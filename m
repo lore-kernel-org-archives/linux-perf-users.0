@@ -1,69 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7DF1DB95E
-	for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 23:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499E7302CD8
+	for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 23:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763162864; cv=none; b=MrNsexRKpJSuzE8kcr2JJmg2kNqwql1uMDV+/Z5VyxqZege2No0JnaMNrVX8Ck+dgbx23tlmDDKbxElWKtLi7E+wR5RnfOY+IDg/UmDdSFebaXb7+SGZOcrt4PVQVqske+Er0WpGe9N6+fD5FcAHgdV83qp5hsrvz2t+KnrfR6A=
+	t=1763164168; cv=none; b=BCm4x2LGh1qalVeogopRmtjL8w+DBP/gu2n0vg7PLR047oyLELTUH4OdzXBC+DqHudaaNKmadeaZNnFQFta5JFOcXK7Fu52rI8pSQrqjUAVTUa28LQNrN7IpBr/1jy5PWQ4Ugd3xjpnmX3pcJbTyqVKyIUt3SASWxp0bAQQbZB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763162864; c=relaxed/simple;
-	bh=g0H4y+6OIMOvABY1b0O60DWti7VVqpiof1utZpMzUgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RAZ3o6zD+O6K+xSNxGUYti7KYKeO0h/1jARFBgFXKOBi8Mw0IEuZOTZQAceC9mFlj6m7xeHoXDRkUydCi3XkY4XnY4mENfsB2Xjp+ZGByhl4SLPz0RN+L3JGbSMYJskwKF4cnJIM9KnDod9kQveXzDMNpLSJk0SqTBiGZhF/qRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGgLVcBZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763164168; c=relaxed/simple;
+	bh=wqhYEdtYkGwjLIFqEJnVEAfzy+uYEANRYzFEWhmoU8s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IgUmeCU60RiJmYRa9N5BQOcQ4+sP7J64azpY2SCO1jEh/55hDxnHArJceXM83+JnKt4igsokYaeCDZ/cTB/Dcd+VH0W8AnRGFR97LhooEmubj6hdatJjaiw6eAiu2s1v5rKohQbpU8tuhYZudycLEK6mmkcHPgO0l/zPhdfhmaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YTa6aaPv; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IGgLVcBZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3FE6C116D0;
-	Fri, 14 Nov 2025 23:27:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763162864;
-	bh=g0H4y+6OIMOvABY1b0O60DWti7VVqpiof1utZpMzUgY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IGgLVcBZ57egBBwV7QZ0v9Ji0pkV29gejcEWVIUiZBZeBmxg/OheAm2g3vMX3Iw13
-	 VZbAAM9jH9QFcFdQxkzfNYvOqBwExI56TPHcC+iYIpHWZJunZ9YqxWsfofmwWeg5W+
-	 5QuZMqdVV6KeNwMMYEo6eTyJ8XOKBYl1D1ANhChCZilKsl4NdWTuhfxrmgcTcNAjbL
-	 FXYYo+oEpAwPLE5rNAlBe7o0oWQvAfrNyZlR3JmpoBueXeAS/9wmuNaEbzT/FgthQk
-	 roUx3tJqeKCM81pQLLanbghfFwM6iXis415Unzvc+LS0Q/esZesu/I/PIq5TaEZ7nn
-	 zxb/oFaNJFulA==
-Date: Fri, 14 Nov 2025 15:27:42 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Pablo Galindo Salgado <pablogsal@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf test: Add python JIT dump test
-Message-ID: <aRe67vqAUlIEo90-@google.com>
-References: <20251114092914.217533-1-namhyung@kernel.org>
- <20251114092914.217533-2-namhyung@kernel.org>
- <CAFjbc8FK_qs9XqMEf5k81VRNCNXSyda=VUSuJwp8LALOq8fGvg@mail.gmail.com>
- <aReBx2jFezxbhWt0@google.com>
- <CAFjbc8ENz1AhCH0MBMmcrJB34GvjWPjzV3i0PEfnsTAampe8-w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTa6aaPv"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-42b47f662a0so1758253f8f.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 15:49:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763164166; x=1763768966; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MOqayRQhdzTWWtGSNjRg5DxZI7H2LMVGi4pIqL6+Qa0=;
+        b=YTa6aaPvBDHqO9TnXzKp0qVXnQ9eYABoDhQnTW3GVZ7NbCqC2Q3eTYpjnWu9G3nYrC
+         v+ItlOgVozeuwXj0C+sfDYAVc4i+SIdpVPgM2I28Gws/BZ/aXiF1494KEzLdHCxOps/y
+         DzUhrMiOdK9g1OHXMlwaRuGA35K3ttFZmPltLhkmVBQavh/rbONJcrc2GAI/T/8Bo4Ik
+         pSufB2F5TLC7EE15i37l+2x1HrXA1TeQqK8xPo5OAkNgKtNa7hEsjk4Oj7qlA+di+Fb7
+         3r+knbJTJUegQQz3CC8+Zje+gTwV7mfgFt/hVc2hoOOsVj/Dv8P8kdUBhOOkCFISdD44
+         kfgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763164166; x=1763768966;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MOqayRQhdzTWWtGSNjRg5DxZI7H2LMVGi4pIqL6+Qa0=;
+        b=SI09GGI1hwn/xnnn9cye5VIkvsB5N7Owvg+28A/wKDfYMEM6UwTUL1vlqQRKgBisOa
+         ULVgYc0d1Wvl3UHWLDRzPAXwB0mdLDelBeNOF9BtnlP9y9jR6TRF0Z36kOmOkzpp5KNs
+         tphdw4n1rASsi+rY1SktST9SqV4cDlhdkBOLfRoT3kl7G3Gk15vf+jyyp+eENRcVQ2dB
+         +EQ5YlAxtsTJgbvmY0bxt79gDWUVBBMl4s4lazwbL/w+ER0AhlnLdVEaLk8DyLR0rk/J
+         uXO7Ko+YxQO+Vzo2P34RT6P/EAl/i3WOJxvYe0TdA9R8w3uIIjVLSG7XwP/zSu4zn/+O
+         wJxQ==
+X-Gm-Message-State: AOJu0Yzzu3F+pzxHvXjBknbI4z62L5x3HrhO8qFowRyTUYe6RGpioM2G
+	46z83DMh0wvB3Z441MXo/T+H+jM8lXmOAh1VNEYZvL59WoFBmVnN5ysEN3brb2ix9mq2jXzPdkj
+	qD6tiP8N+5s5c6+WRv8HgKmRTINUSZAb/tqcmgmg=
+X-Gm-Gg: ASbGncseuWMkc88U6EBNEgprSBEtlsPgivTiwSRBykWetj8y+dVL+yvNjMTp1V3AbQf
+	SP9G94iJGfPBvVRsIhNB9oKq+Ouf5X9d62n8bAaNg1Fv2M7IdHEsLZalJVRe/YMXQ60U/GFhOow
+	rVjEvybzTko7aHKo0fCnncAW0AZ/0COGUm6HA9nQUoJ66Rsk7uZ+AAzfAmFR5AucMK8Wa59CA7L
+	vnY/w6DwJHJ49+RNCGIg9DDgLVQCdAhgwQaC25SPdqSy0XGwlacyNkM90ZqwUBf8UtuG0PODGS7
+	Zqk1HK/NHIGk+7ID46yA3jx3L3bZrMLIjmIifwyIOlEhW5VhRIvtEF/bAitK+hLoq95NJch5alj
+	1IVtmJxYiU5rA7LtMp3xzDl/6
+X-Google-Smtp-Source: AGHT+IHLI1fEqeCMXOHsPc3KUnHcaLTMu6dlrYfq7MtKVrvVLyQXOdubo9J14ldaYXYEWcvGx8+vZduAiXgs2tgiiec=
+X-Received: by 2002:a5d:64e3:0:b0:42b:3dbe:3a37 with SMTP id
+ ffacd0b85a97d-42b58d7925fmr4781527f8f.10.1763164165479; Fri, 14 Nov 2025
+ 15:49:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAFjbc8ENz1AhCH0MBMmcrJB34GvjWPjzV3i0PEfnsTAampe8-w@mail.gmail.com>
+References: <20251114092914.217533-1-namhyung@kernel.org> <20251114092914.217533-2-namhyung@kernel.org>
+ <CAFjbc8FK_qs9XqMEf5k81VRNCNXSyda=VUSuJwp8LALOq8fGvg@mail.gmail.com>
+ <aReBx2jFezxbhWt0@google.com> <CAFjbc8ENz1AhCH0MBMmcrJB34GvjWPjzV3i0PEfnsTAampe8-w@mail.gmail.com>
+ <aRe67vqAUlIEo90-@google.com>
+In-Reply-To: <aRe67vqAUlIEo90-@google.com>
+From: Pablo Galindo Salgado <pablogsal@gmail.com>
+Date: Fri, 14 Nov 2025 23:49:15 +0000
+X-Gm-Features: AWmQ_bmWsaO5czM8oFjAWvuJfhjGDaKj-EBuIwGM1npC8d6-INTvxte01O4MH7g
+Message-ID: <CAFjbc8EqLdtb6LBbztwnHgvk8pGWJG=vXJ-_E4T-opJzazcUzw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf test: Add python JIT dump test
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Nov 14, 2025 at 10:27:43PM +0000, Pablo Galindo Salgado wrote:
-> The version is likely the more reliable method, but you could use
-> sys.is_stack_trampoline_active()
-> in combination with the X option. For example:
+> My concern is platform support.  Is it available on ARM and others?
 
-My concern is platform support.  Is it available on ARM and others?
+Currently, it's available in x86-64, ARM64 (little endian, 64-bit ABI
+only) and RISC-V
 
-> 
-> $ python -c 'import sys; print(sys.is_stack_trampoline_active())'
-> False
-> $ python -Xperf_jit -c 'import sys; print(sys.is_stack_trampoline_active())'
-> True
-> 
-> If you get False even when passing Xperf_jit, then it is not supported.
+> I like this.  I guess it'll return False on unsupported archs.
 
-I like this.  I guess it'll return False on unsupported archs.
+Correct: https://github.com/python/cpython/blob/f0a8bc737ab2f04d4196eee154cb1e17e26ad585/Python/sysmodule.c#L2442
 
-Thanks,
-Namhyung
-
+Pablo
