@@ -1,187 +1,132 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596462E11AA
-	for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 19:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B3C2EFD8A
+	for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 19:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763147577; cv=none; b=EmwXbYO2SvJfGooKFgBdOGBbauT/6PTeuuNiOOOnkD9mKoE1ETs9lzBgHdv658c9PcPtHeEUvVon+tf3WNY+nls0mq5b+B7QrMQ9n0Vt5lOP3wpZZ0sVeCUnV0aqpZSjzz/uItZ76uRe6meh50P78kav1T4LSPECLKXYZxIRDlk=
+	t=1763147658; cv=none; b=Ui7n5xZtF3Wb717+Oh3ob82WvcVMwHLm7XpiGgBWgZYp9Qs5suPxDjTKrrubqlD/XM66SKbjFJwgBhffmLje6nc64lRzfinaivwQu56EqZbYb7bDOBcLv3NEUg20hMBjPKPmUaUz1F3CbjfImcE3YyJcao8ovhsQ2RHLsbE1/Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763147577; c=relaxed/simple;
-	bh=+F3OVJ+IEOr15tu96sm8GR3U/EgXEX0j1JW9zr22qLA=;
+	s=arc-20240116; t=1763147658; c=relaxed/simple;
+	bh=sqFSHDCPRksQdHdUyv1FMM63cJMW5yRb5MbRUz9Ot64=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 Cc:Content-Type; b=F15YlK/ciWOCHeVwL6OjSviU5l+3trVK0TlX0Hsg+52ixjLtBMgICEm5y/qEsIBfiFLp8R9lo2sDHhiz/kpb/9LLBo0w/ktDeLgEKE5vI3GtR79+5aMRSf2tAjKXGbBMeuEhEhqjf1JqcVjgTLZwp4TO90LZvR6oE6LaLz9Oly4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q7vSoJei; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=iO6AeelHTCg/Jv8imzQyVlCfQXSuwfwM0ob8pKcmDcaZAiYfwe1gQGfry85hQVPoJYy6GIlFQ4hw2hQ4lwpwRgmFACJYucSnPTDeXitlriijzM/mXj/m9JdnA6q24PDQr8SKQyUGaVmRWLJhNnMhS9+kzTSEi5sFUWapmj3Wtqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hDEK0dRz; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7vSoJei"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-47775fb6cb4so17119125e9.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 11:12:54 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hDEK0dRz"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-640b0639dabso4079953a12.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 11:14:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763147573; x=1763752373; darn=vger.kernel.org;
-        h=cc:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ECLdnz+RzZfBcg21IkQyyzTrn2zfRl3emdrxEYSuK8g=;
-        b=Q7vSoJeifWgZ5rdt8AcyNn1nzmxVMMNy4mBx2PJXjHJafn8ZklND2Jz/dGwAB/TPCZ
-         XVGjCifk8gVgh94CGkgzY1uKmvXbERW0cSWvpNB2jjZqMHeghm8bhyUpJJcURc1LwJ93
-         fGEbhqmbBihlokizXqxLHv8or872V7s6RsaSD0ys+UPF4ggbhmWbg1/i2bQHhOnLADTO
-         u82gbBsJPL9odvz7BJghgXwWxRGhEzjz3o5ZGdf63MhE+4qIQcgHoeBgrZFaGX6VHiyy
-         OY3jWCSb65H7JLTeZuuIpzSvLzNOXtwsGHnFFSKNkbSKdI08oE7GYMpa7gX6O1FvTWxQ
-         aPUQ==
+        d=chromium.org; s=google; t=1763147651; x=1763752451; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sqFSHDCPRksQdHdUyv1FMM63cJMW5yRb5MbRUz9Ot64=;
+        b=hDEK0dRzjwmtrRvi0fgEo2jGlsHZTDRoKQnuQZ0Pfp3pmiPC2nUmycKDUEF6JVDwaN
+         7pwZdTiUiqpmWpRJLpwKAyCTYLgRavx5O7NaOa3L3hIs00A2/bVHgkSRX0IoBcVWzdo+
+         aCAwbVOp0PbUYq+hdTgKmtYNVwDRPuAi7Uo3g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763147573; x=1763752373;
-        h=cc:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ECLdnz+RzZfBcg21IkQyyzTrn2zfRl3emdrxEYSuK8g=;
-        b=s2R8AvSr0IEGxqBZdZon9Jx2OWy8FX8TRRSnCuKhQJl00HFEq0QU3pC1BkDeJiP1fh
-         LFz9YMHMIwZgMm1CPUcDWKhDxPAj491ldmQKROxm7LRYRRArRbrgo/HXmjd1jnvzekbX
-         HJgWMvLKKgS7M7tovzm2jYTjUGns56dG3P0MLa03nF4yv/OnV0SBklZOanskijwaQp+x
-         c9jE7avPJp+BliCQ5b9S87tI1myYdYDpLAWitFu7kKLI4eVOB2qvmBU8+55PSV8edQyn
-         B653UAL9nTTt+wu6ij+ToYowCRh2Nu+1bxSBObLhj3tnh7tVb0SLwcR/cDzdeRcqu+sY
-         pJgw==
-X-Gm-Message-State: AOJu0YxUqnUAFL0kbbQJFmGYVi8ayVUUWp9CR/WERcXM+pdHpzDqzNpE
-	5FlxVyQ4QzauMMTADZVh2WXQOTgb1LetEzf9tzlnfENPm0VK1bhiWMlFfyighSjAfyPeADpFhuO
-	G7sI+9/UwZK0y2DPYxDJIXZl4Uv6Ohcyr0/p7las=
-X-Gm-Gg: ASbGncvKg/9EkQd5rly/mrw9XZmThIlPj2hPo/JCp5y7xffuHkK4ZEqNNJCxroH9cBp
-	ovqsB3s2hALVWZGI7pnHNGXUDAxifq9oAAHpiXy7CIz5+gVrttQ344CcGCgIFOBmowIsRuDNI8n
-	/SQmtLYFrl+RGN7q7sLA/AGVFrulhi4SY+1inIcUWAcizvps0g52dNDiuQPv/lXkK6bc8jmgstY
-	ZOkFSKzG5i4HgLWYLY0yjrajOkEZfJs2aywOY4Ty90lHBA+ZBIlDsmYBvENFik1qlnz9ct9jgL+
-	lomovoylej8hsr7byoWZJdmSe01Nqm7pefsaBXJ7+MH+e5+Cghthee7nvg1nyazNzsJF
-X-Google-Smtp-Source: AGHT+IEtlTIOYqyVhdgTiv/aTiBp4oi1wcJRoGRcZNs8Nm5zS/S1Q27IIeSCVKWkLF07gmSYp6JO2LO/63wVz9hLc90=
-X-Received: by 2002:a05:6000:2c09:b0:429:d6fa:da32 with SMTP id
- ffacd0b85a97d-42b59398a2dmr3510381f8f.59.1763147573184; Fri, 14 Nov 2025
- 11:12:53 -0800 (PST)
+        d=1e100.net; s=20230601; t=1763147651; x=1763752451;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=sqFSHDCPRksQdHdUyv1FMM63cJMW5yRb5MbRUz9Ot64=;
+        b=PHU3VlTCDYRA2n0ZqYjvINhzJvG+cbuHbPcyw+hKiuOyQSQT/YaH1eo8Ej7Om1+VXH
+         69MqONNSva6utJwWtGkdY8LyMF65cns0bvmXX7nFViReR6y+asfoRGpkqT6eg26GdKtV
+         9Fh/OViq1XXg0TBvFqvBtg0Qyu5uuah8ag0nWAgWzVZhKxP+a1gHO9G3XnKTZGD55uyN
+         gRoicNmfM+MYuvG7ms9+W2jVVCJySYfUQlHW4PrrqMKqPQN9noQidtcnUdedU1zkM3/Y
+         9ijkTYAAo1SWAHi7t5aD9HCMHIzFvVToijQ+ILp7GCBNewKMF9sfQoeHeIRhHsZVUaEI
+         dLgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXlD74nIskx6NI1wKffwuq9xVRyoBtCgvMMv7OAtZGWFy0HG8XMIeY11UKCndzNXjC/2aj3gFX6OLm2QYr/M+XY@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKtRJnd8csIfEQXq4oS7TrtygI44KKrbTCE2w68yF93e+e6kwG
+	Wf4bxDvAtObyc9+WO9Zzi/SDfrVtWPFm1+idEq8qahm37RuRzcQUgmuMDdrk4WTQHpAux03ftC9
+	LCGw+U61e
+X-Gm-Gg: ASbGncsuU2RjpFCfKJa8fM7xwhXdXTLjRwhfO8ivGu/iaExwgXPz3d+xDVKiydi7uqT
+	k2NoT2KlvB48rGoLJxpTNAqvdUjtZdZf1+0JiHD+0100/mAlUc04m8VEKumuudAWlqJvooGcXDU
+	Andqkk7k+PSYW+kEPrUuDTZu+X/IxvPmCR65pumwSzmpWsmJHXWA+CvMpztmI+xAqF7i6vC1e/F
+	0VlP7WkE+3jcxZykkCeXBm8DkP8qzj7bNPgwK9ZXC9pB+APNgjvaD1nvGyAVc4D8SoGOm65Rmfa
+	jJJWudfB/CSNV3dVNiWAJM8nPq4LqtIVmrPwM77f2fAeVlDWSEDhptlx3tehaQ959rd59pO/wxd
+	5OJmOS7ilO3/0uuiPaoevPtn5mlQc/82Ke7l7OLCdFviIGtkdur3yg113ueBV7H+MgJdpufd68i
+	Q1QfjmHT5j71jhgYllGp2Hkfd3TsY9yGtYivQ8geK0VOC9CCQIFw==
+X-Google-Smtp-Source: AGHT+IFQeHwsNf1SOj9Q5jMPM2CiZ0bNsHlFK6cSL8B+n1T5/wPLdkDTUHVYp1JMUmweVr9bj6DUUw==
+X-Received: by 2002:a17:906:c153:b0:b73:5c12:3f8a with SMTP id a640c23a62f3a-b73678d2c5fmr503671966b.18.1763147651210;
+        Fri, 14 Nov 2025 11:14:11 -0800 (PST)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b734fad456bsm449818066b.21.2025.11.14.11.14.09
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Nov 2025 11:14:10 -0800 (PST)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-42b427cda88so1708025f8f.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 11:14:09 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUdZnsaATliTbleACQqVCHuB3OGZt/9OxDeNUPg7lvpXumtWKfhLujbhryN090c0Enp14NjHxEUojA50a3YL6t/@vger.kernel.org
+X-Received: by 2002:a05:6000:178c:b0:429:c14f:5f7d with SMTP id
+ ffacd0b85a97d-42b59367935mr4118712f8f.29.1763147649019; Fri, 14 Nov 2025
+ 11:14:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251114092914.217533-1-namhyung@kernel.org> <20251114092914.217533-2-namhyung@kernel.org>
-In-Reply-To: <20251114092914.217533-2-namhyung@kernel.org>
-From: Pablo Galindo Salgado <pablogsal@gmail.com>
-Date: Fri, 14 Nov 2025 19:12:42 +0000
-X-Gm-Features: AWmQ_blLAuaNhaeLoc_GPqSX5vfQwVPhmY4WXFhV3PUU309qKVuCyNEEwro9WMk
-Message-ID: <CAFjbc8FK_qs9XqMEf5k81VRNCNXSyda=VUSuJwp8LALOq8fGvg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Add python JIT dump test
-Cc: linux-perf-users@vger.kernel.org
+References: <20251114033243.76509-1-cuiyunhui@bytedance.com>
+In-Reply-To: <20251114033243.76509-1-cuiyunhui@bytedance.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 14 Nov 2025 11:13:57 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=Vh-guJS+5BAqhao9aECtkRFgoqEjpzhuDYEsRVqtVA6w@mail.gmail.com>
+X-Gm-Features: AWmQ_bljLqXqDOKTQP59kORhab2-SwO6F5Qm44XiGdi2quOMGlF7tExq5Grrg24
+Message-ID: <CAD=FV=Vh-guJS+5BAqhao9aECtkRFgoqEjpzhuDYEsRVqtVA6w@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] Add HARDLOCKUP_DETECTOR_PERF support for RISC-V
+To: Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: akpm@linux-foundation.org, alex@ghiti.fr, anup@brainfault.org, 
+	aou@eecs.berkeley.edu, atish.patra@linux.dev, catalin.marinas@arm.com, 
+	johannes@sipsolutions.net, lihuafei1@huawei.com, mark.rutland@arm.com, 
+	masahiroy@kernel.org, maz@kernel.org, mingo@kernel.org, 
+	nicolas.schier@linux.dev, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	suzuki.poulose@arm.com, thorsten.blum@linux.dev, wangjinchao600@gmail.com, 
+	will@kernel.org, yangyicong@hisilicon.com, zhanjie9@hisilicon.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-One important aspect to have in mind here is that Python 3.13 was the
-first version to add Perf JIT support. In older versions -Xperf_jit is
-a noop. You may want to check for the version in your test and skip if
-the running version of Python is lower or alternatively ensure you
-always run with 3.13+.
+Hi,
 
-> +
-> +SHELLDIR=$(dirname $0)
-> +PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXXX)
-> +
-> +echo "Run python with -Xperf_jit"
-> +perf record -k 1 -g --call-graph dwarf -o "${PERF_DATA}" -- python -Xperf_jit ${SHELLDIR}/jitdump-test.py
+On Thu, Nov 13, 2025 at 7:33=E2=80=AFPM Yunhui Cui <cuiyunhui@bytedance.com=
+> wrote:
+>
+> After discussion [1],[2], hardlockup_perf cannot be completely replaced b=
+y
+> the hardlockup_buddy approach, so this patch is still being submitted.
+>
+> v1->v2:
+> The contents of arch/arm64/watchdog_hld.c are directly consolidated into
+> kernel/watchdog_perf.c.
+>
+>
+> v2->v3:
+> Add CONFIG_WATCHDOG_PERF_ADJUST_PERIOD to enclose the period update logic=
+,
+> select it by default on arm64 and riscv, without affecting other arches
+> like x86 and PPC.
+>
+> v3->v4:
+> Place the line "select WATCHDOG_PERF_ADJUST_PERIOD if HARDLOCKUP_DETECTOR=
+_PERF && CPU_FREQ"
+> in the Kconfig files for arm64 and riscv in one line, with no line breaks=
+.
+>
+> v4->v5:
+> Remove __weak from hw_nmi_get_sample_period()
+>
+> v5->v6:
+> Removed the dependency on CPU_FREQ for WATCHDOG_PERF_ADJUST_PERIOD in Kco=
+nfig, which fixes the
+> issue reported at: https://lore.kernel.org/oe-kbuild-all/202510240701.eB6=
+r97V3-lkp@intel.com/
 
+I haven't tried compiling this myself, but it seems like an OK
+solution for the compile-time error to me.
 
-On Fri, 14 Nov 2025 at 09:29, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Add a test case for the python interpreter like below so that we can
-> make sure it won't break again.  To validate the effect of build-ID
-> generation, it adds and removes the JIT'ed DSOs to/from the build-ID
-> cache for the test.
->
->   $ perf test -vv jitdump
->    84: python profiling with jitdump:
->   --- start ---
->   test child forked, pid 214316
->   Run python with -Xperf_jit
->   [ perf record: Woken up 5 times to write data ]
->   [ perf record: Captured and wrote 1.180 MB /tmp/__perf_test.perf.data.XbqZNm (140 samples) ]
->   Generate JIT-ed DSOs using perf inject
->   Add JIT-ed DSOs to the build-ID cache
->   Check the symbol containing the script name
->   Found 108 matching lines
->   Remove JIT-ed DSOs from the build-ID cache
->   ---- end(0) ----
->    84: python profiling with jitdump                                   : Ok
->
-> Cc: Pablo Galindo <pablogsal@gmail.com>
-> Link: https://docs.python.org/3/howto/perf_profiling.html#how-to-work-without-frame-pointers
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/shell/jitdump-python.sh | 41 ++++++++++++++++++++++++
->  tools/perf/tests/shell/jitdump-test.py   | 14 ++++++++
->  2 files changed, 55 insertions(+)
->  create mode 100755 tools/perf/tests/shell/jitdump-python.sh
->  create mode 100644 tools/perf/tests/shell/jitdump-test.py
->
-> diff --git a/tools/perf/tests/shell/jitdump-python.sh b/tools/perf/tests/shell/jitdump-python.sh
-> new file mode 100755
-> index 0000000000000000..101c15e65da1a0c0
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/jitdump-python.sh
-> @@ -0,0 +1,41 @@
-> +#!/bin/bash
-> +# python profiling with jitdump
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +if ! command -v python > /dev/null; then
-> +    echo "Skip: no python found"
-> +    exit 2
-> +fi
-> +
-> +SHELLDIR=$(dirname $0)
-> +PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXXX)
-> +
-> +echo "Run python with -Xperf_jit"
-> +perf record -k 1 -g --call-graph dwarf -o "${PERF_DATA}" -- python -Xperf_jit ${SHELLDIR}/jitdump-test.py
-> +
-> +_PID=$(perf report -i "${PERF_DATA}" -F pid -q -g none | cut -d: -f1 -s)
-> +PID=$(echo -n $_PID)  # remove newlines
-> +
-> +echo "Generate JIT-ed DSOs using perf inject"
-> +perf inject -i "${PERF_DATA}" -j -o "${PERF_DATA}.jit"
-> +
-> +echo "Add JIT-ed DSOs to the build-ID cache"
-> +for F in /tmp/jitted-${PID}-*.so; do
-> +  perf buildid-cache -a "${F}"
-> +done
-> +
-> +echo "Check the symbol containing the script name"
-> +NUM=$(perf report -i "${PERF_DATA}.jit" -s sym | grep -c jitdump-test.py)
-> +
-> +echo "Found ${NUM} matching lines"
-> +
-> +echo "Remove JIT-ed DSOs from the build-ID cache"
-> +for F in /tmp/jitted-${PID}-*.so; do
-> +  perf buildid-cache -r "${F}"
-> +done
-> +
-> +rm -f ${PERF_DATA} ${PERF_DATA}.jit /tmp/jit-${PID}.dump /tmp/jitted-${PID}-*.so
-> +
-> +if [ "${NUM}" -eq 0 ]; then
-> +    exit 1
-> +fi
-> diff --git a/tools/perf/tests/shell/jitdump-test.py b/tools/perf/tests/shell/jitdump-test.py
-> new file mode 100644
-> index 0000000000000000..b427363ae4956db6
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/jitdump-test.py
-> @@ -0,0 +1,14 @@
-> +def foo(n):
-> +    result = 0
-> +    for _ in range(n):
-> +        result += 1
-> +    return result
-> +
-> +def bar(n):
-> +    foo(n)
-> +
-> +def baz(n):
-> +    bar(n)
-> +
-> +if __name__ == "__main__":
-> +    baz(1000000)
-> --
-> 2.52.0.rc1.455.g30608eb744-goog
->
+-Doug
