@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E13287504;
-	Fri, 14 Nov 2025 18:57:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451F52EB5CE;
+	Fri, 14 Nov 2025 19:03:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763146635; cv=none; b=KFIy4p0jLwq+V3X/KBEGBGY1FT11zXyPlHdmRDxuVbi/v2qfRTdxByDvRyDOg+PmWnEZX+MmsssGsNVq8+lbcFmU4FhgvwlP07Bc+562Y77nDpzaBvi7/EuJgD7zxiLInTGbj4IkWmLktHmrrCxFcB0HedS9TB7W7U9SJ15Npv0=
+	t=1763147005; cv=none; b=o1jLrs+YAiSsUHG+YUVp98pr6m6+qz81qNJxORwC222/TSyISJLZp+DEFU1ypfXwx5zpXtlf+CvzqPjmguVhbg/Ozh8OGfKLUJLaByTaA87p1LB7UWjnbsHIK9e0hu0zsEumtP3Dq3vu0Cjx0zw0SGIEQggxuVkd+b4P67LV5yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763146635; c=relaxed/simple;
-	bh=lYD3SZ9RO4v3fms8UESEkEBQASbTiZ6xYkrrrx/0ZVI=;
+	s=arc-20240116; t=1763147005; c=relaxed/simple;
+	bh=I4cSupUj1yArQFO8j1TCBB0/g4NCXS877IPEVCWSoLU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KRBd0AL4bNauDSXV3+8NO3oeJl0QgJrY2VbZkAT4rRM8jD5JNhrvUIotXr0MRLxfzZzk6tsz72Bb3yAcogHsrt41GClhh9K7P6KqOGvuGNhbotKGVA8GwXoYyzEHskXy4WfaF+wfN9UxDBguH/fuimtKKsbnheR7EQP+KeVc5OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZcNORuc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ctP16LWeankZjy4RwKNvxOMGpIgGwlgthQmkxuXi6sN2nJCyeb6YJa6+UTQ0MMit0C8qkNK40EvID+Lzp9ybWF14ETtUggZ705GFJ+AsNfYTEMijXKI44tSYG5k9cVgqJKWN7f/rX/5nUyC9jb5Hx7YBKgIh6HVu0K9mMt5Vi2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQKSbZqN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZcNORuc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DBC9C4CEF8;
-	Fri, 14 Nov 2025 18:57:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQKSbZqN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1DC6C113D0;
+	Fri, 14 Nov 2025 19:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763146634;
-	bh=lYD3SZ9RO4v3fms8UESEkEBQASbTiZ6xYkrrrx/0ZVI=;
+	s=k20201202; t=1763147005;
+	bh=I4cSupUj1yArQFO8j1TCBB0/g4NCXS877IPEVCWSoLU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NZcNORucU05v10ff3B6wb0F1tK8SOD10H5hwi8HooAwoIAkz+9yXonj46kfDNUFEa
-	 5LoGhZvbe5neujtNqJIayr9qS/Tf91rlpN9L6AM40MtFDJBFq7qVVZl8AHq3WlurVy
-	 Avwt6yCX8h8Hp6nwBzQN4SewNhN1tQ/N57wssuolO3IP8oMvKYAhGsy7+znA3VDcKl
-	 2TdoZhCICxJH4vK/xhrakRVpzzDf20759QIWDaWgliL6XveF71YxAyS2AFJ69fvINT
-	 7ChYugobKvf1cFqDrn0I2PLgtHPl283c+OJNobVkagaXqPlygUvTBXHpD192qCK0Gt
-	 dG5EC+IRfNtLA==
-Date: Fri, 14 Nov 2025 10:57:12 -0800
+	b=rQKSbZqNUvwki5F6jHL4I1rbKp1a2uZkPOyno1R7vn2giJMLL2XFOqLxCvf5wtSAO
+	 ijhLgcnoJrxVM/iy9bsR+alcglMAbf8LLbHzCx+8gQ/Lhar4mL+RnXMQaLqA5DFXG+
+	 FnW3idINe1hZe40IbZlP+E1vlEBNOQV3Yx5iaPB2yjios9M3wGWsYUoxbWwELWabnh
+	 eD7ZDCJt0k+Dpoc1CKY2FZs9BcxDH3C5n1DkD247jnkyVNBYxFzilrp3mIPPRUY/0l
+	 jGwq/W3L1xnAUH6jfqH/9tHleqk/3oQ+fzgiRP8xYPlxP3A9VufTCHu1bZ7//wjKuf
+	 O9jBV0E9NXW3A==
+Date: Fri, 14 Nov 2025 11:03:23 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -35,12 +35,12 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Eric Biggers <ebiggers@kernel.org>,
 	Pablo Galindo <pablogsal@gmail.com>
-Subject: Re: [PATCH 1/2] perf jitdump: Add load_addr to build-ID generation
-Message-ID: <aRd7iJJxgT-0G8Ky@google.com>
+Subject: Re: [PATCH 2/2] perf test: Add python JIT dump test
+Message-ID: <aRd8-4e5apdL7R6Z@google.com>
 References: <20251114092914.217533-1-namhyung@kernel.org>
- <CAP-5=fWsFLkYGFFyzSrpZNdRLpjaTZAuW7-YVUr-zMVH5dk8eg@mail.gmail.com>
+ <20251114092914.217533-2-namhyung@kernel.org>
+ <CAP-5=fWLGQJ+jdc1kqSo0+wy6AVa2Dm-yp7OX8q+bNw94aV3FA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,85 +50,143 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWsFLkYGFFyzSrpZNdRLpjaTZAuW7-YVUr-zMVH5dk8eg@mail.gmail.com>
+In-Reply-To: <CAP-5=fWLGQJ+jdc1kqSo0+wy6AVa2Dm-yp7OX8q+bNw94aV3FA@mail.gmail.com>
 
-On Fri, Nov 14, 2025 at 09:33:29AM -0800, Ian Rogers wrote:
+On Fri, Nov 14, 2025 at 09:44:21AM -0800, Ian Rogers wrote:
 > On Fri, Nov 14, 2025 at 1:29 AM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > It was reported that python backtrace with JIT dump was broken after the
-> > change to built-in SHA-1 implementation.  It seems python generates the
-> > same JIT code for each function.  They will become separate DSOs but the
-> > contents are the same.  Only difference is in the symbol name.
+> > Add a test case for the python interpreter like below so that we can
+> > make sure it won't break again.  To validate the effect of build-ID
+> > generation, it adds and removes the JIT'ed DSOs to/from the build-ID
+> > cache for the test.
 > >
-> > But this caused a problem that every JIT'ed DSOs will have the same
-> > build-ID which makes perf confused.  And it resulted in no python
-> > symbols (from JIT) in the output.
+> >   $ perf test -vv jitdump
+> >    84: python profiling with jitdump:
+> >   --- start ---
+> >   test child forked, pid 214316
+> >   Run python with -Xperf_jit
+> >   [ perf record: Woken up 5 times to write data ]
+> >   [ perf record: Captured and wrote 1.180 MB /tmp/__perf_test.perf.data.XbqZNm (140 samples) ]
+> >   Generate JIT-ed DSOs using perf inject
+> >   Add JIT-ed DSOs to the build-ID cache
+> >   Check the symbol containing the script name
+> >   Found 108 matching lines
+> >   Remove JIT-ed DSOs from the build-ID cache
+> >   ---- end(0) ----
+> >    84: python profiling with jitdump                                   : Ok
+> >
+> > Cc: Pablo Galindo <pablogsal@gmail.com>
+> > Link: https://docs.python.org/3/howto/perf_profiling.html#how-to-work-without-frame-pointers
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/tests/shell/jitdump-python.sh | 41 ++++++++++++++++++++++++
+> >  tools/perf/tests/shell/jitdump-test.py   | 14 ++++++++
+> >  2 files changed, 55 insertions(+)
+> >  create mode 100755 tools/perf/tests/shell/jitdump-python.sh
+> >  create mode 100644 tools/perf/tests/shell/jitdump-test.py
+> >
+> > diff --git a/tools/perf/tests/shell/jitdump-python.sh b/tools/perf/tests/shell/jitdump-python.sh
+> > new file mode 100755
+> > index 0000000000000000..101c15e65da1a0c0
+> > --- /dev/null
+> > +++ b/tools/perf/tests/shell/jitdump-python.sh
+> > @@ -0,0 +1,41 @@
+> > +#!/bin/bash
+> > +# python profiling with jitdump
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +
+> > +if ! command -v python > /dev/null; then
+> > +    echo "Skip: no python found"
+> > +    exit 2
+> > +fi
 > 
-> The lookup of a DSO involves the build ID and the filename. I'm
-> confused as to why things weren't deduplicated and why no symbols
-> rather than repeatedly the same symbol?
+> Can this just reuse the python set up logic in:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/lib/setup_python.sh?h=perf-tools-next
 
-I don't know, but that's the symptom in the original bug report in the
-python github (see Links: below).  I guess the behavior is
-non-deterministic.
+Will do!
 
 > 
-> > Looking back at the original code before the conversion, it used the
-> > load_addr as well as the code section to distinguish each DSO.  I think
-> > we should do the same or use symbol table as an additional input for
-> > SHA-1.
+> > +
+> > +SHELLDIR=$(dirname $0)
+> > +PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXXX)
+> > +
+> > +echo "Run python with -Xperf_jit"
+> > +perf record -k 1 -g --call-graph dwarf -o "${PERF_DATA}" -- python -Xperf_jit ${SHELLDIR}/jitdump-test.py
 > 
-> Hmm.. the build ID for the contents of the code should be a constant.
-> As the build ID is a note for the entire ELF file then something is
-> wrong with the filename handling it seems.
+> We can avoid an additional file by using the REPL, this is why the
+> java test is using jshell:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/test_java_symbol.sh?h=perf-tools-next#n41
 
-When it tries to load symbols from a DSO, it prefer reading from the
-build-ID cache than the file system since it trusts build-IDs more than
-the path name.  See dso__load() and binary_type_symtab[].
+I thought that too, but I wanted a filename to check the result.
+Hmm.. probably I can use a different pattern without it.
 
-So having multiple DSO's with the same build-ID can be a problem if they
-are in the build-ID cache.  Normally `perf inject -j` won't add the new
-JIT-ed DSOs to the build-ID cache but it's still possible.
+> 
+> > +
+> > +_PID=$(perf report -i "${PERF_DATA}" -F pid -q -g none | cut -d: -f1 -s)
+> > +PID=$(echo -n $_PID)  # remove newlines
+> > +
+> > +echo "Generate JIT-ed DSOs using perf inject"
+> > +perf inject -i "${PERF_DATA}" -j -o "${PERF_DATA}.jit"
+> 
+> Thomas Richter did a workaround in the Java version to avoid debuginfod queries:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/test_java_symbol.sh?h=perf-tools-next#n59
 
-Thanks,
+Yep, will add.
+
+> 
+> > +
+> > +echo "Add JIT-ed DSOs to the build-ID cache"
+> > +for F in /tmp/jitted-${PID}-*.so; do
+> > +  perf buildid-cache -a "${F}"
+> > +done
+> > +
+> > +echo "Check the symbol containing the script name"
+> > +NUM=$(perf report -i "${PERF_DATA}.jit" -s sym | grep -c jitdump-test.py)
+> > +
+> > +echo "Found ${NUM} matching lines"
+> > +
+> > +echo "Remove JIT-ed DSOs from the build-ID cache"
+> > +for F in /tmp/jitted-${PID}-*.so; do
+> > +  perf buildid-cache -r "${F}"
+> > +done
+> > +
+> > +rm -f ${PERF_DATA} ${PERF_DATA}.jit /tmp/jit-${PID}.dump /tmp/jitted-${PID}-*.so
+> 
+> It'd be nice to have this in a function that also gets run if there is
+> a trap. It looks like the Java test is missing a call to cleanup_files
+> on the success path.
+
+I thought that it will go the end of the script regardless of any
+command failures but we should protect it from Ctrl-C as well.. ok.
+
+Thanks for your review!
 Namhyung
 
 > 
-> > This patch is a quick-and-dirty fix just to add each byte of the
-> > load_addr to the first 8 bytes of SHA-1 result.  Probably we need to add
-> > sha1_update() or similar to update the existing hash value and use it
-> > here.  I'd like something that can be backported to the stable trees
-> > easily.
-> >
-> > Fixes: e3f612c1d8f3945b ("perf genelf: Remove libcrypto dependency and use built-in sha1()")
-> > Cc: Eric Biggers <ebiggers@kernel.org>
-> > Cc: Pablo Galindo <pablogsal@gmail.com>
-> > Link: https://github.com/python/cpython/issues/139544
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/genelf.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >
-> > diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-> > index 591548b10e34ef6a..a412e6faf70e37f3 100644
-> > --- a/tools/perf/util/genelf.c
-> > +++ b/tools/perf/util/genelf.c
-> > @@ -395,6 +395,15 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
-> >          * build-id generation
-> >          */
-> >         sha1(code, csize, bnote.build_id);
-> > +       /* FIXME: update the SHA-1 hash using additional contents */
-> > +       bnote.build_id[0] += (load_addr >> 0) & 0xff;
-> > +       bnote.build_id[1] += (load_addr >> 8) & 0xff;
-> > +       bnote.build_id[2] += (load_addr >> 16) & 0xff;
-> > +       bnote.build_id[3] += (load_addr >> 24) & 0xff;
-> > +       bnote.build_id[4] += (load_addr >> 32) & 0xff;
-> > +       bnote.build_id[5] += (load_addr >> 40) & 0xff;
-> > +       bnote.build_id[6] += (load_addr >> 48) & 0xff;
-> > +       bnote.build_id[7] += (load_addr >> 56) & 0xff;
-> >         bnote.desc.namesz = sizeof(bnote.name); /* must include 0 termination */
-> >         bnote.desc.descsz = sizeof(bnote.build_id);
-> >         bnote.desc.type   = NT_GNU_BUILD_ID;
+> > +
+> > +if [ "${NUM}" -eq 0 ]; then
+> > +    exit 1
+> > +fi
+> > diff --git a/tools/perf/tests/shell/jitdump-test.py b/tools/perf/tests/shell/jitdump-test.py
+> > new file mode 100644
+> > index 0000000000000000..b427363ae4956db6
+> > --- /dev/null
+> > +++ b/tools/perf/tests/shell/jitdump-test.py
+> > @@ -0,0 +1,14 @@
+> > +def foo(n):
+> > +    result = 0
+> > +    for _ in range(n):
+> > +        result += 1
+> > +    return result
+> > +
+> > +def bar(n):
+> > +    foo(n)
+> > +
+> > +def baz(n):
+> > +    bar(n)
+> > +
+> > +if __name__ == "__main__":
+> > +    baz(1000000)
 > > --
 > > 2.52.0.rc1.455.g30608eb744-goog
 > >
