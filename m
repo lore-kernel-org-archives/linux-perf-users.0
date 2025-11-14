@@ -1,117 +1,71 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD2A26E16E
-	for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 14:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BDC330319;
+	Fri, 14 Nov 2025 16:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763129305; cv=none; b=r6G0LflyF+8Vk9CcpHZMVgYOX5GIZvYuNA+k46lBw4WEhGkoZKJySM8P0VqecLUC7+3f5yB+jTJj7uix2K9/VmzBth9A0152kq3SvrUvU+WGZtQZEz98y4M2pE1FL7ZhgZBxdQDz2whrK0B23fwMb5Us8AwwpVx1AslkPjtJ4Mk=
+	t=1763137034; cv=none; b=j9CT0t7TGrwqekcrYso0CeNHumIXMpIRFmesYWHXFARhLoHO7z8Ca3/UnNsTzAZhrghLGHu0AaWhBMoarvFAt5uMrXudtp5KFkA5S7/lhofVXr7/8ry6HIN4LA6OTG3+U/clZMyECi1YcJVqlLly5ceQlpE8TsjsJfXZ8RMd/jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763129305; c=relaxed/simple;
-	bh=DsHRb3aBVsPsTfxFZTltQl8Cgb+5+kZTKJRtgUHVP0Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=blaYLUI6PpmMpy5D2p6z1TEQ06DPikySZ8JgTIKXBU+i6YNiQ7EGQzkn4Isjvt8dVqMLNfrLQlAIb09IpvJxggCI7lj5gYFMfUBYbhpqsuYSkT94VMqUoaKpzin9ZXigHkyzi2BLuOyhSOxI+n6O8FeI1JnEx+OxE5dC2UHPIzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SLTDzmfD; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1763137034; c=relaxed/simple;
+	bh=Px3lKZdUS5rdr+F3zZSev4T8mg958AG9l4kRlO2wCqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u3GZYZtepM7wQrdVwGSvK3uBo5r3MWdIMJ51YX9aeepaUE+LMD272fUPuog51qv4hP5YZKBcy0wmYKIkS8h7cjUiBzdRiYFPI9J8Xxy7qP4S/GuY1U2gd2YnTynaQEdlbjz/6A5HjZ9OOVHfjSZFKYEXG7Uw5+UnXzE2MPmko0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EBPYejEz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SLTDzmfD"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-42b3ac40ae4so1095619f8f.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 06:08:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763129293; x=1763734093; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wt52bq5jaqJDguhB1sVQNID6rpmfKSxM12PWX69j5Wg=;
-        b=SLTDzmfDUGadOD9zcpYX7my6gVSAv+Cb4k9rTq/H+nuYnDkMVg8ug7D+el5iAcT3yD
-         Cj4/DZi9ik9U+W//BXXcDTosYQtWPjztQ6NtNMs2iY0F/0fn12PM+K/dp5pqh0Xp/VN/
-         83klub7ArV79/p45q70L8+aCGYPG0psvqt9/SK/AmO4UYgYg23gVy449dQ8ZaRGWexZz
-         Oag/JtglntPcS8XhdPZXOuc/RlClaoeCpRaEZ5UuRjXVZaL6qNCVy23cgRA4+Be7T+qi
-         mKLu8QaueT5ATb1yONRKLfYrxjV/X+VAlB/M1/gwa+bhF/lKce6RfaiUHNjpGrxPOqc7
-         mxAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763129293; x=1763734093;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wt52bq5jaqJDguhB1sVQNID6rpmfKSxM12PWX69j5Wg=;
-        b=kHJOYb0c0Y4QI37uX/tVl9VUH+JaI5BH26Ocq6SXvLDRXUSIAQRdTXKeboNRZngoSu
-         HZuLdb1lfc7BvpBS7NdZdFV1T/FgxjGAcU1OA4FzPt/ki23mcUDsVxmYjVXvmKSFYx1T
-         4wl0G93x/FMtvPUmlJOaPyrRtt5uOlhWBmAkM1MChhFw0YZo0KoBtwsM1QF3WBvEu8QD
-         W3mhtHdYnWQU6jtlOB4AZzH6HJ0aTwUJt2TRk3nkJfHJ6XfrZTb+1QsaEkIPqAA/Q4lA
-         pzaf+dKbXLUJJaEWWi8NBope/C04qWhvk6Jh/yX8qva76QVNi1d3KKQAr2TU8zf1JYfo
-         UCZQ==
-X-Gm-Message-State: AOJu0YyCo8+q+NQRaJ16uUVtBXRhMWdINxvG9jmKKBJWeS0NJrKb6hfL
-	mHu04vO9yccQnHvzsTfSz29/FbM+rCTzWlbTi+fROA7qlchCM8T4HH/cvIC1Q4qOIDkJPx/7RAQ
-	W+Pfnlig=
-X-Gm-Gg: ASbGnctwxkpRlwdmCCSzWYgal2J8+EwTEpHsAbFWXjbANk3SaPOn7dRQEwPjfnmP+mo
-	pDRvZCVQ+/yEWp4zW/dSg7RtHyediy4bi7iYqGrRhERtWfPQ9rWM0pzquZb2vlpKi/8lGRKPaYg
-	0bIo+h0KQtPdAtg476px7YpMxeDBu27dYqLQ23mIdNrc8BDYTwdn3ps3lgHxUE8XIthw7n5hvlT
-	lA5Qq5sFL7o33kc3qGy9qBQQpGf5lBX383hAsTrV+PDocfF7SvA2jkxGlg6xvc/jYA7WMa0kT/C
-	MXwOH3ZcFOVqqgR5SqqUgQfVte4ckCI2VUOzmpThzB/lEewoA1to6OoIAHbbOk55I/mvrjOxUiY
-	Oq80dDMQgTn916Hhgbjdh13tjWqLQAWQ1AzySjRdxtLdPmEEuR86cUYkFuN5NmUe23MJoZcDNo+
-	xAP3oNDCmy92GqSNtKI+r9wDwBapSqROnjkqi/TA==
-X-Google-Smtp-Source: AGHT+IEzGIG2tfSFNxrE/D4oQHp2bwRFhYPdDmFq4nLFvLUDg6G092MzyyCwFrJtkHVF1wL5m17IEg==
-X-Received: by 2002:a05:6000:310b:b0:42b:41d3:dafa with SMTP id ffacd0b85a97d-42b59389c39mr3120792f8f.46.1763129293155;
-        Fri, 14 Nov 2025 06:08:13 -0800 (PST)
-Received: from localhost.localdomain ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53f0b8a0sm10180854f8f.25.2025.11.14.06.08.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Nov 2025 06:08:12 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-To: linux-perf-users@vger.kernel.org,
-	irogers@google.com,
-	namhyung@kernel.org,
-	acme@kernel.org
-Cc: James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EBPYejEz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 343EBC4CEFB;
+	Fri, 14 Nov 2025 16:17:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763137033;
+	bh=Px3lKZdUS5rdr+F3zZSev4T8mg958AG9l4kRlO2wCqE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EBPYejEzrwCn4Zb5hqGfAGsRuk9RtKOvK6DJboD4IPKftcJOdg4oRRU5uT8NPBLE+
+	 OCllQlduZ42OJyJUua2necJE+0YSdMcHbdeLObYCCvkrn/QwTZwzPnKXqb38rWi4fx
+	 mw+gUSWQ6/Z3DVBAUUf3g6ei/hgWhfp7oWapApA7/2onlPDePp296sVo1FRqC2qZLi
+	 VseGB5u3t8eCfXy0RDuL7FaQz+qNhJB6BR4RzMRRyHWBM8G63G1zF6mSYIYV2yixgW
+	 x5bf4nJawh3kaT0tOsY4WlKO02LdPnsxSPRrLeRVJEoXJ4IYeL7vJVSz00VvRSHbOa
+	 FVxXdc/8ggRbw==
+Date: Fri, 14 Nov 2025 16:17:06 +0000
+From: Will Deacon <will@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf script: Fix build by removing unused evsel_script()
-Date: Fri, 14 Nov 2025 14:06:18 +0000
-Message-Id: <20251114140618.229205-1-james.clark@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/2] tracing/wprobe: Fix to avoid inifinite watchpoint
+ exception on arm64
+Message-ID: <aRdWAshGkWjgXW3L@willie-the-truck>
+References: <176179481538.959775.12326313742393696258.stgit@devnote2>
+ <20251104223735.4164f224790ea0aea267dff1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251104223735.4164f224790ea0aea267dff1@kernel.org>
 
-The evsel_script() function is unused since the linked commit. Fix the
-build by removing it.
+On Tue, Nov 04, 2025 at 10:37:35PM +0900, Masami Hiramatsu wrote:
+> Gently ping.
+> 
+> There is a bugfix (or strange behavior) on arm64 hw breakpoint but
+> to fix it cleanly, it should change the perf itself (but I'm not
+> sure why arm64 changes the behavior only for the default overflow
+> handlers.) Anyone knows it?
 
-Fixes the following compilation error:
+It's because GDB expects to handle the stepping itself when using the
+ptrace interface (with a custom overflow handler to deliver SIGTRAP).
 
-  builtin-script.c:347:36: error: unused function 'evsel_script' [-Werror,-Wunused-function]
-  static inline struct evsel_script *evsel_script(struct evsel *evsel)
-                                     ^
-Fixes: 3622990efaab ("perf script: Change metric format to use json metrics")
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/builtin-script.c | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index cf0040bbaba9..581fb101e8be 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -344,11 +344,6 @@ struct evsel_script {
-        u64  samples;
- };
- 
--static inline struct evsel_script *evsel_script(struct evsel *evsel)
--{
--	return (struct evsel_script *)evsel->priv;
--}
--
- static struct evsel_script *evsel_script__new(struct evsel *evsel, struct perf_data *data)
- {
- 	struct evsel_script *es = zalloc(sizeof(*es));
--- 
-2.34.1
-
+Will
