@@ -1,99 +1,86 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8916226056D
-	for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 03:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1F1146A66
+	for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 03:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763091194; cv=none; b=ojOouMJwg9mhqapecz1YyHYJiczsgqrj9kWFP+fuBJ3yZ3RB8SDhGbGPUZXhcincRon5Vb1MyAmnjPDxNTYwDy+dpab3TiO5PdVHTbpTxD2Nfh4kLruxsloqQhGL/zI06Tbr5xjYy7T/UthgKIWY+XH1UoNgcOpF0wiDywGk8Wo=
+	t=1763091260; cv=none; b=Ney+2WVTU3LukFvY8vFQLT2jKNLZdIorFoXvBm6cX4nznGqkdnGJacPt1tsY4+qMw5oQ2WoAgFZS8vg1Hy640hk43lTC0gSmtLvYK0sIh3BpuDGOP3xY4G0wN7Ki64uz3K+ch+S5Fg+TEiihWUNJWf3W8MpMMnaU7FhNnLVuyyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763091194; c=relaxed/simple;
-	bh=MEktD7Q4lr4BzIQfNar3Unfhcxo9clcZUzcd+NqIv1k=;
+	s=arc-20240116; t=1763091260; c=relaxed/simple;
+	bh=eypeEOGS4DTZUcPlaH9EVqH033dMbd2jWX5a0gNfGyI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IMG1SpZhbjyBpzkzg1YARIIofu57dohCsQgvxS5QIeLtHiJvKBgiwK91zco0F+NNPvgOlaWLBBwKjgC4zRna8lFV9OdaSRaCTvOuz3cIE+G2nCvn6cuB4HEvr3tbbijeMt7Y+84JMln6v15ns+tE+bg/IP4iQ7FCd7ff7wj6G8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=XFxhFgfW; arc=none smtp.client-ip=209.85.214.182
+	 MIME-Version; b=ZgbeU0M68UpAcy+IW8Q+XVXOvK5WbthAV76+C7KyFkmGb/vs57uc5W7nW+W/4RgJSxJIPpPCfEFEpNqnUxhgFRY05ReHeAOBzc1ArbwrqmXTOiKsJSQPeZ2J4dYdyiKN9yTIooFgqhlKblS96kxIruZWYoQmEYKsZS30SBRO32A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=diTjSPFn; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="XFxhFgfW"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-297d4a56f97so14960815ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 19:33:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="diTjSPFn"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7aace33b75bso1444262b3a.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 19:34:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1763091192; x=1763695992; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1763091258; x=1763696058; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RwoYW3TpVbjpnbuDSYglQbGQzGJdKy4yKIu8+Puv/Yk=;
-        b=XFxhFgfWOMISEOkzt1hh+/qg8Dtms8qdfA5+6D3ZRiR12aE2diTYHpjV7Lg8+XI+42
-         BCGdtIW17X24ZwXvuIpggXzZOGr8uNzeAILLleYOP4ztjrTCxdv4upwaepjDSxlaW0KF
-         Z/ackthbYRXdQZNli+YPYWOBtzKFcwkMqP5yFlxb4AWB3EGYu95nB85FJxss8tnbJC4G
-         ur5vlLe18pRGhGgy1cRyOFvzSEXSsxeC5tk65/eD96z8OG2yIfaPmABKK2dHDkr+aszd
-         uTHrcI2nXxcMxJHegzENpPHPYHOOZUCYBAlltmSqtZ4YhfZSGD6ec+fK6JJc0KQDj2hY
-         t15Q==
+        bh=06rxs18soTzDGgvX4jMIEpe66BQCyuI5RVVlwhCORYg=;
+        b=diTjSPFn+bKUbjdnhppqtIrEfdXuvv0VHaXUAaXL5Z7h+fyZmG5Q4PMzYwxDm1GLoL
+         z6JOqAl/tYr2tk/XQWxv33JDgjiHTjDVMMPq8qpfLOrxF5WSdIrU/TIlUOTgnUtFexq6
+         CjTbpra+dD6srQlqR5b97WcNgqPzgJHC2hSAL0munrKB2pt30H1EdM8lEB8X6pohOXY5
+         8AX1dcFE1r8DGIeiklOsTy/WkYx+B7LQrUzZZI3ISnsRHkYn7iqhxpLLp+nTKm1QeRty
+         UtPN7ietfSw/zpECd4V9Sh0qjNECWD7FXGEucOj1/i/xeEBdIa7h46tGconFNJw9Kq8H
+         IhOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763091192; x=1763695992;
+        d=1e100.net; s=20230601; t=1763091258; x=1763696058;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=RwoYW3TpVbjpnbuDSYglQbGQzGJdKy4yKIu8+Puv/Yk=;
-        b=W04tTxwlWQRHKO+Vw0L6XUmb0ulUEpxysqjIcEV68yvlCkm2Fm0A5we4tKQZe6TrRZ
-         tB2PP30v69TF+b71z2pxVXCrgkdznp7z5qzkapUXRIvZGk77y/y+I07k+FapFpOikoKT
-         2LsPHlfNjm0XHbvTLnYDmRKI/TPxd8ZXvI3gTJEzjkhUIFg54F9Z3WNVxKvBqitbu1Hf
-         noIpF3RruJ6KQO8fzII+NMJAw/v/aiSHBsUrkm+EDSKnFNaE4iHYNtbfn6hiXpUWCdUE
-         nH2QfegQLF1SWkLvynTCVn5DLUK8S8qvnqwQWNXKbHAGSlc9SoyN8fePJ9aNErzSSTN7
-         QfhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUD+DXsm59/467XHdilppGbtr6E2lMXZdpuLrODPUD8v2NEaUheN0InUiZwDfc8OJRh96awENO3VZKmn7c+vV4g@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuFkqWl5spVgTfeOmSttybP1xMQlchaVBZX0tH+l1iTQBChTaJ
-	ym2cqBKoAdTpLnj58uivJufRAvRLWKPNotALR9a5VTDIs/R5EDZmBaGfJyUQ/muDw7M=
-X-Gm-Gg: ASbGncvYMxtIL8jE56hj+fMOFVZeqPvMBnbxnQUXAGS7AfBTD9jdxVQesw8GSUmgJg4
-	MJ0IbVVYWOx6JPwdRPE1XFGmcy74d3emUYsfJlxfkH2+oH1mAPJyLRKEgY/Un1lkJFA1FZaXg7O
-	gNO55Mu+VQhmTQ4/zQOqzhJggz7jffA8SGgxs2ADBwgPPSOKyhnW7fcSrxYvcFeJO5daEsy/DqG
-	+3RDM0blObbjOqUiDLRchIDcZ7hIs6/LXHfAODY1K/7cepavEEuuK7UkABY9gCToMIE2k18jL6L
-	/HEi/iyggseZ2KNKyqENjRntLZT8oPcjnUcB3YdFLY8eoKDr57ODjcCTThVN4qkfssSwcC3stW4
-	x+uTt+uUQ/XJNbtV6vl2RYFLiGWhwAGwVmdmHoAxsJaTSIrEI4GyPLQRuEIRnR/TMOCDg7cUIEX
-	/G02eZyHLu9pNyDFdGfF0+SLF936L+xw==
-X-Google-Smtp-Source: AGHT+IHfXjnRp3cTFGa+8Qanqxwy10UGsb/fLvaOOKkhNjGlyR2g6kaDXFitMh3x5rYeK43UijaMTw==
-X-Received: by 2002:a17:903:247:b0:252:a80c:3cc5 with SMTP id d9443c01a7336-2986a6beeb4mr15742395ad.22.1763091191709;
-        Thu, 13 Nov 2025 19:33:11 -0800 (PST)
-Received: from L6YN4KR4K9.bytedance.net ([61.213.176.8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c2b0bf0sm40334405ad.71.2025.11.13.19.33.04
+        bh=06rxs18soTzDGgvX4jMIEpe66BQCyuI5RVVlwhCORYg=;
+        b=vmoOBDIoIvUTVzuf3bv3CiJSmCN2POLhFnoyTJgoSmQa7fMkoD6HlZ/QoTKzKSj1Mz
+         rLQ8s51VfeSe5f0EEU7S4JbBafUsGiPMho9ZJun4d8hprO0gyKZWOz6DNzyp6D4k4/46
+         TR/vDDqAb2SiZEfViUs4WD8bECxK19T6fUN7xTPnQJRWlk45W5wrFkSwCQ7LTTxlsys/
+         3mCDCshn3STLixyrvM6vuWg5VQ4EPzfyNHrs+pvNyYGfqr85NqMZQvObg8ps/8V2epWL
+         pKq7XTUVrOq6amhKUY6UAOutLAViIOzGFRX9veZYmytG8muE3V1TuhoFAbSt2mL/ro6Q
+         VaTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ8zLwOK3IgT1r+MLdLbUdc21APrMlYS07BrvYmM0zhJjTNLFrZLNQ94RJg5gwlKVg4nAm583+1hd2HvS46m7o@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4eURe8N03WFmLwgV4PqdvSTsTVri3IzlXd8Z0qP5uycFlZI9D
+	PEX7Kv8BnxYh0I89sd0+222LPmd9DrhklxpHK1utQGdP41wyIEK4EUhwB/tvgnCFvzs=
+X-Gm-Gg: ASbGncuoG96kneGApfi1pjLmvM/7m0NsnRCWSkMqjKegzm9hsaVCh1MjezbkkQ3loko
+	c7Lb8LU8x48DaYah1/HlGhnbHWozLeZA3dkbzZYZQdMMv/OaJR/7ycKoIQqug2UGMo143A/yjub
+	V/i9krtgejA6n5Wn03NrlIU82YQXejwlndJD+s0VelkOUuBAmKgIpzbpi3jlgPKrM57C022uusk
+	UhoAyy88atl3JH/j4HRKmI9qzKEyQzKokYJ0DJLk7ZVyzekP6jNqnQhstrk1YRu83Bn4sPhAh9C
+	YoabEL/CcJo5sLxvt7wQO4Ie/OzHdv6vYsS8t7EgtQ0yzCvFjdUq3TuScVd1jElix/dfx3Fg5zY
+	TDouEfkdYthtcCcU5UKG7LN90XKOrLVD4+mvzQqdzXA2U2lH99gf/2tAYFlwiKOQHLLLEpdnRMO
+	zjGeg2BIKXeOq4HdG9An/CBqEqBEt6ptCrh2jyGA==
+X-Google-Smtp-Source: AGHT+IHxKhWOLK7ixe3MOL0Ju5wRKPpe/wyqhOmYIo/Pknu5a7BOoAwSwSzFp5FswHA7DxNLm8+Y3Q==
+X-Received: by 2002:a05:6a00:12c5:b0:772:8101:870c with SMTP id d2e1a72fcca58-7ba39bc0759mr2295198b3a.11.1763091258072;
+        Thu, 13 Nov 2025 19:34:18 -0800 (PST)
+Received: from T179DVVMRY.bytedance.net ([2001:c10:ff04:0:1000::7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b92782d39bsm3671231b3a.63.2025.11.13.19.34.12
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 13 Nov 2025 19:33:11 -0800 (PST)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: akpm@linux-foundation.org,
-	alex@ghiti.fr,
-	anup@brainfault.org,
-	aou@eecs.berkeley.edu,
-	atish.patra@linux.dev,
-	catalin.marinas@arm.com,
-	cuiyunhui@bytedance.com,
-	dianders@chromium.org,
-	johannes@sipsolutions.net,
-	lihuafei1@huawei.com,
+        Thu, 13 Nov 2025 19:34:17 -0800 (PST)
+From: Liangyan <liangyan.peng@bytedance.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	bigeasy@linutronix.de
+Cc: acme@kernel.org,
+	namhyung@kernel.org,
 	mark.rutland@arm.com,
-	masahiroy@kernel.org,
-	maz@kernel.org,
-	mingo@kernel.org,
-	nicolas.schier@linux.dev,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	suzuki.poulose@arm.com,
-	thorsten.blum@linux.dev,
-	wangjinchao600@gmail.com,
-	will@kernel.org,
-	yangyicong@hisilicon.com,
-	zhanjie9@hisilicon.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	zengxianjun@bytedance.com,
 	linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Cc: Paul Walmsley <pjw@kernel.org>
-Subject: [PATCH v6 2/2] riscv: add HARDLOCKUP_DETECTOR_PERF support
-Date: Fri, 14 Nov 2025 11:32:43 +0800
-Message-Id: <20251114033243.76509-3-cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
-In-Reply-To: <20251114033243.76509-1-cuiyunhui@bytedance.com>
-References: <20251114033243.76509-1-cuiyunhui@bytedance.com>
+	linux-kernel@vger.kernel.org,
+	Liangyan <liangyan.peng@bytedance.com>
+Subject: [PATCH v3] perf/core: Fix pending work re-queued in __perf_event_overflow
+Date: Fri, 14 Nov 2025 11:33:49 +0800
+Message-Id: <20251114033349.3048-1-liangyan.peng@bytedance.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
+In-Reply-To: <20251109164122.80138-1-liangyan.peng@bytedance.com>
+References: <20251109164122.80138-1-liangyan.peng@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -102,65 +89,67 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Enable the HARDLOCKUP_DETECTOR_PERF function based on RISC-V SSE.
+We got warning below during perf test.
+[  467.100914] [      T1] WARNING: CPU: 0 PID: 1 at kernel/events/core.c:5147 put_pmu_ctx+0x2ef/0x3c0
+[  467.107702] [      T1] CPU: 0 UID: 0 PID: 1 Comm: systemd Kdump: loaded Tainted: G            E       6.18.0-rc4-dirty #114 PREEMPT(voluntary)
+[  467.109835] [      T1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1
+[  467.111027] [      T1] RIP: 0010:put_pmu_ctx+0x2ef/0x3c0
+[  467.122081] [      T1] Call Trace:
+[  467.122463] [      T1]  <TASK>
+[  467.124822] [      T1]  __free_event+0x337/0xa50
+[  467.125306] [      T1]  perf_pending_task+0x10f/0x3b0
+[  467.125824] [      T1]  task_work_run+0x140/0x210
+[  467.127413] [      T1]  exit_to_user_mode_loop+0x10e/0x130
+[  467.127965] [      T1]  do_syscall_64+0x26d/0x2e0
+[  467.128453] [      T1]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  467.129025] [      T1] RIP: 0033:0x7f01d22349ca
+[  467.135157] [      T1]  </TASK>
 
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Paul Walmsley <pjw@kernel.org>
+A race condition occurs between task context and IRQ context when
+handling sigtrap tracepoint event overflows:
+
+1. In task context, an event is overflowed and its pending work is
+   queued to task->task_works
+2. Before pending_work is set, the same event overflows in IRQ context
+3. Both contexts queue the same perf pending work to task->task_works
+
+This double queuing causes:
+- task_work_run() enters infinite loop calling perf_pending_task()
+- Potential warnings and use-after-free when event is freed in
+perf_pending_task()
+
+Fix the race by disabling interrupts during queuing of perf pending work.
+
+Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
+Reported-by: Xianjun Zeng <zengxianjun@bytedance.com>
+Signed-off-by: Liangyan <liangyan.peng@bytedance.com>
 ---
- arch/riscv/Kconfig           |  3 +++
- drivers/perf/riscv_pmu_sbi.c | 10 ++++++++++
- 2 files changed, 13 insertions(+)
+v3: Refine commit log suggested by Sebastian.
+---
+ kernel/events/core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index fadec20b87a8e..46ccd33732fa8 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -186,6 +186,9 @@ config RISCV
- 	select HAVE_PAGE_SIZE_4KB
- 	select HAVE_PCI
- 	select HAVE_PERF_EVENTS
-+	select HAVE_PERF_EVENTS_NMI if RISCV_PMU_SBI_SSE
-+	select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && HAVE_PERF_EVENTS_NMI
-+	select WATCHDOG_PERF_ADJUST_PERIOD if HARDLOCKUP_DETECTOR_PERF
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index c852f64a50221..0c7c5924687c9 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -22,6 +22,7 @@
- #include <linux/sched/clock.h>
- #include <linux/soc/andes/irq.h>
- #include <linux/workqueue.h>
-+#include <linux/nmi.h>
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index cae921f4d137..7c63e5fdd334 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10433,6 +10433,16 @@ static int __perf_event_overflow(struct perf_event *event,
  
- #include <asm/errata_list.h>
- #include <asm/sbi.h>
-@@ -1192,6 +1193,13 @@ static int pmu_sbi_setup_sse(struct riscv_pmu *pmu)
- }
- #endif
+ 		notify_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
  
-+#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
-+bool arch_perf_nmi_is_available(void)
-+{
-+	return IS_ENABLED(CONFIG_RISCV_PMU_SBI_SSE);
-+}
-+#endif
++		/*
++		 * Task context queues the work via task_work_add() but has not yet
++		 * set event->pending_work when the same event overflows in
++		 * IRQ context. The IRQ path, seeing !event->pending_work,
++		 * queues the work again.
++		 * The double queuing causes corruption in task->task_works.
++		 * Prevent this by disabling interrupts around the critical section.
++		 */
++		guard(irqsave)();
 +
- static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
- {
- 	struct riscv_pmu *pmu = hlist_entry_safe(node, struct riscv_pmu, node);
-@@ -1618,6 +1626,8 @@ static int __init pmu_sbi_devinit(void)
- 	/* Notify legacy implementation that SBI pmu is available*/
- 	riscv_pmu_legacy_skip_init();
- 
-+	lockup_detector_retry_init();
-+
- 	return ret;
- }
- device_initcall(pmu_sbi_devinit)
+ 		if (!event->pending_work &&
+ 		    !task_work_add(current, &event->pending_task, notify_mode)) {
+ 			event->pending_work = pending_id;
 -- 
-2.39.5
+2.39.3 (Apple Git-145)
 
