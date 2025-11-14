@@ -1,55 +1,45 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D478279DC0;
-	Fri, 14 Nov 2025 08:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1AC26CE25;
+	Fri, 14 Nov 2025 08:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763107330; cv=none; b=oKQNfaORl7emQYA5E+TFftuLHLl0e/eUofRywyAzLduwCwR1rm2NZYb7xmv2vDsrNr4Kk6qqcYt4kIQCWkGXyvrrXKryq9dEz4kqER9UeQGHV3hbEC8EIgGI9IiTgMv4Wvm0tbEMkibgfNyPvVrPvAyDWzPGJHz80jNgNeCg7zc=
+	t=1763107672; cv=none; b=jQOwSZUOwtTPCr1r9/rwJwYhf/qwi2ZO0QwMYS0Cd2REs/BkVgve8tzM2hli5yFdNUkt7/s7Fu8OwqG4WeLWcLgIi3FgROLGPxuYUDCTrSEJCn5SguoLF1DwvMZnGOr29uXcSts0K0S6MqtRUKehJmY25sh1MT58Zuf076nXB98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763107330; c=relaxed/simple;
-	bh=t8FvFDcwml7eN5Pu3DEI1yBsCR7WXaS/+SVQSnBwAfk=;
+	s=arc-20240116; t=1763107672; c=relaxed/simple;
+	bh=/UDmOgmrTSBOSNZVGiQrkY/E6AOxVYxscfsxhWDvuHU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t3iqZ7woj40edc2FsVP/TzqPPfRIx52NbTjhHG6i0f0Gtm8P1EvLDb/odUXiFO6Ee6lVVW+nbdl6lAO6WRVJjEOlNBSnquRld+qWksTOThgTlXGjPv83xy0w9Lus0blxqDSXyeJx+ekCoTCLj4hW/ivR0frk3S8Puv9ajsoKons=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2BhAnu9u; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JP5OtxH5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=LFkTrAHL/opXa1wSj5RcU7f4CjlNMUm5za5R0bmpJrrfeCtLLDC+hgAXMDhPeZMrErttWFGckKI5ZMuEgvoDRxvPN/SCJvih16HNrD+W8c1oK0xmjmjAgNSsXg5SerkCohWkx4tFytykr6fUFfHR7uVW2kPqLH51EgJgihlG3qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sb68trvG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2BhAnu9u";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JP5OtxH5"
-Date: Fri, 14 Nov 2025 09:02:03 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1763107324;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SrVOPdCwE2JO7jfKCTx6/W/Y6YwB9uSRmSqmI/gBK6M=;
-	b=2BhAnu9ugHNFrVOTC9RiRVUBHhRZWk0iS1fwoyl9Bz1w0tDJeb5/lmZLoZe4Xtf5ivuASQ
-	neoJMha7BPbacvIGi5icKQ+k7ckI5cb3d3LOHnNKg7+3pY8fR6AVKI2tKszJRc2gVSr2KC
-	lT2CDbuM3q30+AGCYrClQDXi95IYbLtLTBT0bAEjAuI/GnMR1NuOaVTxFQxreqkQTSeSma
-	zqsjpVDrO+tis5OwSGGxLnnOvP9Ef+4y3It8JpsFWwdCsfLPENH2Pj8H8hLbG+YAIu/4mR
-	va/7XFoEyAPlyYbrbhaL3Kl+VKfVWqNOCOkH46/tssllTwbHOMs5DbCpGTL8mw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1763107324;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SrVOPdCwE2JO7jfKCTx6/W/Y6YwB9uSRmSqmI/gBK6M=;
-	b=JP5OtxH5m31dquP+yCpVVrPW2LYRHEKOwl+h91gi7IrjB6tpiEnkW10YKadi8t6WkJzi9v
-	hmQx+fZJcBYO14BA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Liangyan <liangyan.peng@bytedance.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
-	zengxianjun@bytedance.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf/core: Fix pending work re-queued in
- __perf_event_overflow
-Message-ID: <20251114080203.kFM7NGAU@linutronix.de>
-References: <20251109164122.80138-1-liangyan.peng@bytedance.com>
- <20251114033349.3048-1-liangyan.peng@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sb68trvG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44FACC4CEF8;
+	Fri, 14 Nov 2025 08:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763107670;
+	bh=/UDmOgmrTSBOSNZVGiQrkY/E6AOxVYxscfsxhWDvuHU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sb68trvGIZFkRzHD5IRKW/oKkOfFm9z/sv7jyLvT4dQeaCOmnGt66rsDrkBmEN2Yq
+	 3Fis2i48R0wckK54AMabj0xUAr+JPcbQQGgXnKbD8026J+OsCo+MaJnHquqVv8Dc5B
+	 HWWhsi1LYZJaHo5IUaNTiBxTYzQdyIL8kI8U7XFEb+aAZpsULxe7ulGiwG65RNAuZs
+	 p/vVuYCyXLy2Yg2LckjNk9VQ7yxomTZkXpxcj5jYeJM5IwSeYtY5w3vnSoC6aEgP6h
+	 89uIReeeAFltewm8jLsQuA6uk22xlbozEzHcqlPg3tbJza0puSKHjhhGQIY9eUct/d
+	 KnN+J1x6UT5pg==
+Date: Fri, 14 Nov 2025 00:07:48 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: Re: [PATCH 1/5] perf jitdump: Fix PID namespace detection
+Message-ID: <aRbjVG3q2kCOl8BJ@google.com>
+References: <20251105191626.34998-1-iii@linux.ibm.com>
+ <20251105191626.34998-2-iii@linux.ibm.com>
+ <aQ1WiC3Id82pTHAI@google.com>
+ <b02b6c7a1fcea87248a60ee9c94aaa6e078316d0.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,82 +48,137 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251114033349.3048-1-liangyan.peng@bytedance.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b02b6c7a1fcea87248a60ee9c94aaa6e078316d0.camel@linux.ibm.com>
 
-On 2025-11-14 11:33:49 [+0800], Liangyan wrote:
-> We got warning below during perf test.
-> [  467.100914] [      T1] WARNING: CPU: 0 PID: 1 at kernel/events/core.c:5147 put_pmu_ctx+0x2ef/0x3c0
-> [  467.107702] [      T1] CPU: 0 UID: 0 PID: 1 Comm: systemd Kdump: loaded Tainted: G            E       6.18.0-rc4-dirty #114 PREEMPT(voluntary)
-> [  467.109835] [      T1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1
-> [  467.111027] [      T1] RIP: 0010:put_pmu_ctx+0x2ef/0x3c0
-> [  467.122081] [      T1] Call Trace:
-> [  467.122463] [      T1]  <TASK>
-> [  467.124822] [      T1]  __free_event+0x337/0xa50
-> [  467.125306] [      T1]  perf_pending_task+0x10f/0x3b0
-> [  467.125824] [      T1]  task_work_run+0x140/0x210
-> [  467.127413] [      T1]  exit_to_user_mode_loop+0x10e/0x130
-> [  467.127965] [      T1]  do_syscall_64+0x26d/0x2e0
-> [  467.128453] [      T1]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [  467.129025] [      T1] RIP: 0033:0x7f01d22349ca
-> [  467.135157] [      T1]  </TASK>
+Hello,
+
+Sorry for the delay.
+
+On Fri, Nov 07, 2025 at 09:19:47AM +0100, Ilya Leoshkevich wrote:
+> On Thu, 2025-11-06 at 18:16 -0800, Namhyung Kim wrote:
+> > On Wed, Nov 05, 2025 at 08:10:24PM +0100, Ilya Leoshkevich wrote:
+> > > perf inject fails to detect jitdump file produced by a process
+> > > running in a different PID namespace if this process has not exited
+> > > yet.
+> > > 
+> > > The PID namespace heuristic in jit_detect() compares two PIDs:
+> > > 
+> > > * pid: outermost NStgid of mmap(jitdump) caller from perf's PoV.
+> > > * nsinfo__nstgid(nsi): innermost NStgid of mmap(jitdump) caller
+> > > from
+> > >                        perf's PoV.
+> > > 
+> > > The semantics of the in_pidns variable can be seen in, e.g.,
+> > > nsinfo__get_nspid(): it's true if and only if perf and the profiled
+> > > process are in different PID namespaces.
+> > > 
+> > > The current logic is clearly inverted: if pid and
+> > > nsinfo__nstgid(nsi)
+> > > are different, then the profiled process must be in a different PID
+> > > namespace. This, of course, ignores that fact that they may end up
+> > > being equal by accident, but that's not the point here.
+> > > 
+> > > Fix by flipping the comparison.
+> > > 
+> > > Changing just that, however, breaks the case when the process has
+> > > exited. Add explicit support for that by adding "synthesized" field
+> > > to
+> > > nsinfo, which tracks whether NStgid was obtained from a running
+> > > process (ignoring considerations of PID reuse or running inject on
+> > > a different machine). When the namespace information is
+> > > synthesized,
+> > > assume the process ran in a different PID namespace.
+> > 
+> > I'm not sure I'm following.  It'd be great if anyone understand the
+> > topic well could review.
 > 
-> A race condition occurs between task context and IRQ context when
-> handling sigtrap tracepoint event overflows:
+> Perhaps some data from the testcase from [5/5] can make it more clear.
+> Here are the PIDs that exist in reality:
 > 
-> 1. In task context, an event is overflowed and its pending work is
->    queued to task->task_works
-> 2. Before pending_work is set, the same event overflows in IRQ context
-> 3. Both contexts queue the same perf pending work to task->task_works
+>              unshare[a] perf-record unshare[b] jshell
+> Host PIDNS:  1000       1001        1002       1003
+> PIDNS[a]:       -          1           2          3
+> PIDNS[b]:       -          -           -          1
 > 
-> This double queuing causes:
-> - task_work_run() enters infinite loop calling perf_pending_task()
-> - Potential warnings and use-after-free when event is freed in
-> perf_pending_task()
+> In jit_detect() we deal with 2 of them.
 > 
-> Fix the race by disabling interrupts during queuing of perf pending work.
+> - pid is jshell@PIDNS[a].
+>   It is taken from the MMAP2 event, this is how perf sees jshell.
 > 
-> Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
-> Reported-by: Xianjun Zeng <zengxianjun@bytedance.com>
-> Signed-off-by: Liangyan <liangyan.peng@bytedance.com>
-> ---
-> v3: Refine commit log suggested by Sebastian.
-
-I assumed you get rid of the warning backtrace as it adds to value but
-instead you added the whole thing including timestamps and so on.
-
-> ---
->  kernel/events/core.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> - pid2 is jshell@PIDNS[b].
+>   It is taken from "jit-1.dump", this is how jshell sees itself.
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index cae921f4d137..7c63e5fdd334 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10433,6 +10433,16 @@ static int __perf_event_overflow(struct perf_event *event,
->  
->  		notify_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
->  
-> +		/*
-> +		 * Task context queues the work via task_work_add() but has not yet
-> +		 * set event->pending_work when the same event overflows in
-> +		 * IRQ context. The IRQ path, seeing !event->pending_work,
-> +		 * queues the work again.
-> +		 * The double queuing causes corruption in task->task_works.
+> - nsinfo__nstgid(nsi) ideally should be jshell@PIDNS[b].
+>   This is jshell's innermost NStgid.
+>   But perf can see it differently. This is the core of the problem this
+>   series deals with.
 
-    The same event can be enqueued in TASK and IRQ context because
-    assigning perf_event::pending_work is not atomic in regard to
-    enqueue. task_work_add() does not prevent double enqueue.
+Thanks a lot for the example and explanation!  I'm trying to understand.
+:)
 
-The above should be enough if it is not self explained :)
-However I did think that we have per-context events here. But it seems
-those are not used in this case here.
+> 
+> Why does nsinfo__nstgid(nsi) vary? Because the kernel does not record
+> it, and perf has to guess it. I have a WIP patch to fix that [1], but
+> it needs a lot more work at this point.
+> 
+> How does perf guess it? It looks into /proc/$PID/status. This is quite
+> unreliable, but this is the best perf can do under circumstances. As a
+> result we have 3 possibilities:
+> 
+> - The original process is still around. This is the buggy case. In this
+>   case nsinfo__nstgid(nsi) == jshell@PIDNS[b]. IMHO this is a very
+>   clear indication of namespacing, and that's why the condition should
+>   be flipped.
 
-> +		 * Prevent this by disabling interrupts around the critical section.
-> +		 */
-> +		guard(irqsave)();
-> +
->  		if (!event->pending_work &&
->  		    !task_work_add(current, &event->pending_task, notify_mode)) {
->  			event->pending_work = pending_id;
+So perf would look at /proc/3/status and the file would have the below
 
-Sebastian
+  NStgid:  1003  3  1
+
+and *in_pidns should be true, right?
+
+> 
+> - The original process has exited and PID was not reused. I believe
+>   this is the use case the current code has been extensively tested
+>   with. In this case perf assumes there was no namespacing and
+>   nsinfo__nstgid(nsi) == pid. That's why I need the "synthesized"
+>   field: to indicate that NStgid is just an assumption and didn't come
+>   from any real data source.
+
+Ok, can you please put short comments on each boolean field so that we
+can see the meaning of them clearly?
+
+> 
+> - The original process has exited ans PID was reused. I am not trying
+>   to deal with this here, because this is rare and absolutely anything
+>   is possible. The only concern is running perf inject on a different
+>   machine, but I'm also not sure whether we should care about this.
+
+Fair enough.
+
+Thanks,
+Namhyung
+
+> 
+> [1]
+> https://github.com/iii-i/linux/commit/4b519b774eed850abe0757df39be13a704d2748e
+> 
+> [...]
+> 
+> > > diff --git a/tools/perf/util/namespaces.h
+> > > b/tools/perf/util/namespaces.h
+> > > index e95c79b80e27c..41ba2ea8137e5 100644
+> > > --- a/tools/perf/util/namespaces.h
+> > > +++ b/tools/perf/util/namespaces.h
+> > > @@ -38,6 +38,7 @@ DECLARE_RC_STRUCT(nsinfo) {
+> > >  	bool			in_pidns;
+> > >  	char			*mntns_path;
+> > >  	refcount_t		refcnt;
+> > > +	bool			synthesized;
+> > 
+> > It'd be nice if you can put this along with other bool fields.
+> 
+> Sure, will do.
+> 
+> [...]
+> > 
