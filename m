@@ -1,155 +1,175 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010037.outbound.protection.outlook.com [40.93.198.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1F1146A66
-	for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 03:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763091260; cv=none; b=Ney+2WVTU3LukFvY8vFQLT2jKNLZdIorFoXvBm6cX4nznGqkdnGJacPt1tsY4+qMw5oQ2WoAgFZS8vg1Hy640hk43lTC0gSmtLvYK0sIh3BpuDGOP3xY4G0wN7Ki64uz3K+ch+S5Fg+TEiihWUNJWf3W8MpMMnaU7FhNnLVuyyg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763091260; c=relaxed/simple;
-	bh=eypeEOGS4DTZUcPlaH9EVqH033dMbd2jWX5a0gNfGyI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZgbeU0M68UpAcy+IW8Q+XVXOvK5WbthAV76+C7KyFkmGb/vs57uc5W7nW+W/4RgJSxJIPpPCfEFEpNqnUxhgFRY05ReHeAOBzc1ArbwrqmXTOiKsJSQPeZ2J4dYdyiKN9yTIooFgqhlKblS96kxIruZWYoQmEYKsZS30SBRO32A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=diTjSPFn; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF2C1EDA2B;
+	Fri, 14 Nov 2025 06:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763101186; cv=fail; b=BSj/jEfgDMv8YdQxzk3KALW3+lA+7YObTv+A05lcX8ijlPwyHicHC1N2FpXXuBXAanQ0BGY6NlWg137WyvuccyLbp15Ut5oSyIry2QwXqD/r7zJtnkfqnocOb9V2AB9jNbhlHWw70czEjqa36IrjCZxY8CdTsRU5t1EIuHGJeK0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763101186; c=relaxed/simple;
+	bh=LJjpujdKKNydWOOsi4NYg9QKP06hnwA4DscVAyPUMdQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=O89hbULIEcAtOkUI2HlbOJBETgGhGIYJ2g8JWOQiWaXG+iNgo+Z88BPFAFo40KiGBcsRsHDWfWw8EVt5BlYFhFmeDzzrqrds/16ox+IU0V7vfebNgSVv5NV9JU0P8INeU5erfyPhP99qbHN/SBJiaOBuvx9b7hSEIjDfQ7ckAQQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Rw8vPHr3; arc=fail smtp.client-ip=40.93.198.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="diTjSPFn"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7aace33b75bso1444262b3a.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 19:34:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1763091258; x=1763696058; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=06rxs18soTzDGgvX4jMIEpe66BQCyuI5RVVlwhCORYg=;
-        b=diTjSPFn+bKUbjdnhppqtIrEfdXuvv0VHaXUAaXL5Z7h+fyZmG5Q4PMzYwxDm1GLoL
-         z6JOqAl/tYr2tk/XQWxv33JDgjiHTjDVMMPq8qpfLOrxF5WSdIrU/TIlUOTgnUtFexq6
-         CjTbpra+dD6srQlqR5b97WcNgqPzgJHC2hSAL0munrKB2pt30H1EdM8lEB8X6pohOXY5
-         8AX1dcFE1r8DGIeiklOsTy/WkYx+B7LQrUzZZI3ISnsRHkYn7iqhxpLLp+nTKm1QeRty
-         UtPN7ietfSw/zpECd4V9Sh0qjNECWD7FXGEucOj1/i/xeEBdIa7h46tGconFNJw9Kq8H
-         IhOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763091258; x=1763696058;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=06rxs18soTzDGgvX4jMIEpe66BQCyuI5RVVlwhCORYg=;
-        b=vmoOBDIoIvUTVzuf3bv3CiJSmCN2POLhFnoyTJgoSmQa7fMkoD6HlZ/QoTKzKSj1Mz
-         rLQ8s51VfeSe5f0EEU7S4JbBafUsGiPMho9ZJun4d8hprO0gyKZWOz6DNzyp6D4k4/46
-         TR/vDDqAb2SiZEfViUs4WD8bECxK19T6fUN7xTPnQJRWlk45W5wrFkSwCQ7LTTxlsys/
-         3mCDCshn3STLixyrvM6vuWg5VQ4EPzfyNHrs+pvNyYGfqr85NqMZQvObg8ps/8V2epWL
-         pKq7XTUVrOq6amhKUY6UAOutLAViIOzGFRX9veZYmytG8muE3V1TuhoFAbSt2mL/ro6Q
-         VaTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ8zLwOK3IgT1r+MLdLbUdc21APrMlYS07BrvYmM0zhJjTNLFrZLNQ94RJg5gwlKVg4nAm583+1hd2HvS46m7o@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4eURe8N03WFmLwgV4PqdvSTsTVri3IzlXd8Z0qP5uycFlZI9D
-	PEX7Kv8BnxYh0I89sd0+222LPmd9DrhklxpHK1utQGdP41wyIEK4EUhwB/tvgnCFvzs=
-X-Gm-Gg: ASbGncuoG96kneGApfi1pjLmvM/7m0NsnRCWSkMqjKegzm9hsaVCh1MjezbkkQ3loko
-	c7Lb8LU8x48DaYah1/HlGhnbHWozLeZA3dkbzZYZQdMMv/OaJR/7ycKoIQqug2UGMo143A/yjub
-	V/i9krtgejA6n5Wn03NrlIU82YQXejwlndJD+s0VelkOUuBAmKgIpzbpi3jlgPKrM57C022uusk
-	UhoAyy88atl3JH/j4HRKmI9qzKEyQzKokYJ0DJLk7ZVyzekP6jNqnQhstrk1YRu83Bn4sPhAh9C
-	YoabEL/CcJo5sLxvt7wQO4Ie/OzHdv6vYsS8t7EgtQ0yzCvFjdUq3TuScVd1jElix/dfx3Fg5zY
-	TDouEfkdYthtcCcU5UKG7LN90XKOrLVD4+mvzQqdzXA2U2lH99gf/2tAYFlwiKOQHLLLEpdnRMO
-	zjGeg2BIKXeOq4HdG9An/CBqEqBEt6ptCrh2jyGA==
-X-Google-Smtp-Source: AGHT+IHxKhWOLK7ixe3MOL0Ju5wRKPpe/wyqhOmYIo/Pknu5a7BOoAwSwSzFp5FswHA7DxNLm8+Y3Q==
-X-Received: by 2002:a05:6a00:12c5:b0:772:8101:870c with SMTP id d2e1a72fcca58-7ba39bc0759mr2295198b3a.11.1763091258072;
-        Thu, 13 Nov 2025 19:34:18 -0800 (PST)
-Received: from T179DVVMRY.bytedance.net ([2001:c10:ff04:0:1000::7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b92782d39bsm3671231b3a.63.2025.11.13.19.34.12
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 13 Nov 2025 19:34:17 -0800 (PST)
-From: Liangyan <liangyan.peng@bytedance.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	bigeasy@linutronix.de
-Cc: acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	zengxianjun@bytedance.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Liangyan <liangyan.peng@bytedance.com>
-Subject: [PATCH v3] perf/core: Fix pending work re-queued in __perf_event_overflow
-Date: Fri, 14 Nov 2025 11:33:49 +0800
-Message-Id: <20251114033349.3048-1-liangyan.peng@bytedance.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-145)
-In-Reply-To: <20251109164122.80138-1-liangyan.peng@bytedance.com>
-References: <20251109164122.80138-1-liangyan.peng@bytedance.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Rw8vPHr3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bawfsQ1j8r5AhLTdx89qIuG6ZbuTlRsKHGXKZeSY2hiF9xyJdbA/aHdC2UQzpIukAY4rw1jX3M0sSRfK7zC/BkPEqRAFPyIqgCF09imI6S93J3DBJHbYcc7QAohmjcbRPx7J3a34uLkrOF8wqoNiV61VYSjd+tCyTONTYWySbPO3Oo3W1AYbSzStV4JvHBocyKyDUzoFZd0t40ed9c98Cg9r8m7VxPom2n9ciE/jb747vRhyUopLEzXpDRl7QItC6YD5B3WZLKDCrfT7ySB9mZfZXWq7d+yMgtNrCDUBH9HGeo9jqYsF7bv4uIUjK3cPmE3kRV9xovZFROSGFyq0rg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BlY0JjOFu+SpS7sZ5ysQugPxTdZPr6s6LuborW5uUCU=;
+ b=Mm9E/LZ9cgEc8HcTnZCePJuxpWOeXltXGHA19Qzt5zOoMEzna5i0rpBo1L1VBfJl5Hra43Tf7KR9WKzmrZSvCer8h+FBZxeVf7gJe3GYXYWJ0lTVIW8PYikFM7ycT6B+6ybO9XkKm+VrMwv0+APmVll7/EXg7UV+/j0IWO02QI81ve2NxzDHE3vW8uCRYcvvFLdaoRJgbNm7KJ3ttKIGDGvZYJm+Qro12Zdq63sQTjdZiVi9mRn46Gjkga2K8h74wVxWjUW0yrhTtRn8GKXcZbXXuvfHcs7oyzZS+1/1U0FzdITlf/Rr0AWpQjj1l9fmEITKwY5a2RKoevfSYqL8FA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BlY0JjOFu+SpS7sZ5ysQugPxTdZPr6s6LuborW5uUCU=;
+ b=Rw8vPHr3RRaGwTmewqYz/uxJEdmH8J8tQtFv6PsKAlScL3nIDaaooAEpk2DqsR1nwz+iqG6DCg7wdkLTycKFAxYAuI7HfJgx3GM/vv12ddFinS52nSesZUVjuTfBykCEsLuURlvbbLqxK2oDF9Egf0n9FPwhii0Z7+LszonZkxg=
+Received: from BYAPR08CA0031.namprd08.prod.outlook.com (2603:10b6:a03:100::44)
+ by SA3PR12MB9158.namprd12.prod.outlook.com (2603:10b6:806:380::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Fri, 14 Nov
+ 2025 06:19:40 +0000
+Received: from MWH0EPF000A6730.namprd04.prod.outlook.com
+ (2603:10b6:a03:100:cafe::e2) by BYAPR08CA0031.outlook.office365.com
+ (2603:10b6:a03:100::44) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.17 via Frontend Transport; Fri,
+ 14 Nov 2025 06:19:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ MWH0EPF000A6730.mail.protection.outlook.com (10.167.249.22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9320.13 via Frontend Transport; Fri, 14 Nov 2025 06:19:39 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 13 Nov
+ 2025 22:19:38 -0800
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 13 Nov
+ 2025 22:19:38 -0800
+Received: from [10.252.219.240] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Thu, 13 Nov 2025 22:19:31 -0800
+Message-ID: <780ec006-ca77-40bc-ae9e-8ed0ec093dc5@amd.com>
+Date: Fri, 14 Nov 2025 11:49:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 44/44] KVM: x86/pmu: Elide WRMSRs when loading guest
+ PMCs if values already match
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
+	<zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, Huacai Chen
+	<chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, "H. Peter Anvin"
+	<hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
+ Melo" <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini
+	<pbonzini@redhat.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<kvm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, Kan Liang
+	<kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>, Mingwei Zhang
+	<mizhang@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, "Sandipan
+ Das" <sandipan.das@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+References: <20250806195706.1650976-1-seanjc@google.com>
+ <20250806195706.1650976-45-seanjc@google.com>
+Content-Language: en-US
+From: Manali Shukla <manali.shukla@amd.com>
+In-Reply-To: <20250806195706.1650976-45-seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000A6730:EE_|SA3PR12MB9158:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7bae66b6-14ce-4d0f-b4e5-08de2345cad1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|7416014|1800799024|7053199007|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VUNpOGpobXdNZkx3NEhVcE9relBCUVBnbXF0aTI0UUJJVVY4b1RPdXZiVS9T?=
+ =?utf-8?B?aklXTkcvTGNuZmlNYTdpZHg2TDF4eG5nMFRVd1NiQ2hpQm5RWXkzcHBXQmJ2?=
+ =?utf-8?B?N1pDS3llZ2N4SnZPWUFMcEc3cStuT2dZdmZNSlgyNjZhZjhiejRUYjlrWmFJ?=
+ =?utf-8?B?UnBITDRCdjdoU2U3bnFJRG4yMmR2T0hjcU1GT2tvVVlrVG1TeXZKVG1kdVMx?=
+ =?utf-8?B?dkk0TlBxcmErcGtSUmdhZzE5WnRlcnFnOS9jZStpQzJBWkNJVmlwUXFMeFhx?=
+ =?utf-8?B?KzNjQVVjSXMwWW42RWZuZ3J4NUNBaHBRNDNKUVVUS0FEblpBT1Q2TVo2bEZ6?=
+ =?utf-8?B?amxlbytYRkI5UHE1UXpTYVk0QTVlOFcwQkc0ckRJM1RNeG9xZkYrVmtrTUhl?=
+ =?utf-8?B?TVMwS0RVd2dRQjVYWE5RUXNTWjdPcDNZSW56eXJGR3VtZjhxOWR5REppSWJS?=
+ =?utf-8?B?NHFOblVUT09UVkd1dDBDaXE1VmV2TW5mazd2L0pzd2tYT0I3SnBCUGJIN1pJ?=
+ =?utf-8?B?dzVCL1N0QmNUUlE1bWxYdXZrSmhPZENKbWFIcS9wWHRMQ2xEbitPVU9GWjZB?=
+ =?utf-8?B?NkpaeTRJVUoxTytJN2xQSXVEVUZHQ3JQU3I4WlhUUFE0NUNtNlJ3cWRZSUpi?=
+ =?utf-8?B?OEZXUGZ4V0xOVVJra1p3ZlJrbTJpUDE2WlZodEdMbEljaGNpK1RSd0ZTUGw1?=
+ =?utf-8?B?b1k0c1BLUjBuU0kya0V2NTdRMkJSWTdlRzNNUVk3SFZzYkg1OWw0a0t0VmQv?=
+ =?utf-8?B?aXV2MUp3RytBRjR0M2w4T2xBcmxON1pYWENIK2hVWlRWRWJWRHkxVVRNZVR6?=
+ =?utf-8?B?STVrakVkMlV6L2t2Q2RXOG5SR2dWdVIrUFFjck9iR2xKUkdRZXBraG1MWEZi?=
+ =?utf-8?B?NkpFQlVzTXBjUlNiQUcxK25ZSWc2dDVsMVVYSEk0blkzUWtnWVh5a2QzaHNy?=
+ =?utf-8?B?TDlWa3pQcVpmT3lNR3FVakNEdndTK1ROYW1iL0N4b0lBN2dSQVgzalA4SHI5?=
+ =?utf-8?B?SlhBTldRWGlWOXBYRjBiVWZmald3L2FkSmprWEdnb3lPQlJHOU9PM1FsclRK?=
+ =?utf-8?B?MlVQazZ2T25FendnRlJBemo1M0lCZm1OT2lvbVVJdGVnOGVzY2poTUlyeFlR?=
+ =?utf-8?B?Q0xaTjZKamZ3b2VvanlvNVFVMVVBMVlqVTAzUmFncnoxMFVUd3RGQVdYT3Ex?=
+ =?utf-8?B?eE8xUFk1Mk95VldjK2txcVBaVm1wTzk5bnMvYTU1SEpucnl3QlEzOGJ4MXly?=
+ =?utf-8?B?OWw3SDN6RXREVndSRHoxRHJVK0VhelZXS2kvNytldFRTTVJsSEhld3p1V0Jq?=
+ =?utf-8?B?UGFtMmwxM0NVOTl3WGt5ejd5bzFNb2FVUFhFZGhmR3VhYWY2TitwQlgxT05y?=
+ =?utf-8?B?MzBxQVZRa1JaQjlKbjhiak15Wm5mMGtEWFVicWZWZFUyUS9saFJldG9QTzM4?=
+ =?utf-8?B?RGJQSTFFOE5SMkJLRkJjNlRQTDBZOGljOE1BdXh6S2tNK2g1T3BSLytEcUNZ?=
+ =?utf-8?B?NnRxaUd4dW9vRDAxMVpmQnRJVGxmMjNoZFhKeWh1ZjBLYXNKbGN3a1lYTEFz?=
+ =?utf-8?B?bVgwSjcvNGZOdFhEMlNlYmkxS0NNeEo0Yi9MRFEwMHdLclJjMzFmcmhWOWFo?=
+ =?utf-8?B?SEVuN2lyMzhveUdpNldYV2ZEaUtEY1l6QUd1Nndsbm54THFEVXEvSWxhZ1ll?=
+ =?utf-8?B?YTE2OHBuVG1TL0VFUHdKOElEQnFDWE9SWVJ6WHRyTzNPS1hvU0dEVUZjb0tU?=
+ =?utf-8?B?dDd0dTB3NkF0S0s4ZVpwb0dHL0ZtekRrOEF1dlZKc0ZEUUR2elUyZVVWLzBm?=
+ =?utf-8?B?aXR2SUhDaUc5cy92Z3JtRU41MFk4NFZmdEU4TnF6d3NXQmNCNDh6SmVxY25D?=
+ =?utf-8?B?UkxRRTFBaXhyYzNNQUlUUmJlcDR0MHB2N1FmMTMxTm90UE1Zd3EwMmVyMjJP?=
+ =?utf-8?B?NGhZVHJUcnRqeCtZZTVOaWNkVUtLVng4b2VhZzluR1FHTE1NYlVzakdyTDVu?=
+ =?utf-8?B?MCtwM2lCVVZBMmdGclAvL0ltNWZRSFpwY3VLZEdLMmpLRmlPUkZnMUIyK1Ax?=
+ =?utf-8?B?STBFdzVyUkJUcXFXazRvL1JUdGczdSswTGZLYW40ckJqQWpWSVdobHhuRDF1?=
+ =?utf-8?Q?KFiy63jKx4vPBSIhvOwkZIh/n?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(7416014)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2025 06:19:39.4251
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7bae66b6-14ce-4d0f-b4e5-08de2345cad1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000A6730.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9158
 
-We got warning below during perf test.
-[  467.100914] [      T1] WARNING: CPU: 0 PID: 1 at kernel/events/core.c:5147 put_pmu_ctx+0x2ef/0x3c0
-[  467.107702] [      T1] CPU: 0 UID: 0 PID: 1 Comm: systemd Kdump: loaded Tainted: G            E       6.18.0-rc4-dirty #114 PREEMPT(voluntary)
-[  467.109835] [      T1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1
-[  467.111027] [      T1] RIP: 0010:put_pmu_ctx+0x2ef/0x3c0
-[  467.122081] [      T1] Call Trace:
-[  467.122463] [      T1]  <TASK>
-[  467.124822] [      T1]  __free_event+0x337/0xa50
-[  467.125306] [      T1]  perf_pending_task+0x10f/0x3b0
-[  467.125824] [      T1]  task_work_run+0x140/0x210
-[  467.127413] [      T1]  exit_to_user_mode_loop+0x10e/0x130
-[  467.127965] [      T1]  do_syscall_64+0x26d/0x2e0
-[  467.128453] [      T1]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[  467.129025] [      T1] RIP: 0033:0x7f01d22349ca
-[  467.135157] [      T1]  </TASK>
+On 8/7/2025 1:27 AM, Sean Christopherson wrote:
+> When loading a mediated PMU state, elide the WRMSRs to load PMCs with the
+> guest's value if the value in hardware already matches the guest's value.
+> For the relatively common case where neither the guest nor the host is
+> actively using the PMU, i.e. when all/many counters are '0', eliding the
+> WRMSRs reduces the latency of handling VM-Exit by a measurable amount
+> (WRMSR is significantly more expensive than RDPMC).
+> 
+> As measured by KVM-Unit-Tests' CPUID VM-Exit testcase, this provides a
+> a ~25% reduction in latency (4k => 3k cycles) on Intel Emerald Rapids,
+> and a ~13% reduction (6.2k => 5.3k cycles) on AMD Turing.
 
-A race condition occurs between task context and IRQ context when
-handling sigtrap tracepoint event overflows:
+Nit. s/AMD Turing/AMD Turin
 
-1. In task context, an event is overflowed and its pending work is
-   queued to task->task_works
-2. Before pending_work is set, the same event overflows in IRQ context
-3. Both contexts queue the same perf pending work to task->task_works
-
-This double queuing causes:
-- task_work_run() enters infinite loop calling perf_pending_task()
-- Potential warnings and use-after-free when event is freed in
-perf_pending_task()
-
-Fix the race by disabling interrupts during queuing of perf pending work.
-
-Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
-Reported-by: Xianjun Zeng <zengxianjun@bytedance.com>
-Signed-off-by: Liangyan <liangyan.peng@bytedance.com>
----
-v3: Refine commit log suggested by Sebastian.
----
- kernel/events/core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index cae921f4d137..7c63e5fdd334 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10433,6 +10433,16 @@ static int __perf_event_overflow(struct perf_event *event,
- 
- 		notify_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
- 
-+		/*
-+		 * Task context queues the work via task_work_add() but has not yet
-+		 * set event->pending_work when the same event overflows in
-+		 * IRQ context. The IRQ path, seeing !event->pending_work,
-+		 * queues the work again.
-+		 * The double queuing causes corruption in task->task_works.
-+		 * Prevent this by disabling interrupts around the critical section.
-+		 */
-+		guard(irqsave)();
-+
- 		if (!event->pending_work &&
- 		    !task_work_add(current, &event->pending_task, notify_mode)) {
- 			event->pending_work = pending_id;
--- 
-2.39.3 (Apple Git-145)
-
+-Manali
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
