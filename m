@@ -1,89 +1,103 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EF22C326F;
-	Fri, 14 Nov 2025 09:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9B5303A03;
+	Fri, 14 Nov 2025 09:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763111019; cv=none; b=p+Qh57pJU7VZBY4GUecaIDzBJ/U8a7NqTMeE0ueTcZOQd8LOJionDAVEMh2MA/UbPAsFhPCnB3L2LLOcPLZXnG20WvsWDTIWiKLim6QfhiIYEX2Z2ApfXW8hGMoxbwDH8FOTcYQZ4iwmXbzQd4wiAja7SsyZcI+SPDHavimzAAk=
+	t=1763112556; cv=none; b=aoDEHLi+MRDSHCXjPPZBtSAb0X3naKWmnnX/D7bLNqZoOqOiaqC8CJ/Z6CJfSeuiYgZLElqoLfR/UUf7oRurVIk7PIlFkAfmxfNYaevmu+zWL/D0gmX9KmfE1u2WMXosIDVrIN7DkHt50SFptFMppR5wCfFuy/Zs3Lae8vicqaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763111019; c=relaxed/simple;
-	bh=CHHcVWP7+azq7U8bx2c9snKg7BzuRKMTEfKak29g+SQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZDuzLH1ndto/5IzyYhDcljKTajp/XQ56ijr5T/zW7zdQQHKiQSNtm9gczG1AK5Od++CatWVvq6E58rXvZwYYxO9N3bIFCUaj+XeU7SsEnodN1DQsCVI9S+AhI9XvIt8S7ZFC/NhurOBAl6jwPBKN7t8n79yRQPpc/z/wITMQCIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PrKyPU9e; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1763112556; c=relaxed/simple;
+	bh=3WNSCRqblIMCNzTE2n1uMeiFH+oTUvRCzErtYNIlyHU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hj2O29luImLoonMc9QF5w5852NO2e709AdyiY1IQLORgGaKw42fjXkNhFokuh5aznMHIgtTlfxqfLaAKXMsGkehYkMdiqYkhrt4YLlxOY2y9nqHxHYseJVduDNCxFNm2bu9LsDj5LY7cu/vuLdiigfrQ6oWzpzXnx2G1NsS84Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n2RWIE0e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PrKyPU9e"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=isqvQ2KBi8Wgtu2oWNPjHlRemcfKWwu1gUel1sa3XZk=; b=PrKyPU9eI3TivS1fIA96M3CQEy
-	l+PjKPIFDXbdHhk3I9sqEQb4IPMXJs3gVUagfrf+uBvwZzVPvWwsIJSXkmzk0ySznn+9IFhkYhu8f
-	H9RJNTzTs8hItc1d9l9MMN2it5IZi4Tw54el219kiGuTkrcyX9EtxAYAdNU7KG26qPA7+bHQq2Hpm
-	qkSUA2swvgD1DzoH2uT+0Y8DvE3A0zYn0CUn+m1w3bkaXT4bUu6Qp7Ipy7kcpFNdPjmChI2Vm0jkb
-	u1CfgsvLsYVvULFeDxQfiuNUP831SUgpz8X9JjQ08xXWwEA3mQYcAXtH6xGH2xFMjQYf+UcC91hTx
-	/V9Zw+ZA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJoqg-000000028bs-2k1l;
-	Fri, 14 Nov 2025 08:08:03 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E24F530029E; Fri, 14 Nov 2025 10:03:28 +0100 (CET)
-Date: Fri, 14 Nov 2025 10:03:28 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	"Kirill A. Shutemov" <kas@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
-	linux-sgx@vger.kernel.org, linux-coco@lists.linux.dev,
-	Kai Huang <kai.huang@intel.com>
-Subject: Re: [PATCH 0/4] x86: Restrict KVM-induced symbol exports to KVM
-Message-ID: <20251114090328.GS278048@noisy.programming.kicks-ass.net>
-References: <20251112173944.1380633-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n2RWIE0e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89CA9C116D0;
+	Fri, 14 Nov 2025 09:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763112556;
+	bh=3WNSCRqblIMCNzTE2n1uMeiFH+oTUvRCzErtYNIlyHU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=n2RWIE0eb+nVveWZc+wgosul/H9xnDyyPVAcX4dpTVxw4bcIhUXM8oMCXDuilNU7H
+	 UurzKJfO2YopBF6sC07xvLj7I+S6lyvbChlLU0qjWeef+Z9VQWy4VK4cRTCgy31Mcw
+	 xShMU+0Xp8cBLVoongAemeQ7719Yrg+NQfDiIncx/PxUBfgxUVh4M8U0lmFXZO5w/1
+	 3a1LG4zswvC5c8InRh8KvPzR+ilIWxf7DQEHqQVBGA1ce+TiZxqEtNJJ/eqteVanJs
+	 zzbjSRxGzHf0cEmubTc3V+yd6PFsjcMK7n5gAc7mh/d+RzHbJ6xVHcX1yI70N6i3Bg
+	 fHf/fCuOgGcZg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Eric Biggers <ebiggers@kernel.org>,
+	Pablo Galindo <pablogsal@gmail.com>
+Subject: [PATCH 1/2] perf jitdump: Add load_addr to build-ID generation
+Date: Fri, 14 Nov 2025 01:29:13 -0800
+Message-ID: <20251114092914.217533-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251112173944.1380633-1-seanjc@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 12, 2025 at 09:39:40AM -0800, Sean Christopherson wrote:
-> Leverage and extend KVM's macro shenanigans to export symbols for KVM if
-> and only if kvm{,-amd,intel}.ko is being built as a module, and only for
-> the KVM modules that are being built.
-> 
-> Note, this approach isn't 100% precise, as exports that are only strictly
-> necessary for one of KVM's modules will get exported for all KVM modules.
-> But I don't see any value in being super precise as it's not like kvm.ko is
-> any more trustworthy tha kvm-{amd,intel}.ko (and it's easy to circumvent
-> "for module" exports by abusing module names (in out-of-tree code)).  And
-> maintaining precise exports would likely be a nightmare (as would writing
-> the macros to get the exports right).
-> 
-> Patches 1-3 drop superfluous exports that I found while digging around for
-> KVM-only exports.
-> 
-> Sean Christopherson (4):
->   x86/bugs: Drop unnecessary export of "x86_spec_ctrl_base"
->   x86/mtrr: Drop unnecessary export of "mtrr_state"
->   x86/mm: Drop unnecessary export of "ptdump_walk_pgd_level_debugfs"
->   x86: Restrict KVM-induced symbol exports to KVM modules where
->     obvious/possible
+It was reported that python backtrace with JIT dump was broken after the
+change to built-in SHA-1 implementation.  It seems python generates the
+same JIT code for each function.  They will become separate DSOs but the
+contents are the same.  Only difference is in the symbol name.
 
-Nice!
+But this caused a problem that every JIT'ed DSOs will have the same
+build-ID which makes perf confused.  And it resulted in no python
+symbols (from JIT) in the output.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Looking back at the original code before the conversion, it used the
+load_addr as well as the code section to distinguish each DSO.  I think
+we should do the same or use symbol table as an additional input for
+SHA-1.
+
+This patch is a quick-and-dirty fix just to add each byte of the
+load_addr to the first 8 bytes of SHA-1 result.  Probably we need to add
+sha1_update() or similar to update the existing hash value and use it
+here.  I'd like something that can be backported to the stable trees
+easily.
+
+Fixes: e3f612c1d8f3945b ("perf genelf: Remove libcrypto dependency and use built-in sha1()")
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Pablo Galindo <pablogsal@gmail.com>
+Link: https://github.com/python/cpython/issues/139544
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/genelf.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
+index 591548b10e34ef6a..a412e6faf70e37f3 100644
+--- a/tools/perf/util/genelf.c
++++ b/tools/perf/util/genelf.c
+@@ -395,6 +395,15 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
+ 	 * build-id generation
+ 	 */
+ 	sha1(code, csize, bnote.build_id);
++	/* FIXME: update the SHA-1 hash using additional contents */
++	bnote.build_id[0] += (load_addr >> 0) & 0xff;
++	bnote.build_id[1] += (load_addr >> 8) & 0xff;
++	bnote.build_id[2] += (load_addr >> 16) & 0xff;
++	bnote.build_id[3] += (load_addr >> 24) & 0xff;
++	bnote.build_id[4] += (load_addr >> 32) & 0xff;
++	bnote.build_id[5] += (load_addr >> 40) & 0xff;
++	bnote.build_id[6] += (load_addr >> 48) & 0xff;
++	bnote.build_id[7] += (load_addr >> 56) & 0xff;
+ 	bnote.desc.namesz = sizeof(bnote.name); /* must include 0 termination */
+ 	bnote.desc.descsz = sizeof(bnote.build_id);
+ 	bnote.desc.type   = NT_GNU_BUILD_ID;
+-- 
+2.52.0.rc1.455.g30608eb744-goog
+
