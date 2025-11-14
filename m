@@ -1,84 +1,75 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4B82E3AE9
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 22:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B838526F2AD
+	for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 02:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763073954; cv=none; b=DfsPj5sXshHMGkvfFwsSqXX6Q6MKa1CV71mr1Wce+3ih1nttt8+BMCbEjL9nWDdyVbmQM+GEzA+p8IGAO8eke/hauS2Hhl9cDQjuMvl1jJ3SkY4UUw4ixWLNKv9JWGwSQqObKip332Ya+xXlC4R0TT5q4m73o9eTnos889vmPWY=
+	t=1763086376; cv=none; b=CNxi2ueDVnInoYb3kh5ri8+k519YTQ5Sim3uahMjgZI98LmnPcukHepRjK+hjtWUkOrIkAnuyub16XIECF1HnLxdrR1GpFZwgiuTguqFwuv7142qeWsOIgMxYxRpOJ4B1M+QWyFOsdBdyIVHlVjoLsSO9ygs5YvlrDRXiUwgUdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763073954; c=relaxed/simple;
-	bh=KVxhPOl9A1AJMg0s4eFGGbAqvxrGzpEQIUpU1sh34mg=;
+	s=arc-20240116; t=1763086376; c=relaxed/simple;
+	bh=Ah/xJ0bYqUpIFbLqeA3hC94ZlIfAy5PPkysDbnucDRs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eLMp6R2GBqHawDHLG2naiST+r0lRqG1HDUPxZYzvcmXi7ybgWitYkaPVFLnS9ZOiYYSquuP7sfGz3+AoNuqgecAdHUSgxF3L/pBwtF7L33dl3KNv7qf6dfWkffwVSQCYsiaDCP4o/RcXtAntV/tSXHZsvt9E6BVR+tEi23NMfCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DMs45vva; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=LkYyGE6aerB6LE1SG5Qpnuu8CfAjTrR+Vo+qA6OiPfXeZ3mllDNhZiTo+YqK1Lb5p/+/ii+WorMakbTHz/0LtZrC6OwuWbJ/LMtIMd529f+pzTDme8fThnCBAoC3inOmK+yYe/VFExRYfFOTZu/B/LBDM1vCToGMpryz7kzW6N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Nr+oKZ2L; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DMs45vva"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b710601e659so215051666b.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 14:45:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Nr+oKZ2L"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-4503ee5c160so693064b6e.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 18:12:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1763073950; x=1763678750; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1763086374; x=1763691174; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0UVVQud0Izrm82Y9YsVW4ejkPGLxxg20QvfQU/ToybY=;
-        b=DMs45vvaTgJWcJNPUgyCNtrmns49fOjZ436GZK+cm6Fo+ZPrhCvzksKGWvv+qTzVey
-         2vTgF6mdKe5ZiHWRjJKgC3vmCQ38jFLHWxQ1ZqL/gzvK4yyQtImP7iU3waRdLAOrY1gj
-         tR13Ehs7oYh08bwj6ceDN2JnWS6DYNEcTlUIA=
+        bh=SBM3vq37SG4A6w1IUkBk6VD1Hqp+KmIvSGnOQB9SSPA=;
+        b=Nr+oKZ2LHd6dr6Offcl7ttJFtzIxM/xHj81QObPzAkvoZ9Sby5jdqkX0A7CcOV4jLf
+         BZpD5CDIb5KbHuNEbTXL6Mbb97/YpDRTs4hbaK+sFjr7je/46GrRTLN0D61Rvow6v+Pc
+         t0RpeYnR2qhZTbuNRIa/PJmt9qz2wF3gdcAlrpI+vBFVLMUCsTWBosCxSoILd1xHNbTO
+         D+LVBCAYzt2g9T3PlAitNAH+UHjaKVur59rxHHLK3PXY4UElxXdpKAg2gKbNASS7TJUz
+         VanZgie5XnFefvh4b7OqWvny3Su3IAV2XhVBq/UuBYzkg+4p9Py6ZdMiWNgryMh6sz0B
+         BVqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763073950; x=1763678750;
+        d=1e100.net; s=20230601; t=1763086374; x=1763691174;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=0UVVQud0Izrm82Y9YsVW4ejkPGLxxg20QvfQU/ToybY=;
-        b=roCTrytw+jlnOYAEQdQyW1Zit0MtmGiQTh9fO+BZPFEO9IMknEh/SsC4Tt2vNncBjt
-         lKnl1kCOZX7jXMAWcHBwX4Nu+0PmpfeS1v5mEwQ8VM19dgx/q1VEith4aZlNoRgBktQz
-         MDmSIZYqNba/Pa/OjVK1bjRxh8jfAHC3BRpXddpeNoZQmcixqEouPJbuEO6lo/IMFXcQ
-         T5QpTXFhoB7bdlwyaGs0ERqyzX91uG/pGp7/1b/14tx5kefl4xTC9Q1uyQ/Kve3IMQn2
-         ihVGrhdVKbl/k4PvPfn6MrFMD27cJFzHXPCor9RvSInLKitiw74E+HHlxal0bnwwh136
-         VoCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXbB33UxcE8filwrLXGNv8F1B/QCvvPReZERGy4YyIxtohTf2ZL5fmMy2XDEk54aAyNOypvvYUBUZIefBRyKFFQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YznBwqzt6vx9WIl8prEzbdbRTPbynhGqLkDe9SbfQtfhRf9PGtO
-	/hEmkBtD8+5KQziWUgxqWlSiqyyHEY3yqjxrZbhGWyCQw/V3W7Jcx6MMA4T56Wl7QVJZ96Ew5Q3
-	m6OA/7fBc
-X-Gm-Gg: ASbGncv92p5T6odQQn9mIvMCUDr2BYScc9s//r0X/qzxBw5x3L4mbKoRiqolJU+QF8m
-	Fyj6AVOAExXpD5kIMsp8dKsFAuDg9AY23AKJ6TWEuFV7QDIa4CaY80d6/0C3OIIST/UepTVHhpD
-	NJp+Rvf+Sa/Ly6RoP8Z8CFNJnfVu1EX7NV9eqT6vs7gFbvtKALpenwvaVsNiZcx45L+rDDvBWJX
-	jB7b83soPBfth0CgCZu2GALkJEUHiXgOg5VP6KZbc7ByVOXiQ+2HwJywDBZlpFfO9YnYWivpaVc
-	uIvn+iGCYen1lyxRsE/MeCYSqZ2Mwbkd5w/i0UeRoYngqy2Ldl9REdaCotVkNvbtnYc97P/6kh4
-	GY9X4eM7qiSIsKs/QE5Jjpbh5N7KmSS5MWr/V/bkd0tZF3WfVPP3vFMB316K6j0eiEDHh0L4M4x
-	VgB7p7aR5+8a1+lAWjHDLfHrc8J/ZyFviTUhHYnKbopb7flRLwvQch9pA+iMtc
-X-Google-Smtp-Source: AGHT+IFHXJq863iRNNJkpPy4PLFQnJjjGlPxoYEeQu9NyqePD6IX1EGWYNrubCtG3+270K/YrrDpWA==
-X-Received: by 2002:a17:906:d9b:b0:b73:68b3:bd2f with SMTP id a640c23a62f3a-b7368b3c0fdmr49215366b.40.1763073950565;
-        Thu, 13 Nov 2025 14:45:50 -0800 (PST)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com. [209.85.221.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b734ff36ac6sm252259766b.74.2025.11.13.14.45.49
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Nov 2025 14:45:49 -0800 (PST)
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-42b32900c8bso790376f8f.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 14:45:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXT8IkEyo5O2IXD+OsvpyGEcq1yr8lbxC90IZ7D3WBjVvnH8AH8nE+bTMuG0813jLIAneU6cUjZ/fKx53A/KYN/@vger.kernel.org
-X-Received: by 2002:a05:6000:2010:b0:42b:3c3e:5d53 with SMTP id
- ffacd0b85a97d-42b5933aff4mr761555f8f.16.1763073948860; Thu, 13 Nov 2025
- 14:45:48 -0800 (PST)
+        bh=SBM3vq37SG4A6w1IUkBk6VD1Hqp+KmIvSGnOQB9SSPA=;
+        b=CMReOFtmDvqVTjZcwABaZPY4xI+/56Gr/AVQSBQqZfByRKeJY8jU4TDu8ysiZj6yXL
+         2BD1LRGTZ1BI5ArEAlO9GbN+3yFa9hjVcYnfUwNZNx2TOB6mPu1/yzFFGhWbAX48RCUl
+         /OHRPusNtUvyKoMuZMA9ywFfSl2W2GBfNy1a0XVKmQcLMQdLzdwUfRtckcYLKBRITvFl
+         pfIBSWH8kONRfRpJA5Sl4/FuwI1v4zO/voDCJiwdwNvAQVacTqq9Rzr2QklbaAdUWmQH
+         WC7r38Jpp6KTcK+F1JmFk/ZYdkaQqwOAO/AcLA8yqCvstNnBneCXr3I+gUV1egdp7JgG
+         ew4w==
+X-Forwarded-Encrypted: i=1; AJvYcCWBE6Wz/WpweW7I/vdijfFwimaWp3F5fZJv9WBoVW3CkC0+SILgJIudGUSxpzAFBFK1ZpuFMr4knPrlogi6XJBq@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWjQ/qJr8xishE6jCQYHJlXNRdiJy/Z/LkPLPJh7Et8NUTQbgZ
+	JPVCc8sWTStyuc3ixzuFnydrHd17/K7eVrAg9WaSQd8M+mlgDEoRLxd/LAK23BRjA6apQlsMxQV
+	AZg5uEohKugGi5mHASjXnIoQehZc+z+WFwzGotlfKXg==
+X-Gm-Gg: ASbGncsJQm83HNi4PhiO8aiGN5S6MQiSL+UWZQuPIe/04tYyFdrIT8tBrBlYG4sFDP0
+	Y8/Vt5v+2O6rBl0zPuuCNTP3NGh9GCAB4YsZ7Q6/k0/nxFK7Ikjk9qn3uOKEGaqDITcdy7l0asU
+	WGfyhPH6bHqCH8s1vR3PdmtCKXBbHGlX2WFq8dK0gv/3FoMwGe6QFfZk4yXzewxXo5Z7gPMVS5W
+	E0sLNor8hVtoaJI/nOpcu1EopPR8hWk+JXe8+r1n4/xs2AmXJyAmGfF6azCbtBbXPPXOVk5yRRA
+	KeohArW1
+X-Google-Smtp-Source: AGHT+IHy0n4gQ/6J6Qsut3+AMNzWOn2pYSEr7TLktEg1mu/utZ4gYoyrlrE9G2GmaDzmMmkxvEL9sFE1ukImX70O6Wg=
+X-Received: by 2002:a05:6808:221f:b0:450:76f:b1a8 with SMTP id
+ 5614622812f47-450973ba31emr745094b6e.30.1763086373692; Thu, 13 Nov 2025
+ 18:12:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251111073459.44030-1-cuiyunhui@bytedance.com>
-In-Reply-To: <20251111073459.44030-1-cuiyunhui@bytedance.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 13 Nov 2025 14:45:36 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=VGvp5XsT9R9-LR-dSbGAZ5YVcm=HxBYibCcSdVnNkyPA@mail.gmail.com>
-X-Gm-Features: AWmQ_bkNWl8O-v3oF1GNsRABKkGX6YQ-aUhM_Mt29bXwj4MZQ9qr2FjFv9F9mEw
-Message-ID: <CAD=FV=VGvp5XsT9R9-LR-dSbGAZ5YVcm=HxBYibCcSdVnNkyPA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/2] Add HARDLOCKUP_DETECTOR_PERF support for RISC-V
-To: Yunhui Cui <cuiyunhui@bytedance.com>
+References: <20251111073459.44030-1-cuiyunhui@bytedance.com> <CAD=FV=VGvp5XsT9R9-LR-dSbGAZ5YVcm=HxBYibCcSdVnNkyPA@mail.gmail.com>
+In-Reply-To: <CAD=FV=VGvp5XsT9R9-LR-dSbGAZ5YVcm=HxBYibCcSdVnNkyPA@mail.gmail.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Fri, 14 Nov 2025 10:12:41 +0800
+X-Gm-Features: AWmQ_bkAOsbu28DhTbtm-Wf7KobQu9Ki7D8PlLDLwgn0w5kVCtpXXRPq6fTQ_oc
+Message-ID: <CAEEQ3wnGUDW_dqbbhM8nLeDH0kL=s89=8x2ESYs=Nm6AMzkV4A@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v5 0/2] Add HARDLOCKUP_DETECTOR_PERF
+ support for RISC-V
+To: Doug Anderson <dianders@chromium.org>
 Cc: akpm@linux-foundation.org, alex@ghiti.fr, anup@brainfault.org, 
 	aou@eecs.berkeley.edu, atish.patra@linux.dev, catalin.marinas@arm.com, 
 	johannes@sipsolutions.net, lihuafei1@huawei.com, mark.rutland@arm.com, 
@@ -91,65 +82,85 @@ Cc: akpm@linux-foundation.org, alex@ghiti.fr, anup@brainfault.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Doug,
 
-On Mon, Nov 10, 2025 at 11:35=E2=80=AFPM Yunhui Cui <cuiyunhui@bytedance.co=
-m> wrote:
+On Fri, Nov 14, 2025 at 6:51=E2=80=AFAM Doug Anderson <dianders@chromium.or=
+g> wrote:
 >
-> After discussion [1],[2], hardlockup_perf cannot be completely replaced b=
-y
-> the hardlockup_buddy approach, so this patch is still being submitted.
+> Hi,
 >
-> v1->v2:
-> The contents of arch/arm64/watchdog_hld.c are directly consolidated into
-> kernel/watchdog_perf.c.
->
->
-> v2->v3:
-> Add CONFIG_WATCHDOG_PERF_ADJUST_PERIOD to enclose the period update logic=
-,
-> select it by default on arm64 and riscv, without affecting other arches
-> like x86 and PPC.
->
-> v3->v4:
-> Place the line "select WATCHDOG_PERF_ADJUST_PERIOD if HARDLOCKUP_DETECTOR=
-_PERF && CPU_FREQ"
-> in the Kconfig files for arm64 and riscv in one line, with no line breaks=
-.
->
-> v4->v5:
-> Remove __weak from hw_nmi_get_sample_period()
->
-> Link: https://lore.kernel.org/all/CAD=3DFV=3DUEhVCD6JehQi1wor2sSmtTLDyf=
+> On Mon, Nov 10, 2025 at 11:35=E2=80=AFPM Yunhui Cui <cuiyunhui@bytedance.=
+com> wrote:
+> >
+> > After discussion [1],[2], hardlockup_perf cannot be completely replaced=
+ by
+> > the hardlockup_buddy approach, so this patch is still being submitted.
+> >
+> > v1->v2:
+> > The contents of arch/arm64/watchdog_hld.c are directly consolidated int=
+o
+> > kernel/watchdog_perf.c.
+> >
+> >
+> > v2->v3:
+> > Add CONFIG_WATCHDOG_PERF_ADJUST_PERIOD to enclose the period update log=
+ic,
+> > select it by default on arm64 and riscv, without affecting other arches
+> > like x86 and PPC.
+> >
+> > v3->v4:
+> > Place the line "select WATCHDOG_PERF_ADJUST_PERIOD if HARDLOCKUP_DETECT=
+OR_PERF && CPU_FREQ"
+> > in the Kconfig files for arm64 and riscv in one line, with no line brea=
+ks.
+> >
+> > v4->v5:
+> > Remove __weak from hw_nmi_get_sample_period()
+> >
+> > Link: https://lore.kernel.org/all/CAD=3DFV=3DUEhVCD6JehQi1wor2sSmtTLDyf=
 =3D37xfo-DOTK1=3Du1xzA@mail.gmail.com/ [1]
-> Link: https://lore.kernel.org/all/20250916145122.416128-1-wangjinchao600@=
-gmail.com/ [2]
+> > Link: https://lore.kernel.org/all/20250916145122.416128-1-wangjinchao60=
+0@gmail.com/ [2]
+> >
+> > Yunhui Cui (2):
+> >   watchdog: move arm64 watchdog_hld into common code
+> >   riscv: add HARDLOCKUP_DETECTOR_PERF support
+> >
+> >  arch/arm64/Kconfig               |  1 +
+> >  arch/arm64/kernel/Makefile       |  1 -
+> >  arch/arm64/kernel/watchdog_hld.c | 94 --------------------------------
+> >  arch/riscv/Kconfig               |  3 +
+> >  drivers/perf/arm_pmu.c           | 10 +++-
+> >  drivers/perf/riscv_pmu_sbi.c     | 10 ++++
+> >  include/linux/perf/arm_pmu.h     |  2 -
+> >  kernel/watchdog_perf.c           | 83 ++++++++++++++++++++++++++++
+> >  lib/Kconfig.debug                |  8 +++
+> >  9 files changed, 114 insertions(+), 98 deletions(-)
+> >  delete mode 100644 arch/arm64/kernel/watchdog_hld.c
 >
-> Yunhui Cui (2):
->   watchdog: move arm64 watchdog_hld into common code
->   riscv: add HARDLOCKUP_DETECTOR_PERF support
+> Perhaps you missed that (I think) Andrew had already dropped your v4
+> due to the Kernel Test Robot finding a problem. See:
 >
->  arch/arm64/Kconfig               |  1 +
->  arch/arm64/kernel/Makefile       |  1 -
->  arch/arm64/kernel/watchdog_hld.c | 94 --------------------------------
->  arch/riscv/Kconfig               |  3 +
->  drivers/perf/arm_pmu.c           | 10 +++-
->  drivers/perf/riscv_pmu_sbi.c     | 10 ++++
->  include/linux/perf/arm_pmu.h     |  2 -
->  kernel/watchdog_perf.c           | 83 ++++++++++++++++++++++++++++
->  lib/Kconfig.debug                |  8 +++
->  9 files changed, 114 insertions(+), 98 deletions(-)
->  delete mode 100644 arch/arm64/kernel/watchdog_hld.c
+> https://lore.kernel.org/r/202510240701.eB6r97V3-lkp@intel.com
+>
+> I don't think you've fixed these problems in v5, have you? I think you
+> need a v6 for it? I haven't dug all the way, but I'd suspect the
+> compile error is if "HARDLOCKUP_DETECTOR_PERF" is defined but not
+> "CPU_FREQ". Indeed, that matches the config in the report...
+>
 
-Perhaps you missed that (I think) Andrew had already dropped your v4
-due to the Kernel Test Robot finding a problem. See:
+Thanks for the reminder. I indeed missed replying to the email dated
+October 26th regarding the error "ld.lld: error: undefined symbol:
+hw_nmi_get_sample_period".
+We can fix it directly as follows:
+-       select WATCHDOG_PERF_ADJUST_PERIOD if HARDLOCKUP_DETECTOR_PERF
+&& CPU_FREQ
++       select WATCHDOG_PERF_ADJUST_PERIOD if HARDLOCKUP_DETECTOR_PERF
+Because when CPU_FREQ is not defined, there is a stub function, and
+the corresponding max_cpu_freq will be set to SAFE_MAX_CPU_FREQ.
 
-https://lore.kernel.org/r/202510240701.eB6r97V3-lkp@intel.com
+>
+> -Doug
 
-I don't think you've fixed these problems in v5, have you? I think you
-need a v6 for it? I haven't dug all the way, but I'd suspect the
-compile error is if "HARDLOCKUP_DETECTOR_PERF" is defined but not
-"CPU_FREQ". Indeed, that matches the config in the report...
-
-
--Doug
+Thanks,
+Yunhui
