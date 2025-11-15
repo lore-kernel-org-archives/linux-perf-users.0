@@ -1,201 +1,161 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155AD30BB86
-	for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 23:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F432FAC0A
+	for <linux-perf-users@vger.kernel.org>; Sat, 15 Nov 2025 13:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763164708; cv=none; b=K1ZeU3aJLpGGCfUKgljmyGXrhG6h4dQkQKvVDkKN/iOS/sndSK3EFJ2P1MAuqG0rsTzxd8eq+6I2rVwab5BrPzJx6GILnl+b+cRezKa4mnuWNsDSOKQ9Zol3Ud4k9ku+LG/xMVeSzdZ2Xw/B6nI7bS+o5khxWgwzoG6PxFzwaZs=
+	t=1763214927; cv=none; b=GLW/lPy/QCyaV7kEZhlHhiaGkk8pfwvGanQjrevwm0BIIzTyo5RT9BuOMaBRzjoyskacILPUJFIt4gSgxz0OZyXJRVM2lDLTqyikUE38ovYHU7dG17b6po0WCp+lpE/VS/9Iei1RHFtOmMhGFtU7muy+aVUoQlHm3NQr8kukoC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763164708; c=relaxed/simple;
-	bh=MRQdsBHsyEu3nPxhDy9ym0PPhvnehuucqECBK78LWnI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qdJ9dawkMd6QXAyuyl1Ng2NNK7J0ilCUvNSuwCbQbEF8Yq6rEEoSNo4khbZ6S4srEwtK3Vfcrz9Ss9IaMS1afxExUcfVRObCP/i1lXzip4bi/4un2PRLEiPa+Mc9xFS8JsoUQDkSco7/fztkQv0Hf9vg2M4St5aBtv9FLUIK01Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H7Frv838; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1763214927; c=relaxed/simple;
+	bh=y5QUmSKzlS0amBxXurpdk6aXWqflSKro/h9ErGoIjwQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GRLg7YPbsA7F/NvG+8QpgxSQL5G5dghcWHb+AOxxjrhmYiA3lWfabXrlMkA80GnugYDBwh7LUY4zht+6cqvdI703ENn+MEk47ziuKbVA/5BAUn8iHZGlGr4SNcd0CxbL6/uNUl3BLGzPOzXQ5keYxQ4JofLgtk0ubom0QvZXT3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jXj3Vvch; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H7Frv838"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2980343d9d1so42415ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Nov 2025 15:58:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXj3Vvch"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-343d73d08faso2825047a91.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 15 Nov 2025 05:55:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763164706; x=1763769506; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1763214926; x=1763819726; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/mGyicn36wATRenY0gnqN+aakOkORwD2CJtd26qTK3s=;
-        b=H7Frv8382urrY2PJ9bpgYTVVQaIaz1QTqLnXcIlbBTBDQHRBiS7OhGu6T0J4wlgVX/
-         +0eNr8SnErlGi+fk+AvftdyGouuyIsK4ntkqWmPEnt/XNTJuFCLEbAXjTuqkqw2z26BF
-         Ag5jW4A28POm5BEjpZykxyao2OzPH82IS3pVP/ZOf2Z4hXH8NtFSCLJ/j7hmfoS+Axa9
-         vAv4iLULaeZx3CjLUtIx62sGRIXXexD84MOa8QpjFMR2iTYMHTGYjfurfzRyLyLElPq7
-         gWmNmJdqNrqFNTNUYVWYChoCPDJmLJAJRDrcnf7pibcOnNoOZFwCpcelz0gpsUFaOfUS
-         C+6Q==
+        bh=y5QUmSKzlS0amBxXurpdk6aXWqflSKro/h9ErGoIjwQ=;
+        b=jXj3VvchJ3DaDQrXW6IN/9Jnboih4YaZsQ4jwthcGQt7g8jmyb1FuL5Sv4FBHm72Jh
+         CXnGduVJJaNgwuCvg5ldvn9DFPKFLMF+uokpidzv00Azp43Zr3UkGvnFR4thVeSRO7IS
+         AXTogjn+aDULC8ZUEDLQNSO7gAdf49lr7c73UiSd2iOB9RMOYdzglH9nn/gUWVMmhoAC
+         TIjjb8rG1d5E0toxH3Sv54mWByx0piXkKYaK7e922KCmwia7WlBlQDLN3WUfvcBwpm7N
+         7A+y2YSfm5vHPIVBHPC6sVRxDDZq2gOCxFMwiVTsu8BWL34QbUxje1RULZIqClxye8LA
+         gvCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763164706; x=1763769506;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20230601; t=1763214926; x=1763819726;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=/mGyicn36wATRenY0gnqN+aakOkORwD2CJtd26qTK3s=;
-        b=m4dXDLFfSkGPAnIsRjR7fu/r5BHvDrAFKEtDkdz3mcIL/s4FSCtMSDCkgKkMiLmCeY
-         kA0q6fitdwAiJTbH4gK/hJOH/L4SlGV1ixk/UsZ78dQ9xpXfyrVA6Sn+qvE4ImlQfc96
-         S2bPW7LJaL738QwPKI1vEuTB4hbjx3lHWEgrBO+wTlt9nrwbibWsCIrOK/99cKgrEJxt
-         FRsx+E/v7qIqDjlX81tJIL0Q3Rje6/gUjFZmCeuc2ikNB0QkjzoRiwH18dI3gZpCTtF7
-         p1J9/pYaqYYEvR/X5O8/bPQzYTiv5SSn22AbmfxPvj/gAFXaToibXyyh76LV4crFL4lD
-         opaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUjXsL6jXh8AECvpBKVlhhYBeKgsgQ5mRMiVYbCWxQYsVF2xcjj1ctwLaAmchNfcQOwNW3lRZ3Ly6tNguEFnEMB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgdgI+ytV6e/0+5VzU+4pWNg30c+98wsvYtjteKSRJ+kGa2aR2
-	x6ZjAho/iZgwZHq8+lmkjoCjw/lvgAl7ZT6BdFaUhT/jLxp8R4ehpj2HlE13smGhOTCc/JSDgPK
-	Gc3Kpx+mPLetQFLOn8v/gnxHawdsrBd2WRPTFfXPB
-X-Gm-Gg: ASbGncsrT24/qe4NjuqvGoua5CUlFxh4qIlvwyJzqHEFzuMP/dljZE0aoQCpmR3JZSb
-	/41ugJRhj1Jjx5S5oI0umjN4dh6+TcSVqRjGBTmfRzZcbvPVRRkjZ7bonSFTOL9ZTH2BcWt7Yyy
-	al9VBRb80f8Z6yaYVgOAZHO79qhQzng7edxk0jU5NAZW1D1SETiHCABVe0ex/9B64TGtYDrcDtJ
-	wwRVJJ0LDrCRPJZn74qdErLw3KFvn7uXjHwX83Io+CwOW5e0z6V5/c8ySwCyQ2Xm1TH3eWB/JqE
-	2Hlm2pZx/qhE8m4LtybfW9yc
-X-Google-Smtp-Source: AGHT+IFa+Wpq6kYL6NLSQ6a04Li3fe+qxt1VBhyzh+FOPCQLgUZ2MqncC+sRe1ABv2uYCQf3zhuAycq1285FIpXjlQs=
-X-Received: by 2002:a17:903:1a68:b0:295:5405:46be with SMTP id
- d9443c01a7336-299c6bb2635mr1048315ad.1.1763164706130; Fri, 14 Nov 2025
- 15:58:26 -0800 (PST)
+        bh=y5QUmSKzlS0amBxXurpdk6aXWqflSKro/h9ErGoIjwQ=;
+        b=pa413nsc5FH2zGeNbCCUC03X+3WLeKKG7fRyV/1RhuKROR/SULJLamGljBht47x/bq
+         hxU3CAqIFfMJSHFu0xPDNKW2udq/RagUJZclCDxn5n+ioRze4xOMSjZdrZ4quE8T1fc4
+         sViUK/GksJ93TnsLgf0G3x7Qv4aaIRMeFjvcLWv51MiYIjo34cwDCydIxSZo+CCDzNk4
+         N/OOVmW3lkYvd6mj/7sklKtJ00ZgzGWQ87N6tG6YjjnnSyV3XHmheh+kPAqU3UCbZVTr
+         H59lxC9BY81oFWloHYlkAarksDmeM2FzRejB0+TsjVGLhyP4MHEZaYHU3hssW7zg91jo
+         mU5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWb0+l1fW/H24Ytmcr4uzQOp86dBW5UcobjioiBTXopMrIvRiRpSc/Fvxkhn8qgaC4Es/S71ewg7kPMkf+LH9Nb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKD0xPRvvjSq05NTyE0WHt7V1cu0DDQ99G6opxsGmrlRfWfkU7
+	c8tMHpeYpmAkUhn1GDwQklTgPgVFsO24tXgUUAzd/VmqebjyxARL6Ug/
+X-Gm-Gg: ASbGncsmVcN123iBtMmJbYyGmHRia8NMl30Ro8Ds0UNs8sqVRodD3lundCcqCq1Xi5y
+	YZzjGKFhek20AF/X39dTityH3G6Ypj7Xg7B1Elhzp6jaFB7X7rpGiZctYqBeXXtYTu/5EtFtreP
+	s4pVLMNR1tkYdUQjJsU+rSPoVzTFR9JzMzJaK0arlj7ECT7Imi8DWZ8qYMsFWMZcLAEQDP+d5ED
+	5fOlcLQ4HqIfWboMr2+TLhd6XIsNVqY3AVlM8ng0Hc84F4VC7bg7g7C4dvq2OXzQjJlkzjgnjq8
+	ccFeNWBNbV+u0A8NygZWFaKl5CA5P9MXY0cWcSSMwbyz+5Bmgc9Na+6x3UwdtyftCannYxhnrvw
+	h6hOCjGqef/xdJn3+KJqr5Ss3GgF73Q9EfK38yJRSug0t6bBVEF4k2VFfYTCulF6UpYVAKwra0c
+	iVMRwv4oxzRFg3FJkGBYQFxENu+AwZUSfmYGo=
+X-Google-Smtp-Source: AGHT+IFuTufEP59uKbwpymRKno9yjHG2whmUp7ulswIr3+CxbVVYv/nhc0N014IklbozTKH44HgIGw==
+X-Received: by 2002:a17:90b:3503:b0:340:9d78:59 with SMTP id 98e67ed59e1d1-343eab07fc3mr11539361a91.3.1763214925468;
+        Sat, 15 Nov 2025 05:55:25 -0800 (PST)
+Received: from DESKTOP-8TIG9K0.localdomain ([119.28.20.50])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-343e071571fsm12590727a91.7.2025.11.15.05.55.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Nov 2025 05:55:25 -0800 (PST)
+From: Xie Yuanbin <qq570070308@gmail.com>
+To: tglx@linutronix.de
+Cc: aalbersh@redhat.com,
+	acme@kernel.org,
+	adrian.hunter@intel.com,
+	agordeev@linux.ibm.com,
+	akpm@linux-foundation.org,
+	alex@ghiti.fr,
+	alexander.shishkin@linux.intel.com,
+	andreas@gaisler.com,
+	andrii@kernel.org,
+	anna-maria@linutronix.de,
+	aou@eecs.berkeley.edu,
+	arnd@arndb.de,
+	baolin.wang@linux.alibaba.com,
+	borntraeger@linux.ibm.com,
+	bp@alien8.de,
+	brauner@kernel.org,
+	bsegall@google.com,
+	dave.hansen@linux.intel.com,
+	davem@davemloft.net,
+	david@kernel.org,
+	david@redhat.com,
+	dietmar.eggemann@arm.com,
+	frederic@kernel.org,
+	gor@linux.ibm.com,
+	hca@linux.ibm.com,
+	hpa@zytor.com,
+	irogers@google.com,
+	james.clark@linaro.org,
+	jlayton@kernel.org,
+	jolsa@kernel.org,
+	juri.lelli@redhat.com,
+	justinstitt@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux@armlinux.org.uk,
+	lkp@intel.com,
+	llvm@lists.linux.dev,
+	lorenzo.stoakes@oracle.com,
+	luto@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	max.kellermann@ionos.com,
+	mgorman@suse.de,
+	mhiramat@kernel.org,
+	mingo@redhat.com,
+	morbo@google.com,
+	namhyung@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	nysal@linux.ibm.com,
+	oleg@redhat.com,
+	osalvador@suse.de,
+	palmer@dabbelt.com,
+	paulmck@kernel.org,
+	peterz@infradead.org,
+	pjw@kernel.org,
+	qq570070308@gmail.com,
+	riel@surriel.com,
+	rostedt@goodmis.org,
+	ryan.roberts@arm.com,
+	segher@kernel.crashing.org,
+	sforshee@kernel.org,
+	sparclinux@vger.kernel.org,
+	svens@linux.ibm.com,
+	thuth@redhat.com,
+	urezki@gmail.com,
+	vincent.guittot@linaro.org,
+	vschneid@redhat.com,
+	will@kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v3 1/3] Make enter_lazy_tlb inline on x86
+Date: Sat, 15 Nov 2025 21:54:43 +0800
+Message-ID: <20251115135443.460-1-qq570070308@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <878qg8bduc.ffs@tglx>
+References: <878qg8bduc.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251114092914.217533-1-namhyung@kernel.org> <CAP-5=fWsFLkYGFFyzSrpZNdRLpjaTZAuW7-YVUr-zMVH5dk8eg@mail.gmail.com>
- <aRd7iJJxgT-0G8Ky@google.com> <CAP-5=fUC88TVwnjTuTgU+s=LqqP0xOhNTG5hU27cSbaZRH7Jpg@mail.gmail.com>
- <aRe6PnZ1rk2oOz85@google.com>
-In-Reply-To: <aRe6PnZ1rk2oOz85@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 14 Nov 2025 15:58:15 -0800
-X-Gm-Features: AWmQ_blg0TOwNkM3Z7XKUpafvey5lrlMxhWtfQKveYxGt9c2QJMKbfSYn2zBSIY
-Message-ID: <CAP-5=fV0=s6B=-m=iAwOzQrntG9vXn+jWeWhdQewGJhQBnqG6w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf jitdump: Add load_addr to build-ID generation
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: maskray@sourceware.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>, 
-	Pablo Galindo <pablogsal@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 14, 2025 at 3:24=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Fri, 14 Nov 2025 20:42:35 +0100, Thomas Gleixner wrote:
+> Please use the documented way to denote functions in subject and change
+> log:
 >
-> On Fri, Nov 14, 2025 at 11:32:52AM -0800, Ian Rogers wrote:
-> > On Fri, Nov 14, 2025 at 10:57=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > >
-> > > On Fri, Nov 14, 2025 at 09:33:29AM -0800, Ian Rogers wrote:
-> > > > On Fri, Nov 14, 2025 at 1:29=E2=80=AFAM Namhyung Kim <namhyung@kern=
-el.org> wrote:
-> > > > >
-> > > > > It was reported that python backtrace with JIT dump was broken af=
-ter the
-> > > > > change to built-in SHA-1 implementation.  It seems python generat=
-es the
-> > > > > same JIT code for each function.  They will become separate DSOs =
-but the
-> > > > > contents are the same.  Only difference is in the symbol name.
-> > > > >
-> > > > > But this caused a problem that every JIT'ed DSOs will have the sa=
-me
-> > > > > build-ID which makes perf confused.  And it resulted in no python
-> > > > > symbols (from JIT) in the output.
-> > > >
-> > > > The lookup of a DSO involves the build ID and the filename. I'm
-> > > > confused as to why things weren't deduplicated and why no symbols
-> > > > rather than repeatedly the same symbol?
-> > >
-> > > I don't know, but that's the symptom in the original bug report in th=
-e
-> > > python github (see Links: below).  I guess the behavior is
-> > > non-deterministic.
-> > >
-> > > >
-> > > > > Looking back at the original code before the conversion, it used =
-the
-> > > > > load_addr as well as the code section to distinguish each DSO.  I=
- think
-> > > > > we should do the same or use symbol table as an additional input =
-for
-> > > > > SHA-1.
-> > > >
-> > > > Hmm.. the build ID for the contents of the code should be a constan=
-t.
-> > > > As the build ID is a note for the entire ELF file then something is
-> > > > wrong with the filename handling it seems.
-> > >
-> > > When it tries to load symbols from a DSO, it prefer reading from the
-> > > build-ID cache than the file system since it trusts build-IDs more th=
-an
-> > > the path name.  See dso__load() and binary_type_symtab[].
-> > >
-> > > So having multiple DSO's with the same build-ID can be a problem if t=
-hey
-> > > are in the build-ID cache.  Normally `perf inject -j` won't add the n=
-ew
-> > > JIT-ed DSOs to the build-ID cache but it's still possible.
-> >
-> > +Fangrui
-> >
-> > I'm surprised that build IDs don't include symbol names but:
-> > ```
-> > $ cat a.s
-> > .text
-> > .global main
-> > .global foo
-> > main:
-> > foo:
-> >        ret
-> > $ cat b.s
-> > .text
-> > .global main
-> > .global bar
-> > main:
-> > bar:
-> >        ret
-> > $ gcc -Wl,--build-id a.s -o a.out
-> > $ gcc -Wl,--build-id b.s -o b.out
-> > $ readelf -n a.out
-> > ...
-> >    Build ID: 9dd0371b953db5d72929af5d98552e4ee1043616
-> > ...
-> > $ readelf -n b.out
-> > ...
-> >    Build ID: 9dd0371b953db5d72929af5d98552e4ee1043616
-> > ...
-> > ```
-> > so ugh. Perhaps we need to have jitdump make a single object file (and
-> > so 1 build ID) but with multiple unique symbols.
+> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#function-references-in-changelogs
 >
-> Right, that'd be better.  But I'm afraid some JIT code could spread to
-> many segments so it's not possible to create a map to cover all areas
-> due to conflicts with other libraries.
+> Also you make this __always_inline and not inline.
 
-I'm not familiar with any JITs doing this. JITs often have to run on
-Windows where there is a reserve for the code cache and then commits
-to actually use individual pages. On Linux you can do a large
-PROT_NONE mmap and then mprotect pages within this code cache region
-(we should have perf events on this). Apple has some optimizations
-with the MAP_JIT mmap flag. SBCL has a code cache within the
-executable itself. On x86 you could spread code around within +/-2GB,
-on RISC it'd be a pain due to offset limitations.
+Thanks for pointing it out, I will improve it in v4 patch.
 
-Anyway, it sounds like something is off when we are writing the
-executable and likely having too many of them. There is also something
-off with dsos__find as it should only give a dso if the name and build
-ID are matching. The sample should have an IP we turn into a map
-within maps, the dso of the map should differ for each of the call
-chain IPs (even though they are < page_size()) and the symbol lookup
-should work.
-
-If we're not going to maintain that jitdump build IDs behave like
-build IDs then there is little point using a SHA-1 hash and patch
-series like:
-https://lore.kernel.org/lkml/20251016205126.2882625-1-irogers@google.com/
-are even more tedious to land :-)
-
-Thanks,
-Ian
+Xie Yuanbin
