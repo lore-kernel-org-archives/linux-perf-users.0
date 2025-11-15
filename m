@@ -1,212 +1,208 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC258296BD3
-	for <linux-perf-users@vger.kernel.org>; Sat, 15 Nov 2025 15:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308BD305967;
+	Sat, 15 Nov 2025 17:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763219401; cv=none; b=Q+nw/uSWJSntNY+WBM/i7LWsIoIBRJhO5zwZNphVxkEdaVPvdmkj30PlZb5gCw3VG+qD8nJVqtxycvrf61bq1JvlZaFFxJHost3KPk+lUOOIRf8/SRKRwrqgdmvH7pkqndPm19ft+6/T3r+dNHa/iN//9UlnbEnrD3C6tvNQchI=
+	t=1763229131; cv=none; b=gRksNdcv2I8HDaeumQ6DgR+Co6Uc28kj4XyUjj9HO1H160Zf1nGPyMpqwweogC4l+VevTWNDgPzr1vuqz5O2NaDeVLPe0Tc/eg2o4kLzwm0y01HHM3KNFWcSD70XGYJXy8zn3n5/kAwOx0/K+jTTe4Hl9eupZsRB7RERYXtcT50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763219401; c=relaxed/simple;
-	bh=9SA9SEdpJyHPt8tsp4kccmbvrFG5gu2WIbEuJq7mvJw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YieQqajqyDPs6LrIkVKi+RqxfNfGkhbOcWIhnazd+8xxK4bkdhb1DXTMHWq7HjcSquoOOn6GefLBRcT1gurd20YHMBufZ57Xz/Jo2NtZjYB3tq9H1k6wO+GEkX7IgAt10zRQr7LfgT+dCVyt8Wf10+5oPgkfpcK/b6ySmzFK4NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJbErLXt; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1763229131; c=relaxed/simple;
+	bh=SkJx0bCyo9zKkbc9u1qMSudxM93XhzbKvdAO2MG36e4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lPx/r7eYw5XvT4P643el1NGvXkMEYkrxoD2TrX5vauG0BftMEoHl+zdla+XelYr6GTEusSHkVNS6fuLS0iL9YQs6SdNu6/BK9OyQ83kxzkyTOcmFQvBznjZGepQY/OsfPwhIC2xBxrc5XA4j6pNxHmPSbWGxaOUCzKSa0AsiYu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AY4nUr6h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJbErLXt"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7b8eff36e3bso3740149b3a.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 15 Nov 2025 07:09:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763219398; x=1763824198; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9SA9SEdpJyHPt8tsp4kccmbvrFG5gu2WIbEuJq7mvJw=;
-        b=FJbErLXtU8bgqxHLdctt8zbwJon845Uu5fz6ysLb2rJa5T7Ab5Vo8beiZkbvJHFqA7
-         zpFdgwr82ImS0hvpgydizMysAfTNyP3fFskBZ/qj1o07UwM4TwkqAtI9+bEb69LNM+Rx
-         BwPVySwULjjg7bfakaWVU2koQIa4gF4L7AvxAetvPCJKBIvEvyiXRw2ZY+85JU+tBxOc
-         G+NwvS293UzoTEUFt8OD1oEjxJ+yqc2PALzTghq/gNUT/Rq+koMEhfo/1rrM5/adsOcF
-         LO+zdTe4in6D/AdRRnqCNP4CWk6x/zFjAutbnv/RJqrP8lFmJMoGd0OvrHw/izY27Vm5
-         PwCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763219398; x=1763824198;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9SA9SEdpJyHPt8tsp4kccmbvrFG5gu2WIbEuJq7mvJw=;
-        b=ph2WCjmXK3Z8K8kbpL2Zg/4wH9PDnKq7xJo1l2Mb6Xv68NEb7G+bzpl6egGXLZaEjG
-         MySoPNZrR3QEd/mxNzFHmRGTvFD3V5uckRTpcB41G0/s4lhYkoJmAgW5VggIzH4IUxdW
-         qsi3hq4yhvwrAw+ufyYjdg9TPgb6Vl0IX4b029oyUdtVhEdOEXGmHw6FqO+qZ/3BENRK
-         AT2TfxWyXr7jTPy2JLXTMPssAoXRRkEdOADVz6IP5e6Vy8w7/UKQHYbhrxrX3/bdWKu7
-         zwkyb1HUWadrJM/1qcEC98oeKU51UO8BKMdwadyULY9JSxWnnaebNaVdxqbLQd2TuKCM
-         kQPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWI2YgHWMdo1/QWo8ToweccFbffWft9dZWxEAuAGK7DEe3vYRLZzL78JDiUQpsb3j6gGSSUTmaqQFcDRLS8VqCT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkZqc8+kuIe5MZITGmLhlVDvAL00pousmYnj/vFzPYykn/ygIR
-	w1Og6wM52BIX9UMtevmjuDARmQ60tRLhz87eMg6R4UJD13ZrLzDLAkNW
-X-Gm-Gg: ASbGncsSFPMHMYVuru8Q/nZJ7TWDfauJVFKKAs8nPglmZTIt+FFlaQIdHJZ5N1N0p/O
-	3dg3J2prdXMyjMV7nEmR8KAIP2URLHFRvPjWoa1TNFYa6j7WqqV5y638YtgRBv6/VhrKtKXMmYP
-	ZfGCM0esKxr/gyEcXI2F8j5SlA6Si04AzYNGeoFTCTu/R5jvK5th1+jahXViR+7/meqiP4c6uV2
-	qnc4/PJ0AlBuf+oPEFEXIJhjH9KLmrn+4NxFSyGqwnex2qjmN/nT5Y1MJ6KvYyCx15BNVusfU+V
-	TxPjUSt6gcuSUpQ6N3crBTipzWganzuLqYm0I1+FTiTY6uv+z7asoG6cKI2lp5H6ifpdwTT3uYS
-	IMX3NeAf0z9sOzCTzSaapvzboGSMVjvKT3wLTZ79kysCwg5wzP5l3Kj5V6ZuwyE5JyuCdLDgBy8
-	Otu7smyVtWE0Znqd1uiRD/17ObTJIbpUEjZ8A=
-X-Google-Smtp-Source: AGHT+IHWcY+GtYxvT2QkvWrdoG6nA29trQIRuLrsD8pNdWPYP/nxv4eW9O/LAvnZtRfQqFwuGVp1RA==
-X-Received: by 2002:a05:6a20:a109:b0:34f:c83b:b3f6 with SMTP id adf61e73a8af0-35ba2598aebmr8896833637.43.1763219398046;
-        Sat, 15 Nov 2025 07:09:58 -0800 (PST)
-Received: from DESKTOP-8TIG9K0.localdomain ([119.28.20.50])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b927d1c413sm8266986b3a.69.2025.11.15.07.09.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Nov 2025 07:09:57 -0800 (PST)
-From: Xie Yuanbin <qq570070308@gmail.com>
-To: tglx@linutronix.de
-Cc: aalbersh@redhat.com,
-	acme@kernel.org,
-	adrian.hunter@intel.com,
-	agordeev@linux.ibm.com,
-	akpm@linux-foundation.org,
-	alex@ghiti.fr,
-	alexander.shishkin@linux.intel.com,
-	andreas@gaisler.com,
-	andrii@kernel.org,
-	anna-maria@linutronix.de,
-	aou@eecs.berkeley.edu,
-	arnd@arndb.de,
-	baolin.wang@linux.alibaba.com,
-	borntraeger@linux.ibm.com,
-	bp@alien8.de,
-	brauner@kernel.org,
-	bsegall@google.com,
-	dave.hansen@linux.intel.com,
-	davem@davemloft.net,
-	david@kernel.org,
-	david@redhat.com,
-	dietmar.eggemann@arm.com,
-	frederic@kernel.org,
-	gor@linux.ibm.com,
-	hca@linux.ibm.com,
-	hpa@zytor.com,
-	irogers@google.com,
-	james.clark@linaro.org,
-	jlayton@kernel.org,
-	jolsa@kernel.org,
-	juri.lelli@redhat.com,
-	justinstitt@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux@armlinux.org.uk,
-	llvm@lists.linux.dev,
-	lorenzo.stoakes@oracle.com,
-	luto@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	max.kellermann@ionos.com,
-	mgorman@suse.de,
-	mhiramat@kernel.org,
-	mingo@redhat.com,
-	morbo@google.com,
-	namhyung@kernel.org,
-	nathan@kernel.org,
-	nick.desaulniers+lkml@gmail.com,
-	nysal@linux.ibm.com,
-	oleg@redhat.com,
-	osalvador@suse.de,
-	palmer@dabbelt.com,
-	paulmck@kernel.org,
-	peterz@infradead.org,
-	pjw@kernel.org,
-	qq570070308@gmail.com,
-	riel@surriel.com,
-	rostedt@goodmis.org,
-	ryan.roberts@arm.com,
-	segher@kernel.crashing.org,
-	sforshee@kernel.org,
-	sparclinux@vger.kernel.org,
-	svens@linux.ibm.com,
-	thuth@redhat.com,
-	urezki@gmail.com,
-	vincent.guittot@linaro.org,
-	vschneid@redhat.com,
-	will@kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v3 3/3] Make finish_task_switch and its subfuncs inline in context switching
-Date: Sat, 15 Nov 2025 23:09:28 +0800
-Message-ID: <20251115150928.649-1-qq570070308@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <87346gbd04.ffs@tglx>
-References: <87346gbd04.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AY4nUr6h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BACF6C19423;
+	Sat, 15 Nov 2025 17:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763229130;
+	bh=SkJx0bCyo9zKkbc9u1qMSudxM93XhzbKvdAO2MG36e4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AY4nUr6hRpN/Hua+PC6lQbjZ546ZJA2C/UxNJGSEuhZ1xbUfGOgxhIawcrm4Yvb86
+	 g9cBvCHRnAeY6O5LYUdWAuc3CqKupdbZ6gvy3yI+XFyILu0E2ACRQDlcqcui7kIWty
+	 8vRYITRS5iur/IIRrf8FIuDBbapDLY9fE9Jg0286tDMaUSlW2nJ7kH9GZneaygxGDW
+	 6Ied3fbLZfQM4HHhaO6FLisHzWuy+ggBV/dgd3qxJNXBUHv4TsbyluVcasHbyutLHq
+	 UMqqY4cANp8dhosyaCZS2YVLG8NQ21I5pH7n7zAQ0/gnchoWo0W38uvUk0Hk/Au7iV
+	 rHGYs8mVyE4ww==
+Date: Sat, 15 Nov 2025 09:52:06 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Xu Yang <xu.yang_2@nxp.com>, Chun-Tse Shao <ctshao@google.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Sumanth Korikkar <sumanthk@linux.ibm.com>,
+	Collin Funk <collin.funk1@gmail.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Levi Yun <yeoreum.yun@arm.com>,
+	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+	Weilin Wang <weilin.wang@intel.com>, Leo Yan <leo.yan@arm.com>
+Subject: Re: [PATCH v4 03/18] perf jevents: Add set of common metrics based
+ on default ones
+Message-ID: <aRi9xnwdLh3Dir9f@google.com>
+References: <20251111212206.631711-1-irogers@google.com>
+ <20251111212206.631711-4-irogers@google.com>
+ <ca0f0cd3-7335-48f9-8737-2f70a75b019a@linaro.org>
+ <CAP-5=fWNr9oaxWy3PyqbeH-sjsPpSt9g=8vP0drbb_e+ijpWkw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWNr9oaxWy3PyqbeH-sjsPpSt9g=8vP0drbb_e+ijpWkw@mail.gmail.com>
 
-On Fri, 14 Nov 2025 21:00:43 +0100, Thomas Gleixner wrote:
-> What are subfuncs? This is not a SMS service. Use proper words and not
-> made up abbreviations.
->
-> Again you mark them __always_inline and not inline. Most of them are
-> already 'inline'. Can you please precise in your wording?
->
-> This really can go into the comment section below the first '---'
-> separator. No point in having this in the change log.
+On Fri, Nov 14, 2025 at 08:57:39AM -0800, Ian Rogers wrote:
+> On Fri, Nov 14, 2025 at 8:28 AM James Clark <james.clark@linaro.org> wrote:
+> >
+> >
+> >
+> > On 11/11/2025 9:21 pm, Ian Rogers wrote:
+> > > Add support to getting a common set of metrics from a default
+> > > table. It simplifies the generation to add json metrics at the same
+> > > time. The metrics added are CPUs_utilized, cs_per_second,
+> > > migrations_per_second, page_faults_per_second, insn_per_cycle,
+> > > stalled_cycles_per_instruction, frontend_cycles_idle,
+> > > backend_cycles_idle, cycles_frequency, branch_frequency and
+> > > branch_miss_rate based on the shadow metric definitions.
+> > >
+> > > Following this change the default perf stat output on an alderlake
+> > > looks like:
+> > > ```
+> > > $ perf stat -a -- sleep 2
+> > >
+> > >   Performance counter stats for 'system wide':
+> > >
+> > >                0.00 msec cpu-clock                        #    0.000 CPUs utilized
+> > >              77,739      context-switches
+> > >              15,033      cpu-migrations
+> > >             321,313      page-faults
+> > >      14,355,634,225      cpu_atom/instructions/           #    1.40  insn per cycle              (35.37%)
+> > >     134,561,560,583      cpu_core/instructions/           #    3.44  insn per cycle              (57.85%)
+> > >      10,263,836,145      cpu_atom/cycles/                                                        (35.42%)
+> > >      39,138,632,894      cpu_core/cycles/                                                        (57.60%)
+> > >       2,989,658,777      cpu_atom/branches/                                                      (42.60%)
+> > >      32,170,570,388      cpu_core/branches/                                                      (57.39%)
+> > >          29,789,870      cpu_atom/branch-misses/          #    1.00% of all branches             (42.69%)
+> > >         165,991,152      cpu_core/branch-misses/          #    0.52% of all branches             (57.19%)
+> > >                         (software)                 #      nan cs/sec  cs_per_second
+> > >               TopdownL1 (cpu_core)                 #     11.9 %  tma_bad_speculation
+> > >                                                    #     19.6 %  tma_frontend_bound       (63.97%)
+> > >               TopdownL1 (cpu_core)                 #     18.8 %  tma_backend_bound
+> > >                                                    #     49.7 %  tma_retiring             (63.97%)
+> > >                         (software)                 #      nan faults/sec  page_faults_per_second
+> > >                                                    #      nan GHz  cycles_frequency       (42.88%)
+> > >                                                    #      nan GHz  cycles_frequency       (69.88%)
+> > >               TopdownL1 (cpu_atom)                 #     11.7 %  tma_bad_speculation
+> > >                                                    #     29.9 %  tma_retiring             (50.07%)
+> > >               TopdownL1 (cpu_atom)                 #     31.3 %  tma_frontend_bound       (43.09%)
+> > >                         (cpu_atom)                 #      nan M/sec  branch_frequency     (43.09%)
+> > >                                                    #      nan M/sec  branch_frequency     (70.07%)
+> > >                                                    #      nan migrations/sec  migrations_per_second
+> > >               TopdownL1 (cpu_atom)                 #     27.1 %  tma_backend_bound        (43.08%)
+> > >                         (software)                 #      0.0 CPUs  CPUs_utilized
+> > >                                                    #      1.4 instructions  insn_per_cycle  (43.04%)
+> > >                                                    #      3.5 instructions  insn_per_cycle  (69.99%)
+> > >                                                    #      1.0 %  branch_miss_rate         (35.46%)
+> > >                                                    #      0.5 %  branch_miss_rate         (65.02%)
+> > >
+> > >         2.005626564 seconds time elapsed
+> > > ```
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >   .../arch/common/common/metrics.json           |  86 +++++++++++++
+> > >   tools/perf/pmu-events/empty-pmu-events.c      | 115 +++++++++++++-----
+> > >   tools/perf/pmu-events/jevents.py              |  21 +++-
+> > >   tools/perf/pmu-events/pmu-events.h            |   1 +
+> > >   tools/perf/util/metricgroup.c                 |  31 +++--
+> > >   5 files changed, 212 insertions(+), 42 deletions(-)
+> > >   create mode 100644 tools/perf/pmu-events/arch/common/common/metrics.json
+> > >
+> > > diff --git a/tools/perf/pmu-events/arch/common/common/metrics.json b/tools/perf/pmu-events/arch/common/common/metrics.json
+> > > new file mode 100644
+> > > index 000000000000..d915be51e300
+> > > --- /dev/null
+> > > +++ b/tools/perf/pmu-events/arch/common/common/metrics.json
+> > > @@ -0,0 +1,86 @@
+> > > +[
+> > > +    {
+> > > +        "BriefDescription": "Average CPU utilization",
+> > > +        "MetricExpr": "(software@cpu\\-clock\\,name\\=cpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=task\\-clock@) / (duration_time * 1e9)",
+> >
+> > Hi Ian,
+> >
+> > I noticed that this metric is making "perf stat tests" fail.
+> > "duration_time" is a tool event and they don't work with "perf stat
+> > record" anymore. The test tests the record command with the default args
+> > which results in this event being used and a failure.
+> >
+> > I suppose there are three issues. First two are unrelated to this change:
+> >
+> >   - Perf stat record continues to write out a bad perf.data file even
+> >     though it knows that tool events won't work.
+> >
+> >     For example 'status' ends up being -1 in cmd_stat() but it's ignored
+> >     for some of the writing parts. It does decide to not print any stdout
+> >     though:
+> >
+> >     $ perf stat record -e "duration_time"
+> >     <blank>
+> >
+> >   - The other issue is obviously that tool events don't work with perf
+> >     stat record which seems to be a regression from 6828d6929b76 ("perf
+> >     evsel: Refactor tool events")
+> >
+> >   - The third issue is that this change adds a broken tool event to the
+> >     default output of perf stat
+> >
+> > I'm not actually sure what "perf stat record" is for? It's possible that
+> > it's not used anymore, expecially if nobody noticed that tool events
+> > haven't been working in it for a while.
+> >
+> > I think we're also supposed to have json output for perf stat (although
+> > this is also broken in some obscure scenarios), so maybe perf stat
+> > record isn't needed anymore?
+> 
+> Hi James,
+> 
+> Thanks for the report. I think this is also an overlap with perf stat
+> metrics don't work with perf stat record, and because these changes
+> made that the default. Let me do some follow up work as the perf
+> script work shows we can do useful things with metrics while not being
+> on a live perf stat - there's the obstacle that the CPUID of the host
+> will be used :-/
+> 
+> Anyway, I'll take a look and we should add a test on this. There is
+> one that the perf stat json output is okay, to some definition. One
+> problem is that the stat-display code is complete spaghetti. Now that
+> stat-shadow only handles json metrics, and perf script isn't trying to
+> maintain a set of shadow counters, that is a little bit improved.
 
-Thanks for pointing it out, I will improve it in v4 patch.
+I have another test failure on this.  On my AMD machine, perf all
+metrics test fails due to missing "LLC-loads" events.
 
->> After `finish_task_switch` is changed to an inline function, the number of
->> calls to the subfunctions (called by `finish_task_switch`) increases in
->> this translation unit due to the inline expansion of `finish_task_switch`.
->> Due to compiler optimization strategies, these functions may transition
->> from inline functions to non inline functions, which can actually lead to
->> performance degradation.
->
-> I'm having a hard time to understand this word salad.
+  $ sudo perf stat -M llc_miss_rate true
+  Error:
+  No supported events found.
+  The LLC-loads event is not supported.
 
-I think the description is very important here, because it explains why
-it needs to make the subfunctions as __always_inline.
-Where is difficult to understand specifically? Please point it out,
-and I will improve the description in v4 patch. Thank you very much!
+Maybe we need to make some cache metrics conditional as some events are
+missing.
 
-> What means (rdtsc)?
+Thanks,
+Namhyung
 
-This is a high-precision timestamp acquisition method in x86.
-The description here is not sufficient, thanks for pointing it out, I
-will improve it in v4 patch.
-
-> So the real benefit is observable when spectre_v2_user mitigations are
-> enabled. You completely fail to explain that.
-
-What kind of explanation is needed here?
-```txt
-When spectre_v2_user mitigation is enabled, kernel is likely to
-preform branch prediction hardening inside switch_mm_irq_off, which can
-drastically increase the branch prediction misses in subsequently
-executed code.
-
-On x86, this mitigation is enabled conditionally by default, but on other
-architectures, for example arm32/aarch64, the mitigation may be fully
-enabled by default.
-
-`finish_task_switch` is right after `switch_mm_irq_off`, so makeing it
-inline can achieve high performance benefits.
-```
-Is it ok? Thanks very much!
-
-> bzImage size is completely irrelevant. What's interesting is how the
-> size of the actual function changes.
-
-I think the bzImage size is meaningful, at least for many embedded
-devices. Due to compression algorithms, code size cannot directly reflect
-to the compressed size.
-
-Anyway, I will supplement the size of the .text section in the v4 patch.
-
-Thanks very much!
-
-Xie Yuanbin
