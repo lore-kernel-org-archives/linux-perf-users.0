@@ -1,299 +1,225 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C881DB125
-	for <linux-perf-users@vger.kernel.org>; Sun, 16 Nov 2025 03:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA9A1917ED
+	for <linux-perf-users@vger.kernel.org>; Sun, 16 Nov 2025 07:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763263784; cv=none; b=KZQCveQslfzwJF0ulyRb8O08o+pKkFLPhfCbulgXcoaXCOndI4MHv3RpcxuCeEKag45xlxWIEv0chRoHr93MMywdie6Eo4Bpp5qg9S+QNJgxdCWNHEpze8HzFZ5PeAh7S+WEnYyFs6l08u3B0YMAo34gWRQRuKrxlNe6M7kCpHc=
+	t=1763277713; cv=none; b=NvXGtMA5fLsTiojlpV1xbaW/gw+m1zJ/P39Ik/9/A26Vrg376bnk9e9wAUSn+tBYsB3lVX1KlAsPWduW4uB9flLGPqHex5vgP3wH57QryxpyAx/4BvGTDhGbW4P97NdZuhq3U/+mr0qE48P6GYfaMRNq3zSZKK7i8z7NY78Bt6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763263784; c=relaxed/simple;
-	bh=5WY03GlOFrpYW/e8i9oen4Cc3MyY1mbwOu4bfKJd/eY=;
+	s=arc-20240116; t=1763277713; c=relaxed/simple;
+	bh=fSHL3sd9Gbbrp1gQtngQIUSDsPeVMgQ7JrxPCW2iXqM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AC68ZFZO+0jQL8kvvsYOw3ayFI87lYiz9oZ6axyc/N2ltGSIgLHolCoAw9MSnuSN3y8aro01+eZBhIAIRwCKG/oS2UraCN9/rxNIG9JG7/6WbNFLkKQpHdc1hLwIai7QB+Z91pCEBu5rvwtS6lS4+9CgN32WLz5ycs3rA1CMzfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RSuZq4Eb; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RSuZq4Eb"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-29852dafa7dso153565ad.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 15 Nov 2025 19:29:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763263782; x=1763868582; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YenHTZ1IsVuOfRhsKvPFDqOaMwLMVWJWTeC/KEdwWHY=;
-        b=RSuZq4EbeDWqUQE8eF/Ato0bIPwQTBWy2RKR5RAFYhu9F7jvxyLFBaXI50l+EFRnv9
-         MVPAZZ29TEOkvJlr2cH2NlpoOcLfRctScglPAF9SNWc7bSATpEKGqAHbkgWq6ZNA3MPC
-         igGTV/Wh9903dSgGgyahmEr5omXGBhcI1Q7Gl6CWSGztlw6uV/7uscXZ3CWFAaiSs038
-         ffvH4vCHoKX/e2vbPUWQyoE8IYh7WUOjFREoQhhdUPE8x6Bq8bnkdI28SJVogVf4/dY7
-         PhDsvufdav1DXiPBXDZXcQYJUAUO8oDbA7FFrgsuOTcH1Lkm8ggjLN4QbBRwqNRcaCB3
-         DzDQ==
+	 To:Cc:Content-Type; b=QqUFJUMMOafPiuoLJdpvrDCfAh14ucdUMaWcmvkEFBHOB85Bnlemv8KJh/i0jdlH+koFvkp80yMjX9rZ9MU8GtTgvyRXOH4/Y/CVx/8adRXLRs0r0LWc1IZMRLYpsHQTRkx6b5dN+MvF8cn3jCalY54e23TzHWMZGcAVP0cyofA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-5dfb5fcf063so986664137.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 15 Nov 2025 23:21:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763263782; x=1763868582;
+        d=1e100.net; s=20230601; t=1763277709; x=1763882509;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=YenHTZ1IsVuOfRhsKvPFDqOaMwLMVWJWTeC/KEdwWHY=;
-        b=NEA2e3zGx07gmJ+SpMQqCwgosfJW0SxrwQpO6MhmEHLs6vaTBOGy6riVAsSz7J5OND
-         S+AHp26HYGwuXu/+1NoPP2SD10N28TDzm7BjeEX9fkqPMx95xBP72AAbTEHUmrhd+cZw
-         +XuLsdssuIko3t/O9ovJ0DnVyho8G8uSBkRTkaIrXJxP5GkHjT+7baP9I9wdsGGSJIqt
-         Bx2nimlefi90S9bTyW4I7G8wUupOE4AzsG3Z/QmE+3Tx99DzVCAh8oAhMINcDqTImFlR
-         EaOVlQuv40OdJzSQ9EK1HbSNdtiIMhr2MmyOUizeHHf4SCPbYo2op5HQhvYk4ENTVqtv
-         wYgw==
-X-Forwarded-Encrypted: i=1; AJvYcCXbbjq1Mtbi+FY/UgUEzfugkfC8OYPaeqQk5q2BHWLkramSnhsQldGMnU3NA/NFtbdDVqojusqEkJ0rQSyXhH1h@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVMHtQwFjWmnsH7VVpnYhdbtN56F+rl6Ib6ptp8HkfrF+hZ2nX
-	lu56vq2bgoGEhi+9WJ382qqvaRTSw2Lj8YNAg+TgjPOqikYdYJyS4vSiG0K7KP3WtDJnwG+zlbk
-	8Bw+uPni9mCVPR383/NaIxVZioBCVPLATF+veg3lm
-X-Gm-Gg: ASbGncvl9kKMsjYDE2TaPzcSpBFfd4H3hBRMTmrhXJ7We9QLTt6WWc8hctZ4C6moCI0
-	MfBnYnqn98YNG1PQ9VHhkfozQ/EH7gtS7ygqRjWbPSI3TEoJ/mPlfUR0Mp/wb9j3GH8CJf8xfgP
-	Vsr5iH3gx4caNZShmkpsPgX03lXiOkWGhrU7dtF8ZzVYbzJKE3ZuG9fEtE1rv5LYlJPhbp4myXY
-	0aICqn8idjENK6Iyl0sn+P63kWm6Z0/Yd11QhaMe04abLIuUF7IpTbM9DRdLu2y7P/rztDI
-X-Google-Smtp-Source: AGHT+IGTwV5AI6pAr7IsbiIFQxi3zjHr4l4PPaj4Btj8iJyGRXOdHFfOEhoLQpIbdSuUEJRovrmEwAd3tAqCZscjtLA=
-X-Received: by 2002:a17:903:120a:b0:294:f745:fe7b with SMTP id
- d9443c01a7336-299c6a962e8mr3359575ad.6.1763263781730; Sat, 15 Nov 2025
- 19:29:41 -0800 (PST)
+        bh=hqg0bjLSAES7daJaMwwXzpjllo/mE++1WP9GUNGDNAI=;
+        b=RL/JUuSISYAuoKgL0kA3nL967iw1I3DwZ1lnIsOvqDVMchT93h6kJXBSpKHbGEEQcH
+         AaD+SSSLBZ2IC408Q3xe5ntwHcZ2u5t/yfBG6rIPSycx4YDGlX+ZlxOrjjFGELJ9iBWh
+         7O8KUXZ74+O3KRe8EyrqoPsZBPzUsJzAmT+ONg9THqGnTrPgKwWbkg0X1yloCYN3u0RK
+         7XBhJukR7QTcHp+kFmWBtPI2pzV2Aark8Ngz2Val/HhUQ3lp5JKKAcoM5iHQItsDWmVW
+         VRlXc3HokwBmLXupSRyhElj/8tspUOROKKX62J7POEHYzOStwdHh4HZF5KkaE7gwo8Wm
+         s6rw==
+X-Forwarded-Encrypted: i=1; AJvYcCWqh0o9LfQoZjHZHIiM7BqWpFNjJegSCI0uit/DtcqT4EKGfNACiVdeIOn/tAzIrVypjeOBUdn4jfoqROFYch6l@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlpT2JjyefCmzMZVtZiXLZJvkWwSiApq7VfsnVOrd/g0DUkpAH
+	Q4QEzxSyuk9qhXH83asPmJWb6otR5XEEAZIgUkV+JlOCTCVg/3qTgAV+OYH4rQ==
+X-Gm-Gg: ASbGnctE8YI70u+lfm9SQ6oIq51OxLoyKcVhCdpBloR3vkPGtcvnIVoPQvVjmY0tTLe
+	xtiHKnrphA4PmG7tnqukqWklQgc+bjubfrimeX9XdvTBWc/TtppqYdKAjMUFs0TRoJIbyamX2ib
+	v6w+VpXGTo4sYFFtr6UCuvaPPQbZdebM5H81TYh6612lllYx2wfM4bLq8V6UoUngqk4k1VVRaHa
+	MeFJOBwPPPUhwPJ2a8VQdOiEz9iEVSr9ZXq+8teeq0ElxPZQ5UyJkCV66XGaFqcsVfV5mDFHsIN
+	VcAgtg7SmTrY5aC6pQ6tZkwU2DXZwMYGe45F2B6u0RE5I7pqeE4ss6jpM6W1D94yhUPu43+an3+
+	3b7CuhAxZZxY3IlRbmqRBpgc1zIlJ/yvcXlm7/FzqQQMhTlcgo4qtdgwc4LA+BTFfFIS9TZd+2f
+	CZbm1aGe6TvxUVUPIXcNv9bI5BN2+9KVMKdKuUZcgNBJQujPWUWYo=
+X-Google-Smtp-Source: AGHT+IFFrd5x46A32+GRn/bpo1XGzsy5FxdKG2YKZxoWs+k/y00AumfHpzBiu4Isnsq0SoiwDgSKGw==
+X-Received: by 2002:a05:6102:d92:b0:5db:23ed:3840 with SMTP id ada2fe7eead31-5dfc5a5e77fmr2580264137.37.1763277709408;
+        Sat, 15 Nov 2025 23:21:49 -0800 (PST)
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-937610ce60bsm2926289241.3.2025.11.15.23.21.49
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Nov 2025 23:21:49 -0800 (PST)
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-5dde4444e0cso1168396137.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 15 Nov 2025 23:21:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUA2mgFf9GksJO9d1v+eFnnuHabGYPsI7pYQkAMtrbRPljU7E578KOnMryxno135/vB+bjk4CcQJ6owpp5s7b+g@vger.kernel.org
+X-Received: by 2002:a05:6102:3596:b0:5b1:15:1986 with SMTP id
+ ada2fe7eead31-5dfc55371b4mr2501850137.15.1763277709074; Sat, 15 Nov 2025
+ 23:21:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251111212206.631711-1-irogers@google.com> <20251111212206.631711-4-irogers@google.com>
- <ca0f0cd3-7335-48f9-8737-2f70a75b019a@linaro.org> <CAP-5=fWNr9oaxWy3PyqbeH-sjsPpSt9g=8vP0drbb_e+ijpWkw@mail.gmail.com>
- <aRi9xnwdLh3Dir9f@google.com>
-In-Reply-To: <aRi9xnwdLh3Dir9f@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 15 Nov 2025 19:29:29 -0800
-X-Gm-Features: AWmQ_bnhMe6zSP20I8x9QNg6zfV5mkXy_spw4zRprMmyWnsbiXAVrumTPf9eMPQ
-Message-ID: <CAP-5=fVKwQbOFcm5kNkuZ62rTu77A+N=aa2Of+hN1-68Qe7rFA@mail.gmail.com>
-Subject: Re: [PATCH v4 03/18] perf jevents: Add set of common metrics based on
- default ones
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Xu Yang <xu.yang_2@nxp.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Sumanth Korikkar <sumanthk@linux.ibm.com>, Collin Funk <collin.funk1@gmail.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Leo Yan <leo.yan@arm.com>
+References: <20251114092914.217533-1-namhyung@kernel.org> <CAP-5=fWsFLkYGFFyzSrpZNdRLpjaTZAuW7-YVUr-zMVH5dk8eg@mail.gmail.com>
+ <aRd7iJJxgT-0G8Ky@google.com> <CAP-5=fUC88TVwnjTuTgU+s=LqqP0xOhNTG5hU27cSbaZRH7Jpg@mail.gmail.com>
+In-Reply-To: <CAP-5=fUC88TVwnjTuTgU+s=LqqP0xOhNTG5hU27cSbaZRH7Jpg@mail.gmail.com>
+From: Fangrui Song <maskray@sourceware.org>
+Date: Sat, 15 Nov 2025 23:22:04 -0800
+X-Gmail-Original-Message-ID: <CAN30aBHWef0kKWPkvx9NZ4nJjdz97PJ7s_68h-ddZ3e8VzYW3A@mail.gmail.com>
+X-Gm-Features: AWmQ_bm5hukHAbV38L3RXVaN5pYjuZWE37O-ylgNz3OdGsdQI_siuDB0gtH03t0
+Message-ID: <CAN30aBHWef0kKWPkvx9NZ4nJjdz97PJ7s_68h-ddZ3e8VzYW3A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf jitdump: Add load_addr to build-ID generation
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, maskray@sourceware.org, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>, 
+	Pablo Galindo <pablogsal@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Nov 15, 2025 at 9:52=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Fri, Nov 14, 2025 at 11:33=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-> On Fri, Nov 14, 2025 at 08:57:39AM -0800, Ian Rogers wrote:
-> > On Fri, Nov 14, 2025 at 8:28=E2=80=AFAM James Clark <james.clark@linaro=
+> On Fri, Nov 14, 2025 at 10:57=E2=80=AFAM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> >
+> > On Fri, Nov 14, 2025 at 09:33:29AM -0800, Ian Rogers wrote:
+> > > On Fri, Nov 14, 2025 at 1:29=E2=80=AFAM Namhyung Kim <namhyung@kernel=
 .org> wrote:
-> > >
-> > >
-> > >
-> > > On 11/11/2025 9:21 pm, Ian Rogers wrote:
-> > > > Add support to getting a common set of metrics from a default
-> > > > table. It simplifies the generation to add json metrics at the same
-> > > > time. The metrics added are CPUs_utilized, cs_per_second,
-> > > > migrations_per_second, page_faults_per_second, insn_per_cycle,
-> > > > stalled_cycles_per_instruction, frontend_cycles_idle,
-> > > > backend_cycles_idle, cycles_frequency, branch_frequency and
-> > > > branch_miss_rate based on the shadow metric definitions.
 > > > >
-> > > > Following this change the default perf stat output on an alderlake
-> > > > looks like:
-> > > > ```
-> > > > $ perf stat -a -- sleep 2
+> > > > It was reported that python backtrace with JIT dump was broken afte=
+r the
+> > > > change to built-in SHA-1 implementation.  It seems python generates=
+ the
+> > > > same JIT code for each function.  They will become separate DSOs bu=
+t the
+> > > > contents are the same.  Only difference is in the symbol name.
 > > > >
-> > > >   Performance counter stats for 'system wide':
-> > > >
-> > > >                0.00 msec cpu-clock                        #    0.00=
-0 CPUs utilized
-> > > >              77,739      context-switches
-> > > >              15,033      cpu-migrations
-> > > >             321,313      page-faults
-> > > >      14,355,634,225      cpu_atom/instructions/           #    1.40=
-  insn per cycle              (35.37%)
-> > > >     134,561,560,583      cpu_core/instructions/           #    3.44=
-  insn per cycle              (57.85%)
-> > > >      10,263,836,145      cpu_atom/cycles/                          =
-                              (35.42%)
-> > > >      39,138,632,894      cpu_core/cycles/                          =
-                              (57.60%)
-> > > >       2,989,658,777      cpu_atom/branches/                        =
-                              (42.60%)
-> > > >      32,170,570,388      cpu_core/branches/                        =
-                              (57.39%)
-> > > >          29,789,870      cpu_atom/branch-misses/          #    1.00=
-% of all branches             (42.69%)
-> > > >         165,991,152      cpu_core/branch-misses/          #    0.52=
-% of all branches             (57.19%)
-> > > >                         (software)                 #      nan cs/se=
-c  cs_per_second
-> > > >               TopdownL1 (cpu_core)                 #     11.9 %  tm=
-a_bad_speculation
-> > > >                                                    #     19.6 %  tm=
-a_frontend_bound       (63.97%)
-> > > >               TopdownL1 (cpu_core)                 #     18.8 %  tm=
-a_backend_bound
-> > > >                                                    #     49.7 %  tm=
-a_retiring             (63.97%)
-> > > >                         (software)                 #      nan fault=
-s/sec  page_faults_per_second
-> > > >                                                    #      nan GHz  =
-cycles_frequency       (42.88%)
-> > > >                                                    #      nan GHz  =
-cycles_frequency       (69.88%)
-> > > >               TopdownL1 (cpu_atom)                 #     11.7 %  tm=
-a_bad_speculation
-> > > >                                                    #     29.9 %  tm=
-a_retiring             (50.07%)
-> > > >               TopdownL1 (cpu_atom)                 #     31.3 %  tm=
-a_frontend_bound       (43.09%)
-> > > >                         (cpu_atom)                 #      nan M/sec=
-  branch_frequency     (43.09%)
-> > > >                                                    #      nan M/sec=
-  branch_frequency     (70.07%)
-> > > >                                                    #      nan migra=
-tions/sec  migrations_per_second
-> > > >               TopdownL1 (cpu_atom)                 #     27.1 %  tm=
-a_backend_bound        (43.08%)
-> > > >                         (software)                 #      0.0 CPUs =
- CPUs_utilized
-> > > >                                                    #      1.4 instr=
-uctions  insn_per_cycle  (43.04%)
-> > > >                                                    #      3.5 instr=
-uctions  insn_per_cycle  (69.99%)
-> > > >                                                    #      1.0 %  br=
-anch_miss_rate         (35.46%)
-> > > >                                                    #      0.5 %  br=
-anch_miss_rate         (65.02%)
-> > > >
-> > > >         2.005626564 seconds time elapsed
-> > > > ```
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >   .../arch/common/common/metrics.json           |  86 +++++++++++++
-> > > >   tools/perf/pmu-events/empty-pmu-events.c      | 115 +++++++++++++=
------
-> > > >   tools/perf/pmu-events/jevents.py              |  21 +++-
-> > > >   tools/perf/pmu-events/pmu-events.h            |   1 +
-> > > >   tools/perf/util/metricgroup.c                 |  31 +++--
-> > > >   5 files changed, 212 insertions(+), 42 deletions(-)
-> > > >   create mode 100644 tools/perf/pmu-events/arch/common/common/metri=
-cs.json
-> > > >
-> > > > diff --git a/tools/perf/pmu-events/arch/common/common/metrics.json =
-b/tools/perf/pmu-events/arch/common/common/metrics.json
-> > > > new file mode 100644
-> > > > index 000000000000..d915be51e300
-> > > > --- /dev/null
-> > > > +++ b/tools/perf/pmu-events/arch/common/common/metrics.json
-> > > > @@ -0,0 +1,86 @@
-> > > > +[
-> > > > +    {
-> > > > +        "BriefDescription": "Average CPU utilization",
-> > > > +        "MetricExpr": "(software@cpu\\-clock\\,name\\=3Dcpu\\-cloc=
-k@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@) / (d=
-uration_time * 1e9)",
+> > > > But this caused a problem that every JIT'ed DSOs will have the same
+> > > > build-ID which makes perf confused.  And it resulted in no python
+> > > > symbols (from JIT) in the output.
 > > >
-> > > Hi Ian,
-> > >
-> > > I noticed that this metric is making "perf stat tests" fail.
-> > > "duration_time" is a tool event and they don't work with "perf stat
-> > > record" anymore. The test tests the record command with the default a=
-rgs
-> > > which results in this event being used and a failure.
-> > >
-> > > I suppose there are three issues. First two are unrelated to this cha=
-nge:
-> > >
-> > >   - Perf stat record continues to write out a bad perf.data file even
-> > >     though it knows that tool events won't work.
-> > >
-> > >     For example 'status' ends up being -1 in cmd_stat() but it's igno=
-red
-> > >     for some of the writing parts. It does decide to not print any st=
-dout
-> > >     though:
-> > >
-> > >     $ perf stat record -e "duration_time"
-> > >     <blank>
-> > >
-> > >   - The other issue is obviously that tool events don't work with per=
-f
-> > >     stat record which seems to be a regression from 6828d6929b76 ("pe=
-rf
-> > >     evsel: Refactor tool events")
-> > >
-> > >   - The third issue is that this change adds a broken tool event to t=
-he
-> > >     default output of perf stat
-> > >
-> > > I'm not actually sure what "perf stat record" is for? It's possible t=
-hat
-> > > it's not used anymore, expecially if nobody noticed that tool events
-> > > haven't been working in it for a while.
-> > >
-> > > I think we're also supposed to have json output for perf stat (althou=
-gh
-> > > this is also broken in some obscure scenarios), so maybe perf stat
-> > > record isn't needed anymore?
+> > > The lookup of a DSO involves the build ID and the filename. I'm
+> > > confused as to why things weren't deduplicated and why no symbols
+> > > rather than repeatedly the same symbol?
 > >
-> > Hi James,
+> > I don't know, but that's the symptom in the original bug report in the
+> > python github (see Links: below).  I guess the behavior is
+> > non-deterministic.
 > >
-> > Thanks for the report. I think this is also an overlap with perf stat
-> > metrics don't work with perf stat record, and because these changes
-> > made that the default. Let me do some follow up work as the perf
-> > script work shows we can do useful things with metrics while not being
-> > on a live perf stat - there's the obstacle that the CPUID of the host
-> > will be used :-/
+> > >
+> > > > Looking back at the original code before the conversion, it used th=
+e
+> > > > load_addr as well as the code section to distinguish each DSO.  I t=
+hink
+> > > > we should do the same or use symbol table as an additional input fo=
+r
+> > > > SHA-1.
+> > >
+> > > Hmm.. the build ID for the contents of the code should be a constant.
+> > > As the build ID is a note for the entire ELF file then something is
+> > > wrong with the filename handling it seems.
 > >
-> > Anyway, I'll take a look and we should add a test on this. There is
-> > one that the perf stat json output is okay, to some definition. One
-> > problem is that the stat-display code is complete spaghetti. Now that
-> > stat-shadow only handles json metrics, and perf script isn't trying to
-> > maintain a set of shadow counters, that is a little bit improved.
+> > When it tries to load symbols from a DSO, it prefer reading from the
+> > build-ID cache than the file system since it trusts build-IDs more than
+> > the path name.  See dso__load() and binary_type_symtab[].
+> >
+> > So having multiple DSO's with the same build-ID can be a problem if the=
+y
+> > are in the build-ID cache.  Normally `perf inject -j` won't add the new
+> > JIT-ed DSOs to the build-ID cache but it's still possible.
 >
-> I have another test failure on this.  On my AMD machine, perf all
-> metrics test fails due to missing "LLC-loads" events.
+> +Fangrui
 >
->   $ sudo perf stat -M llc_miss_rate true
->   Error:
->   No supported events found.
->   The LLC-loads event is not supported.
+> I'm surprised that build IDs don't include symbol names but:
+> ```
+> $ cat a.s
+> .text
+> .global main
+> .global foo
+> main:
+> foo:
+>        ret
+> $ cat b.s
+> .text
+> .global main
+> .global bar
+> main:
+> bar:
+>        ret
+> $ gcc -Wl,--build-id a.s -o a.out
+> $ gcc -Wl,--build-id b.s -o b.out
+> $ readelf -n a.out
+> ...
+>    Build ID: 9dd0371b953db5d72929af5d98552e4ee1043616
+> ...
+> $ readelf -n b.out
+> ...
+>    Build ID: 9dd0371b953db5d72929af5d98552e4ee1043616
+> ...
+> ```
+> so ugh. Perhaps we need to have jitdump make a single object file (and
+> so 1 build ID) but with multiple unique symbols.
 >
-> Maybe we need to make some cache metrics conditional as some events are
-> missing.
-
-Maybe we can `perf list Default`, etc. for this is a problem. We have
-similar unsupported events in metrics on Intel like:
-
-```
-$ perf stat -M itlb_miss_rate -a sleep 1
-
- Performance counter stats for 'system wide':
-
-   <not supported>      iTLB-loads
-           168,926      iTLB-load-misses
-
-       1.002287122 seconds time elapsed
-```
-
-but I've not seen failures:
-
-```
-$ perf test -v "all metrics"
-103: perf all metrics test                                           : Skip
-```
-
-Thanks,
-Ian
-
 > Thanks,
-> Namhyung
+> Ian
+
+Looks like a GNU ld issue. Other linkers should give different build IDs.
+
+ .symtab/.strtab/.shstrtab are special sections and BFD seem to skip
+their content for the build ID.
+Raised  https://sourceware.org/bugzilla/show_bug.cgi?id=3D33633 ("ld
+--build-id does not use symtab/strtab content")
+
 >
+>
+>
+> > Thanks,
+> > Namhyung
+> >
+> > >
+> > > > This patch is a quick-and-dirty fix just to add each byte of the
+> > > > load_addr to the first 8 bytes of SHA-1 result.  Probably we need t=
+o add
+> > > > sha1_update() or similar to update the existing hash value and use =
+it
+> > > > here.  I'd like something that can be backported to the stable tree=
+s
+> > > > easily.
+> > > >
+> > > > Fixes: e3f612c1d8f3945b ("perf genelf: Remove libcrypto dependency =
+and use built-in sha1()")
+> > > > Cc: Eric Biggers <ebiggers@kernel.org>
+> > > > Cc: Pablo Galindo <pablogsal@gmail.com>
+> > > > Link: https://github.com/python/cpython/issues/139544
+> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > > ---
+> > > >  tools/perf/util/genelf.c | 9 +++++++++
+> > > >  1 file changed, 9 insertions(+)
+> > > >
+> > > > diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
+> > > > index 591548b10e34ef6a..a412e6faf70e37f3 100644
+> > > > --- a/tools/perf/util/genelf.c
+> > > > +++ b/tools/perf/util/genelf.c
+> > > > @@ -395,6 +395,15 @@ jit_write_elf(int fd, uint64_t load_addr __may=
+be_unused, const char *sym,
+> > > >          * build-id generation
+> > > >          */
+> > > >         sha1(code, csize, bnote.build_id);
+> > > > +       /* FIXME: update the SHA-1 hash using additional contents *=
+/
+> > > > +       bnote.build_id[0] +=3D (load_addr >> 0) & 0xff;
+> > > > +       bnote.build_id[1] +=3D (load_addr >> 8) & 0xff;
+> > > > +       bnote.build_id[2] +=3D (load_addr >> 16) & 0xff;
+> > > > +       bnote.build_id[3] +=3D (load_addr >> 24) & 0xff;
+> > > > +       bnote.build_id[4] +=3D (load_addr >> 32) & 0xff;
+> > > > +       bnote.build_id[5] +=3D (load_addr >> 40) & 0xff;
+> > > > +       bnote.build_id[6] +=3D (load_addr >> 48) & 0xff;
+> > > > +       bnote.build_id[7] +=3D (load_addr >> 56) & 0xff;
+> > > >         bnote.desc.namesz =3D sizeof(bnote.name); /* must include 0=
+ termination */
+> > > >         bnote.desc.descsz =3D sizeof(bnote.build_id);
+> > > >         bnote.desc.type   =3D NT_GNU_BUILD_ID;
+> > > > --
+> > > > 2.52.0.rc1.455.g30608eb744-goog
+> > > >
