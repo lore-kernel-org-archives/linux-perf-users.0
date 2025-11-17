@@ -1,63 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985CF26D4CA;
-	Sun, 16 Nov 2025 21:57:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40141189F20;
+	Mon, 17 Nov 2025 02:46:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763330230; cv=none; b=tg1puPQMefS5LX/CLK+G49wNS1ftvFEgTU4B3GMXpudSV1TllI4uERPRUODm8cs1F9dcjHT7cJnZ9/zbKw980uvAP8AcTEpACFOzh98T7NqAg2Oo8KJ1zNV5HLmZvvj7o7RRJhxPpkefz1od2AavBF7wbQOG5uAuRUNvRbcd+NA=
+	t=1763347591; cv=none; b=EGf5eogcRY8BAQOQQgf8joHv30i7+ckMSpjjC9kzbDt9wWmkMzRBWeymQ1AbFCgUDXFDJPbaQq3OnZFMzL6DPcPzueLSXwFHd5vZBD0G2VF+gDQnp24Zx5PdIjjkD4NWegZlZ4i7MNCToWK7Cqp2EWtLjzFhS2MSJGtd70yjSL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763330230; c=relaxed/simple;
-	bh=9RL9RNt8A1fOzUlOHOJDyDi+dlnw6ypWH6C5qyJRmbc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VXJBL466AUdywGYliygOFH2R8Kxgp4Bn5zUcSq7DPZ2Kqmxz9HYA/1bHAhHllahG/3KgWAXx61N22+/LsFIEnYNS9JVhXPz0x38FcYVfTkZgUDa40pU7YuD2wKO83WvfCv05vjK6V1QxUWyqW+dZSnFaQmjIt84o5LGa39O3lao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LnTsJmOA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763347591; c=relaxed/simple;
+	bh=WckId20dWoL3Sm2pBxpsSPNRW6RlT7Dsm6IF/ZnMV/g=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=NoWCBOEYVNFnfQ21NE6NbKf5v7hoWRRvN/9px9Y/DzK/clQHl502YC2PDUI805lU/qAY+E/ggFwux6ljJpeefx4LOKdUKtCTE6qZi35QwPliZ+7zus6CcScAnS9/vh3SmR66G8WM9ktaoQoil3gX9ZapiMFOAAwWVk468MKBHes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jv4IAyaO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LnTsJmOA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24ED4C4CEF1;
-	Sun, 16 Nov 2025 21:57:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jv4IAyaO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A73C4CEF5;
+	Mon, 17 Nov 2025 02:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763330230;
-	bh=9RL9RNt8A1fOzUlOHOJDyDi+dlnw6ypWH6C5qyJRmbc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=LnTsJmOAuh3IOzciHouruJByImAAeHnzY2XbAPEkrhkkiCjwJCqHq1KYTDZ0HgLQn
-	 jb4Yg5CsZHND4rLuWpta396DPm3IWti46pRFsTGJIFW0dW5K0KmgWDMsCEMIY1CHI9
-	 ohXpbRVXq83mt5SIdgSaUpGXLMIvGJEwGxkJyVSrTulbGSmFRaWCfGEdjhcMboX/sH
-	 Th0t5PZQnvAzTi/SBWDjUQhVIPxTvuCffcLingoNLW0U1rH148i0rMISAxFRuf1exk
-	 ZHl6lOUDuWxksEoYl0VhyZPrzBv0K2Kei8MzKW1uLWqh29Vp/jfQXZE4gHp1AE6Iqu
-	 6xcPndXYznQnQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADEBB3A78B25;
-	Sun, 16 Nov 2025 21:56:38 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v6.18: 2nd batch
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20251116192901.272457-1-acme@kernel.org>
-References: <20251116192901.272457-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20251116192901.272457-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.18-2-2025-11-16
-X-PR-Tracked-Commit-Id: b72b8132d8fd2d6bf5b420a03d4fc553980c3a92
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 998ccc327b14c03861247540ff6f8135a5283621
-Message-Id: <176333019718.2325379.6209332232667485003.pr-tracker-bot@kernel.org>
-Date: Sun, 16 Nov 2025 21:56:37 +0000
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Guilherme Amadio <amadio@gentoo.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Thomas Falcon <thomas.falcon@intel.com>, Tycho Andersen <tycho@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+	s=k20201202; t=1763347590;
+	bh=WckId20dWoL3Sm2pBxpsSPNRW6RlT7Dsm6IF/ZnMV/g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Jv4IAyaOD4AVcvfTrSXXHEBQWq8KCAZsS3yOCC2ZnSa5zb9dGp0KP5yw9+FkNhSXf
+	 Apxz61+p14sURJhwVI6iUiRc69h5MBTw5i3wWuyKrzbLN4uTEMYFBwVGt9ZDrXMmBi
+	 SOlUmJ3/3vhGqX0zd3OTjVJUj1eh8QAHYTlwh7xypVKk7iHspdR4kdfLvYbnsp4uoO
+	 edfQ44DEBLWhjcTRBMH8cJNNQA0o5WFGgn8/SdAfWOUFoNU60L+dBGgXjYpWjCpbL6
+	 qf4fG0tQVBbmRJMWv+kTiO0SluBlkGhXpgd2qghlM1dcPcACURQ5U4Hp2qELemiAzO
+	 yey6qXzWDSfXg==
+Date: Mon, 17 Nov 2025 11:46:24 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Catalin Marinas
+ <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/2] tracing/wprobe: Fix to avoid inifinite watchpoint
+ exception on arm64
+Message-Id: <20251117114624.5fc972e65edac5bb91caa4b2@kernel.org>
+In-Reply-To: <aRdWAshGkWjgXW3L@willie-the-truck>
+References: <176179481538.959775.12326313742393696258.stgit@devnote2>
+	<20251104223735.4164f224790ea0aea267dff1@kernel.org>
+	<aRdWAshGkWjgXW3L@willie-the-truck>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Sun, 16 Nov 2025 16:29:01 -0300:
+On Fri, 14 Nov 2025 16:17:06 +0000
+Will Deacon <will@kernel.org> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.18-2-2025-11-16
+> On Tue, Nov 04, 2025 at 10:37:35PM +0900, Masami Hiramatsu wrote:
+> > Gently ping.
+> > 
+> > There is a bugfix (or strange behavior) on arm64 hw breakpoint but
+> > to fix it cleanly, it should change the perf itself (but I'm not
+> > sure why arm64 changes the behavior only for the default overflow
+> > handlers.) Anyone knows it?
+> 
+> It's because GDB expects to handle the stepping itself when using the
+> ptrace interface (with a custom overflow handler to deliver SIGTRAP).
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/998ccc327b14c03861247540ff6f8135a5283621
+Hmm, would you mean GDB for user program?
+If so, it expects hw breakpoint is used by:
+ - user-space ptrace (for GDB)
+ - kernel-space perf (must be default overflow handler)
 
-Thank you!
+And not expects to be used by 
+
+ - kernel-space custom overflow handler
+
+This series is to handle the third use case.
+
+Thank you,
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
