@@ -1,369 +1,272 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4951A31D723
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Nov 2025 02:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E405326D65;
+	Tue, 18 Nov 2025 02:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763432927; cv=none; b=aLgSSlHJ+gxPAAT1feo2cIqQJMeRTjdrBAZm+lwveq5x3i+Iyf0RCLZRWYqsRXyzrsr8CwxtdAl++V3fs/FEvl1zIZjay5Udhp1c7tt6N2nuEsq90TtoVpyC9+He9T2PCv+oDg0+YSCV+sogvwz/XX9b1ydRo7hiq3SMoTvG9yc=
+	t=1763433007; cv=none; b=aEry2SoXMyIWHUno+nBS+7xav2sFZf7MsPDOm7WG1cxuZYMGVDC29kQLXG3gv+O18Dy6MHDdLqA7v6E+p0G6Mk3nm0oCzRgtGRb8AwiRYl875sHEyHW44Pz1aV5bVB/8c1UD6SOGphHwcdwEVMOHyy+Hz3gWQUn5Doz0gJlberQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763432927; c=relaxed/simple;
-	bh=RNpMIQGQKW4j4zmSuqZIzWc7QOdNb5tEEcWv5ZpI2wA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oJkSjB5JCjQJ3iQvYfH+K+W3NKwf90WAmCtWGmRfvmtt3APTu5sZ3r6VBseJnkvKCD6J+ZtpFfNnapEAJg5jfVcEOl9zbnC7RYmDCpWAdH0aecXb75xs2on+mcJIxNOJtO/wrt377LL6nwMjdlq6DeIMLsANX4h0PNvspdGcBC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tOz/NF+u; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1763433007; c=relaxed/simple;
+	bh=GRoBbQtF2411pFOi4Hn7rRqZu41b/g6654YuaxvYlsw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mPX9Tcp91uBGiRL0hXXJthhbjyY2IbUkWMQV8UthJNXV5liLlXgRh16aaWF+duVyMCM+TU9TQ4LF1xkMUTS//pFDoEES9G9yUu7mrrULmEsiVL33V49EJqRaXF2tpvqaLv+4p2GdWQDJSDc3FCEEHZ98Fc5TXVDtHmlrw5/jae0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5OZXbXJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tOz/NF+u"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-295c64cb951so108235ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Nov 2025 18:28:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763432924; x=1764037724; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a693yz+QrmjGZhuJSAQVH9/iAFLd7SqnheJkZhn6O4c=;
-        b=tOz/NF+uNq93VC5s5TfP+gVXc+a7zaO8UVnaI2hUQzZ9L/K1n80PfpHS7uWyB3lMfY
-         cDr31/hIhpA17CpGvjui+/6Dfco+gnsMIgKOashUOlLoYISiXqprkolXt4ULapQoijDb
-         CTit7F6W5t99UAN7HkAlwUe0PLnljnWQReRozz2A7f3EQ5yPrZZJluhKZeahybBFJNei
-         BLu9070G7VYJn3fKVPa3bnIuDXLq30MGAKncY9kkD0XxE41sKVT8tEuBoHuPk3vN56E2
-         1ZpG3cwV8AlDeyQaU12oR5DU0HIRAAxu8InOnD+IruzbZXaGIBVhOEFp23l+HMimDzBE
-         HGGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763432924; x=1764037724;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=a693yz+QrmjGZhuJSAQVH9/iAFLd7SqnheJkZhn6O4c=;
-        b=QE487hgb381dmONoctLVORPfdTkaSuB3aWDp+vRgeTgTzeD/5xfnoc7hu+bTuzYp3I
-         BCWPTWYTGx+ErcyiBCOVgZwIWyuDoiNv8ISX2kRPTbZRUUO5wUuHnu9CCf8KgcSEy4Oi
-         8lz5db2iFfKvFv+UD7YfyjbvyC7zBOnZl22WBy0g4rA5hfuEBc9cuTXtpgV4TXQATkwV
-         EQIRYpsYBIDdQwd/TVKFEZAlNx7z0gljne9o48sn4+3tJeUnOszqK4y6sGcIe29r0X21
-         G6DZU9r37rE8CPMQQBF9v2UIdqfdvQjAt5fYb/cgx9Apjho0qNao1UQkuhHk7LTgWCi1
-         1FTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmVBFZfTaCTL4wFWqvPfy4Y3xzF9puxKfaPX4nxJhn1cNQ9dBl4rdIEfzzQyIllag9NQVfLlRIfTMtoFM7kEAu@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywfu5SlLPQvLKzw8Dx2gG95NtPaj5z/tvY7hhsR954le1uOqYn9
-	uojjf7iJ44nYKYtxU4OBDln+wCOXpCO+1j4dNpfNhGgTBse3YQpFNa+GyrDdkrOHWqQtkhWa97D
-	xWQfbO7sC6jTmQsQdbpz2HeeKmenOZfguBf3bp4H2
-X-Gm-Gg: ASbGncuBz2ufXsNSTMNB2rAKI+4OZx9FmmEVhiJmjQRm85CA2TfmOzUbUF0Fs9x71q4
-	Tw4GfgsCwtMekCrgzxDDNuvBG58ENWHi/amoymX2AkfIHC+IeGIVEbW6gHwxxIa3aZ/egRC/RiP
-	QTSbVe38VtBeCM5NxN7sG7EIzpNHmg7ANOzVQZkUlMjt0f9UfHQTQPNE227yQIDuFASCQSwGXyy
-	+cvw/WMK9J9Glgvg1LXd24k6lRWaEBmJUSVSJSSmgwd7cFxi0X1aRl46vPt8UiccNZDpAoDqRTW
-	zy0wmmI=
-X-Google-Smtp-Source: AGHT+IHOJwOj/c+oSefzQ5RXC4DanS0yCQKOyiqZUiRZTrbguyb/Vl55IABfIA7X4QSd/OHDQf2pcm2tqlLdHOsmOA4=
-X-Received: by 2002:a17:902:ea08:b0:294:e585:1f39 with SMTP id
- d9443c01a7336-299f69fbeb6mr1761645ad.14.1763432924230; Mon, 17 Nov 2025
- 18:28:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5OZXbXJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3858C116B1;
+	Tue, 18 Nov 2025 02:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763433007;
+	bh=GRoBbQtF2411pFOi4Hn7rRqZu41b/g6654YuaxvYlsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C5OZXbXJdgQH41clItlwobZZFnYGk3ttbtDiwKMSY+UkBFIVsq+Iiuw1cv7vCXQRA
+	 vth8ASNM4GOrly95RuN9rA26ebrq5gM4XSRx++x+Y62sOCLrLTG4XTxg51c1OTKoe8
+	 vlvhpQd/MYpAjQkMfELun8XJCtyG0LSMUobbm9zo9cp/fMQL/IYhUgpmNcPzdx93kq
+	 5CHc6zsb4z5ts1sWS7yEehO0rP4fK77poeRVzgB8UopCBIT9K3DYl8pOIuO/GNq+gC
+	 kPU3sHfkB9IgVcxaA6uAAut+ti8OJSTUiO++Lopd1dFa9ngc2nyNSIzIIZExlv2X4U
+	 QR0Xbj1FVXs8Q==
+Date: Mon, 17 Nov 2025 18:30:03 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andi Kleen <ak@linux.intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v4 04/10] perf stat-shadow: Read tool events directly
+Message-ID: <aRvaK32xmC8XUA-k@google.com>
+References: <20251113180517.44096-1-irogers@google.com>
+ <20251113180517.44096-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251111212206.631711-1-irogers@google.com> <20251111212206.631711-4-irogers@google.com>
- <ca0f0cd3-7335-48f9-8737-2f70a75b019a@linaro.org> <CAP-5=fWNr9oaxWy3PyqbeH-sjsPpSt9g=8vP0drbb_e+ijpWkw@mail.gmail.com>
- <aRi9xnwdLh3Dir9f@google.com> <CAP-5=fVKwQbOFcm5kNkuZ62rTu77A+N=aa2Of+hN1-68Qe7rFA@mail.gmail.com>
- <aRvNux4vlacfrgin@google.com>
-In-Reply-To: <aRvNux4vlacfrgin@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 17 Nov 2025 18:28:31 -0800
-X-Gm-Features: AWmQ_bl4Yf2Ian0T96NlggMCLepMuz6NloWM_fFTEkaI8xD3bdwaAUw_B5_JguM
-Message-ID: <CAP-5=fUpkUifLiBSO473Ws5HyDH0dGNMVCqomggE2P2=VNhAZg@mail.gmail.com>
-Subject: Re: [PATCH v4 03/18] perf jevents: Add set of common metrics based on
- default ones
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Xu Yang <xu.yang_2@nxp.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Sumanth Korikkar <sumanthk@linux.ibm.com>, Collin Funk <collin.funk1@gmail.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Leo Yan <leo.yan@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251113180517.44096-5-irogers@google.com>
 
-On Mon, Nov 17, 2025 at 5:37=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Sat, Nov 15, 2025 at 07:29:29PM -0800, Ian Rogers wrote:
-> > On Sat, Nov 15, 2025 at 9:52=E2=80=AFAM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > On Fri, Nov 14, 2025 at 08:57:39AM -0800, Ian Rogers wrote:
-> > > > On Fri, Nov 14, 2025 at 8:28=E2=80=AFAM James Clark <james.clark@li=
-naro.org> wrote:
-> > > > >
-> > > > >
-> > > > >
-> > > > > On 11/11/2025 9:21 pm, Ian Rogers wrote:
-> > > > > > Add support to getting a common set of metrics from a default
-> > > > > > table. It simplifies the generation to add json metrics at the =
-same
-> > > > > > time. The metrics added are CPUs_utilized, cs_per_second,
-> > > > > > migrations_per_second, page_faults_per_second, insn_per_cycle,
-> > > > > > stalled_cycles_per_instruction, frontend_cycles_idle,
-> > > > > > backend_cycles_idle, cycles_frequency, branch_frequency and
-> > > > > > branch_miss_rate based on the shadow metric definitions.
-> > > > > >
-> > > > > > Following this change the default perf stat output on an alderl=
-ake
-> > > > > > looks like:
-> > > > > > ```
-> > > > > > $ perf stat -a -- sleep 2
-> > > > > >
-> > > > > >   Performance counter stats for 'system wide':
-> > > > > >
-> > > > > >                0.00 msec cpu-clock                        #    =
-0.000 CPUs utilized
-> > > > > >              77,739      context-switches
-> > > > > >              15,033      cpu-migrations
-> > > > > >             321,313      page-faults
-> > > > > >      14,355,634,225      cpu_atom/instructions/           #    =
-1.40  insn per cycle              (35.37%)
-> > > > > >     134,561,560,583      cpu_core/instructions/           #    =
-3.44  insn per cycle              (57.85%)
-> > > > > >      10,263,836,145      cpu_atom/cycles/                      =
-                                  (35.42%)
-> > > > > >      39,138,632,894      cpu_core/cycles/                      =
-                                  (57.60%)
-> > > > > >       2,989,658,777      cpu_atom/branches/                    =
-                                  (42.60%)
-> > > > > >      32,170,570,388      cpu_core/branches/                    =
-                                  (57.39%)
-> > > > > >          29,789,870      cpu_atom/branch-misses/          #    =
-1.00% of all branches             (42.69%)
-> > > > > >         165,991,152      cpu_core/branch-misses/          #    =
-0.52% of all branches             (57.19%)
-> > > > > >                         (software)                 #      nan c=
-s/sec  cs_per_second
-> > > > > >               TopdownL1 (cpu_core)                 #     11.9 %=
-  tma_bad_speculation
-> > > > > >                                                    #     19.6 %=
-  tma_frontend_bound       (63.97%)
-> > > > > >               TopdownL1 (cpu_core)                 #     18.8 %=
-  tma_backend_bound
-> > > > > >                                                    #     49.7 %=
-  tma_retiring             (63.97%)
-> > > > > >                         (software)                 #      nan f=
-aults/sec  page_faults_per_second
-> > > > > >                                                    #      nan G=
-Hz  cycles_frequency       (42.88%)
-> > > > > >                                                    #      nan G=
-Hz  cycles_frequency       (69.88%)
-> > > > > >               TopdownL1 (cpu_atom)                 #     11.7 %=
-  tma_bad_speculation
-> > > > > >                                                    #     29.9 %=
-  tma_retiring             (50.07%)
-> > > > > >               TopdownL1 (cpu_atom)                 #     31.3 %=
-  tma_frontend_bound       (43.09%)
-> > > > > >                         (cpu_atom)                 #      nan M=
-/sec  branch_frequency     (43.09%)
-> > > > > >                                                    #      nan M=
-/sec  branch_frequency     (70.07%)
-> > > > > >                                                    #      nan m=
-igrations/sec  migrations_per_second
-> > > > > >               TopdownL1 (cpu_atom)                 #     27.1 %=
-  tma_backend_bound        (43.08%)
-> > > > > >                         (software)                 #      0.0 C=
-PUs  CPUs_utilized
-> > > > > >                                                    #      1.4 i=
-nstructions  insn_per_cycle  (43.04%)
-> > > > > >                                                    #      3.5 i=
-nstructions  insn_per_cycle  (69.99%)
-> > > > > >                                                    #      1.0 %=
-  branch_miss_rate         (35.46%)
-> > > > > >                                                    #      0.5 %=
-  branch_miss_rate         (65.02%)
-> > > > > >
-> > > > > >         2.005626564 seconds time elapsed
-> > > > > > ```
-> > > > > >
-> > > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > > > ---
-> > > > > >   .../arch/common/common/metrics.json           |  86 +++++++++=
-++++
-> > > > > >   tools/perf/pmu-events/empty-pmu-events.c      | 115 +++++++++=
-++++-----
-> > > > > >   tools/perf/pmu-events/jevents.py              |  21 +++-
-> > > > > >   tools/perf/pmu-events/pmu-events.h            |   1 +
-> > > > > >   tools/perf/util/metricgroup.c                 |  31 +++--
-> > > > > >   5 files changed, 212 insertions(+), 42 deletions(-)
-> > > > > >   create mode 100644 tools/perf/pmu-events/arch/common/common/m=
-etrics.json
-> > > > > >
-> > > > > > diff --git a/tools/perf/pmu-events/arch/common/common/metrics.j=
-son b/tools/perf/pmu-events/arch/common/common/metrics.json
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..d915be51e300
-> > > > > > --- /dev/null
-> > > > > > +++ b/tools/perf/pmu-events/arch/common/common/metrics.json
-> > > > > > @@ -0,0 +1,86 @@
-> > > > > > +[
-> > > > > > +    {
-> > > > > > +        "BriefDescription": "Average CPU utilization",
-> > > > > > +        "MetricExpr": "(software@cpu\\-clock\\,name\\=3Dcpu\\-=
-clock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@) =
-/ (duration_time * 1e9)",
-> > > > >
-> > > > > Hi Ian,
-> > > > >
-> > > > > I noticed that this metric is making "perf stat tests" fail.
-> > > > > "duration_time" is a tool event and they don't work with "perf st=
-at
-> > > > > record" anymore. The test tests the record command with the defau=
-lt args
-> > > > > which results in this event being used and a failure.
-> > > > >
-> > > > > I suppose there are three issues. First two are unrelated to this=
- change:
-> > > > >
-> > > > >   - Perf stat record continues to write out a bad perf.data file =
-even
-> > > > >     though it knows that tool events won't work.
-> > > > >
-> > > > >     For example 'status' ends up being -1 in cmd_stat() but it's =
-ignored
-> > > > >     for some of the writing parts. It does decide to not print an=
-y stdout
-> > > > >     though:
-> > > > >
-> > > > >     $ perf stat record -e "duration_time"
-> > > > >     <blank>
-> > > > >
-> > > > >   - The other issue is obviously that tool events don't work with=
- perf
-> > > > >     stat record which seems to be a regression from 6828d6929b76 =
-("perf
-> > > > >     evsel: Refactor tool events")
-> > > > >
-> > > > >   - The third issue is that this change adds a broken tool event =
-to the
-> > > > >     default output of perf stat
-> > > > >
-> > > > > I'm not actually sure what "perf stat record" is for? It's possib=
-le that
-> > > > > it's not used anymore, expecially if nobody noticed that tool eve=
-nts
-> > > > > haven't been working in it for a while.
-> > > > >
-> > > > > I think we're also supposed to have json output for perf stat (al=
-though
-> > > > > this is also broken in some obscure scenarios), so maybe perf sta=
-t
-> > > > > record isn't needed anymore?
-> > > >
-> > > > Hi James,
-> > > >
-> > > > Thanks for the report. I think this is also an overlap with perf st=
-at
-> > > > metrics don't work with perf stat record, and because these changes
-> > > > made that the default. Let me do some follow up work as the perf
-> > > > script work shows we can do useful things with metrics while not be=
-ing
-> > > > on a live perf stat - there's the obstacle that the CPUID of the ho=
-st
-> > > > will be used :-/
-> > > >
-> > > > Anyway, I'll take a look and we should add a test on this. There is
-> > > > one that the perf stat json output is okay, to some definition. One
-> > > > problem is that the stat-display code is complete spaghetti. Now th=
-at
-> > > > stat-shadow only handles json metrics, and perf script isn't trying=
- to
-> > > > maintain a set of shadow counters, that is a little bit improved.
-> > >
-> > > I have another test failure on this.  On my AMD machine, perf all
-> > > metrics test fails due to missing "LLC-loads" events.
-> > >
-> > >   $ sudo perf stat -M llc_miss_rate true
-> > >   Error:
-> > >   No supported events found.
-> > >   The LLC-loads event is not supported.
-> > >
-> > > Maybe we need to make some cache metrics conditional as some events a=
-re
-> > > missing.
-> >
-> > Maybe we can `perf list Default`, etc. for this is a problem. We have
-> > similar unsupported events in metrics on Intel like:
-> >
-> > ```
-> > $ perf stat -M itlb_miss_rate -a sleep 1
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> >    <not supported>      iTLB-loads
-> >            168,926      iTLB-load-misses
-> >
-> >        1.002287122 seconds time elapsed
-> > ```
-> >
-> > but I've not seen failures:
-> >
-> > ```
-> > $ perf test -v "all metrics"
-> > 103: perf all metrics test                                           : =
-Skip
-> > ```
->
->   $ sudo perf test -v "all metrics"
->   --- start ---
->   test child forked, pid 1347112
->   Testing CPUs_utilized
->   Testing backend_cycles_idle
->   Not supported events
->   Performance counter stats for 'system wide': <not counted> cpu-cycles <=
-not supported> stalled-cycles-backend 0.013162328 seconds time elapsed
->   Testing branch_frequency
->   Testing branch_miss_rate
->   Testing cs_per_second
->   Testing cycles_frequency
->   Testing frontend_cycles_idle
->   Testing insn_per_cycle
->   Testing migrations_per_second
->   Testing page_faults_per_second
->   Testing stalled_cycles_per_instruction
->   Testing l1d_miss_rate
->   Testing llc_miss_rate
->   Metric contains missing events
->   Error: No supported events found. The LLC-loads event is not supported.
+On Thu, Nov 13, 2025 at 10:05:10AM -0800, Ian Rogers wrote:
+> When reading time values for metrics don't use the globals updated in
+> builtin-stat, just read the events as regular events. The only
+> exception is for time events where nanoseconds need converting to
+> seconds as metrics assume time metrics are in seconds.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/stat-shadow.c | 149 +++++++++++++++-------------------
+>  1 file changed, 66 insertions(+), 83 deletions(-)
+> 
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index b3b482e1808f..6c1ad78604e1 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -26,7 +26,32 @@ void perf_stat__reset_shadow_stats(void)
+>  	memset(&ru_stats, 0, sizeof(ru_stats));
+>  }
+>  
+> -static int prepare_metric(const struct metric_expr *mexp,
+> +static bool tool_pmu__is_time_event(const struct perf_stat_config *config,
+> +				   const struct evsel *evsel, int *tool_aggr_idx)
+> +{
+> +	enum tool_pmu_event event = evsel__tool_event(evsel);
+> +	int aggr_idx;
+> +
+> +	if (event != TOOL_PMU__EVENT_DURATION_TIME &&
+> +	    event != TOOL_PMU__EVENT_USER_TIME &&
+> +	    event != TOOL_PMU__EVENT_SYSTEM_TIME)
+> +		return false;
+> +
+> +	if (config) {
+> +		cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
+> +			if (config->aggr_map->map[aggr_idx].cpu.cpu == 0) {
+> +				*tool_aggr_idx = aggr_idx;
+> +				return true;
+> +			}
+> +		}
+> +		pr_debug("Unexpected CPU0 missing in aggregation for tool event.\n");
+> +	}
+> +	*tool_aggr_idx = 0; /* Assume the first aggregation index works. */
+> +	return true;
+> +}
+> +
+> +static int prepare_metric(struct perf_stat_config *config,
+> +			  const struct metric_expr *mexp,
+>  			  const struct evsel *evsel,
+>  			  struct expr_parse_ctx *pctx,
+>  			  int aggr_idx)
+> @@ -36,93 +61,51 @@ static int prepare_metric(const struct metric_expr *mexp,
+>  	int i;
+>  
+>  	for (i = 0; metric_events[i]; i++) {
+> +		int source_count = 0, tool_aggr_idx;
+> +		bool is_tool_time =
+> +			tool_pmu__is_time_event(config, metric_events[i], &tool_aggr_idx);
+> +		struct perf_stat_evsel *ps = metric_events[i]->stats;
+> +		struct perf_stat_aggr *aggr;
+>  		char *n;
+>  		double val;
+> -		int source_count = 0;
+>  
+> -		if (evsel__is_tool(metric_events[i])) {
+> -			struct stats *stats;
+> -			double scale;
+> -
+> -			switch (evsel__tool_event(metric_events[i])) {
+> -			case TOOL_PMU__EVENT_DURATION_TIME:
+> -				stats = &walltime_nsecs_stats;
+> -				scale = 1e-9;
+> -				break;
+> -			case TOOL_PMU__EVENT_USER_TIME:
+> -				stats = &ru_stats.ru_utime_usec_stat;
+> -				scale = 1e-6;
+> +		/*
+> +		 * If there are multiple uncore PMUs and we're not reading the
+> +		 * leader's stats, determine the stats for the appropriate
+> +		 * uncore PMU.
+> +		 */
+> +		if (evsel && evsel->metric_leader &&
+> +		    evsel->pmu != evsel->metric_leader->pmu &&
+> +		    mexp->metric_events[i]->pmu == evsel->metric_leader->pmu) {
+> +			struct evsel *pos;
+> +
+> +			evlist__for_each_entry(evsel->evlist, pos) {
+> +				if (pos->pmu != evsel->pmu)
+> +					continue;
+> +				if (pos->metric_leader != mexp->metric_events[i])
+> +					continue;
+> +				ps = pos->stats;
+> +				source_count = 1;
+>  				break;
+> -			case TOOL_PMU__EVENT_SYSTEM_TIME:
+> -				stats = &ru_stats.ru_stime_usec_stat;
+> -				scale = 1e-6;
+> -				break;
 
-Right, but this should match the Intel case as iTLB-loads is an
-unsupported event so I'm not sure why we don't see a failure on Intel
-but do on AMD given both events are legacy cache ones. I'll need to
-trace through the code (or uftrace it :-) ).
+I think this was broken as it seems to be converted to nsec in the
+update_rusage_stats().
+
+
+> -			case TOOL_PMU__EVENT_NONE:
+> -				pr_err("Invalid tool event 'none'");
+> -				abort();
+> -			case TOOL_PMU__EVENT_MAX:
+> -				pr_err("Invalid tool event 'max'");
+> -				abort();
+> -			case TOOL_PMU__EVENT_HAS_PMEM:
+> -			case TOOL_PMU__EVENT_NUM_CORES:
+> -			case TOOL_PMU__EVENT_NUM_CPUS:
+> -			case TOOL_PMU__EVENT_NUM_CPUS_ONLINE:
+> -			case TOOL_PMU__EVENT_NUM_DIES:
+> -			case TOOL_PMU__EVENT_NUM_PACKAGES:
+> -			case TOOL_PMU__EVENT_SLOTS:
+> -			case TOOL_PMU__EVENT_SMT_ON:
+> -			case TOOL_PMU__EVENT_SYSTEM_TSC_FREQ:
+> -			case TOOL_PMU__EVENT_CORE_WIDE:
+> -			case TOOL_PMU__EVENT_TARGET_CPU:
+> -			default:
+> -				pr_err("Unexpected tool event '%s'", evsel__name(metric_events[i]));
+> -				abort();
+>  			}
+> -			val = avg_stats(stats) * scale;
+> -			source_count = 1;
+> -		} else {
+> -			struct perf_stat_evsel *ps = metric_events[i]->stats;
+> -			struct perf_stat_aggr *aggr;
+> -
+> +		}
+> +		/* Time events are always on CPU0, the first aggregation index. */
+> +		aggr = &ps->aggr[is_tool_time ? tool_aggr_idx : aggr_idx];
+> +		if (!aggr || !metric_events[i]->supported) {
+>  			/*
+> -			 * If there are multiple uncore PMUs and we're not
+> -			 * reading the leader's stats, determine the stats for
+> -			 * the appropriate uncore PMU.
+> +			 * Not supported events will have a count of 0, which
+> +			 * can be confusing in a metric. Explicitly set the
+> +			 * value to NAN. Not counted events (enable time of 0)
+> +			 * are read as 0.
+>  			 */
+> -			if (evsel && evsel->metric_leader &&
+> -			    evsel->pmu != evsel->metric_leader->pmu &&
+> -			    mexp->metric_events[i]->pmu == evsel->metric_leader->pmu) {
+> -				struct evsel *pos;
+> -
+> -				evlist__for_each_entry(evsel->evlist, pos) {
+> -					if (pos->pmu != evsel->pmu)
+> -						continue;
+> -					if (pos->metric_leader != mexp->metric_events[i])
+> -						continue;
+> -					ps = pos->stats;
+> -					source_count = 1;
+> -					break;
+> -				}
+> -			}
+> -			aggr = &ps->aggr[aggr_idx];
+> -			if (!aggr)
+> -				break;
+> -
+> -			if (!metric_events[i]->supported) {
+> -				/*
+> -				 * Not supported events will have a count of 0,
+> -				 * which can be confusing in a
+> -				 * metric. Explicitly set the value to NAN. Not
+> -				 * counted events (enable time of 0) are read as
+> -				 * 0.
+> -				 */
+> -				val = NAN;
+> -				source_count = 0;
+> -			} else {
+> -				val = aggr->counts.val;
+> -				if (!source_count)
+> -					source_count = evsel__source_count(metric_events[i]);
+> -			}
+> +			val = NAN;
+> +			source_count = 0;
+> +		} else {
+> +			val = aggr->counts.val;
+> +			if (is_tool_time)
+> +				val *= 1e-9; /* Convert time event nanoseconds to seconds. */
+
+And this code treats all time events are in nsec now.
 
 Thanks,
-Ian
+Namhyung
 
->   Testing dtlb_miss_rate
->   Testing itlb_miss_rate
->   Testing l1i_miss_rate
->   Testing l1_prefetch_miss_rate
->   Not supported events
->   Performance counter stats for 'system wide': <not counted> L1-dcache-pr=
-efetches <not supported> L1-dcache-prefetch-misses 0.012983559 seconds time=
- elapsed
->   Testing branch_misprediction_ratio
->   Testing all_remote_links_outbound
->   Testing nps1_die_to_dram
->   Testing all_l2_cache_accesses
->   Testing all_l2_cache_hits
->   Testing all_l2_cache_misses
->   Testing ic_fetch_miss_ratio
->   Testing l2_cache_accesses_from_l2_hwpf
->   Testing l2_cache_misses_from_l2_hwpf
->   Testing l3_read_miss_latency
->   Testing l1_itlb_misses
->   ---- end(-1) ----
->   103: perf all metrics test                                           : =
-FAILED!
->
-> Thanks,
-> Namhyung
->
+
+> +			if (!source_count)
+> +				source_count = evsel__source_count(metric_events[i]);
+>  		}
+>  		n = strdup(evsel__metric_id(metric_events[i]));
+>  		if (!n)
+> @@ -168,7 +151,7 @@ static void generic_metric(struct perf_stat_config *config,
+>  		pctx->sctx.user_requested_cpu_list = strdup(config->user_requested_cpu_list);
+>  	pctx->sctx.runtime = runtime;
+>  	pctx->sctx.system_wide = config->system_wide;
+> -	i = prepare_metric(mexp, evsel, pctx, aggr_idx);
+> +	i = prepare_metric(config, mexp, evsel, pctx, aggr_idx);
+>  	if (i < 0) {
+>  		expr__ctx_free(pctx);
+>  		return;
+> @@ -229,7 +212,7 @@ double test_generic_metric(struct metric_expr *mexp, int aggr_idx)
+>  	if (!pctx)
+>  		return NAN;
+>  
+> -	if (prepare_metric(mexp, /*evsel=*/NULL, pctx, aggr_idx) < 0)
+> +	if (prepare_metric(/*config=*/NULL, mexp, /*evsel=*/NULL, pctx, aggr_idx) < 0)
+>  		goto out;
+>  
+>  	if (expr__parse(&ratio, pctx, mexp->metric_expr))
+> -- 
+> 2.51.2.1041.gc1ab5b90ca-goog
+> 
