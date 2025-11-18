@@ -1,57 +1,39 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825A0311C3C;
-	Tue, 18 Nov 2025 11:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62B1236C5BA;
+	Tue, 18 Nov 2025 17:05:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763465058; cv=none; b=H4/fx0AX9XYUkXtUW/nCh5whj1c2tO7YhApP2FBuzdN5FHqzrIfULEOLfEu0Be+FgACZvsA+I5TVcawcsfcI1xazYVwcS9CH3wKiV2eRPgSVg/L5RXRCHQt0wvRDFaQEoqv2uessi48ks8wEF/2QZ/YW6b2cy5GhHR4omi4WPdk=
+	t=1763485551; cv=none; b=GbliFK8eKK4XEj7qkOCliInDNhxJRouzuglf3DknKPEh0KIywpodpIrCEDfBi8i2zC7wpzHlXC16QSUJXjU/xBYg79fkyiFYI3c4/MRSUhPBrhYRu29Kofcu9KRI352I8NP/8RKyQlBKCkyrqtZNHV8sh0t3IrBR8zrQBb50pXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763465058; c=relaxed/simple;
-	bh=j0LWnCH1Js04qK7IbjmxTqss8IAlir1T+L/85yUXYdo=;
+	s=arc-20240116; t=1763485551; c=relaxed/simple;
+	bh=d/6v5YXcGsl+jI8UPBK/wUWbtETNAJgf3K4V4S/GW+0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FJKTDGM5I8XAuHQ/cBkUqfPNoIiFX4TIFuX5yxkRYSodKwB8DvD69bK2+lj41YbPUt6vcxGSh9WaXzgPwU7ShAwPyEW2r7GChOSGtdC1HjrM4+Sehko7bWi5fbn9JE58FxBvOPgsVYAsg2Stm5pFFkBkRom3Pd6eo7ztZNlXHxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ur8zwFbG; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ur8zwFbG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ot4gedOVOy6eh5KcNB2yZlNlynmhbNk3sgHm+aTawiY=; b=Ur8zwFbGDiNxHST7GUhU4oXv/n
-	r6RnesJzyR1LwWkGlR0uwk+8qZpO2/I+9985IPbJcSj9TShfTsDXtLssVB0ozTh2GlDKhF2GFFK/A
-	FFMUhfD0gURiGhCx5bSn+bHhJxm1U24k0V00jOnQkCgTcc+DwgDusTZrDesASSGWi+mbUyIV509X/
-	4lgBHut/GDQvHq6lWBqLDvxa9ngewK3JSNyszfDbtDd3PFHc+fXzKivWG07hdBIWYB664K1SSC7lk
-	iitUx/lDGGibEyXFwu59Jv0Hf7HVuvRYpETGb/cH2CmU+5oZZaLBfdBpLMNLUcK0yTh00iuvE8DJk
-	wQuSqfCw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vLJod-0000000FOH9-0ciY;
-	Tue, 18 Nov 2025 11:24:07 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 273DC30029E; Tue, 18 Nov 2025 12:24:06 +0100 (CET)
-Date: Tue, 18 Nov 2025 12:24:06 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=OGm7zJivqNe/2qZ1gdoArBN6z9CHDA5/+nkGrVPo22UViOtMSy6ga9og2Dxa1R7WMYIK6k3GoDI3oxinA2ebCsN004tVQ/V+mPvau0loQ6yWOBAWDPOjDcWG/yysl5u6uO6jTxCWdTL4fpsi76tLh2ssIenJMANi1fo3zrwFWT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA9AA497;
+	Tue, 18 Nov 2025 09:05:37 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21CE23F66E;
+	Tue, 18 Nov 2025 09:05:45 -0800 (PST)
+Date: Tue, 18 Nov 2025 17:05:43 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>
-Subject: Re: [PATCH] perf: Fix 0 count issue of cpu-clock
-Message-ID: <20251118112406.GH4067720@noisy.programming.kicks-ass.net>
-References: <20251112080526.3971392-1-dapeng1.mi@linux.intel.com>
- <20251118110309.GP3245006@noisy.programming.kicks-ass.net>
- <20251118110417.GI4068168@noisy.programming.kicks-ass.net>
- <baf8aceb-5caa-4c3b-80f0-43a4a1449a23@linux.intel.com>
+	James Clark <james.clark@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 18/25] perf/uapi: Extend data source fields
+Message-ID: <20251118170543.GB8204@e132581.arm.com>
+References: <20251112-perf_support_arm_spev1-3-v3-0-e63c9829f9d9@arm.com>
+ <20251112-perf_support_arm_spev1-3-v3-18-e63c9829f9d9@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,47 +42,94 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <baf8aceb-5caa-4c3b-80f0-43a4a1449a23@linux.intel.com>
+In-Reply-To: <20251112-perf_support_arm_spev1-3-v3-18-e63c9829f9d9@arm.com>
 
-On Tue, Nov 18, 2025 at 07:22:24PM +0800, Mi, Dapeng wrote:
+On Wed, Nov 12, 2025 at 06:24:44PM +0000, Leo Yan wrote:
+> Arm CPUs introduce several new types of memory operations, like MTE tag
+> accessing, system register access for nested virtualization, memcpy &
+> memset, and Guarded Control Stack (GCS).
 > 
-> On 11/18/2025 7:04 PM, Peter Zijlstra wrote:
-> > On Tue, Nov 18, 2025 at 12:03:09PM +0100, Peter Zijlstra wrote:
-> >> On Wed, Nov 12, 2025 at 04:05:26PM +0800, Dapeng Mi wrote:
-> >>
-> >>> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> >>> index f6a08c73f783..77d3af5959c1 100644
-> >>> --- a/kernel/events/core.c
-> >>> +++ b/kernel/events/core.c
-> >>> @@ -11964,7 +11964,7 @@ static int cpu_clock_event_add(struct perf_event *event, int flags)
-> >>>  
-> >>>  static void cpu_clock_event_del(struct perf_event *event, int flags)
-> >>>  {
-> >>> -	cpu_clock_event_stop(event, flags);
-> >>> +	cpu_clock_event_stop(event, flags | PERF_EF_UPDATE);
-> >>>  }
-> >>>  
-> >>>  static void cpu_clock_event_read(struct perf_event *event)
-> >>> @@ -12043,7 +12043,7 @@ static int task_clock_event_add(struct perf_event *event, int flags)
-> >>>  
-> >>>  static void task_clock_event_del(struct perf_event *event, int flags)
-> >>>  {
-> >>> -	task_clock_event_stop(event, PERF_EF_UPDATE);
-> >>> +	task_clock_event_stop(event, flags | PERF_EF_UPDATE);
-> >>>  }
-> >> I think it can both just be: PERF_EF_UPDATE. The only pmu::del() caller
-> >> hands in flags=0, but if there were to be flags added, we'd have to
-> >> audit all del methods anyway.
-> >>
-> >> Also, the few comments we do have already note that ->del() must do
-> >> ->stop(EF_UPDATE).
-> > Updated patch now sits in queue/perf/urgent.
+> For memory operation details, Arm SPE provides information like data
+> (parallel) processing, floating-point, predicated, atomic, exclusive,
+> acquire/release, gather/scatter, and conditional.
 > 
-> Hi Peter,
+> This commit introduces a field 'mem_op_ext' for extended operation type.
+> The extended operation type can be combined with the existed operation
+> type to express a memory type, for examples, a PERF_MEM_OP_GCS type can
+> be set along with PERF_MEM_OP_LOAD to present a load operation for
+> GCS register access.
 > 
-> Thanks for merging. If we decide not to or the "flags", then the last
-> sentence "Besides, or flags with PERF_EF_UPDATE for task-clock although
-> currently the flags argument would always be 0." in the commit message
-> should be dropped as well. :)
+> Bit fields are also added to represent detailed operation attributes.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-Should be fixed now. Thanks!
+Just ping perf core maintainers, is this uAPI change okay for you?
+
+Thanks for Ian's and James' review!
+
+Leo
+
+> ---
+>  include/uapi/linux/perf_event.h | 32 ++++++++++++++++++++++++++++++--
+>  1 file changed, 30 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 78a362b8002776e5ce83a0d7816601638c61ecc6..9b9fa59fd828756b5e8e93520da5a269f0dfff52 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -1309,14 +1309,32 @@ union perf_mem_data_src {
+>  			mem_snoopx  :  2, /* Snoop mode, ext */
+>  			mem_blk     :  3, /* Access blocked */
+>  			mem_hops    :  3, /* Hop level */
+> -			mem_rsvd    : 18;
+> +			mem_op_ext  :  4, /* Extended type of opcode */
+> +			mem_dp      :  1, /* Data processing */
+> +			mem_fp      :  1, /* Floating-point */
+> +			mem_pred    :  1, /* Predicated */
+> +			mem_atomic  :  1, /* Atomic operation */
+> +			mem_excl    :  1, /* Exclusive */
+> +			mem_ar      :  1, /* Acquire/release */
+> +			mem_sg      :  1, /* Scatter/Gather */
+> +			mem_cond    :  1, /* Conditional */
+> +			mem_rsvd    :  6;
+>  	};
+>  };
+>  #elif defined(__BIG_ENDIAN_BITFIELD)
+>  union perf_mem_data_src {
+>  	__u64 val;
+>  	struct {
+> -		__u64	mem_rsvd    : 18,
+> +		__u64	mem_rsvd    :  6,
+> +			mem_cond    :  1, /* Conditional */
+> +			mem_sg      :  1, /* Scatter/Gather */
+> +			mem_ar      :  1, /* Acquire/release */
+> +			mem_excl    :  1, /* Exclusive */
+> +			mem_atomic  :  1, /* Atomic operation */
+> +			mem_pred    :  1, /* Predicated */
+> +			mem_fp      :  1, /* Floating-point */
+> +			mem_dp      :  1, /* Data processing */
+> +			mem_op_ext  :  4, /* Extended type of opcode */
+>  			mem_hops    :  3, /* Hop level */
+>  			mem_blk     :  3, /* Access blocked */
+>  			mem_snoopx  :  2, /* Snoop mode, ext */
+> @@ -1426,6 +1444,16 @@ union perf_mem_data_src {
+>  /* 5-7 available */
+>  #define PERF_MEM_HOPS_SHIFT			43
+>  
+> +/* Extended type of memory opcode: */
+> +#define PERF_MEM_EXT_OP_NA			0x0    /* Not available */
+> +#define PERF_MEM_EXT_OP_MTE_TAG			0x1    /* MTE tag */
+> +#define PERF_MEM_EXT_OP_NESTED_VIRT		0x2    /* Nested virtualization */
+> +#define PERF_MEM_EXT_OP_MEMCPY			0x3    /* Memory copy */
+> +#define PERF_MEM_EXT_OP_MEMSET			0x4    /* Memory set */
+> +#define PERF_MEM_EXT_OP_SIMD			0x5    /* SIMD */
+> +#define PERF_MEM_EXT_OP_GCS			0x6    /* Guarded Control Stack */
+> +#define PERF_MEM_EXT_OP_SHIFT			46
+> +
+>  #define PERF_MEM_S(a, s) \
+>  	(((__u64)PERF_MEM_##a##_##s) << PERF_MEM_##a##_SHIFT)
+>  
+> 
+> -- 
+> 2.34.1
+> 
