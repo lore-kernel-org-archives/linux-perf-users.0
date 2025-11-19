@@ -1,174 +1,91 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315C7288C30
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 21:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284D43346BA
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 22:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763587889; cv=none; b=UKOzqxH4hMjmjk/X5OyR6yhSFp70ul579C2z+3PfsB/ZYl3s02FuEfS1Up/qQ6a1Mc7UjLqBdy4I3cpijBfZSCzDKAsGcF/jgSeOHRD0w7dzit/EiQKpLS+VyV6BeLTdEaH/Glb85o/siWrWYuQABR/wxMUGGzRYir+GgZFbDS0=
+	t=1763592175; cv=none; b=ptANoMt7UWUCf+wL6eFPge5qLygucUwK/vkz07ve1jWNhSigKiaOeZDm5x0vUIw55IFdg8NhcCo8utF9s1/iCrXfpB8p+XUZ92pPGx7thKYyoUHDzoNaSOuLjHispXjzMB/2vLTeiereFix/1u4MKK8HI7kgINrnpnaiGzJnrw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763587889; c=relaxed/simple;
-	bh=xnVWHoRf7o0NcxPQfVQjG9xcAOWFFNXm2zL7SdEXGTY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rSKNGWgkEtQ6bXCAVqLG2GzEbTJWZH4dUvIimxntd3yK1m96z3gWSfx2qBxC1K9FJdxGWrQujV2QWfEoipcjNyQGa8p4xaZCqxH8BgbpZDSTP7q4HCX+N4hUWuv9eUUGd1pGUAkzppZ1jq3mW6B1aiTfDZPF9Fsk/+lmHrbHJXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dwY5SH/K; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1763592175; c=relaxed/simple;
+	bh=li52uobPk66+BkwIH/b8VJKjGDYh3+gh2uWOK3B772E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Ftv4HB5+GLmt/5GTTguCcqDIFxhvaM9fnalzxo3C8C4rWad1zP/EHNV2Z5vKy7ndDeC1H9f+u06rZItHZjvPbJDUsDnw0tEUhisOzKCtNc13SEElVXCg7iukDOP2D7f68nowXu2WEX5mghmBYk6eQDDmAqUm23mthyE3qZmI6XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=DGUWUnvz; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dwY5SH/K"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-29845b18d1aso4213345ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 13:31:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763587887; x=1764192687; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tRlBn8hNsoLzEGGI6zV1NxPFQ/eFHCg8PaMSNSKYawI=;
-        b=dwY5SH/K3B1spsCJkHaaYy5Yes1+n5M/uUUXpP6+AiKQ1vPFlfifPIezxVF9DpMOlT
-         5t2mMbaMfU8DKLv0ZtLiegnpd/BTVj7Y4UnwnRttNhIk5YEFY1dXgOUU0nNCF7tOngYl
-         vYCwMUt/BOluXDxwHobpmWQw6bH7eZPlEk6Pk3fwmT/KlOPq4L4CZxmlk0ufc7husBQw
-         5B4Wo9c9Bl9aDsR6ckIHSf8n+L8OveGt3RFVQHcrfOapjNXqU3pjT21TbEZzKikfZV4x
-         gOIEFau6vKPXmaiyoutWZWQ9aqe9cwsvlAfRymaN+zCvFFH9uUKkwt6+3MnhDvzDoZkI
-         qISQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763587887; x=1764192687;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tRlBn8hNsoLzEGGI6zV1NxPFQ/eFHCg8PaMSNSKYawI=;
-        b=gESbg8w5/FavlhIUzyl4qaTKTpsowJuLumoX5pGzm/zzPLFsHuFVusFrxM/BZGLQBC
-         ohygtfhujduZFaowyFkM/QO2afRh0Jho7oPMwVvnJR9tFEhDTbrU4y0oZwINfLGk6voi
-         nQgXWzC+HBjyKxWmWdMgUsPfZVGne5mPFC4NZjZTqj1ffBvfeBFUa/IH2mNnKSIc4YXW
-         IaLNtohWkuxbyP2gaWI+NUwbmDsvneQus5JInTi+eiGP+PDE12CLk+VpXzUqUvmg3GPk
-         QWLGjllNIrZChHlEGMuKoNFz8fwRkkiGFnNPVj3EqL9zYGIZRsUPn2+2pED7n3TCN9m0
-         g8wg==
-X-Forwarded-Encrypted: i=1; AJvYcCVV5XLolNwuT2LUpElnddbgecVnzVkEn4Jl/SCy8u3DBqn8xa+Yqk9Yuw6XMy4Im2AFXQ2nskK5+To9D5KjAKZq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2Of0m+hHR5/E/OE0ZbhAOctqkilc+tJ7ypW7nrHIjAlqHtB8S
-	9iIKGK8sgy8J60kN4TPM4VWC6V7Q8RQAVeSUN2rDqqYEnX0FcRtyu7I5wXoOyb7rZzB5p+zBPh8
-	WXPFU+Q==
-X-Google-Smtp-Source: AGHT+IEd+gfd++T3e2i6Z4dBj2glGk6LJnNjNrz24WgF1sqa+HmClxx9J2N7UBfKQW53wCFECS0cLQGpQb0=
-X-Received: from plot18.prod.google.com ([2002:a17:902:8c92:b0:298:9ac:cfe9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ccc7:b0:298:49db:a9c5
- with SMTP id d9443c01a7336-29b5b136462mr7336255ad.43.1763587887332; Wed, 19
- Nov 2025 13:31:27 -0800 (PST)
-Date: Wed, 19 Nov 2025 13:31:26 -0800
-In-Reply-To: <aKNF7jc4qr9ab-Es@google.com>
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="DGUWUnvz"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <david.laight.linux_spam@runbox.com>)
+	id 1vLqt0-006kxU-Tm; Wed, 19 Nov 2025 23:42:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
+	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To
+	:Message-Id:Date:Subject:Cc:To:From;
+	bh=N1DxFU65G+nM7q0zov0KSr3WF0ez8nK/PjfzsNDA87s=; b=DGUWUnvzyRp3eBNft6KMmq33+r
+	cqzFxHUt1cMknmNzAL0QK0DdLp7DRfT/3Cj2QO9XgbvpOzu6XPMDzjz4TtMdxFGHgcmx8VPz0qUoM
+	POrh0zfp3/9JbKuncjnr05y1RaYfnJ8OjYAnSj8NGE5Z3uQ2/heQ4SjGigBs6Bu+TvGbfPU2qTgHR
+	UeGPfULMqTboFHcEKrSLWXXf0oBLw1+++XgdPlUii6w+jsK6ITl56xerANPGwyF+uVaWX/nOOJbJm
+	5svE9KfLf7Srtp0RdeqynV4E/5FzJskMjBRlNFtoiODpcx4OMiDuQMhKc+kyt5oX9UM0ilLa72+e+
+	7cF7cbYA==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <david.laight.linux_spam@runbox.com>)
+	id 1vLqt0-00086M-KX; Wed, 19 Nov 2025 23:42:50 +0100
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1vLqsV-00Fos6-DY; Wed, 19 Nov 2025 23:42:19 +0100
+From: david.laight.linux@gmail.com
+To: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	David Laight <david.laight.linux@gmail.com>
+Subject: [PATCH 03/44] perf: Fix branch stack callchain limit
+Date: Wed, 19 Nov 2025 22:40:59 +0000
+Message-Id: <20251119224140.8616-4-david.laight.linux@gmail.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20251119224140.8616-1-david.laight.linux@gmail.com>
+References: <20251119224140.8616-1-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250806195706.1650976-1-seanjc@google.com> <20250806195706.1650976-10-seanjc@google.com>
- <20250815113951.GC4067720@noisy.programming.kicks-ass.net>
- <aJ9VQH87ytkWf1dH@google.com> <aJ9YbZTJAg66IiVh@google.com>
- <20250818143204.GH3289052@noisy.programming.kicks-ass.net> <aKNF7jc4qr9ab-Es@google.com>
-Message-ID: <aR43LoV1ti5-2WRD@google.com>
-Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
- vector on guest load/put context
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>, 
-	Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 18, 2025, Sean Christopherson wrote:
-> On Mon, Aug 18, 2025, Peter Zijlstra wrote:
-> > On Fri, Aug 15, 2025 at 08:55:25AM -0700, Sean Christopherson wrote:
-> > > On Fri, Aug 15, 2025, Sean Christopherson wrote:
-> > > > On Fri, Aug 15, 2025, Peter Zijlstra wrote:
-> > > So if we're confident that switching the host LVTPC outside of
-> > > perf_{load,put}_guest_context() is functionally safe, I'm a-ok with it.
-> > 
-> > Let me see. So the hardware sets Masked when it raises the interrupt.
-> > 
-> > The interrupt handler clears it from software -- depending on uarch in 3
-> > different places:
-> >  1) right at the start of the PMI
-> >  2) in the middle, right before enabling the PMU (writing global control)
-> >  3) at the end of the PMI
-> > 
-> > the various changelogs adding that code mention spurious PMIs and
-> > malformed PEBS records.
-> > 
-> > So the fun all happens when the guest is doing PMI and gets a VM-exit
-> > while still Masked.
-> > 
-> > At that point, we can come in and completely rewrite the PMU state,
-> > reroute the PMI and enable things again. Then later, we 'restore' the
-> > PMU state, re-set LVTPC masked to the guest interrupt and 'resume'.
-> > 
-> > What could possibly go wrong :/ Kan, I'm assuming, but not knowing, that
-> > writing all the PMU MSRs is somehow serializing state sufficient to not
-> > cause the above mentioned fails? Specifically, clearing PEBS_ENABLE
-> > should inhibit those malformed PEBS records or something? What if the
-> > host also has PEBS and we don't actually clear the bit?
-> > 
-> > The current order ensures we rewrite LVTPC when global control is unset;
-> > I think we want to keep that.
-> 
-> Yes, for sure.
-> 
-> > While staring at this, I note that perf_load_guest_context() will clear
-> > global ctrl, clear all the counter programming, and re-enable an empty
-> > pmu. Now, an empty PMU should result in global control being zero --
-> > there is nothing run after all.
-> > 
-> > But then kvm_mediated_pmu_load() writes an explicit 0 again. Perhaps
-> > replace this with asserting it is 0 instead?
-> 
-> Yeah, I like that idea, a lot.  This?
-> 
-> 	perf_load_guest_context();
-> 
-> 	/*
-> 	 * Sanity check that "loading" guest context disabled all counters, as
-> 	 * modifying the LVTPC while host perf is active will cause explosions,
-> 	 * as will loading event selectors and PMCs with guest values.
-> 	 *
-> 	 * VMX will enable/disable counters at VM-Enter/VM-Exit by atomically
-> 	 * loading PERF_GLOBAL_CONTROL.  SVM effectively performs the switch by
-> 	 * configuring all events to be GUEST_ONLY.
-> 	 */
-> 	WARN_ON_ONCE(rdmsrq(kvm_pmu_ops.PERF_GLOBAL_CTRL));
+From: David Laight <david.laight.linux@gmail.com>
 
-This doesn't actually work, because perf_load_guest_context() doesn't guarantee
-PERF_GLOBAL_CTRL is '0', it only guarantees all events are disabled.  E.g. if
-there are no perf events, perf_load_guest_context() is one big nop (I think).
+The code that bounds the brs->nr to event->attr.sample_max_stack
+incorrectly masks brs->nr with 65535 before the limit check.
+Replace the min_t(u16, ...) with a plain min(...).
 
-And while it might seem reasonable to expect PERF_GLOBAL_CTRL to be '0' if
-there are no perf events, that doesn't hold true today.  E.g. amd_pmu_reload_virt()
-unconditionally sets all supported MSR_AMD64_PERF_CNTR_GLOBAL_CTL bits.
+I guess there may be another limit on brs->nr (which is u64).
 
-I'm sure we could massage perf to really truly ensure PERF_GLOBAL_CTRL is '0',
-but I don't see any value in explicitly doing that in perf_load_guest_context()
-(versus simply doing it in KVM), and I would rather not play whack-a-mole in perf
-as part of this series.
+Fixes: c53e14f1ea4a8 ("perf: Extend per event callchain limit to branch stack")
+Signed-off-by: David Laight <david.laight.linux@gmail.com>
+---
+ include/linux/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So unless someone really, really wants to lean on perf to clear PERF_GLOBAL_CTRL,
-I'll go with this:
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index fd1d91017b99..f91c875ea311 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1430,7 +1430,7 @@ static inline void perf_sample_save_brstack(struct perf_sample_data *data,
+ 	if (branch_sample_hw_index(event))
+ 		size += sizeof(u64);
+ 
+-	brs->nr = min_t(u16, event->attr.sample_max_stack, brs->nr);
++	brs->nr = min(event->attr.sample_max_stack, brs->nr);
+ 
+ 	size += brs->nr * sizeof(struct perf_branch_entry);
+ 
+-- 
+2.39.5
 
-	/*
-	 * Explicitly clear PERF_GLOBAL_CTRL, as "loading" the guest's context
-	 * disables all individual counters (if any were enabled), but doesn't
-	 * globally disable the entire PMU.  Loading event selectors and PMCs
-	 * with guest values while PERF_GLOBAL_CTRL is non-zero will generate
-	 * unexpected events and PMIs.
-	 *
-	 * VMX will enable/disable counters at VM-Enter/VM-Exit by atomically
-	 * loading PERF_GLOBAL_CONTROL.  SVM effectively performs the switch by
-	 * configuring all events to be GUEST_ONLY.  Clear PERF_GLOBAL_CONTROL
-	 * even for SVM to minimize the damage if a perf event is left enabled,
-	 * and to ensure a consistent starting state.
-	 */
-	wrmsrq(kvm_pmu_ops.PERF_GLOBAL_CTRL, 0);
