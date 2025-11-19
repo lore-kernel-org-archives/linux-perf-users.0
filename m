@@ -1,205 +1,149 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A417B270EBA
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 05:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0852E0415;
+	Wed, 19 Nov 2025 07:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763528769; cv=none; b=PZ52etk2TEm0AclzAWHCAKSxFOj+GulMZMyEb2pPqZ05yTJ5ZjveYBpVQAjdvTIF2OSDj8FkJMzPgQ59/Pu0RuXYNNu8rsldN1kC21lF6nuegp2Xw0jACXOg0gzZv258wN+vt2WsMpqXqEi02AYGc5VCLiPd8YyFxTD3zSYEVPY=
+	t=1763538977; cv=none; b=jMaxhJwuvCUtpo/nX0+Ibd61EEjaMwT5XdT1wEGICC6L4g6ODd9B+/0OwG91LNEzp0cfph1ZZPz0KSrKoWqgNPaHSqwY+5JloTfdSLVdKWuQes6ibX70/aylHCqZ48tfGUeRaQcxB9QhtMKgk4hSA3/PmyZHmEJtEtFM9JZu6F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763528769; c=relaxed/simple;
-	bh=sErQlv+SSX673tGFwuBfJXkDlMGMo806+f7AvH23WLs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=cv8ghgv6FY1Eh+w9XJ/j/284QRMkWSxOpvDzj66lOPPcIg/7LUsCdKo16gIjl5HNiOsry2bnd4V4b7FTaR6qsUqKKCQi8vCixGYra50l0pC22L0wWqY9h6LtbXDbO4hs09vQlzek2q956bgrkRiFGC36LmOBHP9NboA/ZEllnhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TMpEEqr0; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1763538977; c=relaxed/simple;
+	bh=fFOj0gYwi+B9zsla+smhaX51Vh+rEi/ZGYNhLplS608=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h3HgYiBhkJQ6m88kkiMhDRFzwMdiC3pOXwUvPgXJg8sYZljcqBYHGrxl5H5MLLjHOyKOAUl2WaaN+Wb84HalAPgeBynFf4iiTEJb0Qr9mpyeMwOQsIyUiSb5pAInt4+D5e85OMNiQg6KthLRzm7Omob/+E/JwFIGFhHUIKvDfGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YEHOTibS; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TMpEEqr0"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-bb27b422cf2so12682070a12.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Nov 2025 21:06:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763528766; x=1764133566; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ttkXmYbg68Vro9QoU2QUTcpcEAK5DtQHDGLiWPkC03U=;
-        b=TMpEEqr0eyfdkaUEb0Kz2sSUHg0RzO8de8ATUzdRYb0EOHXsQuvIi+YaOBZorWyPHX
-         B3/kFVvvXMtSNT8cmNmGH7t54cbvfIeQZnBpEBjAw5LI7+cbiR86FD/PXHUswW5u9jsR
-         TEXJOb938x01Lv+ksovtjzu0iKE9bv4W7tQGpZhOz25QqcxjZBo5C8wPy5djyFn2Sy9B
-         qOn6y9tKpETt9/7ngtqD47EYnNzWdTqNpP2+tIlR2VMh0pWpy0frx92kM3QjjQ2VeRd6
-         rnH9sXiZAeFDlAQLHJyk8NKl6pJ9pzPT6FNOwQz0zU+EwU5w8DkYwxtQeKStIHS2ciZD
-         IRNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763528766; x=1764133566;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ttkXmYbg68Vro9QoU2QUTcpcEAK5DtQHDGLiWPkC03U=;
-        b=iHiLpVihx3eyiJjdOXsXA6rBJZTcpU69IiSwrC6qrysTY0LNaRZLLNDrWFqapjmntm
-         jEttlvgfXxE5Liv7NnQCR9MCfpEOvZoOWt01o60N965K4j/l7VwdndLMGs8qCLxKVSLn
-         SZXUR5Ol0XZilQkRJ3kns+OcuHCiZF9bbn2GJMEbyMZdlAfZvTQtUWXhT1awRuXnw/Gm
-         GgHXCmd8bkfBM9rlYF+NNpZ3CinFyd+Nn6Xgz1k9aiHsbmwRDG5ElVLchLtOf5MTpcQy
-         k/3ZV3wXu0GA1yLDkuEZWfGpDE2+fXOzWTxeEk2gut31Cx2rhcHZ5EYVl1y2a13WH+2D
-         p4Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCXXwscliC+d+K8wBDluIWAeVqQeIRji1zwirkIKKQeElEZMSriNnnsCYfTthAR+GnGIplISPGZPoiLGvW5s+Qsj@vger.kernel.org
-X-Gm-Message-State: AOJu0YzM/CD05MXhlsSUFXDSdCq7qRjbx5H5e/WM0op07wUSzUn2LO9R
-	D24zt656dew3CQFl7Br78fPePRMLQ1HDYKDVLrp28TWssDg34puAjqqQz0Pauyt/Ip5iRvE8XJD
-	4evJ6kUEgUw==
-X-Google-Smtp-Source: AGHT+IFMWHR6ONxAR1O4I5VrA191Wg889KMc+40Os+/1IDDJPJJIBz077B6oD4VN0iciAfxL762efycsBgks
-X-Received: from dyau39.prod.google.com ([2002:a05:7300:6027:b0:2a4:75f7:2135])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:3fa4:b0:2a4:3593:9685
- with SMTP id 5a478bee46e88-2a6d995cb02mr561372eec.2.1763528765799; Tue, 18
- Nov 2025 21:06:05 -0800 (PST)
-Date: Tue, 18 Nov 2025 21:05:55 -0800
-In-Reply-To: <20251119050555.2017758-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YEHOTibS"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJ7sKUH006274;
+	Wed, 19 Nov 2025 07:56:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=SYfiNP
+	6hUuKh16OALQ2gAyjN8MsRmM1HU+NgA5w7pBA=; b=YEHOTibS5i5lJczfLd9Vjq
+	iqmSI69v6CJExXl4Y5IYkt2sxMhE3eHZWP4onIdlMpAHpPP8pRCXJBoMO+r2W3vQ
+	HCaRqC0nNBg+5TOckUw4GhtETHMkAGXtndcZryxJwPoTVSgzk8DTPhf7K/1E3Kyu
+	j1KAuvnuUR+8zKG2sksOELD+9i5rRyRri9WbTyKqiFB95YsV+N4rnHY2yg7+xzKt
+	bJuOhL4AvglJemRwsbKWGoDl/EMh4Z6KLh718CaetYKwyxg2Or7T9oOaiVm5zEur
+	bOpnQpSMFkmG0CUv11iKD0PMLRD0NcxZnlhfoqCs0zyxIXfHIP1e+9xjjAKQhhGg
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejjtxf7x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Nov 2025 07:56:03 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJ4a9jm017381;
+	Wed, 19 Nov 2025 07:56:02 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4af6j1q71x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Nov 2025 07:56:02 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AJ7txPO31654230
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Nov 2025 07:55:59 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F262120043;
+	Wed, 19 Nov 2025 07:55:58 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8BBFA2004B;
+	Wed, 19 Nov 2025 07:55:58 +0000 (GMT)
+Received: from [9.111.88.30] (unknown [9.111.88.30])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 19 Nov 2025 07:55:58 +0000 (GMT)
+Message-ID: <81b3029e-6e9f-409e-93b8-495176992209@linux.ibm.com>
+Date: Wed, 19 Nov 2025 08:55:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251119050555.2017758-1-irogers@google.com>
-X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
-Message-ID: <20251119050555.2017758-2-irogers@google.com>
-Subject: [PATCH v1 2/2] perf test maps: Additional maps__fixup_overlap_and_insert
- tests
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, German Gomez <german.gomez@arm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel test robot <oliver.sang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH Linux-next] perf test: Fix test case perf trace BTF
+ general tests
+To: Jan Polensky <japo@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, namhyung@kernel.org
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com
+References: <20251117124359.75604-1-tmricht@linux.ibm.com>
+ <aRy7V8EF6cRj8lCo@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <aRy7V8EF6cRj8lCo@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: e96yBkVVV0aDq6P6qcFdf39VqjP1ciY4
+X-Proofpoint-ORIG-GUID: e96yBkVVV0aDq6P6qcFdf39VqjP1ciY4
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX/jUQ01kXuNRE
+ vS0IFlG+BjkYQS6qH88JTQqeu1LU/9eRPflwPntBB3qL0r1RjnEXqjU+WjHOdGFcqNT7XE4u1hp
+ su3NHgNHFDfKWn0i4rT9SL3l6FViwlv9yTggwH4727my2L8DRvEYUv3426E1PCwdjgiI5WeTS35
+ 3ef6uxfYP07bcngwjfWG/GEUzSbzhOWGlgmWLINs2ZsWbXZDDle89OUXNRTRejOdyAULQ3fnh6o
+ 2McpnH33YMvekihSDxOVgy6/NTCrI5/9zmq7ydMyk78U25rtpFIR16OymStiQZ2A4myjx/OxXCS
+ NAOqx56c4MTVP+kh/GHGbPFEXQmmGrecgr3Lkvz1MzdELhYgkMov+6TkFrY8oVncwINmhAaG8RS
+ Qdq/w+9VH9QAZnB8Jddxt8FSr6FA9A==
+X-Authority-Analysis: v=2.4 cv=SvOdKfO0 c=1 sm=1 tr=0 ts=691d7813 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VnNF1IyMAAAA:8 a=lNeJwW5zoNWuYIwxTtkA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-19_01,2025-11-18_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 adultscore=0 bulkscore=0 impostorscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2511150032
 
-Add additional test to the maps covering
-maps__fixup_overlap_and_insert. Change the test suite to be for more
-than just 1 test.
+On 11/18/25 19:30, Jan Polensky wrote:
+> On Mon, Nov 17, 2025 at 01:43:59PM +0100, Thomas Richter wrote:
+>> The following test case fails on linux-next repo:
+>>
+> ---8<--- snip ---8<---
+>>  #
+>>
+>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>> ---
+>>  tools/perf/tests/shell/trace_btf_general.sh | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
+>> index ef2da806be6b..9cd6180062d8 100755
+>> --- a/tools/perf/tests/shell/trace_btf_general.sh
+>> +++ b/tools/perf/tests/shell/trace_btf_general.sh
+>> @@ -39,7 +39,7 @@ trace_test_buffer() {
+>>    echo "Testing perf trace's buffer augmentation"
+>>    # echo will insert a newline (\10) at the end of the buffer
+>>    output="$(perf trace --sort-events -e write --max-events=1 -- echo "${buffer}" 2>&1)"
+>> -  if ! echo "$output" | grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
+>> +  if ! echo "$output" | grep -qE "^echo/[0-9]+ write\([0-9]+, ${buffer}\\\\10, [0-9]+(, ..)?\) += +[0-9]+$"
+>>    then
+>>      printf "Buffer augmentation test failed, output:\n$output\n"
+>>      err=1
+> ---------------8<---------------
+> Tested-by: Jan Polensky <japo@linux.ibm.com>
+> Reviewed-by: Jan Polensky <japo@linux.ibm.com>
+> 
+> Thank you Thomas
+> 
+> Nit: maybe `(, \"\")?` instead of `(, ..)?` for clarity?
+> 
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/builtin-test.c |  2 +-
- tools/perf/tests/maps.c         | 82 ++++++++++++++++++++++++++++++++-
- tools/perf/tests/tests.h        |  2 +-
- 3 files changed, 83 insertions(+), 3 deletions(-)
+Thanks will do it.
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 0d2fb7a4ae5b..9090e8238a44 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -126,7 +126,7 @@ static struct test_suite *generic_tests[] = {
- 	&suite__jit_write_elf,
- 	&suite__pfm,
- 	&suite__api_io,
--	&suite__maps__merge_in,
-+	&suite__maps,
- 	&suite__demangle_java,
- 	&suite__demangle_ocaml,
- 	&suite__demangle_rust,
-diff --git a/tools/perf/tests/maps.c b/tools/perf/tests/maps.c
-index 4f1f9385ea9c..2c05d62f40dc 100644
---- a/tools/perf/tests/maps.c
-+++ b/tools/perf/tests/maps.c
-@@ -162,4 +162,84 @@ static int test__maps__merge_in(struct test_suite *t __maybe_unused, int subtest
- 	return TEST_OK;
- }
- 
--DEFINE_SUITE("maps__merge_in", maps__merge_in);
-+static int test__maps__fixup_overlap_and_insert(struct test_suite *t __maybe_unused,
-+						int subtest __maybe_unused)
-+{
-+	struct map_def initial_maps[] = {
-+		{ "target_map", 1000, 2000 },
-+		{ "next_map",   3000, 4000 },
-+	};
-+	struct map_def insert_split = { "split_map", 1400, 1600 };
-+	struct map_def expected_after_split[] = {
-+		{ "target_map", 1000, 1400 },
-+		{ "split_map",  1400, 1600 },
-+		{ "target_map", 1600, 2000 },
-+		{ "next_map",   3000, 4000 },
-+	};
-+
-+	struct map_def insert_eclipse = { "eclipse_map", 2500, 4500 };
-+	struct map_def expected_final[] = {
-+		{ "target_map",  1000, 1400 },
-+		{ "split_map",   1400, 1600 },
-+		{ "target_map",  1600, 2000 },
-+		{ "eclipse_map", 2500, 4500 },
-+		/* "next_map" (3000-4000) is removed */
-+	};
-+
-+	struct map *map_split, *map_eclipse;
-+	int ret;
-+	unsigned int i;
-+	struct maps *maps = maps__new(NULL);
-+
-+	TEST_ASSERT_VAL("failed to create maps", maps);
-+
-+	for (i = 0; i < ARRAY_SIZE(initial_maps); i++) {
-+		struct map *map = dso__new_map(initial_maps[i].name);
-+
-+		TEST_ASSERT_VAL("failed to create map", map);
-+		map__set_start(map, initial_maps[i].start);
-+		map__set_end(map, initial_maps[i].end);
-+		TEST_ASSERT_VAL("failed to insert map", maps__insert(maps, map) == 0);
-+		map__put(map);
-+	}
-+
-+	// Check splitting.
-+	map_split = dso__new_map(insert_split.name);
-+	TEST_ASSERT_VAL("failed to create split map", map_split);
-+	map__set_start(map_split, insert_split.start);
-+	map__set_end(map_split, insert_split.end);
-+
-+	ret = maps__fixup_overlap_and_insert(maps, map_split);
-+	TEST_ASSERT_VAL("failed to fixup and insert split map", !ret);
-+
-+	map__zput(map_split);
-+	ret = check_maps(expected_after_split, ARRAY_SIZE(expected_after_split), maps);
-+	TEST_ASSERT_VAL("split check failed", !ret);
-+
-+	// Check cover 1 map with another.
-+	map_eclipse = dso__new_map(insert_eclipse.name);
-+	TEST_ASSERT_VAL("failed to create eclipse map", map_eclipse);
-+	map__set_start(map_eclipse, insert_eclipse.start);
-+	map__set_end(map_eclipse, insert_eclipse.end);
-+
-+	ret = maps__fixup_overlap_and_insert(maps, map_eclipse);
-+	TEST_ASSERT_VAL("failed to fixup and insert eclipse map", !ret);
-+
-+	map__zput(map_eclipse);
-+	ret = check_maps(expected_final, ARRAY_SIZE(expected_final), maps);
-+	TEST_ASSERT_VAL("eclipse check failed", !ret);
-+
-+	maps__zput(maps);
-+	return TEST_OK;
-+}
-+
-+static struct test_case tests__maps[] = {
-+	TEST_CASE("Test merge_in interface", maps__merge_in),
-+	TEST_CASE("Test fix up overlap interface", maps__fixup_overlap_and_insert),
-+	{	.name = NULL, }
-+};
-+
-+struct test_suite suite__maps = {
-+	.desc = "Maps - per process mmaps abstraction",
-+	.test_cases = tests__maps,
-+};
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 33de16dde737..f5fba95b6f3f 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -160,7 +160,7 @@ DECLARE_SUITE(bitmap_print);
- DECLARE_SUITE(perf_hooks);
- DECLARE_SUITE(unit_number__scnprint);
- DECLARE_SUITE(mem2node);
--DECLARE_SUITE(maps__merge_in);
-+DECLARE_SUITE(maps);
- DECLARE_SUITE(time_utils);
- DECLARE_SUITE(jit_write_elf);
- DECLARE_SUITE(api_io);
 -- 
-2.52.0.rc1.455.g30608eb744-goog
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
