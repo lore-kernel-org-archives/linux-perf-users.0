@@ -1,154 +1,154 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9112B346780;
-	Wed, 19 Nov 2025 10:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C476035B13E
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 12:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763549309; cv=none; b=KoQpKyVcwFSNXMudHLmsS0Ssx+VaR35j45RPj4CyDyDK1rWsDMVrCgQN+tMZDT5u7PLMNBsVmkz20d/EEBm+nJIQSQzF6c7Qv8fcDG/cuMLFrK6vF44MDtrMKFzldBdbolPb8MtdHFNv0u9ilOnJW+RSWFkOWS6ycWfbnNO95wU=
+	t=1763555617; cv=none; b=pRldh+lEg5BEXFzAxSVQlWlTzvvoGhLEMkrCy7r7Wt8YmhnykPyZCegSl3l0TDf96jndNcxTX4d8Pn+W6Q5kvY8Z2DSdcNAy6eB3dc7FiB4N1CAwKkaBckIfXl89+CM4yxzXvA4f+EaPPF826AwbjKMCOSR1TtjJK/4sXycOyu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763549309; c=relaxed/simple;
-	bh=kMT0ZzWp63kDA17ol75ffzc2At9Ul8sk3tSyxXVumcw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C896b2Js3CGoGAgJe8cw4S31xFk7JBdRifLJBBgSGR93vn18FMKFd6DM3wVjdaz4SuWfpg91EuzthZGy1jYh9rHx9Y0mhlB9JWlZxqTgUAJEaNj8ZjT8TRvIqcRN+ckGarOP0M35SSEyJwHe6F9vTBYDqlYmiPjkiMsViyZJBes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jyYqwpdB; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1763555617; c=relaxed/simple;
+	bh=GFLtMROpQw9A+PEPUreRaLxQRhO+LyU0XUmlP/JZmBw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=V+RPM2aawF2+TKiLqR09dZXbpRFUZwbZP3T4GTyUy178tV3LMIVst0Wfh/wSo84WzGJtLCsGtUPT8oJo83i91uubEDD/Ny3aeT9piU3FFT/qmSJ/lZ+MFwbYAszDN/DUWDhWe33ZswT0eseIaVtc8Wd/UJdB0WX5hw3Zl4PSQcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QSpa9RMk; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jyYqwpdB"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJ6UUZO003110;
-	Wed, 19 Nov 2025 10:48:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=t3PwjL3QmlNiCI+JRw2jGFl0WLlmDkeiR7GE4NHOK
-	zA=; b=jyYqwpdBpDJkk7COLVQSLvCGh56DTbMYRqzfNXUa9YsCzL1lypcmrwSCI
-	OblYPufhZR0+OeaKAM/UjzkbKkzY+IehdIHo2pO0I3XtHN8V+eni2wZ0xLuDsMuu
-	LtIv2GUDYRuEepXNKKlJI0rCa64sKU6ETWCWxCCyYliDJIrbeFFRYp2WXxgcqikm
-	gJoIVzWCWUpddtqoWeI05L+CDoiK5/2KzHwVcFMwn8/YmVSCw9Zce7Jbx3o6ctEF
-	oc/wEP+hZllNe2U9iGiMt3AyXkBb6VqRZt37rJdjHQwqWzRXg0SdVPQab2zK41LK
-	ufSsa8W/Ev7kYld8iHcXufHc5PdSw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejk1fxpw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Nov 2025 10:48:03 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AJAcqg3017085;
-	Wed, 19 Nov 2025 10:48:02 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejk1fxpv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Nov 2025 10:48:02 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJ8vL2i017335;
-	Wed, 19 Nov 2025 10:48:01 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4af6j1quu3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Nov 2025 10:48:01 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AJAlwZg43319552
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Nov 2025 10:47:58 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0323C20043;
-	Wed, 19 Nov 2025 10:47:58 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CF8C920040;
-	Wed, 19 Nov 2025 10:47:57 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 19 Nov 2025 10:47:57 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        irogers@google.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH linux-next] perf tests: Handle s390 metrics in perf all metrics test
-Date: Wed, 19 Nov 2025 11:47:51 +0100
-Message-ID: <20251119104751.51960-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QSpa9RMk"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-42b3b0d76fcso4172092f8f.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 04:33:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1763555611; x=1764160411; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tVOK/gZwGH/qAUHEfz1NMpjUaPUGidGp5/ImMSGMGpc=;
+        b=QSpa9RMk2Gawp1omHaxLWpUlbRDwxPSY7OBZsnsiJJdGj59IB4vILkfOA0L85qnnTR
+         TnNGaUCbX7hIxsQQSb1Sl1NbNoOT3fL+bHnsGNuT27kxEvygBUZXTUZf9vkUCTXaZ4wT
+         JyWaEK0VIdP5l3oZnL1N5dd0KXDTLFtdiaGFiViWB8QA0ngHLOtLnfnaGFzr7JKUdM08
+         VZ9A2JXpuaaMrOJVF2csFXPH6ImNgV6v+0gb4PuS1YekS4PuIxo0xuHtc4BSfDMC4ri2
+         cRRjgYBF+OFeWgjgvdIH8VI29YGsropgWtGcRk7bvhUg2KN6fTyo9dnCDwYlCF15UrdO
+         Z4YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763555611; x=1764160411;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tVOK/gZwGH/qAUHEfz1NMpjUaPUGidGp5/ImMSGMGpc=;
+        b=RIVoBsxNH1wtA2Fv17eMxQFWcdeEMVkWPP/i8J2IP8OwmlEATHT3K2qFl4UF/BNwAH
+         ktnPVUC/fuZbTeU1jtUAcJIwRLVaccqnTkjBebt16mFXAJM8OD4nbLg5KH3ZG8hW2cFF
+         eNLvx+VfpHUuRs+t/5zPtio0q7H+xw+OEsgmbSt0A9D8rWfKXp/r1KcslIi6mbf4eAyV
+         o2W0tcDfx8xOtPzRuMXgWiFqJZLZgq12PD4XtIQpv9bwHZCiK1lV+khSVAGHpzqPfhlM
+         wE8Rto6BuFxIduZ3GXRBSLBK3SEZVxNm1oFsEL0XZ/munGumloHnOU1+IMYyU82RpYcA
+         /PBg==
+X-Forwarded-Encrypted: i=1; AJvYcCU5VGgi403tHsMBsNK/VgGHJHYii9PQEvF2e2dIoIiW5iV6PQxqEq0YV6fGuRm40pyIV+C9XuHZlYSDsXvqdgpo@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRmtmCiARuCi7mh0rxn33oHLoE806pafOj7qEoFFRNzl9KGdeD
+	UG5xoJu3fPusBQaYR6Y0M2+akNrsI2lK1gH6VrGKJfRt8u52o9B0WFqyz2PojdEP9sU=
+X-Gm-Gg: ASbGncshZvYYzszR2w7AhYzGO7zqhkPzwJFcf0RPVQYbXM0oQVmpIayMwzctLSlKNl7
+	qrRoyO1dpdGepaYjSKxmBAX5oDjKuKaEPREjrGLyBh6z9mKZ05UDMnfLQOkQmq/IieY3ZKZurxY
+	fpT/bKQaa9Z1AT45zblmvMy1ua80zvf7ct3Rx1ErqWQ1rgThk2NI/aq1otwW4TzFoDMgCtT91WO
+	/MIKBZNeNm9+pc5PwXyQeZ3ohSB5lrqBhYywfrcqRwtownrwhqEFvr4pWK+lKBL2gRUNKZ5PAB2
+	OztDi4aEkSwm4s8eXajXGRuxQmLX//2ev7tJPvbWo6bXZtfUNO9pb52NM6hp+j3DsW8c2iRlTta
+	0opDjrEU8g8YylpDs9yjE6gi8m9NV5gGy0Rw4RRQqeOCEOXBMop9sfmocI/nXghsXQDU/YImcjn
+	PA/ot2kK2AirEGvpUD7rQuaI+Jnac=
+X-Google-Smtp-Source: AGHT+IHrVclBtR9HfIguZZfrK6wQUJjCLe6CJI/4hqbAdl79ZudAPdTK9Mp+h1vilglUyVf/wTs04g==
+X-Received: by 2002:a05:6000:2509:b0:42b:3e0a:649e with SMTP id ffacd0b85a97d-42b59328f9fmr20589260f8f.13.1763555610867;
+        Wed, 19 Nov 2025 04:33:30 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e85627sm39778524f8f.16.2025.11.19.04.33.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Nov 2025 04:33:30 -0800 (PST)
+Message-ID: <fe28fdc7-7c5c-420f-ac5c-903438d4d62b@linaro.org>
+Date: Wed, 19 Nov 2025 12:33:29 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=C/nkCAP+ c=1 sm=1 tr=0 ts=691da063 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=LEUDr0dq1Xqas2V5W20A:9
-X-Proofpoint-GUID: 18ZAZuQdO48430WzIPKsEDHMCr-EBQcf
-X-Proofpoint-ORIG-GUID: rbYlv0U9DC6xYfBPlXq05gduhZAXCZQd
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX51MjMo/Q/9FD
- 5HJ5L7mjkOvSA3/+aR4H0Y2/vpHxMxKSvox36bsjpDmKolZnFVRs7/8Gx3GxNmhYics8ylXC6mg
- 9B2aO3XthB7t3aoPSyh9BeOzsLn9cjH/mG2hQwW1HXUbHhGsGWHRTUHpAZC1kCakJcQLpcAfhCa
- RR1Uw7B56U7ykTU5J4uvjj5z/uA36go/Uap694sktA3GNcJaFw56n7hGZBoS/zWGVNVdfLHidnn
- h7v2zQ1ro6uNnOSj4h59CMVUkpkD3kh2xBlJ41DRcub/tdvEuDOeIqi+tCLqPwyiR+DPw3+MVqL
- 0LRgHQo2e89HNFQGID/5vAMdYwh6EN08YR1upT+pE2SO95Z9/Dl6P7MfTsHFMCAhJaE95QLvkme
- +Kob3hEXNGKlcmL339xuvuxw90YeKA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-19_03,2025-11-18_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 spamscore=0 impostorscore=0 bulkscore=0
- malwarescore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511150032
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] perf maps: Avoid RC_CHK use after free
+To: Ian Rogers <irogers@google.com>
+References: <20251119050555.2017758-1-irogers@google.com>
+Content-Language: en-US
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ German Gomez <german.gomez@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel test robot <oliver.sang@intel.com>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20251119050555.2017758-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This test case fails on s390 because some counters metrics
-are not available and the metric defined on them fail.
-Add s390x specific list of metrics to be skipped.
 
-Add an extra line to display which metric has been skipped.
-It is shown with the verbose option turned on.
 
-Also return "Ok" instead of "Skipped" when no errors
-have been detected, but some metric have been skipped.
-The seems more logical otherwise "Skipped" means all
-metric tests have been skipped instead of just a few.
+On 19/11/2025 5:05 am, Ian Rogers wrote:
+> The case of __maps__fixup_overlap_and_insert where the "new" maps
+> covers existing mappings can create a use-after-free with reference
+> count checking enabled. The issue is that "pos" holds a map pointer
+> from maps_by_address that is put from maps_by_address but then used to
+> look for a map in maps_by_name (the compared map is now a
+> use-after-free). The issue stems from using maps__remove which redoes
+> some of the searches already done by __maps__fixup_overlap_and_insert,
+> so optimize the code (by avoiding repeated searches) and avoid the
+> use-after-free by inlining the appropriate removal code.
+> 
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/oe-lkp/202511141407.f9edcfa6-lkp@intel.com
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/shell/stat_all_metrics.sh | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Reviewed-by: James Clark <james.clark@linaro.org>
 
-diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-index a7edf01b3943..b86b36a49228 100755
---- a/tools/perf/tests/shell/stat_all_metrics.sh
-+++ b/tools/perf/tests/shell/stat_all_metrics.sh
-@@ -7,6 +7,10 @@ ParanoidAndNotRoot()
-   [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
- }
- 
-+# Ignore metric which are not supported on s390x
-+[ "$(uname -m)" = "s390x" ] && ignore="|branch_miss_rate|l1d_miss_rate|llc_miss_rate|\
-+		dtlb_miss_rate|itlb_miss_rate|l1i_miss_rate|l1_prefetch_miss_rate"
-+
- test_prog="sleep 0.01"
- system_wide_flag="-a"
- if ParanoidAndNotRoot 0
-@@ -27,9 +31,10 @@ for m in $(perf list --raw-dump metrics); do
-   fi
-   if [[ "$result" =~ "Cannot resolve IDs for" || "$result" =~ "No supported events found" ]]
-   then
--    if [[ "$m" == @(l1_prefetch_miss_rate|stalled_cycles_per_instruction) ]]
-+    if [[ "$m" == @(l1_prefetch_miss_rate|stalled_cycles_per_instruction$ignore) ]]
-     then
-       # Default metrics that may use unsupported events.
-+      echo "Skipped metric $m"
-       continue
-     fi
-     echo "Metric contains missing events"
-@@ -106,4 +111,5 @@ for m in $(perf list --raw-dump metrics); do
-   err=1
- done
- 
-+[ "$err" -eq 2 ] && err=0
- exit "$err"
--- 
-2.51.1
+> ---
+>   tools/perf/util/maps.c | 22 ++++++++++++++++++++--
+>   1 file changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+> index 779f6230130a..c321d4f4d846 100644
+> --- a/tools/perf/util/maps.c
+> +++ b/tools/perf/util/maps.c
+> @@ -931,8 +931,9 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+>   			return err;
+>   		} else {
+>   			struct map *next = NULL;
+> +			unsigned int nr_maps = maps__nr_maps(maps);
+>   
+> -			if (i + 1 < maps__nr_maps(maps))
+> +			if (i + 1 < nr_maps)
+>   				next = maps_by_address[i + 1];
+>   
+>   			if (!next  || map__start(next) >= map__end(new)) {
+> @@ -953,7 +954,24 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+>   				check_invariants(maps);
+>   				return err;
+>   			}
+> -			__maps__remove(maps, pos);
+> +			/*
+> +			 * pos fully covers the previous mapping so remove
+> +			 * it. The following is an inlined version of
+> +			 * maps__remove that reuses the already computed
+> +			 * indices.
+> +			 */
+> +			map__put(maps_by_address[i]);
+> +			memmove(&maps_by_address[i],
+> +				&maps_by_address[i + 1],
+> +				(nr_maps - i - 1) * sizeof(*maps_by_address));
+> +
+> +			if (maps_by_name) {
+> +				map__put(maps_by_name[ni]);
+> +				memmove(&maps_by_name[ni],
+> +					&maps_by_name[ni + 1],
+> +					(nr_maps - ni - 1) *  sizeof(*maps_by_name));
+> +			}
+> +			--RC_CHK_ACCESS(maps)->nr_maps;
+>   			check_invariants(maps);
+>   			/*
+>   			 * Maps are ordered but no need to increase `i` as the
 
