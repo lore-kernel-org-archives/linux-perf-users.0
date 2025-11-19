@@ -1,109 +1,93 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5E93702E8
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 00:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F073054CC;
+	Wed, 19 Nov 2025 04:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763513924; cv=none; b=F92L2VNZQTvaRDmuvUGFhysSiruJRXTRpc/WEwY8Q6XBlvugkl89QDXCLjla0xTyIkP1XKziEG4rYVlcu7r7yosBilnB64dN/d887HQGffj7eD6YfIitjdcuG9Xwby931rCadkRknRFf4P8Z6Xfv56NbvtDfA1NI7kOZgKE3Ve4=
+	t=1763527013; cv=none; b=aJ++e1+yMWe/T9HQMh2zfWqTb9gKbWSJ+h9ZZ7gN/EilmcAuyb2GCVKO1r+VCkQVleEIZQul42jWFyNoRILByBkYpADoDW0041IQ/TE4qYt+nSshMUjo3yVaBPFEjDD9PWaIdqEQjsrwEFYp6PiSVlWHTYjHjDczyYXg9zVGPyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763513924; c=relaxed/simple;
-	bh=GwVpQy9p9osfDjoLkz/2+ZEd3Vac0wNDCbA/vjX4IzE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i1cU6rOHd3/d8lYCeZAosuRmpAtHxfoXg9SV72RA8BMEflXHlH9nWSHxsaPuWiTVUnn0yta3wm5u0hdz8PODOBi2wUF47HtK+YpWt6wZZ9EBuV7d+foKO7sNopQmJRRszm5lRWG7AHggcHUkKRBZl4XfS2WLfIuLOA6PfovCBQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ohvrc8Pg; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1763527013; c=relaxed/simple;
+	bh=i7FTyMfKA2faDsYEZyR7LnAsGu6Czs+vyOLA26sm3Ok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i1s0kR6FOygcMfyOYQkdcIpq9uaRsiuL5/3yyqCmYkLDmiJyNqyEdPLnLO39XF0cnOMSM6nXZCElLRQ7wfhJD9uk0dUZwr0iABJq/yDM6RhEKwWHnSYm9lKidj47HYcBbGO1BSo2VrT1QW0YOz+BaCglP2RVlnNgJyMTV4BoCq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EXFc8ppJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ohvrc8Pg"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-29852dafa7dso51865ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Nov 2025 16:58:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763513922; x=1764118722; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GwVpQy9p9osfDjoLkz/2+ZEd3Vac0wNDCbA/vjX4IzE=;
-        b=ohvrc8PgnBPL1zix+EJemwR40jVBsaesPSLRGh1PsKHgzNoqZeBbwa5hZ+3ZtvTZiS
-         fCRWjVAxUuGWdBRC2sBsmXKMXSWLkOfblzO/YouIH0Gs2tKOsfT/Y7VgZ1wRZmJ2Vbpq
-         UE5L/kEU6R8dnvHzhNXX7t/8QD59Rg6ABxCpotvJP+ZHri7PNLpF8Hpjs4DxCLgG5+NS
-         k3xbypBqgiitFex3kQikpAlfEc0YJjL6n9sNnTHLov13nZ1ITiuhLRoi5M/El5FWZSxa
-         QtSPpzkApuL5lM4rJEtKoaCHtwfvI4fuBsY+YI9XUuFc5uXh+1kPYNpWzB9y8oAAPKt2
-         bY7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763513922; x=1764118722;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=GwVpQy9p9osfDjoLkz/2+ZEd3Vac0wNDCbA/vjX4IzE=;
-        b=JLunLpVG8k49KN/DwAl5DMQR/EsUdMoO5nTnNHsy4NlYsiM1t1MGpeyKTvM5PIUamS
-         8SmWCgS6YwSptd6yWohtwQuXDhPU0tO3T46Mip2jzYKpMT80UTzvcHAjB3DQrupQZChj
-         t/UwaVtnKDGeAFBoUohyCb4xCNFbBNJSbDP22Nt9uh0HdpLUq+epJRWVQ05gemzsugiV
-         S8ppyGY/koZ187h8cAbSfM4MJxBJuHVYb69CScn3cvOcon9e9BRk1bU+sMkLB8STouEg
-         +VpMFl2UbFacKwnbVOlX0j1tO7VbXT45C5Iic1Sm7MGPJdN1yrfg+Ny1TCkx/DGYzEw7
-         JKiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWveb0xF4+dU/CKr7w9KaegmMYDEXonbCtebDwxC5J7i+85avpN/GW6gPpwSOJnXwF/XYkxtARJkXETWpB8liMZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuNgx6WFffkDlNHX05aHtnELnhndLaqXwhpA00ld9ZstZABS9o
-	JGjHgwI4BnWCDBOmiK+O4+GD04wnYhTt/6FVzTzPvwhMbrOSFdlF3teeONieW/5Y8eR+qKggqfB
-	ve7Jqwr9PkbqHpi/qthgM0oZWgFUgzOc+14aLR5xv
-X-Gm-Gg: ASbGncuLoTw5ELAEHgxFngcV4P4l4frYaocDjHQ9l2/5z+dJyGm1B//Fx/fjNetlJ44
-	MZ5qSNqb72fpGtEw8xvrdHQxV/qNTcTkv/Ea0gqffsZP7PUtrF+NmtwLmR/apn3AT/nCON3iboW
-	Dpnt6Oy6tLbg2aiHnTkMp88V70JNg+Zz6u0nCC+OVnC6HGDci43lXAuVW4DvBaXNFlGinPeqCvq
-	T4wwMOsog2xyRbsK/xkP+zAhZG3jZRw4igXZedtNPBz+UskS3nHwmTCqC40sfsjMyts36i0l6av
-	3zL/9QN4JnJwKNxu363y4lBALzTLqb7xjvXo
-X-Google-Smtp-Source: AGHT+IEQCQoM3oAb3/g0ua7BMXx06hWekLGuHKFxLIW/sFW1co+BOv8s/Z+96MRyfLRZqdTAtzt7bVEWROIm3z9mwlE=
-X-Received: by 2002:a17:902:c412:b0:295:3f35:a315 with SMTP id
- d9443c01a7336-29a05fa3a9emr990865ad.5.1763513921749; Tue, 18 Nov 2025
- 16:58:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EXFc8ppJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EBC0C4AF0E;
+	Wed, 19 Nov 2025 04:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763527011;
+	bh=i7FTyMfKA2faDsYEZyR7LnAsGu6Czs+vyOLA26sm3Ok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EXFc8ppJrSCRX1JdmRoNUth4BaclTwECsFduCyZrvdfSLrwRS4UMybgMt0F6fF3wT
+	 F7tpPJl3kSoN05B8Hn/T89n7okKYyGArBgaiQV5bpeLRpRDm7kjCjDPW67flhmIG9z
+	 6tCAPkJAY2NvTkaVVPAJyVWlhi9pfY9zqNMHhdf0v70eiQYpYlZgRgitWg1rO4HC3F
+	 +8HgBXgsSJwZjyVd+Y8H2th6+NeI2lh6OLw616LWTWA3dRMov9JrJy++Paux6Abp+d
+	 9Yqmpb5h32f1NDJXPsuw5N4l6FHdUdv6v0sTv/jnMZ72L7mJnPeUSLCtIR1AP6+7DG
+	 pHfXOF9aaMqPg==
+Date: Tue, 18 Nov 2025 20:36:46 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
+	sumanthk@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com
+Subject: Re: [PATCH Linux-next] perf test: Fix test case perf trace BTF
+ general tests
+Message-ID: <aR1JXlhJ8rC8Ujb3@google.com>
+References: <20251117124359.75604-1-tmricht@linux.ibm.com>
+ <aRvSv03cqarM5dY9@google.com>
+ <d60860b4-e84b-48e1-87dd-4bd8203a69ad@linux.ibm.com>
+ <aRwVifZ_-7puFUVC@google.com>
+ <20251118132451.29a35127@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251118211326.1840989-1-irogers@google.com> <20251118211326.1840989-4-irogers@google.com>
- <aRz-6jQf9GH4JROi@tassilo>
-In-Reply-To: <aRz-6jQf9GH4JROi@tassilo>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 18 Nov 2025 16:58:29 -0800
-X-Gm-Features: AWmQ_bkQuffoviTgy5y0ooHnLqsR-dISriW1Vp4fzGv_kitVXgMSGfRHOn6PnJs
-Message-ID: <CAP-5=fWSXboT2jEYtua_N8AnaXc0SUeoC2iBgxSz5QRF09bfoQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] perf stat: Add no-affinity flag
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Yang Li <yang.lee@linux.alibaba.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251118132451.29a35127@gandalf.local.home>
 
-On Tue, Nov 18, 2025 at 3:19=E2=80=AFPM Andi Kleen <ak@linux.intel.com> wro=
-te:
->
-> On Tue, Nov 18, 2025 at 01:13:26PM -0800, Ian Rogers wrote:
-> > Add flag that disables affinity behavior. Using sched_setaffinity to
-> > place a perf thread on a CPU can avoid certain interprocessor
-> > interrupts but may introduce a delay due to the scheduling,
-> > particularly on loaded machines. Add a command line option to disable
-> > the behavior. This behavior is less present in other tools like `perf
-> > record`, as it uses a ring buffer and doesn't make repeated system
-> > calls.
->
-> Like i wrote earlier a much better fix for starvation is to use
-> real-time priority instead of the old IPI storms this flag
-> is bringing back.
+On Tue, Nov 18, 2025 at 01:24:51PM -0500, Steven Rostedt wrote:
+> On Mon, 17 Nov 2025 22:43:21 -0800
+> Namhyung Kim <namhyung@kernel.org> wrote:
+> 
+> > > bash-5.3# uname -a
+> > > Linux f43 6.18.0-rc5-next-20251114tmr-n #1 SMP PREEMPT_DYNAMIC Mon Nov 17 11:24:02 CET 2025 x86_64 GNU/Linux
+> > > bash-5.3# cat /sys/kernel/tracing/events/syscalls/sys_enter_write/format
+> > > name: sys_enter_write
+> > > ID: 758
+> > > format:
+> > > 	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+> > > 	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+> > > 	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+> > > 	field:int common_pid;	offset:4;	size:4;	signed:1;
+> > > 
+> > > 	field:int __syscall_nr;	offset:8;	size:4;	signed:1;
+> > > 	field:unsigned int fd;	offset:16;	size:8;	signed:0;
+> > > 	field:const char * buf;	offset:24;	size:8;	signed:0;
+> > > 	field:size_t count;	offset:32;	size:8;	signed:0;
+> > > 	field:__data_loc char[] __buf_val;	offset:40;	size:4;	signed:0;  
+> > 
+> > Indeed, I see this new field __buf_val.
+> > 
+> > Steve, is this what you added recently for taking user contents?
+> 
+> Yes.
+> 
+> > Hmm.. this makes perf trace confused wrt the syscall parameters.
+> > Is it always __buf_val or has any patterns?
+> 
+> Really? It still uses libtraceevent right? I made sure that this didn't
+> break trace-cmd and thought that perf would work too.
 
-Ack. This is only adding the flag to perf stat, are the storms as much
-of an issue there? Patch 2 of 3 changes it so that for a single event
-we still use affinities, where a dummy and an event count as >1 event.
-We have specific examples of loaded machines where the scheduling
-latency causes broken metrics - the flag at least allows investigation
-of issues like this. I don't mind reviewing a patch adding real time
-priorities as an option.
+It doesn't completely break perf trace but added new parameter for the
+write syscall at the end.  IIUC perf trace iterates the format fields
+after __syscall_nr and take them all as syscall parameters.
 
 Thanks,
-Ian
+Namhyung
+
