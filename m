@@ -1,73 +1,73 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980192FBE0A
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 16:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB253043A4
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 16:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763571080; cv=none; b=OzUEg+4xIcXsVozDiX8z3G7IcGNa7vAuCZmq76l2PyX7FmqZVjnxPW/R8SOCZmlAW5oJrbG3OxcNPgmnEX6Poz9RwtcappDumxPVEKuV2qvk2DkbtNXHFq5T9xlEPe0jdVqBf3ngShXGO6le9ADqZBVWekruasKjkCPFXNubMLA=
+	t=1763571281; cv=none; b=QMZ2aC8fTia7/a1fxwMJkdcLtKcADJGtfXSDkhnHSE2ogvy83ra0E6FIKV7crojUnHpXOsNtRIb52D9N6eaoOZBqnKZlPf8bL3eehuNHR+Amtww456uT81Lp7JGRZR7ZSuFy8cJc2/+6bLwPTdVxsj+GDVkM83y0hvo9Ek6sNfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763571080; c=relaxed/simple;
-	bh=nQahBAqd9A3uMYOeNF6oDXlCXzdSKi9c1+8wneM3F6M=;
+	s=arc-20240116; t=1763571281; c=relaxed/simple;
+	bh=jhkyeEDqW4tlWxuMpEJ76v1FpdOWlpnQbXT8ql/aNXw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LlI+7UYhLKGEa8aa+LDAMBXMGmsq6K+SHby66Ef9MIM7JnzKrfAlM4bJu8QWJpnJhUgojIBWy/9FDPGZh2dXyifjPkNfbOkk7b7BW0XDlO4fWIeiEuwmjObZoMLl7W2LbhDPwuCWSM4g4xK3LJOdQyMZzzXX/JHfiAXGbKVSjH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AV8C9Lyl; arc=none smtp.client-ip=209.85.214.182
+	 To:Cc:Content-Type; b=hmmwyMn98WQliSBUlVjr8e/L3W2uQ0lZRsvFKWBObSyJm9do0tVt2SxUacOxiyE1tqDtpZb3Qv5pEy4SsTHMSTVNCByEgpAIis3Jcyd55JYEh3uWr/P/FFCXVtRIQ/qbL7QXBWKYLocjr2aNbCjeUG4dyBKsJIn1foLlmTaptoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ndx0tjvB; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AV8C9Lyl"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-29852dafa7dso220465ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 08:51:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ndx0tjvB"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2980343d9d1so192155ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 08:54:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763571077; x=1764175877; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763571278; x=1764176078; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=attkz3hb2o7VbwjOaioSYx2TafHXy4IEgJE4uz2Nb8w=;
-        b=AV8C9LylZaElFN3IB9FCZo3QLqAaP59K7xou7c3VRi/lRQ+k0wCA9myJG4XG5jWvFt
-         VCham5Eik97aoF8Vc8rv0nNPjwKxErjwruIJclrYSxIMhkHrGNdPTNeDrXpawQYIJnF9
-         Q3xGsnpEnph5WQzXKls+GYoP0MCZIRkZ1Aa1lwAStm/0rhFv4ubbCFIVrCDw1L2+X7Aa
-         ah2KjoxhxJZlWS83H2mAXDibyAs72/YSwKQsgbiSkqGeEAdh2hdk7vWAg8jBd9FvdnPU
-         uwD08VhhJkoP1V7WpnH2amaRcbC20RAnaA2mkYg+zfmp5l5BWEb1mrbZYNlnFM3SzkEH
-         8f1A==
+        bh=HT3OMqxJH7s/PONrg9KShT6qvoV2gN1KmFktP31fzqk=;
+        b=Ndx0tjvB/EFXwQulzFoKZ8wFmzYmxbUVnerV1a/ffITXXh5CI1JeSSRbIOipoAHJML
+         8ml+CaijcsvvvIfY7UOl1Kq8vFT2omG773WZNUSJuXp0UYSTV0Keaj/tiY7qtnsYKGHA
+         0l2UnqJ0fRm/OX7+n0Ltn4BMij4xo1n6py6vA/tBAKNs8G7/0oOI/uV0PYNCC3+mKUse
+         Qt/eBkVW1OvkGMvBZF8fg2S5/NYP3EYUBoRlJfZliEluJoQuSwRZ32Qks8h4sDn/GO6Z
+         Or8TjYw2ZoehTSB0fQbY4Pl3XH5BC2JmCXIpFKWXeveX/fnxz2eqpEtVNVXiLZPyYBzp
+         CLQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763571077; x=1764175877;
+        d=1e100.net; s=20230601; t=1763571278; x=1764176078;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=attkz3hb2o7VbwjOaioSYx2TafHXy4IEgJE4uz2Nb8w=;
-        b=kdXYzdFoNsU77GNhnwqkZcazmDP1O81LErvo9/JeSKNApTFVtL5R59JlzHTVy/6y6f
-         VnlUwSrGLHPDCmqn29I8anudzO/PQWT2KTUkPZkGoBhLNg1Gp0uzVaZ7SN0CC8dEChxU
-         pbAjhzB1Qz3ZpntxSoaak4aaqAbhEmaqLi38vnQzeAkjz/RFtljRBTFvwn23nEDA4ceM
-         ZqObKZV0zG1qK7gR5WydqEJIpxxYuizeKfYxRywrzjP1XjfCjpx+atSBkefc0QZA+fVJ
-         8PPflYaiqo5AFUkk5e0d8JhqJYPHNCtZOfYPKJ6b0ZT5QRPYhrzFrceGW34Sxg/GLa0a
-         yhzA==
-X-Forwarded-Encrypted: i=1; AJvYcCWW11Ih+uIn7YNTzBgxkm1orhyPtTBTrfnjWZnpSzd0EB0TjBFMQw3+/OeCdlpt7ncCtpYpRbT0UdwQ79lZJF0x@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO4841Qd+NuRJedxrwqLt9I0v6nW8V5CzwJxzH2YaeWffoXOs8
-	8fAUFCODZjkivnmppo6yn2IAYPIP/iSVpRbYoxYjHJ1tUacCoIMbKYWSkIdJGo2JuV1lUOMJPMy
-	8zVL/fFtNIPQEbwXdsHl9I1BpMjUK/4hYlpHOZBvf
-X-Gm-Gg: ASbGncvP6ESwSIfPz+CJu16Y26IuoCJq/4lTp5LXNMBbdIxrexs/GMWyHOp4BULneYq
-	bSC6QifqTOZqypo97cAAdBmXslSPpohgpWX9a5m/KZMMcMb3lkeG110V07I4bpA+g9QJ1Is+X1r
-	LcsJm7eQiJFwDlTcbtiRe++vwFQeSPqVRI4TPiP4VmaZA2eI1Y7aZl47tuwSImXT3LIKSvLFrAk
-	/T92hJ9OBtM4JPq0ilYDx9qziwZWkKo1OvNAHf1xg3CxZ9H+KYXIoM7YsLxsRixqCb2SG3Y+zy0
-	oLjZqbxNVm8gzV26ZoemH/9P9A==
-X-Google-Smtp-Source: AGHT+IGrGYmUdrGNbrEcCZ2Lb4w2x+nf21XgWAqygnecEbVd8wlT3Q9897677EaPK3Vxzh6+WC7cCcn8YEmMGBQAJHo=
-X-Received: by 2002:a05:7022:670b:b0:11a:fcc8:c311 with SMTP id
- a92af1059eb24-11c8ddae885mr129688c88.5.1763571076468; Wed, 19 Nov 2025
- 08:51:16 -0800 (PST)
+        bh=HT3OMqxJH7s/PONrg9KShT6qvoV2gN1KmFktP31fzqk=;
+        b=wD0WorSLL6KcGqCtqAlXq2ZEcZ+qoOmslt17yMBi4K0UybFMQVs6AyykPfZ0lpOPTh
+         3WGp5ZCTvKIeh413tUMvxaEpism2RxdntypdTaPh/9ybgG7AA3gOtSPUwvh/eE8hbFc1
+         NLXBjze08EuBqiS9X9AZmj9uK6z1QAllX6xEN+ykd3VC2r1Ubvk9PTwh+EvqfmjYO9CQ
+         NFOZJe65nLKHCK207muSWWFMilzfY2Af4g+wLnJJz8bPH9pZERhMgO0M2p2FXX/SOEgB
+         y6MX9F5uVa3ZjIEl1O8JliLV+MFHtDe41MKMxAyZSqfA2LsDF8kK1a+7SsfO8+QKNzc5
+         esxg==
+X-Forwarded-Encrypted: i=1; AJvYcCU86B4UTYmwVFGd2Xg8D83UUraCR+UV0VyZ0my17r4eypjKqq4BCGvmBnz7uY0OXdQ5U3tUYvA+C2KwALDHC4wI@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJFtJAl993mJVa14bSxJMj8pZ4Ed3NLHYEsi6Un8DknQzsm6l5
+	LGObP2knN8f7GLQE81iB0C6k7L6whQIuOlv8c5dblacc0GxzEG3SDl8uQbvwDDMZGYG/jw4PcbA
+	O/4m4EzLvrSpFrEyXtd0NRcWa8OWX3aJZaichDPta
+X-Gm-Gg: ASbGncsp5QmELBmdKTQE9YNRwjUavL8qsUC+4foU8w8uzHawHKIHbYcsY2Iy+/Y/D0l
+	Cif8M1SoplLgZUNJ1paS0Eup02YPctSXjIQrZPqwoEkBX7be/NFgNm36SNdH9BIKBZ0r8QTdh2L
+	ARiCLVaJa7NzVvWZ7rzlfYQQ1xbDJnGwErJuuHLYsKEUWYQW7Z6tPPnichE3r0PMFzdB3u4nKFZ
+	QqFeU/hsHQiyabqBQtGJF8TvW9N6e8lSs0rhxqujJo2M8ubQuoxdsIaPWUV24T0Kg8ty79YmvZu
+	1jYpaqeCBshCJ2W5e0HOno9txNi8fjlICNuz
+X-Google-Smtp-Source: AGHT+IGL2aUTgoEDz+e2CZiIvy6DL6EnVNS86TKmRAEEpVDKzLg2uXqwv/ykRm5IZkphcs9U8PwCjxdUAMlRLefYwGY=
+X-Received: by 2002:a17:902:c947:b0:292:b6a0:80df with SMTP id
+ d9443c01a7336-29a052426a2mr3617505ad.10.1763571277439; Wed, 19 Nov 2025
+ 08:54:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251115234106.348571-1-namhyung@kernel.org> <20251115234106.348571-5-namhyung@kernel.org>
-In-Reply-To: <20251115234106.348571-5-namhyung@kernel.org>
+References: <20251115234106.348571-1-namhyung@kernel.org> <20251115234106.348571-6-namhyung@kernel.org>
+In-Reply-To: <20251115234106.348571-6-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 19 Nov 2025 08:50:57 -0800
-X-Gm-Features: AWmQ_bnVKO8c9bXEJsrfvioIgEOHmv-1NhmRxz-5e6N8fNNM-Nya4lwaQhItlno
-Message-ID: <CAP-5=fUXrUE7gkQMqkXiW6NurarrW7O-ey5punwX3LH-e_ma-g@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
+Date: Wed, 19 Nov 2025 08:54:26 -0800
+X-Gm-Features: AWmQ_bmuXVqzJG8k6iFG3rBra-pvA2ab1qa4cxW_U8vY5d6oxGfclXdpsGg1O6Y
+Message-ID: <CAP-5=fVWVHzJ6uzfPpM37p6ZNbFC2D51nmdJzmnyKXy4COwB_Q@mail.gmail.com>
+Subject: Re: [PATCH v4 5/5] perf tools: Merge deferred user callchains
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
 	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
@@ -83,7 +83,12 @@ Content-Transfer-Encoding: quoted-printable
 On Sat, Nov 15, 2025 at 3:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> Handle the deferred callchains in the script output.
+> Save samples with deferred callchains in a separate list and deliver
+> them after merging the user callchains.  If users don't want to merge
+> they can set tool->merge_deferred_callchains to false to prevent the
+> behavior.
+>
+> With previous result, now perf script will show the merged callchains.
 >
 >   $ perf script
 >   ...
@@ -97,168 +102,347 @@ s])
 >           ffffffff845e6692 do_syscall_64+0x62 ([kernel.kallsyms])
 >           ffffffff8360012f entry_SYSCALL_64_after_hwframe+0x76 ([kernel.k=
 allsyms])
->                  b00000006 (cookie) ([unknown])
->
->   pwd    2312   121.163447: DEFERRED CALLCHAIN [cookie: b00000006]
 >               7f18fe337fa7 mprotect+0x7 (/lib/x86_64-linux-gnu/ld-linux-x=
 86-64.so.2)
 >               7f18fe330e0f _dl_sysdep_start+0x7f (/lib/x86_64-linux-gnu/l=
 d-linux-x86-64.so.2)
 >               7f18fe331448 _dl_start_user+0x0 (/lib/x86_64-linux-gnu/ld-l=
 inux-x86-64.so.2)
+>   ...
+>
+> The old output can be get using --no-merge-callchain option.
+> Also perf report can get the user callchain entry at the end.
+>
+>   $ perf report --no-children --stdio -q -S __build_id_parse.isra.0
+>   # symbol: __build_id_parse.isra.0
+>        8.40%  pwd      [kernel.kallsyms]
+>               |
+>               ---__build_id_parse.isra.0
+>                  perf_event_mmap
+>                  mprotect_fixup
+>                  do_mprotect_pkey
+>                  __x64_sys_mprotect
+>                  do_syscall_64
+>                  entry_SYSCALL_64_after_hwframe
+>                  mprotect
+>                  _dl_sysdep_start
+>                  _dl_start_user
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/Documentation/perf-script.txt |  5 ++
+>  tools/perf/builtin-inject.c              |  1 +
+>  tools/perf/builtin-report.c              |  1 +
+>  tools/perf/builtin-script.c              |  4 ++
+>  tools/perf/util/callchain.c              | 29 ++++++++++
+>  tools/perf/util/callchain.h              |  3 ++
+>  tools/perf/util/evlist.c                 |  1 +
+>  tools/perf/util/evlist.h                 |  2 +
+>  tools/perf/util/session.c                | 67 +++++++++++++++++++++++-
+>  tools/perf/util/tool.c                   |  1 +
+>  tools/perf/util/tool.h                   |  1 +
+>  11 files changed, 114 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Docume=
+ntation/perf-script.txt
+> index 28bec7e78bc858ba..03d1129606328d6d 100644
+> --- a/tools/perf/Documentation/perf-script.txt
+> +++ b/tools/perf/Documentation/perf-script.txt
+> @@ -527,6 +527,11 @@ include::itrace.txt[]
+>         The known limitations include exception handing such as
+>         setjmp/longjmp will have calls/returns not match.
+>
+> +--merge-callchains::
+> +       Enable merging deferred user callchains if available.  This is th=
+e
+> +       default behavior.  If you want to see separate CALLCHAIN_DEFERRED
+> +       records for some reason, use --no-merge-callchains explicitly.
+> +
+>  :GMEXAMPLECMD: script
+>  :GMEXAMPLESUBCMD:
+>  include::guest-files.txt[]
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index bd9245d2dd41aa48..51d2721b6db9dccb 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -2527,6 +2527,7 @@ int cmd_inject(int argc, const char **argv)
+>         inject.tool.auxtrace            =3D perf_event__repipe_auxtrace;
+>         inject.tool.bpf_metadata        =3D perf_event__repipe_op2_synth;
+>         inject.tool.dont_split_sample_group =3D true;
+> +       inject.tool.merge_deferred_callchains =3D false;
+>         inject.session =3D __perf_session__new(&data, &inject.tool,
+>                                              /*trace_event_repipe=3D*/inj=
+ect.output.is_pipe,
+>                                              /*host_env=3D*/NULL);
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index 2bc269f5fcef8023..add6b1c2aaf04270 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -1614,6 +1614,7 @@ int cmd_report(int argc, const char **argv)
+>         report.tool.event_update         =3D perf_event__process_event_up=
+date;
+>         report.tool.feature              =3D process_feature_event;
+>         report.tool.ordering_requires_timestamps =3D true;
+> +       report.tool.merge_deferred_callchains =3D !dump_trace;
+>
+>         session =3D perf_session__new(&data, &report.tool);
+>         if (IS_ERR(session)) {
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 85b42205a71b3993..62e43d3c5ad731a0 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -4009,6 +4009,7 @@ int cmd_script(int argc, const char **argv)
+>         bool header_only =3D false;
+>         bool script_started =3D false;
+>         bool unsorted_dump =3D false;
+> +       bool merge_deferred_callchains =3D true;
+>         char *rec_script_path =3D NULL;
+>         char *rep_script_path =3D NULL;
+>         struct perf_session *session;
+> @@ -4162,6 +4163,8 @@ int cmd_script(int argc, const char **argv)
+>                     "Guest code can be found in hypervisor process"),
+>         OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
+>                     "Enable LBR callgraph stitching approach"),
+> +       OPT_BOOLEAN('\0', "merge-callchains", &merge_deferred_callchains,
+> +                   "Enable merge deferred user callchains"),
+>         OPTS_EVSWITCH(&script.evswitch),
+>         OPT_END()
+>         };
+> @@ -4418,6 +4421,7 @@ int cmd_script(int argc, const char **argv)
+>         script.tool.throttle             =3D process_throttle_event;
+>         script.tool.unthrottle           =3D process_throttle_event;
+>         script.tool.ordering_requires_timestamps =3D true;
+> +       script.tool.merge_deferred_callchains =3D merge_deferred_callchai=
+ns;
+>         session =3D perf_session__new(&data, &script.tool);
+>         if (IS_ERR(session))
+>                 return PTR_ERR(session);
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index 2884187ccbbecfdc..71dc5a070065dd2a 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -1838,3 +1838,32 @@ int sample__for_each_callchain_node(struct thread =
+*thread, struct evsel *evsel,
+>         }
+>         return 0;
+>  }
+> +
+> +int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
+> +                                    struct perf_sample *sample_callchain=
+)
+> +{
+> +       u64 nr_orig =3D sample_orig->callchain->nr - 1;
+> +       u64 nr_deferred =3D sample_callchain->callchain->nr;
+> +       struct ip_callchain *callchain;
+> +
+> +       if (sample_orig->callchain->nr < 2) {
+> +               sample_orig->deferred_callchain =3D false;
+> +               return -EINVAL;
+> +       }
+> +
+> +       callchain =3D calloc(1 + nr_orig + nr_deferred, sizeof(u64));
+> +       if (callchain =3D=3D NULL) {
+> +               sample_orig->deferred_callchain =3D false;
+> +               return -ENOMEM;
+> +       }
+> +
+> +       callchain->nr =3D nr_orig + nr_deferred;
+> +       /* copy original including PERF_CONTEXT_USER_DEFERRED (but the co=
+okie) */
+> +       memcpy(callchain->ips, sample_orig->callchain->ips, nr_orig * siz=
+eof(u64));
+> +       /* copy deferred user callchains */
+> +       memcpy(&callchain->ips[nr_orig], sample_callchain->callchain->ips=
+,
+> +              nr_deferred * sizeof(u64));
+> +
+> +       sample_orig->callchain =3D callchain;
+> +       return 0;
+> +}
+> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+> index d5ae4fbb7ce5fa44..2a52af8c80ace33c 100644
+> --- a/tools/perf/util/callchain.h
+> +++ b/tools/perf/util/callchain.h
+> @@ -318,4 +318,7 @@ int sample__for_each_callchain_node(struct thread *th=
+read, struct evsel *evsel,
+>                                     struct perf_sample *sample, int max_s=
+tack,
+>                                     bool symbols, callchain_iter_fn cb, v=
+oid *data);
+>
+> +int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
+> +                                    struct perf_sample *sample_callchain=
+);
+> +
+>  #endif /* __PERF_CALLCHAIN_H */
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index e8217efdda5323c6..03674d2cbd015e4f 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -85,6 +85,7 @@ void evlist__init(struct evlist *evlist, struct perf_cp=
+u_map *cpus,
+>         evlist->ctl_fd.pos =3D -1;
+>         evlist->nr_br_cntr =3D -1;
+>         metricgroup__rblist_init(&evlist->metric_events);
+> +       INIT_LIST_HEAD(&evlist->deferred_samples);
+>  }
+>
+>  struct evlist *evlist__new(void)
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index 5e71e3dc60423079..911834ae7c2a6f76 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -92,6 +92,8 @@ struct evlist {
+>          * of struct metric_expr.
+>          */
+>         struct rblist   metric_events;
+> +       /* samples with deferred_callchain would wait here. */
+> +       struct list_head deferred_samples;
+>  };
+>
+>  struct evsel_str_handler {
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 361e15c1f26a96d0..2e777fd1bcf6707b 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1285,6 +1285,60 @@ static int evlist__deliver_sample(struct evlist *e=
+vlist, const struct perf_tool
+>                                             per_thread);
+>  }
+>
+> +struct deferred_event {
+> +       struct list_head list;
+> +       union perf_event *event;
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+What's going on with the memory here? Doesn't the event need to be a
+copy to avoid the memory going away in between processing events? It
+is definitely worth commenting. Note, I don't see a copy being made
+for the event here in machines__deliver_event.
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/builtin-script.c     | 89 +++++++++++++++++++++++++++++++++
->  tools/perf/util/evsel_fprintf.c |  5 +-
->  2 files changed, 93 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 011962e1ee0f6898..85b42205a71b3993 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2706,6 +2706,94 @@ static int process_sample_event(const struct perf_=
-tool *tool,
->         return ret;
->  }
->
-> +static int process_deferred_sample_event(const struct perf_tool *tool,
-> +                                        union perf_event *event,
-> +                                        struct perf_sample *sample,
-> +                                        struct evsel *evsel,
-> +                                        struct machine *machine)
+> +};
+> +
+> +static int evlist__deliver_deferred_samples(struct evlist *evlist,
+> +                                           const struct perf_tool *tool,
+> +                                           union  perf_event *event,
+> +                                           struct perf_sample *sample,
+> +                                           struct machine *machine)
 > +{
-> +       struct perf_script *scr =3D container_of(tool, struct perf_script=
-, tool);
-> +       struct perf_event_attr *attr =3D &evsel->core.attr;
-> +       struct evsel_script *es =3D evsel->priv;
-> +       unsigned int type =3D output_type(attr->type);
-> +       struct addr_location al;
-> +       FILE *fp =3D es->fp;
+> +       struct deferred_event *de, *tmp;
+> +       struct evsel *evsel;
 > +       int ret =3D 0;
 > +
-> +       if (output[type].fields =3D=3D 0)
-> +               return 0;
-> +
-> +       /* Set thread to NULL to indicate addr_al and al are not initiali=
-zed */
-> +       addr_location__init(&al);
-> +
-> +       if (perf_time__ranges_skip_sample(scr->ptime_range, scr->range_nu=
-m,
-> +                                         sample->time)) {
-> +               goto out_put;
+> +       if (!tool->merge_deferred_callchains) {
+> +               evsel =3D evlist__id2evsel(evlist, sample->id);
+> +               return tool->callchain_deferred(tool, event, sample,
+> +                                               evsel, machine);
 > +       }
 > +
-> +       if (debug_mode) {
-> +               if (sample->time < last_timestamp) {
-> +                       pr_err("Samples misordered, previous: %" PRIu64
-> +                               " this: %" PRIu64 "\n", last_timestamp,
-> +                               sample->time);
-> +                       nr_unordered++;
-> +               }
-> +               last_timestamp =3D sample->time;
-> +               goto out_put;
-> +       }
+> +       list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list=
+) {
+> +               struct perf_sample orig_sample;
 > +
-> +       if (filter_cpu(sample))
-> +               goto out_put;
-> +
-> +       if (machine__resolve(machine, &al, sample) < 0) {
-> +               pr_err("problem processing %d event, skipping it.\n",
-> +                      event->header.type);
-> +               ret =3D -1;
-> +               goto out_put;
-> +       }
-> +
-> +       if (al.filtered)
-> +               goto out_put;
-> +
-> +       if (!show_event(sample, evsel, al.thread, &al, NULL))
-> +               goto out_put;
-> +
-> +       if (evswitch__discard(&scr->evswitch, evsel))
-> +               goto out_put;
-> +
-> +       perf_sample__fprintf_start(scr, sample, al.thread, evsel,
-> +                                  PERF_RECORD_CALLCHAIN_DEFERRED, fp);
-> +       fprintf(fp, "DEFERRED CALLCHAIN [cookie: %llx]",
-> +               (unsigned long long)event->callchain_deferred.cookie);
-> +
-> +       if (PRINT_FIELD(IP)) {
-> +               struct callchain_cursor *cursor =3D NULL;
-> +
-> +               if (symbol_conf.use_callchain && sample->callchain) {
-> +                       cursor =3D get_tls_callchain_cursor();
-> +                       if (thread__resolve_callchain(al.thread, cursor, =
-evsel,
-> +                                                     sample, NULL, NULL,
-> +                                                     scripting_max_stack=
-)) {
-> +                               pr_info("cannot resolve deferred callchai=
-ns\n");
-> +                               cursor =3D NULL;
-> +                       }
+> +               ret =3D evlist__parse_sample(evlist, de->event, &orig_sam=
+ple);
+> +               if (ret < 0) {
+> +                       pr_err("failed to parse original sample\n");
+> +                       break;
 > +               }
 > +
-> +               fputc(cursor ? '\n' : ' ', fp);
-> +               sample__fprintf_sym(sample, &al, 0, output[type].print_ip=
-_opts,
-> +                                   cursor, symbol_conf.bt_stop_list, fp)=
-;
+> +               if (sample->tid !=3D orig_sample.tid)
+> +                       continue;
+> +
+> +               if (event->callchain_deferred.cookie =3D=3D orig_sample.d=
+eferred_cookie)
+> +                       sample__merge_deferred_callchain(&orig_sample, sa=
+mple);
+> +               else
+> +                       orig_sample.deferred_callchain =3D false;
+> +
+> +               evsel =3D evlist__id2evsel(evlist, orig_sample.id);
+> +               ret =3D evlist__deliver_sample(evlist, tool, de->event,
+> +                                            &orig_sample, evsel, machine=
+);
+> +
+> +               if (orig_sample.deferred_callchain)
+> +                       free(orig_sample.callchain);
+> +
+> +               list_del(&de->list);
+> +               free(de);
+> +
+> +               if (ret)
+> +                       break;
 > +       }
-> +
-> +       fprintf(fp, "\n");
-> +
-> +       if (verbose > 0)
-> +               fflush(fp);
-> +
-> +out_put:
-> +       addr_location__exit(&al);
 > +       return ret;
 > +}
 > +
->  // Used when scr->per_event_dump is not set
->  static struct evsel_script es_stdout;
+>  static int machines__deliver_event(struct machines *machines,
+>                                    struct evlist *evlist,
+>                                    union perf_event *event,
+> @@ -1313,6 +1367,16 @@ static int machines__deliver_event(struct machines=
+ *machines,
+>                         return 0;
+>                 }
+>                 dump_sample(evsel, event, sample, perf_env__arch(machine-=
+>env));
+> +               if (sample->deferred_callchain && tool->merge_deferred_ca=
+llchains) {
+> +                       struct deferred_event *de =3D malloc(sizeof(*de))=
+;
+> +
+> +                       if (de =3D=3D NULL)
+> +                               return -ENOMEM;
+> +
+> +                       de->event =3D event;
+> +                       list_add_tail(&de->list, &evlist->deferred_sample=
+s);
+> +                       return 0;
+> +               }
+>                 return evlist__deliver_sample(evlist, tool, event, sample=
+, evsel, machine);
+>         case PERF_RECORD_MMAP:
+>                 return tool->mmap(tool, event, sample, machine);
+> @@ -1372,7 +1436,8 @@ static int machines__deliver_event(struct machines =
+*machines,
+>                 return tool->aux_output_hw_id(tool, event, sample, machin=
+e);
+>         case PERF_RECORD_CALLCHAIN_DEFERRED:
+>                 dump_deferred_callchain(evsel, event, sample);
+> -               return tool->callchain_deferred(tool, event, sample, evse=
+l, machine);
+> +               return evlist__deliver_deferred_samples(evlist, tool, eve=
+nt,
+> +                                                       sample, machine);
+>         default:
+>                 ++evlist->stats.nr_unknown_events;
+>                 return -1;
+> diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+> index f732d33e7f895ed4..c5d3b464b2a433b3 100644
+> --- a/tools/perf/util/tool.c
+> +++ b/tools/perf/util/tool.c
+> @@ -266,6 +266,7 @@ void perf_tool__init(struct perf_tool *tool, bool ord=
+ered_events)
+>         tool->cgroup_events =3D false;
+>         tool->no_warn =3D false;
+>         tool->show_feat_hdr =3D SHOW_FEAT_NO_HEADER;
+> +       tool->merge_deferred_callchains =3D true;
 >
-> @@ -4303,6 +4391,7 @@ int cmd_script(int argc, const char **argv)
+>         tool->sample =3D process_event_sample_stub;
+>         tool->mmap =3D process_event_stub;
+> diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+> index 9b9f0a8cbf3de4b5..e96b69d25a5b737d 100644
+> --- a/tools/perf/util/tool.h
+> +++ b/tools/perf/util/tool.h
+> @@ -90,6 +90,7 @@ struct perf_tool {
+>         bool            cgroup_events;
+>         bool            no_warn;
+>         bool            dont_split_sample_group;
+> +       bool            merge_deferred_callchains;
+>         enum show_feature_header show_feat_hdr;
+>  };
 >
->         perf_tool__init(&script.tool, !unsorted_dump);
->         script.tool.sample               =3D process_sample_event;
-> +       script.tool.callchain_deferred   =3D process_deferred_sample_even=
-t;
->         script.tool.mmap                 =3D perf_event__process_mmap;
->         script.tool.mmap2                =3D perf_event__process_mmap2;
->         script.tool.comm                 =3D perf_event__process_comm;
-> diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fpri=
-ntf.c
-> index 103984b29b1e10ae..10f1a03c28601e36 100644
-> --- a/tools/perf/util/evsel_fprintf.c
-> +++ b/tools/perf/util/evsel_fprintf.c
-> @@ -168,7 +168,10 @@ int sample__fprintf_callchain(struct perf_sample *sa=
-mple, int left_alignment,
->                                 node_al.addr =3D addr;
->                                 node_al.map  =3D map__get(map);
->
-> -                               if (print_symoffset) {
-> +                               if (sample->deferred_callchain &&
-> +                                   sample->deferred_cookie =3D=3D node->=
-ip) {
-> +                                       printed +=3D fprintf(fp, "(cookie=
-)");
-> +                               } else if (print_symoffset) {
->                                         printed +=3D __symbol__fprintf_sy=
-mname_offs(sym, &node_al,
->                                                                          =
-         print_unknown_as_addr,
->                                                                          =
-         true, fp);
 > --
 > 2.52.0.rc1.455.g30608eb744-goog
 >
