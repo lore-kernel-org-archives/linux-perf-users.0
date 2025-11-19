@@ -1,127 +1,189 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0F1341051
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 16:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AE5366DD4
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 16:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763569575; cv=none; b=ZG8zKdZCAnVUXunzF+WEdzUYVzfb+Mlqd2qywh1B83Efn/y2cUOVPGwR/PZeBnFg40L7xvjSY0LyLQhLFN5AzgAQ5lPkBLT6H8Y6wUJ6rxhD+qf7Kr1geQ65m/K0s1h3oVgFdsywxW6p7VIfcfpHj2/DgLNdVAymytze+IfhOAw=
+	t=1763570021; cv=none; b=dWc4jg9ahI4JY4crw3Z+6Mm13vaQOvL2KrBY0KGTP/vyhXl+ZdlKzp8/agrN+k4Vr1JMxeugIPsjZw+Wb8gcDNyMzLRHUPRP3eKif+ADdW5WKjMzy1xt/MPZWpMH4jMIy+byAn2iGw07oUB/2RFEedIO2qBbcp0eSisVVV1hyOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763569575; c=relaxed/simple;
-	bh=kp8RopAHLbKeFSiA5P+Jv9nHnOWt5EBoxB3Qph8v9B0=;
+	s=arc-20240116; t=1763570021; c=relaxed/simple;
+	bh=YvLlwkR0sFXWx8ICmwu69vlBaWu+uc7QoJgjyewiXZk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OF4USJjr3UOLgM/3wKg/O8UwhJS+pt+it4oR38oYJKNkmkXLqeuAPqhAfa3lkZjb2ZARP6nzWuSSkpIr2TQ2UcYyS55Lj98aVnGOzfvUn5K176jiibA/fxFQqyMzqzHNFzSBl+7yVMOGZebodvgJZmztntkzUUvPYJES9MoJsU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZS0rZ8tn; arc=none smtp.client-ip=209.85.214.172
+	 To:Cc:Content-Type; b=HBQXKDSOwJOS0ZTS6aclKfT1/lvCfp3Nnwnepds6fkMZ/XlTNhKR0JN//kZrhS7TVoGk7DRO4ZuUJNLPgPKHlaNF/b2APGynei6xWhYCybcXcm9eww0ecK3x+i/Zbvw3VKG4LWtVaPJls5dB2MTcWP2cp5s1n7n+2Tj2yiYR3tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TFX6rq2k; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZS0rZ8tn"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-29852dafa7dso212175ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 08:26:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TFX6rq2k"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-295c64cb951so259745ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 08:33:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763569573; x=1764174373; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763570019; x=1764174819; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kp8RopAHLbKeFSiA5P+Jv9nHnOWt5EBoxB3Qph8v9B0=;
-        b=ZS0rZ8tnVNuf3pNdiS1ND+pbP/6BbFxNiGVQTplbTbV2guGHrn/V56BGCQZyHt5zUD
-         /dcebZz8+2QjGTWHLs3Y7KvlO2bIcy4KuW19ayJyEyVhZnSiTHsrMIzFSW47PBgc+T3q
-         M04nNSSjkKn8JjsRnq+NC0uxKDgYwdalKYqlh5/c+96eGaJ0CpTowN2D18Nv9VsoxXs5
-         mdnSDtaI/3YW31IIbK2+I4OG7DK7Jf93VCtPyf3jbP0CxaKemDGQvP2KIzm7+V2hkdkG
-         FDsOhd91Ij3WjKGUljlsL+bRHWV5nD19QUqw1GT/1RjCwHImJ2bp2znJKQLbk3DPzHMV
-         2WlQ==
+        bh=bZFcdgpmrdvf5S0/a3UfoJ11QunHjJR5yDnx5SLMriE=;
+        b=TFX6rq2ktYOylDjlSrjwRUJI0Jnh1whtG6J/TAb6rfYJ4u6ctmeqslnrSps5DNMIOs
+         3WcTZNOyt8MH6UJKSJXxiwEREreKyJeL2HkjTS4r9CpJEbRs7LXWI5gCxhN6aKCFO2I7
+         U2fGDT+cyg0KmYaSNXvdK5OFETVzPhu+ZmC6A0MlH1xth8nJgIDhPwwSFeaQp0FW1SjZ
+         GJNvV+xfjiJsYD6q8PlT0aKLW4f5TxU7JyZVuKRCd5IJ3vg6RqGjzQiFDsHIDiJmo2kT
+         TeobsNCm9rW+MLevfmPGvSLFmLXlxr8jagMOMTvq952kCFjb9EwmA6PkhZKJOESKn1Qj
+         JmRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763569573; x=1764174373;
+        d=1e100.net; s=20230601; t=1763570019; x=1764174819;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=kp8RopAHLbKeFSiA5P+Jv9nHnOWt5EBoxB3Qph8v9B0=;
-        b=Ns38XFvzJgG8RtOz5gPXesTo4gmNrMqvKaCjPy7bUA22EE0SmQrdq7lem65dWfRLKC
-         60oV3BOJlBTDicrwu5EcVwVrv3OlyCYmr3KbXOM0tVc1S/7iUmgqFQIUim70n4WTLQsG
-         ZPzq4k8g1BMPgQKhMrVsnTSfEVP0PNbk3r3CH8rEP56brE1FrsoeSl8C+1rl2REELbaq
-         cNjakPdMBSTGUMZEYh/ZACM4MtOzhrzaxiECZkNf2HuTvQ6bPuP1Qb1EDbjkz+Yjx5wG
-         bAW79lUUG+6bsVHV+BMDQnPA/0jnyEh9iG1ej3KCsWtH0ZFm8yf8DqZq8oglO2lhEp9G
-         kHOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXtnryQOgJ7vk93azbxlrg7RJNODAEzXRHwqbOIX9NrF9rw69xlowycwp3jUfNT0qePka86zidIyJBeDiFOAS6+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7Vjlnn7enLDJtdl/pNqNhjnftdejpxRZrDDpbvajRSemNYEcg
-	USvTrNYklJQjrGKoSxnL6kEurc3M8h9wSzJL73MZYVQpadzVFa1Ogj4X5hB8HmCYHIVX02pkcOe
-	bjoq0rW1beHK49WkONYjdA5gQAnSxcgfGXMinc0Yq
-X-Gm-Gg: ASbGncuiy6l5/vi3NUFRN5lCsNHr7y4l+FzeQT+ecQy/+Y21hxuc/J0/TaCe7u6ZNGP
-	ZHeC3T5DJ5ROC9zOZAdszOUFJkfVFAp1b96HCq9IQTVSd2FfM45rrLzLAqBls8WoOTl27I5OAnY
-	lj8qixoJ7JW8tWrYXSbflPo0Hfq6Fol8H3Y7ZAGr2EcfmCUxMlYhE30F9nHVhn8dnQOIWiX+9PD
-	aLyZTFMKfAMysEuzwRJrwL3WR1eSr2Q/T0WpnUKpkvUvOK1XUUiuZJxpjdUVaoLC3IMqhD2RucW
-	3cBAHwJTf9J4aywRAGh6g5kUTw==
-X-Google-Smtp-Source: AGHT+IGNF1WWmbuh7n0RWPz28sKc389KlQJI2uOYQdvOkTmGe79SR5mFlXGCctKc0qC1gsu+Qjj68wdYArtds2QBnhk=
-X-Received: by 2002:a05:7022:e01:b0:119:e55a:808c with SMTP id
- a92af1059eb24-11c8ddae890mr115565c88.9.1763569572587; Wed, 19 Nov 2025
- 08:26:12 -0800 (PST)
+        bh=bZFcdgpmrdvf5S0/a3UfoJ11QunHjJR5yDnx5SLMriE=;
+        b=RNrRm94sDc/mT88TaUOtllpwOU0rfQ69wAAQFHvi6dXMpZXJI/xozzDFOeJ8UTE4Ql
+         DJpeedH3Lio/edimD8/H2nXWguykcwXesOm/2dxTeTvO4SEZ5kwGb6XyHwi7616pmrY7
+         EWomDDRrUnYSNPj8s3HHQRXmoj1nyFkflv2OOGX5WuuZVLGMfGJzH9+oHy7ACS12S3nV
+         QJBhm0eN5TbTV0qXQMmEnVEaBeHEBUOwFtlvAUU3yRLmtkXktot5/SyZ7ywIvkqTn846
+         V0qrgWJbLAqVp+LTgIj4EEwJDEgP2mBWk82hCFR99lNWy9Tn8ws1Z90FQ77o8AMX1tvF
+         iUww==
+X-Forwarded-Encrypted: i=1; AJvYcCXz7vpjCtj/qhva0RuEYhezhaE+Mo0PB6azsLxTXxsNZM7Zo7llmGHxlQ6qOeij/0KCU5eMW2zgHlCvrBaK40Te@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuLKZREUn4nIRGhGh89EDdhusncXLMJnPjrLqb/cSSy+gn/Pjb
+	iNxxN3bI4570R4L/hzO7mwSvg0K/jEpimMEvgwOXeMvflvzT9xiVql87dcC2fj1csb8mQY+YF4A
+	AvPZpuDo7vPC5CUEXJcWBjDucWltxySf/omZ3LUezE0O/d69al4TgaPaKd50=
+X-Gm-Gg: ASbGncs4fReHp3BoGyR71SqMchMpkJqvpukvfNbK5ub25UpvE1AkCAj0bh9TUCNSklA
+	eNVhtYXl/B4/MH+Sya1L1eTvYPqBdO48pUVPwrlXu+gsm+K7pdtSwz6AXUbuQ0IbzfoClkNuYC0
+	pEqwe/RsPHkzgH0qfSQHoHwlCC74O1z5ObF8fh4UJqCoJxfRSegX94Xi5UkR7QXJQRljnRNU9+/
+	eJzwG+jqmOD3ZPhwu9VCZwfN2zGiHTV//Lb7lo/d3g1u2AOVpjDCC/OJWdhDi/izPbhL6SyRe0q
+	R5N5uIsIIu1zB7maaYFy+2AyKw==
+X-Google-Smtp-Source: AGHT+IHK0CVTzxvtaSfgeCCOWslR47PYRFT6AfCBn4tuqL+zi+z8txXS2jNwvNSzqY7aXMQQm8+XOumuB8p4q/W3I/I=
+X-Received: by 2002:a05:7022:e25:b0:119:e56b:c1de with SMTP id
+ a92af1059eb24-11c8dda980bmr112210c88.9.1763570018870; Wed, 19 Nov 2025
+ 08:33:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251118211326.1840989-1-irogers@google.com> <20251118211326.1840989-4-irogers@google.com>
- <aRz-6jQf9GH4JROi@tassilo> <CAP-5=fWSXboT2jEYtua_N8AnaXc0SUeoC2iBgxSz5QRF09bfoQ@mail.gmail.com>
- <aR3kN1GiKki4AO9b@tassilo>
-In-Reply-To: <aR3kN1GiKki4AO9b@tassilo>
+References: <20251118063641.517066-1-namhyung@kernel.org>
+In-Reply-To: <20251118063641.517066-1-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 19 Nov 2025 08:25:58 -0800
-X-Gm-Features: AWmQ_bkSE1E8AJpK_KQsWLifNM-tu0frIr_JeGj16ryd0iOuSJjZ_3mfJM1iVYs
-Message-ID: <CAP-5=fUvsF7RtLAKaMwc28CeSEOJ+j0gVwvQN59moOnUS=kWVg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] perf stat: Add no-affinity flag
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Yang Li <yang.lee@linux.alibaba.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Date: Wed, 19 Nov 2025 08:33:27 -0800
+X-Gm-Features: AWmQ_bmC68uis_qvPbfD18xThgKbqF6g5L4omo-vIOQ81TfJL0KatCk3LoukJfQ
+Message-ID: <CAP-5=fUEiPncL3Xe9WoDqWBTTxqw7dXxudx7-8muzppmz6JEXA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf list: Print matching PMU events for --unit
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 19, 2025 at 7:37=E2=80=AFAM Andi Kleen <ak@linux.intel.com> wro=
-te:
+On Mon, Nov 17, 2025 at 10:36=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
-> > Ack. This is only adding the flag to perf stat, are the storms as much
-> > of an issue there? Patch 2 of 3 changes it so that for a single event
-> > we still use affinities, where a dummy and an event count as >1 event.
+> When --unit option is used, pmu_glob is set to the argument.  It should
+> match with event PMU and display the matching ones only.  But it also
+> shows raw events and metrics after that.
 >
-> Not sure I follow here. I thought you disabled it completely?
-
-No, when we have `perf stat` we may have a single event
-open/enable/disable/read/close that needs running on a particular CPU.
-If we have a group of events, for a metric, the group may turn into a
-single syscall that reads the group. What I've done is made it so that
-in the case of a single syscall, rather than try to change the
-affinity through all the CPUs we just take the hit of the IPI. If
-there are 2 syscalls needed (for open/enable/...) then we use the
-affinity mechanism. The key function is evlist__use_affinity and that
-tries to make this >1 IPI calculation, where >1 IPI means use
-affinities. I suspect the true threshold number for when we should use
-IPIs probably isn't >1, but I'm hoping that this saving is obviously
-true and we can change the number later. Maybe we can do some io_uring
-thing in the longer term to batch up all these changes and let the
-kernel worry about optimizing the changes.
-
-The previous affinity code wasn't used for events in per-thread mode,
-but when trying to use that more widely I found bugs in its iteration.
-So I did a bigger re-engineering that is in patch 2 now. The code
-tries to spot the grouping case, and to ignore certain kinds of events
-like retirement latency and tool events that don't benefit from the
-affinity mechanism regardless of what their CPU mask is saying.
-
-> > We have specific examples of loaded machines where the scheduling
-> > latency causes broken metrics - the flag at least allows investigation
-> > of issues like this. I don't mind reviewing a patch adding real time
-> > priorities as an option.
+>   $ perf list --unit tool
+>   List of pre-defined events (to be used in -e or -M):
 >
-> You don't need a new flag. Just run perf with real time priority with
-> any standard wrapper tool, like chrt. The main obstacle is that you may
-> need the capability to do that though.
+>   tool:
+>     core_wide
+>          [1 if not SMT,if SMT are events being gathered on all SMT thread=
+s 1 otherwise 0. Unit: tool]
+>     duration_time
+>          [Wall clock interval time in nanoseconds. Unit: tool]
+>     has_pmem
+>          [1 if persistent memory installed otherwise 0. Unit: tool]
+>     num_cores
+>          [Number of cores. A core consists of 1 or more thread,with each =
+thread being associated with a logical Linux CPU. Unit: tool]
+>     num_cpus
+>          [Number of logical Linux CPUs. There may be multiple such CPUs o=
+n a core. Unit: tool]
+>     ...
+>     rNNN                                               [Raw event descrip=
+tor]
+>     cpu/event=3D0..255,pc,edge,.../modifier              [Raw event descr=
+iptor]
+>          [(see 'man perf-list' or 'man perf-record' on how to encode it)]
+>     breakpoint//modifier                               [Raw event descrip=
+tor]
+>     cstate_core/event=3D0..0xffffffffffffffff/modifier   [Raw event descr=
+iptor]
+>     cstate_pkg/event=3D0..0xffffffffffffffff/modifier    [Raw event descr=
+iptor]
+>     drm_i915//modifier                                 [Raw event descrip=
+tor]
+>     hwmon_acpitz//modifier                             [Raw event descrip=
+tor]
+>     hwmon_ac//modifier                                 [Raw event descrip=
+tor]
+>     hwmon_bat0//modifier                               [Raw event descrip=
+tor]
+>     hwmon_coretemp//modifier                           [Raw event descrip=
+tor]
+>     ...
+>
+>   Metric Groups:
+>
+>   Backend: [Grouping from Top-down Microarchitecture Analysis Metrics spr=
+eadsheet]
+>     tma_core_bound
+>          [This metric represents fraction of slots where Core non-memory =
+issues were of a bottleneck]
+>     tma_info_core_ilp
+>          [Instruction-Level-Parallelism (average number of uops executed =
+when there is execution) per thread (logical-processor)]
+>     tma_info_memory_l2mpki
+>          [L2 cache true misses per kilo instruction for retired demand lo=
+ads]
+>     ...
+>
+> This change makes it print the tool PMU events only.
 
-Ack. Thanks!
+Perhaps this can be used to simplify tests like:
+https://lore.kernel.org/lkml/20251109005959.2540616-2-irogers@google.com/
 
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
 Ian
+
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/builtin-list.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> index 16400366f8276a7a..28bf1fc7f5eeff8f 100644
+> --- a/tools/perf/builtin-list.c
+> +++ b/tools/perf/builtin-list.c
+> @@ -130,7 +130,7 @@ static void default_print_event(void *ps, const char =
+*topic,
+>         if (deprecated && !print_state->deprecated)
+>                 return;
+>
+> -       if (print_state->pmu_glob && pmu_name && !strglobmatch(pmu_name, =
+print_state->pmu_glob))
+> +       if (print_state->pmu_glob && (!pmu_name || !strglobmatch(pmu_name=
+, print_state->pmu_glob)))
+>                 return;
+>
+>         if (print_state->exclude_abi && pmu_type < PERF_TYPE_MAX && pmu_t=
+ype !=3D PERF_TYPE_RAW)
+> @@ -612,8 +612,10 @@ int cmd_list(int argc, const char **argv)
+>         print_cb.print_start(ps);
+>
+>         if (argc =3D=3D 0) {
+> -               default_ps.metrics =3D true;
+> -               default_ps.metricgroups =3D true;
+> +               if (!unit_name) {
+> +                       default_ps.metrics =3D true;
+> +                       default_ps.metricgroups =3D true;
+> +               }
+>                 print_events(&print_cb, ps);
+>                 goto out;
+>         }
+> --
+> 2.52.0.rc1.455.g30608eb744-goog
+>
