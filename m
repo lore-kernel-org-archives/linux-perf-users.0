@@ -1,370 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E551232E733;
-	Thu, 20 Nov 2025 12:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D729D337BBA
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Nov 2025 14:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763640541; cv=none; b=jYGbT8cyus++EQgd9oko8x9ySCnSah+taKUVMH0uV75LLaUzo4w3MbBiuQWEXh99VntDTqDtSuptUpbPwaBmqp0bElaEGEJ2DK2aTfTLbWuzsD/ctZpnw/XIjhUJfT19OlLJGxdiDxH/86l1sOl1Ddi+zdskkdeAgu6IdgtKmlg=
+	t=1763648350; cv=none; b=gDx/iLAYxTfdFB72I7Y8Eb3M+tcv6b7Ei46MRvWBAnujd2IduoqzYaqnaYjxCdF7ebqt3bXDsPHSPb6g5+9ZYZwRhmJMeBbytoVk3umiDDVyk/dsaVUj0ioi9IvU5aCVWf1hBzsAS/EQL1/Yc6bCNQzmptQCSY9cJ54pbpqUpIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763640541; c=relaxed/simple;
-	bh=dHdiqclNgshIpbh6Bo2FKYIxbGzT6Wmk88nZ1/oUxxY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=px0cN1UQTiFlfGavBGWSvdCrr6YUXBarmeHh4BeBFEjW4P2WlaKa8Ple0NzOl24tq3LkFKLmr5n+z7rJ+oXLNneqHB7IETJP3E+OQBxB0yHljtZH44Kv2oiRqbLSvWLgmkqrBzYKSkActcjnwnrtwRMs/1a4WiT7L9YOn4DM394=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f9nTfUEc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763648350; c=relaxed/simple;
+	bh=71xR6QYzJdwdOokv/CFKZ49LWyyZFU7pcNK54isomOg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=kPW+9QBb46hCULsbf7Rdl2PeBS/gqnHoovccb1bxPprvPzYtqd/uboiB2K1jgPPsTnB2+jY5GXirwR0vMzQxJg2kLGi+4TsvYYxkQYiWfH7NmmA0b3+F0Zj91rP+AfiKkpWa6a+301DM+khs0M5N+1lflkJlDZSY5wfQpePwilk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GOAjCdeF; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f9nTfUEc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D47FC4CEF1;
-	Thu, 20 Nov 2025 12:08:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763640540;
-	bh=dHdiqclNgshIpbh6Bo2FKYIxbGzT6Wmk88nZ1/oUxxY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=f9nTfUEcIvrlEA1xyvBv4JuAB+uMQemkaGw+4Z8uChvujMhU5etYJJfI6c1O+6e6R
-	 DAGWiEv8C7/+NGPaIe9ZnRaexluzOTjikNohkDldz7ds4nJ8Bj6mmz2qcE7KZQ3iko
-	 b47HqSSzzUlOqyD09K6PUZ9fWhnrIPr1AKcESU2FCnecmrtK7ODaOnAHI+/6eRtxUv
-	 U5zBD3l0fQVAz5x844xOwLT5Fn8RR3qM/qUT15cAEkL0RG0YRgljf9rEHAqhIq9NS5
-	 bPauZNeZN9rHsDU8d0AqMFsm8MYz+qyFxjB8rq+K6Fva1D7/fxKYs5U96al3WGQR3u
-	 AblzIcJuu0zWg==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Song Liu <song@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	Sasha Levin <sashal@kernel.org>,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17-5.4] Revert "perf/x86: Always store regs->ip in perf_callchain_kernel()"
-Date: Thu, 20 Nov 2025 07:08:20 -0500
-Message-ID: <20251120120838.1754634-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251120120838.1754634-1-sashal@kernel.org>
-References: <20251120120838.1754634-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GOAjCdeF"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-42b3377aaf2so545460f8f.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Nov 2025 06:19:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1763648347; x=1764253147; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mzRUBgRnLtue7JLgqZDwQWS0Dekpvo9x0SVB1SOpe+o=;
+        b=GOAjCdeFbeT8wcBSuw8LmpaU5Scl2R5gEKMp+xVIj5OwTuyE6TTWBkxPlkXct3DVcI
+         aUrShZ1B0/05VOyOkH8pOP2g543Anrs4rc4V42foIHQJOyEX0M/9ClTkY/JdhPgwzVBs
+         /BV0qyWVNKhj6V2N6nPxXnb9gVW8hotba73LkGHfEA6eN4wWxobZiLbMR7pAA1781klP
+         t2dlBPskdC69NSAY6kULB5x+mx8t1Fsb3tcxwYSXF6/F8++uLIaAA6m7hqgF9iv3x9Yw
+         SfXYSgIF4PfnaXER0UGhe7IqohWkXFtjITbqwW398ss74Q4qKrjnP3+X8WieMJVg1i5l
+         pmcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763648347; x=1764253147;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mzRUBgRnLtue7JLgqZDwQWS0Dekpvo9x0SVB1SOpe+o=;
+        b=eMR/KMq/wUd6VBiYtdXQHPfLD+bJzk4JumYjLEi681al6J4+VcLyWUoj3RgUuQ7f+p
+         uYyJ9Ip/RxCwVWLWsJfZOIjIvHNgUSEwGnrHrcCwyWez3FsbjE2RirIgwE7UjjncjXdh
+         99zuUeAvYxGtQMA2r6P9qPpwR9K4khI74RANhs0b46QARzkNViT7Cq+zEr1bmeG3aO1Q
+         4Nq2v5Y94uIVnZ3WJ58Kb/sfHjoRIEZMfu8WI92FRUtujWM+IzVUaNC7MRQ80xrTXnut
+         K7nWGwcAtb7hhRUPAa+UbXru0zaOw8sOG1xj8PTA2gT8D8ngxPBUNrjeLC/Fwrwa6Gw5
+         WXpw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgZCQIdiW30Q6+5M+03oDdoHLM6paOxwZJH+4w8grWpMqKKchw1hzGL9LgevEQZJ2i/GjJYGhXyHpJjr3FXmdB@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV7TTYzhtPlJAXlxWwsyBtjbQvSSIHrqeRRquR+QlNneLsKIEv
+	xNRVIxldJtMfuCOLbsMpoOL/wjAl+/Orn8mrc3S5Tu9GASEKasZWFuOmXZENo6JIxPo=
+X-Gm-Gg: ASbGncvWMt/KLEy6gwgB6QhaJy7HoUVKExMMUnRW5OYELv8dCQ4Xsd1yZM85De13CM1
+	ZRcaxfr84ina3MDEBCElY/r9nQHW9lvO1Pa3hIPhzj9DlxnoSOgOgCqSW+aFflhY68y7qwCzsSY
+	L/Wz4Wm8b6zJ/2ryLzDx01qhvsPvnQ7Xp3SB2Nos6j79BNito9wdODWFbu6NGecKyf2eHzzCnes
+	8ospW1GBA5XT9xZBHNfCSIzq58ETqb5vn90PHp7lW3mFGs6sipdJNZ8giSKBTF5nwaCZGRCNyCK
+	RN6476usjwjw/vSgy/6bQO7I5RRbTRVhvt7w9+eSbkx13el+RpbMT6WnoShwbJ6+NemqE7dr2bT
+	3DucCy+gwOfQ7oDNHvko50unQYnMmyB2PhhBRdfd9KQqEWsL3GHzNzpInwbff9Krwf6aaqOa1wd
+	z2tm5SCQq6squDkjKG
+X-Google-Smtp-Source: AGHT+IEyXLt5JVQU6RfXVIsmFqkafV/foIUCJq4WJcs8aLMI+3oGtWeUMpw2rYrwctuS12CNjB8/Gg==
+X-Received: by 2002:a05:6000:25c4:b0:42b:3dfb:645c with SMTP id ffacd0b85a97d-42cb9a11829mr3019069f8f.12.1763648346883;
+        Thu, 20 Nov 2025 06:19:06 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7fd8c47sm5953302f8f.38.2025.11.20.06.19.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Nov 2025 06:19:06 -0800 (PST)
+Message-ID: <a5b1bb5f-7364-465a-ae32-9dafa0823f1d@linaro.org>
+Date: Thu, 20 Nov 2025 14:19:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.17.8
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-From: Jiri Olsa <jolsa@kernel.org>
-
-[ Upstream commit 6d08340d1e354787d6c65a8c3cdd4d41ffb8a5ed ]
-
-This reverts commit 83f44ae0f8afcc9da659799db8693f74847e66b3.
-
-Currently we store initial stacktrace entry twice for non-HW ot_regs, which
-means callers that fail perf_hw_regs(regs) condition in perf_callchain_kernel.
-
-It's easy to reproduce this bpftrace:
-
-  # bpftrace -e 'tracepoint:sched:sched_process_exec { print(kstack()); }'
-  Attaching 1 probe...
-
-        bprm_execve+1767
-        bprm_execve+1767
-        do_execveat_common.isra.0+425
-        __x64_sys_execve+56
-        do_syscall_64+133
-        entry_SYSCALL_64_after_hwframe+118
-
-When perf_callchain_kernel calls unwind_start with first_frame, AFAICS
-we do not skip regs->ip, but it's added as part of the unwind process.
-Hence reverting the extra perf_callchain_store for non-hw regs leg.
-
-I was not able to bisect this, so I'm not really sure why this was needed
-in v5.2 and why it's not working anymore, but I could see double entries
-as far as v5.10.
-
-I did the test for both ORC and framepointer unwind with and without the
-this fix and except for the initial entry the stacktraces are the same.
-
-Acked-by: Song Liu <song@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Link: https://lore.kernel.org/r/20251104215405.168643-2-jolsa@kernel.org
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-LLM Generated explanations, may be completely bogus:
-
-Now let me compile my comprehensive analysis:
-
-## COMPREHENSIVE ANALYSIS: Perf Stack Trace Duplicate Entry Bug
-
-### 1. COMMIT MESSAGE ANALYSIS
-
-**Subject**: Revert "perf/x86: Always store regs->ip in
-perf_callchain_kernel()"
-
-**Key Information**:
-- This is a **revert** of commit
-  83f44ae0f8afcc9da659799db8693f74847e66b3
-- **Problem**: Stores initial stacktrace entry **twice** for non-HW
-  pt_regs
-- **Reproducer provided**: Easy reproduction with bpftrace showing
-  duplicate `bprm_execve+1767` entry
-- **Testing**: Tested with both ORC and framepointer unwinders
-- **Maintainer support**: Acked-by Song Liu (original author), Steven
-  Rostedt (tracing), signed by Alexei Starovoitov (BPF)
-- **Note**: This is commit 46b2650126939 which is a backport of mainline
-  fix 6d08340d1e354
-
-### 2. DEEP CODE RESEARCH AND TECHNICAL ANALYSIS
-
-**Understanding the Bug Mechanism**:
-
-The bug occurs in `perf_callchain_kernel()` function. Let me trace
-through the code flow:
-
-**Current buggy code (lines 2790-2796)**:
-```c
-if (perf_callchain_store(entry, regs->ip))  // ALWAYS stores regs->ip
-first
-    return;
-
-if (perf_hw_regs(regs))
-    unwind_start(&state, current, regs, NULL);
-else
-    unwind_start(&state, current, NULL, (void *)regs->sp);  // Also
-stores regs->ip during unwind!
-```
-
-**Fixed code**:
-```c
-if (perf_hw_regs(regs)) {
-    if (perf_callchain_store(entry, regs->ip))  // Only store for HW
-regs
-        return;
-    unwind_start(&state, current, regs, NULL);
-} else {
-    unwind_start(&state, current, NULL, (void *)regs->sp);  // Let
-unwinder add regs->ip
-}
-```
-
-**What is `perf_hw_regs()`?**
-From line 2774-2777, it checks if registers came from an IRQ/exception
-handler:
-```c
-static bool perf_hw_regs(struct pt_regs *regs)
-{
-    return regs->flags & X86_EFLAGS_FIXED;
-}
-```
-
-**The Two Paths**:
-
-1. **HW regs path** (IRQ/exception context):
-   - Registers captured by hardware interrupt
-   - `perf_hw_regs(regs)` returns `true`
-   - Need to explicitly store `regs->ip`
-   - Call `unwind_start(&state, current, regs, NULL)` with full regs
-
-2. **Non-HW regs path** (software context like tracepoints):
-   - Registers captured by `perf_arch_fetch_caller_regs()` (line 614-619
-     in perf_event.h)
-   - `perf_hw_regs(regs)` returns `false`
-   - Call `unwind_start(&state, current, NULL, (void *)regs->sp)` with
-     only stack pointer
-   - **The unwinder automatically includes regs->ip during the unwinding
-     process**
-   - **BUG**: The buggy code ALSO stores it explicitly, causing
-     duplication
-
-**Bug Introduction History**:
-
-The buggy commit 83f44ae0f8afcc9da659799db8693f74847e66b3 was introduced
-in June 2019 (v5.2-rc7) to fix a different issue where RIP wasn't being
-saved for BPF selftests. However, that fix was overly broad - it
-unconditionally stored regs->ip even for non-HW regs where the unwinder
-would already include it.
-
-**Affected Versions**: v5.2 through v6.17 (over 6 years of stable
-kernels!)
-
-### 3. SECURITY ASSESSMENT
-
-**No security implications** - this is a correctness bug in stack trace
-generation, not a security vulnerability. No CVE, no privilege
-escalation, no information leak beyond what's already visible.
-
-### 4. FEATURE VS BUG FIX CLASSIFICATION
-
-**Definitively a BUG FIX**:
-- Fixes incorrect stack trace output (duplicate entries)
-- Does NOT add new functionality
-- Restores correct behavior that was broken in v5.2
-
-### 5. CODE CHANGE SCOPE ASSESSMENT
-
-**Extremely small and surgical**:
-- **1 file changed**: `arch/x86/events/core.c`
-- **7 lines modified**: Moving the `perf_callchain_store()` call inside
-  the `if` block
-- **Single function affected**: `perf_callchain_kernel()`
-- **No API changes, no new exports, no dependencies**
-
-### 6. BUG TYPE AND SEVERITY
-
-**Bug Type**: Logic error - incorrect conditional placement causing
-duplicate stack trace entry
-
-**Severity**: **MEDIUM to HIGH**
-- **User-visible**: YES - anyone using perf/eBPF tools sees duplicate
-  entries
-- **Functional impact**: Corrupts observability data, misleading
-  debugging information
-- **Common scenario**: Affects ALL users collecting stack traces from
-  tracepoints, kprobes, raw_tp
-- **No system crashes**: But breaks critical debugging/profiling
-  workflows
-
-### 7. USER IMPACT EVALUATION
-
-**Very High Impact**:
-
-**Affected Users**:
-- **eBPF/BPF users**: bpftrace, bcc tools (very common in production)
-- **Performance engineers**: Using perf for profiling with stack traces
-- **System administrators**: Debugging with tracepoints
-- **Cloud providers**: Running observability tools
-- **Container environments**: Kubernetes/Docker using eBPF monitoring
-
-**Real-world scenario**:
-```bash
-# bpftrace -e 'tracepoint:sched:sched_process_exec { print(kstack()); }'
-bprm_execve+1767
-bprm_execve+1767    # <-- DUPLICATE! Confusing and wrong
-do_execveat_common.isra.0+425
-...
-```
-
-This makes stack traces misleading and harder to analyze. For production
-observability, **correct stack traces are essential**.
-
-### 8. REGRESSION RISK ANALYSIS
-
-**Very Low Regression Risk**:
-
-1. **Simple revert**: Reverting a previous change, well understood
-2. **Tested thoroughly**:
-   - Tested with ORC and framepointer unwinders
-   - BPF selftests added (commit 5b98eca7fae8e)
-   - Easy reproduction case provided
-3. **Maintainer consensus**: Multiple Acked-by from subsystem
-   maintainers
-4. **In mainline since Nov 2025**: Has been in v6.18-rc6+ for testing
-5. **Localized change**: Only affects one function, no ripple effects
-
-### 9. MAINLINE STABILITY
-
-**Strong mainline stability**:
-- **Mainline commit**: 6d08340d1e354 (Nov 5, 2025)
-- **First appeared**: v6.18-rc6
-- **Testing**: Includes reproducible test case and BPF selftests
-- **Reviews**: Acked by Song Liu (original author acknowledging the
-  revert is correct)
-- **Signed-off**: Alexei Starovoitov (BPF maintainer)
-
-### 10. STABLE KERNEL RULES COMPLIANCE
-
-**Checking against stable kernel criteria**:
-
-1. ✅ **Obviously correct**: YES - simple logic fix, moves conditional
-   correctly
-2. ✅ **Fixes real bug**: YES - duplicate stack trace entries (easy to
-   reproduce)
-3. ✅ **Important issue**: YES - breaks observability for common
-   workflows
-4. ✅ **Small and contained**: YES - 7 lines in one function
-5. ✅ **No new features**: CORRECT - only fixes existing functionality
-6. ✅ **Applies cleanly**: YES - this IS a stable backport
-   (46b2650126939)
-
-**Backport Status**: This commit (46b2650126939) is already a backport
-to stable of mainline commit 6d08340d1e354, committed by Sasha Levin on
-Nov 17, 2025.
-
-### ADDITIONAL CONTEXT
-
-**Why was the original fix needed in 2019?**
-The original commit 83f44ae0f8afcc9da659799db8693f74847e66b3 was fixing
-a BPF selftest where RIP wasn't being saved. However, the fix was too
-broad and caused this duplication issue.
-
-**Why revert now?**
-The author (Jiri Olsa) notes: "I was not able to bisect this, so I'm not
-really sure why this was needed in v5.2 and why it's not working
-anymore, but I could see double entries as far as v5.10." The unwinder
-behavior has evolved, and the explicit store is no longer needed (and
-causes duplication) for non-HW regs.
-
-**Related commits**:
-- There's a companion fix (e9e73b80b50ef) for fgraph/BPF stack unwinding
-  also backported
-- BPF selftests added to prevent regression
-
-### CONCLUSION
-
-This commit fixes a **real, user-visible bug** that affects a **very
-common use case** (stack trace collection via perf/eBPF tools). The bug
-has existed since v5.2 (2019) and affects ALL stable kernels from v5.2
-through v6.17.
-
-**Correctness**: The fix is small, surgical, well-tested, and has strong
-maintainer support.
-
-**Impact**: High - affects production observability workflows used by
-system administrators, performance engineers, and cloud providers.
-
-**Risk**: Very low - simple logic fix, thoroughly tested, in mainline
-since Nov 2025.
-
-**Stable Tree Alignment**: This perfectly fits stable kernel criteria -
-it's a small, obviously correct fix for an important user-visible bug
-that affects commonly-used functionality.
-
-**YES**
-
- arch/x86/events/core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 7610f26dfbd90..38f7102e2dacc 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2787,13 +2787,13 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
- 		return;
- 	}
- 
--	if (perf_callchain_store(entry, regs->ip))
--		return;
--
--	if (perf_hw_regs(regs))
-+	if (perf_hw_regs(regs)) {
-+		if (perf_callchain_store(entry, regs->ip))
-+			return;
- 		unwind_start(&state, current, regs, NULL);
--	else
-+	} else {
- 		unwind_start(&state, current, NULL, (void *)regs->sp);
-+	}
- 
- 	for (; !unwind_done(&state); unwind_next_frame(&state)) {
- 		addr = unwind_get_return_address(&state);
--- 
-2.51.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf test all metrics: Fully ignore Default metric
+ failures
+To: Ian Rogers <irogers@google.com>
+References: <20251119193047.2238095-1-irogers@google.com>
+Content-Language: en-US
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Thomas Richter <tmricht@linux.ibm.com>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20251119193047.2238095-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+
+
+On 19/11/2025 7:30 pm, Ian Rogers wrote:
+> Determine if a metric is default from `perf list --raw-dump $m` eg:
+> ```
+> $ perf list --raw-dump l1_prefetch_miss_rate
+> Default4 l1_prefetch_miss_rate
+> ```
+> If a metric has "not supported" or "no supported events" then ignore
+> these failures for default metrics. Tidy up the skip/fail messages in
+> the output to make them easier to spot/read.
+> 
+> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+> Closes: https://lore.kernel.org/linux-perf-users/20251119104751.51960-1-tmricht@linux.ibm.com/
+> Reported-by: Namhyung Kim <namhyung@kernel.org>
+> Reported-by: James Clark <james.clark@linaro.org>
+> Closes: https://lore.kernel.org/lkml/aRi9xnwdLh3Dir9f@google.com/
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
+> ---
+>   tools/perf/tests/shell/stat_all_metrics.sh | 27 ++++++++++++++--------
+>   1 file changed, 17 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
+> index a7edf01b3943..3dabb39c7cc8 100755
+> --- a/tools/perf/tests/shell/stat_all_metrics.sh
+> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
+> @@ -27,19 +27,20 @@ for m in $(perf list --raw-dump metrics); do
+>     fi
+>     if [[ "$result" =~ "Cannot resolve IDs for" || "$result" =~ "No supported events found" ]]
+>     then
+> -    if [[ "$m" == @(l1_prefetch_miss_rate|stalled_cycles_per_instruction) ]]
+> +    if [[ $(perf list --raw-dump $m) == "Default"* ]]
+>       then
+> -      # Default metrics that may use unsupported events.
+> +      echo "[Ignored $m] failed but as a Default metric this can be expected"
+> +      echo $result
+>         continue
+>       fi
+> -    echo "Metric contains missing events"
+> +    echo "[Failed $m] Metric contains missing events"
+>       echo $result
+>       err=1 # Fail
+>       continue
+>     elif [[ "$result" =~ \
+>           "Access to performance monitoring and observability operations is limited" ]]
+>     then
+> -    echo "Permission failure"
+> +    echo "[Skipped $m] Permission failure"
+>       echo $result
+>       if [[ $err -eq 0 ]]
+>       then
+> @@ -48,7 +49,7 @@ for m in $(perf list --raw-dump metrics); do
+>       continue
+>     elif [[ "$result" =~ "in per-thread mode, enable system wide" ]]
+>     then
+> -    echo "Permissions - need system wide mode"
+> +    echo "[Skipped $m] Permissions - need system wide mode"
+>       echo $result
+>       if [[ $err -eq 0 ]]
+>       then
+> @@ -57,7 +58,13 @@ for m in $(perf list --raw-dump metrics); do
+>       continue
+>     elif [[ "$result" =~ "<not supported>" ]]
+>     then
+> -    echo "Not supported events"
+> +    if [[ $(perf list --raw-dump $m) == "Default"* ]]
+> +    then
+> +      echo "[Ignored $m] failed but as a Default metric this can be expected"
+> +      echo $result
+> +      continue
+> +    fi
+> +    echo "[Skipped $m] Not supported events"
+>       echo $result
+>       if [[ $err -eq 0 ]]
+>       then
+> @@ -66,7 +73,7 @@ for m in $(perf list --raw-dump metrics); do
+>       continue
+>     elif [[ "$result" =~ "<not counted>" ]]
+>     then
+> -    echo "Not counted events"
+> +    echo "[Skipped $m] Not counted events"
+>       echo $result
+>       if [[ $err -eq 0 ]]
+>       then
+> @@ -75,7 +82,7 @@ for m in $(perf list --raw-dump metrics); do
+>       continue
+>     elif [[ "$result" =~ "FP_ARITH" || "$result" =~ "AMX" ]]
+>     then
+> -    echo "FP issues"
+> +    echo "[Skipped $m] FP issues"
+>       echo $result
+>       if [[ $err -eq 0 ]]
+>       then
+> @@ -84,7 +91,7 @@ for m in $(perf list --raw-dump metrics); do
+>       continue
+>     elif [[ "$result" =~ "PMM" ]]
+>     then
+> -    echo "Optane memory issues"
+> +    echo "[Skipped $m] Optane memory issues"
+>       echo $result
+>       if [[ $err -eq 0 ]]
+>       then
+> @@ -101,7 +108,7 @@ for m in $(perf list --raw-dump metrics); do
+>       # No error result and metric shown.
+>       continue
+>     fi
+> -  echo "Metric '$m' has non-zero error '$result_err' or not printed in:"
+> +  echo "[Failed $m] has non-zero error '$result_err' or not printed in:"
+>     echo "$result"
+>     err=1
+>   done
 
