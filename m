@@ -1,284 +1,385 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7829D2D062A
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Nov 2025 05:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9692FFDD8
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Nov 2025 05:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763616588; cv=none; b=qmV5M9/taRhwAn3tzURS4Q4ocpIwJF63KNvz4AqkwEoyWVuUyXHLWJOd21lXQTZ/BQPYlGc5ypd6EThcA0yQpqDgQXIL9hq1C60aVQ8SxNi+AdTy/6DKhs7IIZJQU4epFHinJtlR9y1xHYBcfBTgSa574lLGlDlLMq/vTV//Q34=
+	t=1763616640; cv=none; b=J+I5g/IwQ5Oaasp2e5L8PsahjeOgOYLWAlDSB7XYg82ayyano3ej9Y7HuDZVw56OFNFSi6ROrTufOe3c9g6S05qA+/M4nJRtKK01WoIes5++hXCGjtPWVpASMqGqgsmXSI5Swn3eB+0/ogDrz4o6eZBPtBlKeJK649G+g6TvMg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763616588; c=relaxed/simple;
-	bh=YHDLsIpTmt7VE1wNd2xoG3QIZdjR0RBXPFb12Wq7qss=;
+	s=arc-20240116; t=1763616640; c=relaxed/simple;
+	bh=N6yOztctVwNX0bnzrQfMG+Y3iHsLVmUJdHld0841ovM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rp53IYyH+1LUzjBVnf8UVa2we4CsQT3wZlpWPaMECGX570I7Tzwj37BiI4GNqwKst6eJ7BMeWvixUkkyYGvVZYiGuKgUfzNqhR9nrPOxzC+U8WkQ5yYrxPvgcBt+9+zQA62plmKDV285DtsYHZ9guUxkcAXw9REjIkEV0GtBmyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wQMmYsJS; arc=none smtp.client-ip=209.85.214.178
+	 To:Cc:Content-Type; b=SviuOhcN18hiXLslf07QfvnDJbwZq8KiVEB2XC9efrMSjtr+OsMHTLcmscK92kUsegcaUSe8QHePqaYVLU8co7qPjcvbgALeUac2UIB0Ml4ICOm8kjANZEzUP+/SkfJ7QjCSDrQwPzmFKgicEoh1XkBE6L6gCkDuFNUJJpg8FFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sgViMwYP; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wQMmYsJS"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-297e13bf404so113895ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 21:29:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sgViMwYP"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-295c64cb951so139085ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 21:30:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763616586; x=1764221386; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763616637; x=1764221437; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TW5aVHVpnngD0pwo3SfGO76Ix5ez8063opvM3M5CLFE=;
-        b=wQMmYsJSfsDefVzEp0B7FMyh1VNplJV+Ml+7glKWi4dY54fIFPBXSXEIDu+ZDsuHjI
-         G4R3kC2PsCKUuJWn0Amgo6ubt9GHnup2FF1EtztYF3T8HNSgwLoCOq21XmT7CjjH7+aX
-         DpK0zHzME/mdqfkr8XOMFEMKRpoF6e/Ql62jAMzhoP3apociHlFhdct7ozmr1P0gQEUH
-         QnvC2sDQW5NjKrCnVh96eVYuFJ8sBfwOvZEFxM8bqf9WPI9BbYrw3lxyIH4U2m6QuTrT
-         mrsCm6pzmb1ARmigNGx5z5hfycWjx0dvqZXIIESiyFIylbmVn8tr5+rfZLJz0r7EnpjR
-         gJrA==
+        bh=PHE7Bf8hdf1BlTO6T/tS+Le0BhRC7n6lGCF1BwIc6Bo=;
+        b=sgViMwYPP/MAaKFrvVRHewCEEFV2jSYykF1mjz1iiFxu80pmSqEI8tiedAIO9Hlvb3
+         ATpS5h6pWNMGuUhCs8RJToaBrW3a2NafP/G79GnqJZ7B4kCHvEEMyfGCLvTs8xW6pcXF
+         57LZHvUDlOa8AQySjR1/Zh1Th8bYcfiiAvBuFQFRvR9U2aZspGWW6zplHBSbg+lWPKxV
+         j+pY9PyAIsFyq9YqkuKjTKK9VRpE5MU9BvuFwY7tL1/adGWvZksBFZplfWLBzxSajr14
+         iRLHyIe+6LD03qSSNi3k6vhvWlDMwZXgIfkBYFygRHopaji+6kKPh1oubttHqDgfgXsQ
+         0qKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763616586; x=1764221386;
+        d=1e100.net; s=20230601; t=1763616637; x=1764221437;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=TW5aVHVpnngD0pwo3SfGO76Ix5ez8063opvM3M5CLFE=;
-        b=A5LX5g6uITG3ZVrP6WG8fUg7cJtjcj7FHXL45krfWPgvMQdUEtkHtL+yvBu2byhLE9
-         O6GDYLAWJlpxK8Y1wdsjfjU/SMUFnoARd+N8qKWEb3kEEGqIezIG77HYIQdyOoki84Ja
-         /KZwV2NMZ/9LX/xAVTkc2aOcU8UUTi9XeJUYF0jGem/ciBBOxxCGbfytge9uRauvWGrk
-         NNiTbQuhiXsrcOKp6ExxXhxkVd3IE4NKPomibTysvB3o6RRnvMhbEsa9+Jzv1qKXLEvv
-         2+bAAl1vkoOuSM8Xubr+Z5ya6eky7CK+8R6Rle1VF5OhYwHiOEehvOJu6pJUnYvoU3sz
-         EUeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUuIHY26SIWXb5BT46/3HvdzNEm7VIj+fqIfQdiZk4VoyDBAPwfGWEEW8SZHSQEXjOih9mzv+RsCgJkevJ+Uwc2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzf/DwBFqMXoxiuFyw0JqbxdyQ6Uu2XO24MfAtxeAjHQDTOzcyz
-	XDRQvi7WB1PhOqlnuyr0Dsf0ek9VlcOqous1kqqavLUdNRC5xYIAXfQMRIqiGOSaa7sLBxVJwow
-	uAh4qDByoiZ4j9A378RZvgeF/kZcWVbQCnJvH/n6q
-X-Gm-Gg: ASbGnct9naNQO6wiohG7BhqcKCPeNWmiO/m7J/pybdk96zoK3FcEUcfndMHN5S7+SXv
-	ec6n81Ybe4WO1cUv6lgZG/mfkJ01uTrrPUe2Xbne9Pfcb8ZlkLxeHj3L+7vZ1UhcUbjD7c01lMG
-	OapCtRH9Rj/gMSkTVXfoI9WMClvaMmWVDi/PL66Q0plBlzf9GYsQpFTV1VdbPgcw4sVB+uYa0ez
-	drzwnn8Sqt2q5yhlt43uUop74dQ0403OqUZw9e1v8diJ/ulzn4QoHhQ25pATPyfPK9QnU6W
-X-Google-Smtp-Source: AGHT+IFz21m1gvtJ+c4Oz5Xw91aFL1sfJL0YxVGA63lOLUkBDQShrn7qcWGtR3K/OnaWZwh4nUG1vbmcxYGLjIUUpt0=
-X-Received: by 2002:a17:902:da83:b0:298:144f:b759 with SMTP id
- d9443c01a7336-29b5dc138e1mr1457515ad.9.1763616585298; Wed, 19 Nov 2025
- 21:29:45 -0800 (PST)
+        bh=PHE7Bf8hdf1BlTO6T/tS+Le0BhRC7n6lGCF1BwIc6Bo=;
+        b=eGqgU38Rvv4bESXKOTRqRNYpXeQth+XYNcPHBzV4RY5d2rr3GHKJFQaAhilMqrgKWS
+         k4P7Bm70KSKHo1ZhdchJELkicDgVflwPKloimERYo8c5I2+eS2gSa/00RivdY7wUhZPL
+         1T1Fi2eystosmkFRAeML5LFbMI6LL1sV6/IUWgRwXK66CoBOiBwltF/bDltsxyEnWsCN
+         XRkSrWlNZiLfyc+B1hPbe2f4q0EdtDjCzRmMkYi0NsRRm5WOJLkeNith2qDJpgi2in8x
+         7TmrDYGuzG9gGxWMoPtXjadvHLJitV2Zc5r/63+a3Fnlx0Xd8Fg3whSUGWQ931ew8++d
+         ylaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1ts0hGypeZElLZ5PnsvClTQj5xyxep6l3nLYzE7QzmShuXbwlBQRQRuYTkIn4O4xttm4gjBq2Z3V4JO7vVy9Z@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw11r638WNg+X/AKQ4qRhfn++pqZDcDThbDEnjk8qWJzuWfwIFa
+	3if7/O2Vqu1j2Cn56dooUIzfnFjd8Vx2FMOMnspz+JhWGT7Whv83G2vSjNYLbRaDmw/zhYBs92y
+	pZJ4ja9Y8SOUHWH8OzQL34v/9QRlzhN6t1Ajq7pIX
+X-Gm-Gg: ASbGncvcnYv8Z0Zh3Zl8Vq3sTXG+ds7XAVxGPwd8v9TDhirEQwAQpuBgfD4DO5nlRbh
+	BpIAqYwp9Egxo+ydccXSip8gCnT5yHYT9hgirjiGCSGAlFBIj+Icb/EoQksBSkj2E6K/LJpVTl1
+	OFrMa5/GdQDuT+mdHpbZ7uYEf8dTRnnVNJPV5hUXX6E4VFUob/QQN0zOVK2aQh0wtz1QO0hQ+gS
+	/EemgeDdaTTsvz9pp0jR9BuoOQQDk1dbI4BIq/WvWPlBNzzmbjixCEZyHtZ2dcbyrpmxF3v
+X-Google-Smtp-Source: AGHT+IFN1kkWsfESQyRXEM0/RnZUrC0oMSWRAIWelC1mu8lz8aqsnE4W9KOAKclX6pTuEdsTxSpoTEgYRqlz8tDTfOk=
+X-Received: by 2002:a17:902:d48a:b0:295:30bc:458e with SMTP id
+ d9443c01a7336-29b5da68247mr1196115ad.3.1763616636937; Wed, 19 Nov 2025
+ 21:30:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251120021046.94490-1-namhyung@kernel.org> <20251120021046.94490-7-namhyung@kernel.org>
-In-Reply-To: <20251120021046.94490-7-namhyung@kernel.org>
+References: <20251120004726.61660-1-namhyung@kernel.org> <20251120004726.61660-2-namhyung@kernel.org>
+In-Reply-To: <20251120004726.61660-2-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 19 Nov 2025 21:29:34 -0800
-X-Gm-Features: AWmQ_bniEbT9bZAsiC3VOQbMkfFcl3CbQa7pPIN-PoUwLJdoM4P-V4uu45KLj0Q
-Message-ID: <CAP-5=fVZcmYgyRJVNbet9ZLjihAiXNy7D8cX+QqHe8EKqJ1qOQ@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] perf tools: Flush remaining samples w/o deferred callchains
+Date: Wed, 19 Nov 2025 21:30:25 -0800
+X-Gm-Features: AWmQ_bmjtDwDnY6AhwENCSpEurbZKfuI4HxjdGkAa5AnmY2UlgY_PCpDSRCZoxg
+Message-ID: <CAP-5=fWSg07fTLJNya0ftdUfk7HTbYXB=5xbbPBeN_q4LNs6cw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] perf list: Share print state with JSON output
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
 	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, Jens Remus <jremus@linux.ibm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 19, 2025 at 6:11=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On Wed, Nov 19, 2025 at 4:47=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> It's possible that some kernel samples don't have matching deferred
-> callchain records when the profiling session was ended before the
-> threads came back to userspace.  Let's flush the samples before
-> finish the session.
+> The JSON print state has only one different field (need_sep).  Let's
+> add the default print state to the json state and use it.  Then we can
+> use the 'ps' variable to update the state properly.
 >
-> Also 32-bit systems can see partial mmap for the data.  In that case,
-> deferred samples won't point to the correct data once the mapping moves
-> to the next portion of the file.  Copy the original sample before it
-> unmaps the current data.
+> This is a preparation for the next commit.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-I think it is simpler to always copy. We may have events from
-synthesis, inject, .. and not the reader. Relying on callers to know
-that someone made a copy of the event and to make a defensive copy on
-their behalf just feels error prone.
-
-In the python session API I need to deal with the lifetime of events.
-Currently the events are copied:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/python.c?h=3Dperf-tools-next#n507
-and I'm doing this for session tool callbacks:
-https://lore.kernel.org/lkml/20251029053413.355154-12-irogers@google.com/
-I think it can be made lazier by knowing the tool callback can assume
-the event and sample are valid. We can delay the copying of the
-event/sample for if the pyevent has a reference count >1 and we're
-returning out of the tool callback. Doing some kind of global
-knowledge in the reader for maintaining the correctness of memory, I'm
-just not clear on how to make it always work.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/util/session.c | 98 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 98 insertions(+)
+>  tools/perf/builtin-list.c | 127 +++++++++++++++++++-------------------
+>  1 file changed, 65 insertions(+), 62 deletions(-)
 >
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 2e777fd1bcf6707b..b781e01ddcb4876b 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1288,8 +1288,13 @@ static int evlist__deliver_sample(struct evlist *e=
-vlist, const struct perf_tool
->  struct deferred_event {
->         struct list_head list;
->         union perf_event *event;
-> +       bool allocated;
+> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> index 28bf1fc7f5eeff8f..6c5913f129f39c94 100644
+> --- a/tools/perf/builtin-list.c
+> +++ b/tools/perf/builtin-list.c
+> @@ -283,8 +283,8 @@ static void default_print_metric(void *ps,
+>  }
+>
+>  struct json_print_state {
+> -       /** @fp: File to write output to. */
+> -       FILE *fp;
+> +       /** The shared print_state */
+> +       struct print_state common;
+>         /** Should a separator be printed prior to the next item? */
+>         bool need_sep;
 >  };
+> @@ -292,7 +292,7 @@ struct json_print_state {
+>  static void json_print_start(void *ps)
+>  {
+>         struct json_print_state *print_state =3D ps;
+> -       FILE *fp =3D print_state->fp;
+> +       FILE *fp =3D print_state->common.fp;
 >
-> +/*
-> + * This is called when a deferred callchain record comes up.  Find all m=
-atching
-> + * samples, merge the callchains and process them.
-> + */
->  static int evlist__deliver_deferred_samples(struct evlist *evlist,
->                                             const struct perf_tool *tool,
->                                             union  perf_event *event,
-> @@ -1331,6 +1336,86 @@ static int evlist__deliver_deferred_samples(struct=
- evlist *evlist,
->                         free(orig_sample.callchain);
+>         fprintf(fp, "[\n");
+>  }
+> @@ -300,7 +300,7 @@ static void json_print_start(void *ps)
+>  static void json_print_end(void *ps)
+>  {
+>         struct json_print_state *print_state =3D ps;
+> -       FILE *fp =3D print_state->fp;
+> +       FILE *fp =3D print_state->common.fp;
 >
->                 list_del(&de->list);
-> +               if (de->allocated)
-> +                       free(de->event);
-> +               free(de);
-> +
-> +               if (ret)
-> +                       break;
-> +       }
-> +       return ret;
-> +}
-> +
-> +/*
-> + * This is called when the backing mmap is about to go away.  It needs t=
-o save
-> + * the original sample data until it finds the matching deferred callcha=
-ins.
-> + */
-> +static void evlist__copy_deferred_samples(struct evlist *evlist,
-> +                                         const struct perf_tool *tool,
-> +                                         struct machine *machine)
-> +{
-> +       struct deferred_event *de, *tmp;
-> +       struct evsel *evsel;
-> +       int ret =3D 0;
-> +
-> +       list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list=
-) {
-> +               struct perf_sample sample;
-> +               size_t sz =3D de->event->header.size;
-> +               void *buf;
-> +
-> +               if (de->allocated)
-> +                       continue;
-> +
-> +               buf =3D malloc(sz);
-> +               if (buf) {
-> +                       memcpy(buf, de->event, sz);
-> +                       de->event =3D buf;
-> +                       de->allocated =3D true;
-> +                       continue;
-> +               }
-> +
-> +               /* The allocation failed, flush the sample now */
-> +               ret =3D evlist__parse_sample(evlist, de->event, &sample);
-> +               if (ret =3D=3D 0) {
-> +                       evsel =3D evlist__id2evsel(evlist, sample.id);
-> +                       evlist__deliver_sample(evlist, tool, de->event,
-> +                                              &sample, evsel, machine);
-> +               }
-> +
-> +               list_del(&de->list);
-> +               BUG_ON(de->allocated);
-> +               free(de);
-> +       }
-> +}
-> +
-> +/*
-> + * This is called at the end of the data processing for the session.  Fl=
-ush the
-> + * remaining samples as there's no hope for matching deferred callchains=
-.
-> + */
-> +static int evlist__flush_deferred_samples(struct evlist *evlist,
-> +                                         const struct perf_tool *tool,
-> +                                         struct machine *machine)
-> +{
-> +       struct deferred_event *de, *tmp;
-> +       struct evsel *evsel;
-> +       int ret =3D 0;
-> +
-> +       list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list=
-) {
-> +               struct perf_sample sample;
-> +
-> +               ret =3D evlist__parse_sample(evlist, de->event, &sample);
-> +               if (ret < 0) {
-> +                       pr_err("failed to parse original sample\n");
-> +                       break;
-> +               }
-> +
-> +               evsel =3D evlist__id2evsel(evlist, sample.id);
-> +               ret =3D evlist__deliver_sample(evlist, tool, de->event,
-> +                                            &sample, evsel, machine);
-> +
-> +               list_del(&de->list);
-> +               if (de->allocated)
-> +                       free(de->event);
->                 free(de);
+>         fprintf(fp, "%s]\n", print_state->need_sep ? "\n" : "");
+>  }
+> @@ -370,7 +370,7 @@ static void json_print_event(void *ps, const char *to=
+pic,
+>  {
+>         struct json_print_state *print_state =3D ps;
+>         bool need_sep =3D false;
+> -       FILE *fp =3D print_state->fp;
+> +       FILE *fp =3D print_state->common.fp;
+>         struct strbuf buf;
 >
->                 if (ret)
-> @@ -1374,6 +1459,7 @@ static int machines__deliver_event(struct machines =
-*machines,
->                                 return -ENOMEM;
+>         strbuf_init(&buf, 0);
+> @@ -446,7 +446,7 @@ static void json_print_metric(void *ps __maybe_unused=
+, const char *group,
+>  {
+>         struct json_print_state *print_state =3D ps;
+>         bool need_sep =3D false;
+> -       FILE *fp =3D print_state->fp;
+> +       FILE *fp =3D print_state->common.fp;
+>         struct strbuf buf;
 >
->                         de->event =3D event;
-> +                       de->allocated =3D false;
->                         list_add_tail(&de->list, &evlist->deferred_sample=
-s);
->                         return 0;
+>         strbuf_init(&buf, 0);
+> @@ -521,10 +521,12 @@ int cmd_list(int argc, const char **argv)
+>                 .fp =3D stdout,
+>                 .desc =3D true,
+>         };
+> -       struct print_state json_ps =3D {
+> -               .fp =3D stdout,
+> +       struct json_print_state json_ps =3D {
+> +               .common =3D {
+> +                       .fp =3D stdout,
+> +               },
+>         };
+> -       void *ps =3D &default_ps;
+> +       struct print_state *ps =3D &default_ps;
+>         struct print_callbacks print_cb =3D {
+>                 .print_start =3D default_print_start,
+>                 .print_end =3D default_print_end,
+> @@ -572,9 +574,11 @@ int cmd_list(int argc, const char **argv)
+>         argc =3D parse_options(argc, argv, list_options, list_usage,
+>                              PARSE_OPT_STOP_AT_NON_OPTION);
+>
+> +       if (json)
+> +               ps =3D &json_ps.common;
+> +
+>         if (output_path) {
+> -               default_ps.fp =3D fopen(output_path, "w");
+> -               json_ps.fp =3D default_ps.fp;
+> +               ps->fp =3D fopen(output_path, "w");
+>         }
+>
+>         setup_pager();
+> @@ -590,14 +594,13 @@ int cmd_list(int argc, const char **argv)
+>                         .print_metric =3D json_print_metric,
+>                         .skip_duplicate_pmus =3D json_skip_duplicate_pmus=
+,
+>                 };
+> -               ps =3D &json_ps;
+>         } else {
+> -               default_ps.last_topic =3D strdup("");
+> -               assert(default_ps.last_topic);
+> -               default_ps.visited_metrics =3D strlist__new(NULL, NULL);
+> -               assert(default_ps.visited_metrics);
+> +               ps->last_topic =3D strdup("");
+> +               assert(ps->last_topic);
+> +               ps->visited_metrics =3D strlist__new(NULL, NULL);
+> +               assert(ps->visited_metrics);
+>                 if (unit_name)
+> -                       default_ps.pmu_glob =3D strdup(unit_name);
+> +                       ps->pmu_glob =3D strdup(unit_name);
+>                 else if (cputype) {
+>                         const struct perf_pmu *pmu =3D perf_pmus__pmu_for=
+_pmu_filter(cputype);
+>
+> @@ -606,15 +609,15 @@ int cmd_list(int argc, const char **argv)
+>                                 ret =3D -1;
+>                                 goto out;
+>                         }
+> -                       default_ps.pmu_glob =3D strdup(pmu->name);
+> +                       ps->pmu_glob =3D strdup(pmu->name);
 >                 }
-> @@ -2218,6 +2304,8 @@ reader__mmap(struct reader *rd, struct perf_session=
- *session)
 >         }
+>         print_cb.print_start(ps);
 >
->         if (mmaps[rd->mmap_idx]) {
-> +               evlist__copy_deferred_samples(session->evlist, session->t=
-ool,
-> +                                             &session->machines.host);
->                 munmap(mmaps[rd->mmap_idx], rd->mmap_size);
->                 mmaps[rd->mmap_idx] =3D NULL;
->         }
-> @@ -2372,6 +2460,11 @@ static int __perf_session__process_events(struct p=
-erf_session *session)
->         if (err)
->                 goto out_err;
->         err =3D auxtrace__flush_events(session, tool);
-> +       if (err)
-> +               goto out_err;
-> +       err =3D evlist__flush_deferred_samples(session->evlist,
-> +                                            session->tool,
-> +                                            &session->machines.host);
->         if (err)
->                 goto out_err;
->         err =3D perf_session__flush_thread_stacks(session);
-> @@ -2494,6 +2587,11 @@ static int __perf_session__process_dir_events(stru=
-ct perf_session *session)
->         if (ret)
->                 goto out_err;
+>         if (argc =3D=3D 0) {
+>                 if (!unit_name) {
+> -                       default_ps.metrics =3D true;
+> -                       default_ps.metricgroups =3D true;
+> +                       ps->metrics =3D true;
+> +                       ps->metricgroups =3D true;
+>                 }
+>                 print_events(&print_cb, ps);
+>                 goto out;
+> @@ -636,57 +639,57 @@ int cmd_list(int argc, const char **argv)
+>                         default_ps.pmu_glob =3D old_pmu_glob;
+>                 } else if (strcmp(argv[i], "hw") =3D=3D 0 ||
+>                            strcmp(argv[i], "hardware") =3D=3D 0) {
+> -                       char *old_event_glob =3D default_ps.event_glob;
+> +                       char *old_event_glob =3D ps->event_glob;
 >
-> +       ret =3D evlist__flush_deferred_samples(session->evlist, tool,
-> +                                            &session->machines.host);
-> +       if (ret)
-> +               goto out_err;
-> +
->         ret =3D perf_session__flush_thread_stacks(session);
->  out_err:
->         ui_progress__finish();
+> -                       default_ps.event_glob =3D strdup("legacy hardware=
+");
+> -                       if (!default_ps.event_glob) {
+> +                       ps->event_glob =3D strdup("legacy hardware");
+> +                       if (!ps->event_glob) {
+>                                 ret =3D -1;
+>                                 goto out;
+>                         }
+>                         perf_pmus__print_pmu_events(&print_cb, ps);
+> -                       zfree(&default_ps.event_glob);
+> -                       default_ps.event_glob =3D old_event_glob;
+> +                       zfree(&ps->event_glob);
+> +                       ps->event_glob =3D old_event_glob;
+>                 } else if (strcmp(argv[i], "sw") =3D=3D 0 ||
+>                          strcmp(argv[i], "software") =3D=3D 0) {
+> -                       char *old_pmu_glob =3D default_ps.pmu_glob;
+> +                       char *old_pmu_glob =3D ps->pmu_glob;
+>                         static const char * const sw_globs[] =3D { "softw=
+are", "tool" };
+>
+>                         for (size_t j =3D 0; j < ARRAY_SIZE(sw_globs); j+=
++) {
+> -                               default_ps.pmu_glob =3D strdup(sw_globs[j=
+]);
+> -                               if (!default_ps.pmu_glob) {
+> +                               ps->pmu_glob =3D strdup(sw_globs[j]);
+> +                               if (!ps->pmu_glob) {
+>                                         ret =3D -1;
+>                                         goto out;
+>                                 }
+>                                 perf_pmus__print_pmu_events(&print_cb, ps=
+);
+> -                               zfree(&default_ps.pmu_glob);
+> +                               zfree(&ps->pmu_glob);
+>                         }
+> -                       default_ps.pmu_glob =3D old_pmu_glob;
+> +                       ps->pmu_glob =3D old_pmu_glob;
+>                 } else if (strcmp(argv[i], "cache") =3D=3D 0 ||
+>                            strcmp(argv[i], "hwcache") =3D=3D 0) {
+> -                       char *old_event_glob =3D default_ps.event_glob;
+> +                       char *old_event_glob =3D ps->event_glob;
+>
+> -                       default_ps.event_glob =3D strdup("legacy cache");
+> -                       if (!default_ps.event_glob) {
+> +                       ps->event_glob =3D strdup("legacy cache");
+> +                       if (!ps->event_glob) {
+>                                 ret =3D -1;
+>                                 goto out;
+>                         }
+>                         perf_pmus__print_pmu_events(&print_cb, ps);
+> -                       zfree(&default_ps.event_glob);
+> -                       default_ps.event_glob =3D old_event_glob;
+> +                       zfree(&ps->event_glob);
+> +                       ps->event_glob =3D old_event_glob;
+>                 } else if (strcmp(argv[i], "pmu") =3D=3D 0) {
+> -                       default_ps.exclude_abi =3D true;
+> +                       ps->exclude_abi =3D true;
+>                         perf_pmus__print_pmu_events(&print_cb, ps);
+> -                       default_ps.exclude_abi =3D false;
+> +                       ps->exclude_abi =3D false;
+>                 } else if (strcmp(argv[i], "sdt") =3D=3D 0)
+>                         print_sdt_events(&print_cb, ps);
+>                 else if (strcmp(argv[i], "metric") =3D=3D 0 || strcmp(arg=
+v[i], "metrics") =3D=3D 0) {
+> -                       default_ps.metricgroups =3D false;
+> -                       default_ps.metrics =3D true;
+> +                       ps->metricgroups =3D false;
+> +                       ps->metrics =3D true;
+>                         metricgroup__print(&print_cb, ps);
+>                 } else if (strcmp(argv[i], "metricgroup") =3D=3D 0 ||
+>                            strcmp(argv[i], "metricgroups") =3D=3D 0) {
+> -                       default_ps.metricgroups =3D true;
+> -                       default_ps.metrics =3D false;
+> +                       ps->metricgroups =3D true;
+> +                       ps->metrics =3D false;
+>                         metricgroup__print(&print_cb, ps);
+>                 }
+>  #ifdef HAVE_LIBPFM
+> @@ -694,40 +697,40 @@ int cmd_list(int argc, const char **argv)
+>                         print_libpfm_events(&print_cb, ps);
+>  #endif
+>                 else if ((sep =3D strchr(argv[i], ':')) !=3D NULL) {
+> -                       char *old_pmu_glob =3D default_ps.pmu_glob;
+> -                       char *old_event_glob =3D default_ps.event_glob;
+> +                       char *old_pmu_glob =3D ps->pmu_glob;
+> +                       char *old_event_glob =3D ps->event_glob;
+>
+> -                       default_ps.event_glob =3D strdup(argv[i]);
+> -                       if (!default_ps.event_glob) {
+> +                       ps->event_glob =3D strdup(argv[i]);
+> +                       if (!ps->event_glob) {
+>                                 ret =3D -1;
+>                                 goto out;
+>                         }
+>
+> -                       default_ps.pmu_glob =3D strdup("tracepoint");
+> -                       if (!default_ps.pmu_glob) {
+> -                               zfree(&default_ps.event_glob);
+> +                       ps->pmu_glob =3D strdup("tracepoint");
+> +                       if (!ps->pmu_glob) {
+> +                               zfree(&ps->event_glob);
+>                                 ret =3D -1;
+>                                 goto out;
+>                         }
+>                         perf_pmus__print_pmu_events(&print_cb, ps);
+> -                       zfree(&default_ps.pmu_glob);
+> -                       default_ps.pmu_glob =3D old_pmu_glob;
+> +                       zfree(&ps->pmu_glob);
+> +                       ps->pmu_glob =3D old_pmu_glob;
+>                         print_sdt_events(&print_cb, ps);
+> -                       default_ps.metrics =3D true;
+> -                       default_ps.metricgroups =3D true;
+> +                       ps->metrics =3D true;
+> +                       ps->metricgroups =3D true;
+>                         metricgroup__print(&print_cb, ps);
+> -                       zfree(&default_ps.event_glob);
+> -                       default_ps.event_glob =3D old_event_glob;
+> +                       zfree(&ps->event_glob);
+> +                       ps->event_glob =3D old_event_glob;
+>                 } else {
+>                         if (asprintf(&s, "*%s*", argv[i]) < 0) {
+>                                 printf("Critical: Not enough memory! Tryi=
+ng to continue...\n");
+>                                 continue;
+>                         }
+> -                       default_ps.event_glob =3D s;
+> +                       ps->event_glob =3D s;
+>                         perf_pmus__print_pmu_events(&print_cb, ps);
+>                         print_sdt_events(&print_cb, ps);
+> -                       default_ps.metrics =3D true;
+> -                       default_ps.metricgroups =3D true;
+> +                       ps->metrics =3D true;
+> +                       ps->metricgroups =3D true;
+>                         metricgroup__print(&print_cb, ps);
+>                         free(s);
+>                 }
+> @@ -735,12 +738,12 @@ int cmd_list(int argc, const char **argv)
+>
+>  out:
+>         print_cb.print_end(ps);
+> -       free(default_ps.pmu_glob);
+> -       free(default_ps.last_topic);
+> -       free(default_ps.last_metricgroups);
+> -       strlist__delete(default_ps.visited_metrics);
+> +       free(ps->pmu_glob);
+> +       free(ps->last_topic);
+> +       free(ps->last_metricgroups);
+> +       strlist__delete(ps->visited_metrics);
+>         if (output_path)
+> -               fclose(default_ps.fp);
+> +               fclose(ps->fp);
+>
+>         return ret;
+>  }
 > --
 > 2.52.0.rc1.455.g30608eb744-goog
 >
