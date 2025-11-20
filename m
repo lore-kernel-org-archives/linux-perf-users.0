@@ -1,45 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5B82DFF04;
-	Thu, 20 Nov 2025 19:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B7C368E03;
+	Thu, 20 Nov 2025 19:22:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763665897; cv=none; b=FbFvD547buIrjBFfrXsNLcRZYbwIdS6ARq3vTgxlq3n2aCkB4Doiq1I+1h0rdPYJwIQNuau8ZDlHk5nLob+AOUDYJMizRFPM5NW7VHfTdeFgRjO/WeAUw0A4SS+MQzMRgRzs6HFzUGvBnQfGx5O9cwVeNjqI5tF+HC6+TLsoFDU=
+	t=1763666580; cv=none; b=SJmn3mvj8VSplMCB+POT2tTgQUlcEm7q5KbI2Tlj45NxcYHsgscumFzcYC35S4kVcn3SX+vdjcenFUC+d4TLKxe2cpXsrfP83lrORcoH289oIXWVZQ+a1WjHbNgWVGgQpoH3a9+If7aSYXH9S+dZLcQGHBPc0RIlODpyVlhEr0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763665897; c=relaxed/simple;
-	bh=EJGjcOwpuilPCorYj7pXBDNcjFxuVQ7TIwc/ZYdTU1I=;
+	s=arc-20240116; t=1763666580; c=relaxed/simple;
+	bh=YPGubKINGZqJbiLeSuPo53PeN2/J0YT4+7G2RbocRrg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X7Sm0iytYV+GHvwmzBOnyYwPEqP9q6P0gV5U9yBdG4Yns3v4X8J1pKYP2Q4PhYGAYAjaU0tErnw1LU92qdzQ5TzpQA+IVQD1gWK/0aw4ObpVYlKQJFX3Gro2La3QHd2k/vjtw+36Ajw+LvwEXmrWxSaUq37O6eijGODkE3Ehs+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocJACiWC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=d67HrGhXKeCdip/stV6lB9Ybsi94TEjZ3jEgBPnco4G3JBbkedxuWUozZepDtx5qsmdIkfg+eF34ElUOgKm+MXhfmW0ce3gKo3CYljKlR3uz0JNWH8PavX31xBKYhRrg7WMf4i5pS1YR1CYVBv4vFL+VSWu0rcxUHRcGZwquVXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWDGve6v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocJACiWC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1855C4CEF1;
-	Thu, 20 Nov 2025 19:11:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWDGve6v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E95E6C19423;
+	Thu, 20 Nov 2025 19:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763665896;
-	bh=EJGjcOwpuilPCorYj7pXBDNcjFxuVQ7TIwc/ZYdTU1I=;
+	s=k20201202; t=1763666579;
+	bh=YPGubKINGZqJbiLeSuPo53PeN2/J0YT4+7G2RbocRrg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ocJACiWCnqu6d6LWBkrzPSHS77UJPVaofqKRccoWKwKT0lpH2iijo0DVki2Hc39O9
-	 JFBnaj64PfeLwhD8pG7Q2THWDjQPuSbo9ZnvOKbdj63zkSJc/MjX2ELe471F4rWPeC
-	 hzMkf47qlBjDqOboybjvPWhp2KSw2n7i/4Vvxwjkvup3Zy/gL7i5JoTA8bygbeteiN
-	 PQaKN6q3HoqgkAiQGCDA5PvXZ+dT76QbLWEkZYMx0RmhsNdLrdE/8/5knPuwNk++6W
-	 JwHm89Nin0Z/JIACgRrrJJW+JgsOPdHnPQVGC4RPdhKacRCYA/+m34gzZi1k3rNiiD
-	 xlDv/8G1yhz/g==
-Date: Thu, 20 Nov 2025 11:11:34 -0800
+	b=nWDGve6v4Vt608RstA/o1Ut996nY5D5yCOY0rTq8ugnIwKK1qHZvUf6yqXI4HqzxS
+	 QKqINfH6kmahWvTmLrtYxGr8+VhWDCshe4Id5xvjyurPcKTdPQIBghxDQ7/ADvdeKr
+	 oOEmKfJhhRYuEHYAI0WyVMynn6AqrnbM5B68VkG9zQ/zrlZ77FVY1hhs3w3hqcix/F
+	 wNr7adKO8xAlPlV0SUSqyQIRdfzkLekwXmk3zvF4t46nFdk/VMzKStbIfu2S00eKEB
+	 tVfbq1uHpT2T04vGUETsLDSNewLkpT5yXX3Cwb4gGa6HpdQcJhOn+W+N6qUvEMFY0B
+	 mucYmEPAFNi1Q==
+Date: Thu, 20 Nov 2025 11:22:56 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] perf list: Support filtering in JSON output
-Message-ID: <aR9n5qgwryvJaexY@google.com>
-References: <20251120004726.61660-1-namhyung@kernel.org>
- <20251120004726.61660-3-namhyung@kernel.org>
- <CAP-5=fWHTGSZPDO06FJENFLW0AtS1Fukk1jqFeHqyGFa+HLhMw@mail.gmail.com>
+To: hupu <hupu.gm@gmail.com>
+Cc: Leo Yan <leo.yan@arm.com>, acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, irogers@google.com,
+	jolsa@kernel.org, justinstitt@google.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mark.rutland@arm.com, mingo@redhat.com, morbo@google.com,
+	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
+	peterz@infradead.org
+Subject: Re: [PATCH] perf build: Support passing extra Clang options via
+ EXTRA_BPF_FLAGS
+Message-ID: <aR9qkB_XY-elMxSh@google.com>
+References: <CADHxFxQHFkn-J9R6AJY8LxkDN-eTWjp34VvoQDcshfZs1eF0rQ@mail.gmail.com>
+ <20251020024049.6877-1-hupu.gm@gmail.com>
+ <aPW3rilb8DtFDIMC@google.com>
+ <20251020101523.GE281971@e132581.arm.com>
+ <CADHxFxQjMy9n7G1dUX=HLi3b5VFjMd8YpBP7DOQyOdaQp443mA@mail.gmail.com>
+ <CADHxFxTHYwjqAjURTbkZ=6-4Ti0GGc7uKsrjthL9s78rAgv5EA@mail.gmail.com>
+ <CADHxFxT9fXfKVDXWxoFs0KeG+gssNhZE3y6TGKGtS=AhKPdGAg@mail.gmail.com>
+ <CADHxFxR2t4jMmjm3hMdhsxoRjUw+k3CtrG6ZzG39b_BhVzyzsQ@mail.gmail.com>
+ <CADHxFxROMe++VB17J3UgOxSoEhJ7bNagBHO6gRQQPpAELc1ocw@mail.gmail.com>
+ <CADHxFxTHHT0bWf__dwnZXk6E8Qb2sxL5=L5KDh_Xmzq-hNYs6g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,109 +58,61 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWHTGSZPDO06FJENFLW0AtS1Fukk1jqFeHqyGFa+HLhMw@mail.gmail.com>
+In-Reply-To: <CADHxFxTHHT0bWf__dwnZXk6E8Qb2sxL5=L5KDh_Xmzq-hNYs6g@mail.gmail.com>
 
-On Wed, Nov 19, 2025 at 09:42:51PM -0800, Ian Rogers wrote:
-> On Wed, Nov 19, 2025 at 4:47 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Like regular output mode, it should honor command line arguments to
-> > limit to a certain type of PMUs or events.
-> >
-> >   $ perf list -j hw
-> >   [
-> >   {
-> >           "Unit": "cpu",
-> >           "Topic": "legacy hardware",
-> >           "EventName": "branch-instructions",
-> >           "EventType": "Kernel PMU event",
-> >           "BriefDescription": "Retired branch instructions [This event is an alias of branches]",
-> >           "Encoding": "cpu/event=0xc4\n/"
-> >   },
-> >   {
-> >           "Unit": "cpu",
-> >           "Topic": "legacy hardware",
-> >           "EventName": "branch-misses",
-> >           "EventType": "Kernel PMU event",
-> >           "BriefDescription": "Mispredicted branch instructions",
-> >           "Encoding": "cpu/event=0xc5\n/"
+Hello,
+
+On Wed, Nov 19, 2025 at 05:43:41PM +0800, hupu wrote:
+> RESEND
 > 
-> I think these newlines can be fixed by changing:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/pmu.c?h=perf-tools-next#n643
-> ```
-> ret = io__getline(&io, &alias->terms, &line_len) < 0 ? -errno : 0;
-> if (ret) {
->    ...
-> }
-> ```
-> to something like:
-> ```
-> ret = io__getline(&io, &alias->terms, &line_len) < 0 ? -errno : 0;
-> if (ret) {
->     ...
-> }
-> if (alias->terms[line_len - 1] == '\n')
->     alias->terms[line_len - 1] = '\0';
-> ```
-
-Yep, will do in a separate patch.
-
-> 
-> >   },
-> >   ...
+> On Tue, Nov 18, 2025 at 3:28 PM hupu <hupu.gm@gmail.com> wrote:
 > >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> > Hi Leo and Namhyung,
+> >
+> > On Tue, Nov 18, 2025 at 3:18 PM hupu <hupu.gm@gmail.com> wrote:
+> > >
+> > > I then added KHDR_INCLUDES to BPF_INCLUDE, pointing it to the kernel’s
+> > > self-contained header directory so that the build prefers headers
+> > > provided by the kernel.
+> > >
+> > >
+> > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > > index 47c906b807ef..65c6e871988b 100644
+> > > --- a/tools/perf/Makefile.perf
+> > > +++ b/tools/perf/Makefile.perf
+> > > @@ -1202,7 +1202,8 @@ endif
+> > >
+> > >  CLANG_OPTIONS = -Wall
+> > >  CLANG_SYS_INCLUDES = $(call get_sys_includes,$(CLANG),$(CLANG_TARGET_ARCH))
+> > > -BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES)
+> > > +KHDR_INCLUDES := $(abspath $(OUTPUT)/../../usr/include)
+> > > +BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE)
+> > > -I$(KHDR_INCLUDES) $(CLANG_SYS_INCLUDES)
 
-Thanks for your review!
+I think your patch was wrapped around.
+
+> > >  TOOLS_UAPI_INCLUDE := -I$(srctree)/tools/include/uapi
+> > >
+> > >  ifneq ($(WERROR),0)
+> > >
+> > >
+> > > With this change verified, perf compiles successfully even without
+> > > explicitly specifying the cross-toolchain sysroot in the compile
+> > > command.
+
+I'm not familiar with the usr directory in the kernel source.  Will it
+contain some generated headers?
+
+> > >
+> >
+> > As an additional suggestion, I’d prefer to keep both the above patch
+> > and the previously discussed PATCH v3, which would mean submitting two
+> > PRs. From my perspective, allowing users to pass custom compilation
+> > options via EXTRA_BPF_FLAGS is more flexible than only configuring
+> > headers, so I’d like to hear your thoughts.
+
+Yep, I'm ok with the extra flag variable.
+
+Thanks,
 Namhyung
- 
-> > ---
-> >  tools/perf/builtin-list.c | 24 ++++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >
-> > diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> > index 6c5913f129f39c94..5cbca0bacd35237e 100644
-> > --- a/tools/perf/builtin-list.c
-> > +++ b/tools/perf/builtin-list.c
-> > @@ -373,6 +373,23 @@ static void json_print_event(void *ps, const char *topic,
-> >         FILE *fp = print_state->common.fp;
-> >         struct strbuf buf;
-> >
-> > +       if (deprecated && !print_state->common.deprecated)
-> > +               return;
-> > +
-> > +       if (print_state->common.pmu_glob &&
-> > +           (!pmu_name || !strglobmatch(pmu_name, print_state->common.pmu_glob)))
-> > +               return;
-> > +
-> > +       if (print_state->common.exclude_abi && pmu_type < PERF_TYPE_MAX &&
-> > +           pmu_type != PERF_TYPE_RAW)
-> > +               return;
-> > +
-> > +       if (print_state->common.event_glob &&
-> > +           (!event_name || !strglobmatch(event_name, print_state->common.event_glob)) &&
-> > +           (!event_alias || !strglobmatch(event_alias, print_state->common.event_glob)) &&
-> > +           (!topic || !strglobmatch_nocase(topic, print_state->common.event_glob)))
-> > +               return;
-> > +
-> >         strbuf_init(&buf, 0);
-> >         fprintf(fp, "%s{\n", print_state->need_sep ? ",\n" : "");
-> >         print_state->need_sep = true;
-> > @@ -449,6 +466,13 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
-> >         FILE *fp = print_state->common.fp;
-> >         struct strbuf buf;
-> >
-> > +       if (print_state->common.event_glob &&
-> > +           (!print_state->common.metrics || !name ||
-> > +            !strglobmatch(name, print_state->common.event_glob)) &&
-> > +           (!print_state->common.metricgroups || !group ||
-> > +            !strglobmatch(group, print_state->common.event_glob)))
-> > +               return;
-> > +
-> >         strbuf_init(&buf, 0);
-> >         fprintf(fp, "%s{\n", print_state->need_sep ? ",\n" : "");
-> >         print_state->need_sep = true;
-> > --
-> > 2.52.0.rc1.455.g30608eb744-goog
-> >
+
