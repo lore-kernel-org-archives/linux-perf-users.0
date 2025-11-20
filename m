@@ -1,54 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0892D6E6F;
-	Thu, 20 Nov 2025 02:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D2128688E
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Nov 2025 04:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763604662; cv=none; b=NOvWMJuiRh1+OXgP71TP/pL/0P7xpTz3XLZLnVov3kN6BoUYX44SOCe/JYJ3Ftsg8vUKY+g+1U1jegHox5DDBJnZk3LOZS/3r9FNyVdv/XTG1jbqYrsaUUEX+jXVJR1610q9lGEMB0griNauXs8BruE84z92/P2LxIi24xjv0Cw=
+	t=1763612193; cv=none; b=iwE+Ro51izg12Z0A6b87uGLm5g2kkozhQWy0Bg3OHRvBPUeM/IMRao+yypzGzTC6uGroBIE3CUnQnqqRmVBjanVFex7VaTfeMR/RCCVNZXCJ93agvf9iMroZdvYkKgGj1qlbso1aD+jUzjyKH/VAb0NKyChF2nrm2EiUVcZLWgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763604662; c=relaxed/simple;
-	bh=siw+mcZ83tjXm1ovxal++nt/JLHPrue73w1F1ndPwRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oQvjaxBRX2FPMYk4SzN1ZAYsrR5pOUUUwBaJ+CfjVCQKSADz+3SvNwWkH9jCBmhOt8yiAMxD7XE4WCVRetz8tmYQ8jTxJ+JLoFboFnBIa6jD00xumPLZ9EXC2wxIWVUEZCSjg3zVlzolA28MzMQGav67n3wtdRQVZEVFIWmOinQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eud32Usg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763612193; c=relaxed/simple;
+	bh=pkOpsCdmeW3ExT8MjqMMgG9gs9dCzYhTub4Hn8jfayA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CBezKEyw16FL4CKrQ43jtXRzRIDbir8bVq7x3qksgRXc5ejbVL9H1lRVod6+R/O8k7O5mvT5t30M5X6ogNRmryrIvscWHbzqoNvnR8Pb7e5C9zfB6LAAXIH2GoNfPMzB9JCzrA8lPs684lfwXNMuWxlT/Uzx7w2kEc3kOJWGaA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CNgEqiAS; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eud32Usg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E88CC16AAE;
-	Thu, 20 Nov 2025 02:11:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763604662;
-	bh=siw+mcZ83tjXm1ovxal++nt/JLHPrue73w1F1ndPwRE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eud32Usgc3f/G2icCK37SiCaUf90+lfBfUw++mCSiv4YBzcQAI2m0Tp0eKPxU/+B0
-	 Qi7uOEyO8fQT4OAzOXa8gqG74jJjkWG2Qu4N2St0oI+Mfoj7aqwwqEaFREgr0b3RAD
-	 oQHKpA43Mj5cVJCLn20JZDC4fsAA1l+uF4xabDkgqiALIdek06BVmr0dcJoPqhNGkF
-	 J1Y6e1vzO73CFXOwG1HTJHmemhGdqTtNiKBUkp348Rc5gv0h6Jbw6SCl/I9U9JMjwG
-	 a5KyipsPMQxA1VP3S7vGyeQqb7E+gXoP5pU793H4uxMs2Z/K0eMoREgFK7Wi+z8Uny
-	 l2GL2YjAMkPqg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNgEqiAS"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b472842981fso57594466b.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 20:16:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763612189; x=1764216989; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ke0jCxxr1nY0cEvcerSphkfz/Tc2+RuiCKy89HRuYRM=;
+        b=CNgEqiASyNp37ez2s3IWU4Zqn/w7NIGzAs4B25myBPM6TaGMneAZNTZt73THAWYKmi
+         n6CW4TtZW3yGchpTHSlrr38TQLPvNUtt9YKkfa6YwYdP6zIYHjGL1OV/AzrqRJPdPpqz
+         62wLNUZ00vsy9ILGOiaNOt+XzdiPx2qCJZmPAg0ykHFB+KN/2fUjzO9UoDnUw0UTFNnZ
+         M/eOFqnmuIb2JJWpRSAZekVRJ1wcv4d8ZOGasj11rdC26yVOtwmnHyAQLmzdWooZiMtU
+         vc50KoBQlPAHz5lA6hRsydI7iIuMQFiyWKBvW8gnaG5L/AMOqTRk53zVrkkpUxwhlV3F
+         Mtew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763612189; x=1764216989;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ke0jCxxr1nY0cEvcerSphkfz/Tc2+RuiCKy89HRuYRM=;
+        b=Bb3ICpLidNBiBwCGF2msqNxfBjq6Q/kZg3mc8SVd1c0HdmJR4ZougpNZtup1MkCUwy
+         Ztmvd7M3xzByqNA62ViNBrMmjlES5QtvXQ2fHlhVI1YiD6+lKxDP76p4Jl17mLIVVLFx
+         jgyOkyEGyzprShq0+PfbxM88o/PrRnO9ngk9mG3ygyyB6EqpUY4HZNXFhuHBKrjkWLMW
+         OidfizLw7EkEG2X/dGe/c2UZ5VM90nLcVNbhqLWwKq3C7aHeYNSGUU21YOXPG2jyNeQn
+         /Jyn7hewZnABD44navFoH4dE1yShdz+XEOk/Rtz7mYTBfKHiela6awde4hhP7cW3ZtCo
+         hWJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXIbsKK+IciOp56yDIC5gGE5C/W1dD7tESujpiiBxpGZHJPY6fg7sKdIToel9jyvUCNKBQNvPuigV+IOPJ1TK9b@vger.kernel.org
+X-Gm-Message-State: AOJu0YyquA4vxEgt5Q2hVbP8SoxgP85lJ6Nvxp/Yp8UTrnmjuxiVyEtV
+	3bOf1VfThhlk45j8AiDqUqZ+ROxve9XA9scqqAUmxUtcpS9k88K3npnl
+X-Gm-Gg: ASbGncvr7tUjK0ObWiS4JjAWMW4W0sVCB9JXd8RrF+XFXXSF2+/UAT6s+IRlRj34M6W
+	jdD0WLb0R6ND3PYHUO3y+bv7Bxr66NoLrUzkSXPdSrwhpr2pGc8HsTW4qtVLU/TRh404JeLu6Bt
+	/LpAFEZdC+5VEYWuf+85MlSYUakRA+/20V1X/8pM2kUd7HTKwEEL6xhiblEC5NwLB/Oqy1Okleg
+	EEKPUaCvGBBYY6CzWkl+nbu21/dR8W86jLjvmirAPtLzpCiMEKy5iKGXltoXavDEbMto9xT5or/
+	noQADTjYRQUQktdOpC3QUgsNmA251XssnNx9d4pegDjny7bZNqB++4Y0Ay2UQbEckktmfnaM6nL
+	TWfi1diok9yH/YAU96dAo7ujVUSaby7xCI4QHp9VVo5FUbTMrmNMwUt7HxvUg6O9UsihUx1x5s7
+	xzci/0tzoKn79LxxpjwVc6TftrXx7qlzSvI25sdI0N7RIBMZUEhaZ7jWYWvsY1xLZkR/abbMUI1
+	+CRdA==
+X-Google-Smtp-Source: AGHT+IGqn5oXr/h3c2O6rTOyQf01J2AYNnPmwNsh9JRVrcfyj3qioQ6SqB2JsYWuuxozcP7S9Ahx+w==
+X-Received: by 2002:a17:907:96a7:b0:b6d:6d66:e8e9 with SMTP id a640c23a62f3a-b7654fcfd37mr150210766b.61.1763612189064;
+        Wed, 19 Nov 2025 20:16:29 -0800 (PST)
+Received: from ubuntu-2204.speedport.ip (p5de55abc.dip0.t-ipconnect.de. [93.229.90.188])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7654ce15e7sm111441966b.8.2025.11.19.20.16.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Nov 2025 20:16:27 -0800 (PST)
+From: Hrishikesh Suresh <hrishikesh123s@gmail.com>
+To: acme@kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
 	linux-perf-users@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH v5 6/6] perf tools: Flush remaining samples w/o deferred callchains
-Date: Wed, 19 Nov 2025 18:10:46 -0800
-Message-ID: <20251120021046.94490-7-namhyung@kernel.org>
-X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
-In-Reply-To: <20251120021046.94490-1-namhyung@kernel.org>
-References: <20251120021046.94490-1-namhyung@kernel.org>
+	linux-kernel@vger.kernel.org,
+	Hrishikesh Suresh <hrishikesh123s@gmail.com>
+Subject: [PATCH] perf: replace strcpy() with strncpy() in util/jitdump.c
+Date: Wed, 19 Nov 2025 23:16:10 -0500
+Message-Id: <20251120041610.299972-1-hrishikesh123s@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,167 +84,35 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It's possible that some kernel samples don't have matching deferred
-callchain records when the profiling session was ended before the
-threads came back to userspace.  Let's flush the samples before
-finish the session.
+Usage of strcpy() can lead to buffer overflows. Therefore, it has been
+replaced with strncpy(). The output file path is provided as a parameter
+and might be restricted by command-line by default. But this defensive
+patch will prevent any potential overflow, making the code more robust
+against future changes in input handling.
 
-Also 32-bit systems can see partial mmap for the data.  In that case,
-deferred samples won't point to the correct data once the mapping moves
-to the next portion of the file.  Copy the original sample before it
-unmaps the current data.
+Testing:
+- ran perf test from tools/perf and did not observe any regression with
+  the earlier code
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Hrishikesh Suresh <hrishikesh123s@gmail.com>
 ---
- tools/perf/util/session.c | 98 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ tools/perf/util/jitdump.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 2e777fd1bcf6707b..b781e01ddcb4876b 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1288,8 +1288,13 @@ static int evlist__deliver_sample(struct evlist *evlist, const struct perf_tool
- struct deferred_event {
- 	struct list_head list;
- 	union perf_event *event;
-+	bool allocated;
- };
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index b062b1f234b6..496ca2d2bfdb 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -233,7 +233,8 @@ jit_open(struct jit_buf_desc *jd, const char *name)
+ 	/*
+ 	 * keep dirname for generating files and mmap records
+ 	 */
+-	strcpy(jd->dir, name);
++	strncpy(jd->dir, name, PATH_MAX);
++	jd->dir[PATH_MAX - 1] = '\0';
+ 	dirname(jd->dir);
+ 	free(buf);
  
-+/*
-+ * This is called when a deferred callchain record comes up.  Find all matching
-+ * samples, merge the callchains and process them.
-+ */
- static int evlist__deliver_deferred_samples(struct evlist *evlist,
- 					    const struct perf_tool *tool,
- 					    union  perf_event *event,
-@@ -1331,6 +1336,86 @@ static int evlist__deliver_deferred_samples(struct evlist *evlist,
- 			free(orig_sample.callchain);
- 
- 		list_del(&de->list);
-+		if (de->allocated)
-+			free(de->event);
-+		free(de);
-+
-+		if (ret)
-+			break;
-+	}
-+	return ret;
-+}
-+
-+/*
-+ * This is called when the backing mmap is about to go away.  It needs to save
-+ * the original sample data until it finds the matching deferred callchains.
-+ */
-+static void evlist__copy_deferred_samples(struct evlist *evlist,
-+					  const struct perf_tool *tool,
-+					  struct machine *machine)
-+{
-+	struct deferred_event *de, *tmp;
-+	struct evsel *evsel;
-+	int ret = 0;
-+
-+	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
-+		struct perf_sample sample;
-+		size_t sz = de->event->header.size;
-+		void *buf;
-+
-+		if (de->allocated)
-+			continue;
-+
-+		buf = malloc(sz);
-+		if (buf) {
-+			memcpy(buf, de->event, sz);
-+			de->event = buf;
-+			de->allocated = true;
-+			continue;
-+		}
-+
-+		/* The allocation failed, flush the sample now */
-+		ret = evlist__parse_sample(evlist, de->event, &sample);
-+		if (ret == 0) {
-+			evsel = evlist__id2evsel(evlist, sample.id);
-+			evlist__deliver_sample(evlist, tool, de->event,
-+					       &sample, evsel, machine);
-+		}
-+
-+		list_del(&de->list);
-+		BUG_ON(de->allocated);
-+		free(de);
-+	}
-+}
-+
-+/*
-+ * This is called at the end of the data processing for the session.  Flush the
-+ * remaining samples as there's no hope for matching deferred callchains.
-+ */
-+static int evlist__flush_deferred_samples(struct evlist *evlist,
-+					  const struct perf_tool *tool,
-+					  struct machine *machine)
-+{
-+	struct deferred_event *de, *tmp;
-+	struct evsel *evsel;
-+	int ret = 0;
-+
-+	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
-+		struct perf_sample sample;
-+
-+		ret = evlist__parse_sample(evlist, de->event, &sample);
-+		if (ret < 0) {
-+			pr_err("failed to parse original sample\n");
-+			break;
-+		}
-+
-+		evsel = evlist__id2evsel(evlist, sample.id);
-+		ret = evlist__deliver_sample(evlist, tool, de->event,
-+					     &sample, evsel, machine);
-+
-+		list_del(&de->list);
-+		if (de->allocated)
-+			free(de->event);
- 		free(de);
- 
- 		if (ret)
-@@ -1374,6 +1459,7 @@ static int machines__deliver_event(struct machines *machines,
- 				return -ENOMEM;
- 
- 			de->event = event;
-+			de->allocated = false;
- 			list_add_tail(&de->list, &evlist->deferred_samples);
- 			return 0;
- 		}
-@@ -2218,6 +2304,8 @@ reader__mmap(struct reader *rd, struct perf_session *session)
- 	}
- 
- 	if (mmaps[rd->mmap_idx]) {
-+		evlist__copy_deferred_samples(session->evlist, session->tool,
-+					      &session->machines.host);
- 		munmap(mmaps[rd->mmap_idx], rd->mmap_size);
- 		mmaps[rd->mmap_idx] = NULL;
- 	}
-@@ -2372,6 +2460,11 @@ static int __perf_session__process_events(struct perf_session *session)
- 	if (err)
- 		goto out_err;
- 	err = auxtrace__flush_events(session, tool);
-+	if (err)
-+		goto out_err;
-+	err = evlist__flush_deferred_samples(session->evlist,
-+					     session->tool,
-+					     &session->machines.host);
- 	if (err)
- 		goto out_err;
- 	err = perf_session__flush_thread_stacks(session);
-@@ -2494,6 +2587,11 @@ static int __perf_session__process_dir_events(struct perf_session *session)
- 	if (ret)
- 		goto out_err;
- 
-+	ret = evlist__flush_deferred_samples(session->evlist, tool,
-+					     &session->machines.host);
-+	if (ret)
-+		goto out_err;
-+
- 	ret = perf_session__flush_thread_stacks(session);
- out_err:
- 	ui_progress__finish();
 -- 
-2.52.0.rc1.455.g30608eb744-goog
+2.34.1
 
