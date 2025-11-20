@@ -1,385 +1,189 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9692FFDD8
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Nov 2025 05:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EC2277CAB;
+	Thu, 20 Nov 2025 05:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763616640; cv=none; b=J+I5g/IwQ5Oaasp2e5L8PsahjeOgOYLWAlDSB7XYg82ayyano3ej9Y7HuDZVw56OFNFSi6ROrTufOe3c9g6S05qA+/M4nJRtKK01WoIes5++hXCGjtPWVpASMqGqgsmXSI5Swn3eB+0/ogDrz4o6eZBPtBlKeJK649G+g6TvMg8=
+	t=1763617024; cv=none; b=bMmWbWVdqSzgJN4miLWCBnSrB9Kd3qwdt+6JuWauG9C+2NdTdUX8k6IgDTc6FO99oRByr7Kq6Yco1Dgj9tfOpkDQwIMAjNeMJjfwxqKWbrtv7YbG/4qGbdlh2qbjCwVEZ9LvBBRmxLM86c8YbKah9sBfA15d4YBjGgyvkTNio6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763616640; c=relaxed/simple;
-	bh=N6yOztctVwNX0bnzrQfMG+Y3iHsLVmUJdHld0841ovM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SviuOhcN18hiXLslf07QfvnDJbwZq8KiVEB2XC9efrMSjtr+OsMHTLcmscK92kUsegcaUSe8QHePqaYVLU8co7qPjcvbgALeUac2UIB0Ml4ICOm8kjANZEzUP+/SkfJ7QjCSDrQwPzmFKgicEoh1XkBE6L6gCkDuFNUJJpg8FFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sgViMwYP; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1763617024; c=relaxed/simple;
+	bh=MGC69O3DL8v6tTyun93EbVXiWU1Mh9kifaKsGqKJEFc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jz8oJcyh35U4p2FdYEOiLwzNAUJiLeIoITPzS4v2Q7dZEPR9HGxavnKGFJg/pPmong1KNWeMe9QWmHUBQjJcOj0VcEnLkBOxIvnqFFwhZFWfqs5hsZWLfN6goTrqWvVo54euR6gAwxFEtSpWWBrwkYI2TGopoR9P0iU18M2/RN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OuB9fqdi; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sgViMwYP"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-295c64cb951so139085ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 21:30:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763616637; x=1764221437; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PHE7Bf8hdf1BlTO6T/tS+Le0BhRC7n6lGCF1BwIc6Bo=;
-        b=sgViMwYPP/MAaKFrvVRHewCEEFV2jSYykF1mjz1iiFxu80pmSqEI8tiedAIO9Hlvb3
-         ATpS5h6pWNMGuUhCs8RJToaBrW3a2NafP/G79GnqJZ7B4kCHvEEMyfGCLvTs8xW6pcXF
-         57LZHvUDlOa8AQySjR1/Zh1Th8bYcfiiAvBuFQFRvR9U2aZspGWW6zplHBSbg+lWPKxV
-         j+pY9PyAIsFyq9YqkuKjTKK9VRpE5MU9BvuFwY7tL1/adGWvZksBFZplfWLBzxSajr14
-         iRLHyIe+6LD03qSSNi3k6vhvWlDMwZXgIfkBYFygRHopaji+6kKPh1oubttHqDgfgXsQ
-         0qKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763616637; x=1764221437;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PHE7Bf8hdf1BlTO6T/tS+Le0BhRC7n6lGCF1BwIc6Bo=;
-        b=eGqgU38Rvv4bESXKOTRqRNYpXeQth+XYNcPHBzV4RY5d2rr3GHKJFQaAhilMqrgKWS
-         k4P7Bm70KSKHo1ZhdchJELkicDgVflwPKloimERYo8c5I2+eS2gSa/00RivdY7wUhZPL
-         1T1Fi2eystosmkFRAeML5LFbMI6LL1sV6/IUWgRwXK66CoBOiBwltF/bDltsxyEnWsCN
-         XRkSrWlNZiLfyc+B1hPbe2f4q0EdtDjCzRmMkYi0NsRRm5WOJLkeNith2qDJpgi2in8x
-         7TmrDYGuzG9gGxWMoPtXjadvHLJitV2Zc5r/63+a3Fnlx0Xd8Fg3whSUGWQ931ew8++d
-         ylaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1ts0hGypeZElLZ5PnsvClTQj5xyxep6l3nLYzE7QzmShuXbwlBQRQRuYTkIn4O4xttm4gjBq2Z3V4JO7vVy9Z@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw11r638WNg+X/AKQ4qRhfn++pqZDcDThbDEnjk8qWJzuWfwIFa
-	3if7/O2Vqu1j2Cn56dooUIzfnFjd8Vx2FMOMnspz+JhWGT7Whv83G2vSjNYLbRaDmw/zhYBs92y
-	pZJ4ja9Y8SOUHWH8OzQL34v/9QRlzhN6t1Ajq7pIX
-X-Gm-Gg: ASbGncvcnYv8Z0Zh3Zl8Vq3sTXG+ds7XAVxGPwd8v9TDhirEQwAQpuBgfD4DO5nlRbh
-	BpIAqYwp9Egxo+ydccXSip8gCnT5yHYT9hgirjiGCSGAlFBIj+Icb/EoQksBSkj2E6K/LJpVTl1
-	OFrMa5/GdQDuT+mdHpbZ7uYEf8dTRnnVNJPV5hUXX6E4VFUob/QQN0zOVK2aQh0wtz1QO0hQ+gS
-	/EemgeDdaTTsvz9pp0jR9BuoOQQDk1dbI4BIq/WvWPlBNzzmbjixCEZyHtZ2dcbyrpmxF3v
-X-Google-Smtp-Source: AGHT+IFN1kkWsfESQyRXEM0/RnZUrC0oMSWRAIWelC1mu8lz8aqsnE4W9KOAKclX6pTuEdsTxSpoTEgYRqlz8tDTfOk=
-X-Received: by 2002:a17:902:d48a:b0:295:30bc:458e with SMTP id
- d9443c01a7336-29b5da68247mr1196115ad.3.1763616636937; Wed, 19 Nov 2025
- 21:30:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OuB9fqdi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763617022; x=1795153022;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MGC69O3DL8v6tTyun93EbVXiWU1Mh9kifaKsGqKJEFc=;
+  b=OuB9fqdin6uUKF1g2ZKUS9RVn330abFD0zzLW8JGEzCi7kw3+P4mlSKA
+   2B8RwEAHm2CDNo7k1d3RO9KBJ+pXHKCIPLsv+y7LuBleVomJtabTm/ktz
+   zRGHROm2RMmSpBthqrVL9HIQblCnHnb1Cik/pJyoVVnDDJpXqVAGraI6q
+   0H7lKVBKYRD/Ofw6BRrCfA4B19S0gvQmccDy7w/leY0Qkz7WvuZMVyRn5
+   PBuxZm64EQbM6l75/+KuIYkihNwyymq1aVlGUEf/oo00qtPYrb9n00syU
+   jAHdri0AOppBMTe1fykt9CBmrkt6ezxYZ1Eh1v1t6Mp2hBrGeksHdXnit
+   A==;
+X-CSE-ConnectionGUID: h22BP+uSSZ6gMONmGgl/fw==
+X-CSE-MsgGUID: x/6boDOxSO2Tf7t0hnvoGQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="65710137"
+X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
+   d="scan'208";a="65710137"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 21:37:02 -0800
+X-CSE-ConnectionGUID: YpqvTkDURfeq/B3H1VTsnA==
+X-CSE-MsgGUID: JpFTK1C4QPOoA3l6HA6O1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
+   d="scan'208";a="191055511"
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by orviesa009.jf.intel.com with ESMTP; 19 Nov 2025 21:36:58 -0800
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH 0/7] Enable core PMU for DMR and NVL
+Date: Thu, 20 Nov 2025 13:34:24 +0800
+Message-Id: <20251120053431.491677-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251120004726.61660-1-namhyung@kernel.org> <20251120004726.61660-2-namhyung@kernel.org>
-In-Reply-To: <20251120004726.61660-2-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 19 Nov 2025 21:30:25 -0800
-X-Gm-Features: AWmQ_bmjtDwDnY6AhwENCSpEurbZKfuI4HxjdGkAa5AnmY2UlgY_PCpDSRCZoxg
-Message-ID: <CAP-5=fWSg07fTLJNya0ftdUfk7HTbYXB=5xbbPBeN_q4LNs6cw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] perf list: Share print state with JSON output
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 19, 2025 at 4:47=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> The JSON print state has only one different field (need_sep).  Let's
-> add the default print state to the json state and use it.  Then we can
-> use the 'ps' variable to update the state properly.
->
-> This is a preparation for the next commit.
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+This patch-set enables core PMU functionalities for Diamond Rapids (DMR)
+and Nova Lake (NVL). 
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Comparing with previous platforms, there are 3 main changes on core PMU
+functionalities.
 
-Thanks,
-Ian
+1. Introduce OFF-MODULE RESPONSE (OMR) facility to replace Off-Core
+Response (OCR) facility
 
-> ---
->  tools/perf/builtin-list.c | 127 +++++++++++++++++++-------------------
->  1 file changed, 65 insertions(+), 62 deletions(-)
->
-> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> index 28bf1fc7f5eeff8f..6c5913f129f39c94 100644
-> --- a/tools/perf/builtin-list.c
-> +++ b/tools/perf/builtin-list.c
-> @@ -283,8 +283,8 @@ static void default_print_metric(void *ps,
->  }
->
->  struct json_print_state {
-> -       /** @fp: File to write output to. */
-> -       FILE *fp;
-> +       /** The shared print_state */
-> +       struct print_state common;
->         /** Should a separator be printed prior to the next item? */
->         bool need_sep;
->  };
-> @@ -292,7 +292,7 @@ struct json_print_state {
->  static void json_print_start(void *ps)
->  {
->         struct json_print_state *print_state =3D ps;
-> -       FILE *fp =3D print_state->fp;
-> +       FILE *fp =3D print_state->common.fp;
->
->         fprintf(fp, "[\n");
->  }
-> @@ -300,7 +300,7 @@ static void json_print_start(void *ps)
->  static void json_print_end(void *ps)
->  {
->         struct json_print_state *print_state =3D ps;
-> -       FILE *fp =3D print_state->fp;
-> +       FILE *fp =3D print_state->common.fp;
->
->         fprintf(fp, "%s]\n", print_state->need_sep ? "\n" : "");
->  }
-> @@ -370,7 +370,7 @@ static void json_print_event(void *ps, const char *to=
-pic,
->  {
->         struct json_print_state *print_state =3D ps;
->         bool need_sep =3D false;
-> -       FILE *fp =3D print_state->fp;
-> +       FILE *fp =3D print_state->common.fp;
->         struct strbuf buf;
->
->         strbuf_init(&buf, 0);
-> @@ -446,7 +446,7 @@ static void json_print_metric(void *ps __maybe_unused=
-, const char *group,
->  {
->         struct json_print_state *print_state =3D ps;
->         bool need_sep =3D false;
-> -       FILE *fp =3D print_state->fp;
-> +       FILE *fp =3D print_state->common.fp;
->         struct strbuf buf;
->
->         strbuf_init(&buf, 0);
-> @@ -521,10 +521,12 @@ int cmd_list(int argc, const char **argv)
->                 .fp =3D stdout,
->                 .desc =3D true,
->         };
-> -       struct print_state json_ps =3D {
-> -               .fp =3D stdout,
-> +       struct json_print_state json_ps =3D {
-> +               .common =3D {
-> +                       .fp =3D stdout,
-> +               },
->         };
-> -       void *ps =3D &default_ps;
-> +       struct print_state *ps =3D &default_ps;
->         struct print_callbacks print_cb =3D {
->                 .print_start =3D default_print_start,
->                 .print_end =3D default_print_end,
-> @@ -572,9 +574,11 @@ int cmd_list(int argc, const char **argv)
->         argc =3D parse_options(argc, argv, list_options, list_usage,
->                              PARSE_OPT_STOP_AT_NON_OPTION);
->
-> +       if (json)
-> +               ps =3D &json_ps.common;
-> +
->         if (output_path) {
-> -               default_ps.fp =3D fopen(output_path, "w");
-> -               json_ps.fp =3D default_ps.fp;
-> +               ps->fp =3D fopen(output_path, "w");
->         }
->
->         setup_pager();
-> @@ -590,14 +594,13 @@ int cmd_list(int argc, const char **argv)
->                         .print_metric =3D json_print_metric,
->                         .skip_duplicate_pmus =3D json_skip_duplicate_pmus=
-,
->                 };
-> -               ps =3D &json_ps;
->         } else {
-> -               default_ps.last_topic =3D strdup("");
-> -               assert(default_ps.last_topic);
-> -               default_ps.visited_metrics =3D strlist__new(NULL, NULL);
-> -               assert(default_ps.visited_metrics);
-> +               ps->last_topic =3D strdup("");
-> +               assert(ps->last_topic);
-> +               ps->visited_metrics =3D strlist__new(NULL, NULL);
-> +               assert(ps->visited_metrics);
->                 if (unit_name)
-> -                       default_ps.pmu_glob =3D strdup(unit_name);
-> +                       ps->pmu_glob =3D strdup(unit_name);
->                 else if (cputype) {
->                         const struct perf_pmu *pmu =3D perf_pmus__pmu_for=
-_pmu_filter(cputype);
->
-> @@ -606,15 +609,15 @@ int cmd_list(int argc, const char **argv)
->                                 ret =3D -1;
->                                 goto out;
->                         }
-> -                       default_ps.pmu_glob =3D strdup(pmu->name);
-> +                       ps->pmu_glob =3D strdup(pmu->name);
->                 }
->         }
->         print_cb.print_start(ps);
->
->         if (argc =3D=3D 0) {
->                 if (!unit_name) {
-> -                       default_ps.metrics =3D true;
-> -                       default_ps.metricgroups =3D true;
-> +                       ps->metrics =3D true;
-> +                       ps->metricgroups =3D true;
->                 }
->                 print_events(&print_cb, ps);
->                 goto out;
-> @@ -636,57 +639,57 @@ int cmd_list(int argc, const char **argv)
->                         default_ps.pmu_glob =3D old_pmu_glob;
->                 } else if (strcmp(argv[i], "hw") =3D=3D 0 ||
->                            strcmp(argv[i], "hardware") =3D=3D 0) {
-> -                       char *old_event_glob =3D default_ps.event_glob;
-> +                       char *old_event_glob =3D ps->event_glob;
->
-> -                       default_ps.event_glob =3D strdup("legacy hardware=
-");
-> -                       if (!default_ps.event_glob) {
-> +                       ps->event_glob =3D strdup("legacy hardware");
-> +                       if (!ps->event_glob) {
->                                 ret =3D -1;
->                                 goto out;
->                         }
->                         perf_pmus__print_pmu_events(&print_cb, ps);
-> -                       zfree(&default_ps.event_glob);
-> -                       default_ps.event_glob =3D old_event_glob;
-> +                       zfree(&ps->event_glob);
-> +                       ps->event_glob =3D old_event_glob;
->                 } else if (strcmp(argv[i], "sw") =3D=3D 0 ||
->                          strcmp(argv[i], "software") =3D=3D 0) {
-> -                       char *old_pmu_glob =3D default_ps.pmu_glob;
-> +                       char *old_pmu_glob =3D ps->pmu_glob;
->                         static const char * const sw_globs[] =3D { "softw=
-are", "tool" };
->
->                         for (size_t j =3D 0; j < ARRAY_SIZE(sw_globs); j+=
-+) {
-> -                               default_ps.pmu_glob =3D strdup(sw_globs[j=
-]);
-> -                               if (!default_ps.pmu_glob) {
-> +                               ps->pmu_glob =3D strdup(sw_globs[j]);
-> +                               if (!ps->pmu_glob) {
->                                         ret =3D -1;
->                                         goto out;
->                                 }
->                                 perf_pmus__print_pmu_events(&print_cb, ps=
-);
-> -                               zfree(&default_ps.pmu_glob);
-> +                               zfree(&ps->pmu_glob);
->                         }
-> -                       default_ps.pmu_glob =3D old_pmu_glob;
-> +                       ps->pmu_glob =3D old_pmu_glob;
->                 } else if (strcmp(argv[i], "cache") =3D=3D 0 ||
->                            strcmp(argv[i], "hwcache") =3D=3D 0) {
-> -                       char *old_event_glob =3D default_ps.event_glob;
-> +                       char *old_event_glob =3D ps->event_glob;
->
-> -                       default_ps.event_glob =3D strdup("legacy cache");
-> -                       if (!default_ps.event_glob) {
-> +                       ps->event_glob =3D strdup("legacy cache");
-> +                       if (!ps->event_glob) {
->                                 ret =3D -1;
->                                 goto out;
->                         }
->                         perf_pmus__print_pmu_events(&print_cb, ps);
-> -                       zfree(&default_ps.event_glob);
-> -                       default_ps.event_glob =3D old_event_glob;
-> +                       zfree(&ps->event_glob);
-> +                       ps->event_glob =3D old_event_glob;
->                 } else if (strcmp(argv[i], "pmu") =3D=3D 0) {
-> -                       default_ps.exclude_abi =3D true;
-> +                       ps->exclude_abi =3D true;
->                         perf_pmus__print_pmu_events(&print_cb, ps);
-> -                       default_ps.exclude_abi =3D false;
-> +                       ps->exclude_abi =3D false;
->                 } else if (strcmp(argv[i], "sdt") =3D=3D 0)
->                         print_sdt_events(&print_cb, ps);
->                 else if (strcmp(argv[i], "metric") =3D=3D 0 || strcmp(arg=
-v[i], "metrics") =3D=3D 0) {
-> -                       default_ps.metricgroups =3D false;
-> -                       default_ps.metrics =3D true;
-> +                       ps->metricgroups =3D false;
-> +                       ps->metrics =3D true;
->                         metricgroup__print(&print_cb, ps);
->                 } else if (strcmp(argv[i], "metricgroup") =3D=3D 0 ||
->                            strcmp(argv[i], "metricgroups") =3D=3D 0) {
-> -                       default_ps.metricgroups =3D true;
-> -                       default_ps.metrics =3D false;
-> +                       ps->metricgroups =3D true;
-> +                       ps->metrics =3D false;
->                         metricgroup__print(&print_cb, ps);
->                 }
->  #ifdef HAVE_LIBPFM
-> @@ -694,40 +697,40 @@ int cmd_list(int argc, const char **argv)
->                         print_libpfm_events(&print_cb, ps);
->  #endif
->                 else if ((sep =3D strchr(argv[i], ':')) !=3D NULL) {
-> -                       char *old_pmu_glob =3D default_ps.pmu_glob;
-> -                       char *old_event_glob =3D default_ps.event_glob;
-> +                       char *old_pmu_glob =3D ps->pmu_glob;
-> +                       char *old_event_glob =3D ps->event_glob;
->
-> -                       default_ps.event_glob =3D strdup(argv[i]);
-> -                       if (!default_ps.event_glob) {
-> +                       ps->event_glob =3D strdup(argv[i]);
-> +                       if (!ps->event_glob) {
->                                 ret =3D -1;
->                                 goto out;
->                         }
->
-> -                       default_ps.pmu_glob =3D strdup("tracepoint");
-> -                       if (!default_ps.pmu_glob) {
-> -                               zfree(&default_ps.event_glob);
-> +                       ps->pmu_glob =3D strdup("tracepoint");
-> +                       if (!ps->pmu_glob) {
-> +                               zfree(&ps->event_glob);
->                                 ret =3D -1;
->                                 goto out;
->                         }
->                         perf_pmus__print_pmu_events(&print_cb, ps);
-> -                       zfree(&default_ps.pmu_glob);
-> -                       default_ps.pmu_glob =3D old_pmu_glob;
-> +                       zfree(&ps->pmu_glob);
-> +                       ps->pmu_glob =3D old_pmu_glob;
->                         print_sdt_events(&print_cb, ps);
-> -                       default_ps.metrics =3D true;
-> -                       default_ps.metricgroups =3D true;
-> +                       ps->metrics =3D true;
-> +                       ps->metricgroups =3D true;
->                         metricgroup__print(&print_cb, ps);
-> -                       zfree(&default_ps.event_glob);
-> -                       default_ps.event_glob =3D old_event_glob;
-> +                       zfree(&ps->event_glob);
-> +                       ps->event_glob =3D old_event_glob;
->                 } else {
->                         if (asprintf(&s, "*%s*", argv[i]) < 0) {
->                                 printf("Critical: Not enough memory! Tryi=
-ng to continue...\n");
->                                 continue;
->                         }
-> -                       default_ps.event_glob =3D s;
-> +                       ps->event_glob =3D s;
->                         perf_pmus__print_pmu_events(&print_cb, ps);
->                         print_sdt_events(&print_cb, ps);
-> -                       default_ps.metrics =3D true;
-> -                       default_ps.metricgroups =3D true;
-> +                       ps->metrics =3D true;
-> +                       ps->metricgroups =3D true;
->                         metricgroup__print(&print_cb, ps);
->                         free(s);
->                 }
-> @@ -735,12 +738,12 @@ int cmd_list(int argc, const char **argv)
->
->  out:
->         print_cb.print_end(ps);
-> -       free(default_ps.pmu_glob);
-> -       free(default_ps.last_topic);
-> -       free(default_ps.last_metricgroups);
-> -       strlist__delete(default_ps.visited_metrics);
-> +       free(ps->pmu_glob);
-> +       free(ps->last_topic);
-> +       free(ps->last_metricgroups);
-> +       strlist__delete(ps->visited_metrics);
->         if (output_path)
-> -               fclose(default_ps.fp);
-> +               fclose(ps->fp);
->
->         return ret;
->  }
-> --
-> 2.52.0.rc1.455.g30608eb744-goog
->
+Legacy microarchitectures used the OCR facility to evaluate off-core and
+multi-core off-module transactions. The properly renamed, OMR facility,
+improves the OCR capability for scalable coverage of new memory systems
+of multi-core module systems.
+
+Along with the introduction of OMR, 4 equivalent MSRs (OFFMODULE_RSP_0 ~
+OFFMODULE_RSP_3) are introduced to specify attributes of the off-module
+transaction and the legacy 2 OFFCORE_RSP MSRs are retired.
+
+For more details about OMR events and OFFMODULE_RSP_x MSRs, please refer
+to the section 16.1 "OFF-MODULE RESPONSE (OMR) FACILITY" in latest ISE[1]
+documentation.
+
+2. New PEBS data source encoding layout
+
+Diamond Rapids and Nova Lake include PEBS Load Latency and Store Latency
+support similar to previous platforms but with a different data source
+encoding layout.
+
+Briefly speaking, the new data source encoding is determined by bit[8] of
+memory auxiliary info field. The bit[8] indicates whether a L2 cache miss
+occurs for a memory load or store instruction. If bit[8] is 0, it
+signifies no L2 cache miss, and bits[7:0] specify the exact cache data
+source (up to the L2 cache level). If bit[8] is 1, bits[7:0] represents
+the OMR encoding, indicating the specific L3 cache or memory region
+involved in the memory access.
+
+A significant enhancement for OMR encoding is the ability to provide
+up to 8 fine-grained memory regions in addition to the cache region,
+offering more detailed insights into memory access regions.
+
+For more details about the new data source layout, please refer to the
+section 16.2 "PEBS LOAD LATENCY AND STORE LATENCY FACILITY" in latest
+ISE documentation.
+
+3. Support "rdpmc user disable" feature
+
+Currently executing RDPMC when CPL > 0 is allowed if the CR4.PCE flag
+(performance-monitoring counter enable) is set. This introduces a
+security risk that any user space process can read the count of any PMU
+counter even though the counter belongs to a system-wide event as long
+as CR4.PCE = 1.
+
+To mitigate this security risk, the rdpmc user disable feature is
+introduced to provide per-counter rdpmc control.
+
+'rdpmc user disable' introduces a new bit "RDPMC_USR_DISABLE" to manage
+if the counter can be read in user space by leveraging rdpmc instruction
+for each GP and fixed counter.
+
+The details are
+- New RDPMC_USR_DISABLE bit in each EVNTSELx[37] MSR to indicate counter
+  can't be read by RDPMC in ring 3.
+- New RDPMC_USR_DISABLE bits in bits 33,37,41,45,etc.,
+  in IA32_FIXED_CTR_CTRL MSR for fixed counters 0-3, etc.
+- On RDPMC for counter x, use select to choose the final counter value:
+  If (!CPL0 && RDPMC_USR_DISABLE[x] == 1 ) ? 0 : counter_value
+- RDPMC_USR_DISABLE is enumerated by CPUID.0x23.0.EBX[2].
+
+For more details about "rdpmc user disable", please refer to chapter 15
+"RDPMC USER DISABLE" in latest ISE.
+
+This patch-set adds support for these 3 new changes or features. Besides
+the DMR and NVL specific counter constraints are supported together.
+
+Tests:
+
+The below tests pass on DMR and NVL (both P-core and E-core).
+ a) Perf counting tests pass.
+ b) Perf sampling tests pass.
+ c) Perf PEBS based sampling tests pass.
+ d) "rdpmc user disable" functionality tests pass.
+
+Ref:
+
+ISE (version 60): https://www.intel.com/content/www/us/en/content-details/869288/intel-architecture-instruction-set-extensions-programming-reference.html 
+
+Dapeng Mi (7):
+  perf/x86/intel: Support newly introduced 4 OMR MSRs for DMR & NVL
+  perf/x86/intel: Add support for PEBS memory auxiliary info field in
+    DMR
+  perf/x86/intel: Add core PMU support for DMR
+  perf/x86/intel: Add support for PEBS memory auxiliary info field in
+    NVL
+  perf/x86/intel: Add core PMU support for Novalake
+  perf/x86: Replace magic numbers with macros for attr_rdpmc
+  perf/x86/intel: Add rdpmc-user-disable support
+
+ .../sysfs-bus-event_source-devices-rdpmc      |  40 ++
+ arch/x86/events/core.c                        |  28 +-
+ arch/x86/events/intel/core.c                  | 352 +++++++++++++++++-
+ arch/x86/events/intel/ds.c                    | 261 +++++++++++++
+ arch/x86/events/intel/p6.c                    |   2 +-
+ arch/x86/events/perf_event.h                  |  26 ++
+ arch/x86/include/asm/msr-index.h              |   5 +
+ arch/x86/include/asm/perf_event.h             |   8 +-
+ include/uapi/linux/perf_event.h               |  27 +-
+ tools/include/uapi/linux/perf_event.h         |  27 +-
+ 10 files changed, 751 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-rdpmc
+
+
+base-commit: 9929dffce5ed7e2988e0274f4db98035508b16d9
+-- 
+2.34.1
+
