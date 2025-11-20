@@ -1,48 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE4C288C0E;
-	Thu, 20 Nov 2025 07:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187262D6E4F;
+	Thu, 20 Nov 2025 07:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763623863; cv=none; b=oVBkvApKI8+AiXF1DXWgyBMEzcEUYYgWJk4zrfag0H/LFtHv459TmRY5w+OTpUQE0O/gdchf4fZUW0hW+zo67X8FfyMA4Fsaw4J9+AJfsDbibKLTLQEPSI1hzP5g2GinP2Fu4E93JMHoil99e+ulUG7yWSvqqJ0vUpNAqy339pw=
+	t=1763624270; cv=none; b=B9AN4+YNIunwmVQWuch9czy/EqebMKeJT7XgEYE4QPGw1stVgcFBHC7MSt+KOt7a0G3B3DpIGPCxmzGinxK48f47FXy2GuJ4RMNBE1aH07Mh7sZRlFJCDksmvp6L1DZMsA5m+uY1BdNsNjcfqZqxivzwGM+XEN8sdHgNMqDG/3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763623863; c=relaxed/simple;
-	bh=c4KmVSZfsFjqWHXfRbCp+0XrAXpO71IKASgpNLREERc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eXmNfX0+xMpxsT1yLz7EmffhTN/yV9Vw5qnDzTzeAGkwmbtxW0Psr6AVAOybENk3n/yoT81r/02feav744xJMz1Jk9g2ct1Pu42B4suXwUpy3Gzp1WrUzQj6hOlmaGePXdwwZKKeXDptomucRbXXcCALMliW4QQlL4FHShQYa90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EIAhbaE8; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1763624270; c=relaxed/simple;
+	bh=j1lRiy/6p6/UShKSg5jUvceVavKPCYRx38h9pTDksPg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=SEaLpaQnMUCoHh5Hs1JYfIFXeyztP0lV5eUDjPwAWOIB/LR3UD5LY+kHiEPHFsWueMQNDs6NDo3EzS1j5t98ECL6ngBPjPzHWPwcEaNteT0rmPcioZ2hmobLlrpYqlLFUOsGFNuUF10YWlYTUGTSrZohmKkSG2j/Ze5rV3TlAgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rRM5d2nv; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EIAhbaE8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763623861; x=1795159861;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=c4KmVSZfsFjqWHXfRbCp+0XrAXpO71IKASgpNLREERc=;
-  b=EIAhbaE8qevXFP/01HYPgiID49UrTFsETfU3kikJfta4UW61m3K3yozA
-   4kcUn0++GQ6XSRNy7OvUeaN2fZo52BXBqUsW1hfhm56H7FabIo6ubZ7GA
-   2usc6IR8jip5KIRJNwfwQHIOibT+G85ou6g4blmA9GWhwWgWQ2Y/n/yPP
-   awKY0VngUh3zuugEPDmJfE+Jd5P/wj3ocB7WiIZjXJriJJVPAmeOrnOtF
-   nFCQ3uWo7f5c/z+PXX2L4V3M9LmMA4o3CY/cPWl/18Gqy9jALtXyoCFcJ
-   hFJWfECGPSLKq/OLVes/GduI2xv2UlwzcMyoHaquNabFPix57na7AEbMW
-   A==;
-X-CSE-ConnectionGUID: yqZsBa3IQ4O8CZHoWyl7Lg==
-X-CSE-MsgGUID: /4pXC7Y6T9Ku4fPvjQnpPQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="76290320"
-X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
-   d="scan'208";a="76290320"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 23:31:00 -0800
-X-CSE-ConnectionGUID: mWg18Z9VSw25VoOHR4SVUw==
-X-CSE-MsgGUID: dsP4cDp2QqKTeCZnFbwNlQ==
-X-ExtLoop1: 1
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.213]) ([10.124.240.213])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 23:30:57 -0800
-Message-ID: <24bc287a-a3e0-45f6-a8f1-20a34e2f9af2@linux.intel.com>
-Date: Thu, 20 Nov 2025 15:30:54 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rRM5d2nv"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJLlKP9003959;
+	Thu, 20 Nov 2025 07:37:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=E0KCkp
+	lvxwBvwICrfM6hydjcQnLn7cx1QFWUcNYjx/Y=; b=rRM5d2nvimMed1cVnmP/+B
+	UaVGke+yrUkRDdxG+YN7pF08A7o2y4ymytL1gUYl99XAjaXWuc1ZBeUq3OTnQcL3
+	HLrRO6JKdV5TbWpXc30Jp6YUNx5+KCLUEMQclY/r5hdL7qEhieirFSiYvz/GtZDQ
+	87d/1rjj5P401nvSViTlltd6jiYEr3Fpg6BoaCud+W/A6FYR2teVIAKtuUbWlLIy
+	i5KjsO59q6DbGOxYJtJiVV8Ya51nib+ZNUkzZiA+SA4dFKQGhfRdcSjCnmmJa77o
+	fxNxkC8aeAJmGA9Md0jTtO8EMkYVmVYIgLhIp9KXrbBjFk6HJAy5zHPAwYDiGyFQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejju3qdg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Nov 2025 07:37:27 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AK7bR6j009468;
+	Thu, 20 Nov 2025 07:37:27 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejju3qd6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Nov 2025 07:37:27 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AK6mgHm006954;
+	Thu, 20 Nov 2025 07:37:26 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4af62jmyva-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Nov 2025 07:37:26 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AK7bOT242729896
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Nov 2025 07:37:24 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A42C520043;
+	Thu, 20 Nov 2025 07:37:24 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 212B420040;
+	Thu, 20 Nov 2025 07:37:24 +0000 (GMT)
+Received: from [9.111.89.55] (unknown [9.111.89.55])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 20 Nov 2025 07:37:24 +0000 (GMT)
+Message-ID: <f7192ccf-7702-4a40-978e-60fc7c1639c6@linux.ibm.com>
+Date: Thu, 20 Nov 2025 08:37:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,128 +69,61 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/7] perf/x86: Replace magic numbers with macros for
- attr_rdpmc
-To: Ian Rogers <irogers@google.com>, Falcon Thomas <thomas.falcon@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Xudong Hao <xudong.hao@intel.com>
-References: <20251120053431.491677-1-dapeng1.mi@linux.intel.com>
- <20251120053431.491677-7-dapeng1.mi@linux.intel.com>
- <CAP-5=fWOhG8XJwcyT1tYtVhLxp0m2kWG1oSeX6gKOmyJ=kOSpA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf test all metrics: Fully ignore Default metric
+ failures
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        James Clark <james.clark@linaro.org>
+References: <20251119193047.2238095-1-irogers@google.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAP-5=fWOhG8XJwcyT1tYtVhLxp0m2kWG1oSeX6gKOmyJ=kOSpA@mail.gmail.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20251119193047.2238095-1-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 7etrxVUbi71juC4zHqdI1fpzugYGzJfq
+X-Proofpoint-ORIG-GUID: v617qbINymV4coJX74VoolpKKoxWOayJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX3z1GX7+hYHkv
+ P/k+8k7hSeXUuTY5AaH2ucrb+0ziluR7giH8sq1uh3d6XxsHXdF20FIRqNiIksaWNCw46FZp8xj
+ /G1WmrYtRpc+IY/J7ONcdwCkOyPzrWj9sZWygMZLnbniwetdGzFJXhkpfycL6S2d5fAxOF9A6vU
+ N3u+meq6NZ76sxfmzKGRGMunI06mgZjcs4U8YarqWC5q7DRcZsM2TOpaEUBNrODfIOBVtnjJExs
+ q7Z2wvEAAFHGCyoXeKQpIDem4bALghbDkx6gVHKsezMMpmUfR7EYLHG7CAC6c0LunqgUHacA77i
+ q/N7p/H1bmGjhtx9nKVnUAAZIfY4xwnn5RPB0S6it+4AaKc78jULwpk2dWLflR6uqfjdvJSflZb
+ 7Jponv7c+bZmn+SQn3gsT8zsnmzH+w==
+X-Authority-Analysis: v=2.4 cv=SvOdKfO0 c=1 sm=1 tr=0 ts=691ec538 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VnNF1IyMAAAA:8 a=HVa9FsKFN9bTpKEVuYAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-20_02,2025-11-18_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 adultscore=0 bulkscore=0 impostorscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2511150032
+
+On 11/19/25 20:30, Ian Rogers wrote:
+> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
 
 
-On 11/20/2025 2:19 PM, Ian Rogers wrote:
-> On Wed, Nov 19, 2025 at 9:37 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->> Use macros to replace these attr_rdpmc magic numbers, so users are easy
->> to know their meaning.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> I'm reminded that we were having issues with rdpmc on hybrid:
-> https://lore.kernel.org/lkml/20250614004528.1652860-1-irogers@google.com/
-> like the enable/disable rdpmc flag being shared across the cpu_core
-> and cpu_atom PMUs, and needing to force the thread doing the rdpmc to
-> have affinity matching the CPUs of the PMU it is reading from, as
-> otherwise things like struct perf_event_mmap_page's index could do
-> interesting things:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/mmap-basic.c?h=perf-tools-next#n208
-> Others required the rdpmc to be in a restartable sequence and Peter
-> proposed fixing this in the kernel:
-> https://lore.kernel.org/linux-perf-users/20250618084522.GE1613376@noisy.programming.kicks-ass.net/
->
-> Also looks like we never merged fixing the documentation:
-> https://lore.kernel.org/lkml/20220817174909.877139-1-irogers@google.com/
->
-> Not specifically a DMR issue but this is reminding me of a bunch of
-> tech debt - I also wonder if this patch requires the test being
-> updated.
+Thanks for fixing this.
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
-Thanks for reminding. This patch doesn't involve any functional change for
-the "rdpmc" attribute, but along with the introduction of per-counter
-"rdpmc user disable" in patch 7/7, the rdpmc test can definitely be
-enhanced. I would enhance the rpdmc test in next version. 
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
 
+Geschäftsführung: David Faller
 
->
-> Thanks,
-> Ian
->
->> ---
->>  arch/x86/events/core.c       | 7 ++++---
->>  arch/x86/events/intel/p6.c   | 2 +-
->>  arch/x86/events/perf_event.h | 7 +++++++
->>  3 files changed, 12 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 5d0d5e466c62..3d9cc1d7fcfa 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -2129,7 +2129,8 @@ static int __init init_hw_perf_events(void)
->>
->>         pr_cont("%s PMU driver.\n", x86_pmu.name);
->>
->> -       x86_pmu.attr_rdpmc = 1; /* enable userspace RDPMC usage by default */
->> +       /* enable userspace RDPMC usage by default */
->> +       x86_pmu.attr_rdpmc = X86_USER_RDPMC_CONDITIONAL_ENABLE;
->>
->>         for (quirk = x86_pmu.quirks; quirk; quirk = quirk->next)
->>                 quirk->func();
->> @@ -2609,12 +2610,12 @@ static ssize_t set_attr_rdpmc(struct device *cdev,
->>                  */
->>                 if (val == 0)
->>                         static_branch_inc(&rdpmc_never_available_key);
->> -               else if (x86_pmu.attr_rdpmc == 0)
->> +               else if (x86_pmu.attr_rdpmc == X86_USER_RDPMC_NEVER_ENABLE)
->>                         static_branch_dec(&rdpmc_never_available_key);
->>
->>                 if (val == 2)
->>                         static_branch_inc(&rdpmc_always_available_key);
->> -               else if (x86_pmu.attr_rdpmc == 2)
->> +               else if (x86_pmu.attr_rdpmc == X86_USER_RDPMC_ALWAYS_ENABLE)
->>                         static_branch_dec(&rdpmc_always_available_key);
->>
->>                 on_each_cpu(cr4_update_pce, NULL, 1);
->> diff --git a/arch/x86/events/intel/p6.c b/arch/x86/events/intel/p6.c
->> index 6e41de355bd8..fb991e0ac614 100644
->> --- a/arch/x86/events/intel/p6.c
->> +++ b/arch/x86/events/intel/p6.c
->> @@ -243,7 +243,7 @@ static __init void p6_pmu_rdpmc_quirk(void)
->>                  */
->>                 pr_warn("Userspace RDPMC support disabled due to a CPU erratum\n");
->>                 x86_pmu.attr_rdpmc_broken = 1;
->> -               x86_pmu.attr_rdpmc = 0;
->> +               x86_pmu.attr_rdpmc = X86_USER_RDPMC_NEVER_ENABLE;
->>         }
->>  }
->>
->> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
->> index f7caabc5d487..24a81d2916e9 100644
->> --- a/arch/x86/events/perf_event.h
->> +++ b/arch/x86/events/perf_event.h
->> @@ -187,6 +187,13 @@ struct amd_nb {
->>          (1ULL << PERF_REG_X86_R14)   | \
->>          (1ULL << PERF_REG_X86_R15))
->>
->> +/* user space rdpmc control values */
->> +enum {
->> +       X86_USER_RDPMC_NEVER_ENABLE             = 0,
->> +       X86_USER_RDPMC_CONDITIONAL_ENABLE       = 1,
->> +       X86_USER_RDPMC_ALWAYS_ENABLE            = 2,
->> +};
->> +
->>  /*
->>   * Per register state.
->>   */
->> --
->> 2.34.1
->>
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
