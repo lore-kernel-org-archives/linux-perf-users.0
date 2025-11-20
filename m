@@ -1,46 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D44C343D78;
-	Thu, 20 Nov 2025 19:08:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5B82DFF04;
+	Thu, 20 Nov 2025 19:11:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763665709; cv=none; b=C5OTXocnkqihYqS98anlIp20pIW0ZxrkGdfV2g6M2kJImhNWzEtRZ8nJX9W46d5P7+adI9PtNVauHuYCfIzkDebkWIiOUC1sYMO+pCdSeTrvB0oj2PUp7FFaoxEumKEknMUMUTmJaXoe+OuxhVIq8SXjQL/1qfdgKolk/cZNOs4=
+	t=1763665897; cv=none; b=FbFvD547buIrjBFfrXsNLcRZYbwIdS6ARq3vTgxlq3n2aCkB4Doiq1I+1h0rdPYJwIQNuau8ZDlHk5nLob+AOUDYJMizRFPM5NW7VHfTdeFgRjO/WeAUw0A4SS+MQzMRgRzs6HFzUGvBnQfGx5O9cwVeNjqI5tF+HC6+TLsoFDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763665709; c=relaxed/simple;
-	bh=Rzff4obSKFIdFUbYUl7nlWEtOy9EsXbK0dihW/9ge1k=;
+	s=arc-20240116; t=1763665897; c=relaxed/simple;
+	bh=EJGjcOwpuilPCorYj7pXBDNcjFxuVQ7TIwc/ZYdTU1I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dh3ZNEfpxPSmFfMb1JxS1OD/Fd8gHq+TNqLhe+CVhWgbRUwztggbtZ0TaQ1UgIgIW0Mhe48J1VQDpGtyb8lFs/Sm/DsNrez9amJMDPabZyhuZlC1YnuNi2H0U3LmY6k/kPsJqC5bzWAg2tB9oM7ThyaMbnKIvrrqkCiweuMDBJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/pihGfp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=X7Sm0iytYV+GHvwmzBOnyYwPEqP9q6P0gV5U9yBdG4Yns3v4X8J1pKYP2Q4PhYGAYAjaU0tErnw1LU92qdzQ5TzpQA+IVQD1gWK/0aw4ObpVYlKQJFX3Gro2La3QHd2k/vjtw+36Ajw+LvwEXmrWxSaUq37O6eijGODkE3Ehs+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocJACiWC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/pihGfp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6666C4CEF1;
-	Thu, 20 Nov 2025 19:08:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocJACiWC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1855C4CEF1;
+	Thu, 20 Nov 2025 19:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763665709;
-	bh=Rzff4obSKFIdFUbYUl7nlWEtOy9EsXbK0dihW/9ge1k=;
+	s=k20201202; t=1763665896;
+	bh=EJGjcOwpuilPCorYj7pXBDNcjFxuVQ7TIwc/ZYdTU1I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q/pihGfpE+WDWvg09+bI4I6jqq+yaE6m+7kFHnw4SihrJ8+chjY0ImGAZ3wOD/uUj
-	 /hyBcrcpc3F2SfGD3oBzZFC7Cbi+jdUhdgVtDchOmZc8lMkdX8VAH2l6Y0wwpCxwNO
-	 egScqe/ZBphtm+ik4/dkKH3V/1eCreYRRwuUBkeMFV8t4Zvdqpjn1GdzEUVIAwWcNY
-	 RUnCIbiIAvp6bYYhrLppaXvcuoEHnLV27EYjdTNo7JMJeECCJZfXcXwCMhk1Dr9zVS
-	 3p5sVdkhX1/Ekt4+FQpROvJXX5iceZnKp8KDKxCZaZbk1KhPiMCFVa/v34mHQEwfhK
-	 baEpSgligT/Zg==
-Date: Thu, 20 Nov 2025 11:08:26 -0800
+	b=ocJACiWCnqu6d6LWBkrzPSHS77UJPVaofqKRccoWKwKT0lpH2iijo0DVki2Hc39O9
+	 JFBnaj64PfeLwhD8pG7Q2THWDjQPuSbo9ZnvOKbdj63zkSJc/MjX2ELe471F4rWPeC
+	 hzMkf47qlBjDqOboybjvPWhp2KSw2n7i/4Vvxwjkvup3Zy/gL7i5JoTA8bygbeteiN
+	 PQaKN6q3HoqgkAiQGCDA5PvXZ+dT76QbLWEkZYMx0RmhsNdLrdE/8/5knPuwNk++6W
+	 JwHm89Nin0Z/JIACgRrrJJW+JgsOPdHnPQVGC4RPdhKacRCYA/+m34gzZi1k3rNiiD
+	 xlDv/8G1yhz/g==
+Date: Thu, 20 Nov 2025 11:11:34 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	James Clark <james.clark@linaro.org>,
-	Thomas Richter <tmricht@linux.ibm.com>
-Subject: Re: [PATCH v1] perf test all metrics: Fully ignore Default metric
- failures
-Message-ID: <aR9nKoW0f-gByJQc@google.com>
-References: <20251119193047.2238095-1-irogers@google.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] perf list: Support filtering in JSON output
+Message-ID: <aR9n5qgwryvJaexY@google.com>
+References: <20251120004726.61660-1-namhyung@kernel.org>
+ <20251120004726.61660-3-namhyung@kernel.org>
+ <CAP-5=fWHTGSZPDO06FJENFLW0AtS1Fukk1jqFeHqyGFa+HLhMw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,67 +48,110 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251119193047.2238095-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWHTGSZPDO06FJENFLW0AtS1Fukk1jqFeHqyGFa+HLhMw@mail.gmail.com>
 
-On Wed, Nov 19, 2025 at 11:30:47AM -0800, Ian Rogers wrote:
-> Determine if a metric is default from `perf list --raw-dump $m` eg:
-> ```
-> $ perf list --raw-dump l1_prefetch_miss_rate
-> Default4 l1_prefetch_miss_rate
-> ```
-> If a metric has "not supported" or "no supported events" then ignore
-> these failures for default metrics. Tidy up the skip/fail messages in
-> the output to make them easier to spot/read.
+On Wed, Nov 19, 2025 at 09:42:51PM -0800, Ian Rogers wrote:
+> On Wed, Nov 19, 2025 at 4:47 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Like regular output mode, it should honor command line arguments to
+> > limit to a certain type of PMUs or events.
+> >
+> >   $ perf list -j hw
+> >   [
+> >   {
+> >           "Unit": "cpu",
+> >           "Topic": "legacy hardware",
+> >           "EventName": "branch-instructions",
+> >           "EventType": "Kernel PMU event",
+> >           "BriefDescription": "Retired branch instructions [This event is an alias of branches]",
+> >           "Encoding": "cpu/event=0xc4\n/"
+> >   },
+> >   {
+> >           "Unit": "cpu",
+> >           "Topic": "legacy hardware",
+> >           "EventName": "branch-misses",
+> >           "EventType": "Kernel PMU event",
+> >           "BriefDescription": "Mispredicted branch instructions",
+> >           "Encoding": "cpu/event=0xc5\n/"
 > 
-> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-> Closes: https://lore.kernel.org/linux-perf-users/20251119104751.51960-1-tmricht@linux.ibm.com/
-> Reported-by: Namhyung Kim <namhyung@kernel.org>
-> Reported-by: James Clark <james.clark@linaro.org>
-> Closes: https://lore.kernel.org/lkml/aRi9xnwdLh3Dir9f@google.com/
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> I think these newlines can be fixed by changing:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/pmu.c?h=perf-tools-next#n643
+> ```
+> ret = io__getline(&io, &alias->terms, &line_len) < 0 ? -errno : 0;
+> if (ret) {
+>    ...
+> }
+> ```
+> to something like:
+> ```
+> ret = io__getline(&io, &alias->terms, &line_len) < 0 ? -errno : 0;
+> if (ret) {
+>     ...
+> }
+> if (alias->terms[line_len - 1] == '\n')
+>     alias->terms[line_len - 1] = '\0';
+> ```
 
-Thanks for the fix!
+Yep, will do in a separate patch.
 
-  $ sudo ./perf test -vv "all metrics"
-  103: perf all metrics test:
-  --- start ---
-  test child forked, pid 3329979
-  Testing CPUs_utilized
-  Testing backend_cycles_idle
-  [Ignored backend_cycles_idle] failed but as a Default metric this can be expected
-  Performance counter stats for 'system wide': <not counted> cpu-cycles <not supported> stalled-cycles-backend 0.013059060 seconds time elapsed
-  Testing branch_frequency
-  Testing branch_miss_rate
-  Testing cs_per_second
-  Testing cycles_frequency
-  Testing frontend_cycles_idle
-  Testing insn_per_cycle
-  Testing migrations_per_second
-  Testing page_faults_per_second
-  Testing stalled_cycles_per_instruction
-  [Ignored stalled_cycles_per_instruction] failed but as a Default metric this can be expected
-  Error: No supported events found. The stalled-cycles-backend event is not supported.
-  Testing l1d_miss_rate
-  Testing llc_miss_rate
-  [Ignored llc_miss_rate] failed but as a Default metric this can be expected
-  Error: No supported events found. The LLC-loads event is not supported.
-  Testing dtlb_miss_rate
-  Testing itlb_miss_rate
-  Testing l1i_miss_rate
-  Testing l1_prefetch_miss_rate
-  [Ignored l1_prefetch_miss_rate] failed but as a Default metric this can be expected
-  Performance counter stats for 'system wide': <not counted> L1-dcache-prefetches <not supported> L1-dcache-prefetch-misses 0.012868128 seconds time elapsed
-  Testing branch_misprediction_ratio
-  Testing all_remote_links_outbound
-  Testing nps1_die_to_dram
-  Testing all_l2_cache_accesses
-  Testing all_l2_cache_hits
-  Testing all_l2_cache_misses
-  Testing ic_fetch_miss_ratio
-  Testing l2_cache_accesses_from_l2_hwpf
-  Testing l2_cache_misses_from_l2_hwpf
-  Testing l3_read_miss_latency
-  Testing l1_itlb_misses
-  ---- end(0) ----
-  103: perf all metrics test                                           : Ok
+> 
+> >   },
+> >   ...
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
+Thanks for your review!
+Namhyung
+ 
+> > ---
+> >  tools/perf/builtin-list.c | 24 ++++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >
+> > diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> > index 6c5913f129f39c94..5cbca0bacd35237e 100644
+> > --- a/tools/perf/builtin-list.c
+> > +++ b/tools/perf/builtin-list.c
+> > @@ -373,6 +373,23 @@ static void json_print_event(void *ps, const char *topic,
+> >         FILE *fp = print_state->common.fp;
+> >         struct strbuf buf;
+> >
+> > +       if (deprecated && !print_state->common.deprecated)
+> > +               return;
+> > +
+> > +       if (print_state->common.pmu_glob &&
+> > +           (!pmu_name || !strglobmatch(pmu_name, print_state->common.pmu_glob)))
+> > +               return;
+> > +
+> > +       if (print_state->common.exclude_abi && pmu_type < PERF_TYPE_MAX &&
+> > +           pmu_type != PERF_TYPE_RAW)
+> > +               return;
+> > +
+> > +       if (print_state->common.event_glob &&
+> > +           (!event_name || !strglobmatch(event_name, print_state->common.event_glob)) &&
+> > +           (!event_alias || !strglobmatch(event_alias, print_state->common.event_glob)) &&
+> > +           (!topic || !strglobmatch_nocase(topic, print_state->common.event_glob)))
+> > +               return;
+> > +
+> >         strbuf_init(&buf, 0);
+> >         fprintf(fp, "%s{\n", print_state->need_sep ? ",\n" : "");
+> >         print_state->need_sep = true;
+> > @@ -449,6 +466,13 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
+> >         FILE *fp = print_state->common.fp;
+> >         struct strbuf buf;
+> >
+> > +       if (print_state->common.event_glob &&
+> > +           (!print_state->common.metrics || !name ||
+> > +            !strglobmatch(name, print_state->common.event_glob)) &&
+> > +           (!print_state->common.metricgroups || !group ||
+> > +            !strglobmatch(group, print_state->common.event_glob)))
+> > +               return;
+> > +
+> >         strbuf_init(&buf, 0);
+> >         fprintf(fp, "%s{\n", print_state->need_sep ? ",\n" : "");
+> >         print_state->need_sep = true;
+> > --
+> > 2.52.0.rc1.455.g30608eb744-goog
+> >
