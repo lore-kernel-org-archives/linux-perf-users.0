@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EC2277CAB;
-	Thu, 20 Nov 2025 05:37:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD4F3002CE;
+	Thu, 20 Nov 2025 05:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763617024; cv=none; b=bMmWbWVdqSzgJN4miLWCBnSrB9Kd3qwdt+6JuWauG9C+2NdTdUX8k6IgDTc6FO99oRByr7Kq6Yco1Dgj9tfOpkDQwIMAjNeMJjfwxqKWbrtv7YbG/4qGbdlh2qbjCwVEZ9LvBBRmxLM86c8YbKah9sBfA15d4YBjGgyvkTNio6M=
+	t=1763617028; cv=none; b=ccbUhcWVSU9zV80dQzHYYaEIoMdmNhXYOcaO71/L7085IPwe3jat/qGJLqjcgp7fFZazwUffkkC7ux/GN3H7LqORgr/jjZZn+//YU8xC2Zenhb2+6RjeSukuoGQ7jq+w+MvGEF4ikfLv5o99DCgmdY0iZzx9e+QJ0fEj/YrubOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763617024; c=relaxed/simple;
-	bh=MGC69O3DL8v6tTyun93EbVXiWU1Mh9kifaKsGqKJEFc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jz8oJcyh35U4p2FdYEOiLwzNAUJiLeIoITPzS4v2Q7dZEPR9HGxavnKGFJg/pPmong1KNWeMe9QWmHUBQjJcOj0VcEnLkBOxIvnqFFwhZFWfqs5hsZWLfN6goTrqWvVo54euR6gAwxFEtSpWWBrwkYI2TGopoR9P0iU18M2/RN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OuB9fqdi; arc=none smtp.client-ip=192.198.163.14
+	s=arc-20240116; t=1763617028; c=relaxed/simple;
+	bh=mxmtB5LHf+KKSdJFHtNgNUq3nDPZqEkLcEPvhZhRNmA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rCFx/bx6tF6jVYlPhpGmY1ZrUyeTf+eWbBIf6hNFd6mSxvxVCJMr9bDCm3W2QMB6jhveNOzBeuUqjSux1j5dVkYpsOfclm0dvfuXzDPsYXZbKghK6agRIRVFuGAhKs4MwaiuiQl15rX8XQ9keroqt349xlEOZEG5YmVV3+Nvi7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Swf/pdUt; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OuB9fqdi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Swf/pdUt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763617022; x=1795153022;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MGC69O3DL8v6tTyun93EbVXiWU1Mh9kifaKsGqKJEFc=;
-  b=OuB9fqdin6uUKF1g2ZKUS9RVn330abFD0zzLW8JGEzCi7kw3+P4mlSKA
-   2B8RwEAHm2CDNo7k1d3RO9KBJ+pXHKCIPLsv+y7LuBleVomJtabTm/ktz
-   zRGHROm2RMmSpBthqrVL9HIQblCnHnb1Cik/pJyoVVnDDJpXqVAGraI6q
-   0H7lKVBKYRD/Ofw6BRrCfA4B19S0gvQmccDy7w/leY0Qkz7WvuZMVyRn5
-   PBuxZm64EQbM6l75/+KuIYkihNwyymq1aVlGUEf/oo00qtPYrb9n00syU
-   jAHdri0AOppBMTe1fykt9CBmrkt6ezxYZ1Eh1v1t6Mp2hBrGeksHdXnit
+  t=1763617026; x=1795153026;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=mxmtB5LHf+KKSdJFHtNgNUq3nDPZqEkLcEPvhZhRNmA=;
+  b=Swf/pdUt33GyZ2ftYH2/FvS6FKjxO5u69zXfaCkkCFl8xw8/kkfz0V3Q
+   8OmAzRuTsYqJX2tcGo3JdlXWRfPm+umrUmXeAQwXWb5XMUEpLtMg0f2DR
+   YgLjkcAN7pywU0ffyPV4lVcZsN4Se0+6sUi6DkKGlldUeffq70Pf5HZj0
+   79VEvTonSizb5hSyfqTo+fHsP2Ny/JjYQOaPgZ78LSCjnriDM7cqgD7t5
+   hf3Y3LvFSbvsipC0qDGgs5l2uWgP/CYIPBSl+kJpdNa+0otN8A8m/570E
+   U14ST/4q2HjXqNGey6RhRtAhwMf1tql4I+lJSc1CZAth3yDX/DLvmBZE5
    A==;
-X-CSE-ConnectionGUID: h22BP+uSSZ6gMONmGgl/fw==
-X-CSE-MsgGUID: x/6boDOxSO2Tf7t0hnvoGQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="65710137"
+X-CSE-ConnectionGUID: Pag2Yc0hTDyPusKaFKhqGg==
+X-CSE-MsgGUID: qC1HBc26SLW+T7fozX99lg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="65710149"
 X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
-   d="scan'208";a="65710137"
+   d="scan'208";a="65710149"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 21:37:02 -0800
-X-CSE-ConnectionGUID: YpqvTkDURfeq/B3H1VTsnA==
-X-CSE-MsgGUID: JpFTK1C4QPOoA3l6HA6O1Q==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 21:37:05 -0800
+X-CSE-ConnectionGUID: GU14klhDQNCFYErxadC4og==
+X-CSE-MsgGUID: DitVtM4PRp2xnU+7SH7lsg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
-   d="scan'208";a="191055511"
+   d="scan'208";a="191055523"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa009.jf.intel.com with ESMTP; 19 Nov 2025 21:36:58 -0800
+  by orviesa009.jf.intel.com with ESMTP; 19 Nov 2025 21:37:02 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -59,131 +60,157 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 0/7] Enable core PMU for DMR and NVL
-Date: Thu, 20 Nov 2025 13:34:24 +0800
-Message-Id: <20251120053431.491677-1-dapeng1.mi@linux.intel.com>
+Subject: [PATCH 1/7] perf/x86/intel: Support newly introduced 4 OMR MSRs for DMR & NVL
+Date: Thu, 20 Nov 2025 13:34:25 +0800
+Message-Id: <20251120053431.491677-2-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251120053431.491677-1-dapeng1.mi@linux.intel.com>
+References: <20251120053431.491677-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch-set enables core PMU functionalities for Diamond Rapids (DMR)
-and Nova Lake (NVL). 
+Diamond Rapids and Nova Lake feature an expanded facility called
+the Off-Module Response (OMR) facility, which replaces the Off-Core
+Response (OCR) Performance Monitoring of previous processors.
 
-Comparing with previous platforms, there are 3 main changes on core PMU
-functionalities.
+Legacy microarchitectures used the OCR facility to evaluate off-core
+and multi-core off-module transactions. The properly renamed, OMR
+facility, improves the OCR capability for scalable coverage of new
+memory systems of multi-core module systems.
 
-1. Introduce OFF-MODULE RESPONSE (OMR) facility to replace Off-Core
-Response (OCR) facility
+Similarly with OCR, 4 additional off-module configuration MSRs
+OFFMODULE_RSP_0 ~ OFFMODULE_RSP_3 are introduced to specify
+attributes of the off-module transaction.
 
-Legacy microarchitectures used the OCR facility to evaluate off-core and
-multi-core off-module transactions. The properly renamed, OMR facility,
-improves the OCR capability for scalable coverage of new memory systems
-of multi-core module systems.
+For more details about OMR, please refer to section 16.1 "OFF-MODULE
+ RESPONSE (OMR) FACILITY" in ISE documentation.
 
-Along with the introduction of OMR, 4 equivalent MSRs (OFFMODULE_RSP_0 ~
-OFFMODULE_RSP_3) are introduced to specify attributes of the off-module
-transaction and the legacy 2 OFFCORE_RSP MSRs are retired.
+This patch adds support for these 4 OMR events.
 
-For more details about OMR events and OFFMODULE_RSP_x MSRs, please refer
-to the section 16.1 "OFF-MODULE RESPONSE (OMR) FACILITY" in latest ISE[1]
-documentation.
+ISE link: https://www.intel.com/content/www/us/en/content-details/869288/intel-architecture-instruction-set-extensions-programming-reference.html
 
-2. New PEBS data source encoding layout
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ arch/x86/events/intel/core.c     | 45 +++++++++++++++++++++++---------
+ arch/x86/events/perf_event.h     |  5 ++++
+ arch/x86/include/asm/msr-index.h |  5 ++++
+ 3 files changed, 42 insertions(+), 13 deletions(-)
 
-Diamond Rapids and Nova Lake include PEBS Load Latency and Store Latency
-support similar to previous platforms but with a different data source
-encoding layout.
-
-Briefly speaking, the new data source encoding is determined by bit[8] of
-memory auxiliary info field. The bit[8] indicates whether a L2 cache miss
-occurs for a memory load or store instruction. If bit[8] is 0, it
-signifies no L2 cache miss, and bits[7:0] specify the exact cache data
-source (up to the L2 cache level). If bit[8] is 1, bits[7:0] represents
-the OMR encoding, indicating the specific L3 cache or memory region
-involved in the memory access.
-
-A significant enhancement for OMR encoding is the ability to provide
-up to 8 fine-grained memory regions in addition to the cache region,
-offering more detailed insights into memory access regions.
-
-For more details about the new data source layout, please refer to the
-section 16.2 "PEBS LOAD LATENCY AND STORE LATENCY FACILITY" in latest
-ISE documentation.
-
-3. Support "rdpmc user disable" feature
-
-Currently executing RDPMC when CPL > 0 is allowed if the CR4.PCE flag
-(performance-monitoring counter enable) is set. This introduces a
-security risk that any user space process can read the count of any PMU
-counter even though the counter belongs to a system-wide event as long
-as CR4.PCE = 1.
-
-To mitigate this security risk, the rdpmc user disable feature is
-introduced to provide per-counter rdpmc control.
-
-'rdpmc user disable' introduces a new bit "RDPMC_USR_DISABLE" to manage
-if the counter can be read in user space by leveraging rdpmc instruction
-for each GP and fixed counter.
-
-The details are
-- New RDPMC_USR_DISABLE bit in each EVNTSELx[37] MSR to indicate counter
-  can't be read by RDPMC in ring 3.
-- New RDPMC_USR_DISABLE bits in bits 33,37,41,45,etc.,
-  in IA32_FIXED_CTR_CTRL MSR for fixed counters 0-3, etc.
-- On RDPMC for counter x, use select to choose the final counter value:
-  If (!CPL0 && RDPMC_USR_DISABLE[x] == 1 ) ? 0 : counter_value
-- RDPMC_USR_DISABLE is enumerated by CPUID.0x23.0.EBX[2].
-
-For more details about "rdpmc user disable", please refer to chapter 15
-"RDPMC USER DISABLE" in latest ISE.
-
-This patch-set adds support for these 3 new changes or features. Besides
-the DMR and NVL specific counter constraints are supported together.
-
-Tests:
-
-The below tests pass on DMR and NVL (both P-core and E-core).
- a) Perf counting tests pass.
- b) Perf sampling tests pass.
- c) Perf PEBS based sampling tests pass.
- d) "rdpmc user disable" functionality tests pass.
-
-Ref:
-
-ISE (version 60): https://www.intel.com/content/www/us/en/content-details/869288/intel-architecture-instruction-set-extensions-programming-reference.html 
-
-Dapeng Mi (7):
-  perf/x86/intel: Support newly introduced 4 OMR MSRs for DMR & NVL
-  perf/x86/intel: Add support for PEBS memory auxiliary info field in
-    DMR
-  perf/x86/intel: Add core PMU support for DMR
-  perf/x86/intel: Add support for PEBS memory auxiliary info field in
-    NVL
-  perf/x86/intel: Add core PMU support for Novalake
-  perf/x86: Replace magic numbers with macros for attr_rdpmc
-  perf/x86/intel: Add rdpmc-user-disable support
-
- .../sysfs-bus-event_source-devices-rdpmc      |  40 ++
- arch/x86/events/core.c                        |  28 +-
- arch/x86/events/intel/core.c                  | 352 +++++++++++++++++-
- arch/x86/events/intel/ds.c                    | 261 +++++++++++++
- arch/x86/events/intel/p6.c                    |   2 +-
- arch/x86/events/perf_event.h                  |  26 ++
- arch/x86/include/asm/msr-index.h              |   5 +
- arch/x86/include/asm/perf_event.h             |   8 +-
- include/uapi/linux/perf_event.h               |  27 +-
- tools/include/uapi/linux/perf_event.h         |  27 +-
- 10 files changed, 751 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-rdpmc
-
-
-base-commit: 9929dffce5ed7e2988e0274f4db98035508b16d9
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index aad89c9d9514..5970f7c20101 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3529,17 +3529,24 @@ static int intel_alt_er(struct cpu_hw_events *cpuc,
+ 	struct extra_reg *extra_regs = hybrid(cpuc->pmu, extra_regs);
+ 	int alt_idx = idx;
+ 
+-	if (!(x86_pmu.flags & PMU_FL_HAS_RSP_1))
+-		return idx;
+-
+-	if (idx == EXTRA_REG_RSP_0)
+-		alt_idx = EXTRA_REG_RSP_1;
+-
+-	if (idx == EXTRA_REG_RSP_1)
+-		alt_idx = EXTRA_REG_RSP_0;
++	if (idx == EXTRA_REG_RSP_0 || idx == EXTRA_REG_RSP_1) {
++		if (!(x86_pmu.flags & PMU_FL_HAS_RSP_1))
++			return idx;
++		if (++alt_idx > EXTRA_REG_RSP_1)
++			alt_idx = EXTRA_REG_RSP_0;
++		if (config & ~extra_regs[alt_idx].valid_mask)
++			return idx;
++	}
+ 
+-	if (config & ~extra_regs[alt_idx].valid_mask)
+-		return idx;
++	if (idx >= EXTRA_REG_OMR_0 && idx <= EXTRA_REG_OMR_3) {
++		if (!(x86_pmu.flags & PMU_FL_HAS_OMR))
++			return idx;
++		if (++alt_idx > EXTRA_REG_OMR_3)
++			alt_idx = EXTRA_REG_OMR_0;
++		if (config &
++		    ~extra_regs[alt_idx - EXTRA_REG_OMR_0].valid_mask)
++			return idx;
++	}
+ 
+ 	return alt_idx;
+ }
+@@ -3547,16 +3554,28 @@ static int intel_alt_er(struct cpu_hw_events *cpuc,
+ static void intel_fixup_er(struct perf_event *event, int idx)
+ {
+ 	struct extra_reg *extra_regs = hybrid(event->pmu, extra_regs);
+-	event->hw.extra_reg.idx = idx;
++	int omr_idx;
+ 
+-	if (idx == EXTRA_REG_RSP_0) {
++	event->hw.extra_reg.idx = idx;
++	switch (idx) {
++	case EXTRA_REG_RSP_0:
+ 		event->hw.config &= ~INTEL_ARCH_EVENT_MASK;
+ 		event->hw.config |= extra_regs[EXTRA_REG_RSP_0].event;
+ 		event->hw.extra_reg.reg = MSR_OFFCORE_RSP_0;
+-	} else if (idx == EXTRA_REG_RSP_1) {
++		break;
++	case EXTRA_REG_RSP_1:
+ 		event->hw.config &= ~INTEL_ARCH_EVENT_MASK;
+ 		event->hw.config |= extra_regs[EXTRA_REG_RSP_1].event;
+ 		event->hw.extra_reg.reg = MSR_OFFCORE_RSP_1;
++		break;
++	case EXTRA_REG_OMR_0 ... EXTRA_REG_OMR_3:
++		omr_idx = idx - EXTRA_REG_OMR_0;
++		event->hw.config &= ~ARCH_PERFMON_EVENTSEL_UMASK;
++		event->hw.config |= 1ULL << (8 + omr_idx);
++		event->hw.extra_reg.reg = MSR_OMR_0 + omr_idx;
++		break;
++	default:
++		pr_warn("The extra reg idx %d is not supported.\n", idx);
+ 	}
+ }
+ 
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 3161ec0a3416..586e3fdfe6d8 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -45,6 +45,10 @@ enum extra_reg_type {
+ 	EXTRA_REG_FE		= 4,  /* fe_* */
+ 	EXTRA_REG_SNOOP_0	= 5,  /* snoop response 0 */
+ 	EXTRA_REG_SNOOP_1	= 6,  /* snoop response 1 */
++	EXTRA_REG_OMR_0		= 7,  /* OMR 0 */
++	EXTRA_REG_OMR_1		= 8,  /* OMR 1 */
++	EXTRA_REG_OMR_2		= 9,  /* OMR 2 */
++	EXTRA_REG_OMR_3		= 10,  /* OMR 3 */
+ 
+ 	EXTRA_REG_MAX		      /* number of entries needed */
+ };
+@@ -1099,6 +1103,7 @@ do {									\
+ #define PMU_FL_RETIRE_LATENCY	0x200 /* Support Retire Latency in PEBS */
+ #define PMU_FL_BR_CNTR		0x400 /* Support branch counter logging */
+ #define PMU_FL_DYN_CONSTRAINT	0x800 /* Needs dynamic constraint */
++#define PMU_FL_HAS_OMR		0x1000 /* has 4 equivalent OMR regs */
+ 
+ #define EVENT_VAR(_id)  event_attr_##_id
+ #define EVENT_PTR(_id) &event_attr_##_id.attr.attr
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 65cc528fbad8..170cece31e3c 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -259,6 +259,11 @@
+ #define MSR_SNOOP_RSP_0			0x00001328
+ #define MSR_SNOOP_RSP_1			0x00001329
+ 
++#define MSR_OMR_0			0x000003e0
++#define MSR_OMR_1			0x000003e1
++#define MSR_OMR_2			0x000003e2
++#define MSR_OMR_3			0x000003e3
++
+ #define MSR_LBR_SELECT			0x000001c8
+ #define MSR_LBR_TOS			0x000001c9
+ 
 -- 
 2.34.1
 
