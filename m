@@ -1,203 +1,161 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D729D337BBA
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Nov 2025 14:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D93033FE13
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Nov 2025 14:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763648350; cv=none; b=gDx/iLAYxTfdFB72I7Y8Eb3M+tcv6b7Ei46MRvWBAnujd2IduoqzYaqnaYjxCdF7ebqt3bXDsPHSPb6g5+9ZYZwRhmJMeBbytoVk3umiDDVyk/dsaVUj0ioi9IvU5aCVWf1hBzsAS/EQL1/Yc6bCNQzmptQCSY9cJ54pbpqUpIY=
+	t=1763650371; cv=none; b=t4AUt9nBjUw/yWcb/4STNp9pgH5h+x2zdfAB82yQaLVDTCZWhpEqSwYMMTxPrdTP8tPsh/7Qy7N32zPzrJKybYAJmW2CCifiT6uMadh9gTnGZhy1IwOh8X0fwr0W+WdoXMfvInLs6CUvYu6IFHmu98kVrOSjw/YeiCDwYXIgH2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763648350; c=relaxed/simple;
-	bh=71xR6QYzJdwdOokv/CFKZ49LWyyZFU7pcNK54isomOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=kPW+9QBb46hCULsbf7Rdl2PeBS/gqnHoovccb1bxPprvPzYtqd/uboiB2K1jgPPsTnB2+jY5GXirwR0vMzQxJg2kLGi+4TsvYYxkQYiWfH7NmmA0b3+F0Zj91rP+AfiKkpWa6a+301DM+khs0M5N+1lflkJlDZSY5wfQpePwilk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GOAjCdeF; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1763650371; c=relaxed/simple;
+	bh=fJNbQYu7PoiJLsEPpjUYNqAPI6k2geFEJacIKnsv5a4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TXEbB1eUVH8L+Wqj3NukzdLW62EdATs19OO06AS62AA7UzWjrBUAwca31HpTr8qEllkXGun+KRTffmPkcgcE/3ElBggV2ebDTP2vsvad/oXCRyUXDN/AIZmFPOizXnNV6w+jcChXuRoF26+mckDfLcYpa+hV6Z6edCSo+JVsMdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Nlop4bDN; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GOAjCdeF"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-42b3377aaf2so545460f8f.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Nov 2025 06:19:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Nlop4bDN"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-435a16798feso7420175ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Nov 2025 06:52:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763648347; x=1764253147; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mzRUBgRnLtue7JLgqZDwQWS0Dekpvo9x0SVB1SOpe+o=;
-        b=GOAjCdeFbeT8wcBSuw8LmpaU5Scl2R5gEKMp+xVIj5OwTuyE6TTWBkxPlkXct3DVcI
-         aUrShZ1B0/05VOyOkH8pOP2g543Anrs4rc4V42foIHQJOyEX0M/9ClTkY/JdhPgwzVBs
-         /BV0qyWVNKhj6V2N6nPxXnb9gVW8hotba73LkGHfEA6eN4wWxobZiLbMR7pAA1781klP
-         t2dlBPskdC69NSAY6kULB5x+mx8t1Fsb3tcxwYSXF6/F8++uLIaAA6m7hqgF9iv3x9Yw
-         SfXYSgIF4PfnaXER0UGhe7IqohWkXFtjITbqwW398ss74Q4qKrjnP3+X8WieMJVg1i5l
-         pmcA==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1763650367; x=1764255167; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mIp1emodWmrQX+c6TjoXmEBGWcecINECr9nK+dGHBUw=;
+        b=Nlop4bDNIOkjuo0pMhzaqc0ODrEsmRo7XtLqwhp00uyFASxw+sbIvvfDKg63/0WNIr
+         Irgw7i1L5c7f3KspyZuRfY76O51HffIuodvQy5ZIcDN4No7WwIxUOGZ9dpes/M6K+nsd
+         SNLzENdMcdkRpJUmuFjuM9BMlGaR61DPmsUMatu7aVJzbpi7Z/RO6GbliOgOscpBha8S
+         DnzFtV5phPRpPEJgf98WlMFKyzL6CdLykV3ZnkTgBAq3ZRb9M24771+6fglXYKmcEHuj
+         JwzMwrRMP1iOEu/PZF6XSo/nxjqLzdvmfaif9TGvKGR4YXIy2m1LIpokuAZvSHGS7C+s
+         olCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763648347; x=1764253147;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mzRUBgRnLtue7JLgqZDwQWS0Dekpvo9x0SVB1SOpe+o=;
-        b=eMR/KMq/wUd6VBiYtdXQHPfLD+bJzk4JumYjLEi681al6J4+VcLyWUoj3RgUuQ7f+p
-         uYyJ9Ip/RxCwVWLWsJfZOIjIvHNgUSEwGnrHrcCwyWez3FsbjE2RirIgwE7UjjncjXdh
-         99zuUeAvYxGtQMA2r6P9qPpwR9K4khI74RANhs0b46QARzkNViT7Cq+zEr1bmeG3aO1Q
-         4Nq2v5Y94uIVnZ3WJ58Kb/sfHjoRIEZMfu8WI92FRUtujWM+IzVUaNC7MRQ80xrTXnut
-         K7nWGwcAtb7hhRUPAa+UbXru0zaOw8sOG1xj8PTA2gT8D8ngxPBUNrjeLC/Fwrwa6Gw5
-         WXpw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgZCQIdiW30Q6+5M+03oDdoHLM6paOxwZJH+4w8grWpMqKKchw1hzGL9LgevEQZJ2i/GjJYGhXyHpJjr3FXmdB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzV7TTYzhtPlJAXlxWwsyBtjbQvSSIHrqeRRquR+QlNneLsKIEv
-	xNRVIxldJtMfuCOLbsMpoOL/wjAl+/Orn8mrc3S5Tu9GASEKasZWFuOmXZENo6JIxPo=
-X-Gm-Gg: ASbGncvWMt/KLEy6gwgB6QhaJy7HoUVKExMMUnRW5OYELv8dCQ4Xsd1yZM85De13CM1
-	ZRcaxfr84ina3MDEBCElY/r9nQHW9lvO1Pa3hIPhzj9DlxnoSOgOgCqSW+aFflhY68y7qwCzsSY
-	L/Wz4Wm8b6zJ/2ryLzDx01qhvsPvnQ7Xp3SB2Nos6j79BNito9wdODWFbu6NGecKyf2eHzzCnes
-	8ospW1GBA5XT9xZBHNfCSIzq58ETqb5vn90PHp7lW3mFGs6sipdJNZ8giSKBTF5nwaCZGRCNyCK
-	RN6476usjwjw/vSgy/6bQO7I5RRbTRVhvt7w9+eSbkx13el+RpbMT6WnoShwbJ6+NemqE7dr2bT
-	3DucCy+gwOfQ7oDNHvko50unQYnMmyB2PhhBRdfd9KQqEWsL3GHzNzpInwbff9Krwf6aaqOa1wd
-	z2tm5SCQq6squDkjKG
-X-Google-Smtp-Source: AGHT+IEyXLt5JVQU6RfXVIsmFqkafV/foIUCJq4WJcs8aLMI+3oGtWeUMpw2rYrwctuS12CNjB8/Gg==
-X-Received: by 2002:a05:6000:25c4:b0:42b:3dfb:645c with SMTP id ffacd0b85a97d-42cb9a11829mr3019069f8f.12.1763648346883;
-        Thu, 20 Nov 2025 06:19:06 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7fd8c47sm5953302f8f.38.2025.11.20.06.19.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Nov 2025 06:19:06 -0800 (PST)
-Message-ID: <a5b1bb5f-7364-465a-ae32-9dafa0823f1d@linaro.org>
-Date: Thu, 20 Nov 2025 14:19:05 +0000
+        d=1e100.net; s=20230601; t=1763650367; x=1764255167;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mIp1emodWmrQX+c6TjoXmEBGWcecINECr9nK+dGHBUw=;
+        b=aqffkidvqPBRUJneEET9hJMZ3HzCGUPyZuzQjNNNztwydGYRk5qkD53WFSCofrCZrC
+         EtmVvW3/znxsZQYWTJYr7nyFIoN2TKV1i3HFiXWJv8LTaoznej9rQuGbFNn3FB4MtIDz
+         cVsQp9PAKlH05rCTe8Zie3O+M6nCzFtfpkLYWKM7wo/K6sXQEzO7r6Iz5PyQajwtb4CK
+         8lknTm5dnasiI0fL3bevo1/GS5aq0fMu981n2uxWMi5Uz3M332eYtVcaffQrXiY7lsUq
+         yXysPm+4+3p6Jb+8ZwXyd3j1seSzPrujc5B5zskBuJzHEQlWUzpsR/FoOqcepHpVWPsH
+         EzaA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+PsEG1S0Gn02877zvibmFVS8I/YlDku302IwJADqOyZhqIUXfr5RNiwNDIgD6EHcTrUJuAId8UC/LfHtMDI17@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFKvtBf5w41SnTVg/0+FhIchgJ+6kPDQe455oQM2lyPl9MKrgz
+	NnBUxRSnvHN6eCAVHyM/CXQLLgb4vmxncUmZCh3B2cu4kQPSzVuJzFHnywt3fa7YMoM=
+X-Gm-Gg: ASbGncuTWvHRNJp1Yj94ULuEphueEmSwT1BHFDUQntTzTpnjs2r7ir57S7ORYtZjIuV
+	ayicLyLp6Hx0FsihRA8wHNuRvkiOtRZOUH+eA8mjjhLUxFRjGeXOLnnwwZVs1/r40U1X4rMolW6
+	EOg/eK+aXruf5HVSwcUgfdDMlDbydICA9n8uznexJ04b/SzRN6iuI9v1ww+5Cu3ZCBDZ3EFUwsH
+	RRqr7kTHWOS7wqYZqV9Ya0qCnpWpKwO91CsFZFeocdBkaxBsZTHj7L7A5wItyR0y8xELEBsPUM+
+	dsVr1FkRNAi6b4kv/PUanE0okDNRO2GiZRvhBSG9lJNl04bKjB2WvkrQN/Zi2i8bWiBq92zhfEh
+	AOacU1aPSVsu6DXCp9+XNnV2vtopVsrr4lMYHkrzntbDv+2fggXmeIokydjfZcOsCVnYtZiOEVH
+	tNWw==
+X-Google-Smtp-Source: AGHT+IEmRlVKCe07qbgo1t2w3uFpBKsqx62crTftDC+8sZ0oUBIrcGL53VTRakva//fmnWvcfQrQww==
+X-Received: by 2002:a05:6e02:1c01:b0:433:1d5a:5157 with SMTP id e9e14a558f8ab-435aa88e822mr21434775ab.6.1763650367018;
+        Thu, 20 Nov 2025 06:52:47 -0800 (PST)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b954b207d7sm1008611173.33.2025.11.20.06.52.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Nov 2025 06:52:46 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org, david.laight.linux@gmail.com
+Cc: Alan Stern <stern@rowland.harvard.edu>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Alexei Starovoitov <ast@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Andrew Lunn <andrew@lunn.ch>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Ard Biesheuvel <ardb@kernel.org>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>, 
+ Christian Brauner <brauner@kernel.org>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Christoph Hellwig <hch@lst.de>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Dan Williams <dan.j.williams@intel.com>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, 
+ Dave Jiang <dave.jiang@intel.com>, David Ahern <dsahern@kernel.org>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@redhat.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Jakub Sitnicki <jakub@cloudflare.com>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Jarkko Sakkinen <jarkko@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+ Jiri Slaby <jirislaby@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+ John Allen <john.allen@amd.com>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Juergen Gross <jgross@suse.com>, Kees Cook <kees@kernel.org>, 
+ KP Singh <kpsingh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+ Mika Westerberg <westeri@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+ Miklos Szeredi <miklos@szeredi.hu>, Namhyung Kim <namhyung@kernel.org>, 
+ Neal Cardwell <ncardwell@google.com>, nic_swsd@realtek.com, 
+ OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
+ Olivia Mackall <olivia@selenic.com>, Paolo Abeni <pabeni@redhat.com>, 
+ Paolo Bonzini <pbonzini@redhat.com>, Peter Huewe <peterhuewe@gmx.de>, 
+ Peter Zijlstra <peterz@infradead.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Sean Christopherson <seanjc@google.com>, 
+ Srinivas Kandagatla <srini@kernel.org>, 
+ Stefano Stabellini <sstabellini@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>, 
+ Theodore Ts'o <tytso@mit.edu>, Thomas Gleixner <tglx@linutronix.de>, 
+ Tom Lendacky <thomas.lendacky@amd.com>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, x86@kernel.org, 
+ Yury Norov <yury.norov@gmail.com>, amd-gfx@lists.freedesktop.org, 
+ bpf@vger.kernel.org, cgroups@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, io-uring@vger.kernel.org, 
+ kvm@vger.kernel.org, linux-acpi@vger.kernel.org, 
+ linux-block@vger.kernel.org, linux-crypto@vger.kernel.org, 
+ linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org, 
+ linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+ linux-integrity@vger.kernel.org, linux-mm@kvack.org, 
+ linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-serial@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-usb@vger.kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org, 
+ usb-storage@lists.one-eyed-alien.net, David Hildenbrand <david@kernel.org>
+In-Reply-To: <20251119224140.8616-1-david.laight.linux@gmail.com>
+References: <20251119224140.8616-1-david.laight.linux@gmail.com>
+Subject: Re: (subset) [PATCH 00/44] Change a lot of min_t() that might mask
+ high bits
+Message-Id: <176365036384.566630.2992984118137417732.b4-ty@kernel.dk>
+Date: Thu, 20 Nov 2025 07:52:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf test all metrics: Fully ignore Default metric
- failures
-To: Ian Rogers <irogers@google.com>
-References: <20251119193047.2238095-1-irogers@google.com>
-Content-Language: en-US
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Thomas Richter <tmricht@linux.ibm.com>
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20251119193047.2238095-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
 
 
-
-On 19/11/2025 7:30 pm, Ian Rogers wrote:
-> Determine if a metric is default from `perf list --raw-dump $m` eg:
-> ```
-> $ perf list --raw-dump l1_prefetch_miss_rate
-> Default4 l1_prefetch_miss_rate
-> ```
-> If a metric has "not supported" or "no supported events" then ignore
-> these failures for default metrics. Tidy up the skip/fail messages in
-> the output to make them easier to spot/read.
+On Wed, 19 Nov 2025 22:40:56 +0000, david.laight.linux@gmail.com wrote:
+> It in not uncommon for code to use min_t(uint, a, b) when one of a or b
+> is 64bit and can have a value that is larger than 2^32;
+> This is particularly prevelant with:
+> 	uint_var = min_t(uint, uint_var, uint64_expression);
 > 
-> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-> Closes: https://lore.kernel.org/linux-perf-users/20251119104751.51960-1-tmricht@linux.ibm.com/
-> Reported-by: Namhyung Kim <namhyung@kernel.org>
-> Reported-by: James Clark <james.clark@linaro.org>
-> Closes: https://lore.kernel.org/lkml/aRi9xnwdLh3Dir9f@google.com/
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-Reviewed-by: James Clark <james.clark@linaro.org>
-
-> ---
->   tools/perf/tests/shell/stat_all_metrics.sh | 27 ++++++++++++++--------
->   1 file changed, 17 insertions(+), 10 deletions(-)
+> Casts to u8 and u16 are very likely to discard significant bits.
 > 
-> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-> index a7edf01b3943..3dabb39c7cc8 100755
-> --- a/tools/perf/tests/shell/stat_all_metrics.sh
-> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
-> @@ -27,19 +27,20 @@ for m in $(perf list --raw-dump metrics); do
->     fi
->     if [[ "$result" =~ "Cannot resolve IDs for" || "$result" =~ "No supported events found" ]]
->     then
-> -    if [[ "$m" == @(l1_prefetch_miss_rate|stalled_cycles_per_instruction) ]]
-> +    if [[ $(perf list --raw-dump $m) == "Default"* ]]
->       then
-> -      # Default metrics that may use unsupported events.
-> +      echo "[Ignored $m] failed but as a Default metric this can be expected"
-> +      echo $result
->         continue
->       fi
-> -    echo "Metric contains missing events"
-> +    echo "[Failed $m] Metric contains missing events"
->       echo $result
->       err=1 # Fail
->       continue
->     elif [[ "$result" =~ \
->           "Access to performance monitoring and observability operations is limited" ]]
->     then
-> -    echo "Permission failure"
-> +    echo "[Skipped $m] Permission failure"
->       echo $result
->       if [[ $err -eq 0 ]]
->       then
-> @@ -48,7 +49,7 @@ for m in $(perf list --raw-dump metrics); do
->       continue
->     elif [[ "$result" =~ "in per-thread mode, enable system wide" ]]
->     then
-> -    echo "Permissions - need system wide mode"
-> +    echo "[Skipped $m] Permissions - need system wide mode"
->       echo $result
->       if [[ $err -eq 0 ]]
->       then
-> @@ -57,7 +58,13 @@ for m in $(perf list --raw-dump metrics); do
->       continue
->     elif [[ "$result" =~ "<not supported>" ]]
->     then
-> -    echo "Not supported events"
-> +    if [[ $(perf list --raw-dump $m) == "Default"* ]]
-> +    then
-> +      echo "[Ignored $m] failed but as a Default metric this can be expected"
-> +      echo $result
-> +      continue
-> +    fi
-> +    echo "[Skipped $m] Not supported events"
->       echo $result
->       if [[ $err -eq 0 ]]
->       then
-> @@ -66,7 +73,7 @@ for m in $(perf list --raw-dump metrics); do
->       continue
->     elif [[ "$result" =~ "<not counted>" ]]
->     then
-> -    echo "Not counted events"
-> +    echo "[Skipped $m] Not counted events"
->       echo $result
->       if [[ $err -eq 0 ]]
->       then
-> @@ -75,7 +82,7 @@ for m in $(perf list --raw-dump metrics); do
->       continue
->     elif [[ "$result" =~ "FP_ARITH" || "$result" =~ "AMX" ]]
->     then
-> -    echo "FP issues"
-> +    echo "[Skipped $m] FP issues"
->       echo $result
->       if [[ $err -eq 0 ]]
->       then
-> @@ -84,7 +91,7 @@ for m in $(perf list --raw-dump metrics); do
->       continue
->     elif [[ "$result" =~ "PMM" ]]
->     then
-> -    echo "Optane memory issues"
-> +    echo "[Skipped $m] Optane memory issues"
->       echo $result
->       if [[ $err -eq 0 ]]
->       then
-> @@ -101,7 +108,7 @@ for m in $(perf list --raw-dump metrics); do
->       # No error result and metric shown.
->       continue
->     fi
-> -  echo "Metric '$m' has non-zero error '$result_err' or not printed in:"
-> +  echo "[Failed $m] has non-zero error '$result_err' or not printed in:"
->     echo "$result"
->     err=1
->   done
+> [...]
+
+Applied, thanks!
+
+[12/44] block: use min() instead of min_t()
+        commit: 9420e720ad192c53c8d2803c5a2313b2d586adbd
+
+Best regards,
+-- 
+Jens Axboe
+
+
 
