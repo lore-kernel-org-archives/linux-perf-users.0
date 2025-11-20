@@ -1,55 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC1536D510;
-	Thu, 20 Nov 2025 21:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D9B30BF77;
+	Thu, 20 Nov 2025 21:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763673039; cv=none; b=HngE0Uy5N2oABA/FX1YKKoTXq2Kv8s47izFuTTKYW7uVwIq7NLhkV+YIDrTWPmSItVQdqG/FN9EHTpYx91LdPvPxPgE+f9wu4TkDTAPDHnVNTZcMpO+t9pkLci1VTMBl946K8PlPCTb/WGm06W6KbP9eqAUXZTbRoikOdwRnkh8=
+	t=1763675070; cv=none; b=NDA2MiL/xQ4gIvPyW8uzjugP1ruFa10eK5xoynERdppDjUeGPfkIIn6DqztigTHVYZn8hlQ9KKDw2Kydc56Bh+fQWem9vNuSNPj45M5/ahRz6dA5qxVdX9hGLFXo8GmoqRlksgOO7i/VOq+aWa+zyZUUmo2q57T2rcpeEbgWigM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763673039; c=relaxed/simple;
-	bh=pafp7QYJgYL+8kO0rjTWcdd13XPyv7o8C16TP8alzsw=;
+	s=arc-20240116; t=1763675070; c=relaxed/simple;
+	bh=2OMhZo0qqU+XgO0p6psfFq2viIlFEbW4CJY7Y7IoxHs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RocQkyTTNTsicce09+ZJrmrhKjAGBF19BJzHhvW+kieMHszYHTcEFcbxkQOhXQXYAa4ooZvb8AS28X2QSQVuwN1aRmIbhxDvRp8xD8l+czcKoJrw+rTH8DgSo2wcP953mNSFzSiUh3qd9Ohn6ReNbf/CY/iLLuTL4D8urCKRNNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCQ2vo2j; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cgavWPivBcdHr+1f0c7esGf75YIO7Eq5jk3idLdVyuKYXnf2UJ7kiK/yYIE43MfXRZrDIbarEOyTcjjFmU9VdO3xVwoPhichPOl6z/vpOXgZD4zVeLByTuUEnUWTIZJ36dy0ItFkcPHbfI8+H50uak/86W7ZpnojaPkIshSrTaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pr/ooh+V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCQ2vo2j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5939CC4CEF1;
-	Thu, 20 Nov 2025 21:10:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pr/ooh+V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A0D5C4CEF1;
+	Thu, 20 Nov 2025 21:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763673038;
-	bh=pafp7QYJgYL+8kO0rjTWcdd13XPyv7o8C16TP8alzsw=;
+	s=k20201202; t=1763675069;
+	bh=2OMhZo0qqU+XgO0p6psfFq2viIlFEbW4CJY7Y7IoxHs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gCQ2vo2j53NCoKkd9xScCThpXaYNkm+xDC6wEm7fN2qjyb0L4bsmtzIA283Q5rtQT
-	 hgeYkiJYbX8WO7zl1Em9uMhR0eDUKiKMvtzw5bDUvNSh3FdnO0Z7BvOqbta0JEZaLn
-	 3QG9Rd+vhSoF6DiBBreB++uttt5vLDGy2h+8ux3owAQZDrrcqiLGeuIN9idjfEYwaw
-	 krqTVbBJPCajIIenHkBPZuKbAv3/9qZJqygYuoh5zJnkM3h6fMlt39Tl+8am6Pab9k
-	 gCiykrrM0VQ1kZLwD6V6O/30oMhW3lWk7tgIHXk3ELWZI1EjfbTR1v7DDERMagfxCH
-	 hHJkATDVu1i4Q==
-Date: Thu, 20 Nov 2025 13:10:33 -0800
+	b=pr/ooh+VceNK429KoU+0r1Ldb4DBzO+Hw9WapUYmtGk4x2hpRamPzFKoYphNtzzEl
+	 Hdv0sqwwkqHlkavjRsxjESxDeNEURi4FnYk+UIovQX2iAY5A2ihidr38blcSwWabwd
+	 qJS4dzSgDCHvQ+Hbme4AYtTg3yIGfNNeMh2RpqidAgT89Mu47xOcMpvZv8Xn7MwvSi
+	 5Z3ukFBMPdYDQUxQDU7OXP9c6N//xyj0aBeNXwzZY/AKJijqENFdmlc1dHYfPBCq3P
+	 OWknhIT1ZoZggm02C6uPMoBASz0FYzu/Z+nV20cLfpIvOxZ7+hKmZZijQuayh+0zB4
+	 ZtHf17BMtlDZw==
+Date: Thu, 20 Nov 2025 13:44:26 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Sandipan Das <sandipan.das@amd.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Benjamin Gray <bgray@linux.ibm.com>,
-	Caleb Biggers <caleb.biggers@intel.com>,
-	Edward Baker <edward.baker@intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Jing Zhang <renyu.zj@linux.alibaba.com>,
-	Jiri Olsa <jolsa@kernel.org>, John Garry <john.g.garry@oracle.com>,
-	Leo Yan <leo.yan@arm.com>, Perry Taylor <perry.taylor@intel.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Samantha Alt <samantha.alt@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v8 00/52] AMD, ARM, Intel metric generation with Python
-Message-ID: <aR-DycrAgXbQ3dJp@google.com>
-References: <20251113032040.1994090-1-irogers@google.com>
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v5 5/6] perf tools: Merge deferred user callchains
+Message-ID: <aR-Luv1UnB1lGXgx@google.com>
+References: <20251120021046.94490-1-namhyung@kernel.org>
+ <20251120021046.94490-6-namhyung@kernel.org>
+ <CAP-5=fXO=QEOcFyRGbZ6AqmcMHwLke=KsDSDR3KcxCECJF3jNA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,246 +54,239 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251113032040.1994090-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXO=QEOcFyRGbZ6AqmcMHwLke=KsDSDR3KcxCECJF3jNA@mail.gmail.com>
 
-Hello Sandipan and Ravi,
-
-On Wed, Nov 12, 2025 at 07:19:48PM -0800, Ian Rogers wrote:
-> Metrics in the perf tool come in via json. Json doesn't allow
-> comments, line breaks, etc. making it an inconvenient way to write
-> metrics. Further, it is useful to detect when writing a metric that
-> the event specified is supported within the event json for a
-> model. From the metric python code Event(s) are used, with fallback
-> events provided, if no event is found then an exception is thrown and
-> that can either indicate a failure or an unsupported model. To avoid
-> confusion all the metrics and their metricgroups are prefixed with
-> 'lpm_', where LPM is an abbreviation of Linux Perf Metric. While extra
-> characters aren't ideal, this separates the metrics from other vendor
-> provided metrics.
+On Wed, Nov 19, 2025 at 09:13:50PM -0800, Ian Rogers wrote:
+> On Wed, Nov 19, 2025 at 6:11 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Save samples with deferred callchains in a separate list and deliver
+> > them after merging the user callchains.  If users don't want to merge
+> > they can set tool->merge_deferred_callchains to false to prevent the
+> > behavior.
+> >
+> > With previous result, now perf script will show the merged callchains.
+> >
+> >   $ perf script
+> >   ...
+> >   pwd    2312   121.163435:     249113 cpu/cycles/P:
+> >           ffffffff845b78d8 __build_id_parse.isra.0+0x218 ([kernel.kallsyms])
+> >           ffffffff83bb5bf6 perf_event_mmap+0x2e6 ([kernel.kallsyms])
+> >           ffffffff83c31959 mprotect_fixup+0x1e9 ([kernel.kallsyms])
+> >           ffffffff83c31dc5 do_mprotect_pkey+0x2b5 ([kernel.kallsyms])
+> >           ffffffff83c3206f __x64_sys_mprotect+0x1f ([kernel.kallsyms])
+> >           ffffffff845e6692 do_syscall_64+0x62 ([kernel.kallsyms])
+> >           ffffffff8360012f entry_SYSCALL_64_after_hwframe+0x76 ([kernel.kallsyms])
+> >               7f18fe337fa7 mprotect+0x7 (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >               7f18fe330e0f _dl_sysdep_start+0x7f (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >               7f18fe331448 _dl_start_user+0x0 (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >   ...
+> >
+> > The old output can be get using --no-merge-callchain option.
+> > Also perf report can get the user callchain entry at the end.
+> >
+> >   $ perf report --no-children --stdio -q -S __build_id_parse.isra.0
+> >   # symbol: __build_id_parse.isra.0
+> >        8.40%  pwd      [kernel.kallsyms]
+> >               |
+> >               ---__build_id_parse.isra.0
+> >                  perf_event_mmap
+> >                  mprotect_fixup
+> >                  do_mprotect_pkey
+> >                  __x64_sys_mprotect
+> >                  do_syscall_64
+> >                  entry_SYSCALL_64_after_hwframe
+> >                  mprotect
+> >                  _dl_sysdep_start
+> >                  _dl_start_user
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/Documentation/perf-script.txt |  5 ++
+> >  tools/perf/builtin-inject.c              |  1 +
+> >  tools/perf/builtin-report.c              |  1 +
+> >  tools/perf/builtin-script.c              |  4 ++
+> >  tools/perf/util/callchain.c              | 29 ++++++++++
+> >  tools/perf/util/callchain.h              |  3 ++
+> >  tools/perf/util/evlist.c                 |  1 +
+> >  tools/perf/util/evlist.h                 |  2 +
+> >  tools/perf/util/session.c                | 67 +++++++++++++++++++++++-
+> >  tools/perf/util/tool.c                   |  2 +
+> >  tools/perf/util/tool.h                   |  1 +
+> >  11 files changed, 115 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+> > index 28bec7e78bc858ba..03d1129606328d6d 100644
+> > --- a/tools/perf/Documentation/perf-script.txt
+> > +++ b/tools/perf/Documentation/perf-script.txt
+> > @@ -527,6 +527,11 @@ include::itrace.txt[]
+> >         The known limitations include exception handing such as
+> >         setjmp/longjmp will have calls/returns not match.
+> >
+> > +--merge-callchains::
+> > +       Enable merging deferred user callchains if available.  This is the
+> > +       default behavior.  If you want to see separate CALLCHAIN_DEFERRED
+> > +       records for some reason, use --no-merge-callchains explicitly.
+> > +
+> >  :GMEXAMPLECMD: script
+> >  :GMEXAMPLESUBCMD:
+> >  include::guest-files.txt[]
+> > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> > index bd9245d2dd41aa48..51d2721b6db9dccb 100644
+> > --- a/tools/perf/builtin-inject.c
+> > +++ b/tools/perf/builtin-inject.c
+> > @@ -2527,6 +2527,7 @@ int cmd_inject(int argc, const char **argv)
+> >         inject.tool.auxtrace            = perf_event__repipe_auxtrace;
+> >         inject.tool.bpf_metadata        = perf_event__repipe_op2_synth;
+> >         inject.tool.dont_split_sample_group = true;
+> > +       inject.tool.merge_deferred_callchains = false;
+> >         inject.session = __perf_session__new(&data, &inject.tool,
+> >                                              /*trace_event_repipe=*/inject.output.is_pipe,
+> >                                              /*host_env=*/NULL);
+> > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> > index 2bc269f5fcef8023..add6b1c2aaf04270 100644
+> > --- a/tools/perf/builtin-report.c
+> > +++ b/tools/perf/builtin-report.c
+> > @@ -1614,6 +1614,7 @@ int cmd_report(int argc, const char **argv)
+> >         report.tool.event_update         = perf_event__process_event_update;
+> >         report.tool.feature              = process_feature_event;
+> >         report.tool.ordering_requires_timestamps = true;
+> > +       report.tool.merge_deferred_callchains = !dump_trace;
+> >
+> >         session = perf_session__new(&data, &report.tool);
+> >         if (IS_ERR(session)) {
+> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> > index 85b42205a71b3993..62e43d3c5ad731a0 100644
+> > --- a/tools/perf/builtin-script.c
+> > +++ b/tools/perf/builtin-script.c
+> > @@ -4009,6 +4009,7 @@ int cmd_script(int argc, const char **argv)
+> >         bool header_only = false;
+> >         bool script_started = false;
+> >         bool unsorted_dump = false;
+> > +       bool merge_deferred_callchains = true;
+> >         char *rec_script_path = NULL;
+> >         char *rep_script_path = NULL;
+> >         struct perf_session *session;
+> > @@ -4162,6 +4163,8 @@ int cmd_script(int argc, const char **argv)
+> >                     "Guest code can be found in hypervisor process"),
+> >         OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
+> >                     "Enable LBR callgraph stitching approach"),
+> > +       OPT_BOOLEAN('\0', "merge-callchains", &merge_deferred_callchains,
+> > +                   "Enable merge deferred user callchains"),
+> >         OPTS_EVSWITCH(&script.evswitch),
+> >         OPT_END()
+> >         };
+> > @@ -4418,6 +4421,7 @@ int cmd_script(int argc, const char **argv)
+> >         script.tool.throttle             = process_throttle_event;
+> >         script.tool.unthrottle           = process_throttle_event;
+> >         script.tool.ordering_requires_timestamps = true;
+> > +       script.tool.merge_deferred_callchains = merge_deferred_callchains;
+> >         session = perf_session__new(&data, &script.tool);
+> >         if (IS_ERR(session))
+> >                 return PTR_ERR(session);
+> > diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> > index 2884187ccbbecfdc..71dc5a070065dd2a 100644
+> > --- a/tools/perf/util/callchain.c
+> > +++ b/tools/perf/util/callchain.c
+> > @@ -1838,3 +1838,32 @@ int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
+> >         }
+> >         return 0;
+> >  }
+> > +
+> > +int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
+> > +                                    struct perf_sample *sample_callchain)
+> > +{
+> > +       u64 nr_orig = sample_orig->callchain->nr - 1;
+> > +       u64 nr_deferred = sample_callchain->callchain->nr;
+> > +       struct ip_callchain *callchain;
+> > +
+> > +       if (sample_orig->callchain->nr < 2) {
+> > +               sample_orig->deferred_callchain = false;
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       callchain = calloc(1 + nr_orig + nr_deferred, sizeof(u64));
+> > +       if (callchain == NULL) {
+> > +               sample_orig->deferred_callchain = false;
+> > +               return -ENOMEM;
+> > +       }
+> > +
+> > +       callchain->nr = nr_orig + nr_deferred;
+> > +       /* copy original including PERF_CONTEXT_USER_DEFERRED (but the cookie) */
+> > +       memcpy(callchain->ips, sample_orig->callchain->ips, nr_orig * sizeof(u64));
+> > +       /* copy deferred user callchains */
+> > +       memcpy(&callchain->ips[nr_orig], sample_callchain->callchain->ips,
+> > +              nr_deferred * sizeof(u64));
+> > +
+> > +       sample_orig->callchain = callchain;
+> > +       return 0;
+> > +}
+> > diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+> > index d5ae4fbb7ce5fa44..2a52af8c80ace33c 100644
+> > --- a/tools/perf/util/callchain.h
+> > +++ b/tools/perf/util/callchain.h
+> > @@ -318,4 +318,7 @@ int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
+> >                                     struct perf_sample *sample, int max_stack,
+> >                                     bool symbols, callchain_iter_fn cb, void *data);
+> >
+> > +int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
+> > +                                    struct perf_sample *sample_callchain);
+> > +
+> >  #endif /* __PERF_CALLCHAIN_H */
+> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> > index e8217efdda5323c6..03674d2cbd015e4f 100644
+> > --- a/tools/perf/util/evlist.c
+> > +++ b/tools/perf/util/evlist.c
+> > @@ -85,6 +85,7 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+> >         evlist->ctl_fd.pos = -1;
+> >         evlist->nr_br_cntr = -1;
+> >         metricgroup__rblist_init(&evlist->metric_events);
+> > +       INIT_LIST_HEAD(&evlist->deferred_samples);
+> >  }
+> >
+> >  struct evlist *evlist__new(void)
+> > diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> > index 5e71e3dc60423079..911834ae7c2a6f76 100644
+> > --- a/tools/perf/util/evlist.h
+> > +++ b/tools/perf/util/evlist.h
+> > @@ -92,6 +92,8 @@ struct evlist {
+> >          * of struct metric_expr.
+> >          */
+> >         struct rblist   metric_events;
+> > +       /* samples with deferred_callchain would wait here. */
+> > +       struct list_head deferred_samples;
+> >  };
+> >
+> >  struct evsel_str_handler {
+> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> > index 361e15c1f26a96d0..2e777fd1bcf6707b 100644
+> > --- a/tools/perf/util/session.c
+> > +++ b/tools/perf/util/session.c
+> > @@ -1285,6 +1285,60 @@ static int evlist__deliver_sample(struct evlist *evlist, const struct perf_tool
+> >                                             per_thread);
+> >  }
+> >
+> > +struct deferred_event {
+> > +       struct list_head list;
+> > +       union perf_event *event;
 > 
-> * The first 14 patches introduce infrastructure and fixes for the
->   addition of metrics written in python for Arm64, AMD Zen and Intel
->   CPUs. The ilist.py and perf python module are fixed to work better
->   with metrics on hybrid architectures.
-> 
-> * The next 13 patches generate additional metrics for AMD zen.  Rapl
->   and Idle metrics aren't specific to AMD but are placed here for ease
->   and convenience. Uncore L3 metrics are added along with the majority
->   of core metrics.
+> Is this the old version of the patch? No comment and it seems the
+> event's memory isn't copied. I'm worried as we have events in stack
+> allocated memory such as:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/session.c?h=perf-tools-next#n1618
+> or copies:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/builtin-inject.c?h=perf-tools-next#n336
+> or just because the ring buffer overwrites itself. My belief is that
+> we don't hold events, and the associated parsed sample, longer than
+> the  tool callback because it'll be wrong/corrupt after that. Here the
+> deferred callchain events are all being held longer than a single tool
+> event callback.
 
-Any opinion on these new metrics?  I'd like to have them unless you have
-objections.  Please let me know if there are concerns.
+I added the conditional copy in the next patch, but as you said, it'd be
+safer to copy always.  The concern is the performance of perf report
+which is already slow and I don't want to make it worse.  But let's
+start with the simple, safe version and optimize it later.
 
 Thanks,
 Namhyung
 
-> 
-> * The next 20 patches add additional metrics for Intel. Rapl and Idle
->   metrics aren't specific to Intel but are placed here for ease and
->   convenience. Smi and tsx metrics are added so they can be dropped
->   from the per model json files. There are four uncore sets of metrics
->   and eleven core metrics. Add a CheckPmu function to metric to
->   simplify detecting the presence of hybrid PMUs in events. Metrics
->   with experimental events are flagged as experimental in their
->   description.
-> 
-> * The next 2 patches add additional metrics for Arm64, where the
->   topdown set decomposes yet further. The metrcs primarily use json
->   events, where the json contains architecture standard events. Not
->   all events are in the json, such as for a53 where the events are in
->   sysfs. Workaround this by adding the sysfs events to the metrics but
->   longer-term such events should be added to the json.
-> 
-> * The final patch validates that all events provided to an Event
->   object exist in a json file somewhere. This is to avoid mistakes
->   like unfortunate typos.
-> 
-> This series has benefitted from the input of Leo Yan
->  <leo.yan@arm.com>, Sandipan Das <sandidas@amd.com>, Thomas Falcon
->  <thomas.falcon@intel.com> and Perry Taylor <perry.taylor@intel.com>.
-> 
-> v8. Combine the previous 4 series for clarity. Rebase on top of the
->     more recent legacy metric and event changes. Make the python more
->     pep8 and pylint compliant.
-> 
-> Foundations:
-> v6. Fix issue with '\-' escape not being '\\-' (reported-by Sandipan
->     Das <sandidas@amd.com>) which didn't alter the generated json.
->     https://lore.kernel.org/lkml/20250904043208.995243-1-irogers@google.com/
-> 
-> v5. Rebase on top of legacy hardware/cache changes that now generate
->     events using python:
->     https://lore.kernel.org/lkml/20250828205930.4007284-1-irogers@google.com/
->     the v5 series is:
->     https://lore.kernel.org/lkml/20250829030727.4159703-1-irogers@google.com/
-> 
-> v4. Rebase and small Build/Makefile tweak
->     https://lore.kernel.org/lkml/20240926173554.404411-1-irogers@google.com/
-> 
-> v3. Some code tidying, make the input directory a command line
->     argument, but no other functional or output changes.
->     https://lore.kernel.org/lkml/20240314055051.1960527-1-irogers@google.com/
-> 
-> v2. Fixes two type issues in the python code but no functional or
->     output changes.
->     https://lore.kernel.org/lkml/20240302005950.2847058-1-irogers@google.com/
-> 
-> v1. https://lore.kernel.org/lkml/20240302005950.2847058-1-irogers@google.com/
-> 
-> AMD:
-> v6. Fix issue with '\-' escape not being '\\-' (reported-by Sandipan
->     Das <sandidas@amd.com>) which didn't alter the generated json.
->     https://lore.kernel.org/lkml/20250904044047.999031-1-irogers@google.com/
-> 
-> v5. Rebase. Add uop cache hit/miss rates patch. Prefix all metric
->     names with lpm_ (short for Linux Perf Metric) so that python
->     generated metrics are clearly namespaced.
->     https://lore.kernel.org/lkml/20250829033138.4166591-1-irogers@google.com/
-> 
-> v4. Rebase.
->     https://lore.kernel.org/lkml/20240926174101.406874-1-irogers@google.com/
-> 
-> v3. Some minor code cleanup changes.
->     https://lore.kernel.org/lkml/20240314055839.1975063-1-irogers@google.com/
-> 
-> v2. Drop the cycles breakdown in favor of having it as a common
->     metric, suggested by Kan Liang <kan.liang@linux.intel.com>.
->     https://lore.kernel.org/lkml/20240301184737.2660108-1-irogers@google.com/
-> 
-> v1. https://lore.kernel.org/lkml/20240229001537.4158049-1-irogers@google.com/
-> 
-> Intel:
-> v6. Fix issue with '\-' escape not being '\\-' (reported-by Sandipan
->     Das <sandidas@amd.com>) which didn't alter the generated json.
->     https://lore.kernel.org/lkml/20250904044653.1002362-1-irogers@google.com/
-> 
-> v5. Rebase. Fix description for smi metric (Kan). Prefix all metric
->     names with lpm_ (short for Linux Perf Metric) so that python
->     generated metrics are clearly namespaced. Kan requested a
->     namespace in his review:
->     https://lore.kernel.org/lkml/43548903-b7c8-47c4-b1da-0258293ecbd4@linux.intel.com/
->     The v5 series is:
->     https://lore.kernel.org/lkml/20250829041104.4186320-1-irogers@google.com/
-> 
-> v4. Experimental metric descriptions. Add mesh bandwidth metric. Rebase.
->     https://lore.kernel.org/lkml/20240926175035.408668-1-irogers@google.com/
-> 
-> v3. Swap tsx and CheckPMU patches that were in the wrong order. Some
->     minor code cleanup changes. Drop reference to merged fix for
->     umasks/occ_sel in PCU events and for cstate metrics.
->     https://lore.kernel.org/lkml/20240314055919.1979781-1-irogers@google.com/
-> 
-> v2. Drop the cycles breakdown in favor of having it as a common
->     metric, spelling and other improvements suggested by Kan Liang
->     <kan.liang@linux.intel.com>.
->     https://lore.kernel.org/lkml/20240301185559.2661241-1-irogers@google.com/
-> 
-> v1. https://lore.kernel.org/lkml/20240229001806.4158429-1-irogers@google.com/
-> 
-> ARM:
-> v7. Switch a use of cycles to cpu-cycles due to ARM having too many
->     cycles events.
->     https://lore.kernel.org/lkml/20250904194139.1540230-1-irogers@google.com/
-> 
-> v6. Fix issue with '\-' escape not being '\\-' (reported-by Sandipan
->     Das <sandidas@amd.com>) which didn't alter the generated json.
->     https://lore.kernel.org/lkml/20250904045253.1007052-1-irogers@google.com/
-> 
-> v5. Rebase. Address review comments from Leo Yan
->     <leo.yan@arm.com>. Prefix all metric names with lpm_ (short for
->     Linux Perf Metric) so that python generated metrics are clearly
->     namespaced. Use cpu-cycles rather than cycles legacy event for
->     cycles metrics to avoid confusion with ARM PMUs. Add patch that
->     checks events to ensure all possible event names are present in at
->     least one json file.
->     https://lore.kernel.org/lkml/20250829053235.21994-1-irogers@google.com/
-> 
-> v4. Tweak to build dependencies and rebase.
->     https://lore.kernel.org/lkml/20240926175709.410022-1-irogers@google.com/
-> 
-> v3. Some minor code cleanup changes.
->     https://lore.kernel.org/lkml/20240314055801.1973422-1-irogers@google.com/
-> 
-> v2. The cycles metrics are now made common and shared with AMD and
->     Intel, suggested by Kan Liang <kan.liang@linux.intel.com>. This
->     assumes these patches come after the AMD and Intel sets.
->     https://lore.kernel.org/lkml/20240301184942.2660478-1-irogers@google.com/
-> 
-> v1. https://lore.kernel.org/lkml/20240229001325.4157655-1-irogers@google.com/
-> 
-> Ian Rogers (52):
->   perf python: Correct copying of metric_leader in an evsel
->   perf ilist: Be tolerant of reading a metric on the wrong CPU
->   perf jevents: Allow multiple metricgroups.json files
->   perf jevents: Update metric constraint support
->   perf jevents: Add descriptions to metricgroup abstraction
->   perf jevents: Allow metric groups not to be named
->   perf jevents: Support parsing negative exponents
->   perf jevents: Term list fix in event parsing
->   perf jevents: Add threshold expressions to Metric
->   perf jevents: Move json encoding to its own functions
->   perf jevents: Drop duplicate pending metrics
->   perf jevents: Skip optional metrics in metric group list
->   perf jevents: Build support for generating metrics from python
->   perf jevents: Add load event json to verify and allow fallbacks
->   perf jevents: Add RAPL event metric for AMD zen models
->   perf jevents: Add idle metric for AMD zen models
->   perf jevents: Add upc metric for uops per cycle for AMD
->   perf jevents: Add br metric group for branch statistics on AMD
->   perf jevents: Add software prefetch (swpf) metric group for AMD
->   perf jevents: Add hardware prefetch (hwpf) metric group for AMD
->   perf jevents: Add itlb metric group for AMD
->   perf jevents: Add dtlb metric group for AMD
->   perf jevents: Add uncore l3 metric group for AMD
->   perf jevents: Add load store breakdown metrics ldst for AMD
->   perf jevents: Add ILP metrics for AMD
->   perf jevents: Add context switch metrics for AMD
->   perf jevents: Add uop cache hit/miss rates for AMD
->   perf jevents: Add RAPL metrics for all Intel models
->   perf jevents: Add idle metric for Intel models
->   perf jevents: Add CheckPmu to see if a PMU is in loaded json events
->   perf jevents: Add smi metric group for Intel models
->   perf jevents: Mark metrics with experimental events as experimental
->   perf jevents: Add tsx metric group for Intel models
->   perf jevents: Add br metric group for branch statistics on Intel
->   perf jevents: Add software prefetch (swpf) metric group for Intel
->   perf jevents: Add ports metric group giving utilization on Intel
->   perf jevents: Add L2 metrics for Intel
->   perf jevents: Add load store breakdown metrics ldst for Intel
->   perf jevents: Add ILP metrics for Intel
->   perf jevents: Add context switch metrics for Intel
->   perf jevents: Add FPU metrics for Intel
->   perf jevents: Add Miss Level Parallelism (MLP) metric for Intel
->   perf jevents: Add mem_bw metric for Intel
->   perf jevents: Add local/remote "mem" breakdown metrics for Intel
->   perf jevents: Add dir breakdown metrics for Intel
->   perf jevents: Add C-State metrics from the PCU PMU for Intel
->   perf jevents: Add local/remote miss latency metrics for Intel
->   perf jevents: Add upi_bw metric for Intel
->   perf jevents: Add mesh bandwidth saturation metric for Intel
->   perf jevents: Add collection of topdown like metrics for arm64
->   perf jevents: Add cycles breakdown metric for arm64/AMD/Intel
->   perf jevents: Validate that all names given an Event
-> 
->  tools/perf/.gitignore                   |    5 +
->  tools/perf/Makefile.perf                |    2 +
->  tools/perf/pmu-events/Build             |   51 +-
->  tools/perf/pmu-events/amd_metrics.py    |  711 ++++++++++++++
->  tools/perf/pmu-events/arm64_metrics.py  |  187 ++++
->  tools/perf/pmu-events/common_metrics.py |   19 +
->  tools/perf/pmu-events/intel_metrics.py  | 1129 +++++++++++++++++++++++
->  tools/perf/pmu-events/jevents.py        |    7 +-
->  tools/perf/pmu-events/metric.py         |  256 ++++-
->  tools/perf/pmu-events/metric_test.py    |    4 +
->  tools/perf/python/ilist.py              |    8 +-
->  tools/perf/util/evsel.c                 |    1 +
->  tools/perf/util/python.c                |   82 +-
->  13 files changed, 2408 insertions(+), 54 deletions(-)
->  create mode 100755 tools/perf/pmu-events/amd_metrics.py
->  create mode 100755 tools/perf/pmu-events/arm64_metrics.py
->  create mode 100644 tools/perf/pmu-events/common_metrics.py
->  create mode 100755 tools/perf/pmu-events/intel_metrics.py
-> 
-> -- 
-> 2.51.2.1041.gc1ab5b90ca-goog
-> 
