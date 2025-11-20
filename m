@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BBC22AE7A;
-	Thu, 20 Nov 2025 23:48:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B62130FC17;
+	Thu, 20 Nov 2025 23:48:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763682489; cv=none; b=jKoLeFIx2go11KEyVqUa6C60SGviFGUjRw1dBTlUvfx1ILG597qr0OKS6hx+xWo/lJOO2D1TZGu4frB8D6+9pFcZdAuh4ybIAKqkHeoG808zx2AIUUFb51bVtoVI/GxE7zQ+Gue9epagnnBOLzxxRJOgXtZvIfrbfXnlCf2HkJo=
+	t=1763682491; cv=none; b=uqVlCTCZIrG0htg8Qf8oDcbcF0hle5f/gZAPVG6WuxkFIcF++2geSP4jkfLkBRV0XVkcAEKYDSjb3WhS8mrCjniR8ZY8GXBByCAYCXQgwp6lrErECawlWucAqy6hPp5cnBHJ4f8/16FfAEQkLPAhwThbVk1heVvtw+OR8VCHeHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763682489; c=relaxed/simple;
-	bh=VCitTLNl4pF3HT4SSFNsCGSBjZfQ7YTxcCLL1JOLWjg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pEP0/D6HpPqwHB7kwMmLzQLHEZI2fkoEbLKLYAxQIRtmaakDyIvdeCSKTnfQyrClZa8aQ8mrShEdn0hcS/Y9Sj1u4FLBW2o9o/cybJfGUGnIXIOZdQJfNrniaKWbVsJEhvZnAfCGGzpomt3g3Pk1CWzmYDqGgFwZDFRIg6mFYWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ks5lRGic; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763682491; c=relaxed/simple;
+	bh=6E7S1qiCAeFYdAEsMcPGeoh/Sr+GKSQeYdUiLCW163c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uNGINvKWpPp7oqDRdRavcekeA2RfcgkNqZkH2lOBOJu/GKUlrE0QSTCF4zmuV7Y6+FpM5dwL5QJljIpRKv+9CXEg4Qk5/2y36aYv5BKYCCftjC9VwpZxPNkIsoyxyFDqzsotw2mG+AQBQHBnU4yJyVnwlgnuCgy/DWMzi5IP0Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cRWxwSmA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ks5lRGic"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51721C4CEF1;
-	Thu, 20 Nov 2025 23:48:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cRWxwSmA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3390AC116C6;
+	Thu, 20 Nov 2025 23:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763682487;
-	bh=VCitTLNl4pF3HT4SSFNsCGSBjZfQ7YTxcCLL1JOLWjg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ks5lRGicUYP9mNqtczq6x91MbGXtoBz+8HdIQ+0C89uk5+yFL5t/Gdd+6iW6Iw0y+
-	 7qVUGFQXeSSd9YDPoeoqwwNcsF66GbsKmXuUIZLpLFhZGJEVuRIgS8uTnjsFqTvYjC
-	 nr8/FuCAYVNUwM+2qt47EoUECZRuHeCtTxkskG/3yIl3xTz4DB27GnGrPSHrBVw+eA
-	 UkoshMBsJS/6QuQNeAvVam20rMkwRS9fH04h4V+71GHPf/SXx1xrPHCZcteDEN7Bkm
-	 x2n3PJSo+eAbE2QTWLYRqkKruPlg/Bt4rlrQHPw3tfJgYCkF6rIOzYOtcHaT4xu3Rc
-	 4il2nfceedllw==
+	s=k20201202; t=1763682490;
+	bh=6E7S1qiCAeFYdAEsMcPGeoh/Sr+GKSQeYdUiLCW163c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cRWxwSmAMkJm1HgJqTKgv66iMPOJMR5cn8ZSv9YbK6UF8TwKUAzCrcCC+tD3gC/Qf
+	 FThpwWdM5em7mrIpyaPt5zd3k/SXpwVWmaMsURi8UFMSN60mCiG/zUM9iGEm428I9v
+	 CnPxv+fis+cfDSlFRE4I4feY4cEOyjttG7oaYRbny8aHrMbAhKeNCNc3Ngx9gsbeN1
+	 ZfOkxtaJHm5NBhH4kETRaGAPdKhVI5pvlIxQ1IMDpcPYcAuakH7xCFJeAulOR09v/e
+	 UJjKARficEN7bfksdU3FcuULxWu+6SyinGU2BLVsIdKnUHtWboi9bl+aQ4YUJLxDFw
+	 brAlatwGlMGRw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -42,10 +43,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-trace-kernel@vger.kernel.org,
 	bpf@vger.kernel.org
-Subject: [PATCHSET v6 0/6] perf tools: Add deferred callchain support
-Date: Thu, 20 Nov 2025 15:47:58 -0800
-Message-ID: <20251120234804.156340-1-namhyung@kernel.org>
+Subject: [PATCH v6 2/6] perf tools: Minimal DEFERRED_CALLCHAIN support
+Date: Thu, 20 Nov 2025 15:48:00 -0800
+Message-ID: <20251120234804.156340-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.52.0.rc2.455.g230fcf2819-goog
+In-Reply-To: <20251120234804.156340-1-namhyung@kernel.org>
+References: <20251120234804.156340-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,125 +57,274 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+Add a new event type for deferred callchains and a new callback for the
+struct perf_tool.  For now it doesn't actually handle the deferred
+callchains but it just marks the sample if it has the PERF_CONTEXT_
+USER_DEFFERED in the callchain array.
 
-This is a new version of deferred callchain support as the kernel part
-is merged to the tip tree.  Actually this is based on Steve's work (v16).
+At least, perf report can dump the raw data with this change.  Actually
+this requires the next commit to enable attr.defer_callchain, but if you
+already have a data file, it'll show the following result.
 
-  https://lore.kernel.org/r/20250908175319.841517121@kernel.org
-
-v6 changes)
-
-* always copy the events  (Ian)
-* add flush in the pipe mode
-
-v5: https://lore.kernel.org/r/20251120021046.94490-1-namhyung@kernel.org/
-
-* update delegate tools  (Ian)
-* copy and flush remaining samples  (Ian)
-* add Ian's Reviewed-by tags
-
-v4: https://lore.kernel.org/r/20251115234106.348571-1-namhyung@kernel.org
-
-* add --call-graph fp,defer option   (Ian, Steve)
-* add more comment on the cookie  (Ian)
-* display cookie part in the deferred callchain  (Ian)
-
-v3: https://lore.kernel.org/r/20251114070018.160330-1-namhyung@kernel.org
-
-* handle new attr.defer_output to generate deferred callchains
-* fix crash when cookies don't match  (Steven)
-* disable merging for perf inject
-* fix missing feature detection bug
-* symbolize merged callchains properly
-
-Here's an example session.
-
-  $ perf record --call-graph fp,defer  pwd
-  /home/namhyung/project/linux
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.010 MB perf.data (29 samples) ]
-
-  $ perf evlist -v
-  cpu/cycles/P: type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES),
-  { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CALLCHAIN|PERIOD,
-  read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1,
-  task: 1, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, build_id: 1,
-  defer_callchain: 1, defer_output: 1
-
-  $ perf script
+  $ perf report -D
   ...
-  pwd    2312   121.163435:     249113 cpu/cycles/P:
-          ffffffff845b78d8 __build_id_parse.isra.0+0x218 ([kernel.kallsyms])
-          ffffffff83bb5bf6 perf_event_mmap+0x2e6 ([kernel.kallsyms])
-          ffffffff83c31959 mprotect_fixup+0x1e9 ([kernel.kallsyms])
-          ffffffff83c31dc5 do_mprotect_pkey+0x2b5 ([kernel.kallsyms])
-          ffffffff83c3206f __x64_sys_mprotect+0x1f ([kernel.kallsyms])
-          ffffffff845e6692 do_syscall_64+0x62 ([kernel.kallsyms])
-          ffffffff8360012f entry_SYSCALL_64_after_hwframe+0x76 ([kernel.kallsyms])
-              7f18fe337fa7 mprotect+0x7 (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-              7f18fe330e0f _dl_sysdep_start+0x7f (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-              7f18fe331448 _dl_start_user+0x0 (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-  ...
+  0x2158@perf.data [0x40]: event: 22
+  .
+  . ... raw event: size 64 bytes
+  .  0000:  16 00 00 00 02 00 40 00 06 00 00 00 0b 00 00 00  ......@.........
+  .  0010:  03 00 00 00 00 00 00 00 a7 7f 33 fe 18 7f 00 00  ..........3.....
+  .  0020:  0f 0e 33 fe 18 7f 00 00 48 14 33 fe 18 7f 00 00  ..3.....H.3.....
+  .  0030:  08 09 00 00 08 09 00 00 e6 7a e7 35 1c 00 00 00  .........z.5....
 
-  $ perf script --no-merge-callchains
-  ...
-  pwd    2312   121.163435:     249113 cpu/cycles/P:
-          ffffffff845b78d8 __build_id_parse.isra.0+0x218 ([kernel.kallsyms])
-          ffffffff83bb5bf6 perf_event_mmap+0x2e6 ([kernel.kallsyms])
-          ffffffff83c31959 mprotect_fixup+0x1e9 ([kernel.kallsyms])
-          ffffffff83c31dc5 do_mprotect_pkey+0x2b5 ([kernel.kallsyms])
-          ffffffff83c3206f __x64_sys_mprotect+0x1f ([kernel.kallsyms])
-          ffffffff845e6692 do_syscall_64+0x62 ([kernel.kallsyms])
-          ffffffff8360012f entry_SYSCALL_64_after_hwframe+0x76 ([kernel.kallsyms])
-                 b00000006 (cookie) ([unknown])
+  121163447014 0x2158 [0x40]: PERF_RECORD_CALLCHAIN_DEFERRED(IP, 0x2): 2312/2312: 0xb00000006
+  ... FP chain: nr:3
+  .....  0: 00007f18fe337fa7
+  .....  1: 00007f18fe330e0f
+  .....  2: 00007f18fe331448
+  : unhandled!
 
-  pwd    2312   121.163447: DEFERRED CALLCHAIN [cookie: b00000006]
-              7f18fe337fa7 mprotect+0x7 (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-              7f18fe330e0f _dl_sysdep_start+0x7f (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-              7f18fe331448 _dl_start_user+0x0 (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-  ...
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/lib/perf/include/perf/event.h       | 13 ++++++++++
+ tools/perf/util/event.c                   |  1 +
+ tools/perf/util/evsel.c                   | 31 +++++++++++++++++++++--
+ tools/perf/util/machine.c                 |  1 +
+ tools/perf/util/perf_event_attr_fprintf.c |  2 ++
+ tools/perf/util/sample.h                  |  2 ++
+ tools/perf/util/session.c                 | 20 +++++++++++++++
+ tools/perf/util/tool.c                    |  3 +++
+ tools/perf/util/tool.h                    |  3 ++-
+ 9 files changed, 73 insertions(+), 3 deletions(-)
 
-The code is available at 'perf/defer-callchain-v6' branch in
-
-  git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (6):
-  tools headers UAPI: Sync linux/perf_event.h for deferred callchains
-  perf tools: Minimal DEFERRED_CALLCHAIN support
-  perf record: Add --call-graph fp,defer option for deferred callchains
-  perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
-  perf tools: Merge deferred user callchains
-  perf tools: Flush remaining samples w/o deferred callchains
-
- tools/include/uapi/linux/perf_event.h     |  21 +++-
- tools/lib/perf/include/perf/event.h       |  13 ++
- tools/perf/Documentation/perf-config.txt  |   3 +
- tools/perf/Documentation/perf-record.txt  |   4 +
- tools/perf/Documentation/perf-script.txt  |   5 +
- tools/perf/builtin-inject.c               |   1 +
- tools/perf/builtin-report.c               |   1 +
- tools/perf/builtin-script.c               |  93 ++++++++++++++
- tools/perf/util/callchain.c               |  45 ++++++-
- tools/perf/util/callchain.h               |   4 +
- tools/perf/util/event.c                   |   1 +
- tools/perf/util/evlist.c                  |   1 +
- tools/perf/util/evlist.h                  |   2 +
- tools/perf/util/evsel.c                   |  50 +++++++-
- tools/perf/util/evsel.h                   |   1 +
- tools/perf/util/evsel_fprintf.c           |   5 +-
- tools/perf/util/machine.c                 |   1 +
- tools/perf/util/perf_event_attr_fprintf.c |   2 +
- tools/perf/util/sample.h                  |   2 +
- tools/perf/util/session.c                 | 147 ++++++++++++++++++++++
- tools/perf/util/tool.c                    |   5 +
- tools/perf/util/tool.h                    |   4 +-
- 22 files changed, 403 insertions(+), 8 deletions(-)
-
+diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+index aa1e91c97a226e1a..43a8cb04994fa033 100644
+--- a/tools/lib/perf/include/perf/event.h
++++ b/tools/lib/perf/include/perf/event.h
+@@ -151,6 +151,18 @@ struct perf_record_switch {
+ 	__u32			 next_prev_tid;
+ };
+ 
++struct perf_record_callchain_deferred {
++	struct perf_event_header header;
++	/*
++	 * This is to match kernel and (deferred) user stacks together.
++	 * The kernel part will be in the sample callchain array after
++	 * the PERF_CONTEXT_USER_DEFERRED entry.
++	 */
++	__u64			 cookie;
++	__u64			 nr;
++	__u64			 ips[];
++};
++
+ struct perf_record_header_attr {
+ 	struct perf_event_header header;
+ 	struct perf_event_attr	 attr;
+@@ -523,6 +535,7 @@ union perf_event {
+ 	struct perf_record_read			read;
+ 	struct perf_record_throttle		throttle;
+ 	struct perf_record_sample		sample;
++	struct perf_record_callchain_deferred	callchain_deferred;
+ 	struct perf_record_bpf_event		bpf;
+ 	struct perf_record_ksymbol		ksymbol;
+ 	struct perf_record_text_poke_event	text_poke;
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index fcf44149feb20c35..4c92cc1a952c1d9f 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -61,6 +61,7 @@ static const char *perf_event__names[] = {
+ 	[PERF_RECORD_CGROUP]			= "CGROUP",
+ 	[PERF_RECORD_TEXT_POKE]			= "TEXT_POKE",
+ 	[PERF_RECORD_AUX_OUTPUT_HW_ID]		= "AUX_OUTPUT_HW_ID",
++	[PERF_RECORD_CALLCHAIN_DEFERRED]	= "CALLCHAIN_DEFERRED",
+ 	[PERF_RECORD_HEADER_ATTR]		= "ATTR",
+ 	[PERF_RECORD_HEADER_EVENT_TYPE]		= "EVENT_TYPE",
+ 	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index aee42666e882daab..f1a311637694ac0a 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3089,6 +3089,20 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 	data->data_src = PERF_MEM_DATA_SRC_NONE;
+ 	data->vcpu = -1;
+ 
++	if (event->header.type == PERF_RECORD_CALLCHAIN_DEFERRED) {
++		const u64 max_callchain_nr = UINT64_MAX / sizeof(u64);
++
++		data->callchain = (struct ip_callchain *)&event->callchain_deferred.nr;
++		if (data->callchain->nr > max_callchain_nr)
++			return -EFAULT;
++
++		data->deferred_cookie = event->callchain_deferred.cookie;
++
++		if (evsel->core.attr.sample_id_all)
++			perf_evsel__parse_id_sample(evsel, event, data);
++		return 0;
++	}
++
+ 	if (event->header.type != PERF_RECORD_SAMPLE) {
+ 		if (!evsel->core.attr.sample_id_all)
+ 			return 0;
+@@ -3213,12 +3227,25 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 
+ 	if (type & PERF_SAMPLE_CALLCHAIN) {
+ 		const u64 max_callchain_nr = UINT64_MAX / sizeof(u64);
++		u64 callchain_nr;
+ 
+ 		OVERFLOW_CHECK_u64(array);
+ 		data->callchain = (struct ip_callchain *)array++;
+-		if (data->callchain->nr > max_callchain_nr)
++		callchain_nr = data->callchain->nr;
++		if (callchain_nr > max_callchain_nr)
+ 			return -EFAULT;
+-		sz = data->callchain->nr * sizeof(u64);
++		sz = callchain_nr * sizeof(u64);
++		/*
++		 * Save the cookie for the deferred user callchain.  The last 2
++		 * entries in the callchain should be the context marker and the
++		 * cookie.  The cookie will be used to match PERF_RECORD_
++		 * CALLCHAIN_DEFERRED later.
++		 */
++		if (evsel->core.attr.defer_callchain && callchain_nr >= 2 &&
++		    data->callchain->ips[callchain_nr - 2] == PERF_CONTEXT_USER_DEFERRED) {
++			data->deferred_cookie = data->callchain->ips[callchain_nr - 1];
++			data->deferred_callchain = true;
++		}
+ 		OVERFLOW_CHECK(array, sz, max_size);
+ 		array = (void *)array + sz;
+ 	}
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index b5dd42588c916d91..841b711d970e9457 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2124,6 +2124,7 @@ static int add_callchain_ip(struct thread *thread,
+ 				*cpumode = PERF_RECORD_MISC_KERNEL;
+ 				break;
+ 			case PERF_CONTEXT_USER:
++			case PERF_CONTEXT_USER_DEFERRED:
+ 				*cpumode = PERF_RECORD_MISC_USER;
+ 				break;
+ 			default:
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index 66b666d9ce649dd7..741c3d657a8b6ae7 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -343,6 +343,8 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	PRINT_ATTRf(inherit_thread, p_unsigned);
+ 	PRINT_ATTRf(remove_on_exec, p_unsigned);
+ 	PRINT_ATTRf(sigtrap, p_unsigned);
++	PRINT_ATTRf(defer_callchain, p_unsigned);
++	PRINT_ATTRf(defer_output, p_unsigned);
+ 
+ 	PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events, p_unsigned, false);
+ 	PRINT_ATTRf(bp_type, p_unsigned);
+diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+index fae834144ef42105..a8307b20a9ea8066 100644
+--- a/tools/perf/util/sample.h
++++ b/tools/perf/util/sample.h
+@@ -107,6 +107,8 @@ struct perf_sample {
+ 	/** @weight3: On x86 holds retire_lat, on powerpc holds p_stage_cyc. */
+ 	u16 weight3;
+ 	bool no_hw_idx;		/* No hw_idx collected in branch_stack */
++	bool deferred_callchain;	/* Has deferred user callchains */
++	u64 deferred_cookie;
+ 	char insn[MAX_INSN];
+ 	void *raw_data;
+ 	struct ip_callchain *callchain;
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 4b0236b2df2913e1..361e15c1f26a96d0 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -720,6 +720,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
+ 	[PERF_RECORD_CGROUP]		  = perf_event__cgroup_swap,
+ 	[PERF_RECORD_TEXT_POKE]		  = perf_event__text_poke_swap,
+ 	[PERF_RECORD_AUX_OUTPUT_HW_ID]	  = perf_event__all64_swap,
++	[PERF_RECORD_CALLCHAIN_DEFERRED]  = perf_event__all64_swap,
+ 	[PERF_RECORD_HEADER_ATTR]	  = perf_event__hdr_attr_swap,
+ 	[PERF_RECORD_HEADER_EVENT_TYPE]	  = perf_event__event_type_swap,
+ 	[PERF_RECORD_HEADER_TRACING_DATA] = perf_event__tracing_data_swap,
+@@ -854,6 +855,9 @@ static void callchain__printf(struct evsel *evsel,
+ 	for (i = 0; i < callchain->nr; i++)
+ 		printf("..... %2d: %016" PRIx64 "\n",
+ 		       i, callchain->ips[i]);
++
++	if (sample->deferred_callchain)
++		printf("...... (deferred)\n");
+ }
+ 
+ static void branch_stack__printf(struct perf_sample *sample,
+@@ -1123,6 +1127,19 @@ static void dump_sample(struct evsel *evsel, union perf_event *event,
+ 		sample_read__printf(sample, evsel->core.attr.read_format);
+ }
+ 
++static void dump_deferred_callchain(struct evsel *evsel, union perf_event *event,
++				    struct perf_sample *sample)
++{
++	if (!dump_trace)
++		return;
++
++	printf("(IP, 0x%x): %d/%d: %#" PRIx64 "\n",
++	       event->header.misc, sample->pid, sample->tid, sample->deferred_cookie);
++
++	if (evsel__has_callchain(evsel))
++		callchain__printf(evsel, sample);
++}
++
+ static void dump_read(struct evsel *evsel, union perf_event *event)
+ {
+ 	struct perf_record_read *read_event = &event->read;
+@@ -1353,6 +1370,9 @@ static int machines__deliver_event(struct machines *machines,
+ 		return tool->text_poke(tool, event, sample, machine);
+ 	case PERF_RECORD_AUX_OUTPUT_HW_ID:
+ 		return tool->aux_output_hw_id(tool, event, sample, machine);
++	case PERF_RECORD_CALLCHAIN_DEFERRED:
++		dump_deferred_callchain(evsel, event, sample);
++		return tool->callchain_deferred(tool, event, sample, evsel, machine);
+ 	default:
+ 		++evlist->stats.nr_unknown_events;
+ 		return -1;
+diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+index 22a8a4ffe05f778e..e77f0e2ecc1f79db 100644
+--- a/tools/perf/util/tool.c
++++ b/tools/perf/util/tool.c
+@@ -287,6 +287,7 @@ void perf_tool__init(struct perf_tool *tool, bool ordered_events)
+ 	tool->read = process_event_sample_stub;
+ 	tool->throttle = process_event_stub;
+ 	tool->unthrottle = process_event_stub;
++	tool->callchain_deferred = process_event_sample_stub;
+ 	tool->attr = process_event_synth_attr_stub;
+ 	tool->event_update = process_event_synth_event_update_stub;
+ 	tool->tracing_data = process_event_synth_tracing_data_stub;
+@@ -335,6 +336,7 @@ bool perf_tool__compressed_is_stub(const struct perf_tool *tool)
+ 	}
+ CREATE_DELEGATE_SAMPLE(read);
+ CREATE_DELEGATE_SAMPLE(sample);
++CREATE_DELEGATE_SAMPLE(callchain_deferred);
+ 
+ #define CREATE_DELEGATE_ATTR(name)					\
+ 	static int delegate_ ## name(const struct perf_tool *tool,	\
+@@ -468,6 +470,7 @@ void delegate_tool__init(struct delegate_tool *tool, struct perf_tool *delegate)
+ 	tool->tool.ksymbol = delegate_ksymbol;
+ 	tool->tool.bpf = delegate_bpf;
+ 	tool->tool.text_poke = delegate_text_poke;
++	tool->tool.callchain_deferred = delegate_callchain_deferred;
+ 
+ 	tool->tool.attr = delegate_attr;
+ 	tool->tool.event_update = delegate_event_update;
+diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+index 88337cee1e3e2be3..9b9f0a8cbf3de4b5 100644
+--- a/tools/perf/util/tool.h
++++ b/tools/perf/util/tool.h
+@@ -44,7 +44,8 @@ enum show_feature_header {
+ 
+ struct perf_tool {
+ 	event_sample	sample,
+-			read;
++			read,
++			callchain_deferred;
+ 	event_op	mmap,
+ 			mmap2,
+ 			comm,
 -- 
 2.52.0.rc2.455.g230fcf2819-goog
 
