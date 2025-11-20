@@ -1,186 +1,298 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E002AE68
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Nov 2025 06:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC252FCC1D
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Nov 2025 07:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763619601; cv=none; b=FKFgREsD/XjTd9MXX0Ryw8Y3jrfUXeR+4FvIg105/IIUm4y52KkOsxBkbQyA/uM/kr88Tq/7frXe40QLM9HnhrScIwKOQNQsfcOfc/e/V6ga5xnR12OB6k14+NZJYNb8rSi1zZctaRYKhuFCXrmX8hUJHQBYgiLGSQnNLz6L8BE=
+	t=1763623309; cv=none; b=jttPa7wSUcg16x4poM74LYIeTUt08cmgjNgJ5HIaCB+XARLkjbvMnTH/qprfdLhaXQ/5s20hwXPL4JzhKOe2fnux5WLG5NXqFb4ad4GCh5iGURrcJyXyPtYPb5+eBMtKNnMwKpCKbuNL1mrOyz7F45DuK4ssXonfMDZF+eJwUz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763619601; c=relaxed/simple;
-	bh=v4/QNHf5y9qehcrp9ZW1OQ3Qmou9xbBgq+qdM9gXKAY=;
+	s=arc-20240116; t=1763623309; c=relaxed/simple;
+	bh=PoZzKooldyS09F0DrQHNQlOyt/QzIA7zHB/LjzFuNHc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DTISjU0SElubIy94SFLZjwEHw7rFXzJFWXUCRDbSEsbuX2+UgtdVfOD9eIEPdNUPmw0nR3PWmj9R8L1fLx6Gnx4qTPgOPVMF3632sZADCAuLgl0qvq+aPwwL5vWLOWqwksF4da22jj9TmJ3LvQq4m1MKppzPqAEoQxt3UzkSRto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v3pyBtNW; arc=none smtp.client-ip=209.85.214.177
+	 To:Cc:Content-Type; b=BSfzwZTC1yAJEPKokq00Tk2+djJalSw0m6OKaOQMbAw/+/Np/sIjPMneoTjQqWXiXLuZGHmy9N8i8IOSgQHBrYTbhOZUsc3PX678iU1CPgCPAx5yamuv1TJrg+DY6k73tebUravgTFIR1X9lJ7rUBIgKXv30SoUdm7LGDO/g4x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=knUuKfk3; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v3pyBtNW"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2980343d9d1so86525ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 22:19:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="knUuKfk3"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-295c64cb951so157375ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Nov 2025 23:21:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763619599; x=1764224399; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763623307; x=1764228107; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qQbqlneP0k94xfCsp7Dp2s/aFM70DtqH0k+Oufc2748=;
-        b=v3pyBtNWWgUAfUWt9ZKpsarvBGtrE5SQH8xDSHYDsmKkyHnUglQQHA/imdekgWup95
-         MKxCr8OhtdTZYy+q3gQE8ayg5cdRUrmZ/swW+2DnSSqGfBtGA9RYnop/GtNDNLKsMEhW
-         Q0Xv9gmwuTCfzJ2tDdU+TmFQNKDWnZZAp7890+kTJA7D9QWA0KlFc6NWok/QPPPX90mC
-         L9p+Bdo5MilY1g5jYQvODGdzk3UPexn1D9pN+D0sc+yeMSQvOOuljvyEIt0qSScj7iaA
-         g20cUctyr05XcMn4iaKTb2MVRjKgmLxivWoTAqpPamkCOeSzDlDyAEctg4h51H5nunsi
-         lM1Q==
+        bh=ZHaicfDQ+Iz0AxGWxfn1Oe/AWnMqn2B/ceLG3l5DP4g=;
+        b=knUuKfk3B4zUoyDB7P59AxJ4GjTKDh6nYPwfi96fNtrqzBYMH9XkorqIsZO8W6maOL
+         enxpHWf7P7UBi0JlrNPKt3ySVn/HYTUKHJ+L7O44lrrI8H8IdNdhLJyIXhuL6vv5V1+Q
+         11NNC0SQaevc3jwxjabwu9TxEW8jVGYrlK/50aPem9GAy6hDw+Wa1BILIJJiu7+6utgm
+         Dqc7ujEjfPNuNfPqCxGLrDByHweu42jUURtfZVil9NHXNlJkXN6QMbv0xwVFi2aU8q78
+         4kzzExZ32O5y9OH4NjauDkIXZIJVP4xUXvq0u3kzCP2JIXtBxENEhOKnKUAeIy5GfcSV
+         iGXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763619599; x=1764224399;
+        d=1e100.net; s=20230601; t=1763623307; x=1764228107;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=qQbqlneP0k94xfCsp7Dp2s/aFM70DtqH0k+Oufc2748=;
-        b=dp5GwDRkLixkLdDeLWiu8hMQDB4DCqcb4iiTzp4hr8CiXbOAUUkex8NrY18+UvuCVp
-         yjteyXnqJmXUxFP/xwBE4H/kD5QUK0XxKuedtcEYdD7L8Nl39eebfLa7xFLLtSAnvVNR
-         DNDpiSDmYaS7O4TmEc13SmDTT0gOYJ087I8T3piyp9Iarexa0Nwgf+LH19dCXTpr50RL
-         9tjTi/vunCqbTHEruQrNAjANG3CLNFnN08qogWJ2oz3uBItrqMfcfRp5Yg0Fi8CZaBWJ
-         kSFng3TyULs9G64yQj0V8Ad97LTQO5zxhP15jiVw1ZHHxwJa60Ce2v8Q9k/TyCkIem8J
-         81JA==
-X-Forwarded-Encrypted: i=1; AJvYcCXPGHZhfa68e2iINUSbZ1sD9O4Ge5KN/7JkvneJPD6Whx9QLDcjcZAC/1mzsoE497bhKVu3KxCOpG+zeVR14lXv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhtP+leTbZHmVBvOonjb6tQ59A9KeCby07923Q01WecMrk8hiA
-	qW/xFrIvWsf9vQHjFOEmhvz4fbg9JAFIG8zXHYhv0Ny+Gwgt7wMBNQ8nuJIXeqMeOBDCM6K7S78
-	iNiPShF3jtzVWBkBgTRn8vreErLETGgPgKmkwZF6Y
-X-Gm-Gg: ASbGncuTvxjWBv00DVtR/pxdJBtJCT3wKM5tBUie06m9S3fn8h821YaV/bj8HdTl157
-	Wijt5GBU7CsDBY/+IYwAy/z2x6tgqyS9aTuQZnQbJbe4t6zO8JwNy5INMkFoMhkJQkrlinzRc28
-	y4jYWf925CyHp9EHWELZ8AN1/G6SxERUHixR1FSo1YbpUEOJjCO/ShNPzAXLRyOq3764D3Tw0v/
-	TOBLLcBzP44uan3mpuzazsO3PNHqUylJeGneeXr0LwLtKEtQEEVbpabxcRZqSmRdtZWNgDM
-X-Google-Smtp-Source: AGHT+IEIswPfK3DzmAKM+co/T5twbAI+gC+NxulP6Sj+0yYNqpPtfFvoVIG6/9Gnhh8Uj3uHUwlg6HdLchnuuRvxfWM=
-X-Received: by 2002:a17:903:11c7:b0:295:28a4:f0f5 with SMTP id
- d9443c01a7336-29b5dc03c51mr1308115ad.5.1763619598805; Wed, 19 Nov 2025
- 22:19:58 -0800 (PST)
+        bh=ZHaicfDQ+Iz0AxGWxfn1Oe/AWnMqn2B/ceLG3l5DP4g=;
+        b=TaRCQz8uWP960bEtoclhUcx5GB8tdqqqa30Nf2wp335XOKtcjwz4kp5wCvXZgJigzY
+         Ifmcv1SICumsQGf0bSd2u4H46cyU5YZU+jgM4Ahag+78Vz8G04eh+FQr/iZlDGFOe1Yk
+         Ax0VUsz9wOE0abZlPZN/hlmJp9USx6va3QyjDzm5iyCpdXn8hzPZ1ali+N7v4a+SYM95
+         7rrQ3D88QkNJ33zhY/QZ8RBFwamuEAkdG6pU5r5Mw20bFdOlaHxKgYPe23dvMLAGXVp9
+         me8o9vezYS+7onEfW0Lik5ZbHJsW9YiWjN3U0trigDTexETF34naQrSWZPFOY5znRkQM
+         Wm8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUV1KnQdfSmjSXeDTTrI+mfbXIluZGYxI7N7LYBtqobZVB6GjeNrLM42TrT5NzUSmx8qdeVWwQNGo8dyusVWavh@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZDK/M9R37DH7gPxtN4K1z7ZkVOmEYZfjxg78/+7IEsCu0S6IJ
+	ZnrUldsqR56g1l0HNlt0bNbxhDwmOfDgFffglAuok7PYorLKLeowheUHRShW5wv3ejfk8IriACo
+	voJw2u4in6r4RYnJGYd9hkS+RXr5LEJ5AaY3NHawf
+X-Gm-Gg: ASbGnctc0Ssv+D8ysjLxez1QenoQSRrFGAo/4iCd3eVuVeiuKqGMiZa37KayRaMOE2t
+	tdGYalaGdXccdfW2KMZbidf8i7f3sveAPf2Xunf5BqQhwwkajyKLatCdvMdbeBPvLZgGTxgRjo8
+	21/uirGsp5MCuScelAG0Yr18HRg0jYA0Rh6N7EghxJ7h+lNsh0ZkTdwe/l6zmibfRAd5zKQsqmi
+	o/512UCQ0UeluuKpK11CNCsCT4gjMixwQ8W/eaLZfRtVtXDconu8BGEfLfT+6x/+43BAhiv
+X-Google-Smtp-Source: AGHT+IHZH4dzJYbP+6JEJU146TqIYwgbwYu6L37DmUR2kDQlrP4kcGeYX6edRL7L67kQOFBusvYY8AdC2i6auLcPlzk=
+X-Received: by 2002:a17:902:d48a:b0:295:30bc:458e with SMTP id
+ d9443c01a7336-29b5da68247mr1398075ad.3.1763623306956; Wed, 19 Nov 2025
+ 23:21:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251120053431.491677-1-dapeng1.mi@linux.intel.com> <20251120053431.491677-7-dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251120053431.491677-7-dapeng1.mi@linux.intel.com>
+References: <20251120021046.94490-1-namhyung@kernel.org> <20251120021046.94490-7-namhyung@kernel.org>
+ <CAP-5=fVZcmYgyRJVNbet9ZLjihAiXNy7D8cX+QqHe8EKqJ1qOQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fVZcmYgyRJVNbet9ZLjihAiXNy7D8cX+QqHe8EKqJ1qOQ@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 19 Nov 2025 22:19:47 -0800
-X-Gm-Features: AWmQ_bkI4A3mEQtAkRR1ujkt4bIRsTNW1Nqt--Nm_J9W5uqVMwAGQhGc3rxlao0
-Message-ID: <CAP-5=fWOhG8XJwcyT1tYtVhLxp0m2kWG1oSeX6gKOmyJ=kOSpA@mail.gmail.com>
-Subject: Re: [PATCH 6/7] perf/x86: Replace magic numbers with macros for attr_rdpmc
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>, Falcon Thomas <thomas.falcon@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>, 
-	Zide Chen <zide.chen@intel.com>, Xudong Hao <xudong.hao@intel.com>
+Date: Wed, 19 Nov 2025 23:21:35 -0800
+X-Gm-Features: AWmQ_bmGj70-yG8VRXForCVD3RpZbxAbDk1gJJ-fwwQ4WqyQsrq4dL6vbbcFGRk
+Message-ID: <CAP-5=fUmoxMw9UkptfoMZUaSbLSnZ2hxJvYejMabyugLk_qYKQ@mail.gmail.com>
+Subject: Re: [PATCH v5 6/6] perf tools: Flush remaining samples w/o deferred callchains
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, Jens Remus <jremus@linux.ibm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 19, 2025 at 9:37=E2=80=AFPM Dapeng Mi <dapeng1.mi@linux.intel.c=
-om> wrote:
+On Wed, Nov 19, 2025 at 9:29=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> Use macros to replace these attr_rdpmc magic numbers, so users are easy
-> to know their meaning.
+> On Wed, Nov 19, 2025 at 6:11=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > It's possible that some kernel samples don't have matching deferred
+> > callchain records when the profiling session was ended before the
+> > threads came back to userspace.  Let's flush the samples before
+> > finish the session.
+> >
+> > Also 32-bit systems can see partial mmap for the data.  In that case,
+> > deferred samples won't point to the correct data once the mapping moves
+> > to the next portion of the file.  Copy the original sample before it
+> > unmaps the current data.
 >
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> I think it is simpler to always copy. We may have events from
+> synthesis, inject, .. and not the reader. Relying on callers to know
+> that someone made a copy of the event and to make a defensive copy on
+> their behalf just feels error prone.
+>
+> In the python session API I need to deal with the lifetime of events.
+> Currently the events are copied:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/util/python.c?h=3Dperf-tools-next#n507
+> and I'm doing this for session tool callbacks:
+> https://lore.kernel.org/lkml/20251029053413.355154-12-irogers@google.com/
+> I think it can be made lazier by knowing the tool callback can assume
+> the event and sample are valid. We can delay the copying of the
+> event/sample for if the pyevent has a reference count >1 and we're
+> returning out of the tool callback. Doing some kind of global
+> knowledge in the reader for maintaining the correctness of memory, I'm
+> just not clear on how to make it always work.
 
-I'm reminded that we were having issues with rdpmc on hybrid:
-https://lore.kernel.org/lkml/20250614004528.1652860-1-irogers@google.com/
-like the enable/disable rdpmc flag being shared across the cpu_core
-and cpu_atom PMUs, and needing to force the thread doing the rdpmc to
-have affinity matching the CPUs of the PMU it is reading from, as
-otherwise things like struct perf_event_mmap_page's index could do
-interesting things:
+I believe we always reuse the memory for the event, per event, in pipe mode=
+:
 https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/mmap-basic.c?h=3Dperf-tools-next#n208
-Others required the rdpmc to be in a restartable sequence and Peter
-proposed fixing this in the kernel:
-https://lore.kernel.org/linux-perf-users/20250618084522.GE1613376@noisy.pro=
-gramming.kicks-ass.net/
-
-Also looks like we never merged fixing the documentation:
-https://lore.kernel.org/lkml/20220817174909.877139-1-irogers@google.com/
-
-Not specifically a DMR issue but this is reminding me of a bunch of
-tech debt - I also wonder if this patch requires the test being
-updated.
+t/tree/tools/perf/util/session.c?h=3Dperf-tools-next#n1868
+so a lazy copy will be broken for the pipe mode case.
 
 Thanks,
 Ian
 
-> ---
->  arch/x86/events/core.c       | 7 ++++---
->  arch/x86/events/intel/p6.c   | 2 +-
->  arch/x86/events/perf_event.h | 7 +++++++
->  3 files changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 5d0d5e466c62..3d9cc1d7fcfa 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2129,7 +2129,8 @@ static int __init init_hw_perf_events(void)
->
->         pr_cont("%s PMU driver.\n", x86_pmu.name);
->
-> -       x86_pmu.attr_rdpmc =3D 1; /* enable userspace RDPMC usage by defa=
-ult */
-> +       /* enable userspace RDPMC usage by default */
-> +       x86_pmu.attr_rdpmc =3D X86_USER_RDPMC_CONDITIONAL_ENABLE;
->
->         for (quirk =3D x86_pmu.quirks; quirk; quirk =3D quirk->next)
->                 quirk->func();
-> @@ -2609,12 +2610,12 @@ static ssize_t set_attr_rdpmc(struct device *cdev=
-,
->                  */
->                 if (val =3D=3D 0)
->                         static_branch_inc(&rdpmc_never_available_key);
-> -               else if (x86_pmu.attr_rdpmc =3D=3D 0)
-> +               else if (x86_pmu.attr_rdpmc =3D=3D X86_USER_RDPMC_NEVER_E=
-NABLE)
->                         static_branch_dec(&rdpmc_never_available_key);
->
->                 if (val =3D=3D 2)
->                         static_branch_inc(&rdpmc_always_available_key);
-> -               else if (x86_pmu.attr_rdpmc =3D=3D 2)
-> +               else if (x86_pmu.attr_rdpmc =3D=3D X86_USER_RDPMC_ALWAYS_=
-ENABLE)
->                         static_branch_dec(&rdpmc_always_available_key);
->
->                 on_each_cpu(cr4_update_pce, NULL, 1);
-> diff --git a/arch/x86/events/intel/p6.c b/arch/x86/events/intel/p6.c
-> index 6e41de355bd8..fb991e0ac614 100644
-> --- a/arch/x86/events/intel/p6.c
-> +++ b/arch/x86/events/intel/p6.c
-> @@ -243,7 +243,7 @@ static __init void p6_pmu_rdpmc_quirk(void)
->                  */
->                 pr_warn("Userspace RDPMC support disabled due to a CPU er=
-ratum\n");
->                 x86_pmu.attr_rdpmc_broken =3D 1;
-> -               x86_pmu.attr_rdpmc =3D 0;
-> +               x86_pmu.attr_rdpmc =3D X86_USER_RDPMC_NEVER_ENABLE;
->         }
->  }
->
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index f7caabc5d487..24a81d2916e9 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -187,6 +187,13 @@ struct amd_nb {
->          (1ULL << PERF_REG_X86_R14)   | \
->          (1ULL << PERF_REG_X86_R15))
->
-> +/* user space rdpmc control values */
-> +enum {
-> +       X86_USER_RDPMC_NEVER_ENABLE             =3D 0,
-> +       X86_USER_RDPMC_CONDITIONAL_ENABLE       =3D 1,
-> +       X86_USER_RDPMC_ALWAYS_ENABLE            =3D 2,
-> +};
-> +
->  /*
->   * Per register state.
->   */
-> --
-> 2.34.1
->
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/session.c | 98 +++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 98 insertions(+)
+> >
+> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> > index 2e777fd1bcf6707b..b781e01ddcb4876b 100644
+> > --- a/tools/perf/util/session.c
+> > +++ b/tools/perf/util/session.c
+> > @@ -1288,8 +1288,13 @@ static int evlist__deliver_sample(struct evlist =
+*evlist, const struct perf_tool
+> >  struct deferred_event {
+> >         struct list_head list;
+> >         union perf_event *event;
+> > +       bool allocated;
+> >  };
+> >
+> > +/*
+> > + * This is called when a deferred callchain record comes up.  Find all=
+ matching
+> > + * samples, merge the callchains and process them.
+> > + */
+> >  static int evlist__deliver_deferred_samples(struct evlist *evlist,
+> >                                             const struct perf_tool *too=
+l,
+> >                                             union  perf_event *event,
+> > @@ -1331,6 +1336,86 @@ static int evlist__deliver_deferred_samples(stru=
+ct evlist *evlist,
+> >                         free(orig_sample.callchain);
+> >
+> >                 list_del(&de->list);
+> > +               if (de->allocated)
+> > +                       free(de->event);
+> > +               free(de);
+> > +
+> > +               if (ret)
+> > +                       break;
+> > +       }
+> > +       return ret;
+> > +}
+> > +
+> > +/*
+> > + * This is called when the backing mmap is about to go away.  It needs=
+ to save
+> > + * the original sample data until it finds the matching deferred callc=
+hains.
+> > + */
+> > +static void evlist__copy_deferred_samples(struct evlist *evlist,
+> > +                                         const struct perf_tool *tool,
+> > +                                         struct machine *machine)
+> > +{
+> > +       struct deferred_event *de, *tmp;
+> > +       struct evsel *evsel;
+> > +       int ret =3D 0;
+> > +
+> > +       list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, li=
+st) {
+> > +               struct perf_sample sample;
+> > +               size_t sz =3D de->event->header.size;
+> > +               void *buf;
+> > +
+> > +               if (de->allocated)
+> > +                       continue;
+> > +
+> > +               buf =3D malloc(sz);
+> > +               if (buf) {
+> > +                       memcpy(buf, de->event, sz);
+> > +                       de->event =3D buf;
+> > +                       de->allocated =3D true;
+> > +                       continue;
+> > +               }
+> > +
+> > +               /* The allocation failed, flush the sample now */
+> > +               ret =3D evlist__parse_sample(evlist, de->event, &sample=
+);
+> > +               if (ret =3D=3D 0) {
+> > +                       evsel =3D evlist__id2evsel(evlist, sample.id);
+> > +                       evlist__deliver_sample(evlist, tool, de->event,
+> > +                                              &sample, evsel, machine)=
+;
+> > +               }
+> > +
+> > +               list_del(&de->list);
+> > +               BUG_ON(de->allocated);
+> > +               free(de);
+> > +       }
+> > +}
+> > +
+> > +/*
+> > + * This is called at the end of the data processing for the session.  =
+Flush the
+> > + * remaining samples as there's no hope for matching deferred callchai=
+ns.
+> > + */
+> > +static int evlist__flush_deferred_samples(struct evlist *evlist,
+> > +                                         const struct perf_tool *tool,
+> > +                                         struct machine *machine)
+> > +{
+> > +       struct deferred_event *de, *tmp;
+> > +       struct evsel *evsel;
+> > +       int ret =3D 0;
+> > +
+> > +       list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, li=
+st) {
+> > +               struct perf_sample sample;
+> > +
+> > +               ret =3D evlist__parse_sample(evlist, de->event, &sample=
+);
+> > +               if (ret < 0) {
+> > +                       pr_err("failed to parse original sample\n");
+> > +                       break;
+> > +               }
+> > +
+> > +               evsel =3D evlist__id2evsel(evlist, sample.id);
+> > +               ret =3D evlist__deliver_sample(evlist, tool, de->event,
+> > +                                            &sample, evsel, machine);
+> > +
+> > +               list_del(&de->list);
+> > +               if (de->allocated)
+> > +                       free(de->event);
+> >                 free(de);
+> >
+> >                 if (ret)
+> > @@ -1374,6 +1459,7 @@ static int machines__deliver_event(struct machine=
+s *machines,
+> >                                 return -ENOMEM;
+> >
+> >                         de->event =3D event;
+> > +                       de->allocated =3D false;
+> >                         list_add_tail(&de->list, &evlist->deferred_samp=
+les);
+> >                         return 0;
+> >                 }
+> > @@ -2218,6 +2304,8 @@ reader__mmap(struct reader *rd, struct perf_sessi=
+on *session)
+> >         }
+> >
+> >         if (mmaps[rd->mmap_idx]) {
+> > +               evlist__copy_deferred_samples(session->evlist, session-=
+>tool,
+> > +                                             &session->machines.host);
+> >                 munmap(mmaps[rd->mmap_idx], rd->mmap_size);
+> >                 mmaps[rd->mmap_idx] =3D NULL;
+> >         }
+> > @@ -2372,6 +2460,11 @@ static int __perf_session__process_events(struct=
+ perf_session *session)
+> >         if (err)
+> >                 goto out_err;
+> >         err =3D auxtrace__flush_events(session, tool);
+> > +       if (err)
+> > +               goto out_err;
+> > +       err =3D evlist__flush_deferred_samples(session->evlist,
+> > +                                            session->tool,
+> > +                                            &session->machines.host);
+> >         if (err)
+> >                 goto out_err;
+> >         err =3D perf_session__flush_thread_stacks(session);
+> > @@ -2494,6 +2587,11 @@ static int __perf_session__process_dir_events(st=
+ruct perf_session *session)
+> >         if (ret)
+> >                 goto out_err;
+> >
+> > +       ret =3D evlist__flush_deferred_samples(session->evlist, tool,
+> > +                                            &session->machines.host);
+> > +       if (ret)
+> > +               goto out_err;
+> > +
+> >         ret =3D perf_session__flush_thread_stacks(session);
+> >  out_err:
+> >         ui_progress__finish();
+> > --
+> > 2.52.0.rc1.455.g30608eb744-goog
+> >
