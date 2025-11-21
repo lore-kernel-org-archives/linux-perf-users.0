@@ -1,28 +1,29 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F3D1E0DFE;
-	Fri, 21 Nov 2025 06:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C94026A1B6;
+	Fri, 21 Nov 2025 06:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763706910; cv=none; b=KS+zTgWIpJ0pvcNApkac8QNYvYINDg9/ScaWhTyfZVDCdmH+I4YexoIZAGZhPBr8MbsCjf7ZpRXVuHkZAe9gHBuZLZ72u4UOVNS3GaPkWW0PIwOAnVW3oDZ4aVRta95Bc7GYmDZU4uMb3PdkQxDWYiRNMptuDt6Ydtrfa/SE72E=
+	t=1763706913; cv=none; b=JCElhWkcEEWWcS0cC/Sx6kEdeKYoLODcfrINoMC3GWvPEeXbekZZ1fg3o5NSGGZ3r8cBYEkLMJ8h0jKs7uV74asuww5YSGQjUmkZIuT4Mp23Uv5Xt5aL/RXHttx+pxtLUow8VtTj3W2q4AdaNcKIHZoPtxUkVWkn7DfA6yvEIlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763706910; c=relaxed/simple;
-	bh=zMSDDLDUe8c4wD5uDNfH5p1DEY8d5Ax+YGvcHudNLiM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XNFsONAw5OzJqlA0bljmL3s3eIz95A4ws1MJzujZJO7g2q3KXVXuOmwneTOwlUmLxoVWd0PZ3PFusCnExtfRtCm8VncbIxIxa7Z+evAK190s2LeQtxoQQ6xKuOJDSPj7nBg1DpxcnbSAFb+jVuAsxyIRlKe2svC/EoQuIUA0Ygw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Q/kShyQn; arc=none smtp.client-ip=115.124.30.98
+	s=arc-20240116; t=1763706913; c=relaxed/simple;
+	bh=kXMhAazt0uxA4yg1yuPsBKe1Mfi0G9F6GXwrhBbNi7M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bthc+d7AZwvQ9NR+piZ/7+viWPOTYLuHOIaJsAWscB9Op96cTFETyi5GGjWnY0pzDbr/85wy6BWJOdsLLEpxh4Huh+96lO6Kh+/SckB3sW6C7cycRLu2aNj9xni/oAUA9eeDzHLqzHblTCD6DnfGGJclZzdZHms9zBnuklOa2hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=exrzOeio; arc=none smtp.client-ip=115.124.30.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Q/kShyQn"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="exrzOeio"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1763706900; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=UmXbqM0JY6kjsKySz34atLgV4D046f4p8ol4pZE44Vo=;
-	b=Q/kShyQnIcKKaT99GWYB5ctiS9zdpFKT/T33r5Wy3lZP92MvfReo0MNwQeutTChPh390J4R+n0GA9IxUaeaVelXBO5uMHv+r8+BD4VP2JvuFC41YflaURJhCDaA0FFQLa5txCjsbXmWETmL9Ggfyj1Dy8mpACJE7ljNupiKfjH4=
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0Wt-RZCZ_1763706884 cluster:ay36)
+	t=1763706902; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=48Ey0y3O33KKcN2qk5Z3Lr1o4LbwnuPTXJlui7gSguo=;
+	b=exrzOeior8XCY1q2JCWU/8P08giDZ/gyRv1ZzXVdjuvpz3Gz2UnPJhM2FXymCLcF2nY0ZfqXhoZf2amYhI/BA3etqSwyF2YG/+ObXxYxMD5ncG9FpH6TpIyTNeBk6vWkIIqVCUSmqwvwf1jixv3oH3IyQZqFfjX2d5iYmZK0v8Y=
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0Wt-RZKC_1763706899 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 21 Nov 2025 14:34:58 +0800
+          Fri, 21 Nov 2025 14:35:00 +0800
 From: cp0613@linux.alibaba.com
 To: robh@kernel.org,
 	krzk+dt@kernel.org,
@@ -46,10 +47,12 @@ Cc: devicetree@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Chen Pei <cp0613@linux.alibaba.com>
-Subject: [PATCH v2 0/4] perf vendor events riscv: Add XuanTie C930 JSON files
-Date: Fri, 21 Nov 2025 14:34:35 +0800
-Message-ID: <20251121063439.2545-1-cp0613@linux.alibaba.com>
+Subject: [PATCH v2 1/4] dt-bindings: vendor-prefixes: Add prefix for XuanTie
+Date: Fri, 21 Nov 2025 14:34:36 +0800
+Message-ID: <20251121063439.2545-2-cp0613@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251121063439.2545-1-cp0613@linux.alibaba.com>
+References: <20251121063439.2545-1-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,43 +63,26 @@ Content-Transfer-Encoding: 8bit
 
 From: Chen Pei <cp0613@linux.alibaba.com>
 
-XuanTie[1] is the RISC-V processor brand of C-SKY Microsystems Co., Ltd.
-This patch series first adds vendor XuanTie, then adds XuanTie C930 CPU
-compatible, and finally adds pmu json files for XuanTie C930, including
-topdown and some other metric groups.
+Add new vendor strings to dt bindings for RISC-V vendor XuanTie.
 
-Note:
-According to the "Standard Manufacturer's IDENTIFICATION CODE"[2], the
-manufacturer of Code '0x5b7' has changed to C-SKY Microsystems Co., Ltd.
+Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-[1] https://www.xrvm.com/
-[2] https://www.jedec.org/standards-documents/docs/jep-106ab
-
-Chen Pei (4):
-  dt-bindings: vendor-prefixes: Add prefix for XuanTie
-  dt-bindings: riscv: Add XuanTie C930 CPU compatible
-  perf vendor events riscv: Add XuanTie C930 JSON file
-  perf vendor events riscv: Add XuanTie C930 metrics
-
- .../devicetree/bindings/riscv/cpus.yaml       |   1 +
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
- .../arch/riscv/xuantie/c930/basic.json        | 117 ++++
- .../arch/riscv/xuantie/c930/ieu.json          |  97 ++++
- .../arch/riscv/xuantie/c930/ifu.json          |  62 ++
- .../arch/riscv/xuantie/c930/l2c.json          |  87 +++
- .../arch/riscv/xuantie/c930/lsu.json          | 182 ++++++
- .../arch/riscv/xuantie/c930/metrics.json      | 538 ++++++++++++++++++
- .../arch/riscv/xuantie/c930/vfpu.json         | 177 ++++++
- 10 files changed, 1264 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/basic.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/ieu.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/ifu.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/l2c.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/lsu.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/metrics.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/vfpu.json
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index f1d1882009ba..5d28b2da94cd 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1829,6 +1829,8 @@ patternProperties:
+     description: Xilinx
+   "^xnano,.*":
+     description: Xnano
++  "^xuantie,.*":
++    description: C-SKY Microsystems Co., Ltd. (XuanTie)
+   "^xunlong,.*":
+     description: Shenzhen Xunlong Software CO.,Limited
+   "^xylon,.*":
 -- 
 2.50.1
 
