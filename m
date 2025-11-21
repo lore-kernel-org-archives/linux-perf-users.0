@@ -1,91 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96FC2F99B8
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Nov 2025 08:24:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFA42C0296;
+	Fri, 21 Nov 2025 09:01:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763713447; cv=none; b=QChv711O1CcrbKMyQu8cjYR/avCIj16m3OLD+7QgKUm7yO6PKHwjw6hXDoHQclV9JbVUwTidvuuR1pPHRgG6OfNzeHN9K4RWJzhkJxqOiO3uvmsJrOSBXeaprK4z+4IQE6tl5RvTxYaz5NharrhQBExnjKu+5oQWgAc+wLehpXc=
+	t=1763715670; cv=none; b=A1KdYNHgCeZK8Lk2jOAwDsBbBteq1MqxwBJynEd75Bz9txnxrGxmfatWo40BFqbf46UfTK4lZNoIi2ZAggLOlYQJrli1HD3v5Y1bNRbpMhW9pyExrdv8baw5DWFCovaQPp8bv7P7NT6OboU474WRggiowlmtn+u7/qQFSto5u2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763713447; c=relaxed/simple;
-	bh=HDm+cQ3E57Rw/aW22/2o/8DFD56OTcZLebchCcKA30k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iWQsnC5eJ5NdrWteTeTPPMpQ+idIXXr6Rw9Lt7FlXaWXuCKTgwR55KJgsqCi8X52/PJwMxri90jYLZiOmMIZBiICM3M2eglhm4bvtP8Pi8fHlvEPuD4Lyr1JllrAnJrwu7mH39EayC+zcwi2+ZctkkpY+NLqWhTif/qkVEaAfls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EwfTg4N6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763715670; c=relaxed/simple;
+	bh=eInAUYEonqecolnVtmUNXId6rbl1ZXAHthWxpLNajEU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TXx7i0ZMvSbAfU7086iPXSZArk99xBdniFfFWWAvoiZwtH+bKi/r2ejXQXOwPhrze+9SLNCANj3VWIG36rhGir5vPDbCenFwH0iVLwAiGpjjtXeI6fOhigOQnQMIpXLXCfeXDwL624C7K3Ia+LeUWUZ93sSCwXe75JCRCxhNVIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nAijLsFX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EwfTg4N6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B921C4AF0F
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Nov 2025 08:24:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nAijLsFX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 829DAC4CEF1;
+	Fri, 21 Nov 2025 09:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763713446;
-	bh=HDm+cQ3E57Rw/aW22/2o/8DFD56OTcZLebchCcKA30k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EwfTg4N66L5B8/nM+2BVV2mkYqrpKTvpzjVCrNXZsdKP4fIaAaxOQEC5mVNn5iUBF
-	 kd69Z9TklSKdY4Rb3w+Wiohjp5m9aV3E6qX9UBRbMcVjGGnkjbxBfwpyHOJDQMdHvd
-	 rp1nkMrJ/TIHEYrwTEkzDOCqDq5BogoP4ZwQB1O7EoMvRB0WdokHeD693br30F1fB/
-	 I1Q8u1Yt+6hz8jsLqS59MY0mTOVLfAMlccV2ZqXuZT6IlnKkidYlF/VQhXODM8ujlo
-	 RwOfeu0C4FL47dw7dgeFEFjCBYs1hepbUcnPtG0axIyL31Or4GjKYQXG4P1OXYg2LT
-	 NqHJe05O01bUQ==
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-42b3ad51fecso1407580f8f.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Nov 2025 00:24:06 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWEwHQ54jC1lR6nJG1dJ0zy9ht2/tyWCY6c7TD9pU9wsQbgGaCgYYZnDPnlNnJNo4hsAyXTPF7xyHIZ//X0/nSN@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCdJeZ2XS/cP0EmQIE6aw+/rn3T+4MbnDyoT8S0OKRjSLNRL0w
-	DfSkQfCQcKrkZNGNZEderk4nKznnRTIjOcZ5nU6NuT3eaDj/xhqnPUGyXSZiNeQvQNESTVJw9/0
-	xagdHRFER9y0eg7IMy9xoDXv6ZnGV6wk=
-X-Google-Smtp-Source: AGHT+IF50+ZT25khXCr5BWbB5f955K3EzGSR5+akTKTO8ruIBzLrBr5HyMTCxBOFOObMcHXPXDQuQGeq69WN85GtTKY=
-X-Received: by 2002:a05:6000:144c:b0:42b:2f3d:2967 with SMTP id
- ffacd0b85a97d-42cc1d3a3cbmr1162815f8f.51.1763713445114; Fri, 21 Nov 2025
- 00:24:05 -0800 (PST)
+	s=k20201202; t=1763715670;
+	bh=eInAUYEonqecolnVtmUNXId6rbl1ZXAHthWxpLNajEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nAijLsFX/S5Sf6sqheAQEACvIwIlXP58JZgMNSayulYJhQ/vkzcFMbYimLZajqFl8
+	 WDudN5Vht9JQNhoGhkJFZOYhDi6GOK81pnW+IbjFPGpFFvzp/aTmtykFLRtZnQRY5G
+	 cqhAXEdxrZYjx+nm+mtHr9aHyX/xjtTur91tejJBBKl7LkX7O1GHLnUA8KNs1i2Dd6
+	 HZmETHnaJlYLGxI5SBm/WWJUXucKqbCHGke95a6qpHln5XIk1QXet84kIm7+ZfzP4O
+	 w4ZHHh7nOdCeY/PqH+1xY9kfjHuskzqbIsbatfTzEI/bX02JflZlD4/pgMTidGofS5
+	 fGblDXCRydK4w==
+Date: Fri, 21 Nov 2025 10:01:07 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: cp0613@linux.alibaba.com
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, peterz@infradead.org, 
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	james.clark@linaro.org, guoren@kernel.org, devicetree@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: vendor-prefixes: Add prefix for
+ XuanTie
+Message-ID: <20251121-able-terrestrial-spaniel-90c3cf@kuoka>
+References: <20251121063439.2545-1-cp0613@linux.alibaba.com>
+ <20251121063439.2545-2-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251121063439.2545-1-cp0613@linux.alibaba.com> <20251121063439.2545-3-cp0613@linux.alibaba.com>
-In-Reply-To: <20251121063439.2545-3-cp0613@linux.alibaba.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Fri, 21 Nov 2025 16:23:52 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTQ2SLj0hhQ0PXYECd+soKGN0TNmx38sVpO0iN_mHEXyRQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bn6YgxX0unEboOo_dGjgAu7Fy2rOtRVLHuIL5-VjcuP9Bd0OZCqE0sqPbE
-Message-ID: <CAJF2gTQ2SLj0hhQ0PXYECd+soKGN0TNmx38sVpO0iN_mHEXyRQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: riscv: Add XuanTie C930 CPU compatible
-To: cp0613@linux.alibaba.com
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, pjw@kernel.org, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, james.clark@linaro.org, devicetree@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251121063439.2545-2-cp0613@linux.alibaba.com>
 
-On Fri, Nov 21, 2025 at 2:35=E2=80=AFPM <cp0613@linux.alibaba.com> wrote:
->
+On Fri, Nov 21, 2025 at 02:34:36PM +0800, cp0613@linux.alibaba.com wrote:
 > From: Chen Pei <cp0613@linux.alibaba.com>
->
-> Update Documentation for supporting XuanTie C930.
->
+> 
+> Add new vendor strings to dt bindings for RISC-V vendor XuanTie.
+> 
 > Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 > ---
->  Documentation/devicetree/bindings/riscv/cpus.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Document=
-ation/devicetree/bindings/riscv/cpus.yaml
-> index 153d0dac57fb..581a95eba932 100644
-> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> @@ -65,6 +65,7 @@ properties:
->                - thead,c908
->                - thead,c910
->                - thead,c920
-> +              - xuantie,c930
-Yes, c930 belongs to XuanTie, not T-HEAD.
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index f1d1882009ba..5d28b2da94cd 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -1829,6 +1829,8 @@ patternProperties:
+>      description: Xilinx
+>    "^xnano,.*":
+>      description: Xnano
+> +  "^xuantie,.*":
+> +    description: C-SKY Microsystems Co., Ltd. (XuanTie)
 
-Reviewed-by: Guo Ren (Alibaba Damo Academy) <guoren@kernel.org>
+We do not create new prefixes for existing entries. You have already
+csky, alibaba and thead and probably many more. Choose some appropriate.
 
---=20
-Best Regards
- Guo Ren
+Your commit msg should also explain anything unusual here, like above.
+
+Best regards,
+Krzysztof
+
