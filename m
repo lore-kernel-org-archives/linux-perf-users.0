@@ -1,564 +1,174 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900A62B2DA
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Nov 2025 17:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B0C2DA779;
+	Fri, 21 Nov 2025 17:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763745253; cv=none; b=HmKBuQkqEKx3cEfOUAFzUUSQmdVeuWj2XJ6ejwJEoVQATw2nQjOfVyt7VtHsm7x6vVqWRr/AYwCaTElkmMHcxKxWMZBQOu10XfNufEivKPiM2u7cG99dCdEcbnQlWsGIp+G3h03GO3exE8+S8ajgX1NsvoW8r7+47jxbY0g0xMU=
+	t=1763745759; cv=none; b=hVq+MiITEF1f48zeMNlXhvXTSdSgRVUwV+I3lBq7d1pkRIDkdSs5TdMAZRk8cGstYV85a+RyLFd4dsd7Es3LBKf6XrK347cZfmBVKXSgKRfd2T/vCFs4YXrTC7fj5zqnvaWwGYt2LwvFyKZxOfDhZtrzvLg89iCO9yHT+tIEyMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763745253; c=relaxed/simple;
-	bh=4+eP/s6rfELGO1KMeEkeC+HqXllyRXoFEyddTsvlEMo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AiDYWdnZ97yRkz5i24cSKXEdgL1EMiBKmtEJKw8B9OrzvxgrJfM+A9Sy33V/DyYgEfKP4olb5RCd61DSt/m0mp4PzxTMtCEwmD1f9FMtQAlPtCuBmwzFzUvI9cUFkuCme0R/8bYEqNsB7G8vybtgCr4h8crxM69jzmQILwcHIgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QeQUaFJL; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1763745759; c=relaxed/simple;
+	bh=+h/Yc1dp+CFDd2KN9AzZ5krPiFpi1l2fIrX/TdWsPiY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RuQJVR4pErvrPd7xCPqacKvj1pnqOApBJPVZYZ/o30t18rLPtOqOiIV26bAwXbXxAZdhPjPL8jqmphGqFJJ2iBYsxaIkM49EUy7ngRabbz7uTyP6A0jXWyhMbiHa4eEbFz7RJle2e3maOiZf+TUpIk7Zhu3+DMWm/vIOfNiPi58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FV5pDfBV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QeQUaFJL"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-29852dafa7dso202565ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Nov 2025 09:14:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763745251; x=1764350051; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/fHkA5bXvXGdkcz4DZ9xrSerUItBeB4S8Hb79A6zE4Q=;
-        b=QeQUaFJLYejQW9HlZBD/d6uUjK3gNKVjYd0vkvZIcolRR74gHmCLwpwAwg9DX+QVwj
-         RxpTJSCtPka9KoKVRThjmTZl/TsVhtYeM78RG0LFAWqqK6bB//C5mY1AITQ5tQ84h0ck
-         HPvIvJ3lTQn/b2OU7i9dD8S2WHRtEeCbk6TXsPV6w29uRSDZ3XETnAtaJLJpukXlEowm
-         5lFdwklvSEo0+ptgjkfZTiD7FI1cE/nlGd5numI5rQIUFIofE2H2mcpAd2u11ORA1Ksd
-         utoKE/xvNdPxiVRHF/JW8llu5nXkafdgVWXoYIWc+XfHTl9Yt2YlzSz832EskoHLX0L/
-         EF1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763745251; x=1764350051;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/fHkA5bXvXGdkcz4DZ9xrSerUItBeB4S8Hb79A6zE4Q=;
-        b=tjfISLE2MBhymwVYHvkPY62kNcMh70kEVIZDBah6ZCBzbWhe6XV6mZJzgZZuk0aXYu
-         PYx3mb6vGKClD/IgtpMiI/fg+D23/njdRWXwM78N+sZcT9MrrQAxQm5qzdogcsmj3tAj
-         Fc05eDSnipSrYEVNyoVfCRevP82hxvIzLdTo6oPgCImzUvDEg6aPOBznzuCe7tOdwXqi
-         ZEO1qCNAKJjMdKJ5Hl0TUdYTDggX80rA2oGIhBl0ItdK9AzvesZKvxvREUybZExxb284
-         DLqdQGnLMF1M7Oi9Q4SSSWQVjzxQWTqU4xdeu+ZdFD+zDjvi98enXJi7wA9ZWiNAWugX
-         9IoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfBhv5QeceKNFhI3iQdK5rG+ICVhuBv6k3QsICpNll8AFtD1gSEJCyVJ7VQQLX7IX6HUguZjSPoJKQmNOdFUKC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTZYeteMWNIBW1d2cwICucfNcVBwb5QIN4o4PZzbNhNbF/kORA
-	fuUG6b8hFlPk2pt89xted96Wt0bVF8gveTkyRzf+dM21ejajhAHeD5CQQ4OwasYddYLMWhATABh
-	T+tgN4Co+FeyMs27MONHTWeVzOrjFkjpdYfp1dSQ9
-X-Gm-Gg: ASbGncsXM5/K2PM9f5OmIQdT9TfLug6TJbvgH0dCqWQraBE0moSVkur9Rxjj870fTcR
-	WKUKhsyWkBDnxZj0S1vaKSTMtsKLmfwjzzXvjzovTncSoglV9MVMiZNxIDJKNlHn1Ujj7WJxoOn
-	w0AzSFLwRXTBNrOeaZKYOVzL0FVjaG0JZHL1fNidcz0HHEZf2NfaUHrwiM7UKHZHEFMs4UKI/WR
-	1e3Jf1preQP8X9zRRB2yWDo8qyPmiI2EFn9GP7QBB09SB2FF5qGBI+6U59Jm0GBnjjvjOzyRAAv
-	/7VZ8tYoUnw0EI73mFHrC4Uh
-X-Google-Smtp-Source: AGHT+IEVhP3LbQeLvVIPC6ewGUvF+DwzG1d7XZsW3pCvV34fJS2jGI7dQrG+s2Vdkwz4zA41f0/p7SrPMCURdRwmbAY=
-X-Received: by 2002:a17:902:ce8c:b0:294:ecba:c8e with SMTP id
- d9443c01a7336-29b6bcef60amr3113015ad.3.1763745250465; Fri, 21 Nov 2025
- 09:14:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FV5pDfBV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D175C4CEF1;
+	Fri, 21 Nov 2025 17:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763745758;
+	bh=+h/Yc1dp+CFDd2KN9AzZ5krPiFpi1l2fIrX/TdWsPiY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FV5pDfBV2jcsTBz79mbt5JpGGRP/X4G560gmlcngXYzRsGfIbM+ZvL5KLTBtIhlLD
+	 PN2xJ5REsMsNWGlVLjeQdPPAjhj3zsRgkgpvMFkffUsGrbAWzHKHu2AJdmZ5kgxDp3
+	 3BOIyx/M4oc+4azxtaORJCSDAGV6rw6ZkQyi1TJ7LAUpw64GiySSAEzjBM+dzS62Eb
+	 Jyw4q4fjh3N4F+bRveDoC589oWd8hVQU7WS1Pwz1xKHVvYfoasCTOKyBXUlW0xTemv
+	 +boYsnTURbA3mku4rsSbOEc+j4mmUyMWhTiDl1GLAadLk8TzhknO/maSWnKPRb2uji
+	 UKHZ92926CMaw==
+Message-ID: <88bfaf9f-4483-4bcd-b3a8-de453ce6417f@kernel.org>
+Date: Fri, 21 Nov 2025 18:22:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251121-james-perf-non-block-v1-1-6ab2702ab573@linaro.org>
-In-Reply-To: <20251121-james-perf-non-block-v1-1-6ab2702ab573@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 21 Nov 2025 09:13:59 -0800
-X-Gm-Features: AWmQ_blOnKZlLgbo3J32qTgQY3ytSWzP4H1OPQYh2U-nxclDP-dom0e0bHG-Zm4
-Message-ID: <CAP-5=fVj-EQK=Dz8RRjrG+s1oH=1JrYzVu=oDGUHpP_iD=gP_A@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Don't read build-ids from non-regular files
-To: James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] dt-bindings: vendor-prefixes: Add prefix for
+ XuanTie
+To: Guo Ren <guoren@kernel.org>, Conor Dooley <conor@kernel.org>
+Cc: cp0613@linux.alibaba.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, james.clark@linaro.org, devicetree@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20251121063439.2545-1-cp0613@linux.alibaba.com>
+ <20251121063439.2545-2-cp0613@linux.alibaba.com>
+ <20251121-able-terrestrial-spaniel-90c3cf@kuoka>
+ <20251121-shortlist-coroner-b29e19293b40@spud>
+ <CAJF2gTRUmUHrTsOBM82kNq2cSYmeYr9NC_ORacUnqHAefFSaWw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAJF2gTRUmUHrTsOBM82kNq2cSYmeYr9NC_ORacUnqHAefFSaWw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 21, 2025 at 6:21=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
-> Simplify the build ID reading code by removing the non-blocking option.
-> Having to pass the correct option to this function was fragile and a
-> mistake would result in a hang, see the linked fix. Furthermore,
-> compressed files are always opened blocking anyway, ignoring the
-> non-blocking option.
->
-> We also don't expect to read build IDs from non-regular files. The only
-> hits to this function that are non-regular are devices that won't be elf
-> files with build IDs, for example "/dev/dri/renderD129".
->
-> Now instead of opening these as non-blocking and failing to read, we
-> skip them. Even if something like a pipe or character device did have a
-> build ID, I don't think it would have worked because you need to call
-> read() in a loop, check for -EAGAIN and handle timeouts to make
-> non-blocking reads work.
->
-> Link: https://lore.kernel.org/linux-perf-users/20251022-james-perf-fix-ds=
-o-block-v1-1-c4faab150546@linaro.org/
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
-> I looked at the paths for hits to this function and found the following
-> categories:
->
-> Devices, which non-block reads were unsuccessfully attempted, but are
-> now skipped:
->  * /dev/dri/renderD129
->
-> Non-valid paths, where 'non-regular' is irrelevant e.g.:
->  * [vdso]
->  * ... (deleted)
->  * anon_inode:i915.gem
->
-> Shared memory. These are regular and blocking reads work, so no changes
-> there:
->  * /dev/shm/.org.chromium.Chromium.ejhzXY
->
-> Symlinks to regular files. Also no change as is_regular_file() is true
-> for these too.
-> ---
->  tools/perf/bench/inject-buildid.c  |  2 +-
->  tools/perf/builtin-buildid-cache.c |  8 ++++----
->  tools/perf/builtin-inject.c        |  4 ++--
->  tools/perf/tests/pe-file-parsing.c |  4 ++--
->  tools/perf/tests/sdt.c             |  2 +-
->  tools/perf/util/build-id.c         |  4 ++--
->  tools/perf/util/debuginfo.c        |  2 +-
->  tools/perf/util/dsos.c             |  4 ++--
->  tools/perf/util/libbfd.c           |  4 ++--
->  tools/perf/util/libbfd.h           |  5 ++---
->  tools/perf/util/symbol-elf.c       | 13 ++++++-------
->  tools/perf/util/symbol-minimal.c   |  9 ++++++---
->  tools/perf/util/symbol.c           |  5 ++---
->  tools/perf/util/symbol.h           |  2 +-
->  tools/perf/util/synthetic-events.c |  2 +-
->  15 files changed, 35 insertions(+), 35 deletions(-)
->
-> diff --git a/tools/perf/bench/inject-buildid.c b/tools/perf/bench/inject-=
-buildid.c
-> index 12387ea88b9a..aad572a78d7f 100644
-> --- a/tools/perf/bench/inject-buildid.c
-> +++ b/tools/perf/bench/inject-buildid.c
-> @@ -85,7 +85,7 @@ static int add_dso(const char *fpath, const struct stat=
- *sb __maybe_unused,
->         if (typeflag =3D=3D FTW_D || typeflag =3D=3D FTW_SL)
->                 return 0;
->
-> -       if (filename__read_build_id(fpath, &bid, /*block=3D*/true) < 0)
-> +       if (filename__read_build_id(fpath, &bid) < 0)
->                 return 0;
->
->         dso->name =3D realpath(fpath, NULL);
-> diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buil=
-did-cache.c
-> index 2e0f2004696a..c98104481c8a 100644
-> --- a/tools/perf/builtin-buildid-cache.c
-> +++ b/tools/perf/builtin-buildid-cache.c
-> @@ -180,7 +180,7 @@ static int build_id_cache__add_file(const char *filen=
-ame, struct nsinfo *nsi)
->         struct nscookie nsc;
->
->         nsinfo__mountns_enter(nsi, &nsc);
-> -       err =3D filename__read_build_id(filename, &bid, /*block=3D*/true)=
-;
-> +       err =3D filename__read_build_id(filename, &bid);
->         nsinfo__mountns_exit(&nsc);
->         if (err < 0) {
->                 pr_debug("Couldn't read a build-id in %s\n", filename);
-> @@ -204,7 +204,7 @@ static int build_id_cache__remove_file(const char *fi=
-lename, struct nsinfo *nsi)
->         int err;
->
->         nsinfo__mountns_enter(nsi, &nsc);
-> -       err =3D filename__read_build_id(filename, &bid, /*block=3D*/true)=
-;
-> +       err =3D filename__read_build_id(filename, &bid);
->         nsinfo__mountns_exit(&nsc);
->         if (err < 0) {
->                 pr_debug("Couldn't read a build-id in %s\n", filename);
-> @@ -280,7 +280,7 @@ static bool dso__missing_buildid_cache(struct dso *ds=
-o, int parm __maybe_unused)
->         if (!dso__build_id_filename(dso, filename, sizeof(filename), fals=
-e))
->                 return true;
->
-> -       if (filename__read_build_id(filename, &bid, /*block=3D*/true) =3D=
-=3D -1) {
-> +       if (filename__read_build_id(filename, &bid) =3D=3D -1) {
->                 if (errno =3D=3D ENOENT)
->                         return false;
->
-> @@ -309,7 +309,7 @@ static int build_id_cache__update_file(const char *fi=
-lename, struct nsinfo *nsi)
->         int err;
->
->         nsinfo__mountns_enter(nsi, &nsc);
-> -       err =3D filename__read_build_id(filename, &bid, /*block=3D*/true)=
-;
-> +       err =3D filename__read_build_id(filename, &bid);
->         nsinfo__mountns_exit(&nsc);
->         if (err < 0) {
->                 pr_debug("Couldn't read a build-id in %s\n", filename);
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index bd9245d2dd41..0e40f2a4bd18 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -668,12 +668,12 @@ static int dso__read_build_id(struct dso *dso)
->
->         mutex_lock(dso__lock(dso));
->         nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
-> -       if (filename__read_build_id(dso__long_name(dso), &bid, /*block=3D=
-*/true) > 0)
-> +       if (filename__read_build_id(dso__long_name(dso), &bid) > 0)
->                 dso__set_build_id(dso, &bid);
->         else if (dso__nsinfo(dso)) {
->                 char *new_name =3D dso__filename_with_chroot(dso, dso__lo=
-ng_name(dso));
->
-> -               if (new_name && filename__read_build_id(new_name, &bid, /=
-*block=3D*/true) > 0)
-> +               if (new_name && filename__read_build_id(new_name, &bid) >=
- 0)
->                         dso__set_build_id(dso, &bid);
->                 free(new_name);
->         }
-> diff --git a/tools/perf/tests/pe-file-parsing.c b/tools/perf/tests/pe-fil=
-e-parsing.c
-> index 8b31d1d05f90..30c7da79e109 100644
-> --- a/tools/perf/tests/pe-file-parsing.c
-> +++ b/tools/perf/tests/pe-file-parsing.c
-> @@ -37,7 +37,7 @@ static int run_dir(const char *d)
->         size_t idx;
->
->         scnprintf(filename, PATH_MAX, "%s/pe-file.exe", d);
-> -       ret =3D filename__read_build_id(filename, &bid, /*block=3D*/true)=
-;
-> +       ret =3D filename__read_build_id(filename, &bid);
->         TEST_ASSERT_VAL("Failed to read build_id",
->                         ret =3D=3D sizeof(expect_build_id));
->         TEST_ASSERT_VAL("Wrong build_id", !memcmp(bid.data, expect_build_=
-id,
-> @@ -49,7 +49,7 @@ static int run_dir(const char *d)
->                         !strcmp(debuglink, expect_debuglink));
->
->         scnprintf(debugfile, PATH_MAX, "%s/%s", d, debuglink);
-> -       ret =3D filename__read_build_id(debugfile, &bid, /*block=3D*/true=
-);
-> +       ret =3D filename__read_build_id(debugfile, &bid);
->         TEST_ASSERT_VAL("Failed to read debug file build_id",
->                         ret =3D=3D sizeof(expect_build_id));
->         TEST_ASSERT_VAL("Wrong build_id", !memcmp(bid.data, expect_build_=
-id,
-> diff --git a/tools/perf/tests/sdt.c b/tools/perf/tests/sdt.c
-> index 6132f1af3e22..93baee2eae42 100644
-> --- a/tools/perf/tests/sdt.c
-> +++ b/tools/perf/tests/sdt.c
-> @@ -31,7 +31,7 @@ static int build_id_cache__add_file(const char *filenam=
-e)
->         struct build_id bid =3D { .size =3D 0, };
->         int err;
->
-> -       err =3D filename__read_build_id(filename, &bid, /*block=3D*/true)=
-;
-> +       err =3D filename__read_build_id(filename, &bid);
->         if (err < 0) {
->                 pr_debug("Failed to read build id of %s\n", filename);
->                 return err;
-> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-> index 35505a1ffd11..fdb35133fde4 100644
-> --- a/tools/perf/util/build-id.c
-> +++ b/tools/perf/util/build-id.c
-> @@ -122,7 +122,7 @@ int filename__snprintf_build_id(const char *pathname,=
- char *sbuild_id, size_t sb
->         struct build_id bid =3D { .size =3D 0, };
->         int ret;
->
-> -       ret =3D filename__read_build_id(pathname, &bid, /*block=3D*/true)=
-;
-> +       ret =3D filename__read_build_id(pathname, &bid);
->         if (ret < 0)
->                 return ret;
->
-> @@ -848,7 +848,7 @@ static int filename__read_build_id_ns(const char *fil=
-ename,
->         int ret;
->
->         nsinfo__mountns_enter(nsi, &nsc);
-> -       ret =3D filename__read_build_id(filename, bid, /*block=3D*/true);
-> +       ret =3D filename__read_build_id(filename, bid);
->         nsinfo__mountns_exit(&nsc);
->
->         return ret;
-> diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-> index bb9ebd84ec2d..4a559b3e8cdc 100644
-> --- a/tools/perf/util/debuginfo.c
-> +++ b/tools/perf/util/debuginfo.c
-> @@ -115,7 +115,7 @@ struct debuginfo *debuginfo__new(const char *path)
->          * incase the path isn't for a regular file.
->          */
->         assert(!dso__has_build_id(dso));
-> -       if (filename__read_build_id(path, &bid, /*block=3D*/false) > 0)
-> +       if (filename__read_build_id(path, &bid) > 0)
->                 dso__set_build_id(dso, &bid);
->
->         for (type =3D distro_dwarf_types;
-> diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-> index 64c1d65b0149..0a7645c7fae7 100644
-> --- a/tools/perf/util/dsos.c
-> +++ b/tools/perf/util/dsos.c
-> @@ -81,13 +81,13 @@ static int dsos__read_build_ids_cb(struct dso *dso, v=
-oid *data)
->                 return 0;
->         }
->         nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
-> -       if (filename__read_build_id(dso__long_name(dso), &bid, /*block=3D=
-*/true) > 0) {
-> +       if (filename__read_build_id(dso__long_name(dso), &bid) > 0) {
->                 dso__set_build_id(dso, &bid);
->                 args->have_build_id =3D true;
->         } else if (errno =3D=3D ENOENT && dso__nsinfo(dso)) {
->                 char *new_name =3D dso__filename_with_chroot(dso, dso__lo=
-ng_name(dso));
->
-> -               if (new_name && filename__read_build_id(new_name, &bid, /=
-*block=3D*/true) > 0) {
-> +               if (new_name && filename__read_build_id(new_name, &bid) >=
- 0) {
->                         dso__set_build_id(dso, &bid);
->                         args->have_build_id =3D true;
->                 }
-> diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
-> index 01147fbf73b3..91b431eae0d7 100644
-> --- a/tools/perf/util/libbfd.c
-> +++ b/tools/perf/util/libbfd.c
-> @@ -383,13 +383,13 @@ int dso__load_bfd_symbols(struct dso *dso, const ch=
-ar *debugfile)
->         return err;
->  }
->
-> -int libbfd__read_build_id(const char *filename, struct build_id *bid, bo=
-ol block)
-> +int libbfd__read_build_id(const char *filename, struct build_id *bid)
->  {
->         size_t size =3D sizeof(bid->data);
->         int err =3D -1, fd;
->         bfd *abfd;
->
-> -       fd =3D open(filename, block ? O_RDONLY : (O_RDONLY | O_NONBLOCK))=
-;
-> +       fd =3D open(filename, O_RDONLY);
+On 21/11/2025 14:01, Guo Ren wrote:
+> On Fri, Nov 21, 2025 at 8:31 PM Conor Dooley <conor@kernel.org> wrote:
+>>
+>> On Fri, Nov 21, 2025 at 10:01:07AM +0100, Krzysztof Kozlowski wrote:
+>>> On Fri, Nov 21, 2025 at 02:34:36PM +0800, cp0613@linux.alibaba.com wrote:
+>>>> From: Chen Pei <cp0613@linux.alibaba.com>
+>>>>
+>>>> Add new vendor strings to dt bindings for RISC-V vendor XuanTie.
+>>>>
+>>>> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>>>>  1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>>>> index f1d1882009ba..5d28b2da94cd 100644
+>>>> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>>>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>>>> @@ -1829,6 +1829,8 @@ patternProperties:
+>>>>      description: Xilinx
+>>>>    "^xnano,.*":
+>>>>      description: Xnano
+>>>> +  "^xuantie,.*":
+>>>> +    description: C-SKY Microsystems Co., Ltd. (XuanTie)
+>>>
+>>> We do not create new prefixes for existing entries. You have already
+>>> csky, alibaba and thead and probably many more. Choose some appropriate.
+> We could leave the one C-SKY vendor entry, how about:
+> 
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -347,8 +347,8 @@ patternProperties:
+>      description: Creative Technology Ltd
+>    "^crystalfontz,.*":
+>      description: Crystalfontz America, Inc.
+> -  "^csky,.*":
+> -    description: Hangzhou C-SKY Microsystems Co., Ltd
+> +  "^xuantie,.*":
+> +    description: C-SKY Microsystems Co., Ltd. (XuanTie)
+>    "^csot,.*":
+>      description: Guangzhou China Star Optoelectronics Technology Co., Ltd
+>    "^csq,.*":
+> 
+> The arch/csky is the architecture name, which means "xuantie,csky".
+> 
+> The c810 is the CPU product name, which means "xuantie,c810" of the
+> "xuantie,csky" architecture.
+> 
+> The c930 is the CPU product name, which means "xuantie,c930".
+> 
+>>
+>> When the vendor literally says "C-SKY", it's hard to buy why csky
+>> shouldn't be used here. Xuantie is described as being a brand, where at
+>> least t-head was a company. This seems akin to having
+>> "snapdragon,msm8660" instead of "qcom,msm8660", for example.
+> Yes, XuanTie is not only a brand, but also the abbreviation of C-SKY
+> Microsystems Co., Ltd.
 
-We will need the is_regular_file test here.
+"XuanTie is a brand", so not suitable for vendor prefixes.
 
->         if (fd < 0)
->                 return -1;
->
-> diff --git a/tools/perf/util/libbfd.h b/tools/perf/util/libbfd.h
-> index e300f171d1bd..953886f3d62f 100644
-> --- a/tools/perf/util/libbfd.h
-> +++ b/tools/perf/util/libbfd.h
-> @@ -25,7 +25,7 @@ void dso__free_a2l_libbfd(struct dso *dso);
->  int symbol__disassemble_libbfd(const char *filename, struct symbol *sym,
->                              struct annotate_args *args);
->
-> -int libbfd__read_build_id(const char *filename, struct build_id *bid, bo=
-ol block);
-> +int libbfd__read_build_id(const char *filename, struct build_id *bid);
->
->  int libbfd_filename__read_debuglink(const char *filename, char *debuglin=
-k, size_t size);
->
-> @@ -59,8 +59,7 @@ static inline int symbol__disassemble_libbfd(const char=
- *filename __always_unuse
->  }
->
->  static inline int libbfd__read_build_id(const char *filename __always_un=
-used,
-> -                                       struct build_id *bid __always_unu=
-sed,
-> -                                       bool block __always_unused)
-> +                                       struct build_id *bid __always_unu=
-sed)
->  {
->         return -1;
->  }
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 9e820599bab3..6b35c5bec610 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -860,20 +860,20 @@ static int elf_read_build_id(Elf *elf, void *bf, si=
-ze_t size)
->         return err;
->  }
->
-> -static int read_build_id(const char *filename, struct build_id *bid, boo=
-l block)
-> +static int read_build_id(const char *filename, struct build_id *bid)
->  {
->         size_t size =3D sizeof(bid->data);
->         int fd, err;
->         Elf *elf;
->
-> -       err =3D libbfd__read_build_id(filename, bid, block);
-> +       err =3D libbfd__read_build_id(filename, bid);
->         if (err >=3D 0)
->                 goto out;
->
->         if (size < BUILD_ID_SIZE)
->                 goto out;
->
-> -       fd =3D open(filename, block ? O_RDONLY : (O_RDONLY | O_NONBLOCK))=
-;
-> +       fd =3D open(filename, O_RDONLY);
->         if (fd < 0)
->                 goto out;
->
-> @@ -894,13 +894,13 @@ static int read_build_id(const char *filename, stru=
-ct build_id *bid, bool block)
->         return err;
->  }
->
-> -int filename__read_build_id(const char *filename, struct build_id *bid, =
-bool block)
-> +int filename__read_build_id(const char *filename, struct build_id *bid)
->  {
->         struct kmod_path m =3D { .name =3D NULL, };
->         char path[PATH_MAX];
->         int err;
->
-> -       if (!filename)
-> +       if (!filename || !is_regular_file(filename))
->                 return -EFAULT;
+https://www.xrvm.com/declaration
 
-I wonder if -EWOULDBLOCK would be a better return code for the
-!is_regular_file test?
+What's more:
 
->
->         err =3D kmod_path__parse(&m, filename);
-> @@ -918,10 +918,9 @@ int filename__read_build_id(const char *filename, st=
-ruct build_id *bid, bool blo
->                 }
->                 close(fd);
->                 filename =3D path;
-> -               block =3D true;
->         }
->
-> -       err =3D read_build_id(filename, bid, block);
-> +       err =3D read_build_id(filename, bid);
->
->         if (m.comp)
->                 unlink(filename);
-> diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-mi=
-nimal.c
-> index aeb253248895..b811db4157ab 100644
-> --- a/tools/perf/util/symbol-minimal.c
-> +++ b/tools/perf/util/symbol-minimal.c
-> @@ -85,7 +85,7 @@ int filename__read_debuglink(const char *filename __may=
-be_unused,
->  /*
->   * Just try PT_NOTE header otherwise fails
->   */
-> -int filename__read_build_id(const char *filename, struct build_id *bid, =
-bool block)
-> +int filename__read_build_id(const char *filename, struct build_id *bid)
->  {
->         int fd, ret =3D -1;
->         bool need_swap =3D false, elf32;
-> @@ -102,7 +102,10 @@ int filename__read_build_id(const char *filename, st=
-ruct build_id *bid, bool blo
->         void *phdr, *buf =3D NULL;
->         ssize_t phdr_size, ehdr_size, buf_size =3D 0;
->
-> -       fd =3D open(filename, block ? O_RDONLY : (O_RDONLY | O_NONBLOCK))=
-;
-> +       if (!filename || !is_regular_file(filename))
-> +               return -EFAULT;
+<<A reference to “C-SKY”, “we” or “us” is a reference to C-SKY
+Microsystems Co., Ltd. of Room >>
 
-Same here.
+So again c-sky.
 
-Thanks,
-Ian
 
-> +
-> +       fd =3D open(filename, O_RDONLY);
->         if (fd < 0)
->                 return -1;
->
-> @@ -323,7 +326,7 @@ int dso__load_sym(struct dso *dso, struct map *map __=
-maybe_unused,
->         if (ret >=3D 0)
->                 RC_CHK_ACCESS(dso)->is_64_bit =3D ret;
->
-> -       if (filename__read_build_id(ss->name, &bid, /*block=3D*/true) > 0=
-)
-> +       if (filename__read_build_id(ss->name, &bid) > 0)
->                 dso__set_build_id(dso, &bid);
->         return 0;
->  }
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index cc26b7bf302b..d8fc5ea77f84 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1743,14 +1743,13 @@ int dso__load(struct dso *dso, struct map *map)
->
->         /*
->          * Read the build id if possible. This is required for
-> -        * DSO_BINARY_TYPE__BUILDID_DEBUGINFO to work. Don't block in cas=
-e path
-> -        * isn't for a regular file.
-> +        * DSO_BINARY_TYPE__BUILDID_DEBUGINFO to work.
->          */
->         if (!dso__has_build_id(dso)) {
->                 struct build_id bid =3D { .size =3D 0, };
->
->                 __symbol__join_symfs(name, PATH_MAX, dso__long_name(dso))=
-;
-> -               if (filename__read_build_id(name, &bid, /*block=3D*/false=
-) > 0)
-> +               if (filename__read_build_id(name, &bid) > 0)
->                         dso__set_build_id(dso, &bid);
->         }
->
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> index 347106218799..3fb5d146d9b1 100644
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-> @@ -140,7 +140,7 @@ struct symbol *dso__next_symbol(struct symbol *sym);
->
->  enum dso_type dso__type_fd(int fd);
->
-> -int filename__read_build_id(const char *filename, struct build_id *id, b=
-ool block);
-> +int filename__read_build_id(const char *filename, struct build_id *id);
->  int sysfs__read_build_id(const char *filename, struct build_id *bid);
->  int modules__parse(const char *filename, void *arg,
->                    int (*process_module)(void *arg, const char *name,
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
-ic-events.c
-> index 5aa44c4aba62..2ba9fa25e00a 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -401,7 +401,7 @@ static void perf_record_mmap2__read_build_id(struct p=
-erf_record_mmap2 *event,
->         nsi =3D nsinfo__new(event->pid);
->         nsinfo__mountns_enter(nsi, &nc);
->
-> -       rc =3D filename__read_build_id(event->filename, &bid, /*block=3D*=
-/false) > 0 ? 0 : -1;
-> +       rc =3D filename__read_build_id(event->filename, &bid) > 0 ? 0 : -=
-1;
->
->         nsinfo__mountns_exit(&nc);
->         nsinfo__put(nsi);
->
-> ---
-> base-commit: 134852abcbfa5f6a4a17619c8f44c857f800ae03
-> change-id: 20251119-james-perf-non-block-3296c96909aa
->
-> Best regards,
-> --
-> James Clark <james.clark@linaro.org>
->
+Best regards,
+Krzysztof
