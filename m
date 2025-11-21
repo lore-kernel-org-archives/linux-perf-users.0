@@ -1,137 +1,102 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9263736D4EC;
-	Fri, 21 Nov 2025 06:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F3D1E0DFE;
+	Fri, 21 Nov 2025 06:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763706449; cv=none; b=rAKrhLFi6KcSSCcowBN6WJsqwcI3DHs9Inu5lUXSFiFS3at0tz6QvjlwsFMI8nik3SAXoXqE3VIyinpiFqX/jOyKEk2BO2KRrjcuzc4ieieyk/EtuDBzHRJAF9uRoZ4DZ/WtoONYw8KG8DVcWMadXZVsc0UkU+B49n3xLe/OtJ4=
+	t=1763706910; cv=none; b=KS+zTgWIpJ0pvcNApkac8QNYvYINDg9/ScaWhTyfZVDCdmH+I4YexoIZAGZhPBr8MbsCjf7ZpRXVuHkZAe9gHBuZLZ72u4UOVNS3GaPkWW0PIwOAnVW3oDZ4aVRta95Bc7GYmDZU4uMb3PdkQxDWYiRNMptuDt6Ydtrfa/SE72E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763706449; c=relaxed/simple;
-	bh=qJ2nSRtu6ZKlc04KJ/xIxWpoWS/gxvHeS7RWzacIzgU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hHBjehJkM7t+EGcMxtR7v60MQ21GZYtcvhmXhxEsTWvJkaAc18WXJGf8MslR705hR5gPj15hnCGoKdpPobQx8JapYODQjoTPSQ1jGtsvLZtcKu4Smt7e+K/PYkiCQAK+9CctEMeAmrdJ3KlhjL5/oqGj9ut96e1yjzxaxF0TlUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=N67R4OXS; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1763706910; c=relaxed/simple;
+	bh=zMSDDLDUe8c4wD5uDNfH5p1DEY8d5Ax+YGvcHudNLiM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XNFsONAw5OzJqlA0bljmL3s3eIz95A4ws1MJzujZJO7g2q3KXVXuOmwneTOwlUmLxoVWd0PZ3PFusCnExtfRtCm8VncbIxIxa7Z+evAK190s2LeQtxoQQ6xKuOJDSPj7nBg1DpxcnbSAFb+jVuAsxyIRlKe2svC/EoQuIUA0Ygw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Q/kShyQn; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="N67R4OXS"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AKN2m0t029044;
-	Fri, 21 Nov 2025 06:26:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=f8Leuo
-	bENvTWFFGXUrBpGnI/R/n1wTecEAvCQC1wuxY=; b=N67R4OXSWXUax/jLTC0NHZ
-	fq93zGbEjTlrbc6k5Cxjrbqf1R4hfoW8UemGwOO/LeU/OgH4ymPj62zax2fC2Vbz
-	pILU5712l0n6eTNzsWdW+m/sV4nQrt+fy2ygCAT0T5EJ3pzcF4dEPcQaiGzO4YwL
-	tLtsBcGMNO3oQKYqfkWIlTWEf09p/KQ9dm/IXKAp3HVmfEyAhLMkTzpZggA6GZ1s
-	gthzvPE9xFc4bSzSMUoqt7lRI299k06lvroAjXnrKeDBnl4xhhRfsiY8R15dyorX
-	INC62hXQrQPW/6JDPIaqhmJVmYa7AWDlSFVesc8NHkhUgx3f6pTvsxl4R8Y5FNdQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejk1tdkk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Nov 2025 06:26:39 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AL6QcDQ007289;
-	Fri, 21 Nov 2025 06:26:38 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejk1tdkg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Nov 2025 06:26:38 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AL3kBoW005231;
-	Fri, 21 Nov 2025 06:26:37 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4af5bkjqtk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Nov 2025 06:26:37 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AL6QZkJ43516246
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Nov 2025 06:26:35 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 450E820043;
-	Fri, 21 Nov 2025 06:26:35 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8515820040;
-	Fri, 21 Nov 2025 06:26:34 +0000 (GMT)
-Received: from [9.111.16.202] (unknown [9.111.16.202])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 21 Nov 2025 06:26:34 +0000 (GMT)
-Message-ID: <947ef366-435d-4b05-b0b1-685e569d0a1e@linux.ibm.com>
-Date: Fri, 21 Nov 2025 07:26:34 +0100
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Q/kShyQn"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1763706900; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=UmXbqM0JY6kjsKySz34atLgV4D046f4p8ol4pZE44Vo=;
+	b=Q/kShyQnIcKKaT99GWYB5ctiS9zdpFKT/T33r5Wy3lZP92MvfReo0MNwQeutTChPh390J4R+n0GA9IxUaeaVelXBO5uMHv+r8+BD4VP2JvuFC41YflaURJhCDaA0FFQLa5txCjsbXmWETmL9Ggfyj1Dy8mpACJE7ljNupiKfjH4=
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0Wt-RZCZ_1763706884 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 21 Nov 2025 14:34:58 +0800
+From: cp0613@linux.alibaba.com
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	guoren@kernel.org
+Cc: devicetree@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Chen Pei <cp0613@linux.alibaba.com>
+Subject: [PATCH v2 0/4] perf vendor events riscv: Add XuanTie C930 JSON files
+Date: Fri, 21 Nov 2025 14:34:35 +0800
+Message-ID: <20251121063439.2545-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/6] perf record: Add --call-graph fp,defer option for
- deferred callchains
-To: Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20251120234804.156340-1-namhyung@kernel.org>
- <20251120234804.156340-4-namhyung@kernel.org>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20251120234804.156340-4-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=C/nkCAP+ c=1 sm=1 tr=0 ts=6920061f cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=MGucU4rsRRrPEl4HSeQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: DdontG2BWgp9fdEXp43uc2-XCLm970VD
-X-Proofpoint-ORIG-GUID: Uh4AtN1LKgtJqEkg07QDvq90ML58U1VZ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX7Y9jnqhzl7c6
- oGcuPtwZ2GmgessOB5Lb+/hK9v+i/6lgKy0zqm0V5R67NJpFGfCGn3JMLE+60qJ1V9CE4mjpEAC
- w3jdVKAUhz0b2f5ad2YY/DV7X8mIb9/iSEDSfFFk+wvO/dA+qXkQJgCss55VrVQdftwk/FdF8XC
- IbJkALqvntxsgpHXcJT7hBsKxMFBYheHzC6cG+yGYiXILCye8eZzEkhxQL1RhtxQh5eJDC3gxBs
- //oPZp3T+OpCz4DqHpossygQjTna8Puv/RBssBWHh5vVmW7DgI1EIJy6Crc7KozoQ8Qe7g++pss
- ijiaHsk+GVT+f6tVuOzDnETPN8k1GaK8UjE7MNZib5G9c/dvQFKYmXNv9x9X/Fr1zLLtzt1PXEi
- xkh/I4YPRgHCtlrKb8VfYVn2kQSGAg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-21_02,2025-11-20_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 spamscore=0 impostorscore=0 bulkscore=0
- malwarescore=0 suspectscore=0 clxscore=1011 lowpriorityscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511150032
 
-On 11/21/25 00:48, Namhyung Kim wrote:
-> Add a new callchain record mode option for deferred callchains.  For now
-> it only works with FP (frame-pointer) mode.
-> 
-> And add the missing feature detection logic to clear the flag on old
-> kernels.
-> 
->   $ perf record --call-graph fp,defer -vv true
+From: Chen Pei <cp0613@linux.alibaba.com>
 
-Does this also works for dwarf format?
-    # perf record --call-graph dwarf,defer ....
+XuanTie[1] is the RISC-V processor brand of C-SKY Microsystems Co., Ltd.
+This patch series first adds vendor XuanTie, then adds XuanTie C930 CPU
+compatible, and finally adds pmu json files for XuanTie C930, including
+topdown and some other metric groups.
+
+Note:
+According to the "Standard Manufacturer's IDENTIFICATION CODE"[2], the
+manufacturer of Code '0x5b7' has changed to C-SKY Microsystems Co., Ltd.
+
+[1] https://www.xrvm.com/
+[2] https://www.jedec.org/standards-documents/docs/jep-106ab
+
+Chen Pei (4):
+  dt-bindings: vendor-prefixes: Add prefix for XuanTie
+  dt-bindings: riscv: Add XuanTie C930 CPU compatible
+  perf vendor events riscv: Add XuanTie C930 JSON file
+  perf vendor events riscv: Add XuanTie C930 metrics
+
+ .../devicetree/bindings/riscv/cpus.yaml       |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
+ .../arch/riscv/xuantie/c930/basic.json        | 117 ++++
+ .../arch/riscv/xuantie/c930/ieu.json          |  97 ++++
+ .../arch/riscv/xuantie/c930/ifu.json          |  62 ++
+ .../arch/riscv/xuantie/c930/l2c.json          |  87 +++
+ .../arch/riscv/xuantie/c930/lsu.json          | 182 ++++++
+ .../arch/riscv/xuantie/c930/metrics.json      | 538 ++++++++++++++++++
+ .../arch/riscv/xuantie/c930/vfpu.json         | 177 ++++++
+ 10 files changed, 1264 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/basic.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/ieu.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/ifu.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/l2c.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/lsu.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/xuantie/c930/vfpu.json
+
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+2.50.1
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
