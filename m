@@ -1,55 +1,55 @@
 Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858D02FD661
-	for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 08:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043C62FD7D8
+	for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 08:20:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763799608; cv=none; b=u5OPvXzqIgQN/vuWtEi2DqsNDDK8aXiqXTmSWFcPtLfAb5g/KY8q4DJTq5Pvfc7+WUXXAHyEAheouJVP0Fj1a0LRpIBwBRioPz/QKo9907olteClsMxyfYOrRO7k6yNZd3wdEWLFm/BAIHCuC5ci/D/t280iy4563RoPejrw5sY=
+	t=1763799611; cv=none; b=UnfmOZ3X7WhL4U6hTsdsNl59dEHWtGuYtvYa3DuRgl7DlmP3LaXohcBR9vOLfQ/DJunTrXG1C4LxayEQtQrBv4pmev2NnS/R5BixiFMr+7+hzAe5ThLyS9K1yb7EHU3U72VxeRgip/oLju48FuaCfUDFBNVbMtutdhqY4XV5ydw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763799608; c=relaxed/simple;
-	bh=cVbo9KyKjAiks4mZRtglLay3uOkQ31MIH0rTAfdDkxU=;
+	s=arc-20240116; t=1763799611; c=relaxed/simple;
+	bh=77y7tXutito3nnzAoc+ycFKKxLdAvlLV3iqcipeD6VM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=eqfHTelSXhZKSl5c6Rx5V+g0Jqc849EDI32XsEuaWnkC97hYrmAlwIUbrdsd5/lEcO6sumg46IszdWdpocHu/H76sRE+1x6XWjNvAWxprgY6kYrRybnRhOzxU8M/Lp0IoA5a36/gY7Vvb4ZuIY31FiwGwPefEx1Qv5N5Q4Sy2bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nDcwQ7K1; arc=none smtp.client-ip=209.85.215.201
+	 To:Content-Type; b=sU0vlQ9gx5loufrkhTbs78xKIh6JOAi+9zBJrPDsHDXrUR9SRfT/yg9bQLKtRc9gvT7jUBTI8ApRbqx6c1srCZfR8WC7OfnUCsg23hjxh8n5D6MJy4HttgQ1qnE3CJLs1F+w8trrPJs5OAbyzQjRpNFoZwgTgEXrQBmLdPKsgXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FO7VsXYc; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nDcwQ7K1"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b471737e673so4045381a12.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 00:20:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FO7VsXYc"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b9d73d57328so2953023a12.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 00:20:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763799606; x=1764404406; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763799608; x=1764404408; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=c5vcUZ36q7LIP5k988zWeeeMo0DAr72XmNMPXeiuOFk=;
-        b=nDcwQ7K1EjzwrCoIPsER93yq7sG+vw8gu6NqIJmcseRTYyV/PGpapZG0uG0xOD6ZwW
-         jlmt76Ic6y0lUeXmT8NYIf8TPXs6n2SB9MvOOR8FZ4/Yw09FhKRankk5ZwHONWjAq6Uo
-         u6EhR4vDDrEjMIiwzeqK+BZnjyjw3QNwSH+U9Futm517ZAR3hskvc7sjq/iqA8dUHa0Q
-         tsjupbjHv9R1AWUI71FS4B5tX7bhL/a9hJVWNNJ/BPs4GxZzI0WfHvKwPlNkaBL5i9Ru
-         T2tHHoGjt6bH7NAcMeRYv+k2Ml1JYV4fT1Xc3dMF5hA5+/2hMELtFXOTExh2r6AZ2nVp
-         nlgQ==
+        bh=I1FSqCMeHsL++g3NwVXFiLoHBKehFUPc0C8bNPag8O0=;
+        b=FO7VsXYcDBug4auNy2umqJ9iF+h4/tfKAIz/VZ8X1/52OFBovZ523kvPWW1UNXtG92
+         Q5/oj2dzi6yHTIf+ZZ9Sf96foP2vPKVw3XEF7JgCZUzCQF8NY42SHR3ERtWiV2Lz7834
+         x6B5g3Z5/f+MhDlXSvCxEg2FEHjdbo6CCoD3DvEpOgqGMOuivHfLC4IGjs0eIsl30rgS
+         OcoZemHX97tGQSPhMpVvsm+Vwkh74sad8qwG6aFdFVXKfyeVkqRh68u/NVGJ5YfuZmy3
+         I396xoEEdgAFpZFOseiQW4bva4z5gK8VjcLsiy1OS607FJW3uT4IYi4RdHzUMpMgZcNO
+         8+Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763799606; x=1764404406;
+        d=1e100.net; s=20230601; t=1763799608; x=1764404408;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c5vcUZ36q7LIP5k988zWeeeMo0DAr72XmNMPXeiuOFk=;
-        b=W2MxwotcADjBJn8Y1urHwgBsNqH7h8kykF6HUWwy6VrqRqs27wEgjucnmfibqfNOd2
-         UzpT8rS8cK3ewAa66nAArgZ3P3R8/hETeXrXVAVA07neaOGgxmNv3xPSgy19dmNFj/sj
-         QqG760SyF+lnS9/zGHBD+j1h4oTcAK0rkP6iw9pGHjHdd6sk9DAgmj19oxTeZDwusgi/
-         Yf37m+JGzTVFyT65lZ+oFHZpkFtQkOHLjWobKBR7C1DgYwQDvagB4BhT+q/RMbsB3JAB
-         GmMWB7nk3zrLAo4/JDBcDWVQNpQMGw6obh+u43cKAPxNXTMZJaN4XKFV6TTqh1Hoe8gR
-         knRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsE9Pt8JVI1+DK4DWKuzGM0ZA2jJhX4eIX9FF825unGepJlle2mE0ETpfCn+pr1PDviJ/V67juIbNplh84cX59@vger.kernel.org
-X-Gm-Message-State: AOJu0YyERxakhFm0lKJv0pc8ud2jSjKvwL59YHd3r/qraF9naoTP/rb9
-	zSHe3Uv3LKPVbhp4Agtu2DoVjT4acOMmDZfGFjxWMkAjKd350R0m2I9Uby8XrbqyneUJVyso62h
-	Qw3suugZVUA==
-X-Google-Smtp-Source: AGHT+IHp2n+PMLI6OfHsMt+oT7Bf6B1GSkHq8pvIHAETmUrFKTEcUmTA0f7lg7TVaCVrRV2nsTnRe5nKpQtt
-X-Received: from dlbdd12.prod.google.com ([2002:a05:7022:a8c:b0:119:49ca:6b9c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:388e:b0:11b:9386:8267
- with SMTP id a92af1059eb24-11c9d86fc93mr2488596c88.44.1763799605924; Sat, 22
- Nov 2025 00:20:05 -0800 (PST)
-Date: Sat, 22 Nov 2025 00:19:28 -0800
+        bh=I1FSqCMeHsL++g3NwVXFiLoHBKehFUPc0C8bNPag8O0=;
+        b=bdovaOQ5HOOX+RFHk/F57jWziNIQD2wnmraH4/RppqN8r22+tD5x1RaQrX2cxryMmg
+         LPomjpM1Mjb2joE3E98Tb25LZw0JxNmQi6X6qyxVlO6AqH3l20eFmq3wITzWvOmijIKf
+         8SqZ5H3lSVhIEnC2F5MyBijzu15pMfx4cJaV82ZP/Maidb85rt/klhUUEE3nvRLC3JXN
+         peM7tkNYHmcjEt3eXELSFkTnYy0G7ZItE3q9hll9+4ONxuo9kHGZ+CSGtzoHjUi4HMXF
+         JUr+duSsMbq8L39G1XS8c4SSnsfrIFAl7aIjliu6CCX/WJlnMEICGy3zZJC4UrJVFlbA
+         IHSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBWEdcmMXYSmdMBCOKGtniVMoPzpIxzh/pmFaBSmpdomcsGHvXy274m0IzwJsuVd0YcwnXLhwqtOZtxfCRUb1l@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/c7/cApG5nBlp/ilA0yQd5wuBMMseZeaWFX7BOY/lBUnxZECA
+	Sqqdhp6uNP3XFp/H6U0eE1v/6E1RX7fjOQGgq1+h4ejQIN28LL2FqlkbgTb6agvwXP8A+ieyVGp
+	Y7xW5nTMPGA==
+X-Google-Smtp-Source: AGHT+IGflzDr78v/sru9qBkWDUDP31dQt3lOiXUHw56VDdhoXsu553xPZE3o+BNCwrkxSJyKbDjQLLqsDtJ2
+X-Received: from dycog5.prod.google.com ([2002:a05:7301:9a85:b0:2a4:791c:9e95])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:7d0a:b0:2a4:3592:c5f7
+ with SMTP id 5a478bee46e88-2a71907139amr1640322eec.8.1763799608188; Sat, 22
+ Nov 2025 00:20:08 -0800 (PST)
+Date: Sat, 22 Nov 2025 00:19:29 -0800
 In-Reply-To: <20251122081929.7588-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251122081929.7588-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.rc2.455.g230fcf2819-goog
-Message-ID: <20251122081929.7588-17-irogers@google.com>
-Subject: [PATCH v1 16/17] perf tests evlist: Add basic evlist test
+Message-ID: <20251122081929.7588-18-irogers@google.com>
+Subject: [PATCH v1 17/17] perf test kvm: Add some basic perf kvm test coverage
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,31 +75,42 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add test that evlist reports expected events from perf record.
+Setup qemu with KVM then run kvm stat and some host
+recording/reporting/build-id tests.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/evlist.sh | 79 ++++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100755 tools/perf/tests/shell/evlist.sh
+ tools/perf/tests/shell/kvm.sh | 154 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 154 insertions(+)
+ create mode 100755 tools/perf/tests/shell/kvm.sh
 
-diff --git a/tools/perf/tests/shell/evlist.sh b/tools/perf/tests/shell/evlist.sh
+diff --git a/tools/perf/tests/shell/kvm.sh b/tools/perf/tests/shell/kvm.sh
 new file mode 100755
-index 000000000000..140f099e75c1
+index 000000000000..2fafde1a29cc
 --- /dev/null
-+++ b/tools/perf/tests/shell/evlist.sh
-@@ -0,0 +1,79 @@
++++ b/tools/perf/tests/shell/kvm.sh
+@@ -0,0 +1,154 @@
 +#!/bin/bash
-+# perf evlist tests
++# perf kvm tests
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
 +
 +err=0
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++perfdata=$(mktemp /tmp/__perf_kvm_test.perf.data.XXXXX)
++qemu_pid_file=$(mktemp /tmp/__perf_kvm_test.qemu.pid.XXXXX)
 +
 +cleanup() {
 +	rm -f "${perfdata}"
++	if [ -f "${qemu_pid_file}" ]; then
++		if [ -s "${qemu_pid_file}" ]; then
++			qemu_pid=$(cat "${qemu_pid_file}")
++			if [ -n "${qemu_pid}" ]; then
++				kill "${qemu_pid}" 2>/dev/null || true
++			fi
++		fi
++		rm -f "${qemu_pid_file}"
++	fi
 +	trap - EXIT TERM INT
 +}
 +
@@ -110,61 +121,126 @@ index 000000000000..140f099e75c1
 +}
 +trap trap_cleanup EXIT TERM INT
 +
-+test_evlist_simple() {
-+	echo "Simple evlist test"
-+	if ! perf record -e cycles -o "${perfdata}" true 2> /dev/null
-+	then
-+		echo "Simple evlist [Failed record]"
-+		err=1
-+		return
-+	fi
-+	if ! perf evlist -i "${perfdata}" | grep -q "cycles"
-+	then
-+		echo "Simple evlist [Failed to list event]"
-+		err=1
-+		return
-+	fi
-+	echo "Simple evlist test [Success]"
++skip() {
++	echo "Skip: $1"
++	cleanup
++	exit 2
 +}
 +
-+test_evlist_group() {
-+	echo "Group evlist test"
-+	if ! perf record -e "{cycles,instructions}" -o "${perfdata}" true 2> /dev/null
-+	then
-+		echo "Group evlist [Skipped event group recording failed]"
-+		return
-+	fi
++test_kvm_stat() {
++	echo "Testing perf kvm stat"
 +
-+	if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cycles.*,.*instructions.*}"
-+	then
-+		echo "Group evlist [Failed to list event group]"
++	echo "Recording kvm events for pid ${qemu_pid}..."
++	if ! perf kvm stat record -p "${qemu_pid}" -o "${perfdata}" sleep 1; then
++		echo "Failed to record kvm events"
 +		err=1
 +		return
 +	fi
-+	echo "Group evlist test [Success]"
++
++	echo "Reporting kvm events..."
++	if ! perf kvm -i "${perfdata}" stat report 2>&1 | grep -q "VM-EXIT"; then
++		echo "Failed to find VM-EXIT in report"
++		perf kvm -i "${perfdata}" stat report 2>&1
++		err=1
++		return
++	fi
++
++	echo "perf kvm stat test [Success]"
 +}
 +
-+test_evlist_verbose() {
-+	echo "Event configuration evlist test"
-+	if ! perf record -e cycles -o "${perfdata}" true 2> /dev/null
-+	then
-+		echo "Event configuration evlist [Failed record]"
++test_kvm_record_report() {
++	echo "Testing perf kvm record/report"
++
++	echo "Recording kvm profile for pid ${qemu_pid}..."
++	# Use --host to avoid needing guest symbols/mounts for this simple test
++	# We just want to verify the command runs and produces data
++	# We run in background and kill it because 'perf kvm record' appends options
++	# after the command, which breaks 'sleep' (e.g. it gets '-e cycles').
++	perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" &
++	rec_pid=$!
++	sleep 1
++	kill -INT "${rec_pid}"
++	wait "${rec_pid}" || true
++
++	echo "Reporting kvm profile..."
++	# Check for some standard output from report
++	if ! perf kvm -i "${perfdata}" report --stdio 2>&1 | grep -q "Event count"; then
++		echo "Failed to report kvm profile"
++		perf kvm -i "${perfdata}" report --stdio 2>&1
 +		err=1
 +		return
 +	fi
 +
-+	if ! perf evlist -i "${perfdata}" -v | grep -q "config:"
-+	then
-+		echo "Event configuration evlist [Failed to list verbose info]"
-+		err=1
-+		return
-+	fi
-+	echo "Event configuration evlist test [Success]"
++	echo "perf kvm record/report test [Success]"
 +}
 +
-+test_evlist_simple
-+test_evlist_group
-+test_evlist_verbose
++test_kvm_buildid_list() {
++	echo "Testing perf kvm buildid-list"
++
++	# We reuse the perf.data from the previous record test
++	if ! perf kvm --host -i "${perfdata}" buildid-list 2>&1 | grep -q "."; then
++		echo "Failed to list buildids"
++		perf kvm --host -i "${perfdata}" buildid-list 2>&1
++		err=1
++		return
++	fi
++
++	echo "perf kvm buildid-list test [Success]"
++}
++
++setup_qemu() {
++	# Find qemu
++	if [ "$(uname -m)" = "x86_64" ]; then
++		qemu="qemu-system-x86_64"
++	elif [ "$(uname -m)" = "aarch64" ]; then
++		qemu="qemu-system-aarch64"
++	elif [ "$(uname -m)" = "s390x" ]; then
++		qemu="qemu-system-s390x"
++	elif [ "$(uname -m)" = "ppc64le" ]; then
++		qemu="qemu-system-ppc64"
++	else
++		qemu="qemu-system-$(uname -m)"
++	fi
++
++	if ! which -s "$qemu"; then
++		skip "$qemu not found"
++	fi
++
++	if [ ! -r /dev/kvm ] || [ ! -w /dev/kvm ]; then
++		skip "/dev/kvm not accessible"
++	fi
++
++	if ! perf kvm stat record -a sleep 0.01 >/dev/null 2>&1; then
++		skip "No permission to record kvm events"
++	fi
++
++	echo "Starting $qemu..."
++	# Start qemu in background, detached, with pidfile
++	# We use -display none -daemonize and a monitor to keep it alive/controllable if needed
++	# We don't need a real kernel, just KVM active.
++	if ! $qemu -enable-kvm -display none -daemonize -pidfile "${qemu_pid_file}" -monitor none; then
++		echo "Failed to start qemu"
++		err=1
++		return
++	fi
++
++	# Wait a bit for qemu to start
++	sleep 1
++	qemu_pid=$(cat "${qemu_pid_file}")
++
++	if ! kill -0 "${qemu_pid}" 2>/dev/null; then
++		echo "Qemu process failed to stay alive"
++		err=1
++		return
++	fi
++}
++
++setup_qemu
++if [ $err -eq 0 ]; then
++	test_kvm_stat
++	test_kvm_record_report
++	test_kvm_buildid_list
++fi
 +
 +cleanup
 +exit $err
