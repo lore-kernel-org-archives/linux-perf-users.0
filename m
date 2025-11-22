@@ -1,215 +1,128 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B97221F1C
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Nov 2025 23:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A214221FBF
+	for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 08:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763766621; cv=none; b=dy/Hd5cNhOsCs847422Jiu39QEEiIP01D3mSRHXAqTcOhbdYx09wA/OJjz76cm9cD9i1G2QUr32sbwmWaHzeDqv3gqf7cyynQuXl3CpWMlU6XpJ2+7iyanetfRuqIYKdE6kmFV0Wz0aFxfJMNkXwURsjflqmQ+cHNMj0oRIDxVg=
+	t=1763799577; cv=none; b=TevjMb1kOkv3ITEe+9OZEx24S/rW3XXh/Q9iNdt1SKmTujGjr0qjGyo094Iwx/5udBo+Wve76m5lOVq4rX9phZx/21RSvOlzev0Icvf6J5b9uCOOSBtpg0nQsQpydvsOtXOu7qRfz1OfznjW3P9egTNfD9gm26ZZKAJPKi+MTcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763766621; c=relaxed/simple;
-	bh=8bWhIzEE2kOCM2/P4siDh4lmVU3/GWQ9Z1Vge3A2ZaM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=N2+eY3ZWPGfK5K9LUkaQxaSAh4ST/j4FUSp32Mxl+YmmyZh+W+CrcZiY9VaK/y7v7hSD1n5fuWkaoFSNS1gWivBHUzRjVR1FiVy4Nim3d6eyy7UzL5PjlxNA2YXAOdFrTyO8/3rvxQIgfgvGm+7I33edKPkkveCDQ8vCm2CpBrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LDRbe6Gy; arc=none smtp.client-ip=209.85.215.202
+	s=arc-20240116; t=1763799577; c=relaxed/simple;
+	bh=HcBOiZAfszGrwpJ6oGMUFTsPwyb1ZvVxScJkvfp4HQs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=cBO8uFD3DkJqO7BEtlwxYbUnl0s3qzzoUeZ5UYLxqzRWEIn9xBWfWFrVkqbK+dWvXEoPAfF7Rb7hZ3ooq6EZHXr1BBbkRgCZav8GzVcgQAEvuYr2NA/02Iuzj2/1OovQr/dmwfQqnx1yIGWO7rHzyadXdxe4qmYnhGzetJEVyKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lvqHihGL; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LDRbe6Gy"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b62da7602a0so2415696a12.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Nov 2025 15:10:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lvqHihGL"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-340c261fb38so5428403a91.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 00:19:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763766611; x=1764371411; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5b2DOngf45K4pr9iLY35IcW9cBrxBxPbnXC9KlOB26c=;
-        b=LDRbe6GybRAOnGdkEO+zKAVLrXAOeH+v2MuxHZ2jmF+GdXnRzJu9NyzXfkQXOkIlm/
-         jC/Z93rjNV+cdNBkFixN8/4//UdFNdDx0wU2RZwSgLlOz6uVh/CNzg+KEHtRanf6WSju
-         AlqKhvsAV4L/Khb+YPM798GPEPAJJkJmgM+KRA/XjjM93+Nz+6lsjvPeBLCcorfRHRZM
-         YI1rth0cq5uphZc0YYz79KAXFKW3aKrd89i7HQoNCjZUcHVfCigz1fu5ZxiJEhi6M+CI
-         pba9HgHe5moO0xJAZ5rEH1IlaXi/0hDH1PEnWmCut07YLHaBVBxd/SRt6jCKuOMgdC+9
-         rDYQ==
+        d=google.com; s=20230601; t=1763799575; x=1764404375; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GM80xqNnqKDmBWRP4MpjKcacHL6rSES/RecPK9JDnao=;
+        b=lvqHihGLHkzTZCvnDIhKxR6lcQHLpqAKosfMN75xH7w3V5pIv3h/e5fZACt7l7Sdpi
+         CXKUeV9vVJJoVulCA8SUTUG408jNxCux9rbgy8sGvb+rnrJD1b8A+Dy8PuVyBuXxc0TE
+         RZoWAxVtzNtL0fzWZL7iDxv/bRNt6DiNSWDXsnm7yFI7NN0MZIj1BWsVG2YK3lA3f5ZZ
+         Ae/weiLwLwrPqzosTwHghB9HW7ktrO2wbxOV0vo2jM+3kNWFDgpk36x12xo7C9dKDrC+
+         8kT9ndVnstX2GEJ0+/uNqsxPlSlv54pjq9nNdVZ2P7xtr6/WhYZ7yHLHXba3jZXvijw+
+         GuFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763766611; x=1764371411;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5b2DOngf45K4pr9iLY35IcW9cBrxBxPbnXC9KlOB26c=;
-        b=n92IOeWAzRVTxgVhnBEvU9PvVMnIQ79gHCTGzOSMXqZfY6mZlTfWDvWeZPx85MJLLH
-         BrVy0Pz0Nmqzo41sDOGTH6oPQ8aArl972HkRPenp7BMb0Vb3nARhDXx+xSLtDnz3VtuZ
-         uhXh8e56cJI6imFPU13lFH1Op4sW7Iu18+LGqjFHlx6qfojHjeWutUHDLSXV6O15Z51Q
-         XBN55jqkkE5PVfteF24O3Nx49uSjUHwz/DwbMPVYhHTWwJvbT2lJBEKd1MooOcRHSMq6
-         K3mmoI4ykNdaqxLJaJOuQVCcul+rD83sP7zYpCR9ho1k/cRfmkICyHn/CWFg5RZOCewc
-         ow4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXicpCdenDx1gPHspd4KT1P9r0GWzMxfx3N4xQ8ZWeGWgKslKxwm5fNEH1WwJxGyeTpo+nd+HtFNear5PFgyS3u@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS+1QYpUAaqyTcfI8aFVkyXUh8RGaDJbIx9S2l5c7u5w+QQcro
-	yUVCC3NkQX3y700CvC7Jc7JJiyoZmZyvnDq7P8Dj/iDgXmQj2fOnq8RGSpMQCc0iz52DzVz4vUb
-	UyXFiEA==
-X-Google-Smtp-Source: AGHT+IGylgxQzgTzR8vCzvcryIe4d4Y+gnzkKFo3DXktMIlzTpkf5SRCaUVEZdGi/cXH+z3M3SolRzieAsk=
-X-Received: from dyaa12.prod.google.com ([2002:a05:693c:40cc:b0:2a4:7453:cd4e])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:3c1e:b0:2a4:3593:ddf0
- with SMTP id 5a478bee46e88-2a719fbd09bmr1625100eec.29.1763766610602; Fri, 21
- Nov 2025 15:10:10 -0800 (PST)
-Date: Fri, 21 Nov 2025 15:09:12 -0800
-In-Reply-To: <20251121230951.3240124-1-ctshao@google.com>
+        d=1e100.net; s=20230601; t=1763799575; x=1764404375;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GM80xqNnqKDmBWRP4MpjKcacHL6rSES/RecPK9JDnao=;
+        b=H/O5pwcTCatoHBsy/ku+fwLBR2TlN96bKQlCwy4m3FWL87uljwzJUGQ4ko4OadTiyZ
+         eZpnMDzTcrE9QG/4k/m04yZX4fiYyv+60P03d0Kf/RaW/cFTclGQTFTz83Bt0zjrkEjo
+         sBqKYwiqdZZMl4uzXd54nC+QmtfIbw0h+5I8V3+TTp3gjhDLM5n1E9kJIOj0EoDhGFcj
+         SvvdYdFeqI41BYn5IBjTzrXQoCyiR/KtHADlFrye/7PmG+CBsetJkU19iR2goXSbGr8/
+         CJj+GU8CdCIpgasM6Sk1XgSqkGJCgKQpEBTiZn6sN3vQfxRXxUQnVBMtHGEdqrUJ7f5c
+         uHQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdfdI/Em3h7+yafdB44+Y5dJwzgT26tzaTT/8e8521MNj6hhOwWp9GnoS3i30D7euwTRYsm++kPQRsEazf6dfE@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeyFZZ0LdG6TmE1VJHnz3nlhOH/ec5nSa3V/wi0PCY8kl83/eP
+	FVjXldmnPDEDNOewDebYF5a5y0ITsdyVFmpKWwtfHCNT34hmLAQlchEcOCCqDVjKG3T764KXUUc
+	e7zKXFapFwA==
+X-Google-Smtp-Source: AGHT+IGEdfcf1vcuaCJvoYdYJ3BAVMzz3FXV9FLVs9dvggYArZkYTZ9cwp52m0tLcY0WKDDcvBh2FsVu/nE+
+X-Received: from dlbcq18.prod.google.com ([2002:a05:7022:2492:b0:119:78ff:fe0f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4424:b0:11b:9386:a3cc
+ with SMTP id a92af1059eb24-11c9d872af1mr2180162c88.45.1763799575160; Sat, 22
+ Nov 2025 00:19:35 -0800 (PST)
+Date: Sat, 22 Nov 2025 00:19:12 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20251121230951.3240124-1-ctshao@google.com>
 X-Mailer: git-send-email 2.52.0.rc2.455.g230fcf2819-goog
-Message-ID: <20251121230951.3240124-2-ctshao@google.com>
-Subject: [PATCH v5 2/2] perf evsel: Find process with busy PMUs for EBUSY
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, thomas.falcon@intel.com, howardchu95@gmail.com, 
+Message-ID: <20251122081929.7588-1-irogers@google.com>
+Subject: [PATCH v1 00/17] perf: Small fixes and new tests
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Collin Funk <collin.funk1@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Leo Yan <leo.yan@arm.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
+	Haibo Xu <haibo1.xu@intel.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-It parses fdinfo with PMU type, comparing with the event which failed to
-open, and report the processes causing EBUSY error.
+Pushing for additional test coverage exposed minor fixes, a missing
+timechart option, and a number of reference counting issues. Fix the
+issues then add the new tests. The new tests cover c2c, additional
+build-id tests, perf top, timechart, kallsyms, perf script with
+ --dlfilter, evlist and kvm.
 
-Testing cycles and intel_pt//
+Ian Rogers (17):
+  perf kvm: Fix debug assertion
+  perf timechart: Add record support for output perf.data path
+  perf symbol-elf: Add missing puts on error path
+  perf symbol: Add missed dso__put
+  perf probe-event: Ensure probe event nsinfo is always cleared
+  perf hist: In init, ensure mem_info is put on error paths
+  perf mem-events: Don't leak online CPU map
+  perf jitdump: Fix missed dso__put
+  perf c2c: Clean up some defensive gets and make asan clean
+  perf tests c2c: Add a basic c2c
+  perf tests buildid: Add purge and remove testing
+  perf tests top: Add basic perf top coverage test
+  perf tests timechart: Add a perf timechart test
+  perf tests kallsyms: Add basic kallsyms test
+  perf tests script dlfilter: Add a dlfilter test
+  perf tests evlist: Add basic evlist test
+  perf test kvm: Add some basic perf kvm test coverage
 
-  $ ./perf stat -e cycles &
-  [1] 55569
-  $ ./perf stat -e intel_pt// &
-  [2] 55683
-  $ ./perf stat -e intel_pt//
-  Error:
-  The PMU intel_pt counters are busy and in use by another process.
-  Possible processes:
-  55683 ./perf stat -e intel_pt//
+ tools/perf/builtin-c2c.c                  |  36 ++--
+ tools/perf/builtin-kvm.c                  |   2 +-
+ tools/perf/builtin-timechart.c            |  15 +-
+ tools/perf/tests/shell/buildid.sh         | 203 +++++++++++++++++++---
+ tools/perf/tests/shell/c2c.sh             |  62 +++++++
+ tools/perf/tests/shell/evlist.sh          |  79 +++++++++
+ tools/perf/tests/shell/kallsyms.sh        |  56 ++++++
+ tools/perf/tests/shell/kvm.sh             | 154 ++++++++++++++++
+ tools/perf/tests/shell/script_dlfilter.sh | 107 ++++++++++++
+ tools/perf/tests/shell/timechart.sh       |  67 +++++++
+ tools/perf/tests/shell/top.sh             |  74 ++++++++
+ tools/perf/util/hist.c                    |   6 +-
+ tools/perf/util/jitdump.c                 |   2 +
+ tools/perf/util/mem-events.c              |   5 +-
+ tools/perf/util/probe-event.c             |  12 +-
+ tools/perf/util/symbol-elf.c              |   5 +-
+ tools/perf/util/symbol.c                  |   1 +
+ 17 files changed, 819 insertions(+), 67 deletions(-)
+ create mode 100755 tools/perf/tests/shell/c2c.sh
+ create mode 100755 tools/perf/tests/shell/evlist.sh
+ create mode 100755 tools/perf/tests/shell/kallsyms.sh
+ create mode 100755 tools/perf/tests/shell/kvm.sh
+ create mode 100755 tools/perf/tests/shell/script_dlfilter.sh
+ create mode 100755 tools/perf/tests/shell/timechart.sh
+ create mode 100755 tools/perf/tests/shell/top.sh
 
-Only perf with intel_pt was reported.
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
-v5:
-  No change.
-
-v4: lore.kernel.org/20250603181634.1362626-2-ctshao@google.com/
-  Removed the first patch in v3 since it is merged.
-  Retested to make sure the patch still work.
-
-v3: lore.kernel.org/20241106003007.2112584-3-ctshao@google.com/
-
- tools/perf/util/evsel.c | 79 +++++++++++++++++++++++++++++------------
- 1 file changed, 57 insertions(+), 22 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index aee42666e882..059792a978a8 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3732,7 +3732,8 @@ static bool find_process(const char *name)
- 	return ret ? false : true;
- }
-
--static int dump_perf_event_processes(char *msg, size_t size)
-+static int dump_perf_event_processes(const struct perf_event_attr *failed_attr,
-+				     char *msg, size_t size)
- {
- 	DIR *proc_dir;
- 	struct dirent *proc_entry;
-@@ -3773,29 +3774,61 @@ static int dump_perf_event_processes(char *msg, size_t size)
- 				continue;
- 			/* Take care as readlink doesn't null terminate the string. */
- 			if (!strncmp(buf, "anon_inode:[perf_event]", link_size)) {
--				int cmdline_fd;
--				ssize_t cmdline_size;
--
--				scnprintf(buf, sizeof(buf), "%s/cmdline", proc_entry->d_name);
--				cmdline_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
--				if (cmdline_fd == -1)
--					continue;
--				cmdline_size = read(cmdline_fd, buf, sizeof(buf) - 1);
--				close(cmdline_fd);
--				if (cmdline_size < 0)
-+				int fdinfo_fd;
-+				ssize_t fdinfo_size;
-+				char *line;
-+				u32 perf_event_type = UINT32_MAX;
-+
-+				/* Let's check the PMU type reserved by this process */
-+				scnprintf(buf, sizeof(buf), "%s/fdinfo/%s",
-+					  proc_entry->d_name, fd_entry->d_name);
-+				fdinfo_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
-+				fdinfo_size = read(fdinfo_fd, buf, sizeof(buf) - 1);
-+				if (fdinfo_size < 0)
- 					continue;
--				buf[cmdline_size] = '\0';
--				for (ssize_t i = 0; i < cmdline_size; i++) {
--					if (buf[i] == '\0')
--						buf[i] = ' ';
-+				buf[fdinfo_size] = '\0';
-+
-+				line = strtok(buf, "\n");
-+				while (line != NULL) {
-+					if (sscanf(line,
-+						   "perf_event_attr.type:\t%u",
-+						   &perf_event_type) == 1)
-+						break;
-+					line = strtok(NULL, "\n");
- 				}
-
--				if (printed == 0)
--					printed += scnprintf(msg, size, "Possible processes:\n");
--
--				printed += scnprintf(msg + printed, size - printed,
--						"%s %s\n", proc_entry->d_name, buf);
--				break;
-+				/* Report the process which reserves the conflicted PMU. */
-+				/* If fdinfo does not contain PMU type, report it too. */
-+				if (perf_event_type == failed_attr->type ||
-+				    perf_event_type == UINT32_MAX) {
-+					int cmdline_fd;
-+					ssize_t cmdline_size;
-+
-+					scnprintf(buf, sizeof(buf),
-+						  "%s/cmdline",
-+						  proc_entry->d_name);
-+					cmdline_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
-+					if (cmdline_fd == -1)
-+						continue;
-+					cmdline_size = read(cmdline_fd, buf, sizeof(buf) - 1);
-+					close(cmdline_fd);
-+					if (cmdline_size < 0)
-+						continue;
-+					buf[cmdline_size] = '\0';
-+					for (ssize_t i = 0; i < cmdline_size; i++) {
-+						if (buf[i] == '\0')
-+							buf[i] = ' ';
-+					}
-+
-+					if (printed == 0)
-+						printed += scnprintf(
-+							msg, size,
-+							"Possible processes:\n");
-+
-+					printed += scnprintf(msg + printed, size - printed,
-+							"%s %s\n", proc_entry->d_name, buf);
-+					break;
-+				}
- 			}
- 		}
- 		closedir(fd_dir);
-@@ -3914,7 +3947,9 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
- 			msg, size,
- 			"The PMU %s counters are busy and in use by another process.\n",
- 			evsel->pmu ? evsel->pmu->name : "");
--		return printed + dump_perf_event_processes(msg + printed, size - printed);
-+		return printed + dump_perf_event_processes(&evsel->core.attr,
-+							   msg + printed,
-+							   size - printed);
- 		break;
- 	case EINVAL:
- 		if (evsel->core.attr.sample_type & PERF_SAMPLE_CODE_PAGE_SIZE && perf_missing_features.code_page_size)
---
-
+-- 
 2.52.0.rc2.455.g230fcf2819-goog
 
