@@ -1,55 +1,55 @@
 Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C958C2FC019
-	for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 08:20:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858D02FD661
+	for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 08:20:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763799606; cv=none; b=OYlL9izmE5QpmdvC4GEMZmwENs7wfWNNSS7S/U+P1MI+rgBYQpcaDqXivBXLcSp3Byhdq6sSg1tTOB5JE6/qHHyeWQyacWrwQV5dlOJGMC6r1ug2QiaqNmDZOwKFb7nFlomeBhzP6/0lud4ekxvacQiRxWUXz3t+vdsKoEaO6Y4=
+	t=1763799608; cv=none; b=u5OPvXzqIgQN/vuWtEi2DqsNDDK8aXiqXTmSWFcPtLfAb5g/KY8q4DJTq5Pvfc7+WUXXAHyEAheouJVP0Fj1a0LRpIBwBRioPz/QKo9907olteClsMxyfYOrRO7k6yNZd3wdEWLFm/BAIHCuC5ci/D/t280iy4563RoPejrw5sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763799606; c=relaxed/simple;
-	bh=fmBkDqhx1PttP/dB41nn3oTLi+QWzIEgzUqcslYwQqk=;
+	s=arc-20240116; t=1763799608; c=relaxed/simple;
+	bh=cVbo9KyKjAiks4mZRtglLay3uOkQ31MIH0rTAfdDkxU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=EfWqN4kuyc9XRr6U2Rz+Ows/9b9DRJh9Zer0Pko7ZP4aWMIHo3wpglG10vQ7/9sTx4SrTXo/HAUmRmyS+gojxjejyY1bAfd19PnXCt2TAepDzXOPKIl3Soz7dN8Z20/Xgggo+LMU4VAeS02oPOdDi6p42uWp1Gut/oM9TurJsBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nk8F0XFl; arc=none smtp.client-ip=209.85.215.201
+	 To:Content-Type; b=eqfHTelSXhZKSl5c6Rx5V+g0Jqc849EDI32XsEuaWnkC97hYrmAlwIUbrdsd5/lEcO6sumg46IszdWdpocHu/H76sRE+1x6XWjNvAWxprgY6kYrRybnRhOzxU8M/Lp0IoA5a36/gY7Vvb4ZuIY31FiwGwPefEx1Qv5N5Q4Sy2bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nDcwQ7K1; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nk8F0XFl"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b969f3f5c13so2654312a12.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 00:20:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nDcwQ7K1"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b471737e673so4045381a12.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 00:20:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763799604; x=1764404404; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763799606; x=1764404406; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qagIg4uAZrdvXdo5hL885MqntgeUFGla68aYQTHhYq0=;
-        b=Nk8F0XFlEbBgMTTIjOP//Ho/leXPGOeKhu2cZjsrKTqyDHTHqfJDelRSnKjHLvZaZS
-         rtnnmXxc2rTQDse4jT9ul+Ig8r2VS8FCC0jeNvwBMK1MNz1CQ5WuGozNQEbRigOmqvbD
-         s1dRJvTvijm/yuxlEng9jSSyU7EkeQMrVgXZU1qtR4ArxF4aHL/sUJILJKHKvp07sc+t
-         FW5adExOqWYp0FLXOsHQsS1BstRsgn3aJYWPAwmz1iGp5EuwPxpwKkLrBzyW2RLDVMgM
-         CIf0kuRLyGd93nu9IsluIxJmwzB6lFjF2p/HDZf1WFmFU0/MnNH7PKMrEIFYeIRd1x96
-         S6rA==
+        bh=c5vcUZ36q7LIP5k988zWeeeMo0DAr72XmNMPXeiuOFk=;
+        b=nDcwQ7K1EjzwrCoIPsER93yq7sG+vw8gu6NqIJmcseRTYyV/PGpapZG0uG0xOD6ZwW
+         jlmt76Ic6y0lUeXmT8NYIf8TPXs6n2SB9MvOOR8FZ4/Yw09FhKRankk5ZwHONWjAq6Uo
+         u6EhR4vDDrEjMIiwzeqK+BZnjyjw3QNwSH+U9Futm517ZAR3hskvc7sjq/iqA8dUHa0Q
+         tsjupbjHv9R1AWUI71FS4B5tX7bhL/a9hJVWNNJ/BPs4GxZzI0WfHvKwPlNkaBL5i9Ru
+         T2tHHoGjt6bH7NAcMeRYv+k2Ml1JYV4fT1Xc3dMF5hA5+/2hMELtFXOTExh2r6AZ2nVp
+         nlgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763799604; x=1764404404;
+        d=1e100.net; s=20230601; t=1763799606; x=1764404406;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qagIg4uAZrdvXdo5hL885MqntgeUFGla68aYQTHhYq0=;
-        b=J5fkaehsSldAwBbeXM6xefwUq9bLuL5h9GXfpc2sqqPJAz9GeySFx+IlWdt4GOfk2q
-         BB0PjpzzZ4+9n2+ybZOqW0vPgFWvJc4Xx1rVU1wfOQAaFU5Rqs0Np5EpQmR0K6rup6v2
-         TPJOLOwTLpuQ4YRJ8AsaIo3hJL9sgteL+PMu/pnQyJ9ZnifwvtWV2SnJRDSIBNP9Y1sm
-         OvOyXW5BHviOinGhSmFCclTuZCzJYNK/86f1HFSlcHJbdcchBROhZadjBlx7k72Le4vJ
-         AaLSCAf8nXGAL2YZ2um2bt9nRhkbPucbHZtH1ccpbWsVz2xiMMl7UcGTS08AGa31jtuq
-         CZSA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZPZGLmLK2JgSLoq2hKJZNPspH2wv4PdXEIPTFZTLtMmD+4yItwxtVZ3i1XyMNtID0njC2Mylst7Jj8hi6elT5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3GpRZg/IZ3zG4zXyl6muz8V5dyOv+TjpSNJvYfu6G1g+aDg8T
-	roF3RNFnfl3xLtLBJVspjrHhQwAvkWhG1MvJtJTPeDVqqdzpu6TIXtwBt32e/IjQImB4m4sNMvv
-	vgAjnJGLzmg==
-X-Google-Smtp-Source: AGHT+IEt4dH04AqO+CjXIyoe+uYefmSRa8ceQS06YbtdgWzSj0GX2or7oPfZlPna9E6bEu5iEskG4hp2bqz1
-X-Received: from dyt23.prod.google.com ([2002:a05:693c:8097:b0:2a2:454c:f92])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d198:b0:2a4:3593:466c
- with SMTP id 5a478bee46e88-2a719098538mr1676208eec.8.1763799604030; Sat, 22
- Nov 2025 00:20:04 -0800 (PST)
-Date: Sat, 22 Nov 2025 00:19:27 -0800
+        bh=c5vcUZ36q7LIP5k988zWeeeMo0DAr72XmNMPXeiuOFk=;
+        b=W2MxwotcADjBJn8Y1urHwgBsNqH7h8kykF6HUWwy6VrqRqs27wEgjucnmfibqfNOd2
+         UzpT8rS8cK3ewAa66nAArgZ3P3R8/hETeXrXVAVA07neaOGgxmNv3xPSgy19dmNFj/sj
+         QqG760SyF+lnS9/zGHBD+j1h4oTcAK0rkP6iw9pGHjHdd6sk9DAgmj19oxTeZDwusgi/
+         Yf37m+JGzTVFyT65lZ+oFHZpkFtQkOHLjWobKBR7C1DgYwQDvagB4BhT+q/RMbsB3JAB
+         GmMWB7nk3zrLAo4/JDBcDWVQNpQMGw6obh+u43cKAPxNXTMZJaN4XKFV6TTqh1Hoe8gR
+         knRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsE9Pt8JVI1+DK4DWKuzGM0ZA2jJhX4eIX9FF825unGepJlle2mE0ETpfCn+pr1PDviJ/V67juIbNplh84cX59@vger.kernel.org
+X-Gm-Message-State: AOJu0YyERxakhFm0lKJv0pc8ud2jSjKvwL59YHd3r/qraF9naoTP/rb9
+	zSHe3Uv3LKPVbhp4Agtu2DoVjT4acOMmDZfGFjxWMkAjKd350R0m2I9Uby8XrbqyneUJVyso62h
+	Qw3suugZVUA==
+X-Google-Smtp-Source: AGHT+IHp2n+PMLI6OfHsMt+oT7Bf6B1GSkHq8pvIHAETmUrFKTEcUmTA0f7lg7TVaCVrRV2nsTnRe5nKpQtt
+X-Received: from dlbdd12.prod.google.com ([2002:a05:7022:a8c:b0:119:49ca:6b9c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:388e:b0:11b:9386:8267
+ with SMTP id a92af1059eb24-11c9d86fc93mr2488596c88.44.1763799605924; Sat, 22
+ Nov 2025 00:20:05 -0800 (PST)
+Date: Sat, 22 Nov 2025 00:19:28 -0800
 In-Reply-To: <20251122081929.7588-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251122081929.7588-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.rc2.455.g230fcf2819-goog
-Message-ID: <20251122081929.7588-16-irogers@google.com>
-Subject: [PATCH v1 15/17] perf tests script dlfilter: Add a dlfilter test
+Message-ID: <20251122081929.7588-17-irogers@google.com>
+Subject: [PATCH v1 16/17] perf tests evlist: Add basic evlist test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,48 +75,31 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Compile a simple dlfilter and make sure it remove samples from
-everything other than a test_loop.
+Add test that evlist reports expected events from perf record.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/script_dlfilter.sh | 107 ++++++++++++++++++++++
- 1 file changed, 107 insertions(+)
- create mode 100755 tools/perf/tests/shell/script_dlfilter.sh
+ tools/perf/tests/shell/evlist.sh | 79 ++++++++++++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100755 tools/perf/tests/shell/evlist.sh
 
-diff --git a/tools/perf/tests/shell/script_dlfilter.sh b/tools/perf/tests/shell/script_dlfilter.sh
+diff --git a/tools/perf/tests/shell/evlist.sh b/tools/perf/tests/shell/evlist.sh
 new file mode 100755
-index 000000000000..45c97d4a7d5f
+index 000000000000..140f099e75c1
 --- /dev/null
-+++ b/tools/perf/tests/shell/script_dlfilter.sh
-@@ -0,0 +1,107 @@
++++ b/tools/perf/tests/shell/evlist.sh
+@@ -0,0 +1,79 @@
 +#!/bin/bash
-+# perf script --dlfilter tests
++# perf evlist tests
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
 +
-+shelldir=$(dirname "$0")
-+# shellcheck source=lib/setup_python.sh
-+. "${shelldir}"/lib/setup_python.sh
-+
-+# skip if there's no compiler
-+if ! [ -x "$(command -v cc)" ]; then
-+	echo "failed: no compiler, install gcc"
-+	exit 2
-+fi
-+
 +err=0
 +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+dlfilter_c=$(mktemp /tmp/__perf_test.dlfilter.test.c.XXXXX)
-+dlfilter_so=$(mktemp /tmp/__perf_test.dlfilter.so.XXXXX)
 +
 +cleanup() {
 +	rm -f "${perfdata}"
-+	rm -f "${dlfilter_c}"
-+	rm -f "${dlfilter_so}"
-+	rm -f "${dlfilter_so}.o"
-+
 +	trap - EXIT TERM INT
 +}
 +
@@ -127,74 +110,62 @@ index 000000000000..45c97d4a7d5f
 +}
 +trap trap_cleanup EXIT TERM INT
 +
-+cat <<EOF > "${dlfilter_c}"
-+#include <perf/perf_dlfilter.h>
-+#include <string.h>
-+#include <stdio.h>
-+
-+struct perf_dlfilter_fns perf_dlfilter_fns;
-+
-+int filter_event(void *data, const struct perf_dlfilter_sample *sample, void *ctx)
-+{
-+	const struct perf_dlfilter_al *al;
-+
-+	if (!sample->ip)
-+		return 0;
-+
-+	al = perf_dlfilter_fns.resolve_ip(ctx);
-+	if (!al || !al->sym || strcmp(al->sym, "test_loop"))
-+		return 1;
-+
-+	return 0;
-+}
-+EOF
-+
-+test_dlfilter() {
-+	echo "Basic --dlfilter test"
-+	# Generate perf.data file
-+	if ! perf record -o "${perfdata}" perf test -w thloop 1 2> /dev/null
++test_evlist_simple() {
++	echo "Simple evlist test"
++	if ! perf record -e cycles -o "${perfdata}" true 2> /dev/null
 +	then
-+		echo "Basic --dlfilter test [Failed record]"
++		echo "Simple evlist [Failed record]"
 +		err=1
 +		return
 +	fi
-+
-+	# Build the dlfilter
-+	if ! cc -c -I tools/perf/include -fpic -x c "${dlfilter_c}" -o "${dlfilter_so}.o"
++	if ! perf evlist -i "${perfdata}" | grep -q "cycles"
 +	then
-+		echo "Basic --dlfilter test [Failed to build dlfilter object]"
++		echo "Simple evlist [Failed to list event]"
 +		err=1
 +		return
 +	fi
-+
-+	if ! cc -shared -o "${dlfilter_so}" "${dlfilter_so}.o"
-+	then
-+		echo "Basic --dlfilter test [Failed to link dlfilter shared object]"
-+		err=1
-+		return
-+	fi
-+
-+	# Check that the output contains "test_loop" and nothing else
-+	if ! perf script -i "${perfdata}" --dlfilter "${dlfilter_so}" | grep -q "test_loop"
-+	then
-+		echo "Basic --dlfilter test [Failed missing output]"
-+		err=1
-+		return
-+	fi
-+
-+	# The filter should filter out everything except test_loop, so ensure no other symbols are present
-+	# This is a simple check; we could be more rigorous
-+	if perf script -i "${perfdata}" --dlfilter "${dlfilter_so}" | grep -v "test_loop" | grep -q "perf"
-+	then
-+		echo "Basic --dlfilter test [Failed filtering]"
-+		err=1
-+		return
-+	fi
-+
-+	echo "Basic --dlfilter test [Success]"
++	echo "Simple evlist test [Success]"
 +}
 +
-+test_dlfilter
++test_evlist_group() {
++	echo "Group evlist test"
++	if ! perf record -e "{cycles,instructions}" -o "${perfdata}" true 2> /dev/null
++	then
++		echo "Group evlist [Skipped event group recording failed]"
++		return
++	fi
++
++	if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cycles.*,.*instructions.*}"
++	then
++		echo "Group evlist [Failed to list event group]"
++		err=1
++		return
++	fi
++	echo "Group evlist test [Success]"
++}
++
++test_evlist_verbose() {
++	echo "Event configuration evlist test"
++	if ! perf record -e cycles -o "${perfdata}" true 2> /dev/null
++	then
++		echo "Event configuration evlist [Failed record]"
++		err=1
++		return
++	fi
++
++	if ! perf evlist -i "${perfdata}" -v | grep -q "config:"
++	then
++		echo "Event configuration evlist [Failed to list verbose info]"
++		err=1
++		return
++	fi
++	echo "Event configuration evlist test [Success]"
++}
++
++test_evlist_simple
++test_evlist_group
++test_evlist_verbose
++
 +cleanup
 +exit $err
 -- 
