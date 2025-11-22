@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E097528643C
-	for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 08:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40422D949F
+	for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 08:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763799579; cv=none; b=I2Qb5Yqr6BTNeE0lvK1YPa5wTJx1uEmI78wQRFWRBoPUfLKyZMSCttEC4QyI6z5D7EX1nTFqPgiMqYZJWAKonfownaRVZFCT1PzthhjkA8GAlYLti5q+vYcbkBAIYQeMwO1lB80htWD1qBhMXYnxGLH3uu7QcwwlG+j9qbbdKDk=
+	t=1763799581; cv=none; b=Kujmtm258AA0JJOUOjMoj/PeTVz76NLYcRNVcqxsFAx6jIPbekctguTdL7DOyoUM2hLFO/no2DSegYHmqsD/ykyEGeu6SdGsKyllbBXSdlnuuWc5DQLLHFssLEEJod0UEXl/qIUx3j0k8Us2t49IRnAHsltkL/Q1MKY7iB8CBxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763799579; c=relaxed/simple;
-	bh=66zSOIq74hxYCETHRFMWlx/lP7j6PkMIhGgMOekkt40=;
+	s=arc-20240116; t=1763799581; c=relaxed/simple;
+	bh=lcitgjEQcXl1ueB+btDph/z9Qk2ubVjcj5n/+Z1wp9U=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=PNNXvjP9juKnxrJ/GS366DRGy+uvjGCEWRdVcqfQm24CBVqEeHNbVcKibuFm00KBvXFxHEEKGVCaS8zVNsHJa0Jze1PrparQt9UhUDyDAa4a4gu7vTu/uUtlgY63E/ViXoLCH/hc7ca65oydhGenLEgcfNm3ObHysxUixnFih4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yF4I6ed9; arc=none smtp.client-ip=209.85.215.201
+	 To:Content-Type; b=nN0lIAMjT2kaZnLNlpHACvfmO4TQ++SaiK8YrSTQri78VXJxP/f1d1tf25jooCID0uqDp/MhD4IUh6xNh1N2d5lr0rLXONK4WEr17IZVUE37YgnZDAC1De8GTvultjww/E+1/xwa3Fc+vG8G/eomYROezz7VmMvI5ygiXNqV+KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LHOIFRai; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yF4I6ed9"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b6ce1b57b9cso2820583a12.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 00:19:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LHOIFRai"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-341aec498fdso3904806a91.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 00:19:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763799577; x=1764404377; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763799579; x=1764404379; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qGjBuL6hpWHuvMAblul9npGpWy029ZKQRp7hNfKA50A=;
-        b=yF4I6ed9JfX/3KBNkhFdR6jPc818rmrGQulpu4Ox29URE6GRDKjL5xRdqLqxIxrG3v
-         L3cvtVzMkmzsxPMoyvpOaMU28yAMmDzFtf+Ll+m5SyFSQd/oNbMR2MXxLU6ObQxh47ie
-         3LS/8Dqw/iVRpM84g5r6uqhrj0r82rg5A6WsY9Q7e//lJdVkjc3gNQC7NGIXo2NWBbTd
-         r73TMKdnYK6XbcjTZsyLEIRMDSjVvYCastG/VGwUfe1B5kBWgzt8/0tuOQL+I/uCBcVJ
-         rZr3+hYz2Us8BRFWQLYyUF9cy2NU7c8Y4dhfRPCoIVuJG0RIzKmI5/Huge13oQMW3re5
-         Afvg==
+        bh=olDcTWaXoeAAZhaDM2EEwFLEFX4r4XtX7pbuTmW4sUE=;
+        b=LHOIFRaiztihTktBVsUZdTuoAT/BrzAewNIh1SG0Tby58D3i7461k1VqIpobLGabGl
+         6Tai++nW7nXnChlS6IohMjAwPfXARA6DRY3xhVNOEfeBZramj901CSeZahKsL4EFdZZG
+         uZ9cWOuPcOAtCrht+uuEt4+gQ+jqcpoXPY4vdrPR/XAEaKINgpxqJqYogUKRFd5/bdGa
+         0ohsCNImSASLqi/Gupsd2IP1uQzwajxgVHHCx8uBAiE/guyf+S9zAAXVyxJh7IYxsiBi
+         MTsOEo/B8+tRYhOVtZPQAeMSoKvNaF+mj0UHDA62Fa/Uvf7Fq/gotoaunkMb7ZQO+fdc
+         OR1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763799577; x=1764404377;
+        d=1e100.net; s=20230601; t=1763799579; x=1764404379;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qGjBuL6hpWHuvMAblul9npGpWy029ZKQRp7hNfKA50A=;
-        b=sOX0it8RAqBLr8RN24+k47yEmlkSLpkE8N9mZ6EalzflmEOPBDadtlMOvS++9bdrF+
-         DFK5ehDEOFxjz+MSb2/WoYdIJUPyuY1fTFlr9H/GSi0M2ZHW+W8XJ5LX5NV/a4nk5WvM
-         SocaB85iGMwvTYpkHW0fiPs1yShTj0Kqc/6CiI2piqFgb+L7sc3KLV7MxF9Gyq4fW9Z/
-         A6sIEsjwt3Pik65791DoOpc8lGlxIDh+YIYrbAgaLiAzIk8+i/kcTZLEc7NiLYK3AKj6
-         yUNjwDwrJuEhVFvTSoZu2d8i5Lw1lIPILIqEhvf8Hq25XbRpf7AutR6Se0de93v7UZvO
-         7GBA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxMowxWnNQiUe1TKGLUaEznQt3hgJjCInBeZVJOl5HWyNMWakTVb0y3mkzNaY/nhik8vuJTK5hfw2+seowlCfe@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkkeR4eglk5BqlqSGlnDOTMm5w4K4FIGBzMmjGyNPu1XtXiI9u
-	8JE8YO3PVTPDDnMaSwdYFD15YKeeDRpyhaESqLId7xS8OiEfGE7F1RgyFGQL9rI+tNByx46Fx3F
-	oLPsDc8oAqg==
-X-Google-Smtp-Source: AGHT+IFk8hIvCd98IgS3hAB8UgO1KPRZquX8qEJmEtwOJnrLusPChQDQA1oynuDhD//Rh1OjHAscFPAszRhJ
-X-Received: from dybma12.prod.google.com ([2002:a05:7301:168c:b0:2a2:53a5:570f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:f148:b0:2a4:3593:ddf5
- with SMTP id 5a478bee46e88-2a71a0015ebmr1591424eec.34.1763799577130; Sat, 22
- Nov 2025 00:19:37 -0800 (PST)
-Date: Sat, 22 Nov 2025 00:19:13 -0800
+        bh=olDcTWaXoeAAZhaDM2EEwFLEFX4r4XtX7pbuTmW4sUE=;
+        b=R5kEGlSJ+xYbnliudTpjdvoYyKZ8rROMYgT97TF81tueeg1+J45SZjcRZHxX9gwwwe
+         jWCcGCjg5A2h+z9Dq9wG8jPiLf3oNUwiKgHnNrvkWcqWKpdMIJjz0juF+CKuEdtia/mq
+         6cEge2TvFI4V4CotFrf3KsdIeVoGbk6zDbTZo/cQmHFtTjPh+ovUqGQyYcckmXh2bYJg
+         NG00HIGsgrcztALQMbLH61Xytma8lrWPGaeu9694C4KgZh9TXwVq8h1W1TiFmZPUjOJC
+         Fen6Ar7xug3ph3vac9AEzDc4k1SmrPx/jqmloLxhirjbsQr5RzxvIolZeC1eY5awLWoA
+         iTiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUglo9N0HyzLvZXCBwkZ9qScQcS4eaHww9anivkBsjbpsxSPtWjqOanKo/V3XSfIusXY2SPtzl+jnbNiu8/7vNf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4BU3/+OqE3mujRXwb6MoxUl98OqzkN0HUxWFoKcBPNVh9yOjh
+	ksNty6Tkkg9Bih3BUkJpdSyeC7Y+4J0clOCrLMXUMeIY5JABZxvlH0rho1VHis1qQDJeo28FFsF
+	5PghtVA8jbg==
+X-Google-Smtp-Source: AGHT+IFg6Ktrj2zIwJbXlbe5LDlc+MS/s38n577fvz01e7jf8fE8U5cwWbIJlEx4XNUPC4DWxaE7w06J0Wjy
+X-Received: from dlbqy19.prod.google.com ([2002:a05:7022:ef13:b0:11b:c1ab:bdb1])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ec88:b0:11a:4b72:35e8
+ with SMTP id a92af1059eb24-11c9d7092b7mr2588098c88.6.1763799579085; Sat, 22
+ Nov 2025 00:19:39 -0800 (PST)
+Date: Sat, 22 Nov 2025 00:19:14 -0800
 In-Reply-To: <20251122081929.7588-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251122081929.7588-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.rc2.455.g230fcf2819-goog
-Message-ID: <20251122081929.7588-2-irogers@google.com>
-Subject: [PATCH v1 01/17] perf kvm: Fix debug assertion
+Message-ID: <20251122081929.7588-3-irogers@google.com>
+Subject: [PATCH v1 02/17] perf timechart: Add record support for output
+ perf.data path
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,28 +76,83 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-There are 2 slots left for kvm_add_default_arch_event, fix the
-assertion so that debug builds don't fail the assert and to agree with
-the comment.
+The '-o' option exists for the SVG creation but not for `perf
+timechart record`. Add to better allow testing.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-kvm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-timechart.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index f0f285763f19..c61369d54dd9 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -2014,7 +2014,7 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
- 	for (j = 1; j < argc; j++, i++)
- 		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 22050c640dfa..f8b49d69e9a5 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -1651,7 +1651,7 @@ static int __cmd_timechart(struct timechart *tchart, const char *output_name)
+ 	return ret;
+ }
  
--	BUG_ON(i != rec_argc);
-+	BUG_ON(i + 2 != rec_argc);
+-static int timechart__io_record(int argc, const char **argv)
++static int timechart__io_record(int argc, const char **argv, const char *output_data)
+ {
+ 	unsigned int rec_argc, i;
+ 	const char **rec_argv;
+@@ -1659,7 +1659,7 @@ static int timechart__io_record(int argc, const char **argv)
+ 	char *filter = NULL;
  
- 	ret = kvm_add_default_arch_event(&i, rec_argv);
- 	if (ret)
+ 	const char * const common_args[] = {
+-		"record", "-a", "-R", "-c", "1",
++		"record", "-a", "-R", "-c", "1", "-o", output_data,
+ 	};
+ 	unsigned int common_args_nr = ARRAY_SIZE(common_args);
+ 
+@@ -1786,7 +1786,8 @@ static int timechart__io_record(int argc, const char **argv)
+ }
+ 
+ 
+-static int timechart__record(struct timechart *tchart, int argc, const char **argv)
++static int timechart__record(struct timechart *tchart, int argc, const char **argv,
++			     const char *output_data)
+ {
+ 	unsigned int rec_argc, i, j;
+ 	const char **rec_argv;
+@@ -1794,7 +1795,7 @@ static int timechart__record(struct timechart *tchart, int argc, const char **ar
+ 	unsigned int record_elems;
+ 
+ 	const char * const common_args[] = {
+-		"record", "-a", "-R", "-c", "1",
++		"record", "-a", "-R", "-c", "1", "-o", output_data,
+ 	};
+ 	unsigned int common_args_nr = ARRAY_SIZE(common_args);
+ 
+@@ -1934,6 +1935,7 @@ int cmd_timechart(int argc, const char **argv)
+ 		.merge_dist = 1000,
+ 	};
+ 	const char *output_name = "output.svg";
++	const char *output_record_data = "perf.data";
+ 	const struct option timechart_common_options[] = {
+ 	OPT_BOOLEAN('P', "power-only", &tchart.power_only, "output power data only"),
+ 	OPT_BOOLEAN('T', "tasks-only", &tchart.tasks_only, "output processes data only"),
+@@ -1976,6 +1978,7 @@ int cmd_timechart(int argc, const char **argv)
+ 	OPT_BOOLEAN('I', "io-only", &tchart.io_only,
+ 		    "record only IO data"),
+ 	OPT_BOOLEAN('g', "callchain", &tchart.with_backtrace, "record callchain"),
++	OPT_STRING('o', "output", &output_record_data, "file", "output data file name"),
+ 	OPT_PARENT(timechart_common_options),
+ 	};
+ 	const char * const timechart_record_usage[] = {
+@@ -2024,9 +2027,9 @@ int cmd_timechart(int argc, const char **argv)
+ 		}
+ 
+ 		if (tchart.io_only)
+-			ret = timechart__io_record(argc, argv);
++			ret = timechart__io_record(argc, argv, output_record_data);
+ 		else
+-			ret = timechart__record(&tchart, argc, argv);
++			ret = timechart__record(&tchart, argc, argv, output_record_data);
+ 		goto out;
+ 	} else if (argc)
+ 		usage_with_options(timechart_usage, timechart_options);
 -- 
 2.52.0.rc2.455.g230fcf2819-goog
 
