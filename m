@@ -1,424 +1,345 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA215239E7E
-	for <linux-perf-users@vger.kernel.org>; Sun, 23 Nov 2025 02:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF3A14A91
+	for <linux-perf-users@vger.kernel.org>; Sun, 23 Nov 2025 12:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763865168; cv=none; b=l0ubnFXnbW5+SBYgC7IgINONVpXjJ17jddh6NBfk1TpL2a5VOP0tmcbnPJeWSSvJ9OO8mzQtlh0jAQymYYExNyiYJCzwgbmNi2xl+S1oVR6Oeg1+XAIvIQaV13w0JRM3xgbgnoJgDk+olix8nnCGXOgwyGiC1wqt9TreB2nIMaM=
+	t=1763900378; cv=none; b=hCLT4EK9slQFAS66ih22JfXhxVi+h3A9mWCXF4T+6+eS8dRoEOWa+lkFPYOZS3hpIyj2dN2YgwuUr1u3v0zWTCamQApVJG1hN4JLMAKcpmrJSDU+XqgIqbLBHhr9iUhcOi0XEfw4dTc6D0g+RIgRci666U+FrM7dKDq6khT1p1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763865168; c=relaxed/simple;
-	bh=gmLo+tgn4IZIr717BNDUYeGmMI7UzWO3Pd0YWYVvZ0s=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=WI6G6JVq1AXJ6+cq7pQK5qn/bYPZjWB9ArU8X5R4DWlQJGtT2zKwACEvaagdy8phpNzhrP4eeaN7XHlM6PuRcoeruP3x42xk9FAGWxZtxbbEYsuq7OH1sWeWS2KLqvdx2CENm2F3eAONYZ6VKYImm2PImENGgokjMsPqhSHsTj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rOXcy/dl; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1763900378; c=relaxed/simple;
+	bh=fMAYCzcpWyauo+apNc+9ppC2lUGQLtHtVV7tfYAy+68=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tOIEYmRZsZFIlvtwVTlrUhft5DtClA8r3+ibcvX8g6OWb3OAt+lS78wLtA0dULd7A1cLSdWYPlptDTrCwI1DUs4J9su9OTWIZwNW5R+Tizx8Ig4u6k1P7vQ86HfHxS5vrU7VsqeE8V+IfmgllxFAkrsYvySsozo+pFy55P9Ou8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lEyIhhis; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rOXcy/dl"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b630753cc38so6036110a12.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 18:32:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEyIhhis"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7ba55660769so2937308b3a.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 23 Nov 2025 04:19:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763865166; x=1764469966; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PJWi9LJoNL3FYJ5G98IXAS+1MZDxRsbBpxNCWiuvz3Y=;
-        b=rOXcy/dliwqxm0O0CMdF/7SSgwPjy8bmhvMwPfHBndZZ1J3ry0i+PCMmRwmU8prfTA
-         BGywM3lMP5ruW3VckQ2VO37w9DdfuhxdZQ4iW8PH8aghz2FcKRN6jBaCMGv39mQE6Osq
-         n9zfqi7vjnPVoZFP+bUPnyELIGkNTiBXcjj8SEriUh4aXBcE0xSmeEhGDVSUfgqHsaPi
-         LnZ8KsKU5xMWxnBroiOzEFZOK5TYQEbMWRbaXYYrXmqowP0jdFpsdekYJdM7VLzyNAAa
-         5SXp9TIk7RMJFUjgBbQQxGE2DpALxMvOrEi6ZVEdiywWHFa8FoXHP0mYd6QSoTe94QEu
-         04OQ==
+        d=gmail.com; s=20230601; t=1763900376; x=1764505176; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tCYrQqEvztHYX2R5Z02I20mOYhdh9Ir99v7aCp1zUe4=;
+        b=lEyIhhisixfYUq1Pd94j1XkQJyHmvaj4B/e23ZxIrb56YlhcnuMj5qAoShgL5rb2Rd
+         zfIfvhCIRemic2BerYu3sJeTmB9LDsOTLsjwA6yvJawq1Ey/ZPds1DhLGApiIvt5xjcY
+         FHG7Q46mKcjQDcAURfzLaC7nxI4Ok3xRpmGYxXTGkNOO9yA1o7H9h7sqACYHlyPBFxIU
+         bDAj6eO1nHHby+qtqMwDngg/FRqsftzuHcBKY+8/gNGNJL1s96JvXxNLJsK6y/yf7C53
+         2ieqLQnHveYEqRejJjrFga8IbtZ7+1YNXS84Sw5xlQow+3MA4iSykgf3HLNxAGipRqDx
+         6hhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763865166; x=1764469966;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PJWi9LJoNL3FYJ5G98IXAS+1MZDxRsbBpxNCWiuvz3Y=;
-        b=i46drNTwGoltFpT/YmhVLC6w4AhRciv7FR9+Z4CCTOU5t1yz0f9k9EHcAAhLBUjcQl
-         JhfdEBDNLrQs4kLMsqPLF6w+5516k98uTT3xldpe86Y28Zre7wL+VeFggNXI8aExgk7M
-         zBHcBJZKBhPqFVP4BT2H8gBQ6IvUbVCpr94QKzOe4YQZAY9HuVt9ZbtD9AgC3w5yShd1
-         cER2Xx7SBjZgwiM8ZzXjl9Huw5SpCDUIPnlihTPGS18p4ama6t6gNbNGserSWyCwcNhW
-         eGdSS3WK1FzdijoNYFjUAU5AUqPWwHRUXltGm0McNacb2HaBj+CQtsMyZiDmzTyx7Nsv
-         gbXA==
-X-Forwarded-Encrypted: i=1; AJvYcCXyTGy9aTb//bazJwr9SWTytgqklJQk/yRGlI88Ep5t+tgfO6TS4uSTYh50hMnRvRazDS7ymfO8nayro0yJgV15@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHUw85dBYS4nHyS0KUU3O2sF88wB/b9cOWKwws4nR6NXg3RTfL
-	AZhxRCjVOW/Cld73Kz3xSC3sDn5lIq+2yzr8XaLhMvysc2cQWabrmOxMw9+oF7pALBVboCw7tHB
-	TSQPKfzPkIg==
-X-Google-Smtp-Source: AGHT+IGlLjcaAxzInDuxNrjd4MICP4gAlip8m1PZOAGVSGoEQnG3ECgO4g4ensv3j1w62Z5aRC/CWmyas1X5
-X-Received: from dlbrh6.prod.google.com ([2002:a05:7022:f306:b0:11a:26c7:567d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f909:b0:11b:9386:a380
- with SMTP id a92af1059eb24-11c9d8720c3mr2820469c88.47.1763865165987; Sat, 22
- Nov 2025 18:32:45 -0800 (PST)
-Date: Sat, 22 Nov 2025 18:32:25 -0800
-In-Reply-To: <20251123023225.8069-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1763900376; x=1764505176;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tCYrQqEvztHYX2R5Z02I20mOYhdh9Ir99v7aCp1zUe4=;
+        b=xMY6shC2ZEU86+vliOGQwFSojNOTg4I03GpFl44xMHk0VIyWJZo0s4cj/V03coZAiU
+         fnzVp7COiWOGlJ0b3eKKS0r0ukoMc7nTQY1+tZ+Zw8Yh+X3yP+0YQNsIq3+NqGD9C5UW
+         4YrPQHqOO9L+zlNYur5UawZS3+FaF9FB6SRvUFjChzxvRAWNzHIBwpfQ+zEF4EqR12Zl
+         yD6OeP0QNZf1LoEoRnUN/F7KGj0nVT3tjhCgojBuEU3B71lNNwEikol96M9dskVLC5eh
+         PN6Bkq3Cnf+kVFp9AWks5urpnpO0FqlIi6fqvJc2bdlFGJFguNhe96ugaOUnP1YA4iO4
+         IFmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXF+HsOPTE++FXcfx7HB1VuXvqjNogGet5uFyNvvgrCT6qJoi+jtVAhnXHqgvtHJB3JdhnPVv6TTtnX/dItckgg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAao08WpWwj9Bpu2FkCqb2RKlD/kwI4tUDR59/sNnPifl36bzt
+	9PQUNHoUPqu3nVwDT6KosssvukJ0dsHzkFVGI1QEcWPyNLkll2NMQMQE
+X-Gm-Gg: ASbGnctWYpysj7dOvVtdkQS+MSDBvwRd8965qmOmOutJC4b3ljQ7kcSDtTJiuDLEzjO
+	D9I/etTDPXdvk4LLuX42seAhjBO2Lfbpc/pSksk+Ei9PIV95BNoFwlLQFZ6ULXf8BgFWZ5znlyr
+	4d4GjgsFJy0IdIS0pm90eo6V58QobZjMHxvI7vWysA1SSmhm6kiXSzy6Jf9yDID33fGjhJMkavN
+	OycQfClQNWHvxqNbhjbFUNs2w4Hbe1I2RqE7Tkftp6NSPLAylU1y8LnE2Bt/51sEWAP438tIU/F
+	bcpiVVxiwshalzcXFUYwNULHOHeztrvK3BAkyBYkvJcKiXa4MBNecU9AnlquVfW9dRZoF2su+g6
+	Jziw5i+dt4t+k6lhm4wmbCs6dE9ziXdLr4QuQu4rDk8sh3Eq1r05pZ1DBvrQswsUPpmEAQEnOul
+	JvyKt0phvokUvpzAAA+wHYdafNXNrbIMU1UIeWzQENV/4IdGtU
+X-Google-Smtp-Source: AGHT+IGf6ygH8Jb4cf01QxiqfQEDJ29a6hRUllFevQDvAG//mWFJqgi9wfdZ9zJBDAoD7TvOdP34+g==
+X-Received: by 2002:a05:6a00:1aca:b0:781:9ae1:1be6 with SMTP id d2e1a72fcca58-7c58c2b0d3amr10154323b3a.6.1763900375746;
+        Sun, 23 Nov 2025 04:19:35 -0800 (PST)
+Received: from DESKTOP-8TIG9K0.localdomain ([45.121.215.197])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7c3f0b63aefsm11410178b3a.52.2025.11.23.04.19.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Nov 2025 04:19:35 -0800 (PST)
+From: Xie Yuanbin <qq570070308@gmail.com>
+To: tglx@linutronix.de,
+	peterz@infradead.org,
+	david@kernel.org,
+	riel@surriel.com,
+	segher@kernel.crashing.org,
+	hpa@zytor.com,
+	arnd@arndb.de,
+	mingo@redhat.com,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	luto@kernel.org,
+	linux@armlinux.org.uk,
+	mathieu.desnoyers@efficios.com,
+	paulmck@kernel.org,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com,
+	svens@linux.ibm.com,
+	davem@davemloft.net,
+	andreas@gaisler.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	anna-maria@linutronix.de,
+	frederic@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	morbo@google.com,
+	justinstitt@google.com,
+	thuth@redhat.com,
+	akpm@linux-foundation.org,
+	lorenzo.stoakes@oracle.com,
+	anshuman.khandual@arm.com,
+	nysal@linux.ibm.com,
+	max.kellermann@ionos.com,
+	urezki@gmail.com,
+	ryan.roberts@arm.com
+Cc: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	llvm@lists.linux.dev,
+	Xie Yuanbin <qq570070308@gmail.com>
+Subject: [PATCH v4 0/3] Optimize code generation during context switching
+Date: Sun, 23 Nov 2025 20:18:24 +0800
+Message-ID: <20251123121827.1304-1-qq570070308@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251123023225.8069-1-irogers@google.com>
-X-Mailer: git-send-email 2.52.0.rc2.455.g230fcf2819-goog
-Message-ID: <20251123023225.8069-10-irogers@google.com>
-Subject: [PATCH v1 9/9] perf dso: Move type helpers out of symbol and use fallbacks
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	James Clark <james.clark@linaro.org>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, tanze <tanze@kylinos.cn>, 
-	Aditya Bodkhe <aditya.b1@linux.ibm.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	Andi Kleen <ak@linux.intel.com>, Chun-Tse Shao <ctshao@google.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Haibo Xu <haibo1.xu@intel.com>, Sergei Trofimovich <slyich@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Fallback between libelf and symbol-minimal versions. Remove the
-symbol.c code and just directly inline into the only caller in dso.c.
+The purpose of this series of patches is to optimize the performance of
+context switching. It does not change the code logic, but only modifies
+the inline attributes of some functions.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/dso.c            | 57 ++++++++++++++----------
- tools/perf/util/perf-libelf.c    | 33 ++++++++++++++
- tools/perf/util/perf-libelf.h    |  8 ++++
- tools/perf/util/symbol-elf.c     | 33 --------------
- tools/perf/util/symbol-minimal.c | 76 ++++++++++++++++----------------
- tools/perf/util/symbol-minimal.h |  3 ++
- tools/perf/util/symbol.h         |  2 -
- 7 files changed, 115 insertions(+), 97 deletions(-)
+It is found that finish_task_switch() is not inlined even in the O2 level
+optimization. This may affect performance for the following reasons:
+1. It is in the context switching code, which is a hot code path.
+2. Because of the modern CPU vulnerabilities, kernel is likely to perform
+some mitigations inside switch_mm_irq_off(), such as branch prediction
+hardening or l1d flushing, the instruction pipeline and cache may be
+flushed. finish_task_switch() is right after that, so the performance
+here is greatly affected by function calls and branch jumps.
+3. The __schedule function has __sched attribute, which makes it be
+placed in the ".sched.text" section, while finish_task_switch() does not,
+which causes their distance to be very far in binary, aggravating the
+above performance degradation.
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 344e689567ee..421fa4d27d2a 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1,37 +1,42 @@
- // SPDX-License-Identifier: GPL-2.0
--#include <asm/bug.h>
--#include <linux/kernel.h>
--#include <linux/string.h>
--#include <linux/zalloc.h>
--#include <sys/time.h>
--#include <sys/resource.h>
--#include <sys/types.h>
--#include <sys/stat.h>
--#include <unistd.h>
- #include <errno.h>
- #include <fcntl.h>
- #include <stdlib.h>
--#ifdef HAVE_LIBBPF_SUPPORT
--#include <bpf/libbpf.h>
--#include "bpf-event.h"
--#include "bpf-utils.h"
--#endif
-+#include <sys/resource.h>
-+#include <sys/stat.h>
-+#include <sys/time.h>
-+#include <sys/types.h>
-+#include <unistd.h>
-+
-+#include "annotate-data.h"
-+#include "auxtrace.h"
- #include "compress.h"
-+#include "debug.h"
-+#include "dso.h"
-+#include "dsos.h"
- #include "env.h"
-+#include "machine.h"
-+#include "map.h"
- #include "namespaces.h"
- #include "path.h"
--#include "map.h"
--#include "symbol.h"
-+#include "perf-libelf.h"
- #include "srcline.h"
--#include "dso.h"
--#include "dsos.h"
--#include "machine.h"
--#include "auxtrace.h"
--#include "util.h" /* O_CLOEXEC for older systems */
--#include "debug.h"
- #include "string2.h"
-+#include "symbol-minimal.h"
-+#include "symbol.h"
-+#include "util.h" /* O_CLOEXEC for older systems */
- #include "vdso.h"
--#include "annotate-data.h"
-+
-+#include <asm/bug.h>
-+#include <linux/kernel.h>
-+#include <linux/string.h>
-+#include <linux/zalloc.h>
-+
-+#ifdef HAVE_LIBBPF_SUPPORT
-+#include <bpf/libbpf.h>
-+#include "bpf-event.h"
-+#include "bpf-utils.h"
-+#endif
+This series of patches primarily make some functions called in context
+switching as always inline to optimize performance. Here is the
+performance test data for these patches:
+Time spent on calling finish_task_switch(), the unit is tsc from x86:
+ | test scenario             | old   | new   | delta          |
+ | gcc 15.2                  | 13.94 | 12.40 | 1.54  (-11.1%) |
+ | gcc 15.2 + spectre_v2     | 24.78 | 13.70 | 11.08 (-44.7%) |
+ | clang 21.1.4              | 13.90 | 12.71 | 1.19  (- 8.6%) |
+ | clang 21.1.4 + spectre_v2 | 29.01 | 18.91 | 10.1  (-34.8%) |
+
+Additional information:
+1. The testing kernel source is commit 9c0826a5d9aa4d52206d ("Add
+linux-next specific files for 20251107") from linux-next branch.
+
+2. Testing machine:
+cpu: intel i5-8300h@4Ghz
+mem: DDR4 2666MHz
+Bare-metal boot, non-virtualized environment
+
+3. Testing compiler:
+gcc: gcc version 15.2.0 (Debian 15.2.0-7) with
+GNU ld (GNU Binutils for Debian) 2.45
+clang: Debian clang version 21.1.4 (8) with
+Debian LLD 21.1.4 (compatible with GNU linkers)
+
+4. Testing config:
+base on default x86_64_defconfig, and setting:
+CONFIG_HZ=100
+CONFIG_DEBUG_ENTRY=n
+CONFIG_X86_DEBUG_FPU=n
+CONFIG_EXPERT=y
+CONFIG_MODIFY_LDT_SYSCALL=n
+CONFIG_CGROUPS=n
+CONFIG_BLK_DEV_NVME=y
+
+5. Test method:
+Use rdtsc (cntvct_el0 can be use on arm64/arm) to obtain timestamps
+before and after finish_task_switch() calling point, and created multiple
+processes to trigger context switches, then calculated the average
+duration of the finish_task_switch() call.
+Note that using multiple processes rather than threads is recommended for
+testing, because this will trigger switch_mm_irqs_off(), where
+spectre_v2 mitigations may be performed, during context switching.
+
+6. Testing code:
+kernel:
+```patch
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 8a4ac4841be6..5a42ec008620 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -395,6 +395,7 @@
+ 468	common	file_getattr		sys_file_getattr
+ 469	common	file_setattr		sys_file_setattr
+ 470	common	listns			sys_listns
++471	common	sched_test		sys_sched_test
  
- static const char * const debuglink_paths[] = {
- 	"%.0s%s",
-@@ -1747,7 +1752,11 @@ enum dso_type dso__type(struct dso *dso, struct machine *machine)
- 	enum dso_type type = DSO__TYPE_UNKNOWN;
- 
- 	if (dso__data_get_fd(dso, machine, &fd)) {
--		type = dso__type_fd(fd);
-+		type = libelf_dso__type_fd(fd);
-+
-+		if (type == DSO__TYPE_UNKNOWN)
-+			type = sym_min_dso__type_fd(fd);
-+
- 		dso__data_put_fd(dso);
- 	}
- 
-diff --git a/tools/perf/util/perf-libelf.c b/tools/perf/util/perf-libelf.c
-index 861cb7ae9b45..d36b69ccccda 100644
---- a/tools/perf/util/perf-libelf.c
-+++ b/tools/perf/util/perf-libelf.c
-@@ -251,3 +251,36 @@ int libelf_filename__read_debuglink(const char *filename, char *debuglink, size_
- out:
- 	return err;
+ #
+ # Due to a historical design error, certain syscalls are numbered differently
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 81cf8452449a..d7e2095aeb7d 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5195,6 +5195,36 @@ asmlinkage __visible void schedule_tail(struct task_struct *prev)
+ 	calculate_sigpending();
  }
+ 
++static DEFINE_PER_CPU(uint64_t, start_time);
++static DEFINE_PER_CPU(uint64_t, total_time);
++static DEFINE_PER_CPU(uint64_t, total_count);
 +
-+enum dso_type libelf_dso__type_fd(int fd)
++static __always_inline uint64_t test_rdtsc(void)
 +{
-+	enum dso_type dso_type = DSO__TYPE_UNKNOWN;
-+	GElf_Ehdr ehdr;
-+	Elf_Kind ek;
-+	Elf *elf;
++    register uint64_t rax __asm__("rax");
++    register uint64_t rdx __asm__("rdx");
 +
-+	elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
-+	if (elf == NULL)
-+		goto out;
++    __asm__ __volatile__ ("rdtsc" : "=a"(rax), "=d"(rdx));
++    return rax | (rdx << 32);
++}
 +
-+	ek = elf_kind(elf);
-+	if (ek != ELF_K_ELF)
-+		goto out_end;
++static __always_inline void test_start(void)
++{
++	raw_cpu_write(start_time, test_rdtsc());
++}
 +
-+	if (gelf_getclass(elf) == ELFCLASS64) {
-+		dso_type = DSO__TYPE_64BIT;
-+		goto out_end;
++static __always_inline void test_end(void)
++{
++	const uint64_t end_time = test_rdtsc();
++	const uint64_t cost_time = end_time - raw_cpu_read(start_time);
++
++	raw_cpu_add(total_time, cost_time);
++	if (unlikely(raw_cpu_inc_return(total_count) % (1 << 20) == 0)) {
++		pr_emerg("cpu %d total_time %llu\n", raw_smp_processor_id(), raw_cpu_read(total_time));
++		raw_cpu_write(total_time, 0);
 +	}
-+
-+	if (gelf_getehdr(elf, &ehdr) == NULL)
-+		goto out_end;
-+
-+	if (ehdr.e_machine == EM_X86_64)
-+		dso_type = DSO__TYPE_X32BIT;
-+	else
-+		dso_type = DSO__TYPE_32BIT;
-+out_end:
-+	elf_end(elf);
-+out:
-+	return dso_type;
 +}
-diff --git a/tools/perf/util/perf-libelf.h b/tools/perf/util/perf-libelf.h
-index 95fe8805aa41..976fe3fb5cd8 100644
---- a/tools/perf/util/perf-libelf.h
-+++ b/tools/perf/util/perf-libelf.h
-@@ -4,6 +4,8 @@
- 
- #include <stddef.h>
- 
-+#include "dso.h"
 +
- struct build_id;
+ /*
+  * context_switch - switch to the new MM and the new thread's register state.
+  */
+@@ -5264,7 +5294,10 @@ context_switch(struct rq *rq, struct task_struct *prev,
+ 	switch_to(prev, next, prev);
+ 	barrier();
  
- #ifdef HAVE_LIBELF_SUPPORT
-@@ -29,6 +31,7 @@ int __libelf__read_build_id(Elf *elf, void *bf, size_t size);
- int libelf__read_build_id(int _fd, const char *filename, struct build_id *bid);
- int libelf_sysfs__read_build_id(const char *filename, struct build_id *bid);
- int libelf_filename__read_debuglink(const char *filename, char *debuglink, size_t size);
-+enum dso_type libelf_dso__type_fd(int fd);
- 
- #else // !defined(HAVE_LIBELF_SUPPORT)
- 
-@@ -52,6 +55,11 @@ static inline int libelf_filename__read_debuglink(const char *filename __always_
- 	return -1;
+-	return finish_task_switch(prev);
++	test_start();
++	rq = finish_task_switch(prev);
++	test_end();
++	return rq;
  }
  
-+enum dso_type libelf_dso__type_fd(int fd __always_unused)
+ /*
+@@ -10861,3 +10894,18 @@ void sched_change_end(struct sched_change_ctx *ctx)
+ 		p->sched_class->prio_changed(rq, p, ctx->prio);
+ 	}
+ }
++
++static struct task_struct *wait_task;
++
++SYSCALL_DEFINE0(sched_test)
 +{
-+	return DSO__TYPE_UNKNOWN;
++	preempt_disable();
++	while (1) {
++		if (likely(wait_task))
++			wake_up_process(wait_task);
++		wait_task = current;
++		set_current_state(TASK_UNINTERRUPTIBLE);
++		__schedule(SM_NONE);
++	}
++	return 0;
 +}
-+
- #endif // defined(HAVE_LIBELF_SUPPORT)
- 
- #endif /* __PERF_LIBELF_H */
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 5ddf8353e01b..3d385d749c53 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1572,39 +1572,6 @@ int file__read_maps(int fd, bool exe, mapfn_t mapfn, void *data,
- 	return err;
- }
- 
--enum dso_type dso__type_fd(int fd)
--{
--	enum dso_type dso_type = DSO__TYPE_UNKNOWN;
--	GElf_Ehdr ehdr;
--	Elf_Kind ek;
--	Elf *elf;
--
--	elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
--	if (elf == NULL)
--		goto out;
--
--	ek = elf_kind(elf);
--	if (ek != ELF_K_ELF)
--		goto out_end;
--
--	if (gelf_getclass(elf) == ELFCLASS64) {
--		dso_type = DSO__TYPE_64BIT;
--		goto out_end;
--	}
--
--	if (gelf_getehdr(elf, &ehdr) == NULL)
--		goto out_end;
--
--	if (ehdr.e_machine == EM_X86_64)
--		dso_type = DSO__TYPE_X32BIT;
--	else
--		dso_type = DSO__TYPE_32BIT;
--out_end:
--	elf_end(elf);
--out:
--	return dso_type;
--}
--
- static int copy_bytes(int from, off_t from_offs, int to, off_t to_offs, u64 len)
- {
- 	ssize_t r;
-diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-index cc9055ba2f2a..336886c2b1ff 100644
---- a/tools/perf/util/symbol-minimal.c
-+++ b/tools/perf/util/symbol-minimal.c
-@@ -225,6 +225,44 @@ int sym_min_sysfs__read_build_id(const char *filename, struct build_id *bid)
- 	return ret;
- }
- 
-+static int fd__is_64_bit(int fd)
-+{
-+	u8 e_ident[EI_NIDENT];
-+
-+	if (lseek(fd, 0, SEEK_SET))
-+		return -1;
-+
-+	if (readn(fd, e_ident, sizeof(e_ident)) != sizeof(e_ident))
-+		return -1;
-+
-+	if (memcmp(e_ident, ELFMAG, SELFMAG) ||
-+	    e_ident[EI_VERSION] != EV_CURRENT)
-+		return -1;
-+
-+	return e_ident[EI_CLASS] == ELFCLASS64;
-+}
-+
-+enum dso_type sym_min_dso__type_fd(int fd)
-+{
-+	Elf64_Ehdr ehdr;
-+	int ret;
-+
-+	ret = fd__is_64_bit(fd);
-+	if (ret < 0)
-+		return DSO__TYPE_UNKNOWN;
-+
-+	if (ret)
-+		return DSO__TYPE_64BIT;
-+
-+	if (readn(fd, &ehdr, sizeof(ehdr)) != sizeof(ehdr))
-+		return DSO__TYPE_UNKNOWN;
-+
-+	if (ehdr.e_machine == EM_X86_64)
-+		return DSO__TYPE_X32BIT;
-+
-+	return DSO__TYPE_32BIT;
-+}
-+
- #ifndef HAVE_LIBELF_SUPPORT
- int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
- 	         enum dso_binary_type type)
-@@ -271,44 +309,6 @@ int dso__synthesize_plt_symbols(struct dso *dso __maybe_unused,
- 	return 0;
- }
- 
--static int fd__is_64_bit(int fd)
--{
--	u8 e_ident[EI_NIDENT];
--
--	if (lseek(fd, 0, SEEK_SET))
--		return -1;
--
--	if (readn(fd, e_ident, sizeof(e_ident)) != sizeof(e_ident))
--		return -1;
--
--	if (memcmp(e_ident, ELFMAG, SELFMAG) ||
--	    e_ident[EI_VERSION] != EV_CURRENT)
--		return -1;
--
--	return e_ident[EI_CLASS] == ELFCLASS64;
--}
--
--enum dso_type dso__type_fd(int fd)
--{
--	Elf64_Ehdr ehdr;
--	int ret;
--
--	ret = fd__is_64_bit(fd);
--	if (ret < 0)
--		return DSO__TYPE_UNKNOWN;
--
--	if (ret)
--		return DSO__TYPE_64BIT;
--
--	if (readn(fd, &ehdr, sizeof(ehdr)) != sizeof(ehdr))
--		return DSO__TYPE_UNKNOWN;
--
--	if (ehdr.e_machine == EM_X86_64)
--		return DSO__TYPE_X32BIT;
--
--	return DSO__TYPE_32BIT;
--}
--
- int dso__load_sym(struct dso *dso, struct map *map __maybe_unused,
- 		  struct symsrc *ss,
- 		  struct symsrc *runtime_ss __maybe_unused,
-diff --git a/tools/perf/util/symbol-minimal.h b/tools/perf/util/symbol-minimal.h
-index 5cce1f1f0f16..282466aca7d9 100644
---- a/tools/perf/util/symbol-minimal.h
-+++ b/tools/perf/util/symbol-minimal.h
-@@ -2,9 +2,12 @@
- #ifndef __PERF_SYMBOL_MINIMAL_H
- #define __PERF_SYMBOL_MINIMAL_H
- 
-+#include "dso.h"
-+
- struct build_id;
- 
- int sym_min__read_build_id(int _fd, const char *filename, struct build_id *bid);
- int sym_min_sysfs__read_build_id(const char *filename, struct build_id *bid);
-+enum dso_type sym_min_dso__type_fd(int fd);
- 
- #endif /* __PERF_SYMBOL_MINIMAL_H */
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index d37d5a97bc6f..25484b2e7fa4 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -117,8 +117,6 @@ struct symbol *dso__first_symbol(struct dso *dso);
- struct symbol *dso__last_symbol(struct dso *dso);
- struct symbol *dso__next_symbol(struct symbol *sym);
- 
--enum dso_type dso__type_fd(int fd);
--
- int filename__read_build_id(const char *filename, struct build_id *id, bool block);
- int sysfs__read_build_id(const char *filename, struct build_id *bid);
- int modules__parse(const char *filename, void *arg,
+```
+
+User program:
+```c
+int main()
+{
+	cpu_set_t mask;
+	if (fork())
+		sleep(1);
+
+	CPU_ZERO(&mask);
+	CPU_SET(5, &mask); // Assume that cpu5 exists
+	assert(sched_setaffinity(0, sizeof(mask), &mask) == 0);
+	syscall(471);
+	// unreachable
+	return 0;
+}
+```
+
+Usage:
+1. set core5 as isolated cpu: add "isolcpus=5" to cmdline
+2. run user programe
+3. wait for kernel print
+
+v3->v4: https://lore.kernel.org/20251113105227.57650-1-qq570070308@gmail.com
+  - Improve the commit message
+
+v2->v3: https://lore.kernel.org/20251108172346.263590-1-qq570070308@gmail.com
+  - Fix building error in patch 1
+  - Simply add the __always_inline attribute to the existing function,
+    Instead of adding the always inline version functions
+
+v1->v2: https://lore.kernel.org/20251024182628.68921-1-qq570070308@gmail.com
+  - Make raw_spin_rq_unlock() inline
+  - Make __balance_callbacks() inline
+  - Add comments for always inline functions
+  - Add Performance Test Data
+
+Xie Yuanbin (3):
+  x86/mm/tlb: Make enter_lazy_tlb() always inline on x86
+  sched: Make raw_spin_rq_unlock() inline
+  sched/core: Make finish_task_switch() and its subfunctions always
+    inline
+
+ arch/arm/include/asm/mmu_context.h      |  2 +-
+ arch/riscv/include/asm/sync_core.h      |  2 +-
+ arch/s390/include/asm/mmu_context.h     |  2 +-
+ arch/sparc/include/asm/mmu_context_64.h |  2 +-
+ arch/x86/include/asm/mmu_context.h      | 23 ++++++++++++++++++++++-
+ arch/x86/include/asm/sync_core.h        |  2 +-
+ arch/x86/mm/tlb.c                       | 21 ---------------------
+ include/linux/perf_event.h              |  2 +-
+ include/linux/sched/mm.h                | 10 +++++-----
+ include/linux/tick.h                    |  4 ++--
+ include/linux/vtime.h                   |  8 ++++----
+ kernel/sched/core.c                     | 19 +++++++------------
+ kernel/sched/sched.h                    | 24 ++++++++++++++----------
+ 13 files changed, 60 insertions(+), 61 deletions(-)
+
 -- 
-2.52.0.rc2.455.g230fcf2819-goog
+2.51.0
 
