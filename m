@@ -1,139 +1,224 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BC686347
-	for <linux-perf-users@vger.kernel.org>; Sun, 23 Nov 2025 00:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB443207
+	for <linux-perf-users@vger.kernel.org>; Sun, 23 Nov 2025 02:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763857848; cv=none; b=B02H8r5P+tflzCp3qzu4nMibRtuu1sDDjpjMsbCryjht4grG2hJ2gQ18axu3zurBRG91qwpJ8gvXSiN82trcxL2FKjA35PU8SEJDEfdb8b5pUrWpKkK9Q4hD9sG51SBYIKEqmBzVnkFI7X7U7Fo1YVWnxDctDJbdR5Y2SHXtyeY=
+	t=1763865151; cv=none; b=sMAvmzMUUXBHMh68bgivG/9ZDyjHUI0YxfELKVqkcf5OerAHZ+osQ9eoHDc+WkfIlNUMf03c2rxrrqhLalNxmzK+zeh2FrJkL4/ARW/igaswPSBjVAAyOUUkwF5ekHoPUs5HBPTV5QQ/xQb0mMCICE2PLBZq6+8dxKXAWAjW3Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763857848; c=relaxed/simple;
-	bh=6xhfXXlpqcCqejVCDCYVo3oAu9yx0YwKcR0PFbIIDFQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d1efij4ToxkIhlhWSF2LZkimgQtdw/gAoxj/gOI8yfKh+TQaRjS58RBvuAH1xvGmj3q4NmuCXgbAnokTQdBlgej/cL2nDBIi9f0YNBIPgTZpYqdTItFKJ7Q6rPXvHKYBw8sEwVqhJ+fr0qhTkL93g8EBKWYJW65Tjxy9/ZjQ4hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M4Hf+pTz; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1763865151; c=relaxed/simple;
+	bh=GQ6E2o42ySv4npqucIrF42DXoAXQ8Irw8Zi7CuGn/Kg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=YPNtoh0O/KyoCfOPvqCgpDo7hyTeZhzlCojBNFLHRk5LF0VxGj8Ih52fQd/5Sk8tQJNi//l7kKsr3yfpvlkINr6uK2+pNalq7b6PUUU6d8fkBaoclnuscEc2A0kx+wq89cfWv4Zr0G+RYfxpRcwdUxl7uXlVj0ud0mbNk8lAe9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U09uxgca; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M4Hf+pTz"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2980343d9d1so130435ad.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 16:30:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U09uxgca"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-297f587dc2eso79575875ad.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 22 Nov 2025 18:32:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763857846; x=1764462646; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=26FtagD37u9GK5Wekr3iLHsRu7ImiEfyzh6Sww0KaxY=;
-        b=M4Hf+pTz2Rpcl83gbjT78V1+bOdvAa9SV3dQ5VJ7+Oy7bgK3lAgNL03YzsKxWj1LLW
-         nR+i8c5YxGlG9UzmZbkkh1j4rcIj74pfoF7gxblq0OdWeIfVzi24CSqM+bDp8en3A0rQ
-         d5sKChbXX1mqHxxbduHFzeBb6lMYh2RtC9AciuL1OuMsrHFGCDqnbl4Z/wYI+d4nAFpH
-         iOC7ThvElSKKBXI/WLRKbQZmJ+oefwQsSH/BNLyxsP2VRMqU9GfejCQ+wNQUGoXUcov9
-         eWEu66D0D6ZUQP4m+5jh22g0SmjRBFXtkSZQ+Rv7T3Irbe7o1Lpm51Gc5CXAjLU7vNSK
-         LCGQ==
+        d=google.com; s=20230601; t=1763865149; x=1764469949; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XMwSNu71qAXwuCKpGVJwB1UJ2pDS9YmjGMRSsQyaJ48=;
+        b=U09uxgcaHsAI2afoKjXFikbIOWN9dnV24KtpjYeyJP2Cf4TeqOU+9CeGQM8VJspgPe
+         ocu+6vfPbncfyUd08WX4KazysAu2LpAVrhvVZDX3IQWpbSlqXIjzqbKLjf+MwN1pq3Of
+         kKmvbcomH5CNhqRYiRN7srFJ3CBm8jrDXSRBV39abWfubmZvT3mmtExHDFNbSjXWitBZ
+         eiUO/DP+wUTtbPXhEHmrVUJzgAVCabpfS7qwZ7D06BKKVNoAMDWuU0Z7WJyT6fnUFPlo
+         juUGObFarIYGcbu2V1d8x9sVvi5Rz3nfVnyZAo6mrfFIMGACcEhuFaQ8ZNOyDAKnSB9Z
+         BBpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763857846; x=1764462646;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=26FtagD37u9GK5Wekr3iLHsRu7ImiEfyzh6Sww0KaxY=;
-        b=MnUMZV7s+v4pRRZhXzKaVVnyjqLELF152QNppwjQsH+/VR++ZBYNt6uW0n31leXWc4
-         ujFB4o8HofRCudus34nw+PT4hcA1WpHV1YlPUf7YZg+c2sR+43O8wkbjL+P+EI8NQfke
-         ji6NozXVPZS8bJhUzwgBe9TG4neIX/QHeLGFVqw63iLz/HughXsuLPbND/v9j+GTmxzx
-         7ArzJ0WtSlWNsgvKxT6JRyEznjMpXzTv3iPbPe2lWykz0PfcXo7eBFNthBhKapLUAl49
-         4+LakL4wcVFbquOo157m1tt4zV0zgHzThSvKHZygCE4zk6RjzMM7TmsxokAZoWWCYFgp
-         Wwdg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3KyFbFghqLoLSXcV4hixwxbOFUoMXPC0N4MReLbQyl0gGmHMXt8W0MI3/g9HjTVO2A6QQiCA8yHvtl3Wm4i4Q@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9vpTuBijcjmR+V2fH4071lWofHzIgHvKBJrA1xQMclsv/78lk
-	sqTiWSSA8B4RtYtHPwu7yHks4Ig8Tkfgjtka6GRVoJPqcexP1cDlCBeMI0wvNHy5F96W4wb05eC
-	mTNw61XC5kVvRfevipQpyKhvfhPGCOtkk7KEEk46+
-X-Gm-Gg: ASbGncuFcP3/sqBg+mToowpWFGNdf1urB/s2FuOhn8WsBlC/B2wmB3i2uva8VEr2YE/
-	XeFacQvickOEzFpzU/rTGTk3WVdtbhfWJNGrkUYvZ3qpBygyAQle0L4qwukzSD8lz1a6zFrDgxv
-	2NYX3Jc0GJWw1634iwR2rngoshyCFKQdmn+TnGxAiAnvp+YW1cpXA3FGtiMMR5Z9e2Y3q90kIzv
-	S/yGfu1p3+vh7kGqWzv89cEpeAE/h6b4sPGVDIPVt7UjfcbrHZED+gTvPu8+bZnO4EuxDQP
-X-Google-Smtp-Source: AGHT+IGxZugTBeTINYeI9mdAvYCHsBzpYel/BLJyZnES4BIkRliCez1EVoui4mKjHpvIj63YSLHiTDlfNoawTTs0VNM=
-X-Received: by 2002:a17:903:41cc:b0:299:c368:6b20 with SMTP id
- d9443c01a7336-29b7b2db473mr2583055ad.19.1763857845403; Sat, 22 Nov 2025
- 16:30:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1763865149; x=1764469949;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XMwSNu71qAXwuCKpGVJwB1UJ2pDS9YmjGMRSsQyaJ48=;
+        b=Km1PKa4p1xVxgnHmIsB02eIyn6E0QzXF/rwY1KYZCwxykpmoW6cHTnvFmvnNOhve1X
+         +UFh6gEzly/cAwNBmLLULSVQ+SVrJrpdEcrH5y1cF/AD+VcaaNhMXGNZESNpJlnwPMyf
+         if0tnkeYT2tUBrj+l2IFNwC4SJd2pTpPMiHjl7TJUGLKI/ZOGcGolvbBnl6LvzoY8LTn
+         A0sQ4ttOdD9iI0cw2JS3bN38nEKxy/JcyGJ6o/PFoSf/HyVAxiVdF0+gU2MkGXHv2FAf
+         5OmFXVa4/e1yDdZxv5dMkoPXeryNeVrcrMuvLUxV2wSZbxcPW/SdxC0tlgfFWvj+njSK
+         0Ogw==
+X-Forwarded-Encrypted: i=1; AJvYcCVwsVZbIDU+RRlOidri8a6buebODSODdwwLWXAnRspyPSuG4BuhrCwpFztSHbmi76c1dLyHwYJl6v5OcLYbs5B9@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYNZnUhVjb6T+HdV7L4rJstcHJYYfST8rr/QHu0nD6GvV7KlhT
+	+P57WtOMKMR+aS4e4Ma9iuyOuAJJp5ET3r4eb7vFJjw/dl5VbUr2MqJbwoTHJSp8etGzCKjWOiO
+	B8BwZP9bAYw==
+X-Google-Smtp-Source: AGHT+IHPGH30YGuRkWW/yJF/LJPq70FjhtMk/91ZNsIeiJ+ce80VG9Unk6hTi6Ov0vkfRjIlLvNnptK1Kl/4
+X-Received: from dyx22.prod.google.com ([2002:a05:693c:8216:b0:2a4:6f7f:e6f0])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:51fc:b0:2a4:3593:645a
+ with SMTP id 5a478bee46e88-2a71910148amr3277736eec.10.1763865149084; Sat, 22
+ Nov 2025 18:32:29 -0800 (PST)
+Date: Sat, 22 Nov 2025 18:32:16 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251119091538.825307-1-jirislaby@kernel.org> <796c2f61-b74f-44e4-a633-eb447a79c9f6@linux.intel.com>
-In-Reply-To: <796c2f61-b74f-44e4-a633-eb447a79c9f6@linux.intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.52.0.rc2.455.g230fcf2819-goog
+Message-ID: <20251123023225.8069-1-irogers@google.com>
+Subject: [PATCH v1 0/9] perf: Refactor/add fallbacks for reading build-id and debuglink
 From: Ian Rogers <irogers@google.com>
-Date: Sat, 22 Nov 2025 16:30:33 -0800
-X-Gm-Features: AWmQ_bkCk5-a7wRNbNYgo7JW0xj6eHanA6zrrXGBweukWX05VbY3t4xY0tTZrtM
-Message-ID: <CAP-5=fWBME6Di_=uPqytjPEM9a=S+qm-fDcUXJczwNtH5jjVdA@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86/intel/uncore: remove dead check
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, peterz@infradead.org, 
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	James Clark <james.clark@linaro.org>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
+	Athira Rajeev <atrajeev@linux.ibm.com>, tanze <tanze@kylinos.cn>, 
+	Aditya Bodkhe <aditya.b1@linux.ibm.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
+	Andi Kleen <ak@linux.intel.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Haibo Xu <haibo1.xu@intel.com>, Sergei Trofimovich <slyich@gmail.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 19, 2025 at 2:25=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.intel.=
-com> wrote:
->
->
-> On 11/19/2025 5:15 PM, Jiri Slaby (SUSE) wrote:
-> > pmu cannot be NULL as is taken as a pointer to an array. Remove the
-> > superfluous NULL check.
-> >
-> > Found by Coverity: CID#1497507.
-> >
-> > Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> > ---
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: "Liang, Kan" <kan.liang@linux.intel.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > Cc: x86@kernel.org
-> > Cc: linux-perf-users@vger.kernel.org
-> > ---
-> >  arch/x86/events/intel/uncore.c | 2 --
-> >  1 file changed, 2 deletions(-)
-> >
-> > diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/unc=
-ore.c
-> > index d6c945cc5d07..e228e564b15e 100644
-> > --- a/arch/x86/events/intel/uncore.c
-> > +++ b/arch/x86/events/intel/uncore.c
-> > @@ -1325,8 +1325,6 @@ static void uncore_pci_sub_driver_init(void)
-> >                               continue;
-> >
-> >                       pmu =3D &type->pmus[UNCORE_PCI_DEV_IDX(ids->drive=
-r_data)];
-> > -                     if (!pmu)
-> > -                             continue;
-> >
-> >                       if (uncore_pci_get_dev_die_info(pci_sub_dev, &die=
-))
-> >                               continue;
->
-> LGTM.
->
-> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+This cleans up some tech debt mentioned in the thread:
+https://lore.kernel.org/lkml/aQt66zhfxSA80xwt@gentoo.org/
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+The perf tool has fallbacks for objdump but not in the case of
+build-id and debuglink reading. Refactor the code so that in the case
+of read_build_id it now looks like:
 
-Thanks,
-Ian
+```
+int filename__read_build_id(const char *filename, struct build_id *bid, bool block)
+{
+        struct kmod_path m = { .name = NULL, };
+        char path[PATH_MAX];
+        int err, fd;
+
+        if (!filename)
+                return -EFAULT;
+
+        err = kmod_path__parse(&m, filename);
+        if (err)
+                return -1;
+
+        if (m.comp) {
+                int error = 0;
+
+                fd = filename__decompress(filename, path, sizeof(path), m.comp, &error);
+                if (fd < 0) {
+                        pr_debug("Failed to decompress (error %d) %s\n",
+                                 error, filename);
+                        return -1;
+                }
+                lseek(fd, 0, SEEK_SET);
+                filename = path;
+                block = true;
+        } else {
+                fd = open(filename, block ? O_RDONLY : (O_RDONLY | O_NONBLOCK));
+                if (fd < 0) {
+                        pr_debug("Failed to open %s\n", filename);
+                        return -1;
+                }
+        }
+
+        err = libbfd__read_build_id(fd, filename, bid);
+        if (err == 0)
+                goto out;
+
+        err = libelf__read_build_id(fd, filename, bid);
+        if (err == 0)
+                goto out;
+
+        err = sym_min__read_build_id(fd, filename, bid);
+...
+```
+
+That is what was previously symbol-elf decompression code is now made
+common for all cases of reading. The handling of the block argument is
+now common. There is a clear fallback from libbfd to libelf to the
+symbol-minimal (sym_min) versions of the functions.
+
+To support this there is refactoring of code into a perf-libelf.c
+file, to follow patterns established for the capstone, LLVM and libbfd
+code.
+
+These changes conflict with James' removal of the block argument:
+https://lore.kernel.org/lkml/20251121-james-perf-non-block-v1-1-6ab2702ab573@linaro.org/
+I think we should do that change. It would be easy to apply that
+change on these changes as rather than updating 3 functions, only 1
+function needs updating.
+
+Ian Rogers (9):
+  perf symbol: Reduce scope of elf__needs_adjust_symbols
+  perf symbol: Reduce scope of arch__sym_update
+  perf symbol: Move libelf code to its own file/header
+  perf symbol: Remove unused includes
+  perf symbol: Move dso__load_bfd_symbols out of symbol.h
+  perf symbol: Use fallbacks with filename__read_build_id
+  perf symbol: Use fallbacks for filename__read_debuglink
+  perf symbol: Use fallbacks for sysfs__read_build_id
+  perf dso: Move type helpers out of symbol and use fallbacks
+
+ tools/perf/arch/powerpc/util/sym-handling.c   |   7 -
+ tools/perf/builtin-annotate.c                 |  47 +--
+ tools/perf/builtin-c2c.c                      |  58 +--
+ tools/perf/builtin-diff.c                     |  22 +-
+ tools/perf/builtin-inject.c                   |  19 +-
+ tools/perf/builtin-kmem.c                     |  41 ++-
+ tools/perf/builtin-kwork.c                    |   9 +-
+ tools/perf/builtin-mem.c                      |  16 +-
+ tools/perf/builtin-report.c                   |  76 ++--
+ tools/perf/builtin-sched.c                    |  50 ++-
+ tools/perf/builtin-script.c                   |  89 ++---
+ tools/perf/builtin-timechart.c                |  34 +-
+ tools/perf/builtin-top.c                      |  85 +++--
+ tools/perf/builtin-trace.c                    |  82 ++---
+ .../scripts/python/Perf-Trace-Util/Context.c  |  11 +-
+ tools/perf/tests/code-reading.c               |   1 +
+ tools/perf/tests/hists_cumulate.c             |   1 +
+ tools/perf/tests/hists_filter.c               |   1 +
+ tools/perf/tests/hists_link.c                 |   1 +
+ tools/perf/tests/hists_output.c               |   1 +
+ tools/perf/tests/mmap-thread-lookup.c         |   1 +
+ tools/perf/tests/pe-file-parsing.c            |   5 +-
+ tools/perf/util/Build                         |   6 +-
+ tools/perf/util/annotate-data.c               |   7 +-
+ tools/perf/util/auxtrace.h                    |   1 +
+ tools/perf/util/block-info.c                  |  11 +-
+ tools/perf/util/build-id.c                    |  28 +-
+ tools/perf/util/callchain.c                   |   1 +
+ tools/perf/util/cs-etm.c                      |   1 +
+ tools/perf/util/data-convert-json.c           |  30 +-
+ tools/perf/util/db-export.c                   |  16 +-
+ tools/perf/util/dlfilter.c                    |  11 +-
+ tools/perf/util/dlfilter.h                    |   1 +
+ tools/perf/util/dso.c                         |  57 +--
+ tools/perf/util/event.c                       |  41 ++-
+ tools/perf/util/evsel_fprintf.c               |  14 +-
+ tools/perf/util/hist.c                        |  29 +-
+ tools/perf/util/intel-pt.c                    |  35 +-
+ tools/perf/util/kvm-stat.h                    |   5 +-
+ tools/perf/util/libbfd.c                      |   4 +-
+ tools/perf/util/libbfd.h                      |  15 +-
+ tools/perf/util/machine.c                     |  34 +-
+ tools/perf/util/perf-libelf.c                 | 286 +++++++++++++++
+ tools/perf/util/perf-libelf.h                 |  65 ++++
+ tools/perf/util/print_insn.c                  |  14 +-
+ tools/perf/util/probe-event.c                 |   1 +
+ tools/perf/util/probe-finder.c                |   1 +
+ .../util/scripting-engines/trace-event-perl.c |   1 +
+ .../scripting-engines/trace-event-python.c    |   1 +
+ tools/perf/util/symbol-elf.c                  | 337 +-----------------
+ tools/perf/util/symbol-minimal.c              |  95 +++--
+ tools/perf/util/symbol-minimal.h              |  13 +
+ tools/perf/util/symbol.c                      | 108 +++++-
+ tools/perf/util/symbol.h                      |  44 +--
+ tools/perf/util/symbol_fprintf.c              |   1 +
+ tools/perf/util/thread-stack.c                |  12 +-
+ tools/perf/util/thread.c                      |  18 +-
+ tools/perf/util/unwind-libdw.c                |  15 +-
+ 58 files changed, 1085 insertions(+), 931 deletions(-)
+ create mode 100644 tools/perf/util/perf-libelf.c
+ create mode 100644 tools/perf/util/perf-libelf.h
+ create mode 100644 tools/perf/util/symbol-minimal.h
+
+-- 
+2.52.0.rc2.455.g230fcf2819-goog
+
