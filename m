@@ -1,89 +1,88 @@
-Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26A027472
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Nov 2025 07:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03042DFA2D;
+	Mon, 24 Nov 2025 08:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763970700; cv=none; b=dFr/RLlM7z23zlT66LunYMwa/5OTpTMpvBCEQR0IsCZTyznx/zIsI5ttMQjFiD9orEpSQIK3cDPtt7Ud4BS+FScgsjAwfrfLyE/KovcFBDbq7wYllXkP+4HU7sgLGvAns56fkHRJ3LeXDZQprYN4/kyvUxYKRxDnq+9mD/oaL+E=
+	t=1763971578; cv=none; b=qTWJeP2HWPXn2NiefSL3Vv1CbBtTem/2B3ojdQAv5HxOIjH4NppOdE3HdnYkjKsePKuvgTMURjsfFmO/6k6AqJ3yIjdfpyT+9VHT22OI9BsnAS3Umj6EuH5uZAXQcJ5pv6HI9aCWWsCu8DEAhLXuR18k7hbjWyFiZpRGJMhSxac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763970700; c=relaxed/simple;
-	bh=NkwFA9bt4PsJVA9p346GsH7+NKsQSScbU6yQvmg4UlQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ri5XV+w0IVHQIwTiBRPvVjIO4rG2Up3n00gINDuZpQgsmJol5tpMVlKZitSVRJWKOd37maVJelVB14an5s6Moi9i77ABUHP+v89YCAVA/dR2BlaHfDR+FX5e+38yZiCry6YCoVxR6+9+botdeuwyqW9tkqBYfjCyIguoL3p4Gwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sc8y/rYw; arc=none smtp.client-ip=209.85.167.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1763971578; c=relaxed/simple;
+	bh=PMzkBO//8WDq1tkTkIx0PVqzyte18D1/JifnbllLWyQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bU8QJBgfP/nI7RqTdR3wQsALmkBtabdUBAu2o/Kg2tH8hzN0TekO5Xl7Kd8MSP6gA5H972a0iUno3fu/BvhSMQgRcEybFH7d7Dt2aPvbJ5GSfm/fB/1mbfhoAlSVYp1mJvPWdBgCj2ckeLUljDldzP2PzmT0ebmAr1q6fHdwxkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; dkim=temperror (0-bit key) header.d=dev.tdt.de header.i=@dev.tdt.de header.b=EOYTcjps; arc=none smtp.client-ip=194.37.255.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dev.tdt.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sc8y/rYw"
-Received: by mail-lf1-f66.google.com with SMTP id 2adb3069b0e04-595819064cdso5555079e87.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 23 Nov 2025 23:51:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763970697; x=1764575497; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NkwFA9bt4PsJVA9p346GsH7+NKsQSScbU6yQvmg4UlQ=;
-        b=Sc8y/rYw0nNTz+/PNcMIldzRMNq2uRYmVwY4OrStwR8HFM2oUBXvKNg8t4VmYgSKrv
-         rmhb/smDyaYLqAFP34KePpnzvqKY1pd10+0/NSZJ8HQPvRDXQeTa2AWR0en8xqeiUxob
-         cXudesq8zWrbLHjEHiXTm4ZTspWyhFJX0QeIT3jDyFcTiAoPpgOa9BGjG+TBi6AdjnCV
-         1rSN3pbIkGc2QPOU511Ebp0A+BNNAukOczjimiaDR7in3KL8YYYvjc6kbyQksfqNF5Ul
-         oCwkiIw0VgCDc4606KD7fVmHzSp1gdQnf/76OTW+QaseG2lqQSH/YJw9R+O0EhU/oGkB
-         Ti0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763970697; x=1764575497;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NkwFA9bt4PsJVA9p346GsH7+NKsQSScbU6yQvmg4UlQ=;
-        b=UVg/YhLUDqdHQtKyPCWYtViF2x9jwMgAFzpEJRlSukCzZ3P3iPSz0Pj4eli8uerKOf
-         WyqEq+8Tr5C7+jEAqQwOlbayH8fvfZ1sS0nUDhepsSOA5U6xPnqKzTlohb1lbR2Ibgvb
-         hL3ab/H5X6gk19vHuvDgAtvL94HTOGm5B3gY5UNRgvWHt9X+b9DDNH78sLL+wKTUnxTl
-         Wa2pMJrimORCJB9pvJzuB1czgjbsLaYmJGdT2VbcEMQ6/iL9ZyusIxhQUbRR2jIv3hv2
-         OOjgYOr45PhQN9FBkeqeS+tZZA482XMctkYVX2nXTWPn8cvR/4zxFGI4LaltB01ZiYuH
-         Lv0g==
-X-Forwarded-Encrypted: i=1; AJvYcCU82vM0UnGUr9CWyI2snnOuVvh9CJs574OrTwA2GA/Lk4s/B4zHWEkqoNV5OuOJS60GW+7qPbtKLGaYI/kP9rQA@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS13Nqm+dczi0FHb3PhugkVvoSEZ/wdqIQpIaRsNvibWvrTBgN
-	zCSATSTtam5W/ztKdvT0oxwrOcy7l0axl18da/5Ll5UA+5r7xFcz3T+mzYfE62XI83MNw807E9z
-	KDMshEqryTzwZTwVuPvKoc8k9qeXGZWiA4JyM/q+5bB/m
-X-Gm-Gg: ASbGnctsEhIm9rW30XQ2DwDeV3AyqvPAF332f0QxSrIbYzjNUlyrlm3eEy17y8O8vzr
-	YkNceUeKbxoM2dtX8NPrK9LOwsTWfpdO89wcAiYoZ0tI/2dBLxnze9ApolnE9uK8NSVT6gDpYIk
-	Pmk96ASJ/Q5QUuSMYyVB8SVyw0UCe6ep6Pc1w/3u59poS5FixWLKlA+wGlaEc680gej19L88kdT
-	cIFKvXGWeN6MJc7L4vF6dxiFfSoMeiRfPFbs5mpmlsDkXZ8B0BFrfwo+VT6Iid+GCmmAm0=
-X-Google-Smtp-Source: AGHT+IFvR9jt6zmhWvSf/yJY7DFqxsQu8rC/ZW9fkca6tsO60TxVs1xtPM9NEnCg9D8LH94U3JlX/SIzJqjEyT6GTjE=
-X-Received: by 2002:a05:6512:31ca:b0:594:773e:7631 with SMTP id
- 2adb3069b0e04-5969e9df185mr4428263e87.7.1763970696453; Sun, 23 Nov 2025
- 23:51:36 -0800 (PST)
+	dkim=temperror (0-bit key) header.d=dev.tdt.de header.i=@dev.tdt.de header.b="EOYTcjps"
+Received: from [194.37.255.9] (helo=mxout.expurgate.net)
+	by relay.expurgate.net with smtp (Exim 4.92)
+	(envelope-from <prvs=1437707645=ms@dev.tdt.de>)
+	id 1vNRK3-003IUc-AA; Mon, 24 Nov 2025 08:49:19 +0100
+Received: from [195.243.126.94] (helo=securemail.tdt.de)
+	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ms@dev.tdt.de>)
+	id 1vNRK2-009pp8-DV; Mon, 24 Nov 2025 08:49:18 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dev.tdt.de;
+	s=z1-selector1; t=1763970557;
+	bh=kRi1gpli3cGMbZUvgHl2yFbNspzWoVIhg09LfDrXUyE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EOYTcjps6OqdzqEhCSiN/VZQT4xP1bik3vFyN65132dUqoUaeUH09y/8zApeuiZIC
+	 T2vjpsywsEGvzuE97l/FoFZn6eBOk1n2hxYeklsOrKm8pZ/PxenYUcMfPNNnQpwBzD
+	 OyIt/nwghlbAsmNOxUo+Qze1/bBy7cf9ncQ+FzbzJ4/uJXhfPORldOVQKkh9nunVEd
+	 horHb6IDydnuggCvwyXjB5tok5afSo7tg0EdHEGCsvBD8SssNTCZwPJmP6Mf5uPxUO
+	 IoECKTjubRRg8iG9Uf36YbaEJIX0PXNLOQCL1t4Wh1P6y1EeehJaDBxpNIey82Fl2d
+	 gj3yqRSiljiow==
+Received: from securemail.tdt.de (localhost [127.0.0.1])
+	by securemail.tdt.de (Postfix) with ESMTP id E0183240042;
+	Mon, 24 Nov 2025 08:49:17 +0100 (CET)
+Received: from mail.dev.tdt.de (unknown [10.2.4.42])
+	by securemail.tdt.de (Postfix) with ESMTP id C3F7F240036;
+	Mon, 24 Nov 2025 08:49:17 +0100 (CET)
+Received: from mschillerX13.tdtnet.local (unknown [10.2.3.19])
+	by mail.dev.tdt.de (Postfix) with ESMTPSA id 93A2D20807;
+	Mon, 24 Nov 2025 08:49:17 +0100 (CET)
+From: Martin Schiller <ms@dev.tdt.de>
+To: tony.luck@intel.com, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com
+Cc: x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, fe@dev.tdt.de,
+	Martin Schiller <ms@dev.tdt.de>
+Subject: [PATCH 0/3] perf/x86: Add Airmont NP
+Date: Mon, 24 Nov 2025 08:48:43 +0100
+Message-ID: <20251124074846.9653-1-ms@dev.tdt.de>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251124072310.3592-1-hupu.gm@gmail.com>
-In-Reply-To: <20251124072310.3592-1-hupu.gm@gmail.com>
-From: hupu <hupu.gm@gmail.com>
-Date: Mon, 24 Nov 2025 15:51:25 +0800
-X-Gm-Features: AWmQ_bkct2JGhMwqYp0FsD8DCDAJuZSg50hSAXixkZ2WVGtPpGcdMp3zCOm0rsU
-Message-ID: <CADHxFxRX2=Mt+BGhpCU9WfAMi9rfUO2x7qLy8tEu1aiSVo39bQ@mail.gmail.com>
-Subject: Re: [RFC] perf build: Use self-contained headers from kernel source
- when compiling
-To: namhyung@kernel.org, leo.yan@arm.com
-Cc: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	justinstitt@google.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	morbo@google.com, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
-	peterz@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-purgate: clean
+X-purgate-ID: 151534::1763970559-A72C30DE-0AFB5FEA/0/0
+X-purgate-type: clean
 
-Hi All Maintainers:
+From the perspective of Intel cstate, PMU and MSR the Airmont NP
+(aka Lightning Mountain) is identical to Airmont.
 
-The background of this PATCH is explained in the email linked below.
-To avoid potential disagreement from submitting multiple PATCHes in a
-single email, this email focuses solely on discussing whether to use
-self-contained headers from the kernel source when building perf.
+This changes are taken from patched kernel sources of the MaxLinear SDK
+which can be found at https://github.com/maxlinear/linux
 
-https://lore.kernel.org/all/20251013080609.2070555-1-hupu.gm@gmail.com/
+Martin Schiller (3):
+  perf/x86/msr: Add Airmont NP
+  perf/x86/intel: Add Airmont NP
+  perf/x86/cstate: Add Airmont NP
 
-Thanks,
-hupu
+ arch/x86/events/intel/core.c   | 1 +
+ arch/x86/events/intel/cstate.c | 1 +
+ arch/x86/events/msr.c          | 1 +
+ 3 files changed, 3 insertions(+)
+
+--=20
+2.47.3
+
