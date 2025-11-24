@@ -1,134 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C891DF75A;
-	Mon, 24 Nov 2025 20:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764016944; cv=none; b=FASRvmEfdUQMYDoX3wGlQy93OFeeikPo2x9jxBl/+zZmX81kGoZJIi9zxQ62aVoPlAbpty+8bZY4QJb2Aqcm411H+vlmP8Q3867VKqVZ1PAlhBpqcxh8onn1qBpIzArqURHhichX8If8dcSnyNNjx6nas3v7l7VQdLCh258aBBY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764016944; c=relaxed/simple;
-	bh=Si7eTK2/BZuVYtQFbflprK/KYJ4whdcxNyG6sL2lt+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lpMCUKC2rBXupBTLvoF+5iEW7drh5sVhV/MLQHu6/q6YlLHZyXLuXkwlNEv1LmqNK77HPL5bpSwLTSO4udB+iyKMNCN2T/mrOTW3ip3E4jaVioNFNvNjjUo5N64Mf2kvvNbLwBJlUgOeYTP/NUBOQKaHPXslHph6Qk3NQkmpLAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=roWO5oSC; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6583C2F363B;
+	Mon, 24 Nov 2025 21:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764019454; cv=pass; b=MMA1vKipD2IO7EoNtu7B5DZQi93xHybpbum6y43pHachr3ShLsjmID6fCWxBvS+t78AYezlNmPQ1TEMExcd4P0rP0j470Uuq6bQLGXXvY297DexaPdlid4GvLnIr311ZXwV9/dIk9DiZuYAyYFJI1Zaw3T9F8q1ozvBo1wVIWZA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764019454; c=relaxed/simple;
+	bh=sevA2JknAt6QkW2DSkMZ3VhBnHCK3YacoP54ZHcgmWs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=omsKV7rqmrYxfMdjXG4kxayVfIfI2ORxDlcJBGWpbwS7Y6g58VVuaeEm7DC1l2hBllr7qE5p9TxTHzUj+KItCKA4ANbOYcajTJH/1hkk8fb/qjKtQIlw0cNBIsqcULc3O7qTQtUbWyV1+F+nddPPvUsJkH8zm2aThsve8lnEHSc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=derek.foreman@collabora.com header.b=KRnndxy0; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="roWO5oSC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CA22C4CEF1;
-	Mon, 24 Nov 2025 20:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764016943;
-	bh=Si7eTK2/BZuVYtQFbflprK/KYJ4whdcxNyG6sL2lt+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=roWO5oSChBQC5M9L+H/X0SrcgcdHG9KED5r9YMT1ouRulQwJq4DMnoC0maaXmz1gG
-	 74DzdwNIUH3SupUIJxCYFZ5LVKkxCxzZBNPlKHbRgpcDyOVexU7Ibk7WT54gKgOLgL
-	 d/thfo/UQDXRpGpLmuJIf9Kc28vhlzUBycPGmJE9QPMOx4EvPeGu9TPE0Nkx93/GXT
-	 zfAj0SxOteqK9fMWlCJ1OEMnUnfWqigYEuhC/8Hh4jaQxHMhNtr+GxpNPF4QmYPcgm
-	 R8qAqrpcGcL6RNKRyOKXeHSaYwERTTk3SrTnN1vknSJw/VKZ4/Xkl242m9C1v8R/Pz
-	 mNmGj1jLfwUeA==
-Date: Mon, 24 Nov 2025 12:42:22 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Quentin Monnet <qmo@kernel.org>
-Cc: Alan Maguire <alan.maguire@oracle.com>, KP Singh <kpsingh@kernel.org>,
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [BUG] bpftool: Build failure due to opensslv.h
-Message-ID: <aSTDLrUqeZ3xwEhA@google.com>
-References: <aP7uq6eVieG8v_v4@google.com>
- <2cb226f8-a67c-4bdb-8c59-507c99a46bab@kernel.org>
- <aP-5fUaroYE5xSnw@google.com>
- <d6a63399-361f-4f1c-845c-b69192bfc822@kernel.org>
- <7c86f05f-2ba3-4f63-8d63-49a3b3370360@oracle.com>
- <aR51ZSicusUssXuU@google.com>
- <fbd98bd0-a89c-4903-af06-fd1f2fb4ae16@kernel.org>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=derek.foreman@collabora.com header.b="KRnndxy0"
+ARC-Seal: i=1; a=rsa-sha256; t=1764019404; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=lwGWhKvYKAA5wqGBCWEyvVALDc9rSON3LbY6YQODPwmrzwUS0AtzHZqieyVJoXSkdzrPoDD8QTmuSpZ5Oe3nYPDwDZ1mUse9/LK2qdGQxW9eflEhAvM+ekTThdtY97g7jvQ/Kg/aazYRdPIvW/WhogXxr9h6Fi+Pc581RyE6Erk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1764019404; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=+xnE+1HBZXX6YMytZ+iSpT2O0yHGEOoCmf6XDPOjcn4=; 
+	b=HkGZBc48lpYMgw8VVJZ+/7twx7QYnxEkrp55glHAVu7925nxsMlOoRzuk1tdfOf/EM2uzaWx8mApG97sDfCuCkd9u3MMfqCzP83CcXGWQho4e11pNpkuJLP0zDyfPouSTUfQ2gIrFvVPPuUDk/odhec1qTpSniRDzhMzAvQN3WM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=derek.foreman@collabora.com;
+	dmarc=pass header.from=<derek.foreman@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1764019404;
+	s=zohomail; d=collabora.com; i=derek.foreman@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=+xnE+1HBZXX6YMytZ+iSpT2O0yHGEOoCmf6XDPOjcn4=;
+	b=KRnndxy0SdoWeFLVVXH+5xZDtZHU9Om3rGAKMv1fEGoq75V/BEQomw2EAlojDvSm
+	RV3APzmw9P5031b//eSrKMOCWGUtRrrLGG7ybTIpFVqFYcUbTDN4Jz3x0Bgx/YyE0Pw
+	49U7mCe9CNlHqG4ZmJLZgfQY1/yjQ4rXoTUEf/ig=
+Received: by mx.zohomail.com with SMTPS id 1764019401636556.5261613838819;
+	Mon, 24 Nov 2025 13:23:21 -0800 (PST)
+From: Derek Foreman <derek.foreman@collabora.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>
+Cc: kernel@collabora.com,
+	Derek Foreman <derek.foreman@collabora.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf data: Allow filtering conversion by start and end time
+Date: Mon, 24 Nov 2025 15:23:00 -0600
+Message-ID: <20251124212301.450296-1-derek.foreman@collabora.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <fbd98bd0-a89c-4903-af06-fd1f2fb4ae16@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Thu, Nov 20, 2025 at 09:24:49AM +0000, Quentin Monnet wrote:
-> 2025-11-19 17:56 UTC-0800 ~ Namhyung Kim <namhyung@kernel.org>
-> > Hello,
-> > 
-> > On Tue, Oct 28, 2025 at 10:20:22AM +0000, Alan Maguire wrote:
-> >> On 28/10/2025 09:05, Quentin Monnet wrote:
-> >>> 2025-10-27 11:27 UTC-0700 ~ Namhyung Kim <namhyung@kernel.org>
-> >>>> On Mon, Oct 27, 2025 at 11:41:01AM +0000, Quentin Monnet wrote:
-> >>>>> 2025-10-26 21:01 UTC-0700 ~ Namhyung Kim <namhyung@kernel.org>
-> >>>>>> Hello,
-> >>>>>>
-> >>>>>> I'm seeing a build failure like below in Fedora 40 and others.  I'm not
-> >>>>>> sure if it's reported already but it failed to build perf tools due to
-> >>>>>> errors in the bootstrap bpftool.
-> >>>>>>
-> >>>>>>     CC      /build/util/bpf_skel/.tmp/bootstrap/sign.o
-> >>>>>>   sign.c:16:10: fatal error: openssl/opensslv.h: No such file or directory
-> >>>>>>      16 | #include <openssl/opensslv.h>
-> >>>>>>         |          ^~~~~~~~~~~~~~~~~~~~
-> >>>>>>   compilation terminated.
-> >>>>>>   make[3]: *** [Makefile:256: /build/util/bpf_skel/.tmp/bootstrap/sign.o] Error 1
-> >>>>>>   make[3]: *** Waiting for unfinished jobs....
-> >>>>>>   make[2]: *** [Makefile.perf:1213: /build/util/bpf_skel/.tmp/bootstrap/bpftool] Error 2
-> >>>>>>   make[1]: *** [Makefile.perf:289: sub-make] Error 2
-> >>>>>>   make: *** [Makefile:76: all] Error 2
-> >>>>>>
-> >>>>>> I think it's from the recent signing change.  I'm not familiar with
-> >>>>>> openssl but I guess there's a proper feature check for it.  Is this a
-> >>>>>> known issue?
-> >>>>>
-> >>>>>
-> >>>>> Hi Namhyung,
-> >>>>
-> >>>> Hello!
-> >>>>
-> >>>>>
-> >>>>> This looks related to the program signing change indeed, commit
-> >>>>> 40863f4d6ef2 ("bpftool: Add support for signing BPF programs")
-> >>>>> introduced a dependency on OpenSSL's development headers for bpftool.
-> >>>>> It's not gated behind a feature check. On Fedora, I think the headers
-> >>>>> come with openssl-devel, do you have this package installed?
-> >>>>
-> >>>> No I don't, but I guess it should be able to build on such systems.  Or
-> >>>> is it required for bpftool?  Anyway I feel like it should have a feature
-> >>>> check and appropriate error messages.
-> >>>>
-> >>>
-> >>> +Cc KP
-> >>>
-> >>> We usually have feature checks when optional features bring in new
-> >>> dependencies for bpftool, but we haven't discussed it this time. My
-> >>> understanding was that program signing is important enough that it
-> >>> should always be present in newer versions of bpftool, making OpenSSL
-> >>> one of the required dependencies going forward.
-> >>>
-> >>> We don't currently have feature checks to tell when required
-> >>> dependencies are missing for bpftool (it's just the build failing, in
-> >>> that case). I know perf does a great job at it, we could look into it
-> >>> for bpftool, too.
-> >>>
-> >>
-> >> One issue here is that some distros package openssl v3 such that the
-> >> #include files are in /usr/include/openssl3 and libraries in
-> >> /usr/lib64/openssl3 so that older versions can co-exist. Maybe we could
-> >> figure out a feature test that handles that too?
-> > 
-> > What's the state of this?  Is the fix in the bpf tree now?
-> 
-> 
-> Hi Namhyung, Alan just submitted a v2 of his patch (targetting
-> bpf-next), see:
-> 
-> https://lore.kernel.org/all/20251120084754.640405-2-alan.maguire@oracle.com/
+This adds a feature to allow restricting the range of converted samples
+with start and end times specified in nanoseconds.
+
+Use it like this:
+
+  $ perf data convert --to-json out.json -s 12345 -e 13340
+
+Start, end, or both may be omitted.
+
+Signed-off-by: Derek Foreman <derek.foreman@collabora.com>
+---
+ tools/perf/Documentation/perf-data.txt |  6 ++++++
+ tools/perf/builtin-data.c              |  4 ++++
+ tools/perf/util/data-convert-bt.c      | 18 ++++++++++++++++++
+ tools/perf/util/data-convert-json.c    | 18 ++++++++++++++++++
+ tools/perf/util/data-convert.h         |  3 +++
+ 5 files changed, 49 insertions(+)
+
+diff --git a/tools/perf/Documentation/perf-data.txt b/tools/perf/Documentation/perf-data.txt
+index 417bf17e265c..db0de1f354a3 100644
+--- a/tools/perf/Documentation/perf-data.txt
++++ b/tools/perf/Documentation/perf-data.txt
+@@ -40,6 +40,12 @@ OPTIONS for 'convert'
+ --force::
+ 	Don't complain, do it.
  
-Hello Quentin,
-
-I'm afraid it doesn't fix my issue.  It seems to fix another problem
-about the error API.  But I still see the build failure.
-
-Thanks,
-Namhyung
++-s::
++	Start time, in nanoseconds. Samples before this time will not be converted.
++
++-e::
++	End time, in nanoseconds. Samples after this time will not be converted.
++
+ -v::
+ --verbose::
+         Be more verbose (show counter open errors, etc).
+diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
+index ce51cbf6dc97..da813c62e284 100644
+--- a/tools/perf/builtin-data.c
++++ b/tools/perf/builtin-data.c
+@@ -33,6 +33,8 @@ const char *to_ctf;
+ struct perf_data_convert_opts opts = {
+ 	.force = false,
+ 	.all = false,
++	.range_start = 0,
++	.range_end = 0,
+ };
+ 
+ const struct option data_options[] = {
+@@ -45,6 +47,8 @@ const struct option data_options[] = {
+ #endif
+ 		OPT_BOOLEAN('f', "force", &opts.force, "don't complain, do it"),
+ 		OPT_BOOLEAN(0, "all", &opts.all, "Convert all events"),
++		OPT_U64('s', "start", &opts.range_start, "Earliest timestamp to convert"),
++		OPT_U64('e', "end", &opts.range_end, "Latest timestamp to convert"),
+ 		OPT_END()
+ 	};
+ 
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index 3d2e437e1354..6819f11fe900 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -91,9 +91,13 @@ struct convert {
+ 	struct perf_tool	tool;
+ 	struct ctf_writer	writer;
+ 
++	u64			start;
++	u64			end;
++
+ 	u64			events_size;
+ 	u64			events_count;
+ 	u64			non_sample_count;
++	u64			skipped;
+ 
+ 	/* Ordered events configured queue size. */
+ 	u64			queue_size;
+@@ -811,6 +815,12 @@ static int process_sample_event(const struct perf_tool *tool,
+ 	if (WARN_ONCE(!priv, "Failed to setup all events.\n"))
+ 		return 0;
+ 
++	if (sample->time < c->start ||
++	    (c->end && sample->time > c->end)) {
++		++c->skipped;
++		return 0;
++	}
++
+ 	event_class = priv->event_class;
+ 
+ 	/* update stats */
+@@ -1626,6 +1636,9 @@ int bt_convert__perf2ctf(const char *input, const char *path,
+ 	c.tool.namespaces      = perf_event__process_namespaces;
+ 	c.tool.ordering_requires_timestamps = true;
+ 
++	c.start = opts->range_start;
++	c.end = opts->range_end;
++
+ 	if (opts->all) {
+ 		c.tool.comm = process_comm_event;
+ 		c.tool.exit = process_exit_event;
+@@ -1677,6 +1690,11 @@ int bt_convert__perf2ctf(const char *input, const char *path,
+ 		"[ perf data convert: Converted '%s' into CTF data '%s' ]\n",
+ 		data.path, path);
+ 
++	if (c.skipped)
++		fprintf(stderr,
++			"[ perf data convert: Skipped %" PRIu64 " samples",
++			c.skipped);
++
+ 	fprintf(stderr,
+ 		"[ perf data convert: Converted and wrote %.3f MB (%" PRIu64 " samples",
+ 		(double) c.events_size / 1024.0 / 1024.0,
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index 9dc1e184cf3c..dcbba34d6b08 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -35,7 +35,11 @@ struct convert_json {
+ 	struct perf_tool tool;
+ 	FILE *out;
+ 	bool first;
++	u64 start;
++	u64 end;
++
+ 	u64 events_count;
++	u64 skipped;
+ };
+ 
+ // Outputs a JSON-encoded string surrounded by quotes with characters escaped.
+@@ -165,6 +169,12 @@ static int process_sample_event(const struct perf_tool *tool,
+ 		return -1;
+ 	}
+ 
++	if (sample->time < c->start ||
++	    (c->end && sample->time > c->end)) {
++		++c->skipped;
++		return 0;
++	}
++
+ 	++c->events_count;
+ 
+ 	if (c->first)
+@@ -320,6 +330,9 @@ int bt_convert__perf2json(const char *input_name, const char *output_name,
+ 	struct convert_json c = {
+ 		.first = true,
+ 		.events_count = 0,
++		.start = opts->range_start,
++		.end = opts->range_end,
++		.skipped = 0,
+ 	};
+ 	struct perf_data data = {
+ 		.mode = PERF_DATA_MODE_READ,
+@@ -407,6 +420,11 @@ int bt_convert__perf2json(const char *input_name, const char *output_name,
+ 			"[ perf data convert: Converted '%s' into JSON data '%s' ]\n",
+ 			data.path, output_name);
+ 
++	if (c.skipped)
++		fprintf(stderr,
++				"[ perf data convert: Skipped %" PRIu64 " samples.\n",
++				c.skipped);
++
+ 	fprintf(stderr,
+ 			"[ perf data convert: Converted and wrote %.3f MB (%" PRIu64 " samples) ]\n",
+ 			(ftell(c.out)) / 1024.0 / 1024.0, c.events_count);
+diff --git a/tools/perf/util/data-convert.h b/tools/perf/util/data-convert.h
+index 1b4c5f598415..5d055e1c31c8 100644
+--- a/tools/perf/util/data-convert.h
++++ b/tools/perf/util/data-convert.h
+@@ -3,11 +3,14 @@
+ #define __DATA_CONVERT_H
+ 
+ #include <stdbool.h>
++#include <linux/types.h>
+ 
+ struct perf_data_convert_opts {
+ 	bool force;
+ 	bool all;
+ 	bool tod;
++	u64 range_start;
++	u64 range_end;
+ };
+ 
+ #ifdef HAVE_LIBBABELTRACE_SUPPORT
+-- 
+2.47.3
 
