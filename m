@@ -1,51 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCDAE571;
-	Mon, 24 Nov 2025 20:22:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6200A21D58B;
+	Mon, 24 Nov 2025 20:27:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764015758; cv=none; b=bOtmgFSvGaoApxnalco6RSJ1eQt7u+kdr8+9UhhGvgKVQrSggHb0fbyAN+RUcV8cNV3By42bmq3jfpXPZrZrfgHZb3PI/ckA/6If9LHE1jIl1eyQDm2yu6MalzAd0hlmTXQnNmb+tqTqvxOU6O9Gotdjc2u+f/d/JhlvOY/FLz4=
+	t=1764016068; cv=none; b=LiOzP0bM3qNfLrV8qGu8oeXtzpF4Tl9Ml8OpSbqWZWO+FUEwovrsaWYHZpaEiRkoOPCVzVLbu/RrEoJiZ7vi2Ic2bQD5Aezaj5Sx4K5IfvVsTqJSzx6QG7XMeyWeDEYGDSTpOP4GNWxBierTMwawmSREeEu25O/uEhOtCxDJsvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764015758; c=relaxed/simple;
-	bh=9cpV3hPEcSWt2nP+SqAQdVTrzwYE61khh6jlE/4yyzg=;
+	s=arc-20240116; t=1764016068; c=relaxed/simple;
+	bh=sFh+GJxftviI9ok4scpNd13sZc66q9ausSV1iblN4c8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JmWIGSiKArlppa9C94nq9B89JfAgS5sECRuKn6OsUn02zq/8EUFu8lIwU1hcilTH1YFbIbSf6UFjEPs6ztLnrumqgMcJ+ECtY/CZaqxYKrSy7vDYXBLCvqlsGSeGQaUqic6kgQVNonURmfY8f9H/atEa4+GCXUzqAc+mXtrVvOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SalgsBAC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=s5lUaxehavBKIjVJfALoNytPim4ua0Fv73wbijEaT80OWpR9VVNA3K6Qh7a8X6kf8dTDs1qgoszYu/020N5qpOWfmHt/maMOqeNr8YuIXAtWXQpegb438E59iLALoJK1W4gzf9RWTKSXDHVWLymK6akeORfKxFITmAu2AwW4iNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTFiIFxI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SalgsBAC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06D4C4CEF1;
-	Mon, 24 Nov 2025 20:22:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTFiIFxI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D5CEC4CEF1;
+	Mon, 24 Nov 2025 20:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764015758;
-	bh=9cpV3hPEcSWt2nP+SqAQdVTrzwYE61khh6jlE/4yyzg=;
+	s=k20201202; t=1764016067;
+	bh=sFh+GJxftviI9ok4scpNd13sZc66q9ausSV1iblN4c8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SalgsBACiW5P7RPLORYJOxDVrJb9AkDxWVSorKzlZFq18qq95ztJJ0veXEWLrIcV1
-	 hAr3f/rJF0zah8tv8t4gZC6MjfAp+IqPScfGXB2/rRUST4UbIJqQgo5v1z2bJHe7VX
-	 XWK7HiVxhJ0ucu76I7IMm+SdaD3RYSdpRNptn/lWN9s5SVKTH7B27WavFU69Ajxwwz
-	 lWumUQNXmy8ZOARxpjrDRHYeeGjF8At/0VOf1wX9YlgCiCP7JsgTVTIW+D1pjVCTEu
-	 MxDsyLxWr5/ByzSrKRIoFycwfLUXUBBFSjGT5V6DDaluTHWJNxQOzMeIpSjADp4bS/
-	 1+W4SbDN5sHig==
-Date: Mon, 24 Nov 2025 12:22:36 -0800
+	b=KTFiIFxIHYF2h4iZEW4r2LkXe7JgcmqkYhBvEph60j/ynB8wATFGJnkwV/ugWvEJ/
+	 mGe5GlToodlHPO0vVouG7Tu7SR8rmQ4qFtx6CIVOY2kb2F4efxIAKOm7Sb/gBMaglW
+	 gBMUS69QgjvLMO4jv/nRk22+Rxd3XtI2RFzm6rCoH4PYIU08Y1Zp/WdvQRtoV4vKr8
+	 39j/0aLog4GxdFCyPuGl6C3D01Fr4nQTLL4fVPh8mOU9b1UGe0mmSjiWXwcJfTSuhW
+	 z4sf87j4Ufcz3ArMv+cXQC3LgnstY0rk4Lf/0likaWX/BV9KgYc4bIAeEXD7ImhXLA
+	 H1D3YqWo4rUTw==
+Date: Mon, 24 Nov 2025 12:27:45 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Anubhav Shelat <ashelat@redhat.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	James Clark <james.clark@linaro.org>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] perf pmu: Add PMU kind to simplify differentiating
-Message-ID: <aSS-jMEgzX30fe1p@google.com>
-References: <20251114220547.496562-1-irogers@google.com>
- <20251114220547.496562-2-irogers@google.com>
- <CA+G8Dh+wLx+FvjjoEkypqvXhbzWEQVpykovzrsHi2_eQjHkzQA@mail.gmail.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v6 3/6] perf record: Add --call-graph fp,defer option for
+ deferred callchains
+Message-ID: <aSS_wR973EKsdW-B@google.com>
+References: <20251120234804.156340-1-namhyung@kernel.org>
+ <20251120234804.156340-4-namhyung@kernel.org>
+ <947ef366-435d-4b05-b0b1-685e569d0a1e@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,38 +56,25 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G8Dh+wLx+FvjjoEkypqvXhbzWEQVpykovzrsHi2_eQjHkzQA@mail.gmail.com>
+In-Reply-To: <947ef366-435d-4b05-b0b1-685e569d0a1e@linux.ibm.com>
 
 Hello,
 
-On Mon, Nov 24, 2025 at 12:34:11PM +0000, Anubhav Shelat wrote:
-> On Fri, Nov 14, 2025 at 10:06 PM Ian Rogers <irogers@google.com> wrote:
-> > +static inline enum pmu_kind perf_pmu__kind(const struct perf_pmu *pmu)
-> > +{
-> > +       __u32 type;
-> > +
-> > +       if (!pmu)
-> > +               return PERF_PMU_KIND_PE;
-> > +
-> > +       type = pmu->type;
-> > +       if (type <= PERF_PMU_TYPE_PE_END)
-> > +               return PERF_PMU_KIND_PE;
-> > +       if (type <= PERF_PMU_TYPE_DRM_END)
-> > +               return PERF_PMU_KIND_DRM;
-> > +       if (type <= PERF_PMU_TYPE_DRM_END)
-> > +               return PERF_PMU_KIND_DRM;
-> > +       if (type <= PERF_PMU_TYPE_HWMON_END)
-> > +               return PERF_PMU_KIND_HWMON;
-> > +       if (type == PERF_PMU_TYPE_TOOL)
-> > +               return PERF_PMU_KIND_TOOL;
-> > +       return PERF_PMU_KIND_FAKE;
-> > +}
-> > +
+On Fri, Nov 21, 2025 at 07:26:34AM +0100, Thomas Richter wrote:
+> On 11/21/25 00:48, Namhyung Kim wrote:
+> > Add a new callchain record mode option for deferred callchains.  For now
+> > it only works with FP (frame-pointer) mode.
+> > 
+> > And add the missing feature detection logic to clear the flag on old
+> > kernels.
+> > 
+> >   $ perf record --call-graph fp,defer -vv true
 > 
-> Looks like there's a duplicate check for PERF_PMU_TYPE_DRM_END.
+> Does this also works for dwarf format?
+>     # perf record --call-graph dwarf,defer ....
 
-Right, can you please send a fix?
+No, it's not supported.  Maybe we can do similar just to dump stack
+content and registers for dwarf before returning to user.
 
 Thanks,
 Namhyung
