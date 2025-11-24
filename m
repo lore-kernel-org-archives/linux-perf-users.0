@@ -1,88 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965192D7805;
-	Mon, 24 Nov 2025 19:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCDAE571;
+	Mon, 24 Nov 2025 20:22:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764011928; cv=none; b=mmK++MCMRQoeFvQn0LnpdckRDVbbQcdCeXjdJzUgzkpBO0lNZIRftgrzJbBlJ54tsSuD1/cK3VSpH7C3zXl2iwq2gHCzPX1xVWTJ+WDfmdICAOoiKxdmOc/bDzl7+BVhkwhKMERANTfBcXvz70Vv4/0+Mm5LLSMel8G7eKMxqXE=
+	t=1764015758; cv=none; b=bOtmgFSvGaoApxnalco6RSJ1eQt7u+kdr8+9UhhGvgKVQrSggHb0fbyAN+RUcV8cNV3By42bmq3jfpXPZrZrfgHZb3PI/ckA/6If9LHE1jIl1eyQDm2yu6MalzAd0hlmTXQnNmb+tqTqvxOU6O9Gotdjc2u+f/d/JhlvOY/FLz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764011928; c=relaxed/simple;
-	bh=rDkSwbW4xoasbdAG1a25incEAfgJNunRzcR8e9Kx9qo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jmvAX3wMEwR/GwQK2fwuvJq6bBMWeR5/zfDNRLJFXSRmRru7J8ChS6VPb8C2XbJuGeM35USsvpuWul2EH30736uuSKaYnjHcLk12IfB5bF3X1HAvOKXL3eTVmYo/dPDK30gEmiurHlM2YMRD8OShj5JfUwdf4VEIX99giGXIFmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7Vox0ti; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764015758; c=relaxed/simple;
+	bh=9cpV3hPEcSWt2nP+SqAQdVTrzwYE61khh6jlE/4yyzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JmWIGSiKArlppa9C94nq9B89JfAgS5sECRuKn6OsUn02zq/8EUFu8lIwU1hcilTH1YFbIbSf6UFjEPs6ztLnrumqgMcJ+ECtY/CZaqxYKrSy7vDYXBLCvqlsGSeGQaUqic6kgQVNonURmfY8f9H/atEa4+GCXUzqAc+mXtrVvOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SalgsBAC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7Vox0ti"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD7AC4CEF1;
-	Mon, 24 Nov 2025 19:18:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SalgsBAC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06D4C4CEF1;
+	Mon, 24 Nov 2025 20:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764011928;
-	bh=rDkSwbW4xoasbdAG1a25incEAfgJNunRzcR8e9Kx9qo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k7Vox0tiC6aEBy+NvJaadSN3/y2+MnSeI16LLh4WWU7Wt1gcm7dngn98Eidpbh+Zi
-	 uiiuASO0fqEp+TXKWvf0/zEp9FV1oGU+xaNcZpFi7aTPesnk81dS6cBEoRFZz6gotJ
-	 0XG1DpTk1Y9N1fjuK1rCaYdIxKvwLfw2bNAkA/22FbzwPXFISHtAO5ky794Fp8f5Pn
-	 ikwAnf3fH6xzB/d29obYib/CuWsaz3JJpw8MhGpEHoPo8LXM48dX5S3uFQkfMeuUVV
-	 pXHjDz2toelygeC/7FhZnqgn/omotVps3GjsGPCkppJ+Z3SDoDzdpgv02dQxBQwaWh
-	 S7uz3yF4CeFmQ==
-From: Will Deacon <will@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+	s=k20201202; t=1764015758;
+	bh=9cpV3hPEcSWt2nP+SqAQdVTrzwYE61khh6jlE/4yyzg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SalgsBACiW5P7RPLORYJOxDVrJb9AkDxWVSorKzlZFq18qq95ztJJ0veXEWLrIcV1
+	 hAr3f/rJF0zah8tv8t4gZC6MjfAp+IqPScfGXB2/rRUST4UbIJqQgo5v1z2bJHe7VX
+	 XWK7HiVxhJ0ucu76I7IMm+SdaD3RYSdpRNptn/lWN9s5SVKTH7B27WavFU69Ajxwwz
+	 lWumUQNXmy8ZOARxpjrDRHYeeGjF8At/0VOf1wX9YlgCiCP7JsgTVTIW+D1pjVCTEu
+	 MxDsyLxWr5/ByzSrKRIoFycwfLUXUBBFSjGT5V6DDaluTHWJNxQOzMeIpSjADp4bS/
+	 1+W4SbDN5sHig==
+Date: Mon, 24 Nov 2025 12:22:36 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Anubhav Shelat <ashelat@redhat.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Leo Yan <leo.yan@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	James Clark <james.clark@linaro.org>
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v10 0/5] perf: arm_spe: Armv8.8 SPE features
-Date: Mon, 24 Nov 2025 19:18:31 +0000
-Message-Id: <176399995950.525942.8372760882667197136.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20251111-james-perf-feat_spe_eft-v10-0-1e1b5bf2cd05@linaro.org>
-References: <20251111-james-perf-feat_spe_eft-v10-0-1e1b5bf2cd05@linaro.org>
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	James Clark <james.clark@linaro.org>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/3] perf pmu: Add PMU kind to simplify differentiating
+Message-ID: <aSS-jMEgzX30fe1p@google.com>
+References: <20251114220547.496562-1-irogers@google.com>
+ <20251114220547.496562-2-irogers@google.com>
+ <CA+G8Dh+wLx+FvjjoEkypqvXhbzWEQVpykovzrsHi2_eQjHkzQA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G8Dh+wLx+FvjjoEkypqvXhbzWEQVpykovzrsHi2_eQjHkzQA@mail.gmail.com>
 
-On Tue, 11 Nov 2025 11:37:54 +0000, James Clark wrote:
-> Support SPE_FEAT_FDS data source filtering.
+Hello,
+
+On Mon, Nov 24, 2025 at 12:34:11PM +0000, Anubhav Shelat wrote:
+> On Fri, Nov 14, 2025 at 10:06 PM Ian Rogers <irogers@google.com> wrote:
+> > +static inline enum pmu_kind perf_pmu__kind(const struct perf_pmu *pmu)
+> > +{
+> > +       __u32 type;
+> > +
+> > +       if (!pmu)
+> > +               return PERF_PMU_KIND_PE;
+> > +
+> > +       type = pmu->type;
+> > +       if (type <= PERF_PMU_TYPE_PE_END)
+> > +               return PERF_PMU_KIND_PE;
+> > +       if (type <= PERF_PMU_TYPE_DRM_END)
+> > +               return PERF_PMU_KIND_DRM;
+> > +       if (type <= PERF_PMU_TYPE_DRM_END)
+> > +               return PERF_PMU_KIND_DRM;
+> > +       if (type <= PERF_PMU_TYPE_HWMON_END)
+> > +               return PERF_PMU_KIND_HWMON;
+> > +       if (type == PERF_PMU_TYPE_TOOL)
+> > +               return PERF_PMU_KIND_TOOL;
+> > +       return PERF_PMU_KIND_FAKE;
+> > +}
+> > +
 > 
+> Looks like there's a duplicate check for PERF_PMU_TYPE_DRM_END.
 
-Applied kernel changes to will (for-next/perf), thanks!
+Right, can you please send a fix?
 
-[1/5] perf: Add perf_event_attr::config4
-      https://git.kernel.org/will/c/cbbfba4847b8
-[2/5] perf: arm_spe: Add support for filtering on data source
-      https://git.kernel.org/will/c/e6a27290d800
+Thanks,
+Namhyung
 
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
