@@ -1,96 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AF231329E;
-	Mon, 24 Nov 2025 16:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0D5F1EDA02
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Nov 2025 16:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764000868; cv=none; b=k/0pGSwH+X+Z7vhSKERXnRkBzS+Ct/xpX7ZFeeJUb97f8X+1aEHXMuUynJSWUBiJQ50SvNHzq3+G3uZSA4tS4WHPbi4Ky51gIg/aH/sJKep2rUSCDoxDRXLFRYnmO5CHXPkLGOzJxzVQcL8DXKcnAIunRLqneA3sSydVljCoPas=
+	t=1764002408; cv=none; b=QtTTwPP4RvOp8aGfJFMMN/ESssSpMInhcByimJ5yYHgWDlqOB4EkgbPV4rwx9viq633LenqaeM97leDpAGX+dxrvAAmwgfmmUXuS+WbRNM6bRzfI6n9Hpp72Kx6Fi6BIAleH7/IfqdeZMzswpNrtUtw/hgQOV7Yo8pwKmakJtp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764000868; c=relaxed/simple;
-	bh=G9H9wGmU1A3UKAZvzaabdyQPVDbzmy328mGagCCY2HE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mBPukbX0N31IvQhrqWByyaUu5UVkJVU0lzBnSunRPru7ReMZ/G3gcz8BDzoq5Dd7BnABI/ex9JbER4eniEQfWQCxfOoJvOks0vMKtZVg3XWh71q3N4sfW1piOfIwgf4kvqF+pmsjHx1jhDG0Xr5XvfBG2uUQspe8g6ObSwacu9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVf+cccL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVf+cccL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 769F6C4CEF1;
-	Mon, 24 Nov 2025 16:14:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764000868;
-	bh=G9H9wGmU1A3UKAZvzaabdyQPVDbzmy328mGagCCY2HE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iVf+cccLqZeIumQJBrKQmcOzC4IQbSYnAiDhcu+WlJ815ho82ogCeo63mawAgqQUz
-	 qN7OXkYouTRmI6b5neBgoZmF9voOPg5VX0uf3DKeXV8MfK8v3hVIb+nnY9ARBuLRry
-	 XuN2K3QXfHXyKU9qjo1r6RkMlaHnWZWKY/Sg9DZhycIhSE86bR771Cv6CvMqPyzdxz
-	 2Byh0p/RmMhjNai65JmDmRvvFYgHm8l1lCP8WVZEYEYjIKtWU0mldFdx85JUMN35pz
-	 DhqtVfB3UhOw87MTpLATfJrvESq4xImvwEzApdf7sW5qiMvkdjn/nXW0cHVxB2lkjX
-	 jibPH3lTObHHA==
-Date: Mon, 24 Nov 2025 16:14:23 +0000
-From: Will Deacon <will@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	James Clark <james.clark@linaro.org>,
+	s=arc-20240116; t=1764002408; c=relaxed/simple;
+	bh=AZFPQvx6ShncMyK7/jWvSgudnL/U8XvvcbADQYnNofQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m5vQJqPFsO1mu+8eVz0Dr30TL6AtH4XwVrUVHPgZoXY0GPfyW6CCG+K6CxTpFyedk7woYLV0FnbrmhRXvpeyBVMFBVC0C3dHQtNvc89o4qw8tU8DhIQ6mjopmmrHSAURjYlBvOBdWbWq94X0bo4RjMaSV76QZL0yoyEahyCHxvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D7681477;
+	Mon, 24 Nov 2025 08:39:56 -0800 (PST)
+Received: from 010265703453.cambridge.arm.com (unknown [10.1.30.67])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 850063F86F;
+	Mon, 24 Nov 2025 08:40:02 -0800 (PST)
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org
+Cc: mark.rutland@arm.com,
 	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf: arm_spe: Correct setting the
- PERF_HES_STOPPED flag
-Message-ID: <aSSEXzMr1drvL2zz@willie-the-truck>
-References: <20251110-arm_spe_fix_truncated_flag-v2-0-a629740985cc@arm.com>
- <20251110-arm_spe_fix_truncated_flag-v2-1-a629740985cc@arm.com>
+	linux-perf-users@vger.kernel.org,
+	michal.simek@amd.com
+Subject: [PATCH] perf/arm-cmn: Support CMN-600AE
+Date: Mon, 24 Nov 2025 16:39:54 +0000
+Message-Id: <f0c6e66df6b74f073df77c00bdf9ed560ca9c703.1764002394.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251110-arm_spe_fix_truncated_flag-v2-1-a629740985cc@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 10, 2025 at 04:28:31PM +0000, Leo Yan wrote:
-> In arm_spe_perf_aux_output_begin(), if the calculation of limit fails
-> and arm_spe_pmu_next_off() returns zero, the driver misses to set the
-> PERF_HES_STOPPED flag for the event.  As a result, hwc->state does not
-> reflect the latest state, which can mislead subsequent operations.
-> 
-> Validate the limit when exiting the function: if the limit is 0,
-> that tracing is disabled, set the PERF_HES_STOPPED flag accordingly.
-> 
-> Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  drivers/perf/arm_spe_pmu.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index fa50645feddadbea5dc1e404f80f62cf5aa96fd4..fc8f908c2c3a270f2d1ae574c2badb1fbcf51484 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -597,7 +597,6 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
->  	/* Start a new aux session */
->  	buf = perf_aux_output_begin(handle, event);
->  	if (!buf) {
-> -		event->hw.state |= PERF_HES_STOPPED;
->  		/*
->  		 * We still need to clear the limit pointer, since the
->  		 * profiler might only be disabled by virtue of a fault.
-> @@ -608,15 +607,19 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
->  
->  	limit = buf->snapshot ? arm_spe_pmu_next_snapshot_off(handle)
->  			      : arm_spe_pmu_next_off(handle);
-> -	if (limit)
-> -		limit |= PMBLIMITR_EL1_E;
-> +	if (!limit)
-> +		goto out_write_limit;
+The functional safety features of CMN-600AE have little to no impact on
+the PMU relative to the base CMN-600 design, so for simplicity we can
+reasonably just treat it as the same thing. The only obvious difference
+is that the revision numbers aren't aligned, so we may hide some aliases
+for events which do actually exist, but those can still be specified via
+the underlying "type,eventid" format so it's not too big a deal.
 
-Is 'limit == 0' always indicative of an error, even in snapshot mode?
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/perf/arm-cmn.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-If __arm_spe_pmu_next_off() fails, it will call perf_aux_output_end()
-with the TRUNCATED flag set, which should then disable the event
-via arm_spe_pmu_del() and update the state there.
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index 23245352a3fc..651edd73bfcb 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -210,6 +210,7 @@ enum cmn_model {
+ enum cmn_part {
+ 	PART_CMN600 = 0x434,
+ 	PART_CMN650 = 0x436,
++	PART_CMN600AE = 0x438,
+ 	PART_CMN700 = 0x43c,
+ 	PART_CI700 = 0x43a,
+ 	PART_CMN_S3 = 0x43e,
+@@ -2266,6 +2267,9 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 	reg = readq_relaxed(cfg_region + CMN_CFGM_PERIPH_ID_01);
+ 	part = FIELD_GET(CMN_CFGM_PID0_PART_0, reg);
+ 	part |= FIELD_GET(CMN_CFGM_PID1_PART_1, reg) << 8;
++	/* 600AE is close enough that it's not really worth more complexity */
++	if (part == PART_CMN600AE)
++		part = PART_CMN600;
+ 	if (cmn->part && cmn->part != part)
+ 		dev_warn(cmn->dev,
+ 			 "Firmware binding mismatch: expected part number 0x%x, found 0x%x\n",
+-- 
+2.34.1
 
-Is that not happening?
-
-Will
