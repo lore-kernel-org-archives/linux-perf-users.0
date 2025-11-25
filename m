@@ -1,177 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22442D6619;
-	Tue, 25 Nov 2025 08:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFB92D7DF2;
+	Tue, 25 Nov 2025 08:13:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764058070; cv=none; b=lSUO7IsKjJJ/SXEy0gEI/je1mSge+iRf/cDL7nfi8BeYRS64BqYcMRWg6XehQs4TonSS+vTJUhLXufEuXpNKglUof4i5zG5yTVd74WXusAB1DrYCLa+Cfa9ASR139zIStvXt5FdNXtPxww7rkT6T9F1mYPVYILNBZIQLE48yuTs=
+	t=1764058435; cv=none; b=G1qgLiVAnYqFMQq5bpKsmPQZnxEog59ecKJwqPGMxLHtanZqHlRdRHEUhe2yU4rswlTKAYeG4PI3EhIbPkJqyE8TMOaA4XP9W51Repx+lZnehhPs7aUnuzUCxw3m8h1r+Us3L0bQ6UeNcfDaQxuXI7kmPLWG2IwlR9yelUWLQ9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764058070; c=relaxed/simple;
-	bh=C42mtGso90o4KVPb1YHqzWm9PZ+3ey0qCaJdlerJnOo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RcMHH7DNIPw+ma08gMhsKUM9hjHzg/uPU1idgKt+2xwYCcobZ6rDjVeC6f0LnIGuS3gk9WsUJGn+f0NV31V8MRyo3lpmIfsYlQEUlfrcu0DCc+3e+vNn69W8/r+pX9XJUdCm4IaHpRVFEa9R9u6ocwbdesn3ZsuH+swcMjWo24Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NrZuqA/D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764058435; c=relaxed/simple;
+	bh=5B4S9Wbk7WVGsAmTNI0yyt5e2qGMc0oyI+GmfoaHfYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aCr4WcgfypRn1FNdNGI5eOkB+3hpo9t0L5qg7xjaF9aXWUmQezE1Xyz9DEmKXC6aIXOx1LYPBCH1RzAgxWgzC2oyORP7rxHt1+KUhGR3h3Un6zktKrRzzkYIMRqI0w3Q5FpQ4WuxLMq7QJ5kxfmwCPZhDuprPlEsmeEsRewH0eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=siBTTwEx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NrZuqA/D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DFB3C16AAE;
-	Tue, 25 Nov 2025 08:07:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="siBTTwEx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12587C116D0;
+	Tue, 25 Nov 2025 08:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764058069;
-	bh=C42mtGso90o4KVPb1YHqzWm9PZ+3ey0qCaJdlerJnOo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NrZuqA/DfAJFRuPV0/+ZroVRXsWPmOiQ3wm4OcEGuiZV2cKoOKJJKX4zBUwb38/KJ
-	 fVBtlW01FvoGZiE+b/UWjuCFaIuDO1hdOE7JRVPkIjpGEO5Qv1DKaypJkmSGV4SP6Q
-	 vMynzO2gaWPf++ubv96Wbvkg8KrZDyvk6qpXSZDV3OTaOo/pa7yjE/cjSKwM0dKNPv
-	 HARgayajb6C4hz2gFyNu+b5cS65+N2/o7lpN2NYWavUU5HVvxaRcl/JmqPzgXlu5L4
-	 Ka3lLOZWKNhEbh32SRMj6eLce083nlGG8Ymi2i1y0j3Hh1Xk8m5XM1J9Dv2gUG+Pwb
-	 yc3hCstp1XnZg==
+	s=k20201202; t=1764058434;
+	bh=5B4S9Wbk7WVGsAmTNI0yyt5e2qGMc0oyI+GmfoaHfYQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=siBTTwExikwuCEzsvFoWpZ8xkIcONZ2/BERf+jiXu2XTRoiz4Na/zK/aq4gjXdUKB
+	 +9frmjXhvvKZwgGV0b3hp1b6KerXXDbRsnOkSwpZtKVhz1psafXRZFqiP4fVWwieLS
+	 L9D+bTWwlC5gTd0eTdUlV6/sJMYa3T4Eg0Q4KxkRYD7OB8kGP8ZL/dHtcLhgxev2tN
+	 FLpmZOnenKiKcsl/nM7bVGOd/UbSSc4Y6op1dFrNLF9G9nFrdT+5dJrhc9rIKxJzCJ
+	 IEuRJCdbTBPiSRjcwCud6GVjW4z4QQpygo//A0Za6bF493Y2+QtgGg264cD5grUn5q
+	 2Mi+1PPatnSRg==
+Date: Tue, 25 Nov 2025 00:13:52 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Pablo Galindo <pablogsal@gmail.com>
-Subject: [PATCH v2 2/2] perf test: Add python JIT dump test
-Date: Tue, 25 Nov 2025 00:07:47 -0800
-Message-ID: <20251125080748.461014-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.52.0.460.gd25c4c69ec-goog
-In-Reply-To: <20251125080748.461014-1-namhyung@kernel.org>
-References: <20251125080748.461014-1-namhyung@kernel.org>
+To: hupu <hupu.gm@gmail.com>
+Cc: leo.yan@arm.com, acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, irogers@google.com,
+	jolsa@kernel.org, justinstitt@google.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mark.rutland@arm.com, mingo@redhat.com, morbo@google.com,
+	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
+	peterz@infradead.org
+Subject: Re: [PATCH] perf build: Support passing extra Clang options via
+ EXTRA_BPF_FLAGS
+Message-ID: <aSVlQHJ9xcGcZULp@google.com>
+References: <CADHxFxR-8NRN0Fwj7jhD1KKACrb0PdUp1iOBKJ+xkxaNQn_tew@mail.gmail.com>
+ <20251124073445.3709-1-hupu.gm@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251124073445.3709-1-hupu.gm@gmail.com>
 
-Add a test case for the python interpreter like below so that we can
-make sure it won't break again.  To validate the effect of build-ID
-generation, it adds and removes the JIT'ed DSOs to/from the build-ID
-cache for the test.
+Hello,
 
-  $ perf test -vv jitdump
-   84: python profiling with jitdump:
-  --- start ---
-  test child forked, pid 214316
-  Run python with -Xperf_jit
-  [ perf record: Woken up 5 times to write data ]
-  [ perf record: Captured and wrote 1.180 MB /tmp/__perf_test.perf.data.XbqZNm (140 samples) ]
-  Generate JIT-ed DSOs using perf inject
-  Add JIT-ed DSOs to the build-ID cache
-  Check the symbol containing the script name
-  Found 108 matching lines
-  Remove JIT-ed DSOs from the build-ID cache
-  ---- end(0) ----
-   84: python profiling with jitdump                                   : Ok
+On Mon, Nov 24, 2025 at 03:34:45PM +0800, hupu wrote:
+> When cross-compiling perf with BPF enabled, Clang is invoked during the
+> build. Some cross-compilation environments require additional compiler
+> options, such as `--sysroot` or custom include paths.
+> 
+> This patch introduces a new Make variable, `EXTRA_BPF_FLAGS`. During BPF
+> skeleton builds, it appends user-provided options to `CLANG_OPTIONS`,
+> allowing extra Clang flags to be set without modifying Makefile.perf
+> directly.
+> 
+> Example usage:
+>     make perf ARCH="arm64" EXTRA_BPF_FLAGS="--sysroot=..."
+> 
+> Change history:
+>   v3:
+>     - Move the variable description comment to the top of Makefile.perf
+>     - Update commit message
+>   v2:
+>     - Rename EXTRA_CLANG_FLAGS to EXTRA_BPF_FLAGS
+>     - Update commit message
+>   v1:
+>     - Introduce EXTRA_CLANG_FLAGS to allow passing extra Clang options
+> 
+> Signed-off-by: hupu <hupu.gm@gmail.com>
+> ---
+>  tools/perf/Makefile.perf | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 47c906b807ef..c1a66cf3d1a7 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -35,6 +35,9 @@ include ../scripts/utilities.mak
+>  #
+>  # Define EXTRA_CFLAGS=-m64 or EXTRA_CFLAGS=-m32 as appropriate for cross-builds.
+>  #
+> +# Define EXTRA_BPF_FLAGS="--sysroot=<path>" or other custom include paths for
+> +# cross-compiling BPF skeletons
+> +#
+>  # Define EXCLUDE_EXTLIBS=-lmylib to exclude libmylib from the auto-generated
+>  # EXTLIBS.
+>  #
+> @@ -1249,6 +1252,8 @@ else
+>  	$(Q)cp "$(VMLINUX_H)" $@
+>  endif
+>  
+> +CLANG_OPTIONS += $(EXTRA_BPF_FLAGS)
 
-Cc: Pablo Galindo <pablogsal@gmail.com>
-Link: https://docs.python.org/3/howto/perf_profiling.html#how-to-work-without-frame-pointers
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v2 changes)
-* check availability of -Xperf_jit properly  (Pablo)
-* use setup_python.sh  (Ian)
-* do not use a separate script file  (Ian)
-* add cleanup function  (Ian)
+While it seems CLANG_OPTIONS is used only for BPF skeletons, I think
+it's better to add it directly to the below lines instead of adding it
+to CLANG_OPTIONS like following.
 
- tools/perf/tests/shell/jitdump-python.sh | 81 ++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
- create mode 100755 tools/perf/tests/shell/jitdump-python.sh
+> +
+>  $(SKEL_TMP_OUT)/%.bpf.o: $(OUTPUT)PERF-VERSION-FILE util/bpf_skel/perf_version.h | $(SKEL_TMP_OUT)
+>  $(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) $(SKEL_OUT)/vmlinux.h
+>  	$(QUIET_CLANG)$(CLANG) -g -O2 -fno-stack-protector --target=bpf \
 
-diff --git a/tools/perf/tests/shell/jitdump-python.sh b/tools/perf/tests/shell/jitdump-python.sh
-new file mode 100755
-index 0000000000000000..ae86203b14a22b4e
---- /dev/null
-+++ b/tools/perf/tests/shell/jitdump-python.sh
-@@ -0,0 +1,81 @@
-+#!/bin/bash
-+# python profiling with jitdump
-+# SPDX-License-Identifier: GPL-2.0
-+
-+SHELLDIR=$(dirname $0)
-+# shellcheck source=lib/setup_python.sh
-+. "${SHELLDIR}"/lib/setup_python.sh
-+
-+OUTPUT=$(${PYTHON} -Xperf_jit -c 'import os, sys; print(os.getpid(), sys.is_stack_trampoline_active())' 2> /dev/null)
-+PID=${OUTPUT% *}
-+HAS_PERF_JIT=${OUTPUT#* }
-+
-+rm -f /tmp/jit-${PID}.dump 2> /dev/null
-+if [ "${HAS_PERF_JIT}" != "True" ]; then
-+    echo "SKIP: python JIT dump is not available"
-+    exit 2
-+fi
-+
-+PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXXX)
-+
-+cleanup() {
-+    echo "Cleaning up files..."
-+    rm -f ${PERF_DATA} ${PERF_DATA}.jit /tmp/jit-${PID}.dump /tmp/jitted-${PID}-*.so 2> /dev/null
-+
-+    trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+    echo "Unexpected termination"
-+    cleanup
-+    exit 1
-+}
-+
-+trap trap_cleanup EXIT TERM INT
-+
-+echo "Run python with -Xperf_jit"
-+cat <<EOF | perf record -k 1 -g --call-graph dwarf -o "${PERF_DATA}" \
-+		 -- ${PYTHON} -Xperf_jit
-+def foo(n):
-+    result = 0
-+    for _ in range(n):
-+        result += 1
-+    return result
-+
-+def bar(n):
-+    foo(n)
-+
-+def baz(n):
-+    bar(n)
-+
-+if __name__ == "__main__":
-+    baz(1000000)
-+EOF
-+
-+# extract PID of the target process from the data
-+_PID=$(perf report -i "${PERF_DATA}" -F pid -q -g none | cut -d: -f1 -s)
-+PID=$(echo -n $_PID)  # remove newlines
-+
-+echo "Generate JIT-ed DSOs using perf inject"
-+DEBUGINFOD_URLS='' perf inject -i "${PERF_DATA}" -j -o "${PERF_DATA}.jit"
-+
-+echo "Add JIT-ed DSOs to the build-ID cache"
-+for F in /tmp/jitted-${PID}-*.so; do
-+  perf buildid-cache -a "${F}"
-+done
-+
-+echo "Check the symbol containing the function/module name"
-+NUM=$(perf report -i "${PERF_DATA}.jit" -s sym | grep -cE 'py::(foo|bar|baz):<stdin>')
-+
-+echo "Found ${NUM} matching lines"
-+
-+echo "Remove JIT-ed DSOs from the build-ID cache"
-+for F in /tmp/jitted-${PID}-*.so; do
-+  perf buildid-cache -r "${F}"
-+done
-+
-+cleanup
-+
-+if [ "${NUM}" -eq 0 ]; then
-+    exit 1
-+fi
--- 
-2.52.0.460.gd25c4c69ec-goog
+	  $(CLANG_OPTIONS) $(EXTRA_BPF_FLAGS) $(BPF_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
 
+Thanks,
+Namhyung
