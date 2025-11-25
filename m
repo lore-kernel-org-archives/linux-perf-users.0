@@ -1,95 +1,100 @@
-Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6592ED15D
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Nov 2025 13:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.193
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57677325704;
+	Tue, 25 Nov 2025 14:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764076371; cv=none; b=m/n9KGmJgF9yGzu7Hh06lif/csqgG+cZ/mmlutajkTur0smIe8u+Mx5TQI7m8rbe3LN26wMdxsungWL3AZHnuwHk9bi8KD5bMXzznAY7k0B1+v6Rj+NtxWyKbd1fvSqzIBoPG0wq+F1P+woZz4Zqy4ldN4sqQOgOLaVUlBALRfI=
+	t=1764080441; cv=none; b=q+jMRbANi488Pug+1KmJFQN2uJAW70E4zMz7y3ERILMDN8ENRRJCq5VetCvVwC+QPzAmvMPDbYMmnHmP4sBZQjXuw1d4XEWFoooEWw1wDLsRrIOO81h5dF9fhCFPa3HVlnNXOpJEVGgcdkUJCs/IREIsECkqMRiV1+M9Zp1kGos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764076371; c=relaxed/simple;
-	bh=zbyU+4bvtfH/pps4khRIFBiU+g5XtLwdwZJoF9L1pwk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nf1dK7YvwZRzxpfjk+jgHanssBSKpPJTiilE5b1JbhhN5R3guM8iMTVQuSObQq8422/kwlpckDLoe2cYAiiIxRmgpyqEhYZVPFRjN5LAIcJXLzS2hLnXHptGkqVCzkE8Hrf9iWyM5n78tS8rmSJ8w6rs+S/O7aeSE6R24kHcOoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nVRMh7qg; arc=none smtp.client-ip=209.85.160.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVRMh7qg"
-Received: by mail-qt1-f193.google.com with SMTP id d75a77b69052e-4eda26a04bfso62479951cf.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Nov 2025 05:12:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764076369; x=1764681169; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zbyU+4bvtfH/pps4khRIFBiU+g5XtLwdwZJoF9L1pwk=;
-        b=nVRMh7qgj7Au0I8kMGTgRtvBqhEZZnYrUYOADQ6iT98jjkMBytt2YMhbwidz/rGgcP
-         wH7AHnB8Iz9NW4tfqUQs5CapFEnzrVhrOMRX6mnEGZM7eT+Y90sKVHyF3PM128aqBlCc
-         ZYr5khqNdAHYstg1XT4dC+n1oWcSix6GqoJYt3nEHSUS/tB0zzejaicamUXN9wynRwte
-         fYlqK0ww8DGq/vl/3lSQdqI5S6aq2sscHxExyjlA8faopPmUKw19t4Y1yvslhBfx6wOd
-         FJji/ND4oxejCSnpWg1nuI/28wiGCO0TtxwxVq5K6Q9NziZM+g1QhFex8BOU1tD6+J68
-         QGDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764076369; x=1764681169;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=zbyU+4bvtfH/pps4khRIFBiU+g5XtLwdwZJoF9L1pwk=;
-        b=O3AEG71Qn1Pajsg6FqMAtsGe3E3gQWSnH4GgqS3wO/F4cPqWO9bIhbBNG/lwojNW9V
-         wIMFDf3oPX68+ZBqRy709b39FFoR3v64pnceSLHCvBSrjtZF6yQYp4ZIJ8AMlxd1PCV3
-         ZkpQuSCxkmBl730eHpEsnEV933dQ5D8gTYUfEs77LewyGpDJPO9Gy0NPiyLfjJ8mGrgs
-         DgbXkFLUVXVkoefTRUd2Q7tRdcTJRiDExWbRnoaea2ddqyIqaESekQizY3VfCbfqv33c
-         d4/ksEB7dO8PynJvNRDeSprH2cFQjVOygWBHa0c9KRfG1Ivzy1pWpSIM749SyLHThy7I
-         6qeg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmuCd4lq8Mtj1JHKEIj46FhwHN+TXSqPFdxgYi3hbNK4cimjgjFTLBc1KZ8Ump5sGZ8WvnUMYkBmGGsddVkPbJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyszYOnb8J2QATLgtL805xVqBCfZHkkcVZyahaJACuQ2z6/uVUK
-	lvIXN8GWhlSaEFcTC9jzvcrtPz2WFL3rwxUcMb8byNc4Wqgrspa8hF1z9OjuRk7fEJgfigD9o7w
-	tCZhC2bulN+HK1VQ1f2ybHJb0Y5QdRiQ=
-X-Gm-Gg: ASbGncvPtotPjQIUAgDGMHgjRq8p38NPFUx+Zz6b4zmCPIgQt/TrdDY3LdEdysaYrzk
-	nKkGCyeqUiRIg17RpPEVkcuMcwXvYs8d5le5KwjPtcyuYn1NWvNh4lewvNNmGxW39pdMW9PbNd8
-	O5VrIQqwGra8vNyNQCI2Ecn3t8JwByuc5R/T4htxtGupBPof/8fYMWxXtaK2zI3x3BIJVi83M65
-	5Er9RBefVBbVsfd95Lug2oIlL3D7eEadyOqYP/RBuXfD3FI+IIcwKflMMaryhfHMjJDpMg=
-X-Google-Smtp-Source: AGHT+IHGU003XEqpI5L8CyxzbhM1skfKHKtdo1c93HbYZEg3WQd5fGS6r6lx32pNu0o8tqVuhoelaaNCWrS3jQt21XY=
-X-Received: by 2002:a05:622a:1314:b0:4eb:a192:de99 with SMTP id
- d75a77b69052e-4ee5895a795mr184304681cf.76.1764076368901; Tue, 25 Nov 2025
- 05:12:48 -0800 (PST)
+	s=arc-20240116; t=1764080441; c=relaxed/simple;
+	bh=b/BnQEcMnKh6wPyN5PICy5P66y0vxLhzL7vLu1MIkQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QMbn+NqULzCeeW6sAP4y1VYdgE4LaTEppYhnMY3cB3WnsjhsDEY3izXIGc9JgISwO069hSpJq+cvCqj6kPVlgnuaDnSIriqU2hbupX3Ucwspf2MBOswtOm8BUcpcvGVnjaslNYIL91vOx49OfX+1+K9eT1sQHxnc4lzRnPonoj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 368AF168F;
+	Tue, 25 Nov 2025 06:20:31 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48B743F86F;
+	Tue, 25 Nov 2025 06:20:38 -0800 (PST)
+Date: Tue, 25 Nov 2025 14:20:36 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] perf: arm_spe: Correct setting the
+ PERF_HES_STOPPED flag
+Message-ID: <20251125142036.GE724103@e132581.arm.com>
+References: <20251110-arm_spe_fix_truncated_flag-v2-0-a629740985cc@arm.com>
+ <20251110-arm_spe_fix_truncated_flag-v2-1-a629740985cc@arm.com>
+ <aSSEXzMr1drvL2zz@willie-the-truck>
+ <20251124184815.GC724103@e132581.arm.com>
+ <aSSrrmX_nAl82GKE@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251124072310.3592-1-hupu.gm@gmail.com> <CADHxFxRX2=Mt+BGhpCU9WfAMi9rfUO2x7qLy8tEu1aiSVo39bQ@mail.gmail.com>
-In-Reply-To: <CADHxFxRX2=Mt+BGhpCU9WfAMi9rfUO2x7qLy8tEu1aiSVo39bQ@mail.gmail.com>
-From: hupu <hupu.gm@gmail.com>
-Date: Tue, 25 Nov 2025 21:12:36 +0800
-X-Gm-Features: AWmQ_bn22f4Qn_0gJqRgVQQKDEQBirV0Szt2EL_wcPjjvZwzMT7u0eJDLZT97rw
-Message-ID: <CADHxFxR=8zSCD_JJQrjUGDWz9g4u8-4qtwdsQNeanLB+TqVMHw@mail.gmail.com>
-Subject: Re: [RFC] perf build: Use self-contained headers from kernel source
- when compiling
-To: namhyung@kernel.org, leo.yan@arm.com
-Cc: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	justinstitt@google.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	morbo@google.com, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
-	peterz@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aSSrrmX_nAl82GKE@willie-the-truck>
 
-RESEND for attention.
+On Mon, Nov 24, 2025 at 07:02:06PM +0000, Will Deacon wrote:
 
-On Mon, Nov 24, 2025 at 3:51=E2=80=AFPM hupu <hupu.gm@gmail.com> wrote:
->
-> Hi All Maintainers:
->
-> The background of this PATCH is explained in the email linked below.
-> To avoid potential disagreement from submitting multiple PATCHes in a
-> single email, this email focuses solely on discussing whether to use
-> self-contained headers from the kernel source when building perf.
->
-> https://lore.kernel.org/all/20251013080609.2070555-1-hupu.gm@gmail.com/
->
-> Thanks,
-> hupu
+[...]
+
+> > > If __arm_spe_pmu_next_off() fails, it will call perf_aux_output_end()
+> > > with the TRUNCATED flag set, which should then disable the event
+> > > via arm_spe_pmu_del() and update the state there.
+> > > 
+> > > Is that not happening?
+> > 
+> > Correct.  However, this patch is not for the flow you mentioned.
+> 
+> How is it not for this flow? You're talking about:
+> 
+> arm_spe_pmu_start
+> 	=> arm_spe_perf_aux_output_begin
+> 		=> arm_spe_pmu_next_off // Returns error
+> 
+> The only way arm_spe_pmu_next_off() returns an error is if
+> __arm_spe_pmu_next_off() fails, and that's the flow I'm talking about.
+
+My bad.  Because you mentioned the TRUNCATED flag, I incorrectly assumed
+it had to be used in interrupt handler with the disable irq work.
+
+> > If an error is returned from arm_spe_pmu_next_off(), because hw.state
+> > is not set to PERF_HES_STOPPED, the caller arm_spe_pmu_start() cannot
+> > detect error properly:
+> 
+> But why isn't PERF_HES_STOPPED set by the sequence I described?
+
+Fair point.  I can confirm after settting the TRUNCATED flag,
+arm_spe_pmu_del() will be invoked to disable the trace unit and state
+will be updated to PERF_HES_STOPPED.
+
+> I have a feeling you're right, but I can't piece it together from the
+> information here.
+
+Let me explain in another way:
+
+The issue is a mismatch between the state machine and the hardware
+state.  When arm_spe_perf_aux_output_begin() detects an error and does
+not set PMBLIMITR_EL1_E, the trace unit is effectively stopped, but
+the state machine is not updated to PERF_HES_STOPPED. This causes
+callers to handle errors incorrectly [1][2].
+
+It is arguable that the disable IRQ work will eventually disable the
+trace unit and update hw.state, but the state should be updated in the
+first place by the PMU driver to notify even core layer.
+
+Thanks,
+Leo
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/arm_spe_pmu.c?//h=v6.18-rc7#n855
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/events/core.c#n2742
