@@ -1,93 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377E6226D18;
-	Tue, 25 Nov 2025 07:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE71230BD5;
+	Tue, 25 Nov 2025 08:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764056676; cv=none; b=qWcyiglVxZpa6pL8VE59kVqRcGkefhFrJckPs6e73B2LLYlv/l8jqKOdAc+m2E3EZE+r/vLW2yBYinghtdssZJ7ynBws1qpo6jxXosNXndj1VPDKBVvLSDFD1lqEwhYfvdZ60PYH6JwfDcy5vuVWb3uaM9PaE34R5XCLpaFNESk=
+	t=1764058069; cv=none; b=n/WVZbxQBs21QvO+YMGg1Pk6iRIq4J9cPhea4DZ99xWb7BSJV4/QuJCyq0kw/Gc7x5zVIz34n8lZZV9YetKnqcuxFW8/1k41d66bH67cK5EKAncKbrJ9BN3XdbDfSmR25jUU2xgmCMD+bLHESOseYktXPlXQmba3+N8yZNXPnMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764056676; c=relaxed/simple;
-	bh=Wm90iqCzTdbklOvC6Gk9dh3F9gBpqBFcbxEfjY+YBwg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WaRlvIdUkKQGAnAGmN7l/VjEnMX4tK/5qX8hsajQonHMW5MREWgQEulvWqJOH4qVmcsw1GQ7uuwihAdMUdVJc1xoY4TmErppFv80VjgTg4kaQa3VboOSy/QewrULYBFznTHFn1BBYX6secQmqVj0DxFvTpCckdXggszu4pLjc10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xs/PEYbl; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1764058069; c=relaxed/simple;
+	bh=gnK25BO6MmTaG9o7ZGaqsLRWbVERrF9peN8MVb8f3Es=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fB+s0xsHxF/08Ju61+W3knDDw4BnLkhC/IiMxtCEElbTJuNVftwxXhWphLDlvzStprvzv8qNo60XkGc0eg4lv36yYMrlyAtqdFbxZkaXtoTzoAKeoSZnWmw+b+wT9DOvxDvSqdFpMphmB+6CwpI+Mv6BI9mveVyto9jmQ1GUySk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZXiKVPx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xs/PEYbl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764056675; x=1795592675;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Wm90iqCzTdbklOvC6Gk9dh3F9gBpqBFcbxEfjY+YBwg=;
-  b=Xs/PEYblM2QHkI3FTmYQWWKFm0Jjb1OktFgfzvKZUNfOLmpGlnpUCzz3
-   SZkvUjgLBlbmSJcdK34r8zwoPChVN+cV1j0mC7SzEAFxOV/jFFbqCrqr7
-   i2LxLvn5x3SXmgxyc3+QnLc5wKPKvdwhV4JznclygAQJFp6ORLjK92Cxz
-   G0/p0Ab4gNjeO5ra5l1QzHGZrV3690y+W7shUswLt2AxAzuBeBWTIXS9G
-   nvnt1SdC1lAuywQ6cqatCxJddMktPkUS7ohm/UEv2uLBA3QJhz7c2gP4J
-   HJKT4bnlxDysbrbmd+XZfcPcccGV2r/D1nYm+EmDRncp8B4LQgn77YPyc
-   w==;
-X-CSE-ConnectionGUID: U9EG5HTmRK64ISuJ1j4cXA==
-X-CSE-MsgGUID: hqJHeZPfSX6qxJCSK9emnA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11623"; a="77178445"
-X-IronPort-AV: E=Sophos;i="6.20,224,1758610800"; 
-   d="scan'208";a="77178445"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 23:44:34 -0800
-X-CSE-ConnectionGUID: SI73HCNlRMy34c0SIjxYtg==
-X-CSE-MsgGUID: xSOymkxFTg6qhsGY7ffvCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,224,1758610800"; 
-   d="scan'208";a="229845163"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.213]) ([10.124.240.213])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 23:44:28 -0800
-Message-ID: <e224b118-6595-4f03-8aad-862e47fde5fa@linux.intel.com>
-Date: Tue, 25 Nov 2025 15:44:25 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZXiKVPx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3836C4CEF1;
+	Tue, 25 Nov 2025 08:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764058069;
+	bh=gnK25BO6MmTaG9o7ZGaqsLRWbVERrF9peN8MVb8f3Es=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QZXiKVPx+L+X++73fYp5a/t5efivq5GHETVXIm3aEH0bdliSyFfdBlrbQbalczPIl
+	 4uGRdEG33BTqldPPuYzLd1abEOKz+XhJUgSHJKuXP+m42XwHm4MiAQO1/7WdlqEadl
+	 jdWjki3uWuGTZzpZADfFISbl8Cuaa40BhI292Dna6ZNR5Hvgczi3SbdvOLSkYiAWTu
+	 g6A+i+iNQsRCStGTpazDVjEXBt59AHfCukkYUMJIhiKHg+QMjPzGICjFH11rGOwrE1
+	 5i+vTITQuW5REO/aWXoAmu3VgYXkG4xqlp6wqhW8OhURE552lDQrruFZYPB2DRSfj3
+	 1YX6SSToiU3yw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Eric Biggers <ebiggers@kernel.org>,
+	Pablo Galindo <pablogsal@gmail.com>,
+	Fangrui Song <maskray@sourceware.org>
+Subject: [PATCH v2 1/2] perf jitdump: Add sym/str-tables to build-ID generation
+Date: Tue, 25 Nov 2025 00:07:46 -0800
+Message-ID: <20251125080748.461014-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.52.0.460.gd25c4c69ec-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] perf/x86: Add Airmont NP
-To: Martin Schiller <ms@dev.tdt.de>, tony.luck@intel.com,
- peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, james.clark@linaro.org, tglx@linutronix.de,
- bp@alien8.de, dave.hansen@linux.intel.com
-Cc: x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, fe@dev.tdt.de
-References: <20251124074846.9653-1-ms@dev.tdt.de>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251124074846.9653-1-ms@dev.tdt.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+It was reported that python backtrace with JIT dump was broken after the
+change to built-in SHA-1 implementation.  It seems python generates the
+same JIT code for each function.  They will become separate DSOs but the
+contents are the same.  Only difference is in the symbol name.
 
-On 11/24/2025 3:48 PM, Martin Schiller wrote:
-> From the perspective of Intel cstate, PMU and MSR the Airmont NP
-> (aka Lightning Mountain) is identical to Airmont.
->
-> This changes are taken from patched kernel sources of the MaxLinear SDK
-> which can be found at https://github.com/maxlinear/linux
->
-> Martin Schiller (3):
->   perf/x86/msr: Add Airmont NP
->   perf/x86/intel: Add Airmont NP
->   perf/x86/cstate: Add Airmont NP
->
->  arch/x86/events/intel/core.c   | 1 +
->  arch/x86/events/intel/cstate.c | 1 +
->  arch/x86/events/msr.c          | 1 +
->  3 files changed, 3 insertions(+)
+But this caused a problem that every JIT'ed DSOs will have the same
+build-ID which makes perf confused.  And it resulted in no python
+symbols (from JIT) in the output.
 
-The whole patch-set looks good to me.
+Looking back at the original code before the conversion, it used the
+load_addr as well as the code section to distinguish each DSO.  But it'd
+be better to use contents of symtab and strtab instead as it aligns with
+some linker behaviors.
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+This patch adds a buffer to save all the contents in a single place for
+SHA-1 calculation.  Probably we need to add sha1_update() or similar to
+update the existing hash value with different contents and use it here.
+But it's out of scope for this change and I'd like something that can be
+backported to the stable trees easily.
 
+Fixes: e3f612c1d8f3945b ("perf genelf: Remove libcrypto dependency and use built-in sha1()")
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Pablo Galindo <pablogsal@gmail.com>
+Cc: Fangrui Song <maskray@sourceware.org>
+Link: https://github.com/python/cpython/issues/139544
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+v2) use symtab/strtab instead of load_addr
+
+ tools/perf/util/genelf.c | 32 ++++++++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
+index 591548b10e34ef6a..a1cd5196f4ec8f88 100644
+--- a/tools/perf/util/genelf.c
++++ b/tools/perf/util/genelf.c
+@@ -173,6 +173,8 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
+ 	Elf_Shdr *shdr;
+ 	uint64_t eh_frame_base_offset;
+ 	char *strsym = NULL;
++	void *build_id_data = NULL, *tmp;
++	int build_id_data_len;
+ 	int symlen;
+ 	int retval = -1;
+ 
+@@ -251,6 +253,14 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
+ 	shdr->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
+ 	shdr->sh_entsize = 0;
+ 
++	build_id_data = malloc(csize);
++	if (build_id_data == NULL) {
++		warnx("cannot allocate build-id data");
++		goto error;
++	}
++	memcpy(build_id_data, code, csize);
++	build_id_data_len = csize;
++
+ 	/*
+ 	 * Setup .eh_frame_hdr and .eh_frame
+ 	 */
+@@ -334,6 +344,15 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
+ 	shdr->sh_entsize = sizeof(Elf_Sym);
+ 	shdr->sh_link = unwinding ? 6 : 4; /* index of .strtab section */
+ 
++	tmp = realloc(build_id_data, build_id_data_len + sizeof(symtab));
++	if (tmp == NULL) {
++		warnx("cannot allocate build-id data");
++		goto error;
++	}
++	memcpy(tmp + build_id_data_len, symtab, sizeof(symtab));
++	build_id_data = tmp;
++	build_id_data_len += sizeof(symtab);
++
+ 	/*
+ 	 * setup symbols string table
+ 	 * 2 = 1 for 0 in 1st entry, 1 for the 0 at end of symbol for 2nd entry
+@@ -376,6 +395,15 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
+ 	shdr->sh_flags = 0;
+ 	shdr->sh_entsize = 0;
+ 
++	tmp = realloc(build_id_data, build_id_data_len + symlen);
++	if (tmp == NULL) {
++		warnx("cannot allocate build-id data");
++		goto error;
++	}
++	memcpy(tmp + build_id_data_len, strsym, symlen);
++	build_id_data = tmp;
++	build_id_data_len += symlen;
++
+ 	/*
+ 	 * setup build-id section
+ 	 */
+@@ -394,7 +422,7 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
+ 	/*
+ 	 * build-id generation
+ 	 */
+-	sha1(code, csize, bnote.build_id);
++	sha1(build_id_data, build_id_data_len, bnote.build_id);
+ 	bnote.desc.namesz = sizeof(bnote.name); /* must include 0 termination */
+ 	bnote.desc.descsz = sizeof(bnote.build_id);
+ 	bnote.desc.type   = NT_GNU_BUILD_ID;
+@@ -439,7 +467,7 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
+ 	(void)elf_end(e);
+ 
+ 	free(strsym);
+-
++	free(build_id_data);
+ 
+ 	return retval;
+ }
+-- 
+2.52.0.460.gd25c4c69ec-goog
 
