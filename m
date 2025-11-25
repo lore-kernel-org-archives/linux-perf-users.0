@@ -1,97 +1,160 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA3BD1487E9;
-	Tue, 25 Nov 2025 16:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D89F329C69
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Nov 2025 17:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764088766; cv=none; b=PNa0x6oxl8r4QgXFSYNh215LbMaZzJmQHvCRHLtFC10zqFLkBFS9fYCdwq6Su3RDFK8SUxPk1P7C2NUYsWA5ealZO8+DFV/tabOSXe8Crk4tPCqS9HWjDRuHhCzh4/4fpIb8QJDRhSPI1aEiXCII4OLmP/kmGpPzdsUu4vnqdzI=
+	t=1764090500; cv=none; b=ZgPe5CoL+bBsr703T6FFhj8HcFwLLFTEpGgB7z9Gy6FbabsTGs2MHD4BLnFvRkPCrDAAO77Rx0jLjC0lFKLI6BWhuWUkJ9E9GxWe6FLPy91qrk/FpG2kmef+Wu98iyKIvVfImLLdTv/Z3aFcpdNtLmulJF5vZ1sN4t43exjnkNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764088766; c=relaxed/simple;
-	bh=oTCNH0b1Y7GDCSwRRWldwuA6nWMqLUNaLlTqmBFV9yU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h1fvz6NzWkXAAymA+i4aCV7rgcvbzxHkJi8L9KV/Py5Guu+W9czRb3Tv9J+a2/Mh8N5Ra+GiL+LFV9ygGpzc70qqpKJYbfk2Tm7LFFynSK/LwQdtLrgnlw6KH1hIUFJkgO54NxrK37KVGfdwZAfU4R6pbX2yHskEflFB4PcFhyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B68DA168F;
-	Tue, 25 Nov 2025 08:39:15 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9DD83F6A8;
-	Tue, 25 Nov 2025 08:39:22 -0800 (PST)
-Date: Tue, 25 Nov 2025 16:39:20 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: hupu <hupu.gm@gmail.com>
-Cc: namhyung@kernel.org, acme@kernel.org, adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com, irogers@google.com,
-	jolsa@kernel.org, justinstitt@google.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com, mingo@redhat.com, morbo@google.com,
-	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
-	peterz@infradead.org
-Subject: Re: [RFC] perf build: Use self-contained headers from kernel source
- when compiling
-Message-ID: <20251125163920.GG724103@e132581.arm.com>
-References: <20251124072310.3592-1-hupu.gm@gmail.com>
+	s=arc-20240116; t=1764090500; c=relaxed/simple;
+	bh=Ws/YNKakph/oNkC8T2Z0oK5lQ8Qe0+L4yEIQYy1pOV8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=R3TjgTs1eihXV4LbaYFXTwwM/kylU4GpsxSiQ+g2I1KKq+IWmbNJcH4ucMBC6mk8RabWxdxHlCec61LssMFn+cr9RvfJZC3UTlJqhMO0JZ9+FVnSEz/lclex8GE1iqDze4x+KS+hI5eO+d9HW/vaKbkRUpS+EaZSSLjM+EeVNk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hyEz2jcm; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hyEz2jcm"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-34377900dbcso12698283a91.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Nov 2025 09:08:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764090498; x=1764695298; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=y4ndUQJXblyMVIEo31GQ2aPBJsTj4kLS2trQiSNmxdk=;
+        b=hyEz2jcmDG2VZ0SowrKZ1f5pZ//OeUIlgQGcTulUikVnNnF9oimfdIYuuQ8isRblV9
+         uZGZOMxYsRwtRNXgEXYGXTQw3yTFxWDX43viymf507u157LsbHuAklGaWSyEu3g8DHAc
+         usxaUz3Q8CzdMWkxbGpaAa7Q1UcSjyQkvOnB64zhiQihP2FcGEXsraebkPXnaDN3sNX9
+         EfUcOxWEjX60n3P3ODo9JGA+7SjDWJuzMxFos8cSf5iHGVLE1/QPWXw/Wn3Z2AvsmXKG
+         zmogkg2e3zLt1swH02vuKUSJrp+gjOHIJ4RhR19A5JXFkd9M9R4JQbbKEta888+07ko6
+         5WXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764090498; x=1764695298;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y4ndUQJXblyMVIEo31GQ2aPBJsTj4kLS2trQiSNmxdk=;
+        b=luX4NATGoOnQl6OV4uUps67DHAtjhONJu2dL5H9XE31yyHxSYpc8DhcDUDxjSR9Ye6
+         8jLmgIBNLSx5BurK4KWQY/Y/if8ufqzVSxn1RmfgWiBeCnx2dLKm3LNlPfoOx6m3X06K
+         RLNriYrSwK7clXEdyw5I/DnG9tmc0oBuREMdVJ4igikG5SBIs5jJKqPT8kI5Ouz4wyOB
+         VkNx0KM8gelEkic70/Mx93H5uJBRjwLVfqcCOHJ8TSy0ciEdUWXbhPTH5+IfXuUqWdkJ
+         dQDst4Tsw12iltVRLkk7ftjKBiolj30ZRcSZA5hJ/TMG0JOSyqgsznx7YcwfSS35Xh5D
+         xABg==
+X-Forwarded-Encrypted: i=1; AJvYcCXt8X0iDNz1OPfBztAAMDOzm0wMlL8btvtK4Jl/tX65befAclrqoEqKcmYDAQVwx5DkD+SlR0DyqgPJ+SWeYlwg@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvKiRw5ZS8E4s+pW315v/x58Ey0zO2l7gZRFYYwmrLJGkRz+d5
+	0Utv/fKXww10Zf2tnwv6EBtpBYdZ2eO+5wJ2P6gFnNswNppsJUjP7sDqtSFxDeoAUHJTqYtAeFU
+	+WOdWGg==
+X-Google-Smtp-Source: AGHT+IFzDAUOZTDNFOssfEjC4490DRPTOVZZ7CJwR5gD19Yg3yMCKcUxEwLwt1d5WA+HAajf5nh9jS9CJiQ=
+X-Received: from pjbpw1.prod.google.com ([2002:a17:90b:2781:b0:33b:c211:1fa9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:384f:b0:341:8c8e:38b5
+ with SMTP id 98e67ed59e1d1-34733f3e483mr14061440a91.25.1764090498218; Tue, 25
+ Nov 2025 09:08:18 -0800 (PST)
+Date: Tue, 25 Nov 2025 09:08:16 -0800
+In-Reply-To: <83067602-325a-4655-a1b7-e6bd6a31eed4@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251124072310.3592-1-hupu.gm@gmail.com>
+Mime-Version: 1.0
+References: <20250806195706.1650976-1-seanjc@google.com> <20250806195706.1650976-29-seanjc@google.com>
+ <aSUK8FuWT4lpMP3F@google.com> <83067602-325a-4655-a1b7-e6bd6a31eed4@linux.intel.com>
+Message-ID: <aSXigAQznhuxZmy7@google.com>
+Subject: Re: [PATCH v5 28/44] KVM: x86/pmu: Load/save GLOBAL_CTRL via
+ entry/exit fields for mediated PMU
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>, 
+	Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Nov 24, 2025 at 03:23:10PM +0800, hupu wrote:
-> When building perf, switch to using the self-contained headers provided
-> in the kernel source tree to avoid build failures caused by missing
-> architecture-specific headers. For example, the build may fail with
-> errors like:
+On Tue, Nov 25, 2025, Dapeng Mi wrote:
+> On 11/25/2025 9:48 AM, Sean Christopherson wrote:
+> >> +	if (host_pmu->version < 4 || !(host_perf_cap & PERF_CAP_FW_WRITES))
+> >> +		return false;
+> >> +
+> >> +	/*
+> >> +	 * All CPUs that support a mediated PMU are expected to support loading
+> >> +	 * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
+> >> +	 */
+> >> +	if (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
+> >> +			 !cpu_has_save_perf_global_ctrl()))
+> >> +		return false;
+> > And so this WARN fires due to cpu_has_save_perf_global_ctrl() being false.  The
+> > bad changelog is mine, but the code isn't entirely my fault.  I did suggest the
+> > WARN in v3[1], probably because I forgot when PMU v4 was introduced and no one
+> > corrected me.
+> >
+> > v4 of the series[2] then made cpu_has_save_perf_global_ctrl() a hard requirement,
+> > based on my miguided feedback.
+> >
+> >    * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
+> >      save/retore list support for GLOBAL_CTRL, thus the support of mediated
+> >      vPMU is constrained to SapphireRapids and later CPUs on Intel side.
+> >
+> > Doubly frustrating is that this was discussed in the original RFC, where Jim
+> > pointed out[3] that requiring VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL would prevent
+> > enabling the mediated PMU on Skylake+, and I completely forgot that conversation
+> > by the time v3 of the series rolled around :-(
 > 
-> /usr/include/linux/ioctl.h:5:10: fatal error: 'asm/ioctl.h' file not
-> found
->     5 | #include <asm/ioctl.h>
->       |          ^~~~~~~~~~~~~
+> VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL is introduced from SPR and later. I
+> remember the original requirements includes to support Skylake and Icelake,
+> but I ever thought there were some offline sync and the requirement changed...
+
+Two things:
+
+ 1) Upstream's "requirements" are not the same as Google's requirements (or those
+    of any company/individual).  Upstream most definitely is influenced by the
+    needs and desires of end users, but ultimately the decision to do something
+    (or not) is one that needs to be made by the upstream community.
+
+ 2) Decisions made off-list need to be summarized and communicated on-list,
+    especially in cases like this where it's a relatively minor detail in a
+    large series/feature, and thus easy to overlook.
+
+I'll follow-up internally to make sure these points are well-understood by Google
+folks as well (at least, those working on KVM).
+
+> My bad,
+
+Eh, this was a group "effort".  I'm as much to blame as anyone else.
+
+> I should double confirm this at then.
+
+No need, as above, Google's requirements (assuming the requirements you're referring
+to are coming from Google people) are effectively just one data point.  At this
+point, I want to drive the decision to support Sylake+ (or not) purely through
+discussion of upstream patches.
+
+> > As mentioned in the discussion with Jim, _if_ PMU v4 was introduced with ICX (or
+> > later), then I'd be in favor of making VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL a hard
+> > requirement.  But losing supporting Skylake+ is a bit much.
+> >
+> > There are a few warts with nVMX's use of the auto-store list that need to be
+> > cleaned up, but on the plus side it's also a good excuse to clean up
+> > {add,clear}_atomic_switch_msr(), which have accumulated some cruft and quite a
+> > bit of duplicate code.  And while I still dislike using the auto-store list, the
+> > code isn't as ugly as it was back in v3 because we _can_ make the "load" VMCS
+> > controls mandatory without losing support for any CPUs (they predate PMU v4).
 > 
-> This issue may occur because system-installed headers are incomplete,
-> incompatible with the kernel version being built, or the corresponding
-> architecture-specific headers are not installed at all. Using the
-> self-contained headers from the kernel source ensures a consistent and
-> compatible build environment.
-> 
-> Signed-off-by: hupu <hupu.gm@gmail.com>
-> ---
->  tools/perf/Makefile.perf | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 47c906b807ef..eaccaae87e3c 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -1202,7 +1202,9 @@ endif
->  
->  CLANG_OPTIONS = -Wall
->  CLANG_SYS_INCLUDES = $(call get_sys_includes,$(CLANG),$(CLANG_TARGET_ARCH))
-> -BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES)
-> +KHDR_INCLUDES := $(abspath $(OUTPUT)/../../usr/include)
+> Yes, xxx_atomic_switch_msr() helpers need to be cleaned up and optimized. I
+> suppose we can have an independent patch-set to clean up and support
+> global_ctrl with auto-store list for Skylake and Icelake.
 
-This doesn't work if use the commands:
-
-  make -j `nproc` Image O=$OUT
-  make headers_install O=$OUT
-  make O=$OUT -C tools/perf VF=1 CORESIGHT=1 DEBUG=1
-
-Maybe it is good to search possible paths:
-
-  $(abspath ../../usr/include)    => Build in local folder
-  $(abspath $(OUTPUT)usr/include) => Build in a specified folder
-
-> +BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE) \
-> +		-I$(KHDR_INCLUDES) $(CLANG_SYS_INCLUDES)
-
-Why the issue only happens for eBPF skel build but not for perf binary
-build?  As I said in another reply, I'd consolidate options for both
-cases.
-
-Thanks,
-Leo
+I have the code written (I wanted to see how much complexity it would add before
+re-opening this discussion).  My plan is to put the Skylake+ support at the end
+of the series, not a separate series, so that it can be reviewed in one shot.
+E.g. if we can make a change in the "main" series that would simplify Skylake+
+support, then I'd prefer to find and implement any such change right away.
