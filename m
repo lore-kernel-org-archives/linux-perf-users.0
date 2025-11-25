@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE71230BD5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22442D6619;
 	Tue, 25 Nov 2025 08:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764058069; cv=none; b=n/WVZbxQBs21QvO+YMGg1Pk6iRIq4J9cPhea4DZ99xWb7BSJV4/QuJCyq0kw/Gc7x5zVIz34n8lZZV9YetKnqcuxFW8/1k41d66bH67cK5EKAncKbrJ9BN3XdbDfSmR25jUU2xgmCMD+bLHESOseYktXPlXQmba3+N8yZNXPnMk=
+	t=1764058070; cv=none; b=lSUO7IsKjJJ/SXEy0gEI/je1mSge+iRf/cDL7nfi8BeYRS64BqYcMRWg6XehQs4TonSS+vTJUhLXufEuXpNKglUof4i5zG5yTVd74WXusAB1DrYCLa+Cfa9ASR139zIStvXt5FdNXtPxww7rkT6T9F1mYPVYILNBZIQLE48yuTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764058069; c=relaxed/simple;
-	bh=gnK25BO6MmTaG9o7ZGaqsLRWbVERrF9peN8MVb8f3Es=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fB+s0xsHxF/08Ju61+W3knDDw4BnLkhC/IiMxtCEElbTJuNVftwxXhWphLDlvzStprvzv8qNo60XkGc0eg4lv36yYMrlyAtqdFbxZkaXtoTzoAKeoSZnWmw+b+wT9DOvxDvSqdFpMphmB+6CwpI+Mv6BI9mveVyto9jmQ1GUySk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZXiKVPx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764058070; c=relaxed/simple;
+	bh=C42mtGso90o4KVPb1YHqzWm9PZ+3ey0qCaJdlerJnOo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RcMHH7DNIPw+ma08gMhsKUM9hjHzg/uPU1idgKt+2xwYCcobZ6rDjVeC6f0LnIGuS3gk9WsUJGn+f0NV31V8MRyo3lpmIfsYlQEUlfrcu0DCc+3e+vNn69W8/r+pX9XJUdCm4IaHpRVFEa9R9u6ocwbdesn3ZsuH+swcMjWo24Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NrZuqA/D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZXiKVPx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3836C4CEF1;
-	Tue, 25 Nov 2025 08:07:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NrZuqA/D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DFB3C16AAE;
+	Tue, 25 Nov 2025 08:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1764058069;
-	bh=gnK25BO6MmTaG9o7ZGaqsLRWbVERrF9peN8MVb8f3Es=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QZXiKVPx+L+X++73fYp5a/t5efivq5GHETVXIm3aEH0bdliSyFfdBlrbQbalczPIl
-	 4uGRdEG33BTqldPPuYzLd1abEOKz+XhJUgSHJKuXP+m42XwHm4MiAQO1/7WdlqEadl
-	 jdWjki3uWuGTZzpZADfFISbl8Cuaa40BhI292Dna6ZNR5Hvgczi3SbdvOLSkYiAWTu
-	 g6A+i+iNQsRCStGTpazDVjEXBt59AHfCukkYUMJIhiKHg+QMjPzGICjFH11rGOwrE1
-	 5i+vTITQuW5REO/aWXoAmu3VgYXkG4xqlp6wqhW8OhURE552lDQrruFZYPB2DRSfj3
-	 1YX6SSToiU3yw==
+	bh=C42mtGso90o4KVPb1YHqzWm9PZ+3ey0qCaJdlerJnOo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NrZuqA/DfAJFRuPV0/+ZroVRXsWPmOiQ3wm4OcEGuiZV2cKoOKJJKX4zBUwb38/KJ
+	 fVBtlW01FvoGZiE+b/UWjuCFaIuDO1hdOE7JRVPkIjpGEO5Qv1DKaypJkmSGV4SP6Q
+	 vMynzO2gaWPf++ubv96Wbvkg8KrZDyvk6qpXSZDV3OTaOo/pa7yjE/cjSKwM0dKNPv
+	 HARgayajb6C4hz2gFyNu+b5cS65+N2/o7lpN2NYWavUU5HVvxaRcl/JmqPzgXlu5L4
+	 Ka3lLOZWKNhEbh32SRMj6eLce083nlGG8Ymi2i1y0j3Hh1Xk8m5XM1J9Dv2gUG+Pwb
+	 yc3hCstp1XnZg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,13 +36,13 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Eric Biggers <ebiggers@kernel.org>,
-	Pablo Galindo <pablogsal@gmail.com>,
-	Fangrui Song <maskray@sourceware.org>
-Subject: [PATCH v2 1/2] perf jitdump: Add sym/str-tables to build-ID generation
-Date: Tue, 25 Nov 2025 00:07:46 -0800
-Message-ID: <20251125080748.461014-1-namhyung@kernel.org>
+	Pablo Galindo <pablogsal@gmail.com>
+Subject: [PATCH v2 2/2] perf test: Add python JIT dump test
+Date: Tue, 25 Nov 2025 00:07:47 -0800
+Message-ID: <20251125080748.461014-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.52.0.460.gd25c4c69ec-goog
+In-Reply-To: <20251125080748.461014-1-namhyung@kernel.org>
+References: <20251125080748.461014-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,116 +51,127 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It was reported that python backtrace with JIT dump was broken after the
-change to built-in SHA-1 implementation.  It seems python generates the
-same JIT code for each function.  They will become separate DSOs but the
-contents are the same.  Only difference is in the symbol name.
+Add a test case for the python interpreter like below so that we can
+make sure it won't break again.  To validate the effect of build-ID
+generation, it adds and removes the JIT'ed DSOs to/from the build-ID
+cache for the test.
 
-But this caused a problem that every JIT'ed DSOs will have the same
-build-ID which makes perf confused.  And it resulted in no python
-symbols (from JIT) in the output.
+  $ perf test -vv jitdump
+   84: python profiling with jitdump:
+  --- start ---
+  test child forked, pid 214316
+  Run python with -Xperf_jit
+  [ perf record: Woken up 5 times to write data ]
+  [ perf record: Captured and wrote 1.180 MB /tmp/__perf_test.perf.data.XbqZNm (140 samples) ]
+  Generate JIT-ed DSOs using perf inject
+  Add JIT-ed DSOs to the build-ID cache
+  Check the symbol containing the script name
+  Found 108 matching lines
+  Remove JIT-ed DSOs from the build-ID cache
+  ---- end(0) ----
+   84: python profiling with jitdump                                   : Ok
 
-Looking back at the original code before the conversion, it used the
-load_addr as well as the code section to distinguish each DSO.  But it'd
-be better to use contents of symtab and strtab instead as it aligns with
-some linker behaviors.
-
-This patch adds a buffer to save all the contents in a single place for
-SHA-1 calculation.  Probably we need to add sha1_update() or similar to
-update the existing hash value with different contents and use it here.
-But it's out of scope for this change and I'd like something that can be
-backported to the stable trees easily.
-
-Fixes: e3f612c1d8f3945b ("perf genelf: Remove libcrypto dependency and use built-in sha1()")
-Cc: Eric Biggers <ebiggers@kernel.org>
 Cc: Pablo Galindo <pablogsal@gmail.com>
-Cc: Fangrui Song <maskray@sourceware.org>
-Link: https://github.com/python/cpython/issues/139544
+Link: https://docs.python.org/3/howto/perf_profiling.html#how-to-work-without-frame-pointers
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
-v2) use symtab/strtab instead of load_addr
+v2 changes)
+* check availability of -Xperf_jit properly  (Pablo)
+* use setup_python.sh  (Ian)
+* do not use a separate script file  (Ian)
+* add cleanup function  (Ian)
 
- tools/perf/util/genelf.c | 32 ++++++++++++++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
+ tools/perf/tests/shell/jitdump-python.sh | 81 ++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+ create mode 100755 tools/perf/tests/shell/jitdump-python.sh
 
-diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-index 591548b10e34ef6a..a1cd5196f4ec8f88 100644
---- a/tools/perf/util/genelf.c
-+++ b/tools/perf/util/genelf.c
-@@ -173,6 +173,8 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
- 	Elf_Shdr *shdr;
- 	uint64_t eh_frame_base_offset;
- 	char *strsym = NULL;
-+	void *build_id_data = NULL, *tmp;
-+	int build_id_data_len;
- 	int symlen;
- 	int retval = -1;
- 
-@@ -251,6 +253,14 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
- 	shdr->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
- 	shdr->sh_entsize = 0;
- 
-+	build_id_data = malloc(csize);
-+	if (build_id_data == NULL) {
-+		warnx("cannot allocate build-id data");
-+		goto error;
-+	}
-+	memcpy(build_id_data, code, csize);
-+	build_id_data_len = csize;
+diff --git a/tools/perf/tests/shell/jitdump-python.sh b/tools/perf/tests/shell/jitdump-python.sh
+new file mode 100755
+index 0000000000000000..ae86203b14a22b4e
+--- /dev/null
++++ b/tools/perf/tests/shell/jitdump-python.sh
+@@ -0,0 +1,81 @@
++#!/bin/bash
++# python profiling with jitdump
++# SPDX-License-Identifier: GPL-2.0
 +
- 	/*
- 	 * Setup .eh_frame_hdr and .eh_frame
- 	 */
-@@ -334,6 +344,15 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
- 	shdr->sh_entsize = sizeof(Elf_Sym);
- 	shdr->sh_link = unwinding ? 6 : 4; /* index of .strtab section */
- 
-+	tmp = realloc(build_id_data, build_id_data_len + sizeof(symtab));
-+	if (tmp == NULL) {
-+		warnx("cannot allocate build-id data");
-+		goto error;
-+	}
-+	memcpy(tmp + build_id_data_len, symtab, sizeof(symtab));
-+	build_id_data = tmp;
-+	build_id_data_len += sizeof(symtab);
++SHELLDIR=$(dirname $0)
++# shellcheck source=lib/setup_python.sh
++. "${SHELLDIR}"/lib/setup_python.sh
 +
- 	/*
- 	 * setup symbols string table
- 	 * 2 = 1 for 0 in 1st entry, 1 for the 0 at end of symbol for 2nd entry
-@@ -376,6 +395,15 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
- 	shdr->sh_flags = 0;
- 	shdr->sh_entsize = 0;
- 
-+	tmp = realloc(build_id_data, build_id_data_len + symlen);
-+	if (tmp == NULL) {
-+		warnx("cannot allocate build-id data");
-+		goto error;
-+	}
-+	memcpy(tmp + build_id_data_len, strsym, symlen);
-+	build_id_data = tmp;
-+	build_id_data_len += symlen;
++OUTPUT=$(${PYTHON} -Xperf_jit -c 'import os, sys; print(os.getpid(), sys.is_stack_trampoline_active())' 2> /dev/null)
++PID=${OUTPUT% *}
++HAS_PERF_JIT=${OUTPUT#* }
 +
- 	/*
- 	 * setup build-id section
- 	 */
-@@ -394,7 +422,7 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
- 	/*
- 	 * build-id generation
- 	 */
--	sha1(code, csize, bnote.build_id);
-+	sha1(build_id_data, build_id_data_len, bnote.build_id);
- 	bnote.desc.namesz = sizeof(bnote.name); /* must include 0 termination */
- 	bnote.desc.descsz = sizeof(bnote.build_id);
- 	bnote.desc.type   = NT_GNU_BUILD_ID;
-@@ -439,7 +467,7 @@ jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
- 	(void)elf_end(e);
- 
- 	free(strsym);
--
-+	free(build_id_data);
- 
- 	return retval;
- }
++rm -f /tmp/jit-${PID}.dump 2> /dev/null
++if [ "${HAS_PERF_JIT}" != "True" ]; then
++    echo "SKIP: python JIT dump is not available"
++    exit 2
++fi
++
++PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXXX)
++
++cleanup() {
++    echo "Cleaning up files..."
++    rm -f ${PERF_DATA} ${PERF_DATA}.jit /tmp/jit-${PID}.dump /tmp/jitted-${PID}-*.so 2> /dev/null
++
++    trap - EXIT TERM INT
++}
++
++trap_cleanup() {
++    echo "Unexpected termination"
++    cleanup
++    exit 1
++}
++
++trap trap_cleanup EXIT TERM INT
++
++echo "Run python with -Xperf_jit"
++cat <<EOF | perf record -k 1 -g --call-graph dwarf -o "${PERF_DATA}" \
++		 -- ${PYTHON} -Xperf_jit
++def foo(n):
++    result = 0
++    for _ in range(n):
++        result += 1
++    return result
++
++def bar(n):
++    foo(n)
++
++def baz(n):
++    bar(n)
++
++if __name__ == "__main__":
++    baz(1000000)
++EOF
++
++# extract PID of the target process from the data
++_PID=$(perf report -i "${PERF_DATA}" -F pid -q -g none | cut -d: -f1 -s)
++PID=$(echo -n $_PID)  # remove newlines
++
++echo "Generate JIT-ed DSOs using perf inject"
++DEBUGINFOD_URLS='' perf inject -i "${PERF_DATA}" -j -o "${PERF_DATA}.jit"
++
++echo "Add JIT-ed DSOs to the build-ID cache"
++for F in /tmp/jitted-${PID}-*.so; do
++  perf buildid-cache -a "${F}"
++done
++
++echo "Check the symbol containing the function/module name"
++NUM=$(perf report -i "${PERF_DATA}.jit" -s sym | grep -cE 'py::(foo|bar|baz):<stdin>')
++
++echo "Found ${NUM} matching lines"
++
++echo "Remove JIT-ed DSOs from the build-ID cache"
++for F in /tmp/jitted-${PID}-*.so; do
++  perf buildid-cache -r "${F}"
++done
++
++cleanup
++
++if [ "${NUM}" -eq 0 ]; then
++    exit 1
++fi
 -- 
 2.52.0.460.gd25c4c69ec-goog
 
