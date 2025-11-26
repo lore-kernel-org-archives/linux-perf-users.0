@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82594C9D;
-	Wed, 26 Nov 2025 06:38:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B017314D35;
+	Wed, 26 Nov 2025 06:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764139131; cv=none; b=TFKEA+LJ86ypftJ628vwCz49ODi3G2ggGdXXPjdBiUFvj37bo2RVJguyISEPF8hQfu18P/bQPfIqVVWZDokaeaSeGn6hOwNzBK4C5egzz7xOmetQwH1DXB0n5td2NCLUHF5hpqk2b2IVesy96Ew5sxdH/CRNpbnx7wP0ck3eMAY=
+	t=1764140317; cv=none; b=txUI6D+WmK6olzPYmsQqIRVPyTsBynZEONleAKN1Aq0hkgbvVwFjtMm+PdkQKodb+Bva1gH7OC8DwqbBttndTCPjPO5ZZHoRzian6S4kocyJhgS82rQ6F0oJO7yQwYlNQvOD2LOHShvuZq29HTyJ28TRL0/Hh4tDkRvilOHGLIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764139131; c=relaxed/simple;
-	bh=wR30lNo0nwD9x0Dn3+l/MmIF3m2FG6nAAz2bzg9VC/E=;
+	s=arc-20240116; t=1764140317; c=relaxed/simple;
+	bh=lWeRxaX4+VvnMpzF+TCIIN+QKdPRglpgu651nre//GE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iw4Ln/Qef0KXqNwVzFEA+rBBnKY09DJH4dAk9azl7z8IIRzrcMtRMfmc5bfwZYMwuxkDY2h3TA8ZZOTich18fRsBSRts0dCMsRMdzumOY40YlXSv44N5a3ZdoxOjhDcc2Cyn/l1sCRUYZvywdFmX+zBn+/qEEvxRUfe1vz6Neec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTyifArp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qJNfu1irIARqYwCNJGlFVlfH4LQlIUPjBRJ+kH3YdQmAkd4lBFgmDl8wNwddy9w24nwfDSp5xsRAY2gb7pPMNfYYo3+jfFCiOucyoCami0Ik57E70yEA46cWhRTrgJIvmZtMLDNbzjWw/GlFSwNCpgXc+UTlC90lSMDyNwIfmg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DSc1p9RA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTyifArp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A278AC113D0;
-	Wed, 26 Nov 2025 06:38:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DSc1p9RA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 036B5C116B1;
+	Wed, 26 Nov 2025 06:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764139131;
-	bh=wR30lNo0nwD9x0Dn3+l/MmIF3m2FG6nAAz2bzg9VC/E=;
+	s=k20201202; t=1764140316;
+	bh=lWeRxaX4+VvnMpzF+TCIIN+QKdPRglpgu651nre//GE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DTyifArpsO+iaBml3bAFhWLgGb9RmYRb1nR1NEUF2/8nm5Y2KQVOrRDnSpzmTZf2+
-	 iGZgB9bzfyYWnfZuLRzjxlSiv0VnwRqPY3fPvZjvm2REgco0LL4XeIAWlzXJrbO8He
-	 qjOHo1hPRSIRXWvmBoBng6JrCVn3TEwLqqJ+rUj9MX9hbuiL9Will9hPfDQNgKZtpE
-	 kF/4otbNMSaQJvSZ3jxaaFp6lTpPKq4U5jVem3Qrvjq6GiJYnFK4wVVpv75gQ5iUNC
-	 QWmz5jD08nQ/nabdWOC078IFQBJGiWuceF4yALmtqjcTOV3SPn2RwcFJcL+w1hrjv1
-	 MjQuoU6ScjmoQ==
-Date: Tue, 25 Nov 2025 22:38:48 -0800
+	b=DSc1p9RAfvasmBoPJW8HrV7dMK/O5D1dd3N7tdVkc3J+qRkC6cqSivq2VX4Bs3ASc
+	 6DJKZTi5f/jrei33ZNvAmSx12+qQXrqqD4X7mLrV5lvNMtQHosn0+2vFVll0O3fYeU
+	 VD+meFe+UvXwDqnsrPqbeJzQ9hsWd1oojw7iccDK+augK0dmvPrI/Hvgk8N45qOQxB
+	 rCA4+/k7xABodCDA9Gm6EtjlU2RFbW2faNoiMWbnQadrdyKOe7as2T4Zn/8RAlbs6W
+	 2118WexJClryVZMfJ7VMOE/yhEzJGGe+W04Bg4ityHNf2v1OBNIPOgCl4zrknem2m3
+	 M2a7zsJoCKFGQ==
+Date: Tue, 25 Nov 2025 22:58:34 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -44,11 +44,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Stephen Brennan <stephen.s.brennan@oracle.com>,
 	Haibo Xu <haibo1.xu@intel.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 02/17] perf timechart: Add record support for output
- perf.data path
-Message-ID: <aSageLlTEnj8SRfF@google.com>
+Subject: Re: [PATCH v1 05/17] perf probe-event: Ensure probe event nsinfo is
+ always cleared
+Message-ID: <aSalGg5f8xaM_GBX@google.com>
 References: <20251122081929.7588-1-irogers@google.com>
- <20251122081929.7588-3-irogers@google.com>
+ <20251122081929.7588-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,92 +57,61 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251122081929.7588-3-irogers@google.com>
+In-Reply-To: <20251122081929.7588-6-irogers@google.com>
 
-On Sat, Nov 22, 2025 at 12:19:14AM -0800, Ian Rogers wrote:
-> The '-o' option exists for the SVG creation but not for `perf
-> timechart record`. Add to better allow testing.
+On Sat, Nov 22, 2025 at 12:19:17AM -0800, Ian Rogers wrote:
+> Move nsinfo__zput from cleanup_perf_probe_events to
+> clear_perf_probe_event so it is always executed. Clean up
+> clear_perf_probe_event to not call nsinfo__zput and use the pev
 
-Can you please update the documentation as well?
+Do you mean clear_perf_probe_events?
+
+
+> variable to avoid repeated array accesses.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/probe-event.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> index 6ab2eb551b6c..710e4620923e 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -2419,6 +2419,7 @@ void clear_perf_probe_event(struct perf_probe_event *pev)
+>  	}
+>  	pev->nargs = 0;
+>  	zfree(&pev->args);
+> +	nsinfo__zput(pev->nsi);
+
+I'm not sure pev->nsi is always set properly.  At least it seems to miss
+in the perf_probe_event__copy().
 
 Thanks,
 Namhyung
 
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-timechart.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-> index 22050c640dfa..f8b49d69e9a5 100644
-> --- a/tools/perf/builtin-timechart.c
-> +++ b/tools/perf/builtin-timechart.c
-> @@ -1651,7 +1651,7 @@ static int __cmd_timechart(struct timechart *tchart, const char *output_name)
->  	return ret;
+
 >  }
 >  
-> -static int timechart__io_record(int argc, const char **argv)
-> +static int timechart__io_record(int argc, const char **argv, const char *output_data)
->  {
->  	unsigned int rec_argc, i;
->  	const char **rec_argv;
-> @@ -1659,7 +1659,7 @@ static int timechart__io_record(int argc, const char **argv)
->  	char *filter = NULL;
->  
->  	const char * const common_args[] = {
-> -		"record", "-a", "-R", "-c", "1",
-> +		"record", "-a", "-R", "-c", "1", "-o", output_data,
->  	};
->  	unsigned int common_args_nr = ARRAY_SIZE(common_args);
->  
-> @@ -1786,7 +1786,8 @@ static int timechart__io_record(int argc, const char **argv)
+>  #define strdup_or_goto(str, label)	\
+> @@ -3767,12 +3768,11 @@ void cleanup_perf_probe_events(struct perf_probe_event *pevs, int npevs)
+>  	/* Loop 3: cleanup and free trace events  */
+>  	for (i = 0; i < npevs; i++) {
+>  		pev = &pevs[i];
+> -		for (j = 0; j < pevs[i].ntevs; j++)
+> -			clear_probe_trace_event(&pevs[i].tevs[j]);
+> -		zfree(&pevs[i].tevs);
+> -		pevs[i].ntevs = 0;
+> -		nsinfo__zput(pev->nsi);
+> -		clear_perf_probe_event(&pevs[i]);
+> +		for (j = 0; j < pev->ntevs; j++)
+> +			clear_probe_trace_event(&pev->tevs[j]);
+> +		zfree(&pev->tevs);
+> +		pev->ntevs = 0;
+> +		clear_perf_probe_event(pev);
+>  	}
 >  }
 >  
->  
-> -static int timechart__record(struct timechart *tchart, int argc, const char **argv)
-> +static int timechart__record(struct timechart *tchart, int argc, const char **argv,
-> +			     const char *output_data)
->  {
->  	unsigned int rec_argc, i, j;
->  	const char **rec_argv;
-> @@ -1794,7 +1795,7 @@ static int timechart__record(struct timechart *tchart, int argc, const char **ar
->  	unsigned int record_elems;
->  
->  	const char * const common_args[] = {
-> -		"record", "-a", "-R", "-c", "1",
-> +		"record", "-a", "-R", "-c", "1", "-o", output_data,
->  	};
->  	unsigned int common_args_nr = ARRAY_SIZE(common_args);
->  
-> @@ -1934,6 +1935,7 @@ int cmd_timechart(int argc, const char **argv)
->  		.merge_dist = 1000,
->  	};
->  	const char *output_name = "output.svg";
-> +	const char *output_record_data = "perf.data";
->  	const struct option timechart_common_options[] = {
->  	OPT_BOOLEAN('P', "power-only", &tchart.power_only, "output power data only"),
->  	OPT_BOOLEAN('T', "tasks-only", &tchart.tasks_only, "output processes data only"),
-> @@ -1976,6 +1978,7 @@ int cmd_timechart(int argc, const char **argv)
->  	OPT_BOOLEAN('I', "io-only", &tchart.io_only,
->  		    "record only IO data"),
->  	OPT_BOOLEAN('g', "callchain", &tchart.with_backtrace, "record callchain"),
-> +	OPT_STRING('o', "output", &output_record_data, "file", "output data file name"),
->  	OPT_PARENT(timechart_common_options),
->  	};
->  	const char * const timechart_record_usage[] = {
-> @@ -2024,9 +2027,9 @@ int cmd_timechart(int argc, const char **argv)
->  		}
->  
->  		if (tchart.io_only)
-> -			ret = timechart__io_record(argc, argv);
-> +			ret = timechart__io_record(argc, argv, output_record_data);
->  		else
-> -			ret = timechart__record(&tchart, argc, argv);
-> +			ret = timechart__record(&tchart, argc, argv, output_record_data);
->  		goto out;
->  	} else if (argc)
->  		usage_with_options(timechart_usage, timechart_options);
 > -- 
 > 2.52.0.rc2.455.g230fcf2819-goog
 > 
