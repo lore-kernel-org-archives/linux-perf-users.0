@@ -1,96 +1,103 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D4D30F92F;
-	Wed, 26 Nov 2025 15:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A716A33F8D8
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Nov 2025 17:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764170608; cv=none; b=QXP+qyLPUuok+CVCk5Z0V7N+NWk7vFEfuOcbXntDBXXYcGNALGhwVwHQEHoakM90rsJ24QPACF7u5EhBMiQtvB3BWT79x0Uwsh9TgZYJomdYnxDsQfuacEJT/ZkqyoAKIGV0g8ZsDww8xwfHckbPkgo4ke4lHvp9G70vHmcpxgk=
+	t=1764176418; cv=none; b=J7Y6tadOl9+fPjZ8uhiC8qOwWmF5oZjmuMfCX/sw/NwFga9+wk7s+mlIT2DeIUGGL65TzV1CRlbbluOyF82e3WkFCVazH4fJSHl0vRxs6MbkkakXJF5WLJjmzIAa1iE9QMJmMrOmlD1tlBYDWfTVCydIhNTDZUDFjya+aJw1SmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764170608; c=relaxed/simple;
-	bh=LFc/OZL4XClihrVX49UrCO2oWbvxK9XYv0bABP0kvsg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G/6iX08kV9oyJT/upQMrajBDFIYhquK/yykrww0X/DGcVd+jm5/1LWLsR3wJuBkOGT+9SClYoKjXAiWzqP0ECUUgyQef9MTpKtNiDgr/cm/+wwFNUKRfFIf62ylg3G4u1pOltiWedS7gAQBmM5MHsR9Y8yORN9qY54ukh4F35PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 5F1F8160682;
-	Wed, 26 Nov 2025 15:23:18 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 053A720025;
-	Wed, 26 Nov 2025 15:23:15 +0000 (UTC)
-Date: Wed, 26 Nov 2025 10:24:01 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
- acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
- sumanthk@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com
-Subject: Re: [PATCH Linux-next] perf test: Fix test case perf trace BTF
- general tests
-Message-ID: <20251126102401.37af98bb@gandalf.local.home>
-In-Reply-To: <a7a5f95b-25e0-4816-9d0b-04d955c95821@linux.ibm.com>
-References: <20251117124359.75604-1-tmricht@linux.ibm.com>
-	<aRvSv03cqarM5dY9@google.com>
-	<d60860b4-e84b-48e1-87dd-4bd8203a69ad@linux.ibm.com>
-	<aRwVifZ_-7puFUVC@google.com>
-	<20251118132451.29a35127@gandalf.local.home>
-	<aR1JXlhJ8rC8Ujb3@google.com>
-	<20251119125903.417f595e@gandalf.local.home>
-	<aR5mTLRWA-SLAFUM@google.com>
-	<a7a5f95b-25e0-4816-9d0b-04d955c95821@linux.ibm.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1764176418; c=relaxed/simple;
+	bh=FDL8Iccuse66Bxed+XPCxWHerT7aoF5GBEUCMbgX28E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xy3DW/cZgviVBsVVN+3sROD2tk+fmGjoAvHISoZx2ZVTiz5oNdM9xTwNGOLfQKxs0e90MvdGn9xb55DWvAXy6aj4ZFgcaHa+xThFL9QQSZZEhHFuGm2tUH4t3DH9aYf+0HwzJrJ0httLh8d9RTFF1j+JATWCIZBCzhveWYdXs+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wp/ZyHyl; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wp/ZyHyl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764176414;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=GVxnRSGS2Ql1rPwd1LWbH/+Gj7SmBJzETLU23n/HatQ=;
+	b=Wp/ZyHylmit296I1fyY3kR2wPReaDjigZoPnH7/QHWG31Co7jEr5HOQORgshH2izLQWTJt
+	i+WAvn2YNvwb1JBRukpM283VSYLoe7E9FmbYIoaWw/ZCYKMgfb5laCpvi5cKq9iRWuoPhi
+	UVFCEtRAueBqzCAhGVgkAeD/G6UymVU=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-6-r9JpdcYROMu9lmsqFNKXyA-1; Wed,
+ 26 Nov 2025 12:00:08 -0500
+X-MC-Unique: r9JpdcYROMu9lmsqFNKXyA-1
+X-Mimecast-MFC-AGG-ID: r9JpdcYROMu9lmsqFNKXyA_1764176407
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4CBBB19560AA;
+	Wed, 26 Nov 2025 17:00:06 +0000 (UTC)
+Received: from tallison-mac.rdu.redhat.com (unknown [10.13.33.156])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 10F431800451;
+	Wed, 26 Nov 2025 17:00:03 +0000 (UTC)
+From: Trevor Allison <tallison@redhat.com>
+To: linux-perf-users@vger.kernel.org,
+	acme@kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	tallison@redhat.com,
+	mpetlan@redhat.org
+Subject: [PATCH] perf pmu: fix unit listing for SPR uncore event
+Date: Wed, 26 Nov 2025 11:59:57 -0500
+Message-ID: <20251126165957.96312-1-tallison@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 053A720025
-X-Stat-Signature: 8ccgzmrux5oqkypzm45frqu51ujae3nb
-X-Rspamd-Server: rspamout08
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19JwORjpsyMxLCGkDfN3X/20qARCOPcJlQ=
-X-HE-Tag: 1764170595-701583
-X-HE-Meta: U2FsdGVkX184Xz57GuSVDRGjbgiTKlTWqoJAwNfuPKL+y6fn7ysgNag7J7IvQjvvgkb7FyCodymddTEggcXwOGNo3kZKANrGGMt4NvI6HS/b9g8tQwL426qDlRAP8dM9rY3Rzb8vsKzdGm8CM0z9UWLl4E6WeRyh01FiVwQMYrR6qunE/89dsZhOsIApc5EY7T6kXPiWxJKXhfLwGeyeVf1pMPnkOW8OIfCsARzGR1GolcJnJOzayUb6b3Ge49zctGRWXRld/vq6QRnJgMaLzghjqr2r17RueTSeNNebl/SWu1kracf05risaimcoJAwJYRmEFWE6fh6wvY/lUZocFSGAdoVqzOc
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Wed, 26 Nov 2025 08:13:00 +0100
-Thomas Richter <tmricht@linux.ibm.com> wrote:
+Fix issue where certain SPR uncore "M3UPI" events were listed as
+just "UPI" in the json, causing them not to be found.
 
-> >> I haven't tried it without the patches. Does it usually show what "buf" is?
-> >> Now with the reading of user space, it can show the content too!  
-> > 
-> > Yep, it reads the content using BPF.  This is on my 6.16 kernel.
-> > 
-> >   $ sudo perf trace -e write -- /bin/echo hello
-> >   hello
-> >        0.000 ( 0.014 ms): echo/61922 write(fd: 1, buf: hello\10, count: 6)                                 = 6
-> > 
-> > Thanks,
-> > Namhyung
-> > 
-> >   
-> 
-> Hello Namhyung, Steven,
-> 
-> friendly ping... any progress here?
-> 
+Fixes 54f5de6f2998c
 
-I honestly have no clue how to fix this, as I don't even know where to
-look. Is it BPF that is messing up? If so, where's the BPF program that is
-doing this.
+Signed-off-by: Trevor Allison <tallison@redhat.com>
+---
+ .../arch/x86/sapphirerapids/uncore-interconnect.json          | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I thought BPF is supposed to handle updates and should never cause API
-breakage?
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.json
+index 8b1ae9540066..64eb0d02af57 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.json
+@@ -6640,7 +6640,7 @@
+         "PerPkg": "1",
+         "PublicDescription": "Valid Flits Received : All Data : Shows legal flit time (hides impact of L0p and L0c).",
+         "UMask": "0xf",
+-        "Unit": "UPI"
++        "Unit": "M3UPI"
+     },
+     {
+         "BriefDescription": "Null FLITs received from any slot",
+@@ -7146,7 +7146,7 @@
+         "PerPkg": "1",
+         "PublicDescription": "Valid Flits Sent : All Data : Counts number of data flits across this UPI link.",
+         "UMask": "0xf",
+-        "Unit": "UPI"
++        "Unit": "M3UPI"
+     },
+     {
+         "BriefDescription": "Valid Flits Sent : All LLCRD Not Empty",
+-- 
+2.50.1 (Apple Git-155)
 
-I'll continue to look at the builtin-trace.c, but it seems that the BPF
-program it's attached to is handing it garbage with:
-
-	perf trace -e syscalls:sys_enter_write
-
-The new fields are at the end. The BPF program should simply ignore those
-values. But again, I don't know where this BPF program lives.
-
--- Steve
