@@ -1,122 +1,134 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719401F4CB3
-	for <linux-perf-users@vger.kernel.org>; Wed, 26 Nov 2025 01:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83F928E0F
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Nov 2025 02:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764121424; cv=none; b=odPyPy1CG8YA/6wHs3BcH8aZk+XDm6kb6z4c2zD5yEZHX+okrXzS7OQr7cKWSvgfE9Agc2JmUZX7B9i7zik/7xBYXxLBvnKxVF0VwBX0hwiQZib/ovoBBEMJK4zoLZS/AhdWFXI6pa/fLVA5TpG556RYvt//V1vA2cIF87TtybY=
+	t=1764124058; cv=none; b=Se6laUKv4MscK+keHA5VT3B6q/EZgvNEXoDjRLrDOhbDUAOhO2FM0p+CGLGY55X/X+65vkNShrSFzUBtNjUSsHvyG1SKg1q5PJPjsbPN6uPY6mMcojkso9VUF/KvHCprS5yrZzVy7vgcbalcL99lwK7YCPsGLgPoHuIbUc3bUTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764121424; c=relaxed/simple;
-	bh=RgoG2QjVtV/MBQQ6BuPKbeOOJv8TrZoYsrOBz12BCRk=;
+	s=arc-20240116; t=1764124058; c=relaxed/simple;
+	bh=l+Bbr5zgMrvRyMwXeAJsfgNlRx6rA3ODHm82hDoI7PA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CRDtV+lVzQZ9JIoH1CKcxnRJUtnpQ8ZOZZBeLxZuzi3+z2PjPLPn0AqAFQWFLQEofa+iJAzfhpY54DCx7r6sNoIcNog7ipDwqqg/klsOTrqkDzzANweNnqVuif3WK9DJjoVAxhlPjp6MNuZsY3RS0pj0IkGa7CzaxhrXOex0MWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q7DfA8yg; arc=none smtp.client-ip=209.85.214.171
+	 To:Cc:Content-Type; b=KY/0mze3Fm4BbgehFIwQ+//QhvJDXaOlyPGbkICUY8f5uwbprlk7GazGUcMGla6xqXl/vur8oRoPwYY7ItFfDO1/ktWcd299patFrJMm/JaRUQMxUM+Oyw5cb7HsogxfH4r8lcCDgDarHLgEKiwWBXebGO9vJjYW4JNmNDMGAW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BuE/Iowj; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q7DfA8yg"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2980343d9d1so61065ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Nov 2025 17:43:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BuE/Iowj"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-297e13bf404so104055ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Nov 2025 18:27:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764121423; x=1764726223; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764124056; x=1764728856; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nh1d/9yMuCiM8Nz6j/NlZlDry+0zo07qKygWs7xAcxk=;
-        b=q7DfA8ygRBcbT/561xL7H/wRcKGgnJljSd54jY9JZ0YEumQqcjla2MyJqqkG0MdsZp
-         hdKCyyzdXJjE02uX14hGAdq72YucrFLYhOcSnIb/bCYMqYdO6XdwZ0QPMZ+ovKilakgw
-         OAv0H9cV6F+GWkTdN9t1gFExp+cEzK3NJbUBL2Ts4i6DJaELjwxmF+zbTvsZEzTnX4OC
-         XJI/N3tPmt2MGLXjC+aSAOctpNeEhzO/fwnJhLqJpGgwb0m51j6gXTGGkfvITAMhVKNe
-         tK+4pISR10ixU6rY8jH5aNSCpTkVFLxBgI+NUcRmvL2ywdjGzY2WTHE8lAbs6Dm58my4
-         YfZQ==
+        bh=3AfyTSLxsENf/ESlVNQYE59WjUSDrJkKq+u96c91FR4=;
+        b=BuE/IowjM8pmHkVS/dlerUg10l0iqDH4ssC6KmnaHVqbUeH8TgDKBdh6Th+WT1EPBu
+         +8fCqVU07vTveDsp8RfVa4bJtn7SMDsHDfS6QWQ4WDv7xeruyOSlt1vQULiYFn/NIAzF
+         pjFVptAQCjBsOYSP7MHOV2bHqYiM26uhX9jtI9w8fsgCNs2ZiYOCRV84NPlyNe7CuPte
+         1ng6H5EnUQBbhBhqunR7IwB1ZFsKm58L6fwPykhWAQejiGzjeqTuczfUjf2Oci/q9fRe
+         9gPaiweUGqH2ZUrlYq+D56/8vrqFxPhTgnsSBJwuKXovtt+yHgJ6aOA+dpscIgFYJ3Kb
+         OSoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764121423; x=1764726223;
+        d=1e100.net; s=20230601; t=1764124056; x=1764728856;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=nh1d/9yMuCiM8Nz6j/NlZlDry+0zo07qKygWs7xAcxk=;
-        b=qD0Zez4Iius6sFHjc2PjmNLC13M8dtbeSmFE0vRaWD0BLrCSwQcwT/1mJUmuyZtYjz
-         20M14W6wF8gYv10oorx2cXmr6i0OwqjBTgw26SKS5TTEV/ZpE6QhRfZoZx36imSMGKk/
-         y6G5Bw7aIz0NdYot5+zzZCW3TtBH1VWzM3Fr+iGQTg0g2YT/IfUUgXvxNduHYkNqLPFE
-         3ecN+GK0/YM3yDbQWm35h/P09H//PdHHlaUDGnkhNwZci7wl1iwGEoKhthuhRaVg/Mhx
-         hRKm7BeH3+P1jHXXmqRZDh/eHqzLKmblUAIDwgs0MlmBD1p0TpAiWbODpxplu1oRk2LZ
-         BSRg==
-X-Gm-Message-State: AOJu0YxqlnBemsrfGbbcqDhG7PyMQuoKScDCMV7u1Ggv6D3zqXoePRr2
-	CgArPekiEU4Qgz/BP2MdgdUnunMWVg58sIqOJ4gk08PembLSKJ9kkgi2BwJLGk562/ZHFUmh7rm
-	4cPBsrzedb+R9YW11s4XOHofXZXyJENVUXMlxuO1CjTDsacUICmb5Jvsbvk4=
-X-Gm-Gg: ASbGnct2O8zA/uu6wEGaCfaiZC79WsCicmstZ5J46B/eKCDeLZi/T6HJSTEe/NjMdDV
-	Aj/GWYscxiwi7UQKTGTNsR0sT8P1hyql2qTXQJxIsdlO6O3kL9htWvuycnO8NvxEGhbitcgtgCE
-	JvG5fnC63hA9SS9miFryy6Vtu5McJpCyAAFAIh4nS/8RQ5xYtPzSMabWYZnYm7EO9PGlH9Mi+T2
-	OVl4r8RLWVu2eiWTtk+X+/t7gDOQCdmC5FNQS/1TadGOVVtMqu6Pt7qVLFa3Fx7cjfLJ6CD
-X-Google-Smtp-Source: AGHT+IHjM1sfiGyOKJI+rj2txN2NAlKd/8vohnzlW0/f3geWKBHE0pTJCGMStBuFrlD686EYRlvyw6rz2KFpxoK7tyE=
-X-Received: by 2002:a17:902:d4c6:b0:297:f0aa:d466 with SMTP id
- d9443c01a7336-29bb8f3ad92mr1168775ad.8.1764121422413; Tue, 25 Nov 2025
- 17:43:42 -0800 (PST)
+        bh=3AfyTSLxsENf/ESlVNQYE59WjUSDrJkKq+u96c91FR4=;
+        b=fu65vezAn+3dxOhJCaRAWaxXqdf/K/g3CNXIldNR5BAlpK9vfLJtt/YN0mH5CLXHSJ
+         b07majWuIisrSNs92YBMG34UlW/kqm1MXhmc6ZtNvmVuMioFPfBIOdCMw+VWDtkw5+BK
+         3XdOxlNm6BOpyp43XLmWJEpt9oVrKoGyNNEZy6JS+k7auaFMyK23rvAc0sete1Qv9RPF
+         xhH/1uFusGzlH+V8BjJRL466YWH+EpCAEjlIPAi+tkmYMbcymF6oxk9VyyxjUSjX3OcQ
+         zgImDVmFnYytlWV7eg+a9i0MWjIqQN0I7UQoDAJBpAQNhTp7KGEwSmCRErhSJznIpSNJ
+         ljsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVrnYD5IJm9NPgcWsWGUW6goBlBbKtL3F90TsFQ1FH5KAd/2uqfLF7bRN3xTNcs3qlUFxkw4mUbE8p3sfpxa5DW@vger.kernel.org
+X-Gm-Message-State: AOJu0YyowpvvkyPGftkwbEZYdCJVVIP0Rj1te3cTwY7T4G4fpnA7aAju
+	7bacFGAqKZVsZ28d7mgkuV+kg5SYhSyLbIrIss9eK74ysrPDwfIZn/tKytoF+Nz/5aK+xjS4vDP
+	nz71LIHFuv9J7J3OkjD7zbtl4APEkF2HHtzIz9GvInR8d896e54E8Yov8+Tk=
+X-Gm-Gg: ASbGncsyuprd5Ffc8LaG9Qz0yOIE4uygooAqTESe4D6bYp8GrbLC2YMjrcSRffB724M
+	aFPqgjMndzga/KDYSjW3Gr4XmOW2F7Bzn/5pq2rytYQpgAjM9rAUeA1Dq9AtG4hywfvGM+5wta7
+	wFYkWOkCwNWwmJJVnXIU5AtkHvKbr0klXY3r4GT8kxWgbptANNWNVGJFq4iAL/wWo5dIygn+GjX
+	oqwec2zExKlJrVW2yRWsP3jn8XuJsAvnajGQW2ByvmJyiksy48S9DTyuTPEf6wGrrFtBSperZ/R
+	NFzfi1A=
+X-Google-Smtp-Source: AGHT+IGhtZfRQkAQfRD+HQDWYpS0KOqBkcd+E1vcSInN3twS9evj3f+CnU/9UcNMyVsw/sZspK9k88TXojmZnxXBY4A=
+X-Received: by 2002:a17:903:22ce:b0:294:d42c:ca0f with SMTP id
+ d9443c01a7336-29bb8f51558mr1678465ad.2.1764124055842; Tue, 25 Nov 2025
+ 18:27:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAK3u-5gjxsFbnimP0mMFM6GRki7TAfNe6YmY6KtJhApV45nSNw@mail.gmail.com>
-In-Reply-To: <CAK3u-5gjxsFbnimP0mMFM6GRki7TAfNe6YmY6KtJhApV45nSNw@mail.gmail.com>
+References: <20251114220547.496562-2-irogers@google.com> <20251125114118.196089-1-ashelat@redhat.com>
+ <9efbbdad-c7d6-46ac-89f3-6ed28533b85c@linux.intel.com>
+In-Reply-To: <9efbbdad-c7d6-46ac-89f3-6ed28533b85c@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 25 Nov 2025 17:43:29 -0800
-X-Gm-Features: AWmQ_bkH-se5F4FQgDGnKrqrYioI6WEFN7aZ6ZOqjquSKZYDvLlLlJ7vou9Ni4w
-Message-ID: <CAP-5=fVndu7gOVSzH=jKtsNLQk=Asv_OZNaEQ8nPXoUKWE8izg@mail.gmail.com>
-Subject: Re: [BUG] perf: libdw not working for data collected on a different
- arch than host
-To: Shimin Guo <shimin.guo@skydio.com>
-Cc: linux-perf-users@vger.kernel.org
+Date: Tue, 25 Nov 2025 18:27:23 -0800
+X-Gm-Features: AWmQ_blYbDA6mFfPRsrO9Pv4aigd6KQwY0d_RrilFwT8m6O6ja7OFVqQtLrlbj8
+Message-ID: <CAP-5=fXP66bNcm26MGD=7stHW56Eq3=3iYejgYKG_jZsyKOS6g@mail.gmail.com>
+Subject: Re: [PATCH] perf pmu: fix duplicate conditional statement
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Anubhav Shelat <ashelat@redhat.com>, mpetlan@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, linux-perf-users@vger.kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	james.clark@linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 24, 2025 at 10:39=E2=80=AFAM Shimin Guo <shimin.guo@skydio.com>=
- wrote:
+On Tue, Nov 25, 2025 at 5:33=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel.=
+com> wrote:
 >
-> Hi,
 >
-> I see there have been patches aimed at enabling perf to unwind stacks
-> collected on a different arch than the host perf itself is running on,
-> for example, https://lore.kernel.org/all/20230606014559.21783-4-leo.yan@l=
-inaro.org/.
+> On 11/25/2025 7:41 PM, Anubhav Shelat wrote:
+> > Remove duplicate check for PERF_PMU_TYPE_DRM_END in perf_pmu__kind.
+> >
+> > Fixes cedf1f4852ae.
 >
-> I believe there is still one issue that prevents me from doing
-> unwinding on arm64 stacks on a x86 host. As of v6.18-rc6, I still see
-> the following in tools/perf/util/unwind-libdw.c:
+> The code change looks good to me. But the offensive commit hash ID seems
+> incorrect.
 >
-> static const Dwfl_Thread_Callbacks callbacks =3D {
->     .next_thread =3D next_thread,
->     .memory_read =3D memory_read,
->     .set_initial_registers =3D libdw__arch_set_initial_registers,
-> };
+> The change comes from this commit.
 >
-> libdw__arch_set_initial_registers is defined for each architecture,
-> and the version is chosen at compile time, not for the arch the data
-> is collected on. After fixing this issue, I was able to get the call
-> chains. Is my analysis correct?
+> f0feb21e0a10 ("perf pmu: Add PMU kind to simplify differentiating")
+>
+> Better add a "Fixes" tag for this change.
 
-Hi Shimin,
+Thanks! I think the fixes tag should be:
 
-I think your analysis is correct. I've been trying to clean up other
-cases of this, such as with dwarf_regs:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/log/tools/perf/util/include/dwarf-regs.h?h=3Dperf-tools-next
-Or with syscalltbl:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/commit/tools/perf/util/syscalltbl.c?h=3Dperf-tools-next&id=3D1470eaa57487=
-0da3f78942927b15e0b75da3ffbe
+Fixes:  f0feb21e0a10 ("perf pmu: Add PMU kind to simplify differentiating")
 
-My belief is the arch directory is a code smell where we've most
-likely broken cross-architecture support. Were you in the process of
-putting together a patch series to fix this? My hope is to move away
-from the CPUID feature strings for things like this and just use ELF
-values like EM_X86_64.
+and there could also be:
+
+Closes: https://lore.kernel.org/linux-perf-users/CA+G8Dh+wLx+FvjjoEkypqvXhb=
+zWEQVpykovzrsHi2_eQjHkzQA@mail.gmail.com/
+
+as well as:
+
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Ian Rogers
+Ian
 
-> Best,
-> Shimin
->
+> >
+> > Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+> > ---
+> >  tools/perf/util/pmu.h | 2 --
+> >  1 file changed, 2 deletions(-)
+> >
+> > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> > index cfcaba3e2e75..723a67cb41f4 100644
+> > --- a/tools/perf/util/pmu.h
+> > +++ b/tools/perf/util/pmu.h
+> > @@ -331,8 +331,6 @@ static inline enum pmu_kind perf_pmu__kind(const st=
+ruct perf_pmu *pmu)
+> >               return PERF_PMU_KIND_PE;
+> >       if (type <=3D PERF_PMU_TYPE_DRM_END)
+> >               return PERF_PMU_KIND_DRM;
+> > -     if (type <=3D PERF_PMU_TYPE_DRM_END)
+> > -             return PERF_PMU_KIND_DRM;
+> >       if (type <=3D PERF_PMU_TYPE_HWMON_END)
+> >               return PERF_PMU_KIND_HWMON;
+> >       if (type =3D=3D PERF_PMU_TYPE_TOOL)
