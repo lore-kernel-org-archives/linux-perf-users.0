@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194B119CCF5;
-	Wed, 26 Nov 2025 07:20:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB15B1BBBE5;
+	Wed, 26 Nov 2025 07:21:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764141602; cv=none; b=mYi37H2SXCxNUwbRcyH+p7ChLdKox1ZcPP7S5P3pHy2x+9m1eTrLqQ4JT5PngIQZQhw9OEGxcJvSZqHs7l04n2+xHZyl/xhT/95qWxk/x53ixB//m3eC9IJdzaqaq8rHRg+Mf4A5rkUvglyzlbVk1XALWPRltjL5ERiSDWNqQ5Q=
+	t=1764141705; cv=none; b=t5D8pybQ+OL3Be49fJHmzDy0IRNAJZnqFSdWOIy9BSdNWFx8qnN4oQDszDkxskiLwBdNJwb5WFPwJPGLT3XfHdbHKgAEZvQobSxrhFT0rEjCJytXO/tRsirczFuafyalZ9+lh/a+zM+xlWz+upLuXcMRtP/Zot4DJqC/ICwOSFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764141602; c=relaxed/simple;
-	bh=+xqDmyWS2yizyUsQHqqBC/HQaxjRA3/nR9ClxKarT80=;
+	s=arc-20240116; t=1764141705; c=relaxed/simple;
+	bh=tyxUSwK+rWzPFt3VN/qmJModMgv0OdRgHG4/8AcX4QU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bowwABTSnMhOyoo0WJgoxfdZtErmUEYgReYwDCKEy7BVecnWT3FHblCDkIabPqieM6Jh2fVqfLbg4+oOpBJpzica+iQ2x5/F1e248Su1r+GzL/ug78/yPHCmhbWgChl74dGv93a9erPGHYHfYsu8J1W2j5QpeFqCo3fsaQcGlrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VYgI2bv5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qs01cT7thkQB7/XDoFfJ+g43fHrqFeVu0a/08UkcQPj1eif3dUZONPbf9Y52j2ToZLScHOXDqLwguQ6veNisXskIEWky3+MSEBQ6SUrNE+1a4Zp1bBJkv2vz+3OpYAoddIp4atRV8Zu+RK3DQSDQVEpD2uvHb/s8UJLzFTu6FZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WG9XfNdx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VYgI2bv5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42B2C16AAE;
-	Wed, 26 Nov 2025 07:20:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WG9XfNdx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE96BC113D0;
+	Wed, 26 Nov 2025 07:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764141601;
-	bh=+xqDmyWS2yizyUsQHqqBC/HQaxjRA3/nR9ClxKarT80=;
+	s=k20201202; t=1764141704;
+	bh=tyxUSwK+rWzPFt3VN/qmJModMgv0OdRgHG4/8AcX4QU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VYgI2bv5hvUWUsSO/c/e7/bELcg5kyjchoKjbsVcazJx1YB/mY+xAZrQhLPitlb/J
-	 ISqZs82YtiOIv/gDk9BESSHoqrm/BocI9Vx9i6oW/BM1S8H0NhUs0UxWixI82Fkp4G
-	 Rtk1tQ+lKcP1USMc/3mwD4I5iMpnkHauKfDCrXCHmBWgJgjH55fOCYOVL48wlOTv5h
-	 y+HW5sbv4pkWKssBvf2/cO+oCbpy5TGRBBWUGA1xoy91IppfWdg75aHxqtMpKfA8Cg
-	 P6EsS5ZVqizJm2yEqLYnelEw5rQ1XyRE/c3TRYj595yOfwwmLawitB5vI1KkIVNpbD
-	 07QNn8qlTxtkQ==
-Date: Tue, 25 Nov 2025 23:19:59 -0800
+	b=WG9XfNdxgqBXSJbfsG/D0EKxoWLtJ8YutzV/XtFUNeWKyIiNFyvKhDvypSP3TAjox
+	 z3E26UkMEh9LgZ1fzs4adgxQb6Znw/O3U2XAdwwRBm9G4hgSlmKLqD0kZxDlGXxuma
+	 gkyj+UCn2kC0DBq9nv31it737ek8ffy/o73toOfoqEtp/o71UQShB0C7bBIF/AMI2b
+	 tdC7jnncPDhQNYk39TTKK9Ytf29Q3JI4oaRdXStpJSxGJjkyhmY8R6IkJN9mFzDiNG
+	 kri3fsMRCjWCLoBVSHXtMKsT87qRRYjfjiVWTlY6JhujlIGba2AGHAehjdSZcw3SIz
+	 QKmMevhMhoaPg==
+Date: Tue, 25 Nov 2025 23:21:42 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -44,10 +44,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Stephen Brennan <stephen.s.brennan@oracle.com>,
 	Haibo Xu <haibo1.xu@intel.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 16/17] perf tests evlist: Add basic evlist test
-Message-ID: <aSaqH8xF7zcjq2Nc@google.com>
+Subject: Re: [PATCH v1 17/17] perf test kvm: Add some basic perf kvm test
+ coverage
+Message-ID: <aSaqhlvclSnzJJf1@google.com>
 References: <20251122081929.7588-1-irogers@google.com>
- <20251122081929.7588-17-irogers@google.com>
+ <20251122081929.7588-18-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,34 +57,45 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251122081929.7588-17-irogers@google.com>
+In-Reply-To: <20251122081929.7588-18-irogers@google.com>
 
-On Sat, Nov 22, 2025 at 12:19:28AM -0800, Ian Rogers wrote:
-> Add test that evlist reports expected events from perf record.
+On Sat, Nov 22, 2025 at 12:19:29AM -0800, Ian Rogers wrote:
+> Setup qemu with KVM then run kvm stat and some host
+> recording/reporting/build-id tests.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/tests/shell/evlist.sh | 79 ++++++++++++++++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100755 tools/perf/tests/shell/evlist.sh
+>  tools/perf/tests/shell/kvm.sh | 154 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 154 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/kvm.sh
 > 
-> diff --git a/tools/perf/tests/shell/evlist.sh b/tools/perf/tests/shell/evlist.sh
+> diff --git a/tools/perf/tests/shell/kvm.sh b/tools/perf/tests/shell/kvm.sh
 > new file mode 100755
-> index 000000000000..140f099e75c1
+> index 000000000000..2fafde1a29cc
 > --- /dev/null
-> +++ b/tools/perf/tests/shell/evlist.sh
-> @@ -0,0 +1,79 @@
+> +++ b/tools/perf/tests/shell/kvm.sh
+> @@ -0,0 +1,154 @@
 > +#!/bin/bash
-> +# perf evlist tests
+> +# perf kvm tests
 > +# SPDX-License-Identifier: GPL-2.0
 > +
 > +set -e
 > +
 > +err=0
-> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +perfdata=$(mktemp /tmp/__perf_kvm_test.perf.data.XXXXX)
+> +qemu_pid_file=$(mktemp /tmp/__perf_kvm_test.qemu.pid.XXXXX)
 > +
 > +cleanup() {
 > +	rm -f "${perfdata}"
+> +	if [ -f "${qemu_pid_file}" ]; then
+> +		if [ -s "${qemu_pid_file}" ]; then
+> +			qemu_pid=$(cat "${qemu_pid_file}")
+> +			if [ -n "${qemu_pid}" ]; then
+> +				kill "${qemu_pid}" 2>/dev/null || true
+> +			fi
+> +		fi
+> +		rm -f "${qemu_pid_file}"
+> +	fi
 > +	trap - EXIT TERM INT
 > +}
 > +
@@ -94,69 +106,133 @@ On Sat, Nov 22, 2025 at 12:19:28AM -0800, Ian Rogers wrote:
 > +}
 > +trap trap_cleanup EXIT TERM INT
 > +
-> +test_evlist_simple() {
-> +	echo "Simple evlist test"
-> +	if ! perf record -e cycles -o "${perfdata}" true 2> /dev/null
+> +skip() {
+> +	echo "Skip: $1"
+> +	cleanup
+> +	exit 2
+> +}
+> +
+> +test_kvm_stat() {
+> +	echo "Testing perf kvm stat"
+> +
+> +	echo "Recording kvm events for pid ${qemu_pid}..."
+> +	if ! perf kvm stat record -p "${qemu_pid}" -o "${perfdata}" sleep 1; then
+> +		echo "Failed to record kvm events"
+> +		err=1
+> +		return
+> +	fi
+> +
+> +	echo "Reporting kvm events..."
+> +	if ! perf kvm -i "${perfdata}" stat report 2>&1 | grep -q "VM-EXIT"; then
+> +		echo "Failed to find VM-EXIT in report"
+> +		perf kvm -i "${perfdata}" stat report 2>&1
+> +		err=1
+> +		return
+> +	fi
+> +
+> +	echo "perf kvm stat test [Success]"
+> +}
+> +
+> +test_kvm_record_report() {
+> +	echo "Testing perf kvm record/report"
+> +
+> +	echo "Recording kvm profile for pid ${qemu_pid}..."
+> +	# Use --host to avoid needing guest symbols/mounts for this simple test
+> +	# We just want to verify the command runs and produces data
+> +	# We run in background and kill it because 'perf kvm record' appends options
+> +	# after the command, which breaks 'sleep' (e.g. it gets '-e cycles').
+> +	perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" &
+> +	rec_pid=$!
+> +	sleep 1
+> +	kill -INT "${rec_pid}"
+> +	wait "${rec_pid}" || true
+> +
+> +	echo "Reporting kvm profile..."
+> +	# Check for some standard output from report
+> +	if ! perf kvm -i "${perfdata}" report --stdio 2>&1 | grep -q "Event count"; then
+> +		echo "Failed to report kvm profile"
+> +		perf kvm -i "${perfdata}" report --stdio 2>&1
+> +		err=1
+> +		return
+> +	fi
+> +
+> +	echo "perf kvm record/report test [Success]"
+> +}
+> +
+> +test_kvm_buildid_list() {
+> +	echo "Testing perf kvm buildid-list"
+> +
+> +	# We reuse the perf.data from the previous record test
+> +	if ! perf kvm --host -i "${perfdata}" buildid-list 2>&1 | grep -q "."; then
+> +		echo "Failed to list buildids"
+> +		perf kvm --host -i "${perfdata}" buildid-list 2>&1
+> +		err=1
+> +		return
+> +	fi
+> +
+> +	echo "perf kvm buildid-list test [Success]"
+> +}
+> +
+> +setup_qemu() {
+> +	# Find qemu
+> +	if [ "$(uname -m)" = "x86_64" ]; then
+> +		qemu="qemu-system-x86_64"
+> +	elif [ "$(uname -m)" = "aarch64" ]; then
+> +		qemu="qemu-system-aarch64"
+> +	elif [ "$(uname -m)" = "s390x" ]; then
+> +		qemu="qemu-system-s390x"
+> +	elif [ "$(uname -m)" = "ppc64le" ]; then
+> +		qemu="qemu-system-ppc64"
+> +	else
+> +		qemu="qemu-system-$(uname -m)"
+> +	fi
+> +
+> +	if ! which -s "$qemu"; then
+> +		skip "$qemu not found"
+> +	fi
+> +
+> +	if [ ! -r /dev/kvm ] || [ ! -w /dev/kvm ]; then
+> +		skip "/dev/kvm not accessible"
+> +	fi
+> +
+> +	if ! perf kvm stat record -a sleep 0.01 >/dev/null 2>&1; then
+> +		skip "No permission to record kvm events"
+> +	fi
+> +
+> +	echo "Starting $qemu..."
+> +	# Start qemu in background, detached, with pidfile
+> +	# We use -display none -daemonize and a monitor to keep it alive/controllable if needed
+> +	# We don't need a real kernel, just KVM active.
+> +	if ! $qemu -enable-kvm -display none -daemonize -pidfile "${qemu_pid_file}" -monitor none; then
 
-I think we need to use a software event to make sure it can run on any
-platforms.
+What is running in the guest?
 
 Thanks,
 Namhyung
 
 
-> +	then
-> +		echo "Simple evlist [Failed record]"
+> +		echo "Failed to start qemu"
 > +		err=1
 > +		return
 > +	fi
-> +	if ! perf evlist -i "${perfdata}" | grep -q "cycles"
-> +	then
-> +		echo "Simple evlist [Failed to list event]"
+> +
+> +	# Wait a bit for qemu to start
+> +	sleep 1
+> +	qemu_pid=$(cat "${qemu_pid_file}")
+> +
+> +	if ! kill -0 "${qemu_pid}" 2>/dev/null; then
+> +		echo "Qemu process failed to stay alive"
 > +		err=1
 > +		return
 > +	fi
-> +	echo "Simple evlist test [Success]"
 > +}
 > +
-> +test_evlist_group() {
-> +	echo "Group evlist test"
-> +	if ! perf record -e "{cycles,instructions}" -o "${perfdata}" true 2> /dev/null
-> +	then
-> +		echo "Group evlist [Skipped event group recording failed]"
-> +		return
-> +	fi
-> +
-> +	if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cycles.*,.*instructions.*}"
-> +	then
-> +		echo "Group evlist [Failed to list event group]"
-> +		err=1
-> +		return
-> +	fi
-> +	echo "Group evlist test [Success]"
-> +}
-> +
-> +test_evlist_verbose() {
-> +	echo "Event configuration evlist test"
-> +	if ! perf record -e cycles -o "${perfdata}" true 2> /dev/null
-> +	then
-> +		echo "Event configuration evlist [Failed record]"
-> +		err=1
-> +		return
-> +	fi
-> +
-> +	if ! perf evlist -i "${perfdata}" -v | grep -q "config:"
-> +	then
-> +		echo "Event configuration evlist [Failed to list verbose info]"
-> +		err=1
-> +		return
-> +	fi
-> +	echo "Event configuration evlist test [Success]"
-> +}
-> +
-> +test_evlist_simple
-> +test_evlist_group
-> +test_evlist_verbose
+> +setup_qemu
+> +if [ $err -eq 0 ]; then
+> +	test_kvm_stat
+> +	test_kvm_record_report
+> +	test_kvm_buildid_list
+> +fi
 > +
 > +cleanup
 > +exit $err
