@@ -1,153 +1,165 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE45221FDE;
-	Wed, 26 Nov 2025 07:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194B119CCF5;
+	Wed, 26 Nov 2025 07:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764141196; cv=none; b=BaBvkiQ1pQ0gSwhGMr6B9bncXjOJUVZK3YgNxpkFrGSdiHciIdH5qMmQU1ohrK6Sg+8knM6gVRjUZvsPtXsIBLa4ORcrqBO+LLhIZSEYBEaAqpZDqZhb7ExFD2M21hdSa0lSwnWnC7wmQJrJ8eKeWnIMwCuvbxo5Hf1/rwxHRXU=
+	t=1764141602; cv=none; b=mYi37H2SXCxNUwbRcyH+p7ChLdKox1ZcPP7S5P3pHy2x+9m1eTrLqQ4JT5PngIQZQhw9OEGxcJvSZqHs7l04n2+xHZyl/xhT/95qWxk/x53ixB//m3eC9IJdzaqaq8rHRg+Mf4A5rkUvglyzlbVk1XALWPRltjL5ERiSDWNqQ5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764141196; c=relaxed/simple;
-	bh=CghIzvifIzj7wUX1Yf6flOI5O5lNYwEinemt3bj/1hc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XnU2JrWaMXiSarTyBfShOQ0kLbo/ZcQzzWwhzaiAkjLM0lTEAvHRt3Bo6+ECa+awCZTBYVVxqJI/Qsq6oFzvjzSa7J5ic2MgKqy4F5pXL1U7fwOd6z2TMNuF+17HmtLerL6iHhUs8s0m77argPfsqPnXWjAK9CFUZzXoSVxUV5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DiZ2WRQz; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1764141602; c=relaxed/simple;
+	bh=+xqDmyWS2yizyUsQHqqBC/HQaxjRA3/nR9ClxKarT80=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bowwABTSnMhOyoo0WJgoxfdZtErmUEYgReYwDCKEy7BVecnWT3FHblCDkIabPqieM6Jh2fVqfLbg4+oOpBJpzica+iQ2x5/F1e248Su1r+GzL/ug78/yPHCmhbWgChl74dGv93a9erPGHYHfYsu8J1W2j5QpeFqCo3fsaQcGlrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VYgI2bv5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DiZ2WRQz"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AQ2BmbU002195;
-	Wed, 26 Nov 2025 07:13:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=sskhNi
-	sivOqO9ITn3IG8cBqmWiCRM6z2JSLpTW1Ycgw=; b=DiZ2WRQzWB+5JmFRqOq5PJ
-	3hi+yaFL4FwozxyFYQm9/8V618TXtWXpP4e1rZX2k8hCQ93Ae0wptVaanq7pSkBL
-	f32QkNJ7C0tM04tghTX3qOuj/5D8oPpHJmMsGr350LlWYJ6E/N4YeIkDOCGKRD0a
-	hCt2VZZ1Ttc3ZnF0Gw/bd5/1uDL286xPsmPnTwVryewS3GeN/YsignqKWtVz76GQ
-	oq1qN98t1Sve2SM8XoRfWRQ1NE83eFDA1xCTr0EMkbMIW+Scz+j6CLvA59jhkTf2
-	jyp7YLY4AbJvW8MXWW18Ema9hb/aUNFRfZIwrfS3xHq49Z//V+4f1RgDiAYqU8bg
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ak2kq1mxs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Nov 2025 07:13:06 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AQ6viZY025108;
-	Wed, 26 Nov 2025 07:13:04 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4akt71gcnj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Nov 2025 07:13:04 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AQ7D05I53018894
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Nov 2025 07:13:00 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AB5EE20040;
-	Wed, 26 Nov 2025 07:13:00 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 721A620043;
-	Wed, 26 Nov 2025 07:13:00 +0000 (GMT)
-Received: from [9.152.212.92] (unknown [9.152.212.92])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 26 Nov 2025 07:13:00 +0000 (GMT)
-Message-ID: <a7a5f95b-25e0-4816-9d0b-04d955c95821@linux.ibm.com>
-Date: Wed, 26 Nov 2025 08:13:00 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VYgI2bv5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42B2C16AAE;
+	Wed, 26 Nov 2025 07:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764141601;
+	bh=+xqDmyWS2yizyUsQHqqBC/HQaxjRA3/nR9ClxKarT80=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VYgI2bv5hvUWUsSO/c/e7/bELcg5kyjchoKjbsVcazJx1YB/mY+xAZrQhLPitlb/J
+	 ISqZs82YtiOIv/gDk9BESSHoqrm/BocI9Vx9i6oW/BM1S8H0NhUs0UxWixI82Fkp4G
+	 Rtk1tQ+lKcP1USMc/3mwD4I5iMpnkHauKfDCrXCHmBWgJgjH55fOCYOVL48wlOTv5h
+	 y+HW5sbv4pkWKssBvf2/cO+oCbpy5TGRBBWUGA1xoy91IppfWdg75aHxqtMpKfA8Cg
+	 P6EsS5ZVqizJm2yEqLYnelEw5rQ1XyRE/c3TRYj595yOfwwmLawitB5vI1KkIVNpbD
+	 07QNn8qlTxtkQ==
+Date: Tue, 25 Nov 2025 23:19:59 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Collin Funk <collin.funk1@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>, Leo Yan <leo.yan@arm.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Haibo Xu <haibo1.xu@intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 16/17] perf tests evlist: Add basic evlist test
+Message-ID: <aSaqH8xF7zcjq2Nc@google.com>
+References: <20251122081929.7588-1-irogers@google.com>
+ <20251122081929.7588-17-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH Linux-next] perf test: Fix test case perf trace BTF
- general tests
-To: Namhyung Kim <namhyung@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org,
-        agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com
-References: <20251117124359.75604-1-tmricht@linux.ibm.com>
- <aRvSv03cqarM5dY9@google.com>
- <d60860b4-e84b-48e1-87dd-4bd8203a69ad@linux.ibm.com>
- <aRwVifZ_-7puFUVC@google.com> <20251118132451.29a35127@gandalf.local.home>
- <aR1JXlhJ8rC8Ujb3@google.com> <20251119125903.417f595e@gandalf.local.home>
- <aR5mTLRWA-SLAFUM@google.com>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <aR5mTLRWA-SLAFUM@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTIyMDAwMCBTYWx0ZWRfX+qPQ7dj4yQCE
- YUVLZ23vpuAWL70J08OW7VWJMddEmMumHXB9oXA4CyNUGyknKWVhEDKL/3lj+ZVUG1PNRqFrnZL
- ulhHjTa/CuEDECNZD8sXoUFJPqMRyWBl5K5d80mPxFLB9pb2TX6x7lpu2Gli+7cCfoK+BQK9Bio
- v13LmXyBSX+ZrfgeXqJNFPxVks4unS1EVMnCChN/eEx2PB5oHMAA5NyONf6J00jobGVUSvTLZ6L
- tnnze+lmlIQVsF9u6YZHBItQLzTQA31RFMWIAap611IJ8CGgScGRxhR+N1kjvM8WON6DhGuUWRz
- YI214TdrJZM8GPKttVD8h2j7Ifdwj3PDUUyy5ZJROASnlacbv9dyJ/RxcIjrd4/ALZ7GhGOK3XM
- NSfXREKX7EF95QAKWfw/362ey49iJQ==
-X-Authority-Analysis: v=2.4 cv=fJM0HJae c=1 sm=1 tr=0 ts=6926a882 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=JOla_U2dEw1KniFPV6wA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: u_4kOoe7VtMzghgZ_ad_P7naaLXVPYvV
-X-Proofpoint-ORIG-GUID: u_4kOoe7VtMzghgZ_ad_P7naaLXVPYvV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-25_02,2025-11-25_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 phishscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 suspectscore=0 malwarescore=0 adultscore=0 bulkscore=0
- spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2511220000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251122081929.7588-17-irogers@google.com>
 
-On 11/20/25 01:52, Namhyung Kim wrote:
-> On Wed, Nov 19, 2025 at 12:59:03PM -0500, Steven Rostedt wrote:
->> On Tue, 18 Nov 2025 20:36:46 -0800
->> Namhyung Kim <namhyung@kernel.org> wrote:
->>
->>>> Really? It still uses libtraceevent right? I made sure that this didn't
->>>> break trace-cmd and thought that perf would work too.  
->>>
->>> It doesn't completely break perf trace but added new parameter for the
->>> write syscall at the end.  IIUC perf trace iterates the format fields
->>> after __syscall_nr and take them all as syscall parameters.
->>
->> Is this a regression? Or can perf be fixed?
->>
->> I just ran it and I have this:
->>
->>    542.337 ( 0.131 ms): sshd-session/1189 write(fd: 7<socket:[9749]>, buf: , count: 268)                        = 268
->>
->> I haven't tried it without the patches. Does it usually show what "buf" is?
->> Now with the reading of user space, it can show the content too!
+On Sat, Nov 22, 2025 at 12:19:28AM -0800, Ian Rogers wrote:
+> Add test that evlist reports expected events from perf record.
 > 
-> Yep, it reads the content using BPF.  This is on my 6.16 kernel.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/shell/evlist.sh | 79 ++++++++++++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/evlist.sh
 > 
->   $ sudo perf trace -e write -- /bin/echo hello
->   hello
->        0.000 ( 0.014 ms): echo/61922 write(fd: 1, buf: hello\10, count: 6)                                 = 6
+> diff --git a/tools/perf/tests/shell/evlist.sh b/tools/perf/tests/shell/evlist.sh
+> new file mode 100755
+> index 000000000000..140f099e75c1
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/evlist.sh
+> @@ -0,0 +1,79 @@
+> +#!/bin/bash
+> +# perf evlist tests
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +err=0
+> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +
+> +cleanup() {
+> +	rm -f "${perfdata}"
+> +	trap - EXIT TERM INT
+> +}
+> +
+> +trap_cleanup() {
+> +	echo "Unexpected signal in ${FUNCNAME[1]}"
+> +	cleanup
+> +	exit 1
+> +}
+> +trap trap_cleanup EXIT TERM INT
+> +
+> +test_evlist_simple() {
+> +	echo "Simple evlist test"
+> +	if ! perf record -e cycles -o "${perfdata}" true 2> /dev/null
+
+I think we need to use a software event to make sure it can run on any
+platforms.
+
+Thanks,
+Namhyung
+
+
+> +	then
+> +		echo "Simple evlist [Failed record]"
+> +		err=1
+> +		return
+> +	fi
+> +	if ! perf evlist -i "${perfdata}" | grep -q "cycles"
+> +	then
+> +		echo "Simple evlist [Failed to list event]"
+> +		err=1
+> +		return
+> +	fi
+> +	echo "Simple evlist test [Success]"
+> +}
+> +
+> +test_evlist_group() {
+> +	echo "Group evlist test"
+> +	if ! perf record -e "{cycles,instructions}" -o "${perfdata}" true 2> /dev/null
+> +	then
+> +		echo "Group evlist [Skipped event group recording failed]"
+> +		return
+> +	fi
+> +
+> +	if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cycles.*,.*instructions.*}"
+> +	then
+> +		echo "Group evlist [Failed to list event group]"
+> +		err=1
+> +		return
+> +	fi
+> +	echo "Group evlist test [Success]"
+> +}
+> +
+> +test_evlist_verbose() {
+> +	echo "Event configuration evlist test"
+> +	if ! perf record -e cycles -o "${perfdata}" true 2> /dev/null
+> +	then
+> +		echo "Event configuration evlist [Failed record]"
+> +		err=1
+> +		return
+> +	fi
+> +
+> +	if ! perf evlist -i "${perfdata}" -v | grep -q "config:"
+> +	then
+> +		echo "Event configuration evlist [Failed to list verbose info]"
+> +		err=1
+> +		return
+> +	fi
+> +	echo "Event configuration evlist test [Success]"
+> +}
+> +
+> +test_evlist_simple
+> +test_evlist_group
+> +test_evlist_verbose
+> +
+> +cleanup
+> +exit $err
+> -- 
+> 2.52.0.rc2.455.g230fcf2819-goog
 > 
-> Thanks,
-> Namhyung
-> 
-> 
-
-Hello Namhyung, Steven,
-
-friendly ping... any progress here?
-
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
-
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
