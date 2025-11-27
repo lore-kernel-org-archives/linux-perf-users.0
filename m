@@ -1,102 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6CB3126BC
-	for <linux-perf-users@vger.kernel.org>; Wed, 26 Nov 2025 19:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240442DF144;
+	Thu, 27 Nov 2025 04:44:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764183891; cv=none; b=BQ8BzipTsjpl/MQazgrKTK5/EGtn/v+PtiA7XbJnEFvYFOwr5p/nLUL4djl/IaHmCzp+yBn9fo10J6VfVEvRkp8sT2oodegGXV9wpUcc0wGJgRNJrIwxpe+3ozcbByxj7b1uIkrrR7w4+3z7kG2RUtbIDP6DfjHW4tN6oLBaxbw=
+	t=1764218660; cv=none; b=ikqm6vKHR+z83tGFjLCpqk4B/LxOGeVNPS58KL7n0f7tXOTEReHTIgV70ff2O7GiG+PVS0O3Qty8L6VLz2OiJ6eZCu/pNir/DTB1ElTgY5MvxIics8oTEqYnMPI5u76PSNmINWEYm713hTpcLOmwgkJCtcZMaPRiaTtNDC03p/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764183891; c=relaxed/simple;
-	bh=y77rHH/FFpexWCoXa/I+QlKQxciFJQJ0i0r9l0Qh5KQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kFiglJ8PcGM21tCYu9kUP1W/URE8IQx1agvXbGhv75rnEQcYRQ0Kxi4NfZKHDOkzs0ywUmgnDJhGysgqQQmWK0f5z4ep8LxpkWklxjgAiuXQTRgD2xiEtZPYlQPjkO8S9YoYLUT3OmZT0lU20NDN0FKTsWCpzlDWR+7Nt4l1zTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OdywvWg1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764218660; c=relaxed/simple;
+	bh=odNUPVkd3OWxfZFbBCkAb6oVbbG/scpWrx0iT14zz4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CJDf/xy3zr/DekURISl4FmFSoFo8FaSVpI9hbcjpvxzsb5IyDsSiVDZBAVjeAOxPfEyh7LEsKf4jbA/TNO6yVh7Py7Dl/BYM8jDpx/Y3PechKEhJ8uEWssX99AzuKNgwalWorzRFD+2LeuX7Kv5BiBCyECM7EgCMPkqsbjO3nW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlsO1PeG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OdywvWg1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87616C4CEF7;
-	Wed, 26 Nov 2025 19:04:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlsO1PeG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 222A5C4CEF8;
+	Thu, 27 Nov 2025 04:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764183891;
-	bh=y77rHH/FFpexWCoXa/I+QlKQxciFJQJ0i0r9l0Qh5KQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OdywvWg1LpePICfHr7jFR9uz6iFtv7NRWZC9rvsGNrDMpLr+hc2vmoy59mWcWiHQC
-	 Vv+OTlD9TihaGN68VwBDapoCkAPiDYx8r5XQvaBeCEv6X1l0HMAh+kyyBo+1tKjUXR
-	 zNyrxun/dOA4MhAVkjAxXPaAcmYilQqBZdXeYidqtnQjUmxcNdrxaIcGjgF537nkl4
-	 CJEBZrlx85X6iygde4ngPH4zBn5i8UT2MC9Fgz5fBvV+vGAGqPJLrpDxoTMercwN9K
-	 UyMhyzePn18DJNdkIDI8R51KyA3OskqpldYY3cm11sjiTCJWLCxRghP29eDbJXVZ65
-	 a17f3STxuK4mA==
-Date: Wed, 26 Nov 2025 11:04:48 -0800
+	s=k20201202; t=1764218659;
+	bh=odNUPVkd3OWxfZFbBCkAb6oVbbG/scpWrx0iT14zz4E=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NlsO1PeGq5FuGXojcOLcwtdhOjA/soGZJOAjKcDrjNV36Az5GJlyAJ+iR/WTrUNAe
+	 MqkSq3MkWUc++v6skc+P9wEE4ZHINA1nKTw8GxzRvDgWu9nSVXovnMLcFenuKli82/
+	 v57bF+O6GAodGgiaheHGWg4VmmNIslvb4JGoQ2pQAt7wl/FXMSANFkuUkBESnB/VlA
+	 S8sRRGejLMKN5TqY36QcayZzb6JVU6uIMgN3uUhWBU+msM8Y/+Y6nsekqpaZcodGiq
+	 cmi5B/OzqQph7bOjnEDY3eOCX+Sc27NAfrWA/b/CPw3jKQ9VZ+VX4Kji8KPZH0f3fi
+	 jc5GX152KaXCg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Shimin Guo <shimin.guo@skydio.com>
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [BUG] perf: libdw not working for data collected on a different
- arch than host
-Message-ID: <aSdPUOz6gqInzJdR@google.com>
-References: <CAK3u-5gjxsFbnimP0mMFM6GRki7TAfNe6YmY6KtJhApV45nSNw@mail.gmail.com>
- <CAP-5=fVndu7gOVSzH=jKtsNLQk=Asv_OZNaEQ8nPXoUKWE8izg@mail.gmail.com>
- <CAK3u-5gfzAR5RDicyqaUi9ddZSbD=JkYN-K--iD4wCMCqFKF=w@mail.gmail.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH] perf trace: Skip internal syscall arguments
+Date: Wed, 26 Nov 2025 20:44:18 -0800
+Message-ID: <20251127044418.677379-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.52.0.487.g5c8c507ade-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK3u-5gfzAR5RDicyqaUi9ddZSbD=JkYN-K--iD4wCMCqFKF=w@mail.gmail.com>
 
-Hello,
+Recent changes in the linux-next kernel will add new field for syscalls
+to have contents in the userspace like below.
 
-On Tue, Nov 25, 2025 at 06:55:54PM -0800, Shimin Guo wrote:
-> On Tue, Nov 25, 2025 at 5:43 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Mon, Nov 24, 2025 at 10:39 AM Shimin Guo <shimin.guo@skydio.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > I see there have been patches aimed at enabling perf to unwind stacks
-> > > collected on a different arch than the host perf itself is running on,
-> > > for example, https://lore.kernel.org/all/20230606014559.21783-4-leo.yan@linaro.org/.
-> > >
-> > > I believe there is still one issue that prevents me from doing
-> > > unwinding on arm64 stacks on a x86 host. As of v6.18-rc6, I still see
-> > > the following in tools/perf/util/unwind-libdw.c:
-> > >
-> > > static const Dwfl_Thread_Callbacks callbacks = {
-> > >     .next_thread = next_thread,
-> > >     .memory_read = memory_read,
-> > >     .set_initial_registers = libdw__arch_set_initial_registers,
-> > > };
-> > >
-> > > libdw__arch_set_initial_registers is defined for each architecture,
-> > > and the version is chosen at compile time, not for the arch the data
-> > > is collected on. After fixing this issue, I was able to get the call
-> > > chains. Is my analysis correct?
-> >
-> > Hi Shimin,
-> >
-> > I think your analysis is correct. I've been trying to clean up other
-> > cases of this, such as with dwarf_regs:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/tools/perf/util/include/dwarf-regs.h?h=perf-tools-next
-> > Or with syscalltbl:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/tools/perf/util/syscalltbl.c?h=perf-tools-next&id=1470eaa574870da3f78942927b15e0b75da3ffbe
-> >
-> > My belief is the arch directory is a code smell where we've most
-> > likely broken cross-architecture support. Were you in the process of
-> > putting together a patch series to fix this? My hope is to move away
-> > from the CPUID feature strings for things like this and just use ELF
-> > values like EM_X86_64.
-> 
-> I don't have immediate plans to put together a patch series. I'm not
-> familiar with the Linux development process, coding standards, and
-> common practices. Conceptually it's not that complicated, but whatever
-> I come up with is likely not the best way to do it.
+  # cat /sys/kernel/tracing/events/syscalls/sys_enter_write/format
+  name: sys_enter_write
+  ID: 758
+  format:
+          field:unsigned short common_type;       offset:0;       size:2; signed:0;
+          field:unsigned char common_flags;       offset:2;       size:1; signed:0;
+          field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
+          field:int common_pid;   offset:4;       size:4; signed:1;
 
-That's fine, we can find the best way during the review process if
-you're willing to. :)
+          field:int __syscall_nr; offset:8;       size:4; signed:1;
+          field:unsigned int fd;  offset:16;      size:8; signed:0;
+          field:const char * buf; offset:24;      size:8; signed:0;
+          field:size_t count;     offset:32;      size:8; signed:0;
+          field:__data_loc char[] __buf_val;      offset:40;      size:4; signed:0;
 
-Thanks,
-Namhyung
+  print fmt: "fd: 0x%08lx, buf: 0x%08lx (%s), count: 0x%08lx", ((unsigned long)(REC->fd)),
+             ((unsigned long)(REC->buf)), __print_dynamic_array(__buf_val, 1),
+             ((unsigned long)(REC->count))
+
+We have a different way to handle those arguments and this change
+confuses perf trace then make some tests failing.  Fix it by skipping
+the new fields that have "__data_loc char[]" type.
+
+Maybe we can switch to this instead of the BPF augmentation later.
+
+Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Howard Chu <howardchu95@gmail.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-trace.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index a743bda294bd3400..baee1f6956001d86 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2069,6 +2069,15 @@ static const struct syscall_arg_fmt *syscall_arg_fmt__find_by_name(const char *n
+        return __syscall_arg_fmt__find_by_name(syscall_arg_fmts__by_name, nmemb, name);
+ }
+ 
++/*
++ * v6.19 kernel added new fields to read userspace memory for event tracing.
++ * But it's not used by perf and confuses the syscall parameters.
++ */
++static bool is_internal_field(struct tep_format_field *field)
++{
++	return !strcmp(field->type, "__data_loc char[]");
++}
++
+ static struct tep_format_field *
+ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field *field,
+ 			    bool *use_btf)
+@@ -2077,6 +2086,10 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+ 	int len;
+ 
+ 	for (; field; field = field->next, ++arg) {
++		/* assume it's the last argument */
++		if (is_internal_field(field))
++			continue;
++
+ 		last_field = field;
+ 
+ 		if (arg->scnprintf)
+@@ -2145,6 +2158,7 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+ {
+ 	char tp_name[128];
+ 	const char *name;
++	struct tep_format_field *field;
+ 	int err;
+ 
+ 	if (sc->nonexistent)
+@@ -2201,6 +2215,13 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+ 		--sc->nr_args;
+ 	}
+ 
++	field = sc->args;
++	while (field) {
++		if (is_internal_field(field))
++			--sc->nr_args;
++		field = field->next;
++	}
++
+ 	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
+ 	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
+ 
+-- 
+2.52.0.487.g5c8c507ade-goog
 
