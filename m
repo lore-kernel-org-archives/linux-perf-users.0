@@ -1,46 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA36830F7ED;
-	Thu, 27 Nov 2025 21:34:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348AA3FBA7;
+	Thu, 27 Nov 2025 22:20:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764279284; cv=none; b=ZpLW3XN1U41ZAz+LJ7PYi/wfq0/aBk0RoHXRxxlaIX23Pxe6fV+CMUjqfG8nz42IBy3KMrlEDzPeYso6VnoLq9x1R6O/sFpZkOxX68CBA0lon57Ne/y9gqcvJ7IP+QmiH2M1dxvDg0slo5LM7m4ngRN5F1HNpN3eZyW3JFvFNJs=
+	t=1764282011; cv=none; b=JfrSsYdDUPuVEfWRMg6ccjQJIC9+IZe1oKnOHb0prC1WGJD4oTwMPMx6DTNbgCDXPV0RyWTBrJhhzRB1B14WGaJfV+IpAJBmgjTI2eEAElqX5oZnvc6otbOyDG5G8d7nx2pyTJgFpmwBM8stsiZ8lxbkGsRdneWdi2zbwG9PgSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764279284; c=relaxed/simple;
-	bh=fReJ7B0zzohyHeXgCW2gHW6cexupyNkwi03bPHKdIJU=;
+	s=arc-20240116; t=1764282011; c=relaxed/simple;
+	bh=TyyoBW2Cdk+8ZJ6lKW+yUP9T0YjNCK7qa9bJpo+Fbe4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mjusVkOJhSawNg1jwE3vN7CYdqTBOUPNiAA9W+XNO9uhcTERznQ+qjPejufUoR22H+FBWW/aRmSbv4xERhgJZkpJ/VYll7W5cf3eNWqKIPk6vGLCoYqhpm/3aBqwCpF9BsTzy1k/f7ElbBwnfigj0dqEia2D6uSN9MUq1vqgYAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AuK3l+50; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uTYS+ASab10ktvBTkbmIO/i7utjrtnmqYCyYnkF/JszISwo1tqMiW0ROY8hXbyL+5wwKoYyd3ERb2KtB1Qmtx/E+kalxQnE7WbjrdLlCQDaHojMHlwReHMidv/ZMABGx+e6uMmuyRCgzdcrRmGXyFXcVVoRcwK1MpfFtzoZelss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WjBAw3Ni; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AuK3l+50"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 540C9C4CEF8;
-	Thu, 27 Nov 2025 21:34:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WjBAw3Ni"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FD67C4CEF8;
+	Thu, 27 Nov 2025 22:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764279283;
-	bh=fReJ7B0zzohyHeXgCW2gHW6cexupyNkwi03bPHKdIJU=;
+	s=k20201202; t=1764282010;
+	bh=TyyoBW2Cdk+8ZJ6lKW+yUP9T0YjNCK7qa9bJpo+Fbe4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AuK3l+50f8ZOQoe1H1b7drQUYSY6J4cLqDJySMLMVsdMC8/1TqPRSViLC9H+t78xs
-	 xmLeuB0BWHGja9MTwRgJ3x4DRD99VXVKtp3D4KQPg9ktHI3Q/xaLixPOBhN8kGpSwk
-	 gK6nma1bjh+DtadS1I/jH5z7shFhWP0kGGUdFxMnawq7yLL6nWiunHBnM/aM4+U9dV
-	 O9YUnCFxhVacdK29FDTK++ZlvzKDghzR3GvFhAYQiJx8SN/3YsYHCgnlSIOEw6V/qp
-	 Unlecowr3CzPsnjehbnCwEFh7jThHOdcUBjb7sfQ+8pVf2IJVy0hfNyBuKFHKFc4Rl
-	 reDoxUYV+ecog==
-Date: Thu, 27 Nov 2025 13:34:41 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Derek Foreman <derek.foreman@collabora.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	b=WjBAw3NiXnjbFo/57RJR0DT3CLy46ytsEBdE8pgPy3ZNbcdpD1OnyySSs7Sk1rgzz
+	 7c1ExKviqQfY74udIQ01p5RjmSbTYdJND8QD8BTzaC8cpAOuNzvWrzCA5G/xzr5P4e
+	 zaEY6sIwlUNobPMKkOX0vSKWPTypzmzfUQ/sj4S0AxRCOOKOyNdGuiJ0DRrVMoGLKc
+	 J5XE0oPyYJrl7GLmpBVFZMVEzPjF/Mx72IoFZMVBkhf8EF2QF/jrF7Jo/lZYmwpycp
+	 eg7UQDvTONN3/HwfY6uT0LcKpXigl5aVFVd7WBqGFqpnk+NdSvAAZNipSndeou3MNe
+	 xPiaOPKvzv9mw==
+Date: Thu, 27 Nov 2025 14:18:22 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, kernel@collabora.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf data: Allow filtering conversion by start and end
- time
-Message-ID: <aSjD8WC9qUzjrvH6@google.com>
-References: <20251124212301.450296-1-derek.foreman@collabora.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Pablo Galindo <pablogsal@gmail.com>,
+	Fangrui Song <maskray@sourceware.org>
+Subject: Re: [PATCH v2 1/2] perf jitdump: Add sym/str-tables to build-ID
+ generation
+Message-ID: <20251127221822.GA2977@sol>
+References: <20251125080748.461014-1-namhyung@kernel.org>
+ <20251125192943.GA3061247@google.com>
+ <CAP-5=fXh82HpvLhPr9uFtq=HK5V+ZL3xntz7-gspEE5az2+7nw@mail.gmail.com>
+ <20251126030452.GA85316@sol>
+ <aSi_zXuT8isr8jEC@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,222 +54,113 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251124212301.450296-1-derek.foreman@collabora.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aSi_zXuT8isr8jEC@google.com>
 
-Hello,
-
-On Mon, Nov 24, 2025 at 03:23:00PM -0600, Derek Foreman wrote:
-> This adds a feature to allow restricting the range of converted samples
-> with start and end times specified in nanoseconds.
+On Thu, Nov 27, 2025 at 01:17:01PM -0800, Namhyung Kim wrote:
+> Hello,
 > 
-> Use it like this:
+> On Tue, Nov 25, 2025 at 07:04:52PM -0800, Eric Biggers wrote:
+> > On Tue, Nov 25, 2025 at 06:55:39PM -0800, Ian Rogers wrote:
+> > > On Tue, Nov 25, 2025 at 11:29 AM Eric Biggers <ebiggers@kernel.org> wrote:
+> > > >
+> > > > On Tue, Nov 25, 2025 at 12:07:46AM -0800, Namhyung Kim wrote:
+> > > > > It was reported that python backtrace with JIT dump was broken after the
+> > > > > change to built-in SHA-1 implementation.  It seems python generates the
+> > > > > same JIT code for each function.  They will become separate DSOs but the
+> > > > > contents are the same.  Only difference is in the symbol name.
+> > > > >
+> > > > > But this caused a problem that every JIT'ed DSOs will have the same
+> > > > > build-ID which makes perf confused.  And it resulted in no python
+> > > > > symbols (from JIT) in the output.
+> > > > >
+> > > > > Looking back at the original code before the conversion, it used the
+> > > > > load_addr as well as the code section to distinguish each DSO.  But it'd
+> > > > > be better to use contents of symtab and strtab instead as it aligns with
+> > > > > some linker behaviors.
+> > > > >
+> > > > > This patch adds a buffer to save all the contents in a single place for
+> > > > > SHA-1 calculation.  Probably we need to add sha1_update() or similar to
+> > > > > update the existing hash value with different contents and use it here.
+> > > > > But it's out of scope for this change and I'd like something that can be
+> > > > > backported to the stable trees easily.
+> > > > >
+> > > > > Fixes: e3f612c1d8f3945b ("perf genelf: Remove libcrypto dependency and use built-in sha1()")
+> > > > > Cc: Eric Biggers <ebiggers@kernel.org>
+> > > > > Cc: Pablo Galindo <pablogsal@gmail.com>
+> > > > > Cc: Fangrui Song <maskray@sourceware.org>
+> > > > > Link: https://github.com/python/cpython/issues/139544
+> > > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > >
+> > > > That commit actually preserved the behavior of the existing variant of
+> > > > gen_build_id() that was under #ifdef BUILD_ID_SHA.  So I guess that code
+> > > > was always broken, and it was just never noticed because the alternative
+> > > > variant of gen_build_id() under #ifdef BUILD_ID_MD5 was used instead?
+> > > >
+> > > > The MD5 variant of gen_build_id() just hashed the load_addr concatenated
+> > > > with the code.  That's not what this patch does, though.  So just to
+> > > > clarify, you'd actually like to go with a third approach rather than
+> > > > just restoring the original hash(load_addr || code) approach?
+> > > >
+> > > > Also, I missed that you had actually changed the hash algorithm.  I had
+> > > > assumed the perf folks were were pushing SHA-1 because they were already
+> > > > using it.  Given that the algorithm changed, there must not be any
+> > > > backwards compatibility concerns here, and you should switch to a modern
+> > > > hash algorithm such as SHA-256 instead.
+> > > >
+> > > > I'd be glad to add an incremental API if you need it, but I'm confused
+> > > > why you want SHA-1 and not a modern hash algorithm.
+> > > 
+> > > Hi Eric,
+> > > 
+> > > Thanks for the help with the hash functions! There's a bit more
+> > > context in this thread:
+> > > https://lore.kernel.org/linux-perf-users/CAP-5=fWLgaWsv82dcPajVk=UmBbmwyEd7OVp6psZQ4TiXh-Meg@mail.gmail.com/
+> > > 
+> > > So genelf is trying to take snippets of jitted code and create ELF
+> > > files from them for the purpose of symbolizing in perf. The buildid
+> > > hash being used is SHA1 and I think the MD5 support was removed as
+> > > unnecessary. The problem this patch is addressing is that a JIT may
+> > > create many identical stubs which then end up being deduplicated into
+> > > the same buildid as only the code is hashed. The BFD linker seems to
+> > > have the same issue (Fangrui filed a bug), gold and lld appear to hash
+> > > the symbols (which Namhyung adds to genelf here) but still yield
+> > > different build id for the same source assembly code. It is possible
+> > > to hash the address of the symbol rather than the symbol itself, but I
+> > > think the intent for the code should be to best match what a compiler
+> > > and linker would generate. The problem there is that this differs for
+> > > every linker :-)
+> > > 
+> > > Something that is unfortunate in the code now is copying/concatenating
+> > > all the build data for the sake of producing the hash. It would be
+> > > nice if the code could incrementally build up the sha1 hash to avoid
+> > > the copying. I don't know if there is functionality for this
+> > > currently.
+> > 
+> > Again, I can add support for incremental hashing if you need it.  But I
+> > don't understand why you want the hash function to be SHA-1.  Also,
+> > given that this seems to be a regression fix, it's surprising that
+> > you're suddenly changing the inputs to the hash entirely, instead of
+> > just going back to hashing load_addr concatenated with the code for now.
 > 
->   $ perf data convert --to-json out.json -s 12345 -e 13340
+> Historically MD5 or SHA1 was the only choice for build-ID in linkers.
+> I don't know if it's changed lately though.  But because of that we
+> support build-IDs up to 20 bytes and it's in the UAPI too (well.. it's
+> implicit in PERF_RECORD_MMAP2).  I think we can support other hashs if
+> they fit into it, but SHA-1 would be the right choice for now.
 > 
-> Start, end, or both may be omitted.
-
-Looks useful, thanks!
-
+> About load_addr, I don't think it's the right fix.  We cannot have the
+> exactly same build-IDs as before since we already switched to SHA-1.
+> What we actually want is a way to generate unique IDs for each DSO.
+> For that purpose, it'd be nice to use sym/str-tables as Fangrui said
+> instead of using load_addr which seems to be a quick hack in the past.
 > 
-> Signed-off-by: Derek Foreman <derek.foreman@collabora.com>
-> ---
->  tools/perf/Documentation/perf-data.txt |  6 ++++++
->  tools/perf/builtin-data.c              |  4 ++++
->  tools/perf/util/data-convert-bt.c      | 18 ++++++++++++++++++
->  tools/perf/util/data-convert-json.c    | 18 ++++++++++++++++++
->  tools/perf/util/data-convert.h         |  3 +++
->  5 files changed, 49 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-data.txt b/tools/perf/Documentation/perf-data.txt
-> index 417bf17e265c..db0de1f354a3 100644
-> --- a/tools/perf/Documentation/perf-data.txt
-> +++ b/tools/perf/Documentation/perf-data.txt
-> @@ -40,6 +40,12 @@ OPTIONS for 'convert'
->  --force::
->  	Don't complain, do it.
->  
-> +-s::
+> So I think I can merge this change for stable fix.  And add incremental
+> SHA-1 (thanks in advance!) and update the code to it later.
 
-Please add this as well.
+If it needs to be 20 bytes, you should just use a truncated SHA-256.
 
---start=<TIME>::
+The only use for SHA-1 is backwards compatibility.  Which it seems you
+don't need.
 
-> +	Start time, in nanoseconds. Samples before this time will not be converted.
-
-It'd be nice if you mention that users can see the timestamp from perf
-script or so.
-
-
-> +
-> +-e::
-
---end=<TIME>::
-
-> +	End time, in nanoseconds. Samples after this time will not be converted.
-> +
->  -v::
->  --verbose::
->          Be more verbose (show counter open errors, etc).
-> diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
-> index ce51cbf6dc97..da813c62e284 100644
-> --- a/tools/perf/builtin-data.c
-> +++ b/tools/perf/builtin-data.c
-> @@ -33,6 +33,8 @@ const char *to_ctf;
->  struct perf_data_convert_opts opts = {
->  	.force = false,
->  	.all = false,
-> +	.range_start = 0,
-> +	.range_end = 0,
->  };
->  
->  const struct option data_options[] = {
-> @@ -45,6 +47,8 @@ const struct option data_options[] = {
->  #endif
->  		OPT_BOOLEAN('f', "force", &opts.force, "don't complain, do it"),
->  		OPT_BOOLEAN(0, "all", &opts.all, "Convert all events"),
-> +		OPT_U64('s', "start", &opts.range_start, "Earliest timestamp to convert"),
-> +		OPT_U64('e', "end", &opts.range_end, "Latest timestamp to convert"),
->  		OPT_END()
->  	};
->  
-> diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-> index 3d2e437e1354..6819f11fe900 100644
-> --- a/tools/perf/util/data-convert-bt.c
-> +++ b/tools/perf/util/data-convert-bt.c
-> @@ -91,9 +91,13 @@ struct convert {
->  	struct perf_tool	tool;
->  	struct ctf_writer	writer;
->  
-> +	u64			start;
-> +	u64			end;
-> +
->  	u64			events_size;
->  	u64			events_count;
->  	u64			non_sample_count;
-> +	u64			skipped;
->  
->  	/* Ordered events configured queue size. */
->  	u64			queue_size;
-> @@ -811,6 +815,12 @@ static int process_sample_event(const struct perf_tool *tool,
->  	if (WARN_ONCE(!priv, "Failed to setup all events.\n"))
->  		return 0;
->  
-> +	if (sample->time < c->start ||
-> +	    (c->end && sample->time > c->end)) {
-> +		++c->skipped;
-> +		return 0;
-> +	}
-> +
->  	event_class = priv->event_class;
->  
->  	/* update stats */
-> @@ -1626,6 +1636,9 @@ int bt_convert__perf2ctf(const char *input, const char *path,
->  	c.tool.namespaces      = perf_event__process_namespaces;
->  	c.tool.ordering_requires_timestamps = true;
->  
-> +	c.start = opts->range_start;
-> +	c.end = opts->range_end;
-> +
->  	if (opts->all) {
->  		c.tool.comm = process_comm_event;
->  		c.tool.exit = process_exit_event;
-> @@ -1677,6 +1690,11 @@ int bt_convert__perf2ctf(const char *input, const char *path,
->  		"[ perf data convert: Converted '%s' into CTF data '%s' ]\n",
->  		data.path, path);
->  
-> +	if (c.skipped)
-> +		fprintf(stderr,
-> +			"[ perf data convert: Skipped %" PRIu64 " samples",
-> +			c.skipped);
-
-This is a strange style to have the literal in a different line.  It'd
-be nice if you can fix others too - probably in a separate commit.
-
-And this line could come after the next, but it's up to you.
-
-Also it'd be recommended to have a pair of parentheses for multi-line
-bodies even it's a single statement.
-
-> +
->  	fprintf(stderr,
->  		"[ perf data convert: Converted and wrote %.3f MB (%" PRIu64 " samples",
->  		(double) c.events_size / 1024.0 / 1024.0,
-> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-> index 9dc1e184cf3c..dcbba34d6b08 100644
-> --- a/tools/perf/util/data-convert-json.c
-> +++ b/tools/perf/util/data-convert-json.c
-> @@ -35,7 +35,11 @@ struct convert_json {
->  	struct perf_tool tool;
->  	FILE *out;
->  	bool first;
-> +	u64 start;
-> +	u64 end;
-> +
->  	u64 events_count;
-> +	u64 skipped;
->  };
->  
->  // Outputs a JSON-encoded string surrounded by quotes with characters escaped.
-> @@ -165,6 +169,12 @@ static int process_sample_event(const struct perf_tool *tool,
->  		return -1;
->  	}
->  
-> +	if (sample->time < c->start ||
-> +	    (c->end && sample->time > c->end)) {
-> +		++c->skipped;
-> +		return 0;
-> +	}
-> +
->  	++c->events_count;
->  
->  	if (c->first)
-> @@ -320,6 +330,9 @@ int bt_convert__perf2json(const char *input_name, const char *output_name,
->  	struct convert_json c = {
->  		.first = true,
->  		.events_count = 0,
-> +		.start = opts->range_start,
-> +		.end = opts->range_end,
-> +		.skipped = 0,
->  	};
->  	struct perf_data data = {
->  		.mode = PERF_DATA_MODE_READ,
-> @@ -407,6 +420,11 @@ int bt_convert__perf2json(const char *input_name, const char *output_name,
->  			"[ perf data convert: Converted '%s' into JSON data '%s' ]\n",
->  			data.path, output_name);
->  
-> +	if (c.skipped)
-> +		fprintf(stderr,
-> +				"[ perf data convert: Skipped %" PRIu64 " samples.\n",
-> +				c.skipped);
-
-Ditto.
-
-Thanks,
-Namhyung
-
-> +
->  	fprintf(stderr,
->  			"[ perf data convert: Converted and wrote %.3f MB (%" PRIu64 " samples) ]\n",
->  			(ftell(c.out)) / 1024.0 / 1024.0, c.events_count);
-> diff --git a/tools/perf/util/data-convert.h b/tools/perf/util/data-convert.h
-> index 1b4c5f598415..5d055e1c31c8 100644
-> --- a/tools/perf/util/data-convert.h
-> +++ b/tools/perf/util/data-convert.h
-> @@ -3,11 +3,14 @@
->  #define __DATA_CONVERT_H
->  
->  #include <stdbool.h>
-> +#include <linux/types.h>
->  
->  struct perf_data_convert_opts {
->  	bool force;
->  	bool all;
->  	bool tod;
-> +	u64 range_start;
-> +	u64 range_end;
->  };
->  
->  #ifdef HAVE_LIBBABELTRACE_SUPPORT
-> -- 
-> 2.47.3
-> 
+- Eric
