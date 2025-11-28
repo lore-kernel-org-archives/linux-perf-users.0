@@ -1,290 +1,587 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012024.outbound.protection.outlook.com [52.101.48.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A959830EF9D;
-	Fri, 28 Nov 2025 11:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764329636; cv=fail; b=IVlCiab+N/ZWO2n98nJOuPU0my3na/R3xcNCYvRG98Z9QqqXWukt2CwxJYPAfKl9OIgtJJ7JrunUPHDE4FBaZa+S2Vbuvls393aQJgKsFnhzQtTtYN+HrX2zMd7qy6GNWq0I2znnlYwgQCgVMPZlNs6uVjFhfz9ahwQNXm46a3o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764329636; c=relaxed/simple;
-	bh=IUZ8/OVBe5JLexUsunbn2vz7ZS2Wxyv0bND0h7uxl9M=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=P8/BMw/5a+uMh9pkhU7MkVG5qlor53YTBsc8h3fSzqRHChuBjup9fHf2feltfTOLkZA0Fm9GMSL2DLEetlAWguCyC6ZDG/y88uTXQAVhoKgf8vDHSk8KPYbVFFITZilEwdwcEv1lfqOXu2i+ghKMxLHe8M9y0XHVGyzJnHxwEic=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=f7aJCwof; arc=fail smtp.client-ip=52.101.48.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F073A2676DE
+	for <linux-perf-users@vger.kernel.org>; Fri, 28 Nov 2025 14:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764339954; cv=none; b=AhzSpsPs7lkbssC55CjSgbMbrD10zyAff4pgUp8r0Nq7MyZDCd+uA3c9+zlzIgVhyX32vkh+VytAj40hkYf0Yl9FFh7ydxvYdPy8Fl//IzqSh23hGvdayyHDR2+KvqUo+pcSC7DU1nJ+Qa35cVQoKQE8ExTnfPmyettAxK7XHAg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764339954; c=relaxed/simple;
+	bh=vyWMoHIj+PuSovFZHchq/447GWUaVnUJhkFDyLPyutQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GGer9qW0As5sDZooQP868rWj7PEtZ+6vbyUPRPw4wjPqxiZik2mMyYeK9MZJfcOjSUSUrTlTavvvzn7zIRJMNJP1HGKtHtAv24XuhzyVToeZI+O9J/LrGsTn6I0295W+V2VuMmP5pnhMe0vpN0GDLLOdcGlOAl1Le1rXYnIIgbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rneBK11s; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="f7aJCwof"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gTv7KgTweMPgZhM7pYozDMrTsFKanoOFAxvTE4hwtpSAReKEKv5uAFwhuNNO9+OATfY7YUljXsG/QsVW3eJFXb1RjHFWGV/6WviHFXhelbffFrbvhfzV8FXmORVsXNMstGbw2x5I1Zq6P8HmVgGAnZmVpG/3KGjNSTEhFrelzmr3628cpNgQ2Fej9k1cd8s2fC+JYbcd22uh77rlcU5wzefPayQ4fmPCIyS4VO2nF9QWsEZy7ukzYLOpinbb2kzWWmmarCtEDfQCeD6rjXYb74+d4Jl56Sr5GaUjxEAcR2jzFx2o2CFP/bpR/QjYRLbxHg2NcQK04BZqmcYeWAu7+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EpDZq4ZNKLQMopSh7DDQ13a9YSm6BueXIApePgVK5Fs=;
- b=BKnTFB8HLhLpCUnUOI+nfC1LcuskzKL2ghOX/so/zVHO7A3wiHKRdcUcM7U2yHgQcdU5Yl8iTEII/HQ/kO5paqbWNO80I8YuQjamDqWxdM4ZZ3TQqJHLLzyH2f7t6MmEnPIOS1UAoFfAgax+zcUOo4mq40343UcwOBv7PiqgPrFNGlhr0OGX3+Ea3Uvr+b+UoFZUa8pB+S/ZmVX6Yjnr9yBnqwUfT6nvt3qD0WvOCCNBWAZBpEKNwwCWsa6TIgc8iw7SgpEvcIXpEoEZ/5s/ZJkVIR9gSgSRwOyNIGDyWyaEuOlFuK/HON0cl8QIZBgyt11mQRCcKqn2qAYDqiachA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EpDZq4ZNKLQMopSh7DDQ13a9YSm6BueXIApePgVK5Fs=;
- b=f7aJCwofTX93x4RG+Mz7ewVpDUK7YR6cujAO+f1jVd9+6NfxAEhJVoH2/mx7YZZzhA/uI7UlgJ1TOl1qRYfZGnCd7CLY5/cYRdCN8KPLMF7tlruoDnfvtkQ3ew/NPKGJNDDkbA6Et7KcefqpwqQ8N7fIs6hAu3vv4xhIICoc++o=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by SA3PR12MB8764.namprd12.prod.outlook.com (2603:10b6:806:317::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.14; Fri, 28 Nov
- 2025 11:33:50 +0000
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.20.9366.009; Fri, 28 Nov 2025
- 11:33:49 +0000
-Message-ID: <f7ad550d-0547-414b-82d6-a85e208a5c5b@amd.com>
-Date: Fri, 28 Nov 2025 17:03:39 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 15/52] perf jevents: Add RAPL event metric for AMD zen
- models
-To: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Benjamin Gray <bgray@linux.ibm.com>, Caleb Biggers
- <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>,
- Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@linaro.org>,
- Jing Zhang <renyu.zj@linux.alibaba.com>, Jiri Olsa <jolsa@kernel.org>,
- John Garry <john.g.garry@oracle.com>, Leo Yan <leo.yan@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, Perry Taylor <perry.taylor@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Samantha Alt
- <samantha.alt@intel.com>, Thomas Falcon <thomas.falcon@intel.com>,
- Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20251113032040.1994090-1-irogers@google.com>
- <20251113032040.1994090-16-irogers@google.com>
- <095bbbb8-4a65-4888-aa7d-39ea09a52b84@amd.com>
- <CAP-5=fW6er5djFROP-SQ64uiN545wfHoyZazugya1h8JXXyvvQ@mail.gmail.com>
-Content-Language: en-US
-From: Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <CAP-5=fW6er5djFROP-SQ64uiN545wfHoyZazugya1h8JXXyvvQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA5P287CA0235.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:1b1::13) To PH7PR12MB5712.namprd12.prod.outlook.com
- (2603:10b6:510:1e3::13)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rneBK11s"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-47755de027eso12498245e9.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Nov 2025 06:25:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1764339948; x=1764944748; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v8/ohxAgHHaN2EtQS+Uih5++4UiIx2jDsHKPa01+IIw=;
+        b=rneBK11sN7+9RKYKqUeVqSxiGMHqQVqBiRTctEJN1rNziyVnp9Gte2CI1OSAwyUuKR
+         o21mdlQcqVONnirqCsn093PKgc00DkSRI3h1ZQojfW7vSBjXSMnPfYw+t6gQ0LfCIdNk
+         fnb4tm9afvDPy4Wq+Yz1KTZGsSHabcasZCTOb9Sq4RBiDiEVXqs1DzWQUb30mbqtWk0i
+         5iwEgcH1IwYj4zqrI3PQ6JWPyQWqwsQyB250/ydyf7c7vPhHMmoE2KJCyBR6YFNudgjR
+         0TMhLykdXRsrR/e6fOuA/lWeet5cgCNQFBZyhhlT4kVVsYeAm0Ee+3TSd7nSnOdCeztP
+         odQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764339948; x=1764944748;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=v8/ohxAgHHaN2EtQS+Uih5++4UiIx2jDsHKPa01+IIw=;
+        b=egcb5HBj1T40MVZD9OfFYU8qzO5/X9MT/9+xeq3sx5KyELjuN+uwNfLfrnqlZJ2IZD
+         Gq2NA4MUmLbfgIw2oE0oX6S0bzxZwb/YhxYmdUkJTmkLtJij5o7JK4/ix9dgR4zMJqJ6
+         vU2NYcXAleWLcje3a0z9SxiQuo4s7gZnpXInFdhHCgmDH/yFmyiZp/dDWmYo/Cu4Qo+2
+         A7fePG6akX6HzgHwRcJeTs0aM13JS0a6QFE9xRu0ttQZ/OZTWUpUiHc1G2H2uu/gYrvA
+         fpU1ksnvSK8Zaih+ykozuB2CdG21giOGFo83lgnTf14qraCJJgNeXGn6Wd6VFTJpCBA7
+         lA1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUWlTNNWQKRDZdkjB7xyIuUuIdt+egaCqeYBCf0qqzF1hpONacH9Ss85VHgZRnTY8e/u0X78MTUlR+AwjsBPCEa@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG+ZegHq2ddHkXT9HArCdJ7+0H97xC2wxVElcT1F/9WbCgiY3c
+	DxREhnr/ZEglh5zfq8l3KkY1Nb9K8ggZyIKLfkdXkTi1B+K2gkDAy/yD0Rj1w8+/GpUgzCTFcSI
+	nE1yn
+X-Gm-Gg: ASbGncugHd5Y44kD8P5TA0fqFbnm9yFoA2x8Avjeb+fMsmV2Vu40W3bBhr/voyT7tk2
+	qm8OR10xFgn5wi63b7PYQqv4fV9K1TKMAIEwp0umKIv6/ho7+HbpQOVsEQKYtUWKiA2xAGQ7U3+
+	uXBG439Kf3/jiYVLWC+yuFtGrYpkj1RPfdEycxRe0RF9BXAAQQxKNTtfzBKaIykbcgCqfLoZ3TV
+	fKd7YyBMytkRbbBMEY+7UOF1pjMwN4JOCgjXCgY6ypTJnplLrGyd9qN0OWIwnHWa9q112+Fnbn7
+	gFCNe7NPeVbAMapjz6QdANei014fC8ZgfxdYe7GB2i15eO+TFyA1byFlg+1/86Il066HDt+rs66
+	l8ypYq9Pt+HMra8SHWDvTQ0ZhRXsFTeZ3v9p3gVzOZQBwWJq9m0UXyGBHVakzATXgnP+fc/KBPZ
+	ze81CYNC6b9B6w04cdkHBXdPK8ghs=
+X-Google-Smtp-Source: AGHT+IG5XWW8EU/n+SElWifeRaCdIb3qSk59NKsERLQuygTEzy/niHcmWKkyQrfmM4an8zXoMDFRZQ==
+X-Received: by 2002:a05:600c:6287:b0:477:a246:8398 with SMTP id 5b1f17b1804b1-47904acef7cmr136262085e9.2.1764339947844;
+        Fri, 28 Nov 2025 06:25:47 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4790adc6f7bsm162026015e9.2.2025.11.28.06.25.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Nov 2025 06:25:47 -0800 (PST)
+Message-ID: <1136b408-7bf8-4cc8-98b6-e44c2ed45aaf@linaro.org>
+Date: Fri, 28 Nov 2025 14:25:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|SA3PR12MB8764:EE_
-X-MS-Office365-Filtering-Correlation-Id: 17c794c7-f78b-4214-1e96-08de2e71ffe4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OUdzaTFtQk9sL2hobnRSVjdINkUyckVhR2h4WlZXa3NiL3c1OGhxV1RYdGZk?=
- =?utf-8?B?N0ZobCtTSUJHUTZ3eEVmQ3I0TjNpQTlORzdqb2NPWUYxRzVZalBSQnY2amo2?=
- =?utf-8?B?cW54WEg4ajlwakl0SXIrb3l1Qi9hVlQzcjl3NENSRnJUUFZPaUpUZXJkbGpQ?=
- =?utf-8?B?VWdsQzg4REdSWUpqUDJEUUU0d2tGSjg3TDdLa1Z4YktWempWMzZOeTBzaWJO?=
- =?utf-8?B?eG4wYkdnNFVqbTJ6bVA0ZWFUUmcwazdXNDZodG9jTmxVWU13Q294a256aHRT?=
- =?utf-8?B?dXpSNWRGK0hlRmdkM3hpcUlkblZiWVNmTFMrZkVEUFd5dTB0YVBPWFl6RWE3?=
- =?utf-8?B?eG9kUEdlYzY0d2tYRGNTdmc0Z2VmZ1N1c0xXblpkbGRyeGV6REFqTVdTOGhE?=
- =?utf-8?B?UmNLZTM2NzJpNmFRN2ZBTWZZejRJdFNZdUdZMUwvb1ovaUlkbjRvZnUyWUdQ?=
- =?utf-8?B?R1luWlJHZi9jVWJhQkpTT2I2Skp6NDVLV1RYVkFTS3pJcURGV3JDbDJaK1do?=
- =?utf-8?B?dzZtdFVRNlBScUM2RlhwRmYrV2tCZmc4dTNBOFFuYlN3NHFrNFN1bytWV3lo?=
- =?utf-8?B?ampGMGdBM3o4ZG4zWXdXNC9VY1cxNGF0NHQ0UFF5dDNwcmFPRlpyZDVld09J?=
- =?utf-8?B?WUVtVk5WQkYyQ3hFTEs4bERUbUY4WkwxUVZNOEFVUzhSUmdjSVd6QjNPTko2?=
- =?utf-8?B?QUQ3cVVjQ0dlbmtKNllXdmprM05ZWmc4RUFIVlg3cTNnZmRaczM5aHRxSFVD?=
- =?utf-8?B?bkpCdnE5ZEZLM1k4WHkrb1RxTnJCRmhIZmhCbGYyZGhuSHhkOVhTOGg4MGxt?=
- =?utf-8?B?WDEvQkRVNUFDbklLUmpKM3VEREZUcmNHaTdJU2thYzNpQ09MSW5ZRi9HdzEy?=
- =?utf-8?B?dnBYcjNVMXlrbXc3dmY5clV6OUpLZ2tvS0xZdjJxdzR5QmZGeExvZFFRY01p?=
- =?utf-8?B?R2F4V1hPc2lPbnN4OWwyQkxSN0UxcnFQS0ZzOXQ3SG01Y3RJcDFzZGhvcnRX?=
- =?utf-8?B?YzQ3akZkUEM1NlpoeVZhay9VU1gzMXMvaW5wV3BGRHBkUGtVUFFGOUlZVVFK?=
- =?utf-8?B?UFVhSXBFQ3JxeUk4VXp3RS9xY2NvVU1KMUV4c3lIY203RUNwVFpweVV0V1pF?=
- =?utf-8?B?Mkg3ZzErYTFIVnd6R0Z0T1VqTXlFbUp3eU1CUWxmVWQ5QWxDb2pQb2xWSk9D?=
- =?utf-8?B?d2RPT0NUVTVDZWxXTlh6RGJjWGkwU2VUZTg1R0liU0V4RHhoSzhXMjNzRHJ1?=
- =?utf-8?B?ejdQSVVxdGoyM29sdVNMZTNDQnZaLzk1dCt1R0g0OWc4LzZEc0xTUXMzRVpM?=
- =?utf-8?B?MW9ubldmMFFtUTBMNmRuNG9FclpsYk0xZ3orRVlFaXBLenNKVUlSTmY5R21J?=
- =?utf-8?B?bmVubWV4ay92dktBalFKS0hkUDNLRU0xL2ppcnJ6WHhCL1diR2tTdHFSQmdu?=
- =?utf-8?B?Smh2K3JMeVp2NWhCUDMvdlVRVnBiTjFIVFJTSFZ2b2ZoUmphQURjcXJONE5H?=
- =?utf-8?B?K3NGQXV4RWtqM01ub3UvUHk2R091VkxqYUpmZ0VKbCtTTWhkNjJIMENOdWJm?=
- =?utf-8?B?akRXUEFFSWl2UytmZGVHeE93OERnWVRVYk9CYXpxZGZMcTdJeVpZZHVSRGV4?=
- =?utf-8?B?SG1mUzA5anNZd2xudGxGSXlpb1pwN2xCZ24vOXN5cXlQUlpaMU1hYmJjRTN6?=
- =?utf-8?B?R2JUMEhvS1JHUXMxYWx4YW40OHlrREFpMDNhcThiUXA3VmRyK3JtOUpyb3gz?=
- =?utf-8?B?TndkTklXSTllaFR2MDZEN1ZZWjU1WGFKbEdVM2swUlJPNncxOHM1QmFQMlow?=
- =?utf-8?B?VGtaVmtjR2ZibHJOY1E1VndqYW9OQzZRc1Q5cGhMeWZUbUZJcDd5RmJCSTlL?=
- =?utf-8?B?elFiMjVwOVlVaGVBcm91T25mZmc1dXNsRjdIN29ZZU94TlozNmlYeFhlUUZw?=
- =?utf-8?B?L09YRk1UQ3pmQkZFNXdNdVk1d0Rqc2w0SnQ3SGRuTU5zSGJOejZoMmpZYzFU?=
- =?utf-8?B?TkJIT044ZUhRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q3dLQ3BsU0J1ZzZldnFjVzdQMGFNZ0orcWRkZGc3SnAwZVphckZ2MkxiK0VC?=
- =?utf-8?B?cDBqMVdQU2tQdUJtbTRxTXo0YWE2K2ZNOVJGaUlXQ1VrdW96SkJvVlZ6czBQ?=
- =?utf-8?B?eWRVeVZPMTlBSVczL3pOell2aS9WVlFBdm5ZNzRKUmhVNVhPQ0NSb0g0dGNK?=
- =?utf-8?B?T1BNQVRHTzFNUnErUnpuV21lU1owdjdJVmV3U3dMbW1CZGZZSU5JNStiY3Vu?=
- =?utf-8?B?b1U5Z00zVGFUSmhiWUFuY211S3FLbVVuc092ZzRUUTZkSTlVc1FmWkR0L0hF?=
- =?utf-8?B?UUVuYTRsb2ZKcUZIWlFHdStYNVphWTM1UXdVSnJqZ0RDbTVuQm5TR3JRTjEw?=
- =?utf-8?B?OWtrOWlYYzNwdFJjN2E3TUJITDl5eG83Vno2b0F2cGdmYjltK0hTQmw0VEtE?=
- =?utf-8?B?TkV1S1BuWmNWeDVOQml2M3o3cDFIQUlveXRTZHJSRmtjaEZ1ZUhZeWRwYThn?=
- =?utf-8?B?aTVLUGtpMzUrWXNrUEZiR0RKWFF2eEVoNElWNUtHaDlQMXBWZEtIbHcyZGM4?=
- =?utf-8?B?aU13c3laWEUwT1ZTbnpJV3pSbnRTRXlFMzNFT0NoK3ZaVTJWNHBnRTcvZkkx?=
- =?utf-8?B?UzVHNUpzalk2azRrZUs3Sk1iR2traUtKajNyUTRnYXFFWFBqcnFQamtTTmtk?=
- =?utf-8?B?bnFJY3BSbTdtcDhveHhWbDVSY1dIOVkzM0VuZkhYZGkwaUF3Tlp2c3dGSDgr?=
- =?utf-8?B?MS9ZTHhrNk15bzd1QmRCOEtRc3JpWUdwdjVYa1pZT1A1ME9NMTFkMDBaRGNQ?=
- =?utf-8?B?R3cwS3NqeTN3OHIyMVl0M1phalZKTlpWWHZ0NkJjODJMU0tObGxNSEZCVFZy?=
- =?utf-8?B?cllOUE4vSXJBaVpoNnd3TXEvWUsvZGlaeklqcHQyTHJxTzlTaUlKUFpzaHNR?=
- =?utf-8?B?dVh4Z1VUTnp6TlZkLzd3Tk1wRm9LRmh1QllrSG9JZTh3cHNmbWdUOG1JVlJ5?=
- =?utf-8?B?a0lwbjUyU25aZkx0MThXV29zM2dnOGhuUll5a3lBenE4MyttUkN2VWhpM3F1?=
- =?utf-8?B?aWZheGpyQms1VUxRQjg1dVVyU2RRMlJ0ak9BbEdjdjBIaFFDU0Q3Tm5ITFFj?=
- =?utf-8?B?dFR6aHl6ekViQ21rL0xPdS9mYy9iQ0pHSFJaS1MzR1BYZGc2VTlrcTM4cEpq?=
- =?utf-8?B?L3dzcWs2K1VaalF2WDNwKzk4YW9XWVpnelpqci96aEtSV3ZRN2tIK1lKUk14?=
- =?utf-8?B?RWhUOE9FSUZWcXpES1FHcVFxWmxHSXdCdlgrUWU4SVNMOGtHN2tmeFFNODBl?=
- =?utf-8?B?c2ZqaFR2TStFbXI0TXFWckRpVlhMK3lKQkEzbEpOdDJyZS82VXlqWWhQd0Ey?=
- =?utf-8?B?MjEyYWhCbHV6Yk10bnl0MWFmZHA5dUs1by9vbkdRZm1vOEQ0K1hsT0hoK1pi?=
- =?utf-8?B?V2Z3VnNmMXcxaW9VQlgvWWd3NE54aUlha0xzcDJBdVkxVUlXOXZKWlFKSnlx?=
- =?utf-8?B?LzdNSC8xTmxMdk5NNWdENDFqR1Z5akdEQmRTa0Z2YXg0alRHUmRUMklxZXJY?=
- =?utf-8?B?L2lVc0VndjJUdEZwTVd1ZUFhaFhxYXpoTlY0Rk1ERHRrK0k3UFF5NFIyTjFJ?=
- =?utf-8?B?QjMzNEVySWh2UGNHdllMRXc1WjMxd0hKNFBGZlFFVmY4Y3lnMWQ1VFNEc1BG?=
- =?utf-8?B?cU1nemxoZE1ZOVczRGJwVzBvUmFhMjgwNGNpWU05RnoyWVB6UE9rVFN2REF3?=
- =?utf-8?B?T05vMUhWbHpCQThrbEZUYlIrc2J6dzZ5L3U3NVNkTHFURDlUUVZUTEVQU2Ny?=
- =?utf-8?B?czRiNlRQK3FxQkZiRG55dzFwd1RjWDBJWkVTZ3N2ZjExMmRReUZwNjJ3MlJB?=
- =?utf-8?B?dllqOTYyYWVUQlpTY1hyZ3o0VVhBc3czOHJWL1cxQzFjWWtvSW4rVm04cW8r?=
- =?utf-8?B?MXpQN3JUWUhYaE1UMkNHRlZRamtVN1ZEOHN2RVBlUFowcmIyYWo3YzJuWHh3?=
- =?utf-8?B?M0I3aDdKYmY2TlcrRHlnaU5GTmN6c0tzMWdITDVVS0JVTFk3UEVtbVh0OXFt?=
- =?utf-8?B?S1BsRWFxdE5UcE93ZThlYmQ4czVCN2pQMkd3dEVqaVhaMlprZjhnbCthOVFW?=
- =?utf-8?B?bUhVVG5Td1pmUVNDS1JMcnZISXNmUDFVa1E1WHN2UzB5Q2prOXFpZHRsNG5m?=
- =?utf-8?Q?Y4By1PmYTj1K17RZEUNHJBnqm?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17c794c7-f78b-4214-1e96-08de2e71ffe4
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2025 11:33:49.6515
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aJimQyhQYcg6fX8Mefcpk4VvoOR4YeEkw+HT6MgxgC5xa8UvehsL7oxGoMismGty05Jt4fvH9bX+l2Gwq7BNXQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8764
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf addr2line: Add a libdw implementation
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Tony Jones <tonyj@suse.de>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Howard Chu <howardchu95@gmail.com>,
+ Stephen Brennan <stephen.s.brennan@oracle.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20251122093934.94971-1-irogers@google.com>
+ <aSdGq2K6TRMyG009@google.com>
+ <CAP-5=fULHMCw=b0PuN07r=aAjoamb+MNSNrHM3nyHPYM2DGkow@mail.gmail.com>
+ <f85dacc5-5d81-4ee7-acf3-8aa053c42dab@linaro.org>
+ <CAP-5=fW01urmSotcEHauc3xVUPqDRhkBttCvpa=6FuJyRaxiEw@mail.gmail.com>
+ <d808f86b-551c-4028-97c0-d468dac71d51@linaro.org>
+ <CAP-5=fV7QOe7ThUDCFpqWkqLpuq4j_f1mA=zRE78bmwcyY_nXA@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fV7QOe7ThUDCFpqWkqLpuq4j_f1mA=zRE78bmwcyY_nXA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 11/28/2025 2:50 PM, Ian Rogers wrote:
-> On Tue, Nov 25, 2025 at 9:05 PM Sandipan Das <sandipan.das@amd.com> wrote:
+
+
+On 28/11/2025 9:00 am, Ian Rogers wrote:
+> On Thu, Nov 27, 2025 at 5:48 AM James Clark <james.clark@linaro.org> wrote:
 >>
->> On 11/13/2025 8:50 AM, Ian Rogers wrote:
->>> Add power per second metrics based on RAPL.
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>  tools/perf/pmu-events/amd_metrics.py | 31 +++++++++++++++++++++++++---
->>>  1 file changed, 28 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
->>> index bc91d9c120fa..b6cdeb4f09fe 100755
->>> --- a/tools/perf/pmu-events/amd_metrics.py
->>> +++ b/tools/perf/pmu-events/amd_metrics.py
->>> @@ -1,13 +1,36 @@
->>>  #!/usr/bin/env python3
->>>  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
->>>  import argparse
->>> +import math
->>>  import os
->>> -from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, LoadEvents,
->>> -                    MetricGroup)
->>> +from metric import (d_ratio, has_event, Event, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
->>> +                    LoadEvents, Metric, MetricGroup, Select)
->>>
->>>  # Global command line arguments.
->>>  _args = None
->>>
->>> +interval_sec = Event("duration_time")
->>> +
->>> +
->>> +def Rapl() -> MetricGroup:
->>> +    """Processor socket power consumption estimate.
->>> +
->>> +    Use events from the running average power limit (RAPL) driver.
->>> +    """
->>> +    # Watts = joules/second
->>> +    # Currently only energy-pkg is supported by AMD:
->>> +    # https://lore.kernel.org/lkml/20220105185659.643355-1-eranian@google.com/
->>> +    pkg = Event("power/energy\\-pkg/")
->>> +    cond_pkg = Select(pkg, has_event(pkg), math.nan)
->>> +    scale = 2.3283064365386962890625e-10
 >>
->> It is unlikely that the scale factor will change, but would it still be safer to read
->> it from /sys/bus/event_source/devices/power/events/energy-pkg.scale?
-> 
-> Thanks Sandipan, I agree with the feedback but this isn't something
-> the metrics currently support. I'll keep it in mind.
-> 
-
-Thanks Ian. Parsing the scale factor and unit will be a nice addition.
-
-> Wrt, the other feedback, I'm wondering if we can get this series
-> landed and drop for now the patches that you have commented on? I'll
-> move them to a follow up series. That'd make the AMD patches here
-> something like:
-> 
-> Keep: [PATCH v8 15/52] perf jevents: Add RAPL event metric for AMD zen models
-> Keep: [PATCH v8 16/52] perf jevents: Add idle metric for AMD zen models
-> Keep: [PATCH v8 17/52] perf jevents: Add upc metric for uops per cycle for AMD
-> Keep: [PATCH v8 18/52] perf jevents: Add br metric group for branch
-> statistics on AMD
-> Drop: [PATCH v8 19/52] perf jevents: Add software prefetch (swpf)
-> metric group for AMD
-> Drop: [PATCH v8 20/52] perf jevents: Add hardware prefetch (hwpf)
-> metric group for AMD
-> Keep: [PATCH v8 21/52] perf jevents: Add itlb metric group for AMD
-> Keep: [PATCH v8 22/52] perf jevents: Add dtlb metric group for AMD
-> Drop (or perhaps keep and followup with miss latency): [PATCH v8
-> 23/52] perf jevents: Add uncore l3 metric group for AMD
-> Keep: [PATCH v8 24/52] perf jevents: Add load store breakdown metrics
-> ldst for AMD
-> Drop: [PATCH v8 25/52] perf jevents: Add ILP metrics for AMD
-> Keep: [PATCH v8 26/52] perf jevents: Add context switch metrics for AMD
-> Keep: [PATCH v8 27/52] perf jevents: Add uop cache hit/miss rates for AMD
-> 
-> Is it okay to use your reviewed-by tag on the kept patches? If I keep
-> patch 23 for uncore l3, with a follow up on miss latency, then are you
-> okay with that?
-> 
-
-I am fine with patch 23 currently not having a miss latency metric.
-
-For all the patches tagged "Keep" except 27/52, I don't see any obvious
-issues but to be sure that the interpretations are correct, I reached
-out to our internal hardware and performance teams for clarity on the
-behaviour of some of the events. I would like to wait until I have the
-answers.
-
-> 
-> 
->>> +    metrics = [
->>> +        Metric("lpm_cpu_power_pkg", "",
->>> +               d_ratio(cond_pkg * scale, interval_sec), "Watts"),
->>> +    ]
->>> +
->>> +    return MetricGroup("lpm_cpu_power", metrics,
->>> +                       description="Processor socket power consumption estimates")
->>> +
+>>
+>> On 27/11/2025 1:19 pm, Ian Rogers wrote:
+>>> On Thu, Nov 27, 2025 at 4:16 AM James Clark <james.clark@linaro.org> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 27/11/2025 11:43 am, Ian Rogers wrote:
+>>>>> On Wed, Nov 26, 2025 at 10:27 AM Namhyung Kim <namhyung@kernel.org> wrote:
+>>>>>>
+>>>>>> On Sat, Nov 22, 2025 at 01:39:34AM -0800, Ian Rogers wrote:
+>>>>>>> Add an implementation of addr2line that uses libdw. Other addr2line
+>>>>>>> implementations or, in the case of forking addr2line, slow. Add an
+>>>>>>> implementation that caches the libdw information in the dso and uses
+>>>>>>> it to find the file and line number information.
+>>>>>
+>>>>> Thanks James and Namhyung for the reviews! I agree with James' comment
+>>>>> about a typo in the commit message.
+>>>>>
+>>>>>> My concern is the limit in the open file descriptors in case the data
+>>>>>> touched a lot of different libraries.  The DSO code has some logic to
+>>>>>> deal with it but I'm not sure if we can share that since libdw seems to
+>>>>>> want to own the FD.
+>>>>>
+>>>>> The code opens the FD:
+>>>>>
+>>>>> +               fd = open(dso_name, O_RDONLY);
+>>>>> +               if (fd < 0)
+>>>>> +                       return 0;
+>>>>> +
+>>>>> +               dwfl = dwfl_begin(&offline_callbacks);
+>>>>> +               if (!dwfl) {
+>>>>> +                       close(fd);
+>>>>> +                       return 0;
+>>>>> +               }
+>>>>>
+>>>>> It then uses the FD and closes it (the close is hidden in libdw itself):
+>>>>>
+>>>>> +               /*
+>>>>> +                * If the report is successful, the file descriptor fd
+>>>>> is consumed
+>>>>> +                * and closed by the Dwfl. If not, it is not closed.
+>>>>> +                */
+>>>>> +               mod = dwfl_report_offline(dwfl, dso_name, dso_name, fd);
+>>>>>
+>>>>> So it is possible we exhaust all the file descriptors if there are
+>>>>> multiple concurrent calls to libdw__addr2line and every dso has
+>>>>> missing libdw dwfl data... but because the open/close are close
+>>>>> together and that 1 FD is say small to the FDs needed for the
+>>>>> cmd__addr2line, I don't think it is a problem we need to specifically
+>>>>> handle. Were the FD kept open until the dso was deleted, I'd agree
+>>>>> with you.
+>>>>>
+>>>>>> Also, have you checked if this generates the exactly same output with
+>>>>>> other implementations?
+>>>>>
+>>>>> So the code passes `perf test` and I was checking functionality with
+>>>>> perf annotate, top, etc. What I saw looked good, but it may not have
+>>>>> been exhaustive. I didn't specifically create a test that compares the
+>>>>> output of the different addr2line implementations. Such a test would
+>>>>> be possible, it's not something we've done elsewhere.
+>>>>>
+>>>>> Thanks,
+>>>>> Ian
+>>>>>
+>>>>
+>>>> I manually looked at a couple of line numbers and they looked
+>>>> reasonable. I think an automated test that compared dwarf decoders would
+>>>> be a bit of a nightmare because I'm sure there would always be subtle
+>>>> differences.
+>>>>
+>>>> Doing a manual side by side comparison of libdw__addr2line() and
+>>>> llvm__addr2line(), they seem to be quite different:
+>>>>
+>>>>      $ perf record -- perf test -w leafloop
+>>>>      $ perf script -F ip,srcline > libdw_addr2line.txt
+>>>>      # Comment out libdw_addr2line() and rebuild
+>>>>      $ perf script -F ip,srcline > llvm_addr2line.txt
+>>>>      $ diff libdw_addr2line.txt llvm_addr2line.txt
+>>>>
+>>>> It gets all of the simple leafloop workload lines the same, but lots of
+>>>> the libc stuff is different.
+>>>>
+>>>> For example libdw gives cpu-features.c:350 where llvm gives strcmp.S. At
+>>>> least that one looks like inlining so llvm might be "better", but where
+>>>> it gives dl-cache.c:490 isntead of llvm's mmap64.c:47, it's hard to see
+>>>> how that can be inlining if they're in different compilation units.
+>>>>
+>>>> If the llvm addr2line implementation is also supposed to be slow, it
+>>>> just means we're trading speed with accuracy with this change. Hard to
+>>>> say what the default should be in that case.
 >>>
->>>  def main() -> None:
->>>      global _args
->>> @@ -33,7 +56,9 @@ def main() -> None:
->>>      directory = f"{_args.events_path}/x86/{_args.model}/"
->>>      LoadEvents(directory)
+>>> Agreed. We could do some kind of option scheme like with the disassemblers:
+>>> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/disasm.c?h=perf-tools-next#n1715
 >>>
->>> -    all_metrics = MetricGroup("", [])
->>> +    all_metrics = MetricGroup("", [
->>> +        Rapl(),
->>> +    ])
+>>> I'm not sure there are currently any distributions using the LLVM
+>>> options, this in part motivates:
+>>> https://lore.kernel.org/lkml/20251007163835.3152881-1-irogers@google.com/
+>>> but the addr2line APIs are a pain there - see the extra generated .so.
+>>> Because of that it could be reasonable to delete the LLVM addr2line
+>>> code and just focus on libdw. I kind of wish we could also delete the
+>>> precarious command forking versions too. And libbfd... Perhaps with
+>>> this code, those advocating libbfd have a fast enough alternative
+>>> without bringing in large dependencies like libLLVM.
 >>>
->>>      if _args.metricgroups:
->>>          print(JsonEncodeMetricGroupDescriptions(all_metrics))
+>>> Thanks,
+>>> Ian
+>>>
+>>
+>> Personally for debugging I would want the most accurate and detailed
+>> information possible and don't care at all about the size of
+>> dependencies. If Perf is a tool for debugging then surely that should be
+>> the default? But right now I don't actually know which of the outputs is
+>> most accurate although I'll assume that the llvm one is.
+> 
+> I know LLVM got dwarf 5 support early. I'm not sure if accurate is the
+> best word to compare libdw and LLVM as, if libdw supports the format,
+> discrepancies are bugs in LLVM or libdw, .. Building around LLVM as a
+> common base sgtm and my main use-case doesn't get impeded by the large
+> dependency because of the dlopen patches. As libelf/libdw is pretty
+> much a given for a perf build, as it is required for libbpf, then the
+> code here can avoid the fork/exec fallback. I can see the sense in
+> trying with LLVM first and then falling back to libdw.
+> 
+
+Seems like my libc does have dwarf 5 symbols. Looking a bit more I still 
+think "accurate" is the right word. Comparing gdb, forked addr2line and 
+llvm_addr2line(), all 3 agree on the source line for every address in my 
+recording. The only one that disagrees is libdw_addr2line(). I don't 
+know if there's an issue with how it's being called, or there is a bug 
+in the library.
+
+Digging even deeper, if I put breakpoints on the lines that 
+libdw_addr2line() gives, they aren't even hit. So it's not even like 
+it's not de-inlining stuff, which you could argue is fine. And there is 
+the issue that some of the results are in completely different C files. 
+It's hard to see why it's giving such different results without 
+debugging libdw line by line.
+
+I'm not sure if you see the same thing with a simple recording or you 
+want me to send a perf archive?
+
+>> Wanting the smallest application possible while trading away detail and
+>> accuracy seems like an unusual special case that should be opt in. It
+>> also seems to relate to this old discussion [1], in that if we're going
+>> to keep the llvm depencency then it doesn't make sense to re-write
+>> anything in Perf.
+> 
+> So I think PE support in libdw wouldn't be a priority and so LLVM for
+> the win there. I think distributions have been slow to pick up the
+> LLVM dependency, I'm not sure what the issue is there. It would be
+> nice to start removing some of the alternatives the perf build
+> supports. The libbfd and libunwind code is only built with specific
+> opt-ins, and I think the fork/exec addr2line is redundant after this
+> change. For addr2line that'd bring the 2 implementations down to libdw
+
+It might be a bit premature to drop the addr2line fork if libdw isn't 
+mature enough. Especially as it seems to fall over on such a basic test. 
+Hopefully it's just an issue with how it's called or the version that I 
+have.
+
+> and LLVM. As the recent libbfd fixes show [1], inadvertently we can
+> break these largely untested dependencies by exposing latent bugs in
+> things like improper initialization.
+> 
+> Thanks,
+> Ian
+> 
+> [1] https://lore.kernel.org/lkml/20251112074311.1440101-1-irogers@google.com/
+> 
+>> [1]:
+>> https://lore.kernel.org/linux-perf-users/549d3812-a606-4981-83f5-0a99b0ff9f6a@linaro.org/
+>>
+>>>>>> Thanks,
+>>>>>> Namhyung
+>>>>>>
+>>>>>>>
+>>>>>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>>>>>> ---
+>>>>>>>     tools/perf/util/Build     |   1 +
+>>>>>>>     tools/perf/util/dso.c     |   2 +
+>>>>>>>     tools/perf/util/dso.h     |  11 +++
+>>>>>>>     tools/perf/util/libdw.c   | 136 ++++++++++++++++++++++++++++++++++++++
+>>>>>>>     tools/perf/util/libdw.h   |  60 +++++++++++++++++
+>>>>>>>     tools/perf/util/srcline.c |   5 ++
+>>>>>>>     6 files changed, 215 insertions(+)
+>>>>>>>     create mode 100644 tools/perf/util/libdw.c
+>>>>>>>     create mode 100644 tools/perf/util/libdw.h
+>>>>>>>
+>>>>>>> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+>>>>>>> index 1c2a43e1dc68..2bed6274e248 100644
+>>>>>>> --- a/tools/perf/util/Build
+>>>>>>> +++ b/tools/perf/util/Build
+>>>>>>> @@ -224,6 +224,7 @@ perf-util-$(CONFIG_LIBDW) += dwarf-regs-powerpc.o
+>>>>>>>     perf-util-$(CONFIG_LIBDW) += dwarf-regs-x86.o
+>>>>>>>     perf-util-$(CONFIG_LIBDW) += debuginfo.o
+>>>>>>>     perf-util-$(CONFIG_LIBDW) += annotate-data.o
+>>>>>>> +perf-util-$(CONFIG_LIBDW) += libdw.o
+>>>>>>>
+>>>>>>>     perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+>>>>>>>     perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind-local.o
+>>>>>>> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+>>>>>>> index 344e689567ee..06980844c014 100644
+>>>>>>> --- a/tools/perf/util/dso.c
+>>>>>>> +++ b/tools/perf/util/dso.c
+>>>>>>> @@ -32,6 +32,7 @@
+>>>>>>>     #include "string2.h"
+>>>>>>>     #include "vdso.h"
+>>>>>>>     #include "annotate-data.h"
+>>>>>>> +#include "libdw.h"
+>>>>>>>
+>>>>>>>     static const char * const debuglink_paths[] = {
+>>>>>>>          "%.0s%s",
+>>>>>>> @@ -1605,6 +1606,7 @@ void dso__delete(struct dso *dso)
+>>>>>>>          auxtrace_cache__free(RC_CHK_ACCESS(dso)->auxtrace_cache);
+>>>>>>>          dso_cache__free(dso);
+>>>>>>>          dso__free_a2l(dso);
+>>>>>>> +     dso__free_a2l_libdw(dso);
+>>>>>>>          dso__free_symsrc_filename(dso);
+>>>>>>>          nsinfo__zput(RC_CHK_ACCESS(dso)->nsinfo);
+>>>>>>>          mutex_destroy(dso__lock(dso));
+>>>>>>> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+>>>>>>> index f8ccb9816b89..4aee23775054 100644
+>>>>>>> --- a/tools/perf/util/dso.h
+>>>>>>> +++ b/tools/perf/util/dso.h
+>>>>>>> @@ -268,6 +268,7 @@ DECLARE_RC_STRUCT(dso) {
+>>>>>>>          const char       *short_name;
+>>>>>>>          const char       *long_name;
+>>>>>>>          void             *a2l;
+>>>>>>> +     void             *a2l_libdw;
+>>>>>>>          char             *symsrc_filename;
+>>>>>>>     #if defined(__powerpc__)
+>>>>>>>          void            *dwfl;                  /* DWARF debug info */
+>>>>>>> @@ -334,6 +335,16 @@ static inline void dso__set_a2l(struct dso *dso, void *val)
+>>>>>>>          RC_CHK_ACCESS(dso)->a2l = val;
+>>>>>>>     }
+>>>>>>>
+>>>>>>> +static inline void *dso__a2l_libdw(const struct dso *dso)
+>>>>>>> +{
+>>>>>>> +     return RC_CHK_ACCESS(dso)->a2l_libdw;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static inline void dso__set_a2l_libdw(struct dso *dso, void *val)
+>>>>>>> +{
+>>>>>>> +     RC_CHK_ACCESS(dso)->a2l_libdw = val;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>>     static inline unsigned int dso__a2l_fails(const struct dso *dso)
+>>>>>>>     {
+>>>>>>>          return RC_CHK_ACCESS(dso)->a2l_fails;
+>>>>>>> diff --git a/tools/perf/util/libdw.c b/tools/perf/util/libdw.c
+>>>>>>> new file mode 100644
+>>>>>>> index 000000000000..c4331fa8e1a3
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/tools/perf/util/libdw.c
+>>>>>>> @@ -0,0 +1,136 @@
+>>>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>>>> +#include "dso.h"
+>>>>>>> +#include "libdw.h"
+>>>>>>> +#include "srcline.h"
+>>>>>>> +#include "symbol.h"
+>>>>>>> +#include "dwarf-aux.h"
+>>>>>>> +#include <fcntl.h>
+>>>>>>> +#include <unistd.h>
+>>>>>>> +#include <elfutils/libdwfl.h>
+>>>>>>> +
+>>>>>>> +void dso__free_a2l_libdw(struct dso *dso)
+>>>>>>> +{
+>>>>>>> +     Dwfl *dwfl = dso__a2l_libdw(dso);
+>>>>>>> +
+>>>>>>> +     if (dwfl) {
+>>>>>>> +             dwfl_end(dwfl);
+>>>>>>> +             dso__set_a2l_libdw(dso, NULL);
+>>>>>>> +     }
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +int libdw__addr2line(const char *dso_name, u64 addr,
+>>>>>>> +                  char **file, unsigned int *line_nr,
+>>>>>>> +                  struct dso *dso, bool unwind_inlines,
+>>>>>>> +                  struct inline_node *node, struct symbol *sym)
+>>>>>>> +{
+>>>>>>> +     static const Dwfl_Callbacks offline_callbacks = {
+>>>>>>> +             .find_debuginfo = dwfl_standard_find_debuginfo,
+>>>>>>> +             .section_address = dwfl_offline_section_address,
+>>>>>>> +             .find_elf = dwfl_build_id_find_elf,
+>>>>>>> +     };
+>>>>>>> +     Dwfl *dwfl = dso__a2l_libdw(dso);
+>>>>>>> +     Dwfl_Module *mod;
+>>>>>>> +     Dwfl_Line *dwline;
+>>>>>>> +     Dwarf_Addr bias;
+>>>>>>> +     const char *src;
+>>>>>>> +     int lineno;
+>>>>>>> +
+>>>>>>> +     if (!dwfl) {
+>>>>>>> +             /*
+>>>>>>> +              * Initialize Dwfl session.
+>>>>>>> +              * We need to open the DSO file to report it to libdw.
+>>>>>>> +              */
+>>>>>>> +             int fd;
+>>>>>>> +
+>>>>>>> +             fd = open(dso_name, O_RDONLY);
+>>>>>>> +             if (fd < 0)
+>>>>>>> +                     return 0;
+>>>>>>> +
+>>>>>>> +             dwfl = dwfl_begin(&offline_callbacks);
+>>>>>>> +             if (!dwfl) {
+>>>>>>> +                     close(fd);
+>>>>>>> +                     return 0;
+>>>>>>> +             }
+>>>>>>> +
+>>>>>>> +             /*
+>>>>>>> +              * If the report is successful, the file descriptor fd is consumed
+>>>>>>> +              * and closed by the Dwfl. If not, it is not closed.
+>>>>>>> +              */
+>>>>>>> +             mod = dwfl_report_offline(dwfl, dso_name, dso_name, fd);
+>>>>>>> +             if (!mod) {
+>>>>>>> +                     dwfl_end(dwfl);
+>>>>>>> +                     close(fd);
+>>>>>>> +                     return 0;
+>>>>>>> +             }
+>>>>>>> +
+>>>>>>> +             dwfl_report_end(dwfl, /*removed=*/NULL, /*arg=*/NULL);
+>>>>>>> +             dso__set_a2l_libdw(dso, dwfl);
+>>>>>>> +     } else {
+>>>>>>> +             /* Dwfl session already initialized, get module for address. */
+>>>>>>> +             mod = dwfl_addrmodule(dwfl, addr);
+>>>>>>> +     }
+>>>>>>> +
+>>>>>>> +     if (!mod)
+>>>>>>> +             return 0;
+>>>>>>> +
+>>>>>>> +     /* Find source line information for the address. */
+>>>>>>> +     dwline = dwfl_module_getsrc(mod, addr);
+>>>>>>> +     if (!dwline)
+>>>>>>> +             return 0;
+>>>>>>> +
+>>>>>>> +     /* Get line information. */
+>>>>>>> +     src = dwfl_lineinfo(dwline, &addr, &lineno, /*col=*/NULL, /*mtime=*/NULL, /*length=*/NULL);
+>>>>>>> +
+>>>>>>> +     if (file)
+>>>>>>> +             *file = src ? strdup(src) : NULL;
+>>>>>>> +     if (line_nr)
+>>>>>>> +             *line_nr = lineno;
+>>>>>>> +
+>>>>>>> +     /* Optionally unwind inline function call chain. */
+>>>>>>> +     if (unwind_inlines && node && src) {
+>>>>>>> +             Dwarf_Die *cudie = dwfl_module_addrdie(mod, addr, &bias);
+>>>>>>> +             Dwarf_Die *scopes = NULL;
+>>>>>>> +             int nscopes;
+>>>>>>> +
+>>>>>>> +             if (!cudie)
+>>>>>>> +                     return 1;
+>>>>>>> +
+>>>>>>> +             nscopes = die_get_scopes(cudie, addr, &scopes);
+>>>>>>> +             if (nscopes > 0) {
+>>>>>>> +                     int i;
+>>>>>>> +                     const char *call_file = src;
+>>>>>>> +                     unsigned int call_line = lineno;
+>>>>>>> +
+>>>>>>> +                     for (i = 0; i < nscopes; i++) {
+>>>>>>> +                             Dwarf_Die *die = &scopes[i];
+>>>>>>> +                             struct symbol *inline_sym;
+>>>>>>> +                             char *srcline = NULL;
+>>>>>>> +                             int tag = dwarf_tag(die);
+>>>>>>> +
+>>>>>>> +                             /* We are interested in inlined subroutines. */
+>>>>>>> +                             if (tag != DW_TAG_inlined_subroutine &&
+>>>>>>> +                                 tag != DW_TAG_subprogram)
+>>>>>>> +                                     continue;
+>>>>>>> +
+>>>>>>> +                             inline_sym = new_inline_sym(dso, sym, dwarf_diename(die));
+>>>>>>> +
+>>>>>>> +                             if (call_file)
+>>>>>>> +                                     srcline = srcline_from_fileline(call_file, call_line);
+>>>>>>> +
+>>>>>>> +                             inline_list__append(inline_sym, srcline, node);
+>>>>>>> +
+>>>>>>> +                             /* Update call site for next level. */
+>>>>>>> +                             if (tag == DW_TAG_inlined_subroutine) {
+>>>>>>> +                                     call_file = die_get_call_file(die);
+>>>>>>> +                                     call_line = die_get_call_lineno(die);
+>>>>>>> +                             } else {
+>>>>>>> +                                     /* Reached the root subprogram. */
+>>>>>>> +                                     break;
+>>>>>>> +                             }
+>>>>>>> +                     }
+>>>>>>> +                     free(scopes);
+>>>>>>> +             }
+>>>>>>> +     }
+>>>>>>> +
+>>>>>>> +     return 1;
+>>>>>>> +}
+>>>>>>> diff --git a/tools/perf/util/libdw.h b/tools/perf/util/libdw.h
+>>>>>>> new file mode 100644
+>>>>>>> index 000000000000..0f8d7b4a11a5
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/tools/perf/util/libdw.h
+>>>>>>> @@ -0,0 +1,60 @@
+>>>>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>>>>> +#ifndef PERF_LIBDW_H
+>>>>>>> +#define PERF_LIBDW_H
+>>>>>>> +
+>>>>>>> +#include <linux/types.h>
+>>>>>>> +
+>>>>>>> +struct dso;
+>>>>>>> +struct inline_node;
+>>>>>>> +struct symbol;
+>>>>>>> +
+>>>>>>> +#ifdef HAVE_LIBDW_SUPPORT
+>>>>>>> +/*
+>>>>>>> + * libdw__addr2line - Convert address to source location using libdw
+>>>>>>> + * @dso_name: Name of the DSO
+>>>>>>> + * @addr: Address to resolve
+>>>>>>> + * @file: Pointer to return filename (caller must free)
+>>>>>>> + * @line_nr: Pointer to return line number
+>>>>>>> + * @dso: The dso struct
+>>>>>>> + * @unwind_inlines: Whether to unwind inline function calls
+>>>>>>> + * @node: Inline node list to append to
+>>>>>>> + * @sym: The symbol associated with the address
+>>>>>>> + *
+>>>>>>> + * This function initializes a Dwfl context for the DSO if not already present,
+>>>>>>> + * finds the source line information for the given address, and optionally
+>>>>>>> + * resolves inline function call chains.
+>>>>>>> + *
+>>>>>>> + * Returns 1 on success (found), 0 on failure (not found).
+>>>>>>> + */
+>>>>>>> +int libdw__addr2line(const char *dso_name, u64 addr, char **file,
+>>>>>>> +                  unsigned int *line_nr, struct dso *dso,
+>>>>>>> +                  bool unwind_inlines, struct inline_node *node,
+>>>>>>> +                  struct symbol *sym);
+>>>>>>> +
+>>>>>>> +/*
+>>>>>>> + * dso__free_a2l_libdw - Free libdw resources associated with the DSO
+>>>>>>> + * @dso: The dso to free resources for
+>>>>>>> + *
+>>>>>>> + * This function cleans up the Dwfl context used for addr2line lookups.
+>>>>>>> + */
+>>>>>>> +void dso__free_a2l_libdw(struct dso *dso);
+>>>>>>> +
+>>>>>>> +#else /* HAVE_LIBDW_SUPPORT */
+>>>>>>> +
+>>>>>>> +static inline int libdw__addr2line(const char *dso_name __maybe_unused,
+>>>>>>> +                                u64 addr __maybe_unused, char **file __maybe_unused,
+>>>>>>> +                                unsigned int *line_nr __maybe_unused,
+>>>>>>> +                                struct dso *dso __maybe_unused,
+>>>>>>> +                                bool unwind_inlines __maybe_unused,
+>>>>>>> +                                struct inline_node *node __maybe_unused,
+>>>>>>> +                                struct symbol *sym __maybe_unused)
+>>>>>>> +{
+>>>>>>> +     return 0;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static inline void dso__free_a2l_libdw(struct dso *dso __maybe_unused)
+>>>>>>> +{
+>>>>>>> +}
+>>>>>>> +#endif /* HAVE_LIBDW_SUPPORT */
+>>>>>>> +
+>>>>>>> +#endif /* PERF_LIBDW_H */
+>>>>>>> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+>>>>>>> index 27c0966611ab..4b456c4d4138 100644
+>>>>>>> --- a/tools/perf/util/srcline.c
+>>>>>>> +++ b/tools/perf/util/srcline.c
+>>>>>>> @@ -6,6 +6,7 @@
+>>>>>>>     #include "libbfd.h"
+>>>>>>>     #include "llvm.h"
+>>>>>>>     #include "symbol.h"
+>>>>>>> +#include "libdw.h"
+>>>>>>>
+>>>>>>>     #include <inttypes.h>
+>>>>>>>     #include <string.h>
+>>>>>>> @@ -120,6 +121,10 @@ static int addr2line(const char *dso_name, u64 addr, char **file, unsigned int *
+>>>>>>>     {
+>>>>>>>          int ret;
+>>>>>>>
+>>>>>>> +     ret = libdw__addr2line(dso_name, addr, file, line_nr, dso, unwind_inlines, node, sym);
+>>>>>>> +     if (ret > 0)
+>>>>>>> +             return ret;
+>>>>>>> +
+>>>>>>>          ret = llvm__addr2line(dso_name, addr, file, line_nr, dso, unwind_inlines, node, sym);
+>>>>>>>          if (ret > 0)
+>>>>>>>                  return ret;
+>>>>>>> --
+>>>>>>> 2.52.0.rc2.455.g230fcf2819-goog
+>>>>>>>
+>>>>
 >>
 
