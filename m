@@ -1,270 +1,256 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1BD3002AF
-	for <linux-perf-users@vger.kernel.org>; Fri, 28 Nov 2025 09:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717CA2C21DC;
+	Fri, 28 Nov 2025 09:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764320797; cv=none; b=lswynMW80Qvs6qH+OxvR9wSGOCkp/eZsefumjUtAYVohN35t0dFrR+zVFQNbRV5SOCFpd2Rm1qKxixzT2/KUnK70BJdz4jOMqc90df3xUO/kv46Jn4zGhFUb07xGDYEiP5EYhCTCNe29bSRpZuUPHy1tU/bUN/VOVyBQMTkDDxk=
+	t=1764321124; cv=none; b=AhMONv8mzIg4vPinybTdpsstZ9UwDeZ/R8Tl7DVyn6XoTx8i5p6I8B/p1ZQv1giVWHG3Gy5+Jr4xlvyy3eAjfV6r13tv6ZAqACZ5km0fr6Dkyf0xCe/UIDqYxgS50flhj6peG6gN8ET84P94SCh7fssZb96OtR8bz3NYTkMHGa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764320797; c=relaxed/simple;
-	bh=mepeeWfB5Fp49aF4gCqTILrqltQwvgkdlxA3+dTqC0w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ubikOI3u0rHCx2ogU+dHEa39YA4pXhCr+QnOKFa7gsbTHKiQP1fY+LwKETEVjF6Jhz7lZG7fm9Xq7ZSX4rjWXAZUFUsiPgVLFXXKp1Wl61ClSoa8GgEQ60im5DIM3VfjFn7HFJf5gZza22PI/fsWZ6ruhL+GR6p20S635bgbvxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=frjpveN9; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1764321124; c=relaxed/simple;
+	bh=82qB/1eUwV3iZdGYPHBLziWmQsE+8pHHcoDTqZb6Fq0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=llWUh0wFWgVoj0oSy4Vl5RynBjlm63LvSmdkPfdQ1LogBaz+7xeJ5HF/RGpYlCv+la9IT3sqVx5fPqklydF932yAsVN3DqdRXq0jvDrlIj7D8t9lTSJn0AyZUyQ1HJUvkS4XTFHpCzv3o2cGUnoTimAdcyuadwXu3Oiw3lizy/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UmbPQMiM; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="frjpveN9"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-297e13bf404so312885ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Nov 2025 01:06:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764320795; x=1764925595; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Oqs8LnX2OY4gSUrKyr7QJ8PLW9/ZifNP7B4CESBV4EM=;
-        b=frjpveN9DaaaT4AZkMTi7LIvPBgwauimA052wvm+q2/tzCQG5h0YbY7tSJgPLID4oY
-         1T4LNpebzEdAOH50gph7dKz67/jS+ulnWKfwNiglPQV2zefrCCzZ+r6AMkfi9OIZ8g4f
-         g+0vAzTEPd46l+D86RFetQ5mfMdQZseGOuYDX1li75yqnw4qlkaqds2jFQOQ31CiwVJR
-         D+MdvgPSIhRC5xa1UceQnH1z2Z3QIXeAcd8NH9lffgHmP+hHlQhuPdNzK6KpWuIujY4K
-         6FClFmyRERHqGxwdhq6nkQNckqLMHo+q4MKbqJjKat9jjwd6pVxEMolCO8qtLM8f5WKj
-         HChA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764320795; x=1764925595;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Oqs8LnX2OY4gSUrKyr7QJ8PLW9/ZifNP7B4CESBV4EM=;
-        b=WlG/6p9jBkHZAmDtD+faMcjvbu+rD4q3HwuNtcnJLBx8LW2Aascd9jAaOlNtFH7yuJ
-         6o8FwWr7hur1e5FRZt9m/TE+nw4ozmXkAy9ElTjk3fgm+tmedElL5pIxeXUnjw/oFOjR
-         tfGFVF5qxtJVagKPYTdR0uc7+dPPv5OuW0dSMrndOWfQotW8L2PntRZAmIA164+dIr1A
-         Hd/8RtBlRJ4fek6mEZpAYSp/vYCNvtEiWtTKBb2p+7i7jHYaNhqhoDAiXNwHUpgLFgii
-         IxTidzdXHnyQFQlSD0VQFEzwK+flJPzcMOv1RL4peGkVlyWvM73YAlFw9tuEDFJU/CxY
-         fMxw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvcXEU6lEfpjgnaXbReOVgNJ79+FIZ7Zmc5s/zr3E9WFxEyFK/tpmNwUon6W8elhhOyWYv1mfvLW6UJ+5coQr4@vger.kernel.org
-X-Gm-Message-State: AOJu0YyipFdHb95sjyOFZSsO8waWa4Csc/oqfyE0sx0u59SL6BIldYtm
-	1wa8Q4Vn2iFY7ETa+WECqrv6Av0Qu6R/T6lrUmV1sYUbf8Nfph/M2G5fO9/OYSZDx9dJVGUaUYF
-	6seTUs6cXx6iV9760UM9ILijRpfofAIdZ5pjhZiM+
-X-Gm-Gg: ASbGncvsgZAE24QppeDYkUC7A9McWYrOYOVx/jIRCbG08mWE7ELh+s6S5coaJ4mngbz
-	ycz/AloMDZUXUEIAXGcL3LT4EPAfP9pkaILl8terz4fan50GH01w4VjqbXmALUPUNqxIMQko6Ak
-	WX8eMCk/s7dvwNQemjRahNjKkqTOlLHNF/eEfdbROaRMYdXGbTDOP6P/bm1IG3EFk788mqEBJKM
-	M0gOutpF+g7vHc29ZCyTvQufoQ7NsfPbgBtiu9qckTBNdPDUslOp7X2ZcrtK0aI/L8QivTe
-X-Google-Smtp-Source: AGHT+IFQWKIw8BDGfajD8e1QAqYCVMKlEqZ0VKAV9UM4R32U5AkvQZQWlwM7XNbjfhIY/0mzu/qX6N2NOTIaLb55S+o=
-X-Received: by 2002:a17:902:e5c3:b0:291:6488:5af5 with SMTP id
- d9443c01a7336-29bca2adfaemr3343555ad.1.1764320794746; Fri, 28 Nov 2025
- 01:06:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UmbPQMiM"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AS87tR1012251;
+	Fri, 28 Nov 2025 09:11:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=/MGkGvC2D5jrCnOMSARQ8raLIVYZx4SxdmJXlUqsX
+	5o=; b=UmbPQMiMo/4dqQUtcHelIE1b92scIVh5pYtZuWeFpNxWDyqT0UXKQE4DL
+	XAKqrpNWa5aYJ8NIMyIbgNleuX5md4jn1ghSXwvmgv8ultxtAtt5lCNK+/zeSN43
+	OPU/nMgS2XkTWzJNYdspgGCjE7HPRX0YP8TrG2MwJJTGJBM5l98bkQ7Z7xvPyRF9
+	O05M2GuYGAJhPav2eNsCSJqKJiqy1z6TqOv20HktT/m3GaHtC4iqkDMlMw7k2G6h
+	ZSxJ8gGJUGaxORwJwQZZSQDKXt1AOZE/ZyphWAujgaBQe3nVrmsSf3EC0WMu+coQ
+	ILvFTqyfTEV4Eqj+EsXu5e2Sq46zg==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ak3kkbxm6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Nov 2025 09:11:58 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AS7uvMt000831;
+	Fri, 28 Nov 2025 09:11:57 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4akqvyc9q0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Nov 2025 09:11:57 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AS9BrI228574332
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 28 Nov 2025 09:11:53 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AABDE20049;
+	Fri, 28 Nov 2025 09:11:53 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6E8AE20040;
+	Fri, 28 Nov 2025 09:11:53 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 28 Nov 2025 09:11:53 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com,
+        James Clark <james.clark@linaro.org>,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/test: Fix test case Leader sampling on s390.
+Date: Fri, 28 Nov 2025 10:11:39 +0100
+Message-ID: <20251128091139.1309755-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251122081929.7588-1-irogers@google.com> <20251122081929.7588-18-irogers@google.com>
- <aSaqhlvclSnzJJf1@google.com> <CAP-5=fVW0Hnf6SfuAC4q-bZtr7h7XkYpQrGLQVj6rXc4Ddh5fQ@mail.gmail.com>
- <aSi6uGZdIqxLuyhz@google.com>
-In-Reply-To: <aSi6uGZdIqxLuyhz@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 28 Nov 2025 01:06:22 -0800
-X-Gm-Features: AWmQ_ble0V8r7R8xkzuvUAImQoPR6sh8YtP-qPp6rQt50xoUclY04GtY__vPHis
-Message-ID: <CAP-5=fWrbHu75NZcYn7NETDb057uZA6NGpOFADMWNgHRyxfCsA@mail.gmail.com>
-Subject: Re: [PATCH v1 17/17] perf test kvm: Add some basic perf kvm test coverage
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Collin Funk <collin.funk1@gmail.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Leo Yan <leo.yan@arm.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	Haibo Xu <haibo1.xu@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: AU5zfL7QdecZ2JvHaJmtK3vir05HXIZu
+X-Authority-Analysis: v=2.4 cv=frbRpV4f c=1 sm=1 tr=0 ts=6929675e cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=KKAkSRfTAAAA:8 a=VnNF1IyMAAAA:8
+ a=tYKNLRJmw82Eq7S0GJYA:9 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: AU5zfL7QdecZ2JvHaJmtK3vir05HXIZu
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTIyMDAwOCBTYWx0ZWRfXxLxyC4kNOacX
+ UFqca2gHhyZqnFFRow57JevVUgJuTuplReJcADf7GGVpBBqzQC5C17Fr1tGoaMswwq2hh+j4m6x
+ +shvJcYEnqIlYI4UZ6PKkzk13A8gBadwZ3ng4yAX6UzEU8ALZoodNKoJyhxEZQvlUZmLAV+OuTX
+ B0O1H999K0Q0iLnuBWkoKIKkHOazFn/Nu+upKTFxWN7KjJ0tjgH0tLp51gEoKerbyFzDd66XPGQ
+ NX9Wcf9H/kJsPsNM0F57KlVzwYb6+D4m9HrSOlulUOYKyOibsjBj13ARuRdft6M+Bp7ypwdyIrC
+ umbjMlmMyWIvHvozVCdzWBAKy96Epi6SZGj76TymOGhL8lY8U9FcVdSQ4C8X8W+UJx6RFznXGmn
+ w+Ysp+fYRpobUoMQHFjvPF/+jZrR+A==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-28_03,2025-11-27_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
+ impostorscore=0 bulkscore=0 adultscore=0 priorityscore=1501 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511220008
 
-On Thu, Nov 27, 2025 at 12:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Thu, Nov 27, 2025 at 03:53:13AM -0800, Ian Rogers wrote:
-> > On Tue, Nov 25, 2025 at 11:21=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > >
-> > > On Sat, Nov 22, 2025 at 12:19:29AM -0800, Ian Rogers wrote:
-> > > > Setup qemu with KVM then run kvm stat and some host
-> > > > recording/reporting/build-id tests.
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/perf/tests/shell/kvm.sh | 154 ++++++++++++++++++++++++++++++=
-++++
-> > > >  1 file changed, 154 insertions(+)
-> > > >  create mode 100755 tools/perf/tests/shell/kvm.sh
-> > > >
-> > > > diff --git a/tools/perf/tests/shell/kvm.sh b/tools/perf/tests/shell=
-/kvm.sh
-> > > > new file mode 100755
-> > > > index 000000000000..2fafde1a29cc
-> > > > --- /dev/null
-> > > > +++ b/tools/perf/tests/shell/kvm.sh
-> > > > @@ -0,0 +1,154 @@
-> > > > +#!/bin/bash
-> > > > +# perf kvm tests
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > +
-> > > > +set -e
-> > > > +
-> > > > +err=3D0
-> > > > +perfdata=3D$(mktemp /tmp/__perf_kvm_test.perf.data.XXXXX)
-> > > > +qemu_pid_file=3D$(mktemp /tmp/__perf_kvm_test.qemu.pid.XXXXX)
-> > > > +
-> > > > +cleanup() {
-> > > > +     rm -f "${perfdata}"
-> > > > +     if [ -f "${qemu_pid_file}" ]; then
-> > > > +             if [ -s "${qemu_pid_file}" ]; then
-> > > > +                     qemu_pid=3D$(cat "${qemu_pid_file}")
-> > > > +                     if [ -n "${qemu_pid}" ]; then
-> > > > +                             kill "${qemu_pid}" 2>/dev/null || tru=
-e
-> > > > +                     fi
-> > > > +             fi
-> > > > +             rm -f "${qemu_pid_file}"
-> > > > +     fi
-> > > > +     trap - EXIT TERM INT
-> > > > +}
-> > > > +
-> > > > +trap_cleanup() {
-> > > > +     echo "Unexpected signal in ${FUNCNAME[1]}"
-> > > > +     cleanup
-> > > > +     exit 1
-> > > > +}
-> > > > +trap trap_cleanup EXIT TERM INT
-> > > > +
-> > > > +skip() {
-> > > > +     echo "Skip: $1"
-> > > > +     cleanup
-> > > > +     exit 2
-> > > > +}
-> > > > +
-> > > > +test_kvm_stat() {
-> > > > +     echo "Testing perf kvm stat"
-> > > > +
-> > > > +     echo "Recording kvm events for pid ${qemu_pid}..."
-> > > > +     if ! perf kvm stat record -p "${qemu_pid}" -o "${perfdata}" s=
-leep 1; then
-> > > > +             echo "Failed to record kvm events"
-> > > > +             err=3D1
-> > > > +             return
-> > > > +     fi
-> > > > +
-> > > > +     echo "Reporting kvm events..."
-> > > > +     if ! perf kvm -i "${perfdata}" stat report 2>&1 | grep -q "VM=
--EXIT"; then
-> > > > +             echo "Failed to find VM-EXIT in report"
-> > > > +             perf kvm -i "${perfdata}" stat report 2>&1
-> > > > +             err=3D1
-> > > > +             return
-> > > > +     fi
-> > > > +
-> > > > +     echo "perf kvm stat test [Success]"
-> > > > +}
-> > > > +
-> > > > +test_kvm_record_report() {
-> > > > +     echo "Testing perf kvm record/report"
-> > > > +
-> > > > +     echo "Recording kvm profile for pid ${qemu_pid}..."
-> > > > +     # Use --host to avoid needing guest symbols/mounts for this s=
-imple test
-> > > > +     # We just want to verify the command runs and produces data
-> > > > +     # We run in background and kill it because 'perf kvm record' =
-appends options
-> > > > +     # after the command, which breaks 'sleep' (e.g. it gets '-e c=
-ycles').
-> > > > +     perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" &
-> > > > +     rec_pid=3D$!
-> > > > +     sleep 1
-> > > > +     kill -INT "${rec_pid}"
-> > > > +     wait "${rec_pid}" || true
-> > > > +
-> > > > +     echo "Reporting kvm profile..."
-> > > > +     # Check for some standard output from report
-> > > > +     if ! perf kvm -i "${perfdata}" report --stdio 2>&1 | grep -q =
-"Event count"; then
-> > > > +             echo "Failed to report kvm profile"
-> > > > +             perf kvm -i "${perfdata}" report --stdio 2>&1
-> > > > +             err=3D1
-> > > > +             return
-> > > > +     fi
-> > > > +
-> > > > +     echo "perf kvm record/report test [Success]"
-> > > > +}
-> > > > +
-> > > > +test_kvm_buildid_list() {
-> > > > +     echo "Testing perf kvm buildid-list"
-> > > > +
-> > > > +     # We reuse the perf.data from the previous record test
-> > > > +     if ! perf kvm --host -i "${perfdata}" buildid-list 2>&1 | gre=
-p -q "."; then
-> > > > +             echo "Failed to list buildids"
-> > > > +             perf kvm --host -i "${perfdata}" buildid-list 2>&1
-> > > > +             err=3D1
-> > > > +             return
-> > > > +     fi
-> > > > +
-> > > > +     echo "perf kvm buildid-list test [Success]"
-> > > > +}
-> > > > +
-> > > > +setup_qemu() {
-> > > > +     # Find qemu
-> > > > +     if [ "$(uname -m)" =3D "x86_64" ]; then
-> > > > +             qemu=3D"qemu-system-x86_64"
-> > > > +     elif [ "$(uname -m)" =3D "aarch64" ]; then
-> > > > +             qemu=3D"qemu-system-aarch64"
-> > > > +     elif [ "$(uname -m)" =3D "s390x" ]; then
-> > > > +             qemu=3D"qemu-system-s390x"
-> > > > +     elif [ "$(uname -m)" =3D "ppc64le" ]; then
-> > > > +             qemu=3D"qemu-system-ppc64"
-> > > > +     else
-> > > > +             qemu=3D"qemu-system-$(uname -m)"
-> > > > +     fi
-> > > > +
-> > > > +     if ! which -s "$qemu"; then
-> > > > +             skip "$qemu not found"
-> > > > +     fi
-> > > > +
-> > > > +     if [ ! -r /dev/kvm ] || [ ! -w /dev/kvm ]; then
-> > > > +             skip "/dev/kvm not accessible"
-> > > > +     fi
-> > > > +
-> > > > +     if ! perf kvm stat record -a sleep 0.01 >/dev/null 2>&1; then
-> > > > +             skip "No permission to record kvm events"
-> > > > +     fi
-> > > > +
-> > > > +     echo "Starting $qemu..."
-> > > > +     # Start qemu in background, detached, with pidfile
-> > > > +     # We use -display none -daemonize and a monitor to keep it al=
-ive/controllable if needed
-> > > > +     # We don't need a real kernel, just KVM active.
-> > > > +     if ! $qemu -enable-kvm -display none -daemonize -pidfile "${q=
-emu_pid_file}" -monitor none; then
-> > >
-> > > What is running in the guest?
-> >
-> > Nothing. As no kernel or storage image were provided the guest should
-> > be waiting at the bios similar to if you booted a PC with no storage
-> > in it. I just wanted something quick and dirty to give the basic perf
-> > kvm command a simple work out for the sake of testing coverage.
->
-> Ok, it'd be fine as long as perf can get some samples in the guest.
+The subtest 'Leader sampling' some time fails on s390.
+- for z/VM guest: Disable the test for z/VM guest. There is no
+  CPU Measurement facility to run the test successfully.
+- for LPAR: Use correct event names.
 
-I hope we always get a sample in the guest, but I don't think it is a
-given as qemu is running in the background, etc. Even without guest
-samples the code is getting coverage in the perf tool we don't get by
-other means, for example, finding the broken BUG_ON.
+A detailed analysis follows here:
+Now to the debugging and investigation:
+1. With command
+       perf record -e '{cycles,cycles}:S' -- ....
+   the first cycles event starts sampling.
+   On s390 this sets up sampling with a frequency of 4000 Hz.
+   This translates to hardware sample rate of 1377000 instructions per
+   micro-second to meet a frequency of 4000 HZ.
 
-Thanks,
-Ian
+2. With first event cycles now sampling into a hardware buffer, an
+   interrupt is triggered each time a sampling buffer gets full.
+   The interrupt handler is then invoked and debug output shows the
+   processing of samples.  The size of one hardware sample is 32 bytes.
+   With an interrupt triggered when the hardware buffer page of 4KB
+   gets full, the interrupt handler processes 128 samples.
+   (This is taken from s390 specific fast debug data gathering)
+   2025-11-07 14:35:51.977248  000003ffe013cbfa \
+	   perf_event_count_update event->count 0x0 count 0x1502e8
+   2025-11-07 14:35:51.977248  000003ffe013cbfa \
+	   perf_event_count_update event->count 0x1502e8 count 0x1502e8
+   2025-11-07 14:35:51.977248  000003ffe013cbfa \
+	   perf_event_count_update event->count 0x2a05d0 count 0x1502e8
+   2025-11-07 14:35:51.977252  000003ffe013cbfa \
+	   perf_event_count_update event->count 0x3f08b8 count 0x1502e8
+   2025-11-07 14:35:51.977252  000003ffe013cbfa \
+	   perf_event_count_update event->count 0x540ba0 count 0x1502e8
+   2025-11-07 14:35:51.977253  000003ffe013cbfa \
+	   perf_event_count_update event->count 0x690e88 count 0x1502e8
+   2025-11-07 14:35:51.977254  000003ffe013cbfa \
+	   perf_event_count_update event->count 0x7e1170 count 0x1502e8
+   2025-11-07 14:35:51.977254  000003ffe013cbfa \
+	   perf_event_count_update event->count 0x931458 count 0x1502e8
+   2025-11-07 14:35:51.977254  000003ffe013cbfa \
+	   perf_event_count_update event->count 0xa81740 count 0x1502e8
 
-> Thanks,
-> Namhyung
->
+3. The value is constantly increasing by the number of instructions
+   executed to generate a sample entry.  This is the first line of the
+   pairs of lines. count 0x1502e8 --> 1377000
+
+   # perf script | grep 1377000 | wc -l
+   214
+   # perf script | wc -l
+   428
+   #
+   That is 428 lines in total, and half of the lines contain value
+   1377000.
+
+4. The second event cycles is opened against the counting PMU, which
+   is an independent PMU and is not interrupt driven.  Once enabled it
+   runs in the background and keeps running, incrementing silently
+   about 400+ counters. The counter values are read via assembly
+   instructions.
+
+   This second counter PMU's read call back function is called when the
+   interrupt handler of the sampling facility processes each sample. The
+   function call sequence is:
+
+   perf_event_overflow()
+   +--> __perf_event_overflow()
+        +--> __perf_event_output()
+               +--> perf_output_sample()
+                    +--> perf_output_read()
+                         +--> perf_output_read_group()
+	                          for_each_sibling_event(sub, leader) {
+		values[n++] = perf_event_count(sub, self);
+		printk("%s sub %p values %#lx\n", __func__, sub, values[n-1]);
+			          }
+
+   The last function perf_event_count() is invoked on the second event
+   cylces *on* the counting PMU. An added printk statement shows the
+   following lines in the dmesg output:
+
+   # dmesg|grep perf_output_read_group |head -10
+   [  332.368620] perf_output_read_group sub 00000000d80b7c1f values 0x3a80917 (1)
+   [  332.368624] perf_output_read_group sub 00000000d80b7c1f values 0x3a86c7f (2)
+   [  332.368627] perf_output_read_group sub 00000000d80b7c1f values 0x3a89c15 (3)
+   [  332.368629] perf_output_read_group sub 00000000d80b7c1f values 0x3a8c895 (4)
+   [  332.368631] perf_output_read_group sub 00000000d80b7c1f values 0x3a8f569 (5)
+   [  332.368633] perf_output_read_group sub 00000000d80b7c1f values 0x3a9204b
+   [  332.368635] perf_output_read_group sub 00000000d80b7c1f values 0x3a94790
+   [  332.368637] perf_output_read_group sub 00000000d80b7c1f values 0x3a9704b
+   [  332.368638] perf_output_read_group sub 00000000d80b7c1f values 0x3a99888
+   #
+
+   This correlates with the output of
+   # perf report -D | grep 'id 00000000000000'|head -10
+   ..... id 0000000000000006, value 00000000001502e8, lost 0
+   ..... id 000000000000000e, value 0000000003a80917, lost 0 --> line (1) above
+   ..... id 0000000000000006, value 00000000002a05d0, lost 0
+   ..... id 000000000000000e, value 0000000003a86c7f, lost 0 --> line (2) above
+   ..... id 0000000000000006, value 00000000003f08b8, lost 0
+   ..... id 000000000000000e, value 0000000003a89c15, lost 0 --> line (3) above
+   ..... id 0000000000000006, value 0000000000540ba0, lost 0
+   ..... id 000000000000000e, value 0000000003a8c895, lost 0 --> line (4) above
+   ..... id 0000000000000006, value 0000000000690e88, lost 0
+   ..... id 000000000000000e, value 0000000003a8f569, lost 0 --> line (5) above
+
+Summary:
+- Above command starts the CPU sampling facility, with runs interrupt
+  driven when a 4KB page is full. An interrupt processes the 128 samples
+  and calls eventually perf_output_read_group() for each sample to save it
+  in the event's ring buffer.
+
+- At that time the CPU counting facility is invoked to read the value of
+  the event cycles. This value is saved as the second value in the
+  sample_read structure.
+
+- The first and odd lines in the perf script output displays the period
+  value between 2 samples being created by hardware. It is the number
+  of instructions executes before the hardware writes a sample.
+
+- The second and even lines in the perf script output displays the number
+  of CPU cycles needed to process each sample and save it in the event's
+  ring buffer.
+These 2 different values can never be identical on s390.
+
+Since event leader sampling is not possible on s390 the perf tool will
+return EOPNOTSUPP soon. Perpare the test case for that.
+
+Suggested-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Jan Polensky <japo@linux.ibm.com>
+Reviewed-by: Jan Polensky <japo@linux.ibm.com>
+---
+ tools/perf/tests/shell/record.sh | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 0f5841c479e7..46b96d565680 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -260,7 +260,21 @@ test_uid() {
+ 
+ test_leader_sampling() {
+   echo "Basic leader sampling test"
+-  if ! perf record -o "${perfdata}" -e "{cycles,cycles}:Su" -- \
++  events="{cycles,cycles}:Su"
++  [ $(uname -m) = "s390x" ] && {
++    [ ! -d /sys/devices/cpum_sf ] && {
++      echo "No CPUMF [Skipped record]"
++      return
++    }
++    events="{cpum_sf/SF_CYCLES_BASIC/,cycles}:Su"
++    perf record -o "${perfdata}" -e "$events" -- perf test -w brstack 2> /dev/null
++    # Perf grouping might be unsupported, depends on version.
++    [ "$?" -ne 0 ] && {
++      echo "Grouping not support [Skipped record]"
++      return
++    }
++  }
++  if ! perf record -o "${perfdata}" -e "$events" -- \
+     perf test -w brstack 2> /dev/null
+   then
+     echo "Leader sampling [Failed record]"
+-- 
+2.52.0
+
