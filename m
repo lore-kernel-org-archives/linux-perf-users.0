@@ -1,429 +1,627 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2370E296BD1;
-	Fri, 28 Nov 2025 06:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764311747; cv=fail; b=rS71wM4Xyor+40qpNxZ3mmx7H9J6kjVU5Lo2OvaCyOs/USPUfkQAhzmF7Myxi45ZIbm9/BMvOUhUdQ7yua7gmuDgCmTQYVoMrgZ7jtAjV/P82QdLMTdUyXM0PziodzDawXRM+hfJjcrmEQ5ZXsjHuVfQON+Mvf/HcOOGThKlndI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764311747; c=relaxed/simple;
-	bh=8qZyt3CZWAQ5qPWBbL8LYbkrqhpxtmWCnfjm+sNMoFc=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=UdjsRHRo5GkFRxxSkKBXLvIICJbG+/IITLK5O4eZ0MNf9sM+tmoqGEbY3qXwJLsAuRB6TLZYkAuj+09+rQ6RJbHb5X8MAKHHEYsJ2liIzu8DRrcyCI1UOL1fi+Pfp/z8F/df0OTAQ3TfvAEoqc2Js7f+dEBHNU2w2Ub1DKq88q0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cYEepzBn; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B22D2EB868
+	for <linux-perf-users@vger.kernel.org>; Fri, 28 Nov 2025 08:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764319351; cv=none; b=scUXGF5St8yTRmUUzZ3SycN+z4+DORsYfZYQgIbWUSFCspbUV4PdfPEr23WP21Ltn59dkc74ngpYvorDeD2dkihQzF36mcyW8uR21Y01DEw9MYK8c/vLDVULyxbHw555gr8xnmPX6mj+Qqcn4Boue//A7JstVg4tAmo6pWTUAOA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764319351; c=relaxed/simple;
+	bh=i6Ap3KxyQE4KYK+el90G3XIJ2xbIwJPbWlbejbQf4S0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nGsxVNNoSuPcArFyZgMwjVlbKe8DRzeRAGdxb7ZbHdF4g0tvyU/xyoMVxyU6LYDG/YgaG198BYxHW2RrPOd7KKI1ris8mvmNaZRJST6ppKrf8FJZZAQsGhFvwulK00STC41MPUhOjucDXHE30eSJlBM6522ERB4k4poLgdZPppo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2aqBM5GP; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cYEepzBn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764311746; x=1795847746;
-  h=date:from:to:cc:subject:message-id:
-   content-transfer-encoding:mime-version;
-  bh=8qZyt3CZWAQ5qPWBbL8LYbkrqhpxtmWCnfjm+sNMoFc=;
-  b=cYEepzBnG1jo4eTEsDR66q0TjKnJ+yM8gCxdPzvH4C4/s1g/eJ560OcC
-   cWRdbk0afCe4rlxyqQGPnLZSaZLXerCU7iZw32Pxf8jxDYNwQm6dkQZH6
-   t3/7fBGj7/pEcaDJr3XBHXBB2TKRL9uyQAML/cW3fHtLpbmdnErktkOf2
-   b5h8U/z9bwOSTrPWnYThy5fa7dLD/xQq3ekkr8kzf5ebpHQiWurt1u9SD
-   r4lgf8ZYVXxQKTcAZAql6YaElq5iJo4U53XZk1tuuLu/vVONNfoP3h6rO
-   NML0DmDAidCEbrkWxYQGz8aee4pmQ1ocpiVlfiDw2uJHDMwDV9/sTPdz9
-   A==;
-X-CSE-ConnectionGUID: eSsdtwcxQf2aOi22sG6ocQ==
-X-CSE-MsgGUID: u4GnQmtgSTiaU5AwjGKNJQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11626"; a="77032237"
-X-IronPort-AV: E=Sophos;i="6.20,232,1758610800"; 
-   d="scan'208";a="77032237"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 22:35:44 -0800
-X-CSE-ConnectionGUID: 55w924TbSi2xKTiwRcLXHg==
-X-CSE-MsgGUID: Y3lcWMV3Q/ifXM4paXEpOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,232,1758610800"; 
-   d="scan'208";a="193397012"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 22:35:43 -0800
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Thu, 27 Nov 2025 22:35:43 -0800
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29 via Frontend Transport; Thu, 27 Nov 2025 22:35:43 -0800
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (40.93.194.23)
- by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Thu, 27 Nov 2025 22:35:43 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ga7o5DEn7QkN1FJBdtpwk+5B1YI1EAHnKaq3yyXCc+135eKU+QDNqGUA4qCDs6VRj60QJGJJFv22/Dp19eiaQlUovIYW6KAk4U7ud7lXmkChnIauzklNK8a4eoWLI6Fg4IkZsaph8Mv6ZPbwXlwWzejryrgVPkdAvFtMNGPnOhijRPIHxGD+3ODp14cYwNIDRaHIF9C8kMBzFIRw8xiR6TQbbAtdWcR8IrFZ6+OgfMrXrEEuHeNOSVnbTTO+woD/7v0q0M7Dv+IpHXuDFr0QG3z9Sy/6g35Hn88KvefSKB2LcSZ8iEKOO4rW5X2vOB2n7E+u2R+WP7e7v5M875gZFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d1nsgm9Ip4cLSKTsrSxPlDpzB1LY49FqNU6arBPnfMc=;
- b=Pen/bIjPA0Bm5HWoG4aCQmKW6CtuDUxs0eDAzGh3fStFS1aDLZUzXQc6foOgABzLrWqfnvNo/KVwezUzOSTsHInfvHrDg6flQzs2f/ZfOA5gCsZYclOEH9ol332fS6EUpZM8vkSbMOKD5yJab6jzKwVrTDicbl5Oj75ibsgt4kSPUYRuaI1kpd1gsT56uI/ISOclzAIPAvVUPIgjkmjInccoLi5h4jx4ItKeNjU6pBJOQ+PkCchy3DG+tOaRDazAV6vmxiQq1Wxetvk228v6a4RXXUcd/M2jU7tb9Ig5HVz4cDKbGNHJ7JhXssTkoueCFy8OK0rtY9cF0dYtbK890A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by CO1PR11MB4915.namprd11.prod.outlook.com (2603:10b6:303:93::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.14; Fri, 28 Nov
- 2025 06:35:40 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.9366.012; Fri, 28 Nov 2025
- 06:35:40 +0000
-Date: Fri, 28 Nov 2025 14:35:25 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Thierry Reding <treding@nvidia.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-samsung-soc@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linux-mips@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-sh@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
-	<linux-edac@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<imx@lists.linux.dev>, <linux-rockchip@lists.infradead.org>,
-	<linux-tegra@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-mediatek@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-leds@vger.kernel.org>,
-	<xen-devel@lists.xenproject.org>, <oliver.sang@intel.com>
-Subject: [linux-next:master] [syscore]  a97fbc3ee3:
- will-it-scale.per_process_ops 3.2% regression
-Message-ID: <202511281432.47ac7e38-lkp@intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2PR02CA0013.apcprd02.prod.outlook.com
- (2603:1096:4:194::21) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2aqBM5GP"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-297e13bf404so308835ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Nov 2025 00:42:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764319348; x=1764924148; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hvtjON200uqsSKc4pOJoWwvVag89AFopn1e89zA/nHE=;
+        b=2aqBM5GPRzdB73/SJrhEB4NDUTghMUeNtqMjoMIs7O8mMdmNSoiZk+dPaKEEUAjYRV
+         jBXdYBCp6Xbbfh5mP4qtZqFNef5+HqSY4sbA9H+7PJ5Db2YLOTccMjBBeKX9lwUrXrbf
+         D3/13tKde70qj60VKd8yOVGvH5fYHvXhjrg7UU9IZP5dsk/2usCObgBO1lqXJeJ0S8Mt
+         PufHEc9/OZhskogQgn3QYy8iIfHlnxi7eJG07FBHOVbNYkbjl6Iis5G7b1bBdMuOEtxj
+         fMlqRYCN7meJPrgYpD1qdCsb3lJoPZfoxrZ0wvNu5Z4/QT4x/FvLRk7naP5YcAk5+lyd
+         5qgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764319348; x=1764924148;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=hvtjON200uqsSKc4pOJoWwvVag89AFopn1e89zA/nHE=;
+        b=R9GOW8Rj6U1YGPHvuLwGS3MQbZKxxsvF1C6mBSduWrcSX8UXf5q4xYNKZ4er/9gW6m
+         CHbg6cHRVco5blml/yklkMw6GATIrL9y6JrYRZLE4TlEtS70ze8LlTLNpdmnvH9ALu0V
+         +FUogUojrp3bBUlOFD2MC3epHdnQUQQOdClcrwdaGx8oGsJqnGCquM/RRk9hHkEN1x95
+         Df9Tl4tbPmS7dQZ5r8d62wVBUyETU2GVtM27QKWIL/UpRJ348lD6I0l3eRVmnXFCgZ1+
+         +MGPTf9Kq7EVIT3DstEohatNxtIxuNarMh6PHqJrQFVN1kIAJG7SRgXNjHkFXesYC7TX
+         JstA==
+X-Forwarded-Encrypted: i=1; AJvYcCVoWSxv7TBGhG1XJxpfj7h8jILNhwoaWS0HqwALM599d7o2SitTFV+gcuNpREdd1DEkuupwCNwZ/CTX/uAlkiwg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOyOcIsJ+4lcisecc+GyBgWx+4FjBOlZE2JbTQX0qC7xATnWPr
+	bKBFElzTYlOnh+jKoZ7rXqoGfau5qN26lfXNkRLiZmo4LTwmdVPwZVxqYKf8oCLaH14zXyD5ufH
+	RTrVKqJgNEM4rtsBlxTf4MimI1X1OWqma7kxK9YAt
+X-Gm-Gg: ASbGncuIjriZSl8pjJtm7bXjjgJeui19ZY5t/h8Ffb3f3jZSAqKD3cAdIB/a2BkkLij
+	C5OQRRZghSNGD7efr5NDSjkDdQlb7ij53RQBYRjunJeW2w2w28JWufcLvX5TyhH48ZLqXbD8+Rv
+	QGiJo/2LkSI632fjZOqXv7pQkQnp5fNghYT/X5zP/33agXAsC6+IdJ9EOqkIk7YvaVUwV0k3S8V
+	8y3RyJnRD9sZScis5J0UH8/VzYWLPu0a5fEycsLNzPYLIcEFaermUDQlwx8a8Uc5ClkJErz
+X-Google-Smtp-Source: AGHT+IG2vDdt5L4C2UunyxnO87152DuVwFl/WKY1mev6WiEErJs4KhojakhmXpJe1LWuHl+gb70NH+xsU3J3POEb88c=
+X-Received: by 2002:a17:902:f14b:b0:299:c367:9e03 with SMTP id
+ d9443c01a7336-29bc92e759amr1608515ad.18.1764319348123; Fri, 28 Nov 2025
+ 00:42:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|CO1PR11MB4915:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2eaf8dfa-bf1b-4ec4-fcee-08de2e48594d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?EFp53KH0HxNC2xm3JlGjU28j6rFzy4Ry+EC6UFfrhsBDDeVgTLBjZv3B9/?=
- =?iso-8859-1?Q?RYDolJOFxq7oQB+gE5KrQrwHhyp35gocjEUeVFQ+ZIIRh4ye4+QTZzCo22?=
- =?iso-8859-1?Q?wQNF3diApWO3r/NDLspxg7CKp+9eGVkTNsYHRAzkIB8gH7B5uVX1yN5YWW?=
- =?iso-8859-1?Q?YAQIQeCgW4ASS0nF2hXiOsJxATWZFNWlzMpQf/sIdRbQKDKl3P6aYIJEVZ?=
- =?iso-8859-1?Q?WCZa1Mzfzub58IKEqETQevjBRWE6pjuyI2UorpsqhPW/erMtJuvmYCpxkX?=
- =?iso-8859-1?Q?D5dIuVTB0O10l6eJXWT/IzhDSofBjUTQ8UwaLRhQGzUtFdxLO9WY2tj+pr?=
- =?iso-8859-1?Q?NFASEPudecC3Sh0+gBwlnUxwagxdG9EuuwuYvV38jaTw1l/CrXt51qD+zZ?=
- =?iso-8859-1?Q?9oQVlUcWVFOTcJSVmIfDnOVeCGdEq+lKZj3FP0J8434EiQK8OY4Um8H/fs?=
- =?iso-8859-1?Q?WTfU+8XLi07Bh6Z6wClmihd02fZUc+fGK75l2Z5HDGYlLW66Scbm9ATOpN?=
- =?iso-8859-1?Q?Qr37ZcbVflNN1KgIjy/4qsjX8eEfHdtj7fXB7XAHc+4KRl6x6MWYV8u02F?=
- =?iso-8859-1?Q?neMYZfXo4PPC5oJS7R2sKMMaP2gccgIwp/2qUxc/K3cjKK/Ziu08KyBJ/x?=
- =?iso-8859-1?Q?dXkzWO1RFoZQ+kf7r9k+2IZTHBUjQEl5tNvFgcLZrqk1RGe7BANWLLmxXH?=
- =?iso-8859-1?Q?OF/sHBMUx68cTVHEA7g21Sa5pwbIdLSXLXKZF0fs6buZmj/heHDSOCcQgv?=
- =?iso-8859-1?Q?VbHW7Tg/lAiWe5f/Jx9YMXZhBiLdvgVY0YKscf0mRjX5kgjQlEOoPM7dtH?=
- =?iso-8859-1?Q?GQiXWXAQ5bGrQRoslBs8jeBJGBe/aBkwVqslvY3cy4EHEOx+E8EjShMBkz?=
- =?iso-8859-1?Q?+BcVJNQ+cp++wIFr3ywYemqh9RIVOUNBKWBJf6bh2XQ51u1eS2yOtxTsQb?=
- =?iso-8859-1?Q?SZbYRMIO9nqmrlSAi486s5X5z+AvOwYsRG7OdkkPagqfh0Q80FU+HAoC4t?=
- =?iso-8859-1?Q?d81gH5mNjX9gi8rwG/2XUpLTxw9GeY1FGAxtU0v6IKdpzPJ9zeQ9qVvvsJ?=
- =?iso-8859-1?Q?GXvEKHhJgVdIq0HGMddNgVj28sLW7aSHZ8Q2Geu8spPAJg17oV2cvc6MFZ?=
- =?iso-8859-1?Q?Y4wPWkXGoC6fyvGXsH4ZFP24bBtRNUa8WgOao2RJbBtBKMzUFwPHdwpxP8?=
- =?iso-8859-1?Q?K9zbvhKKT6vdoh4uUomuu81LBQ6L5eSp+cqApWFPo+6TCFseaI2wRnuTk9?=
- =?iso-8859-1?Q?9GaDRV9IU4OA7GwgMjdAA+s1o/j9aa8zZZS1XgIS0NEcBrMYY2uKRpCwnX?=
- =?iso-8859-1?Q?j5sGbhfe9ZRkjNthSd7jDq19D20/5cxZa7xNtqDXCsEMlsvppS2zI5bzZ/?=
- =?iso-8859-1?Q?PjeiEubQl1K6/PoGCyGZ5ZKCFky+0pX4vaK4yEgw3bDgRj60aLJ5aRUdej?=
- =?iso-8859-1?Q?fQgYdTgzBciaoGu5901GUfIL7MHf5q5eVQAtctZQZ//oX3FSvk4OpaTzvP?=
- =?iso-8859-1?Q?Dkdl1oEdRrVhL92FGucaTaLuYaTLJuR7gAZx4zZ5iOvw=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?t6zuwfsmHUleIb4YtmoF7hxy3UNa5AB7p7MfI8FI/hyHjnVrrSZiQrgsQL?=
- =?iso-8859-1?Q?ZvN16y1qoJ1omfgQsPFUti+PzfrXGKX1NZBt0w/D/E9EGuJRRKP//mgr/A?=
- =?iso-8859-1?Q?YlQf6NbZKbpxwN14iEclA2HDi28ZJMQ39EaMNVBFIBya1tUfSwo0K6SBE3?=
- =?iso-8859-1?Q?x9jSkMdCz/u3C+jeRjcQ7PmvtihympDBB1ESg1qzYbeXoXnAsM2qB04+yB?=
- =?iso-8859-1?Q?K0XrmShmaIZvZflu201E16UzyjNcuXtdtF/pxJJ1dvKKV8vwTlSQKr9/u8?=
- =?iso-8859-1?Q?su5AeHDAt3cifUDc9Z0rr7roS/h4MgIhurP3BJvM/ZoLwS73h+L6015Y6Y?=
- =?iso-8859-1?Q?h+MOXwF+YB++ET25tKiFuRD7R0+tCMHgBIy+AogFZ4Xll1RqlO2DpKjKUT?=
- =?iso-8859-1?Q?3afSXNFxsbWSKboPSF77/Wr59onGY1VIyuAe2DuPWCaZkaHjVuP3MooftE?=
- =?iso-8859-1?Q?WSDNtt04Slw3QOF+YWfCEXR2q7ltjZnIEOtOGfbcIW22BARTxvJAOaOeRK?=
- =?iso-8859-1?Q?IBgTf/gbIEWDjyazrKR9TXnJCwkHuh0z9HTmUvzduxEksNM/kx9Ovb8/7E?=
- =?iso-8859-1?Q?GZAicig+JCvamUdNBWIQHPf9BZAQ5XFKvH8zlpj3pw6HYlLn7IrTV+i8X1?=
- =?iso-8859-1?Q?5Miw6NaapD8D8LlOvVrjTbRMAPZcsEJDMq6SaxTsTCJgHT6w+r2G4BvaJ+?=
- =?iso-8859-1?Q?ePgEVoAq2dOT5uYM2lgOE9qkkazAQYtgrcB/UGOQzrLl003XYHwybxZb3c?=
- =?iso-8859-1?Q?Z8Z5OhguV6TUoX2XzXQYz90suQkyALFBDvyBQlmlWWm5ZABUidvrOFU+Y7?=
- =?iso-8859-1?Q?3C+uz9KwJCJhvUt/CSag2o8G1fM/uLTCtAVpwaIMC5Is+icShWhOOmmQn0?=
- =?iso-8859-1?Q?2LUXJ9VQPfcq7xV6ZF/H4t1lqfRozlD+QyX9f3vO0pLDofW5AHUXg1wlWE?=
- =?iso-8859-1?Q?nSvKBzMzVj346se/68FIF1N5WR0cxrlOzoZZRASvzP0RiehxzFVon1aaj4?=
- =?iso-8859-1?Q?EXIke5mbC06Ls+nHsL2ftJ1azsHEvw3Y3IhkGDOR/O4ZNy+UKlpJaMV/JX?=
- =?iso-8859-1?Q?8mG3Kdq7RHURfKfEWvRczllSwj8EiuRGPah0EWk9TsrlUlZABKYU68ZIDa?=
- =?iso-8859-1?Q?SHDfN3LEF0lInz/ldbyCvuytGFk3YuGWCUou/f0wpWY9mBcN1KcTSGFbJk?=
- =?iso-8859-1?Q?O72Q4oOSRPzu4HGAJMhn3r8mUf0b7GsD7xM+7Ocqvsx6j6wK6ip2zdWBcB?=
- =?iso-8859-1?Q?H8GoJvlDDJxqEuorVS1E6QzI8T8rdjWXLOMzzSOlF2T1kJ/jz4f+PDhgrg?=
- =?iso-8859-1?Q?d17NieR+U8kb76X2Hy/ECsY/cl0CcX1rzS4DmPfjpEvI2UjRtoTXseSZt3?=
- =?iso-8859-1?Q?EHgQBh2fGSj7U+0thLy15pr9a8aS4a4PrfdDdwGoZWKgMtkr71HJEVP1Yk?=
- =?iso-8859-1?Q?BG0Aw8IqOjnes3JxFTDwnkAKyqkDUqReeuVUs+cbxCKaNJff/D262A0att?=
- =?iso-8859-1?Q?y9wxR/Mc3lcupg71Vlgu//UdePGJbMeg2SccXffSyr46MRiJ1wa8gRWna5?=
- =?iso-8859-1?Q?06Ps2FFYXsYUTZkFeMGyqbDhpPv8+aLkOIwzaePsLeNFUkHUlXpg92ntiR?=
- =?iso-8859-1?Q?QUR4IpVjc2gHF8cz2iyJMRuwqDI4adLEuykQnb+s1OwwSEAr1qhlPW1g?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2eaf8dfa-bf1b-4ec4-fcee-08de2e48594d
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2025 06:35:40.5327
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HmfS8NaE17GcvD65qsG/EMO5v0RPd+8DXn5Q8d8/qNCwZQg4j/mUxxx28bAjHkgpTLtwYChWWgPsGf5p0HRk9g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4915
-X-OriginatorOrg: intel.com
+References: <20251122093934.94971-1-irogers@google.com> <aSdGq2K6TRMyG009@google.com>
+ <CAP-5=fULHMCw=b0PuN07r=aAjoamb+MNSNrHM3nyHPYM2DGkow@mail.gmail.com> <aSi6Wjm2tkuNQEXD@google.com>
+In-Reply-To: <aSi6Wjm2tkuNQEXD@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 28 Nov 2025 00:42:15 -0800
+X-Gm-Features: AWmQ_bmvPIiBfUX_lzyGKu1dMl6bJ3A91NB4RQoYCk5R0H2XCJ5G5hr9lr6mFts
+Message-ID: <CAP-5=fXp4nbnMdgbXogxzQaeo3G-vVWbiTRcFi3PO+vLsB67JA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf addr2line: Add a libdw implementation
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Tony Jones <tonyj@suse.de>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Nov 27, 2025 at 12:53=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Thu, Nov 27, 2025 at 03:43:34AM -0800, Ian Rogers wrote:
+> > On Wed, Nov 26, 2025 at 10:27=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> > >
+> > > On Sat, Nov 22, 2025 at 01:39:34AM -0800, Ian Rogers wrote:
+> > > > Add an implementation of addr2line that uses libdw. Other addr2line
+> > > > implementations or, in the case of forking addr2line, slow. Add an
+> > > > implementation that caches the libdw information in the dso and use=
+s
+> > > > it to find the file and line number information.
+> >
+> > Thanks James and Namhyung for the reviews! I agree with James' comment
+> > about a typo in the commit message.
+> >
+> > > My concern is the limit in the open file descriptors in case the data
+> > > touched a lot of different libraries.  The DSO code has some logic to
+> > > deal with it but I'm not sure if we can share that since libdw seems =
+to
+> > > want to own the FD.
+> >
+> > The code opens the FD:
+> >
+> > +               fd =3D open(dso_name, O_RDONLY);
+> > +               if (fd < 0)
+> > +                       return 0;
+> > +
+> > +               dwfl =3D dwfl_begin(&offline_callbacks);
+> > +               if (!dwfl) {
+> > +                       close(fd);
+> > +                       return 0;
+> > +               }
+> >
+> > It then uses the FD and closes it (the close is hidden in libdw itself)=
+:
+> >
+> > +               /*
+> > +                * If the report is successful, the file descriptor fd
+> > is consumed
+> > +                * and closed by the Dwfl. If not, it is not closed.
+> > +                */
+> > +               mod =3D dwfl_report_offline(dwfl, dso_name, dso_name, f=
+d);
+> >
+> > So it is possible we exhaust all the file descriptors if there are
+> > multiple concurrent calls to libdw__addr2line and every dso has
+> > missing libdw dwfl data... but because the open/close are close
+> > together and that 1 FD is say small to the FDs needed for the
+> > cmd__addr2line, I don't think it is a problem we need to specifically
+> > handle. Were the FD kept open until the dso was deleted, I'd agree
+> > with you.
+>
+> Oh, I thought libdwfl keeps the FD open until you call dwfl_end().
+> Are you sure the dwfl function would close the FD?  I've quickly checked
+> the code, but it doesn't seem to close if you pass an FD manually.
 
+So in the documentation there is:
+https://sourceware.org/git/?p=3Delfutils.git;a=3Dblob;f=3Dlibdwfl/libdwfl.h=
+;h=3D90523283c9359b09a16709a8422917a44257932f;hb=3DHEAD#l155
+```
+/* ...On success, FD is consumed by the
+   library, ... */
+extern Dwfl_Module *dwfl_report_elf (Dwfl *dwfl, const char *name,
+     const char *file_name, int fd,
+     GElf_Addr base, bool add_p_vaddr);
 
-Hello,
+/* Similar, but report the module for offline use. ...  */
+extern Dwfl_Module *dwfl_report_offline (Dwfl *dwfl, const char *name,
+const char *file_name, int fd);
+```
 
-kernel test robot noticed a 3.2% regression of will-it-scale.per_process_ops on:
+Running with gdb I see:
+```
+$ perf record perf test -w noploop
+Lowering default frequency rate from 4000 to 2500.
+Please consider tweaking /proc/sys/kernel/perf_event_max_sample_rate.
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.611 MB perf.data (2534 samples) ]
+$ gdb --args perf --no-pager annotate -l --stdio
+...
+Reading symbols from /tmp/perf/perf...
+(gdb) b libdw__addr2line
+Breakpoint 1 at 0x392b98: file util/libdw.c, line 25.
+(gdb) r
+Starting program: /tmp/perf/perf --no-pager annotate -l --stdio
+...
+Breakpoint 1, libdw__addr2line (dso_name=3D0x555557b41270
+"/root/.debug/.build-id/4c/72a04e484e8636631219f4454cc64a674a5f57/elf",
+addr=3D1903613,
+    file=3D0x7fffffffa830, line_nr=3D0x7fffffffa82c, dso=3D0x5555569eba20,
+unwind_inlines=3Dfalse, node=3D0x0, sym=3D0x0) at util/libdw.c:25
+25      {
+(gdb) n
+31              Dwfl *dwfl =3D dso__a2l_libdw(dso);
+(gdb)
+38              if (!dwfl) {
+(gdb)
+45                      fd =3D open(dso_name, O_RDONLY);
+(gdb)
+46                      if (fd < 0)
+(gdb) p fd
+$1 =3D 5
+(gdb) n
+49                      dwfl =3D dwfl_begin(&offline_callbacks);
+(gdb) b close
+Breakpoint 2 at 0x7fffedf09760: close. (15 locations)
+(gdb) c
+Continuing.
 
+Breakpoint 2.1, __GI___close (fd=3D5) at ../sysdeps/unix/sysv/linux/close.c=
+:27
+warning: 27     ../sysdeps/unix/sysv/linux/close.c: No such file or directo=
+ry
+(gdb) bt
+#0  __GI___close (fd=3D5) at ../sysdeps/unix/sysv/linux/close.c:27
+#1  0x00007ffff7e0e122 in ?? () from /lib/x86_64-linux-gnu/libdw.so.1
+#2  0x00007ffff7e0e6f7 in ?? () from /lib/x86_64-linux-gnu/libdw.so.1
+#3  0x00005555558e6c3c in libdw__addr2line (dso_name=3D0x555557b41270
+"/root/.debug/.build-id/4c/72a04e484e8636631219f4454cc64a674a5f57/elf",
+    addr=3D1903613, file=3D0x7fffffffa830, line_nr=3D0x7fffffffa82c,
+dso=3D0x5555569eba20, unwind_inlines=3Dfalse, node=3D0x0, sym=3D0x0) at
+util/libdw.c:59
+#4  0x000055555584c861 in addr2line (dso_name=3D0x555557b41270
+"/root/.debug/.build-id/4c/72a04e484e8636631219f4454cc64a674a5f57/elf",
+    addr=3D1903613, file=3D0x7fffffffa830, line_nr=3D0x7fffffffa82c,
+dso=3D0x5555569eba20, unwind_inlines=3Dfalse, node=3D0x0, sym=3D0x0)
+    at util/srcline.c:124
+#5  0x000055555584ca9c in __get_srcline (dso=3D0x5555569eba20,
+addr=3D1903613, sym=3D0x0, show_sym=3Dfalse, show_addr=3Dtrue,
+unwind_inlines=3Dfalse,
+    ip=3D1903613) at util/srcline.c:181
+#6  0x000055555584ce21 in get_srcline (dso=3D0x5555569eba20,
+addr=3D1903613, sym=3D0x0, show_sym=3Dfalse, show_addr=3Dtrue, ip=3D1903613=
+)
+    at util/srcline.c:259
+#7  0x0000555555754a63 in annotation__calc_lines
+(notes=3D0x5555586d02d0, ms=3D0x555558665600, root=3D0x7fffffffa9a0) at
+util/annotate.c:1651
+#8  0x0000555555754b20 in symbol__calc_lines (ms=3D0x555558665600,
+root=3D0x7fffffffa9a0) at util/annotate.c:1663
+#9  0x0000555555754f22 in hist_entry__tty_annotate (he=3D0x555558665560,
+evsel=3D0x5555561dc6e0) at util/annotate.c:1728
+#10 0x00005555555a829a in hist_entry__stdio_annotate
+(he=3D0x555558665560, evsel=3D0x5555561dc6e0, ann=3D0x7fffffffcc90) at
+builtin-annotate.c:332
+#11 0x00005555555a8ed4 in hists__find_annotations
+(hists=3D0x5555561dc998, evsel=3D0x5555561dc6e0, ann=3D0x7fffffffcc90) at
+builtin-annotate.c:545
+#12 0x00005555555a9404 in __cmd_annotate (ann=3D0x7fffffffcc90) at
+builtin-annotate.c:655
+#13 0x00005555555aa5c6 in cmd_annotate (argc=3D0, argv=3D0x7fffffffe318)
+at builtin-annotate.c:949
+#14 0x0000555555655e11 in run_builtin (p=3D0x555556128650
+<commands+432>, argc=3D3, argv=3D0x7fffffffe318) at perf.c:349
+#15 0x00005555556560a9 in handle_internal_command (argc=3D3,
+argv=3D0x7fffffffe318) at perf.c:401
+#16 0x0000555555656202 in run_argv (argcp=3D0x7fffffffe10c,
+argv=3D0x7fffffffe100) at perf.c:445
+#17 0x000055555565654b in main (argc=3D3, argv=3D0x7fffffffe318) at perf.c:=
+553
+(gdb) frame 3
+#3  0x00005555558e6c3c in libdw__addr2line (dso_name=3D0x555557b41270
+"/root/.debug/.build-id/4c/72a04e484e8636631219f4454cc64a674a5f57/elf",
+   addr=3D1903613, file=3D0x7fffffffa830, line_nr=3D0x7fffffffa82c,
+dso=3D0x5555569eba20, unwind_inlines=3Dfalse, node=3D0x0, sym=3D0x0) at
+util/libdw.c:59
+59                      mod =3D dwfl_report_offline(dwfl, dso_name, dso_nam=
+e, fd);
+```
 
-commit: a97fbc3ee3e2a536fafaff04f21f45472db71769 ("syscore: Pass context data to callbacks")
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+So I think everything is working as explained. The open happens
+returning fd 5, dwfl_report_offline is called and on success it closes
+fd 5. Were the dwfl_report_offline to fail then the error path in
+libdw__addr2line closes fd.
 
-[still regression on linux-next/master ef68bf704646690aba5e81c2f7be8d6ef13d7ad8]
+Looking at older versions of the code (10 years old) the header file
+documentation is the same, so I'm not sure why you are seeing a
+different behavior.
 
-testcase: will-it-scale
-config: x86_64-rhel-9.4
-compiler: gcc-14
-test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
-parameters:
+Thanks,
+Ian
 
-	nr_task: 100%
-	mode: process
-	test: signal1
-	cpufreq_governor: performance
-
-
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202511281432.47ac7e38-lkp@intel.com
-
-
-Details are as below:
--------------------------------------------------------------------------------------------------->
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20251128/202511281432.47ac7e38-lkp@intel.com
-
-=========================================================================================
-compiler/cpufreq_governor/kconfig/mode/nr_task/rootfs/tbox_group/test/testcase:
-  gcc-14/performance/x86_64-rhel-9.4/process/100%/debian-13-x86_64-20250902.cgz/lkp-icl-2sp7/signal1/will-it-scale
-
-commit: 
-  v6.18-rc1
-  a97fbc3ee3 ("syscore: Pass context data to callbacks")
-
-       v6.18-rc1 a97fbc3ee3e2a536fafaff04f21 
----------------- --------------------------- 
-         %stddev     %change         %stddev
-             \          |                \  
-     71066 ±105%    +119.1%     155709 ± 64%  numa-meminfo.node1.AnonHugePages
-     34.80 ±105%    +118.6%      76.08 ± 64%  numa-vmstat.node1.nr_anon_transparent_hugepages
-      0.34            +0.2        0.52 ± 25%  mpstat.cpu.all.idle%
-      0.01            +0.0        0.01 ±  3%  mpstat.cpu.all.soft%
-    142.02 ±  5%     +20.2%     170.65 ±  9%  sched_debug.cfs_rq:/.runnable_avg.stddev
-      7.16 ±  5%     +52.9%      10.94 ±  8%  sched_debug.cpu.clock.stddev
-      1233 ±  4%     -22.2%     960.17 ±  8%  perf-c2c.DRAM.remote
-      2429 ±  3%     -18.0%       1993        perf-c2c.HITM.local
-      1010 ±  5%     -29.8%     709.00 ±  2%  perf-c2c.HITM.remote
-   8382642            -3.2%    8118230        will-it-scale.64.processes
-    130978            -3.2%     126846        will-it-scale.per_process_ops
-   8382642            -3.2%    8118230        will-it-scale.workload
-    285565            -1.6%     280908        proc-vmstat.nr_active_anon
-     28063            +4.4%      29306        proc-vmstat.nr_mapped
-    117169            -3.9%     112656        proc-vmstat.nr_shmem
-    285565            -1.6%     280908        proc-vmstat.nr_zone_active_anon
-     38231 ± 33%     -48.6%      19647 ± 35%  proc-vmstat.numa_hint_faults
-     19706 ± 75%     -65.5%       6790 ± 15%  proc-vmstat.numa_hint_faults_local
- 9.391e+09            -3.1%  9.102e+09        perf-stat.i.branch-instructions
-      0.48            -0.0        0.45        perf-stat.i.branch-miss-rate%
-  45545162           -10.7%   40674481        perf-stat.i.branch-misses
-     11.08 ±  8%      -2.3        8.81 ± 12%  perf-stat.i.cache-miss-rate%
-      1811            +6.2%       1922        perf-stat.i.context-switches
-      5.09            +3.2%       5.26        perf-stat.i.cpi
-    117.53            -2.1%     115.06        perf-stat.i.cpu-migrations
-    216404 ±  2%     +86.7%     404107 ±  4%  perf-stat.i.cycles-between-cache-misses
-  3.87e+10            -3.1%  3.752e+10        perf-stat.i.instructions
-      0.20            -3.1%       0.19        perf-stat.i.ipc
-      0.49            -0.0        0.45        perf-stat.overall.branch-miss-rate%
-      5.10            +3.2%       5.26        perf-stat.overall.cpi
-      0.20            -3.1%       0.19        perf-stat.overall.ipc
- 9.361e+09            -3.1%  9.068e+09        perf-stat.ps.branch-instructions
-  45428240           -10.7%   40562730        perf-stat.ps.branch-misses
-      1806            +6.2%       1917        perf-stat.ps.context-switches
-    117.13            -2.1%     114.62        perf-stat.ps.cpu-migrations
- 3.858e+10            -3.1%  3.738e+10        perf-stat.ps.instructions
- 1.166e+13            -3.0%  1.131e+13        perf-stat.total.instructions
-     32.30            -6.5       25.85        perf-profile.calltrace.cycles-pp.get_signal.arch_do_signal_or_restart.exit_to_user_mode_loop.do_syscall_64.entry_SYSCALL_64_after_hwframe
-     31.42            -6.4       25.04        perf-profile.calltrace.cycles-pp.dequeue_signal.get_signal.arch_do_signal_or_restart.exit_to_user_mode_loop.do_syscall_64
-     30.28            -6.3       23.98        perf-profile.calltrace.cycles-pp.dec_rlimit_put_ucounts.__sigqueue_free.dequeue_signal.get_signal.arch_do_signal_or_restart
-     30.32            -6.3       24.02        perf-profile.calltrace.cycles-pp.__sigqueue_free.dequeue_signal.get_signal.arch_do_signal_or_restart.exit_to_user_mode_loop
-     37.60            -6.0       31.57        perf-profile.calltrace.cycles-pp.arch_do_signal_or_restart.exit_to_user_mode_loop.do_syscall_64.entry_SYSCALL_64_after_hwframe
-     37.68            -6.0       31.66        perf-profile.calltrace.cycles-pp.exit_to_user_mode_loop.do_syscall_64.entry_SYSCALL_64_after_hwframe
-     90.92            -0.5       90.43        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe
-     90.63            -0.5       90.14        perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe
-      0.62            +0.0        0.65        perf-profile.calltrace.cycles-pp.check_xstate_in_sigframe.__fpu_restore_sig.fpu__restore_sig.restore_sigcontext.__x64_sys_rt_sigreturn
-      0.72 ±  2%      +0.0        0.75        perf-profile.calltrace.cycles-pp.kmem_cache_alloc_noprof.__send_signal_locked.do_send_sig_info.do_send_specific.__x64_sys_tgkill
-      0.67            +0.0        0.70        perf-profile.calltrace.cycles-pp.__fpu_restore_sig.fpu__restore_sig.restore_sigcontext.__x64_sys_rt_sigreturn.do_syscall_64
-      2.54            +0.0        2.58        perf-profile.calltrace.cycles-pp.fpu__restore_sig.restore_sigcontext.__x64_sys_rt_sigreturn.do_syscall_64.entry_SYSCALL_64_after_hwframe
-      1.15            +0.0        1.19        perf-profile.calltrace.cycles-pp.fpu__clear_user_states.arch_do_signal_or_restart.exit_to_user_mode_loop.do_syscall_64.entry_SYSCALL_64_after_hwframe
-      1.78            +0.0        1.83        perf-profile.calltrace.cycles-pp.clear_bhb_loop
-      0.56            +0.1        0.61        perf-profile.calltrace.cycles-pp.rseq_ip_fixup.__rseq_handle_notify_resume.arch_do_signal_or_restart.exit_to_user_mode_loop.do_syscall_64
-      1.46            +0.1        1.51        perf-profile.calltrace.cycles-pp.__restore_fpregs_from_user.restore_fpregs_from_user.fpu__restore_sig.restore_sigcontext.__x64_sys_rt_sigreturn
-      1.62            +0.1        1.68        perf-profile.calltrace.cycles-pp.arch_do_signal_or_restart.exit_to_user_mode_loop.do_syscall_64.entry_SYSCALL_64_after_hwframe.handler
-      3.06            +0.1        3.11        perf-profile.calltrace.cycles-pp.restore_sigcontext.__x64_sys_rt_sigreturn.do_syscall_64.entry_SYSCALL_64_after_hwframe
-      1.69            +0.1        1.75        perf-profile.calltrace.cycles-pp.exit_to_user_mode_loop.do_syscall_64.entry_SYSCALL_64_after_hwframe.handler
-      1.91            +0.1        1.98        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.handler
-      1.88            +0.1        1.96        perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.handler
-      0.96            +0.1        1.04        perf-profile.calltrace.cycles-pp.save_xstate_epilog.get_sigframe.x64_setup_rt_frame.arch_do_signal_or_restart.exit_to_user_mode_loop
-      0.93            +0.1        1.02        perf-profile.calltrace.cycles-pp.__rseq_handle_notify_resume.arch_do_signal_or_restart.exit_to_user_mode_loop.do_syscall_64.entry_SYSCALL_64_after_hwframe
-      4.46            +0.1        4.57        perf-profile.calltrace.cycles-pp.__x64_sys_rt_sigreturn.do_syscall_64.entry_SYSCALL_64_after_hwframe
-      2.18            +0.2        2.35        perf-profile.calltrace.cycles-pp.copy_fpstate_to_sigframe.get_sigframe.x64_setup_rt_frame.arch_do_signal_or_restart.exit_to_user_mode_loop
-      4.88            +0.3        5.14        perf-profile.calltrace.cycles-pp.handler
-      3.66            +0.3        3.95        perf-profile.calltrace.cycles-pp.get_sigframe.x64_setup_rt_frame.arch_do_signal_or_restart.exit_to_user_mode_loop.do_syscall_64
-      4.16            +0.3        4.50        perf-profile.calltrace.cycles-pp.x64_setup_rt_frame.arch_do_signal_or_restart.exit_to_user_mode_loop.do_syscall_64.entry_SYSCALL_64_after_hwframe
-      0.00            +0.5        0.51        perf-profile.calltrace.cycles-pp.restore_altstack.__x64_sys_rt_sigreturn.do_syscall_64.entry_SYSCALL_64_after_hwframe
-      0.00            +0.5        0.52        perf-profile.calltrace.cycles-pp.__get_user_nocheck_8.__x64_sys_rt_sigreturn.do_syscall_64.entry_SYSCALL_64_after_hwframe
-     45.91            +5.3       51.19        perf-profile.calltrace.cycles-pp.do_send_sig_info.do_send_specific.__x64_sys_tgkill.do_syscall_64.entry_SYSCALL_64_after_hwframe
-     46.73            +5.3       52.02        perf-profile.calltrace.cycles-pp.do_send_specific.__x64_sys_tgkill.do_syscall_64.entry_SYSCALL_64_after_hwframe
-     47.27            +5.3       52.57        perf-profile.calltrace.cycles-pp.__x64_sys_tgkill.do_syscall_64.entry_SYSCALL_64_after_hwframe
-     45.10            +5.3       50.43        perf-profile.calltrace.cycles-pp.__send_signal_locked.do_send_sig_info.do_send_specific.__x64_sys_tgkill.do_syscall_64
-     43.31            +5.3       48.65        perf-profile.calltrace.cycles-pp.inc_rlimit_get_ucounts.sig_get_ucounts.__send_signal_locked.do_send_sig_info.do_send_specific
-     43.39            +5.3       48.73        perf-profile.calltrace.cycles-pp.sig_get_ucounts.__send_signal_locked.do_send_sig_info.do_send_specific.__x64_sys_tgkill
-     32.36            -6.5       25.90        perf-profile.children.cycles-pp.get_signal
-     31.44            -6.4       25.06        perf-profile.children.cycles-pp.dequeue_signal
-     30.29            -6.3       23.99        perf-profile.children.cycles-pp.dec_rlimit_put_ucounts
-     30.33            -6.3       24.03        perf-profile.children.cycles-pp.__sigqueue_free
-     39.26            -6.0       33.30        perf-profile.children.cycles-pp.arch_do_signal_or_restart
-     39.38            -5.9       33.43        perf-profile.children.cycles-pp.exit_to_user_mode_loop
-     93.64            -0.3       93.30        perf-profile.children.cycles-pp.entry_SYSCALL_64_after_hwframe
-     93.28            -0.3       92.95        perf-profile.children.cycles-pp.do_syscall_64
-      0.36 ± 11%      -0.1        0.25        perf-profile.children.cycles-pp.recalc_sigpending
-      0.61 ± 11%      -0.1        0.50 ±  6%  perf-profile.children.cycles-pp._raw_spin_lock_irq
-      0.43            -0.1        0.38        perf-profile.children.cycles-pp.fpregs_mark_activate
-      0.44            -0.0        0.40        perf-profile.children.cycles-pp.complete_signal
-      0.27 ±  5%      -0.0        0.23 ±  3%  perf-profile.children.cycles-pp.sysvec_apic_timer_interrupt
-      0.25 ±  6%      -0.0        0.22 ±  5%  perf-profile.children.cycles-pp.__sysvec_apic_timer_interrupt
-      0.25 ±  6%      -0.0        0.22 ±  5%  perf-profile.children.cycles-pp.hrtimer_interrupt
-      0.25            -0.0        0.22 ±  5%  perf-profile.children.cycles-pp._raw_spin_lock_irqsave
-      0.29 ±  5%      -0.0        0.26 ±  3%  perf-profile.children.cycles-pp.asm_sysvec_apic_timer_interrupt
-      0.31 ±  2%      -0.0        0.28        perf-profile.children.cycles-pp.set_current_blocked
-      0.05            +0.0        0.06        perf-profile.children.cycles-pp.fpu__alloc_mathframe
-      0.06            +0.0        0.07        perf-profile.children.cycles-pp.__cond_resched
-      0.20            +0.0        0.21        perf-profile.children.cycles-pp.syscall_return_via_sysret
-      0.24            +0.0        0.25        perf-profile.children.cycles-pp.__get_user_nocheck_4
-      0.39            +0.0        0.40        perf-profile.children.cycles-pp.entry_SYSCALL_64_safe_stack
-      0.72            +0.0        0.74        perf-profile.children.cycles-pp.entry_SYSRETQ_unsafe_stack
-      0.20            +0.0        0.22        perf-profile.children.cycles-pp.__get_user_8
-      0.22 ±  2%      +0.0        0.24        perf-profile.children.cycles-pp.__put_user_8
-      0.46 ±  3%      +0.0        0.48        perf-profile.children.cycles-pp.__memcg_slab_post_alloc_hook
-      0.69            +0.0        0.71        perf-profile.children.cycles-pp.__fpu_restore_sig
-      0.27            +0.0        0.30        perf-profile.children.cycles-pp.rseq_get_rseq_cs
-      0.63            +0.0        0.66        perf-profile.children.cycles-pp.check_xstate_in_sigframe
-      0.74            +0.0        0.77        perf-profile.children.cycles-pp.kmem_cache_alloc_noprof
-      0.50            +0.0        0.53        perf-profile.children.cycles-pp.restore_altstack
-      0.32            +0.0        0.35        perf-profile.children.cycles-pp.rseq_update_cpu_node_id
-      0.36            +0.0        0.39        perf-profile.children.cycles-pp.__put_user_nocheck_4
-      0.69            +0.0        0.73        perf-profile.children.cycles-pp.arch_exit_to_user_mode_prepare
-      0.37            +0.0        0.40        perf-profile.children.cycles-pp.__put_user_nocheck_8
-      2.06            +0.0        2.10        perf-profile.children.cycles-pp.__getpid
-      0.66            +0.0        0.70        perf-profile.children.cycles-pp._copy_from_user
-      2.55            +0.0        2.59        perf-profile.children.cycles-pp.fpu__restore_sig
-      0.87            +0.0        0.91        perf-profile.children.cycles-pp.its_return_thunk
-      1.21            +0.0        1.25        perf-profile.children.cycles-pp.fpu__clear_user_states
-      1.48            +0.0        1.52        perf-profile.children.cycles-pp.__restore_fpregs_from_user
-      2.39            +0.1        2.44        perf-profile.children.cycles-pp.clear_bhb_loop
-      0.09 ±  4%      +0.1        0.14 ±  4%  perf-profile.children.cycles-pp.shmem_file_write_iter
-      0.08            +0.1        0.14 ±  5%  perf-profile.children.cycles-pp.generic_perform_write
-      0.00            +0.1        0.06 ±  8%  perf-profile.children.cycles-pp.shmem_get_folio_gfp
-      0.10 ±  3%      +0.1        0.16 ±  3%  perf-profile.children.cycles-pp.perf_mmap__push
-      0.00            +0.1        0.06 ±  6%  perf-profile.children.cycles-pp.shmem_write_begin
-      0.58            +0.1        0.64        perf-profile.children.cycles-pp.rseq_ip_fixup
-      3.08            +0.1        3.13        perf-profile.children.cycles-pp.restore_sigcontext
-      0.10 ±  3%      +0.1        0.16 ±  4%  perf-profile.children.cycles-pp.record__mmap_read_evlist
-      0.09 ±  5%      +0.1        0.15 ±  4%  perf-profile.children.cycles-pp.record__pushfn
-      0.12 ±  4%      +0.1        0.18 ±  4%  perf-profile.children.cycles-pp.handle_internal_command
-      0.12 ±  4%      +0.1        0.18 ±  4%  perf-profile.children.cycles-pp.main
-      0.12 ±  4%      +0.1        0.18 ±  4%  perf-profile.children.cycles-pp.run_builtin
-      0.11 ±  6%      +0.1        0.17 ±  5%  perf-profile.children.cycles-pp.cmd_record
-      0.98            +0.1        1.06        perf-profile.children.cycles-pp.__get_user_nocheck_8
-      1.36            +0.1        1.45        perf-profile.children.cycles-pp.native_irq_return_iret
-      1.00            +0.1        1.09        perf-profile.children.cycles-pp.save_xstate_epilog
-      0.95            +0.1        1.04        perf-profile.children.cycles-pp.__rseq_handle_notify_resume
-      4.52            +0.1        4.64        perf-profile.children.cycles-pp.__x64_sys_rt_sigreturn
-      2.27            +0.2        2.45        perf-profile.children.cycles-pp.copy_fpstate_to_sigframe
-      3.68            +0.2        3.86        perf-profile.children.cycles-pp.handler
-      3.68            +0.3        3.98        perf-profile.children.cycles-pp.get_sigframe
-      4.21            +0.3        4.55        perf-profile.children.cycles-pp.x64_setup_rt_frame
-     45.96            +5.3       51.25        perf-profile.children.cycles-pp.do_send_sig_info
-     46.77            +5.3       52.07        perf-profile.children.cycles-pp.do_send_specific
-     47.30            +5.3       52.60        perf-profile.children.cycles-pp.__x64_sys_tgkill
-     45.18            +5.3       50.51        perf-profile.children.cycles-pp.__send_signal_locked
-     43.40            +5.3       48.74        perf-profile.children.cycles-pp.sig_get_ucounts
-     43.32            +5.3       48.66        perf-profile.children.cycles-pp.inc_rlimit_get_ucounts
-     30.28            -6.3       23.98        perf-profile.self.cycles-pp.dec_rlimit_put_ucounts
-      0.34 ± 12%      -0.1        0.23 ±  2%  perf-profile.self.cycles-pp.recalc_sigpending
-      0.58 ± 12%      -0.1        0.48 ±  6%  perf-profile.self.cycles-pp._raw_spin_lock_irq
-      0.31            -0.1        0.25 ±  2%  perf-profile.self.cycles-pp.complete_signal
-      0.36            -0.1        0.31        perf-profile.self.cycles-pp.fpregs_mark_activate
-      0.23 ±  2%      -0.0        0.20 ±  3%  perf-profile.self.cycles-pp._raw_spin_lock_irqsave
-      0.20            +0.0        0.21        perf-profile.self.cycles-pp.arch_do_signal_or_restart
-      0.07            +0.0        0.08        perf-profile.self.cycles-pp.collect_signal
-      0.40            +0.0        0.41        perf-profile.self.cycles-pp.__getpid
-      0.20            +0.0        0.21        perf-profile.self.cycles-pp.syscall_return_via_sysret
-      0.23            +0.0        0.24 ±  2%  perf-profile.self.cycles-pp.__get_user_nocheck_4
-      0.15 ±  2%      +0.0        0.16 ±  2%  perf-profile.self.cycles-pp.__x64_sys_rt_sigreturn
-      0.26            +0.0        0.28        perf-profile.self.cycles-pp.kmem_cache_free
-      0.10            +0.0        0.11 ±  4%  perf-profile.self.cycles-pp.signal_setup_done
-      0.70            +0.0        0.72        perf-profile.self.cycles-pp.entry_SYSRETQ_unsafe_stack
-      0.18 ±  2%      +0.0        0.20        perf-profile.self.cycles-pp.__get_user_8
-      0.21 ±  3%      +0.0        0.23        perf-profile.self.cycles-pp.__put_user_8
-      0.25 ±  3%      +0.0        0.27 ±  2%  perf-profile.self.cycles-pp.__memcg_slab_post_alloc_hook
-      0.47            +0.0        0.49        perf-profile.self.cycles-pp.get_signal
-      0.52            +0.0        0.55        perf-profile.self.cycles-pp.its_return_thunk
-      0.37            +0.0        0.40        perf-profile.self.cycles-pp.get_sigframe
-      0.34            +0.0        0.37        perf-profile.self.cycles-pp.__put_user_nocheck_4
-      0.31            +0.0        0.34        perf-profile.self.cycles-pp.rseq_update_cpu_node_id
-      0.34            +0.0        0.38        perf-profile.self.cycles-pp.__put_user_nocheck_8
-      0.37 ±  2%      +0.0        0.41        perf-profile.self.cycles-pp.save_xstate_epilog
-      0.64            +0.0        0.68        perf-profile.self.cycles-pp.arch_exit_to_user_mode_prepare
-      0.64            +0.0        0.68        perf-profile.self.cycles-pp._copy_from_user
-      0.53            +0.0        0.57        perf-profile.self.cycles-pp.x64_setup_rt_frame
-      1.46            +0.0        1.51        perf-profile.self.cycles-pp.__restore_fpregs_from_user
-      2.36            +0.1        2.41        perf-profile.self.cycles-pp.clear_bhb_loop
-      1.00            +0.1        1.06        perf-profile.self.cycles-pp.fpu__clear_user_states
-      0.94            +0.1        1.01        perf-profile.self.cycles-pp.__get_user_nocheck_8
-      1.36            +0.1        1.45        perf-profile.self.cycles-pp.native_irq_return_iret
-      1.45            +0.1        1.55        perf-profile.self.cycles-pp.copy_fpstate_to_sigframe
-     43.32            +5.3       48.66        perf-profile.self.cycles-pp.inc_rlimit_get_ucounts
-
-
-
-
-Disclaimer:
-Results have been estimated based on internal Intel analysis and are provided
-for informational purposes only. Any difference in system hardware or software
-design or configuration may affect actual performance.
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+> Thanks,
+> Namhyung
+>
+> >
+> > > Also, have you checked if this generates the exactly same output with
+> > > other implementations?
+> >
+> > So the code passes `perf test` and I was checking functionality with
+> > perf annotate, top, etc. What I saw looked good, but it may not have
+> > been exhaustive. I didn't specifically create a test that compares the
+> > output of the different addr2line implementations. Such a test would
+> > be possible, it's not something we've done elsewhere.
+> >
+> > Thanks,
+> > Ian
+> >
+> > > Thanks,
+> > > Namhyung
+> > >
+> > > >
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > ---
+> > > >  tools/perf/util/Build     |   1 +
+> > > >  tools/perf/util/dso.c     |   2 +
+> > > >  tools/perf/util/dso.h     |  11 +++
+> > > >  tools/perf/util/libdw.c   | 136 ++++++++++++++++++++++++++++++++++=
+++++
+> > > >  tools/perf/util/libdw.h   |  60 +++++++++++++++++
+> > > >  tools/perf/util/srcline.c |   5 ++
+> > > >  6 files changed, 215 insertions(+)
+> > > >  create mode 100644 tools/perf/util/libdw.c
+> > > >  create mode 100644 tools/perf/util/libdw.h
+> > > >
+> > > > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> > > > index 1c2a43e1dc68..2bed6274e248 100644
+> > > > --- a/tools/perf/util/Build
+> > > > +++ b/tools/perf/util/Build
+> > > > @@ -224,6 +224,7 @@ perf-util-$(CONFIG_LIBDW) +=3D dwarf-regs-power=
+pc.o
+> > > >  perf-util-$(CONFIG_LIBDW) +=3D dwarf-regs-x86.o
+> > > >  perf-util-$(CONFIG_LIBDW) +=3D debuginfo.o
+> > > >  perf-util-$(CONFIG_LIBDW) +=3D annotate-data.o
+> > > > +perf-util-$(CONFIG_LIBDW) +=3D libdw.o
+> > > >
+> > > >  perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
+> > > >  perf-util-$(CONFIG_LOCAL_LIBUNWIND)    +=3D unwind-libunwind-local=
+.o
+> > > > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> > > > index 344e689567ee..06980844c014 100644
+> > > > --- a/tools/perf/util/dso.c
+> > > > +++ b/tools/perf/util/dso.c
+> > > > @@ -32,6 +32,7 @@
+> > > >  #include "string2.h"
+> > > >  #include "vdso.h"
+> > > >  #include "annotate-data.h"
+> > > > +#include "libdw.h"
+> > > >
+> > > >  static const char * const debuglink_paths[] =3D {
+> > > >       "%.0s%s",
+> > > > @@ -1605,6 +1606,7 @@ void dso__delete(struct dso *dso)
+> > > >       auxtrace_cache__free(RC_CHK_ACCESS(dso)->auxtrace_cache);
+> > > >       dso_cache__free(dso);
+> > > >       dso__free_a2l(dso);
+> > > > +     dso__free_a2l_libdw(dso);
+> > > >       dso__free_symsrc_filename(dso);
+> > > >       nsinfo__zput(RC_CHK_ACCESS(dso)->nsinfo);
+> > > >       mutex_destroy(dso__lock(dso));
+> > > > diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> > > > index f8ccb9816b89..4aee23775054 100644
+> > > > --- a/tools/perf/util/dso.h
+> > > > +++ b/tools/perf/util/dso.h
+> > > > @@ -268,6 +268,7 @@ DECLARE_RC_STRUCT(dso) {
+> > > >       const char       *short_name;
+> > > >       const char       *long_name;
+> > > >       void             *a2l;
+> > > > +     void             *a2l_libdw;
+> > > >       char             *symsrc_filename;
+> > > >  #if defined(__powerpc__)
+> > > >       void            *dwfl;                  /* DWARF debug info *=
+/
+> > > > @@ -334,6 +335,16 @@ static inline void dso__set_a2l(struct dso *ds=
+o, void *val)
+> > > >       RC_CHK_ACCESS(dso)->a2l =3D val;
+> > > >  }
+> > > >
+> > > > +static inline void *dso__a2l_libdw(const struct dso *dso)
+> > > > +{
+> > > > +     return RC_CHK_ACCESS(dso)->a2l_libdw;
+> > > > +}
+> > > > +
+> > > > +static inline void dso__set_a2l_libdw(struct dso *dso, void *val)
+> > > > +{
+> > > > +     RC_CHK_ACCESS(dso)->a2l_libdw =3D val;
+> > > > +}
+> > > > +
+> > > >  static inline unsigned int dso__a2l_fails(const struct dso *dso)
+> > > >  {
+> > > >       return RC_CHK_ACCESS(dso)->a2l_fails;
+> > > > diff --git a/tools/perf/util/libdw.c b/tools/perf/util/libdw.c
+> > > > new file mode 100644
+> > > > index 000000000000..c4331fa8e1a3
+> > > > --- /dev/null
+> > > > +++ b/tools/perf/util/libdw.c
+> > > > @@ -0,0 +1,136 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +#include "dso.h"
+> > > > +#include "libdw.h"
+> > > > +#include "srcline.h"
+> > > > +#include "symbol.h"
+> > > > +#include "dwarf-aux.h"
+> > > > +#include <fcntl.h>
+> > > > +#include <unistd.h>
+> > > > +#include <elfutils/libdwfl.h>
+> > > > +
+> > > > +void dso__free_a2l_libdw(struct dso *dso)
+> > > > +{
+> > > > +     Dwfl *dwfl =3D dso__a2l_libdw(dso);
+> > > > +
+> > > > +     if (dwfl) {
+> > > > +             dwfl_end(dwfl);
+> > > > +             dso__set_a2l_libdw(dso, NULL);
+> > > > +     }
+> > > > +}
+> > > > +
+> > > > +int libdw__addr2line(const char *dso_name, u64 addr,
+> > > > +                  char **file, unsigned int *line_nr,
+> > > > +                  struct dso *dso, bool unwind_inlines,
+> > > > +                  struct inline_node *node, struct symbol *sym)
+> > > > +{
+> > > > +     static const Dwfl_Callbacks offline_callbacks =3D {
+> > > > +             .find_debuginfo =3D dwfl_standard_find_debuginfo,
+> > > > +             .section_address =3D dwfl_offline_section_address,
+> > > > +             .find_elf =3D dwfl_build_id_find_elf,
+> > > > +     };
+> > > > +     Dwfl *dwfl =3D dso__a2l_libdw(dso);
+> > > > +     Dwfl_Module *mod;
+> > > > +     Dwfl_Line *dwline;
+> > > > +     Dwarf_Addr bias;
+> > > > +     const char *src;
+> > > > +     int lineno;
+> > > > +
+> > > > +     if (!dwfl) {
+> > > > +             /*
+> > > > +              * Initialize Dwfl session.
+> > > > +              * We need to open the DSO file to report it to libdw=
+.
+> > > > +              */
+> > > > +             int fd;
+> > > > +
+> > > > +             fd =3D open(dso_name, O_RDONLY);
+> > > > +             if (fd < 0)
+> > > > +                     return 0;
+> > > > +
+> > > > +             dwfl =3D dwfl_begin(&offline_callbacks);
+> > > > +             if (!dwfl) {
+> > > > +                     close(fd);
+> > > > +                     return 0;
+> > > > +             }
+> > > > +
+> > > > +             /*
+> > > > +              * If the report is successful, the file descriptor f=
+d is consumed
+> > > > +              * and closed by the Dwfl. If not, it is not closed.
+> > > > +              */
+> > > > +             mod =3D dwfl_report_offline(dwfl, dso_name, dso_name,=
+ fd);
+> > > > +             if (!mod) {
+> > > > +                     dwfl_end(dwfl);
+> > > > +                     close(fd);
+> > > > +                     return 0;
+> > > > +             }
+> > > > +
+> > > > +             dwfl_report_end(dwfl, /*removed=3D*/NULL, /*arg=3D*/N=
+ULL);
+> > > > +             dso__set_a2l_libdw(dso, dwfl);
+> > > > +     } else {
+> > > > +             /* Dwfl session already initialized, get module for a=
+ddress. */
+> > > > +             mod =3D dwfl_addrmodule(dwfl, addr);
+> > > > +     }
+> > > > +
+> > > > +     if (!mod)
+> > > > +             return 0;
+> > > > +
+> > > > +     /* Find source line information for the address. */
+> > > > +     dwline =3D dwfl_module_getsrc(mod, addr);
+> > > > +     if (!dwline)
+> > > > +             return 0;
+> > > > +
+> > > > +     /* Get line information. */
+> > > > +     src =3D dwfl_lineinfo(dwline, &addr, &lineno, /*col=3D*/NULL,=
+ /*mtime=3D*/NULL, /*length=3D*/NULL);
+> > > > +
+> > > > +     if (file)
+> > > > +             *file =3D src ? strdup(src) : NULL;
+> > > > +     if (line_nr)
+> > > > +             *line_nr =3D lineno;
+> > > > +
+> > > > +     /* Optionally unwind inline function call chain. */
+> > > > +     if (unwind_inlines && node && src) {
+> > > > +             Dwarf_Die *cudie =3D dwfl_module_addrdie(mod, addr, &=
+bias);
+> > > > +             Dwarf_Die *scopes =3D NULL;
+> > > > +             int nscopes;
+> > > > +
+> > > > +             if (!cudie)
+> > > > +                     return 1;
+> > > > +
+> > > > +             nscopes =3D die_get_scopes(cudie, addr, &scopes);
+> > > > +             if (nscopes > 0) {
+> > > > +                     int i;
+> > > > +                     const char *call_file =3D src;
+> > > > +                     unsigned int call_line =3D lineno;
+> > > > +
+> > > > +                     for (i =3D 0; i < nscopes; i++) {
+> > > > +                             Dwarf_Die *die =3D &scopes[i];
+> > > > +                             struct symbol *inline_sym;
+> > > > +                             char *srcline =3D NULL;
+> > > > +                             int tag =3D dwarf_tag(die);
+> > > > +
+> > > > +                             /* We are interested in inlined subro=
+utines. */
+> > > > +                             if (tag !=3D DW_TAG_inlined_subroutin=
+e &&
+> > > > +                                 tag !=3D DW_TAG_subprogram)
+> > > > +                                     continue;
+> > > > +
+> > > > +                             inline_sym =3D new_inline_sym(dso, sy=
+m, dwarf_diename(die));
+> > > > +
+> > > > +                             if (call_file)
+> > > > +                                     srcline =3D srcline_from_file=
+line(call_file, call_line);
+> > > > +
+> > > > +                             inline_list__append(inline_sym, srcli=
+ne, node);
+> > > > +
+> > > > +                             /* Update call site for next level. *=
+/
+> > > > +                             if (tag =3D=3D DW_TAG_inlined_subrout=
+ine) {
+> > > > +                                     call_file =3D die_get_call_fi=
+le(die);
+> > > > +                                     call_line =3D die_get_call_li=
+neno(die);
+> > > > +                             } else {
+> > > > +                                     /* Reached the root subprogra=
+m. */
+> > > > +                                     break;
+> > > > +                             }
+> > > > +                     }
+> > > > +                     free(scopes);
+> > > > +             }
+> > > > +     }
+> > > > +
+> > > > +     return 1;
+> > > > +}
+> > > > diff --git a/tools/perf/util/libdw.h b/tools/perf/util/libdw.h
+> > > > new file mode 100644
+> > > > index 000000000000..0f8d7b4a11a5
+> > > > --- /dev/null
+> > > > +++ b/tools/perf/util/libdw.h
+> > > > @@ -0,0 +1,60 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > +#ifndef PERF_LIBDW_H
+> > > > +#define PERF_LIBDW_H
+> > > > +
+> > > > +#include <linux/types.h>
+> > > > +
+> > > > +struct dso;
+> > > > +struct inline_node;
+> > > > +struct symbol;
+> > > > +
+> > > > +#ifdef HAVE_LIBDW_SUPPORT
+> > > > +/*
+> > > > + * libdw__addr2line - Convert address to source location using lib=
+dw
+> > > > + * @dso_name: Name of the DSO
+> > > > + * @addr: Address to resolve
+> > > > + * @file: Pointer to return filename (caller must free)
+> > > > + * @line_nr: Pointer to return line number
+> > > > + * @dso: The dso struct
+> > > > + * @unwind_inlines: Whether to unwind inline function calls
+> > > > + * @node: Inline node list to append to
+> > > > + * @sym: The symbol associated with the address
+> > > > + *
+> > > > + * This function initializes a Dwfl context for the DSO if not alr=
+eady present,
+> > > > + * finds the source line information for the given address, and op=
+tionally
+> > > > + * resolves inline function call chains.
+> > > > + *
+> > > > + * Returns 1 on success (found), 0 on failure (not found).
+> > > > + */
+> > > > +int libdw__addr2line(const char *dso_name, u64 addr, char **file,
+> > > > +                  unsigned int *line_nr, struct dso *dso,
+> > > > +                  bool unwind_inlines, struct inline_node *node,
+> > > > +                  struct symbol *sym);
+> > > > +
+> > > > +/*
+> > > > + * dso__free_a2l_libdw - Free libdw resources associated with the =
+DSO
+> > > > + * @dso: The dso to free resources for
+> > > > + *
+> > > > + * This function cleans up the Dwfl context used for addr2line loo=
+kups.
+> > > > + */
+> > > > +void dso__free_a2l_libdw(struct dso *dso);
+> > > > +
+> > > > +#else /* HAVE_LIBDW_SUPPORT */
+> > > > +
+> > > > +static inline int libdw__addr2line(const char *dso_name __maybe_un=
+used,
+> > > > +                                u64 addr __maybe_unused, char **fi=
+le __maybe_unused,
+> > > > +                                unsigned int *line_nr __maybe_unus=
+ed,
+> > > > +                                struct dso *dso __maybe_unused,
+> > > > +                                bool unwind_inlines __maybe_unused=
+,
+> > > > +                                struct inline_node *node __maybe_u=
+nused,
+> > > > +                                struct symbol *sym __maybe_unused)
+> > > > +{
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static inline void dso__free_a2l_libdw(struct dso *dso __maybe_unu=
+sed)
+> > > > +{
+> > > > +}
+> > > > +#endif /* HAVE_LIBDW_SUPPORT */
+> > > > +
+> > > > +#endif /* PERF_LIBDW_H */
+> > > > diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+> > > > index 27c0966611ab..4b456c4d4138 100644
+> > > > --- a/tools/perf/util/srcline.c
+> > > > +++ b/tools/perf/util/srcline.c
+> > > > @@ -6,6 +6,7 @@
+> > > >  #include "libbfd.h"
+> > > >  #include "llvm.h"
+> > > >  #include "symbol.h"
+> > > > +#include "libdw.h"
+> > > >
+> > > >  #include <inttypes.h>
+> > > >  #include <string.h>
+> > > > @@ -120,6 +121,10 @@ static int addr2line(const char *dso_name, u64=
+ addr, char **file, unsigned int *
+> > > >  {
+> > > >       int ret;
+> > > >
+> > > > +     ret =3D libdw__addr2line(dso_name, addr, file, line_nr, dso, =
+unwind_inlines, node, sym);
+> > > > +     if (ret > 0)
+> > > > +             return ret;
+> > > > +
+> > > >       ret =3D llvm__addr2line(dso_name, addr, file, line_nr, dso, u=
+nwind_inlines, node, sym);
+> > > >       if (ret > 0)
+> > > >               return ret;
+> > > > --
+> > > > 2.52.0.rc2.455.g230fcf2819-goog
+> > > >
