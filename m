@@ -1,188 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0B12773F0
-	for <linux-perf-users@vger.kernel.org>; Sun, 30 Nov 2025 11:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F1F26F2AA
+	for <linux-perf-users@vger.kernel.org>; Sun, 30 Nov 2025 12:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764503028; cv=none; b=cnyLOrh8A/tZ2SbsWtQ0KbsdVv/roSJ0GauqeqH2JlZy79A6s6qPEdHiawpeXd8HDkvpSVJRxcn+tWEe/mf72S9y0z5jtI/8QQ15oNNYLqfU0iP82nfeJuXBdLh1d/JNoW67UyioMeQ7ovV0cX5ZChhJwOYJzLHhffJHcm2ITzw=
+	t=1764506618; cv=none; b=KbuGIBBzs7LYkdi3hufDu3SkngF5cguf4G6Z0orXBEfxNBkzhehj5uwcMS05nw8BHV6NnrfacHpXdCS73zg/igK0e1NUipbVXxpBgsC/AcA1Fe9Gc5fomifBZRiij53LuMl9m5P7EWa8j0sYYptN7OGUqUdGo8H/aIOI8toMXeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764503028; c=relaxed/simple;
-	bh=jlkwVzOX4lz5SnG4r7UvKPXL7RbcYVso5mLgneTlzbs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Gv//LsSpAUdlCqZEaCHyc7G9GDIxdnbw4HyjaH3ehB65ZSj/j+GTWUvbsrNtuM6nEjQaskPedMEmdsgbZk8b3HYXhgHNDWkwtbT2/fWJmC8koat+SbdXXG3CkiabXH3fZ49afwmYU/7H8p6AXGP1sD96NkqyqznadsvP8Ks0Q18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/wHsBHv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764506618; c=relaxed/simple;
+	bh=3eNjw+pPA7bOdESCTn99iE1l6IYo9w6olvIBrN4F95s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lfkxFgGCgpAG8m4v2f7dtSwunOjBvIR0KaNJjRq9QWqkZ9oTAjVRIRiib6GO+NxKMww1cKRrcl+rvFOvp/NLqf17yQGvt6kP9X7GTRLtEzc2sSVa4f1lCa2c3yUKckXX1bobBNy0PbwmEWoW44VyfEjrm+h9kAS9W2m0roJnzrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gRwYcmTf; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/wHsBHv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ED02C4CEF8;
-	Sun, 30 Nov 2025 11:43:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764503028;
-	bh=jlkwVzOX4lz5SnG4r7UvKPXL7RbcYVso5mLgneTlzbs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=j/wHsBHvCLnb1R7nXaliOtA06fFnG+9R6amcN0Z5KOjQmSflFaBQcCCxnfKl8vWVK
-	 FVEvfYpwXEcCA27jhd8qEgipshI0ksgHLSPWGaMNB2g0yg6zRNOMUUmyOmfaaqsUph
-	 Oz8t/7Y7FtM0oQJIixqsbbZMUTrpluBRA2hAyToSsDnC1Fddi1qB6aA9emoRDjaqkM
-	 u0Kb0ZwcyWDlxn3uASkL5E/zZBtZAPOoIP9gaqXdqJxIZtCHEwMssGzw2qQw0en1FB
-	 /5eBiDls4l/9yd0k2JxSUIKf7E5FNZHDhCYUwiyKljkVCZB3U74WoK8l3rmx36YtPt
-	 EkGrYoiE0Ec4g==
-Date: Sun, 30 Nov 2025 12:43:43 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Subject: [PATCH] Fix (well, work around) perf stat --null segfault
-Message-ID: <aSwt7yzFjVJCEmVp@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gRwYcmTf"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-297ec50477aso12981945ad.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 30 Nov 2025 04:43:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764506616; x=1765111416; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q24/I9SndBUdDUiodRkHdhfBwRhvK6inDO5OAxEgMow=;
+        b=gRwYcmTfWk1FhF39UzHAdscoeR6GuuCq0cDJHpjZxcvuBYWFZueMIGwsyIg+5FxGRA
+         8SRKa7ebscQfIXuSr3MqBUDQwV8/mN5KukBl2mM1/TrouVCHSn09Dbcerm4QGgyTYexl
+         4vSc5VC3PgarzuxL3l2dQiqILyKd5vaQbtUpBqwGUvKEf6Rps7rpLzUdlNkzjdyA2ssA
+         m2+8KWOCPrFUhEIaXgF90uI6rYg2dt3O51IKmIxHfwdsXFcq5yI6fmQpI3nHWYiS0XOS
+         wj3DapH42BscyCV4ujggoXQOQQeYR9NL+Xdg2UH8ne/JJiUxp7+7tp/RvKRtgqjEYmYf
+         FD7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764506616; x=1765111416;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Q24/I9SndBUdDUiodRkHdhfBwRhvK6inDO5OAxEgMow=;
+        b=YqBRLpskXexeaUwgkGEHlPtggz1SJ4Y/CsSL8ZDEIMweApDZlH9wx0KxqwhFFzPSEd
+         SOcgkLRthkZP7poexMLpIypOXDYX/INfVIkIHUnKq5OuiwA8uSnE2VkhtTZVruNszVzr
+         0kYhX0+XJ94amTLcLf0RqzlgZiV2/BWK8cEjKogJXYr8Ch2yBKgi/yvoOvxxkuYWpzrf
+         HfGNjevJRv+ayts+5EM/L4fKJNE5Ho2h5a5CtbZomP6iy2RDxGdzxepNuokPy70P9nh9
+         3By5LPD9DqSeZrKhARyMbVijzu07pdhHjOUYzC8AjkCbrnIU7HrcAIBN0/h6g83kDVu3
+         GCSg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGOyzehyHFXoq9q9lPiGeMEYRMr6UqVZJK4oSQ+3WxjCII7BUinOJ33fJbPqw7DW5y6Y84WKykVOCC/x/tgWBe@vger.kernel.org
+X-Gm-Message-State: AOJu0YwymvGcjzdOq0aNoakHiUlfvaWrWvXxAOgTin1TlrFQf8b87ajR
+	YxgxqWJ18Lo6uAPCkhPPDjo3rsfPrlRwgWezqBab9ym8WgzsXMesyOMF
+X-Gm-Gg: ASbGncsc65J4dIZtd/ZCCO/A2ToSZrSwHsoBObwu0iA01Zps0Px/iP9ZE2TG2R3488F
+	SBmFeJm5OulBND2I80vcOgmBTLBJZcPHcLMYWIDZdTMy8OJgSjqlrPz6iML8HZtiEF1dfa1Wj2J
+	ndzmCAQRosMwsMflU1WKAqwdMb99c7AxtLEOQYKbNQiNnYpWk0gmZ2dL/HvfHLa3tYg9383oEFo
+	5PHz95B9/jq2l1tfMXVg8VgU+BbF+7D3miYBYCwTCdZ9tBpMvhfOUcyQW5tX+bL49CoRSfTk1HN
+	3EIrolc637rFz8dLg5PQ9d1Qno5PumYDnbuWOCbj8L60FKbd4AcrInyG6WnhvJ1jAGHk4mqKhBq
+	I1zKREgyZEhSBP9OSb9DYxCC1187xelyFJEZy0s2CTRV+RyRqe33A811n6ndiVDPqZcBKGi7+uV
+	alKzWjwviZfEMMpkkbVKuX/ljcblJ/I3o=
+X-Google-Smtp-Source: AGHT+IHQ1s8urnjdyeSUProWKNYbFdFfSSoKWTRTrBGlC3S9nSYGdG5k/0wJBSlO6lDVv0ToPmYK9Q==
+X-Received: by 2002:a17:902:f547:b0:294:8c99:f318 with SMTP id d9443c01a7336-29b6beeda0fmr397752515ad.3.1764506616356;
+        Sun, 30 Nov 2025 04:43:36 -0800 (PST)
+Received: from DESKTOP-8TIG9K0.localdomain ([119.28.20.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29bceb52d14sm94230235ad.82.2025.11.30.04.43.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Nov 2025 04:43:35 -0800 (PST)
+From: Xie Yuanbin <qq570070308@gmail.com>
+To: acme@kernel.org,
+	adrian.hunter@intel.com,
+	agordeev@linux.ibm.com,
+	akpm@linux-foundation.org,
+	alex@ghiti.fr,
+	alexander.shishkin@linux.intel.com,
+	andreas@gaisler.com,
+	anna-maria@linutronix.de,
+	anshuman.khandual@arm.com,
+	aou@eecs.berkeley.edu,
+	arnd@arndb.de,
+	borntraeger@linux.ibm.com,
+	bp@alien8.de,
+	bsegall@google.com,
+	dave.hansen@linux.intel.com,
+	davem@davemloft.net,
+	david@kernel.org,
+	dietmar.eggemann@arm.com,
+	frederic@kernel.org,
+	gor@linux.ibm.com,
+	hca@linux.ibm.com,
+	hpa@zytor.com,
+	irogers@google.com,
+	james.clark@linaro.org,
+	jolsa@kernel.org,
+	juri.lelli@redhat.com,
+	justinstitt@google.com,
+	lorenzo.stoakes@oracle.com,
+	luto@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	max.kellermann@ionos.com,
+	mgorman@suse.de,
+	mingo@redhat.com,
+	morbo@google.com,
+	namhyung@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	nysal@linux.ibm.com,
+	palmer@dabbelt.com,
+	paulmck@kernel.org,
+	peterz@infradead.org,
+	pjw@kernel.org,
+	riel@surriel.com,
+	rostedt@goodmis.org,
+	ryan.roberts@arm.com,
+	segher@kernel.crashing.org,
+	svens@linux.ibm.com,
+	tglx@linutronix.de,
+	thuth@redhat.com,
+	urezki@gmail.com,
+	vincent.guittot@linaro.org,
+	vschneid@redhat.com,
+	linux@armlinux.org.uk
+Cc: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v4 0/3] Optimize code generation during context switching
+Date: Sun, 30 Nov 2025 20:43:04 +0800
+Message-ID: <20251130124304.184107-1-qq570070308@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251123121827.1304-1-qq570070308@gmail.com>
+References: <20251123121827.1304-1-qq570070308@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-JFYI:
+On Sun, 23 Nov 2025 20:18:24 +0800, Xie Yuanbin wrote:
+> This series of patches primarily make some functions called in context
+> switching as always inline to optimize performance. Here is the
+> performance test data for these patches:
+> Time spent on calling finish_task_switch(), the unit is tsc from x86:
+>  | test scenario             | old   | new   | delta          |
+>  | gcc 15.2                  | 13.94 | 12.40 | 1.54  (-11.1%) |
+>  | gcc 15.2 + spectre_v2     | 24.78 | 13.70 | 11.08 (-44.7%) |
+>  | clang 21.1.4              | 13.90 | 12.71 | 1.19  (- 8.6%) |
+>  | clang 21.1.4 + spectre_v2 | 29.01 | 18.91 | 10.1  (-34.8%) |
 
-  starship:~> perf stat --null ls
-  Segmentation fault (core dumped)
+Hi everyone, I also conducted a performance test on raspberry pi 3b. I
+hope this will be helpful in merging the patch.
+The following is the test data:
+Time spent on calling finish_task_switch(), the clocksource and unit is
+cntvct_el0 from aarch64:
+ | test scenario             | old  | new  | delta         |
+ | gcc 15.2                  | 2.00 | 1.68 | 0.32 (-16.0%) |
+ | clang 21.1.6              | 2.15 | 1.68 | 0.47 (-23.5%) |
 
+Since raspberry pi 3b use a cortex-a53 processor, it is not affected by
+the spectre v2 vulnerability, as is defined in
+arch/arm64/kernel/proton-pack.c:
+```c
+	static const struct midr_range spectre_v2_safe_list[] = {
+		MIDR_ALL_VERSIONS(MIDR_CORTEX_A35),
+		MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
+		MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
+		MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
+		MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
+		MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_2XX_SILVER),
+		MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
+		MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
+		{ /* sentinel */ }
+	};
+```
+Link: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/kernel/proton-pack.c?id=7d31f578f3230f3b7b33b0930b08f9afd8429817#n152
 
-  Program received signal SIGSEGV, Segmentation fault.
-  0x000055555563596e in __perf_cpu_map__nr (cpus=<error reading variable: Cannot access memory at address 0x0>) at cpumap.c:257
-  257		return RC_CHK_ACCESS(cpus)->nr;
-  (gdb) bt
-  #0  0x000055555563596e in __perf_cpu_map__nr (cpus=<error reading variable: Cannot access memory at address 0x0>) at cpumap.c:257
-  #1  perf_cpu_map__max (map=0x0) at cpumap.c:372
-  #2  0x00005555555cc249 in perf_stat_init_aggr_mode ()
-  #3  0x00005555555d1963 in cmd_stat ()
-  #4  0x0000555555631bb2 in run_builtin ()
-  #5  0x0000555555631e9e in handle_internal_command ()
-  #6  0x00005555555ab183 in main ()
-  (gdb) 
+Perhaps I can test the performace with spectre_v2 mitigation enabled on
+a raspberry pi 4b in the future.
 
-  (gdb) print cpus
-  Cannot access memory at address 0x0
-  (gdb) bt
-  #0  0x000055555563596e in __perf_cpu_map__nr (cpus=<error reading variable: Cannot access memory at address 0x0>) at cpumap.c:257
-  #1  perf_cpu_map__max (map=0x0) at cpumap.c:372
-  #2  0x00005555555cc249 in perf_stat_init_aggr_mode ()
-  #3  0x00005555555d1963 in cmd_stat ()
-  #4  0x0000555555631bb2 in run_builtin ()
-  #5  0x0000555555631e9e in handle_internal_command ()
-  #6  0x00005555555ab183 in main ()
-  (gdb) 
+In order to make the test result stable, I fixed the cpu frequency by
+setting config.txt as following:
+```config
+core_freq_fixed=1
+arm_freq=800
+arm_freq_min=800
+gpu_freq=300
+core_freq=300
+h264_freq=300
+isp_freq=300
+v3d_freq=300
+hevc_freq=300
+sdram_freq=400
+gpu_freq_min=300
+core_freq_min=300
+h264_freq_min=300
+isp_freq_min=300
+v3d_freq_min=300
+hevc_freq_min=300
+sdram_freq_min=400
+```
 
-For some build(?) reason I cannot set breakpoints 
-inside builtin-stat.c:
+The test source is commit 7d31f578f323 ("Add linux-next specific files
+for 20251128") from liunx-next branch. Using default defconfig config,
+and setting:
+CONFIG_ARM64_SVE=n
+CONFIG_COMPAT=n
+CONFIG_COMPAT_32BIT_TIME=n
+CONFIG_ARM64_PTR_AUTH=n
+CONFIG_ARM64_GCS=n
+CONFIG_ARM64_MTE=n
+CONFIG_SHADOW_CALL_STACK=y
+CONFIG_SCHED_AUTOGROUP=n
+CONFIG_CGROUPS=n
+CONFIG_KVM=n
+CONFIG_HZ_100=y
+CONFIG_HZ=100
 
-  (gdb) b builtin-stat.c:1545
-  No source file named builtin-stat.c.
+Thanks very much!
 
-... and didn't investigate any further.
-
-System has 128 CPUs.
-
-It's been broken for some time:
-
-  starship:~/tip> git bisect bad
-  ced4c249569ab25c32b0d36e2ebdb19c74394bdf is the first bad commit
-  commit ced4c249569ab25c32b0d36e2ebdb19c74394bdf (HEAD)
-  Author: Ian Rogers <irogers@google.com>
-  Date:   Fri Jul 18 20:05:05 2025 -0700
-
-    perf stat: Don't size aggregation ids from user_requested_cpus
-    
-    As evsels may have additional CPU terms, the user_requested_cpus may
-    not reflect all the CPUs requested. Use evlist->all_cpus to size the
-    array as that reflects all the CPUs potentially needed by the evlist.
-    
-    Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
-    Signed-off-by: Ian Rogers <irogers@google.com>
-    Tested-by: James Clark <james.clark@linaro.org>
-    Link: https://lore.kernel.org/r/20250719030517.1990983-4-irogers@google.com
-    Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-
-The bug is the assumption that 
-evsel_list->core.all_cpus exists at this stage.
-
-The attached patch works this around like the old 
-version, but there's more things wrong with this code:
-
-BTW., I couldn't even find where all_cpus pointer gets 
-allocated. It gets zalloc()-ed to NULL, and cleared 
-back to NULL in two places:
-
-  lib/perf/evlist.c:	evlist->all_cpus = NULL;
-  lib/perf/evlist.c:	evlist->all_cpus = NULL;
-
-But where does it get allocated? perf_cpu_map__nr() 
-hides it in most cases that ->cpus_all is always NULL:
-
-  int perf_cpu_map__nr(const struct perf_cpu_map *cpus)
-  {
-        return cpus ? __perf_cpu_map__nr(cpus) : 1;
-  }
-
-Which in general is a code robustness red flag, for 
-something this fundamental I doubt there should be any 
-conditionality to this pointer. Allowing cpus pointers 
-to be NULL and hiding it in the helpers hid a real bug 
-for months.
-
-So this code looks like a bit of a trainwreck. ;-)
-
-In addition to fixing the bug, it might also make sense 
-to add a testcase for 'perf stat --null'? (which is a 
-better, more accurate 'time' utility)
-
-As an additional report and side note, I still get this 
-bogus message during a build on standard Ubuntu:
-
- Makefile.config:1151: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-latest-openjdk-devel
-
-The suggested "e.g. openjdk-8-jdk" package *is* 
-installed:
-
- starship:~/tip> dpkg -l | grep openjdk
- ii  openjdk-11-jre:amd64                                        11.0.29+7-1ubuntu1~25.10                            amd64        OpenJDK Java runtime, using Hotspot JIT
- ii  openjdk-11-jre-headless:amd64                               11.0.29+7-1ubuntu1~25.10                            amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
- ii  openjdk-17-jre:amd64                                        17.0.17+10-1~25.10                                  amd64        OpenJDK Java runtime, using Hotspot JIT
- ii  openjdk-17-jre-headless:amd64                               17.0.17+10-1~25.10                                  amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
- ii  openjdk-21-jre:amd64                                        21.0.9+10-1~25.10                                   amd64        OpenJDK Java runtime, using Hotspot JIT
- ii  openjdk-21-jre-headless:amd64                               21.0.9+10-1~25.10                                   amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
- ii  openjdk-8-jdk:amd64                                         8u472-ga-1~25.10                                    amd64        OpenJDK Development Kit (JDK)
- ii  openjdk-8-jdk-headless:amd64                                8u472-ga-1~25.10                                    amd64        OpenJDK Development Kit (JDK) (headless)
- ii  openjdk-8-jre:amd64                                         8u472-ga-1~25.10                                    amd64        OpenJDK Java runtime, using Hotspot JIT
- ii  openjdk-8-jre-headless:amd64                                8u472-ga-1~25.10                                    amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
-
-Thanks,
-
-	Ingo
-
-====================>
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-
- tools/perf/builtin-stat.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 7006f848f87a..973b72218df7 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1542,7 +1542,10 @@ static int perf_stat_init_aggr_mode(void)
- 	 * taking the highest cpu number to be the size of
- 	 * the aggregation translate cpumap.
- 	 */
--	nr = perf_cpu_map__max(evsel_list->core.all_cpus).cpu + 1;
-+	if (evsel_list->core.all_cpus)
-+		nr = perf_cpu_map__max(evsel_list->core.all_cpus).cpu + 1;
-+	else
-+		nr = 0;
- 	stat_config.cpus_aggr_map = cpu_aggr_map__empty_new(nr);
- 	return stat_config.cpus_aggr_map ? 0 : -ENOMEM;
- }
+Xie Yuanbin
