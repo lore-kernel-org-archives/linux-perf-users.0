@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68463223DF6
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 20:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F74626E6E4
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 20:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764622525; cv=none; b=XXEW5HNKf+A6uaPnU6gFaCpDDOxun6fwoeC5292cPAjW6W0s7lb61z31G5lYLGH9M04wUjBkHwZCC6NB5ImVC31ciWZkcSV285+7s8S5QQnBWUtQukdTWIMBZiyaD/DoklFgqQAV59Y5wK112lF4WrNMCk2gZzIHobMRLBX3l74=
+	t=1764622532; cv=none; b=SoLeJD6w8zDUaqv4U9AIlMysP/vq2q5MStRX/x5nw5YZOGf2aXP+U964XGkB9tCXEIyuAqU9GONlST+8n5Gq8rW7wG6FeBjnI8CQbeZBdtgTnwytSLzyeLWgopM6BrCjb5jMjXosXpZ2ShoDAM/mCpYRjQWDSlmORsvRvH2S4hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764622525; c=relaxed/simple;
-	bh=z6FtVLqdmY2BvHaJao1xCfusHONbHKHJuP9pFmB/d0g=;
+	s=arc-20240116; t=1764622532; c=relaxed/simple;
+	bh=RGdmhyBYFRnGgFw20jM0roDN+95aj0Dmbo2wN7m/qV4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=tj8HeysAOX+sBc6LqUhouTGvv4vmtTpVkQMD+4lumiawVAxXxabStPaXSsLS4Iq0rniECK756moPNzbsCTutdrcLv0NBPpg6s1/MYKRrbN4D95dDZ+or18yZJD47cjFH7wGJW1iGPNF7cFJOm6VkW9u9mf6O22SplDnEQMemy98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BeNIDYFL; arc=none smtp.client-ip=209.85.210.202
+	 To:Content-Type; b=UnCU9ZebQ680hB+D0CctwoCTyP7GJmxU9r1O9RAK6MuTbGZ5OCYfIqr/iY9OdVUYrgTcbxE3Bo1MCfhH3n20FFvZEklYAsezWR6wc+8bhM0oAoTY7uXaSjhprERKwPf1e9IqmQBIl7uKZvU9wr5t69h61UtMBxUKzhxes9rUYCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4WJ96559; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BeNIDYFL"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7b82c2c2ca2so7047419b3a.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 12:55:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4WJ96559"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-bc240cdb249so4157542a12.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 12:55:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764622523; x=1765227323; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764622530; x=1765227330; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=z77aYCybIIHavayyPQkrG4XKGziZQG4YhRaKisouWww=;
-        b=BeNIDYFLvcrWLpYVaLbdUPxdx2AuDX4AZBdSkedivw9VyUPp+skyrPQGTSYNlwp4W8
-         zcspHRCrOIXo95lRS449hGEhMfd3JNW3T2c98vw0uJ4BY23HIcBXpxxtJtA0gj02negR
-         aW0E06xshfvUjC7ru0NWPeVFw2X7vYRh3nV6HQ+sPr2qrANqwEMnAn5ZrkBpO/KWt178
-         CCYUcWDpu9mL8W1v47kXcfcpofFpNl9JlGGAZZFiSIUZVfyt8M3+9R4olqqmUc9j/0lW
-         o/b1+XckYzRUZiU0L8McshodyTPwDTsURYxSMnuzALAbj7Oppo0X0JCOP/EsJ4TUJpBc
-         NKzA==
+        bh=nuvqYDAGbb4tGYCC6QK3TUQ9PWdRvfqu3GrG0lS3IVQ=;
+        b=4WJ96559VIGAaEALefJFSywyqSKX97vmrU3b8y7AuhfkssiFgamEO0w2V3IZoN04eM
+         FWHhmIywjEca7SpAzKCmC0HZfLtaJF+tL5G5za4dnRd0Vc3ZXhZBYWPG6q6sJbs+ebJ3
+         jEYHKaJD468Hk4CLGHTyDVCTYeJ1xkde5t6uE1OQnr1UiPdnEP5lMmLjLhAEGT4ZPXUq
+         qxCneXcSHcKkI5iNFJCn2tFOmTadjMQ4k/ZAwsfbpPOK2UpBSAyJIkcTB11XXfoJFOmc
+         IS0H9W5W8pTuHlBMqDBbO9yQRok0c8Haw7potcOadDRRYGu5kcAleWtxL8PhtWv9lg8K
+         5LLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764622523; x=1765227323;
+        d=1e100.net; s=20230601; t=1764622530; x=1765227330;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z77aYCybIIHavayyPQkrG4XKGziZQG4YhRaKisouWww=;
-        b=ButstKooMZJH2AZBEEBPijWWB56uScFrFxfPCOyQ0ztsPJIY6iD/pAdu6DQrvUZnmI
-         Dd59wbyc7aVbn3yZwmhcjqmpqbOZeZP9PGTdexrsTkDKrASxD/9QdBTW0DU1TNXv1iWA
-         z2sEKbj4QnFlCna+5L/c/EfOylVQRDQyiGN3FGv5Vn0bCVtaKvBRA3p+EmYlbMWBMHfh
-         Iqq4wKHD9uLq+nYExAXrBcymqTACwAD6z2iPFOGJGPScfi1l9nt9GOEt2MBrtVqfoZXg
-         fNXRwIXIJOjZjps9tkDzB6Dwo1T/t/8l4bduK/kGJA4iuV4u3I+hetdbHmw4rsmDxoWe
-         wVlg==
-X-Forwarded-Encrypted: i=1; AJvYcCXxMQlHchRbjzRR+Fbxjm5c0jmIfPhJuC/wyeb29AgZF53li3x2qwuQCgs/Hl8Zqak9TSIwRUTE8niPBZF5lQlG@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXi2e271DmOigQDDrXFwR1l2yWM9qfzvH/Lmmi0+yvAyyQh1bd
-	iNrOfvjciZNRk3Z4HA5uO889l7mZbeT23ksMZ/qJjGNvUBFXLWmhFIff6wrJCfY8N8FqOzNhpmD
-	832b1k2iwXA==
-X-Google-Smtp-Source: AGHT+IEE9W5jzAEEvpyu9+iNLMSoHbvRdj4v9fElI9rpCqSB7ekTOa4+XG6BRiJddwmiLaTozOsN4F8a2pxb
-X-Received: from dlbvv24.prod.google.com ([2002:a05:7022:5f18:b0:11b:a892:80ac])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2219:b0:11a:51f9:daf
- with SMTP id a92af1059eb24-11c9d718ef4mr24872885c88.14.1764622523344; Mon, 01
- Dec 2025 12:55:23 -0800 (PST)
-Date: Mon,  1 Dec 2025 12:55:00 -0800
+        bh=nuvqYDAGbb4tGYCC6QK3TUQ9PWdRvfqu3GrG0lS3IVQ=;
+        b=buelXds7xkKSMyHqNWu48ncRXQET+w0HYpYPlGrMFLIGWIQjoxZeFPyyR6B+Q733WT
+         rSQRDOfD2SQirMr5vXO9RAtI8oeamy4IQhFQA7FXUIYj+WfWFJKWBdK/eXICgj6vrQF2
+         OiV4OF/pw+Uk9IFdAvpatCsdAXVl7b/efX0ioY7a/29++bXk5qoyC0U8cQLHiNytQKDK
+         BLIbWvcUZ/CWEXV9q2ndJaqgt9nggd1VJh0cVkndLYEpyquRftiZhhHcfoSce5PRWkzr
+         pLTyd64lqZjIbD/OA79q0T1kClucS6T10dEnFJ98Z6nITPJE52/fimoOoHsxZLiIfcRH
+         DZfg==
+X-Forwarded-Encrypted: i=1; AJvYcCVGU+kw6pyVcLwqIkL3HimoiC5ONCDv4WPjuiO0O/q3ThrHhofzQC3wlwvAcsfjAJU6Sp8O06vjVstWyROSsOKf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzj/Zmgp7bL3i4oTfRG82lmAGgXukjx+yPAk/pfTtbwARiSNABY
+	cF7KOnywGojuo66yxtU2HOuGmYL4LXFd2QkWYAicwTGj06bLwxMig8SpF7yjPSZ3hdRhSsJUwcE
+	koZRoY0J8rA==
+X-Google-Smtp-Source: AGHT+IFFXPeFIT+moZ3s44tHExWRRKrP5myjYRtAUhgxSg5dgFVxNxqkGlXQGLrK0E1CN+rPJMvc0QOl3Lch
+X-Received: from dybgu41.prod.google.com ([2002:a05:7301:22a9:b0:2a9:7031:8efc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:fe46:b0:2a4:5028:342d
+ with SMTP id 5a478bee46e88-2a9418914f7mr11875973eec.33.1764622529695; Mon, 01
+ Dec 2025 12:55:29 -0800 (PST)
+Date: Mon,  1 Dec 2025 12:55:01 -0800
 In-Reply-To: <20251201205509.195451-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251201205509.195451-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
-Message-ID: <20251201205509.195451-2-irogers@google.com>
-Subject: [PATCH v2 01/10] perf symbol: Reduce scope of elf__needs_adjust_symbols
+Message-ID: <20251201205509.195451-3-irogers@google.com>
+Subject: [PATCH v2 02/10] perf symbol: Reduce scope of arch__sym_update
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,60 +80,86 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Function is only used by symsrc__init in symbol-elf.c, make static to
-reduce scope. Switch to not passing the argument by value but as a
-pointer.
+Rather than being a weak arch function, use the e_machine from the ELF
+header to determine whether to update or not. This should make the
+function work cross-platform, it also reduces the function's scope.
+
+Note, the previous PPC code would compile both for 32 and 64-bit and
+when _CALL_ELF==2. Similar testing could be done using the ELF file's
+e_machine for PPC32 and e_flags for not EF_PPC_EMB. It can also be
+done on the symbol for a non-zero st_other. Given we're just copying
+the value, which would otherwise be 0, there's no need to introduce a
+st_other != 0 test. The value is only used in arch__fix_tev_from_maps
+on PowerPC in the PPC64_LOCAL_ENTRY_OFFSET macro, where 64-bit is
+assumed.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/symbol-elf.c | 8 ++++----
- tools/perf/util/symbol.h     | 1 -
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ tools/perf/arch/powerpc/util/sym-handling.c | 7 -------
+ tools/perf/util/symbol-elf.c                | 9 ++++++---
+ tools/perf/util/symbol.h                    | 4 ----
+ 3 files changed, 6 insertions(+), 14 deletions(-)
 
+diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
+index 947bfad7aa59..afefa9bd0c93 100644
+--- a/tools/perf/arch/powerpc/util/sym-handling.c
++++ b/tools/perf/arch/powerpc/util/sym-handling.c
+@@ -66,13 +66,6 @@ const char *arch__normalize_symbol_name(const char *name)
+ 
+ #if defined(_CALL_ELF) && _CALL_ELF == 2
+ 
+-#ifdef HAVE_LIBELF_SUPPORT
+-void arch__sym_update(struct symbol *s, GElf_Sym *sym)
+-{
+-	s->arch_sym = sym->st_other;
+-}
+-#endif
+-
+ #define PPC64LE_LEP_OFFSET	8
+ 
+ void arch__fix_tev_from_maps(struct perf_probe_event *pev,
 diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index c5c382c3409a..f661ea6c8ac2 100644
+index f661ea6c8ac2..99b1e060acf5 100644
 --- a/tools/perf/util/symbol-elf.c
 +++ b/tools/perf/util/symbol-elf.c
-@@ -1052,15 +1052,15 @@ void symsrc__destroy(struct symsrc *ss)
- 	close(ss->fd);
+@@ -1338,8 +1338,11 @@ static u64 ref_reloc(struct kmap *kmap)
+ 	return 0;
  }
  
--bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
-+static bool elf__needs_adjust_symbols(const GElf_Ehdr *ehdr)
- {
- 	/*
- 	 * Usually vmlinux is an ELF file with type ET_EXEC for most
- 	 * architectures; except Arm64 kernel is linked with option
- 	 * '-share', so need to check type ET_DYN.
- 	 */
--	return ehdr.e_type == ET_EXEC || ehdr.e_type == ET_REL ||
--	       ehdr.e_type == ET_DYN;
-+	return ehdr->e_type == ET_EXEC || ehdr->e_type == ET_REL ||
-+	       ehdr->e_type == ET_DYN;
- }
+-void __weak arch__sym_update(struct symbol *s __maybe_unused,
+-		GElf_Sym *sym __maybe_unused) { }
++static void arch__sym_update(int e_machine, const GElf_Sym *sym, struct symbol *s)
++{
++	if (e_machine == EM_PPC64)
++		s->arch_sym = sym->st_other;
++}
  
- static Elf *read_gnu_debugdata(struct dso *dso, Elf *elf, const char *name, int *fd_ret)
-@@ -1233,7 +1233,7 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
- 	if (dso__kernel(dso) == DSO_SPACE__USER)
- 		ss->adjust_symbols = true;
- 	else
--		ss->adjust_symbols = elf__needs_adjust_symbols(ehdr);
-+		ss->adjust_symbols = elf__needs_adjust_symbols(&ehdr);
+ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 				      GElf_Sym *sym, GElf_Shdr *shdr,
+@@ -1718,7 +1721,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 		if (!f)
+ 			goto out_elf_end;
  
- 	ss->name   = strdup(name);
- 	if (!ss->name) {
+-		arch__sym_update(f, &sym);
++		arch__sym_update(ehdr.e_machine, &sym, f);
+ 
+ 		__symbols__insert(dso__symbols(curr_dso), f, dso__kernel(dso));
+ 		nr++;
 diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 3fb5d146d9b1..9aa0016937b7 100644
+index 9aa0016937b7..f12bb3d0e08b 100644
 --- a/tools/perf/util/symbol.h
 +++ b/tools/perf/util/symbol.h
-@@ -217,7 +217,6 @@ int setup_intlist(struct intlist **list, const char *list_str,
+@@ -216,10 +216,6 @@ int setup_list(struct strlist **list, const char *list_str,
+ int setup_intlist(struct intlist **list, const char *list_str,
  		  const char *list_name);
  
- #ifdef HAVE_LIBELF_SUPPORT
--bool elf__needs_adjust_symbols(GElf_Ehdr ehdr);
- void arch__sym_update(struct symbol *s, GElf_Sym *sym);
- #endif
- 
+-#ifdef HAVE_LIBELF_SUPPORT
+-void arch__sym_update(struct symbol *s, GElf_Sym *sym);
+-#endif
+-
+ const char *arch__normalize_symbol_name(const char *name);
+ #define SYMBOL_A 0
+ #define SYMBOL_B 1
 -- 
 2.52.0.158.g65b55ccf14-goog
 
