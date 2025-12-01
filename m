@@ -1,176 +1,243 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A25277C86
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 20:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4E0253B42
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 20:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764620694; cv=none; b=KsnNKCYyKrF6MA535khO4f8weDo+bChavNgUw5oZnxD++icgT+GTZfMG9WKB6l4MFz6+T4nAJfwQrnr6deoQdMn/RuTp/Iv7QctEDcmKKeCrHbJI9hFILVFHmBo09L3mtiFjfMOUWhLCD04GnegVVPGOMDR23vBkLvxnymbImqY=
+	t=1764622521; cv=none; b=E7MiyTk+sk7yCyAyX68c3gNMooMTZ/qTa+Hl3VYk3LvUQq3RK7kGaeq+8SZOsyNFzt6rIT3yxxJOLUipocasnpX96ZaT2oLT1ldYvO6iSsSMEdeJsocmkPi7BbQXnl3Btue+KztWBxSG4XSw7ik7beSLOW+Pp6AbJ5sFytSXROM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764620694; c=relaxed/simple;
-	bh=9VtX2NvFz0RoQVJ8SSqGMuTYPnLO3r9LWpqks/kmpMQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pqZ2Qkyx2AK5GqU+Xa/JutOhxuCLujT3xwpzSAWfJ0UYj/O9fUtcmv2V9t6d0qisR3bSPJ22jvGifbC+Ir9zYFC3WzlWJABlnycyJdd46mtFiHW2NwZm9Wz5Oicp7h1IJEmeTCPn0WbD3n0rf4S/iSN+u8Gf7geNZwCzk39rw5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--wusamuel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jkNbt3ou; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1764622521; c=relaxed/simple;
+	bh=ZSxrOdUDV2fsiZ8VTAoHybN58iPShWXHilNcC1eOP9c=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=oGjkgINQuzLnE0nDvp/PBtmscqGx57IUyhGty9OckgXw7btg1Z/zF4llR46W9bWBniW8teB5g5g2s1Yk//ylOBQDoU9QpSmBEmF2OLH5m0v8tDbuGVGiGLr5y7/GfDo5NLXteUIYgZGOqWqaeb8pzUc1neKVe+tJnifdlJN68tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T+snBJLN; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--wusamuel.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jkNbt3ou"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-297fbfb4e53so69662105ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 12:24:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T+snBJLN"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b6097ca315bso6744024a12.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 12:55:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764620691; x=1765225491; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iuYJ8a9yf5YfCIOX0vDCxkx5Zc9d0WA0EbWHTfFbCpI=;
-        b=jkNbt3ouuc6NmxFq5apXPbnMYpm1+zjWpeLCHENUhZshBHu5HtyWtBRrtrgDl7yalQ
-         OtXQasM1U+p8W2X/IYCa2cUExCHo0oVWoB8FJsSl1BeopyHbTrYz+9YzTGuqlAKYUaQI
-         IJapEgCG+EizpaCFsG6l5ATwt5rzAJ4+tDTdFaxXAEItPwJu0MKHQ7YGAErlkZb1XXhU
-         MWgjhSmcDoofFGwbkjtHo5nMbpLoUUNjN5loYr7jv9kC3Q+I/88Ak23hMapuj4HFYfBO
-         son19Lz+dHz87y71srH8WwtEHospUet67m9ZKRWT2Iyh2vFf+e/JVNXH8Z5jFwFJqBQ3
-         1TiQ==
+        d=google.com; s=20230601; t=1764622518; x=1765227318; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CM4WlM3X7MrnLioK5/Fb9PLY7pS2paWGYqO8IZMvjl0=;
+        b=T+snBJLNwzOKpEO3egsltT6gbaTW7afXQzbRwKrR8DshTxxuCwrBxdLW0rLZUiLkjw
+         Cyj3vp7Elc+wDJykWAzEwiZzOO0Ir/5lfQb7FuEeGBzaOcavG9Li6YP1kBCmUFviqKvl
+         EZ7UqIbVaI0+zFMQ7974DL7QTq3qpY1lg62jPDkHx6cNBA4fga3HcrzJh1Xms9Q+g6HN
+         thfB3wGrDZwMujp2X+YvA2iD4pkDY/46WMg+5hgvK+PrmcdJeF5AvabTCsR2Qc2n9LCw
+         HlLbT+FK5MJuH2Om7egKdamnGC37aA462AHyv9SyPCu6qirdbUE5if+yxeyW2YeWxy1z
+         mpvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764620691; x=1765225491;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iuYJ8a9yf5YfCIOX0vDCxkx5Zc9d0WA0EbWHTfFbCpI=;
-        b=cvMP+GcnM9ID+CbqNo8MGu/u7ZBavi8nT/LLDa/KL6VP7xE2DMrIMRURnKwdM3CBfV
-         T5vQ/3hsxqM9WgAl/zgqnwijZAib1qRm4vjGr6oW/MP+dkziL4jrgXj5b4TEI74YBOmM
-         Jom7T1b1JOhDq2sVrh3dqUz0CXhFOtDQDE36tICP/p3/5Q3Ff/FSGfi2Z8TQvzOXNdDK
-         OpAPrDKvJhcd6xg4zjypOL6TX780w9EXcya7kxcRM0pN0lhSpwY4aV+Acpq6vrvGr2V5
-         58hInpsXm13VANV+xCRjcx2wz7GwVcxO6CmvJkrv4FlEkQwS/15V8e5njy5iNlmEnH0o
-         zvwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwOQk6bkmT2Jzbx4qa8q04mNCVsUd1h1kIRUHdFVY2j6vDubTzhebvYT+qaStTanSS+83RdYrG0vlAzVSneyi0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmDAC142/6Q7/62//5VZHTDKWQyRpcm9hFntr9xyDZqh0wkY97
-	MNAiIzp0986gwazvUFOi8fV4mk7zO9Y79obkzf2+M/oXRU0HFc61D1kppxyNhKShLyYfS/o70ge
-	Eoo6gvAQNTAzdug==
-X-Google-Smtp-Source: AGHT+IGsvk85QlzW667SyDst19B1vMCsdIZFkhsIWO+5Oz5JLmlMK/v87N6vvqpae9OjXI/Z5iDlf2o2nXomaQ==
-X-Received: from dlbdd25.prod.google.com ([2002:a05:7022:a99:b0:11c:58e4:e325])
- (user=wusamuel job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:7022:6726:b0:119:e56b:98ab with SMTP id a92af1059eb24-11cb3ede9dcmr19616669c88.18.1764620691371;
- Mon, 01 Dec 2025 12:24:51 -0800 (PST)
-Date: Mon,  1 Dec 2025 12:24:35 -0800
-In-Reply-To: <20251201202437.3750901-1-wusamuel@google.com>
+        d=1e100.net; s=20230601; t=1764622518; x=1765227318;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CM4WlM3X7MrnLioK5/Fb9PLY7pS2paWGYqO8IZMvjl0=;
+        b=Mmkkvv9gtaAyB14lMXVHhbRVx70K1pgn4lMd0hQSH3pnkFEMp0VoyZm7y3ZsFyoyMa
+         QaPuMb0fLCVmyXqZ5dxMFHmDIvrxfXWCBte+ho0NfxxdTtSSflHjFaRD1d0cBb8HSgbR
+         OFcLVpTOP6ekMJgd97vsNilmz9Vtsmoz2zkPjSlv2v9e28GqAPmc9D4bE38a30P/dySk
+         mAiPgwNaiM2nBcqezoYyBXZza8Xwo3mYDqtoQrZbe8JcC75/GRNsPSZLYSx/uDdHEnsF
+         jHK0EUslNTpaWQC4RGdj3MJ/TdY8y5o0ZiEQ6Ii9TWT8FUFFATBZQBLBRpd3jL46lHVv
+         kgAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEfbabjPZCJOMec7dPTkK5NBUFGCNck6yagPeX1FZbKf3bHu+g5zim6pbbKnxnDSrrtS0OF/wfUpq0fyYLcolw@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMn5xvvqxTGsNendYC27uqSGuDoEa9ac2gyNuYiNTnZCvNih/g
+	AN7d4HRfAtc92n8k8NiixnZ/2MZ03r7HQfK+sBeSH+w980PxHdFkanlX1gIBoNOQeRtSgAOoro8
+	lr2My6NxA2A==
+X-Google-Smtp-Source: AGHT+IHzasUWwoOoaBGRKrbmTLPwNDgHZhXRK6AamdUEgKNV5PIGt1TasBJ+i8LlW5NAIHXjG29VZyv13epx
+X-Received: from dlbtp11.prod.google.com ([2002:a05:7022:3b8b:b0:119:49ca:6ba3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:3898:b0:11b:7e61:57d5
+ with SMTP id a92af1059eb24-11c9d60eac9mr25543419c88.2.1764622517699; Mon, 01
+ Dec 2025 12:55:17 -0800 (PST)
+Date: Mon,  1 Dec 2025 12:54:59 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20251201202437.3750901-1-wusamuel@google.com>
-X-Mailer: git-send-email 2.52.0.107.ga0afd4fd5b-goog
-Message-ID: <20251201202437.3750901-3-wusamuel@google.com>
-Subject: [PATCH v3 2/2] cpufreq: Documentation update for trace_policy_frequency
-From: Samuel Wu <wusamuel@google.com>
-To: Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
-	Jonathan Corbet <corbet@lwn.net>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
+Message-ID: <20251201205509.195451-1-irogers@google.com>
+Subject: [PATCH v2 00/10] perf: Refactor/add fallbacks for reading build-id
+ and debuglink
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
-Cc: christian.loehle@arm.com, Samuel Wu <wusamuel@google.com>, kernel-team@android.com, 
-	linux-pm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	James Clark <james.clark@linaro.org>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
+	Athira Rajeev <atrajeev@linux.ibm.com>, tanze <tanze@kylinos.cn>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, Andi Kleen <ak@linux.intel.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Haibo Xu <haibo1.xu@intel.com>, Sergei Trofimovich <slyich@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Documentation update corresponding to replace the cpu_frequency trace
-event with the policy_frequency trace event.
+This cleans up some tech debt mentioned in the thread:
+https://lore.kernel.org/lkml/aQt66zhfxSA80xwt@gentoo.org/
 
-Signed-off-by: Samuel Wu <wusamuel@google.com>
----
- Documentation/admin-guide/pm/amd-pstate.rst   | 10 +++++-----
- Documentation/admin-guide/pm/intel_pstate.rst | 14 +++++++-------
- Documentation/trace/events-power.rst          |  2 +-
- 3 files changed, 13 insertions(+), 13 deletions(-)
+The perf tool has fallbacks for objdump but not in the case of
+build-id and debuglink reading. Refactor the code so that in the case
+of read_build_id it now looks like:
 
-diff --git a/Documentation/admin-guide/pm/amd-pstate.rst b/Documentation/admin-guide/pm/amd-pstate.rst
-index e1771f2225d5..e110854ece88 100644
---- a/Documentation/admin-guide/pm/amd-pstate.rst
-+++ b/Documentation/admin-guide/pm/amd-pstate.rst
-@@ -503,8 +503,8 @@ Trace Events
- --------------
- 
- There are two static trace events that can be used for ``amd-pstate``
--diagnostics. One of them is the ``cpu_frequency`` trace event generally used
--by ``CPUFreq``, and the other one is the ``amd_pstate_perf`` trace event
-+diagnostics. One of them is the ``policy_frequency`` trace event generally
-+used by ``CPUFreq``, and the other one is the ``amd_pstate_perf`` trace event
- specific to ``amd-pstate``.  The following sequence of shell commands can
- be used to enable them and see their output (if the kernel is
- configured to support event tracing). ::
-@@ -531,9 +531,9 @@ configured to support event tracing). ::
-           <idle>-0       [003] d.s..  4995.980971: amd_pstate_perf: amd_min_perf=85 amd_des_perf=85 amd_max_perf=166 cpu_id=3 changed=false fast_switch=true
-           <idle>-0       [011] d.s..  4995.980996: amd_pstate_perf: amd_min_perf=85 amd_des_perf=85 amd_max_perf=166 cpu_id=11 changed=false fast_switch=true
- 
--The ``cpu_frequency`` trace event will be triggered either by the ``schedutil`` scaling
--governor (for the policies it is attached to), or by the ``CPUFreq`` core (for the
--policies with other scaling governors).
-+The ``policy_frequency`` trace event will be triggered either by the
-+``schedutil`` scaling governor (for the policies it is attached to), or by the
-+``CPUFreq`` core (for the policies with other scaling governors).
- 
- 
- Tracer Tool
-diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-guide/pm/intel_pstate.rst
-index fde967b0c2e0..274c9208f342 100644
---- a/Documentation/admin-guide/pm/intel_pstate.rst
-+++ b/Documentation/admin-guide/pm/intel_pstate.rst
-@@ -822,23 +822,23 @@ Trace Events
- ------------
- 
- There are two static trace events that can be used for ``intel_pstate``
--diagnostics.  One of them is the ``cpu_frequency`` trace event generally used
--by ``CPUFreq``, and the other one is the ``pstate_sample`` trace event specific
--to ``intel_pstate``.  Both of them are triggered by ``intel_pstate`` only if
--it works in the :ref:`active mode <active_mode>`.
-+diagnostics.  One of them is the ``policy_frequency`` trace event generally
-+used by ``CPUFreq``, and the other one is the ``pstate_sample`` trace event
-+specific to ``intel_pstate``.  Both of them are triggered by ``intel_pstate``
-+only if it works in the :ref:`active mode <active_mode>`.
- 
- The following sequence of shell commands can be used to enable them and see
- their output (if the kernel is generally configured to support event tracing)::
- 
-  # cd /sys/kernel/tracing/
-  # echo 1 > events/power/pstate_sample/enable
-- # echo 1 > events/power/cpu_frequency/enable
-+ # echo 1 > events/power/policy_frequency/enable
-  # cat trace
-  gnome-terminal--4510  [001] ..s.  1177.680733: pstate_sample: core_busy=107 scaled=94 from=26 to=26 mperf=1143818 aperf=1230607 tsc=29838618 freq=2474476
-- cat-5235  [002] ..s.  1177.681723: cpu_frequency: state=2900000 cpu_id=2
-+ cat-5235  [002] ..s.  1177.681723: policy_frequency: state=2900000 cpu_id=2 policy_cpus=04
- 
- If ``intel_pstate`` works in the :ref:`passive mode <passive_mode>`, the
--``cpu_frequency`` trace event will be triggered either by the ``schedutil``
-+``policy_frequency`` trace event will be triggered either by the ``schedutil``
- scaling governor (for the policies it is attached to), or by the ``CPUFreq``
- core (for the policies with other scaling governors).
- 
-diff --git a/Documentation/trace/events-power.rst b/Documentation/trace/events-power.rst
-index f45bf11fa88d..f013c74b932f 100644
---- a/Documentation/trace/events-power.rst
-+++ b/Documentation/trace/events-power.rst
-@@ -26,8 +26,8 @@ cpufreq.
- ::
- 
-   cpu_idle		"state=%lu cpu_id=%lu"
--  cpu_frequency		"state=%lu cpu_id=%lu"
-   cpu_frequency_limits	"min=%lu max=%lu cpu_id=%lu"
-+  policy_frequency	"state=%lu cpu_id=%lu policy_cpus=%*pb"
- 
- A suspend event is used to indicate the system going in and out of the
- suspend mode:
+```
+...
+int filename__read_build_id(const char *filename, struct build_id *bid)
+{
+	struct kmod_path m = { .name = NULL, };
+	char path[PATH_MAX];
+	int err, fd;
+
+	if (!filename)
+		return -EFAULT;
+
+	if (!is_regular_file(filename))
+		return -EWOULDBLOCK;
+
+	err = kmod_path__parse(&m, filename);
+	if (err)
+		return -1;
+
+	if (m.comp) {
+		int error = 0;
+
+		fd = filename__decompress(filename, path, sizeof(path), m.comp, &error);
+		if (fd < 0) {
+			pr_debug("Failed to decompress (error %d) %s\n",
+				 error, filename);
+			return -1;
+		}
+		lseek(fd, 0, SEEK_SET);
+		filename = path;
+	} else {
+		fd = open(filename, O_RDONLY);
+		if (fd < 0) {
+			pr_debug("Failed to open %s\n", filename);
+			return -1;
+		}
+	}
+
+	err = libbfd__read_build_id(fd, filename, bid);
+	if (err == 0)
+		goto out;
+
+	err = libelf__read_build_id(fd, filename, bid);
+	if (err == 0)
+		goto out;
+
+	err = sym_min__read_build_id(fd, filename, bid);
+out:
+	close(fd);
+	if (m.comp)
+		unlink(filename);
+	return err;
+}
+...
+```
+
+That is what was previously symbol-elf decompression code is now made
+common for all cases of reading. The handling of "is_regular_file" is
+now common. There is a clear fallback from libbfd to libelf to the
+symbol-minimal (sym_min) versions of the functions.
+
+To support this there is refactoring of code into a perf-libelf.c
+file, to follow patterns established for the capstone, LLVM and libbfd
+code.
+
+v2: Rebase, resolving merge conflict with James' removal of the block
+    argument:
+    https://lore.kernel.org/lkml/20251121-james-perf-non-block-v1-1-6ab2702ab573@linaro.org/
+    Add a patch fixing an issue with return values from
+    filename__read_build_id. Some tweaks to the PPC arch__sym_update
+    patch commit message and make it 64-bit only. Change the
+    sysfs__read_build_id code combining the libelf and minimal
+    implementations but avoiding the memory read overhead, avoiding a
+    potential buffer overrun if the descsz was particularly large in a
+    build ID note, avoid reads and just using seeks.
+
+v1: https://lore.kernel.org/lkml/20251123023225.8069-1-irogers@google.com/
+
+Ian Rogers (10):
+  perf symbol: Reduce scope of elf__needs_adjust_symbols
+  perf symbol: Reduce scope of arch__sym_update
+  perf symbol: Move libelf code to its own file/header
+  perf symbol: Remove unused includes
+  perf symbol: Move dso__load_bfd_symbols out of symbol.h
+  perf symbol: Use fallbacks with filename__read_build_id
+  perf symbol: Use fallbacks for filename__read_debuglink
+  perf symbol: Make a common sysfs__read_build_id
+  perf dso: Move type helpers out of symbol and use fallbacks
+  perf symbol: Fix ENOENT case for filename__read_build_id
+
+ tools/perf/arch/powerpc/util/sym-handling.c   |   7 -
+ tools/perf/builtin-annotate.c                 |  47 +--
+ tools/perf/builtin-buildid-cache.c            |   6 +-
+ tools/perf/builtin-c2c.c                      |  58 +--
+ tools/perf/builtin-diff.c                     |  22 +-
+ tools/perf/builtin-inject.c                   |  19 +-
+ tools/perf/builtin-kmem.c                     |  41 ++-
+ tools/perf/builtin-kwork.c                    |   9 +-
+ tools/perf/builtin-mem.c                      |  16 +-
+ tools/perf/builtin-report.c                   |  76 ++--
+ tools/perf/builtin-sched.c                    |  50 ++-
+ tools/perf/builtin-script.c                   |  89 ++---
+ tools/perf/builtin-timechart.c                |  34 +-
+ tools/perf/builtin-top.c                      |  85 +++--
+ tools/perf/builtin-trace.c                    |  82 ++---
+ .../scripts/python/Perf-Trace-Util/Context.c  |  11 +-
+ tools/perf/tests/code-reading.c               |   1 +
+ tools/perf/tests/hists_cumulate.c             |   1 +
+ tools/perf/tests/hists_filter.c               |   1 +
+ tools/perf/tests/hists_link.c                 |   1 +
+ tools/perf/tests/hists_output.c               |   1 +
+ tools/perf/tests/mmap-thread-lookup.c         |   1 +
+ tools/perf/tests/pe-file-parsing.c            |   5 +-
+ tools/perf/util/Build                         |   6 +-
+ tools/perf/util/annotate-data.c               |   7 +-
+ tools/perf/util/auxtrace.h                    |   1 +
+ tools/perf/util/block-info.c                  |  11 +-
+ tools/perf/util/build-id.c                    |  28 +-
+ tools/perf/util/callchain.c                   |   1 +
+ tools/perf/util/cs-etm.c                      |   1 +
+ tools/perf/util/data-convert-json.c           |  30 +-
+ tools/perf/util/db-export.c                   |  16 +-
+ tools/perf/util/dlfilter.c                    |  11 +-
+ tools/perf/util/dlfilter.h                    |   1 +
+ tools/perf/util/dso.c                         |  57 +--
+ tools/perf/util/event.c                       |  41 ++-
+ tools/perf/util/evsel_fprintf.c               |  14 +-
+ tools/perf/util/hist.c                        |  29 +-
+ tools/perf/util/intel-pt.c                    |  35 +-
+ tools/perf/util/kvm-stat.h                    |   5 +-
+ tools/perf/util/libbfd.c                      |   9 +-
+ tools/perf/util/libbfd.h                      |  12 +-
+ tools/perf/util/machine.c                     |  34 +-
+ tools/perf/util/perf-libelf.c                 | 235 ++++++++++++
+ tools/perf/util/perf-libelf.h                 |  58 +++
+ tools/perf/util/print_insn.c                  |  14 +-
+ tools/perf/util/probe-event.c                 |   1 +
+ tools/perf/util/probe-finder.c                |   1 +
+ .../util/scripting-engines/trace-event-perl.c |   1 +
+ .../scripting-engines/trace-event-python.c    |   1 +
+ tools/perf/util/symbol-elf.c                  | 338 +-----------------
+ tools/perf/util/symbol-minimal.c              | 166 +++++----
+ tools/perf/util/symbol-minimal.h              |  13 +
+ tools/perf/util/symbol.c                      | 107 +++++-
+ tools/perf/util/symbol.h                      |  44 +--
+ tools/perf/util/symbol_fprintf.c              |   1 +
+ tools/perf/util/thread-stack.c                |  12 +-
+ tools/perf/util/thread.c                      |  18 +-
+ tools/perf/util/unwind-libdw.c                |  15 +-
+ 59 files changed, 1079 insertions(+), 958 deletions(-)
+ create mode 100644 tools/perf/util/perf-libelf.c
+ create mode 100644 tools/perf/util/perf-libelf.h
+ create mode 100644 tools/perf/util/symbol-minimal.h
+
 -- 
-2.52.0.107.ga0afd4fd5b-goog
+2.52.0.158.g65b55ccf14-goog
 
