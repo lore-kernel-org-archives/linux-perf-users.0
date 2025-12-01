@@ -1,118 +1,218 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1B0288C34
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 23:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160DC192B75
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 23:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764630723; cv=none; b=tr9poNrLcb2CdMeIPCnqedZmzoe3sTvu1zb95KtYRJVbOdhLfiwz0ze30CfTfZzqh5oqNkcfwKR3KGwnVBbm3Le3eeZnp8ZknL93qBo16JIbeovRyhUdH1gpX6MawNt2m6ZoOmx3PExj7WI/HPDeE/w0XghqrJnwyCJJeVH7dcc=
+	t=1764632017; cv=none; b=aQaTmkxRqE1puBfwV3ZmJQqKY3cnlCUdCb2Y+nguRuRbVhYtcSS5hRzma0GcLh4XfH7Z5B9NX1202jvY734qGm/CGn8yo8y0OHRv723LHtVctmT/1Qy08snWHMQY8rJAYIkcTn1zReXWXKgB4bdcGdOdGd+KW/R8oRtvjv0qljw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764630723; c=relaxed/simple;
-	bh=J+kLpkIMy3513Bm09of6YHNMGo8AAMwx8rUXVBwzd2Q=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Xk5MXHxQQKdTKmHKEUp7VhxQaQk8CgxaIRUDMQYBzQtYi4eaG2YovpOm1t2Vkx60WB7J6wXvbwJ5xBnWJv6A8/a5FssWVU8w/MCDiL/DxeSwL4aMzSzLvGxj3+HUiXHjhQj0vfRd2MO783oTLYKYmoCQg4IzpgmMF7N+Aez0Qvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r1fX+fXb; arc=none smtp.client-ip=209.85.215.202
+	s=arc-20240116; t=1764632017; c=relaxed/simple;
+	bh=mqEmSWIayMgrBHVxTSJ+aILcYCD7UFsfnFcJEZE+4bg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e40bFbTgd3wwy5bpkSlQPLxlOggGYSixeYDGTbXpij61fPAKHEVmSuIHJpYivIzYm/2CktdzOX4in0s0WlS0cXQOP67CqeuNTbYmKy2bT//27QavHM82twNrQyEaHbxuvk138hirrsRdMmvL43b+Jp/3lKYDxzZTSvs4ME77jOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pkG4zIoF; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r1fX+fXb"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b62da7602a0so4780206a12.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 15:12:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pkG4zIoF"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2980343d9d1so829285ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 15:33:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764630721; x=1765235521; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:user-agent:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zLM1EPntpvB3fDVLGw42FElIkaQKNx9U9DS+XMsl0fM=;
-        b=r1fX+fXbEJlouqcyHm3JSiPgfdPmHqObRKzGGfTP+vyJ3nKoJtwz5YKpRg3V9YNauf
-         LJC3PB/m6vlOtnd6FBQ4n0zTD9gxg9kknLe96Dm76uoed9/G8Kph4/zHm1y6bGlTra8J
-         8VPPFd3SAwqJ40jYZeBJqtBxf/FlDLTzHB86+H5lmYzCJVbyujwfcpY9HB5Qz7wNzr+D
-         81EJU6/vw5rzcH5msgJrtW3unzt/USSSFVzY85OBA5XNxoBwnTqSiSnOEJgRnlsKf2K2
-         gcFXi0CAc65NbjnpYgVXpR0vsVmLLNpqZ8jF1Ajf2VfWvRi9UlC8z8fXVCtpRYMqWsrB
-         8UDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764630721; x=1765235521;
-        h=cc:to:from:subject:message-id:user-agent:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1764632015; x=1765236815; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zLM1EPntpvB3fDVLGw42FElIkaQKNx9U9DS+XMsl0fM=;
-        b=IREeDl99+phQ3q0mG3JdzDfjhWpr2mYL3dWXU11Svb4/R8YJ/3q+f+o0XEPgVK9LLU
-         Y9b2j2QZrRH47HigLtovAiWj3YplntwXfwrvAkItZCKyh0G5adZnOoMuZ7/znhjLSPtY
-         kK+cR0ZdimPOK9dhGizQ197HUmt4DFLW1gXiksx036hEJ+zf28ZzFZLjMhAOU6a81ijM
-         3Ln4niFLstzpcPBc13cIumGUgTEiWx//OI6jS9eU1ei+SUQuvJXMQiTNq1RY6zpTkd0S
-         VJdYLGTTYj74ofrEsNEeE6mDrxxN18smkNru+NhXFtqbC7riLHgpW1MykE+l3ZOGOz4c
-         hjkg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnNN1NZqIGVzJ4Sb9m/tBw3UFY8imn95ezDCKdcy48vTC3Pcsmz33jWjPv5Cr0KzcydQpe+aMAaMBDswM9MjA/@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvGUMq19CLRXOgOcSu2Y9sYcLvPx6oQ6K3MaVRlJM3X4vYH9pU
-	aQguInagYi5jFoZHzBjFXCjw9XA4I0KHrMOLh5dF4lX0suwQ4AQTRNxSqlp/y9BDOLzmCoeSyTr
-	RUQpV6zfpYA==
-X-Google-Smtp-Source: AGHT+IE1+zlv+/Ra8/4fDxzAvPN8JlMMEIwYI0833qsjS+sqfkYoQe/VtqWugCSuUH/u1MaLnSztSAazoE5b
-X-Received: from dlbcy37.prod.google.com ([2002:a05:7022:ba5:b0:11b:9bdf:e45c])
- (user=ynaffit job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6898:b0:11b:ceee:a469
- with SMTP id a92af1059eb24-11c9d85feeemr24650965c88.22.1764630720912; Mon, 01
- Dec 2025 15:12:00 -0800 (PST)
-Date: Mon, 01 Dec 2025 15:11:45 -0800
-In-Reply-To: <20251201202437.3750901-3-wusamuel@google.com> (via kernel-team's
- message of "Mon, 1 Dec 2025 12:24:35 -0800")
+        bh=KU+Xhsb0wVLfae+h6Tff84XzrZeWfQsHJXytg0YbSkQ=;
+        b=pkG4zIoFhePjvyaAsI7vu7eYaWWEgOCyWU4gxd4wpo9ISIYKz649Md//o0TZ8/1m44
+         cExg8wJxJWrR/GZSKfNohyi0doniNU4KKljd2vpyjtf+5hyItBTT/Wi5DYlg4+H+aABf
+         gRZVfvhbIiF1i1cCo10apXznyQQjNZANAVnwzjkqs2KIXgstWaW6JDVRYD6/PMwkHq/G
+         8hCitrlYDcQOonFqbj4pUH5rSjJv8L+30LV9khcOOgNkO8cVFX7BipF7wZXxm6hggEaA
+         bdRBCVbe3GL0eXCdW5Qs/LMSfgXihyotfVprHdRy+1qJTPorCsWWXeZr8KjbtXDQI+U8
+         Icqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764632015; x=1765236815;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=KU+Xhsb0wVLfae+h6Tff84XzrZeWfQsHJXytg0YbSkQ=;
+        b=dfEa5WfXyfU/tYUQ91GBljqE5kxi7glCGcxNwXzqKmhFFnqLbEcH+ztYxaioV1/vbS
+         7owKLvpp+FTt21jojjYzNcMTzM3jOHITAsHp14Hb/Wq+29IteyxAj/jcUOcMcAaymk5F
+         x9jd7kHgz5g5yciuwpUOpKfTZlLUwWMxKZK/c06HVrdEAxwfHiQvZz2nvgy2+7Vct0Bq
+         HL/0W49Fbgv5sj7T8M2rW/OX1tSbBOfYnK9eIODbHZc2WwdYP/bUMn3u+U1H+r2k0cC0
+         Jzuf94Jv75T/wHSnyPBlq0ly+a6g17/aZWW4NVlQIrJ7lF2p4L7dLkOhseWwJiYuEyrH
+         Siew==
+X-Gm-Message-State: AOJu0Yzh8lEPt0E9yKAKoWLxu4ycJiJPIfDBo4RWj6LWIy8mQMfkbecr
+	mwG3mMt3HOVCk5SJRvCqGHwsWWHowlYKCMmO6CpnqjYPuYvnRciuoLlR3fCQ2yAb8l/A45OdmSM
+	/Oh+wdzjEsJG5GqH7V9chTS4vm3BkeGfSuo+PUJdo
+X-Gm-Gg: ASbGncsGelVZlEg6Gvo9BLrVEnWL0h4f2Hm3xwZ3FGbbbLcyByRxc+BRDfZkiYCC8VV
+	1GzxPMTAL3tWUXS9xdbPs9mbkET253AUijiArjQ28ADTOdXEENk0r3rNu/Nqq2/wfFk1+Xwy0Iv
+	olq2+pQN08hUUTQJSl1pK7AFVvQJc4PMP4sb0w8NQEoZKMQkHz1tC7Q+N0Ef8nXcsz80IPu+TVj
+	7YQJVqjnn3LyKCgozJAe1i8sggijzZXKyUU7mcraNd1UjcwmVlfqOW81nQqEhYpUd51A6unwEnK
+	XMv6ZjjeA149m4B0ZycajW7v4Q==
+X-Google-Smtp-Source: AGHT+IHBOdhxjPt23CmqXvN+ReHT/c8bI6cFxqfE6eJLINAxpcHRG1O0ScvEhXFl+auLNtkKYMFtA6TiEe6pPgvCzOU=
+X-Received: by 2002:a17:902:d4c8:b0:294:e585:1f39 with SMTP id
+ d9443c01a7336-29d5a4989eemr397955ad.14.1764632014896; Mon, 01 Dec 2025
+ 15:33:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251201202437.3750901-1-wusamuel@google.com> <20251201202437.3750901-3-wusamuel@google.com>
-User-Agent: mu4e 1.12.12; emacs 30.1
-Message-ID: <dbx88qflajbi.fsf@ynaffit-andsys.c.googlers.com>
-Subject: Re: [PATCH v3 2/2] cpufreq: Documentation update for trace_policy_frequency
-From: Tiffany Yang <ynaffit@google.com>
-To: "'Samuel Wu' via kernel-team" <kernel-team@android.com>
-Cc: Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
-	Jonathan Corbet <corbet@lwn.net>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+MIME-Version: 1.0
+References: <aSwt7yzFjVJCEmVp@gmail.com> <CAP-5=fXK8HORZaFUxydEatLV1xXQTcLLBnEMeveJYDHDQPkf_w@mail.gmail.com>
+ <aS3WXn4nz9GE87bM@gmail.com>
+In-Reply-To: <aS3WXn4nz9GE87bM@gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 1 Dec 2025 15:33:23 -0800
+X-Gm-Features: AWmQ_bl_0AmW3dgVWpJS7NRUa5sTSiX78e2w2bZspNk_NoThxxw-K6eZdXBYILM
+Message-ID: <CAP-5=fX6NFb_n8i5Pj5Dk2u+PGuHwxsoo4B7UbkPH_1+MhEYLg@mail.gmail.com>
+Subject: Re: [PATCH] Fix (well, work around) perf stat --null segfault
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Samuel Wu <wusamuel@google.com>, christian.loehle@arm.com, linux-pm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sam,
+On Mon, Dec 1, 2025 at 9:54=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrote=
+:
+>
+>
+> * Ian Rogers <irogers@google.com> wrote:
+>
+> > Agreed on the trainwreck :-) So NULL is a valid CPU map value. It
+> > means no CPUs, but magically no CPUs can also be converted in the code
+> > to become the "any" CPU value of -1. So iterating the perf_cpu_map of
+> > NULL will yield a single CPU of -1 :-( This behavior existed before my
+> > time working on the code, I've tried to make the expectation in the
+> > using code clearer, does the user want the magic "any" CPU behavior?
+> > "any" CPU is distinct from every/all CPUs which would be something
+> > like CPUs 0-127, and then does "all" include online and offline CPUs?
+> > This is something that's been discussed and I think things can be
+> > better, I'd rather the code was explicit whenever terms like "all",
+> > "online" and "any" were being used - it is very easy to confuse "all"
+> > and "any". I've been trying to adjust the code and make it more
+> > sensible with changes like:
+> > https://lore.kernel.org/all/20240202234057.2085863-1-irogers@google.com=
+/
+> > but I agree with you that things are a mess here. At least we
+> > shouldn't be leaking memory (due to the reference count checking) and
+> > we shouldn't confuse indices and CPU numbers (due to the introduction
+> > of a wrapper type), problems that were pervasive and broke things like
+> > uncore counters frequently before.
+> >
+> > Fwiw, part of me thinks we should change the perf_cpu_map to be a
+> > cpu_set_t, the "any" case could be an additional boolean in the
+> > struct. Perhaps we can just auto change "all" to "any" as is somewhat
+> > done here:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/lib/perf/evlist.c?h=3Dperf-tools-next#n92
+> > Then perf_cpu_map can be a cpu_set_t and I think life will be clearer.
+>
+> Yeah, so when I looked at the data structure a few
+> minutes ago:
+>
+>         /**
+>          * A sized, reference counted, sorted array of integers represent=
+ing CPU
+>          * numbers. This is commonly used to capture which CPUs a PMU is =
+associated
+>          * with. The indices into the cpumap are frequently used as they =
+avoid having
+>          * gaps if CPU numbers were used. For events associated with a pi=
+d, rather than
+>          * a CPU, a single dummy map with an entry of -1 is used.
+>          */
+>         DECLARE_RC_STRUCT(perf_cpu_map) {
+>                 refcount_t      refcnt;
+>                 /** Length of the map array. */
+>                 int             nr;
+>                 /** The CPU values. */
+>                 struct perf_cpu map[];
+>         };
+>
+>
+> My first thought was "Why isn't this a bitmask?". :-)
+>
+> The thing is, even with 8192 CPUs, the mask size is 1K.
+> That's still not catastrophic compared to the nightmare
+> of managing a [8192] array...
+>
+> And I would keep such core data structures as simple as
+> possible: a single continuous bitmask. No sparse
+> support, no NULL tricks. Just an always-present
+> bitmask, and maybe an any/all modifier flag if the ABIs
+> strongly suggest so.
+>
+> The closer a data structure is to the core concepts of
+> a tool, the more important its robust KISS properties
+> are - at almost any runtime cost. </handwaving> :)
 
-IMO this type of documentation should be in the same patch as the
-related change because having a single commit makes it easier to track
-(especially if/when these changes are cherry-picked to other
-trees). There may be reasons to keep them separate that I'm not thinking
-of, so if others disagree, defer to them!
+Agreed. Some more things I can think of:
 
+- the perf vs libperf separation is kind of redundant. The API of
+libperf isn't good enough (no event parsing), nor stable and because
+the license is GPLv2 doesn't benefit external users. It is a chore
+making changes in two places and I think we should just focus on
+making the python API the extension point.
 
-"'Samuel Wu' via kernel-team" <kernel-team@android.com> writes:
+- the /sys/bus/event_source/devices/<pmu>/cpumask aren't consistent in
+whether there are hot plugged CPUs in there. Kan cleaned this up but
+only as far as Intel PMUs:
+https://lore.kernel.org/all/20240802151643.1691631-1-kan.liang@linux.intel.=
+com/
 
-> Documentation update corresponding to replace the cpu_frequency trace
-> event with the policy_frequency trace event.
+- ARM PMUs ignore hot plugging leading to a scary intersect:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/arch/arm/util/pmu.c?h=3Dperf-tools-next#n42
 
-> Signed-off-by: Samuel Wu <wusamuel@google.com>
-> ---
->   Documentation/admin-guide/pm/amd-pstate.rst   | 10 +++++-----
->   Documentation/admin-guide/pm/intel_pstate.rst | 14 +++++++-------
->   Documentation/trace/events-power.rst          |  2 +-
->   3 files changed, 13 insertions(+), 13 deletions(-)
-<snip>
+But we did manage to make event encoding/displaying consistent with:
+https://lore.kernel.org/lkml/20251005182430.2791371-1-irogers@google.com/
+something I will no doubt get emails about in this v6.19 merge window :-)
 
->   A suspend event is used to indicate the system going in and out of the
->   suspend mode:
+> > Fwiw, even on the kernel side this is borked as I tried to explain in
+> > this RFC with 0 follow ups:
+> > https://lore.kernel.org/lkml/20250716223924.825772-1-irogers@google.com=
+/
+>
+> So that's a neat patch and kudos on the ASCII graphics. :-)
+>
+> I'd suggest a re-send.
 
-Otherwise, this change lgtm.
+Agreed. I think it needs a refresh, I'll try to find the time.
 
--- 
-Tiffany Y. Yang
+> > Imagine the case of an event opened with 1 CPU and a TID. The filter
+> > will mean the counter only counts on the 1 CPU but the enabled and
+> > running time will mean the counter will be scaled (on your system) 128
+> > times!
+> > All of this matters when you consider different events opened in the
+> > same evlist and there being combined perf_cpu_maps like the evlist's
+> > all_cpus value.
+>
+> > > -       nr =3D perf_cpu_map__max(evsel_list->core.all_cpus).cpu + 1;
+> > > +       if (evsel_list->core.all_cpus)
+> > > +               nr =3D perf_cpu_map__max(evsel_list->core.all_cpus).c=
+pu + 1;
+> > > +       else
+> > > +               nr =3D 0;
+> >
+> > So I think the better fix is to make max handle a NULL perf_cpu_map.
+> > That will yield "any" CPU of -1 ( :-( ) and then the -1 + 1 will give
+> > an empty aggregation map.
+> >
+> > I'll write this up, add the test and see if I can spot similar issues
+> > wrt NULL in the vicinity in the perf_cpu_map code.
+>
+> Thank you! In the short run I'd prefer whichever fix
+> can restore perf stat --null functionality the fastest. ;-)
+
+Done in the series:
+https://lore.kernel.org/lkml/20251201230904.290733-1-irogers@google.com/
+
+Thanks,
+Ian
+
+> Thanks,
+>
+>         Ingo
