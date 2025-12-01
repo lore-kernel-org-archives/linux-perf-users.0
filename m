@@ -1,27 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F05730C36C;
-	Mon,  1 Dec 2025 11:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93E530C61B;
+	Mon,  1 Dec 2025 11:22:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764588169; cv=none; b=K9ETTWtKzT8yWTy4SR4AOleKmAHaAkRUGiz65N3W+dpYRsaBS3J2nuMJ1dEJK+Y97sXV9C41JKfje9YZutV6ggzB3TIvbGNHxBpxslMjyInfwTYRc3acZRkuLC2/1JV7Js8R7qGKN11qxV1q7ozProk9sqh4XO3npgx8jVH9eoo=
+	t=1764588172; cv=none; b=Erlo7bx4smTplico5xFkX5TIMKQAITw2+3Oacm2mLlDPdF3NnhgghputGYAUjLI6tmsPTQEWR2eJkB0PJX6x/8EwDw0fTVmBJtR6JBGDws/KAsqpX8NaW+wUCQnsAlMrJGzPMQNfz0GXmWB1uuYyvfp0Apgw1gUrbFWkdViMJ4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764588169; c=relaxed/simple;
-	bh=pdBR+vHQTejdXMyQCGeDWKUBEJWy99o13yGFD4L3f8I=;
+	s=arc-20240116; t=1764588172; c=relaxed/simple;
+	bh=f8fiAsWWNi9eG7kzbI25lHuMO+0SEpBi2vesAPCLkBQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bRrYRPvPZ00UdOK//XDnmTBM9oAvL50JyG/0nbrycT0WhElIm32K1jSkFAZ3V3yuaFTZm+dETEobovpIPBhXtEAGKmdGcTvuukBLXPsBWGTOH8uDY+Byt4sZfdY9b1Eo6UglrP84Z6ybdY7S3pwQlufYvVTrCJgPEyC5kPXPcN4=
+	 In-Reply-To:To:Cc; b=VtxXD3tmriWu38nyzQLcw2n3XhZxg/XEDNYsIQE9BZNA5dMHR2LAq1JnszrozoxIyKhc5GZpC59oEvj7IQc9+Q/yZO40QQiqK+0SfNV2kH8aZHl1uejud6lYsp4XxyoGehbHgMuzuHsg7lANetzVDzpM5uKMRb/oVwXYcPQYLOI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 320D71595;
-	Mon,  1 Dec 2025 03:22:40 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1ADF153B;
+	Mon,  1 Dec 2025 03:22:42 -0800 (PST)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10BF63F7B4;
-	Mon,  1 Dec 2025 03:22:44 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2D583F59E;
+	Mon,  1 Dec 2025 03:22:47 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
-Date: Mon, 01 Dec 2025 11:22:04 +0000
-Subject: [PATCH 14/19] coresight: trbe: Refactor
- compute_trbe_buffer_limit()
+Date: Mon, 01 Dec 2025 11:22:05 +0000
+Subject: [PATCH 15/19] coresight: trbe: Add static key for bypassing
+ trigger mode
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -30,7 +30,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251201-trbe_buffer_refactor_v1-1-v1-14-7da32b076b28@arm.com>
+Message-Id: <20251201-trbe_buffer_refactor_v1-1-v1-15-7da32b076b28@arm.com>
 References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
 In-Reply-To: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -46,118 +46,66 @@ Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1764588125; l=3669;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1764588125; l=1845;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=pdBR+vHQTejdXMyQCGeDWKUBEJWy99o13yGFD4L3f8I=;
- b=Hmo3a2QT2DsoM7rDrG/lKaNtOxyiNlks/bbGtYN9y7F7T2KvSHz41ysRmE4Y8+Oui2MvkevKV
- GJQHuQ2gOsjDSaahhZzNT2OPPflU2YZDrAv1xoLcJUGBRluhPm2QoxV
+ bh=f8fiAsWWNi9eG7kzbI25lHuMO+0SEpBi2vesAPCLkBQ=;
+ b=siS5jicoBJRIEarVYCG4OsMb2IDUFmciW/1Nkg+AM25TbL8IlrHgAYVJqIIaH1u9S9Qal+dNp
+ i8heRWCOmCKDw3rmu9hdz7xMe10PTYu9LJWEPrKBPdbZbxF3IFKX7PQ
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Refactor compute_trbe_buffer_limit() to perform the computation and
-handle failures. The return type is changed from a limit offset to an
-error number (0 is for success).
+To avoid complexity, if any CPU in the system has the fill mode erratum,
+the driver will not use trigger mode, it simply rolls back to fill mode
+only and apply the workaround on it.
 
-This refactoring is for future extensions, such as calculating
-additional values (e.g., the trigger count). No functional changes are
-introduced.
+Add a static key to control trigger mode bypassing.  During each CPU
+probe, the key is enabled when the relevant erratum is detected.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-trbe.c | 44 +++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 17 deletions(-)
+ drivers/hwtracing/coresight/coresight-trbe.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
-index 206eaf103cd94f36220cb6bddd1a78012f5de35a..941aa46e9b11f60c707eb40093964de454a3fd83 100644
+index 941aa46e9b11f60c707eb40093964de454a3fd83..8390d0a8fe23d35945610df15f21751279ee37ee 100644
 --- a/drivers/hwtracing/coresight/coresight-trbe.c
 +++ b/drivers/hwtracing/coresight/coresight-trbe.c
-@@ -332,7 +332,7 @@ static void trbe_pad_buf(struct perf_output_handle *handle, int len)
- 		perf_aux_output_skip(handle, len);
- }
+@@ -17,6 +17,7 @@
  
--static unsigned long trbe_snapshot_offset(struct perf_output_handle *handle)
-+static int trbe_snapshot_offset(struct perf_output_handle *handle)
+ #include <asm/barrier.h>
+ #include <asm/cpufeature.h>
++#include <linux/jump_label.h>
+ #include <linux/kvm_host.h>
+ #include <linux/vmalloc.h>
+ 
+@@ -147,6 +148,12 @@ struct trbe_drvdata {
+ 	struct platform_device *pdev;
+ };
+ 
++DEFINE_STATIC_KEY_FALSE(trbe_trigger_mode_bypass);
++
++#define trbe_trigger_mode_need_bypass(cpudata)		\
++	(trbe_may_overwrite_in_fill_mode((cpudata)) ||	\
++	 trbe_may_write_out_of_range((cpudata)))
++
+ static void trbe_check_errata(struct trbe_cpudata *cpudata)
  {
- 	struct trbe_buf *buf = etm_perf_sink_config(handle);
+ 	int i;
+@@ -1306,6 +1313,14 @@ static void arm_trbe_register_coresight_cpu(struct trbe_drvdata *drvdata, int cp
  
-@@ -341,7 +341,8 @@ static unsigned long trbe_snapshot_offset(struct perf_output_handle *handle)
- 	 * the decoder to reset in case of an overflow or corruption.
- 	 * So we can use the entire buffer for the snapshot mode.
- 	 */
--	return buf->nr_pages * PAGE_SIZE;
-+	buf->trbe_limit = buf->trbe_base + buf->nr_pages * PAGE_SIZE;
-+	return 0;
- }
- 
- static u64 trbe_min_trace_buf_size(struct perf_output_handle *handle)
-@@ -510,7 +511,7 @@ static unsigned long __trbe_normal_offset(struct perf_output_handle *handle)
- 	return 0;
- }
- 
--static unsigned long trbe_normal_offset(struct perf_output_handle *handle)
-+static int trbe_normal_offset(struct perf_output_handle *handle)
- {
- 	struct trbe_buf *buf = etm_perf_sink_config(handle);
- 	u64 limit = __trbe_normal_offset(handle);
-@@ -529,19 +530,34 @@ static unsigned long trbe_normal_offset(struct perf_output_handle *handle)
- 		limit = __trbe_normal_offset(handle);
- 		head = PERF_IDX2OFF(handle->head, buf);
- 	}
--	return limit;
+ 	dev_set_drvdata(&trbe_csdev->dev, cpudata);
+ 	coresight_set_percpu_sink(cpu, trbe_csdev);
 +
-+	if (!limit)
-+		return -ENOSPC;
++	/*
++	 * If any CPU cannot use trigger mode, bypass the mode globally for
++	 * consistent tracing behaviour.
++	 */
++	if (trbe_trigger_mode_need_bypass(cpudata))
++		static_branch_enable(&trbe_trigger_mode_bypass);
 +
-+	buf->trbe_limit = buf->trbe_base + limit;
-+	return 0;
- }
- 
--static unsigned long compute_trbe_buffer_limit(struct perf_output_handle *handle)
-+static int trbe_compute_next(struct perf_output_handle *handle)
- {
- 	struct trbe_buf *buf = etm_perf_sink_config(handle);
--	unsigned long offset;
-+	int ret;
-+
-+	perf_aux_output_flag(handle, PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW);
- 
- 	if (buf->snapshot)
--		offset = trbe_snapshot_offset(handle);
-+		ret = trbe_snapshot_offset(handle);
- 	else
--		offset = trbe_normal_offset(handle);
--	return buf->trbe_base + offset;
-+		ret = trbe_normal_offset(handle);
-+
-+	if (ret)
-+		return ret;
-+
-+	buf->trbe_write = buf->trbe_base + PERF_IDX2OFF(handle->head, buf);
-+
-+	/* Set the base of the TRBE to the buffer base */
-+	buf->trbe_hw_base = buf->trbe_base;
-+	return 0;
- }
- 
- static void clr_trbe_status(void)
-@@ -986,15 +1002,9 @@ static int __arm_trbe_enable(struct trbe_buf *buf,
- {
- 	int ret = 0;
- 
--	perf_aux_output_flag(handle, PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW);
--	buf->trbe_limit = compute_trbe_buffer_limit(handle);
--	buf->trbe_write = buf->trbe_base + PERF_IDX2OFF(handle->head, buf);
--	if (buf->trbe_limit == buf->trbe_base) {
--		ret = -ENOSPC;
-+	ret = trbe_compute_next(handle);
-+	if (ret)
- 		goto err;
--	}
--	/* Set the base of the TRBE to the buffer base */
--	buf->trbe_hw_base = buf->trbe_base;
- 
- 	ret = trbe_apply_work_around_before_enable(buf);
- 	if (ret)
+ 	return;
+ cpu_clear:
+ 	cpumask_clear_cpu(cpu, &drvdata->supported_cpus);
 
 -- 
 2.34.1
