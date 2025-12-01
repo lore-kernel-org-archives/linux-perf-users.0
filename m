@@ -1,67 +1,66 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCFC33554C
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 16:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5666133506A
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 16:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764607309; cv=none; b=s58uBN6gXOyF7fTY7nHw7ujT/+OkiqxvnXLPk5LTNlBARC5UNpvzOZVXvdNwgDk2fxe6ph81z6GrrH5eiYpVr+ER5PvQbZWS6pXw0LhCrCg5t1cZ09Gz2c4bING78uDKMlCY4OIEYE5+wmOEXq3K5XcV/Awb2YkN5Pa9Oez198g=
+	t=1764607310; cv=none; b=iWEhRxFjDQu2L70I3oUlrxAiaNqL+guO1XL8QlEgD1C8kPAqPeNWHwXoV/1EJHmBQrmmTMzKumHkWxJIRzgmwiv1YAbTG51bdBvWJlIEBirIXLcztqa+1a4u5sYjb2WP3obZ5AopLBjfjRgZj40TIn1Py/cuTGXjBzfWWF0BbUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764607309; c=relaxed/simple;
-	bh=Y/ioDqGIzUScWoIaRX68KW6AKfDzMnOwyWt3rbeY7RE=;
+	s=arc-20240116; t=1764607310; c=relaxed/simple;
+	bh=v7g+eJS8zgDENJl8497hl9tj8yvM2zLWTQWKh+fYsBw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pk3ZheSjTYrdM55lrRe8xitZkaIFy2fLTseewf9FnyhbT1m9gVi3hNYgc3+10rWF51JBvehR/iWBKp+Rkutded5qM6OFflgnZGMUR4K2fO4BTFGg04GB/qxP0aIp699ZOFZSEuxXbnVeNhC3iISfrX6niMg3srTrF9qLooXARm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YN/0XgNx; arc=none smtp.client-ip=209.85.128.49
+	 In-Reply-To:To:Cc; b=oc/rf/1OExJy+m68o4xkOai4DnsIAyunOgi5CT6MU3/6z+mUVX7J04UgcXp42APZVGzVMqDXvQWSg7Y1uq5xWFsv82jG3urRGemDqTBJW/HZpqdFlei0BckMgkX+xwVxsLVZGFLzgzYIFdpUGJ/8BfS7LdTe7ger7OiHWfNYF5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SjqqXan+; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YN/0XgNx"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-477a2ab455fso49520895e9.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 08:41:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SjqqXan+"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-477ba2c1ca2so51874575e9.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 08:41:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1764607305; x=1765212105; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1764607307; x=1765212107; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=cpxmoGZlCGWci4RYJQsukYp/h5kR1+QCzzjmaZQmdKI=;
-        b=YN/0XgNx3ebt9D1zA3b6I929OsBTDpAtFQ+L0NwGUD6MMw7mDW/g8vCGlKfESndLLp
-         wLfVZDElA8czCg9hvabHLuoeqLNTyaaYVmRCIHYxxmMx34ySdVq3smkBAU8hpeJA6A3n
-         i0ijkzv2TjmvBUEAFzoo/Gms+eZ3SbTl5hTfGLVg0HSAWSmq8PTtQZhvWElbBBLEkRTT
-         yDFR9SytFcD+I1v7GGgaApQ/7v8ePCe6Yn7UbmdJsdFTkmGexfbw2fGgLbMkJg/BJIhh
-         FrmA/lr2s8PeaysVHRq4oIPVack7XMkkSMJhLdDE/Rj/vKwILIj6hoQeesv2LvR1WOoy
-         33dw==
+        bh=T/5T6lo313puZ/SVQF0jyUpNeCSlBosPw8CY0HUbC1E=;
+        b=SjqqXan+P6pFlwYry25L8gAPCxe1+uiAcwa1xNRikjUmyUPbS7MgpfDgC3bDtwJEqd
+         D991bXuMk6B9Shl0HvYs5fgGF0Yrn1UzPXRhghb8zDj6ZBNM9HOqIG45Ng14BWrl3q5S
+         WQbGmnm6ksSxXsbQWziAJirA2mPhYeqxdGeiSrNBHMxDjeob/GygB0EOmU9xJDAf3Xnc
+         ok07wnJHwmzIoHX7kl9YV9MGA03fUO1Rw1KlP+yZsxCdaRFW8wjZ9uWgRAtJBR52Eo/O
+         hy/sbeBh6u9Kwi17Py2ErgAZxpaE5c7M8JSCkmDV117WjtXID9rRrDHJh3Kf49QqrWCd
+         H8+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764607305; x=1765212105;
+        d=1e100.net; s=20230601; t=1764607307; x=1765212107;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=cpxmoGZlCGWci4RYJQsukYp/h5kR1+QCzzjmaZQmdKI=;
-        b=Om+saTgltvDiD9Roy5BxGE6YS8/j/hyUeCPQ9DZHnDwerc/G3MoamKIRNdEoQpjCzG
-         x5al0mbV7UeRccLb+wTEJe0k0WKYmVHzTvEeH+cud4ZyFrLGf+0NYb+HuiUVILa6GLlY
-         gg9JRAyhsBhpabKOmfNA2T2e2C1Q1VilktN2xdeKvPhAL2rndhvbS9a7MvrvynG4NJxX
-         Te/GW3l4mU7YtYtP05KVnkpMAwwav2sBjfa4MP1Dyn5MaZH8crZzKPjY47Tpq8gdU5oU
-         4VInXu/fowNnacmt/xdYqWi/DgCDAZavGXeUsh98tsdh9Z6WKDHqV/4YJ9pXgvI1AzmF
-         PmFQ==
-X-Gm-Message-State: AOJu0YxUxuyqHbUop5Ka/sEwHXwWZGYcehUycdblT27gMbcNS7l3/omD
-	e9kvmyNkUabbZY+R2K3ddSpxKxa/bkgS5ZwxNvnmLQUz8TrKIDbBBjkqhV4jyR6Xtok=
-X-Gm-Gg: ASbGncum8Tq7Kdm9/+HMgezyj0EqTUxv/CFNeL6GEYwlcHLxhq3XkYvE/VKTQpQH98h
-	ea4c1BAbyK/a4tgT80NZ+nn3eCdjSKWxSjVLP+5d/Cwe9Yxq2zmMtRob9Tv93oRp3HaH6tZ5i16
-	ukYJT4J4ZbqiGf1rxYfE6mGNsMjdH2S5bQ8LSW7shbBcgXXhZamvvgtv2dK6EnG0os4WVHXKCy2
-	wbTwNlKMZeBxPnT5zPYv5ao0zs/ON/SSXd9SsySXuv+WyJ/0HWjgt1zV+rvxHTjHHE78Dpqou5g
-	KvphtqOdigNhtVorvwm9lo+DjT9NjcOqhN0SRqDgN8vsgFfhNT5nuhDCHWoFzyFiww8hkOCqkJ9
-	8tzjMeOktBmRcHicE5jcFrR8r73aFhMtcQsM8My5ZrvyjtvhrJlEVaTn6CFwwLpFHYDyATukHcT
-	kS78uGa/wNCzORBZ1VZ7YP
-X-Google-Smtp-Source: AGHT+IFv850C8awUZtGHTOiLNICfiiJUYFGeJOYwfQRd2+Nt5FLiP4oGJKVYYX9fX1k/MFpwo7/ZRA==
-X-Received: by 2002:a05:600c:1ca4:b0:45d:f83b:96aa with SMTP id 5b1f17b1804b1-477c10c92d8mr469875015e9.7.1764607305455;
-        Mon, 01 Dec 2025 08:41:45 -0800 (PST)
+        bh=T/5T6lo313puZ/SVQF0jyUpNeCSlBosPw8CY0HUbC1E=;
+        b=sDJWjIm1NQZAJGiAQQSP75ms+jMfFkf7BvYnAHM+zmFHxuYeDx/lkEMcRkhtKBp0/x
+         0SLwELo604qVfymjtlr+xf5TZQIxy0qz7t1ksI6YEi9nsPOjD77oytUAjrAS5wPraaXi
+         YNcMkuG6TcTasOy0JpvL125tk3+8kxQOgGvMjJC/wN05dZUSaAEqF44G8XNh/rF0qnq/
+         bnG7WyKY4OJQKYgD5bxGRxzZLSg8QMdF3KBf9l1DBjFqxEEaBWqEs+l1goxru/zbTAcu
+         Gl++q6w/AGd5R4M7U4Otavzo6ZO02HaAcYqqlqJwSLiF8SHmlZzoJCrNUkuhfMJSEIiC
+         Y1yg==
+X-Gm-Message-State: AOJu0YwvlK2TJ/4ey2pqm3q58/zgq44Sj/DaUroFdVwSnRWNwoQM78cU
+	wwlLhc2wyiT33rKGuJAyMd4QjZXUaNuOGgXw5XC8L++oYU2m+MztG4sLQE1pKIOWEN0=
+X-Gm-Gg: ASbGncs9Bw7AzbbjJodUj27eg/6B0d0JDpHKtgoJh9Je3WNzaoFkNbQ2Z7ePKVoS4CX
+	odA5zUksj4bkPTlpDnXtQo3+qGjTCzi54LCbjecu/Lj20pRo2x0PoqbJCyOeK8UZej6x9FgcCSB
+	feuA69t3jRLpTUlz5nY5eCfcGinZg7oO7dVu0Ac9YglCtSreaOHCZcbl/9ZYuWcV6CO6J7q/OUU
+	VVLh+H21ZMjZggwNi5kZ+ZPV3XZomuppIkfOoVA8jytMXlrjTS0w1lXyJH7945GR5iQgHmsi071
+	K2m6OM3jG5nmCRKNOyEmrogqCwDtfHEqfIquc2ewX1bQtXeIpqW+JykWeYBFMKZiEMaClvQBKaL
+	fBb99Yb0Hc0I2mVIcdOgvTkWN4VcBkRtKYBAk/LREIRkgwKD5w5w/u7fwQU1lWSXzIvRHiXnhaq
+	RwDjjAgOHaa5wUAccgiqsN
+X-Google-Smtp-Source: AGHT+IEE3voa2OXjkQohxBlLJHCO8n9F+sDfMVLCHbry/3Vx/3/QnGHskYaS+QvFk8/708DyHCFFKQ==
+X-Received: by 2002:a05:600c:3587:b0:471:131f:85aa with SMTP id 5b1f17b1804b1-47904aecfd9mr268721295e9.13.1764607306655;
+        Mon, 01 Dec 2025 08:41:46 -0800 (PST)
 Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4791164d4f3sm255901275e9.13.2025.12.01.08.41.44
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4791164d4f3sm255901275e9.13.2025.12.01.08.41.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Dec 2025 08:41:45 -0800 (PST)
+        Mon, 01 Dec 2025 08:41:46 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Mon, 01 Dec 2025 16:41:05 +0000
-Subject: [PATCH 2/7] perf tools: apply evsel__set_config_if_unset() to all
- config fields
+Date: Mon, 01 Dec 2025 16:41:06 +0000
+Subject: [PATCH 3/7] perf cs-etm: Make a helper to find the Coresight evsel
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251201-james-perf-config-bits-v1-2-22ecbbf8007c@linaro.org>
+Message-Id: <20251201-james-perf-config-bits-v1-3-22ecbbf8007c@linaro.org>
 References: <20251201-james-perf-config-bits-v1-0-22ecbbf8007c@linaro.org>
 In-Reply-To: <20251201-james-perf-config-bits-v1-0-22ecbbf8007c@linaro.org>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -87,116 +86,95 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-Misleadingly, evsel__set_config_if_unset() only works with the config
-field and not config1, config2, etc. This is fine at the moment because
-all users of it happen to operate on bits that are in that config field.
-Fix it before there are any new users of the function which operate on
-bits in different config fields.
-
-In theory it's also possible for a driver to move an existing bit to
-another config field and this fixes that scenario too, although this
-hasn't happened yet either.
+This pattern occurs a few times and we'll add another one later, so add
+a helper function for it.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/pmu.c | 60 +++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 44 insertions(+), 16 deletions(-)
+ tools/perf/arch/arm/util/cs-etm.c | 50 +++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 7a7db31be70d..c8968cddc0a9 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/list.h>
-+#include <linux/bitfield.h>
- #include <linux/compiler.h>
- #include <linux/string.h>
- #include <linux/zalloc.h>
-@@ -1371,6 +1372,18 @@ bool evsel__is_aux_event(const struct evsel *evsel)
- 	return pmu && pmu->auxtrace;
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index ea891d12f8f4..22c6272e8c36 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -302,6 +302,19 @@ static int cs_etm_set_sink_attr(struct perf_pmu *pmu,
+ 	return 0;
  }
  
-+static struct perf_pmu_format *
-+pmu_find_format(const struct list_head *formats, const char *name)
++static struct evsel *cs_etm_get_evsel(struct evlist *evlist,
++				      struct perf_pmu *cs_etm_pmu)
 +{
-+	struct perf_pmu_format *format;
++	struct evsel *evsel;
 +
-+	list_for_each_entry(format, formats, list)
-+		if (!strcmp(format->name, name))
-+			return format;
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel->core.attr.type == cs_etm_pmu->type)
++			return evsel;
++	}
 +
 +	return NULL;
 +}
 +
- /*
-  * Set @config_name to @val as long as the user hasn't already set or cleared it
-  * by passing a config term on the command line.
-@@ -1379,12 +1392,39 @@ bool evsel__is_aux_event(const struct evsel *evsel)
-  * the bit pattern. It is shifted into position by this function, so to set
-  * something to true, pass 1 for val rather than a pre shifted value.
-  */
--#define field_prep(_mask, _val) (((_val) << (ffsll(_mask) - 1)) & (_mask))
- void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
- 				const char *config_name, u64 val)
+ static int cs_etm_recording_options(struct auxtrace_record *itr,
+ 				    struct evlist *evlist,
+ 				    struct record_opts *opts)
+@@ -476,29 +489,21 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+ 
+ static u64 cs_etm_get_config(struct auxtrace_record *itr)
  {
- 	u64 user_bits = 0, bits;
--	struct evsel_config_term *term = evsel__get_config_term(evsel, USR_CHG_CONFIG);
-+	struct evsel_config_term *term;
-+	struct perf_pmu_format *format = pmu_find_format(&pmu->format, config_name);
-+	__u64 *vp;
-+
-+	switch (format->value) {
-+	case PERF_PMU_FORMAT_VALUE_CONFIG:
-+		term = evsel__get_config_term(evsel, USR_CHG_CONFIG);
-+		vp = &evsel->core.attr.config;
-+		break;
-+	case PERF_PMU_FORMAT_VALUE_CONFIG1:
-+		term = evsel__get_config_term(evsel, USR_CHG_CONFIG1);
-+		vp = &evsel->core.attr.config1;
-+		break;
-+	case PERF_PMU_FORMAT_VALUE_CONFIG2:
-+		term = evsel__get_config_term(evsel, USR_CHG_CONFIG2);
-+		vp = &evsel->core.attr.config2;
-+		break;
-+	case PERF_PMU_FORMAT_VALUE_CONFIG3:
-+		term = evsel__get_config_term(evsel, USR_CHG_CONFIG3);
-+		vp = &evsel->core.attr.config3;
-+		break;
-+	case PERF_PMU_FORMAT_VALUE_CONFIG4:
-+		term = evsel__get_config_term(evsel, USR_CHG_CONFIG4);
-+		vp = &evsel->core.attr.config4;
-+		break;
-+	default:
-+		pr_err("Unknown format value: %d\n", format->value);
-+		return;
-+	}
+-	u64 config = 0;
+ 	struct cs_etm_recording *ptr =
+ 			container_of(itr, struct cs_etm_recording, itr);
+ 	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
+ 	struct evlist *evlist = ptr->evlist;
+-	struct evsel *evsel;
++	struct evsel *evsel = cs_etm_get_evsel(evlist, cs_etm_pmu);
  
- 	if (term)
- 		user_bits = term->val.cfg_chg;
-@@ -1396,20 +1436,8 @@ void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
- 		return;
- 
- 	/* Otherwise replace it */
--	evsel->core.attr.config &= ~bits;
--	evsel->core.attr.config |= field_prep(bits, val);
--}
+-	evlist__for_each_entry(evlist, evsel) {
+-		if (evsel->core.attr.type == cs_etm_pmu->type) {
+-			/*
+-			 * Variable perf_event_attr::config is assigned to
+-			 * ETMv3/PTM.  The bit fields have been made to match
+-			 * the ETMv3.5 ETRMCR register specification.  See the
+-			 * PMU_FORMAT_ATTR() declarations in
+-			 * drivers/hwtracing/coresight/coresight-perf.c for
+-			 * details.
+-			 */
+-			config = evsel->core.attr.config;
+-			break;
+-		}
+-	}
 -
--static struct perf_pmu_format *
--pmu_find_format(const struct list_head *formats, const char *name)
--{
--	struct perf_pmu_format *format;
--
--	list_for_each_entry(format, formats, list)
--		if (!strcmp(format->name, name))
--			return format;
--
--	return NULL;
-+	*vp &= ~bits;
-+	*vp |= FIELD_PREP(bits, val);
+-	return config;
++	/*
++	 * Variable perf_event_attr::config is assigned to
++	 * ETMv3/PTM.  The bit fields have been made to match
++	 * the ETMv3.5 ETRMCR register specification.  See the
++	 * PMU_FORMAT_ATTR() declarations in
++	 * drivers/hwtracing/coresight/coresight-perf.c for
++	 * details.
++	 */
++	return evsel ? evsel->core.attr.config : 0;
  }
  
- __u64 perf_pmu__format_bits(struct perf_pmu *pmu, const char *name)
+ #ifndef BIT
+@@ -832,12 +837,11 @@ static int cs_etm_snapshot_start(struct auxtrace_record *itr)
+ {
+ 	struct cs_etm_recording *ptr =
+ 			container_of(itr, struct cs_etm_recording, itr);
+-	struct evsel *evsel;
++	struct evsel *evsel = cs_etm_get_evsel(ptr->evlist, ptr->cs_etm_pmu);
++
++	if (evsel)
++		return evsel__disable(evsel);
+ 
+-	evlist__for_each_entry(ptr->evlist, evsel) {
+-		if (evsel->core.attr.type == ptr->cs_etm_pmu->type)
+-			return evsel__disable(evsel);
+-	}
+ 	return -EINVAL;
+ }
+ 
 
 -- 
 2.34.1
