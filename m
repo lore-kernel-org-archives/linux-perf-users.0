@@ -1,27 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DCEE309EE3;
-	Mon,  1 Dec 2025 11:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BD0930AACA;
+	Mon,  1 Dec 2025 11:22:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764588152; cv=none; b=VWQwujOhfswP2yQLDAXeBNSrgcFv+qdjv82NUtd/xDAbDKjpSsz8VSkTb7yJ+7oITwfan+LCSy7tmKKDmjpVMnG2ZnuSigluBU/0gOYlMYjruQrf3q7UgcTwIwB82W1/m+S9yU5InGR+XfoYEpiZNUNmFSmX07DtAhu9ui/twVQ=
+	t=1764588155; cv=none; b=hqMzkrGB4XSkA+dyDWExsFhqmXPPEZpAYvlotyiqklB4eolZsIJ3aicr23wweQBv3e8HTexMvngI89Ud+5VPubTPxC5Bg6srrQhMy+nCuLFLYFoRJbdw8VYPYYVjgYTTrHk6WKELlX6JdkvelZAeVx0nHKP/ltpdt0BeLTpuMdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764588152; c=relaxed/simple;
-	bh=45Ukm1pq3z+aAFJGvQBiBA1GyyPqXQWhw0CPZGZjIh8=;
+	s=arc-20240116; t=1764588155; c=relaxed/simple;
+	bh=ksnOW813/iK1sop8lflRXFLjB5lzQz2UyBhXvDajeUw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QRrNza3YUyJFTPm+tyr2AswiaSAEtGgq5vikP61jX81Kx/RsaufBBXUaHWLfvCSkxGIIHZun/bSgbedYv2JVOhz9NZAoc3UULtwebiaTnAvxXQ9ZWKVKAgDUgheic9Yudo9WAPBLzmLaZAmLScrVTt3lhacqJBN0LFxJ/sIQfQY=
+	 In-Reply-To:To:Cc; b=f/iAhsW0UVEBB8OVWlJmo27zqrv2V+YsmOMS+ZP0OyOGsHJ7B2xd6CUY8tBa0hEhMl3swqg/yQlUSaMDhsKB+j2zit+84TTI++0HgDNO8mpSHJLNOdEVG6a9QWzeVfU3E+XTBGxMwtOZnY5W+sAkgRA37FyPlzhDJARm54u9Nks=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6420C1595;
-	Mon,  1 Dec 2025 03:22:23 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35121153B;
+	Mon,  1 Dec 2025 03:22:26 -0800 (PST)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44CCA3F59E;
-	Mon,  1 Dec 2025 03:22:28 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13E583F59E;
+	Mon,  1 Dec 2025 03:22:30 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
-Date: Mon, 01 Dec 2025 11:21:58 +0000
-Subject: [PATCH 08/19] coresight: trbe: Use PERF_AUX_FLAG_PARTIAL instead
- of PERF_AUX_FLAG_COLLISION
+Date: Mon, 01 Dec 2025 11:21:59 +0000
+Subject: [PATCH 09/19] coresight: trbe: Add fault action argument to
+ trbe_handle_overflow()
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -30,7 +30,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251201-trbe_buffer_refactor_v1-1-v1-8-7da32b076b28@arm.com>
+Message-Id: <20251201-trbe_buffer_refactor_v1-1-v1-9-7da32b076b28@arm.com>
 References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
 In-Reply-To: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -46,58 +46,55 @@ Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1764588125; l=2104;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1764588125; l=1665;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=45Ukm1pq3z+aAFJGvQBiBA1GyyPqXQWhw0CPZGZjIh8=;
- b=rv8WJ/wDAP2cVLXQAucOIQ4EXKHQSz3w7jwIFos9rHOyjzA5djR1DbHPp8dhlSMqvqQTqPf4D
- EaUSOON1dr7BGqkzwUyKzCvEq4yAyZ2fgRMWU7HlzH5QRSKSawtHDUE
+ bh=ksnOW813/iK1sop8lflRXFLjB5lzQz2UyBhXvDajeUw=;
+ b=FymtGmZmDoYUeDSYYDJzHDfusIr5gd+3LCACayX07U7EGpHbpD/+PMIJnWQTugSmTqfH0PXGq
+ LRhPTtr7wwiAxLQTaUOGwzOHMYh5s/lK2CI47ZA0OnwDtEerPJg1MSC
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-When tracing stops, there is no collision with other samples, so using
-PERF_AUX_FLAG_COLLISION does not accurately reflect the trace state and
-may mislead userspace.
+Add a new argument to trbe_handle_overflow() for the fault action, which
+is used to compare the wrap event for trace size calculation.
 
-Use PERF_AUX_FLAG_PARTIAL instead to indicate that tracing stopped and
-the record may contain gaps.
+No functional change intended; this is preparation for a later update.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-trbe.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ drivers/hwtracing/coresight/coresight-trbe.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
-index b06885a08e082fd34f68d9588518807b5c47c86e..0caa4a6b437a3aa39fc6bcc72a23711b54f7c598 100644
+index 0caa4a6b437a3aa39fc6bcc72a23711b54f7c598..f56ecdeaa6596afb440e4d53732e08a85f9bf89d 100644
 --- a/drivers/hwtracing/coresight/coresight-trbe.c
 +++ b/drivers/hwtracing/coresight/coresight-trbe.c
-@@ -669,21 +669,14 @@ static enum trbe_fault_action trbe_get_fault_act(struct perf_output_handle *hand
- 	}
+@@ -1078,14 +1078,15 @@ static void trbe_handle_spurious(struct perf_output_handle *handle)
+ 	set_trbe_enabled(buf->cpudata, trblimitr);
+ }
  
- 	/*
--	 * Mark the buffer to indicate that there was a WRAP event by
--	 * setting the COLLISION flag. This indicates to the user that
--	 * the TRBE trace collection was stopped without stopping the
--	 * ETE and thus there might be some amount of trace that was
--	 * lost between the time the WRAP was detected and the IRQ
--	 * was consumed by the CPU.
--	 *
--	 * Setting the TRUNCATED flag would move the event to STOPPED
--	 * state unnecessarily, even when there is space left in the
--	 * ring buffer. Using the COLLISION flag doesn't have this side
--	 * effect. We only set TRUNCATED flag when there is no space
--	 * left in the ring buffer.
-+	 * Mark the buffer to indicate that the trace is stopped by setting
-+	 * the PARTIAL flag. This indicates to the user that the TRBE trace
-+	 * collection was stopped without stopping the ETE and thus there
-+	 * might be some amount of trace that was lost between the time the
-+	 * TRBE event was detected and the IRQ was consumed by the CPU.
- 	 */
- 	if (!is_trbe_running(trbsr))
--		perf_aux_output_flag(handle, PERF_AUX_FLAG_COLLISION);
-+		perf_aux_output_flag(handle, PERF_AUX_FLAG_PARTIAL);
+-static int trbe_handle_overflow(struct perf_output_handle *handle)
++static int trbe_handle_overflow(struct perf_output_handle *handle,
++				enum trbe_fault_action act)
+ {
+ 	struct perf_event *event = handle->event;
+ 	struct trbe_buf *buf = etm_perf_sink_config(handle);
+ 	unsigned long size;
+ 	struct etm_event_data *event_data;
  
- 	if (is_trbe_wrap(trbsr))
- 		return TRBE_FAULT_ACT_WRAP;
+-	size = trbe_get_trace_size(handle, buf, true);
++	size = trbe_get_trace_size(handle, buf, act == TRBE_FAULT_ACT_WRAP);
+ 	if (buf->snapshot)
+ 		handle->head += size;
+ 
+@@ -1179,7 +1180,7 @@ static irqreturn_t arm_trbe_irq_handler(int irq, void *dev)
+ 
+ 	switch (act) {
+ 	case TRBE_FAULT_ACT_WRAP:
+-		truncated = !!trbe_handle_overflow(handle);
++		truncated = !!trbe_handle_overflow(handle, act);
+ 		break;
+ 	case TRBE_FAULT_ACT_SPURIOUS:
+ 		trbe_handle_spurious(handle);
 
 -- 
 2.34.1
