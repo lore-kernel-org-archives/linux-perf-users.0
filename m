@@ -1,124 +1,118 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6DE25C704
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 23:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1B0288C34
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 23:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764630703; cv=none; b=ZuQ/MdVHIs76I4Sm25hp5GXbk9FwmNS4daUQ1TL5OeOFBoRUwZSrOw9NlyjzjcNJaQ/eU94ZeBNXg6qKbh98yjzYSaDFTrLbZ7kGyX43KDXPN8r28E4UFvd814lCFN0PfdwhblMQlnNWhXQEUnMmVZiexYCQyfBeNsXOmc+fxpE=
+	t=1764630723; cv=none; b=tr9poNrLcb2CdMeIPCnqedZmzoe3sTvu1zb95KtYRJVbOdhLfiwz0ze30CfTfZzqh5oqNkcfwKR3KGwnVBbm3Le3eeZnp8ZknL93qBo16JIbeovRyhUdH1gpX6MawNt2m6ZoOmx3PExj7WI/HPDeE/w0XghqrJnwyCJJeVH7dcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764630703; c=relaxed/simple;
-	bh=uMZz143jWc52luqVLAtJT9U2+4OfZDNhG31QyEH57oY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=rckaFBgrtmHZO0phN42NUlEL1SGJVygfwmPWuM1f++Pyo9tHPZ6euBPUO78lYB7yaNZZvfUpl3QpQJskCiMGX+fbX/ItRWIVtAFEmAmt3298k8WELuDOqSreMOBUXI/lajsA/CpxqbdY1SCQ+hw9DNcV7Bsg6s0LcBivvonfJWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iw+aCYJh; arc=none smtp.client-ip=209.85.215.201
+	s=arc-20240116; t=1764630723; c=relaxed/simple;
+	bh=J+kLpkIMy3513Bm09of6YHNMGo8AAMwx8rUXVBwzd2Q=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Xk5MXHxQQKdTKmHKEUp7VhxQaQk8CgxaIRUDMQYBzQtYi4eaG2YovpOm1t2Vkx60WB7J6wXvbwJ5xBnWJv6A8/a5FssWVU8w/MCDiL/DxeSwL4aMzSzLvGxj3+HUiXHjhQj0vfRd2MO783oTLYKYmoCQg4IzpgmMF7N+Aez0Qvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r1fX+fXb; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iw+aCYJh"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b5edecdf94eso6538743a12.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 15:11:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r1fX+fXb"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b62da7602a0so4780206a12.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 15:12:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764630701; x=1765235501; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qvrcYzJX4HQd95gXath2BIDINA9x1lNmgQSwyPq3BcY=;
-        b=iw+aCYJhb3ccM90xx8eiaPMeiGzvC2E2az5Evbtt3VwHJ4d8Li6I6Yza49hNAr3DdD
-         EA6nnwUX9/9Q3UHy9NUesJORkGAq/zvZTnjFMOCZJpPEmIqQamF0XUR3lexeXxdsgRac
-         9KRHopyMKGW8vA0XbDWT87w+L0WBBKb/dRqqM3yVm5eK/ULQM+32CinJD1C+KMmr0nx/
-         GiuNGRYJCJMZJ/pZZJI0fokIfFc94iS0F7NhAKTg8esfEW392gqeJSR1riLopcRYLxqN
-         /npONrFsD3PXHuGLAFeONRMQf8PrDcdwAaYgwG0ShzOWT2jmFfwrAddUln9aY97ndwHY
-         GKOA==
+        d=google.com; s=20230601; t=1764630721; x=1765235521; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:user-agent:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zLM1EPntpvB3fDVLGw42FElIkaQKNx9U9DS+XMsl0fM=;
+        b=r1fX+fXbEJlouqcyHm3JSiPgfdPmHqObRKzGGfTP+vyJ3nKoJtwz5YKpRg3V9YNauf
+         LJC3PB/m6vlOtnd6FBQ4n0zTD9gxg9kknLe96Dm76uoed9/G8Kph4/zHm1y6bGlTra8J
+         8VPPFd3SAwqJ40jYZeBJqtBxf/FlDLTzHB86+H5lmYzCJVbyujwfcpY9HB5Qz7wNzr+D
+         81EJU6/vw5rzcH5msgJrtW3unzt/USSSFVzY85OBA5XNxoBwnTqSiSnOEJgRnlsKf2K2
+         gcFXi0CAc65NbjnpYgVXpR0vsVmLLNpqZ8jF1Ajf2VfWvRi9UlC8z8fXVCtpRYMqWsrB
+         8UDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764630701; x=1765235501;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qvrcYzJX4HQd95gXath2BIDINA9x1lNmgQSwyPq3BcY=;
-        b=wFbNvTAm+jhNmWMn3+3jpiFHL03FUhCWZLALTcoksoDWWaqTZT5bwdPDJ1IZRPPWG8
-         T3XrKSNyw0npMXmxP26DiRjds7yLu060Op1kdLNgul9XX/6pHf8qdE68sM3VqCIU9alp
-         eqXrlZRpN4yLwVdZuYfkY0hvzSbZQyDfS5PcwPawenoNMM3IJMmiBW+PLf7TU02aRLmG
-         mgWZPXDu9lAeN+i8upSVYAAAktRdfNJ9M7QCih0moxj35hUfjElPBIIfShfl6FsOlbys
-         yaf4ybbhiJ6+IP/HhbDdA6l5tvgomXoX2zwSaaxMLu4aDUttULv4xlV55P3FcBnr2ivx
-         IyUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6rMO2iLwg+Z+fvQeeNHk5mMciY8KpLBjR/Pv8YAVT9RJBY0afEHbhTU3W4TidlSWHwRpRaryciWRai+r4IoqK@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmHvuwUqJ4y3l6ZXvLNmpreynTfDdaukCtao8nn4UPQz6+iMQA
-	F2J4jOlu+Vxs1h6knD2zaZOsWnTU1l/zTpYR5mH63jZDjBDMLoXJAe5JbICV1NvXCzjMWg7XyFm
-	N/aVC9w7zBQ==
-X-Google-Smtp-Source: AGHT+IEhFTw4uLES7YC4xtveOaW/ZNPK2Ajlq2jGh4lhwhN8iyHF5TXqmGNa6X1yA0hJBPaifOCQ+1DB4S+C
-X-Received: from dybfx7.prod.google.com ([2002:a05:7300:c387:b0:2a4:75c7:9884])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e517:b0:2a4:3594:72d1
- with SMTP id 5a478bee46e88-2a718aea47amr16201978eec.0.1764630701279; Mon, 01
- Dec 2025 15:11:41 -0800 (PST)
-Date: Mon,  1 Dec 2025 15:11:36 -0800
+        d=1e100.net; s=20230601; t=1764630721; x=1765235521;
+        h=cc:to:from:subject:message-id:user-agent:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zLM1EPntpvB3fDVLGw42FElIkaQKNx9U9DS+XMsl0fM=;
+        b=IREeDl99+phQ3q0mG3JdzDfjhWpr2mYL3dWXU11Svb4/R8YJ/3q+f+o0XEPgVK9LLU
+         Y9b2j2QZrRH47HigLtovAiWj3YplntwXfwrvAkItZCKyh0G5adZnOoMuZ7/znhjLSPtY
+         kK+cR0ZdimPOK9dhGizQ197HUmt4DFLW1gXiksx036hEJ+zf28ZzFZLjMhAOU6a81ijM
+         3Ln4niFLstzpcPBc13cIumGUgTEiWx//OI6jS9eU1ei+SUQuvJXMQiTNq1RY6zpTkd0S
+         VJdYLGTTYj74ofrEsNEeE6mDrxxN18smkNru+NhXFtqbC7riLHgpW1MykE+l3ZOGOz4c
+         hjkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnNN1NZqIGVzJ4Sb9m/tBw3UFY8imn95ezDCKdcy48vTC3Pcsmz33jWjPv5Cr0KzcydQpe+aMAaMBDswM9MjA/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvGUMq19CLRXOgOcSu2Y9sYcLvPx6oQ6K3MaVRlJM3X4vYH9pU
+	aQguInagYi5jFoZHzBjFXCjw9XA4I0KHrMOLh5dF4lX0suwQ4AQTRNxSqlp/y9BDOLzmCoeSyTr
+	RUQpV6zfpYA==
+X-Google-Smtp-Source: AGHT+IE1+zlv+/Ra8/4fDxzAvPN8JlMMEIwYI0833qsjS+sqfkYoQe/VtqWugCSuUH/u1MaLnSztSAazoE5b
+X-Received: from dlbcy37.prod.google.com ([2002:a05:7022:ba5:b0:11b:9bdf:e45c])
+ (user=ynaffit job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6898:b0:11b:ceee:a469
+ with SMTP id a92af1059eb24-11c9d85feeemr24650965c88.22.1764630720912; Mon, 01
+ Dec 2025 15:12:00 -0800 (PST)
+Date: Mon, 01 Dec 2025 15:11:45 -0800
+In-Reply-To: <20251201202437.3750901-3-wusamuel@google.com> (via kernel-team's
+ message of "Mon, 1 Dec 2025 12:24:35 -0800")
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
-Message-ID: <20251201231136.293248-1-irogers@google.com>
-Subject: [PATCH v1] perf test: Fix hybrid testing of event fallback test
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+References: <20251201202437.3750901-1-wusamuel@google.com> <20251201202437.3750901-3-wusamuel@google.com>
+User-Agent: mu4e 1.12.12; emacs 30.1
+Message-ID: <dbx88qflajbi.fsf@ynaffit-andsys.c.googlers.com>
+Subject: Re: [PATCH v3 2/2] cpufreq: Documentation update for trace_policy_frequency
+From: Tiffany Yang <ynaffit@google.com>
+To: "'Samuel Wu' via kernel-team" <kernel-team@android.com>
+Cc: Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
+	Jonathan Corbet <corbet@lwn.net>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Zide Chen <zide.chen@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Samuel Wu <wusamuel@google.com>, christian.loehle@arm.com, linux-pm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-The mem-loads-aux event exists on hybrid systems but the "cpu" PMU
-does not. This causes an event parsing error which erroneously makes
-the test look like it is failing. Avoid naming the PMU to avoid
-this. Rather than cleaning up perf.data in the directory the test is
-run, explicitly send the 'perf record' output to /dev/null and avoid
-any cleanup scripts.
+Hi Sam,
 
-Fixes: fc9c17b22352 ("perf test: Add a perf event fallback test")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../tests/shell/test_event_open_fallback.sh   | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+IMO this type of documentation should be in the same patch as the
+related change because having a single commit makes it easier to track
+(especially if/when these changes are cherry-picked to other
+trees). There may be reasons to keep them separate that I'm not thinking
+of, so if others disagree, defer to them!
 
-diff --git a/tools/perf/tests/shell/test_event_open_fallback.sh b/tools/perf/tests/shell/test_event_open_fallback.sh
-index 9c411153c01b..9420a7557c13 100755
---- a/tools/perf/tests/shell/test_event_open_fallback.sh
-+++ b/tools/perf/tests/shell/test_event_open_fallback.sh
-@@ -6,24 +6,9 @@ skip_cnt=0
- ok_cnt=0
- err_cnt=0
- 
--cleanup()
--{
--	rm -f perf.data
--	rm -f perf.data.old
--	trap - EXIT TERM INT
--}
--
--trap_cleanup()
--{
--	cleanup
--	exit 1
--}
--
--trap trap_cleanup EXIT TERM INT
--
- perf_record()
- {
--	perf record "$@" -- true 1>/dev/null 2>&1
-+	perf record -o /dev/null "$@" -- true 1>/dev/null 2>&1
- }
- 
- test_decrease_precise_ip()
-@@ -49,7 +34,7 @@ test_decrease_precise_ip_complicated()
- 
- 	perf list pmu | grep -q 'mem-loads-aux' || return 2
- 
--	if ! perf_record -e '{cpu/mem-loads-aux/S,cpu/mem-loads/PS}'; then
-+	if ! perf_record -e '{mem-loads-aux:S,mem-loads:PS}'; then
- 		return 1
- 	fi
- 	return 0
+
+"'Samuel Wu' via kernel-team" <kernel-team@android.com> writes:
+
+> Documentation update corresponding to replace the cpu_frequency trace
+> event with the policy_frequency trace event.
+
+> Signed-off-by: Samuel Wu <wusamuel@google.com>
+> ---
+>   Documentation/admin-guide/pm/amd-pstate.rst   | 10 +++++-----
+>   Documentation/admin-guide/pm/intel_pstate.rst | 14 +++++++-------
+>   Documentation/trace/events-power.rst          |  2 +-
+>   3 files changed, 13 insertions(+), 13 deletions(-)
+<snip>
+
+>   A suspend event is used to indicate the system going in and out of the
+>   suspend mode:
+
+Otherwise, this change lgtm.
+
 -- 
-2.52.0.158.g65b55ccf14-goog
-
+Tiffany Y. Yang
