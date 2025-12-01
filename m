@@ -1,92 +1,317 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A40F1F30BB;
-	Mon,  1 Dec 2025 18:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DED9258EE0
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 20:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764612266; cv=none; b=dMqIwveBB+tWVmC4DHySnRTJxz6z2hZB6C7R1K+abwrjZXM3DaVOMXEpytGnKRU0m7eNX5y4mcpiRqHuKShmT6qA+/JTPS2WSYxLyEixnMM8+JEUKBl5wKReqOUD97rxrnlAWemKED+NVeQEF/qrb1Ya1UApt4zQF9DsBAHd7gs=
+	t=1764620008; cv=none; b=KTuG0fuslwzmPVol+vxhdoQQGqmxcX9O7lDNE2fwjUJ2JD1G9WEe8tZ8Qbf0YxoudNTLlhyzP53JTVKAn7VbfzVyhNIYjO4po2tU4KjzZWaQq5SsOVvlF2zL8cHHw54nhoKhPxKGPi69t0dvFeRJLFq2pa6JmDVtdEJkkZcgZzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764612266; c=relaxed/simple;
-	bh=Gb4XTvI/x9vKAgaq8ubQZtTAYFOtWMWwkqv/JpD+ADY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WSGWfj8G/qYWwZ7FWwpTLXMHUrI58vgycPKegtrQTqVhx7E1qrbUZmpmFOkYtMmADALgxUjrGRiQFZpLQZE4GZyZcl/dzayattELtCQtfBfSyXVLK769FbPhhXGQCBUeuof1R/0XIawCl6QWI/CHiZgY2GOjaXx1UlqmJd6hiYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gi4OwzsT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764620008; c=relaxed/simple;
+	bh=c8mlL+8JS1BJUpGU/CCeiDRO5fIc5qgfb2CsJTD7loM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=mV9sGofJigMTyx3ZHirxPs3+zCmvKVPwIFKce0nhFIY8xegGf73ygz+A9TbBhQBOva9rGxFADO8hOWhZP/BFqYw5gymYYlRTHWlB7IqbrlwHbDnXC+uBaeSKa7wbN59ZGKRf2QYNAIHA6KOhT56gXB439cpkH3FfZ/8bRc7kLNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--wusamuel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s8nmvSe5; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--wusamuel.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gi4OwzsT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FECC4CEF1;
-	Mon,  1 Dec 2025 18:04:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764612266;
-	bh=Gb4XTvI/x9vKAgaq8ubQZtTAYFOtWMWwkqv/JpD+ADY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gi4OwzsTkPkU1RM3Q8E69+v3xNudw6vRjerVLkMzvd5/KvjMpF/G/xa+Ruho0OZpP
-	 cRYqE/UniHHIfDlUF88I//FPuGmC7cm/QIVBJ8zQEZh4m1aXbbwgdZrNos+UyCmIZe
-	 DznzG9ou0ctkO2N2O86s7uJrpTZdBN+G3U8i6f9menekNchZH6wgkSFlGmV/FXtg88
-	 ZTEkrTf/Dr+fHyfuhNytFU2rFzrGTJIzHFul1AxEvOicWoj+edq9jGh4kx80ro8igy
-	 3+1pXkUkGl/dmje/n0+MnMqF0yIuST5wdIW1LPLbdHhFOxoM1oY62JEkdR6+pDUTLx
-	 sL84trwkXmTzg==
-Date: Mon, 1 Dec 2025 15:04:23 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Collin Funk <collin.funk1@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>, Leo Yan <leo.yan@arm.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Haibo Xu <haibo1.xu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 03/17] perf symbol-elf: Add missing puts on error path
-Message-ID: <aS3YpyPwlBq2ald2@x1>
-References: <20251122081929.7588-1-irogers@google.com>
- <20251122081929.7588-4-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s8nmvSe5"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b5edecdf94eso6337097a12.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 12:13:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764620005; x=1765224805; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hVFOz36NzkthLgnEyyQ+T4r4aeS1YE42iDi3jXssFxw=;
+        b=s8nmvSe5uKotA1B1r7hKTSbYu2ARWHjE1SyHUYXSJOCv5zK298w6TwmEIGN5pFxxgX
+         3SKFtfEzUhAi/rxtG/2hY5h+T32NN6MW/LKSZI+DNmp4ktndShQxX9mNJD+L4Vnd0eql
+         d4sqCl+d/HGpqCvhR8UQsDvvccD6a9Rmg73W5e+kuGv/+dd0qY7OXBbhl8UtvAROmqv5
+         TKp/ExYUCiV4yvUuB4rzoEMBVRyd2288CY+aPBgpSYJV5Ac7UFNvTXZMXKQqIe7K5bqy
+         OUBRw/sOyxl5r1+tZGxicWsiSSMVX8HzdLEoQ/LddOjHMKKj6O+/8pfxYg7TXPcTCT5/
+         38gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764620005; x=1765224805;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hVFOz36NzkthLgnEyyQ+T4r4aeS1YE42iDi3jXssFxw=;
+        b=nsycir4QqyDBArulgJOsH6I6eKCysE2ZPm7CdgbGlQA3I4gP/sIK9lfa4vF5Ogpcsr
+         AY8lgv6zytAf2B7trWn46u4wjMrmU/aW1eRJLh/C87SOSgVW5XAsF9tAxv6G/FPusWCr
+         4wqe0d8uUmsDp7D+rCvLfL5aQbxfIuclTzx484rogSE1beKEat0bSsdab/282FrsUKHj
+         DRVJmqHlVliHoygZl/6MWkZx/DYBk7Njv2IHghvVgP1dNM6FcgSLaz9UtkPMMqPCIPvD
+         t3gflwdSxcfDu7HxomWF9uZ+HR2h4zeGaB2Byz4AOIs59M581eqj3JzkLSc2TkU66OK8
+         knQA==
+X-Forwarded-Encrypted: i=1; AJvYcCX8+A7mvzPtCqvMhqvvpxwZ8CkBbJ3xSEY3gTaMOrbKTw5p/ZzOO1utzFwBp+Ti9J/2h6egxw6hGJn3PDX/yKz2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSf7g80lPgFCiLPyaIq8AoP0KOLh5ItEP+6nM+EI3dIIthqxJG
+	1Br+idSUYqcfR3KeK5nQzZf/YLX5QxSXqDF6Pq70RCadS+LhbX+FIUj0MsqwmoptGVK5Pd9NfVR
+	yLc4juHUuXtl29g==
+X-Google-Smtp-Source: AGHT+IECD5vU0CmfGe21dvtzJjuBH17s1ELeyFti1sE3jj2tes8LvitCskY4NkHYvgojqpoh1w3H0N6Q452j8A==
+X-Received: from dlbcy37.prod.google.com ([2002:a05:7022:ba5:b0:11b:9bdf:e45c])
+ (user=wusamuel job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:7022:e17:b0:119:e56c:18ae with SMTP id a92af1059eb24-11c9d848290mr27418765c88.22.1764620005449;
+ Mon, 01 Dec 2025 12:13:25 -0800 (PST)
+Date: Mon,  1 Dec 2025 12:13:09 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251122081929.7588-4-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.52.0.107.ga0afd4fd5b-goog
+Message-ID: <20251201201311.3746338-1-wusamuel@google.com>
+Subject: [PATCH v2 1/2] cpufreq: Replace trace_cpu_frequency with trace_policy_frequency
+From: Samuel Wu <wusamuel@google.com>
+To: Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
+	Jonathan Corbet <corbet@lwn.net>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
+Cc: christian.loehle@arm.com, Samuel Wu <wusamuel@google.com>, kernel-team@android.com, 
+	linux-pm@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Nov 22, 2025 at 12:19:15AM -0800, Ian Rogers wrote:
-> In dso__process_kernel_symbol if inserting a map fails, probably
-> ENOMEM, then the reference count puts were missing on the dso and map.
+The existing cpu_frequency trace_event can be verbose, emitting a nearly
+identical trace event for every CPU in the policy even when their
+frequencies are identical.
 
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+This patch replaces the cpu_frequency trace event with policy_frequency
+trace event, a more efficient alternative. From the kernel's
+perspective, emitting a trace event once per policy instead of once per
+cpu saves some memory and is less overhead. From the post-processing
+perspective, analysis of the trace log is simplified without any loss of
+information.
 
-- Arnaldo
+Signed-off-by: Samuel Wu <wusamuel@google.com>
+---
+ drivers/cpufreq/cpufreq.c      | 14 ++------------
+ drivers/cpufreq/intel_pstate.c |  6 ++++--
+ include/trace/events/power.h   | 24 +++++++++++++++++++++---
+ kernel/trace/power-traces.c    |  2 +-
+ samples/bpf/cpustat_kern.c     |  8 ++++----
+ samples/bpf/cpustat_user.c     |  6 +++---
+ tools/perf/builtin-timechart.c | 12 ++++++------
+ 7 files changed, 41 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 4472bb1ec83c..dd3f08f3b958 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -309,8 +309,6 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+ 				      struct cpufreq_freqs *freqs,
+ 				      unsigned int state)
+ {
+-	int cpu;
+-
+ 	BUG_ON(irqs_disabled());
  
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/symbol-elf.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 9e820599bab3..4c76e680b13d 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -1446,8 +1446,11 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
->  			map__set_mapping_type(curr_map, MAPPING_TYPE__IDENTITY);
->  		}
->  		dso__set_symtab_type(curr_dso, dso__symtab_type(dso));
-> -		if (maps__insert(kmaps, curr_map))
-> +		if (maps__insert(kmaps, curr_map)) {
-> +			dso__put(curr_dso);
-> +			map__put(curr_map);
->  			return -1;
-> +		}
->  		dsos__add(&maps__machine(kmaps)->dsos, curr_dso);
->  		dso__set_loaded(curr_dso);
->  		dso__put(*curr_dsop);
-> -- 
-> 2.52.0.rc2.455.g230fcf2819-goog
+ 	if (cpufreq_disabled())
+@@ -344,10 +342,7 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+ 		adjust_jiffies(CPUFREQ_POSTCHANGE, freqs);
+ 		pr_debug("FREQ: %u - CPUs: %*pbl\n", freqs->new,
+ 			 cpumask_pr_args(policy->cpus));
+-
+-		for_each_cpu(cpu, policy->cpus)
+-			trace_cpu_frequency(freqs->new, cpu);
+-
++		trace_policy_frequency(freqs->new, policy->cpu, policy->cpus);
+ 		srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
+ 					 CPUFREQ_POSTCHANGE, freqs);
+ 
+@@ -2201,7 +2196,6 @@ unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
+ 					unsigned int target_freq)
+ {
+ 	unsigned int freq;
+-	int cpu;
+ 
+ 	target_freq = clamp_val(target_freq, policy->min, policy->max);
+ 	freq = cpufreq_driver->fast_switch(policy, target_freq);
+@@ -2213,11 +2207,7 @@ unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
+ 	arch_set_freq_scale(policy->related_cpus, freq,
+ 			    arch_scale_freq_ref(policy->cpu));
+ 	cpufreq_stats_record_transition(policy, freq);
+-
+-	if (trace_cpu_frequency_enabled()) {
+-		for_each_cpu(cpu, policy->cpus)
+-			trace_cpu_frequency(freq, cpu);
+-	}
++	trace_policy_frequency(freq, policy->cpu, policy->cpus);
+ 
+ 	return freq;
+ }
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index ec4abe374573..9724b5d19d83 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -2297,7 +2297,8 @@ static int hwp_get_cpu_scaling(int cpu)
+ 
+ static void intel_pstate_set_pstate(struct cpudata *cpu, int pstate)
+ {
+-	trace_cpu_frequency(pstate * cpu->pstate.scaling, cpu->cpu);
++	trace_policy_frequency(pstate * cpu->pstate.scaling, cpu->cpu,
++			       cpumask_of(cpu->cpu));
+ 	cpu->pstate.current_pstate = pstate;
+ 	/*
+ 	 * Generally, there is no guarantee that this code will always run on
+@@ -2587,7 +2588,8 @@ static void intel_pstate_adjust_pstate(struct cpudata *cpu)
+ 
+ 	target_pstate = get_target_pstate(cpu);
+ 	target_pstate = intel_pstate_prepare_request(cpu, target_pstate);
+-	trace_cpu_frequency(target_pstate * cpu->pstate.scaling, cpu->cpu);
++	trace_policy_frequency(target_pstate * cpu->pstate.scaling, cpu->cpu,
++			       cpumask_of(cpu->cpu));
+ 	intel_pstate_update_pstate(cpu, target_pstate);
+ 
+ 	sample = &cpu->sample;
+diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+index 370f8df2fdb4..317098ffdd5f 100644
+--- a/include/trace/events/power.h
++++ b/include/trace/events/power.h
+@@ -182,11 +182,29 @@ TRACE_EVENT(pstate_sample,
+ 		{ PM_EVENT_RECOVER, "recover" }, \
+ 		{ PM_EVENT_POWEROFF, "poweroff" })
+ 
+-DEFINE_EVENT(cpu, cpu_frequency,
++TRACE_EVENT(policy_frequency,
+ 
+-	TP_PROTO(unsigned int frequency, unsigned int cpu_id),
++	TP_PROTO(unsigned int frequency, unsigned int cpu_id,
++		 const struct cpumask *policy_cpus),
+ 
+-	TP_ARGS(frequency, cpu_id)
++	TP_ARGS(frequency, cpu_id, policy_cpus),
++
++	TP_STRUCT__entry(
++		__field(u32, state)
++		__field(u32, cpu_id)
++		__cpumask(cpumask)
++	),
++
++	TP_fast_assign(
++		__entry->state = frequency;
++		__entry->cpu_id = cpu_id;
++		__assign_cpumask(cpumask, policy_cpus);
++	),
++
++	TP_printk("state=%lu cpu_id=%lu policy_cpus=%*pb",
++		  (unsigned long)__entry->state,
++		  (unsigned long)__entry->cpu_id,
++		  cpumask_pr_args((struct cpumask *)__get_dynamic_array(cpumask)))
+ );
+ 
+ TRACE_EVENT(cpu_frequency_limits,
+diff --git a/kernel/trace/power-traces.c b/kernel/trace/power-traces.c
+index f2fe33573e54..a537e68a6878 100644
+--- a/kernel/trace/power-traces.c
++++ b/kernel/trace/power-traces.c
+@@ -16,5 +16,5 @@
+ 
+ EXPORT_TRACEPOINT_SYMBOL_GPL(suspend_resume);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(cpu_idle);
+-EXPORT_TRACEPOINT_SYMBOL_GPL(cpu_frequency);
++EXPORT_TRACEPOINT_SYMBOL_GPL(policy_frequency);
+ 
+diff --git a/samples/bpf/cpustat_kern.c b/samples/bpf/cpustat_kern.c
+index 7ec7143e2757..f485de0f89b2 100644
+--- a/samples/bpf/cpustat_kern.c
++++ b/samples/bpf/cpustat_kern.c
+@@ -75,9 +75,9 @@ struct {
+ } pstate_duration SEC(".maps");
+ 
+ /*
+- * The trace events for cpu_idle and cpu_frequency are taken from:
++ * The trace events for cpu_idle and policy_frequency are taken from:
+  * /sys/kernel/tracing/events/power/cpu_idle/format
+- * /sys/kernel/tracing/events/power/cpu_frequency/format
++ * /sys/kernel/tracing/events/power/policy_frequency/format
+  *
+  * These two events have same format, so define one common structure.
+  */
+@@ -162,7 +162,7 @@ int bpf_prog1(struct cpu_args *ctx)
+ 	 */
+ 	if (ctx->state != (u32)-1) {
+ 
+-		/* record pstate after have first cpu_frequency event */
++		/* record pstate after have first policy_frequency event */
+ 		if (!*pts)
+ 			return 0;
+ 
+@@ -208,7 +208,7 @@ int bpf_prog1(struct cpu_args *ctx)
+ 	return 0;
+ }
+ 
+-SEC("tracepoint/power/cpu_frequency")
++SEC("tracepoint/power/policy_frequency")
+ int bpf_prog2(struct cpu_args *ctx)
+ {
+ 	u64 *pts, *cstate, *pstate, cur_ts, delta;
+diff --git a/samples/bpf/cpustat_user.c b/samples/bpf/cpustat_user.c
+index 356f756cba0d..f7e81f702358 100644
+--- a/samples/bpf/cpustat_user.c
++++ b/samples/bpf/cpustat_user.c
+@@ -143,12 +143,12 @@ static int cpu_stat_inject_cpu_idle_event(void)
+ 
+ /*
+  * It's possible to have no any frequency change for long time and cannot
+- * get ftrace event 'trace_cpu_frequency' for long period, this introduces
++ * get ftrace event 'trace_policy_frequency' for long period, this introduces
+  * big deviation for pstate statistics.
+  *
+  * To solve this issue, below code forces to set 'scaling_max_freq' to 208MHz
+- * for triggering ftrace event 'trace_cpu_frequency' and then recovery back to
+- * the maximum frequency value 1.2GHz.
++ * for triggering ftrace event 'trace_policy_frequency' and then recovery back
++ * to the maximum frequency value 1.2GHz.
+  */
+ static int cpu_stat_inject_cpu_frequency_event(void)
+ {
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 22050c640dfa..3ef1a2fd0493 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -612,10 +612,10 @@ process_sample_cpu_idle(struct timechart *tchart __maybe_unused,
+ }
+ 
+ static int
+-process_sample_cpu_frequency(struct timechart *tchart,
+-			     struct evsel *evsel,
+-			     struct perf_sample *sample,
+-			     const char *backtrace __maybe_unused)
++process_sample_policy_frequency(struct timechart *tchart,
++				struct evsel *evsel,
++				struct perf_sample *sample,
++				const char *backtrace __maybe_unused)
+ {
+ 	u32 state  = evsel__intval(evsel, sample, "state");
+ 	u32 cpu_id = evsel__intval(evsel, sample, "cpu_id");
+@@ -1541,7 +1541,7 @@ static int __cmd_timechart(struct timechart *tchart, const char *output_name)
+ {
+ 	const struct evsel_str_handler power_tracepoints[] = {
+ 		{ "power:cpu_idle",		process_sample_cpu_idle },
+-		{ "power:cpu_frequency",	process_sample_cpu_frequency },
++		{ "power:policy_frequency",	process_sample_policy_frequency },
+ 		{ "sched:sched_wakeup",		process_sample_sched_wakeup },
+ 		{ "sched:sched_switch",		process_sample_sched_switch },
+ #ifdef SUPPORT_OLD_POWER_EVENTS
+@@ -1804,7 +1804,7 @@ static int timechart__record(struct timechart *tchart, int argc, const char **ar
+ 	unsigned int backtrace_args_no = ARRAY_SIZE(backtrace_args);
+ 
+ 	const char * const power_args[] = {
+-		"-e", "power:cpu_frequency",
++		"-e", "power:policy_frequency",
+ 		"-e", "power:cpu_idle",
+ 	};
+ 	unsigned int power_args_nr = ARRAY_SIZE(power_args);
+-- 
+2.52.0.107.ga0afd4fd5b-goog
+
