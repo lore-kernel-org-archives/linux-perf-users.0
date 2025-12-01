@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD0ED2E5D17;
-	Mon,  1 Dec 2025 11:22:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 675023093A7;
+	Mon,  1 Dec 2025 11:22:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764588147; cv=none; b=IVaBrCYRZ3dwkCBXqpBiOvfH1AYVVVluGkL0NNz/Gk22S9fj6bCJfwvBxrlSIqxtqRT02FT7J8EhZRyCYd8vPQjraXMeMDGGx+uSJ8yHEjPA1hzvVosyGZ+eViMcIhT4b58wjA1daXqD5SvDYs/37VwBqsBVfIfxJpIqF8ACfqo=
+	t=1764588150; cv=none; b=AN+HKr3mxERo8wR6PHmz/b3Lqn2GVJTSNxx4na6usHl0q5XY6VCBlb/ggypJbVByMlms21tKlS0Cm7ixhoWlOzLpFdAq9uKKxf5dWXJziU7qqcNUbJdGFpuD50FjJ5CWKSVDbYFpBqa3vsYKuYxojRfZZr+26dKEMoZRV+o5FvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764588147; c=relaxed/simple;
-	bh=rS7n6GqYxBhjQifAmikJPjJWBJ0+WduJEB52j0HxrUc=;
+	s=arc-20240116; t=1764588150; c=relaxed/simple;
+	bh=W/JeYnunOoLhYN6hczuLJvjEZ+swqNz13PSBPwFvoT8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eg4cdltKMHXo2fmNZpOUFhSFKsxeQ3M7MgsjB4ogYh5vSdBbYGfYQjFiesMYqQuSI8DHP0Hdr7YkwoNVqhufUF/ls6y6dPZ5VFbygTJkqAPdocAFsCQpk0HTSFwXKeVwfgALFfP9l26iG6+1WTUO/YAY/N2qFBaSHyBwadcXW5A=
+	 In-Reply-To:To:Cc; b=iErbId2Q0XiYd3VxC6ZF2i2nAtal9V1EldXSQBUWpgwuEFTKumSjjYr2zIUZ6NgNYIq5XnmSUngDwBif57FQtrZ+uDp3Ae6ffySAft3V7NfGoncxy1po67c160pp1AuLMlNkEAFezGaHiaRqGLpdY1cahGx6y+2brhVxrFJS+/o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6BA3153B;
-	Mon,  1 Dec 2025 03:22:17 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97E18153B;
+	Mon,  1 Dec 2025 03:22:20 -0800 (PST)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A89F83F59E;
-	Mon,  1 Dec 2025 03:22:22 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7651C3F59E;
+	Mon,  1 Dec 2025 03:22:25 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
-Date: Mon, 01 Dec 2025 11:21:56 +0000
-Subject: [PATCH 06/19] coresight: trbe: Refactor syndrome decoding
+Date: Mon, 01 Dec 2025 11:21:57 +0000
+Subject: [PATCH 07/19] coresight: trbe: Refactor AUX flag setting
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251201-trbe_buffer_refactor_v1-1-v1-6-7da32b076b28@arm.com>
+Message-Id: <20251201-trbe_buffer_refactor_v1-1-v1-7-7da32b076b28@arm.com>
 References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
 In-Reply-To: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -45,137 +45,96 @@ Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1764588125; l=4359;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1764588125; l=3290;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=rS7n6GqYxBhjQifAmikJPjJWBJ0+WduJEB52j0HxrUc=;
- b=j2R99VhM0xRCEGs9Df6BspIDlCsqEPA0TdAW9zgg7opexB+TMQv2IZXgjHuEHaqsxSf8Rfn+0
- siZbfpHRgTVA2u0tY12czMXtmPRWBTWMLKT9N+FT+TZqLe27g92sSq0
+ bh=W/JeYnunOoLhYN6hczuLJvjEZ+swqNz13PSBPwFvoT8=;
+ b=49j4rwio/yVC2wwPB9Z9UiUECEUH03HHUoBb3VifuBNB8Y+ISShfg7DiQ4nBoshKwWSux9vlm
+ TWhR+mz3crPCd5r1VNehnxNPG5t14B+GOOMRrPM/R8VEmlDUI1ARPhp
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-It gives priority to TRBSR_EL1.EA (external abort); an external abort
-will immediately bail out and return an error.
+Rather than spreading AUX flag setting in different functions, use
+trbe_get_fault_act() as a central place for setting the flag.
 
-Next, the syndrome decoding is refactored based on two levels of
-information: the EC (Event Class) bits and the BSC (Trace Buffer Status
-Code) bits.
-
-If TRBSR_EL1.EC==0b000000, the driver continues parsing TRBSR_EL1.BSC to
-identify the specific trace buffer event.  Otherwise, any non-zero
-TRBSR_EL1.EC is treated as an error.
-
-For error cases, the driver prints an error string and dumps registers
-for debugging.
-
-No additional checks are required for wrap mode beyond verifying the
-TRBSR_EL1.WRAP bit, even on units with overwrite errata, as this bit
-reliably indicates a buffer wrap.
+Later we will support WRAP mode with continuous trace, so the WRAP
+event does not necessarily cause the trace discontinuity, change to
+check the stop status instead.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-trbe.c | 60 +++++++++++++++++++++-------
- drivers/hwtracing/coresight/coresight-trbe.h |  8 ++--
- 2 files changed, 51 insertions(+), 17 deletions(-)
+ drivers/hwtracing/coresight/coresight-trbe.c | 38 +++++++++++++---------------
+ 1 file changed, 17 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
-index 9e565122816949b37b8ff5e4ba04cfbc317c6f25..28e2bfa68074f19ccaa4a737d00af577aea818fe 100644
+index 28e2bfa68074f19ccaa4a737d00af577aea818fe..b06885a08e082fd34f68d9588518807b5c47c86e 100644
 --- a/drivers/hwtracing/coresight/coresight-trbe.c
 +++ b/drivers/hwtracing/coresight/coresight-trbe.c
-@@ -643,29 +643,61 @@ static void trbe_enable_hw(struct trbe_buf *buf)
- static enum trbe_fault_action trbe_get_fault_act(struct perf_output_handle *handle,
- 						 u64 trbsr)
- {
-+	const char *err_str;
- 	int ec = get_trbe_ec(trbsr);
- 	int bsc = get_trbe_bsc(trbsr);
--	struct trbe_buf *buf = etm_perf_sink_config(handle);
--	struct trbe_cpudata *cpudata = buf->cpudata;
+@@ -265,25 +265,6 @@ static void trbe_reset_local(struct trbe_cpudata *cpudata)
+ 	write_sysreg_s(0, SYS_TRBSR_EL1);
+ }
  
- 	WARN_ON(is_trbe_running(trbsr));
--	if (is_trbe_trg(trbsr) || is_trbe_abort(trbsr))
--		return TRBE_FAULT_ACT_FATAL;
- 
--	if ((ec == TRBE_EC_STAGE1_ABORT) || (ec == TRBE_EC_STAGE2_ABORT))
--		return TRBE_FAULT_ACT_FATAL;
-+	if (is_trbe_abort(trbsr)) {
-+		err_str = "External abort";
-+		goto out_fatal;
-+	}
- 
+-static void trbe_report_wrap_event(struct perf_output_handle *handle)
+-{
 -	/*
--	 * If the trbe is affected by TRBE_WORKAROUND_OVERWRITE_FILL_MODE,
--	 * it might write data after a WRAP event in the fill mode.
--	 * Thus the check TRBPTR == TRBBASER will not be honored.
+-	 * Mark the buffer to indicate that there was a WRAP event by
+-	 * setting the COLLISION flag. This indicates to the user that
+-	 * the TRBE trace collection was stopped without stopping the
+-	 * ETE and thus there might be some amount of trace that was
+-	 * lost between the time the WRAP was detected and the IRQ
+-	 * was consumed by the CPU.
+-	 *
+-	 * Setting the TRUNCATED flag would move the event to STOPPED
+-	 * state unnecessarily, even when there is space left in the
+-	 * ring buffer. Using the COLLISION flag doesn't have this side
+-	 * effect. We only set TRUNCATED flag when there is no space
+-	 * left in the ring buffer.
 -	 */
--	if ((is_trbe_wrap(trbsr) && (ec == TRBE_EC_OTHERS) && (bsc == TRBE_BSC_FILLED)) &&
--	    (trbe_may_overwrite_in_fill_mode(cpudata) ||
--	     get_trbe_write_pointer() == get_trbe_base_pointer()))
-+	switch (ec) {
-+	case TRBE_EC_OTHERS:
-+		break;
-+	case TRBE_EC_BUF_MGMT_IMPL:
-+		err_str = "Unexpected implemented management";
-+		goto out_fatal;
-+	case TRBE_EC_GP_CHECK_FAULT:
-+		err_str = "Granule Protection Check fault";
-+		goto out_fatal;
-+	case TRBE_EC_STAGE1_ABORT:
-+		err_str = "Stage 1 data abort";
-+		goto out_fatal;
-+	case TRBE_EC_STAGE2_ABORT:
-+		err_str = "Stage 2 data abort";
-+		goto out_fatal;
-+	default:
-+		err_str = "Unknown error code";
-+		goto out_fatal;
-+	}
+-	perf_aux_output_flag(handle, PERF_AUX_FLAG_COLLISION);
+-}
+-
+ static void trbe_truncate_event(struct perf_output_handle *handle)
+ {
+ 	struct trbe_buf *buf = etm_perf_sink_config(handle);
+@@ -687,6 +668,23 @@ static enum trbe_fault_action trbe_get_fault_act(struct perf_output_handle *hand
+ 		goto out_fatal;
+ 	}
+ 
++	/*
++	 * Mark the buffer to indicate that there was a WRAP event by
++	 * setting the COLLISION flag. This indicates to the user that
++	 * the TRBE trace collection was stopped without stopping the
++	 * ETE and thus there might be some amount of trace that was
++	 * lost between the time the WRAP was detected and the IRQ
++	 * was consumed by the CPU.
++	 *
++	 * Setting the TRUNCATED flag would move the event to STOPPED
++	 * state unnecessarily, even when there is space left in the
++	 * ring buffer. Using the COLLISION flag doesn't have this side
++	 * effect. We only set TRUNCATED flag when there is no space
++	 * left in the ring buffer.
++	 */
++	if (!is_trbe_running(trbsr))
++		perf_aux_output_flag(handle, PERF_AUX_FLAG_COLLISION);
 +
-+	switch (bsc) {
-+	case TRBE_BSC_NOT_STOPPED:
-+		break;
-+	case TRBE_BSC_FILLED:
-+		break;
-+	case TRBE_BSC_TRIGGERED:
-+		err_str = "Unexpected trigger status";
-+		goto out_fatal;
-+	default:
-+		err_str = "Unexpected buffer status code";
-+		goto out_fatal;
-+	}
-+
-+	if (is_trbe_wrap(trbsr))
+ 	if (is_trbe_wrap(trbsr))
  		return TRBE_FAULT_ACT_WRAP;
  
- 	return TRBE_FAULT_ACT_SPURIOUS;
-+
-+out_fatal:
-+	pr_err_ratelimited("%s on CPU %d [TRBSR=0x%016llx, TRBPTR=0x%016llx, TRBLIMITR=0x%016llx]\n",
-+			   err_str, smp_processor_id(), trbsr,
-+			   read_sysreg_s(SYS_TRBPTR_EL1),
-+			   read_sysreg_s(SYS_TRBLIMITR_EL1));
-+	return TRBE_FAULT_ACT_FATAL;
- }
+@@ -878,7 +876,6 @@ static unsigned long arm_trbe_update_buffer(struct coresight_device *csdev,
+ 			goto done;
+ 		}
  
- static unsigned long trbe_get_trace_size(struct perf_output_handle *handle,
-diff --git a/drivers/hwtracing/coresight/coresight-trbe.h b/drivers/hwtracing/coresight/coresight-trbe.h
-index 45202c48accec7c86ba56130e2737bc2d1830fae..d7f7cd763c0c7139cf322b7336ee563073e3bea0 100644
---- a/drivers/hwtracing/coresight/coresight-trbe.h
-+++ b/drivers/hwtracing/coresight/coresight-trbe.h
-@@ -35,9 +35,11 @@ static inline bool is_trbe_enabled(void)
- 	return trblimitr & TRBLIMITR_EL1_E;
- }
+-		trbe_report_wrap_event(handle);
+ 		wrap = true;
+ 	}
  
--#define TRBE_EC_OTHERS		0
--#define TRBE_EC_STAGE1_ABORT	36
--#define TRBE_EC_STAGE2_ABORT	37
-+#define TRBE_EC_OTHERS			0x0
-+#define TRBE_EC_GP_CHECK_FAULT		0X1e
-+#define TRBE_EC_BUF_MGMT_IMPL		0x1f
-+#define TRBE_EC_STAGE1_ABORT		0x24
-+#define TRBE_EC_STAGE2_ABORT		0x25
+@@ -1099,7 +1096,6 @@ static int trbe_handle_overflow(struct perf_output_handle *handle)
+ 	if (buf->snapshot)
+ 		handle->head += size;
  
- static inline int get_trbe_ec(u64 trbsr)
- {
+-	trbe_report_wrap_event(handle);
+ 	perf_aux_output_end(handle, size);
+ 	event_data = perf_aux_output_begin(handle, event);
+ 	if (!event_data) {
 
 -- 
 2.34.1
