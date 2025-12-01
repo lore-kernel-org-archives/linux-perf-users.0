@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190AC21CC4F;
-	Mon,  1 Dec 2025 17:05:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBF133507A;
+	Mon,  1 Dec 2025 17:14:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764608737; cv=none; b=N0I5DBaXOQe0Voeq67qxIS4ZLqyz7bWLCkpOf2S9RSO5ZDuc7A/DYaIZVZMUhcOpAja/k1yl7P796imXuTge9DmTJ6VOzI4tJbFhauAzgq0D9gZMaNSeUS7ee7NurnmqiaRw2EUZ6xy3YIrAhIuEt7R4+4XQF6KWJyl/yZDR+/c=
+	t=1764609263; cv=none; b=ojal6eq3c8drlZ7GdQ+J5ou8RHi2IORrM9kO72iWM2+KktDE0AWG+C+M8PuzSOQ6PkTvizy24wGJsvqk/fvcAPVCr3OLGAJkMu2t6FLGVtyrTkDwqTAh04d1KdHPfzQiASdyOVYrSJkRzKHahIbK9O9gnLUaj3H+4Rp0sgHLV1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764608737; c=relaxed/simple;
-	bh=DDxpwuLF06Gfy57oEvUhVKW6teXyjsVAbvLpu4cwAoU=;
+	s=arc-20240116; t=1764609263; c=relaxed/simple;
+	bh=xr+scbNuDcdutR3BSvDQTMhN8ZBljtskf3ZPHRiXMbs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k85W3FHEw5qG1LKRu3KYN+S4s8DJXpGdAEZdRNj3437QQJ4slBNpArd23nlQ4sdGfClDoosIYWQMGMf99Cvw8nr3WVW68ueeOi9qznp1gWXqwUBgLEoEHGsz5X611uARE/XYi2c/A+OX2DYd7kZVQ9wEdTGfKRMYND0Jnn+zqP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNDG/Ev9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iv7auoyWmbEVM9SoMHgf9970ER09TjX0B6GieBsalA6SiDE0w0vo5C6/J3wVBII17cVtvJHSINMJNBbSxjfh7Pz8x8Evfljabf8fvdy+ANBruuJvDtda80U3Lfv+eMFQe6o3CMtR/a4gLxWC5HC4PsMzIxJU0DZQX75VmwiRVmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z2D6jlKG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNDG/Ev9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22801C4CEF1;
-	Mon,  1 Dec 2025 17:05:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z2D6jlKG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F64DC4CEF1;
+	Mon,  1 Dec 2025 17:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764608734;
-	bh=DDxpwuLF06Gfy57oEvUhVKW6teXyjsVAbvLpu4cwAoU=;
+	s=k20201202; t=1764609262;
+	bh=xr+scbNuDcdutR3BSvDQTMhN8ZBljtskf3ZPHRiXMbs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VNDG/Ev95cxt42ASLD1Mdn2o5pGTmQ1w8lrYa4N5pKqtkTHZozVX2CdZMTUhMss3p
-	 8sWOBvrvdmPS6wN1m0F1VBDYFZhVobznnWeC0kNm1nd77cOHxPDqTJ1LHIyfy+MVEc
-	 71GSCjJAN28RA1igOFWxBp6xrcwiVcIn4WnNFb+zHU1DpuquxnVEusRoJd+GKyjn6a
-	 OOH8ZbwY+f44HR3Dc1YE5LeEweAyAhSx9P0pzl6epYZhtAaOUmU9LLJvHxP7cjKo+3
-	 j6stzrkNwCPCWrt6g9KcLpqEB8tTWLmvab49JWIG++xBNl+Zsz6r2kCsdeplB8C17s
-	 nf1l+9L/3kK/A==
-Date: Mon, 1 Dec 2025 14:05:23 -0300
+	b=Z2D6jlKGXcwtR84ZoY6sFDMh71wQ+6wHMn4j89tBfTTRXt31ch9NyRh59tCNRT/ZI
+	 YvOptZXHjynaG1kLh4onnRlKae9zTawr+TPIfHMVLEhqA2HsxKQ6nA4HJHSC8x6GmY
+	 525h3Y9c8zRvsxGxeBb3tJGQkRVsR5RTF3hNN0SZGnJdOMoAacgEQcj+ccSD+0BZ8H
+	 j2MwMWZJF9mUSclVBiioZ2cY086ZvWx+hHXyfkdKBHe8GpGYmbdi6prifM8owUCmLK
+	 YmacOcSzeARnfRh0RjzZFatZSTwRnwyoo4s/suNkZZ/9fO23VfChDB0fbh6DjYCapw
+	 32p2lKcyMpW1A==
+Date: Mon, 1 Dec 2025 14:14:19 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -46,7 +46,7 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH v1 06/17] perf hist: In init, ensure mem_info is put on
  error paths
-Message-ID: <aS3K0zgkQlUzMIhe@x1>
+Message-ID: <aS3M6_T-_UIr6eiU@x1>
 References: <20251122081929.7588-1-irogers@google.com>
  <20251122081929.7588-7-irogers@google.com>
 Precedence: bulk
@@ -63,6 +63,12 @@ On Sat, Nov 22, 2025 at 12:19:18AM -0800, Ian Rogers wrote:
 > Rather than exit the internal map_symbols directly, put the mem-info
 > that does this and also lowers the reference count on the mem-info
 > itself otherwise the mem-info is being leaked.
+
+Shouldn't this have a:
+
+Fixes: 56e144fe98260a0f ("perf mem_info: Add and use map_symbol__exit and addr_map_symbol__exit")
+
+Other than that:
 
 Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
