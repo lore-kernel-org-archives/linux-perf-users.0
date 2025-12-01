@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F74626E6E4
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 20:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE3027C842
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 20:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764622532; cv=none; b=SoLeJD6w8zDUaqv4U9AIlMysP/vq2q5MStRX/x5nw5YZOGf2aXP+U964XGkB9tCXEIyuAqU9GONlST+8n5Gq8rW7wG6FeBjnI8CQbeZBdtgTnwytSLzyeLWgopM6BrCjb5jMjXosXpZ2ShoDAM/mCpYRjQWDSlmORsvRvH2S4hE=
+	t=1764622537; cv=none; b=dxTAhnCRmzVplmHfOC27MGpxN6rVoVWVk5fzw5LJRyAGzeek3iAxPBaRJTwxYMgh0O4Tz2itKGwnz1Kcy8+JMw5dkIxE9RFozbBd8tfgD4DyEAaGWncEMYdt9nNsIWYmRWwsqpjZzebp1PuF41rRqGLPMOVMKCxe1UYzyGcq2eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764622532; c=relaxed/simple;
-	bh=RGdmhyBYFRnGgFw20jM0roDN+95aj0Dmbo2wN7m/qV4=;
+	s=arc-20240116; t=1764622537; c=relaxed/simple;
+	bh=zUVBgiiZ0gXg2kVcXRXUmDd2ZV1Y5zckGB+gp6QQQ3g=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=UnCU9ZebQ680hB+D0CctwoCTyP7GJmxU9r1O9RAK6MuTbGZ5OCYfIqr/iY9OdVUYrgTcbxE3Bo1MCfhH3n20FFvZEklYAsezWR6wc+8bhM0oAoTY7uXaSjhprERKwPf1e9IqmQBIl7uKZvU9wr5t69h61UtMBxUKzhxes9rUYCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4WJ96559; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=mMec+GZuYshdhaypYviePBIQJ3Sfo0gT23w19wLpiwReUo2Gu8So1tdm3Y20jP1krXbzcJygzTY/GUPmswEBSG3yKFvKVFtmQmw4Gdy2k63n03/qpkHI5ds2DaRSazlILsw9du2wBn4CTOnH/YuyxowRwq906U7SUgxiJsNg0Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0SBZyhNT; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4WJ96559"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-bc240cdb249so4157542a12.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 12:55:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0SBZyhNT"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b99f6516262so11623875a12.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 12:55:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764622530; x=1765227330; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764622535; x=1765227335; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=nuvqYDAGbb4tGYCC6QK3TUQ9PWdRvfqu3GrG0lS3IVQ=;
-        b=4WJ96559VIGAaEALefJFSywyqSKX97vmrU3b8y7AuhfkssiFgamEO0w2V3IZoN04eM
-         FWHhmIywjEca7SpAzKCmC0HZfLtaJF+tL5G5za4dnRd0Vc3ZXhZBYWPG6q6sJbs+ebJ3
-         jEYHKaJD468Hk4CLGHTyDVCTYeJ1xkde5t6uE1OQnr1UiPdnEP5lMmLjLhAEGT4ZPXUq
-         qxCneXcSHcKkI5iNFJCn2tFOmTadjMQ4k/ZAwsfbpPOK2UpBSAyJIkcTB11XXfoJFOmc
-         IS0H9W5W8pTuHlBMqDBbO9yQRok0c8Haw7potcOadDRRYGu5kcAleWtxL8PhtWv9lg8K
-         5LLw==
+        bh=XN0PksgfGile0bb+ntHwdR8Wgi7cddiEbQBXMGD33y4=;
+        b=0SBZyhNT1JI1uVh/pxDe7hy13GbP1VqWP884TLe/9r0A+uL1LUYfcGHje10fq/B4c4
+         bJJPrvz7/0oPVPy1h82p8goahoV6ycRRVIxz7Y/27p6VzJskGWBa5iimrw4le2tr7qO7
+         AkwVFycjCZjRszXofyfFiDXefT2p1b1DnGwf/GkCS9S+hlFgdOOl20jY5dx2W9BuldVd
+         SHGxpIjpbo7JM5AKvyOmOoZJJFx7IQKTAAJRSY34Rn98BzK3nOdCC9tYAxH/45uykOoW
+         H+26kJRG7UQV8afh+iFGSD70+BzGGZjbgrl2SiFDmPItIm9lQyf5G9lPn7J2G7EYC/Zz
+         Z3tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764622530; x=1765227330;
+        d=1e100.net; s=20230601; t=1764622535; x=1765227335;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nuvqYDAGbb4tGYCC6QK3TUQ9PWdRvfqu3GrG0lS3IVQ=;
-        b=buelXds7xkKSMyHqNWu48ncRXQET+w0HYpYPlGrMFLIGWIQjoxZeFPyyR6B+Q733WT
-         rSQRDOfD2SQirMr5vXO9RAtI8oeamy4IQhFQA7FXUIYj+WfWFJKWBdK/eXICgj6vrQF2
-         OiV4OF/pw+Uk9IFdAvpatCsdAXVl7b/efX0ioY7a/29++bXk5qoyC0U8cQLHiNytQKDK
-         BLIbWvcUZ/CWEXV9q2ndJaqgt9nggd1VJh0cVkndLYEpyquRftiZhhHcfoSce5PRWkzr
-         pLTyd64lqZjIbD/OA79q0T1kClucS6T10dEnFJ98Z6nITPJE52/fimoOoHsxZLiIfcRH
-         DZfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGU+kw6pyVcLwqIkL3HimoiC5ONCDv4WPjuiO0O/q3ThrHhofzQC3wlwvAcsfjAJU6Sp8O06vjVstWyROSsOKf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj/Zmgp7bL3i4oTfRG82lmAGgXukjx+yPAk/pfTtbwARiSNABY
-	cF7KOnywGojuo66yxtU2HOuGmYL4LXFd2QkWYAicwTGj06bLwxMig8SpF7yjPSZ3hdRhSsJUwcE
-	koZRoY0J8rA==
-X-Google-Smtp-Source: AGHT+IFFXPeFIT+moZ3s44tHExWRRKrP5myjYRtAUhgxSg5dgFVxNxqkGlXQGLrK0E1CN+rPJMvc0QOl3Lch
-X-Received: from dybgu41.prod.google.com ([2002:a05:7301:22a9:b0:2a9:7031:8efc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:fe46:b0:2a4:5028:342d
- with SMTP id 5a478bee46e88-2a9418914f7mr11875973eec.33.1764622529695; Mon, 01
- Dec 2025 12:55:29 -0800 (PST)
-Date: Mon,  1 Dec 2025 12:55:01 -0800
+        bh=XN0PksgfGile0bb+ntHwdR8Wgi7cddiEbQBXMGD33y4=;
+        b=rOPGaZ1H7gktioFbxhX9oar3C0OrEY0j2rJ5oc/Cq8TKAeRpn2lHF4eUQ/rpdT0f+v
+         DJYFJo6uASWLrjF3xYZmmRuTy/npGfiMvv4nF8lTro2kXUVCH4S0Ka/j01V+zuGBFlki
+         7Ux7A9sKDbJXpUNPeVQ72dHJaKqt6cuTL282vpHtSPFA0pNb1G79enxgoAn8UUiakS6G
+         W7yjGwOTArRzh8tIujsbS4wpLCx9GZW16tsVMvUT74yRmHE+jGISHgSvUBfq5Fl6lUEG
+         EoEU7DuIG/uZ7Tgn3U4arFioam7sNQYZp8b9sI9hJ1OhgogEjSj96nhXz34k9PfPJRaZ
+         HfSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVx1MGRiNHiP3UaSAXleS8ob2TXrk+jvO7EESFxiEDGDne5r2T7vZ/xQPHkvtAWojrWJR8FdbEZTknoK4DZDX1/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfM2dvRIjbPVKdVtYXQTtjuizcnIsg5+LUUjm2QvWdu5AYZW9F
+	A/YCMl7b9XLAws/Nve00Yx1PEkN7ak7enMP6LVlMCciYn91csqdk4dvT+ZF1Bd5bKaL+3brIbZ4
+	5Mu109qszYg==
+X-Google-Smtp-Source: AGHT+IFHeAOg9/N3Q5WZyX9xvhKVcksBco4IpwEXc2kFEVfynL65kSy79cDzSSZueJGis+MGC5RUjkOviWyf
+X-Received: from dybph18.prod.google.com ([2002:a05:7301:4192:b0:2a4:7453:cd4e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:2a18:b0:2a4:4bce:309c
+ with SMTP id 5a478bee46e88-2a94186f8f4mr15215437eec.22.1764622534894; Mon, 01
+ Dec 2025 12:55:34 -0800 (PST)
+Date: Mon,  1 Dec 2025 12:55:02 -0800
 In-Reply-To: <20251201205509.195451-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251201205509.195451-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
-Message-ID: <20251201205509.195451-3-irogers@google.com>
-Subject: [PATCH v2 02/10] perf symbol: Reduce scope of arch__sym_update
+Message-ID: <20251201205509.195451-4-irogers@google.com>
+Subject: [PATCH v2 03/10] perf symbol: Move libelf code to its own file/header
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,86 +80,211 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Rather than being a weak arch function, use the e_machine from the ELF
-header to determine whether to update or not. This should make the
-function work cross-platform, it also reduces the function's scope.
-
-Note, the previous PPC code would compile both for 32 and 64-bit and
-when _CALL_ELF==2. Similar testing could be done using the ELF file's
-e_machine for PPC32 and e_flags for not EF_PPC_EMB. It can also be
-done on the symbol for a non-zero st_other. Given we're just copying
-the value, which would otherwise be 0, there's no need to introduce a
-st_other != 0 test. The value is only used in arch__fix_tev_from_maps
-on PowerPC in the PPC64_LOCAL_ENTRY_OFFSET macro, where 64-bit is
-assumed.
+Move perf declarations depending on libelf out of symbol.h into
+perf-libelf.h. Move the corresponding C code into perf-libelf.c. This
+is motivated by trying to make it clearer the symbol.[ch] is generic
+code without library dependencies.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/powerpc/util/sym-handling.c | 7 -------
- tools/perf/util/symbol-elf.c                | 9 ++++++---
- tools/perf/util/symbol.h                    | 4 ----
- 3 files changed, 6 insertions(+), 14 deletions(-)
+ tools/perf/util/Build          |  1 +
+ tools/perf/util/perf-libelf.c  | 32 ++++++++++++++++++++++++++++++++
+ tools/perf/util/perf-libelf.h  | 25 +++++++++++++++++++++++++
+ tools/perf/util/probe-event.c  |  1 +
+ tools/perf/util/probe-finder.c |  1 +
+ tools/perf/util/symbol-elf.c   | 27 +--------------------------
+ tools/perf/util/symbol.h       | 19 -------------------
+ 7 files changed, 61 insertions(+), 45 deletions(-)
+ create mode 100644 tools/perf/util/perf-libelf.c
+ create mode 100644 tools/perf/util/perf-libelf.h
 
-diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
-index 947bfad7aa59..afefa9bd0c93 100644
---- a/tools/perf/arch/powerpc/util/sym-handling.c
-+++ b/tools/perf/arch/powerpc/util/sym-handling.c
-@@ -66,13 +66,6 @@ const char *arch__normalize_symbol_name(const char *name)
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 1c2a43e1dc68..dcac6f1e1d99 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -193,6 +193,7 @@ ifeq ($(CONFIG_LIBTRACEEVENT),y)
+   perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_kwork_top.o
+ endif
  
- #if defined(_CALL_ELF) && _CALL_ELF == 2
- 
--#ifdef HAVE_LIBELF_SUPPORT
--void arch__sym_update(struct symbol *s, GElf_Sym *sym)
--{
--	s->arch_sym = sym->st_other;
--}
--#endif
--
- #define PPC64LE_LEP_OFFSET	8
- 
- void arch__fix_tev_from_maps(struct perf_probe_event *pev,
++perf-util-$(CONFIG_LIBELF) += perf-libelf.o
+ perf-util-$(CONFIG_LIBELF) += symbol-elf.o
+ perf-util-$(CONFIG_LIBELF) += probe-file.o
+ perf-util-$(CONFIG_LIBELF) += probe-event.o
+diff --git a/tools/perf/util/perf-libelf.c b/tools/perf/util/perf-libelf.c
+new file mode 100644
+index 000000000000..abd55bd7f14b
+--- /dev/null
++++ b/tools/perf/util/perf-libelf.c
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "perf-libelf.h"
++
++#include <stddef.h>
++#include <string.h>
++
++Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
++			     GElf_Shdr *shp, const char *name, size_t *idx)
++{
++	Elf_Scn *sec = NULL;
++	size_t cnt = 1;
++
++	/* ELF is corrupted/truncated, avoid calling elf_strptr. */
++	if (!elf_rawdata(elf_getscn(elf, ep->e_shstrndx), NULL))
++		return NULL;
++
++	while ((sec = elf_nextscn(elf, sec)) != NULL) {
++		char *str;
++
++		gelf_getshdr(sec, shp);
++		str = elf_strptr(elf, ep->e_shstrndx, shp->sh_name);
++		if (str && !strcmp(name, str)) {
++			if (idx)
++				*idx = cnt;
++			return sec;
++		}
++		++cnt;
++	}
++
++	return NULL;
++}
++
+diff --git a/tools/perf/util/perf-libelf.h b/tools/perf/util/perf-libelf.h
+new file mode 100644
+index 000000000000..5d7d18daf5ff
+--- /dev/null
++++ b/tools/perf/util/perf-libelf.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __PERF_LIBELF_H
++#define __PERF_LIBELF_H
++
++#ifdef HAVE_LIBELF_SUPPORT
++
++#include <libelf.h>
++#include <gelf.h>
++
++/*
++ * libelf 0.8.x and earlier do not support ELF_C_READ_MMAP;
++ * for newer versions we can use mmap to reduce memory usage:
++ */
++#ifdef ELF_C_READ_MMAP
++# define PERF_ELF_C_READ_MMAP ELF_C_READ_MMAP
++#else
++# define PERF_ELF_C_READ_MMAP ELF_C_READ
++#endif
++
++Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep, GElf_Shdr *shp, const char *name,
++			     size_t *idx);
++
++#endif // defined(HAVE_LIBELF_SUPPORT)
++
++#endif /* __PERF_LIBELF_H */
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 6ab2eb551b6c..c27ad9121230 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -23,6 +23,7 @@
+ #include "build-id.h"
+ #include "event.h"
+ #include "namespaces.h"
++#include "perf-libelf.h"
+ #include "strlist.h"
+ #include "strfilter.h"
+ #include "debug.h"
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 5ffd97ee4898..f94f742a3458 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -25,6 +25,7 @@
+ #include "debug.h"
+ #include "debuginfo.h"
+ #include "intlist.h"
++#include "perf-libelf.h"
+ #include "strbuf.h"
+ #include "strlist.h"
+ #include "symbol.h"
 diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index f661ea6c8ac2..99b1e060acf5 100644
+index 99b1e060acf5..72632bf9cc30 100644
 --- a/tools/perf/util/symbol-elf.c
 +++ b/tools/perf/util/symbol-elf.c
-@@ -1338,8 +1338,11 @@ static u64 ref_reloc(struct kmap *kmap)
- 	return 0;
+@@ -12,6 +12,7 @@
+ #include "libbfd.h"
+ #include "map.h"
+ #include "maps.h"
++#include "perf-libelf.h"
+ #include "symbol.h"
+ #include "symsrc.h"
+ #include "machine.h"
+@@ -183,32 +184,6 @@ static size_t elf_addr_to_index(Elf *elf, GElf_Addr addr)
+ 	return -1;
  }
  
--void __weak arch__sym_update(struct symbol *s __maybe_unused,
--		GElf_Sym *sym __maybe_unused) { }
-+static void arch__sym_update(int e_machine, const GElf_Sym *sym, struct symbol *s)
-+{
-+	if (e_machine == EM_PPC64)
-+		s->arch_sym = sym->st_other;
-+}
- 
- static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 				      GElf_Sym *sym, GElf_Shdr *shdr,
-@@ -1718,7 +1721,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 		if (!f)
- 			goto out_elf_end;
- 
--		arch__sym_update(f, &sym);
-+		arch__sym_update(ehdr.e_machine, &sym, f);
- 
- 		__symbols__insert(dso__symbols(curr_dso), f, dso__kernel(dso));
- 		nr++;
+-Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
+-			     GElf_Shdr *shp, const char *name, size_t *idx)
+-{
+-	Elf_Scn *sec = NULL;
+-	size_t cnt = 1;
+-
+-	/* ELF is corrupted/truncated, avoid calling elf_strptr. */
+-	if (!elf_rawdata(elf_getscn(elf, ep->e_shstrndx), NULL))
+-		return NULL;
+-
+-	while ((sec = elf_nextscn(elf, sec)) != NULL) {
+-		char *str;
+-
+-		gelf_getshdr(sec, shp);
+-		str = elf_strptr(elf, ep->e_shstrndx, shp->sh_name);
+-		if (str && !strcmp(name, str)) {
+-			if (idx)
+-				*idx = cnt;
+-			return sec;
+-		}
+-		++cnt;
+-	}
+-
+-	return NULL;
+-}
+-
+ bool filename__has_section(const char *filename, const char *sec)
+ {
+ 	int fd;
 diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 9aa0016937b7..f12bb3d0e08b 100644
+index f12bb3d0e08b..393a528326d5 100644
 --- a/tools/perf/util/symbol.h
 +++ b/tools/perf/util/symbol.h
-@@ -216,10 +216,6 @@ int setup_list(struct strlist **list, const char *list_str,
- int setup_intlist(struct intlist **list, const char *list_str,
- 		  const char *list_name);
+@@ -14,10 +14,6 @@
+ #include "symbol_conf.h"
+ #include "spark.h"
  
 -#ifdef HAVE_LIBELF_SUPPORT
--void arch__sym_update(struct symbol *s, GElf_Sym *sym);
+-#include <libelf.h>
+-#include <gelf.h>
+-#endif
+ #include <elf.h>
+ 
+ struct dso;
+@@ -26,21 +22,6 @@ struct maps;
+ struct option;
+ struct build_id;
+ 
+-/*
+- * libelf 0.8.x and earlier do not support ELF_C_READ_MMAP;
+- * for newer versions we can use mmap to reduce memory usage:
+- */
+-#ifdef ELF_C_READ_MMAP
+-# define PERF_ELF_C_READ_MMAP ELF_C_READ_MMAP
+-#else
+-# define PERF_ELF_C_READ_MMAP ELF_C_READ
 -#endif
 -
- const char *arch__normalize_symbol_name(const char *name);
- #define SYMBOL_A 0
- #define SYMBOL_B 1
+-#ifdef HAVE_LIBELF_SUPPORT
+-Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
+-			     GElf_Shdr *shp, const char *name, size_t *idx);
+-#endif
+-
+ /**
+  * A symtab entry. When allocated this may be preceded by an annotation (see
+  * symbol__annotation) and/or a browser_index (see symbol__browser_index).
 -- 
 2.52.0.158.g65b55ccf14-goog
 
