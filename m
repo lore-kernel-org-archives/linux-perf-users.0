@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E068328469A
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 20:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A5228489A
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Dec 2025 20:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764622551; cv=none; b=ovW2RRoIgee/ITMFRIVnRn/HhGnQrlTPx7JV8w9mbRB33RI/rN/6kEdQ3cdjy1UT13tDEFCxPBt2B6F71Z/sFumXmiX4/JqNUrUSZhIRY53kWu/z0peDovgo2fTkGx4dQQpAO0R8Yii2i/gbHHKGmVnD2WdVIubV8FUG1wh8FaI=
+	t=1764622552; cv=none; b=eWHjm+ft96YKKrjYGzL9gzedmVcbaSw+Y0a9nWWYWRnFNIRtMyyhc8kRhKlZ4OvZZNLfD02kWvGcxf22F8z1m8Vt6EP3ds6oIpUr4qGIsZbhanawW4RBeztXw8O71bHUjSrHfdDxKC/+jLargNkyegaQT9sU//tVtc7zWJR77d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764622551; c=relaxed/simple;
-	bh=2hLfLEdeG6Q9fp6ZEtSs1CidG+0p9Bs8uu4s6+QrX+A=;
+	s=arc-20240116; t=1764622552; c=relaxed/simple;
+	bh=jrlJM+/Xgy1nehgeiFknXjuulHnnAtIGNxHD7/IQYEo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Z5PLenkLy6lWQivwSkFx4K2fy1KDhkx3VUVON6wJgqToYuic3VOtb0s/bGdFNXF8a0FBgbZMe+wMXHlxFFTt9CL1fB/r0j5lvZjfS37NIXz7o24c+g7i0VZhRfIwRfCi4/kxkF/zTkC2lwQz8gvNMcXAaxD4e+MxMwnEw4zpGGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lMqJfx/j; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=jST4Fh2MHJIAuQLH2JL0alXTPWWVDLkXqWH0KBBW6TL+oV7Ow3cgXYV1/NbZKE5djNNer8O3td/3I4/dkIcpeADPn+9OgnbNDaQ2938EEthVDBt0S3kyYvO/iFfOPibKjgmQKTF8Bowibwpf76aelYzf6y7ObFPLNiTWq6HbmjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ev/qTNbN; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lMqJfx/j"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b99f6516262so11624221a12.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 12:55:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ev/qTNbN"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-bdf47c10220so6762473a12.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Dec 2025 12:55:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764622548; x=1765227348; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764622550; x=1765227350; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=HKKNjh5F/DaKk8wuFOjnc86WkhY823H5ekf9jbrPtus=;
-        b=lMqJfx/jvWsyx6G8U5XiToYWLJmjU+5j3mqN9w3TaQr1rxzi5o6IcQYXkpzTwIsweH
-         1NbQ3gLZS3s7Uv424BNmkwjdzow5IMxu6UrERUVE9z9DFOSGxwappWFbqX4wW5b8tJKF
-         cCmWZ0puYQ+n/OJhjKdEZWFt5jmNUfpEMlNUigbMk4fYAGXKgAW5LGovDXo7w2vTI284
-         sFNfn+mCR3ADVQO2QXpOrC6xxC0mJvbhMRlcFmxG5unz0M1zgrBKTSsOR79VoIwPRI5E
-         +5E+bdZKe7pKk3gAmFPIO50y011Q516VO1yTGeUPtzCB9xgkkN8FgnNOdRFfwAJNgw/s
-         VS+g==
+        bh=cKo8U+r87/wZow77a+6w5wG9mxBjXhr2B97riOby7IM=;
+        b=Ev/qTNbNmqOZiIL74zrSySwFegdLycWrZ5jj7mvEhMa2A7+GGZrbRJ2QIU+MxX08qr
+         n4J9AvvhQdnICpsWdZtFNtp8SRc3510lhUISDFKZTa69w+64MOaauXkpceAkHHZtnUJZ
+         R1/d2aYOIkSQFaFdkpaAW2rn4v6ap/xIzeemSspJ7jTjEJxagtt8lhZZZvhODXMYhgTU
+         6G8ss8dKQvEq3ptJRsvsP4eZk4vE/1UqTLB4jxQaD57IWI4/T2O9cq783/sE4a9wFCB6
+         Nr3pyxhUWtSeSIdvHx9BSgurKG3rTrKZOTdg/56tkTD3/j6tFVZeV7iQGj5JQnE3fnO4
+         czNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764622548; x=1765227348;
+        d=1e100.net; s=20230601; t=1764622550; x=1765227350;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HKKNjh5F/DaKk8wuFOjnc86WkhY823H5ekf9jbrPtus=;
-        b=UcRtemQAS60j/WAKgjSR7kM7/35gKdL54CXTVxDfs1vgtE06U7p5tem8NTMFv0+3+X
-         EBGW7R13CxWJRDhAAFg4X8XYYMm/bCQFtHdVDBMma3scDLe3TQcHX3zPsJsXUkWPYIQl
-         1oukumDUFe5X2ofb45OZq4hCoJ75Atqtx0T2XP82WjZdNAW7h06HKT0927Ps8jz8ehGb
-         QnFboxDLF26KFqY6Q4YvnKBtX11nax+tUhELIxyaW7NTZq706kFtYqq0C29alV11GoSO
-         3U6o2gDQ7zju21tODuvc56xt3yFSvlLiAC/NQzMwMizqGZKU3bDWg7bfbkuSAfAVjJ7G
-         siKg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+8eJiuZupoV4euc4EVLcF5AUL4DWFYhIyLmPOt+p2VZSf5xo5ym7I2ExH/APpDkmwAswElG0Nb6wif2MPbO7Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjjV4ntFVM2yMCzKtNBYlb5VePU0maXfN94qk3Yb5kMFYx5GHi
-	YWTYHJwYvHsLv6WB52Wvlg1q2FLkoupEv1OSdv6ezlgUxLo+0SV6PYTopiuPluxhDcnAUxY4GjC
-	viqdm+CVC8A==
-X-Google-Smtp-Source: AGHT+IFR17AdhrIQVLVcu0xi9Bguk4YjUWqci6Qpnra1PNK40h9hsWE1hc6G1x5ZPC695Q4w+8XCmSkGAurL
-X-Received: from dygu17.prod.google.com ([2002:a05:7300:5411:b0:2a4:85c9:5e08])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:3943:b0:2a4:3592:cf77
- with SMTP id 5a478bee46e88-2a941894852mr19882346eec.27.1764622548105; Mon, 01
- Dec 2025 12:55:48 -0800 (PST)
-Date: Mon,  1 Dec 2025 12:55:07 -0800
+        bh=cKo8U+r87/wZow77a+6w5wG9mxBjXhr2B97riOby7IM=;
+        b=qfllRB54fdvqMWvyMo//LbwhKCzjNAMec2EaXsk7UOBUj9k0x7D62kXN7T+3/+Oqxg
+         kIgMzOQLd8U0P/Bv1658Dlk3seHSKpC4YHqtn+EuHgdoY1lccy5cQgbkEiFNCqdKdHmP
+         XTz/fCZX4BITwb8f2jcXl/41aVMLny3e+kmfX1N03O5MMG00KKiEAVOWd2I98Qmu96UB
+         B9onREHMJ18TxnUmQ+AMWEySVPio27915mAaFegr59CJdrBvQoYJcPzm7vEy4D60lw5R
+         RZ51V1ARnxRpoKk/U1a9bELLsoSYFqZOa0rRIpmx3fSpfpwjjoSSJzyzSZmBRuJCUdwi
+         t9KA==
+X-Forwarded-Encrypted: i=1; AJvYcCWVcZ2EuqHeAE+HlW/NrUCkPvuQPziL3KKEtoGsr9bxJ7zerXi3F41I4K2cyfytOKZ6aHDHeWr6DpY2RhMW2/PE@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLIp3InlTSMYLuNe63+SQ1Z9XhFeBJlmi/hHyjSvb8taxW/Jx4
+	E6MJupxnjHfmh5WLbxqo5cv0J/0TJFq3YJ3C6Tkdh+f9LzYfbKKH1JCQxtd6asNK+DvVu2KTp1H
+	FomLysfeQEA==
+X-Google-Smtp-Source: AGHT+IFwfbvxrTUV97nEqe//dS4hmDl4mUXXnvNvY1GF2WwfaNj5WQeqU7NF6PKqtn2upo6UO60uM+9Q7iaX
+X-Received: from dybuh25.prod.google.com ([2002:a05:7301:7519:b0:2a4:664f:e91d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:550d:b0:2a4:3594:d552
+ with SMTP id 5a478bee46e88-2a719f9d8d6mr19884768eec.31.1764622549762; Mon, 01
+ Dec 2025 12:55:49 -0800 (PST)
+Date: Mon,  1 Dec 2025 12:55:08 -0800
 In-Reply-To: <20251201205509.195451-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251201205509.195451-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
-Message-ID: <20251201205509.195451-9-irogers@google.com>
-Subject: [PATCH v2 08/10] perf symbol: Make a common sysfs__read_build_id
+Message-ID: <20251201205509.195451-10-irogers@google.com>
+Subject: [PATCH v2 09/10] perf dso: Move type helpers out of symbol and use fallbacks
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,262 +80,345 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The libelf version of sysfs__read_build_id would read through the
-file, the symbol-minimal version would read the whole file and then
-use regular build-id parsing. Given we prefer the libelf code, make
-both implementations use the libelf implementation and not require
-reading the whole file. As the libelf implementation uses libelf
-structs, move the code to symbol-minimal and use the
-style/implementation that exists there already in the in memory
-read_build_id code. Note, this means we could avoid reading phdrs
-where read_build_id is used and switch to read_build_id_fd to
-potentially avoid some memory allocation.
-
-Clean up how bf was being used as it bound checked bf when a build ID
-note was found but not when the name wasn't "GNU". Switch to just
-lseek-ing forward the file to avoid any buffer overrun problems and
-unnecessary reading.
-
-Reduce scope of NOTE_ALIGN macro in perf-libelf.h.
+Fallback between libelf and symbol-minimal versions. Remove the
+symbol.c code and just directly inline into the only caller in dso.c.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/perf-libelf.c    |  5 ++
- tools/perf/util/perf-libelf.h    |  5 --
- tools/perf/util/symbol-elf.c     | 50 --------------------
- tools/perf/util/symbol-minimal.c | 80 +++++++++++++++++++++++---------
- tools/perf/util/symbol-minimal.h |  1 +
- tools/perf/util/symbol.c         |  6 +++
- 6 files changed, 69 insertions(+), 78 deletions(-)
+ tools/perf/util/dso.c            | 57 ++++++++++++++----------
+ tools/perf/util/perf-libelf.c    | 33 ++++++++++++++
+ tools/perf/util/perf-libelf.h    |  8 ++++
+ tools/perf/util/symbol-elf.c     | 33 --------------
+ tools/perf/util/symbol-minimal.c | 76 ++++++++++++++++----------------
+ tools/perf/util/symbol-minimal.h |  3 ++
+ tools/perf/util/symbol.h         |  2 -
+ 7 files changed, 115 insertions(+), 97 deletions(-)
 
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 344e689567ee..421fa4d27d2a 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -1,37 +1,42 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <asm/bug.h>
+-#include <linux/kernel.h>
+-#include <linux/string.h>
+-#include <linux/zalloc.h>
+-#include <sys/time.h>
+-#include <sys/resource.h>
+-#include <sys/types.h>
+-#include <sys/stat.h>
+-#include <unistd.h>
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <stdlib.h>
+-#ifdef HAVE_LIBBPF_SUPPORT
+-#include <bpf/libbpf.h>
+-#include "bpf-event.h"
+-#include "bpf-utils.h"
+-#endif
++#include <sys/resource.h>
++#include <sys/stat.h>
++#include <sys/time.h>
++#include <sys/types.h>
++#include <unistd.h>
++
++#include "annotate-data.h"
++#include "auxtrace.h"
+ #include "compress.h"
++#include "debug.h"
++#include "dso.h"
++#include "dsos.h"
+ #include "env.h"
++#include "machine.h"
++#include "map.h"
+ #include "namespaces.h"
+ #include "path.h"
+-#include "map.h"
+-#include "symbol.h"
++#include "perf-libelf.h"
+ #include "srcline.h"
+-#include "dso.h"
+-#include "dsos.h"
+-#include "machine.h"
+-#include "auxtrace.h"
+-#include "util.h" /* O_CLOEXEC for older systems */
+-#include "debug.h"
+ #include "string2.h"
++#include "symbol-minimal.h"
++#include "symbol.h"
++#include "util.h" /* O_CLOEXEC for older systems */
+ #include "vdso.h"
+-#include "annotate-data.h"
++
++#include <asm/bug.h>
++#include <linux/kernel.h>
++#include <linux/string.h>
++#include <linux/zalloc.h>
++
++#ifdef HAVE_LIBBPF_SUPPORT
++#include <bpf/libbpf.h>
++#include "bpf-event.h"
++#include "bpf-utils.h"
++#endif
+ 
+ static const char * const debuglink_paths[] = {
+ 	"%.0s%s",
+@@ -1747,7 +1752,11 @@ enum dso_type dso__type(struct dso *dso, struct machine *machine)
+ 	enum dso_type type = DSO__TYPE_UNKNOWN;
+ 
+ 	if (dso__data_get_fd(dso, machine, &fd)) {
+-		type = dso__type_fd(fd);
++		type = libelf_dso__type_fd(fd);
++
++		if (type == DSO__TYPE_UNKNOWN)
++			type = sym_min_dso__type_fd(fd);
++
+ 		dso__data_put_fd(dso);
+ 	}
+ 
 diff --git a/tools/perf/util/perf-libelf.c b/tools/perf/util/perf-libelf.c
-index a8a8c39056da..4198f4dfad9f 100644
+index 4198f4dfad9f..eed5c0317f8b 100644
 --- a/tools/perf/util/perf-libelf.c
 +++ b/tools/perf/util/perf-libelf.c
-@@ -9,6 +9,11 @@
- #include "build-id.h"
- #include "debug.h"
- 
-+/*
-+ * Align offset to 4 bytes as needed for note name and descriptor data.
-+ */
-+#define NOTE_ALIGN(n) (((n) + 3) & -4U)
+@@ -200,3 +200,36 @@ int libelf_filename__read_debuglink(const char *filename, char *debuglink, size_
+ out:
+ 	return err;
+ }
 +
- Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
- 			     GElf_Shdr *shp, const char *name, size_t *idx)
- {
++enum dso_type libelf_dso__type_fd(int fd)
++{
++	enum dso_type dso_type = DSO__TYPE_UNKNOWN;
++	GElf_Ehdr ehdr;
++	Elf_Kind ek;
++	Elf *elf;
++
++	elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
++	if (elf == NULL)
++		goto out;
++
++	ek = elf_kind(elf);
++	if (ek != ELF_K_ELF)
++		goto out_end;
++
++	if (gelf_getclass(elf) == ELFCLASS64) {
++		dso_type = DSO__TYPE_64BIT;
++		goto out_end;
++	}
++
++	if (gelf_getehdr(elf, &ehdr) == NULL)
++		goto out_end;
++
++	if (ehdr.e_machine == EM_X86_64)
++		dso_type = DSO__TYPE_X32BIT;
++	else
++		dso_type = DSO__TYPE_32BIT;
++out_end:
++	elf_end(elf);
++out:
++	return dso_type;
++}
 diff --git a/tools/perf/util/perf-libelf.h b/tools/perf/util/perf-libelf.h
-index 167679f9fc9b..2118325c04e5 100644
+index 2118325c04e5..5ca5641b9dc9 100644
 --- a/tools/perf/util/perf-libelf.h
 +++ b/tools/perf/util/perf-libelf.h
-@@ -21,11 +21,6 @@ struct build_id;
- # define PERF_ELF_C_READ_MMAP ELF_C_READ
- #endif
+@@ -4,6 +4,8 @@
  
--/*
-- * Align offset to 4 bytes as needed for note name and descriptor data.
-- */
--#define NOTE_ALIGN(n) (((n) + 3) & -4U)
--
- Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep, GElf_Shdr *shp, const char *name,
- 			     size_t *idx);
+ #include <stddef.h>
  
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 9ceb746b6c59..cb890de31044 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -751,56 +751,6 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
- 	return 0;
- }
++#include "dso.h"
++
+ struct build_id;
  
--int sysfs__read_build_id(const char *filename, struct build_id *bid)
--{
--	size_t size = sizeof(bid->data);
--	int fd, err = -1;
--
--	fd = open(filename, O_RDONLY);
--	if (fd < 0)
--		goto out;
--
--	while (1) {
--		char bf[BUFSIZ];
--		GElf_Nhdr nhdr;
--		size_t namesz, descsz;
--
--		if (read(fd, &nhdr, sizeof(nhdr)) != sizeof(nhdr))
--			break;
--
--		namesz = NOTE_ALIGN(nhdr.n_namesz);
--		descsz = NOTE_ALIGN(nhdr.n_descsz);
--		if (nhdr.n_type == NT_GNU_BUILD_ID &&
--		    nhdr.n_namesz == sizeof("GNU")) {
--			if (read(fd, bf, namesz) != (ssize_t)namesz)
--				break;
--			if (memcmp(bf, "GNU", sizeof("GNU")) == 0) {
--				size_t sz = min(descsz, size);
--				if (read(fd, bid->data, sz) == (ssize_t)sz) {
--					memset(bid->data + sz, 0, size - sz);
--					bid->size = sz;
--					err = 0;
--					break;
--				}
--			} else if (read(fd, bf, descsz) != (ssize_t)descsz)
--				break;
--		} else {
--			int n = namesz + descsz;
--
--			if (n > (int)sizeof(bf)) {
--				n = sizeof(bf);
--				pr_debug("%s: truncating reading of build id in sysfs file %s: n_namesz=%u, n_descsz=%u.\n",
--					 __func__, filename, nhdr.n_namesz, nhdr.n_descsz);
--			}
--			if (read(fd, bf, n) != n)
--				break;
--		}
--	}
--	close(fd);
--out:
--	return err;
--}
--
- bool symsrc__possibly_runtime(struct symsrc *ss)
- {
- 	return ss->dynsym || ss->opdsec;
-diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-index 445307f230af..0e3a27dae9d6 100644
---- a/tools/perf/util/symbol-minimal.c
-+++ b/tools/perf/util/symbol-minimal.c
-@@ -77,6 +77,58 @@ static int read_build_id(void *note_data, size_t note_len, struct build_id *bid,
+ #ifdef HAVE_LIBELF_SUPPORT
+@@ -28,6 +30,7 @@ int __libelf__read_build_id(Elf *elf, void *bf, size_t size);
+ 
+ int libelf__read_build_id(int _fd, const char *filename, struct build_id *bid);
+ int libelf_filename__read_debuglink(const char *filename, char *debuglink, size_t size);
++enum dso_type libelf_dso__type_fd(int fd);
+ 
+ #else // !defined(HAVE_LIBELF_SUPPORT)
+ 
+@@ -45,6 +48,11 @@ static inline int libelf_filename__read_debuglink(const char *filename __always_
  	return -1;
  }
  
-+static int read_build_id_fd(int fd, struct build_id *bid, bool need_swap)
++enum dso_type libelf_dso__type_fd(int fd __always_unused)
 +{
-+	size_t size = sizeof(bid->data);
-+	struct {
-+		u32 n_namesz;
-+		u32 n_descsz;
-+		u32 n_type;
-+	} nhdr;
-+
-+	while (true) {
-+		size_t namesz, descsz, n;
-+		ssize_t err;
-+
-+		err = read(fd, &nhdr, sizeof(nhdr));
-+		if (err != sizeof(nhdr))
-+			return err == -1 ? -errno : -EIO;
-+
-+		if (need_swap) {
-+			nhdr.n_namesz = bswap_32(nhdr.n_namesz);
-+			nhdr.n_descsz = bswap_32(nhdr.n_descsz);
-+			nhdr.n_type = bswap_32(nhdr.n_type);
-+		}
-+		namesz = NOTE_ALIGN(nhdr.n_namesz);
-+		descsz = NOTE_ALIGN(nhdr.n_descsz);
-+		n = namesz + descsz; /* Remaining bytes of this note. */
-+
-+		if (nhdr.n_type == NT_GNU_BUILD_ID && nhdr.n_namesz == sizeof("GNU")) {
-+			char name[NOTE_ALIGN(sizeof("GNU"))];
-+
-+			err = read(fd, name, sizeof(name));
-+			if (err != sizeof(name))
-+				return err == -1 ? -errno : -EIO;
-+
-+			n = descsz;
-+			if (memcmp(name, "GNU", sizeof("GNU")) == 0) {
-+				/* Successfully found build ID. */
-+				ssize_t sz = min(descsz, size);
-+
-+				err = read(fd, bid->data, sz);
-+				if (err != sz)
-+					return err == -1 ? -errno : -EIO;
-+
-+				memset(bid->data + sz, 0, size - sz);
-+				bid->size = sz;
-+				return 0;
-+			}
-+		}
-+		if (lseek(fd, n, SEEK_CUR) == -1)
-+			return -errno;
-+	}
++	return DSO__TYPE_UNKNOWN;
 +}
 +
- /*
-  * Just try PT_NOTE header otherwise fails
-  */
-@@ -194,38 +246,20 @@ int sym_min__read_build_id(int _fd, const char *filename, struct build_id *bid)
- 	return ret;
- }
+ #endif // defined(HAVE_LIBELF_SUPPORT)
  
--#ifndef HAVE_LIBELF_SUPPORT
--int sysfs__read_build_id(const char *filename, struct build_id *bid)
-+int sym_min_sysfs__read_build_id(const char *filename, struct build_id *bid)
- {
--	int fd;
--	int ret = -1;
--	struct stat stbuf;
--	size_t buf_size;
--	void *buf;
-+	int fd, ret;
- 
- 	fd = open(filename, O_RDONLY);
- 	if (fd < 0)
--		return -1;
--
--	if (fstat(fd, &stbuf) < 0)
--		goto out;
--
--	buf_size = stbuf.st_size;
--	buf = malloc(buf_size);
--	if (buf == NULL)
--		goto out;
--
--	if (read(fd, buf, buf_size) != (ssize_t) buf_size)
--		goto out_free;
-+		return -errno;
- 
--	ret = read_build_id(buf, buf_size, bid, false);
--out_free:
--	free(buf);
--out:
-+	ret = read_build_id_fd(fd, bid, /*need_swap=*/false);
- 	close(fd);
- 	return ret;
- }
- 
-+#ifndef HAVE_LIBELF_SUPPORT
- int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
- 	         enum dso_binary_type type)
- {
-diff --git a/tools/perf/util/symbol-minimal.h b/tools/perf/util/symbol-minimal.h
-index 185d98968212..5cce1f1f0f16 100644
---- a/tools/perf/util/symbol-minimal.h
-+++ b/tools/perf/util/symbol-minimal.h
-@@ -5,5 +5,6 @@
- struct build_id;
- 
- int sym_min__read_build_id(int _fd, const char *filename, struct build_id *bid);
-+int sym_min_sysfs__read_build_id(const char *filename, struct build_id *bid);
- 
- #endif /* __PERF_SYMBOL_MINIMAL_H */
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index da75a1c159f2..76dc5b70350a 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -2050,6 +2050,12 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
+ #endif /* __PERF_LIBELF_H */
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index cb890de31044..f483aa67f69b 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1572,39 +1572,6 @@ int file__read_maps(int fd, bool exe, mapfn_t mapfn, void *data,
  	return err;
  }
  
-+int sysfs__read_build_id(const char *filename, struct build_id *bid)
+-enum dso_type dso__type_fd(int fd)
+-{
+-	enum dso_type dso_type = DSO__TYPE_UNKNOWN;
+-	GElf_Ehdr ehdr;
+-	Elf_Kind ek;
+-	Elf *elf;
+-
+-	elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
+-	if (elf == NULL)
+-		goto out;
+-
+-	ek = elf_kind(elf);
+-	if (ek != ELF_K_ELF)
+-		goto out_end;
+-
+-	if (gelf_getclass(elf) == ELFCLASS64) {
+-		dso_type = DSO__TYPE_64BIT;
+-		goto out_end;
+-	}
+-
+-	if (gelf_getehdr(elf, &ehdr) == NULL)
+-		goto out_end;
+-
+-	if (ehdr.e_machine == EM_X86_64)
+-		dso_type = DSO__TYPE_X32BIT;
+-	else
+-		dso_type = DSO__TYPE_32BIT;
+-out_end:
+-	elf_end(elf);
+-out:
+-	return dso_type;
+-}
+-
+ static int copy_bytes(int from, off_t from_offs, int to, off_t to_offs, u64 len)
+ {
+ 	ssize_t r;
+diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+index 0e3a27dae9d6..f9724448fb64 100644
+--- a/tools/perf/util/symbol-minimal.c
++++ b/tools/perf/util/symbol-minimal.c
+@@ -259,6 +259,44 @@ int sym_min_sysfs__read_build_id(const char *filename, struct build_id *bid)
+ 	return ret;
+ }
+ 
++static int fd__is_64_bit(int fd)
 +{
-+	/* Doesn't mmap file into memory. */
-+	return sym_min_sysfs__read_build_id(filename, bid);
++	u8 e_ident[EI_NIDENT];
++
++	if (lseek(fd, 0, SEEK_SET))
++		return -1;
++
++	if (readn(fd, e_ident, sizeof(e_ident)) != sizeof(e_ident))
++		return -1;
++
++	if (memcmp(e_ident, ELFMAG, SELFMAG) ||
++	    e_ident[EI_VERSION] != EV_CURRENT)
++		return -1;
++
++	return e_ident[EI_CLASS] == ELFCLASS64;
 +}
 +
- int filename__read_debuglink(const char *filename, char *debuglink, size_t size)
- {
- 	int err = libbfd_filename__read_debuglink(filename, debuglink, size);
++enum dso_type sym_min_dso__type_fd(int fd)
++{
++	Elf64_Ehdr ehdr;
++	int ret;
++
++	ret = fd__is_64_bit(fd);
++	if (ret < 0)
++		return DSO__TYPE_UNKNOWN;
++
++	if (ret)
++		return DSO__TYPE_64BIT;
++
++	if (readn(fd, &ehdr, sizeof(ehdr)) != sizeof(ehdr))
++		return DSO__TYPE_UNKNOWN;
++
++	if (ehdr.e_machine == EM_X86_64)
++		return DSO__TYPE_X32BIT;
++
++	return DSO__TYPE_32BIT;
++}
++
+ #ifndef HAVE_LIBELF_SUPPORT
+ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
+ 	         enum dso_binary_type type)
+@@ -305,44 +343,6 @@ int dso__synthesize_plt_symbols(struct dso *dso __maybe_unused,
+ 	return 0;
+ }
+ 
+-static int fd__is_64_bit(int fd)
+-{
+-	u8 e_ident[EI_NIDENT];
+-
+-	if (lseek(fd, 0, SEEK_SET))
+-		return -1;
+-
+-	if (readn(fd, e_ident, sizeof(e_ident)) != sizeof(e_ident))
+-		return -1;
+-
+-	if (memcmp(e_ident, ELFMAG, SELFMAG) ||
+-	    e_ident[EI_VERSION] != EV_CURRENT)
+-		return -1;
+-
+-	return e_ident[EI_CLASS] == ELFCLASS64;
+-}
+-
+-enum dso_type dso__type_fd(int fd)
+-{
+-	Elf64_Ehdr ehdr;
+-	int ret;
+-
+-	ret = fd__is_64_bit(fd);
+-	if (ret < 0)
+-		return DSO__TYPE_UNKNOWN;
+-
+-	if (ret)
+-		return DSO__TYPE_64BIT;
+-
+-	if (readn(fd, &ehdr, sizeof(ehdr)) != sizeof(ehdr))
+-		return DSO__TYPE_UNKNOWN;
+-
+-	if (ehdr.e_machine == EM_X86_64)
+-		return DSO__TYPE_X32BIT;
+-
+-	return DSO__TYPE_32BIT;
+-}
+-
+ int dso__load_sym(struct dso *dso, struct map *map __maybe_unused,
+ 		  struct symsrc *ss,
+ 		  struct symsrc *runtime_ss __maybe_unused,
+diff --git a/tools/perf/util/symbol-minimal.h b/tools/perf/util/symbol-minimal.h
+index 5cce1f1f0f16..282466aca7d9 100644
+--- a/tools/perf/util/symbol-minimal.h
++++ b/tools/perf/util/symbol-minimal.h
+@@ -2,9 +2,12 @@
+ #ifndef __PERF_SYMBOL_MINIMAL_H
+ #define __PERF_SYMBOL_MINIMAL_H
+ 
++#include "dso.h"
++
+ struct build_id;
+ 
+ int sym_min__read_build_id(int _fd, const char *filename, struct build_id *bid);
+ int sym_min_sysfs__read_build_id(const char *filename, struct build_id *bid);
++enum dso_type sym_min_dso__type_fd(int fd);
+ 
+ #endif /* __PERF_SYMBOL_MINIMAL_H */
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index e265e1f028be..4cc557981724 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -117,8 +117,6 @@ struct symbol *dso__first_symbol(struct dso *dso);
+ struct symbol *dso__last_symbol(struct dso *dso);
+ struct symbol *dso__next_symbol(struct symbol *sym);
+ 
+-enum dso_type dso__type_fd(int fd);
+-
+ int filename__read_build_id(const char *filename, struct build_id *id);
+ int sysfs__read_build_id(const char *filename, struct build_id *bid);
+ int modules__parse(const char *filename, void *arg,
 -- 
 2.52.0.158.g65b55ccf14-goog
 
