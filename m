@@ -1,55 +1,55 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144822C375E
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 17:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971472D0292
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 17:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764697912; cv=none; b=PmjVg53Lz+3r5Ov7rOPvUVM+TSZOANsamcRWp2kOGlcbWL35HY7F4cx6Zp0MBs2TEtliGfVBzzhwYtYpCTPb2rl89ki4an6dEhSqEW/Th0bTFjae8438x+/wYjfiXA25w8OE736bv4iixFeb0BewcaGfsCMYdpxR07iKZXgLEjw=
+	t=1764697917; cv=none; b=e95KjKKuqBxroNXx3jCLeSL3BdnSBpakPblkit/XmXDKmjaak8PMYCoeU8cXYmTaf6HkPiAag9mUJJGBXsv6M/XaCsoApxYzNCf7DdSM4tCHpoAL4cY0UGG+rKnYYv7MUdA+LFj/lUMittAjQ3MrjoorELKor2lfKY0YV8llCc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764697912; c=relaxed/simple;
-	bh=XLsJTgjagka2dsiamNyAZTU9RaBavEfkkTGJy4uPs7U=;
+	s=arc-20240116; t=1764697917; c=relaxed/simple;
+	bh=9rsT8ncoWqyJyQ7nwr+E7hBrtYBywRQ32oouuk6dvU8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=LbUTJ2NI/cNMuxYBN7vd0w2rM2pdbB501qNPSjmhSAzYfxq7yoHF3kOTzJbhwlGk/bjT94/mQD9Ask3sxGQhJwT1uj3y8HzBLZW5kCLH9SqiVqbS4U6otI/BbWfO7LjgHqQEh2n+PpsqzFg2T/o9t7mo9CGrFFqWRcUidI9Z7TE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x4xkHrKV; arc=none smtp.client-ip=209.85.210.201
+	 To:Content-Type; b=TWijLkMwIZLyhqgtZIAmR/GTwqFQz3g7GkybEMySnYz39h1elpm/H1dxKAbrlR00Uf/FIUaME2AvxfUOtvri+1+0KzLE8rxm1wO9kbDQCkJIAEztqgU6+stzDvgFtBvmdaCm0h5gvrtimc8JHqXcn4K6LClb5qrhCUzigSOCtds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wy+qeRmU; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x4xkHrKV"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7b9ef46df43so5610163b3a.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 09:51:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wy+qeRmU"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b609c0f6522so8942114a12.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 09:51:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764697910; x=1765302710; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764697916; x=1765302716; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=BEKPKSXJVqEyBo5v+XF1vkq0zQUQV06pYRMl8tmk8ts=;
-        b=x4xkHrKVhIztLfD/7I9ESPYOa78Ot9D3Lcc8q7gxQD9TvCffZT8IAr13ZoiY8SvpvX
-         jv5BWKVQDoBr77lKCOpvstiyYWb95HjWGIgo1TF5pwhhRYDppY2+DIXugDTiJfIcPdic
-         KTf6yB8XLUkxJV/uxTqY52nfsQHZ+Kf3GCE3XrBtzohZsSS1mkX6iRfWi450mbQHjvvW
-         jW4c3asvpG/YQlqFpkVWvhxq4CtbXPce0imCeEH4sVK2H7YSb90oLHty3jnV8PXueLQu
-         ghfEUVvXAOkqjaAtOKhdAMza1sFNoR3fRJyb41xMIvB5RaePBh4v4sosEKi+/5djPNGp
-         sHdA==
+        bh=chffPpIGVoN2jtkWf66gf8jxJ2q6txF/MGepK7+1bz4=;
+        b=Wy+qeRmUNdVLHWMVRKP89QMjbL26ASN4KUpdpGP9fu3J+yAnS3EtTOuNpxYcuq/9kR
+         aXDu0+7eve27yy1tPqrFSbCidcjL6kIzl1jVCSx9INMEztmkpEXKRphsHjeowqjKV1bo
+         M2N0HHX0WLWhXpErnmTpB8Jj8i9mwbjafTZNcsLhikBpcvtsNS22jHgVNPpYT5QimSHj
+         nd0dqXydJ99BzJNc+BENxFCYw6oI6jzRQDeL7kKSUvOlTbcHt6bxUAKqE+fWhfyX+tpD
+         ZUPMCebzeD2ALk+5LunJ3w75cM6p5dVXgyMnlb2N+BxtPMIDWI2ZKhOWdpSEu+XCDHkL
+         fYkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764697910; x=1765302710;
+        d=1e100.net; s=20230601; t=1764697916; x=1765302716;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BEKPKSXJVqEyBo5v+XF1vkq0zQUQV06pYRMl8tmk8ts=;
-        b=u2ufdQp1A0c+GTnlwS8ofZtEXgy8HQ07uKtT8h2qaZci9Zw2SbC8GRmib/OcHk802k
-         dC6kgJ6Qk9j3ujqcVMDCr/kLzgaaGb3b6naHHKsvQ7cFyMA/PgdGPQe/C8qNlHBj5pAY
-         TFI7mwWWzy7YkJ1NShdZi1aBxCf1uRswO9tvvhIkQY7h5TEmypIRFXZsCCKEETwdtg/a
-         TqU0iL7ehu2HoOx9WVKAynHpJCGh0jkFn8msMIbeXU0UDPjRe7LFXFDqy0EtLvYek+2H
-         mb6+MIV/LCbpVNQ5KyeKGghBMlxuzvLYXDfMhaXMF+O6prDqqaalNaJRGrdnNrxz9Irg
-         R3Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCaVEO8Es5rQvZI1LGHHK3nhNRjwXl0Vg3eZbo7LAqeqjDj1ODqs8J8qwmokjf3IzjWom13g73AhzV8UhaOWih@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz18yb9qVcusSWqENEXuCSGm9hAOAOnLOTkpB7LrXyrQpDRFVZj
-	SsB55Rkb3U/8D8jHZYCofuMg2kwSij4tnRFJcNw2rTq2zNZQ73I/iITu03zB5DuengQGOpWun5J
-	o4Q4pRZ4uNg==
-X-Google-Smtp-Source: AGHT+IHLhgeIjP3E8w1A3UKCxPJWw8wcYDNmWLJmWTgrvrXbVIWvAt263kx6nbrqRlfiJN7YfVnDcqL9+if3
-X-Received: from pfbmy26-n2.prod.google.com ([2002:a05:6a00:6d5a:20b0:7ba:3994:c73f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:728e:b0:35f:6e12:1851
- with SMTP id adf61e73a8af0-3637dafd94emr31725961637.16.1764697909980; Tue, 02
- Dec 2025 09:51:49 -0800 (PST)
-Date: Tue,  2 Dec 2025 09:50:05 -0800
+        bh=chffPpIGVoN2jtkWf66gf8jxJ2q6txF/MGepK7+1bz4=;
+        b=vEL6PvKSGm52dY3dPdtaz+zQJdRwClBBsuxFU1ga+/x+LWwmKKhrwXfiMOqoRjkSGO
+         cA4NVEjbvpNw7FEvbRxA7l1q51SP4Fdzsl5lKlxmQ5x9MPpt0taKA6hU+fJoSGb7kyOT
+         Jq/aNyYS9W0+Qx0UBNNS0NfrfpIdbPnkgJiajOO2DYsanrv9rm1mGZhUwtUo93g27I+G
+         kirAiS8gtxt7+TpOWm11BTfVAPR/fLpQUi3P34gYExMKh7vni+XQhiVTUoburTqh+v/n
+         ZjK9HFfjO5W6etDkHIRSmZpH7GXmbOgCQweZtzde+CpR1HMSBq1O+4eJ3zUICFzUMlyi
+         vfcA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9zLJsHGoeN+b/1PGwdkNP0tQDmWdIuAJYgNTlHkk1OkSKavxstv0bPD7lKw1bdHNsqljioX2iu/W9VPhzYgO2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw960HJb5UkqfdIemrHiQxbLiVq8b0p/LeZwiYg9ramRlsPmROq
+	gdNR7iFWjhSvfTyhVfJ2Po6RroPgmHwc6YeT5kjfc5W+QSCyCcv7zbesHCoJSlCBp6VnX83VQyO
+	ZYYp3YGjqeA==
+X-Google-Smtp-Source: AGHT+IGZbE0tHHNZ5KQzidjw1HssP4aJnIt2qxPmCEqD/zPS9eZSJWVQh8N5FRoj7mRUatF92kp8yZGviBzn
+X-Received: from dlbdm15.prod.google.com ([2002:a05:7022:6b8f:b0:119:49ca:6ba8])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:b96:b0:119:e569:f611
+ with SMTP id a92af1059eb24-11defc9e5fdmr183254c88.10.1764697915672; Tue, 02
+ Dec 2025 09:51:55 -0800 (PST)
+Date: Tue,  2 Dec 2025 09:50:06 -0800
 In-Reply-To: <20251202175043.623597-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251202175043.623597-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
-Message-ID: <20251202175043.623597-11-irogers@google.com>
-Subject: [PATCH v9 10/48] perf jevents: Move json encoding to its own functions
+Message-ID: <20251202175043.623597-12-irogers@google.com>
+Subject: [PATCH v9 11/48] perf jevents: Drop duplicate pending metrics
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -76,75 +76,29 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Have dedicated encode functions rather than having them embedded in
-MetricGroup. This is to provide some uniformity in the Metric ToXXX
-routines.
+Drop adding a pending metric if there is an existing one. Ensure the
+PMUs differ for hybrid systems.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 ---
- tools/perf/pmu-events/metric.py | 34 +++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 12 deletions(-)
+ tools/perf/pmu-events/jevents.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
-index e81fed2e29b5..b39189182608 100644
---- a/tools/perf/pmu-events/metric.py
-+++ b/tools/perf/pmu-events/metric.py
-@@ -484,15 +484,6 @@ class Metric:
-   def ToMetricGroupDescriptions(self, root: bool = True) -> Dict[str, str]:
-     return {}
- 
--class _MetricJsonEncoder(json.JSONEncoder):
--  """Special handling for Metric objects."""
--
--  def default(self, o):
--    if isinstance(o, Metric):
--      return o.ToPerfJson()
--    return json.JSONEncoder.default(self, o)
--
--
- class MetricGroup:
-   """A group of metrics.
- 
-@@ -523,8 +514,11 @@ class MetricGroup:
- 
-     return result
- 
--  def ToPerfJson(self) -> str:
--    return json.dumps(sorted(self.Flatten()), indent=2, cls=_MetricJsonEncoder)
-+  def ToPerfJson(self) -> List[Dict[str, str]]:
-+    result = []
-+    for x in sorted(self.Flatten()):
-+      result.append(x.ToPerfJson())
-+    return result
- 
-   def ToMetricGroupDescriptions(self, root: bool = True) -> Dict[str, str]:
-     result = {self.name: self.description} if self.description else {}
-@@ -533,7 +527,23 @@ class MetricGroup:
-     return result
- 
-   def __str__(self) -> str:
--    return self.ToPerfJson()
-+    return str(self.ToPerfJson())
-+
-+
-+def JsonEncodeMetric(x: MetricGroup):
-+  class MetricJsonEncoder(json.JSONEncoder):
-+    """Special handling for Metric objects."""
-+
-+    def default(self, o):
-+      if isinstance(o, Metric) or isinstance(o, MetricGroup):
-+        return o.ToPerfJson()
-+      return json.JSONEncoder.default(self, o)
-+
-+  return json.dumps(x, indent=2, cls=MetricJsonEncoder)
-+
-+
-+def JsonEncodeMetricGroupDescriptions(x: MetricGroup):
-+  return json.dumps(x.ToMetricGroupDescriptions(), indent=2)
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 03f5ad262eb5..3a1bcdcdc685 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -501,7 +501,8 @@ def add_events_table_entries(item: os.DirEntry, topic: str) -> None:
+   for e in read_json_events(item.path, topic):
+     if e.name:
+       _pending_events.append(e)
+-    if e.metric_name:
++    if e.metric_name and not any(e.metric_name == x.metric_name and
++                                 e.pmu == x.pmu for x in _pending_metrics):
+       _pending_metrics.append(e)
  
  
- class _RewriteIfExpToSelect(ast.NodeTransformer):
 -- 
 2.52.0.158.g65b55ccf14-goog
 
