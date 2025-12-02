@@ -1,172 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00190b01.pphosted.com (mx0a-00190b01.pphosted.com [67.231.149.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAA2222597;
-	Tue,  2 Dec 2025 21:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08592DC352;
+	Tue,  2 Dec 2025 22:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764712606; cv=none; b=Cx93MQ1V1cdW4bnm/HYVGvReRpqMnJ7jCq9oTK5C+2QUzPS1wpLQg6uxpyWa9raMZ0KcMNpB1SLfA1JNQovtEU8FlSl636QSFmCSYS77UXhx+HjfqEWuo1fYcuGYOtynku7xJ1eiv+PQEGu3TH4YchKSajh3pCfBpHyk30134uw=
+	t=1764715159; cv=none; b=qKmotMo/mISmNUcIX6goHOLxX64HgHyfUtQ9Wn45BDnSoxFICtV/ENgXTJBrGGlHOeHvBH6GiAdOPicVaP2x9e9Jx4/eKSSh35tsTzEh8KpTv+7mhhjDBOUWpDa4GSibtcb8f6F/auPR5cGwj+qrLW6mgWQo5u3ooWfm/Xlo6KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764712606; c=relaxed/simple;
-	bh=dLSoz4nMaHIBreG7sYLs1P/hNF8DhY1VEbWCo6hcAPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPi/AdCER2kfdGIIOPDVYldrLhir/f767rs8R9k8KTW92ox08l7GhD3+4VgoxcruZjLxtW8MgO0hX2IhuKQWIII0kfQf1VKJ2rEeUkuU9IwyGDVpJRZ9fJAkbquvav6Wx2yoK9Sjp4iX/Q/zW1Uw84177D20AUSmo9SI2xqk1Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ACbQNUEI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764715159; c=relaxed/simple;
+	bh=wz3hFok5Hq8CITC0iecI2VWaTAv+ZebOF1TXLNBlYKk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h2exL55uaZLK3vUORx0tOfvsdAzokNBBkIRDq4hyj9MqOBhQ4NwNQLWZNhsX3t8h5fnjE/KOCzhkhQddGQW60VSlQaNSnl/HxxBXLb162ZCYw5PrbM4lasr/3M4JEXrJH5rgEWcsg0Ttz4hjKBmElZmhUnhl6YpCf5+GMZ03wWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=akamai.com; spf=pass smtp.mailfrom=akamai.com; dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b=jtWZI5OH; arc=none smtp.client-ip=67.231.149.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=akamai.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=akamai.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ACbQNUEI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABD33C4CEF1;
-	Tue,  2 Dec 2025 21:56:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764712606;
-	bh=dLSoz4nMaHIBreG7sYLs1P/hNF8DhY1VEbWCo6hcAPU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ACbQNUEIJbh4XGfCGr8GGKslgTymR4HTDTU9AEeCgLfiFMqKcL0dkcJhQMCeWOKBS
-	 dpQLTWJpO3KDth2qALAyG+yUfz8e8D507nUIJA7OdViHFSFqQ3Eh9aTUZQdW2YzhPz
-	 mQHEtAYWzO4yiyfW3YHjsvpSBkP44bBMbid8EgkLztVj23oSvMiPxDE+Naq2UH0OSC
-	 WRsQ3q2qxKIff0bLQ5qVLppzE76z+0ysYxuDlnMb3aZ4hdOzBDGaxgTZ3v8MJL+fAb
-	 3I4TYiUOejc30Ou7aVamT9c2nGn7KIkSAfhJombV0/oZWA2xeIFz/17c1IGEbxh9sJ
-	 0n3mIb6yyj3Zw==
-Date: Tue, 2 Dec 2025 13:56:42 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Pablo Galindo <pablogsal@gmail.com>,
-	Fangrui Song <maskray@sourceware.org>
-Subject: Re: [PATCH v2 1/2] perf jitdump: Add sym/str-tables to build-ID
- generation
-Message-ID: <aS9gms3-xGaIpUnt@google.com>
-References: <20251125080748.461014-1-namhyung@kernel.org>
- <20251125192943.GA3061247@google.com>
- <CAP-5=fXh82HpvLhPr9uFtq=HK5V+ZL3xntz7-gspEE5az2+7nw@mail.gmail.com>
- <20251126030452.GA85316@sol>
- <aSi_zXuT8isr8jEC@google.com>
- <20251127221822.GA2977@sol>
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="jtWZI5OH"
+Received: from pps.filterd (m0122332.ppops.net [127.0.0.1])
+	by mx0a-00190b01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B2KfSWQ2190902;
+	Tue, 2 Dec 2025 21:40:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=jan2016.eng; bh=sA61KNryxt+en/RkEE5Z
+	ijcUTQpdnBvRWWHIr61GQig=; b=jtWZI5OHUj9nGCEQiqB9N48GuJM7uEGJ0Bq+
+	Tk5N5Ckv6TbWpauH9r0u/aNJdDPgQ3cnWFxHAvW5Cmjgq6Zr15wny7JuNeqv525s
+	a3y9k1ZCtGbMMA4aVXaM9YLyP1Pxw27XS51vq6LjCdlk4fUDeEhFYgCuamIvFnxp
+	NpmObfePqW8zdKLw6XnsweO64qiiruF58iudwxagMgnLWhebgh2NelCOWi0HEPP8
+	/ve84Q8ecFzsoeCQkUJGdvFubiNj06VhTGn25ggmCOMrDnozKF7Blbt7xJ+fJpWb
+	jOME5jjfw93O7rZuYKPLPcAPhRN4FZ+YbRWE0Lf2+QLBVNAbIw==
+Received: from prod-mail-ppoint6 (prod-mail-ppoint6.akamai.com [184.51.33.61])
+	by mx0a-00190b01.pphosted.com (PPS) with ESMTPS id 4asvftka48-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Dec 2025 21:40:55 +0000 (GMT)
+Received: from pps.filterd (prod-mail-ppoint6.akamai.com [127.0.0.1])
+	by prod-mail-ppoint6.akamai.com (8.18.1.2/8.18.1.2) with ESMTP id 5B2J5ohA013412;
+	Tue, 2 Dec 2025 16:40:54 -0500
+Received: from email.msg.corp.akamai.com ([172.27.91.41])
+	by prod-mail-ppoint6.akamai.com (PPS) with ESMTPS id 4aqw21fg0n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Dec 2025 16:40:54 -0500
+Received: from usma1ex-exedge1.msg.corp.akamai.com (172.27.91.34) by
+ usma1ex-dag5mb2.msg.corp.akamai.com (172.27.91.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Tue, 2 Dec 2025 13:40:54 -0800
+Received: from usma1ex-dag5mb2.msg.corp.akamai.com (172.27.91.41) by
+ usma1ex-exedge1.msg.corp.akamai.com (172.27.91.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Tue, 2 Dec 2025 16:40:53 -0500
+Received: from bos-lhvg4i.bos01.corp.akamai.com (172.28.221.248) by
+ usma1ex-dag5mb2.msg.corp.akamai.com (172.27.91.41) with Microsoft SMTP Server
+ id 15.2.2562.29 via Frontend Transport; Tue, 2 Dec 2025 13:40:53 -0800
+Received: by bos-lhvg4i.bos01.corp.akamai.com (Postfix, from userid 35625)
+	id D0AF215FA1B; Tue,  2 Dec 2025 16:40:53 -0500 (EST)
+From: Sri Jayaramappa <sjayaram@akamai.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers
+	<irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra
+	<peterz@infradead.org>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Joshua
+ Hunt <johunt@akamai.com>,
+        Sri Jayaramappa <sjayaram@akamai.com>
+Subject: [PATCH] libsubcmd: Fix null intersection case in exclude_cmds()
+Date: Tue, 2 Dec 2025 16:36:32 -0500
+Message-ID: <20251202213632.2873731-1-sjayaram@akamai.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251127221822.GA2977@sol>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-01_01,2025-11-27_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=823 mlxscore=0 phishscore=0
+ bulkscore=0 spamscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
+ definitions=main-2512020170
+X-Authority-Analysis: v=2.4 cv=cYzfb3DM c=1 sm=1 tr=0 ts=692f5ce7 cx=c_pps
+ a=WPLAOKU3JHlOa4eSsQmUFQ==:117 a=WPLAOKU3JHlOa4eSsQmUFQ==:17
+ a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=X7Ea-ya5AAAA:8
+ a=-naFw8Ui1DtwFZ36E5wA:9
+X-Proofpoint-ORIG-GUID: IuiYulG8Mnoqbz4Y5KIc2gu5R48MtSBs
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjAyMDE3MCBTYWx0ZWRfX7bOhrBQ5pz4x
+ 3latGvlnL77+5pX/mFyZ4PtZZG8o20HtyOA+knAxvcNvBDKATjo4mLiiO70TeZGgHcOUTBHvGn2
+ oz6tP5SbDWSrKtTiAtIqU+EPdlDLOGLQSNFmi8qOHZaNN8SNZmNJw/yTw/qPELF/x9ZgWYZ0aZQ
+ WFesk+KV65DcW9vP1TWTk3m7C2nnqmBVt3LWX6NHIeHFlrBJvk1PLkwmDz3jQaMLzgT7YbtatNP
+ i82R8rg5NM/4QQBMg/fZJqjsuaKL4m61aO4Fy2yrV0C2amz41a6y+FtN57Uw+kaulemsRTieP3B
+ azij0bQRMEVxFRV+UIaGDtQs2O3mN7y7IDJrq2BpHQDgp++a5nrr2PP5kx9PzFva0LimdJP27YI
+ ZhJgFknF1T54qv258tMEYPJwCyMk0w==
+X-Proofpoint-GUID: IuiYulG8Mnoqbz4Y5KIc2gu5R48MtSBs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-01_01,2025-11-27_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011
+ phishscore=0 lowpriorityscore=0 impostorscore=0 spamscore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 malwarescore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512020170
 
-On Thu, Nov 27, 2025 at 02:18:22PM -0800, Eric Biggers wrote:
-> On Thu, Nov 27, 2025 at 01:17:01PM -0800, Namhyung Kim wrote:
-> > Hello,
-> > 
-> > On Tue, Nov 25, 2025 at 07:04:52PM -0800, Eric Biggers wrote:
-> > > On Tue, Nov 25, 2025 at 06:55:39PM -0800, Ian Rogers wrote:
-> > > > On Tue, Nov 25, 2025 at 11:29 AM Eric Biggers <ebiggers@kernel.org> wrote:
-> > > > >
-> > > > > On Tue, Nov 25, 2025 at 12:07:46AM -0800, Namhyung Kim wrote:
-> > > > > > It was reported that python backtrace with JIT dump was broken after the
-> > > > > > change to built-in SHA-1 implementation.  It seems python generates the
-> > > > > > same JIT code for each function.  They will become separate DSOs but the
-> > > > > > contents are the same.  Only difference is in the symbol name.
-> > > > > >
-> > > > > > But this caused a problem that every JIT'ed DSOs will have the same
-> > > > > > build-ID which makes perf confused.  And it resulted in no python
-> > > > > > symbols (from JIT) in the output.
-> > > > > >
-> > > > > > Looking back at the original code before the conversion, it used the
-> > > > > > load_addr as well as the code section to distinguish each DSO.  But it'd
-> > > > > > be better to use contents of symtab and strtab instead as it aligns with
-> > > > > > some linker behaviors.
-> > > > > >
-> > > > > > This patch adds a buffer to save all the contents in a single place for
-> > > > > > SHA-1 calculation.  Probably we need to add sha1_update() or similar to
-> > > > > > update the existing hash value with different contents and use it here.
-> > > > > > But it's out of scope for this change and I'd like something that can be
-> > > > > > backported to the stable trees easily.
-> > > > > >
-> > > > > > Fixes: e3f612c1d8f3945b ("perf genelf: Remove libcrypto dependency and use built-in sha1()")
-> > > > > > Cc: Eric Biggers <ebiggers@kernel.org>
-> > > > > > Cc: Pablo Galindo <pablogsal@gmail.com>
-> > > > > > Cc: Fangrui Song <maskray@sourceware.org>
-> > > > > > Link: https://github.com/python/cpython/issues/139544
-> > > > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > >
-> > > > > That commit actually preserved the behavior of the existing variant of
-> > > > > gen_build_id() that was under #ifdef BUILD_ID_SHA.  So I guess that code
-> > > > > was always broken, and it was just never noticed because the alternative
-> > > > > variant of gen_build_id() under #ifdef BUILD_ID_MD5 was used instead?
-> > > > >
-> > > > > The MD5 variant of gen_build_id() just hashed the load_addr concatenated
-> > > > > with the code.  That's not what this patch does, though.  So just to
-> > > > > clarify, you'd actually like to go with a third approach rather than
-> > > > > just restoring the original hash(load_addr || code) approach?
-> > > > >
-> > > > > Also, I missed that you had actually changed the hash algorithm.  I had
-> > > > > assumed the perf folks were were pushing SHA-1 because they were already
-> > > > > using it.  Given that the algorithm changed, there must not be any
-> > > > > backwards compatibility concerns here, and you should switch to a modern
-> > > > > hash algorithm such as SHA-256 instead.
-> > > > >
-> > > > > I'd be glad to add an incremental API if you need it, but I'm confused
-> > > > > why you want SHA-1 and not a modern hash algorithm.
-> > > > 
-> > > > Hi Eric,
-> > > > 
-> > > > Thanks for the help with the hash functions! There's a bit more
-> > > > context in this thread:
-> > > > https://lore.kernel.org/linux-perf-users/CAP-5=fWLgaWsv82dcPajVk=UmBbmwyEd7OVp6psZQ4TiXh-Meg@mail.gmail.com/
-> > > > 
-> > > > So genelf is trying to take snippets of jitted code and create ELF
-> > > > files from them for the purpose of symbolizing in perf. The buildid
-> > > > hash being used is SHA1 and I think the MD5 support was removed as
-> > > > unnecessary. The problem this patch is addressing is that a JIT may
-> > > > create many identical stubs which then end up being deduplicated into
-> > > > the same buildid as only the code is hashed. The BFD linker seems to
-> > > > have the same issue (Fangrui filed a bug), gold and lld appear to hash
-> > > > the symbols (which Namhyung adds to genelf here) but still yield
-> > > > different build id for the same source assembly code. It is possible
-> > > > to hash the address of the symbol rather than the symbol itself, but I
-> > > > think the intent for the code should be to best match what a compiler
-> > > > and linker would generate. The problem there is that this differs for
-> > > > every linker :-)
-> > > > 
-> > > > Something that is unfortunate in the code now is copying/concatenating
-> > > > all the build data for the sake of producing the hash. It would be
-> > > > nice if the code could incrementally build up the sha1 hash to avoid
-> > > > the copying. I don't know if there is functionality for this
-> > > > currently.
-> > > 
-> > > Again, I can add support for incremental hashing if you need it.  But I
-> > > don't understand why you want the hash function to be SHA-1.  Also,
-> > > given that this seems to be a regression fix, it's surprising that
-> > > you're suddenly changing the inputs to the hash entirely, instead of
-> > > just going back to hashing load_addr concatenated with the code for now.
-> > 
-> > Historically MD5 or SHA1 was the only choice for build-ID in linkers.
-> > I don't know if it's changed lately though.  But because of that we
-> > support build-IDs up to 20 bytes and it's in the UAPI too (well.. it's
-> > implicit in PERF_RECORD_MMAP2).  I think we can support other hashs if
-> > they fit into it, but SHA-1 would be the right choice for now.
-> > 
-> > About load_addr, I don't think it's the right fix.  We cannot have the
-> > exactly same build-IDs as before since we already switched to SHA-1.
-> > What we actually want is a way to generate unique IDs for each DSO.
-> > For that purpose, it'd be nice to use sym/str-tables as Fangrui said
-> > instead of using load_addr which seems to be a quick hack in the past.
-> > 
-> > So I think I can merge this change for stable fix.  And add incremental
-> > SHA-1 (thanks in advance!) and update the code to it later.
-> 
-> If it needs to be 20 bytes, you should just use a truncated SHA-256.
-> 
-> The only use for SHA-1 is backwards compatibility.  Which it seems you
-> don't need.
+When there is no exclusion occurring from the cmds list - for example -
+cmds contains ["read-vdso32"] and excludes contains ["archive"] - the
+main loop completes with ci == cj == 0. In the original code the loop
+processing the remaining elements in the list was conditional:
 
-I think the linker (ld) --build-id still defaults to SHA-1.
+    if (ci != cj) { ...}
 
-Thanks,
-Namhyung
+So we end up in the assertion loop since ci < cmds->cnt and we
+incorrectly try to assert the list elements to be NULL and fail with
+the following error
+
+   help.c:104: exclude_cmds: Assertion `cmds->names[ci] == NULL' failed.
+
+Fix this by moving the if (ci != cj) check inside of a broader loop.
+If ci != cj, left shift the list elements, as before, and then
+unconditionally advance the ci and cj indicies which also covers the
+ci == cj case.
+
+Fixes: 1fdf938168c4d26f ("perf tools: Fix use-after-free in help_unknown_cmd()")
+
+Signed-off-by: Sri Jayaramappa <sjayaram@akamai.com>
+---
+ tools/lib/subcmd/help.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/tools/lib/subcmd/help.c b/tools/lib/subcmd/help.c
+index ddaeb4eb3e24..db94aa685b73 100644
+--- a/tools/lib/subcmd/help.c
++++ b/tools/lib/subcmd/help.c
+@@ -97,11 +97,13 @@ void exclude_cmds(struct cmdnames *cmds, struct cmdnames *excludes)
+ 			ei++;
+ 		}
+ 	}
+-	if (ci != cj) {
+-		while (ci < cmds->cnt) {
+-			cmds->names[cj++] = cmds->names[ci];
+-			cmds->names[ci++] = NULL;
++	while (ci < cmds->cnt) {
++		if (ci != cj) {
++			cmds->names[cj] = cmds->names[ci];
++			cmds->names[ci] = NULL;
+ 		}
++		ci++;
++		cj++;
+ 	}
+ 	for (ci = cj; ci < cmds->cnt; ci++)
+ 		assert(cmds->names[ci] == NULL);
+-- 
+2.34.1
 
