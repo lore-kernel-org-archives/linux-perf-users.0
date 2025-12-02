@@ -1,67 +1,25 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8414212548
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 10:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C56F1E7C03;
+	Tue,  2 Dec 2025 11:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764672054; cv=none; b=gWQjWktMv+PQeVYZokjyLGbFYxoAidisfORMLa/ewlQekgzgpBWyiTp1Eup7xQodXlTVr5GSHDeq9CNlfSdpHC2xdZaGpjC9zrr5m3bvTb74qZlpP4A3mbRPDJHleSEQbZQPU90MVpp4tjMZZlrjsE7kCvdgJZmiaGpanoK+Rgw=
+	t=1764673614; cv=none; b=s6A7O3CC/QX2iJrBS4eKVOG1CqCgwI8BPU/dDeslCQLkJloX6kkhyjBhY/OP2RMxXEseh8xy3e2t1XE9n/hXcK/6Vd1X/r0FFGKdJnO4YG2Ugy7kWRWdQLVI7xOXo1O6EIwgwAyeqgq/xXAnCH0beH+7Ows1arberXlznFg9fLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764672054; c=relaxed/simple;
-	bh=PBKsInVvpd9PdpiPDAdwcyqFmktaB7feF/0sAPP48zI=;
+	s=arc-20240116; t=1764673614; c=relaxed/simple;
+	bh=VU4ZUEToaZ0XeFoAKrnYe6PG9uRU48wkKXtsGUK6qa8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OeVq7XXgRoVPGzK3XxitpALAWR+l7+0dGmCSpQsqu101sDY4mrPXhyWPzRg5rM0ETqhTkLQ6hLrS1/0HXU3NszuTjlUfGOW5Osps9c15a+lnneI3efJ1LAu7vK/pQe0irZ+SH0MWI+kyHC+n3D7kX8+ZdPuC9uze4Mm8PhqvwJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rGjrzL2+; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rGjrzL2+"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4779d47be12so42976945e9.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 02:40:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1764672051; x=1765276851; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=th2ta/uFhCmWYoXsGiqxNYGiQhfkxRr8VyWDSYszkyk=;
-        b=rGjrzL2+NnrlvX+5mzCN++oEz5agqiiWzzdmQDvXfVmumC8bvoBPM7ekYBSZLkfW/g
-         j2Py8JMnLLEQeiTG4emY0maVtaA4uTLjyGZWO/d0LhP/Zlegxm2Q6YYjGqKb0BwS4N8M
-         ybUy0HDSKGwok7YyMdneqUqdEMMiONE2uSYGW/30ZaMiQ1uSkReqFlLThZZp+uaQz9fQ
-         EX6lyRD2ep1RO9gFs8nU7FyseuWRXyhajMhQG9ZBk4hp84iSSk5Ns8nBhQLIsqpxeUrw
-         HQ5X0SwNmd/9hs07WM0ehspr2Cw7+dSYKXo3ywus65gU2bpAlxVZKIi9ylnsjvD5bZeA
-         y9gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764672051; x=1765276851;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=th2ta/uFhCmWYoXsGiqxNYGiQhfkxRr8VyWDSYszkyk=;
-        b=nD92b7FYQFHAsVgbpvRtPMHMbDI/SW6svuMHO/yXRPJiAvgbRzidBQXb9h08PYdr5P
-         YV0CNG9XeMCblzqddxkST+jStTzwGfzY5CCV8DdYjNcx42SwTm7l3H/ZN2jF1O3KDuKf
-         wcJr4jrgL0Ckys9Rr4/mjuaXjRUbDoEgL8Nxx60ovfAYFc+EYG6YfJxx81Aovsl6K50+
-         kL6zO3sC3KwUgJqBoaYA9vqynVmFHX7lIhK74iBNIrXxJfHYZ0ydXss73NdJGFVl2sL6
-         eh+hI4Oilp7WotMCnHxhrPpOdkP/59KcaDP0kf7FFthzHKt8QnguAo17rFABC9usFLWG
-         9rjA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKD0FoLee1+4LL55Fez3vdO7tG0q0lnUbq+gTjZQ1TJU6DiUnjL42NtTtXS4RXS5ZdwIoXvLxeGV95yF/8oJEG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG6nnh/RKfnHFD98LXhasURe7mxjPeqtU9MBs+4dgoy2OO6m73
-	sfV12qfdi9nW11D8IXy62zKzuLRFse3tM6Dy03gcfY5YXzVXhyALWg4Nnaz2QZmvCvg=
-X-Gm-Gg: ASbGnct5zFOM9PWvsJj8WYs64USPe8krt955QrXBj/+8PIMb/DxwQW3iLCI6r8z5ML4
-	3xzg8lNdsepCEwUuikJ+vVifWbLQsjPnGlza+7p3pDXZf/b7btQhAaAJY9iB/Abt69XVBt9alNK
-	sPibOQn/dmI3cIPr82EjHiTsKsbd6jVja2rBYQguRPb6YfqXLsOlLKpjpePlyaRiaE2T2K4JoxB
-	CBlogOZ27qkXUSB4KsocKB1/OaIiLh5eYtpCBRVl8ASco7uMoeux1xFlnlbzxm+8eu79o5XBY6p
-	zFwbUYnP8Wu0Qn07xHAapOP8i55xS02qhFfs+VFGX9ulCOln5X+hQcDZ7639/0w5BGDlLOen+eM
-	Q7oPtAPASr0r1ODLW5PK1gKNikaXxDGZEKRM/PwZ5LZzifBJ3e9g1EgamgAC9GTKvN4Vf2N6zmP
-	41pVFAVMhIW9qEA+if
-X-Google-Smtp-Source: AGHT+IFIZZL3ELzhmY7ZxQvV+EVEfV64j2iIUcHf0FIxZBYlBnLylq8S3u+BdSmD7CbXWktYV2cbug==
-X-Received: by 2002:a05:600c:3b09:b0:471:13fa:1b84 with SMTP id 5b1f17b1804b1-477c0185bc8mr473893265e9.12.1764672051209;
-        Tue, 02 Dec 2025 02:40:51 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4791116c3c0sm291934395e9.8.2025.12.02.02.40.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Dec 2025 02:40:50 -0800 (PST)
-Message-ID: <978dd9b1-1cb0-4338-95fa-575a858cea80@linaro.org>
-Date: Tue, 2 Dec 2025 10:40:49 +0000
+	 In-Reply-To:Content-Type; b=UBleu39qTRBq2Hdh9jz7MnyIJAPHb804OKBdSe8szEXUYyOXZNyHcTot67NCI/gC7G/uL85ZLjzio1FsxsPJpQJFoi3yB5utbrlhRS8k3RoN3T/6uzO4xmRLMTSOKSubs4wiUDWb9H5t8h+bi96GExwkqMpyUqSu5EDZpM1FRx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7ACDB153B;
+	Tue,  2 Dec 2025 03:06:44 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 982793F59E;
+	Tue,  2 Dec 2025 03:06:49 -0800 (PST)
+Message-ID: <65c84357-0bda-454f-88c3-623b3ff9d29d@arm.com>
+Date: Tue, 2 Dec 2025 11:06:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,67 +27,177 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] perf tools: Track all user changed config bits
-To: Leo Yan <leo.yan@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+Subject: Re: [PATCH 06/19] coresight: trbe: Refactor syndrome decoding
+To: Leo Yan <leo.yan@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@linaro.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Tamas Petz <tamas.petz@arm.com>,
+ Tamas Zsoldos <tamas.zsoldos@arm.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-References: <20251201-james-perf-config-bits-v1-0-22ecbbf8007c@linaro.org>
- <20251201-james-perf-config-bits-v1-1-22ecbbf8007c@linaro.org>
- <20251202101556.GR724103@e132581.arm.com>
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
+ <20251201-trbe_buffer_refactor_v1-1-v1-6-7da32b076b28@arm.com>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20251202101556.GR724103@e132581.arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20251201-trbe_buffer_refactor_v1-1-v1-6-7da32b076b28@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+Hi Leo
+
+A couple of minor nits below. Otherwise looks like a nice cleanup
 
 
-On 02/12/2025 10:15 am, Leo Yan wrote:
-> On Mon, Dec 01, 2025 at 04:41:04PM +0000, Coresight ML wrote:
+On 01/12/2025 11:21, Leo Yan wrote:
+> It gives priority to TRBSR_EL1.EA (external abort); an external abort
+> will immediately bail out and return an error.
 > 
-> [...]
+> Next, the syndrome decoding is refactored based on two levels of
+> information: the EC (Event Class) bits and the BSC (Trace Buffer Status
+> Code) bits.
 > 
->> +#define ADD_CONFIG_CHG(format_type, term_type, new_term)		\
->> +{									\
->> +	struct parse_events_term *term;					\
->> +	u64 bits = 0;							\
->> +	int type;							\
->> +									\
->> +	list_for_each_entry(term, &head_config->terms, list) {		\
->> +		if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER) {  \
->> +			type = perf_pmu__format_type(pmu, term->config);\
->> +			if (type != format_type)			\
->> +				continue;				\
->> +			bits |= perf_pmu__format_bits(pmu, term->config); \
->> +		} else if (term->type_term == term_type) {		\
->> +			bits = ~(u64)0;					\
->> +		}							\
->> +	}								\
->> +									\
->> +	if (bits)							\
->> +		ADD_CONFIG_TERM_VAL(new_term, cfg_chg, bits, false);	\
->> +	return 0;							\
+> If TRBSR_EL1.EC==0b000000, the driver continues parsing TRBSR_EL1.BSC to
+> identify the specific trace buffer event.  Otherwise, any non-zero
+> TRBSR_EL1.EC is treated as an error.
 > 
-> Nitpick: "return 0" is not needed here.  Otherwise:
+> For error cases, the driver prints an error string and dumps registers
+> for debugging.
+
+minor nit: Please avoid describing the code, which cod does well.
+Briefly mention what you are doing, giving any additional contexts
+that may not be evident from the code.
+
+e.g:
+
+"Add support for decoding the syndrome for TRBE, providing a verbose
+description of the code for Fatal/unhandled events.
+While at it add the new definitions from the latest Arm ARM for
+EC and BSC"
+
+
+
+
 > 
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
+> No additional checks are required for wrap mode beyond verifying the
+> TRBSR_EL1.WRAP bit, even on units with overwrite errata, as this bit
 
-I think it's worse than not needed, it makes it stop collecting the 
-changes after the first one.
 
-It was annoying that this had to be a macro instead of a function 
-because ADD_CONFIG_TERM_VAL constructs the #define name of the first 
-argument.
+> reliably indicates a buffer wrap.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>   drivers/hwtracing/coresight/coresight-trbe.c | 60 +++++++++++++++++++++-------
+>   drivers/hwtracing/coresight/coresight-trbe.h |  8 ++--
+>   2 files changed, 51 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
+> index 9e565122816949b37b8ff5e4ba04cfbc317c6f25..28e2bfa68074f19ccaa4a737d00af577aea818fe 100644
+> --- a/drivers/hwtracing/coresight/coresight-trbe.c
+> +++ b/drivers/hwtracing/coresight/coresight-trbe.c
+> @@ -643,29 +643,61 @@ static void trbe_enable_hw(struct trbe_buf *buf)
+>   static enum trbe_fault_action trbe_get_fault_act(struct perf_output_handle *handle,
+>   						 u64 trbsr)
+>   {
+> +	const char *err_str;
+>   	int ec = get_trbe_ec(trbsr);
+>   	int bsc = get_trbe_bsc(trbsr);
+> -	struct trbe_buf *buf = etm_perf_sink_config(handle);
+> -	struct trbe_cpudata *cpudata = buf->cpudata;
+>   
+>   	WARN_ON(is_trbe_running(trbsr));
+> -	if (is_trbe_trg(trbsr) || is_trbe_abort(trbsr))
+> -		return TRBE_FAULT_ACT_FATAL;
+>   
+> -	if ((ec == TRBE_EC_STAGE1_ABORT) || (ec == TRBE_EC_STAGE2_ABORT))
+> -		return TRBE_FAULT_ACT_FATAL;
+> +	if (is_trbe_abort(trbsr)) {
+> +		err_str = "External abort";
+> +		goto out_fatal;
+> +	}
+>   
+> -	/*
+> -	 * If the trbe is affected by TRBE_WORKAROUND_OVERWRITE_FILL_MODE,
+> -	 * it might write data after a WRAP event in the fill mode.
+> -	 * Thus the check TRBPTR == TRBBASER will not be honored.
+> -	 */
+> -	if ((is_trbe_wrap(trbsr) && (ec == TRBE_EC_OTHERS) && (bsc == TRBE_BSC_FILLED)) &&
+> -	    (trbe_may_overwrite_in_fill_mode(cpudata) ||
+> -	     get_trbe_write_pointer() == get_trbe_base_pointer()))
+> +	switch (ec) {
+> +	case TRBE_EC_OTHERS:
+> +		break;
+> +	case TRBE_EC_BUF_MGMT_IMPL:
+> +		err_str = "Unexpected implemented management";
 
-It's probably worth putting in some effort to make ADD_CONFIG_CHG() a 
-function to avoid problems like this and maybe add a test.
+minor nit: "Unexpected IMPDEF buffer management event"
+
+
+Suzuki
+
+> +		goto out_fatal;
+> +	case TRBE_EC_GP_CHECK_FAULT:
+> +		err_str = "Granule Protection Check fault";
+> +		goto out_fatal;
+> +	case TRBE_EC_STAGE1_ABORT:
+> +		err_str = "Stage 1 data abort";
+> +		goto out_fatal;
+> +	case TRBE_EC_STAGE2_ABORT:
+> +		err_str = "Stage 2 data abort";
+> +		goto out_fatal;
+> +	default:
+> +		err_str = "Unknown error code";
+> +		goto out_fatal;
+> +	}
+> +
+> +	switch (bsc) {
+> +	case TRBE_BSC_NOT_STOPPED:
+> +		break;
+> +	case TRBE_BSC_FILLED:
+> +		break;
+> +	case TRBE_BSC_TRIGGERED:
+> +		err_str = "Unexpected trigger status";
+> +		goto out_fatal;
+> +	default:
+> +		err_str = "Unexpected buffer status code";
+> +		goto out_fatal;
+> +	}
+> +
+> +	if (is_trbe_wrap(trbsr))
+>   		return TRBE_FAULT_ACT_WRAP;
+>   
+>   	return TRBE_FAULT_ACT_SPURIOUS;
+> +
+> +out_fatal:
+> +	pr_err_ratelimited("%s on CPU %d [TRBSR=0x%016llx, TRBPTR=0x%016llx, TRBLIMITR=0x%016llx]\n",
+> +			   err_str, smp_processor_id(), trbsr,
+> +			   read_sysreg_s(SYS_TRBPTR_EL1),
+> +			   read_sysreg_s(SYS_TRBLIMITR_EL1));
+> +	return TRBE_FAULT_ACT_FATAL;
+>   }
+>   
+>   static unsigned long trbe_get_trace_size(struct perf_output_handle *handle,
+> diff --git a/drivers/hwtracing/coresight/coresight-trbe.h b/drivers/hwtracing/coresight/coresight-trbe.h
+> index 45202c48accec7c86ba56130e2737bc2d1830fae..d7f7cd763c0c7139cf322b7336ee563073e3bea0 100644
+> --- a/drivers/hwtracing/coresight/coresight-trbe.h
+> +++ b/drivers/hwtracing/coresight/coresight-trbe.h
+> @@ -35,9 +35,11 @@ static inline bool is_trbe_enabled(void)
+>   	return trblimitr & TRBLIMITR_EL1_E;
+>   }
+>   
+> -#define TRBE_EC_OTHERS		0
+> -#define TRBE_EC_STAGE1_ABORT	36
+> -#define TRBE_EC_STAGE2_ABORT	37
+> +#define TRBE_EC_OTHERS			0x0
+> +#define TRBE_EC_GP_CHECK_FAULT		0X1e
+> +#define TRBE_EC_BUF_MGMT_IMPL		0x1f
+> +#define TRBE_EC_STAGE1_ABORT		0x24
+> +#define TRBE_EC_STAGE2_ABORT		0x25
+>   
+>   static inline int get_trbe_ec(u64 trbsr)
+>   {
+> 
 
