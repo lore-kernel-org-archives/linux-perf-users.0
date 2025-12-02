@@ -1,88 +1,147 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB1092222B2;
-	Tue,  2 Dec 2025 14:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEDC283FC5
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 16:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764685462; cv=none; b=S6JU1Y4+PNIRQjbS/BfeSR9WJp/ilzkOM1Ir6rst7yf9iXYDR904tOslKia/P7XwqDVOnVrslZlR6iAVG+kV4uA3vSGA6xbcSsa+5cpP80wARhSzkJfpEiPVlO9RQGO+DSGTzk5Np19xP1fXE6h/48H58ff9jtYyWaG7myhNgPs=
+	t=1764692166; cv=none; b=MyGK4R1RgWmnke5+IM1/2cX4xAemz/0cedXsZV90uSaE3MDqk6nu/hr33Gh4twBYF9Kt4JJVzmEwLsJSrW79E+gqM6vH2a1Uk9xh0462IZuDp5cm4GcdK2S4/y8bEHCGP+8bHPZkV0y/HZzzTC5oTAwwxvAzFZRQD1DCk4t8GHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764685462; c=relaxed/simple;
-	bh=mce4JBsxEdZhkNL8QanhegEJATWa2s9OY46mz+/orF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EKlAKcDTI/PX7ZYVPnOQkxfXn1OEpsUqZjEL6LlIpXEDoqn+LkXb3YTVGgNVozfoJWuhzsW23EQJ9I9LU6Ss7kGn5uyPjSV1WGbIDkARwqRn0N4lSxpP5hPcVtVNLVL5W3flaj1oMFUeGFZIDKIhiGqFfPe4xu4py0LDiTsqXHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B98321477;
-	Tue,  2 Dec 2025 06:24:11 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B04D33F73B;
-	Tue,  2 Dec 2025 06:24:18 -0800 (PST)
-Date: Tue, 2 Dec 2025 14:24:16 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Yeoreum Yun <yeoreum.yun@arm.com>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Tamas Petz <tamas.petz@arm.com>,
-	Tamas Zsoldos <tamas.zsoldos@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 06/19] coresight: trbe: Refactor syndrome decoding
-Message-ID: <20251202142416.GC724103@e132581.arm.com>
-References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
- <20251201-trbe_buffer_refactor_v1-1-v1-6-7da32b076b28@arm.com>
- <65c84357-0bda-454f-88c3-623b3ff9d29d@arm.com>
+	s=arc-20240116; t=1764692166; c=relaxed/simple;
+	bh=remfTrDM1aIETc0Sk88qOsVxDimHfdjE9H7wzCe/8hE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P4zxUzdg5VEEXyXw5HOsJO89zSePRPdVMIsjGFTApZlNdaS2EwURAWNSnN1j0nAundy22yCmBQwz+L5WTkHqKcPN2zhEoAcSGHg6mzcfnqxlm1xnShQ3H8iAxBI9yVnVB/l+RRDjgkCmIojhVYs89IWqCYFr8/n6DG36YOwf2J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ekAmnaN/; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ekAmnaN/"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2980343d9d1so952265ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 08:16:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764692164; x=1765296964; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9oBF8USmDJ40ZYW4a82JBBoAjiGdK54Fzpigl/4R9dc=;
+        b=ekAmnaN/EMonRrGCtAxbL3/BvL8V9olZbsyq17iXyoYphwQwtcsohZvHmX5W2kB8jt
+         ZdrlB/BLPy4wYs1oKSUlWMmznpCG2IMvCHCy7hJCXi39ZEDUdzIzFLYqfhd0iReWj6eo
+         BykYPYN5b1mwUs2Rn0mKXPdsPNCM8wOhpIrrf49AyF6dfn1PzkqDMbvRO5BcZpobj57+
+         sV+tT1sTL8vbPfgwxm0yqcpdytjF1d544GxArcB0dj9/kFp14OV1/5ceYYi8qrNcVfZF
+         T1Fmi93muUUNXc4rsRJi5AzlX91FDWHjNYmzHX//KpojcPOabRTxuueucAjxg9IoiIdk
+         iSMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764692164; x=1765296964;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=9oBF8USmDJ40ZYW4a82JBBoAjiGdK54Fzpigl/4R9dc=;
+        b=wTdZiHbYASYvLpZa1jw5AYvXeZKtxC3VM+hPXchOQ8ssQxg854HxE9iR2P0+rnqfaT
+         ucwgSfqJC1MpYAkKz8oCyJcubPL8mQEk6DWi9aRw/JyQRo1djLiE6sJifDcu1i3Chf1S
+         7zQhrQQGfC8/nM10tOvfvSyXAQOKoZGYaxCMHRso6L+nZdxmo15HNAGv8nUoDI521YSQ
+         FbrRMYX9pvmVruE2Up94XGeTvpnYC6ZLayaJvsiiyJ5E3QY84iImkecvt3lTdRdiv6Mu
+         S/LKvVAoiDAAA0DAJ9qmOvSABSVgAscvewQrA64I1GRHLhqs3m+TU9PifgnUMZxoJXNK
+         dK0g==
+X-Gm-Message-State: AOJu0YwcYQhuhc7grqU56pcN2H3PZm9zeDlVdNBCK/lRpUoir7p/IVyY
+	cJka7XTjdBoudYmMIqLj/K9+FebANay64kBKW+Vxp7P+T976hDMPlHRuu8pdgHFiuPciSzFGhOK
+	YXgxvqZzJDvhDldeTIoTLdDJd25tznsu2JKnlvTPG
+X-Gm-Gg: ASbGnctB6emfQDk4mlnqS80X2PpujKXBV15YaCgrdnllaxw67kEXmwHNfRCFAj6WTos
+	Trmdh+Knk6Wa0YujOqiiL9cNQRUIT4mTTDHyM7h+g7GM69kEJsnHwQoSwoiVekMLP/kUnszNWXn
+	TYWhP3j+YcbQ6SuVARxIuTNIfRzVuXjf9ig9Rhhdb9iX7zNonr77oPiUwaxUn+t6SqcZnsHlVZn
+	Hb1U7uzGNohdP0xeIMXA22lk93yNdizKNYrPfSkvLu3opQQEheTPGq86fg2QPAZSre28v9EjboG
+	WjcV4axu7PXLmumX3dm3nRWE
+X-Google-Smtp-Source: AGHT+IGqm0ASgXz4YM3f2vYKEmhoMIWn3crg1qcrSB7K5HCDfa25vGUK20zvqssMxxNGyFuPVWtpKkj8hh/AVl+KdD8=
+X-Received: by 2002:a05:7022:4407:b0:11a:61f0:6e6d with SMTP id
+ a92af1059eb24-11de9385556mr112501c88.10.1764692163394; Tue, 02 Dec 2025
+ 08:16:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65c84357-0bda-454f-88c3-623b3ff9d29d@arm.com>
+References: <20251031162637.1456191-1-irogers@google.com> <CAP-5=fV1bobHM5bT8xU7sxZAFt03XNaXwTQVGj3hm9RyKsH3fw@mail.gmail.com>
+In-Reply-To: <CAP-5=fV1bobHM5bT8xU7sxZAFt03XNaXwTQVGj3hm9RyKsH3fw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 2 Dec 2025 08:15:49 -0800
+X-Gm-Features: AWmQ_bkDWwvYim11tF-jrtnpeXVDyZYgIqVYIZQVhpBfbWINS9Zq8fO6MIQU8pU
+Message-ID: <CAP-5=fV1TkcwGCOVXRK2gcM2KGqy9j=yNf1-bXJE1Zf5m_2Fwg@mail.gmail.com>
+Subject: Re: [PATCH v1] perf vendor power9 nest metrics: Correct unit from MB
+ to MiB
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, 
+	linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 02, 2025 at 11:06:48AM +0000, Suzuki K Poulose wrote:
-> Hi Leo
-> 
-> A couple of minor nits below. Otherwise looks like a nice cleanup
-> 
-> 
-> On 01/12/2025 11:21, Leo Yan wrote:
-> > It gives priority to TRBSR_EL1.EA (external abort); an external abort
-> > will immediately bail out and return an error.
-> > 
-> > Next, the syndrome decoding is refactored based on two levels of
-> > information: the EC (Event Class) bits and the BSC (Trace Buffer Status
-> > Code) bits.
-> > 
-> > If TRBSR_EL1.EC==0b000000, the driver continues parsing TRBSR_EL1.BSC to
-> > identify the specific trace buffer event.  Otherwise, any non-zero
-> > TRBSR_EL1.EC is treated as an error.
-> > 
-> > For error cases, the driver prints an error string and dumps registers
-> > for debugging.
-> 
-> minor nit: Please avoid describing the code, which cod does well.
-> Briefly mention what you are doing, giving any additional contexts
-> that may not be evident from the code.
+On Wed, Nov 12, 2025 at 11:31=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Fri, Oct 31, 2025 at 9:26=E2=80=AFAM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > 6.1e-5 is very close to 1/16384, where 16384 is 2^14, i.e. a power of
+> > 2. When units are in powers of 2 the IEC unit is MiB (mebibytes)
+> > rather than MB (megabytes) where the values are powers of 10. This
+> > patch corrects the unit for uniformity and because such units may be
+> > pattern matched against.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> Ping.
 
-Sure, I will note this later.
+Ping.
 
-> e.g:
-> 
-> "Add support for decoding the syndrome for TRBE, providing a verbose
-> description of the code for Fatal/unhandled events.
-> While at it add the new definitions from the latest Arm ARM for
-> EC and BSC"
+Thanks,
+Ian
 
-Will do this and followed comment.  Thanks for suggestion!
-
-Leo
+> > ---
+> >  .../perf/pmu-events/arch/powerpc/power9/nest_metrics.json | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.jso=
+n b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> > index 7a5d1bf543f8..8d028a7c2777 100644
+> > --- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> > +++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> > @@ -29,25 +29,25 @@
+> >         "MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + =
+nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@",
+> >         "MetricName" : "mcs01-read",
+> >         "MetricGroup" : "memory-bandwidth",
+> > -       "ScaleUnit": "6.1e-5MB"
+> > +       "ScaleUnit": "6.1e-5MiB"
+> >      },
+> >      {
+> >         "MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + =
+nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@",
+> >         "MetricName" : "mcs23-read",
+> >         "MetricGroup" : "memory-bandwidth",
+> > -       "ScaleUnit": "6.1e-5MB"
+> > +       "ScaleUnit": "6.1e-5MiB"
+> >      },
+> >      {
+> >         "MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + =
+nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@",
+> >         "MetricName" : "mcs01-write",
+> >         "MetricGroup" : "memory-bandwidth",
+> > -       "ScaleUnit": "6.1e-5MB"
+> > +       "ScaleUnit": "6.1e-5MiB"
+> >      },
+> >      {
+> >         "MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + =
+nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@",
+> >         "MetricName" : "mcs23-write",
+> >         "MetricGroup" : "memory-bandwidth",
+> > -       "ScaleUnit": "6.1e-5MB"
+> > +       "ScaleUnit": "6.1e-5MiB"
+> >      },
+> >      {
+> >         "MetricExpr" : "nest_powerbus0_imc@PM_PB_CYC@",
+> > --
+> > 2.51.1.930.gacf6e81ea2-goog
+> >
