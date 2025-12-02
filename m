@@ -1,113 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC3E3074B0;
-	Tue,  2 Dec 2025 08:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD46E214A64;
+	Tue,  2 Dec 2025 10:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764663409; cv=none; b=S2shIvNcJBcu+W2fI6rtV8/zqMmwyscT4CUAGU4bg84puHwACB07GhREHuum8ME7soAQluA7G6/d5CpiTtCdpMGaKfeZJ4DEOC7tm9nc0A8eThCOt/DZgiREKT5EqcG7py/uyrkPdUCNfcNCLScTMcXAPNPdygxIjO322rXPisk=
+	t=1764670562; cv=none; b=X2A96oKdsBZKMAuHQmRlO4oxpA0y6ko2/JSSSktGK2tmzYoJTyED6ykO7p9bQI8mcr/G1a6q3l03iO5+ur0FlESbOd1qs6HQJ5A21IAV90TFfsyo+DLD6O1nl120HJ112L1OnAXLObV7fBQjd54WOGbFOmqBl/bj8yv/tXDrBSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764663409; c=relaxed/simple;
-	bh=BmuWs0K1Zd/sPIBy+NuqOXOK0JJQRHXd3X7PpP84iZM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YrIzn5gRbCwUzwvxij2oEHAgEHNkVxD/v0fJw3f51/vZQVVFPG82niXEO171WrdZIH/I2Zm38TLnDmiIDRXP71rFviI74QjMth2mvHdX4cvfn2katXFWGZLpcPhhpf0tW5TI6xrbppB7Z7GGS5xkTKGwwYpoqvbhLwWqNZdmXGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRUyAuPO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRUyAuPO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C547C4CEF1;
-	Tue,  2 Dec 2025 08:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764663407;
-	bh=BmuWs0K1Zd/sPIBy+NuqOXOK0JJQRHXd3X7PpP84iZM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mRUyAuPOAM6i0oXlP8RchSKqfQXWvr5U19sNQwSTxx4jXP9ZkpuxJ9ASjNLN93Puj
-	 I9eC8El5aUHg1hHkPgycD8C/sJKVI9G8qsbULZPYTmyd3phUY4PBuRyjNU93ZweJZL
-	 lwRv+yl88rfbgyJewpwUZP9GzO5vaFybCpLO+JMuiiaWGTpsDXQFRBrX3KKk4xkwUq
-	 7eBeQ48quJnVjjKLebeKtsz+qIM0karQp45O+PwTA7dnWbQMw2KmBw/O/UF3ceV9nO
-	 TGXXxc2axTWkxVSjIfcwBwwhpE8p+Z+e5p3xrKFS1LPtT1KIYjWIJT7kWQgW3ljYvS
-	 No5qpGG2MXx1g==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
+	s=arc-20240116; t=1764670562; c=relaxed/simple;
+	bh=Jn07b+OHkkgikm7s8lxh5Hyn2ya9deH1ZnyXoO09uoY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CaqZ5eQTdGkbA6tBxl3qOVyuMbDwJJRGicy+UtljuVsc/dCgUzWAfq+HLaRnR8usA8xBu46osRT8BddnKxdPZQ6Y+WyiQ3u4hWEkNP2WoYi4BQI1BTSwPhy/lbrgYx7Sxqe/U1A8CbjTazH9AZhI102wUzfF5ToJN6FEHaLQk/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9EF4153B;
+	Tue,  2 Dec 2025 02:15:51 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0E8E3F73B;
+	Tue,  2 Dec 2025 02:15:58 -0800 (PST)
+Date: Tue, 2 Dec 2025 10:15:56 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/5] perf tools: Fallback to initial kernel map properly
-Date: Tue,  2 Dec 2025 00:16:43 -0800
-Message-ID: <20251202081645.931527-4-namhyung@kernel.org>
-X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
-In-Reply-To: <20251202081645.931527-1-namhyung@kernel.org>
-References: <20251202081645.931527-1-namhyung@kernel.org>
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/7] perf tools: Track all user changed config bits
+Message-ID: <20251202101556.GR724103@e132581.arm.com>
+References: <20251201-james-perf-config-bits-v1-0-22ecbbf8007c@linaro.org>
+ <20251201-james-perf-config-bits-v1-1-22ecbbf8007c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251201-james-perf-config-bits-v1-1-22ecbbf8007c@linaro.org>
 
-In maps__split_kallsyms(), it assumes new kernel map when it finds a
-symbol without module after any module and the initial kernel map has
-some symbols.  Because it expects modules are out of the kernel map so
-modules should not have symbols in the kernel map.
+On Mon, Dec 01, 2025 at 04:41:04PM +0000, Coresight ML wrote:
 
-For example, the following memory map shows symbols and maps.  Any
-symbols in the module 1 area will go to the module 1.  The main kernel
-map starts at 0xffffffffbc200000.  But if any symbol has a module
-between the symbols in that area, next symbols after 0xffffffffbd008000
-will generate new kernel maps like [kernel].1.
+[...]
 
-   kernel address   |                     |
-                    |                     |
- 0xffffffffc0000000 |---------------------|
-                    |     (symbols)       |
-                    |        ...          |   <---  [kernel].N
- 0xffffffffbc400000 |---------------------|
-                    |     (symbols)       |
-                    |      module 2       |   <---  bad?
- 0xffffffffbc380000 |---------------------|
-                    |        ...          |
-                    |     (symbols)       |
-                    |  [kernel.kallsyms]  |   <---  initial map
- 0xffffffffbc200000 |---------------------|
-                    |                     |
-                    |                     |
- 0xffffffffabcde000 |---------------------|
-                    |     (symbols)       |
-                    |      module 1       |
- 0xffffffffabcd0000 |---------------------|
+> +#define ADD_CONFIG_CHG(format_type, term_type, new_term)		\
+> +{									\
+> +	struct parse_events_term *term;					\
+> +	u64 bits = 0;							\
+> +	int type;							\
+> +									\
+> +	list_for_each_entry(term, &head_config->terms, list) {		\
+> +		if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER) {  \
+> +			type = perf_pmu__format_type(pmu, term->config);\
+> +			if (type != format_type)			\
+> +				continue;				\
+> +			bits |= perf_pmu__format_bits(pmu, term->config); \
+> +		} else if (term->type_term == term_type) {		\
+> +			bits = ~(u64)0;					\
+> +		}							\
+> +	}								\
+> +									\
+> +	if (bits)							\
+> +		ADD_CONFIG_TERM_VAL(new_term, cfg_chg, bits, false);	\
+> +	return 0;							\
 
-This is very fragile when the module has a symbol that falls into the
-main kernel map for some reason.  My system has a livepatch module with
-such symbols.  And it created a lot of new kernel maps after those
-symbols.  But the symbol may have broken addresses and the later symbols
-can still be found in the initial kernel map.
+Nitpick: "return 0" is not needed here.  Otherwise:
 
-Let's check the symbol address in the initial map and use it if found.
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/symbol.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 8eea49c50453d13a..b533fbf17a8b19a3 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -951,7 +951,8 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
- 				pos->end -= delta;
- 			}
- 
--			if (count == 0) {
-+			if (map__start(initial_map) <= (pos->start + delta) &&
-+			    (pos->start + delta) < map__end(initial_map)) {
- 				map__zput(curr_map);
- 				curr_map = map__get(initial_map);
- 				goto add_symbol;
--- 
-2.52.0.158.g65b55ccf14-goog
-
+Reviewed-by: Leo Yan <leo.yan@arm.com>
