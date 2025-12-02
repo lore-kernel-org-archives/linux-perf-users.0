@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0663932548A;
-	Tue,  2 Dec 2025 23:57:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B081D326D6A;
+	Tue,  2 Dec 2025 23:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764719845; cv=none; b=pqQX5e1lRnVLgMN/0YouMnfbtB/AjpyE8b7P1xIEq4wrHLeb4omuWw3tmtE8CG4Qno/4xmoCBcpEcCTFw6LALBf0PNKomakH20eIc0f6x7cN3xW7h9At5lm/tbaji++RkASwkwjWOYzwV0UhJ4RQz3D8BztmUs+jo/MRKUklhAg=
+	t=1764719846; cv=none; b=XvyXyCUs0Cazgqcr60RHjs6PoV7q3X8CP8MZjXuaAaHdMlMtanKk7q57hfliCt6pq5ksx7pqWBhxOVOaDj/+sSD5bRQKbMOhGMTwRd1RtBU2bgamC6QYvABmmDa+kPHQIAdZN7GpQfwhK6G1KUZxu9xa96nHdKtcXcyL1NcOHXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764719845; c=relaxed/simple;
-	bh=51SzdK5YgOrpwG29nPtjhtZWeR3CnIAEyultKDgodK4=;
+	s=arc-20240116; t=1764719846; c=relaxed/simple;
+	bh=yKYggOYyM1s/vjYzdis17U8F2v/NZUGNksTBzefvIWw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=agkwdWxUJ9ToG3VX+MeSde2XwGidXpmM/M+iOjUnFQBHlMxLffT5dl5cQayotu5k7MqEgiEbrzdOQ5bh2WMlyljjYhZMCGzeNRDmYHpE2+nLDZrBba1wOiql4st/INxN9NwBz+tf2PAv2FYgEYAZopYbRdeF4/TSSHqHXEp7e5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TE8FxKsj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=W485Ba+QtgMZDMJQlo+qltJJX+XdiKosvk8Uzq9fWWga11C1TmUlbOFBp0/Yc6ZA+/SI3Qz2Rc1IECWyfwfO9m/dil1jRvQrcs0JiKxo99OIvzoDVlXYCpiZZjkPKLJGKAZf3eh561Mg2kDx4Sjs5ChNr58xdORTH5Xi7IBtEAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TyV0vACd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TE8FxKsj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A72C4CEF1;
-	Tue,  2 Dec 2025 23:57:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TyV0vACd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A8BDC4CEF1;
+	Tue,  2 Dec 2025 23:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764719844;
-	bh=51SzdK5YgOrpwG29nPtjhtZWeR3CnIAEyultKDgodK4=;
+	s=k20201202; t=1764719846;
+	bh=yKYggOYyM1s/vjYzdis17U8F2v/NZUGNksTBzefvIWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TE8FxKsj70s8pG/l0htHiXf9GvKqCEaBP1DlQC44ewU3rcRZHomgCRHF495JgCSbR
-	 PHJbmMZrmUiLKcMayp/sLFKbaoz4PXMWi8wbdRRbpPDiaG+Gi1HQVvPIsdEyYJ1rXR
-	 W7g+r7R2+ryRC6cSRJTR46OERFhngfIuihlBtalBXrkmru9HKuisQafMok5+FZbmDf
-	 TsjpkSp5UUPi8liRzEh3KMq1K0YWLv4FPNdcStA6HoT81ebIm8svhxPLZSfV9r3Tj/
-	 2ZoG9gOS7U2f/tTP/8sMYmFDk2LlhbkRlWKiaiw/Sd1A+NKqIf+YGIiVGVXMyXuh5v
-	 x40ZHsKmM4fvA==
+	b=TyV0vACdkrz/6x92CUtA71Uzc5R13qiYDeoej3AB8wzTAVJznOwwuIxz+lrEVTJ37
+	 3PueO/V5sg39b74fAfkwttsMd+kyWhAhtwvy+kNQdGzK7v7+dlR+Es2/oTK4inLgae
+	 viCaHD7Z4RIFGIedl5M9y2469q1bHkZG65dkpYyXO9yJkPs/neG6mOey9+0c71e2nc
+	 tlOZlhYADSrrjKSBrcpru8zJW9iU+yfrGkGTNQRNYrtm1aBGj+NnGt/LPAslKTU/PK
+	 dnH3qHNVUNi1Kg9suAXHLx8ruunI9BMb2yRCnVKS3KmdexkfL/VA4E1AhSRgBv9USF
+	 oZpQPPyhoFO6w==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 3/5] perf tools: Fallback to initial kernel map properly
-Date: Tue,  2 Dec 2025 15:57:16 -0800
-Message-ID: <20251202235718.1018752-4-namhyung@kernel.org>
+Subject: [PATCH v2 4/5] perf tools: Use machine->root_dir to find /proc/kallsyms
+Date: Tue,  2 Dec 2025 15:57:17 -0800
+Message-ID: <20251202235718.1018752-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
 In-Reply-To: <20251202235718.1018752-1-namhyung@kernel.org>
 References: <20251202235718.1018752-1-namhyung@kernel.org>
@@ -50,65 +50,43 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In maps__split_kallsyms(), it assumes new kernel map when it finds a
-symbol without module after any module and the initial kernel map has
-some symbols.  Because it expects modules are out of the kernel map so
-modules should not have symbols in the kernel map.
-
-For example, the following memory map shows symbols and maps.  Any
-symbols in the module 1 area will go to the module 1.  The main kernel
-map starts at 0xffffffffbc200000.  But if any symbol has a module
-between the symbols in that area, next symbols after 0xffffffffbd008000
-will generate new kernel maps like [kernel].1.
-
-   kernel address   |                     |
-                    |                     |
- 0xffffffffc0000000 |---------------------|
-                    |     (symbols)       |
-                    |        ...          |   <---  [kernel].N
- 0xffffffffbc400000 |---------------------|
-                    |     (symbols)       |
-                    |      module 2       |   <---  bad?
- 0xffffffffbc380000 |---------------------|
-                    |        ...          |
-                    |     (symbols)       |
-                    |  [kernel.kallsyms]  |   <---  initial map
- 0xffffffffbc200000 |---------------------|
-                    |                     |
-                    |                     |
- 0xffffffffabcde000 |---------------------|
-                    |     (symbols)       |
-                    |      module 1       |
- 0xffffffffabcd0000 |---------------------|
-
-This is very fragile when the module has a symbol that falls into the
-main kernel map for some reason.  My system has a livepatch module with
-such symbols.  And it created a lot of new kernel maps after those
-symbols.  But the symbol may have broken addresses and the later symbols
-can still be found in the initial kernel map.
-
-Let's check the symbol address in the initial map and use it if found.
+This is for test functions to find the kallsyms correctly.  It can find
+the machine from the kernel maps and use its root_dir.  This is helpful
+to setup fake /proc directory for testing.
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/symbol.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/symbol.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 8eea49c50453d13a..b533fbf17a8b19a3 100644
+index b533fbf17a8b19a3..6ddbf4427c60dace 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -951,7 +951,8 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
- 				pos->end -= delta;
- 			}
+@@ -2002,6 +2002,7 @@ static char *dso__find_kallsyms(struct dso *dso, struct map *map)
+ 	char sbuild_id[SBUILD_ID_SIZE];
+ 	bool is_host = false;
+ 	char path[PATH_MAX];
++	struct maps *kmaps = map__kmaps(map);
  
--			if (count == 0) {
-+			if (map__start(initial_map) <= (pos->start + delta) &&
-+			    (pos->start + delta) < map__end(initial_map)) {
- 				map__zput(curr_map);
- 				curr_map = map__get(initial_map);
- 				goto add_symbol;
+ 	if (!dso__has_build_id(dso)) {
+ 		/*
+@@ -2038,8 +2039,13 @@ static char *dso__find_kallsyms(struct dso *dso, struct map *map)
+ 		return strdup(path);
+ 
+ 	/* Use current /proc/kallsyms if possible */
+-	if (is_host) {
+ proc_kallsyms:
++	if (kmaps) {
++		struct machine *machine = maps__machine(kmaps);
++
++		scnprintf(path, sizeof(path), "%s/proc/kallsyms", machine->root_dir);
++		return strdup(path);
++	} else if (is_host) {
+ 		return strdup("/proc/kallsyms");
+ 	}
+ 
 -- 
 2.52.0.158.g65b55ccf14-goog
 
