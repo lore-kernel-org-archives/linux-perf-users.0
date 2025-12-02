@@ -1,55 +1,57 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69792BDC29
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 16:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BFD2BE62E
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 16:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764694434; cv=none; b=PoFCAg0ybjrTAV4ywZ4T29g6/kOg48ZUgRMfUuNHM9D1UfNsHYoB3bhRmpWLkaR736h7tGtbKTM2iGkfHsH+hZiW5+K3K6KOc6MsyP9GeLiAf8FHWkzfLP/PHHtW0b1MQaZONmY6QYxRTabrawNS6x8/G2NjNL5+Q69HQ8SHimc=
+	t=1764694443; cv=none; b=VSLHeTn4gwgv89EHrXx1yeL5OhmNAOpR0Erf4UQEcNLSESUHQAVqIVhpdrCHYFaOTlogC7oWAR2Ulo/3S8TfsmQ30HPDgEo8+lDODhbZxltW9JZHPQmkqFREyXrgN1IrtpqhcHUgixfNKdAfB1rotXBEBHwYZT//s6JZryBSimE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764694434; c=relaxed/simple;
-	bh=+VuGKRpago5g32rnVZvs1w9NkuVaMi3ZWb1kIvxv5VM=;
+	s=arc-20240116; t=1764694443; c=relaxed/simple;
+	bh=PKN9wKWRHuHBnEagiKPstIxGTBNtnHMEpF+O0Q3fxD4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=sgO0prPPv6cXCNUNvVibDpMoXcQD+YLItFNxKohA8XCwWDGXSZJnr1L2LmLf+7v4woVxESMCC/iB1QDuTniHrZhwgCnE3+xl8u8iVQpm7+QHHFe32+KtihgHyWVTm5BXF/uYj4Rq3uvnC9wIMtunahIngEP3/khz8j4zbLkcGlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tvg29oic; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=Tf1CfV6sJzrk3w0os/tCIIILEotBAf3kq9WyzYpBEBvNCtJrif2AEW5/Msecj1C3bEqt/DBQ+y2syjQpbt+FxOA0E8Id+EZHNPAWOyC3Ahtqf3208LA1w2h4+FSmCnd4mCO9NSXoPz1zCpsHj5qrtV30W+Hi7xvHKH6txBRhTNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2A1dPG8F; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tvg29oic"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-297e5a18652so61241985ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 08:53:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2A1dPG8F"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-ba265ee0e34so5349773a12.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 08:53:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764694432; x=1765299232; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=thyC6gLHoXaiGKry1UOkvUXEqn0AK8hudN66LgrOvpU=;
-        b=Tvg29oicQFX4TMmI0HXdTdF+9A5LjFAz5VjszVEMwigMcToD/u3WWq4aST2mv/4daC
-         LKK35xB2n5erlHp6VJjZca93/x0nqp9VzdQ6jD9mm2uXkWGz5BbDP+nOsy2VaVaVNPFc
-         9Qau0xspfbzSskLpoT7WcPUHHfnjhTgm3KAf1lwPJsP5PC6X3l9aQb2AcrKKzNJ113yg
-         UpI26yC6KrJczq642esJh98VHD6JeN80CU5Wwc89hGsPtRcfS8Tq2LGEF8vYRNQvp6/Y
-         +bNLYYppYzq2OyFDnp0WB33KIssBct+4qrqTdZQJfVwhdlV63S35Pepeevt5820cWkbb
-         hmvg==
+        d=google.com; s=20230601; t=1764694439; x=1765299239; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bMgnfa3AYI0t40UWO2zRUlXL6E47k1A6ST6Q0daj43I=;
+        b=2A1dPG8FR6YzCPHHAY/aTf7fQ5hyVAyNxaju3HPvvrpnOLTUHGvCFc+5DE40XObZmq
+         ht9/CIgo4wcleZa8kUw/RD6QGTOTM/r9b3VYXsbW/Oq5rTrrTQptslhHokh0IhYZ87Du
+         0cnqAZQnxyIRdXrhWy5Oe3ajimxFXrKTVpnupS9W91BU1NwwYym9yNNXIh+hUDEuHY1y
+         D5kOWZ8POOc2GMmbvBg9IhovK2X6ajw0wgsjJOZasbfUGSzp67VRz0bG2J1PBGG5pkgS
+         Pbbr1SQMGIjAwRIYWIZuIpeogd1092eeegB+D24MRHaNCvAcnBsT9bRhll1Fslki1Zd2
+         Xxvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764694432; x=1765299232;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=thyC6gLHoXaiGKry1UOkvUXEqn0AK8hudN66LgrOvpU=;
-        b=k1RwYx5EoZEbIHbHmpxNGv8po0tgou4CrA3hB0n4itbitYTwT47mjOzomxYwE3R8qX
-         8Zh0X6+jKax8WuPTW4yVqWrltcRG94oRoP8eXbwccM2VgdcLet2Em2i9WohNf6UOwvm3
-         aj37wDDQxV8Dyu1N1XGcdawKL9jhkpBvv/fD12clp+DGdn1U2lcqhc7Yd3CziKOUYevr
-         32Ecve/eMiN7NC870o63RlKh1xgsXKmxCfJ0GvHF6f1FmrjWpYnwlcOrB0S7f4pM445y
-         PtVkUmjf/LDA7BKK/B1qB/mCBrmpENxKlbaDqAjrZzaLrhmqiXs4lNwGyuiF2PsD9FTw
-         VMsA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/Q71tI/XUKC/9bbwTPY9bjKhL3vE+KIeFlUlEbvGFKSvrp2ZJxvOsAk2r/rzpMAmeY7ruBUSecvZitFBB/Y/0@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXN6zp3gf+XXIDUZ8pvvYsRi9R8IB8SCwsgJKB8mK0CxgiXfEO
-	R5Dxb6YoH/pp/yNGLZkJrkXC7bg2Y1KpKkcOdaf+mlFV207yzR4I0/GqDBf+uJlRdpdNT9ChqTP
-	YhoR7clLHfA==
-X-Google-Smtp-Source: AGHT+IE0/p2JoW1TZj7cfNF1e+VX2+9tvW6YL7vSDYQAc09tPzgkkUBB08oJkfPbDdXi3VqNeI53knN1330k
-X-Received: from pgbj27.prod.google.com ([2002:a63:551b:0:b0:bdb:36f7:556f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ef51:b0:295:9b39:4533
- with SMTP id d9443c01a7336-29b6c57210emr484928435ad.30.1764694431947; Tue, 02
- Dec 2025 08:53:51 -0800 (PST)
-Date: Tue,  2 Dec 2025 08:53:32 -0800
+        d=1e100.net; s=20230601; t=1764694439; x=1765299239;
+        h=content-transfer-encoding:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bMgnfa3AYI0t40UWO2zRUlXL6E47k1A6ST6Q0daj43I=;
+        b=g18kh6eLrJeK+7mCb6lAZOC5Uhf3g1E6tB6y8V3d0843DxVs/SfIaG9JV9XmEJ1F66
+         fhlfAz0+5KlAd0p8zZAlzN2lxceqtMXvEYjIPPiREP21N1zjH3CBrVy54TclQ3Ip7/iK
+         WyT8rMUWY4v1D3MwpOuTs6+LYraHzem2kTcqqwchiLhCh1v6QqcDKEQvsIu3CvvhLG5u
+         yKSovFWSPMfhaqNktYtoi2RHyBDmczpGb7FmxRQoJtJjO1nVBqxdSm/iB1deYZTInKx3
+         rD4esZagFYraD7qVzVb8ebQ8gQVLl1KWWotM3R30jEE/D7SDS+WZVqPJcutskEP6/FOE
+         UXBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUbboE9gtQnDMjOihLB7AP6f6cWc3/JvPtZs3NNsOsU6w8DLijMhAeXBIDgZYAPZFpOvmMr6FdUd339ENPoK1E@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn0zphlavwZTWQIYkiOlWy6/4DbPTtuiQcmTdgvzqdaweURhRB
+	Y4uiqt+KLnJla29cWTl5SxBSjnBboe/J6CLMQp5Biebt4vU9udeYnhcBwsKUVI705DwSEcam2D0
+	NtUhHrDhJxA==
+X-Google-Smtp-Source: AGHT+IGd3UZRxb66Lca370uLblqSxOshEBK4GaC4GVtjW5e/5zaTeSciu4oVafdOe0NB5u5glPTYH/mvDX52
+X-Received: from dykf10.prod.google.com ([2002:a05:7300:690a:b0:2a2:4de5:16b9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:da82:b0:2a4:3592:c60b
+ with SMTP id 5a478bee46e88-2a9418873d1mr14105438eec.28.1764694439362; Tue, 02
+ Dec 2025 08:53:59 -0800 (PST)
+Date: Tue,  2 Dec 2025 08:53:33 -0800
 In-Reply-To: <20251202165340.555375-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +61,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251202165340.555375-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
-Message-ID: <20251202165340.555375-2-irogers@google.com>
-Subject: [PATCH v1 1/9] perf vendor events intel: Update alderlake events from
- 1.34 to 1.35
+Message-ID: <20251202165340.555375-3-irogers@google.com>
+Subject: [PATCH v1 2/9] perf vendor events intel: Update arrowlake events from
+ 1.13 to 1.14
 From: Ian Rogers <irogers@google.com>
 To: Thomas Falcon <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
 	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
@@ -72,235 +74,2135 @@ To: Thomas Falcon <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.c
 	Caleb Biggers <caleb.biggers@intel.com>, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
 The updated events were published in:
-https://github.com/intel/perfmon/commit/c74f1cefa94d224cb3338507961b59d8a2a1c4e9
+https://github.com/intel/perfmon/commit/588dd77675039e1aaacee27a414cbcf3625=
+c58a3
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/alderlake/cache.json     | 16 ++++++++--------
- .../pmu-events/arch/x86/alderlake/pipeline.json  |  6 ++++--
- .../pmu-events/arch/x86/alderlaken/cache.json    | 16 ++++++++--------
- .../pmu-events/arch/x86/alderlaken/pipeline.json |  6 ++++--
- tools/perf/pmu-events/arch/x86/mapfile.csv       |  4 ++--
- 5 files changed, 26 insertions(+), 22 deletions(-)
+ .../pmu-events/arch/x86/arrowlake/cache.json  | 337 ++++++++++++++++-
+ .../arch/x86/arrowlake/floating-point.json    |  73 ++++
+ .../arch/x86/arrowlake/frontend.json          |  72 ++++
+ .../pmu-events/arch/x86/arrowlake/memory.json |  64 ++++
+ .../pmu-events/arch/x86/arrowlake/other.json  | 119 ++++++
+ .../arch/x86/arrowlake/pipeline.json          | 350 ++++++++++++++++++
+ .../arch/x86/arrowlake/virtual-memory.json    | 113 ++++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   2 +-
+ 8 files changed, 1111 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/cache.json b/tools/perf/pmu-events/arch/x86/alderlake/cache.json
-index 4cd535baf703..be15a7f83717 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/cache.json
-@@ -877,7 +877,7 @@
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 128 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
-+        "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
-@@ -890,7 +890,7 @@
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 16 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
-+        "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
-@@ -903,7 +903,7 @@
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 256 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
-+        "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
-@@ -916,7 +916,7 @@
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 32 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
-+        "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
-@@ -929,7 +929,7 @@
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 4 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
-+        "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
-@@ -942,7 +942,7 @@
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 512 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
-+        "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
-@@ -955,7 +955,7 @@
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 64 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
-+        "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
-@@ -968,7 +968,7 @@
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 8 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
-+        "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json b/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
-index 33d1f39e441f..57a8c78cdc49 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
-@@ -32,8 +32,9 @@
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "Counts the number of active floating point and integer dividers per cycle.",
-+        "BriefDescription": "This event is deprecated.",
-         "Counter": "0,1,2,3,4,5",
-+        "Deprecated": "1",
-         "EventCode": "0xcd",
-         "EventName": "ARITH.DIV_OCCUPANCY",
+diff --git a/tools/perf/pmu-events/arch/x86/arrowlake/cache.json b/tools/pe=
+rf/pmu-events/arch/x86/arrowlake/cache.json
+index 30dd56b487ba..fba4a0672f6c 100644
+--- a/tools/perf/pmu-events/arch/x86/arrowlake/cache.json
++++ b/tools/perf/pmu-events/arch/x86/arrowlake/cache.json
+@@ -8,6 +8,16 @@
          "SampleAfterValue": "1000003",
-@@ -41,8 +42,9 @@
          "Unit": "cpu_atom"
      },
++    {
++        "BriefDescription": "Counts the number of L1D cacheline (dirty) ev=
+ictions caused by load misses, stores, and prefetches.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x51",
++        "EventName": "DL1.DIRTY_EVICTION",
++        "PublicDescription": "Counts the number of L1D cacheline (dirty) e=
+victions caused by load misses, stores, and prefetches.  Does not count evi=
+ctions or dirty writebacks caused by snoops.  Does not count a replacement =
+unless a (dirty) line was written back.",
++        "SampleAfterValue": "200003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
      {
--        "BriefDescription": "Counts the number of floating point and integer divider uops executed per cycle.",
-+        "BriefDescription": "This event is deprecated.",
-         "Counter": "0,1,2,3,4,5",
-+        "Deprecated": "1",
-         "EventCode": "0xcd",
-         "EventName": "ARITH.DIV_UOPS",
+         "BriefDescription": "Counts the number of L1D cacheline (dirty) ev=
+ictions caused by load misses, stores, and prefetches.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -109,6 +119,15 @@
+         "UMask": "0x1f",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of cache lines filled into =
+the L2 cache that are in Exclusive state",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x25",
++        "EventName": "L2_LINES_IN.E",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of cache lines filled into =
+the L2 cache that are in Exclusive state",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -119,6 +138,15 @@
+         "UMask": "0x4",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of cache lines filled into =
+the L2 cache that are in Forward state",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x25",
++        "EventName": "L2_LINES_IN.F",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x10",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of cache lines filled into =
+the L2 cache that are in Forward state",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -129,6 +157,25 @@
+         "UMask": "0x10",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of cache lines filled into =
+the L2 cache that are in Invalid state",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x25",
++        "EventName": "L2_LINES_IN.I",
++        "PublicDescription": "Counts the number of cache lines filled into=
+ the L2 cache that are in Invalid state, does not count lines that go Inval=
+id due to an eviction",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of cache lines filled into =
+the L2 cache that are in Modified state",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x25",
++        "EventName": "L2_LINES_IN.M",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of cache lines filled into =
+the L2 cache that are in Modified state",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -139,6 +186,15 @@
+         "UMask": "0x8",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of cache lines filled into =
+the L2 cache that are in Shared state",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x25",
++        "EventName": "L2_LINES_IN.S",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of cache lines filled into =
+the L2 cache that are in Shared state",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -189,6 +245,16 @@
+         "UMask": "0x1",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of L2 cache lines that have=
+ been L2 hardware prefetched but not used by demand accesses",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x26",
++        "EventName": "L2_LINES_OUT.USELESS_HWPF",
++        "PublicDescription": "Counts the number of L2 cache lines that hav=
+e been L2 hardware prefetched but not used by demand accesses.  Increments =
+on the core that brought the line in originally.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Cache lines that have been L2 hardware prefet=
+ched but not used by demand accesses",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -199,6 +265,42 @@
+         "UMask": "0x4",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of L2 prefetches initiated =
+by either the L2 Stream or AMP that were  throttled due to Dynamic Prefetch=
+ Throttling. The throttle requestor/source could be from the uncore/SOC or =
+the Dead Block Predictor.  Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x28",
++        "EventName": "L2_PREFETCHES_THROTTLED.DPT",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of L2 prefetches initiated =
+by the L2 Stream that were throttled due to Demand Throttle Prefetcher.  DT=
+P Global Triggered with no Local Override. Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x28",
++        "EventName": "L2_PREFETCHES_THROTTLED.DTP",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of L2 prefetches initiated =
+by the L2 Stream and not throttled by DTP due to local override.  These pre=
+fetches may still be throttled due to another throttler mechanism besides D=
+TP. Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x28",
++        "EventName": "L2_PREFETCHES_THROTTLED.DTP_OVERRIDE",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of L2 prefetches initiated =
+by either the L2 Stream or AMP that were throttled due to exceeding the XQ =
+threshold set by either XQ_THRESHOLD_DTP or XQ_THRESHOLD. Counts on a per c=
+ore basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x28",
++        "EventName": "L2_PREFETCHES_THROTTLED.XQ_THRESH",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of demand and prefetch tran=
+sactions that the External Queue (XQ) rejects due to a full or near full co=
+ndition.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -208,6 +310,16 @@
          "SampleAfterValue": "1000003",
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json b/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
-index 669f4979b651..76a841675337 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
-@@ -247,7 +247,7 @@
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the number of L2 Cache Accesses Counts=
+ the total number of L2 Cache Accesses - sum of hits, misses, rejects  fron=
+t door requests for CRd/DRd/RFO/ItoM/L2 Prefetches only, per core event",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x24",
++        "EventName": "L2_REQUEST.ALL",
++        "PublicDescription": "Counts the number of L2 Cache Accesses Count=
+s the total number of L2 Cache Accesses - sum of hits, misses, rejects  fro=
+nt door requests for CRd/DRd/RFO/ItoM/L2 Prefetches only.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x7",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "All accesses to L2 cache [This event is alias=
+ to L2_RQSTS.REFERENCES, L2_RQSTS.ANY]",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -218,6 +330,15 @@
+         "UMask": "0xff",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of L2 Cache Accesses that r=
+esulted in a Hit from a front door request only (does not include rejects o=
+r recycles), per core event",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x24",
++        "EventName": "L2_REQUEST.HIT",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of L2 Cache Accesses that r=
+esulted in a Hit from a front door request only (does not include rejects o=
+r recycles), per core event",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -227,6 +348,15 @@
+         "UMask": "0x2",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of total L2 Cache Accesses =
+that resulted in a Miss from a front door request only (does not include re=
+jects or recycles), per core event",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x24",
++        "EventName": "L2_REQUEST.MISS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Read requests with true-miss in L2 cache [Thi=
+s event is alias to L2_RQSTS.MISS]",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -246,6 +376,15 @@
+         "UMask": "0x1",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of L2 Cache Accesses that m=
+iss the L2 and get BBL reject  short and long rejects (includes those count=
+ed in L2_reject_XQ.any), per core event",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x24",
++        "EventName": "L2_REQUEST.REJECTS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of L2 Cache Accesses that m=
+iss the L2 and get BBL reject  short and long rejects, per core event",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -365,6 +504,51 @@
+         "UMask": "0x22",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of LLC prefetches that were=
+  throttled due to Dynamic Prefetch Throttling.  The throttle requestor/sou=
+rce could be from the uncore/SOC or the Dead Block Predictor. Counts on a p=
+er core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x29",
++        "EventName": "LLC_PREFETCHES_THROTTLED.DPT",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of LLC prefetches throttled=
+ due to Demand Throttle Prefetcher.  DTP Global Triggered with no Local Ove=
+rride. Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x29",
++        "EventName": "LLC_PREFETCHES_THROTTLED.DTP",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of LLC prefetches not throt=
+tled by DTP due to local override.  These prefetches may still be throttled=
+ due to another throttler mechanism. Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x29",
++        "EventName": "LLC_PREFETCHES_THROTTLED.DTP_OVERRIDE",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of LLC prefetches throttled=
+ due to LLC hit rate in <insert knob name here>. Counts on a per core basis=
+.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x29",
++        "EventName": "LLC_PREFETCHES_THROTTLED.HIT_RATE",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x10",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of LLC prefetches throttled=
+ due to exceeding the XQ threshold set by either XQ_THRESHOLD_DTP or LLC_XQ=
+_THRESHOLD. Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x29",
++        "EventName": "LLC_PREFETCHES_THROTTLED.XQ_THRESH",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Cycles when L1D is locked",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -375,6 +559,16 @@
+         "UMask": "0x2",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of cacheable memory request=
+s that miss in the LLC. Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x2e",
++        "EventName": "LONGEST_LAT_CACHE.MISS",
++        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that miss in the Last Level Cache (LLC). Requests include demand loads, =
+reads for ownership (RFO), instruction fetches and L1 HW prefetches. If the=
+ core has access to an L3 cache, the LLC is the L3 cache, otherwise it is t=
+he L2 cache. Counts on a per core basis.",
++        "SampleAfterValue": "200003",
++        "UMask": "0x41",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Core-originated cacheable requests that misse=
+d L3  (Except hardware prefetches to the L3)",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -385,6 +579,26 @@
+         "UMask": "0x41",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of cacheable memory request=
+s that miss in the LLC. Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x2e",
++        "EventName": "LONGEST_LAT_CACHE.MISS",
++        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that miss in the Last Level Cache (LLC). Requests include demand loads, =
+reads for ownership (RFO), instruction fetches and L1 HW prefetches. If the=
+ core has access to an L3 cache, the LLC is the L3 cache, otherwise it is t=
+he L2 cache. Counts on a per core basis.",
++        "SampleAfterValue": "200003",
++        "UMask": "0x41",
++        "Unit": "cpu_lowpower"
++    },
++    {
++        "BriefDescription": "Counts the number of cacheable memory request=
+s that access the LLC. Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x2e",
++        "EventName": "LONGEST_LAT_CACHE.REFERENCE",
++        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that access the Last Level Cache (LLC). Requests include demand loads, r=
+eads for ownership (RFO), instruction fetches and L1 HW prefetches. If the =
+core has access to an L3 cache, the LLC is the L3 cache, otherwise it is th=
+e L2 cache. Counts on a per core basis.",
++        "SampleAfterValue": "200003",
++        "UMask": "0x4f",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Core-originated cacheable requests that refer=
+ to L3 (Except hardware prefetches to the L3)",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -535,6 +749,15 @@
+         "UMask": "0x78",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of unhalted cycles when the=
+ core is stalled to a store buffer full condition",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x34",
++        "EventName": "MEM_BOUND_STALLS_LOAD.SBFULL",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x80",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of unhalted cycles when the=
+ core is stalled to a store buffer full condition",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -858,6 +1081,15 @@
+         "UMask": "0x20",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of load ops retired that mi=
+ss the L3 cache and hit in DRAM",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xd4",
++        "EventName": "MEM_LOAD_UOPS_MISC_RETIRED.LOCAL_DRAM",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_lowpower"
++    },
+     {
+         "BriefDescription": "Counts the number of load ops retired that hi=
+t the L1 data cache",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -940,6 +1172,15 @@
+         "UMask": "0x1c",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the number of load ops retired that hi=
+t in the L3 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xd1",
++        "EventName": "MEM_LOAD_UOPS_RETIRED.L3_HIT",
++        "SampleAfterValue": "200003",
++        "UMask": "0x1c",
++        "Unit": "cpu_lowpower"
++    },
+     {
+         "BriefDescription": "Counts the number of loads that hit in a writ=
+e combining buffer (WCB), excluding the first load that caused the WCB to a=
+llocate.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1039,6 +1280,16 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of memory uops retired.  A =
+single uop that performs both a load AND a store will be counted as 1, not =
+2 (e.g. ADD [mem], CONST)",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.ALL",
++        "SampleAfterValue": "200003",
++        "UMask": "0x83",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of load uops retired.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1081,7 +1332,7 @@
      },
      {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 128 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5,6,7",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_1024",
+@@ -1093,7 +1344,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
+-        "Counter": "0,1,2,3,4,5,6,7",
 +        "Counter": "0,1",
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
-@@ -259,7 +259,7 @@
+@@ -1105,7 +1356,7 @@
      },
      {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 16 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5,6,7",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
+@@ -1117,7 +1368,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
+-        "Counter": "0,1,2,3,4,5,6,7",
 +        "Counter": "0,1",
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
-@@ -271,7 +271,7 @@
+@@ -1129,7 +1380,7 @@
      },
      {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 256 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5,6,7",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
+@@ -1141,7 +1392,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5,6,7",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_2048",
+@@ -1153,7 +1404,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
+-        "Counter": "0,1,2,3,4,5,6,7",
 +        "Counter": "0,1",
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
-@@ -283,7 +283,7 @@
+@@ -1165,7 +1416,7 @@
      },
      {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 32 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5,6,7",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
+@@ -1177,7 +1428,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
+-        "Counter": "0,1,2,3,4,5,6,7",
 +        "Counter": "0,1",
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
-@@ -295,7 +295,7 @@
+@@ -1189,7 +1440,7 @@
      },
      {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 4 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5,6,7",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
+@@ -1201,7 +1452,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
+-        "Counter": "0,1,2,3,4,5,6,7",
 +        "Counter": "0,1",
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
-@@ -307,7 +307,7 @@
+@@ -1213,7 +1464,7 @@
      },
      {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 512 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5,6,7",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
+@@ -1225,7 +1476,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
+-        "Counter": "0,1,2,3,4,5,6,7",
 +        "Counter": "0,1",
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
-@@ -319,7 +319,7 @@
+@@ -1237,7 +1488,7 @@
      },
      {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 64 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5,6,7",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
+@@ -1249,7 +1500,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
+-        "Counter": "0,1,2,3,4,5,6,7",
 +        "Counter": "0,1",
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
-@@ -331,7 +331,7 @@
+@@ -1261,7 +1512,7 @@
      },
      {
-         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 8 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1,2,3,4,5",
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5,6,7",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
+@@ -1273,7 +1524,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled",
+-        "Counter": "0,1,2,3,4,5,6,7",
 +        "Counter": "0,1",
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json b/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-index 1dd61baec1a9..d650cbd48c1f 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-@@ -9,16 +9,18 @@
-         "UMask": "0x3"
+@@ -1285,7 +1536,7 @@
      },
      {
--        "BriefDescription": "Counts the number of active floating point and integer dividers per cycle.",
-+        "BriefDescription": "This event is deprecated.",
-         "Counter": "0,1,2,3,4,5",
-+        "Deprecated": "1",
-         "EventCode": "0xcd",
-         "EventName": "ARITH.DIV_OCCUPANCY",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x3"
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5,6,7",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
+@@ -1315,6 +1566,26 @@
+         "UMask": "0x21",
+         "Unit": "cpu_lowpower"
      },
++    {
++        "BriefDescription": "Counts the number of memory renamed load uops=
+ retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.MRN_LOADS",
++        "SampleAfterValue": "200003",
++        "UMask": "0x9",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of memory renamed store uop=
+s retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.MRN_STORES",
++        "SampleAfterValue": "200003",
++        "UMask": "0xa",
++        "Unit": "cpu_atom"
++    },
      {
--        "BriefDescription": "Counts the number of floating point and integer divider uops executed per cycle.",
-+        "BriefDescription": "This event is deprecated.",
-         "Counter": "0,1,2,3,4,5",
-+        "Deprecated": "1",
-         "EventCode": "0xcd",
-         "EventName": "ARITH.DIV_UOPS",
+         "BriefDescription": "Counts the number of memory uops retired that=
+ were splits.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1375,6 +1646,16 @@
+         "UMask": "0x42",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of memory uops retired that=
+ missed in the second level TLB.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.STLB_MISS",
++        "SampleAfterValue": "200003",
++        "UMask": "0x13",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of memory uops retired that=
+ missed in the second level TLB.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1385,6 +1666,16 @@
+         "UMask": "0x13",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of load ops retired that fi=
+lled the STLB - includes those in DTLB_LOAD_MISSES submasks",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.STLB_MISS_LOADS",
++        "SampleAfterValue": "200003",
++        "UMask": "0x11",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of load uops retired that m=
+iss in the second Level TLB.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1395,6 +1686,16 @@
+         "UMask": "0x11",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of store ops retired (store=
+ STLB miss)",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.STLB_MISS_STORES",
++        "SampleAfterValue": "200003",
++        "UMask": "0x12",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of store uops retired that =
+miss in the second level TLB.",
+         "Counter": "0,1,2,3,4,5,6,7",
+diff --git a/tools/perf/pmu-events/arch/x86/arrowlake/floating-point.json b=
+/tools/perf/pmu-events/arch/x86/arrowlake/floating-point.json
+index 23a80c526aa1..3e68c2468f11 100644
+--- a/tools/perf/pmu-events/arch/x86/arrowlake/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/arrowlake/floating-point.json
+@@ -1,4 +1,14 @@
+ [
++    {
++        "BriefDescription": "Counts the number of cycles when any of the f=
+loating point dividers are active.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "CounterMask": "1",
++        "EventCode": "0xcd",
++        "EventName": "ARITH.FPDIV_ACTIVE",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Cycles when floating-point divide unit is bus=
+y executing divide or square root operations.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -20,6 +30,24 @@
+         "UMask": "0x2",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of active floating point di=
+viders per cycle in the loop stage.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xcd",
++        "EventName": "ARITH.FPDIV_OCCUPANCY",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of floating point divider u=
+ops executed per cycle.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xcd",
++        "EventName": "ARITH.FPDIV_UOPS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts all microcode FP assists.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -473,6 +501,51 @@
+         "UMask": "0x3f",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the number of uops executed on all flo=
+ating point ports.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xb2",
++        "EventName": "FP_VINT_UOPS_EXECUTED.ALL",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1f",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of uops executed on floatin=
+g point and vector integer port 0.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xb2",
++        "EventName": "FP_VINT_UOPS_EXECUTED.P0",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of uops executed on floatin=
+g point and vector integer port 1.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xb2",
++        "EventName": "FP_VINT_UOPS_EXECUTED.P1",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of uops executed on floatin=
+g point and vector integer port 2.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xb2",
++        "EventName": "FP_VINT_UOPS_EXECUTED.P2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of uops executed on floatin=
+g point and vector integer port 3.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xb2",
++        "EventName": "FP_VINT_UOPS_EXECUTED.P3",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x10",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of uops executed on floatin=
+g point and vector integer port 0, 1, 2, 3.",
+         "Counter": "0,1,2,3,4,5,6,7",
+diff --git a/tools/perf/pmu-events/arch/x86/arrowlake/frontend.json b/tools=
+/perf/pmu-events/arch/x86/arrowlake/frontend.json
+index db2ef84ca041..a15de050a76c 100644
+--- a/tools/perf/pmu-events/arch/x86/arrowlake/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/arrowlake/frontend.json
+@@ -29,6 +29,42 @@
+         "UMask": "0x1",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of BACLEARS due to a condit=
+ional jump.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe6",
++        "EventName": "BACLEARS.COND",
++        "SampleAfterValue": "200003",
++        "UMask": "0x10",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of BACLEARS due to an indir=
+ect branch.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe6",
++        "EventName": "BACLEARS.INDIRECT",
++        "SampleAfterValue": "200003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of BACLEARS due to a return=
+ branch.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe6",
++        "EventName": "BACLEARS.RETURN",
++        "SampleAfterValue": "200003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of BACLEARS due to a direct=
+, unconditional jump.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe6",
++        "EventName": "BACLEARS.UNCOND",
++        "SampleAfterValue": "200003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Stalls caused by changing prefix length of th=
+e instruction.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -48,6 +84,15 @@
+         "UMask": "0x2",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of times a decode restricti=
+on reduces the decode throughput due to wrong instruction length prediction=
+.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe9",
++        "EventName": "DECODE_RESTRICTION.PREDECODE_WRONG",
++        "SampleAfterValue": "200003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "DSB-to-MITE switch true penalty cycles.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -733,6 +778,15 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of cycles that the micro-se=
+quencer is busy.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe7",
++        "EventName": "MS_DECODED.MS_BUSY",
++        "SampleAfterValue": "200003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of cycles that the micro-se=
+quencer is busy.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -741,5 +795,23 @@
          "SampleAfterValue": "1000003",
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index 32093bded949..d640acb8a3c7 100644
+         "UMask": "0x4",
+         "Unit": "cpu_lowpower"
++    },
++    {
++        "BriefDescription": "Counts the number of times entered into a uco=
+de flow in the FEC.  Includes inserted flows due to front-end detected faul=
+ts or assists.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe7",
++        "EventName": "MS_DECODED.MS_ENTRY",
++        "SampleAfterValue": "200003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of times nanocode flow is e=
+xecuted.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe7",
++        "EventName": "MS_DECODED.NANO_CODE",
++        "SampleAfterValue": "200003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/arrowlake/memory.json b/tools/p=
+erf/pmu-events/arch/x86/arrowlake/memory.json
+index aba1e27e5e37..05cc46518232 100644
+--- a/tools/perf/pmu-events/arch/x86/arrowlake/memory.json
++++ b/tools/perf/pmu-events/arch/x86/arrowlake/memory.json
+@@ -1,4 +1,13 @@
+ [
++    {
++        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to any number of reasons, incl=
+uding an L1 miss, WCB full, pagewalk, store address block or store data blo=
+ck.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x05",
++        "EventName": "LD_HEAD.ANY",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x7f",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to any number of reasons, incl=
+uding an L1 miss, WCB full, pagewalk, store address block or store data blo=
+ck, on a load that retires.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -62,6 +71,16 @@
+         "UMask": "0x81",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to other block cases.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x05",
++        "EventName": "LD_HEAD.OTHER",
++        "PublicDescription": "Counts the number of cycles that the head (o=
+ldest load) of the load buffer is stalled due to other block cases such as =
+pipeline conflicts, fences, etc.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x40",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to other =
+block cases.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -82,6 +101,15 @@
+         "UMask": "0xc0",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to a pagewalk.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x05",
++        "EventName": "LD_HEAD.PGWALK",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x20",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to a page=
+walk.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -100,6 +128,15 @@
+         "UMask": "0xa0",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to a store address match.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x05",
++        "EventName": "LD_HEAD.ST_ADDR",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to a stor=
+e address match.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -118,6 +155,24 @@
+         "UMask": "0x84",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to store data forward block.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x05",
++        "EventName": "LD_HEAD.ST_DATA",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to request buffers full or loc=
+k in progress.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x05",
++        "EventName": "LD_HEAD.WCB_FULL",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to reques=
+t buffers full or lock in progress.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -155,6 +210,15 @@
+         "UMask": "0x2",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of machine clears that flus=
+h the pipeline and restart the machine without the use of microcode.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc3",
++        "EventName": "MACHINE_CLEARS.MEMORY_ORDERING_FAST",
++        "SampleAfterValue": "20003",
++        "UMask": "0x82",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 1024 cycles.",
+         "Counter": "2,3,4,5,6,7,8,9",
+diff --git a/tools/perf/pmu-events/arch/x86/arrowlake/other.json b/tools/pe=
+rf/pmu-events/arch/x86/arrowlake/other.json
+index ab7aac14e697..c8feed3a99a6 100644
+--- a/tools/perf/pmu-events/arch/x86/arrowlake/other.json
++++ b/tools/perf/pmu-events/arch/x86/arrowlake/other.json
+@@ -18,6 +18,89 @@
+         "UMask": "0x8",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of unhalted cycles a Core i=
+s blocked due to a lock In Progress issued by another core",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x63",
++        "EventName": "BUS_LOCK.BLOCKED_CYCLES",
++        "PublicDescription": "Counts the number of unhalted cycles a Core =
+is blocked due to a lock In Progress issued by another core. Counts on a pe=
+r core basis.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of unhalted cycles a Core i=
+s blocked due to an Accepted lock it issued, includes both split and non-sp=
+lit lock cycles.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x63",
++        "EventName": "BUS_LOCK.LOCK_CYCLES",
++        "PublicDescription": "Counts the number of unhalted cycles a Core =
+is blocked due to an Accepted lock it issued, includes both split and non-s=
+plit lock cycles. Counts on a per core basis.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of non-split locks such as =
+UC locks issued by a Core (does not include cache locks)",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x63",
++        "EventName": "BUS_LOCK.NON_SPLIT_LOCKS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of split locks issued by a =
+Core",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x63",
++        "EventName": "BUS_LOCK.SPLIT_LOCKS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of cycles the L2 Prefetcher=
+s are at throttle level 0",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x32",
++        "EventName": "DYNAMIC_PREFETCH_THROTTLER.LEVEL0_SOC",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of cycles the L2 Prefetcher=
+ throttle level is at 1",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x32",
++        "EventName": "DYNAMIC_PREFETCH_THROTTLER.LEVEL1_SOC",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of cycles the L2 Prefetcher=
+ throttle level is at 2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x32",
++        "EventName": "DYNAMIC_PREFETCH_THROTTLER.LEVEL2_SOC",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of cycles the L2 Prefetcher=
+ throttle level is at 3",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x32",
++        "EventName": "DYNAMIC_PREFETCH_THROTTLER.LEVEL3_SOC",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of cycles the L2 Prefetcher=
+ throttle level is at 4",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x32",
++        "EventName": "DYNAMIC_PREFETCH_THROTTLER.LEVEL4_SOC",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x10",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "This event is deprecated. [This event is alia=
+s to MISC_RETIRED.LBR_INSERTS]",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -86,5 +169,41 @@
+         "SampleAfterValue": "1000003",
+         "UMask": "0x1",
+         "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts the number of prefetch requests that w=
+ere promoted in the XQ to a demand request.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xf4",
++        "EventName": "XQ_PROMOTION.ALL",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x7",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of prefetch requests that w=
+ere promoted in the XQ to a demand code read.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xf4",
++        "EventName": "XQ_PROMOTION.CRDS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of prefetch requests that w=
+ere promoted in the XQ to a demand read.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xf4",
++        "EventName": "XQ_PROMOTION.DRDS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of prefetch requests that w=
+ere promoted in the XQ to a demand RFO.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xf4",
++        "EventName": "XQ_PROMOTION.RFOS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/arrowlake/pipeline.json b/tools=
+/perf/pmu-events/arch/x86/arrowlake/pipeline.json
+index 0651e2c4561e..805616052925 100644
+--- a/tools/perf/pmu-events/arch/x86/arrowlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/arrowlake/pipeline.json
+@@ -30,6 +30,16 @@
+         "UMask": "0x3",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of cycles when any of the i=
+nteger dividers are active.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "CounterMask": "1",
++        "EventCode": "0xcd",
++        "EventName": "ARITH.IDIV_ACTIVE",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Cycles when integer divide unit is busy execu=
+ting divide or square root operations.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -41,6 +51,24 @@
+         "UMask": "0x8",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of active integer dividers =
+per cycle.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xcd",
++        "EventName": "ARITH.IDIV_OCCUPANCY",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of integer divider uops exe=
+cuted per cycle.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xcd",
++        "EventName": "ARITH.IDIV_UOPS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Number of occurrences where a microcode assis=
+t is invoked by hardware.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -117,6 +145,15 @@
+         "UMask": "0x7e",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of not taken JCC branch ins=
+tructions retired",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc4",
++        "EventName": "BR_INST_RETIRED.COND_NTAKEN",
++        "SampleAfterValue": "200003",
++        "UMask": "0x7f",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Not taken branch instructions retired.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -252,6 +289,15 @@
+         "UMask": "0xfb",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of near indirect JMP branch=
+ instructions retired",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc4",
++        "EventName": "BR_INST_RETIRED.INDIRECT_JMP",
++        "SampleAfterValue": "200003",
++        "UMask": "0xef",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of near indirect JMP branch=
+ instructions retired.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -261,6 +307,17 @@
+         "UMask": "0xef",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "This event is deprecated. Refer to new event =
+BR_INST_RETIRED.INDIRECT_CALL",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "Deprecated": "1",
++        "Errata": "ARL011",
++        "EventCode": "0xc4",
++        "EventName": "BR_INST_RETIRED.IND_CALL",
++        "SampleAfterValue": "200003",
++        "UMask": "0xfb",
++        "Unit": "cpu_lowpower"
++    },
+     {
+         "BriefDescription": "Counts the number of near CALL branch instruc=
+tions retired",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -318,6 +375,15 @@
+         "UMask": "0xf7",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of taken branch instruction=
+s retired",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc4",
++        "EventName": "BR_INST_RETIRED.NEAR_TAKEN",
++        "SampleAfterValue": "200003",
++        "UMask": "0xc0",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Taken branch instructions retired.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -440,6 +506,15 @@
+         "UMask": "0x151",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of mispredicted not taken J=
+CC branch instructions retired",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc5",
++        "EventName": "BR_MISP_RETIRED.COND_NTAKEN",
++        "SampleAfterValue": "200003",
++        "UMask": "0x7f",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Mispredicted non-taken conditional branch ins=
+tructions retired.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -613,6 +688,15 @@
+         "UMask": "0xc0",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of mispredicted near indire=
+ct JMP branch instructions retired",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc5",
++        "EventName": "BR_MISP_RETIRED.INDIRECT_JMP",
++        "SampleAfterValue": "200003",
++        "UMask": "0xef",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of mispredicted near indire=
+ct JMP branch instructions retired.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -622,6 +706,15 @@
+         "UMask": "0xef",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of mispredicted near taken =
+branch instructions retired",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc5",
++        "EventName": "BR_MISP_RETIRED.NEAR_TAKEN",
++        "SampleAfterValue": "200003",
++        "UMask": "0x80",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Number of near branch instructions retired th=
+at were mispredicted and taken.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -689,6 +782,15 @@
+         "UMask": "0x48",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the total number of BTCLEARS.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe8",
++        "EventName": "BTCLEAR.ANY",
++        "PublicDescription": "Counts the total number of BTCLEARS which oc=
+curs when the Branch Target Buffer (BTB) predicts a taken branch.",
++        "SampleAfterValue": "1000003",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Core clocks when the thread is in the C0.1 li=
+ght-weight slower wakeup time but more power saving optimized state.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -1187,6 +1289,15 @@
+         "UMask": "0x80",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the number of uops executed on all Int=
+eger ports.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xb3",
++        "EventName": "INT_UOPS_EXECUTED.ALL",
++        "SampleAfterValue": "1000003",
++        "UMask": "0xff",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of uops executed on a load =
+port.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1197,6 +1308,42 @@
+         "UMask": "0x1",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the number of uops executed on integer=
+ port 0.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xb3",
++        "EventName": "INT_UOPS_EXECUTED.P0",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of uops executed on integer=
+ port 1.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xb3",
++        "EventName": "INT_UOPS_EXECUTED.P1",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x10",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of uops executed on integer=
+ port 2.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xb3",
++        "EventName": "INT_UOPS_EXECUTED.P2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x20",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of uops executed on integer=
+ port 3.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xb3",
++        "EventName": "INT_UOPS_EXECUTED.P3",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x40",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of uops executed on integer=
+ port  0,1, 2, 3.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1327,6 +1474,15 @@
+         "UMask": "0x4",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of occurrences a retired lo=
+ad was blocked for any of the following reasons:  utlb_miss, 4k_alias, unkn=
+own_sta/bad_fwd, unready_fwd (includes md blocks and esp consuming load blo=
+cks)",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x03",
++        "EventName": "LD_BLOCKS.ALL",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1f",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of occurrences a retired lo=
+ad gets blocked because its address exactly matches an older store whose da=
+ta is not ready (a.k.a. unknown).  unready_fwd",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1392,6 +1548,25 @@
+         "UMask": "0x2",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of demand loads that match =
+on a wcb (request buffer) allocated by an L1 hardware prefetch [This event =
+is alias to LOAD_HIT_PREFETCH.HW_PF]",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x4c",
++        "EventName": "LOAD_HIT_PREFETCH.HWPF",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "This event is deprecated. [This event is alia=
+s to LOAD_HIT_PREFETCH.HWPF]",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "Deprecated": "1",
++        "EventCode": "0x4c",
++        "EventName": "LOAD_HIT_PREFETCH.HW_PF",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Cycles Uops delivered by the LSD, but didn't =
+come from the decoder.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -1432,6 +1607,15 @@
+         "SampleAfterValue": "20003",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the number of machine clears that flus=
+h the pipeline and restart the machine without the use of microcode.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc3",
++        "EventName": "MACHINE_CLEARS.ANY_FAST",
++        "SampleAfterValue": "20003",
++        "UMask": "0xff",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Number of machine clears (nukes) of any type.=
+",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -1462,6 +1646,15 @@
+         "UMask": "0x8",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of machine clears that flus=
+h the pipeline and restart the machine without the use of microcode.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc3",
++        "EventName": "MACHINE_CLEARS.DISAMBIGUATION_FAST",
++        "SampleAfterValue": "20003",
++        "UMask": "0x88",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of nukes due to memory rena=
+ming",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1471,6 +1664,15 @@
+         "UMask": "0x10",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the number of machine clears that flus=
+h the pipeline and restart the machine without the use of microcode.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc3",
++        "EventName": "MACHINE_CLEARS.MRN_NUKE_FAST",
++        "SampleAfterValue": "20003",
++        "UMask": "0x90",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of times that the machine c=
+lears due to a page fault.  Covers both I-Side and D-Side (Loads/Stores) pa=
+ge faults.  A page fault occurs when either the page is not present, or an =
+access violation.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1574,6 +1776,15 @@
+         "UMask": "0x20",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of LBR entries recorded. Re=
+quires LBRs to be enabled in IA32_LBR_CTL.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe4",
++        "EventName": "MISC_RETIRED.LBR_INSERTS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "LBR record is inserted",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -1593,6 +1804,86 @@
+         "UMask": "0x1",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of CLFLUSH, CLWB, and CLDEM=
+OTE instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe0",
++        "EventName": "MISC_RETIRED1.CL_INST",
++        "SampleAfterValue": "1000003",
++        "UMask": "0xff",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of LFENCE instructions reti=
+red.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe0",
++        "EventName": "MISC_RETIRED1.LFENCE",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of RDPMC, RDTSC, and RDTSCP=
+ instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe0",
++        "EventName": "MISC_RETIRED1.RDPMC_RDTSC_P",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Count the number of WRMSR instructions retire=
+d.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe0",
++        "EventName": "MISC_RETIRED1.WRMSR",
++        "SampleAfterValue": "1000003",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of faults and software inte=
+rrupts with vector < 32.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe1",
++        "EventName": "MISC_RETIRED2.FAULT_ALL",
++        "PublicDescription": "Counts the number of faults and software int=
+errupts with vector < 32, including VOE cases.",
++        "SampleAfterValue": "1000003",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of PSB+ nuke events and ToP=
+A trap events.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe1",
++        "EventName": "MISC_RETIRED2.INTEL_PT_CLEARS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of user interrupts delivere=
+d.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe1",
++        "EventName": "MISC_RETIRED2.ULI_DELIVERY",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of SENDUIPI instructions re=
+tired.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe1",
++        "EventName": "MISC_RETIRED2.ULI_SENDUIPI",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x9",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of VM exits.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xe1",
++        "EventName": "MISC_RETIRED2.VM_EXIT",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Cycles when Reservation Station (RS) is empty=
+ for the thread.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -1643,6 +1934,15 @@
+         "UMask": "0x4",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number issue slots not consumed  d=
+ue to a  color request for an FCW or MXCSR control register when all 4 colo=
+rs (copies) are already in use",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x75",
++        "EventName": "SERIALIZATION.COLOR_STALLS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of issue slots where no uop=
+ could issue due to an IQ scoreboard that stalls allocation until a specifi=
+ed older uop retires or (in the case of jump scoreboard) executes. Commonly=
+ executed instructions with IQ scoreboards include LFENCE and MFENCE.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1720,6 +2020,15 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of issue slo=
+ts not consumed by the backend because allocation is stalled due to a mispr=
+edicted jump or a machine clear.",
++        "Counter": "Fixed counter 4",
++        "EventName": "TOPDOWN_BAD_SPECULATION.ALL",
++        "PublicDescription": "Fixed Counter: Counts the number of issue sl=
+ots that were not consumed by the backend because allocation is stalled due=
+ to a mispredicted jump or a machine clear.  Counts all issue slots blocked=
+ during this recovery window including relevant microcode flows and while u=
+ops are not yet available in the IQ. Also, includes the issue slots that we=
+re consumed by the backend but were thrown away because they were younger t=
+han the mispredict or machine clear.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of issue slots that were no=
+t consumed by the backend because allocation is stalled due to a mispredict=
+ed jump or a machine clear.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1836,6 +2145,14 @@
+         "UMask": "0x1",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to backend stalls",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x74",
++        "EventName": "TOPDOWN_BE_BOUND.ALL_NON_ARCH",
++        "SampleAfterValue": "1000003",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to backend stalls [This event is alias to TOPDOWN_BE_BOUND.ALL]",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1951,6 +2268,14 @@
+         "UMask": "0x6",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to front end stalls",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x71",
++        "EventName": "TOPDOWN_FE_BOUND.ALL_NON_ARCH",
++        "SampleAfterValue": "1000003",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to front end stalls",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -2148,6 +2473,14 @@
+         "UMask": "0x7",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the number of consumed retirement slot=
+s.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x72",
++        "EventName": "TOPDOWN_RETIRING.ALL_NON_ARCH",
++        "SampleAfterValue": "1000003",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of consumed retirement slot=
+s.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -2367,6 +2700,14 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of uops retired",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc2",
++        "EventName": "UOPS_RETIRED.ALL",
++        "SampleAfterValue": "2000003",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the total number of uops retired.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -2414,6 +2755,15 @@
+         "UMask": "0x10",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of uops retired that were d=
+elivered by the loop stream detector (LSD).",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc2",
++        "EventName": "UOPS_RETIRED.LSD",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of uops that are from the c=
+omplex flows issued by the micro-sequencer (MS).  This includes uops from f=
+lows due to complex instructions, faults, assists, and inserted flows.",
+         "Counter": "0,1,2,3,4,5,6,7",
+diff --git a/tools/perf/pmu-events/arch/x86/arrowlake/virtual-memory.json b=
+/tools/perf/pmu-events/arch/x86/arrowlake/virtual-memory.json
+index a3e4a4f3ab45..602e2ad5de6e 100644
+--- a/tools/perf/pmu-events/arch/x86/arrowlake/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/arrowlake/virtual-memory.json
+@@ -8,6 +8,15 @@
+         "UMask": "0x1",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts walks that miss the PDE_CACHE",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x08",
++        "EventName": "DTLB_LOAD_MISSES.PDE_CACHE_MISS",
++        "SampleAfterValue": "200003",
++        "UMask": "0x80",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of first level TLB misses b=
+ut second level hits due to a demand load that did not start a page walk. A=
+ccounts for all page sizes. Will result in a DTLB write from STLB.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -47,6 +56,16 @@
+         "UMask": "0x10",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of page walks completed due=
+ to load DTLB misses to any page size.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x08",
++        "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
++        "PublicDescription": "Counts the number of page walks completed du=
+e to loads (including SW prefetches) whose address translations missed in a=
+ll Translation Lookaside Buffer (TLB) levels and were mapped to any page si=
+ze. Includes page walks that page fault.",
++        "SampleAfterValue": "200003",
++        "UMask": "0xe",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Load miss in all TLB levels causes a page wal=
+k that completes. (All page sizes)",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -175,6 +194,15 @@
+         "UMask": "0x1",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts walks that miss the PDE_CACHE",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x49",
++        "EventName": "DTLB_STORE_MISSES.PDE_CACHE_MISS",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x80",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of first level TLB misses b=
+ut second level hits due to stores that did not start a page walk. Accounts=
+ for all page sizes. Will result in a DTLB write from STLB.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -215,6 +243,16 @@
+         "UMask": "0x10",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of page walks completed due=
+ to store DTLB misses to any page size.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x49",
++        "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED",
++        "PublicDescription": "Counts the number of page walks completed du=
+e to stores whose address translations missed in all Translation Lookaside =
+Buffer (TLB) levels and were mapped to any page size.  Includes page walks =
+that page fault.",
++        "SampleAfterValue": "2000003",
++        "UMask": "0xe",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Store misses in all TLB levels causes a page =
+walk that completes. (All page sizes)",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -244,6 +282,16 @@
+         "UMask": "0x8",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of page walks completed due=
+ to store DTLB misses to a 2M or 4M page.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x49",
++        "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED_2M_4M",
++        "PublicDescription": "Counts the number of page walks completed du=
+e to stores whose address translations missed in all Translation Lookaside =
+Buffer (TLB) levels and were mapped to 2M or 4M pages.  Includes page walks=
+ that page fault.",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Page walks completed due to a demand data sto=
+re to a 2M/4M page.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+@@ -324,6 +372,16 @@
+         "UMask": "0x10",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of times there was an ITLB =
+miss and a new translation was filled into the ITLB.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x81",
++        "EventName": "ITLB.FILLS",
++        "PublicDescription": "Counts the number of times the machine was u=
+nable to find a translation in the Instruction Translation Lookaside Buffer=
+ (ITLB) and a new translation was filled into the ITLB. The event is specul=
+ative in nature, but will not count translations (page walks) that are begu=
+n and not finished, or translations that are finished but not filled into t=
+he ITLB.",
++        "SampleAfterValue": "200003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of page walks initiated by =
+a instruction fetch that missed the first and second level TLBs.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -342,6 +400,15 @@
+         "UMask": "0x1",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts walks that miss the PDE_CACHE",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x85",
++        "EventName": "ITLB_MISSES.PDE_CACHE_MISS",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x80",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of first level TLB misses b=
+ut second level hits due to an instruction fetch that did not start a page =
+walk. Account for all pages sizes. Will result in an ITLB write from STLB."=
+,
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -501,6 +568,24 @@
+         "UMask": "0x10",
+         "Unit": "cpu_lowpower"
+     },
++    {
++        "BriefDescription": "Counts the number of occurrences a load gets =
+blocked because of a micro TLB miss",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x03",
++        "EventName": "LD_BLOCKS.DTLB_MISS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to a DTLB miss",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x05",
++        "EventName": "LD_HEAD.DTLB_MISS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x10",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to a DTLB=
+ miss.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -518,5 +603,33 @@
+         "SampleAfterValue": "1000003",
+         "UMask": "0x90",
+         "Unit": "cpu_lowpower"
++    },
++    {
++        "BriefDescription": "Counts the number of PMH walks that hit in th=
+e L1 or WCBs",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xbc",
++        "EventName": "PAGE_WALKER_LOADS.DTLB_L1_HIT",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of PMH walks that hit in th=
+e L2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xbc",
++        "EventName": "PAGE_WALKER_LOADS.DTLB_L2_HIT",
++        "PublicDescription": "Counts the number of PMH walks that hit in t=
+he L2.  Includes L2 Hit resulting from and L1D eviction of another core in =
+the same module which is longer latency than a typical L2 hit.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Count number of any STLB flush attempts (Enti=
+re, PCID, InvPage, CR3 write, etc)",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xbd",
++        "EventName": "TLB_FLUSHES.STLB_ANY",
++        "SampleAfterValue": "20003",
++        "UMask": "0x20",
++        "Unit": "cpu_atom"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index d640acb8a3c7..c25f718cfd54 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -1,6 +1,6 @@
+@@ -1,7 +1,7 @@
  Family-model,Version,Filename,EventType
--GenuineIntel-6-(97|9A|B7|BA|BF),v1.34,alderlake,core
--GenuineIntel-6-BE,v1.34,alderlaken,core
-+GenuineIntel-6-(97|9A|B7|BA|BF),v1.35,alderlake,core
-+GenuineIntel-6-BE,v1.35,alderlaken,core
- GenuineIntel-6-C[56],v1.13,arrowlake,core
+ GenuineIntel-6-(97|9A|B7|BA|BF),v1.35,alderlake,core
+ GenuineIntel-6-BE,v1.35,alderlaken,core
+-GenuineIntel-6-C[56],v1.13,arrowlake,core
++GenuineIntel-6-C[56],v1.14,arrowlake,core
  GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
  GenuineIntel-6-(3D|47),v30,broadwell,core
--- 
+ GenuineIntel-6-56,v12,broadwellde,core
+--=20
 2.52.0.158.g65b55ccf14-goog
 
