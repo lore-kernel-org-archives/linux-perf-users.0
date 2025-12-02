@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D461A219E8C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E944302143;
 	Tue,  2 Dec 2025 08:16:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764663406; cv=none; b=luGrg9u+Gkq6NEEKzk6KCMA9UPZnmtzQE13Wwyle4kGmJo8slXdjlKlmEqkfn6ZZeIa5zMc6qVM83LMXbLZ0NBDViLRomdaqdSwR6KFPVKkfC8qPJj8TPJLESACmM0/Ejfo9pXhQkSInUwSqD7JsAQRfKjmdwDaYKotwoCNHfss=
+	t=1764663408; cv=none; b=oGO3xeykVR6fE1RR1Mibad4WgcDyVqiuB/n+3NOfTfN8q0dcQ3Bv/tqZvWMh6TSmyMxMHANHT0skIHvK1GQym4RgtYHLuu8pxAlxRc1ALmCA90+liBF7Ypb3rg+6iVaiff9p3zp6PpJXd782jjQY8HyLIBl5msM0SqTbv4WmCGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764663406; c=relaxed/simple;
-	bh=RxqAj9h+/viMZshnmHgnFPnkGGBelDBbmQHHCMFXa8Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pR48rRThs2rUNn+12j1mtkco6qFQd9z1eQAlMKFztNg3qVGDJM/Kpb3F4aS3n/FOyUSGekozHkAaSlEmc73YXZBLcbNuDGkbrtUzePyitH14BF7T6zFZKuqzpKP4hHPzRyCaIDEt9lTJYUw9fsM5ck8fK5PPoEiHBShvRRt3us0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmQt/Mrv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764663408; c=relaxed/simple;
+	bh=94tAKDZ53sl6q3FUT31bWUB3s4TUzwZR3kG3Xd3nFxs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RRDPAUsMGtD7XeUBMi2L+HuUZv0IroUiDxJrYUWqXtn6iK9FJPCvtLH5z+tIwnJkHKtltQMh/9PKv1kIWwOl+JjVYuA3O8g8RBSPS0VjiUg1VIuDIOIC9ee8OoJxQ6VVTUQKdMfr/h9HnU8kHliL4EFU6yAVbEh7vvVq8x7MUr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sB0eSrBf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmQt/Mrv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B4CEC4CEF1;
-	Tue,  2 Dec 2025 08:16:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sB0eSrBf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85F55C19423;
+	Tue,  2 Dec 2025 08:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1764663406;
-	bh=RxqAj9h+/viMZshnmHgnFPnkGGBelDBbmQHHCMFXa8Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mmQt/Mrvv8UHbzoX/SrVs15SdUVYCUyvzLuITK/GKJLAcoXFU1RW0jXxUDesuvf70
-	 f+dPNyargk0L3i2fZwK4m1UqeKRwHAANJZulMzy58tcg0wOcF0093R5HTDO8E49awB
-	 k7DC+MhfUgcBi+/SWW2J9hc9axRz4ri8KIyQja4Brhp+RloS63zjVFGY7Rsf4g0cu5
-	 amb0wDQ/yOVFX2YJB+vn1epDGtlX5wYTv1vrQxta8owq0YH1HpFkVESYpofQpsEOeU
-	 /ohKLOKaKeA3GkZu25cUCrmhF1K+PaV9ywTho/s5iNTxgjFdmCdfvor1cuLn5nhAQV
-	 HFsmhrngfBJOw==
+	bh=94tAKDZ53sl6q3FUT31bWUB3s4TUzwZR3kG3Xd3nFxs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=sB0eSrBfNT3siGqy0H65ugClxhI4/HzODBLHsahhxN16DoGTHbE6nHR2mrMSWH8Xy
+	 Zn/4T4PaVxXnPPMxtfSbZ8i6EL60MGkF02ZExv6J0f1NuiHBm7kaJn407WR/f6wmMj
+	 4/JI3ghdoIJ9NM8ohB7VBaaRpbwTEvTnx3k7FE4LbxwxNRGCyYM6l42WjpyAjt6Kls
+	 z4nZkudVz008KT1e5jmkhlRgA0NlQXy4ciCu3k0eDRTLKaem/CEP6cXnUOo0gJvy2c
+	 y6j+pvyBUWVP6XxW3Veb/qBfcSPz6GHt0VEtsFnSfZgRK+Oya0FkqtYzbCao1qcIWD
+	 gmxwEfpHZhk+A==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,10 +36,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCHSET 0/5] perf tools: Fix /proc/kallsyms map split 
-Date: Tue,  2 Dec 2025 00:16:40 -0800
-Message-ID: <20251202081645.931527-1-namhyung@kernel.org>
+Subject: [PATCH 1/5] perf tools: Mark split kallsyms DSOs as loaded
+Date: Tue,  2 Dec 2025 00:16:41 -0800
+Message-ID: <20251202081645.931527-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
+In-Reply-To: <20251202081645.931527-1-namhyung@kernel.org>
+References: <20251202081645.931527-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,82 +50,33 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+The maps__split_kallsyms() will split symbols to module DSOs if it comes
+from a module.  It also handled some unusual kernel symbols after modules
+by creating new kernel maps like "[kernel].0".
 
-I found a weird bug in symbol handling for kallsyms.  My system has a
-live patch which is a module and it has some symbols that conflict
-with the main kernel map.
+But they are pseudo DSOs to have those unexpected symbols.  They should
+not be considered as unloaded kernel DSOs.  Otherwise the dso__load()
+for them will end up calling dso__load_kallsyms() and then
+maps__split_kallsyms() again and again.
 
-For example, the symbols are common functions defined in the kernel
-like kmalloc and kfree.  They have 'u' type which is a unique global
-symbol.
+Fixes: 2e538c4a1847291cf ("perf tools: Improve kernel/modules symbol lookup")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/symbol.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-  $ grep ' u ' /proc/kallsyms
-  ffffffff98798dd0 u kmalloc_caches	[livepatch]
-  ffffffff97afb6c0 u kmalloc_trace_noprof	[livepatch]
-  ffffffff9739e7a0 u __list_add_valid_or_report	[livepatch]
-  ffffffff97afb240 u __kmalloc_noprof	[livepatch]
-  ffffffff970597f0 u klp_enable_patch	[livepatch]
-  ffffffff979939f0 u kfree	[livepatch]
-  ...
-
-They are duplicate symbols and will be removed by the fixup routine.
-But if symbol_conf.allow_aliases is set, they remain.  This is the
-case for perf lock contention, and it caused a trouble with the
-kallsyms split code.
-
-  $ grep ' kfree' /proc/kallsyms
-  ffffffff97057a30 t kfree_rcu_shrink_scan
-  ffffffff97394380 T kfree_strarray
-  ffffffff9779b890 T kfree_skb_list_reason
-  ffffffff9787be60 t kfree_pmc
-  ffffffff979939f0 T kfree                         <<<--- here
-  ffffffff979bbc50 T kfree_skb_partial
-  ffffffff97a8f110 t kfree_rcu_work
-  ffffffff97a8f2f0 t kfree_rcu_monitor
-  ffffffff97a8f910 t kfree_rcu_shrink_count
-  ffffffff97af67f0 T kfree_const
-  ffffffff97afbbc0 T kfree_sensitive
-  ffffffff97b5c4a0 T kfree_link
-  ffffffff99255908 d kfree_rcu_shrinker
-  ffffffff998beec0 T kfree_rcu_scheduler_running
-  ffffffff979939f0 u kfree	[livepatch]        <<<--- duplicate
-
-As the kfree function is in the livepatch module, any functions in the
-main kernel map that come later than 'kfree' will now to be splitted.
-This will create a lot of new kernel maps and loading them again will
-go to the routines to load kallsyms and split.  So the process was in
-an infinite loop creating new maps and eventually gets killed.
-
-I've added some defensive measures to prevent such situations and a
-test case to verify it.  But maybe we need to do something for 'u'
-type symbols.
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (5):
-  perf tools: Mark split kallsyms DSOs as loaded
-  perf tools: Fix split kallsyms DSO counting
-  perf tools: Fallback to initial kernel map properly
-  perf tools: Use machine->root_dir to find /proc/kallsyms
-  perf test: Add kallsyms split test
-
- tools/perf/tests/Build                   |  1 +
- tools/perf/tests/builtin-test.c          |  1 +
- tools/perf/tests/fake_root/proc/kallsyms | 10 ++++
- tools/perf/tests/fake_root/proc/modules  |  1 +
- tools/perf/tests/fake_root/proc/version  |  1 +
- tools/perf/tests/kallsyms-split.c        | 72 ++++++++++++++++++++++++
- tools/perf/tests/tests.h                 |  1 +
- tools/perf/util/symbol.c                 | 16 ++++--
- 8 files changed, 99 insertions(+), 4 deletions(-)
- create mode 100644 tools/perf/tests/fake_root/proc/kallsyms
- create mode 100644 tools/perf/tests/fake_root/proc/modules
- create mode 100644 tools/perf/tests/fake_root/proc/version
- create mode 100644 tools/perf/tests/kallsyms-split.c
-
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index d8fc5ea77f849326..5a38435d90c96092 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -972,6 +972,7 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+ 				return -1;
+ 
+ 			dso__set_kernel(ndso, dso__kernel(dso));
++			dso__set_loaded(ndso);
+ 
+ 			curr_map = map__new2(pos->start, ndso);
+ 			if (curr_map == NULL) {
 -- 
 2.52.0.158.g65b55ccf14-goog
 
