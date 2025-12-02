@@ -1,121 +1,104 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E55D2F8BFA
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 20:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D4F2C21C1;
+	Tue,  2 Dec 2025 21:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764709079; cv=none; b=lCoAhdiItF9WxJZcbQF649NNSwYCyVSvThOb83SnBz6taFKn5xcaAEmXTNUJLRtW/cTlYKOsR8UuVnlazNN3v96CAwcO1k2Yg0ctEiLV2/pbzloGyxwJGqkvlG0S7sBGRD4OHyw6SWPNimYeQTWV6is9woGEVkZKUG5M5gb+2HM=
+	t=1764710783; cv=none; b=rnPBeozDLPJqiSn2RShgzCrhqKE3BPYAfy1ItgSpJK7vJ0Oev/mczPLYU9frLEJ/fsdVu+5+eGu8h4dScdYjlmF1ra3e+eheNfIYw1194f0rwOMTqyrmOkvJJ1aZWF64XfGrgOgXjZxBmOstu0U0e7Dg4Lx3htkbXgPwZ9u81X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764709079; c=relaxed/simple;
-	bh=GQP845qBI9oKETUyhQrI2VT9jtgt+qf7xrS1DOwlua4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ibDw+BGYN+VcawUAOYEcN6dgxvm4PjNsFQUXlb538C9rUfPtzDrWQ37iyn0qErJCJLoueyzQkuCd8L3b2pHQmSTo/j0dFF3ZTiEq4SvE6iylHZYAnlSqGM/Jb/xgZFli9XKJQtdCCcyHmzujiswcCHOEE9Uss+V/Lnz6Cvdbn9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YWRsAu2D; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1764710783; c=relaxed/simple;
+	bh=lzbCcolJw3gbpFNtY05e0rIhyPbenmMDafbBKzZ+KWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FukIZ16Q6HaCDoQhsAUo5ko+Li8oXQLZyQ9TlDW8NQCPDQtXCLbFjSUCNg1uQPkPt2tx1IOYSxLDPOQbv9Jr8xM1QRed+bJoxx4QZWMv3sVGSsqGEw9yE71PjXmB+5kBxAZol9C72dBsuh/9XiRZl7X1wdtVrcUCL6r2OKQXBcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cU/Bye8t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YWRsAu2D"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-295c64cb951so52455ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 12:57:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764709078; x=1765313878; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ajXHk6e5XevCIkKzZj3uDS1dij7DdGd6AS0GZTuW5mo=;
-        b=YWRsAu2DRPS2ffdDXfcLAqw0EG4dxhXWKHnBcUwAKd2AWfZHJQGgvvjovt1X0qH5DJ
-         fMtc34aYfmDs2gVbE2VpkbzwiSsqn6/Bjh8aIqBCX1Sl1yr/xNM+vd40s5JLidujqSgk
-         OvPpN4N/YjpgEohu5GTNMeo8XojGcG5rgLFZfNo+BjyQh6sDBqfzOUl4aeugQ6vbxQNm
-         fI/sUsbPkpR5VHbwJvXAGDD5YHWhLEJRhoNw1BMP8P0DGEkalEPAzae/l/sU6kut6TIx
-         C9bVq8PLmSp03s2jHf8k6Tv/7/b5Ym0DivLQA/35uA4UGSxffxMFo8JlIhGIkxmV58qg
-         KSEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764709078; x=1765313878;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ajXHk6e5XevCIkKzZj3uDS1dij7DdGd6AS0GZTuW5mo=;
-        b=XwoHnkUC84512NRS0XwUDLegFSU29Sy4fhWJTNlhiYHzVreKB1Cvt1MFRkiuazkhn1
-         FXGGby18pVfpQ7wt7yunJYV/dGtoUFH1g2pKIt1GCQ/c7A6SGPXP7tDcrEkxllM2qkOX
-         9jGDkv3R7V/EZZZzHu8b9OjGwi3Tjm8+gqAIRGdjE/orzo3ztC4dZ73DNmoboPrBk1Ue
-         7+55+hGZHcbw1Bc1RVPKBV5ToR2HxeFElZebHtJQTnPOSUuiPUtcWr2evmogdKtoyh7T
-         97kk1pZg5ptwF/DrLmMsnnRN2SK+k8zY6CBSOHkeYeM0q50c98Mpv7uoajEtW054+Q7j
-         uMnw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+XMUDQAfapY4zwOJpjl6S40OCRHUIYA46QvoAK+eA6oQ8/zaDAoaSQNbLHI3kYOvIhkDUiUMPXwEYJxlj+pMO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHAVbkRCT8AI9booz4PrtYlSjLJMTnOJ/Mgkh5Mu3jPCwaWFOL
-	TRafi8DGcE30Zqf62BR0mHC3/ggLbQlaa2hbjWkzZACyKrrX8bQ9CKyK9CQQ+ndjqFrEKlpYqps
-	QwLHpXLHjYt0KMq4i/x9te0QyBwQE+/LrcZco6Ak6sbAzCirGyJax9MXv
-X-Gm-Gg: ASbGncvBiDZ7LYAHkFCKwoYXdA5CDOjGpXU9aePqOVBqzFsK8eAUDZ5LCZKERMF3EHw
-	mMtF5IZGmj0w47aTEnrQ9gMRakbIJ/qt4WJEB6VpW9pAYoTu+a231toVxK40SAMvMRTP9vgwDrh
-	HjUKRPXM/AeeMyN+3tKB3TNWMsVFT1mJg0tPxIoPAHodkSXDIFTDtXIaw6dDysRhn6crfO7ILv5
-	BNDrPgvzUi49hoT7ja729KuFweKK+NWdf8ektumF8iv7o5J85yUpqHfdsu3+hvI6nRUBvKSMztJ
-	J53F4Daoj4jZDP8RB2HUf0NN
-X-Google-Smtp-Source: AGHT+IFOCTKjmVP2DZtYUc++msXSf69je/iD1ClVUmzhDPbWuBIjoHChBmXbi9Jqvi9J/FmI7ZBMA7sYj+7OjsGX4RE=
-X-Received: by 2002:a17:903:32c8:b0:271:9873:80d9 with SMTP id
- d9443c01a7336-29d67f32ca1mr15625ad.7.1764709077647; Tue, 02 Dec 2025 12:57:57
- -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cU/Bye8t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29F5AC4CEF1;
+	Tue,  2 Dec 2025 21:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764710783;
+	bh=lzbCcolJw3gbpFNtY05e0rIhyPbenmMDafbBKzZ+KWE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cU/Bye8txHMeigrCia4db6f2rFdXhZ0D5SFhps7DdP/+qY0nFntPscPL0Sgo/vnie
+	 KcHwE6uOiTJbk6bNN3gFZyED/IVpHZNftRVytP7wB5vaR/aOOUVvyudNwJRuwCkPnX
+	 0Wy7mG4w1GZZerd0wcOWVvm41gPtctURlWkN5Q9W6kOOPx48kAMMa9PY2kOhDs3LWb
+	 LUZq37bBNplOYaDIXRJ4WU9SFJb6zYK5mvAuEl1Lavs16eQpF57DodGZMt/ZhdzwU4
+	 6VkMuwizJTRo0/obnqE3DtJ4V4W4/RHAlpaFNL9+SfpjnMWVZw4h7tbkZViVtMR4tv
+	 LXLAE7Bkb6ohQ==
+Date: Tue, 2 Dec 2025 13:26:20 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 4/5] perf tools: Use machine->root_dir to find
+ /proc/kallsyms
+Message-ID: <aS9ZfAd3CDh5wboJ@google.com>
+References: <20251202081645.931527-1-namhyung@kernel.org>
+ <20251202081645.931527-5-namhyung@kernel.org>
+ <CAP-5=fXWwQjdAQHNxVoz1=AF83g75Yd=L32owxCfyiXKL+mVeA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251202081645.931527-1-namhyung@kernel.org> <20251202081645.931527-2-namhyung@kernel.org>
-In-Reply-To: <20251202081645.931527-2-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 2 Dec 2025 12:57:45 -0800
-X-Gm-Features: AWmQ_blkesPKhsWNtIT8byyXVHxFWxYHhWPJFuJzAdW9He7YBwCKKLYQ9y46lhI
-Message-ID: <CAP-5=fX_Qxmi5WNS5Xd++zJbvoM2kPn0cF-FfVWsUUTvov86Ng@mail.gmail.com>
-Subject: Re: [PATCH 1/5] perf tools: Mark split kallsyms DSOs as loaded
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXWwQjdAQHNxVoz1=AF83g75Yd=L32owxCfyiXKL+mVeA@mail.gmail.com>
 
-On Tue, Dec 2, 2025 at 12:16=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> The maps__split_kallsyms() will split symbols to module DSOs if it comes
-> from a module.  It also handled some unusual kernel symbols after modules
-> by creating new kernel maps like "[kernel].0".
->
-> But they are pseudo DSOs to have those unexpected symbols.  They should
-> not be considered as unloaded kernel DSOs.  Otherwise the dso__load()
-> for them will end up calling dso__load_kallsyms() and then
-> maps__split_kallsyms() again and again.
->
-> Fixes: 2e538c4a1847291cf ("perf tools: Improve kernel/modules symbol look=
-up")
+On Tue, Dec 02, 2025 at 12:53:48PM -0800, Ian Rogers wrote:
+> On Tue, Dec 2, 2025 at 12:16 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > This is for test functions to find the kallsyms correctly.  It can find
+> > the machine from the kernel maps and use its root_dir.  This is helpful
+> > to setup fake /proc directory for testing.
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/symbol.c | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> > index b533fbf17a8b19a3..e90ecfd286043aa4 100644
+> > --- a/tools/perf/util/symbol.c
+> > +++ b/tools/perf/util/symbol.c
+> > @@ -2002,6 +2002,7 @@ static char *dso__find_kallsyms(struct dso *dso, struct map *map)
+> >         char sbuild_id[SBUILD_ID_SIZE];
+> >         bool is_host = false;
+> >         char path[PATH_MAX];
+> > +       struct kmap *kmap = map__kmap(map);
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> nit: perhaps just use map__kmaps here to avoid testing two values below.
 
-Fixed after 16 years :-)
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/symbol.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index d8fc5ea77f849326..5a38435d90c96092 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -972,6 +972,7 @@ static int maps__split_kallsyms(struct maps *kmaps, s=
-truct dso *dso, u64 delta,
->                                 return -1;
->
->                         dso__set_kernel(ndso, dso__kernel(dso));
-> +                       dso__set_loaded(ndso);
->
->                         curr_map =3D map__new2(pos->start, ndso);
->                         if (curr_map =3D=3D NULL) {
-> --
-> 2.52.0.158.g65b55ccf14-goog
->
+Right, will update.  Thanks for your review!
+Namhyung
+ 
+> >
+> >         if (!dso__has_build_id(dso)) {
+> >                 /*
+> > @@ -2038,8 +2039,13 @@ static char *dso__find_kallsyms(struct dso *dso, struct map *map)
+> >                 return strdup(path);
+> >
+> >         /* Use current /proc/kallsyms if possible */
+> > -       if (is_host) {
+> >  proc_kallsyms:
+> > +       if (kmap && kmap->kmaps) {
+> > +               struct machine *machine = maps__machine(kmap->kmaps);
+> > +
+> > +               scnprintf(path, sizeof(path), "%s/proc/kallsyms", machine->root_dir);
+> > +               return strdup(path);
+> > +       } else if (is_host) {
+> >                 return strdup("/proc/kallsyms");
+> >         }
+> >
+> > --
+> > 2.52.0.158.g65b55ccf14-goog
+> >
