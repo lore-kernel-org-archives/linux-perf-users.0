@@ -1,55 +1,55 @@
 Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4767B2D77F5
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 17:52:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1962D3731
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 17:52:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764697946; cv=none; b=JluNiGdLy4H1bCxB9RpySh9NrB92dMT/Tm1y4PVX5e5jLU0PHPWePclLK5IQQ9Z1jPw5/Ykqp8U22/66fCw6HemcSXLTM8xmygdRMNpEBqe8WYz4twURePv0R/akJJgTmlrW/bVxS30pJxPSJ5Ynw6nxDCQxoLLWqXr4Vpen7wg=
+	t=1764697948; cv=none; b=ZJah+wjAN7n74MhUm4ZvEio/yrDfR0ltcwXSX8IZQ8W5HWKEoyQ3YNPpQnjQETDn1aSNfgudqrJywotf4C/Oaw8BgUMaLhUbrW31v6RF5pn/7iHSIXDR7oVGRRPGCNIcou+CTXHpYpZcGokccjAmUQLDjRZ1wTX2MBHVaEokzTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764697946; c=relaxed/simple;
-	bh=AyZA4nD7jh5kb1lPGF2MDaVZ/tkGQEyjyH8++oUHFGM=;
+	s=arc-20240116; t=1764697948; c=relaxed/simple;
+	bh=ToHaD1gpwP1uWL3U7MH+po+mxnuGTW8jd1YqF5p7UWk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=S/5UX+q4iJxeIAbwAk+XhItLAgyghf+QsoxNKDDhLXvzoNTS+RLcWIGIQylcENYYbq2x7ggs1ZR1/8hHzKC4IHjF6/UX7qS4D4OqedlD2bJFm0SYPyiYfZ1Ouvs4pWfHwz/IBrJO8Jj6UnCpKRCf5KQKiW6aKiqAqSo50zwOlOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=faKp60jZ; arc=none smtp.client-ip=209.85.215.201
+	 To:Content-Type; b=iR5OlqLeK7g+7v3JqAK9FSZwGlwTwecLn4XXsEe4S/XHs+js365/nCrn59UOZIn79UOnYkv1o6E/39bJDJStbIaS83HsemPl/kWS0LJoMCCHHCDCzx636XhoK9PuBfww0R9bbWhgCcv5dy4zt2KQ/enDDne/wpJgfydLgxEmcTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R3rtjZBf; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="faKp60jZ"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b98e6ff908aso12792715a12.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 09:52:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R3rtjZBf"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-bc09a8454b9so12957267a12.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 09:52:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764697944; x=1765302744; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764697947; x=1765302747; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6lWESTB2UTGcAg+Bqss+YoR/rSNf4J9eOBW+DXHV/2E=;
-        b=faKp60jZtmY3yxYtU4oIAcP9k7qBVZ3QxYAdhl38/5kagD5YLQvluPVdQ+a6xvuxy9
-         S/9C54di55Jb5TOWxrEvmVgU/SvTYNTT8zp55s99yc2CE3ghasJefEOix2vELUrcwnYo
-         HQ94Uhbbcprt3CQz7UU2K+TjHG1B+KEKZQnMq2tA/v5/jDkCubpDzUP+qM1v5tVG90KH
-         FF2oNKsGc480n0ILft27hwR4p8G8Q4R5dz/W9/15nyC8JIJNPd/gQ5ED7r54Pi48kCbX
-         q5/u3DQjV4Uw27zci/5SMjQryx/L2YxwUP4ssoLh4+oLDzht6P5Zd93oglnDC7UC1rmv
-         I1eA==
+        bh=UBraLOuppoKBMvtTbUVI8ZVtGBuCTR4b8oDGHI+adOo=;
+        b=R3rtjZBf2SIpI3qZ0gNzORMQLgJytbySbRx/agnMYzx7u0j8CqkbU59+VOsBxyILvR
+         R6/o0sS9Ns2Vq/lFT31XeMjOkTGUJJp1VAl6ETyvFWxzzjcy/dmxuhHoSmr2p82wwhxd
+         9fFzaX2P1edJYnJiAu1a/P+SsdbuSHO5F7q/GeiHDnI4rODQcs+eSLZ2A2HcKMIXqzlK
+         WFWNGOe9kjFpObsl1qM3yIYUwI1p7Nx+C6vLexQOIXUgofq3mMpjCbqdxSqa9KbNgUQ2
+         PeVRlxfLCDx6sCpUM3p4QR2bDCrYupG1feqB5Qq8CVAylKqskJGSNGvyhpYCX5vHck2j
+         fGGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764697944; x=1765302744;
+        d=1e100.net; s=20230601; t=1764697947; x=1765302747;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6lWESTB2UTGcAg+Bqss+YoR/rSNf4J9eOBW+DXHV/2E=;
-        b=cVEfDYtrBDEY5DBOLBDN3aRbiHdRLVxXAnGzOz8iZbTB1/wzKZPxYzrg2j9XnFOM27
-         5TH2Eo3l6FO7jhxoLFBei17zVQwJZ/gXePYY2ckQL5gLYIY6yFxEYzp4yN1zG2Hz3CRE
-         8mZhHbOinVGhd+AFoMxZQukO8c2fs59mCdid6HhHAfntrkTMiEGQEPg2k8SZS/LtBZFa
-         lMrk1f2rPYLwQ7B2qXGilVxvx1NVJBXU6E3pIcqgOLPv6Ra6kFeHqzJu1dQ5BJtYn2tO
-         /Am1HpMryATHLWmdCzxlJjYY9/30gu/V2PaSPOobRpEH9QHsD5hbRndIcRwRSIDqkidT
-         wnnw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1/y+S7eZp3EDUsG6vb3icPNIzzaNBDLwG+szKXJgRiJnrbmogWd/Zim5spzFy0nwDaKS6GBsCu1wWIsIE9CYw@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEvOeUb52Zxl7oe5tqNaNsUZnIgiEMQzvB0dRGDLkCeMrROoD/
-	rBPcRcOUYcZxEklGGJ6YUPrxHv0zUGeD49h+TP/9O+6SqVrF3QszPpCqOp+y1MvDLlJb3JoDhTx
-	hbzCgF9dFAg==
-X-Google-Smtp-Source: AGHT+IGHRBUPQQI/Ixl6furUweurkhLLHHi+K7hWEgwf6CovRvn8iSd9kk5hxy9K0HFykKH3Edpqp6VZSQlX
-X-Received: from dybms17.prod.google.com ([2002:a05:7300:d511:b0:2a4:559f:7c4e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:ec96:b0:2a6:a306:eff5
- with SMTP id 5a478bee46e88-2a941581a8dmr17218723eec.5.1764697944468; Tue, 02
- Dec 2025 09:52:24 -0800 (PST)
-Date: Tue,  2 Dec 2025 09:50:11 -0800
+        bh=UBraLOuppoKBMvtTbUVI8ZVtGBuCTR4b8oDGHI+adOo=;
+        b=lC8C8OEDtadjgtpijBiF2pLpw+xWCEsgTw0OzvzKTCjztEuAk4srEm6xZkhqNk+nHS
+         ZL4zxvwxum99Gw08K0GRR3jnC30n3ID3sXqfEGvX7zbrA1CRYDX7OYAcLzDAn71g0J/M
+         XIIv4NPvmwElk0I31yvFMzD9HqWdAWL5ZSPdi7PVcpgQnIEACx6aXyWLaA4RDfgedOxS
+         uCDbgoVjOFMwCGNFZa5HmSPWhmjyrj3JIgrGTk3i6DW69r3yEA6E0d1PdvWKEihgoUXb
+         e8nY1OdP6gr7+cwPdSNG8NWxXSY6R3+dwtz24EoFKo0GkvXQEptKc0lB5dYS1ud4OqGF
+         7r3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWWe8xVxjkkl2/Iu5hTVM5zoiyc6Zbi6/BELGjJL+MnW8EbMZIBQVyM3D9CT38WrAgjcOCCcpfFyQZqpxaIj5KS@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc8+nRDlsrS505vZ6ojVjC64Lr2VhhgNBjaCFl8UNwfqmyraBG
+	GZGKQ/rlT18JBG98jkOO+3DXjbsN1ad0lnBu96/C6iZVwoN261pZksTPGW2pK+b/sxpTtXcn6iF
+	crWCZSf6P9Q==
+X-Google-Smtp-Source: AGHT+IHW0Cp5GyrrR3flEmMg7aEQH7+Qv/G5/JFMzVnN2vAu3XjJnL31sjK7xy4r/8WNN9p0O57Jheo5vojq
+X-Received: from dycnl9.prod.google.com ([2002:a05:7300:d109:b0:2a2:2846:c4f7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:570b:b0:2a4:3592:cf64
+ with SMTP id 5a478bee46e88-2a9415819f9mr20281218eec.8.1764697946550; Tue, 02
+ Dec 2025 09:52:26 -0800 (PST)
+Date: Tue,  2 Dec 2025 09:50:12 -0800
 In-Reply-To: <20251202175043.623597-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251202175043.623597-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
-Message-ID: <20251202175043.623597-17-irogers@google.com>
-Subject: [PATCH v9 16/48] perf jevents: Add idle metric for AMD zen models
+Message-ID: <20251202175043.623597-18-irogers@google.com>
+Subject: [PATCH v9 17/48] perf jevents: Add upc metric for uops per cycle for AMD
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -76,56 +76,67 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Compute using the msr PMU the percentage of wallclock cycles where the
-CPUs are in a low power state.
+The metric adjusts for whether or not SMT is on.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Sandipan Das <sandipan.das@amd.com>
 ---
- tools/perf/pmu-events/amd_metrics.py | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ tools/perf/pmu-events/amd_metrics.py | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-index b6cdeb4f09fe..f51a044b8005 100755
+index f51a044b8005..42e46b33334d 100755
 --- a/tools/perf/pmu-events/amd_metrics.py
 +++ b/tools/perf/pmu-events/amd_metrics.py
-@@ -3,8 +3,9 @@
+@@ -3,14 +3,26 @@
  import argparse
  import math
  import os
--from metric import (d_ratio, has_event, Event, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
--                    LoadEvents, Metric, MetricGroup, Select)
-+from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
-+                    JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
-+                    MetricGroup, Select)
++from typing import Optional
+ from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
+-                    JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
+-                    MetricGroup, Select)
++                    JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
++                    Metric, MetricGroup, Select)
  
  # Global command line arguments.
  _args = None
-@@ -12,6 +13,16 @@ _args = None
+-
++_zen_model: int = 1
  interval_sec = Event("duration_time")
- 
- 
-+def Idle() -> Metric:
-+    cyc = Event("msr/mperf/")
-+    tsc = Event("msr/tsc/")
-+    low = max(tsc - cyc, 0)
-+    return Metric(
-+        "lpm_idle",
-+        "Percentage of total wallclock cycles where CPUs are in low power state (C1 or deeper sleep state)",
-+        d_ratio(low, tsc), "100%")
++ins = Event("instructions")
++cycles = Event("cycles")
++# Number of CPU cycles scaled for SMT.
++smt_cycles = Select(cycles / 2, Literal("#smt_on"), cycles)
 +
 +
- def Rapl() -> MetricGroup:
-     """Processor socket power consumption estimate.
++def AmdUpc() -> Metric:
++    ops = Event("ex_ret_ops", "ex_ret_cops")
++    upc = d_ratio(ops, smt_cycles)
++    return Metric("lpm_upc", "Micro-ops retired per core cycle (higher is better)",
++                  upc, "uops/cycle")
  
-@@ -57,6 +68,7 @@ def main() -> None:
+ 
+ def Idle() -> Metric:
+@@ -45,6 +57,7 @@ def Rapl() -> MetricGroup:
+ 
+ def main() -> None:
+     global _args
++    global _zen_model
+ 
+     def dir_path(path: str) -> str:
+         """Validate path is a directory for argparse."""
+@@ -67,7 +80,10 @@ def main() -> None:
+     directory = f"{_args.events_path}/x86/{_args.model}/"
      LoadEvents(directory)
  
++    _zen_model = int(_args.model[6:])
++
      all_metrics = MetricGroup("", [
-+        Idle(),
++        AmdUpc(),
+         Idle(),
          Rapl(),
      ])
- 
 -- 
 2.52.0.158.g65b55ccf14-goog
 
