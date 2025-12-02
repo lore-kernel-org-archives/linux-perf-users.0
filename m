@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768BD2C3258
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 17:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBB52D0C9C
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 17:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764697867; cv=none; b=qy1KJHdHUUJRQvGsXGiLZi+SWyjcw5eyppMSyejHrz//EswnYuG+K3alpq3Ef8crAIbw3kGyxc0hpO5tOUdRvJe09cbfelsGieZSKS1lvzn8D7MvU6ZIUu5SP4YNdE5PddDIfm9RqP/DG59LzCL6tRPfY7ZYtRGgP+dPibNfwlc=
+	t=1764697871; cv=none; b=V21EANRNyGfRRwmJUk+7RMK3WQIgeiH18fx7klxnZS1APt2ZUhP6CSIGalHo7EPv286FadiNtIRfsQ6+V4BvZHm9P1cylrBjc2HtV1F5AOUisU9bxTUmtIg++qmQXZgKjTweoRyEzSBSpf/Beg/gNMmsIhBfHE8EfBD5S/tffO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764697867; c=relaxed/simple;
-	bh=1MGEg68OAPpnEDOXdOpIbV+hPW6P24DxL9Ap9Ef0JVc=;
+	s=arc-20240116; t=1764697871; c=relaxed/simple;
+	bh=TEv1/HAzSLHeBA3NWyF7DX5ZlJzYioSuwudoqiQdkGg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=awkjJhI9HWSfoSVMEhuvBiripUSKAnkvSGdsnWT8PEH73MI16tq+NSEZ1aozkVOzY9gcu1PqlQ/l42cAt2Rsbzp3oeJIQVGcFX2qOhcZJFefavlIT+31Q7v+2o/67gsoDkbZg7lYOpS2uM+mMjWXyZEFbXEDiPj8qLWm4vHcwEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xu3ykvmP; arc=none smtp.client-ip=209.85.215.201
+	 To:Content-Type; b=TMqSrGlWa1efhkKaoLbMNypIdgJq/d4FLD93T4ZX+ACZCgYu5SP+v7RoZg+Hy9rnnNuLF96mkgRk47Atw5v6ufQiboLcD7BM+c/0nVE0vqOVFvJpkgUZvaHRwhlr6ueBjtSwbgQ/DsgmXiuyYSDUj3VYWOnHB380dIgtTo4dEBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m3oPlgIT; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xu3ykvmP"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b5edecdf94eso7936828a12.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 09:51:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m3oPlgIT"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2956cdcdc17so54830445ad.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 09:51:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764697864; x=1765302664; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764697869; x=1765302669; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=9j2nD9pKAg4HaspT9MBZ6CGU49fK4DzkCnN37LNxG9w=;
-        b=xu3ykvmPkp1xiL74edEcstnUpgQDM8DAXap5rAOUthWkUN1u5qXpzGYryO0idI2FET
-         rsAAnZ7zZBPiBWl1XzQtQyfw/JPMt9YBpI+UsXCvjPZp4po/g+LRIgA6RTAfo/NTpJat
-         dD6jYa1+qwZUiKCeMiNnEqhP7KrvQoHMTjvY9hOCcoEbnzspKxrWgeVDqdJC3n/x+Hfk
-         +lRFJ+O4PdQBxDhs9XBiIGtfaQdY85VWJNFp8KiQpGhTvrnEoLVALULpIo9vxXze/fWj
-         mvnj5FdheQ/fINCAuVHv/LSUtsS8hrBFasSgct2W2H9tVAIb0AG/HWf9srzMtyfOJrog
-         gpeA==
+        bh=NH2u4VUQ3fj61HenZr1UXZRG+xsck/DPqaTtHXUTkxo=;
+        b=m3oPlgIT2RWA1EQ8RnEnd17DyFOMuQs7dS/QnQj8cLqVvI5157uh1J/0j/xTfwJxf8
+         7YvLHnavT4PZsLZLdGgS8CuEaS1fKtf66iDNs2klVy8x0ZGjbKq7uvyf2Ly3B6N0H6Vp
+         5z7yhPC78FFkCYFajhE459evNCwuBMcDSDfQghiCBjNC7ftoAF4egTVfrvTr5BoWmdwi
+         vXZzbBk5fC9/2TYiZtPQQUHvUmxGSUoRflre91E/PO64JOTnJSCi7qqA7PDFMSAtU4Aq
+         ZTpXN4xWqpGK//ToDIAUe5tge9FXQdy5qZ/qctbVk6ILSGIYkML7Pbwyy39X8F+n+Xug
+         FbaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764697864; x=1765302664;
+        d=1e100.net; s=20230601; t=1764697869; x=1765302669;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9j2nD9pKAg4HaspT9MBZ6CGU49fK4DzkCnN37LNxG9w=;
-        b=f7Bdc5FLG2v02ZPLUo1+mP7Ij0kqNzY2Qb0r9/REMzKRd1tDhYltmqmzFtOp6+sVj/
-         BjNkLZD7bra3RMcUQYGImXfPk3dNrcgRE5bokCm/+0oSFxSxLHskvDJf+U7qq6MKb9eC
-         ffBzMW8h6+Bcmy9QuA1+4lUQ7OURyeeVrfn+bx9dwwOb+XxqPSjC2UTAFLyW5ik+iO9Q
-         M3xGPNjUGa4oEd09980KwUQjumaG9j8e8HjszZepV5g/+ONQOV6bVzkoS+6mbSyYJTFz
-         9e/rvrj7GjlK4NC0kcD9De3CC4xLDtMFx8IiotRopTVSmK41o3LjOU2y0rLXEp2Q7wlu
-         lYOg==
-X-Forwarded-Encrypted: i=1; AJvYcCWrfwOFas51dHY053gNtRAWWUUDCWYytnyzw6Gxv7dRDplGeTbak31OHyu8nJD4kxDD3jYWPwJL473vxkHNvKkc@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxEGjO+RbVoXOpMYGrNWfNCV3v1tsz9+LZfU0OUL8LBXSUJE41
-	QtVplviCWgvJc2L97hpqKDiqaNqznNwpIko+x6B2oisO2UOWDHx3CUDqprpmxHmQl5UQVdXXKUP
-	Vy22LILlUfg==
-X-Google-Smtp-Source: AGHT+IG9UvfE78E1OdBtiqQkaphk9mKjtLJwuhCfyL1TztsqLedsiK3sZFbFmUdXc5+L2ln2AzEOp5wGyNYM
-X-Received: from dybqr10.prod.google.com ([2002:a05:7301:608a:b0:2a4:7c1a:3e18])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:50ef:b0:2a4:7fb3:7a96
- with SMTP id 5a478bee46e88-2a7192d82b0mr23551111eec.36.1764697863587; Tue, 02
- Dec 2025 09:51:03 -0800 (PST)
-Date: Tue,  2 Dec 2025 09:49:57 -0800
+        bh=NH2u4VUQ3fj61HenZr1UXZRG+xsck/DPqaTtHXUTkxo=;
+        b=Qa/EXyBu4rRyeL48Ypo6x0VPP25cmVblY+KGEpzyDHYWapOU63kSjtPsYv4RfXTbDy
+         rnLlFNhYU4PwLJtKDv7g6d9gD+Uo/gxGZpN8qybsakZ4q9m8HwftsxLSYkUwCFkZ8sl3
+         YKmbDenR0AsbHGLhYDclaGJ+4bAp6zCLwDtBckoz4fZ7dJgYkVs76Rw3H8du6hhioi83
+         l9gZheHm0O8WZWhY5drgv/wURvwwlsIRvUxW/NS3gp2muCm3TxIbl2J1Yg4KHoupa6rZ
+         pst1NGGnTez52Zk+qKwW5eJURUbRI4FyDsm0NeFSvHafDwtSIDx5i8ZUAJdEDG6g2fa+
+         rsoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXac2Fkxwm+vkLSeHvloHJvskcQYiawJjq7eIb9k7g9I7J432GwZn9PPsX0Xm4KQqdE7AF8WSOk0K21kFCjfSsW@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGeD8N2wF+cv03bU2LuF2Ha2wk3vZidU9PrE02rSG3sRoJlo6h
+	bmRJzMqlcc9bHlspH59GQQp0CotJff65dXeiG7LpySx+Pu6Bn4GLHAdBXkIpe0u39cZ3hvGNCvm
+	i3iC63h7lSw==
+X-Google-Smtp-Source: AGHT+IFlGTmkGGNi+SC78cD9hWU6PN0Yrfo0gXOZw0nJvl3+hn9RGHqM3/7qCGozUF6udTtmu99BfqGzB1gx
+X-Received: from dlag16.prod.google.com ([2002:a05:701b:2510:b0:11b:998d:bdf4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1e03:b0:11b:e21e:5653
+ with SMTP id a92af1059eb24-11defca66c3mr132520c88.19.1764697869345; Tue, 02
+ Dec 2025 09:51:09 -0800 (PST)
+Date: Tue,  2 Dec 2025 09:49:58 -0800
 In-Reply-To: <20251202175043.623597-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251202175043.623597-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
-Message-ID: <20251202175043.623597-3-irogers@google.com>
-Subject: [PATCH v9 02/48] perf ilist: Be tolerant of reading a metric on the
- wrong CPU
+Message-ID: <20251202175043.623597-4-irogers@google.com>
+Subject: [PATCH v9 03/48] perf jevents: Allow multiple metricgroups.json files
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -77,34 +76,37 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-This happens on hybrid machine metrics. Be tolerant and don't cause
-the ilist application to crash with an exception.
+Allow multiple metricgroups.json files by handling any file ending
+with metricgroups.json as a metricgroups file.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 ---
- tools/perf/python/ilist.py | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tools/perf/pmu-events/jevents.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/python/ilist.py b/tools/perf/python/ilist.py
-index eb687ce9d5a6..0d757ddb4795 100755
---- a/tools/perf/python/ilist.py
-+++ b/tools/perf/python/ilist.py
-@@ -77,8 +77,12 @@ class Metric(TreeValue):
-         return perf.parse_metrics(self.metric_name, self.metric_pmu)
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 3413ee5d0227..03f5ad262eb5 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -640,7 +640,7 @@ def preprocess_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
+   if not item.is_file() or not item.name.endswith('.json'):
+     return
  
-     def value(self, evlist: perf.evlist, evsel: perf.evsel, cpu: int, thread: int) -> float:
--        val = evlist.compute_metric(self.metric_name, cpu, thread)
--        return 0 if math.isnan(val) else val
-+        try:
-+            val = evlist.compute_metric(self.metric_name, cpu, thread)
-+            return 0 if math.isnan(val) else val
-+        except:
-+            # Be tolerant of failures to compute metrics on particular CPUs/threads.
-+            return 0
+-  if item.name == 'metricgroups.json':
++  if item.name.endswith('metricgroups.json'):
+     metricgroup_descriptions = json.load(open(item.path))
+     for mgroup in metricgroup_descriptions:
+       assert len(mgroup) > 1, parents
+@@ -693,7 +693,7 @@ def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
  
+   # Ignore other directories. If the file name does not have a .json
+   # extension, ignore it. It could be a readme.txt for instance.
+-  if not item.is_file() or not item.name.endswith('.json') or item.name == 'metricgroups.json':
++  if not item.is_file() or not item.name.endswith('.json') or item.name.endswith('metricgroups.json'):
+     return
  
- @dataclass
+   add_events_table_entries(item, get_topic(item.name))
 -- 
 2.52.0.158.g65b55ccf14-goog
 
