@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E944302143;
-	Tue,  2 Dec 2025 08:16:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED73302177;
+	Tue,  2 Dec 2025 08:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764663408; cv=none; b=oGO3xeykVR6fE1RR1Mibad4WgcDyVqiuB/n+3NOfTfN8q0dcQ3Bv/tqZvWMh6TSmyMxMHANHT0skIHvK1GQym4RgtYHLuu8pxAlxRc1ALmCA90+liBF7Ypb3rg+6iVaiff9p3zp6PpJXd782jjQY8HyLIBl5msM0SqTbv4WmCGk=
+	t=1764663408; cv=none; b=Qp9btFid6RsXAYzktQllYYkqhXqulHViW/CC5s0+pVyQ+dZlTYNjHUy4Jfm/yFIFwcAFqv0JKIunREp/ug92G8dpq4D+l4ZNWEs8zoHvF1kRRm4EVenJSRRmyTot8TAxU8GpAjmfpdOSuSf2Mkpt8wA86WCRyxFQABZBp4BGlNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1764663408; c=relaxed/simple;
-	bh=94tAKDZ53sl6q3FUT31bWUB3s4TUzwZR3kG3Xd3nFxs=;
+	bh=6AHEiPJOEAyaqlW9GQvpF6pPbppvNp0fzLe1GEZEqfE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RRDPAUsMGtD7XeUBMi2L+HuUZv0IroUiDxJrYUWqXtn6iK9FJPCvtLH5z+tIwnJkHKtltQMh/9PKv1kIWwOl+JjVYuA3O8g8RBSPS0VjiUg1VIuDIOIC9ee8OoJxQ6VVTUQKdMfr/h9HnU8kHliL4EFU6yAVbEh7vvVq8x7MUr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sB0eSrBf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XR6IlSn4eCipN3UWHuQZPM4XITqLgHRN5UO6fCLqG2+CPBiVq5iYbhz3d2U5qbU2XVuSx6Mmv5Sgn/AwprlzmrCaQrfQkvQtz5fFoQXRpKyCwgtCfN899GGpf+QjGVL3YUungBtGzEhI6F5cTbZByJaCdrY/NjpP9u6yWY1x+SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zls31T/N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sB0eSrBf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85F55C19423;
-	Tue,  2 Dec 2025 08:16:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zls31T/N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 015B4C19424;
+	Tue,  2 Dec 2025 08:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764663406;
-	bh=94tAKDZ53sl6q3FUT31bWUB3s4TUzwZR3kG3Xd3nFxs=;
+	s=k20201202; t=1764663408;
+	bh=6AHEiPJOEAyaqlW9GQvpF6pPbppvNp0fzLe1GEZEqfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sB0eSrBfNT3siGqy0H65ugClxhI4/HzODBLHsahhxN16DoGTHbE6nHR2mrMSWH8Xy
-	 Zn/4T4PaVxXnPPMxtfSbZ8i6EL60MGkF02ZExv6J0f1NuiHBm7kaJn407WR/f6wmMj
-	 4/JI3ghdoIJ9NM8ohB7VBaaRpbwTEvTnx3k7FE4LbxwxNRGCyYM6l42WjpyAjt6Kls
-	 z4nZkudVz008KT1e5jmkhlRgA0NlQXy4ciCu3k0eDRTLKaem/CEP6cXnUOo0gJvy2c
-	 y6j+pvyBUWVP6XxW3Veb/qBfcSPz6GHt0VEtsFnSfZgRK+Oya0FkqtYzbCao1qcIWD
-	 gmxwEfpHZhk+A==
+	b=Zls31T/NVzmjBzBSl0KjoxmgO2f2TyAKP0m8n9xfVzMtu9Lk5Nm2L7oI7LpzS1VJd
+	 dTOF8JLAG9AgbIYO+9FI3wz4d019QgoIPsT7u7l7VImiYlAf4uaJyAqCwgYBnSAQ/3
+	 ceLMGLP/wpDqixut3fBXruXolITLV/MHi5GKA93TiN/S/+7dpSHD06WSpfRTV4ayRD
+	 o2N6rhxtoK3TuZL8iz85rvaoPHPHYftnVV5Ryp/gsWN06SRixeBiKmOyoOgmfBMZKz
+	 vDWtcE2dZTscQOBtCU2bgyp6Nvwspi+0Hq4QuPYKlu6ykHjAzH3hX324XLqO1vPQAN
+	 w/uHYxcqdWCyg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/5] perf tools: Mark split kallsyms DSOs as loaded
-Date: Tue,  2 Dec 2025 00:16:41 -0800
-Message-ID: <20251202081645.931527-2-namhyung@kernel.org>
+Subject: [PATCH 4/5] perf tools: Use machine->root_dir to find /proc/kallsyms
+Date: Tue,  2 Dec 2025 00:16:44 -0800
+Message-ID: <20251202081645.931527-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
 In-Reply-To: <20251202081645.931527-1-namhyung@kernel.org>
 References: <20251202081645.931527-1-namhyung@kernel.org>
@@ -50,33 +50,42 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The maps__split_kallsyms() will split symbols to module DSOs if it comes
-from a module.  It also handled some unusual kernel symbols after modules
-by creating new kernel maps like "[kernel].0".
+This is for test functions to find the kallsyms correctly.  It can find
+the machine from the kernel maps and use its root_dir.  This is helpful
+to setup fake /proc directory for testing.
 
-But they are pseudo DSOs to have those unexpected symbols.  They should
-not be considered as unloaded kernel DSOs.  Otherwise the dso__load()
-for them will end up calling dso__load_kallsyms() and then
-maps__split_kallsyms() again and again.
-
-Fixes: 2e538c4a1847291cf ("perf tools: Improve kernel/modules symbol lookup")
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/symbol.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/symbol.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index d8fc5ea77f849326..5a38435d90c96092 100644
+index b533fbf17a8b19a3..e90ecfd286043aa4 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -972,6 +972,7 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
- 				return -1;
+@@ -2002,6 +2002,7 @@ static char *dso__find_kallsyms(struct dso *dso, struct map *map)
+ 	char sbuild_id[SBUILD_ID_SIZE];
+ 	bool is_host = false;
+ 	char path[PATH_MAX];
++	struct kmap *kmap = map__kmap(map);
  
- 			dso__set_kernel(ndso, dso__kernel(dso));
-+			dso__set_loaded(ndso);
+ 	if (!dso__has_build_id(dso)) {
+ 		/*
+@@ -2038,8 +2039,13 @@ static char *dso__find_kallsyms(struct dso *dso, struct map *map)
+ 		return strdup(path);
  
- 			curr_map = map__new2(pos->start, ndso);
- 			if (curr_map == NULL) {
+ 	/* Use current /proc/kallsyms if possible */
+-	if (is_host) {
+ proc_kallsyms:
++	if (kmap && kmap->kmaps) {
++		struct machine *machine = maps__machine(kmap->kmaps);
++
++		scnprintf(path, sizeof(path), "%s/proc/kallsyms", machine->root_dir);
++		return strdup(path);
++	} else if (is_host) {
+ 		return strdup("/proc/kallsyms");
+ 	}
+ 
 -- 
 2.52.0.158.g65b55ccf14-goog
 
