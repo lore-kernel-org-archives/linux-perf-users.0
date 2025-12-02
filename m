@@ -1,63 +1,67 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8267E29E10C
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 16:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69792BDC29
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Dec 2025 16:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764694427; cv=none; b=lR54Oq1d/ssDrAo/EOIZXZaXquw31A5yptnQeawPjAnXvZmpr6LxpBKSr92aAC9ymdg8ORwjl6ePmK20CETcrWpp8GcNNAbuc6u+27Q9FZi1LVzDt5/PHq5zV8C7+zZxbXnq9ytsBDiLoyDEHNa6hzNUMl27kYFSKVIvkaWJUGQ=
+	t=1764694434; cv=none; b=PoFCAg0ybjrTAV4ywZ4T29g6/kOg48ZUgRMfUuNHM9D1UfNsHYoB3bhRmpWLkaR736h7tGtbKTM2iGkfHsH+hZiW5+K3K6KOc6MsyP9GeLiAf8FHWkzfLP/PHHtW0b1MQaZONmY6QYxRTabrawNS6x8/G2NjNL5+Q69HQ8SHimc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764694427; c=relaxed/simple;
-	bh=77SzexNPEzVdad1dhqQ1mMmq8wyAgOayAk8nIyG6rA4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=S9gz/FizAJlrmf46SLrPqVC7mQM4SNK/SIEhlAp3mxWbWUzv5JlgU5jtdY1LgPRfZetGEfm+QGMZGWY1jHXJ035w6kvDoabad50YsqmjuKH/Uc1mZ1ImVRzU+8P45CVWplPMIUlslPkF0de6Y59g3CBTO4kMefiZPkTPNwtQmUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XEyLypAt; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1764694434; c=relaxed/simple;
+	bh=+VuGKRpago5g32rnVZvs1w9NkuVaMi3ZWb1kIvxv5VM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=sgO0prPPv6cXCNUNvVibDpMoXcQD+YLItFNxKohA8XCwWDGXSZJnr1L2LmLf+7v4woVxESMCC/iB1QDuTniHrZhwgCnE3+xl8u8iVQpm7+QHHFe32+KtihgHyWVTm5BXF/uYj4Rq3uvnC9wIMtunahIngEP3/khz8j4zbLkcGlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tvg29oic; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XEyLypAt"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-297dabf9fd0so74297325ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 08:53:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tvg29oic"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-297e5a18652so61241985ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 08:53:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764694426; x=1765299226; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7xR1eg9dXteMerxR6K6VL4zybm40g9HpEFF/wXzaips=;
-        b=XEyLypAtM4/PdmBqbBjz4REy/l3KeIM6twIRp1WCWYyp9ySwiXFmFNTPnX6fyZaL8o
-         DfkpBCAcFHYFP4OnoDJfEHjxbdC/r+4vN78jZEsKqfjwF2k3wNc6AdmIoHSuWTzoRoLd
-         IjCOpQXnYkGHZ506V+B4LwEdeXE9KqO+1CiV0ApHw37M+HV0xggaRXyOInReQUcye92J
-         MmjieJyuNKF767/i/hGeCnG3mDgpKsnshTvL/cjEuSQabF6f7GSX52WzSqY0KMykcKga
-         OB1bqDbXev3ugx9yjcPAkeMhkzYQ6GHUZy9FNOYC46mwT7+pr5TLyxUd/fqbcCBZ7DIA
-         cWIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764694426; x=1765299226;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1764694432; x=1765299232; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7xR1eg9dXteMerxR6K6VL4zybm40g9HpEFF/wXzaips=;
-        b=s1Un7Pw4eMx/jmFPVQe0xy6z4RnrWkfyaW+6X/mtWWOfv6x+TTwaAvWK3ONVSQ0AWo
-         ohs9ROAiWkxZPo6tJ7TpntRskCb6F6Qy7oqn+jSo/WI+3NwCLV8dAViNSczilpuD7pcT
-         BE+Fb8J62cM4jlio/jKg5hy2tk0cEcv+6PTvqweNwYjxD/TKC2F+Pu6lAIQMKc3aUQCW
-         C1Nr2NYgIaS+9fYHk2VYdhJucgbkn2fvLvB9gwDFEuW7Y9J/yWsIqwqrEgHVffAZVZZl
-         AH8YzcnnQDyJun5iSuKebROU4qkeWhB34lZzvhB9sJeOvTF0uuqgR6WcZYuS4cMx3B/w
-         29Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCVT0Zl7xIt/6A2r0EJEQV+ZqXzFFpwAj8qAzJipadNBDD8t7qgiFAvMkVZdqSf5N6U+oSSVMQj90i5wQWcy7sQP@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLAzF4yVE+Sg9dFv2zn8y/ECK0mGsWwj86N/jPfuaPaU50BGQO
-	aLhPmb5pSeBl9JYQO/hXndPBGXyGUJ/o1/tfsZjgI00wP/NWQTQlc+sDs5Hx9aukdbsYHMAj2df
-	RYrd2q6j5tg==
-X-Google-Smtp-Source: AGHT+IG/g7hIB6kSH7pTGiy/Z6Mh+2b+sjehXKpsQ8AnVWCTMgJWEkyzlPfgyInh8X8qAiAJwrZyjFkHqg1D
-X-Received: from dlnn2.prod.google.com ([2002:a05:7022:6182:b0:11b:d561:bbf5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6629:b0:119:e56b:91d3
- with SMTP id a92af1059eb24-11defc9c27amr47390c88.4.1764694425718; Tue, 02 Dec
- 2025 08:53:45 -0800 (PST)
-Date: Tue,  2 Dec 2025 08:53:31 -0800
+        bh=thyC6gLHoXaiGKry1UOkvUXEqn0AK8hudN66LgrOvpU=;
+        b=Tvg29oicQFX4TMmI0HXdTdF+9A5LjFAz5VjszVEMwigMcToD/u3WWq4aST2mv/4daC
+         LKK35xB2n5erlHp6VJjZca93/x0nqp9VzdQ6jD9mm2uXkWGz5BbDP+nOsy2VaVaVNPFc
+         9Qau0xspfbzSskLpoT7WcPUHHfnjhTgm3KAf1lwPJsP5PC6X3l9aQb2AcrKKzNJ113yg
+         UpI26yC6KrJczq642esJh98VHD6JeN80CU5Wwc89hGsPtRcfS8Tq2LGEF8vYRNQvp6/Y
+         +bNLYYppYzq2OyFDnp0WB33KIssBct+4qrqTdZQJfVwhdlV63S35Pepeevt5820cWkbb
+         hmvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764694432; x=1765299232;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=thyC6gLHoXaiGKry1UOkvUXEqn0AK8hudN66LgrOvpU=;
+        b=k1RwYx5EoZEbIHbHmpxNGv8po0tgou4CrA3hB0n4itbitYTwT47mjOzomxYwE3R8qX
+         8Zh0X6+jKax8WuPTW4yVqWrltcRG94oRoP8eXbwccM2VgdcLet2Em2i9WohNf6UOwvm3
+         aj37wDDQxV8Dyu1N1XGcdawKL9jhkpBvv/fD12clp+DGdn1U2lcqhc7Yd3CziKOUYevr
+         32Ecve/eMiN7NC870o63RlKh1xgsXKmxCfJ0GvHF6f1FmrjWpYnwlcOrB0S7f4pM445y
+         PtVkUmjf/LDA7BKK/B1qB/mCBrmpENxKlbaDqAjrZzaLrhmqiXs4lNwGyuiF2PsD9FTw
+         VMsA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/Q71tI/XUKC/9bbwTPY9bjKhL3vE+KIeFlUlEbvGFKSvrp2ZJxvOsAk2r/rzpMAmeY7ruBUSecvZitFBB/Y/0@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXN6zp3gf+XXIDUZ8pvvYsRi9R8IB8SCwsgJKB8mK0CxgiXfEO
+	R5Dxb6YoH/pp/yNGLZkJrkXC7bg2Y1KpKkcOdaf+mlFV207yzR4I0/GqDBf+uJlRdpdNT9ChqTP
+	YhoR7clLHfA==
+X-Google-Smtp-Source: AGHT+IE0/p2JoW1TZj7cfNF1e+VX2+9tvW6YL7vSDYQAc09tPzgkkUBB08oJkfPbDdXi3VqNeI53knN1330k
+X-Received: from pgbj27.prod.google.com ([2002:a63:551b:0:b0:bdb:36f7:556f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ef51:b0:295:9b39:4533
+ with SMTP id d9443c01a7336-29b6c57210emr484928435ad.30.1764694431947; Tue, 02
+ Dec 2025 08:53:51 -0800 (PST)
+Date: Tue,  2 Dec 2025 08:53:32 -0800
+In-Reply-To: <20251202165340.555375-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20251202165340.555375-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
-Message-ID: <20251202165340.555375-1-irogers@google.com>
-Subject: [PATCH v1 0/9] Updated Intel events and metric unit fixes
+Message-ID: <20251202165340.555375-2-irogers@google.com>
+Subject: [PATCH v1 1/9] perf vendor events intel: Update alderlake events from
+ 1.34 to 1.35
 From: Ian Rogers <irogers@google.com>
 To: Thomas Falcon <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
 	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
@@ -69,51 +73,234 @@ To: Thomas Falcon <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.c
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Update the Intel events using the script:
-https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-pulling in 8 updates to event data and a metric unit fix.
+The updated events were published in:
+https://github.com/intel/perfmon/commit/c74f1cefa94d224cb3338507961b59d8a2a1c4e9
 
-Ian Rogers (9):
-  perf vendor events intel: Update alderlake events from 1.34 to 1.35
-  perf vendor events intel: Update arrowlake events from 1.13 to 1.14
-  perf vendor events intel: Update cascadelakex metric units
-  perf vendor events intel: Update graniterapids events from 1.15 to
-    1.16
-  perf vendor events intel: Update icelakex events from 1.28 to 1.30
-  perf vendor events intel: Update lunarlake events from 1.18 to 1.19
-  perf vendor events intel: Update meteorlake events from 1.17 to 1.18
-  perf vendor events intel: Update pantherlake events from 1.00 to 1.02
-  perf vendor events intel: Update sierraforest events from 1.12 to 1.13
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../pmu-events/arch/x86/alderlake/cache.json     | 16 ++++++++--------
+ .../pmu-events/arch/x86/alderlake/pipeline.json  |  6 ++++--
+ .../pmu-events/arch/x86/alderlaken/cache.json    | 16 ++++++++--------
+ .../pmu-events/arch/x86/alderlaken/pipeline.json |  6 ++++--
+ tools/perf/pmu-events/arch/x86/mapfile.csv       |  4 ++--
+ 5 files changed, 26 insertions(+), 22 deletions(-)
 
- .../pmu-events/arch/x86/alderlake/cache.json  |  16 +-
- .../arch/x86/alderlake/pipeline.json          |   6 +-
- .../pmu-events/arch/x86/alderlaken/cache.json |  16 +-
- .../arch/x86/alderlaken/pipeline.json         |   6 +-
- .../pmu-events/arch/x86/arrowlake/cache.json  | 337 ++++++++++++++++-
- .../arch/x86/arrowlake/floating-point.json    |  73 ++++
- .../arch/x86/arrowlake/frontend.json          |  72 ++++
- .../pmu-events/arch/x86/arrowlake/memory.json |  64 ++++
- .../pmu-events/arch/x86/arrowlake/other.json  | 119 ++++++
- .../arch/x86/arrowlake/pipeline.json          | 350 ++++++++++++++++++
- .../arch/x86/arrowlake/virtual-memory.json    | 113 ++++++
- .../arch/x86/cascadelakex/uncore-cache.json   |   2 +-
- .../arch/x86/cascadelakex/uncore-memory.json  |  12 +-
- .../arch/x86/graniterapids/cache.json         |   4 +-
- .../arch/x86/graniterapids/uncore-cache.json  |   9 +
- .../arch/x86/icelakex/uncore-cache.json       |   4 +-
- .../pmu-events/arch/x86/lunarlake/cache.json  |  20 +-
- .../pmu-events/arch/x86/lunarlake/other.json  |   1 +
- .../arch/x86/lunarlake/pipeline.json          |  26 +-
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  18 +-
- .../pmu-events/arch/x86/meteorlake/cache.json |  20 +-
- .../arch/x86/pantherlake/cache.json           |  38 ++
- .../arch/x86/pantherlake/floating-point.json  |  73 ++++
- .../arch/x86/pantherlake/memory.json          |   9 +
- .../arch/x86/pantherlake/pipeline.json        | 305 ++++++++++++++-
- .../arch/x86/sierraforest/cache.json          |  20 +-
- .../arch/x86/sierraforest/uncore-cache.json   |   9 +
- 27 files changed, 1650 insertions(+), 92 deletions(-)
-
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/cache.json b/tools/perf/pmu-events/arch/x86/alderlake/cache.json
+index 4cd535baf703..be15a7f83717 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/cache.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/cache.json
+@@ -877,7 +877,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 128 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
+@@ -890,7 +890,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 16 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
+@@ -903,7 +903,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 256 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
+@@ -916,7 +916,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 32 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
+@@ -929,7 +929,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 4 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
+@@ -942,7 +942,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 512 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
+@@ -955,7 +955,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 64 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
+@@ -968,7 +968,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 8 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json b/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
+index 33d1f39e441f..57a8c78cdc49 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
+@@ -32,8 +32,9 @@
+         "Unit": "cpu_core"
+     },
+     {
+-        "BriefDescription": "Counts the number of active floating point and integer dividers per cycle.",
++        "BriefDescription": "This event is deprecated.",
+         "Counter": "0,1,2,3,4,5",
++        "Deprecated": "1",
+         "EventCode": "0xcd",
+         "EventName": "ARITH.DIV_OCCUPANCY",
+         "SampleAfterValue": "1000003",
+@@ -41,8 +42,9 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of floating point and integer divider uops executed per cycle.",
++        "BriefDescription": "This event is deprecated.",
+         "Counter": "0,1,2,3,4,5",
++        "Deprecated": "1",
+         "EventCode": "0xcd",
+         "EventName": "ARITH.DIV_UOPS",
+         "SampleAfterValue": "1000003",
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json b/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
+index 669f4979b651..76a841675337 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
+@@ -247,7 +247,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 128 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
+@@ -259,7 +259,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 16 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
+@@ -271,7 +271,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 256 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
+@@ -283,7 +283,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 32 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
+@@ -295,7 +295,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 4 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
+@@ -307,7 +307,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 512 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
+@@ -319,7 +319,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 64 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
+@@ -331,7 +331,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 8 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+-        "Counter": "0,1,2,3,4,5",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json b/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
+index 1dd61baec1a9..d650cbd48c1f 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
+@@ -9,16 +9,18 @@
+         "UMask": "0x3"
+     },
+     {
+-        "BriefDescription": "Counts the number of active floating point and integer dividers per cycle.",
++        "BriefDescription": "This event is deprecated.",
+         "Counter": "0,1,2,3,4,5",
++        "Deprecated": "1",
+         "EventCode": "0xcd",
+         "EventName": "ARITH.DIV_OCCUPANCY",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x3"
+     },
+     {
+-        "BriefDescription": "Counts the number of floating point and integer divider uops executed per cycle.",
++        "BriefDescription": "This event is deprecated.",
+         "Counter": "0,1,2,3,4,5",
++        "Deprecated": "1",
+         "EventCode": "0xcd",
+         "EventName": "ARITH.DIV_UOPS",
+         "SampleAfterValue": "1000003",
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index 32093bded949..d640acb8a3c7 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -1,6 +1,6 @@
+ Family-model,Version,Filename,EventType
+-GenuineIntel-6-(97|9A|B7|BA|BF),v1.34,alderlake,core
+-GenuineIntel-6-BE,v1.34,alderlaken,core
++GenuineIntel-6-(97|9A|B7|BA|BF),v1.35,alderlake,core
++GenuineIntel-6-BE,v1.35,alderlaken,core
+ GenuineIntel-6-C[56],v1.13,arrowlake,core
+ GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
+ GenuineIntel-6-(3D|47),v30,broadwell,core
 -- 
 2.52.0.158.g65b55ccf14-goog
 
