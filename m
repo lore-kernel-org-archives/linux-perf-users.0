@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511AB33DEEB;
-	Wed,  3 Dec 2025 17:58:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B3033E358;
+	Wed,  3 Dec 2025 17:58:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764784714; cv=none; b=qvGQabKOWP5+3zC2CcbGG0Lnbw+MY3FBJL9v4/+OEfcWLjwI+MtMmNqcyS+boJe/0YJFbxYoiUTvsM5EL00fS0SNWgLPXgHlFHAPLhBTAAixqCVTs3R22csC+NO+5Kzq+zbu6jo6NJlu9Qxq3k/Futezo15VAv8rQjE6IV2aX94=
+	t=1764784716; cv=none; b=iN9IPflcSMLxG8AVu3TWxNIS21auVgAZa0+4Wf4xYRGKFO99nYNqUlJmYemNWoINDmtou2Vezw+QUaOB3BfvVUNQ2mUGOx1JSsc2dEr1cmorg8Ts2HDAmXgR91SN14eQW6y0CeGCXhlQxvMDSj+JZGj66vBJC5hPataj24MSD5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764784714; c=relaxed/simple;
-	bh=odvDvU39uz7B8A+oDWeMr+EYRQoJwE5bEI9RfPVlWrU=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=KSFQxAAIW49rB8rRyyvymeIWol2PgCAmXfhsF7152d7RmL4xd4qjkNaf+jgK14trtoFwulUrjIlJkl8SqK+YIjwPf2DWju/WDyzy/fQ9Hw8+Y7Bd4T+PMZN84igRbF4aAF9O4+obVaF9BTe3sAB2W3nimyQq2DmXRrOhZORSQLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pLZNanAM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764784716; c=relaxed/simple;
+	bh=qtlGQduNPsz6ODSyzAoClcSOuVArAXAQY3T27m442ps=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=V8hZpcVJhfVsUKxhC6TyehXVQwiPzV2AZSsrlihaKTD1JViz9Dqz6f3sVaDwm7WUFen9oUPyYElHQjmKNnYKEIPf2qYDS4A8m83BaN2N4NMqc8KhlmAFEye+y8G0TLie5XCaWyLmlzJzMyvNx1r8qRQ4LgWxUTprf+9JyeiCugM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eq1vjtaI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pLZNanAM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB96CC116C6;
-	Wed,  3 Dec 2025 17:58:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eq1vjtaI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368CEC16AAE;
+	Wed,  3 Dec 2025 17:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764784713;
-	bh=odvDvU39uz7B8A+oDWeMr+EYRQoJwE5bEI9RfPVlWrU=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=pLZNanAMMRGyS+z0bVEpEmPCUBr0iMDgosUvSZJNzNWKOi4yeqswAs4tH0v5bQTW/
-	 fHKBCn0ZgBDgUuWYAY7p7UJDTVajExnxmtjgi9+M4pRlkStzI0qkJNoEO0gi/DDrhf
-	 GFocxqHn5ZIkxQ8oj4uJHP8Kp8O47ixNzsUAr1/3ARjUWRZNViLy7tTuYRV8Bp7zAS
-	 HufqIwtZSnZ55iP7OrcK9qox5hsZqF3Awm3SFaUpDgkucf4QTxLOkQS6rcPMT6wHsH
-	 B2FgnESrz4NZFyznTg+VAQnEDsU6ScUVVUgkK5k5P1+VdFewqjQSI6fUxEpJmo8XAM
-	 Lk2BLwAKJgSkQ==
+	s=k20201202; t=1764784715;
+	bh=qtlGQduNPsz6ODSyzAoClcSOuVArAXAQY3T27m442ps=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=eq1vjtaId1hp/npq3Gj2KOgiBOKbjfIw9ae+gF2w701AqMiKIPLDd/1SakV2ItStj
+	 67IMOw1iH1ylljfquisnZcQRN9nXc8hioaysGelmX7a1YCnCwJrWxGaPPAe7QGGwBL
+	 wSx1JH27mO/JgxFR0r2pCAo8NHHtPE6VLPm+E3ycw8/W/vYqbUNo9D2Ja4NJ/+vJOr
+	 snpmbt/yOZ65p4j2k2vS+uAx+uKkEPLY846lFcnSqWtjmP7pbV2jlr6uZizc4iRcFg
+	 A+yEE4MeSZhkxvu5dsBTM5rk+BSwavVUVX3DtclG4H8uLw9vIJR6ufTuRHmvxT9/nS
+	 zOkPHTKZBMfHQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Zide Chen <zide.chen@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ian Rogers <irogers@google.com>
-In-Reply-To: <20251201231136.293248-1-irogers@google.com>
-References: <20251201231136.293248-1-irogers@google.com>
-Subject: Re: [PATCH v1] perf test: Fix hybrid testing of event fallback
- test
-Message-Id: <176478471279.3636162.12282429232615352755.b4-ty@kernel.org>
-Date: Wed, 03 Dec 2025 09:58:32 -0800
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>, 
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+ Eric Biggers <ebiggers@kernel.org>, Pablo Galindo <pablogsal@gmail.com>, 
+ Fangrui Song <maskray@sourceware.org>
+In-Reply-To: <20251125080748.461014-1-namhyung@kernel.org>
+References: <20251125080748.461014-1-namhyung@kernel.org>
+Subject: Re: [PATCH v2 1/2] perf jitdump: Add sym/str-tables to build-ID
+ generation
+Message-Id: <176478471412.3636162.8826107482964301667.b4-ty@kernel.org>
+Date: Wed, 03 Dec 2025 09:58:34 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,13 +51,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Mon, 01 Dec 2025 15:11:36 -0800, Ian Rogers wrote:
-> The mem-loads-aux event exists on hybrid systems but the "cpu" PMU
-> does not. This causes an event parsing error which erroneously makes
-> the test look like it is failing. Avoid naming the PMU to avoid
-> this. Rather than cleaning up perf.data in the directory the test is
-> run, explicitly send the 'perf record' output to /dev/null and avoid
-> any cleanup scripts.
+On Tue, 25 Nov 2025 00:07:46 -0800, Namhyung Kim wrote:
+> It was reported that python backtrace with JIT dump was broken after the
+> change to built-in SHA-1 implementation.  It seems python generates the
+> same JIT code for each function.  They will become separate DSOs but the
+> contents are the same.  Only difference is in the symbol name.
+> 
+> But this caused a problem that every JIT'ed DSOs will have the same
+> build-ID which makes perf confused.  And it resulted in no python
+> symbols (from JIT) in the output.
 > 
 > [...]
 Applied to perf-tools-next, thanks!
