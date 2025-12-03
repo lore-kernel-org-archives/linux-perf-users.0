@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B3033E358;
-	Wed,  3 Dec 2025 17:58:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5EC33EB06;
+	Wed,  3 Dec 2025 17:58:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764784716; cv=none; b=iN9IPflcSMLxG8AVu3TWxNIS21auVgAZa0+4Wf4xYRGKFO99nYNqUlJmYemNWoINDmtou2Vezw+QUaOB3BfvVUNQ2mUGOx1JSsc2dEr1cmorg8Ts2HDAmXgR91SN14eQW6y0CeGCXhlQxvMDSj+JZGj66vBJC5hPataj24MSD5c=
+	t=1764784717; cv=none; b=AdDtVqbC6rmNO+7dKQW35UR5sjvcL602IDeSUFvodzwbnPPikPyTHcsKrNWAEhoZM7jeLf7ixfcF0wQveMQkO+uZYJfhBOh04ouY46oxCgl9jMWSIWd3UipXHIa9/rWBFihoSBmgs3XlvP3q42q6BB3d/EZ/XC1pgatkPI2ID0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764784716; c=relaxed/simple;
-	bh=qtlGQduNPsz6ODSyzAoClcSOuVArAXAQY3T27m442ps=;
+	s=arc-20240116; t=1764784717; c=relaxed/simple;
+	bh=pBHaqc1UaMxy6DaEmtPewMkqaPweraKDE02V5olQNd0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=V8hZpcVJhfVsUKxhC6TyehXVQwiPzV2AZSsrlihaKTD1JViz9Dqz6f3sVaDwm7WUFen9oUPyYElHQjmKNnYKEIPf2qYDS4A8m83BaN2N4NMqc8KhlmAFEye+y8G0TLie5XCaWyLmlzJzMyvNx1r8qRQ4LgWxUTprf+9JyeiCugM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eq1vjtaI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Lyg2zcIfvMDD+4QoCjY2vNaD7V0ZmSEKL6F8cgMGI2N1AiTbH+Xurr1LQgCQWzrNDNWpi4m0laCS6ByjvwRtpPsHsX8iS5QlFdNaTp3cc88QQUGPqKG5GKwN5apTSFQ38aVJG6UlZ8rAMyB02dKMzVGSUvfbhrIiA7z82JoTHCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkTT+88u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eq1vjtaI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368CEC16AAE;
-	Wed,  3 Dec 2025 17:58:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkTT+88u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B870EC116C6;
+	Wed,  3 Dec 2025 17:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764784715;
-	bh=qtlGQduNPsz6ODSyzAoClcSOuVArAXAQY3T27m442ps=;
+	s=k20201202; t=1764784717;
+	bh=pBHaqc1UaMxy6DaEmtPewMkqaPweraKDE02V5olQNd0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=eq1vjtaId1hp/npq3Gj2KOgiBOKbjfIw9ae+gF2w701AqMiKIPLDd/1SakV2ItStj
-	 67IMOw1iH1ylljfquisnZcQRN9nXc8hioaysGelmX7a1YCnCwJrWxGaPPAe7QGGwBL
-	 wSx1JH27mO/JgxFR0r2pCAo8NHHtPE6VLPm+E3ycw8/W/vYqbUNo9D2Ja4NJ/+vJOr
-	 snpmbt/yOZ65p4j2k2vS+uAx+uKkEPLY846lFcnSqWtjmP7pbV2jlr6uZizc4iRcFg
-	 A+yEE4MeSZhkxvu5dsBTM5rk+BSwavVUVX3DtclG4H8uLw9vIJR6ufTuRHmvxT9/nS
-	 zOkPHTKZBMfHQ==
+	b=dkTT+88uVT1bgCNEJxz465IiHx71Tr2tn3AQlRd7d41E5PxmwGqiNsGCelwOFHR6H
+	 MC1tBs6oIyC4xq07cTo5yd+9Jms4PYlYaVgfI8tN8CL/FeXlc3aRy2UNyyG8xyPKqZ
+	 gU8Zq29L5sABFt0zXPAYMUz5t1lPVLRxXuhrQxHgY+QLx/wo9DJ5LGEdGn7TdHiAUr
+	 XyM5GIerL1F4oOJdxvvOz++wqswCriHZ9kFPUDyi4gsVZ8D4afm5QOt3CWWnJG+/pE
+	 SwGngMndgAp3ARY+M9yrrFzKX5BZNSTrHb64WAaAO+l9ClLEY//cyFpMTV3qZhNWyl
+	 83oBYm497vw+w==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>, 
@@ -33,14 +33,15 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
  LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
- Eric Biggers <ebiggers@kernel.org>, Pablo Galindo <pablogsal@gmail.com>, 
- Fangrui Song <maskray@sourceware.org>
-In-Reply-To: <20251125080748.461014-1-namhyung@kernel.org>
-References: <20251125080748.461014-1-namhyung@kernel.org>
-Subject: Re: [PATCH v2 1/2] perf jitdump: Add sym/str-tables to build-ID
- generation
-Message-Id: <176478471412.3636162.8826107482964301667.b4-ty@kernel.org>
-Date: Wed, 03 Dec 2025 09:58:34 -0800
+ Steven Rostedt <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+ Indu Bhagat <indu.bhagat@oracle.com>, Jens Remus <jremus@linux.ibm.com>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+In-Reply-To: <20251120234804.156340-1-namhyung@kernel.org>
+References: <20251120234804.156340-1-namhyung@kernel.org>
+Subject: Re: [PATCHSET v6 0/6] perf tools: Add deferred callchain support
+Message-Id: <176478471565.3636162.18444163502613500865.b4-ty@kernel.org>
+Date: Wed, 03 Dec 2025 09:58:35 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,15 +52,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Tue, 25 Nov 2025 00:07:46 -0800, Namhyung Kim wrote:
-> It was reported that python backtrace with JIT dump was broken after the
-> change to built-in SHA-1 implementation.  It seems python generates the
-> same JIT code for each function.  They will become separate DSOs but the
-> contents are the same.  Only difference is in the symbol name.
+On Thu, 20 Nov 2025 15:47:58 -0800, Namhyung Kim wrote:
+> This is a new version of deferred callchain support as the kernel part
+> is merged to the tip tree.  Actually this is based on Steve's work (v16).
 > 
-> But this caused a problem that every JIT'ed DSOs will have the same
-> build-ID which makes perf confused.  And it resulted in no python
-> symbols (from JIT) in the output.
+>   https://lore.kernel.org/r/20250908175319.841517121@kernel.org
+> 
+> v6 changes)
 > 
 > [...]
 Applied to perf-tools-next, thanks!
