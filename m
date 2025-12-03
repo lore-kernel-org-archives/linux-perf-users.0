@@ -1,55 +1,55 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F06E2D9792
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Dec 2025 21:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD03D2DC339
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Dec 2025 21:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764798434; cv=none; b=HONFM1i7w1IS8oP13825OrqahxJ2HpwMk2MW6pkjLpDsOal9TrMGGFvdKN8hmIWqU0wDuMX0JP1j34IXdl0V8vyzfTrGvI+bOkq67KAgjIjo9BpO9ALEuJQzbIG9ftXGQy4wKT5DHGRXn0uQwYO2DgdvkjvYz+tQAc8ZPT13KCo=
+	t=1764798436; cv=none; b=LdSl414feRpFXLNZGWE55ghbQdqChKNc1yDBAaT/5IXgkEYawvdyYbbn3NdT504nNqlABWjtD7tX0ZBrLYoGzETs3TZcQUaAVgx20PQQAY5AJJBhvZ9uNUFMvO9X1p5jVW08BbVX+VY5UDZNqv9Nqw3LB/9xiICPbO/kniBRmmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764798434; c=relaxed/simple;
-	bh=gR16hXUGmvBYon0NXkKR6UIc51eic/vdJdsFwlnfBmQ=;
+	s=arc-20240116; t=1764798436; c=relaxed/simple;
+	bh=RnRkqXZ4JTrwCm2Wz2Zuk8jh3jbWrplurAPzXjoLNRs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=GlpzFDf/B/np1l8Q3Z3rVy3uNvMT7n5OIkdcAXHuRiMRQNIwj11OAC7xFrpDGDywjspGkYOlIIJUX1c1nML83n1yUCs3V0cB1aXNnmSY+kLrWVObs1LVkZts7JyhsiM/5TXF1E0lN7+c3XQb31oXNHI3DtyJOnWrYUPjoCC+Ju8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EuQYnEEo; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=mawQIRLZGf6CuTbhw7pxHgvh808YKbpkCLFyysWys4Y9DOEvBIaiderGw3S8t7AYM30Ys9NymaGIqixxJo4Uj3krJpGx2yOWHt119vW/8y4Hogbk4LiEYxQaaGjQvg/2GqVDz1c4n7QGS1NhvupClFD3Q62UGTZvaFL2TzssZrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B2OugdYP; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EuQYnEEo"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2a45fea6efbso1718001eec.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Dec 2025 13:47:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B2OugdYP"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-bce224720d8so323005a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Dec 2025 13:47:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764798432; x=1765403232; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764798434; x=1765403234; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0JLDB1+Famcj/1uPLs4rB9WCCpUFUNy+DKkLH/GTWVU=;
-        b=EuQYnEEoYR/aadRRh9mHXpXFwYPGTK0RRSgEVvj7uI0Ug7WJpizODd3TRzm8ySSSJI
-         bURS5zam3vbdSmbw9bXCndKQkhMUywo8Cr8SVdcGPcxLc18vHhPrgk9vX7byD6JtllsZ
-         sLeuySfsNGuLFvO10RR3eB+t6+lKrwqaPA9CxmEdINKkH9i7tq9S+1+z0ToT06IsIuet
-         WtIjLwMICDVdHiIkwPDVZvmEP4pXZA9v7awpPF0dlAqr8a23ewTP0O70XSnnZNlrLMYf
-         icYxK2Uwq6BMLm2LIxMP6oFpWetHq9dIKbvGQZVae4mnM9y8putQi0reQtxo05aSwC6/
-         87dA==
+        bh=eOcSMNeJ/ZMXLpzeMBUmAqAigtJI1TPFFdhHf8jwosU=;
+        b=B2OugdYPk/CQs+p3NCdKT+0vV5ZMaghUiPdabUb+M2wBGuTnmSo7R1z8SzAQJ0B41Z
+         iN50Hxh2FebPyudNLMp9NAYuL0IHoxYwj55lSlWp5wzR9zYzxZy7bUzeaaZqjn45N5MS
+         BBeVQQSgL/CWjxC5doLFS3PBT/QeW6+6BvWeO6P1+EmafzxbXPkiip85/quby+9h/QFQ
+         XAJGJMLrVYvRM5/Ye97hSLGSAopG4r9KHvccWPjAAxXi18ln4XPAUT0Llme8QDZy+m/i
+         Rx3atFvrX+ptxVDdsKC7b2BsBYtPTVNUJKMdppSCjoL/0fXIYxIMNLLYjA6jWjQxTCV0
+         KFxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764798432; x=1765403232;
+        d=1e100.net; s=20230601; t=1764798434; x=1765403234;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0JLDB1+Famcj/1uPLs4rB9WCCpUFUNy+DKkLH/GTWVU=;
-        b=D5Cxl/ytS7qMBT2W0PYGB1lGvgMwjcqZ+Njr9Lxh+Wpwjqxsk8n9bDRsR6Qm4u2Nuo
-         cst05RFEwBWj3d+CvJBMvExwic11dvQr8AWMYK9XYTKCb1L/fsuYqTWfK4P/uVIhvkzR
-         Zhz41sSve/3OUuKYiQf62V344eZTUrxyP6k2fUGMB5WXeCLAx+srtip+iqOn0kDhj6PT
-         LM/4xRvltfsF77lclyhcpPMRBhBZ6+926AggYD37smUMS3f4a3ileQcgRykd09iUhIKM
-         v60K4u6++wn9sGgczJWCz6vqRsrNpPeaH5CNauVo1RodhVW7tNvK7Z+pVyHffks4CS+4
-         +dyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWY4nbKVROyETYW3vb+KvaKi+SnxqcjRoKQmeyU0aZGgpJJO9ST/0eQ8XNwjLPrNjHamV8nachemh8VCc0vPLIH@vger.kernel.org
-X-Gm-Message-State: AOJu0YymciK9DrCH0Q7s19U/pI8kwWY6GnDOT2/qU7Dt9wVFZQ7DD2ky
-	KtA+ZT/MzEK9RfFtV2p6v3BXrX8owYES9v7E4WsOUsRT14YNwmpuxnqqsIGmHhZWtNPeSRlezSC
-	4GTQ4l81hRw==
-X-Google-Smtp-Source: AGHT+IHu/jj6pSf2/OU7jAgX2yW38AXdSzMKTldoaWwQfMGHkoQ8ENZUp5NPZM91LnGiAdpVMi15XVZwV4So
-X-Received: from dys5.prod.google.com ([2002:a05:693c:8005:b0:2a4:51e8:c5c8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:60e:b0:2a4:3593:cca7
- with SMTP id 5a478bee46e88-2aba3394a44mr812863eec.4.1764798431987; Wed, 03
- Dec 2025 13:47:11 -0800 (PST)
-Date: Wed,  3 Dec 2025 13:47:00 -0800
+        bh=eOcSMNeJ/ZMXLpzeMBUmAqAigtJI1TPFFdhHf8jwosU=;
+        b=PHFs5C0f5OPrg8+q6LJYA5WEj6cHrzqADQzDElPlxlCQyz06rtORUjBmLvFU+9WNI6
+         89KVCKFMrBubF+xFXOpjLrhBwpaCynsWST79odccyrRZ2sUvqlWJtOgqBKbdorSKQMsN
+         v9X7lh5xy9HoIy0LNl+hEEY4HRr1aCEn2sd9FnfZtmDzuggU/0HCfN74puLOOXRuFoGl
+         b7c/wjQwno8HAAQfwQ48NSQ83Klb1UoPymlgECvfrRWncLD2BCsEcuQqwRJk3EztAeCj
+         6wMRoDjqI3DBRSQgxuuG3OwuxkUDA8wEYz8bGoq83I53lZSNWkKPWJeIBZt0efXHDV5J
+         3EfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUx2fV7HSR2kHpy0SXMJ1IVCPmKFpVRrjGaAXVnCgfaSXbrhc3vZK9Ulbp1xAQtpM8mY90ngnADB36CgyL+pYF3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGX8VGHYCYNsAMHEXxIl4vIWRl0a5Re/SyUBXTPi+HpCMn3Stz
+	V8z6jDFZiu0+2j5sqy7XZb8H+Y5LTBySj4lo+HKutG1HtmsnMLO0LrjrMyDxNyWbB3JrbAEd23k
+	lGSxLVsO4mw==
+X-Google-Smtp-Source: AGHT+IFm5eUCWRwz5Nfygqjtwh5PieLN6MVOHBcL6m3z8SCNLQ9bZBKQIdp75woC2gQZxpW8S+MHehpUntax
+X-Received: from dyjn15.prod.google.com ([2002:a05:7300:a8f:b0:2a4:5a4a:cc6d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:b0a:b0:2a6:d0bd:4a07
+ with SMTP id 5a478bee46e88-2ab92e52960mr1991364eec.18.1764798433998; Wed, 03
+ Dec 2025 13:47:13 -0800 (PST)
+Date: Wed,  3 Dec 2025 13:47:01 -0800
 In-Reply-To: <20251203214706.112174-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251203214706.112174-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.177.g9f829587af-goog
-Message-ID: <20251203214706.112174-2-irogers@google.com>
-Subject: [PATCH v2 1/7] perf stat: Allow no events to open if this is a
- "--null" run
+Message-ID: <20251203214706.112174-3-irogers@google.com>
+Subject: [PATCH v2 2/7] libperf cpumap: Fix perf_cpu_map__max for an
+ empty/NULL map
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,28 +72,38 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-It is intended that a "--null" run doesn't open any events.
+Passing an empty map to perf_cpu_map__max triggered a SEGV. Explicitly
+test for the empty map.
 
-Fixes: 2cc7aa995ce9 ("perf stat: Refactor retry/skip/fatal error handling")
+Reported-by: Ingo Molnar <mingo@kernel.org>
+Closes: https://lore.kernel.org/linux-perf-users/aSwt7yzFjVJCEmVp@gmail.com/
 Tested-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/perf/cpumap.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 5c06e9b61821..6410115ed9c5 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -923,7 +923,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 			goto err_out;
- 		}
- 	}
--	if (!has_supported_counters) {
-+	if (!has_supported_counters && !stat_config.null_run) {
- 		evsel__open_strerror(evlist__first(evsel_list), &target, open_err,
- 				     msg, sizeof(msg));
- 		ui__error("No supported events found.\n%s\n", msg);
+diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+index 7e88417ba84d..4160e7d2e120 100644
+--- a/tools/lib/perf/cpumap.c
++++ b/tools/lib/perf/cpumap.c
+@@ -368,10 +368,12 @@ struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
+ 		.cpu = -1
+ 	};
+ 
+-	// cpu_map__trim_new() qsort()s it, cpu_map__default_new() sorts it as well.
+-	return __perf_cpu_map__nr(map) > 0
+-		? __perf_cpu_map__cpu(map, __perf_cpu_map__nr(map) - 1)
+-		: result;
++	if (!map)
++		return result;
++
++	// The CPUs are always sorted and nr is always > 0 as 0 length map is
++	// encoded as NULL.
++	return __perf_cpu_map__cpu(map, __perf_cpu_map__nr(map) - 1);
+ }
+ 
+ /** Is 'b' a subset of 'a'. */
 -- 
 2.52.0.177.g9f829587af-goog
 
