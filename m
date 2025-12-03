@@ -1,51 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F07C36D4EC;
-	Wed,  3 Dec 2025 00:01:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D7B2B9A4;
+	Wed,  3 Dec 2025 00:06:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764720102; cv=none; b=JB5ISHrs4eTy8prM8upU7y08gDCYc/BJtFWy1YGOrat80DtO+JD2pXyEE3Oxzex6sc4hd9wllMy0YA98xzEupKgmkhtxuzeVcl39NZT/ebdsFicW3NwmDTZE00njBZPFw8JlaCCEWgU5N8EjZO6AaJyVh03HpGriBTa6eQJOqOI=
+	t=1764720404; cv=none; b=lmnIJpB63NP2FAclHexF3xsEyO4NbbEgFLCqdnGjESnLbyMkWtz0mCJgr6dbh9Q4o6DQG809xkIeLVOWmQ1pMNKaak1t8v7EyjjIJq8py4jtpbQQeQBjYO0IofTSvFFePTYQWa23/A9DKNXj2QD7ndJdtLAFGGgejlYdINU+GYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764720102; c=relaxed/simple;
-	bh=yt2dmbYs+Z7tHAiBz+WK3bg9EVIZKUbEQYiUbaOzt58=;
+	s=arc-20240116; t=1764720404; c=relaxed/simple;
+	bh=BcFAVPFSQV/uDnGkR0h4dQD5XJr8SIfSBJ9Mucj7ylQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eAOLXNgS7cwSGqyGAq0pGnSfM4V8eGR5wvPH8cUe7HApCQ/k0CEPuLTx+GnGrjXW9sQQIFT5QIGV+cyRLnuWtRIyzrmpFxO6R2yTYMGsp2sZsfzNmmIb7yR4pFHvl1jznIOGqBtHXl8kl971JXalggYW6w1Q9iNGmJifrZErSa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OwqPV71+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jkWb9MUk/Uj2QHVm4TKyhYGbOxPWWkQ53sWWNq+C2eNnrYPaMK3IA0haQe7wp3qEV5MVJseC7l4IeRXoMM/343yAlfBtRn5MwJaQ4lHt5G3Ly2Es5oaOIwHtHRNq7VPBv0zBbTfUCU4nPMr7iTNf+cutMWYhNwwN6O/pqr4RxyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N3Emvg3W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OwqPV71+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C4C9C4CEF1;
-	Wed,  3 Dec 2025 00:01:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3Emvg3W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E637C4CEF1;
+	Wed,  3 Dec 2025 00:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764720101;
-	bh=yt2dmbYs+Z7tHAiBz+WK3bg9EVIZKUbEQYiUbaOzt58=;
+	s=k20201202; t=1764720403;
+	bh=BcFAVPFSQV/uDnGkR0h4dQD5XJr8SIfSBJ9Mucj7ylQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OwqPV71+1oBkhUFc5MV1PMnNLSaXtrTCLPwS/isqTr7vzpmRTHooFaInuWZU/1+BA
-	 PtTrzvsxNkoNcrVFON4pZqMEVotMzBPNkM/eqqZg1FTOsJ3/6gNufUQ6a87fYtrvT5
-	 +OOnS/46jxIBPIMW21ERuDmUldmiBq4T/ZhxDrHerFLUwg+ZVyXn49vCaAkNcdmez2
-	 OX4qm81zg/1tvzTAR/0yjspNTM6MUS474vXLMltBwiKZ7uZ0jAqjv8zAIWCboFrcD/
-	 Zwf1Hz9K3KALESDLGk7PjAdABeDAMS+g+fzl3Lw4OsRk6UDxZ9lj5EoJZ814xMiJVL
-	 WzR/nnUBlOeCg==
-Date: Tue, 2 Dec 2025 16:01:38 -0800
+	b=N3Emvg3WM5sh/CBLkb23ymJ+CoMmTAwKnmnmmF0rNU3JDyJ72uJo6PFkyahm1i7ov
+	 m7A1mxVHF05zS/oNA+PkFAY/EyMmVYNwIhD8vJmADYwqI1MtuJKfg/9Z9f3pSNUqr9
+	 XtTOpmjsNC8ogSuFNe/eyP9wnYSj/f77rfRglFa8REeKfMJzCH1YU0PAdrvWNdwLEm
+	 uvGJsuKIV0wef07wx6bn1dkZB1KVTXHquZh4lEHvYrzFv6S3LdPAoHUrUlXC3U/4/u
+	 hx/9tVMqw2ZxOIBuc1GckzWsQ1St7U8o/aoF9pBfFAlDn1rYs6ntI5e85SyH0vEakF
+	 fxMRGhvDFEbXA==
+Date: Tue, 2 Dec 2025 16:06:40 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+Cc: Eric Biggers <ebiggers@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v6 5/6] perf tools: Merge deferred user callchains
-Message-ID: <aS994rls5y5xP1br@google.com>
-References: <20251120234804.156340-1-namhyung@kernel.org>
- <20251120234804.156340-6-namhyung@kernel.org>
- <CAP-5=fUVgxHn-oxQNQBJKDo=k8VPXBKA5BkJ5LbUF-UOm9t8Xw@mail.gmail.com>
+	Pablo Galindo <pablogsal@gmail.com>,
+	Fangrui Song <maskray@sourceware.org>
+Subject: Re: [PATCH v2 1/2] perf jitdump: Add sym/str-tables to build-ID
+ generation
+Message-ID: <aS9_ENzrfbjj5Eye@google.com>
+References: <20251125080748.461014-1-namhyung@kernel.org>
+ <20251125192943.GA3061247@google.com>
+ <CAP-5=fXh82HpvLhPr9uFtq=HK5V+ZL3xntz7-gspEE5az2+7nw@mail.gmail.com>
+ <20251126030452.GA85316@sol>
+ <aSi_zXuT8isr8jEC@google.com>
+ <20251127221822.GA2977@sol>
+ <aS9gms3-xGaIpUnt@google.com>
+ <CAP-5=fVoGKnhcN5Rqx-EqsCC-UMx-eKNdFory7XaYpdG_4wu2g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,156 +58,132 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUVgxHn-oxQNQBJKDo=k8VPXBKA5BkJ5LbUF-UOm9t8Xw@mail.gmail.com>
+In-Reply-To: <CAP-5=fVoGKnhcN5Rqx-EqsCC-UMx-eKNdFory7XaYpdG_4wu2g@mail.gmail.com>
 
-On Tue, Dec 02, 2025 at 03:14:31PM -0800, Ian Rogers wrote:
-> On Thu, Nov 20, 2025 at 3:48 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Tue, Dec 02, 2025 at 03:26:59PM -0800, Ian Rogers wrote:
+> On Tue, Dec 2, 2025 at 1:56 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > Save samples with deferred callchains in a separate list and deliver
-> > them after merging the user callchains.  If users don't want to merge
-> > they can set tool->merge_deferred_callchains to false to prevent the
-> > behavior.
+> > On Thu, Nov 27, 2025 at 02:18:22PM -0800, Eric Biggers wrote:
+> > > On Thu, Nov 27, 2025 at 01:17:01PM -0800, Namhyung Kim wrote:
+> > > > Hello,
+> > > >
+> > > > On Tue, Nov 25, 2025 at 07:04:52PM -0800, Eric Biggers wrote:
+> > > > > On Tue, Nov 25, 2025 at 06:55:39PM -0800, Ian Rogers wrote:
+> > > > > > On Tue, Nov 25, 2025 at 11:29 AM Eric Biggers <ebiggers@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Tue, Nov 25, 2025 at 12:07:46AM -0800, Namhyung Kim wrote:
+> > > > > > > > It was reported that python backtrace with JIT dump was broken after the
+> > > > > > > > change to built-in SHA-1 implementation.  It seems python generates the
+> > > > > > > > same JIT code for each function.  They will become separate DSOs but the
+> > > > > > > > contents are the same.  Only difference is in the symbol name.
+> > > > > > > >
+> > > > > > > > But this caused a problem that every JIT'ed DSOs will have the same
+> > > > > > > > build-ID which makes perf confused.  And it resulted in no python
+> > > > > > > > symbols (from JIT) in the output.
+> > > > > > > >
+> > > > > > > > Looking back at the original code before the conversion, it used the
+> > > > > > > > load_addr as well as the code section to distinguish each DSO.  But it'd
+> > > > > > > > be better to use contents of symtab and strtab instead as it aligns with
+> > > > > > > > some linker behaviors.
+> > > > > > > >
+> > > > > > > > This patch adds a buffer to save all the contents in a single place for
+> > > > > > > > SHA-1 calculation.  Probably we need to add sha1_update() or similar to
+> > > > > > > > update the existing hash value with different contents and use it here.
+> > > > > > > > But it's out of scope for this change and I'd like something that can be
+> > > > > > > > backported to the stable trees easily.
+> > > > > > > >
+> > > > > > > > Fixes: e3f612c1d8f3945b ("perf genelf: Remove libcrypto dependency and use built-in sha1()")
+> > > > > > > > Cc: Eric Biggers <ebiggers@kernel.org>
+> > > > > > > > Cc: Pablo Galindo <pablogsal@gmail.com>
+> > > > > > > > Cc: Fangrui Song <maskray@sourceware.org>
+> > > > > > > > Link: https://github.com/python/cpython/issues/139544
+> > > > > > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > > > > >
+> > > > > > > That commit actually preserved the behavior of the existing variant of
+> > > > > > > gen_build_id() that was under #ifdef BUILD_ID_SHA.  So I guess that code
+> > > > > > > was always broken, and it was just never noticed because the alternative
+> > > > > > > variant of gen_build_id() under #ifdef BUILD_ID_MD5 was used instead?
+> > > > > > >
+> > > > > > > The MD5 variant of gen_build_id() just hashed the load_addr concatenated
+> > > > > > > with the code.  That's not what this patch does, though.  So just to
+> > > > > > > clarify, you'd actually like to go with a third approach rather than
+> > > > > > > just restoring the original hash(load_addr || code) approach?
+> > > > > > >
+> > > > > > > Also, I missed that you had actually changed the hash algorithm.  I had
+> > > > > > > assumed the perf folks were were pushing SHA-1 because they were already
+> > > > > > > using it.  Given that the algorithm changed, there must not be any
+> > > > > > > backwards compatibility concerns here, and you should switch to a modern
+> > > > > > > hash algorithm such as SHA-256 instead.
+> > > > > > >
+> > > > > > > I'd be glad to add an incremental API if you need it, but I'm confused
+> > > > > > > why you want SHA-1 and not a modern hash algorithm.
+> > > > > >
+> > > > > > Hi Eric,
+> > > > > >
+> > > > > > Thanks for the help with the hash functions! There's a bit more
+> > > > > > context in this thread:
+> > > > > > https://lore.kernel.org/linux-perf-users/CAP-5=fWLgaWsv82dcPajVk=UmBbmwyEd7OVp6psZQ4TiXh-Meg@mail.gmail.com/
+> > > > > >
+> > > > > > So genelf is trying to take snippets of jitted code and create ELF
+> > > > > > files from them for the purpose of symbolizing in perf. The buildid
+> > > > > > hash being used is SHA1 and I think the MD5 support was removed as
+> > > > > > unnecessary. The problem this patch is addressing is that a JIT may
+> > > > > > create many identical stubs which then end up being deduplicated into
+> > > > > > the same buildid as only the code is hashed. The BFD linker seems to
+> > > > > > have the same issue (Fangrui filed a bug), gold and lld appear to hash
+> > > > > > the symbols (which Namhyung adds to genelf here) but still yield
+> > > > > > different build id for the same source assembly code. It is possible
+> > > > > > to hash the address of the symbol rather than the symbol itself, but I
+> > > > > > think the intent for the code should be to best match what a compiler
+> > > > > > and linker would generate. The problem there is that this differs for
+> > > > > > every linker :-)
+> > > > > >
+> > > > > > Something that is unfortunate in the code now is copying/concatenating
+> > > > > > all the build data for the sake of producing the hash. It would be
+> > > > > > nice if the code could incrementally build up the sha1 hash to avoid
+> > > > > > the copying. I don't know if there is functionality for this
+> > > > > > currently.
+> > > > >
+> > > > > Again, I can add support for incremental hashing if you need it.  But I
+> > > > > don't understand why you want the hash function to be SHA-1.  Also,
+> > > > > given that this seems to be a regression fix, it's surprising that
+> > > > > you're suddenly changing the inputs to the hash entirely, instead of
+> > > > > just going back to hashing load_addr concatenated with the code for now.
+> > > >
+> > > > Historically MD5 or SHA1 was the only choice for build-ID in linkers.
+> > > > I don't know if it's changed lately though.  But because of that we
+> > > > support build-IDs up to 20 bytes and it's in the UAPI too (well.. it's
+> > > > implicit in PERF_RECORD_MMAP2).  I think we can support other hashs if
+> > > > they fit into it, but SHA-1 would be the right choice for now.
+> > > >
+> > > > About load_addr, I don't think it's the right fix.  We cannot have the
+> > > > exactly same build-IDs as before since we already switched to SHA-1.
+> > > > What we actually want is a way to generate unique IDs for each DSO.
+> > > > For that purpose, it'd be nice to use sym/str-tables as Fangrui said
+> > > > instead of using load_addr which seems to be a quick hack in the past.
+> > > >
+> > > > So I think I can merge this change for stable fix.  And add incremental
+> > > > SHA-1 (thanks in advance!) and update the code to it later.
+> > >
+> > > If it needs to be 20 bytes, you should just use a truncated SHA-256.
+> > >
+> > > The only use for SHA-1 is backwards compatibility.  Which it seems you
+> > > don't need.
 > >
-> > With previous result, now perf script will show the merged callchains.
-> >
-> >   $ perf script
-> >   ...
-> >   pwd    2312   121.163435:     249113 cpu/cycles/P:
-> >           ffffffff845b78d8 __build_id_parse.isra.0+0x218 ([kernel.kallsyms])
-> >           ffffffff83bb5bf6 perf_event_mmap+0x2e6 ([kernel.kallsyms])
-> >           ffffffff83c31959 mprotect_fixup+0x1e9 ([kernel.kallsyms])
-> >           ffffffff83c31dc5 do_mprotect_pkey+0x2b5 ([kernel.kallsyms])
-> >           ffffffff83c3206f __x64_sys_mprotect+0x1f ([kernel.kallsyms])
-> >           ffffffff845e6692 do_syscall_64+0x62 ([kernel.kallsyms])
-> >           ffffffff8360012f entry_SYSCALL_64_after_hwframe+0x76 ([kernel.kallsyms])
-> >               7f18fe337fa7 mprotect+0x7 (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >               7f18fe330e0f _dl_sysdep_start+0x7f (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >               7f18fe331448 _dl_start_user+0x0 (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >   ...
-> >
-> > The old output can be get using --no-merge-callchain option.
-> > Also perf report can get the user callchain entry at the end.
-> >
-> >   $ perf report --no-children --stdio -q -S __build_id_parse.isra.0
-> >   # symbol: __build_id_parse.isra.0
-> >        8.40%  pwd      [kernel.kallsyms]
-> >               |
-> >               ---__build_id_parse.isra.0
-> >                  perf_event_mmap
-> >                  mprotect_fixup
-> >                  do_mprotect_pkey
-> >                  __x64_sys_mprotect
-> >                  do_syscall_64
-> >                  entry_SYSCALL_64_after_hwframe
-> >                  mprotect
-> >                  _dl_sysdep_start
-> >                  _dl_start_user
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > I think the linker (ld) --build-id still defaults to SHA-1.
 > 
 > Reviewed-by: Ian Rogers <irogers@google.com>
 > 
-> > ---
-> >  tools/perf/Documentation/perf-script.txt |  5 ++
-> >  tools/perf/builtin-inject.c              |  1 +
-> >  tools/perf/builtin-report.c              |  1 +
-> >  tools/perf/builtin-script.c              |  4 ++
-> >  tools/perf/util/callchain.c              | 29 +++++++++
-> >  tools/perf/util/callchain.h              |  3 +
-> >  tools/perf/util/evlist.c                 |  1 +
-> >  tools/perf/util/evlist.h                 |  2 +
-> >  tools/perf/util/session.c                | 79 +++++++++++++++++++++++-
-> >  tools/perf/util/tool.c                   |  2 +
-> >  tools/perf/util/tool.h                   |  1 +
-> >  11 files changed, 127 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> > index 28bec7e78bc858ba..03d1129606328d6d 100644
-> > --- a/tools/perf/Documentation/perf-script.txt
-> > +++ b/tools/perf/Documentation/perf-script.txt
-> > @@ -527,6 +527,11 @@ include::itrace.txt[]
-> >         The known limitations include exception handing such as
-> >         setjmp/longjmp will have calls/returns not match.
-> >
-> > +--merge-callchains::
-> > +       Enable merging deferred user callchains if available.  This is the
-> > +       default behavior.  If you want to see separate CALLCHAIN_DEFERRED
-> > +       records for some reason, use --no-merge-callchains explicitly.
-> > +
-> >  :GMEXAMPLECMD: script
-> >  :GMEXAMPLESUBCMD:
-> >  include::guest-files.txt[]
-> > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> > index bd9245d2dd41aa48..51d2721b6db9dccb 100644
-> > --- a/tools/perf/builtin-inject.c
-> > +++ b/tools/perf/builtin-inject.c
-> > @@ -2527,6 +2527,7 @@ int cmd_inject(int argc, const char **argv)
-> >         inject.tool.auxtrace            = perf_event__repipe_auxtrace;
-> >         inject.tool.bpf_metadata        = perf_event__repipe_op2_synth;
-> >         inject.tool.dont_split_sample_group = true;
-> > +       inject.tool.merge_deferred_callchains = false;
-> >         inject.session = __perf_session__new(&data, &inject.tool,
-> >                                              /*trace_event_repipe=*/inject.output.is_pipe,
-> >                                              /*host_env=*/NULL);
-> > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> > index 2bc269f5fcef8023..add6b1c2aaf04270 100644
-> > --- a/tools/perf/builtin-report.c
-> > +++ b/tools/perf/builtin-report.c
-> > @@ -1614,6 +1614,7 @@ int cmd_report(int argc, const char **argv)
-> >         report.tool.event_update         = perf_event__process_event_update;
-> >         report.tool.feature              = process_feature_event;
-> >         report.tool.ordering_requires_timestamps = true;
-> > +       report.tool.merge_deferred_callchains = !dump_trace;
-> >
-> >         session = perf_session__new(&data, &report.tool);
-> >         if (IS_ERR(session)) {
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index 85b42205a71b3993..62e43d3c5ad731a0 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -4009,6 +4009,7 @@ int cmd_script(int argc, const char **argv)
-> >         bool header_only = false;
-> >         bool script_started = false;
-> >         bool unsorted_dump = false;
-> > +       bool merge_deferred_callchains = true;
-> >         char *rec_script_path = NULL;
-> >         char *rep_script_path = NULL;
-> >         struct perf_session *session;
-> > @@ -4162,6 +4163,8 @@ int cmd_script(int argc, const char **argv)
-> >                     "Guest code can be found in hypervisor process"),
-> >         OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
-> >                     "Enable LBR callgraph stitching approach"),
-> > +       OPT_BOOLEAN('\0', "merge-callchains", &merge_deferred_callchains,
-> > +                   "Enable merge deferred user callchains"),
-> >         OPTS_EVSWITCH(&script.evswitch),
-> >         OPT_END()
-> >         };
-> > @@ -4418,6 +4421,7 @@ int cmd_script(int argc, const char **argv)
-> >         script.tool.throttle             = process_throttle_event;
-> >         script.tool.unthrottle           = process_throttle_event;
-> >         script.tool.ordering_requires_timestamps = true;
-> > +       script.tool.merge_deferred_callchains = merge_deferred_callchains;
-> >         session = perf_session__new(&data, &script.tool);
-> >         if (IS_ERR(session))
-> >                 return PTR_ERR(session);
-> > diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> > index 2884187ccbbecfdc..71dc5a070065dd2a 100644
-> > --- a/tools/perf/util/callchain.c
-> > +++ b/tools/perf/util/callchain.c
-> > @@ -1838,3 +1838,32 @@ int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
-> >         }
-> >         return 0;
-> >  }
-> > +
-> > +int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
-> 
-> nit: We use the term deferred rather than original except in this
-> context. I think deferred is a little more intention revealing than
-> original. Perhaps add a comment capturing that the original sample is
-> the deferred kernel sample.
+> I think everyone is agreeing. Let's fix the python JIT issue with
+> what's here with SHA-1 and work upon truncated SHA-256 with
+> incremental hashing that's truncated to 20 bytes and without the
+> load_addr hack. We could also hash other ELF sections from the jitdump
+> output at the same time as it may be theoretically possible to have
+> matching object code and symbols but differing frame layouts. Thanks
+> Namhyung for working on the fix, Eric and Fangrui for the hashing
+> support and build ID insights!
 
-Sure, will add.
+Yep, thanks Ian for your careful review!
 
-Thanks,
 Namhyung
 
