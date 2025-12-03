@@ -1,41 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6E7301468;
-	Wed,  3 Dec 2025 14:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA2E35FF46;
+	Wed,  3 Dec 2025 16:43:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764773407; cv=none; b=fPclRJZtjBCgxfU8oBAhXrX7ble6lPbntnS595WJW/XTYg3CmCSZn2sujykAJhivFxRviTYBxHpSX34tz/TQOxfy9BFfohbliJhr4sDcKs32njK5qkrPDKCYmmdoHEzRRNLpp+Ml+WIox8IEHwp6ihC7DMM+fVrwfeOJdwncCGY=
+	t=1764780201; cv=none; b=CqpeglVf0keKRXA6I+G0M7+pmoO4sl/tV+FIshcu+5f99t2Hulr7nAVj3RLfID+qLHpGxCdxZcGuhQC0qLvY8dwx3F1RuFDwaqhLEJ4j2B0JbpGGoUvaRyUe45a5F7pY+q0PQcvJK3t8Vl7la/YcMftPj+NRrO6rv1Znf+8IauM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764773407; c=relaxed/simple;
-	bh=8uVgtYBSkB0Aw0zdBOrJ7XvOI9WKa3qjg/u+fiXL714=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ZEK6w7BmFnp66wIvTKS1NEr5KVuw7nX9GpbtOaUvYwHKjIIj4qJjcdC7+wjqW/tClY0Ai7Uj5EveSSqdrmy/KvPya6Fi7rnPtRjsQSOcfbeX2xNey8NYOgecmehqu+7UncTpXfScQ/aHl959Z2V7LRHiBVa5UaIQ0oKWLF8SL6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ML/irMWK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764780201; c=relaxed/simple;
+	bh=1XNQS0lbn9FevDFX+NqC8EFfjK6r037ERyxzwj6yRtA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rvWNd1mrXy6u/qJsOIOsTpaCUiJJqFrUaOwkASsG/Pak8hkB8580wTRQngM+8854lq44PR/1GXedcxMeL7cjnavoPGw/01S4cJaLjhzn7VbO0YzpkAlwWuHLyIB5V1Ku6kOnn31pD5QoWnOibCwAiiTzQk7JQh3TGbd84gRj7qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMJmOKBS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ML/irMWK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79063C4CEF5;
-	Wed,  3 Dec 2025 14:50:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMJmOKBS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADB3FC4CEF5;
+	Wed,  3 Dec 2025 16:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764773406;
-	bh=8uVgtYBSkB0Aw0zdBOrJ7XvOI9WKa3qjg/u+fiXL714=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ML/irMWKtaselxNsNnbXqS9FMzZ5nwH2qbkS/x07nfRuwUyfN6zUyyO3SaepzzfbJ
-	 35hXSmlbml0D8CAnYrLVptu8+oLJbZ5J9zPkMTMucWp6D/F+Zy7oQ3aa+nUGe2sRWX
-	 f+h7U34nsJ85+lpOkzXUdQoNO5/kN2KC2F2jdLhhqPM2gGeIoGSlDcVyfiDveQ+UuP
-	 40f25ydRpbQF6pkDHfao9rPgap4TVsoSgv7g1IgM+usmOsWAv+NVMqeH+qGVaOtvZA
-	 F7ZDU0QMyxEfpuSnX7TMqp3yff2fQaN9o06m6cZBTld0MNrEzD5ZzgyJVbgotCR8m6
-	 AxMkZ8tgJqo+g==
-Date: Wed, 3 Dec 2025 11:50:03 -0300
+	s=k20201202; t=1764780201;
+	bh=1XNQS0lbn9FevDFX+NqC8EFfjK6r037ERyxzwj6yRtA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GMJmOKBSwDtijIjhVAv3lZAEXFA8Yg75apJnBXD7HeB41Pcbx4cEfrGe5PC453Zwb
+	 0KSjymC4CyxhG91V4UP+V+lgmtigbMB6EdZgdlpZ/KdfV/2cg6Gj5pFEN+HxAxhfxm
+	 ekGvhYvlws2XvOGcvo3spTIC88zChQSeKvrDvJdDArfUveZU4ApFeEcnOwFuCIspv0
+	 FiWrutG1OQHIwSSeJ7oCxlukKtE2D5JRw9uli5xeysT7leY1KC9Do3Ll3Q66hrMJbi
+	 ZzCpg59GJ1gatpTK4jrU3K2cyIdj5YmogAU0MVLmc03HISbQEiNI8GVIbiuUpjU2gz
+	 UF8KLZa5msswQ==
+Date: Wed, 3 Dec 2025 13:43:17 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v6.19-rc1 1/1] perf auxtrace: Include sys/types.h for pid_t
-Message-ID: <aTBOG7H7OAST04iB@x1>
+To: Jon Kohler <jon@nutanix.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Tomas Glozar <tglozar@redhat.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] perf build: build BPF skeletons with fPIC
+Message-ID: <aTBopdY6tmmxbDuu@x1>
+References: <20251203035526.1237602-1-jon@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,34 +50,86 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20251203035526.1237602-1-jon@nutanix.com>
 
-In 754187ad73b73bcb ("perf build: Remove NO_AUXTRACE build option")
-sys/types.h was removed, which broke the build in all Alpine Linux
-releases, as musl libc has pid_t defined via sys/types.h, add it back.
+On Tue, Dec 02, 2025 at 08:55:26PM -0700, Jon Kohler wrote:
+> Fix Makefile.perf to ensure that bpf skeletons are built with fPIC.
+> 
+> When building with BUILD_BPF_SKEL=1, bpf_skel's was not getting built
+> with fPIC, seeing compilation failures like:
+> 
+> /usr/bin/ld: /builddir/.../tools/perf/util/bpf_skel/.tmp/bootstrap/main.o:
+>   relocation R_X86_64_32 against `.rodata.str1.8' can not be used when
+>   making a PIE object; recompile with -fPIE
+> 
+> Bisected down to 6.18 commit a39516805992 ("tools build: Don't assume
+> libtracefs-devel is always available").
+> 
+> Fixes: a39516805992 ("tools build: Don't assume libtracefs-devel is always available")
 
-Fixes: 754187ad73b73bcb ("perf build: Remove NO_AUXTRACE build option")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/auxtrace.h | 1 +
- 1 file changed, 1 insertion(+)
+How come, this patch is just:
 
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index eee2c11f76668348..6947f3f284c02928 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -7,6 +7,7 @@
- #ifndef __PERF_AUXTRACE_H
- #define __PERF_AUXTRACE_H
- 
-+#include <sys/types.h>
- #include <stdio.h> // FILE
- #include <linux/perf_event.h>
- #include <linux/types.h>
--- 
-2.52.0
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 9c1a69d26f5121fd..531f8fc4f7df9943 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -83,7 +83,6 @@ FEATURE_TESTS_BASIC :=                  \
+         libpython                       \
+         libslang                        \
+         libtraceevent                   \
+-        libtracefs                      \
+         libcpupower                     \
+         pthread-attr-setaffinity-np     \
+         pthread-barrier                \
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index e1847db6f8e63750..2df593593b6ec15e 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -150,10 +150,6 @@
+ # include "test-libtraceevent.c"
+ #undef main
 
+-#define main main_test_libtracefs
+-# include "test-libtracefs.c"
+-#undef main
+-
+ int main(int argc, char *argv[])
+ {
+        main_test_libpython();
+@@ -187,7 +183,6 @@ int main(int argc, char *argv[])
+        main_test_reallocarray();
+        main_test_libzstd();
+        main_test_libtraceevent();
+-       main_test_libtracefs();
+
+        return 0;
+}
+
+
+----
+
+And your patch is touching building bpftool? Seems very unrelated :-\
+
+- Arnaldo
+
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jon Kohler <jon@nutanix.com>
+> ---
+>  tools/perf/Makefile.perf | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 02f87c49801f..4557c2e89e88 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -1211,7 +1211,7 @@ endif
+>  
+>  $(BPFTOOL): | $(SKEL_TMP_OUT)
+>  	$(Q)CFLAGS= $(MAKE) -C ../bpf/bpftool \
+> -		OUTPUT=$(SKEL_TMP_OUT)/ bootstrap
+> +		EXTRA_CFLAGS="-fPIC" OUTPUT=$(SKEL_TMP_OUT)/ bootstrap
+>  
+>  # Paths to search for a kernel to generate vmlinux.h from.
+>  VMLINUX_BTF_ELF_PATHS ?= $(if $(O),$(O)/vmlinux)			\
+> -- 
+> 2.43.0
