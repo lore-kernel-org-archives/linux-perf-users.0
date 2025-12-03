@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67E629D28F;
-	Wed,  3 Dec 2025 06:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC53529D260;
+	Wed,  3 Dec 2025 06:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764745102; cv=none; b=IScpuFN/MKuAZle4V8dMZxUzxAKAvevSC5zfWe5bLWb3/JR2vrOStAjslet17BdIry0vHgng01uHk1kX7Wj20LRoE59LobAgGvUlN4BXEIne8KLI/hT7V5xRnXIAgJk/BhPLSz2HSr8Pkw1Qli72yRxmrVlxLlb8eDNKTk0doF8=
+	t=1764745107; cv=none; b=uZwYLr9XYe8GQiD9LjpmqLELde1X/2WmcHpP92PKoR6ejX1PL0uujTURaolJ6fuylhz/yBhNPQPrtfNt27Aqb2SIrJkz0jfW0u+JQevCNgvpGyxCy0e3F5Lq+q40sp5omcnHj2b6Ep+cfEaaulfCOc208nD/2eULrmLDs3QNqPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764745102; c=relaxed/simple;
-	bh=x9ZgONUDtVCEjRBKBlKFNPl1U5MMoEuvT00xRdCh3hY=;
+	s=arc-20240116; t=1764745107; c=relaxed/simple;
+	bh=zLgkbpHLpsxyBbWLwrpPSYQx1fWU/bpzREKI2QhRlSc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JS+Z3E2vwdZCFq4yrfSnHGgYy8HQ73/UOSA9piIEVeKKOicEhXfOMKw3F+OK/oymaxv197HpaX4GA+ZJqyB5d5sGg8cX+7E8IsqZXPeqJ15f4mBAjTI16EmYbEglypIrbqyiOV89CjAQAxwl2hMnQCvYyc2zfbE2w9uLu7u/5dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eblIBhu2; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=mWr4PrH6ZKeqkD10R6z+V5HppVhDrk2enLo4zQrN1aIxhY6cvGVtvExWJeNVjWEF5yKvjye1aAUn/a2gZLCzWb2sRu0RxNjThw7YelKO0ZEBJGM4QUE1z8YMD7CPymQvvY18lzuxjVp1XYZqzp66iqQyP9I9hjZ9QtIghWUntHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WnqzPUgk; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eblIBhu2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WnqzPUgk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764745101; x=1796281101;
+  t=1764745106; x=1796281106;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=x9ZgONUDtVCEjRBKBlKFNPl1U5MMoEuvT00xRdCh3hY=;
-  b=eblIBhu2Ie+/b10v2D92au3bPHac9PC5ty184zQJrNwokQOPCOcmWj4A
-   5QlRtr0gG/IDbyU/M6rAZ7QOPEpF4rW12z7hHPaLFo9eso7HdLnSUqv0R
-   fDF7Z0MNLmIPUpVUJTiBX3123mWIrwY5bj+bitkk/A4kWXdUIIiXcBUi+
-   QnfcyZLOhzdNwFlzmmHCAGfWyEMXevtkATWbPyGd5s5+1njAVsVPXcxbd
-   4BVkqr0uOxnfT2E0Dg+9XOhkUiLOyMOX7s54hs3Mw7EnWT8n/pfVoWNkJ
-   XL5y+hUEJa5fjkXprzv7FyftNA0SGR8BAv8+EOp/6l8Y87f9en92aOyo+
+  bh=zLgkbpHLpsxyBbWLwrpPSYQx1fWU/bpzREKI2QhRlSc=;
+  b=WnqzPUgkszEZVNj7j22SdcCzC+KTlbjYZ9wPOeXEKjjiFS9/mPkb8w/C
+   0KI0F6nT7PSUFiThuEkRbC84zJa43wjbgbphBPNZE61QJl2jqkuE/5oRY
+   WGp/juLrJnW1zVARMjtGtulkZYiglEwEMg+cEHsEx4qBjhbtdbE6OdxNF
+   KjrFQxYqaEAp/+aQbf9ZcE2O4B+yTmCTXjKUk4za99z2wFgcklVpaU7+L
+   d5Hs8xnKdg9EmzlGjry4T+2jMf9xVSQWzLPMV45xkuLVqlKXPP694tGKT
+   SlK1/dZ5i2HHF7B10+AILfECuK3EM9z1td2Smnv44Vb/a7EeydYRlhrL/
    Q==;
-X-CSE-ConnectionGUID: XiA6jZV1Qbyn9Kor3d3gpw==
-X-CSE-MsgGUID: TOObFZtJSvadtg1wnFBE8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11631"; a="84324778"
+X-CSE-ConnectionGUID: WCYDkFH9QkqdHc2ZyGwdyA==
+X-CSE-MsgGUID: nGPFvFkjSsW1wDEmdS+A7A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11631"; a="84324793"
 X-IronPort-AV: E=Sophos;i="6.20,245,1758610800"; 
-   d="scan'208";a="84324778"
+   d="scan'208";a="84324793"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2025 22:58:21 -0800
-X-CSE-ConnectionGUID: g3Oeze4KQlWJ+Y0l+vENIQ==
-X-CSE-MsgGUID: cwFpJBJuTOGkVVA/pHwITQ==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2025 22:58:25 -0800
+X-CSE-ConnectionGUID: TP7saJF6ThSkoHFUkN1c5A==
+X-CSE-MsgGUID: +DaQ0cDrRcC+1BK4huZJmw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,245,1758610800"; 
-   d="scan'208";a="199003803"
+   d="scan'208";a="199003821"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa005.fm.intel.com with ESMTP; 02 Dec 2025 22:58:16 -0800
+  by fmviesa005.fm.intel.com with ESMTP; 02 Dec 2025 22:58:21 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -67,9 +67,9 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v5 04/19] x86/fpu/xstate: Add xsaves_nmi() helper
-Date: Wed,  3 Dec 2025 14:54:45 +0800
-Message-Id: <20251203065500.2597594-5-dapeng1.mi@linux.intel.com>
+Subject: [Patch v5 05/19] perf: Move and rename has_extended_regs() for ARCH-specific use
+Date: Wed,  3 Dec 2025 14:54:46 +0800
+Message-Id: <20251203065500.2597594-6-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
 References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
@@ -83,70 +83,66 @@ Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Add xsaves_nmi() to save supported xsave states in NMI handler.
+The has_extended_regs() function will be utilized in ARCH-specific code.
+To facilitate this, move it to header file perf_event.h
 
-This function is similar to xsaves(), but should only be called within
-a NMI handler. This function returns the actual register contents at
-the moment the NMI occurs.
+Additionally, the function is renamed to event_has_extended_regs() which
+aligns with the existing naming conventions.
 
-Currently the perf subsystem is the sole user of this helper. It uses
-this function to snapshot SIMD (XMM/YMM/ZMM) and APX eGPRs registers
-which would be added in subsequent patches.
+No functional change intended.
 
-Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/include/asm/fpu/xstate.h |  1 +
- arch/x86/kernel/fpu/xstate.c      | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+ include/linux/perf_event.h | 8 ++++++++
+ kernel/events/core.c       | 8 +-------
+ 2 files changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-index 7a7dc9d56027..38fa8ff26559 100644
---- a/arch/x86/include/asm/fpu/xstate.h
-+++ b/arch/x86/include/asm/fpu/xstate.h
-@@ -110,6 +110,7 @@ int xfeature_size(int xfeature_nr);
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 9870d768db4c..5153b70d09c8 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1526,6 +1526,14 @@ perf_event__output_id_sample(struct perf_event *event,
+ extern void
+ perf_log_lost_samples(struct perf_event *event, u64 lost);
  
- void xsaves(struct xregs_state *xsave, u64 mask);
- void xrstors(struct xregs_state *xsave, u64 mask);
-+void xsaves_nmi(struct xregs_state *xsave, u64 mask);
- 
- int xfd_enable_feature(u64 xfd_err);
- 
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 28e4fd65c9da..e3b8afed8b2c 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -1474,6 +1474,29 @@ void xrstors(struct xregs_state *xstate, u64 mask)
- 	WARN_ON_ONCE(err);
- }
- 
-+/**
-+ * xsaves_nmi - Save selected components to a kernel xstate buffer in NMI
-+ * @xstate:	Pointer to the buffer
-+ * @mask:	Feature mask to select the components to save
-+ *
-+ * This function is similar to xsaves(), but should only be called within
-+ * a NMI handler. This function returns the actual register contents at
-+ * the moment the NMI occurs.
-+ *
-+ * Currently, the perf subsystem is the sole user of this helper. It uses
-+ * the function to snapshot SIMD (XMM/YMM/ZMM) and APX eGPRs registers.
-+ */
-+void xsaves_nmi(struct xregs_state *xstate, u64 mask)
++static inline bool event_has_extended_regs(struct perf_event *event)
 +{
-+	int err;
++	struct perf_event_attr *attr = &event->attr;
 +
-+	if (!in_nmi())
-+		return;
-+
-+	XSTATE_OP(XSAVES, xstate, (u32)mask, (u32)(mask >> 32), err);
-+	WARN_ON_ONCE(err);
++	return (attr->sample_regs_user & PERF_REG_EXTENDED_MASK) ||
++	       (attr->sample_regs_intr & PERF_REG_EXTENDED_MASK);
 +}
 +
- #if IS_ENABLED(CONFIG_KVM)
- void fpstate_clear_xstate_component(struct fpstate *fpstate, unsigned int xfeature)
+ static inline bool event_has_any_exclude_flag(struct perf_event *event)
  {
+ 	struct perf_event_attr *attr = &event->attr;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index efc938c6a2be..3e9c48fa2202 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12664,12 +12664,6 @@ int perf_pmu_unregister(struct pmu *pmu)
+ }
+ EXPORT_SYMBOL_GPL(perf_pmu_unregister);
+ 
+-static inline bool has_extended_regs(struct perf_event *event)
+-{
+-	return (event->attr.sample_regs_user & PERF_REG_EXTENDED_MASK) ||
+-	       (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK);
+-}
+-
+ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
+ {
+ 	struct perf_event_context *ctx = NULL;
+@@ -12704,7 +12698,7 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
+ 		goto err_pmu;
+ 
+ 	if (!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS) &&
+-	    has_extended_regs(event)) {
++	    event_has_extended_regs(event)) {
+ 		ret = -EOPNOTSUPP;
+ 		goto err_destroy;
+ 	}
 -- 
 2.34.1
 
