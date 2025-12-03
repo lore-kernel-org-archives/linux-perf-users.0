@@ -1,55 +1,55 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2491F2D97A6
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Dec 2025 21:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9EE2DC350
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Dec 2025 21:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764798439; cv=none; b=cs9TITwL8F8pA3jGh1CDLBL+fbwKwrvuzSI3HMh94KKD8oUALIZXUWsp5zlJEtq6Tqmsl2SMarP+i+3Fdd4IRtycd0n75g1tbitOKsBKofacIITW240K2SBx4NyEvl2QdQI2aD6RvKtMgcGqJN+eYRRnI1113Om8ab2JzuFzb0I=
+	t=1764798442; cv=none; b=WPKVtlQMboqvmDGc0QUmixZT1/+m20jSDlNYWMKbb1M5cE1x9J38OJHgOkwF0uWLA82kwUxjPf8/g4KFaABJ1f3MdD3BnfFEX3Ew0yoQhBCredQMkuDr942l/t+8K25Hv/a+iueX0PghnLPbx4rXrtj/FHLvYz94YEnz9tTIBwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764798439; c=relaxed/simple;
-	bh=Kyld/TH14VvFTwm+4dZFdkYfKcCb+2QzuTXq2FWHP/w=;
+	s=arc-20240116; t=1764798442; c=relaxed/simple;
+	bh=7EIPkt57mizIcizq27oR3v0Xbaf3b0skd0mBiDbL4lg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=b0Kz+O/g+BlMzCV/GltDNe++6hpmQwu9+3Nh8itaxwH1ahXWb44nrx8qC//V/jsW3ycDQX3xPE0CFizYbgwT3VQ+4cht5iKx7cGybObmQ4Iw+7IuYLVbGfmCOPCiA5Y6nAzfSgGJzofTHC6V+VynA6oUNRDPGdriKRalgtg1Dgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZGhmkiYt; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=Ceinp1cexf/xE4YQLZx46TryCvf4yOB/V/XNKYaiv71F6+i9c+xXio0vbvfVgKzQqyNIad1bWyiTIS4x4sDFhBO+2mIplf92ZDZXP75deTvqkUWXWxP8TFwxY3iQicpoUy1bn4BPbjNrVlqFik+pfGdVmiKs5YU1bjSqxsQiu9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4k9vtsWN; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZGhmkiYt"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7c240728e2aso347738b3a.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Dec 2025 13:47:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4k9vtsWN"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b99d6bd6cc9so363077a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Dec 2025 13:47:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764798437; x=1765403237; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764798440; x=1765403240; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KVrVKz8Lai23YOYMICxCQxi+2iTcn8EZtLBh+0CJH0s=;
-        b=ZGhmkiYtuHMAlODVlJU7YmU5/Vg678OJCd8MoGviHOt0yeZJj2NDNSVDqjGZdeiVck
-         C3lYU71iUuCa9x+zAsiZ3mYdppdgmkhJU9CB18IwW1aNTVujd0OU0GzYM3CpniMpjUuz
-         VJHeFnNGDT/hi22duhM8YOKjFP2aidX7C3agpF0N1YrgiAK5+mWjvfQn2bgHTFJU5/8m
-         95hw83sfFG2gIpYEGvWLAXvOAqOMdD1n34TTOJJefMy/ntGKuDVmAo53xDIidkOjMibf
-         C6oN1fjCvcgktybGKy6Ylqni4QZDojZtGmo6CUyFTJQiv6PCc1/U49eSaWt0epCQOtEr
-         u3rA==
+        bh=waFYuL17oCw/gfl7ThqVJ2njN32XU6ljeSvAGuXSYL4=;
+        b=4k9vtsWNBzcHrgUU3LfJi2YfXvSXHjrA/v8SE25b2KZO0TLQOHT5/9E4A527EkuSgC
+         dZwcPTZJLjbej7bMMZD8afEy3jCKjj3Ukq/Tp1FuXdI4IV89dIQDrP7TqpQFFgJT6gRw
+         +SggGq+PqQVWvh7I5BtVqPciJf7UoypyBVIvT6fNDKNUtysTvGyN1OBwT0WgYFd7Plnp
+         5bfoRjMQtd2zJzPxIosJNyKvUh3d/jDkKr1txsVzshLWgmIT8dgfuGTHsajrHGaFxY83
+         fZjPLB7arpb8ZAVmQglG4DEApRdhL3b0yfv/i9jx73Wdccu89fZa3iP4LKufpAg0Shwo
+         YC0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764798437; x=1765403237;
+        d=1e100.net; s=20230601; t=1764798440; x=1765403240;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KVrVKz8Lai23YOYMICxCQxi+2iTcn8EZtLBh+0CJH0s=;
-        b=RnO4LaanPTg6ER/07/k4MOTcqHoj7oUbnGfFyozX4pC8UTwQGDGUyI3KnPdHk8Ee9R
-         D6DcmPeZlxLyAH+sgnEX+Osif+m6MeMu5kXOM2D4EejYf/i+D2yHAvrA9jZM2ZlMtfIE
-         7/F5yffAwWbE1kHZT+pW6AXYERiPhEci2Dgh4upg74l6kYNsoEo4l1MYEJEld8qOVhvp
-         J8E+J2lVVCGMRvEVRmupRAl7b8iTMUlTiT4M3SeuoW/Z33ablaqRdtxzVRoK8YKkYWBP
-         2BPTkPdMBV8QxlUty9DEjprrmtJO9h+E1wcC1VoggAhgadFi7BkxiDosgtqRa11jucDL
-         pKhA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHN827NtKh0nHcNePF6HmiQ6QGUNl/O+l+SSsJNwobCHO2fNWLeNEiR7G4tklxet5tjG3SUqhktM/nZc17zgsp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9ooCL7ajMnwrrqTuE/6tDU5WGEZgbnwz9JBC64CpoP4Y2WRjl
-	nHQlztPVfWMwbB2nttktoutKjAU5VHkO0HaEzKK9jalUrGt5ThPMI2IYNfLO/beJXSS9LteL+6M
-	v5jUKSIZioA==
-X-Google-Smtp-Source: AGHT+IHQNalAFA0VgFKH+HuXt5tSRXPCzbxo8ZyVDg59kZ29Ina+YFWr1q9VEzg+9t3xXETcoD2Qq+FkDeUj
-X-Received: from dlii30.prod.google.com ([2002:a05:7022:419e:b0:119:78ff:fe16])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:390:b0:11a:fe6f:806a
- with SMTP id a92af1059eb24-11df0cc65a1mr3127815c88.31.1764798437402; Wed, 03
- Dec 2025 13:47:17 -0800 (PST)
-Date: Wed,  3 Dec 2025 13:47:02 -0800
+        bh=waFYuL17oCw/gfl7ThqVJ2njN32XU6ljeSvAGuXSYL4=;
+        b=GlrI7O/aljSs9xBgz0xpVEVWv2jKpcvrPmXWtz70xBHQqCPveE65YHBTMy0Jprf6gI
+         qUwylACYG2Xti0yWgxj/MS65ke3ra0i6rJogn+Wil8t73HIRkAj7XZJ9KlB4+o+055/e
+         wz3zIxXWTGlzZbCY2pjNt6A9RgsRy1+6TJtcbcBMaMR06e+YHBq3vOHSzlzKOVbw+piK
+         CzySJwWKttqO9KmDZlt0SbJeZG5HE6H4rq4nFYqjnSHuAXf9O2wzciscsmYolW7YU8g/
+         eU92kBCinwrjj7bP9Hdeu77NMyKfgFbLlusyqkROinY93aRAqdlH6bZCUIXuxSgD1eaM
+         picg==
+X-Forwarded-Encrypted: i=1; AJvYcCXrLWRf8k5YuI/t//lWvMg4wEsWZewSgsiyFdnCOxZ/3m+T63ObQu4zeF1CEz3SKH4n60zF9lnGD13p1QWmVG16@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8EeIWD/MDDAtEW9zOdB2Fs95frP7ziAKprYZl9Jq38WbRN6JO
+	bE9I5kwMgGQcOaSgRtlJx9t/P0etDMgeLfFNL9s3nlHlGGLKlDMTq/r0RuQaNpT3gWO/EavNvfv
+	KPlOg5+JMhw==
+X-Google-Smtp-Source: AGHT+IGVgYUemMQSQM+Wr/hzm5JJaEabH1iCca9VsSm++HtRNgqmw1d8vrPOBIlEK2BPXIh9yyFV1V09gTzS
+X-Received: from dydu18.prod.google.com ([2002:a05:7300:51f2:b0:2ab:9be4:b136])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:8202:b0:2a4:3594:d54e
+ with SMTP id 5a478bee46e88-2ab92e88b27mr1994859eec.27.1764798439706; Wed, 03
+ Dec 2025 13:47:19 -0800 (PST)
+Date: Wed,  3 Dec 2025 13:47:03 -0800
 In-Reply-To: <20251203214706.112174-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251203214706.112174-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.177.g9f829587af-goog
-Message-ID: <20251203214706.112174-4-irogers@google.com>
-Subject: [PATCH v2 3/7] perf cpumap: Add "any" CPU handling to cpu_map__snprint_mask
+Message-ID: <20251203214706.112174-5-irogers@google.com>
+Subject: [PATCH v2 4/7] perf tests stat: Add "--null" coverage
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,43 +71,46 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-If the perf_cpu_map is empty or is just the any CPU value, then early
-return. Don't process the "any" CPU when creating the bitmap.
+Ensure "--null" does a minimal run.
 
+Reported-by: Ingo Molnar <mingo@kernel.org>
+Closes: https://lore.kernel.org/linux-perf-users/aSwt7yzFjVJCEmVp@gmail.com/
 Tested-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/cpumap.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/perf/tests/shell/stat.sh | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 89570397a4b3..a80845038a5e 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -684,16 +684,21 @@ size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size)
- 	unsigned char *bitmap;
- 	struct perf_cpu c, last_cpu = perf_cpu_map__max(map);
+diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+index 985adc02749e..7885e875caf4 100755
+--- a/tools/perf/tests/shell/stat.sh
++++ b/tools/perf/tests/shell/stat.sh
+@@ -16,6 +16,17 @@ test_default_stat() {
+   echo "Basic stat command test [Success]"
+ }
  
--	if (buf == NULL)
-+	if (buf == NULL || size == 0)
- 		return 0;
- 
-+	if (last_cpu.cpu < 0) {
-+		buf[0] = '\0';
-+		return 0;
-+	}
++test_null_stat() {
++  echo "Null stat command test"
++  if ! perf stat --null true 2>&1 | grep -E -q "Performance counter stats for 'true':"
++  then
++    echo "Null stat command test [Failed]"
++    err=1
++    return
++  fi
++  echo "Null stat command test [Success]"
++}
 +
- 	bitmap = zalloc(last_cpu.cpu / 8 + 1);
- 	if (bitmap == NULL) {
- 		buf[0] = '\0';
- 		return 0;
- 	}
+ test_stat_record_report() {
+   echo "stat record and report test"
+   if ! perf stat record -e task-clock -o - true | perf stat report -i - 2>&1 | \
+@@ -212,6 +223,7 @@ test_hybrid() {
+ }
  
--	perf_cpu_map__for_each_cpu(c, idx, map)
-+	perf_cpu_map__for_each_cpu_skip_any(c, idx, map)
- 		bitmap[c.cpu / 8] |= 1 << (c.cpu % 8);
- 
- 	for (int cpu = last_cpu.cpu / 4 * 4; cpu >= 0; cpu -= 4) {
+ test_default_stat
++test_null_stat
+ test_stat_record_report
+ test_stat_record_script
+ test_stat_repeat_weak_groups
 -- 
 2.52.0.177.g9f829587af-goog
 
