@@ -1,251 +1,219 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-002c1b01.pphosted.com (mx0a-002c1b01.pphosted.com [148.163.151.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E41DDAB
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Dec 2025 01:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764725292; cv=none; b=arG0c0viDS7hCunirAgSaEiPEXOCB6SkmKqYsYIbmNXJ/nVhjjO30tV9UEvZtOB8VwR3LyempunAszE4NwHSenqBl+Q3j/CVx2TFUV7Zws3kh/bPlb7QXtdsrA/ReCYEOimSXkKnNPNXinTTDMvkRMDwVpwH7qJOatl4WHHGsqA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764725292; c=relaxed/simple;
-	bh=YKUzWvNJdlQYgTLX/pWV09r1PX9+0LmCn8R8nVh5pBc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ch1035Vfn5BwxijgQcKmLKDajLOPYR0EWKtXWiKBOmaToSEF2nPjws5PN3kyce1WhNx2a3eXqvv7rCl+/vE6F1D5bIUIaxWjqCTvoT0iZOmvjYzbBtPZrxwhVmofobfQJv+265ka/l5TT7ZeOVcvQqJiMTkrMx0f3DV/tgMgylE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-55b26332196so1570155e0c.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 17:28:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764725288; x=1765330088;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=OULFOWieLdWDEJWsO8MWmGNNjukLt8vuIsI3P0/MGDw=;
-        b=MFVo+AbPPZUtHW3EPnp+cdSKEjLKVA4bTHsw5XVsg7yJrs5UfpOpsaZ/3A2hhSMxmy
-         EW2flQJOxZW86wy3lrXrudACphkbCsDNvJjJ9XWZBpHpFplvadHB7FpczcYsbxnaL54L
-         +6eYygcXOj/7zwasEV+h+jsHnUWDjadWOMpjzdw9eNA3xtpe26mmetvHffffbfEw/iJ6
-         d5om8OWRlJ0J8ZQQPX34cDD4PPFPlHGpQVuSt2jGmduXXzA54OU/aYbSP5DnskUslz2I
-         NGEhyVL/i5jCkhGWcOkhzgnQesz5GYBXAO39GxNMOHasGNbIQ5QNvDPu0TPt/Tx1Xobt
-         7TEA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBHJLSZA9ZiJzfoPOjSK1aGTGZdw5GC1LBpONVLQTsG4zAi0cK4aSccxuBLisPZ+1lDU2lcMh/N1d254MaI80V@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzq805GPLoTrlfKTUa0R1CjGiuGUonM5Mzq92/i/hqmqiLeBMZ3
-	40JI2XyB2sNV9pRYGAud0eQSS5iEep8G6vF44AhenSKUf2xQrVcZNZ/irsDUCd+e
-X-Gm-Gg: ASbGnct83O4smCh7W5i7COF1XhahmGcEOUqDblkH1ZdUPBUh0scOhIEMy0CzWpf3Dfx
-	pk9XZx2a+ZWuCWmvm5y7px5RhM65Ovkc409M6My9Xuzt4PLOx0uHwSDNNnJPBQ8/YqGPbLvRTJX
-	uJ+hKE7X/bDHxbM9PuDrlrupfZygB0Ylf451ZZMrmzFABhWc3qk8pNEL+Iq79VfZo9HX7R7sTwB
-	MpbxwEk5+NECoHLg6WIqsFQiSgvQZ/LJQOD3vuGChrnp2Qb/N7CRyjsZFdcBkku7DOSSfyJC8Lr
-	5kZOy1QdcF0KDZKItJX0KdsXe0q38dngDbIO9tvivqDchLbNwVL4VGYqh1c9rkWuOlIDwbw+O5r
-	yXFMbPiX5OWgfpXwxh4Gv4m1xkjQH52ACjp4ZFbhX8F/lUd2LkeJfdQ+26oH91YLzTyIq7jB5pU
-	4vedA6w24fLeABAZuKKDkMpF93VieJzBHXCGoix7ucuVELmkzPN8P7/K8=
-X-Google-Smtp-Source: AGHT+IFKs+bLN47jigee45nRcdP7Jzp2XWUVQad/jDnR7r62/6n2OPsOlK0pFQylXBIT4YmS9+Aigg==
-X-Received: by 2002:a05:6122:6e13:b0:55b:7494:1736 with SMTP id 71dfb90a1353d-55e5bf988a3mr207433e0c.14.1764725288202;
-        Tue, 02 Dec 2025 17:28:08 -0800 (PST)
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-55cf518c3efsm7378884e0c.22.2025.12.02.17.28.07
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Dec 2025 17:28:07 -0800 (PST)
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-55b26332196so1570150e0c.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Dec 2025 17:28:07 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWsNDt9Eth4Xjx1kPpSEWXKdu68aPydcQEmqeMAoS/GLEC+b8v46WUXUTUDXcUIRTQW919OT7/lDPAqbT7DOUq7@vger.kernel.org
-X-Received: by 2002:a05:6122:2187:b0:559:65d6:1666 with SMTP id
- 71dfb90a1353d-55e5be4ef9cmr267163e0c.1.1764725287209; Tue, 02 Dec 2025
- 17:28:07 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C202B9BA;
+	Wed,  3 Dec 2025 03:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.151.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764731609; cv=fail; b=mlhU1hY11t+21iYg1yjRc9gRMPfkAQyEY9v8pI89odt+De2R0IddBqjR3hOQuS3I+qFjzLmdwVjC2b7jo3h6fFljto9EWH5rkZHfEaOZggf6ZFCF/hp4T+99yquZ0q60FKaC6uEfZIypl/KVrdDiid//Mq57vCE4CPHUxdg4mKg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764731609; c=relaxed/simple;
+	bh=wz9rKnDrpa9DlR+6/U91YfYRF7YR69FFMk+Rg3jtRDo=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Z5l1Zs3cmOcRthueOeb3eSlSYO53Z9m+TYlOt60V4eBCu0fNUdJHMloj+dqb0gjcTb21hRxEKGVrO7FyADANj9G6D7A/Y4kV37z1q8/dWzQQdDo40Ny9OWooaMsymj1ScgoIhjB3DLeLBiVq+coJloDJSHNIm54AFR3aQf68tJY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nutanix.com; spf=pass smtp.mailfrom=nutanix.com; dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b=q96kWuOW; dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b=gpkPwbhq; arc=fail smtp.client-ip=148.163.151.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nutanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nutanix.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="q96kWuOW";
+	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="gpkPwbhq"
+Received: from pps.filterd (m0127839.ppops.net [127.0.0.1])
+	by mx0a-002c1b01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B32wB9t2193908;
+	Tue, 2 Dec 2025 19:13:00 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=proofpoint20171006; bh=d6nBQHf1AzsXN
+	Ia3eWkmbyX9M0c0vuPNNSn+Fo4YM6E=; b=q96kWuOWxZBLzXVnbwjppxIt1DBA7
+	JjcIVZvXFyHzl7L1IJ8nHyPMxoKhXBWWfQLhMNfX4mgz12HXXJskNCfrfo4JsaYy
+	1uvQOy4bBgKUkFuWNPNOelJ9jwi0taLAPcMtK0q9XtauF/OmHaaMfdFSweQnitZt
+	+WYqsNGZevQ44q9PRBmik0hGpe3M1wYyYLCdKXs2oP2ocwLyqC/bHjUeyrqtB61S
+	+cmocT53J2PGlaLaHZ5cK6naeoHy0p/dt1acHHAqesr2zVptAD6dyScIAvA3rGcu
+	axn8CglLN03/QuS7YPf/YO2x0KAEYu+cYwhb6VfGFslMH1q8ZafqEOIyg==
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazon11021132.outbound.protection.outlook.com [52.101.52.132])
+	by mx0a-002c1b01.pphosted.com (PPS) with ESMTPS id 4asttgaeht-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 02 Dec 2025 19:12:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=E/Iy/EO68CPYDxuP1KnLVTPWt8Eet3w6QtMKA06jO/fFPfdEFF+lDQxNGy/Xz6iKy+eAjgNkntwQQKyybQSuTPlNjkGBJwWXzcHR0eNRXOTniRU6JgeKH5vLSdI3BGTItrNwsDvK0hVbMK7M6tShRUO7JgFX9qmlR0/+g3rASvo0x96oSOVFky+82haBnHKxoxJ8dtQvLV4p6PRYzlrsek5wUiA6zuTm0awyHPkA/ld3IaywF0hmV14vtNe/Hl4gzWC1qbcjUgiBPbySiRy8BCE3niu913jTfsV4P3H2c8UZxjVivtSC6rRFUGhFy4Gh30rBa2BOruGBeJ3gxxiWBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d6nBQHf1AzsXNIa3eWkmbyX9M0c0vuPNNSn+Fo4YM6E=;
+ b=NfA2OTEkx+DOm6g6y474nY76r0mTdnJ35UrM+H0vcW4GZkhqKHeyYyxP2OQb8p93eTh2jk1MVF/QxcrQZUXRbQtJNaVulRpUejdOISuYh1ZndJ5YS0431OsPHcZQtnjK8dU4P/McDeRGYVSIsCpKal3kPP9xvctaxU0ewa+gY8hSvPE+m+iN2ABI+puZBYAEtSqD3j67d/0EfzEVWgUbw9GyWjWz6h6opZz/m5FVf1pCmSJlNMFfUS9erF9JaHenarG5LwNXaVPK1/a/VTLckyIrtHwFwQwTBqsbazPEci32yopaJNqQEGpcChOlQ9CHp61BYefOJPOit0KsEYudyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
+ dkim=pass header.d=nutanix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d6nBQHf1AzsXNIa3eWkmbyX9M0c0vuPNNSn+Fo4YM6E=;
+ b=gpkPwbhqpH1eJ3Rh8WAjJ+PY4Gv2yivln/BDEzGMXaQFthSqszd34yCMkJjNH5A/hH3JtjKq//slRbcahYakinx3r9PsBN0jZGhhUpNRXQMWka6nJtNOEq1k1e/ctOZ7fYuXbF11K5y4KKRBDcwPAUrc1hCFBhxhDG6U/SPswhri3UvRfs7UvK1ZHTy/zpq2RFJ8RU4lq6xEhHrhrO7YHxvhFQamSRjFFKhoB+CNF4YC5in5Sl82lGVaeMwZkufqX8wayELJsqsfx+DS68sKg68EX3k+st/2y7xg/sagFV39I57XeMulnvHZDGwD638/iylduOnnhW/P6IkWgZvikg==
+Received: from LV0PR02MB11133.namprd02.prod.outlook.com
+ (2603:10b6:408:333::18) by BN0PR02MB8030.namprd02.prod.outlook.com
+ (2603:10b6:408:16d::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Wed, 3 Dec
+ 2025 03:12:57 +0000
+Received: from LV0PR02MB11133.namprd02.prod.outlook.com
+ ([fe80::10e5:8031:1b1b:b2dc]) by LV0PR02MB11133.namprd02.prod.outlook.com
+ ([fe80::10e5:8031:1b1b:b2dc%4]) with mapi id 15.20.9366.012; Wed, 3 Dec 2025
+ 03:12:57 +0000
+From: Jon Kohler <jon@nutanix.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@linaro.org>,
+        Tomas Glozar <tglozar@redhat.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Cc: Jon Kohler <jon@nutanix.com>, stable@vger.kernel.org
+Subject: [PATCH] perf build: build BPF skeletons with fPIC
+Date: Tue,  2 Dec 2025 20:55:26 -0700
+Message-ID: <20251203035526.1237602-1-jon@nutanix.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PH7P222CA0003.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:510:33a::18) To LV0PR02MB11133.namprd02.prod.outlook.com
+ (2603:10b6:408:333::18)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251125080748.461014-1-namhyung@kernel.org> <20251125192943.GA3061247@google.com>
- <CAP-5=fXh82HpvLhPr9uFtq=HK5V+ZL3xntz7-gspEE5az2+7nw@mail.gmail.com>
- <20251126030452.GA85316@sol> <aSi_zXuT8isr8jEC@google.com>
- <20251127221822.GA2977@sol> <aS9gms3-xGaIpUnt@google.com>
-In-Reply-To: <aS9gms3-xGaIpUnt@google.com>
-From: Fangrui Song <maskray@sourceware.org>
-Date: Tue, 2 Dec 2025 17:28:23 -0800
-X-Gmail-Original-Message-ID: <CAN30aBEdbSLH_ZRLAJzY0JwwE4jHtaWRpHkWeOnScqR4rbDHTQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bllQZKFWxq5wBQI9JU2o7nruhe-Vq5pYPJCdS73DB-cNQsakjDBpsVSB_c
-Message-ID: <CAN30aBEdbSLH_ZRLAJzY0JwwE4jHtaWRpHkWeOnScqR4rbDHTQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] perf jitdump: Add sym/str-tables to build-ID generation
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Eric Biggers <ebiggers@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Pablo Galindo <pablogsal@gmail.com>, 
-	Fangrui Song <maskray@sourceware.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV0PR02MB11133:EE_|BN0PR02MB8030:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07c9e2ec-e19d-4baf-5e71-08de3219dbb6
+x-proofpoint-crosstenant: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|7416014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?EErYReQwL0K2YYkhxtKc/2NdJKvsneeIcNguy00EhYcUEpwEkLdavboeLIDv?=
+ =?us-ascii?Q?lZrcihVU/gKK3k3AFz8w2yXBIvNpIIF1Qu2CTWWj0x/p7z7Hnzq4WopldatU?=
+ =?us-ascii?Q?Y4Eb8MLPMEbE16UVUPrjtMqmD5RjMS9L+ft+b0qdMxYU01t5x02vCfjEqw+C?=
+ =?us-ascii?Q?o1aCtnT5tY0T5Ibuu37WyqzCqE2evAu1PCnqZ26PYQOhlvPu8TP6dCsYDTBa?=
+ =?us-ascii?Q?fnuyR0RzaiCQZqEDCFDJWMxl4JeRkQuMe7HLCrM5g0N0/zpiRCaJkcaQj/EV?=
+ =?us-ascii?Q?kQ0vnZzcSk+uwtqh/EU02NBmyooSnAuP2qnVvVNRM7cO3HxBhJ6cCT8dOuRv?=
+ =?us-ascii?Q?1XPl8wH+20IwRk4cHKS4fBO3WMFgZtvDqMSgHq4g2HXbnasvBWX/M1JdOgO3?=
+ =?us-ascii?Q?HYGg9lj2Cnmv0+8d4VRU0iHrIfChsP2IXKow6LRjW5j+3px3YwoLRFPZ6TcM?=
+ =?us-ascii?Q?v4iXGAxmGH59Ye0594hPh37HQFR6sTma2EzLBjd7gjOuT7Os0DSLPHQ68fks?=
+ =?us-ascii?Q?8FCtuZOVdLnH/yNclS/YAiAb2QlOrnWW0mXE+L93efSqaSm/mJC3tt5aCjFj?=
+ =?us-ascii?Q?HtkLNCuNCu9NqM1Qd191AuhCfhX5sMviiUMYmg2f2GkQNXNSx7ukZAh0Zje0?=
+ =?us-ascii?Q?KqETpyKJV8Y/BDUN0DaKnAPcUCsr4gOS2XlohppYOo2bgINSRxf+tAIZxspj?=
+ =?us-ascii?Q?wrT/1zabpKEEhL/H6TUSdmQBnhuVSPcz36I1WQXXoEoPrp4H2OcKRfOrNC4L?=
+ =?us-ascii?Q?YLsJVjUXYZYwfnxc6sRX8CsUYPQ26VUSju4U0L8a9WXJbpm4gz16nhCx+X9V?=
+ =?us-ascii?Q?uOln1XBuPyniMRsLs7bD7eCZD+FQ4VNLC3qbM9rnEOlXxJgmRqngC1i0t1P7?=
+ =?us-ascii?Q?WG0Eqs3Dq26uuvfA2+qztuZn486S/RZCU1ovMSPrit9AGdztuKrA2T+zVaTC?=
+ =?us-ascii?Q?3VlmoOa/G3AmYgVJy4gUgzpB1G5GshklakBll4EIS1J/nc0ZQmCBCaYiUBX/?=
+ =?us-ascii?Q?kGJPhAJfDXMD823xl2yWygq+4kJYftU5o8TE4YeGkASe8i2EmeqrGOJow2hv?=
+ =?us-ascii?Q?+eestwoKf8rQHBqT6+LHv5JwSxrDehWl+1qG6+Vo3XfXRBmobG5Eabhs3BhB?=
+ =?us-ascii?Q?9vdepNSI9Czza6Txe5uXWavsyKK351oFJ8hEFwB+5Vgc8TJf9N8s6gEr1l69?=
+ =?us-ascii?Q?qj1NepfLxYdCAWeC1sVPpcmjvyAmOJgI+R4Lwj6SbcHryGrYPFk5cfbu1k9V?=
+ =?us-ascii?Q?YvASeqKPPncoxySvikEufgsdTFWZwY45EM/bloBvRY5sZzI3fIGQf7QZUHTc?=
+ =?us-ascii?Q?P5rvUNGkWptU62/J5u1MGQLl2kTPnL89zF21alHgYGqZDgCZgCWMzs8OkcKr?=
+ =?us-ascii?Q?CRS7Cci2j3HvLY5d0808/B+bPeYW+jblZ9BePL3vv3xMNHz4vNl986PeMMTF?=
+ =?us-ascii?Q?TfN3wKnbkMIezK87hpWEkWTsQHd4zIFzGImhLQAOddEwDokLEkJXEuD0Dwo/?=
+ =?us-ascii?Q?iZbGXLM/X9O0XcH/fqg7JTPcNNJpnJ4uKDcxh/5B1fnhbrKssKI2mWTcGg?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV0PR02MB11133.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(7416014)(921020)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?HQNEl7kzXnP1zI+MNy4cQdmtY3rvC1FP6TTQpFhjpeV7hPyg8rkZF/lGR2cH?=
+ =?us-ascii?Q?LzPBk0zG9+xDFb7P45KhPnWsg7hs8sMJlI+Im0TU1B50KAMGS8Nm2ZUk6cVS?=
+ =?us-ascii?Q?fiZcxXUS1Xkt4pw7ZJMhveWYbtbtRc9lHLdYe69mtPdXTr2cTgmPjsJAeBwk?=
+ =?us-ascii?Q?+J7Dyet/wtjY9Gkzu97PbuFNb5HeuVoATrvcI+ds6XaXC2LmyEItvjid/bYI?=
+ =?us-ascii?Q?k5joMc2z1l0zlGlS1/PP0lPP23HuHlW2LLM44/grSodn9xOi5ddybD4P4l8t?=
+ =?us-ascii?Q?DHRXgkqkgszq6fq6B2SGDVjt8DdjMIAg+UtaTLgi7WYLSJNrBW6GUC0AoMjL?=
+ =?us-ascii?Q?Di9sDKbXqpON4kS0wC6SncU3HlULwuNQCFmxEq9TajAvuNTXtJepIu6vBTJt?=
+ =?us-ascii?Q?pmX1Z0pNbirxagjjcWKJT2osMxMSk2McKPPX7jz4u5y2WUnpimDjMbQ+fUtn?=
+ =?us-ascii?Q?8mdj7bCPdSYlJ/sdeGbLF+Sj5f0/xin/Xhh5Ed0YQjiuCd29983Ogp1qb9In?=
+ =?us-ascii?Q?KLcWO53qT2e2o61lKJxox5sxGW9Rlpj8OIVDv0CBuUGxGCOzXKpRiBm0ubzj?=
+ =?us-ascii?Q?9PB+xu7OW5eNrAZTjAwvn/EzGhI7ZADpzv1+3neRpYbS/D+22O5PXSgv3ox5?=
+ =?us-ascii?Q?Bj09myxhiSglhvyG0KWymPAvb3g5y9lnjLqrUOQQqIelo/n5veWnaSGQcYSj?=
+ =?us-ascii?Q?8RiNjEyj3A3O7qpgona8WuFAHwE+NcusvLfNBAg0T6aUHGSDsOVWJ4NQMrnf?=
+ =?us-ascii?Q?G1ZXOV52sujDgbY1sLJUEa98WmIuzZAg7rqML9cpYg0o3uwKesp3ZbYKkTKG?=
+ =?us-ascii?Q?if3eI2dpndw43sBWZ4HUp52unmiwKlzJdHiedGaHLHvHiZLWJyENiTw+yxpe?=
+ =?us-ascii?Q?w96QieSCPgG0ToNKYYWjY7PwXTGo5/pHaSgeQ4739Fe2yGrckYzj0Hj4Camx?=
+ =?us-ascii?Q?uyYzbDOszbgj9+s4aBxCpUGLH6aXCHfjJaZdN4M89wdtgRgmJZ6Q1eKC2Y46?=
+ =?us-ascii?Q?7t2jTeusldDgVZCJxRtC1yyf5bZKCg0h5KhZAe0chbb3zBWUUUICgYs0e2hV?=
+ =?us-ascii?Q?sJ4Bf2pf48c+E1Ft6aqKwwdM7wKG5oUgdf5wzABGuXgWQiXuQ0XixlIR2UWn?=
+ =?us-ascii?Q?aFJpl0Y+OVEzE/e3lo2EAJdc2dHw1zIx6cdRUEtmYwUWyXfWjlPDcvA7f270?=
+ =?us-ascii?Q?WWlskL3KgOND0skkMoIjCOoi9QJlIqzlJ9Z1OLUJOtnOI+RF6YeAWi9KKtYa?=
+ =?us-ascii?Q?/CbqhwuPDvvRPjBxPSxVYhdfEB3ZYe0LWVLoQkkI6/5GFLsEsmXf2HM2yAk8?=
+ =?us-ascii?Q?V4Al6XTVZWEDNEWO8awDzsrf9cMGnARhVHCDrDCcvhQytKLXC7EjpcZYAQk5?=
+ =?us-ascii?Q?/Qy/JrDJwHlp2OvyMMV/Kf/sL9HcqHpJBdh8W+4h9T+r+mTPCFUnvTWEyTqG?=
+ =?us-ascii?Q?dhpY7dkoLxKFDTCykxe3TuvuVa0G4QTs5VcMVN7EI6l05Gkh3SqiJXhPuuti?=
+ =?us-ascii?Q?9yl49hifqUWtmp++A+KIDXkWGQHe8Ml7FfgVS+T6VB2OjC1d7SvLQVh68Ee1?=
+ =?us-ascii?Q?/uSpEw7oJZ/6KgDDsZLvLquncAPSxMrYFW2qxaHKRelKqALtctQRpHNJsn1X?=
+ =?us-ascii?Q?0w=3D=3D?=
+X-OriginatorOrg: nutanix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07c9e2ec-e19d-4baf-5e71-08de3219dbb6
+X-MS-Exchange-CrossTenant-AuthSource: LV0PR02MB11133.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2025 03:12:57.6355
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bb047546-786f-4de1-bd75-24e5b6f79043
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mW5/pJ5PjT1bnjxHfUoCxvsDY2oDwwqhfqYESv+dqgUK2cGx6waw4lp6vAHQYNuE2dZi8m32R6IbxyV/5+NAp+LWQ97OT2Uuyl5fwh7tQP4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR02MB8030
+X-Proofpoint-GUID: bMUn9lskt0ZvLuAMXBqcH1EALVv1MlSa
+X-Proofpoint-ORIG-GUID: bMUn9lskt0ZvLuAMXBqcH1EALVv1MlSa
+X-Authority-Analysis: v=2.4 cv=Urdu9uwB c=1 sm=1 tr=0 ts=692faabb cx=c_pps
+ a=Jry067FxzTqLSYox7+vmHw==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=xqWC_Br6kY4A:10 a=wP3pNCr1ah4A:10 a=0kUYKlekyDsA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=64Cc0HZtAAAA:8
+ a=V6_SfRwt4mKuhsd9XPwA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjAzMDAyMyBTYWx0ZWRfX35rvGtIQKQ5D
+ CCjLSe4vG/DAbS/ySQICUG6A2B9mhz4QxKd2G7fBc/t/qVd6Ejit1QLQJ2E5wadTEuuy4mYakYV
+ a9IunkaTgj8oGU9Gn5e7C2wFpGAqrtAELqAAEJpM/Qd/W8bDfvYsVVsiAX9Eq46CWJ+PhRfbXkN
+ XoTvuJQiAcSflJw2CScX40QlUlUsLSAa1u6EhsPMeLl2HoZ5benC23R+6y212JqQTWBIRe9gc2T
+ 7/x+Z1e+Wq/xH7fuq8EKa6kov8MM11IIi+BHjFofNdA/Aza8jX488K9C4fB6z++GJ+vvw7EQqwO
+ n6TUzHycI2UQIHfVxDmB2qT6u4n+VSWU8jaDkq2LoU4331kZoQpNtDtK1qjsiHSFnoxOe4WAFW3
+ uLJX4Pn5JQsLpHjmcfGd6q6zOETp1A==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-01_01,2025-11-27_02,2025-10-01_01
+X-Proofpoint-Spam-Reason: safe
 
-On Tue, Dec 2, 2025 at 1:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Thu, Nov 27, 2025 at 02:18:22PM -0800, Eric Biggers wrote:
-> > On Thu, Nov 27, 2025 at 01:17:01PM -0800, Namhyung Kim wrote:
-> > > Hello,
-> > >
-> > > On Tue, Nov 25, 2025 at 07:04:52PM -0800, Eric Biggers wrote:
-> > > > On Tue, Nov 25, 2025 at 06:55:39PM -0800, Ian Rogers wrote:
-> > > > > On Tue, Nov 25, 2025 at 11:29=E2=80=AFAM Eric Biggers <ebiggers@k=
-ernel.org> wrote:
-> > > > > >
-> > > > > > On Tue, Nov 25, 2025 at 12:07:46AM -0800, Namhyung Kim wrote:
-> > > > > > > It was reported that python backtrace with JIT dump was broke=
-n after the
-> > > > > > > change to built-in SHA-1 implementation.  It seems python gen=
-erates the
-> > > > > > > same JIT code for each function.  They will become separate D=
-SOs but the
-> > > > > > > contents are the same.  Only difference is in the symbol name=
-.
-> > > > > > >
-> > > > > > > But this caused a problem that every JIT'ed DSOs will have th=
-e same
-> > > > > > > build-ID which makes perf confused.  And it resulted in no py=
-thon
-> > > > > > > symbols (from JIT) in the output.
-> > > > > > >
-> > > > > > > Looking back at the original code before the conversion, it u=
-sed the
-> > > > > > > load_addr as well as the code section to distinguish each DSO=
-.  But it'd
-> > > > > > > be better to use contents of symtab and strtab instead as it =
-aligns with
-> > > > > > > some linker behaviors.
-> > > > > > >
-> > > > > > > This patch adds a buffer to save all the contents in a single=
- place for
-> > > > > > > SHA-1 calculation.  Probably we need to add sha1_update() or =
-similar to
-> > > > > > > update the existing hash value with different contents and us=
-e it here.
-> > > > > > > But it's out of scope for this change and I'd like something =
-that can be
-> > > > > > > backported to the stable trees easily.
-> > > > > > >
-> > > > > > > Fixes: e3f612c1d8f3945b ("perf genelf: Remove libcrypto depen=
-dency and use built-in sha1()")
-> > > > > > > Cc: Eric Biggers <ebiggers@kernel.org>
-> > > > > > > Cc: Pablo Galindo <pablogsal@gmail.com>
-> > > > > > > Cc: Fangrui Song <maskray@sourceware.org>
-> > > > > > > Link: https://github.com/python/cpython/issues/139544
-> > > > > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > > >
-> > > > > > That commit actually preserved the behavior of the existing var=
-iant of
-> > > > > > gen_build_id() that was under #ifdef BUILD_ID_SHA.  So I guess =
-that code
-> > > > > > was always broken, and it was just never noticed because the al=
-ternative
-> > > > > > variant of gen_build_id() under #ifdef BUILD_ID_MD5 was used in=
-stead?
-> > > > > >
-> > > > > > The MD5 variant of gen_build_id() just hashed the load_addr con=
-catenated
-> > > > > > with the code.  That's not what this patch does, though.  So ju=
-st to
-> > > > > > clarify, you'd actually like to go with a third approach rather=
- than
-> > > > > > just restoring the original hash(load_addr || code) approach?
-> > > > > >
-> > > > > > Also, I missed that you had actually changed the hash algorithm=
-.  I had
-> > > > > > assumed the perf folks were were pushing SHA-1 because they wer=
-e already
-> > > > > > using it.  Given that the algorithm changed, there must not be =
-any
-> > > > > > backwards compatibility concerns here, and you should switch to=
- a modern
-> > > > > > hash algorithm such as SHA-256 instead.
-> > > > > >
-> > > > > > I'd be glad to add an incremental API if you need it, but I'm c=
-onfused
-> > > > > > why you want SHA-1 and not a modern hash algorithm.
-> > > > >
-> > > > > Hi Eric,
-> > > > >
-> > > > > Thanks for the help with the hash functions! There's a bit more
-> > > > > context in this thread:
-> > > > > https://lore.kernel.org/linux-perf-users/CAP-5=3DfWLgaWsv82dcPajV=
-k=3DUmBbmwyEd7OVp6psZQ4TiXh-Meg@mail.gmail.com/
-> > > > >
-> > > > > So genelf is trying to take snippets of jitted code and create EL=
-F
-> > > > > files from them for the purpose of symbolizing in perf. The build=
-id
-> > > > > hash being used is SHA1 and I think the MD5 support was removed a=
-s
-> > > > > unnecessary. The problem this patch is addressing is that a JIT m=
-ay
-> > > > > create many identical stubs which then end up being deduplicated =
-into
-> > > > > the same buildid as only the code is hashed. The BFD linker seems=
- to
-> > > > > have the same issue (Fangrui filed a bug), gold and lld appear to=
- hash
-> > > > > the symbols (which Namhyung adds to genelf here) but still yield
-> > > > > different build id for the same source assembly code. It is possi=
-ble
-> > > > > to hash the address of the symbol rather than the symbol itself, =
-but I
-> > > > > think the intent for the code should be to best match what a comp=
-iler
-> > > > > and linker would generate. The problem there is that this differs=
- for
-> > > > > every linker :-)
-> > > > >
-> > > > > Something that is unfortunate in the code now is copying/concaten=
-ating
-> > > > > all the build data for the sake of producing the hash. It would b=
-e
-> > > > > nice if the code could incrementally build up the sha1 hash to av=
-oid
-> > > > > the copying. I don't know if there is functionality for this
-> > > > > currently.
-> > > >
-> > > > Again, I can add support for incremental hashing if you need it.  B=
-ut I
-> > > > don't understand why you want the hash function to be SHA-1.  Also,
-> > > > given that this seems to be a regression fix, it's surprising that
-> > > > you're suddenly changing the inputs to the hash entirely, instead o=
-f
-> > > > just going back to hashing load_addr concatenated with the code for=
- now.
-> > >
-> > > Historically MD5 or SHA1 was the only choice for build-ID in linkers.
-> > > I don't know if it's changed lately though.  But because of that we
-> > > support build-IDs up to 20 bytes and it's in the UAPI too (well.. it'=
-s
-> > > implicit in PERF_RECORD_MMAP2).  I think we can support other hashs i=
-f
-> > > they fit into it, but SHA-1 would be the right choice for now.
-> > >
-> > > About load_addr, I don't think it's the right fix.  We cannot have th=
-e
-> > > exactly same build-IDs as before since we already switched to SHA-1.
-> > > What we actually want is a way to generate unique IDs for each DSO.
-> > > For that purpose, it'd be nice to use sym/str-tables as Fangrui said
-> > > instead of using load_addr which seems to be a quick hack in the past=
-.
-> > >
-> > > So I think I can merge this change for stable fix.  And add increment=
-al
-> > > SHA-1 (thanks in advance!) and update the code to it later.
-> >
-> > If it needs to be 20 bytes, you should just use a truncated SHA-256.
-> >
-> > The only use for SHA-1 is backwards compatibility.  Which it seems you
-> > don't need.
->
-> I think the linker (ld) --build-id still defaults to SHA-1.
->
-> Thanks,
-> Namhyung
->
+Fix Makefile.perf to ensure that bpf skeletons are built with fPIC.
 
-In all GNU ld compatible linkers I am aware of, --build-id is an alias
-for --build-id=3Dsha1.
-However, lld (since https://reviews.llvm.org/D121531 ) and mold
-actually truncate BLAKE3 to 20 bytes for "sha1".
+When building with BUILD_BPF_SKEL=1, bpf_skel's was not getting built
+with fPIC, seeing compilation failures like:
+
+/usr/bin/ld: /builddir/.../tools/perf/util/bpf_skel/.tmp/bootstrap/main.o:
+  relocation R_X86_64_32 against `.rodata.str1.8' can not be used when
+  making a PIE object; recompile with -fPIE
+
+Bisected down to 6.18 commit a39516805992 ("tools build: Don't assume
+libtracefs-devel is always available").
+
+Fixes: a39516805992 ("tools build: Don't assume libtracefs-devel is always available")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jon Kohler <jon@nutanix.com>
+---
+ tools/perf/Makefile.perf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 02f87c49801f..4557c2e89e88 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1211,7 +1211,7 @@ endif
+ 
+ $(BPFTOOL): | $(SKEL_TMP_OUT)
+ 	$(Q)CFLAGS= $(MAKE) -C ../bpf/bpftool \
+-		OUTPUT=$(SKEL_TMP_OUT)/ bootstrap
++		EXTRA_CFLAGS="-fPIC" OUTPUT=$(SKEL_TMP_OUT)/ bootstrap
+ 
+ # Paths to search for a kernel to generate vmlinux.h from.
+ VMLINUX_BTF_ELF_PATHS ?= $(if $(O),$(O)/vmlinux)			\
+-- 
+2.43.0
+
