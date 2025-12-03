@@ -1,134 +1,156 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145E226560B
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Dec 2025 21:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566B62DCBE0
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Dec 2025 21:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764798562; cv=none; b=mbK3iELlYFuL71IFIQiJq1/cPkibSjMxvJinERMlyhtA9PgxL0QwWRVYyPy3iyd6Fk5cPbxjeJ1DcbgOTj0Rz7tZcphPGwiiap0SSexjnstNYNWd8RP2m822/NDzhWjv1rtOJCyE7mT8kPrSsoGP9An+SSzgJvRMspb9f2kqbLg=
+	t=1764798679; cv=none; b=WX7x0Pbd64+wFLJO2Wcn/SHjr0EjT95SkTgDyyahz6J6kK+NOyGUBh+bS205JIg10eFa2xo+ALOxmLlsPH7rBU2/INA3L3HpmDODRh9EWFWpHGEnj6ZaCYuNoGMHFkcf9FUEKnmEaqHBt2OLtYmFqOb/daSny0yLtFBlvXUo8gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764798562; c=relaxed/simple;
-	bh=nfg41T1tfTYNZbsHBGbseBMH87T0QQgtgvZExoknAt0=;
+	s=arc-20240116; t=1764798679; c=relaxed/simple;
+	bh=oSTCN59RHaF/BFgo8zzJKa+5K4tKjM046cM7KL+wLyQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LqESpaeM0QuBZ8ydDMHxf7bEr+4ve47TsknojewtrbURGCIiYUDZtr9uPpa5w64uZJyrnZrlFc5wEAUc0apLpAv72QSNbr2E2aAoG6HBG5rxdMNWyUjObKc2Q6r+0Xs6FYfclIWTHoz1bOLaXEazNVpPm8UOunhcr5Z/KBGWPko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pMiFDaU8; arc=none smtp.client-ip=209.85.214.169
+	 To:Cc:Content-Type; b=WYenZetsepZ6WUSsHxKspcYx/MvPiNhcCbE2rkDKrR0Tc6Hf8mchoqfAAGMoYpTJ8Ln0kZ0aQURPDC/b1ZXJIeaSjZOXFbj3kCU9tWBWSJwAfowgAGoYPGCSFNiOgKeugHMy6fN2n2HKfC1EVczDg7K16/P4Az0kF7Wkq3gkr+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1UjSWmNG; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pMiFDaU8"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-295c64cb951so56515ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Dec 2025 13:49:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1UjSWmNG"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-295c64cb951so57085ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Dec 2025 13:51:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764798560; x=1765403360; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764798677; x=1765403477; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=n2w7JOmTQwdkMhZfit1/JaxKTkte3Ol1QXq7EnPXVnI=;
-        b=pMiFDaU8+RpD9NE0RhC1W6ZJHnKFDMN4OTTXnYuYU5Pd3baKHG7kO+1Zom+EqMwIjW
-         RHa1creYhEKuO2cQHAdtUWzAIYpXrryPH7TnU90txHmn/sveaOJwsGA0tcmJk2gDyOxw
-         QWqfXMJHNrt/p/PHy3DTLjyhdOvgOfzL4e9b1BMPdJC/8lx0UYWLNzULaO+EaFZh/q+e
-         4G9u7cY8RKn1XE/qSAtNM30GWVdREhL+DWw94XbHxKbcwODmkc+EkXKLh5LfW8wKefch
-         Ch+2BK3GK+MzrDUXtBwk7TZ8ZaCC5nVQwageAozl/uwwqX7DYZg8p9J+pqSe+bgHJL59
-         9XNg==
+        bh=xr3HyFkHSSGTb33wkJrXY95CS6Z4GdjEvX6KNWzd8xQ=;
+        b=1UjSWmNG1MJnAkFrDpgsA2BnSZRP9E2p6XjxH9TXzJnoNt1XlOf18GTx2PTYU/fKh2
+         cw8Dte2Nz8h/Aknc0nERvQx39Gj959ZUAkQz/EfcSijUic7u4hE9nQzS58mHD/PS+gjP
+         IyWFeFeNboJ4mXSD3k2kreIjsplzpM7ylaJOJRDz6z9DYdQpA1v30ECZnUzJ7qCLGX7X
+         QizOgqGBFlR33MIwfxlMTx6T6fkkf6aAT6nEYhXiUWcyMyjjoEdfgO50DBNePqW1X0SP
+         Clqo3kGdsM3BglQV9K430qmRXzCqN9GL9UHxtqoiiYuhm21gEGutWVX/efI34rVmK0bG
+         yQRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764798560; x=1765403360;
+        d=1e100.net; s=20230601; t=1764798677; x=1765403477;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=n2w7JOmTQwdkMhZfit1/JaxKTkte3Ol1QXq7EnPXVnI=;
-        b=Yf7g+WC1Qd/h2pB85mcm1/PC28tlTPy1YXVIpT8YyFZtGe3Nu8RQeMAZUpFer7SAQW
-         mPEvEh2PtPwewTaumqjbuXiepn6nlc63Yp0bvh7+LRlkEiLO62ojIHymi0cgs4swcd0a
-         eEo4hWDGmcLV4oUBLr/+T5bPyw48QbhCsf6r/+otYzqebmA4qagqhDViea+HSM6b3kGw
-         ktCAeCo1N3Z0X2JAPrXFYhDmDz6xu26M0f6RPjOLuqLvcNl8gspyJPe70PV+z/GWqNRE
-         rut7ffujZCPeN0HPOPWBqVDbpR0bR/8CcQbRxThnK0m7qnozkO81Wxkt3OzOfuj7PtMT
-         cUsw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2kZ8Fq2x5otPk6QsygSeko0U/4k9JfHYOq6KlnkWQIjAiiOye5WysikaQwTxel5u+jfqEnhQINQGA2IWlmzdT@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI5XDT6TVUS9DaVD23LjTNB2LOZ784D1RfZbeyjIvy0zJ52q/x
-	RawjpppO0si/gOm2iVAHPsVaL8mSER0k/FJ8zFJgXa2iKN/96csd58WNHzdMaKVympiWW/95LZw
-	oiqqAOMnVcMc5R0x+7PAAZtS5gCdxECkIk1zxMC39
-X-Gm-Gg: ASbGnctbQdQFMENPc0cVOFTXABKzZ/xnKs4nbvdWfaoC69T9DDbDC1jTlcszfh3iZ5E
-	BL47hDTRpEQtWtY+KMUF9hS2OcS5gSk0mfATvpEiDAZ5mvnMRKvdBeRpABPEdfjH0bStfU7VjLF
-	g1lF/Vh0s/YEWVDyc0xz7oxkYx306mIdbpOwLrp9cEdj/UezSEi5wq88PDBFFpalIC2way38EFp
-	TInyp3LnlLw+fg7SY466bttnBobbDxD20m6MoSdQz70MOxHw/XPiVeZlBARCyGHuJh5u+PQ
-X-Google-Smtp-Source: AGHT+IHqoglbwiaORG58Hj4/3KXPFdZlIkY5Pr06qBcCgMVAEx/6AXRUynbEpXjWX1Bg6Nwf/ZZ9V2+TFmvOQZQCcQc=
-X-Received: by 2002:a17:902:f689:b0:299:c368:6b1e with SMTP id
- d9443c01a7336-29dacc20e8amr50985ad.17.1764798560239; Wed, 03 Dec 2025
- 13:49:20 -0800 (PST)
+        bh=xr3HyFkHSSGTb33wkJrXY95CS6Z4GdjEvX6KNWzd8xQ=;
+        b=G2U+F174GUhkwm70M2ZFakbmLaIrQXLtvZ4SEkvn8Hx9Gmwid5LyjTR03oUIYgqmaT
+         +L89TR/NsWy0/I823r05JefV3KzcBOTqBcx14AVrZ/6fH3LVGC/GHn0U0BqvO2um9fPX
+         EXd1czxdgyjCUaF0r8sLtWtH+tsirOomS+dk2dIz6EDegAQFuSSuX0SImKb/orXc/KZb
+         jRW/cefwNlzlMtn6kPvRI9qBo/a/PlV0xkvlZ/m9nq/SNZiDAflABeWNPaxm1IodLUYP
+         oo9GNbMEfbAM1IPkWG54INfUYFZQ34ew9f0rF+5lGpy5AJdUy9KkzkMSP+MwbE+m2XdT
+         AwYg==
+X-Gm-Message-State: AOJu0Yx8lXME8D5/lxS3t7qC5hi6qSfHZ6jKpT6LwWkNTGMNnPi1PYaE
+	Y6gEB4fwrci+E5QOYVV/1Z8cCvPPSuACbP56qfr07PTXSBI42NZzhbWYUy2YPvWdiPCQjmjC6TK
+	vyV980C+33/TXd+CIGcmsikNwy0AloCvgz2VhQKFX
+X-Gm-Gg: ASbGncsYb2tUij8VtRWM5Uy7z7taZNMKk+YEiazWx03GwSjFz0dcYR040wdvVc3YuCJ
+	iYZBb6KVAkH1uG1QbLof71sSGAbMmbEQM29Wb4zjLe186YKUJyMmzNg/sSEyaIgDwpPBxKqrsVO
+	BE3yfEEtjJeKukCM2ACmSzy6/yNB1PKwB8h5bUlFJo9PwilreHr9YhJYNwkgJfVgp3T9WGiAVe4
+	olT9LUL6h/+NeXKvXt+gTaCyRoLL/yCAjNrgqjsEs18lsOZxmp4zZf8HIJ2iLPr2kYS6265
+X-Google-Smtp-Source: AGHT+IFNM34p4hYpmaz75oaRgmGGWtF7uvr6OwxBeVLM724V0LiOi8wHDxZpXtBlReJQwDCA8uBo2Cz+lcTSstIQMEg=
+X-Received: by 2002:a17:902:ec90:b0:271:9873:80d9 with SMTP id
+ d9443c01a7336-29dacbe34femr141325ad.7.1764798677305; Wed, 03 Dec 2025
+ 13:51:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251201230904.290733-1-irogers@google.com> <aS5tRnf801Sm3z8P@gmail.com>
- <aS5t5hCk0vde4QvY@gmail.com> <aS5u7BkXnA2Q19-8@gmail.com> <aS5wjmbAM9ka3M2g@gmail.com>
-In-Reply-To: <aS5wjmbAM9ka3M2g@gmail.com>
+References: <94313b82-888b-4f42-9fb0-4585f9e90080@linux.ibm.com> <CAP-5=fXFJJOCDqdCXi4hT65o9g0GH+xwnUT3Qq-OErra51kKFA@mail.gmail.com>
+In-Reply-To: <CAP-5=fXFJJOCDqdCXi4hT65o9g0GH+xwnUT3Qq-OErra51kKFA@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 3 Dec 2025 13:49:09 -0800
-X-Gm-Features: AWmQ_bmkSGcNC4O_kWRb025MQYOYdwLNDBqX-7c62eAzoWY6HLvs1D1uP2qrt3k
-Message-ID: <CAP-5=fXz1GG8oDzZ6kXTDX6KWDChgm+sZO+oo9HgqU4whed5nQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] perf stat: Allow no events to open if this is a
- "--null" run
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 3 Dec 2025 13:51:06 -0800
+X-Gm-Features: AWmQ_bnaQGNfLE0ZN00pHyV6jZ8hiVbX6SlFRIlrD15iz_COWeNJNEFvMy64lEk
+Message-ID: <CAP-5=fUoYYThz4vA_hCGoCLorNHZUWvc5BTK+sK5xp0Lkm4kZg@mail.gmail.com>
+Subject: Re: perf stat dumps core when CPU offline
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Jan Polensky <japo@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 1, 2025 at 8:52=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wrote=
-:
+On Wed, Dec 3, 2025 at 9:47=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
 >
->
-> * Ingo Molnar <mingo@kernel.org> wrote:
->
-> > With all 4 patches applied to v6.18 'perf stat --null'
-> > works fine:
+> On Wed, Dec 3, 2025 at 5:20=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.=
+com> wrote:
 > >
-> >   Tested-by: Ingo Molnar <mingo@kernel.org>
+> > Hi all,
+> >
+> > Is this a known issue? Trying to do a perf stat on a CPU which is offli=
+ne.
+> >
+> > # echo 1 > /sys/devices/system/cpu/cpu1/online
+> > # perf stat -C1 -e cycles -- true
+> >
+> >  Performance counter stats for 'CPU(s) 1':
+> >
+> >            123,965      cycles
+> >
+> >        0.000356838 seconds time elapsed
+> >
+> > # echo 0 > /sys/devices/system/cpu/cpu1/online
+> > # perf stat -C1 -e cycles -- true
+> > WARNING: A requested CPU in '1' is not supported by PMU 'cpum_cf' (CPUs=
+ 0,2-7) for event 'cycles'
+> > Segmentation fault         (core dumped) perf stat -C1 -e cycles -- tru=
+e
+> > #
+> >
+> > This happens on linux-next and linux.
+> >
+> > Thanks a lot
 >
-> BTW., there's a long-standing perf-stat --repeat bug
-> where signals don't seem to get properly propagated.
+> Hi Thomas,
 >
-> The following command takes 10 seconds to run, as
-> expected:
+> sorry for the issue! I ran a similar test and got the segmentation
+> fault. gdb showed the issue was similar to a bug with `perf stat
+> --null` and testing those fixes gave me:
+> ```
+> $ cat /sys/devices/system/cpu/cpu8/online
+> 0
+> $ perf stat -C8 -e cycles -- true
+> WARNING: A requested CPU in '8' is not supported by PMU 'cpu' (CPUs
+> 0-7) for event 'cycles'
+> Error:
+> No supported events found.
+> The sys_perf_event_open() syscall returned with 0 (Success) for event
+> (cpu/unknown-hardware/).
+> "dmesg | grep -i perf" may provide additional information.
+> ```
 >
->   starship:~/tip> perf stat --null --repeat 10 sleep 1
+> Not a great error message but hopefully when:
+> https://lore.kernel.org/lkml/20251201230904.290733-1-irogers@google.com/
+> lands this will be resolved.
 >
->    Performance counter stats for 'sleep 1' (10 runs):
->
->            1.0026669 +- 0.0000503 seconds time elapsed  ( +-  0.01% )
->
-> But if I try to interrupt the test:
->
->   starship:~/tip> perf stat --null --repeat 10 sleep 1
->   ^Csleep: Interrupt
->   ^Csleep: Interrupt
->
->    Performance counter stats for 'sleep 1' (10 runs):
->
->               0.9250 +- 0.0543 seconds time elapsed  ( +-  5.87% )
->
->
-> The Ctrl-C only propagates to the <command>, interrupts
-> it (as can be seen from the shortened total runtime
-> that is less than 10 seconds), and otherwise results in
-> both an incorrect measurement and a misleading output
-> of the partial results.
->
-> Furthermore, the test runs to full completion - which
-> can be annoying if you happen to use high --repeat
-> counts like I sometimes do. I have to Ctrl-Z and
-> killall -9 perf to kill such instances.
+> I think we can test this behavior as the only thing required is a CPU
+> that's not in the cpumask, any very large numbered CPU will do that. I
+> also think the error message of "Success" is confusing, we should
+> probably just drop that message if the errno is 0. I'll add these two
+> patches to that existing series.
 
-I've added a patch that hopefully fixes this in the v2 patch series:
-https://lore.kernel.org/lkml/20251203214706.112174-8-irogers@google.com/
+Patches to fix, test and error message clean up added in:
+https://lore.kernel.org/lkml/20251203214706.112174-1-irogers@google.com/
 
 Thanks,
 Ian
 
 > Thanks,
+> Ian
 >
->         Ingo
+> > --
+> > Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germ=
+any
+> > --
+> > IBM Deutschland Research & Development GmbH
+> >
+> > Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+> >
+> > Gesch=C3=A4ftsf=C3=BChrung: David Faller
+> >
+> > Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht St=
+uttgart, HRB 243294
+> >
+> >
