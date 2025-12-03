@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D707D2DEA95
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Dec 2025 21:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADC52DECB9
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Dec 2025 21:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764798446; cv=none; b=H6wk16s93WouKJVNPhh0SYXzBTvidyq8/MbqX2I/0BRf+Dl8NkkNGiV4GiBJ37XAvgV7ZhaVrv4DJ1g66kZf+SpxIPbcLoKwOzXHz24+BSAEdn2qn2RgvzKSb1b6HdvJgBY8To2b5yLizsYjrzck/sFDQE3ScmiifeJsCF5CFFM=
+	t=1764798450; cv=none; b=f4RwW0PzYxMrAjzNTvHudRCCBMNIiq9E010Tl4Sv0mZ1X/FZaTW64yLXOiuOXoV7g0tyRCDbFHQXUhJtYFOZgD3I7G5WTogzT6X3UB0UuZYF+7EHgs5xukisX49zv8kIRj84gCmzcTheqUjerMpmeCyPE2PloCxPS72+/yNcOXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764798446; c=relaxed/simple;
-	bh=Gx3JjXPhyf4K31F1oSQwVaIDiiuTokaWZT2VKxSeKlU=;
+	s=arc-20240116; t=1764798450; c=relaxed/simple;
+	bh=NLjjJgqj44yOShiPvUtgrdHvboGVu5475ukXj0UL1WE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=B5JbH0zwUg+0AtIT6FUF0jfWuF1SeuWjfRJruU50ztkZ2lLfxhrA20FMQEoR5tK/ELZPdbBBP+anmg4XlXu2dDHF5tgT668e54+ozGy1oewtolo4GYXsThj03gOISiSRLzZE7uqMPO/ACJxEEUsrhe9tcPx0FdfhGa+ZN2STMyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tI4GGQM0; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=dBaRY82zVmOI9NBIDzlcPsUZXMH7BibXX/Y5V2Wr/XzWVsXMzFO7czwnHyKH0visVMhk02jVEk35E1TR7i3WxUANhdX1Mb7lGuTjWcW2AJpzamxJPUQl06JO9XggEm7rmzGS1r7HsCFUb/PPJyRxnSsz86zRj++afZDune7MytU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jgMJpgMz; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tI4GGQM0"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-bc2a04abc5aso164723a12.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Dec 2025 13:47:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jgMJpgMz"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-297f8a2ba9eso4486515ad.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Dec 2025 13:47:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764798444; x=1765403244; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cl5+8xbClVweIwNwbXuJK+Q4qhM9Nu7TLMnqmk8eKXk=;
-        b=tI4GGQM0LcERqu5GoBHJmVW9dOAMYJtH0FhvLy5JyWyeQ2fBL8VOwXJke4RvjwyHfK
-         JO5uuYnX5CWXvdk5BFsUlB04BQinqUY0ZRtX7bCR6GtYIM8gaLlekZFOwB/g7uFdwXKs
-         ui0rxL3FwR1P1FbZ2Tu8BiEm+Zvmq0kIELovkXsd+k56LEyHF7GQLn7kNFcn/5BWfuwt
-         VvH1u+sUEjH4dtj26rSDif1MKV9TaTV8GBRtEJDBG2LF7mJeZiNNsL27BbX/0mJHcqBB
-         BF2EkXXi4iGn0XZXY3Re+JAv1dHMU3bAh1T6+TMQhWezmg1UAgZtLBnFSCkc15s5O5Jl
-         HAlw==
+        d=google.com; s=20230601; t=1764798447; x=1765403247; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4ROp2gD1qsi5HFemrZlvE5vnoydq6n4iQlRkymTuUuc=;
+        b=jgMJpgMz41ZkXX6Q7M80cfV/fcFXXUgwdzB3e7KCtrj3lmGNiEktxPohCGNGFdpyrG
+         /RuAoUTxM0g8L2M4DSVjRL+OWdm/Lz7sexng8ebb6ZzjzN5mtom6ctVKB/2NDPQvSA5M
+         Lg2msT9Jd0xV42sHdlLdTILBBY4K3uSjGrzMFH3mOld7fMFBByxPvqk93JpTE+JdTh5U
+         8ln42cNUMb4m3MukkYAekF3aubgZ6xcuBD4FWSDrjCZByZTLXyONsgUgNkzDXHkWJthr
+         9U00Sizuf/yDCPNI9RRZQauKar4mNwcGUGovGHM1ZRY5Yna5rOfoxuF69+eJFR9h+XSz
+         18Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764798444; x=1765403244;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cl5+8xbClVweIwNwbXuJK+Q4qhM9Nu7TLMnqmk8eKXk=;
-        b=bBW6O54FoVOZ2lbA31GglWDAmSd0eP0bLpbJUg7bVgMeGV6wMQRCz6/KkkUFxzfI/F
-         PE8tBd4IQ9V3wKMQnb02FqnUp0uYoH9lPmiI3mTMODOLE85zhiZUgLLqgC+2bDQv2j6z
-         w9mqNAucq+6jo7zfl5XS3wwMcgPTdUFYBvzTcBoLSWPfkMwIq8E+1I0ug/S0754UQL6H
-         b8PqEpqe+hmQfWsN7RXBQByf8yFASwp8XCsWJz9pn42oH/Jxv+U+BbiwuYgj0EqIej+k
-         0yIl2NMCdYC7rlGkTeTvvpAy2Ta9/cd4R+kdFG3Uq7DKp9XsX7Dq1caJQ84pwwxhDeic
-         gc3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWGI9R2e3br14URjwim+o5wvPt3wCwCMJaLjG8ai+g2Q24NpdD3YP+X5ntqrtsttl+DZCHPzEOFx51gJqZ2S+Co@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyPsicfkQKD43y9iZO2U32W3K6sCvbfvlLq4ep6cLopY0LgEra
-	AJENzqvwqW9KXhn7x1TDS+nEO4fNAHSS5C2Sg6tV3TuL2NkeyQcgEHXonGmOtKZuLhhkKYuHz7Q
-	cW9357XRbQA==
-X-Google-Smtp-Source: AGHT+IHoOO93hzmFFlcQIYCbtgZj5ffz/3Wxhh2XCDCoisunfP+n6KCvgGin6yHxpV1LaAnMC1gvdiILhBSD
-X-Received: from dlbpk8.prod.google.com ([2002:a05:7022:3848:b0:119:49ca:6bb0])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:18ad:b0:2a4:3593:466b
- with SMTP id 5a478bee46e88-2aba422c066mr382160eec.7.1764798444290; Wed, 03
- Dec 2025 13:47:24 -0800 (PST)
-Date: Wed,  3 Dec 2025 13:47:05 -0800
+        d=1e100.net; s=20230601; t=1764798447; x=1765403247;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4ROp2gD1qsi5HFemrZlvE5vnoydq6n4iQlRkymTuUuc=;
+        b=rEedfbAXJgs+wuxdINKI5wgCpKpiB0c2wD5Ai7wHp+24HI+71pxHlOS6cbbkewDd68
+         7NaXugDoUM8YkB3DCE16EmhzFHVR+6IYe2Jvo7WY44OXg/8GYY+po3g5sZEBPo1AhL0Q
+         Z0Ea7nynAlU7ZO0l9pN6/sA2jO7d2jc2ICUeBgHVsDabTgusvDdFJa5P2aZvazzQiLN5
+         lXUULiyAEipK9hmHjlB3n5rWoxecUcjd5FH2OdKS4cpVyU6vMWc07pVo1u0brRvIWIpF
+         fa2XVLXUQT6ur5DfzBzyARyfxQ9+6EXoDObSSjOLS6RtE1pp/2ptxejXSSX+vzNa1b9T
+         2dIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgwl33oKqaWr0yRm7CjdB6MvWrNgrN5dM0fx7Y02bccraJMkdikG5B9QKG8cd53hDYEo/oQyKWQB6Upo/iLSQ5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSezzhflOoj7mEHRX6KmMWLlTTE76aMHvRSe7/byPF9wwLTrRZ
+	vd/N1AYdiH/3zIxAZuDmDcHytNV513KwJ6rsBp6pZEByE+73xlvt/bUvqNRpMRfoqgfjehL0Iqc
+	0alRNadkA+A==
+X-Google-Smtp-Source: AGHT+IHOGolbfyVik9GfL8FV0R1q7aR/DF1pW7wJKBvhtMirbEukdNxXMJ1WtmyaSH2UeJq4wnhjMPuIrobw
+X-Received: from dyjh23.prod.google.com ([2002:a05:7300:5617:b0:2a4:7a56:1730])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:4007:b0:2a4:3593:96a6
+ with SMTP id 5a478bee46e88-2ab92e8105amr1977090eec.35.1764798447380; Wed, 03
+ Dec 2025 13:47:27 -0800 (PST)
+Date: Wed,  3 Dec 2025 13:47:06 -0800
 In-Reply-To: <20251203214706.112174-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251203214706.112174-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.177.g9f829587af-goog
-Message-ID: <20251203214706.112174-7-irogers@google.com>
-Subject: [PATCH v2 6/7] perf tests stat: Add test for error for an offline CPU
+Message-ID: <20251203214706.112174-8-irogers@google.com>
+Subject: [PATCH v2 7/7] perf stat: Improve handling of termination by signal
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -68,91 +68,115 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
 	James Clark <james.clark@linaro.org>, Thomas Richter <tmricht@linux.ibm.com>, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a test that if an offline CPU is requested perf stat will fail.
-
+When interrupting perf stat in repeat mode with a signal the signal is
+passed to the child process but the repeat doesn't terminate:
 ```
-$ perf test -vv "perf stat tests"
-101: perf stat tests:
---- start ---
-test child forked, pid 46965
-Basic stat command test
-Basic stat command test [Success]
-Null stat command test
-Null stat command test [Success]
-Offline CPU stat command test (cpu 8)
-Offline CPU stat command test [Success]
-stat record and report test
-stat record and report test [Success]
-stat record and script test
-stat record and script test [Success]
-stat repeat weak groups test
-stat repeat weak groups test [Success]
-Topdown event group test
-Topdown event group test [Success]
-Topdown weak groups test
-Topdown weak groups test [Skipped event parsing failed]
-cputype test
-cputype test [Success]
-hybrid test
-hybrid test [Success]
----- end(0) ----
-101: perf stat tests                                                 : Ok
+$ perf stat -v --null --repeat 10 sleep 1
+Control descriptor is not initialized
+[ perf stat: executing run #1 ... ]
+[ perf stat: executing run #2 ... ]
+^Csleep: Interrupt
+[ perf stat: executing run #3 ... ]
+[ perf stat: executing run #4 ... ]
+[ perf stat: executing run #5 ... ]
+[ perf stat: executing run #6 ... ]
+[ perf stat: executing run #7 ... ]
+[ perf stat: executing run #8 ... ]
+[ perf stat: executing run #9 ... ]
+[ perf stat: executing run #10 ... ]
+
+ Performance counter stats for 'sleep 1' (10 runs):
+
+            0.9500 +- 0.0512 seconds time elapsed  ( +-  5.39% )
+
+0.01user 0.02system 0:09.53elapsed 0%CPU (0avgtext+0avgdata 18940maxresident)k
+29944inputs+0outputs (0major+2629minor)pagefaults 0swaps
 ```
 
-Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-Closes: https://lore.kernel.org/linux-perf-users/94313b82-888b-4f42-9fb0-4585f9e90080@linux.ibm.com/
+Terminate the repeated run and give a reasonable exit value:
+```
+$ perf stat -v --null --repeat 10 sleep 1
+Control descriptor is not initialized
+[ perf stat: executing run #1 ... ]
+[ perf stat: executing run #2 ... ]
+[ perf stat: executing run #3 ... ]
+^Csleep: Interrupt
+
+ Performance counter stats for 'sleep 1' (10 runs):
+
+             0.680 +- 0.321 seconds time elapsed  ( +- 47.16% )
+
+Command exited with non-zero status 130
+0.00user 0.01system 0:02.05elapsed 0%CPU (0avgtext+0avgdata 70688maxresident)k
+0inputs+0outputs (0major+5002minor)pagefaults 0swaps
+```
+
+Note, this also changes the exit value for non-repeat runs when
+interrupted by a signal.
+
+Reported-by: Ingo Molnar <mingo@kernel.org>
+Closes: https://lore.kernel.org/lkml/aS5wjmbAM9ka3M2g@gmail.com/
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/stat.sh | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ tools/perf/builtin-stat.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-index 7885e875caf4..0b2f0f88ca16 100755
---- a/tools/perf/tests/shell/stat.sh
-+++ b/tools/perf/tests/shell/stat.sh
-@@ -27,6 +27,32 @@ test_null_stat() {
-   echo "Null stat command test [Success]"
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index bd3c3de8d200..ab40d85fb125 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1007,10 +1007,20 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 			goto err_out;
+ 		}
+ 
+-		if (WIFSIGNALED(status))
++		if (WIFSIGNALED(status)) {
++			/*
++			 * We want to indicate failure to stop a repeat run,
++			 * hence negative. We want the value to be the exit code
++			 * of perf, which for termination by a signal is 128
++			 * plus the signal number.
++			 */
++			err = 0 - (128 + WTERMSIG(status));
+ 			psignal(WTERMSIG(status), argv[0]);
++		} else {
++			err = WEXITSTATUS(status);
++		}
+ 	} else {
+-		status = dispatch_events(forks, timeout, interval, &times);
++		err = dispatch_events(forks, timeout, interval, &times);
+ 	}
+ 
+ 	disable_counters();
+@@ -1050,7 +1060,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	if (!STAT_RECORD)
+ 		evlist__close(evsel_list);
+ 
+-	return WEXITSTATUS(status);
++	return err;
+ 
+ err_out:
+ 	if (forks)
+@@ -2969,7 +2979,7 @@ int cmd_stat(int argc, const char **argv)
+ 			evlist__reset_prev_raw_counts(evsel_list);
+ 
+ 		status = run_perf_stat(argc, argv, run_idx);
+-		if (status == -1)
++		if (status < 0)
+ 			break;
+ 
+ 		if (forever && !interval) {
+@@ -3039,5 +3049,6 @@ int cmd_stat(int argc, const char **argv)
+ 
+ 	evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ack, &stat_config.ctl_fd_close);
+ 
+-	return status;
++	/* Only the low byte of status becomes the exit code. */
++	return abs(status);
  }
- 
-+find_offline_cpu() {
-+  for i in $(seq 1 4096)
-+  do
-+    if [[ ! -f /sys/devices/system/cpu/cpu$i/online || \
-+          $(cat /sys/devices/system/cpu/cpu$i/online) == "0" ]]
-+    then
-+      echo $i
-+      return
-+    fi
-+  done
-+  echo "Failed to find offline CPU"
-+  exit 1
-+}
-+
-+test_offline_cpu_stat() {
-+  cpu=$(find_offline_cpu)
-+  echo "Offline CPU stat command test (cpu $cpu)"
-+  if ! perf stat "-C$cpu" -e cycles true 2>&1 | grep -E -q "No supported events found."
-+  then
-+    echo "Offline CPU stat command test [Failed]"
-+    err=1
-+    return
-+  fi
-+  echo "Offline CPU stat command test [Success]"
-+}
-+
- test_stat_record_report() {
-   echo "stat record and report test"
-   if ! perf stat record -e task-clock -o - true | perf stat report -i - 2>&1 | \
-@@ -224,6 +250,7 @@ test_hybrid() {
- 
- test_default_stat
- test_null_stat
-+test_offline_cpu_stat
- test_stat_record_report
- test_stat_record_script
- test_stat_repeat_weak_groups
 -- 
 2.52.0.177.g9f829587af-goog
 
