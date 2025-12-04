@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 523FD338F2F;
-	Thu,  4 Dec 2025 12:08:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85A6A398FB6;
+	Thu,  4 Dec 2025 12:25:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764850096; cv=none; b=Pdw9/G88F4lOs+5EW+4Yy50UlLC3Daz5yygRz6sy1dN2d5QEXiW1PUfxYRViF8w5NzKalSObcZ+Q3mE6L7IjuFhNQGYF3SPhjFiyfTnL6NqhmZZCFA6TcSoYqyb2ObLiNjzwDejNnLVXYzb80KORgAwsLLU9c+HCPXUYcWDSSyI=
+	t=1764851115; cv=none; b=Zc61lvr3bxJH53P9mcUcRJXsk6CDZfcYdKlcHnCpKkRmy9A2/77ih8Jlsam3VSNrqfnCtwpdldkcRsY9dTmpLy+vFoZjyQ58sauS5bZFhfrMNpGAHe6gEAnuBHgWE0Kn+tf2exk2YYZkJ/zaUJn+x4wwT+DW4qc2HkeRetI5fMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764850096; c=relaxed/simple;
-	bh=959xcw5yX4PoIuZ/HAOrDU65/YlBQuITaHCDJCCbGpI=;
+	s=arc-20240116; t=1764851115; c=relaxed/simple;
+	bh=/332OnwBU3AoRjqy7aPV+3dy4pZZpMiGY+vlyUKDtyY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HUF7wixaBSZUJFXCy1zBdkcPcav6bVXCt+5ivUKzURf1pS+LPEhj61dslWbIXkdEr/FXKerUFjZ5REnqRmIqdwaifydxOb4DoiIdc7595so4iB8qiQqAE+YNwEIccVB956ucBpfJCExHfo5Vt+ccmQQ2msqpd5QHEYU06IoEPmM=
+	 In-Reply-To:Content-Type; b=mAWELujYgpQLQ3QovWkwEIHAhxAd9LbmTH6FxIhlFwMXehgwyIGwKeDVebvhrLC9mXh1vnKe908t9rwgAQbVhi1UocDKkyY/kRVTIVso9NdlHnwoILAfPp8MuHfKUlIm4Mj2PjhXAfgXan/i30MjdH2v+pVGbQp72HOXulOwOs4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54B28339;
-	Thu,  4 Dec 2025 04:08:06 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B108339;
+	Thu,  4 Dec 2025 04:25:05 -0800 (PST)
 Received: from [10.163.49.196] (unknown [10.163.49.196])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ACBF33F73B;
-	Thu,  4 Dec 2025 04:08:08 -0800 (PST)
-Message-ID: <9440a191-86af-4eea-b867-8f65131bd701@arm.com>
-Date: Thu, 4 Dec 2025 17:38:05 +0530
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FD283F73B;
+	Thu,  4 Dec 2025 04:25:06 -0800 (PST)
+Message-ID: <26841df4-04d5-45d6-b589-e6061db2ad33@arm.com>
+Date: Thu, 4 Dec 2025 17:55:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,7 +27,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/19] coresight: trbe: Use helpers for checking errata
+Subject: Re: [PATCH 02/19] coresight: trbe: Remove redundant disable operation
 To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
  Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
  Yeoreum Yun <yeoreum.yun@arm.com>, Will Deacon <will@kernel.org>,
@@ -39,57 +39,78 @@ To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
 Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
- <20251201-trbe_buffer_refactor_v1-1-v1-1-7da32b076b28@arm.com>
+ <20251201-trbe_buffer_refactor_v1-1-v1-2-7da32b076b28@arm.com>
 Content-Language: en-US
 From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20251201-trbe_buffer_refactor_v1-1-v1-1-7da32b076b28@arm.com>
+In-Reply-To: <20251201-trbe_buffer_refactor_v1-1-v1-2-7da32b076b28@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+
+
 On 01/12/25 4:51 PM, Leo Yan wrote:
-> Use the existed helpers for checking errata instead of open coded
-
-Small nit - s/the existed helpers/the existing helpers/
-
-> equivalent.> 
+> The trace unit is already disabled when trbe_stop_and_truncate_event()
+> is called, so draining and stopping the buffer in the function is
+> redundant.
+> 
+> Remove the unnecessary disable operation and rename the function to
+> trbe_truncate_event() to better reflect its purpose.
+> 
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
 > ---
->  drivers/hwtracing/coresight/coresight-trbe.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/hwtracing/coresight/coresight-trbe.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
 > 
 > diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
-> index 293715b4ff0eb0abe30f9b477700ca94f81cd4a2..0ddb3db0213cf0014e29decfb79da68b0a351b31 100644
+> index 0ddb3db0213cf0014e29decfb79da68b0a351b31..2f44e4a65e0ee2b2c8fdd06a51ab01fc57f44a4e 100644
 > --- a/drivers/hwtracing/coresight/coresight-trbe.c
 > +++ b/drivers/hwtracing/coresight/coresight-trbe.c
-> @@ -723,7 +723,7 @@ static unsigned long trbe_get_trace_size(struct perf_output_handle *handle,
->  	 * the space we skipped with IGNORE packets. And we are always
->  	 * guaranteed to have at least a PAGE_SIZE space in the buffer.
->  	 */
-> -	if (trbe_has_erratum(buf->cpudata, TRBE_WORKAROUND_OVERWRITE_FILL_MODE) &&
-> +	if (trbe_may_overwrite_in_fill_mode(buf->cpudata) &&
->  	    !WARN_ON(size < overwrite_skip))
->  		__trbe_pad_buf(buf, start_off, overwrite_skip);
+> @@ -284,18 +284,10 @@ static void trbe_report_wrap_event(struct perf_output_handle *handle)
+>  	perf_aux_output_flag(handle, PERF_AUX_FLAG_COLLISION);
+>  }
 >  
-> @@ -946,7 +946,7 @@ static int trbe_apply_work_around_before_enable(struct trbe_buf *buf)
->  	 *  - At trace collection:
->  	 *     - Pad the 256bytes skipped above again with IGNORE packets.
->  	 */
-> -	if (trbe_has_erratum(buf->cpudata, TRBE_WORKAROUND_OVERWRITE_FILL_MODE)) {
-> +	if (trbe_may_overwrite_in_fill_mode(buf->cpudata)) {
->  		if (WARN_ON(!IS_ALIGNED(buf->trbe_write, PAGE_SIZE)))
->  			return -EINVAL;
->  		buf->trbe_hw_base = buf->trbe_write;
-> @@ -970,7 +970,7 @@ static int trbe_apply_work_around_before_enable(struct trbe_buf *buf)
->  	 *     - Adjust the TRBLIMITR.LIMIT to leave the extra PAGE outside
->  	 *       the TRBE's range (i.e [TRBBASER, TRBLIMITR.LIMI] ).
->  	 */
-> -	if (trbe_has_erratum(buf->cpudata, TRBE_WORKAROUND_WRITE_OUT_OF_RANGE)) {
-> +	if (trbe_may_write_out_of_range(buf->cpudata)) {
->  		s64 space = buf->trbe_limit - buf->trbe_write;
->  		/*
->  		 * We must have more than a PAGE_SIZE worth space in the proposed
+> -static void trbe_stop_and_truncate_event(struct perf_output_handle *handle)
+> +static void trbe_truncate_event(struct perf_output_handle *handle)
+>  {
+>  	struct trbe_buf *buf = etm_perf_sink_config(handle);
+>  
+> -	/*
+> -	 * We cannot proceed with the buffer collection and we
+> -	 * do not have any data for the current session. The
+> -	 * etm_perf driver expects to close out the aux_buffer
+> -	 * at event_stop(). So disable the TRBE here and leave
+> -	 * the update_buffer() to return a 0 size.
+> -	 */
+> -	trbe_drain_and_disable_local(buf->cpudata);
+>  	perf_aux_output_flag(handle, PERF_AUX_FLAG_TRUNCATED);
+>  	perf_aux_output_end(handle, 0);
+>  	*this_cpu_ptr(buf->cpudata->drvdata->handle) = NULL;
+> @@ -1008,7 +1000,7 @@ static int __arm_trbe_enable(struct trbe_buf *buf,
+>  	trbe_enable_hw(buf);
+>  	return 0;
+>  err:
+> -	trbe_stop_and_truncate_event(handle);
+> +	trbe_truncate_event(handle);
+>  	return ret;
+>  }
+>  
+> @@ -1169,7 +1161,7 @@ static irqreturn_t arm_trbe_irq_handler(int irq, void *dev)
+>  		trbe_handle_spurious(handle);
+>  		break;
+>  	case TRBE_FAULT_ACT_FATAL:
+> -		trbe_stop_and_truncate_event(handle);
+> +		trbe_truncate_event(handle);
+>  		truncated = true;
+>  		break;
+>  	}
 > 
 
-LGTM
+In arm_trbe_irq_handler() function trbe_drain_and_disable_local() is
+called early on before TRBE_FAULT_ACT_FATAL gets handled but for the
+other case __arm_trbe_enable() - do all the code paths leading upto
+present trbe_stop_and_truncate_event() would have definitely called
+trbe_drain_and_disable_local() as well ? If yes, please do call out
+those code paths clearly in the commit message.
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Besides it might be worth adding an WARN_ON() in trbe_truncate_event()
+if the TRBE has not been disabled as now being expected there.
