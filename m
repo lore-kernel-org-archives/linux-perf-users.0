@@ -1,377 +1,484 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E64DF6C
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 00:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9874D35898
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 00:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764807872; cv=none; b=VzruUjG1aJyaFJ3QHz8XquiE0ollYYKg7XIYNhei4v675ZRjQKwI6SQxggloEUkO3R/lUQpXDSIkjxKAqUqIsXgQ4Yx7kJuwV8Q5OrjlH6vXuNP6p3oGLcM/RqmgQD0sl3sKBH9M/Tyv2ij8eB462QF+1ufyMk3RD+yfQz1v5mk=
+	t=1764808417; cv=none; b=FSNJdAPo6l1hrVBb7YFWNilAAAFfzXC34c6TyYH4cceWbrp4hZwi5Q7bocY+O2NsP67LNokIkDhXbo4g4/ScDVQzQo7sugndbUR1CyDhgt078tmkC1MlGTENqDV+TOBmFVDE/HdjIMKN3w4dr7IIkv3YfSlS9nsWu9SjQ+A5NI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764807872; c=relaxed/simple;
-	bh=6Tfa3AMLbypBfTAyBUA3np8avYbkc5BpXZu0C39U06g=;
+	s=arc-20240116; t=1764808417; c=relaxed/simple;
+	bh=Gyu07sgO89udA4VpdmLEzJ2y+Ygct3bzDi4mURvrIpI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hfUYdTBOP5yj9LrgYYYhlt+dLy+92GOVykiEkPpRTo/7PcyNWGsvLYN/09i0TC/cGzojKKTZFGdKlPmmM0dHbzMo6TsF+5YcXoHOubYlOUb2Nf40u4piXosmX2sy705M1ksu79uGqj+WKkFSgGxQfA8D8XurYGl0+k1B8977rNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MracsAbX; arc=none smtp.client-ip=209.85.214.176
+	 To:Cc:Content-Type; b=jF06fDdFPD3MjAXX7Q5ZlIDP7s+OJIdxV+shG56zSj68VmvPwy/2fUJkQDW1M5UC+8tGJ/cw1VOwl3DWLjUEUeDwKs1kWe2ueo/p1ZS90jmQ8mEIwYmY/xmj3ubfd+nvfIYL1LIgC16xhLJcvy+CBzVhwUeCZWXIixVpwdLjnqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PpP+knOR; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MracsAbX"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-29852dafa7dso41935ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Dec 2025 16:24:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PpP+knOR"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b7355f6ef12so61701466b.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Dec 2025 16:33:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764807870; x=1765412670; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764808414; x=1765413214; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rWJC1qlMUI/r0xyezxePg/T/bKZCHCkQB2rgKkeSdO0=;
-        b=MracsAbXd8fYc0WIWWVOv4mvJNxxJVgfOKEfMoL3dr/gHaoMenzScWZ7MVL2oKKIHu
-         KATZVqy7Bb2M/4TlJnROrhP9xKnnvqhbLn1lWurfRfIowVlC317x7k75lVoW3P2B9EqG
-         kYkE4aWgoKyrXWoekGamL+uDlsaDaYcpzMleCSClRsieiEzpajIaaPV7xRuMHokIk5u5
-         a1NR2iByW0qpl0H7xB03AmEvu0uSk2D31PN+YnYlv7UVoBSXcLf+1LhA1SZinVL8K03u
-         cygdC14Y+3955u87V7qXRX6lbTbd3YNBlbp12Nhxk+4TKEdp/mWI0trkj/G65qoNid2p
-         yyRQ==
+        bh=umN819w48S7XpRn5se0oiD1rh9hIyAruGfJiHIcVXLk=;
+        b=PpP+knOR37fIwWPJ1GcYPRMmF8K54s073MVve/sn+koeVyYYfZ/PJ1MBIjf58cG5Q+
+         RwL5o/9BJmYuHsjl5zPolLB7vNFx++HBd04yQsOY5z0siFbFca0+6/ExGREbScS/mips
+         ordLiud9qcbFfkJgFg5qsoSYqMqqTPH9iFPMRvq+XLv2oFn5lQUjsynkFDDqWQJAzH0/
+         t0350LjKb9zjwlbsSQ5cd1v84YaCkH1PdpWiO8fEpkxC/DZgNXLI6G6z+9bRtpByGVav
+         xZJLFf/vTrBXWKNSwwF1/Yds7msXdEeG6mMWN/5taEbhxwwyD63AlM9139MJuIUf6G6H
+         3WqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764807870; x=1765412670;
+        d=1e100.net; s=20230601; t=1764808414; x=1765413214;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=rWJC1qlMUI/r0xyezxePg/T/bKZCHCkQB2rgKkeSdO0=;
-        b=OsjlH919YPsQaEXCDhusqKUVMtFaCBeCe6oHJmEXM2vgaQByryuu+vRa1yHQv50mDy
-         FNvJhoAg+SRQtH1ZV0PFEpdRPN3EfvEKBLSn6G71Sb+z19DydMgt2gKe0i2Pj0NdLnPn
-         Z+Aku+TlSQMdNPCbBxxkw45D91KWQT2SYh9i0O6Vk6r0UuZktXaj+pkEDb3Od27a20BH
-         laRmCS6egeBrF2qYrGYGAqPEZAz3ukNQFEEX/LSP3AsN841rYzvc/gJhix1qF51oEd7m
-         W8PjTvcVweu8qh+F5PPmJPHeYtlqBl3ER84blHPupmedoOV7K1+sb7+aschRWWy+8b1q
-         15dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXcNP5HUwONEahGmZqZRjzzZo4lQKKxwBSgpLyoc2rwsGNDVtaUoPAflwHoeCVwCcGc6//eTbvpEbwaP2OUZIBt@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYe7sru91aaXZKbQOtuj8AacfPUSaC0XWqFaVAyOkqVgT8HA7w
-	7XbAbBXP9Db5WXSfGByFJ0bpImIOb0jrtWKKarAr9WirCOvU70MXAc3oTY6surT0b+0QYqaSvgH
-	BnaWSu0ExySVrLvmEBZ1n5GQQZ+YsZrz11+w8ezBJ
-X-Gm-Gg: ASbGnctlslW0fVXbky54Z1B+a61KUzbYjN6Be7+CSlfcc/J8z4Mxf0bz0rEmrBYYqmW
-	eEPJVSdJmyUa+i03hytIwDTLrK0asmtYFjvQG5Y14nrGMFskWEB3VXc5BfQ0mLBZMDScmd3VLjC
-	sdFp7+DYa2W9Dr1hHis2OOGRRagzzNyfkgQYv80nG3Hxc43cL4YFI7fFsdwKp1es3z3HMrGfWc9
-	NQSXRXAFLBzS5a7ZKy3TZDXa8YdGtfL+83vkUtjh1Mx6Hi72U6D9nlnIgCCM+ko7arXwIZ8
-X-Google-Smtp-Source: AGHT+IHGeqmz+MxsH57WON0oyD/N6qxbX77pmnKBF2xleSxn6aSYOcjr+8wEVFd61m0hRq+uX6y5iPM+Me4Lc2er3hU=
-X-Received: by 2002:a17:902:c947:b0:294:f745:fe7b with SMTP id
- d9443c01a7336-29da3f8069cmr1272595ad.6.1764807869626; Wed, 03 Dec 2025
- 16:24:29 -0800 (PST)
+        bh=umN819w48S7XpRn5se0oiD1rh9hIyAruGfJiHIcVXLk=;
+        b=WQ9ncNk9TScZdjWcv3sVZUrxq4GSeTbEwlCbnZ+ajW2t54ZZxHg/iYQ0gB09vLzvyn
+         L5Sm8fZXfMQymtIjpwwzlivn2tdaeVGdemA77wFIv7vbFismLErsJ+lLGBWimw1Ie5C5
+         eK0anlFI/IleBOMtYafu42ge9JGu1knz4xZdfjPendNhoHoeYZVs1QxH0pAWwT9IQ7tA
+         XpcRiB/rUODznRI8L/GX3onHB2yxaEYk10PuNyoD27YLoB17lRtI1nGt3zPRRIGdix0l
+         tRoj/4L9/nE2wnG+XOmo+hnLapEaYezXqRCngAG3o2QhQiDvUwQgEIbDEw/e+XTRwDzG
+         KBvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdPckOL/IVmtML0H1GDIIIAe9sOW8/12dlbvF72R9laFrrXr9e0Gzwzht0GgkO3kHYmCie942orLb9Dh7lOPlY@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVLPGMguyoLAJ6VHoXzRyUAg//g4/xLgCNiKnJENivjvevh0cu
+	HgNFzEBMFEaImelrKK69p069hVhwTkPwl2wTNMAcV8xG/hw+TnRfBMzhtqawfZyZIiy/g5vjrBj
+	RZvGBEZsCqfwbRwQeSBTVGnMgwngGpu6Yf0T8nOpK
+X-Gm-Gg: ASbGnctg9Ba216elY23+egplGepzaLlkBlMlGp1qLVbDkVFMOM6LIboWlOXmfXmyZSq
+	Qtp1dJAqi1EWFg3iekxzFvIRm8dhH8gdGQCRs/g+tFq2Rl32GZNgL3F7Dk5WK+/Na8xY2mGJghf
+	8g1ODSQm924oFRiY+WsMUxctg5sIrWWFfL+oAOwdAmFB7sSgKz18QvZgVkv7imyHa5eFVPfnBs2
+	7EBWVHACQ/pFq7TPGPUvI/yDkTwvQcKgaG0bmKy2ubUNKAe7Z6IqlYJCuHZK/Njde4r6N+klplx
+	SerWbFsMVmvqQLxceNZs0yVyEX2XjQ==
+X-Google-Smtp-Source: AGHT+IHiW686iz9sbIrGvDGc5m0yQyoZa9JTastn+MWfElK1LeOcbwJzc9K8FNpVwBziTCtyvIuv20SpJtsdYCwKNF4=
+X-Received: by 2002:a17:907:d8e:b0:b73:1baa:6424 with SMTP id
+ a640c23a62f3a-b79dc7c29b5mr565562266b.55.1764808413540; Wed, 03 Dec 2025
+ 16:33:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 3 Dec 2025 16:24:18 -0800
-X-Gm-Features: AWmQ_bmXifxm_FuA2iZGx2TniDrXbsd8UC4MdOSQjLjcKHkzz_mBwU3U3ZbJKZw
-Message-ID: <CAP-5=fW=qZzAsmc7CKj-GGbABBgCB7KhK+Xa8K1LiUGJJBC9Hg@mail.gmail.com>
-Subject: Re: [Patch v5 00/19] Support SIMD/eGPRs/SSP registers sampling for perf
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+References: <20251201202437.3750901-1-wusamuel@google.com> <20251201202437.3750901-2-wusamuel@google.com>
+ <51711ea1-2e5c-457d-902d-68797eb496cb@arm.com>
+In-Reply-To: <51711ea1-2e5c-457d-902d-68797eb496cb@arm.com>
+From: Samuel Wu <wusamuel@google.com>
+Date: Wed, 3 Dec 2025 16:33:22 -0800
+X-Gm-Features: AWmQ_bm1mpitIcii6HDOivmMy4RjSPBoPtqJ3zy6c1_aiBXckMIMe8FKRJn1KVY
+Message-ID: <CAG2KctqZfkHDXjhv+aTDAeNgxkA_V9kQjQH0rm5moaRX38MS3Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] cpufreq: Replace trace_cpu_frequency with trace_policy_frequency
+To: Douglas Raillard <douglas.raillard@arm.com>
+Cc: Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
+	Jonathan Corbet <corbet@lwn.net>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Eranian Stephane <eranian@google.com>, Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>, 
-	Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>, 
-	Xudong Hao <xudong.hao@intel.com>
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	christian.loehle@arm.com, kernel-team@android.com, linux-pm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Lalit Maganti <lalitm@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 2, 2025 at 10:58=E2=80=AFPM Dapeng Mi <dapeng1.mi@linux.intel.c=
-om> wrote:
+On Tue, Dec 2, 2025 at 4:03=E2=80=AFAM Douglas Raillard
+<douglas.raillard@arm.com> wrote:
 >
-> Changes since V4:
-> - Rewrite some functions comments and commit messages (Dave)
-> - Add arch-PEBS based SIMD/eGPRs/SSP sampling support (Patch 15/19)
-> - Fix "suspecious NMI" warnning observed on PTL/NVL P-core and DMR by
->   activating back-to-back NMI detection mechanism (Patch 16/19)
-> - Fix some minor issues on perf-tool patches (Patch 18/19)
+> Hi Samuel,
 >
-> Changes since V3:
-> - Drop the SIMD registers if an NMI hits kernel mode for REGS_USER.
-> - Only dump the available regs, rather than zero and dump the
->   unavailable regs. It's possible that the dumped registers are a subset
->   of the requested registers.
-> - Some minor updates to address Dapeng's comments in V3.
+> On 01-12-2025 20:24, Samuel Wu wrote:
+> > The existing cpu_frequency trace_event can be verbose, emitting a nearl=
+y
+> > identical trace event for every CPU in the policy even when their
+> > frequencies are identical.
+> >
+> > This patch replaces the cpu_frequency trace event with policy_frequency
+> > trace event, a more efficient alternative. From the kernel's
+> > perspective, emitting a trace event once per policy instead of once per
+> > cpu saves some memory and is less overhead.
 >
-> Changes since V2:
-> - Use the FPU format for the x86_pmu.ext_regs_mask as well
-> - Add a check before invoking xsaves_nmi()
-> - Add perf_simd_reg_check() to retrieve the number of available
->   registers. If the kernel fails to get the requested registers, e.g.,
->   XSAVES fails, nothing dumps to the userspace (the V2 dumps all 0s).
-> - Add POC perf tool patches
+> I'd be fully behind that as a general guideline.
 >
-> Changes since V1:
-> - Apply the new interfaces to configure and dump the SIMD registers
-> - Utilize the existing FPU functions, e.g., xstate_calculate_size,
->   get_xsave_addr().
+> > From the post-processing
+> > perspective, analysis of the trace log is simplified without any loss o=
+f
+> > information.
 >
-> Starting from Intel Ice Lake, XMM registers can be collected in a PEBS
-> record. Future Architecture PEBS will include additional registers such
-> as YMM, ZMM, OPMASK, SSP and APX eGPRs, contingent on hardware support.
+> Unfortunately I'm not so sure about the "simplified" part (as of today),
+> more on that below.
 >
-> This patch set introduces a software solution to mitigate the hardware
-> requirement by utilizing the XSAVES command to retrieve the requested
-> registers in the overflow handler. This feature is no longer limited to
-> PEBS events or specific platforms. While the hardware solution remains
-> preferable due to its lower overhead and higher accuracy, this software
-> approach provides a viable alternative.
+> >
+> > Signed-off-by: Samuel Wu <wusamuel@google.com>
+> > ---
+> >   drivers/cpufreq/cpufreq.c      | 14 ++------------
+> >   drivers/cpufreq/intel_pstate.c |  6 ++++--
+> >   include/trace/events/power.h   | 24 +++++++++++++++++++++---
+> >   kernel/trace/power-traces.c    |  2 +-
+> >   samples/bpf/cpustat_kern.c     |  8 ++++----
+> >   samples/bpf/cpustat_user.c     |  6 +++---
+> >   tools/perf/builtin-timechart.c | 12 ++++++------
+> >   7 files changed, 41 insertions(+), 31 deletions(-)
+> >
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index 4472bb1ec83c..dd3f08f3b958 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -309,8 +309,6 @@ static void cpufreq_notify_transition(struct cpufre=
+q_policy *policy,
+> >                                     struct cpufreq_freqs *freqs,
+> >                                     unsigned int state)
+> >   {
+> > -     int cpu;
+> > -
+> >       BUG_ON(irqs_disabled());
+> >
+> >       if (cpufreq_disabled())
+> > @@ -344,10 +342,7 @@ static void cpufreq_notify_transition(struct cpufr=
+eq_policy *policy,
+> >               adjust_jiffies(CPUFREQ_POSTCHANGE, freqs);
+> >               pr_debug("FREQ: %u - CPUs: %*pbl\n", freqs->new,
+> >                        cpumask_pr_args(policy->cpus));
+> > -
+> > -             for_each_cpu(cpu, policy->cpus)
+> > -                     trace_cpu_frequency(freqs->new, cpu);
+> > -
+> > +             trace_policy_frequency(freqs->new, policy->cpu, policy->c=
+pus);
+> >               srcu_notifier_call_chain(&cpufreq_transition_notifier_lis=
+t,
+> >                                        CPUFREQ_POSTCHANGE, freqs);
+> >
+> > @@ -2201,7 +2196,6 @@ unsigned int cpufreq_driver_fast_switch(struct cp=
+ufreq_policy *policy,
+> >                                       unsigned int target_freq)
+> >   {
+> >       unsigned int freq;
+> > -     int cpu;
+> >
+> >       target_freq =3D clamp_val(target_freq, policy->min, policy->max);
+> >       freq =3D cpufreq_driver->fast_switch(policy, target_freq);
+> > @@ -2213,11 +2207,7 @@ unsigned int cpufreq_driver_fast_switch(struct c=
+pufreq_policy *policy,
+> >       arch_set_freq_scale(policy->related_cpus, freq,
+> >                           arch_scale_freq_ref(policy->cpu));
+> >       cpufreq_stats_record_transition(policy, freq);
+> > -
+> > -     if (trace_cpu_frequency_enabled()) {
+> > -             for_each_cpu(cpu, policy->cpus)
+> > -                     trace_cpu_frequency(freq, cpu);
+> > -     }
+> > +     trace_policy_frequency(freq, policy->cpu, policy->cpus);
+> >
+> >       return freq;
+> >   }
+> > diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pst=
+ate.c
+> > index ec4abe374573..9724b5d19d83 100644
+> > --- a/drivers/cpufreq/intel_pstate.c
+> > +++ b/drivers/cpufreq/intel_pstate.c
+> > @@ -2297,7 +2297,8 @@ static int hwp_get_cpu_scaling(int cpu)
+> >
+> >   static void intel_pstate_set_pstate(struct cpudata *cpu, int pstate)
+> >   {
+> > -     trace_cpu_frequency(pstate * cpu->pstate.scaling, cpu->cpu);
+> > +     trace_policy_frequency(pstate * cpu->pstate.scaling, cpu->cpu,
+> > +                            cpumask_of(cpu->cpu));
+> >       cpu->pstate.current_pstate =3D pstate;
+> >       /*
+> >        * Generally, there is no guarantee that this code will always ru=
+n on
+> > @@ -2587,7 +2588,8 @@ static void intel_pstate_adjust_pstate(struct cpu=
+data *cpu)
+> >
+> >       target_pstate =3D get_target_pstate(cpu);
+> >       target_pstate =3D intel_pstate_prepare_request(cpu, target_pstate=
+);
+> > -     trace_cpu_frequency(target_pstate * cpu->pstate.scaling, cpu->cpu=
+);
+> > +     trace_policy_frequency(target_pstate * cpu->pstate.scaling, cpu->=
+cpu,
+> > +                            cpumask_of(cpu->cpu));
+> >       intel_pstate_update_pstate(cpu, target_pstate);
+> >
+> >       sample =3D &cpu->sample;
+> > diff --git a/include/trace/events/power.h b/include/trace/events/power.=
+h
+> > index 370f8df2fdb4..317098ffdd5f 100644
+> > --- a/include/trace/events/power.h
+> > +++ b/include/trace/events/power.h
+> > @@ -182,11 +182,29 @@ TRACE_EVENT(pstate_sample,
+> >               { PM_EVENT_RECOVER, "recover" }, \
+> >               { PM_EVENT_POWEROFF, "poweroff" })
+> >
+> > -DEFINE_EVENT(cpu, cpu_frequency,
+> > +TRACE_EVENT(policy_frequency,
+> >
+> > -     TP_PROTO(unsigned int frequency, unsigned int cpu_id),
+> > +     TP_PROTO(unsigned int frequency, unsigned int cpu_id,
+> > +              const struct cpumask *policy_cpus),
+> >
+> > -     TP_ARGS(frequency, cpu_id)
+> > +     TP_ARGS(frequency, cpu_id, policy_cpus),
+> > +
+> > +     TP_STRUCT__entry(
+> > +             __field(u32, state)
+> > +             __field(u32, cpu_id)
+> > +             __cpumask(cpumask)
 >
-> The solution is theoretically compatible with all x86 platforms but is
-> currently enabled on newer platforms, including Sapphire Rapids and
-> later P-core server platforms, Sierra Forest and later E-core server
-> platforms and recent Client platforms, like Arrow Lake, Panther Lake and
-> Nova Lake.
+> Using a cpumask is the most technically correct option here, but it also =
+carries a big issue.
+> Userspace tooling will have a very hard time doing anything with it. A lo=
+t of that is down
+> to having no appropriate counterpart in "table libraries" in general (e.g=
+. what would you
+> map that to in pandas, polars or SQL ?). Some of the lack of support is p=
+robably also down to how
+> infrequently used it is. For example I don't think Perfetto would be able=
+ to handle that
+> in the ftrace_event and args table, as the documented supported value typ=
+es are:
+
+I've been in touch with the Perfetto team through this process, and it
+is an easy update for them to handle. If there are other libraries
+using this event, I think their approach would be similar to how
+Perfetto's SQL tables handle this new trace event.
+
+> args table:
+> value_type      STRING  The type of the value of the arg. Will be one of =
+'int', 'uint', 'string', 'real', 'pointer', 'bool' or 'json'.
+> https://perfetto.dev/docs/analysis/stdlib-docs
+
+In the same URL as above, there is a 'cpu_frequency_counters' SQL
+table documentation. The new tracepoint would be parsed by Perfetto's
+C++ parser before being inserted into the aforementioned SQL table as
+four separate rows, given a policy with 4 CPUs. This effectively
+creates the same table with the same data (just slightly different
+timestamps) as prior to this patch.
+
 >
-> Newly supported registers include YMM, ZMM, OPMASK, SSP, and APX eGPRs.
-> Due to space constraints in sample_regs_user/intr, new fields have been
-> introduced in the perf_event_attr structure to accommodate these
-> registers.
+> So while I definitely support improving the situation around cpumasks (I =
+lobbied a bit for that),
+> I don't think the ecosystem is ready for it yet and having such a core ev=
+ent switched to using it
+> is going to cause a lot of pain.
 >
-> After a long discussion in V1,
-> https://lore.kernel.org/lkml/3f1c9a9e-cb63-47ff-a5e9-06555fa6cc9a@linux.i=
-ntel.com/
-> The below new fields are introduced.
+> Some alternatives for tooling could be:
+> 1. Record the policy cpumasks in a tool-friendly format in the trace head=
+er, but no current format I know
+>     of provides that, and ftrace does not provide a "JSON blob to be pass=
+ed through" we could easily append to.
+>     Any such addition will therefore require libraries update which will =
+take time.
 >
-> @@ -543,6 +545,25 @@ struct perf_event_attr {
->         __u64   sig_data;
+> 3. Doing without the data in the trace. That means collecting and bundlin=
+g another sidecar file, which
+>     is really not convenient and still requires 3rd party tool modificati=
+ons for end users.
 >
->         __u64   config3; /* extension of config2 */
-> +
-> +
-> +       /*
-> +        * Defines set of SIMD registers to dump on samples.
-> +        * The sample_simd_regs_enabled !=3D0 implies the
-> +        * set of SIMD registers is used to config all SIMD registers.
-> +        * If !sample_simd_regs_enabled, sample_regs_XXX may be used to
-> +        * config some SIMD registers on X86.
-> +        */
-> +       union {
-> +               __u16 sample_simd_regs_enabled;
-> +               __u16 sample_simd_pred_reg_qwords;
-> +       };
-> +       __u32 sample_simd_pred_reg_intr;
-> +       __u32 sample_simd_pred_reg_user;
-> +       __u16 sample_simd_vec_reg_qwords;
-> +       __u64 sample_simd_vec_reg_intr;
-> +       __u64 sample_simd_vec_reg_user;
-> +       __u32 __reserved_4;
->  };
-> @@ -1016,7 +1037,15 @@ enum perf_event_type {
->          *      } && PERF_SAMPLE_BRANCH_STACK
->          *
->          *      { u64                   abi; # enum perf_sample_regs_abi
-> -        *        u64                   regs[weight(mask)]; } && PERF_SAM=
-PLE_REGS_USER
-> +        *        u64                   regs[weight(mask)];
-> +        *        struct {
-> +        *              u16 nr_vectors;
-> +        *              u16 vector_qwords;
-> +        *              u16 nr_pred;
-> +        *              u16 pred_qwords;
-> +        *              u64 data[nr_vectors * vector_qwords + nr_pred * p=
-red_qwords];
-> +        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
-> +        *      } && PERF_SAMPLE_REGS_USER
->          *
->          *      { u64                   size;
->          *        char                  data[size];
-> @@ -1043,7 +1072,15 @@ enum perf_event_type {
->          *      { u64                   data_src; } && PERF_SAMPLE_DATA_S=
-RC
->          *      { u64                   transaction; } && PERF_SAMPLE_TRA=
-NSACTION
->          *      { u64                   abi; # enum perf_sample_regs_abi
-> -        *        u64                   regs[weight(mask)]; } && PERF_SAM=
-PLE_REGS_INTR
-> +        *        u64                   regs[weight(mask)];
-> +        *        struct {
-> +        *              u16 nr_vectors;
-> +        *              u16 vector_qwords;
-> +        *              u16 nr_pred;
-> +        *              u16 pred_qwords;
-> +        *              u64 data[nr_vectors * vector_qwords + nr_pred * p=
-red_qwords];
-> +        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
-> +        *      } && PERF_SAMPLE_REGS_INTR
->          *      { u64                   phys_addr;} && PERF_SAMPLE_PHYS_A=
-DDR
->          *      { u64                   cgroup;} && PERF_SAMPLE_CGROUP
->          *      { u64                   data_page_size;} && PERF_SAMPLE_D=
-ATA_PAGE_SIZE
+> 2. Add policy_frequency event, but not remove cpu_frequency yet. Possibly=
+ with a deprecation warning
+>     when enabling the event.
 >
+
+These alternatives should work, but I feel are probably too complex to
+be worth the effort.
+
+> > +     ),
+> > +
+> > +     TP_fast_assign(
+> > +             __entry->state =3D frequency;
+> > +             __entry->cpu_id =3D cpu_id;
+> > +             __assign_cpumask(cpumask, policy_cpus);
 >
-> To maintain simplicity, a single field, sample_{simd|pred}_vec_reg_qwords=
+> ipi_send_cpumask uses cpumask_bits():
+>
+>                 __assign_cpumask(cpumask, cpumask_bits(cpumask));
+>
+> It's not clear what is best practice, as struct cpumask contains a single=
+ member anyway and
+> __assign_cpumask() expands to a memcpy() so they are functionally identic=
+al.
+>
+> > +     ),
+> > +
+> > +     TP_printk("state=3D%lu cpu_id=3D%lu policy_cpus=3D%*pb",
+> > +               (unsigned long)__entry->state,
+> > +               (unsigned long)__entry->cpu_id,
+> > +               cpumask_pr_args((struct cpumask *)__get_dynamic_array(c=
+pumask)))
+>
+> Looking at ipi_send_cpumask, this should be:
+>
+>    __get_cpumask(cpumask)
+>
+> The cast and cpumask_pr_args() may look like it's working, but there is o=
+nly a very slim
+> chance any downstream tool will know what to do with this. Looking at lib=
+traceevent
+> (which trace-cmd is based on):
+>
+> ./utest/traceevent-utest.c:116: "print fmt: \"cpumask=3D%s\", __get_cpuma=
+sk(cpumask)\n";
+> ./src/event-parse.c:3674:       if (strcmp(token, "__get_cpumask") =3D=3D=
+ 0 ||
+> ./src/event-parse.c:7568:               printf("__get_cpumask(%s)", args-=
+>bitmask.bitmask);
+>
+> But there is no match for "cpumask_pr_args".
+
+Thanks for pointing out libtraceevent- I didn't know about this tool,
+but I'll take a look at compatibility and adjust appropriately. The
+macros are a little tricky, but I agree that it seems best to follow
+the template set out by the pre-existing ipi_send_cpumask.
+
+>
+> Considering the gap between what works when using the in-kernel text rend=
+ering and what can be
+> reasonably expected to work in any other userspace tool, it's a good idea=
+ to try
+> as many as possible unfortunately.
+>
+
+Overall, I appreciate the thorough and insightful feedback Douglas! If
+there are any other tools consuming cpu_frequency, I can help update
+them appropriately. AFAICT Perfetto is by far, the most widespread
+tool consuming cpu_frequency.
+
+> >   );
+> >
+> >   TRACE_EVENT(cpu_frequency_limits,
+> > diff --git a/kernel/trace/power-traces.c b/kernel/trace/power-traces.c
+> > index f2fe33573e54..a537e68a6878 100644
+> > --- a/kernel/trace/power-traces.c
+> > +++ b/kernel/trace/power-traces.c
+> > @@ -16,5 +16,5 @@
+> >
+> >   EXPORT_TRACEPOINT_SYMBOL_GPL(suspend_resume);
+> >   EXPORT_TRACEPOINT_SYMBOL_GPL(cpu_idle);
+> > -EXPORT_TRACEPOINT_SYMBOL_GPL(cpu_frequency);
+> > +EXPORT_TRACEPOINT_SYMBOL_GPL(policy_frequency);
+> >
+> > diff --git a/samples/bpf/cpustat_kern.c b/samples/bpf/cpustat_kern.c
+> > index 7ec7143e2757..f485de0f89b2 100644
+> > --- a/samples/bpf/cpustat_kern.c
+> > +++ b/samples/bpf/cpustat_kern.c
+> > @@ -75,9 +75,9 @@ struct {
+> >   } pstate_duration SEC(".maps");
+> >
+> >   /*
+> > - * The trace events for cpu_idle and cpu_frequency are taken from:
+> > + * The trace events for cpu_idle and policy_frequency are taken from:
+> >    * /sys/kernel/tracing/events/power/cpu_idle/format
+> > - * /sys/kernel/tracing/events/power/cpu_frequency/format
+> > + * /sys/kernel/tracing/events/power/policy_frequency/format
+> >    *
+> >    * These two events have same format, so define one common structure.
+> >    */
+> > @@ -162,7 +162,7 @@ int bpf_prog1(struct cpu_args *ctx)
+> >        */
+> >       if (ctx->state !=3D (u32)-1) {
+> >
+> > -             /* record pstate after have first cpu_frequency event */
+> > +             /* record pstate after have first policy_frequency event =
+*/
+> >               if (!*pts)
+> >                       return 0;
+> >
+> > @@ -208,7 +208,7 @@ int bpf_prog1(struct cpu_args *ctx)
+> >       return 0;
+> >   }
+> >
+> > -SEC("tracepoint/power/cpu_frequency")
+> > +SEC("tracepoint/power/policy_frequency")
+> >   int bpf_prog2(struct cpu_args *ctx)
+> >   {
+> >       u64 *pts, *cstate, *pstate, cur_ts, delta;
+> > diff --git a/samples/bpf/cpustat_user.c b/samples/bpf/cpustat_user.c
+> > index 356f756cba0d..f7e81f702358 100644
+> > --- a/samples/bpf/cpustat_user.c
+> > +++ b/samples/bpf/cpustat_user.c
+> > @@ -143,12 +143,12 @@ static int cpu_stat_inject_cpu_idle_event(void)
+> >
+> >   /*
+> >    * It's possible to have no any frequency change for long time and ca=
+nnot
+> > - * get ftrace event 'trace_cpu_frequency' for long period, this introd=
+uces
+> > + * get ftrace event 'trace_policy_frequency' for long period, this int=
+roduces
+> >    * big deviation for pstate statistics.
+> >    *
+> >    * To solve this issue, below code forces to set 'scaling_max_freq' t=
+o 208MHz
+> > - * for triggering ftrace event 'trace_cpu_frequency' and then recovery=
+ back to
+> > - * the maximum frequency value 1.2GHz.
+> > + * for triggering ftrace event 'trace_policy_frequency' and then recov=
+ery back
+> > + * to the maximum frequency value 1.2GHz.
+> >    */
+> >   static int cpu_stat_inject_cpu_frequency_event(void)
+> >   {
+> > diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timech=
+art.c
+> > index 22050c640dfa..3ef1a2fd0493 100644
+> > --- a/tools/perf/builtin-timechart.c
+> > +++ b/tools/perf/builtin-timechart.c
+> > @@ -612,10 +612,10 @@ process_sample_cpu_idle(struct timechart *tchart =
+__maybe_unused,
+> >   }
+> >
+> >   static int
+> > -process_sample_cpu_frequency(struct timechart *tchart,
+> > -                          struct evsel *evsel,
+> > -                          struct perf_sample *sample,
+> > -                          const char *backtrace __maybe_unused)
+> > +process_sample_policy_frequency(struct timechart *tchart,
+> > +                             struct evsel *evsel,
+> > +                             struct perf_sample *sample,
+> > +                             const char *backtrace __maybe_unused)
+> >   {
+> >       u32 state  =3D evsel__intval(evsel, sample, "state");
+> >       u32 cpu_id =3D evsel__intval(evsel, sample, "cpu_id");
+> > @@ -1541,7 +1541,7 @@ static int __cmd_timechart(struct timechart *tcha=
+rt, const char *output_name)
+> >   {
+> >       const struct evsel_str_handler power_tracepoints[] =3D {
+> >               { "power:cpu_idle",             process_sample_cpu_idle }=
 ,
-> is introduced to indicate register width. For example:
-> - sample_simd_vec_reg_qwords =3D 2 for XMM registers (128 bits) on x86
-> - sample_simd_vec_reg_qwords =3D 4 for YMM registers (256 bits) on x86
+> > -             { "power:cpu_frequency",        process_sample_cpu_freque=
+ncy },
+> > +             { "power:policy_frequency",     process_sample_policy_fre=
+quency },
+> >               { "sched:sched_wakeup",         process_sample_sched_wake=
+up },
+> >               { "sched:sched_switch",         process_sample_sched_swit=
+ch },
+> >   #ifdef SUPPORT_OLD_POWER_EVENTS
+> > @@ -1804,7 +1804,7 @@ static int timechart__record(struct timechart *tc=
+hart, int argc, const char **ar
+> >       unsigned int backtrace_args_no =3D ARRAY_SIZE(backtrace_args);
+> >
+> >       const char * const power_args[] =3D {
+> > -             "-e", "power:cpu_frequency",
+> > +             "-e", "power:policy_frequency",
+> >               "-e", "power:cpu_idle",
+> >       };
+> >       unsigned int power_args_nr =3D ARRAY_SIZE(power_args);
 >
-> Four additional fields, sample_{simd|pred}_vec_reg_{intr|user}, represent
-> the bitmap of sampling registers. For instance, the bitmap for x86
-> XMM registers is 0xffff (16 XMM registers). Although users can
-> theoretically sample a subset of registers, the current perf-tool
-> implementation supports sampling all registers of each type to avoid
-> complexity.
->
-> A new ABI, PERF_SAMPLE_REGS_ABI_SIMD, is introduced to signal user space
-> tools about the presence of SIMD registers in sampling records. When this
-> flag is detected, tools should recognize that extra SIMD register data
-> follows the general register data. The layout of the extra SIMD register
-> data is displayed as follow.
->
->    u16 nr_vectors;
->    u16 vector_qwords;
->    u16 nr_pred;
->    u16 pred_qwords;
->    u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
->
-> With this patch set, sampling for the aforementioned registers is
-> supported on the Intel Nova Lake platform.
->
-> Examples:
->  $perf record -I?
->  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
->  R11 R12 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 R23 R24 R25 R26 R27 R28
->  R29 R30 R31 SSP XMM0-15 YMM0-15 ZMM0-31 OPMASK0-7
-
-nit: It seems strange in this output to mix ranges like "XMM0-15" but
-then list out "R8....R31". That said we have tests that explicitly
-look for the non-range pattern:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/shell/record.sh?h=3Dperf-tools-next#n106
-
-Thanks,
-Ian
-
->  $perf record --user-regs=3D?
->  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
->  R11 R12 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 R23 R24 R25 R26 R27 R28
->  R29 R30 R31 SSP XMM0-15 YMM0-15 ZMM0-31 OPMASK0-7
->
->  $perf record -e branches:p -Iax,bx,r8,r16,r31,ssp,xmm,ymm,zmm,opmask -c =
-100000 ./test
->  $perf report -D
->
->  ... ...
->  14027761992115 0xcf30 [0x8a8]: PERF_RECORD_SAMPLE(IP, 0x1): 29964/29964:
->  0xffffffff9f085e24 period: 100000 addr: 0
->  ... intr regs: mask 0x18001010003 ABI 64-bit
->  .... AX    0xdffffc0000000000
->  .... BX    0xffff8882297685e8
->  .... R8    0x0000000000000000
->  .... R16   0x0000000000000000
->  .... R31   0x0000000000000000
->  .... SSP   0x0000000000000000
->  ... SIMD ABI nr_vectors 32 vector_qwords 8 nr_pred 8 pred_qwords 1
->  .... ZMM  [0] 0xffffffffffffffff
->  .... ZMM  [0] 0x0000000000000001
->  .... ZMM  [0] 0x0000000000000000
->  .... ZMM  [0] 0x0000000000000000
->  .... ZMM  [0] 0x0000000000000000
->  .... ZMM  [0] 0x0000000000000000
->  .... ZMM  [0] 0x0000000000000000
->  .... ZMM  [0] 0x0000000000000000
->  .... ZMM  [1] 0x003a6b6165506d56
->  ... ...
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... OPMASK[0] 0x00000000fffffe00
->  .... OPMASK[1] 0x0000000000ffffff
->  .... OPMASK[2] 0x000000000000007f
->  .... OPMASK[3] 0x0000000000000000
->  .... OPMASK[4] 0x0000000000010080
->  .... OPMASK[5] 0x0000000000000000
->  .... OPMASK[6] 0x0000400004000000
->  .... OPMASK[7] 0x0000000000000000
->  ... ...
->
->
-> History:
->   v4: https://lore.kernel.org/all/20250925061213.178796-1-dapeng1.mi@linu=
-x.intel.com/
->   v3: https://lore.kernel.org/lkml/20250815213435.1702022-1-kan.liang@lin=
-ux.intel.com/
->   v2: https://lore.kernel.org/lkml/20250626195610.405379-1-kan.liang@linu=
-x.intel.com/
->   v1: https://lore.kernel.org/lkml/20250613134943.3186517-1-kan.liang@lin=
-ux.intel.com/
->
-> Dapeng Mi (3):
->   perf: Eliminate duplicate arch-specific functions definations
->   perf/x86/intel: Enable arch-PEBS based SIMD/eGPRs/SSP sampling
->   perf/x86: Activate back-to-back NMI detection for arch-PEBS induced
->     NMIs
->
-> Kan Liang (16):
->   perf/x86: Use x86_perf_regs in the x86 nmi handler
->   perf/x86: Introduce x86-specific x86_pmu_setup_regs_data()
->   x86/fpu/xstate: Add xsaves_nmi() helper
->   perf: Move and rename has_extended_regs() for ARCH-specific use
->   perf/x86: Add support for XMM registers in non-PEBS and REGS_USER
->   perf: Add sampling support for SIMD registers
->   perf/x86: Enable XMM sampling using sample_simd_vec_reg_* fields
->   perf/x86: Enable YMM sampling using sample_simd_vec_reg_* fields
->   perf/x86: Enable ZMM sampling using sample_simd_vec_reg_* fields
->   perf/x86: Enable OPMASK sampling using sample_simd_pred_reg_* fields
->   perf/x86: Enable eGPRs sampling using sample_regs_* fields
->   perf/x86: Enable SSP sampling using sample_regs_* fields
->   perf/x86/intel: Enable PERF_PMU_CAP_SIMD_REGS capability
->   perf headers: Sync with the kernel headers
->   perf parse-regs: Support new SIMD sampling format
->   perf regs: Enable dumping of SIMD registers
->
->  arch/arm/kernel/perf_regs.c                   |   8 +-
->  arch/arm64/kernel/perf_regs.c                 |   8 +-
->  arch/csky/kernel/perf_regs.c                  |   8 +-
->  arch/loongarch/kernel/perf_regs.c             |   8 +-
->  arch/mips/kernel/perf_regs.c                  |   8 +-
->  arch/parisc/kernel/perf_regs.c                |   8 +-
->  arch/powerpc/perf/perf_regs.c                 |   2 +-
->  arch/riscv/kernel/perf_regs.c                 |   8 +-
->  arch/s390/kernel/perf_regs.c                  |   2 +-
->  arch/x86/events/core.c                        | 326 +++++++++++-
->  arch/x86/events/intel/core.c                  | 117 ++++-
->  arch/x86/events/intel/ds.c                    | 134 ++++-
->  arch/x86/events/perf_event.h                  |  85 +++-
->  arch/x86/include/asm/fpu/xstate.h             |   3 +
->  arch/x86/include/asm/msr-index.h              |   7 +
->  arch/x86/include/asm/perf_event.h             |  38 +-
->  arch/x86/include/uapi/asm/perf_regs.h         |  62 +++
->  arch/x86/kernel/fpu/xstate.c                  |  25 +-
->  arch/x86/kernel/perf_regs.c                   | 131 ++++-
->  include/linux/perf_event.h                    |  16 +
->  include/linux/perf_regs.h                     |  36 +-
->  include/uapi/linux/perf_event.h               |  45 +-
->  kernel/events/core.c                          | 132 ++++-
->  tools/arch/x86/include/uapi/asm/perf_regs.h   |  62 +++
->  tools/include/uapi/linux/perf_event.h         |  45 +-
->  tools/perf/arch/x86/util/perf_regs.c          | 470 +++++++++++++++++-
->  tools/perf/util/evsel.c                       |  47 ++
->  tools/perf/util/parse-regs-options.c          | 151 +++++-
->  .../perf/util/perf-regs-arch/perf_regs_x86.c  |  43 ++
->  tools/perf/util/perf_event_attr_fprintf.c     |   6 +
->  tools/perf/util/perf_regs.c                   |  59 +++
->  tools/perf/util/perf_regs.h                   |  11 +
->  tools/perf/util/record.h                      |   6 +
->  tools/perf/util/sample.h                      |  10 +
->  tools/perf/util/session.c                     |  78 ++-
->  35 files changed, 2012 insertions(+), 193 deletions(-)
->
->
-> base-commit: 9929dffce5ed7e2988e0274f4db98035508b16d9
-> prerequisite-patch-id: a15bcd62a8dcd219d17489eef88b66ea5488a2a0
 > --
-> 2.34.1
+>
+> Douglas
 >
