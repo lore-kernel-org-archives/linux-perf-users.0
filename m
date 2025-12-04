@@ -1,113 +1,84 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9993330B39;
-	Thu,  4 Dec 2025 16:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A84E2D5950;
+	Thu,  4 Dec 2025 16:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764866883; cv=none; b=Fg1UUnXbJClUJm775YkuL5n0CkDnw9ycZL18EneMNQmWXGLrc+bkizwir30G6WNkXpVKkOPBUUWM7Sc78F1kiKOW151nL9ysStCJqYdOkBYYn4jC/FmG0PjIg/U0JZdw1uExucdI9xSv6SHoAEQ8PBTWJ7dBc9EmQXJe7qtJFF8=
+	t=1764867238; cv=none; b=WUqzyrIFW7rMJO1h3VOqUqqrbIovyDLzsY7CChBkoz9nJ2HylZ+NGts9Li674XCLxovUYGHHu5IodmZHGyEsGcQuXUQ+TigrHyNKihzzAn3XaASKMxrPoielpMy9AEAgU9guhKO6ZcEchOk9ifWFgfJ27hEWPQfyLs7OBPjsr6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764866883; c=relaxed/simple;
-	bh=EkE0z2zzbR4yC9MaoW/nOBpvKzurJl2cMHIPauvwvLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kv8zSqZyEC4iE9J5BpKp9lFnbZ1YWwwZ54uK8z+yNQ8XeB7rfayoyMEI/wpgj6XdQDO1xfdtn6564TuS52iWO4YtPolc/iLl1S0t2YXNFxX7XGLRj4K9sRUxnVhtSZG5S2+owLiftOLuEFNhBv/64oKxpdmWfLZgLJ5B/ZdV92Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id E73521602CA;
-	Thu,  4 Dec 2025 16:47:49 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id CBA7434;
-	Thu,  4 Dec 2025 16:47:39 +0000 (UTC)
-Date: Thu, 4 Dec 2025 11:48:44 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Christian Loehle <christian.loehle@arm.com>, Samuel Wu
- <wusamuel@google.com>, Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy"
- <gautham.shenoy@amd.com>, Mario Limonciello <mario.limonciello@amd.com>,
- Perry Yuan <perry.yuan@amd.com>, Jonathan Corbet <corbet@lwn.net>, Viresh
- Kumar <viresh.kumar@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Srinivas Pandruvada
- <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Alexei
- Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
- <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, kernel-team@android.com,
- linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] cpufreq: Replace trace_cpu_frequency with
- trace_policy_frequency
-Message-ID: <20251204114844.54953b01@gandalf.local.home>
-In-Reply-To: <CAJZ5v0hAmgjozeX0egBs_ii_zzKXGPsPBUWwmGD+23KD++Rzqw@mail.gmail.com>
-References: <20251201202437.3750901-1-wusamuel@google.com>
-	<20251201202437.3750901-2-wusamuel@google.com>
-	<f28577c1-ca95-43ca-b179-32e2cd46d054@arm.com>
-	<CAJZ5v0hAmgjozeX0egBs_ii_zzKXGPsPBUWwmGD+23KD++Rzqw@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1764867238; c=relaxed/simple;
+	bh=BhtLrRJksViZCVJBbVVT7HdbfU1WgRqFsLQrjCOtIiI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mJNKJesCf8Tv6xQYEsggg1MCvhlzX0Hdgwk8aIwZd7svgpeBk7F/9ThoDYbS4FCcfCBvaA4hDRnUOMu+UgomJKy33JnWXyRO6U9y/uQfTTpAAkNvNvVHZ0KraF1tM4MMVVBsr9Eqkhk4C3MQnqJdlnem38drN6yg3xtFVQVteQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7BED339;
+	Thu,  4 Dec 2025 08:53:47 -0800 (PST)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ADE423F59E;
+	Thu,  4 Dec 2025 08:53:53 -0800 (PST)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH 0/2] tools build: Fix arm64's unistd_64.h dependency
+Date: Thu, 04 Dec 2025 16:53:40 +0000
+Message-Id: <20251204-perf_fix_syscall_header-v1-0-b8e27f74ed6a@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: CBA7434
-X-Stat-Signature: 5naxe6mx6ihc16m76ezutr5ep85hrf9p
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/J21Ccxet+KzrR4vtWh4885+nU0w2MNEY=
-X-HE-Tag: 1764866859-645779
-X-HE-Meta: U2FsdGVkX1+rIpoHDJmodDidRgnpgmXUk6kj76YJY9MmykbmTefvXvCnzhEWKuoD9usqsAAM1Ymp7UfIQETAvreqSDSvT0WOAF/NGAANWxHTF50AhOPFovpQT4TEj3VZ6JEcABbCAXAoz4LQg+rmH20p978O8vW7XUllbyUwPzpeDoIb830LrRJRmp76OAVhoCFOVK5cP3gx/SRNk7EInEmMsnRzTgi+o73h/QhXju7UNIAUdhIsgiN83m/meDZ8h7SxUAkR4H6YU4s6qGDLaAFGUu2nHlnRKmQ8digVjDTfSxIrBpaYASPH7g7WXJ5Y/Qwgc8WvVJYjVCED+yWcHyfe47kK2KsE
+X-B4-Tracking: v=1; b=H4sIAJS8MWkC/x2MUQqDMBAFryL7bSCJFtpepUgI5qVZECu7UJTg3
+ Q1+DsxMJYUwlN5dJcGflX9rA9d3NJe4fmE4NSZv/cN5O5gNkkPmPeihc1yWUBATxMA/bY6vwaV
+ xpFZvgmbd5890nhc0kbWdaQAAAA==
+X-Change-ID: 20251203-perf_fix_syscall_header-e280fa931d44
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1764867233; l=1413;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=BhtLrRJksViZCVJBbVVT7HdbfU1WgRqFsLQrjCOtIiI=;
+ b=yhNaeDVu+gqnZT50RValRrj2Gu51+AvkdK8BHnkM95duovC++g/yVX2oyHXOByAgSgKd2OMNI
+ cxMdKW3md8ZCI3RA+SB2lnamp6Ly1gsHzrIJpx98vMc+Wcw/DJNqu2o
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Thu, 4 Dec 2025 15:57:41 +0100
-"Rafael J. Wysocki" <rafael@kernel.org> wrote:
+Arm64's unistd.h is included in the tools build, but its dependent
+header unistd_64.h is missing.  This results in only a partial set of UAPI
+headers being available, forcing tools to generate unistd_64.h dynamically.
 
-> > perf timechart seem to do per-CPU reporting though?
-> > So this is broken by not emitting an event per-CPU? At least with a simple s/cpu_frequency/policy_frequency/
-> > like here.
-> > Similar for the bpf samples technically...  
-> 
-> This kind of boils down to whether or not tracepoints can be regarded
-> as ABI and to what extent.
+Because unistd.h is widely used across the tools directory, relying on a
+dynamically generated header is fragile, especially when a tool builds in
+multiple stages, each of which may include unistd.h.
 
-They are an ABI and they are not an ABI. It really boils down to "if you
-break the ABI but no user space notices, did you really break the ABI?" the
-answer is "no". But if user space notices, then yes you did. But it is
-possible to still fix user space (I did this with powertop).
+This series addresses the issue by adding a generated unistd_64.h
+directly to the tools tree, ensuring the header is available from the
+start and eliminating build failures due to header dependency.
 
-> 
-> In this particular case, I'm not sure I agree with the stated motivation.
-> 
-> First of all, on systems with one CPU per cpufreq policy (the vast
-> majority of x86, including AMD, and the ARM systems using the CPPC
-> driver AFAICS), the "issue" at hand is actually a non-issue and
-> changing the name of the tracepoint alone would confuse things in user
-> space IIUC.  Those need to work the way they do today.
+This series has been tested with Arm64 cross-compilation and confirmed
+that the BPF feature is enabled in perf.  It also verifies libperf
+in-source builds with applying this series.
 
-If the way the tracepoint changes, it's best to change the name too.
-Tooling can check to see which name is available to determine how to
-process the traces.
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Leo Yan (2):
+      tools headers: Add arm64's unistd_64.h
+      Revert "perf tools: Fix arm64 build by generating unistd_64.h"
 
-> 
-> On systems with multiple CPUs per cpufreq policy there is some extra
-> overhead related to the cpu_frequency tracepoint, but the if someone
-> is only interested in the "policy" frequency, they can filter out all
-> CPUs belonging to the same policy except for one from the traces,
-> don't they?
+ tools/arch/arm64/include/uapi/asm/unistd_64.h | 330 ++++++++++++++++++++++++++
+ tools/lib/perf/Makefile                       |  14 +-
+ tools/perf/Makefile.config                    |   1 -
+ 3 files changed, 332 insertions(+), 13 deletions(-)
+---
+base-commit: 267c2e633af6e9461477bed91e428993f8b36ee8
+change-id: 20251203-perf_fix_syscall_header-e280fa931d44
 
-I'm not exactly sure what you mean here. There is an "onchange" trigger you
-can use to trigger a synthetic event whenever a change happens. But I think
-the data here wants to know which CPU had its policy change. Hence the CPU
-mask.
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
 
--- Steve
