@@ -1,190 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5D021D3CA;
-	Thu,  4 Dec 2025 16:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B0618871F
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 16:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764865019; cv=none; b=brt6YVlzcWDqqN1v5juNHVK7P/4f/yTzV34ckqH/+MH0LgnR2ddGKlo5BqBE5GAKaiF/opbt7FoHEZA0qnFFMwApgv76ZruAeTC2tJKAKIW36pMrK7ac3VhCWuW9kv/etzuhQa0gKV+RAVrtbCtqviiKBaB7xJl7qiB64pM8qIY=
+	t=1764865587; cv=none; b=JMj9al+ZMWD/SG3DcPI/r4zberwnErS/2oIaJg4jkkc+e2VXDq24hf+j5pLe3/MP7WmpWbsMZKUn0hOqYqrGAle3GBsQfJIbUeSXqOLTUe46pno/rgrv9utwn+yfNWVRQ8sbzIYcV+m5RC6lIKur7vnazRRlWJeh8opo0NXodPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764865019; c=relaxed/simple;
-	bh=w+bnQF747FRQPyfTU7XxB1/U2YspG4WLg9S8Pf1uVqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e004Fgo4rq7u3/D/UCYoSiF3XJC78TSJzh/PapNxyB3cfLjt6gNWmMlc1jVXd/PupUAbWyZ/CCUmsaZCrtX4qi+FgKIuAaVNGrXeESmbKDZAoWEivnefcLNg3jLHUX5V9D8aEP1P17hGe4LhH7OGxIxs6ARnvfA22HABDTeZkOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2s3rbB/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764865587; c=relaxed/simple;
+	bh=O7HbtLaXuilVB2OB2qtbyBs0ythTqJf9VhCdEjayb+w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jdkvFMwr0tbJElLZhULTzT6i3rtGtW61ZOaQ+1xLy6u0AmFlJBwjaU3CNR7vMTDTZzh1e+zhOsYPlnTSKgwCRztfBD0GtyQB0iKl1RmHIF1I4QVPX9Y2SzWs3KshMBxNkpZXwnldfSQQOU0vPNqXiMyw306xY9nXF1okMXKnS3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nGAxt0WT; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2s3rbB/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C30DC4CEFB;
-	Thu,  4 Dec 2025 16:16:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764865018;
-	bh=w+bnQF747FRQPyfTU7XxB1/U2YspG4WLg9S8Pf1uVqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N2s3rbB/RF8vdWIZapqNzqzkjCbLI4ZNFJ79pf5Iaq7dPT4R1zjOT3WQmTpcGKFtf
-	 z4V50sC8cCxGEXYRnMOFCuqGZ+/7eb9UQJdg6jZKM3i7oK2XGHV110BUH9is7plmSN
-	 FMpoVIHqfKDLS/EsWJFcN1yavMFOfosZo8I2PhR5K6FGcVa3dyjvEEQXuO/5Mm71Zr
-	 ySwO+AaZ0IdggFbintKdMh5L0AyXpqURBMf7/rLeNwzEWnzu7gUvk3GcoaKAEGmSi4
-	 LLIkg6dLcYnfmza5DHXL3MtH50ULa+s7l3xFxOvkyC4L05Qv/reSoR9BMDtkxfiiEv
-	 tGgCzXMKAMb+Q==
-Date: Thu, 4 Dec 2025 13:16:54 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Quentin Monnet <qmo@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	bpf@vger.kernel.org, James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] tools/build: Add a feature test for libopenssl
-Message-ID: <aTGz9kFQk2xNvsbC@x1>
-References: <20251203232924.1119206-1-namhyung@kernel.org>
- <CAP-5=fU=G75jpsG-X6pa8_rdKapxVc615CqvcdSPBFesj02D6A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nGAxt0WT"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-295c64cb951so249585ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Dec 2025 08:26:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764865585; x=1765470385; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HRuck0o/ayMMH0+PU5Oqx6DlMomqKFq4SofG0rr8euI=;
+        b=nGAxt0WTopoGJ/JUJrCQL+Ghawm6umWU8fQ9P6BQhstS2ULKEkzPh3Fzjqn/wwZ9hR
+         bnMUCwHasHnb707d1mSrzkiiOIQuRftC/51UsgKLvRiALyHRxrR//aA1YOBpnEX6NWJn
+         PfcisAkNHVCjQoxtLbo4XaE2stCO/IDbrIcBtVw6rtT2K/PCvhLSbdcQKjH5U7kC0crY
+         YHe+ppSXCQfQW6+QX6/X4gvQNJRuuxNh9h+b4ScL9ue9+dGoyyYUVv6OS3vaqPPZIQHg
+         w+3ZC5cDhcY00v+bVEUUuXI8mZXkrkWguU9phrc5okM+kU4HwY2fQ/PQuId59rY27sQL
+         LRhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764865585; x=1765470385;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=HRuck0o/ayMMH0+PU5Oqx6DlMomqKFq4SofG0rr8euI=;
+        b=vOSIBSs0/M4F+7B8uIUQQxVQ85diBlEJ9wq2809s/bdLthNC2HkI2piWzerjbv7eqd
+         rxJTKHe00XMTP6/GnzWsH7l4ouWN5OHB22l+znA9WGoWuJOHQmUBNz8HxW6PaAcKnxNL
+         jWCAIRsC2FTkhXN70tGjawx0Ju/fghJTg7Dy1HVJjqMcIB71UOXcTYuKOPzVk6JpdgWU
+         nn3xHkPoCdjkBKc3pdRkpAcHy+/E11T7SpeQYG2I3TyCtOG+DXu52X/2GCYU9AtUoMkT
+         bZNU0fQ0+76swwwe93OaknKx9htxHnijtk17m2RPjZ+p07bpiQ27ZyzDfM9ivVTLpJBu
+         +84w==
+X-Forwarded-Encrypted: i=1; AJvYcCXAQmGNEOuLlfP9nF/DoIft7wFEr69ZAga8hwM2MaAhhc2qjB5slvyXARXFpQEJkbEVUhC71xgitB4fIsyPGbhC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLhJrfBzd2S2OWe2J9LZI/qQLGaQOWidzd2cj7yZU9V+HuMRnY
+	eYWVQ3U+LocEtjiKpYRuyYHdLJqKE//ymfOm0aY0K1EQX+5uZUbhfshFjnwVt2KSQRuttjf9Idj
+	mjrV7lJs1Ftqw1Kfeusaq7J/Hnjha7qcIx3gsiMJA
+X-Gm-Gg: ASbGnctKj0uRQJw/TepcImrRMn/iNI0kvxm49jWaznOizXk5cu4KmSBeuy1yStJkIeq
+	ey97vIDXa2s45bLlG0HTr4hILX50+YtEjNp4oChIxaKrNyZxPsnSVG2Wq5ipsv75fcVPFpLeazG
+	nEg8x3Ibx7PMiwn/6NVpgWTkNy1Eb1Sbhr9KNtCvztug4MGEn5wy4gLfCBOJQ1DE4AkMRwPMqhF
+	MY2/iC9nX07HROyw4k+7Jl9tq74w8CMC4UJzedaxyGNXj5R4Umftxnj9SHJEhpCKh3KovEiLQKt
+	AFoK3qWR+1XjQ1zbowdxZy1sQR8AWgkNw2rd
+X-Google-Smtp-Source: AGHT+IFrb0RuEPaUjEFdKS6f7fL7lCYr2fjaMsenvp46rFkKzNePDRZK4iIIJl6ap0l1COIHrix7hLzBcIAbZGqxUak=
+X-Received: by 2002:a17:902:e850:b0:26d:72f8:8cfa with SMTP id
+ d9443c01a7336-29dbe8fede5mr730745ad.13.1764865585125; Thu, 04 Dec 2025
+ 08:26:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU=G75jpsG-X6pa8_rdKapxVc615CqvcdSPBFesj02D6A@mail.gmail.com>
+References: <20251204-james-parse-events-test-v1-0-e6f922ca395e@linaro.org> <20251204-james-parse-events-test-v1-2-e6f922ca395e@linaro.org>
+In-Reply-To: <20251204-james-parse-events-test-v1-2-e6f922ca395e@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 4 Dec 2025 08:26:14 -0800
+X-Gm-Features: AWmQ_bkL9oUGmakw_tPZ3cllyhPphZGPqF7gEYueTv6c6dnex7eRawFWEOAazeE
+Message-ID: <CAP-5=fWvE1XSChS7mMxaFVi+y8A16gy4f=2bepKOZUpDK50+ew@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf test: Add missing newlines in debug messages
+To: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, leo.yan@arm.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 03, 2025 at 04:34:56PM -0800, Ian Rogers wrote:
-> On Wed, Dec 3, 2025 at 3:29 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > It's used by bpftool and the kernel build.  Let's add a feature test so
-> > that perf can decide what to do based on the availability.
-> 
-> It seems strange to add a feature test that bpftool is missing and
-> then use it only in the perf build. The signing of bpf programs isn't
+On Thu, Dec 4, 2025 at 1:11=E2=80=AFAM James Clark <james.clark@linaro.org>=
+ wrote:
+>
+> These debug messages bleed into the next log line. Fix it by adding the
+> missing newlines.
+>
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-It is strange indeed, I agree that since we don't use BPF signing at
-this point in the perf BPf skels, then we could just bootstrap a bpftool
-without such feature and continue building the existing features.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Adding the bpftool maintainer to the CC list, Quentin?
+I looked at the Fixes tag situation but there are a few different
+patches that did this wrong. Given this is debug messages in a test,
+backporting is a huge priority.
 
-- Arnaldo
+Thanks!
+Ian
 
-> something I think we need for skeleton support in perf. I like the
-> feature test, could we add it and use it in bpftool? The only two
-> functions using openssl appear to be:
-> 
->   __u32 register_session_key(const char *key_der_path)
->   int bpftool_prog_sign(struct bpf_load_and_run_opts *opts)
-> 
-> so we can do the whole feature test then #ifdef HAVE_FEATURE... stub
-> static inline versions of the functions game?
-> 
-> Perhaps we only need the bootstrap version of bpftool in perf and we
-> can just avoid dependencies that way. Looking at bpftool's build I see
-> that sign.o/c with those functions in is part of the bootstrap version
-> of bpftool :-(
-> 
-> Thanks,
-> Ian
-> 
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/build/Makefile.feature          | 6 ++++--
-> >  tools/build/feature/Makefile          | 8 ++++++--
-> >  tools/build/feature/test-all.c        | 5 +++++
-> >  tools/build/feature/test-libopenssl.c | 7 +++++++
-> >  4 files changed, 22 insertions(+), 4 deletions(-)
-> >  create mode 100644 tools/build/feature/test-libopenssl.c
-> >
-> > diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> > index fc6abe369f7373c5..bc6d85bad379321b 100644
-> > --- a/tools/build/Makefile.feature
-> > +++ b/tools/build/Makefile.feature
-> > @@ -99,7 +99,8 @@ FEATURE_TESTS_BASIC :=                  \
-> >          libzstd                                \
-> >          disassembler-four-args         \
-> >          disassembler-init-styled       \
-> > -        file-handle
-> > +        file-handle                    \
-> > +        libopenssl
-> >
-> >  # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
-> >  # of all feature tests
-> > @@ -147,7 +148,8 @@ FEATURE_DISPLAY ?=              \
-> >           lzma                   \
-> >           bpf                   \
-> >           libaio                        \
-> > -         libzstd
-> > +         libzstd               \
-> > +         libopenssl
-> >
-> >  #
-> >  # Declare group members of a feature to display the logical OR of the detection
-> > diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> > index 7c90e0d0157ac9b1..3fd5ad0db2109778 100644
-> > --- a/tools/build/feature/Makefile
-> > +++ b/tools/build/feature/Makefile
-> > @@ -67,12 +67,13 @@ FILES=                                          \
-> >           test-libopencsd.bin                   \
-> >           test-clang.bin                                \
-> >           test-llvm.bin                         \
-> > -         test-llvm-perf.bin   \
-> > +         test-llvm-perf.bin                    \
-> >           test-libaio.bin                       \
-> >           test-libzstd.bin                      \
-> >           test-clang-bpf-co-re.bin              \
-> >           test-file-handle.bin                  \
-> > -         test-libpfm4.bin
-> > +         test-libpfm4.bin                      \
-> > +         test-libopenssl.bin
-> >
-> >  FILES := $(addprefix $(OUTPUT),$(FILES))
-> >
-> > @@ -381,6 +382,9 @@ endif
-> >  $(OUTPUT)test-libpfm4.bin:
-> >         $(BUILD) -lpfm
-> >
-> > +$(OUTPUT)test-libopenssl.bin:
-> > +       $(BUILD) -lssl
-> > +
-> >  $(OUTPUT)test-bpftool-skeletons.bin:
-> >         $(SYSTEM_BPFTOOL) version | grep '^features:.*skeletons' \
-> >                 > $(@:.bin=.make.output) 2>&1
-> > diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-> > index eb346160d0ba0e2f..1488bf6e607836e5 100644
-> > --- a/tools/build/feature/test-all.c
-> > +++ b/tools/build/feature/test-all.c
-> > @@ -142,6 +142,10 @@
-> >  # include "test-libtraceevent.c"
-> >  #undef main
-> >
-> > +#define main main_test_libopenssl
-> > +# include "test-libopenssl.c"
-> > +#undef main
-> > +
-> >  int main(int argc, char *argv[])
-> >  {
-> >         main_test_libpython();
-> > @@ -173,6 +177,7 @@ int main(int argc, char *argv[])
-> >         main_test_reallocarray();
-> >         main_test_libzstd();
-> >         main_test_libtraceevent();
-> > +       main_test_libopenssl();
-> >
-> >         return 0;
-> >  }
-> > diff --git a/tools/build/feature/test-libopenssl.c b/tools/build/feature/test-libopenssl.c
-> > new file mode 100644
-> > index 0000000000000000..168c45894e8be687
-> > --- /dev/null
-> > +++ b/tools/build/feature/test-libopenssl.c
-> > @@ -0,0 +1,7 @@
-> > +#include <openssl/ssl.h>
-> > +#include <openssl/opensslv.h>
-> > +
-> > +int main(void)
-> > +{
-> > +       return SSL_library_init();
-> > +}
-> > --
-> > 2.52.0.177.g9f829587af-goog
-> >
+> ---
+>  tools/perf/tests/parse-events.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-eve=
+nts.c
+> index 128d21dc389f..62aa40d8114a 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -2627,7 +2627,7 @@ static int test_events(const struct evlist_test *ev=
+ents, int cnt)
+>                 pr_debug("running test %d '%s'\n", i, e.name);
+>                 test_ret =3D test_event(&e);
+>                 if (test_ret !=3D TEST_OK) {
+> -                       pr_debug("Event test failure: test %d '%s'", i, e=
+.name);
+> +                       pr_debug("Event test failure: test %d '%s'\n", i,=
+ e.name);
+>                         ret =3D combine_test_results(ret, test_ret);
+>                 }
+>         }
+> @@ -2764,7 +2764,7 @@ static int test__pmu_events(struct test_suite *test=
+ __maybe_unused, int subtest
+>
+>                         test_ret =3D test_event(&e);
+>                         if (test_ret !=3D TEST_OK) {
+> -                               pr_debug("Test PMU event failed for '%s'"=
+, name);
+> +                               pr_debug("Test PMU event failed for '%s'\=
+n", name);
+>                                 ret =3D combine_test_results(ret, test_re=
+t);
+>                         }
+>
+> @@ -2790,7 +2790,7 @@ static int test__pmu_events(struct test_suite *test=
+ __maybe_unused, int subtest
+>                         e.check =3D test__checkevent_pmu_events_mix;
+>                         test_ret =3D test_event(&e);
+>                         if (test_ret !=3D TEST_OK) {
+> -                               pr_debug("Test PMU event failed for '%s'"=
+, name);
+> +                               pr_debug("Test PMU event failed for '%s'\=
+n", name);
+>                                 ret =3D combine_test_results(ret, test_re=
+t);
+>                         }
+>                 }
+>
+> --
+> 2.34.1
+>
