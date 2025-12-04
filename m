@@ -1,67 +1,66 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBB21397
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 10:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA61331A42
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 10:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764845735; cv=none; b=Oclmrpj8tSQ4xPspiQzjHGu3N0MnX+RdsJD2EtP/YRq+g3Tq+Tek+ALGfvZBeJZ56NsMpAILeuHJs5f32C05VmyZJVVZaYjTHoUaTsYakxwqEqrzxxs46gV9E49RQ0YCL5aKBa+2xCDy1tIWs1pc5WkP48X1/QJ2K540joY2Wbs=
+	t=1764845745; cv=none; b=pCspTfIEeghDnhf3e+YLuSA8YblTDXMqXlzyT29DPyjE0UHo2r0hSjfSHZFxnVTFFOdlbUkQ/qrVLgO6Zn73+lx4jnu7z/HRrtQxbxVXYNSQUpcZA7oH/n3JuT7caxLVNWyLCZorGxPdl52YdAnXNXm8fZxXDN1ntWmE5Ftjx7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764845735; c=relaxed/simple;
-	bh=KfNAxcWsFDZtg0VgvwB9Evx0NV6h4p3bl4zs5YSIaR4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kLvpQ8mrfYydXXNJzeRsVX9GZmKRZE/qU+UvfpsyP+JJV0OJLUFVu++CaPVZ3qL4Y2Dp4rieQu5zDn3fvb4fXG4s0RWxFpHW6B/1ugZ5RQWUdL9uuFPH6YrfTeQFtdDHr7JL+EN8718UFlXco/L9gZ5NBPpNf9kThd9UDI3W/+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZrRQpNeL; arc=none smtp.client-ip=209.85.208.43
+	s=arc-20240116; t=1764845745; c=relaxed/simple;
+	bh=SgJNoLR6K3fNtJPZOlFwZxsl2xtwua+Et9HkEmnnc8E=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XdR4Lm3pyHHOr3Ofda+qcL+gmD9V6pypfmcDEmcdLQq6YI7JHv8Fdtj30fwiFGfGA2U/zXG5wP4zthr9ooLyI2IsCckmXCGa3v2HqCQrXKrgepQzgsbgmz2m6/GHQCUl3h7TDK9OPlFzOMWRTZ2zVhIIyZ72bZSfx0GKg6g9K50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M2JhWHiD; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZrRQpNeL"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6408f9cb1dcso1150877a12.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Dec 2025 02:55:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M2JhWHiD"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-42e2d02a3c9so535208f8f.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Dec 2025 02:55:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1764845732; x=1765450532; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WUsSSlUcY7wQnlMDz+NJbRcKuFysd8RLpXnuMwJEeMI=;
-        b=ZrRQpNeL2XRZKfb3aUPl7s+E29JnOz6u0NwPyHjqwzk6gWRKJxf3oBBfT4douEvDwR
-         hmosBOp0OQMApUvrrV0YKTaiTH/PY5lHGcrsxB8UeAWGFx7BWkv6t3T+1VobE7t7fspe
-         ST+sZ2EkshlY7Y2nc7D5zntcdBeoSCL8kFQjeI7fRk6VXvJOBoUUcAj7Yw/Fz+2RhbSV
-         hDFgSuUKTP1xwh5DY55O/T4hqBTVqpR1vGoZbtXoU+KpX75fGbyox9q0N2A4w22Atw0W
-         T0tY+T47BBCny3Fn8fp1cwcjaHDrdwvxTX9hsES4OHj4D6rHyA9RVDoZw7lv2ZxYHeTq
-         kPxQ==
+        d=linaro.org; s=google; t=1764845739; x=1765450539; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7MK1DoZ8jdaWVf6WB3pp5Ox5xAT5z0hNR1E+xIMlTlc=;
+        b=M2JhWHiDN90koGFzrh5dCJd4POstAJv7UXshzK0bLd0R9lqGOTyUCOUKGJWW+LCSCB
+         EELX7nC19dA/HRBkWgBYxBwN9AsWqiL+/KXL/dHyaeT7a7psrvRvb/v9/YTD2rGU9NYL
+         hdsD2tCzxW2dccYDU63g8+FiWZurSblHDMMhaswDCWoIrgXOzrkSch04A1HLtvQ758fQ
+         63RshHBv5ysHYD7KA7Df0tMnFLgauF2QKG8BXFCZ+qGHOQyryGoz/baQUHoADWbW/vD3
+         3NGSKwmgvewDyVdjLMA7dsZZuFFlCW1Q1m/5UKjsKiNj5m4GDWW4/+UIkzBmCv7Et60P
+         xhzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764845732; x=1765450532;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WUsSSlUcY7wQnlMDz+NJbRcKuFysd8RLpXnuMwJEeMI=;
-        b=s+dNdZiXCaoU31sPsxJijOtfdzdR7SP6Ujl+fNKiEpogdT3/e11tOdLMNvr0Rdz91Q
-         hH6rIS6yBlpWW4t6gLtjDSCjFha1Fh+znU0UUbwNDnb2vNTEH6F2BJ3RmzOzPOJeQP2I
-         k6UgtQMZcJXf+irJnNGVZQl256VUJQikBExCF7emhevdRB+v7E40qaEGsrhgB7iYDqQA
-         6hKPhaC9jKrQHTEkPgK09M8Tg2PCDEb2sC5tgY7Z6d4jacWPypCLuypmsr+78ZO/1GFP
-         P/cBoEQvr4wZkb6GLE9tTNE7I1l04NCmW4C9YDIHw4T8YMQQFGEEpjDmyrwJDtSOkyx7
-         h3Zg==
-X-Forwarded-Encrypted: i=1; AJvYcCXh8tY3Kga3BDp8eW6vyCAYoLtVTS8pVBkF8BVDI01slUC/71hatSW5vUvsdFT2MOy6M9sD00KIe3Zb9xfvfZmQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2KcjBFtrTQzy9c7qJlU/GskhP10mwtqgRQtDkLxpPKBozUJ7b
-	lFBr941VpfI2+NtjLJ9Rg/RtLpaNAgAwbwnLdbxruuQijkVrIljOxCsNUmqWJBfh+Og=
-X-Gm-Gg: ASbGncsJaiItFtqLpH4ldwDGgC94+C6xMrwr0pB/aotCQbmRVHQW1IxpazZruars8cU
-	pf+Wm/bEzEjIf/faaKt7f7kQSQyiP+aVnuxVsSEiUtzsbMdLoLvROfK4esBgAfEVv9ex4ssshRF
-	O+bM9v5a8+5JuVdtXSpo1Mrcav9nY8rxwJfyd5KxEaN+MRfnHIThWUrSJyyEdY3N0WG9PWijPu0
-	IoD7MKGwChNiFR/eKI3j2E+uNql0Z2aBvhLc+t/l6ZgDeRCfMUi/mayUvORC0TOAVeeSu7ugDhe
-	QjjzRidzDeg160cPl6kcSGt2kAfu1fo/UeQXXk/vycqh1gWWSWLpC9G+pKvn8iedqStJZPUOKnz
-	JOzKfvFMdm12UnUlWCFM5o3dH0xplAou1LV8m/j1rxUSEK+eNDO6Jl1q8+LVMmo7ugyRT7fnw+i
-	MkCmfd5R2B0Cp3aH9U2xa/UQJ2I5k=
-X-Google-Smtp-Source: AGHT+IENHvhi6pXKaJ+5f7nedg49gxJBxX0xpyd3BktUKwCryE/FZ4iNGolJufGPapWBjNh9KBoiMA==
-X-Received: by 2002:a05:6402:1d4e:b0:647:a570:b74b with SMTP id 4fb4d7f45d1cf-647abd99511mr2072101a12.14.1764845732199;
-        Thu, 04 Dec 2025 02:55:32 -0800 (PST)
+        d=1e100.net; s=20230601; t=1764845739; x=1765450539;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7MK1DoZ8jdaWVf6WB3pp5Ox5xAT5z0hNR1E+xIMlTlc=;
+        b=nFF8Hzutm2QBTYflDi8w56hzwpS3LV8VU3rW+gCyouqagsELyxv9jokQJety8r6BcI
+         EB9fqVZzyWwTGGc6/soURD1xgl4D/gIMgx5Tym5wlBtQUGjjZzfdEyG6DYmkkt5ATcjY
+         Trv/C6YItVLMUw28DmHw6JpGlO3PvBQKQDIkB3c/QsPY5JiLCVf7dDIWedSQmrPuP52L
+         XGXuzNfhsWUNZN32QokaORrv+FIfyv4zA5ENU+jzTCsXgdX0kzqudCRcXbscyMOtZcMF
+         iDNovrbfHdGhD8Xci+19kFo7UCCakyiCZsfIeYcTS1TyYDDffQJnCrKFwOYt5khJMvyo
+         Q3rA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ5JwH3508vxwSL51cjHx6twFZ9afUWJ58fmT1eTbKGG0pcDsCUosgvYbS+85e64uuMom+j5UV3nf6unP04bvT@vger.kernel.org
+X-Gm-Message-State: AOJu0YySC/p8jq3hYTANll614pkAPYJp2J0RiD8yAaHUFSjwdA7lC8jD
+	dDLmJQcNOZ4bsGiPvmz32o2yqCd6I+A9lxp+R7LCFwBdMBIbADUGqMy/12yMS6jEwbc=
+X-Gm-Gg: ASbGncvqKSxu8Fd09z6KTLv86xp6MnDebjUk/zmG19eoSC6qjz7mx2pqCywclmhYzDn
+	srYTcr/U7Gf8z4BDWcyzI0AKV8T3NkDjrTLgFLsOHXmRG5Q6HobmMYhIB6wSBOJf8gSdI6dDVVF
+	FKahSaU9yk3pNKKqtKccbTV1589dZ9wOISdgS+Lmj9drMcP4w8w2ek4cs0jwrxe9y9CXTSMCr4L
+	v0ydqpbTZlJ8dE92tx6JEELHYF1VRcssUPvPpsX9xCZCDIJ+JT9RJfxAHtPxh9lbdAZRnXQDhIK
+	0qaJxl7UmRRRjEqOGa7keilhH3LyEmPxjp78MiKNWYe4wDQ3lasx3o/bib+m1wKwAX0z2VB8egk
+	uTh7j+KOAk9KERdsh2uDhx7mFlWgjx7hJ+8aNCxdDjTPYyppuAO/D3T4MBpOMxlVfCVWteXYYX0
+	ZuEdzYVReb5M7cGnjoYh4jxFIjSlk=
+X-Google-Smtp-Source: AGHT+IF/hw6YXo0ND/050KonkHRNTrdsi5Huu1bqezplzyoJWuA2V3KAYQIym/bIYa2FHGR7FnQb1A==
+X-Received: by 2002:a05:6000:4029:b0:429:b8e2:1064 with SMTP id ffacd0b85a97d-42f731c3147mr5483314f8f.47.1764845739098;
+        Thu, 04 Dec 2025 02:55:39 -0800 (PST)
 Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-647b412dd8csm976684a12.33.2025.12.04.02.55.30
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbff320sm2520602f8f.18.2025.12.04.02.55.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Dec 2025 02:55:31 -0800 (PST)
-Message-ID: <6661f623-0b27-429d-92ee-785caf04e682@linaro.org>
-Date: Thu, 4 Dec 2025 10:55:30 +0000
+        Thu, 04 Dec 2025 02:55:38 -0800 (PST)
+Message-ID: <96c54895-cebe-4247-86e6-d41b8be0dd40@linaro.org>
+Date: Thu, 4 Dec 2025 10:55:37 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,8 +68,9 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/7] perf tools: apply evsel__set_config_if_unset() to all
- config fields
+Subject: Re: [PATCH 4/7] perf cs-etm: Don't use hard coded config bits when
+ setting up ETMCR
+From: James Clark <james.clark@linaro.org>
 To: Leo Yan <leo.yan@arm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -84,86 +84,55 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 References: <20251201-james-perf-config-bits-v1-0-22ecbbf8007c@linaro.org>
- <20251201-james-perf-config-bits-v1-2-22ecbbf8007c@linaro.org>
- <20251202111403.GS724103@e132581.arm.com>
+ <20251201-james-perf-config-bits-v1-4-22ecbbf8007c@linaro.org>
+ <20251202114300.GV724103@e132581.arm.com>
+ <53b24702-eb3b-4e08-bca3-70402eaf4db5@linaro.org>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20251202111403.GS724103@e132581.arm.com>
+In-Reply-To: <53b24702-eb3b-4e08-bca3-70402eaf4db5@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 02/12/2025 11:14 am, Leo Yan wrote:
-> On Mon, Dec 01, 2025 at 04:41:05PM +0000, Coresight ML wrote:
+On 02/12/2025 11:53 am, James Clark wrote:
 > 
-> [...]
 > 
->>   void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
->>   				const char *config_name, u64 val)
->>   {
->>   	u64 user_bits = 0, bits;
->> -	struct evsel_config_term *term = evsel__get_config_term(evsel, USR_CHG_CONFIG);
->> +	struct evsel_config_term *term;
->> +	struct perf_pmu_format *format = pmu_find_format(&pmu->format, config_name);
->> +	__u64 *vp;
-> 
-> Should check (format == NULL) here and bail out for a unknown config name?
-> 
+> On 02/12/2025 11:43 am, Leo Yan wrote:
+>> On Mon, Dec 01, 2025 at 04:41:07PM +0000, Coresight ML wrote:
+>>
+>> [...]
+>>
+>>> @@ -746,7 +779,7 @@ static void cs_etm_get_metadata(struct perf_cpu 
+>>> cpu, u32 *offset,
+>>>       case CS_ETMV3:
+>>>           magic = __perf_cs_etmv3_magic;
+>>>           /* Get configuration register */
+>>> -        info->priv[*offset + CS_ETM_ETMCR] = cs_etm_get_config(itr);
+>>> +        info->priv[*offset + CS_ETM_ETMCR] = cs_etm_guess_etmcr(itr);
+>>
+>> I still think cs_etm_get_config() is better than cs_etm_guess_etmcr().
+>>
+>> For ETMv3, we directly pass CONFIG to the kernel, and after validation
+>> in the dirver, then the value will be set to ETMCR.  If we already know
+>> the config value is consistent between user space and kernel, why
 
-Good point, yes I'll return without any errors. It will be slightly 
-inconsistent with the other config functions that return an error if 
-it's not found, but it's consistent with the existing function which is 
-a nop in that case.
+One other note is that since moving the timestamp field, this is no 
+longer true either. The value in attr.config isn't directly put into ETMCR.
 
->> +
->> +	switch (format->value) {
->> +	case PERF_PMU_FORMAT_VALUE_CONFIG:
->> +		term = evsel__get_config_term(evsel, USR_CHG_CONFIG);
->> +		vp = &evsel->core.attr.config;
->> +		break;
->> +	case PERF_PMU_FORMAT_VALUE_CONFIG1:
->> +		term = evsel__get_config_term(evsel, USR_CHG_CONFIG1);
->> +		vp = &evsel->core.attr.config1;
->> +		break;
->> +	case PERF_PMU_FORMAT_VALUE_CONFIG2:
->> +		term = evsel__get_config_term(evsel, USR_CHG_CONFIG2);
->> +		vp = &evsel->core.attr.config2;
->> +		break;
->> +	case PERF_PMU_FORMAT_VALUE_CONFIG3:
->> +		term = evsel__get_config_term(evsel, USR_CHG_CONFIG3);
->> +		vp = &evsel->core.attr.config3;
->> +		break;
->> +	case PERF_PMU_FORMAT_VALUE_CONFIG4:
->> +		term = evsel__get_config_term(evsel, USR_CHG_CONFIG4);
->> +		vp = &evsel->core.attr.config4;
->> +		break;
->> +	default:
->> +		pr_err("Unknown format value: %d\n", format->value);
->> +		return;
->> +	}
->>   
->>   	if (term)
->>   		user_bits = term->val.cfg_chg;
->> @@ -1396,20 +1436,8 @@ void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
->>   		return;
->>   
->>   	/* Otherwise replace it */
->> -	evsel->core.attr.config &= ~bits;
->> -	evsel->core.attr.config |= field_prep(bits, val);
->> -}
->> -
->> -static struct perf_pmu_format *
->> -pmu_find_format(const struct list_head *formats, const char *name)
->> -{
->> -	struct perf_pmu_format *format;
->> -
->> -	list_for_each_entry(format, formats, list)
->> -		if (!strcmp(format->name, name))
->> -			return format;
->> -
->> -	return NULL;
->> +	*vp &= ~bits;
->> +	*vp |= FIELD_PREP(bits, val);
->>   }
+>> introduce a redundant "guess" operation here?
+>>
+>> Thanks,
+>> Leo
+> 
+> Because userspace doesn't always come up with the same value as the 
+> driver. For example right now in ETM3, ETMCR_RETURN_STACK isn't set 
+> depending on certain conditions that userspace doesn't know about.  ETM4 
+> has the same for TRCCONFIGR_RS and maybe some others. In the future, 
+> other versions of the driver could do different things as long as we 
+> don't break decoding.
+> 
+> I didn't want the function name to imply it was doing something it 
+> wasn't as that confused me a little bit. It's definitely not "getting" 
+> the value. Maybe "guess" isn't the best it could be, but it's not far off.
+> 
 
