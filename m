@@ -1,144 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C882F39B9
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 17:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198362DA768
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 18:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764869110; cv=none; b=rzn2rP4v4cp45nfpzAxfVZu2s6mo/+K9udOKA4JqrqNXYt7/lDjOjqD2Z5/qVrvW+yuf3yw33vYQkzffzXuw2xXBE25htnneSSfiPZLViOGa2v+2qfY1qSoBXnARtQAROJLMSoI+M7SXXLBH9LdR8BTd9xY1OBVsPEt0gSQi4bM=
+	t=1764872414; cv=none; b=Ea6U0+Qxr6tkm9lLCKf7DEGddVuKsQCFmJ4Qi8/lp22qqEP7CkhgYhN6m0G7tP3++pBQhryxBdBTYasGWnTX/FsWoZot1MDUiExU3+38swu0IZc/GTtWbAl8hVO1PO1RCpxVqxFpJ45qzOsHNJ/SGHaPJdMtBtPLpGAC3MLICE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764869110; c=relaxed/simple;
-	bh=w4DudhomAtyMI1TwgWxj2bPlJOA+LZwDMSH+WEth98E=;
+	s=arc-20240116; t=1764872414; c=relaxed/simple;
+	bh=uGmQrKojHbfjgbGYv8My25L7Ow9cjr6R4cePCS1/ChM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ut5bgTsz6f7OdecHAAirljWfEVnnKYal1/xLXMSl1lbeNOl9Cu2GUyrp1uZKyPpt9LPq/42m4UzE+ELYNRpEV20FjMwphsh7L23g5xBuIlVAV7EEEGayRZ/DDHbhrHJZ5eBek3OiUXSeAzYb07EC4P8OWyiGmVGGZjWiseqhIZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XRcrsxzJ; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Lzi7xMPUW5boEFEO4PtItbcQkDFldHb6ZD3yeb8i/YkHQxZ9r9amM/5C+sg7pRdq/ubMqyNG5DgKAVPouZLsXBXULNyqEPYznysIt/tRz9eTvGcq+4fq4mgycNwH8gml2BjQ9iCcvKCUSqTZvfOopRn25hwzK7CQgNehQnDnfuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OsQwZ/1u; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XRcrsxzJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7616C16AAE
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 17:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764869109;
-	bh=w4DudhomAtyMI1TwgWxj2bPlJOA+LZwDMSH+WEth98E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XRcrsxzJVKTpceabtl5pcstGUoqpNlTZAMm3EaW9HxGW3FGnaB9cfRtL7hH2y9mz0
-	 cUl6F/DP3vmzVZGX6t2ePNsiD5o/+0Z5pvudbQT017kN+oamwD3ZuzN9IZmzOWuCRR
-	 DB/8u7FK9ZkmYDUSL5tR4LOkA+2bro+kOxsYjGkdPC7ucKA4E5lmZCsiuGn7V59xtc
-	 D5euXb4Rhp6SaVQQ9xGXKeZjptIFhc5f/kdmp7p1lTJ/rkD+BI0scZxd2BXw0grxD7
-	 LNpJj8NKljMOjpxy19K2azKLPVTB0eMeT2jV/bJQNU58dpGJ78WMUlXtEcT/2qW3nL
-	 MN5zGDf4D2yqg==
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-45066bee74aso377980b6e.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Dec 2025 09:25:09 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVV8u0SAN/4hFU4Sa4xfj5Deuapb2anNNVAcsloYInFBJc5JrrUjmlwRVpEwCXKkx5bJx7K1775OkNLbqnjhJ6s@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrhOgg5EAg5idqEMC6gTZBp+QNjQi06yLbOfm+dQTP7VgREPmK
-	F5BaxX3fwYO8wusHWmRghqMTNPYykP/tggUvRmn/P6hahaPWFTki0GKd4bJxUX3QTLPdkpY0XlD
-	SkiTJInHEz6ZNNH13I2E5Q15ObdhiWgs=
-X-Google-Smtp-Source: AGHT+IFdqRMTGYpfrIBkL/94H/4UVZLUsxsDPuVlgRIpWLfDNTMjGKr6U2rZEn17oThUm6ZKuIH5u+kR3ynMKeZ2BJA=
-X-Received: by 2002:a05:6808:1308:b0:44d:badf:f41a with SMTP id
- 5614622812f47-4536e52b830mr3093125b6e.32.1764869108561; Thu, 04 Dec 2025
- 09:25:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OsQwZ/1u"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-29852dafa7dso7645ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Dec 2025 10:20:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764872411; x=1765477211; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i7UGDbYN0HgmxODNA4VdtXLtFmyqVq5pKIjkg+oiyjs=;
+        b=OsQwZ/1uqN4J0t/sMo4rly6qnIp5UCxaj9HwvVD4Gvjc60azn8zvcsaa3vsMPxSfD+
+         xqEoK+DAXHHl7J3PW3kzBUwBeSNjU/7pkA8k9RfwpM3O3bjbpfgWfCJi8ijUBIUmxMMG
+         G4oUYqr27xyEf2GGE7FSY0AKcBr/dkNMsUIZWUutV1tY566ko0FIlXVUL5E9MA8szFhx
+         sXMBbu/J4f0oG4MgqKiIYTfytmeITGHkYOnTHeQJDxHwpG9isD1jaZ57p6akOyPbSGru
+         LT+xVI92paPxDMZz6l/fp4S0IV5sl3Zhgnfyu9p39QHqAUyF5jnHHaZ4AWxqGaUiqVWv
+         mBQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764872411; x=1765477211;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=i7UGDbYN0HgmxODNA4VdtXLtFmyqVq5pKIjkg+oiyjs=;
+        b=TdCREWfvgQIZ7JlGb92cAdIpCDgGOLzkkjbePwXqzMpGHtvDJXstaYo7U2qgN5hpuH
+         fdditPNLO0w03+mXxM4usUzoDp2+i/J/N2IayE8V9Ebp5k8n7g5dvVq7HCpBGArA64Kt
+         qwVSAAMIPSyjhCGvDLJDS+i5SOEfxdMKcnE26rJ10BjS2Bm+UI8yCuWrBqjy92rezmI8
+         TMM2+TM5e98ib3Yk7pwMD08avf2S4vLeW7YFVHWn1QehhNywAO1D3+ImzkoIo6w7+hZv
+         ZY/GZrQjQWYUmZmLItm+/T61MAIIcyOMw1mUT+JHS8stPMtgtz6KQeL/DMQWiaL9f6P3
+         2txw==
+X-Forwarded-Encrypted: i=1; AJvYcCXX1Ld140D3cHM6psfuI8fOesqKjA6/woVbP1RLDXuxPeABJ9H0ENnns4Yc+P1rhzIvwas1jBjcLnllAo47dGDZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2g4NXvTjmhx9WdHIkgzOGgjDa24QcDvdZKKYbZbDZXUcrSwFr
+	AzpJCJbyT0pL7aeSk8im//A+usiz3qqloGbagEu3bvpZO/udWWNPzOmFY2fLVPBjMOHCLfnD99z
+	5dZ2ecf2kqywgOoT49yK7ZCUm6gKWDc+TmCXlPhqV
+X-Gm-Gg: ASbGncsDjslOjZ98nFEl0DgctacGvLDkF+ZEuG153zi1ewO93aEQnXuAO3u0pXVV+CR
+	fNWfuf3mCqpCNSq2sMAJ7oFalFOpgOKqYkjIa9ZnU1vI13fEjASfWbzDjjJVnesbErhAuTxy3Pt
+	xFtrttYrRp3dYqqdhdvw8ieR/gE9ORofE04SWmRORNj599pkeYPUpd3KiL0WQid2wLFmrm/0Gtp
+	Rzsy5Ulu6YgyjSL130gvFP44m6NuJNXMWdpUz1TayRaSS0QyRRvk/WhPDcm/m11s7vvbHyJJxSd
+	n6oosPZTKIt28SxRYLf564jxiQ==
+X-Google-Smtp-Source: AGHT+IFf+VWpRoPAv192tHNIq38glaxoIijpwbtfMXFCpvOLbawe6MNxrX/jmz5K/0lxeQFPbP5CHSNCMYrEj6F6uUM=
+X-Received: by 2002:a17:902:ea0c:b0:299:c367:9e03 with SMTP id
+ d9443c01a7336-29dcd8c62a4mr70705ad.18.1764872411110; Thu, 04 Dec 2025
+ 10:20:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251201202437.3750901-1-wusamuel@google.com> <20251201202437.3750901-2-wusamuel@google.com>
- <f28577c1-ca95-43ca-b179-32e2cd46d054@arm.com> <CAJZ5v0hAmgjozeX0egBs_ii_zzKXGPsPBUWwmGD+23KD++Rzqw@mail.gmail.com>
- <20251204114844.54953b01@gandalf.local.home>
-In-Reply-To: <20251204114844.54953b01@gandalf.local.home>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 4 Dec 2025 18:24:57 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0irO1zmh=un+8vDQ8h2k-sHFTpCPCwr=iVRPcozHMRKHA@mail.gmail.com>
-X-Gm-Features: AWmQ_bmbIJSS9C0PX7f-im5Va5YR_TWQXMQtQLR9w9H1jR--rFQSko9z5SAsOhM
-Message-ID: <CAJZ5v0irO1zmh=un+8vDQ8h2k-sHFTpCPCwr=iVRPcozHMRKHA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] cpufreq: Replace trace_cpu_frequency with trace_policy_frequency
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Christian Loehle <christian.loehle@arm.com>, 
-	Samuel Wu <wusamuel@google.com>, Huang Rui <ray.huang@amd.com>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Perry Yuan <perry.yuan@amd.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+References: <20251204-perf_fix_syscall_header-v1-0-b8e27f74ed6a@arm.com> <20251204-perf_fix_syscall_header-v1-2-b8e27f74ed6a@arm.com>
+In-Reply-To: <20251204-perf_fix_syscall_header-v1-2-b8e27f74ed6a@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 4 Dec 2025 10:19:59 -0800
+X-Gm-Features: AWmQ_bmidjMG4fWzPpsr-eDCkaa5ZHJi6Jiu7ERoPT2EOBvLSxtMTBW1reHdG44
+Message-ID: <CAP-5=fV-d_X1uFYACEOJOxOY43+fj9aEm0_bp7NGSo9kZVMJ4Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] Revert "perf tools: Fix arm64 build by generating unistd_64.h"
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	kernel-team@android.com, linux-pm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 4, 2025 at 5:48=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
+On Thu, Dec 4, 2025 at 8:53=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
 >
-> On Thu, 4 Dec 2025 15:57:41 +0100
-> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+> This reverts:
 >
-> > > perf timechart seem to do per-CPU reporting though?
-> > > So this is broken by not emitting an event per-CPU? At least with a s=
-imple s/cpu_frequency/policy_frequency/
-> > > like here.
-> > > Similar for the bpf samples technically...
-> >
-> > This kind of boils down to whether or not tracepoints can be regarded
-> > as ABI and to what extent.
+> commit 8988c4b91945 ("perf tools: Fix in-source libperf build")
+> commit bfb713ea53c7 ("perf tools: Fix arm64 build by generating unistd_64=
+.h")
 >
-> They are an ABI and they are not an ABI. It really boils down to "if you
-> break the ABI but no user space notices, did you really break the ABI?" t=
-he
-> answer is "no". But if user space notices, then yes you did. But it is
-> possible to still fix user space (I did this with powertop).
+> Since we now have a static unistd_64.h for the arm64 build, there is no
+> need to generate unistd_64.h in libperf.  Revert all patches related to
+> generating unistd_64.h.
 
-My concern is that the patch effectively removes one trace point
-(cpu_frequency) and adds another one with a different format
-(policy_frequency), updates one utility in the kernel tree and expects
-everyone else to somehow know that they should switch over.
+Could we generate the file and then compare the two? We do something
+like this for empty-pmu-events.c here:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/Build?h=3Dperf-tools-next#n49
 
-I know about at least several people who have their own scripts using
-this tracepoint though.
+Similarly, could we get rid of the unistd_64.h generation and just add
+a build time validation test? Generating the file is painful in many
+ways, as this series testifies.
 
-> >
-> > In this particular case, I'm not sure I agree with the stated motivatio=
-n.
-> >
-> > First of all, on systems with one CPU per cpufreq policy (the vast
-> > majority of x86, including AMD, and the ARM systems using the CPPC
-> > driver AFAICS), the "issue" at hand is actually a non-issue and
-> > changing the name of the tracepoint alone would confuse things in user
-> > space IIUC.  Those need to work the way they do today.
+Thanks,
+Ian
+
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/lib/perf/Makefile    | 14 ++------------
+>  tools/perf/Makefile.config |  1 -
+>  2 files changed, 2 insertions(+), 13 deletions(-)
 >
-> If the way the tracepoint changes, it's best to change the name too.
-> Tooling can check to see which name is available to determine how to
-> process the traces.
-
-If it is updated to do so, yes, but in the meantime?
-
-> >
-> > On systems with multiple CPUs per cpufreq policy there is some extra
-> > overhead related to the cpu_frequency tracepoint, but the if someone
-> > is only interested in the "policy" frequency, they can filter out all
-> > CPUs belonging to the same policy except for one from the traces,
-> > don't they?
+> diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+> index 7fbb50b74c00b3b99ac538821124e04bfbc6da6a..ffcfd777c45181960afc7505e=
+f8f85d0b7ea7e8d 100644
+> --- a/tools/lib/perf/Makefile
+> +++ b/tools/lib/perf/Makefile
+> @@ -42,7 +42,6 @@ libdir_relative_SQ =3D $(subst ','\'',$(libdir_relative=
+))
+>  TEST_ARGS :=3D $(if $(V),-v)
 >
-> I'm not exactly sure what you mean here. There is an "onchange" trigger y=
-ou
-> can use to trigger a synthetic event whenever a change happens. But I thi=
-nk
-> the data here wants to know which CPU had its policy change. Hence the CP=
-U
-> mask.
-
-IIUC he wants to trace frequency changes per policy, not per CPU
-(because there are cases in which multiple CPUs belong to one policy
-and arguably the frequency doesn't need to be traced for all of them),
-but tooling should know which CPUs belong to the same policy, so it
-should be straightforward to use that knowledge when processing the
-traces.
+>  INCLUDES =3D \
+> --I$(OUTPUT)arch/$(SRCARCH)/include/generated/uapi \
+>  -I$(srctree)/tools/lib/perf/include \
+>  -I$(srctree)/tools/lib/ \
+>  -I$(srctree)/tools/include \
+> @@ -100,16 +99,7 @@ $(LIBAPI)-clean:
+>         $(call QUIET_CLEAN, libapi)
+>         $(Q)$(MAKE) -C $(LIB_DIR) O=3D$(OUTPUT) clean >/dev/null
+>
+> -uapi-asm :=3D $(OUTPUT)arch/$(SRCARCH)/include/generated/uapi/asm
+> -ifeq ($(SRCARCH),arm64)
+> -       syscall-y :=3D $(uapi-asm)/unistd_64.h
+> -endif
+> -uapi-asm-generic:
+> -       $(if $(syscall-y),\
+> -               $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.asm-headers ob=
+j=3D$(uapi-asm) \
+> -               generic=3Dinclude/uapi/asm-generic $(syscall-y),)
+> -
+> -$(LIBPERF_IN): uapi-asm-generic FORCE
+> +$(LIBPERF_IN): FORCE
+>         $(Q)$(MAKE) $(build)=3Dlibperf
+>
+>  $(LIBPERF_A): $(LIBPERF_IN)
+> @@ -130,7 +120,7 @@ all: fixdep
+>  clean: $(LIBAPI)-clean
+>         $(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
+>                  *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) =
+.*.d .*.cmd tests/*.o LIBPERF-CFLAGS $(LIBPERF_PC) \
+> -                $(TESTS_STATIC) $(TESTS_SHARED) $(syscall-y)
+> +                $(TESTS_STATIC) $(TESTS_SHARED)
+>
+>  TESTS_IN =3D tests-in.o
+>
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 6b62fea21a0ad1caf99d75d06fc29d2b05007931..b1e39fe0cf40ce1419b19a11d=
+accc18853d5cfe6 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -64,7 +64,6 @@ include $(srctree)/tools/scripts/Makefile.arch
+>  $(call detected_var,SRCARCH)
+>
+>  CFLAGS +=3D -I$(OUTPUT)arch/$(SRCARCH)/include/generated
+> -CFLAGS +=3D -I$(OUTPUT)libperf/arch/$(SRCARCH)/include/generated/uapi
+>
+>  # Additional ARCH settings for ppc
+>  ifeq ($(SRCARCH),powerpc)
+>
+> --
+> 2.34.1
+>
