@@ -1,66 +1,63 @@
 Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855BE333727
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 22:50:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D803303C81
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 22:55:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764888628; cv=none; b=MC10iCZrGyyshuj2+/un/O4d7pc9Bn8xfKKp3O4ZwXUj7A4hXCC4wa1PaDm0oEsdmzYlskcjxqTzNt2Bh0+ffcIl+OZ8itSpDCwy3a4g2+hH8B/Rcofn1xQJvtlQufeuPO2B/bT3NLs7r0qnacfuQPXlGGL28yrjHP5poWqfN+E=
+	t=1764888929; cv=none; b=p8KdQCIhIOg6o01UQ1b3nrVa57koXAhQ/pAn3+aavpU5NBXIMqcjUhfvYuO7PzvJDmG9YvXVJyJ5l896igU1EZbhJaELIL4Se6REeQ/BWXUTydyp4ehKWqPItvmku61kQpNTXZo9ETAJBtO5dWEUYW29K23QHpzANzteH/8TlMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764888628; c=relaxed/simple;
-	bh=p2qLeL6ruS/pkqb6aE1taSPsrmNe+crh+IRoGZZnhU0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=lQCtn/ejxxbosnP7wU8NO+gJmRfVU35sdv+xwUM+141SrkXiO9Of/ZQjmkWhD8+yhAUPkYPfiOg+la8fzdjp1OMG4s30t7fE8QIqfyEdz6YzpoSYgzcDoTgFic2NS++IGg4qqvT9DOai+up+0T6i1SHx5wmOUdtAo6gZMhrCRsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bk8LK1N+; arc=none smtp.client-ip=209.85.215.202
+	s=arc-20240116; t=1764888929; c=relaxed/simple;
+	bh=G7pNIVhA1TXObmnFY7+cd5kvUOCU2C28ebfuPdpleTs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=gwRS5qssU5agLGtUhNxYl19Y5NWZuJZGtkcubKNVHNIY5au+eaPZGLw9A/uoeqbmO7OpI+UapwOVALzu98vENMmYNJBxXHJJgVIqubBckeleJvnxx2ZXc0/LUTs+t/DZxHdnpMMSt4uBLQVDpPN1IfMs9ZwQqvOcj5kg6riNHwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aG46mUQQ; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bk8LK1N+"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-bc0de474d4eso3091460a12.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Dec 2025 14:50:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aG46mUQQ"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-bf493d248baso2363766a12.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Dec 2025 14:55:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764888622; x=1765493422; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dDwI/M2EFWmojd9V/GQAN6QyfpviaBffARtENrFg12c=;
-        b=bk8LK1N+mY0hmBpR+CDbfcGcAopSmnYz+6HuClE3drGyRnLMWysuTkCm88b3Zmg9kw
-         swDZGT4IsUE/4P5pdfAlHQC+8b59UwRqymrkY3y7a5WQJFhs6xiYcbIwg+RDaCbFVBzR
-         qXLX7uHUCNRSQ5fd11sBLYjeO6Q9z8kA3yPEAzxhcsxNzHfhdzvfDhSq3I9f70TWZoiY
-         CIpTGARyR42vRuDWDbqq/D0nQV8uPl2rE4cD6X8Mc+w8b+90+PI2w1er/71gE1PPRLvA
-         epRTaivvMuepauSBVfFsYQ+alCTvWknCPA5B7ALAAOO8U0ohEEMJAavf23OqEjBQrPpf
-         +OCg==
+        d=google.com; s=20230601; t=1764888925; x=1765493725; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=A7czelWahvvfZQW+IquXER+uuj/HdN565wv3OdCn5dY=;
+        b=aG46mUQQVayGeL98QawNrSwxmV2JwtvJ9ZIJy7ZDpkdZQnDTxMNBS6YBx6rFdU5piI
+         lVP8mWbZknodWiRb+yZtsgLu2T3gHCLM3yU1eEp3WUPHMftAjqY+/H6NT8rf7yzs7pka
+         0Y4zLuSAjhvOYWzPmRscmZDlxCeMUsfjAxABiY8bLQlqxnERpbKHDCjqjmpWROG04VM0
+         1aSTpDHirR+ACfTLdii/szMdGTHI0Fx7wqh7Vr3YYxtSv+V5n24XaGxb0ObeEKir+W9C
+         Uu85maWYjDGooTmKWnvcx4xZ9IlIv1slLpDeHsSysdbDyiyaI4dun8pWUvZje5Cxbfuk
+         ZZ8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764888622; x=1765493422;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dDwI/M2EFWmojd9V/GQAN6QyfpviaBffARtENrFg12c=;
-        b=Epg2r0w4x5/T0vT6J9DUv8D7yGUmqWQORMUgXL7EQ+wgXj3oiRg1zkMOaU08idcJzN
-         D/WghAYQrMvtHWW50A9U+K3uePS6aV4QWIGB37EVb6eUfIVBtrPdzQyKi26DybZLmDNK
-         2AZJrjR/tAKoQzpYCexqP1/BEVf3e8Kmt74gre0jXqty1limsbv+sYFvDwQ5etE01qXb
-         Jz9BYsUqZVvsLlRjHRInZs4BnftmdDswJSzaAPn+bFbolrp/lIi/KKJC3wzXV17YJSIJ
-         r9iFRjlmd0BvIWGIIeGLzTtR5AzlVxyLpehcB8DYT79vA30W8eeURCeSwqMdp13NMgxl
-         r5ig==
-X-Forwarded-Encrypted: i=1; AJvYcCXMqkL54eT2C9DjRcACggqR7HtrUntGMknSPtkymP2f2hXdQtUKAzGGDP9JyMdVJCWzuWXJ3jdVHB+cFzPfMlqk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh5pvRhlMm7S9aZ0+fQ5LbpPqgHCxMCxarkgBgSL1aIZedMHpr
-	jDxwAIyNSpQ3SGmtnAoynTKA94IkxocSX+bpECuh6gytXkIXtHS+JyQ7AyAHMlPYEjYeV/Fw/uK
-	IuGD0yMgfDg==
-X-Google-Smtp-Source: AGHT+IHt9EN97y1PErPO5IclmGoF4/jKv4qG2omMnV+lk8/HKNL8WPctEV5EcLxGp0k/+ElEa3kb7CVxLRW6
-X-Received: from dybmc14.prod.google.com ([2002:a05:7301:198e:b0:2a4:721c:5daf])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:f78a:b0:2a4:3592:cf76
- with SMTP id 5a478bee46e88-2aba45007c4mr2961738eec.26.1764888617729; Thu, 04
- Dec 2025 14:50:17 -0800 (PST)
-Date: Thu,  4 Dec 2025 14:49:24 -0800
-In-Reply-To: <20251204224924.639406-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1764888925; x=1765493725;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A7czelWahvvfZQW+IquXER+uuj/HdN565wv3OdCn5dY=;
+        b=vTs4cef9rRYGhdvcKe82zJixxhQ6FKC3rs+cbbrO7clXbgGHJ2fBehgIHqgstJa0dq
+         c6zMdkENmQwdpJxbIfLn31oK7M1stmLtdENiLGozhowdu1iuFUKdNiQRsMZo9w1YMebA
+         2vztdHvIyx85GCCBEIThmghfXBj76xX7BcJ0VOOcWPsk55YlSkVNd8DPf8GTK1X4QWv/
+         Iwo3oPQwsidnmn5DqrIPbSamJMbkocq0fVnvhl8ou+DNUQ9HCuefH/YrCktOdx1KU/Le
+         epsdmWen5jNO/w4838X6lq2hyCt1P+gkwXLhWbEZBPHXcvpYjih6tly9glZ/aOU0zfrE
+         cg3w==
+X-Forwarded-Encrypted: i=1; AJvYcCXxB89cKm64b8VbP0r8dPJCeEqFZoVZSUqei/hKvFTWWCkrlJvAyRi/4biDJxe1JeuF1gxG1j29s12KWApjPMGC@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyYI/p/whdfmIEmnLVgtovbXwjQJa93fM+hoPRtRrviEXKHroZ
+	LSyNtlQXEKg/LJuui8gaOGCr1PQp9bpuyaYUZI3Q9/KXoCgCBe9B3D09K+QrvxsdXdmxGUCWvek
+	rV2lfDJdSXQ==
+X-Google-Smtp-Source: AGHT+IFxsVk1sW9cjUulSOztIaLSd39e7TdMm+r1aotcotXO7b3lEV0XaciSXdvu8cMA9M0vfVhVHWzKwQ3L
+X-Received: from dycnm7.prod.google.com ([2002:a05:7300:d187:b0:2a4:59ce:b584])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:4283:b0:2a4:3594:d54a
+ with SMTP id 5a478bee46e88-2ab92e3a972mr4367342eec.23.1764888925427; Thu, 04
+ Dec 2025 14:55:25 -0800 (PST)
+Date: Thu,  4 Dec 2025 14:55:21 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20251204224924.639406-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
-Message-ID: <20251204224924.639406-2-irogers@google.com>
-Subject: [PATCH v1 2/2] perf tests top: Make the test exclusive
+Message-ID: <20251204225522.648456-1-irogers@google.com>
+Subject: [PATCH v2 1/2] perf tests kvm: Avoid leaving perf.data.guest file around
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -69,34 +66,28 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-With sufficient tests running the load causes the top test fails with:
-```
-123: perf top tests                                                  : FAILED!
---- start ---
-test child forked, pid 629856
-Basic perf top test
-Basic perf top test [Failed: no sample percentage found]
----- end(-1) ----
-```
-Mark the test exclusive to avoid flakes.
+Ensure the perf.data output when checking permissions is written to
+/dev/null so that it isn't left in the directory the test is run.
 
-Fixes: 75e961730b9e ("perf tests top: Add basic perf top coverage test")
+Fixes: b58261584d2f ("perf test kvm: Add some basic perf kvm test coverage")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/top.sh | 2 +-
+ tools/perf/tests/shell/kvm.sh | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/top.sh b/tools/perf/tests/shell/top.sh
-index 768ebcf7a89c..ad7fccd09025 100755
---- a/tools/perf/tests/shell/top.sh
-+++ b/tools/perf/tests/shell/top.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf top tests
-+# perf top tests (exclusive)
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/perf/tests/shell/kvm.sh b/tools/perf/tests/shell/kvm.sh
+index 2fafde1a29cc..2a399b83fe80 100755
+--- a/tools/perf/tests/shell/kvm.sh
++++ b/tools/perf/tests/shell/kvm.sh
+@@ -118,7 +118,7 @@ setup_qemu() {
+ 		skip "/dev/kvm not accessible"
+ 	fi
  
- set -e
+-	if ! perf kvm stat record -a sleep 0.01 >/dev/null 2>&1; then
++	if ! perf kvm stat record -o /dev/null -a sleep 0.01 >/dev/null 2>&1; then
+ 		skip "No permission to record kvm events"
+ 	fi
+ 
 -- 
 2.52.0.223.gf5cc29aaa4-goog
 
