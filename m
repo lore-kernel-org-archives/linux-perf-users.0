@@ -1,167 +1,125 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198362DA768
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 18:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5439153598;
+	Thu,  4 Dec 2025 18:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764872414; cv=none; b=Ea6U0+Qxr6tkm9lLCKf7DEGddVuKsQCFmJ4Qi8/lp22qqEP7CkhgYhN6m0G7tP3++pBQhryxBdBTYasGWnTX/FsWoZot1MDUiExU3+38swu0IZc/GTtWbAl8hVO1PO1RCpxVqxFpJ45qzOsHNJ/SGHaPJdMtBtPLpGAC3MLICE8=
+	t=1764873969; cv=none; b=kPMKGlVuGRFs58wyRXS0iJLpcsC70w6tOl5vV0MTOXm8o5tAUZvDn9k1eo8ZjC7tVlsdtPLRLZ1VXpUGXa/4gxmJY2N88uHSCTYs2vXJxWnG/A7mFaedYrXxz/BaUc3JTOXOleI97nMVd4senZO0xkbV14qMWh6rFwDib96eBMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764872414; c=relaxed/simple;
-	bh=uGmQrKojHbfjgbGYv8My25L7Ow9cjr6R4cePCS1/ChM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lzi7xMPUW5boEFEO4PtItbcQkDFldHb6ZD3yeb8i/YkHQxZ9r9amM/5C+sg7pRdq/ubMqyNG5DgKAVPouZLsXBXULNyqEPYznysIt/tRz9eTvGcq+4fq4mgycNwH8gml2BjQ9iCcvKCUSqTZvfOopRn25hwzK7CQgNehQnDnfuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OsQwZ/1u; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OsQwZ/1u"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-29852dafa7dso7645ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Dec 2025 10:20:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764872411; x=1765477211; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i7UGDbYN0HgmxODNA4VdtXLtFmyqVq5pKIjkg+oiyjs=;
-        b=OsQwZ/1uqN4J0t/sMo4rly6qnIp5UCxaj9HwvVD4Gvjc60azn8zvcsaa3vsMPxSfD+
-         xqEoK+DAXHHl7J3PW3kzBUwBeSNjU/7pkA8k9RfwpM3O3bjbpfgWfCJi8ijUBIUmxMMG
-         G4oUYqr27xyEf2GGE7FSY0AKcBr/dkNMsUIZWUutV1tY566ko0FIlXVUL5E9MA8szFhx
-         sXMBbu/J4f0oG4MgqKiIYTfytmeITGHkYOnTHeQJDxHwpG9isD1jaZ57p6akOyPbSGru
-         LT+xVI92paPxDMZz6l/fp4S0IV5sl3Zhgnfyu9p39QHqAUyF5jnHHaZ4AWxqGaUiqVWv
-         mBQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764872411; x=1765477211;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=i7UGDbYN0HgmxODNA4VdtXLtFmyqVq5pKIjkg+oiyjs=;
-        b=TdCREWfvgQIZ7JlGb92cAdIpCDgGOLzkkjbePwXqzMpGHtvDJXstaYo7U2qgN5hpuH
-         fdditPNLO0w03+mXxM4usUzoDp2+i/J/N2IayE8V9Ebp5k8n7g5dvVq7HCpBGArA64Kt
-         qwVSAAMIPSyjhCGvDLJDS+i5SOEfxdMKcnE26rJ10BjS2Bm+UI8yCuWrBqjy92rezmI8
-         TMM2+TM5e98ib3Yk7pwMD08avf2S4vLeW7YFVHWn1QehhNywAO1D3+ImzkoIo6w7+hZv
-         ZY/GZrQjQWYUmZmLItm+/T61MAIIcyOMw1mUT+JHS8stPMtgtz6KQeL/DMQWiaL9f6P3
-         2txw==
-X-Forwarded-Encrypted: i=1; AJvYcCXX1Ld140D3cHM6psfuI8fOesqKjA6/woVbP1RLDXuxPeABJ9H0ENnns4Yc+P1rhzIvwas1jBjcLnllAo47dGDZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2g4NXvTjmhx9WdHIkgzOGgjDa24QcDvdZKKYbZbDZXUcrSwFr
-	AzpJCJbyT0pL7aeSk8im//A+usiz3qqloGbagEu3bvpZO/udWWNPzOmFY2fLVPBjMOHCLfnD99z
-	5dZ2ecf2kqywgOoT49yK7ZCUm6gKWDc+TmCXlPhqV
-X-Gm-Gg: ASbGncsDjslOjZ98nFEl0DgctacGvLDkF+ZEuG153zi1ewO93aEQnXuAO3u0pXVV+CR
-	fNWfuf3mCqpCNSq2sMAJ7oFalFOpgOKqYkjIa9ZnU1vI13fEjASfWbzDjjJVnesbErhAuTxy3Pt
-	xFtrttYrRp3dYqqdhdvw8ieR/gE9ORofE04SWmRORNj599pkeYPUpd3KiL0WQid2wLFmrm/0Gtp
-	Rzsy5Ulu6YgyjSL130gvFP44m6NuJNXMWdpUz1TayRaSS0QyRRvk/WhPDcm/m11s7vvbHyJJxSd
-	n6oosPZTKIt28SxRYLf564jxiQ==
-X-Google-Smtp-Source: AGHT+IFf+VWpRoPAv192tHNIq38glaxoIijpwbtfMXFCpvOLbawe6MNxrX/jmz5K/0lxeQFPbP5CHSNCMYrEj6F6uUM=
-X-Received: by 2002:a17:902:ea0c:b0:299:c367:9e03 with SMTP id
- d9443c01a7336-29dcd8c62a4mr70705ad.18.1764872411110; Thu, 04 Dec 2025
- 10:20:11 -0800 (PST)
+	s=arc-20240116; t=1764873969; c=relaxed/simple;
+	bh=yIqydaEIMrZjWRo8LWEf8jUMkuV3Kir3YBByEcdUGuo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rRUCc6GH7GnNE8mnU7llJlHW9lWB1EneRE+nQMJh4BOdrO9pIld6XSKpAcA9v6o/aFJS0BPNj8YoUUgho+13kLA8KZ9osVuiDCtg6jD60Mr10Bgtu500R54buMqciRgYomMsa7nBeTWY//pbZvOXA+Emahh7QZgrMMJAKAJf9FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 170F5B73CC;
+	Thu,  4 Dec 2025 18:45:56 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id BED922002D;
+	Thu,  4 Dec 2025 18:45:45 +0000 (UTC)
+Date: Thu, 4 Dec 2025 13:46:50 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Christian Loehle <christian.loehle@arm.com>, Samuel Wu
+ <wusamuel@google.com>, Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy"
+ <gautham.shenoy@amd.com>, Mario Limonciello <mario.limonciello@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>, Jonathan Corbet <corbet@lwn.net>, Viresh
+ Kumar <viresh.kumar@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Srinivas Pandruvada
+ <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
+ <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, kernel-team@android.com,
+ linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] cpufreq: Replace trace_cpu_frequency with
+ trace_policy_frequency
+Message-ID: <20251204134650.2d9fd3ff@gandalf.local.home>
+In-Reply-To: <CAJZ5v0irO1zmh=un+8vDQ8h2k-sHFTpCPCwr=iVRPcozHMRKHA@mail.gmail.com>
+References: <20251201202437.3750901-1-wusamuel@google.com>
+	<20251201202437.3750901-2-wusamuel@google.com>
+	<f28577c1-ca95-43ca-b179-32e2cd46d054@arm.com>
+	<CAJZ5v0hAmgjozeX0egBs_ii_zzKXGPsPBUWwmGD+23KD++Rzqw@mail.gmail.com>
+	<20251204114844.54953b01@gandalf.local.home>
+	<CAJZ5v0irO1zmh=un+8vDQ8h2k-sHFTpCPCwr=iVRPcozHMRKHA@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251204-perf_fix_syscall_header-v1-0-b8e27f74ed6a@arm.com> <20251204-perf_fix_syscall_header-v1-2-b8e27f74ed6a@arm.com>
-In-Reply-To: <20251204-perf_fix_syscall_header-v1-2-b8e27f74ed6a@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 4 Dec 2025 10:19:59 -0800
-X-Gm-Features: AWmQ_bmidjMG4fWzPpsr-eDCkaa5ZHJi6Jiu7ERoPT2EOBvLSxtMTBW1reHdG44
-Message-ID: <CAP-5=fV-d_X1uFYACEOJOxOY43+fj9aEm0_bp7NGSo9kZVMJ4Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Revert "perf tools: Fix arm64 build by generating unistd_64.h"
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: BED922002D
+X-Stat-Signature: 1mm99c6m3astshbq7ckoy9t7qefuxpqj
+X-Rspamd-Server: rspamout08
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/CN4d8P+cv3dNHDlW96Ps5lg789OU92zA=
+X-HE-Tag: 1764873945-545180
+X-HE-Meta: U2FsdGVkX18tqzw2//qpi2ZH6MYa9i57BKgUq3iyQj1qyboQdAeoZjH8fFCCTCLm8t81HhPaHi3TJMeLTMpoL9gKrDiJsFfFUA1lPP3UQoDaar2RgJty3CJrUhFOIQsjtlj3ZfqVM0mI4nwiPOsOA//f06BEghLtT3rLcBJwrCe+vRbQs1ArCz5pVZyI54E4Pyaj+B4QDz5kGYLtQCiZ7Zq7cPXsIgnPEJwQX11m++Ou+Zi1iDx8N75lzk5Dg8ZYo3eCWvnRCCb2ylMEObCk8nfe/indBvgHmAgJMGdgxPF7/ce5QsIBqHICv2eURygXcu3i9Zs4a+JhXIxm9T0J8XTcQchu07V0vBTcdU9QhY5vNMEJeGDoEY2ysZVNl508aqWKc0R5gGaJ/3TMM6IWg7hCpmgx4jQHcU3lQzZ5vH6KsE9P/6M8TSyQdn/+bKg8aY6IoPA7TYvv3MYl/Za58t9XwljexnPMcH2tbpR8LQA=
 
-On Thu, Dec 4, 2025 at 8:53=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
->
-> This reverts:
->
-> commit 8988c4b91945 ("perf tools: Fix in-source libperf build")
-> commit bfb713ea53c7 ("perf tools: Fix arm64 build by generating unistd_64=
-.h")
->
-> Since we now have a static unistd_64.h for the arm64 build, there is no
-> need to generate unistd_64.h in libperf.  Revert all patches related to
-> generating unistd_64.h.
+On Thu, 4 Dec 2025 18:24:57 +0100
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
 
-Could we generate the file and then compare the two? We do something
-like this for empty-pmu-events.c here:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/pmu-events/Build?h=3Dperf-tools-next#n49
+> > I'm not exactly sure what you mean here. There is an "onchange" trigger you
+> > can use to trigger a synthetic event whenever a change happens. But I think
+> > the data here wants to know which CPU had its policy change. Hence the CPU
+> > mask.  
+> 
+> IIUC he wants to trace frequency changes per policy, not per CPU
+> (because there are cases in which multiple CPUs belong to one policy
+> and arguably the frequency doesn't need to be traced for all of them),
+> but tooling should know which CPUs belong to the same policy, so it
+> should be straightforward to use that knowledge when processing the
+> traces.
 
-Similarly, could we get rid of the unistd_64.h generation and just add
-a build time validation test? Generating the file is painful in many
-ways, as this series testifies.
+In case you only care about frequency changes, you could do this:
 
-Thanks,
-Ian
+ # echo 'freq_change u32 state;' > /sys/kernel/tracing/synthetic_events 
+ # echo 'hist:keys=common_type:s=state:onchange($s).trace(freq_change,$s)' > /sys/kernel/tracing/events/power/cpu_frequency/trigger 
+ # echo 1 > /sys/kernel/tracing/events/synthetic/freq_change/enable 
+ # cat /sys/kernel/tracing/trace
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 2833/2833   #P:56
+#
+#                                _-----=> irqs-off/BH-disabled
+#                               / _----=> need-resched
+#                              | / _---=> hardirq/softirq
+#                              || / _--=> preempt-depth
+#                              ||| / _-=> migrate-disable
+#                              |||| /     delay
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+             sed-596089  [034] d..5. 2687140.288806: freq_change: state=2000000
+            bash-596090  [020] d.s4. 2687140.290407: freq_change: state=1900000
+          <idle>-0       [028] d.s7. 2687140.290425: freq_change: state=3000000
+            bash-596090  [020] d..5. 2687140.291152: freq_change: state=1900000
+          <idle>-0       [000] dNs5. 2687140.326526: freq_change: state=1200000
+       CPU 3/KVM-10724   [019] d.s5. 2687140.358418: freq_change: state=2100000
+       CPU 6/KVM-10727   [021] d.h5. 2687140.394403: freq_change: state=1300000
+       CPU 6/KVM-10727   [021] d.h5. 2687140.398403: freq_change: state=1400000
+       CPU 6/KVM-10727   [021] d.h5. 2687140.402402: freq_change: state=1500000
+       CPU 6/KVM-10727   [021] d.h5. 2687140.406400: freq_change: state=1600000
+       CPU 6/KVM-10727   [021] d.h5. 2687140.410404: freq_change: state=1700000
+[..]
 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  tools/lib/perf/Makefile    | 14 ++------------
->  tools/perf/Makefile.config |  1 -
->  2 files changed, 2 insertions(+), 13 deletions(-)
->
-> diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-> index 7fbb50b74c00b3b99ac538821124e04bfbc6da6a..ffcfd777c45181960afc7505e=
-f8f85d0b7ea7e8d 100644
-> --- a/tools/lib/perf/Makefile
-> +++ b/tools/lib/perf/Makefile
-> @@ -42,7 +42,6 @@ libdir_relative_SQ =3D $(subst ','\'',$(libdir_relative=
-))
->  TEST_ARGS :=3D $(if $(V),-v)
->
->  INCLUDES =3D \
-> --I$(OUTPUT)arch/$(SRCARCH)/include/generated/uapi \
->  -I$(srctree)/tools/lib/perf/include \
->  -I$(srctree)/tools/lib/ \
->  -I$(srctree)/tools/include \
-> @@ -100,16 +99,7 @@ $(LIBAPI)-clean:
->         $(call QUIET_CLEAN, libapi)
->         $(Q)$(MAKE) -C $(LIB_DIR) O=3D$(OUTPUT) clean >/dev/null
->
-> -uapi-asm :=3D $(OUTPUT)arch/$(SRCARCH)/include/generated/uapi/asm
-> -ifeq ($(SRCARCH),arm64)
-> -       syscall-y :=3D $(uapi-asm)/unistd_64.h
-> -endif
-> -uapi-asm-generic:
-> -       $(if $(syscall-y),\
-> -               $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.asm-headers ob=
-j=3D$(uapi-asm) \
-> -               generic=3Dinclude/uapi/asm-generic $(syscall-y),)
-> -
-> -$(LIBPERF_IN): uapi-asm-generic FORCE
-> +$(LIBPERF_IN): FORCE
->         $(Q)$(MAKE) $(build)=3Dlibperf
->
->  $(LIBPERF_A): $(LIBPERF_IN)
-> @@ -130,7 +120,7 @@ all: fixdep
->  clean: $(LIBAPI)-clean
->         $(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
->                  *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) =
-.*.d .*.cmd tests/*.o LIBPERF-CFLAGS $(LIBPERF_PC) \
-> -                $(TESTS_STATIC) $(TESTS_SHARED) $(syscall-y)
-> +                $(TESTS_STATIC) $(TESTS_SHARED)
->
->  TESTS_IN =3D tests-in.o
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 6b62fea21a0ad1caf99d75d06fc29d2b05007931..b1e39fe0cf40ce1419b19a11d=
-accc18853d5cfe6 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -64,7 +64,6 @@ include $(srctree)/tools/scripts/Makefile.arch
->  $(call detected_var,SRCARCH)
->
->  CFLAGS +=3D -I$(OUTPUT)arch/$(SRCARCH)/include/generated
-> -CFLAGS +=3D -I$(OUTPUT)libperf/arch/$(SRCARCH)/include/generated/uapi
->
->  # Additional ARCH settings for ppc
->  ifeq ($(SRCARCH),powerpc)
->
-> --
-> 2.34.1
->
+Which BTW, I'll be giving a talk about synthetic events at OSS in Tokyo ;-)
+   (cheap plug!)
+
+https://ossjapan2025.sched.com/event/29FoB/synthetic-events-and-tracing-latency-within-the-kernel-steven-rostedt-google?iframe=yes&w=100%&sidebar=yes&bg=no
+
+-- Steve
