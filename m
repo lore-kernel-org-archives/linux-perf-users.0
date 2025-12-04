@@ -1,43 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE920349B15
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 19:10:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD11734AAE2;
+	Thu,  4 Dec 2025 19:10:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764875448; cv=none; b=EZOxaBBbOk4UpXoC/ceqvI1AFVbZIA0iMPp18A61YiaQfae7wC7lPnwO4+H4BLbdmRWZjuSnT+kqUMwtswdiTZv2MCwvsJ1pTi3euIYWbGGsUWq8x6McUwpQQDrZvXmhEy/PpVw5yEbZ4Zlba98Ax6aQuXXeGWBf/rcT14dhrjs=
+	t=1764875450; cv=none; b=EZpSLHZzBbheZYGP+isRWMICYHXHTZkpH7T9yTWgyBLY24hZ8j/UYDv+BgDpnioCgmlCyUTN7tqGtD0bz5TgZXOEFZhUkpL3zdJ6aROFvfx8LNCqhhm3ZqADRNypSh0qaADLjz/dkigbnrPZacQ8xphH0apDJzZ18x7Kij4huqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764875448; c=relaxed/simple;
-	bh=I48PDz0RhPoBY/algdOFF+TPb6qdaIPNpJJyzHAE0IY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=XGpr4mvNmu6+bQb+3FnT8ioTgMOyG/nFwm/DDgOe5e9Hmh4x1C3SNFPuezd0xoIg9TiH3tNXSRMijrF0XavE4nTNREVz5C6A3NtFK/WwSqPWFWZySKmmMoLpooVaNJENtjfyV75ZXtr21vz6DhKnqa69TVjXOkf2gMRXrgXopXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zc0Vmmy9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764875450; c=relaxed/simple;
+	bh=CFWsJfr3fP39HGmtCGaF7ehnwfFGxX9jbDd9MyItYjI=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=NOexOgoR/hLqbbyKcFj4sAIU6TNrfLZmClhHeUBbm9PyTVF6PLCz5OmV1fgGCKEGMAltey/L8T1fZxwGINfXHxm+Lu8CegYwd53+9QgTuefHZB5wXL+L/38CJkooRqhKKpco/UWgI7RkA5IgSKNWSGt5lfCoM28q1+PZjrdO0KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uzdZq7hO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zc0Vmmy9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4950C16AAE;
-	Thu,  4 Dec 2025 19:10:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uzdZq7hO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFDD5C19424;
+	Thu,  4 Dec 2025 19:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764875446;
-	bh=I48PDz0RhPoBY/algdOFF+TPb6qdaIPNpJJyzHAE0IY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Zc0Vmmy9o+QOcoEz5uFdnKe/9P6HU98xvoP7pOzN3Yz6cn3KL6FTl1RLrQ5TW6Il2
-	 OUPvISnZw9ILRtJjau+6eeZWFIkSvYXMnBfDdkpQe4j8xyIe5+wexE4/JJy2jdTqpq
-	 nFoPMFyKPzSHwERzzRfR/LAaiZA2KedhbX0MNs/RSld4+M7VmPB5eybIwtIE2D6b+X
-	 LktsnNUwi9tmcUUB66nU/rPXvo3vTrIfegiXRXeVnCZhWms+JqSOD9V4F80g23JaDN
-	 TL9XNbIJY/rxWJ9Vij3lj3BICl6nwbW3BL8BtHDHXLjVbr0LMTGTT93NFcof8B8FB2
-	 P6WD5YVy6LYwA==
+	s=k20201202; t=1764875450;
+	bh=CFWsJfr3fP39HGmtCGaF7ehnwfFGxX9jbDd9MyItYjI=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=uzdZq7hO4hzz2BrHFKOpP8B4S0QZfWGrs/UkahCc4Kmh2PM0wGUrFMbT2Xy3CpfRT
+	 74eyRoJu4wjByQH7A5qP+Q9QwJfQuti6RSjxph85RqQ0kwIN0wmodztWU+iFCEc8/Q
+	 P9QDLZbRdNcBMGFVdhyyrDLcJ1/nTo0/jRhsKOgXSL5QzMMYRd1YSU8TXzZnz6z/Wf
+	 58VnEnc+lSxjZSk8M7Tld0Wz7Q8ODoxUJIJ13+yCtpH1wor/J4qPKotYqMXqpd5IKF
+	 Z/XqrfSzPQpKsR+pfgMUuWHQpbtMMvjEH3UWUyLHanfGaLzN7cLiObSSlzxdX+YH59
+	 5TYDsV5hiO8ew==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- James Clark <james.clark@linaro.org>, Ian Rogers <irogers@google.com>, 
- Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
- Leo Yan <leo.yan@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20251113-perf_arm_spe_update_midr_list-v2-1-d547768f5520@arm.com>
-References: <20251113-perf_arm_spe_update_midr_list-v2-1-d547768f5520@arm.com>
-Subject: Re: [PATCH v2] perf arm_spe: Add CPU variants supporting common
- data source packet
-Message-Id: <176487544583.182574.10220163589833287696.b4-ty@kernel.org>
-Date: Thu, 04 Dec 2025 11:10:45 -0800
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Collin Funk <collin.funk1@gmail.com>, 
+ Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
+ Thomas Falcon <thomas.falcon@intel.com>, Leo Yan <leo.yan@arm.com>, 
+ Yicong Yang <yangyicong@hisilicon.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+ Stephen Brennan <stephen.s.brennan@oracle.com>, 
+ Haibo Xu <haibo1.xu@intel.com>, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
+In-Reply-To: <20251122081929.7588-1-irogers@google.com>
+References: <20251122081929.7588-1-irogers@google.com>
+Subject: Re: [PATCH v1 00/17] perf: Small fixes and new tests
+Message-Id: <176487544861.182574.4835277830514985189.b4-ty@kernel.org>
+Date: Thu, 04 Dec 2025 11:10:48 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,14 +55,31 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Thu, 13 Nov 2025 10:57:39 +0000, Leo Yan wrote:
-> Add the following CPU variants to the list for data source decoding:
+On Sat, 22 Nov 2025 00:19:12 -0800, Ian Rogers wrote:
+> Pushing for additional test coverage exposed minor fixes, a missing
+> timechart option, and a number of reference counting issues. Fix the
+> issues then add the new tests. The new tests cover c2c, additional
+> build-id tests, perf top, timechart, kallsyms, perf script with
+>  --dlfilter, evlist and kvm.
 > 
->   - Cortex-A715 [1]
->   - Cortex-A78C [2]
->   - Cortex-X1 [3]
->   - Cortex-X4 [4]
->   - Neoverse V3 [5]
+> Ian Rogers (17):
+>   perf kvm: Fix debug assertion
+>   perf timechart: Add record support for output perf.data path
+>   perf symbol-elf: Add missing puts on error path
+>   perf symbol: Add missed dso__put
+>   perf probe-event: Ensure probe event nsinfo is always cleared
+>   perf hist: In init, ensure mem_info is put on error paths
+>   perf mem-events: Don't leak online CPU map
+>   perf jitdump: Fix missed dso__put
+>   perf c2c: Clean up some defensive gets and make asan clean
+>   perf tests c2c: Add a basic c2c
+>   perf tests buildid: Add purge and remove testing
+>   perf tests top: Add basic perf top coverage test
+>   perf tests timechart: Add a perf timechart test
+>   perf tests kallsyms: Add basic kallsyms test
+>   perf tests script dlfilter: Add a dlfilter test
+>   perf tests evlist: Add basic evlist test
+>   perf test kvm: Add some basic perf kvm test coverage
 > 
 > [...]
 Applied to perf-tools-next, thanks!
