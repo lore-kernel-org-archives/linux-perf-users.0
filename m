@@ -1,126 +1,91 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FA221ABD7
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 14:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65C1934405D;
+	Thu,  4 Dec 2025 14:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764858775; cv=none; b=gy8tCWY+RaCESbhbNbNN+zt0f04s7G562ruzeu5H1X71Po0Brg/C1+QR3Ei/H1CG6RReLBhhFgh5yt++5tauhIiHc24L9HTrJzRcVJ4+RbiyDAB97Pz5vFraqPEGWUBB8K/fTD2ysmHNTQjJHIs5b95+NDBN1YGWlw54/gVlfto=
+	t=1764859422; cv=none; b=dn5NbR2JEFHa/gZlzzycBvFoSt7Q6jjC4uPIcJLHlCZubvFI//a1rckgB6N9EpmnVGbYi7QTKwdzsSINQeBg8Y9ZiBBWiJ/NDhkl0iFHiW0+UisShWA08gqyU+ngz0/QZdMmItj4Xg1kPSF8vcMgELDq6vBEvPe/nO0OMvzTwMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764858775; c=relaxed/simple;
-	bh=t9/qFMla3/ao3at5BcBq/CfTbrOmXor3GPtvLpg1sJQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=f+92APx5gSajkyJ12x2vhjLA7Sq1+xsxUWrK56yIkoh0bjWyJwNAQy/WErJx4syXS/0QSGw8nfaib36oJhJCYrg2u9kgyRE1sahWzmRsREXwt+yM2480YNF7qO8O3/ybDHOBk7zb2zXUPKEg/tSVlTvGJQaIIBNt5dLTcbOXLGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BzRBdeW6; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzRBdeW6"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-656b4881f55so532843eaf.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Dec 2025 06:32:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764858773; x=1765463573; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ApF+lq9vyl7sPIbcvI6XFTDweDtGUFRLdBndvRJKvZc=;
-        b=BzRBdeW6sSYKRfZRF3eZGKKZ6NzYJzbGgw87rYjmyt5c4SECcF8jI8nlJHeZ6NGI5S
-         ssEPi6p4P2iEaL+7FgMpJRuzRy5/wl533iyu8SvdH1Kc7FDGO4K5i1aCxsVwKSBMsJpY
-         HkTHsdH3MJlYlgZakcVoY433DzxfRo69e10gpC5XyMGtN7Gwtf7uazUcUrszouyihhXf
-         O9HkoXV60I97Mpk7fgBA46z6QFNioF7DD7j3VcnY8MqlarrU1feSMYkLbyKIObh6FC2m
-         U4F9mVpsngrxTUewceAGDZFwdaJ3x+fytifv388yYxD9DSZfFGbku6REVjr3FM2FVq0b
-         7emQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764858773; x=1765463573;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ApF+lq9vyl7sPIbcvI6XFTDweDtGUFRLdBndvRJKvZc=;
-        b=uDcjz8807laE9NhxfFratChnQpN6CZ7jQ3D24B4+EJnmkwfbIT7VGnGds79v/gmFLT
-         wpqw2VB5yOQx2n7OdbfybuR9BpWk4HhIIm4/GP3Ife9lp9AhJPOojm40StvSkCXoTEvP
-         3/4a10c0dkQ6tGWPJhLyoxrlC6hkoQxoIZXmnzG/cia3LPFcheTb20H8uklnj7drmQ3+
-         Uz8ulGGx4Yo9uEEsAS23x/xYObNJeOlaEv+0ipvWLw9bDL9llMeFrH8Yrn9JM0iEYXsp
-         tipZaQ85XdDEkhxSF5XMBAoJVhvA0BgalW90Xn7sUK5jS+yPqccUgXLE2cLAKpU9GkyX
-         eECw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXwVLvuinKxmqj3dkZ6Vx5kWGErTkDiMpWwxA/zYPJDb/zDDlkVUXzTDNkMz3CxSiBESqbW6q+j/VJfQEGWE/i@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxDexIksNXz3yZZZcmzQaq38qqel0hrCf6q7jlu1wrY6O7aHAh
-	bGCifp6YPeupTHhvZ2LjeLI9zWMBDs2EU42XhcKz3YHFgDCLAWX1yLjDT1644miw
-X-Gm-Gg: ASbGncuWgXtuzAZn6BO138ApeK831pgdwGpcBP1M++exZGE9WFw5JTF+KJ2TTUYp7kE
-	fyOsFAPOuHeL9LVc4jUCXHRIC9XgIZzJ7uVIm0qZy8ngKIBtfA5WibjsPBTpfTUPm27zmFsepy6
-	Hq82QzFSta/15GacU6lnYMxhZCVfYBmfBLAMVDIgPg1fWv26syFLvVe7HVssnzWscGqEjmr2y/Y
-	Y2mLDIuqOxyd7bmIZ68Z4p/jj+vDES+iN+xPsfbeCh7S4VTjdee/cexqC+dnkpD5NYSKmGUsyqe
-	YQgUn2Mv8Wousa/72JjR0Sghy4T91lhuu1gOoFj5wASsoQWde3h9ta2iBg5+OB8M1716pxRgY3V
-	BWb8CtQyNWTyqSXyo40GrGJApeTBUElXj+hCDVSdk3KonK5YyOIOY+q1L67BdiQIUZSET0/4JMU
-	eR16AVQE9o5YXMhMbT40jj
-X-Google-Smtp-Source: AGHT+IGS/5Gs1BpVIDOMYyZriEdNA1gGzMBGy/3VoAobZgq1D27uY86F05vFM9m+ujfVJF7mmtpo6g==
-X-Received: by 2002:a05:6820:4dc9:b0:657:5723:76ce with SMTP id 006d021491bc7-6597bbc8b1dmr1336424eaf.5.1764858772960;
-        Thu, 04 Dec 2025 06:32:52 -0800 (PST)
-Received: from ehlo.thunderbird.net ([2804:389:8130:8976:1:0:a370:94f9])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6597ec25ed1sm769870eaf.1.2025.12.04.06.32.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Dec 2025 06:32:52 -0800 (PST)
-Date: Thu, 04 Dec 2025 11:32:47 -0300
-From: Arnaldo Melo <arnaldo.melo@gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
- James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- linux-perf-users@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6=2E19-rc1_1/1=5D_libperf=3A_Compile_using_-?=
- =?US-ASCII?Q?std=3Dgnu17_to_deal_with_visibility_attribute_issues?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <aTFJT8kQsxnxBaS8@google.com>
-References: <aTCpiDG6WOzMv7ji@x1> <aTFJT8kQsxnxBaS8@google.com>
-Message-ID: <D6618627-090D-4795-8EEB-72628537D39A@gmail.com>
+	s=arc-20240116; t=1764859422; c=relaxed/simple;
+	bh=X7HIHJgLEosjztrkvQ70G2wQxtfoQrekxHSQYmvNjO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lb0tfTlc+bj8Wz15CvK6auIhJ1uKZdZfELITtViPX9INH21OWrnOzp1+w7twdy7pgIDCNXHvpVW6iA1yCq4ayL7vAWt/E/IhV1nX2kON6CA3158M0rlS+/l8eplhrh6GI701pgA4z42AwjaBktRyixzy+5c69xQpnFj8LC18b/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA605339;
+	Thu,  4 Dec 2025 06:43:31 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDAD23F66E;
+	Thu,  4 Dec 2025 06:43:38 -0800 (PST)
+Date: Thu, 4 Dec 2025 14:43:36 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 6/7] perf cs-etm: Don't hard code config attribute when
+ configuring the event
+Message-ID: <20251204144336.GN724103@e132581.arm.com>
+References: <20251201-james-perf-config-bits-v1-0-22ecbbf8007c@linaro.org>
+ <20251201-james-perf-config-bits-v1-6-22ecbbf8007c@linaro.org>
+ <20251202121528.GX724103@e132581.arm.com>
+ <857538e7-cac2-4871-9711-4c434420df8a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <857538e7-cac2-4871-9711-4c434420df8a@linaro.org>
 
+On Thu, Dec 04, 2025 at 02:08:59PM +0000, James Clark wrote:
 
+[...]
 
-On December 4, 2025 5:41:51 AM GMT-03:00, Namhyung Kim <namhyung@kernel=2E=
-org> wrote:
->On Wed, Dec 03, 2025 at 06:20:08PM -0300, Arnaldo Carvalho de Melo wrote:
->> We seem to need a more invasive patch using 'extern' on all LIBPERF_API
->> prefixed functions to be future proof, so use -std=3Dgnu17 which is the
->> one in gcc 14, present in the distro generation before ubuntu 25=2E10 (=
-gcc
->> 15)=2E
->
->Something like this?
+> > > +	err = evsel__get_config_val(cs_etm_pmu, evsel, "contextid", &ctxt);
+> > > +	if (err)
+> > > +		return err;
+> > > +	err = evsel__get_config_val(cs_etm_pmu, evsel, "contextid1", &ctxt1);
+> > > +	if (err)
+> > > +		return err;
+> > > +	err = evsel__get_config_val(cs_etm_pmu, evsel, "contextid2", &ctxt2);
+> > > +	if (err)
+> > > +		return err;
+> > 
+> > Seems to me, this is not right.  The current code checks any context
+> > ID setting but it can tolerate if missing "contexid[*]" format.
+> > 
+> > After calling evsel__get_config_val(), if any "contextid[*]" format is
+> > missed, it returns error and will diretly bail out.  As a result,
+> > cs_etm_validate_context_id() will always return error.
+> > 
+> 
+> Missed by the driver or the user? evsel__get_config_val() only returns an
+> error when "contextid" isn't published by the driver, not when the user
+> doesn't supply one of those options. The actual user supplied value is in
+> the out param, not the return value.
 
-Yeah, I probably got carried away with libbpf's accidental way of "dealing=
-" with it=2E
+My question is for missing format from user.  Thanks for reminding the
+error is only for driver's publishing.
 
-Will test build it, or have you already?
+> Having said that, this does make it an error if the driver did stop
+> publishing one, which might be too inflexible and is a new behavior. I can
+> change to it ignore the errors instead.
 
-- Arnaldo
+Yeah, this will likely break nVHE / pKVM cases.
 
->
->Thanks,
->Namhyung
->
->
->diff --git a/tools/lib/perf/include/perf/core=2Eh b/tools/lib/perf/includ=
-e/perf/core=2Eh
->index a3f6d68edad76240=2E=2E06cc132d88cf3436 100644
->--- a/tools/lib/perf/include/perf/core=2Eh
->+++ b/tools/lib/perf/include/perf/core=2Eh
->@@ -5,7 +5,7 @@
-> #include <stdarg=2Eh>
->=20
-> #ifndef LIBPERF_API
->-#define LIBPERF_API __attribute__((visibility("default")))
->+#define LIBPERF_API extern __attribute__((visibility("default")))
-> #endif
->=20
-> enum libperf_print_level {
-
-- Arnaldo 
+Thanks,
+Leo
