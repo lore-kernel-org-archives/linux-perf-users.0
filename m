@@ -1,211 +1,126 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C696398F90
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 14:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FA221ABD7
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 14:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764857348; cv=none; b=aswB8f/M6bau2G03QT9Kcn6ojbr79W7EJGvny3poHQnuPqBSG9Zqa+4w3Bj0KZneLbT232EHilYbntakcyuBji7dUrSPqcOrxC8e0IQX0O3CYWs4L33Vbi8Ry1d8udj33jcz891x8HpV2hKzoQbOeqfR0kkDmTqTg7ODag5nmVs=
+	t=1764858775; cv=none; b=gy8tCWY+RaCESbhbNbNN+zt0f04s7G562ruzeu5H1X71Po0Brg/C1+QR3Ei/H1CG6RReLBhhFgh5yt++5tauhIiHc24L9HTrJzRcVJ4+RbiyDAB97Pz5vFraqPEGWUBB8K/fTD2ysmHNTQjJHIs5b95+NDBN1YGWlw54/gVlfto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764857348; c=relaxed/simple;
-	bh=PPN9ntVixLLghQlwTGocaD7TMXsSlTYP+h+h0LhL+Hg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=US//6ctW1KOq5K1dIfHO7zEGxxFJ7D7SB8zOAG6wXoCDSoc+Pky5LMo3KYaXa2mC3n3/u+6PjDut3L9YgQOZmk3MJvDGTCzSPnDeMCQ4SaObZpNPM41sj2nEdTOvqw4uyMPb0Igzv+T3/dsLlkfJ+TByeYdvOm5KfvWxAM+7QcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wj15Xawz; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1764858775; c=relaxed/simple;
+	bh=t9/qFMla3/ao3at5BcBq/CfTbrOmXor3GPtvLpg1sJQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=f+92APx5gSajkyJ12x2vhjLA7Sq1+xsxUWrK56yIkoh0bjWyJwNAQy/WErJx4syXS/0QSGw8nfaib36oJhJCYrg2u9kgyRE1sahWzmRsREXwt+yM2480YNF7qO8O3/ybDHOBk7zb2zXUPKEg/tSVlTvGJQaIIBNt5dLTcbOXLGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BzRBdeW6; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wj15Xawz"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-42e2ce8681eso748947f8f.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Dec 2025 06:09:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzRBdeW6"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-656b4881f55so532843eaf.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Dec 2025 06:32:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1764857342; x=1765462142; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K76Qia/ZXCjjiEWFg52fUrDZVdVaau3amc8W3Ejug+E=;
-        b=wj15Xawzw1p9eA1tU881e1JXkWk46QEsDB/MvLRQuZp1uZNgXhanjHZyZPfF6gzWIo
-         aENnej/+QBMJHEAVvqDwyUABa/9iB9hj2EH36RH+05C2ynQzeR1uenksCLVWJkRxHU9M
-         9AFh6N7a2k7caA44uu21p4bP+Xs4ybLxaZeq6z9135wIjNxZN8JR8DblxCWxNlDmCzKS
-         jIxAAnjez/QtZ771XmLNtiIOtn37Yk7VuOmUOlTecZkNnvy3dnqBthJHKo49csFVNvqI
-         Ij7IOEr6XNOhzkzrgvwe2ep8c8Uy4e8fAms2UC7k0bqZIdp4y1LA6/iP/pZkD/jsorq9
-         /P3g==
+        d=gmail.com; s=20230601; t=1764858773; x=1765463573; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ApF+lq9vyl7sPIbcvI6XFTDweDtGUFRLdBndvRJKvZc=;
+        b=BzRBdeW6sSYKRfZRF3eZGKKZ6NzYJzbGgw87rYjmyt5c4SECcF8jI8nlJHeZ6NGI5S
+         ssEPi6p4P2iEaL+7FgMpJRuzRy5/wl533iyu8SvdH1Kc7FDGO4K5i1aCxsVwKSBMsJpY
+         HkTHsdH3MJlYlgZakcVoY433DzxfRo69e10gpC5XyMGtN7Gwtf7uazUcUrszouyihhXf
+         O9HkoXV60I97Mpk7fgBA46z6QFNioF7DD7j3VcnY8MqlarrU1feSMYkLbyKIObh6FC2m
+         U4F9mVpsngrxTUewceAGDZFwdaJ3x+fytifv388yYxD9DSZfFGbku6REVjr3FM2FVq0b
+         7emQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764857342; x=1765462142;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K76Qia/ZXCjjiEWFg52fUrDZVdVaau3amc8W3Ejug+E=;
-        b=URO5yDYdCP0GXoAzWYVnjjg9awt/IjWN02GbMfbXtbdoR0KJSr52Ski1UohW0VnItO
-         6c4IC6vyIn1jaA8ND5GXDAhXKiqQYSPENfXjwUSvjmlwEIfWL/PdKq/fdhM+mSsGUv85
-         rknzaxTlKZzvyIBNAPLkVF6JKKAPeuxexhF07OzJZMKWyaRBfuU1U0I4h+kM3Vtp5/O/
-         ubaLuNY9EYo/ORYMeYpztMj1Qfhw7YSKb5klcCxrQMsBROfGiwBNU2QuFMIPKYvFrrpL
-         eavqgzC4AjDbwVgHCnVGLt8y3ZWRy1JeXWfSkHE9ln2h1ws4792EYGe1FIAtsOaYfNFY
-         ISRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZaYrmUJzh9VNsExBqUfmjW6ZWoT7dSxVNTm4XmTfAamK/dLYSwLIAIwDYnLBnObMCI4nIHv6DTDD5xNdZPrzq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyco3D4XYZz0sxILlCjepUGbO8Apv8MbuVKHpQzOjPiYxy7kdlg
-	nLP6QT43kH+tYXXtzjkHC65mmFx0BfvuEgcxYkmcmOjYgVOvUA5WS3vj5V+et5nHfIQ=
-X-Gm-Gg: ASbGncvAoTBEP07xOzsnKc6pqBbuykgba9B2I8zHiI4SunsCICowjYLZBQlwrO+wtpn
-	v5MuLCEq6odIzhJlpasLB6LaUDU+0SSW+PSCP9/8MGSkaUxHxuqLkKxgWLOs5bIcjBYOkQK1RpD
-	mInqAPluBjVpnfvPyA+IItF6BUzuBwykU+36aaB9TCt+6zvL/inV6BWFdfpJJZ2+XuAGC+8mlm+
-	Zy1X0D3814t6v58wXDpgDFPOlRGzt6Uz3q9TyrQO16jjDSvoiD0M113SWDGK8p3aGfCZCbYVurN
-	CWVmhn2OxM082QwY5Um/stg3w95F7TlKGVeXBQq6s+M35w8g9C0/bN3xn6V8xnpBTQSlb4ZZj9w
-	rdyLgRlmYFVI4N4nOMN3YN1p4knqDVAJaNGE3fWMD+b3+0QJI5VwQz0SZjcs7ZIV22diITT7m5p
-	kXmkjitOjfOxz4biIQ
-X-Google-Smtp-Source: AGHT+IE2K35j9CdlrIvdH8Bojq1tholsrKjYuSZd1hMIs3XjAOQLvnDBCIItIYw5O13dYS68vstw3Q==
-X-Received: by 2002:a5d:490a:0:b0:42b:3366:6330 with SMTP id ffacd0b85a97d-42f731cf312mr4668252f8f.57.1764857341593;
-        Thu, 04 Dec 2025 06:09:01 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbe90f0sm3477398f8f.9.2025.12.04.06.09.00
+        d=1e100.net; s=20230601; t=1764858773; x=1765463573;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ApF+lq9vyl7sPIbcvI6XFTDweDtGUFRLdBndvRJKvZc=;
+        b=uDcjz8807laE9NhxfFratChnQpN6CZ7jQ3D24B4+EJnmkwfbIT7VGnGds79v/gmFLT
+         wpqw2VB5yOQx2n7OdbfybuR9BpWk4HhIIm4/GP3Ife9lp9AhJPOojm40StvSkCXoTEvP
+         3/4a10c0dkQ6tGWPJhLyoxrlC6hkoQxoIZXmnzG/cia3LPFcheTb20H8uklnj7drmQ3+
+         Uz8ulGGx4Yo9uEEsAS23x/xYObNJeOlaEv+0ipvWLw9bDL9llMeFrH8Yrn9JM0iEYXsp
+         tipZaQ85XdDEkhxSF5XMBAoJVhvA0BgalW90Xn7sUK5jS+yPqccUgXLE2cLAKpU9GkyX
+         eECw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXwVLvuinKxmqj3dkZ6Vx5kWGErTkDiMpWwxA/zYPJDb/zDDlkVUXzTDNkMz3CxSiBESqbW6q+j/VJfQEGWE/i@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxDexIksNXz3yZZZcmzQaq38qqel0hrCf6q7jlu1wrY6O7aHAh
+	bGCifp6YPeupTHhvZ2LjeLI9zWMBDs2EU42XhcKz3YHFgDCLAWX1yLjDT1644miw
+X-Gm-Gg: ASbGncuWgXtuzAZn6BO138ApeK831pgdwGpcBP1M++exZGE9WFw5JTF+KJ2TTUYp7kE
+	fyOsFAPOuHeL9LVc4jUCXHRIC9XgIZzJ7uVIm0qZy8ngKIBtfA5WibjsPBTpfTUPm27zmFsepy6
+	Hq82QzFSta/15GacU6lnYMxhZCVfYBmfBLAMVDIgPg1fWv26syFLvVe7HVssnzWscGqEjmr2y/Y
+	Y2mLDIuqOxyd7bmIZ68Z4p/jj+vDES+iN+xPsfbeCh7S4VTjdee/cexqC+dnkpD5NYSKmGUsyqe
+	YQgUn2Mv8Wousa/72JjR0Sghy4T91lhuu1gOoFj5wASsoQWde3h9ta2iBg5+OB8M1716pxRgY3V
+	BWb8CtQyNWTyqSXyo40GrGJApeTBUElXj+hCDVSdk3KonK5YyOIOY+q1L67BdiQIUZSET0/4JMU
+	eR16AVQE9o5YXMhMbT40jj
+X-Google-Smtp-Source: AGHT+IGS/5Gs1BpVIDOMYyZriEdNA1gGzMBGy/3VoAobZgq1D27uY86F05vFM9m+ujfVJF7mmtpo6g==
+X-Received: by 2002:a05:6820:4dc9:b0:657:5723:76ce with SMTP id 006d021491bc7-6597bbc8b1dmr1336424eaf.5.1764858772960;
+        Thu, 04 Dec 2025 06:32:52 -0800 (PST)
+Received: from ehlo.thunderbird.net ([2804:389:8130:8976:1:0:a370:94f9])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6597ec25ed1sm769870eaf.1.2025.12.04.06.32.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Dec 2025 06:09:01 -0800 (PST)
-Message-ID: <857538e7-cac2-4871-9711-4c434420df8a@linaro.org>
-Date: Thu, 4 Dec 2025 14:08:59 +0000
+        Thu, 04 Dec 2025 06:32:52 -0800 (PST)
+Date: Thu, 04 Dec 2025 11:32:47 -0300
+From: Arnaldo Melo <arnaldo.melo@gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+CC: Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
+ James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-perf-users@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6=2E19-rc1_1/1=5D_libperf=3A_Compile_using_-?=
+ =?US-ASCII?Q?std=3Dgnu17_to_deal_with_visibility_attribute_issues?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <aTFJT8kQsxnxBaS8@google.com>
+References: <aTCpiDG6WOzMv7ji@x1> <aTFJT8kQsxnxBaS8@google.com>
+Message-ID: <D6618627-090D-4795-8EEB-72628537D39A@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/7] perf cs-etm: Don't hard code config attribute when
- configuring the event
-To: Leo Yan <leo.yan@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-References: <20251201-james-perf-config-bits-v1-0-22ecbbf8007c@linaro.org>
- <20251201-james-perf-config-bits-v1-6-22ecbbf8007c@linaro.org>
- <20251202121528.GX724103@e132581.arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20251202121528.GX724103@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
 
-On 02/12/2025 12:15 pm, Leo Yan wrote:
-> On Mon, Dec 01, 2025 at 04:41:09PM +0000, Coresight ML wrote:
-> 
-> [...]
-> 
->> @@ -103,13 +103,20 @@ static int cs_etm_validate_context_id(struct perf_pmu *cs_etm_pmu, struct evsel
->>   				      struct perf_cpu cpu)
->>   {
->>   	int err;
->> -	__u64 val;
->> -	u64 contextid = evsel->core.attr.config &
->> -		(perf_pmu__format_bits(cs_etm_pmu, "contextid") |
->> -		 perf_pmu__format_bits(cs_etm_pmu, "contextid1") |
->> -		 perf_pmu__format_bits(cs_etm_pmu, "contextid2"));
->> +	u64 ctxt, ctxt1, ctxt2;
->> +	__u64 trcidr2;
->>   
->> -	if (!contextid)
->> +	err = evsel__get_config_val(cs_etm_pmu, evsel, "contextid", &ctxt);
->> +	if (err)
->> +		return err;
->> +	err = evsel__get_config_val(cs_etm_pmu, evsel, "contextid1", &ctxt1);
->> +	if (err)
->> +		return err;
->> +	err = evsel__get_config_val(cs_etm_pmu, evsel, "contextid2", &ctxt2);
->> +	if (err)
->> +		return err;
-> 
-> Seems to me, this is not right.  The current code checks any context
-> ID setting but it can tolerate if missing "contexid[*]" format.
-> 
-> After calling evsel__get_config_val(), if any "contextid[*]" format is
-> missed, it returns error and will diretly bail out.  As a result,
-> cs_etm_validate_context_id() will always return error.
-> 
+On December 4, 2025 5:41:51 AM GMT-03:00, Namhyung Kim <namhyung@kernel=2E=
+org> wrote:
+>On Wed, Dec 03, 2025 at 06:20:08PM -0300, Arnaldo Carvalho de Melo wrote:
+>> We seem to need a more invasive patch using 'extern' on all LIBPERF_API
+>> prefixed functions to be future proof, so use -std=3Dgnu17 which is the
+>> one in gcc 14, present in the distro generation before ubuntu 25=2E10 (=
+gcc
+>> 15)=2E
+>
+>Something like this?
 
-Missed by the driver or the user? evsel__get_config_val() only returns 
-an error when "contextid" isn't published by the driver, not when the 
-user doesn't supply one of those options. The actual user supplied value 
-is in the out param, not the return value.
+Yeah, I probably got carried away with libbpf's accidental way of "dealing=
+" with it=2E
 
-Having said that, this does make it an error if the driver did stop 
-publishing one, which might be too inflexible and is a new behavior. I 
-can change to it ignore the errors instead.
+Will test build it, or have you already?
 
->> +
->> +	if (!ctxt && !ctxt1 && !ctxt2)
->>   		return 0;
->>   
->>   	/* Not supported in etmv3 */
->> @@ -120,12 +127,11 @@ static int cs_etm_validate_context_id(struct perf_pmu *cs_etm_pmu, struct evsel
->>   	}
->>   
->>   	/* Get a handle on TRCIDR2 */
->> -	err = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR2], &val);
->> +	err = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR2], &trcidr2);
->>   	if (err)
->>   		return err;
->>   
->> -	if (contextid &
->> -	    perf_pmu__format_bits(cs_etm_pmu, "contextid1")) {
->> +	if (ctxt1) {
->>   		/*
->>   		 * TRCIDR2.CIDSIZE, bit [9-5], indicates whether contextID
->>   		 * tracing is supported:
->> @@ -133,15 +139,14 @@ static int cs_etm_validate_context_id(struct perf_pmu *cs_etm_pmu, struct evsel
->>   		 *  0b00100 Maximum of 32-bit Context ID size.
->>   		 *  All other values are reserved.
->>   		 */
->> -		if (BMVAL(val, 5, 9) != 0x4) {
->> +		if (BMVAL(trcidr2, 5, 9) != 0x4) {
->>   			pr_err("%s: CONTEXTIDR_EL1 isn't supported, disable with %s/contextid1=0/\n",
->>   			       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
->>   			return -EINVAL;
->>   		}
->>   	}
->>   
->> -	if (contextid &
->> -	    perf_pmu__format_bits(cs_etm_pmu, "contextid2")) {
->> +	if (ctxt2) {
->>   		/*
->>   		 * TRCIDR2.VMIDOPT[30:29] != 0 and
->>   		 * TRCIDR2.VMIDSIZE[14:10] == 0b00100 (32bit virtual contextid)
->> @@ -149,7 +154,7 @@ static int cs_etm_validate_context_id(struct perf_pmu *cs_etm_pmu, struct evsel
->>   		 * virtual context id is < 32bit.
->>   		 * Any value of VMIDSIZE >= 4 (i.e, > 32bit) is fine for us.
->>   		 */
->> -		if (!BMVAL(val, 29, 30) || BMVAL(val, 10, 14) < 4) {
->> +		if (!BMVAL(trcidr2, 29, 30) || BMVAL(trcidr2, 10, 14) < 4) {
->>   			pr_err("%s: CONTEXTIDR_EL2 isn't supported, disable with %s/contextid2=0/\n",
->>   			       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
->>   			return -EINVAL;
->> @@ -163,10 +168,14 @@ static int cs_etm_validate_timestamp(struct perf_pmu *cs_etm_pmu, struct evsel *
->>   				     struct perf_cpu cpu)
->>   {
->>   	int err;
->> -	__u64 val;
->> +	u64 val;
->> +	__u64 trcidr0;
->>   
->> -	if (!(evsel->core.attr.config &
->> -	      perf_pmu__format_bits(cs_etm_pmu, "timestamp")))
->> +	err = evsel__get_config_val(cs_etm_pmu, evsel, "timestamp", &val);
->> +	if (err)
->> +		return err;
->> +
->> +	if (!val)
->>   		return 0;
-> 
-> Similiar issue here.  The current code returns 0 if not find "timestamp"
-> format.  With this change, it returns error instead.
-> 
-> Thanks,
-> Leo
+- Arnaldo
 
+>
+>Thanks,
+>Namhyung
+>
+>
+>diff --git a/tools/lib/perf/include/perf/core=2Eh b/tools/lib/perf/includ=
+e/perf/core=2Eh
+>index a3f6d68edad76240=2E=2E06cc132d88cf3436 100644
+>--- a/tools/lib/perf/include/perf/core=2Eh
+>+++ b/tools/lib/perf/include/perf/core=2Eh
+>@@ -5,7 +5,7 @@
+> #include <stdarg=2Eh>
+>=20
+> #ifndef LIBPERF_API
+>-#define LIBPERF_API __attribute__((visibility("default")))
+>+#define LIBPERF_API extern __attribute__((visibility("default")))
+> #endif
+>=20
+> enum libperf_print_level {
+
+- Arnaldo 
