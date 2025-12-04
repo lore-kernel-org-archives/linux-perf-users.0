@@ -1,208 +1,284 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33BDEEC3
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Dec 2025 00:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5D5398F85;
+	Thu,  4 Dec 2025 01:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764808511; cv=none; b=Z8obKZ+KNu8exzdT9Vq73uFicA+49X6d/b5TXsUPFTFltqqRltMEjftb3w4D/dP4yDF17MjgdwJrtG2FNRe/IlrY3UuQhqgEQmluIIqWbRcTrPzcwMP8wz888L+IrIE6SNikkEMleNYJUMX+04DRanRn6Sf/XZV5XP6ld7XNI6w=
+	t=1764812282; cv=none; b=AlGPasWHsCGnKOg9pBCAkbAvA4yZMBS31Ne+VThD/MWPD73aR60jaO9VA6cpa81StdKUopFNAFSe/gfPTRSipB4oqeIBJZJkHe3gfS4UJDWnC9+1p/rx2TQh4xbwwGVciHwyxNH7x87fZzbRURuFVr7yyXtzmqdTFcTebHAhrnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764808511; c=relaxed/simple;
-	bh=qgzowlqvozrCdDlDBPM5DsRKNURP5c6NQbJd24LpgBM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h4K7zzSQVQNHCS9nGZVQsRpaA9i6t7+XCXRoZ7L3yAqKzgrRliiWwTNRJElbxRGTK+qQL/iCd2bNe75j5rS+FGc6iT2zNJWWXsopP9UF33KzswzhgdmPD3dqxYa8OVuyJy0lyKI8gXMA6QQBO2c1zkrqNKv2b+mrlfZBZhjO1xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h977q/0H; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1764812282; c=relaxed/simple;
+	bh=hlGf/F3H++tx64WdKSnByAsBUAJ7G1rUCgBeGkuRARs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LFTvKyUVeJTah7Bp1h8GO4J8FjdRJyvcusMAqGZBx4Hqw4R9DYPCe7+wV5H//mkz+wZnj++kcD2NfxjyDIX2jvCk/W5rPYSIOyEe2TFJKULA1oHA97pxvqS1zeeTXBuweoFzpX/rf+/OYtJ7qNZMQppcmRx4Khpir9PWwYKBaMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Az7mml7e; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h977q/0H"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-295c64cb951so85745ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Dec 2025 16:35:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764808509; x=1765413309; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z8NxXfPbmZpTpe7Ihl25p9otWD958rJ0JpuGnfn0nEk=;
-        b=h977q/0Hj8CwutoQ/JMmOldqtg3TzK5WKTvxid5W8wfAjwMZ05GRg80Px/zWdy8Bk4
-         NWHqGL0yFh/ofJBsOHBxiCjQElCD3iCSxkRxQ7Ibn0Y/qW/AjQ9NK+EOB6a7WwonlyJg
-         lO9LMHGVC6a9QZjP/aj5lrLf0AvDnAaQw+j+i3f6CFQVNjpNAQ5YJ0jtpohAYUrf8ndK
-         0qvi5gjSIQmDqRp/r+obs13RpeJCEDx7agumCw7GcX8YtdflQMuFshAK4D9p+1o69z6c
-         NsN6xCbhK3mam/ooFk7odwRXrtCwEBp8+5FXYoPwJyfzWqZiaSeeazJBz9Q8snSmGjYC
-         TXtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764808509; x=1765413309;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Z8NxXfPbmZpTpe7Ihl25p9otWD958rJ0JpuGnfn0nEk=;
-        b=KeS2D46QqhVRZKatXIhsMUKlEswuaOspeWbX84mt8PwZmyldB0W9UjtMJn1kdd2u8l
-         SONCYCybGrgYRbqJWHpR5gq20yZXhPKfIFYzh2pWvcyyj2ovIc3rZJ6B2EqERVdVaacV
-         NTEw/Ai/65EOepuadJ/XNv9LAIkTuWe6X6E035q1nin9cp+Q8tmdV7/Q3/jjum6vQjBU
-         decQvda44Ki5xhMDffWjYAcmk/rSWD+SoalcTffH7WHVIrzLfofcAvy1tlq2vFC5co7w
-         M+nd1+cul9aQKWXuWhu5+NdFKzz86Lm8bXg5zYFlNg2jBA5kE6urZRTULKs+KNMjUsfq
-         pE2g==
-X-Forwarded-Encrypted: i=1; AJvYcCU4ixl027fEdq3VVKgXOZF4QzWmtmxqszJ9gTs7UeglZs5fFMTrYvo0rhXWdudf59TlxJX9dFwFlptYSUP8+fGx@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPHhnmt7FFsZA8ykLdSnaW9z1QGNdancoOE8AQlZ3yO41Mqn6S
-	/GJFiZCCvs6JM/FBw1XG1vM+Tmdz1DgA3shKOwdbp8YWCz36WzcuHfETtPLhJiR4sk+CBpC54BZ
-	uIM7sigL5c2sh0Xyda7fEViIiHowBwOin6v1nkCro
-X-Gm-Gg: ASbGncuZ1xK2QpwyIwqBHpS9+wwYk4NO+4tXeAZv4tYfXw0c+UF/SxxHwt2zNP2Dg9X
-	kcej8GK1fCDI/IfhjBeEYvS3yr3lL6uGWWzDlfE8PQ0okrNahd+LVcvj6pHHjAy6ho2xtx2Cvdy
-	2yZw3ueWsvzVLtxFC51EfODgJotWwLiSmztc16TISSFJx+IYKhaHkUsgOoWa44r9feM7ZL8jlny
-	d+oaFeMz3PqkrkL4FxBBkoJ9oA72orzRd7yyAmPQhXINmpqdfuMmB+csn0fgdzXDRAxlrEQ
-X-Google-Smtp-Source: AGHT+IGtuTwFiqEVUPuFXsWaToyH66kacw06+zovttbjLZvSFsLj2aUpbFICoYLoW+5DcEZ1+naYSFaxz6aLt8bJaPw=
-X-Received: by 2002:a17:902:e551:b0:290:cd63:e922 with SMTP id
- d9443c01a7336-29dacc202f9mr615265ad.15.1764808508741; Wed, 03 Dec 2025
- 16:35:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Az7mml7e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764812281; x=1796348281;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hlGf/F3H++tx64WdKSnByAsBUAJ7G1rUCgBeGkuRARs=;
+  b=Az7mml7ewwUySsARBjmYa24hlfSUtUvc9tQtvE7xMStNBAdzZdfrOw1b
+   2I7Fwe4vKPxhbUv8kIMg9Mt2njigw+Y12HEdZphGgStr9e303URm3Nwm7
+   AeJLhnFlbmBsi2Tj36VZD81xPdDmTqike0/hjhyvrNVb5j0WZutxvsQPf
+   uPOKqBhOwt8//Yx8uvcTkMakhbIo16mi2vFDH2eqoPVnzVNeWGoFhFK4n
+   sSuvyLcOHCyv5pKvLAiVu07Pv2CyFQjmmJFkW7C0O2Ggn2ENFPRNhAQvQ
+   SZMNqcuzE0BaAqEttXKKKQpvyJ1YTCuTIOBfExxZQtvs+yHLa3KrWk+SG
+   Q==;
+X-CSE-ConnectionGUID: h9EfhtYeQGukcNTUgtLs4A==
+X-CSE-MsgGUID: W5NTWlUSSO+qmeonKEIJNw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11631"; a="66863562"
+X-IronPort-AV: E=Sophos;i="6.20,247,1758610800"; 
+   d="scan'208";a="66863562"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2025 17:38:00 -0800
+X-CSE-ConnectionGUID: dj3HOOfJRTKGHe94ZNVojQ==
+X-CSE-MsgGUID: cJDP978jQIqE7Aa/YP2L3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,247,1758610800"; 
+   d="scan'208";a="199326314"
+Received: from unknown (HELO [10.238.3.115]) ([10.238.3.115])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2025 17:37:54 -0800
+Message-ID: <ffdcf61f-a525-4e90-a401-b8fb4d7b0453@linux.intel.com>
+Date: Thu, 4 Dec 2025 09:37:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251203232924.1119206-1-namhyung@kernel.org>
-In-Reply-To: <20251203232924.1119206-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 3 Dec 2025 16:34:56 -0800
-X-Gm-Features: AWmQ_blAzZW_jsMqIr61VwXVVoWBHwRZTdy5zFilIW7cQO8zIwuVd0klRVGDF00
-Message-ID: <CAP-5=fU=G75jpsG-X6pa8_rdKapxVc615CqvcdSPBFesj02D6A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] tools/build: Add a feature test for libopenssl
-To: Namhyung Kim <namhyung@kernel.org>, bpf@vger.kernel.org
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v5 17/19] perf headers: Sync with the kernel headers
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>, Kan Liang <kan.liang@linux.intel.com>
+References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
+ <20251203065500.2597594-18-dapeng1.mi@linux.intel.com>
+ <CAP-5=fU+eoG5sXwL_ZHYup2RbZpZvYY7OaMjWQVRhO2ATq9BoQ@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fU+eoG5sXwL_ZHYup2RbZpZvYY7OaMjWQVRhO2ATq9BoQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 3, 2025 at 3:29=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> It's used by bpftool and the kernel build.  Let's add a feature test so
-> that perf can decide what to do based on the availability.
 
-It seems strange to add a feature test that bpftool is missing and
-then use it only in the perf build. The signing of bpf programs isn't
-something I think we need for skeleton support in perf. I like the
-feature test, could we add it and use it in bpftool? The only two
-functions using openssl appear to be:
+On 12/4/2025 7:43 AM, Ian Rogers wrote:
+> On Tue, Dec 2, 2025 at 10:59 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> Update include/uapi/linux/perf_event.h and
+>> arch/x86/include/uapi/asm/perf_regs.h to support extended regs.
+>>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  tools/arch/x86/include/uapi/asm/perf_regs.h | 62 +++++++++++++++++++++
+>>  tools/include/uapi/linux/perf_event.h       | 45 +++++++++++++--
+>>  2 files changed, 103 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
+>> index 7c9d2bb3833b..f3561ed10041 100644
+>> --- a/tools/arch/x86/include/uapi/asm/perf_regs.h
+>> +++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
+>> @@ -27,9 +27,34 @@ enum perf_event_x86_regs {
+>>         PERF_REG_X86_R13,
+>>         PERF_REG_X86_R14,
+>>         PERF_REG_X86_R15,
+>> +       /*
+>> +        * The EGPRs/SSP and XMM have overlaps. Only one can be used
+>> +        * at a time. For the ABI type PERF_SAMPLE_REGS_ABI_SIMD,
+>> +        * utilize EGPRs/SSP. For the other ABI type, XMM is used.
+>> +        *
+>> +        * Extended GPRs (EGPRs)
+>> +        */
+>> +       PERF_REG_X86_R16,
+>> +       PERF_REG_X86_R17,
+>> +       PERF_REG_X86_R18,
+>> +       PERF_REG_X86_R19,
+>> +       PERF_REG_X86_R20,
+>> +       PERF_REG_X86_R21,
+>> +       PERF_REG_X86_R22,
+>> +       PERF_REG_X86_R23,
+>> +       PERF_REG_X86_R24,
+>> +       PERF_REG_X86_R25,
+>> +       PERF_REG_X86_R26,
+>> +       PERF_REG_X86_R27,
+>> +       PERF_REG_X86_R28,
+>> +       PERF_REG_X86_R29,
+>> +       PERF_REG_X86_R30,
+>> +       PERF_REG_X86_R31,
+>> +       PERF_REG_X86_SSP,
+>>         /* These are the limits for the GPRs. */
+>>         PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+>>         PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
+>> +       PERF_REG_MISC_MAX = PERF_REG_X86_SSP + 1,
+> I wonder MISC isn't the most intention revealing name. What happens if
+> things are extended again? Would APX be a better alternative, so
+> PERF_REG_APX_MAX ?
 
-  __u32 register_session_key(const char *key_der_path)
-  int bpftool_prog_sign(struct bpf_load_and_run_opts *opts)
+Hmm, I don't think PERF_REG_APX_MAX is a good name either since there is
+SSP as well besides the APX eGPRs, and there could be more registers
+introduced in the future.
 
-so we can do the whole feature test then #ifdef HAVE_FEATURE... stub
-static inline versions of the functions game?
+How about PERF_REG_X86_EXTD_MAX?
 
-Perhaps we only need the bootstrap version of bpftool in perf and we
-can just avoid dependencies that way. Looking at bpftool's build I see
-that sign.o/c with those functions in is part of the bootstrap version
-of bpftool :-(
 
-Thanks,
-Ian
+>
+>>         /* These all need two bits set because they are 128bit */
+>>         PERF_REG_X86_XMM0  = 32,
+>> @@ -54,5 +79,42 @@ enum perf_event_x86_regs {
+>>  };
+>>
+>>  #define PERF_REG_EXTENDED_MASK (~((1ULL << PERF_REG_X86_XMM0) - 1))
+>> +#define PERF_X86_EGPRS_MASK    GENMASK_ULL(PERF_REG_X86_R31, PERF_REG_X86_R16)
+>> +
+>> +enum {
+>> +       PERF_REG_X86_XMM,
+>> +       PERF_REG_X86_YMM,
+>> +       PERF_REG_X86_ZMM,
+>> +       PERF_REG_X86_MAX_SIMD_REGS,
+>> +
+>> +       PERF_REG_X86_OPMASK = 0,
+>> +       PERF_REG_X86_MAX_PRED_REGS = 1,
+>> +};
+>> +
+>> +enum {
+>> +       PERF_X86_SIMD_XMM_REGS      = 16,
+>> +       PERF_X86_SIMD_YMM_REGS      = 16,
+>> +       PERF_X86_SIMD_ZMMH_REGS     = 16,
+>> +       PERF_X86_SIMD_ZMM_REGS      = 32,
+>> +       PERF_X86_SIMD_VEC_REGS_MAX  = PERF_X86_SIMD_ZMM_REGS,
+>> +
+>> +       PERF_X86_SIMD_OPMASK_REGS   = 8,
+>> +       PERF_X86_SIMD_PRED_REGS_MAX = PERF_X86_SIMD_OPMASK_REGS,
+>> +};
+>> +
+>> +#define PERF_X86_SIMD_PRED_MASK                GENMASK(PERF_X86_SIMD_PRED_REGS_MAX - 1, 0)
+>> +#define PERF_X86_SIMD_VEC_MASK         GENMASK_ULL(PERF_X86_SIMD_VEC_REGS_MAX - 1, 0)
+>> +
+>> +#define PERF_X86_H16ZMM_BASE           PERF_X86_SIMD_ZMMH_REGS
+>> +
+>> +enum {
+>> +       PERF_X86_OPMASK_QWORDS   = 1,
+>> +       PERF_X86_XMM_QWORDS      = 2,
+>> +       PERF_X86_YMMH_QWORDS     = 2,
+>> +       PERF_X86_YMM_QWORDS      = 4,
+>> +       PERF_X86_ZMMH_QWORDS     = 4,
+>> +       PERF_X86_ZMM_QWORDS      = 8,
+>> +       PERF_X86_SIMD_QWORDS_MAX = PERF_X86_ZMM_QWORDS,
+>> +};
+>>
+>>  #endif /* _ASM_X86_PERF_REGS_H */
+>> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+>> index d292f96bc06f..f1474da32622 100644
+>> --- a/tools/include/uapi/linux/perf_event.h
+>> +++ b/tools/include/uapi/linux/perf_event.h
+>> @@ -314,8 +314,9 @@ enum {
+>>   */
+>>  enum perf_sample_regs_abi {
+>>         PERF_SAMPLE_REGS_ABI_NONE               = 0,
+>> -       PERF_SAMPLE_REGS_ABI_32                 = 1,
+>> -       PERF_SAMPLE_REGS_ABI_64                 = 2,
+>> +       PERF_SAMPLE_REGS_ABI_32                 = (1 << 0),
+>> +       PERF_SAMPLE_REGS_ABI_64                 = (1 << 1),
+>> +       PERF_SAMPLE_REGS_ABI_SIMD               = (1 << 2),
+>>  };
+>>
+>>  /*
+>> @@ -382,6 +383,7 @@ enum perf_event_read_format {
+>>  #define PERF_ATTR_SIZE_VER6                    120     /* Add: aux_sample_size */
+>>  #define PERF_ATTR_SIZE_VER7                    128     /* Add: sig_data */
+>>  #define PERF_ATTR_SIZE_VER8                    136     /* Add: config3 */
+>> +#define PERF_ATTR_SIZE_VER9                    168     /* Add: sample_simd_{pred,vec}_reg_* */
+> ARM have added a config4 in:
+> https://lore.kernel.org/lkml/20251111-james-perf-feat_spe_eft-v10-1-1e1b5bf2cd05@linaro.org/
+> so this will need to be VER10.
 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/build/Makefile.feature          | 6 ++++--
->  tools/build/feature/Makefile          | 8 ++++++--
->  tools/build/feature/test-all.c        | 5 +++++
->  tools/build/feature/test-libopenssl.c | 7 +++++++
->  4 files changed, 22 insertions(+), 4 deletions(-)
->  create mode 100644 tools/build/feature/test-libopenssl.c
+Thanks. It looks the ARM changes have been merged, so we can change it to
+VER10 in next version.
+
+
 >
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index fc6abe369f7373c5..bc6d85bad379321b 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -99,7 +99,8 @@ FEATURE_TESTS_BASIC :=3D                  \
->          libzstd                                \
->          disassembler-four-args         \
->          disassembler-init-styled       \
-> -        file-handle
-> +        file-handle                    \
-> +        libopenssl
+> Thanks,
+> Ian
 >
->  # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
->  # of all feature tests
-> @@ -147,7 +148,8 @@ FEATURE_DISPLAY ?=3D              \
->           lzma                   \
->           bpf                   \
->           libaio                        \
-> -         libzstd
-> +         libzstd               \
-> +         libopenssl
->
->  #
->  # Declare group members of a feature to display the logical OR of the de=
-tection
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index 7c90e0d0157ac9b1..3fd5ad0db2109778 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -67,12 +67,13 @@ FILES=3D                                          \
->           test-libopencsd.bin                   \
->           test-clang.bin                                \
->           test-llvm.bin                         \
-> -         test-llvm-perf.bin   \
-> +         test-llvm-perf.bin                    \
->           test-libaio.bin                       \
->           test-libzstd.bin                      \
->           test-clang-bpf-co-re.bin              \
->           test-file-handle.bin                  \
-> -         test-libpfm4.bin
-> +         test-libpfm4.bin                      \
-> +         test-libopenssl.bin
->
->  FILES :=3D $(addprefix $(OUTPUT),$(FILES))
->
-> @@ -381,6 +382,9 @@ endif
->  $(OUTPUT)test-libpfm4.bin:
->         $(BUILD) -lpfm
->
-> +$(OUTPUT)test-libopenssl.bin:
-> +       $(BUILD) -lssl
-> +
->  $(OUTPUT)test-bpftool-skeletons.bin:
->         $(SYSTEM_BPFTOOL) version | grep '^features:.*skeletons' \
->                 > $(@:.bin=3D.make.output) 2>&1
-> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-al=
-l.c
-> index eb346160d0ba0e2f..1488bf6e607836e5 100644
-> --- a/tools/build/feature/test-all.c
-> +++ b/tools/build/feature/test-all.c
-> @@ -142,6 +142,10 @@
->  # include "test-libtraceevent.c"
->  #undef main
->
-> +#define main main_test_libopenssl
-> +# include "test-libopenssl.c"
-> +#undef main
-> +
->  int main(int argc, char *argv[])
->  {
->         main_test_libpython();
-> @@ -173,6 +177,7 @@ int main(int argc, char *argv[])
->         main_test_reallocarray();
->         main_test_libzstd();
->         main_test_libtraceevent();
-> +       main_test_libopenssl();
->
->         return 0;
->  }
-> diff --git a/tools/build/feature/test-libopenssl.c b/tools/build/feature/=
-test-libopenssl.c
-> new file mode 100644
-> index 0000000000000000..168c45894e8be687
-> --- /dev/null
-> +++ b/tools/build/feature/test-libopenssl.c
-> @@ -0,0 +1,7 @@
-> +#include <openssl/ssl.h>
-> +#include <openssl/opensslv.h>
-> +
-> +int main(void)
-> +{
-> +       return SSL_library_init();
-> +}
-> --
-> 2.52.0.177.g9f829587af-goog
->
+>>  /*
+>>   * 'struct perf_event_attr' contains various attributes that define
+>> @@ -545,6 +547,25 @@ struct perf_event_attr {
+>>         __u64   sig_data;
+>>
+>>         __u64   config3; /* extension of config2 */
+>> +
+>> +
+>> +       /*
+>> +        * Defines set of SIMD registers to dump on samples.
+>> +        * The sample_simd_regs_enabled !=0 implies the
+>> +        * set of SIMD registers is used to config all SIMD registers.
+>> +        * If !sample_simd_regs_enabled, sample_regs_XXX may be used to
+>> +        * config some SIMD registers on X86.
+>> +        */
+>> +       union {
+>> +               __u16 sample_simd_regs_enabled;
+>> +               __u16 sample_simd_pred_reg_qwords;
+>> +       };
+>> +       __u32 sample_simd_pred_reg_intr;
+>> +       __u32 sample_simd_pred_reg_user;
+>> +       __u16 sample_simd_vec_reg_qwords;
+>> +       __u64 sample_simd_vec_reg_intr;
+>> +       __u64 sample_simd_vec_reg_user;
+>> +       __u32 __reserved_4;
+>>  };
+>>
+>>  /*
+>> @@ -1018,7 +1039,15 @@ enum perf_event_type {
+>>          *      } && PERF_SAMPLE_BRANCH_STACK
+>>          *
+>>          *      { u64                   abi; # enum perf_sample_regs_abi
+>> -        *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
+>> +        *        u64                   regs[weight(mask)];
+>> +        *        struct {
+>> +        *              u16 nr_vectors;
+>> +        *              u16 vector_qwords;
+>> +        *              u16 nr_pred;
+>> +        *              u16 pred_qwords;
+>> +        *              u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
+>> +        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
+>> +        *      } && PERF_SAMPLE_REGS_USER
+>>          *
+>>          *      { u64                   size;
+>>          *        char                  data[size];
+>> @@ -1045,7 +1074,15 @@ enum perf_event_type {
+>>          *      { u64                   data_src; } && PERF_SAMPLE_DATA_SRC
+>>          *      { u64                   transaction; } && PERF_SAMPLE_TRANSACTION
+>>          *      { u64                   abi; # enum perf_sample_regs_abi
+>> -        *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_INTR
+>> +        *        u64                   regs[weight(mask)];
+>> +        *        struct {
+>> +        *              u16 nr_vectors;
+>> +        *              u16 vector_qwords;
+>> +        *              u16 nr_pred;
+>> +        *              u16 pred_qwords;
+>> +        *              u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
+>> +        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
+>> +        *      } && PERF_SAMPLE_REGS_INTR
+>>          *      { u64                   phys_addr;} && PERF_SAMPLE_PHYS_ADDR
+>>          *      { u64                   cgroup;} && PERF_SAMPLE_CGROUP
+>>          *      { u64                   data_page_size;} && PERF_SAMPLE_DATA_PAGE_SIZE
+>> --
+>> 2.34.1
+>>
