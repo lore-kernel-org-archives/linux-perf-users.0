@@ -1,122 +1,142 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B47631FC7FB;
-	Fri,  5 Dec 2025 04:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from sg-1-34.ptr.blmpb.com (sg-1-34.ptr.blmpb.com [118.26.132.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9053A1D31B9
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Dec 2025 06:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764910447; cv=none; b=Wy93vkNoSKF9iZzKMgKcbRWzqAYXqUHL2INP5u33M/DcaeUti549t+iNYgFOqw7o9Je+ecwd6yE4NxOLUm2vR4QxwUqhZxKzRaeUs2izO2jr4RR1fKkYT4rYobcl5BXT7fZJ7sdvzJFaZdl2Scki0WwjA9YK7fjovOYpnYmbq6c=
+	t=1764915289; cv=none; b=BuMj9FlNVZApl/o1Fp164cLM99ukz+fLGmRnx3TdPRLbZ2lbCze+hic0NUJy+lHs/Vq0NIYRTQd/nzoc06sPgTsCeksuQJCC0v6n4SPwJeKJE77QJnkbyXf1QLafjxhh9i94cJV6A88iCW3gstPPmG7yommkVHcvkuAfswmoTgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764910447; c=relaxed/simple;
-	bh=fGLX4f9BliEq3ff+cYL7QS/mZsPXQVrIupq0uNqdeP4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rh3Bc+SA2Xgo3xx8xsKkVCiGnZV7Q6jvgWIRARfquYTk9lwcP7pgjcKxnneD5EDWsglIcKjzwT9NX/ixbbGsHkp831vCzfv80wCl5sXd4rfjckNuglikvM9xA3VAM87b5QuenSTV3jG7rz05ZKQyS+LRt7K/dI5cC7dfuMpPZkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F012339;
-	Thu,  4 Dec 2025 20:53:56 -0800 (PST)
-Received: from [10.163.52.42] (unknown [10.163.52.42])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBD9C3F59E;
-	Thu,  4 Dec 2025 20:53:57 -0800 (PST)
-Message-ID: <ae9aacb1-29ae-4e05-ac55-0db555c3e455@arm.com>
-Date: Fri, 5 Dec 2025 10:23:54 +0530
+	s=arc-20240116; t=1764915289; c=relaxed/simple;
+	bh=CvWhmtmvn7qNNSNds0KvCC2SLPReBQpsfdIG9lnMji0=;
+	h=Subject:Message-Id:Mime-Version:Content-Type:References:
+	 In-Reply-To:To:Date:Cc:From; b=c89apEXZM5XpsN+Du8f9UaAOMOLcXGtwM4U1OSKZhyG2j50J2LYjunl2W9LaGDROYeV0pRHsuBG9sZgJL0s++z1UZNlwrK0pFAg9byKtOxohzmuHezQ2sohDX/IWu5LX9yYCAwdkNnaomTT6/BsnNilReKfPQNLng6pO54iKsNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=picoheart.com; spf=pass smtp.mailfrom=picoheart.com; dkim=pass (2048-bit key) header.d=picoheart-com.20200927.dkim.feishu.cn header.i=@picoheart-com.20200927.dkim.feishu.cn header.b=JBfuGE69; arc=none smtp.client-ip=118.26.132.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=picoheart.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=picoheart.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=picoheart-com.20200927.dkim.feishu.cn header.i=@picoheart-com.20200927.dkim.feishu.cn header.b="JBfuGE69"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=picoheart-com.20200927.dkim.feishu.cn; t=1764915159;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=CbbPQmGT66XgpcQTC/NHTJu3sZ6jTELyOqJLg0OipEM=;
+ b=JBfuGE69Do+bFrVN6EcOnjae8w/VdKFoH5FAjG+LcfFoNkUBEwUEPq/HA499GvjxjqF0m2
+ fIEgs56nbY3QIGXT0GIepUUM3kJiSh0722TMMb4aZWXR6Ylz5yOfcrkrMoK5pQTuSEmzKV
+ kh60gDU+K2qn/GcMtTpzv+Calxl9PmmY9+gwMbgfc/cuSXdI8a8wq8SdGNLMMiiKCC1uBb
+ mrjaE5wDsqGGf27ctDVJi96JBoj4rqErALrE5nFqb2/OIHFIH14sPvIAKiouxLyllN4zSi
+ hRfyfyzTizO9B7AmdtBl8WEUZi3rmEkGnuZ4jD4SZWpQLR0uioTEAbMk2c64Zg==
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Lms-Return-Path: <lba+2693277d5+f048a0+vger.kernel.org+yang.yicong@picoheart.com>
+Subject: Re: [PATCH v6 2/2] riscv: add HARDLOCKUP_DETECTOR_PERF support
+Received: from [100.86.226.133] ([58.250.106.109]) by smtp.feishu.cn with ESMTPS; Fri, 05 Dec 2025 14:12:36 +0800
+Message-Id: <96fd2a69-baf4-4109-8341-0d4bb6c60393@picoheart.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/19] coresight: trbe: Support trigger and circle buffer
- modes
-To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Yeoreum Yun <yeoreum.yun@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Tamas Petz <tamas.petz@arm.com>,
- Tamas Zsoldos <tamas.zsoldos@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20251114033243.76509-1-cuiyunhui@bytedance.com> <20251114033243.76509-3-cuiyunhui@bytedance.com>
+In-Reply-To: <20251114033243.76509-3-cuiyunhui@bytedance.com>
+To: "Yunhui Cui" <cuiyunhui@bytedance.com>
+Date: Fri, 5 Dec 2025 14:12:33 +0800
+X-Original-From: Yicong Yang <yang.yicong@picoheart.com>
+Cc: <akpm@linux-foundation.org>, <alex@ghiti.fr>, <anup@brainfault.org>, 
+	<aou@eecs.berkeley.edu>, <atish.patra@linux.dev>, 
+	<catalin.marinas@arm.com>, <dianders@chromium.org>, 
+	<johannes@sipsolutions.net>, <lihuafei1@huawei.com>, 
+	<mark.rutland@arm.com>, <masahiroy@kernel.org>, <maz@kernel.org>, 
+	<mingo@kernel.org>, <nicolas.schier@linux.dev>, <palmer@dabbelt.com>, 
+	<paul.walmsley@sifive.com>, <suzuki.poulose@arm.com>, 
+	<thorsten.blum@linux.dev>, <wangjinchao600@gmail.com>, <will@kernel.org>, 
+	<yangyicong@hisilicon.com>, <zhanjie9@hisilicon.com>, 
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-perf-users@vger.kernel.org>, <linux-riscv@lists.infradead.org>, 
+	"Paul Walmsley" <pjw@kernel.org>, <yang.yicong@picoheart.com>, 
+	<geshijian@picoheart.com>
+From: "Yicong Yang" <yang.yicong@picoheart.com>
 
-On 01/12/25 4:51 PM, Leo Yan wrote:
-> The current TRBE driver operates only in fill mode, where tracing stops
-> at the top of buffer and a maintenance interrupt is raised.  Due to
-> interrupt latency, tracing is halted while the program continues to run,
-> resulting in trace data lose.
+Hi Yunhui,
+
+this has conflicts on the mainline master. looks like you have a dependency
+on the SSE PMU support patchset [1], need to mention it for the maintainer
+to apply.
+
+[1] https://lore.kernel.org/linux-riscv/20250908181717.1997461-5-cleger@rivosinc.com/
+
+one comment below.
+
+On 2025/11/14 11:32, Yunhui Cui wrote:
+> Enable the HARDLOCKUP_DETECTOR_PERF function based on RISC-V SSE.
 > 
-> This series enhances the driver for the trigger mode to mitigate trace
-> discontinuity.  The circle buffer mode is introduced to avoid any
-> maintenance interrupts during the snapshot session.
-> 
-> It can be divided into three parts for easier review:
-> 
->   Patches 01~05: Minor refactoring for disabling operations and
->                  clearing status.
-
-Could these patches be posted first ?
-
->   Patches 06~12: Refactor fault action and trace size calculation.
-
-Followed by this set which still keeps the existing functionality intact.
-
->   Patches 13~19: Support trigger and circle modes. To better utilize the
->                  new buffer modes, perf sets the watermark to
-> 		 one-quarter of the buffer size.
-
-Then finally all above changes which are newer functions and tests etc.
-
-I guess that will be much easier to review.
-
-> 
-> This series is applied on coresight-next branch and has been validated
-> on Orion O6 board:
-> 
->   1) The trigger count and wrap mode are verified using Ftrace logs.
->   2) A new kunit test module verifies limit and count calculations.
->   3) Basic perf record / script commands and module load/unload have
->      been tested successfully.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Acked-by: Paul Walmsley <pjw@kernel.org>
 > ---
-> Leo Yan (19):
->       coresight: trbe: Use helpers for checking errata
->       coresight: trbe: Remove redundant disable operation
->       coresight: trbe: Remove buffer disabling in trbe_handle_overflow()
->       coresight: trbe: Remove set_trbe_disabled() from the enable flow
->       coresight: trbe: Refactor status clearing
->       coresight: trbe: Refactor syndrome decoding
->       coresight: trbe: Refactor AUX flag setting
->       coresight: trbe: Use PERF_AUX_FLAG_PARTIAL instead of PERF_AUX_FLAG_COLLISION
->       coresight: trbe: Add fault action argument to trbe_handle_overflow()
->       coresight: trbe: Always check fault action when updating buffer
->       coresight: trbe: Apply overwrite erratum for only wrap event
->       coresight: trbe: Calculate size for buffer wrapping
->       coresight: trbe: Remove misleading comment
->       coresight: trbe: Refactor compute_trbe_buffer_limit()
->       coresight: trbe: Add static key for bypassing trigger mode
->       coresight: trbe: Support trigger mode
->       coresight: trbe: Enable circle mode for snapshot
->       coresight: trbe: Add kunit tests
->       perf: cs-etm: Set watermark for AUX trace
+>  arch/riscv/Kconfig           |  3 +++
+>  drivers/perf/riscv_pmu_sbi.c | 10 ++++++++++
+>  2 files changed, 13 insertions(+)
 > 
->  drivers/hwtracing/coresight/Kconfig                |   9 +
->  drivers/hwtracing/coresight/Makefile               |   1 +
->  .../coresight/coresight-trbe-kunit-tests.c         | 536 +++++++++++++++++++++
->  drivers/hwtracing/coresight/coresight-trbe.c       | 440 +++++++++--------
->  drivers/hwtracing/coresight/coresight-trbe.h       | 111 ++++-
->  tools/perf/arch/arm/util/cs-etm.c                  |   7 +
->  6 files changed, 896 insertions(+), 208 deletions(-)
-> ---
-> base-commit: 9e9182cab5ebc3ee7544e60ef08ba19fdf216920
-> change-id: 20251120-trbe_buffer_refactor_v1-1-8f8023105469
-> 
-> Best regards,
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index fadec20b87a8e..46ccd33732fa8 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -186,6 +186,9 @@ config RISCV
+>  	select HAVE_PAGE_SIZE_4KB
+>  	select HAVE_PCI
+>  	select HAVE_PERF_EVENTS
+> +	select HAVE_PERF_EVENTS_NMI if RISCV_PMU_SBI_SSE
+> +	select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && HAVE_PERF_EVENTS_NMI
+> +	select WATCHDOG_PERF_ADJUST_PERIOD if HARDLOCKUP_DETECTOR_PERF
+>  	select HAVE_PERF_REGS
+>  	select HAVE_PERF_USER_STACK_DUMP
+>  	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index c852f64a50221..0c7c5924687c9 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/sched/clock.h>
+>  #include <linux/soc/andes/irq.h>
+>  #include <linux/workqueue.h>
+> +#include <linux/nmi.h>
+>  
+>  #include <asm/errata_list.h>
+>  #include <asm/sbi.h>
+> @@ -1192,6 +1193,13 @@ static int pmu_sbi_setup_sse(struct riscv_pmu *pmu)
+>  }
+>  #endif
+>  
+> +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
+> +bool arch_perf_nmi_is_available(void)
+> +{
+> +	return IS_ENABLED(CONFIG_RISCV_PMU_SBI_SSE);
 
+this looks incorrect per implementation in [1]. we'll fallback to the normal
+interrupt if failed to register the SSE event, in which case NMI is not
+available for the PMU. Check the kconfig is not sufficient.
+
+you can check pmu->sse_evt instead for the NMI support here, or cached the
+NMI status somewhere like how arm_pmu does.
+
+Thanks.
+
+> +}
+> +#endif
+> +
+>  static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
+>  {
+>  	struct riscv_pmu *pmu = hlist_entry_safe(node, struct riscv_pmu, node);
+> @@ -1618,6 +1626,8 @@ static int __init pmu_sbi_devinit(void)
+>  	/* Notify legacy implementation that SBI pmu is available*/
+>  	riscv_pmu_legacy_skip_init();
+>  
+> +	lockup_detector_retry_init();
+> +
+>  	return ret;
+>  }
+>  device_initcall(pmu_sbi_devinit)
