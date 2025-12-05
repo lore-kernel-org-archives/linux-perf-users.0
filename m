@@ -1,76 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FBC275861;
-	Fri,  5 Dec 2025 04:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D25E18B0A;
+	Fri,  5 Dec 2025 04:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764909679; cv=none; b=lBmi5jnaL8o5VJhqFKChpYYqSMKiA2WwjfwCo0sY5nRtu1zVmiPw2OnpaxXB/JFOApFYlDDxSC62J7kxxOc2DRfCKib3G8BGSxJWB4tPuOjzHdfhLwOolKm/lsP15qxyaeLo+IJAujP1PBK7p2fKkskKbgRDvb7AQPD+eppMrPk=
+	t=1764910103; cv=none; b=ac365mvearzByQq8TB6cxJUsVSiNCcqk1Inirkf9TviMeQkJ7Cu4JO/j4OTp74IL566EtmOp87qivCs2TZ6rsBMBCd6sVlX37VzGHkTaC5Gg40Y7R5vBI6//N0E4B3IOX0sPzGS7kcKcqEgBzXUtV5xAC4sCtu1uBewUq7V5UuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764909679; c=relaxed/simple;
-	bh=GdEhun3cR/92HV9I3xif4vkj50h42eNKF9Jmt5SKwaw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hIw0tBC+NQQGKL8ejfHQhpH4wugMVnSRwJSUs26bvVlzRCpd/X7+p0YBfRR3EnTU9Gk7YMEvWh2Xtc7twtyC6zPDjwKg7OohfFtCFB7PilGGb8AGBv5nojWntxEXaXtFB95AT8hKv3hzHM0G208ktxmtXiQBeSdPsqo+WuRVQRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jaZN2bLL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jaZN2bLL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7529CC4CEF1;
-	Fri,  5 Dec 2025 04:41:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764909678;
-	bh=GdEhun3cR/92HV9I3xif4vkj50h42eNKF9Jmt5SKwaw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jaZN2bLLhUud8G1DgWgzUjUfmjiP1OM0+DAGo1kjyTO9Xmj2eHjbBPc/0FsISYlFV
-	 NdxdC9+FXaH9hU1b3Pl9aMDjSLxRbgM0b45/AHxepqSU2bEQp59JFyYKYUDb/qsUXL
-	 bwpN9DRnuBwxZ0W0w5rMpWpr8y+prn4m/l+jSoSEOqz4alwI02h216p5uagmET5zxp
-	 gwGe+R9jpZ+boVmJYe/yOAkFzUi6fDHwSVC9zyIs694hHH0SxlPc+EFfsykJc4RdVL
-	 1Ml/DW+Zni7a49xx5Pb2GlxE7GZDELVxmmPChUDvKvc/lYpgBBEAoyWFcyv58UxWkE
-	 5UNIsU8JTtoaw==
-Date: Thu, 4 Dec 2025 20:39:24 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Fangrui Song <maskray@sourceware.org>,
-	Pablo Galindo <pablogsal@gmail.com>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH] perf genelf: Switch from SHA-1 to BLAKE2s for build ID
- generation
-Message-ID: <20251205043924.GA6421@sol>
-References: <20251205043121.62356-1-ebiggers@kernel.org>
+	s=arc-20240116; t=1764910103; c=relaxed/simple;
+	bh=/6zLhXin8TiveM4GlDFxuE79xuhwSrMi0pfUNFVFK/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E4Jn1LVJp0zZ7rH1bmklMonKciuYD537vsI5IRiySaSRH8snhH1Yr2OMBijcnM9cxAPwpI9gBK2WL4L5dr0t4+ugX4x13qtEzsPuEc/aVvpTl5EL9sTI/82nT+x5D6UynSFVRcJrtLhXWJQLVD25hO4EdSPvN71ELyRk3qA24WQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9170B339;
+	Thu,  4 Dec 2025 20:48:13 -0800 (PST)
+Received: from [10.163.52.42] (unknown [10.163.52.42])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 321A23F86F;
+	Thu,  4 Dec 2025 20:48:14 -0800 (PST)
+Message-ID: <c22b084b-3853-405d-8b43-397786af7be9@arm.com>
+Date: Fri, 5 Dec 2025 10:18:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251205043121.62356-1-ebiggers@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 19/19] perf: cs-etm: Set watermark for AUX trace
+To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Tamas Petz <tamas.petz@arm.com>,
+ Tamas Zsoldos <tamas.zsoldos@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
+ <20251201-trbe_buffer_refactor_v1-1-v1-19-7da32b076b28@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20251201-trbe_buffer_refactor_v1-1-v1-19-7da32b076b28@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Dec 04, 2025 at 08:31:21PM -0800, Eric Biggers wrote:
+On 01/12/25 4:52 PM, Leo Yan wrote:
+> The default watermark is half of the total buffer size. In many cases,
+> the tool can not be notified with sufficient free space, especially when
+> profiling with small AUX buffer (e.g., 64KiB).
+
+Could not smaller AUX buffer be prevented for TRBE instead ?
+
+> > Setting watermark to quarter of the buffer to notifies the tool to read
+> data earlier and prevents the data loss.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 > ---
->  tools/perf/tests/util.c   |  78 ++++++++++++--------
->  tools/perf/util/Build     |   2 +-
->  tools/perf/util/blake2s.c | 151 ++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/blake2s.h |  73 ++++++++++++++++++
->  tools/perf/util/genelf.c  |  58 +++++++--------
->  tools/perf/util/sha1.c    |  97 ------------------------
->  tools/perf/util/sha1.h    |   6 --
->  7 files changed, 302 insertions(+), 163 deletions(-)
->  create mode 100644 tools/perf/util/blake2s.c
->  create mode 100644 tools/perf/util/blake2s.h
->  delete mode 100644 tools/perf/util/sha1.c
->  delete mode 100644 tools/perf/util/sha1.h
+>  tools/perf/arch/arm/util/cs-etm.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> index ea891d12f8f40beebf8dee1d3db71cad701f5666..649b8b0d0f92b4af45fb97db9da3c5ccf24a978b 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -424,6 +424,13 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>  		pr_debug2("%s snapshot size: %zu\n", CORESIGHT_ETM_PMU_NAME,
+>  			  opts->auxtrace_snapshot_size);
+>  
+> +	if (!opts->auxtrace_snapshot_mode && !opts->auxtrace_sample_mode) {
+> +		size_t aw = opts->auxtrace_mmap_pages * (size_t)page_size / 4;
+> +		u32 aux_watermark = aw > UINT_MAX ? UINT_MAX : aw;
+> +
+> +		cs_etm_evsel->core.attr.aux_watermark = aux_watermark;
+> +	}
+> +
+>  	/*
+>  	 * To obtain the auxtrace buffer file descriptor, the auxtrace
+>  	 * event must come first.
+> 
 
-Forgot to mention: this applies to next-20251204, or alternatively to
-the latest perf-tools-next (d509d14fff783969904954eaf5d94f092c6fce19)
-
-- Eric
