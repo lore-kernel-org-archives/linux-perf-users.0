@@ -1,109 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BDF2F7442;
-	Fri,  5 Dec 2025 10:28:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA872DE6E3;
+	Fri,  5 Dec 2025 11:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764930488; cv=none; b=QzxwN3AgE+vxe3CPmvsASv+2FETMLtKXrtdw24pB5/wEHs6HD8WmJ/OGQ+xrqHka4S0A2/IeBIxQNu5h2OXhISZwP+aUxHz7K6Qv9QvljEDwFZ8nd2gmO9QIxVhQEqD5Uy71zGtaIaGy5ZcjeJ+TSNz2vm37m4n6/FXtyMpTv4I=
+	t=1764932846; cv=none; b=rgXrvnW/AYzOlWMP7dU7caLZmm+XI16mIe/bRJ9AQRuhbam1T0wZ6Muhvjsz3tdXXcDRbjODpOaqmsi0KugQGMAzzQ0AEuXkiHIEtgF6Bzq0SslITGXRDMi7Rsj0Y7hwlSFmQhpb8q8NGDeWPrp0tI75DcnEzi5TP/FrXRZP8sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764930488; c=relaxed/simple;
-	bh=pkvT43jmHMZGx+gMf8vBonhQo51AMhf1P7oAkHfkYX0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gtAFps5pJCE+ATPMNaUctmXC7S1XGiFUSc3TS1u+70wz2zWXRJOccjSmNfv8KGlpE4qveA9fmd9QAG73kbGP2Nu1fvhhXmc6xAZzyIWLXnuzAo7Zworc8nDfLwwk15djWHGSFMkNbx8rM4C145hoZFjYNNwEOdA5fEavT54FBiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qYr8+xBZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764932846; c=relaxed/simple;
+	bh=bRrb+8Q5ZRnXrTkx+jEs28tHrGBlIImR98H2WBQYM4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fC3MD7SchhO3pIT36Ygpxo6XZnbb/BdoGt0q+AASGKxI1FYKRwwJXhmmrCL/4etYltQWfKqnVVWT2C1LEYOpu2Vp2TdhE+jl+M3lvgYCHNn4J1Je2uTgHoB2fEW+kqHfzy86tcIKgtZYLSCxLaKG/Jz+kwWPUDkMo4cb0poXjBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NhrVxaVC; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qYr8+xBZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BACEBC4CEF1;
-	Fri,  5 Dec 2025 10:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764930487;
-	bh=pkvT43jmHMZGx+gMf8vBonhQo51AMhf1P7oAkHfkYX0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qYr8+xBZSun+hkYWbe4wozkXTtknFZa+HkldPsyfOnnY3ZQEiqYTIh0h7Ef9fxayQ
-	 bIxF4lYK/uq3wKNYTGDvSOlm96vLPCTo/L/AIr/HHPRKjXf1ZsORCtFC9vJK1aNDt7
-	 PwLe3TiufThXN+0kONSMWn5Q6B1oH4M2VKrasLLCglhuXk1Ou0nRiPSutJDd2mnR3e
-	 F8+EJvyjOz7EvhoVyiNzciV6Px8Vrj8aYhJa9ch7d8c1dMbspJxLkv5nbwSjSR3Lwe
-	 JgskYqpDT8TvVR9GJyd3cJo+Y3yFs3JW+19JjjmYNdIUrDmnmXmr9zznnOfuQ3SExH
-	 gwx+Op3hZek6w==
-Message-ID: <4e7f40fc-114c-4786-86f7-532dce6cb04c@kernel.org>
-Date: Fri, 5 Dec 2025 10:28:03 +0000
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NhrVxaVC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=5dGDTOXT6AFdadWGfcrsOZEESdafhFkFNnqBlj3hmKQ=; b=NhrVxaVCtfLiNUGvox2H66tlFT
+	QgX11z5SE7+tNt4dfPHqiNj9B1yD/plbhladJuPwFKY4OIgCrk/bwW4lXONaclEeBmmIMnbOWon2K
+	3GoYOT6kRisewRICUO64v2r2x20YXEZgyq5kPaB2fTVbwlWGZXIiB+x30udZIpm4CY2h65n8MM0gY
+	oqffjaHTC/KdBUQSyMj3sf+/9zAJe88sU7+bBZR0IgJNzVHP/1c3ggUPef33nEZoN46GpsJZlObFf
+	FUgpYGKFj1K3Y5xiuTMf3851otH+7NLuzH+HBhVe+nIHmDSpTqgsTvzgrMDF7Qnp5Ev5cIZxWlFbZ
+	kH5GxqRQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vRTeV-00000005bYM-1std;
+	Fri, 05 Dec 2025 11:07:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id EB6FB30027B; Fri, 05 Dec 2025 12:07:06 +0100 (CET)
+Date: Fri, 5 Dec 2025 12:07:06 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>,
+	Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: Re: [Patch v5 07/19] perf: Add sampling support for SIMD registers
+Message-ID: <20251205110706.GT2528459@noisy.programming.kicks-ass.net>
+References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
+ <20251203065500.2597594-8-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] tools/build: Add a feature test for libopenssl
-To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: bpf@vger.kernel.org, James Clark <james.clark@linaro.org>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- KP Singh <kpsingh@kernel.org>
-References: <20251203232924.1119206-1-namhyung@kernel.org>
- <CAP-5=fU=G75jpsG-X6pa8_rdKapxVc615CqvcdSPBFesj02D6A@mail.gmail.com>
- <aTGz9kFQk2xNvsbC@x1> <aTIeuLOcc6c7RWUz@google.com>
- <CAP-5=fVRjs9Dw=_8B9NRkWxgZKn_yg5XEYXhc_UNi9HGz-R23Q@mail.gmail.com>
-From: Quentin Monnet <qmo@kernel.org>
-Content-Language: en-GB
-In-Reply-To: <CAP-5=fVRjs9Dw=_8B9NRkWxgZKn_yg5XEYXhc_UNi9HGz-R23Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251203065500.2597594-8-dapeng1.mi@linux.intel.com>
 
-2025-12-04 22:27 UTC-0800 ~ Ian Rogers <irogers@google.com>
-> On Thu, Dec 4, 2025 at 3:52 PM Namhyung Kim <namhyung@kernel.org> wrote:
->>
->> On Thu, Dec 04, 2025 at 01:16:54PM -0300, Arnaldo Carvalho de Melo wrote:
->>> On Wed, Dec 03, 2025 at 04:34:56PM -0800, Ian Rogers wrote:
->>>> On Wed, Dec 3, 2025 at 3:29 PM Namhyung Kim <namhyung@kernel.org> wrote:
->>>>>
->>>>> It's used by bpftool and the kernel build.  Let's add a feature test so
->>>>> that perf can decide what to do based on the availability.
->>>>
->>>> It seems strange to add a feature test that bpftool is missing and
->>>> then use it only in the perf build. The signing of bpf programs isn't
->>>
->>> It is strange indeed, I agree that since we don't use BPF signing at
->>> this point in the perf BPf skels, then we could just bootstrap a bpftool
->>> without such feature and continue building the existing features.
->>>
->>> Adding the bpftool maintainer to the CC list, Quentin?
->>
->> I've already talked to Quentin and they want libopenssl as a
->> requirement.
->>
->> https://lore.kernel.org/linux-perf-users/e44f70bf-8f50-4a4b-97b8-eaf988aabced@kernel.org/
-> 
-> You can have libopenssl as a requirement and have a bootstrap bpftool
-> that doesn't require it, as the bootstrap version only provides
-> minimal features typically to just build bpftool. You can also have
-> libopenssl as a requirement and have a feature test that fails in the
-> bpftool build saying you are missing a requirement. Having the perf
-> build detect that a feature for the bpftool dependency is missing is
-> fine as we can then recommend installing bpftool or the missing
-> dependency, but doing this without bpftool also doing something just
-> seems inconsistent.
-> 
-> Thanks,
-> Ian
+On Wed, Dec 03, 2025 at 02:54:48PM +0800, Dapeng Mi wrote:
+
+> @@ -545,6 +547,25 @@ struct perf_event_attr {
+>  	__u64	sig_data;
+>  
+>  	__u64	config3; /* extension of config2 */
+> +
+> +
+> +	/*
+> +	 * Defines set of SIMD registers to dump on samples.
+> +	 * The sample_simd_regs_enabled !=0 implies the
+> +	 * set of SIMD registers is used to config all SIMD registers.
+> +	 * If !sample_simd_regs_enabled, sample_regs_XXX may be used to
+> +	 * config some SIMD registers on X86.
+> +	 */
+> +	union {
+> +		__u16 sample_simd_regs_enabled;
+> +		__u16 sample_simd_pred_reg_qwords;
+> +	};
+> +	__u32 sample_simd_pred_reg_intr;
+> +	__u32 sample_simd_pred_reg_user;
+> +	__u16 sample_simd_vec_reg_qwords;
+> +	__u64 sample_simd_vec_reg_intr;
+> +	__u64 sample_simd_vec_reg_user;
+> +	__u32 __reserved_4;
+>  };
+
+This is poorly aligned and causes holes.
+
+This:
+
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index d292f96bc06f..2deb8dd0ca37 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -545,6 +545,14 @@ struct perf_event_attr {
+ 	__u64	sig_data;
+ 
+ 	__u64	config3; /* extension of config2 */
++
++	__u16	sample_simd_pred_reg_qwords;
++	__u32	sample_simd_pred_reg_intr;
++	__u32	sample_simd_pred_reg_user;
++	__u16	sample_simd_vec_reg_qwords;
++	__u64	sample_simd_vec_reg_intr;
++	__u64	sample_simd_vec_reg_user;
++	__u32	__reserved_4;
+ };
+ 
+ /*
+
+results in:
+
+        __u64                      config3;              /*   128     8 */
+        __u16                      sample_simd_pred_reg_qwords; /*   136     2 */
+
+        /* XXX 2 bytes hole, try to pack */
+
+        __u32                      sample_simd_pred_reg_intr; /*   140     4 */
+        __u32                      sample_simd_pred_reg_user; /*   144     4 */
+        __u16                      sample_simd_vec_reg_qwords; /*   148     2 */
+
+        /* XXX 2 bytes hole, try to pack */
+
+        __u64                      sample_simd_vec_reg_intr; /*   152     8 */
+        __u64                      sample_simd_vec_reg_user; /*   160     8 */
+        __u32                      __reserved_4;         /*   168     4 */
 
 
-From bpftool's perspective, it doesn't really make sense to skip the
-OpenSSL dependency for the bootstrap version, given that we want to ship
-the main binary with the signing feature: so you could build a bootstrap
-version without signing, but you won't be able to use it to build the
-final binary because, well, you miss a required dependency.
 
-This being said, if it really makes it easier for you to build perf, I'd
-be open to adjusting the bootstrap version, as long as it doesn't affect
-the final bpftool build. It might lead to further headaches if someone
-needs to sign the BPF programs when building perf in the future though.
+A better layout might be:
 
-I'm also OK with adding a dependency check with a simple build error for
-bpftool, although we don't currently do it for other required
-dependencies in bpftool.
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index d292f96bc06f..f72707e9df68 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -545,6 +545,15 @@ struct perf_event_attr {
+ 	__u64	sig_data;
+ 
+ 	__u64	config3; /* extension of config2 */
++
++	__u16	sample_simd_pred_reg_qwords;
++	__u16	sample_simd_vec_reg_qwords;
++	__u32	__reserved_4;
++
++	__u32	sample_simd_pred_reg_intr;
++	__u32	sample_simd_pred_reg_user;
++	__u64	sample_simd_vec_reg_intr;
++	__u64	sample_simd_vec_reg_user;
+ };
+ 
+ /*
 
-Quentin
+such that:
+
+        __u64                      config3;              /*   128     8 */
+        __u16                      sample_simd_pred_reg_qwords; /*   136     2 */
+        __u16                      sample_simd_vec_reg_qwords; /*   138     2 */
+        __u32                      __reserved_4;         /*   140     4 */
+        __u32                      sample_simd_pred_reg_intr; /*   144     4 */
+        __u32                      sample_simd_pred_reg_user; /*   148     4 */
+        __u64                      sample_simd_vec_reg_intr; /*   152     8 */
+        __u64                      sample_simd_vec_reg_user; /*   160     8 */
+
+
