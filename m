@@ -1,245 +1,94 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D281530DEA9
-	for <linux-perf-users@vger.kernel.org>; Sat,  6 Dec 2025 00:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F92267714;
+	Sat,  6 Dec 2025 09:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764980338; cv=none; b=AeqWBxWoDzDb5pyLapkHWrGi4HTZejLPWeN/bzjPzdiQx8bmcqop3y+LP62iZIEVnx7LkjlGNFby31JP3G2Qp5TLDIsPW6EygNgxy+d1i2jI3s/+PKpDrIDF/lwcUotLXvfOmNOdFzt3riEkf74prPqqhxdbJqt8J7L5ziMopM0=
+	t=1765013714; cv=none; b=uk+e5DQh8APtZYp2xb0JjG8Aj3sfyXTocuoww3Nbu93G4AvofB4aMn/jLFhx771Pdom4mU9imScBjc9rPyz4mhaJr8hG6kCw96XFL3/srZgJbjHAYB24j043/PEzA0md8e/pAsGjzoMbU4TSdp/Cn6+4nHmy8f+cCZYxlVi2wlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764980338; c=relaxed/simple;
-	bh=gvtfcjIXj//cuiiuL7vddv/r8HozbH4yy9UU+z+mReQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lc/DUndgP00GL/qVFq+W5hNUlg0FXlP4UsqoZ13VUuAPaac517M2e2xEXMW13WGmMjDHE2lBkT864X2qkqA+lmynouQSt07y1f34P//nYi72vVVPQ9+zuyXKo0Ri+QKZe1elWT/98c1enNtnngfHqjkpv+IwrFmuQGtNtPHkuJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e2+Lh9NO; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1765013714; c=relaxed/simple;
+	bh=EAi1jAEMwd7Q9sMhS/y3hdNUpwWkw5KXsfpzt2bs8eo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iJ1NFw0WteYyxmoCfztFDlJhiHa7QQbP79ezDQSDyOtnO72KnePuJH8GgpZITa3z1nVz9lCrjFlY6MU2l8AOZGlNepc1DxhksOoKqJlnU8utt8p3/vJJhiwZ+G2Ojk1xF7OS9k0kDs3xmuVI0tNLHHiY44Jt6yAFKibijbaSC+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IeypfUKO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e2+Lh9NO"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2982b47ce35so36760545ad.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Dec 2025 16:18:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764980335; x=1765585135; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=dghHZC8C4J94U5X0EsLhdqx+qyyu5Gw9y0a71sLAgMI=;
-        b=e2+Lh9NOV9oFxAhcihvtwuvlpFFYgrPpkFtzJewouyhZ6KGw00QMqmtMYDJMA/FfOj
-         PhL1kr6BCAxP7KJOGMuUY8Dz2cjGh1FRNRytpgYyypj0Fc9JGbidyZzu5vjBZcnC0BSC
-         P6D7V11GpTo+aCtf8XAGrjz9h8+RJaytrUwHJ40sh0l2jUsP0banmYi/qXd5O5SF0mO6
-         ZJOBmMk1zwy8U6Lifpm0B7UBtn9beUaQg9bvdmOb1LBGwGUGgRfE0BPPeer5nQidkRm0
-         tZzi+VMzi3Lh7izG7kpYYmgnIAgFTAEPRCmi8GhmTbetHugS/ZFwSXs3lmb06aRQwC73
-         j2dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764980335; x=1765585135;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dghHZC8C4J94U5X0EsLhdqx+qyyu5Gw9y0a71sLAgMI=;
-        b=KVgGNUIU0bDqLW1jUi96HfWs6dVaN5q+sFPzM+ZGZFBOp18Uqvchecl3Dh4K5etymr
-         7EU7cvu4+Zg7NP2LwfWdEjfxBrYRF63sF13Jwu6NMgvfAkY1GqybWExC5o/PAIvuuuFB
-         i2kBpvfrZBda+gnaSuFhuVLRR5Bioesu0vN8Y06hQTiBfuFR2zTDHmwvsKzRERcKBStF
-         UtUX2gq4gFiGzrUIXh//6PLmwouxbYwCJKRtqaJsZY8M/3DL51s4d/k+v1fyK4Spvkcl
-         eg/YQ5uMdm/9hMyGjjHfWg/XJbGJQUB2SVa7NaKuJXbqeWznxHAqwWdD7+FznnQr7++p
-         BHLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVW1CSuzeQpkq0rtSnPqgWIzKiCTyl521BCq3z70opIeq6IMC8GXlCMpzZaVGjTLC9A0dOPcoYKgWrXN/MERLhN@vger.kernel.org
-X-Gm-Message-State: AOJu0YycRPFG+JJ5y1cbe2/pFPnlWSrIOgNwzb/R2U0pODNc4nPxtMCm
-	eWZUQ5cdxDx/+0D/TtPf86qyEsrjNPVlwAw812j5tSjny1gOEdEjUxtExjm5B6g2XYcoLjChMzc
-	0AkbWFA==
-X-Google-Smtp-Source: AGHT+IGiF/KlyKw3jh5Mhte5oVO+4hAY3tNIkOZ4DdyLYn/+Z0r5Rwc99w3eHOaoOE5Aq4b+oO/Y2gl+Kqw=
-X-Received: from pgbcp9.prod.google.com ([2002:a05:6a02:4009:b0:b99:9560:3dc9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:e290:b0:35b:c84f:c7b0
- with SMTP id adf61e73a8af0-36617e37e14mr1031726637.8.1764980334861; Fri, 05
- Dec 2025 16:18:54 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri,  5 Dec 2025 16:17:20 -0800
-In-Reply-To: <20251206001720.468579-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IeypfUKO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1D6DC4CEF5;
+	Sat,  6 Dec 2025 09:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765013714;
+	bh=EAi1jAEMwd7Q9sMhS/y3hdNUpwWkw5KXsfpzt2bs8eo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IeypfUKONqL5jYEpyhzJ/8Ozf/BqbsrA8w/T7RgkwqX5OveF9KA5pfFKiJ9vbMse2
+	 OG03s3NslPoAwTnC21ZLoQj4RSWSmZ+aY5ZJqEgZADKzmI1/fB6lNvSclbWaOf/O7n
+	 CvTTuf9z7hxgHn+6x4H6zqKhSnOasxf+v6uQ5pqfcrpLX6P8J67yUZpc6urSKhz1dC
+	 Kxj3MgykPgxJvPjgxHPZyaEwZp0jTxuSQkian8/h7isuQLyD+I9QTj7fBk1kRRKA2C
+	 6uGEjiul7j/YAkyMkSbILzxfCePXPsXNsb9725gMReT6hDXbgSFQXvcNZsfjEHCCCG
+	 1PebREALjzdVg==
+Date: Sat, 6 Dec 2025 10:35:09 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] Perf stat --null/offline CPU segv related
+ fixes/tests
+Message-ID: <aTP4zSy87wEZlbsO@gmail.com>
+References: <20251203214706.112174-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251206001720.468579-1-seanjc@google.com>
-X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
-Message-ID: <20251206001720.468579-45-seanjc@google.com>
-Subject: [PATCH v6 44/44] KVM: VMX: Add mediated PMU support for CPUs without
- "save perf global ctrl"
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Mingwei Zhang <mizhang@google.com>, 
-	Xudong Hao <xudong.hao@intel.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251203214706.112174-1-irogers@google.com>
 
-Extend mediated PMU support for Intel CPUs without support for saving
-PERF_GLOBAL_CONTROL into the guest VMCS field on VM-Exit, e.g. for Skylake
-and its derivatives, as well as Icelake.  While supporting CPUs without
-VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL isn't completely trivial, it's not that
-complex either.  And not supporting such CPUs would mean not supporting 7+
-years of Intel CPUs released in the past 10 years.
+* Ian Rogers <irogers@google.com> wrote:
 
-On VM-Exit, immediately propagate the saved PERF_GLOBAL_CTRL to the VMCS
-as well as KVM's software cache so that KVM doesn't need to add full EXREG
-tracking of PERF_GLOBAL_CTRL.  In practice, the vast majority of VM-Exits
-won't trigger software writes to guest PERF_GLOBAL_CTRL, so deferring the
-VMWRITE to the next VM-Enter would only delay the inevitable without
-batching/avoiding VMWRITEs.
+> Ingo reported [1] that `perf stat --null` was segfaulting. Fix the
+> underlying issue and add a test to the "perf stat tests". Do some
+> related fixing/cleanup in the perf util cpumap code.
+>
+> Thomas reported an issue fixed by the same patches [2] but caused by
+> giving perf stat an offline CPU. Add test coverage for that and
+> improve the "error" message that reports "success".
+>
+> Ingo further pointed at broken signal handling in repeat mode [3]. I
+> observed we weren't giving the best exit code, 0 rather than the
+> expected 128+<signal number>. Add a patch fixing this.
+>
+> [1] https://lore.kernel.org/linux-perf-users/aSwt7yzFjVJCEmVp@gmail.com/
+> [2] https://lore.kernel.org/linux-perf-users/94313b82-888b-4f42-9fb0-4585f9e90080@linux.ibm.com/
+> [3] https://lore.kernel.org/lkml/aS5wjmbAM9ka3M2g@gmail.com/
+>
+> Ian Rogers (7):
+>   perf stat: Allow no events to open if this is a "--null" run
+>   libperf cpumap: Fix perf_cpu_map__max for an empty/NULL map
+>   perf cpumap: Add "any" CPU handling to cpu_map__snprint_mask
+>   perf tests stat: Add "--null" coverage
+>   perf stat: When no events, don't report an error if there is none
+>   perf tests stat: Add test for error for an offline CPU
+>   perf stat: Improve handling of termination by signal
+>
+>  tools/lib/perf/cpumap.c        | 10 +++++----
+>  tools/perf/builtin-stat.c      | 29 ++++++++++++++++++-------
+>  tools/perf/tests/shell/stat.sh | 39 ++++++++++++++++++++++++++++++++++
+>  tools/perf/util/cpumap.c       |  9 ++++++--
+>  4 files changed, 73 insertions(+), 14 deletions(-)
 
-Note!  Take care to refresh VM_EXIT_MSR_STORE_COUNT on nested VM-Exit, as
-it's unfortunately possible that KVM could recalculate MSR intercepts
-while L2 is active, e.g. if userspace loads nested state and _then_ sets
-PERF_CAPABILITIES.  Eating the VMWRITE on every nested VM-Exit is
-unfortunate, but that's a pre-existing problem and can/should be solved
-separately, e.g. modifying the number of auto-load entries while L2 is
-active is also uncommon on modern CPUs.
+A belated:
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/vmx/nested.c    |  6 ++++-
- arch/x86/kvm/vmx/pmu_intel.c |  7 -----
- arch/x86/kvm/vmx/vmx.c       | 52 ++++++++++++++++++++++++++++++++----
- 3 files changed, 52 insertions(+), 13 deletions(-)
+  Tested-by: Ingo Molnar <mingo@kernel.org>
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 614b789ecf16..1ee1edc8419d 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5142,7 +5142,11 @@ void __nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
- 
- 	kvm_nested_vmexit_handle_ibrs(vcpu);
- 
--	/* Update any VMCS fields that might have changed while L2 ran */
-+	/*
-+	 * Update any VMCS fields that might have changed while vmcs02 was the
-+	 * active VMCS.  The tracking is per-vCPU, not per-VMCS.
-+	 */
-+	vmcs_write32(VM_EXIT_MSR_STORE_COUNT, vmx->msr_autostore.nr);
- 	vmcs_write32(VM_EXIT_MSR_LOAD_COUNT, vmx->msr_autoload.host.nr);
- 	vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT, vmx->msr_autoload.guest.nr);
- 	vmcs_write64(TSC_OFFSET, vcpu->arch.tsc_offset);
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 55249fa4db95..27eb76e6b6a0 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -777,13 +777,6 @@ static bool intel_pmu_is_mediated_pmu_supported(struct x86_pmu_capability *host_
- 	if (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl()))
- 		return false;
- 
--	/*
--	 * KVM doesn't yet support mediated PMU on CPUs without support for
--	 * saving PERF_GLOBAL_CTRL via a dedicated VMCS field.
--	 */
--	if (!cpu_has_save_perf_global_ctrl())
--		return false;
--
- 	return true;
- }
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 6a17cb90eaf4..ba1262c3e3ff 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1204,6 +1204,17 @@ static bool update_transition_efer(struct vcpu_vmx *vmx)
- 	return true;
- }
- 
-+static void vmx_add_autostore_msr(struct vcpu_vmx *vmx, u32 msr)
-+{
-+	vmx_add_auto_msr(&vmx->msr_autostore, msr, 0, VM_EXIT_MSR_STORE_COUNT,
-+			 vmx->vcpu.kvm);
-+}
-+
-+static void vmx_remove_autostore_msr(struct vcpu_vmx *vmx, u32 msr)
-+{
-+	vmx_remove_auto_msr(&vmx->msr_autostore, msr, VM_EXIT_MSR_STORE_COUNT);
-+}
-+
- #ifdef CONFIG_X86_32
- /*
-  * On 32-bit kernels, VM exits still load the FS and GS bases from the
-@@ -4225,6 +4236,8 @@ void pt_update_intercept_for_msr(struct kvm_vcpu *vcpu)
- 
- static void vmx_recalc_pmu_msr_intercepts(struct kvm_vcpu *vcpu)
- {
-+	u64 vm_exit_controls_bits = VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
-+				    VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL;
- 	bool has_mediated_pmu = kvm_vcpu_has_mediated_pmu(vcpu);
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -4234,12 +4247,19 @@ static void vmx_recalc_pmu_msr_intercepts(struct kvm_vcpu *vcpu)
- 	if (!enable_mediated_pmu)
- 		return;
- 
-+	if (!cpu_has_save_perf_global_ctrl()) {
-+		vm_exit_controls_bits &= ~VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL;
-+
-+		if (has_mediated_pmu)
-+			vmx_add_autostore_msr(vmx, MSR_CORE_PERF_GLOBAL_CTRL);
-+		else
-+			vmx_remove_autostore_msr(vmx, MSR_CORE_PERF_GLOBAL_CTRL);
-+	}
-+
- 	vm_entry_controls_changebit(vmx, VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL,
- 				    has_mediated_pmu);
- 
--	vm_exit_controls_changebit(vmx, VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
--					VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL,
--				   has_mediated_pmu);
-+	vm_exit_controls_changebit(vmx, vm_exit_controls_bits, has_mediated_pmu);
- 
- 	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
- 		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PERFCTR0 + i,
-@@ -7346,6 +7366,29 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
- 					      msrs[i].host);
- }
- 
-+static void vmx_refresh_guest_perf_global_control(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+
-+	if (msr_write_intercepted(vmx, MSR_CORE_PERF_GLOBAL_CTRL))
-+		return;
-+
-+	if (!cpu_has_save_perf_global_ctrl()) {
-+		int slot = vmx_find_loadstore_msr_slot(&vmx->msr_autostore,
-+						       MSR_CORE_PERF_GLOBAL_CTRL);
-+
-+		if (WARN_ON_ONCE(slot < 0))
-+			return;
-+
-+		pmu->global_ctrl = vmx->msr_autostore.val[slot].value;
-+		vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL, pmu->global_ctrl);
-+		return;
-+	}
-+
-+	pmu->global_ctrl = vmcs_read64(GUEST_IA32_PERF_GLOBAL_CTRL);
-+}
-+
- static void vmx_update_hv_timer(struct kvm_vcpu *vcpu, bool force_immediate_exit)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -7631,8 +7674,7 @@ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- 
- 	vmx->loaded_vmcs->launched = 1;
- 
--	if (!msr_write_intercepted(vmx, MSR_CORE_PERF_GLOBAL_CTRL))
--		vcpu_to_pmu(vcpu)->global_ctrl = vmcs_read64(GUEST_IA32_PERF_GLOBAL_CTRL);
-+	vmx_refresh_guest_perf_global_control(vcpu);
- 
- 	vmx_recover_nmi_blocking(vmx);
- 	vmx_complete_interrupts(vmx);
--- 
-2.52.0.223.gf5cc29aaa4-goog
+And thank you a lot for doing these QoL fixes!
 
+	Ingo
