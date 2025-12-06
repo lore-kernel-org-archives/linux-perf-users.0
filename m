@@ -1,57 +1,57 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA7B25C80D
-	for <linux-perf-users@vger.kernel.org>; Sat,  6 Dec 2025 00:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93522EB840
+	for <linux-perf-users@vger.kernel.org>; Sat,  6 Dec 2025 00:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764980306; cv=none; b=KbGRwM0pep+z6oUyX1uvp2czP7Je7jZJ0bj7jKvz3bnr+FjLlOedRlPeuUx4jlkDOFEI/nSsOCNahpE2g6iHV+bY7xIwPFXhnD2vA160YsiU9UIsbPfDWNjfIRbp8c7MBHMU3WeAlLNjNn5f9e74fHr7D6IB3ZRIcy+pPrh+/m8=
+	t=1764980307; cv=none; b=k6PO4VI0a8wGRbxSUkKoYdtg9807b01uO8LuXLRYZ8jXzRTVh0tfQ0V4wUJ217YT/entc5jTRc2f/nR8qssQmxVnEiZAbuZtjytEhzgK1kjG6rwHdy9FcXq4/cv/UvOlR+omxBrMfwZUYV9uhv2D2ckds23zQBg/BaMBXa3XUDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764980306; c=relaxed/simple;
-	bh=zwC31PtY1144Zbq3uDzlYjGhLN8hSauVy0aZ0f/WAwM=;
+	s=arc-20240116; t=1764980307; c=relaxed/simple;
+	bh=Yx2occF+Cc2oLfxL/Kkyww9HN7cAnhXtGyaYNERA9Ks=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=edU9AefR6zQzVHLmnwfLgDxAFopqffsppnb0TVRLnMUbLeiWEUgyg3YUjMdwI/aE9b/05cb7unzIWlQ+iS5UWoAP9RYy4HMNbPOK7EkecXb0f2PojqK3FQimCfFxuKTqQ/l6sECRvEdciDdiHHeNK1lcx/wD7F3E2HSljAHPxAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GpPdDcrc; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=N6C6mHZHFQcEW4gfCcCs2QPSPNUjkZKapwf9I3n1vwvRCBlWFc6en2mKVBscutt4/VznBJOWqeE4l69uqzwK1OOcFXjLG5+3dqCbuOV+DDX1Sra71feKXk9XHBWaD1alO9mP/ThW5m1uSz6iRjDI6PoacQe+DEwkRFxG+rFwHNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=THyvMBJ3; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GpPdDcrc"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7b9c91b814cso6655381b3a.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Dec 2025 16:18:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="THyvMBJ3"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-349aadb8ab9so104664a91.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Dec 2025 16:18:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764980303; x=1765585103; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764980305; x=1765585105; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=vcjFml1Ocn5W+9fhtxvlQ/X0kii0S1Hbwc7mdgCzQH4=;
-        b=GpPdDcrcX/O2WMJDudwmIRnyPJEAGYpY1YMIKwi7MR6u+UZKHKBcqrd4WBtCv4D713
-         n0coA+2TfbfjYY2diXOq5Jx6xpPgpCH9/qzj1Yw6ebsCajoeT44fth+yoM0WpTfmlbOc
-         UAHhV5dsFOtarp3DyDl/uRF/HH2NDpLWIk81j819fV7pl8evYS/9XaDHL0oNpGn938Dz
-         5vFtbwmtjoqMKosUysjoAg0sR/N7PaIMVq/PyZ3O/5NTVxlmn5M9iU5z7fnvrFpqGzzK
-         FRr7NUwmtCuhsOWLVh8Kt0dB2acTyEOcRfG8JdmjpV9DDxQdmvKsOf7EEtPZm0mfmts8
-         h2aA==
+        bh=VDZ6qvbhnxeB/xicU22NIlKKbEtAofiGZXasyTcZTcc=;
+        b=THyvMBJ3meNDoA2l0BzL7YeICYmWTwOE5M1zabT5vLiRvDTdY3lvdH/iXtt+GCZczn
+         UWlB3oXT1Tt1KHbUkRD/RLmNt0Xg3Xk6cuEEU9j5Jv67SfkMRhXo9B+HO7QuB837BIwd
+         MAKBb5LqN13A9XCF8ixopL7svv3vDLeodx4VuqSwvF5Cq1dz9EAd7LTeZhkNyqBNCCpM
+         yZu3NOu5+xsAgCRbFso/ZGZb9i+TFXsNhR5XRV03pzNss8zZWkJfX1oqAJvR8DYmXmTG
+         iaU2Ea/F+RzVY85GQ7MNBx6Jobm6ZeYmJMknGRoHVfyb+ZVfvtwUdSzFhaoe7JxjLTm8
+         tH+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764980303; x=1765585103;
+        d=1e100.net; s=20230601; t=1764980305; x=1765585105;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vcjFml1Ocn5W+9fhtxvlQ/X0kii0S1Hbwc7mdgCzQH4=;
-        b=q4+9AJU8UmyZzWvkMIAqeh9LPS/enfIY+8Qto5nAUg8oADO6G1n2DQLQU4u1cKTNwU
-         Vy9Bfol7MOgGaqfhtqAe0eyeXZQGxew6wr9ZowTKMFfHwWMtzWUhsMi0gn6G/iCZH7J6
-         IUlq2joevzgcAzcUYOqImwhDXgEQGzCkZxDudJ9JIaUlskHtq6EytqQmEX5inNd/P6/I
-         zchOPL/wHJJwSz8EjwNJk0mpBwexBLpD1QxWX+UtOhwppFdFWE/TLOfrrsaif4dmVugZ
-         bidn08kmjH7JMq4NcE7kRXtayLFZo6tlSp2yQoBiQGocvLTPzW37vvvij+zL80TtNCGE
-         C/zQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoA22J2b3dsoJXwzQaGRLoE5qS68l42AIVLANrcecH/hU40wSxSvhA25+pdsLZ61Y5YYiEeJR1y+jUX7SMOIXo@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2eK0sAYyA7cUyi2ydPEMSF59GoCGaXeV+MAjMp0LyBOzQ2aW1
-	hw3ZHwb9ZO7hoauljktLuqEzFhfv7yC++t3XhYrGuqWYosUR/zBNuvpljEaoZd9wO1mwL65xAlm
-	lU9lVMg==
-X-Google-Smtp-Source: AGHT+IEi41vT7k5Y8TL0eorj0ILiZzn3n1cXKu+mvARIF/KTkqiX2XdS9wsUu8uQeqy5b+ge2DTi5IOhdXM=
-X-Received: from pfmm14.prod.google.com ([2002:a05:6a00:248e:b0:7dd:8bba:63ae])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2ea0:b0:7a9:8770:ce5a
- with SMTP id d2e1a72fcca58-7e8c3628897mr847803b3a.20.1764980303025; Fri, 05
- Dec 2025 16:18:23 -0800 (PST)
+        bh=VDZ6qvbhnxeB/xicU22NIlKKbEtAofiGZXasyTcZTcc=;
+        b=KM2wj14UmcmVLa+0vAxTQieloTysjRTyRh1R4rQF7lmgePWCKI1DDj/YMMw6tOOe8t
+         BSBOo/znF7cRmlzb0e8b5nR8lHnQqG0L9j8GpGDJJCMT3Be7Rt/QVCbVkdWYNeCfr/x1
+         9ENGnmKUuj7zKZ+GQRRW51BrDnx2rvwwxNCIcgkzB7nyC60jzIYuUlDwY5lCfEUBlQL2
+         6mQKdpR/UD5mzOXIzQZTCVkD0BLgaDVg2yS7bqmbQ9zCjsD1dMsVH2qJpNXuCgSqcLv0
+         RlNsM5YfKEyoqCE/tWu/UquyOdAhSJoWLYKfv8naUb62T2fVF2Zy+VMOoAgRhYmobyqk
+         kj0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXxc/GjgZmuuPahv/TT/FgSZhob9pPbLHohT7wowH50+3ujTCug3ZkNQMUQH0k0wtcB9GywCVHpH/O1MFmxbBM4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw61RRMM11vwdcRFtXFBngYaz+GkkrZOXQZgQo13nh+sUA6Lhms
+	emTpvu2bI5a5DvCSF6JxGlIzhlFaOUU+5/fI5+soLgp2t4/liQMPpDuKuj8NpJCjXFmRLYc8ihi
+	9E/gRgg==
+X-Google-Smtp-Source: AGHT+IF4RzpEBka8aK0ucRE2Cm9e095W8Dm56/F1owL7T0nm81v+pRoWT+IrKx6iUc4yDzdsBycmMqAWYnk=
+X-Received: from pjuy11.prod.google.com ([2002:a17:90a:d70b:b0:340:3ea9:30bc])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5905:b0:341:761c:3330
+ with SMTP id 98e67ed59e1d1-349a25bd8e0mr687187a91.23.1764980304689; Fri, 05
+ Dec 2025 16:18:24 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri,  5 Dec 2025 16:17:04 -0800
+Date: Fri,  5 Dec 2025 16:17:05 -0800
 In-Reply-To: <20251206001720.468579-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251206001720.468579-1-seanjc@google.com>
 X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
-Message-ID: <20251206001720.468579-29-seanjc@google.com>
-Subject: [PATCH v6 28/44] KVM: x86/pmu: Disallow emulation in the fastpath if
- mediated PMCs are active
+Message-ID: <20251206001720.468579-30-seanjc@google.com>
+Subject: [PATCH v6 29/44] KVM: x86/pmu: Handle emulated instruction for
+ mediated vPMU
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -82,75 +82,75 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Don't handle exits in the fastpath if emulation is required, i.e. if an
-instruction needs to be skipped, the mediated PMU is enabled, and one or
-more PMCs is counting instructions.  With the mediated PMU, KVM's cache of
-PMU state is inconsistent with respect to hardware until KVM exits the
-inner run loop (when the mediated PMU is "put").
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Reviewed-by: Sandipan Das <sandipan.das@amd.com>
+Mediated vPMU needs to accumulate the emulated instructions into counter
+and load the counter into HW at vm-entry.
+
+Moreover, if the accumulation leads to counter overflow, KVM needs to
+update GLOBAL_STATUS and inject PMI into guest as well.
+
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Mingwei Zhang <mizhang@google.com>
 Tested-by: Xudong Hao <xudong.hao@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/pmu.h | 10 ++++++++++
- arch/x86/kvm/x86.c |  9 +++++++++
- 2 files changed, 19 insertions(+)
+ arch/x86/kvm/pmu.c | 39 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 37 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 25b583da9ee2..0925246731cb 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -234,6 +234,16 @@ static inline bool pmc_is_globally_enabled(struct kvm_pmc *pmc)
- 	return test_bit(pmc->idx, (unsigned long *)&pmu->global_ctrl);
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index 578bf996bda2..cb07d9b62bee 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -1033,10 +1033,45 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu)
+ 	kvm_pmu_reset(vcpu);
  }
  
-+static inline bool kvm_pmu_is_fastpath_emulation_allowed(struct kvm_vcpu *vcpu)
++static bool pmc_is_pmi_enabled(struct kvm_pmc *pmc)
 +{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
++	u8 fixed_ctr_ctrl;
 +
-+	return !kvm_vcpu_has_mediated_pmu(vcpu) ||
-+	       !bitmap_intersects(pmu->pmc_counting_instructions,
-+				  (unsigned long *)&pmu->global_ctrl,
-+				  X86_PMC_IDX_MAX);
++	if (pmc_is_gp(pmc))
++		return pmc->eventsel & ARCH_PERFMON_EVENTSEL_INT;
++
++	fixed_ctr_ctrl = fixed_ctrl_field(pmc_to_pmu(pmc)->fixed_ctr_ctrl,
++					  pmc->idx - KVM_FIXED_PMC_BASE_IDX);
++	return fixed_ctr_ctrl & INTEL_FIXED_0_ENABLE_PMI;
 +}
 +
- void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu);
- void kvm_pmu_handle_event(struct kvm_vcpu *vcpu);
- int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned pmc, u64 *data);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 589a309259f4..4683df775b0a 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2215,6 +2215,9 @@ EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_emulate_invd);
- 
- fastpath_t handle_fastpath_invd(struct kvm_vcpu *vcpu)
+ static void kvm_pmu_incr_counter(struct kvm_pmc *pmc)
  {
-+	if (!kvm_pmu_is_fastpath_emulation_allowed(vcpu))
-+		return EXIT_FASTPATH_NONE;
+-	pmc->emulated_counter++;
+-	kvm_pmu_request_counter_reprogram(pmc);
++	struct kvm_vcpu *vcpu = pmc->vcpu;
 +
- 	if (!kvm_emulate_invd(vcpu))
- 		return EXIT_FASTPATH_EXIT_USERSPACE;
- 
-@@ -2271,6 +2274,9 @@ static inline bool kvm_vcpu_exit_request(struct kvm_vcpu *vcpu)
- 
- static fastpath_t __handle_fastpath_wrmsr(struct kvm_vcpu *vcpu, u32 msr, u64 data)
- {
-+	if (!kvm_pmu_is_fastpath_emulation_allowed(vcpu))
-+		return EXIT_FASTPATH_NONE;
++	/*
++	 * For perf-based PMUs, accumulate software-emulated events separately
++	 * from pmc->counter, as pmc->counter is offset by the count of the
++	 * associated perf event. Request reprogramming, which will consult
++	 * both emulated and hardware-generated events to detect overflow.
++	 */
++	if (!kvm_vcpu_has_mediated_pmu(vcpu)) {
++		pmc->emulated_counter++;
++		kvm_pmu_request_counter_reprogram(pmc);
++		return;
++	}
 +
- 	switch (msr) {
- 	case APIC_BASE_MSR + (APIC_ICR >> 4):
- 		if (!lapic_in_kernel(vcpu) || !apic_x2apic_mode(vcpu->arch.apic) ||
-@@ -11714,6 +11720,9 @@ EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_emulate_halt);
++	/*
++	 * For mediated PMUs, pmc->counter is updated when the vCPU's PMU is
++	 * put, and will be loaded into hardware when the PMU is loaded. Simply
++	 * increment the counter and signal overflow if it wraps to zero.
++	 */
++	pmc->counter = (pmc->counter + 1) & pmc_bitmask(pmc);
++	if (!pmc->counter) {
++		pmc_to_pmu(pmc)->global_status |= BIT_ULL(pmc->idx);
++		if (pmc_is_pmi_enabled(pmc))
++			kvm_make_request(KVM_REQ_PMI, vcpu);
++	}
+ }
  
- fastpath_t handle_fastpath_hlt(struct kvm_vcpu *vcpu)
- {
-+	if (!kvm_pmu_is_fastpath_emulation_allowed(vcpu))
-+		return EXIT_FASTPATH_NONE;
-+
- 	if (!kvm_emulate_halt(vcpu))
- 		return EXIT_FASTPATH_EXIT_USERSPACE;
- 
+ static inline bool cpl_is_matched(struct kvm_pmc *pmc)
 -- 
 2.52.0.223.gf5cc29aaa4-goog
 
