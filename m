@@ -1,290 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F8F32824C;
-	Mon,  8 Dec 2025 06:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E1D2857CD
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Dec 2025 08:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765176414; cv=none; b=D1P/JCY0jB2DEivws9iuYumfSQG9AmKUlDgn8sztZZEo4OQdzkNoWMaCGA4ft4b6PBNKxPLQrjxBmxGS/dFBQoHT82nGSm990t/kTqW5M41sOWBkXv4jWE9Yvtm+Ai3Zap7O3ybJMwfDGxi1Esp2QLHzdBJCa9iJK3jHW646qNE=
+	t=1765181657; cv=none; b=LetSsnDtfhEzAJNVF6B/5FnimibbLiKJoyKEcK2P1gRju8pMqhnOBXVnoyxia3TYy4xu+gD53MvBI+ItOPLp0iYA6Ixa2+giZxmmaLGCA2IHGCjypEPDvkeZeqd5kt3UjI/XQgd7xMG5/ZkR8ujOM0Jzr3Zh2swL8IZxnGoa3xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765176414; c=relaxed/simple;
-	bh=AxuIQYBlWT1fy6f6uKhDRn+dunOxIjSbwOTfASPg7F0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LKwl/pThJ/DNdqhOAHIv57zbVT1CF8mdIqMysO59vDBuOnfUscuRwZbpQ3IuJZ/2ilqT3SxEWxZ2NScTUD4HrGBsFqOagfsoNF6IuAhDPn2S9bR5gkDusXTViTDTRMxUT6dEONI96qJkcb5KBXmhDNr7PLtRSZPfLSzW1mbJN7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CEBwkUP9; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1765181657; c=relaxed/simple;
+	bh=zKuBvxyxZJslPOMplhZnuM9Yv8eYhb7wr6yk7mLhsZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=U29PFaSq2ReBnW+CRct1yoVsUE5D7excrfpGMCA5E7R+Lzm4CjZkLBuKCA6AvPBiA/fi4wYIuX+NaM8Jnztm/3DL2ehOXO3zcNvYPVf+xLYQ3Tr+hVP3dcz44C4CXs27tOHvXS2ya7y6YABG8UuFYoatUAbyoSc01QOUfm08IQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lLtaVbqN; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CEBwkUP9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765176413; x=1796712413;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=AxuIQYBlWT1fy6f6uKhDRn+dunOxIjSbwOTfASPg7F0=;
-  b=CEBwkUP9GHCuO4nM3afAz2iJtzYni+zPevTA/42K85C4OS9qOd35NcyM
-   6sZXCAJV6tqRHPdclj7Vug42mcJuGXsRf628UuvOMiZClbtErJSPwDEib
-   2uhkHwvLZnuy2pe8BBhgJ5Et/ueMhSsC+YOJdCiheaM/KeQssg6CEYGt0
-   2pg4UHuz5IhXvrFO4qBHcN1ZvyuVhMhiEY+58irAsu3hKfX+BoOv5hIPF
-   SSHLJzzJtVz9DvEhVky97L5d9+jwQB4IkGvxfeCEsngfxnd9CWQhBFby1
-   hFGa0FN+JcR71oqrq7WDowsIlC0W3doGojP+copzzA+oJVM3EbI4KTTc5
-   Q==;
-X-CSE-ConnectionGUID: tq0bJG64QvakE01RkUKVsA==
-X-CSE-MsgGUID: X0zrfy/iSQiFH2T+vC27yQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="84521912"
-X-IronPort-AV: E=Sophos;i="6.20,258,1758610800"; 
-   d="scan'208";a="84521912"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 22:46:53 -0800
-X-CSE-ConnectionGUID: zhvgWjiGQeOy33J5281s7w==
-X-CSE-MsgGUID: i7j1oDlTT5GYEDNx8plMKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,258,1758610800"; 
-   d="scan'208";a="200774255"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.12]) ([10.124.240.12])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 22:46:47 -0800
-Message-ID: <5e808ff0-0107-4085-a1ab-ea1cfed4e0ca@linux.intel.com>
-Date: Mon, 8 Dec 2025 14:46:44 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lLtaVbqN"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-42e2ba54a6fso1323735f8f.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Dec 2025 00:14:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1765181653; x=1765786453; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=T1991j57Uz3Fn7DkGnXZOz9lVmuzpVmyw3e1zr4rts0=;
+        b=lLtaVbqNzaPDlJQH5Q9qGk23m/OFHrNFIWUklG3STuJ44xlsOUnlbToSxhbLuYo4OT
+         nVQ1yPFP+SuyBhwc/F2YWEUyvqfsewvZaUP/7ErdoY51i1drN1NZ1YkpV+80ZDlMiGo/
+         khIoWKCTHGh9Kd6cTWnE1lVB0snimabfLcbniTPGPfSICRN5vwGbg/tpSUdULQ0GjL4/
+         sxQsizVxrCHTrYeqmvpG40NAHHN8LAuxhFUFOahUsqy9ZdOjq6x2Cbg8mI4n51PKo+TZ
+         DuuOcZ3QKvmJjXCUnoiK5Xv2qQltzLdaiXvKkWWO2M7qaHyvQb6H0RjC4keVK69tW8oV
+         kO+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765181653; x=1765786453;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T1991j57Uz3Fn7DkGnXZOz9lVmuzpVmyw3e1zr4rts0=;
+        b=o/oGjoNaPuA1C2hF7RAO8LZkADtZ0PPadtBTvWh3qnU5W+b1NIDYPuZ6nDNLxKSX7I
+         1uHcIeOZPkR8KUahlLbjeWoOtLfYW4dcQQi4yBvR/GYoV158hgGsKRcToRTSuRFyhzpo
+         qApZnHXGvapg5UwQW09Hq6/8oLHYZeDva0HGC9HUOgpbRi5cl3WlidGcNtZQL3A+4sDk
+         Q3wc7aePZoN+f1KpZiY+Ey4bw2ZPs0IpKmoTMGa6VqV8FUMZUcUoiQVTOcn8+CS7flg9
+         LCkooKwNGdKfc1MhiPb5sFNqGomzeSzt5S7UF46hukrrxuTdkQhkRGhaaAOApnWCO05+
+         KZ6w==
+X-Gm-Message-State: AOJu0YytbVF/kZ05OWOHOiQ6XS8W7tQ5ItxaMQDOkW3d59db9aXgCUkn
+	IVWPpMn82nN3dtvuJBBg/EDZuaWXDmpJyJefTYc1A0muVfYztX0gicETTITh3VENr34=
+X-Gm-Gg: ASbGncvpoMzNIXV5khAH0+inWIgRgpj0TKhWkcJ594ke1DgiST2iZUyP8ar5FsDi0h7
+	jXk82hMPAyxRWBP6JeIJi9tFFHPl7FU2uFQeFGbEzb6F5MJ8iQw5uQ+iAuxPCm2IE9ayhE1Gc/z
+	kLJOKMRWsve+x/KSA30KQ8aCOCJOwY0c2gHVABDNfV1BHg4pRQAhU7rSWxbW4H8YySL9oJtfe9I
+	lh1mk/8InqG/fEZnUch01DC4H5p5pUi+jZVXVK1/W1zwfutDceZcpvgDsm7jUDJdP5XRlFs2Gvh
+	DDuuTYqjHhCRfsudG9+sAa9zHWY+BDglXH7vBm0cRI4wDjDL3KxAng+dJsIhFeqfZah+YEpviNw
+	jEKHul9S7h3ycAL3BO0vpF/0syscdPO9a+C+XYFfKV/mqlPIZ5pc32kdmBgPs3eRM6O8djFEBl+
+	yabr+EnYj1nyPFc6gH
+X-Google-Smtp-Source: AGHT+IENvBVyw+v75lTlgMHU8PIOMdlNNByQUTjHiyI5B9jOdh8IUvypNp1jfzdtKKlHEd8bqfTwLQ==
+X-Received: by 2002:a05:6000:26c6:b0:42b:3bee:a7ff with SMTP id ffacd0b85a97d-42f89f0e417mr7068719f8f.24.1765181653346;
+        Mon, 08 Dec 2025 00:14:13 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-42f7cbfee5bsm24236359f8f.16.2025.12.08.00.14.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Dec 2025 00:14:12 -0800 (PST)
+Date: Mon, 8 Dec 2025 11:14:09 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Sandipan Das <sandipan.das@amd.com>
+Cc: linux-perf-users@vger.kernel.org
+Subject: [bug report] perf/x86/amd/uncore: Refactor uncore management
+Message-ID: <aTaI0ci3vZ44lmBn@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v5 16/19] perf/x86: Activate back-to-back NMI detection
- for arch-PEBS induced NMIs
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- Xudong Hao <xudong.hao@intel.com>
-References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
- <20251203065500.2597594-17-dapeng1.mi@linux.intel.com>
- <20251205123940.GY2528459@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251205123940.GY2528459@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hello Sandipan Das,
 
-On 12/5/2025 8:39 PM, Peter Zijlstra wrote:
-> On Wed, Dec 03, 2025 at 02:54:57PM +0800, Dapeng Mi wrote:
->> When two or more identical PEBS events with the same sampling period are
->> programmed on a mix of PDIST and non-PDIST counters, multiple
->> back-to-back NMIs can be triggered.
-> This is a hardware defect -- albeit a fairly common one.
->
->
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index da48bcde8fce..a130d3f14844 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -3351,8 +3351,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
->>  	 */
->>  	if (__test_and_clear_bit(GLOBAL_STATUS_ARCH_PEBS_THRESHOLD_BIT,
->>  				 (unsigned long *)&status)) {
->> -		handled++;
->> -		static_call(x86_pmu_drain_pebs)(regs, &data);
->> +		handled += static_call(x86_pmu_drain_pebs)(regs, &data);
->>  
->>  		if (cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS] &&
->>  		    is_pebs_counter_event_group(cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS]))
-> Note that the old code would return handled++, while the new code:
->
->> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->> index a01c72c03bd6..c7cdcd585574 100644
->> --- a/arch/x86/events/intel/ds.c
->> +++ b/arch/x86/events/intel/ds.c
->> @@ -2759,7 +2759,7 @@ __intel_pmu_pebs_events(struct perf_event *event,
->>  	__intel_pmu_pebs_last_event(event, iregs, regs, data, at, count, setup_sample);
->>  }
->>  
->> -static void intel_pmu_drain_pebs_core(struct pt_regs *iregs, struct perf_sample_data *data)
->> +static int intel_pmu_drain_pebs_core(struct pt_regs *iregs, struct perf_sample_data *data)
->>  {
->>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->>  	struct debug_store *ds = cpuc->ds;
->> @@ -2768,7 +2768,7 @@ static void intel_pmu_drain_pebs_core(struct pt_regs *iregs, struct perf_sample_
->>  	int n;
->>  
->>  	if (!x86_pmu.pebs_active)
->> -		return;
->> +		return 0;
->>  
->>  	at  = (struct pebs_record_core *)(unsigned long)ds->pebs_buffer_base;
->>  	top = (struct pebs_record_core *)(unsigned long)ds->pebs_index;
->> @@ -2779,22 +2779,24 @@ static void intel_pmu_drain_pebs_core(struct pt_regs *iregs, struct perf_sample_
->>  	ds->pebs_index = ds->pebs_buffer_base;
->>  
->>  	if (!test_bit(0, cpuc->active_mask))
->> -		return;
->> +		return 0;
->>  
->>  	WARN_ON_ONCE(!event);
->>  
->>  	if (!event->attr.precise_ip)
->> -		return;
->> +		return 0;
->>  
->>  	n = top - at;
->>  	if (n <= 0) {
->>  		if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
->>  			intel_pmu_save_and_restart_reload(event, 0);
->> -		return;
->> +		return 0;
->>  	}
->>  
->>  	__intel_pmu_pebs_events(event, iregs, data, at, top, 0, n,
->>  				setup_pebs_fixed_sample_data);
->> +
->> +	return 0;
->>  }
->>  
->>  static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, u64 mask)
->> @@ -2817,7 +2819,7 @@ static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, u64
->>  	}
->>  }
->>  
->> -static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_data *data)
->> +static int intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_data *data)
->>  {
->>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->>  	struct debug_store *ds = cpuc->ds;
->> @@ -2830,7 +2832,7 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
->>  	u64 mask;
->>  
->>  	if (!x86_pmu.pebs_active)
->> -		return;
->> +		return 0;
->>  
->>  	base = (struct pebs_record_nhm *)(unsigned long)ds->pebs_buffer_base;
->>  	top = (struct pebs_record_nhm *)(unsigned long)ds->pebs_index;
->> @@ -2846,7 +2848,7 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
->>  
->>  	if (unlikely(base >= top)) {
->>  		intel_pmu_pebs_event_update_no_drain(cpuc, mask);
->> -		return;
->> +		return 0;
->>  	}
->>  
->>  	for (at = base; at < top; at += x86_pmu.pebs_record_size) {
->> @@ -2931,6 +2933,8 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
->>  						setup_pebs_fixed_sample_data);
->>  		}
->>  	}
->> +
->> +	return 0;
->>  }
->>  
->>  static __always_inline void
->> @@ -2984,7 +2988,7 @@ __intel_pmu_handle_last_pebs_record(struct pt_regs *iregs,
->>  
->>  }
->>  
->> -static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_data *data)
->> +static int intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_data *data)
->>  {
->>  	short counts[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {};
->>  	void *last[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS];
->> @@ -2997,7 +3001,7 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
->>  	u64 mask;
->>  
->>  	if (!x86_pmu.pebs_active)
->> -		return;
->> +		return 0;
->>  
->>  	base = (struct pebs_basic *)(unsigned long)ds->pebs_buffer_base;
->>  	top = (struct pebs_basic *)(unsigned long)ds->pebs_index;
->> @@ -3010,7 +3014,7 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
->>  
->>  	if (unlikely(base >= top)) {
->>  		intel_pmu_pebs_event_update_no_drain(cpuc, mask);
->> -		return;
->> +		return 0;
->>  	}
->>  
->>  	if (!iregs)
->> @@ -3032,9 +3036,11 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
->>  
->>  	__intel_pmu_handle_last_pebs_record(iregs, regs, data, mask, counts, last,
->>  					    setup_pebs_adaptive_sample_data);
->> +
->> +	return 0;
->>  }
-> will now return handled+=0 for all these. Which is a change in
-> behaviour. Also:
+Commit d6389d3ccc13 ("perf/x86/amd/uncore: Refactor uncore
+management") from Oct 5, 2023 (linux-next), leads to the following
+Smatch static checker warning:
 
-This change only take effects for arch-PEBS. For the legacy PEBS, the
-"handled" would still be added 1 unconditionally even the *_drain_pebs()
-helpers always return 0.
+	arch/x86/events/amd/uncore.c:660 amd_uncore_df_event_init()
+	warn: set error code if 'pmu_version < 2'
 
-    /*
-     * PEBS overflow sets bit 62 in the global status register
-     */
-    if (__test_and_clear_bit(GLOBAL_STATUS_BUFFER_OVF_BIT, (unsigned long
-*)&status)) {
-        u64 pebs_enabled = cpuc->pebs_enabled;
+arch/x86/events/amd/uncore.c
+    654 static int amd_uncore_df_event_init(struct perf_event *event)
+    655 {
+    656         struct hw_perf_event *hwc = &event->hw;
+    657         int ret = amd_uncore_event_init(event);
+    658 
+    659         if (ret || pmu_version < 2)
+--> 660                 return ret;
 
-        handled++;
-        x86_pmu_handle_guest_pebs(regs, &data);
-        static_call(x86_pmu_drain_pebs)(regs, &data);
+If pmu_version is < 2, do we really want to just return success?
 
+    661 
+    662         hwc->config = event->attr.config &
+    663                       (pmu_version >= 2 ? AMD64_PERFMON_V2_RAW_EVENT_MASK_NB :
+    664                                           AMD64_RAW_EVENT_MASK_NB);
 
->
->> -static void intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
->> +static int intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
->>  				      struct perf_sample_data *data)
->>  {
->>  	short counts[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {};
->> @@ -3044,13 +3050,14 @@ static void intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
->>  	struct x86_perf_regs perf_regs;
->>  	struct pt_regs *regs = &perf_regs.regs;
->>  	void *base, *at, *top;
->> +	u64 events_bitmap = 0;
->>  	u64 mask;
->>  
->>  	rdmsrq(MSR_IA32_PEBS_INDEX, index.whole);
->>  
->>  	if (unlikely(!index.wr)) {
->>  		intel_pmu_pebs_event_update_no_drain(cpuc, X86_PMC_IDX_MAX);
->> -		return;
->> +		return 0;
+Or do we want to set:
 
-If index.wr is 0, then it indicates there is no any PEBS record written in
-buffer since last drain of PEBS buffer. In this case, the PEBS PMI should
-not be generated. If it's generated, then it implies there must be
-something wrong. The 0 return value would lead to a "suspicious NMI"
-warning which is good to warn us there are something wrong.
+	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
 
+And then return success?
 
->>  	}
->>  
->>  	base = cpuc->pebs_vaddr;
->> @@ -3089,6 +3096,7 @@ static void intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
->>  
->>  		basic = at + sizeof(struct arch_pebs_header);
->>  		pebs_status = mask & basic->applicable_counters;
->> +		events_bitmap |= pebs_status;
->>  		__intel_pmu_handle_pebs_record(iregs, regs, data, at,
->>  					       pebs_status, counts, last,
->>  					       setup_arch_pebs_sample_data);
->> @@ -3108,6 +3116,8 @@ static void intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
->>  	__intel_pmu_handle_last_pebs_record(iregs, regs, data, mask,
->>  					    counts, last,
->>  					    setup_arch_pebs_sample_data);
->> +
-> 	/*
-> 	 * Comment that explains the arch pebs defect goes here.
-> 	 */
->> +	return hweight64(events_bitmap);
->>  }
+    665 
+    666         return 0;
+    667 }
+
+regards,
+dan carpenter
