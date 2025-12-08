@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DDD23D7FF;
-	Mon,  8 Dec 2025 05:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221C522D4DC;
+	Mon,  8 Dec 2025 06:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765171498; cv=none; b=ZoomdPUSJ4ny92l4G3kisdaUAF/cDZPwivuKK5fioxPRzvN2DZebkeci8ruwkAHB06pZa81+KfjcjPrdbmRLrfP11tKux1AU6e22mLjvnT2sI0/AjhsgjOPW+JSdcOHAap60AV5Mhl7NkbAtoE3FoK/EkeyInFhGIE7kCmU+x0k=
+	t=1765173657; cv=none; b=Gt81ICkDau41c6cevwTnJDyRSIKT51zKwakdDRu0BYGXNdbqbZ0BkvQH09XXsyCtQPbEcovzpMf2I5vNRq+PfZtphwxouMdBiUnWiZrt5k9tzOya4wqx4xabqW4VccwIFjWxVDQeB4hypUe8btNftHZ9sl+jhIsp0fFU4XF1YCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765171498; c=relaxed/simple;
-	bh=bEMRxkvNs0KYgcxdzq6z0odYgVI65uj9k4Zl8E0EFL4=;
+	s=arc-20240116; t=1765173657; c=relaxed/simple;
+	bh=vCzULPTWc7Q3dx9hLUV1hFVQFwFpyYJvUTxprmAzRPU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YGeaeaDzMDBBO95Fkq9DIpKBZU9rqBHT+6aoj6GYTtCn6icfKoUKnsQcDO8Jw9OE5BwJP7e9N8USJM5CbE1Tpq2Jsx7cY9xUKEuvL1upNLl6wNecbSDHN3cX3DcV0jZUKq0J58KQi2y0/md2vPODQdNuerYQjCTupWMgfT8oCSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZZZ4VYN0; arc=none smtp.client-ip=198.175.65.11
+	 In-Reply-To:Content-Type; b=qRjHZy4ORfeUjLYOxkBiL7beGC965NxWCc2dbuPkWAR7XiBTd5hyDgR4a1U/7pXkAVRGnYGKdv9EkfKkvJuUlq0QdFchxrIqsckGv9LbZVxpkjKvUB5iU0ZmtANhGx1dhWanKma+LuvYEJf9ZY2Aye3fLSXd5DITTz2MAy2a3Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=agqIUycS; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZZZ4VYN0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="agqIUycS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765171496; x=1796707496;
+  t=1765173654; x=1796709654;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=bEMRxkvNs0KYgcxdzq6z0odYgVI65uj9k4Zl8E0EFL4=;
-  b=ZZZ4VYN0gadZk/fpXw3gDCshSA4Qyyd7M4VP9/aIdm2j9aeRBT9+hc7J
-   4MYDc6VyUNoeqf3rtawk85FVB6mLYsiUSDljpzWbYkHdzDs+RCM+juMHS
-   7Ube4tx14L4NA2pL/RSa1iuxk2lAVPylgOPqK5zW+stINzH7sm+k/H0YU
-   pbzNTHSeymdkqtWeeD7EPOLqNV8vrLgeVk6MCyrSZ5+Lx0Ez/Z2B5fAZ3
-   8JnaBQBrXwFoqMBeW2GYnbTNYOK5eCWkxqat/0YHLhHYuf1Ez8Jkw4ZDI
-   rGnpOYIJsQAq9k3QNRG9ALEDjR0BYsytJOzG5YlRWdwRwbIc/W6fcGqTE
+  bh=vCzULPTWc7Q3dx9hLUV1hFVQFwFpyYJvUTxprmAzRPU=;
+  b=agqIUycSgr166L4pYLnF6/yhGNu2WsJHU1p5UkOx1q+aTpcbmcExBq2e
+   SuroNGvUsTVucKsXGnueSwDF72VKiUEoDph7XbJV6FA+78+LXCtEPkpwN
+   w3O0Fdg5d+o65qiPaJC0jRmL46FMXpO2UJDNYlIj+3PMeeiUGLFAIU4Iq
+   dWUIfQmqsGJSAuFbdC4IcO8xhy1VUI9S0Usb722ldHw5y6aHhcJSkm01r
+   +1iSyQ1TT4do1zOK9pnEKqZrpmcrTdN4o+HhOv5w9xYLliY/nTWxIhGPf
+   OJRkE9C/Wxty8A2D38fQDKw2aOrocOK1Set3QOdsTFYSQ5zqnHEBzT411
    g==;
-X-CSE-ConnectionGUID: iLvwjikqTRyX0UjHI+YP+g==
-X-CSE-MsgGUID: TZolH5mnSKeA/UZgTdQrYQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="77431380"
+X-CSE-ConnectionGUID: 1OHL1NwBRga0KwXNzwlIBQ==
+X-CSE-MsgGUID: 2bwTroldSzyUpa8jxqyPCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="66112400"
 X-IronPort-AV: E=Sophos;i="6.20,258,1758610800"; 
-   d="scan'208";a="77431380"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 21:24:55 -0800
-X-CSE-ConnectionGUID: lN2N9BaiRT+SrG+gFzoTeQ==
-X-CSE-MsgGUID: ntuZ6btuRQyRSNjcG0D9aQ==
+   d="scan'208";a="66112400"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 22:00:53 -0800
+X-CSE-ConnectionGUID: JAiwGYgTQC2c/DORcui6Iw==
+X-CSE-MsgGUID: 8Q+Lfm/YQUmR+PDhow0HhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,258,1758610800"; 
-   d="scan'208";a="233215898"
+   d="scan'208";a="196311128"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.12]) ([10.124.240.12])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 21:24:50 -0800
-Message-ID: <288614cf-d22f-4329-8440-5a3ab7299041@linux.intel.com>
-Date: Mon, 8 Dec 2025 13:24:47 +0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 22:00:48 -0800
+Message-ID: <2c057288-afe9-4117-8db3-5211fb82615c@linux.intel.com>
+Date: Mon, 8 Dec 2025 14:00:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,119 +68,73 @@ Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
  Xudong Hao <xudong.hao@intel.com>, Kan Liang <kan.liang@linux.intel.com>
 References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
  <20251203065500.2597594-8-dapeng1.mi@linux.intel.com>
- <20251205110706.GT2528459@noisy.programming.kicks-ass.net>
+ <20251205114006.GV2528459@noisy.programming.kicks-ass.net>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251205110706.GT2528459@noisy.programming.kicks-ass.net>
+In-Reply-To: <20251205114006.GV2528459@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 12/5/2025 7:07 PM, Peter Zijlstra wrote:
+On 12/5/2025 7:40 PM, Peter Zijlstra wrote:
 > On Wed, Dec 03, 2025 at 02:54:48PM +0800, Dapeng Mi wrote:
 >
->> @@ -545,6 +547,25 @@ struct perf_event_attr {
->>  	__u64	sig_data;
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 3e9c48fa2202..b19de038979e 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -7469,6 +7469,50 @@ perf_output_sample_regs(struct perf_output_handle *handle,
+>>  	}
+>>  }
 >>  
->>  	__u64	config3; /* extension of config2 */
+>> +static void
+>> +perf_output_sample_simd_regs(struct perf_output_handle *handle,
+>> +			     struct perf_event *event,
+>> +			     struct pt_regs *regs,
+>> +			     u64 mask, u16 pred_mask)
+>> +{
+>> +	u16 pred_qwords = event->attr.sample_simd_pred_reg_qwords;
+>> +	u16 vec_qwords = event->attr.sample_simd_vec_reg_qwords;
+>> +	u64 pred_bitmap = pred_mask;
+>> +	u64 bitmap = mask;
+>> +	u16 nr_vectors;
+>> +	u16 nr_pred;
+>> +	int bit;
+>> +	u64 val;
+>> +	u16 i;
 >> +
+>> +	nr_vectors = hweight64(bitmap);
+>> +	nr_pred = hweight64(pred_bitmap);
 >> +
->> +	/*
->> +	 * Defines set of SIMD registers to dump on samples.
->> +	 * The sample_simd_regs_enabled !=0 implies the
->> +	 * set of SIMD registers is used to config all SIMD registers.
->> +	 * If !sample_simd_regs_enabled, sample_regs_XXX may be used to
->> +	 * config some SIMD registers on X86.
->> +	 */
->> +	union {
->> +		__u16 sample_simd_regs_enabled;
->> +		__u16 sample_simd_pred_reg_qwords;
->> +	};
->> +	__u32 sample_simd_pred_reg_intr;
->> +	__u32 sample_simd_pred_reg_user;
->> +	__u16 sample_simd_vec_reg_qwords;
->> +	__u64 sample_simd_vec_reg_intr;
->> +	__u64 sample_simd_vec_reg_user;
->> +	__u32 __reserved_4;
->>  };
-> This is poorly aligned and causes holes.
->
-> This:
->
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index d292f96bc06f..2deb8dd0ca37 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -545,6 +545,14 @@ struct perf_event_attr {
->  	__u64	sig_data;
->  
->  	__u64	config3; /* extension of config2 */
-> +
-> +	__u16	sample_simd_pred_reg_qwords;
-> +	__u32	sample_simd_pred_reg_intr;
-> +	__u32	sample_simd_pred_reg_user;
-> +	__u16	sample_simd_vec_reg_qwords;
-> +	__u64	sample_simd_vec_reg_intr;
-> +	__u64	sample_simd_vec_reg_user;
-> +	__u32	__reserved_4;
->  };
->  
->  /*
->
-> results in:
->
->         __u64                      config3;              /*   128     8 */
->         __u16                      sample_simd_pred_reg_qwords; /*   136     2 */
->
->         /* XXX 2 bytes hole, try to pack */
->
->         __u32                      sample_simd_pred_reg_intr; /*   140     4 */
->         __u32                      sample_simd_pred_reg_user; /*   144     4 */
->         __u16                      sample_simd_vec_reg_qwords; /*   148     2 */
->
->         /* XXX 2 bytes hole, try to pack */
->
->         __u64                      sample_simd_vec_reg_intr; /*   152     8 */
->         __u64                      sample_simd_vec_reg_user; /*   160     8 */
->         __u32                      __reserved_4;         /*   168     4 */
->
->
->
-> A better layout might be:
->
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index d292f96bc06f..f72707e9df68 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -545,6 +545,15 @@ struct perf_event_attr {
->  	__u64	sig_data;
->  
->  	__u64	config3; /* extension of config2 */
-> +
-> +	__u16	sample_simd_pred_reg_qwords;
-> +	__u16	sample_simd_vec_reg_qwords;
-> +	__u32	__reserved_4;
-> +
-> +	__u32	sample_simd_pred_reg_intr;
-> +	__u32	sample_simd_pred_reg_user;
-> +	__u64	sample_simd_vec_reg_intr;
-> +	__u64	sample_simd_vec_reg_user;
->  };
->  
->  /*
->
-> such that:
->
->         __u64                      config3;              /*   128     8 */
->         __u16                      sample_simd_pred_reg_qwords; /*   136     2 */
->         __u16                      sample_simd_vec_reg_qwords; /*   138     2 */
->         __u32                      __reserved_4;         /*   140     4 */
->         __u32                      sample_simd_pred_reg_intr; /*   144     4 */
->         __u32                      sample_simd_pred_reg_user; /*   148     4 */
->         __u64                      sample_simd_vec_reg_intr; /*   152     8 */
->         __u64                      sample_simd_vec_reg_user; /*   160     8 */
->
-Sure. Thanks.
+>> +	perf_output_put(handle, nr_vectors);
+>> +	perf_output_put(handle, vec_qwords);
+>> +	perf_output_put(handle, nr_pred);
+>> +	perf_output_put(handle, pred_qwords);
+>> +
+>> +	if (nr_vectors) {
+>> +		for_each_set_bit(bit, (unsigned long *)&bitmap,
+> This isn't right. Yes we do this all the time in the x86 code, but there
+> we can assume little-endian byte order. This is core code and is also
+> used on big-endian systems where this is very much broken.
+
+Oh, yes. Just ignored the endians. Would fix it in next version. Thanks.
 
 
 >
+>> +				 sizeof(bitmap) * BITS_PER_BYTE) {
+>> +			for (i = 0; i < vec_qwords; i++) {
+>> +				val = perf_simd_reg_value(regs, bit, i, false);
+>> +				perf_output_put(handle, val);
+>> +			}
+>> +		}
+>> +	}
+>> +	if (nr_pred) {
+>> +		for_each_set_bit(bit, (unsigned long *)&pred_bitmap,
+>> +				 sizeof(pred_bitmap) * BITS_PER_BYTE) {
+>> +			for (i = 0; i < pred_qwords; i++) {
+>> +				val = perf_simd_reg_value(regs, bit, i, true);
+>> +				perf_output_put(handle, val);
+>> +			}
+>> +		}
+>> +	}
+>> +}
