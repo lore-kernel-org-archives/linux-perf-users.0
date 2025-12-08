@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221C522D4DC;
-	Mon,  8 Dec 2025 06:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D8D1DB95E;
+	Mon,  8 Dec 2025 06:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765173657; cv=none; b=Gt81ICkDau41c6cevwTnJDyRSIKT51zKwakdDRu0BYGXNdbqbZ0BkvQH09XXsyCtQPbEcovzpMf2I5vNRq+PfZtphwxouMdBiUnWiZrt5k9tzOya4wqx4xabqW4VccwIFjWxVDQeB4hypUe8btNftHZ9sl+jhIsp0fFU4XF1YCk=
+	t=1765174252; cv=none; b=BlZcUs+WHqUGrUJeehXzdtXST+E+r3dEUAtHLMcb/wCmr6lDAvL7Eh51QVvDTQMynv4prKcwxmeMSaEa98YgzmAuCYU0jfbtf1WnCRSPJgRGIvfAIooyvSSxE+4GuPcTsecuOmqxq/hPaQ3b3eLX71be+J11rND50fGkJeTyLls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765173657; c=relaxed/simple;
-	bh=vCzULPTWc7Q3dx9hLUV1hFVQFwFpyYJvUTxprmAzRPU=;
+	s=arc-20240116; t=1765174252; c=relaxed/simple;
+	bh=ItJVesisIYmgIOHsDrL4ZMoHgj7n6miST0Kjz1Syg14=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qRjHZy4ORfeUjLYOxkBiL7beGC965NxWCc2dbuPkWAR7XiBTd5hyDgR4a1U/7pXkAVRGnYGKdv9EkfKkvJuUlq0QdFchxrIqsckGv9LbZVxpkjKvUB5iU0ZmtANhGx1dhWanKma+LuvYEJf9ZY2Aye3fLSXd5DITTz2MAy2a3Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=agqIUycS; arc=none smtp.client-ip=192.198.163.19
+	 In-Reply-To:Content-Type; b=aOIx8zMt4tJQjdoAxYxh3vSv4xlDwcP8iNpuEc3lpsmU/fg0O15ovITh0M8sHAu+5d64rEIWJkKRDrXu2GNR3BwH9xIoN2YSkp5qYtnrUtv+WLBDrWIox+AxTexlTClsGx4uvdkQ2HlGwMrBaAokqa2F8ZYgONQjnsSZOSsAa/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EEj/4DbA; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="agqIUycS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EEj/4DbA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765173654; x=1796709654;
+  t=1765174252; x=1796710252;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=vCzULPTWc7Q3dx9hLUV1hFVQFwFpyYJvUTxprmAzRPU=;
-  b=agqIUycSgr166L4pYLnF6/yhGNu2WsJHU1p5UkOx1q+aTpcbmcExBq2e
-   SuroNGvUsTVucKsXGnueSwDF72VKiUEoDph7XbJV6FA+78+LXCtEPkpwN
-   w3O0Fdg5d+o65qiPaJC0jRmL46FMXpO2UJDNYlIj+3PMeeiUGLFAIU4Iq
-   dWUIfQmqsGJSAuFbdC4IcO8xhy1VUI9S0Usb722ldHw5y6aHhcJSkm01r
-   +1iSyQ1TT4do1zOK9pnEKqZrpmcrTdN4o+HhOv5w9xYLliY/nTWxIhGPf
-   OJRkE9C/Wxty8A2D38fQDKw2aOrocOK1Set3QOdsTFYSQ5zqnHEBzT411
-   g==;
-X-CSE-ConnectionGUID: 1OHL1NwBRga0KwXNzwlIBQ==
-X-CSE-MsgGUID: 2bwTroldSzyUpa8jxqyPCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="66112400"
+  bh=ItJVesisIYmgIOHsDrL4ZMoHgj7n6miST0Kjz1Syg14=;
+  b=EEj/4DbAWflUKIv2HVqWHAuyGokZy1gaEUYrBr7czhQ80W6HEkIjYkq7
+   FRHN/cbuOrqXAaYg87J+JqYSsgfCSrPQekG8JkUECwRL4fKl3Yy2fJTFu
+   hSLdR/q6NyZXv/P41nlXY9YZEHmO4qgoz0IznqyJjDDE3sQ9Z99Vp/6J/
+   aosE8fILET+b/xvZ8viuiVy6BO08PVMECIt12PW2z3bC0yRbxrNVbmOG5
+   BHpuhlFVD/ZqgQaouPTnUqwdo792TUQHlBTiLytiVzZRQKygSPm8SRm+V
+   EUPFns0yhzW3iLJ4FhMp/T2rB7fPLhiyFWEj9zpvVY4YFeoX+OSWEU6Vj
+   w==;
+X-CSE-ConnectionGUID: vja2KxOtRTW4YPMtfF1Yew==
+X-CSE-MsgGUID: dGNqeXcqQ4yYK3rLfS8ROg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="67160280"
 X-IronPort-AV: E=Sophos;i="6.20,258,1758610800"; 
-   d="scan'208";a="66112400"
+   d="scan'208";a="67160280"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 22:00:53 -0800
-X-CSE-ConnectionGUID: JAiwGYgTQC2c/DORcui6Iw==
-X-CSE-MsgGUID: 8Q+Lfm/YQUmR+PDhow0HhA==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 22:10:51 -0800
+X-CSE-ConnectionGUID: OpqZbjoqSGy6jxlsYl1Zvw==
+X-CSE-MsgGUID: 3hLHdUyQQAmh0tye3JLACg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,258,1758610800"; 
-   d="scan'208";a="196311128"
+   d="scan'208";a="196313275"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.12]) ([10.124.240.12])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 22:00:48 -0800
-Message-ID: <2c057288-afe9-4117-8db3-5211fb82615c@linux.intel.com>
-Date: Mon, 8 Dec 2025 14:00:45 +0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 22:10:45 -0800
+Message-ID: <f36e5477-d405-4da0-bdae-f79d496cf465@linux.intel.com>
+Date: Mon, 8 Dec 2025 14:10:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,7 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v5 07/19] perf: Add sampling support for SIMD registers
+Subject: Re: [Patch v5 08/19] perf/x86: Enable XMM sampling using
+ sample_simd_vec_reg_* fields
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
  <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -67,74 +68,50 @@ Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
  Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
  Xudong Hao <xudong.hao@intel.com>, Kan Liang <kan.liang@linux.intel.com>
 References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
- <20251203065500.2597594-8-dapeng1.mi@linux.intel.com>
- <20251205114006.GV2528459@noisy.programming.kicks-ass.net>
+ <20251203065500.2597594-9-dapeng1.mi@linux.intel.com>
+ <20251205112516.GU2528459@noisy.programming.kicks-ass.net>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251205114006.GV2528459@noisy.programming.kicks-ass.net>
+In-Reply-To: <20251205112516.GU2528459@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 12/5/2025 7:40 PM, Peter Zijlstra wrote:
-> On Wed, Dec 03, 2025 at 02:54:48PM +0800, Dapeng Mi wrote:
+On 12/5/2025 7:25 PM, Peter Zijlstra wrote:
+> On Wed, Dec 03, 2025 at 02:54:49PM +0800, Dapeng Mi wrote:
 >
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 3e9c48fa2202..b19de038979e 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -7469,6 +7469,50 @@ perf_output_sample_regs(struct perf_output_handle *handle,
->>  	}
->>  }
+>> diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
+>> index 7c9d2bb3833b..c3862e5fdd6d 100644
+>> --- a/arch/x86/include/uapi/asm/perf_regs.h
+>> +++ b/arch/x86/include/uapi/asm/perf_regs.h
+>> @@ -55,4 +55,21 @@ enum perf_event_x86_regs {
 >>  
->> +static void
->> +perf_output_sample_simd_regs(struct perf_output_handle *handle,
->> +			     struct perf_event *event,
->> +			     struct pt_regs *regs,
->> +			     u64 mask, u16 pred_mask)
->> +{
->> +	u16 pred_qwords = event->attr.sample_simd_pred_reg_qwords;
->> +	u16 vec_qwords = event->attr.sample_simd_vec_reg_qwords;
->> +	u64 pred_bitmap = pred_mask;
->> +	u64 bitmap = mask;
->> +	u16 nr_vectors;
->> +	u16 nr_pred;
->> +	int bit;
->> +	u64 val;
->> +	u16 i;
+>>  #define PERF_REG_EXTENDED_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
+>>  
+>> +enum {
+>> +	PERF_REG_X86_XMM,
+>> +	PERF_REG_X86_MAX_SIMD_REGS,
+>> +};
 >> +
->> +	nr_vectors = hweight64(bitmap);
->> +	nr_pred = hweight64(pred_bitmap);
+>> +enum {
+>> +	PERF_X86_SIMD_XMM_REGS      = 16,
+>> +	PERF_X86_SIMD_VEC_REGS_MAX  = PERF_X86_SIMD_XMM_REGS,
+>> +};
 >> +
->> +	perf_output_put(handle, nr_vectors);
->> +	perf_output_put(handle, vec_qwords);
->> +	perf_output_put(handle, nr_pred);
->> +	perf_output_put(handle, pred_qwords);
+>> +#define PERF_X86_SIMD_VEC_MASK		GENMASK_ULL(PERF_X86_SIMD_VEC_REGS_MAX - 1, 0)
 >> +
->> +	if (nr_vectors) {
->> +		for_each_set_bit(bit, (unsigned long *)&bitmap,
-> This isn't right. Yes we do this all the time in the x86 code, but there
-> we can assume little-endian byte order. This is core code and is also
-> used on big-endian systems where this is very much broken.
+>> +enum {
+>> +	PERF_X86_XMM_QWORDS      = 2,
+>> +	PERF_X86_SIMD_QWORDS_MAX = PERF_X86_XMM_QWORDS,
+>> +};
+>> +
+>>  #endif /* _ASM_X86_PERF_REGS_H */
+> I don't understand this bit -- the next few patches add to it for YMM
+> and ZMM, but what's the point? I don't see why this is needed at all,
+> let alone why it needs to be UABI.
 
-Oh, yes. Just ignored the endians. Would fix it in next version. Thanks.
+Currently these bits are only used in user space perf tools. Let me remove
+it from the header perf_regs.h.
 
 
 >
->> +				 sizeof(bitmap) * BITS_PER_BYTE) {
->> +			for (i = 0; i < vec_qwords; i++) {
->> +				val = perf_simd_reg_value(regs, bit, i, false);
->> +				perf_output_put(handle, val);
->> +			}
->> +		}
->> +	}
->> +	if (nr_pred) {
->> +		for_each_set_bit(bit, (unsigned long *)&pred_bitmap,
->> +				 sizeof(pred_bitmap) * BITS_PER_BYTE) {
->> +			for (i = 0; i < pred_qwords; i++) {
->> +				val = perf_simd_reg_value(regs, bit, i, true);
->> +				perf_output_put(handle, val);
->> +			}
->> +		}
->> +	}
->> +}
