@@ -1,67 +1,67 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383EA311952
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Dec 2025 14:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A11414A8E
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Dec 2025 14:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765203805; cv=none; b=ob+d36UDPMjG5noDL0rDNg/VIAgU61uXmC1tBwDfUP2l1MZck1xU1GcptJFxAWHkdx3BuXvOi0YfT0+0eJkgc44ZCW4X4NqCtU57ZeaWK3ssNs/x7iAsf26et7uUGSQ1tqoe1ZJQNUGZHzWpalSYgR/+PFH7Mw1qEKDdcissz9A=
+	t=1765203805; cv=none; b=iAJsRCUq58+2vnPimGrZqknNxV29LCXbukFMvv3PrDrDlsZgRzWpCc4SSFSq2LEiSfp0qOVrc2YJ2weHhMNq4+FS3J1HeC4zZAfm3gv+z5/keal541wkRwksKypTUYcte+93dZLrRIBJiaSCuHp2G6lDJD9Te4PasJf5FhOVgLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1765203805; c=relaxed/simple;
-	bh=05Pbq0Jej4bAMFmDYk0LEbaSQ7hT79En5MlCfiT84iw=;
+	bh=J1wksdIJurkXz2WYT6fWQWG7Ja/E0T/Th8nKVIM+YO4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OBv+YB/ZMft1uC3jBg72yX/5ObNuTl6KbsxKk2mfUs1eOpV3reOmaHkrlTCQPDUVcxtCeigYml5g4FEjoK/Q5SWhHe8ToP8BLdsZv/6jyDNTozUbxRBdz/YExJrAyZYPg6QF8RgbqceBJ2y+ovU/5qWHMcbXT6L4ADeWqaleuZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eO9TJ4cM; arc=none smtp.client-ip=209.85.128.44
+	 In-Reply-To:To:Cc; b=XVE7Je5U4x3JyjabjZcVTo9c0DlsPMfqexLpoUMoM26UJoChyzgllhtsJncxmMff/wR/T4Ct/4mMfdbs0Xf/3hp0fLNi/bBK4QNIMywipusLM2T6fR1J0OahBd6/0ulj+nKee7c1M914JHnmBNam1klkwdIbkbb+LKRKXZDOY1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W3Nqm329; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eO9TJ4cM"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-477aa218f20so28890895e9.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Dec 2025 06:23:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W3Nqm329"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-477563e28a3so32441505e9.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Dec 2025 06:23:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1765203801; x=1765808601; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1765203799; x=1765808599; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Zdr/CpHFQzsUBx8MJgOEiksl8pXlmmWZkFYmwO0fchY=;
-        b=eO9TJ4cMdRYKxlxE06p4ZetHT5hSAAUOExKjYi2azbgqZzm8f551KKbYJo4fr25zrO
-         jaip3GEkceFFAM4mvmmLbyEV282df2yJZk+zdpLFLQo/4GljQsYAIAj7sqU8oWge/Pfi
-         4z6kLuJOEApDISf+McxOOY1L3mvE+VWIgc5Yp4TalMqBn9vt03/IgDOTlpWrhGQc2UWN
-         po+2G9RTDnvir9ofKL9AaUkuU0b31KyW14ejqW/2E7iqQHx5nLoZQE9u+oJRZPSySU+4
-         qXTn7O8Rh98/HKlivJoFwYJAkkxQeBZr8b6TGU2mCkGbXNiLo917vAilwQBnn11QTeL6
-         Q4Kg==
+        bh=2sW5CVG6fTovVK5pm5F0b9TUqJDd0mR5nCkkwbSDkjc=;
+        b=W3Nqm329pQpcHDahFhKI0Yz7Yh0x9xCAK0rCkSaMceiZR6ACIJmGWRJA88bdxYi04E
+         mA17WwI0nfYyw7bLb3d99eFPprcIB19ZEUzAkxPG2yZdZJ0za6ywG90Zg1VgjTeDQR8K
+         JeO4xyq9Kc7akUixTy1hVIDGDpGLJBijf4jzTpc6ySv1eiphZIsGSvGBEHUAFNc3yNa5
+         MiUMN74Lj0nKOhPw33g/rBj2W/VmrnVAjrvwV7eTyCfh+2Ula7E++PbJ5mZTPpYjB2XU
+         ZwU1Himq2bErlRd9cSY+T6EpbsK8WR2ZqQ62A9Lxh2oJuQXhBbkZLZgOnD8h6Q2pYgPI
+         hXbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765203801; x=1765808601;
+        d=1e100.net; s=20230601; t=1765203799; x=1765808599;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Zdr/CpHFQzsUBx8MJgOEiksl8pXlmmWZkFYmwO0fchY=;
-        b=hLxlngp4Z9eUeOjFDWx7p3T5jU8JzuLYWFtQ5VoI6gG8f/vV3HQiqfD+8iTkXujQEl
-         aJjXYR9gGoCkUNa0u2MhIyNJT1bFmeXjIND5Flo1O7VjuweyBpmu6l841SMoNnPSp1X0
-         SmTO1k7IzL3aOsHJxcMJqjNIoaxk6z9I6JVthSMynIKk5rA6u4UvAK7i/mmQN64b8/YS
-         564i86PxVeI1ceEqG3wtsb9iptRPWrGVct3RkrPttCOBPAsFmrEzDWzIZhFyoZnhlZT+
-         GpA9dXBocivDnC1j4APiMAomYjhHzJjvdZnfSkMhxy+ns+7xs4xXb4jmHHsBFaviJAnw
-         YCwg==
-X-Gm-Message-State: AOJu0YxiDHaR0/ZDeG05OTEqITmHyNkkfU8gy5oq22QcX1JCglhZbAos
-	5OOKEtAS3LmTFMCCyKgvMitAGhYJRuJkM9BXFAVgCm4p9N2AKyMt2W0QQ1CbLgyS1FA=
-X-Gm-Gg: ASbGncvk1pJUv+r1KO8SiSlVU7PyrkhDOEvd1j8Qi7CUqz/Tgoxf3AlEKaLFi5JlKXf
-	fLnx2SZJYoU71hVRxuopYfukliQUMqc+kXr/BhNnd2AFvmY0yeXfEG7S/k7M8LaPf/s3cjDP6xq
-	oF4IQRPHPwb8bWGSGWcKtcpTaEnULC5zI/AuMqIjV2c7jrP9bsrouMbtBXx/lBQAo8voI7d712G
-	jdSGcrvla6dwX5V1XMLhQ0SnfxXzNA+IDnsTCyKdTBH/nYXjhEjiZEKbvgsvM0Qb6hp4RCV598P
-	eypzwrU9q5CyXaNh1I/qADyz9l7JgzO2tdKf5d78jH+CFMEzCUnnl6vZ+E7/PAGmnZJ7ST7+ux6
-	Mu2+uv872Gl90wOn5HUCHLjC6WbIvhgrPEj/MPLx6ajmwC4aQghiYcCPmfJR5K29RuQsCwdVYo5
-	S1cX0jOlzLi7xU83MOigfk
-X-Google-Smtp-Source: AGHT+IEu1SotQqoNDjmrD/hhBGtqy2G67QaRn20FmBFDWomVLO0SM2avnkCOuR5GDvM7Zf5p/BZfuw==
-X-Received: by 2002:a05:600c:4743:b0:477:afc5:fb02 with SMTP id 5b1f17b1804b1-47939e246e0mr79322745e9.21.1765203801289;
-        Mon, 08 Dec 2025 06:23:21 -0800 (PST)
+        bh=2sW5CVG6fTovVK5pm5F0b9TUqJDd0mR5nCkkwbSDkjc=;
+        b=N37aH2/ggfYi1Ty8W+0hV0X/k7ydbZ609YqaEMJSQdrRA3exeHggtrR38nA4fa+0MP
+         DP/iPv05H7T2RR138DqxXSlSCMktY3xa8jGx2RVUokGT/OQMJvAbM4SuKFUWkwVIv/Ue
+         C8HHDrUZE0d9wwvQmrwOxfN7SoeCizdZtjJKoiEmKgv8jSSLaqcAJj98ACkK2IuWQS4y
+         DzDmLRZo2zOG+iBjclUAoQAqCT20jNBP38nhYaQnNx8xsNcb/PYNPng29UuVK87XbYaA
+         4VBk71Uebi+OC3xy1kdgCmXBR5KQsB168r1Wf6wnSrZ3IReKLvG42mVMqfE4zibIp3YF
+         1AYg==
+X-Gm-Message-State: AOJu0YzYulYDKLjDDsoN3gi4kowoW5LQHlpL8TUzNxvLHojXJXP7dLrI
+	UF7G/O3B+I1Mn/XxJuUJcLzTnpnDfMwRtjiNgOSPV7nfrPsKI7WlhIMCllixy0u5hgc=
+X-Gm-Gg: ASbGnctzrlWiJO4u7j1yRaHmKFesuhb050S21PLvsv3PnJkUKTetyWdn1/LKbseFpie
+	Fyw/mn0pwAxMLZ5wk2z2OqOOtAvr3s6zVcfbmGqhDXjjAfug9vNtFqae2Tiw3zfN2jqj9kipZ9g
+	gLKLfxeVnM2drlhHjWXGF6z6LbPFGGRU4R6kjajR4H3lAoZfI8JUvxuuV2anmV3dsN3wba82kZM
+	rdAUvo0ZRR3Kdp9osWippgAQjSwOeAQDZQHIXyoGEpzfFsRN1wjHT3RHZbx9NPX2PtqVeCNJDWR
+	48wjsHfhKE3acwlQVWPf0qsrlrA8MXXTFw6OJjzcACguUri3vTe/VsE2RRn2tLo2ulYgvgvWMbC
+	s8wtoRkzurxeaI+kSwsDG/VkneHK53UiZMLRMsBcoKr9utyoseH9rsjW0RcfvyKYfNH0TtW09C5
+	aRMba3t4F9eeLb/BMBZ9lz0Wlz32Yra2589LZVZdvKyw==
+X-Google-Smtp-Source: AGHT+IGYLrvxfRv8u0L6Kyp8fUW21hbwdhdUTTfYsrMxGFHJNMXLnvGBImr+N7bTR/70pUVKkNbYZQ==
+X-Received: by 2002:a05:600c:4f11:b0:46e:2815:8568 with SMTP id 5b1f17b1804b1-47939e2371fmr79357865e9.10.1765203798705;
+        Mon, 08 Dec 2025 06:23:18 -0800 (PST)
 Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47930920e0dsm248561065e9.2.2025.12.08.06.23.20
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47930920e0dsm248561065e9.2.2025.12.08.06.23.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Dec 2025 06:23:20 -0800 (PST)
+        Mon, 08 Dec 2025 06:23:18 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Mon, 08 Dec 2025 14:22:06 +0000
-Subject: [PATCH v2 03/12] perf parse-events: Track all user changed config
- bits
+Date: Mon, 08 Dec 2025 14:22:04 +0000
+Subject: [PATCH v2 01/12] perf parse-events: Refactor get_config_terms() to
+ remove macros
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251208-james-perf-config-bits-v2-3-4ac0281993b0@linaro.org>
+Message-Id: <20251208-james-perf-config-bits-v2-1-4ac0281993b0@linaro.org>
 References: <20251208-james-perf-config-bits-v2-0-4ac0281993b0@linaro.org>
 In-Reply-To: <20251208-james-perf-config-bits-v2-0-4ac0281993b0@linaro.org>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -87,200 +87,250 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-Currently we only track which bits were set by the user in attr->config.
-But all configN fields should be treated equally as they can all have
-default and user overridden values.
+The ADD_CONFIG_TERM() macros build the __type argument out of a partial
+EVSEL__CONFIG_TERM_x enum name. This means that they can't be called
+from a function where __type is a variable and it's also impossible to
+grep the codebase to find usages of these enums as they're never typed
+in full.
 
-Track them all by making get_config_chgs() generic and calling it once
-for each config value.
+Fix this by removing the macros and replacing them with an
+add_config_term() function. It seems the main reason these existed in
+the first place was to avoid type punning and to write to a specific
+field in the union, but the same thing can be achieved with a single
+write to a u64 'val' field.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/evsel.c        |  6 ++-
- tools/perf/util/evsel_config.h |  6 ++-
- tools/perf/util/parse-events.c | 98 +++++++++++++++++++++++-------------------
- tools/perf/util/pmu.c          |  2 +-
- 4 files changed, 65 insertions(+), 47 deletions(-)
+ tools/perf/util/evsel_config.h |   1 +
+ tools/perf/util/parse-events.c | 146 ++++++++++++++++++++++++-----------------
+ 2 files changed, 86 insertions(+), 61 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9cd706f62793..dcadf022405d 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1242,7 +1242,11 @@ static void evsel__apply_config_terms(struct evsel *evsel,
- 		case EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE:
- 			/* Already applied by auxtrace */
- 			break;
--		case EVSEL__CONFIG_TERM_CFG_CHG:
-+		case EVSEL__CONFIG_TERM_USR_CHG_CONFIG:
-+		case EVSEL__CONFIG_TERM_USR_CHG_CONFIG1:
-+		case EVSEL__CONFIG_TERM_USR_CHG_CONFIG2:
-+		case EVSEL__CONFIG_TERM_USR_CHG_CONFIG3:
-+		case EVSEL__CONFIG_TERM_USR_CHG_CONFIG4:
- 			break;
- 		case EVSEL__CONFIG_TERM_RATIO_TO_PREV:
- 			rtp_buf = term->val.str;
 diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_config.h
-index 685fd8d5c4a8..7b565d76c0bc 100644
+index bcd3a978f0c4..685fd8d5c4a8 100644
 --- a/tools/perf/util/evsel_config.h
 +++ b/tools/perf/util/evsel_config.h
-@@ -27,7 +27,11 @@ enum evsel_term_type {
- 	EVSEL__CONFIG_TERM_AUX_OUTPUT,
- 	EVSEL__CONFIG_TERM_AUX_ACTION,
- 	EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE,
--	EVSEL__CONFIG_TERM_CFG_CHG,
-+	EVSEL__CONFIG_TERM_USR_CHG_CONFIG,
-+	EVSEL__CONFIG_TERM_USR_CHG_CONFIG1,
-+	EVSEL__CONFIG_TERM_USR_CHG_CONFIG2,
-+	EVSEL__CONFIG_TERM_USR_CHG_CONFIG3,
-+	EVSEL__CONFIG_TERM_USR_CHG_CONFIG4,
- 	EVSEL__CONFIG_TERM_RATIO_TO_PREV,
+@@ -50,6 +50,7 @@ struct evsel_config_term {
+ 		u64	      cfg_chg;
+ 		char	      *str;
+ 		int	      cpu;
++		u64	      val;
+ 	} val;
+ 	bool weak;
  };
- 
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index d5b009b4ebab..7a3a90377896 100644
+index 17c1c36a7bf9..d5b009b4ebab 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -1253,66 +1253,32 @@ static int get_config_terms(const struct parse_events_terms *head_config,
+@@ -1116,105 +1116,107 @@ static int config_attr(struct perf_event_attr *attr,
  	return 0;
  }
  
--/*
-- * Add EVSEL__CONFIG_TERM_CFG_CHG where cfg_chg will have a bit set for
-- * each bit of attr->config that the user has changed.
-- */
--static int get_config_chgs(struct perf_pmu *pmu, struct parse_events_terms *head_config,
--			   struct list_head *head_terms)
-+static int add_cfg_chg(struct perf_pmu *pmu,
-+		       struct parse_events_terms *head_config,
-+		       struct list_head *head_terms,
-+		       int format_type,
-+		       enum parse_events__term_type term_type,
-+		       enum evsel_term_type new_term_type)
+-static int get_config_terms(const struct parse_events_terms *head_config,
+-			    struct list_head *head_terms)
++static struct evsel_config_term *add_config_term(enum evsel_term_type type,
++						 struct list_head *head_terms,
++						 bool weak)
  {
+-#define ADD_CONFIG_TERM(__type, __weak)				\
+-	struct evsel_config_term *__t;			\
+-								\
+-	__t = zalloc(sizeof(*__t));				\
+-	if (!__t)						\
+-		return -ENOMEM;					\
+-								\
+-	INIT_LIST_HEAD(&__t->list);				\
+-	__t->type       = EVSEL__CONFIG_TERM_ ## __type;	\
+-	__t->weak	= __weak;				\
+-	list_add_tail(&__t->list, head_terms)
+-
+-#define ADD_CONFIG_TERM_VAL(__type, __name, __val, __weak)	\
+-do {								\
+-	ADD_CONFIG_TERM(__type, __weak);			\
+-	__t->val.__name = __val;				\
+-} while (0)
++	struct evsel_config_term *t;
+ 
+-#define ADD_CONFIG_TERM_STR(__type, __val, __weak)		\
+-do {								\
+-	ADD_CONFIG_TERM(__type, __weak);			\
+-	__t->val.str = strdup(__val);				\
+-	if (!__t->val.str) {					\
+-		zfree(&__t);					\
+-		return -ENOMEM;					\
+-	}							\
+-	__t->free_str = true;					\
+-} while (0)
++	t = zalloc(sizeof(*t));
++	if (!t)
++		return NULL;
++
++	INIT_LIST_HEAD(&t->list);
++	t->type = type;
++	t->weak	= weak;
++	list_add_tail(&t->list, head_terms);
+ 
++	return t;
++}
++
++static int get_config_terms(const struct parse_events_terms *head_config,
++			    struct list_head *head_terms)
++{
  	struct parse_events_term *term;
- 	u64 bits = 0;
- 	int type;
  
  	list_for_each_entry(term, &head_config->terms, list) {
--		switch (term->type_term) {
--		case PARSE_EVENTS__TERM_TYPE_USER:
-+		if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER) {
- 			type = perf_pmu__format_type(pmu, term->config);
--			if (type != PERF_PMU_FORMAT_VALUE_CONFIG)
-+			if (type != format_type)
- 				continue;
- 			bits |= perf_pmu__format_bits(pmu, term->config);
++		struct evsel_config_term *new_term;
++		enum evsel_term_type new_type;
++		char *str = NULL;
++		u64 val;
++
+ 		switch (term->type_term) {
+ 		case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
+-			ADD_CONFIG_TERM_VAL(PERIOD, period, term->val.num, term->weak);
++			new_type = EVSEL__CONFIG_TERM_PERIOD;
++			val = term->val.num;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
+-			ADD_CONFIG_TERM_VAL(FREQ, freq, term->val.num, term->weak);
++			new_type = EVSEL__CONFIG_TERM_FREQ;
++			val = term->val.num;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_TIME:
+-			ADD_CONFIG_TERM_VAL(TIME, time, term->val.num, term->weak);
++			new_type = EVSEL__CONFIG_TERM_TIME;
++			val = term->val.num;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_CALLGRAPH:
+-			ADD_CONFIG_TERM_STR(CALLGRAPH, term->val.str, term->weak);
++			new_type = EVSEL__CONFIG_TERM_CALLGRAPH;
++			str = term->val.str;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_BRANCH_SAMPLE_TYPE:
+-			ADD_CONFIG_TERM_STR(BRANCH, term->val.str, term->weak);
++			new_type = EVSEL__CONFIG_TERM_BRANCH;
++			str = term->val.str;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_STACKSIZE:
+-			ADD_CONFIG_TERM_VAL(STACK_USER, stack_user,
+-					    term->val.num, term->weak);
++			new_type = EVSEL__CONFIG_TERM_STACK_USER;
++			val = term->val.num;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_INHERIT:
+-			ADD_CONFIG_TERM_VAL(INHERIT, inherit,
+-					    term->val.num ? 1 : 0, term->weak);
++			new_type = EVSEL__CONFIG_TERM_INHERIT;
++			val = term->val.num ? 1 : 0;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_NOINHERIT:
+-			ADD_CONFIG_TERM_VAL(INHERIT, inherit,
+-					    term->val.num ? 0 : 1, term->weak);
++			new_type = EVSEL__CONFIG_TERM_INHERIT;
++			val = term->val.num ? 0 : 1;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_MAX_STACK:
+-			ADD_CONFIG_TERM_VAL(MAX_STACK, max_stack,
+-					    term->val.num, term->weak);
++			new_type = EVSEL__CONFIG_TERM_MAX_STACK;
++			val = term->val.num;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_MAX_EVENTS:
+-			ADD_CONFIG_TERM_VAL(MAX_EVENTS, max_events,
+-					    term->val.num, term->weak);
++			new_type = EVSEL__CONFIG_TERM_MAX_EVENTS;
++			val = term->val.num;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_OVERWRITE:
+-			ADD_CONFIG_TERM_VAL(OVERWRITE, overwrite,
+-					    term->val.num ? 1 : 0, term->weak);
++			new_type = EVSEL__CONFIG_TERM_OVERWRITE;
++			val = term->val.num ? 1 : 0;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_NOOVERWRITE:
+-			ADD_CONFIG_TERM_VAL(OVERWRITE, overwrite,
+-					    term->val.num ? 0 : 1, term->weak);
++			new_type = EVSEL__CONFIG_TERM_OVERWRITE;
++			val = term->val.num ? 0 : 1;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
+-			ADD_CONFIG_TERM_STR(DRV_CFG, term->val.str, term->weak);
++			new_type = EVSEL__CONFIG_TERM_DRV_CFG;
++			str = term->val.str;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_PERCORE:
+-			ADD_CONFIG_TERM_VAL(PERCORE, percore,
+-					    term->val.num ? true : false, term->weak);
++			new_type = EVSEL__CONFIG_TERM_PERCORE;
++			val = term->val.num ? true : false;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
+-			ADD_CONFIG_TERM_VAL(AUX_OUTPUT, aux_output,
+-					    term->val.num ? 1 : 0, term->weak);
++			new_type = EVSEL__CONFIG_TERM_AUX_OUTPUT;
++			val = term->val.num ? 1 : 0;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_AUX_ACTION:
+-			ADD_CONFIG_TERM_STR(AUX_ACTION, term->val.str, term->weak);
++			new_type = EVSEL__CONFIG_TERM_AUX_ACTION;
++			str = term->val.str;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
+-			ADD_CONFIG_TERM_VAL(AUX_SAMPLE_SIZE, aux_sample_size,
+-					    term->val.num, term->weak);
++			new_type = EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE;
++			val = term->val.num;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
+-			ADD_CONFIG_TERM_STR(RATIO_TO_PREV, term->val.str, term->weak);
++			new_type = EVSEL__CONFIG_TERM_RATIO_TO_PREV;
++			str = term->val.str;
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_USER:
+ 		case PARSE_EVENTS__TERM_TYPE_CONFIG:
+@@ -1229,7 +1231,23 @@ do {								\
+ 		case PARSE_EVENTS__TERM_TYPE_RAW:
+ 		case PARSE_EVENTS__TERM_TYPE_CPU:
+ 		default:
 -			break;
--		case PARSE_EVENTS__TERM_TYPE_CONFIG:
-+		} else if (term->type_term == term_type) {
- 			bits = ~(u64)0;
--			break;
--		case PARSE_EVENTS__TERM_TYPE_CONFIG1:
--		case PARSE_EVENTS__TERM_TYPE_CONFIG2:
--		case PARSE_EVENTS__TERM_TYPE_CONFIG3:
--		case PARSE_EVENTS__TERM_TYPE_CONFIG4:
--		case PARSE_EVENTS__TERM_TYPE_LEGACY_HARDWARE_CONFIG:
--		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE_CONFIG:
--		case PARSE_EVENTS__TERM_TYPE_NAME:
--		case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
--		case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
--		case PARSE_EVENTS__TERM_TYPE_BRANCH_SAMPLE_TYPE:
--		case PARSE_EVENTS__TERM_TYPE_TIME:
--		case PARSE_EVENTS__TERM_TYPE_CALLGRAPH:
--		case PARSE_EVENTS__TERM_TYPE_STACKSIZE:
--		case PARSE_EVENTS__TERM_TYPE_NOINHERIT:
--		case PARSE_EVENTS__TERM_TYPE_INHERIT:
--		case PARSE_EVENTS__TERM_TYPE_MAX_STACK:
--		case PARSE_EVENTS__TERM_TYPE_MAX_EVENTS:
--		case PARSE_EVENTS__TERM_TYPE_NOOVERWRITE:
--		case PARSE_EVENTS__TERM_TYPE_OVERWRITE:
--		case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
--		case PARSE_EVENTS__TERM_TYPE_PERCORE:
--		case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
--		case PARSE_EVENTS__TERM_TYPE_AUX_ACTION:
--		case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
--		case PARSE_EVENTS__TERM_TYPE_METRIC_ID:
--		case PARSE_EVENTS__TERM_TYPE_RAW:
--		case PARSE_EVENTS__TERM_TYPE_CPU:
--		case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
--		default:
--			break;
++			/* Don't add a new term for these ones */
++			continue;
++		}
++
++		new_term = add_config_term(new_type, head_terms, term->weak);
++		if (!new_term)
++			return -ENOMEM;
++
++		if (str) {
++			new_term->val.str = strdup(str);
++			if (!new_term->val.str) {
++				zfree(&new_term);
++				return -ENOMEM;
++			}
++			new_term->free_str = true;
++		} else {
++			new_term->val.val = val;
+ 		}
+ 	}
+ 	return 0;
+@@ -1290,10 +1308,16 @@ static int get_config_chgs(struct perf_pmu *pmu, struct parse_events_terms *head
  		}
  	}
  
- 	if (bits) {
- 		struct evsel_config_term *new_term;
+-	if (bits)
+-		ADD_CONFIG_TERM_VAL(CFG_CHG, cfg_chg, bits, false);
++	if (bits) {
++		struct evsel_config_term *new_term;
++
++		new_term = add_config_term(EVSEL__CONFIG_TERM_CFG_CHG,
++					   head_terms, false);
++		if (!new_term)
++			return -ENOMEM;
++		new_term->val.cfg_chg = bits;
++	}
  
--		new_term = add_config_term(EVSEL__CONFIG_TERM_CFG_CHG,
--					   head_terms, false);
-+		new_term = add_config_term(new_term_type, head_terms, false);
- 		if (!new_term)
- 			return -ENOMEM;
- 		new_term->val.cfg_chg = bits;
-@@ -1321,6 +1287,50 @@ static int get_config_chgs(struct perf_pmu *pmu, struct parse_events_terms *head
+-#undef ADD_CONFIG_TERM
  	return 0;
  }
  
-+/*
-+ * Add EVSEL__CONFIG_TERM_USR_CFG_CONFIGn where cfg_chg will have a bit set for
-+ * each bit of attr->configN that the user has changed.
-+ */
-+static int get_config_chgs(struct perf_pmu *pmu,
-+			   struct parse_events_terms *head_config,
-+			   struct list_head *head_terms)
-+{
-+	int ret;
-+
-+	ret = add_cfg_chg(pmu, head_config, head_terms,
-+			  PERF_PMU_FORMAT_VALUE_CONFIG,
-+			  PARSE_EVENTS__TERM_TYPE_CONFIG,
-+			  EVSEL__CONFIG_TERM_USR_CHG_CONFIG);
-+	if (ret)
-+		return ret;
-+
-+	ret = add_cfg_chg(pmu, head_config, head_terms,
-+			  PERF_PMU_FORMAT_VALUE_CONFIG1,
-+			  PARSE_EVENTS__TERM_TYPE_CONFIG1,
-+			  EVSEL__CONFIG_TERM_USR_CHG_CONFIG1);
-+	if (ret)
-+		return ret;
-+
-+	ret = add_cfg_chg(pmu, head_config, head_terms,
-+			  PERF_PMU_FORMAT_VALUE_CONFIG2,
-+			  PARSE_EVENTS__TERM_TYPE_CONFIG2,
-+			  EVSEL__CONFIG_TERM_USR_CHG_CONFIG2);
-+	if (ret)
-+		return ret;
-+
-+	ret = add_cfg_chg(pmu, head_config, head_terms,
-+			  PERF_PMU_FORMAT_VALUE_CONFIG3,
-+			  PARSE_EVENTS__TERM_TYPE_CONFIG3,
-+			  EVSEL__CONFIG_TERM_USR_CHG_CONFIG3);
-+	if (ret)
-+		return ret;
-+
-+	return add_cfg_chg(pmu, head_config, head_terms,
-+			   PERF_PMU_FORMAT_VALUE_CONFIG4,
-+			   PARSE_EVENTS__TERM_TYPE_CONFIG4,
-+			   EVSEL__CONFIG_TERM_USR_CHG_CONFIG4);
-+}
-+
- int parse_events_add_tracepoint(struct parse_events_state *parse_state,
- 				struct list_head *list,
- 				const char *sys, const char *event,
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 2c26c8d76bed..e02f74d4020c 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1387,7 +1387,7 @@ void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
- 				const char *config_name, u64 val)
- {
- 	u64 user_bits = 0, bits;
--	struct evsel_config_term *term = evsel__get_config_term(evsel, CFG_CHG);
-+	struct evsel_config_term *term = evsel__get_config_term(evsel, USR_CHG_CONFIG);
- 
- 	if (term)
- 		user_bits = term->val.cfg_chg;
 
 -- 
 2.34.1
