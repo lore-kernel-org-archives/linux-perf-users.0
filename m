@@ -1,111 +1,92 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E1D2857CD
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Dec 2025 08:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E33E2DD608;
+	Mon,  8 Dec 2025 08:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765181657; cv=none; b=LetSsnDtfhEzAJNVF6B/5FnimibbLiKJoyKEcK2P1gRju8pMqhnOBXVnoyxia3TYy4xu+gD53MvBI+ItOPLp0iYA6Ixa2+giZxmmaLGCA2IHGCjypEPDvkeZeqd5kt3UjI/XQgd7xMG5/ZkR8ujOM0Jzr3Zh2swL8IZxnGoa3xM=
+	t=1765183834; cv=none; b=uyryhW0Soq0lnd8VopgAA69CNEkNnxk6BsG4b6w42hTrkQ9fLImUyFHdZ0W+vPPXyhIbo6vn06dZR7HJqWUGeCz/Wq5EMAxAUsYGkL9NX1ry/t7M1sv4TcmvBfZFytekqJ9MCkBLMrcDIZOo+ZJSKh2fLyCGd18gdwikAY6ddDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765181657; c=relaxed/simple;
-	bh=zKuBvxyxZJslPOMplhZnuM9Yv8eYhb7wr6yk7mLhsZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=U29PFaSq2ReBnW+CRct1yoVsUE5D7excrfpGMCA5E7R+Lzm4CjZkLBuKCA6AvPBiA/fi4wYIuX+NaM8Jnztm/3DL2ehOXO3zcNvYPVf+xLYQ3Tr+hVP3dcz44C4CXs27tOHvXS2ya7y6YABG8UuFYoatUAbyoSc01QOUfm08IQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lLtaVbqN; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1765183834; c=relaxed/simple;
+	bh=gP9IZub1CXFwc8U+XH0DbSLtta3vvhcnMY1BjJzMxc4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gw1G8xYXP6ui75Z41swdPGXfFaAH0QvEDwYsBIUb7Hlq8uyAg5Q3w7OLba9o9dByB5YFy9YRmRoV1lfVae2Zz36xzM1ZmsLVbCyrWjol8e9NcXB+SCQDIaA9YQQRfALrawUElJ5hjOWeiVbrgjtLFcO/DVQ+4M805WfhMzbXSPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YrQAqzWJ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lLtaVbqN"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-42e2ba54a6fso1323735f8f.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Dec 2025 00:14:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1765181653; x=1765786453; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=T1991j57Uz3Fn7DkGnXZOz9lVmuzpVmyw3e1zr4rts0=;
-        b=lLtaVbqNzaPDlJQH5Q9qGk23m/OFHrNFIWUklG3STuJ44xlsOUnlbToSxhbLuYo4OT
-         nVQ1yPFP+SuyBhwc/F2YWEUyvqfsewvZaUP/7ErdoY51i1drN1NZ1YkpV+80ZDlMiGo/
-         khIoWKCTHGh9Kd6cTWnE1lVB0snimabfLcbniTPGPfSICRN5vwGbg/tpSUdULQ0GjL4/
-         sxQsizVxrCHTrYeqmvpG40NAHHN8LAuxhFUFOahUsqy9ZdOjq6x2Cbg8mI4n51PKo+TZ
-         DuuOcZ3QKvmJjXCUnoiK5Xv2qQltzLdaiXvKkWWO2M7qaHyvQb6H0RjC4keVK69tW8oV
-         kO+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765181653; x=1765786453;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T1991j57Uz3Fn7DkGnXZOz9lVmuzpVmyw3e1zr4rts0=;
-        b=o/oGjoNaPuA1C2hF7RAO8LZkADtZ0PPadtBTvWh3qnU5W+b1NIDYPuZ6nDNLxKSX7I
-         1uHcIeOZPkR8KUahlLbjeWoOtLfYW4dcQQi4yBvR/GYoV158hgGsKRcToRTSuRFyhzpo
-         qApZnHXGvapg5UwQW09Hq6/8oLHYZeDva0HGC9HUOgpbRi5cl3WlidGcNtZQL3A+4sDk
-         Q3wc7aePZoN+f1KpZiY+Ey4bw2ZPs0IpKmoTMGa6VqV8FUMZUcUoiQVTOcn8+CS7flg9
-         LCkooKwNGdKfc1MhiPb5sFNqGomzeSzt5S7UF46hukrrxuTdkQhkRGhaaAOApnWCO05+
-         KZ6w==
-X-Gm-Message-State: AOJu0YytbVF/kZ05OWOHOiQ6XS8W7tQ5ItxaMQDOkW3d59db9aXgCUkn
-	IVWPpMn82nN3dtvuJBBg/EDZuaWXDmpJyJefTYc1A0muVfYztX0gicETTITh3VENr34=
-X-Gm-Gg: ASbGncvpoMzNIXV5khAH0+inWIgRgpj0TKhWkcJ594ke1DgiST2iZUyP8ar5FsDi0h7
-	jXk82hMPAyxRWBP6JeIJi9tFFHPl7FU2uFQeFGbEzb6F5MJ8iQw5uQ+iAuxPCm2IE9ayhE1Gc/z
-	kLJOKMRWsve+x/KSA30KQ8aCOCJOwY0c2gHVABDNfV1BHg4pRQAhU7rSWxbW4H8YySL9oJtfe9I
-	lh1mk/8InqG/fEZnUch01DC4H5p5pUi+jZVXVK1/W1zwfutDceZcpvgDsm7jUDJdP5XRlFs2Gvh
-	DDuuTYqjHhCRfsudG9+sAa9zHWY+BDglXH7vBm0cRI4wDjDL3KxAng+dJsIhFeqfZah+YEpviNw
-	jEKHul9S7h3ycAL3BO0vpF/0syscdPO9a+C+XYFfKV/mqlPIZ5pc32kdmBgPs3eRM6O8djFEBl+
-	yabr+EnYj1nyPFc6gH
-X-Google-Smtp-Source: AGHT+IENvBVyw+v75lTlgMHU8PIOMdlNNByQUTjHiyI5B9jOdh8IUvypNp1jfzdtKKlHEd8bqfTwLQ==
-X-Received: by 2002:a05:6000:26c6:b0:42b:3bee:a7ff with SMTP id ffacd0b85a97d-42f89f0e417mr7068719f8f.24.1765181653346;
-        Mon, 08 Dec 2025 00:14:13 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-42f7cbfee5bsm24236359f8f.16.2025.12.08.00.14.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Dec 2025 00:14:12 -0800 (PST)
-Date: Mon, 8 Dec 2025 11:14:09 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: [bug report] perf/x86/amd/uncore: Refactor uncore management
-Message-ID: <aTaI0ci3vZ44lmBn@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YrQAqzWJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=za4eJfAzfcigSmbD2HxrnUJ9fQifoichO9AYM9rALrE=; b=YrQAqzWJJSk5v/6k67tUAr1Zzf
+	2xURg4yRkL+7ONvyuY3rMk1wk8aUbmQqxpWv3hlb2TXB93RAbZ6r7JN58014KqXCpxKml0//SxXTY
+	RZhPOR0TC18m6Kc3QSHFozU/lz42BWWBCCvyvwT7iM+9gy4cp0lKbs4REIEpK1YSBu0x/kFWKyie1
+	1ah9l/qnB9X69DYJJMGd7p3kCDjFAUG6VLw9GEVHLE8kNI1EU5mFPwmQbbpAEo/0viwLmYWNi7Gvh
+	g2Gp2otsyXbPKenfke2hsomjpjH879yrbWCN5yg5jMGP2QTLvu9pJ9ZJ026YADLhWt6Uf9CJozrWP
+	eGaeYs+Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vSWwn-00000009YKT-2ETq;
+	Mon, 08 Dec 2025 08:50:21 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 80E7B30301A; Mon, 08 Dec 2025 09:50:20 +0100 (CET)
+Date: Mon, 8 Dec 2025 09:50:20 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>,
+	Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
+Subject: Re: [Patch v5 16/19] perf/x86: Activate back-to-back NMI detection
+ for arch-PEBS induced NMIs
+Message-ID: <20251208085020.GA3707891@noisy.programming.kicks-ass.net>
+References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
+ <20251203065500.2597594-17-dapeng1.mi@linux.intel.com>
+ <20251205123940.GY2528459@noisy.programming.kicks-ass.net>
+ <5e808ff0-0107-4085-a1ab-ea1cfed4e0ca@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5e808ff0-0107-4085-a1ab-ea1cfed4e0ca@linux.intel.com>
 
-Hello Sandipan Das,
+On Mon, Dec 08, 2025 at 02:46:44PM +0800, Mi, Dapeng wrote:
 
-Commit d6389d3ccc13 ("perf/x86/amd/uncore: Refactor uncore
-management") from Oct 5, 2023 (linux-next), leads to the following
-Smatch static checker warning:
+> This change only take effects for arch-PEBS. For the legacy PEBS, the
+> "handled" would still be added 1 unconditionally even the *_drain_pebs()
+> helpers always return 0.
+> 
+>     /*
+>      * PEBS overflow sets bit 62 in the global status register
+>      */
+>     if (__test_and_clear_bit(GLOBAL_STATUS_BUFFER_OVF_BIT, (unsigned long
+> *)&status)) {
+>         u64 pebs_enabled = cpuc->pebs_enabled;
+> 
+>         handled++;
+>         x86_pmu_handle_guest_pebs(regs, &data);
+>         static_call(x86_pmu_drain_pebs)(regs, &data);
+> 
 
-	arch/x86/events/amd/uncore.c:660 amd_uncore_df_event_init()
-	warn: set error code if 'pmu_version < 2'
+Oh gawd. Please don't do that. If you change the calling convention of
+that function, please have it be used consistently.
 
-arch/x86/events/amd/uncore.c
-    654 static int amd_uncore_df_event_init(struct perf_event *event)
-    655 {
-    656         struct hw_perf_event *hwc = &event->hw;
-    657         int ret = amd_uncore_event_init(event);
-    658 
-    659         if (ret || pmu_version < 2)
---> 660                 return ret;
-
-If pmu_version is < 2, do we really want to just return success?
-
-    661 
-    662         hwc->config = event->attr.config &
-    663                       (pmu_version >= 2 ? AMD64_PERFMON_V2_RAW_EVENT_MASK_NB :
-    664                                           AMD64_RAW_EVENT_MASK_NB);
-
-Or do we want to set:
-
-	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
-
-And then return success?
-
-    665 
-    666         return 0;
-    667 }
-
-regards,
-dan carpenter
