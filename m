@@ -1,67 +1,67 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9967C314D3B
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Dec 2025 14:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF41E3176EF
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Dec 2025 14:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765203806; cv=none; b=XxwJVh2B2v6tG2iB3R7Yg6wtSTgkDx1pGKkm7sFIsE+tZ/r9Td/MKJX6YKHMsF2EwY8DrwY9WUuOVstpLsgpKG1xJU2AiMatFVHDceyB45rToeHWy2bXq5f6tu+yjIjKjHb6Eu5mjnA6jmuPyygzzQ9LOQr4WpGOvippUqgAj2w=
+	t=1765203807; cv=none; b=m80tdJZh6GiBPK8akk+9ANrQIC74vQhwC4ae1jrG7nGwmi9nMOs+XP18VylbHxKzzs4Ic7SJwVZaOlSfV5NQeTsjMHN0HX8tEHGoSGujc1iu6pgdjQ6GQA79qPWvXOtJzCcmqPtaIXiopVEJSNImv08PCzR6hg/YmeBw9otz5lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765203806; c=relaxed/simple;
-	bh=G91PVNHfi0QYrYWGktdjTNJ/Okf/P/cyrGTlMeXq90I=;
+	s=arc-20240116; t=1765203807; c=relaxed/simple;
+	bh=X/msMFwhX0wLMQ0DfyqjBDYpojeE6MPsUgOWEjzkTWw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=s9P9veqkB3YyUIrDG9dLPZP/yEW8Gg7fchLMfP0fUUPPjnG7g9PALFQrzSvjuHe05r5OpKJ1WFppXobb8PuqRNh7Xl4e3GJNmHQ+Pr995QnaHDgBKnGCB8rLetAYCZYgzFN8slHv0lNNaUm5GyxVoI0/pU6gJCMQbLH8qUngcww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eDq8/R/J; arc=none smtp.client-ip=209.85.128.53
+	 In-Reply-To:To:Cc; b=b3EV2pZ5eGm5+062w2QQgRr5yY98JpBf/R1ndnL1/CFVmX1AVkBzOMtbwl3ZbGTsV9Jgj0wEqBmBeQaQp7/mNKWvszWGueQ7xcyeG4HWZa/TcakrLg/MrKP/gIYuMs132W9pb89baZRcU+8qXkm47eL+kWl9vDkU10BpX00i8IQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yj9g6pyu; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eDq8/R/J"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-47798ded6fcso33860915e9.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Dec 2025 06:23:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yj9g6pyu"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-477b91680f8so50577525e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Dec 2025 06:23:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1765203803; x=1765808603; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1765203804; x=1765808604; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZRhf5LqtwI1BCs/MXxqcrvCOGauWve2lGZSZRvbtNrM=;
-        b=eDq8/R/JfzeeH6y8BF+AWTwQINiTl38oUMd7dpbuLjNjbCzcOhPMX8Rp+877/Be1dR
-         Qazyg3IO5gQuECgkSDh0E1EQhaw/kQN8at2kwBGSgJeCiiIreSNK7Gn0d4LydSeMqvQ+
-         Nvl/b8S+6ju+Aa7a9fLH8Ol46bGGq1WBixI/ocuAdPB7SmLFXrMiSFa8BzoFkLPUcyFm
-         7yRyn+0xgw9e+yUZcj+a3zBcDEE1iEHbr+3BdrsdCS2B8laDhgZ86AZER+nlxSpr4MZl
-         /lUDaHIZNK1EWnLpVOfvawwcCm4CsEaDjWrOmBDpsFdA8bmUJyxBniidXka1B+ID2z9v
-         WnFQ==
+        bh=Y0SkqXfoDch2Crrep+7q41phmdji29dr3SE6FUuXCaY=;
+        b=yj9g6pyuHgm6dFWlxsDa8sRnheIwzqeeL9OKCy6h8eWQVWXmNHxgmXb8SvHq/G5sUg
+         +VYWriOzUci0lby5Jjl5G77YO/LOTDxkne0Q9xtN9OG9y5LpjWRhl9ujkldVP3fX/mK0
+         9/XNVwxtN/yPQmhaCUonq3kYgroxMO2ihJuDeoDFPyKAvi5lInf7N6lyryJO++bUsGp+
+         tGR95XaST8WF5fYTzJxNj2oDhUDf0Ib/Cu2CaOVVjZ2BBcfDOsZ+mIy5eDetEaxP7iwf
+         IL/Zm9BAMw0D6FMbvlFnugHEqKv7s/yL6kJEMZ+ljriL2A9DNm4zHm4AKXMbaBUusYrW
+         Tspw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765203803; x=1765808603;
+        d=1e100.net; s=20230601; t=1765203804; x=1765808604;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=ZRhf5LqtwI1BCs/MXxqcrvCOGauWve2lGZSZRvbtNrM=;
-        b=qkuo7BlkSV5wJDmRiqrHO2FMwc5/CD3nMRw5v3j4EIjDNVyurpb+1qfbgVgBKHoW92
-         8uuxfuYf7SgUVNfBOcdo8AO4xUkn0HWmC0i8GQDFgZfKHijLqX1ImjWCcbShTTYKzU/H
-         C6bVJhQZqsGyElCEtFl/uWagu1fpBY94AnuzMmKl91t3wAeCmIgSWJaXCbYLYeryjEgw
-         RgpHweIsxpCoUIusqdhXG052lXepE2AfphdztzzTwV+Kmhv/km8ZWdJvz0kN0P6xdQC7
-         5qKbrbTTTqAGP9FMTPgzy/pzU9aRjT6jy9Fm5aJrAKDmXHK8LItujQ0OkTSOt16wIJ1B
-         25xw==
-X-Gm-Message-State: AOJu0YwRs2QQlgjAKnaYjV9nGIxu/fiCTR8mI5DdhMloTbDjp2Rcjkj3
-	5by3zEIIaVdCUbvrAFIfS4YNcNzfkxsTk1d4t3c6cXzhj3u0oxOVhhxLzwYphRyez/4=
-X-Gm-Gg: ASbGnct6yYGKmIysnsnkWipQaZBdOB5qBL4Daz4qedjetIb1UFXnc/bsL5J29kbgH45
-	loEWv5DcbXTCwgn/2P0L1EOM9oosLvlgXPNPFmGhYC12t9xxme11sPSbeWNn9BSiFGDAmaP4TsR
-	GxXM3oG1zvk9qRsG++YcbK6dRmfHXYsOZ6n4Dr9emaOdX66T7lVVzYMTZm8pyZEtEBh/9HGmGAG
-	0Kz4WmzzSy9yk1rm8Dd8bYomxxGHqBm+wnuMzH25Smw85/JEZhfMkBQF377C2GNfJHIG1TSK17L
-	upK2lsFDR/dw6OeLhw72aYfAEk07Nr0Bl49lgIdj7SWKqv57ZePonvYSGh1VpR6GVOlzgejeL6b
-	hPpRNX4ANQXEgqnYXf8WIyh5pom8jeifAELETvub89SxOTBMHHwBy8nFHY5rQRojj2xXrUm1FX2
-	XFa5X32PIFW69J3AHPh/VA
-X-Google-Smtp-Source: AGHT+IEhpoMN4+zTETFkcztiEWYM4FtF59nv9AEONwYh8tAIN/5BaZy8msPhg0ncsD8sYg+q3JZCMw==
-X-Received: by 2002:a05:600c:3514:b0:477:7768:8da4 with SMTP id 5b1f17b1804b1-47939deac5bmr91892805e9.7.1765203802717;
-        Mon, 08 Dec 2025 06:23:22 -0800 (PST)
+        bh=Y0SkqXfoDch2Crrep+7q41phmdji29dr3SE6FUuXCaY=;
+        b=Jt+QiHZXXE8Vd7E0yNXP/02xv59EWS8mCOQJEMnWZzp6gFQhxGRBywtgJqJPBequKp
+         FhjRJVANUCXCE+rMPsRnFsUOEUNuGLYVLD7aTkZzD7giUAvFmYgeYs+5tj+lIVkfiegQ
+         4kfGLuHTDKHsxjbNw6Ms4vsV74eC8E67i8UxmW8qFIgSdpEyYwUTToW12gcoNkPTv95C
+         KrXI8yXSlmmWcoynszIAnKkmW/tCHHZzbkoH1+JAxUvwQxS8qAITYuyYykoGzVKPCcTJ
+         J5nAP5IMjkbpoWAuM59cfCtTY3zy+4HmukeEhmmwEjGQo0YNhBvEtSqGvoJZZ6m9CgTA
+         CT4w==
+X-Gm-Message-State: AOJu0YxLaB7NuZQgjCJ2EonHMuGXW5/OJ7XFJ+8zQbYRDipmead3c7Y2
+	7y+aIBCO/3CNal1cUsrPPWGAnMHFNb0YdhjnOYENLp2/d8Xn9AiVtUGcVjCrljorOV0=
+X-Gm-Gg: ASbGncs17ECTzybLhZ7AsRhZCLciE6RDQM49ENuAwOXHSm8xDbli7iOJ+qi1XWiuQHe
+	cRge3VoqhF9mzkty0EMyOk7UnBJkJ8YGLWchlDNv3j5zz8bOt/0DTVMvm1TS96ry9gKquVMv8bm
+	qfkwc4iGEelNTQePpv/qGofKLfWjg1at6kwQUdVVOd8jpYrRIxNlOWnMHwY1pz5xXxQzZ1q1szQ
+	DJ2x/gg7F52HyZi9z/vRQleCvRoNJOCrGyNU7ttO+75+Hao7aGPtLb09hjbA2ER/0db8D9f19P3
+	5KT1QaCMlxXu8d12vT3lUynKhkuKGCHwMjiEJeMUAJaYkVWrfS4i8/NBYDFZaZACO2Z6nkD6TIA
+	OTULeAeumFxGNtAHCKar6ZsBhDpB6rMVgGsxOqddDl2KCnOEEX5n5lBM1QyEP8KpJxidm9F6Br0
+	JAE0CcjRshuJgAK3VKPgp+
+X-Google-Smtp-Source: AGHT+IHwhLKOnPQJeWTWX0qTh2VoeWymbnjL3OsZC8/GHM1ActCoWHWUVxRUFsk4tnHyrFVHMqEDIg==
+X-Received: by 2002:a05:600c:3e8c:b0:475:d8b3:a9d5 with SMTP id 5b1f17b1804b1-47939dfa460mr81661905e9.10.1765203804015;
+        Mon, 08 Dec 2025 06:23:24 -0800 (PST)
 Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47930920e0dsm248561065e9.2.2025.12.08.06.23.21
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47930920e0dsm248561065e9.2.2025.12.08.06.23.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Dec 2025 06:23:22 -0800 (PST)
+        Mon, 08 Dec 2025 06:23:23 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Mon, 08 Dec 2025 14:22:07 +0000
-Subject: [PATCH v2 04/12] perf evsel: apply evsel__set_config_if_unset() to
- all config fields
+Date: Mon, 08 Dec 2025 14:22:08 +0000
+Subject: [PATCH v2 05/12] perf evsel: Add a helper to get the value of a
+ config field
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251208-james-perf-config-bits-v2-4-4ac0281993b0@linaro.org>
+Message-Id: <20251208-james-perf-config-bits-v2-5-4ac0281993b0@linaro.org>
 References: <20251208-james-perf-config-bits-v2-0-4ac0281993b0@linaro.org>
 In-Reply-To: <20251208-james-perf-config-bits-v2-0-4ac0281993b0@linaro.org>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -87,83 +87,167 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-Misleadingly, evsel__set_config_if_unset() only works with the config
-field and not config1, config2, etc. This is fine at the moment because
-all users of it happen to operate on bits that are in that config field.
-Fix it before there are any new users of the function which operate on
-bits in different config fields.
+This will be used by aux PMUs to read an already written value for
+configuring their events and for also testing.
 
-In theory it's also possible for a driver to move an existing bit to
-another config field and this fixes that scenario too, although this
-hasn't happened yet either.
+Its helper pmu_format_unpack() does the opposite of the existing
+pmu_format_value() so rename that one to pmu_format_pack() so it's clear
+how they are related.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/pmu.c | 37 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 35 insertions(+), 2 deletions(-)
+ tools/perf/util/evsel.h |  2 ++
+ tools/perf/util/pmu.c   | 77 ++++++++++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 68 insertions(+), 11 deletions(-)
 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index a08130ff2e47..092904a61ec7 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -575,6 +575,8 @@ void evsel__uniquify_counter(struct evsel *counter);
+ 	((((src) >> (pos)) & ((1ull << (size)) - 1)) << (63 - ((pos) + (size) - 1)))
+ 
+ u64 evsel__bitfield_swap_branch_flags(u64 value);
++int evsel__get_config_val(struct perf_pmu *pmu, struct evsel *evsel,
++			  const char *config_name, u64 *val);
+ void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
+ 				const char *config_name, u64 val);
+ 
 diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index e02f74d4020c..514cba91f5d9 100644
+index 514cba91f5d9..ef7358ad1fb9 100644
 --- a/tools/perf/util/pmu.c
 +++ b/tools/perf/util/pmu.c
-@@ -146,6 +146,8 @@ struct perf_pmu_format {
- static int pmu_aliases_parse(struct perf_pmu *pmu);
- static void pmu_format_value(unsigned long *format, __u64 value, __u64 *v,
- 			     bool zero);
-+static struct perf_pmu_format *pmu_find_format(const struct list_head *formats,
-+					       const char *name);
+@@ -144,8 +144,8 @@ struct perf_pmu_format {
+ };
  
- static struct perf_pmu_format *perf_pmu__new_format(struct list_head *list, char *name)
- {
-@@ -1387,7 +1389,38 @@ void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
- 				const char *config_name, u64 val)
- {
- 	u64 user_bits = 0, bits;
--	struct evsel_config_term *term = evsel__get_config_term(evsel, USR_CHG_CONFIG);
-+	struct evsel_config_term *term;
-+	struct perf_pmu_format *format = pmu_find_format(&pmu->format, config_name);
-+	__u64 *vp;
+ static int pmu_aliases_parse(struct perf_pmu *pmu);
+-static void pmu_format_value(unsigned long *format, __u64 value, __u64 *v,
+-			     bool zero);
++static void pmu_format_pack(unsigned long *format, __u64 value, __u64 *v,
++			    bool zero);
+ static struct perf_pmu_format *pmu_find_format(const struct list_head *formats,
+ 					       const char *name);
+ 
+@@ -1377,6 +1377,61 @@ bool evsel__is_aux_event(const struct evsel *evsel)
+ 	return pmu && pmu->auxtrace;
+ }
+ 
++/*
++ * Unpacks a raw config[n] value using the sparse bitfield that defines a
++ * format attr. For example "config1:1,6-7,44" defines a 4 bit value across non
++ * contiguous bits and this function returns those 4 bits as a value.
++ */
++static u64 pmu_format_unpack(u64 format, u64 config_val)
++{
++	int val_bit = 0;
++	u64 res = 0;
++	int fmt_bit;
 +
-+	if (!format)
-+		return;
++	for_each_set_bit(fmt_bit, &format, PERF_PMU_FORMAT_BITS) {
++		if (test_bit(fmt_bit, &config_val))
++			res |= BIT_ULL(val_bit);
++
++		val_bit++;
++	}
++	return res;
++}
++
++int evsel__get_config_val(struct perf_pmu *pmu, struct evsel *evsel,
++			  const char *config_name, u64 *val)
++{
++	struct perf_pmu_format *format = pmu_find_format(&pmu->format, config_name);
++	u64 bits = perf_pmu__format_bits(pmu, config_name);
++
++	if (!format || !bits) {
++		pr_err("Unknown/empty format name: %s\n", config_name);
++		*val = 0;
++		return -EINVAL;
++	}
 +
 +	switch (format->value) {
 +	case PERF_PMU_FORMAT_VALUE_CONFIG:
-+		term = evsel__get_config_term(evsel, USR_CHG_CONFIG);
-+		vp = &evsel->core.attr.config;
-+		break;
++		*val = pmu_format_unpack(bits, evsel->core.attr.config);
++		return 0;
 +	case PERF_PMU_FORMAT_VALUE_CONFIG1:
-+		term = evsel__get_config_term(evsel, USR_CHG_CONFIG1);
-+		vp = &evsel->core.attr.config1;
-+		break;
++		*val = pmu_format_unpack(bits, evsel->core.attr.config1);
++		return 0;
 +	case PERF_PMU_FORMAT_VALUE_CONFIG2:
-+		term = evsel__get_config_term(evsel, USR_CHG_CONFIG2);
-+		vp = &evsel->core.attr.config2;
-+		break;
++		*val = pmu_format_unpack(bits, evsel->core.attr.config2);
++		return 0;
 +	case PERF_PMU_FORMAT_VALUE_CONFIG3:
-+		term = evsel__get_config_term(evsel, USR_CHG_CONFIG3);
-+		vp = &evsel->core.attr.config3;
-+		break;
++		*val = pmu_format_unpack(bits, evsel->core.attr.config3);
++		return 0;
 +	case PERF_PMU_FORMAT_VALUE_CONFIG4:
-+		term = evsel__get_config_term(evsel, USR_CHG_CONFIG4);
-+		vp = &evsel->core.attr.config4;
-+		break;
++		*val = pmu_format_unpack(bits, evsel->core.attr.config4);
++		return 0;
 +	default:
 +		pr_err("Unknown format value: %d\n", format->value);
-+		return;
++		*val = 0;
++		return -EINVAL;
 +	}
- 
- 	if (term)
- 		user_bits = term->val.cfg_chg;
-@@ -1399,7 +1432,7 @@ void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
++}
++
+ /*
+  * Set @config_name to @val as long as the user hasn't already set or cleared it
+  * by passing a config term on the command line.
+@@ -1432,7 +1487,7 @@ void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
  		return;
  
  	/* Otherwise replace it */
--	pmu_format_value(&bits, val, &evsel->core.attr.config, /*zero=*/true);
-+	pmu_format_value(&bits, val, vp, /*zero=*/true);
+-	pmu_format_value(&bits, val, vp, /*zero=*/true);
++	pmu_format_pack(&bits, val, vp, /*zero=*/true);
  }
  
  static struct perf_pmu_format *
+@@ -1477,8 +1532,8 @@ int perf_pmu__format_type(struct perf_pmu *pmu, const char *name)
+  * Sets value based on the format definition (format parameter)
+  * and unformatted value (value parameter).
+  */
+-static void pmu_format_value(unsigned long *format, __u64 value, __u64 *v,
+-			     bool zero)
++static void pmu_format_pack(unsigned long *format, __u64 value, __u64 *v,
++			    bool zero)
+ {
+ 	unsigned long fbit, vbit;
+ 
+@@ -1595,23 +1650,23 @@ static int pmu_config_term(const struct perf_pmu *pmu,
+ 		switch (term->type_term) {
+ 		case PARSE_EVENTS__TERM_TYPE_CONFIG:
+ 			assert(term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+-			pmu_format_value(bits, term->val.num, &attr->config, zero);
++			pmu_format_pack(bits, term->val.num, &attr->config, zero);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_CONFIG1:
+ 			assert(term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+-			pmu_format_value(bits, term->val.num, &attr->config1, zero);
++			pmu_format_pack(bits, term->val.num, &attr->config1, zero);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_CONFIG2:
+ 			assert(term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+-			pmu_format_value(bits, term->val.num, &attr->config2, zero);
++			pmu_format_pack(bits, term->val.num, &attr->config2, zero);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_CONFIG3:
+ 			assert(term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+-			pmu_format_value(bits, term->val.num, &attr->config3, zero);
++			pmu_format_pack(bits, term->val.num, &attr->config3, zero);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_CONFIG4:
+ 			assert(term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+-			pmu_format_value(bits, term->val.num, &attr->config4, zero);
++			pmu_format_pack(bits, term->val.num, &attr->config4, zero);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_LEGACY_HARDWARE_CONFIG:
+ 			assert(term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+@@ -1749,7 +1804,7 @@ static int pmu_config_term(const struct perf_pmu *pmu,
+ 		 */
+ 	}
+ 
+-	pmu_format_value(format->bits, val, vp, zero);
++	pmu_format_pack(format->bits, val, vp, zero);
+ 	return 0;
+ }
+ 
 
 -- 
 2.34.1
