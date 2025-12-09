@@ -1,121 +1,188 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DBD2F691D;
-	Tue,  9 Dec 2025 09:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF731DB125
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Dec 2025 09:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765273136; cv=none; b=AFq2OfsJ4GuuNqLnlV/R/y+qp7fE7osC+e7FTDOOsnR7Ds4teIZ5IyrBrRx2fMJULpVCd08rR+j6BEdZ72e+p03XPlEHy+B3JS67jUZUXmDm0Ogoj1PUDxjjcVS8Zs8GzyI/saZ3Q2tcuh6l/IT3cAA488E+HvNrhyHRSg4YfXQ=
+	t=1765273642; cv=none; b=kQhCT7htaQlWDix/amYozONrxkzM7+d8ma6vFGaJ4b6btT7O6strJIjJp1c73w1P9Qw33PjxYoCsf7r+wlZz7HgCAeJGfkKxK3Fzy86LpoA/h4RLMH17XQrttrhRFYh7XKlmS9v6jIX+4GXcUXejZc8rbvNbbMviWcWTVU+42Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765273136; c=relaxed/simple;
-	bh=l343WGoBCGxuw1w6kVcEJnvXKrhscvAS//dntrt37II=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rk6VA6NBJuqDIXUK3g9oSnl6hRovlI6FWL7T0OXcsaO8XOkj4TTG4K3ZQ8OmWOADq2a1yqrOJTVTcD4rvAA2BhGKFZOaKPm57zMccvOllr++vydO4vvxvPeHuExcNvRcONr6pZQJgL3InhrT2EOVZzVjXF04CYYy8tE7h09Fb+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JpEwfp4E; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1765273642; c=relaxed/simple;
+	bh=9TslD7xCl7tSVm0C8zQsYurDAQ8KmYQic8s8dVXNOLE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=AgVzFWtPRMTqIwyWMDfCwXEAi5YPUpQvBkSJdUGDj84ojSrFZh15MjmNOXDkFEzsrLty0XRnsP/21RE6/SOOWL8xQFDqCWZvN4ubYVMnVIgHodpTrnneQDHLu4Lz44b58YugUMlL+27IR4iInUkamEbuZRlGDQWhi+8GYw0MvEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gMywNWCZ; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JpEwfp4E"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=IA9vbhctquU1+roJTvFyfy6IXlfcAxQIeJiu52IUJaY=; b=JpEwfp4EfbxW/mDaCmw8PQGxiP
-	s+zTGxu1aW9pEtaW1+nrB+TwMlL3aOSNFtcJ8qHV3P+2aqu0M4l3LynkNHJNmUCHvSpcpdbZTHtHV
-	0Gt+k8ggYKnXmUHsOe1bOzv1C+ItgH+TVpAAf5DtiA64qKhx+XdAz6XzH8jiJc2DrcVsCCbvyIe6W
-	Ir2wmlZa+/zWGzoIH7rvdY5VqEznz2c5Qz9DCRpltoqJs8R9Cf117foqlVg5vbkF9+soyGA+sN8c9
-	BysdcMuSmeW2zcVT8IHsUiZoG/g2avUfx3R5WhrGPrl+D+pTY+wdw5ZrHE/x+N2dNCl4A9FS8rtUi
-	xZ5Cl2Mw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vSuBA-0000000B1fA-0Dxr;
-	Tue, 09 Dec 2025 09:38:44 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9D9E730045C; Tue, 09 Dec 2025 10:38:43 +0100 (CET)
-Date: Tue, 9 Dec 2025 10:38:43 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Thaumy Cheng <thaumy.love@gmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 RESEND] perf/core: Fix missing read event generation
- on task exit
-Message-ID: <20251209093843.GI3707891@noisy.programming.kicks-ass.net>
-References: <20251209041600.963586-1-thaumy.love@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gMywNWCZ"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-47755de027eso37608485e9.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Dec 2025 01:47:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1765273638; x=1765878438; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=SAXkEChtFVOZf8CYCobgM6VEiPTyXUpeqrCFGBI1jtA=;
+        b=gMywNWCZRV0ed1/fU0g7hPFvnTs9uzgij480b/5GfmJgQ2vo/H/IqW7cJAR7PVZUSV
+         C1j/h64+IPmntPi3XqQ5I0YP6Myg4a5ywuFYsU4M+oPTPl6t2PjtWRF7ipd5UbAPqKjI
+         3aBAIj6KnLTw8E6Tw0BwylB4sDmG1BxitYzsyNBnLsB68tdeQWyQRUZk1tsFF9awuad+
+         C70lNQiX6Aao0iiTKRQQnkCbuEPnkKQTg0j/AyQsEYJdlKaNcfKkaXhDsHvC77lgVsQN
+         EnSuFo6WMFZclBIskkNBZ5hxQlvx8KV0EKS/bux7At7BwlMGrcTwiMsvxDOWUVfD8sEb
+         zUHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765273638; x=1765878438;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SAXkEChtFVOZf8CYCobgM6VEiPTyXUpeqrCFGBI1jtA=;
+        b=TZaNjao3A8UScjwy1SAyHjvmj6OPZ5yYpJT0/TRawgsZutj26ZeN3ln4RhSSim4+Ei
+         jiTOgND1WKQpOg8cLEIkL11UH5XpRS6SC2NYeQQR8xldDBAERipC0mgG3XTjOcf10npo
+         LIFzCo+Td0lLm4Mxzvec++Xd7YEyQanv31BS8pMDrYPPdsiB0TFFQAzr5IhGGfPOjRCz
+         Wh4D+ytltUArqQ9qBtGycCie4syb511cq5drWlM9BSl5UoVL/pM1Evv6iv0XgAJPgxj2
+         yJ4XPtMPOYJZE6XDSE1O6anhzYjEXSRLtl1JKHnjjVfwXuESlVg8K8WCYh8MkvBIF2Wv
+         fSUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOautD0vCDbk0k00z9Td2Rnm98K+k85OVgEiB3f2ftAV6L+V1o5bgJxWUUoMtMlgh0P5XXGyHWh5L/GyhVsiYP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+u0sb+oskFf4jYc2VBXXzuG7srDV7CrVGo8whFBrbUZOaVRHP
+	JMWNb4HQKjYoDYJfvAlLZkmk9ZL8JCAw6gzzHpq/sBbMVLiSMIiUcGZiTX2xcGPjp44=
+X-Gm-Gg: ASbGncsfjM1SihZuMOSeTtmtodHlX8OioMEjyA3pAGfbYrEL5sHYZoGRsQQqFYR2uIl
+	LOwi55zqbgyz3IEn+7IURdd9SCV48oSpc5dmWZh57c43BLy6BRFoFXXATqMQzjr6ihHEK7rqFFg
+	OI84wNFWm4CD9tM+is6XZbcQoolc4/Z6HAqeG3fmWwxoBczUEZ49WMfeg0sI1+k6YcHzLeBKQPP
+	mwT1KL+E6vrqhsN0zJlSBLs2Ibp5Y/mN2KJUD3D89OOJo9dCfLWsJFXU5qcZJUtwsRXERRXIEe/
+	OVYgrq/LjPWwaRTcvMb6srtwVCd3F/DSBxPxuE/oQJDS4bMiEnNEZMTg8Sk/N8xNbIFKGAKsK2o
+	oOrieLEJ6Yrshr0ifwzofIP5sjwWPPuXATF1dU6/JL8I4VSCRuER0Pvbh8TwmMWBAPa+uvtY4sS
+	6WRRD/1gY0V+gRL+o0ECR2XkZ3/NM=
+X-Google-Smtp-Source: AGHT+IEyZ8rEBV81FtwtosZhISPa9lLEsQPr8OGMQ2/sDvokQBEAnlNemVfQjOesVjI8iShir2ykag==
+X-Received: by 2002:a05:600c:468a:b0:477:9814:6882 with SMTP id 5b1f17b1804b1-47939df1517mr83498755e9.5.1765273638400;
+        Tue, 09 Dec 2025 01:47:18 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7d331a4fsm34229370f8f.33.2025.12.09.01.47.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Dec 2025 01:47:18 -0800 (PST)
+Message-ID: <45aa45d0-3fd6-4073-87b5-80af287ca9ac@linaro.org>
+Date: Tue, 9 Dec 2025 09:47:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251209041600.963586-1-thaumy.love@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf symbol: Fix ENOENT case for
+ filename__read_build_id
+To: Ian Rogers <irogers@google.com>
+References: <20251207022345.909535-1-irogers@google.com>
+Content-Language: en-US
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Stephen Brennan <stephen.s.brennan@oracle.com>,
+ Haibo Xu <haibo1.xu@intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20251207022345.909535-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 09, 2025 at 12:16:00PM +0800, Thaumy Cheng wrote:
-> For events with inherit_stat enabled, a "read" event will be generated
-> to collect per task event counts on task exit.
+
+
+On 07/12/2025 2:23 am, Ian Rogers wrote:
+> Some callers of filename__read_build_id assume the error value must be
+> -1, fix by making them handle all < 0 values.
 > 
-> The call chain is as follows:
+> If is_regular_file fails in filename__read_build_id then it could be
+> the file is missing (ENOENT) and it would be wrong to return
+> -EWOULDBLOCK in that case. Fix the logic so -EWOULDBLOCK is only
+> reported if other errors with stat haven't occurred.
 > 
-> do_exit
->   -> perf_event_exit_task
->     -> perf_event_exit_task_context
->       -> perf_event_exit_event
->         -> perf_remove_from_context
->           -> perf_child_detach
->             -> sync_child_event
->               -> perf_event_read_event
-> 
-> However, the child event context detaches the task too early in
-> perf_event_exit_task_context, which causes sync_child_event to never
-> generate the read event in this case, since child_event->ctx->task is
-> always set to TASK_TOMBSTONE. Fix that by moving context lock section
-> backward to ensure ctx->task is not set to TASK_TOMBSTONE before
-> generating the read event.
-> 
-> Because perf_event_free_task calls perf_event_exit_task_context with
-> exit = false to tear down all child events from the context, and the
-> task never lived, accessing the task PID can lead to a use-after-free.
-> 
-> To fix that, let sync_child_event read task from argument and move the
-> call to the only place it should be triggered to avoid the effect of
-> setting ctx->task to TASK_TOMESTONE, and add a task parameter to
-> perf_event_exit_event to trigger the sync_child_event properly when
-> needed.
-> 
-> This bug can be reproduced by running "perf record -s" and attaching to
-> any program that generates perf events in its child tasks. If we check
-> the result with "perf report -T", the last line of the report will leave
-> an empty table like "# PID  TID", which is expected to contain the
-> per-task event counts by design.
-> 
-> Fixes: ef54c1a476ae ("perf: Rework perf_event_exit_event()")
-> Signed-off-by: Thaumy Cheng <thaumy.love@gmail.com>
+> Fixes: 834ebb5678d7 ("perf tools: Don't read build-ids from non-regular files")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
+> Note, a shorter version of this patch appeared in a series
+> cleaning/refactoring the build id reading code:
+> https://lore.kernel.org/lkml/20251201205509.195451-11-irogers@google.com/
+> It is sent without the refactor for the sake of fixing the bug in an
+> earlier release.
 
->  kernel/events/core.c | 23 ++++++++++++++---------
->  1 file changed, 14 insertions(+), 9 deletions(-)
+Reviewed-by: James Clark <james.clark@linaro.org>
+
+> ---
+>   tools/perf/builtin-buildid-cache.c | 6 ++++--
+>   tools/perf/util/libbfd.c           | 4 +++-
+>   tools/perf/util/symbol-elf.c       | 4 +++-
+>   tools/perf/util/symbol-minimal.c   | 4 +++-
+>   4 files changed, 13 insertions(+), 5 deletions(-)
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 177e57c1a362..618e7947c358 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2316,7 +2316,8 @@ static void perf_group_detach(struct perf_event *event)
->  	perf_event__header_size(leader);
->  }
-> 
-> -static void sync_child_event(struct perf_event *child_event);
-> +static void sync_child_event(struct perf_event *child_event,
-> +			     struct task_struct *task);
+> diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+> index c98104481c8a..539e779e3268 100644
+> --- a/tools/perf/builtin-buildid-cache.c
+> +++ b/tools/perf/builtin-buildid-cache.c
+> @@ -276,12 +276,14 @@ static bool dso__missing_buildid_cache(struct dso *dso, int parm __maybe_unused)
+>   {
+>   	char filename[PATH_MAX];
+>   	struct build_id bid = { .size = 0, };
+> +	int err;
+>   
+>   	if (!dso__build_id_filename(dso, filename, sizeof(filename), false))
+>   		return true;
+>   
+> -	if (filename__read_build_id(filename, &bid) == -1) {
+> -		if (errno == ENOENT)
+> +	err = filename__read_build_id(filename, &bid);
+> +	if (err < 0) {
+> +		if (err == -ENOENT)
+>   			return false;
+>   
+>   		pr_warning("Problems with %s file, consider removing it from the cache\n",
+> diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+> index 0099b415decc..edf0829e9635 100644
+> --- a/tools/perf/util/libbfd.c
+> +++ b/tools/perf/util/libbfd.c
+> @@ -391,8 +391,10 @@ int libbfd__read_build_id(const char *filename, struct build_id *bid)
+>   
+>   	if (!filename)
+>   		return -EFAULT;
+> +
+> +	errno = 0;
+>   	if (!is_regular_file(filename))
+> -		return -EWOULDBLOCK;
+> +		return errno == 0 ? -EWOULDBLOCK : -errno;
+>   
+>   	fd = open(filename, O_RDONLY);
+>   	if (fd < 0)
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 957143fbf8a0..d1dcafa4b3b8 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -902,8 +902,10 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
+>   
+>   	if (!filename)
+>   		return -EFAULT;
+> +
+> +	errno = 0;
+>   	if (!is_regular_file(filename))
+> -		return -EWOULDBLOCK;
+> +		return errno == 0 ? -EWOULDBLOCK : -errno;
+>   
+>   	err = kmod_path__parse(&m, filename);
+>   	if (err)
+> diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+> index c6b17c14a2e9..8221dc9868f7 100644
+> --- a/tools/perf/util/symbol-minimal.c
+> +++ b/tools/perf/util/symbol-minimal.c
+> @@ -104,8 +104,10 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
+>   
+>   	if (!filename)
+>   		return -EFAULT;
+> +
+> +	errno = 0;
+>   	if (!is_regular_file(filename))
+> -		return -EWOULDBLOCK;
+> +		return errno == 0 ? -EWOULDBLOCK : -errno;
+>   
+>   	fd = open(filename, O_RDONLY);
+>   	if (fd < 0)
 
-This forward declaration can be entirely removed now.
-
-Other than that, yes this seems fine. I see Ingo already picked up the
-patch, thanks!
