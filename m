@@ -1,140 +1,166 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBC0301489
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Dec 2025 16:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA34B329E48
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Dec 2025 17:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765298426; cv=none; b=PbAh5zOphSD2PQ2B5oUYEYfiRmxTwJ2DbD8LwAZNiURCrSQlktHgAXjPmNwdkHPtq1/tgpmPBH5x3W3sDyzPguDor6rRXF6DD1QOzgNwT6cr/2i2Xh6T3ZUNuj+ask9fct2popXTgE53xm0npdw2AnQaVEv5nhSN+72WDSRGnOg=
+	t=1765300101; cv=none; b=ntvr+1XfllNER4JVn99avRQZz/2ov2I28Dd3j+cOrIQ1IeQVWuZUByT8OdcnWpNsH79QKsw0wqXT4LW0FjIC+/yzWRkO5//Slb9OeHfFqDfapE79DUqgmuveB0CODHbJrQpuMIL6OE1moxEZHgiHCb4yMb5GtgpqyMWqk/L23RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765298426; c=relaxed/simple;
-	bh=JvFF6+FOKEAOJj9t/hxDHDO1jVTcnLAYiVmuSofMOCU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KTfCX4U0xKlL767udOo6+uakrD0cUsG5lqq3ZsA7ZMs6oGcoHY4gmWVSSN5r1jN1B83M9LW/g+xrve50HPkM7Yl6hdfw5ClXBhSQT1FfwNnbawHE1bLAGjODXaUdIT1Ra81baDZGQEyLFdFqaBygoYkcSGfNLgfl2zmMGIv45ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cYV6hfle; arc=none smtp.client-ip=209.85.214.172
+	s=arc-20240116; t=1765300101; c=relaxed/simple;
+	bh=SrSQINHsZi5xCD99oEpcw455kSMvg+7scyD1FdsGFUg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=hn9NHfOKK9YmgvcGb2I21dwo8JDeeVN+ScrMSlUUBO1oTVVIhwc5H6s4HMl8E2W8j4OZxRVHzmZjo64Qs8lKROpL4e05JyatX9RXu2LxvT38krLpS78OZVj9NnL6v8au7atyhE/qgkHIaMb1wPorolU2lWQC7JAr7EbTvxTQNww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V2FyvGtG; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cYV6hfle"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-29e7ec26e3dso252895ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Dec 2025 08:40:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V2FyvGtG"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7c240728e2aso10667645b3a.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Dec 2025 09:08:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1765298424; x=1765903224; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QIKlOB/KgpJP9kT0dnjJxhFbF65TR4r34o2YIc6jtW4=;
-        b=cYV6hfleOG4s2Xj8TORMH/MEzSoM1XY+wzrjv+3M0wqUlgy8BiC6HnQwf3JGxnjeSA
-         ODYaJ0bAyPYv49ZXj7AApUYroUjAI6NoAt6oFe6dESqsQWTaqxE0GqJaqQhveDctsMQP
-         SQwAf/jWd4BGvSHHPoOffVkBQlHQtlG3T7TR49re+5/hHcPeDxOaH5xV9q9mk8EY9k9H
-         jWgRbehXbgbAJMaypGApx2F8+zbeAnJIBFckGskru1s/bsVRIR/1UO4rYZrFaONPhnKX
-         kfyZLH8gb6TZzdLDcAQV5PztKSTxahnTvFpboEg7FNdnLSPxfnS/DdS1Nk2i6VYHwiWZ
-         JJBQ==
+        d=google.com; s=20230601; t=1765300099; x=1765904899; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kSNKIJFZ+LEnI//dDB9nn4CQuFiHZyaloDyEr4z5v5c=;
+        b=V2FyvGtGap+DQFmUyjQQ01IfIWSGyAdOICNS8geVjaCRbjx0IT7gTD2UEYS0MCWFqy
+         vFskBXPdrJPsfc1HsU8wS5dnwsq6v4Agu0AIUJXOlIw84nyZOsrGgPME1Xxm1zM/UiHJ
+         SRFRMoib1wJSx50UNAsk+0Dr9dIESDkqqrtRl1XccgOzs+9TVYb5NHM1pzs0juTpi0Fu
+         WrJnbjJpAofhwUoaEm0xkyRun7UrmG6NKSgW9TPUgMvoPngLwCqi8kRqeUie8Qv9ktSu
+         WiGmD4Aum6X34XK7lffgr/BKzYnEpnQE2YHKfK0DNIZjS4CP0N10+Rf0/Qci5AxYsAKz
+         3KdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765298424; x=1765903224;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=QIKlOB/KgpJP9kT0dnjJxhFbF65TR4r34o2YIc6jtW4=;
-        b=vcsQOfTY7Q86bYFL67IdzSopd7yLJ3a/zoQ14KRsxXD0Wvp6SKb0bQEq/rhcr503CF
-         2/NmLfe1Tvkyd5ypEdPEhjyZShWuahuG9TqC39nKIe7lEAjf4z6wtM3HEp/TKwye0OBm
-         QkiUg2kBoDg4uwMBTQ9aAMTD4k9UmB/3q9WqdAvRWcYzNITF1LZdDOyrjBgyZEXl6zuG
-         y4yw0Gc4flqdzpnpVKZswcZVBA3IXodo0nABBpDnNIipZ4Pp4UxwBFUGrsRKTd40RN5k
-         DjBx1d5oHjs0eLny3G5gthiNaGknarL0R+/3UiCdEwHDZ2K6cZEfpOxNkW/VYwZRr4VH
-         QH6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVoGv/rD+Ofyt6gq58Zps4sS7IwVgrmlg3avV3kstahD0vYsjUUyqtr4by3XalWCBjdufqXS83KNXZAQHUjOGdA@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLHt0+0hHwRrATQllxrAOQdDyAU6/zZZqUmdoISIuDrudphvkv
-	5WvROWEHAKIrX2QbLBbNm5oPolJRSKn1RQOhXq7Gi6lCGunqtgkRN6sYGO+SLRfMVfZkHuzJUHr
-	/4DVg4zHTa6ws3ISp6m83UtcqHox6rSUl8r0arhlw
-X-Gm-Gg: AY/fxX5GOVPEXgTu6C/L8BNyA/NIUwjUFLoh2Iesb8U/xciyqtQYmR8xG5OBo3DgkhC
-	b9Yfv6dpwBjtCPlBr8po73b5uKIiUDzqkqyYqma82IDc1LCNseCTz1prFT3JayVkAB4y8AvKKgO
-	JUnftL9WgjZD4YOxzxfLBmtdRAW4BIl1Q9k0gMiO/x0GOCF96YSAcSm1CGCnkSb94vp3FvYf6ZM
-	P7E5tzPqI4AsSG5oL8qSHIQ2m2YKsL+2UGWa8vNynAOabJsx+qUW5+CG1m08yg/p9BBMAwX2OBH
-	XF4laDNWeUQ2eDAPrNMQsmkf
-X-Google-Smtp-Source: AGHT+IG+tXtxqxAs5MZsdZ8QQBhYZxwYfw3KSnJRGGNeVnKDA+uhxtLhn7sIFa6Z7B6HlmBTov8Y3nqdUn5WPLykovg=
-X-Received: by 2002:a17:903:22c9:b0:298:3544:aa72 with SMTP id
- d9443c01a7336-29e99730116mr3216545ad.9.1765298423750; Tue, 09 Dec 2025
- 08:40:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1765300099; x=1765904899;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kSNKIJFZ+LEnI//dDB9nn4CQuFiHZyaloDyEr4z5v5c=;
+        b=E5hn6XUuSfIs0dwqEKLGoZEvPpYvJpd1v2YRGGo8WVGHN5/TDQRV1uSthr3mGlP+5C
+         ZWfLZdyyWPtfoqZ6Pkp1BAwruA9Puq/EDlankW578NAYDXKjz1nhb/CfW3lbjKdda9Sq
+         Htd4GP24Pal3B26Ipl18brU1c2m3w2HBFkQLODygirIAVZx4qiRd2L6cLbfMWikFaW2W
+         Q6dT6ti1KMYfi5qMOKntlvLkcSOJVKPoJ0/geGOpMffvP8DwILh4lEVBP5c+1hI1Czu1
+         5wcHNFV+idC+uBIY47CsW3rP05BN6icob9RzvOqLid/PLZmUFT0PhDl/0Tm/2fUN683P
+         Uumw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhlVC5pvCRcVVpi4ywdjaXOOR42TgMKBGgI5L+oRoTNDK3hHxvt1CGnvVDIfJZvkalTifAU7plCrZ4RvKCRBaU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6wkm76M8Pxr4NK3KZIv6h+CL8xSPHo3LJZ8B7sqEU6fGdinaR
+	KoYOitVDJZP3yH30MVXjTX/88uFXD4lQm0RTTVKhrBbEk91v1UCIvexCSyNrnNl5OJOHncHXJp1
+	6gV7u18boeQ==
+X-Google-Smtp-Source: AGHT+IGqjPHUYsuiUAOaApZalPyWsBbmQb9shlzz6ePcj6eT+3u+fmmkb/CRRr+IquuEWZlepCL9JLho1wDJ
+X-Received: from dlbur10.prod.google.com ([2002:a05:7022:ea4a:b0:119:78ff:fe0f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:441e:b0:11b:9386:8260
+ with SMTP id a92af1059eb24-11e032d455dmr7967381c88.45.1765300098798; Tue, 09
+ Dec 2025 09:08:18 -0800 (PST)
+Date: Tue,  9 Dec 2025 09:08:11 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251209105029.142517-1-tmricht@linux.ibm.com>
-In-Reply-To: <20251209105029.142517-1-tmricht@linux.ibm.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
+Message-ID: <20251209170814.2009253-1-irogers@google.com>
+Subject: [PATCH v1] perf tests kwork: Add basic kwork coverage tests
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 9 Dec 2025 08:40:12 -0800
-X-Gm-Features: AQt7F2o2b-TqXVYAJS0WsHVzROtpYWKCgPgSD2vNxwquDaWtEtxWSQOanCjh5Kk
-Message-ID: <CAP-5=fVxFEzOwQN610gE9F5XiHYP2wHKD6K5zfBHhFOrxD1fDw@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Fix test case perf evlist tests for s390x
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
-	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
-	hca@linux.ibm.com, japo@linux.ibm.com
+To: Feng Yang <yangfeng@kylinos.cn>, Yang Jihong <yangjihong1@huawei.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 9, 2025 at 2:50=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.co=
-m> wrote:
->
-> Perf test case 78: perf evlist tests fails on s390. The failure
-> is causes by grouping events cycles and instructions because
-> sampling does only support event cycles.
-> Change the group to -e '{cycles,cycles}' to fix this.
->
-> Output before:
->   # ./perf test 78
->   78: perf evlist tests              : FAILED!
->   #
->
-> Output after:
->   # ./perf test 78
->   78: perf evlist tests              : Ok
->   #
->
-> Fixes: db452961de939 ("perf tests evlist: Add basic evlist test")
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Add basic kwork coverage tests for record, report, latency, timehist
+and top.
 
-Thanks Thomas, I always appreciate your help and fixes! Do you think
-we should switch to software events to remedy this issue? Perhaps
-cpu-clock and task-clock? I worry about event deduplication possibly
-causing issues were it to happen.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/kwork.sh | 79 +++++++++++++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100755 tools/perf/tests/shell/kwork.sh
 
-Thanks,
-Ian
+diff --git a/tools/perf/tests/shell/kwork.sh b/tools/perf/tests/shell/kwork.sh
+new file mode 100755
+index 000000000000..42bfd9382816
+--- /dev/null
++++ b/tools/perf/tests/shell/kwork.sh
+@@ -0,0 +1,79 @@
++#!/bin/bash
++# perf kwork tests
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++# Root permissions required for tracing events.
++if [ "$(id -u)" != 0 ]; then
++	echo "[Skip] No root permission"
++	exit 2
++fi
++
++err=0
++perfdata=$(mktemp /tmp/__perf_test_kwork.perf.data.XXXXX)
++
++cleanup() {
++	rm -f "${perfdata}"
++	rm -f "${perfdata}".old
++
++	trap - EXIT TERM INT
++}
++
++trap_cleanup() {
++	echo "Unexpected signal in ${FUNCNAME[1]}"
++	cleanup
++	exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
++test_kwork_record() {
++	echo "Kwork record"
++	perf kwork record -o "${perfdata}" -- sleep 1
++	echo "Kwork record [Success]"
++}
++
++test_kwork_report() {
++	echo "Kwork report"
++	if ! perf kwork report -i "${perfdata}" | grep -q "Kwork Name"; then
++		echo "Kwork report [Failed missing output]"
++		err=1
++	fi
++	echo "Kwork report [Success]"
++}
++
++test_kwork_latency() {
++	echo "Kwork latency"
++	if ! perf kwork latency -i "${perfdata}" | grep -q "Avg delay"; then
++		echo "Kwork latency [Failed missing output]"
++		err=1
++	fi
++	echo "Kwork latency [Success]"
++}
++
++test_kwork_timehist() {
++	echo "Kwork timehist"
++	if ! perf kwork timehist -i "${perfdata}" | grep -q "Kwork name"; then
++		echo "Kwork timehist [Failed missing output]"
++		err=1
++	fi
++	echo "Kwork timehist [Success]"
++}
++
++test_kwork_top() {
++	echo "Kwork top"
++	if ! perf kwork top -i "${perfdata}" | grep -q "COMMAND"; then
++		echo "Kwork top [Failed missing output]"
++		err=1
++	fi
++	echo "Kwork top [Success]"
++}
++
++test_kwork_record
++test_kwork_report
++test_kwork_latency
++test_kwork_timehist
++test_kwork_top
++
++cleanup
++exit $err
+-- 
+2.52.0.223.gf5cc29aaa4-goog
 
-> ---
->  tools/perf/tests/shell/evlist.sh | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/evlist.sh b/tools/perf/tests/shell/ev=
-list.sh
-> index 140f099e75c1..80f808b3059d 100755
-> --- a/tools/perf/tests/shell/evlist.sh
-> +++ b/tools/perf/tests/shell/evlist.sh
-> @@ -38,13 +38,13 @@ test_evlist_simple() {
->
->  test_evlist_group() {
->         echo "Group evlist test"
-> -       if ! perf record -e "{cycles,instructions}" -o "${perfdata}" true=
- 2> /dev/null
-> +       if ! perf record -e "{cycles,cycles}" -o "${perfdata}" true 2> /d=
-ev/null
->         then
->                 echo "Group evlist [Skipped event group recording failed]=
-"
->                 return
->         fi
->
-> -       if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cycles.*,.*ins=
-tructions.*}"
-> +       if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cycles.*,.*cyc=
-les.*}"
->         then
->                 echo "Group evlist [Failed to list event group]"
->                 err=3D1
-> --
-> 2.52.0
->
