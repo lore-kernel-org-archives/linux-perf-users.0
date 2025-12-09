@@ -1,170 +1,180 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4073002B9
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Dec 2025 17:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848472E7198
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Dec 2025 17:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765301783; cv=none; b=eUDR/BgHmYz4CnkJ5MNH5dS92JvUbVxPnJT252ZLvAMRIk49O+1WOyy3Flf/nXKbD9BTKNvIGWE02mzld1VibHr9oPE6a7k4o9uAyWhWPUGR1jgQ4m83HhiPSuBqVuQim847tI6cySawdJJKpgleTB1awQ+Brx+7lPph9PEkwmc=
+	t=1765301836; cv=none; b=BVSzP4VVS9a0y0ZrWoUaCXQ/LVccIT7T5ndGG8j/8TaVkSvYMfUr6u6VC/hLjZEBft1gd+V1K+kfH6yxEVVZ51rbqFRIL68zImB31UQrwHxDAlYv0m1U2n39fkKKSZJ5mdSk5v1BgoDPg64fMdd3DObvMQXtITh+Y6rltGlmQ5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765301783; c=relaxed/simple;
-	bh=2J4VNMTx7hncImwcZzxIKLa0er9axnz0Fzr3Wf9tUQk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=dUJHBgMiOePtim5CDrmaTyS9/gZUEg3NzeAwi/KRa1Zzb5Mt1OmAPScKpqjRgJC0JuRt/CWh3qGqUC9z8B0D3cpErsT+mQu9k+E+FouHk1tiBbob1DMtJ20Hxr/cuP8W1MwmVoA2+RYKQd0qLpABcJgswOa/ImevXQduXlU4bkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AU153jSo; arc=none smtp.client-ip=74.125.82.74
+	s=arc-20240116; t=1765301836; c=relaxed/simple;
+	bh=HizTlmZQbI6tmGG3q1gw6CHs59oQallkQuLPYHyLpHw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=PK4s2jcXsenyQQnSn/WYHInekIoadVMPOwou07EdGRoHzKPIhbxO81nNRI+69lqo1Cj8T+9Pm8edowtpQgKVCBGrdLYwQQeQN8mnCOTdxO4E5GZ+R6vNC7JrTStXAiKR+mbAAe8d07XVLNRGlI2l3rUAwd0TreQggTUGprV/MOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ny3bS05R; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AU153jSo"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-11bd7a827fdso81789c88.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Dec 2025 09:36:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ny3bS05R"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-34a43e96860so2484072a91.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Dec 2025 09:37:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1765301780; x=1765906580; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MHFT62zcP+uzBhJJkYNqwWKNM/LVKwF9++8ZaNQtnLE=;
-        b=AU153jSoN/p8I8+iSdJzCL7j1hxo8jRbeIIa6ZMp0XCn6Y8ukxk8pcP0NjATIXZH28
-         r9KuoYvzDlS7yxHaYwcvp7BcyjyxBkILnMg/cShMVDfSAJ6TkVKC1nDA2UArGsNWScET
-         l4UYEdE5+/v14NEfRTp2+NEn3Yu5sRkL6JuH10SmoSoegGGrL50O5NvkRUKyL4Sytyev
-         XFxjaJKJVRuW0dxCLa2Rvm3oO/wiNIcNpnmJqMWYchZvQb9jEQK4kYz/ZJcWi5VZo23g
-         G9HL0DResKGo8vM3cclkFyRZEH8Ck5KXIp5AAeH9cfREFWK0Y9jtDjoLFSQf2Fe9OQbQ
-         QEVg==
+        d=google.com; s=20230601; t=1765301835; x=1765906635; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RSI8Pxf1Wt9ews+8G0JZ3VLNAwMte4kHmIud1VFkk60=;
+        b=Ny3bS05Rx9IPO7IiQAlFWygqJDqU/KBJUkllITfQpS45+n5voCrD973pltyWkhLD+l
+         EgGKOCKqaR+BfPaPhJFUuUg1ROVdBY7qphwC9cGynLgj4Ef3p32IL7689AN+qnguQ2X2
+         mCyReCHzUm47/u2XwjlybNGJVvmW1Kfugsn86k/yLdt/VKjUEQi4sgMxWDxLLAP1Uubt
+         vF1Fy8SPECt5v9QZmcZi3dTB+Hk0XxmnkCcygx1SWzOtJkdyIvErDZGIbpviqSJnOWiZ
+         Zwez+PHnTTlCgXqdh7LJR0kesdv5qLZkqmihAY626EvqcKTmfQHNcxGI1jF3bYc2Jsaa
+         iJlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765301780; x=1765906580;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MHFT62zcP+uzBhJJkYNqwWKNM/LVKwF9++8ZaNQtnLE=;
-        b=dJg+fr1ssm/eTgQcj6YcJS9HHMo3eIE5y774wpR+jGmHMmRgy7QUnGXRKqWCYkS8ql
-         oFJgvW/nO3PODewxV2s0HA0PSp+2R8ruWcHtFVEZfrLrp/ZOjcs79UEfQoZFOUkhjngW
-         z+Bg8klYoLdSkWGJVvVUDeW/6rrD0q1N1DJmAe7e8COKzXP/zhh680r6y8BciuGL18J5
-         lPEFtXJi23RI1eg2AKA0FHU+oIhNZCftSTqt49e94m+1haKESgY4MPJ0zFNAWlngXRtS
-         iHJoFi9nJ7as6Jm5bWhkp1k/FWRLWb2j5EwFggEFTDBcRo9gaorFl2HBQnFsV4bcAL9f
-         ZNiA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeSSSC+l+8chcTg1cFDKtGptXAJh5CCQI6YoYZDCUBgMxnZeAD+tLRkvnGXffXvzcm6SLluCnvOs/foMckPDAP@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHip9/JYZ97P/6jRHGxMJ5/mU4KtKIoLmgWG4VS6FZa4PwHEXZ
-	vWatHKIOpTDzoRGsvbudG5YGGbxgsw6DjdCi1+aZrW8PRII+FfwRtHbpix1teYl29Qh6g44kGuD
-	LjMY78sYqTA==
-X-Google-Smtp-Source: AGHT+IGH5qKcGCeDOkGypUsW1qg77Dqskx2nxip9KgH11cgR6u1rp1/Lii/alrmJCzILGhU3Cy+RFpDcAbIx
-X-Received: from dlbeg42.prod.google.com ([2002:a05:7022:faa:b0:119:49ca:6ba0])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:98c:b0:11b:9b9f:427c
- with SMTP id a92af1059eb24-11f251c3934mr1393470c88.13.1765301780303; Tue, 09
- Dec 2025 09:36:20 -0800 (PST)
-Date: Tue,  9 Dec 2025 09:36:10 -0800
+        d=1e100.net; s=20230601; t=1765301835; x=1765906635;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RSI8Pxf1Wt9ews+8G0JZ3VLNAwMte4kHmIud1VFkk60=;
+        b=rZTj0Mo4GsoTdf8iXEWNPAHgBmJFLtyTsWUGFmvSobhMx3SG0s4HrCZrgV+TnBnsd/
+         Ikf22bo6JfuQh23I0M8b7/p0Ig7Xq/77X68S6jfdmCZp/1v+vwiF/+XJVn81xM85IzB6
+         vNXE/SHBe67OZN2u14V2DYTRVnlR+JSQTFQwMat1z+cBghdagQhJxp6sRJ6AgtG7HF/l
+         r5PPpQ3npKgP+OJza604d+Uj4VdZAV4OejcyuqZ/PvjCTkzsiBLq4mpbQEJvDdngf0BV
+         ckCBkXXJlibzZWMHyxTxcNyEJuO6xm0JTWCYAQd+tsXtxqhhfPlfYlf3/GUmf2Dw6LX+
+         twyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZpNiAwaKqJETr5giL60xs4qokwGP5jHmdJlwSZq6ZLtialcr8vi5UZv+dU3alRr/2tdm0cYI1OPrhqAueP3qH@vger.kernel.org
+X-Gm-Message-State: AOJu0YzErBwFRoaLFYDSxt9bng+DT8T2GfRZ7sdnyZLlTep1Ubwbir/L
+	Ca552QdDmYAdS3s+Cu/5LNLNapZJi5GJevQZI/CCTWHWcwc96xPIl5B3ihZ+aNyvATt+Teabu2c
+	7I8Pu5A==
+X-Google-Smtp-Source: AGHT+IFtEkvOBWBmPhAZp6fiQBmIeByIj1WwkTuM0S6f9ba1kbmIBgBTopqxljhwYNgNIix+N66SAv3Sd14=
+X-Received: from pjbnh9.prod.google.com ([2002:a17:90b:3649:b0:343:6cb7:a68e])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1a8b:b0:343:f509:aa4a
+ with SMTP id 98e67ed59e1d1-349a260a9d0mr9559247a91.36.1765301834531; Tue, 09
+ Dec 2025 09:37:14 -0800 (PST)
+Date: Tue, 9 Dec 2025 09:37:13 -0800
+In-Reply-To: <2440b9bf-a2a1-4f66-94b2-71f47d62f3db@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
-Message-ID: <20251209173610.2033973-1-irogers@google.com>
-Subject: [PATCH v1] perf stat display: Make %f precision consistent
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+References: <20251206001720.468579-1-seanjc@google.com> <20251206001720.468579-38-seanjc@google.com>
+ <2440b9bf-a2a1-4f66-94b2-71f47d62f3db@linux.intel.com>
+Message-ID: <aTheSQb9fhXmZKw6@google.com>
+Subject: Re: [PATCH v6 37/44] KVM: VMX: Dedup code for removing MSR from
+ VMCS's auto-load list
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Chun-Tse Shao <ctshao@google.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit bc22de9bcdb2 ("perf stat: Display time in precision based on
-std deviation") added multirun workload elapsed time. There was an
-effort to make the precision in the output most useful for the user,
-however, when gathering over runs it means the formatting varies. This
-change just makes the output format fixed.
+On Mon, Dec 08, 2025, Dapeng Mi wrote:
+>=20
+> On 12/6/2025 8:17 AM, Sean Christopherson wrote:
+> > Add a helper to remove an MSR from an auto-{load,store} list to dedup t=
+he
+> > msr_autoload code, and in anticipation of adding similar functionality =
+for
+> > msr_autostore.
+> >
+> > No functional change intended.
+> >
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 31 ++++++++++++++++---------------
+> >  1 file changed, 16 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 52bcb817cc15..a51f66d1b201 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -1040,9 +1040,22 @@ static int vmx_find_loadstore_msr_slot(struct vm=
+x_msrs *m, u32 msr)
+> >  	return -ENOENT;
+> >  }
+> > =20
+> > +static void vmx_remove_auto_msr(struct vmx_msrs *m, u32 msr,
+> > +				unsigned long vmcs_count_field)
+> > +{
+> > +	int i;
+> > +
+> > +	i =3D vmx_find_loadstore_msr_slot(m, msr);
+> > +	if (i < 0)
+> > +		return;
+> > +
+> > +	--m->nr;
+> > +	m->val[i] =3D m->val[m->nr];
+>=20
+> Sometimes the order of MSR writing does matter, e.g., PERF_GLOBAL_CTRL MS=
+R
+> should be written at last after all PMU MSR writing.
 
-Before:
-```
-$ while :; do perf stat --null --repeat 3 sleep 0.1 2>&1 | grep elapsed; done
-          0.101140 +- 0.000149 seconds time elapsed  ( +-  0.15% )
-         0.1011396 +- 0.0000218 seconds time elapsed  ( +-  0.02% )
-          0.101331 +- 0.000124 seconds time elapsed  ( +-  0.12% )
-^C
-$ while :; do perf stat --null --repeat 3 sleep 1 2>&1 | grep elapsed; done
-          1.001317 +- 0.000146 seconds time elapsed  ( +-  0.01% )
-          1.001377 +- 0.000172 seconds time elapsed  ( +-  0.02% )
-           1.00253 +- 0.00131 seconds time elapsed  ( +-  0.13% )
-```
+Hmm, no.  _If_ KVM were writing event selectors using the auto-load lists, =
+then
+KVM would need to bookend the event selector MSRs with PERF_GLOBAL_CTRL=3D0=
+ and
+PERF_GLOBAL_CTRL=3D<new context (guest vs. host)>.  E.g. so that guest PMC =
+counts
+aren't polluted with host events, and vice versa.
 
-After:
-```
-$ while :; do perf stat --null --repeat 3 sleep 0.1 2>&1 | grep elapsed; done
-       0.101406408 +- 0.000064778 seconds time elapsed  ( +-  0.06% )
-       0.101367315 +- 0.000027253 seconds time elapsed  ( +-  0.03% )
-       0.101434164 +- 0.000084750 seconds time elapsed  ( +-  0.08% )
-^C
-$ while :; do perf stat --null --repeat 3 sleep 1 2>&1 | grep elapsed; done
-       1.001525467 +- 0.000051703 seconds time elapsed  ( +-  0.01% )
-       1.001375093 +- 0.000116200 seconds time elapsed  ( +-  0.01% )
-       1.001141025 +- 0.000046361 seconds time elapsed  ( +-  0.00% )
-```
+As things stand today, the only other MSRs are PEBS and the DS area configu=
+ration
+stuff, and kinda to my earlier point, KVM pre-zeroes MSR_IA32_PEBS_ENABLE a=
+s part
+of add_atomic_switch_msr() to ensure a quiescent period before VM-Enter.
 
-Suggested-by: Ingo Molnar <mingo@kernel.org>
-Closes: https://lore.kernel.org/lkml/aTQRgAOpKyI53TEq@gmail.com/
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/stat-display.c | 26 +++++---------------------
- 1 file changed, 5 insertions(+), 21 deletions(-)
+Heh, and writing PERF_GLOBAL_CTRL last for that sequence might actually be
+problematic.  E.g. load host PEBS with guest PERF_GLOBAL_CTRL active.
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 6d02f84c5691..2ce0602974a1 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -1397,21 +1397,12 @@ static void print_header(struct perf_stat_config *config,
- 		num_print_iv = 0;
- }
- 
--static int get_precision(double num)
--{
--	if (num > 1)
--		return 0;
--
--	return lround(ceil(-log10(num)));
--}
--
--static void print_table(struct perf_stat_config *config,
--			FILE *output, int precision, double avg)
-+static void print_table(struct perf_stat_config *config, FILE *output, double avg)
- {
- 	char tmp[64];
- 	int idx, indent = 0;
- 
--	scnprintf(tmp, 64, " %17.*f", precision, avg);
-+	scnprintf(tmp, 64, " %17.9f", avg);
- 	while (tmp[indent] == ' ')
- 		indent++;
- 
-@@ -1421,8 +1412,7 @@ static void print_table(struct perf_stat_config *config,
- 		double run = (double) config->walltime_run[idx] / NSEC_PER_SEC;
- 		int h, n = 1 + abs((int) (100.0 * (run - avg)/run) / 5);
- 
--		fprintf(output, " %17.*f (%+.*f) ",
--			precision, run, precision, run - avg);
-+		fprintf(output, " %17.9f (%+.9f) ", run, run - avg);
- 
- 		for (h = 0; h < n; h++)
- 			fprintf(output, "#");
-@@ -1462,17 +1452,11 @@ static void print_footer(struct perf_stat_config *config)
- 		}
- 	} else {
- 		double sd = stddev_stats(config->walltime_nsecs_stats) / NSEC_PER_SEC;
--		/*
--		 * Display at most 2 more significant
--		 * digits than the stddev inaccuracy.
--		 */
--		int precision = get_precision(sd) + 2;
- 
- 		if (config->walltime_run_table)
--			print_table(config, output, precision, avg);
-+			print_table(config, output, avg);
- 
--		fprintf(output, " %17.*f +- %.*f seconds time elapsed",
--			precision, avg, precision, sd);
-+		fprintf(output, " %17.9f +- %.9f seconds time elapsed", avg, sd);
- 
- 		print_noise_pct(config, NULL, sd, avg, /*before_metric=*/false);
- 	}
--- 
-2.52.0.223.gf5cc29aaa4-goog
+Anyways, I agree that this might be brittle, but this is all pre-existing b=
+ehavior
+so I don't want to tackle that here unless it's absolutely necessary.
 
+Or wait, by "writing" do you mean "writing MSRs to memory", as opposed to "=
+writing
+values to MSRs"?  Regardless, I think my answer is the same: this isn't a p=
+roblem
+today, so I'd prefer to not shuffle the ordering unless it's absolutely nec=
+essary.
+
+> So directly moving the last MSR entry into cleared one could break the MS=
+R
+> writing sequence and may cause issue in theory.
+>=20
+> I know this won't really cause issue since currently vPMU won't use the M=
+SR
+> auto-load feature to save any PMU MSR, but it's still unsafe for future u=
+ses.=C2=A0
+>=20
+> I'm not sure if it's worthy to do the strict MSR entry shift right now.
+>
+> Perhaps we could add a message to warn users at least.
+
+Hmm, yeah, but I'm not entirely sure where/how best to document this.  Beca=
+use
+it's not just that vmx_remove_auto_msr() arbitrarily maniuplates the order,=
+ e.g.
+multiple calls to vmx_add_auto_msr() aren't guaranteed to provide ordering =
+because
+one or more MSRs may already be in the list.  And the "special" MSRs that c=
+an be
+switched via dedicated VMCS fields further muddy the waters.
+
+So I'm tempted to not add a comment to the helpers, or even the struct fiel=
+ds,
+because unfortunately it's largely a "Here be dragons!" type warning. :-/
