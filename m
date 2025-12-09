@@ -1,67 +1,67 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D85330B02
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Dec 2025 13:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2B223DEB6
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Dec 2025 13:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765285290; cv=none; b=BS5bAFulJR3czLdhtHjPDDq9RxLxsuRS+MVGo1vS4/VS/AIr4Czt8+7BifqISrd8OAA2ngd1nu5/5Lg8dEBBeFnXlBSALviINgtUDjnTO8NdGb1sKWiqEOBbM50Ob4bnjj1oVXwQMjKt3JCBgqn8h8/HWysS/bnjYrPjrrjcAIQ=
+	t=1765286275; cv=none; b=UnxNyZUtHTzlU/NHCgh9cWhkzh69WVuSg3iaO8wQ6kPbnaoJaF95FAlsZ7JGoiyEuyusOjg7KhE/oOc2o7VGPc1zflMVHn5dIAuTYA/7lMv5NZyX+qK/0KcEFHyhMZDQUsAviNKH4qIL6Q63Ifhrlwz+sTWSYNHpNzQQv6Jo5gA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765285290; c=relaxed/simple;
-	bh=wqVgsncxvpMLGl7mWRxwt420jJBUq4mUp9pBmEvDgnw=;
+	s=arc-20240116; t=1765286275; c=relaxed/simple;
+	bh=EhUGZfNpKXNoslsyCqwDQrS3a7bufCc+Q4GvIRe9f2Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KbDoDH7hPjl2RASGMMIc0z3gBYUnuYYY/1mdytGj0z/IplHAkIRmtowfxJXfpV2mMcpBlqubNDBmp0E6tAcOA/SMuoYNW9eWOAktSlxv4IRrF4MY9LI+wClk+lEvuOFy/2xo519m7xufTPxlac7RwT+adsnchaVXesFbuk2xYQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ij/4npfF; arc=none smtp.client-ip=209.85.128.50
+	 In-Reply-To:Content-Type; b=DipJ/3JxKBiJfbKw1Zc4wIHBJytBq2hbepsaSbn9YFf/dnnBoQ9Ez9zojtsQAHjQzGXRKzIDs9iJBSzSUMDjSk7pCeWmvMCc9W3RUiucLhIOWfmem1QsbAKd4dlxZKH0joE3GE4tBf7vivfLmqpqqp6TsRF2n+/dEstJ1kzJfoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QC4paAmU; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ij/4npfF"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-477b1cc8fb4so39444875e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Dec 2025 05:01:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QC4paAmU"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-429ce7e79f8so3519140f8f.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Dec 2025 05:17:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1765285287; x=1765890087; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1765286272; x=1765891072; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=EloXbUlyU+hIjFo3T7Nctx7EsOFehJ2QD88cldp/Pqc=;
-        b=Ij/4npfFmvo4HVadd+JbVDhnxgeBeDLWLgj49f3KHN+Cwzex3U8xPeeiSRXLB66Dro
-         qh3wEMkIz17RewpuIREUtrLU8gL1dA9uEjQOfCjWNk01sfco3VAGjza32jUjJQN+/Go/
-         VFykYF1sl3XFq6PuFp0tLpC2oHHujqwjQ5btNEwiBSWDplOCIjGVp1Ty3Jtiz+oYV1O1
-         axjznvXmhzrvc5jKfLES00YAgsUdt7ZNa713uLVhRNOYgZsdvis955KD7zhkYZtx2o7q
-         zWFxDViJGI0HOVgLbDsxgyqDzvIQAiqD4Ux3cY8bwypWG9gvEM2gu087MLusNwauEx8W
-         H/xg==
+        bh=6x4q7pYt+yBI8IV/ZgaXayi6EhlEVDj7sYbIN6bcwR8=;
+        b=QC4paAmU0U32ndpCuQhIU2zx61rBdnR3ZR+Hvcht1NJ3/4rwxUXNcyM+/dT+mw/EUc
+         Dg/f8Xxw7NU/QCe26QPG/Dc/9G2PF9K7XjdzqfXeiRv1/oweLGUirHRCw5hodXmVF3dd
+         juXv/jNKM1TiZWuzTrI2BPFF6Kb5RddPSAwnAmaEPMiNHivfsUTkh5ckiTHYjxBbQaZN
+         OgbXdBLQU6kUVVwvRzypxLNoNiDjwmn0SEDAukKJzUiQRn9IGCd7JG4cwLQ27VUZ214O
+         Ap0uZQ+LyIkLU3TpHyq4Ib6lKL64lZbAN79nqjN2gN15te/xqaGZR0mVezPVTdydAcaX
+         KRnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765285287; x=1765890087;
+        d=1e100.net; s=20230601; t=1765286272; x=1765891072;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EloXbUlyU+hIjFo3T7Nctx7EsOFehJ2QD88cldp/Pqc=;
-        b=GF75YPfA237vtrfkoWUtOCiSaZEdFarGZnP2kk9AluRvWbDL78j5+awEfgbq1H/VOM
-         m7MjEHUyLNqZDcv9uN0GlNGJPV4xVbJ2U5lzxSe7M0t5Sf8wYpcTbfzlSeGKSuHP6Qz8
-         Bjd+0pTT8AWXZYCoMMzNQYAqg2YRCbyWARSK9ItttCrf9aJmNiZ6xYtWVZ8N8D/OksZ0
-         /XRmSGcmJMHtsUs4jVl6bDkmE4AcELQ2IPubHs9f+nB/3kMMmbyVhtQojx1PdMTG+Gwr
-         3bjpWkdVa15uLYdRWgU3g3U7RNN7IgjuY3b8PDrFJJR52/O5yjJeyp6l3tioWI50NR0A
-         yfIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZuq/WEPvi3BnzyyO2z4xZKhdubbAX2mSAKYPC2+Pr8Mu0VuFhFLWp+r2utCOXcMDZnySQZ0LkPKFucEKA/pGQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjjXdAUDr81ICfwqbRTrpbHTQ4P6yJV5jaShFWxtitlo+GXDPc
-	5Vd4dKV2rRDkUUjXgH5ZLLrFv+xePraeGkeeMy8ZuVJHgvq8cwAMgx992dQRPGPNNx4=
-X-Gm-Gg: ASbGncs3lJuZ1Ds3ef86rSJWstYBCmUgS4h3ml6LAIgU00N6JFZHjn5YuP/wFmvVGu8
-	6Yr68IVK4nLb9HqRChj0mbBLwgisTInFXVEkCMQjXT6UWloL0SjL7vBRkuA1akfJeuaBNl8zMHM
-	UYPQNRgvpTrw/KzMDLyyJ7wied5XwJtIMn9w+FMm00/fjtzlWGXE9LfIgsU8TaHLtEJHiyut9x6
-	UvR7tXkE5OZtFNLefo3sK6U1aZv/Dfj9KqVYGtOedlJswMZ2GLIZfqo6qqXWpXY4wwhwHZPn7qr
-	odoV1Vv/dOZjprTmuYPBiAYBpVPaLBD2GSalRHIr/9dvtEDKO2UbEk+5Yz5dCmadXuYhHyBPYDj
-	q3X5Z0AFrVztCsAZPFfvpWmPZtDVdoxZER+VnrCbbzVM4oAvCDwl/VyqEE1g1v8lCOZAcWTB5G/
-	UoMr/n5pBGDTleq4+3
-X-Google-Smtp-Source: AGHT+IFDlGRr/YlbcCjqm4e6AKZfDMyX5+qQMOLamcP7s3WAWrfh7lAxE2Xtj6o6T4iNnHR0Lcka4A==
-X-Received: by 2002:a05:600c:4ecb:b0:45d:e28c:875a with SMTP id 5b1f17b1804b1-47939e4ee88mr121622935e9.31.1765285286961;
-        Tue, 09 Dec 2025 05:01:26 -0800 (PST)
+        bh=6x4q7pYt+yBI8IV/ZgaXayi6EhlEVDj7sYbIN6bcwR8=;
+        b=EgbQAqf62bEqFGoV2t6j+3l1poBspPVHB40IuRY8E0AlDOk4ISqqV7ZwH/8YTarksi
+         okuARnDhUUzDv7ykvcLlf6tslSSH5+Cuu7CQhqK3z2rs0Ywfe90SzB7hej8T9OmGB183
+         7y16fvKqdEYcyqoZpq285fn87DkkljGhffJtTNIzE1Nv4s5OimpCffEuXiJGwf7lIFn9
+         MuTNx6tDzb9FlWKImBQXg9idWx1179lUs9n0FHBUEdWpArn3BMNqdGzw+s2FxRrJZ5Y4
+         lhTjyK/Dv/ujNC1QIzPMIjR1tFi1uUVDzcdbewMbSYfrIMO+n8iKYaY/P4E2aY/GNiv9
+         /S2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVg/Ml2MmB9QkBseP+4O8Vi0zxGJD/i0QDRCUzzP7uY4mNWxlw6OfM2jqG6K3sg+wTpISfxXeI4lNEBWnblQT8m@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxnVySo8CpJhzCgNbt3FUBk3NfxIBu5ouLvWAzAJARBzFho9T2
+	gdcBIk3dxhd1ksxUwkO0rQYpxhy7RcLSLyedBcowSn1mHZah70mNSzIVSVWDpIDyWXM=
+X-Gm-Gg: AY/fxX7PUoU9Fk0zITcE0eNR9uPSAdpOcwNJxIr8eugMymuKtsMXfBukPdukbCNwQYx
+	Z/xpNgA0n5eMLck6Vqke/F24cq8cUadxAF/fyWM73CEXoAiPaIbEtW7lqMybMogKuuAjY0BYW/w
+	k6gUtwaOgC24sZprpGBkkdkATPS4aeWU4ScJuGDKNOCs85cZSHFJIksIYIABVhoaT2EH6JZRFu1
+	4E1d3xYl+3InkKSEeox/D1iFUtDjkpGmVRImwHCGlnbIODrgjJN+6w3bDvYImfrKfNbkbqBeCNn
+	IeS3KYVjuC98Oj7cTKBHhnDiHJDdh1gqwVn479eF0pVMkBbWYmsJVm0eWXQ7YNRcg8u2f5FoHyC
+	qlg5Y1mJLhvnMCy2D8QTKffuxE0L+7YJDfszLLrPrkRlUussSEvLAvZXFXEo+7oNaEOT3a1VQ09
+	Bjb3c4O6+nplQvgFPY
+X-Google-Smtp-Source: AGHT+IFkh1qNBfsdlzavryRRrHz55vGlnsqEVl3PW1eyYgIUgYX4YzhkI06ypPZmgVor+ogQtygTpQ==
+X-Received: by 2002:a05:6000:2008:b0:42b:3b62:cd86 with SMTP id ffacd0b85a97d-42f89f09474mr10823996f8f.6.1765286271664;
+        Tue, 09 Dec 2025 05:17:51 -0800 (PST)
 Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47a7d99dabesm17221325e9.5.2025.12.09.05.01.25
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbfeb38sm31235105f8f.12.2025.12.09.05.17.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Dec 2025 05:01:26 -0800 (PST)
-Message-ID: <3c27128a-5cca-4c2f-a3f8-47b9a375bc7a@linaro.org>
-Date: Tue, 9 Dec 2025 13:01:25 +0000
+        Tue, 09 Dec 2025 05:17:51 -0800 (PST)
+Message-ID: <1c1092e6-aa5d-4bb1-84e5-81151a02cc6f@linaro.org>
+Date: Tue, 9 Dec 2025 13:17:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,210 +69,192 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf bench: Add -t/--threads option to perf bench mem
- mmap
-To: Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- Ankur Arora <ankur.a.arora@oracle.com>
-References: <20251207085741.1388141-1-namhyung@kernel.org>
+Subject: Re: [PATCH 06/19] coresight: trbe: Refactor syndrome decoding
+To: Leo Yan <leo.yan@arm.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Mike Leach <mike.leach@linaro.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Tamas Petz <tamas.petz@arm.com>,
+ Tamas Zsoldos <tamas.zsoldos@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
+ <20251201-trbe_buffer_refactor_v1-1-v1-6-7da32b076b28@arm.com>
+ <65c84357-0bda-454f-88c3-623b3ff9d29d@arm.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20251207085741.1388141-1-namhyung@kernel.org>
+In-Reply-To: <65c84357-0bda-454f-88c3-623b3ff9d29d@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 07/12/2025 8:57 am, Namhyung Kim wrote:
-> So that it can measure overhead of mmap_lock and/or per-VMA lock
-> contention.
+On 02/12/2025 11:06 am, Suzuki K Poulose wrote:
+> Hi Leo
 > 
->    $ perf bench mem mmap -f demand -l 1000 -t 1
->    # Running 'mem/mmap' benchmark:
->    # function 'demand' (Demand loaded mmap())
->    # Copying 1MB bytes ...
+> A couple of minor nits below. Otherwise looks like a nice cleanup
 > 
->           2.914503 GB/sec
 > 
->    $ perf bench mem mmap -f demand -l 1000 -t 2
->    # Running 'mem/mmap' benchmark:
->    # function 'demand' (Demand loaded mmap())
->    # Copying 1MB bytes ...
+> On 01/12/2025 11:21, Leo Yan wrote:
+>> It gives priority to TRBSR_EL1.EA (external abort); an external abort
+>> will immediately bail out and return an error.
+>>
+>> Next, the syndrome decoding is refactored based on two levels of
+>> information: the EC (Event Class) bits and the BSC (Trace Buffer Status
+>> Code) bits.
+>>
+>> If TRBSR_EL1.EC==0b000000, the driver continues parsing TRBSR_EL1.BSC to
+>> identify the specific trace buffer event.  Otherwise, any non-zero
+>> TRBSR_EL1.EC is treated as an error.
+>>
+>> For error cases, the driver prints an error string and dumps registers
+>> for debugging.
 > 
->         888.769991 MB/sec
+> minor nit: Please avoid describing the code, which cod does well.
+> Briefly mention what you are doing, giving any additional contexts
+> that may not be evident from the code.
 > 
->    $ perf bench mem mmap -f demand -l 1000 -t 3
->    # Running 'mem/mmap' benchmark:
->    # function 'demand' (Demand loaded mmap())
->    # Copying 1MB bytes ...
+> e.g:
 > 
->         757.658220 MB/sec
+> "Add support for decoding the syndrome for TRBE, providing a verbose
+> description of the code for Fatal/unhandled events.
+> While at it add the new definitions from the latest Arm ARM for
+> EC and BSC"
 > 
->    $ perf bench mem mmap -f demand -l 1000 -t 4
->    # Running 'mem/mmap' benchmark:
->    # function 'demand' (Demand loaded mmap())
->    # Copying 1MB bytes ...
 > 
->         316.410713 MB/sec
+> 
+> 
+>>
+>> No additional checks are required for wrap mode beyond verifying the
+>> TRBSR_EL1.WRAP bit, even on units with overwrite errata, as this bit
+> 
+> 
+>> reliably indicates a buffer wrap.
+>>
+>> Signed-off-by: Leo Yan <leo.yan@arm.com>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-trbe.c | 60 ++++++++++++++++++ 
+>> +++-------
+>>   drivers/hwtracing/coresight/coresight-trbe.h |  8 ++--
+>>   2 files changed, 51 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/ 
+>> hwtracing/coresight/coresight-trbe.c
+>> index 
+>> 9e565122816949b37b8ff5e4ba04cfbc317c6f25..28e2bfa68074f19ccaa4a737d00af577aea818fe 100644
+>> --- a/drivers/hwtracing/coresight/coresight-trbe.c
+>> +++ b/drivers/hwtracing/coresight/coresight-trbe.c
+>> @@ -643,29 +643,61 @@ static void trbe_enable_hw(struct trbe_buf *buf)
+>>   static enum trbe_fault_action trbe_get_fault_act(struct 
+>> perf_output_handle *handle,
+>>                            u64 trbsr)
+>>   {
+>> +    const char *err_str;
+>>       int ec = get_trbe_ec(trbsr);
+>>       int bsc = get_trbe_bsc(trbsr);
+>> -    struct trbe_buf *buf = etm_perf_sink_config(handle);
+>> -    struct trbe_cpudata *cpudata = buf->cpudata;
+>>       WARN_ON(is_trbe_running(trbsr));
+>> -    if (is_trbe_trg(trbsr) || is_trbe_abort(trbsr))
+>> -        return TRBE_FAULT_ACT_FATAL;
+>> -    if ((ec == TRBE_EC_STAGE1_ABORT) || (ec == TRBE_EC_STAGE2_ABORT))
+>> -        return TRBE_FAULT_ACT_FATAL;
+>> +    if (is_trbe_abort(trbsr)) {
+>> +        err_str = "External abort";
+>> +        goto out_fatal;
+>> +    }
+>> -    /*
+>> -     * If the trbe is affected by TRBE_WORKAROUND_OVERWRITE_FILL_MODE,
+>> -     * it might write data after a WRAP event in the fill mode.
+>> -     * Thus the check TRBPTR == TRBBASER will not be honored.
+>> -     */
+>> -    if ((is_trbe_wrap(trbsr) && (ec == TRBE_EC_OTHERS) && (bsc == 
+>> TRBE_BSC_FILLED)) &&
+>> -        (trbe_may_overwrite_in_fill_mode(cpudata) ||
+>> -         get_trbe_write_pointer() == get_trbe_base_pointer()))
+>> +    switch (ec) {
+>> +    case TRBE_EC_OTHERS:
+>> +        break;
+>> +    case TRBE_EC_BUF_MGMT_IMPL:
+>> +        err_str = "Unexpected implemented management";
+> 
+> minor nit: "Unexpected IMPDEF buffer management event"
+> 
+> 
+> Suzuki
+> 
+>> +        goto out_fatal;
+>> +    case TRBE_EC_GP_CHECK_FAULT:
+>> +        err_str = "Granule Protection Check fault";
+>> +        goto out_fatal;
+>> +    case TRBE_EC_STAGE1_ABORT:
+>> +        err_str = "Stage 1 data abort";
+>> +        goto out_fatal;
+>> +    case TRBE_EC_STAGE2_ABORT:
+>> +        err_str = "Stage 2 data abort";
+>> +        goto out_fatal;
+>> +    default:
+>> +        err_str = "Unknown error code";
+>> +        goto out_fatal;
+>> +    }
+>> +
+>> +    switch (bsc) {
+>> +    case TRBE_BSC_NOT_STOPPED:
+>> +        break;
+>> +    case TRBE_BSC_FILLED:
+>> +        break;
+>> +    case TRBE_BSC_TRIGGERED:
+>> +        err_str = "Unexpected trigger status";
+>> +        goto out_fatal;
+>> +    default:
+>> +        err_str = "Unexpected buffer status code";
+>> +        goto out_fatal;
+>> +    }
+>> +
+>> +    if (is_trbe_wrap(trbsr))
+>>           return TRBE_FAULT_ACT_WRAP;
+>>       return TRBE_FAULT_ACT_SPURIOUS;
+>> +
+>> +out_fatal:
+>> +    pr_err_ratelimited("%s on CPU %d [TRBSR=0x%016llx, 
+>> TRBPTR=0x%016llx, TRBLIMITR=0x%016llx]\n",
+>> +               err_str, smp_processor_id(), trbsr,
+>> +               read_sysreg_s(SYS_TRBPTR_EL1),
+>> +               read_sysreg_s(SYS_TRBLIMITR_EL1));
 
-Should this now say "MB/sec per thread" for nr_threads > 1? I think it 
-could be interpreted either way without a label, but I see you divided 
-by nr_threads in timeval2double().
+Don't you need to use %p to not leak pointers?
 
+>> +    return TRBE_FAULT_ACT_FATAL;
+>>   }
+>>   static unsigned long trbe_get_trace_size(struct perf_output_handle 
+>> *handle,
+>> diff --git a/drivers/hwtracing/coresight/coresight-trbe.h b/drivers/ 
+>> hwtracing/coresight/coresight-trbe.h
+>> index 
+>> 45202c48accec7c86ba56130e2737bc2d1830fae..d7f7cd763c0c7139cf322b7336ee563073e3bea0 100644
+>> --- a/drivers/hwtracing/coresight/coresight-trbe.h
+>> +++ b/drivers/hwtracing/coresight/coresight-trbe.h
+>> @@ -35,9 +35,11 @@ static inline bool is_trbe_enabled(void)
+>>       return trblimitr & TRBLIMITR_EL1_E;
+>>   }
+>> -#define TRBE_EC_OTHERS        0
+>> -#define TRBE_EC_STAGE1_ABORT    36
+>> -#define TRBE_EC_STAGE2_ABORT    37
+>> +#define TRBE_EC_OTHERS            0x0
+>> +#define TRBE_EC_GP_CHECK_FAULT        0X1e
+>> +#define TRBE_EC_BUF_MGMT_IMPL        0x1f
+>> +#define TRBE_EC_STAGE1_ABORT        0x24
+>> +#define TRBE_EC_STAGE2_ABORT        0x25
+
+I know some were already defined here, but this should probably be an 
+enum in sysreg.
+
+>>   static inline int get_trbe_ec(u64 trbsr)
+>>   {
+>>
 > 
-> Cc: Ankur Arora <ankur.a.arora@oracle.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->   tools/perf/Documentation/perf-bench.txt |  4 ++
->   tools/perf/bench/mem-functions.c        | 74 +++++++++++++++++++++----
->   2 files changed, 67 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
-> index 1160224cb718392d..c5913cf59c988421 100644
-> --- a/tools/perf/Documentation/perf-bench.txt
-> +++ b/tools/perf/Documentation/perf-bench.txt
-> @@ -274,6 +274,10 @@ Repeat mmap() invocation this number of times.
->   --cycles::
->   Use perf's cpu-cycles event instead of gettimeofday syscall.
->   
-> +-t::
-> +--threads=<NUM>::
-> +Create multiple threads to call mmap/munmap concurrently.
-> +
->   SUITES FOR 'numa'
->   ~~~~~~~~~~~~~~~~~
->   *mem*::
-> diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
-> index 2908a3a796c932d0..e7e7d0b41fc7720f 100644
-> --- a/tools/perf/bench/mem-functions.c
-> +++ b/tools/perf/bench/mem-functions.c
-> @@ -26,6 +26,7 @@
->   #include <errno.h>
->   #include <linux/time64.h>
->   #include <linux/log2.h>
-> +#include <pthread.h>
->   
->   #define K 1024
->   
-> @@ -41,6 +42,7 @@ static unsigned int	nr_loops	= 1;
->   static bool		use_cycles;
->   static int		cycles_fd;
->   static unsigned int	seed;
-> +static unsigned int	nr_threads	= 1;
->   
->   static const struct option bench_common_options[] = {
->   	OPT_STRING('s', "size", &size_str, "1MB",
-> @@ -174,7 +176,7 @@ static void clock_accum(union bench_clock *a, union bench_clock *b)
->   
->   static double timeval2double(struct timeval *ts)
->   {
-> -	return (double)ts->tv_sec + (double)ts->tv_usec / (double)USEC_PER_SEC;
-> +	return (double)ts->tv_sec + (double)ts->tv_usec / (double)USEC_PER_SEC / nr_threads;
->   }
->   
->   #define print_bps(x) do {						\
-> @@ -494,16 +496,27 @@ static void mmap_page_touch(void *dst, size_t size, unsigned int page_shift, boo
->   	}
->   }
->   
-> -static int do_mmap(const struct function *r, struct bench_params *p,
-> -		  void *src __maybe_unused, void *dst __maybe_unused,
-> -		  union bench_clock *accum)
-> +struct mmap_data {
-> +	pthread_t id;
-> +	const struct function *func;
-> +	struct bench_params *params;
-> +	union bench_clock result;
-> +	unsigned int seed;
-> +	int error;
-> +};
-> +
-> +static void *do_mmap_thread(void *arg)
->   {
-> +	struct mmap_data *data = arg;
-> +	const struct function *r = data->func;
-> +	struct bench_params *p = data->params;
->   	union bench_clock start, end, diff;
->   	mmap_op_t fn = r->fn.mmap_op;
->   	bool populate = strcmp(r->name, "populate") == 0;
-> +	void *dst;
->   
-> -	if (p->seed)
-> -		srand(p->seed);
-> +	if (data->seed)
-> +		srand(data->seed);
->   
->   	for (unsigned int i = 0; i < p->nr_loops; i++) {
->   		clock_get(&start);
-> @@ -514,16 +527,53 @@ static int do_mmap(const struct function *r, struct bench_params *p,
->   		fn(dst, p->size, p->page_shift, p->seed);
->   		clock_get(&end);
->   		diff = clock_diff(&start, &end);
-> -		clock_accum(accum, &diff);
-> +		clock_accum(&data->result, &diff);
->   
->   		bench_munmap(dst, p->size);
->   	}
->   
-> -	return 0;
-> +	return data;
->   out:
-> -	printf("# Memory allocation failed - maybe size (%s) %s?\n", size_str,
-> -			p->page_shift != PAGE_SHIFT_4KB ? "has insufficient hugepages" : "is too large");
-> -	return -1;
-> +	data->error = -ENOMEM;
-> +	return NULL;
-> +}
-> +
-> +static int do_mmap(const struct function *r, struct bench_params *p,
-> +		  void *src __maybe_unused, void *dst __maybe_unused,
-> +		  union bench_clock *accum)
-> +{
-> +	struct mmap_data *data;
-> +	int error = 0;
-> +
-> +	data = calloc(nr_threads, sizeof(*data));
-> +	if (!data) {
-> +		printf("# Failed to allocate thread resources\n");
-> +		return -1;
-> +	}
-> +
-> +	for (unsigned int i = 0; i < nr_threads; i++) {
-> +		data[i].func = r;
-> +		data[i].params = p;
-> +		if (p->seed)
-> +			data[i].seed = p->seed + i;
-> +
-> +		if (pthread_create(&data[i].id, NULL, do_mmap_thread, &data[i]) < 0)
-> +			data[i].error = -errno;
-> +	}
-> +
-> +	for (unsigned int i = 0; i < nr_threads; i++) {
-> +		pthread_join(data[i].id, NULL);
-> +
-> +		clock_accum(accum, &data[i].result);
-> +		error |= data[i].error;
-> +	}
-> +	free(data);
-> +
-> +	if (error) {
-> +		printf("# Memory allocation failed - maybe size (%s) %s?\n", size_str,
-> +		       p->page_shift != PAGE_SHIFT_4KB ? "has insufficient hugepages" : "is too large");
-> +	}
-> +	return error ? -1 : 0;
->   }
->   
->   static const char * const bench_mem_mmap_usage[] = {
-> @@ -548,6 +598,8 @@ int bench_mem_mmap(int argc, const char **argv)
->   	static const struct option bench_mmap_options[] = {
->   		OPT_UINTEGER('r', "randomize", &seed,
->   			    "Seed to randomize page access offset."),
-> +		OPT_UINTEGER('t', "threads", &nr_threads,
-> +			    "Number of threads to run concurrently (default: 1)."),
->   		OPT_PARENT(bench_common_options),
->   		OPT_END()
->   	};
 
