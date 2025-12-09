@@ -1,240 +1,185 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8C31E7C34;
-	Tue,  9 Dec 2025 11:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74791288C22
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Dec 2025 11:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765279493; cv=none; b=kxSqWhu5jtLUlkXSb5uUjw18OdkYW5WIRSVDkgAf+9g9CyGomxeb8ur3JHvp322uG4JZMSEPIEtcuU3OnHFrjSp8wLhgO2bn1LPExh8roQrCvEQ1CCoNyOC6MewufXcbeTFqon0OTa/y6Sm8tUE4KkHheDWDWSYax8yHKct6AN8=
+	t=1765279916; cv=none; b=HzziYQnkgbB6zv+nnF+cCxft2hAgp0xZJ+JgQff2qsIwgofX/u6hPqUChVTDTPEojxrADK8KShmkPfj2wWq4l3wdPqZv96Tae4gTSOh/X4YiHJVtNkOOqGDCmP1+LQYvV7T1OuplKx678atizu85+SyxKft1WN6ezHG3LmU9S3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765279493; c=relaxed/simple;
-	bh=H5btXk/+oC7SAB9++U7/lphBfoew9ALzPNB3wrtQhA4=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=sxXyqu1lMhwYxXPZwU0vIB8ZtAm7zITZjr3SMSan/lIr1lrHHFoIGSgzzXHNBRkTBXBOM5e70kE5/TcLrUaY9S2kmUyNj4dUmVQCZQ4nT2B0daGlCjMwWisqD28GMWc/5/0Ys5GaChvkv/5tcp3K3xG1OqTuWN+6u3gu8YsD7P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LGbMT0/4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4rBmdu0D; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1765279916; c=relaxed/simple;
+	bh=6HH/cxAGt3ABS3t90IUPQ0e68wSNZs8U8QlS2Iiv/WY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=f6p9Fvke+1dyE2pY5SmQ/Sm31N6XVN0PGE9Z8gBDPnB8vNPhE+4Jw8DYhH90cX9I+GR0FpvHwR2bZYhPRy4Y+IASWU8Ll2cSSLgFXLazBhHczCP5tdyr/zM5lhzupb9HydwbEr980F6PjKQs6by6f//AUKsXdxqlZu16iCns294=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DT1i7a2e; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LGbMT0/4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4rBmdu0D"
-Date: Tue, 09 Dec 2025 11:24:47 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1765279489;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sIny6YUQuMC7wj+IntQV/3JJLGsBurBGpsu7lIWtjPs=;
-	b=LGbMT0/4NbkxiYVRKGmNC8gBOBEarw8+VOmsONbuNY7P99bm2GHJ/BvPGfXLEx139Kwnxn
-	f1zNKAh5MkUK8PGKhNij0iy86RVs7lGR/hj5o7FiwpmCD7yEIifyOn1JFkrJKNYbzN5gV7
-	/4rkLESpISqtx4tpzgqSPCL5kiM0rFHwc+hAE0mhPr45LpqYIGwh8omu+KIUnNpzwURMkR
-	Atvsh3Cq1lL5L5H7lPUZgX9YsrOk8j5NL0F18O1diNYjN0yD5AHpYnUn1cDHTatBCvNgpw
-	m5/MOstIy8cTvoqj36OCAid/F9Jg51mvDU9XGrCeu0PaMv001u3peS8KkVtZSw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1765279489;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sIny6YUQuMC7wj+IntQV/3JJLGsBurBGpsu7lIWtjPs=;
-	b=4rBmdu0DLQYNYutl74G4xGJ1bnNio0z740uOFQbAigZMbz3KtBehvdtz6cFfBM5nvuUeyZ
-	h2OXDvaIUrpGY4Dw==
-From: "tip-bot2 for Thaumy Cheng" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: perf/urgent] perf/core: Fix missing read event generation on task exit
-Cc: Thaumy Cheng <thaumy.love@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
- James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>,
- linux-perf-users@vger.kernel.org, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20251209041600.963586-1-thaumy.love@gmail.com>
-References: <20251209041600.963586-1-thaumy.love@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DT1i7a2e"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-42e33956e76so2489258f8f.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Dec 2025 03:31:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1765279912; x=1765884712; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=e6YWuMvXTNdTJOhHcDzcUXEKOmVYtdsSHdCKcDTVbug=;
+        b=DT1i7a2eRvbRFikyVj47zjez4/UWBN1J7kivgWUWjlq3Sv6tjR54FeDoMTGhctz3yM
+         S+d+cNT8fIhjS5g5vvYzA20G4htXtX4qlu/+axDox2CQeQh2CxLfS7Jzzdauot1J3zF9
+         aURA3nJFC7Qoo23046Q9T9G4VYlI1s5TtJ0L8S5TPkpi0pTELk6cVR9CDRPeEoszb8km
+         jn0IStgPmKYSEhEhK6SGBphx2uh+ZsexeJtmmXMxkioLf6FP/MmX2b7XGnzJuSVIqQcu
+         Z2siNOzr7ObaEpHrcEIn6fIj0ln4ysZc/G5iEvHlZLnLD9ociQP6q35+qBjeb+i5mpnb
+         BB0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765279912; x=1765884712;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e6YWuMvXTNdTJOhHcDzcUXEKOmVYtdsSHdCKcDTVbug=;
+        b=GkjYc9SeJj0/ifWv1VTmnhQx2X8CNr5GS5xMJo4Xr/nvF+DuKrMOj7KWchBWadaotS
+         WtGmf/S8MF0REZBvQ0utGaYeq3qDBps2YYTja9pZnPeOBAeNhogUMUyKwRVK/tRelbpn
+         4qRccZvf1YRrSAQxIATA86tCDZle5XVWSfFEEdJetlmXuZmXWob5IdiAttOxYSZzQ+u1
+         GAuVHDCH0sj43lBfcoZWEWsPWvz8/Kc5BqQK6HCAFqK8nBpAzqIDnedZsIzq0FiYUklt
+         Mm29vYy1xw8p7G8ShLNqyi6SfJub9VjzWiMOGRz1WkSNtNo7Vh/IoYMK/quiURn1eAtf
+         qO+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWepsV5idSOkcc0oCdh9OBiLMZUVkoRavhLV4knXrLnXmWHeAqBzraFHXn7OlOCLVfYXiIDM/PRnCqhrv/vphCj@vger.kernel.org
+X-Gm-Message-State: AOJu0YzefqGqv6vjeiw370HTzeDBlS/t4FLKd7Xx4bPe4ooYY1ehSS3g
+	3DXGoebWT5M39Cmb7hWHk/3V/4bR4qUJKCbJYQxREjBuNhmqVbZDtxJb93KvSg/Z8ao=
+X-Gm-Gg: ASbGncun7mJYty0+4qgA2Z+6ADBHGplZ3aAqRuB5VMKgr6Cqa5LhCUA3sFA0zP9nYOl
+	qIY5GyiMgZ1pUKKJ3ZhZamcGdOE9Lj3TIIvqNUcXtfnlKjzR4NieN+fzZzTzENDjF+sblU348aA
+	atxb2rOhWY2AoTPZoAfh9qRsbnO672Vq641aryr1JCu7WkfuHHU5OA6EM2F66/CDl5z8uMk3NnQ
+	Il+r2915Cs/t9dvr+YdkrnAKtk+pznZGpgsdm9W2I3eD2OmrIksKcRLYdEgrO6WLl1uOCqU4S2G
+	gzFh0g5zXh6bFBkxnH1CICf+8XEhuJm1c3iOOjyUh2mbcTYXiyWkW9aPDc1ZVPKvuPqcBvbNtJP
+	/VTf5xTcfXXnASsUmLNjsPZ8vcYTA7jGssy07Jhq1W2WFrfL1PGAWN/j8lRdxm5OMPcLRmZIwNF
+	/ijiDBp6e/LhXhy/JG
+X-Google-Smtp-Source: AGHT+IEwfVpq4vEyyu/zMlGG00IRvDaLPlzEHvJE6y+B8GWLHwhzhlMF/Zpeb50z/1x4UmBzouJKYg==
+X-Received: by 2002:a05:6000:4301:b0:429:8d0f:e92 with SMTP id ffacd0b85a97d-42f89f0abbemr10139233f8f.6.1765279911677;
+        Tue, 09 Dec 2025 03:31:51 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbff320sm31190157f8f.18.2025.12.09.03.31.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Dec 2025 03:31:51 -0800 (PST)
+Message-ID: <c71aeb58-a87c-455b-9d5d-7bb28e34d317@linaro.org>
+Date: Tue, 9 Dec 2025 11:31:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <176527948706.498.4135909078466502735.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 46/48] perf jevents: Add collection of topdown like
+ metrics for arm64
+To: Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20251202175043.623597-1-irogers@google.com>
+ <20251202175043.623597-47-irogers@google.com>
+Content-Language: en-US
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Benjamin Gray <bgray@linux.ibm.com>, Caleb Biggers
+ <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>,
+ Ingo Molnar <mingo@redhat.com>, Jing Zhang <renyu.zj@linux.alibaba.com>,
+ Jiri Olsa <jolsa@kernel.org>, John Garry <john.g.garry@oracle.com>,
+ Leo Yan <leo.yan@arm.com>, Namhyung Kim <namhyung@kernel.org>,
+ Perry Taylor <perry.taylor@intel.com>, Peter Zijlstra
+ <peterz@infradead.org>, Samantha Alt <samantha.alt@intel.com>,
+ Sandipan Das <sandipan.das@amd.com>, Thomas Falcon
+ <thomas.falcon@intel.com>, Weilin Wang <weilin.wang@intel.com>,
+ Xu Yang <xu.yang_2@nxp.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20251202175043.623597-47-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     c418d8b4d7a43a86b82ee39cb52ece3034383530
-Gitweb:        https://git.kernel.org/tip/c418d8b4d7a43a86b82ee39cb52ece30343=
-83530
-Author:        Thaumy Cheng <thaumy.love@gmail.com>
-AuthorDate:    Tue, 09 Dec 2025 12:16:00 +08:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 09 Dec 2025 12:22:25 +01:00
 
-perf/core: Fix missing read event generation on task exit
+On 02/12/2025 5:50 pm, Ian Rogers wrote:
+> Metrics are created using legacy, common and recommended events. As
+> events may be missing a TryEvent function will give None if an event
+> is missing. To workaround missing JSON events for cortex-a53, sysfs
+> encodings are used.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> An earlier review of this patch by Leo Yan is here:
+> https://lore.kernel.org/lkml/8168c713-005c-4fd9-a928-66763dab746a@arm.com/
+> Hopefully all corrections were made.
+> ---
+>   tools/perf/pmu-events/arm64_metrics.py | 145 ++++++++++++++++++++++++-
+>   1 file changed, 142 insertions(+), 3 deletions(-)
+> 
+[...]
+> +        MetricGroup("lpm_topdown_be_bound", [
+> +            MetricGroup("lpm_topdown_be_dtlb", [
+> +                Metric("lpm_topdown_be_dtlb_walks", "Dtlb walks per instruction",
+> +                       d_ratio(dtlb_walk, ins_ret), "walk/insn"),
+> +                Metric("lpm_topdown_be_dtlb_walk_rate", "Dtlb walks per L1D TLB access",
+> +                       d_ratio(dtlb_walk, l1d_tlb) if l1d_tlb else None, "100%"),
+> +            ]) if dtlb_walk else None,
+> +            MetricGroup("lpm_topdown_be_mix", [
+> +                Metric("lpm_topdown_be_mix_ld", "Percentage of load instructions",
+> +                       d_ratio(ld_spec, inst_spec), "100%") if ld_spec else None,
+> +                Metric("lpm_topdown_be_mix_st", "Percentage of store instructions",
+> +                       d_ratio(st_spec, inst_spec), "100%") if st_spec else None,
+> +                Metric("lpm_topdown_be_mix_simd", "Percentage of SIMD instructions",
+> +                       d_ratio(ase_spec, inst_spec), "100%") if ase_spec else None,
+> +                Metric("lpm_topdown_be_mix_fp",
+> +                       "Percentage of floating point instructions",
+> +                       d_ratio(vfp_spec, inst_spec), "100%") if vfp_spec else None,
+> +                Metric("lpm_topdown_be_mix_dp",
+> +                       "Percentage of data processing instructions",
+> +                       d_ratio(dp_spec, inst_spec), "100%") if dp_spec else None,
+> +                Metric("lpm_topdown_be_mix_crypto",
+> +                       "Percentage of data processing instructions",
+> +                       d_ratio(crypto_spec, inst_spec), "100%") if crypto_spec else None,
+> +                Metric(
+> +                    "lpm_topdown_be_mix_br", "Percentage of branch instructions",
+> +                    d_ratio(br_immed_spec + br_indirect_spec + br_ret_spec,
+> +                            inst_spec), "100%") if br_immed_spec and br_indirect_spec and br_ret_spec else None,
 
-For events with inherit_stat enabled, a "read" event will be generated
-to collect per task event counts on task exit.
+Hi Ian,
 
-The call chain is as follows:
+I've been trying to engage with the team that's publishing the metrics 
+in Arm [1] to see if there was any chance in getting some unity between 
+these new metrics and their existing json ones. The feedback from them 
+was that the decision to only publish metrics for certain cores is 
+deliberate and there is no plan to change anything. The metrics there 
+are well tested, known to be working, and usually contain workarounds 
+for specific issues. They don't want to do "Arm wide" common metrics for 
+existing cores as they believe it has more potential to mislead people 
+than help.
 
-do_exit
-  -> perf_event_exit_task
-    -> perf_event_exit_task_context
-      -> perf_event_exit_event
-        -> perf_remove_from_context
-          -> perf_child_detach
-            -> sync_child_event
-              -> perf_event_read_event
+I'm commenting on this "lpm_topdown_be_mix_br" as one example, that the 
+equivalent Arm metric "branch_percentage" excludes br_ret_spec because 
+br_indirect_spec also counts returns. Or on neoverse-n3 it's 
+"PC_WRITE_SPEC / INST_SPEC".
 
-However, the child event context detaches the task too early in
-perf_event_exit_task_context, which causes sync_child_event to never
-generate the read event in this case, since child_event->ctx->task is
-always set to TASK_TOMBSTONE. Fix that by moving context lock section
-backward to ensure ctx->task is not set to TASK_TOMBSTONE before
-generating the read event.
+I see that you've prefixed all the metrics so the names won't clash from 
+Kan's feedback [2]. But it makes me wonder if at some point some kind of 
+alias list could be implemented to override the generated metrics with 
+hand written json ones. But by that point why not just use the same 
+names? The Arm metric team's feedback was that there isn't really an 
+industry standard for naming, and that differences between architectures 
+would make it almost impossible to standardise anyway in their opinion. 
+But here we're adding duplicate metrics with different names, where the 
+new ones are known to have issues. It's not a great user experience IMO, 
+but at the same time missing old cores from the Arm metrics isn't a 
+great user experience either. I actually don't have a solution, other 
+than to say I tried to get them to consider more unified naming.
 
-Because perf_event_free_task calls perf_event_exit_task_context with
-exit =3D false to tear down all child events from the context, and the
-task never lived, accessing the task PID can lead to a use-after-free.
+I also have to say that I do still agree with Andi's old feedback [3] 
+that the existing json was good enough, and maybe this isn't the right 
+direction, although it's not very useful feedback at this point. I 
+thought I had replied to that thread long ago, but must not have pressed 
+send, sorry about that.
 
-To fix that, let sync_child_event read task from argument and move the
-call to the only place it should be triggered to avoid the effect of
-setting ctx->task to TASK_TOMESTONE, and add a task parameter to
-perf_event_exit_event to trigger the sync_child_event properly when
-needed.
+[1]: 
+https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/tree/main/data
+[2]: 
+https://lore.kernel.org/lkml/43548903-b7c8-47c4-b1da-0258293ecbd4@linux.intel.com
+[3]: https://lore.kernel.org/lkml/ZeJJyCmXO9GxpDiF@tassilo/
 
-This bug can be reproduced by running "perf record -s" and attaching to
-any program that generates perf events in its child tasks. If we check
-the result with "perf report -T", the last line of the report will leave
-an empty table like "# PID  TID", which is expected to contain the
-per-task event counts by design.
-
-Fixes: ef54c1a476ae ("perf: Rework perf_event_exit_event()")
-Signed-off-by: Thaumy Cheng <thaumy.love@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Link: https://patch.msgid.link/20251209041600.963586-1-thaumy.love@gmail.com
----
- kernel/events/core.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index ece7168..dad0d3d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2317,8 +2317,6 @@ out:
- 	perf_event__header_size(leader);
- }
-=20
--static void sync_child_event(struct perf_event *child_event);
--
- static void perf_child_detach(struct perf_event *event)
- {
- 	struct perf_event *parent_event =3D event->parent;
-@@ -2337,7 +2335,6 @@ static void perf_child_detach(struct perf_event *event)
- 	lockdep_assert_held(&parent_event->child_mutex);
- 	 */
-=20
--	sync_child_event(event);
- 	list_del_init(&event->child_list);
- }
-=20
-@@ -4588,6 +4585,7 @@ out:
- static void perf_remove_from_owner(struct perf_event *event);
- static void perf_event_exit_event(struct perf_event *event,
- 				  struct perf_event_context *ctx,
-+				  struct task_struct *task,
- 				  bool revoke);
-=20
- /*
-@@ -4615,7 +4613,7 @@ static void perf_event_remove_on_exec(struct perf_event=
-_context *ctx)
-=20
- 		modified =3D true;
-=20
--		perf_event_exit_event(event, ctx, false);
-+		perf_event_exit_event(event, ctx, ctx->task, false);
- 	}
-=20
- 	raw_spin_lock_irqsave(&ctx->lock, flags);
-@@ -12518,7 +12516,7 @@ static void __pmu_detach_event(struct pmu *pmu, struc=
-t perf_event *event,
- 	/*
- 	 * De-schedule the event and mark it REVOKED.
- 	 */
--	perf_event_exit_event(event, ctx, true);
-+	perf_event_exit_event(event, ctx, ctx->task, true);
-=20
- 	/*
- 	 * All _free_event() bits that rely on event->pmu:
-@@ -14075,14 +14073,13 @@ void perf_pmu_migrate_context(struct pmu *pmu, int =
-src_cpu, int dst_cpu)
- }
- EXPORT_SYMBOL_GPL(perf_pmu_migrate_context);
-=20
--static void sync_child_event(struct perf_event *child_event)
-+static void sync_child_event(struct perf_event *child_event,
-+			     struct task_struct *task)
- {
- 	struct perf_event *parent_event =3D child_event->parent;
- 	u64 child_val;
-=20
- 	if (child_event->attr.inherit_stat) {
--		struct task_struct *task =3D child_event->ctx->task;
--
- 		if (task && task !=3D TASK_TOMBSTONE)
- 			perf_event_read_event(child_event, task);
- 	}
-@@ -14101,7 +14098,9 @@ static void sync_child_event(struct perf_event *child=
-_event)
-=20
- static void
- perf_event_exit_event(struct perf_event *event,
--		      struct perf_event_context *ctx, bool revoke)
-+		      struct perf_event_context *ctx,
-+		      struct task_struct *task,
-+		      bool revoke)
- {
- 	struct perf_event *parent_event =3D event->parent;
- 	unsigned long detach_flags =3D DETACH_EXIT;
-@@ -14124,6 +14123,9 @@ perf_event_exit_event(struct perf_event *event,
- 		mutex_lock(&parent_event->child_mutex);
- 		/* PERF_ATTACH_ITRACE might be set concurrently */
- 		attach_state =3D READ_ONCE(event->attach_state);
-+
-+		if (attach_state & PERF_ATTACH_CHILD)
-+			sync_child_event(event, task);
- 	}
-=20
- 	if (revoke)
-@@ -14215,7 +14217,7 @@ static void perf_event_exit_task_context(struct task_=
-struct *task, bool exit)
- 		perf_event_task(task, ctx, 0);
-=20
- 	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
--		perf_event_exit_event(child_event, ctx, false);
-+		perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
-=20
- 	mutex_unlock(&ctx->mutex);
-=20
