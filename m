@@ -1,189 +1,379 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63E822C0263;
-	Tue,  9 Dec 2025 15:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB8A2C11D3
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Dec 2025 15:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765295847; cv=none; b=ZSHo6lJR9L51pIY/pi8uGM0z9WDgjJuHCwCMGr0tE1LQdrlUMBhMtn/FtxBmoLNwuvHqZD8xAfpgoXjJD+7tlHG9FKB2Zmen8J3fNFGbJqK45pvZKUhXp52G6wcWWXBsaWgfNU+5hhyEHEJ69McPRSoiE8OxUKvqh+oXoMnC3T8=
+	t=1765295925; cv=none; b=lY+jSKe8U/pvXMCttpP6igedb8Z88rzbojnU2PuTHbRbFwM5uwXOzFFH8FgB4BwHe/0O4XBdC3OtRP2B+Xbk+dy0y+WVv6dKL3Z64/Q3R/n8FTwuNjpg0V/mUO4gEnY/i+F+K3RYWoXvQ374LAKM4HCZfFdTpPZv5NVitx2wkH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765295847; c=relaxed/simple;
-	bh=F61cIfXxouBbpi53cpu2Eh0cn/nAP2vMHrT5Qv5kjD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sVaxPrF9GEhPqw/4hS9LGFaf9uzMfSwTlZkroKpb8xu+Jn4tqCBGxJSMPux6QUfUxzueqdY6GcZtwhrbjSj+kXm8++dpgFnxu0uC427b7uZP3S3dmfvNYxOi2ORj4zkXjs82HJzr0eA/VvpasnEUOsGvEpUgD2GIqETPI9n6KW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89E97175D;
-	Tue,  9 Dec 2025 07:57:17 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 66D3F3F73B;
-	Tue,  9 Dec 2025 07:57:24 -0800 (PST)
-Date: Tue, 9 Dec 2025 15:57:22 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Yeoreum Yun <yeoreum.yun@arm.com>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Tamas Petz <tamas.petz@arm.com>,
-	Tamas Zsoldos <tamas.zsoldos@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 06/19] coresight: trbe: Refactor syndrome decoding
-Message-ID: <20251209155722.GX724103@e132581.arm.com>
-References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
- <20251201-trbe_buffer_refactor_v1-1-v1-6-7da32b076b28@arm.com>
- <ae63c69c-eff9-4665-a9a6-d395e61bea86@arm.com>
+	s=arc-20240116; t=1765295925; c=relaxed/simple;
+	bh=CikQc/fnzb9c5oM/8Eb9yUjZRbCszrqJmho1dnojadM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g0VS4pKdEo7gNKLVUtv8+YkZWxtp/dw9VmJ2rwR9h9lB/1xw8AQZaZ4UfYREz263o8NEdTPdnWQqThU5s9twXOvluGBWSV4hgIaeQ28R0+tn+Coa1ZBbY8J99XnutLRL8xpcDzun/vCCrwZE0AYAUS+/MZEWi3kkkO/a3QQz71E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=17J/Bqvq; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="17J/Bqvq"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-297e13bf404so246165ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Dec 2025 07:58:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1765295923; x=1765900723; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lDgse4smKZRxWXFHykbYNCZxcA+/jW1sukp85CRj1yk=;
+        b=17J/Bqvq8YF4u4S6kHAnewzT343QAkwiKsVeX2h9Vill/7hJ+Tyk57O0bYRt6kpKiH
+         3wlTB/tPV0w4qy1PZCdZdBXWsEmsaFsA6UQ0lb6PZ0b9PT+TOtMaXjBREGqcSppYd25J
+         jffbiPSjCsU0tCyqfcxpo/eTIg7KqEy0rrbFNgunE93OWdTGSn0QXcMPLCx+loIuCwN4
+         JxtK8BAE5c+QN2SxUQWiMpKxH7iXN4GhPBCZYXxafDsYDNRezHl9d65pHkUd+g/Tg4Bb
+         EszaGWxkGIdJybS6/dIHAwinroloRdRhXaL8kfNZnQmgT7YrvNdgHjjGRNdD1+rsz+7k
+         CC3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765295923; x=1765900723;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lDgse4smKZRxWXFHykbYNCZxcA+/jW1sukp85CRj1yk=;
+        b=ayC6c8g/kz2mK/9iW+2Wx/GA+BrQ96/UnH9TVsB8MbVN5MONnTiGWsmNLgBw9Qzs6k
+         20Kx6OKwb/TFzBRrPiCHoGOKXh9bwEcWmRGr7dmaeC9oAMsAYqEz0b0uflSo4w4HxszA
+         pL1ZhSmU//3Hj8vj1tpopbCoytv5stq3fJIGVUcmjpcHjbA8a2QHxA4DSf6+wbpKA1Cq
+         jJroShGfozbLkpUdugqq/DMAel1BBadS3isGNJ5o6N7PIXahRGk9lmXynRTQ/zfXjNUc
+         c6CDBUVaonlYuF0IZMRBYcDdhknuvnuh04S+fhTBkhcD/3zFxhu3tzy6LXKF0sD5xt41
+         9HOA==
+X-Gm-Message-State: AOJu0Yxz+EzZrs6+kGvWZ4dqjeiudVp/bSc99AOlAOfjFQgbe4E3iS/C
+	ZqlnP4AP5B8C28J66PpSDgQb+r1VOZUQKJQt6GhWuAKeghc9jVhTc4yWRFg+uasJGfDY2NRqK/W
+	DlZTMb0qZjC/7v4cJjNT96f4s2CnmyOxcIbTZoJxF
+X-Gm-Gg: AY/fxX4yWmr2gng+0UR4eCUyWvk01zlkoIRL/j3Mpvo5vdw4+4Cfbh2pUOz8ROoSOts
+	sQKCI8xt4+xE4Nc3dBtOESkMp84Srdd0sHzGxePz5MX8H1fe4QmurhTEH3gwicWAW4Cc3xgUkhB
+	Qoc3iESS7MD4vIu4+z/XFszgukZnc6ljpkM+NL/Op3SO2JE9PffJvxDOM9Wbzmr2hfaFszMf04R
+	ACXtGEV7kPIr384wtoD7J7aMP7/KXM9E4T3V2iW1qw94CJfu9gAk4A/4NBQMx0/lA17k5t63ekr
+	LICLdigvD3OOOYaOBcSoiJ/N
+X-Google-Smtp-Source: AGHT+IEZGJ2IBQ2j1MbdGq5XaIfuVItXVgOQ0Dn63+iXclg+rEg/7JRhz9Q9g5d8crMx5xPTS07qDWbS+y/SSIFNDuE=
+X-Received: by 2002:a17:903:1c8:b0:265:e66:6c10 with SMTP id
+ d9443c01a7336-29e9417f3c2mr3300855ad.4.1765295922533; Tue, 09 Dec 2025
+ 07:58:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae63c69c-eff9-4665-a9a6-d395e61bea86@arm.com>
+References: <20251208-james-perf-config-bits-v2-0-4ac0281993b0@linaro.org>
+ <20251208-james-perf-config-bits-v2-1-4ac0281993b0@linaro.org> <6ba6bde3-f56b-4354-b336-4739cb1edb71@linaro.org>
+In-Reply-To: <6ba6bde3-f56b-4354-b336-4739cb1edb71@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 9 Dec 2025 07:58:31 -0800
+X-Gm-Features: AQt7F2py_yb8y5sEdWL_sj5dKYcliEu1dCmZ7RHB13qbHpYjiU2r9ka3GKUHG9w
+Message-ID: <CAP-5=fV_Y5W2RyJhBgnk49JuTf8EsyisY-LfL3sVhC4TVRC_gg@mail.gmail.com>
+Subject: Re: [PATCH v2 01/12] perf parse-events: Refactor get_config_terms()
+ to remove macros
+To: James Clark <james.clark@linaro.org>
+Cc: Linux perf Profiling <linux-perf-users@vger.kernel.org>, linux-kernel@vger.kernel.org, 
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, leo.yan@arm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 05, 2025 at 09:40:33AM +0530, Anshuman Khandual wrote:
-> On 01/12/25 4:51 PM, Leo Yan wrote:
-> > It gives priority to TRBSR_EL1.EA (external abort); an external abort
-> > will immediately bail out and return an error.
-> 
-> This is an abrupt starting for a commit message without giving context.
-> The rationale for the change needs to be explained rather than details
-> of implementation.
-
-Agreed.  I will refine the commit log to state that we need to diagnose
-the error code based on the hierarchy information (EC and BSC).
-
-> > Next, the syndrome decoding is refactored based on two levels of
-> > information: the EC (Event Class) bits and the BSC (Trace Buffer Status
-> > Code) bits.
-> > 
-> > If TRBSR_EL1.EC==0b000000, the driver continues parsing TRBSR_EL1.BSC to
-> > identify the specific trace buffer event.  Otherwise, any non-zero
-> > TRBSR_EL1.EC is treated as an error.
-> > 
-> > For error cases, the driver prints an error string and dumps registers
-> > for debugging.
-> > 
-> > No additional checks are required for wrap mode beyond verifying the
-> > TRBSR_EL1.WRAP bit, even on units with overwrite errata, as this bit
-> > reliably indicates a buffer wrap.
-> 
-> Should the errata related changes be done in a separate patch instead ?
-
-Good point.  I will consider extracting the change; this would make
-the review clearer.
-
-[...]
-
-> >  static enum trbe_fault_action trbe_get_fault_act(struct perf_output_handle *handle,
-> >  						 u64 trbsr)
-> >  {
-> > +	const char *err_str;
-> >  	int ec = get_trbe_ec(trbsr);
-> >  	int bsc = get_trbe_bsc(trbsr);
-> > -	struct trbe_buf *buf = etm_perf_sink_config(handle);
-> > -	struct trbe_cpudata *cpudata = buf->cpudata;
-> >  
-> >  	WARN_ON(is_trbe_running(trbsr));
-> > -	if (is_trbe_trg(trbsr) || is_trbe_abort(trbsr))
-> > -		return TRBE_FAULT_ACT_FATAL;
-> >  
-> > -	if ((ec == TRBE_EC_STAGE1_ABORT) || (ec == TRBE_EC_STAGE2_ABORT))
-> > -		return TRBE_FAULT_ACT_FATAL;
-> > +	if (is_trbe_abort(trbsr)) {
-> > +		err_str = "External abort";
-> > +		goto out_fatal;
-> > +	}
-> >  
-> > -	/*
-> > -	 * If the trbe is affected by TRBE_WORKAROUND_OVERWRITE_FILL_MODE,
-> > -	 * it might write data after a WRAP event in the fill mode.
-> > -	 * Thus the check TRBPTR == TRBBASER will not be honored.
-> > -	 */
-> > -	if ((is_trbe_wrap(trbsr) && (ec == TRBE_EC_OTHERS) && (bsc == TRBE_BSC_FILLED)) &&
-> > -	    (trbe_may_overwrite_in_fill_mode(cpudata) ||
-> > -	     get_trbe_write_pointer() == get_trbe_base_pointer()))
-> > +	switch (ec) {
-> > +	case TRBE_EC_OTHERS:
-> > +		break;
-> 
-> No message for this ?
-
-No.  EC_OTHERS means "this is a normal maintenance interrupt".
-
-> > +	case TRBE_EC_BUF_MGMT_IMPL:
-> > +		err_str = "Unexpected implemented management";
-> > +		goto out_fatal;
-> > +	case TRBE_EC_GP_CHECK_FAULT:
-> > +		err_str = "Granule Protection Check fault";
-> > +		goto out_fatal;
-> > +	case TRBE_EC_STAGE1_ABORT:
-> > +		err_str = "Stage 1 data abort";
-> > +		goto out_fatal;
-> > +	case TRBE_EC_STAGE2_ABORT:
-> > +		err_str = "Stage 2 data abort";
-> > +		goto out_fatal;
-> > +	default:
-> > +		err_str = "Unknown error code";
-> > +		goto out_fatal;
-> > +	}
+On Tue, Dec 9, 2025 at 4:48=E2=80=AFAM James Clark <james.clark@linaro.org>=
+ wrote:
+>
+> On 08/12/2025 2:22 pm, James Clark wrote:
+> > The ADD_CONFIG_TERM() macros build the __type argument out of a partial
+> > EVSEL__CONFIG_TERM_x enum name. This means that they can't be called
+> > from a function where __type is a variable and it's also impossible to
+> > grep the codebase to find usages of these enums as they're never typed
+> > in full.
+> >
+> > Fix this by removing the macros and replacing them with an
+> > add_config_term() function. It seems the main reason these existed in
+> > the first place was to avoid type punning and to write to a specific
+> > field in the union, but the same thing can be achieved with a single
+> > write to a u64 'val' field.
+> >
+> > Signed-off-by: James Clark <james.clark@linaro.org>
+> > ---
+> >   tools/perf/util/evsel_config.h |   1 +
+> >   tools/perf/util/parse-events.c | 146 ++++++++++++++++++++++++--------=
+---------
+> >   2 files changed, 86 insertions(+), 61 deletions(-)
+> >
+> > diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_con=
+fig.h
+> > index bcd3a978f0c4..685fd8d5c4a8 100644
+> > --- a/tools/perf/util/evsel_config.h
+> > +++ b/tools/perf/util/evsel_config.h
+> > @@ -50,6 +50,7 @@ struct evsel_config_term {
+> >               u64           cfg_chg;
+> >               char          *str;
+> >               int           cpu;
+> > +             u64           val;
+> >       } val;
+> >       bool weak;
+> >   };
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
+nts.c
+> > index 17c1c36a7bf9..d5b009b4ebab 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -1116,105 +1116,107 @@ static int config_attr(struct perf_event_attr=
+ *attr,
+> >       return 0;
+> >   }
+> >
+> > -static int get_config_terms(const struct parse_events_terms *head_conf=
+ig,
+> > -                         struct list_head *head_terms)
+> > +static struct evsel_config_term *add_config_term(enum evsel_term_type =
+type,
+> > +                                              struct list_head *head_t=
+erms,
+> > +                                              bool weak)
+> >   {
+> > -#define ADD_CONFIG_TERM(__type, __weak)                              \
+> > -     struct evsel_config_term *__t;                  \
+> > -                                                             \
+> > -     __t =3D zalloc(sizeof(*__t));                             \
+> > -     if (!__t)                                               \
+> > -             return -ENOMEM;                                 \
+> > -                                                             \
+> > -     INIT_LIST_HEAD(&__t->list);                             \
+> > -     __t->type       =3D EVSEL__CONFIG_TERM_ ## __type;        \
+> > -     __t->weak       =3D __weak;                               \
+> > -     list_add_tail(&__t->list, head_terms)
+> > -
+> > -#define ADD_CONFIG_TERM_VAL(__type, __name, __val, __weak)   \
+> > -do {                                                         \
+> > -     ADD_CONFIG_TERM(__type, __weak);                        \
+> > -     __t->val.__name =3D __val;                                \
+> > -} while (0)
+> > +     struct evsel_config_term *t;
+> >
+> > -#define ADD_CONFIG_TERM_STR(__type, __val, __weak)           \
+> > -do {                                                         \
+> > -     ADD_CONFIG_TERM(__type, __weak);                        \
+> > -     __t->val.str =3D strdup(__val);                           \
+> > -     if (!__t->val.str) {                                    \
+> > -             zfree(&__t);                                    \
+> > -             return -ENOMEM;                                 \
+> > -     }                                                       \
+> > -     __t->free_str =3D true;                                   \
+> > -} while (0)
+> > +     t =3D zalloc(sizeof(*t));
+> > +     if (!t)
+> > +             return NULL;
 > > +
-> > +	switch (bsc) {
-> > +	case TRBE_BSC_NOT_STOPPED:
-> > +		break;
-> > +	case TRBE_BSC_FILLED:
-> > +		break;
-> > +	case TRBE_BSC_TRIGGERED:
-> > +		err_str = "Unexpected trigger status";
-> > +		goto out_fatal;
-> > +	default:
-> > +		err_str = "Unexpected buffer status code";
-> > +		goto out_fatal;
-> > +	}
-> 
-> Just wondering if it would be cleaner to add a const char * based
-> static array mapping these EC/BSC codes with above error messages.
+> > +     INIT_LIST_HEAD(&t->list);
+> > +     t->type =3D type;
+> > +     t->weak =3D weak;
+> > +     list_add_tail(&t->list, head_terms);
+> >
+> > +     return t;
+> > +}
+> > +
+> > +static int get_config_terms(const struct parse_events_terms *head_conf=
+ig,
+> > +                         struct list_head *head_terms)
+> > +{
+> >       struct parse_events_term *term;
+> >
+> >       list_for_each_entry(term, &head_config->terms, list) {
+> > +             struct evsel_config_term *new_term;
+> > +             enum evsel_term_type new_type;
+> > +             char *str =3D NULL;
+> > +             u64 val;
+> > +
+> >               switch (term->type_term) {
+> >               case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
+> > -                     ADD_CONFIG_TERM_VAL(PERIOD, period, term->val.num=
+, term->weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_PERIOD;
+> > +                     val =3D term->val.num;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
+> > -                     ADD_CONFIG_TERM_VAL(FREQ, freq, term->val.num, te=
+rm->weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_FREQ;
+> > +                     val =3D term->val.num;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_TIME:
+> > -                     ADD_CONFIG_TERM_VAL(TIME, time, term->val.num, te=
+rm->weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_TIME;
+> > +                     val =3D term->val.num;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_CALLGRAPH:
+> > -                     ADD_CONFIG_TERM_STR(CALLGRAPH, term->val.str, ter=
+m->weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_CALLGRAPH;
+> > +                     str =3D term->val.str;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_BRANCH_SAMPLE_TYPE:
+> > -                     ADD_CONFIG_TERM_STR(BRANCH, term->val.str, term->=
+weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_BRANCH;
+> > +                     str =3D term->val.str;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_STACKSIZE:
+> > -                     ADD_CONFIG_TERM_VAL(STACK_USER, stack_user,
+> > -                                         term->val.num, term->weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_STACK_USER;
+> > +                     val =3D term->val.num;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_INHERIT:
+> > -                     ADD_CONFIG_TERM_VAL(INHERIT, inherit,
+> > -                                         term->val.num ? 1 : 0, term->=
+weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_INHERIT;
+> > +                     val =3D term->val.num ? 1 : 0;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_NOINHERIT:
+> > -                     ADD_CONFIG_TERM_VAL(INHERIT, inherit,
+> > -                                         term->val.num ? 0 : 1, term->=
+weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_INHERIT;
+> > +                     val =3D term->val.num ? 0 : 1;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_MAX_STACK:
+> > -                     ADD_CONFIG_TERM_VAL(MAX_STACK, max_stack,
+> > -                                         term->val.num, term->weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_MAX_STACK;
+> > +                     val =3D term->val.num;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_MAX_EVENTS:
+> > -                     ADD_CONFIG_TERM_VAL(MAX_EVENTS, max_events,
+> > -                                         term->val.num, term->weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_MAX_EVENTS;
+> > +                     val =3D term->val.num;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_OVERWRITE:
+> > -                     ADD_CONFIG_TERM_VAL(OVERWRITE, overwrite,
+> > -                                         term->val.num ? 1 : 0, term->=
+weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_OVERWRITE;
+> > +                     val =3D term->val.num ? 1 : 0;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_NOOVERWRITE:
+> > -                     ADD_CONFIG_TERM_VAL(OVERWRITE, overwrite,
+> > -                                         term->val.num ? 0 : 1, term->=
+weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_OVERWRITE;
+> > +                     val =3D term->val.num ? 0 : 1;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
+> > -                     ADD_CONFIG_TERM_STR(DRV_CFG, term->val.str, term-=
+>weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_DRV_CFG;
+> > +                     str =3D term->val.str;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_PERCORE:
+> > -                     ADD_CONFIG_TERM_VAL(PERCORE, percore,
+> > -                                         term->val.num ? true : false,=
+ term->weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_PERCORE;
+> > +                     val =3D term->val.num ? true : false;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
+> > -                     ADD_CONFIG_TERM_VAL(AUX_OUTPUT, aux_output,
+> > -                                         term->val.num ? 1 : 0, term->=
+weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_AUX_OUTPUT;
+> > +                     val =3D term->val.num ? 1 : 0;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_AUX_ACTION:
+> > -                     ADD_CONFIG_TERM_STR(AUX_ACTION, term->val.str, te=
+rm->weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_AUX_ACTION;
+> > +                     str =3D term->val.str;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
+> > -                     ADD_CONFIG_TERM_VAL(AUX_SAMPLE_SIZE, aux_sample_s=
+ize,
+> > -                                         term->val.num, term->weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE;
+> > +                     val =3D term->val.num;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
+> > -                     ADD_CONFIG_TERM_STR(RATIO_TO_PREV, term->val.str,=
+ term->weak);
+> > +                     new_type =3D EVSEL__CONFIG_TERM_RATIO_TO_PREV;
+> > +                     str =3D term->val.str;
+> >                       break;
+> >               case PARSE_EVENTS__TERM_TYPE_USER:
+> >               case PARSE_EVENTS__TERM_TYPE_CONFIG:
+> > @@ -1229,7 +1231,23 @@ do {                                            =
+               \
+> >               case PARSE_EVENTS__TERM_TYPE_RAW:
+> >               case PARSE_EVENTS__TERM_TYPE_CPU:
+> >               default:
+> > -                     break;
+> > +                     /* Don't add a new term for these ones */
+> > +                     continue;
+> > +             }
+> > +
+> > +             new_term =3D add_config_term(new_type, head_terms, term->=
+weak);
+> > +             if (!new_term)
+> > +                     return -ENOMEM;
+> > +
+> > +             if (str) {
+> > +                     new_term->val.str =3D strdup(str);
+> > +                     if (!new_term->val.str) {
+> > +                             zfree(&new_term);
+> > +                             return -ENOMEM;
+> > +                     }
+> > +                     new_term->free_str =3D true;
+> > +             } else {
+>
+> This will incorrectly hit the else if term->val.str is NULL. Not sure if
+> that can happen but will fix anyway.
+>
+> > +                     new_term->val.val =3D val;
+>
+> There's an uninitialized variable warning for val here on release
+> builds. Will fix too
 
-Now we have two level's (EC/BSC) error codes, it would be complex to
-maintain a string array and map to two level's error codes.
-
-> > +	if (is_trbe_wrap(trbsr))
-> 
-> But what about TRBE affected with trbe_may_overwrite_in_fill_mode()
-> is that still being taken care of some how ?
-
-The TRBSR_EL1.WRAP bit reliably indicates that the pointer has
-wrapped.  I don't think we need any special handling for the overwrite
-erratum here; we can simply return TRBE_FAULT_ACT_WRAP.
-
-Afterward, trbe_get_trace_size() consumes the wrap flag and will
-compute the trace size appropriately for the overwrite erratum when
-the wrap flag is set.
-
-[...]
-
-> > -#define TRBE_EC_OTHERS		0
-> > -#define TRBE_EC_STAGE1_ABORT	36
-> > -#define TRBE_EC_STAGE2_ABORT	37
-> > +#define TRBE_EC_OTHERS			0x0
-> > +#define TRBE_EC_GP_CHECK_FAULT		0X1e
-> > +#define TRBE_EC_BUF_MGMT_IMPL		0x1f
-> > +#define TRBE_EC_STAGE1_ABORT		0x24
-> > +#define TRBE_EC_STAGE2_ABORT		0x25
-> 
-> Please do mention the document source for these new EC codes in the
-> commit message.
-
-As James suggested in another reply, I will consider to add sysreg
-enum.
+I'm not sure how I feel about the change, but did you check that it is
+ubsan clean? I worry it is introducing writes to "val" and then reads
+from say "period" in the evsel_config_term val union. I believe ubsan
+will flag this as:
+https://en.cppreference.com/w/cpp/language/union.html
+"It is undefined behavior to read from the member of the union that
+wasn't most recently written."
 
 Thanks,
-Leo
+Ian
+
+> >               }
+> >       }
+> >       return 0;
+> > @@ -1290,10 +1308,16 @@ static int get_config_chgs(struct perf_pmu *pmu=
+, struct parse_events_terms *head
+> >               }
+> >       }
+> >
+> > -     if (bits)
+> > -             ADD_CONFIG_TERM_VAL(CFG_CHG, cfg_chg, bits, false);
+> > +     if (bits) {
+> > +             struct evsel_config_term *new_term;
+> > +
+> > +             new_term =3D add_config_term(EVSEL__CONFIG_TERM_CFG_CHG,
+> > +                                        head_terms, false);
+> > +             if (!new_term)
+> > +                     return -ENOMEM;
+> > +             new_term->val.cfg_chg =3D bits;
+> > +     }
+> >
+> > -#undef ADD_CONFIG_TERM
+> >       return 0;
+> >   }
+> >
+> >
+>
