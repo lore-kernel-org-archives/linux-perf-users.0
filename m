@@ -1,131 +1,145 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 694111DF25F;
-	Tue,  9 Dec 2025 10:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD8726F2B8;
+	Tue,  9 Dec 2025 10:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765277377; cv=none; b=qIMmmRfVXNfbRUfR0BRYcPh31nATMArQ1FaC9YmihK/02fmcqeAWUsN2VYGdRMfKNw2HxiQgFzBFKnYcnVt4sYA5qhSmKlddduEmZfhShC+xE+q7I6sM8exI20AXBfO0StTLrN8kM0jiDQt1BoadgLG7LqcAUeT/pmCMzf6+5So=
+	t=1765277453; cv=none; b=ZC14mkZGvGf4e3USFNLtFA4b68JZVdwqFJfr1rK6/Kh9WxoEJNCY6SabrSxxPV7sTpgqfsN3rsfKoFb7iIbfjQ4dIsw7+8EGuBA3Wf7iHNaXtr2y3ZyhQmc9Iv3IUA29rR0q8z8CP+27MA4v2/oNASN+m6ND4MKghLOgEH6wfRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765277377; c=relaxed/simple;
-	bh=5e4yFUhr/PyEg1pKUCuCWpuw0KuvvwOmg2LYTn3gO1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F24ziUJay2mjAK7PSmXmfGEbZzOu8+45+MFTFHWOGlM68j0QKC4q+Y4/5n6hgy8FmozButv7mUgI1wDvTGubOVDYGzvAcbjXEq2BKezLUEchj/Wzh3j+i79V4R8jnsFSFlL8Pbp4ZtoR95qwjdrJWGiNIkqBzvb5jT5XVteCbqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A5671691;
-	Tue,  9 Dec 2025 02:49:21 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45F4C3F740;
-	Tue,  9 Dec 2025 02:49:28 -0800 (PST)
-Date: Tue, 9 Dec 2025 10:49:26 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] Revert "perf tools: Fix arm64 build by generating
- unistd_64.h"
-Message-ID: <20251209104926.GS724103@e132581.arm.com>
-References: <20251204-perf_fix_syscall_header-v1-0-b8e27f74ed6a@arm.com>
- <20251204-perf_fix_syscall_header-v1-2-b8e27f74ed6a@arm.com>
- <CAP-5=fV-d_X1uFYACEOJOxOY43+fj9aEm0_bp7NGSo9kZVMJ4Q@mail.gmail.com>
- <20251205162147.GR724103@e132581.arm.com>
- <CAP-5=fW3ZVfTU-=3WJny6KuD+DC7fzNzAehUscztr8Zhhfwrmw@mail.gmail.com>
+	s=arc-20240116; t=1765277453; c=relaxed/simple;
+	bh=aCrM7W3CAPC+RMSQJtvAyAkXY4Lv9Ztd5W/fhfzFdE8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=htxHtw2QF5TJvmtK82TNCmZbdLjT2bPT9l+DKo2rYjMozsY1G2tZT0O6RYohhmukiUGuBIrFsNFNKNCDx0VxadbmP/l++DTS7/mDYmUrzUnaqPXB4I6TvpWHyZRf66wQxqpPUha34u35gt4fqgwoWendpjIhTlZWfxi7m0GiYTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ernw37wm; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ernw37wm"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B91bTbx025102;
+	Tue, 9 Dec 2025 10:50:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=MPau5gDSQFiMBBpgwuXuFOr8iUJjmIgZg9W3uk7X5
+	1Q=; b=ernw37wmJShN38TK5bmJLM1JjIekW24SxL8AeIFAmp38IL9tAED9YduyD
+	TPUG/DYHmD3C3UHnnpWvLwrL5Xe7VtqagwdFB5yIPYoJLtGY1QT2pE/ea4o+DPYI
+	DamNpIdpSKJlZPAEZYEDk7VVilu7+SW764UqVg5iZE3HZf0oljJu1SzUzH7lUWKN
+	35eoq4SDAL5P7dQ3raTWZUGJPimH+Rnf3nX04q+z09eDGlEDQKpwUcZ7eV9+BOHD
+	9jbLrL/oRYVAiyVuhLmBGQI5NgTOxXVhy521ur4cICKR6Lwv8idbb0IbOTXop2QG
+	CMtJVg1KqjCM6oJE4XRZlD78sAs6A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4avc53bss6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Dec 2025 10:50:39 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5B9AhltK021706;
+	Tue, 9 Dec 2025 10:50:39 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4avc53bsry-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Dec 2025 10:50:39 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B985uoK012807;
+	Tue, 9 Dec 2025 10:50:38 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4aw0ajtbpd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Dec 2025 10:50:38 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B9AoYaF47120818
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 9 Dec 2025 10:50:34 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 29ABF2004D;
+	Tue,  9 Dec 2025 10:50:34 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E9A4E2004F;
+	Tue,  9 Dec 2025 10:50:33 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  9 Dec 2025 10:50:33 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        irogers@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: Fix test case perf evlist tests for s390x
+Date: Tue,  9 Dec 2025 11:50:29 +0100
+Message-ID: <20251209105029.142517-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fW3ZVfTU-=3WJny6KuD+DC7fzNzAehUscztr8Zhhfwrmw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAyMCBTYWx0ZWRfX5qDVLO0xxN/1
+ fcQLW2VIdIygrEyzLmzLLjHKjWYtQ2g4H3HOIyiJdy2d3siw1ZMnaDoBUwN+Lvtcti03tCAfO09
+ atAD5PqbwK/JmVAGRX8MmCaBELPy9BvZw4OBIXwR/gpytv+feAfGd5lrNj7vPeF6qkh6y+2GKV7
+ 504sShwWlO0qJ2t9/kyxXg+7byWdOFUR9Wf5mhv7adNdh7I6t4r7G9gfW9uhPselcr7C2oKrcMj
+ 0DUcSOvVg+BLd3a4iRO3BNiXOQyaMBfnzSgF1OYO5540zjiUfaMGXmaSGmXcDyb1zbHVg2ncVae
+ 3qcLsFGMTCb7k3ooSqV8EMr4ZTifJfyOhAplG7X6Fq7TS5MefzSYK2nVgcLsmy+BCkFdlCVGlfu
+ pO7BNF2xe+wOe7YNWjcedHy+y+xO+A==
+X-Authority-Analysis: v=2.4 cv=S/DUAYsP c=1 sm=1 tr=0 ts=6937feff cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
+ a=GOdL-N95vH2p3EwyxFsA:9
+X-Proofpoint-ORIG-GUID: z12NeC_F6pmhYRex77wjbLnfNkWsjx8C
+X-Proofpoint-GUID: FHXIwJL86uDMQ8Yq1-8HLGl44y92M6UK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-09_02,2025-12-04_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 phishscore=0 clxscore=1015 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 bulkscore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512060020
 
-Hi Ian,
+Perf test case 78: perf evlist tests fails on s390. The failure
+is causes by grouping events cycles and instructions because
+sampling does only support event cycles.
+Change the group to -e '{cycles,cycles}' to fix this.
 
-On Fri, Dec 05, 2025 at 09:16:32AM -0800, Ian Rogers wrote:
+Output before:
+  # ./perf test 78
+  78: perf evlist tests              : FAILED!
+  #
 
-[...]
+Output after:
+  # ./perf test 78
+  78: perf evlist tests              : Ok
+  #
 
-> > For a neat fix, I think we can remove all unistd.h headers:
-> >
-> >   $ ls tools/arch/*/include/uapi/asm/unistd*
-> >   tools/arch/arc/include/uapi/asm/unistd.h
-> >   tools/arch/hexagon/include/uapi/asm/unistd.h
-> >   tools/arch/riscv/include/uapi/asm/unistd.h
-> >   tools/arch/x86/include/uapi/asm/unistd_64.h
-> >   tools/arch/arm64/include/uapi/asm/unistd.h
-> >   tools/arch/loongarch/include/uapi/asm/unistd.h
-> >   tools/arch/x86/include/uapi/asm/unistd_32.h
-> >   tools/arch/x86/include/uapi/asm/unistd.h
-> >
-> > Any concern?  I would get maintainers's confirmation before proceeding.
-> 
-> Thanks Leo! The tools/include directory is a concern for me as the use
-> of it is pretty unstructured. For example, what does <linux/types.h>
-> refer to?
+Fixes: db452961de939 ("perf tests evlist: Add basic evlist test")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/shell/evlist.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I understand your concern.
+diff --git a/tools/perf/tests/shell/evlist.sh b/tools/perf/tests/shell/evlist.sh
+index 140f099e75c1..80f808b3059d 100755
+--- a/tools/perf/tests/shell/evlist.sh
++++ b/tools/perf/tests/shell/evlist.sh
+@@ -38,13 +38,13 @@ test_evlist_simple() {
+ 
+ test_evlist_group() {
+ 	echo "Group evlist test"
+-	if ! perf record -e "{cycles,instructions}" -o "${perfdata}" true 2> /dev/null
++	if ! perf record -e "{cycles,cycles}" -o "${perfdata}" true 2> /dev/null
+ 	then
+ 		echo "Group evlist [Skipped event group recording failed]"
+ 		return
+ 	fi
+ 
+-	if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cycles.*,.*instructions.*}"
++	if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cycles.*,.*cycles.*}"
+ 	then
+ 		echo "Group evlist [Failed to list event group]"
+ 		err=1
+-- 
+2.52.0
 
-For my current work, I would like to constraint to unistd.h headers
-only, now this is breaking BPF skeleton building on Arm64.
-
-I did not observe other building failures, so we can polish other
-headers later.
-
-> Thanks for doing the build testing! Doing a simpler grep:
-> ```
-> $ grep -r "asm/unistd" tools/include tools/perf tools/lib
-> tools/perf/check-headers.sh:  "arch/x86/include/uapi/asm/unistd.h"
-> tools/perf/check-headers.sh:  "arch/arm64/include/uapi/asm/unistd.h"
-> tools/lib/bpf/bpf.c:#include <asm/unistd.h>
-> tools/lib/bpf/libbpf.c:#include <asm/unistd.h>
-> ```
-> I think unistd.h is needed to make things hermetic for libbpf :-( ...
-> Anyway, I think getting rid of unistd.h is a good
-> thing but it will probably break perf's build that invokes libbpf's
-> build because libbpf will be mixing kernel and old libc headers on one
-> of the maintainers build test platforms (likely an old one) where the
-> type collisions yield compile time errors. To avoid that I'd suggest
-> making libbpf not use asm/unistd.h as a first step. We could get lucky
-> with something non-hermetic, but it wouldn't be my preference.
-
-Based on my test, perf (including libbpf) builds successfully without
-relying on the unistd.h headers under tools/arch.
-
-To verify which "unistd.h" headers are actually included, I searched
-dependencies recorded in .cmd files:
-
-  grep -r --include="*.cmd" "unistd.h" /data_nvme1n1/niayan01/upstream/build/
-
-See the complete log: https://termbin.com/9w85
-
-The mentioned libbpf building includes "unistd.h" headers from the toolchain
-and can build successfully.  I verified with two GCC toolchains:
-
-  # aarch64-linux-gnu-gcc --version
-  aarch64-linux-gnu-gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
-  Copyright (C) 2019 Free Software Foundation, Inc.
-  This is free software; see the source for copying conditions.  There is NO
-  warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-  # aarch64-linux-gnu-gcc --version
-  aarch64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
-  Copyright (C) 2023 Free Software Foundation, Inc.
-  This is free software; see the source for copying conditions.  There is NO
-  warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-As a side topic, given libbpf is maintained on github and can support
-standalone build [1], we should have confidence that it is not dependent on
-tools' headers.
-
-I still think removing the unistd.h headers from tools is the right thing to
-do, and based on test, it does not break perf building.
-
-Thanks,
-Leo
-
-[1] https://github.com/libbpf/libbpf?tab=readme-ov-file#building-libbpf
