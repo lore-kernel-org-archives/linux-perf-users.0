@@ -1,54 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7EED30100E;
-	Tue,  9 Dec 2025 01:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65750208D0
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Dec 2025 04:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765245490; cv=none; b=kQGPM6mT5BFfhsK8SfFn5qPPduTM9WM9nNo5nxR2cP5kdTAub7xrFstT+5cNMljVlMBEHUT5NsAzlKpPZJbQp6KIleHuOB/XdtFyB3cwoRWfqxvP/o34zwX4nIRC+p0ZJ7GGJGXzEpMQhs+G9aLRLarqU6wVA6WiCQEteWT6ZQI=
+	t=1765253778; cv=none; b=rwjt/bf0ehxwb719HiLHOBefp0bLEkanYmwGeznA7ICB7qkvhKQPY8XkqEX2C67tmPq6WY07+LCKOfcglZLh/nQqBSerkmhIkqD0tb3lAFDUmh0dSolRMqegdLnCLzrQ0l20jZBHYIgNUxS55BIv1u2eow3gaDB1QdSmcdS1d+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765245490; c=relaxed/simple;
-	bh=cm/t/nkJi4XYRjRg4UCoPHKxHiy1d6tYPHHSUQ8dOvU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UQflHfW3kfolmXXuP/tazA1SAUaz9EUB85AJ9EbPKNy+iZH25YXRMQlyOPbkFBmXuOsMLqpRW/ikPGMJgr8Osj/Reqs4zyO3HhsAi/HP5w7iwRbJ2mCHHak1ZcOfe47V3mPm6dNS9Wx4jvIjl7M6xd+vcKgRS95diHTmET2nSE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ti7VhSlp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765253778; c=relaxed/simple;
+	bh=ywL2XffooPaoJtOW52uoNolWTfO4L1cPqhwxEZrSkdI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tYvCUe33FSuxam9VHcWZ4R7FYuMz/XH6hnkAp5hmFGpY7K4gu6vfbLK4zObdnu2w1qhieSQaXb3PSROph3Dt/NT203CEt5lxtSCc4po00pcWmitdcnwO3m4tkZkq7QMkaL2+zW/2GYCGmUtEwHKTRACgK6O8VGX9JsLGQtG9dLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kdH9PSl3; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ti7VhSlp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAD0DC113D0;
-	Tue,  9 Dec 2025 01:58:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765245490;
-	bh=cm/t/nkJi4XYRjRg4UCoPHKxHiy1d6tYPHHSUQ8dOvU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ti7VhSlpTCoG9v8pESxdWtbucHbx8i721vNs0MyWltgqI9JV19ycEreUoC4ap/CZv
-	 TETCMDULIe2d6vGnmBABELWREowkwFLDQ1jOJsDOjQY0I8D9f3CUyl0nfVDiXzyBep
-	 OJSh7mXktSp3Ogh0Yxtv0zNHnTvYqT9ac1vMsI45X0MZOhdRvWzupzidgo89Jaqec7
-	 wVRRblwkOXuQA7Et8J4QPl9jKboqCCD6jal+DdI/Q/1VWXj5pZUmjfLbzwtbV0i1RD
-	 AWdOy4YApEsI+g69pU8cDCjZJZlVq0OS2pRFZbvbTG31AzcGzZ4N1H/yLkU9ZjeUY7
-	 a99k/ZWxPdOdw==
-From: Eric Biggers <ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdH9PSl3"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-297ef378069so47661725ad.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Dec 2025 20:16:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765253776; x=1765858576; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FlJMjioQT5hFyjTQfgGib/nn3aRlpyKPcJRzd9y5r+E=;
+        b=kdH9PSl3Fx/laRO35dI5wNoLTc52VczkPkXldwAzix+S18hkFWxkYlCBzNYGWTEecV
+         U8uevCt2RcbVfJvhyyu7BVVO4SIwzVbCtGtzxZPt3wko3R3JAvlAMmFgolQfdzuXLrJn
+         JLAAEwXrlKQufXxLl+1WD2YjY/DJLNR3/l5PiGvfcIJspVU0WSlTiMkjV6dW9d4creqg
+         3FHQqaUYPuUR7WFyBJf295gD5kZoEUO2S9hNLx39rVo0/pTbSUC0ezasRm/skZ8n7IRr
+         VTyKbgDn6xzq+Es33Jp8sBqAw0/lXlBMmneRVYEVThLX522+rdsT1IIAJpMfgeBZ/JFm
+         gmDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765253776; x=1765858576;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FlJMjioQT5hFyjTQfgGib/nn3aRlpyKPcJRzd9y5r+E=;
+        b=Twziv0K0aeQhOB/lO2QXbC0Uizwx+UUeh07cAES7qUEkGuHw6owMFmTWmOGrDpzEZa
+         Mjwbt0QlmsL6ahnSDuaWBIrKEqEZgt9ejdsa709K7xjnZXrXqJXvU1cQNNN68s0RDgv4
+         q0G+F8o/QATEOYl/yx51v1HXNHXaav8yKhFzvgiUnzJsEcID92mEzfkud+Fq52ekbUL2
+         e+llqwRwIHiOIGxDRdoG1a7ShxismmuWq7wAm+s1iO0lTvLrNaSJ6R4zxkEo/SGeaiNG
+         LaUXqIUS1yUe6i0AtOBswI98IC1faz8zsSz7455s0ZY/Xpoc94Mg4qcOBOQ4zWceEIJc
+         2edQ==
+X-Gm-Message-State: AOJu0YyIVhkHST4cQH1Rs4gg/z07kkDkePo+5h3JzQxjfiJj0NjUEbSi
+	4DUbbwpmeIScJWZXKgsLODDp0FWPdVqkYXWuu203p+5ebaKwX6bX28fN
+X-Gm-Gg: ASbGnctCXYBd/Cbe3YKGrr5erYO8difG7SebwXP3VzEYFevMKYeNI6VrS4VxnxBS6gG
+	zJVASqFQwYLtJRsTsFdvVDnVOeE3YyWsBAoTw68F7JC6Rn51PaTu2wVyIioBXLU4r5r70zSIViU
+	RjZQX8U4J4ij1zxpp6NNSXcPAfN++VLIwcgLkcKonJwLyStSiaarcCBvQEgiQB2G2IsGecXYhD/
+	aimWlrh1yVN2PhuWSitD2yC+0yknVbZmKIYwm7+55G061bid7ADoZNImnNC0097Lhg/Cd5i/+VK
+	YxOwvHyfNuA/AX0GLTEZMathGCoilIbp2Xtm0p3zGGvu5o0L+k5x9e7z5lf0rGdbtSiiPq4dEO9
+	p4pTWcR05AFI7t3W7oKlJFCJ7QhOfz7HGSWAt66WM2g4ya0zitFolsGe7TxZkKJbCYZBpuq4W5J
+	5r9iK8kE9UvwbQEKjjWzq1EBS9/TkpHhnp8/1hg6yQpzMzDlpFrKU=
+X-Google-Smtp-Source: AGHT+IF+n41cK6qyOclXKfTA9gq7iCinUctpvRZ1cPZYr5mMQx60DHOAwzuQ2syrMzUSlAxPhD3pUA==
+X-Received: by 2002:a17:903:110e:b0:294:ccc6:cd30 with SMTP id d9443c01a7336-29df5ab1c90mr115886225ad.17.1765253775595;
+        Mon, 08 Dec 2025 20:16:15 -0800 (PST)
+Received: from nixos (36-231-103-14.dynamic-ip.hinet.net. [36.231.103.14])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29dae99f01csm137394405ad.48.2025.12.08.20.16.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Dec 2025 20:16:15 -0800 (PST)
+From: Thaumy Cheng <thaumy.love@gmail.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Fangrui Song <maskray@sourceware.org>,
-	Pablo Galindo <pablogsal@gmail.com>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	linux-crypto@vger.kernel.org,
-	Eric Biggers <ebiggers@kernel.org>
-Subject: [PATCH v2 3/3] perf util: Remove SHA-1 code
-Date: Mon,  8 Dec 2025 17:57:29 -0800
-Message-ID: <20251209015729.23253-4-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251209015729.23253-1-ebiggers@kernel.org>
-References: <20251209015729.23253-1-ebiggers@kernel.org>
+	James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thaumy Cheng <thaumy.love@gmail.com>
+Subject: [PATCH v3 RESEND] perf/core: Fix missing read event generation on task exit
+Date: Tue,  9 Dec 2025 12:16:00 +0800
+Message-ID: <20251209041600.963586-1-thaumy.love@gmail.com>
+X-Mailer: git-send-email 2.51.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,241 +82,158 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that the SHA-1 code is no longer used, remove it.
+For events with inherit_stat enabled, a "read" event will be generated
+to collect per task event counts on task exit.
 
-Tested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+The call chain is as follows:
+
+do_exit
+  -> perf_event_exit_task
+    -> perf_event_exit_task_context
+      -> perf_event_exit_event
+        -> perf_remove_from_context
+          -> perf_child_detach
+            -> sync_child_event
+              -> perf_event_read_event
+
+However, the child event context detaches the task too early in
+perf_event_exit_task_context, which causes sync_child_event to never
+generate the read event in this case, since child_event->ctx->task is
+always set to TASK_TOMBSTONE. Fix that by moving context lock section
+backward to ensure ctx->task is not set to TASK_TOMBSTONE before
+generating the read event.
+
+Because perf_event_free_task calls perf_event_exit_task_context with
+exit = false to tear down all child events from the context, and the
+task never lived, accessing the task PID can lead to a use-after-free.
+
+To fix that, let sync_child_event read task from argument and move the
+call to the only place it should be triggered to avoid the effect of
+setting ctx->task to TASK_TOMESTONE, and add a task parameter to
+perf_event_exit_event to trigger the sync_child_event properly when
+needed.
+
+This bug can be reproduced by running "perf record -s" and attaching to
+any program that generates perf events in its child tasks. If we check
+the result with "perf report -T", the last line of the report will leave
+an empty table like "# PID  TID", which is expected to contain the
+per-task event counts by design.
+
+Fixes: ef54c1a476ae ("perf: Rework perf_event_exit_event()")
+Signed-off-by: Thaumy Cheng <thaumy.love@gmail.com>
 ---
- tools/perf/tests/util.c | 49 ---------------------
- tools/perf/util/Build   |  1 -
- tools/perf/util/sha1.c  | 97 -----------------------------------------
- tools/perf/util/sha1.h  |  6 ---
- 4 files changed, 153 deletions(-)
- delete mode 100644 tools/perf/util/sha1.c
- delete mode 100644 tools/perf/util/sha1.h
+Changes in v3:
+- Fix the bug in a more direct way by moving the call to
+  sync_child_event and bring back the task param to
+  perf_event_exit_event.
+  This approach avoids the event unscheduling issue in v2.
 
-diff --git a/tools/perf/tests/util.c b/tools/perf/tests/util.c
-index efc3e4e4c6fa..bf2c5b133884 100644
---- a/tools/perf/tests/util.c
-+++ b/tools/perf/tests/util.c
-@@ -1,10 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "tests.h"
- #include "util/blake2s.h"
- #include "util/debug.h"
--#include "util/sha1.h"
- 
- #include <linux/compiler.h>
- #include <stdlib.h>
- #include <string2.h>
- 
-@@ -16,52 +15,10 @@ static int test_strreplace(char needle, const char *haystack,
- 
- 	free(new);
- 	return ret == 0;
+Changes in v2:
+- Only trigger read event on task exit.
+- Rename perf_event_exit_event to perf_event_detach_event.
+- Link to v2: https://lore.kernel.org/all/20250817132742.85154-1-thaumy.love@gmail.com/
+
+Changes in v1:
+- Set TASK_TOMBSTONE after the read event is tirggered.
+- Link to v1: https://lore.kernel.org/all/20250720000424.12572-1-thaumy.love@gmail.com/
+
+ kernel/events/core.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 177e57c1a362..618e7947c358 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2316,7 +2316,8 @@ static void perf_group_detach(struct perf_event *event)
+ 	perf_event__header_size(leader);
  }
- 
--#define MAX_LEN 512
--
--/* Test sha1() for all lengths from 0 to MAX_LEN inclusively. */
--static int test_sha1(void)
--{
--	u8 data[MAX_LEN];
--	size_t digests_size = (MAX_LEN + 1) * SHA1_DIGEST_SIZE;
--	u8 *digests;
--	u8 digest_of_digests[SHA1_DIGEST_SIZE];
--	/*
--	 * The correctness of this value was verified by running this test with
--	 * sha1() replaced by OpenSSL's SHA1().
--	 */
--	static const u8 expected_digest_of_digests[SHA1_DIGEST_SIZE] = {
--		0x74, 0xcd, 0x4c, 0xb9, 0xd8, 0xa6, 0xd5, 0x95, 0x22, 0x8b,
--		0x7e, 0xd6, 0x8b, 0x7e, 0x46, 0x95, 0x31, 0x9b, 0xa2, 0x43,
--	};
--	size_t i;
--
--	digests = malloc(digests_size);
--	TEST_ASSERT_VAL("failed to allocate digests", digests != NULL);
--
--	/* Generate MAX_LEN bytes of data. */
--	for (i = 0; i < MAX_LEN; i++)
--		data[i] = i;
--
--	/* Calculate a SHA-1 for each length 0 through MAX_LEN inclusively. */
--	for (i = 0; i <= MAX_LEN; i++)
--		sha1(data, i, &digests[i * SHA1_DIGEST_SIZE]);
--
--	/* Calculate digest of all digests calculated above. */
--	sha1(digests, digests_size, digest_of_digests);
--
--	free(digests);
--
--	/* Check for the expected result. */
--	TEST_ASSERT_VAL("wrong output from sha1()",
--			memcmp(digest_of_digests, expected_digest_of_digests,
--			       SHA1_DIGEST_SIZE) == 0);
--	return 0;
--}
--
- /* Maximum data length tested by test_blake2s() */
- #define MAX_DATA_LEN 512
- 
- /*
-  * Hash length tested by test_blake2s().  BLAKE2s supports variable-length
-@@ -129,22 +86,16 @@ static int test_blake2s(void)
- 	return 0;
- }
- 
- static int test__util(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
+
+-static void sync_child_event(struct perf_event *child_event);
++static void sync_child_event(struct perf_event *child_event,
++			     struct task_struct *task);
+
+ static void perf_child_detach(struct perf_event *event)
  {
--	int ret;
--
- 	TEST_ASSERT_VAL("empty string", test_strreplace(' ', "", "123", ""));
- 	TEST_ASSERT_VAL("no match", test_strreplace('5', "123", "4", "123"));
- 	TEST_ASSERT_VAL("replace 1", test_strreplace('3', "123", "4", "124"));
- 	TEST_ASSERT_VAL("replace 2", test_strreplace('a', "abcabc", "ef", "efbcefbc"));
- 	TEST_ASSERT_VAL("replace long", test_strreplace('a', "abcabc", "longlong",
- 							"longlongbclonglongbc"));
- 
--	ret = test_sha1();
--	if (ret != TEST_OK)
--		return ret;
--
- 	return test_blake2s();
- }
- 
- DEFINE_SUITE("util", util);
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index b500053332d2..2a9f3d015c1d 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -42,11 +42,10 @@ perf-util-y += rlimit.o
- perf-util-y += argv_split.o
- perf-util-y += rbtree.o
- perf-util-y += libstring.o
- perf-util-y += bitmap.o
- perf-util-y += hweight.o
--perf-util-y += sha1.o
- perf-util-y += smt.o
- perf-util-y += strbuf.o
- perf-util-y += string.o
- perf-util-y += strlist.o
- perf-util-y += strfilter.o
-diff --git a/tools/perf/util/sha1.c b/tools/perf/util/sha1.c
-deleted file mode 100644
-index 7032fa4ff3fd..000000000000
---- a/tools/perf/util/sha1.c
-+++ /dev/null
-@@ -1,97 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * SHA-1 message digest algorithm
-- *
-- * Copyright 2025 Google LLC
-- */
--#include <linux/bitops.h>
--#include <linux/kernel.h>
--#include <linux/unaligned.h>
--#include <string.h>
--
--#include "sha1.h"
--
--#define SHA1_BLOCK_SIZE 64
--
--static const u32 sha1_K[4] = { 0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xCA62C1D6 };
--
--#define SHA1_ROUND(i, a, b, c, d, e)                                          \
--	do {                                                                  \
--		if ((i) >= 16)                                                \
--			w[i] = rol32(w[(i) - 16] ^ w[(i) - 14] ^ w[(i) - 8] ^ \
--					     w[(i) - 3],                      \
--				     1);                                      \
--		e += w[i] + rol32(a, 5) + sha1_K[(i) / 20];                   \
--		if ((i) < 20)                                                 \
--			e += (b & (c ^ d)) ^ d;                               \
--		else if ((i) < 40 || (i) >= 60)                               \
--			e += b ^ c ^ d;                                       \
--		else                                                          \
--			e += (c & d) ^ (b & (c ^ d));                         \
--		b = rol32(b, 30);                                             \
--		/* The new (a, b, c, d, e) is the old (e, a, b, c, d). */     \
--	} while (0)
--
--#define SHA1_5ROUNDS(i)                             \
--	do {                                        \
--		SHA1_ROUND((i) + 0, a, b, c, d, e); \
--		SHA1_ROUND((i) + 1, e, a, b, c, d); \
--		SHA1_ROUND((i) + 2, d, e, a, b, c); \
--		SHA1_ROUND((i) + 3, c, d, e, a, b); \
--		SHA1_ROUND((i) + 4, b, c, d, e, a); \
--	} while (0)
--
--#define SHA1_20ROUNDS(i)                \
--	do {                            \
--		SHA1_5ROUNDS((i) + 0);  \
--		SHA1_5ROUNDS((i) + 5);  \
--		SHA1_5ROUNDS((i) + 10); \
--		SHA1_5ROUNDS((i) + 15); \
--	} while (0)
--
--static void sha1_blocks(u32 h[5], const u8 *data, size_t nblocks)
--{
--	while (nblocks--) {
--		u32 a = h[0];
--		u32 b = h[1];
--		u32 c = h[2];
--		u32 d = h[3];
--		u32 e = h[4];
--		u32 w[80];
--
--		for (int i = 0; i < 16; i++)
--			w[i] = get_unaligned_be32(&data[i * 4]);
--		SHA1_20ROUNDS(0);
--		SHA1_20ROUNDS(20);
--		SHA1_20ROUNDS(40);
--		SHA1_20ROUNDS(60);
--
--		h[0] += a;
--		h[1] += b;
--		h[2] += c;
--		h[3] += d;
--		h[4] += e;
--		data += SHA1_BLOCK_SIZE;
--	}
--}
--
--/* Calculate the SHA-1 message digest of the given data. */
--void sha1(const void *data, size_t len, u8 out[SHA1_DIGEST_SIZE])
--{
--	u32 h[5] = { 0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476,
--		     0xC3D2E1F0 };
--	u8 final_data[2 * SHA1_BLOCK_SIZE] = { 0 };
--	size_t final_len = len % SHA1_BLOCK_SIZE;
--
--	sha1_blocks(h, data, len / SHA1_BLOCK_SIZE);
--
--	memcpy(final_data, data + len - final_len, final_len);
--	final_data[final_len] = 0x80;
--	final_len = round_up(final_len + 9, SHA1_BLOCK_SIZE);
--	put_unaligned_be64((u64)len * 8, &final_data[final_len - 8]);
--
--	sha1_blocks(h, final_data, final_len / SHA1_BLOCK_SIZE);
--
--	for (int i = 0; i < 5; i++)
--		put_unaligned_be32(h[i], &out[i * 4]);
--}
-diff --git a/tools/perf/util/sha1.h b/tools/perf/util/sha1.h
-deleted file mode 100644
-index e92c9966e1d5..000000000000
---- a/tools/perf/util/sha1.h
-+++ /dev/null
-@@ -1,6 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--#include <linux/types.h>
--
--#define SHA1_DIGEST_SIZE 20
--
--void sha1(const void *data, size_t len, u8 out[SHA1_DIGEST_SIZE]);
--- 
-2.52.0
+@@ -2336,7 +2337,6 @@ static void perf_child_detach(struct perf_event *event)
+ 	lockdep_assert_held(&parent_event->child_mutex);
+ 	 */
 
+-	sync_child_event(event);
+ 	list_del_init(&event->child_list);
+ }
+
+@@ -4587,6 +4587,7 @@ static void perf_event_enable_on_exec(struct perf_event_context *ctx)
+ static void perf_remove_from_owner(struct perf_event *event);
+ static void perf_event_exit_event(struct perf_event *event,
+ 				  struct perf_event_context *ctx,
++				  struct task_struct *task,
+ 				  bool revoke);
+
+ /*
+@@ -4614,7 +4615,7 @@ static void perf_event_remove_on_exec(struct perf_event_context *ctx)
+
+ 		modified = true;
+
+-		perf_event_exit_event(event, ctx, false);
++		perf_event_exit_event(event, ctx, ctx->task, false);
+ 	}
+
+ 	raw_spin_lock_irqsave(&ctx->lock, flags);
+@@ -12437,7 +12438,7 @@ static void __pmu_detach_event(struct pmu *pmu, struct perf_event *event,
+ 	/*
+ 	 * De-schedule the event and mark it REVOKED.
+ 	 */
+-	perf_event_exit_event(event, ctx, true);
++	perf_event_exit_event(event, ctx, ctx->task, true);
+
+ 	/*
+ 	 * All _free_event() bits that rely on event->pmu:
+@@ -13994,14 +13995,13 @@ void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
+ }
+ EXPORT_SYMBOL_GPL(perf_pmu_migrate_context);
+
+-static void sync_child_event(struct perf_event *child_event)
++static void sync_child_event(struct perf_event *child_event,
++			     struct task_struct *task)
+ {
+ 	struct perf_event *parent_event = child_event->parent;
+ 	u64 child_val;
+
+ 	if (child_event->attr.inherit_stat) {
+-		struct task_struct *task = child_event->ctx->task;
+-
+ 		if (task && task != TASK_TOMBSTONE)
+ 			perf_event_read_event(child_event, task);
+ 	}
+@@ -14020,7 +14020,9 @@ static void sync_child_event(struct perf_event *child_event)
+
+ static void
+ perf_event_exit_event(struct perf_event *event,
+-		      struct perf_event_context *ctx, bool revoke)
++		      struct perf_event_context *ctx,
++		      struct task_struct *task,
++		      bool revoke)
+ {
+ 	struct perf_event *parent_event = event->parent;
+ 	unsigned long detach_flags = DETACH_EXIT;
+@@ -14043,6 +14045,9 @@ perf_event_exit_event(struct perf_event *event,
+ 		mutex_lock(&parent_event->child_mutex);
+ 		/* PERF_ATTACH_ITRACE might be set concurrently */
+ 		attach_state = READ_ONCE(event->attach_state);
++
++		if (attach_state & PERF_ATTACH_CHILD)
++			sync_child_event(event, task);
+ 	}
+
+ 	if (revoke)
+@@ -14134,7 +14139,7 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+ 		perf_event_task(task, ctx, 0);
+
+ 	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
+-		perf_event_exit_event(child_event, ctx, false);
++		perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
+
+ 	mutex_unlock(&ctx->mutex);
+
+--
+2.51.0
