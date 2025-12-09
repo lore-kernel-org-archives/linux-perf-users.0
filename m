@@ -1,260 +1,219 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012022.outbound.protection.outlook.com [52.101.48.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBA123D7F7;
-	Tue,  9 Dec 2025 06:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765261891; cv=none; b=cBqK2NyNVMlez5J4ycvtnEJcSf6+ow65g00D+3mATYh179+bE4nNUn+XYoM1V/mMU722mu9bDwsmPV+jxJ4Ah447yJWd+vxWgW3o+5PS/n0K+bCeIkwvACofJ8HC+nzyCncu1PX894WerHa0UMJ7+e9hQt+fiE+5n204qOQVcGY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765261891; c=relaxed/simple;
-	bh=3I2+FsbZXr1WnlAwsLrRK4zLjlcjjzCN2ZRMQ8uYaWE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=csUSJQq83t0cUgootLRoVFx2NPCVYkHKtOn0WfblofsC78PfIJkisrl26reQR2Ti9XuAyGa05LQajdRfRYeKZ1fE33VkLO757TuPYFv1tMT1dKq98LUnP9ESDHQBl4EdIbCGAgBHtzTFauE7D8xkSBt8w9A5rxqy6412liciaGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qz5XTvzl; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB108281376
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Dec 2025 07:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.22
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765265196; cv=fail; b=GMDhEErrG1CAykwNQ430AB6ifmv0g6Fgm5H4RG5rMB2d2KdpCLLo9apK7ZQy2WhpqDpqcGPfDYD8zy49SqaU7L46AaKvyBr1qY4xLgufWb9qV9yKDwiL+oStThOpPBORbzV93X32CHuPl4bLujCF241ahfoeKMLX7oTaSGLZ9M4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765265196; c=relaxed/simple;
+	bh=ewyVq515Il+m+dGeLttEPHOqQixUr+YvfjrGqdVEp0g=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=WLcjNWYSBmEFI+w5zJ5H0PGlUzVXj8LdRf/mTKEnluu+Q+Gx21rTRxM3MoxZV5QwUguRUc0NHrcHXCJu7x6ZhcpaHZNs1jzs5UxzpY8lj7lHT2ixxVdIDn0Tlpr/BHNiBTwrz4kIbUw7YR64ML+Fdv9fCw2Vm/voWDG00Wb4vOg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bGsMMNcW; arc=fail smtp.client-ip=52.101.48.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qz5XTvzl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765261888; x=1796797888;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=3I2+FsbZXr1WnlAwsLrRK4zLjlcjjzCN2ZRMQ8uYaWE=;
-  b=Qz5XTvzlod2viSVUR3nXbwVu2qtYZr4iJHqqpqMY9tQcwNx4j3Lrk15D
-   YAHn8ESHKTaPb+kj14UVcC4Q+SDNDw4UV8uGyKBYnebien9RXo9JIv4wL
-   BUpXTkPofdb8m0luAkkVnylyo4yjsybpLxPQnqU3HUKwHMVA1pei5kR9j
-   vRqJmZ2siX6/WOxOg9zqibLhFaCBP0/+LnRDc4E9Q60d2kVwmXv9vjKKW
-   xtRi+08G4ky0ohoebpY0N47P065msgJFGYRMEwTCDKEc2CpkZQh4rNS24
-   kUxAkmvck9n88QTMzphuRNGf31Fv09sjB4OBV4qgnydqU9lgXI7xtmjMb
-   g==;
-X-CSE-ConnectionGUID: ttyxH3HLRDS2A+51g7bMHQ==
-X-CSE-MsgGUID: R3exEsBNScefUjTRRs4UIQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11636"; a="84621508"
-X-IronPort-AV: E=Sophos;i="6.20,260,1758610800"; 
-   d="scan'208";a="84621508"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 22:31:28 -0800
-X-CSE-ConnectionGUID: E0aTtjOiTQelMO5dDdd7mA==
-X-CSE-MsgGUID: 9WXsel9CRiO4rC94VpUqXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,260,1758610800"; 
-   d="scan'208";a="196601217"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.12]) ([10.124.240.12])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 22:31:20 -0800
-Message-ID: <8365c5ca-637d-4bef-a404-eb2166d384f5@linux.intel.com>
-Date: Tue, 9 Dec 2025 14:31:17 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bGsMMNcW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uM5rGD6ifda07afqip6V51Rlb4Cfy5TzvDVOexA8iRJfOXEUy+xvQD+BuUD7Y475g/sHUPvnluPkjdDjVGBQ/Rfd92f1rVbDRAH+iDEUZjL1lxB9qv9as/7FMUI4J9kaU6I65YSuMXp5hVVoEzHcdJCqh+2G63OS9Zx0bo6Odxx1fiHzieslaE8n/M4pPXj6VB/hsGEKo/I8QbAwcZs1Ll5WZLvve5kUYW6M32W9TCguF8nLygCBRg33pauoxwvlVMGlvC/UF8sw548Ysz4VqnkxdX6kD3VvKX3F2b9WbqeUAAVEQ4NH4nOnhp5madjnVueW5xeLzJT1xvAXScyZAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Cwd7Ihn1Sax2i90iJdyQmSSrJwPEO8DLCBcKaaAnHe0=;
+ b=BXoW/NT99yBW1t7W+msE13bBTYvgWXI0BSkKyw4GTTQXll2+oFXdahvse0Lt4Yvn/o338maet37ehHDkevej4Z+CCgeJDI4A0OCQJWzOtqR+vrF/xWavIsbOn8eFXtlMhIPlAbYIEkrmj9jXbTeb8u15KXtKmDxdJcNrcvSPNJpGkFM2c18lQiDEe1hlDtKpfqdBbZ7FRYyESopEDlgat09JJwCfTl44WMOq6AFHOGuWHguBErM9+iAI7jGik4vcHmMa0lyTVx1/JEmasNlbyMDN5z2H10Vbacfztumhn+0/3zXXt8nOQdPTheVADJIQyESDzVsDKUrl1kPd7UUgHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cwd7Ihn1Sax2i90iJdyQmSSrJwPEO8DLCBcKaaAnHe0=;
+ b=bGsMMNcWcjtZ+SuF/VBrxw3ZCzCXhu0SNbms+E0iKPRdK4yC2wonk/Eh9hDqZzX5LvnjfYbL3qxG4hMmjax2nwVZa4sqpgP+vV0+5X7JYGH7mvHNgwxIiyuL9f2vi/I4Ww8QBqshekLprWyj1vzBN1xJj/TCtzpf6M4l+nboAEQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by PH8PR12MB6795.namprd12.prod.outlook.com (2603:10b6:510:1c6::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Tue, 9 Dec
+ 2025 07:26:32 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.20.9388.013; Tue, 9 Dec 2025
+ 07:26:32 +0000
+Message-ID: <0e64db3d-042d-4066-a04d-68e1dd573b5b@amd.com>
+Date: Tue, 9 Dec 2025 12:56:27 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bug report] perf/x86/amd/uncore: Refactor uncore management
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+References: <aTaI0ci3vZ44lmBn@stanley.mountain>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <aTaI0ci3vZ44lmBn@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA5PR01CA0123.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:1a7::13) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 44/44] KVM: VMX: Add mediated PMU support for CPUs
- without "save perf global ctrl"
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oupton@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>,
- Sandipan Das <sandipan.das@amd.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
-References: <20251206001720.468579-1-seanjc@google.com>
- <20251206001720.468579-45-seanjc@google.com>
- <ee30ed9c-6377-4d14-b930-f0e2c809df7c@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <ee30ed9c-6377-4d14-b930-f0e2c809df7c@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|PH8PR12MB6795:EE_
+X-MS-Office365-Filtering-Correlation-Id: e0f20bd6-e6b5-4ff0-994e-08de36f446b3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?U2N0ZWpyZSs0QVBEa3RBV0RPOHNPV24wMnJEYk9iSXVBUithYlN3Z3JSVjBY?=
+ =?utf-8?B?djFGRVltQnpVcnlnWjNJNkNFdlRyVnpibUpXc25EbllFNEgzT0k4K1M0YXNM?=
+ =?utf-8?B?ZGVwUm83MHV2WnlQQm9XNStETWhYR0UreFJLbWRiR1c4WDhRMk83WXZpb0ZT?=
+ =?utf-8?B?WDhDNjlLYmR6alhhekdCcjk3Sko2TUJmZUcraEZxNkVmaldQKzVtc2x6VGJJ?=
+ =?utf-8?B?REZuYjhzYWUrRURWUFlrNE1XVFVzTERmUVRvbmg3Tyt5bTF2ZGlMTmJOUWdj?=
+ =?utf-8?B?a3N4RGo3QVBmTTRsU2pvVDNibGJDS0xSTzNRZS8rN2JyNGE3T0hLRzV0bWFx?=
+ =?utf-8?B?dTd5RnV3NUpUQ2FSMlUzWjc5Z0dKeDc1YW9UV0dpdEQwV1FoVERFZ3F3RTdp?=
+ =?utf-8?B?T1JtQW1vb0lPOTZiL0VyeFo0ek1FK1lYYlo4R3J2Z0F5bk8relhvajI0c21u?=
+ =?utf-8?B?d3VnbkpYbjE5Qk0zSWsrLzdRa2IvZUhjTEZNTDVwU2R1aU1VdXhTM1JnMUI0?=
+ =?utf-8?B?V2RnRnJpeXQyaUc3R0xrZHdlWWpPUVZ1RlhDR2hsd1lJOWdoeC92Rm1OWEx5?=
+ =?utf-8?B?Z2xuNXg0NUJ4WDRJMGZXRXJGWDhjSklSaDBwY25oZWs1S29raDBaNE5OTE9r?=
+ =?utf-8?B?MFJzU2NGTklBNkVObmlNczMybkJOQ2h2NjZHRUJQb0I5SnRxTHpKaEt1a0Z6?=
+ =?utf-8?B?QkwvZDd2KzNIaHF4MXJzcWl4RWtyalgwMi9tdDFJMXJrLzRqRU5Rb0NuUFNa?=
+ =?utf-8?B?Y1gvcGlKNll1aTN4a3FPdkkwYzZYVnVKd2VoTE81b0lrQ3loMXJmUGMrQmxj?=
+ =?utf-8?B?ZktVUjNJeXlJUCtaRVhYMkh4WFhNcW91TktSK0xqcW02bzJWMExxRjFwTG1z?=
+ =?utf-8?B?RG4ya1duRUVEWkpjU1UvTXl5ZHluR3dHcU9wYStIUHJQaUUvVnhUR3A3QkVj?=
+ =?utf-8?B?ak5sOXFUTlVoMHE3WTRYTjRHcnZmSkRTQ0NrSi9EWkRqRDhuSm02QXhSN0NJ?=
+ =?utf-8?B?SjNHR1pQb1NvSDdkbHJkOUhublFBMTVvbk02QVRvb1ZKSmtrL3dFZkgvc3Yy?=
+ =?utf-8?B?UXhxRDcwZ0RVVWIwV2h3dTJGTlJnZ3dSY2NMdFhKQXRCL0FvK2IzWkxNVGIy?=
+ =?utf-8?B?Wm43NFhzOEJ6b2xUUEV4Wnhnd0w5aEMvNmJQb2hhTGhtRWRDU3RlblNlRGgv?=
+ =?utf-8?B?UGxvbmQ5QnhZYnRhQjF6dW1yOElhMnZaaEl6M1M0YzQ3cno3TDRqOXJEN1Ar?=
+ =?utf-8?B?YWt1ZXBNaTl0MlQwcTZ0ZEpmZitSQ3hkdGNGNXl5TnVXa2R2ZzRubEhVcUZo?=
+ =?utf-8?B?N1dSZlk3LytmakZsUTR6OXRPYnRqK1RUODN0Nk53djBWSC93QnI3VTF6LzBs?=
+ =?utf-8?B?SXJBVkZ2VCt5UE5RRmR1RUh1M2xxTXFQc2NmTEljdmtkYVJ0ZTJCYktmRTdT?=
+ =?utf-8?B?OXNGRGpPOWdlZ1BQcXRUMGJ3OXBaKzZtdFFjV1dVVE1GalZGUG85bXBxbGN2?=
+ =?utf-8?B?MkZlTkZBeHVzMTNpcG03N1VwblNLTEtZa2hnbEFVWFMrUkU1aUFtbVJkWnR4?=
+ =?utf-8?B?Vy91TUFKTllDUWVScnN6R0QzZ2dtVUd1NFV2dWZPL0tMZkZ5enFYNjhXNksv?=
+ =?utf-8?B?dkNYN1pWbU1yZ0J4QTdFYWNUMUhzYU9kTHFRcithODBjbjZwSUJpZXVzSG5l?=
+ =?utf-8?B?Uk5aY2VSUEIzeDFEMnhyT2dLNHQwTlYvSjFEaU0yemFZRERkbkVrek9wYVhP?=
+ =?utf-8?B?R0g5OVRjb2NYTWY0RUhjS2dkakZ3RGtJK3FNdlpWK2FWTElGZ2JseWp4blR3?=
+ =?utf-8?B?T2JBUXBDQXI2QnlrT0J2aDBBWmhtQWNsU1NOTEpaS3p6VHJwVW96alN2bXYx?=
+ =?utf-8?B?Z0JySzY1K04rUWhEbXNINDhiWmhHaUN2SnpGVDRYbmFLVUI0UnBObHkwanRR?=
+ =?utf-8?Q?qF3wV0skHy+ewf7xGVEPkbs/o38QRnH8?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YlN2bmttc3FHRGpxTUkvNE5XTU9DYkVaSG5nM0ExNnJnTTJadFBlZzlIQ3VN?=
+ =?utf-8?B?SFlKM1NIQ1c2d21yMmU0aFk1ZDNaM2tYSm9SK1BaR2ttMEg1TElzY3o5VEgv?=
+ =?utf-8?B?Y1BnclFCOXI0UjdmaElyeEtIMEdJRlBHWGR2dFNWUDVRSlNlcHFENXlQNFcw?=
+ =?utf-8?B?VXUyVFF2cmNHTVlrcGhLZFEvM1M5dU0vMHJreFRqYThGMk10c01lallYRGZn?=
+ =?utf-8?B?c3ZQT29aSThjUWZKK1kva2g0elVtM05xNGErSDNyS21Xa2NoUHJWZlpMOXJB?=
+ =?utf-8?B?UWEySmZKRlpoVTBPMVVMeE8zcFpsYWlaRUQ4by9GM0krOUpVcmMyRmREWEl2?=
+ =?utf-8?B?VlpacHZobU85T1U4cFBidG9meERkbHl4QkI4MVVIbnNFemt3eDVEUlBxZEdn?=
+ =?utf-8?B?d0trSEozYXB3cysvRnYrUFZLdEdFVW1Fdk5IaS9WNFBRaDFtbHFrbS92NG9N?=
+ =?utf-8?B?b2htMFJqUGxpeXlrQ2RnZVBWUFBUcjRPYTdHQzZqOUw0R1lOT1lzanpORGFO?=
+ =?utf-8?B?bzZ6Rjl2aUdlTlhpdHZNQlV6eTFlMGUyNEFQL3VLSUxHMFlaVGFia2FCL2Nh?=
+ =?utf-8?B?YitrWmc2cTIzTm80bU5DaW03aFAxNXBIbE5Dd2M5K3lpWXJmU0dwdlJhNHNt?=
+ =?utf-8?B?SGlkWE5SaFFqVjJhanV2MUtDZUt3QU1qR1R5R1FOaTBCU0h6UWJ5SkhSd3BL?=
+ =?utf-8?B?S0RRZDZmUkRDRlJYZnl3QW0vMGhEcVg5dVQ1TVZiMWRvYmRIaStoTzl4d3lu?=
+ =?utf-8?B?WStBSzhPRklBZzRiMWRoT3VPNHA0Mkl1Qk1BSXNBSnM3bitOZE5MK0RIeUlt?=
+ =?utf-8?B?QWtmQkM5dnhlMi9DM3FYY1lqa3JkclNFMUVHTTVzb1c3WG1YT3hiOFBaZW5V?=
+ =?utf-8?B?a2EwWXM4N0RNMTVXZWtSTXplSGhvclh2czQ0K2ZmSTdqcTd3QXZYdWxJNCtr?=
+ =?utf-8?B?NzhaS0NHVm0zZTFqUlZaWGpINTNHTzl6MU96K09oY2wrankyNFdKV1RzdHpV?=
+ =?utf-8?B?MXloZFVBS0NGczZDVHpTcHR4UlJTSUU4RnRnTSt3MlNXS0FvKzduSGRma0Jm?=
+ =?utf-8?B?OXNVM253UkFnUU9nRDRUZ0VneEpyWFMxWXJ0cHhUMlh3N09SenNHTmVpYUlh?=
+ =?utf-8?B?UTdjR2JQeGR3VUxFeHhVWThldWVZUXFZSHJ6eTFsenB0bnlrcTAzbjNiQnpG?=
+ =?utf-8?B?dXQyT2dleUF0d25zamJ6QzRudDV0dDVlVzNjcjJKSE8zbUJUTElWYm9KVEx4?=
+ =?utf-8?B?S1NmZkZEYmJEYWdLcktZaWZmcjJORUZJR2h1cUdDRGhLbnYwUGhkRWJSQmE3?=
+ =?utf-8?B?NWhtS2ZWRDFvYUVYVEhLdFlQeGdLeUw0b0tZb0F2bkRaU3RMYUI4K0YrMnlw?=
+ =?utf-8?B?dTliS2QzRU9oWlZLLytQSmhnL2JmR2dnUElQUVFuODArKzM5VE0yd1RkNkRP?=
+ =?utf-8?B?a1p0UVV5QllWbWdPemNtMnpsekJDQzVaQ2o5azhQdEowMDJiSGFFOERGL3Jt?=
+ =?utf-8?B?K09hNElQSmpBYVZOWFppM3hWNk0yajRsakJML24zanF0WFp3QnhSZWNyaWN0?=
+ =?utf-8?B?RlBKNU94dHlMbXBTQk04MWQxR1U5R0JOUHJZV3lmdWpDQVNPUG5IRVl4Lytv?=
+ =?utf-8?B?djRNbXVYWDV0cysrcnJYTlJ2c0RvaDlGZ3Z6K01xTVVWU29YK0g3dWp2SE5I?=
+ =?utf-8?B?WGc3ZE11cE5xYUFzd01jQytvRWQ4a1RWeUhBOGJ5ZGlJQnErWmhhKytzbUtT?=
+ =?utf-8?B?RDJPYkVIdXBRNyt1dE5aNk1tN21aMDdnWFZwSWJBeExnY0xQb0FtMnVhdmFJ?=
+ =?utf-8?B?V0hNcUhMV1hQTDNRdEJlb3Z2ZHFhUTQwQmhmcWdGVThWelZwQkI5NFdXdlpV?=
+ =?utf-8?B?cU51OUZpMDEyZ3V5UmN0V3JTSmYwQ2JtdmUyaHo5MVZNWWUxTkN1UmxVMUxl?=
+ =?utf-8?B?WmhsY3RwamlDR2VLeVRrMTdnd0FvNm4zeTRrRWQzS01CK1E0eFU4bmIwVFVB?=
+ =?utf-8?B?T24vWmw5dHZ5ZWxHTWRjT2Q4NlRaUFh1WWhnaVMxUGd5ZFE2MDZDK1lXVncv?=
+ =?utf-8?B?KzdkYnJEWmRXR2JHWEFBWitLbjRTN3dOQzZhMXhOd0svK2Y1NXlyWStqS1g2?=
+ =?utf-8?Q?iaSVqENM8Gp22mLMNCE4miRyj?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0f20bd6-e6b5-4ff0-994e-08de36f446b3
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2025 07:26:32.2390
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yTgyrrOku8I4apAIV8b3krxcCP88BtRbvY1s/0arA+jkbDOt30+MSZrSpIuGybPTtSh59K14Jf6MD6ONe2cy+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6795
 
+Hi Dan,
 
-On 12/8/2025 5:39 PM, Mi, Dapeng wrote:
-> On 12/6/2025 8:17 AM, Sean Christopherson wrote:
->> Extend mediated PMU support for Intel CPUs without support for saving
->> PERF_GLOBAL_CONTROL into the guest VMCS field on VM-Exit, e.g. for Skylake
->> and its derivatives, as well as Icelake.  While supporting CPUs without
->> VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL isn't completely trivial, it's not that
->> complex either.  And not supporting such CPUs would mean not supporting 7+
->> years of Intel CPUs released in the past 10 years.
->>
->> On VM-Exit, immediately propagate the saved PERF_GLOBAL_CTRL to the VMCS
->> as well as KVM's software cache so that KVM doesn't need to add full EXREG
->> tracking of PERF_GLOBAL_CTRL.  In practice, the vast majority of VM-Exits
->> won't trigger software writes to guest PERF_GLOBAL_CTRL, so deferring the
->> VMWRITE to the next VM-Enter would only delay the inevitable without
->> batching/avoiding VMWRITEs.
->>
->> Note!  Take care to refresh VM_EXIT_MSR_STORE_COUNT on nested VM-Exit, as
->> it's unfortunately possible that KVM could recalculate MSR intercepts
->> while L2 is active, e.g. if userspace loads nested state and _then_ sets
->> PERF_CAPABILITIES.  Eating the VMWRITE on every nested VM-Exit is
->> unfortunate, but that's a pre-existing problem and can/should be solved
->> separately, e.g. modifying the number of auto-load entries while L2 is
->> active is also uncommon on modern CPUs.
->>
->> Signed-off-by: Sean Christopherson <seanjc@google.com>
->> ---
->>  arch/x86/kvm/vmx/nested.c    |  6 ++++-
->>  arch/x86/kvm/vmx/pmu_intel.c |  7 -----
->>  arch/x86/kvm/vmx/vmx.c       | 52 ++++++++++++++++++++++++++++++++----
->>  3 files changed, 52 insertions(+), 13 deletions(-)
->>
->> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->> index 614b789ecf16..1ee1edc8419d 100644
->> --- a/arch/x86/kvm/vmx/nested.c
->> +++ b/arch/x86/kvm/vmx/nested.c
->> @@ -5142,7 +5142,11 @@ void __nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
->>  
->>  	kvm_nested_vmexit_handle_ibrs(vcpu);
->>  
->> -	/* Update any VMCS fields that might have changed while L2 ran */
->> +	/*
->> +	 * Update any VMCS fields that might have changed while vmcs02 was the
->> +	 * active VMCS.  The tracking is per-vCPU, not per-VMCS.
->> +	 */
->> +	vmcs_write32(VM_EXIT_MSR_STORE_COUNT, vmx->msr_autostore.nr);
->>  	vmcs_write32(VM_EXIT_MSR_LOAD_COUNT, vmx->msr_autoload.host.nr);
->>  	vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT, vmx->msr_autoload.guest.nr);
->>  	vmcs_write64(TSC_OFFSET, vcpu->arch.tsc_offset);
->> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
->> index 55249fa4db95..27eb76e6b6a0 100644
->> --- a/arch/x86/kvm/vmx/pmu_intel.c
->> +++ b/arch/x86/kvm/vmx/pmu_intel.c
->> @@ -777,13 +777,6 @@ static bool intel_pmu_is_mediated_pmu_supported(struct x86_pmu_capability *host_
->>  	if (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl()))
->>  		return false;
->>  
->> -	/*
->> -	 * KVM doesn't yet support mediated PMU on CPUs without support for
->> -	 * saving PERF_GLOBAL_CTRL via a dedicated VMCS field.
->> -	 */
->> -	if (!cpu_has_save_perf_global_ctrl())
->> -		return false;
->> -
->>  	return true;
->>  }
->>  
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index 6a17cb90eaf4..ba1262c3e3ff 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -1204,6 +1204,17 @@ static bool update_transition_efer(struct vcpu_vmx *vmx)
->>  	return true;
->>  }
->>  
->> +static void vmx_add_autostore_msr(struct vcpu_vmx *vmx, u32 msr)
->> +{
->> +	vmx_add_auto_msr(&vmx->msr_autostore, msr, 0, VM_EXIT_MSR_STORE_COUNT,
->> +			 vmx->vcpu.kvm);
->> +}
->> +
->> +static void vmx_remove_autostore_msr(struct vcpu_vmx *vmx, u32 msr)
->> +{
->> +	vmx_remove_auto_msr(&vmx->msr_autostore, msr, VM_EXIT_MSR_STORE_COUNT);
->> +}
->> +
->>  #ifdef CONFIG_X86_32
->>  /*
->>   * On 32-bit kernels, VM exits still load the FS and GS bases from the
->> @@ -4225,6 +4236,8 @@ void pt_update_intercept_for_msr(struct kvm_vcpu *vcpu)
->>  
->>  static void vmx_recalc_pmu_msr_intercepts(struct kvm_vcpu *vcpu)
->>  {
->> +	u64 vm_exit_controls_bits = VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
->> +				    VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL;
->>  	bool has_mediated_pmu = kvm_vcpu_has_mediated_pmu(vcpu);
->>  	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
->> @@ -4234,12 +4247,19 @@ static void vmx_recalc_pmu_msr_intercepts(struct kvm_vcpu *vcpu)
->>  	if (!enable_mediated_pmu)
->>  		return;
->>  
->> +	if (!cpu_has_save_perf_global_ctrl()) {
->> +		vm_exit_controls_bits &= ~VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL;
->> +
->> +		if (has_mediated_pmu)
->> +			vmx_add_autostore_msr(vmx, MSR_CORE_PERF_GLOBAL_CTRL);
->> +		else
->> +			vmx_remove_autostore_msr(vmx, MSR_CORE_PERF_GLOBAL_CTRL);
->> +	}
->> +
->>  	vm_entry_controls_changebit(vmx, VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL,
->>  				    has_mediated_pmu);
->>  
->> -	vm_exit_controls_changebit(vmx, VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
->> -					VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL,
->> -				   has_mediated_pmu);
->> +	vm_exit_controls_changebit(vmx, vm_exit_controls_bits, has_mediated_pmu);
->>  
->>  	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
->>  		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PERFCTR0 + i,
->> @@ -7346,6 +7366,29 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
->>  					      msrs[i].host);
->>  }
->>  
->> +static void vmx_refresh_guest_perf_global_control(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->> +	struct vcpu_vmx *vmx = to_vmx(vcpu);
->> +
->> +	if (msr_write_intercepted(vmx, MSR_CORE_PERF_GLOBAL_CTRL))
->> +		return;
->> +
->> +	if (!cpu_has_save_perf_global_ctrl()) {
->> +		int slot = vmx_find_loadstore_msr_slot(&vmx->msr_autostore,
->> +						       MSR_CORE_PERF_GLOBAL_CTRL);
->> +
->> +		if (WARN_ON_ONCE(slot < 0))
->> +			return;
->> +
->> +		pmu->global_ctrl = vmx->msr_autostore.val[slot].value;
->> +		vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL, pmu->global_ctrl);
->> +		return;
->> +	}
->> +
->> +	pmu->global_ctrl = vmcs_read64(GUEST_IA32_PERF_GLOBAL_CTRL);
->> +}
->> +
->>  static void vmx_update_hv_timer(struct kvm_vcpu *vcpu, bool force_immediate_exit)
->>  {
->>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
->> @@ -7631,8 +7674,7 @@ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
->>  
->>  	vmx->loaded_vmcs->launched = 1;
->>  
->> -	if (!msr_write_intercepted(vmx, MSR_CORE_PERF_GLOBAL_CTRL))
->> -		vcpu_to_pmu(vcpu)->global_ctrl = vmcs_read64(GUEST_IA32_PERF_GLOBAL_CTRL);
->> +	vmx_refresh_guest_perf_global_control(vcpu);
->>  
->>  	vmx_recover_nmi_blocking(vmx);
->>  	vmx_complete_interrupts(vmx);
-> The change looks good to me, but I still have no bandwidth to test the code
-> on Ice lake, I would go back after I finish the tests. Thanks.
+Thanks for reporting this.
 
-Tested below test cases on Skylake and Sapphire Rapids servers for both
-mediated vPMU and Perf based emulated vPMU, no issue is found. Thanks.
+On 12/8/2025 1:44 PM, Dan Carpenter wrote:
+> Hello Sandipan Das,
+> 
+> Commit d6389d3ccc13 ("perf/x86/amd/uncore: Refactor uncore
+> management") from Oct 5, 2023 (linux-next), leads to the following
+> Smatch static checker warning:
+> 
+> 	arch/x86/events/amd/uncore.c:660 amd_uncore_df_event_init()
+> 	warn: set error code if 'pmu_version < 2'
+> 
+> arch/x86/events/amd/uncore.c
+>     654 static int amd_uncore_df_event_init(struct perf_event *event)
+>     655 {
+>     656         struct hw_perf_event *hwc = &event->hw;
+>     657         int ret = amd_uncore_event_init(event);
+>     658 
+>     659         if (ret || pmu_version < 2)
+> --> 660                 return ret;
+> 
+> If pmu_version is < 2, do we really want to just return success?
+> 
+>     661 
+>     662         hwc->config = event->attr.config &
+>     663                       (pmu_version >= 2 ? AMD64_PERFMON_V2_RAW_EVENT_MASK_NB :
+>     664                                           AMD64_RAW_EVENT_MASK_NB);
+> 
+> Or do we want to set:
+> 
+> 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
+> 
+> And then return success?
+> 
 
-Kselftests: pmu_counters_test/pmu_event_filter_test/vmx_pmu_caps_test
+Right. If amd_uncore_event_init() returns an error, this should bail out
+irrespective of pmu_version. I think it should be okay to set hwc->config
+even if amd_uncore_event_init() errors out so that this can be simplified
+further.
 
-KVM-unit-tests: pmu/pmu_lbr/pmu_pebs
+@@ -656,14 +656,11 @@ static int amd_uncore_df_event_init(struct perf_event *event)
+        struct hw_perf_event *hwc = &event->hw;
+        int ret = amd_uncore_event_init(event);
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+-       if (ret || pmu_version < 2)
+-               return ret;
+-
+        hwc->config = event->attr.config &
+                      (pmu_version >= 2 ? AMD64_PERFMON_V2_RAW_EVENT_MASK_NB :
+                                          AMD64_RAW_EVENT_MASK_NB);
 
-Tested-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+-       return 0;
++       return ret;
+ }
 
+ static int amd_uncore_df_add(struct perf_event *event, int flags
 
->
->
+>     665 
+>     666         return 0;
+>     667 }
+> 
