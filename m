@@ -1,225 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689DF28FFF6;
-	Wed, 10 Dec 2025 06:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD1F1EF39E;
+	Wed, 10 Dec 2025 07:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765348515; cv=none; b=MJQDvEL8eYdyKM2fDbbu8aLqd94hkdoHUEQq2Nr2kJNZIREcIsP3o7cmF/VYU2yd0q76MOrHQx32igkarfumDbMQw5U9/8tA9tNJfjQdXHJmTJcq0nHxF8zuv6+R7N2kJq0llu/cQ2OTuVSmYGNC2icJpg4wvO7NHDZVrmzH5c4=
+	t=1765351095; cv=none; b=kZ6fPLaeTuzwut7jBRxI3zvHgzigsM0lKG7ZL5gZKeVl2Fs84dxMN4JuPfNj8z+6x8yaUFzZxKpAv54rOL81f5B31mZDzw7rWqvgSMObKJz5/N95e2E+CAqrUy2rFk4GlAkSeZHgiey5P3xc55HUo4HKdbcgfLXxk7VPONEXk4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765348515; c=relaxed/simple;
-	bh=vpqBjFxS2tCn1qmGhUgdhnHKuO1yGyehv0knWmhmibs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rtzQDjgp9iDolv3Br/sxFgWJw7Y7EhQuaXW42m/kr543Btg360KNITE72RWN3WPSfFaXYiiRlzggf+hlmRgX00kT6WtYg3zIP4qYQ8SF1cNIXwkC9JSAI6H6ALpH4/9ptxT1AL+I1V2xRjzoj7WH8QBEMSpyTI4cIST9qFW0nrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iV/JvpFI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765351095; c=relaxed/simple;
+	bh=7mbZgvZzbMi1K298uwM/RXpYz/zNeo2REWlUfA+j1JU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ao3lnfUlWvlMdX4p6Zd0AQzB4TPaPCm+YurdwwX66oIG/XtsfQAtrNwPF4p6EYLslqUVCj0i2xkryPWyh1lH4oJZQVbH6UWGy1vDLAQ666EyhJ69KHKrTjGrTQ4lsVDdM3qAxVskXi2/GWiVWnpcBDnx5nc2MzxcgV90QaGHBKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QZQMwsWo; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iV/JvpFI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E226EC4CEF1;
-	Wed, 10 Dec 2025 06:35:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765348514;
-	bh=vpqBjFxS2tCn1qmGhUgdhnHKuO1yGyehv0knWmhmibs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iV/JvpFI/RbwQ6NTqWsvgwbkrRHEZbLGU3a4g4R6vLcTs79Zzg5kXSam2TS/WsUzD
-	 /CexocqD6u02rukHD9Sc2lYYFgke5+4k5nQDVe6dCgDhpC4qE5JQ8oyzzK9+pfOkn8
-	 A5Q30kHh0Ayidz9GJVZ9nt51SImiqlhUFIIGCoCMKQS7WFzO5TmN5RfFjEz+8ZpdxZ
-	 mYX/4FG60tg5C9t27JzmpdeXH9+KvoyG3R0qSjdGYEwESZHSbwqwYx3nenaY1UCRz+
-	 OcA3WmLajviXcMf0daOXNa0dPEWUQQLwuJIM0RTY0uzvLyR/pLnYWXIveJ6x2IrzV2
-	 H/wy2rsGMNloA==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18-6.6] libperf cpumap: Fix perf_cpu_map__max for an empty/NULL map
-Date: Wed, 10 Dec 2025 01:34:36 -0500
-Message-ID: <20251210063446.2513466-7-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QZQMwsWo"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5BA2jbOn027211;
+	Wed, 10 Dec 2025 07:18:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=oUcwrDXdEDroh90YnMHd2PpfOg3zgyPKDYVcDR6xS
+	5E=; b=QZQMwsWoeuA8Fho6a+pHf8G1V+eZd0Sc97MqVqrNd0fEsN1chCWRsdMH4
+	7qGz/iEa0shFbJopq0YTNgMO71lO09gxqZR19Y/NTg1kwbXdk+BhOCsdGcNloBBf
+	Z36mSUgMv3GCDFieRSi3CydDJ5YYJcqKPJQ3E1nrRIUGw/n8MP626FpUBWeGIiUw
+	jKAk6jOOojraYKBT15brgSLfvBG5f9zI1LzS+f38eQGs4KYtnWOhGtVoOXij4qH7
+	q2QTyraNrhErRApf2BCnh0olgapOQ3ZLD++Pn3oK05qpgkc36y5roHmq3KTs2Vx9
+	tGDyYs+Gepl1Cgy5DXk34RcnAgRWw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4av9wvrqqh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Dec 2025 07:18:10 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5BA76Ebj029087;
+	Wed, 10 Dec 2025 07:18:09 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4av9wvrqqe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Dec 2025 07:18:09 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5BA68F4M002053;
+	Wed, 10 Dec 2025 07:18:08 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aw11jf63g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Dec 2025 07:18:08 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5BA7I49r53150048
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 10 Dec 2025 07:18:05 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DDD5620040;
+	Wed, 10 Dec 2025 07:18:04 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AA2B42004F;
+	Wed, 10 Dec 2025 07:18:04 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 10 Dec 2025 07:18:04 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        irogers@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v2] perf test: Fix test case perf evlist tests for s390x
+Date: Wed, 10 Dec 2025 08:17:52 +0100
+Message-ID: <20251210071752.4160369-1-tmricht@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251210063446.2513466-1-sashal@kernel.org>
-References: <20251210063446.2513466-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.18
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: HmIPfMruhVbtd2jA0Tk_oIBDjfyTvqJx
+X-Proofpoint-ORIG-GUID: TesyQIDUV2ESurBxaTY3A3URG9H9AYR-
+X-Authority-Analysis: v=2.4 cv=AdS83nXG c=1 sm=1 tr=0 ts=69391eb2 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
+ a=LDFJ_rGeWCfCHBBpOA4A:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAwMCBTYWx0ZWRfX0lco75CXU4r1
+ lSuLjktW0i99R+EJWyImIUp77YTnpaFGRMC5tp6JwExnDRXDJ/+whNS0r0WlgEm8Oh0CEPobh8Z
+ kLeJwI+xakO1Ij60LsjT8G4CQnDuS7dNXLe5yIRyYHoxNScrpJ5ZpOZz6hv+U7IUu6gliaUTSSB
+ qgtO2+4GvDbuJ//ukl9TQpRK0v+dFKnGP2ET4WJFGWOUKV9Dt0nSEmd18kga6MYoNPp0S/jokkZ
+ Q365CMfqP1RWnPuL0b4EovgiTXwvsnujWxvLhlj6j/Nj3vKRVYTvWKhTlDYCl/AWOd+ibf5q6cD
+ perRjSfYW2/W22bRLPbcgsMvduMKDF+imLQoJYjxM/671FcnwUM+gVuEaP8hAsIcD8e3RKLyCQP
+ Gotg8OR7BTWYOK7mDMgZAlk0wdPlUg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-09_05,2025-12-09_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1015 malwarescore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512060000
 
-From: Ian Rogers <irogers@google.com>
+Perf test case 78: perf evlist tests fails on s390. The failure
+is causes by grouping events cycles and instructions because
+sampling does only support event cycles.
+Change the group to software events to fix this.
 
-[ Upstream commit a0a4173631bfcfd3520192c0a61cf911d6a52c3a ]
+Output before:
+  # ./perf test 78
+  78: perf evlist tests              : FAILED!
+  #
 
-Passing an empty map to perf_cpu_map__max triggered a SEGV. Explicitly
-test for the empty map.
+Output after:
+  # ./perf test 78
+  78: perf evlist tests              : Ok
+  #
 
-Reported-by: Ingo Molnar <mingo@kernel.org>
-Closes: https://lore.kernel.org/linux-perf-users/aSwt7yzFjVJCEmVp@gmail.com/
-Tested-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: db452961de939 ("perf tests evlist: Add basic evlist test")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 ---
+ tools/perf/tests/shell/evlist.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-LLM Generated explanations, may be completely bogus:
-
-## Commit Analysis: libperf cpumap: Fix perf_cpu_map__max for an
-empty/NULL map
-
-### 1. COMMIT MESSAGE ANALYSIS
-
-- **Subject**: Clearly indicates a bug fix for `perf_cpu_map__max()`
-- **Bug type**: SEGV (segmentation fault / crash) - a severe issue
-- **Tags present**:
-  - `Reported-by: Ingo Molnar` - reported by a prominent kernel
-    developer
-  - `Closes:` link to mailing list bug report
-  - `Tested-by:` from two people (Ingo Molnar and Thomas Richter)
-  - `Signed-off-by:` from maintainers
-- **Missing tags**: No explicit `Cc: stable@vger.kernel.org` or `Fixes:`
-  tag
-
-### 2. CODE CHANGE ANALYSIS
-
-**Before the fix:**
-```c
-return __perf_cpu_map__nr(map) > 0
-    ? __perf_cpu_map__cpu(map, __perf_cpu_map__nr(map) - 1)
-    : result;
-```
-
-**After the fix:**
-```c
-if (!map)
-    return result;
-
-// The CPUs are always sorted and nr is always > 0 as 0 length map is
-// encoded as NULL.
-return __perf_cpu_map__cpu(map, __perf_cpu_map__nr(map) - 1);
-```
-
-**The Bug Mechanism:**
-The old code attempted to check `__perf_cpu_map__nr(map) > 0` before
-accessing the map, but this check **itself** dereferences the `map`
-pointer. When `map` is NULL, calling `__perf_cpu_map__nr(map)` results
-in a NULL pointer dereference, causing a SEGV.
-
-**The Fix:**
-- Adds an explicit NULL check at the function entry point
-- Returns the default result (`cpu = -1`) for NULL maps
-- Simplifies the logic based on the invariant that a 0-length map is
-  encoded as NULL (so if map is non-NULL, it has at least one entry)
-
-### 3. CLASSIFICATION
-
-- **Type**: Bug fix (NULL pointer dereference causing crash)
-- **Not a feature**: Doesn't add new functionality
-- **Not a quirk/device ID**: Pure crash fix in existing code
-
-### 4. SCOPE AND RISK ASSESSMENT
-
-| Metric | Assessment |
-|--------|------------|
-| Lines changed | ~10 (very small) |
-| Files touched | 1 file |
-| Complexity | Very low - simple NULL check |
-| Subsystem | tools/lib/perf (perf userspace tooling) |
-| Risk level | **Very low** |
-
-The fix is defensive - adding a NULL check cannot break anything that
-was previously working.
-
-### 5. USER IMPACT
-
-- **Affected users**: Anyone using perf tooling
-- **Trigger condition**: Passing an empty/NULL cpu map to
-  `perf_cpu_map__max()`
-- **Severity**: Crash (SEGV) - high severity
-- **Reproducibility**: Reliably reproducible per the bug report
-
-### 6. STABILITY INDICATORS
-
-- ✅ Tested by Ingo Molnar (original reporter)
-- ✅ Tested by Thomas Richter (IBM)
-- ✅ Signed off by maintainer Namhyung Kim
-- ✅ Simple, obviously correct fix
-- ✅ Well-documented reasoning in updated comment
-
-### 7. DEPENDENCY CHECK
-
-- Self-contained fix - no dependencies on other commits
-- Uses existing internal functions (`__perf_cpu_map__nr`,
-  `__perf_cpu_map__cpu`) that would exist in stable trees
-- Should apply cleanly to stable trees
-
-### STABLE CRITERIA EVALUATION
-
-| Criterion | Met? |
-|-----------|------|
-| Obviously correct | ✅ Yes - simple NULL check |
-| Fixes real bug | ✅ Yes - SEGV crash |
-| Important issue | ✅ Yes - crash in widely-used tool |
-| Small and contained | ✅ Yes - few lines, one function |
-| No new features | ✅ Yes - purely defensive |
-| No new APIs | ✅ Yes |
-
-### CONCLUSION
-
-This commit is an excellent candidate for stable backport:
-
-1. **Fixes a real crash**: SEGV when passing NULL/empty map is a serious
-   bug that users can hit
-2. **Obviously correct**: Simple NULL check at function entry is
-   textbook defensive programming
-3. **Minimal risk**: Cannot cause regressions - only affects the
-   previously-broken case
-4. **Well tested**: Multiple test acknowledgments from respected
-   developers
-5. **Small and surgical**: Touches only one function in one file
-6. **No dependencies**: Self-contained fix
-
-The missing `Cc: stable` tag appears to be an oversight rather than an
-indication the fix isn't appropriate for stable. The perf tooling is
-widely used, and crash fixes in it are important for stable users.
-
-**YES**
-
- tools/lib/perf/cpumap.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index b20a5280f2b33..2bbbe1c782b8a 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -368,10 +368,12 @@ struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
- 		.cpu = -1
- 	};
+diff --git a/tools/perf/tests/shell/evlist.sh b/tools/perf/tests/shell/evlist.sh
+index 140f099e75c1..5632be391710 100755
+--- a/tools/perf/tests/shell/evlist.sh
++++ b/tools/perf/tests/shell/evlist.sh
+@@ -38,13 +38,14 @@ test_evlist_simple() {
  
--	// cpu_map__trim_new() qsort()s it, cpu_map__default_new() sorts it as well.
--	return __perf_cpu_map__nr(map) > 0
--		? __perf_cpu_map__cpu(map, __perf_cpu_map__nr(map) - 1)
--		: result;
-+	if (!map)
-+		return result;
-+
-+	// The CPUs are always sorted and nr is always > 0 as 0 length map is
-+	// encoded as NULL.
-+	return __perf_cpu_map__cpu(map, __perf_cpu_map__nr(map) - 1);
- }
+ test_evlist_group() {
+ 	echo "Group evlist test"
+-	if ! perf record -e "{cycles,instructions}" -o "${perfdata}" true 2> /dev/null
++	if ! perf record -e "{cpu-clock,task-clock}" -o "${perfdata}" \
++		-- perf test -w noploop 2> /dev/null
+ 	then
+ 		echo "Group evlist [Skipped event group recording failed]"
+ 		return
+ 	fi
  
- /** Is 'b' a subset of 'a'. */
+-	if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cycles.*,.*instructions.*}"
++	if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cpu-clock.*,.*task-clock.*}"
+ 	then
+ 		echo "Group evlist [Failed to list event group]"
+ 		err=1
 -- 
-2.51.0
+2.52.0
 
