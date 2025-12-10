@@ -1,159 +1,115 @@
 Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C08527B4E8
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Dec 2025 18:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596BA136351
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Dec 2025 18:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.175
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765391717; cv=pass; b=OHYsldPOtNeYGWm3Nk30sd0n4+ug9vNIk/GrjunCOefXdh7dRiChCPkdgtP5Q0Q4V9i8pfyDf7kOSEDTHsRDdNsX/9uk5HNiXkkKOhD7g7Xpxc1L7h2QLcBTXEDDPZDufh2iXTcD8yLr6crSqdZBTaB7kJL6nMMpZWHtecDGXpQ=
+	t=1765391944; cv=pass; b=TBIHRZI4tHE4Au9zgdtLAbhqRlvH4ab3PIVuQEc/fB5HZq7gJ70pFFmsf0EOqTXuBUC0bzX8SKChWs4ico2R1DhPUinE408jvIqGVYvIQnaPrnBjCQSsI649Z1D8atXegqcQio1t6IXc+SQ9Yv0PxSvve7zizYtZuRY7UTH3Cxk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765391717; c=relaxed/simple;
-	bh=7iUZibeL2UHNIR4N1JDwRiO59K1+1GWyhNYWdVfQPPI=;
+	s=arc-20240116; t=1765391944; c=relaxed/simple;
+	bh=GXByxdqbshboTWkWfzfyHgJ1p0lHhn/zWGU1v/M5foI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b58n1zIxaYjqRc0CAe7g//KEOqQxRTOVspm193d4rV0u7fdMu5pL4FBR3FJBDAOjkMnV/QVrQK1a4KRmC5XVf8sAxVT427IShW/6fZsxGOMNaT9DF6pUO7mdR0O/+iWFQd20xm6Z5iZ14RLAVPm9HQEv+MUZQvICVds2W90H/ow=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vZS16Qhx; arc=pass smtp.client-ip=209.85.214.175
+	 To:Cc:Content-Type; b=lw6K0jQYEEoNgxcpJJLn1rOgYTDZ0uEWuYn+i4JEWRZ6ZH4+kBQXi2747lcrkec7ylIldb70C4weniiubEERf9CWJxxFcyTkJXDFOhMUXCKyXoowIGMMa3fYH/UU/ag3VKDUgPgG4YbQATj+h/pLrdl6WcMJp0DbNMnom84rohg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yDR5Sd4m; arc=pass smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vZS16Qhx"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-29e7ec26e3dso15525ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Dec 2025 10:35:15 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1765391715; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yDR5Sd4m"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-297e13bf404so15995ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Dec 2025 10:39:03 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1765391943; cv=none;
         d=google.com; s=arc-20240605;
-        b=eZcpCGVRWK6QpPDVicNQn8wBvihI5l2rNgkdHoze0uFKdujUrZdqYzgfufbUK39J1V
-         UMG2v2zzxMln6sqwm3Oto1IWut9WSK5b4UU+DFienzi5O8MiV4nzotScmjJZ1yhCJGJQ
-         ieOo/FCApR9KXTLTewqYi8jU3jYi0GFC58arKzcVX5jTXIwmtGo2Hffc9c3+svKsP7hf
-         9588ZEnzdWlj3c5ZPYPAQ7HXi005en1Uc7rUYGFrTkFsM/lep1iLOZBxHePmfqO1bk8h
-         xbuiHyD8x64B8lh4BTIEol6cscnka+XoiPtYwW3hKLNE9zeyHzYQXmeiQ/ieNHjoC1GV
-         UBjg==
+        b=RDqO/upibMbAQuNT0St4cfYJPLQCSMQ9XIpQ4pHDfGKgRFH456R9sez3d4zDEVsJf9
+         TkZ/1cp/4nBv7RE5cbWkmBIlXMGbvwkasg2lTGS7bbiFeNv7utDO2NkqP+tj9zfwRTd+
+         CPwtldsPJSWynMRHdoYiZ3avlP43BBzwcgEvg88ok1DDomIICqluozogfLK19hPChPO9
+         7xmo4HsbekkdHBjYSo8Rcu8SkopuVHZ2hWcZXKu808HTv9R8DMGPrh7yv0k6qhVkyHS8
+         1/ASz026erY2tToWSuzfsnAuCJUAJVwZ4Y4YUiFVUrQy/1ipK3F20yJMwjP9mFcK93B8
+         roGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=BZMRIR2Q3ZuqewvXWF5v1G95vOLQu6CiC7DhBrH8+jg=;
-        fh=6DA4G11NGR51Ftmcj0jwsyj+/lm3lkUxXGCj2Hol/Ss=;
-        b=DKa6rah56zT72R06vYLnsq1DVgXBQtp3xLuI2YiYEWB+a+1IWsn/12/oV/NECsK12Z
-         JgHaBj35Z/N7hHQKqmY4L0o3+Xs61Vv5ArD+Zy0n8irEW87tfNMHWDQAVYj9bm0rc7yg
-         3Ufa5/J7CtKbhq+4e88QX7pOjHTCijueSxo4sIPuHlapO16osHAD7FiJ7mVQj/ZwrLUs
-         MJaVZOKTmEW2GH3nDEn7c70WVF4PVHpoH030SXxO1dpW7yRVqfwLyLqcPPwmrkBdJk3D
-         OZiiCqoqq2FGykZBbDsWLMn5VjeUQiy/I7/HtWMf76wZRt3VKvbTzclPUkbHi49LPmva
-         8lRQ==;
+        bh=GXByxdqbshboTWkWfzfyHgJ1p0lHhn/zWGU1v/M5foI=;
+        fh=n74jQJiCJ1kqDa1g34gHV4UtMdkdMQvZ4Sjj0nUwLdA=;
+        b=LmoQUJh2qdk/pMUl/8mGT7cacOvc89SIoUJz45GiX3grzHOWcaEgw0k66FayuUTIsT
+         o2c6Hkd1rA7hmvRy4FLF6SYiGkkPR+LCGpagkqszHDix9h5iU4ph8y7g1oarPXaCTc6I
+         U+Z9n8gm4olue2Zg8BQFlcbg98E0sC0XbH4mX98zCVBDAri/8Z0iStgnmYNpa11WNnFe
+         8vtbdkqA4MAnjy6X0Js6bghpb3mRhyINgFPpl1rijFMnUtrWkLNuMr5m492y4Jn9nMz3
+         ocKjSfCwV/umcyHtdMeh+2QLU/KCmBeDE8MGMbS4J73ddbQVkMxqWGSRy0Og5irG1pZ5
+         4eDA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1765391715; x=1765996515; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1765391943; x=1765996743; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BZMRIR2Q3ZuqewvXWF5v1G95vOLQu6CiC7DhBrH8+jg=;
-        b=vZS16QhxgBSv1dxUPLO4n60wA4jEGpDJrcxCWPjES9oNxZQVVwXBFHadQYkat1D/Zw
-         QmVk4VCmwu+eRUn+gs96X4yl5azYF8W19ElbPFpvH+WMCiaDHfkNl1+gOq1iNPcrasOx
-         3AC1TiLxI6Mz6A+IkXEpKAhoF7zOiOylM7DhfOxw/aN5QwS3l+5cY53bAs2btNZ1we1u
-         3Ve2YrjyZvFd09UffnwZWdUw0v9N8sXlaI5YFDek+5XpDJp3qWG6L2OcjJ3gP6OM34H7
-         qK+3HGaLQBq/Wy3PpqJOvn4BDzQclmDkJSA7WcedDhxmlgN9G/R6xBoeG2wqaszNj0z0
-         KI+w==
+        bh=GXByxdqbshboTWkWfzfyHgJ1p0lHhn/zWGU1v/M5foI=;
+        b=yDR5Sd4myNYT14FcdsAxCiMOKo8UlacyO0+tZsP6JwOdC9GiZug53Gsi5S1O2yxPgK
+         boAbOoBaSRg4hjjq64lzlYLrTJBlwTsx60dZ8ebB/EjxvLn4FCrSonncGIowhUxqFUDk
+         sFs9NCGiamBvgA4Rigy6mwiOm/ueSMlX5omnC7q1NhnFg9hlswqbp1Be2HA13QJLR8Ux
+         6Fd99cL5ucoeWHs2Ztuu0N3hee/PUnqsme48bHShWOdBagTFY/hkxnmyo6XFrC28jA1h
+         Id5KBxuYq7uV2uyp/HT2Jby1dy4cDhmGgd123nUNGo7bJ1AYXYFupPHYYCgdUCEmFSJw
+         dvVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765391715; x=1765996515;
+        d=1e100.net; s=20230601; t=1765391943; x=1765996743;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=BZMRIR2Q3ZuqewvXWF5v1G95vOLQu6CiC7DhBrH8+jg=;
-        b=fY2Ho6q/V6vISytGVVjl7OO9jLbiUaLxzakuXJcTxQDTEgO4DuC+JsbCgIuu3SSlsY
-         v8wV82OVZ3nnb0y1tKAC/YjE8KDgB4afe/XPEKjNbNaOFHFQ8+K0+VGwNipl40vOCI+n
-         W535WVzqUnxqkmlVOO7gIRAbCu27zK4KJTk/741EdWsKS1WYPiYoqVPWfoWn+nbQSlor
-         LD1xlyWsRQB+9uZvQViygwQt58PgtSMftPAfHFM0gpa04PPmE5G6ouPSvbX6sSSywUux
-         dGw++b9HNF+M44NYMZLhyILsMZ0JGERLpjhwzxKwCfUEmlM7UNp0CD6hw07DNkE+StSL
-         iMfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvKeYWiXuzXXhUTJGhAeDkF3uTHYi8TyaexnoP9Y4mJD7G0hbqORUJIw0ysPkoTK3TRkvLxdiVYzBLwfN8szLb@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYlUmKhoITAZyp6+Mk+27wm9JRWf/2NZkjxsKtaSBTJIxswTsc
-	tPVXEhF+RajeNZ1uktbShqFuQDnka8RnmP2d31S6l08RcnVp6EGowLiIR9xCfBz6e2XVVYA/iQ3
-	tmH5bvbrgg5qg2n8xpb5c+QXfjGEazMbcZ2BSxjQf
-X-Gm-Gg: AY/fxX5yLegnQFCvlctQ1jisYvfqht0hwke27md3JqMDu0u3wG1SYi6J43E6VH6uClG
-	WQTKCiKDyJ7j54NDoNpNvrX9TZJiNwMYDAEBaxxQQKJ4WfPdnYl1NWE8GMoFSDWxsmUKx59JaoG
-	jqRh8CiLiK2ycLfnZsRJ4ZBorCQ7Z/SPu+JddbSUuURF+DCFP+ilAq+yfSbCndD3U4N4kI9H0tV
-	Vh5q/Eql/eO2IPTmzlbF3b3dHm5diAfrydqWKJ1iwrwmTfnGAFtYR0ZUTfvkDkFCU5Lcii8l0KM
-	cCLE8rLZL771UEU3h7UomgvaXQ==
-X-Google-Smtp-Source: AGHT+IHkNtWv5/wfc7clfE6FKDxA6B6rrCfOLX5MNaL0d4/+iHfwM93T6frSydRfoQD0vFxm5erOpRpxXqxo4Y94ORY=
-X-Received: by 2002:a17:903:3c70:b0:292:b6a0:80df with SMTP id
- d9443c01a7336-29eea1fa30bmr107165ad.10.1765391713128; Wed, 10 Dec 2025
- 10:35:13 -0800 (PST)
+        bh=GXByxdqbshboTWkWfzfyHgJ1p0lHhn/zWGU1v/M5foI=;
+        b=s3Ax0cl26KIHOWu4ceFsTEiomw79YI0K8nY75WUuzQrZhSiPbu3DDoPhDmJT2Iph0B
+         b51GLMVeAbvT6MYDVp7gu86y+ItcOHX39lCgk0l4zQo2WIbREt5rELFkJvBJu8hrR01k
+         tUIh1kvu7BE6CNn05fksc9OYY8jZ74J/7iA+0Bbhonep6D8SdLtYW7cOlnKiunnhmB5R
+         NNLtjuOmv02XgyT+MNiIpULf60UUI+6Lwem7aYartUbkwbgldNQ2R2WfR/zpXlWkH8sX
+         1vTJdahEmN+pfchd/tx9w4ysyMIdPv7SGsID8eggSh6QZHOg7btmsUEYNNrwVe8/8tfe
+         iLag==
+X-Forwarded-Encrypted: i=1; AJvYcCW5izMPCeoTBc/24aULaoNVvSW9JR7atjcuFhDSiCD6rOMqeKAwuhysIR/MO1D/ukGx21XLgO8pToE2u6RbAalf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7xVfg7DtU87iQfFg3VmRgcVFrnrfhp3MBNhoMDYyhPnZ3cxmo
+	e3XAhRJqfNpnUe5+5GPgkJK+avpZwDkKkhH1rPKd+pQceSX6/Mpqke/KuIreKq/XVUl8haGkZP4
+	zP5a57zGyqym6UiQfe7SAvbANtY2d+7xIyU1iMZMr
+X-Gm-Gg: AY/fxX5JR4CzRHMeN19JrQDvLkA4N8meLO6luXaXBIePaDpRr2oFEI7PcqDALQeagKi
+	MR9eWzFIIpXg5uIuEVH/dF9QNjgFJJYnVy7vJhr1yCFeoFYGB6GMWz1L08qXqW4WrMgiJdSnPmR
+	+VBgMI4uSkq3pB4it+pI84CN1SB4NNwD60VhowLfUlaCxaHetpsSRscnpxJyY8DPav9H6M2t/F2
+	QS4kf78JtANmda2gYMQr0Xk4zqzW9K/kkhkg+BNIzCIjsKPs0RtzKYNR+Y2bTpdfMTY3r9faZW5
+	mPpKkFFPNr98n5u4kKscGLyWO7IPeWiMsePE
+X-Google-Smtp-Source: AGHT+IFRzIABOIYCbEyDQqye9vn1iBq9cOpKHfgWUHyxulKgprvrEpUzR1LUvOAdXoCBcyt8e3A6i0aZubKGr5CxFhw=
+X-Received: by 2002:a17:903:2f8f:b0:294:f745:fe7b with SMTP id
+ d9443c01a7336-29ee9dcb749mr131115ad.6.1765391942178; Wed, 10 Dec 2025
+ 10:39:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251210071752.4160369-1-tmricht@linux.ibm.com>
-In-Reply-To: <20251210071752.4160369-1-tmricht@linux.ibm.com>
+References: <CAP-5=fUs8jD_qLJGjLBiVheu6JzynmmYSmfr_9PgKmxK4qEwVg@mail.gmail.com>
+ <20251210020026.3265559-1-sjayaram@akamai.com>
+In-Reply-To: <20251210020026.3265559-1-sjayaram@akamai.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 10 Dec 2025 10:35:01 -0800
-X-Gm-Features: AQt7F2p7zkl5_tleQz8BxMy-eEc6AfcdZWPmBPnZXC7zroc51uSFIkefyEI9spM
-Message-ID: <CAP-5=fXZw9NA7bK6bH+hxPYG0nHGPYKqtYt3pg7iNmsQPWHRig@mail.gmail.com>
-Subject: Re: [PATCH v2] perf test: Fix test case perf evlist tests for s390x
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
-	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
-	hca@linux.ibm.com, japo@linux.ibm.com
+Date: Wed, 10 Dec 2025 10:38:49 -0800
+X-Gm-Features: AQt7F2puvhMg-gkZV__rKcXVpnreHh44yHRbYGS6SCqJBUSmsPJd5ee3ryPvslk
+Message-ID: <CAP-5=fVmbif0k3LMnMMeZUPnyL5fG=fNc-6TnBsXmhzqHu=0gQ@mail.gmail.com>
+Subject: Re: [PATCH] libsubcmd: Fix null intersection case in exclude_cmds()
+To: Sri Jayaramappa <sjayaram@akamai.com>
+Cc: acme@kernel.org, amadio@gentoo.org, johunt@akamai.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	namhyung@kernel.org, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 9, 2025 at 11:18=E2=80=AFPM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
+On Tue, Dec 9, 2025 at 6:00=E2=80=AFPM Sri Jayaramappa <sjayaram@akamai.com=
+> wrote:
 >
-> Perf test case 78: perf evlist tests fails on s390. The failure
-> is causes by grouping events cycles and instructions because
-> sampling does only support event cycles.
-> Change the group to software events to fix this.
+> Hi Ian,
 >
-> Output before:
->   # ./perf test 78
->   78: perf evlist tests              : FAILED!
->   #
->
-> Output after:
->   # ./perf test 78
->   78: perf evlist tests              : Ok
->   #
->
-> Fixes: db452961de939 ("perf tests evlist: Add basic evlist test")
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Yes, this covers my case. I had thought through other possible scenarios =
+before sending the patch, and I don=E2=80=99t see any additional issues.
 
-Tested-by: Ian Rogers <irogers@google.com>
+Thanks Sri,
+
+any chance you could reply to the test e-mail with a "Reviewed-by: Sri
+Jayaramappa <sjayaram@akamai.com>" ? It makes it easier for patch
+managers to spot that the code is reviewed.
 
 Thanks!
-
 Ian
-
-> ---
->  tools/perf/tests/shell/evlist.sh | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/evlist.sh b/tools/perf/tests/shell/ev=
-list.sh
-> index 140f099e75c1..5632be391710 100755
-> --- a/tools/perf/tests/shell/evlist.sh
-> +++ b/tools/perf/tests/shell/evlist.sh
-> @@ -38,13 +38,14 @@ test_evlist_simple() {
->
->  test_evlist_group() {
->         echo "Group evlist test"
-> -       if ! perf record -e "{cycles,instructions}" -o "${perfdata}" true=
- 2> /dev/null
-> +       if ! perf record -e "{cpu-clock,task-clock}" -o "${perfdata}" \
-> +               -- perf test -w noploop 2> /dev/null
->         then
->                 echo "Group evlist [Skipped event group recording failed]=
-"
->                 return
->         fi
->
-> -       if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cycles.*,.*ins=
-tructions.*}"
-> +       if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cpu-clock.*,.*=
-task-clock.*}"
->         then
->                 echo "Group evlist [Failed to list event group]"
->                 err=3D1
-> --
-> 2.52.0
->
