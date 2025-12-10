@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C479226F297;
-	Wed, 10 Dec 2025 02:33:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E722F26F295;
+	Wed, 10 Dec 2025 02:33:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765334020; cv=none; b=PqpDCENvjAzkdLr4PQblIB2vHIUCxT4OJow04yBK9NjmkmEubKn/CdnMQa4YetYSpumVorwBt9MnKG2XgvN8EzzyMQAoBW+DX2yrn4TFHXKGU/y+qIPf3glgNaQU1q61Su33g8393wl5YRtjzOX3S48eqMGs8BbYgqEYIU6uPXY=
+	t=1765334023; cv=none; b=ucEpmTllikXwRS84gDKktIzn/0As/i7AssWKofGbAOqO45uSrveBotLafLxeq+k1isaz7GzP4p/i/W5hP7+1UKWnWKx+M9SkW9q9v6ii0gyyAeqgzGLA09aJZz/t4stM/oZbDGTS6WpDVJEljTDjg9+OZF0Y6BFNRcrnpKMewVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765334020; c=relaxed/simple;
-	bh=qnB9/p0M/ybVVFnns5vMIEoYgDXhamMDqNhALztsF3U=;
+	s=arc-20240116; t=1765334023; c=relaxed/simple;
+	bh=86swnSN0s+bEaL5SN5EmJNGgj66dgkAauWCfVuExFvo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oe2gIFTkXDw88pr7EHOEbyq5odO4yhxTHVg5K9PZSH0RBGFnIwEHS6C/FLi9OGwJ4pmvEc6jD3tHz0NLhIUcjJUeRiL/utLJdjt8bM+b/lU4wZzMyta/1S3orOgTx8MIUS7CxAFn7UoJapiIqb90pmJTOevwx5kj2KMW1Zy1h8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qm8S1VIF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jZGeV3/AxoPboOV+d30Q1PHpQbicLoMKkZzSf0U9jr1j/XPAYhPGl6VXEmKpLTqKMo78JGOOwrghD6635JljPfK7ARGQbUW15LIsR70vcNwSJs6HMXZkD2Id/57jZoW6LBDQfkfK9BK4O5/eEk0R7yHqOo1dv5VODFOybUvE7dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N33KXB0E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qm8S1VIF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 220F0C19422;
-	Wed, 10 Dec 2025 02:33:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N33KXB0E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F05A8C4CEF5;
+	Wed, 10 Dec 2025 02:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765334020;
-	bh=qnB9/p0M/ybVVFnns5vMIEoYgDXhamMDqNhALztsF3U=;
+	s=k20201202; t=1765334022;
+	bh=86swnSN0s+bEaL5SN5EmJNGgj66dgkAauWCfVuExFvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Qm8S1VIFMk+NDEVW2N/w04nv8/TOkIC7nYVB5ld3U9hOz79Q97D0AGtEntDCPWKXY
-	 OGO8kt4O+GRcVU31sM41322mtUqhIBdzvEZstjCeDZWdffrACe2pDIYieiwlppTf/C
-	 UP7ht56hOuAmPMcdSf8MIgCUR7FszTWSwQ2QI7Fhh0AHLO9sTDd6f/HXNeIyegQf+d
-	 ohNxyztP4O6EOH7RgXKjW27+AZW7s+whLC2BvFiTM/YVnfb5jRnDIDb8Hq0qYi4ZEn
-	 HaDymjVtI0b6e1E2i3JLd/7n7J7Bo5pwZR7xlt3AmjgzDgD5cEOA26CKCKNgIqBDfZ
-	 uuSz2hxC5IUZg==
+	b=N33KXB0EFlQo/dHTHzvlLXsqHcitkWOrhsQIiNlpEvCsOsOiZjT5sD2O4IzzFmo3/
+	 fEeGlO6Ml8GqUIfRtEYC4exZTChH5ZovLInao3qywJMz/OQXJqe8J+qvnrzq3U8HQo
+	 LTtwqav2Je9qURmfya1m6QYC11Ywv7dpz96G8XxjgJnhJo3ixhEZTyaMK9+u7bnbIa
+	 osjVtfIc5NvfuZUcAXmokjrkHtfeKwYKCA+aE37+BncvYcaExHkYM7scYh5Xmml/IO
+	 R230XFKlZLrER8AV7yvx6R8pFcV9MnnF/HoWJa9+KEIHSJainQXXZe0ytHrkcEcBfk
+	 Jbw/qezW8OKeg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/4] perf report: Enable data-type profiling with -F option too
-Date: Tue,  9 Dec 2025 18:33:25 -0800
-Message-ID: <20251210023327.1669863-2-namhyung@kernel.org>
+Subject: [PATCH 3/4] perf report: Fix histogram entry collapsing for -F option
+Date: Tue,  9 Dec 2025 18:33:26 -0800
+Message-ID: <20251210023327.1669863-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
 In-Reply-To: <20251210023327.1669863-1-namhyung@kernel.org>
 References: <20251210023327.1669863-1-namhyung@kernel.org>
@@ -50,37 +50,52 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It checked -s/--sort options only.  As the sort keys can be setup using
-the -F/--fields option as well, it should enable data-type profiling
-with it too.
+Users can use -F/--fields option to set output fields and sort keys
+together.  But it missed to set perf_hpp_list->need_collapse for sort
+entries that have se_collapse callbacks.  So it ends up with having
+duplicated entries separately.
 
-The following two commands should have the same output.
+For example, let's run this command first.
 
-  $ perf report -s type
+  $ perf mem record -t load -U -- perf test -w datasym
 
-  $ perf report -F overhead,type
+This will record samples for memory access (load) to struct 'buf' and a
+loop condition ('sig_atomic_t') types.  So the following two commands
+should have identical output.
 
-But there's another problem on this.  I'll handle it in the next commit.
+  $ perf report -s type --stdio --percent-limit=1 -q
+      87.80%  perf                  buf
+      12.17%  perf                  sig_atomic_t
+
+But using -F option didn't collapse the entries based on types so the
+result looked like below:
+
+  $ perf report -F overhead,type --stdio --percent-limit=1 -q
+      23.31%  perf                  buf
+      22.84%  perf                  buf
+      21.26%  perf                  buf
+      20.39%  perf                  buf
+      12.17%  perf                  sig_atomic_t
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-report.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/sort.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index add6b1c2aaf04270..6c2b4f93ec78e579 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1727,7 +1727,8 @@ int cmd_report(int argc, const char **argv)
- 			sort_order = NULL;
- 	}
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index a0a5c1c40af0c318..c51604eaae0a4b90 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -3578,6 +3578,9 @@ static int __sort_dimension__add_output(struct perf_hpp_list *list,
+ 	if (__sort_dimension__add_hpp_output(sd, list, level) < 0)
+ 		return -1;
  
--	if (sort_order && strstr(sort_order, "type")) {
-+	if ((sort_order && strstr(sort_order, "type")) ||
-+	    (field_order && strstr(field_order, "type"))) {
- 		report.data_type = true;
- 		annotate_opts.annotate_src = false;
- 
++	if (sd->entry->se_collapse)
++		list->need_collapse = 1;
++
+ 	sd->taken = 1;
+ 	return 0;
+ }
 -- 
 2.52.0.223.gf5cc29aaa4-goog
 
