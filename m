@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8C6A2236E8;
-	Wed, 10 Dec 2025 14:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7293621D3E4;
+	Wed, 10 Dec 2025 14:45:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765377915; cv=none; b=ZCieOYFsfPspbRoNWo1q70pnC5lxk6zFBESfacp/BCQBlyXFOTBnrRwfuWmQyvAHEfgyojcGeexh9o/XCnOrUZfueEq0xl2iCgjaXC93oYf3b5VX0rDdVYjs0AcFd8cUvLomR9d/JX6pi9K+FwUGdx42iMJaQLwKfJQvqSvq0Ts=
+	t=1765377917; cv=none; b=I7inkHHQSqlCX2BMWxC2ZAQPLXJhkTEv52625pRcLsoWCpeHOv2FsuCoJYVIerDhLl5ijaObANVTUxQWCZLEDLz0XNMDUiPhuzXdj6hwP8P8hn5vQX1v6UFkvXeLT/WsjgQ53FFKiCRLdMFoM/RJ5C5RQlbotmeSV3mPosG9bSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765377915; c=relaxed/simple;
-	bh=yvoSzS8tbtymMGwetG3HBDWv7plELrvOOfPbygBGJMw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=o3bcYQCmoTuXDBo3cwg0mAGIyGCK2bF5u0xouyo5OHUCHueLjnURuhOcmm2DZ/qIgnkuvr7XvKS9q0Q/pplvRhGjZf4jiwrn8YYSMdo8MM/aT9C6vaPYO2ELGDDA2Fwlt4BldtFHBzXEH6azShJjBkir7Hd6ekSKvRE8lTU4Kec=
+	s=arc-20240116; t=1765377917; c=relaxed/simple;
+	bh=8OEmoIgIriThyMB8vH4BttKXvKwkoWY96zD1JVdlIlE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZcRo85GyplPXNoucOGIZG6Z2BpQGYLqjg+KQjmiuNK6e1Wqrrep2tUrRimKH+1X1JMBXHc5zLCf+9/1AW9vHK8D/Ei3PEV3Pp6HdxeUvNSp8eMxP9d8QBaRQBeN1ZHBAshpbanFbuvtg9t537NrWMO/asPirZeYAFn4sQGALm0s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B725F153B;
-	Wed, 10 Dec 2025 06:45:05 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 425BB175D;
+	Wed, 10 Dec 2025 06:45:07 -0800 (PST)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B35CA3F73B;
-	Wed, 10 Dec 2025 06:45:11 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 403EF3F73B;
+	Wed, 10 Dec 2025 06:45:13 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v2 0/3] tools build: Fix arm64's unistd_64.h dependency
-Date: Wed, 10 Dec 2025 14:44:54 +0000
-Message-Id: <20251210-perf_fix_syscall_header-v2-0-b18b6016e0ea@arm.com>
+Date: Wed, 10 Dec 2025 14:44:55 +0000
+Subject: [PATCH v2 1/3] tools headers: Add arm64's unistd_64.h
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,11 +29,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGaHOWkC/3WNQQrCMBREr1L+2kiSRltdeQ8pJSY/NtA25UeCp
- eTuxoJLl2+YebNBRPIY4VptQJh89GEuIA8VmEHPT2TeFgbJ5UlIXrMFyfXOv/u4RqPHsR9QWyS
- GsuVOX2phlYKyXghLazffu8KDj69A636UxDf9OdVfZxKMs0eLsnGNQnvWN03T0YQJupzzBzxoh
- Q+8AAAA
-X-Change-ID: 20251203-perf_fix_syscall_header-e280fa931d44
+Message-Id: <20251210-perf_fix_syscall_header-v2-1-b18b6016e0ea@arm.com>
+References: <20251210-perf_fix_syscall_header-v2-0-b18b6016e0ea@arm.com>
+In-Reply-To: <20251210-perf_fix_syscall_header-v2-0-b18b6016e0ea@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
  Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
@@ -41,53 +39,396 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1765377911; l=1719;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1765377911; l=11689;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=yvoSzS8tbtymMGwetG3HBDWv7plELrvOOfPbygBGJMw=;
- b=cXOuaQ3/vcACMSeGA1wc/mnb6KfUB9o5pFPbzer/gc1JoK1X3RkKnxkdImSmRr51Q7ZOqs5aZ
- AdOC/1Lz5x+BIPIWZwh2DUUeLxVhsQhj3wEdfYVZoQ7TFEF93Tp+yrr
+ bh=8OEmoIgIriThyMB8vH4BttKXvKwkoWY96zD1JVdlIlE=;
+ b=Uc7Zl43JrigfuhkQG/MuXwE1I9YFWYp4lnjrrvF7la5oVKZb5+RfB0wVxEgt+s/sZ0BbcJj4R
+ Xpmta0HEtKxCaGn6zpIpMj7/tS8dEgIPuN9HHeS2YYaj3N+QTaYat55
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Arm64's unistd.h is included in the tools build, but its dependent
-header unistd_64.h is missing.  This results in only a partial set of UAPI
-headers being available, forcing tools to generate unistd_64.h dynamically.
+The header unistd.h is included under Arm64's uAPI folder (see
+tools/arch/arm64/include/uapi/asm/), but it does not include its
+dependent header unistd_64.h.  The intention is for unistd_64.h to be
+generated dynamically using scripts/Makefile.asm-headers.
 
-Because unistd.h is widely used across the tools directory, relying on a
-dynamically generated header is fragile, especially when a tool builds in
-multiple stages, each of which may include unistd.h.
+However, this dynamic approach causes problems because the header is not
+available early enough, even though it is widely included throughout
+tools.  Using the perf build as an example:
 
-This series addresses the issue by adding a generated unistd_64.h
-directly to the tools tree, ensuring the header is available from the
-start and eliminating build failures due to header dependency.
+ 1) Feature detection: Perf first runs feature tests.
 
-This series has been tested with Arm64 cross-compilation and confirmed
-that the BPF feature is enabled in perf.  It also verifies libperf
-in-source builds with applying this series.
+    The BPF feature program test-bpf.c includes unistd.h.  Since
+    unistd_64.h has not been generated yet, the program fails to build,
+    and the BPF feature ends up being disabled.
 
+ 2) libperf build:
+
+    The libperf Makefile later generates unistd_64.h on the fly, so
+    libperf itself builds successfully.
+
+ 3) Final perf build:
+
+    Although the perf binary can build successfully using the generated
+    header, we never get a chance to build BPF skeleton programs,
+    because BPF support was already disabled earlier.
+
+We can fix perf build issue by generating unistd_64.h before feature
+detection.  However, the problem persists whenever any program under
+tools attempts to include unistd.h.
+
+To address this reliably, and to keep the behavior consistent with other
+architectures, we add a generated unistd_64.h header under arm64's uAPI
+folder.  This ensures the header is available from the start.
+
+Fixes: 22f72088ffe6 ("tools headers: Update the syscall table with the kernel sources")
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
-Changes in v2:
-- Added a consistency check (Ian).
-- Rebased on the latest perf-tools-next.
-- Link to v1: https://lore.kernel.org/r/20251204-perf_fix_syscall_header-v1-0-b8e27f74ed6a@arm.com
-
----
-Leo Yan (3):
-      tools headers: Add arm64's unistd_64.h
-      Revert "perf tools: Fix arm64 build by generating unistd_64.h"
-      tools headers: Verify arm64's unistd_64.h
-
  tools/arch/arm64/include/uapi/asm/unistd_64.h | 335 ++++++++++++++++++++++++++
- tools/lib/perf/Makefile                       |  14 +-
- tools/perf/Makefile.config                    |   1 -
- tools/perf/check-headers.sh                   |   9 +
- 4 files changed, 346 insertions(+), 13 deletions(-)
----
-base-commit: cb015814f8b6eebcbb8e46e111d108892c5e6821
-change-id: 20251203-perf_fix_syscall_header-e280fa931d44
+ 1 file changed, 335 insertions(+)
 
-Best regards,
+diff --git a/tools/arch/arm64/include/uapi/asm/unistd_64.h b/tools/arch/arm64/include/uapi/asm/unistd_64.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..e42428a19d96f672f23ad03ec5982794978933a5
+--- /dev/null
++++ b/tools/arch/arm64/include/uapi/asm/unistd_64.h
+@@ -0,0 +1,335 @@
++#ifndef _UAPI_ASM_UNISTD_64_H
++#define _UAPI_ASM_UNISTD_64_H
++
++#define __NR_io_setup 0
++#define __NR_io_destroy 1
++#define __NR_io_submit 2
++#define __NR_io_cancel 3
++#define __NR_io_getevents 4
++#define __NR_setxattr 5
++#define __NR_lsetxattr 6
++#define __NR_fsetxattr 7
++#define __NR_getxattr 8
++#define __NR_lgetxattr 9
++#define __NR_fgetxattr 10
++#define __NR_listxattr 11
++#define __NR_llistxattr 12
++#define __NR_flistxattr 13
++#define __NR_removexattr 14
++#define __NR_lremovexattr 15
++#define __NR_fremovexattr 16
++#define __NR_getcwd 17
++#define __NR_lookup_dcookie 18
++#define __NR_eventfd2 19
++#define __NR_epoll_create1 20
++#define __NR_epoll_ctl 21
++#define __NR_epoll_pwait 22
++#define __NR_dup 23
++#define __NR_dup3 24
++#define __NR_fcntl 25
++#define __NR_inotify_init1 26
++#define __NR_inotify_add_watch 27
++#define __NR_inotify_rm_watch 28
++#define __NR_ioctl 29
++#define __NR_ioprio_set 30
++#define __NR_ioprio_get 31
++#define __NR_flock 32
++#define __NR_mknodat 33
++#define __NR_mkdirat 34
++#define __NR_unlinkat 35
++#define __NR_symlinkat 36
++#define __NR_linkat 37
++#define __NR_renameat 38
++#define __NR_umount2 39
++#define __NR_mount 40
++#define __NR_pivot_root 41
++#define __NR_nfsservctl 42
++#define __NR_statfs 43
++#define __NR_fstatfs 44
++#define __NR_truncate 45
++#define __NR_ftruncate 46
++#define __NR_fallocate 47
++#define __NR_faccessat 48
++#define __NR_chdir 49
++#define __NR_fchdir 50
++#define __NR_chroot 51
++#define __NR_fchmod 52
++#define __NR_fchmodat 53
++#define __NR_fchownat 54
++#define __NR_fchown 55
++#define __NR_openat 56
++#define __NR_close 57
++#define __NR_vhangup 58
++#define __NR_pipe2 59
++#define __NR_quotactl 60
++#define __NR_getdents64 61
++#define __NR_lseek 62
++#define __NR_read 63
++#define __NR_write 64
++#define __NR_readv 65
++#define __NR_writev 66
++#define __NR_pread64 67
++#define __NR_pwrite64 68
++#define __NR_preadv 69
++#define __NR_pwritev 70
++#define __NR_sendfile 71
++#define __NR_pselect6 72
++#define __NR_ppoll 73
++#define __NR_signalfd4 74
++#define __NR_vmsplice 75
++#define __NR_splice 76
++#define __NR_tee 77
++#define __NR_readlinkat 78
++#define __NR_newfstatat 79
++#define __NR_fstat 80
++#define __NR_sync 81
++#define __NR_fsync 82
++#define __NR_fdatasync 83
++#define __NR_sync_file_range 84
++#define __NR_timerfd_create 85
++#define __NR_timerfd_settime 86
++#define __NR_timerfd_gettime 87
++#define __NR_utimensat 88
++#define __NR_acct 89
++#define __NR_capget 90
++#define __NR_capset 91
++#define __NR_personality 92
++#define __NR_exit 93
++#define __NR_exit_group 94
++#define __NR_waitid 95
++#define __NR_set_tid_address 96
++#define __NR_unshare 97
++#define __NR_futex 98
++#define __NR_set_robust_list 99
++#define __NR_get_robust_list 100
++#define __NR_nanosleep 101
++#define __NR_getitimer 102
++#define __NR_setitimer 103
++#define __NR_kexec_load 104
++#define __NR_init_module 105
++#define __NR_delete_module 106
++#define __NR_timer_create 107
++#define __NR_timer_gettime 108
++#define __NR_timer_getoverrun 109
++#define __NR_timer_settime 110
++#define __NR_timer_delete 111
++#define __NR_clock_settime 112
++#define __NR_clock_gettime 113
++#define __NR_clock_getres 114
++#define __NR_clock_nanosleep 115
++#define __NR_syslog 116
++#define __NR_ptrace 117
++#define __NR_sched_setparam 118
++#define __NR_sched_setscheduler 119
++#define __NR_sched_getscheduler 120
++#define __NR_sched_getparam 121
++#define __NR_sched_setaffinity 122
++#define __NR_sched_getaffinity 123
++#define __NR_sched_yield 124
++#define __NR_sched_get_priority_max 125
++#define __NR_sched_get_priority_min 126
++#define __NR_sched_rr_get_interval 127
++#define __NR_restart_syscall 128
++#define __NR_kill 129
++#define __NR_tkill 130
++#define __NR_tgkill 131
++#define __NR_sigaltstack 132
++#define __NR_rt_sigsuspend 133
++#define __NR_rt_sigaction 134
++#define __NR_rt_sigprocmask 135
++#define __NR_rt_sigpending 136
++#define __NR_rt_sigtimedwait 137
++#define __NR_rt_sigqueueinfo 138
++#define __NR_rt_sigreturn 139
++#define __NR_setpriority 140
++#define __NR_getpriority 141
++#define __NR_reboot 142
++#define __NR_setregid 143
++#define __NR_setgid 144
++#define __NR_setreuid 145
++#define __NR_setuid 146
++#define __NR_setresuid 147
++#define __NR_getresuid 148
++#define __NR_setresgid 149
++#define __NR_getresgid 150
++#define __NR_setfsuid 151
++#define __NR_setfsgid 152
++#define __NR_times 153
++#define __NR_setpgid 154
++#define __NR_getpgid 155
++#define __NR_getsid 156
++#define __NR_setsid 157
++#define __NR_getgroups 158
++#define __NR_setgroups 159
++#define __NR_uname 160
++#define __NR_sethostname 161
++#define __NR_setdomainname 162
++#define __NR_getrlimit 163
++#define __NR_setrlimit 164
++#define __NR_getrusage 165
++#define __NR_umask 166
++#define __NR_prctl 167
++#define __NR_getcpu 168
++#define __NR_gettimeofday 169
++#define __NR_settimeofday 170
++#define __NR_adjtimex 171
++#define __NR_getpid 172
++#define __NR_getppid 173
++#define __NR_getuid 174
++#define __NR_geteuid 175
++#define __NR_getgid 176
++#define __NR_getegid 177
++#define __NR_gettid 178
++#define __NR_sysinfo 179
++#define __NR_mq_open 180
++#define __NR_mq_unlink 181
++#define __NR_mq_timedsend 182
++#define __NR_mq_timedreceive 183
++#define __NR_mq_notify 184
++#define __NR_mq_getsetattr 185
++#define __NR_msgget 186
++#define __NR_msgctl 187
++#define __NR_msgrcv 188
++#define __NR_msgsnd 189
++#define __NR_semget 190
++#define __NR_semctl 191
++#define __NR_semtimedop 192
++#define __NR_semop 193
++#define __NR_shmget 194
++#define __NR_shmctl 195
++#define __NR_shmat 196
++#define __NR_shmdt 197
++#define __NR_socket 198
++#define __NR_socketpair 199
++#define __NR_bind 200
++#define __NR_listen 201
++#define __NR_accept 202
++#define __NR_connect 203
++#define __NR_getsockname 204
++#define __NR_getpeername 205
++#define __NR_sendto 206
++#define __NR_recvfrom 207
++#define __NR_setsockopt 208
++#define __NR_getsockopt 209
++#define __NR_shutdown 210
++#define __NR_sendmsg 211
++#define __NR_recvmsg 212
++#define __NR_readahead 213
++#define __NR_brk 214
++#define __NR_munmap 215
++#define __NR_mremap 216
++#define __NR_add_key 217
++#define __NR_request_key 218
++#define __NR_keyctl 219
++#define __NR_clone 220
++#define __NR_execve 221
++#define __NR_mmap 222
++#define __NR_fadvise64 223
++#define __NR_swapon 224
++#define __NR_swapoff 225
++#define __NR_mprotect 226
++#define __NR_msync 227
++#define __NR_mlock 228
++#define __NR_munlock 229
++#define __NR_mlockall 230
++#define __NR_munlockall 231
++#define __NR_mincore 232
++#define __NR_madvise 233
++#define __NR_remap_file_pages 234
++#define __NR_mbind 235
++#define __NR_get_mempolicy 236
++#define __NR_set_mempolicy 237
++#define __NR_migrate_pages 238
++#define __NR_move_pages 239
++#define __NR_rt_tgsigqueueinfo 240
++#define __NR_perf_event_open 241
++#define __NR_accept4 242
++#define __NR_recvmmsg 243
++#define __NR_wait4 260
++#define __NR_prlimit64 261
++#define __NR_fanotify_init 262
++#define __NR_fanotify_mark 263
++#define __NR_name_to_handle_at 264
++#define __NR_open_by_handle_at 265
++#define __NR_clock_adjtime 266
++#define __NR_syncfs 267
++#define __NR_setns 268
++#define __NR_sendmmsg 269
++#define __NR_process_vm_readv 270
++#define __NR_process_vm_writev 271
++#define __NR_kcmp 272
++#define __NR_finit_module 273
++#define __NR_sched_setattr 274
++#define __NR_sched_getattr 275
++#define __NR_renameat2 276
++#define __NR_seccomp 277
++#define __NR_getrandom 278
++#define __NR_memfd_create 279
++#define __NR_bpf 280
++#define __NR_execveat 281
++#define __NR_userfaultfd 282
++#define __NR_membarrier 283
++#define __NR_mlock2 284
++#define __NR_copy_file_range 285
++#define __NR_preadv2 286
++#define __NR_pwritev2 287
++#define __NR_pkey_mprotect 288
++#define __NR_pkey_alloc 289
++#define __NR_pkey_free 290
++#define __NR_statx 291
++#define __NR_io_pgetevents 292
++#define __NR_rseq 293
++#define __NR_kexec_file_load 294
++#define __NR_pidfd_send_signal 424
++#define __NR_io_uring_setup 425
++#define __NR_io_uring_enter 426
++#define __NR_io_uring_register 427
++#define __NR_open_tree 428
++#define __NR_move_mount 429
++#define __NR_fsopen 430
++#define __NR_fsconfig 431
++#define __NR_fsmount 432
++#define __NR_fspick 433
++#define __NR_pidfd_open 434
++#define __NR_clone3 435
++#define __NR_close_range 436
++#define __NR_openat2 437
++#define __NR_pidfd_getfd 438
++#define __NR_faccessat2 439
++#define __NR_process_madvise 440
++#define __NR_epoll_pwait2 441
++#define __NR_mount_setattr 442
++#define __NR_quotactl_fd 443
++#define __NR_landlock_create_ruleset 444
++#define __NR_landlock_add_rule 445
++#define __NR_landlock_restrict_self 446
++#define __NR_memfd_secret 447
++#define __NR_process_mrelease 448
++#define __NR_futex_waitv 449
++#define __NR_set_mempolicy_home_node 450
++#define __NR_cachestat 451
++#define __NR_fchmodat2 452
++#define __NR_map_shadow_stack 453
++#define __NR_futex_wake 454
++#define __NR_futex_wait 455
++#define __NR_futex_requeue 456
++#define __NR_statmount 457
++#define __NR_listmount 458
++#define __NR_lsm_get_self_attr 459
++#define __NR_lsm_set_self_attr 460
++#define __NR_lsm_list_modules 461
++#define __NR_mseal 462
++#define __NR_setxattrat 463
++#define __NR_getxattrat 464
++#define __NR_listxattrat 465
++#define __NR_removexattrat 466
++#define __NR_open_tree_attr 467
++#define __NR_file_getattr 468
++#define __NR_file_setattr 469
++#define __NR_listns 470
++
++#ifdef __KERNEL__
++#define __NR_syscalls 471
++#endif
++
++#endif /* _UAPI_ASM_UNISTD_64_H */
+
 -- 
-Leo Yan <leo.yan@arm.com>
+2.34.1
 
