@@ -1,108 +1,264 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436743271E6;
-	Wed, 10 Dec 2025 20:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765398180; cv=none; b=QvLHWaf9mNxmBUidc9E2/HO+SZ3QXGJQ6Za4nIbxvBdmCxWpYcOqlsVn8fsYRKoNb4G4jjAmv1G1nJJJMyAlglj/gv+DcbzD4OoZSlimrw8rDF7yX2sQovIecXU+uLCAL3PL3CnqMIb8DN3h/gfxw+LEB66rU/f372MZW+FxRoQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765398180; c=relaxed/simple;
-	bh=RxEHatHQ0Qy/ChtgEVQnw0Bex/SyCFO2r36FHfM3As0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qzdXvcIFQaH5Vu5Qmqlaq0AiFjlBotxz2P9VLF0c0oPzf5EGiYWIIQVkr3S0oZiwKstfSTtE89bYL5QX641t3tROBiISwb0L+xKeMVw6fRbT8QeWiSDn4XbPFEQnMxHTHslwkXS34Nfk9VkpFxzqWeSZSP/DcBKfUwS0DQECgJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k5eG4Aqg; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464C726056E
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Dec 2025 22:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765404338; cv=pass; b=MFvCkxD5YXLL7o3in9WEb3DywJAVgXa0bqr91pRlBYoucq5GYHxabLglO3GAkISw9L1ulCmDugwbiGyp9KdNUh8Xz8/hfx35j34xw5Cn5HsxerDiYZBMhg5gJwAZsOeqT4uRZHn1A+HBlZ/uS7+aHtEYLaHZvSfOzlgzISpDGXM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765404338; c=relaxed/simple;
+	bh=YaHPhK9K9MlUuKe1T7Oj53UXHOehWvE/JBH6DaB0rlM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gYq+6ex0fEInbQ1Yr1wk2nSsmW8CeRDhQ6oLIpwBt3GzsMZZHRV0wZA4gD7NHYxmSnT3y4sHKNczZkNacRVmWiTLRKZ5cYo75BnTyOuG4pvC7aXIvV/gw5Rpg8BBT6eVl+ZX6Rm9EOZQZxaH7lK75DIQHR+MCbuRrhCsVruea88=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1BDxB1mp; arc=pass smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k5eG4Aqg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765398179; x=1796934179;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RxEHatHQ0Qy/ChtgEVQnw0Bex/SyCFO2r36FHfM3As0=;
-  b=k5eG4AqgJ2aBUrQBA7NkKCAPG3PyIxJmUotlw/JYwEvOpSqGyZ3jwkwK
-   0JoH/zhqlvbCOTWdYZEac85GdXR2XlZOqsTc1Bxf8tIY7RKNdoRK2d92A
-   Y1/6BNFq3wliuxQ+hzNGdibDFFlgqFhhq5E4RAkZy3/KlQZiTapmcDgrv
-   7+VlQYfJnB6Wfr483Flcf6bvCybIx67vicgQz0OegjdJiGaQtu4H1NTqM
-   j7/saeSy/mgdFD0V6RgTcxlOaITSV6Xzcukp59ZJ9tGWTKr8pxfYjBUCg
-   m+CKzpxr44sp9o9xHVQ8jDcqEatKWEIZFS+Ff1PxbXAG4CZephvllZo+3
-   Q==;
-X-CSE-ConnectionGUID: CA9+IsSiRISpGGwsflqdEA==
-X-CSE-MsgGUID: NeMt5UMAQ5anj7lo5xOkfQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11638"; a="78846115"
-X-IronPort-AV: E=Sophos;i="6.20,264,1758610800"; 
-   d="scan'208";a="78846115"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 12:22:58 -0800
-X-CSE-ConnectionGUID: cQOMJWuWSbOlJRB/Ih9UEQ==
-X-CSE-MsgGUID: bTPfKaUBSC2wiNq3JOclMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,264,1758610800"; 
-   d="scan'208";a="195684982"
-Received: from lkp-server01.sh.intel.com (HELO d335e3c6db51) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 10 Dec 2025 12:22:52 -0800
-Received: from kbuild by d335e3c6db51 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vTQi1-000000003j7-3dyl;
-	Wed, 10 Dec 2025 20:22:49 +0000
-Date: Thu, 11 Dec 2025 04:21:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	Colton Lewis <coltonlewis@google.com>
-Subject: Re: [PATCH v5 09/24] perf: arm_pmuv3: Keep out of guest counter
- partition
-Message-ID: <202512110439.UXwb1Qh4-lkp@intel.com>
-References: <20251209205121.1871534-10-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1BDxB1mp"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2980343d9d1so25355ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Dec 2025 14:05:35 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1765404334; cv=none;
+        d=google.com; s=arc-20240605;
+        b=D8J1mx4tTGGb5MyEhQcDxf3bDQlyNOo/YSwOZccxAVg+elbrexAAyCUpg6EwemZZmA
+         XgpYlYsB4TZxrji7XJhQaJOJyUT2QgvMTeYz/2Fl+nmKHGGE4zx+GuWd7vI4cFgSj7XS
+         R2znKSRJpLXteMhUqx2XNbbgJXh13fq2OxQ0qwtRWUEo2TkuN9MQXYNY6b1YIPgPlRt1
+         0cpTdHsBfQbI8F8NKapOdvSWW6wnB/KorPnmx+rnhzeLpa/FMr/5btTnqoWCkOdig/JS
+         qjL1geWhYMGrUelawolo9xHeZUh4WEMis562POm2JUYn5nybaXA9LYBtMsr8fYJwIovB
+         iKNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Zf0CLyhh9XE4rR8idUFmiczPVQuqzFdqmqmc6AJeS+s=;
+        fh=AHRblmFmTqDMBo/T9Bil027w5E+0qWgoVUXa6FdgpDQ=;
+        b=TbGGNP3Kyb5x9v0XwO5c0hSl5DSJHm5qymi7JU/86PVSp/Rv3Vt25gXqC4eLRcCCta
+         K4ykwn0kddqhqvX14v/U8l/Aacwiya6XgbU01D5LUoq3hshgMlW718HXgCXjpL9IVsEv
+         Ug+dKLonub0ELeW3Ir33IQLZTfE+71bCvvDfupGdCGQVkPtSmk9esRGaxRFvobFitPaJ
+         z/DHBcgloaUMNLfANk1SGLHdCGKNovd4FJwHglHXKaaWdyQdOOP8n7PdYMpSENqZ4emD
+         kanZNmOv8NtI8F2CKN6PrBAEYuHx7zpcWcukAnvTdjY9XoY7GENn8pRh8kpNPV+kmf0r
+         9Aag==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1765404334; x=1766009134; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zf0CLyhh9XE4rR8idUFmiczPVQuqzFdqmqmc6AJeS+s=;
+        b=1BDxB1mpiP7Ut3s24534/uK+dJLi5PO0kC80Jk+Vq26IzOCOLQ1oINrWDFLQxnjEZf
+         3iOm15WZEKk2Awj/R8qxgoEkXZTT58MntWypUsb9L2Ryysrb4iz9xmc7Bu9RRBxdM91R
+         MxL9ksVrtVX4+3tTkbLXGUTFem7o9HiHbpD/7AtgDrkl551xvDovvdI18sAw21hWE2qS
+         8Q5l3+S1i4gN3zFS+n3hby+TTyyNzPOOougp01e3FAi+oY9ObKjR+/vGOmw6FW1vsh/z
+         2suzbv38y+a+OzUNyTV1PpB1N9DyXQJRpuqFBEgHYFKHuzJSZU2xM3MgYc6qEWcIv5Qh
+         VlzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765404334; x=1766009134;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Zf0CLyhh9XE4rR8idUFmiczPVQuqzFdqmqmc6AJeS+s=;
+        b=dfITl1LZLGzR2Bef7eU0NnqcKsT1KHaWFjKi4A9CVkvVWRk3HOIlpPVUGNny1LKeBz
+         9Lp0JnfBl7cVn1PLklFOO0xsQ756eUuXYBv1DSag8uY5OTJwJH/tYBSg5RHRjScMk+kb
+         ja+bhQI9hyr/og8CyxhQt3tr+z8U/CEulpJZNu/dnEH9JbaRyxfbHQzNE3ihEOJwP8s1
+         gsvGRlnwGp9JDN+Uq2+ybxUkD8TAX3ebUtpphapvtCYXUUCW7ppU1s9qKmFKY6WvNhXu
+         xsz+qiivP9UP7QLysOfgmrHK5c9yiGo688JYDUBqOv9JQnUBzAnyCXc/LTlHW/pwSfIf
+         jZxg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVLgZlDCFjF3gCHN6Bd/YRIiTUEazauj4SPQ6Uatc0H2yH9CmSp3tp8Y/4zZd7Pa/z6oYAuVHlVFoWgTyCcv8k@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2WE0cfQxveq3IJUYD4tBvH8tPMSwlthLSlAoI2M9BazuUUDgR
+	XFIxjd+4ELehtsn9MMF59fbw67b1YF6RE0/RTLU+Q24mCA+X8keqkrN3rNdevlFiXk+u53/z4fy
+	Tf5FjIqy1YWzI+9UrLk0TDJaoQXPNv1p5BRJPGNsu
+X-Gm-Gg: AY/fxX4hh6viF7kBgCIlI2D1LKpyfqvMLso08yLvaBdOZDCBMP3E8rp8hmm1FsffEsP
+	p9xboylCU8XJxrwHEtmGI90WxY/cXbBB1wAktZEGJCDmkT11h062qGOAmBe1RouVb03dQgYsgkP
+	cg6gWBwNljS7dDww4fjjgK+4BIvlL+mWzgv3te1jfeBY742lGcR3mnzYwXkl3QJu7qKcR9dz23l
+	TOvVoLb22TXZ21XioK8dqzkHXz5BuuXV24xjRml/1VnSFNmL8z/cgnE8j2hExmlH6PJQZet
+X-Google-Smtp-Source: AGHT+IEMPlf2j0Ecy0eDDIvDUE7c2ahNUI7yoLGruflKTBqKQOPy6xaufeGDm4K14X9HtIMXKb3tnuobtzLma+MdRVM=
+X-Received: by 2002:a17:902:f544:b0:26d:72f8:8cfa with SMTP id
+ d9443c01a7336-29eed44b201mr408415ad.13.1765404334209; Wed, 10 Dec 2025
+ 14:05:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251209205121.1871534-10-coltonlewis@google.com>
+References: <20251210023327.1669863-1-namhyung@kernel.org>
+In-Reply-To: <20251210023327.1669863-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 10 Dec 2025 14:05:23 -0800
+X-Gm-Features: AQt7F2qKGr2jBIWxCrmf2q-kRDQ4m-cDZSBnndf_wXmszy8dSdXpLWHt4Lzdqvs
+Message-ID: <CAP-5=fXsrKvKAtAW3b-OzAdzg00hW-py-9eMvCxoY3Vs4p+7iw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] perf record: Split --data-mmap option
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Colton,
+On Tue, Dec 9, 2025 at 6:33=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> Currently -d/--data option controls both PERF_SAMPLE_ADDR bit and
+> perf_event_attr.mmap_data flag.  Separate them using new --data-mmap
+> option to support recording only one of them.
+>
+> For data-type profiling, data MMAP is unnecessary but it wastes a lot
+> of space in the ring buffer and data file.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-kernel test robot noticed the following build warnings:
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-[auto build test WARNING on ac3fd01e4c1efce8f2c054cdeb2ddd2fc0fb150d]
+Thanks,
+Ian
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Colton-Lewis/arm64-cpufeature-Add-cpucap-for-HPMN0/20251210-055309
-base:   ac3fd01e4c1efce8f2c054cdeb2ddd2fc0fb150d
-patch link:    https://lore.kernel.org/r/20251209205121.1871534-10-coltonlewis%40google.com
-patch subject: [PATCH v5 09/24] perf: arm_pmuv3: Keep out of guest counter partition
-config: arm64-defconfig (https://download.01.org/0day-ci/archive/20251211/202512110439.UXwb1Qh4-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251211/202512110439.UXwb1Qh4-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512110439.UXwb1Qh4-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> Warning: arch/arm64/kvm/pmu-direct.c:75 function parameter 'pmu' not described in 'kvm_pmu_guest_counter_mask'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  tools/perf/Documentation/perf-record.txt |  8 +++++++-
+>  tools/perf/builtin-record.c              | 19 +++++++++++++------
+>  tools/perf/util/evsel.c                  |  5 +++--
+>  tools/perf/util/record.h                 |  2 ++
+>  4 files changed, 25 insertions(+), 9 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Docume=
+ntation/perf-record.txt
+> index e8b9aadbbfa50574..c402e74172f6a22d 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -344,7 +344,8 @@ OPTIONS
+>
+>  -d::
+>  --data::
+> -       Record the sample virtual addresses.  Implies --sample-mem-info.
+> +       Record the sample virtual addresses.  Implies --sample-mem-info a=
+nd
+> +       --data-mmap.
+>
+>  --phys-data::
+>         Record the sample physical addresses.
+> @@ -861,6 +862,11 @@ filtered through the mask provided by -C option.
+>         Prepare BPF filter to be used by regular users.  The action shoul=
+d be
+>         either "pin" or "unpin".  The filter can be used after it's pinne=
+d.
+>
+> +--data-mmap::
+> +       Enable recording MMAP events for non-executable mappings.  Basica=
+lly
+> +       perf only records executable mappings but data mmaping can be use=
+ful
+> +       when you analyze data access with sample addresses.  So using -d =
+option
+> +       would enable this unless you specify --no-data-mmap manually.
+>
+>  include::intel-hybrid.txt[]
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 2584d0d8bc820676..cbfbd9bb10634093 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1881,7 +1881,7 @@ static int record__synthesize_workload(struct recor=
+d *rec, bool tail)
+>                                                  process_synthesized_even=
+t,
+>                                                  &rec->session->machines.=
+host,
+>                                                  needs_mmap,
+> -                                                rec->opts.sample_address=
+);
+> +                                                rec->opts.record_data_mm=
+ap);
+>         perf_thread_map__put(thread_map);
+>         return err;
+>  }
+> @@ -2191,7 +2191,7 @@ static int record__synthesize(struct record *rec, b=
+ool tail)
+>
+>                 err =3D __machine__synthesize_threads(machine, tool, &opt=
+s->target,
+>                                                     rec->evlist->core.thr=
+eads,
+> -                                                   f, needs_mmap, opts->=
+sample_address,
+> +                                                   f, needs_mmap, opts->=
+record_data_mmap,
+>                                                     rec->opts.nr_threads_=
+synthesize);
+>         }
+>
+> @@ -3006,8 +3006,9 @@ int record_opts__parse_callchain(struct record_opts=
+ *record,
+>         ret =3D parse_callchain_record_opt(arg, callchain);
+>         if (!ret) {
+>                 /* Enable data address sampling for DWARF unwind. */
+> -               if (callchain->record_mode =3D=3D CALLCHAIN_DWARF)
+> -                       record->sample_address =3D true;
+> +               if (callchain->record_mode =3D=3D CALLCHAIN_DWARF &&
+> +                   !record->record_data_mmap_set)
+> +                       record->record_data_mmap =3D true;
+>                 callchain_debug(callchain);
+>         }
+>
+> @@ -3686,6 +3687,9 @@ static struct option __record_options[] =3D {
+>         OPT_CALLBACK(0, "off-cpu-thresh", &record.opts, "ms",
+>                      "Dump off-cpu samples if off-cpu time exceeds this t=
+hreshold (in milliseconds). (Default: 500ms)",
+>                      record__parse_off_cpu_thresh),
+> +       OPT_BOOLEAN_SET(0, "data-mmap", &record.opts.record_data_mmap,
+> +                       &record.opts.record_data_mmap_set,
+> +                       "Record mmap events for non-executable mappings")=
+,
+>         OPT_END()
+>  };
+>
+> @@ -4249,9 +4253,12 @@ int cmd_record(int argc, const char **argv)
+>                 goto out_opts;
+>         }
+>
+> -       /* For backward compatibility, -d implies --mem-info */
+> -       if (rec->opts.sample_address)
+> +       /* For backward compatibility, -d implies --mem-info and --data-m=
+map */
+> +       if (rec->opts.sample_address) {
+>                 rec->opts.sample_data_src =3D true;
+> +               if (!rec->opts.record_data_mmap_set)
+> +                       rec->opts.record_data_mmap =3D true;
+> +       }
+>
+>         /*
+>          * Allow aliases to facilitate the lookup of symbols for address
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 9cd706f6279313c2..ec6552a6f667fec6 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1445,10 +1445,11 @@ void evsel__config(struct evsel *evsel, struct re=
+cord_opts *opts,
+>                 attr->inherit_stat =3D 1;
+>         }
+>
+> -       if (opts->sample_address) {
+> +       if (opts->sample_address)
+>                 evsel__set_sample_bit(evsel, ADDR);
+> +
+> +       if (opts->record_data_mmap)
+>                 attr->mmap_data =3D track;
+> -       }
+>
+>         /*
+>          * We don't allow user space callchains for  function trace
+> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+> index ea3a6c4657eefb74..93627c9a73387ddd 100644
+> --- a/tools/perf/util/record.h
+> +++ b/tools/perf/util/record.h
+> @@ -40,6 +40,8 @@ struct record_opts {
+>         bool          record_cgroup;
+>         bool          record_switch_events;
+>         bool          record_switch_events_set;
+> +       bool          record_data_mmap;
+> +       bool          record_data_mmap_set;
+>         bool          all_kernel;
+>         bool          all_user;
+>         bool          kernel_callchains;
+> --
+> 2.52.0.223.gf5cc29aaa4-goog
+>
