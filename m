@@ -1,113 +1,183 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 079FD8C1F;
-	Wed, 10 Dec 2025 02:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98022248AE;
+	Wed, 10 Dec 2025 02:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765333386; cv=none; b=oDPdLTmORZKuM6EfVxQPnm4k3kVLWeHIyQ5JlkQJAmIRyaAKOewKy8Hn+2iHG3/xjdH1MItLW+u1ga/v1boEj6pZk7/vbZsaimPE02t6gm4cj/BONjAbk2/m0N1w/QJRWsjhSuq8jWSTunzb/XE1wgHur0osSwtyRpi8VtUYjf8=
+	t=1765334019; cv=none; b=sfcPDNHQyqXNmYzbo1ae+4cwajDTp3BU3Dc8+bl3T49+Y+CK/nMwy8hj9OFYVkGkSChKrkd1ABMxuGevhm0/ArsmbGAuaK8kUWGWRUEL/Qp3iqFoDZXhi1nrGdzZJHcKDdFOvOpyst5FHCp8amxB75FEn4TnAv8XOv5GwF2ZZoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765333386; c=relaxed/simple;
-	bh=sVLlNjrqsAQvsnZWpv/v5jhk8lgaxzA7YqtWl/vVXoY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R3S90T4VSBP4s+PzMwbJAaFjHmZ7cQjAKnK5JJoE95xpHaM+UG7uIbiCMlqQjJAF5uRLSwfQk4CRpg5C3Z3OXW7bTm75X3061F1TNimeQ/ZJWK773OsyaGt7AUGdL8Jqg7bKSYyKiD5WspVbHjttvEk85yNXWCNI9Ypoh0e22f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDD36175D;
-	Tue,  9 Dec 2025 18:22:52 -0800 (PST)
-Received: from [10.164.18.52] (unknown [10.164.18.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A7E383F7A6;
-	Tue,  9 Dec 2025 18:22:54 -0800 (PST)
-Message-ID: <d39d633c-a009-41ba-8546-1137509cf678@arm.com>
-Date: Wed, 10 Dec 2025 07:52:51 +0530
+	s=arc-20240116; t=1765334019; c=relaxed/simple;
+	bh=9lgjBEPzdz9Ps357DUI1BL41O7zYzHj2Or+QpVRHjGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U+ghyR+At2QVQrOWhn0Zeqx0qn6wg8azyxHEmzVapxW5UihMd9NG85jy5NGp0fCVRIjEAgyy6RQZh+xfFwEVFgSxOPEUjKUHc5I++6YKKVizP18XKrvlRU49RAhmbCtdw38QR/9b/CcLScRTyGBMPVr/lDyOsKg0BWfPtkv+Dnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=haYhk88v; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="haYhk88v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FE8EC4CEF5;
+	Wed, 10 Dec 2025 02:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765334018;
+	bh=9lgjBEPzdz9Ps357DUI1BL41O7zYzHj2Or+QpVRHjGE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=haYhk88vc5PFnABLKashq3r6lTQKW/Jvu3sN/SPPivYVbboQ35MRi48cy+TcZLlzo
+	 4MLMUwbmNe+YIEF1uKsw6UoLmXcX6lKxSWqTf3zej188uBsASTBSxEyblou6PlSa44
+	 /Z6et1tZOePKcwqvtvdhB4LTW1VpARR/z0BybJcEUgjKTQNXeUllCQGqnftECAX76R
+	 HdS7DevIcV7M/zO1i0XdLh/oz4t9W7r36QfkHs/FZZb4SK1DUjCmVZkCK8wYr1zZfw
+	 2YA/5FXjERJANICK5ogkFgKSjGBpaqlxN0LtenH+khvQv+kZYzBwv0ezoVg+KoS8co
+	 9o870w2fcNStw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/4] perf record: Split --data-mmap option
+Date: Tue,  9 Dec 2025 18:33:24 -0800
+Message-ID: <20251210023327.1669863-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 19/19] perf: cs-etm: Set watermark for AUX trace
-To: James Clark <james.clark@linaro.org>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, Yeoreum Yun <yeoreum.yun@arm.com>,
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Tamas Petz <tamas.petz@arm.com>, Tamas Zsoldos <tamas.zsoldos@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
- <20251201-trbe_buffer_refactor_v1-1-v1-19-7da32b076b28@arm.com>
- <c22b084b-3853-405d-8b43-397786af7be9@arm.com>
- <5ebf1743-b01c-4664-961c-9e1e2aa7ffce@linaro.org>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <5ebf1743-b01c-4664-961c-9e1e2aa7ffce@linaro.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Currently -d/--data option controls both PERF_SAMPLE_ADDR bit and
+perf_event_attr.mmap_data flag.  Separate them using new --data-mmap
+option to support recording only one of them.
 
+For data-type profiling, data MMAP is unnecessary but it wastes a lot
+of space in the ring buffer and data file.
 
-On 09/12/25 8:24 PM, James Clark wrote:
-> 
-> 
-> On 05/12/2025 4:48 am, Anshuman Khandual wrote:
->> On 01/12/25 4:52 PM, Leo Yan wrote:
->>> The default watermark is half of the total buffer size. In many cases,
->>> the tool can not be notified with sufficient free space, especially when
->>> profiling with small AUX buffer (e.g., 64KiB).
->>
->> Could not smaller AUX buffer be prevented for TRBE instead ?
->>
-> 
-> It's not really about the size of the buffer but where the wakeup points are. With only two wakeup points (middle and end) once you pass the first one you are immediately into the last chance end section.
-> 
-> Now the driver is writing into the end section, but Perf is still reading from the first one. Once the end one fills up, you end up with no space left without Perf having a chance to say it's finished reading.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Documentation/perf-record.txt |  8 +++++++-
+ tools/perf/builtin-record.c              | 19 +++++++++++++------
+ tools/perf/util/evsel.c                  |  5 +++--
+ tools/perf/util/record.h                 |  2 ++
+ 4 files changed, 25 insertions(+), 9 deletions(-)
 
-Understood.
-
-> 
-> To guarantee free space, there needs to be at least one additional section as a buffer zone. Ideally we'd set the wakeup point at thirds so there were fewer wakeups and still have one free section, but it might not always divide by 3, so 4 is also fine.
-> 
-> The commit message could probably explain it a bit better though.
-
-Agreed, the commit message should explain this problem in detail. Otherwise it appeared
-as if the buffer sizing alone is impacting the perf records collection.
-
-> 
-> The reason this is different now is because we want to be able to enable wrap mode as much as possible. If you imagine the scenario where a half way watermark is hit, you can't enable wrap mode without wrapping into Perf's part of the buffer (the beginning) as it's all that's left after the second half.
-
-Got it.
-
-> 
->>>> Setting watermark to quarter of the buffer to notifies the tool to read
->>> data earlier and prevents the data loss.
->>>
->>> Signed-off-by: Leo Yan <leo.yan@arm.com>
->>> ---
->>>   tools/perf/arch/arm/util/cs-etm.c | 7 +++++++
->>>   1 file changed, 7 insertions(+)
->>>
->>> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
->>> index ea891d12f8f40beebf8dee1d3db71cad701f5666..649b8b0d0f92b4af45fb97db9da3c5ccf24a978b 100644
->>> --- a/tools/perf/arch/arm/util/cs-etm.c
->>> +++ b/tools/perf/arch/arm/util/cs-etm.c
->>> @@ -424,6 +424,13 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
->>>           pr_debug2("%s snapshot size: %zu\n", CORESIGHT_ETM_PMU_NAME,
->>>                 opts->auxtrace_snapshot_size);
->>>   +    if (!opts->auxtrace_snapshot_mode && !opts->auxtrace_sample_mode) {
->>> +        size_t aw = opts->auxtrace_mmap_pages * (size_t)page_size / 4;
->>> +        u32 aux_watermark = aw > UINT_MAX ? UINT_MAX : aw;
->>> +
->>> +        cs_etm_evsel->core.attr.aux_watermark = aux_watermark;
->>> +    }
->>> +
->>>       /*
->>>        * To obtain the auxtrace buffer file descriptor, the auxtrace
->>>        * event must come first.
->>>
->>
-> 
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index e8b9aadbbfa50574..c402e74172f6a22d 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -344,7 +344,8 @@ OPTIONS
+ 
+ -d::
+ --data::
+-	Record the sample virtual addresses.  Implies --sample-mem-info.
++	Record the sample virtual addresses.  Implies --sample-mem-info and
++	--data-mmap.
+ 
+ --phys-data::
+ 	Record the sample physical addresses.
+@@ -861,6 +862,11 @@ filtered through the mask provided by -C option.
+ 	Prepare BPF filter to be used by regular users.  The action should be
+ 	either "pin" or "unpin".  The filter can be used after it's pinned.
+ 
++--data-mmap::
++	Enable recording MMAP events for non-executable mappings.  Basically
++	perf only records executable mappings but data mmaping can be useful
++	when you analyze data access with sample addresses.  So using -d option
++	would enable this unless you specify --no-data-mmap manually.
+ 
+ include::intel-hybrid.txt[]
+ 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 2584d0d8bc820676..cbfbd9bb10634093 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1881,7 +1881,7 @@ static int record__synthesize_workload(struct record *rec, bool tail)
+ 						 process_synthesized_event,
+ 						 &rec->session->machines.host,
+ 						 needs_mmap,
+-						 rec->opts.sample_address);
++						 rec->opts.record_data_mmap);
+ 	perf_thread_map__put(thread_map);
+ 	return err;
+ }
+@@ -2191,7 +2191,7 @@ static int record__synthesize(struct record *rec, bool tail)
+ 
+ 		err = __machine__synthesize_threads(machine, tool, &opts->target,
+ 						    rec->evlist->core.threads,
+-						    f, needs_mmap, opts->sample_address,
++						    f, needs_mmap, opts->record_data_mmap,
+ 						    rec->opts.nr_threads_synthesize);
+ 	}
+ 
+@@ -3006,8 +3006,9 @@ int record_opts__parse_callchain(struct record_opts *record,
+ 	ret = parse_callchain_record_opt(arg, callchain);
+ 	if (!ret) {
+ 		/* Enable data address sampling for DWARF unwind. */
+-		if (callchain->record_mode == CALLCHAIN_DWARF)
+-			record->sample_address = true;
++		if (callchain->record_mode == CALLCHAIN_DWARF &&
++		    !record->record_data_mmap_set)
++			record->record_data_mmap = true;
+ 		callchain_debug(callchain);
+ 	}
+ 
+@@ -3686,6 +3687,9 @@ static struct option __record_options[] = {
+ 	OPT_CALLBACK(0, "off-cpu-thresh", &record.opts, "ms",
+ 		     "Dump off-cpu samples if off-cpu time exceeds this threshold (in milliseconds). (Default: 500ms)",
+ 		     record__parse_off_cpu_thresh),
++	OPT_BOOLEAN_SET(0, "data-mmap", &record.opts.record_data_mmap,
++			&record.opts.record_data_mmap_set,
++			"Record mmap events for non-executable mappings"),
+ 	OPT_END()
+ };
+ 
+@@ -4249,9 +4253,12 @@ int cmd_record(int argc, const char **argv)
+ 		goto out_opts;
+ 	}
+ 
+-	/* For backward compatibility, -d implies --mem-info */
+-	if (rec->opts.sample_address)
++	/* For backward compatibility, -d implies --mem-info and --data-mmap */
++	if (rec->opts.sample_address) {
+ 		rec->opts.sample_data_src = true;
++		if (!rec->opts.record_data_mmap_set)
++			rec->opts.record_data_mmap = true;
++	}
+ 
+ 	/*
+ 	 * Allow aliases to facilitate the lookup of symbols for address
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 9cd706f6279313c2..ec6552a6f667fec6 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1445,10 +1445,11 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 		attr->inherit_stat = 1;
+ 	}
+ 
+-	if (opts->sample_address) {
++	if (opts->sample_address)
+ 		evsel__set_sample_bit(evsel, ADDR);
++
++	if (opts->record_data_mmap)
+ 		attr->mmap_data = track;
+-	}
+ 
+ 	/*
+ 	 * We don't allow user space callchains for  function trace
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index ea3a6c4657eefb74..93627c9a73387ddd 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -40,6 +40,8 @@ struct record_opts {
+ 	bool	      record_cgroup;
+ 	bool	      record_switch_events;
+ 	bool	      record_switch_events_set;
++	bool	      record_data_mmap;
++	bool	      record_data_mmap_set;
+ 	bool	      all_kernel;
+ 	bool	      all_user;
+ 	bool	      kernel_callchains;
+-- 
+2.52.0.223.gf5cc29aaa4-goog
 
