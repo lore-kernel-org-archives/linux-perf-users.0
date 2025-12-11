@@ -1,103 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0D42D24B6;
-	Thu, 11 Dec 2025 22:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9D43B8D45
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Dec 2025 23:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765491497; cv=none; b=d7U452+Uv6lMK/hv+o2umK1msZbl9P4GsfwKvy99KJqJ93GJUBHJRksIdl35njXO0rQwQAuUN8F60PS/C7E2b0sCFgywoD/FuOv1EIlq9D56mMdUqE05BZA2avnz4lRgPyjoJCL0xSOLgazr6UHAvKRTATwPM7kjG9SJZ1DgTQs=
+	t=1765496134; cv=none; b=XCvWSHTui97eWXzZJjpB4Xz3YetDnHh4ttC8Gg1WRx4+Z93xnOXPwjFEe6gomp8IEKn2gK8MK+8jVAGkzmNNQGkhIfNtf23W0hRkhQqDKPXVmUsCeTz5ytqxjFH88a+PlloT7JWFLGM1iGP44RkFNUOKR7qbfXUwFnXP2gNHeWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765491497; c=relaxed/simple;
-	bh=C0V5aOJ0cXE0jisK65iUMGF3ss0ur1ph4+wirWwNY3Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GcvKr2ztWQScYgVl2/C1XdqS1qF8SVqHSH1N4wsRMkjcmEU2V9MX6JJDbdzIfa9fQ1zC/awGMG728Cy7E6yXKo2iLmvkNaBIxB2jb+P4Pte51IbP0k7bPpAxBDP2bH2XM/WN8+YedeZrLkP4apKmIy5+YXioiXJH/7yKU/tVMZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4J3nVtF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765496134; c=relaxed/simple;
+	bh=rhk0wmqIl3Ez6zAmquakRwT+9CgEeT24rBcNKBK/oJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LduLAQW0IKWBmq9ujuvAtU/ucuP4ELxvjEa26cRTEpQrm/omhDyDB9Q1ZG7k/MiL4WEcNrvWL++4BRITHEVK7vExeUwBYkGev5V8RQNFZNV2Gr4/Uu1WZrNXyEhzwCXt7Wj3xW7LuKzTKK+0hn8oxQ+vQ4fnsltRerlo4rpjG78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OzcggnDX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FO0SuX7C; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OzcggnDX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FO0SuX7C; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4J3nVtF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 682A3C16AAE;
-	Thu, 11 Dec 2025 22:18:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765491497;
-	bh=C0V5aOJ0cXE0jisK65iUMGF3ss0ur1ph4+wirWwNY3Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t4J3nVtFdfVFu/37oO5Df0vujoyDQYTZSP1P6VnUbFgRYSCKPUmWqelXEWDm3H/SO
-	 1RzXTKxgKl0bOeucvR42AICjAoooOgZYlUEnZjA62bCthhp4UGfMIuosF46yClLmd/
-	 vvT+3Yc+s9Q+hdfWleqc/iKBGDQQx3ccb4MnLEPxB04U5jSVs0KOKhyFbjXJYhdLES
-	 Uu4Ed1k6PNLYg5OX+D7mHls5ohfOfSL5uDr/ikKXQZ0o4nB/wYZ17mjJuNWlwIRSsH
-	 c9Fs2hFTPuh/F1I8+JAH2ZYubNkZYudCGcmnLddGWvHUNSafbKvZduyikrFy5Cr6nM
-	 3cpN3zh8Qmiow==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OzcggnDX";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FO0SuX7C";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OzcggnDX";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FO0SuX7C"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id AE96F5BCE0;
+	Thu, 11 Dec 2025 23:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1765496130; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IPcy33/DuUzyPTg2Je9aEmCXF4TRhB6WwhLLNSHoHPU=;
+	b=OzcggnDXWRlpNT3WWS5ZfLfEYNJRHwKSjSSjYuNEY293JKuURhRXrddt8TxL34DWLW6DyG
+	36V5+rvJALRJufERunyCsR4HNBgQOeAibfd/0Py+YC4Vqu1k7zFJ1HYmh0VCv23R72DYlB
+	zIiea7zsmcoQ4uI0bfG5q3/pDhUta2Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1765496130;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IPcy33/DuUzyPTg2Je9aEmCXF4TRhB6WwhLLNSHoHPU=;
+	b=FO0SuX7CsElxsTLbEZyRNr+KeI6xr6jWXPl+81j9fXu6qF6QOji65CcNKS4PDHHLVbUH4l
+	j//++PPWyLNCbsAA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1765496130; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IPcy33/DuUzyPTg2Je9aEmCXF4TRhB6WwhLLNSHoHPU=;
+	b=OzcggnDXWRlpNT3WWS5ZfLfEYNJRHwKSjSSjYuNEY293JKuURhRXrddt8TxL34DWLW6DyG
+	36V5+rvJALRJufERunyCsR4HNBgQOeAibfd/0Py+YC4Vqu1k7zFJ1HYmh0VCv23R72DYlB
+	zIiea7zsmcoQ4uI0bfG5q3/pDhUta2Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1765496130;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IPcy33/DuUzyPTg2Je9aEmCXF4TRhB6WwhLLNSHoHPU=;
+	b=FO0SuX7CsElxsTLbEZyRNr+KeI6xr6jWXPl+81j9fXu6qF6QOji65CcNKS4PDHHLVbUH4l
+	j//++PPWyLNCbsAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F28DA3EA63;
+	Thu, 11 Dec 2025 23:35:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id lWUSMD9VO2mQJwAAD6G6ig
+	(envelope-from <tonyj@suse.de>); Thu, 11 Dec 2025 23:35:27 +0000
+Date: Thu, 11 Dec 2025 15:35:23 -0800
+From: Tony Jones <tonyj@suse.de>
+To: James Clark <james.clark@linaro.org>
+Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4/4] perf trace: Don't change const char strings
-Date: Thu, 11 Dec 2025 19:17:56 -0300
-Message-ID: <20251211221756.96294-5-acme@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251211221756.96294-1-acme@kernel.org>
-References: <20251211221756.96294-1-acme@kernel.org>
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1] perf addr2line: Add a libdw implementation
+Message-ID: <aTtVO7Iykc8oTl8c@suse.de>
+References: <20251122093934.94971-1-irogers@google.com>
+ <aSdGq2K6TRMyG009@google.com>
+ <CAP-5=fULHMCw=b0PuN07r=aAjoamb+MNSNrHM3nyHPYM2DGkow@mail.gmail.com>
+ <f85dacc5-5d81-4ee7-acf3-8aa053c42dab@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f85dacc5-5d81-4ee7-acf3-8aa053c42dab@linaro.org>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[google.com,kernel.org,infradead.org,redhat.com,linux.intel.com,intel.com,gmail.com,oracle.com,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
 
-We got away with this so far but now with fedora 44 complaining about
-the return value of strchr et all, lets use strdup for good measure.
+On Thu, Nov 27, 2025 at 12:16:29PM +0000, James Clark wrote:
 
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-trace.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+> If the llvm addr2line implementation is also supposed to be slow, it just
+> means we're trading speed with accuracy with this change. Hard to say what
+> the default should be in that case.
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index baee1f6956001d86..d49c1ae409d77df1 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -5173,8 +5173,8 @@ static int trace__parse_events_option(const struct option *opt, const char *str,
- 				      int unset __maybe_unused)
- {
- 	struct trace *trace = (struct trace *)opt->value;
--	const char *s = str;
--	char *sep = NULL, *lists[2] = { NULL, NULL, };
-+	const char *s;
-+	char *strd, *sep = NULL, *lists[2] = { NULL, NULL, };
- 	int len = strlen(str) + 1, err = -1, list, idx;
- 	char *strace_groups_dir = system_path(STRACE_GROUPS_DIR);
- 	char group_name[PATH_MAX];
-@@ -5183,6 +5183,10 @@ static int trace__parse_events_option(const struct option *opt, const char *str,
- 	if (strace_groups_dir == NULL)
- 		return -1;
- 
-+	s = strd = strdup(str);
-+	if (strd == NULL)
-+		return -1;
-+
- 	if (*s == '!') {
- 		++s;
- 		trace->not_ev_qualifier = true;
-@@ -5257,8 +5261,7 @@ static int trace__parse_events_option(const struct option *opt, const char *str,
- 	free(strace_groups_dir);
- 	free(lists[0]);
- 	free(lists[1]);
--	if (sep)
--		*sep = ',';
-+	free(strd);
- 
- 	return err;
- }
--- 
-2.52.0
+I originally inquired about this (and was going to code up a patch
+using libdw but Ian beat me to it) as we had a customer bug 
+complaining about the performance of the binutils (/usr/bin/addr2line) 
+forking solution and llvm isn't presently an option for us.
 
+Using the forked addr2line the customer data set takes real: 54m15.023s 
+user: 40m57.719s sys: 11m22.461s for perf script -F ip,srcline (with 
+numerous time-out errors). 
+
+Versus real: 6m6.598s user: 5m32.603s sys: 0m1.768s with this
+proposed libdw patch.
+
+I'm also unfortunately seeing similar wrong file/line# issues. This
+said I think given that libdw is being used anyways and how poor the 
+/usr/bin/addr2line performance is that it's worth digging deeper into 
+what the issues are with libdw.
+
+I'll try to look at it some more next week.
+
+Thanks for the patch Ian!
+
+Tony
+
+---------
+Tony Jones
+SUSE Kernel Performance Team
