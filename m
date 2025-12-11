@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E602A21423C;
-	Thu, 11 Dec 2025 22:18:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6092D6E5B;
+	Thu, 11 Dec 2025 22:18:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765491488; cv=none; b=J2P/BD4X+OetXWrLjc6FRCha9nSmSH7lOykBHFucnATWw8oQN+9EGgKcC4vFN8Ob82UgAtHLn0F1UVEjKrLrKsQFxDvLEgvbWHq1RcxEWkRL5czdxXu/60niF+73DVGBMHvMthAtrb3nLFMVeXmCocfq689TDhj9LOqMVmMnaH4=
+	t=1765491491; cv=none; b=B+LnXV8LpZcLRl1NgoBRxs+jGCuXIRotH308275pvXHQtErWU00KqSZt31MLcGaFRr9N0eY9PHv/Nwv77XnlBqM8FTeIsTq1Vtw2vqiCWoyFK1F/uwGIzH3nBEyYmaytwA1DyAXSFxSnqwlLlQpgb9pAvDyXUKTnEppMvFn0aME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765491488; c=relaxed/simple;
-	bh=nOH1ZX9DzwGUJ1whuJFT388Azu1H/+zQWlzIVUweQSg=;
+	s=arc-20240116; t=1765491491; c=relaxed/simple;
+	bh=w4yfUP3WqGg3ALDETvkl70tHP/a6zGD0PqOjs9hXsgs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kgcD35Gp4zDDihgY0xnh9cRQrKsWtCry7QQRhzd6R2Gvj/GduIuoCV/X7UG81wLrgyF9++arBqzP/zwmdn68r/GnNjevLgtIc84hEfc2GW8pPTUZiIKCINjD1G/bFXbRbH99G4oBaEdQ2QueuGIARypopO5yZbEwcmSFliXbKXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXO8i/xO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=D8XvG+iUYK53R1BxeevacrjZUSUyYzBG5LpZel/Fcmk5saejoUaD8b9BBWrUtAHQUyPJvkLdnqNUDimfdK//eNFTk0wwu7w1HqCzkWwMYgLNWp29sy6AlTsCwRfg70W3ELgT0PJaSJAbaZ0tGWW60xvbuk1wJnJUWj/oJbp3r1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MPwPcZDv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXO8i/xO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F0B0C19422;
-	Thu, 11 Dec 2025 22:18:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MPwPcZDv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C88E3C4CEF7;
+	Thu, 11 Dec 2025 22:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765491487;
-	bh=nOH1ZX9DzwGUJ1whuJFT388Azu1H/+zQWlzIVUweQSg=;
+	s=k20201202; t=1765491490;
+	bh=w4yfUP3WqGg3ALDETvkl70tHP/a6zGD0PqOjs9hXsgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FXO8i/xOQSuc4SEjAdkvm8Aw0I+9Q1pUcjr9sN109KNryy5TeR/ElJmvgbzYBDj5a
-	 SR+CQJ8IeFTpnjdaLgg+gINYoPKRre6KIp0MfhMxmWuxdqT/LdwggGGFeCaeN7jteY
-	 BzuuaXxrHoRT3UVGcs4QAHBa6r7m/x+z3rJpdeu8QvHJX25jQPi8wowWLQCrhLW92S
-	 xslcr9zKuT8SfrNeAhSVvslqBEumgKhPGZuY/b5WYpYfCBXwDdTsQMjlKZ9fhe7mHr
-	 HOK4yJ+W1WVW9FAG8FVuNNqJRORcbsiGyVPhKoSiLzFqpv1peNgkiejo5nIQPqJyKw
-	 5XjJtbS1N7OTA==
+	b=MPwPcZDvlrCuRmoVa8KLDoVAP5BqleBzleYsG7sgBkh3ODi+TkPwGk5TroVBLfPOK
+	 vA89DJF7IDicjvA6HIby1ag71dW6eQtVnSI3tkqW2fPL2+YmJqPktgK3LIIiMe8kdz
+	 DbnLV26AGr+abT+KGturolIr7j8qKl8GQ8Ns3oHwl8CigcW5jmDW603okcj1pCJnYo
+	 ujHuB8e4hE2eVAtVKuYqO/gH+krjyYh1Wtk4zJc39UC0ybF1aSTWcfIV9nptKKDIfq
+	 S/X7HZWJ1MxwLbDLyo7i5fyovAVjwlXftNNeFunvZwnIZ0Xzpq99FWo5jjb+ntz+/p
+	 Hc1cZDHuepc2w==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 1/4] perf list: Remove unused 'sep' variable
-Date: Thu, 11 Dec 2025 19:17:53 -0300
-Message-ID: <20251211221756.96294-2-acme@kernel.org>
+Subject: [PATCH 2/4] perf diff: Constify strchr() return variables
+Date: Thu, 11 Dec 2025 19:17:54 -0300
+Message-ID: <20251211221756.96294-3-acme@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251211221756.96294-1-acme@kernel.org>
 References: <20251211221756.96294-1-acme@kernel.org>
@@ -54,37 +54,64 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It is just being set to the return of strchr() but never used, just
-ditch it and with it get rid of a warning about it not being const on
-fedora 44.
+Newer glibc versions return const char for strchr() when the 's' arg is
+const, change the return variable to const to match that.
+
+Also we don't need to turn that ',' into a '\0', as strtol will stop in
+the first invalid char. No need to touch read only memory.
+
+First noticed with fedora 44.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-list.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-diff.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 5cbca0bacd35237e..ac7bd0e41aa1d5d6 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -648,7 +648,7 @@ int cmd_list(int argc, const char **argv)
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 53d5ea4a6a4f7b54..59bf1f72d12e226a 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -178,10 +178,9 @@ static struct header_column {
  	}
+ };
  
- 	for (i = 0; i < argc; ++i) {
--		char *sep, *s;
-+		char *s;
+-static int setup_compute_opt_wdiff(char *opt)
++static int setup_compute_opt_wdiff(const char *opt)
+ {
+-	char *w1_str = opt;
+-	char *w2_str;
++	const char *w1_str = opt, *w2_str;
  
- 		if (strcmp(argv[i], "tracepoint") == 0) {
- 			char *old_pmu_glob = default_ps.pmu_glob;
-@@ -720,7 +720,7 @@ int cmd_list(int argc, const char **argv)
- 		else if (strcmp(argv[i], "pfm") == 0)
- 			print_libpfm_events(&print_cb, ps);
- #endif
--		else if ((sep = strchr(argv[i], ':')) != NULL) {
-+		else if (strchr(argv[i], ':') != NULL) {
- 			char *old_pmu_glob = ps->pmu_glob;
- 			char *old_event_glob = ps->event_glob;
+ 	int ret = -EINVAL;
  
+@@ -192,8 +191,7 @@ static int setup_compute_opt_wdiff(char *opt)
+ 	if (!w2_str)
+ 		goto out;
+ 
+-	*w2_str++ = 0x0;
+-	if (!*w2_str)
++	if (!*++w2_str)
+ 		goto out;
+ 
+ 	compute_wdiff_w1 = strtol(w1_str, NULL, 10);
+@@ -214,7 +212,7 @@ static int setup_compute_opt_wdiff(char *opt)
+ 	return ret;
+ }
+ 
+-static int setup_compute_opt(char *opt)
++static int setup_compute_opt(const char *opt)
+ {
+ 	if (compute == COMPUTE_WEIGHTED_DIFF)
+ 		return setup_compute_opt_wdiff(opt);
+@@ -234,7 +232,7 @@ static int setup_compute(const struct option *opt, const char *str,
+ 	char *cstr = (char *) str;
+ 	char buf[50];
+ 	unsigned i;
+-	char *option;
++	const char *option;
+ 
+ 	if (!str) {
+ 		*cp = COMPUTE_DELTA;
 -- 
 2.52.0
 
