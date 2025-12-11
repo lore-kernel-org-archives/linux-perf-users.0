@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6092D6E5B;
-	Thu, 11 Dec 2025 22:18:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC392BEC5F;
+	Thu, 11 Dec 2025 22:18:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765491491; cv=none; b=B+LnXV8LpZcLRl1NgoBRxs+jGCuXIRotH308275pvXHQtErWU00KqSZt31MLcGaFRr9N0eY9PHv/Nwv77XnlBqM8FTeIsTq1Vtw2vqiCWoyFK1F/uwGIzH3nBEyYmaytwA1DyAXSFxSnqwlLlQpgb9pAvDyXUKTnEppMvFn0aME=
+	t=1765491494; cv=none; b=XVCnaYSRmqXYiCT3BI4+bpjqhquSMyXjmMrNNabZ/jRE6U9ILxGKrWKwNVNn61H8ledGOJqWP/9J5ciXF+L5pZY3i8I3mlkoJhdhCYexXv2XNxQtwheucq+AvMBi/x36F0VULvGq/qhJ2GyqiDUcdFUJR7k5ODjb6ULdyfgImXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765491491; c=relaxed/simple;
-	bh=w4yfUP3WqGg3ALDETvkl70tHP/a6zGD0PqOjs9hXsgs=;
+	s=arc-20240116; t=1765491494; c=relaxed/simple;
+	bh=HN+YbeRKhYRIdIIuxnmwLla4awRI2Nl2a3IsnUvLQIg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D8XvG+iUYK53R1BxeevacrjZUSUyYzBG5LpZel/Fcmk5saejoUaD8b9BBWrUtAHQUyPJvkLdnqNUDimfdK//eNFTk0wwu7w1HqCzkWwMYgLNWp29sy6AlTsCwRfg70W3ELgT0PJaSJAbaZ0tGWW60xvbuk1wJnJUWj/oJbp3r1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MPwPcZDv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JoNwMFY4TUU9qsFZ/5MhsV2C0korb6NO/MtXOAcU+HIqn3H1lZJ7Vu134EqZ4Cwu+/tXo0evWxUokNrbFo/RT91bDiyyZxjS+PUdpBTl/I3k1zqrGaDHO7x1KWT2lLI5L7GKzrs4FoU/iOwNBMx4mM4NRc+9v7Er4PkAKGhRdHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pYATVGUI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MPwPcZDv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C88E3C4CEF7;
-	Thu, 11 Dec 2025 22:18:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pYATVGUI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E0F5C113D0;
+	Thu, 11 Dec 2025 22:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765491490;
-	bh=w4yfUP3WqGg3ALDETvkl70tHP/a6zGD0PqOjs9hXsgs=;
+	s=k20201202; t=1765491494;
+	bh=HN+YbeRKhYRIdIIuxnmwLla4awRI2Nl2a3IsnUvLQIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MPwPcZDvlrCuRmoVa8KLDoVAP5BqleBzleYsG7sgBkh3ODi+TkPwGk5TroVBLfPOK
-	 vA89DJF7IDicjvA6HIby1ag71dW6eQtVnSI3tkqW2fPL2+YmJqPktgK3LIIiMe8kdz
-	 DbnLV26AGr+abT+KGturolIr7j8qKl8GQ8Ns3oHwl8CigcW5jmDW603okcj1pCJnYo
-	 ujHuB8e4hE2eVAtVKuYqO/gH+krjyYh1Wtk4zJc39UC0ybF1aSTWcfIV9nptKKDIfq
-	 S/X7HZWJ1MxwLbDLyo7i5fyovAVjwlXftNNeFunvZwnIZ0Xzpq99FWo5jjb+ntz+/p
-	 Hc1cZDHuepc2w==
+	b=pYATVGUI4DSWrv5gl8k8u3sKP9y6Y38ZeRQ9kIEHRhCuHRSbCeFOavGGcNtSQ7fcu
+	 MmoXGH7S7X1GgNumXY7/0b8RG277WNUuKP2DjqbgwFkD035p4qCoPJBArA3nOGsjXJ
+	 6J6QGFdxjPQp8O+KH1cbL3Veaf4B6E0WpPydyYZ1WomrZw3pI4gjL8waChmpdAtlpo
+	 fEfr/K2KhJpUBMIsM1cN4Wkd4+D3fbZU/lN0M7Rf4x3tu0IBDrD5X82AdiOo1aUKAV
+	 wEs0wUJzsr3V2A9oOauCk1zjE1Ql03iJpdMDQSmAeSWXVEC028yd6BmRG80tWRD4Su
+	 jvkWJWBx/6hNg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 2/4] perf diff: Constify strchr() return variables
-Date: Thu, 11 Dec 2025 19:17:54 -0300
-Message-ID: <20251211221756.96294-3-acme@kernel.org>
+Subject: [PATCH 3/4] perf tools: Use const for variables receiving str{str,r?chr}() returns
+Date: Thu, 11 Dec 2025 19:17:55 -0300
+Message-ID: <20251211221756.96294-4-acme@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251211221756.96294-1-acme@kernel.org>
 References: <20251211221756.96294-1-acme@kernel.org>
@@ -54,64 +54,64 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Newer glibc versions return const char for strchr() when the 's' arg is
-const, change the return variable to const to match that.
+Newer glibc versions return const char for str{str,chr}() where the
+haystack/s is const so to avoid warnings like these on fedora 44 change
+some variables to const:
 
-Also we don't need to turn that ',' into a '\0', as strtol will stop in
-the first invalid char. No need to touch read only memory.
-
-First noticed with fedora 44.
+  36     8.17 fedora:44                     : FAIL gcc version 15.2.1 20251111 (Red Hat 15.2.1-4) (GCC)
+    libbpf.c: In function 'kallsyms_cb':
+    libbpf.c:8489:13: error: assignment discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
+     8489 |         res = strstr(sym_name, ".llvm.");
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-diff.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ tools/perf/jvmti/libjvmti.c     | 2 +-
+ tools/perf/tests/parse-events.c | 4 ++--
+ tools/perf/util/evlist.c        | 3 ++-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 53d5ea4a6a4f7b54..59bf1f72d12e226a 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -178,10 +178,9 @@ static struct header_column {
- 	}
- };
+diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
+index 82514e6532b8c3af..87bfd4781003a331 100644
+--- a/tools/perf/jvmti/libjvmti.c
++++ b/tools/perf/jvmti/libjvmti.c
+@@ -142,7 +142,7 @@ copy_class_filename(const char * class_sign, const char * file_name, char * resu
+ 	*/
+ 	if (*class_sign == 'L') {
+ 		size_t j, i = 0;
+-		char *p = strrchr(class_sign, '/');
++		const char *p = strrchr(class_sign, '/');
+ 		if (p) {
+ 			/* drop the 'L' prefix and copy up to the final '/' */
+ 			for (i = 0; i < (size_t)(p - class_sign); i++)
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 128d21dc389f869b..2bd6229721145e42 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -2609,8 +2609,8 @@ static int test_events(const struct evlist_test *events, int cnt)
+ 	for (int i = 0; i < cnt; i++) {
+ 		struct evlist_test e = events[i];
+ 		int test_ret;
+-		const char *pos = e.name;
+-		char buf[1024], *buf_pos = buf, *end;
++		const char *pos = e.name, *end;
++		char buf[1024], *buf_pos = buf;
  
--static int setup_compute_opt_wdiff(char *opt)
-+static int setup_compute_opt_wdiff(const char *opt)
+ 		while ((end = strstr(pos, "default_core"))) {
+ 			size_t len = end - pos;
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 03674d2cbd015e4f..64951962854104a5 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1945,7 +1945,8 @@ static int evlist__parse_control_fifo(const char *str, int *ctl_fd, int *ctl_fd_
+ 
+ int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close)
  {
--	char *w1_str = opt;
--	char *w2_str;
-+	const char *w1_str = opt, *w2_str;
+-	char *comma = NULL, *endptr = NULL;
++	const char *comma = NULL;
++	char *endptr = NULL;
  
- 	int ret = -EINVAL;
+ 	*ctl_fd_close = false;
  
-@@ -192,8 +191,7 @@ static int setup_compute_opt_wdiff(char *opt)
- 	if (!w2_str)
- 		goto out;
- 
--	*w2_str++ = 0x0;
--	if (!*w2_str)
-+	if (!*++w2_str)
- 		goto out;
- 
- 	compute_wdiff_w1 = strtol(w1_str, NULL, 10);
-@@ -214,7 +212,7 @@ static int setup_compute_opt_wdiff(char *opt)
- 	return ret;
- }
- 
--static int setup_compute_opt(char *opt)
-+static int setup_compute_opt(const char *opt)
- {
- 	if (compute == COMPUTE_WEIGHTED_DIFF)
- 		return setup_compute_opt_wdiff(opt);
-@@ -234,7 +232,7 @@ static int setup_compute(const struct option *opt, const char *str,
- 	char *cstr = (char *) str;
- 	char buf[50];
- 	unsigned i;
--	char *option;
-+	const char *option;
- 
- 	if (!str) {
- 		*cp = COMPUTE_DELTA;
 -- 
 2.52.0
 
