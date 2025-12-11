@@ -1,89 +1,80 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFD61304980;
-	Thu, 11 Dec 2025 10:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-m19731106.qiye.163.com (mail-m19731106.qiye.163.com [220.197.31.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949DE2B2D7
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Dec 2025 10:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765449603; cv=none; b=MT0XXeWMIKzn3AIQpQG1aTF/fgPLnFuzrIb9tp9Lb/OH0O8Yfz1jsQDwHQy4g2+Nk+3XlqD5cdTaBQmN+MK3RM4Sqye5xlIR2NwUQAvLGSRruOFbp+zfNffFm9Eo6N8oOXt6ankbdH83Jar/MMmWoNovzqjokK0+Ft0ymCmxOEs=
+	t=1765450480; cv=none; b=XXg2vJIzS2r64GCAITu05p4ox/EsxDOn9W/YYAdN+V9dQ49l0Fsh2ErFn07naDQdmZFfi9deNFDh4GhCZ9sWoYLP5i7HdX4ab9NcJlVy4/3ST32EN5quVrSrWXlpbjU+YyXuohZKHe6GOvuqGREwWLLDivW+PvmfatJIDkQ8hWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765449603; c=relaxed/simple;
-	bh=Jt7BSMaQBmg37w8DD4jeqFrNgJJzaDz4bKVHuPXOHys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jtqii0oSJ7Sssz+G1UXL8idRURfo7H8UV2B6il5heFdGBPwjhC40ccaxrNs14Dr/ZMJHz4uI9kagXppsVUSHObqd4yWj3m0kftQqL31JYnijSYoA68ptm5nOVb2j4yy1guW/0hqf2eTlPuLiKO/DpiXfZ2aARJ06J5HiDZQ1zJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB82C175D;
-	Thu, 11 Dec 2025 02:39:52 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 809823F73B;
-	Thu, 11 Dec 2025 02:39:59 -0800 (PST)
-Date: Thu, 11 Dec 2025 10:39:57 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: hupu <hupu.gm@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, acme@kernel.org,
-	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
-	irogers@google.com, jolsa@kernel.org, justinstitt@google.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com, mingo@redhat.com, morbo@google.com,
-	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
-	peterz@infradead.org
-Subject: Re: [PATCH] perf build: Support passing extra Clang options via
- EXTRA_BPF_FLAGS
-Message-ID: <20251211103957.GA4048253@e132581.arm.com>
-References: <CADHxFxR-8NRN0Fwj7jhD1KKACrb0PdUp1iOBKJ+xkxaNQn_tew@mail.gmail.com>
- <20251124073445.3709-1-hupu.gm@gmail.com>
- <aSVlQHJ9xcGcZULp@google.com>
- <CADHxFxRY5Vse0UnezDg8hCEgbVy5qXkoLbEMRGaA6pH5aLoNxA@mail.gmail.com>
- <CADHxFxSXMvmeL4afJPh9Ycs2ABrnOVHkxJ4pRBdhJRJWBAvnHA@mail.gmail.com>
- <20251125161026.GF724103@e132581.arm.com>
- <CADHxFxQ2kb2pRhn0-_PJwmo9pykHzDMJDPQay5GaqmmZF1nwSw@mail.gmail.com>
+	s=arc-20240116; t=1765450480; c=relaxed/simple;
+	bh=2tC1+JT5+sJz1y8I94Jz0CbHqT9KjZjtVXFJ8hmU4rA=;
+	h=Content-Type:Message-ID:To:Cc:Subject:MIME-Version:From:Date; b=JNVbVP0eXFV62RpKusrp2QEWt5kD2G4IECZNqpazlhIAoAaQcdT3b9OxO0zDhlCjDkZxe/RJbvLJ3yqh8pwd7GeDzxRX6dhZSpj9kVuWamI4BpAgv2Ep6edLyO9vcqVctv7n/d8uE2rt2X/kArQkkry3viw6HVA7ruiCiLIQA1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stu.pku.edu.cn; spf=pass smtp.mailfrom=stu.pku.edu.cn; dkim=pass (1024-bit key) header.d=stu.pku.edu.cn header.i=@stu.pku.edu.cn header.b=ZQSawmZR; arc=none smtp.client-ip=220.197.31.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stu.pku.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.pku.edu.cn
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=stu.pku.edu.cn header.i=@stu.pku.edu.cn header.b="ZQSawmZR"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AC2AQgCBJ-ETsVPPQmFlYKrr.1.1765449556480.Hmail.2200013188@stu.pku.edu.cn>
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>, 
+	namhyung <namhyung@kernel.org>, acme <acme@kernel.org>, 
+	mingo <mingo@redhat.com>, peterz <peterz@infradead.org>, 
+	"juri.lelli" <juri.lelli@redhat.com>, 
+	"vincent.guittot" <vincent.guittot@linaro.org>, 
+	xujiakai2025 <xujiakai2025@iscas.ac.cn>, 
+	"zhaoruilin22@mails.ucas.ac.cn" <zhaoruilin22@mails.ucas.ac.cn>
+Subject: =?UTF-8?B?W0JVR10gUG9zc2libGUgZGVhZGxvY2sgaW4gX19wZXJmX2V2ZW50X3Rhc2tfc2NoZWRfb3V0?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com Sirius_WEB_MAC_1.56.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADHxFxQ2kb2pRhn0-_PJwmo9pykHzDMJDPQay5GaqmmZF1nwSw@mail.gmail.com>
+Received: from 2200013188@stu.pku.edu.cn( [210.73.43.101] ) by ajax-webmail ( [127.0.0.1] ) ; Thu, 11 Dec 2025 18:39:16 +0800 (GMT+08:00)
+From: Tianyu Li <lty218@stu.pku.edu.cn>
+Date: Thu, 11 Dec 2025 18:39:16 +0800 (GMT+08:00)
+X-HM-Tid: 0a9b0ce5650c09b6kunm9afb888b634c
+X-HM-MType: 1
+X-HM-NTES-SC: AL0_4z5B86Wr4Tz9jdMF+bhXMTv2670zqzAM+7RIKOqUHUUyjnjpPRHs8I0th+
+	pfToBLAHHPQiSvzTUYtFIRevI3h0H/rL8uiegUHR6ncan8g2rCDfuN4NnB7NuCz/pEOsh0h8hz0y
+	Vo3WCTanBTJrFVQiPyQdrhk33rDjcDAiUCX3E=
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGk5IVh9LTx1NS04fGEIaHVYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlJSktVTEhVT0hVSktKWVdZFhoPEhUdFFlBWU9LSFVKS0hKTkpNVUpLS1
+	VKQlkG
+DKIM-Signature: a=rsa-sha256;
+	b=ZQSawmZRMGqzwt+G4Nd1Wunlnhgy7T1CL1+v4Vdi/ZAHGpMlKxgOhSa/ZAJbyAgyKut70/FMkhTW2jhPJc8qVVOYeGGwO0g3CTeF1BwcuohZoBQgqKqAqgu9Ta0m1G90dHOomst1RP3wUNNwGnSIzDm/hwVuAWwD5SEwjTBQMvY=; c=relaxed/relaxed; s=default; d=stu.pku.edu.cn; v=1;
+	bh=2tC1+JT5+sJz1y8I94Jz0CbHqT9KjZjtVXFJ8hmU4rA=;
+	h=date:mime-version:subject:message-id:from;
 
-On Wed, Nov 26, 2025 at 09:44:02PM +0800, hupu wrote:
-
-Please don't spam on mailing list as you did. It is really bad practice.
-You could find resources [1][2] to learn upstreaming and co-work on the
-ML.
-
-> The eBPF skeleton is compiled via clang --target=bpf, and its header
-> file search paths mainly come from BPF_INCLUDE and TOOLS_UAPI_INCLUDE.
-> It also uses '-idirafter' to include the host’s /usr/local/include and
-> /usr/include directories in the search path. This process is not
-> directly coupled with cross-compilation managed via pkg-config, which
-> means PKG_CONFIG_SYSROOT_DIR does not affect how the skeleton resolves
-> its headers.
-
-Based on my limited knowledge, Clang does not provide its own headers.
-It needs to rely on GCC's headers for compilation.  I do see the
-Makefile does right thing for finding headers:
-
-  Makefile.perf:1203: ***
-  CLANG_SYS_INCLUDES=-idirafter /usr/lib/llvm-18/lib/clang/18/include
-  -idirafter /usr/local/include
-  -idirafter /usr/bin/../lib/gcc-cross/aarch64-linux-gnu/14/../../../../aarch64-linux-gnu/include
-  -idirafter /usr/include/aarch64-linux-gnu
-  -idirafter /usr/include
-
-It is mess to add some random include paths and feed to clang.  We
-already have provided a reliable way for building eBPF skelton program
-- keep in mind, eBPF skeleton program is not any aarch64 cross
-compilation, we just use clang for building bpf target.
-
-My understanding is you don't have a sane setting up on your local
-building env.
-
-Thanks,
-Leo
-
-[1] https://static.linaro.org/connect/hkg18/presentations/hkg18-tr02.pdf
-[2] https://static.linaro.org/connect/hkg18/presentations/hkg18-tr03.pdf
+SGksCgpJJ20gaGl0dGluZyBhIHBvc3NpYmxlIGRlYWRsb2NrIGluIF9fcGVyZl9ldmVudF90YXNr
+X3NjaGVkX291dC4gSXQncyBmaXJzdCBkZXRlY3RlZCB2aWEgYSBmdXp6aW5nIGZyYW1ld29yayBv
+biBMaW51eCA2LjE4LjAtcmM2LCBhbmQgaXQgYWxzbyBhcHBlYXJzIHRvIGJlIHJlcHJvZHVjaWJs
+ZSBvbiB2Ni4xOC4gU2luY2UgdGhlIHJlcG9ydCBpdHNlbGYgaXMgYWxyZWFkeSBxdWl0ZSBjbGVh
+ciwgSSBkb27igJl0IHdhbnQgdG8gcmlzayBhZGRpbmcgaW5hY2N1cmF0ZSBhbmFseXNpcyBoZXJl
+LiBJbnN0ZWFkLCBJIGhhdmUgYXR0YWNoZWQgdGhlIHJlbGV2YW50IGluZm9ybWF0aW9uIGFuZCBt
+YXRlcmlhbHMgYmVsb3cgZm9yIHlvdXIgcmV2aWV3LgoKICAgIEtlcm5lbCBzb3VyY2U6IGh0dHBz
+Oi8vY2RuLmtlcm5lbC5vcmcvcHViL2xpbnV4L2tlcm5lbC92Ni54L2xpbnV4LTYuMTgudGFyLnh6
+CiAgICBLZXJuZWwgY29uZmlndXJhdGlvbjogaHR0cHM6Ly9naXRodWIuY29tL2oxYWthaS9LQ29u
+ZmlnRnV6el9idWcvcmF3L3JlZnMvaGVhZHMvbWFpbi94ODYvbWFpbmxpbmUtY29uZmlnCiAgICBL
+ZXJuZWwgbG9nKGZ1enogcmVwb3J0KTogaHR0cHM6Ly9naXRodWIuY29tL1d4bS0yMzMvS0NvbmZp
+Z0Z1enpfY3Jhc2hlcy9yYXcvcmVmcy9oZWFkcy9tYWluLzhmYWNmYmI1YWNiZTZiODJlN2I1YmY4
+ZDI3YmU4OTMwMTcyYzk2YzEvcmVwcm8ucmVwb3J0CiAgICBLZXJuZWwgbG9nKHJlcHJvIG9uIExp
+bnV4LXY2LjE4KTogaHR0cHM6Ly9naXRodWIuY29tL1d4bS0yMzMvS0NvbmZpZ0Z1enpfY3Jhc2hl
+cy9yYXcvcmVmcy9oZWFkcy9tYWluLzhmYWNmYmI1YWNiZTZiODJlN2I1YmY4ZDI3YmU4OTMwMTcy
+Yzk2YzEvcmVwcm9fcmVwb3J0MAogICAgUmVwcm9kdWN0aW9uIEMgQ29kZTogaHR0cHM6Ly9naXRo
+dWIuY29tL1d4bS0yMzMvS0NvbmZpZ0Z1enpfY3Jhc2hlcy9yYXcvcmVmcy9oZWFkcy9tYWluLzhm
+YWNmYmI1YWNiZTZiODJlN2I1YmY4ZDI3YmU4OTMwMTcyYzk2YzEvcmVwcm8uY3Byb2cKICAgIFN5
+c2NhbGwgc2VxdWVuY2UgZm9yIHJlcHJvZHVjdGlvbiAobW9yZSBwcmVjaXNlKTogaHR0cHM6Ly9n
+aXRodWIuY29tL1d4bS0yMzMvS0NvbmZpZ0Z1enpfY3Jhc2hlcy9yYXcvcmVmcy9oZWFkcy9tYWlu
+LzhmYWNmYmI1YWNiZTZiODJlN2I1YmY4ZDI3YmU4OTMwMTcyYzk2YzEvcmVwcm8ucHJvZwogICAg
+R0NDIGluZm86IGh0dHBzOi8vZ2l0aHViLmNvbS9XeG0tMjMzL0tDb25maWdGdXp6X2NyYXNoZXMv
+cmF3L3JlZnMvaGVhZHMvbWFpbi8wZjg1ZmM2NjFhZjFlM2M2OWIyNmI5N2VhYWFhNDNkNjI5ZGU0
+NDljL2djY2luZm8KCkkgaG9wZSB0aGlzIHJlcG9ydCBoZWxwcyBpbiBpZGVudGlmeWluZyBhbmQg
+cmVzb2x2aW5nIHRoZSBpc3N1ZS4gVGhhbmtzIGZvciB5b3VyIHRpbWUgYW5kIGF0dGVudGlvbi4K
+CkJlc3QgcmVnYXJkcy4K
