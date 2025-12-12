@@ -1,149 +1,108 @@
-Received: from mail-ot1-f73.google.com (mail-ot1-f73.google.com [209.85.210.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314832DC336
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Dec 2025 21:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FBD30CDA2;
+	Fri, 12 Dec 2025 21:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765573617; cv=none; b=WDu7f5c8pxRhftZOe1CKtxjukcrZobuDmBd94rS3opgZ8zm1uSoHuH8iUc1MugDwzsRmEmYaB8UqKtAQyJfFS63GACrG+hZgFE+KNCCBYEHKmMI/L9QoI5sVJ71ZZk7hCY3DbpGJZKDxPew9A3D6ATZD75M82+1y0scIu5niGK4=
+	t=1765573639; cv=none; b=jg0ftxdZ/1eww0LBY2ZMN+DWH02i06NOX4Jl7lhdZt/+d6Ojj/AEgvfvBqOr3lofqHdZy2X4f5mF96l6Xc4R92zQ8QWdUa4Zu7gsL87gmFbGu1kBNkCteo0/HzWBuvxuwcl0EaMWjOQiUq75sAp+9uSmzrZktwxrTxK686jiNFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765573617; c=relaxed/simple;
-	bh=j4zmNXaHcAhBlyQ7iWB1i9Dwg1d4I/P9T1rUCk2IZys=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=oigxpBehvCYb8VUzqySkX655ZSYDETbwj+kKVcWzUzVrZwiJE8tD1YgJL5Jipbg97PM0aG8ZmMYlZ0mWH8VFo1mrpWGQiMCs4Ft4XJ0L5STDElLS+VXsWRu2VFEkuPhWRpQZ439pzYNBzD80GF9qWT9JxsrGMgFUf3J4obVHaoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xXZufRKP; arc=none smtp.client-ip=209.85.210.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1765573639; c=relaxed/simple;
+	bh=lu53LNdB5yeIB6GV9z0XXcgch1GfGp3SwAw6IHPthJE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PNE+Usxdn+HhzvtRhlnDt2UdGN5GZOe805/13NdjSm6+ezaN4mKuH2tMGVDk55dPLjbACb4HB+EXmHXAeOTYfFDg27SVgMoKVA71NMj845JrcifFFNunop4lV9Ew7AHCPVrDNWwe8ZBMXjTn2UTpJBDVyGfCFGFbjp3729T7Ej4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CRN8nX+i; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xXZufRKP"
-Received: by mail-ot1-f73.google.com with SMTP id 46e09a7af769-7c705ffd76fso1611838a34.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Dec 2025 13:06:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1765573614; x=1766178414; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=NvEO8IWge7rjEvmTvBLfyyCkg8YrPNESaGlmNB9KmuA=;
-        b=xXZufRKPOQzTfWsec9kSDdM68oqhKd2xDq60GuwK3/inDt1V9S2RICZNs9jdGhwtxK
-         sQorhvr6euqALbpaIyr9na0o4UPHp9tJhT2ORaJAWXT90TEBOkYfcRFBrwMQZJbbISWu
-         IkU+lAZ4DNUNpthQbuVm/YKsvUvjCDtkQjyhGA5LOs6ccDdKFYZESyqhKpYwDDkfsoI8
-         Ix/+ldNwisX+5tv3FVXll/u1ZMq94E+xJtLie/zehhsf3/31+h4vWL8IRmxLPtLDhgXG
-         JJy6EDBLEEFtJfhtoxjq8eIxZFWXLJzrDAJ0ffFIqdOWTMAJ1lLWpLH2A5K9Qy/SuCN0
-         gg5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765573614; x=1766178414;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NvEO8IWge7rjEvmTvBLfyyCkg8YrPNESaGlmNB9KmuA=;
-        b=LTaRiarU3VZMLCli5Rs15VAIHLA/VvPqW3LeehYHCw+r8H1WYno9U7uCaGrxbel17Q
-         2o59e9Q4U9x8UApF3s6+Bxb40nxpgJqXnnSZYe3YjTq0BHq4HxvS58/PhTDkGgQTQ7mb
-         PUt0cKVrGDa4jQTR++f0SHEfvfvSbzt/n3ljB5FRbf35q6+RWufO0RheGUCcx76X3ppT
-         Is8l5JYmQvB/pc771ElvjNQdG/PdUuIXrhdBs2Eb66aFOlxbUkcwBVp6f4CSssu0FMKa
-         ZlrIn+sCVTJLhub/zPuD1YyJ1yQxI5W9fYSSwxdRQo0VOJ3LsfcK/ifhxkjsW96yzw7w
-         C7uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7n/w1tspVLY8zlqU1NlF/PlrIVeWW8XsLq3whxn7edTvD0mURBWzDjzJXLyG0535Xqkf3XkMqnw8rT2IfTHQJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YygsH3eRICJpmkx3qCUKjvFFxtZNFD37RdmF30/0OZRp7Bhyr3d
-	h8AR4kmsc2pC57uq+bgv2pF56seeQoGUjJgdHfjurkntBw7fcxKibsNIdoBcklXKHKAVhyKJAJk
-	mjxSklGBdEoFbcqCw5arGzukR2Q==
-X-Google-Smtp-Source: AGHT+IGLtIUbFameZTVObRWcG+lq04RJyrGiyVy+qxibJohcLHDXgLx6kR5HPWzG4MF6bmkp/GMqRXiYMN5HlbpHeg==
-X-Received: from ilbcb7.prod.google.com ([2002:a05:6e02:3187:b0:430:c30d:ac37])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6820:1899:b0:659:9a49:8dde with SMTP id 006d021491bc7-65b45172277mr1612721eaf.32.1765573614348;
- Fri, 12 Dec 2025 13:06:54 -0800 (PST)
-Date: Fri, 12 Dec 2025 21:06:53 +0000
-In-Reply-To: <aTiSTODjzaLzwAPN@kernel.org> (message from Oliver Upton on Tue,
- 9 Dec 2025 13:19:08 -0800)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CRN8nX+i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765573639; x=1797109639;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=lu53LNdB5yeIB6GV9z0XXcgch1GfGp3SwAw6IHPthJE=;
+  b=CRN8nX+iH3Mhe/rIeihXTgsPk41w4p5iU3AR+m0GTBJI0HOlPZ1in/4p
+   KCJTgEV8qJ/G9PUSTPSQP4Ju71a1+9QHHccjqo/TW3mVBYwRcSBevfZqz
+   qg25aMtr2+NTGRgxEKZNDjR9FsarVLz82l/+RO2UvhZvMXSRPmjjJUblA
+   l6bFx/SgeGt7tKd+kw0rtiGBIqFBkWumIdDyq9zReAUC9X1mug5QYtTgZ
+   kC2uCOZKpPdI2xnNcHxCHWEKHBDX9269j4PDxoHzl9tyZgEbbrd3oHCdd
+   274NgnZ3Kb4MEeLOWjGHRR5A9liv4H/1PM6dk/+5QSqmEp9C89SMii1ym
+   A==;
+X-CSE-ConnectionGUID: VXsRh16uQIe3YCky61Ocug==
+X-CSE-MsgGUID: g9MANTdQSGK72CoqZn4xtw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11640"; a="67333564"
+X-IronPort-AV: E=Sophos;i="6.21,144,1763452800"; 
+   d="scan'208";a="67333564"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2025 13:07:17 -0800
+X-CSE-ConnectionGUID: 5P/EzDf2SSCXe4OGTU/SOQ==
+X-CSE-MsgGUID: DUrP2z2BRH+ZDaUyTbcgJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,144,1763452800"; 
+   d="scan'208";a="202269516"
+Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.43])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2025 13:07:16 -0800
+From: Zide Chen <zide.chen@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>
+Subject: [PATCH 0/7] Add Diamond Rapids uncore support
+Date: Fri, 12 Dec 2025 13:00:00 -0800
+Message-ID: <20251212210007.13986-1-zide.chen@intel.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntsedf2yvm.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH v5 13/24] KVM: arm64: Writethrough trapped PMOVS register
-From: Colton Lewis <coltonlewis@google.com>
-To: Oliver Upton <oupton@kernel.org>
-Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
-	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
-	mark.rutland@arm.com, shuah@kernel.org, gankulkarni@os.amperecomputing.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Oliver Upton <oupton@kernel.org> writes:
+Similar to Intel Sapphire Rapids, Diamond Rapids relies on discovery
+tables for uncore enumeration.  Key differences and additions include:
 
-> On Tue, Dec 09, 2025 at 08:51:10PM +0000, Colton Lewis wrote:
->> Because PMOVS remains trapped, it needs to be written through when
->> partitioned to affect PMU hardware when expected.
+- DMR may have two Integrated I/O and Memory Hub (IMH) dies, which are
+  separate from the compute tile (CBB) dies.  Each CBB die and each IMH
+  die has its own dedicated discovery table.
 
->> Signed-off-by: Colton Lewis <coltonlewis@google.com>
->> ---
->>   arch/arm64/include/asm/arm_pmuv3.h | 10 ++++++++++
->>   arch/arm64/kvm/sys_regs.c          | 17 ++++++++++++++++-
->>   2 files changed, 26 insertions(+), 1 deletion(-)
+- Unlike prior CPUs that retrieve the global discovery table portal
+  exclusively through either PCI or MSR, DMR uses PCI for IMH PMON
+  discovery and MSR for CBB PMON discovery
 
->> diff --git a/arch/arm64/include/asm/arm_pmuv3.h  
->> b/arch/arm64/include/asm/arm_pmuv3.h
->> index 60600f04b5902..3e25c0313263c 100644
->> --- a/arch/arm64/include/asm/arm_pmuv3.h
->> +++ b/arch/arm64/include/asm/arm_pmuv3.h
->> @@ -140,6 +140,16 @@ static inline u64 read_pmicfiltr(void)
->>   	return read_sysreg_s(SYS_PMICFILTR_EL0);
->>   }
+- DMR introduces several new PMON types, including SCA, HAMVF, D2D_ULA,
+  UBR, PCIE4, CRS, CPC, ITC, OTC, CMS, and PCIE6.
 
->> +static inline void write_pmovsset(u64 val)
->> +{
->> +	write_sysreg(val, pmovsset_el0);
->> +}
->> +
->> +static inline u64 read_pmovsset(void)
->> +{
->> +	return read_sysreg(pmovsset_el0);
->> +}
->> +
->>   static inline void write_pmovsclr(u64 val)
->>   {
->>   	write_sysreg(val, pmovsclr_el0);
->> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
->> index 2e6d907fa8af2..bee892db9ca8b 100644
->> --- a/arch/arm64/kvm/sys_regs.c
->> +++ b/arch/arm64/kvm/sys_regs.c
->> @@ -1307,6 +1307,19 @@ static bool access_pminten(struct kvm_vcpu *vcpu,  
->> struct sys_reg_params *p,
->>   	return true;
->>   }
+- Unlike SPR, IIO free-running counters in DMR are MMIO-based.
 
->> +static void writethrough_pmovs(struct kvm_vcpu *vcpu, struct  
->> sys_reg_params *p, bool set)
->> +{
->> +	u64 mask = kvm_pmu_accessible_counter_mask(vcpu);
->> +
->> +	if (set) {
->> +		__vcpu_rmw_sys_reg(vcpu, PMOVSSET_EL0, |=, (p->regval & mask));
->> +		write_pmovsset(p->regval & mask);
->> +	} else {
->> +		__vcpu_rmw_sys_reg(vcpu, PMOVSSET_EL0, &=, ~(p->regval & mask));
->> +		write_pmovsclr(p->regval & mask);
->> +	}
+Zide Chen (7):
+  perf/x86/intel/uncore: Add dual PCI/MSR discovery support
+  perf/x86/intel/uncore: Add IMH PMON support for Diamond Rapids
+  perf/x86/intel/uncore: Add CBB PMON support for Diamond Rapids
+  perf/x86/intel/uncore: Add freerunning event descriptor helper macro
+  perf/x86/intel/uncore: Support IIO free-running counters on DMR
+  perf/x86/intel/uncore: Update DMR uncore constraints preliminarily
+  perf pmu: Relax uncore wildcard matching to allow numeric suffix
 
-> There's only ever a single canonical guest view of a register. Either it  
-> has
-> been loaded onto the CPU or it is in memory, writing the value to two
-> different locations is odd. What guarantees the guest context is on the
-> CPU currently? And what about preemption?
+ arch/x86/events/intel/uncore.c           |  39 +-
+ arch/x86/events/intel/uncore.h           |   3 +
+ arch/x86/events/intel/uncore_discovery.c |  42 +-
+ arch/x86/events/intel/uncore_discovery.h |   6 +-
+ arch/x86/events/intel/uncore_snbep.c     | 558 ++++++++++++++++++++---
+ tools/perf/util/pmu.c                    |  14 +-
+ 6 files changed, 548 insertions(+), 114 deletions(-)
 
-My thinking here was pmovs is trapped so the "canonical" view is in
-memory, but the guest still expects it to have an effect immediately.
+-- 
+2.52.0
 
-Otherwise we would have to wait until the next load before the value
-makes it to hardware. Are you okay with that latency? I'm not sure
-how well that's going to work. Consider PMEVTYPER as an example. If I
-don't write it to hardware immediately, a guest may expect a counter to
-start counting as soon as it is written, but if it's only in memory the
-counter won't start until the next load.
-
-Echoing discussion on the previous patch, I wasn't aware preemption was
-possible while servicing these register writes. I'll figure out how to
-account for that.
