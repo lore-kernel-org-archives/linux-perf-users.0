@@ -1,77 +1,173 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA1E311C05;
-	Fri, 12 Dec 2025 10:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D1423EA8E;
+	Fri, 12 Dec 2025 11:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765536258; cv=none; b=UPbaYgcEI0Fi9Qi6RaO8AqHLJDJozOocpSzWWD3gjBVuQGvbPvb2uJRLYd02fiPLDQly5Zm8FGWXVkcijgoSM5daesmf03AMrbeiZi5wAoqIbSOTV/yZzWC6HZJrEq2Pp968GBnBcmE7YM4nz/jEZ/PWNaQAF43qycKUHPPvsw0=
+	t=1765538190; cv=none; b=oXC981TW1E6MtPbMa2U6mKsMGopTACqj+fGhI+Wi9EPOQT4oPmGDzvEeb7rQncYC8KCZpl4ZK8XlsSHUyi6MtIlpA7oBKZ/cr6PPv2XHZxOzuBCOyqM60nakoAfQt5X13Tc6bpa2fUEWqqi+iXOxn6LyueUsNREWZwpiJ503O4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765536258; c=relaxed/simple;
-	bh=Pu2H/2Z/qRcAZPg193QleUYUAMYV6ExjTfqj2adCIcA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RS89Ht4ToOWHIvtTZDinflgWdg9NHdaHIgTxRVh3tR+e4Ew37i6nQLNSR/CAjEPEsfN4+KpxJ/KWC2uOzt5GKvwArmgANkYxeUA9UdEl3YAJIxHY5dR+sv7RG1rMyaI85yAUbxtahQMkGgGGrkZpsm18auqfiaEMoOPTW5fbV0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EbodsRjT; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1765538190; c=relaxed/simple;
+	bh=zHCoMwnvK3tt8QxZnIpROBuG06HytpusBqlcZMgAZFY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tzvvSQHsOusHTG3zV45Ai8UJy3cLJSgOSeXM9pZrW9VL3CgxU/BCWXMK7ejC0930N/xVH+DeiREUhfAPPKGhL5ncnBFTyuXG/G+a7DoqFVLB2PNrSS1T1PODWsMdqy7yMGAwRISQWOuD/20bba6OHd2t2T77hwiLQ5rebegYaNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=b+2tjAAs; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EbodsRjT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=8EZawLBa4wOYs64AOS7wdIAgiN6v2diZMH8l27Q+dKU=; b=EbodsRjTHDlLRdmlK0P48Pyn+j
-	PcC7o58KA4TxCdWAdUlwhjTmVvKiswTqaqcx7TB8FLphJ0HvHrxlS7DnYXXpPE/HGTf8fCCRti1ZJ
-	WBrc+wTb7MFvT3ikjof+adOJmLm3LPg/QKtRmqBJtDrgaI0GBODajfXqKfC8+QpfKk0OJ0AnnuwR8
-	YKG68kBkUfR9mIku9OWP4pmKvh7J1yaArXN/vTht/IbxlVkKpobSeof7+uc+wTd1JllgvvfTpB9jJ
-	6JPcYQcCMv0Op+kokAVlptJJHQsT2G+MujVmpbiqQT/oVjWdAU83UlJOav6zbRaaIcf+PEeVtaPVh
-	pMV3TRjQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vU0d3-0000000FZ0H-3yrr;
-	Fri, 12 Dec 2025 10:44:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8F78730057C; Fri, 12 Dec 2025 11:44:04 +0100 (CET)
-Date: Fri, 12 Dec 2025 11:44:04 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: evan.li@linux.alibaba.com
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kitta <kitta@linux.alibaba.com>
-Subject: Re: [PATCH] perf/x86: Prevent NULL event deref in handle_pmi_common()
-Message-ID: <20251212104404.GO3911114@noisy.programming.kicks-ass.net>
-References: <20251212084943.2124787-1-evan.li@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="b+2tjAAs"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5BC5mmts006746;
+	Fri, 12 Dec 2025 11:16:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=uXH1d4
+	CpHyiVheZQ1eD5lAhhBV2oVsDUjDyBrgEPXw4=; b=b+2tjAAsoKqK2Pr2YwKrSF
+	z7DgrFfVj+e2LHJLdL/MzOLJEgvV2ss+R24K7MAn21Rwy071Lu0+JBhIRAJgilC7
+	WZyNBrb3N+jgBdFilkJ2GNcMjFbb1YaQSOVxXQpywiTyxyo607IiBwfwa8iOSAmO
+	3KhJi/aHkSilvjp+eQhr+zgcU9U+VMdtNazb2BT53vn4jp+wDc2p9iJlTVlxnNL6
+	P2eeXadhqnpRAIeGuKrnOkj0TMQXn3XRHS55orFP3MRQlYJBsrXAUi+ognLPXp9J
+	mVtW5LETrQciFw3AOEkW6Mby4RwHyIeSCwHjwsmfkeNrkvHUC7pqQlIHEQ8IEESw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4av9ww4abn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Dec 2025 11:16:13 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5BCBCgJL025341;
+	Fri, 12 Dec 2025 11:16:12 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4av9ww4abj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Dec 2025 11:16:12 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5BC7RPkx002031;
+	Fri, 12 Dec 2025 11:16:11 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aw11jubkg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Dec 2025 11:16:11 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5BCBG9OZ53477654
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Dec 2025 11:16:09 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CD70220049;
+	Fri, 12 Dec 2025 11:16:09 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ECC3720040;
+	Fri, 12 Dec 2025 11:16:08 +0000 (GMT)
+Received: from [9.111.169.84] (unknown [9.111.169.84])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 12 Dec 2025 11:16:08 +0000 (GMT)
+Message-ID: <86593213-8a48-412a-a601-7992cc1660c6@linux.ibm.com>
+Date: Fri, 12 Dec 2025 12:16:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251212084943.2124787-1-evan.li@linux.alibaba.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/6] perf tools: Merge deferred user callchains
+To: Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20251120234804.156340-1-namhyung@kernel.org>
+ <20251120234804.156340-6-namhyung@kernel.org>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20251120234804.156340-6-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 1dprSS6siyKGLquuTwKMEAqCYktwVKx1
+X-Proofpoint-ORIG-GUID: j3Km0c-RSV57gNbhkm-U2mbVZmvviopo
+X-Authority-Analysis: v=2.4 cv=AdS83nXG c=1 sm=1 tr=0 ts=693bf97d cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VnNF1IyMAAAA:8 a=LFt20mCCc4CE-LtB3JUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAwMCBTYWx0ZWRfX+HjoiKyM9Wc5
+ dCCnLQFIANOvFLp4jtUHw9uVRFRypHrBxn3YzTHqbWLpwMf4MYk62/iAbsW2ZKqJmiN1umcyQBw
+ MSkD407yp7Muw0ZWc0kP99XV5tyqbWt7kf8tJZr+GYTV5BC+mQk6ico+kA34MP0Ecr7om+5T4y+
+ ZeerYmB8yNcQQ7nZ3sYddihjOI1GX7HbCMqXrPX/j1lgn8XYdRR75HVmkHr69WRP43eldXDjGIe
+ cGcdV/mtrn7R5ClghJlTJcrclew4cC5WNs1RukvA3iJDo0H5YS/jpsj2qLj63ubeZvAhUzYXp73
+ ShdT+EiFRv0OH+ZNeCC3i+w0Eeu2+44IdpGTg26SCf4Zz4pGbeoDAW4PwZpPpQGOXovim95fesu
+ svvIxhsEt+wAIg86dNlMZSnNB6gavQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-12_02,2025-12-11_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1011 malwarescore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512060000
 
-On Fri, Dec 12, 2025 at 04:49:43PM +0800, evan.li@linux.alibaba.com wrote:
-> From: Evan Li <evan.li@linux.alibaba.com>
-> 
-> handle_pmi_common() may observe an active bit set in cpuc->active_mask
-> while the corresponding cpuc->events[] entry has already been cleared,
-> which leads to a NULL pointer dereference.
-> 
-> This can happen when interrupt throttling stops all events in a group
-> while PEBS processing is still in progress. perf_event_overflow() can
-> trigger perf_event_throttle_group(), which stops the group and clears
-> the cpuc->events[] entry, but the active bit may still be set when
-> handle_pmi_common() iterates over the events.
-> 
-> The following change:
-> 
-> 7e772a93 ("perf/x86: Fix NULL event access and potential PEBS record loss")
-> 
-> moved cpuc->events[] clearing from x86_pmu_stop() to x86_pmu_del() and
-> relied on cpuc->active_mask/pebs_enabled checks. However,
-> handle_pmi_common() can still encounter a NULL cpuc->events[] entry
-> despite the active bit being set.
+Hello Namhyung!
 
-How? What is doing del() concurrently with the pmi?
+On 11/21/2025 12:48 AM, Namhyung Kim wrote:
+> Save samples with deferred callchains in a separate list and deliver
+> them after merging the user callchains.  If users don't want to merge
+> they can set tool->merge_deferred_callchains to false to prevent the
+> behavior.
+
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+
+> +int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
+> +				     struct perf_sample *sample_callchain)
+> +{
+> +	u64 nr_orig = sample_orig->callchain->nr - 1;
+> +	u64 nr_deferred = sample_callchain->callchain->nr;
+> +	struct ip_callchain *callchain;
+> +
+> +	if (sample_orig->callchain->nr < 2) {
+> +		sample_orig->deferred_callchain = false;
+> +		return -EINVAL;
+> +	}
+> +
+> +	callchain = calloc(1 + nr_orig + nr_deferred, sizeof(u64));
+> +	if (callchain == NULL) {
+> +		sample_orig->deferred_callchain = false;
+> +		return -ENOMEM;
+> +	}
+> +
+> +	callchain->nr = nr_orig + nr_deferred;
+> +	/* copy original including PERF_CONTEXT_USER_DEFERRED (but the cookie) */
+> +	memcpy(callchain->ips, sample_orig->callchain->ips, nr_orig * sizeof(u64));
+> +	/* copy deferred user callchains */
+> +	memcpy(&callchain->ips[nr_orig], sample_callchain->callchain->ips,
+> +	       nr_deferred * sizeof(u64));
+> +
+> +	sample_orig->callchain = callchain;
+
+Hope you don't mind my naive question, as I don't have a clue about perf:
+
+Doesn't the sample_orig->callchain storage need to be free'd prior to
+assigning the newly allocated one?  Or is that just part of a large
+block that got allocated in one piece?  How is then the one allocated
+here ever free'd?
+
+> +	return 0;
+> +}
+Thanks and regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
