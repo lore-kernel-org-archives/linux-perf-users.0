@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B7730BBB6;
-	Fri, 12 Dec 2025 21:07:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C8030FC0E;
+	Fri, 12 Dec 2025 21:07:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765573642; cv=none; b=aE3X40swtDLQoi8O9PFip4zp5adMAAFVPZLkNTR4eoiSBbZOL3wM21O5ORMXYAhxJNc4SOLhhggJaOUOYT6wgF6mgmsmHS/EfKhwlevAuaU1X01SUMBBjYBMPf3de+0KRWHOBZDkqV1+ryExKadNpB7oau9dzaKQUlmXdw88KgM=
+	t=1765573644; cv=none; b=sOdPDVjGlsHHgDPWBt8OtrpgnYM9OAzHfiReOxxGc5/iDRvXwoF9N8yLQo2j492gLhih2WaymBf6+9USWWq2dM2noC8uQRpNyecPMTbSI458o0rUkhpeMWosrIdF7Wug2otjWb+oBLCXdRYposx/TEDWib8O6PUI1fHp92q3RbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765573642; c=relaxed/simple;
-	bh=YSwHvLUCv+sqXIT3QxKqPPt7Sk8EYNyCUco07yvZEtI=;
+	s=arc-20240116; t=1765573644; c=relaxed/simple;
+	bh=P6fYzZhyP5EAs+fXNaxFNZYzIrUJ0Y7i5+/OhRwtbPE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EvrdyUUqX2UXs9IFVJK9DewSHPEtSnX3HKOK0fzsDrUXiWNb7nMLrBEd+rZ2wLdrZQpZLnVPqj5NOpejLoQycCBgq9dT57R+iIZNe47Gr3pleF0BJlpULZCNSE5JBhEHBh/ylLP5ssOf4+8TobwijWuyAV/6dmlmNL7Z3Q5p5T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nAAqv8kQ; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version; b=F3zqkW2Rm/J66v00QN/BtXdKLJowfVOaNobsyyvQ+4YXli03/RBRZnA4e5hcoB34SEoSUD8kxF6ieEa028zkGHs6Fwsq2wmlyf/rhz+VDb/GR980rMAEKVOUuk6yWq4wj54m3ZzNHBinp6Fngch8FGQ4hoOU+pKkxnx8EguGnF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gBOsFYTO; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nAAqv8kQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gBOsFYTO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765573641; x=1797109641;
+  t=1765573643; x=1797109643;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=YSwHvLUCv+sqXIT3QxKqPPt7Sk8EYNyCUco07yvZEtI=;
-  b=nAAqv8kQvMexgtdWVPmexu8qy+EtYuLwAge9s/wx0Q5uzemJumyYIRpA
-   MHln6dX3kQIpzuBboSmAF77g4Smy0hXgQn1sdZriT3pK80OTi4Uv3WzOs
-   RxbuKv50altkNbFt/7gUZYxQPPDSVQm4LjMmWKp+EXeiiCLNpnFzpb2fF
-   hye5e2lrH7OrNI/sk7ssfIQ2X7r/c2/0ZSpMjX14ib21GZyQ/Iku0GMwG
-   BFzUx2MBXusZOB29mbubdWaxdrPlv3NgIM+5q97s4eyISAqy3ycXnhIsa
-   vXHdv4BRXu+fW6dTpw8ruT5XB8A6vjhUTP2NOIQTvEHW6LLSbNKu9EOI8
-   w==;
-X-CSE-ConnectionGUID: K3ERaILXQPS1SFkObP3Q8g==
-X-CSE-MsgGUID: ZagvWJmGR9+f6rjnL/nTMQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11640"; a="67333577"
+  bh=P6fYzZhyP5EAs+fXNaxFNZYzIrUJ0Y7i5+/OhRwtbPE=;
+  b=gBOsFYTOSnm7J3hT4QzH9uDrFjmjHzcpolYSRg6HMPB8zuxtAW5d79is
+   9zqvRv29JFsclmNDW9Pla0hsn4bocWbduKNMYI4LMP/L1cdt1t33OqyYT
+   KF8uWQZQ8bg3lkT/YdFvXIzrO9WVSEC8/0Oh9iy0jZK8tvAaM6cF76PN+
+   ragmRiHYJaGbjtoRvDIg2+vlvW28xnwuCto6a07HQ2xlx1VWkQKrR8vOB
+   CP7Pqa9eJp9A9TV6bQjDPlMBJtbp1Ti6GNQxct4Q0kOiQV3DIS4ttiCGY
+   o/tq9vfqC8j8b0lYY/Putd34Z1BnxPDY/KAvLCI5hXYDsXMs6f8sMzop7
+   g==;
+X-CSE-ConnectionGUID: wlygf5ExS6KqX8p8pL4RaA==
+X-CSE-MsgGUID: BIPrk5kPQf+uRuSpn3B3uA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11640"; a="67333588"
 X-IronPort-AV: E=Sophos;i="6.21,144,1763452800"; 
-   d="scan'208";a="67333577"
+   d="scan'208";a="67333588"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
   by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2025 13:07:17 -0800
-X-CSE-ConnectionGUID: VIq/XbjGSgmkq0ROQCn9YQ==
-X-CSE-MsgGUID: x8X1ba9FQuyaOtXB874npw==
+X-CSE-ConnectionGUID: fOUOqBwpSjinV8FipJEdRw==
+X-CSE-MsgGUID: qeN/eEAbTCOS8XOZ44VN2w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,144,1763452800"; 
-   d="scan'208";a="202269523"
+   d="scan'208";a="202269528"
 Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.43])
   by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2025 13:07:16 -0800
 From: Zide Chen <zide.chen@intel.com>
@@ -59,9 +59,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Zide Chen <zide.chen@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Falcon Thomas <thomas.falcon@intel.com>
-Subject: [PATCH 2/7] perf/x86/intel/uncore: Add IMH PMON support for Diamond Rapids
-Date: Fri, 12 Dec 2025 13:00:02 -0800
-Message-ID: <20251212210007.13986-3-zide.chen@intel.com>
+Subject: [PATCH 4/7] perf/x86/intel/uncore: Add freerunning event descriptor helper macro
+Date: Fri, 12 Dec 2025 13:00:04 -0800
+Message-ID: <20251212210007.13986-5-zide.chen@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251212210007.13986-1-zide.chen@intel.com>
 References: <20251212210007.13986-1-zide.chen@intel.com>
@@ -73,342 +73,152 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DMR supports IMH PMON units for PCU, UBox, iMC, and CXL:
-- PCU and UBox are same with SPR.
-- iMC is similar to SPR but uses different offsets for fixed registers.
-- CXL introduces a new port_enable field and changes the position of
-  the threshold field.
+Freerunning counter events are repetitive: the event code is fixed to
+0xff, the unit is always "MiB", and the scale is identical across all
+counters on a given PMON unit.
 
-DMR also introduces additional PMON units: SCA, HAMVF, D2D_ULA, UBR,
-PCIE4, CRS, CPC, ITC, OTC, CMS, and PCIE6.  Among these, PCIE4 and
-PCIE6 use different unit types, but share the same config register
-layout, and the generic PCIe PMON events apply to both.
+Introduce a new helper macro, INTEL_UNCORE_FR_EVENT_DESC(), to populate
+the event, scale, and unit descriptor triplet. This reduces duplicated
+lines and improves readability.
+
+No functional change intended.
 
 Signed-off-by: Zide Chen <zide.chen@intel.com>
 ---
- arch/x86/events/intel/uncore.c           |   8 +
- arch/x86/events/intel/uncore.h           |   3 +
- arch/x86/events/intel/uncore_discovery.h |   2 +
- arch/x86/events/intel/uncore_snbep.c     | 228 +++++++++++++++++++++++
- 4 files changed, 241 insertions(+)
+ arch/x86/events/intel/uncore_snbep.c | 95 ++++++++--------------------
+ 1 file changed, 28 insertions(+), 67 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index ecf500470f8e..7ab02638e3f1 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1843,6 +1843,13 @@ static const struct intel_uncore_init_fun gnr_uncore_init __initconst = {
- 	.uncore_units_ignore = gnr_uncore_units_ignore,
- };
- 
-+static const struct intel_uncore_init_fun dmr_uncore_init __initconst = {
-+	.pci_init = dmr_uncore_pci_init,
-+	.mmio_init = dmr_uncore_mmio_init,
-+	.discovery_pci = DMR_UNCORE_DISCOVERY_TABLE_DEVICE,
-+	.uncore_units_ignore = dmr_uncore_units_ignore,
-+};
-+
- static const struct intel_uncore_init_fun generic_uncore_init __initconst = {
- 	.cpu_init = intel_uncore_generic_uncore_cpu_init,
- 	.pci_init = intel_uncore_generic_uncore_pci_init,
-@@ -1906,6 +1913,7 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
- 	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT_X,	&gnr_uncore_init),
- 	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT,	&gnr_uncore_init),
- 	X86_MATCH_VFM(INTEL_ATOM_DARKMONT_X,	&gnr_uncore_init),
-+	X86_MATCH_VFM(INTEL_DIAMONDRAPIDS_X,	&dmr_uncore_init),
- 	{},
- };
- MODULE_DEVICE_TABLE(x86cpu, intel_uncore_match);
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index d8815fff7588..4f9c6e1e0c1a 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -597,6 +597,7 @@ extern struct pci_extra_dev *uncore_extra_pci_dev;
- extern struct event_constraint uncore_constraint_empty;
- extern int spr_uncore_units_ignore[];
- extern int gnr_uncore_units_ignore[];
-+extern int dmr_uncore_units_ignore[];
- 
- /* uncore_snb.c */
- int snb_uncore_pci_init(void);
-@@ -645,6 +646,8 @@ void spr_uncore_mmio_init(void);
- int gnr_uncore_pci_init(void);
- void gnr_uncore_cpu_init(void);
- void gnr_uncore_mmio_init(void);
-+int dmr_uncore_pci_init(void);
-+void dmr_uncore_mmio_init(void);
- 
- /* uncore_nhmex.c */
- void nhmex_uncore_cpu_init(void);
-diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
-index a919b1ac88fe..786670276b5f 100644
---- a/arch/x86/events/intel/uncore_discovery.h
-+++ b/arch/x86/events/intel/uncore_discovery.h
-@@ -5,6 +5,8 @@
- 
- /* Generic device ID of a discovery table device */
- #define UNCORE_DISCOVERY_TABLE_DEVICE		0x09a7
-+/* Device ID used on DMR */
-+#define DMR_UNCORE_DISCOVERY_TABLE_DEVICE	0x09a1
- /* Capability ID for a discovery table device */
- #define UNCORE_EXT_CAP_ID_DISCOVERY		0x23
- /* First DVSEC offset */
 diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index e1f370b8d065..dee94bbdddcf 100644
+index bd1569876640..56c6ac86f28e 100644
 --- a/arch/x86/events/intel/uncore_snbep.c
 +++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -471,6 +471,14 @@
+@@ -4068,34 +4068,24 @@ static struct freerunning_counters skx_iio_freerunning[] = {
+ 	[SKX_IIO_MSR_UTIL]	= { 0xb08, 0x1, 0x10, 8, 36 },
+ };
  
- #define SPR_C0_MSR_PMON_BOX_FILTER0		0x200e
++#define INTEL_UNCORE_FR_EVENT_DESC(name, umask, scl)		\
++	INTEL_UNCORE_EVENT_DESC(name,				\
++		"event=0xff,umask=" __stringify(umask)),	\
++	INTEL_UNCORE_EVENT_DESC(name.scale, __stringify(scl)),	\
++	INTEL_UNCORE_EVENT_DESC(name.unit, "MiB")
++
+ static struct uncore_event_desc skx_uncore_iio_freerunning_events[] = {
+ 	/* Free-Running IO CLOCKS Counter */
+ 	INTEL_UNCORE_EVENT_DESC(ioclk,			"event=0xff,umask=0x10"),
+ 	/* Free-Running IIO BANDWIDTH Counters */
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port0,		"event=0xff,umask=0x20"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port0.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port1,		"event=0xff,umask=0x21"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port1.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port2,		"event=0xff,umask=0x22"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port2.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port3,		"event=0xff,umask=0x23"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port3.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port0,		"event=0xff,umask=0x24"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port0.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port0.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port1,		"event=0xff,umask=0x25"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port1.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port1.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port2,		"event=0xff,umask=0x26"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port2.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port2.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port3,		"event=0xff,umask=0x27"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port3.scale,	"3.814697266e-6"),
+-	INTEL_UNCORE_EVENT_DESC(bw_out_port3.unit,	"MiB"),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port0, 0x24, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port1, 0x25, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port2, 0x26, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port3, 0x27, 3.814697266e-6),
+ 	/* Free-running IIO UTILIZATION Counters */
+ 	INTEL_UNCORE_EVENT_DESC(util_in_port0,		"event=0xff,umask=0x30"),
+ 	INTEL_UNCORE_EVENT_DESC(util_out_port0,		"event=0xff,umask=0x31"),
+@@ -4910,30 +4900,14 @@ static struct uncore_event_desc snr_uncore_iio_freerunning_events[] = {
+ 	/* Free-Running IIO CLOCKS Counter */
+ 	INTEL_UNCORE_EVENT_DESC(ioclk,			"event=0xff,umask=0x10"),
+ 	/* Free-Running IIO BANDWIDTH IN Counters */
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port0,		"event=0xff,umask=0x20"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.0517578125e-5"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port0.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port1,		"event=0xff,umask=0x21"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.0517578125e-5"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port1.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port2,		"event=0xff,umask=0x22"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.0517578125e-5"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port2.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port3,		"event=0xff,umask=0x23"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.0517578125e-5"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port3.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port4,		"event=0xff,umask=0x24"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port4.scale,	"3.0517578125e-5"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port4.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port5,		"event=0xff,umask=0x25"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port5.scale,	"3.0517578125e-5"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port5.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port6,		"event=0xff,umask=0x26"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port6.scale,	"3.0517578125e-5"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port6.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port7,		"event=0xff,umask=0x27"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port7.scale,	"3.0517578125e-5"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port7.unit,	"MiB"),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, 3.0517578125e-5),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, 3.0517578125e-5),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, 3.0517578125e-5),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, 3.0517578125e-5),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port4, 0x24, 3.0517578125e-5),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port5, 0x25, 3.0517578125e-5),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port6, 0x26, 3.0517578125e-5),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port7, 0x27, 3.0517578125e-5),
+ 	{ /* end: all zeroes */ },
+ };
  
-+/* DMR */
-+#define DMR_CXLCM_EVENT_MASK_EXT		0xf
-+#define DMR_HAMVF_EVENT_MASK_EXT		0xffffffff
-+#define DMR_PCIE4_EVENT_MASK_EXT		0xffffff
-+
-+#define DMR_IMC_PMON_FIXED_CTR			0x18
-+#define DMR_IMC_PMON_FIXED_CTL			0x10
-+
- DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
- DEFINE_UNCORE_FORMAT_ATTR(event2, event, "config:0-6");
- DEFINE_UNCORE_FORMAT_ATTR(event_ext, event, "config:0-7,21");
-@@ -486,6 +494,10 @@ DEFINE_UNCORE_FORMAT_ATTR(edge, edge, "config:18");
- DEFINE_UNCORE_FORMAT_ATTR(tid_en, tid_en, "config:19");
- DEFINE_UNCORE_FORMAT_ATTR(tid_en2, tid_en, "config:16");
- DEFINE_UNCORE_FORMAT_ATTR(inv, inv, "config:23");
-+DEFINE_UNCORE_FORMAT_ATTR(inv2, inv, "config:21");
-+DEFINE_UNCORE_FORMAT_ATTR(thresh_ext, thresh_ext, "config:32-35");
-+DEFINE_UNCORE_FORMAT_ATTR(thresh10, thresh, "config:23-32");
-+DEFINE_UNCORE_FORMAT_ATTR(thresh9_2, thresh, "config:23-31");
- DEFINE_UNCORE_FORMAT_ATTR(thresh9, thresh, "config:24-35");
- DEFINE_UNCORE_FORMAT_ATTR(thresh8, thresh, "config:24-31");
- DEFINE_UNCORE_FORMAT_ATTR(thresh6, thresh, "config:24-29");
-@@ -494,6 +506,13 @@ DEFINE_UNCORE_FORMAT_ATTR(occ_sel, occ_sel, "config:14-15");
- DEFINE_UNCORE_FORMAT_ATTR(occ_invert, occ_invert, "config:30");
- DEFINE_UNCORE_FORMAT_ATTR(occ_edge, occ_edge, "config:14-51");
- DEFINE_UNCORE_FORMAT_ATTR(occ_edge_det, occ_edge_det, "config:31");
-+DEFINE_UNCORE_FORMAT_ATTR(port_en, port_en, "config:32-35");
-+DEFINE_UNCORE_FORMAT_ATTR(rs3_sel, rs3_sel, "config:36");
-+DEFINE_UNCORE_FORMAT_ATTR(rx_sel, rx_sel, "config:37");
-+DEFINE_UNCORE_FORMAT_ATTR(tx_sel, tx_sel, "config:38");
-+DEFINE_UNCORE_FORMAT_ATTR(iep_sel, iep_sel, "config:39");
-+DEFINE_UNCORE_FORMAT_ATTR(vc_sel, vc_sel, "config:40-47");
-+DEFINE_UNCORE_FORMAT_ATTR(port_sel, port_sel, "config:48-55");
- DEFINE_UNCORE_FORMAT_ATTR(ch_mask, ch_mask, "config:36-43");
- DEFINE_UNCORE_FORMAT_ATTR(ch_mask2, ch_mask, "config:36-47");
- DEFINE_UNCORE_FORMAT_ATTR(fc_mask, fc_mask, "config:44-46");
-@@ -6709,3 +6728,212 @@ void gnr_uncore_mmio_init(void)
- }
+@@ -5266,12 +5240,8 @@ static struct freerunning_counters snr_imc_freerunning[] = {
+ static struct uncore_event_desc snr_uncore_imc_freerunning_events[] = {
+ 	INTEL_UNCORE_EVENT_DESC(dclk,		"event=0xff,umask=0x10"),
  
- /* end of GNR uncore support */
-+
-+/* DMR uncore support */
-+#define UNCORE_DMR_NUM_UNCORE_TYPES	52
-+
-+static struct attribute *dmr_imc_uncore_formats_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_edge.attr,
-+	&format_attr_inv.attr,
-+	&format_attr_thresh10.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group dmr_imc_uncore_format_group = {
-+	.name = "format",
-+	.attrs = dmr_imc_uncore_formats_attr,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_imc = {
-+	.name			= "imc",
-+	.fixed_ctr_bits		= 48,
-+	.fixed_ctr		= DMR_IMC_PMON_FIXED_CTR,
-+	.fixed_ctl		= DMR_IMC_PMON_FIXED_CTL,
-+	.ops			= &spr_uncore_mmio_ops,
-+	.format_group		= &dmr_imc_uncore_format_group,
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct attribute *dmr_sca_uncore_formats_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_umask_ext5.attr,
-+	&format_attr_edge.attr,
-+	&format_attr_inv.attr,
-+	&format_attr_thresh8.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group dmr_sca_uncore_format_group = {
-+	.name = "format",
-+	.attrs = dmr_sca_uncore_formats_attr,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_sca = {
-+	.name			= "sca",
-+	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-+	.format_group		= &dmr_sca_uncore_format_group,
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct attribute *dmr_cxlcm_uncore_formats_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_umask.attr,
-+	&format_attr_edge.attr,
-+	&format_attr_inv2.attr,
-+	&format_attr_thresh9_2.attr,
-+	&format_attr_port_en.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group dmr_cxlcm_uncore_format_group = {
-+	.name = "format",
-+	.attrs = dmr_cxlcm_uncore_formats_attr,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_cxlcm = {
-+	.name			= "cxlcm",
-+	.event_mask		= GENERIC_PMON_RAW_EVENT_MASK,
-+	.event_mask_ext		= DMR_CXLCM_EVENT_MASK_EXT,
-+	.format_group		= &dmr_cxlcm_uncore_format_group,
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_hamvf = {
-+	.name			= "hamvf",
-+	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-+	.format_group		= &dmr_sca_uncore_format_group,
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_ula = {
-+	.name			= "ula",
-+	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-+	.format_group		= &dmr_sca_uncore_format_group,
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_ubr = {
-+	.name			= "ubr",
-+	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-+	.format_group		= &dmr_sca_uncore_format_group,
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct attribute *dmr_pcie4_uncore_formats_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_umask.attr,
-+	&format_attr_edge.attr,
-+	&format_attr_inv.attr,
-+	&format_attr_thresh8.attr,
-+	&format_attr_thresh_ext.attr,
-+	&format_attr_rs3_sel.attr,
-+	&format_attr_rx_sel.attr,
-+	&format_attr_tx_sel.attr,
-+	&format_attr_iep_sel.attr,
-+	&format_attr_vc_sel.attr,
-+	&format_attr_port_sel.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group dmr_pcie4_uncore_format_group = {
-+	.name = "format",
-+	.attrs = dmr_pcie4_uncore_formats_attr,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_pcie4 = {
-+	.name			= "pcie4",
-+	.event_mask_ext		= DMR_PCIE4_EVENT_MASK_EXT,
-+	.format_group		= &dmr_pcie4_uncore_format_group,
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_crs = {
-+	.name			= "crs",
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_cpc = {
-+	.name			= "cpc",
-+	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-+	.format_group		= &dmr_sca_uncore_format_group,
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_itc = {
-+	.name			= "itc",
-+	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-+	.format_group		= &dmr_sca_uncore_format_group,
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_otc = {
-+	.name			= "otc",
-+	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-+	.format_group		= &dmr_sca_uncore_format_group,
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_cms = {
-+	.name			= "cms",
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct intel_uncore_type dmr_uncore_pcie6 = {
-+	.name			= "pcie6",
-+	.event_mask_ext		= DMR_PCIE4_EVENT_MASK_EXT,
-+	.format_group		= &dmr_pcie4_uncore_format_group,
-+	.attr_update		= uncore_alias_groups,
-+};
-+
-+static struct intel_uncore_type *dmr_uncores[UNCORE_DMR_NUM_UNCORE_TYPES] = {
-+	NULL, NULL, NULL, NULL,
-+	&spr_uncore_pcu,
-+	&gnr_uncore_ubox,
-+	&dmr_uncore_imc,
-+	NULL,
-+	NULL, NULL, NULL, NULL,
-+	NULL, NULL, NULL, NULL,
-+	NULL, NULL, NULL, NULL,
-+	NULL, NULL, NULL,
-+	&dmr_uncore_sca,
-+	&dmr_uncore_cxlcm,
-+	NULL, NULL, NULL,
-+	NULL, NULL,
-+	&dmr_uncore_hamvf,
-+	NULL,
-+	NULL, NULL, NULL,
-+	&dmr_uncore_ula,
-+	NULL, NULL, NULL, NULL,
-+	NULL, NULL, NULL,
-+	&dmr_uncore_ubr,
-+	NULL,
-+	&dmr_uncore_pcie4,
-+	&dmr_uncore_crs,
-+	&dmr_uncore_cpc,
-+	&dmr_uncore_itc,
-+	&dmr_uncore_otc,
-+	&dmr_uncore_cms,
-+	&dmr_uncore_pcie6,
-+};
-+
-+int dmr_uncore_units_ignore[] = {
-+	0x13,		/* MSE */
-+	UNCORE_IGNORE_END
-+};
-+
-+int dmr_uncore_pci_init(void)
-+{
-+	uncore_pci_uncores = uncore_get_uncores(UNCORE_ACCESS_PCI, 0, NULL,
-+						UNCORE_DMR_NUM_UNCORE_TYPES,
-+						dmr_uncores);
-+	return 0;
-+}
-+void dmr_uncore_mmio_init(void)
-+{
-+	uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO, 0, NULL,
-+						 UNCORE_DMR_NUM_UNCORE_TYPES,
-+						 dmr_uncores);
-+}
-+
-+/* end of DMR uncore support */
+-	INTEL_UNCORE_EVENT_DESC(read,		"event=0xff,umask=0x20"),
+-	INTEL_UNCORE_EVENT_DESC(read.scale,	"6.103515625e-5"),
+-	INTEL_UNCORE_EVENT_DESC(read.unit,	"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(write,		"event=0xff,umask=0x21"),
+-	INTEL_UNCORE_EVENT_DESC(write.scale,	"6.103515625e-5"),
+-	INTEL_UNCORE_EVENT_DESC(write.unit,	"MiB"),
++	INTEL_UNCORE_FR_EVENT_DESC(read, 0x20, 6.103515625e-5),
++	INTEL_UNCORE_FR_EVENT_DESC(write, 0x21, 6.103515625e-5),
+ 	{ /* end: all zeroes */ },
+ };
+ 
+@@ -5836,19 +5806,10 @@ static struct freerunning_counters icx_imc_freerunning[] = {
+ static struct uncore_event_desc icx_uncore_imc_freerunning_events[] = {
+ 	INTEL_UNCORE_EVENT_DESC(dclk,			"event=0xff,umask=0x10"),
+ 
+-	INTEL_UNCORE_EVENT_DESC(read,			"event=0xff,umask=0x20"),
+-	INTEL_UNCORE_EVENT_DESC(read.scale,		"6.103515625e-5"),
+-	INTEL_UNCORE_EVENT_DESC(read.unit,		"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(write,			"event=0xff,umask=0x21"),
+-	INTEL_UNCORE_EVENT_DESC(write.scale,		"6.103515625e-5"),
+-	INTEL_UNCORE_EVENT_DESC(write.unit,		"MiB"),
+-
+-	INTEL_UNCORE_EVENT_DESC(ddrt_read,		"event=0xff,umask=0x30"),
+-	INTEL_UNCORE_EVENT_DESC(ddrt_read.scale,	"6.103515625e-5"),
+-	INTEL_UNCORE_EVENT_DESC(ddrt_read.unit,		"MiB"),
+-	INTEL_UNCORE_EVENT_DESC(ddrt_write,		"event=0xff,umask=0x31"),
+-	INTEL_UNCORE_EVENT_DESC(ddrt_write.scale,	"6.103515625e-5"),
+-	INTEL_UNCORE_EVENT_DESC(ddrt_write.unit,	"MiB"),
++	INTEL_UNCORE_FR_EVENT_DESC(read, 0x20, 6.103515625e-5),
++	INTEL_UNCORE_FR_EVENT_DESC(write, 0x21, 6.103515625e-5),
++	INTEL_UNCORE_FR_EVENT_DESC(ddrt_read, 0x30, 6.103515625e-5),
++	INTEL_UNCORE_FR_EVENT_DESC(ddrt_write, 0x31, 6.103515625e-5),
+ 	{ /* end: all zeroes */ },
+ };
+ 
 -- 
 2.52.0
 
