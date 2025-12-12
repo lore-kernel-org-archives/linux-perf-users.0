@@ -1,67 +1,67 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D6B19D081
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Dec 2025 14:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CF119F13F
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Dec 2025 15:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765551057; cv=none; b=ZNdDI4moWClLKko3vwk4yi2kouZDy9X0s7d48hQGkxwQlO2k4ptcvrQxmAZLUDcWlUrasr0A2BTRndsgByZhIuisEzuLDtKhveZsYo0g4wZ0kj5azqSlm35FtdkUd5dKs2h+B4mLHBXUQ30pwsviBYhXYouTGnkds6kU1N7NZUk=
+	t=1765551632; cv=none; b=Z/pJhiX/aawMNQepE1I1D5hzAPeGrWlTMUvxydTihYtrnyA01dHilt8DONXmJAuntpCwmP/TeoOnhTOexwOF2TbheIDOo/AKhwiKj7A+J3lpWIZrtF8of0W7LtKmnPryLFrMoIaDUKKnn9g0QcytohqIsDc3Rjau3ijzIYewzzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765551057; c=relaxed/simple;
-	bh=F3S/6Wwi9xOYCpVo8Q76NbldA6PKCJWkKj9M3rJexMg=;
+	s=arc-20240116; t=1765551632; c=relaxed/simple;
+	bh=evgSYkwUYH+t4KgskXe06Ttrzqn3j/4ghuseDtbEqqM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ya43DMIaGfruovAmymbjW3zC/Puo8h2n4mLVVWyc1AZjp9CyAF9yc6ZDeiwMxQi5J/uWhO8IeSGkYZxwjvExs5sfkPgrveFP3b/wJwoPgDuEIXrUpV91GbmcxW0C8KsYzeWIca3QzjHpBTIddHeNzHRhHADc19KTKGdbCa2+8Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uSCzjJq5; arc=none smtp.client-ip=209.85.208.49
+	 In-Reply-To:Content-Type; b=R1uyfPztA1byYIBgGu6O1edXAloqgvJE+tl7S+PwAhYsZ2hrv1+lfWmmr2WuQNtii5piXITW4eCh6VPol/sdtsfAxI6FGRJfF8oCReNXJ8AcwUPYhrPEOnsBKtH/Up9EN8u983NhaPSsfPpzO6RYw4lFqWccTYc+MS3YwA/e4VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ny05kmA1; arc=none smtp.client-ip=209.85.208.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uSCzjJq5"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6418738efa0so2552577a12.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Dec 2025 06:50:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ny05kmA1"
+Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-64162c04f90so2405062a12.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Dec 2025 07:00:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1765551054; x=1766155854; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1765551629; x=1766156429; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7sHdy2ADgTZPMkZ6aLR22PcGlzZUf/wOZQV/WRzdYkM=;
-        b=uSCzjJq5NBevbzqaU6Wcf+cjgj9yOmr3DAYZ/+KsonZA5j6+coDna8NptF/iEGa7Nu
-         BL2ibBh3yK6V/KvnMYBrJhn64HJ+WQK+Rikf1KCZEOETemAASvhQJZUimZEMJz4JbiAH
-         KxGP74UUu9SgcrxT0wFJ6ul4mzheAaP6FmW1+RAATRRAe/Q7vQ9ARe+GyL06kOHfKbB8
-         JYx/ANPclpTA+Jjf4T1mhgHn43+cd0FBJ6XSM0H4ntDGrG8VAI4tC0ChyWtk1R75Rg17
-         8BHhV/bR0OLmybQ+0B/bU04dOI3v1L4jWqN+1G70aYSJpxMAlX3634YOuktbO4eTmVLZ
-         PX2g==
+        bh=tdtwwIJNAU9UljeByxBUVUW2Rebc/JHtWDPV4PBUMDU=;
+        b=ny05kmA1OkxkJQgmBTNgKBnuVbb9Gdvvwo5oNj+Tzq6wYapwNQYRA8QGL7cRZjVwCm
+         xnPKfBQ4IMCJieUAS2b/D+g6QWg+yaFuJv3sNbJltO4VH8CPKY3BSI559ic4FsL2d+NR
+         cPMaR8mtI6ZG1750TTct5vD77Lrp63CPafknJ75C/K5gAnoKHibUCqEZUlNIIRlhssuI
+         AhS3OE+4n1e/IXkw6B7ejjJnHRO9x/lR0e4nvEY+GAmAcmmfOuFysNV16vFV9Z9z3WaH
+         rJ80rOplgWRt1+SLzBimWVr8TynykOBYr24DjwACjAE+ZC8GjNtb5Stp1VEMxHkuXW3u
+         +jbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765551054; x=1766155854;
+        d=1e100.net; s=20230601; t=1765551629; x=1766156429;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7sHdy2ADgTZPMkZ6aLR22PcGlzZUf/wOZQV/WRzdYkM=;
-        b=VYcMC9q6v6l9iR6DAtdJfzT6RhziujPFLNoLWKkQOFr+BOpFtVIlvgK8rtaVqElT/7
-         3KnkkAT7j4sEHE3g/rfr45OfBplne/bEzbPSWNkhmsYwIcugUh2WpxessINtCmGKP3w7
-         58l9xX/zfG4kivKzzrOoRTWH+f6s3UF8FPST0g2mhefwW+Cip1TpXC8SMMMBrjJkY38E
-         YQ1u9QPHq7Ekps7VH9MctFJNlERZf9vam4Teg4VOMmaEy0WuUSWy8YXj9r1c4GKG3WpZ
-         iNttvQa2y1xOcw4mLhQgx3ZxzLylV1zw2PufizG00kbFeBiLjEVuLGmINcFKYSvIzMBc
-         HDOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV9uqqrEUW85+tSQF99HHqPEbHF+rB1ij8g7/tVtjNVBbJvxr6c8EUIDIHh6h+r0qsuI0vmSSoXK7EvFdhUzAW4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwXGs1jsxjIU3LsCO5qqvVLhyjg6Er88dvXJ2bkLyUulqeun44
-	DxSxGPNmQBYZHZFI7p+aHUKnPQFCLxk0UZFFx0dEKFDHTtqp2Ql55e97h/G9jiDLauA=
-X-Gm-Gg: AY/fxX6OW99YICxwZzSLiBBO0NLdMcN0wogkmHN6myzNbSZjhBmwd3YtU9IR2rVJSmF
-	mMB7qBVWSJSMioLaJR2MF28Ayz+U+SXccw00biftRbt/L3BRVSigFOWK0Df9/wEkuSAZNqICh2V
-	2XhlxIj0TQiN6oRDk8EIFLqJmEah51CsJs9K93EifnoFahkWA375kawIOQAwuYAMqbOSfPBaYyz
-	Q2z28+6MVWizc0K66FksDH9AYSyRPBU3M2d5nNndeQHJ8nBrdAJDRXfPzsjRL3ijT/veF+bTrfj
-	9A7wZmBUXfqdRjjT+3iDQugVTTtUyRnuZCXP5feSHhH4CjBQKs5V/kvxVfZ3Q5xdZ6BeEv/w+Jx
-	NPjfqyAgjm8mg4O1ZYg/CV3/J1VQztFwR5hGODTgkHiTGMJiPPdg6jQRlBHDsiv4TmXKfGlpkBi
-	ZX0exxzh2RSnFLNdYl2r5Z
-X-Google-Smtp-Source: AGHT+IHbdskdCmAkYG3vG2sMYEBW2mjhBkod6LOvZhTWtcYM3sRHnERtPgTtm3eIUz9lQUSEGEvdcw==
-X-Received: by 2002:a05:6402:35d0:b0:649:8a7f:97f8 with SMTP id 4fb4d7f45d1cf-6499b157415mr1924358a12.9.1765551054515;
-        Fri, 12 Dec 2025 06:50:54 -0800 (PST)
+        bh=tdtwwIJNAU9UljeByxBUVUW2Rebc/JHtWDPV4PBUMDU=;
+        b=jemMolYvOaCphH2UtN94deesrvlZ9KTFUPeWNod3oz1MJZ9cS6sPTUAXtjeskl+zq9
+         urRjnWWaQlQpIWPfCsVXHn4CSMV3bKbOoRc6sxc8kB3S10c8U5pb7c/MwmW3FnDb8xBk
+         /zR0a4A3XIC006C5gy37LrByTJzgXWE/JeHq28nmacynHZ2t/PEcPndkcxZcxNSoVoh6
+         JGn79+XAJz6UblwjPnryP7y8uThJOp0nWbgOk72juHIuOMk3RnvhGG04IeRz5/tDY0Wg
+         ELyvwH1kcTtYjo9Y6q3CvB5Q/j5RQJv15rFEYuiaKkF9Qt62/S2Kq08RAK6UdiqHC7tt
+         ROng==
+X-Forwarded-Encrypted: i=1; AJvYcCW9Y4eHWwm3gUNsuh9fI5Z/XNYrJiK48MeB8VAuZodTJXPFt7/0vNHsc67wcqCRMVJpEgUbKCpaW/H9lRRq2FOn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0DGbPECDoZcYQFZpfe0N1Ip/U9qXh+kVTPJO+W8AhX4+silY6
+	H06wzJmPLhDhB1ON9uC+gNEqlNcsixKNMWTju7cWFPoToo3wqeBUoVBRD714hKGxgDU=
+X-Gm-Gg: AY/fxX74acPwquHa9cXzNgBAOzDbwj4uh6RuWNrKaTG4c5OmulXmsY0jjUqgAKr40UU
+	ZFy4Av5/1qHysodsQUG7v2wpethpeQaNJrzupmZMHE9lQpmhjONXdo1M9YVkwU+sgM3WxGc9MTy
+	UO0g5p1ebb2unTWTrXxvlMNbDBp+g7qE/QThx0HqKZ4Ds26wfjnyMXU9EAj7jEuY2rs+IpsGCu9
+	v84jbYHcPLq1zgnN28HOpou57qTNmQaBv53OaLttfClU6Rewv6+zMB44f/tWThzvw/HjBJmKeIW
+	0pDx9jJ02Rj07T1BzEBQdTpTrZTenmZBqwSoO5UYNe2jZZFFTBYuQUcTXvclDqHlc9hwqsqlsDZ
+	864sx1WANA/os3+JYK5qTLGWbdo/GRu02Z1QH1PqGr79oGBNPkHdFz6/apAlO/w7dNKx8HsEd0A
+	rBittx/8fuI79qlrbnht61
+X-Google-Smtp-Source: AGHT+IElfvfWwMZz1cNmYrEtoT0T6NC0VQveo08Mp01q2n8OVYW3xlLRaecHrQm7FbKCC25OI7vsMg==
+X-Received: by 2002:a05:6402:5209:b0:649:9251:1115 with SMTP id 4fb4d7f45d1cf-6499b1f369bmr2115809a12.29.1765551628638;
+        Fri, 12 Dec 2025 07:00:28 -0800 (PST)
 Received: from [192.168.0.108] ([130.185.218.160])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-64982040fbcsm5499695a12.1.2025.12.12.06.50.52
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-649820517d6sm5453544a12.13.2025.12.12.07.00.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Dec 2025 06:50:54 -0800 (PST)
-Message-ID: <27417fd5-902e-4474-8d60-356a94ac9590@linaro.org>
-Date: Fri, 12 Dec 2025 16:50:52 +0200
+        Fri, 12 Dec 2025 07:00:28 -0800 (PST)
+Message-ID: <c3fa97dc-3377-4a62-9fc1-561fc904cf5c@linaro.org>
+Date: Fri, 12 Dec 2025 17:00:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,84 +69,61 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/19] coresight: trbe: Refactor AUX flag setting
+Subject: Re: [PATCH 2/2] perf c2c: Update documentation for Arm SPE events
 To: Leo Yan <leo.yan@arm.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, Anshuman Khandual <anshuman.khandual@arm.com>,
- Yeoreum Yun <yeoreum.yun@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Tamas Petz <tamas.petz@arm.com>,
- Tamas Zsoldos <tamas.zsoldos@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
- <20251201-trbe_buffer_refactor_v1-1-v1-7-7da32b076b28@arm.com>
- <a638f74f-94bc-4052-b8e1-e940aca2d4ce@linaro.org>
- <20251210154308.GZ724103@e132581.arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Mike Leach <mike.leach@linaro.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>
+References: <20251212-perf_c2c_update_event-v1-0-29a26c7a949b@arm.com>
+ <20251212-perf_c2c_update_event-v1-2-29a26c7a949b@arm.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20251210154308.GZ724103@e132581.arm.com>
+In-Reply-To: <20251212-perf_c2c_update_event-v1-2-29a26c7a949b@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 10/12/2025 17:43, Leo Yan wrote:
-> On Tue, Dec 09, 2025 at 01:37:39PM +0000, James Clark wrote:
+On 12/12/2025 14:44, Leo Yan wrote:
+> Document the default Arm SPE events used by the perf c2c tool.  Make a
+> minor adjustment to the PowerPC entry for formatting consistency.
 > 
-> [...]
+> Suggested-by: Al Grant <al.grant@arm.com>
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>   tools/perf/Documentation/perf-c2c.txt | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
 > 
->>> +	if (!is_trbe_running(trbsr))
->>> +		perf_aux_output_flag(handle, PERF_AUX_FLAG_COLLISION);
->>> +
->>
->> Do we need the complexity of COLLISION (changed to PARTIAL in a later
->> commit) and TRUNCATED at the same time?
-> 
->>  From my understanding, TRUNCATED would be when Perf is too slow and we want
->> to disable the event for it to catch up, and PARTIAL is when there was some
->> buffer error so technically we don't need the event to be disabled, but Perf
->> still needs to be notified if we want to start only resetting the decoder
->> when a flag is set rather than on all aux records?
-> 
-> The main difference between the TRUNCATED flag and the COLLISION/PARTIAL
-> flags is that the TRUNCATED flag implicitly asks the event core layer to
-> disable the PMU event.  In contrast, the COLLISION and PARTIAL flags are
-> only stored in AUX record and no additional action in the event core
-> layer.
-> 
-> Setting the TRUNCATED flag would be a over-killer if the buffer has
-> free space, as it would run the expensive sequence of disabling both ETE
-> and TRBE and then requiring userspace to re-enable them.
-> 
->> There is no happy path where there is a buffer error, so I'm not sure why we
->> need the complexity of an extra case? There's no harm in disabling the event
->> on a buffer error. Also it's hard to see what the exact scenario for PARTIAL
->> is, because we set truncated anyway for fatal statuses. The comment in the
->> later commit for the PARTIAL change just says "trace was stopped", but not
->> why.
-> 
-> The trace can be stopped on Fill mode (stop on wrap) or Stop on trigger, so
-> it is not (only) about buffer error.  In these cases, even though the trace
-> unit is stopped, the buffer may still have space available, tracing can be
-> directly re-enabled in interrupt handler, thus the COLLISION/PARTIAL flags
-> are better choices.
+> diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
+> index 40b0f71a2c44eb642ff3bb234631a614b7c4fc9d..b765ae2511d2418a63092fb8a90a61faa335ac91 100644
+> --- a/tools/perf/Documentation/perf-c2c.txt
+> +++ b/tools/perf/Documentation/perf-c2c.txt
+> @@ -170,11 +170,16 @@ following on AMD:
+>   
+>     ibs_op//
+>   
+> -and following on PowerPC:
+> +following on PowerPC:
+>   
+>     cpu/mem-loads/
+>     cpu/mem-stores/
+>   
+> +following on Arm:
+> +
+> +  arm_spe_0/ts_enable=1,pa_enable=1,load_filter=1,min_latency=30/
+> +  arm_spe_0/ts_enable=1,pa_enable=1,store_filter=1/
+> +
 
-I suppose this is the bit that I don't understand. If there is space 
-left then why is the stop hit at all?
+Technically there's 3 different ones on Arm because 
+PERF_MEM_EVENTS__LOAD_STORE is also supported. Although I question the 
+usefulness of these without labels or any text to say what the 
+difference is, but that's an existing problem.
 
-For the other cases, I agree that it's overkill, but my point is that 
-doesn't matter because we don't expect it to be hit in normal cases 
-anyway. So it's worth the simplification of not doing anything different 
-than TRUNCATED.
-
+>   User can pass any 'perf record' option behind '--' mark, like (to enable
+>   callchains and system wide monitoring):
+>   
 > 
-> Only when the buffer is actually used out (i.e., handle->size == 0), it is
-> appropriate to set TRUNCATED flag, since at that point we must wait for
-> userspace to read out the data.
-> 
-> Thanks,
-> Leo
 
