@@ -1,147 +1,141 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289EB3246FD
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Dec 2025 15:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D40AD51
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Dec 2025 15:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765553590; cv=none; b=K8M2+6pa51XxiN5PtpeIB5xG/LzYUr3dBRmZ9oirayrGcUoj5j/1TIegQ5aK7nO+yAbEhg4OBlrOgHeQRMpZsOx4QCe+AjpPj8E+QvBZsDaKTOUsqJFCnALqu90OgprXdR97FQxL+5Lv69LN8F8pyxZd3TKLsf4bH6lWlnECZVs=
+	t=1765554732; cv=none; b=B6Bygop4GpGhn9WioRtTdc03LKHft2bVPzH84pLwr5rXJvkG568fi3kV0LBFagUSS4MAMRgsdD1c+wbth3rc3cAZGLNaVa9sBWjRYdcucHgC6RMlIiLG/esp5ooH8rJ9pKLDiUe5AwTjpL5j+pz9y4MdHCltcvNCcIdFlT7Yntg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765553590; c=relaxed/simple;
-	bh=+3Y3lcxZMqFLbNOWqAJ1uO9Sw58KGFuwnvIdXYYIXjs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NeydwI8HPjtcmEyb090NydOCFANUVU2p0sKYO6OmDrdnTiHP01aliEkhOaEMvcKFarYhcdPr7LQOPHn4gjhrcLPsfosjcrAz8FwaEDzBKyjd/BTvB90P27A13XLMp0g0LrXVCCqQOrl3Nm+7FjgToScFOBtNHoLsa0BpXswbjuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lXjTv0nr; arc=none smtp.client-ip=209.85.218.49
+	s=arc-20240116; t=1765554732; c=relaxed/simple;
+	bh=6cveMDU2xhIPiIlaviJbj0HLFpMZOamk+NrqD5tfSV4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I4CcZZnBeaAOWA60Nz90xBYd6iSWASHle0pR3Gji4TSCDLQFc7Vz3HNRVixU1Rd1M4JU/jzwGruG/Jk9yooyMXWTaTB2ZaGi563/MwBUch13VhwhBd0p1bquzs89mvTc2FDmLNmYRmhr2c//1ahVKukscgT0EdfSmQ/79sqC9us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H1PH4aIY; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lXjTv0nr"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b75c7cb722aso271486966b.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Dec 2025 07:33:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H1PH4aIY"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4779cc419b2so15438835e9.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Dec 2025 07:52:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1765553586; x=1766158386; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=40w1+RpiFWn7cLTaBFnZfKV4QslzhNGDu3cnJiEGNGY=;
-        b=lXjTv0nrAbJPl9W3BvxIeEVMca+rsYwaijKtXfThOzay2EKojwvB3HihiRzMU1HwN7
-         5Co2ACZgtieBQYy43tKg5bJ+XVFAiBCmDEMJx24daizO+n8mSqpmeU4vHcKdMS+2ug2Q
-         6UNsn4IqXFUxB47yWHHiXi4DjynO5l3bX4MAHqMQuVp2OHROgd41p6rU/aDBFDSC0MIK
-         1BC91E01Mb+X5VDrn+WWHEYK4FHMML5C2UVLYKT67J9mLBh8oMXn1UiOraLeqoVJays0
-         hwGhad8bKnwJvx7qVI68C0DCJ841mMmRfZPtzozd7ZrhWXTlbO7CZvfQi8ZKJe1IStrJ
-         s4Gw==
+        d=linaro.org; s=google; t=1765554729; x=1766159529; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BF5gJ/otAEoZ4clGqcYn+D/DhcYdPlTejIl8apYKJjg=;
+        b=H1PH4aIYKEl7teNkGYxE+6xQp0X2kl/JwUFOSe87i1npMzAALsxsMpRd/qqO7AT9aS
+         YwUFFP2ujl7qTfgB6BCx+tLD/2FNQTt8fZef//aUOJdrZX0MntT54OBryVwGaWoY7Qyp
+         pc1HZn9dS4hub+FFbV2FxNBd4ZEreKhkGjVxwzQDXnsSkpSX3svgCuPaZRI2Ptd41uMK
+         iqbKWRy3z8e961gr9z7QaxaZHLQZ3ApclqUeFpgDk/v79Vq4ueY6IYi5xbyIyy5XCh1Z
+         +QHs3ECXs/G4CLQgLx50PsxsMHO91IPx3UsIKLKcPZX5NdTXvQB+/LhPsJNSbWkie13l
+         gRKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765553586; x=1766158386;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=40w1+RpiFWn7cLTaBFnZfKV4QslzhNGDu3cnJiEGNGY=;
-        b=EvtnZR0HUsvfwYGCnqJhVDqgn2znGW3MOKtrLg4eWrL3opinjLCTPfx6e9FOsQx7Yh
-         IT2YIb4eUiQXzwjqHhYZI5oYz9NbdxWU2RCXwPeyjLhHzjEeOxC3Xhflc2YzxqEYTFPy
-         YRb/OktTKI91w4j1fbq9WRxrl1Y7i8rI6mmqxrKoiBs1Ufqb3VUn/6ylUAIo/HJ1pBTv
-         VUul4MalXyo27DTGChSo16GbKKlAIRf4IQujKvuxW1s33fshaWI/ggq0/NtGUBGMQxKG
-         UJVHb+u4O755FB5/wD/ADHPco3i61M5D0ZjvviU9XYR8SuVBDHi+NIhfM2cPU2zMLAqC
-         gQXA==
-X-Gm-Message-State: AOJu0YzNGxQE0qF3yanSPsmmxX5T0GWRI50nQLSxpMbWs90irqgh/BFf
-	VMqtcB+7qLPvM5ah45uPiNcaZrMv5KtDGGIoMDnwycpOz0B2FzfyQMIrs0F7rMlHFl8=
-X-Gm-Gg: AY/fxX43BR7NUezieawUWxyL3L3g1EY6fQgHyS7DikyqrbYuESERkS4kjfLWtzDKazp
-	YS03zkx5iM3iFlMJoVFzVS+4d8rJOgxh24ZYPDLKZ+Eq8gxTC+p9T90YDmH/6yKP6iATC2ZvkVA
-	x66oyVZSBY74gmAAOEsdrNLCsFoTSCJtjw99rizyK3Fxq4+erPy2HnpZVnGOAHBiTnBGnCqt/yK
-	LBsonaJn15hfDO/E6uym8GeRsSJKgqbwp0BIgkgGyl5DdS5m5rgEQa7YTgxa/FuYhsZXexwBvk4
-	X1p63YDcyBiKWkb52SdHTQLRK6gDinqBGANrj4UgQ8TWuzhysK7GMlT82Qm30fKNLiemOpgv9ru
-	JY6Rn9RK9FKB540vC56PjaCMDFhVdEDM9b1FtcuiZnqh9un2QYbqpWddJkSvDw9EoTSjf/X4ZDl
-	n+Feh9SOI+5qU9Ro+WXDbK
-X-Google-Smtp-Source: AGHT+IGymdzTOhM5jbelcMXcQ4KMKi4yIZCo10XakrCUVGapuKUtwGCZXcqj0byfMgnvUtzZVv51aQ==
-X-Received: by 2002:a17:907:1ca1:b0:b76:bfa9:5ae7 with SMTP id a640c23a62f3a-b7d236bcc17mr232174966b.29.1765553586158;
-        Fri, 12 Dec 2025 07:33:06 -0800 (PST)
-Received: from e133063.arm.com ([130.185.218.160])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6498210ed32sm5433234a12.29.2025.12.12.07.33.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Dec 2025 07:33:05 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-Date: Fri, 12 Dec 2025 17:32:29 +0200
-Subject: [PATCH v3 12/12] perf arm-spe: Don't hard code config attribute
+        d=1e100.net; s=20230601; t=1765554729; x=1766159529;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BF5gJ/otAEoZ4clGqcYn+D/DhcYdPlTejIl8apYKJjg=;
+        b=f8yPqZ1CJ40N73guuWqkIYlbNXBo1e7V8lHUpmr3ik/O6UTFg+uWPQUQMoPc8Jdzmv
+         XOiVA+hqPev5CUfFSPVQa8DhEwFy+unSFJW5T5rorl2pr8HU5RvTm29X6icBlX55AjtT
+         5SUudLdUyvROHdFLvL0C/6OJIEtsjt3gDB479R9h3zxowIyvORdL0DevkodgzvtIzJPp
+         F4VlNqJVkR1ukpyxnrhee7rjjFI1Y2qv1WxDUNI/wyyv72XApSeLrw+rUyohcMgKYeMP
+         X6mnjFTeUNjwtH1D6/lQlSI0q/ICDtvHj5408dseLrQkTwAYEn2bLC5RS+DOeSNYm1W0
+         Eg0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUl6ebNpCN4+jBT8X95wal5MIbPCOLNfi8p7DyzIY6CkanMQqHRpzGJZvSgssIIIjfHVC30lRcKvrL0wEQ6w+p0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHieuMeq0I9T+Jkl/zuzC/vAbuUavq6UezbUm61woBoWezsA7F
+	rNxaCldcruWx4xiEn+2EG13QliSk4sdNTsv7ZXsJaPRoYgl0Jecy6owgsNspEh7dGpYmt5XI9W9
+	ojkvCIwR2/gDm
+X-Gm-Gg: AY/fxX5sW65jgGdhi8UboqfehPIBqt2o/Ny1VvIyY+LLc15rOUs7gDgzubzdmMTaquU
+	ojn8/cv1uD31W9bBclf2pBIKW/KE9YcWiTmy4S/8arsLw0esp2A8XOXpSCUaA/j71ok369XAz7x
+	o9i2ten38+IaF1KszC5joVpUV/lmXQFUE24WppZUDKwJHLk6vk/SHjIkTK018MIlemxqesLxDC7
+	hPcIslSn35Bokd1lK9dR3vk9+OWDuTAjYOcc3d7O8oMbqty8kyTnRGPvgS1EQ4/dFxKKRnsTojY
+	MxGZ+l50PHSa3kaeqmP1SRSTqLQMt/gIokjsDhByOxgy/AWvQriRgLEPavCPfqUhDt7dZSQss2X
+	CKi7WY0AsrnfeUshjr4TwOZbhi81TIFD3YkYsLOlAzdmCit9lcjzlOxn3sYk3sjKoMAAWDfkTl9
+	+5wloV5ZwNIrVoox3tyhJ8
+X-Google-Smtp-Source: AGHT+IFyYqsJru0EerGFYFTMp90A+LMaDZcZ5Gsc9tDkxrzqI6XWJZKohcECOZHdf9TafH96HnDZ4g==
+X-Received: by 2002:a05:600c:450b:b0:459:db7b:988e with SMTP id 5b1f17b1804b1-47a8f8c0608mr25573425e9.13.1765554729284;
+        Fri, 12 Dec 2025 07:52:09 -0800 (PST)
+Received: from [192.168.0.108] ([130.185.218.160])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42fa8b85f38sm12766586f8f.28.2025.12.12.07.52.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Dec 2025 07:52:08 -0800 (PST)
+Message-ID: <26b61e11-1dfa-4be1-8d58-06e35fb04d64@linaro.org>
+Date: Fri, 12 Dec 2025 17:52:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/19] coresight: trbe: Refactor AUX flag setting
+To: Leo Yan <leo.yan@arm.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, Anshuman Khandual <anshuman.khandual@arm.com>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Tamas Petz <tamas.petz@arm.com>,
+ Tamas Zsoldos <tamas.zsoldos@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
+ <20251201-trbe_buffer_refactor_v1-1-v1-7-7da32b076b28@arm.com>
+ <a638f74f-94bc-4052-b8e1-e940aca2d4ce@linaro.org>
+ <20251210154308.GZ724103@e132581.arm.com>
+ <27417fd5-902e-4474-8d60-356a94ac9590@linaro.org>
+ <20251212152738.GA181228@e132581.arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20251212152738.GA181228@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251212-james-perf-config-bits-v3-12-aa36a4846776@linaro.org>
-References: <20251212-james-perf-config-bits-v3-0-aa36a4846776@linaro.org>
-In-Reply-To: <20251212-james-perf-config-bits-v3-0-aa36a4846776@linaro.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>, 
- Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
- James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.2
 
-Use the config attribute that's published by the driver instead of
-hard coding "attr.config".
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/arch/arm64/util/arm-spe.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index d5ec1408d0aec7e0d39a2cae7ad73694950ab67b..6c3dc97fde308cf4a1f289fab5101ead2765b140 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -256,7 +256,7 @@ static __u64 arm_spe_pmu__sample_period(const struct perf_pmu *arm_spe_pmu)
- 
- static void arm_spe_setup_evsel(struct evsel *evsel, struct perf_cpu_map *cpus)
- {
--	u64 bit;
-+	u64 pa_enable_bit;
- 
- 	evsel->core.attr.freq = 0;
- 	evsel->core.attr.sample_period = arm_spe_pmu__sample_period(evsel->pmu);
-@@ -288,9 +288,10 @@ static void arm_spe_setup_evsel(struct evsel *evsel, struct perf_cpu_map *cpus)
- 	 * inform that the resulting output's SPE samples contain physical addresses
- 	 * where applicable.
- 	 */
--	bit = perf_pmu__format_bits(evsel->pmu, "pa_enable");
--	if (evsel->core.attr.config & bit)
--		evsel__set_sample_bit(evsel, PHYS_ADDR);
-+
-+	if (!evsel__get_config_val(evsel->pmu, evsel, "pa_enable", &pa_enable_bit))
-+		if (pa_enable_bit)
-+			evsel__set_sample_bit(evsel, PHYS_ADDR);
- }
- 
- static int arm_spe_setup_aux_buffer(struct record_opts *opts)
-@@ -397,6 +398,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
- 	struct perf_cpu_map *cpus = evlist->core.user_requested_cpus;
- 	bool discard = false;
- 	int err;
-+	u64 discard_bit;
- 
- 	sper->evlist = evlist;
- 
-@@ -425,9 +427,8 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
- 	evlist__for_each_entry_safe(evlist, tmp, evsel) {
- 		if (evsel__is_aux_event(evsel)) {
- 			arm_spe_setup_evsel(evsel, cpus);
--			if (evsel->core.attr.config &
--			    perf_pmu__format_bits(evsel->pmu, "discard"))
--				discard = true;
-+			if (!evsel__get_config_val(evsel->pmu, evsel, "discard", &discard_bit))
-+				discard = !!discard_bit;
- 		}
- 	}
- 
+On 12/12/2025 17:27, Leo Yan wrote:
+> On Fri, Dec 12, 2025 at 04:50:52PM +0200, James Clark wrote:
+> 
+> [...]
+> 
+>>> The trace can be stopped on Fill mode (stop on wrap) or Stop on trigger, so
+>>> it is not (only) about buffer error.  In these cases, even though the trace
+>>> unit is stopped, the buffer may still have space available, tracing can be
+>>> directly re-enabled in interrupt handler, thus the COLLISION/PARTIAL flags
+>>> are better choices.
+>>
+>> I suppose this is the bit that I don't understand. If there is space left
+>> then why is the stop hit at all?
+> 
+> For instance, the buffer becomes empty in the middle:
+> 
+>     +----------------------------+
+>     |$$$$$$$|            |$$$$$$$|
+>     +----------------------------+
+>     ` base  `wptr        `limit
+> 
+> In this case, the trace unit stops when it reaches the limit.
+> Meanwhile, the tool might have already read out the old trace data so
+> we will get some free space, thus no need to set TRUNCATED flag.
 
--- 
-2.34.1
+Hmmm I see, I still think that means that Perf is being too slow and 
+disabling the event wouldn't be that bad.
+
+Also isn't there a very small chance to hit this? I'm wondering if you 
+ever saw PARTIAL flags in practice?
+
+I think the following all have to be true:
+
+  * 3 out of 4 sections were full on the last interrupt
+  * Perf hadn't managed to finish reading even 1 section in that time
+  * The last section fills up
+  * Perf had managed to finish reading 1 section between the time of
+    the previous interrupt and the hard stop
+
+There would have to be quite a high variability in read speed to make 
+that possible. Maybe it happens and it's worthwhile optimizing for. The 
+comments could explain it better if we do decide to keep it.
 
