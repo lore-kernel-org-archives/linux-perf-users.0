@@ -1,201 +1,299 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f73.google.com (mail-oo1-f73.google.com [209.85.161.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61B930FC1B;
-	Fri, 12 Dec 2025 21:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55048293B5F
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Dec 2025 21:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765573647; cv=none; b=UTvm4Jw4qwfAAeoQP0r1nTTDrdRlRJQ/iu9nw98UzGxab8E1+HWgcX5qJ8kNvHK+uNPPLQbKATMeC5Yu5yERWGnG9P5Ob74y5ek9jix8Ytu41ihgbvp7i2bh5EGKHq9jUpDNaoFizu1PQwNTGl9JNbXyEHr1Vbg4oY9ccKldeFo=
+	t=1765574547; cv=none; b=ImfJ6CKUwQb5ZL9syh9VZE0tuAOVX9eJfCsqf2lIWZhOI3mVVLSVhw59gfNBdyX2c3ADECdZPcI0Lv16B67tMMixyMSsy00ApVtDayI6z9qIdus1poDkxzodHvAndZIfGr1SVBpVzpQKmo7FDGaY9LcIeem6nQcKdS8RrL+gwUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765573647; c=relaxed/simple;
-	bh=Fi/VgyUpK1VjQOUpwAxq/WFnm7BDJK7ZbFixboClgmQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UEdyUeiYmNM1RmbyGTCKSNg9pmuhcNUefKQjX658BPI9etR2ydFBOQqGG6NLAjQmAg+hmO6bBZ9zvszXRQ60DoHZ+ALb7rgr26Zr4BZs6a+AR/fj2x/xVyFTLVVm+KdP24koXouWMjfcBa5MHednDCH9LCEXSsfHzyHgXuCRKcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KGCaXWzn; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1765574547; c=relaxed/simple;
+	bh=zUcTgO8xFxXTIs2xi2maKe3MVihox+NtvOsRoMBmnbc=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=Jz/q7mNG9TF05HTREEDoiQjia50lF8KG8wLPvQmN1YzJCcdYcWDbqVnbrCsV/wrKkjTP2k4ErHpQbzxHUqY5uIdQDR2JBcPVo1Nc4tAwBZZlk3fjEQXp11gxmMenmdNj+Q4YkkkUNYVpnWg8kAU+2kY6rRQ5tb3adNIwnjo/IOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MW2HlbUh; arc=none smtp.client-ip=209.85.161.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KGCaXWzn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765573646; x=1797109646;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Fi/VgyUpK1VjQOUpwAxq/WFnm7BDJK7ZbFixboClgmQ=;
-  b=KGCaXWzn4t9zEMMqY0dQZC+T4z3CErkAj7VFi+yaxm35m7w5U0fPt6/r
-   OWGf1u1D48PZiHtkY51vLin9f/nA2HdFreMi9Auf0d0Le/MRrDajU0if1
-   ylRlxjKk9+Zo4Zr1Jnn+iPC8kNqLJgWBaV/WmMafp3BNR92Zv3KB9q6Mi
-   gfXWqdGyJBbsTnlXAuGyNoYZgaHwziV+eK5kr76pNIKNfw6yX51b1bq58
-   SfsUWd+wJOQxAX2MRZ/NvSWSI4DSxRH6GcAGL2p41zGZ3Rz8j+Kq96Iqh
-   VYaKHl0lBLZ1cuxBby1MhNfG8hMJZvlYZDCOKV9zMysA2Zwlpgwq3Re7V
-   g==;
-X-CSE-ConnectionGUID: IC7a/LhjSuC7HBnAufz8YA==
-X-CSE-MsgGUID: aU4ZtBZiQ7eqdFFCMlF/MQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11640"; a="67333599"
-X-IronPort-AV: E=Sophos;i="6.21,144,1763452800"; 
-   d="scan'208";a="67333599"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2025 13:07:17 -0800
-X-CSE-ConnectionGUID: tWMgA+noSpivbkGN8G/Baw==
-X-CSE-MsgGUID: uxoMwpAgS9iRwJkPMq6bxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,144,1763452800"; 
-   d="scan'208";a="202269535"
-Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.43])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2025 13:07:17 -0800
-From: Zide Chen <zide.chen@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>
-Subject: [PATCH 6/7] perf/x86/intel/uncore: Update DMR uncore constraints preliminarily
-Date: Fri, 12 Dec 2025 13:00:06 -0800
-Message-ID: <20251212210007.13986-7-zide.chen@intel.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251212210007.13986-1-zide.chen@intel.com>
-References: <20251212210007.13986-1-zide.chen@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MW2HlbUh"
+Received: by mail-oo1-f73.google.com with SMTP id 006d021491bc7-656b3efc41aso1982161eaf.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Dec 2025 13:22:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1765574544; x=1766179344; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=TDikX7MxydgpkEhVgiFec0tbYtt4zp46Bk2PRaWMaw0=;
+        b=MW2HlbUhOD7SlhnGYeQqsyjKWNjRs1JTUy3Rajh8ot/0qyCr6Gb8najsiX3y3JAwiN
+         22hzC+8C94q8j/ekLsaBY7GO4frsEPI1fjWphsJKi8VK1Nd1CF0XZp8rvzQQv0Zy6ETy
+         ePiDLGRX5iTjUefHA3KxsQInMje5hq7IfVM9/fX173MR7K5w3FfYA/ByScf47Sz2aima
+         lKXwSpAqfgYI1/yPAPcm9wf0xnY/8Arl/wALbwR6JazfznD2NGJ5stssqsKNRwYTcaMh
+         NCSDm3UtHDRE7udBgAF7Qhmleptjot6h6keG4XMsbJp/8XcW+T/deoH0oTiozDuGNKY+
+         9JnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765574544; x=1766179344;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TDikX7MxydgpkEhVgiFec0tbYtt4zp46Bk2PRaWMaw0=;
+        b=J4p/GL+WEiIaIaWPfRULZpUYXdFlJFTTPsPm21Xnp97/4ioUDlhDbwaQhJR4OdLnNU
+         3oIiGU8dGzeDmbzux1fhV2mSDM1KIQr66pSP5gnFQJ/4rxbMxuswrTpbHn/SUDMVCS1l
+         1WZDYAtWjdmRnKvBaPqK2NiEN4zD6DKpG0VnikUvLrs8R6id79n/Jdd4sJ2q2IFk8LpT
+         1n3FWaBLiGxLYyM6h499XiQG15waPKyio9RofqToWuD4YSdhGcsQgDyFPONkbf4NJGwI
+         WGAS5DR3saWcG5OZT+0KwpWzC5cl5dNOjFMvawQ1OaOyF8tJT+UIbumGpZMQR6zOwrY9
+         bu7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUaaff1jWuULbGrukFmahYfoAG0FIDy7eoLWHeWzwXMWUalRzfKxvE4jlEMdzJbyyI3CcF49Cb6Ip5/INDNoceV@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF0tnNSfCiDEPlBmrQx/Fj1HhQcT3yQvwyYd5F+nNQUwpKPECa
+	Xs2v6ywEe6HIKH/ED89XQBCB2jLAKP5R/M1CYQ5nTC4CeMyRPPW/gUngJ5+Rw9qJENGct+4B8eL
+	KJ91jFn6woyUqeyOISMqu2OwmeA==
+X-Google-Smtp-Source: AGHT+IFacNltyMpQaFsNK7rlABry0i4u7xBCuikCMLsDPxZN/lK6t81XIofzqcYLqh4pqGUQWt5vQ9Tbd4atv0DZBg==
+X-Received: from jabbm9.prod.google.com ([2002:a05:6638:42c9:b0:5b7:27fd:4260])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6820:16a4:b0:657:6fdd:9875 with SMTP id 006d021491bc7-65b455bc09emr1840088eaf.5.1765574544449;
+ Fri, 12 Dec 2025 13:22:24 -0800 (PST)
+Date: Fri, 12 Dec 2025 21:22:23 +0000
+In-Reply-To: <aTiVnI5ewoEVRztD@kernel.org> (message from Oliver Upton on Tue,
+ 9 Dec 2025 13:33:16 -0800)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Message-ID: <gsntpl8j2y5s.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [PATCH v5 15/24] KVM: arm64: Setup MDCR_EL2 to handle a
+ partitioned PMU
+From: Colton Lewis <coltonlewis@google.com>
+To: Oliver Upton <oupton@kernel.org>
+Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
+	maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com, 
+	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
+	mark.rutland@arm.com, shuah@kernel.org, gankulkarni@os.amperecomputing.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-Update event constraints base on the latest DMR uncore event list.
+Oliver Upton <oupton@kernel.org> writes:
 
-Signed-off-by: Zide Chen <zide.chen@intel.com>
----
- arch/x86/events/intel/uncore_snbep.c | 81 ++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+> On Tue, Dec 09, 2025 at 08:51:12PM +0000, Colton Lewis wrote:
+>> Setup MDCR_EL2 to handle a partitioned PMU. That means calculate an
+>> appropriate value for HPMN instead of the default maximum setting the
+>> host allows (which implies no partition) so hardware enforces that a
+>> guest will only see the counters in the guest partition.
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index e5b95fa75313..8068b9404ecb 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -6760,10 +6760,72 @@ static const struct attribute_group dmr_cxlcm_uncore_format_group = {
- 	.attrs = dmr_cxlcm_uncore_formats_attr,
- };
- 
-+static struct event_constraint dmr_uncore_cxlcm_constraints[] = {
-+	UNCORE_EVENT_CONSTRAINT(0x1, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x2, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x3, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x4, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x5, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x6, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x7, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x8, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x9, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0xa, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0xb, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0xc, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0xd, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0xe, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0xf, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x10, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x11, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x12, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x14, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x1d, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x1e, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x1f, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x20, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x21, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x22, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x23, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x24, 0x0f),
-+	UNCORE_EVENT_CONSTRAINT(0x41, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x42, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x43, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x44, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x45, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x46, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x47, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x48, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x49, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x4a, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x4b, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x4c, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x4e, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x50, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x51, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x52, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x53, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x54, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x55, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x56, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x57, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x58, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x59, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x5a, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x5b, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x5c, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x5d, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x5e, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x60, 0xf0),
-+	UNCORE_EVENT_CONSTRAINT(0x61, 0xf0),
-+	EVENT_CONSTRAINT_END
-+};
-+
- static struct intel_uncore_type dmr_uncore_cxlcm = {
- 	.name			= "cxlcm",
- 	.event_mask		= GENERIC_PMON_RAW_EVENT_MASK,
- 	.event_mask_ext		= DMR_CXLCM_EVENT_MASK_EXT,
-+	.constraints		= dmr_uncore_cxlcm_constraints,
- 	.format_group		= &dmr_cxlcm_uncore_format_group,
- 	.attr_update		= uncore_alias_groups,
- };
-@@ -6775,9 +6837,21 @@ static struct intel_uncore_type dmr_uncore_hamvf = {
- 	.attr_update		= uncore_alias_groups,
- };
- 
-+static struct event_constraint dmr_uncore_cbo_constraints[] = {
-+	UNCORE_EVENT_CONSTRAINT(0x11, 0x1),
-+	UNCORE_EVENT_CONSTRAINT(0x19, 0x1),
-+	UNCORE_EVENT_CONSTRAINT(0x1a, 0x1),
-+	UNCORE_EVENT_CONSTRAINT(0x1f, 0x1),
-+	UNCORE_EVENT_CONSTRAINT(0x21, 0x1),
-+	UNCORE_EVENT_CONSTRAINT(0x25, 0x1),
-+	UNCORE_EVENT_CONSTRAINT(0x36, 0x1),
-+	EVENT_CONSTRAINT_END
-+};
-+
- static struct intel_uncore_type dmr_uncore_cbo = {
- 	.name			= "cbo",
- 	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-+	.constraints            = dmr_uncore_cbo_constraints,
- 	.format_group		= &dmr_sca_uncore_format_group,
- 	.attr_update		= uncore_alias_groups,
- };
-@@ -6811,9 +6885,16 @@ static struct intel_uncore_type dmr_uncore_dda = {
- 	.attr_update		= uncore_alias_groups,
- };
- 
-+static struct event_constraint dmr_uncore_sbo_constraints[] = {
-+	UNCORE_EVENT_CONSTRAINT(0x1f, 0x01),
-+	UNCORE_EVENT_CONSTRAINT(0x25, 0x01),
-+	EVENT_CONSTRAINT_END
-+};
-+
- static struct intel_uncore_type dmr_uncore_sbo = {
- 	.name			= "sbo",
- 	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-+	.constraints		= dmr_uncore_sbo_constraints,
- 	.format_group		= &dmr_sca_uncore_format_group,
- 	.attr_update		= uncore_alias_groups,
- };
--- 
-2.52.0
+>> Setting HPMN to a non default value means the global enable bit for
+>> the host counters is now MDCR_EL2.HPME instead of the usual
+>> PMCR_EL0.E. Enable the HPME bit to allow the host to count guest
+>> events. Since HPME only has an effect when HPMN is set which we only
+>> do for the guest, it is correct to enable it unconditionally here.
 
+>> Unset the TPM and TPMCR bits, which trap all PMU accesses, if
+>> FGT (fine grain trapping) is being used.
+
+>> If available, set the filtering bits HPMD and HCCD to be extra sure
+>> nothing in the guest counts at EL2.
+
+>> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+>> ---
+>>   arch/arm64/include/asm/kvm_pmu.h | 11 ++++++
+>>   arch/arm64/kvm/debug.c           | 29 ++++++++++++--
+>>   arch/arm64/kvm/pmu-direct.c      | 65 ++++++++++++++++++++++++++++++++
+>>   3 files changed, 102 insertions(+), 3 deletions(-)
+
+>> diff --git a/arch/arm64/include/asm/kvm_pmu.h  
+>> b/arch/arm64/include/asm/kvm_pmu.h
+>> index 60b8a48cad456..8b634112eded2 100644
+>> --- a/arch/arm64/include/asm/kvm_pmu.h
+>> +++ b/arch/arm64/include/asm/kvm_pmu.h
+>> @@ -101,6 +101,9 @@ u64 kvm_pmu_guest_counter_mask(struct arm_pmu *pmu);
+>>   void kvm_pmu_host_counters_enable(void);
+>>   void kvm_pmu_host_counters_disable(void);
+
+>> +u8 kvm_pmu_guest_num_counters(struct kvm_vcpu *vcpu);
+>> +u8 kvm_pmu_hpmn(struct kvm_vcpu *vcpu);
+>> +
+>>   #if !defined(__KVM_NVHE_HYPERVISOR__)
+>>   bool kvm_vcpu_pmu_is_partitioned(struct kvm_vcpu *vcpu);
+>>   bool kvm_vcpu_pmu_use_fgt(struct kvm_vcpu *vcpu);
+>> @@ -173,6 +176,14 @@ static inline u64 kvm_pmu_fgt2_bits(void)
+>>   {
+>>   	return 0;
+>>   }
+>> +static inline u8 kvm_pmu_guest_num_counters(struct kvm_vcpu *vcpu)
+>> +{
+>> +	return 0;
+>> +}
+>> +static inline u8 kvm_pmu_hpmn(struct kvm_vcpu *vcpu)
+>> +{
+>> +	return 0;
+>> +}
+>>   static inline void kvm_pmu_set_counter_value(struct kvm_vcpu *vcpu,
+>>   					     u64 select_idx, u64 val) {}
+>>   static inline void kvm_pmu_set_counter_value_user(struct kvm_vcpu *vcpu,
+>> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+>> index 3ad6b7c6e4ba7..0ab89c91e19cb 100644
+>> --- a/arch/arm64/kvm/debug.c
+>> +++ b/arch/arm64/kvm/debug.c
+>> @@ -36,20 +36,43 @@ static int cpu_has_spe(u64 dfr0)
+>>    */
+>>   static void kvm_arm_setup_mdcr_el2(struct kvm_vcpu *vcpu)
+>>   {
+>> +	int hpmn = kvm_pmu_hpmn(vcpu);
+>> +
+>>   	preempt_disable();
+
+>>   	/*
+>>   	 * This also clears MDCR_EL2_E2PB_MASK and MDCR_EL2_E2TB_MASK
+>>   	 * to disable guest access to the profiling and trace buffers
+>>   	 */
+>> -	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN,
+>> -					 *host_data_ptr(nr_event_counters));
+>> +
+>> +	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN, hpmn);
+>>   	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
+>>   				MDCR_EL2_TPMS |
+>>   				MDCR_EL2_TTRF |
+>>   				MDCR_EL2_TPMCR |
+>>   				MDCR_EL2_TDRA |
+>> -				MDCR_EL2_TDOSA);
+>> +				MDCR_EL2_TDOSA |
+>> +				MDCR_EL2_HPME);
+>> +
+>> +	if (kvm_vcpu_pmu_is_partitioned(vcpu)) {
+>> +		/*
+>> +		 * Filtering these should be redundant because we trap
+>> +		 * all the TYPER and FILTR registers anyway and ensure
+>> +		 * they filter EL2, but set the bits if they are here.
+>> +		 */
+>> +		if (is_pmuv3p1(read_pmuver()))
+>> +			vcpu->arch.mdcr_el2 |= MDCR_EL2_HPMD;
+>> +		if (is_pmuv3p5(read_pmuver()))
+>> +			vcpu->arch.mdcr_el2 |= MDCR_EL2_HCCD;
+>> +
+>> +		/*
+>> +		 * Take out the coarse grain traps if we are using
+>> +		 * fine grain traps.
+>> +		 */
+>> +		if (kvm_vcpu_pmu_use_fgt(vcpu))
+>> +			vcpu->arch.mdcr_el2 &= ~(MDCR_EL2_TPM | MDCR_EL2_TPMCR);
+>> +
+>> +	}
+
+>>   	/* Is the VM being debugged by userspace? */
+>>   	if (vcpu->guest_debug)
+>> diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
+>> index 4dd160c878862..7fb4fb5c22e2a 100644
+>> --- a/arch/arm64/kvm/pmu-direct.c
+>> +++ b/arch/arm64/kvm/pmu-direct.c
+>> @@ -154,3 +154,68 @@ void kvm_pmu_host_counters_disable(void)
+>>   	mdcr &= ~MDCR_EL2_HPME;
+>>   	write_sysreg(mdcr, mdcr_el2);
+>>   }
+
+> <snip>
+
+>> +/**
+>> + * kvm_pmu_guest_num_counters() - Number of counters to show to guest
+>> + * @vcpu: Pointer to struct kvm_vcpu
+>> + *
+>> + * Calculate the number of counters to show to the guest via
+>> + * PMCR_EL0.N, making sure to respect the maximum the host allows,
+>> + * which is hpmn_max if partitioned and host_max otherwise.
+>> + *
+>> + * Return: Valid value for PMCR_EL0.N
+>> + */
+>> +u8 kvm_pmu_guest_num_counters(struct kvm_vcpu *vcpu)
+>> +{
+>> +	u8 nr_cnt = vcpu->kvm->arch.nr_pmu_counters;
+>> +	int hpmn_max = armv8pmu_hpmn_max;
+>> +	u8 host_max = *host_data_ptr(nr_event_counters);
+>> +
+>> +	if (vcpu->kvm->arch.arm_pmu)
+>> +		hpmn_max = vcpu->kvm->arch.arm_pmu->hpmn_max;
+>> +
+>> +	if (kvm_vcpu_pmu_is_partitioned(vcpu)) {
+>> +		if (nr_cnt <= hpmn_max && nr_cnt <= host_max)
+>> +			return nr_cnt;
+>> +		if (hpmn_max <= host_max)
+>> +			return hpmn_max;
+>> +	}
+>> +
+>> +	if (nr_cnt <= host_max)
+>> +		return nr_cnt;
+>> +
+>> +	return host_max;
+>> +}
+>> +
+>> +/**
+>> + * kvm_pmu_hpmn() - Calculate HPMN field value
+>> + * @vcpu: Pointer to struct kvm_vcpu
+>> + *
+>> + * Calculate the appropriate value to set for MDCR_EL2.HPMN. If
+>> + * partitioned, this is the number of counters set for the guest if
+>> + * supported, falling back to hpmn_max if needed. If we are not
+>> + * partitioned or can't set the implied HPMN value, fall back to the
+>> + * host value.
+>> + *
+>> + * Return: A valid HPMN value
+>> + */
+>> +u8 kvm_pmu_hpmn(struct kvm_vcpu *vcpu)
+>> +{
+>> +	u8 nr_guest_cnt = kvm_pmu_guest_num_counters(vcpu);
+>> +	int nr_guest_cnt_max = armv8pmu_hpmn_max;
+>> +	u8 nr_host_cnt_max = *host_data_ptr(nr_event_counters);
+>> +
+>> +	if (vcpu->kvm->arch.arm_pmu)
+>> +		nr_guest_cnt_max = vcpu->kvm->arch.arm_pmu->hpmn_max;
+>> +
+>> +	if (kvm_vcpu_pmu_is_partitioned(vcpu)) {
+>> +		if (cpus_have_final_cap(ARM64_HAS_HPMN0))
+>> +			return nr_guest_cnt;
+>> +		else if (nr_guest_cnt > 0)
+>> +			return nr_guest_cnt;
+>> +		else if (nr_guest_cnt_max > 0)
+>> +			return nr_guest_cnt_max;
+>> +	}
+>> +
+>> +	return nr_host_cnt_max;
+>> +}
+
+> </snip>
+
+> I find all of this rather confusing. It seems like you're dealing with
+> sanitizing kvm->arch.nr_pmu_counters vs. the underlying implementation.
+> I'm not sure why you need to do that, I would expect that we reject
+> unsupported values at the time of the ioctl.
+
+I agree it makes more sense to do the validating at the ioctl. I'll do that.
+
+> The only thing you do need to handle is if the vCPU has migrated to an
+> "unsupported" CPU, for which we already have supporting helpers. I'm too
+> lazy to fetch the Arm ARM and cite architecture but I'm pretty sure an
+> out-of-range HPMN has UNPREDICTABLE behavior.
+
+It does.
+
+> I think you just need to move the vcpu_set_unsupported_cpu() call earlier  
+> in
+> kvm_arch_vcpu_load().
+
+> Taking all that into consideration:
+
+> u8 kvm_mdcr_hpmn(struct kvm_vcpu *vcpu)
+> {
+> 	u8 nr_counters = *host_data_ptr(nr_event_counters);
+
+> 	if (!kvm_vcpu_pmu_is_partitioned(vcpu) || vcpu_on_unsupported_cpu(vcpu))
+> 		return nr_counters;
+
+> 	return vcpu->kvm->arch.nr_pmu_counters;
+> }
+
+Something like that will probably work. But I also need to account for
+if arch.nr_pmu_counters is 0 and we don't have HPMN0, which is also
+unpredictable. I don't think I can reject that at the ioctl because we
+still want to support that case. Is there any way to handle that through
+vcpu_on_unsupported_cpu()?
+
+> Thanks,
+> Oliver
