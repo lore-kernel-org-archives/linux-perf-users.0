@@ -1,64 +1,64 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF812773EE
-	for <linux-perf-users@vger.kernel.org>; Sun, 14 Dec 2025 19:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0200930DECA
+	for <linux-perf-users@vger.kernel.org>; Sun, 14 Dec 2025 19:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765739385; cv=none; b=kqjNQqx90FOiCg/plcxAP1QRpLvjqlvFeMqlGw0Rj26+g7Ar6rsxob2Lxk0bZs6e9UvwqcYpFK4fFweNlTP0/yrniWdByVVIy4ovCLd3/++W9c6vTfFVfjYd44eYIwxGKXlKLirqMLx6AfJGuzMxDp07v0J78i76dzgGPRhH3XQ=
+	t=1765739401; cv=none; b=CoOI32eTjgD9IOkDx/Mg4lly495X6cgzm8mlsH1TxvzQtGGcW7r9k69iFCBjIZPqLAjktYK8WmWgQt2Z4mqjsu8P29kBuWDveC/7FOytJM60VHPh3rmE8Y+ezABFWFHuxENWiR+tgDfc4BTpfW9H2AANGY/OpHg4ibVFrgfjGo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765739385; c=relaxed/simple;
-	bh=DKpN2zaUCAninkD0mDIlfHSb+/CVUZ6/kapYpRY+0nU=;
+	s=arc-20240116; t=1765739401; c=relaxed/simple;
+	bh=pWT1cPEvuIsmQo6GtAuGEsb57xm3hz5gYaHUhJkIbyM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d9TI7aa6Dobyi1RRc9adB4KHWj1XEr48b792VBra2IlioPL3au9dCPygrXeWl8ZC3S45E8YT+gg3S8PbjRh8AiIHMOD3uug15DEqPiMLnud1XQS7oWeRsjgUgJC9x0ocUyWI6VvQFtih01LMNlMIGh/uO83FoiQWHLex+MUCjik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YH4jA7uP; arc=none smtp.client-ip=209.85.216.54
+	 MIME-Version; b=UEUBtcghU+km49+3oEg8kzBt658m2itnyxeNEmK14tNL25yRWYCE8eq9xtxlT/2UX3jKOLRTRubBtMdqYZOINfaELywbXGCslgfhaVnpJnrgKOxI1BefMK8waIhZ8yXQX07/PcdhqSZ75e6bSlZdjZlQY2yO/RmS0H7p68/miso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kOn9kQGZ; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YH4jA7uP"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-34be2be4b7cso1191319a91.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 14 Dec 2025 11:09:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOn9kQGZ"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7b80fed1505so2663993b3a.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 14 Dec 2025 11:09:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765739384; x=1766344184; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1765739399; x=1766344199; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kGRylMipBCZAbafLrwEo52FEPB30FFq/2/xIahus1R8=;
-        b=YH4jA7uPGcmSeOqO7sbw5I/3QJc6ZqoU8VwvF6i77SORDr/ahiSsLoZUWYUbW/sdv1
-         hlvk5guiHXYuY6JI5ImPGnGTPXAd2T5+eRMVtwpDI5rIG0zYZBrqhN52KPIK4U5EEAn7
-         GfGlLcEi9yaHH0FIhRO+FctLmy14V0Md8BByvBwXwB3l0YOXnhKeEHJO+LgqV/z6/eLj
-         IeNF0YHBffgFm1g677x4P2Nu3EvrdX1UCPWrWmrylX7T3krJRlRQpaqXwHmsCO7W1HeA
-         P01Un1X6hab3p4AEycbRg4uyY9IUyg1ZuXHWcp5dJ73wRRIQxIuZ9b8bDcl93zKvTjj4
-         yAng==
+        bh=6g+gpMOnc0vQHF+ukJzfO2USCcKfWV/qKZdEDby2+sQ=;
+        b=kOn9kQGZSX3npLPN5nHCKN1zSf+ok3Rj0BH+BoQeS9GPeUDjkExnThqHyyJIXddEuM
+         Tmjrb9JwjwFISHaE6TiqSPjB34buyZFtOz3dPjhuqEG6W+sjWhYPlcBnDW06fGWRZ5UO
+         0dBzDOEwaZylnd9u5cD4q3Io6KEbIDWJUcJlQuwmLimTEMBgFQOYMDnot+tHTmOa/Goj
+         B9uaqy/9RjZhnu/EujCpD6Jeuc0a9MZSUKmdUxmcy7JA2ZreEByujs48jkTgm+yPbJWp
+         yPP6jzgL7jGaSG0LmNmOhAabtUttnCyLHuLXizy2WsF4WfUgIWpTXjifAxxBwJJA9YAp
+         IvzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765739384; x=1766344184;
+        d=1e100.net; s=20230601; t=1765739399; x=1766344199;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=kGRylMipBCZAbafLrwEo52FEPB30FFq/2/xIahus1R8=;
-        b=XxgOqt61r/klUIuWe1NpB/3Y1snCC+Z2xeHy287uBNTDY3JAabkJc38fsoWSz9eP1v
-         Nh8xdEe4AxJg0Wti7gkJSUiewINSn49j9aHSrqR7+fYwi5rQ7zyZs8L8UO0sZ812H9vd
-         DtiPb+//U0DlyoIEDFJ/txylVo74f527+vfgU2P8CCyqY86MUhoLfJxDVm5NNdU1bVZZ
-         iT1sCbcnt52nb5pqNg8C/P4a9ONZyGhj3h+ZK1kqeNSzjXXF7bH9l/H3rdbSJKNgJxQF
-         Uyo3v7vLj+11weDkX3wWKajuNMwK3+q+4e6id1zLIH6LDc+EO/CcPruw8zfTRs7U5Kd/
-         igGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWiiUKliymWj1xqii8SDf+XXGDaD/7Q1op5DD9cBDrQnuBMxm8sUeZ6LtUnLjHT2ADspZtw2G7UGxYv7RvE3n4S@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyEgq5ntx1iQV14AFcxjFrYn2OcMQ1lbqxOtFyKPlhhXwKEcs/
-	rAjFUrVTosY9GIpNdvj7J6V/haS1nl+uRRb8MEhGuPzDfAf7Iv93FlPp
-X-Gm-Gg: AY/fxX4v7Dpb/Z1lxjib2xAhYBDIZprlHqQUlThm5I9OERb3ZLGxZDxTCDajiXNdqrK
-	ulivieL0N6hBRgIrM19QNJZ+d2tS2RYU8TWAQhhOkuJc7Rx2siJepCMM0UuNx14fphKaxOCKFKY
-	vocHslRHYOmA2WGHJ7BqKM24eSZ4Si1OO+oLQLHT7GncotvNwOfS79GIHh/6gN/lB+xTtCw49T5
-	ZudJ/bm+FN05oulgpFVyVUeiZvKFifCDD0m0FC6xTJ3TMb2ck+Qs7Hr23Nes5Pq5vUi5vhR60ZR
-	tZ//+txS1MhlfrDuij1jRZIIOuZRDC2Dw1AidQxXTWW0J4fHBOpgu1PN5dRUOa9nrZZc6FIKndu
-	TpiaG5RRWqqj6LTEfWLbFticW1SJsA1U2kZBPZv8gUYNAOv5YCdZdSWD6Ck/ef4gso5PQNK5JFt
-	Ffi1sw0/k+jZszWbWVtdZ5gGwU+kHHJLY=
-X-Google-Smtp-Source: AGHT+IFmYzgXFHkbQBQiUvnSACzpFFy+PJ8dOf4i/6tp+rBdDj8hhEPW3StEcaOty+tMnp+I1Z9nyA==
-X-Received: by 2002:a17:90b:54c3:b0:33e:2934:6e11 with SMTP id 98e67ed59e1d1-34abd7f7a9cmr6658481a91.11.1765739383476;
-        Sun, 14 Dec 2025 11:09:43 -0800 (PST)
+        bh=6g+gpMOnc0vQHF+ukJzfO2USCcKfWV/qKZdEDby2+sQ=;
+        b=kNoZLcWFNs6LkBrz3eFKoaZL/eVn40eEJcddXnd1VQ3VhtcXU2Ane8FhIc3cbgqixP
+         3QlF+n875FvflYBry/7wDRyPMR56R3oKaTRKlAoVnHe7s0/OvWTvm1SZXger6GVBkQdE
+         +XkK1MZ/qg4YAO+52DhyNEsVpmCIx/PIWbnth8429xm3pa4eEuojtjwGkWUeF8xubVZI
+         t2F+Y3tG/skhz4PHFyG7Tjj6+beOxH4lfOD1WEuS805jdRQ1w3VvfE9g8Uyuiw2jSFZ/
+         oBZPYk2uwyDGeRjPtD7m1SLECNlSNPFloDutO1YIsJM2Z9pUPKbvn490d8V1zuczkK8K
+         oT0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUNCUW34V89T++LmT1ZEQt3ve3CFJobhOCkGkf/RAJnFS0JV2bd7XbwlKh79yUwcohSJITMZPKPTq3tJlKL7k3l@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+COrq4Kxbw6boxKvRGEpIYrZp5DpFi/S3UDTIigUNkzqPu0TF
+	zOOhTLkSFv0ekwGZI7baN53gkZvYi7SY4HCduWiY/XeOTFdQSpqra/tC
+X-Gm-Gg: AY/fxX7QvwK9b2LD08nGREUHCtIojCmVs4l5OBUTxvB21o/BgHcQHlCoYkGA2ElyiIG
+	d2wEiX7V6dG/vG8uNiRR0M0KnQQGfj4Sfvtet7SR51GW4GbNLFRWcKRjii4/CHmi3b+xmoYjCi6
+	n/kccqgXLVbZNzX1Xq/egBr8J+kLYn76G6zpjOmggyq0X2JvQmIYz1bK7ELOLeSPKHuU82MkfOp
+	hTV1+ZPf2HxDyEEOEIfcZ0vOxVTyQ1Fcf82/Apd4TERUg4x8+aaW70xE+ifZpOEAP9P/uanMKV6
+	WO4nLLopRi/HH4HGWHeI7+z1Wt09TP61Wf+CZ+YLl1DqcYB9i7SgONuCLUl1+5Y+nSr4ZDvHq0u
+	ziULBL2B4AWTYZ5uq3myRZzJnkqaoTGnpM3Jj2+4VCmI+e07X0+sBjqC/JocC7tcKaKxRxMUtre
+	92tU9R5bVMNygKuusHNbFsnBWPORFFh7s=
+X-Google-Smtp-Source: AGHT+IFEjQ5W/F/1GV+Udmo7P6q8cvk4k0ZspkiPRW94iOHQJNGagX56DVsdqgrn7t+EEED1vTORKQ==
+X-Received: by 2002:a05:6a20:72a8:b0:366:14af:9bbd with SMTP id adf61e73a8af0-369b07ae5b5mr8721021637.71.1765739399013;
+        Sun, 14 Dec 2025 11:09:59 -0800 (PST)
 Received: from DESKTOP-8TIG9K0.localdomain ([119.28.20.50])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34abe3a1c5esm6909062a91.3.2025.12.14.11.09.29
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34abe3a1c5esm6909062a91.3.2025.12.14.11.09.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Dec 2025 11:09:42 -0800 (PST)
+        Sun, 14 Dec 2025 11:09:57 -0800 (PST)
 From: Xie Yuanbin <qq570070308@gmail.com>
 To: tglx@linutronix.de,
 	peterz@infradead.org,
@@ -121,9 +121,9 @@ Cc: linux-kernel@vger.kernel.org,
 	sparclinux@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH v5 1/3] x86/mm/tlb: Make enter_lazy_tlb() always inline on x86
-Date: Mon, 15 Dec 2025 03:09:05 +0800
-Message-ID: <20251214190907.184793-2-qq570070308@gmail.com>
+Subject: [PATCH v5 2/3] sched: Make raw_spin_rq_unlock() inline
+Date: Mon, 15 Dec 2025 03:09:06 +0800
+Message-ID: <20251214190907.184793-3-qq570070308@gmail.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251214190907.184793-1-qq570070308@gmail.com>
 References: <20251214190907.184793-1-qq570070308@gmail.com>
@@ -135,91 +135,62 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-enter_lazy_tlb() on x86 is short enough, and is called in context
-switching, which is the hot code path.
+raw_spin_rq_unlock() is short, and is called in some hot code paths
+such as finish_lock_switch.
 
-Make enter_lazy_tlb() always inline on x86 to optimize performance.
+Make raw_spin_rq_unlock() inline to optimize performance.
 
 Signed-off-by: Xie Yuanbin <qq570070308@gmail.com>
-Reviewed-by: Rik van Riel <riel@surriel.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202511091959.kfmo9kPB-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202511092219.73aMMES4-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202511100042.ZklpqjOY-lkp@intel.com/
-Cc: David Hildenbrand (Red Hat) <david@kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: David Hildenbrand (Red Hat) <david@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: H. Peter Anvin (Intel) <hpa@zytor.com>
 ---
- arch/x86/include/asm/mmu_context.h | 23 ++++++++++++++++++++++-
- arch/x86/mm/tlb.c                  | 21 ---------------------
- 2 files changed, 22 insertions(+), 22 deletions(-)
+ kernel/sched/core.c  | 5 -----
+ kernel/sched/sched.h | 6 +++++-
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index 73bf3b1b44e8..ecd134dcfb34 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -136,8 +136,29 @@ static inline void mm_reset_untag_mask(struct mm_struct *mm)
- }
- #endif
- 
-+/*
-+ * Please ignore the name of this function.  It should be called
-+ * switch_to_kernel_thread().
-+ *
-+ * enter_lazy_tlb() is a hint from the scheduler that we are entering a
-+ * kernel thread or other context without an mm.  Acceptable implementations
-+ * include doing nothing whatsoever, switching to init_mm, or various clever
-+ * lazy tricks to try to minimize TLB flushes.
-+ *
-+ * The scheduler reserves the right to call enter_lazy_tlb() several times
-+ * in a row.  It will notify us that we're going back to a real mm by
-+ * calling switch_mm_irqs_off().
-+ */
- #define enter_lazy_tlb enter_lazy_tlb
--extern void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk);
-+#ifndef MODULE
-+static __always_inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
-+{
-+	if (this_cpu_read(cpu_tlbstate.loaded_mm) == &init_mm)
-+		return;
-+
-+	this_cpu_write(cpu_tlbstate_shared.is_lazy, true);
-+}
-+#endif
- 
- #define mm_init_global_asid mm_init_global_asid
- extern void mm_init_global_asid(struct mm_struct *mm);
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index f5b93e01e347..71abaf0bdb91 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -971,27 +971,6 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 41ba0be16911..20146da3f181 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -678,11 +678,6 @@ bool raw_spin_rq_trylock(struct rq *rq)
  	}
  }
  
--/*
-- * Please ignore the name of this function.  It should be called
-- * switch_to_kernel_thread().
-- *
-- * enter_lazy_tlb() is a hint from the scheduler that we are entering a
-- * kernel thread or other context without an mm.  Acceptable implementations
-- * include doing nothing whatsoever, switching to init_mm, or various clever
-- * lazy tricks to try to minimize TLB flushes.
-- *
-- * The scheduler reserves the right to call enter_lazy_tlb() several times
-- * in a row.  It will notify us that we're going back to a real mm by
-- * calling switch_mm_irqs_off().
-- */
--void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+-void raw_spin_rq_unlock(struct rq *rq)
 -{
--	if (this_cpu_read(cpu_tlbstate.loaded_mm) == &init_mm)
--		return;
--
--	this_cpu_write(cpu_tlbstate_shared.is_lazy, true);
+-	raw_spin_unlock(rq_lockp(rq));
 -}
 -
  /*
-  * Using a temporary mm allows to set temporary mappings that are not accessible
-  * by other CPUs. Such mappings are needed to perform sensitive memory writes
+  * double_rq_lock - safely lock two runqueues
+  */
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index d30cca6870f5..bef6cb13266d 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1551,13 +1551,17 @@ static inline void lockdep_assert_rq_held(struct rq *rq)
+ 
+ extern void raw_spin_rq_lock_nested(struct rq *rq, int subclass);
+ extern bool raw_spin_rq_trylock(struct rq *rq);
+-extern void raw_spin_rq_unlock(struct rq *rq);
+ 
+ static inline void raw_spin_rq_lock(struct rq *rq)
+ {
+ 	raw_spin_rq_lock_nested(rq, 0);
+ }
+ 
++static inline void raw_spin_rq_unlock(struct rq *rq)
++{
++	raw_spin_unlock(rq_lockp(rq));
++}
++
+ static inline void raw_spin_rq_lock_irq(struct rq *rq)
+ {
+ 	local_irq_disable();
 -- 
 2.51.0
 
