@@ -1,32 +1,32 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EA7E29D293
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Dec 2025 13:05:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA016272E41
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Dec 2025 13:05:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765803911; cv=none; b=LLnZL25d6aJTW/Ko6TSjHXen7e5RsKgsdpjlS6gMFzHOb0uuP9ByLTYBfLZzKXy5BR37nDaWdY5cHITqclegeUvpr7D31iMCHukX9ZAMYhKDtS72G4lBSabsuuHzfhFq535e40ezMcfxA9t9d23JXGJfKqQFxuVVHkGCRTyJjTY=
+	t=1765803912; cv=none; b=Hvhec9P7AzYi6ZHKuh9uckRD8saF891uQxQSKetJyw63NX8DSb+mWaSIXyy2TYAu/EdBkx5D8MkGWRNwCNeFfTg75IvRZFQ07qcOO3MD6u/yjfCHMZFt/L4nzhP+rZtM0Le1GG1k24BOIV7QW3b7vSfDt9Gl5Ctx8RNDVapN7pI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765803911; c=relaxed/simple;
-	bh=HOkfPv1YtQ8Gs+1G8Fam+OBMZyZrMbsL5SDrVXNRVJU=;
+	s=arc-20240116; t=1765803912; c=relaxed/simple;
+	bh=nsSdo/5bGDq6dsN29Sus6hDLxXNJ52/XzmD0nzBiniY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FRpPJnjSOgJArRck1MrXoB0aYAslD2225IMtuz+xOwFrALHFO77wF1Ho7aiPV6pfan5KG4ORAtl482eFuYEqkJbStbrSwgx0/Ls1kkFNoLKjy5Dz1Q/reZiLWmWMwz/JzTx3fB4MQAx686BsR2cPDLapnLVmCc23mkoKG8Xkdl0=
+	 MIME-Version; b=NiibkTo8YDneH4MS6FuTm0USZjuxZxgk8rLhgKSNkioC1VFYSzwrd4yEu3cNnEURZCCJy4Z/j9Xa9/hFngnt3cEdQ1n/GDmk3rRFmF5RzukJDFRFE2ZQIuojn0pY1GUeaaR8eI4eQzKnXtwJpjh2ePBhSadmstN/CCyJ25QeO3M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88B01FEC;
-	Mon, 15 Dec 2025 05:05:01 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCA3D1655;
+	Mon, 15 Dec 2025 05:05:02 -0800 (PST)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.95])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B329F3F73B;
-	Mon, 15 Dec 2025 05:05:07 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0E6453F73B;
+	Mon, 15 Dec 2025 05:05:08 -0800 (PST)
 From: Robin Murphy <robin.murphy@arm.com>
 To: will@kernel.org
 Cc: mark.rutland@arm.com,
 	suzuki.poulose@arm.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/3] perf/arm_dsu: Support DSU-110
-Date: Mon, 15 Dec 2025 13:04:58 +0000
-Message-Id: <5aa884a673f7a53f4793176662e64e4851e394d8.1765802897.git.robin.murphy@arm.com>
+Subject: [PATCH 2/3] perf/arm_dsu: Support DSU-120
+Date: Mon, 15 Dec 2025 13:04:59 +0000
+Message-Id: <346d4d9cda0e6c8dec44c28b8911e2bd944c389c.1765802897.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 In-Reply-To: <cover.1765802897.git.robin.murphy@arm.com>
 References: <cover.1765802897.git.robin.murphy@arm.com>
@@ -38,96 +38,53 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DSU-110 sneakily made all the event counters 64-bit, perhaps related
-to no longer having AArch32 EL1 to worry about. While the DSU version
-itself is not easily discoverable, the size of a counter certainly is.
+DSU-120 has the same system register interface as previous DSUs, but
+no longer offers a dedicated cycle counter. While this is not directly
+discoverable via PMCR, the PMCCNTR register is still defined to exist
+with RAZ/WI behaviour, allowing for a straightforward heuristic.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/perf/arm_dsu_pmu.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+ drivers/perf/arm_dsu_pmu.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
-index cb4fb59fe04b..8663721ee018 100644
+index 8663721ee018..56c592f0dae3 100644
 --- a/drivers/perf/arm_dsu_pmu.c
 +++ b/drivers/perf/arm_dsu_pmu.c
-@@ -66,13 +66,6 @@
-  */
- #define DSU_PMU_IDX_CYCLE_COUNTER	31
- 
--/* All event counters are 32bit, with a 64bit Cycle counter */
--#define DSU_PMU_COUNTER_WIDTH(idx)	\
--	(((idx) == DSU_PMU_IDX_CYCLE_COUNTER) ? 64 : 32)
--
--#define DSU_PMU_COUNTER_MASK(idx)	\
--	GENMASK_ULL((DSU_PMU_COUNTER_WIDTH((idx)) - 1), 0)
--
- #define DSU_EXT_ATTR(_name, _func, _config)		\
- 	(&((struct dev_ext_attribute[]) {				\
- 		{							\
-@@ -107,6 +100,7 @@ struct dsu_hw_events {
-  * @num_counters	: Number of event counters implemented by the PMU,
+@@ -101,6 +101,7 @@ struct dsu_hw_events {
   *			  excluding the cycle counter.
   * @irq			: Interrupt line for counter overflow.
-+ * @has_32b_pmevcntr	: Are the non-cycle counters only 32-bit?
+  * @has_32b_pmevcntr	: Are the non-cycle counters only 32-bit?
++ * @has_pmccntr		: Do we even have a dedicated cycle counter?
   * @cpmceid_bitmap	: Bitmap for the availability of architected common
   *			  events (event_code < 0x40).
   */
-@@ -120,6 +114,7 @@ struct dsu_pmu {
- 	struct hlist_node		cpuhp_node;
+@@ -115,6 +116,7 @@ struct dsu_pmu {
  	s8				num_counters;
  	int				irq;
-+	bool				has_32b_pmevcntr;
+ 	bool				has_32b_pmevcntr;
++	bool				has_pmccntr;
  	DECLARE_BITMAP(cpmceid_bitmap, DSU_PMU_MAX_COMMON_EVENTS);
  };
  
-@@ -328,6 +323,11 @@ static inline void dsu_pmu_set_event(struct dsu_pmu *dsu_pmu,
- 	raw_spin_unlock_irqrestore(&dsu_pmu->pmu_lock, flags);
- }
+@@ -281,7 +283,7 @@ static int dsu_pmu_get_event_idx(struct dsu_hw_events *hw_events,
+ 	struct dsu_pmu *dsu_pmu = to_dsu_pmu(event->pmu);
+ 	unsigned long *used_mask = hw_events->used_mask;
  
-+static u64 dsu_pmu_counter_mask(struct hw_perf_event *hw)
-+{
-+	return (hw->flags && hw->idx != DSU_PMU_IDX_CYCLE_COUNTER) ? U32_MAX : U64_MAX;
-+}
-+
- static void dsu_pmu_event_update(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
-@@ -339,7 +339,7 @@ static void dsu_pmu_event_update(struct perf_event *event)
- 		new_count = dsu_pmu_read_counter(event);
- 	} while (local64_cmpxchg(&hwc->prev_count, prev_count, new_count) !=
- 			prev_count);
--	delta = (new_count - prev_count) & DSU_PMU_COUNTER_MASK(hwc->idx);
-+	delta = (new_count - prev_count) & dsu_pmu_counter_mask(hwc);
- 	local64_add(delta, &event->count);
- }
- 
-@@ -362,8 +362,7 @@ static inline u32 dsu_pmu_get_reset_overflow(void)
-  */
- static void dsu_pmu_set_event_period(struct perf_event *event)
- {
--	int idx = event->hw.idx;
--	u64 val = DSU_PMU_COUNTER_MASK(idx) >> 1;
-+	u64 val = dsu_pmu_counter_mask(&event->hw) >> 1;
- 
- 	local64_set(&event->hw.prev_count, val);
- 	dsu_pmu_write_counter(event, val);
-@@ -564,6 +563,7 @@ static int dsu_pmu_event_init(struct perf_event *event)
- 		return -EINVAL;
- 
- 	event->hw.config_base = event->attr.config;
-+	event->hw.flags = dsu_pmu->has_32b_pmevcntr;
- 	return 0;
- }
- 
-@@ -664,6 +664,10 @@ static void dsu_pmu_probe_pmu(struct dsu_pmu *dsu_pmu)
- 	cpmceid[1] = __dsu_pmu_read_pmceid(1);
- 	bitmap_from_arr32(dsu_pmu->cpmceid_bitmap, cpmceid,
- 			  DSU_PMU_MAX_COMMON_EVENTS);
-+	/* Newer DSUs have 64-bit counters */
-+	__dsu_pmu_write_counter(0, U64_MAX);
-+	if (__dsu_pmu_read_counter(0) != U64_MAX)
-+		dsu_pmu->has_32b_pmevcntr = true;
+-	if (evtype == DSU_PMU_EVT_CYCLES) {
++	if (evtype == DSU_PMU_EVT_CYCLES && dsu_pmu->has_pmccntr) {
+ 		if (test_and_set_bit(DSU_PMU_IDX_CYCLE_COUNTER, used_mask))
+ 			return -EAGAIN;
+ 		return DSU_PMU_IDX_CYCLE_COUNTER;
+@@ -668,6 +670,10 @@ static void dsu_pmu_probe_pmu(struct dsu_pmu *dsu_pmu)
+ 	__dsu_pmu_write_counter(0, U64_MAX);
+ 	if (__dsu_pmu_read_counter(0) != U64_MAX)
+ 		dsu_pmu->has_32b_pmevcntr = true;
++	/* On even newer DSUs, PMCCNTR is RAZ/WI */
++	__dsu_pmu_write_pmccntr(U64_MAX);
++	if (__dsu_pmu_read_pmccntr() == U64_MAX)
++		dsu_pmu->has_pmccntr = true;
  }
  
  static void dsu_pmu_set_active_cpu(int cpu, struct dsu_pmu *dsu_pmu)
