@@ -1,140 +1,98 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B8930F941;
-	Mon, 15 Dec 2025 15:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99E8333890D
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Dec 2025 16:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765813338; cv=none; b=aL4mVVZMQYs5j4wogBFzGAjsxhygz9ge1IbmiHvpNn5wYUZ4qI63ElJsZAe6TU0okDShNhfxWScpS6KjCcwd/O0HbJmBpgbzcyZMaL6zYkBFpq0n0o4oHITJs2wDxIxPHMghwhl7vcfRkEY73vaFqbXj03egD75UBfJG3lELNV0=
+	t=1765817365; cv=none; b=UeHr6AaU+i+6D/KrpKXKjzH3xYUnEsJ0sjggoAYoeifciaweHTDJBwg82/kyaXYSdQEtMmmZqbTR/ilkiCmb1fZFVSqz7zphwTFrGF2NCRdnyEfv0Dkk1Jy5V4zJVYcw86gAwlKNMd747OEszk5F40kRkD0qLgfDGEvzHvJ6l28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765813338; c=relaxed/simple;
-	bh=dJS6PDNzy5SX9DFgslkRBMWCk8nU43CN1Eb994NOW2Y=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=n9Noq2S+jw0T7r30x4oJZZ1/BJBvUHh8KdJ0o0Pk0w42TkiskEDhphRm/7Q3Bem+O3Oh9zP/72R7dbkGtsHNBsH+QJ3dzYuA60OP5nkToVNKq5Oz7NAL4TBIbvi11F+fG3OzydVYaIhJC2blWMKyc/7ITBrGNVeAIiXZzzT1Y/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l6o1JL8E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5XRdeOdi; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l6o1JL8E";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5XRdeOdi"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1765813335;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qNQsIHP9fHBp8xC+0dW3l0G1EY9NhEVbQNXrV3I9Txo=;
-	b=l6o1JL8EEW9krcVDf/3SVEqIOq7qu5Lmvn1vrETvn5YQEo8YFjol7JUHrEknz8K6RNgPQN
-	FKW7BQUnYRVVDVRlT7YQN4De/Ldapy+1xEp3lgFvjvbu7yu0mQ86emPtfMyk+rHxcwseJ2
-	yLvH05FPZoAZ2xsPfmi3wNh0H7OUuLqyE8Mf9Sq1U4GjHn1x4qwrcFfRNiz6jvUow9nbze
-	xXyMx8FfgNWS3qnYTsP4fR78CQUG5d8UGl6d1hpq1EImwAXNw8p2lOtrR7clMYG1nDxPHB
-	m9QPbt56w6aBOHWkJO359PC+76vqXyJ4Co57cxuMJgJZGqVHpGS3nbScA6/X+g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1765813335;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qNQsIHP9fHBp8xC+0dW3l0G1EY9NhEVbQNXrV3I9Txo=;
-	b=5XRdeOdi7Z8jPn2I8e0wJwRxbmi816hPnPyZ//AKwL4kDs/uSE6sqgSXzo/PDUUV+r1rSZ
-	B92xvrm4+KVuAcCQ==
-To: Xie Yuanbin <qq570070308@gmail.com>, peterz@infradead.org,
- riel@surriel.com, segher@kernel.crashing.org, david@kernel.org,
- hpa@zytor.com, arnd@arndb.de, acme@kernel.org, adrian.hunter@intel.com,
- agordeev@linux.ibm.com, akpm@linux-foundation.org, alex@ghiti.fr,
- alexander.shishkin@linux.intel.com, andreas@gaisler.com,
- anshuman.khandual@arm.com, aou@eecs.berkeley.edu,
- borntraeger@linux.ibm.com, bp@alien8.de, bsegall@google.com,
- dave.hansen@linux.intel.com, davem@davemloft.net,
- dietmar.eggemann@arm.com, frederic@kernel.org, gor@linux.ibm.com,
- hca@linux.ibm.com, irogers@google.com, james.clark@linaro.org,
- jolsa@kernel.org, juri.lelli@redhat.com, justinstitt@google.com,
- lorenzo.stoakes@oracle.com, luto@kernel.org, mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com, max.kellermann@ionos.com, mgorman@suse.de,
- mingo@redhat.com, morbo@google.com, namhyung@kernel.org,
- nathan@kernel.org, nick.desaulniers+lkml@gmail.com, nysal@linux.ibm.com,
- palmer@dabbelt.com, paulmck@kernel.org, pjw@kernel.org,
- rostedt@goodmis.org, ryan.roberts@arm.com, svens@linux.ibm.com,
- thuth@redhat.com, urezki@gmail.com, vincent.guittot@linaro.org,
- vschneid@redhat.com, linux@armlinux.org.uk
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v5 1/3] x86/mm/tlb: Make enter_lazy_tlb() always inline
- on x86
-In-Reply-To: <20251214190907.184793-2-qq570070308@gmail.com>
-References: <20251214190907.184793-1-qq570070308@gmail.com>
- <20251214190907.184793-2-qq570070308@gmail.com>
-Date: Mon, 15 Dec 2025 16:42:13 +0100
-Message-ID: <87345beoq2.ffs@tglx>
+	s=arc-20240116; t=1765817365; c=relaxed/simple;
+	bh=Gm8D5T0Mf4vMzuGMobl8AwCM3aXfjNpp6Qe89I8Zfco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CZylqLpwswCQL9w+GbquZ6q/xnCpfh4j1ZA6040+Ac8MEm4hbjVrNOUz5DmnhkhodxeoacBOjoI1IUN+0AXF8DmZWKhMrHUtNeC6FmAHBmuCCw0Uiy8CU0FJOX5GE6ZvkT986UDq5zkzdfsUn4Kin9o/+sE9rrgHSVHOQpqFehs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C40E7FEC;
+	Mon, 15 Dec 2025 08:49:15 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C76F3F694;
+	Mon, 15 Dec 2025 08:49:22 -0800 (PST)
+Date: Mon, 15 Dec 2025 16:49:20 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: James Clark <james.clark@linaro.org>, Joel May <joel-linux@jmay.us>,
+	Ian Rogers <irogers@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Linux perf Profiling <linux-perf-users@vger.kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] arm64: perf: fix syscalltbl path base
+Message-ID: <20251215164920.GD681384@e132581.arm.com>
+References: <b2651f20-6f3a-49f5-9cd8-3fb028b2cab5@app.fastmail.com>
+ <fcefc3c0-541d-40cc-84e3-9c2460308bdb@linaro.org>
+ <23c07ac4-ff13-47a5-824a-e7af1d1847a3@app.fastmail.com>
+ <bda366b4-fa53-4feb-a7ce-ee47cfc404b5@linaro.org>
+ <20251215112818.GB681384@e132581.arm.com>
+ <0076b248-9b23-408d-9448-701df3c8d952@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0076b248-9b23-408d-9448-701df3c8d952@app.fastmail.com>
 
-On Mon, Dec 15 2025 at 03:09, Xie Yuanbin wrote:
-> enter_lazy_tlb() on x86 is short enough, and is called in context
-> switching, which is the hot code path.
->
-> Make enter_lazy_tlb() always inline on x86 to optimize performance.
->
-> Signed-off-by: Xie Yuanbin <qq570070308@gmail.com>
-> Reviewed-by: Rik van Riel <riel@surriel.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202511091959.kfmo9kPB-lkp@intel.com/
-> Closes: https://lore.kernel.org/oe-kbuild-all/202511092219.73aMMES4-lkp@intel.com/
-> Closes: https://lore.kernel.org/oe-kbuild-all/202511100042.ZklpqjOY-lkp@intel.com/
+On Mon, Dec 15, 2025 at 01:22:04PM +0100, Arnd Bergmann wrote:
 
-These Reported-by and Closes tags are just wrong. This is a new patch
-and the robot reported failures against earlier versions. The robot
-report is very clear about that:
+[...]
 
-  "If you fix the issue in a separate patch/commit (i.e. not just a new version of
-   the same patch/commit), kindly add following tags
-     Reported-by:...
-     Closes:..."
+> Ah, I see now that arc/hexagon/loongarch/riscv just use an old
+> copy of the header based on the and no longer update them. I only
+> saw that they have the stub version but hadn't realized that they
+> never updated past the point where we started generating the
+> ones for the uapi.
+> 
+> Still, I would suggest using the same method across all architectures:
+> either we figure out how to use the generated headers on all of them
+> (including x86, which uses yet another method)
 
-No?
+Switching to generated unistd.h headers would require removing
+tools/include/uapi/asm-generic/unistd.h and generating unistd_64/32.h
+on the fly, while still keeping arch's stub headers under
+tools/arch/${arch}/include/uapi/asm/.
 
-> +/*
-> + * Please ignore the name of this function.  It should be called
-> + * switch_to_kernel_thread().
+As discussed in [1], I would prefer to drop these headers, but Ian
+noted that this could break builds with older toolchains.  We keep the
+tools/ copies of unistd.h because tools need the latest syscall
+numbers; relying on outdated toolchain headers can lead to build
+failures or incorrect behavior (e.g., perf falling back to predefined
+but wrong syscall numbers).
 
-And why is it not renamed then?
+One idea is to install kernel headers first and then build tools, e,g.:
 
-> + *
-> + * enter_lazy_tlb() is a hint from the scheduler that we are entering a
+   cd linux
+   export CROSS_COMPILE=aarch64-linux-gnu-
+   make ARCH=arm64 headers_install O=$OUT
+   make ARCH=arm64 O=$OUT -C tools/perf
 
-We enter a kernel thread? AFAIK the metaverse has been canceled.
+Generating the headers dynamically would avoid maintaining duplicated
+copies under tools/ and no need for periodic syncs.  However, this is a
+quite big effort, not just perf, we need to update makefiles to the path
+of the installed headers.  I'd like to hear opinions from tools
+(perf/bpf/selftest) maintainers before proceeding.
 
-> + * kernel thread or other context without an mm.  Acceptable implementations
-> + * include doing nothing whatsoever, switching to init_mm, or various clever
-> + * lazy tricks to try to minimize TLB flushes.
-> + *
-> + * The scheduler reserves the right to call enter_lazy_tlb() several times
-> + * in a row.  It will notify us that we're going back to a real mm by
+> or we just stick with
+> the old asm-generic/unistd.h copy and use that on arm64 as well.
 
-It will notify us by sending email or what?
+I will proceed this way for now.  From a maintenance view, it is a
+pragmatic solution that only requires reverting a few patches and does
+not introduce any new code.
 
-> + * calling switch_mm_irqs_off().
-> + */
->  #define enter_lazy_tlb enter_lazy_tlb
-> -extern void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk);
-> +#ifndef MODULE
-> +static __always_inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
-> +{
-> +	if (this_cpu_read(cpu_tlbstate.loaded_mm) == &init_mm)
-> +		return;
-> +
-> +	this_cpu_write(cpu_tlbstate_shared.is_lazy, true);
-> +}
+Thanks for your suggestion!
 
-Please move the '#define enter_....' under the inline function. That's
-way simpler to read.
+Leo
 
-Thanks,
-
-        tglx
+[1] https://lore.kernel.org/linux-perf-users/20251209104926.GS724103@e132581.arm.com/
