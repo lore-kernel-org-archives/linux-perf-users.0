@@ -1,110 +1,140 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0978531576C;
-	Mon, 15 Dec 2025 14:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B8930F941;
+	Mon, 15 Dec 2025 15:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765810755; cv=none; b=bOBh80nJE3wVudVONmw6nmE7LnjtfUO0achBSfqpa6mlLuP3Tj30cLvy6oaSylRKNJOIF/aIGUrk0m+Ofk1NHlcHAW2h+McLLAIjwCjRFuiA43eGTxCJKSJWGZ4H3x4VkaU/NXIZ0WgyfXUXtpX1Kh9DuocIQ5VpmjwFxxpoGs0=
+	t=1765813338; cv=none; b=aL4mVVZMQYs5j4wogBFzGAjsxhygz9ge1IbmiHvpNn5wYUZ4qI63ElJsZAe6TU0okDShNhfxWScpS6KjCcwd/O0HbJmBpgbzcyZMaL6zYkBFpq0n0o4oHITJs2wDxIxPHMghwhl7vcfRkEY73vaFqbXj03egD75UBfJG3lELNV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765810755; c=relaxed/simple;
-	bh=5Uj3g6oOcW7p1t8bUjqJr8Ix32MQCWcpCoGJTzhY6XM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f7vVtAlpnt9K9O23neXPHV+WXs4ge56WDBATgMknvpaAPzaoaWTAqYNLbD1NeN4BymBnF68IssUk4N7G0ry9wBIJFyK4daYoUH3P54VKPrNK2aKY0o4ZXzq07zKDoUsTJPeKmJ/g6w7BzTZqi84MZre9COfb2aSIjg6UD+tUvP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 230CC497;
-	Mon, 15 Dec 2025 06:59:04 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCC3C3F73B;
-	Mon, 15 Dec 2025 06:59:10 -0800 (PST)
-Date: Mon, 15 Dec 2025 14:59:09 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Osama Abdelkader <osama.abdelkader@gmail.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: hw_breakpoint: warn on invalid breakpoint
- length
-Message-ID: <20251215145909.GC681384@e132581.arm.com>
-References: <20251213112336.26503-1-osama.abdelkader@gmail.com>
+	s=arc-20240116; t=1765813338; c=relaxed/simple;
+	bh=dJS6PDNzy5SX9DFgslkRBMWCk8nU43CN1Eb994NOW2Y=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=n9Noq2S+jw0T7r30x4oJZZ1/BJBvUHh8KdJ0o0Pk0w42TkiskEDhphRm/7Q3Bem+O3Oh9zP/72R7dbkGtsHNBsH+QJ3dzYuA60OP5nkToVNKq5Oz7NAL4TBIbvi11F+fG3OzydVYaIhJC2blWMKyc/7ITBrGNVeAIiXZzzT1Y/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l6o1JL8E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5XRdeOdi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l6o1JL8E";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5XRdeOdi"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1765813335;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qNQsIHP9fHBp8xC+0dW3l0G1EY9NhEVbQNXrV3I9Txo=;
+	b=l6o1JL8EEW9krcVDf/3SVEqIOq7qu5Lmvn1vrETvn5YQEo8YFjol7JUHrEknz8K6RNgPQN
+	FKW7BQUnYRVVDVRlT7YQN4De/Ldapy+1xEp3lgFvjvbu7yu0mQ86emPtfMyk+rHxcwseJ2
+	yLvH05FPZoAZ2xsPfmi3wNh0H7OUuLqyE8Mf9Sq1U4GjHn1x4qwrcFfRNiz6jvUow9nbze
+	xXyMx8FfgNWS3qnYTsP4fR78CQUG5d8UGl6d1hpq1EImwAXNw8p2lOtrR7clMYG1nDxPHB
+	m9QPbt56w6aBOHWkJO359PC+76vqXyJ4Co57cxuMJgJZGqVHpGS3nbScA6/X+g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1765813335;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qNQsIHP9fHBp8xC+0dW3l0G1EY9NhEVbQNXrV3I9Txo=;
+	b=5XRdeOdi7Z8jPn2I8e0wJwRxbmi816hPnPyZ//AKwL4kDs/uSE6sqgSXzo/PDUUV+r1rSZ
+	B92xvrm4+KVuAcCQ==
+To: Xie Yuanbin <qq570070308@gmail.com>, peterz@infradead.org,
+ riel@surriel.com, segher@kernel.crashing.org, david@kernel.org,
+ hpa@zytor.com, arnd@arndb.de, acme@kernel.org, adrian.hunter@intel.com,
+ agordeev@linux.ibm.com, akpm@linux-foundation.org, alex@ghiti.fr,
+ alexander.shishkin@linux.intel.com, andreas@gaisler.com,
+ anshuman.khandual@arm.com, aou@eecs.berkeley.edu,
+ borntraeger@linux.ibm.com, bp@alien8.de, bsegall@google.com,
+ dave.hansen@linux.intel.com, davem@davemloft.net,
+ dietmar.eggemann@arm.com, frederic@kernel.org, gor@linux.ibm.com,
+ hca@linux.ibm.com, irogers@google.com, james.clark@linaro.org,
+ jolsa@kernel.org, juri.lelli@redhat.com, justinstitt@google.com,
+ lorenzo.stoakes@oracle.com, luto@kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, max.kellermann@ionos.com, mgorman@suse.de,
+ mingo@redhat.com, morbo@google.com, namhyung@kernel.org,
+ nathan@kernel.org, nick.desaulniers+lkml@gmail.com, nysal@linux.ibm.com,
+ palmer@dabbelt.com, paulmck@kernel.org, pjw@kernel.org,
+ rostedt@goodmis.org, ryan.roberts@arm.com, svens@linux.ibm.com,
+ thuth@redhat.com, urezki@gmail.com, vincent.guittot@linaro.org,
+ vschneid@redhat.com, linux@armlinux.org.uk
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v5 1/3] x86/mm/tlb: Make enter_lazy_tlb() always inline
+ on x86
+In-Reply-To: <20251214190907.184793-2-qq570070308@gmail.com>
+References: <20251214190907.184793-1-qq570070308@gmail.com>
+ <20251214190907.184793-2-qq570070308@gmail.com>
+Date: Mon, 15 Dec 2025 16:42:13 +0100
+Message-ID: <87345beoq2.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251213112336.26503-1-osama.abdelkader@gmail.com>
+Content-Type: text/plain
 
-Hi,
+On Mon, Dec 15 2025 at 03:09, Xie Yuanbin wrote:
+> enter_lazy_tlb() on x86 is short enough, and is called in context
+> switching, which is the hot code path.
+>
+> Make enter_lazy_tlb() always inline on x86 to optimize performance.
+>
+> Signed-off-by: Xie Yuanbin <qq570070308@gmail.com>
+> Reviewed-by: Rik van Riel <riel@surriel.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202511091959.kfmo9kPB-lkp@intel.com/
+> Closes: https://lore.kernel.org/oe-kbuild-all/202511092219.73aMMES4-lkp@intel.com/
+> Closes: https://lore.kernel.org/oe-kbuild-all/202511100042.ZklpqjOY-lkp@intel.com/
 
-On Sat, Dec 13, 2025 at 12:23:35PM +0100, Osama Abdelkader wrote:
-> Some tools (e.g. perf) incorrectly assume that breakpoints should be
-> sizeof(long), but this is wrong for AArch64 where breakpoints must be
-> 4 bytes. Add a warning when we silently fix up the parameter so tool
-> developers can get notified.
+These Reported-by and Closes tags are just wrong. This is a new patch
+and the robot reported failures against earlier versions. The robot
+report is very clear about that:
 
-To be clear, the perf tool has fixed the issue since:
+  "If you fix the issue in a separate patch/commit (i.e. not just a new version of
+   the same patch/commit), kindly add following tags
+     Reported-by:...
+     Closes:..."
 
-  fa6cc3f93258 ("perf parse-events: Vary default_breakpoint_len on i386 and arm64")
+No?
 
-The latest perf can pass the correct length (4) for instruction
-breakpoint.
+> +/*
+> + * Please ignore the name of this function.  It should be called
+> + * switch_to_kernel_thread().
 
-> This addresses the FIXME comment by adding diagnostic output rather
-> than breaking existing tools by returning -EINVAL.
-> 
-> Signed-off-by: Osama Abdelkader <osama.abdelkader@gmail.com>
-> ---
-> v2: fix warning messageline splitting
-> ---
->  arch/arm64/kernel/hw_breakpoint.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-> index ab76b36dce82..cce306145d78 100644
-> --- a/arch/arm64/kernel/hw_breakpoint.c
-> +++ b/arch/arm64/kernel/hw_breakpoint.c
-> @@ -475,11 +475,13 @@ static int arch_build_bp_info(struct perf_event *bp,
->  				return -EINVAL;
->  		} else if (hw->ctrl.len != ARM_BREAKPOINT_LEN_4) {
->  			/*
-> -			 * FIXME: Some tools (I'm looking at you perf) assume
-> -			 *	  that breakpoints should be sizeof(long). This
-> -			 *	  is nonsense. For now, we fix up the parameter
-> -			 *	  but we should probably return -EINVAL instead.
+And why is it not renamed then?
 
-This FIXME is still valid for me.  IMO, if really want to remove the
-comment, a reasonable solution is:
+> + *
+> + * enter_lazy_tlb() is a hint from the scheduler that we are entering a
 
-  1) Backport two patches (fa6cc3f93258 and 70b27c756f9) onto the
-     stable kernel code base for fixing perf tool.
+We enter a kernel thread? AFAIK the metaverse has been canceled.
 
-  2) Based on perf tool has fixed the issue on the mainline kernel and
-     stable kernels, we can change to return -EINVAL instead.
+> + * kernel thread or other context without an mm.  Acceptable implementations
+> + * include doing nothing whatsoever, switching to init_mm, or various clever
+> + * lazy tricks to try to minimize TLB flushes.
+> + *
+> + * The scheduler reserves the right to call enter_lazy_tlb() several times
+> + * in a row.  It will notify us that we're going back to a real mm by
 
-> +			 * Some tools (e.g. perf) incorrectly assume that
-> +			 * breakpoints should be sizeof(long). This is wrong
-> +			 * for AArch64 where breakpoints must be 4 bytes.
-> +			 * Warn the user and fix up the parameter.
->  			 */
-> +			pr_warn_once("hw_breakpoint: invalid AArch64 breakpoint length %d, fixing to 4 bytes\n",
-> +				     hw->ctrl.len);
+It will notify us by sending email or what?
 
-AFAIK, since I started to use Armv5 CPUs, Arm instructions (not Thumb
-ones) are always 4-byte length. Not sure if the log is useful or not,
-I would leave this to maintainers.
+> + * calling switch_mm_irqs_off().
+> + */
+>  #define enter_lazy_tlb enter_lazy_tlb
+> -extern void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk);
+> +#ifndef MODULE
+> +static __always_inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+> +{
+> +	if (this_cpu_read(cpu_tlbstate.loaded_mm) == &init_mm)
+> +		return;
+> +
+> +	this_cpu_write(cpu_tlbstate_shared.is_lazy, true);
+> +}
+
+Please move the '#define enter_....' under the inline function. That's
+way simpler to read.
 
 Thanks,
-Leo
 
->  			hw->ctrl.len = ARM_BREAKPOINT_LEN_4;
->  		}
->  	}
-> -- 
-> 2.43.0
-> 
-> 
+        tglx
