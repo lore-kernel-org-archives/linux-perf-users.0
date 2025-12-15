@@ -1,40 +1,47 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99E8333890D
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Dec 2025 16:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9B5322547;
+	Mon, 15 Dec 2025 17:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765817365; cv=none; b=UeHr6AaU+i+6D/KrpKXKjzH3xYUnEsJ0sjggoAYoeifciaweHTDJBwg82/kyaXYSdQEtMmmZqbTR/ilkiCmb1fZFVSqz7zphwTFrGF2NCRdnyEfv0Dkk1Jy5V4zJVYcw86gAwlKNMd747OEszk5F40kRkD0qLgfDGEvzHvJ6l28=
+	t=1765821025; cv=none; b=aIx9gD7pt0EN7uJKC6PbbMHg/RwZ2QhgzihQyDbVtowbf4dnOAtHg6Ojqtsw4m2Vnds10LdJN6jgXRXSwl/Jzp67AdzvUzadddim1yR83DAK/2CkzVsikQnIX45YrHwEn3C8zxhhqED2MdAsv+lpbCgSznyrpCsANMXSMKxTkXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765817365; c=relaxed/simple;
-	bh=Gm8D5T0Mf4vMzuGMobl8AwCM3aXfjNpp6Qe89I8Zfco=;
+	s=arc-20240116; t=1765821025; c=relaxed/simple;
+	bh=YrTHPSx4341UHi+jq+akqh9qZcSw7dvO2ic7YUiWbg0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CZylqLpwswCQL9w+GbquZ6q/xnCpfh4j1ZA6040+Ac8MEm4hbjVrNOUz5DmnhkhodxeoacBOjoI1IUN+0AXF8DmZWKhMrHUtNeC6FmAHBmuCCw0Uiy8CU0FJOX5GE6ZvkT986UDq5zkzdfsUn4Kin9o/+sE9rrgHSVHOQpqFehs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C40E7FEC;
-	Mon, 15 Dec 2025 08:49:15 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C76F3F694;
-	Mon, 15 Dec 2025 08:49:22 -0800 (PST)
-Date: Mon, 15 Dec 2025 16:49:20 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: James Clark <james.clark@linaro.org>, Joel May <joel-linux@jmay.us>,
-	Ian Rogers <irogers@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Linux perf Profiling <linux-perf-users@vger.kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] arm64: perf: fix syscalltbl path base
-Message-ID: <20251215164920.GD681384@e132581.arm.com>
-References: <b2651f20-6f3a-49f5-9cd8-3fb028b2cab5@app.fastmail.com>
- <fcefc3c0-541d-40cc-84e3-9c2460308bdb@linaro.org>
- <23c07ac4-ff13-47a5-824a-e7af1d1847a3@app.fastmail.com>
- <bda366b4-fa53-4feb-a7ce-ee47cfc404b5@linaro.org>
- <20251215112818.GB681384@e132581.arm.com>
- <0076b248-9b23-408d-9448-701df3c8d952@app.fastmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=dPxMdgL6eyKVGKDYS1C52GQCuY33tp/ZJ2QkAy/5VKQ9nmZa+raQS1PHQJoPrTRcqwQXe2jxrRW22gG9+peOW9kIyAayfXwYyaDDl7Gx1xFvSL5XPDfexmcZekVDjfovhysdF88VqKtj+5J+3tQ0cOpSMQ3dD0okuXGxfaLV6Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEVe02Iu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEVe02Iu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 132FCC4CEF5;
+	Mon, 15 Dec 2025 17:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765821025;
+	bh=YrTHPSx4341UHi+jq+akqh9qZcSw7dvO2ic7YUiWbg0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CEVe02IunMd7oRHFksHEuNX1ZGXmcKIUYs9D3rfyToXy2S9a/vJIReRvxn0hSyuHq
+	 ZYiHE+ofGwyMAJmluKhkQYrdZH/sUMKtertR6dDwxTG+iRRnl/gjKIqHFfSgnoV8Fk
+	 /L9lVyXu1WUxeBFv8WZU9ewBj0Uk7MrThe65m2SeSzSV5CJ1IHPADfw7Bhajy5exxg
+	 f29m8+hYKOCCh9kjItC7brKVPTJ8NfuY+VapVLoxSo3SCPlFZTTXHGejcN362IY5CC
+	 x0KbRMlW7m0lhBWnhBDb71H/F/MBsH1wSUTLQinohrsqHRnKc3HV6K4mEP6ckdb691
+	 4ezHrJtnERipQ==
+Date: Mon, 15 Dec 2025 09:50:23 -0800
+From: Oliver Upton <oupton@kernel.org>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net,
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+	maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com,
+	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+	mark.rutland@arm.com, shuah@kernel.org,
+	gankulkarni@os.amperecomputing.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v5 21/24] KVM: arm64: Inject recorded guest interrupts
+Message-ID: <aUBKX8iqsptyTb4S@kernel.org>
+References: <aTioEWHu0ZbFCjR6@kernel.org>
+ <gsnt8qf72tv9.fsf@coltonlewis-kvm.c.googlers.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,56 +50,48 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0076b248-9b23-408d-9448-701df3c8d952@app.fastmail.com>
+In-Reply-To: <gsnt8qf72tv9.fsf@coltonlewis-kvm.c.googlers.com>
 
-On Mon, Dec 15, 2025 at 01:22:04PM +0100, Arnd Bergmann wrote:
-
-[...]
-
-> Ah, I see now that arc/hexagon/loongarch/riscv just use an old
-> copy of the header based on the and no longer update them. I only
-> saw that they have the stub version but hadn't realized that they
-> never updated past the point where we started generating the
-> ones for the uapi.
+On Fri, Dec 12, 2025 at 10:55:06PM +0000, Colton Lewis wrote:
+> Oliver Upton <oupton@kernel.org> writes:
 > 
-> Still, I would suggest using the same method across all architectures:
-> either we figure out how to use the generated headers on all of them
-> (including x86, which uses yet another method)
+> > In no situation should KVM be injecting a "recorded" IRQ. The overflow
+> > condition of the PMU is well defined in the architecture and we should
+> > implement *exactly* that.
+> 
+> When I say "record" I just meant "updating the virtual overflow register
+> to reflect an overflow".
 
-Switching to generated unistd.h headers would require removing
-tools/include/uapi/asm-generic/unistd.h and generating unistd_64/32.h
-on the fly, while still keeping arch's stub headers under
-tools/arch/${arch}/include/uapi/asm/.
+Right, consider changing the shortlog to read more along the lines of
+"detect overflows for partitioned PMU" or similar.
 
-As discussed in [1], I would prefer to drop these headers, but Ian
-noted that this could break builds with older toolchains.  We keep the
-tools/ copies of unistd.h because tools need the latest syscall
-numbers; relying on outdated toolchain headers can lead to build
-failures or incorrect behavior (e.g., perf falling back to predefined
-but wrong syscall numbers).
+> > On Tue, Dec 09, 2025 at 08:51:18PM +0000, Colton Lewis wrote:
+> > > +/**
+> > > + * kvm_pmu_part_overflow_status() - Determine if any guest counters
+> > > have overflowed
+> > > + * @vcpu: Ponter to struct kvm_vcpu
+> > > + *
+> > > + * Determine if any guest counters have overflowed and therefore an
+> > > + * IRQ needs to be injected into the guest.
+> > > + *
+> > > + * Return: True if there was an overflow, false otherwise
+> > > + */
+> > > +bool kvm_pmu_part_overflow_status(struct kvm_vcpu *vcpu)
+> > > +{
+> > > +	struct arm_pmu *pmu = vcpu->kvm->arch.arm_pmu;
+> > > +	u64 mask = kvm_pmu_guest_counter_mask(pmu);
+> > > +	u64 pmovs = __vcpu_sys_reg(vcpu, PMOVSSET_EL0);
+> > > +	u64 pmint = read_pmintenset();
+> > > +	u64 pmcr = read_pmcr();
+> 
+> > How do we know that the vPMU has been loaded on the CPU at this point?
+> 
+> Because this is only called by kvm_pmu_update_state which is only called
+> by kvm_pmu_update_state <- kvm_pmu_{flush,sync}_hwstate <-
+> kvm_arch_vcpu_ioctl_run after a vcpu_load.
 
-One idea is to install kernel headers first and then build tools, e,g.:
+That's assuming the PMU is loaded eagerly which I thought we agreed it
+would not be.
 
-   cd linux
-   export CROSS_COMPILE=aarch64-linux-gnu-
-   make ARCH=arm64 headers_install O=$OUT
-   make ARCH=arm64 O=$OUT -C tools/perf
-
-Generating the headers dynamically would avoid maintaining duplicated
-copies under tools/ and no need for periodic syncs.  However, this is a
-quite big effort, not just perf, we need to update makefiles to the path
-of the installed headers.  I'd like to hear opinions from tools
-(perf/bpf/selftest) maintainers before proceeding.
-
-> or we just stick with
-> the old asm-generic/unistd.h copy and use that on arm64 as well.
-
-I will proceed this way for now.  From a maintenance view, it is a
-pragmatic solution that only requires reverting a few patches and does
-not introduce any new code.
-
-Thanks for your suggestion!
-
-Leo
-
-[1] https://lore.kernel.org/linux-perf-users/20251209104926.GS724103@e132581.arm.com/
+Thanks,
+Oliver
