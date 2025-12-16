@@ -1,222 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E190F32BF21;
-	Tue, 16 Dec 2025 12:38:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60EE17C77;
+	Tue, 16 Dec 2025 14:22:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765888736; cv=none; b=Ja5wnGSSvNaQXtcSWNY7AxM7iUgJCuQ+KEeOV9f7j+Yx97mPyIW0GTxBPOVJ3hrJIHNByfgCYMGiKQg2b4zPEAiV7yC8RSehHKfdX5nFLdZwh/H+cxl5HW7fngP3u+J1i/YesKhfGuomsAHURh3uKu/8YDD6wi4ekwO3qgLg1UA=
+	t=1765894929; cv=none; b=tEUQ32OnGTi6hPOXqErDfeSM5iL72GrpjOLfN8aJKjXtO+a79yiw7B7c5HJRhB0zBLyifwFYF0a0kiJZU2b/4q7QfjhbfXn4J1AWVI/hTRg/XtA0xn+gMv6JRnnXc+eUGo4CEE8GzLpXixw/dPiwlVho0K9SbHPdWVu2SmbV1ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765888736; c=relaxed/simple;
-	bh=qylOcx0uj2v9vyRh/chQWHdchdbU5Ji/I5K0zblQJgw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ev2BM9VhAhjsmtnXYYRWbhuVz5RCiufl6ujlOKzQTGtbVeEttlb9BW31zPTPNc6eIAaU9kA/3CtRdkKjVP/ECyCeuow38jMqd/kbS8+vFHoX4vJ4qxjdDEAxEhOkJWRf6zedgc0z4E7N6j/rf4A+nLODAFr0eSCaHv2o7RI4rT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Y5I0tCSV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765894929; c=relaxed/simple;
+	bh=8EmBYCZMZY7bqtalvK4soFukbvVP0Vq2Cmz6pn0pkD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p05AIjg+zMAQvghP/XsskOMa2yYsfaX7IWQfZKYoy5W+9dpgnYiqy5d4eZT4lz7SPznk7QBE40eTtOk6/c5znfe2OtN5WJoYGzIiSKAPrLDAcfiQttr0ngEJHD20boiLbbjdwjGtIK9glp3nzWoK6CJInbCKN9t+PoAZ9XczH8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pq95Jg9P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Y5I0tCSV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24B2EC16AAE;
-	Tue, 16 Dec 2025 12:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1765888735;
-	bh=qylOcx0uj2v9vyRh/chQWHdchdbU5Ji/I5K0zblQJgw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y5I0tCSVaTTqLYjK/yu4SlogGm6g2onpJgRaraNN5MSb6kW6CGROPuQS9rC/l2YJx
-	 Q180LPHRZL5ENAzl9oQ8TPolpmW785jfr69+9Ut2tlg7i89h1ZGXirPbf0/NA2Rt6u
-	 9iZq7tnKpm+gQ+7N2tXYnVnM9R4I6EDEYvCIogTY=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Thaumy Cheng <thaumy.love@gmail.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.18 596/614] perf/core: Fix missing read event generation on task exit
-Date: Tue, 16 Dec 2025 12:16:03 +0100
-Message-ID: <20251216111422.986793433@linuxfoundation.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251216111401.280873349@linuxfoundation.org>
-References: <20251216111401.280873349@linuxfoundation.org>
-User-Agent: quilt/0.69
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pq95Jg9P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE973C16AAE;
+	Tue, 16 Dec 2025 14:22:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765894929;
+	bh=8EmBYCZMZY7bqtalvK4soFukbvVP0Vq2Cmz6pn0pkD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pq95Jg9PQpPHKoUzBuN6OxdVEbQxh1Y/XYydfsYCtj0qB1QCSpDHBUOOJKetPv2U7
+	 V+EfXGgP32ZhyTJEhOT7hyW6d2dgXbeWY3zpkaUcYiUWDBduQw9HobohTWwCdPfZ/3
+	 53kSaerQYX1+x82BeZsn7M3fXN+pzhsed3Wb+/sRmw0BKzURabc2dmSh7D26oRfxp8
+	 Vn/jLd6puEz6akT3jkNHU83BDmrRCPmoj96SRwO5+/Hgc7e4KuUPe+mDpXhfzzzAfP
+	 Zlj1eWQjU3zD5lrX7rMF1KErGsr1DQvIDjNT/krr/fKA5doQ9B3mgP9ImSK/QU52bP
+	 a7uYwqeBxWIIw==
+Date: Tue, 16 Dec 2025 19:51:33 +0530
+From: Naveen N Rao <naveen@kernel.org>
+To: Manali Shukla <manali.shukla@amd.com>
+Cc: kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-doc@vger.kernel.org, seanjc@google.com, pbonzini@redhat.com, nikunj@amd.com, 
+	bp@alien8.de, peterz@infradead.org, mingo@redhat.com, mizhang@google.com, 
+	thomas.lendacky@amd.com, ravi.bangoria@amd.com, Sandipan.Das@amd.com
+Subject: Re: [PATCH v2 03/12] KVM: Add KVM_GET_EXT_LAPIC and
+ KVM_SET_EXT_LAPIC for extapic
+Message-ID: <jf2zfqo6jrrcdkdatztiijmf7tgkho7bks4q4oaegiqpeflrkj@7blq6f5ck2hf>
+References: <20250901051656.209083-1-manali.shukla@amd.com>
+ <20250901052146.209158-1-manali.shukla@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250901052146.209158-1-manali.shukla@amd.com>
 
-6.18-stable review patch.  If anyone has any objections, please let me know.
+On Mon, Sep 01, 2025 at 10:51:46AM +0530, Manali Shukla wrote:
+> Modern AMD processors expose four additional extended LVT registers in
+> the extended APIC register space, which can be used for additional
+> interrupt sources such as instruction-based sampling and others.
+> 
+> To support this, introduce two new vCPU-based IOCTLs:
+> KVM_GET_EXT_LAPIC and KVM_SET_EXT_LAPIC. These IOCTLs works similarly
+> to KVM_GET_LAPIC and KVM_SET_LAPIC, but operate on APIC page with
+> extended APIC register space located at APIC offsets 400h-530h.
+> 
+> These IOCTLs are intended for use when extended APIC support is
+> enabled in the guest. They allow saving and restoring the full APIC
+> page, including the extended registers.
+> 
+> To support this, the `struct kvm_ext_lapic_state` has been made
+> extensible rather than hardcoding its size, improving forward
+> compatibility.
+> 
+> Documentation for the new IOCTLs has also been added.
+> 
+> For more details on the extended APIC space, refer to AMD Programmer’s
+> Manual Volume 2, Section 16.4.5: Extended Interrupts.
+> https://bugzilla.kernel.org/attachment.cgi?id=306250
+> 
+> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
+> ---
+>  Documentation/virt/kvm/api.rst  | 23 ++++++++++++++++++++
+>  arch/x86/include/uapi/asm/kvm.h |  5 +++++
+>  arch/x86/kvm/lapic.c            | 12 ++++++-----
+>  arch/x86/kvm/lapic.h            |  6 ++++--
+>  arch/x86/kvm/x86.c              | 37 ++++++++++++++++++++++++---------
+>  include/uapi/linux/kvm.h        | 10 +++++++++
+>  6 files changed, 76 insertions(+), 17 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 6aa40ee05a4a..0653718a4f04 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -2048,6 +2048,18 @@ error.
+>  Reads the Local APIC registers and copies them into the input argument.  The
+>  data format and layout are the same as documented in the architecture manual.
+>  
+> +::
+> +
+> +  #define KVM_APIC_EXT_REG_SIZE 0x540
+> +  struct kvm_ext_lapic_state {
+> +	__DECLARE_FLEX_ARRAY(__u8, regs);
+> +  };
+> +
+> +Applications should use KVM_GET_EXT_LAPIC ioctl if extended APIC is
+> +enabled. KVM_GET_EXT_LAPIC reads Local APIC registers with extended
+> +APIC register space located at offsets 400h-530h and copies them into input
+> +argument.
 
-------------------
+I suppose the reason for using a flex array was for addressing review 
+comments on the previous version -- to make the new APIs extensible so 
+that they can accommodate any future changes to the extended APIC 
+register space.
 
-From: Thaumy Cheng <thaumy.love@gmail.com>
+I wonder if it would be better to introduce a KVM extension, say 
+KVM_CAP_EXT_LAPIC (along the lines of KVM_CAP_PMU_CAPABILITY).
 
-[ Upstream commit c418d8b4d7a43a86b82ee39cb52ece3034383530 ]
+KVM_CHECK_EXTENSION(KVM_CAP_EXT_LAPIC) can then return a bitmask 
+indicating supported features. Today, this will be a single bit 
+indicating support for the base extended APIC register space (say, 
+KVM_EXT_LAPIC_CAP_ENABLE).  This would map to current extended APIC 
+register space (up to 0x540 offset). Additional bits can be introduced 
+to represent future extensions/changes as necessary.
 
-For events with inherit_stat enabled, a "read" event will be generated
-to collect per task event counts on task exit.
-
-The call chain is as follows:
-
-do_exit
-  -> perf_event_exit_task
-    -> perf_event_exit_task_context
-      -> perf_event_exit_event
-        -> perf_remove_from_context
-          -> perf_child_detach
-            -> sync_child_event
-              -> perf_event_read_event
-
-However, the child event context detaches the task too early in
-perf_event_exit_task_context, which causes sync_child_event to never
-generate the read event in this case, since child_event->ctx->task is
-always set to TASK_TOMBSTONE. Fix that by moving context lock section
-backward to ensure ctx->task is not set to TASK_TOMBSTONE before
-generating the read event.
-
-Because perf_event_free_task calls perf_event_exit_task_context with
-exit = false to tear down all child events from the context, and the
-task never lived, accessing the task PID can lead to a use-after-free.
-
-To fix that, let sync_child_event read task from argument and move the
-call to the only place it should be triggered to avoid the effect of
-setting ctx->task to TASK_TOMESTONE, and add a task parameter to
-perf_event_exit_event to trigger the sync_child_event properly when
-needed.
-
-This bug can be reproduced by running "perf record -s" and attaching to
-any program that generates perf events in its child tasks. If we check
-the result with "perf report -T", the last line of the report will leave
-an empty table like "# PID  TID", which is expected to contain the
-per-task event counts by design.
-
-Fixes: ef54c1a476ae ("perf: Rework perf_event_exit_event()")
-Signed-off-by: Thaumy Cheng <thaumy.love@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Link: https://patch.msgid.link/20251209041600.963586-1-thaumy.love@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/events/core.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2c35acc2722b0..413b88a4e00fb 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2316,8 +2316,6 @@ static void perf_group_detach(struct perf_event *event)
- 	perf_event__header_size(leader);
- }
- 
--static void sync_child_event(struct perf_event *child_event);
--
- static void perf_child_detach(struct perf_event *event)
- {
- 	struct perf_event *parent_event = event->parent;
-@@ -2336,7 +2334,6 @@ static void perf_child_detach(struct perf_event *event)
- 	lockdep_assert_held(&parent_event->child_mutex);
- 	 */
- 
--	sync_child_event(event);
- 	list_del_init(&event->child_list);
- }
- 
-@@ -4587,6 +4584,7 @@ static void perf_event_enable_on_exec(struct perf_event_context *ctx)
- static void perf_remove_from_owner(struct perf_event *event);
- static void perf_event_exit_event(struct perf_event *event,
- 				  struct perf_event_context *ctx,
-+				  struct task_struct *task,
- 				  bool revoke);
- 
- /*
-@@ -4614,7 +4612,7 @@ static void perf_event_remove_on_exec(struct perf_event_context *ctx)
- 
- 		modified = true;
- 
--		perf_event_exit_event(event, ctx, false);
-+		perf_event_exit_event(event, ctx, ctx->task, false);
- 	}
- 
- 	raw_spin_lock_irqsave(&ctx->lock, flags);
-@@ -12447,7 +12445,7 @@ static void __pmu_detach_event(struct pmu *pmu, struct perf_event *event,
- 	/*
- 	 * De-schedule the event and mark it REVOKED.
- 	 */
--	perf_event_exit_event(event, ctx, true);
-+	perf_event_exit_event(event, ctx, ctx->task, true);
- 
- 	/*
- 	 * All _free_event() bits that rely on event->pmu:
-@@ -14004,14 +14002,13 @@ void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
- }
- EXPORT_SYMBOL_GPL(perf_pmu_migrate_context);
- 
--static void sync_child_event(struct perf_event *child_event)
-+static void sync_child_event(struct perf_event *child_event,
-+			     struct task_struct *task)
- {
- 	struct perf_event *parent_event = child_event->parent;
- 	u64 child_val;
- 
- 	if (child_event->attr.inherit_stat) {
--		struct task_struct *task = child_event->ctx->task;
--
- 		if (task && task != TASK_TOMBSTONE)
- 			perf_event_read_event(child_event, task);
- 	}
-@@ -14030,7 +14027,9 @@ static void sync_child_event(struct perf_event *child_event)
- 
- static void
- perf_event_exit_event(struct perf_event *event,
--		      struct perf_event_context *ctx, bool revoke)
-+		      struct perf_event_context *ctx,
-+		      struct task_struct *task,
-+		      bool revoke)
- {
- 	struct perf_event *parent_event = event->parent;
- 	unsigned long detach_flags = DETACH_EXIT;
-@@ -14053,6 +14052,9 @@ perf_event_exit_event(struct perf_event *event,
- 		mutex_lock(&parent_event->child_mutex);
- 		/* PERF_ATTACH_ITRACE might be set concurrently */
- 		attach_state = READ_ONCE(event->attach_state);
-+
-+		if (attach_state & PERF_ATTACH_CHILD)
-+			sync_child_event(event, task);
- 	}
- 
- 	if (revoke)
-@@ -14144,7 +14146,7 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
- 		perf_event_task(task, ctx, 0);
- 
- 	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
--		perf_event_exit_event(child_event, ctx, false);
-+		perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
- 
- 	mutex_unlock(&ctx->mutex);
- 
--- 
-2.51.0
+Userspace will then have to explicitly enable this using 
+KVM_ENABLE_CAP() before issuing KVM_GET_EXT_LAPIC/KVM_SET_EXT_LAPIC.
 
 
+- Naveen
 
