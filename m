@@ -1,50 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012050.outbound.protection.outlook.com [40.107.209.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36311487F6;
-	Tue, 16 Dec 2025 01:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765849909; cv=none; b=kqdeKuoUc9z794kdi89wyfgl6cJ7yyLdOUR723QwWRHGse51oR/XsofO+VgIYrocAYeTpUym9biBIYXR9wCDKmniP5JfnU1j6UjYd7m/V+E9K8jsoDiy4hyH+Ra0LMMg7HSkEt41Gl//sd0NV4xRFfNluclKE+UAFUsO/Fw+maE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765849909; c=relaxed/simple;
-	bh=bAL1Ix06AXQJaesDVbyPJR4MEsaJmLA+bA3mVq4Kcwc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M3By7rUiAQ6rZtSFY2erPuiCNbiFbs47r98noLVzHASlBapAAPGzzlkPbk5uKyBXyDzUoETaNK1BH0SaoR5eUQiaIvh1/ndmWzZiWUuOLVA4nB8YeDwL9oWD6N5Z6VoJw+ynH0y0c4PV7esTuPr8ku8o4E40xeNlz9KIP3q3Lqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JKwTLgx9; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5352D8760;
+	Tue, 16 Dec 2025 04:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765860181; cv=fail; b=mgn76ULTfxgWp9PHHKonDYAS3VuDMzrvoPOM72VrWnHps0h/YT3KVPtpKC9OtYXyBlG1Lg5Mfpg3YkTahcU71tfuKHF+d1wHFAB26zve/Q5tw/ag+VGKAa0QyfqSMoYiajW3qvBQVsgE3rWOtm8KWht6ZMQktJ7SE80I3WTeHAg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765860181; c=relaxed/simple;
+	bh=uyOtXPnHB2WShmCUtg1WEFkRQljLlHxpmurs0XOa4NI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WpPPT3mHlV2Heh0C7ZpreZk3ff93jydG7lcsU3uTicssZnfI4vdSdBC/vxrR4M1JgdY8A6BkAJI/s0qYjBsw0H4ODlQUxP6VgIu3guI6gIn865vifoKFqQhXh+6ZDoHhmzj/TV+/m0ZW7VshSIE7uc4lZMHqa7D23klPkniA+gY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ydd4xd9M; arc=fail smtp.client-ip=40.107.209.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JKwTLgx9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765849906; x=1797385906;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bAL1Ix06AXQJaesDVbyPJR4MEsaJmLA+bA3mVq4Kcwc=;
-  b=JKwTLgx91c0/EIS3WOdOKtWmC14+iEtPQt5AbDRAIPRAgfb07d8v9Mii
-   0/Lqd6urdW0H8m6wjXDM0huTxOnftDq4dN1MxIRKxnu7zLU2XXqXs30wA
-   0picMhy9uZWIjBz52ERT0RB7IC0CLKgEQb+TqHmzrJhIHlEjWR1sSy7qr
-   jNZFDHIrfLVYGsKPgBnKmJuDZP3U/l95wzK0tQ801xd77adVGgtPRTHbh
-   /aDD0cGZXeJQ4evZedzOwssuLw9vnSlj9wv2/JA08aEoi10ccbT41IpBP
-   AMXkjR2bczjAPhrCe9+ivkzbaV+yHmoZUkR1BRVnTFzKzhjoLIPvsnbro
-   A==;
-X-CSE-ConnectionGUID: v1IrDXyaQ3K/gxblkqhtHQ==
-X-CSE-MsgGUID: bnLooGxzQHu9n8v/QKTarg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11643"; a="66750830"
-X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
-   d="scan'208";a="66750830"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2025 17:51:44 -0800
-X-CSE-ConnectionGUID: Fn9cO3zZSVWDOheJdADI9g==
-X-CSE-MsgGUID: zq68VdbyRYWV/WdaV5FSTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
-   d="scan'208";a="202383582"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2025 17:51:40 -0800
-Message-ID: <a01f17ee-7388-4e83-8c02-132f0fc51f1a@linux.intel.com>
-Date: Tue, 16 Dec 2025 09:51:36 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ydd4xd9M"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Nwz/kLwD6bs6FtDAanyWAlYmx8pXWe3oIP3d/h9bcH9qnekyCZAnk4A50ypFDauozrVQbTF4j62Rqe9QvGV/7rLMmdW0b/W544h+qApfqp1hjIn+cxe6Ur8bV/FEYCDu9KKEzzd3ExT7CQgTAQg2I8qjfG8hHJhBKhFan15KiRik9KSTbWoTmLoGaIoXVS7G5A+FxRZrXrEacXecQPfz7BYyxU5l6VWiYu77qcFf+JPY8zMyCa4IOPdRpXzvAoPnSqFPf9Jb/3Pe3iDpS6b1UoCocjdzIvIoHqPKM66IPCJYFlgs+jIsp+KllSxBc9SvORbwggOFxZozHLtQug9LAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=845xRJp428sw2zeVBrqZERCFyMG0xR85WqgC8hY2ng0=;
+ b=OqsRDx+OCsYHCk7zXnE1pY2ENC/qEcubkMyJaTtk6qzFE0dRIrh6fcJaklYWMaUUc8GIXw+NabqiOjuELodG/pqFiVKVoANxnXtscw8Ux+wj4ysg1znui391P+o1NPNGUIEGcivgXm/BWcibbJ17Ut9DCcII+d37TQZ8yek9WajKPomVTdSI8nswhO34BhlZmUyMUwPRd+99cun0HDULBQ0bNUZN2kII/DMAafLvSYoMiAolEWoDtbVPTWYOOeh5hpYHHElnUDajmzMAWMtMziuYux401wNrkzd8qciODjKK0uxqi2zRZ2t7Mt31Lq6Uunm+RrgsKax4C9tmR1zZTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=845xRJp428sw2zeVBrqZERCFyMG0xR85WqgC8hY2ng0=;
+ b=ydd4xd9MOlVuqqOL/jzMbGdFtpBazrvgxI0HCLl1CP0/Ix8Tlor2uemP88Q2igxsf8iwBAFXA4CdaU56KSJXmfS4gzisVWfDnEVYxgiNUNF1f/6mpNzTRYmS8MNPVGRr+jkWi8aM3y6NbbbhHmZQmlQ1XlJ5XX9maPO9gZEc+yg=
+Received: from BL1PR13CA0400.namprd13.prod.outlook.com (2603:10b6:208:2c2::15)
+ by DS0PR12MB8342.namprd12.prod.outlook.com (2603:10b6:8:f9::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.13; Tue, 16 Dec
+ 2025 04:42:45 +0000
+Received: from BL6PEPF0002256E.namprd02.prod.outlook.com
+ (2603:10b6:208:2c2:cafe::9e) by BL1PR13CA0400.outlook.office365.com
+ (2603:10b6:208:2c2::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9434.6 via Frontend Transport; Tue,
+ 16 Dec 2025 04:42:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BL6PEPF0002256E.mail.protection.outlook.com (10.167.249.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9434.6 via Frontend Transport; Tue, 16 Dec 2025 04:42:44 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 15 Dec
+ 2025 22:42:41 -0600
+Received: from [10.136.36.160] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Mon, 15 Dec 2025 22:42:36 -0600
+Message-ID: <c2892e7a-65c4-4744-a611-6fc3c1d37cd3@amd.com>
+Date: Tue, 16 Dec 2025 10:12:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,99 +67,102 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] perf/x86/intel/cstate: Add Wildcat Lake support
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
-References: <20251215182520.115822-1-zide.chen@intel.com>
+Subject: Re: [Patch v5 00/19] Support SIMD/eGPRs/SSP registers sampling for
+ perf
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, Mark Rutland <mark.rutland@arm.com>,
+	<broonie@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, Zide Chen <zide.chen@intel.com>, "Falcon
+ Thomas" <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>, "Xudong
+ Hao" <xudong.hao@intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251215182520.115822-1-zide.chen@intel.com>
-Content-Type: text/plain; charset=UTF-8
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0002256E:EE_|DS0PR12MB8342:EE_
+X-MS-Office365-Filtering-Correlation-Id: a7914af6-8a51-4ded-12b4-08de3c5d8e0b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|36860700013|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NHpkNDhaTzhuL3I5Y2FqTTZIR0RMYTA5N3FLSm1Sa0hHMnVtTGhXZVlST0Nl?=
+ =?utf-8?B?ODdYS1hTYSt4eWZTM0o1bXE1enhURm1oS1hKUjFzZ0hZbWR4QldhdVNkakVm?=
+ =?utf-8?B?VVp2bkpzNGJZanBGZjRod2hTRnZQbUdBS1dVQkhDbXpOd0hTQTRQRHg3VFFx?=
+ =?utf-8?B?NTUrZ1FIcEg0OTR3NHpFRGY0dVNzWERrakpRUElkSjlMUnBad1htRmd1U2ln?=
+ =?utf-8?B?cEtFRk1tQ2JWRmFBMUtFOHVTSGlvZGNOUmRBYnpkRFdtR0M4MnBnRVM5cXFv?=
+ =?utf-8?B?RFk0cnF0SzMvb2VZQWNnYnAvVzZPMDl3UC9DMmpZbGc0OU8xcWJKc0I1MXVL?=
+ =?utf-8?B?LzdBUVlyTVM2WVM0c2RhZ21OZVE0cmRIUThhVEljWS9mZXZSNXRrR3IrSjNl?=
+ =?utf-8?B?TVRYdzZXWDNNNFExOTl3SW5ma2ovUEhNdWJzUjRYeWpXUTU5d3dTVXBWVzlZ?=
+ =?utf-8?B?VHRMSXBNZ3pPRUdVUmxObmxNbng4K0NpdGtQT0twdXBZY3RKM2VIamRVeEQ5?=
+ =?utf-8?B?SEZiWHZzQ2RYZHZ1T3dXM2YvaVBKUmFSQXF6bGF6TXRMUU5JUCtsRVJHMml1?=
+ =?utf-8?B?ekpOYWFCWmNCVHpINDZML0pUZGk0QUlCZnkyMTQ4NjhpNnpHblJtYUxSaWNS?=
+ =?utf-8?B?OWova1dRNlg3a0ZvRlZkRHpsOUIwTGFCVmlUTWgyamhaWkV3cUdiQWN6M0or?=
+ =?utf-8?B?ZmVqdUV3Q0NMbjNkK1RPSWtrWW1KK1h4SGEvN3JPWCs4YSsxTy9lamRCV0Zy?=
+ =?utf-8?B?Yk5xdUhaWVc3V2xKeUdLdmtSTFZIYUozQ0pvN1Z1bU9iR1UxVDNVaUJKZi9m?=
+ =?utf-8?B?K2t2SjZYMlBQbHZrOGorVVI2dEZkcEo5ZC9TMUxUdTVwbW94MHRKRTRNRGRq?=
+ =?utf-8?B?bEZ5Ni9hRGFzNWJqNTNOTTlqYXY4M3lFZzgvWWxJUnJTcmtSMVhDb204WGlP?=
+ =?utf-8?B?TTdIeWpqMWwzRk5DZXRzVjBPUkZpYTlGQTBZOWFDT2liQ3lHMkc4VnJCSEsv?=
+ =?utf-8?B?L0wvamFCMmU0alVHM0FWTjBrK3dSYkNqamI0Q1BMWnFadnMvQzd6Skd4akxR?=
+ =?utf-8?B?WDlJZUJzcUFRUzFKOHdLNTAxRVordVZrckVwVmloVjJBM29ydlFxUERnaGNw?=
+ =?utf-8?B?M25NcGk1bm1EOUllcE91azZaYUpiRzFaeVROaXk3TURpaVc0SjhiOUZCbVM2?=
+ =?utf-8?B?ZVk2Vm1aSGJMM1hxWEdtN0RDY0FxTjE4YUtMSm51aythdkxIRWhtNXFnNyts?=
+ =?utf-8?B?TGpWWTIzK3p5dzFPdHUzc1cvVHZQNWRnbGVrZWRHSGZvUVNpUE1rMUlTbW1J?=
+ =?utf-8?B?TWtGNVRMYXZRd3h0Q2JuUlNGSXc4Y1NkdGpFTGJrU3VnYlh0WUZKL3NxamdE?=
+ =?utf-8?B?LzF0L0svcnhseGJGUzdhOWxreDNxWEVMWkNjUS9xU2tlY2lENkUwbDFqcGFp?=
+ =?utf-8?B?K0g1S2I4ZXNETnJWb2ZKK1RlQVFia2VwWnk0WjlkNUJqSDdTZUR3NTJDNzZs?=
+ =?utf-8?B?cURkVkg3Z2RQUjU1Y2QzSU9EN1F0elE3WlN2U0xwVllCQzFXNGdCdU1hblhV?=
+ =?utf-8?B?Y3FCT3JJSi9sN2puODVxOWtMOHBYRHlqeHg1R2RiNEhtYnFBQUxnalA0UWRF?=
+ =?utf-8?B?S3p2Qmx3UHBiQ3I3THFRYWFiWjUrOXpieXRyY0lsUVcvZ0xLU0M5UnFwaFVh?=
+ =?utf-8?B?dUlQMU9Wd3VGY1ErZmNXd09Gb05vOU9TRTlaY1NheE9GRVRnZExGcG9FeklY?=
+ =?utf-8?B?Y0F6UnJpVEo1WW1pWk1TUTVrVFNRUmJSWGFzR1BqZnp5dktpS2hiZ25EUWZ4?=
+ =?utf-8?B?MVRPa2RhZ2Q1cktMVWVxaVhPMGNxbXp0S3Vhbys1U1Y3R2lkQm5sZ1UrNnVY?=
+ =?utf-8?B?aWhRTURsNHpvblJ6anEzczB4aUtXMnNudFJIZGlkTVFJREpFeHJCKzYxWGhH?=
+ =?utf-8?B?VlAweEpBVWdxeE9Id3pxVS9rNTRlaXZWWUM5bE15VS96WThpbW9Pa3RoanlF?=
+ =?utf-8?B?RVFUMjZpNFJ4eGc3c1NqU3J5YTJ6S0RqWDdWTnlnUzFvUVBvVE5mMDM2Zkxz?=
+ =?utf-8?B?TEgybEdmd3U2U3g1cVdwMTJYV1dOYkFZdVpyWXNEUzBhaENSRzNlZ3ZUckha?=
+ =?utf-8?Q?v4f4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2025 04:42:44.5472
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7914af6-8a51-4ded-12b4-08de3c5d8e0b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0002256E.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8342
 
-The whole patch-set looks good to me. Thanks.
+Hi Dapeng,
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> While the hardware solution remains preferable due to its lower
+> overhead and higher accuracy, this software approach provides a
+> viable alternative.
 
+Lower accuracy in the software approach is due to the delay in an NMI
+delivery which will make the SIMD data misaligned a bit? Something like:
 
-On 12/16/2025 2:25 AM, Zide Chen wrote:
-> Wildcat Lake (WCL) is a low-power variant of Panther Lake.  From a
-> C-state profiling perspective, it supports the same residency counters:
-> CC1/CC6/CC7 and PC2/PC6/PC10.
->
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
-> ---
->  arch/x86/events/intel/cstate.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-> index fa67fda6e45b..b719b0a68a2a 100644
-> --- a/arch/x86/events/intel/cstate.c
-> +++ b/arch/x86/events/intel/cstate.c
-> @@ -41,7 +41,7 @@
->   *	MSR_CORE_C1_RES: CORE C1 Residency Counter
->   *			 perf code: 0x00
->   *			 Available model: SLM,AMT,GLM,CNL,ICX,TNT,ADL,RPL
-> - *					  MTL,SRF,GRR,ARL,LNL,PTL
-> + *					  MTL,SRF,GRR,ARL,LNL,PTL,WCL
->   *			 Scope: Core (each processor core has a MSR)
->   *	MSR_CORE_C3_RESIDENCY: CORE C3 Residency Counter
->   *			       perf code: 0x01
-> @@ -53,19 +53,19 @@
->   *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
->   *						SKL,KNL,GLM,CNL,KBL,CML,ICL,ICX,
->   *						TGL,TNT,RKL,ADL,RPL,SPR,MTL,SRF,
-> - *						GRR,ARL,LNL,PTL
-> + *						GRR,ARL,LNL,PTL,WCL
->   *			       Scope: Core
->   *	MSR_CORE_C7_RESIDENCY: CORE C7 Residency Counter
->   *			       perf code: 0x03
->   *			       Available model: SNB,IVB,HSW,BDW,SKL,CNL,KBL,CML,
->   *						ICL,TGL,RKL,ADL,RPL,MTL,ARL,LNL,
-> - *						PTL
-> + *						PTL,WCL
->   *			       Scope: Core
->   *	MSR_PKG_C2_RESIDENCY:  Package C2 Residency Counter.
->   *			       perf code: 0x00
->   *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
->   *						KBL,CML,ICL,ICX,TGL,TNT,RKL,ADL,
-> - *						RPL,SPR,MTL,ARL,LNL,SRF,PTL
-> + *						RPL,SPR,MTL,ARL,LNL,SRF,PTL,WCL
->   *			       Scope: Package (physical package)
->   *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
->   *			       perf code: 0x01
-> @@ -78,7 +78,7 @@
->   *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
->   *						SKL,KNL,GLM,CNL,KBL,CML,ICL,ICX,
->   *						TGL,TNT,RKL,ADL,RPL,SPR,MTL,SRF,
-> - *						ARL,LNL,PTL
-> + *						ARL,LNL,PTL,WCL
->   *			       Scope: Package (physical package)
->   *	MSR_PKG_C7_RESIDENCY:  Package C7 Residency Counter.
->   *			       perf code: 0x03
-> @@ -97,7 +97,8 @@
->   *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
->   *			       perf code: 0x06
->   *			       Available model: HSW ULT,KBL,GLM,CNL,CML,ICL,TGL,
-> - *						TNT,RKL,ADL,RPL,MTL,ARL,LNL,PTL
-> + *						TNT,RKL,ADL,RPL,MTL,ARL,LNL,PTL,
-> + *						WCL
->   *			       Scope: Package (physical package)
->   *	MSR_MODULE_C6_RES_MS:  Module C6 Residency Counter.
->   *			       perf code: 0x00
-> @@ -654,6 +655,7 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
->  	X86_MATCH_VFM(INTEL_ARROWLAKE_U,	&adl_cstates),
->  	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&lnl_cstates),
->  	X86_MATCH_VFM(INTEL_PANTHERLAKE_L,	&lnl_cstates),
-> +	X86_MATCH_VFM(INTEL_WILDCATLAKE_L,	&lnl_cstates),
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
+   insn1
+   insn2  -> Overflow. RIP, GPRs captured by PEBS and NMI triggered
+   insn3
+   insn4
+   insn5  -> NMI delivered here, so SIMD regs are captured here?
+   insn6
+
+Am I interpreting it correctly?
+
+Thanks,
+Ravi
