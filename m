@@ -1,72 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3623D2E8B75;
-	Mon, 15 Dec 2025 18:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F632222CB
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 01:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765823567; cv=none; b=Jz73PdxVpCKHYydU7ECS9cyoMUJGPcg1jXLbKsLpmKiEIDMh35zumlnnvhSNN1WMO+NanbsHa+00W0NO8cNDROhDlPKRRRh6TBDXDdzZKPcY4KVHoNAVqHHijv+XfFvpMxL4+IUdNtOKtn/dY1O4YmKr7VpiRveCOoXT7Epk0Zo=
+	t=1765848009; cv=none; b=IQeWzJAsVRwd7LX2zijK1ZexKW21ihThIVg3wDNQMCHePDCWtyHpFSXGuTgb00d4TFtRbU19vx8ajZq95e8YaX1zo4EuEyppu2PDHVNH6uiMYymthfAwPtJCGICtq9WV0MMDWViuCTo77XUyN6CVBXjitUNJ/a4ObKjUx8hlRpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765823567; c=relaxed/simple;
-	bh=PhsDg/wOOlYxt7L7an+aypeyHc+6lLG6L2ogGgmH3Rc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZeHNmQowYFItLLRv1g1+RiQ+xgS6ulpbQ9yZZlzJ4JAsiqKEpHLboOJnHNKAWQv5r/zg3G/iWrnewIj4u7c7UFCdFtRkKaNblGhbHfd2wJnDmhb+btNpsy+eCLPSUD3kRX80s+cISeJhDKxTDBxfkGJ3ZgGLwxA4I84tDBQzo3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mCD/oq7K; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1765848009; c=relaxed/simple;
+	bh=otPy5H9YRubAr/y+Uf1Jo4QzPzJqenEdbe+yUk9KE5E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kWD9wiVIAochI34TbbLHMU1w1acnlodedJ0Aef/LO1PGs5JWz4fbtYsGdIkJMxfW38UtWVloZbqOtE9sbefuJiI+a39U/9rGaGEduT74BIli2comP3Hs4BTs3+7gGHwfya4gGw3zdW9E/Xo9DTUyJ448ujqDdo0uy/N5hSzQv30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXs3rIkF; arc=none smtp.client-ip=74.125.224.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mCD/oq7K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765823567; x=1797359567;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PhsDg/wOOlYxt7L7an+aypeyHc+6lLG6L2ogGgmH3Rc=;
-  b=mCD/oq7KHF0kyZT9GnGP5NZCbB1Khsapjau38dpXg246GNP2NYFxYVMK
-   uyaVQOm8c0n804blKXmxdtFlGoQ6N91P0OPg+YwusnSebF9jURDjysc95
-   hYfH9rHnPseTQDUp55Y6iqcvPJcCDFUZyyHOGCcpLWu3yDL5w4NPn35T6
-   xMVuEfpzfmc5Zs+DfLJ9elw0xrPAKyc+nbXr8KyLEuAja/EMheFRSQiiY
-   bm+BNjLW6iz+4hYOygVsd5tKSa/+xwPJxuzI6l4pio1fIUMwgbRXVDSmR
-   WYVFg/kkBThopGxp3kmTRjEH+Ix45h+Q9qtu5xoTQXGhd31+sFsSuHtp6
-   Q==;
-X-CSE-ConnectionGUID: N3yi06cPRK2Rnou1YfQ1Bg==
-X-CSE-MsgGUID: Y8ntcDoGTYCCftNV0mb/QA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11643"; a="67697561"
-X-IronPort-AV: E=Sophos;i="6.21,151,1763452800"; 
-   d="scan'208";a="67697561"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2025 10:32:43 -0800
-X-CSE-ConnectionGUID: yHkFVY/ES42sWkpYhF/06A==
-X-CSE-MsgGUID: JABZeudTQmSeI5cSauumKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,151,1763452800"; 
-   d="scan'208";a="197547945"
-Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.43])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2025 10:32:42 -0800
-From: Zide Chen <zide.chen@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXs3rIkF"
+Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-6446d7a8eadso3735711d50.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Dec 2025 17:20:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765848006; x=1766452806; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4D2fKjhV+xXooGe5GhIIOsVNBVoSb/WsPEzHiyDzi2s=;
+        b=NXs3rIkF3IgFUN2AX/74BRVN2f+S5p5thYnNvocMdCLX2elY/o2RNhOg8wiMUDPm9R
+         3zB4xoEtAkUkhFutnJLclo8LfizCb9WWcoCXQTvQR28x6CTK/lFrwfJkRbDtXl8e3o4L
+         z08faFeB3w7JUIKAgSX/rxy8Y1JDlyJzX6RznWyNb+dwTapfbNQ2s5bCQfnHxO7Oyh1O
+         VyJqTDJq12NXu1y0GasNy1ZCtlqhBuVK4Te8QXp4IDrASpOYfl35aPFctzpunyea4zKQ
+         Aj6OZo2fydaZFXiJJ3/AuGAZcXSG1KFJOMhRoNCFkg/XI7tjbujbp8EgPmNYRn2dpoof
+         U1yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765848006; x=1766452806;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4D2fKjhV+xXooGe5GhIIOsVNBVoSb/WsPEzHiyDzi2s=;
+        b=sNJSqAKznMs+45MftuNxqbHnX8m5ClsmZmIu8Xc5iAuxNloWWritl3L5sh0rm4wokB
+         PdQ5j8KVN1Hyy5K2KeXnK/JRyq+mJXU9GXeYMLFwIn9hDPADl5qCx7hjgMDvPeNKr1+6
+         4EF/ej2IPalSRwgCS7xgrUpgjpmZpktQxyniPxU1sXil4regeSgCmh9j7iGkyuaPavKX
+         SbuBjeuiHtDi3Kge/a+ejO6yzLRiQhNZddmh/3oJiry1NKbI6Nww7YwsD+NypgxzxVxU
+         b1Z7D01uPCsad1pqjolUizaA96DP5yJa3zXwG6T5vz1H6Mq9ngLaPD/fnaCoKOUhhnpI
+         Ad0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUeH6JSVbJqXBs4UG4THLfJ5xsVq0RUCxE18WL4TTZPAa+3S4N+ioM/NbBs2tS/lQoq8tEsvMiuZUHXRDpH0p9A@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww4fDuLtGgyVZNz3nkOxdSjRgGdtPNTfbMSuZswWDeTgin+gAV
+	wUWpoC/LO7cXkbz/B+euPaa52VGCCrj67wmzo18lpmRgXmda/1dj1PV4
+X-Gm-Gg: AY/fxX7Bg2qdFwu1hd6eCb+rGNrDITxagLd374p//G5ur7FthbJRje4L2q2QoISoehm
+	uZbIgcdLQlrcCIsoMVGMaDK5ltN8TQndkGHhz+oXcNpVQINZ4N1Y8hsGh3wRlkteZXDGf8VN81j
+	4vmtSx8U/RFNsUEW38VaLQJgjwJBOusCHPY3b26qUnPvZQKHsrkx6lJtVhOSct2iiI3Uh9H9l+d
+	Bv9P1pR0KaCvOojuOxh8viPA8zV5DCQqJoIBhKEjlEN/sqS4ZD0W81yBYRv/SkW0ZSeBmGvHkp5
+	otPw6Cek4VPoaTjLIyaNt8eRb7urVt61y9k4sfMF5wA3fbmMoTV+Ge0ynLEBBHaNzkh/DP00QK4
+	IU8QDQPEFiDv+LfP6+P+l0dvSD7wskF8g+APbqUYE86WdON/DzqnvqtLPS9li0wo9Ik1StRq/uo
+	pQQ0SocQ==
+X-Google-Smtp-Source: AGHT+IFfmvm90rdPTujJGHfPtnqhB1WsV9zGN12cd9dzeHQbXYRNvb06ZpPINTYrYrF+Tfl+/bGheQ==
+X-Received: by 2002:a05:690e:1a44:b0:63f:9cef:d5f4 with SMTP id 956f58d0204a3-645555eb79emr7067344d50.36.1765848005823;
+        Mon, 15 Dec 2025 17:20:05 -0800 (PST)
+Received: from localhost ([2601:346:0:79bd:6b0:1f10:bc87:9bd7])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64477d58416sm7082747d50.10.2025.12.15.17.20.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Dec 2025 17:20:05 -0800 (PST)
+From: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
+To: Atish Patra <atish.patra@linux.dev>,
+	Anup Patel <anup@brainfault.org>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Zide Chen <zide.chen@intel.com>
-Subject: [PATCH 2/3] perf/x86/intel/cstate: Add Nova Lake support
-Date: Mon, 15 Dec 2025 10:25:19 -0800
-Message-ID: <20251215182520.115822-2-zide.chen@intel.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251215182520.115822-1-zide.chen@intel.com>
-References: <20251215182520.115822-1-zide.chen@intel.com>
+	linux-kernel@vger.kernel.org
+Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
+Subject: [PATCH] drivers: perf: use bitmap_empty() where appropriate
+Date: Mon, 15 Dec 2025 20:20:03 -0500
+Message-ID: <20251216012004.341288-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -75,102 +84,45 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Similar to Lunar Lake and Panther Lake, Nova Lake supports CC1/CC6/CC7
-and PC2/PC6/PC10 residency counters; it also adds support for MC6.
+bitmap_empty() is more verbose and efficient, as it stops traversing
+bitmaps as soon as the 1st set bit found.
 
-Signed-off-by: Zide Chen <zide.chen@intel.com>
+Switch perf code to using bitmap_empty() where appropriate, and
+correspondingly use boolean types.
+
+Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
 ---
- arch/x86/events/intel/cstate.c | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+ drivers/perf/riscv_pmu_sbi.c         | 2 +-
+ drivers/perf/starfive_starlink_pmu.c | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index b719b0a68a2a..008f8ea59315 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -41,7 +41,7 @@
-  *	MSR_CORE_C1_RES: CORE C1 Residency Counter
-  *			 perf code: 0x00
-  *			 Available model: SLM,AMT,GLM,CNL,ICX,TNT,ADL,RPL
-- *					  MTL,SRF,GRR,ARL,LNL,PTL,WCL
-+ *					  MTL,SRF,GRR,ARL,LNL,PTL,WCL,NVL
-  *			 Scope: Core (each processor core has a MSR)
-  *	MSR_CORE_C3_RESIDENCY: CORE C3 Residency Counter
-  *			       perf code: 0x01
-@@ -53,19 +53,20 @@
-  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
-  *						SKL,KNL,GLM,CNL,KBL,CML,ICL,ICX,
-  *						TGL,TNT,RKL,ADL,RPL,SPR,MTL,SRF,
-- *						GRR,ARL,LNL,PTL,WCL
-+ *						GRR,ARL,LNL,PTL,WCL,NVL
-  *			       Scope: Core
-  *	MSR_CORE_C7_RESIDENCY: CORE C7 Residency Counter
-  *			       perf code: 0x03
-  *			       Available model: SNB,IVB,HSW,BDW,SKL,CNL,KBL,CML,
-  *						ICL,TGL,RKL,ADL,RPL,MTL,ARL,LNL,
-- *						PTL,WCL
-+ *						PTL,WCL,NVL
-  *			       Scope: Core
-  *	MSR_PKG_C2_RESIDENCY:  Package C2 Residency Counter.
-  *			       perf code: 0x00
-  *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
-  *						KBL,CML,ICL,ICX,TGL,TNT,RKL,ADL,
-- *						RPL,SPR,MTL,ARL,LNL,SRF,PTL,WCL
-+ *						RPL,SPR,MTL,ARL,LNL,SRF,PTL,WCL,
-+ *						NVL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
-  *			       perf code: 0x01
-@@ -78,7 +79,7 @@
-  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
-  *						SKL,KNL,GLM,CNL,KBL,CML,ICL,ICX,
-  *						TGL,TNT,RKL,ADL,RPL,SPR,MTL,SRF,
-- *						ARL,LNL,PTL,WCL
-+ *						ARL,LNL,PTL,WCL,NVL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C7_RESIDENCY:  Package C7 Residency Counter.
-  *			       perf code: 0x03
-@@ -98,11 +99,11 @@
-  *			       perf code: 0x06
-  *			       Available model: HSW ULT,KBL,GLM,CNL,CML,ICL,TGL,
-  *						TNT,RKL,ADL,RPL,MTL,ARL,LNL,PTL,
-- *						WCL
-+ *						WCL,NVL
-  *			       Scope: Package (physical package)
-  *	MSR_MODULE_C6_RES_MS:  Module C6 Residency Counter.
-  *			       perf code: 0x00
-- *			       Available model: SRF,GRR
-+ *			       Available model: SRF,GRR,NVL
-  *			       Scope: A cluster of cores shared L2 cache
-  *
-  */
-@@ -528,6 +529,18 @@ static const struct cstate_model lnl_cstates __initconst = {
- 				  BIT(PERF_CSTATE_PKG_C10_RES),
- };
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index 7dd282da67ce..9dcc22fd48ef 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -1244,7 +1244,7 @@ static int riscv_pm_pmu_notify(struct notifier_block *b, unsigned long cmd,
+ {
+ 	struct riscv_pmu *rvpmu = container_of(b, struct riscv_pmu, riscv_pm_nb);
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
+-	int enabled = bitmap_weight(cpuc->used_hw_ctrs, RISCV_MAX_COUNTERS);
++	bool enabled = !bitmap_empty(cpuc->used_hw_ctrs, RISCV_MAX_COUNTERS);
+ 	struct perf_event *event;
+ 	int idx;
  
-+static const struct cstate_model nvl_cstates __initconst = {
-+	.core_events		= BIT(PERF_CSTATE_CORE_C1_RES) |
-+				  BIT(PERF_CSTATE_CORE_C6_RES) |
-+				  BIT(PERF_CSTATE_CORE_C7_RES),
-+
-+	.module_events		= BIT(PERF_CSTATE_MODULE_C6_RES),
-+
-+	.pkg_events		= BIT(PERF_CSTATE_PKG_C2_RES) |
-+				  BIT(PERF_CSTATE_PKG_C6_RES) |
-+				  BIT(PERF_CSTATE_PKG_C10_RES),
-+};
-+
- static const struct cstate_model slm_cstates __initconst = {
- 	.core_events		= BIT(PERF_CSTATE_CORE_C1_RES) |
- 				  BIT(PERF_CSTATE_CORE_C6_RES),
-@@ -656,6 +669,8 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
- 	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&lnl_cstates),
- 	X86_MATCH_VFM(INTEL_PANTHERLAKE_L,	&lnl_cstates),
- 	X86_MATCH_VFM(INTEL_WILDCATLAKE_L,	&lnl_cstates),
-+	X86_MATCH_VFM(INTEL_NOVALAKE,		&nvl_cstates),
-+	X86_MATCH_VFM(INTEL_NOVALAKE_L,		&nvl_cstates),
- 	{ },
- };
- MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
+diff --git a/drivers/perf/starfive_starlink_pmu.c b/drivers/perf/starfive_starlink_pmu.c
+index 5e5a672b4229..964897c2baa9 100644
+--- a/drivers/perf/starfive_starlink_pmu.c
++++ b/drivers/perf/starfive_starlink_pmu.c
+@@ -450,8 +450,7 @@ static int starlink_pmu_pm_notify(struct notifier_block *b,
+ 							 starlink_pmu_pm_nb);
+ 	struct starlink_hw_events *hw_events =
+ 					this_cpu_ptr(starlink_pmu->hw_events);
+-	int enabled = bitmap_weight(hw_events->used_mask,
+-				    STARLINK_PMU_MAX_COUNTERS);
++	bool enabled = !bitmap_empty(hw_events->used_mask, STARLINK_PMU_MAX_COUNTERS);
+ 	struct perf_event *event;
+ 	int idx;
+ 
 -- 
-2.52.0
+2.43.0
 
