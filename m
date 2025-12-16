@@ -1,175 +1,222 @@
-Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB99E357A2F
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 12:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E190F32BF21;
+	Tue, 16 Dec 2025 12:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765888160; cv=none; b=XtGbtyjoef+YavlCU4m5VLVnOnSPdQgEIjwZZor34VoYqxRs06xAyIjHyyzRPmiE+nVpCUuE8uYoGs/HdD6YdI4eEKXs6MuqwNwo2+C13wM+TMB3lX/gmVXClTBzZ5eFLDPaEkfVpzyHiGg5NJnBXqTjRbGGqL9u106Xim/0+Jo=
+	t=1765888736; cv=none; b=Ja5wnGSSvNaQXtcSWNY7AxM7iUgJCuQ+KEeOV9f7j+Yx97mPyIW0GTxBPOVJ3hrJIHNByfgCYMGiKQg2b4zPEAiV7yC8RSehHKfdX5nFLdZwh/H+cxl5HW7fngP3u+J1i/YesKhfGuomsAHURh3uKu/8YDD6wi4ekwO3qgLg1UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765888160; c=relaxed/simple;
-	bh=HDes8BCMie6O4p9LVAYxBfQQIpi0ZVoBmPLcQtZg3so=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GyAjG7rTm7Ain3xNSx+esO/+AiPDz544RV/OXYNquyX3CNsHlYpCc7qbbRUjIpRkomljTrz9o59UTiesWPz8k7U4CbFScfgT6R/DHX27Qle8l2/iMpfI+ZACH2f9h9ziwhpHLvFZy/0Tucre1kD+J9rFQgv45eOLRwQ9Ub6sQIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N7B9J92a; arc=none smtp.client-ip=209.85.167.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765888736; c=relaxed/simple;
+	bh=qylOcx0uj2v9vyRh/chQWHdchdbU5Ji/I5K0zblQJgw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ev2BM9VhAhjsmtnXYYRWbhuVz5RCiufl6ujlOKzQTGtbVeEttlb9BW31zPTPNc6eIAaU9kA/3CtRdkKjVP/ECyCeuow38jMqd/kbS8+vFHoX4vJ4qxjdDEAxEhOkJWRf6zedgc0z4E7N6j/rf4A+nLODAFr0eSCaHv2o7RI4rT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Y5I0tCSV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7B9J92a"
-Received: by mail-lf1-f67.google.com with SMTP id 2adb3069b0e04-598eaafa587so5247783e87.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 04:29:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765888157; x=1766492957; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VBB6BuR2kkNR0CeKxXfGVVlzyrMRqFqfRYfF5LSKwuQ=;
-        b=N7B9J92aEdQtjmjIW2+qemVaGCyzo2UuFPH0OSMHUpExS3+Bq/VKp7HCop2Ohvx7vI
-         r9h99no3tANWP3DoHJLipRzoftZwolAWBNDQVGhsKJs47LIYVzUPIevfH3gKXuMPdp2q
-         K+Um/Zw/i7Mej0pAgtdXL68ptD5nXbz16iMpnwvOUvm2oE6BhqHG2lSVnx3iSJ7QuNYa
-         b3ARRLEAf+b5xJzFZxieA5K8vum1YUuAPTZxt/jX6KD6raY76nf7yj0AXN38toUGiV+T
-         MVrzDGYhHVFgiWuiffMm7khnp/K2gXMWpveS35/TQb7IH8PorjFZThRUBGD79ALjjTMf
-         F7pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765888157; x=1766492957;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VBB6BuR2kkNR0CeKxXfGVVlzyrMRqFqfRYfF5LSKwuQ=;
-        b=kWgn/q9AYd3hkTXPyTgtevMX8lrr2Y+U7ra2cn6J4xkT6lp8l7f/fo9AxXV9cmjcIE
-         DD8ff2Zp6Bvr0zhNefZCZlyRX68bf/flRBUTP5AQxEh5gg4WHIV4AL4bAW4evSNjaUBR
-         g4S15DPXsDWgIQaeoULMcX8Zjb+vrOBNdSjC6hns7aEUImge/1zABjfAdXfJXzhA/jv+
-         mp39sUmjzbbuVk8DDBxx2pspdxA4R8CRw08X+lUNMZP1TCqf9jM+bJgHD4Q+GKzCerTL
-         z1ktJO6nJS1xU4yTsjp8SEyOsW8jzg3trIFKlLSyIdZ6BvGG0ILSyUg6jZIxF+ekWSnt
-         q++A==
-X-Forwarded-Encrypted: i=1; AJvYcCUd5Z6Tvfhz++LftyIcfaPAQg4coK4BdmKDIthM9N149MJzTr8dKHTWjQ69/QEs/+FeuePbwlLX0YJ9qbwnJJc2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9mxvs6mEm39q8Z/VGUOK8Kscdd7B0yqzoEhxGv3m7fnj3Oxhl
-	jgIl9O8U6q1gb9BPHboXC3BnqjXHpdf8eJj6a+S1HZsOjpJridjMuu6ADpEa/3P9QF8XvVp3348
-	32Jd8JtzuP7CpB1yNnfEk7WKwskZ2T3I=
-X-Gm-Gg: AY/fxX53tKeRQBG+9/0RGJ1YLR5M3qfP0+xbjnRMxz8gu6EqDoyqWSETbfp9xxl1PGO
-	H1NsCDhx+2HxGvblf0gQRISijYnysir+ZQeReuRLJv25mrXFJVrf6yWYdPXSLJSMbAEc1TOvw7C
-	ydshDda8IpOX06/d6qXdQrXqzcLIjdXIe5BZJsh1UGUrk0L8jEhqfyie+FmaySVQGIo0MBV6MXw
-	7HmC2qLCUo5IOXuEpVgkRLvQ739F1NKtvaRzQpJP+S0ntKHNhmMPXpoNujUYci8RLiRG7yobOHK
-	N6V9mE0=
-X-Google-Smtp-Source: AGHT+IGoKKDcMCCrYaxU4CCwDIRXJ60VGXzp/A+6JuF6OYsGn9u/I7or5OUUfp45M0pM7Qs5kDQvcX2s+2ddvgs4Dx8=
-X-Received: by 2002:a05:6512:1055:b0:598:e851:1db3 with SMTP id
- 2adb3069b0e04-598faa36140mr4912548e87.11.1765888156572; Tue, 16 Dec 2025
- 04:29:16 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Y5I0tCSV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24B2EC16AAE;
+	Tue, 16 Dec 2025 12:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1765888735;
+	bh=qylOcx0uj2v9vyRh/chQWHdchdbU5Ji/I5K0zblQJgw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Y5I0tCSVaTTqLYjK/yu4SlogGm6g2onpJgRaraNN5MSb6kW6CGROPuQS9rC/l2YJx
+	 Q180LPHRZL5ENAzl9oQ8TPolpmW785jfr69+9Ut2tlg7i89h1ZGXirPbf0/NA2Rt6u
+	 9iZq7tnKpm+gQ+7N2tXYnVnM9R4I6EDEYvCIogTY=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Thaumy Cheng <thaumy.love@gmail.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.18 596/614] perf/core: Fix missing read event generation on task exit
+Date: Tue, 16 Dec 2025 12:16:03 +0100
+Message-ID: <20251216111422.986793433@linuxfoundation.org>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20251216111401.280873349@linuxfoundation.org>
+References: <20251216111401.280873349@linuxfoundation.org>
+User-Agent: quilt/0.69
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CADHxFxR-8NRN0Fwj7jhD1KKACrb0PdUp1iOBKJ+xkxaNQn_tew@mail.gmail.com>
- <20251124073445.3709-1-hupu.gm@gmail.com> <aSVlQHJ9xcGcZULp@google.com>
- <CADHxFxRY5Vse0UnezDg8hCEgbVy5qXkoLbEMRGaA6pH5aLoNxA@mail.gmail.com>
- <CADHxFxSXMvmeL4afJPh9Ycs2ABrnOVHkxJ4pRBdhJRJWBAvnHA@mail.gmail.com>
- <20251125161026.GF724103@e132581.arm.com> <CADHxFxQ2kb2pRhn0-_PJwmo9pykHzDMJDPQay5GaqmmZF1nwSw@mail.gmail.com>
- <20251211103957.GA4048253@e132581.arm.com> <CADHxFxRayyDK5qO3j-GtQAuWruk8UtQ-6EcvYb-3iKtE8ooJUQ@mail.gmail.com>
- <aUD1DXHh_PrCjZ96@google.com>
-In-Reply-To: <aUD1DXHh_PrCjZ96@google.com>
-From: hupu <hupu.gm@gmail.com>
-Date: Tue, 16 Dec 2025 20:29:04 +0800
-X-Gm-Features: AQt7F2pPHPZprgoSiTQMkFGOeg4MQ_BpGo6QA5J8JE5iIn9_ZUZ8RrN-FrlSAg0
-Message-ID: <CADHxFxRrXP+vueYh=pMpGUWXCYUvrju0NO34SFUAB=okfDgpSQ@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Support passing extra Clang options via EXTRA_BPF_FLAGS
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Leo Yan <leo.yan@arm.com>, acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	justinstitt@google.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	morbo@google.com, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
-	peterz@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Namhyung,
-Thank you very much for your reply.
+6.18-stable review patch.  If anyone has any objections, please let me know.
 
-On Tue, Dec 16, 2025 at 1:58=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> > Indeed, as you mentioned in the early discussion, running the
-> > following commands on the host to install certain packages can
-> > successfully compile perf:
-> > > $ sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
-> > > $ sudo apt-get install libc6-dev-aarch64-cross linux-libc-dev-aarch64=
--cross
-> > > $ sudo apt-get install libc6-dev-arm64-cross linux-libc-dev-arm64-cro=
-ss
->
-> At this point, I'm confused whether we are talking about general
-> cross-build or just BPF skeleton.  I agree with Leo that the skeleton
-> build should not require any host specific information rather than
-> vmlinux.h.
->
+------------------
 
-I agree with this point. This is also what I was trying to express
-earlier: although installing some additional packages on the host can
-indeed make perf build successfully, in my view this approach is not
-an ideal solution.
+From: Thaumy Cheng <thaumy.love@gmail.com>
 
-> >
-> >
-> > However, I don=E2=80=99t think relying on the host build environment is=
- the
-> > best approach, for several reasons:
-> >
-> > a) These commands install UAPI header files on the host, especially
-> > `linux-libc-dev-aarch64-cross` and `linux-libc-dev-arm64-cross`. These
-> > headers originate from the kernel source tree=E2=80=99s `include/uapi/`=
- and
-> > `arch/arm64/include/uapi/` directories, and their versions are tied to
-> > the *HOST* kernel version. If the target kernel version is different,
-> > mismatches may cause compilation errors or even runtime failures.
-> >
-> > b) Even if `perf` can be compiled and run successfully now, there is
-> > no guarantee that the kernel source headers will always match the
-> > host-installed UAPI headers as the upstream kernel evolves.
-> >
-> > c) In scenarios where the host acts as a general build server and
-> > needs to build multiple target kernel versions, it is not possible to
-> > ensure that the host UAPI headers are compatible with all target
-> > versions.
-> >
-> > d) As you pointed out, `CLANG_SYS_INCLUDES` does include host headers,
-> > but it uses `-idirafter` instead of `-I`. This means the host headers
-> > have lower priority. This change was introduced in commit a2af0f6b8ef7
-> > ("perf build: Add system include paths to BPF builds"); as noted in
-> > the commit message, the preferred approach is to use kernel source
-> > headers rather than potentially older ones from the system.
-> >
-> >
-> > Based on this, I propose the following include order:
-> > - Prefer kernel source headers
-> >   [RFC] perf build: Use self-contained headers from kernel source when =
-compiling
-> >   https://lore.kernel.org/all/20251124072310.3592-1-hupu.gm@gmail.com/
-> >
-> > - Allow users to specify header search paths matching the target
-> > kernel version (eg. via `EXTRA_BPF_FLAGS`)
-> >   [PATCH] perf build: Support passing extra Clang options via EXTRA_BPF=
-_FLAGS
-> >   https://lore.kernel.org/all/20251013080609.2070555-1-hupu.gm@gmail.co=
-m/
->
-> I'm ok with this part - not only to pass header search paths, it can do
-> anything user wants to add to the compiler.  You may want to send it out
-> in a separate thread with all comments addressed.
->
+[ Upstream commit c418d8b4d7a43a86b82ee39cb52ece3034383530 ]
 
-Thank you very much for this suggestion. I understand that you would
-prefer to continue the discussion in a new, separate email thread, and
-I am happy to do so.
+For events with inherit_stat enabled, a "read" event will be generated
+to collect per task event counts on task exit.
 
-Before proceeding, I would like to clarify your intention to make sure
-I understand it correctly and avoid any misunderstanding. Since the
-discussion above involves two patches with different functionalities,
-I would like to confirm whether you would prefer me to combine these
-two patches into a single one, or to discuss and resend both patches
-together in a new separate email thread.
+The call chain is as follows:
+
+do_exit
+  -> perf_event_exit_task
+    -> perf_event_exit_task_context
+      -> perf_event_exit_event
+        -> perf_remove_from_context
+          -> perf_child_detach
+            -> sync_child_event
+              -> perf_event_read_event
+
+However, the child event context detaches the task too early in
+perf_event_exit_task_context, which causes sync_child_event to never
+generate the read event in this case, since child_event->ctx->task is
+always set to TASK_TOMBSTONE. Fix that by moving context lock section
+backward to ensure ctx->task is not set to TASK_TOMBSTONE before
+generating the read event.
+
+Because perf_event_free_task calls perf_event_exit_task_context with
+exit = false to tear down all child events from the context, and the
+task never lived, accessing the task PID can lead to a use-after-free.
+
+To fix that, let sync_child_event read task from argument and move the
+call to the only place it should be triggered to avoid the effect of
+setting ctx->task to TASK_TOMESTONE, and add a task parameter to
+perf_event_exit_event to trigger the sync_child_event properly when
+needed.
+
+This bug can be reproduced by running "perf record -s" and attaching to
+any program that generates perf events in its child tasks. If we check
+the result with "perf report -T", the last line of the report will leave
+an empty table like "# PID  TID", which is expected to contain the
+per-task event counts by design.
+
+Fixes: ef54c1a476ae ("perf: Rework perf_event_exit_event()")
+Signed-off-by: Thaumy Cheng <thaumy.love@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+Link: https://patch.msgid.link/20251209041600.963586-1-thaumy.love@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/events/core.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2c35acc2722b0..413b88a4e00fb 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2316,8 +2316,6 @@ static void perf_group_detach(struct perf_event *event)
+ 	perf_event__header_size(leader);
+ }
+ 
+-static void sync_child_event(struct perf_event *child_event);
+-
+ static void perf_child_detach(struct perf_event *event)
+ {
+ 	struct perf_event *parent_event = event->parent;
+@@ -2336,7 +2334,6 @@ static void perf_child_detach(struct perf_event *event)
+ 	lockdep_assert_held(&parent_event->child_mutex);
+ 	 */
+ 
+-	sync_child_event(event);
+ 	list_del_init(&event->child_list);
+ }
+ 
+@@ -4587,6 +4584,7 @@ static void perf_event_enable_on_exec(struct perf_event_context *ctx)
+ static void perf_remove_from_owner(struct perf_event *event);
+ static void perf_event_exit_event(struct perf_event *event,
+ 				  struct perf_event_context *ctx,
++				  struct task_struct *task,
+ 				  bool revoke);
+ 
+ /*
+@@ -4614,7 +4612,7 @@ static void perf_event_remove_on_exec(struct perf_event_context *ctx)
+ 
+ 		modified = true;
+ 
+-		perf_event_exit_event(event, ctx, false);
++		perf_event_exit_event(event, ctx, ctx->task, false);
+ 	}
+ 
+ 	raw_spin_lock_irqsave(&ctx->lock, flags);
+@@ -12447,7 +12445,7 @@ static void __pmu_detach_event(struct pmu *pmu, struct perf_event *event,
+ 	/*
+ 	 * De-schedule the event and mark it REVOKED.
+ 	 */
+-	perf_event_exit_event(event, ctx, true);
++	perf_event_exit_event(event, ctx, ctx->task, true);
+ 
+ 	/*
+ 	 * All _free_event() bits that rely on event->pmu:
+@@ -14004,14 +14002,13 @@ void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
+ }
+ EXPORT_SYMBOL_GPL(perf_pmu_migrate_context);
+ 
+-static void sync_child_event(struct perf_event *child_event)
++static void sync_child_event(struct perf_event *child_event,
++			     struct task_struct *task)
+ {
+ 	struct perf_event *parent_event = child_event->parent;
+ 	u64 child_val;
+ 
+ 	if (child_event->attr.inherit_stat) {
+-		struct task_struct *task = child_event->ctx->task;
+-
+ 		if (task && task != TASK_TOMBSTONE)
+ 			perf_event_read_event(child_event, task);
+ 	}
+@@ -14030,7 +14027,9 @@ static void sync_child_event(struct perf_event *child_event)
+ 
+ static void
+ perf_event_exit_event(struct perf_event *event,
+-		      struct perf_event_context *ctx, bool revoke)
++		      struct perf_event_context *ctx,
++		      struct task_struct *task,
++		      bool revoke)
+ {
+ 	struct perf_event *parent_event = event->parent;
+ 	unsigned long detach_flags = DETACH_EXIT;
+@@ -14053,6 +14052,9 @@ perf_event_exit_event(struct perf_event *event,
+ 		mutex_lock(&parent_event->child_mutex);
+ 		/* PERF_ATTACH_ITRACE might be set concurrently */
+ 		attach_state = READ_ONCE(event->attach_state);
++
++		if (attach_state & PERF_ATTACH_CHILD)
++			sync_child_event(event, task);
+ 	}
+ 
+ 	if (revoke)
+@@ -14144,7 +14146,7 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+ 		perf_event_task(task, ctx, 0);
+ 
+ 	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
+-		perf_event_exit_event(child_event, ctx, false);
++		perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
+ 
+ 	mutex_unlock(&ctx->mutex);
+ 
+-- 
+2.51.0
 
 
-Thanks again for your time and guidance.
-hupu
+
