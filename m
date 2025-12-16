@@ -1,118 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBC024A058
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 21:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A4C340A4D
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 23:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765919789; cv=none; b=Kq++JlBZ4sMsx0Kr/+S2GQPX+q+1gG6ympsXt76ylhUDvmZnszxrYw8KvlfnymAHxy3ipo614JWiyjRqZQaCLxg8QqQZlqpy5YvObZsmEsIRL+vVvRdaHQnSrkAovQPor2KCae0/kwEch/I7Br0yMoVRsSb/3mz4vmGnKuQ3+SQ=
+	t=1765928123; cv=none; b=qWum2PwYoszBGWy48LAUycjWUddIa7iyYC79ktQuVVS17dUF11JNfA/Ml2mQOWiHH0su2oJ9JBfvG2ZlY82j5mDIUfD15ECBGQjJQxa7+7xZt/W9uTneYSpIHJWgGTt/NQRJDpOodlWujBirlw/q6O5QDjyAMDvPhNjBnVx6zVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765919789; c=relaxed/simple;
-	bh=7/tDwGqk6SrzcmW6C2uMBZPZBRZtu5p/C0meNoGA3Hg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F/qXe+qj+z6sIoXMaz4qX2S4fgyd7DJlX7uF5kyzKJDB17IzzwHRV3hn8tL77MtdeeX/qYjSCj5tf7m0jnNpOh07LeirA4a4aad9CZPvhqR40QPJHgnr4CBe+BLxqrvry6ZIHtnbEkQx7qB4Y+bLA7uoqYH4b8pVVlH2KMtmV44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dLr+FgcO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1765928123; c=relaxed/simple;
+	bh=W6vpDia4FoH9eh75+8sB+9wBjdzpiIlbSOmLaD0uumQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MFgGghrveZh4eJ9a14x+yqVQAl8L3fD4lhjwQ6mhRa6AqQlo7ty+XVk3sGEUFdNPMOtQSUpqKzKGOTWIaWUsQeW71p4glMcocPceXdvj3flSqmppcFZtQ/PeirnhYpBkkJfnQqwCTMuVwoE5ftmN+eIjOYxO9mO2cDA5eWP/FBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z7sTtqyd; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dLr+FgcO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1765919786;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JYyvoAvmvIm4uanb31D4x49l4mxpRuTUWVH4yF4HGLE=;
-	b=dLr+FgcO6qYZI6LjWE0su9iXeLliDHT3/7L+k1JrmdcQbU094USDgbFrn8oOx/Mtuhalc+
-	qX4PMUTzwq42jwzv6Jxxbm/yVA2n19Rf+JOpzqPNUxP84++bsO9K9tAh6SkjTxMZ42CHnf
-	EGbf9Tj4c7lxGjyNNGms4A2h7T2sj/c=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-618-CCCub82DM9yMhnuAywWDCw-1; Tue,
- 16 Dec 2025 16:16:22 -0500
-X-MC-Unique: CCCub82DM9yMhnuAywWDCw-1
-X-Mimecast-MFC-AGG-ID: CCCub82DM9yMhnuAywWDCw_1765919780
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 498341800621;
-	Tue, 16 Dec 2025 21:16:19 +0000 (UTC)
-Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.90.5])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2CACC1800576;
-	Tue, 16 Dec 2025 21:16:14 +0000 (UTC)
-From: Anubhav Shelat <ashelat@redhat.com>
-To: mpetlan@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	linux-perf-users@vger.kernel.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	dapeng1.mi@linux.intel.com,
-	james.clark@linaro.org,
-	Anubhav Shelat <ashelat@redhat.com>
-Subject: [PATCH] arch/powerpc/perf: Fix perf record -d sample loss on non-marked events
-Date: Tue, 16 Dec 2025 16:15:42 -0500
-Message-ID: <20251216211541.111795-2-ashelat@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7sTtqyd"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-47798ded6fcso33357735e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 15:35:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765928120; x=1766532920; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W6vpDia4FoH9eh75+8sB+9wBjdzpiIlbSOmLaD0uumQ=;
+        b=Z7sTtqydHZ0/s7Bob/8BFiNWtG0ibt/lgzTF8dyGU8EuqwT8pMASjcG7cD68lKN/M0
+         XmZf9sKANvGvizBe56k+GxhdFamzo1tADj0aBvVPPP9ov26+8LlBGfnDNSmf1Mk1wkMT
+         kQbgkcdGYy5yb19BpiVJW1MAjj364LvrzeZsN53Az+engGqlGevBWobvLCyk8OMsv+/g
+         mIBdEfYka2xhInP+O41jxavxMTfMFrRFl9Y5kM2yBzsZQ0dJLlZfzYdvTvcFmj8vR5ZM
+         qdSHFpcRWxOIL6NbyfiOB0jTdE5n/UVT4Xu6Jphy/ScoT5z3JIwqYORIyOMrmO84UE19
+         s/ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765928120; x=1766532920;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=W6vpDia4FoH9eh75+8sB+9wBjdzpiIlbSOmLaD0uumQ=;
+        b=C4Rn9E3ar4+IPRgnlvqQlLGUkb2qQ1CHM9Ehb8gCcdjCcbJTFJEtXz1Dnbvm0fCLbn
+         biQkXeVV21i58f9xXAJLS8EaP0Q/lum0qiHMd0Emnda7q2ZatR8bYfNorfOb2h8R0OyQ
+         tAks4C2basJPitLqlmP06Xgps50Xqt5NGSSf13bP4ZG4OUCdEL2hDrK6pAA4bqfFESbo
+         5V7n6wA5hzj8arENwPQh9cT9yOCEyo7Xuo+wpTKDIV5TdsCWei+3w6ODTzLADh9ru5kC
+         sNwRSdl5azeXaV+bBdnPCfNEr3/tyPdcgIe8yE6eQclNySZsP5nZxG6pmFen5roGrcxZ
+         6zJA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1N28rw2i7U0LujqAPJ/wwSiLF0GiF0/jHToWSnYFPT11xgHhOWpM+RtuvnqO8soN6xg377oYYkMZPiDhGHj2/@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc3p0ZhQl47IOZyq9efptJJZCFh6wj7GEWuk3ZjNqBQ7HGDMzc
+	U7JUqDfASaYEMHW/ngaOl4KOeonjlOFa2R/5J1U/nvIUQNdXHpQNnFA/kFkGE/xcX5WaEPU2V9g
+	HDkSBClTo45KA0fvL94OYnZf+z9bY/3U=
+X-Gm-Gg: AY/fxX4H7QUx7z11GWspHWgLe1OIWZ3VmgIa1O/rwxM1UTe/ldiXmrJw0GfBv9E4yny
+	fT2Vo+d/o+DhF/Udclj+6e+6vOJ6ppNcyk57Q7VbAOrn28Weu6fMgDsZQtQ+QcP2Agu5A19Nriq
+	GIqpMydrzhrFGgp0lTkSydTVy8gzexNatpVmA/0jDmm+yG/s2W1qqvgnRZKRatXOcdttS+CRgG/
+	UY6hxaNoeIPHIzd7+xQaijfyVHsf4A8jzfDPMrL1Pdx8ripKzesVb9FK4/D3XTWRcsOxbJy5R4F
+	djAwahIm7JMHEdy7GGdNN2sX38K3QYbxGq6XR/4=
+X-Google-Smtp-Source: AGHT+IHjp/16v6iZgDNYj+IuMGgLFwmSZaVPm7qlrRq0sjVfy55a2ykH7/91v8vRe2lt6+UywAYHRqqvLP4Zs6KBqYo=
+X-Received: by 2002:a05:6000:40cf:b0:42b:3246:1681 with SMTP id
+ ffacd0b85a97d-42fb44a3ee7mr18325137f8f.18.1765928119945; Tue, 16 Dec 2025
+ 15:35:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <20251112163148.100949-1-chen.dylane@linux.dev>
+ <20251112163148.100949-3-chen.dylane@linux.dev> <c41372ad-1591-4f2b-a786-bc0e19f8425c@linux.dev>
+ <7b82e322-eab7-4fc2-9de1-d10ad8251378@linux.dev> <42627219-fa33-441d-b8cb-eb48ab3230d6@linux.dev>
+In-Reply-To: <42627219-fa33-441d-b8cb-eb48ab3230d6@linux.dev>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 16 Dec 2025 15:35:08 -0800
+X-Gm-Features: AQt7F2rJDT2luiBfMEOsoczK4qPy8i7YrtRrkYDQTvIlKjsIFHyghSnoN9z97qc
+Message-ID: <CAADnVQ+pP2oJhMOWe1dLg4W_+bMU=amfzYGWKJ4yVNcq4KOvNA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v6 2/2] bpf: Hold the perf callchain entry until
+ used completely
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: Yonghong Song <yonghong.song@linux.dev>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, "linux-perf-use." <linux-perf-users@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Previously, when running "perf record -d" on powerpc, perf would drop all
-samples that were not load or store instructions. This is because of an
-overly aggressive check introduced in 2ffb26afa642 ("arch/powerpc/perf:
-Check the instruction type before creating sample with perf_mem_data_src")
-which drops samples when the SIER instruction value is considered
-reserved (0 or 7 in ISA 3.0, and 0 in ISA 3.1).
+On Wed, Dec 3, 2025 at 1:34=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wro=
+te:
+>
+> =E5=9C=A8 2025/11/26 17:29, Tao Chen =E5=86=99=E9=81=93:
+> > =E5=9C=A8 2025/11/14 00:01, Yonghong Song =E5=86=99=E9=81=93:
+> >>
+> >>
+> >> On 11/12/25 8:31 AM, Tao Chen wrote:
+> >>> As Alexei noted, get_perf_callchain() return values may be reused
+> >>> if a task is preempted after the BPF program enters migrate disable
+> >>> mode. The perf_callchain_entres has a small stack of entries, and
+> >>> we can reuse it as follows:
+> >>>
+> >>> 1. get the perf callchain entry
+> >>> 2. BPF use...
+> >>> 3. put the perf callchain entry
+> >>>
+> >>> And Peter suggested that get_recursion_context used with preemption
+> >>> disabled, so we should disable preemption at BPF side.
+> >>>
+> >>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> >>
+> >> Acked-by: Yonghong Song <yonghong.song@linux.dev>
+> >>
+> >
+> > Hi eBPF maintainers,
+> >
+> > This patch appears to have missed the eBPF maintainers on the list,
+> > please review it again, thanks.
+> >
+>
+> ping...
 
-This happens because
-1) "perf record -d" sets PERF_SAMPLE_DATA_SRC for general sampling.
-2) When sampling non-memory instructions, the SIER instruction type is 0.
-3) record_and_restart drops anything with SIER instruction type 0.
-
-"perf mem record" uses marked events by setting MMCRA_SAMPLE_ENABLE
-which samples load/store instructions, so a sample with SIER instruction
-type of 0 would be an anomaly and should be dropped. So fix this issue by
-loosening the check to only include marked events. For non-marked
-events, the sample is kept and isa207_get_mem_data_src initializes
-data_src to 0, preserving the original fix in 2ffb26afa642.
-
-Fixes: 2ffb26afa642 ("arch/powerpc/perf: Check the instruction type
-before creating sample with perf_mem_data_src")
-
-Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
----
- arch/powerpc/perf/core-book3s.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index 8b0081441f85..bd44b83db9ec 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -2304,10 +2304,11 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
- 	 * In ISA v3.0 and before values "0" and "7" are considered reserved.
- 	 * In ISA v3.1, value "7" has been used to indicate "larx/stcx".
- 	 * Drop the sample if "type" has reserved values for this field with a
--	 * ISA version check.
-+	 * ISA version check for marked events.
- 	 */
- 	if (event->attr.sample_type & PERF_SAMPLE_DATA_SRC &&
--			ppmu->get_mem_data_src) {
-+			ppmu->get_mem_data_src &&
-+			(regs->dsisr & MMCRA_SAMPLE_ENABLE)) {
- 		val = (regs->dar & SIER_TYPE_MASK) >> SIER_TYPE_SHIFT;
- 		if (val == 0 || (val == 7 && !cpu_has_feature(CPU_FTR_ARCH_31))) {
- 			record = 0;
--- 
-2.51.1
-
+pls resubmit and ask Peter to ack that your patches match what he suggested=
+.
