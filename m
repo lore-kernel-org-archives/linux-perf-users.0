@@ -1,81 +1,69 @@
-Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F632222CB
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 01:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0A8230BD5;
+	Tue, 16 Dec 2025 01:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765848009; cv=none; b=IQeWzJAsVRwd7LX2zijK1ZexKW21ihThIVg3wDNQMCHePDCWtyHpFSXGuTgb00d4TFtRbU19vx8ajZq95e8YaX1zo4EuEyppu2PDHVNH6uiMYymthfAwPtJCGICtq9WV0MMDWViuCTo77XUyN6CVBXjitUNJ/a4ObKjUx8hlRpg=
+	t=1765848310; cv=none; b=tMYRmXs60Fk2KJ0TcjcHheZz+Rm6gEF4lhlZJ5Z4X/nMb5AItYm+PQRnHXzCnKCDXhodSwzdfsAozAOLKN1Yr12svaCceb3pJNPCwWXpg52C1jKWEJTIQvwznCnBgK2dgBfXWYGM5oR6dDJB6SkgpHE+ZWuaJwe2s5Ji3XmwBmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765848009; c=relaxed/simple;
-	bh=otPy5H9YRubAr/y+Uf1Jo4QzPzJqenEdbe+yUk9KE5E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kWD9wiVIAochI34TbbLHMU1w1acnlodedJ0Aef/LO1PGs5JWz4fbtYsGdIkJMxfW38UtWVloZbqOtE9sbefuJiI+a39U/9rGaGEduT74BIli2comP3Hs4BTs3+7gGHwfya4gGw3zdW9E/Xo9DTUyJ448ujqDdo0uy/N5hSzQv30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXs3rIkF; arc=none smtp.client-ip=74.125.224.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765848310; c=relaxed/simple;
+	bh=YtGr61kLMc7I/r5jzFhPwfhjvXqfyibTp/a8r47rJpE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rWx/lsW86MSOrj0VgGysT1ogt1fyUAopoXMiB6z63/zZMzoGheXLQkmdWdX7b5mJ+rbB7VrXyAHO4ktQ0SGZ7VI8/jLclUj71EUZclMGX+nz+ux5jPH71bv8R65qIUmJuwPkL8p2aRrpZCznfCioGEea9XkHpAOF6P+Ri/7upmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j8QMP/Qs; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXs3rIkF"
-Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-6446d7a8eadso3735711d50.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Dec 2025 17:20:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765848006; x=1766452806; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4D2fKjhV+xXooGe5GhIIOsVNBVoSb/WsPEzHiyDzi2s=;
-        b=NXs3rIkF3IgFUN2AX/74BRVN2f+S5p5thYnNvocMdCLX2elY/o2RNhOg8wiMUDPm9R
-         3zB4xoEtAkUkhFutnJLclo8LfizCb9WWcoCXQTvQR28x6CTK/lFrwfJkRbDtXl8e3o4L
-         z08faFeB3w7JUIKAgSX/rxy8Y1JDlyJzX6RznWyNb+dwTapfbNQ2s5bCQfnHxO7Oyh1O
-         VyJqTDJq12NXu1y0GasNy1ZCtlqhBuVK4Te8QXp4IDrASpOYfl35aPFctzpunyea4zKQ
-         Aj6OZo2fydaZFXiJJ3/AuGAZcXSG1KFJOMhRoNCFkg/XI7tjbujbp8EgPmNYRn2dpoof
-         U1yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765848006; x=1766452806;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4D2fKjhV+xXooGe5GhIIOsVNBVoSb/WsPEzHiyDzi2s=;
-        b=sNJSqAKznMs+45MftuNxqbHnX8m5ClsmZmIu8Xc5iAuxNloWWritl3L5sh0rm4wokB
-         PdQ5j8KVN1Hyy5K2KeXnK/JRyq+mJXU9GXeYMLFwIn9hDPADl5qCx7hjgMDvPeNKr1+6
-         4EF/ej2IPalSRwgCS7xgrUpgjpmZpktQxyniPxU1sXil4regeSgCmh9j7iGkyuaPavKX
-         SbuBjeuiHtDi3Kge/a+ejO6yzLRiQhNZddmh/3oJiry1NKbI6Nww7YwsD+NypgxzxVxU
-         b1Z7D01uPCsad1pqjolUizaA96DP5yJa3zXwG6T5vz1H6Mq9ngLaPD/fnaCoKOUhhnpI
-         Ad0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUeH6JSVbJqXBs4UG4THLfJ5xsVq0RUCxE18WL4TTZPAa+3S4N+ioM/NbBs2tS/lQoq8tEsvMiuZUHXRDpH0p9A@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww4fDuLtGgyVZNz3nkOxdSjRgGdtPNTfbMSuZswWDeTgin+gAV
-	wUWpoC/LO7cXkbz/B+euPaa52VGCCrj67wmzo18lpmRgXmda/1dj1PV4
-X-Gm-Gg: AY/fxX7Bg2qdFwu1hd6eCb+rGNrDITxagLd374p//G5ur7FthbJRje4L2q2QoISoehm
-	uZbIgcdLQlrcCIsoMVGMaDK5ltN8TQndkGHhz+oXcNpVQINZ4N1Y8hsGh3wRlkteZXDGf8VN81j
-	4vmtSx8U/RFNsUEW38VaLQJgjwJBOusCHPY3b26qUnPvZQKHsrkx6lJtVhOSct2iiI3Uh9H9l+d
-	Bv9P1pR0KaCvOojuOxh8viPA8zV5DCQqJoIBhKEjlEN/sqS4ZD0W81yBYRv/SkW0ZSeBmGvHkp5
-	otPw6Cek4VPoaTjLIyaNt8eRb7urVt61y9k4sfMF5wA3fbmMoTV+Ge0ynLEBBHaNzkh/DP00QK4
-	IU8QDQPEFiDv+LfP6+P+l0dvSD7wskF8g+APbqUYE86WdON/DzqnvqtLPS9li0wo9Ik1StRq/uo
-	pQQ0SocQ==
-X-Google-Smtp-Source: AGHT+IFfmvm90rdPTujJGHfPtnqhB1WsV9zGN12cd9dzeHQbXYRNvb06ZpPINTYrYrF+Tfl+/bGheQ==
-X-Received: by 2002:a05:690e:1a44:b0:63f:9cef:d5f4 with SMTP id 956f58d0204a3-645555eb79emr7067344d50.36.1765848005823;
-        Mon, 15 Dec 2025 17:20:05 -0800 (PST)
-Received: from localhost ([2601:346:0:79bd:6b0:1f10:bc87:9bd7])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64477d58416sm7082747d50.10.2025.12.15.17.20.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Dec 2025 17:20:05 -0800 (PST)
-From: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
-To: Atish Patra <atish.patra@linux.dev>,
-	Anup Patel <anup@brainfault.org>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j8QMP/Qs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765848309; x=1797384309;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YtGr61kLMc7I/r5jzFhPwfhjvXqfyibTp/a8r47rJpE=;
+  b=j8QMP/Qs8BgdOhVJYZAQITGllH5BnJn5kqt1l3sIHFQNpBQCuOfhrlaF
+   1DqzgX+nkbCoI7NmtxzU37aDwHd+tO5k+Ok00SuRhoNBYcKhVfP0GVubP
+   A+550TE/NNnv910/3QO4xlUzFKmuartuWLKxgLkSiUPyCS2T/kqyQnaxD
+   rR/U+yOoPj9RVlnIgQtcMwob5wC3j8itLfNw/WLyy8E92FhH5B8JhMYri
+   aVjBf3MbNwLDp8JVHbyv2UAopACjHHg49Ilk9jx1Xg6HON3d9hG2gWCgj
+   eWLFlZJ+K23CQBn6XD0U0Dv+0+1cGXDP+r/HRiRtPOAKVadmD+nmdYALL
+   Q==;
+X-CSE-ConnectionGUID: 0MBV2hF2QnSlRQozY7xfrg==
+X-CSE-MsgGUID: 3AJz+gnvSTawLv7MXwyigQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11643"; a="93236195"
+X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
+   d="scan'208";a="93236195"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2025 17:25:08 -0800
+X-CSE-ConnectionGUID: MDfM8vCFSBu17lxTzlRlQA==
+X-CSE-MsgGUID: tBfVXPSpR1yqgWO1DbeG8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
+   d="scan'208";a="202791968"
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by fmviesa004.fm.intel.com with ESMTP; 15 Dec 2025 17:25:04 -0800
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
-Subject: [PATCH] drivers: perf: use bitmap_empty() where appropriate
-Date: Mon, 15 Dec 2025 20:20:03 -0500
-Message-ID: <20251216012004.341288-1-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] perf/x86/intel: Add missing branch counters constraint apply
+Date: Tue, 16 Dec 2025 09:21:13 +0800
+Message-Id: <20251216012113.1417511-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -84,45 +72,143 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-bitmap_empty() is more verbose and efficient, as it stops traversing
-bitmaps as soon as the 1st set bit found.
+When running the command:
+'perf record -e "{instructions,instructions:p}" -j any,counter sleep 1',
+a "shift-out-of-bounds" warning is reported on CWF.
 
-Switch perf code to using bitmap_empty() where appropriate, and
-correspondingly use boolean types.
+[ 5231.981423][   C17] UBSAN: shift-out-of-bounds in /kbuild/src/consumer/arch/x86/events/intel/lbr.c:970:15
+[ 5231.981428][   C17] shift exponent 64 is too large for 64-bit type 'long long unsigned int'
+[ 5231.981436][   C17] CPU: 17 UID: 0 PID: 211871 Comm: sleep Tainted: G S      W           6.18.0-2025-12-09-intel-next-48166-g6cf574943ba3 #1 PREEMPT(none)
+[ 5231.981445][   C17] Tainted: [S]=CPU_OUT_OF_SPEC, [W]=WARN
+[ 5231.981447][   C17] Hardware name: Intel Corporation AvenueCity/AvenueCity, BIOS BHSDCRB1.IPC.3544.P98.2508260307 08/26/2025
+[ 5231.981449][   C17] Call Trace:
+[ 5231.981453][   C17]  <NMI>
+[ 5231.981455][   C17]  dump_stack_lvl+0x4b/0x70
+[ 5231.981463][   C17]  ubsan_epilogue+0x5/0x2b
+[ 5231.981468][   C17]  __ubsan_handle_shift_out_of_bounds.cold+0x61/0xe6
+[ 5231.981472][   C17]  ? __entry_text_end+0x158b/0x102259
+[ 5231.981475][   C17]  intel_pmu_lbr_counters_reorder.isra.0.cold+0x2a/0xa7
+[ 5231.981480][   C17]  ? __task_pid_nr_ns+0x134/0x2a0
+[ 5231.981483][   C17]  ? __pfx_intel_pmu_lbr_counters_reorder.isra.0+0x10/0x10
+[ 5231.981486][   C17]  ? __pfx_perf_output_sample+0x10/0x10
+[ 5231.981489][   C17]  ? arch_perf_update_userpage+0x293/0x310
+[ 5231.981491][   C17]  ? __pfx_arch_perf_update_userpage+0x10/0x10
+[ 5231.981494][   C17]  ? local_clock_noinstr+0xd/0x100
+[ 5231.981498][   C17]  ? calc_timer_values+0x2cb/0x860
+[ 5231.981501][   C17]  ? perf_event_update_userpage+0x399/0x5b0
+[ 5231.981505][   C17]  ? __pfx_perf_event_update_userpage+0x10/0x10
+[ 5231.981508][   C17]  ? local_clock_noinstr+0xd/0x100
+[ 5231.981511][   C17]  ? __perf_event_account_interrupt+0x11c/0x540
+[ 5231.981514][   C17]  intel_pmu_lbr_save_brstack+0xc0/0x4c0
+[ 5231.981518][   C17]  setup_arch_pebs_sample_data+0x114b/0x2400
+[ 5231.981522][   C17]  ? __pfx_x86_perf_event_set_period+0x10/0x10
+[ 5231.981526][   C17]  intel_pmu_drain_arch_pebs+0x64d/0xcc0
+[ 5231.981530][   C17]  ? __pfx_intel_pmu_drain_arch_pebs+0x10/0x10
+[ 5231.981534][   C17]  ? unwind_next_frame+0x11c5/0x1df0
+[ 5231.981541][   C17]  ? intel_pmu_drain_bts_buffer+0xbf/0x6e0
+[ 5231.981545][   C17]  ? __pfx_intel_pmu_drain_bts_buffer+0x10/0x10
+[ 5231.981550][   C17]  handle_pmi_common+0x5c5/0xcb0
+[ 5231.981553][   C17]  ? __pfx_handle_pmi_common+0x10/0x10
+[ 5231.981556][   C17]  ? intel_idle+0x64/0xb0
+[ 5231.981560][   C17]  ? intel_bts_interrupt+0xe5/0x4c0
+[ 5231.981562][   C17]  ? __pfx_intel_bts_interrupt+0x10/0x10
+[ 5231.981565][   C17]  ? intel_pmu_lbr_filter+0x27f/0x910
+[ 5231.981568][   C17]  intel_pmu_handle_irq+0x2ed/0x600
+[ 5231.981571][   C17]  perf_event_nmi_handler+0x219/0x280
+[ 5231.981575][   C17]  ? __pfx_perf_event_nmi_handler+0x10/0x10
+[ 5231.981579][   C17]  ? unwind_next_frame+0x11c5/0x1df0
+[ 5231.981582][   C17]  nmi_handle.part.0+0x11b/0x3a0
+[ 5231.981585][   C17]  ? unwind_next_frame+0x11c5/0x1df0
+[ 5231.981588][   C17]  default_do_nmi+0x6b/0x180
+[ 5231.981591][   C17]  fred_exc_nmi+0x3e/0x80
+[ 5231.981594][   C17]  asm_fred_entrypoint_kernel+0x41/0x60
+[ 5231.981596][   C17] RIP: 0010:unwind_next_frame+0x11c5/0x1df0
+......
 
-Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+The warning occurs because the second "instructions:p" event, which
+involves branch counters sampling, is incorrectly programmed to fixed
+counter 0 instead of the general-purpose (GP) counters 0-3 that support
+branch counters sampling. Currently only GP counters 0~3 support branch
+counters sampling on CWF, any event involving branch counters sampling
+should be programed on GP counters 0~3. Since the counter index of fixed
+counter 0 is 32, it leads to the "src" value in below code is right
+shifted 64 bits and trigger the "shift-out-of-bounds" warning.
+
+cnt = (src >> (order[j] * LBR_INFO_BR_CNTR_BITS)) & LBR_INFO_BR_CNTR_MASK;
+
+The root cause is the loss of the branch counters constraint for the
+last event in the branch counters sampling event group. This results in
+the second "instructions:p" event being programmed on fixed counter 0
+incorrectly instead of the appropriate GP counters 0~3.
+
+To address this, we apply the missing branch counters constraint for
+the last event in the group. Additionally, we introduce a new function,
+`intel_set_branch_counter_constr()`, to apply the branch counters
+constraint and avoid code duplication.
+
+Cc: stable@vger.kernel.org
+Reported-by: Xudong Hao <xudong.hao@intel.com>
+Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- drivers/perf/riscv_pmu_sbi.c         | 2 +-
- drivers/perf/starfive_starlink_pmu.c | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/events/intel/core.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index 7dd282da67ce..9dcc22fd48ef 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -1244,7 +1244,7 @@ static int riscv_pm_pmu_notify(struct notifier_block *b, unsigned long cmd,
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index aad89c9d9514..7c6a0001c8e4 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4364,6 +4364,19 @@ static inline void intel_pmu_set_acr_caused_constr(struct perf_event *event,
+ 		event->hw.dyn_constraint &= hybrid(event->pmu, acr_cause_mask64);
+ }
+ 
++static inline int intel_set_branch_counter_constr(struct perf_event *event,
++						  int *num)
++{
++	if (branch_sample_call_stack(event))
++		return -EINVAL;
++	if (branch_sample_counters(event)) {
++		(*num)++;
++		event->hw.dyn_constraint &= x86_pmu.lbr_counters;
++	}
++
++	return 0;
++}
++
+ static int intel_pmu_hw_config(struct perf_event *event)
  {
- 	struct riscv_pmu *rvpmu = container_of(b, struct riscv_pmu, riscv_pm_nb);
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
--	int enabled = bitmap_weight(cpuc->used_hw_ctrs, RISCV_MAX_COUNTERS);
-+	bool enabled = !bitmap_empty(cpuc->used_hw_ctrs, RISCV_MAX_COUNTERS);
- 	struct perf_event *event;
- 	int idx;
+ 	int ret = x86_pmu_hw_config(event);
+@@ -4434,21 +4447,18 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		 * group, which requires the extra space to store the counters.
+ 		 */
+ 		leader = event->group_leader;
+-		if (branch_sample_call_stack(leader))
++		if (intel_set_branch_counter_constr(leader, &num))
+ 			return -EINVAL;
+-		if (branch_sample_counters(leader)) {
+-			num++;
+-			leader->hw.dyn_constraint &= x86_pmu.lbr_counters;
+-		}
+ 		leader->hw.flags |= PERF_X86_EVENT_BRANCH_COUNTERS;
  
-diff --git a/drivers/perf/starfive_starlink_pmu.c b/drivers/perf/starfive_starlink_pmu.c
-index 5e5a672b4229..964897c2baa9 100644
---- a/drivers/perf/starfive_starlink_pmu.c
-+++ b/drivers/perf/starfive_starlink_pmu.c
-@@ -450,8 +450,7 @@ static int starlink_pmu_pm_notify(struct notifier_block *b,
- 							 starlink_pmu_pm_nb);
- 	struct starlink_hw_events *hw_events =
- 					this_cpu_ptr(starlink_pmu->hw_events);
--	int enabled = bitmap_weight(hw_events->used_mask,
--				    STARLINK_PMU_MAX_COUNTERS);
-+	bool enabled = !bitmap_empty(hw_events->used_mask, STARLINK_PMU_MAX_COUNTERS);
- 	struct perf_event *event;
- 	int idx;
+ 		for_each_sibling_event(sibling, leader) {
+-			if (branch_sample_call_stack(sibling))
++			if (intel_set_branch_counter_constr(sibling, &num))
++				return -EINVAL;
++		}
++
++		if (event != leader) {
++			if (intel_set_branch_counter_constr(event, &num))
+ 				return -EINVAL;
+-			if (branch_sample_counters(sibling)) {
+-				num++;
+-				sibling->hw.dyn_constraint &= x86_pmu.lbr_counters;
+-			}
+ 		}
  
+ 		if (num > fls(x86_pmu.lbr_counters))
+
+base-commit: 9929dffce5ed7e2988e0274f4db98035508b16d9
 -- 
-2.43.0
+2.34.1
 
