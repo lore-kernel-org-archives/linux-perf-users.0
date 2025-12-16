@@ -1,154 +1,184 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4129346AF6
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 15:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A183F308F28
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 15:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765899266; cv=none; b=VBUzaWtGTPsRU2SfxzpjcRP5MuQTOoQz0Wl7k/L6tmqOJqPS03mD3RRNtoCG+ORzsKo1A9ESpNXn+8VyEn6+kzj3VeU55OZWs/lgL9L2Y3G2MquMR7/ID0wnSrzOaybzcB6cn9A/fVnFbCye1ghpT4oWHLzJrj0MdDhf7ay/+ag=
+	t=1765900221; cv=none; b=c1hnsHRRa3WvJbSOHRCc3zsTl6mKXsYmjU36Db1/7N/IpzES5NFW8E+FN8NX/Au2ed48XM42u0T377WUfrfKkdiQ65TE53pdvKpWHy4KioRNkFEevkr+FksOEQaHMSkaKDuTmtWZid3dugQ726nhKQwMvQA0qVUeC+rgQmlkBws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765899266; c=relaxed/simple;
-	bh=BwD7c/B+9PLPk2v9xcagtcKC2j04s6kUgQC0Cea6qJk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VGGDi5vZ6pK4B4jii1w88yDb9mbbqCL1iaBQAHyXpkMeGjksVbBm4p8Rp+BF98x318iUQ4tmEfu0MhmneytlVWjJ3Tl4tSt9muIxO6SangCB4O4sXTJNhh3abTtuWS6t6i2Nscx8S0mArW5uO0/3uTKZgoNUb0Jflxn9LODjJ08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KBA6ARh/; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1765900221; c=relaxed/simple;
+	bh=/J6SJIgVFXi6M7XjQHV29kxITg2wGyGnqWzglUUHx6k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JTaabpar2mCJ99dW1pg9G8yyFDdK5MwCcZm2kTiiDZvlbzcaZjD+bWVPavyhdRhCMu3YqHSTpCZ4NP3LD7gu5XVg/cR0i+Y4+JDEBFI3PluhJKzEcnhxDfGxrJys54qvnsOLyEh8JYF582alxqo4FDoLZKk0SkTmuvuNu8CSqDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bGV/CYXM; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KBA6ARh/"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b79e7112398so946070866b.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 07:34:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGV/CYXM"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7b89c1ce9easo5501924b3a.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 07:50:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1765899263; x=1766504063; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/Z7tlw5t9I5onekdJgpQ0zadrbAsfQMzR4ajquHU3Zg=;
-        b=KBA6ARh/i9n8mYzJJmv0td1hRhgG0aZajTIx+uljn65wAcASnS+16HJccui5ajuCK5
-         jfr44JiU69LHBUGovVqiCT9jl1xUxWkD735PBOFcIQzkcGFUbm7eLDy+CpEnI3cPiAI2
-         eGg5R4UVFuAoRnEF9l+6l1UyeAsqVki7O9uFr3wlWwav82oMjsq8yOuw5vyE4730EMAo
-         1NLwMipZY7ND+HhnucRn81YzxPdMnzQAuHaScMLpg0sbQ2CwQyFP6lnokPOQCCaeXCqz
-         JMFPhQh8saTcSkCyKwUkWqK0rlvNsnXL8yzhUnD4IqauKB6Np5N83P28KzJV22NcNHaR
-         ZkAA==
+        d=gmail.com; s=20230601; t=1765900219; x=1766505019; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AezLWqLpD6CrSSZ20H0ppmyNNXbXENPGR4Qr/3w4H5M=;
+        b=bGV/CYXMtgbehq5c4PcpZ1TUatnxDo+paxHNbJnmZrGo+JtqVS/FS+Ai+d35k4wRn3
+         615M26PUGby9OUXQFfmT7Sen4qS/ju6ezEJPGI1jeUY4fQNZjzSYme279xLmi8UaXonu
+         rDRcH58sNFQBX5xVNy/0o5KpuhNDXBAZGf0xOicZahW7HCwsK4HEbYeir1pwilRxa9Au
+         jBSWTc3i7j1Vp/TEhQDsiomkYLxMduJseNsfcf+V9cnCMboBWfOlE0+YF+dDnElxA1rV
+         qjHZO1i21uWaHhONLCO0UirdVOKaMEL12QAA+7yAqALQBSGqv2mElBYPYS2ahFMz0HJe
+         q62A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765899263; x=1766504063;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/Z7tlw5t9I5onekdJgpQ0zadrbAsfQMzR4ajquHU3Zg=;
-        b=eZt4q+Jxn81QYXi1D1sm3izqe/pW2waCq3p3I8YipQoWZblP3tFTSDUycyF7dyth6+
-         ea7a+8YipEs/zDHK255ckeOznIVEJedvYvM1l/Q1/mcb1DxAVaFGuabO9NVs94KqzyEp
-         nWEw/IKFGI/EpDELQzxSdp4G/R2b9j57JqlEZry+XOZJUe0GSZJZFxyJP8zbNIkF4P8G
-         degi20DLK0asvb7XcwCrT76xryiRhV0z5YbmWn/xnFl7L1pdHdEtJE0TCbxzdAhDtr0S
-         l7Cs3+hacSoEpz/ptthVtFeKJKWN6U6977UV3zLO2OKhm82WUMFx0EHgYWAbJV0XoIph
-         7plA==
-X-Forwarded-Encrypted: i=1; AJvYcCUA5/8bTBa52oD7+TkErfK410BFpQIbPIYEcOZ5pgxjgILIE1mwK1u15FA/Teyf21tPsVa5vZBhyyc8BrbchAHD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0ZRwI6bykfEQHcowofu4Xq73HC781BjXWaF47mhWtkYpa49H6
-	dKJYFw17iwHNDSKx8B09yHLeRIvUvcDmzSwiKf77i5k6Ay5tyQVIiJqdenIfr5IkR785QSFuk6k
-	TV9U4dFy+Ur4t
-X-Gm-Gg: AY/fxX79FIUHvSS8iXWVTYbeFmXC1zj+haRm4i7rPygriTTC1TjPWAVXoqhBGfk9BPP
-	AsVKcxhvB08xdGR+AVUlMnVaj+tAYtZDzthMeSfIhKX40yqlWIXE0QqKgczLWpdx6Dv2ZiarYR5
-	K/2zMUEevQxI6KzQv4g2hXyhD+rL6aikyT0mmijuimXcVpJ4fBOp+gXqtQbLDQ3nvAS6TrwM6sh
-	hvErui1DBobgA8yW6CUFQVW7fqnaG1Ck8oyWRwDx3HczaJRe01+lWtiTq03CjZO39MmIj4H4fVV
-	P+ZXDBx2JBfCkJBenpGTkP37c/fDdXoLYPWAn8iGv9/5QpP/68snBCja+XkCNjlBDWpScjZmzpW
-	yWPSUvL97cIrRSe9kSbhl9qCFv3Ci6FVXFO1bSA8pdb5308Xu0NKl8AQuAqk5BbyBB62XROs1Wk
-	ODNmnx3LisRy8RgDqKMyEu
-X-Google-Smtp-Source: AGHT+IF22aaOZPWW0s+RyYbbqasWTKDbfGAAOMHx5UEmfu9aMhShyeRKOYdJclKZV7/QUKufUhVM0A==
-X-Received: by 2002:a17:907:608c:b0:b74:352d:6dc1 with SMTP id a640c23a62f3a-b7d236b61b4mr1659301766b.28.1765899263078;
-        Tue, 16 Dec 2025 07:34:23 -0800 (PST)
-Received: from [192.168.0.108] ([130.185.218.160])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7cfa2ea57csm1713270966b.22.2025.12.16.07.34.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Dec 2025 07:34:22 -0800 (PST)
-Message-ID: <e22497a2-1019-4eec-95b4-b6fd80090a3f@linaro.org>
-Date: Tue, 16 Dec 2025 17:34:20 +0200
+        d=1e100.net; s=20230601; t=1765900219; x=1766505019;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=AezLWqLpD6CrSSZ20H0ppmyNNXbXENPGR4Qr/3w4H5M=;
+        b=cqT3fd/KdabVsz0l/1AzjVV6AlZomKEN4XZ1klpolorUQcy6ltmpchQPJmS3jfG1La
+         5a2+TD2dNYU65k43SHbvHHE7O8zAPeib0J+dMgGoBQNxx/ZBFuB+KRV8GrkZlKJCQw0m
+         RV4dQaVN6WV0KLOLJ4JufDjC00SOCJm9A5I/AHknv4x/lrKFqlmDjkrwo/ZyaME3J+yA
+         XTBukblXPQVYZoM7pf2biB1LrLxmpuW72Shh0HsbKaWmL/Zns3fuSndm6FmNjqFCC4Wt
+         lA0texO01BT2xlMxmi6qUrjIrdg+20Uh1o4bdM6R7MJfl37t9Gimq9mqFrr0kpOABlyg
+         nd2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU6LZQOTjBaKrcvipKrVnmJOKNwSkpe/BISuXHv/1FwTGETdn388EwNJp+1kBJ+4IHSy6iwiAyLNXFfHU08pDua@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQXAHqMAUrNRSIWI7slH7VmrfvPjEW2lxE/sZ3ePcmE05OP3KY
+	nDAIUmWDtLR1ELkWJOHnSsWjE1TzHqksFyEZ2464QIywOIDUy8MdA5U6
+X-Gm-Gg: AY/fxX5xuCuxBv0OlXsJXOo1rrFv3L4a3FmVVO46eUK1rwN9UMpQzx6JEgydXYYUkZW
+	zCdFd+TK3y0W84sLZyzSJT8P9Jbl6XmjJ8Z8kAK+ioCWf6vD7r3JQjWvURVf5XCz2v8ko0t1r7V
+	/T79Uw4ShGns/L9L68d3mjiLSE9e0so1WIntuhAMiRZfC9M7J6AVldi/5eeiODz/H36QrF6riEe
+	4lsU12HzBVyUyBAmiO11v6V2HNx8ZTM+HPq8etweEBEj8WJWXcVzni2fpI0UVc1UVsZVmL5mDf3
+	r5jVY6OLPPpRT934jG/QvwaAFdCzzPyvVmCOSwDKyz2ZcV89blw0iRyTO0PKrgiG+bpUnfLFTUo
+	PFCcpuMziteL5p07zWLpioymtu8fVNKlC2k3vSgFJe7N9vLbz4WRC3wW3aYCPM/Zq0C2lRkcbFk
+	QMWNkYYjuynoRl2L9i/j0iRbQQxzsgR1g=
+X-Google-Smtp-Source: AGHT+IEoNHdZ1DEBYEdZ8Fi4jzaSzQZOk4zYX1IY5OzpnLVZluq/HgR2KLlvGI9RonLCmUXvHnMZDA==
+X-Received: by 2002:a05:6a20:258b:b0:366:c321:9fc6 with SMTP id adf61e73a8af0-369afa082a3mr14434795637.48.1765900218667;
+        Tue, 16 Dec 2025 07:50:18 -0800 (PST)
+Received: from DESKTOP-8TIG9K0.localdomain ([119.28.20.50])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7f4c5093a4bsm15829494b3a.50.2025.12.16.07.50.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Dec 2025 07:50:17 -0800 (PST)
+From: Xie Yuanbin <qq570070308@gmail.com>
+To: tglx@linutronix.de
+Cc: acme@kernel.org,
+	adrian.hunter@intel.com,
+	agordeev@linux.ibm.com,
+	akpm@linux-foundation.org,
+	alex@ghiti.fr,
+	alexander.shishkin@linux.intel.com,
+	andreas@gaisler.com,
+	anshuman.khandual@arm.com,
+	aou@eecs.berkeley.edu,
+	arnd@arndb.de,
+	borntraeger@linux.ibm.com,
+	bp@alien8.de,
+	bsegall@google.com,
+	dave.hansen@linux.intel.com,
+	davem@davemloft.net,
+	david@kernel.org,
+	dietmar.eggemann@arm.com,
+	frederic@kernel.org,
+	gor@linux.ibm.com,
+	hca@linux.ibm.com,
+	hpa@zytor.com,
+	irogers@google.com,
+	james.clark@linaro.org,
+	jolsa@kernel.org,
+	juri.lelli@redhat.com,
+	justinstitt@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux@armlinux.org.uk,
+	llvm@lists.linux.dev,
+	lorenzo.stoakes@oracle.com,
+	luto@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	max.kellermann@ionos.com,
+	mgorman@suse.de,
+	mingo@redhat.com,
+	morbo@google.com,
+	namhyung@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	nysal@linux.ibm.com,
+	palmer@dabbelt.com,
+	paulmck@kernel.org,
+	peterz@infradead.org,
+	pjw@kernel.org,
+	qq570070308@gmail.com,
+	riel@surriel.com,
+	rostedt@goodmis.org,
+	ryan.roberts@arm.com,
+	segher@kernel.crashing.org,
+	sparclinux@vger.kernel.org,
+	svens@linux.ibm.com,
+	thuth@redhat.com,
+	urezki@gmail.com,
+	vincent.guittot@linaro.org,
+	vschneid@redhat.com,
+	x86@kernel.org
+Subject: Re: [PATCH v5 1/3] x86/mm/tlb: Make enter_lazy_tlb() always inline on x86
+Date: Tue, 16 Dec 2025 23:49:51 +0800
+Message-ID: <20251216154951.631-1-qq570070308@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <87345beoq2.ffs@tglx>
+References: <87345beoq2.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/19] coresight: trbe: Always check fault action when
- updating buffer
-To: Leo Yan <leo.yan@arm.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, Anshuman Khandual <anshuman.khandual@arm.com>,
- Yeoreum Yun <yeoreum.yun@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Tamas Petz <tamas.petz@arm.com>,
- Tamas Zsoldos <tamas.zsoldos@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-References: <20251201-trbe_buffer_refactor_v1-1-v1-0-7da32b076b28@arm.com>
- <20251201-trbe_buffer_refactor_v1-1-v1-10-7da32b076b28@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20251201-trbe_buffer_refactor_v1-1-v1-10-7da32b076b28@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+On Mon, 15 Dec 2025 16:42:13 +0100, Thomas Gleixner wrote:
+> These Reported-by and Closes tags are just wrong. This is a new patch
+> and the robot reported failures against earlier versions. The robot
+> report is very clear about that:
+>
+>   "If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>    the same patch/commit), kindly add following tags
+>      Reported-by:...
+>      Closes:..."
+>
+> No?
+>
+> [...]
+>
+> Please move the '#define enter_....' under the inline function. That's
+> way simpler to read.
 
+Thanks for replying, I will improve it in the V6 patch.
 
-On 01/12/2025 13:22, Leo Yan wrote:
-> The current code checks the fault action only via the IRQ status bit,
-> which is unreliable due to possible hardware latency.
+>> +/*
+>> + * Please ignore the name of this function.  It should be called
+>> + * switch_to_kernel_thread().
+>
+> And why is it not renamed then?
+>
+>> + *
+>> + * enter_lazy_tlb() is a hint from the scheduler that we are entering a
+>
+> We enter a kernel thread? AFAIK the metaverse has been canceled.
+>
+>> + * kernel thread or other context without an mm.  Acceptable implementations
+>> + * include doing nothing whatsoever, switching to init_mm, or various clever
+>> + * lazy tricks to try to minimize TLB flushes.
+>> + *
+>> + * The scheduler reserves the right to call enter_lazy_tlb() several times
+>> + * in a row.  It will notify us that we're going back to a real mm by
+>
+> It will notify us by sending email or what?
 
-This makes it sound like it's fixing a bug, but without a fixes: tag I'm 
-assuming it's not a bug. Also I don't get how the change improves the 
-latency situation, it still calls trbe_get_fault_act() basically in the 
-same place. I think there might be another reason like it makes the code 
-cleaner for a later change? Or the commit message needs some elaboration.
+I didn't write any comments, I just moved its location.
 
-> 
-> Move the fault action check out of the IRQ status condition.  This also
-> causes the buffer size to be calculated for non-WRAP and fault cases,
-> which is fine since the write pointer is trusted for the calculation.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->   drivers/hwtracing/coresight/coresight-trbe.c | 17 +++--------------
->   1 file changed, 3 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
-> index f56ecdeaa6596afb440e4d53732e08a85f9bf89d..e579ea98523c24d23a0cd265dcdd0a46b52b52da 100644
-> --- a/drivers/hwtracing/coresight/coresight-trbe.c
-> +++ b/drivers/hwtracing/coresight/coresight-trbe.c
-> @@ -806,7 +806,6 @@ static unsigned long arm_trbe_update_buffer(struct coresight_device *csdev,
->   	enum trbe_fault_action act;
->   	unsigned long size, status;
->   	unsigned long flags;
-> -	bool wrap = false;
->   
->   	WARN_ON(buf->cpudata != cpudata);
->   	WARN_ON(cpudata->cpu != smp_processor_id());
-> @@ -858,21 +857,11 @@ static unsigned long arm_trbe_update_buffer(struct coresight_device *csdev,
->   		 */
->   		clr_trbe_irq();
->   		isb();
-> -
-> -		act = trbe_get_fault_act(handle, status);
-> -		/*
-> -		 * If this was not due to a WRAP event, we have some
-> -		 * errors and as such buffer is empty.
-> -		 */
-> -		if (act != TRBE_FAULT_ACT_WRAP) {
-> -			size = 0;
-> -			goto done;
-> -		}
-> -
-> -		wrap = true;
->   	}
->   
-> -	size = trbe_get_trace_size(handle, buf, wrap);
-> +	act = trbe_get_fault_act(handle, status);
-> +
-> +	size = trbe_get_trace_size(handle, buf, act == TRBE_FAULT_ACT_WRAP);
->   
->   done:
->   	local_irq_restore(flags);
-> 
+As for the content of the comment, I think it has nothing to do with this
+patch. If the content of the comment needs to be modified, it should be
+modified in another patch?
 
+Thanks!
