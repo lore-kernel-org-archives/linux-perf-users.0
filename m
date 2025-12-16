@@ -1,67 +1,69 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010015.outbound.protection.outlook.com [52.101.193.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A16E32E13D;
-	Tue, 16 Dec 2025 09:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765877428; cv=none; b=rPFQko7AISg38WU66czKFy2tnlLsvcyRl3Z8jITYT0T4TXk/fc2svLdOkw0QEG77OHPVS92KpPGTciDxbX8c74RibFdkhXHW3+uWZzxn3D3QagS+xz4ef/C2wXgZ9c2Pf0/WxuSSIslmk7+nKFvk9lbjDzRx396Ki3qVXM2FoHA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765877428; c=relaxed/simple;
-	bh=9B9fL9zQ8qnpaJErs1fVIQqV/HGDDzxTb5bppDM/LNI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b5n1mUrxVWMo4Vz6Sa+DHn+7nRf564Pw9+4us00kLtAOE152vLNGRQwKSb6FR5TgXtFpUmieJYr9Z7N37WT/gsCo+0a2QPZX+MFpS2yTyuBYiuLU2cDyVMeoF4SK32HmQCnKgF8K2n47lSawWrRZ9BxH4bmrtTnV7wzsTYNJlv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OniCZkuc; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113EF2D8796;
+	Tue, 16 Dec 2025 10:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765879777; cv=fail; b=TczQMk2Ibk0Gcbwu6XscuW1b9VRNloh7SNBFPWkvSBV2LVIEgmxN7v3eXNeuBag0O7qZ/wKG5KqwkOK4qfL7Mrr9MFCSpuMHSESRbYoJ3Vi3Tf83Sp4zHyWiKxQ0d/T6PKd7/C7/5PH/jnohQ5cGj4Fxx+ijdainuYr9QPKs6qU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765879777; c=relaxed/simple;
+	bh=Mkokjaf0AUn98DhJh8cx31QDQH0qbu32jFGtk3lfCHg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZPRbIZscULco8n05SAZRSLz5bN7NxQ7l8OELQwrE/XcOoGKUpHaa/07/1qK+VQNvV8pD4IPrUJHQD7ILbHGf+2MUUBmz0jUlHf37TYwqG1W7K54N3uAAJW4wvOTlfg9h7R2FT80KQ0n6mF/fwBjN66CpODK5htmyOBqkSjGIfdk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=uJmlxl4k; arc=fail smtp.client-ip=52.101.193.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OniCZkuc"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5BFNWofX001735;
-	Tue, 16 Dec 2025 09:29:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=/f30n5
-	Ql5+zqGKmNBlm+fXaMqRlBT/rSwX8VxTEqBuk=; b=OniCZkucWongtxlAi3ZvVJ
-	5JwSsXlQ5mxDnYEForvgj1ywcCxr78HxB6TRDRAzZyGV1ZOGHx1who66ffsAdid3
-	DPycevH/thepPY96Y2il1agRBYQH0imZe1oXA7M7pcHQMGdGY67m4nBI0nUxei4z
-	uhsFzxHUevePlEe8hN0gkKFmYp6DbXXcO0OChth0Bw061EQkAF1XGJn1yljmZB39
-	2boAxzuFZzYrrSxealg1VLXvhRye3uQ9jm8J3Boy1p0ZpDoJVfD2YFLXa+eIl5NA
-	lQ5VYeuMmn6CUT0oQ9dAhY2zc8lqngeN6zviuWnJ0SIFIkRxjj0qel/7r8aKKtTQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4b0ytv685c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Dec 2025 09:29:35 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5BG9Qvk9021825;
-	Tue, 16 Dec 2025 09:29:34 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4b0ytv6859-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Dec 2025 09:29:34 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5BG8mfdA026803;
-	Tue, 16 Dec 2025 09:29:33 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4b1jfsbkp4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Dec 2025 09:29:33 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5BG9TTfK42140010
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Dec 2025 09:29:29 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5834720040;
-	Tue, 16 Dec 2025 09:29:29 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0214720043;
-	Tue, 16 Dec 2025 09:29:29 +0000 (GMT)
-Received: from [9.52.200.193] (unknown [9.52.200.193])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Dec 2025 09:29:28 +0000 (GMT)
-Message-ID: <024b7bb4-731e-4da4-8480-4789f5912977@linux.ibm.com>
-Date: Tue, 16 Dec 2025 10:29:28 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uJmlxl4k"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Y7L2pYh4sf1c02Ae0eJIAP9tXHueAh/JUh4mFNuPsPBW9ez74F5OKdlv8uM5DZ0GuFlru4UEdVkgXXy1xcN4ZH/DKIkqL1eXhsBh3P+rn2n6SHn5/Zpk2Q5oSL1JSWWob2NOX2Sa7d8MWc+G85nC+E0FUVp2hQZtqTcovoasP3EaDzwCXIfh6VlqBRpR2I1q8PFE4eZMeqTWiYiLnWSKL/R0FJXlDG7HSLBwoy+3h9ssu7MyxOGkRKHr8v7LH0+pa/qkavcdof2yeelPCWuf1V+hNYb9E7gwR8EY/wQjImNPaq9/tg9+bGo56M6IGIJ3xZiRiLQOpppBnLaNjYJQog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=khFVfOUtn6hTfiaoPj+Pv+lj8wUiHaulGmXKAkw8UTg=;
+ b=VdEnbhLdEDG/pkM4YdDwg6Car3nDCH9Kl+lOhSvxaMUzno+c0WWlP7Xra1MQ1OdJm1YPTmi9NUhts9o9q9e2bluQZx8bhzq0OxQ7mWgrzOBNRAcVZ9wMGewnl2QeWqLm4XRbB3HA5fe4fOEU/3LUbc9ffj4seBVz+QxsZW9R7LrOUs5U1QA3mKM2kPr92OhFLHRggPP/gFqco5sWDACMnTrY73RpBE5IRkpegNP4pvwrppn78dx3gDWf3XXdhAyFzA/PvAVU9Zu8sVQmULVGZCwO90PBN2yCN/UVxmKn5wAqv2vn4c6MxdL+VSUlEv1Vc4RKfnvqGlKjQlFS1CzY+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=khFVfOUtn6hTfiaoPj+Pv+lj8wUiHaulGmXKAkw8UTg=;
+ b=uJmlxl4km6TmoUz8h5InwEkoyUFMYfn083RFWzgpF6B5WKf5M0q63U0vuab4J9l+v6+MGSdzuzWOZz1TdHvY8cGKVuqEz4/pNU6HNrVG7oRa5faWXdSWG374eUYPPyGL2+RNQocMZ5EGbqxsKdCIhjLs0LNGxEbZFQbtJkYB+TA=
+Received: from CH2PR11CA0018.namprd11.prod.outlook.com (2603:10b6:610:54::28)
+ by CY5PR12MB6623.namprd12.prod.outlook.com (2603:10b6:930:41::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.13; Tue, 16 Dec
+ 2025 10:09:32 +0000
+Received: from CH2PEPF00000149.namprd02.prod.outlook.com
+ (2603:10b6:610:54:cafe::8a) by CH2PR11CA0018.outlook.office365.com
+ (2603:10b6:610:54::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9412.13 via Frontend Transport; Tue,
+ 16 Dec 2025 10:09:02 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CH2PEPF00000149.mail.protection.outlook.com (10.167.244.106) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9434.6 via Frontend Transport; Tue, 16 Dec 2025 10:09:32 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.17; Tue, 16 Dec
+ 2025 04:09:31 -0600
+Received: from satlexmb08.amd.com (10.181.42.217) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 16 Dec
+ 2025 04:09:30 -0600
+Received: from [10.136.43.216] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Tue, 16 Dec 2025 04:09:23 -0600
+Message-ID: <3b7c8c6f-e54e-4bec-9e12-ca672671ad87@amd.com>
+Date: Tue, 16 Dec 2025 15:39:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,282 +71,108 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/6] perf script: Display
- PERF_RECORD_CALLCHAIN_DEFERRED
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <20251120234804.156340-1-namhyung@kernel.org>
- <20251120234804.156340-5-namhyung@kernel.org>
- <9fe12698-2fd5-41fe-8505-735d73eae0a2@linux.ibm.com>
- <aUDkpsW-WH3IPIhh@google.com>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <aUDkpsW-WH3IPIhh@google.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v4 00/11] perf sched: Introduce stats tool
+Content-Language: en-GB
+To: Ian Rogers <irogers@google.com>
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <james.clark@arm.com>, <ravi.bangoria@amd.com>,
+	<yu.c.chen@intel.com>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
+	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
+	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
+	<sshegde@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <santosh.shukla@amd.com>,
+	<sandipan.das@amd.com>, Cristian Prundeanu <cpru@amazon.com>
+References: <20250826051039.2626894-1-swapnil.sapkal@amd.com>
+ <cc87d705-0409-4451-b95d-8a9af94f0c1c@amd.com>
+ <CAP-5=fWSFgkWggNaYDRno=Lv+s980_9ckr3vKy+CX2TsCJH+vA@mail.gmail.com>
+From: Swapnil Sapkal <swapnil.sapkal@amd.com>
+In-Reply-To: <CAP-5=fWSFgkWggNaYDRno=Lv+s980_9ckr3vKy+CX2TsCJH+vA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjEzMDAyMyBTYWx0ZWRfX/XlN0FngC9fC
- AW1o5ed63hU5GBPaWI3aP40oDTdUtoWkYSH2yGuVwXu+chjPnqhdsolwlLuLEpp1uOD72XYF/+9
- FRAaga8EQZ0OUEOezPieO2icte4r5/ET8E/Gqx/tD0BiPkdsHhQMaVVjLAOLp449PtsVRzraCGc
- UivoQiFWu/HhkYnLdjjpfUH45Z229qUfmuNxNSjS/+ZdZ10zwxqnC8GuLhaah7mwZkaNG4zh7dX
- A2VxMbug2/kdBkZCEsISglzsDi8cZMAn/DTZKEJ4s8cUB8vU9HoaJtrmNVL2RM7sTCcUGbrrFor
- goqJ+ZxaVybVVgqKXdX4PD/Y6PczOAu2EctmBzzkESI7vPpoBi9v/x3o8ydsCkD2Agctw/enRIR
- +qBip+1YFQ+SeHvLPSbEOwDpeZ1lgg==
-X-Proofpoint-ORIG-GUID: JJT289aWiYLsJKcs2q0Ec5udR-biyz3H
-X-Authority-Analysis: v=2.4 cv=QtRTHFyd c=1 sm=1 tr=0 ts=6941267f cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=zGLf65y6ZfpCdAT4qmQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: itQ1wkfx0CwiNgQT9LDmeEL1J0-yMivu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-16_01,2025-12-15_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 suspectscore=0 impostorscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512130023
+Received-SPF: None (SATLEXMB04.amd.com: swapnil.sapkal@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF00000149:EE_|CY5PR12MB6623:EE_
+X-MS-Office365-Filtering-Correlation-Id: 418d1255-b17e-49ac-7a10-08de3c8b3563
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|36860700013|82310400026|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QS9FaHhqMERxempNN214bnJ0MGRTMEtEd2pvSFN2STlLL3c3NDZtTllSRlZX?=
+ =?utf-8?B?OEZWWUw4d2dZTzUwQUdKM0ZWclR6ZWJMZDQzQ2xxdlE5b3RjR2N5MjA1aURR?=
+ =?utf-8?B?TzZ5ZXVQd2oyK2RnNWFxNjI2V3A1OVRqckVVTi9sN2M1R2ZjUmZ6anZvMnhT?=
+ =?utf-8?B?d21OMm1Xb29aWk1kUmh2SFUvWWduS2ZxZE1wQmF2TWRKYkVWbC81RkI4MmJx?=
+ =?utf-8?B?bzByakgzalM1N1ZrVVZiRjA1U3VYbDY3RG93c2pvbHR6VEVCRXJJNmtnSjUr?=
+ =?utf-8?B?RFZ1UnVpS1dMZXlsZG1HK3F4TTVuUklobVFrc2JrMTV2eGZVQUYvSlBpUEIv?=
+ =?utf-8?B?eC9oWWxJcmR4N05iVXB5clNyVUl6bzJFWHNscDQ5cktVZW9EYkFuZmZUZmpU?=
+ =?utf-8?B?SkNESy9jaGlIcS9PVDA4NzJHb1ZiYlo2Z21RQzExdmQ2aGthamZqSXZSa3Bs?=
+ =?utf-8?B?UWJ1cTE1OGh3YzF2RExoeng5ZmZYd3RjcFpSYlF3UEZYVVFSY2IzVTZuNWkr?=
+ =?utf-8?B?QVp0T003S1pTWlZnSEhyalF3RTBpcGRKVGxtOGdSUTYyTnVUN3A4MHVwZmJm?=
+ =?utf-8?B?OWVPUVRKTVpmL2tGMWZZQzg1TEd2Ym8yK21YUHBEN1JrY0puZGVuWDV4aWll?=
+ =?utf-8?B?RnpTUTJnSFA5WmRrREJSaUtzc1NwRmNhYkM1RmVzV0R2Vm9UNmdXT3pYNno1?=
+ =?utf-8?B?ekM3R1pGd3QybjF3SFJFNzBRZzgrQnJlSFd3eWpZN1YrWlJHdEpJQnViZURW?=
+ =?utf-8?B?S3ZEM3VObCt4WFlOY05NZy9hUFcxWi9icUZhUS9saytXTUxlZWowblNZT1Va?=
+ =?utf-8?B?Tzl1Y2wwOXJIL2xmaVlxaGtPakt6TmhRTW1kSWN0UlBjZUQvTlNxZlM5RzFW?=
+ =?utf-8?B?VUlEZ2srMUlsWDh1U0NXMnZsUTh6MUJCZXNaNVJ3S1ZpZy9MYUJNaDRIVmJH?=
+ =?utf-8?B?L1lqRUsvSE9teCtuaVNFMFZNL1hIanB5bkVtaDNMdUt1UWVoeFFidm5NMkVj?=
+ =?utf-8?B?OEhZVWJTTjJEUEdwUXZIci9URDdGbFMzVHl3S05wRXRHZ1JUeXAvSjdpLzVG?=
+ =?utf-8?B?TVVFUmVOaHJXaDhhTzUrSSs4WGEvZ3o0cWhyM2VYTUpTWGpDckJDOG1sWmhh?=
+ =?utf-8?B?TTJuaEJ0RU5hai85V0svaDZYT3BlcXVmQ3B3a0lUK09rOU9TUlNCVVBZSnRD?=
+ =?utf-8?B?dy8wdmZ0ZldmM3dnNU1sYXFZZytqb1MwVzB3TzhPamlGZTNWRU9WbllZb3Fo?=
+ =?utf-8?B?NmU5VlRiQm05MlVkVFNNcUs2bzVsazFtRGM1eERDdjZxZkVCRnJHNThITUha?=
+ =?utf-8?B?VkVHUFhDa2JWd3RwUndqbElwOFhzSFBDd0FYZWdvMUZZeUFCOGxPSGtsTGhQ?=
+ =?utf-8?B?TWFBU0ZUbDhoVjJ4N1Rlb3BXVE8rcDRIQ2ZHZDVDWEZFNXUwNnF2MFNTR3Nq?=
+ =?utf-8?B?NDVLdk9jTW4xVnJ3eXZQUGF6MmlzajNsQktrdFVNdDhXdktHLzliK3lhMWkr?=
+ =?utf-8?B?eExSenVUdjgyT05JRWxlM3ZycUVrc2VXbGtsTXM4MXJFYnRpZ1REQkt6ZnFW?=
+ =?utf-8?B?VmlYTEExSHhOU1pBZ0ZNdmc4alErWHlMdm1WUmRHL0tkZEJKRHN1bUVjNmJv?=
+ =?utf-8?B?OGN3Sys3b1Q2L0xGcFMyakVjRW1ZSDRFNUgzZnhvMkxITS9DYW05SE9veFlO?=
+ =?utf-8?B?VGxmbmpZbkZPd0ttNGhSbmppY2FCRk1ad2FNMW9rRjBYcDNKZzN1WEgyNURQ?=
+ =?utf-8?B?Z3ZEMTNwNWJ6OUtnQi93YitzcDhsV1BwN3FUNXpCczBUd1EvZG9jVU9uamdk?=
+ =?utf-8?B?VlpHSXZrUlZ0cXdkZURXMW1uV1krVjM3ZmhqNTN3QXNHT2ZwOEErcmNxZVlt?=
+ =?utf-8?B?MktoRzlwV3pWSnlhbUk0M0k0N2k1L2hoaG1LRTB5eEhWaU5LNjRJb2IxUXhT?=
+ =?utf-8?B?emU2bi9RUnQrREJxN1g4T0Q4RjBqNEw2bWlKa3FvZzhiVk90YklrbDcxWEs3?=
+ =?utf-8?B?M3VpMHNNbmxvNUpXcEFXMkpNWXdYT3ViRVNSWGRaMGlHZ2VsNlRNTGNwZVk5?=
+ =?utf-8?B?U0s2aW1STmFFYytzM1cwelFiOHhoRXFMTFIzdDZRb0M0THliUHo1ZmEvWWY5?=
+ =?utf-8?Q?Auus=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2025 10:09:32.6485
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 418d1255-b17e-49ac-7a10-08de3c8b3563
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF00000149.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6623
 
-Hello Namhyung!
+Hi Ian,
 
-On 12/16/2025 5:48 AM, Namhyung Kim wrote:
-> On Fri, Dec 12, 2025 at 01:11:38PM +0100, Jens Remus wrote:
-
->> following is an observation from my attempt to enable unwind user fp on
->> s390 using s390 back chain instead of frame pointer and relaxing the
->> s390-specific IP validation check.
+On 10-12-2025 02:33, Ian Rogers wrote:
+> On Wed, Aug 27, 2025 at 9:43 PM Sapkal, Swapnil <swapnil.sapkal@amd.com> wrote:
 >>
->> When capturing call graphs of a Java application the list of "unwound"
->> user space IPs may contain invalid entries, such as 0x0, 0xdeaddeaf,
->> and 0xffffffffffffff.  IPs that exceed PERF_CONTEXT_MAX, such as the
->> latter, cause perf not to display any deferred (or merged) call chain.
->> Note that this is not caused by your patch series.
+>> Hello all,
+>>
+>> Missed to add perf folks to the list. Adding them here. Sorry about that.
 > 
-> Right, it's not a real IP so perf ABI treats them as a magic context.
+> Hi Swapnil,
 > 
->>
->> While re-adding the s390-specific IP checks would "hide" those, I found
->> that the call graphs look good otherwise.  That is the back chain seems
->> to be intact.  It is just the user space application (e.g. Java JRE) not
->> correctly adhering to the ABI and saving the return address to the
->> specified location on the stack, causing bogus IPs to be reported.
->>
->> Could perf be improved to handle those user space IPs that exceed
->> PERF_CONTEXT_MAX?
-> 
-> Ideally we should not have them in the first place.  Is it a JRE issue
-> or your s390 unwinder issue?  Is it possible to ignore them in the
-> unwinder?
+> I was wondering if this patch series was active? The kernel test robot
+> mentioned an issue.
 
-Stack tracing using frame pointer is virtually impossible on s390, as
-the ABI does not designate a specific register as FP register, does not
-specify a fixed register save area layout, nor does mandate a FP to be
-setup early.  Compilers usually setup a FP late, that is after static
-stack allocation.
+The series is active. I have fix for the kernel test robot issue. I will 
+be posting the next version in a week. I did not see any more review 
+comments on the series hopefully it will be the final version.
 
-An alternative is the s390-specific back chain, which is basically a
-frame pointer on stack.  The ABI specifics that *(SP+0) has the pointer
-to the previous frame and *(BC-48) has the return address (RA), if a
-back chain is used (e.g. compiler option -mbackchain is used).  This is
-why I implemented unwind user fp on s390 using back chain.  Note that
-the back chain can be correctly followed, even if the saved RAs are
-bogus.  That is what can be observed in case of this specific Java JRE.
-Apparently it correctly maintains the back chain stack slot, but does
-not correctly maintain the RA stack slot.  So the RA stack save slot may
-contain any random value.
-
-The s390-implementation of unwind user fp could check whether the return
-address is a valid IP.  This is how it is implemented in the existing
-stack tracer in arch/s390/kernel/stacktrace.c:
-
-static inline bool ip_invalid(unsigned long ip)
-{
-	/* ABI requires IPs to be 2-byte aligned */
-	if (ip & 1)
-		return true;
-	if (ip < mmap_min_addr)
-		return true;
-	if (ip >= current->mm->context.asce_limit)
-		return true;
-	return false;
-}
-
-It could then either stop or return some magic value
-(e.g. PERF_CONTEXT_MAX - 1) to indicate that the IP is invalid and
-continue.  Actually I would prefer to continue so that a user an see
-that there is something odd with the stack trace.
-
-Alternatively such a check could possibly also be implemented in the
-common undwind user, if the address space limits are known in common
-code, or as an architecture-specific hook.  In general I tend to at
-least add a check whether the IP is zero, as this is used on several
-architectures as indication for outermost frames (usually in
-combination with a FP of zero).
-
->>
->> Is there otherwise guidance how unwind user and/or the s390
->> implementation should deal with such IPs?  Should it stop taking the
->> deferred calltrace?  Should it substitute those with e.g 0, so that
->> perf can display them?
-
-
->> Sample for IP == ffffffffffffff (perf does not display any call chain):
-...
->> # perf report -D
->> ...
->> 44004346257 0x17718 [0x40]: PERF_RECORD_SAMPLE(IP, 0x2): 1082/1084: 0x3ffa3e413aa period: 1001001 addr: 0
->> ... FP chain: nr:2
->> .....  0: fffffffffffffd80
->> .....  1: 0000000400000079
->> ...... (deferred)
->>  ... thread: java:1084
->>  ...... dso: /tmp/perf-1082.map
->>
->> 0x17758@perf.data [0xd0]: event: 22
->> .
->> . ... raw event: size 208 bytes
-...
->>
->> 44004348864 0x17758 [0xd0]: PERF_RECORD_CALLCHAIN_DEFERRED(IP, 0x2): 1082/1084: 0x400000079
->> ... FP chain: nr:21
->> .....  0: 000003ffa3e413aa
->> .....  1: 000003ff3809e2d0
->> .....  2: 000003ff3809e130
->> .....  3: 000003ffb95fdf68
->> .....  4: 0000000000000000
->> .....  5: 000003ffb95fe128
->> .....  6: 000003ffb95fe1d0
->> .....  7: 005780888e7647a5
->> .....  8: 000003ffa3e437f2
->> .....  9: ffffffffffffffff <-- !
->> ..... 10: 000003ffa3e4a1fc
->> ..... 11: 0000000000000000
->> ..... 12: 000003ffa3e37900
->> ..... 13: 000003ffa3e41080
->> ..... 14: 000003ffb9dd11de
->> ..... 15: 000003ffb9e8df92
->> ..... 16: 000003ffb9e90e86
->> ..... 17: 000003ffbab8b07e
->> ..... 18: 000003ffbab8e040
->> ..... 19: 000003ffba8abbd8
->> ..... 20: 000003ffba92b950
->> : unhandled!
->>
->> ...
->> [next entry]
->>
->>
->> On 11/21/2025 12:48 AM, Namhyung Kim wrote:
-
->>> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
->>
->>> +static int process_deferred_sample_event(const struct perf_tool *tool,
->>> +					 union perf_event *event,
->>> +					 struct perf_sample *sample,
->>> +					 struct evsel *evsel,
->>> +					 struct machine *machine)
->>> +{
->>
->>> +	perf_sample__fprintf_start(scr, sample, al.thread, evsel,
->>> +				   PERF_RECORD_CALLCHAIN_DEFERRED, fp);
->>> +	fprintf(fp, "DEFERRED CALLCHAIN [cookie: %llx]",
->>> +		(unsigned long long)event->callchain_deferred.cookie);
->>> +
->>> +	if (PRINT_FIELD(IP)) {
->>> +		struct callchain_cursor *cursor = NULL;
->>> +
->>> +		if (symbol_conf.use_callchain && sample->callchain) {
->>> +			cursor = get_tls_callchain_cursor();
->>> +			if (thread__resolve_callchain(al.thread, cursor, evsel,
->>> +						      sample, NULL, NULL,
->>> +						      scripting_max_stack)) {
->>
->> thread__resolve_callchain()
->> calls __thread__resolve_callchain()
->> calls thread__resolve_callchain_sample():
->>
->>         for (i = first_call, nr_entries = 0;
->>              i < chain_nr && nr_entries < max_stack; i++) {
->> ...
->>                 ip = chain->ips[j];
->>                 if (ip < PERF_CONTEXT_MAX)   <-- IP=ff..ff is greater than PERF_CONTEXT_MAX
->>                        ++nr_entries;
-> 
-> Right.
-> 
->> ...
->>                 err = add_callchain_ip(thread, cursor, parent,
->>                                        root_al, &cpumode, ip,
->>                                        false, NULL, NULL, 0, symbols);
->>
->>                 if (err)
->>                         return (err < 0) ? err : 0;
->>
->> calls add_callchain_ip:
->>
->>                if (ip >= PERF_CONTEXT_MAX) {
->>                        switch (ip) {
->>                        case PERF_CONTEXT_HV:
->>                                *cpumode = PERF_RECORD_MISC_HYPERVISOR;
->>                                break;
->>                        case PERF_CONTEXT_KERNEL:
->>                                *cpumode = PERF_RECORD_MISC_KERNEL;
->>                                break;
->>                        case PERF_CONTEXT_USER:
->>                        case PERF_CONTEXT_USER_DEFERRED:
->>                                *cpumode = PERF_RECORD_MISC_USER;
->>                                break;
->>                        default:
->>                                pr_debug("invalid callchain context: "  <-- IP=ff..ff reaches default case
->>                                         "%"PRId64"\n", (s64) ip);
-> 
-> We may skip -1 if it's Java and *cpumode is already USER and it's s390.
-> But I'd like to understand the situation first.
-
-Let's better not add any weird architecture-specific handling.  This is
-also not limited to -1 (and 0), as Java may have used the stack save
-area in any way, so it may be any random value.
-
->>                                /*
->>                                 * It seems the callchain is corrupted.
->>                                 * Discard all.
->>                                 */
->>                                callchain_cursor_reset(cursor);
->>                                err = 1;
->>                                goto out;
->>                        }
->>
->>> +				pr_info("cannot resolve deferred callchains\n");
->>> +				cursor = NULL;
->>> +			}
->>> +		}
->>> +
->>> +		fputc(cursor ? '\n' : ' ', fp);
->>> +		sample__fprintf_sym(sample, &al, 0, output[type].print_ip_opts,
->>> +				    cursor, symbol_conf.bt_stop_list, fp);
->>> +	}
-
+--
 Thanks and regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
+Swapnil
 
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
