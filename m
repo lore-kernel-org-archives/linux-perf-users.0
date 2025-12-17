@@ -1,177 +1,308 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-oo1-f73.google.com (mail-oo1-f73.google.com [209.85.161.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA17C19CD0A
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Dec 2025 18:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.172
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765997836; cv=pass; b=IQYj5uVIGJjwwsQ57IslvGNZDmtgDNTvbuq59+96IPlo4pBpaerzeLIdRvTRNF5vaM6jBLgP7NSm7ejHu4pGw7CI9VrWyHSjCk9RqxcQ5N+OZo9Od/kexuogBY9ARq8qXpJSIFjxqLuAo+7pGNjq1oMoUBu143DaJk1rF7R/ZBQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765997836; c=relaxed/simple;
-	bh=zmMteg9qnaZxEGIM7xF+591bPcUtEpToQcg/9vzLD+s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FK2miDO59YCQLBW33GwRf111QgkZ9TC93EYXZ5R/Ve6VqILYaOIezz1pAbyRs3ES4eDGeruThm2A6TfusgLRwdMZFYx4JFlqXlVis6UPEsYj28fKNKBKPhFW+hKV9ZSeYJ6NHVUt/ouvIeGa3W4nzQdSLHnjtNQSNupIKV24imw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G+Uq7blv; arc=pass smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EDB3A1E72
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Dec 2025 23:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766012625; cv=none; b=TwEY6ayvL1DhAHq3MOav+QTCmW0Qv4CCL8rklQLBvC/vqWO0x7F1X/f94q30a9MW4D6juPIsRoRh3ZfgBPWz5Push5nMbh5yOAUl9rSjHzbiSBghJnb4djavpj8ztpESfB3g/sFS5Fn5MZFbuiUMVD1dJzijiuU8f8Iff348FwU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766012625; c=relaxed/simple;
+	bh=GcH2YU9svXn1lwAwNWQlWL84mdn4ZPEmHup1iY+NLn4=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=lrWp/wAohbOwJ9RHAzXzuzFRqKEu4KPIuKwSlmW3O57aJyjFOJHbBdtuLi/ozD+NFxxmEa5psysizsH0oZTC2funwPLX/XqOmXe67jjRwhDaEHraODAUhFvvefOrNxM7VDZu3z2wBorl7AY1njCISA2ngtr5x+IR36kcmegX0X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rIPrPCAK; arc=none smtp.client-ip=209.85.161.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G+Uq7blv"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-29e0753e5d8so17515ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Dec 2025 10:57:14 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1765997834; cv=none;
-        d=google.com; s=arc-20240605;
-        b=cKsXNJuO+tfjoFny7ond3AnFLbq7c8G6w+LMGghbrrPmY5f8tgZdyZPIbikeOdOkgP
-         kw+5cD+I2MPZeU8EDY50xJ5GeK5022JrGLyFQml3HOxGq72CJAwxrMjHnb8Nb3WmUq34
-         YaGXONp3MAGrbiwRF3F7+TR7LFbHEByhZpg44IS9clBojPJzyuym2A0wH9rBWAAJ2rb6
-         U5Vwsy0/wPaJKdANnY001JuT4pvD0J28JWLW+1/rR+bNFxHwhCfhXzFsLfHm9b7kvykM
-         v74597BF2xtn2Xw2BGhj3Fbti5ePkaHzbt098IG1qL2Y8tMjYZN5PCh5W198govVuDPW
-         Z9IQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=/zsAjg2VljJvmZn01nm4O96LDJFMDLKiBHWNqVOrCUs=;
-        fh=K7cSvgVIMW2AyG7zmXXRSsM5+ftxgrRF9MTWJXfAE6M=;
-        b=CmnrRJh3+2B2GXQAPxFUTm52nx12a3SKQJRov3c1aech5+dnHHNmjDUXnaI70q5Mpo
-         Z4vKzgiwFD/9cAFTGDydQhoh02TU6MzlFx/uK/Nsv105xyWd+RI7ZUos/oH0EaCZgqBC
-         nM2G6OzCEtK19e8S4QgXQPofui8AgpECSks065wmykXCMpjH+oOeRgFxV9+/C5nL11zs
-         ui75Cj4kmr+nEYO++YKwCqe4XH77Z4Lnpg1wnb5rhak2yTu1jL0PmqOtR35n/FRA5Z9+
-         HzZSAuflvU8+wDc2RjVUZbcbscTyXWQAsq+6Ai6HS6ns2AOPMQkQlNhe1jxPtrskWwo3
-         v7tA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rIPrPCAK"
+Received: by mail-oo1-f73.google.com with SMTP id 006d021491bc7-65742f8c565so21299eaf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Dec 2025 15:03:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1765997834; x=1766602634; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/zsAjg2VljJvmZn01nm4O96LDJFMDLKiBHWNqVOrCUs=;
-        b=G+Uq7blv5et2jdaQahL95+96l0pWvB/bahxKKfDBYLovjvltXS6k5kblDY+gPArYNk
-         vKdiQohlp24DnLYBchjd4ldPqz+XxQgGsihc/PxTlPN2VGudGiZQP2nyFTzTUqu5k+oG
-         a+xX6TOUEszVb/aZQE4ZbUtX/oXm7puBQAoI7cDLTvkPFg+ihwweI23J3JW4VJWEfCNV
-         O7FgmPiMNwIVm53vB37ygTNn6Anc/R0tl01pOiJFlCbPUgRfGxD/P0MbURKBH8ZBBP3q
-         BMJwT8e0M9ln9b6kv3eMCYFst3GXSLcwK7FTEf0L6nHKnyZkm1z+BlbxODWYbxmnBiKG
-         cQ6Q==
+        d=google.com; s=20230601; t=1766012622; x=1766617422; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aRTGpXalCpTw9EJ3jwwqmWQTyjHYa0HLkPGjExiFjCQ=;
+        b=rIPrPCAKLA8TVt8dJxvDb+V4hecsW6IZV/IKE1B7Wyao84NDPJag6rll8HfyFWh72T
+         QQ7q1kA1ZgcGll/QN81Eb1F/X3ZzdXDd6StpuJEiv4w/GmbYGvWMS0WvBZ0XCgeWae43
+         cstm9EcONBmeCEQtQ3uLgmE8qEzjvnE3TPT4rC7d62x/HIFdzzXsjeeT6KeawWNJYmlc
+         Guywernkj//1zm54qgEN0bn/sOUNOsBXLbQHG7H13AsEYJonMTIXH3r+kb8rfVMtYj7q
+         N9TxMrwAtpR7GU13YA12cZ3/Fh/BttjHwuYmQ8pD/KD8zJcWMSXgp4wnWZKCMEKa+fAU
+         zwCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765997834; x=1766602634;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/zsAjg2VljJvmZn01nm4O96LDJFMDLKiBHWNqVOrCUs=;
-        b=CLeZFoB2ikMPw9dpce3gIW1GCE9PIloWEa4Fz+kdyw7KBWlEKQAUy3n4QkJjLvjGEx
-         wxUAH5P2e/91k3HI1wZz06nbNmDYf56FoUAUu0mpxATi1+IBLXU3NMBcB8oBknFTvqye
-         pjshsTmMmHsP8wvN8BqvYzVK+1tC6qh3GhdenuoFSeIH1v0dHaNQLvHCvrqcubTUKwbM
-         +AslmbOzwinB6NRVWVGFPDmV8OHCYovLhxuNuaHTTbIDot+oujyPeaH99p0cRUVnH7C7
-         BA9h+uDE/DCennuhCXbsXvDBQpvKYQCK2RMWC6fyabZQlDbQgUeUmpQVPRSrx28jnavz
-         79gw==
-X-Forwarded-Encrypted: i=1; AJvYcCWXCqKmmMj0O/bZefCKnMe8jFDdoYfBC9qpH3UcwdSc5SMsDm7zHw/yaqSaCOdICGL5XztUjT6lNiVlf6ZLQ34F@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDGPHMNWPUjUyb5jcBUKCo/ip16VXrB5Xw5B+rK3as/FuPkFwf
-	JfRu3drlguokICm96sj2/E8RzblPWvVI/DjIL9JYh89hB5vPGnHwrOS0t/0Br/OmJhormJAy8N5
-	a7RcYEjVyRvzbVeRZAXfbp/B1Dzn3Kv5pJnU112Y5
-X-Gm-Gg: AY/fxX5RUSSlfh1nHsbx7EFtT2LewfCMV+fsIWvBWbOVMj6Z8yKmzmUk18SxjdxMUjS
-	d8yjNQLV5fjMn20CrwJBdT9Fc1vUOVXQ/mqpuuMzsEAQYmMkiSauhT/IaZqwGSJtfQFd6Hd7VP2
-	Si9PA+DChmTAq+FZcNL3h1weh5gAgvg4FK/SxAXbSqvrDh2kwGEcJYNYqD4PsKyHfO5j7/24tho
-	b+9yKLxlzHFOFh0x5kYOxbcmrOUsGthSn8Ww1yeMo4mAf5/6oCQafaN14R53AwYWNEi+9Y3x9//
-	eJPzVBE=
-X-Google-Smtp-Source: AGHT+IHGut4sKRqKJna/oIJmsW2mwPSNXnFDo2PyDc9wyD1ynldwy1wM6uKSVosJiIjtOYO3myyVBWL32jWsRoePCuU=
-X-Received: by 2002:a17:902:cecc:b0:291:6488:5af5 with SMTP id
- d9443c01a7336-2a2d0ba6a3cmr193945ad.1.1765997833618; Wed, 17 Dec 2025
- 10:57:13 -0800 (PST)
+        d=1e100.net; s=20230601; t=1766012622; x=1766617422;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aRTGpXalCpTw9EJ3jwwqmWQTyjHYa0HLkPGjExiFjCQ=;
+        b=BzJr6A6MPmg/AZpEF5xXOhzcwwb68RP7QbzZBgF+Kwx+CfgBzaqQtBUHMKNQIgV1vv
+         oDQ/n8uFRX3w8vCiuDHK9CoYJg3bVNgky2dNkjRBXpnyQHZk/5F4aQsdNfC9UzsMX5CD
+         LamXhBBID2cTrpukh+58Oy9QGpTDPjogQLSgVKnDKdHLMQM25vKGGdqkpSJmmh/WfbNR
+         oFb78p4Gd0V5b7AvW+uFWi5rc13kOghJOt+vVNQyafDnm/w00GT0g786wmzFJTbXABzI
+         ez94P6HfYd88BUqEBp6m1zJDEEJYBCNEznWVefZADnbizQ/CpYie4+H8S2xpqTuwCiJV
+         jPNg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJEQe/8s3gZ8t4McazHTHV0sQbwSYL4swpXdewQfBqpLJHGxQKrzSlPm2Rs42jmXTB6mofej/7SPwlfJmCH1xC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQ41Acq0ZGvK022edF7gnb8OMRRuvJ+P4fClx1O100kB20gJPC
+	dM4Zu655kvctjY7bocmTEFGjWZs3PtQ+kRVrlRmVOofLjIjFsvA3J42tTMA239jIU6FO3rc8KZY
+	jhv6ApUErSq6+7ymB4z9ZGDhUIg==
+X-Google-Smtp-Source: AGHT+IFQs5k1bWdHtz7tc4/8DEUyRxbCe8MSuSfyN2BvguDIeAIIerMywbvjRsitUO6G8RkTOEE+yjjKcwPQBwUtTA==
+X-Received: from jaii7.prod.google.com ([2002:a05:6638:4007:b0:5c6:3249:f8ff])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6820:2915:b0:659:9a49:8fb7 with SMTP id 006d021491bc7-65b452574dfmr8508202eaf.48.1766012622152;
+ Wed, 17 Dec 2025 15:03:42 -0800 (PST)
+Date: Wed, 17 Dec 2025 23:03:41 +0000
+In-Reply-To: <aUH7oC41XaEMsXf_@kernel.org> (message from Oliver Upton on Tue,
+ 16 Dec 2025 16:38:56 -0800)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251217183927.2259237-1-namhyung@kernel.org>
-In-Reply-To: <20251217183927.2259237-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 17 Dec 2025 10:57:01 -0800
-X-Gm-Features: AQt7F2o7r2utAXGoHgacZgZe_6YMLjsWIe2oVUX9Qml4fdmn39ZhPQiW1EMLpjg
-Message-ID: <CAP-5=fXShAb9Ez-j64fY8c_XDpRUp33Z1Z75jS9=+UaTKa68HQ@mail.gmail.com>
-Subject: Re: [PATCH] perf inject: Keep build-ID data if no option is used
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Gabriel Marin <gmx@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Message-ID: <gsnt34583e42.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [PATCH v5 14/24] KVM: arm64: Write fast path PMU register handlers
+From: Colton Lewis <coltonlewis@google.com>
+To: Oliver Upton <oupton@kernel.org>
+Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
+	maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com, 
+	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
+	mark.rutland@arm.com, shuah@kernel.org, gankulkarni@os.amperecomputing.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-On Wed, Dec 17, 2025 at 10:39=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> The keep_feat() determines which header features will be kept or
-> discarded.  Usually perf inject will add build-IDs based on -b, -B or
-> other related options.  But it lose build-ID when none of those options
-> are used.  This is meaningful only when --buildid-mmap is not used.
->
-> The following example shows the impact of this change.
->
->   $ perf record --no-buildid-mmap true
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.037 MB perf.data (5 samples) ]
->
->   $ perf inject -i perf.data -o perf.data.inject
->
->   $ perf buildid-list -i perf.data
->   08cccc2a9388d5247ccb3e864f3063b975b0a15d /usr/lib/x86_64-linux-gnu/ld-l=
-inux-x86-64.so.2
->   fd5c4d5673256cd6bda51725dba048dabb0f854e [kernel.kallsyms]
->   97a36ce1140071be5c36b147fa0bed173e05a602 [vdso]
->
->   $ perf buildid-list -i perf.data.inject
->   97a36ce1140071be5c36b147fa0bed173e05a602 [vdso]
->
-> With this change, perf.data.inject would show the same list (of course,
-> you need to run perf inject again).
->
-> Reported-by: Gabriel Marin <gmx@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Oliver Upton <oupton@kernel.org> writes:
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+> On Tue, Dec 09, 2025 at 08:51:11PM +0000, Colton Lewis wrote:
+>> diff --git a/arch/arm64/include/asm/arm_pmuv3.h  
+>> b/arch/arm64/include/asm/arm_pmuv3.h
+>> index 3e25c0313263c..41ec6730ebc62 100644
+>> --- a/arch/arm64/include/asm/arm_pmuv3.h
+>> +++ b/arch/arm64/include/asm/arm_pmuv3.h
+>> @@ -39,6 +39,16 @@ static inline unsigned long read_pmevtypern(int n)
+>>   	return 0;
+>>   }
 
-Thanks,
-Ian
+>> +static inline void write_pmxevcntr(u64 val)
+>> +{
+>> +	write_sysreg(val, pmxevcntr_el0);
+>> +}
+>> +
+>> +static inline u64 read_pmxevcntr(void)
+>> +{
+>> +	return read_sysreg(pmxevcntr_el0);
+>> +}
+>> +
+>>   static inline unsigned long read_pmmir(void)
+>>   {
+>>   	return read_cpuid(PMMIR_EL1);
+>> @@ -105,21 +115,41 @@ static inline void write_pmcntenset(u64 val)
+>>   	write_sysreg(val, pmcntenset_el0);
+>>   }
 
-> ---
->  tools/perf/builtin-inject.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index aa7be4fb5838fb99..6080afec537d2178 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -2022,7 +2022,7 @@ static int save_section_info(struct perf_inject *in=
-ject)
->         return perf_header__process_sections(header, fd, inject, save_sec=
-tion_info_cb);
->  }
->
-> -static bool keep_feat(int feat)
-> +static bool keep_feat(struct perf_inject *inject, int feat)
->  {
->         switch (feat) {
->         /* Keep original information that describes the machine or softwa=
-re */
-> @@ -2050,6 +2050,7 @@ static bool keep_feat(int feat)
->                 return true;
->         /* Information that can be updated */
->         case HEADER_BUILD_ID:
-> +               return inject->build_id_style =3D=3D BID_RWS__NONE;
->         case HEADER_CMDLINE:
->         case HEADER_EVENT_DESC:
->         case HEADER_BRANCH_STACK:
-> @@ -2108,7 +2109,7 @@ static int feat_copy_cb(struct feat_copier *fc, int=
- feat, struct feat_writer *fw
->         int ret;
->
->         if (!inject->secs[feat].offset ||
-> -           !keep_feat(feat))
-> +           !keep_feat(inject, feat))
->                 return 0;
->
->         ret =3D feat_copy(inject, feat, fw);
-> --
-> 2.52.0.313.g674ac2bdf7-goog
->
+>> +static inline u64 read_pmcntenset(void)
+>> +{
+>> +	return read_sysreg(pmcntenset_el0);
+>> +}
+>> +
+>>   static inline void write_pmcntenclr(u64 val)
+>>   {
+>>   	write_sysreg(val, pmcntenclr_el0);
+>>   }
+
+>> +static inline u64 read_pmcntenclr(void)
+>> +{
+>> +	return read_sysreg(pmcntenclr_el0);
+>> +}
+>> +
+>>   static inline void write_pmintenset(u64 val)
+>>   {
+>>   	write_sysreg(val, pmintenset_el1);
+>>   }
+
+>> +static inline u64 read_pmintenset(void)
+>> +{
+>> +	return read_sysreg(pmintenset_el1);
+>> +}
+>> +
+>>   static inline void write_pmintenclr(u64 val)
+>>   {
+>>   	write_sysreg(val, pmintenclr_el1);
+>>   }
+
+>> +static inline u64 read_pmintenclr(void)
+>> +{
+>> +	return read_sysreg(pmintenclr_el1);
+>> +}
+>> +
+>>   static inline void write_pmccfiltr(u64 val)
+>>   {
+>>   	write_sysreg(val, pmccfiltr_el0);
+>> @@ -160,11 +190,16 @@ static inline u64 read_pmovsclr(void)
+>>   	return read_sysreg(pmovsclr_el0);
+>>   }
+
+>> -static inline void write_pmuserenr(u32 val)
+>> +static inline void write_pmuserenr(u64 val)
+>>   {
+>>   	write_sysreg(val, pmuserenr_el0);
+>>   }
+
+>> +static inline u64 read_pmuserenr(void)
+>> +{
+>> +	return read_sysreg(pmuserenr_el0);
+>> +}
+>> +
+>>   static inline void write_pmuacr(u64 val)
+>>   {
+>>   	write_sysreg_s(val, SYS_PMUACR_EL1);
+
+> I wouldn't bother with adding accessors to the PMUv3 driver header, this
+> gets a bit confusing when the 32-bit counterpart lacks matching  
+> definitions.
+> Additionally, the part of KVM you're modifying is very much an
+> "internal" part meant to run in a not-quite-kernel context.
+
+> Considering this, I'd prefer KVM directly accessed the PMU registers to
+> avoid the possibility of taking some instrumented codepath in the
+> future.
+
+Will do.
+
+>> +	if (!kvm_vcpu_pmu_is_partitioned(vcpu)
+>> +	    || pmu_access_el0_disabled(vcpu))
+
+> Always put operators on the preceding line for line continuations.
+
+> Also, don't call pmu_access_el0_disabled() from here. It can potentially
+> do a full emulated exception entry even though the vCPU is in an
+> extremely inconsistent state (i.e. haven't returned to kernel context
+> yet). Isn't the current value for PMUSERENR_EL0 on the CPU instead of in
+> the vCPU's saved context anyway?
+
+> The fast-path accessors really need to be *just* accessors, reading
+> state from the CPU in the unfortunate situation that a TPM trap has been
+> forced upon us.
+
+Understood.
+
+>> +	case SYS_PMXEVCNTR_EL0:
+>> +		idx = FIELD_GET(PMSELR_EL0_SEL, read_pmselr());
+>> +
+>> +		if (pmu_access_event_counter_el0_disabled(vcpu))
+>> +			return false;
+>> +
+>> +		if (!pmu_counter_idx_valid(vcpu, idx))
+>> +			return false;
+>> +
+>> +		ret = handle_pmu_reg(vcpu, &p, PMEVCNTR0_EL0 + idx, rt, val,
+>> +				     &read_pmxevcntr, &write_pmxevcntr);
+>> +		break;
+
+> It is a bit odd to handle the muxing for finding the in-memory value yet
+> using the selector-based register for hardware.
+
+Agreed
+
+>> +	case SYS_PMEVCNTRn_EL0(0) ... SYS_PMEVCNTRn_EL0(30):
+>> +		idx = ((p.CRm & 3) << 3) | (p.Op2 & 7);
+>> +
+>> +		if (pmu_access_event_counter_el0_disabled(vcpu))
+>> +			return false;
+>> +
+>> +		if (!pmu_counter_idx_valid(vcpu, idx))
+>> +			return false;
+>> +
+>> +		if (p.is_write) {
+>> +			write_pmevcntrn(idx, val);
+>> +			__vcpu_assign_sys_reg(vcpu, PMEVCNTR0_EL0 + idx, val);
+>> +		} else {
+>> +			vcpu_set_reg(vcpu, rt, read_pmevcntrn(idx));
+>> +		}
+>> +
+>> +		ret = true;
+>> +		break;
+
+> Can't both of these cases share a helper once you've worked out the
+> index? Same for PMEVTYPERn_EL0.
+
+Agreed
+
+>> +	default:
+>> +		ret = false;
+>> +	}
+>> +
+>> +	if (ret)
+>> +		__kvm_skip_instr(vcpu);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>   static inline bool kvm_hyp_handle_sysreg(struct kvm_vcpu *vcpu, u64  
+>> *exit_code)
+>>   {
+>>   	if (cpus_have_final_cap(ARM64_WORKAROUND_CAVIUM_TX2_219_TVM) &&
+>> @@ -785,6 +983,9 @@ static inline bool kvm_hyp_handle_sysreg(struct  
+>> kvm_vcpu *vcpu, u64 *exit_code)
+>>   	if (kvm_handle_cntxct(vcpu))
+>>   		return true;
+
+>> +	if (kvm_hyp_handle_pmu_regs(vcpu))
+>> +		return true;
+>> +
+
+> Since the whole partitioned PMU feature is constrained to VHE-only you
+> should call this from kvm_hyp_handle_sysreg_vhe().
+
+Will do.
+
+>> +
+>> +bool check_pmu_access_disabled(struct kvm_vcpu *vcpu, u64 flags)
+>> +{
+>> +	u64 reg = __vcpu_sys_reg(vcpu, PMUSERENR_EL0);
+>> +	bool enabled = (reg & flags) || vcpu_mode_priv(vcpu);
+>> +
+>> +	if (!enabled)
+>> +		kvm_inject_undefined(vcpu);
+>> +
+>> +	return !enabled;
+>> +}
+>> +
+>> +bool pmu_access_el0_disabled(struct kvm_vcpu *vcpu)
+>> +{
+>> +	return check_pmu_access_disabled(vcpu, ARMV8_PMU_USERENR_EN);
+>> +}
+>> +
+>> +bool pmu_counter_idx_valid(struct kvm_vcpu *vcpu, u64 idx)
+>> +{
+>> +	u64 pmcr, val;
+>> +
+>> +	pmcr = kvm_vcpu_read_pmcr(vcpu);
+>> +	val = FIELD_GET(ARMV8_PMU_PMCR_N, pmcr);
+>> +	if (idx >= val && idx != ARMV8_PMU_CYCLE_IDX) {
+>> +		kvm_inject_undefined(vcpu);
+>> +		return false;
+>> +	}
+>> +
+>> +	return true;
+>> +}
+>> +
+>> +bool pmu_access_cycle_counter_el0_disabled(struct kvm_vcpu *vcpu)
+>> +{
+>> +	return check_pmu_access_disabled(vcpu, ARMV8_PMU_USERENR_CR |  
+>> ARMV8_PMU_USERENR_EN);
+>> +}
+>> +
+>> +bool pmu_access_event_counter_el0_disabled(struct kvm_vcpu *vcpu)
+>> +{
+>> +	return check_pmu_access_disabled(vcpu, ARMV8_PMU_USERENR_ER |  
+>> ARMV8_PMU_USERENR_EN);
+>> +}
+
+> Refactorings need to happen in a separate patch.
+
+Will do
+
+> Thanks,
+> Oliver
