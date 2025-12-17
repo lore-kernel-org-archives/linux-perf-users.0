@@ -1,234 +1,137 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E8233DECA
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Dec 2025 09:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E73251791
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Dec 2025 12:34:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765964064; cv=none; b=i+X0z678QXdVvniZtAg1CFJ7QKwFWamrWX8tIDtFs2JZ4hpmeX59GgQRGwB/GGK89freYIMu8dMmpuTNKTZ2WfgseCvPE+hAOE5TLE1hTJuZak03NDhPNUxJl8YmPb5l788uuTDuyKewbuXgIr5RGJBMlmrT/wyepHsNZw1lVYs=
+	t=1765974856; cv=none; b=geRMf3s1qn7EKWiHhzY0I6ZkbVHGy4AfxF7w/0PKQGutWlGaDwN6+GHTYoL6XzbyOn3YOoSErzRhTWUPlzc8p9xdj2mSKL3nejitGwelrYjRI2z0HluIu+aJHgO+WKPs1746frQMlE52gsu75+VUyttbZVbioD8BObitZrrwPBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765964064; c=relaxed/simple;
-	bh=8d0Kv05QbIY3V6VZgRLzYlCzx44ZNAZYWZcMIbzy/j4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KEqCudNhdx30w/xhVKgo89OjBz9zTe4/YvjXR5CmTyuCLXBWlSgsIZa60XKKdrJ6RCZfanRg0lcL31EceBsYh01UEcEX6GQ2SSgCRUQ9Ge8ZI1lDRWQzPFmFbBqXIIj2UvkKb4Lu7U7a2X+Osvyrk30UzoQtXb9HDWDs6tTXKas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dpvEGav0; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1765974856; c=relaxed/simple;
+	bh=+TIekZx3/uvElrdf6KHx/6gUqgw6sR5VUdn/6IuKBbU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qyEDRHtrd4LkhU96kihkfeDyMuQQvaKuhgkYBp9fN7QTLqP6AvhQ14lW4dftp9KtJrKA0LXYe9RsffsRdaSHSJO9+w92KnZA/oekExpqxm4O+N1XTKEWdXOrIwWTPcysy4mbKLDeFWtpuDeM0CiUBDxOEiftMVZ+P9BtF6KfCfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JVWeJDvK; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dpvEGav0"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1765964061;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uUM9tN+SRSk9se9w/GBygwPxcQRVLd8zM/nzUyQmYq4=;
-	b=dpvEGav0CQXGktLmWV23c6eYuovr1ahiBRFsrOAyDkihHQdt9qOuyMYmbOtxO5rIXCz+Ub
-	g0inWUkTZLYEji60/+/8nd1vfKZA9tFDD2/D8fzsfv2TPHm3rILOVDM8WPn/nPcaKm8HMc
-	9xnkudCW/TmEeW40I8rMAvYhmgUOSJE=
-From: Tao Chen <chen.dylane@linux.dev>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	song@kernel.org,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next v7 2/2] bpf: Hold the perf callchain entry until used completely
-Date: Wed, 17 Dec 2025 17:33:26 +0800
-Message-ID: <20251217093326.1745307-3-chen.dylane@linux.dev>
-In-Reply-To: <20251217093326.1745307-1-chen.dylane@linux.dev>
-References: <20251217093326.1745307-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JVWeJDvK"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b7a6e56193cso1046429366b.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Dec 2025 04:34:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1765974853; x=1766579653; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BqCGOsZ4BZPhdG00MIUomE8awebnSdupDx2Uch0yTuE=;
+        b=JVWeJDvKQdYFIkBsQ1lzykASutzi6tEjsZon9FgIwcANBWtv0yAnAaVVnE0gJ7Y3r5
+         xHd96v7fH/sp19FEIhgsHGz6aOqzZW+28It0uSYN5itOZCda6V5KwA/IWnvEshXQSqwW
+         o5EsKTTfYlnkOGBMdFXzdj3YRNVUFqT/uL7mrh1tmXDdToGNQqwka8+kcTtk1uk//iJ/
+         qV3Ry5/m+mAbxWJrzN5w9FWorxUK8sdwcCsPY94uUfyLwrLofikNpTlXbCWK4upjK96w
+         xLPf6IYOferAClsmu2/cdYe82YLXiLeTcFQdGSfGgPGIBT/IQEh1hWWZ3oLfX++6RlRW
+         iC0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765974853; x=1766579653;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BqCGOsZ4BZPhdG00MIUomE8awebnSdupDx2Uch0yTuE=;
+        b=D+7EvLXdLQfTgh0Tg7+ov6OWivlTIThrQpAFH7sW90PQV8NBH9k81RjtczPnaHIA5q
+         u9eNtXrEQ9zIFdU4HKa2VVep9n1b80V+39VGTDznKdwR05kiUIRHci/+hhy9eLvkZOP3
+         vrawqU+w/Tm0orZRSB9KD9Yl1HNG83tZ3HfSiCLyp7+ISG7SOWZAEUSITsd2Jug8I4ax
+         UDmSujgUMDr+8mKxOdKEiqpm/06bGD7FROBi3HaaHCOtFzRrPYWoskz563u8QGsEoKcq
+         E2b//CgvyGyVQOFfLI70+EZ9K5HmVRPu+5uFHG3NoGPBKrFlS6pPbL8kKtRhheTLo0yD
+         cEyA==
+X-Forwarded-Encrypted: i=1; AJvYcCXndds/C4VWxtkmhN2G+7HOY6QtapXxurmH6HsJmLJJemojt69dO43qOnc70PSmmOJ/VzZOAcV0eYItnvSM0Sdq@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNC+02j+apXJc8qFDgwDw3zdglcHYgux120GH8uMQu6NWYWgW+
+	1D7xCQQ9sp7AqxEiszGqJMWPdUK44Z3oC81HNRJW4DgZt2y2yVO7lQ+3p2G211FzRck=
+X-Gm-Gg: AY/fxX6eJfhnYUpm8BX9ljvA2u9jW5XJJCZKrAZw/G8is9njdeA9NWo3rfGPEAbG2mT
+	5h2hXP9PVekQLOd53Qf38B2GP3U9qmNDKYLQu6+HK9FLQsCx2/6wDYHunc0F572KgJXEwXVGAqn
+	ggTUxmz6PgGstroFy4TzXKsuHFY7e3EidEHu0TilLttbRFA+FUCYw5P7d7mYG8G47ziJ8JyYYNE
+	/zVcuI4FcH9WIMwzz0soxF71ZYnjPAJ4EtyTJgzXSAd01rzk1dLSWEC4LA2Jlap2Pwl/cRtjioc
+	8SdJ/UNUq2UKIFdwVqc8yGfp3DMx6gaFcQuOQ0vbka08kIzNIdUqmuK6PpyUZ8KHhpI2nUsYxL3
+	79D18cgP3hs6ShLGGtXiZxd8UuChYc6bIkM9EnX+xmn4/ZKG+Arz+XuNj3RVimtoYYrLQf3Chrl
+	6skAL87xmu8HMthfXKHbvMSJeWq3IzkB8=
+X-Google-Smtp-Source: AGHT+IHCJ5p1mqHUmIm0m6/EO8R7tyvPsphE78dwHj6xv45A77sVAcJddUtJ+YkfO08Nbb25famhnQ==
+X-Received: by 2002:a17:907:3da4:b0:b73:5f48:6159 with SMTP id a640c23a62f3a-b7d236f7974mr1742785466b.5.1765974852651;
+        Wed, 17 Dec 2025 04:34:12 -0800 (PST)
+Received: from [192.168.0.108] ([130.185.218.160])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7fee422729sm512798366b.9.2025.12.17.04.34.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Dec 2025 04:34:12 -0800 (PST)
+Message-ID: <96a09496-f3df-415b-95d1-92ceda06dd03@linaro.org>
+Date: Wed, 17 Dec 2025 14:34:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arch/powerpc/perf: Fix perf record -d sample loss on
+ non-marked events
+To: Anubhav Shelat <ashelat@redhat.com>
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ dapeng1.mi@linux.intel.com, mpetlan@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, irogers@google.com, linux-perf-users@vger.kernel.org
+References: <20251216211541.111795-2-ashelat@redhat.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20251216211541.111795-2-ashelat@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-As Alexei noted, get_perf_callchain() return values may be reused
-if a task is preempted after the BPF program enters migrate disable
-mode. The perf_callchain_entres has a small stack of entries, and
-we can reuse it as follows:
 
-1. get the perf callchain entry
-2. BPF use...
-3. put the perf callchain entry
 
-And Peter suggested that get_recursion_context used with preemption
-disabled, so we should disable preemption at BPF side.
+On 16/12/2025 23:15, Anubhav Shelat wrote:
+> Previously, when running "perf record -d" on powerpc, perf would drop all
+> samples that were not load or store instructions. This is because of an
+> overly aggressive check introduced in 2ffb26afa642 ("arch/powerpc/perf:
+> Check the instruction type before creating sample with perf_mem_data_src")
+> which drops samples when the SIER instruction value is considered
+> reserved (0 or 7 in ISA 3.0, and 0 in ISA 3.1).
+> 
+> This happens because
+> 1) "perf record -d" sets PERF_SAMPLE_DATA_SRC for general sampling.
+> 2) When sampling non-memory instructions, the SIER instruction type is 0.
+> 3) record_and_restart drops anything with SIER instruction type 0.
+> 
+> "perf mem record" uses marked events by setting MMCRA_SAMPLE_ENABLE
+> which samples load/store instructions, so a sample with SIER instruction
+> type of 0 would be an anomaly and should be dropped. So fix this issue by
+> loosening the check to only include marked events. For non-marked
+> events, the sample is kept and isa207_get_mem_data_src initializes
+> data_src to 0, preserving the original fix in 2ffb26afa642.
+> 
+> Fixes: 2ffb26afa642 ("arch/powerpc/perf: Check the instruction type
+> before creating sample with perf_mem_data_src")
+> 
+> Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+> ---
+>   arch/powerpc/perf/core-book3s.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
+> index 8b0081441f85..bd44b83db9ec 100644
+> --- a/arch/powerpc/perf/core-book3s.c
+> +++ b/arch/powerpc/perf/core-book3s.c
+> @@ -2304,10 +2304,11 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
+>   	 * In ISA v3.0 and before values "0" and "7" are considered reserved.
+>   	 * In ISA v3.1, value "7" has been used to indicate "larx/stcx".
+>   	 * Drop the sample if "type" has reserved values for this field with a
+> -	 * ISA version check.
+> +	 * ISA version check for marked events.
+>   	 */
+>   	if (event->attr.sample_type & PERF_SAMPLE_DATA_SRC &&
+> -			ppmu->get_mem_data_src) {
+> +			ppmu->get_mem_data_src &&
+> +			(regs->dsisr & MMCRA_SAMPLE_ENABLE)) {
+>   		val = (regs->dar & SIER_TYPE_MASK) >> SIER_TYPE_SHIFT;
+>   		if (val == 0 || (val == 7 && !cpu_has_feature(CPU_FTR_ARCH_31))) {
+>   			record = 0;
 
-Acked-by: Yonghong Song <yonghong.song@linux.dev>
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
----
- kernel/bpf/stackmap.c | 68 +++++++++++++++++++++++++++++++++++--------
- 1 file changed, 56 insertions(+), 12 deletions(-)
-
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index da3d328f5c1..3bdd99a630d 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -210,13 +210,14 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
- }
- 
- static struct perf_callchain_entry *
--get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
-+get_callchain_entry_for_task(int *rctx, struct task_struct *task, u32 max_depth)
- {
- #ifdef CONFIG_STACKTRACE
- 	struct perf_callchain_entry *entry;
--	int rctx;
- 
--	entry = get_callchain_entry(&rctx);
-+	preempt_disable();
-+	entry = get_callchain_entry(rctx);
-+	preempt_enable();
- 
- 	if (!entry)
- 		return NULL;
-@@ -238,8 +239,6 @@ get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
- 			to[i] = (u64)(from[i]);
- 	}
- 
--	put_callchain_entry(rctx);
--
- 	return entry;
- #else /* CONFIG_STACKTRACE */
- 	return NULL;
-@@ -320,6 +319,34 @@ static long __bpf_get_stackid(struct bpf_map *map,
- 	return id;
- }
- 
-+static struct perf_callchain_entry *
-+bpf_get_perf_callchain(int *rctx, struct pt_regs *regs, bool kernel, bool user,
-+		       int max_stack, bool crosstask)
-+{
-+	struct perf_callchain_entry_ctx ctx;
-+	struct perf_callchain_entry *entry;
-+
-+	preempt_disable();
-+	entry = get_callchain_entry(rctx);
-+	preempt_enable();
-+
-+	if (unlikely(!entry))
-+		return NULL;
-+
-+	__init_perf_callchain_ctx(&ctx, entry, max_stack, false);
-+	if (kernel)
-+		__get_perf_callchain_kernel(&ctx, regs);
-+	if (user && !crosstask)
-+		__get_perf_callchain_user(&ctx, regs, 0);
-+
-+	return entry;
-+}
-+
-+static void bpf_put_perf_callchain(int rctx)
-+{
-+	put_callchain_entry(rctx);
-+}
-+
- BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
- 	   u64, flags)
- {
-@@ -328,20 +355,25 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
- 	struct perf_callchain_entry *trace;
- 	bool kernel = !user;
- 	u32 max_depth;
-+	int rctx, ret;
- 
- 	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
- 			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
- 		return -EINVAL;
- 
- 	max_depth = stack_map_calculate_max_depth(map->value_size, elem_size, flags);
--	trace = get_perf_callchain(regs, kernel, user, max_depth,
--				   false, false, 0);
-+
-+	trace = bpf_get_perf_callchain(&rctx, regs, kernel, user, max_depth,
-+				       false);
- 
- 	if (unlikely(!trace))
- 		/* couldn't fetch the stack trace */
- 		return -EFAULT;
- 
--	return __bpf_get_stackid(map, trace, flags);
-+	ret = __bpf_get_stackid(map, trace, flags);
-+	bpf_put_perf_callchain(rctx);
-+
-+	return ret;
- }
- 
- const struct bpf_func_proto bpf_get_stackid_proto = {
-@@ -435,6 +467,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
- 	bool kernel = !user;
- 	int err = -EINVAL;
- 	u64 *ips;
-+	int rctx;
- 
- 	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
- 			       BPF_F_USER_BUILD_ID)))
-@@ -467,18 +500,26 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
- 		trace = trace_in;
- 		trace->nr = min_t(u32, trace->nr, max_depth);
- 	} else if (kernel && task) {
--		trace = get_callchain_entry_for_task(task, max_depth);
-+		trace = get_callchain_entry_for_task(&rctx, task, max_depth);
- 	} else {
--		trace = get_perf_callchain(regs, kernel, user, max_depth,
--					   crosstask, false, 0);
-+		trace = bpf_get_perf_callchain(&rctx, regs, kernel, user, max_depth,
-+					       crosstask);
- 	}
- 
--	if (unlikely(!trace) || trace->nr < skip) {
-+	if (unlikely(!trace)) {
- 		if (may_fault)
- 			rcu_read_unlock();
- 		goto err_fault;
- 	}
- 
-+	if (trace->nr < skip) {
-+		if (may_fault)
-+			rcu_read_unlock();
-+		if (!trace_in)
-+			bpf_put_perf_callchain(rctx);
-+		goto err_fault;
-+	}
-+
- 	trace_nr = trace->nr - skip;
- 	copy_len = trace_nr * elem_size;
- 
-@@ -497,6 +538,9 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
- 	if (may_fault)
- 		rcu_read_unlock();
- 
-+	if (!trace_in)
-+		bpf_put_perf_callchain(rctx);
-+
- 	if (user_build_id)
- 		stack_map_get_build_id_offset(buf, trace_nr, user, may_fault);
- 
--- 
-2.48.1
+Reviewed-by: James Clark <james.clark@linaro.org>
 
