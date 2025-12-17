@@ -1,49 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F67253950;
-	Wed, 17 Dec 2025 15:25:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C4336403F;
+	Wed, 17 Dec 2025 15:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765985104; cv=none; b=Gan7SS8kzNYlEW7J4+4HKBD1qbxwysMs8JHd1uZOgZszxZ5TzZa0580KgA+ainkHa1BjaGUDAmBFMPgbS/6/xQkRiH76klxwYp4TsSnkUtIcCpkeLm1cHvxlQf/+RiWu2vv9NXntPkY2nEKZYH0yEH7jfhFddh2CujyjPVXw12s=
+	t=1765985268; cv=none; b=cQ5goYwkxGzCE00kkJRd87rgO4bYHSaREr/yxyrQEyt+Tr84FI9ishVMX+0EFpuqY5wMkuISfiLTlk9ptL2REvxdYVGpw5ECSz5pK0wyuNsT63ovRRQcz/9o0DG06uciLXCpvTc0zikxPQHB9FjhMhH06PiGpHS0c+ynSa0/4RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765985104; c=relaxed/simple;
-	bh=FfaEgysqg0qjs127S7KzTs/5HTKPh0j40Z7k0iwiMVc=;
+	s=arc-20240116; t=1765985268; c=relaxed/simple;
+	bh=B8wA+8nfD+gltTXk/Kl0y8cBQSP5PKZ/u7nH/ieM6uU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SazaDBj/LzO+ndOuRAT/WBT/I4Mm3AohdNXOIrzc3DGotszFbxHR7QNW0gFVx68Y8s5lIRMGToxoMRGjQcTO4C1/cE5qPEVC2xM8lOOqmWfL+KKgkzYCQxeQEmUdOCWDK8dgIs9njH5TQFOjaTM82rA1xT14IG9MxQT4E7A7Kf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQnG5eh3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQT6O++b1f09z8G5kt9PNvVAl8XZ9SHxL8Jm5hXUvuO8NlFgdWgAzq5+ZqqA5lGxTUAoY4QEitJgtBo6HvUp04YCqZzoXm/S/QHhab2nQy7pjPZ1yncxw2RJImgjFeozUElDwquCSb5DxaAR9RGaTrDjEkSguloYLkuT1fdad3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CD8tcRaZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQnG5eh3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B0C5C113D0;
-	Wed, 17 Dec 2025 15:25:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CD8tcRaZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DC0CC4CEF5;
+	Wed, 17 Dec 2025 15:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765985103;
-	bh=FfaEgysqg0qjs127S7KzTs/5HTKPh0j40Z7k0iwiMVc=;
+	s=k20201202; t=1765985267;
+	bh=B8wA+8nfD+gltTXk/Kl0y8cBQSP5PKZ/u7nH/ieM6uU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hQnG5eh3FYH/YNdlFXpjbWHyOwrcTO3z4HdEUryWKSLNdyNvNWwu/xpWtEDhxA4sA
-	 +48X8RoPyptAzZFv9DdG4EyKq7ygRgQOOCFiIwzY9q1Zn2xCj6+Vxj31N+A3eylh8t
-	 SFLrLiEctIXcDIbmALy/gONxKFm2uW43xufCeZD2SLCzE6ZN466xOgcleOrF9rIr4S
-	 aKD3K12470ULP9XHwf8dcDE11M3CHEVCqROKIck34dnr3/2obXW0l5Q8EH9H9En9i7
-	 w1YmX/X44DPfAAxBjgKhNYHVC6t7dyJZdrutM3mDC3IoxtvUE5ygbnp8ASZU3Un7MR
-	 OzP7rC6alL0SQ==
-Date: Wed, 17 Dec 2025 07:25:01 -0800
+	b=CD8tcRaZgHlUZF5SfMhTsyE+fiaOmfBD1Bl5dtKpnhaIcJNVcoolgoSFLEc1EMr9O
+	 qmeH7Ey5cWSMqqZ5ip8X7PwSQ1efS3pBDL2oTu86GKObMKdBp9ZvmHdGiY93bJdTAB
+	 +dXg2FYxbtACH7i0d45GLSnUDqs1dOizZAdYFb0vlxEbQ7Z+ms9vDbRpK+TargW1oQ
+	 olLg+z5sy1/fvpMYfLRsUTd4edWCIvbSlGfDJfMwrkeIPVSdNbEislQIlKBb6NHSZ0
+	 co8XY8Zmd3r7V9NamQOGONCCBgblDDvZ6dmVKzlRJ+chwY5UigJQKAzLqPuAFHrkwJ
+	 cdeBrkU6cMNgA==
+Date: Wed, 17 Dec 2025 07:27:45 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>
+To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Fangrui Song <maskray@sourceware.org>,
-	Pablo Galindo <pablogsal@gmail.com>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] perf genelf: BLAKE2s build ID generation
-Message-ID: <aULLTawpDh26XHDB@google.com>
-References: <20251209015729.23253-1-ebiggers@kernel.org>
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Haibo Xu <haibo1.xu@intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf symbol: Fix ENOENT case for
+ filename__read_build_id
+Message-ID: <aULL8e1VFaaHs0aP@google.com>
+References: <20251207022345.909535-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,52 +50,108 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251209015729.23253-1-ebiggers@kernel.org>
+In-Reply-To: <20251207022345.909535-1-irogers@google.com>
 
-Hello,
+Hi Ian,
 
-On Mon, Dec 08, 2025 at 05:57:26PM -0800, Eric Biggers wrote:
-> This series upgrades perf's build ID generation to a more modern hash
-> algorithm and switches to an incremental hashing API.
+On Sat, Dec 06, 2025 at 06:23:45PM -0800, Ian Rogers wrote:
+> Some callers of filename__read_build_id assume the error value must be
+> -1, fix by making them handle all < 0 values.
 > 
-> It also fixes an issue where different (code, symtab, strsym) tuples
-> didn't necessarily result in different hashes.
+> If is_regular_file fails in filename__read_build_id then it could be
+> the file is missing (ENOENT) and it would be wrong to return
+> -EWOULDBLOCK in that case. Fix the logic so -EWOULDBLOCK is only
+> reported if other errors with stat haven't occurred.
 > 
-> Note that the size of the build ID field stays the same.
-> 
-> This applies to the perf-tools-next branch of
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
-> 
-> Changed in v2:
->     - Split into three patches
->     - Improved a couple comments
-> 
-> Eric Biggers (3):
->   perf util: Add BLAKE2s support
->   perf genelf: Switch from SHA-1 to BLAKE2s for build ID generation
->   perf util: Remove SHA-1 code
+> Fixes: 834ebb5678d7 ("perf tools: Don't read build-ids from non-regular files")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> Note, a shorter version of this patch appeared in a series
+> cleaning/refactoring the build id reading code:
+> https://lore.kernel.org/lkml/20251201205509.195451-11-irogers@google.com/
+> It is sent without the refactor for the sake of fixing the bug in an
+> earlier release.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Thanks for the fix, I'll apply this to perf-tools for v6.19.
 
-Thanks a lot!
 Namhyung
 
+> ---
+>  tools/perf/builtin-buildid-cache.c | 6 ++++--
+>  tools/perf/util/libbfd.c           | 4 +++-
+>  tools/perf/util/symbol-elf.c       | 4 +++-
+>  tools/perf/util/symbol-minimal.c   | 4 +++-
+>  4 files changed, 13 insertions(+), 5 deletions(-)
 > 
->  tools/perf/tests/util.c   |  85 +++++++++++++--------
->  tools/perf/util/Build     |   2 +-
->  tools/perf/util/blake2s.c | 151 ++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/blake2s.h |  73 ++++++++++++++++++
->  tools/perf/util/genelf.c  |  58 +++++++--------
->  tools/perf/util/sha1.c    |  97 ------------------------
->  tools/perf/util/sha1.h    |   6 --
->  7 files changed, 309 insertions(+), 163 deletions(-)
->  create mode 100644 tools/perf/util/blake2s.c
->  create mode 100644 tools/perf/util/blake2s.h
->  delete mode 100644 tools/perf/util/sha1.c
->  delete mode 100644 tools/perf/util/sha1.h
-> 
-> 
-> base-commit: 2eeb09fe1c5173b659929f92fee4461796ca8c14
+> diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+> index c98104481c8a..539e779e3268 100644
+> --- a/tools/perf/builtin-buildid-cache.c
+> +++ b/tools/perf/builtin-buildid-cache.c
+> @@ -276,12 +276,14 @@ static bool dso__missing_buildid_cache(struct dso *dso, int parm __maybe_unused)
+>  {
+>  	char filename[PATH_MAX];
+>  	struct build_id bid = { .size = 0, };
+> +	int err;
+>  
+>  	if (!dso__build_id_filename(dso, filename, sizeof(filename), false))
+>  		return true;
+>  
+> -	if (filename__read_build_id(filename, &bid) == -1) {
+> -		if (errno == ENOENT)
+> +	err = filename__read_build_id(filename, &bid);
+> +	if (err < 0) {
+> +		if (err == -ENOENT)
+>  			return false;
+>  
+>  		pr_warning("Problems with %s file, consider removing it from the cache\n",
+> diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+> index 0099b415decc..edf0829e9635 100644
+> --- a/tools/perf/util/libbfd.c
+> +++ b/tools/perf/util/libbfd.c
+> @@ -391,8 +391,10 @@ int libbfd__read_build_id(const char *filename, struct build_id *bid)
+>  
+>  	if (!filename)
+>  		return -EFAULT;
+> +
+> +	errno = 0;
+>  	if (!is_regular_file(filename))
+> -		return -EWOULDBLOCK;
+> +		return errno == 0 ? -EWOULDBLOCK : -errno;
+>  
+>  	fd = open(filename, O_RDONLY);
+>  	if (fd < 0)
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 957143fbf8a0..d1dcafa4b3b8 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -902,8 +902,10 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
+>  
+>  	if (!filename)
+>  		return -EFAULT;
+> +
+> +	errno = 0;
+>  	if (!is_regular_file(filename))
+> -		return -EWOULDBLOCK;
+> +		return errno == 0 ? -EWOULDBLOCK : -errno;
+>  
+>  	err = kmod_path__parse(&m, filename);
+>  	if (err)
+> diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+> index c6b17c14a2e9..8221dc9868f7 100644
+> --- a/tools/perf/util/symbol-minimal.c
+> +++ b/tools/perf/util/symbol-minimal.c
+> @@ -104,8 +104,10 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
+>  
+>  	if (!filename)
+>  		return -EFAULT;
+> +
+> +	errno = 0;
+>  	if (!is_regular_file(filename))
+> -		return -EWOULDBLOCK;
+> +		return errno == 0 ? -EWOULDBLOCK : -errno;
+>  
+>  	fd = open(filename, O_RDONLY);
+>  	if (fd < 0)
 > -- 
-> 2.52.0
+> 2.52.0.223.gf5cc29aaa4-goog
 > 
