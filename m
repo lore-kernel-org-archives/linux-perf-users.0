@@ -1,71 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AB632ABC0;
-	Wed, 17 Dec 2025 12:37:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0DA7355051;
+	Wed, 17 Dec 2025 12:42:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765975074; cv=none; b=uxrnyrmtiSlgnC/fJZs43v/bDl+3GW/UKJQp6XwNRDD5+GDCCszinveyJIgPmF7MVB8lKwxuOvGAocLtbo650jsJJ8VCGxFA4lQLKLztKxnQmj/fT+h9UZAsIVa4EKSVRJuBnZVQfH/mAmIq2cC9RSELTMLZb6XXKMoyU2qZAgs=
+	t=1765975368; cv=none; b=pJF8AjOlpiYRBl0/C7qQrltVNbDB3gymU/ft+keKg1t4+Av4rXDzULncL7X1aZZGjqzgzALAgrNybO0qTU1NkNK7skMOXAANB0sBV1vVsAfCwF+ddX2qH1K8t6BQhpu+RRf1m/UxeNRCzYEy7ZhoaKGaIMr80jKP8PDC3tEK0DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765975074; c=relaxed/simple;
-	bh=ou9Z3js+881lhZms28WvEv8+3fWb8COxwAvUIb3Y6eg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dxTPA8vVZ9Qt0lOAQMa/oSFI3HcRPCheMQqgFyRPvIqdJAPmizsYNgxuSYI37+dkhBZpxpYMtXNxvcabRWm8+p0ABY998MwcH2F3wUIOAe1+X5v3KUaYFtlnolaPNDdccNLEbS3IEra0258VvnjDm/LP7JDrg2ksZeqRNtAeVPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ri6sLOgi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765975368; c=relaxed/simple;
+	bh=YjVIwhTQ2SwgawEShPDHGHYPEBaT6eS66eWlv+BMAfU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DX4wROp61wh4z7FandzZTyvFc1/1ohvPjzuNVKzpemX7eH7huM3ccnwRN8vYDdb6cYMSLp876vAHgDUysuE5wa92WImu5cf0QuqzY7DuegiQVQUSNlH5lClRJQ2yXq6BaVB5ZOmg8A/ZWFiK8/vK5IRDERq3ACeF2/hKCkKcHkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iyOJ5Qs5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ri6sLOgi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9D25C4CEF5;
-	Wed, 17 Dec 2025 12:37:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765975074;
-	bh=ou9Z3js+881lhZms28WvEv8+3fWb8COxwAvUIb3Y6eg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ri6sLOgi0lf6bdQJUQ9mb0GNweroxafzDgTvHhiP8mDGpthvdOmdNvfKznW9rHSuW
-	 teml1rwHmdrlGMlvqblAUWZcrIMmnX7JThc5qt6+DR45zjn4XvVYZXn1tYKy0GwvAF
-	 hE51gotS8Hyb9WtRzbEs913j7hYsJniUVNeruXHvZV6c7OjnSv785cmdFJF9P9c87r
-	 Adfit8xMRn0Gofd85WWk/OoXLwhjs/JSiknv3mFIvjjPPy9Kf2tV2xBvryzI9azGen
-	 +gk3LFzJLvfEd8pxJhkuqGYTwWsoBE0hqJ4wvm/E5YFSGWDHkopHwjmzQZ85DmXCez
-	 DWWfRiHwyxf0g==
-Date: Wed, 17 Dec 2025 09:37:51 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iyOJ5Qs5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1A67C19421;
+	Wed, 17 Dec 2025 12:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1765975367;
+	bh=YjVIwhTQ2SwgawEShPDHGHYPEBaT6eS66eWlv+BMAfU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iyOJ5Qs5swxyIER+TkMNU47YoJZxsk3At9Ta4CBXmmyEAwGG67cKd3uxnUmlxHrwW
+	 z4XoJIQxomVa0/wSqfPvS/2P1FFhm5+9jLNL+Q3rsKEPDSLpocTQZVTKzHI5e9p911
+	 XM5UKeE6AFZz0WBb6Fsdma56yUugvByDN0DSHvu4=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf record: Split --data-mmap option
-Message-ID: <aUKkH82uDY3c0dkB@x1>
-References: <20251210023327.1669863-1-namhyung@kernel.org>
- <CAP-5=fXsrKvKAtAW3b-OzAdzg00hW-py-9eMvCxoY3Vs4p+7iw@mail.gmail.com>
+Subject: [PATCH] perf/x86/uncore: clean up const mismatch
+Date: Wed, 17 Dec 2025 13:42:41 +0100
+Message-ID: <2025121741-headstand-stratus-f5eb@gregkh>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2470; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=YjVIwhTQ2SwgawEShPDHGHYPEBaT6eS66eWlv+BMAfU=; b=owGbwMvMwCRo6H6F97bub03G02pJDJlOSx0jdu7dkz9Rfw/n7g9392n3dDgz71pff05v5scLs Ycm3c6s6IhlYRBkYpAVU2T5so3n6P6KQ4pehranYeawMoEMYeDiFICJ3ExlmF9v/7a9ePO077qR Ilpv5xxZF5CzegbDgta6732vOhNzHt+LzXui/lr+yJOZTwE=
+X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXsrKvKAtAW3b-OzAdzg00hW-py-9eMvCxoY3Vs4p+7iw@mail.gmail.com>
 
-On Wed, Dec 10, 2025 at 02:05:23PM -0800, Ian Rogers wrote:
-> On Tue, Dec 9, 2025 at 6:33 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Currently -d/--data option controls both PERF_SAMPLE_ADDR bit and
-> > perf_event_attr.mmap_data flag.  Separate them using new --data-mmap
-> > option to support recording only one of them.
-> >
-> > For data-type profiling, data MMAP is unnecessary but it wastes a lot
-> > of space in the ring buffer and data file.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+In some cmp functions, a const pointer is cast out to a non-const
+pointer by using container_of() which is not correct.  Fix this up by
+properly marking the pointers as const, which preserves the correct
+type of the pointer passed into the functions.
 
-Tested the series and applied to perf-tools-next (6.20),
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-perf-users@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/x86/events/intel/uncore_discovery.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thanks,
+diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+index 7d57ce706feb..330bca2f14b3 100644
+--- a/arch/x86/events/intel/uncore_discovery.c
++++ b/arch/x86/events/intel/uncore_discovery.c
+@@ -52,7 +52,7 @@ static int get_device_die_id(struct pci_dev *dev)
+ 
+ static inline int __type_cmp(const void *key, const struct rb_node *b)
+ {
+-	struct intel_uncore_discovery_type *type_b = __node_2_type(b);
++	const struct intel_uncore_discovery_type *type_b = __node_2_type(b);
+ 	const u16 *type_id = key;
+ 
+ 	if (type_b->type > *type_id)
+@@ -115,7 +115,7 @@ get_uncore_discovery_type(struct uncore_unit_discovery *unit)
+ 
+ static inline int pmu_idx_cmp(const void *key, const struct rb_node *b)
+ {
+-	struct intel_uncore_discovery_unit *unit;
++	const struct intel_uncore_discovery_unit *unit;
+ 	const unsigned int *id = key;
+ 
+ 	unit = rb_entry(b, struct intel_uncore_discovery_unit, node);
+@@ -173,7 +173,7 @@ int intel_uncore_find_discovery_unit_id(struct rb_root *units, int die,
+ 
+ static inline bool unit_less(struct rb_node *a, const struct rb_node *b)
+ {
+-	struct intel_uncore_discovery_unit *a_node, *b_node;
++	const struct intel_uncore_discovery_unit *a_node, *b_node;
+ 
+ 	a_node = rb_entry(a, struct intel_uncore_discovery_unit, node);
+ 	b_node = rb_entry(b, struct intel_uncore_discovery_unit, node);
+-- 
+2.52.0
 
-- Arnaldo
