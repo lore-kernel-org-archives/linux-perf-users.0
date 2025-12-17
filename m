@@ -1,315 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C966355818;
-	Wed, 17 Dec 2025 16:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BACD34B195
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Dec 2025 16:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765987207; cv=none; b=sxARZNWRQL5kqAIyh24rgQREBwt5jXyi4Wq686hObIQGZyOnbPN14MKAUxE7WY0rP4JZWr6aAVwZJWo2rbons5dWRxfIegWjzgbCDoppCuWEvhsHVuXpdo87fX3q7ssP57HeH1dv5rZ5HrW/H+fzGdEd8aemOM7u+cEBWhp7XME=
+	t=1765988681; cv=none; b=M7Cvg6Qic5a1dOVuhVFasLeTuCxQpQ5SaGRmbbF3vDtSbVGUdzWp+tm0Z6arqYtHTUcOOQbJT7u08/rXvglTeOAsy8dr8fbfetrH9Nu3qKUigp03hJ/Ap+IidUvOmcfPnDCpxeRYmgOHua/CN9osDT68gkw2nktUdvuDTNA0rOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765987207; c=relaxed/simple;
-	bh=8ULpIijsMTIWJpZCYyksJj4tQxYZ8z5XaFLNHmt/XvA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mv8ShiC+GwybcssNtnTGuMz31hMOr5IUBsCu0VgVT0aadjEvr/+i+jVLiYku+YUyryTiOeqlhlCIdlpGR+xS+KSs5F/BMhXOozhFojt9EDY9z7MRe9qRkTbyc0Idz3kbSvvKTy2jDgFuDmMH4QpI93u27R80HpaTW8+L6V/Ri8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FEISZCaI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765988681; c=relaxed/simple;
+	bh=PgTQRT+gLvYaLCi8qjd1aU/cyiFqcrVhwIPj3U+4edM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JWe3m0xWSgzBBBcqPJqYVkIwTKxW+mwgkAA03kAkaCiiWEq90A+BdfdT4UQiepYmZxAoarNcDkf6alkfbpFL4VMQtgYLz0seHsslWOTpKvny4d1jIiCSKAIy/yft0PY7Jp1wjXrIlf8xhiBsUqoYGAeI+yoTNQSmKYnoITMlSo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J+XSh+iq; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FEISZCaI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B27B1C113D0;
-	Wed, 17 Dec 2025 16:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765987204;
-	bh=8ULpIijsMTIWJpZCYyksJj4tQxYZ8z5XaFLNHmt/XvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FEISZCaIzLHWb+/T+GVDyrm53XKVXfOQrcEybo/bu4RPoysKJwqz0U6/RmDzaQqsj
-	 HFwVl3izeMJy3kHKekyBSGuA7ProiCiarlOVGoWgN3ZqQvC3yiMY+rCmFWX6itUest
-	 JbtM5VnQx6tevNSTBCeSsZv3A8o4bvAVFzi66J345CxI2gig+0O0v7Ps2IOJAIxtRR
-	 WMBwsvsf3/0thsL0DJJ4Fhbjt3SEKufNYnn0BUHiYsZqoRobi9YOt3ljmNhTAR8Nly
-	 G6lr1eTxFs4gIq1/j1R8KMODsuQnwLS/R8az2W4K0rUbdG+IiSs4xb6h17pa91FX3U
-	 hbjfu+zD4/vlg==
-Date: Wed, 17 Dec 2025 08:00:00 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v6 4/6] perf script: Display
- PERF_RECORD_CALLCHAIN_DEFERRED
-Message-ID: <aULTgNTtO2z1Gc70@google.com>
-References: <20251120234804.156340-1-namhyung@kernel.org>
- <20251120234804.156340-5-namhyung@kernel.org>
- <9fe12698-2fd5-41fe-8505-735d73eae0a2@linux.ibm.com>
- <aUDkpsW-WH3IPIhh@google.com>
- <024b7bb4-731e-4da4-8480-4789f5912977@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+XSh+iq"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2a09d981507so6450525ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Dec 2025 08:24:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765988679; x=1766593479; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JsPcnAXX0HxXZqnB4n6Iu8u5L4r6zw595gJ+705EC+s=;
+        b=J+XSh+iq4QG9YC6DnfCSS01xt6pHXOSaEyO9VCO0BTjZtFw242zM+H2UIuDm6MFjPO
+         /WwPhirabcTibA6ACDQqrr9tdluRYHiSQSvBZpZPKHdCDilnnZL0oTuXVkSQPkjzVNbj
+         v2jEEkpdxOM5wDOwcBsAeL9Q24ER0vjPmnrIlZkAFnyPM1YVAmSSNB96k459hTvru7Ru
+         29Exv9lGhflV50zro0jFc4ZYGQZLqQTJxFFdMJr0rCXHLkzpJgg45U6/NcPQiEEX7N7o
+         hAFBiBhK7X7otB9ze16aw08OI/T8SZ7krnOsbZayOQ8n1aALAHfBH+vCsNrL2GJy5PUU
+         Nc7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765988679; x=1766593479;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JsPcnAXX0HxXZqnB4n6Iu8u5L4r6zw595gJ+705EC+s=;
+        b=KXRz8MbCyklSZORhwULBio9ouhnyruZIZ5ra1wI2W4L8XnUHPGYZTGD2AFSIiatkJP
+         lk9H7cdskrAKn1EU71PzKBQs0wuIdE7j/TUDFrpgbJ6Rxw2iJjPiIm/vjlVvnp0RyXAP
+         hXNx9kaue3wBd/Y09iRPVXBAcHTcnmBKshncXHiDvbx5C0LRZ0vCucWm4X3xRDucsfw1
+         FtoeE4ROB0xiNmxCZFNubpjkU98El6XgdhPchsKuMmEbwT0YX3dhReucJVokdevNKSRG
+         SrOQ+M/jwoU+ACSAuNlummkf5oYYjqx53O+gSJ8ksTcxsua4DQUj4qmDT9cal/0/rS/u
+         7YvA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/uWNP1p7DmlAxH1Ahrfjbdxf2AhjC7tlmBalB5FmsPeQn41ryI067cQRzvcGNH1P3kuyN3rFazVyuoCTaSnQi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGxSAicd752WEvY4BVzrGxPfiQqPvrbqO4a6oKc4goKtjcCskP
+	vvFVwXZ6IrwSKwDCkOgbJgRpMfMwaB+vvb9DgYIJc/q89BHmaeb2fBW6
+X-Gm-Gg: AY/fxX4bYn9sqZ+tylgYltgbTUyUdZmYWN4SYOqlk9CIDRhhc98Bzni2LE8oOMX+eTT
+	2vI+z+WHXn0AayeVl5Wed3NNsJBFmeQW9uGke5autWnUL+MNzcjf0ok3LeBNH6TuUZRY33miMjJ
+	oeWkmX9xUlbxHhXEq81OW5WLdC8Nm4sxgk0vCSZwngvOYqvj4evCLQi/Lpystf8aDZ3GWrpxusn
+	L1/GwO0vXztME6vfTTzNYeWizXYjEa/HVaxcj/rYGwfURc0JWF7c6zjtFee8MwihP3M/jKP85qe
+	espwRQHwbSVjHvAS3PobHA8y7RQylz/8VH1k/Kh15QYMjgXc+f/7ssFLCGtgPb5WTocweM9IALC
+	5lF6zNGls5wSNUMXWdNnmkVsC08iT77FpILYOF1CA/2/Es3qGeIIQERdj+S8a39Xxl4pZkmgUzp
+	HrLCGLA0KEmsK8
+X-Google-Smtp-Source: AGHT+IHAwxj6DzdDy4Ktf3Hya1n9fwX45F2bVkRoYmLdBMFbognAoioKTp23w8/kQbJXYMZiXIS1HA==
+X-Received: by 2002:a17:903:1a0e:b0:2a0:c92e:a378 with SMTP id d9443c01a7336-2a0c92ea624mr148009915ad.7.1765988678823;
+        Wed, 17 Dec 2025 08:24:38 -0800 (PST)
+Received: from [127.0.1.1] ([59.188.211.98])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-2a0b0687c62sm122980415ad.88.2025.12.17.08.24.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Dec 2025 08:24:38 -0800 (PST)
+From: Nick Chan <towinchenmi@gmail.com>
+Subject: [PATCH v9 00/21] drivers/perf: apple_m1: Add Apple A7-A11, T2 SoC
+ support
+Date: Thu, 18 Dec 2025 00:23:13 +0800
+Message-Id: <20251218-apple-cpmu-v9-0-4deadbe65d03@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <024b7bb4-731e-4da4-8480-4789f5912977@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPLYQmkC/3XRy2rEMAwF0F8ZvG6KLb+UrvofpQtHlmcMk0lI2
+ tAy5N/rDJQ8SpdXcC4SuouRh8yjeDndxcBTHnN3K6F+Ogm6hNuZqxxLFiDBSlCqCn1/5Yr69rO
+ ywQYdg64NalFAP3DKX4+yt/eSL3n86IbvR/eklulvDWxrJlXJKiH5BIGUN/r13IZ8faauFUvNB
+ FuqdxQKRd9op2oNjHik+n+qC23YJwyRI6p0pGZLzY6aZeFEQbKxyng+UruhgDtqC61ZgaEIyNE
+ cqVupkX5HXaGBkSABWPq7sF+pVXJH/XJrLHNqHFmQR4orxf2PJyyUrJPcxJqCcVs6z/MPeEsny
+ 0ECAAA=
+X-Change-ID: 20250211-apple-cpmu-5a5a3da39483
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Janne Grunau <j@jannau.net>, 
+ Neal Gompa <neal@gompa.dev>, Sven Peter <sven@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Nick Chan <towinchenmi@gmail.com>, 
+ Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4650; i=towinchenmi@gmail.com;
+ h=from:subject:message-id; bh=PgTQRT+gLvYaLCi8qjd1aU/cyiFqcrVhwIPj3U+4edM=;
+ b=owEBbQKS/ZANAwAKAQHKCLemxQgkAcsmYgBpQtk73F6rEAOyEA3wyqqf8KFEkTZ/0x9ysNapI
+ uazbrtOdV+JAjMEAAEKAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCaULZOwAKCRABygi3psUI
+ JFh1D/9eIav9eVp8eoDrGgQhSCtAnDqdHRYJkeC0ulHs3A/Ks3x+GmU7fFqCBmnZOeZv91UPI+m
+ VVsJT7Z/8aNJzCsG8/l+rr0any70TKr3Ke+tV409k8s95gKkNHJ2OyH+6hP10VJQ4YnPl3ou32o
+ OxHQk2kh9AWH9gfUR1HnfvJP/p5Hd40lrcyw4HQFBPecPTOTv/moettZMyl4VbnyIduhXMKJq9+
+ gmYMDKZACjN3yYmSrvUbmy4Y8uOMGzCKr77HTQe69jicpoXwY+D0jbvzuvBqw616pWXKPty6QIx
+ W4tEsIb8gOZN1pb5AtMect3T4CxZF6rJV6DFBLKu6kyqtcqxjnx+7i/hLAQrCMkPuw+NihqverH
+ jKLffRvah01OZSuS5LB6FaFa4a5KUz8kV79XKvmjgakp4g3IF4fMCX794es24VQ3a718dyvqXTp
+ 68bI9Yot8ZFD78UDUfzzSH/J8KkNDIVBrZMU7hSpEa1T3rEhjcDQxQFeqDdPuDBT7SbsSJj28yQ
+ RUKnhIQwHj+WsDLQtqM+mqFEpAU7kyturFvrOne4wmb/LraaucJVyNCAtYA0WZxBVdYI8CTBO5U
+ qpLqAQU3+t87Nvro4etxRgvx2+YPFhf8CNaPzL/VBUtDFqeQXo4PQfBQ3dhJgfWWe/y1UtcXsTv
+ wjPHAiSQW7yLVGQ==
+X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
+ fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
 
-Hello!
+This series adds support for the CPU PMU in the older Apple A7-A11, T2
+SoCs. These PMUs may have a different event layout, less counters, or
+deliver their interrupts via IRQ instead of a FIQ. Since some of those
+older SoCs support 32-bit EL0, counting for 32-bit EL0 also need to
+be enabled by the driver where applicable.
 
-On Tue, Dec 16, 2025 at 10:29:28AM +0100, Jens Remus wrote:
-> Hello Namhyung!
-> 
-> On 12/16/2025 5:48 AM, Namhyung Kim wrote:
-> > On Fri, Dec 12, 2025 at 01:11:38PM +0100, Jens Remus wrote:
-> 
-> >> following is an observation from my attempt to enable unwind user fp on
-> >> s390 using s390 back chain instead of frame pointer and relaxing the
-> >> s390-specific IP validation check.
-> >>
-> >> When capturing call graphs of a Java application the list of "unwound"
-> >> user space IPs may contain invalid entries, such as 0x0, 0xdeaddeaf,
-> >> and 0xffffffffffffff.  IPs that exceed PERF_CONTEXT_MAX, such as the
-> >> latter, cause perf not to display any deferred (or merged) call chain.
-> >> Note that this is not caused by your patch series.
-> > 
-> > Right, it's not a real IP so perf ABI treats them as a magic context.
-> > 
-> >>
-> >> While re-adding the s390-specific IP checks would "hide" those, I found
-> >> that the call graphs look good otherwise.  That is the back chain seems
-> >> to be intact.  It is just the user space application (e.g. Java JRE) not
-> >> correctly adhering to the ABI and saving the return address to the
-> >> specified location on the stack, causing bogus IPs to be reported.
-> >>
-> >> Could perf be improved to handle those user space IPs that exceed
-> >> PERF_CONTEXT_MAX?
-> > 
-> > Ideally we should not have them in the first place.  Is it a JRE issue
-> > or your s390 unwinder issue?  Is it possible to ignore them in the
-> > unwinder?
-> 
-> Stack tracing using frame pointer is virtually impossible on s390, as
-> the ABI does not designate a specific register as FP register, does not
-> specify a fixed register save area layout, nor does mandate a FP to be
-> setup early.  Compilers usually setup a FP late, that is after static
-> stack allocation.
-> 
-> An alternative is the s390-specific back chain, which is basically a
-> frame pointer on stack.  The ABI specifics that *(SP+0) has the pointer
-> to the previous frame and *(BC-48) has the return address (RA), if a
-> back chain is used (e.g. compiler option -mbackchain is used).  This is
-> why I implemented unwind user fp on s390 using back chain.  Note that
-> the back chain can be correctly followed, even if the saved RAs are
-> bogus.  That is what can be observed in case of this specific Java JRE.
-> Apparently it correctly maintains the back chain stack slot, but does
-> not correctly maintain the RA stack slot.  So the RA stack save slot may
-> contain any random value.
+Patch 1 adds the DT bindings.
+Patch 2-7 prepares the driver to allow adding support for those
+older SoCs.
+Patch 8-12 adds support for the older SoCs.
+Patch 13-21 are the DT changes.
 
-Thanks for the explanation.
+Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+---
+Changes in v9:
+- Rebased on top of v6.19-rc1
+- Removed non-existent "INST_A32" and "INST_T32" events from Apple A11
+- Added "INST_A32" and "INST_T32" event affinities for A9 and A10
+- Link to v8: https://lore.kernel.org/r/20250811-apple-cpmu-v8-0-c560ebd9ca46@gmail.com
 
-> 
-> The s390-implementation of unwind user fp could check whether the return
-> address is a valid IP.  This is how it is implemented in the existing
-> stack tracer in arch/s390/kernel/stacktrace.c:
-> 
-> static inline bool ip_invalid(unsigned long ip)
-> {
-> 	/* ABI requires IPs to be 2-byte aligned */
-> 	if (ip & 1)
-> 		return true;
-> 	if (ip < mmap_min_addr)
-> 		return true;
-> 	if (ip >= current->mm->context.asce_limit)
-> 		return true;
-> 	return false;
-> }
-> 
-> It could then either stop or return some magic value
-> (e.g. PERF_CONTEXT_MAX - 1) to indicate that the IP is invalid and
-> continue.  Actually I would prefer to continue so that a user an see
-> that there is something odd with the stack trace.
+Changes in v8:
+- Rebased on top of v6.17-rc1
+- Collect Ivaylo's Tested-by
+- Drop #define PMCR1_COUNT_A64_EL3_0_7
+- Reword reason to not initialize PMUv3 remap in EL1
+- Link to v7: https://lore.kernel.org/r/20250510-apple-cpmu-v7-0-bd505cb6c520@gmail.com
 
-Agreed.
+Changes in v7:
+- Fix a W=1 compile warning in apple_pmu_get_event_idx() as appearently using GENMASK()
+in a function prototype causes a warning in GCC.
+- Link to v6: https://lore.kernel.org/r/20250407-apple-cpmu-v6-0-ae8c2f225c1f@gmail.com
 
-> 
-> Alternatively such a check could possibly also be implemented in the
-> common undwind user, if the address space limits are known in common
-> code, or as an architecture-specific hook.  In general I tend to at
-> least add a check whether the IP is zero, as this is used on several
-> architectures as indication for outermost frames (usually in
-> combination with a FP of zero).
+Changes in v6:
+- Rebased on top of v6.15-rc1 (Conflict with FEAT_PMUv3 support for KVM on Apple Hardware)
+- Add patch to skip initialization of PMUv3 remap in EL1 even though not strictly needed
+- Include DT patches
+- Link to v5: https://lore.kernel.org/r/20250228-apple-cpmu-v5-0-9e124cd28ed4@gmail.com
 
-Not sure about the address space limits across archs.  It'd be easier if
-the kernel returns any invalid value like PERF_CONTEXT_MAX - 1 or simply
-0. :)
+Changes in v5:
+- Slightly change "drivers/perf: apple_m1: Add Apple A11 Support", to keep things in
+chronological order.
+- Link to v4: https://lore.kernel.org/r/20250214-apple-cpmu-v4-0-ffca0e45147e@gmail.com
 
-> 
-> >>
-> >> Is there otherwise guidance how unwind user and/or the s390
-> >> implementation should deal with such IPs?  Should it stop taking the
-> >> deferred calltrace?  Should it substitute those with e.g 0, so that
-> >> perf can display them?
-> 
-> 
-> >> Sample for IP == ffffffffffffff (perf does not display any call chain):
-> ...
-> >> # perf report -D
-> >> ...
-> >> 44004346257 0x17718 [0x40]: PERF_RECORD_SAMPLE(IP, 0x2): 1082/1084: 0x3ffa3e413aa period: 1001001 addr: 0
-> >> ... FP chain: nr:2
-> >> .....  0: fffffffffffffd80
-> >> .....  1: 0000000400000079
-> >> ...... (deferred)
-> >>  ... thread: java:1084
-> >>  ...... dso: /tmp/perf-1082.map
-> >>
-> >> 0x17758@perf.data [0xd0]: event: 22
-> >> .
-> >> . ... raw event: size 208 bytes
-> ...
-> >>
-> >> 44004348864 0x17758 [0xd0]: PERF_RECORD_CALLCHAIN_DEFERRED(IP, 0x2): 1082/1084: 0x400000079
-> >> ... FP chain: nr:21
-> >> .....  0: 000003ffa3e413aa
-> >> .....  1: 000003ff3809e2d0
-> >> .....  2: 000003ff3809e130
-> >> .....  3: 000003ffb95fdf68
-> >> .....  4: 0000000000000000
-> >> .....  5: 000003ffb95fe128
-> >> .....  6: 000003ffb95fe1d0
-> >> .....  7: 005780888e7647a5
-> >> .....  8: 000003ffa3e437f2
-> >> .....  9: ffffffffffffffff <-- !
-> >> ..... 10: 000003ffa3e4a1fc
-> >> ..... 11: 0000000000000000
-> >> ..... 12: 000003ffa3e37900
-> >> ..... 13: 000003ffa3e41080
-> >> ..... 14: 000003ffb9dd11de
-> >> ..... 15: 000003ffb9e8df92
-> >> ..... 16: 000003ffb9e90e86
-> >> ..... 17: 000003ffbab8b07e
-> >> ..... 18: 000003ffbab8e040
-> >> ..... 19: 000003ffba8abbd8
-> >> ..... 20: 000003ffba92b950
-> >> : unhandled!
-> >>
-> >> ...
-> >> [next entry]
-> >>
-> >>
-> >> On 11/21/2025 12:48 AM, Namhyung Kim wrote:
-> 
-> >>> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> >>
-> >>> +static int process_deferred_sample_event(const struct perf_tool *tool,
-> >>> +					 union perf_event *event,
-> >>> +					 struct perf_sample *sample,
-> >>> +					 struct evsel *evsel,
-> >>> +					 struct machine *machine)
-> >>> +{
-> >>
-> >>> +	perf_sample__fprintf_start(scr, sample, al.thread, evsel,
-> >>> +				   PERF_RECORD_CALLCHAIN_DEFERRED, fp);
-> >>> +	fprintf(fp, "DEFERRED CALLCHAIN [cookie: %llx]",
-> >>> +		(unsigned long long)event->callchain_deferred.cookie);
-> >>> +
-> >>> +	if (PRINT_FIELD(IP)) {
-> >>> +		struct callchain_cursor *cursor = NULL;
-> >>> +
-> >>> +		if (symbol_conf.use_callchain && sample->callchain) {
-> >>> +			cursor = get_tls_callchain_cursor();
-> >>> +			if (thread__resolve_callchain(al.thread, cursor, evsel,
-> >>> +						      sample, NULL, NULL,
-> >>> +						      scripting_max_stack)) {
-> >>
-> >> thread__resolve_callchain()
-> >> calls __thread__resolve_callchain()
-> >> calls thread__resolve_callchain_sample():
-> >>
-> >>         for (i = first_call, nr_entries = 0;
-> >>              i < chain_nr && nr_entries < max_stack; i++) {
-> >> ...
-> >>                 ip = chain->ips[j];
-> >>                 if (ip < PERF_CONTEXT_MAX)   <-- IP=ff..ff is greater than PERF_CONTEXT_MAX
-> >>                        ++nr_entries;
-> > 
-> > Right.
-> > 
-> >> ...
-> >>                 err = add_callchain_ip(thread, cursor, parent,
-> >>                                        root_al, &cpumode, ip,
-> >>                                        false, NULL, NULL, 0, symbols);
-> >>
-> >>                 if (err)
-> >>                         return (err < 0) ? err : 0;
-> >>
-> >> calls add_callchain_ip:
-> >>
-> >>                if (ip >= PERF_CONTEXT_MAX) {
-> >>                        switch (ip) {
-> >>                        case PERF_CONTEXT_HV:
-> >>                                *cpumode = PERF_RECORD_MISC_HYPERVISOR;
-> >>                                break;
-> >>                        case PERF_CONTEXT_KERNEL:
-> >>                                *cpumode = PERF_RECORD_MISC_KERNEL;
-> >>                                break;
-> >>                        case PERF_CONTEXT_USER:
-> >>                        case PERF_CONTEXT_USER_DEFERRED:
-> >>                                *cpumode = PERF_RECORD_MISC_USER;
-> >>                                break;
-> >>                        default:
-> >>                                pr_debug("invalid callchain context: "  <-- IP=ff..ff reaches default case
-> >>                                         "%"PRId64"\n", (s64) ip);
-> > 
-> > We may skip -1 if it's Java and *cpumode is already USER and it's s390.
-> > But I'd like to understand the situation first.
-> 
-> Let's better not add any weird architecture-specific handling.  This is
-> also not limited to -1 (and 0), as Java may have used the stack save
-> area in any way, so it may be any random value.
+Changes in v4:
+- Support per-implementation event attr group
+- Fix Apple A7 event attr groups
+- Link to v3: https://lore.kernel.org/r/20250213-apple-cpmu-v3-0-be7f8aded81f@gmail.com
 
-I see.  Thanks again for your explanation.
+Changes in v3:
+- Configure PMC8 and PMC9 for 32-bit EL0
+- Remove redundant _common suffix from shared functions
+- Link to v2: https://lore.kernel.org/r/20250213-apple-cpmu-v2-0-87b361932e88@gmail.com
 
-Namhyung
+Changes in v2:
+- Remove unused flags parameter from apple_pmu_init_common()
+- Link to v1: https://lore.kernel.org/r/20250212-apple-cpmu-v1-0-f8c7f2ac1743@gmail.com
 
-> 
-> >>                                /*
-> >>                                 * It seems the callchain is corrupted.
-> >>                                 * Discard all.
-> >>                                 */
-> >>                                callchain_cursor_reset(cursor);
-> >>                                err = 1;
-> >>                                goto out;
-> >>                        }
-> >>
-> >>> +				pr_info("cannot resolve deferred callchains\n");
-> >>> +				cursor = NULL;
-> >>> +			}
-> >>> +		}
-> >>> +
-> >>> +		fputc(cursor ? '\n' : ' ', fp);
-> >>> +		sample__fprintf_sym(sample, &al, 0, output[type].print_ip_opts,
-> >>> +				    cursor, symbol_conf.bt_stop_list, fp);
-> >>> +	}
-> 
-> Thanks and regards,
-> Jens
-> -- 
-> Jens Remus
-> Linux on Z Development (D3303)
-> +49-7031-16-1128 Office
-> jremus@de.ibm.com
-> 
-> IBM
-> 
-> IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-> IBM Data Privacy Statement: https://www.ibm.com/privacy/
-> 
+---
+Nick Chan (21):
+      dt-bindings: arm: pmu: Add Apple A7-A11 SoC CPU PMU compatibles
+      drivers/perf: apple_m1: Only init PMUv3 remap when EL2 is available
+      drivers/perf: apple_m1: Support per-implementation event tables
+      drivers/perf: apple_m1: Support a per-implementation number of counters
+      drivers/perf: apple_m1: Support configuring counters for 32-bit EL0
+      drivers/perf: apple_m1: Support per-implementation PMU startup
+      drivers/perf: apple_m1: Support per-implementation event attr group
+      drivers/perf: apple_m1: Add Apple A7 support
+      drivers/perf: apple_m1: Add Apple A8/A8X support
+      drivers/perf: apple_m1: Add A9/A9X support
+      drivers/perf: apple_m1: Add Apple A10/A10X/T2 Support
+      drivers/perf: apple_m1: Add Apple A11 Support
+      arm64: dts: apple: s5l8960x: Add CPU PMU nodes
+      arm64: dts: apple: t7000: Add CPU PMU nodes
+      arm64: dts: apple: t7001: Add CPU PMU nodes
+      arm64: dts: apple: s800-0-3: Add CPU PMU nodes
+      arm64: dts: apple: s8001: Add CPU PMU nodes
+      arm64: dts: apple: t8010: Add CPU PMU nodes
+      arm64: dts: apple: t8011: Add CPU PMU nodes
+      arm64: dts: apple: t8012: Add CPU PMU nodes
+      arm64: dts: apple: t8015: Add CPU PMU nodes
+
+ Documentation/devicetree/bindings/arm/pmu.yaml |   6 +
+ arch/arm64/boot/dts/apple/s5l8960x.dtsi        |   8 +
+ arch/arm64/boot/dts/apple/s800-0-3.dtsi        |   8 +
+ arch/arm64/boot/dts/apple/s8001.dtsi           |   8 +
+ arch/arm64/boot/dts/apple/t7000.dtsi           |   8 +
+ arch/arm64/boot/dts/apple/t7001.dtsi           |   9 +
+ arch/arm64/boot/dts/apple/t8010.dtsi           |   8 +
+ arch/arm64/boot/dts/apple/t8011.dtsi           |   9 +
+ arch/arm64/boot/dts/apple/t8012.dtsi           |   8 +
+ arch/arm64/boot/dts/apple/t8015.dtsi           |  24 +
+ arch/arm64/include/asm/apple_m1_pmu.h          |   2 +
+ drivers/perf/apple_m1_cpu_pmu.c                | 813 +++++++++++++++++++++++--
+ 12 files changed, 876 insertions(+), 35 deletions(-)
+---
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+change-id: 20250211-apple-cpmu-5a5a3da39483
+
+Best regards,
+-- 
+Nick Chan <towinchenmi@gmail.com>
+
