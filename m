@@ -1,232 +1,295 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F493396E4
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Dec 2025 09:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841451A5B84
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Dec 2025 09:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765962757; cv=none; b=D43f9ZJydzzGu6FBqmkPJ9QrhL1yDXfV4h9p3gQhbD+/sio7fvUCYKbGxsGBzwYw5XUNX+5FOubpL81GlJF6ezh+Vry/df1CYPl2ZwIOswJqy6WJvZyJhZB4bAIzT/m5I9OcK0zICGX14BbVDyqY4kMxmhT92L6xVRyJb2hwi7Y=
+	t=1765963853; cv=none; b=fb10E3TwThn7FGO937p6QYb3E2/pusinxuUOvP9jwI9KL9qJRxth9YG9bw5pQ+i8OzoWzSi1Np5dvOud+hMUq/gvosd690G5Ef77J3pHzzdFeuUoKcwkGBG7lcodAAyDpMeyeZ/87jtFighI6SZLwBn7FPc8fmqeNjfW283ibKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765962757; c=relaxed/simple;
-	bh=8V6H3wR1Oedpof2ecPY3iZ/sxGxOk5tQPRJ2+jw6bL4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=dBC0eex6UfsmN7x6IKL1YeHWzZi6Ynrj7c5lB4dlfqEBaAffrXOTcvoFsvtJEPx3S0S1BtteuMmip6kG/hZc8+TcvEE9bZpvFQvnAQE4fMJFCoKcL52XvfBSxPB4s1XHokZx/7TXvIJzcWh5VVaqX16mEtIsLVzTuDQFRkmG0do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mTRYMK12; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1765963853; c=relaxed/simple;
+	bh=Md0U83NqjQGkSdCE2vPOD3X3PcjtRdA1M/c3NPnSJkM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sAoeCOseXncKFBdyGZQYlHSSACKpg/KscESiTu0OpiatrUG+ar/kvftK0tbaAi88WVXVczd2BPeDyof1qgzi8W585cBPwCzMyw062ex3I9lgJFNMfi5KUa5ynciRufd8L6jZF7N79k1kBxn9hb1n7nM/kQcQa0nHrItQHt+Ljfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=caeV8UIB; arc=none smtp.client-ip=209.85.208.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mTRYMK12"
-Message-ID: <3aae1f51-b1d5-44c2-89d4-242887df34a7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1765962744;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VJyrvuiuPvnyCqCkrTKy6/iPRCtbCKNBoYflRryl0Cs=;
-	b=mTRYMK12O7NZY04J/adUwa72n4xsRZXAZXwDhrNP3RSjsiOCnXEh5ki85gaLhe39UWwQN7
-	FoxhR3wePwitBn2QTG7PkICPU8V+IIMfbT9+yuSUWO1QZ4eCgPV0ZpcxPnXtETzUnJaEYk
-	0jY2fu3pff/UjSUiKhivexxrpHJYH0k=
-Date: Wed, 17 Dec 2025 17:11:59 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="caeV8UIB"
+Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-64312565c10so9855763a12.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Dec 2025 01:30:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1765963850; x=1766568650; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=reyxjbWnqQbkZ/PY9ifbYGWOG1VNVTq6TpSbrTRbFzs=;
+        b=caeV8UIBQs1QZgnjYpRlOjoCdmqkN2rckVSCW1/PFGwavNSR9RLRff+kxL65dowGYp
+         XIZEGRKRQtVadfHhYU8AXiQrajIGB42Z/cxCg578scWEw5vMp92cE+fOnXjxXkO8svyi
+         M9si/DKVRMFLkDSmCEIsp5NmSq93cnI6wbw4Kypmd0kgaN7LbhdoTNB+NX1NdHmtK4fE
+         X9SqQW+p/50Zjtngrh2D+tsu4f9DmysBYFgpFZXL7aWNApwMO/VyuLMqzP+bKdHQj+Rr
+         VFGYR7c1U967O/HapQjdi7EvaCLUuChNczJy69Yzu/64nWjhn3DaXxwJd92pkfJGFpVD
+         PFMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765963850; x=1766568650;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=reyxjbWnqQbkZ/PY9ifbYGWOG1VNVTq6TpSbrTRbFzs=;
+        b=OhMUTatRuQQkJII2dukQwptirWCwANYZPzc3o6QpAcMX0FP3WMjzgsVZDNGgrmN3xc
+         rNPWl5lJeNPxowouL5COgodGH4POVDt7zX6ODZg8Q40CK9zKq47AePsee/dvov1rQmH7
+         aJ4NbzhnZ3Hq3YEtDbBE0MofgtzBm1KauQ9GUJ+Uoe87z9GfS6xPa2xgxVb1LIAAxsf5
+         KWnSUYG1u7nXSAH4PZV2stAt77yOg6LG+EdTuMr+U+7lBRAGhh5RIs7iL0yW9Tf2c6x1
+         nsN4GvMRXwxgv5t7Ox6xF4qBJzZoduTS5O7YmKzvSLq+FStP3eXeZx11yoj21LFGCxKV
+         gkEw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAKM3TaILk/STZXAtTO6L7X6i5h6wXQR5C+hp6mwLAHJvIXAJqAHOodLFr7jITNra4My4PYtoSsIIiiuXQft5K@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXCUu60n2n90UhNKIN7aJzWxyfh91eFPJOxv3ADYCLiuRryjGr
+	OCv1HOKy+J0m1IcEg6eoYfg4MjuA2HXI4kVwyCg1o3LIhbyqT+68hswK51tG/V6Izr0=
+X-Gm-Gg: AY/fxX4RaGOeon107Yf60giR41TNWGbUMyzDoihNvsbZv3zOX4j3EZU8/T5p7hColxU
+	d+LbvsDdlsQ0joTkN7W8rH5sO178LiPJMnPe71oRJs5yeZJ2Oqr689WhKav/OIbAbp78djPTCUp
+	VvgDe6tNkTDIgQZ11fp0GeOSYfZZNhOgKVdSJwAM2HoaBJtM9SJjK5NI9TDPwEIuNtduqzaWZs9
+	mGjw2tc7MgtPrYEMFIYotO708uvqzUSScYFRQkCd9EjslXD6djp2+VLk4/A1kX0ln6sVCqkWVER
+	BOpQ3V2CFrjFhTd0Du7+aSi50kNND5eh1iJXMVburRBfgR3x9LwTamXnkcJvvlarFp7EJZZTBck
+	OZg138QT8f1Jsi4nWkqnaA+Aut7oMaVuw4nmg0viuty6LkKz5lnpBz7TkEr2r/9qIvDf1kOU+so
+	tx2tOi6cgmnq9Tm/4rcG0N
+X-Google-Smtp-Source: AGHT+IHo8MFKKOZcL4dFoI0ohz3Jq9DYwnbOFUbkPu3ssXHjV+PQjNsSYu4MEOkNhQs6nFW7YSQgzA==
+X-Received: by 2002:a05:6402:26cf:b0:649:6c78:dc48 with SMTP id 4fb4d7f45d1cf-6499b1e1a0fmr16912267a12.26.1765963849665;
+        Wed, 17 Dec 2025 01:30:49 -0800 (PST)
+Received: from [192.168.0.108] ([130.185.218.160])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-64b3f4ea39csm1870183a12.6.2025.12.17.01.30.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Dec 2025 01:30:49 -0800 (PST)
+Message-ID: <58d9f452-c075-4499-8975-387f3cdb052a@linaro.org>
+Date: Wed, 17 Dec 2025 11:30:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v7 2/2] bpf: Hold the perf callchain entry until
- used completely
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, song@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-References: <20251217051203.1738517-1-chen.dylane@linux.dev>
- <20251217051203.1738517-3-chen.dylane@linux.dev>
- <1b6f68e1-3239-4b71-9050-877504c7dead@linux.dev>
-In-Reply-To: <1b6f68e1-3239-4b71-9050-877504c7dead@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/12] perf evsel: Add a helper to get the value of a
+ config field
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+References: <20251212-james-perf-config-bits-v3-0-aa36a4846776@linaro.org>
+ <20251212-james-perf-config-bits-v3-5-aa36a4846776@linaro.org>
+ <CAP-5=fUbr56hFd7e7yt33-gnhEGGa72GLmShQ5bCHxQjFAbFCQ@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fUbr56hFd7e7yt33-gnhEGGa72GLmShQ5bCHxQjFAbFCQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-在 2025/12/17 13:22, Tao Chen 写道:
-> 在 2025/12/17 13:12, Tao Chen 写道:
->> As Alexei noted, get_perf_callchain() return values may be reused
->> if a task is preempted after the BPF program enters migrate disable
->> mode. The perf_callchain_entres has a small stack of entries, and
->> we can reuse it as follows:
+
+
+On 16/12/2025 22:44, Ian Rogers wrote:
+> On Fri, Dec 12, 2025 at 7:32 AM James Clark <james.clark@linaro.org> wrote:
 >>
->> 1. get the perf callchain entry
->> 2. BPF use...
->> 3. put the perf callchain entry
+>> This will be used by aux PMUs to read an already written value for
+>> configuring their events and for also testing.
 >>
->> And Peter suggested that get_recursion_context used with preemption
->> disabled, so we should disable preemption at BPF side.
+>> Its helper pmu_format_unpack() does the opposite of the existing
+>> pmu_format_value() so rename that one to pmu_format_pack() so it's clear
+>> how they are related.
 >>
->> Acked-by: Yonghong Song <yonghong.song@linux.dev>
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+>> Signed-off-by: James Clark <james.clark@linaro.org>
 >> ---
->>   kernel/bpf/stackmap.c | 67 +++++++++++++++++++++++++++++++++++--------
->>   1 file changed, 55 insertions(+), 12 deletions(-)
+>>   tools/perf/util/evsel.h |  2 ++
+>>   tools/perf/util/pmu.c   | 77 ++++++++++++++++++++++++++++++++++++++++++-------
+>>   2 files changed, 68 insertions(+), 11 deletions(-)
 >>
->> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
->> index 2365541c81d..64ace4ed50e 100644
->> --- a/kernel/bpf/stackmap.c
->> +++ b/kernel/bpf/stackmap.c
->> @@ -210,13 +210,14 @@ static void stack_map_get_build_id_offset(struct 
->> bpf_stack_build_id *id_offs,
->>   }
->>   static struct perf_callchain_entry *
->> -get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
->> +get_callchain_entry_for_task(int *rctx, struct task_struct *task, u32 
->> max_depth)
->>   {
->>   #ifdef CONFIG_STACKTRACE
->>       struct perf_callchain_entry *entry;
->> -    int rctx;
->> -    entry = get_callchain_entry(&rctx);
->> +    preempt_disable();
->> +    entry = get_callchain_entry(rctx);
->> +    preempt_enable();
->>       if (!entry)
->>           return NULL;
->> @@ -238,8 +239,6 @@ get_callchain_entry_for_task(struct task_struct 
->> *task, u32 max_depth)
->>               to[i] = (u64)(from[i]);
->>       }
->> -    put_callchain_entry(rctx);
->> -
->>       return entry;
->>   #else /* CONFIG_STACKTRACE */
->>       return NULL;
->> @@ -320,6 +319,34 @@ static long __bpf_get_stackid(struct bpf_map *map,
->>       return id;
->>   }
->> +static struct perf_callchain_entry *
->> +bpf_get_perf_callchain(int *rctx, struct pt_regs *regs, bool kernel, 
->> bool user,
->> +               int max_stack, bool crosstask)
+>> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+>> index a08130ff2e47a887b19f6c47bfa9f51e0c40d226..092904a61ec7afdc59253f9b78a9fe8b7cb5bfa7 100644
+>> --- a/tools/perf/util/evsel.h
+>> +++ b/tools/perf/util/evsel.h
+>> @@ -575,6 +575,8 @@ void evsel__uniquify_counter(struct evsel *counter);
+>>          ((((src) >> (pos)) & ((1ull << (size)) - 1)) << (63 - ((pos) + (size) - 1)))
+>>
+>>   u64 evsel__bitfield_swap_branch_flags(u64 value);
+>> +int evsel__get_config_val(struct perf_pmu *pmu, struct evsel *evsel,
+>> +                         const char *config_name, u64 *val);
+>>   void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
+>>                                  const char *config_name, u64 val);
+>>
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index 514cba91f5d99b399d2d6a1e350971660c54a9fc..ef7358ad1fb955f29f2e68b3d0ce711754e4d67c 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -144,8 +144,8 @@ struct perf_pmu_format {
+>>   };
+>>
+>>   static int pmu_aliases_parse(struct perf_pmu *pmu);
+>> -static void pmu_format_value(unsigned long *format, __u64 value, __u64 *v,
+>> -                            bool zero);
+>> +static void pmu_format_pack(unsigned long *format, __u64 value, __u64 *v,
+>> +                           bool zero);
+>>   static struct perf_pmu_format *pmu_find_format(const struct list_head *formats,
+>>                                                 const char *name);
+>>
+>> @@ -1377,6 +1377,61 @@ bool evsel__is_aux_event(const struct evsel *evsel)
+>>          return pmu && pmu->auxtrace;
+>>   }
+>>
+>> +/*
+>> + * Unpacks a raw config[n] value using the sparse bitfield that defines a
+>> + * format attr. For example "config1:1,6-7,44" defines a 4 bit value across non
+>> + * contiguous bits and this function returns those 4 bits as a value.
+>> + */
+>> +static u64 pmu_format_unpack(u64 format, u64 config_val)
 >> +{
->> +    struct perf_callchain_entry_ctx ctx;
->> +    struct perf_callchain_entry *entry;
+>> +       int val_bit = 0;
+>> +       u64 res = 0;
+>> +       int fmt_bit;
 >> +
->> +    preempt_disable();
->> +    entry = get_callchain_entry(rctx);
->> +    preempt_enable();
+>> +       for_each_set_bit(fmt_bit, &format, PERF_PMU_FORMAT_BITS) {
+>> +               if (test_bit(fmt_bit, &config_val))
+>> +                       res |= BIT_ULL(val_bit);
 >> +
->> +    if (unlikely(!entry))
->> +        return NULL;
->> +
->> +    __init_perf_callchain_ctx(&ctx, entry, max_stack, false);
->> +    if (kernel)
->> +        __get_perf_callchain_kernel(&ctx, regs);
->> +    if (user && !crosstask)
->> +        __get_perf_callchain_user(&ctx, regs);
->> +
->> +    return entry;
+>> +               val_bit++;
+>> +       }
+>> +       return res;
 >> +}
 >> +
->> +static void bpf_put_perf_callchain(int rctx)
+>> +int evsel__get_config_val(struct perf_pmu *pmu, struct evsel *evsel,
+>> +                         const char *config_name, u64 *val)
+> 
+> nits:
+> This is an evsel__ function but the evsel is the 2nd argument not the first.
+> Why pass the PMU and not just read evsel->pmu (or better evsel__find_pmu) ?
+
+That makes sense, I can do that.
+
+> Why not place this in evsel.c to match the header file declaration?
+
+This was for consistency with evsel__set_config_if_unset() that Arnaldo 
+moved to pmu.c because of an issue with the Python bindings [1]. That 
+doesn't seem to be an issue any more so I could move both to evsel.c. 
+That would require making the following things public:
+
+   struct perf_pmu_format
+   pmu_format_pack()
+   pmu_format_unpack()
+   pmu_find_format()
+
+Probably not the end of the world though?
+
+[1]: https://lore.kernel.org/all/ZEbAS2yx2fguW60w@kernel.org/
+
+> The evsel could be likely be const.
+> 
+
+Will do
+
+> Thanks,
+> Ian
+> 
 >> +{
->> +    put_callchain_entry(rctx);
+>> +       struct perf_pmu_format *format = pmu_find_format(&pmu->format, config_name);
+>> +       u64 bits = perf_pmu__format_bits(pmu, config_name);
+>> +
+>> +       if (!format || !bits) {
+>> +               pr_err("Unknown/empty format name: %s\n", config_name);
+>> +               *val = 0;
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       switch (format->value) {
+>> +       case PERF_PMU_FORMAT_VALUE_CONFIG:
+>> +               *val = pmu_format_unpack(bits, evsel->core.attr.config);
+>> +               return 0;
+>> +       case PERF_PMU_FORMAT_VALUE_CONFIG1:
+>> +               *val = pmu_format_unpack(bits, evsel->core.attr.config1);
+>> +               return 0;
+>> +       case PERF_PMU_FORMAT_VALUE_CONFIG2:
+>> +               *val = pmu_format_unpack(bits, evsel->core.attr.config2);
+>> +               return 0;
+>> +       case PERF_PMU_FORMAT_VALUE_CONFIG3:
+>> +               *val = pmu_format_unpack(bits, evsel->core.attr.config3);
+>> +               return 0;
+>> +       case PERF_PMU_FORMAT_VALUE_CONFIG4:
+>> +               *val = pmu_format_unpack(bits, evsel->core.attr.config4);
+>> +               return 0;
+>> +       default:
+>> +               pr_err("Unknown format value: %d\n", format->value);
+>> +               *val = 0;
+>> +               return -EINVAL;
+>> +       }
 >> +}
 >> +
->>   BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map 
->> *, map,
->>          u64, flags)
->>   {
->> @@ -328,20 +355,24 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, 
->> regs, struct bpf_map *, map,
->>       struct perf_callchain_entry *trace;
->>       bool kernel = !user;
->>       u32 max_depth;
->> +    int rctx, ret;
->>       if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
->>                      BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
->>           return -EINVAL;
->>       max_depth = stack_map_calculate_max_depth(map->value_size, 
->> elem_size, flags);
->> -    trace = get_perf_callchain(regs, kernel, user, max_depth,
->> -                   false, false);
->> +    trace = bpf_get_perf_callchain(&rctx, regs, kernel, user, max_depth,
->> +                       false);
->>       if (unlikely(!trace))
->>           /* couldn't fetch the stack trace */
->>           return -EFAULT;
->> -    return __bpf_get_stackid(map, trace, flags);
->> +    ret = __bpf_get_stackid(map, trace, flags);
->> +    bpf_put_perf_callchain(rctx);
->> +
->> +    return ret;
->>   }
->>   const struct bpf_func_proto bpf_get_stackid_proto = {
->> @@ -435,6 +466,7 @@ static long __bpf_get_stack(struct pt_regs *regs, 
->> struct task_struct *task,
->>       bool kernel = !user;
->>       int err = -EINVAL;
->>       u64 *ips;
->> +    int rctx;
->>       if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
->>                      BPF_F_USER_BUILD_ID)))
->> @@ -467,18 +499,26 @@ static long __bpf_get_stack(struct pt_regs 
->> *regs, struct task_struct *task,
->>           trace = trace_in;
->>           trace->nr = min_t(u32, trace->nr, max_depth);
->>       } else if (kernel && task) {
->> -        trace = get_callchain_entry_for_task(task, max_depth);
->> +        trace = get_callchain_entry_for_task(&rctx, task, max_depth);
->>       } else {
->> -        trace = get_perf_callchain(regs, kernel, user, max_depth,
->> -                       crosstask, false);
->> +        trace = bpf_get_perf_callchain(&rctx, regs, kernel, user, 
->> max_depth,
->> +                           crosstask);
->>       }
->> -    if (unlikely(!trace) || trace->nr < skip) {
->> +    if (unlikely(!trace)) {
->>           if (may_fault)
->>               rcu_read_unlock();
->>           goto err_fault;
->>       }
->> +    if (trace->nr < skip) {
->> +        if (may_fault)
->> +            rcu_read_unlock();
->> +        if (!trace_in)
->> +            bpf_put_perf_callchain(rctx);
->> +        goto err_fault;
->> +    }
->> +
->>       trace_nr = trace->nr - skip;
->>       copy_len = trace_nr * elem_size;
->> @@ -497,6 +537,9 @@ static long __bpf_get_stack(struct pt_regs *regs, 
->> struct task_struct *task,
->>       if (may_fault)
->>           rcu_read_unlock();
->> +    if (!trace_in)
->> +        bpf_put_perf_callchain(rctx);
->> +
->>       if (user_build_id)
->>           stack_map_get_build_id_offset(buf, trace_nr, user, may_fault);
-> 
-> Hi Peter,
-> 
-> As requested by Alexei, I have re-sent the v7 version. Compared with the 
-> v6 version, the only change is the addition of the ack tag in patch2. In 
-> accordance with your previous suggestions, patch1 has been modified 
-> based on your earlier patch, and patch2 adds preempt_disable on the eBPF 
-> side—this does not affect the original perf logic. Please review it 
-> again, thank you.
-> 
+>>   /*
+>>    * Set @config_name to @val as long as the user hasn't already set or cleared it
+>>    * by passing a config term on the command line.
+>> @@ -1432,7 +1487,7 @@ void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
+>>                  return;
+>>
+>>          /* Otherwise replace it */
+>> -       pmu_format_value(&bits, val, vp, /*zero=*/true);
+>> +       pmu_format_pack(&bits, val, vp, /*zero=*/true);
+>>   }
+>>
+>>   static struct perf_pmu_format *
+>> @@ -1477,8 +1532,8 @@ int perf_pmu__format_type(struct perf_pmu *pmu, const char *name)
+>>    * Sets value based on the format definition (format parameter)
+>>    * and unformatted value (value parameter).
+>>    */
+>> -static void pmu_format_value(unsigned long *format, __u64 value, __u64 *v,
+>> -                            bool zero)
+>> +static void pmu_format_pack(unsigned long *format, __u64 value, __u64 *v,
+>> +                           bool zero)
+>>   {
+>>          unsigned long fbit, vbit;
+>>
+>> @@ -1595,23 +1650,23 @@ static int pmu_config_term(const struct perf_pmu *pmu,
+>>                  switch (term->type_term) {
+>>                  case PARSE_EVENTS__TERM_TYPE_CONFIG:
+>>                          assert(term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+>> -                       pmu_format_value(bits, term->val.num, &attr->config, zero);
+>> +                       pmu_format_pack(bits, term->val.num, &attr->config, zero);
+>>                          break;
+>>                  case PARSE_EVENTS__TERM_TYPE_CONFIG1:
+>>                          assert(term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+>> -                       pmu_format_value(bits, term->val.num, &attr->config1, zero);
+>> +                       pmu_format_pack(bits, term->val.num, &attr->config1, zero);
+>>                          break;
+>>                  case PARSE_EVENTS__TERM_TYPE_CONFIG2:
+>>                          assert(term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+>> -                       pmu_format_value(bits, term->val.num, &attr->config2, zero);
+>> +                       pmu_format_pack(bits, term->val.num, &attr->config2, zero);
+>>                          break;
+>>                  case PARSE_EVENTS__TERM_TYPE_CONFIG3:
+>>                          assert(term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+>> -                       pmu_format_value(bits, term->val.num, &attr->config3, zero);
+>> +                       pmu_format_pack(bits, term->val.num, &attr->config3, zero);
+>>                          break;
+>>                  case PARSE_EVENTS__TERM_TYPE_CONFIG4:
+>>                          assert(term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+>> -                       pmu_format_value(bits, term->val.num, &attr->config4, zero);
+>> +                       pmu_format_pack(bits, term->val.num, &attr->config4, zero);
+>>                          break;
+>>                  case PARSE_EVENTS__TERM_TYPE_LEGACY_HARDWARE_CONFIG:
+>>                          assert(term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+>> @@ -1749,7 +1804,7 @@ static int pmu_config_term(const struct perf_pmu *pmu,
+>>                   */
+>>          }
+>>
+>> -       pmu_format_value(format->bits, val, vp, zero);
+>> +       pmu_format_pack(format->bits, val, vp, zero);
+>>          return 0;
+>>   }
+>>
+>>
+>> --
+>> 2.34.1
+>>
 
-Sorry, there are code conflicts. I will resend it.
-
--- 
-Best Regards
-Tao Chen
