@@ -1,122 +1,84 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A4C340A4D
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 23:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08ADE288A2;
+	Wed, 17 Dec 2025 00:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765928123; cv=none; b=qWum2PwYoszBGWy48LAUycjWUddIa7iyYC79ktQuVVS17dUF11JNfA/Ml2mQOWiHH0su2oJ9JBfvG2ZlY82j5mDIUfD15ECBGQjJQxa7+7xZt/W9uTneYSpIHJWgGTt/NQRJDpOodlWujBirlw/q6O5QDjyAMDvPhNjBnVx6zVA=
+	t=1765930400; cv=none; b=MiKCD0Ueqoti67tPqXxFwUVbWZ9ICBL2lrI4aptkfL9vHgWUR0o/zyEt4c+uH1qLhaGNMrzsqhNQP9KpMqN1VokTQ8xIgYvCGjoRYjB8SN+7XbZ+nNe3rsJe4ZamUMeHCp4lEkHVF4GeGGuV2aIcqlTbm4ccYXsBoiBgOGy29N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765928123; c=relaxed/simple;
-	bh=W6vpDia4FoH9eh75+8sB+9wBjdzpiIlbSOmLaD0uumQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MFgGghrveZh4eJ9a14x+yqVQAl8L3fD4lhjwQ6mhRa6AqQlo7ty+XVk3sGEUFdNPMOtQSUpqKzKGOTWIaWUsQeW71p4glMcocPceXdvj3flSqmppcFZtQ/PeirnhYpBkkJfnQqwCTMuVwoE5ftmN+eIjOYxO9mO2cDA5eWP/FBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z7sTtqyd; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765930400; c=relaxed/simple;
+	bh=p8kOKXRClvsn0/nZCAyBb0kv36JqoCmhi5ZmrnAFXtw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W5KwuuN3/ZEUwiIr4WiDLqWFfld83nCiCODGHxC8R0prU3NsRihrOogYtqwuMI72iK200r/w1VOaD6WAMITdBR0Qmoe7cOennqt76Zotid7MtGBSkt+JkOKFi3picmCs1m9UFjCUNKCs1LQa7LWBgD0fpkspUBZET/gOLhe9azw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjMR02Ze; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7sTtqyd"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-47798ded6fcso33357735e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2025 15:35:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765928120; x=1766532920; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W6vpDia4FoH9eh75+8sB+9wBjdzpiIlbSOmLaD0uumQ=;
-        b=Z7sTtqydHZ0/s7Bob/8BFiNWtG0ibt/lgzTF8dyGU8EuqwT8pMASjcG7cD68lKN/M0
-         XmZf9sKANvGvizBe56k+GxhdFamzo1tADj0aBvVPPP9ov26+8LlBGfnDNSmf1Mk1wkMT
-         kQbgkcdGYy5yb19BpiVJW1MAjj364LvrzeZsN53Az+engGqlGevBWobvLCyk8OMsv+/g
-         mIBdEfYka2xhInP+O41jxavxMTfMFrRFl9Y5kM2yBzsZQ0dJLlZfzYdvTvcFmj8vR5ZM
-         qdSHFpcRWxOIL6NbyfiOB0jTdE5n/UVT4Xu6Jphy/ScoT5z3JIwqYORIyOMrmO84UE19
-         s/ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765928120; x=1766532920;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=W6vpDia4FoH9eh75+8sB+9wBjdzpiIlbSOmLaD0uumQ=;
-        b=C4Rn9E3ar4+IPRgnlvqQlLGUkb2qQ1CHM9Ehb8gCcdjCcbJTFJEtXz1Dnbvm0fCLbn
-         biQkXeVV21i58f9xXAJLS8EaP0Q/lum0qiHMd0Emnda7q2ZatR8bYfNorfOb2h8R0OyQ
-         tAks4C2basJPitLqlmP06Xgps50Xqt5NGSSf13bP4ZG4OUCdEL2hDrK6pAA4bqfFESbo
-         5V7n6wA5hzj8arENwPQh9cT9yOCEyo7Xuo+wpTKDIV5TdsCWei+3w6ODTzLADh9ru5kC
-         sNwRSdl5azeXaV+bBdnPCfNEr3/tyPdcgIe8yE6eQclNySZsP5nZxG6pmFen5roGrcxZ
-         6zJA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1N28rw2i7U0LujqAPJ/wwSiLF0GiF0/jHToWSnYFPT11xgHhOWpM+RtuvnqO8soN6xg377oYYkMZPiDhGHj2/@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc3p0ZhQl47IOZyq9efptJJZCFh6wj7GEWuk3ZjNqBQ7HGDMzc
-	U7JUqDfASaYEMHW/ngaOl4KOeonjlOFa2R/5J1U/nvIUQNdXHpQNnFA/kFkGE/xcX5WaEPU2V9g
-	HDkSBClTo45KA0fvL94OYnZf+z9bY/3U=
-X-Gm-Gg: AY/fxX4H7QUx7z11GWspHWgLe1OIWZ3VmgIa1O/rwxM1UTe/ldiXmrJw0GfBv9E4yny
-	fT2Vo+d/o+DhF/Udclj+6e+6vOJ6ppNcyk57Q7VbAOrn28Weu6fMgDsZQtQ+QcP2Agu5A19Nriq
-	GIqpMydrzhrFGgp0lTkSydTVy8gzexNatpVmA/0jDmm+yG/s2W1qqvgnRZKRatXOcdttS+CRgG/
-	UY6hxaNoeIPHIzd7+xQaijfyVHsf4A8jzfDPMrL1Pdx8ripKzesVb9FK4/D3XTWRcsOxbJy5R4F
-	djAwahIm7JMHEdy7GGdNN2sX38K3QYbxGq6XR/4=
-X-Google-Smtp-Source: AGHT+IHjp/16v6iZgDNYj+IuMGgLFwmSZaVPm7qlrRq0sjVfy55a2ykH7/91v8vRe2lt6+UywAYHRqqvLP4Zs6KBqYo=
-X-Received: by 2002:a05:6000:40cf:b0:42b:3246:1681 with SMTP id
- ffacd0b85a97d-42fb44a3ee7mr18325137f8f.18.1765928119945; Tue, 16 Dec 2025
- 15:35:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjMR02Ze"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34297C4CEF1;
+	Wed, 17 Dec 2025 00:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765930399;
+	bh=p8kOKXRClvsn0/nZCAyBb0kv36JqoCmhi5ZmrnAFXtw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PjMR02ZebL/kAinz2ZnNojcM8bhDXzlCUTEnMESUsr0FLDRKPOXkj7bjCZ3xFh5iG
+	 cYT43D+u/SWqm80L4VdT1hLqQ3kyAsjOJ4d4emHJ3dNdKjKk91dFBeXpQ7/DhAQxaj
+	 CwMoMqR43DG8q8lKdFq8HkJd0RcVYjv2Ok/Mg2DaDhv/v7Gs3PFXXXZBTVrWUFOZtr
+	 fgN0ioyTXURjMW06EepYwDbLIDdUcF4DinO3P0WxREFcCxtxku4w/u7gwOxCu1Acrv
+	 sA1lwdqBz6KarrP+iuTBg/FFS9Zo30sWJjzyZuAr1WR4Yx1TQ+rPZS8349dLW6uKVU
+	 6lwWpPcMMXhRQ==
+Date: Tue, 16 Dec 2025 16:13:17 -0800
+From: Oliver Upton <oupton@kernel.org>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net,
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+	maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com,
+	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+	mark.rutland@arm.com, shuah@kernel.org,
+	gankulkarni@os.amperecomputing.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v5 10/24] KVM: arm64: Set up FGT for Partitioned PMU
+Message-ID: <aUH1nZB83m62kkUH@kernel.org>
+References: <aTiPvS49uMOJEBrf@kernel.org>
+ <gsnty0n72zl5.fsf@coltonlewis-kvm.c.googlers.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112163148.100949-1-chen.dylane@linux.dev>
- <20251112163148.100949-3-chen.dylane@linux.dev> <c41372ad-1591-4f2b-a786-bc0e19f8425c@linux.dev>
- <7b82e322-eab7-4fc2-9de1-d10ad8251378@linux.dev> <42627219-fa33-441d-b8cb-eb48ab3230d6@linux.dev>
-In-Reply-To: <42627219-fa33-441d-b8cb-eb48ab3230d6@linux.dev>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 16 Dec 2025 15:35:08 -0800
-X-Gm-Features: AQt7F2rJDT2luiBfMEOsoczK4qPy8i7YrtRrkYDQTvIlKjsIFHyghSnoN9z97qc
-Message-ID: <CAADnVQ+pP2oJhMOWe1dLg4W_+bMU=amfzYGWKJ4yVNcq4KOvNA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v6 2/2] bpf: Hold the perf callchain entry until
- used completely
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: Yonghong Song <yonghong.song@linux.dev>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, "linux-perf-use." <linux-perf-users@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <gsnty0n72zl5.fsf@coltonlewis-kvm.c.googlers.com>
 
-On Wed, Dec 3, 2025 at 1:34=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wro=
-te:
->
-> =E5=9C=A8 2025/11/26 17:29, Tao Chen =E5=86=99=E9=81=93:
-> > =E5=9C=A8 2025/11/14 00:01, Yonghong Song =E5=86=99=E9=81=93:
-> >>
-> >>
-> >> On 11/12/25 8:31 AM, Tao Chen wrote:
-> >>> As Alexei noted, get_perf_callchain() return values may be reused
-> >>> if a task is preempted after the BPF program enters migrate disable
-> >>> mode. The perf_callchain_entres has a small stack of entries, and
-> >>> we can reuse it as follows:
-> >>>
-> >>> 1. get the perf callchain entry
-> >>> 2. BPF use...
-> >>> 3. put the perf callchain entry
-> >>>
-> >>> And Peter suggested that get_recursion_context used with preemption
-> >>> disabled, so we should disable preemption at BPF side.
-> >>>
-> >>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> >>
-> >> Acked-by: Yonghong Song <yonghong.song@linux.dev>
-> >>
-> >
-> > Hi eBPF maintainers,
-> >
-> > This patch appears to have missed the eBPF maintainers on the list,
-> > please review it again, thanks.
-> >
->
-> ping...
+On Fri, Dec 12, 2025 at 08:51:34PM +0000, Colton Lewis wrote:
+> > The other reason for doing this is kvm_pmu_fgt_bits() assumes a
+> > 'positive' trap polarity, even though there are several cases where FGTs
+> > have a 'negative' priority (i.e. 0 => trap).
+> 
+> For the bits I was concerned with they all had positive polarity, except
+> for the dedicated instruction counter. (Side note: Why would ARM do
+> this?)
 
-pls resubmit and ask Peter to ack that your patches match what he suggested=
-.
+Old software on new hardware, you don't want the guest to magically get
+access to things it shouldn't.
+
+> IIRC the FGT setup I plugged into in previous versions of the patch had
+> some icky macros that accounted for polarity. They were confusing and I
+> didn't like the effort to understand them.
+
+I'm guessing you're referring to the undef infrastructure (FGUs), which
+is a meaningfully load-bearing part of KVM.
+
+> Is there a good reason not to adopt a convetion that 1 => trap for
+> kernel code? Reversing the negative polarities immediately before write
+> could be easy: Have a bitmap of the negative polarity bits to xor with
+> the traps we actually want.
+
+This *significantly* muddies the water around FGTs. I quite like that the
+current representation matches the architecture. NV forces KVM to deal
+with the native representations anyway.
+
+Thanks,
+Oliver
