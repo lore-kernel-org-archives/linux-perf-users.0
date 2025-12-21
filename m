@@ -1,161 +1,137 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010006.outbound.protection.outlook.com [52.101.201.6])
+Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594E52DBF76;
-	Fri, 19 Dec 2025 23:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.6
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766186042; cv=fail; b=nZwGSxXhqrsW8j1Z+vzyv2EHnASrEHG52NVpzv2GiynlVbJ/uKREDLYxOg10rRkRLnaRwc4INM6SsnBfB/UuFFaz8sv3YFDNawCdRTY0CN2vqnNkAa4pqE/mq6ZVAvEmy8caVHbM88h2KxBxHbp6IehNtvEUp/0edy01BNIelhE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766186042; c=relaxed/simple;
-	bh=ZRA7HoSNzmIpeGeB1G38TM5NxYUxhgcRc5hvd6WM0ic=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EhwghlmtwXiQEIovR+HSAnEBbMsPNhFCSpYIXMCgN9BX3t9p91AGpjU43xhJudl6RxE6TjEFj9Lrp4AHhjzVZypr0d7SoXu7elrh83U8DlS6zMncgBNPH3aUrn/Rj80lPjS73ZkGetAiIokpI3bc3CnqmxbRTHyi2peajuMg+xo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Gn3MAUAk; arc=fail smtp.client-ip=52.101.201.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98674182B8
+	for <linux-perf-users@vger.kernel.org>; Sun, 21 Dec 2025 21:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766353787; cv=none; b=GBCF0fV45tTEO5inUf+HCPYUyvWOUqO+B1LqKo7ovnMG86C+lphIK86UNjwxeUAKFGIFM7ERC6TRBbuouQ0qwkf5k9jhNc3fYW5YmAOiLRAbdLQ6lw/3XPw2X0mgYZ1tsh6Q/LLjPaCaK+ChNcen6mCjx+jeJkZPEwYzvG+UGSA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766353787; c=relaxed/simple;
+	bh=Eyl/MjBzj1g3eAUApQQrvOy0kdzygHQen1aDFGhg8Ro=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=CSYg+vV94uyXyFchlzsnM4MJgRwBIAqR/VPm15KsQF7ZNxAYvr126ffDA2imW/IhAqyrFKpiuaI87nak+Erd9nzkJbVRTxRYsR+ayvCWUKo3+xMvzLKcL9NXNNkH2b883B25zqbrZo4dJQ0vzebTfIfv+5dsBFkzyO5f1HrBZKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jmay.us; spf=pass smtp.mailfrom=jmay.us; dkim=pass (2048-bit key) header.d=jmay.us header.i=@jmay.us header.b=idmkJZpw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cN3Gf7XF; arc=none smtp.client-ip=202.12.124.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jmay.us
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmay.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Gn3MAUAk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cNJbN5Y+vQ6yhrgY73KXvENzZrbMn3Ib0h0vkeuTgH5RDJQjLHgFjMHqWWWfV1N8HWsRAsLqwmIwOC5A6ijHLda8Pb2pZkP6eKxQomdvUQhbqt+qnuf/Pw+0omfqK0YKD09mEMpBE2oyXdfIklHbNN+svid1wMFTbmEXWtA/HSF8mO9dqafN9ufv5+3m6AYRL878aOiDP7r+yZ/WZC7QOy199xJK8+Hk5CLMUVi9g4bTILApxmM+CXlijUDO76R17bj5TpOe6tzy7+fHZJjI5qUW42ODA/Unw7rh2fcCqvjN9UdbmfCZboWAnq1DPpcJZTDTl1CknnOjDU4QBHjCrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8iE8sTWgYvHYFzOgO26pI/qN65gsLLyon20fNXuNBtE=;
- b=jGCgX5ZgIP+bHAFLrRyp3bCotGZCUuHgbFsVPVItVu6FWTL1PQ8YhsFA3EbnWrrS6Kw1cgOj5/4vtEp9xvBqHhqc21MgsRuhf+7R6fA07j4awxD4wJn/DJMm81bhAsHmrUqwS+0eyaAB44RoE17B1a0LZOyobS/guvguNUz/BkC99xBPGLg6IGfIh5bFdgcxJrhTUzl9n2IR9HbVkbcW9vb9qndTnGmYkZZT8OBWjQRhgdDUQrP+E9yUdsJiRwxV+iJp3TUm+WgOLO3EsuNPTj/UKv1N15a+oELCpEj8QWQHoZASXK4GoPHHqzOhdt3snjZrztikILA6iXUau438Cw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8iE8sTWgYvHYFzOgO26pI/qN65gsLLyon20fNXuNBtE=;
- b=Gn3MAUAky+R+YxuE7IJdmyvBHsRm33EO+jkzXg6i6U6fqSoYYj6KqMSGtnl4JR0wmc/JMdaExgb2Rg/SuCCHsfSVVDMgf+sIfT9j15rfOUAY9qzIbEG/Wlcd2Vu4+HHYUKg1LHpCYVVLSN1XSH7mqukR7WpX51f6Yl5qabSBlao/M9MP+4wBaraqpZoo+fbOdsuRHj7HdKLctQlQt86NRWPKVN+CRb6x1y1MM++hWE8If/5d3sr+DgOrk6t/F6PFEMSObwciSmMQNR1a/76jPsawkoHkfrH2tDZ1g+dHVpcf12a+HRQZ/j2c0G+w/5+/pFBZ5X940Yk1P1bCL1xuCg==
-Received: from CH0PR03CA0287.namprd03.prod.outlook.com (2603:10b6:610:e6::22)
- by DS7PR12MB9041.namprd12.prod.outlook.com (2603:10b6:8:ea::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.9; Fri, 19 Dec
- 2025 23:13:57 +0000
-Received: from CH1PEPF0000AD79.namprd04.prod.outlook.com
- (2603:10b6:610:e6:cafe::98) by CH0PR03CA0287.outlook.office365.com
- (2603:10b6:610:e6::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9434.9 via Frontend Transport; Fri,
- 19 Dec 2025 23:13:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CH1PEPF0000AD79.mail.protection.outlook.com (10.167.244.57) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9434.6 via Frontend Transport; Fri, 19 Dec 2025 23:13:57 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 19 Dec
- 2025 15:13:41 -0800
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 19 Dec
- 2025 15:13:41 -0800
-Received: from build-bwicaksono-noble-20251018.internal (10.127.8.11) by
- mail.nvidia.com (10.129.68.8) with Microsoft SMTP Server id 15.2.2562.20 via
- Frontend Transport; Fri, 19 Dec 2025 15:13:40 -0800
-From: Besar Wicaksono <bwicaksono@nvidia.com>
-To: <acme@redhat.com>, <leo.yan@arm.com>, <james.clark@arm.com>,
-	<namhyung@kernel.org>, <irogers@google.com>, <mark.rutland@arm.com>,
-	<jolsa@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-	<vsethi@nvidia.com>, <rwiley@nvidia.com>, <skelley@nvidia.com>,
-	<ywan@nvidia.com>, <treding@nvidia.com>, <jonathanh@nvidia.com>, "Besar
- Wicaksono" <bwicaksono@nvidia.com>
-Subject: [PATCH 2/2] perf arm-spe: Add NVIDIA Olympus to neoverse list
-Date: Fri, 19 Dec 2025 23:13:25 +0000
-Message-ID: <20251219231325.2742580-3-bwicaksono@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251219231325.2742580-1-bwicaksono@nvidia.com>
-References: <20251219231325.2742580-1-bwicaksono@nvidia.com>
+	dkim=pass (2048-bit key) header.d=jmay.us header.i=@jmay.us header.b="idmkJZpw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cN3Gf7XF"
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id ABB2A7A0070;
+	Sun, 21 Dec 2025 16:49:43 -0500 (EST)
+Received: from phl-imap-18 ([10.202.2.89])
+  by phl-compute-01.internal (MEProxy); Sun, 21 Dec 2025 16:49:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jmay.us; h=cc:cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1766353783;
+	 x=1766440183; bh=1+IMBLM4U41kKgRvFiSq4x/aDvCnzjCMF1l8hqPeff0=; b=
+	idmkJZpw99YFCVVnJ4jojUegdS9blxxGYtD+rLNYGwkRPDUm4t3U2NsBKpZUElLa
+	+w6NkOxv7lmFZsfdXoJJBW+NqoW2CeVTRfnhetqUCcrMzqRbLCSPqhSTSNEnsGJX
+	qDo1qT3v0ewHzHUeTbQ6dFUZfeQfPaLRmNGlJMcD5RZqNjGt/0Oz8pm/xESBCwbi
+	3aGcKU5SgMlOwuXXaIKyRHoUjSuGObwCptCmgAUtq4EBGro9rh9QjhGcYcduvGqi
+	sr9FFCv4P5R6ikv9YbuLjeS/AN6gVHe2Vhp/oadYMWTdCtMXmEnN9s93GXibv0j3
+	lQAaqZuOTNanpnCWR3BPlQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1766353783; x=
+	1766440183; bh=1+IMBLM4U41kKgRvFiSq4x/aDvCnzjCMF1l8hqPeff0=; b=c
+	N3Gf7XFkjmtgLgky447e/pxXedMFKDFSpSsTa+55yvYD0dUvvdhfdhZMNB8JC1hm
+	HE1Zh9w7DrZbLuLOS0/STVwtYphtIcTar/91CnWuRXV+vbZjIrE8fj1ZaF4zgKw0
+	8umn5MU/JWS31+3Yo4ctR6XcQXKeGstia0GNEoTQreT8n+/zUPoQGu7+twaJXwyH
+	utwMJtLaBGpir5bc5wdadJSh73m+6aD1NloDmQGJsUUY5+4Wl8wQhpkOBr15NcQe
+	0HrtLCV4j/7+NidiQqa29P0Gsb+Sn/8bktWnE/OkUeXgwIghCcX5TLI6VTrrkVbL
+	N7AT1huQcaY503d483EOw==
+X-ME-Sender: <xms:d2tIaVewh-o9TgVESZQvK4028DpLjoicHCuvfQjiwpT-8Ojzk00LcA>
+    <xme:d2tIaeAS96ElWzkrCMZKtLVQq9abm6iV1mcTNZQlmHicm28BwMJ6D6fJuwyADXNa5
+    1Rf3mkYZNA01JdDM1tkr_VgQHXBSvQCEvbHS-V2O9qstI15LQn3cEo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdehhedulecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdflohgvlhcu
+    ofgrhidfuceojhhovghlqdhlihhnuhigsehjmhgrhidruhhsqeenucggtffrrghtthgvrh
+    hnpeevleehvdeiheffudekffejtdeffeeghffggedvteevffdtvddvffevvdetgfffhfen
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepjhhovghlqdhlihhnuhigsehjmhgrhidruhhspdhn
+    sggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrg
+    hlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtoheplhgvohdrhigrnhes
+    rghrmhdrtghomhdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoh
+    epihhrohhgvghrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopehjrghmvghsrdgtlhgrrhhksehlihhnrghrohdroh
+    hrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhn
+    fhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhpvghrfhdquhhsvghrsh
+    esvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:d2tIaa-2XMguZXZw0ohNW9OyR8ERMCpIGdIyH-S4oXfMExaaxnirXw>
+    <xmx:d2tIaWsAp6e1IWIPG3xpiMOiK2xWLho5auDRTH6ouyhPUo-CDcSNew>
+    <xmx:d2tIaSOg4huBcvhAQdTF-DaFHo_eWKUo2ekmYzq_CNOPXTl9VyBQrw>
+    <xmx:d2tIaTiBVajAxzRPrZkfFh6iieaE3bJIb4too7lEo74Dlp4H-naItg>
+    <xmx:d2tIaWby7W6ntYRgE6y2s-AvvFjRR-7ZAZWsiF_n-35H3TXBwhEJ2QLa>
+Feedback-ID: i86164869:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 34BFE15C008C; Sun, 21 Dec 2025 16:49:43 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: AvQW3Rw2Mc4g
+Date: Sun, 21 Dec 2025 13:48:56 -0800
+From: "Joel May" <joel-linux@jmay.us>
+To: "Leo Yan" <leo.yan@arm.com>, "James Clark" <james.clark@linaro.org>
+Cc: "Arnd Bergmann" <arnd@arndb.de>, "Ian Rogers" <irogers@google.com>,
+ linux-arm-kernel@lists.infradead.org,
+ "Linux perf Profiling" <linux-perf-users@vger.kernel.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>
+Message-Id: <c8161700-ad9d-43d3-8c45-cfc110ebcd49@app.fastmail.com>
+In-Reply-To: <20251215112818.GB681384@e132581.arm.com>
+References: <b2651f20-6f3a-49f5-9cd8-3fb028b2cab5@app.fastmail.com>
+ <fcefc3c0-541d-40cc-84e3-9c2460308bdb@linaro.org>
+ <23c07ac4-ff13-47a5-824a-e7af1d1847a3@app.fastmail.com>
+ <bda366b4-fa53-4feb-a7ce-ee47cfc404b5@linaro.org>
+ <20251215112818.GB681384@e132581.arm.com>
+Subject: Re: [PATCH] arm64: perf: fix syscalltbl path base
 Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD79:EE_|DS7PR12MB9041:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3051ae49-f986-4da9-13b0-08de3f54497a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YUMjsS5MDS6yWXBoioLxnQ6qTphTkOdP/c7IGAKWQH2YCyFtbMoaDm6qpIUM?=
- =?us-ascii?Q?yyfFWMcsqNA5VKWMGINFzlSDHxqc0kg7SpqvbUi76xyzTBwt97FZcF68XLHF?=
- =?us-ascii?Q?3ycAomVdlg/nyquvdIG/If97jdV6FazfTLpNWLhA6Wt8XHXlHjEPfvFraDzq?=
- =?us-ascii?Q?NJSSSI4pAU8rs7wPw4NSLHO+KkEpVh87QNnwflgR3HJZGP9KqVz7tKCDV7m/?=
- =?us-ascii?Q?3isYreO2QzXv6WMbCJNa1xJfDX/Crdz6R4c3u4Yys7lCgMwFgTu2f83LyN1g?=
- =?us-ascii?Q?fnRkUakbone+NHRLzNJuDbKKIqLGnw8JiKAQ7vb0eVUATlxn7DOqgFV0wYRX?=
- =?us-ascii?Q?InbY9PG4ayRzLAKe1d4sCuJzwdS+KqhT+PiHaP9gRbcPFlwazl5IKMA3yaTd?=
- =?us-ascii?Q?nkpWI6Ji0/JQWAyIIgv1zUINkvCPmPQCsvYqxyLWsdFHXej96NZ1Z3nzd17f?=
- =?us-ascii?Q?96akXsaFTV7uHfuyZu6c0fla3QwxxgCsbdo0n4+KDNfFWTGrhJSQsvx8bSCv?=
- =?us-ascii?Q?DECVaR09+9ZkSs3Q+vfJYtATtHyVG7vsBus8n6pUj9Nm3Q52vUd83LRU2u3s?=
- =?us-ascii?Q?la0sR97IsKJWHIQdr7GCNgDXX3VH6bXjM6B6xl55yxuSJgPqEk2sqh+gjymi?=
- =?us-ascii?Q?QU4NTgy9Wge3lS6t6MS46UjMLcpU/zzLXFG14IKnWYXcemdJdynJWAS73d1c?=
- =?us-ascii?Q?P4xECAI/r/pCRU0aH8fi936/NKzMPermkNAu2rmN4SWBv12jQRTPPCoJamVX?=
- =?us-ascii?Q?ZKU1C94FFzI0WBYSzXuc9d1VvKhEsr7pziAmPNGucHOTrq+vM99TQxpplP/M?=
- =?us-ascii?Q?D6lkh7tWWU0vg/SbzxRiQv/ir4GlTXoaQcQ4zwnNehDMgcCkHAFMaZFkODbl?=
- =?us-ascii?Q?AgmeWeOMAADpvIEQ8vxmmg2Qlurh5bEgm9gWh7V3gHdBqVSDm44kUOQYUtu2?=
- =?us-ascii?Q?H6cvbJMaNTAEcrcMYhih9vaO79PP95RoXy5ayF52bmO8oSqrThbTrdaED9bk?=
- =?us-ascii?Q?hhGt4oDFsjnQG+GdgJ2eqk5J0AXVYbyEewy9CnmIIx2zAWVa7IJ2QdIWy6xa?=
- =?us-ascii?Q?u+8ZLMf98PA5gmUE4vdRourCXxOH6jDGMU0UpWwh/FrEa9cERK1rgM7jhH2k?=
- =?us-ascii?Q?8NSyDypHe+fOQ9ug1tw5lfqXu0DEg5CgCFasaF/XhOCdsZ5XQix5hyA8cpar?=
- =?us-ascii?Q?Q65NwftfswVnwmIuFCLfJ9zf7Un9eqiBKwfauu08U2kT4cWeHTEzYGkrilj0?=
- =?us-ascii?Q?OFNUlHD33xgR8OgjbPY3Q5NTtdjQQyf9IeCyDKdamU/ztcNx7uQnwXeMeUMG?=
- =?us-ascii?Q?eYDOVhZL06qbKTK4UUAwr8PTyEXpa57kkqA8ezkFW3hI3Hz8a0rd18iaCg2c?=
- =?us-ascii?Q?euj8gaN19Ijdx4dgUGh0oQr8IIrB2TNyITo5xviFJSXzRjaQ2x940JOW9aCq?=
- =?us-ascii?Q?cN4tzjFOJVggv+BdP/5YOMdBylGZv4dmhVwayrOvJTgEANKmxC913YiWSguk?=
- =?us-ascii?Q?BK3Xs8/YVy7gzKaLw7IYXGl9vMVusHqzFnEkYGCa9/y08DzYvdNRC5/ILBAF?=
- =?us-ascii?Q?XGtxH1/jEjCXiZZBjbc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2025 23:13:57.4111
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3051ae49-f986-4da9-13b0-08de3f54497a
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD79.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9041
+Content-Transfer-Encoding: 7bit
 
-Add NVIDIA Olympus MIDR to neoverse_spe range list.
+On Mon, Dec 15, 2025, at 03:28, Leo Yan wrote:
+> On Mon, Dec 15, 2025 at 12:52:24PM +0200, James Clark wrote:
+> > On 15/12/2025 11:33, Arnd Bergmann wrote:
+> > > On Mon, Dec 15, 2025, at 09:47, James Clark wrote:
+> > > > On 15/12/2025 00:12, Joel May wrote:
+> > > > 
+> > > > Hi Joel,
+> > > > 
+> > > > There is a similar fix on the list here:
+> > > > 
+> > > > https://lore.kernel.org/linux-perf-users/20251204-perf_fix_syscall_header-v1-1-b8e27f74ed6a@arm.com/
+> > > > 
+> > > > I'm not sure if commit 1 alone will also fix your issue, or we'd need to
+> > > > collapse both of the commits in that set.
+> 
+> We need to apply both patches in the share link - we need to apply the
+> second patch to revert generating unistd_64.h in libperf.
 
-Signed-off-by: Besar Wicaksono <bwicaksono@nvidia.com>
----
- tools/perf/util/arm-spe.c | 1 +
- 1 file changed, 1 insertion(+)
+Yes, applying both of those patches will mitigate my problem.
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 71be979f5077..75208935d2c5 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -579,6 +579,7 @@ static const struct midr_range common_ds_encoding_cpus[] = {
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2),
-+	MIDR_ALL_VERSIONS(MIDR_NVIDIA_OLYMPUS),
- 	{},
- };
- 
--- 
-2.43.0
+Neither of those patches update syscalltbl in
+arm/arm64/kernel/Makefile.syscalls though.  Based on the context in
+scripts/Makefile.asm-headers, it looks like syscalltbl is always intended
+to be relative to srctree.  So, my patch increases consistency, even if
+it's not fixing any known problem (after the other patches are applied).
 
+Whether headers are dynamically generated or not, it seems like this is
+something that can be improved anyway.
+
+This is my first time contributing to the Linux kernel, so please bare with
+my ignorance.  I don't know whether it's acceptable to consider patches
+that conceptually improve something without an actual problem they're
+solving.
+
+Thanks,
+--Joel
