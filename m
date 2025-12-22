@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD843346E6B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D03B2BEC43;
 	Mon, 22 Dec 2025 22:57:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766444245; cv=none; b=rtznN3wjsYQc53bSK/Q1UJl7athPjG3ydHMN4ikxRJyLbhXYmyBYxsWT+CCRN8acva82a8d3mJKK6u0sTa1Bqq6UES4ewUFPYIe5Bt4E5McES6PSX6lTDdAlfL2G6VxakVAkn+YPNJoUFWfO0G4QI33xGlnu1LJfNfxb/tNJDc4=
+	t=1766444246; cv=none; b=pzcRghlhhsqp5KdCk5WjcGxpehFD/T/1Glzpc8lD7BgEKfi81/1dn37oBij+xeHIQCko9VbfyXWqMW4fNnCy162PvMMQv70vJsAvdrPrFHplYdMnU8kde1u/O5PJ9iQFK1oMo+ebgElzHcG4YDTqiK5XwOkVDWFfy7vr/F2wbG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766444245; c=relaxed/simple;
-	bh=mnu/65nkOLYVGKJLRJS1wFV3oVaFZSvkIiASImiT1og=;
+	s=arc-20240116; t=1766444246; c=relaxed/simple;
+	bh=7E5Dybc75IESRAl+k3QA51khMYlSIHC9JyGLQOU/HYA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rOnKXtsmJ3Hz83xSoCB0Ci2tRNnHyK9hoK2q+rlYFPXDmn2gOu+huvM0fm1AbLIBvMI4zU1ZuJUFOM8EyL6E5pypGqjQQIH9oAHBRE88O5dJ8zFwI9eDedwoiGqcVY5NPtntiAxUgbCRV7uvyh/D7/ig8RcPLOxXZMgChIPu6fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQ0QEB3l; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ofnl228MnkZ0VqGER0BThhXKgWN/0Rf+Rc4VhcttlaFYso/woNQUh3j/1vCQEeUW/i2vnIpfkmwonbbRiWYV6MZOGg4/3bzXV7vpc3HOwzcJJksUDmezI9aHuHIIFcryKJU5OpAQM1vf1Vcr6I8j0lmKGYujjhlIobL5rpY+MgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EwWP75d0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQ0QEB3l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4872C16AAE;
-	Mon, 22 Dec 2025 22:57:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EwWP75d0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D1A9C19421;
+	Mon, 22 Dec 2025 22:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1766444245;
-	bh=mnu/65nkOLYVGKJLRJS1wFV3oVaFZSvkIiASImiT1og=;
+	bh=7E5Dybc75IESRAl+k3QA51khMYlSIHC9JyGLQOU/HYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TQ0QEB3llvXAyckXQmubfldaQrQ/csmppSFOSSlpGBk4qEAlD2qQhcdcqRSTd0l5t
-	 OcpltpjhtTKqQGXD+Irtukm3nkIS85gGFKaWQruo6rftavzlfsfzUU535K4NwX83cN
-	 qiKeOy4IKX3B9Uf13S4/qM2fsaDI3y56i+W9698stA6FvVL+9A67AoG7CyJiRNRsCP
-	 9cvMutU3rP6BvuFmerXle16EIDf2BiVEVk8yrzN6U6nqXGZcOQv6vHDVZkjNOZwKa9
-	 bPcIwPtRF74baqJNgZuxTmrS4ejxHQTp283yzy5bnWrZ8hoccfnUjkDqqWSJ2FqPpY
-	 y6XdxRMdfzs9w==
+	b=EwWP75d0yMaok+rW7kDqDKrllYdg3hFOZVJdkOJXB9XiLWf7BeUY45hOWOg7En3/T
+	 FCM3HzlXTEhGTP5e8s3RVFxWqbNgnN7DKtbh3/Jca1hMH3jQOCD+Bo0k7ATEpVn52x
+	 9ec10vtMK9+IajQ2K0aNCgCoHPfHAWgfdtcWDFu5PNxY8GxKctWD1FiCIxTSiN9p7U
+	 +nqqn+gH95M3HD0yDqbqvruENlaYzKnVXynplpaMUFMQbpFrDzot+w0HYjiBl/6goW
+	 1hXLvWBxY/d3WxcFNi9rYVrLAEzwKZ2PWbTfacpTzH+h7o8T+N+W/4UFKs1IB6YZaL
+	 EI10QvhW/6d1Q==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,10 +36,10 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH 10/11] tools headers: Sync linux/socket.h with kernel sources
-Date: Mon, 22 Dec 2025 14:57:15 -0800
-Message-ID: <20251222225716.3565649-10-namhyung@kernel.org>
+	linux-arch@vger.kernel.org
+Subject: [PATCH 11/11] tools headers: Sync syscall table with kernel sources
+Date: Mon, 22 Dec 2025 14:57:16 -0800
+Message-ID: <20251222225716.3565649-11-namhyung@kernel.org>
 X-Mailer: git-send-email 2.52.0.351.gbe84eed79e-goog
 In-Reply-To: <20251222225716.3565649-1-namhyung@kernel.org>
 References: <20251222225716.3565649-1-namhyung@kernel.org>
@@ -53,72 +53,155 @@ Content-Transfer-Encoding: 8bit
 
 To pick up changes from:
 
-  d73c167708739137 ("socket: Split out a getsockname helper for io_uring")
-  4677e78800bbde62 ("socket: Unify getsockname and getpeername implementation")
-  bf33247a90d3e85d ("net: Add struct sockaddr_unsized for sockaddr of unknown length")
+  b36d4b6aa88ef039 ("arch: hookup listns() system call")
 
-This should be used to beautify socket syscall arguments and it addresses
+This should be used to beautify the syscall arguments and it addresses
 these tools/perf build warnings:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/perf/trace/beauty/include/linux/socket.h include/linux/socket.h
+    diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
+    diff -u tools/scripts/syscall.tbl scripts/syscall.tbl
+    diff -u tools/perf/arch/x86/entry/syscalls/syscall_32.tbl arch/x86/entry/syscalls/syscall_32.tbl
+    diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
+    diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/syscalls/syscall.tbl
+    diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
+    diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/mips/kernel/syscalls/syscall_n64.tbl
+    diff -u tools/perf/arch/arm/entry/syscalls/syscall.tbl arch/arm/tools/syscall.tbl
+    diff -u tools/perf/arch/sh/entry/syscalls/syscall.tbl arch/sh/kernel/syscalls/syscall.tbl
+    diff -u tools/perf/arch/sparc/entry/syscalls/syscall.tbl arch/sparc/kernel/syscalls/syscall.tbl
+    diff -u tools/perf/arch/xtensa/entry/syscalls/syscall.tbl arch/xtensa/kernel/syscalls/syscall.tbl
 
 Please see tools/include/README.kernel-copies.
 
-Cc: netdev@vger.kernel.org
+Note that s390 syscall table is still out of sync as it switches to use the
+generic table.  But I'd like to minimize the change in this commit.
+
+Cc: linux-arch@vger.kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- .../perf/trace/beauty/include/linux/socket.h  | 24 ++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ tools/include/uapi/asm-generic/unistd.h             | 4 +++-
+ tools/perf/arch/arm/entry/syscalls/syscall.tbl      | 1 +
+ tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 1 +
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl  | 1 +
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl     | 1 +
+ tools/perf/arch/sh/entry/syscalls/syscall.tbl       | 1 +
+ tools/perf/arch/sparc/entry/syscalls/syscall.tbl    | 1 +
+ tools/perf/arch/x86/entry/syscalls/syscall_32.tbl   | 1 +
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl   | 1 +
+ tools/perf/arch/xtensa/entry/syscalls/syscall.tbl   | 1 +
+ tools/scripts/syscall.tbl                           | 1 +
+ 11 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/trace/beauty/include/linux/socket.h b/tools/perf/trace/beauty/include/linux/socket.h
-index 77d7c59f5d8b1cb2..ec715ad4bf25f5f7 100644
---- a/tools/perf/trace/beauty/include/linux/socket.h
-+++ b/tools/perf/trace/beauty/include/linux/socket.h
-@@ -32,11 +32,29 @@ typedef __kernel_sa_family_t	sa_family_t;
-  *	1003.1g requires sa_family_t and that sa_data is char.
-  */
+diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
+index 04e0077fb4c97a4d..942370b3f5d25230 100644
+--- a/tools/include/uapi/asm-generic/unistd.h
++++ b/tools/include/uapi/asm-generic/unistd.h
+@@ -857,9 +857,11 @@ __SYSCALL(__NR_open_tree_attr, sys_open_tree_attr)
+ __SYSCALL(__NR_file_getattr, sys_file_getattr)
+ #define __NR_file_setattr 469
+ __SYSCALL(__NR_file_setattr, sys_file_setattr)
++#define __NR_listns 470
++__SYSCALL(__NR_listns, sys_listns)
  
-+/* Deprecated for in-kernel use. Use struct sockaddr_unsized instead. */
- struct sockaddr {
- 	sa_family_t	sa_family;	/* address family, AF_xxx	*/
- 	char		sa_data[14];	/* 14 bytes of protocol address	*/
- };
+ #undef __NR_syscalls
+-#define __NR_syscalls 470
++#define __NR_syscalls 471
  
-+/**
-+ * struct sockaddr_unsized - Unspecified size sockaddr for callbacks
-+ * @sa_family: Address family (AF_UNIX, AF_INET, AF_INET6, etc.)
-+ * @sa_data: Flexible array for address data
-+ *
-+ * This structure is designed for callback interfaces where the
-+ * total size is known via the sockaddr_len parameter. Unlike struct
-+ * sockaddr which has a fixed 14-byte sa_data limit or struct
-+ * sockaddr_storage which has a fixed 128-byte sa_data limit, this
-+ * structure can accommodate addresses of any size, but must be used
-+ * carefully.
-+ */
-+struct sockaddr_unsized {
-+	__kernel_sa_family_t	sa_family;	/* address family, AF_xxx */
-+	char			sa_data[];	/* flexible address data */
-+};
-+
- struct linger {
- 	int		l_onoff;	/* Linger active		*/
- 	int		l_linger;	/* How long to linger for	*/
-@@ -450,10 +468,10 @@ extern int __sys_connect(int fd, struct sockaddr __user *uservaddr,
- 			 int addrlen);
- extern int __sys_listen(int fd, int backlog);
- extern int __sys_listen_socket(struct socket *sock, int backlog);
-+extern int do_getsockname(struct socket *sock, int peer,
-+			  struct sockaddr __user *usockaddr, int __user *usockaddr_len);
- extern int __sys_getsockname(int fd, struct sockaddr __user *usockaddr,
--			     int __user *usockaddr_len);
--extern int __sys_getpeername(int fd, struct sockaddr __user *usockaddr,
--			     int __user *usockaddr_len);
-+			     int __user *usockaddr_len, int peer);
- extern int __sys_socketpair(int family, int type, int protocol,
- 			    int __user *usockvec);
- extern int __sys_shutdown_sock(struct socket *sock, int how);
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/tools/perf/arch/arm/entry/syscalls/syscall.tbl b/tools/perf/arch/arm/entry/syscalls/syscall.tbl
+index b07e699aaa3c2840..fd09afae72a24255 100644
+--- a/tools/perf/arch/arm/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/arm/entry/syscalls/syscall.tbl
+@@ -484,3 +484,4 @@
+ 467	common	open_tree_attr			sys_open_tree_attr
+ 468	common	file_getattr			sys_file_getattr
+ 469	common	file_setattr			sys_file_setattr
++470	common	listns				sys_listns
+diff --git a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+index 7a7049c2c307885f..9b92bddf06b572d0 100644
+--- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
++++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+@@ -384,3 +384,4 @@
+ 467	n64	open_tree_attr			sys_open_tree_attr
+ 468	n64	file_getattr			sys_file_getattr
+ 469	n64	file_setattr			sys_file_setattr
++470	n64	listns				sys_listns
+diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+index b453e80dfc003796..ec4458cdb97b69a6 100644
+--- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+@@ -560,3 +560,4 @@
+ 467	common	open_tree_attr			sys_open_tree_attr
+ 468	common	file_getattr			sys_file_getattr
+ 469	common	file_setattr			sys_file_setattr
++470	common	listns				sys_listns
+diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+index 8a6744d658db3986..5863787ab03633a4 100644
+--- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+@@ -472,3 +472,4 @@
+ 467  common	open_tree_attr		sys_open_tree_attr		sys_open_tree_attr
+ 468  common	file_getattr		sys_file_getattr		sys_file_getattr
+ 469  common	file_setattr		sys_file_setattr		sys_file_setattr
++470  common	listns			sys_listns			sys_listns
+diff --git a/tools/perf/arch/sh/entry/syscalls/syscall.tbl b/tools/perf/arch/sh/entry/syscalls/syscall.tbl
+index 5e9c9eff5539e241..969c11325adeb24e 100644
+--- a/tools/perf/arch/sh/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/sh/entry/syscalls/syscall.tbl
+@@ -473,3 +473,4 @@
+ 467	common	open_tree_attr			sys_open_tree_attr
+ 468	common	file_getattr			sys_file_getattr
+ 469	common	file_setattr			sys_file_setattr
++470	common	listns				sys_listns
+diff --git a/tools/perf/arch/sparc/entry/syscalls/syscall.tbl b/tools/perf/arch/sparc/entry/syscalls/syscall.tbl
+index ebb7d06d1044fa9b..39aa26b6a50be7e0 100644
+--- a/tools/perf/arch/sparc/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/sparc/entry/syscalls/syscall.tbl
+@@ -515,3 +515,4 @@
+ 467	common	open_tree_attr			sys_open_tree_attr
+ 468	common	file_getattr			sys_file_getattr
+ 469	common	file_setattr			sys_file_setattr
++470	common	listns				sys_listns
+diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl
+index 4877e16da69a50f2..e979a3eac7a355de 100644
+--- a/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -475,3 +475,4 @@
+ 467	i386	open_tree_attr		sys_open_tree_attr
+ 468	i386	file_getattr		sys_file_getattr
+ 469	i386	file_setattr		sys_file_setattr
++470	i386	listns			sys_listns
+diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+index ced2a1deecd7ce08..8a4ac4841be6e542 100644
+--- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -394,6 +394,7 @@
+ 467	common	open_tree_attr		sys_open_tree_attr
+ 468	common	file_getattr		sys_file_getattr
+ 469	common	file_setattr		sys_file_setattr
++470	common	listns			sys_listns
+ 
+ #
+ # Due to a historical design error, certain syscalls are numbered differently
+diff --git a/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl b/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl
+index 374e4cb788d8a6d4..438a3b1704022b39 100644
+--- a/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl
+@@ -440,3 +440,4 @@
+ 467	common	open_tree_attr			sys_open_tree_attr
+ 468	common	file_getattr			sys_file_getattr
+ 469	common	file_setattr			sys_file_setattr
++470	common	listns				sys_listns
+diff --git a/tools/scripts/syscall.tbl b/tools/scripts/syscall.tbl
+index d1ae5e92c615b58e..e74868be513cfb04 100644
+--- a/tools/scripts/syscall.tbl
++++ b/tools/scripts/syscall.tbl
+@@ -410,3 +410,4 @@
+ 467	common	open_tree_attr			sys_open_tree_attr
+ 468	common	file_getattr			sys_file_getattr
+ 469	common	file_setattr			sys_file_setattr
++470	common	listns				sys_listns
 -- 
 2.52.0.351.gbe84eed79e-goog
 
