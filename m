@@ -1,67 +1,66 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BFD32D0FE
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Dec 2025 15:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9998232D7F7
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Dec 2025 15:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766416505; cv=none; b=eTdnYZmQchA7yEJJOqbewOHHHQIgro3DPBucsuRGLaUMOqEzT1NigwY4f1dN0bjecdiu/wtU4fgI29HQPDdH5Gnoe2wIPaAXTOvhJYPKkk3/64PgtjK6Mjr7ZqybQ+Z8HQow80rMm1YENxM/52QgS1PuplcCke5t4zDXiOXYZBo=
+	t=1766416505; cv=none; b=otsPEKFXhoDEpd8crj+w/AUmIU9e8yZE/5YTFjbNizABXKEmcGCbX/RdZitaos+81wHNQJN2X7R2Rk8ynGV8UScycWcQyMoBApyC9AxS2X2DWdvZCS11zwV9oK9j8rxYOx6CE4PgHaotoJM8EscB/7gO6awzxz/80XdXyY9X1c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1766416505; c=relaxed/simple;
-	bh=h3UUZ+MTt/jVXlppiWB5dfmCDIA0ulaZv1PvNfguK3Q=;
+	bh=qfRSou8Gjtk8a4ox+K4x5qRrVK3aLa89yRlL85yDPKk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Bjp46feDgf+yExRMJt1Zg8hlvptObqARm99UL9MJZEQGSeyzC96tllDgoQQIpJEtzy6KIXFvn4uvD17ihfGal7RfKbdLr3ZzpKCqsvJz2b4qiJ9J19qx5sMYMwR9XLA7JCQDuBrVrCQHo9AtH0EetGn/QBPFgC7YACU7Mq6+zxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MzBFVU05; arc=none smtp.client-ip=209.85.221.49
+	 In-Reply-To:To:Cc; b=m8qMFt58XRYZWMBVmJel/2/+Njkg26wa7wDNi/nfvHqkJjrOXiIJ9RVlTB/8mq2zz7jelti75oWPyGhITWVjZ82U4FzrcTG5C9YO0B1aid/VyAGR5duBM8I4BLWRnc4hVweCDDLDInP6FJLCgExhwkolhNHM8tUVuePJBlid+Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kc2GUwWL; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MzBFVU05"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-42fbbc3df8fso2050819f8f.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Dec 2025 07:15:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kc2GUwWL"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-430fbb6012bso3195173f8f.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Dec 2025 07:15:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1766416501; x=1767021301; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1766416502; x=1767021302; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NZnllZdyzmPDgDLg3NsetnXCFaQjqpO0nxPQg2XzMvs=;
-        b=MzBFVU05D6D/g+Q83JgxRQ0ZOKgR9Je37QeEw4PHGd1yheqHuOZ9BkGD4BB4/UlMio
-         GPj1Zz91Q5WyAWFRbjsiKcy8GXUt0/fYniGe4t1a1wAEi0ydpFSZnEcma8Q7Oy5povay
-         57Ky//7qEgDjqyrrAIzAH3Z0StsYMonk9sRUTuf8BQRVUhm2r8L9UUtCbDP7d0Mu72Lq
-         fBiWwmjN4yecf9aP+n0n7iD9vv+1OGxcjT8NAjv331X9PFPMd3ve1TJ4pjEhJilRayI4
-         nG0f6Fy1IGA+bUD1sPZstB/BKGQEYbYizemd9Z4ptM+ZLAVNpPkki8/MN+uJuLbPr3Jj
-         kn7g==
+        bh=2jQ8W5nzp73oSPJlX5Jug7ze2sl2RQ53Mf0/SiitI2Y=;
+        b=kc2GUwWLXZYOjYQ76X4inM8w3ZOmIxmQX9cVKFLkweq/Eb/t54vobLaPw19FVbyvwZ
+         LdsXK+GrZfi8LltCFAoyPOGcwKnS3BGVJZq6SGppvoHGOzHX7W+upgNM9e9UsZswdpMS
+         INcVEa8VKcbMFzqfD44BYLFqfZcrtU/Vp3bSXcWXoF5MbFeuiGQoePR0PQcl46geBcUu
+         Nim5aNslJlD8aPE2exkcWpdFKp8QN13+rHFqN24npDy/vhaVs1hIFQBWktaYabfRDRv4
+         kS0lKRiwAovwSgAAh61XAtUiF9wS7DXUIOKVXzDjc/ENyXiivM38dAXB6Qc4pr/fXEkg
+         sYZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766416501; x=1767021301;
+        d=1e100.net; s=20230601; t=1766416502; x=1767021302;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=NZnllZdyzmPDgDLg3NsetnXCFaQjqpO0nxPQg2XzMvs=;
-        b=jVAO2462XgOQR38f2KPBGTq5LKnZ0zIb3I13Wqit77a6Jp6kOsyqoLuq79dFcKH9x7
-         VnWZjRq6RZmWalyuiWXLn+aUaZeuDS3WKDJsTS7SAmgMGEFUygXEFTLNqFP41fkdPSvC
-         Vx38JzVBdQIjrIZDa5wl8NWiVxJN8r7R9DLsHJnQq0C5t6i7aEoKh1z+vEZRP/16fbDD
-         KnLmpBYtKjbKUmvjLEtL/OEourHvGa0tW2+r0NCBIVCIr2gVFUUpgAFArQnvzqRTI0Sy
-         eq3aN+Ct63gK9LjaGB45Y4zcCgYWMOwCRL1f48jE1jSEgc73VXqZQT6YVidWFuHQvfEk
-         26IA==
-X-Gm-Message-State: AOJu0Yzfmgirc4EwPosY84o2d4nf5fHGdRI3+oGWUfaTjOHNdKLjkSQG
-	fuogDZq2w05SpS2Bs8t+AUwIA6jzNgypzvtKNMttNitIAUt1Y58aY+iHG3qmKr4CIvw=
-X-Gm-Gg: AY/fxX47uue4FStL+Xdovsi2B8Pu/mEREE3un7KJGHKksfRGZQK5WP4W+G7xVTNRMkb
-	nIPk/l9YPMzsDMCmTxa0P6qzDcn2DkakaF1cVWhuS5mXLYk+vGwZgwJDcax7jo416hLnCB2/6d2
-	rAZw1USnZtEzKA9Z9G5mKS0wiP7+CKWIdg+uDCS+Peu0qWpEV4vsLqIc5tvjCu93fx1kMk9uZG9
-	hdTLkAFKzRPGEPtLGPiNOF7ytkRPy7qGcdvXzEy19GQsb4I1hnrIK6J1N2cb+X+Q9bS6CiFCCUK
-	cfpA5HICUms8wGSMP8FFw07PT6OAYS8fpBzzp61FSi99K/JwdFivaFvs7BW2V53mZ6GXTjUX/kZ
-	gVyvtiQd/7Nvr3LqamXyB4RnWKDszW6+MlvhVxNdDvsOejU9cCC3irDAK2kFKfrtglKGzX3w4IF
-	hLh83YKwwzUzoFefXdKl/o
-X-Google-Smtp-Source: AGHT+IGJQxCV50ScDAMUPbUoVuouEnRfEx1ZAS/DBqZ58QgrzRh+YFP0A0+P2e7M/HVXKXG4s2eScA==
-X-Received: by 2002:a05:6000:144f:b0:430:feb3:f5bb with SMTP id ffacd0b85a97d-4324e715af9mr13951920f8f.60.1766416501000;
-        Mon, 22 Dec 2025 07:15:01 -0800 (PST)
+        bh=2jQ8W5nzp73oSPJlX5Jug7ze2sl2RQ53Mf0/SiitI2Y=;
+        b=CmnhKNj5PRTxSSY0wcbH+Bqh9HHafLf+1EdT0I9q8TWL9+p4VYa16+adHvgVVRluQq
+         l6aRq9d217D9plDk8sHHCCQ6qfobAFHSD9JZ/yScs9H/4KP1z1Jz+mxmpB/Ngmk009NB
+         /z9zcJMJtdrA0RbOdGfqQP/iLYdE9rh2TJmDKjhj1jx7bUsOefppmw/edUOUedVi59yr
+         TQsoO3RnSxEUye2rYEKg3/hC2i7y4OmI/w6H6t/Mnu7fIUNOhAO1S+dsVsVW/g5bi3I/
+         TmHLPbGKxfUnXbdlLb4LobXJrqj89wECQfPAIT2q9Jkz2AX9eidbwBjDVZ3+jNMnimzL
+         qhZQ==
+X-Gm-Message-State: AOJu0Yzfdj3G5/GL2M5wAYXt6PwE/d59nMRXpXI7caBnaOnag08adaY1
+	3jCwogqcGEVWFPLVPFPPXkMxfWjOIdHrWCLCS4C17PtuAHMu1v0toZn1FIIJIpBOMbc=
+X-Gm-Gg: AY/fxX5HlxPHB3xr/WB4H9pkCRjX0CZiRlbGGnBL8OBQX8LZPA3JTP9SeVo2Cz0gd51
+	oKxdYIi/FWddTlPdo8oIoywQ29hUPSvws4YCjDbK2hN0c3ToBr6Xr0SmA7goF6WGsdmW5czg+PQ
+	eBgakc7ReBnjfAVWAX3iEtORVVWtLj2pXLTUw/O0++imeraKT37kAXwGLNnaVFzrA3tZL9LYV2A
+	Kv0PPgLSmIINCGKHKP3XB8IUo1bM043f1s1uzRkFr+KeDcc67dQeXh29gmmHyY+iFVijHNVM3IH
+	wbpr4Oz8w86r+vArB0zcWGWK7RUxMRpN74X1yFHBzbRw1HmrBe1weBHKu6NRUu9IXUqHQhnRCRi
+	/1WA0wK8UcVGwuOkLnQ7GNeRz/ANaxGJhP8FN3YkugkIRJONkNTkOvzR9QdUb/YhligHHC1uaKI
+	VMyLBGJlqNGYujjl83VwTt
+X-Google-Smtp-Source: AGHT+IGVW2AQoFnt+YQeUkk1+45K7c9zrckQIjMupb2A7/EyJF6AN1n+ruma4tqVGKfvSqChhpvFvg==
+X-Received: by 2002:a05:6000:22c9:b0:430:f72e:c998 with SMTP id ffacd0b85a97d-4324e51081bmr14459005f8f.51.1766416502023;
+        Mon, 22 Dec 2025 07:15:02 -0800 (PST)
 Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324ea830fesm22750093f8f.20.2025.12.22.07.15.00
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324ea830fesm22750093f8f.20.2025.12.22.07.15.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Dec 2025 07:15:00 -0800 (PST)
+        Mon, 22 Dec 2025 07:15:01 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Mon, 22 Dec 2025 15:14:38 +0000
-Subject: [PATCH v4 13/14] perf cs-etm: Don't hard code config attribute
- when configuring the event
+Date: Mon, 22 Dec 2025 15:14:39 +0000
+Subject: [PATCH v4 14/14] perf arm-spe: Don't hard code config attribute
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251222-james-perf-config-bits-v4-13-0608438186fc@linaro.org>
+Message-Id: <20251222-james-perf-config-bits-v4-14-0608438186fc@linaro.org>
 References: <20251222-james-perf-config-bits-v4-0-0608438186fc@linaro.org>
 In-Reply-To: <20251222-james-perf-config-bits-v4-0-0608438186fc@linaro.org>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -87,160 +86,61 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-These instances of hard coded config attributes are used for configuring
-and validating the event options. Use the config attribute that's
-published by the driver by replacing the open coded operations with
-evsel__get_config_val() and evsel__set_config_if_unset().
+Use the config attribute that's published by the driver instead of
+hard coding "attr.config".
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/arch/arm/util/cs-etm.c | 56 +++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 29 deletions(-)
+ tools/perf/arch/arm64/util/arm-spe.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 12b28562c2f3..dc3f4e86b075 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -103,13 +103,14 @@ static int cs_etm_validate_context_id(struct perf_pmu *cs_etm_pmu, struct evsel
- 				      struct perf_cpu cpu)
+diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+index 51014f8bff97..17ced7bbbdda 100644
+--- a/tools/perf/arch/arm64/util/arm-spe.c
++++ b/tools/perf/arch/arm64/util/arm-spe.c
+@@ -256,7 +256,7 @@ static __u64 arm_spe_pmu__sample_period(const struct perf_pmu *arm_spe_pmu)
+ 
+ static void arm_spe_setup_evsel(struct evsel *evsel, struct perf_cpu_map *cpus)
  {
- 	int err;
--	__u64 val;
--	u64 contextid = evsel->core.attr.config &
--		(perf_pmu__format_bits(cs_etm_pmu, "contextid") |
--		 perf_pmu__format_bits(cs_etm_pmu, "contextid1") |
--		 perf_pmu__format_bits(cs_etm_pmu, "contextid2"));
-+	u64 ctxt, ctxt1, ctxt2;
-+	__u64 trcidr2;
+-	u64 bit;
++	u64 pa_enable_bit;
  
--	if (!contextid)
-+	evsel__get_config_val(evsel, "contextid", &ctxt);
-+	evsel__get_config_val(evsel, "contextid1", &ctxt1);
-+	evsel__get_config_val(evsel, "contextid2", &ctxt2);
-+
-+	if (!ctxt && !ctxt1 && !ctxt2)
- 		return 0;
- 
- 	/* Not supported in etmv3 */
-@@ -120,12 +121,11 @@ static int cs_etm_validate_context_id(struct perf_pmu *cs_etm_pmu, struct evsel
- 	}
- 
- 	/* Get a handle on TRCIDR2 */
--	err = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR2], &val);
-+	err = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR2], &trcidr2);
- 	if (err)
- 		return err;
- 
--	if (contextid &
--	    perf_pmu__format_bits(cs_etm_pmu, "contextid1")) {
-+	if (ctxt1) {
- 		/*
- 		 * TRCIDR2.CIDSIZE, bit [9-5], indicates whether contextID
- 		 * tracing is supported:
-@@ -133,15 +133,14 @@ static int cs_etm_validate_context_id(struct perf_pmu *cs_etm_pmu, struct evsel
- 		 *  0b00100 Maximum of 32-bit Context ID size.
- 		 *  All other values are reserved.
- 		 */
--		if (BMVAL(val, 5, 9) != 0x4) {
-+		if (BMVAL(trcidr2, 5, 9) != 0x4) {
- 			pr_err("%s: CONTEXTIDR_EL1 isn't supported, disable with %s/contextid1=0/\n",
- 			       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
- 			return -EINVAL;
- 		}
- 	}
- 
--	if (contextid &
--	    perf_pmu__format_bits(cs_etm_pmu, "contextid2")) {
-+	if (ctxt2) {
- 		/*
- 		 * TRCIDR2.VMIDOPT[30:29] != 0 and
- 		 * TRCIDR2.VMIDSIZE[14:10] == 0b00100 (32bit virtual contextid)
-@@ -149,7 +148,7 @@ static int cs_etm_validate_context_id(struct perf_pmu *cs_etm_pmu, struct evsel
- 		 * virtual context id is < 32bit.
- 		 * Any value of VMIDSIZE >= 4 (i.e, > 32bit) is fine for us.
- 		 */
--		if (!BMVAL(val, 29, 30) || BMVAL(val, 10, 14) < 4) {
-+		if (!BMVAL(trcidr2, 29, 30) || BMVAL(trcidr2, 10, 14) < 4) {
- 			pr_err("%s: CONTEXTIDR_EL2 isn't supported, disable with %s/contextid2=0/\n",
- 			       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
- 			return -EINVAL;
-@@ -163,10 +162,11 @@ static int cs_etm_validate_timestamp(struct perf_pmu *cs_etm_pmu, struct evsel *
- 				     struct perf_cpu cpu)
- {
- 	int err;
--	__u64 val;
-+	u64 val;
-+	__u64 trcidr0;
- 
--	if (!(evsel->core.attr.config &
--	      perf_pmu__format_bits(cs_etm_pmu, "timestamp")))
-+	evsel__get_config_val(evsel, "timestamp", &val);
-+	if (!val)
- 		return 0;
- 
- 	if (cs_etm_get_version(cs_etm_pmu, cpu) == CS_ETMV3) {
-@@ -176,7 +176,7 @@ static int cs_etm_validate_timestamp(struct perf_pmu *cs_etm_pmu, struct evsel *
- 	}
- 
- 	/* Get a handle on TRCIRD0 */
--	err = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0], &val);
-+	err = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0], &trcidr0);
- 	if (err)
- 		return err;
- 
-@@ -187,10 +187,9 @@ static int cs_etm_validate_timestamp(struct perf_pmu *cs_etm_pmu, struct evsel *
- 	 *  0b00110 Implementation supports a maximum timestamp of 48bits.
- 	 *  0b01000 Implementation supports a maximum timestamp of 64bits.
+ 	evsel->core.attr.freq = 0;
+ 	evsel->core.attr.sample_period = arm_spe_pmu__sample_period(evsel->pmu);
+@@ -288,9 +288,10 @@ static void arm_spe_setup_evsel(struct evsel *evsel, struct perf_cpu_map *cpus)
+ 	 * inform that the resulting output's SPE samples contain physical addresses
+ 	 * where applicable.
  	 */
--	val &= GENMASK(28, 24);
--	if (!val) {
-+	trcidr0 &= GENMASK(28, 24);
-+	if (!trcidr0)
- 		return -EINVAL;
--	}
- 
- 	return 0;
- }
-@@ -273,16 +272,19 @@ static int cs_etm_parse_snapshot_options(struct auxtrace_record *itr,
- 	return 0;
+-	bit = perf_pmu__format_bits(evsel->pmu, "pa_enable");
+-	if (evsel->core.attr.config & bit)
+-		evsel__set_sample_bit(evsel, PHYS_ADDR);
++
++	if (!evsel__get_config_val(evsel, "pa_enable", &pa_enable_bit))
++		if (pa_enable_bit)
++			evsel__set_sample_bit(evsel, PHYS_ADDR);
  }
  
-+/*
-+ * If the sink name format "@sink_name" is used, lookup the sink by name to convert to
-+ * "sinkid=sink_hash" format. If the user has already manually provided a hash then
-+ * "sinkid" isn't overwritten. If neither are provided then the driver will pick the best
-+ * sink.
-+ */
- static int cs_etm_set_sink_attr(struct perf_pmu *pmu,
- 				struct evsel *evsel)
- {
- 	char msg[BUFSIZ], path[PATH_MAX], *sink;
- 	struct evsel_config_term *term;
--	int ret = -EINVAL;
- 	u32 hash;
--
--	if (evsel->core.attr.config2 & GENMASK(31, 0))
--		return 0;
-+	int ret;
+ static int arm_spe_setup_aux_buffer(struct record_opts *opts)
+@@ -397,6 +398,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+ 	struct perf_cpu_map *cpus = evlist->core.user_requested_cpus;
+ 	bool discard = false;
+ 	int err;
++	u64 discard_bit;
  
- 	list_for_each_entry(term, &evsel->config_terms, list) {
- 		if (term->type != EVSEL__CONFIG_TERM_DRV_CFG)
-@@ -305,14 +307,10 @@ static int cs_etm_set_sink_attr(struct perf_pmu *pmu,
- 			return ret;
+ 	sper->evlist = evlist;
+ 
+@@ -425,9 +427,8 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+ 	evlist__for_each_entry_safe(evlist, tmp, evsel) {
+ 		if (evsel__is_aux_event(evsel)) {
+ 			arm_spe_setup_evsel(evsel, cpus);
+-			if (evsel->core.attr.config &
+-			    perf_pmu__format_bits(evsel->pmu, "discard"))
+-				discard = true;
++			if (!evsel__get_config_val(evsel, "discard", &discard_bit))
++				discard = !!discard_bit;
  		}
- 
--		evsel->core.attr.config2 |= hash;
-+		evsel__set_config_if_unset(evsel, "sinkid", hash);
- 		return 0;
  	}
- 
--	/*
--	 * No sink was provided on the command line - allow the CoreSight
--	 * system to look for a default
--	 */
- 	return 0;
- }
  
 
 -- 
