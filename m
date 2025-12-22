@@ -1,90 +1,99 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44BAE319604
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Dec 2025 17:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 749333254A9;
+	Mon, 22 Dec 2025 18:07:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766425019; cv=none; b=hwrrGejZ3zlA7oB4VXCCF5PnIc+CHIeAohz0Ky7pLsnmOyYlrbKojS561PpYVizkfxHtZ7JdwAlU6Na05jLeD6tUPWbRdgCGA7WyhY05JvA3th7P+aqxmeHvb9E9gB6CaVtbuqrOiwuyFt+eim3E7bNwrDVV2HmxZVZ5Mhu830k=
+	t=1766426832; cv=none; b=Yv0cOPHRApABqmGiGjf5A1GGjtqgpzs9huY6Db2msY9fws+N4IBBuJQCxvL89oyTaWsuN6VK69Wg6zQBo4EfzbQnOuMLRPwGuNixiA9ATPkBr7LSsY6M7XC3HAkZyKQppcpLk4ofDFjYVi3FxWdN/WXrdOa1F3qaUEyoRD7AEE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766425019; c=relaxed/simple;
-	bh=5tDOOxZ9mBelWLrXONBAeBCECp5uj+W+504HWT647ko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uNbxVlmE8K1v8kWGCOh9//9XCUvRXzEg04CPSp52ZxvsFgXcd5pfTtnriAUH2DywhYL6TQ/lfFukiinfbG7QqYWEX31BovzdfOIycla0kRz/TMLvNA49CB6Mt4qHLlnJrTBsYXvjL2KyhJkN0AOQrI2c2HqjV7IOaFCjt6N/F3E=
+	s=arc-20240116; t=1766426832; c=relaxed/simple;
+	bh=3GGmnu9L+vEPuc5bdxYE1+VuUPd7yTZFcPM6++7EGEI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CIYGM3STMsM9RatuzWlOpK8yOhMCui6d5ZLpn0JIEz5Kyi/1pBLiWuhwPbB/4uE6ywl8em0K989xNDgWCHJWRc5pMMSLJU2r1/Pl6XZ/w4qw41hqT4KbBhGuSKIjpkPhu+0nOHBxQoTCn7trDKEqelr/id0WkY+nNEZdG9Li2Qc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6376C497;
-	Mon, 22 Dec 2025 09:36:48 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FC763F694;
-	Mon, 22 Dec 2025 09:36:54 -0800 (PST)
-Date: Mon, 22 Dec 2025 17:36:53 +0000
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8029F497;
+	Mon, 22 Dec 2025 10:07:02 -0800 (PST)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3100F3F73F;
+	Mon, 22 Dec 2025 10:07:08 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: James Clark <james.clark@linaro.org>, Joel May <joel-linux@jmay.us>,
-	Ian Rogers <irogers@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Linux perf Profiling <linux-perf-users@vger.kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] arm64: perf: fix syscalltbl path base
-Message-ID: <20251222173653.GF9788@e132581.arm.com>
-References: <b2651f20-6f3a-49f5-9cd8-3fb028b2cab5@app.fastmail.com>
- <fcefc3c0-541d-40cc-84e3-9c2460308bdb@linaro.org>
- <23c07ac4-ff13-47a5-824a-e7af1d1847a3@app.fastmail.com>
- <bda366b4-fa53-4feb-a7ce-ee47cfc404b5@linaro.org>
- <20251215112818.GB681384@e132581.arm.com>
- <c8161700-ad9d-43d3-8c45-cfc110ebcd49@app.fastmail.com>
- <a5448524-a147-4edb-9359-bcee3d780eb6@linaro.org>
- <ce4e1210-94c2-4664-885b-e39106905e21@app.fastmail.com>
+Subject: [PATCH v3 0/3] tools build: Fix arm64 unistd.h dependency
+Date: Mon, 22 Dec 2025 18:06:45 +0000
+Message-Id: <20251222-perf_fix_syscall_header-v3-0-eb4a8b9dfe66@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce4e1210-94c2-4664-885b-e39106905e21@app.fastmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALWISWkC/3XNzQqDMAzA8VeRnteR1k6dp73HGFJtOgt+kY4yE
+ d99VRh48fgPyS8L80gOPSuThREG5904xEgvCWtaPbyROxObSZA3ISHlE5KtrPtWfvaN7rqqRW2
+ QOMoCrL6nwijF4vVEGLd2+fmK3Tr/GWneHwWxTf+mOjWD4MDrAmVuc4Um0w9N/bUZe7aJQR4UA
+ eeK3BRR1BmIDAEPyrquP1i4V/0CAQAA
+X-Change-ID: 20251203-perf_fix_syscall_header-e280fa931d44
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1766426827; l=1970;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=3GGmnu9L+vEPuc5bdxYE1+VuUPd7yTZFcPM6++7EGEI=;
+ b=M3Yx6C2flDgR3hN54QK7PGE9R1b214eL9FEugqc+WzbrS99eH6bt0G+GExiiZd+pdSnKxRMhm
+ C6/BN/yVyajDo7cw/E7+AUMQZxKwYa6J8GcfZODzYVym8KWnE3oa7d+
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Mon, Dec 22, 2025 at 11:42:49AM +0100, Arnd Bergmann wrote:
-> On Mon, Dec 22, 2025, at 11:05, James Clark wrote:
-> > On 21/12/2025 9:48 pm, Joel May wrote:
-> >> On Mon, Dec 15, 2025, at 03:28, Leo Yan wrote:
-> >> 
-> >> This is my first time contributing to the Linux kernel, so please bare with
-> >> my ignorance.  I don't know whether it's acceptable to consider patches
-> >> that conceptually improve something without an actual problem they're
-> >> solving.
-> >> 
-> >
-> > No worries, thanks for sending the fix. Yes I think it could be ok to 
-> > apply your patch anyway. I just wanted to make sure we were all on the 
-> > same page with both fixes fixing the same thing.
-> 
-> I still don't think that Leo's series is correct.
+The perf build includes arm64's unistd.h, but its dependent header
+unistd_64.h is missing.
 
-As discussed, I will respin the series to use asm-generic/unistd.h for
-arm64, this is consistent with other arches.
+As suggested by Arnd in [1]:
 
-> > You might want to drop the fixes tag though to avoid confusion if Leo's 
-> > one gets accepted, because then technically it doesn't fix anything any 
-> > more. Keeping Leo's fixes: tag is a bit better because it fixes 
-> > additional things and targets an older commit.
-> 
-> Before that gets applied, someone should explain why arm64 needs
-> any special treatment at all. A lot of work has gone into making
-> the syscall table handling consistent across architectures, so
-> whether we ship a copy of the generated header for perf, we
-> generate a new copy or we rely on 'make headers_install', should
-> should really be done the same way across every architecture.
+  "I would suggest using the same method across all architectures:
+   either we figure out how to use the generated headers on all of them
+   (including x86, which uses yet another method), or we just stick with
+   the old asm-generic/unistd.h copy and use that on arm64 as well."
 
-I agree arm64 is not a special case.
+A dynamic approach (e.g., make headers_install) may be explored later to
+generate headers for tools, but that will need consensus from the tools
+maintainers.  In the meantime, this series provides a quick fix by using
+the asm-generic/unistd.h copy for arm64.
 
-For the long term, I think "make headers_install" is worth trying.  The
-main concern is that it introduces a dependency between tool builds
-and the kernel.  However, if tools/selftests need the latest kernel
-features, it's natural to depend on the latest headers.
+[1] https://lore.kernel.org/linux-arm-kernel/20251222173653.GF9788@e132581.arm.com/T/#m69a051aae5e53a65f9b10e1d13f67b3e92f4bbc7
 
-Thanks,
-Leo
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Changes in v3:
+- Changed to include asm-generic/unistd.h copy (Arnd).
+- Removed check due to divergence between the kernel and tools.
+- Link to v2: https://lore.kernel.org/r/20251210-perf_fix_syscall_header-v2-0-b18b6016e0ea@arm.com
+
+Changes in v2:
+- Added a consistency check (Ian).
+- Rebased on the latest perf-tools-next.
+- Link to v1: https://lore.kernel.org/r/20251204-perf_fix_syscall_header-v1-0-b8e27f74ed6a@arm.com
+
+---
+Leo Yan (3):
+      tools headers: Go back to include asm-generic/unistd.h for arm64
+      Revert "perf tools: Fix arm64 build by generating unistd_64.h"
+      tools headers: Don't check arm64's unistd.h
+
+ tools/arch/arm64/include/uapi/asm/unistd.h | 24 +++++++++++++++++++++++-
+ tools/lib/perf/Makefile                    | 14 ++------------
+ tools/perf/Makefile.config                 |  1 -
+ tools/perf/check-headers.sh                |  1 -
+ 4 files changed, 25 insertions(+), 15 deletions(-)
+---
+base-commit: cb015814f8b6eebcbb8e46e111d108892c5e6821
+change-id: 20251203-perf_fix_syscall_header-e280fa931d44
+
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
+
