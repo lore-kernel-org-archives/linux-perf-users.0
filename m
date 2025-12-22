@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D278A33F8B1;
-	Mon, 22 Dec 2025 22:57:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D27C3451C8;
+	Mon, 22 Dec 2025 22:57:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766444242; cv=none; b=A13xpMospYVQqcvRAo8LZl03X8yTqJxr50Er0w47aVNNzfUUzzXW2B1uEV0ZHB2PtAq37WgtTUAkIjiBcJW0YM4S1I9AZdweyGgAKIhKZcKnfUQPq8Hx4RbYmWRd6Mur6x5IfXxgVicdj0EISyGBBS5ufOAVc+0BVDg4YuLi/aE=
+	t=1766444243; cv=none; b=pAjN3LsizLtOrC4FPBDmXZv8C908F8o4AAVfpW/q8Qw1uZnlTCYo0SjH+r7ngrMhEebLbC0B6FwgqCytrggaEWwhP+FpO0nxdcLndEY5KmXjrmXULjpdlkdF3vK/QCx1lpCNPCV3HQJQnsVbFel3AW6FlK+XsAej4LlEH5oQK1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766444242; c=relaxed/simple;
-	bh=FwSiAEyJtEd/q6VDaW2QXF9zQP4+P1BGW+1/bjUTDNQ=;
+	s=arc-20240116; t=1766444243; c=relaxed/simple;
+	bh=iGYFb6IBoflfqDoZcq97Sl/imErxh/s7ix/63yX+HQQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QUtVi9nKPJRtvJuCaYMNc73kvN0y67EA7O8arhVhxMQdQHg2Lz0MFLgJe63vSlN3VLkV9a+mzJrLFJGOO7NW3ki941PsWSvYjKAcbFLLdLaKc66w1T5jtw451pH8h/PwAcYcE0qDsMKvZcd0A/rVvm3jkb3QpLZpKdfk8GUig1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p4bpIDcc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bNL3stOeE4z+5Pgy+kRenyntIh73+7QbY4cqfOUdCLC9wOOKXB/OWFzpsl9v213IKpLqiKRNgdBVa3tfzBXFl4vYaU/GH/UWAI881wZZXvJBTNzCnyPHnszaNoppLyTdag9F0BnrxjExT6bvyfwdSKuvPO77JGArgi2mbEQ1Vjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0TYwQd0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p4bpIDcc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BCD8C4CEF1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0TYwQd0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8DF0C16AAE;
 	Mon, 22 Dec 2025 22:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766444242;
-	bh=FwSiAEyJtEd/q6VDaW2QXF9zQP4+P1BGW+1/bjUTDNQ=;
+	s=k20201202; t=1766444243;
+	bh=iGYFb6IBoflfqDoZcq97Sl/imErxh/s7ix/63yX+HQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p4bpIDcck9GVvj07Ffwc7HFbkL4Vpth/ofPjUTMClXu0a0OgtuYfHiyFh1M8Po1KN
-	 3Qw9uwMXawAuW2CV2fT0ZrgBRLmQ1IYpspQ01nT61LUbQcAyTzYNxpkBHF9GhCtD7z
-	 YdbTvBhVzWuNn+6urFfgfRZTRyDFaajOZjXxB163VOa40T3YkM3V9up1npAEN4Oa7n
-	 eIOZQMht/tFOnnimDPJ5PdSN0LgnM6O1ZRlV6CLHr8Ne1tEHh2+LhKFn6sEO8oBjOD
-	 wzBJSrKc0oGgtigoSZMwUCsNq1N5PwrW6kJsQP19H3ZvIFazwUPOryckbm06Oz//xC
-	 +SYShAaQQrvrg==
+	b=P0TYwQd0RgxT4LlaiCQD6Q916vvSkayvKih/mBx7/mx+JujAUegtW89+dA0ETB5N8
+	 uJOoV92bxAfZXOhO6LkNHeu149BxRkI/P1Q5qnBR6KiFNRXJPtiErUvSag7hau81iv
+	 ioW7oVFyEotJSq/iiTIuyNV4XqeNvHMVL8gxL2e/4cJMDDD+yqGAoTiCEYlaQEqsBM
+	 w/W+FZF6tQWgQmtQp+aBP7H9lOLTTHsl8QjCmkupuXXZoU8p8KcUVw/tbmc6AxFoMs
+	 6KqVQ0QvbEDCdBwcTkGbmufr/WIN9xzmZUAW7lSy8a5GcICbtjJqd9phb2EXsK4cV+
+	 KWCo9OD+zBLOA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,10 +36,10 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 05/11] tools headers: Sync UAPI linux/mount.h with kernel sources
-Date: Mon, 22 Dec 2025 14:57:10 -0800
-Message-ID: <20251222225716.3565649-5-namhyung@kernel.org>
+	linux-sound@vger.kernel.org
+Subject: [PATCH 06/11] tools headers: Sync UAPI sound/asound.h with kernel sources
+Date: Mon, 22 Dec 2025 14:57:11 -0800
+Message-ID: <20251222225716.3565649-6-namhyung@kernel.org>
 X-Mailer: git-send-email 2.52.0.351.gbe84eed79e-goog
 In-Reply-To: <20251222225716.3565649-1-namhyung@kernel.org>
 References: <20251222225716.3565649-1-namhyung@kernel.org>
@@ -53,35 +53,34 @@ Content-Transfer-Encoding: 8bit
 
 To pick up changes from:
 
-  78f0e33cd6c939a5 ("fs/namespace: correctly handle errors returned by grab_requested_mnt_ns")
+  9a97857db0c5655b ("ALSA: uapi: Fix typo in asound.h comment")
 
-This should be used to beautify mount syscall arguments and it addresses
-these tools/perf build warnings:
+This should address these tools/perf build warnings:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/perf/trace/beauty/include/uapi/linux/mount.h include/uapi/linux/mount.h
+    diff -u tools/perf/trace/beauty/include/uapi/sound/asound.h include/uapi/sound/asound.h
 
 Please see tools/include/README.kernel-copies.
 
-Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-sound@vger.kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/trace/beauty/include/uapi/linux/mount.h | 2 +-
+ tools/perf/trace/beauty/include/uapi/sound/asound.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/trace/beauty/include/uapi/linux/mount.h b/tools/perf/trace/beauty/include/uapi/linux/mount.h
-index 7fa67c2031a5db52..5d3f8c9e3a6256b4 100644
---- a/tools/perf/trace/beauty/include/uapi/linux/mount.h
-+++ b/tools/perf/trace/beauty/include/uapi/linux/mount.h
-@@ -197,7 +197,7 @@ struct statmount {
-  */
- struct mnt_id_req {
- 	__u32 size;
--	__u32 spare;
-+	__u32 mnt_ns_fd;
- 	__u64 mnt_id;
- 	__u64 param;
- 	__u64 mnt_ns_id;
+diff --git a/tools/perf/trace/beauty/include/uapi/sound/asound.h b/tools/perf/trace/beauty/include/uapi/sound/asound.h
+index 5a049eeaeccea59f..d3ce75ba938a8497 100644
+--- a/tools/perf/trace/beauty/include/uapi/sound/asound.h
++++ b/tools/perf/trace/beauty/include/uapi/sound/asound.h
+@@ -60,7 +60,7 @@ struct snd_cea_861_aud_if {
+ 	unsigned char db2_sf_ss; /* sample frequency and size */
+ 	unsigned char db3; /* not used, all zeros */
+ 	unsigned char db4_ca; /* channel allocation code */
+-	unsigned char db5_dminh_lsv; /* downmix inhibit & level-shit values */
++	unsigned char db5_dminh_lsv; /* downmix inhibit & level-shift values */
+ };
+ 
+ /****************************************************************************
 -- 
 2.52.0.351.gbe84eed79e-goog
 
