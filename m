@@ -1,73 +1,97 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B78233A9D6;
-	Mon, 22 Dec 2025 18:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206372F9DBB;
+	Mon, 22 Dec 2025 22:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766426837; cv=none; b=NQ+TUVfEZhItIDzExqy9ajfkSgUw4OHrf6doQISlJYHezA+C1m4TLgE0Y7C/zUzslw9qqtLXo7P55etV5naYJYRLLbuubuI4jDpG2PHgdeuWG4U/24GuJSRWLiXEqS4fgBX8YY/BfudsLrtWBGW374EkqdKznWJX9I8h6C1lntk=
+	t=1766444241; cv=none; b=Rgzp56iPQTS5O1z4vzDrVyzgNgazPHzB7Mrz98px0VVG7fmGEAu9z+zLnYbo4254iAE8DrMmZ+IQPhEd7kDEyu1Lnn3Dc+2HIEhQ8BSs4aV7zig1csbjK2wd5J62R2c670eGF+t2sRxcMS36qttzoEVyH6Mee6ZLYWcehyQRKEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766426837; c=relaxed/simple;
-	bh=MA3lT13EKH4mpSeSWkRjDanYzOL7mdIDaGB4+pCUzO4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rrgeIYYrDgS75rwZnUI9sduMwWtv2+2FXC3nNJA0kkzActQw0nf5b3QCozJkUWtKytqU7tAkz86kDVhCQeffB9v4Pe5dzEjQ7gBltpQ4XcuS7z9yaAskiBQuiD6IfYQ9Ya56br67GrJeyU3TpTH1luke32SeNs0Dp01sPMXBdW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1C86FEC;
-	Mon, 22 Dec 2025 10:07:07 -0800 (PST)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 320AB3F73F;
-	Mon, 22 Dec 2025 10:07:13 -0800 (PST)
-From: Leo Yan <leo.yan@arm.com>
-Date: Mon, 22 Dec 2025 18:06:48 +0000
-Subject: [PATCH v3 3/3] tools headers: Don't check arm64's unistd.h
+	s=arc-20240116; t=1766444241; c=relaxed/simple;
+	bh=3+5GeS8/OYU69k/uHui0TVDmtpR9iplT3VIctDIIIxQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UvHAall4eHbSAm9msXUaazz/tQ5NTjVhb/pYIodDry0/F332rg3M2yRgsZOGEj0INkO3Azxcq6UQBwomiAL/M6/tbunI2kDmKOS4h0RbVitVkaurd3WIXGdEst8iqADaYrWW5qOZjwnpE+TDyk5uhv6RGVJ+BdTTnzjWS1+fyWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j+3n0IcO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j+3n0IcO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 514A6C4CEF1;
+	Mon, 22 Dec 2025 22:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766444240;
+	bh=3+5GeS8/OYU69k/uHui0TVDmtpR9iplT3VIctDIIIxQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=j+3n0IcO31KBuV9byyn8tf4tROU6MFboyNWJw7b5Mb45mT4jodFt5QtVfZa7r2H6/
+	 6lleKgy0fp2cVIYBlEUtNC7Wu/TT/hJnPIti7+BwscJy/g+xJ1y1l+t9AZA9zn57Wz
+	 VRr4knOEcJFxi2r1MoKyCh7Oh4iBSeZEF4KAE+YUvPBmOhfKKULyuKbDMV1BR4xiIF
+	 SlylHh8dDf0oNVdxvd6Byce5WjnDhEaqaRuYloTN4cFc54PNu1A9wuZpcjrympUQwO
+	 VO4zYfBLcz8OWer3RmBqjgnTkSPmxrXFV6IVnk88PoCoFweF9buPaPPckZ0u01l4NL
+	 jgcLx3K6bkiLw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH 01/11] tools headers: Sync UAPI drm/drm.h with kernel sources
+Date: Mon, 22 Dec 2025 14:57:06 -0800
+Message-ID: <20251222225716.3565649-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.52.0.351.gbe84eed79e-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251222-perf_fix_syscall_header-v3-3-eb4a8b9dfe66@arm.com>
-References: <20251222-perf_fix_syscall_header-v3-0-eb4a8b9dfe66@arm.com>
-In-Reply-To: <20251222-perf_fix_syscall_header-v3-0-eb4a8b9dfe66@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1766426828; l=816;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=MA3lT13EKH4mpSeSWkRjDanYzOL7mdIDaGB4+pCUzO4=;
- b=DAHDBO+U3zeZiL7jC32n2JGKborZPo5mYy2AxUcpEuai6Ay+0Rkwfsyhk7Ucsv8v/OJe1My7x
- 1/Q9K+TeugIDepz0f5NenXVAAdCDtOTbrWchlZzZV/kMZmZX073R5X6
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Content-Transfer-Encoding: 8bit
 
-The arm64 unistd.h in tools now diverges from the kernel header.
-Comparing the two headers is pointless, remove the check.
+To pick up changes from:
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
+  179ab8e7d7b378f1 ("drm/colorop: Introduce DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE")
+
+This should be used to beautify DRM syscall arguments and it addresses
+these tools/perf build warnings:
+
+  Warning: Kernel ABI header differences:
+    diff -u tools/include/uapi/drm/drm.h include/uapi/drm/drm.h
+
+Please see tools/include/README.kernel-copies.
+
+Cc: dri-devel@lists.freedesktop.org
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/check-headers.sh | 1 -
- 1 file changed, 1 deletion(-)
+ tools/include/uapi/drm/drm.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index e0537f275da2f79ea9e05b91300aa1e2f996e9f1..da3aca87457fdc56c96d4184f2dee88dab026d98 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -54,7 +54,6 @@ declare -a FILES=(
-   "arch/s390/include/uapi/asm/kvm.h"
-   "arch/s390/include/uapi/asm/sie.h"
-   "arch/arm64/include/uapi/asm/kvm.h"
--  "arch/arm64/include/uapi/asm/unistd.h"
-   "arch/alpha/include/uapi/asm/errno.h"
-   "arch/mips/include/asm/errno.h"
-   "arch/mips/include/uapi/asm/errno.h"
-
+diff --git a/tools/include/uapi/drm/drm.h b/tools/include/uapi/drm/drm.h
+index 3cd5cf15e3c9ce22..27cc159c1d275c7a 100644
+--- a/tools/include/uapi/drm/drm.h
++++ b/tools/include/uapi/drm/drm.h
+@@ -906,6 +906,21 @@ struct drm_get_cap {
+  */
+ #define DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT	6
+ 
++/**
++ * DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE
++ *
++ * If set to 1 the DRM core will allow setting the COLOR_PIPELINE
++ * property on a &drm_plane, as well as drm_colorop properties.
++ *
++ * Setting of these plane properties will be rejected when this client
++ * cap is set:
++ * - COLOR_ENCODING
++ * - COLOR_RANGE
++ *
++ * The client must enable &DRM_CLIENT_CAP_ATOMIC first.
++ */
++#define DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE	7
++
+ /* DRM_IOCTL_SET_CLIENT_CAP ioctl argument type */
+ struct drm_set_client_cap {
+ 	__u64 capability;
 -- 
-2.34.1
+2.52.0.351.gbe84eed79e-goog
 
