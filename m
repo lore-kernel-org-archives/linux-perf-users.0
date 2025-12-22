@@ -1,27 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71A2E33291D;
-	Mon, 22 Dec 2025 18:07:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B78233A9D6;
+	Mon, 22 Dec 2025 18:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766426835; cv=none; b=Vqjsr2tEkSqLKMAo961By9oxlZ4IOY8l1Oow90o5Nm14rRcoqpCTa+amAth1Q9nBEU6n49WpJhdz7CTjw97n1Whilt0F4PX4X/pXXmZiQDE6KN5KRUredvklW31fnQrvcykeJKF9OziLZxCjvQZzqf5aS01NR7Nn4t3ey9uB0E4=
+	t=1766426837; cv=none; b=NQ+TUVfEZhItIDzExqy9ajfkSgUw4OHrf6doQISlJYHezA+C1m4TLgE0Y7C/zUzslw9qqtLXo7P55etV5naYJYRLLbuubuI4jDpG2PHgdeuWG4U/24GuJSRWLiXEqS4fgBX8YY/BfudsLrtWBGW374EkqdKznWJX9I8h6C1lntk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766426835; c=relaxed/simple;
-	bh=rFUtwguG5/wwZfFnpFmopp4L9YEp1dSeOPOmek71TRY=;
+	s=arc-20240116; t=1766426837; c=relaxed/simple;
+	bh=MA3lT13EKH4mpSeSWkRjDanYzOL7mdIDaGB4+pCUzO4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=c/uUo756jXWLeZrtM8FsbPj4Ox+KdGID4eBRWM6WCJZlQdM1QJpoI8oX9azGzGfkZjfsQyrk7QYNNoF+49zko+Xcv00kMDaS0KOQI1X4Enx4kTTZb5Zq3t2jiWn041IJGD06Vd8wiLTIDG2Ergd7OivZMjQH8Mr8mdYxa4w0FiQ=
+	 In-Reply-To:To:Cc; b=rrgeIYYrDgS75rwZnUI9sduMwWtv2+2FXC3nNJA0kkzActQw0nf5b3QCozJkUWtKytqU7tAkz86kDVhCQeffB9v4Pe5dzEjQ7gBltpQ4XcuS7z9yaAskiBQuiD6IfYQ9Ya56br67GrJeyU3TpTH1luke32SeNs0Dp01sPMXBdW0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDCED1515;
-	Mon, 22 Dec 2025 10:07:05 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1C86FEC;
+	Mon, 22 Dec 2025 10:07:07 -0800 (PST)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 821583F73F;
-	Mon, 22 Dec 2025 10:07:11 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 320AB3F73F;
+	Mon, 22 Dec 2025 10:07:13 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
-Date: Mon, 22 Dec 2025 18:06:47 +0000
-Subject: [PATCH v3 2/3] Revert "perf tools: Fix arm64 build by generating
- unistd_64.h"
+Date: Mon, 22 Dec 2025 18:06:48 +0000
+Subject: [PATCH v3 3/3] tools headers: Don't check arm64's unistd.h
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -30,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251222-perf_fix_syscall_header-v3-2-eb4a8b9dfe66@arm.com>
+Message-Id: <20251222-perf_fix_syscall_header-v3-3-eb4a8b9dfe66@arm.com>
 References: <20251222-perf_fix_syscall_header-v3-0-eb4a8b9dfe66@arm.com>
 In-Reply-To: <20251222-perf_fix_syscall_header-v3-0-eb4a8b9dfe66@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -40,80 +39,34 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1766426828; l=2519;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1766426828; l=816;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=rFUtwguG5/wwZfFnpFmopp4L9YEp1dSeOPOmek71TRY=;
- b=Kz3V3KwO5XtMSpSsCGAsB89Ci63hM1fPUxgMacUi8RgPSOACytRwp/NvI1Jwfk9CoiPCCwnoW
- 6k2Dt3csJvDCR8QXi3GakkzAEZlh6OxF66jXi+QUOxop7nn/FpIvlCc
+ bh=MA3lT13EKH4mpSeSWkRjDanYzOL7mdIDaGB4+pCUzO4=;
+ b=DAHDBO+U3zeZiL7jC32n2JGKborZPo5mYy2AxUcpEuai6Ay+0Rkwfsyhk7Ucsv8v/OJe1My7x
+ 1/Q9K+TeugIDepz0f5NenXVAAdCDtOTbrWchlZzZV/kMZmZX073R5X6
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-This reverts:
-
-commit 8988c4b91945 ("perf tools: Fix in-source libperf build")
-commit bfb713ea53c7 ("perf tools: Fix arm64 build by generating unistd_64.h")
-
-Since we now have a static unistd_64.h for the arm64 build, there is no
-need to generate unistd_64.h in libperf.  Revert all patches related to
-generating unistd_64.h.
+The arm64 unistd.h in tools now diverges from the kernel header.
+Comparing the two headers is pointless, remove the check.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/lib/perf/Makefile    | 14 ++------------
- tools/perf/Makefile.config |  1 -
- 2 files changed, 2 insertions(+), 13 deletions(-)
+ tools/perf/check-headers.sh | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-index 7fbb50b74c00b3b99ac538821124e04bfbc6da6a..ffcfd777c45181960afc7505ef8f85d0b7ea7e8d 100644
---- a/tools/lib/perf/Makefile
-+++ b/tools/lib/perf/Makefile
-@@ -42,7 +42,6 @@ libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- TEST_ARGS := $(if $(V),-v)
- 
- INCLUDES = \
---I$(OUTPUT)arch/$(SRCARCH)/include/generated/uapi \
- -I$(srctree)/tools/lib/perf/include \
- -I$(srctree)/tools/lib/ \
- -I$(srctree)/tools/include \
-@@ -100,16 +99,7 @@ $(LIBAPI)-clean:
- 	$(call QUIET_CLEAN, libapi)
- 	$(Q)$(MAKE) -C $(LIB_DIR) O=$(OUTPUT) clean >/dev/null
- 
--uapi-asm := $(OUTPUT)arch/$(SRCARCH)/include/generated/uapi/asm
--ifeq ($(SRCARCH),arm64)
--	syscall-y := $(uapi-asm)/unistd_64.h
--endif
--uapi-asm-generic:
--	$(if $(syscall-y),\
--		$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.asm-headers obj=$(uapi-asm) \
--		generic=include/uapi/asm-generic $(syscall-y),)
--
--$(LIBPERF_IN): uapi-asm-generic FORCE
-+$(LIBPERF_IN): FORCE
- 	$(Q)$(MAKE) $(build)=libperf
- 
- $(LIBPERF_A): $(LIBPERF_IN)
-@@ -130,7 +120,7 @@ all: fixdep
- clean: $(LIBAPI)-clean
- 	$(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
-                 *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd tests/*.o LIBPERF-CFLAGS $(LIBPERF_PC) \
--                $(TESTS_STATIC) $(TESTS_SHARED) $(syscall-y)
-+                $(TESTS_STATIC) $(TESTS_SHARED)
- 
- TESTS_IN = tests-in.o
- 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index bd9f4804d56babeeefd0c02758bebf1ff0c040dd..c97ed1190ea097c41ca83f2ace06c008cd7f0ca9 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -64,7 +64,6 @@ include $(srctree)/tools/scripts/Makefile.arch
- $(call detected_var,SRCARCH)
- 
- CFLAGS += -I$(OUTPUT)arch/$(SRCARCH)/include/generated
--CFLAGS += -I$(OUTPUT)libperf/arch/$(SRCARCH)/include/generated/uapi
- 
- # Additional ARCH settings for ppc
- ifeq ($(SRCARCH),powerpc)
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index e0537f275da2f79ea9e05b91300aa1e2f996e9f1..da3aca87457fdc56c96d4184f2dee88dab026d98 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -54,7 +54,6 @@ declare -a FILES=(
+   "arch/s390/include/uapi/asm/kvm.h"
+   "arch/s390/include/uapi/asm/sie.h"
+   "arch/arm64/include/uapi/asm/kvm.h"
+-  "arch/arm64/include/uapi/asm/unistd.h"
+   "arch/alpha/include/uapi/asm/errno.h"
+   "arch/mips/include/asm/errno.h"
+   "arch/mips/include/uapi/asm/errno.h"
 
 -- 
 2.34.1
