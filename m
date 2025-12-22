@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A099230FF3A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC6432E72B;
 	Mon, 22 Dec 2025 22:57:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766444241; cv=none; b=cpVQWVcqgWcdAKwi3X0c44hBeBRghEoE/S10mMNT3hxCPk53Rffw0hM8jn4T9WWc2PNm4dOI+UA624pslpNknUWBFxttjoMsK9lzhlxCvUbhfMGYgl/CkH3ns3xHFmffLis98C2bzTG082GIRPDkmYjOvKRMX5EbiIrhyVK8yP8=
+	t=1766444242; cv=none; b=HLdVrfFW0bghSCJUPYRrz0wW7L0yytl0AKtGFwTP2dG742u4dscCmghie1xyEUVz9Z4geNC3pbD4jJ4OFrngI0vAeghwKTBDIZV4LdfsUAOX3cug8wMQ3LeDvOSHlyuVdcO912Cvi0fKwTKsvaCB5YwEE7QmUEA31bhJRwA4MSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766444241; c=relaxed/simple;
-	bh=FUn0OR5YuUpOyGicuQ/+P8CxhpRvnEK0ByM4pk9sBBk=;
+	s=arc-20240116; t=1766444242; c=relaxed/simple;
+	bh=49MnGzZAQYqcyLlxZKydO8rdk9ZLuuAGgmq+qGPMu68=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S0cOm7vjlAxd3NZq0L+JvyCdQ6MsguNMJ23MiUEJa10k2s95axjnNJX0gOyNm1jtpBBP3NZmhtOagBqSvYfJcT59Lg9rCFQbmEtoZyXYIO+5ZFG6yCUi+eORi0pu0fgUJRaLvA0ziOAyK5BgIa4dxS/SnOpr4KbxDtqkzboyhyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkDIdYfn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=C+oCIm3ukxZB+wWLzKcPnY3/24OPBfhFmKiiCxMnXE3fqvOOr6zlSneOlVfIsbDb/5vf2xwCEppTskJVOW+/Ary/q5oZQgmVPff0u6fF1mMEgpyh8voApZ3eGBUEFK6vptW2HfxemsDE6OwbyfzwcO9uvy1l7KhbQhID+175XmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RhDIAIHy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkDIdYfn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEB36C19422;
-	Mon, 22 Dec 2025 22:57:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RhDIAIHy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57634C19421;
+	Mon, 22 Dec 2025 22:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1766444241;
-	bh=FUn0OR5YuUpOyGicuQ/+P8CxhpRvnEK0ByM4pk9sBBk=;
+	bh=49MnGzZAQYqcyLlxZKydO8rdk9ZLuuAGgmq+qGPMu68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jkDIdYfnBqcXbdVlEcYHR8rr8eyFgbFLksExGZOipWUuaszxxf8NXXERC4E3BOd1d
-	 csaPAD/ejsi3V1RA96mDKBsERN+6mMRSNintABqnX79yeUt7uag4SPoBFioRtLEyyL
-	 HJ+TebQlu/5ZdCXFp5SuTN2IZRRXfjFlrgJeFB5+2wNVfORL5NiJQUgJDXUKbloQIU
-	 a6HXfvKzlLYbWQrXvsk/Lne8dMl4klJ8gmsAjw4Xxt3zSaHVF9eY7AdZJTeMf6kjpa
-	 XiDv/qrNjeCIkPAjjCy6c6xgWPmqqYRmDa55H+oTGdOqcBfGptmm9dZLcuFtqp7Uje
-	 3El3eqVE7twsw==
+	b=RhDIAIHyowlMyaMKSCZwqh+Oc+vHFYCUiCiD1KqDUvzKB8WWhqi8nndOE98azx3sg
+	 d/kohivM5Z96B/DRHSBEGtxs8U1OtqiHH55gUIzGsaItzFAWOpjUJGszvOtQBTJZKh
+	 qzfB2utYoEsKx9ihRbKxZSznrUjNX9ZNhxHbPDABF92RuUYsAkI3ZtZOGGT6qHVjdR
+	 U6duuikWoRHGy1wKXrnVX1ru6c/3FQNBh3wvNSeH9M9dLmJs/aItyuXlrW5hL8t2PG
+	 RbFMqPdOzq71QSRZNu70g70X7Il/JmDe1Y4KzvoxyMlucwuO8OWS9xti3BTML844Qn
+	 ZTAtVz62hzLxg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,10 +36,10 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [PATCH 02/11] tools headers: Sync UAPI KVM headers with kernel sources
-Date: Mon, 22 Dec 2025 14:57:07 -0800
-Message-ID: <20251222225716.3565649-2-namhyung@kernel.org>
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH 03/11] tools headers: Sync UAPI linux/fcntl.h with kernel sources
+Date: Mon, 22 Dec 2025 14:57:08 -0800
+Message-ID: <20251222225716.3565649-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.52.0.351.gbe84eed79e-goog
 In-Reply-To: <20251222225716.3565649-1-namhyung@kernel.org>
 References: <20251222225716.3565649-1-namhyung@kernel.org>
@@ -53,75 +53,54 @@ Content-Transfer-Encoding: 8bit
 
 To pick up changes from:
 
-  ad9c62bd8946621e ("KVM: arm64: VM exit to userspace to handle SEA")
-  8e8678e740ecde2a ("KVM: s390: Add capability that forwards operation exceptions")
-  e0c26d47def7382d ("Merge tag 'kvm-s390-next-6.19-1' of https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into HEAD")
-  7a61d61396b97fd6 ("KVM: SEV: Publish supported SEV-SNP policy bits")
+  fe93446b5ebdaa89 ("vfs: use UAPI types for new struct delegation definition")
+  4be9e04ebf75a5c4 ("vfs: add needed headers for new struct delegation definition")
+  1602bad16d7df82f ("vfs: expose delegation support to userland")
 
-This should be used to beautify DRM syscall arguments and it addresses
+This should be used to beautify fcntl syscall arguments and it addresses
 these tools/perf build warnings:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
-    diff -u tools/arch/x86/include/uapi/asm/kvm.h arch/x86/include/uapi/asm/kvm.h
+    diff -u tools/perf/trace/beauty/include/uapi/linux/fcntl.h include/uapi/linux/fcntl.h
 
 Please see tools/include/README.kernel-copies.
 
-Cc: kvm@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/arch/x86/include/uapi/asm/kvm.h |  1 +
- tools/include/uapi/linux/kvm.h        | 11 +++++++++++
- 2 files changed, 12 insertions(+)
+ tools/perf/trace/beauty/include/uapi/linux/fcntl.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/tools/arch/x86/include/uapi/asm/kvm.h b/tools/arch/x86/include/uapi/asm/kvm.h
-index d420c9c066d48c98..7ceff65836525c74 100644
---- a/tools/arch/x86/include/uapi/asm/kvm.h
-+++ b/tools/arch/x86/include/uapi/asm/kvm.h
-@@ -502,6 +502,7 @@ struct kvm_sync_regs {
- /* vendor-specific groups and attributes for system fd */
- #define KVM_X86_GRP_SEV			1
- #  define KVM_X86_SEV_VMSA_FEATURES	0
-+#  define KVM_X86_SNP_POLICY_BITS	1
+diff --git a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
+index 3741ea1b73d85000..aadfbf6e0cb3a004 100644
+--- a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
++++ b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
+@@ -4,6 +4,7 @@
  
- struct kvm_vmx_nested_state_data {
- 	__u8 vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 52f6000ab020840e..dddb781b0507dcfe 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -179,6 +179,7 @@ struct kvm_xen_exit {
- #define KVM_EXIT_LOONGARCH_IOCSR  38
- #define KVM_EXIT_MEMORY_FAULT     39
- #define KVM_EXIT_TDX              40
-+#define KVM_EXIT_ARM_SEA          41
+ #include <asm/fcntl.h>
+ #include <linux/openat2.h>
++#include <linux/types.h>
  
- /* For KVM_EXIT_INTERNAL_ERROR */
- /* Emulate instruction failed. */
-@@ -473,6 +474,14 @@ struct kvm_run {
- 				} setup_event_notify;
- 			};
- 		} tdx;
-+		/* KVM_EXIT_ARM_SEA */
-+		struct {
-+#define KVM_EXIT_ARM_SEA_FLAG_GPA_VALID	(1ULL << 0)
-+			__u64 flags;
-+			__u64 esr;
-+			__u64 gva;
-+			__u64 gpa;
-+		} arm_sea;
- 		/* Fix the size of the union. */
- 		char padding[256];
- 	};
-@@ -963,6 +972,8 @@ struct kvm_enable_cap {
- #define KVM_CAP_RISCV_MP_STATE_RESET 242
- #define KVM_CAP_ARM_CACHEABLE_PFNMAP_SUPPORTED 243
- #define KVM_CAP_GUEST_MEMFD_FLAGS 244
-+#define KVM_CAP_ARM_SEA_TO_USER 245
-+#define KVM_CAP_S390_USER_OPEREXEC 246
+ #define F_SETLEASE	(F_LINUX_SPECIFIC_BASE + 0)
+ #define F_GETLEASE	(F_LINUX_SPECIFIC_BASE + 1)
+@@ -79,6 +80,17 @@
+  */
+ #define RWF_WRITE_LIFE_NOT_SET	RWH_WRITE_LIFE_NOT_SET
  
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
++/* Set/Get delegations */
++#define F_GETDELEG		(F_LINUX_SPECIFIC_BASE + 15)
++#define F_SETDELEG		(F_LINUX_SPECIFIC_BASE + 16)
++
++/* Argument structure for F_GETDELEG and F_SETDELEG */
++struct delegation {
++	__u32	d_flags;	/* Must be 0 */
++	__u16	d_type;		/* F_RDLCK, F_WRLCK, F_UNLCK */
++	__u16	__pad;		/* Must be 0 */
++};
++
+ /*
+  * Types of directory notifications that may be requested.
+  */
 -- 
 2.52.0.351.gbe84eed79e-goog
 
