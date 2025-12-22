@@ -1,131 +1,162 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D875E32C927
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Dec 2025 10:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696C62F5492
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Dec 2025 15:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766400237; cv=none; b=hQLDvSzlimrIBk378ybiS+ph3w5r5SeAmMG3KbR5rG4OpjYqbullgh9+mh6pDWyb3Gu+DqeU/kAmJVmbrUmEQ8hE3bd1MAV9zZIYksQJq0JreBXdq+WYaVmgETMCaeFsqouctM8ue3ygAxpKtMuVarKi9T0wSOHrlWu+x0F5Uhk=
+	t=1766416490; cv=none; b=WbFiZ6JG9H2NLIVi+Rn6FE3JsE+x7sL7GUlrBkBqDcTDxpsgiE8A57jqco+V1DVhVFhIVlD34ws670NQ3sPoaxq2ad3QiRBMK8XTxYGah8kh6L1wBYxCNtEMrQ5ywacu5foFlZHjnc3ZW+5lLG3Bova1M/cFY9sl3xZ7qcgpPQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766400237; c=relaxed/simple;
-	bh=gIUWM9Fu07op/5WCXVtTnre/9wUkGlB1NAIs2kOV2yU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Oo3GXPqpb3YziKP1IKgtkCyOsjXdZcjl0SbI5N/P/IXgo4bK78mrVRYW4e8i3a/EzRheDTzWVgsQRLMCseJfzMqO/FtoB+yE4UwrxyJjsOmojdxRrlW8XZp87bKc1PVnaF/2cU8KDyduqgE/hSZWlchqQUEcE8WvtHlgr9YfscI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ibQ/EW7T; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PjI+JSGo; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1766416490; c=relaxed/simple;
+	bh=53i3a6LzQqYU8Q1kaLrIZuILze95GhG1zWxaH3cgDvs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uPBZmgkwXYeoLmI0v32KDyCa6vMTd/NSeejv+YmfHr0idQxBC++PBOqaylyX8g67QcTzEOgWPpcNYTpZ3XnYnC2jKXamwh1IJ2Nn2ILGTXoamGfkhBCUZu+RPWrUFskSl/HrFd4hYhVdF8HYPHGf674DBWrDWF67QkcNrC7dy8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x98pz46D; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ibQ/EW7T";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PjI+JSGo"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfout.stl.internal (Postfix) with ESMTP id DA9551D000C9;
-	Mon, 22 Dec 2025 05:43:54 -0500 (EST)
-Received: from phl-imap-17 ([10.202.2.105])
-  by phl-compute-04.internal (MEProxy); Mon, 22 Dec 2025 05:43:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1766400234;
-	 x=1766486634; bh=9S6jrQH3/mYIWxfqJfOuabWpqho3FX73MIpk1SthbgU=; b=
-	ibQ/EW7TzjusLZOHdidLs59PQQUuFIV2OTE8MOvbcyyb4U9TULe0C/Q3ZgZwB6in
-	QEv9682Uix2Q65IDsRJib0OMH/O124gQrdC2aiRFLitdt54Eo1JKGhFTB91QByse
-	gQVxu03LWbYYBUTizOMH1093GW67aShgXjFjxIqlFOi5EZ62rm9vh2/XoQ6uad97
-	/EreT1SrA2jlx/CjgXLMQ9jitqG3SUTPdVdNUrQxG2kerYgdSKoIFjTkp2rwDqoD
-	KQtsqrppcyhEg8Kb9pJep6gNl6FULUqQxODbT/Axnpr1YI3LtyIC3P8uZnX/qUyK
-	iWCrA4Z7qpc3kVPm467MZw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1766400234; x=
-	1766486634; bh=9S6jrQH3/mYIWxfqJfOuabWpqho3FX73MIpk1SthbgU=; b=P
-	jI+JSGoIG5nxoTi0N9PvAw36w2IgH8RiXKLQ5WOGPI/U9dtGVFy8TYhNeI3O6fGY
-	y25veIYSbfSkne41SVDnQ31yFEQfqL6hzYVPLZ07lrhxfIRlMcQWmZRmOpIWuqBC
-	4IhPnYgUMJHOq2XiTr1tjAd5qs8RWDzJ0Uf6DG0K18J/9sUCjzVGYnoKhG1md5JB
-	S2S792TtLotjlJefS1JE2m1Kukb9vZJxFBkTpGKySsP2jDJmQSFlgxrxw/CTO2w8
-	RF9KEDZesePUGKVhOZcWo6ZPvGNmi9EdyVhgq2uZZQEv+jEPsbe+gTV3FxCvRPgh
-	zV+MV/cv9pVHusd3t706w==
-X-ME-Sender: <xms:6iBJaaSZ6c8G3AGd3VGtfAaARSgT9u2WeeCRrh-KRLwIGCYyLJnWnQ>
-    <xme:6iBJaamWPh2fx7rDF-AFitn0ro8w9GedW9m1PQ9U97g8kqgpq-kWx93Hf1b1HmShR
-    2twJuh99LKBGe0985Dp0xA2tTZcxTh-GJv_wGTX5fiXbs5MgX3-ig>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdehieejfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdp
-    rhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpth
-    htoheplhgvohdrhigrnhesrghrmhdrtghomhdprhgtphhtthhopehirhhoghgvrhhssehg
-    ohhoghhlvgdrtghomhdprhgtphhtthhopehjohgvlhdqlhhinhhugiesjhhmrgihrdhush
-    dprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhgrmhgv
-    shdrtghlrghrkheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmh
-    dqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohep
-    lhhinhhugidqphgvrhhfqdhushgvrhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:6iBJaVRXu_jYaKbLAvVajMBeo-VTSWvgpcLdXIZAx1VT_Ar3f0-kbQ>
-    <xmx:6iBJaaykYXJMLLYQ0toWXEqNfqZxCtKx0ZHNtETd_U1ZH5b-h7-lGA>
-    <xmx:6iBJadD12OY2Xd3COiZvjVSZZVhDxjW0yJsR-_s9Wjmhy4Ox5xjuww>
-    <xmx:6iBJaeFprWUmrPuOqlSxVdJi83uCdiSADngqFaQXx8ulZCu2X_bDgw>
-    <xmx:6iBJaS_JMgOJ1QUYtPfNI0IBSx1z4n2jtKHx-jiohnj2rmSGGKaYqvsx>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5FF89C40054; Mon, 22 Dec 2025 05:43:54 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x98pz46D"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-42fb03c3cf2so2105121f8f.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Dec 2025 07:14:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1766416487; x=1767021287; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9LJhS2nq8ZHS6T/QvSCJ9XFnbSCF5NsF3Smsb7IoFAo=;
+        b=x98pz46DxOgy1mgqZePFKIPPtbMcFf7fuqfPV8y6zRrQLw9IBLQ25/9Bo41lePym72
+         JfLEE6k+fClxTO/PF7/3n8o9Ven08mHxAyMbDhb6ya+rW4nromAG6k/bBtX/sItm3QfA
+         6pygUO/JtcCD9zWteJrWo2FXlBdC6WLdVg8KYLqbWm7TrlyFD37xhDi3I5BeRoQ/aGWu
+         VQfgeKgrD4/8v7ic9geXjs0Ao54+iArBefKKACXQpyAmYQ9KAWou/q830O6an6bF9MxN
+         sQIQIYaVN8NvNf6uRYeWznPPfXu07xnvGir/S4DXclq8sR+2SfeViuO9Yvld378P1JGX
+         0GCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766416487; x=1767021287;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9LJhS2nq8ZHS6T/QvSCJ9XFnbSCF5NsF3Smsb7IoFAo=;
+        b=h5VJicQBPgi2WKxFSmlHcrWhhecuI0exNRxax8H/Av/oXQrR2Ul8XMLimAl77qvOQy
+         SOt3DW7EM3vJh7sgJBKhuZrKc4r3x1qMTeZAkZPAVCt9W1WJFNyhpiU4azFaNkDgpm5y
+         TgGFn6+fzNG3Cy3s2whVECgJHH33babnXjNGt3G5TLcpgBbMfS+fKCywIKphFANg2o1J
+         x4KZ8YCvPS8hEk0X6VufOM/+2MEVGLHMT9hcXsjSBZuGyUjdhhgQjbGIH8Am1ZLqq65f
+         LyCq5OdZtbZ7e6/Rff9KABPOgWN3Z3IO2esdBOmO1HsOCjvDM/mWwlPhAuW/OJQWBMX1
+         0g6w==
+X-Gm-Message-State: AOJu0YyxwI+JtKjDvqSl0szfFZtJjJA8pGhhXNvAF2jYWQqkrjaZA4HF
+	GkbX3zijtAexhO2iW4UGy7ymAfbHhtSKvRvvGau3pOYdjgLLPMvF86P+bWlEtu44f+0=
+X-Gm-Gg: AY/fxX6bLo1RkSEsj6Vp5s6+1l2awICrtYe3vUxuiLYWEE+cWFRLdzDCmmZRr74u6p+
+	nfRACbGsHJF7yk9k0K+wobxwZdsEi5iRsd+2ObcWX6dpJ3u/L5u9gThxD7OP3c78gfEJihM74n0
+	Vb0dkpirIma3/Q77QWEeOwNoZzzyVQcA47kh62RrFXIuHmYXp4PjlA1cMCSueNdndA9yZijSlf+
+	vUdSjd1bVYwNe7xjlSXo9huCn2uZ6vG9r2qT/60j+3tEky8zikcP96CukQihhP33/38TgdjsyrA
+	qmZg9UqWQ+09x9RXtdutP33Cec3tbr5g2h3uTG85ziuzmTYRy5mGJ2Eqm/Yr0RVxLr7ybxql1Un
+	D4LJBS+sgR5PZtPnI3PgWAwGHDT+WVyatUIaxWBL+SB34kCoOO4BnF++V1D2zmjG+AJa2Q8ulmA
+	oaRo1csCUX5UK8SNquQW0T9dPPuMoz02w=
+X-Google-Smtp-Source: AGHT+IFn92lYsDgvK7tpXNAPQ0WsUj1chzC1o/mtl8WTQxCYBCBN4igonzXBapuvSBdZM9yNW4+VSA==
+X-Received: by 2002:a05:6000:144d:b0:431:74:cd5 with SMTP id ffacd0b85a97d-4324e50b758mr14849127f8f.45.1766416486681;
+        Mon, 22 Dec 2025 07:14:46 -0800 (PST)
+Received: from ho-tower-lan.lan ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324ea830fesm22750093f8f.20.2025.12.22.07.14.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Dec 2025 07:14:46 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH v4 00/14] perf cs-etm/arm-spe: Remove hard coded config
+ fields
+Date: Mon, 22 Dec 2025 15:14:25 +0000
+Message-Id: <20251222-james-perf-config-bits-v4-0-0608438186fc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AV8M3mJaQpUZ
-Date: Mon, 22 Dec 2025 11:42:49 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "James Clark" <james.clark@linaro.org>, "Joel May" <joel-linux@jmay.us>,
- "Leo Yan" <leo.yan@arm.com>
-Cc: "Ian Rogers" <irogers@google.com>, linux-arm-kernel@lists.infradead.org,
- "Linux perf Profiling" <linux-perf-users@vger.kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>
-Message-Id: <ce4e1210-94c2-4664-885b-e39106905e21@app.fastmail.com>
-In-Reply-To: <a5448524-a147-4edb-9359-bcee3d780eb6@linaro.org>
-References: <b2651f20-6f3a-49f5-9cd8-3fb028b2cab5@app.fastmail.com>
- <fcefc3c0-541d-40cc-84e3-9c2460308bdb@linaro.org>
- <23c07ac4-ff13-47a5-824a-e7af1d1847a3@app.fastmail.com>
- <bda366b4-fa53-4feb-a7ce-ee47cfc404b5@linaro.org>
- <20251215112818.GB681384@e132581.arm.com>
- <c8161700-ad9d-43d3-8c45-cfc110ebcd49@app.fastmail.com>
- <a5448524-a147-4edb-9359-bcee3d780eb6@linaro.org>
-Subject: Re: [PATCH] arm64: perf: fix syscalltbl path base
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFJgSWkC/3XPzQrCMAzA8VeRnq2k2dyHJ99DPLQ13SK6jnYUR
+ fbuVr0osuM/kF/IQ0QKTFHsVg8RKHFkP+Qo1ythez10JPmUWyDgVimF8qyvFOVIwUnrB8edNDx
+ FaYhqBZUDByDy8hjI8e0NH465e46TD/f3naRe0w+JoJbIpCRIRLLGuAagtvsLDzr4jQ+deJkJv
+ 51m0cHslNoCNqptCwN/TvHlLL+YiuxoXVS6bMqqrqsfZ57nJ3S9Q8RNAQAA
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>, 
+ Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+ James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.0
 
-On Mon, Dec 22, 2025, at 11:05, James Clark wrote:
-> On 21/12/2025 9:48 pm, Joel May wrote:
->> On Mon, Dec 15, 2025, at 03:28, Leo Yan wrote:
->> 
->> This is my first time contributing to the Linux kernel, so please bare with
->> my ignorance.  I don't know whether it's acceptable to consider patches
->> that conceptually improve something without an actual problem they're
->> solving.
->> 
->
-> No worries, thanks for sending the fix. Yes I think it could be ok to 
-> apply your patch anyway. I just wanted to make sure we were all on the 
-> same page with both fixes fixing the same thing.
+The specific config field that an event format attribute is in is
+consistently hard coded, even though the API is supposed to be that the
+driver publishes the config field name. To stop this pattern from being
+copy pasted and causing problems in the future, replace them all with
+calls to a new helper that returns the value that a user set.
 
-I still don't think that Leo's series is correct.
+This reveals some issues in evsel__set_config_if_unset(). It doesn't
+work with sparse bitfields, which are an unused but documented feature.
+And it also only writes to the attr.config field. To fix it we need to
+start tracking user changes for all config fields and then use existing
+helper functions that support sparse bitfields. Some other refactoring
+was also required and a test was added.
 
-> You might want to drop the fixes tag though to avoid confusion if Leo's 
-> one gets accepted, because then technically it doesn't fix anything any 
-> more. Keeping Leo's fixes: tag is a bit better because it fixes 
-> additional things and targets an older commit.
+---
+Changes in v4:
+- Constify some function args (Ian)
+- Move some evsel__* functions to evsel.c and make some pmu.c functions
+  public to support this (Ian)
+- Drop pmu arg where it can be fetched from evsel->pmu (Ian)
+- Link to v3: https://lore.kernel.org/r/20251212-james-perf-config-bits-v3-0-aa36a4846776@linaro.org
 
-Before that gets applied, someone should explain why arm64 needs
-any special treatment at all. A lot of work has gone into making
-the syscall table handling consistent across architectures, so
-whether we ship a copy of the generated header for perf, we
-generate a new copy or we rely on 'make headers_install', should
-should really be done the same way across every architecture.
+Changes in v3:
+- Fix uninitialized variable warning on GCC
+- Fix leak of evlist in test
+- Confirm no type punning issues with ubsan (Ian)
+- Link to v2: https://lore.kernel.org/r/20251208-james-perf-config-bits-v2-0-4ac0281993b0@linaro.org
 
-     Arnd
+Changes in v2:
+- Remove macros in get_config_chgs() and some other refactoring.
+- Support sparse bitfields in evsel__set_config_if_unset().
+- Always track user changes instead of only when
+  'pmu->perf_event_attr_init_default' is set.
+- Add a test.
+- Don't bail out in cs-etm.c if any format fields are missing (Leo).
+- Rename 'guess' to 'synth' (Mike).
+- Link to v1: https://lore.kernel.org/r/20251201-james-perf-config-bits-v1-0-22ecbbf8007c@linaro.org
+
+---
+James Clark (14):
+      perf parse-events: Refactor get_config_terms() to remove macros
+      perf evsel: Refactor evsel__set_config_if_unset() arguments
+      perf evsel: Move evsel__* functions to evsel.c
+      perf evsel: Support sparse fields in evsel__set_config_if_unset()
+      perf parse-events: Track all user changed config bits
+      perf evsel: apply evsel__set_config_if_unset() to all config fields
+      perf evsel: Add a helper to get the value of a config field
+      perf parse-events: Always track user config changes
+      perf tests: Test evsel__set_config_if_unset() and config change tracking
+      perf cs-etm: Make a helper to find the Coresight evsel
+      perf cs-etm: Don't use hard coded config bits when setting up ETMCR
+      perf cs-etm: Don't use hard coded config bits when setting up TRCCONFIGR
+      perf cs-etm: Don't hard code config attribute when configuring the event
+      perf arm-spe: Don't hard code config attribute
+
+ tools/perf/arch/arm/util/cs-etm.c    | 201 +++++++++++++++-------------
+ tools/perf/arch/arm64/util/arm-spe.c |  17 +--
+ tools/perf/arch/x86/util/intel-pt.c  |   3 +-
+ tools/perf/tests/pmu.c               |  91 +++++++++++++
+ tools/perf/util/evsel.c              | 112 +++++++++++++++-
+ tools/perf/util/evsel.h              |   6 +-
+ tools/perf/util/evsel_config.h       |   7 +-
+ tools/perf/util/parse-events.c       | 248 ++++++++++++++++++++---------------
+ tools/perf/util/pmu.c                |  95 ++++----------
+ tools/perf/util/pmu.h                |  34 ++++-
+ 10 files changed, 529 insertions(+), 285 deletions(-)
+---
+base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
+change-id: 20251112-james-perf-config-bits-bee7106f0f00
+
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
+
