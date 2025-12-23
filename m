@@ -1,67 +1,67 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC55346787
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Dec 2025 17:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC38346A15
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Dec 2025 17:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766509255; cv=none; b=a2EMDa0+h0ROY8ABNrTOuwMlnOZ/8cuFqZ0PYlKjzAYcaZrefgem2NwgDvsHnhhF+16g8kaz6dTAjQw+Yl4pYzsw8AJTq52PoBvHE6JMWeeSWMagDYS1FKsNrFCadJ1rKXNAVnnwUfn9LDCNyWh1/gdvQVtq6/JelMHA94WPeJk=
+	t=1766509256; cv=none; b=Co5MwbmYdjbbmILnINPba9sx6HY+cBMMqSs2ItQcueEJ5oVDrlnlD2zZQRNgSsDQBfj1OoP+9xP4j0gSZrJkNI6Q3yoX4GGhixAoSGQlJF9cy+8V2MWDczu6O1vGhUM2IuN1/uqFVtN1WF0Jmltk+87rG6WdIMj0RXYyxW43QlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766509255; c=relaxed/simple;
-	bh=HvQuAl5BIsUEtR0z3TF9FUuo1K9HZfq6C51NE7ALywM=;
+	s=arc-20240116; t=1766509256; c=relaxed/simple;
+	bh=0umdUXyTX5rgSuGain8DW3LGBh7mYqc+EdcYA++gvKo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FkY9X7NOjUbEkEXDvpzrkpcoMgzFseqNq7+0YC8WAmuNXfxPODan47bPrYCZq+thIxVP9WJkq7FnzvJ+9eChEW0Ra7htD9aM5XArheVVqGmEu3cNGqJEoy1B3vHAEsJrU52xtH3ip3IGK93imL2j9TgDR3R1Z8owFExWFQ7DtyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qhMScNo+; arc=none smtp.client-ip=209.85.221.50
+	 In-Reply-To:To:Cc; b=V3faKmmIDiDrxftpfzqrserGbK8OKbbYPefeB48+dHjsUo74/CKE2ehB8Eq17n4coPYYC4xHWA59ZZLtMMC+YlQY35r0KfDRc9Lcem7XUacbEOkh15xURrVoIe2EEOzSWoA5aImpy5Zujr7skXrz1UqtOiYr5CmlhJgaos9O48k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x1XSo8p+; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qhMScNo+"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-42b3b0d76fcso3163526f8f.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Dec 2025 09:00:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x1XSo8p+"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4779ce2a624so38543255e9.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Dec 2025 09:00:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1766509250; x=1767114050; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1766509253; x=1767114053; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UTJM3s/XdCccJiJB0tNPahzzj1p09azMnSbzBQkmBSg=;
-        b=qhMScNo+giJTfU4fCRGs0/r0PkN7fYsqTEySSXhzH1VW5g06LsX35k4z7ASuXOfpXd
-         hDYtd9S8vqzaa3i4IOweRyo13zDqFbNZxRsMB3LDrHHbDVLGGr67yIBpI3q+9ukgAw/7
-         2WGGrJoL3IYesRPtlLxrwtRcrfLTkLP0XE8J1DNP4fzG14uFYP5JLm2/tBkR/fzHlL0c
-         I3b00KLGbwKL0Pfitq1ev9UILNUwEBItDGhkx4izElnJtAsMun/zc8EjlDRFAyVJ2a7T
-         o9TvTBh2SByMa2YUw1AfvKprPwqItBnaQT8NZx2aTPg5VYssnEuxLERiDRfA+PWiDrhk
-         lYqQ==
+        bh=BMhU1Ise8/cj2uC/iqpEOfTTyoX7j88WyHRNEPk+wjQ=;
+        b=x1XSo8p+JwayqQbC81UyMQE+K12s83oCP2hiiPqMHldzuNtCXny2bl3Y/F+xUZ419X
+         A/VsUmcPN+Jfe4jijSpzBUWZnPcPgL+sb/GT/gc0b4D4AK8swfl8nk7BiRuFQsgZIiq1
+         A1xIidyhaId7rHKXG0l9OM02LX5BiXV16Tovjzdz5nYXKbzyOA5jEj20Fw7w9SM7bg7f
+         h66IztXpfm8VTP3ocRnDDH7w0SQBe6LdfZpyklvHXBtsshPNbs2EsHAM40+WnXK2xVG7
+         TjLO4vgOWChNRGVOoqU7VZBtFX7nOeszepYm2c7Iv0Po9pqskXMwLviQyIxG03s1Vuxg
+         l6Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766509250; x=1767114050;
+        d=1e100.net; s=20230601; t=1766509253; x=1767114053;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=UTJM3s/XdCccJiJB0tNPahzzj1p09azMnSbzBQkmBSg=;
-        b=pflBLT6mtiVQJxsHifnvEgNKY7/ZkYasbBE4+Dub9yTxVLcjPs8g0aa5tB/4b/mrtv
-         EUrqFOd44abajCU+p17bg50aYRQzF4cVr/ZEW9AAiXft8uI4om6CqJ2mcrPPDowHt3En
-         C2vvxp6wOQ/dnGKg5/E8ijcjst/gcPn7EbREkB0fz58NRHr3FvppTqfv3o2e7GY4gAOe
-         1kz9Dhbk+fwiA0FTKO7ENVO0VwxVZv58q1jo/MASkfC3a8679MIr4rSUmYPksV/4eFy0
-         52cZGWMD1ZJufo7KjgBzNq7EyzIy6sBcbOwLaFU1MxnD1M2QcHXe0GbTux19xe9jiV9B
-         DVRg==
-X-Gm-Message-State: AOJu0YxWLN4DoNYqmPmq+h8GvCH+Mq9e9SitxsWqSVMemWzwVkeCs3r/
-	MF/sDwhwHtgiilSqS3TPO17LX2JUgxvnjSEmXa/U7QTHmrb5mhxU8NQYm1CeeIz4LMr4cJyq10a
-	V/lDVcLQ=
-X-Gm-Gg: AY/fxX4fYWQ8z/82pcq/25pKC56Bry35Owf2xxZHYZ4LxX0W7c9XRHjVnQoZATZOdPB
-	ATH8k3jzkFxEuXRPBAye6oEvq22HIclJN66tFoq9sLWkhGAduPCpDGwfH9KorS358AjIQwiYGXN
-	SBfS3aFtRxQklqtzP8ijuTbyBU2rKtOMUd4zA0TpnZsrPmx4JqoyN6j1FvBAIYarDsqFf0E8AWZ
-	w4RsaNOdj5h3cLP9wqtzMypEgvlrkF+JHgodleei9bvQuHIvXkBJpZlLIHw5YelN7mtMT5WZ+oG
-	oZ+G010oUx69irm0Vs09w4iIYEbJ2llKSywr28rFY9PeJaXYFUqXL5oeINBeY8Zb6vBdx4kUfJm
-	/Q6a6Nh/HZ3VrsnNYTUR7jomc5HMgFeCz9y04s8Qxokov1ACKHJJ3f8cnbTGxLjsE6WLTaVrZ5u
-	HStywn4IBcaXTanNCDfG+g
-X-Google-Smtp-Source: AGHT+IFMmSNtuwzw5XtsQ5n3BxiXKo6WM82ZPjsLwEsdsqvNmRq9sHEX+kMDMqzpXsuiU6kNsh7ojw==
-X-Received: by 2002:a05:6000:2211:b0:42b:396e:27fd with SMTP id ffacd0b85a97d-4324e4fda01mr17632693f8f.38.1766509250512;
-        Tue, 23 Dec 2025 09:00:50 -0800 (PST)
+        bh=BMhU1Ise8/cj2uC/iqpEOfTTyoX7j88WyHRNEPk+wjQ=;
+        b=alKmO+5Evhk3OT/KEM1UrsklNnzsAr49LChRDXCQ6Qlv5xnQrvBAEf7oCmoSFdYf9R
+         XOixYQmpjKBJjyNwAHkaRKaZe4sdWa2FwaPtS96fjWSEBUOObsPSNaCIKdk3lCeHrZJ8
+         NACyhdNLwTOrsrds0IfYyl+H37hv5FsDlW0xF/sVPTLTIfb7sBoY1QqimB/PwEksTdY/
+         VlAsWwQBI4hypDIdTA5NbMAZ2zwbTA/OUbwt9x1eUMn16Ws1C7+yLjOcsb8oajPjx/dK
+         6uPAAHmUnziOuWgIVM/tv+pGoVznsW5ivCGBKaMvjo9mFakdNfU4tIaxwl30lNhJH/wM
+         Qnxg==
+X-Gm-Message-State: AOJu0YyrM9U6TTzXfRjIgOnf4ln9j+mIhUUMm4jJZ6aw/qv1h3Be2GPY
+	fUZe8BxfV6814T/SHZY0soJxrG1pm8bzown1YjbpFQR5GnCf3CDJjcbrY6M4UDhwU5+lYO5kv9d
+	AP0fsXQc=
+X-Gm-Gg: AY/fxX6F8G8LrQ+c3sFxddv99256eRbBDWX/GsFV16+cMxO12k8yAAwby5xVvcxjbeV
+	Qll1MCd3YYrMkveoeRsAUAdl0sPbKDzlsfVX7rwpBIBMIOYeCebAIWmjZMnGiOuiL8eTTpXhaNr
+	5i3g6m3zO+S3Ns5NxL9bWxEL2viRlo8PP0g/+H5w18II+xjiB3SgigWnBywFNQGhEk2HNETdFNP
+	uMX4tZ6wmetykosYrh6Np1azN60+xgc8JaP+hFyBaECBiKySENWWG31QO1y5PIWajBDa7l+09ru
+	ZyXjALwugRGLAAoZlcD92x7/LdTSpervFVy5McJGjTSQdR/LL/NbDYGPg0FRBGDdOMwtVmQ9B7k
+	zzIjqYOf6vJ3wG8D80wO1pC5Cqo3BnjDk7k0MI7/EotOwPFsCV639n5a+g2cPK3dUX8U5OntGpS
+	TfkPJPHRCYxbSzt/x+Ql6x
+X-Google-Smtp-Source: AGHT+IEmXyr4Uj9u2sWEA01aAu2FLZncuAO3EyjxyoVdSQ4fiNDLouXhbcKF21puEyCjFiiIWbg4AQ==
+X-Received: by 2002:a05:600c:8b11:b0:477:55ce:f3bc with SMTP id 5b1f17b1804b1-47d2d273515mr83353075e9.19.1766509252601;
+        Tue, 23 Dec 2025 09:00:52 -0800 (PST)
 Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324ea1aef7sm28895137f8f.7.2025.12.23.09.00.49
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324ea1aef7sm28895137f8f.7.2025.12.23.09.00.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Dec 2025 09:00:50 -0800 (PST)
+        Tue, 23 Dec 2025 09:00:52 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Tue, 23 Dec 2025 17:00:26 +0000
-Subject: [PATCH 3/5] perf build: Remove unused libbfd-buildid feature test
+Date: Tue, 23 Dec 2025 17:00:28 +0000
+Subject: [PATCH 5/5] perf build: Skip nondistro build test if libbfd is old
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251223-james-libbfd-feat-check-v1-3-0e901ba32ed9@linaro.org>
+Message-Id: <20251223-james-libbfd-feat-check-v1-5-0e901ba32ed9@linaro.org>
 References: <20251223-james-libbfd-feat-check-v1-0-0e901ba32ed9@linaro.org>
 In-Reply-To: <20251223-james-libbfd-feat-check-v1-0-0e901ba32ed9@linaro.org>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -87,90 +87,44 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-HAVE_LIBBFD_BUILDID_SUPPORT isn't used in the codebase so remove the
-feature test that sets it.
+Non distro builds now require a new version of libbfd, so skip the test
+if the library is too old.
+
+The grep test isn't a strong as the feature test in
+test-libbfd-threadsafe.c, but there seems to be precedent for feature
+testing this way here and it's good enough for the build-test rule. If
+the function exists but returns an error it will be picked up by the
+feature test when attempting the build.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/build/Makefile.feature              | 1 -
- tools/build/feature/Makefile              | 4 ----
- tools/build/feature/test-libbfd-buildid.c | 8 --------
- tools/perf/Makefile.config                | 7 -------
- 4 files changed, 20 deletions(-)
+ tools/perf/tests/make | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index a7f030fc5e83..20422853d1ac 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -71,7 +71,6 @@ FEATURE_TESTS_BASIC :=                  \
-         gettid				\
-         glibc                           \
-         libbfd                          \
--        libbfd-buildid			\
-         libelf                          \
-         libelf-getphdrnum               \
-         libelf-gelf_getnote             \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 87a5a908d6fa..63a97cdf78a3 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -13,7 +13,6 @@ FILES=                                          \
-          test-gtk2-infobar.bin                  \
-          test-hello.bin                         \
-          test-libbfd.bin                        \
--         test-libbfd-buildid.bin		\
-          test-disassembler-four-args.bin        \
-          test-disassembler-init-styled.bin	\
-          test-reallocarray.bin			\
-@@ -267,9 +266,6 @@ $(OUTPUT)test-libpython.bin:
- $(OUTPUT)test-libbfd.bin:
- 	$(BUILD_BFD)
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index 6641701e4828..36411b4b6d2b 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -124,6 +124,9 @@ make_minimal        += NO_LIBDW_DWARF_UNWIND=1 NO_LIBBPF=1
+ make_minimal        += NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
+ make_minimal        += NO_LIBCAP=1 NO_CAPSTONE=1
  
--$(OUTPUT)test-libbfd-buildid.bin:
--	$(BUILD_BFD) || $(BUILD_BFD) -liberty || $(BUILD_BFD) -liberty -lz
--
- $(OUTPUT)test-disassembler-four-args.bin:
- 	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
- 	$(BUILD_BFD) -lopcodes -liberty -lz
-diff --git a/tools/build/feature/test-libbfd-buildid.c b/tools/build/feature/test-libbfd-buildid.c
-deleted file mode 100644
-index 157644b04c05..000000000000
---- a/tools/build/feature/test-libbfd-buildid.c
-+++ /dev/null
-@@ -1,8 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <bfd.h>
--
--int main(void)
--{
--	bfd *abfd = bfd_openr("Pedro", 0);
--	return abfd && (!abfd->build_id || abfd->build_id->size > 0x506564726f);
--}
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 594fe3ecfee0..5ff98b89c39a 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -927,7 +927,6 @@ ifdef BUILD_NONDISTRO
-   $(call feature_check,libbfd)
-   $(call feature_check,disassembler-four-args)
-   $(call feature_check,disassembler-init-styled)
--  $(call feature_check,libbfd-buildid)
-   $(call feature_check,libbfd-liberty)
-   $(call feature_check,libbfd-liberty-z)
- 
-@@ -945,12 +944,6 @@ ifdef BUILD_NONDISTRO
-   CXXFLAGS += -DHAVE_LIBBFD_SUPPORT
-   $(call detected,CONFIG_LIBBFD)
- 
--  ifeq ($(feature-libbfd-buildid), 1)
--    CFLAGS += -DHAVE_LIBBFD_BUILDID_SUPPORT
--  else
--    $(warning Old version of libbfd/binutils things like PE executable profiling will not be available)
--  endif
--
-   ifeq ($(feature-disassembler-four-args), 1)
-     CFLAGS += -DDISASM_FOUR_ARGS_SIGNATURE
-   endif
++# binutils 2_42 and newer have bfd_thread_init()
++new_libbfd := $(shell echo '#include <bfd.h>' | $(CC) -E -x c - | grep bfd_thread_init)
++
+ # $(run) contains all available tests
+ run := make_pure
+ # Targets 'clean all' can be run together only through top level
+@@ -137,7 +140,9 @@ MAKE_F := $(MAKE) -f $(MK)
+ endif
+ run += make_python_perf_so
+ run += make_debug
++ifneq ($(new_libbfd),)
+ run += make_nondistro
++endif
+ run += make_extra_tests
+ run += make_jevents_all
+ run += make_no_bpf_skel
 
 -- 
 2.34.1
