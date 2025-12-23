@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6048288C2F;
-	Tue, 23 Dec 2025 05:52:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7DB42048;
+	Tue, 23 Dec 2025 05:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766469176; cv=none; b=osRl1f6bEQ2KwbrTsyiQ/F3yr6JitWR2XMNu2kbYbitZ5+S2sBbt4X4kjg5L3VNqIPFC40kjulXliNZ75KXR9wzytJmdmB0Chz0Tj4EmB+lX+uJkCGqSj+uYy4/0B6+Cs2oC++nBvIqNucN1YmgLMQLfJKRI+q0TSLXfkBwnoGQ=
+	t=1766469503; cv=none; b=geotuEgAqCjGmIka2y3A684uJv5jNqj39XWEMx1jhmbrsr8h9U6fnpA6GKcX1gZLlBAV+TnNihF/TjVAq+SmWIAJCaz/KKXE4gbhSGPsfueX8ZUb0pxJev3lYbNxeacXg1kYgTeNuZHXnP5zKB/ENreu9ms898E59CLUOtvCQrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766469176; c=relaxed/simple;
-	bh=RkXyG34uY5YWKn7k6JtW1TB/xYsa8JjgNjok6WEVqLw=;
+	s=arc-20240116; t=1766469503; c=relaxed/simple;
+	bh=FT6HD752+iZ+0ionk3EidtqeWqU9B7ZGsI0uNBQumWk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vEg7n4IKpmE5nXbyn0nO3tMH+v7PI/83y9lViUbjRgTRCCUcEqip0qZ22OAJq6Tr9XbIwNZEtprRfU5/2EZACaRqJJk7yAkAf+DyS/sKEBokbP6nZHyLW7/Dc1A7IDifgCOKAhcs/CJkWZ6dti2rN2bsib2925LZXYPfi0aF5OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=djrGqHFB; arc=none smtp.client-ip=198.175.65.11
+	 In-Reply-To:Content-Type; b=G2lEtNvMBKTyFQIcxWrElkSi4ZF0oP0Fuoxx17tpfWZusZb7Gw4BeElXIkPCvnVsKwWqTI1DB0lzzDuVLeBDHpAH3QwtOcES62TTF87YKmESO0GE1m0RxaB5mSy16qSDs+lLpE6laczsPeEgehE8T2s2VWn34eNluz9Sl40AGDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d5OpJc+C; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="djrGqHFB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d5OpJc+C"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766469175; x=1798005175;
+  t=1766469502; x=1798005502;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=RkXyG34uY5YWKn7k6JtW1TB/xYsa8JjgNjok6WEVqLw=;
-  b=djrGqHFBWduXAFhb6j9ib34iS6bW7e7nvOtzMIForBdQCRBzwnsNyaek
-   dFkgKQ3G6ddImzbKx+6Ie8CJKUlG66J000Cqpj4J5IvCCNsOxxpj+vgfc
-   +JWFbOXQua9xG/kafcl7wCRoZ5fa4H2Sf8IsKNzX7V6Z6GY8LdA6UFGu8
-   MLd9wTrXGKOL0ELOAunQ6LU7hCASaTF6vsT6WbjNMCPuoLo1icrYXLSb7
-   P4PyEIzQP+AS6sDAF7HV0+M5RGj9gwoJvooRljpZ7Oi8kV6wLufW/ln0l
-   5kbt694enaV7N1DKxTUqXpGlonqRwxnJ4395rA7JUBSiqxMWLwfHlV+l3
-   g==;
-X-CSE-ConnectionGUID: zs1UnkxTRnWd6QBYkNV0JA==
-X-CSE-MsgGUID: LxZPmoSHRGOWEUOUkzEBLg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11650"; a="78634311"
+  bh=FT6HD752+iZ+0ionk3EidtqeWqU9B7ZGsI0uNBQumWk=;
+  b=d5OpJc+C5dXldRIGKhIy9xxT8/nREakhV/PaFyV8OjlV9B9t/nrNPgpz
+   Bj2nEqfahJsgtoKp+WKiToxLkaP0Hf5+vO7tVZwnR+YZFWLMoTd862zCH
+   CgswJLSiouiKfyuleEvfEvGXGCUbCQ8VK8Ug2ADGXREPy0Bx3E1eSZqJU
+   yDTw/ZeYwfQhBnjyuBmJLIc/EJCOSdMCcfWRvUQQlhOGE3C8KV0SzHB0f
+   AD2WdZrFkRW471Ed/F3ann1iki9i/BTJeaveZnV5YIkuApjnxeUrkr24K
+   v5u+tqtVeWvWFMEfhdFggskVtlZmJ4ganLNm3ZevqO0XesatXMcxalI/Z
+   A==;
+X-CSE-ConnectionGUID: DEHEtGIoSSCQu2oiLH1eiQ==
+X-CSE-MsgGUID: pzc0gEzzTpSEB1ndI1ekWQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11650"; a="78634545"
 X-IronPort-AV: E=Sophos;i="6.21,170,1763452800"; 
-   d="scan'208";a="78634311"
+   d="scan'208";a="78634545"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 21:52:54 -0800
-X-CSE-ConnectionGUID: C1B9e9e9TKywv6yDtkvO4A==
-X-CSE-MsgGUID: RwSXUI5cSEuepgfjbRYteQ==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 21:58:22 -0800
+X-CSE-ConnectionGUID: a86dWVTiRGKOekCRCOC3wg==
+X-CSE-MsgGUID: Qkp8VPMoTUW9NYUCqjb90g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,170,1763452800"; 
-   d="scan'208";a="200611519"
+   d="scan'208";a="200612176"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 21:52:50 -0800
-Message-ID: <7f151e4e-7fcf-4007-9c7d-a90af1c05f84@linux.intel.com>
-Date: Tue, 23 Dec 2025 13:52:47 +0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 21:58:17 -0800
+Message-ID: <65e75e07-974a-4bc6-8299-d19e040508cd@linux.intel.com>
+Date: Tue, 23 Dec 2025 13:58:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/7] perf/x86/intel/uncore: Update DMR uncore constraints
- preliminarily
+Subject: Re: [PATCH 7/7] perf pmu: Relax uncore wildcard matching to allow
+ numeric suffix
 To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
  Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
@@ -63,172 +63,68 @@ To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
 References: <20251212210007.13986-1-zide.chen@intel.com>
- <20251212210007.13986-7-zide.chen@intel.com>
+ <20251212210007.13986-8-zide.chen@intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251212210007.13986-7-zide.chen@intel.com>
+In-Reply-To: <20251212210007.13986-8-zide.chen@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 On 12/13/2025 5:00 AM, Zide Chen wrote:
-> Update event constraints base on the latest DMR uncore event list.
+> Diamond Rapids introduces two types of PCIe related uncore PMUs:
+> "uncore_pcie4_*" and "uncore_pcie6_*".
 >
+> To ensure that generic PCIe events (e.g., UNC_PCIE_CLOCKTICKS) can match
+> and collect events from both PMU types, slightly relax the wildcard
+> matching logic in perf_pmu__match_wildcard().
+>
+> This change allows a wildcard such as "pcie" to match PMU names that
+> include a numeric suffix, such as "pcie4_*" and "pcie6_*".
+>
+> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > Signed-off-by: Zide Chen <zide.chen@intel.com>
 > ---
->  arch/x86/events/intel/uncore_snbep.c | 81 ++++++++++++++++++++++++++++
->  1 file changed, 81 insertions(+)
+>  tools/perf/util/pmu.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
 >
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index e5b95fa75313..8068b9404ecb 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -6760,10 +6760,72 @@ static const struct attribute_group dmr_cxlcm_uncore_format_group = {
->  	.attrs = dmr_cxlcm_uncore_formats_attr,
->  };
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 3d1f975e8db9..00cb72615621 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -905,6 +905,7 @@ static bool perf_pmu__match_wildcard(const char *pmu_name, const char *tok)
+>  {
+>  	const char *p, *suffix;
+>  	bool has_hex = false;
+> +	bool has_underscore = false;
+>  	size_t tok_len = strlen(tok);
 >  
-> +static struct event_constraint dmr_uncore_cxlcm_constraints[] = {
-> +	UNCORE_EVENT_CONSTRAINT(0x1, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x2, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x3, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x4, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x5, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x6, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x7, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x8, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x9, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0xa, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0xb, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0xc, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0xd, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0xe, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0xf, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x10, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x11, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x12, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x14, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x1d, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x1e, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x1f, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x20, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x21, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x22, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x23, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x24, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT(0x41, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x42, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x43, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x44, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x45, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x46, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x47, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x48, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x49, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x4a, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x4b, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x4c, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x4e, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x50, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x51, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x52, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x53, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x54, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x55, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x56, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x57, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x58, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x59, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x5a, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x5b, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x5c, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x5d, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x5e, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x60, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT(0x61, 0xf0),
-
-Could we define a "UNCORE_EVENT_CONSTRAINT_RANGE()" macro just like what
-core PMU does (refer INTEL_EVENT_CONSTRAINT_RANGE macro)? Then we don't
-need to add so many lines.
-
-Maybe like this,
-
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 698bcd7fe5a0..bc4367a6628e 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -437,7 +437,7 @@ uncore_get_event_constraint(struct intel_uncore_box
-*box, struct perf_event *eve
-
-        if (type->constraints) {
-                for_each_event_constraint(c, type->constraints) {
--                       if ((event->hw.config & c->cmask) == c->code)
-+                       if (constraint_match(c, event->hw.config))
-                                return c;
-                }
-        }
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 338713cd7a7d..f6fcee2a505e 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -32,7 +32,8 @@
- #define UNCORE_EXTRA_PCI_DEV           0xff
- #define UNCORE_EXTRA_PCI_DEV_MAX       4
-
--#define UNCORE_EVENT_CONSTRAINT(c, n) EVENT_CONSTRAINT(c, n, 0xff)
-+#define UNCORE_EVENT_CONSTRAINT(c, n)          EVENT_CONSTRAINT(c, n, 0xff)
-+#define UNCORE_EVENT_CONSTRAINT_RANGE(c, e, n) EVENT_CONSTRAINT_RANGE(c,
-e, n, 0xff)
-
- #define UNCORE_IGNORE_END              -1
-
-
-> +	EVENT_CONSTRAINT_END
-> +};
-> +
->  static struct intel_uncore_type dmr_uncore_cxlcm = {
->  	.name			= "cxlcm",
->  	.event_mask		= GENERIC_PMON_RAW_EVENT_MASK,
->  	.event_mask_ext		= DMR_CXLCM_EVENT_MASK_EXT,
-> +	.constraints		= dmr_uncore_cxlcm_constraints,
->  	.format_group		= &dmr_cxlcm_uncore_format_group,
->  	.attr_update		= uncore_alias_groups,
->  };
-> @@ -6775,9 +6837,21 @@ static struct intel_uncore_type dmr_uncore_hamvf = {
->  	.attr_update		= uncore_alias_groups,
->  };
+>  	/* Check start of pmu_name for equality. */
+> @@ -915,13 +916,14 @@ static bool perf_pmu__match_wildcard(const char *pmu_name, const char *tok)
+>  	if (*p == 0)
+>  		return true;
 >  
-> +static struct event_constraint dmr_uncore_cbo_constraints[] = {
-> +	UNCORE_EVENT_CONSTRAINT(0x11, 0x1),
-> +	UNCORE_EVENT_CONSTRAINT(0x19, 0x1),
-> +	UNCORE_EVENT_CONSTRAINT(0x1a, 0x1),
-> +	UNCORE_EVENT_CONSTRAINT(0x1f, 0x1),
-> +	UNCORE_EVENT_CONSTRAINT(0x21, 0x1),
-> +	UNCORE_EVENT_CONSTRAINT(0x25, 0x1),
-> +	UNCORE_EVENT_CONSTRAINT(0x36, 0x1),
-> +	EVENT_CONSTRAINT_END
-> +};
+> -	if (*p == '_') {
+> -		++p;
+> -		++suffix;
+> -	}
+> -
+> -	/* Ensure we end in a number */
+> +	/* Ensure we end in a number or a mix of number and "_". */
+>  	while (1) {
+> +		if (!has_underscore && (*p == '_')) {
+> +			has_underscore = true;
+> +			++p;
+> +			++suffix;
+> +		}
 > +
->  static struct intel_uncore_type dmr_uncore_cbo = {
->  	.name			= "cbo",
->  	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-> +	.constraints            = dmr_uncore_cbo_constraints,
->  	.format_group		= &dmr_sca_uncore_format_group,
->  	.attr_update		= uncore_alias_groups,
->  };
-> @@ -6811,9 +6885,16 @@ static struct intel_uncore_type dmr_uncore_dda = {
->  	.attr_update		= uncore_alias_groups,
->  };
->  
-> +static struct event_constraint dmr_uncore_sbo_constraints[] = {
-> +	UNCORE_EVENT_CONSTRAINT(0x1f, 0x01),
-> +	UNCORE_EVENT_CONSTRAINT(0x25, 0x01),
-> +	EVENT_CONSTRAINT_END
-> +};
-> +
->  static struct intel_uncore_type dmr_uncore_sbo = {
->  	.name			= "sbo",
->  	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-> +	.constraints		= dmr_uncore_sbo_constraints,
->  	.format_group		= &dmr_sca_uncore_format_group,
->  	.attr_update		= uncore_alias_groups,
->  };
+
+LGTM.
+
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+
+
+>  		if (!isxdigit(*p))
+>  			return false;
+>  		if (!has_hex)
