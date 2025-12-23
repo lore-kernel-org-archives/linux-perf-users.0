@@ -1,129 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227E92D97BB;
-	Tue, 23 Dec 2025 17:54:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB5734D4C0;
+	Tue, 23 Dec 2025 18:06:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766512499; cv=none; b=hoYpbtFKS8cnxJnfdpxe20RMHoIvYVSW0RCxb21pdajHACx9Szspzzbg9kPvqiQgz8gyJ/+2jBM+KwIHTXU5Tv7h78oVJ3v0FhNGiHROeoqsLxM+QwspnoQ/X69HWpKXTeVubadCeYBFvveXBclnxBJ/4MoaN/J9+UApOhNGw08=
+	t=1766513205; cv=none; b=pslkkNNarZDnr9NOql7gORvbC0r6Im6uTYijqKFzrlYE6GFHs6DKpiih5J9dECkrL6ulEVuV7zLIgZqWnzzAypF4hnzl8thiyHfGwAsUFyVp0wlHOD9eqOs4ciG6nsS0dvJ54zo3MPjgeKIgonwirCosn2LnBGzThWIECacxRE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766512499; c=relaxed/simple;
-	bh=XLM2fikAcavvgjUlqwc5tL6SD3nCDVnUcFY/V0XJ4HY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kjm9YZj1+JbIgMz5430PX0IWZn0gU4BiwlcMGQeKyYpUdzCej+7J2ILPNgbsutpzkNu99VgHXEDgwSQkAGPjIjxUnW3gliziUeCKxKCUoWQ+uS0W4hC5YURmgyCFjQbi3k3L8WLs66QuxL4zC1rNaiTMGGxemvvKPqeT9QdFS0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWF5rpw4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766513205; c=relaxed/simple;
+	bh=p4oE+5o9bN0kXgNRRBGEZJVGoL3abU2EiA/DKtkd5rI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UdafqVOYhjSX88By4bKKRpFGIMQLY9f5++hFMiIVsoNzWd88K7w4c08mj5mYaAMprP2utdlxwJn6CHnE7YJZiFslFBFyNO8gXtFuKvN2hpAN2a+bVMnrpTCTK6a/MboENeHALPTbyIqiu8nqXf2amLi5qURVVJV2SvAqyilwoL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FRKXB5CX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWF5rpw4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BCA7C116B1;
-	Tue, 23 Dec 2025 17:54:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FRKXB5CX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D467CC113D0;
+	Tue, 23 Dec 2025 18:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766512498;
-	bh=XLM2fikAcavvgjUlqwc5tL6SD3nCDVnUcFY/V0XJ4HY=;
-	h=From:To:Cc:Subject:Date:Reply-To:From;
-	b=ZWF5rpw4IlCT9luOR7eqj2o3IOokxIpGUpbyMj8xqkHECttuE9k6EavV6nDS+ZVkY
-	 V6neOwj5ZMW0aBeqj8CtykSZa6oUhiJCDSjxCkgIzQLDqTkL2XwamdxMxSSOUqhbXU
-	 GvN7QOJZzM32cVy8wf8Bw3OKKyNx9Xzux+9MNgaBVyyHJiv/hQQKhTNd1ETFHkBJkP
-	 U881tHlB8BfyX5fhjtiT/szW7hGDqOWPHREf2K2sJSbFIP6+sXuNkZqlx7KpAbBJcl
-	 d2H7arKE/4aoGztdcX5vwLPKsez9cxuB6f18IRVdr5UPJsXIEAMvuoCd/XAktio7ha
-	 N/gsnsdXUrOpw==
-From: Gary Guo <gary@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	s=k20201202; t=1766513205;
+	bh=p4oE+5o9bN0kXgNRRBGEZJVGoL3abU2EiA/DKtkd5rI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FRKXB5CXPr/2qVqWwBw3KOJ2f+ZjW8AXTnkL3tDS+isZzEVGahJ2O5inD4lY/sQ0Q
+	 v9Sy5UXYy52nuEjM3+RQ+UZx3EfRzlBTTKT2aVFkCsDpcWTaLGGzVuaPY1mVXn+cNW
+	 BomlQLRSEBlHCJgMdJq5KAolXb8+xjkQ4oONZoXT/zsI1NX2hnpcb4Tp86oPMl2lUF
+	 0VDJipxWpp4R44TpryHQN4AIhdyOjJV4dvFZsF+ctKsVNCgeeScvVDkEQL85BvahRI
+	 lhm962IHjpzhvPZNLL11W9//slDMK0zaeGAoczpqQ8AAnuWGUTGrM01RXn03PY7DEl
+	 wR6nMYFqZUhfw==
+Date: Tue, 23 Dec 2025 10:06:42 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: SeongJae Park <sj@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] perf symbol: remove Rust symbol workarounds
-Date: Tue, 23 Dec 2025 17:52:10 +0000
-Message-ID: <20251223175216.1353814-1-gary@kernel.org>
-X-Mailer: git-send-email 2.51.2
-Reply-To: Gary Guo <gary@garyguo.net>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 09/11] tools headers: Sync linux/gfp_types.h with kernel
+ sources
+Message-ID: <aUraMnczL_ba_zes@google.com>
+References: <20251222225716.3565649-9-namhyung@kernel.org>
+ <20251223010057.4135-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251223010057.4135-1-sj@kernel.org>
 
-From: Gary Guo <gary@garyguo.net>
+Hi SeongJae,
 
-Due to an off-by-one error introduced in commit 73bbb94466fd ("kallsyms:
-support "big" kernel symbols"), long symbols (which are currently only
-produced by Rust) can have their symbol type being wrongly parsed by
-kernel/kallsyms.c.
+On Mon, Dec 22, 2025 at 05:00:57PM -0800, SeongJae Park wrote:
+> On Mon, 22 Dec 2025 14:57:14 -0800 Namhyung Kim <namhyung@kernel.org> wrote:
+> 
+> > To pick up changes from:
+> > 
+> >   4c0a17e28340e458 ("slab: prevent recursive kmalloc() in alloc_empty_sheaf()")
+> > 
+> > This would be used to handle GFP masks in the perf code and address these
+> > tools/perf build warnings:
+> > 
+> >   Warning: Kernel ABI header differences:
+> >     diff -u tools/include/linux/gfp_types.h include/linux/gfp_types.h
+> > 
+> > Please see tools/include/README.kernel-copies.
+> 
+> Nit.  I don't find the file on linux-next tree.  Do you mean
+> tools/include/uapi/README [1]?
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/tools/include/uapi/README
 
-This has been fixed in commit f3f9f42232dee5 ("kallsyms: Fix wrong "big"
-kernel symbol type read from procfs"), and these symbols are now
-reported correctly.
+Oops, you're right.  I've used a wrong template.  Will fix.
 
-Drop the workaround in perf symbol that filter out these symbol types.
+> 
+> > 
+> > Cc: linux-mm@kvack.org
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Other than the above trivial nit,
+> 
+> Acked-by: SeongJae Park <sj@kernel.org>
 
-Specifically, '1' and 'l' can never be generated by nm -- 'u' does
-indicate GNU unique, however such symbols are only generated by G++ for
-C++ templates, and are never generated by LLVM (LLVM generates weak
-symbols in such cases instead). Therefore, the previous occurrence of
-these symbols types must be due to the off-by-error and can be safely
-removed.
-
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Signed-off-by: Gary Guo <gary@garyguo.net>
----
- tools/perf/util/symbol.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
-
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 814f960fa8f8d..eabb218b4e195 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -106,19 +106,8 @@ static enum dso_binary_type binary_type_symtab[] = {
- 
- static bool symbol_type__filter(char __symbol_type)
- {
--	// Since 'U' == undefined and 'u' == unique global symbol, we can't use toupper there
--	// 'N' is for debugging symbols, 'n' is a non-data, non-code, non-debug read-only section.
--	// According to 'man nm'.
--	// 'N' first seen in:
--	// ffffffff9b35d130 N __pfx__RNCINvNtNtNtCsbDUBuN8AbD4_4core4iter8adapters3map12map_try_foldjNtCs6vVzKs5jPr6_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
--	// a seemingly Rust mangled name
--	// Ditto for '1':
--	// root@x1:~# grep ' 1 ' /proc/kallsyms
--	// ffffffffb098bc00 1 __pfx__RNCINvNtNtNtCsfwaGRd4cjqE_4core4iter8adapters3map12map_try_foldjNtCskFudTml27HW_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
--	// ffffffffb098bc10 1 _RNCINvNtNtNtCsfwaGRd4cjqE_4core4iter8adapters3map12map_try_foldjNtCskFudTml27HW_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
- 	char symbol_type = toupper(__symbol_type);
--	return symbol_type == 'T' || symbol_type == 'W' || symbol_type == 'D' || symbol_type == 'B' ||
--	       __symbol_type == 'u' || __symbol_type == 'l' || __symbol_type == 'N' || __symbol_type == '1';
-+	return symbol_type == 'T' || symbol_type == 'W' || symbol_type == 'D' || symbol_type == 'B';
- }
- 
- static int prefix_underscores_count(const char *str)
-
-base-commit: b927546677c876e26eba308550207c2ddf812a43
--- 
-2.51.2
+Thanks for your review!
+Namhyung
 
