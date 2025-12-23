@@ -1,130 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7DB42048;
-	Tue, 23 Dec 2025 05:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A892E4274
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Dec 2025 06:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766469503; cv=none; b=geotuEgAqCjGmIka2y3A684uJv5jNqj39XWEMx1jhmbrsr8h9U6fnpA6GKcX1gZLlBAV+TnNihF/TjVAq+SmWIAJCaz/KKXE4gbhSGPsfueX8ZUb0pxJev3lYbNxeacXg1kYgTeNuZHXnP5zKB/ENreu9ms898E59CLUOtvCQrs=
+	t=1766471369; cv=none; b=gy/X9PK5hb4WavCKqFv1jnG8dAjUL5XnkPeFeCDo6LFo+cCjVLliYueszV9aEEtF+YuthvwnpBwFp6mfO2EUIQtHuJu69Jk/5VPcNJOVpvDZQ8jOB7tTXnHLxh4IDhh3xrBZ5f6nXvD+YK1Om23C6M9oEoI3W0cFsJNRyFx0+a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766469503; c=relaxed/simple;
-	bh=FT6HD752+iZ+0ionk3EidtqeWqU9B7ZGsI0uNBQumWk=;
+	s=arc-20240116; t=1766471369; c=relaxed/simple;
+	bh=qORk4yp2evfGOATcTKdgCQ313S7aRANC62giFfsLgNE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G2lEtNvMBKTyFQIcxWrElkSi4ZF0oP0Fuoxx17tpfWZusZb7Gw4BeElXIkPCvnVsKwWqTI1DB0lzzDuVLeBDHpAH3QwtOcES62TTF87YKmESO0GE1m0RxaB5mSy16qSDs+lLpE6laczsPeEgehE8T2s2VWn34eNluz9Sl40AGDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d5OpJc+C; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=ghMus6a9L1cBc3NWklXD447t/xRH88Jo407yocmQkC2g/Q54wENHued1wVZe04HaeVkWT4NG6uzcqfXGU/mhzde/He2syVIv+DSJpSQDO17A0RG0j75nd7426bYz1G5FOxBWMoC3cXQFE6jWOS9IZ1MFjfqiE5MYjVIefKdsUhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wLzRWiM/; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d5OpJc+C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766469502; x=1798005502;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FT6HD752+iZ+0ionk3EidtqeWqU9B7ZGsI0uNBQumWk=;
-  b=d5OpJc+C5dXldRIGKhIy9xxT8/nREakhV/PaFyV8OjlV9B9t/nrNPgpz
-   Bj2nEqfahJsgtoKp+WKiToxLkaP0Hf5+vO7tVZwnR+YZFWLMoTd862zCH
-   CgswJLSiouiKfyuleEvfEvGXGCUbCQ8VK8Ug2ADGXREPy0Bx3E1eSZqJU
-   yDTw/ZeYwfQhBnjyuBmJLIc/EJCOSdMCcfWRvUQQlhOGE3C8KV0SzHB0f
-   AD2WdZrFkRW471Ed/F3ann1iki9i/BTJeaveZnV5YIkuApjnxeUrkr24K
-   v5u+tqtVeWvWFMEfhdFggskVtlZmJ4ganLNm3ZevqO0XesatXMcxalI/Z
-   A==;
-X-CSE-ConnectionGUID: DEHEtGIoSSCQu2oiLH1eiQ==
-X-CSE-MsgGUID: pzc0gEzzTpSEB1ndI1ekWQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11650"; a="78634545"
-X-IronPort-AV: E=Sophos;i="6.21,170,1763452800"; 
-   d="scan'208";a="78634545"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 21:58:22 -0800
-X-CSE-ConnectionGUID: a86dWVTiRGKOekCRCOC3wg==
-X-CSE-MsgGUID: Qkp8VPMoTUW9NYUCqjb90g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,170,1763452800"; 
-   d="scan'208";a="200612176"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 21:58:17 -0800
-Message-ID: <65e75e07-974a-4bc6-8299-d19e040508cd@linux.intel.com>
-Date: Tue, 23 Dec 2025 13:58:15 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wLzRWiM/"
+Message-ID: <db97ccea-8cb4-40ea-b040-79f0f63a398e@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1766471356;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YJTQ2ReNoo6Q4R+IKYXTKJ87V/9b3dLaaA5dLOP+k0Q=;
+	b=wLzRWiM/N4A1E1UXIolnMYZ/kUILb4ovDfFGGVZ4to98nPZIOs2Y2sPxuoD01nwLXqREGc
+	GvvlvjPk73zQDhHEKkzo2+bvuQzIPZfHkXiu5TQk5OwI5jBJu3o54wrQqAMMGXnemMd0Ih
+	0EZ7m2pJH9WuDzuf/sbsjUjvutPJgfA=
+Date: Tue, 23 Dec 2025 14:29:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] perf pmu: Relax uncore wildcard matching to allow
- numeric suffix
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
-References: <20251212210007.13986-1-zide.chen@intel.com>
- <20251212210007.13986-8-zide.chen@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251212210007.13986-8-zide.chen@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH bpf-next v7 2/2] bpf: Hold the perf callchain entry until
+ used completely
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, song@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
+ john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20251217093326.1745307-1-chen.dylane@linux.dev>
+ <20251217093326.1745307-3-chen.dylane@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <20251217093326.1745307-3-chen.dylane@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-
-On 12/13/2025 5:00 AM, Zide Chen wrote:
-> Diamond Rapids introduces two types of PCIe related uncore PMUs:
-> "uncore_pcie4_*" and "uncore_pcie6_*".
->
-> To ensure that generic PCIe events (e.g., UNC_PCIE_CLOCKTICKS) can match
-> and collect events from both PMU types, slightly relax the wildcard
-> matching logic in perf_pmu__match_wildcard().
->
-> This change allows a wildcard such as "pcie" to match PMU names that
-> include a numeric suffix, such as "pcie4_*" and "pcie6_*".
->
-> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
+在 2025/12/17 17:33, Tao Chen 写道:
+> As Alexei noted, get_perf_callchain() return values may be reused
+> if a task is preempted after the BPF program enters migrate disable
+> mode. The perf_callchain_entres has a small stack of entries, and
+> we can reuse it as follows:
+> 
+> 1. get the perf callchain entry
+> 2. BPF use...
+> 3. put the perf callchain entry
+> 
+> And Peter suggested that get_recursion_context used with preemption
+> disabled, so we should disable preemption at BPF side.
+> 
+> Acked-by: Yonghong Song <yonghong.song@linux.dev>
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
 > ---
->  tools/perf/util/pmu.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 3d1f975e8db9..00cb72615621 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -905,6 +905,7 @@ static bool perf_pmu__match_wildcard(const char *pmu_name, const char *tok)
->  {
->  	const char *p, *suffix;
->  	bool has_hex = false;
-> +	bool has_underscore = false;
->  	size_t tok_len = strlen(tok);
->  
->  	/* Check start of pmu_name for equality. */
-> @@ -915,13 +916,14 @@ static bool perf_pmu__match_wildcard(const char *pmu_name, const char *tok)
->  	if (*p == 0)
->  		return true;
->  
-> -	if (*p == '_') {
-> -		++p;
-> -		++suffix;
-> -	}
+>   kernel/bpf/stackmap.c | 68 +++++++++++++++++++++++++++++++++++--------
+>   1 file changed, 56 insertions(+), 12 deletions(-)
+> 
+> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+> index da3d328f5c1..3bdd99a630d 100644
+> --- a/kernel/bpf/stackmap.c
+> +++ b/kernel/bpf/stackmap.c
+> @@ -210,13 +210,14 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
+>   }
+>   
+>   static struct perf_callchain_entry *
+> -get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
+> +get_callchain_entry_for_task(int *rctx, struct task_struct *task, u32 max_depth)
+>   {
+>   #ifdef CONFIG_STACKTRACE
+>   	struct perf_callchain_entry *entry;
+> -	int rctx;
+>   
+> -	entry = get_callchain_entry(&rctx);
+> +	preempt_disable();
+> +	entry = get_callchain_entry(rctx);
+> +	preempt_enable();
+>   
+>   	if (!entry)
+>   		return NULL;
+> @@ -238,8 +239,6 @@ get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
+>   			to[i] = (u64)(from[i]);
+>   	}
+>   
+> -	put_callchain_entry(rctx);
 > -
-> -	/* Ensure we end in a number */
-> +	/* Ensure we end in a number or a mix of number and "_". */
->  	while (1) {
-> +		if (!has_underscore && (*p == '_')) {
-> +			has_underscore = true;
-> +			++p;
-> +			++suffix;
-> +		}
+>   	return entry;
+>   #else /* CONFIG_STACKTRACE */
+>   	return NULL;
+> @@ -320,6 +319,34 @@ static long __bpf_get_stackid(struct bpf_map *map,
+>   	return id;
+>   }
+>   
+> +static struct perf_callchain_entry *
+> +bpf_get_perf_callchain(int *rctx, struct pt_regs *regs, bool kernel, bool user,
+> +		       int max_stack, bool crosstask)
+> +{
+> +	struct perf_callchain_entry_ctx ctx;
+> +	struct perf_callchain_entry *entry;
 > +
+> +	preempt_disable();
+> +	entry = get_callchain_entry(rctx);
+> +	preempt_enable();
+> +
+> +	if (unlikely(!entry))
+> +		return NULL;
+> +
+> +	__init_perf_callchain_ctx(&ctx, entry, max_stack, false);
+> +	if (kernel)
+> +		__get_perf_callchain_kernel(&ctx, regs);
+> +	if (user && !crosstask)
+> +		__get_perf_callchain_user(&ctx, regs, 0);
+> +
+> +	return entry;
+> +}
+> +
+> +static void bpf_put_perf_callchain(int rctx)
+> +{
+> +	put_callchain_entry(rctx);
+> +}
+> +
+>   BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
+>   	   u64, flags)
+>   {
+> @@ -328,20 +355,25 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
+>   	struct perf_callchain_entry *trace;
+>   	bool kernel = !user;
+>   	u32 max_depth;
+> +	int rctx, ret;
+>   
+>   	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
+>   			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
+>   		return -EINVAL;
+>   
+>   	max_depth = stack_map_calculate_max_depth(map->value_size, elem_size, flags);
+> -	trace = get_perf_callchain(regs, kernel, user, max_depth,
+> -				   false, false, 0);
+> +
+> +	trace = bpf_get_perf_callchain(&rctx, regs, kernel, user, max_depth,
+> +				       false);
+>   
+>   	if (unlikely(!trace))
+>   		/* couldn't fetch the stack trace */
+>   		return -EFAULT;
+>   
+> -	return __bpf_get_stackid(map, trace, flags);
+> +	ret = __bpf_get_stackid(map, trace, flags);
+> +	bpf_put_perf_callchain(rctx);
+> +
+> +	return ret;
+>   }
+>   
+>   const struct bpf_func_proto bpf_get_stackid_proto = {
+> @@ -435,6 +467,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+>   	bool kernel = !user;
+>   	int err = -EINVAL;
+>   	u64 *ips;
+> +	int rctx;
+>   
+>   	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
+>   			       BPF_F_USER_BUILD_ID)))
+> @@ -467,18 +500,26 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+>   		trace = trace_in;
+>   		trace->nr = min_t(u32, trace->nr, max_depth);
+>   	} else if (kernel && task) {
+> -		trace = get_callchain_entry_for_task(task, max_depth);
+> +		trace = get_callchain_entry_for_task(&rctx, task, max_depth);
+>   	} else {
+> -		trace = get_perf_callchain(regs, kernel, user, max_depth,
+> -					   crosstask, false, 0);
+> +		trace = bpf_get_perf_callchain(&rctx, regs, kernel, user, max_depth,
+> +					       crosstask);
+>   	}
+>   
+> -	if (unlikely(!trace) || trace->nr < skip) {
+> +	if (unlikely(!trace)) {
+>   		if (may_fault)
+>   			rcu_read_unlock();
+>   		goto err_fault;
+>   	}
+>   
+> +	if (trace->nr < skip) {
+> +		if (may_fault)
+> +			rcu_read_unlock();
+> +		if (!trace_in)
+> +			bpf_put_perf_callchain(rctx);
+> +		goto err_fault;
+> +	}
+> +
+>   	trace_nr = trace->nr - skip;
+>   	copy_len = trace_nr * elem_size;
+>   
+> @@ -497,6 +538,9 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+>   	if (may_fault)
+>   		rcu_read_unlock();
+>   
+> +	if (!trace_in)
+> +		bpf_put_perf_callchain(rctx);
+> +
+>   	if (user_build_id)
+>   		stack_map_get_build_id_offset(buf, trace_nr, user, may_fault);
+>   
 
-LGTM.
+Hi Peter,
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+As Alexei said, the patch needs your ack, please review again, thanks.
 
-
->  		if (!isxdigit(*p))
->  			return false;
->  		if (!has_hex)
+-- 
+Best Regards
+Tao Chen
