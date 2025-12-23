@@ -1,64 +1,64 @@
-Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
+Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com [209.85.215.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F44132252E
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Dec 2025 08:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F496322520
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Dec 2025 08:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766479444; cv=none; b=hD/PFLXCFVJfbbU93aJUtpZmqU7FR2C0ej2UhxwYF5NfW4yhp+7mfbu1uYT7I6+/GIpRgs1712rBXOHSCu2WmAxDZOGcNeCZPt8C3dkTqMtg8/PsEiMB5pWFoYbvW3yt6Cp1bSs1PIZ2HuZ9Q47ivOKk4WXSTbveFVqIoUpntk4=
+	t=1766479450; cv=none; b=kcfXur3oQjH+AqlsQPRwkdyqFQh4XYdLesVhbgvLJe+MVBjRbZ9ZKxy7oe6NEjpPG8WUKS8jBYgGXcZULy13MP23ZxSGP6kEeT0vt4nwiKmLKzkKXIigms2kWmwclUocgAuEnoTfMGCoz4jwTrVu9h1JcS76HBB3GrmlEq3x+fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766479444; c=relaxed/simple;
-	bh=JNcxDi8XtzEu3xbpObOr3vCN2IHmRD7IAR2ObU+ycjA=;
+	s=arc-20240116; t=1766479450; c=relaxed/simple;
+	bh=m43rCnWF6W4flnZfWPAFH2zPZg0lP1fMO8rg5+/cqio=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r9bu7uMENdSm83mDtqjk7bTbJmQSguxrvfLPITB4ufQa4xm70MZ3iAUjfrcJ1/RjiHQQoAI66ZvA2b3+g7BhuoAhr5vXZ/vyQslMVjWqq0p0aqAPbJpV7vZsoq2i6LhEBrBQ3fL/xKJMDYkp/3us7hkdnOQfLR4VdmE+5bxJl48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kX3YAH7I; arc=none smtp.client-ip=209.85.215.194
+	 MIME-Version; b=FCX0c5hEEeN30XzY9j3pMs+f7MJZT4CE6LU9KZw1khizl1LapGwfNLx7osIwvXSliSIoOam99Aagj4y7VlvEw5rdubRnocvr4/4f47VwiLEs1nFf1X7epM9KVq1ke8FLvSSIPJLl1bxRuOirSWcqTC63CCvgfpYPSbrccPKWgvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i+jbnGCY; arc=none smtp.client-ip=209.85.215.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kX3YAH7I"
-Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-bc17d39ccd2so2984365a12.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Dec 2025 00:44:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+jbnGCY"
+Received: by mail-pg1-f195.google.com with SMTP id 41be03b00d2f7-c1e7cdf0905so3126502a12.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Dec 2025 00:44:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766479442; x=1767084242; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1766479448; x=1767084248; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oNT47R5lyHr6s83aFhP7qeMV+Nwtti6xzxLjC7+hnjk=;
-        b=kX3YAH7ITnk4k8ju8X+TWFVqTsEzrnfcrALl1eA145Rurcfg330eqNSTrxN+EzsUof
-         3EF6kKH5Jn4xDLfzrEY76wheOaVgR7lfq/IsKaD0rCqDdOvoXMjE1182ypqf5j4YFzvL
-         okPnncOmCJzlUUw3rHHSnhtP/kb1M6nzDoAKvYJESCrLARfjE/St0/yPSezUfytcA6HV
-         F2+yByzdh/83fAObVUBWzE5dITDnbMF4Cv8tCak9LKQAgKTq4Yekkt8+Nx94YWEKNhdo
-         pFVTNbcETqLAXMSX51vt2qMQBnuFYgtZMS1RYXyK9xwNgaik2Qqc8M1BwFcivtfj2zGB
-         zM5A==
+        bh=sYARJPf4DCJHMSVJhsQ64ZrdejW7DqNqW01daFc7LNc=;
+        b=i+jbnGCY+Tjw5cMI9Wya7LlBzHZpJpTT0InGTrCdtlkgr1/HMKdNnTXyvt+nzSgpZh
+         wCWTVR2GxwUnZntnH5uFrsp80V/RFDHLxhxgUuTmQ3Dv9wzyQzi8/Ij/XGERrr0FM2hV
+         AldNj1O7vw76ruMbdDHMxMtBTmXtQV6eWSVBACD6s3XJez5wxZFyy2exnh3rq+rckZDb
+         mIPof01F+UE6pc5c52mJteg90cxNKgBtTnGCxjiDazy+Q+Fc5ykkxa7qTezEA9cHQPf1
+         fOccBGZvnW29c2+sFzYEB8pEvlDfmE/sUj9o5wbWo51Hy2myUPMlVfpPEl0GW6uNLvxg
+         DWeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766479442; x=1767084242;
+        d=1e100.net; s=20230601; t=1766479448; x=1767084248;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=oNT47R5lyHr6s83aFhP7qeMV+Nwtti6xzxLjC7+hnjk=;
-        b=j2W5nl2gk/A1e73PCxyLHTzctdbNMauR6iYtzj6K0EgcvWhuMIcNcKzh2A+WF0fc3o
-         7nAD+dupie0bZ+1dK9DFvVBfFDNHDVpFFMaasOAJHu5pxAQgMRm/Rhxt/AJjn89n5zGh
-         PO+g8WThw2IiJ856UNzbYqqLqxr5/x8p4gsqNkUnF40BylsJjH0nrKC7gtf16JqNhF57
-         Epcfw4Vyi+p1J5HQ1xXu3BLyxCItBs1Q+/SFs9Rfe0Uhm2NvXsnev279MXe/mFGbsZDy
-         ix5Afgryi9+shOpCZieJPYrN9R05pIlF60Yy4nzZDzkZw1BJEe5q4pU4ecgcEta6ScXQ
-         MJhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJTlpkKtEZ5cqkehIyVo1sGmVxIIl8WuDUDRbSFvp4zkYVMkNh5Ble2q1zOUPephWlDi2p4YTBHQ2yhIiu1x3Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxtAGavn/rge7BrvP42O8AsYKGrOGsIjL5O9+RTpWUM1rxzaIH
-	WriD5sr23e5qqaMvQhAe6u4a7aWdLOCf4H2hAzUySWo69zkX9DkD9MSU
-X-Gm-Gg: AY/fxX5TQdFM0zqZ5C1C1leVHNGUH9GVzkSFfdwyieJvloPI+Nzl+5HuzM17isXPnKv
-	WgZ1Zohxp2kobNZ3PcVtaa/cAiAsCd8OuHilOEfYebK3Tzrgh5XTKUcMcIDXuy1hD+v1w+UXJiq
-	7KzDHKlpmiQaI7Kmry39pMyV7El3eQBowzc1c80dRAiGU+x8O0qeocuygsU5LsEuUyUuwhffGuS
-	lYXuwPmzXYivtUoz26h2XYs9p9tdmADsVSzEsdkL7vL3sHov3owZBKOE0WpbjLZD++oRwIyJcp/
-	0I8IJE63YKv65sFiJJE1vi5ShUt64ydV8vjanR1GqbXKtbgbUqMSuuOiWMh9N6TiNppPA2TYc2J
-	srZk4HOIxqZiNzSA2G4MxtKx3FVdRXroRGEq5LA8+LR+4ASS+2zHjVALAC+iuAlBUFycPTSOrCm
-	jKkFqJkRtG3SVetGgg1t3PnNM7AA==
-X-Google-Smtp-Source: AGHT+IHYU+Os1x0yRwca4Pe17iWLQntYr4tzo/e2hIsHQnCg2+Cy7uhXYlQBCpFNDm7a2HU6WuZDfQ==
-X-Received: by 2002:a05:7300:50e2:b0:2ae:5b2e:9d45 with SMTP id 5a478bee46e88-2b05ecb39c4mr10097700eec.38.1766479442294;
-        Tue, 23 Dec 2025 00:44:02 -0800 (PST)
+        bh=sYARJPf4DCJHMSVJhsQ64ZrdejW7DqNqW01daFc7LNc=;
+        b=bkv1xDFpqZQOuDKr8yJQm3WRnlS5NLR7080c5D4Fdi9YDkmgZIpC6pM02Wm2xR7Evb
+         7n2g9wRotU50lSz2dDaf2EBhzpIFwLqLNaeqrzGcyXU+bFsnwWavpqmin5drOqUOP9tH
+         aspCbI9GL6uXueS0BakAeI7jNtA4bnmDIFSZvpX6vr/eHeHR919pa9u8FVo78QZ/bIq1
+         IJ4iqmeUrCuSNs4PmN7OCUehCx9buZl1YDDMNwViNors/XwdQcUQ0gmAK/ZQEcCQRH7P
+         ExL2Em/HaYnsLclc0Y2C/CjjzUWasQyOmD/An1o+hAc9IG6BawExjvsjJW2Z1SPqkvOM
+         h1IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXpTDms2EiGm6dws4Hyco2MXPNdRkQlymshfHQT2INCj/PVICKTT3gF7U4BXtnrSHaeqOQ0US7wGuPl5DS5/jeD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys1X8eIDhLsAmstT2lsfmhoOHGMjQiaC46olfYKLcwXkzWH1yV
+	x7jQSOLlOoE8g/q5yChiBASIamE+z87XV+2oPwNxuRxmiF77NAnjhdF/
+X-Gm-Gg: AY/fxX4KbbBgoFyTkKcmEzkqFEkeye+opYGwzG0IPIhpJfnXq//tXFswUKqkieTF7lT
+	lsDjVmRe6gfGqnVPVjEfM/BKcmcvZ9Yti9RD+zh/0iwMCNcbPSgA/vhank3gzXP1vsn5vrShMTT
+	+t0bZ0m9bexqLeYiC39u/0GDb1o5g+ovGpa7sAflG32Ht4rxF8r4ZVWTAZgzpAOmHKCq/RiLrU0
+	GAD8KwuyvzAr6YL05vZ44zrc1vx07qXJzINiObApdfiyS+yvJCn7g2/jXBl0z1ORRMqK7Vi5g2c
+	bJwwMvcT9Ag8STY/hBFyN/GFn6WyvyvaA066LpnvKC3A4sfLupYXorXKdr10qXzKoYsxH0PnBd2
+	RTuCZ6Ia2GCjLkKQIvHvDuCiVuIkuPx48X9Vi9kQYARykKpgkQX7+n4FpNWYR3tXADwJvPw7snC
+	BTOlMVb+IpO1VuWqRjJwsoSbEykA82JIYvCK18
+X-Google-Smtp-Source: AGHT+IEPBzpa+JSlltoi2sicjexlhwpONg+WQbBsfL7i+rkHPN4HgKra3RHsx7N07jEuGnZtt+CPGw==
+X-Received: by 2002:a05:701b:250f:b0:11b:9386:a3cb with SMTP id a92af1059eb24-12172310ff9mr8272832c88.44.1766479447624;
+        Tue, 23 Dec 2025 00:44:07 -0800 (PST)
 Received: from HUC.. ([149.34.251.245])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1217254c734sm56720887c88.13.2025.12.23.00.43.57
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1217254c734sm56720887c88.13.2025.12.23.00.44.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Dec 2025 00:44:01 -0800 (PST)
+        Tue, 23 Dec 2025 00:44:07 -0800 (PST)
 From: hupu <hupu.gm@gmail.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -78,9 +78,9 @@ To: peterz@infradead.org,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	hupu.gm@gmail.com
-Subject: [RFC 1/2] perf build: Allow passing extra Clang flags via EXTRA_BPF_FLAGS
-Date: Tue, 23 Dec 2025 16:43:34 +0800
-Message-ID: <20251223084337.3789-2-hupu.gm@gmail.com>
+Subject: [RFC 2/2] perf build: Prefer kernel source headers for BPF skeletons
+Date: Tue, 23 Dec 2025 16:43:35 +0800
+Message-ID: <20251223084337.3789-3-hupu.gm@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251223084337.3789-1-hupu.gm@gmail.com>
 References: <20251223084337.3789-1-hupu.gm@gmail.com>
@@ -92,59 +92,44 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for EXTRA_BPF_FLAGS in the eBPF skeleton build, allowing
-users to pass additional Clang options such as --sysroot or custom
-include paths when cross-compiling perf.
+When building eBPF skeletons with Clang, prefer header files provided by
+the kernel source tree over headers installed on the host system.
 
-This is primarily intended for cross-build scenarios where the default
-host include paths do not match the target kernel version.
+While host-installed UAPI headers can be sufficient today, they are
+tightly coupled to the host environment and may diverge from the target
+kernel version over time as the kernel evolves. Relying on kernel source
+headers helps ensure that the headers used during the build remain
+consistent with the target kernel version and reduces dependence on the
+host build environment.
 
-Example usage:
-    make perf ARCH="arm64" EXTRA_BPF_FLAGS="--sysroot=..."
-
-Change history:
-  v5:
-    - Update commit message
-  v4:
-    - Apply EXTRA_BPF_FLAGS directly to BPF skeleton build command
-      instead of modifying CLANG_OPTIONS
-  v3:
-    - Move the variable description comment to the top of Makefile.perf
-    - Update commit message
-  v2:
-    - Rename EXTRA_CLANG_FLAGS to EXTRA_BPF_FLAGS
-    - Update commit message
-  v1:
-    - Introduce EXTRA_CLANG_FLAGS to allow passing extra Clang options
+This change adds the kernel source UAPI and generated header paths to
+the BPF include list and places them before the system include paths,
+while still keeping host headers (CLANG_SYS_INCLUDES) as a fallback.
 
 Signed-off-by: hupu <hupu.gm@gmail.com>
 ---
- tools/perf/Makefile.perf | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/Makefile.perf | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index b3f481a626af..8b8647fd4f41 100644
+index 8b8647fd4f41..57c73ab98703 100644
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -35,6 +35,9 @@ include ../scripts/utilities.mak
- #
- # Define EXTRA_CFLAGS=-m64 or EXTRA_CFLAGS=-m32 as appropriate for cross-builds.
- #
-+# Define EXTRA_BPF_FLAGS="--sysroot=<path>" or other custom include paths for
-+# cross-compiling BPF skeletons
-+#
- # Define EXCLUDE_EXTLIBS=-lmylib to exclude libmylib from the auto-generated
- # EXTLIBS.
- #
-@@ -1250,7 +1253,7 @@ endif
- $(SKEL_TMP_OUT)/%.bpf.o: $(OUTPUT)PERF-VERSION-FILE util/bpf_skel/perf_version.h | $(SKEL_TMP_OUT)
- $(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) $(SKEL_OUT)/vmlinux.h
- 	$(QUIET_CLANG)$(CLANG) -g -O2 -fno-stack-protector --target=bpf \
--	  $(CLANG_OPTIONS) $(BPF_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
-+	  $(CLANG_OPTIONS) $(EXTRA_BPF_FLAGS) $(BPF_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
- 	  -include $(OUTPUT)PERF-VERSION-FILE -include util/bpf_skel/perf_version.h \
- 	  -c $(filter util/bpf_skel/%.bpf.c,$^) -o $@
+@@ -1203,7 +1203,13 @@ endif
  
+ CLANG_OPTIONS = -Wall
+ CLANG_SYS_INCLUDES = $(call get_sys_includes,$(CLANG),$(CLANG_TARGET_ARCH))
+-BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES)
++
++KHDR_INCLUDES := -I$(abspath $(OUTPUT)../../usr/include) \
++-I$(abspath $(OUTPUT)../../arch/$(SRCARCH)/include/generated/uapi) \
++-I$(abspath $(OUTPUT)../../arch/$(SRCARCH)/include/uapi)
++
++BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE) \
++		$(KHDR_INCLUDES) $(CLANG_SYS_INCLUDES)
+ TOOLS_UAPI_INCLUDE := -I$(srctree)/tools/include/uapi
+ 
+ ifneq ($(WERROR),0)
 -- 
 2.43.0
 
