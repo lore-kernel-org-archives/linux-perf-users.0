@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647D62D3EE3;
-	Tue, 23 Dec 2025 05:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6048288C2F;
+	Tue, 23 Dec 2025 05:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766467147; cv=none; b=ZHeNNk2Vip16IeLsxH9DUrnLk/Aqzq1e2Yb1z630ZBjQ1Uplb0pPj6GcroEnlhOG3RWnpODnYj3ghaNlZk51yEfCur7XuTW3HhfB8EeGlI7CGBs0iir5scF9PoM7248OR3ECUK3w4TbRTkEzH4I0IOgWR+ZAmSOeoW6/p6DqK2c=
+	t=1766469176; cv=none; b=osRl1f6bEQ2KwbrTsyiQ/F3yr6JitWR2XMNu2kbYbitZ5+S2sBbt4X4kjg5L3VNqIPFC40kjulXliNZ75KXR9wzytJmdmB0Chz0Tj4EmB+lX+uJkCGqSj+uYy4/0B6+Cs2oC++nBvIqNucN1YmgLMQLfJKRI+q0TSLXfkBwnoGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766467147; c=relaxed/simple;
-	bh=d4cadxTwko4FQPZr2JkXfI/3BEI7wU3NEIVHT3URXgQ=;
+	s=arc-20240116; t=1766469176; c=relaxed/simple;
+	bh=RkXyG34uY5YWKn7k6JtW1TB/xYsa8JjgNjok6WEVqLw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lovKu4QZ8qUSwEfSmwR6KscCz1bB2UcfQLM/B+TJQJn7glykrzpICHJOU0Tt46/IXe7kvP1vHoRTzCqU3tGm/mYyxhAJgjR9wW8fTIr5nRXrsY2Z3Am4TVjZ1KtoL2F2Te6K5KdAA9GqKwLjE66Ax0U9sKu73K9MoR4ezNQz4kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fP3xB4Q5; arc=none smtp.client-ip=198.175.65.10
+	 In-Reply-To:Content-Type; b=vEg7n4IKpmE5nXbyn0nO3tMH+v7PI/83y9lViUbjRgTRCCUcEqip0qZ22OAJq6Tr9XbIwNZEtprRfU5/2EZACaRqJJk7yAkAf+DyS/sKEBokbP6nZHyLW7/Dc1A7IDifgCOKAhcs/CJkWZ6dti2rN2bsib2925LZXYPfi0aF5OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=djrGqHFB; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fP3xB4Q5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="djrGqHFB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766467146; x=1798003146;
+  t=1766469175; x=1798005175;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=d4cadxTwko4FQPZr2JkXfI/3BEI7wU3NEIVHT3URXgQ=;
-  b=fP3xB4Q5NWVScHgZH0xZwcEmzF7UFm3wuNT7dK2bgcp6xFxd/6YRqTSn
-   oHgwVO4XQy4g7RSCYBZ5Xp8rM3EkBmqvD7Fz20Xq6YxdXwvP0vZhYYJI1
-   7k5+67Pf263Uid2QTQCzBX//dPh1tVqxFKw+E1wiznDE6H0xExqLzmBtm
-   OxpT4VLYdbdQtVWMczTzxRIlK2kMx43ldmltN6NEz4rMM0RacRIARNy9y
-   +wFVgg283bb93gi3XMc3Utd8i8aYxAowYO6LzGGcnEGAYvyyLifYasT2e
-   RztG5eh0QnnBEBuHbYOTbHVQDWjGmM5CNX+DyoRmAvuPhK04AsP9RZy9T
+  bh=RkXyG34uY5YWKn7k6JtW1TB/xYsa8JjgNjok6WEVqLw=;
+  b=djrGqHFBWduXAFhb6j9ib34iS6bW7e7nvOtzMIForBdQCRBzwnsNyaek
+   dFkgKQ3G6ddImzbKx+6Ie8CJKUlG66J000Cqpj4J5IvCCNsOxxpj+vgfc
+   +JWFbOXQua9xG/kafcl7wCRoZ5fa4H2Sf8IsKNzX7V6Z6GY8LdA6UFGu8
+   MLd9wTrXGKOL0ELOAunQ6LU7hCASaTF6vsT6WbjNMCPuoLo1icrYXLSb7
+   P4PyEIzQP+AS6sDAF7HV0+M5RGj9gwoJvooRljpZ7Oi8kV6wLufW/ln0l
+   5kbt694enaV7N1DKxTUqXpGlonqRwxnJ4395rA7JUBSiqxMWLwfHlV+l3
    g==;
-X-CSE-ConnectionGUID: HRcTBitZQdS3Cs6bE9aoqQ==
-X-CSE-MsgGUID: QgkggkmsSmC3ottNY35WFA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11650"; a="85732214"
+X-CSE-ConnectionGUID: zs1UnkxTRnWd6QBYkNV0JA==
+X-CSE-MsgGUID: LxZPmoSHRGOWEUOUkzEBLg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11650"; a="78634311"
 X-IronPort-AV: E=Sophos;i="6.21,170,1763452800"; 
-   d="scan'208";a="85732214"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 21:19:05 -0800
-X-CSE-ConnectionGUID: U4HgO9pSSImA2U6gZQWqvQ==
-X-CSE-MsgGUID: oXNh9DntSkSwvtHLm5NiSA==
+   d="scan'208";a="78634311"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 21:52:54 -0800
+X-CSE-ConnectionGUID: C1B9e9e9TKywv6yDtkvO4A==
+X-CSE-MsgGUID: RwSXUI5cSEuepgfjbRYteQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,170,1763452800"; 
-   d="scan'208";a="204647772"
+   d="scan'208";a="200611519"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 21:19:01 -0800
-Message-ID: <c31a79f4-3579-4b67-a859-ec0c69824edc@linux.intel.com>
-Date: Tue, 23 Dec 2025 13:18:58 +0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 21:52:50 -0800
+Message-ID: <7f151e4e-7fcf-4007-9c7d-a90af1c05f84@linux.intel.com>
+Date: Tue, 23 Dec 2025 13:52:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7] perf/x86/intel/uncore: Support IIO free-running
- counters on DMR
+Subject: Re: [PATCH 6/7] perf/x86/intel/uncore: Update DMR uncore constraints
+ preliminarily
 To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
  Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
@@ -63,192 +63,172 @@ To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
 References: <20251212210007.13986-1-zide.chen@intel.com>
- <20251212210007.13986-6-zide.chen@intel.com>
+ <20251212210007.13986-7-zide.chen@intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251212210007.13986-6-zide.chen@intel.com>
+In-Reply-To: <20251212210007.13986-7-zide.chen@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 On 12/13/2025 5:00 AM, Zide Chen wrote:
-> The free-running counters for IIO uncore blocks on Diamond Rapids are
-> similar to Sapphire Rapids IMC freecounters, with the following
-> differences:
->
-> - The counters are MMIO based.
-> - Only a subset of IP blocks implement free-running counters:
->   HIOP0 (IP Base Addr: 2E7000h)
->   HIOP1 (IP Base Addr: 2EF000h)
->   HIOP3 (IP Base Addr: 2FF000h)
->   HIOP4 (IP Base Addr: 307000h)
-> - IMH2 (Secondary IMH) does not provide free-running counters.
+> Update event constraints base on the latest DMR uncore event list.
 >
 > Signed-off-by: Zide Chen <zide.chen@intel.com>
 > ---
->  arch/x86/events/intel/uncore_snbep.c | 120 +++++++++++++++++++++++++--
->  1 file changed, 115 insertions(+), 5 deletions(-)
+>  arch/x86/events/intel/uncore_snbep.c | 81 ++++++++++++++++++++++++++++
+>  1 file changed, 81 insertions(+)
 >
 > diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index 56c6ac86f28e..21cca1b28075 100644
+> index e5b95fa75313..8068b9404ecb 100644
 > --- a/arch/x86/events/intel/uncore_snbep.c
 > +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -472,10 +472,14 @@
->  #define SPR_C0_MSR_PMON_BOX_FILTER0		0x200e
->  
->  /* DMR */
-> +#define DMR_IMH1_HIOP_MMIO_BASE			0x1ffff6ae7000
-> +#define DMR_HIOP_MMIO_SIZE			0x8000
->  #define DMR_CXLCM_EVENT_MASK_EXT		0xf
->  #define DMR_HAMVF_EVENT_MASK_EXT		0xffffffff
->  #define DMR_PCIE4_EVENT_MASK_EXT		0xffffff
->  
-> +#define UNCORE_DMR_ITC				0x30
-> +
->  #define DMR_IMC_PMON_FIXED_CTR			0x18
->  #define DMR_IMC_PMON_FIXED_CTL			0x10
->  
-> @@ -6442,7 +6446,11 @@ static int uncore_type_max_boxes(struct intel_uncore_type **types,
->  	for (node = rb_first(type->boxes); node; node = rb_next(node)) {
->  		unit = rb_entry(node, struct intel_uncore_discovery_unit, node);
->  
-> -		if (unit->id > max)
-> +		/*
-> +		 * on DMR IMH2, the unit id starts from 0x8000,
-> +		 * and we don't need to count it.
-> +		 */
-> +		if ((unit->id > max) && (unit->id < 0x8000))
->  			max = unit->id;
->  	}
->  	return max + 1;
-> @@ -6925,6 +6933,103 @@ int dmr_uncore_units_ignore[] = {
->  	UNCORE_IGNORE_END
+> @@ -6760,10 +6760,72 @@ static const struct attribute_group dmr_cxlcm_uncore_format_group = {
+>  	.attrs = dmr_cxlcm_uncore_formats_attr,
 >  };
 >  
-> +static unsigned int dmr_iio_freerunning_box_offsets[] = {
-> +	0x0, 0x8000, 0x18000, 0x20000
-> +};
-> +
-> +static void dmr_uncore_freerunning_init_box(struct intel_uncore_box *box)
-> +{
-> +	struct intel_uncore_type *type = box->pmu->type;
-> +	u64 mmio_base;
-> +
-> +	if (box->pmu->pmu_idx >= type->num_boxes) {
-> +		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
+> +static struct event_constraint dmr_uncore_cxlcm_constraints[] = {
+> +	UNCORE_EVENT_CONSTRAINT(0x1, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x2, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x3, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x4, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x5, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x6, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x7, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x8, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x9, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0xa, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0xb, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0xc, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0xd, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0xe, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0xf, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x10, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x11, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x12, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x14, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x1d, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x1e, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x1f, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x20, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x21, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x22, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x23, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x24, 0x0f),
+> +	UNCORE_EVENT_CONSTRAINT(0x41, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x42, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x43, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x44, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x45, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x46, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x47, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x48, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x49, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x4a, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x4b, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x4c, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x4e, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x50, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x51, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x52, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x53, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x54, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x55, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x56, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x57, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x58, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x59, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x5a, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x5b, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x5c, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x5d, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x5e, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x60, 0xf0),
+> +	UNCORE_EVENT_CONSTRAINT(0x61, 0xf0),
 
-The warning message is not quite matched with the error case, please update it.
+Could we define a "UNCORE_EVENT_CONSTRAINT_RANGE()" macro just like what
+core PMU does (refer INTEL_EVENT_CONSTRAINT_RANGE macro)? Then we don't
+need to add so many lines.
 
-Other part looks good to me.
+Maybe like this,
+
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 698bcd7fe5a0..bc4367a6628e 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -437,7 +437,7 @@ uncore_get_event_constraint(struct intel_uncore_box
+*box, struct perf_event *eve
+
+        if (type->constraints) {
+                for_each_event_constraint(c, type->constraints) {
+-                       if ((event->hw.config & c->cmask) == c->code)
++                       if (constraint_match(c, event->hw.config))
+                                return c;
+                }
+        }
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 338713cd7a7d..f6fcee2a505e 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -32,7 +32,8 @@
+ #define UNCORE_EXTRA_PCI_DEV           0xff
+ #define UNCORE_EXTRA_PCI_DEV_MAX       4
+
+-#define UNCORE_EVENT_CONSTRAINT(c, n) EVENT_CONSTRAINT(c, n, 0xff)
++#define UNCORE_EVENT_CONSTRAINT(c, n)          EVENT_CONSTRAINT(c, n, 0xff)
++#define UNCORE_EVENT_CONSTRAINT_RANGE(c, e, n) EVENT_CONSTRAINT_RANGE(c,
+e, n, 0xff)
+
+ #define UNCORE_IGNORE_END              -1
 
 
-> +		return;
-> +	}
-> +
-> +	mmio_base = DMR_IMH1_HIOP_MMIO_BASE;
-> +	mmio_base += dmr_iio_freerunning_box_offsets[box->pmu->pmu_idx];
-> +
-> +	box->io_addr = ioremap(mmio_base, type->mmio_map_size);
-> +	if (!box->io_addr)
-> +		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
-> +}
-> +
-> +static struct intel_uncore_ops dmr_uncore_freerunning_ops = {
-> +	.init_box	= dmr_uncore_freerunning_init_box,
-> +	.exit_box	= uncore_mmio_exit_box,
-> +	.read_counter	= uncore_mmio_read_counter,
-> +	.hw_config	= uncore_freerunning_hw_config,
+> +	EVENT_CONSTRAINT_END
 > +};
 > +
-> +enum perf_uncore_dmr_iio_freerunning_type_id {
-> +	DMR_ITC_INB_DATA_BW,
-> +	DMR_ITC_BW_IN,
-> +	DMR_OTC_BW_OUT,
-> +	DMR_OTC_CLOCK_TICKS,
-> +
-> +	DMR_IIO_FREERUNNING_TYPE_MAX,
-> +};
-> +
-> +static struct freerunning_counters dmr_iio_freerunning[] = {
-> +	[DMR_ITC_INB_DATA_BW]	= { 0x4d40, 0x8, 0, 8, 48},
-> +	[DMR_ITC_BW_IN]		= { 0x6b00, 0x8, 0, 8, 48},
-> +	[DMR_OTC_BW_OUT]	= { 0x6b60, 0x8, 0, 8, 48},
-> +	[DMR_OTC_CLOCK_TICKS]	= { 0x6bb0, 0x8, 0, 1, 48},
-> +};
-> +
-> +static struct uncore_event_desc dmr_uncore_iio_freerunning_events[] = {
-> +	/*  ITC Free Running Data BW counter for inbound traffic */
-> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port0, 0x10, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port1, 0x11, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port2, 0x12, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port3, 0x13, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port4, 0x14, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port5, 0x15, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port6, 0x16, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port7, 0x17, "3.814697266e-6"),
-> +
-> +	/*  ITC Free Running BW IN counters */
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port4, 0x24, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port5, 0x25, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port6, 0x26, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port7, 0x27, "3.814697266e-6"),
-> +
-> +	/*  ITC Free Running BW OUT counters */
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port0, 0x30, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port1, 0x31, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port2, 0x32, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port3, 0x33, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port4, 0x34, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port5, 0x35, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port6, 0x36, "3.814697266e-6"),
-> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port7, 0x37, "3.814697266e-6"),
-> +
-> +	/* Free Running Clock Counter */
-> +	INTEL_UNCORE_EVENT_DESC(clockticks, "event=0xff,umask=0x40"),
-> +	{ /* end: all zeroes */ },
-> +};
-> +
-> +static struct intel_uncore_type dmr_uncore_iio_free_running = {
-> +	.name			= "iio_free_running",
-> +	.num_counters		= 25,
-> +	.mmio_map_size		= DMR_HIOP_MMIO_SIZE,
-> +	.num_freerunning_types	= DMR_IIO_FREERUNNING_TYPE_MAX,
-> +	.freerunning		= dmr_iio_freerunning,
-> +	.ops			= &dmr_uncore_freerunning_ops,
-> +	.event_descs		= dmr_uncore_iio_freerunning_events,
-> +	.format_group		= &skx_uncore_iio_freerunning_format_group,
-> +};
-> +
-> +#define UNCORE_DMR_MMIO_EXTRA_UNCORES		1
-> +static struct intel_uncore_type *dmr_mmio_uncores[UNCORE_DMR_MMIO_EXTRA_UNCORES] = {
-> +	&dmr_uncore_iio_free_running,
-> +};
-> +
->  int dmr_uncore_pci_init(void)
->  {
->  	uncore_pci_uncores = uncore_get_uncores(UNCORE_ACCESS_PCI, 0, NULL,
-> @@ -6932,11 +7037,16 @@ int dmr_uncore_pci_init(void)
->  						dmr_uncores);
->  	return 0;
->  }
-> +
->  void dmr_uncore_mmio_init(void)
->  {
-> -	uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO, 0, NULL,
-> -						 UNCORE_DMR_NUM_UNCORE_TYPES,
-> -						 dmr_uncores);
-> -}
-> +	uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
-> +						UNCORE_DMR_MMIO_EXTRA_UNCORES,
-> +						dmr_mmio_uncores,
-> +						UNCORE_DMR_NUM_UNCORE_TYPES,
-> +						dmr_uncores);
+>  static struct intel_uncore_type dmr_uncore_cxlcm = {
+>  	.name			= "cxlcm",
+>  	.event_mask		= GENERIC_PMON_RAW_EVENT_MASK,
+>  	.event_mask_ext		= DMR_CXLCM_EVENT_MASK_EXT,
+> +	.constraints		= dmr_uncore_cxlcm_constraints,
+>  	.format_group		= &dmr_cxlcm_uncore_format_group,
+>  	.attr_update		= uncore_alias_groups,
+>  };
+> @@ -6775,9 +6837,21 @@ static struct intel_uncore_type dmr_uncore_hamvf = {
+>  	.attr_update		= uncore_alias_groups,
+>  };
 >  
-> +	dmr_uncore_iio_free_running.num_boxes =
-> +		uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_DMR_ITC);
-> +}
->  /* end of DMR uncore support */
+> +static struct event_constraint dmr_uncore_cbo_constraints[] = {
+> +	UNCORE_EVENT_CONSTRAINT(0x11, 0x1),
+> +	UNCORE_EVENT_CONSTRAINT(0x19, 0x1),
+> +	UNCORE_EVENT_CONSTRAINT(0x1a, 0x1),
+> +	UNCORE_EVENT_CONSTRAINT(0x1f, 0x1),
+> +	UNCORE_EVENT_CONSTRAINT(0x21, 0x1),
+> +	UNCORE_EVENT_CONSTRAINT(0x25, 0x1),
+> +	UNCORE_EVENT_CONSTRAINT(0x36, 0x1),
+> +	EVENT_CONSTRAINT_END
+> +};
+> +
+>  static struct intel_uncore_type dmr_uncore_cbo = {
+>  	.name			= "cbo",
+>  	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
+> +	.constraints            = dmr_uncore_cbo_constraints,
+>  	.format_group		= &dmr_sca_uncore_format_group,
+>  	.attr_update		= uncore_alias_groups,
+>  };
+> @@ -6811,9 +6885,16 @@ static struct intel_uncore_type dmr_uncore_dda = {
+>  	.attr_update		= uncore_alias_groups,
+>  };
+>  
+> +static struct event_constraint dmr_uncore_sbo_constraints[] = {
+> +	UNCORE_EVENT_CONSTRAINT(0x1f, 0x01),
+> +	UNCORE_EVENT_CONSTRAINT(0x25, 0x01),
+> +	EVENT_CONSTRAINT_END
+> +};
+> +
+>  static struct intel_uncore_type dmr_uncore_sbo = {
+>  	.name			= "sbo",
+>  	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
+> +	.constraints		= dmr_uncore_sbo_constraints,
+>  	.format_group		= &dmr_sca_uncore_format_group,
+>  	.attr_update		= uncore_alias_groups,
+>  };
