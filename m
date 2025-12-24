@@ -1,62 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC5933D504;
-	Wed, 24 Dec 2025 19:38:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A36226F476;
+	Wed, 24 Dec 2025 19:39:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766605104; cv=none; b=rg+7s79k/nWElglShCWve7VtP5uEsLm28UJz3/ekv0lHsPDY4uVPLk8puxtFMNXDA5tUvNCZQ+y3tMb3VVNZ3WKkbz70RMZI6MERI+7/8hqy6D5oAELETUE/2NLjqbw44zB1oegQ9Xxp1Abi5tz/CCjcTGSOWNbRiuBZVqnEodw=
+	t=1766605159; cv=none; b=CU2UiJBkeY0LinJ2I/WBJ35fcJiZil0zXLdAg/vuWYWKzAJycxniOxqkefTQ+c2yTGeIj5aXVnBC3dJu9Pc36DjjecW7Fwg5YkjwEzzSI6ElJI6Qnpgqm/s+hVdl2/dteulJxzR2Hcvp08sRqk/VnHrhBf5Ss9irf82w9CYIeuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766605104; c=relaxed/simple;
-	bh=Xrm/6WEVvOiue4lKlDCI1R59OZx7C59wEORK7oDNnuE=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=EO54HHMp3XzcuEaVJxqV/2kMgRgQcKzGfghqy6FXhwyHKOVel8R0xQ3kIGiYxRzAfGXjoop4bpQtovfjWZIamB0YSANn8/06kDI1qpiAwp4gfoCHrSHdrydRIOSx7NnAZnx58XqwnNYD5v/uJX/BlH8I1g8jywrgS6xPpZk7i5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNvFgZ8O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766605159; c=relaxed/simple;
+	bh=SFNVJjMGA+Rw1CX7XZX/bsK0mjL7TEWtQKvqmufwgVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SE2Des8JphOt0jyv6egV+fbK3DYP4/HZHoR/A2nvnaZJEO8N3lJv3NGsBAPGuJcmyEgURIti0evA4Ced2HOZYPGJsDa/pFqF1N5yvDazzpvs8WYWg64OBg/xCS1R7zpMi0AoEMDk1uLM+d52rhZH2fd8V4o8pLneP8D6ZczwjUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dWFhUSQV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNvFgZ8O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D20C4CEF7;
-	Wed, 24 Dec 2025 19:38:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dWFhUSQV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12E12C4CEF7;
+	Wed, 24 Dec 2025 19:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766605103;
-	bh=Xrm/6WEVvOiue4lKlDCI1R59OZx7C59wEORK7oDNnuE=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=mNvFgZ8OiTC4q3Nam6IvnWZ7jMjRCZsQVeE47t6qE46xECLYCoJ3VRsvZSBaNokrz
-	 1RlAHh46r5gkW9T7Ph5kWVUtFGZ61nu0pDOKRdMyLib9Ehzw8v2nmxgXKohlwFCSdX
-	 BRwQ3B2ks7dUyEAjc4rthRrYIJvby0VY3z4IDV+wyIe8BF3nuh5YTZk36GBsVeyCc1
-	 ABryva0uDGMsyyAYb6yWsFW1YSuUTZzfqURmPbrgHKCQuvn0dzDQZQRsLKQXLMRgFd
-	 OSVhix3OjF7DiD/JeEig6Y5Apxm9Z5xSW0RSdBunVvXN7S0OZ443suvDSO4IlWWAb2
-	 hirepoSJcL6HQ==
+	s=k20201202; t=1766605158;
+	bh=SFNVJjMGA+Rw1CX7XZX/bsK0mjL7TEWtQKvqmufwgVM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dWFhUSQVAHFYLWsFLPwpjObKqwdbeNaYbM+sKwtzlMhAXT7ohO8B4hZMYXMY1QS7A
+	 HygfczNsC18Cy8J5GWq8tJEzK8EWzyH32XAHNbTYTAmyzsHnxgZEZnEDsc2ATnUDIr
+	 6xxu+Y5ZMuYdRQwU7EsBuRo7RGDAcyC9PXDRrnPJUlNy9s+GFi9CvYeLkHTYqSXYQA
+	 F8EyTA0CMLbBQs41yUGLw0LsRrL+IyQkZt79y0a+dxUtcEaf7jL7PEO3sd7OUxzxjB
+	 nq6O0pjsO3hN0a8vdK92JzDy19ZUOwU57IY3DkOfA/sWMjQCMZn2MbR0M+uaUvtDZn
+	 X38LTc4S7oiKA==
+Date: Wed, 24 Dec 2025 11:39:15 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- Ian Rogers <irogers@google.com>
-In-Reply-To: <20251204225522.648456-1-irogers@google.com>
-References: <20251204225522.648456-1-irogers@google.com>
-Subject: Re: [PATCH v2 1/2] perf tests kvm: Avoid leaving perf.data.guest
- file around
-Message-Id: <176660510357.764852.14792840727445410195.b4-ty@kernel.org>
-Date: Wed, 24 Dec 2025 11:38:23 -0800
+To: Besar Wicaksono <bwicaksono@nvidia.com>
+Cc: acme@redhat.com, leo.yan@arm.com, james.clark@arm.com,
+	irogers@google.com, mark.rutland@arm.com, jolsa@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-tegra@vger.kernel.org,
+	vsethi@nvidia.com, rwiley@nvidia.com, skelley@nvidia.com,
+	ywan@nvidia.com, treding@nvidia.com, jonathanh@nvidia.com
+Subject: Re: [PATCH 0/2] arm64: Support NVIDIA Olympus for Perf Arm SPE
+Message-ID: <aUxBY01uNp8gnEPq@google.com>
+References: <20251219231325.2742580-1-bwicaksono@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251219231325.2742580-1-bwicaksono@nvidia.com>
 
-On Thu, 04 Dec 2025 14:55:21 -0800, Ian Rogers wrote:
-> Ensure the perf.data output when checking permissions is written to
-> /dev/null so that it isn't left in the directory the test is run.
+On Fri, Dec 19, 2025 at 11:13:23PM +0000, Besar Wicaksono wrote:
+> This series support NVIDIA Olympus CPU in Perf Arm SPE.
+> The first patch syncs the kernel header to the tools header.
+> The second patch adds NVIDIA Olympus into perf's Neoverse SPE data source list.
 > 
-> 
+> Besar Wicaksono (2):
+>   tools headers arm64: Add NVIDIA Olympus part
+>   perf arm-spe: Add NVIDIA Olympus to neoverse list
+
 Applied to perf-tools, thanks!
 
 Best regards,
 Namhyung
-
 
