@@ -1,151 +1,126 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA42241686
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Dec 2025 02:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3BA1DED5C;
+	Wed, 24 Dec 2025 04:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766543031; cv=none; b=eeOQSnW+6L3p4cnYZJibZW2L0tPWaOZY0G/QFKC1jOd8FpUMNC6cLLxPU8IRhrouMkWugmoDPvuyNdUqX0G7jNgLm0n3YyMJO7ujn/Nik2w7FdvGKZPxkjSDS6OE0eueLBB6/4Q8YOEqtNcttUtMj3ulx0BRgB7HHwfaEQDuMIA=
+	t=1766549022; cv=none; b=bpS7U+SellCx/DVlxir6lfBLgy5F0JstUdFjWvCovsbrxTGHRjNIiVvBJ5k8bWKkZxQqMALw7V4jOjNJNBa8kKvaAZwn8epheLHSrprhrIEwBd7A8V5F+Zm1VnzmJRAmovuhD/37IJsafGZ2Ws/5P5J3A+8N+gC3Pq9kKpAmDhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766543031; c=relaxed/simple;
-	bh=zk2WY1AiP6+Enag8N49LVZry6SGV//pbiK4zYmkTNrE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MF5pUJCSNRmq0gqOjP86bCfONFM5cxauOE5JGd7MDdffZMWjAlA4RdijBUqbFqdJnQD05inFHLyThGJGlhZ5m3lNxIWT7Ut0Sivr1eLtUdtFYs22QmOcDiWtUgt/oTrDis38kFI2XA2FZpNcUaQVmRwvReikvplIkYUKwOGEIvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=skydio.com; spf=pass smtp.mailfrom=skydio.com; dkim=pass (2048-bit key) header.d=skydio.com header.i=@skydio.com header.b=2ixzSADd; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=skydio.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skydio.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=skydio.com header.i=@skydio.com header.b="2ixzSADd"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7c75b829eb6so3487134a34.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Dec 2025 18:23:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=skydio.com; s=google; t=1766543028; x=1767147828; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TQixqKOyVSO+r3jnB1Wmiy1Ta+YjO+y7aLMg2T41hO4=;
-        b=2ixzSADd6Z4pFf127i8kKhxURsvBmnv2TPZWpmMcmw9Djt1/TFLCuhX5g7PG527s55
-         zj3YAyFHv9Fta6xGosAPO6UlNIoEkZjgexavS2tMdCm4wGjsWBOJVo4diYF0jRlRxafj
-         Cslj+5FoCXYAMLt9jprVzC+uePlfjc0r4nILRPdLgU/ioVtNLxIIKUy2Ql4EzLEC0ChE
-         wr8LFHiMvcypoZlKkBx+lf7T7Jz0KKIFdXlXIbrD2Ocektd6UV5EHd9KbtIqSVdp45Ll
-         zHi06r6kmooa7o3E2RfhzXxO2RypTSy5dAQldqEBnwpIzJQ/f/1HjrJBIuqMci/SckvS
-         PHyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766543028; x=1767147828;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=TQixqKOyVSO+r3jnB1Wmiy1Ta+YjO+y7aLMg2T41hO4=;
-        b=fdOZav3HPKPpARvxkJAaT0AUZaMI06KEFfBhRZqUrI1n9dcepp2XqUETTEPkfv3rG/
-         2xfsZPMZBzr4rbZ3CRtOpBNs96ipD5hsEh9JKGLKKi6nmEP1uqevBMayy2h4OBsnoKm5
-         q7uYJ5yrhzm4PdCQ+VuqzryIimOJqE0GMMxwuc4KW53IscuyY3ivowrX2fvLszxnGoqr
-         FstNae4k7RZnK0we5zxswoq7e86KxMAmyxNqWe/o53dMXO1I3oF9wNN3CoqirFqoYc0b
-         iO4Vs3+J1E+qkQFAWmCMFB3nTcg/UujiYn9YvYXO571/y5wR5owb9y58VdoBM4viFAS4
-         hZ1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWmvdSBJQdNvEUj1vijDyGaBZRFCh5EIVIanQUdbuEIDPutdMc0NOfumZIZ791YjMpvCERW29A/2VCjQhuCqdrN@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf9MOXCogYQS2tl2ychThmJFxFgJJFAyLAZ7em3Uv9X2gQgKW9
-	Fd4eUrII28Pfshfw1LsklsVvzrVsw9ezRGJNVNWssjuVIk3E+yP64Yp2FHusV2t/fpXfrBJ+dkC
-	NmrXi9dgg+kM0ykTlAs2jlgJbqi+E2waMBc41+d6ueg==
-X-Gm-Gg: AY/fxX4uLDZdDcW9BKrPhMZIUMoDyDtk6T2t51tZlpzVhVD0bDrXHvLcXZD3a2HB0UX
-	WL5R001pkY48n7u6T+O8kJ/Tc97LPP7CcG5gu3Qe1U/+tjIbwQPaqBib64/dYtD/i+alF9Lz64T
-	L+tpnpaM0pC40M8XeKTzURL1GAnS0nRr8wDkbrUIbWWNKr1IObyXae/X5Y69c+WjvslshGgfbSz
-	sjOso801hElUeMTdms5oRNh6UjA1fd2gMWaWFSO0jsYkMQ0DC5HNOmww64exTdaxsvxEAU=
-X-Google-Smtp-Source: AGHT+IHN2civLTCc8OOGxCDTZrlICoPRHL6fnJTMV7DoL+8l67a47RNYQ2VMW9dpQtDiRbLHeDPM6PD/ovwFcD3u9Dc=
-X-Received: by 2002:a05:6830:3154:b0:7c1:12c5:334e with SMTP id
- 46e09a7af769-7cc66a023c7mr10318927a34.17.1766543028236; Tue, 23 Dec 2025
- 18:23:48 -0800 (PST)
+	s=arc-20240116; t=1766549022; c=relaxed/simple;
+	bh=yWmYbd7ObM1gWpWRA6xOT4CtQ2WgtxNVRKPxsZ+S33M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KyWdJQUUCNL7yRafdSD/Aqw4fB3HbaKmECKk4PxShzk/dpVWl7D6gq2bfEjjEZqQHd9GNQN8B7h6mIaVtpR2iYKIwAql4Qypjwbpgn4YFvc23REf5ZujH7PU5Eaui6YY7FCTaOdVljBzzhAvHwpnNSAFpT0nEsRh/aF9FL0UDRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=pass smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isrc.iscas.ac.cn
+Received: from localhost.localdomain (unknown [36.112.3.209])
+	by APP-01 (Coremail) with SMTP id qwCowACXQW1qZEtpliSkAQ--.15559S2;
+	Wed, 24 Dec 2025 11:56:26 +0800 (CST)
+From: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	yuzhuo@google.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
+Subject: [PATCH] perf jit: close agent in Agent_OnLoad()
+Date: Wed, 24 Dec 2025 11:56:25 +0800
+Message-Id: <20251224035625.1532794-1-lihaoxiang@isrc.iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAK3u-5gjxsFbnimP0mMFM6GRki7TAfNe6YmY6KtJhApV45nSNw@mail.gmail.com>
- <CAP-5=fVndu7gOVSzH=jKtsNLQk=Asv_OZNaEQ8nPXoUKWE8izg@mail.gmail.com>
- <CAK3u-5gfzAR5RDicyqaUi9ddZSbD=JkYN-K--iD4wCMCqFKF=w@mail.gmail.com> <aSdPUOz6gqInzJdR@google.com>
-In-Reply-To: <aSdPUOz6gqInzJdR@google.com>
-From: Shimin Guo <shimin.guo@skydio.com>
-Date: Tue, 23 Dec 2025 18:23:37 -0800
-X-Gm-Features: AQt7F2qbE54_X7h-aFmrw0wHu1JDH4k3xzgbV2i-k9Qii9rCfrmAu_TJ2lOKB1Y
-Message-ID: <CAK3u-5gBQ3GGTNx4Pj8UPgFguKfOnOHLvKPXnTu42Z-XDCJJ6A@mail.gmail.com>
-Subject: Re: [BUG] perf: libdw not working for data collected on a different
- arch than host
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowACXQW1qZEtpliSkAQ--.15559S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF17try8Kr4DZFWDuw4kWFg_yoW8ZF4UpF
+	n8Cayq9ryfZFWfZryxZan3G3Wj9rWfKF47WrZrCa15Aw1ftr9Fkw4IyayYqr4UWryDWw4j
+	vw4DtFyrZF18AF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: 5olkt0x0ld0ww6lv2u4olvutnvoduhdfq/1tbiBgsGE2lLRjtnLgAAsO
 
-On Wed, Nov 26, 2025 at 11:04=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> Hello,
->
-> On Tue, Nov 25, 2025 at 06:55:54PM -0800, Shimin Guo wrote:
-> > On Tue, Nov 25, 2025 at 5:43=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > On Mon, Nov 24, 2025 at 10:39=E2=80=AFAM Shimin Guo <shimin.guo@skydi=
-o.com> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > I see there have been patches aimed at enabling perf to unwind stac=
-ks
-> > > > collected on a different arch than the host perf itself is running =
-on,
-> > > > for example, https://lore.kernel.org/all/20230606014559.21783-4-leo=
-.yan@linaro.org/.
-> > > >
-> > > > I believe there is still one issue that prevents me from doing
-> > > > unwinding on arm64 stacks on a x86 host. As of v6.18-rc6, I still s=
-ee
-> > > > the following in tools/perf/util/unwind-libdw.c:
-> > > >
-> > > > static const Dwfl_Thread_Callbacks callbacks =3D {
-> > > >     .next_thread =3D next_thread,
-> > > >     .memory_read =3D memory_read,
-> > > >     .set_initial_registers =3D libdw__arch_set_initial_registers,
-> > > > };
-> > > >
-> > > > libdw__arch_set_initial_registers is defined for each architecture,
-> > > > and the version is chosen at compile time, not for the arch the dat=
-a
-> > > > is collected on. After fixing this issue, I was able to get the cal=
-l
-> > > > chains. Is my analysis correct?
-> > >
-> > > Hi Shimin,
-> > >
-> > > I think your analysis is correct. I've been trying to clean up other
-> > > cases of this, such as with dwarf_regs:
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-n=
-ext.git/log/tools/perf/util/include/dwarf-regs.h?h=3Dperf-tools-next
-> > > Or with syscalltbl:
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-n=
-ext.git/commit/tools/perf/util/syscalltbl.c?h=3Dperf-tools-next&id=3D1470ea=
-a574870da3f78942927b15e0b75da3ffbe
-> > >
-> > > My belief is the arch directory is a code smell where we've most
-> > > likely broken cross-architecture support. Were you in the process of
-> > > putting together a patch series to fix this? My hope is to move away
-> > > from the CPUID feature strings for things like this and just use ELF
-> > > values like EM_X86_64.
-> >
-> > I don't have immediate plans to put together a patch series. I'm not
-> > familiar with the Linux development process, coding standards, and
-> > common practices. Conceptually it's not that complicated, but whatever
-> > I come up with is likely not the best way to do it.
->
-> That's fine, we can find the best way during the review process if
-> you're willing to. :)
+close agent on error paths in Agent_OnLoad().
 
-OK, I gave it a shot at
-https://lore.kernel.org/linux-perf-users/20251223-cross-arch-unwind-v1-1-4d=
-71ee7db512@skydio.com/T/#u
+Signed-off-by: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
+---
+ tools/perf/jvmti/libjvmti.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
--shimin
+diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
+index 82514e6532b8..fd7efae40102 100644
+--- a/tools/perf/jvmti/libjvmti.c
++++ b/tools/perf/jvmti/libjvmti.c
+@@ -355,7 +355,7 @@ Agent_OnLoad(JavaVM *jvm, char *options, void *reserved __maybe_unused)
+ 	ret = (*jvm)->GetEnv(jvm, (void *)&jvmti, JVMTI_VERSION_1);
+ 	if (ret != JNI_OK) {
+ 		warnx("jvmti: jvmti version 1 not supported");
+-		return -1;
++		goto close_agent;
+ 	}
+ 
+ 	/*
+@@ -368,7 +368,7 @@ Agent_OnLoad(JavaVM *jvm, char *options, void *reserved __maybe_unused)
+ 	ret = (*jvmti)->AddCapabilities(jvmti, &caps1);
+ 	if (ret != JVMTI_ERROR_NONE) {
+ 		print_error(jvmti, "AddCapabilities", ret);
+-		return -1;
++		goto close_agent;
+ 	}
+ 	ret = (*jvmti)->GetJLocationFormat(jvmti, &format);
+         if (ret == JVMTI_ERROR_NONE && format == JVMTI_JLOCATION_JVMBCI) {
+@@ -390,23 +390,27 @@ Agent_OnLoad(JavaVM *jvm, char *options, void *reserved __maybe_unused)
+ 	ret = (*jvmti)->SetEventCallbacks(jvmti, &cb, sizeof(cb));
+ 	if (ret != JVMTI_ERROR_NONE) {
+ 		print_error(jvmti, "SetEventCallbacks", ret);
+-		return -1;
++		goto close_agent;
+ 	}
+ 
+ 	ret = (*jvmti)->SetEventNotificationMode(jvmti, JVMTI_ENABLE,
+ 			JVMTI_EVENT_COMPILED_METHOD_LOAD, NULL);
+ 	if (ret != JVMTI_ERROR_NONE) {
+ 		print_error(jvmti, "SetEventNotificationMode(METHOD_LOAD)", ret);
+-		return -1;
++		goto close_agent;
+ 	}
+ 
+ 	ret = (*jvmti)->SetEventNotificationMode(jvmti, JVMTI_ENABLE,
+ 			JVMTI_EVENT_DYNAMIC_CODE_GENERATED, NULL);
+ 	if (ret != JVMTI_ERROR_NONE) {
+ 		print_error(jvmti, "SetEventNotificationMode(CODE_GENERATED)", ret);
+-		return -1;
++		goto close_agent;
+ 	}
+ 	return 0;
++
++close_agent:
++	jvmti_close(jvmti_agent);
++	return -1;
+ }
+ 
+ JNIEXPORT void JNICALL
+-- 
+2.25.1
 
->
-> Thanks,
-> Namhyung
->
