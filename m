@@ -1,156 +1,82 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E835429B204
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Dec 2025 10:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97B8201004;
+	Wed, 24 Dec 2025 11:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766572765; cv=none; b=Lm6bRkK7aMa4g9XGcau65c/RTPhDDjRl2yS70FvU6dX42UFACM06b756T1m7Qm8m73kX+W3WBN26Ggi2FGTNmKONzvOqm9ZEOqssWgDlWIMtFpfKLEqb6w4I9mnGe6XjSFDYXLBZ0RQ3aZKtFiQ7boMliXvVeiHgm3WNtweFDbc=
+	t=1766576376; cv=none; b=iCWxXjAWJu44nGedhhbYGuTudkgOG+gVQYNZbvCrRb9AAVTX0swdrxM5jIylV1vQHAblG8TAcsQUeFmjANNl5XakVkywF/ckp1pZl0VhDpb0dDXKmznjg+k/da3z9LLo7n9gGqhFdWE5hGnL3GxjC8J8xEC/Jd+Vqp1XJU+A3po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766572765; c=relaxed/simple;
-	bh=VI0rFppBVuytS3W6RrIkZ3jnHk9shm0DV6259lw8U74=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b9ZrHc6nCw/jC0yq+zz1/D20YQRPPBGqYYlo+6BvaZ1R84gc1W/V1VmS7AuOlgbnqQly3oklj1aa1396np7bICDy5OctZwa3SZIMPFjf3QNftgs2IVOHZXOJaei3yDwk4n+t1z0GyhELGbGK7CCrf79tnib8Nd1y6icJDFZtJqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pzUSw0EA; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pzUSw0EA"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-47d3ba3a4deso4654895e9.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Dec 2025 02:39:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1766572760; x=1767177560; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lGutQ2IGqRhDM/icPB6/HEUq7E7+JBO991L3mBxgxLw=;
-        b=pzUSw0EAwObRK4jroovErFM89XOQdEI5/t0rHNLrUi1XLAO8hV2No/RcJR1nImLd+4
-         IRQFP41Zaaxtm5V0LW+qbsnnqDaswoQWU8bGMFshgA0RdMFJ48cGkNzmnGtKmULW83Lv
-         5MxpJCVJVOpbta5PWkmepJPPSi/SriiTrz5wYB4YbR/QlAxGqIuZLSxFE+/nefblTAfv
-         m3Wa7nyL4BGRCBvMasaB0DEB+nfxkcsUC5jMV4ZLzOYm+RxY3N2/VPBVaWrD8I+d6Gcc
-         9F6RGdu9nWzzYAKg/9T5KPQ1aHmDIOoHlX7NAky6iEwoou7kv8x0+NImEnSKXC3KKiLv
-         cw9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766572760; x=1767177560;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lGutQ2IGqRhDM/icPB6/HEUq7E7+JBO991L3mBxgxLw=;
-        b=hv3tzXMkJwRnq3oRBo7dCOuc6fRVKglezYv4BjLFa2KnZjsYUo6R54daCrh+QegVEV
-         VJW83pi2ryTJvYTMMuZnCROGfOUmpJqvdhCD915U8gRMYPkSL+QoUTemMSF1Na+FoLMz
-         ioyDTCEXobARIty6x7SpCH4mx3Vh6GyJudjJWIS/7EuE8fasfp3SatiLgDSQJj4yrcqt
-         gc1ZZICHP0o5xKqcDRIx77qzDT7yp9W/mOywIAxxKilAkHga9qSEtwPeIgnicA5+Zref
-         KJqE8CBqbDl7+cTGSlPDmOYhPBlw8B0V78OMUfrYgHUYgKBVX8HxZI2OOTmncBra2W7E
-         S67A==
-X-Gm-Message-State: AOJu0Yx/YiZd/Or0svuMj0mMt8Wql4w+/Z/M2vR+LQWvBjQJ29MVwfUM
-	KryubU6KpLncIU39IVr0Lm9fh5AFIfNmMF9oIWw559AJ26vRZLexndyvmIJ50A3CUhFCpoTLzPL
-	8ohTDZRM=
-X-Gm-Gg: AY/fxX4WZZCfwtcnHI9Xq8LKm544Z79C9JXa6NSQgvKgqz23eEkXzfK+U8TVM7ruMeq
-	o3GjF/zQbnM9BgQD+U/+1sVS26weNEhmWyuddUWXMuS7vg0d7OtK9qqucCmpczVqNtw+1/x7Q8V
-	DDWKsKaVhQRB3rYKk6J9rsdrxSwO78YufPPkCumxJGDzvO62ZqbRQGz8Gz1EGQX1lcfPfQmiBDf
-	0fGI2SNRYRKSTGlPpKp+wbCGmEyCwoVIMJPwpoaP0jDJHcQbRMy0vEMeHD/NRobf7EkVdXvGHza
-	V79Nol/Ln5r1YkES3AXHD15OXFtvcfoo0p7a1gNegKsSdDkWfiPFdPcGb4UN3JL9aCZ6aPRgX8k
-	RewrsG+1sEXkk71mVyDf3FvioHIAv0OsYQLliKPzzhOH0Lg566WtRpRq9dPtkHBIaC3Kw95kvDr
-	K0KOSgeyus+of85i2U
-X-Google-Smtp-Source: AGHT+IFQ103e73Q2R5Ks+IXqNJmyiaQpuAwsAFcVAjsgAPiSP9fcuHPznYjPiqI5FhyPnwLt3xlftQ==
-X-Received: by 2002:a05:600c:45cf:b0:477:582e:7a81 with SMTP id 5b1f17b1804b1-47d1954986fmr154574865e9.4.1766572760198;
-        Wed, 24 Dec 2025 02:39:20 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47be3ad0c60sm140832025e9.5.2025.12.24.02.39.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Dec 2025 02:39:19 -0800 (PST)
-Message-ID: <51b38c17-4cb7-467b-8606-fae51f629802@linaro.org>
-Date: Wed, 24 Dec 2025 10:39:18 +0000
+	s=arc-20240116; t=1766576376; c=relaxed/simple;
+	bh=L3VejasKVVPamXwRNi5f+d/lBtyywyHWdrc8faKuQQU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KpY+MOSl8wV9AKNLI4jlnymySSUUfPwDs0HW3JnSik1DYCuKgRp3TI4lxa0a19ahwZwWrOf1szSxW6XfyBgrfTGAFKsxejX0xPxnVp6xdhvE6UXjVyz/R408WovjxPm6peB28H+dXy4KvzCZSU+t5LdJ9HiPIQ3DFJjBO09DGrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=pass smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isrc.iscas.ac.cn
+Received: from localhost.localdomain (unknown [36.112.3.209])
+	by APP-05 (Coremail) with SMTP id zQCowAC3SQ3o0EtptBbHAQ--.27675S2;
+	Wed, 24 Dec 2025 19:39:20 +0800 (CST)
+From: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
+To: james.clark@linaro.org
+Cc: acme@kernel.org,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	irogers@google.com,
+	jolsa@kernel.org,
+	lihaoxiang@isrc.iscas.ac.cn,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	mark.rutland@arm.com,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	peterz@infradead.org,
+	yuzhuo@google.com
+Subject: Re: [PATCH] perf jit: close agent in Agent_OnLoad()
+Date: Wed, 24 Dec 2025 19:39:18 +0800
+Message-Id: <20251224113918.1593967-1-lihaoxiang@isrc.iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <51b38c17-4cb7-467b-8606-fae51f629802@linaro.org>
+References: <51b38c17-4cb7-467b-8606-fae51f629802@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf jit: close agent in Agent_OnLoad()
-To: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, yuzhuo@google.com
-References: <20251224035625.1532794-1-lihaoxiang@isrc.iscas.ac.cn>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20251224035625.1532794-1-lihaoxiang@isrc.iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAC3SQ3o0EtptBbHAQ--.27675S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYP7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_JFC_Wr1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aV
+	CY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+	M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxAqzxv26xkF7I0En4kS14
+	v26r1q6r43MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
+	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU1a9aPUUUUU==
+X-CM-SenderInfo: 5olkt0x0ld0ww6lv2u4olvutnvoduhdfq/1tbiBgoGE2lLmTynTQAAs0
 
+On Wed, 24 Dec 2025 10:39:18 +0000, James Clark wrote:
+> Does this actually do anything? jvmti_close() is already called in 
+> Agent_OnUnload().
 
+I think Agent_OnUnload() is not called if Agent_Onload() fails, so it
+is necessary to release the resource.
 
-On 24/12/2025 3:56 am, Haoxiang Li wrote:
-> close agent on error paths in Agent_OnLoad().
-> 
-> Signed-off-by: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
-> ---
->   tools/perf/jvmti/libjvmti.c | 14 +++++++++-----
->   1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
-> index 82514e6532b8..fd7efae40102 100644
-> --- a/tools/perf/jvmti/libjvmti.c
-> +++ b/tools/perf/jvmti/libjvmti.c
-> @@ -355,7 +355,7 @@ Agent_OnLoad(JavaVM *jvm, char *options, void *reserved __maybe_unused)
->   	ret = (*jvm)->GetEnv(jvm, (void *)&jvmti, JVMTI_VERSION_1);
->   	if (ret != JNI_OK) {
->   		warnx("jvmti: jvmti version 1 not supported");
-> -		return -1;
-> +		goto close_agent;
->   	}
->   
->   	/*
-> @@ -368,7 +368,7 @@ Agent_OnLoad(JavaVM *jvm, char *options, void *reserved __maybe_unused)
->   	ret = (*jvmti)->AddCapabilities(jvmti, &caps1);
->   	if (ret != JVMTI_ERROR_NONE) {
->   		print_error(jvmti, "AddCapabilities", ret);
-> -		return -1;
-> +		goto close_agent;
->   	}
->   	ret = (*jvmti)->GetJLocationFormat(jvmti, &format);
->           if (ret == JVMTI_ERROR_NONE && format == JVMTI_JLOCATION_JVMBCI) {
-> @@ -390,23 +390,27 @@ Agent_OnLoad(JavaVM *jvm, char *options, void *reserved __maybe_unused)
->   	ret = (*jvmti)->SetEventCallbacks(jvmti, &cb, sizeof(cb));
->   	if (ret != JVMTI_ERROR_NONE) {
->   		print_error(jvmti, "SetEventCallbacks", ret);
-> -		return -1;
-> +		goto close_agent;
->   	}
->   
->   	ret = (*jvmti)->SetEventNotificationMode(jvmti, JVMTI_ENABLE,
->   			JVMTI_EVENT_COMPILED_METHOD_LOAD, NULL);
->   	if (ret != JVMTI_ERROR_NONE) {
->   		print_error(jvmti, "SetEventNotificationMode(METHOD_LOAD)", ret);
-> -		return -1;
-> +		goto close_agent;
->   	}
->   
->   	ret = (*jvmti)->SetEventNotificationMode(jvmti, JVMTI_ENABLE,
->   			JVMTI_EVENT_DYNAMIC_CODE_GENERATED, NULL);
->   	if (ret != JVMTI_ERROR_NONE) {
->   		print_error(jvmti, "SetEventNotificationMode(CODE_GENERATED)", ret);
-> -		return -1;
-> +		goto close_agent;
->   	}
->   	return 0;
-> +
-> +close_agent:
-> +	jvmti_close(jvmti_agent);
+> The commit message is lacking any details about how this was found or 
+> what the effect is.
 
-Does this actually do anything? jvmti_close() is already called in 
-Agent_OnUnload().
+Sorry for that. I found it by a static analyzer prototype and comfirmed
+by manual review. I think it leads to a resource leak.
 
-The commit message is lacking any details about how this was found or 
-what the effect is.
+If this is ok, I modify the changelog and resubmit it.
 
-> +	return -1;
->   }
->   
->   JNIEXPORT void JNICALL
+Thanks,
+Haoxiang Li
 
