@@ -1,122 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAB213B7A3;
-	Thu, 25 Dec 2025 06:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B09A2236E0;
+	Fri, 26 Dec 2025 19:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766644028; cv=none; b=svJMmRcSkLmIpzsucdTeV0+BHIE7j7LnDVS/FvGkQUJuD64ZaFdZUPJfwGhrV++fqBgYvTHJ5agPkCv4JlZZF6Hb5Rdgy14fWcVYgdqyu3rlh8IwphoOeF5O0blvczoIUv1KsB3fK72gGka9GnkzQw53q5kuQYqBDetFAZuDTJU=
+	t=1766776178; cv=none; b=Zah4GsG6bn7C8fiHY/Il+4jT/sIKmNzKlWexmJ1Wzg/ag2M9X/hpwAjdfbYaUOm+cTI7r3HYCXryT66TizfG3kyII/AWEx7T1G7IyVYD5mv3Hreb1wl/Qc0yfwBjURwdyFJaHNDSbCgK4U4FaQ0MtxD05eN3YfIIlxYk+WTEnaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766644028; c=relaxed/simple;
-	bh=p1XfubM0YWj6WnMP8u+aCWSf2k0v8QcI9Wgv+fon5Ck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bOPpssthunWgKo8FO9F1PkCw6oVFpKzpRrPDNKvEIAUhHh4QwTl0euQNdzFhSoQp8UXaQjfoyplm9SWS4FwsQG0dIBe4iYNOAcZDVOuffDBDQ+pdG6k+1xWDztJQMvj+zQNI1bgTPAaLvEzMjvkn5/S0tPiYfcbidlkX9PQonG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E4dzvruN; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1766776178; c=relaxed/simple;
+	bh=8Z12f+nl7Uk9tytWl9zpCVLu0gopO24gvKuSuuwaiz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=msuK3cSPqJpFINXLrttoDhfWd8meRrNtpzJ+1ITVMtWXA0k8S+V045FHPwa11EILCW2Zdrzu4hXc+fz6GQ8Nn21ZNhxY30j29a0n3SetMCTtNaUqWqLmZnJG1pp3RylDrQFxy5pIh8z775XsYuuWYRxU0KfM2+W+KUJ10Bmwdjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+ayIlBh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E4dzvruN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766644027; x=1798180027;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=p1XfubM0YWj6WnMP8u+aCWSf2k0v8QcI9Wgv+fon5Ck=;
-  b=E4dzvruNcXQE5dw9kyc+jRTBrmIE7QvS576jan+va5QuBsyRkHFlktZH
-   vS/jnf6/P0u400jmA2rsbb2BQmmm2qun4SR/Xcsa79iHWj80++5q4vlVY
-   LKhE+gXWjunWXMVTVyp5HlAFlMe6KxxmVMYU42qVkeWNEDxNUeAuPrK/F
-   9/JZZhfCsAIv1FOKpt0qc53RNF+jHSoTLTBLNWwelZh8DMgTQFjje2r+a
-   6cCb3dznAgHmk8riR5vVQZH4dMfne9Dey9KfneJg/RkABA1/qKC6rLnH8
-   5BpiLgNRR4KWcJuxdFqdzXA1+moZ/16Jr51pec23Hvjhg9nbFNbDKoV17
-   g==;
-X-CSE-ConnectionGUID: /AgsTTqTRZCbVBdJhPrzBA==
-X-CSE-MsgGUID: JWq67hiDS4OIqIjTpn9ujw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11652"; a="68340493"
-X-IronPort-AV: E=Sophos;i="6.21,175,1763452800"; 
-   d="scan'208";a="68340493"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2025 22:27:06 -0800
-X-CSE-ConnectionGUID: DUtRii2LTCeg4q7vXPJ1zA==
-X-CSE-MsgGUID: a7dRTs5tS6S+a0BISdFYdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,175,1763452800"; 
-   d="scan'208";a="200649863"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2025 22:26:59 -0800
-Message-ID: <43d1cde6-2277-4f3c-8e7d-59e6edb2228a@linux.intel.com>
-Date: Thu, 25 Dec 2025 14:26:56 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+ayIlBh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6794AC4CEF7;
+	Fri, 26 Dec 2025 19:09:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766776178;
+	bh=8Z12f+nl7Uk9tytWl9zpCVLu0gopO24gvKuSuuwaiz0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=U+ayIlBh0jt/Lfn85V1i5pOM4LHMJv4c/dfsaOTD5mkoMMeahAq+LPc7yzFkFfLCx
+	 Ql8MYWqI4z4opdRyu1FqIitXcWMMNrnqioHk/PBk8oRVxekI9U7e4DmY6zMcz7Mt8C
+	 NCCJWN8cmHC0bmowwiwklslWEHcfDD70WLw0nH8V8qrXJB3BPLJFFAQGrIHskkuQhj
+	 rZV5XT8NpGBbLY9cR3mrYA0KMjv693ar9NsHY7WHBGpIKNdrRxKwcDnBAFYt40XY7z
+	 eCkjN/jn9EkY79MfsNQYNG8mD14550tmqc5B67jOmTLEzWp4jdN/qgy2bvQA4RMsEr
+	 0VE7IvejA7vBw==
+Date: Fri, 26 Dec 2025 16:09:34 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1 v6.19-rc] tools build: Fix the common set of features
+ test wrt libopenssl
+Message-ID: <aU7dbmP5_opzLPb6@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 15/44] KVM: x86/pmu: Snapshot host (i.e. perf's)
- reported PMU capabilities
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oupton@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>,
- Sandipan Das <sandipan.das@amd.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
-References: <20251206001720.468579-1-seanjc@google.com>
- <20251206001720.468579-16-seanjc@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251206001720.468579-16-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+The recent introduction of the libopenssl feature test forgot to add the
+-lssl to the test-all.o target, which made it always fail, fix it.
 
-On 12/6/2025 8:16 AM, Sean Christopherson wrote:
-> Take a snapshot of the unadulterated PMU capabilities provided by perf so
-> that KVM can compare guest vPMU capabilities against hardware capabilities
-> when determining whether or not to intercept PMU MSRs (and RDPMC).
->
-> Reviewed-by: Sandipan Das <sandipan.das@amd.com>
-> Tested-by: Xudong Hao <xudong.hao@intel.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/pmu.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index 487ad19a236e..7c219305b61d 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -108,6 +108,8 @@ void kvm_init_pmu_capability(const struct kvm_pmu_ops *pmu_ops)
->  	bool is_intel = boot_cpu_data.x86_vendor == X86_VENDOR_INTEL;
->  	int min_nr_gp_ctrs = pmu_ops->MIN_NR_GP_COUNTERS;
->  
-> +	perf_get_x86_pmu_capability(&kvm_host_pmu);
-> +
->  	/*
->  	 * Hybrid PMUs don't play nice with virtualization without careful
->  	 * configuration by userspace, and KVM's APIs for reporting supported
+Noticed by looking at this file after building:
 
-Hi Sean,
+  $ cat /tmp/build/perf-tools/feature/test-all.make.output
+  /usr/bin/ld: /tmp/ccBhO8WH.ltrans0.ltrans.o: in function `main':
+  /home/acme/git/perf-tools/tools/build/feature/test-libopenssl.c:6:(.text.startup+0x2ed): undefined reference to `OPENSSL_init_ssl'
+  collect2: error: ld returned 1 exit status
+  $
 
-It looks a merging error here. We don't need this patch.
+It was added only to the individual ssl test, that works:
 
-The original patch "51f34b1 ("KVM: x86/pmu: Snapshot host (i.e. perf's)
-reported PMU capabilities")" had been merged into upstream and subsequently
-we submitted a new patch "034417c1439a ("KVM: x86/pmu: Don't try to get
-perf capabilities for hybrid CPUs")" to fix the warning introduced from
-previous patch  "51f34b1 ("KVM: x86/pmu: Snapshot host (i.e. perf's)
-reported PMU capabilities")". Thanks.
+  $ cat /tmp/build/perf-tools/feature/test-libopenssl.make.output
+  $ ldd /tmp/build/perf-tools/feature/test-libopenssl.bin | grep ssl
+	libssl.so.3 => /usr/lib64/libssl.so.3 (0x00007fb81eda8000)
+  $
 
--Dapeng Mi
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 7678523109d1d9ee ("tools/build: Add a feature test for libopenssl")
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/build/feature/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index c699d4f4c6d935d0..0d5a15654b17b20a 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -107,7 +107,7 @@ all: $(FILES)
+ __BUILD = $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.c,$(@F)) $(LDFLAGS)
+   BUILD = $(__BUILD) > $(@:.bin=.make.output) 2>&1
+   BUILD_BFD = $(BUILD) -DPACKAGE='"perf"' -lbfd -ldl
+-  BUILD_ALL = $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -ldl -lz -llzma -lzstd
++  BUILD_ALL = $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -ldl -lz -llzma -lzstd -lssl
+ 
+ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(@F)) $(LDFLAGS)
+   BUILDXX = $(__BUILDXX) > $(@:.bin=.make.output) 2>&1
+-- 
+2.52.0
 
