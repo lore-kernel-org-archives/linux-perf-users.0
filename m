@@ -1,42 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B09A2236E0;
-	Fri, 26 Dec 2025 19:09:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B5D18CC13;
+	Mon, 29 Dec 2025 02:50:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766776178; cv=none; b=Zah4GsG6bn7C8fiHY/Il+4jT/sIKmNzKlWexmJ1Wzg/ag2M9X/hpwAjdfbYaUOm+cTI7r3HYCXryT66TizfG3kyII/AWEx7T1G7IyVYD5mv3Hreb1wl/Qc0yfwBjURwdyFJaHNDSbCgK4U4FaQ0MtxD05eN3YfIIlxYk+WTEnaM=
+	t=1766976626; cv=none; b=YvRU6UjpugWZvqS12O6C4h/pZOZUGxNmGADG7eWV6CwgtCfvtAxyTvtnhbmUwSOYtjYgF7UmjYnfU2Lz3HGaAO+GmIMCo1lZ70XXOJTW90PBomks9jDzB7rpL3gdTAjJc1JI84ldDndWRYjfLlx4UNTiuFpkiUViM9Lh5MohXdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766776178; c=relaxed/simple;
-	bh=8Z12f+nl7Uk9tytWl9zpCVLu0gopO24gvKuSuuwaiz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=msuK3cSPqJpFINXLrttoDhfWd8meRrNtpzJ+1ITVMtWXA0k8S+V045FHPwa11EILCW2Zdrzu4hXc+fz6GQ8Nn21ZNhxY30j29a0n3SetMCTtNaUqWqLmZnJG1pp3RylDrQFxy5pIh8z775XsYuuWYRxU0KfM2+W+KUJ10Bmwdjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+ayIlBh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766976626; c=relaxed/simple;
+	bh=tEUU9KDTuNA8oyvyIc3IfREIjFjW8VKwcSqtRHWh6G0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BrPdsvIlzTQdr8yprysgNVQx7bM5Y28xdg6NhN2VJrghlVWk+EZ4mPrmzxOyMB9R4WLsgFS982iDkjBvPLa3P7nwoAcrneJvWTGDhDRA3zeC18j9yuyQ2qAC1/8AO3pt7viflpCFXB5mPOtKCdo2i5FmfH8yBfFt7AysFUAMRQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pxjevTXB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+ayIlBh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6794AC4CEF7;
-	Fri, 26 Dec 2025 19:09:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pxjevTXB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D4B8C4CEFB;
+	Mon, 29 Dec 2025 02:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766776178;
-	bh=8Z12f+nl7Uk9tytWl9zpCVLu0gopO24gvKuSuuwaiz0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=U+ayIlBh0jt/Lfn85V1i5pOM4LHMJv4c/dfsaOTD5mkoMMeahAq+LPc7yzFkFfLCx
-	 Ql8MYWqI4z4opdRyu1FqIitXcWMMNrnqioHk/PBk8oRVxekI9U7e4DmY6zMcz7Mt8C
-	 NCCJWN8cmHC0bmowwiwklslWEHcfDD70WLw0nH8V8qrXJB3BPLJFFAQGrIHskkuQhj
-	 rZV5XT8NpGBbLY9cR3mrYA0KMjv693ar9NsHY7WHBGpIKNdrRxKwcDnBAFYt40XY7z
-	 eCkjN/jn9EkY79MfsNQYNG8mD14550tmqc5B67jOmTLEzWp4jdN/qgy2bvQA4RMsEr
-	 0VE7IvejA7vBw==
-Date: Fri, 26 Dec 2025 16:09:34 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1 v6.19-rc] tools build: Fix the common set of features
- test wrt libopenssl
-Message-ID: <aU7dbmP5_opzLPb6@x1>
+	s=k20201202; t=1766976625;
+	bh=tEUU9KDTuNA8oyvyIc3IfREIjFjW8VKwcSqtRHWh6G0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pxjevTXBWePRefYXPAcmpg6nWB2PERBnaaSXxAnbcUgBOMdnZyQX3wguDIQTjkTPx
+	 iIr2SHgja13dH7+zAsyRTx1dEEe0MuxihiN1J8NzChiVkpM/mHUZV71rwKN7m64YZj
+	 ot3zhLFNeohvJx4F4Ae7tHq4obOz/vzWRClrMMd/6Qj2HcGx/o58w3gQP3iWbfsBRk
+	 faP9iW0H1PLDsuKfnnLuNCf4Cu/+G7FZBOGVS9YA3BLLAd2OpHLlTPw2MOtPo+t/PM
+	 NeMOxHRLOO1r9JwtjWi6DWiuC72pHznV8FI+CXX5FS8dAumnaNywC/nG5ezWbOIaFE
+	 vU/V3Y80oUSMA==
+Date: Mon, 29 Dec 2025 10:50:20 +0800
+From: Shawn Guo <shawnguo@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Xu Yang <xu.yang_2@nxp.com>, Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: Re: [PATCH v3 5/6] arm64: dts: imx8qm: add ddr perf device node
+Message-ID: <aVHsbK-HEfYqpS9G@dragon>
+References: <20251103-qm_dts-v3-0-2bfda8ee14c2@nxp.com>
+ <20251103-qm_dts-v3-5-2bfda8ee14c2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,45 +52,14 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20251103-qm_dts-v3-5-2bfda8ee14c2@nxp.com>
 
-The recent introduction of the libopenssl feature test forgot to add the
--lssl to the test-all.o target, which made it always fail, fix it.
+On Mon, Nov 03, 2025 at 04:48:32PM -0500, Frank Li wrote:
+> Add ddr perf monitor device node for i.MX8QM. Change imx8-ss-ddr.dtsi's
+> compatible string to fsl,imx8qxp-ddr-pmu. i.MX8QM overwrite to
+> fsl,imx8qm-ddr-pmu. All fallback to fsl,imx8-ddr-pmu.
+> 
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Noticed by looking at this file after building:
-
-  $ cat /tmp/build/perf-tools/feature/test-all.make.output
-  /usr/bin/ld: /tmp/ccBhO8WH.ltrans0.ltrans.o: in function `main':
-  /home/acme/git/perf-tools/tools/build/feature/test-libopenssl.c:6:(.text.startup+0x2ed): undefined reference to `OPENSSL_init_ssl'
-  collect2: error: ld returned 1 exit status
-  $
-
-It was added only to the individual ssl test, that works:
-
-  $ cat /tmp/build/perf-tools/feature/test-libopenssl.make.output
-  $ ldd /tmp/build/perf-tools/feature/test-libopenssl.bin | grep ssl
-	libssl.so.3 => /usr/lib64/libssl.so.3 (0x00007fb81eda8000)
-  $
-
-Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: 7678523109d1d9ee ("tools/build: Add a feature test for libopenssl")
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/build/feature/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index c699d4f4c6d935d0..0d5a15654b17b20a 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -107,7 +107,7 @@ all: $(FILES)
- __BUILD = $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.c,$(@F)) $(LDFLAGS)
-   BUILD = $(__BUILD) > $(@:.bin=.make.output) 2>&1
-   BUILD_BFD = $(BUILD) -DPACKAGE='"perf"' -lbfd -ldl
--  BUILD_ALL = $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -ldl -lz -llzma -lzstd
-+  BUILD_ALL = $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -ldl -lz -llzma -lzstd -lssl
- 
- __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(@F)) $(LDFLAGS)
-   BUILDXX = $(__BUILDXX) > $(@:.bin=.make.output) 2>&1
--- 
-2.52.0
-
+Applied, thanks!
