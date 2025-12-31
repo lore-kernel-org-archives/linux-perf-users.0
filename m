@@ -1,192 +1,184 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27248189F43
-	for <linux-perf-users@vger.kernel.org>; Wed, 31 Dec 2025 09:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4344322A2E
+	for <linux-perf-users@vger.kernel.org>; Wed, 31 Dec 2025 12:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767172513; cv=none; b=FWmG325R3FdX6B2oOej+kro9adk/XjcALNBWKjtNg+1yW2OTZiBmdKGbjUuIbgE3bGj/EqS0IA2cDynR6L+lfkZT74kAeJVTtpHyZeBLdx/WRkmb19IpLhAv0LAPm0fz0dF5X82oCxQySfZyA9k5FPhpgbO2bzVKpT1L4gZRdhs=
+	t=1767183203; cv=none; b=IWYaj7WmjnVZjPRrDSdruAwavdmnk5KnJqgWwPAlCY+Sfpn++kZmTOC9EPpyt/WBxIO23BjbhRDhzHomKuJqgSpJWSye2RHgD2r7uNKSjanTLcjeNy18GCh62gm1auBMU4OtICSjD1buK8rFjfgGzMpMy4YkrvL3C5D5uJZA8dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767172513; c=relaxed/simple;
-	bh=z+kguRRaqZHMZx2XZis3aztpcnjb4raCwVyceh6uPlY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E3FiceUhzYEssjTfmCUMDyLJKdFRxC+rg7N1y4HQr4dkpkWq8AOhdnqdnkUwLZ8ZujmGxv73KxOZ3WkZ1aHweCDldflV4Q4kyJ7se7SFvo4NopB24b9IZ6rENjCd2rZXffPQQ/lTzdzCDWkuiKFYC5vbuS5yPMJ9fTI39avtkv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bytefly.space; spf=pass smtp.mailfrom=bytefly.space; dkim=pass (2048-bit key) header.d=bytefly-space.20230601.gappssmtp.com header.i=@bytefly-space.20230601.gappssmtp.com header.b=uvnixW4k; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bytefly.space
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytefly.space
+	s=arc-20240116; t=1767183203; c=relaxed/simple;
+	bh=TbH7w6cL5HlrAiR+wUX+SJxH/xdVAckk8XejBC402FA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=s3HK+b9g/fPYU6J989t6zjSFbMeMuOd3L1vbXHF3M5ZURbo8Hzqv6QerzrMn5Lbe96eUoxdtnuliOc7ttEsclliA6altJkIUV9F2n1+KKYRcrxfwmu0qPP/kgakwg2u10Gu0+L+xR0HrpQjzjTtJZMnFWUxmyWbL0+XdLvgT8L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V01/YWx6; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytefly-space.20230601.gappssmtp.com header.i=@bytefly-space.20230601.gappssmtp.com header.b="uvnixW4k"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2a1388cdac3so99076035ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Dec 2025 01:15:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V01/YWx6"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-47d3ffa6720so47910755e9.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Dec 2025 04:13:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytefly-space.20230601.gappssmtp.com; s=20230601; t=1767172511; x=1767777311; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cqaN5izDEsgH/os+tYDrb4IvKYYnm+SnIE1Vz4Q+hU8=;
-        b=uvnixW4kp8r/k1SAGmsf97cvMOvZfQorgwqiamYy1j2YUFgiGePYPMf293FDIt16vL
-         cctTLi4WftbO81YZjTnVTNR930LA1FYZK5KN7hnY/RUZ9BHK19Qtge052YBeZ48IMV7c
-         dKCnbTq2J5ctaYe2L0BtXmAjzGw+BzXDWInKsdpyqahM/2WbM53QKkFOrf7m3WFPzApI
-         Zr4A6GVzc0wL9M5wseg8tjKMgmZ9UqpKeRTve9sNTo7i7i5VWuxa/w6ES7UVpT7czNOf
-         8NlxD1Z8RvwMuSpLQ+KAc6m3hXQOPi+VBjBOM+psc1yqC/8DZSH28vTN+6gFvZS6riQA
-         R3Uw==
+        d=linaro.org; s=google; t=1767183199; x=1767787999; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NK8HAsEbzuMAmJWJWMfro3WvF+de9PMAbtRd5ci+vDw=;
+        b=V01/YWx6hP89cXNNndGJOoBLuRdVvrNuGhJfL7tws6M5+TDOQdFQ718xyt7YLljJcT
+         t1V5g+NhupGK/aSAzOs7YLb/tGx4SFdyes8VIxIIXJyAL1Prlg2NC+Ut8t2e+2XKh5xE
+         KeUECUufq0TZqLpIT0DnJHoTVJnGF0BStvnVNWYaghaqGwdilVTq1c8Pnbz6JQMAUpAe
+         TUwAzT5c6PCQOhLAaATVLmtxs7Xfm0GNUQ2I+5p68uqwp1Lm+eHlCkhK60qE4u+xIOnl
+         VG7KpgxhOp94mn187x2JfbPlL84lYVsBwttRp8ZOXl1JVdMMWH1opQC6wL9SLUshlk4u
+         kVcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767172511; x=1767777311;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1767183199; x=1767787999;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cqaN5izDEsgH/os+tYDrb4IvKYYnm+SnIE1Vz4Q+hU8=;
-        b=YZVUrxY0bSl/FBY3NRj3AY0lRjnJQW2hBZPNoyQkUvMTASEJWjilr7/xnDnONi0tni
-         8XNlhyUYv5Ndk0Ve0xKk7gaVZTlEDpY+6Q/puHd0qC+o0I23HhMrfa4NaW8AIKXv5IHj
-         llZf3LqKhi5oHXh8SvcBcOAvUGILpzGBF55pSN7nfxJehjKYuC1Bfhbk6u6c/begNr27
-         j1Qmb/jIUxlmVYDB0pXY2z7YqOYN3SdoQAUU75+ySC/D1JYwU3PlyArYunwKt3yTx4+/
-         mTbTVc7TeTn3ePNSIw6C0njMexXlySHpyc4/4E/rurdStbnvQui6Ao283ADfuKdqE3fY
-         jgmg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0iqcJedbjXWUCHGzSlACv7hWPI3LPajgaRIGxV0IajJbCDlY6vu3L2EICE7PwOMD4f4wPj8on3F55luNfAWBx@vger.kernel.org
-X-Gm-Message-State: AOJu0YymqnVA1b2rs5ZPmvODdn/AztlbtsPfvW2XU2B1oRvNEZv4++pq
-	hGsj+Pym1wOPOzR6KO7yx8QAOtOjks5nzINr3K+bL96eCebl5qO2beRTvzPSyWVVL60=
-X-Gm-Gg: AY/fxX5CCbLGxh1nvK9EhpilZwGrR9tPJg66iixTGlzWRK+9cPxmat38T71PnT9+yds
-	RB7QeRUPMQA1f0gLR1FA0BPwxpmmuOnRDPrcHY+ivju3uwZ/Gck8YpXKPgFyJYB2OA1aci93ZrT
-	u0GgyrNwVGUfeS2uHo6Zfs1jkZxmQIj0fiP5+G/xKi232AHKdkeBB1kU+oHH56YV24evxDFKS3Y
-	TaTlOLVknn0GdURHqaeBxO5w0b5A8g5rtD0EbRfgWaEdbG1GpMEuquE2mMo1aH84RncheG03ZXO
-	pmvu7/QxsARSBvjJob5TYMQeMozhxqA5Vuus/wo5xkl1K0noQPiMzk7wI/ejyQjMKNPHoTsNnCl
-	P5GHZFBykj9Ey6Ekw8UwXK0dKhQndi0PUnJdpkzS6uQo8JQVo4UutyKbPimeBWM+bA7FtcS0=
-X-Google-Smtp-Source: AGHT+IEEHAEmUHoBPsk2VWXa0Bxxl2Wl+1W1VgdLinYqxfVL+B8yrv2/848F+XVxTJyQxSLPq3mDmg==
-X-Received: by 2002:a17:902:ce92:b0:2a2:d066:b668 with SMTP id d9443c01a7336-2a2f222adc2mr292537615ad.12.1767172511271;
-        Wed, 31 Dec 2025 01:15:11 -0800 (PST)
-Received: from xpc ([2400:8902:e002:dec1:95fc:f49b:fe:1151])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3c666casm319258255ad.3.2025.12.31.01.15.06
+        bh=NK8HAsEbzuMAmJWJWMfro3WvF+de9PMAbtRd5ci+vDw=;
+        b=Yof6G6ewxfwODu3nom4Nu9Eq6yrc5CejCdxf/H6Q6XWALA4nwIH4iZeN/goNr+2j+u
+         9bOJrye8CT6QTLykvp9XIE9/E/SXrl0y4/fGU8/VQyOcub0gvhYlHgj0VVLE4iGNnYfq
+         P0ZsWkLuuU+t26nDsChmD59ylQfxzGsS24rQ/wtRfjkh+yGlRn+sR66YcaGvAywr2jFR
+         biulIOForaJcomA5CDX10g1rK3xBaZMFt06mYpmNTSVKb3XmyMczkXGHCOEyE9/7XU/R
+         chWt04eVOMOpcbSI3OXfF9v7ZAL3vui9Uc8IA3zbeRolzxyzIefEZ60ozFZdlYa0PZiO
+         fqJg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCTEN/GTd40TfDxbqlbyT9GptH73s36+BPNYqHLBwnznphXp0xRVAYwoYzFPUvSrXhis66OSfqdy4SRpYZkCcC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwyiJC2JBk51cAghdnhTUBGn2UUABLA/T5NOtFXF3PTxrKbuRx
+	9+84939RDUZd9qsFHlnxP3EvyEG3YqJ5JHHtRB+9cTOVzXGpC8WE/YY5DiCv7rBI1ZU=
+X-Gm-Gg: AY/fxX6FoVGqXc7XKDjLRXR4j+oajH+KpOcPKpluYwnByFOYzaatP7zk/4bEGD4JhFK
+	uaARgVScEPSCBkDHhmSGTKWMtvBawJQNVY5zCxTmhpV9IjKK0rH+QiBzU5L0blaUuOt+hPCcgZf
+	IUPPbOqe60MEtPUie7gif/n9MdiV/fT73Yv4roQBCUiBqCb4l+D8Wp2miyPU0Z++fEtv0kpUxOu
+	BioIB+eogjakeKCHmJg1irJER1ixd2vzUoh7vrcYQ6mKOAPpassmMNknJpf6YewgNxORrrhJJgk
+	Lx1/TWidYK7lIHdVK5B0zJZ41g7BAl97pKkWaVksP7jb3TVbszeAhMG4dAzWFMTgyWNk0oO75/k
+	O3aUXSVt2yKeHLza5Yn8B+mq47z/AUqQawNTeWaj2G+vFoVimjDVehqbOt7jmt4yk2egTUvC9vF
+	hNVDrQe+pykZlhOi+VGJID
+X-Google-Smtp-Source: AGHT+IGLQlOVOkiDjec3oBGg4+Ay31+MFr1T1oasXTpgdA5gcl1YGVgHyCirJ2aVhoFz1PXleO1q3g==
+X-Received: by 2002:a5d:5f87:0:b0:431:327:5dd4 with SMTP id ffacd0b85a97d-4324e50db43mr41813742f8f.46.1767183198565;
+        Wed, 31 Dec 2025 04:13:18 -0800 (PST)
+Received: from ho-tower-lan.lan ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43277b0efefsm40904221f8f.25.2025.12.31.04.13.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Dec 2025 01:15:10 -0800 (PST)
-From: Lisa Robinson <lisa@bytefly.space>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Lisa Robinson <lisa@bytefly.space>
-Subject: [PATCH] LoongArch: Fix PMU counter allocation for mixed-type event groups
-Date: Wed, 31 Dec 2025 17:15:00 +0800
-Message-ID: <20251231091500.530432-1-lisa@bytefly.space>
-X-Mailer: git-send-email 2.52.0
+        Wed, 31 Dec 2025 04:13:18 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+Date: Wed, 31 Dec 2025 12:12:28 +0000
+Subject: [PATCH] perf vendor events arm64: Remove uncountable events
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251231-james-perf-uncountable-events-v1-1-f2d9932999fd@linaro.org>
+X-B4-Tracking: v=1; b=H4sIACsTVWkC/x3MQQqDMBAF0KvIrB3QhNLWq4iLRH/aKe0oGZWCe
+ PeGLt/mHWTIAqOuOihjF5NZC9q6ovEZ9AGWqZhc4y6t8w2/wgfGC3LiTcd50zXENxg7dDV2tzC
+ lePfx6hOVY8lI8v3//XCeP4R9qiNvAAAA
+To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+ Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Akio Kakuno <fj3333bs@aa.jp.fujitsu.com>, 
+ Yoshihiro Furudera <fj5100bi@fujitsu.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
-When validating a perf event group, validate_group() unconditionally
-attempts to allocate hardware PMU counters for the leader, sibling
-events and the new event being added.
+These events are never countable by the PMU and are only intended to
+be used as external inputs to trace. Therefore showing them in 'perf
+list' is misleading so remove them.
 
-This is incorrect for mixed-type groups. If a PERF_TYPE_SOFTWARE event
-ispart of the group, the current code still tries to allocate a hardware
-PMU counter for it, which can wrongly consume hardware PMU resources and
-cause spurious allocation failures.
+The generator script doesn't emit these events when used with the new
+telemetry-solution input files [1].
 
-Fix this by only allocating PMU counters for hardware events during group
-validation, and skipping software events.
+'perf list' should only show countable events because there are events
+that are sometimes implemented, sometimes countable and sometimes not,
+for example TRB_TRIG. If we always include any implemented events
+whether they are countable or not then it's not possible to tell whether
+they are usable in perf without going to the docs, defeating the point
+of 'perf list'.
 
-A trimmed down reproducer is as simple as this:
+It's also not useful yet to display implemented events that are not
+countable (for help in using trace rather than perf stat), because
+PMU_OVFS and PMU_HOVFS are practically always implemented and TRB_TRIG
+is always implemented when there is TRBE.
 
-  #include <stdio.h>
-  #include <assert.h>
-  #include <unistd.h>
-  #include <string.h>
-  #include <sys/syscall.h>
-  #include <linux/perf_event.h>
+[1]: https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/tree/main/data/pmu/cpu
 
-  int
-  main (int argc, char *argv[])
-  {
-  	struct perf_event_attr attr = { 0 };
-  	int fds[5];
-
-  	attr.disabled = 1;
-  	attr.exclude_kernel = 1;
-  	attr.exclude_hv = 1;
-  	attr.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
-  		PERF_FORMAT_TOTAL_TIME_RUNNING | PERF_FORMAT_ID | PERF_FORMAT_GROUP;
-  	attr.size = sizeof (attr);
-
-  	attr.type = PERF_TYPE_SOFTWARE;
-  	attr.config = PERF_COUNT_SW_DUMMY;
-  	fds[0] = syscall (SYS_perf_event_open, &attr, 0, -1, -1, 0);
-  	assert (fds[0] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_CPU_CYCLES;
-  	fds[1] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[1] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_INSTRUCTIONS;
-  	fds[2] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[2] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_BRANCH_MISSES;
-  	fds[3] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[3] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_CACHE_REFERENCES;
-  	fds[4] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[4] >= 0);
-
-  	printf ("PASSED\n");
-
-  	return 0;
-  }
-
-Fixes: b37042b2bb7c ("LoongArch: Add perf events support")
-Signed-off-by: Lisa Robinson <lisa@bytefly.space>
+Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- arch/loongarch/kernel/perf_event.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json  |  8 --------
+ tools/perf/pmu-events/arch/arm64/common-and-microarch.json | 12 ------------
+ tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json   | 10 ----------
+ 3 files changed, 30 deletions(-)
 
-diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
-index 9d257c8519c9..82cc08c2b056 100644
---- a/arch/loongarch/kernel/perf_event.c
-+++ b/arch/loongarch/kernel/perf_event.c
-@@ -633,15 +633,24 @@ static int validate_group(struct perf_event *event)
- 
- 	memset(&fake_cpuc, 0, sizeof(fake_cpuc));
- 
--	if (loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
-+	if ((PERF_TYPE_HARDWARE == leader->attr.type ||
-+	     PERF_TYPE_HW_CACHE == leader->attr.type ||
-+	     PERF_TYPE_RAW == leader->attr.type) &&
-+	    loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
- 		return -EINVAL;
- 
- 	for_each_sibling_event(sibling, leader) {
--		if (loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
-+		if ((PERF_TYPE_HARDWARE == sibling->attr.type ||
-+		     PERF_TYPE_HW_CACHE == sibling->attr.type ||
-+		     PERF_TYPE_RAW == sibling->attr.type) &&
-+		    loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
- 			return -EINVAL;
- 	}
- 
--	if (loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
-+	if ((PERF_TYPE_HARDWARE == event->attr.type ||
-+	     PERF_TYPE_HW_CACHE == event->attr.type ||
-+	     PERF_TYPE_RAW == event->attr.type) &&
-+	    loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
- 		return -EINVAL;
- 
- 	return 0;
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json
+deleted file mode 100644
+index d8b7b9f9e5fa..000000000000
+--- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json
++++ /dev/null
+@@ -1,8 +0,0 @@
+-[
+-    {
+-        "ArchStdEvent": "PMU_OVFS"
+-    },
+-    {
+-        "ArchStdEvent": "PMU_HOVFS"
+-    }
+-]
+diff --git a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
+index 2416d9f8a83d..468cb085d879 100644
+--- a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
++++ b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
+@@ -432,24 +432,12 @@
+         "EventName": "TRB_WRAP",
+         "BriefDescription": "Trace buffer current write pointer wrapped"
+     },
+-    {
+-        "PublicDescription": "PMU overflow, counters accessible to EL1 and EL0",
+-        "EventCode": "0x400D",
+-        "EventName": "PMU_OVFS",
+-        "BriefDescription": "PMU overflow, counters accessible to EL1 and EL0"
+-    },
+     {
+         "PublicDescription": "Trace buffer Trigger Event",
+         "EventCode": "0x400E",
+         "EventName": "TRB_TRIG",
+         "BriefDescription": "Trace buffer Trigger Event"
+     },
+-    {
+-        "PublicDescription": "PMU overflow, counters reserved for use by EL2",
+-        "EventCode": "0x400F",
+-        "EventName": "PMU_HOVFS",
+-        "BriefDescription": "PMU overflow, counters reserved for use by EL2"
+-    },
+     {
+         "PublicDescription": "PE Trace Unit external output 0",
+         "EventCode": "0x4010",
+diff --git a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json
+deleted file mode 100644
+index 65bd6cdd0dd5..000000000000
+--- a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json
++++ /dev/null
+@@ -1,10 +0,0 @@
+-[
+-    {
+-        "ArchStdEvent": "PMU_OVFS",
+-        "BriefDescription": "This event counts the event generated each time one of the condition occurs described in Arm Architecture Reference Manual for A-profile architecture. This event is only for output to the trace unit."
+-    },
+-    {
+-        "ArchStdEvent": "PMU_HOVFS",
+-        "BriefDescription": "This event counts the event generated each time an event is counted by an event counter <n> and all of the condition occur described in Arm Architecture Reference Manual for A-profile architecture. This event is only for output to the trace unit."
+-    }
+-]
+
+---
+base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
+change-id: 20251230-james-perf-uncountable-events-28adfb93b73f
+
+Best regards,
 -- 
-2.52.0
+James Clark <james.clark@linaro.org>
 
