@@ -1,184 +1,136 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4344322A2E
-	for <linux-perf-users@vger.kernel.org>; Wed, 31 Dec 2025 12:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7205B67A;
+	Wed, 31 Dec 2025 22:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767183203; cv=none; b=IWYaj7WmjnVZjPRrDSdruAwavdmnk5KnJqgWwPAlCY+Sfpn++kZmTOC9EPpyt/WBxIO23BjbhRDhzHomKuJqgSpJWSye2RHgD2r7uNKSjanTLcjeNy18GCh62gm1auBMU4OtICSjD1buK8rFjfgGzMpMy4YkrvL3C5D5uJZA8dw=
+	t=1767221381; cv=none; b=P6SNrYGtIsmX5Rd6fr1VwRS7IqkGqIqn6W9I0y3zwyT5AAGlos+B9KaJ9y36LM9xcc27zT+FUfhMSpftlR9T5fUv7lEFByarXmiiCjboALt2oaJZJtut6ikieDgo/woHPvm6h5CAMQUnfwyNJq0kqFe5ib9bdidVQNWLtWQyn4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767183203; c=relaxed/simple;
-	bh=TbH7w6cL5HlrAiR+wUX+SJxH/xdVAckk8XejBC402FA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=s3HK+b9g/fPYU6J989t6zjSFbMeMuOd3L1vbXHF3M5ZURbo8Hzqv6QerzrMn5Lbe96eUoxdtnuliOc7ttEsclliA6altJkIUV9F2n1+KKYRcrxfwmu0qPP/kgakwg2u10Gu0+L+xR0HrpQjzjTtJZMnFWUxmyWbL0+XdLvgT8L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V01/YWx6; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1767221381; c=relaxed/simple;
+	bh=WnQYwr01uFtJp/lb65gGjbx7ZL5KYU5JS2Sf4YS5p48=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EaakhtbaOVN6BJ85pUXOeWSxVKXD87i6kBWaAlPLCg49FL5gvgjgb3KM+JosvBp8Q7SQs3gDocjr01fjlE9RhsDTCRh38RqJ+XvTEr2/a29X2yIrtcmAxLoI+l7d6Vxe7P3ynuZ88mwcfbVGZueV20B86sOs+tnyoNhSuQQCsxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lBj7yPgq; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V01/YWx6"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-47d3ffa6720so47910755e9.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Dec 2025 04:13:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1767183199; x=1767787999; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NK8HAsEbzuMAmJWJWMfro3WvF+de9PMAbtRd5ci+vDw=;
-        b=V01/YWx6hP89cXNNndGJOoBLuRdVvrNuGhJfL7tws6M5+TDOQdFQ718xyt7YLljJcT
-         t1V5g+NhupGK/aSAzOs7YLb/tGx4SFdyes8VIxIIXJyAL1Prlg2NC+Ut8t2e+2XKh5xE
-         KeUECUufq0TZqLpIT0DnJHoTVJnGF0BStvnVNWYaghaqGwdilVTq1c8Pnbz6JQMAUpAe
-         TUwAzT5c6PCQOhLAaATVLmtxs7Xfm0GNUQ2I+5p68uqwp1Lm+eHlCkhK60qE4u+xIOnl
-         VG7KpgxhOp94mn187x2JfbPlL84lYVsBwttRp8ZOXl1JVdMMWH1opQC6wL9SLUshlk4u
-         kVcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767183199; x=1767787999;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NK8HAsEbzuMAmJWJWMfro3WvF+de9PMAbtRd5ci+vDw=;
-        b=Yof6G6ewxfwODu3nom4Nu9Eq6yrc5CejCdxf/H6Q6XWALA4nwIH4iZeN/goNr+2j+u
-         9bOJrye8CT6QTLykvp9XIE9/E/SXrl0y4/fGU8/VQyOcub0gvhYlHgj0VVLE4iGNnYfq
-         P0ZsWkLuuU+t26nDsChmD59ylQfxzGsS24rQ/wtRfjkh+yGlRn+sR66YcaGvAywr2jFR
-         biulIOForaJcomA5CDX10g1rK3xBaZMFt06mYpmNTSVKb3XmyMczkXGHCOEyE9/7XU/R
-         chWt04eVOMOpcbSI3OXfF9v7ZAL3vui9Uc8IA3zbeRolzxyzIefEZ60ozFZdlYa0PZiO
-         fqJg==
-X-Forwarded-Encrypted: i=1; AJvYcCXCTEN/GTd40TfDxbqlbyT9GptH73s36+BPNYqHLBwnznphXp0xRVAYwoYzFPUvSrXhis66OSfqdy4SRpYZkCcC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwyiJC2JBk51cAghdnhTUBGn2UUABLA/T5NOtFXF3PTxrKbuRx
-	9+84939RDUZd9qsFHlnxP3EvyEG3YqJ5JHHtRB+9cTOVzXGpC8WE/YY5DiCv7rBI1ZU=
-X-Gm-Gg: AY/fxX6FoVGqXc7XKDjLRXR4j+oajH+KpOcPKpluYwnByFOYzaatP7zk/4bEGD4JhFK
-	uaARgVScEPSCBkDHhmSGTKWMtvBawJQNVY5zCxTmhpV9IjKK0rH+QiBzU5L0blaUuOt+hPCcgZf
-	IUPPbOqe60MEtPUie7gif/n9MdiV/fT73Yv4roQBCUiBqCb4l+D8Wp2miyPU0Z++fEtv0kpUxOu
-	BioIB+eogjakeKCHmJg1irJER1ixd2vzUoh7vrcYQ6mKOAPpassmMNknJpf6YewgNxORrrhJJgk
-	Lx1/TWidYK7lIHdVK5B0zJZ41g7BAl97pKkWaVksP7jb3TVbszeAhMG4dAzWFMTgyWNk0oO75/k
-	O3aUXSVt2yKeHLza5Yn8B+mq47z/AUqQawNTeWaj2G+vFoVimjDVehqbOt7jmt4yk2egTUvC9vF
-	hNVDrQe+pykZlhOi+VGJID
-X-Google-Smtp-Source: AGHT+IGLQlOVOkiDjec3oBGg4+Ay31+MFr1T1oasXTpgdA5gcl1YGVgHyCirJ2aVhoFz1PXleO1q3g==
-X-Received: by 2002:a5d:5f87:0:b0:431:327:5dd4 with SMTP id ffacd0b85a97d-4324e50db43mr41813742f8f.46.1767183198565;
-        Wed, 31 Dec 2025 04:13:18 -0800 (PST)
-Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43277b0efefsm40904221f8f.25.2025.12.31.04.13.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Dec 2025 04:13:18 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-Date: Wed, 31 Dec 2025 12:12:28 +0000
-Subject: [PATCH] perf vendor events arm64: Remove uncountable events
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lBj7yPgq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767221380; x=1798757380;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WnQYwr01uFtJp/lb65gGjbx7ZL5KYU5JS2Sf4YS5p48=;
+  b=lBj7yPgqpmzm5Hj7zNwfEt5YvzGbBeMMWih7VOQwfDaY1k251HK6XtJZ
+   zOXoi7KphURp9rNdoZ9sedRxyBWF8gxAzd9R1ObYkbgRiNDy/+a4liXmw
+   HeWu2Gws1a6X8n/Wy86nBv5vRr3laX7oRY2eZCBU5KYmFm4U+12A7f0wd
+   sErAz1AvEiwqNanDWdcFt7Z6r9FwFw5J7IJsIvbfRRu/nkcj5yVhDhxKy
+   RmThJtg1qvqAzZCu8+GUzUKKtXcyvcua7G+IVD12i4ydp/iy4BncZO19c
+   lBACXwVC5hG444DVGBZ86YZ/YOfZ8UooZ4vxxso2deqmfYFsnEG0VWSoj
+   A==;
+X-CSE-ConnectionGUID: geWHEbrXTkS7VzygFhGxrQ==
+X-CSE-MsgGUID: yS7GGGJIR8e+fVPcnzBpow==
+X-IronPort-AV: E=McAfee;i="6800,10657,11658"; a="68816598"
+X-IronPort-AV: E=Sophos;i="6.21,193,1763452800"; 
+   d="scan'208";a="68816598"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Dec 2025 14:49:39 -0800
+X-CSE-ConnectionGUID: SHyImkrrTae5l7R46jncFg==
+X-CSE-MsgGUID: gY/b9wZ2SCGagsHVdQIoEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,193,1763452800"; 
+   d="scan'208";a="232611001"
+Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.43])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Dec 2025 14:49:39 -0800
+From: Zide Chen <zide.chen@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>
+Subject: [PATCH V2 00/13] Add DMR/NVL and missing PTL uncore support
+Date: Wed, 31 Dec 2025 14:42:17 -0800
+Message-ID: <20251231224233.113839-1-zide.chen@intel.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251231-james-perf-uncountable-events-v1-1-f2d9932999fd@linaro.org>
-X-B4-Tracking: v=1; b=H4sIACsTVWkC/x3MQQqDMBAF0KvIrB3QhNLWq4iLRH/aKe0oGZWCe
- PeGLt/mHWTIAqOuOihjF5NZC9q6ovEZ9AGWqZhc4y6t8w2/wgfGC3LiTcd50zXENxg7dDV2tzC
- lePfx6hOVY8lI8v3//XCeP4R9qiNvAAAA
-To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Akio Kakuno <fj3333bs@aa.jp.fujitsu.com>, 
- Yoshihiro Furudera <fj5100bi@fujitsu.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-perf-users@vger.kernel.org, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-These events are never countable by the PMU and are only intended to
-be used as external inputs to trace. Therefore showing them in 'perf
-list' is misleading so remove them.
+Similar to Sapphire Rapids, Diamond Rapids (DMR) relies on discovery
+tables for uncore enumeration. Key differences and additions include:
 
-The generator script doesn't emit these events when used with the new
-telemetry-solution input files [1].
+- DMR may have two Integrated I/O and Memory Hub (IMH) dies, separate
+  from the compute tile (CBB) dies.  Each CBB and each IMH die has its
+  own discovery domain.
 
-'perf list' should only show countable events because there are events
-that are sometimes implemented, sometimes countable and sometimes not,
-for example TRB_TRIG. If we always include any implemented events
-whether they are countable or not then it's not possible to tell whether
-they are usable in perf without going to the docs, defeating the point
-of 'perf list'.
+- Unlike prior CPUs that retrieve the global discovery table portal
+  exclusively via PCI or MSR, DMR uses PCI for IMH PMON discovery and
+  MSR for CBB PMON discovery.
 
-It's also not useful yet to display implemented events that are not
-countable (for help in using trace rather than perf stat), because
-PMU_OVFS and PMU_HOVFS are practically always implemented and TRB_TRIG
-is always implemented when there is TRBE.
+- DMR introduces several new PMON types: SCA, HAMVF, D2D_ULA, UBR,
+  PCIE4, CRS, CPC, ITC, OTC, CMS, and PCIE6.
 
-[1]: https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/tree/main/data/pmu/cpu
+- IIO free-running counters in DMR are MMIO-based, unlike SPR.
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json  |  8 --------
- tools/perf/pmu-events/arch/arm64/common-and-microarch.json | 12 ------------
- tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json   | 10 ----------
- 3 files changed, 30 deletions(-)
+The uncore driver currently does not clear the freeze_all bit in the
+Global Control Register.  On platforms where it is set at power-on,
+some units may not be enabled if they lack a per-unit enable bit.
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json
-deleted file mode 100644
-index d8b7b9f9e5fa..000000000000
---- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json
-+++ /dev/null
-@@ -1,8 +0,0 @@
--[
--    {
--        "ArchStdEvent": "PMU_OVFS"
--    },
--    {
--        "ArchStdEvent": "PMU_HOVFS"
--    }
--]
-diff --git a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-index 2416d9f8a83d..468cb085d879 100644
---- a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-+++ b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-@@ -432,24 +432,12 @@
-         "EventName": "TRB_WRAP",
-         "BriefDescription": "Trace buffer current write pointer wrapped"
-     },
--    {
--        "PublicDescription": "PMU overflow, counters accessible to EL1 and EL0",
--        "EventCode": "0x400D",
--        "EventName": "PMU_OVFS",
--        "BriefDescription": "PMU overflow, counters accessible to EL1 and EL0"
--    },
-     {
-         "PublicDescription": "Trace buffer Trigger Event",
-         "EventCode": "0x400E",
-         "EventName": "TRB_TRIG",
-         "BriefDescription": "Trace buffer Trigger Event"
-     },
--    {
--        "PublicDescription": "PMU overflow, counters reserved for use by EL2",
--        "EventCode": "0x400F",
--        "EventName": "PMU_HOVFS",
--        "BriefDescription": "PMU overflow, counters reserved for use by EL2"
--    },
-     {
-         "PublicDescription": "PE Trace Unit external output 0",
-         "EventCode": "0x4010",
-diff --git a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json
-deleted file mode 100644
-index 65bd6cdd0dd5..000000000000
---- a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json
-+++ /dev/null
-@@ -1,10 +0,0 @@
--[
--    {
--        "ArchStdEvent": "PMU_OVFS",
--        "BriefDescription": "This event counts the event generated each time one of the condition occurs described in Arm Architecture Reference Manual for A-profile architecture. This event is only for output to the trace unit."
--    },
--    {
--        "ArchStdEvent": "PMU_HOVFS",
--        "BriefDescription": "This event counts the event generated each time an event is counted by an event counter <n> and all of the condition occur described in Arm Architecture Reference Manual for A-profile architecture. This event is only for output to the trace unit."
--    }
--]
+Patch series overview:
+- Patch 1–3, 7, 9: Cleanup or preparatory patches
+- Patch 4–6, 8, 10–11: DMR uncore support
+- Patch 12: Add missing PTL PMON units
+- Patch 13: NVL uncore support
 
----
-base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
-change-id: 20251230-james-perf-uncountable-events-28adfb93b73f
+V2:
+- Introduce struct uncore_discovery_domain[] to allow multiple
+  discovery base, and each could be either an MSR or a PCI device.
+- Add global_init() callback.
+- Add missing format_attr_umask in dmr_imc_uncore_formats_attr[].
+- Address Dapeng’s comments.
+- Add new patches for PTL and NVL uncore support.
 
-Best regards,
+V1: https://lore.kernel.org/linux-perf-users/20251212210007.13986-1-zide.chen@intel.com/
+
+Zide Chen (13):
+  perf/x86/intel/uncore: Move uncore discovery init struct to header
+  perf/x86/intel/uncore: Support per-platform discovery base devices
+  perf/x86/intel/uncore: Remove has_generic_discovery_table()
+  perf/x86/intel/uncore: Add IMH PMON support for Diamond Rapids
+  perf/x86/intel/uncore: Add CBB PMON support for Diamond Rapids
+  perf/x86/intel/uncore: Add domain global init callback
+  perf/x86/intel/uncore: Add freerunning event descriptor helper macro
+  perf/x86/intel/uncore: Support IIO free-running counters on DMR
+  perf/x86/intel/uncore: Support uncore constraint ranges
+  perf/x86/intel/uncore: Update DMR uncore constraints preliminarily
+  perf pmu: Relax uncore wildcard matching to allow numeric suffix
+  perf/x86/intel/uncore: Add missing PMON units for Panther Lake
+  perf/x86/intel/uncore: Add Nova Lake support
+
+ arch/x86/events/intel/uncore.c           | 142 +++--
+ arch/x86/events/intel/uncore.h           |  26 +
+ arch/x86/events/intel/uncore_discovery.c |  78 ++-
+ arch/x86/events/intel/uncore_discovery.h |   8 +-
+ arch/x86/events/intel/uncore_snb.c       |  85 +++
+ arch/x86/events/intel/uncore_snbep.c     | 690 ++++++++++++++++-------
+ tools/perf/util/pmu.c                    |  14 +-
+ 7 files changed, 735 insertions(+), 308 deletions(-)
+
 -- 
-James Clark <james.clark@linaro.org>
+2.52.0
 
