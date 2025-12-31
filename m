@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08C215B998;
-	Wed, 31 Dec 2025 22:49:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8546E28CF52;
+	Wed, 31 Dec 2025 22:49:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767221382; cv=none; b=hEfw32Hp466Uwij7f/abx7irLwviT60pXaYapqMVD8zGikVuFxJHoVkDa7CWvPpNF2qcKawhnqYr9YqHM1GFbSWcWJr10AZetMbprZkXXZ/LUDzbHJptBvw+TnXXcXe+jqhs2TwQHbm77LcSu3V0xC+/82QJ7+B+q00nIIyyugM=
+	t=1767221383; cv=none; b=mffOYe0AJ0nzCbmnxbUeTYuM/myIVR+gAC58NbD1ayma0D5Z9YacRq1gul4zxzviaCSdzaGy1npYPXaIqhP0jSqzuNonO4XtIvV5OKK9EvsQsNUwgzKIYP3QnhQvIawdv+a6SsG/zVkAII0QWqGPgyHrQaXOqLkq4GapNCrN4X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767221382; c=relaxed/simple;
-	bh=+B9k2LapldhEnhYpbP7FbCC2iA89rokPv+/1k44Le5c=;
+	s=arc-20240116; t=1767221383; c=relaxed/simple;
+	bh=0ZOMGXiFWL+wuSWPyRpc35r3raSL34O0zV1ac2PqGoM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jXuvDOKXopDdigqgk44MVP60Vk/v2aXEGmVEvp5UUhqpARF+76WUuV45zWh6PgIW/3BZvyrwhvV6otx8CoJfd31nfGtRRmniZZengybKizP3id5kmb+rri2Ot2Y4Pxcc9crJRThzdX1ZRQ2VaW2xqkbpRNNVmOFXZPnT25yXUP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MisbDMzt; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=bupOx528XI3pf/3VnkGcLNCPAfh8aK4jZVMsp2smyHLxbcpEsWFm5K4tUE/4icnYDcfUVrpTK2OnGJ89lrbLj8VQ5GxqtlnxnIzAuTy1q/KDxtdhvG3G0Cl0rBvXBIfhvYRYTAxW22gm/MYdVEpoCR5Z9a1ApubpYRC/M3WPUrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LnkUYQY1; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MisbDMzt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LnkUYQY1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767221381; x=1798757381;
+  t=1767221382; x=1798757382;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=+B9k2LapldhEnhYpbP7FbCC2iA89rokPv+/1k44Le5c=;
-  b=MisbDMztjaRrLDvi/HcHU7s2xdB/zbfR2JhDEVq5/LJSSU8O8F+3ojej
-   gnquxSzaDXVU7RkgB97Y/Xy3ylOGff0wXER7Fwh0EKjJp5Zt39gtFwy0J
-   BCfgmmnOsJiI2rTsV2g5hsyg4KvUhqk/BA8doMisC+6iT/H2R8HbMl91r
-   WY4sOlv3/YO0X9SJQnNK5XAb3HKXWdMV+dt+8G28w1re0N3LiBL6NuvWz
-   tlf5YSgkbTT3mAoFRcbgVIwkcr8u0Y5dd4kipFu/u7AlCcFbpSQVftW2U
-   ED7xtUBNpFtD9ZU0BKteU0uXMbv485LdmuPEcraVHNns7KmwnAP5hYwqN
-   w==;
-X-CSE-ConnectionGUID: GZEoyy7oT7GxQKDWTESd+g==
-X-CSE-MsgGUID: 1+fen45ZQYqMhfCI8pDUjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11658"; a="68816603"
+  bh=0ZOMGXiFWL+wuSWPyRpc35r3raSL34O0zV1ac2PqGoM=;
+  b=LnkUYQY1dxwXmiOP2oB+7dKg8yIiRSdm4Jrw3GNwMo3T14YBdvEoFaNx
+   KIw1muBcFiEnYpkFXwKCulu+jvvjp1nbtQfJOyxYapOosoj2CGVf/swaM
+   LI9/11o1Pt/DudJHm0kcSDgGuzU0lvhnxjVsVGD1PmeB0+9FOsGIz7hDq
+   edBZuKZe+Ou2sJHkrSG41YgpZ9RrDGLWHjqPcf5ceRY9L+YIQIEkZrtKN
+   lnweeVJm++1TTpmNaunNXKG/Os3HQhSGUOoDEidIjGiBNdWo+l6pE/xo4
+   UR6ejnyZK8ZW5X128MZr1jyc53IALDTAFVe+wr01/eG6KKceVKROXAD6u
+   Q==;
+X-CSE-ConnectionGUID: SJwOdC92SBaoKLk2/jTbzw==
+X-CSE-MsgGUID: IM3pZ3ziRBOD/wdbnFQCCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11658"; a="68816608"
 X-IronPort-AV: E=Sophos;i="6.21,193,1763452800"; 
-   d="scan'208";a="68816603"
+   d="scan'208";a="68816608"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Dec 2025 14:49:39 -0800
-X-CSE-ConnectionGUID: 3xG7iYO9QMGihn0h40zxpw==
-X-CSE-MsgGUID: mUycKkQuQtGKmD+Orxqr1g==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Dec 2025 14:49:40 -0800
+X-CSE-ConnectionGUID: VazQpf8OTWau7+eASf6GnA==
+X-CSE-MsgGUID: fEcHY+l4RraRw4EIhWJWMA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,193,1763452800"; 
-   d="scan'208";a="232611004"
+   d="scan'208";a="232611007"
 Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.43])
   by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Dec 2025 14:49:39 -0800
 From: Zide Chen <zide.chen@intel.com>
@@ -59,9 +59,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Zide Chen <zide.chen@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Falcon Thomas <thomas.falcon@intel.com>
-Subject: [PATCH V2 01/13] perf/x86/intel/uncore: Move uncore discovery init struct to header
-Date: Wed, 31 Dec 2025 14:42:18 -0800
-Message-ID: <20251231224233.113839-2-zide.chen@intel.com>
+Subject: [PATCH V2 02/13] perf/x86/intel/uncore: Support per-platform discovery base devices
+Date: Wed, 31 Dec 2025 14:42:19 -0800
+Message-ID: <20251231224233.113839-3-zide.chen@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251231224233.113839-1-zide.chen@intel.com>
 References: <20251231224233.113839-1-zide.chen@intel.com>
@@ -73,315 +73,292 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The discovery base MSR or PCI device is platform-specific and must be
-defined statically in the per-platform init table and passed to the
-discovery code.
+On DMR platforms, IMH discovery tables are enumerated via PCI, while
+CBB domains use MSRs, unlike earlier platforms which relied on either
+PCI or MSR exclusively.
 
-Move the definition of struct intel_uncore_init_fun to uncore.h so it
-can be accessed by discovery code, and rename it to reflect that it
-now carries more than just init callbacks.
+DMR also uses different MSRs and PCI devices, requiring support for
+multiple, platform-specific discovery bases.
 
-Shorten intel_uncore_has_discovery_tables[_pci/msr] to
-uncore_discovery[_pci/msr] for improved readability and alignment.
+Introduce struct uncore_discovery_domain to hold the discovery base and
+other domain-specific configuration.
 
-Drop the `intel_` prefix from new names since the code is under the
-intel directory and long identifiers make alignment harder.  Further
-cleanups will continue removing `intel_` prefixes.
+Move uncore_units_ignore into uncore_discovery_domain so a single
+structure can be passed to uncore_discovery_[pci/msr].
 
 No functional change intended.
 
+Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Zide Chen <zide.chen@intel.com>
 ---
-V2: New patch
+v2:
+- Introduce uncore_discovery_domain[] to support possible any
+  combination of MSR or PCI discovery base.
+- Move has_generic_discovery_table() related code to a separate patch
+  for easier review.
+- Update commit messages.
 
- arch/x86/events/intel/uncore.c           | 72 ++++++++++--------------
- arch/x86/events/intel/uncore.h           | 10 ++++
- arch/x86/events/intel/uncore_discovery.c | 12 ++--
- arch/x86/events/intel/uncore_discovery.h |  2 +-
- 4 files changed, 49 insertions(+), 47 deletions(-)
+ arch/x86/events/intel/uncore.c           | 32 ++++++++-----
+ arch/x86/events/intel/uncore.h           | 15 +++++--
+ arch/x86/events/intel/uncore_discovery.c | 57 +++++++++++++++---------
+ 3 files changed, 69 insertions(+), 35 deletions(-)
 
 diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index e228e564b15e..cd561290be8c 100644
+index cd561290be8c..844030ef87c4 100644
 --- a/arch/x86/events/intel/uncore.c
 +++ b/arch/x86/events/intel/uncore.c
-@@ -1697,133 +1697,123 @@ static int __init uncore_mmio_init(void)
- 	return ret;
- }
+@@ -1798,7 +1798,7 @@ static const struct uncore_plat_init lnl_uncore_init __initconst = {
+ static const struct uncore_plat_init ptl_uncore_init __initconst = {
+ 	.cpu_init = ptl_uncore_cpu_init,
+ 	.mmio_init = ptl_uncore_mmio_init,
+-	.use_discovery = true,
++	.domain[0].discovery_base = UNCORE_DISCOVERY_MSR,
+ };
  
--struct intel_uncore_init_fun {
--	void	(*cpu_init)(void);
--	int	(*pci_init)(void);
--	void	(*mmio_init)(void);
+ static const struct uncore_plat_init icx_uncore_init __initconst = {
+@@ -1817,16 +1817,18 @@ static const struct uncore_plat_init spr_uncore_init __initconst = {
+ 	.cpu_init = spr_uncore_cpu_init,
+ 	.pci_init = spr_uncore_pci_init,
+ 	.mmio_init = spr_uncore_mmio_init,
+-	.use_discovery = true,
+-	.uncore_units_ignore = spr_uncore_units_ignore,
++	.domain[0].base_is_pci = true,
++	.domain[0].discovery_base = UNCORE_DISCOVERY_TABLE_DEVICE,
++	.domain[0].units_ignore = spr_uncore_units_ignore,
+ };
+ 
+ static const struct uncore_plat_init gnr_uncore_init __initconst = {
+ 	.cpu_init = gnr_uncore_cpu_init,
+ 	.pci_init = gnr_uncore_pci_init,
+ 	.mmio_init = gnr_uncore_mmio_init,
+-	.use_discovery = true,
+-	.uncore_units_ignore = gnr_uncore_units_ignore,
++	.domain[0].base_is_pci = true,
++	.domain[0].discovery_base = UNCORE_DISCOVERY_TABLE_DEVICE,
++	.domain[0].units_ignore = gnr_uncore_units_ignore,
+ };
+ 
+ static const struct uncore_plat_init generic_uncore_init __initconst = {
+@@ -1897,6 +1899,17 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_uncore_match);
+ 
++static bool ucore_use_discovery(struct uncore_plat_init *config)
++{
++	int i;
++
++	for (i = 0; i < UNCORE_DISCOVERY_DOMAINS; i++)
++		if (config->domain[i].discovery_base)
++			return true;
++
++	return false;
++}
++
+ static int __init intel_uncore_init(void)
+ {
+ 	const struct x86_cpu_id *id;
+@@ -1911,15 +1924,14 @@ static int __init intel_uncore_init(void)
+ 
+ 	id = x86_match_cpu(intel_uncore_match);
+ 	if (!id) {
+-		if (!uncore_no_discover && uncore_discovery(NULL))
+-			uncore_init = (struct uncore_plat_init *)&generic_uncore_init;
+-		else
++		uncore_init = (struct uncore_plat_init *)&generic_uncore_init;
++		if (uncore_no_discover || !uncore_discovery(uncore_init))
+ 			return -ENODEV;
+ 	} else {
+ 		uncore_init = (struct uncore_plat_init *)id->driver_data;
+-		if (uncore_no_discover && uncore_init->use_discovery)
++		if (uncore_no_discover && ucore_use_discovery(uncore_init))
+ 			return -ENODEV;
+-		if (uncore_init->use_discovery &&
++		if (ucore_use_discovery(uncore_init) &&
+ 		    !uncore_discovery(uncore_init))
+ 			return -ENODEV;
+ 	}
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 568536ef28ee..1574ffc7ee05 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -47,14 +47,21 @@ struct uncore_event_desc;
+ struct freerunning_counters;
+ struct intel_uncore_topology;
+ 
++struct uncore_discovery_domain {
++	/* MSR address or PCI device used as the discovery base */
++	u32	discovery_base;
++	bool	base_is_pci;
++	/* The units in the discovery table should be ignored. */
++	int	*units_ignore;
++};
++
++#define UNCORE_DISCOVERY_DOMAINS	2
+ struct uncore_plat_init {
+ 	void	(*cpu_init)(void);
+ 	int	(*pci_init)(void);
+ 	void	(*mmio_init)(void);
 -	/* Discovery table is required */
 -	bool	use_discovery;
 -	/* The units in the discovery table should be ignored. */
 -	int	*uncore_units_ignore;
--};
--
--static const struct intel_uncore_init_fun nhm_uncore_init __initconst = {
-+static const struct uncore_plat_init nhm_uncore_init __initconst = {
- 	.cpu_init = nhm_uncore_cpu_init,
- };
- 
--static const struct intel_uncore_init_fun snb_uncore_init __initconst = {
-+static const struct uncore_plat_init snb_uncore_init __initconst = {
- 	.cpu_init = snb_uncore_cpu_init,
- 	.pci_init = snb_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun ivb_uncore_init __initconst = {
-+static const struct uncore_plat_init ivb_uncore_init __initconst = {
- 	.cpu_init = snb_uncore_cpu_init,
- 	.pci_init = ivb_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun hsw_uncore_init __initconst = {
-+static const struct uncore_plat_init hsw_uncore_init __initconst = {
- 	.cpu_init = snb_uncore_cpu_init,
- 	.pci_init = hsw_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun bdw_uncore_init __initconst = {
-+static const struct uncore_plat_init bdw_uncore_init __initconst = {
- 	.cpu_init = snb_uncore_cpu_init,
- 	.pci_init = bdw_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun snbep_uncore_init __initconst = {
-+static const struct uncore_plat_init snbep_uncore_init __initconst = {
- 	.cpu_init = snbep_uncore_cpu_init,
- 	.pci_init = snbep_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun nhmex_uncore_init __initconst = {
-+static const struct uncore_plat_init nhmex_uncore_init __initconst = {
- 	.cpu_init = nhmex_uncore_cpu_init,
- };
- 
--static const struct intel_uncore_init_fun ivbep_uncore_init __initconst = {
-+static const struct uncore_plat_init ivbep_uncore_init __initconst = {
- 	.cpu_init = ivbep_uncore_cpu_init,
- 	.pci_init = ivbep_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun hswep_uncore_init __initconst = {
-+static const struct uncore_plat_init hswep_uncore_init __initconst = {
- 	.cpu_init = hswep_uncore_cpu_init,
- 	.pci_init = hswep_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun bdx_uncore_init __initconst = {
-+static const struct uncore_plat_init bdx_uncore_init __initconst = {
- 	.cpu_init = bdx_uncore_cpu_init,
- 	.pci_init = bdx_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun knl_uncore_init __initconst = {
-+static const struct uncore_plat_init knl_uncore_init __initconst = {
- 	.cpu_init = knl_uncore_cpu_init,
- 	.pci_init = knl_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun skl_uncore_init __initconst = {
-+static const struct uncore_plat_init skl_uncore_init __initconst = {
- 	.cpu_init = skl_uncore_cpu_init,
- 	.pci_init = skl_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun skx_uncore_init __initconst = {
-+static const struct uncore_plat_init skx_uncore_init __initconst = {
- 	.cpu_init = skx_uncore_cpu_init,
- 	.pci_init = skx_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun icl_uncore_init __initconst = {
-+static const struct uncore_plat_init icl_uncore_init __initconst = {
- 	.cpu_init = icl_uncore_cpu_init,
- 	.pci_init = skl_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun tgl_uncore_init __initconst = {
-+static const struct uncore_plat_init tgl_uncore_init __initconst = {
- 	.cpu_init = tgl_uncore_cpu_init,
- 	.mmio_init = tgl_uncore_mmio_init,
- };
- 
--static const struct intel_uncore_init_fun tgl_l_uncore_init __initconst = {
-+static const struct uncore_plat_init tgl_l_uncore_init __initconst = {
- 	.cpu_init = tgl_uncore_cpu_init,
- 	.mmio_init = tgl_l_uncore_mmio_init,
- };
- 
--static const struct intel_uncore_init_fun rkl_uncore_init __initconst = {
-+static const struct uncore_plat_init rkl_uncore_init __initconst = {
- 	.cpu_init = tgl_uncore_cpu_init,
- 	.pci_init = skl_uncore_pci_init,
- };
- 
--static const struct intel_uncore_init_fun adl_uncore_init __initconst = {
-+static const struct uncore_plat_init adl_uncore_init __initconst = {
- 	.cpu_init = adl_uncore_cpu_init,
- 	.mmio_init = adl_uncore_mmio_init,
- };
- 
--static const struct intel_uncore_init_fun mtl_uncore_init __initconst = {
-+static const struct uncore_plat_init mtl_uncore_init __initconst = {
- 	.cpu_init = mtl_uncore_cpu_init,
- 	.mmio_init = adl_uncore_mmio_init,
- };
- 
--static const struct intel_uncore_init_fun lnl_uncore_init __initconst = {
-+static const struct uncore_plat_init lnl_uncore_init __initconst = {
- 	.cpu_init = lnl_uncore_cpu_init,
- 	.mmio_init = lnl_uncore_mmio_init,
- };
- 
--static const struct intel_uncore_init_fun ptl_uncore_init __initconst = {
-+static const struct uncore_plat_init ptl_uncore_init __initconst = {
- 	.cpu_init = ptl_uncore_cpu_init,
- 	.mmio_init = ptl_uncore_mmio_init,
- 	.use_discovery = true,
- };
- 
--static const struct intel_uncore_init_fun icx_uncore_init __initconst = {
-+static const struct uncore_plat_init icx_uncore_init __initconst = {
- 	.cpu_init = icx_uncore_cpu_init,
- 	.pci_init = icx_uncore_pci_init,
- 	.mmio_init = icx_uncore_mmio_init,
- };
- 
--static const struct intel_uncore_init_fun snr_uncore_init __initconst = {
-+static const struct uncore_plat_init snr_uncore_init __initconst = {
- 	.cpu_init = snr_uncore_cpu_init,
- 	.pci_init = snr_uncore_pci_init,
- 	.mmio_init = snr_uncore_mmio_init,
- };
- 
--static const struct intel_uncore_init_fun spr_uncore_init __initconst = {
-+static const struct uncore_plat_init spr_uncore_init __initconst = {
- 	.cpu_init = spr_uncore_cpu_init,
- 	.pci_init = spr_uncore_pci_init,
- 	.mmio_init = spr_uncore_mmio_init,
-@@ -1831,7 +1821,7 @@ static const struct intel_uncore_init_fun spr_uncore_init __initconst = {
- 	.uncore_units_ignore = spr_uncore_units_ignore,
- };
- 
--static const struct intel_uncore_init_fun gnr_uncore_init __initconst = {
-+static const struct uncore_plat_init gnr_uncore_init __initconst = {
- 	.cpu_init = gnr_uncore_cpu_init,
- 	.pci_init = gnr_uncore_pci_init,
- 	.mmio_init = gnr_uncore_mmio_init,
-@@ -1839,7 +1829,7 @@ static const struct intel_uncore_init_fun gnr_uncore_init __initconst = {
- 	.uncore_units_ignore = gnr_uncore_units_ignore,
- };
- 
--static const struct intel_uncore_init_fun generic_uncore_init __initconst = {
-+static const struct uncore_plat_init generic_uncore_init __initconst = {
- 	.cpu_init = intel_uncore_generic_uncore_cpu_init,
- 	.pci_init = intel_uncore_generic_uncore_pci_init,
- 	.mmio_init = intel_uncore_generic_uncore_mmio_init,
-@@ -1910,7 +1900,7 @@ MODULE_DEVICE_TABLE(x86cpu, intel_uncore_match);
- static int __init intel_uncore_init(void)
- {
- 	const struct x86_cpu_id *id;
--	struct intel_uncore_init_fun *uncore_init;
-+	struct uncore_plat_init *uncore_init;
- 	int pret = 0, cret = 0, mret = 0, ret;
- 
- 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-@@ -1921,16 +1911,16 @@ static int __init intel_uncore_init(void)
- 
- 	id = x86_match_cpu(intel_uncore_match);
- 	if (!id) {
--		if (!uncore_no_discover && intel_uncore_has_discovery_tables(NULL))
--			uncore_init = (struct intel_uncore_init_fun *)&generic_uncore_init;
-+		if (!uncore_no_discover && uncore_discovery(NULL))
-+			uncore_init = (struct uncore_plat_init *)&generic_uncore_init;
- 		else
- 			return -ENODEV;
- 	} else {
--		uncore_init = (struct intel_uncore_init_fun *)id->driver_data;
-+		uncore_init = (struct uncore_plat_init *)id->driver_data;
- 		if (uncore_no_discover && uncore_init->use_discovery)
- 			return -ENODEV;
- 		if (uncore_init->use_discovery &&
--		    !intel_uncore_has_discovery_tables(uncore_init->uncore_units_ignore))
-+		    !uncore_discovery(uncore_init))
- 			return -ENODEV;
- 	}
- 
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index d8815fff7588..568536ef28ee 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -47,6 +47,16 @@ struct uncore_event_desc;
- struct freerunning_counters;
- struct intel_uncore_topology;
- 
-+struct uncore_plat_init {
-+	void	(*cpu_init)(void);
-+	int	(*pci_init)(void);
-+	void	(*mmio_init)(void);
-+	/* Discovery table is required */
-+	bool	use_discovery;
-+	/* The units in the discovery table should be ignored. */
-+	int	*uncore_units_ignore;
-+};
 +
++	struct uncore_discovery_domain domain[UNCORE_DISCOVERY_DOMAINS];
+ };
+ 
  struct intel_uncore_type {
- 	const char *name;
- 	int num_counters;
 diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
-index 7d57ce706feb..d39f6a0b8cc3 100644
+index d39f6a0b8cc3..3bcbf974d3a8 100644
 --- a/arch/x86/events/intel/uncore_discovery.c
 +++ b/arch/x86/events/intel/uncore_discovery.c
-@@ -350,7 +350,7 @@ static int parse_discovery_table(struct pci_dev *dev, int die,
- 	return __parse_discovery_table(addr, die, parsed, ignore);
+@@ -259,23 +259,24 @@ uncore_insert_box_info(struct uncore_unit_discovery *unit,
  }
  
--static bool intel_uncore_has_discovery_tables_pci(int *ignore)
-+static bool uncore_discovery_pci(int *ignore)
+ static bool
+-uncore_ignore_unit(struct uncore_unit_discovery *unit, int *ignore)
++uncore_ignore_unit(struct uncore_unit_discovery *unit,
++		   struct uncore_discovery_domain *domain)
+ {
+ 	int i;
+ 
+-	if (!ignore)
++	if (!domain || !domain->units_ignore)
+ 		return false;
+ 
+-	for (i = 0; ignore[i] != UNCORE_IGNORE_END ; i++) {
+-		if (unit->box_type == ignore[i])
++	for (i = 0; domain->units_ignore[i] != UNCORE_IGNORE_END ; i++) {
++		if (unit->box_type == domain->units_ignore[i])
+ 			return true;
+ 	}
+ 
+ 	return false;
+ }
+ 
+-static int __parse_discovery_table(resource_size_t addr, int die,
+-				   bool *parsed, int *ignore)
++static int __parse_discovery_table(struct uncore_discovery_domain *domain,
++				   resource_size_t addr, int die, bool *parsed)
+ {
+ 	struct uncore_global_discovery global;
+ 	struct uncore_unit_discovery unit;
+@@ -314,7 +315,7 @@ static int __parse_discovery_table(resource_size_t addr, int die,
+ 		if (unit.access_type >= UNCORE_ACCESS_MAX)
+ 			continue;
+ 
+-		if (uncore_ignore_unit(&unit, ignore))
++		if (uncore_ignore_unit(&unit, domain))
+ 			continue;
+ 
+ 		uncore_insert_box_info(&unit, die);
+@@ -325,9 +326,9 @@ static int __parse_discovery_table(resource_size_t addr, int die,
+ 	return 0;
+ }
+ 
+-static int parse_discovery_table(struct pci_dev *dev, int die,
+-				 u32 bar_offset, bool *parsed,
+-				 int *ignore)
++static int parse_discovery_table(struct uncore_discovery_domain *domain,
++				 struct pci_dev *dev, int die,
++				 u32 bar_offset, bool *parsed)
+ {
+ 	resource_size_t addr;
+ 	u32 val;
+@@ -347,17 +348,19 @@ static int parse_discovery_table(struct pci_dev *dev, int die,
+ 	}
+ #endif
+ 
+-	return __parse_discovery_table(addr, die, parsed, ignore);
++	return __parse_discovery_table(domain, addr, die, parsed);
+ }
+ 
+-static bool uncore_discovery_pci(int *ignore)
++static bool uncore_discovery_pci(struct uncore_discovery_domain *domain)
  {
  	u32 device, val, entry_id, bar_offset;
  	int die, dvsec = 0, ret = true;
-@@ -399,7 +399,7 @@ static bool intel_uncore_has_discovery_tables_pci(int *ignore)
+ 	struct pci_dev *dev = NULL;
+ 	bool parsed = false;
+ 
+-	if (has_generic_discovery_table())
++	if (domain->discovery_base)
++		device = domain->discovery_base;
++	else if (has_generic_discovery_table())
+ 		device = UNCORE_DISCOVERY_TABLE_DEVICE;
+ 	else
+ 		device = PCI_ANY_ID;
+@@ -386,7 +389,7 @@ static bool uncore_discovery_pci(int *ignore)
+ 			if (die < 0)
+ 				continue;
+ 
+-			parse_discovery_table(dev, die, bar_offset, &parsed, ignore);
++			parse_discovery_table(domain, dev, die, bar_offset, &parsed);
+ 		}
+ 	}
+ 
+@@ -399,11 +402,11 @@ static bool uncore_discovery_pci(int *ignore)
  	return ret;
  }
  
--static bool intel_uncore_has_discovery_tables_msr(int *ignore)
-+static bool uncore_discovery_msr(int *ignore)
+-static bool uncore_discovery_msr(int *ignore)
++static bool uncore_discovery_msr(struct uncore_discovery_domain *domain)
  {
  	unsigned long *die_mask;
  	bool parsed = false;
-@@ -432,10 +432,12 @@ static bool intel_uncore_has_discovery_tables_msr(int *ignore)
- 	return parsed;
- }
+-	int cpu, die;
++	int cpu, die, msr;
+ 	u64 base;
  
--bool intel_uncore_has_discovery_tables(int *ignore)
-+bool uncore_discovery(struct uncore_plat_init *init)
- {
--	return intel_uncore_has_discovery_tables_msr(ignore) ||
--	       intel_uncore_has_discovery_tables_pci(ignore);
-+	int *ignore = init ? init->uncore_units_ignore : NULL;
+ 	die_mask = kcalloc(BITS_TO_LONGS(uncore_max_dies()),
+@@ -411,19 +414,22 @@ static bool uncore_discovery_msr(int *ignore)
+ 	if (!die_mask)
+ 		return false;
+ 
++	msr = domain->discovery_base ?
++	      domain->discovery_base : UNCORE_DISCOVERY_MSR;
 +
-+	return uncore_discovery_msr(ignore) ||
-+	       uncore_discovery_pci(ignore);
+ 	cpus_read_lock();
+ 	for_each_online_cpu(cpu) {
+ 		die = topology_logical_die_id(cpu);
+ 		if (__test_and_set_bit(die, die_mask))
+ 			continue;
+ 
+-		if (rdmsrq_safe_on_cpu(cpu, UNCORE_DISCOVERY_MSR, &base))
++		if (rdmsrq_safe_on_cpu(cpu, msr, &base))
+ 			continue;
+ 
+ 		if (!base)
+ 			continue;
+ 
+-		__parse_discovery_table(base, die, &parsed, ignore);
++		__parse_discovery_table(domain, base, die, &parsed);
+ 	}
+ 
+ 	cpus_read_unlock();
+@@ -434,10 +440,19 @@ static bool uncore_discovery_msr(int *ignore)
+ 
+ bool uncore_discovery(struct uncore_plat_init *init)
+ {
+-	int *ignore = init ? init->uncore_units_ignore : NULL;
++	struct uncore_discovery_domain *domain;
++	bool ret = false;
++	int i;
+ 
+-	return uncore_discovery_msr(ignore) ||
+-	       uncore_discovery_pci(ignore);
++	for (i = 0; i < UNCORE_DISCOVERY_DOMAINS; i++) {
++		domain = &init->domain[i];
++		if (!domain->base_is_pci)
++			ret |= uncore_discovery_msr(domain);
++		else
++			ret |= uncore_discovery_pci(domain);
++	}
++
++	return ret;
  }
  
  void intel_uncore_clear_discovery_tables(void)
-diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
-index dff75c98e22f..dfc237a2b6df 100644
---- a/arch/x86/events/intel/uncore_discovery.h
-+++ b/arch/x86/events/intel/uncore_discovery.h
-@@ -136,7 +136,7 @@ struct intel_uncore_discovery_type {
- 	u16		num_units;	/* number of units */
- };
- 
--bool intel_uncore_has_discovery_tables(int *ignore);
-+bool uncore_discovery(struct uncore_plat_init *init);
- void intel_uncore_clear_discovery_tables(void);
- void intel_uncore_generic_uncore_cpu_init(void);
- int intel_uncore_generic_uncore_pci_init(void);
 -- 
 2.52.0
 
