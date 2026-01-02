@@ -1,56 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6447B2405ED;
-	Fri,  2 Jan 2026 22:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B26B22F772;
+	Fri,  2 Jan 2026 22:40:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767393321; cv=none; b=ZQpAJBflBBQX8dOAIr2zLCiUqD/fH/ITaG8toCGxzS8WhKTxhON+CT0RTelVUczXQMBWFPpBBsC3NcVOtYNDTxs6SMaMnm3bmPiDOEvy4XAh9pclT4tuDKaxlXz94bG9e0f5/TXD8kS4im/Ubc0hmlc+UWZhItgoTk+Z74nMzQ0=
+	t=1767393607; cv=none; b=d5Kqh0zCzeiwy+5tcRpoqpTL6EQpN8BBVXSnmY06vbwwBzZKzVI0RoIH3j4d7CgqMN/KNJ3OSKGwH5a+8J1cA/eYgecuExZS9iaCuhFIU65yg7VRiuAIgiEtH4NGeJhstCJK4zcY/a1jk9wX6fJAAaQgH9H5eBtYgZvzW09s/zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767393321; c=relaxed/simple;
-	bh=iO3fu39Vrw2/lYoAgR2xYxzKU0lNDAIyMr8Wa0A1wS8=;
+	s=arc-20240116; t=1767393607; c=relaxed/simple;
+	bh=u2sBzbUtQ52TAIVixNJyjTXZ4doXDV44CBYUI02UpS0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AAfdi9bQBImri5CvlfITyydR+Jxv1nVOF6Sn3ir6j8unWEweF8zu/lqBsLmDVTb6hK01EnrFcS+teI/PGFueizj8BOMuXXhTHgERsJuoIdIhUHNgGEdZ0BwcxgL8jtU8bbmn2bG6F7ni0oTSWxYpU+6lgAU8NbuPlTWTvHUWlcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tz4iF6te; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=V0GIs5KGjdoS0UyYQ+OaVpYng/zgoKUyP4120uPN0xfg8VJwAUR0lWWXiDygx2VZQtJMVyjOAVI8XJ6aNgEGlOUjChxr0hoUypnBI5buvLu8oYJP7+5Wz+cb0i8igtQuRSCF1OevHx2dVKKzkDXLwICfyrS93/mRyB7rJi4AE4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hxwptyRl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tz4iF6te"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C06C116B1;
-	Fri,  2 Jan 2026 22:35:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hxwptyRl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E96CC116B1;
+	Fri,  2 Jan 2026 22:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767393320;
-	bh=iO3fu39Vrw2/lYoAgR2xYxzKU0lNDAIyMr8Wa0A1wS8=;
+	s=k20201202; t=1767393607;
+	bh=u2sBzbUtQ52TAIVixNJyjTXZ4doXDV44CBYUI02UpS0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tz4iF6tep0JlW4zw4NeDhFyooAMKa7DodawZnCO0UlVvIb58GzYkdsAUeDWaZKb+1
-	 bi4tkgOnhEURGBXTCvXnwTo1RxUzn9Q4htRVaj1RxaPLop5QphuJSVFds8hTGpPdYZ
-	 vVgms/hsNQIOved3/ITL1hN2Z5hOa08leffBoTW8CsJTaRN+uwRT0OSMqLV1ep7Bqi
-	 4Y8kzONCfhasul7KFClDIYC4OMRnEKgGwlKXuDh/9rPaorQZIXf2WKRu//lembTk1a
-	 t66FIuBiFKyZ6Vl+MLCVOFY90ZKBxOKPwZjeVALyg61Oq5XQYiKjDFLDHBaj03BD5U
-	 EFM0PhPCI2VUg==
-Date: Fri, 2 Jan 2026 14:35:18 -0800
+	b=hxwptyRlqOilA+7ZQgpbMzaWtdwKTZP3MB2sXq9XO0QxXj5ZzoTe83WGBSxYz0Yaj
+	 PW47boH91GDqNZKenbkTriPmILAUjQDI1pi8u15rJ3YIN8TophAfp6xDz3ebM1jocx
+	 BWVn7QtE/kCvn6QwbC7hny8MK0W2jeNBdgKU0kiYpa2xBLYaq2CNgZEGNeiVq+wTjb
+	 +RWTbfGpmCUqhz7zxgEgt4ddklcQ7XVu2fQucs9YHiN3hU3E0iCwP8n5+wRmngg5+x
+	 pelaOM7QGH3B517vLaJc0PDMhs3wSgdEtQF1Nfyh1ZxwaSeIfM71BnkcHI8sjvK5EF
+	 N4MsBKkh1zclg==
+Date: Fri, 2 Jan 2026 14:40:05 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Swapnil Sapkal <swapnil.sapkal@amd.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	irogers@google.com, james.clark@arm.com, ravi.bangoria@amd.com,
-	yu.c.chen@intel.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	rostedt@goodmis.org, vincent.guittot@linaro.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	gautham.shenoy@amd.com, kprateek.nayak@amd.com,
-	juri.lelli@redhat.com, yangjihong@bytedance.com, void@manifault.com,
-	tj@kernel.org, sshegde@linux.ibm.com, ctshao@google.com,
-	quic_zhonhan@quicinc.com, thomas.falcon@intel.com,
-	blakejones@google.com, ashelat@redhat.com, leo.yan@arm.com,
-	dvyukov@google.com, ak@linux.intel.com, yujie.liu@intel.com,
-	graham.woodward@arm.com, ben.gainey@arm.com, vineethr@linux.ibm.com,
-	tim.c.chen@linux.intel.com, linux@treblig.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	santosh.shukla@amd.com, sandipan.das@amd.com,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH RESEND v4 07/11] perf sched stats: Add support for report
- subcommand
-Message-ID: <aVhIJmmPGqa77YFR@google.com>
-References: <20250909114227.58802-1-swapnil.sapkal@amd.com>
- <20250909114227.58802-8-swapnil.sapkal@amd.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Dump callchain context marker names
+Message-ID: <aVhJRW9URWItj2fh@google.com>
+References: <20260102-james-perf-dump-callchain-markers-v1-1-3a9bdec20c58@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,601 +47,88 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250909114227.58802-8-swapnil.sapkal@amd.com>
+In-Reply-To: <20260102-james-perf-dump-callchain-markers-v1-1-3a9bdec20c58@linaro.org>
 
-On Tue, Sep 09, 2025 at 11:42:23AM +0000, Swapnil Sapkal wrote:
-> `perf sched stats record` captures two sets of samples. For workload
-> profile, first set right before workload starts and second set after
-> workload finishes. For the systemwide profile, first set at the
-> beginning of profile and second set on receiving SIGINT signal.
-> 
-> Add `perf sched stats report` subcommand that will read both the set
-> of samples, get the diff and render a final report. Final report prints
-> scheduler stat at cpu granularity as well as sched domain granularity.
-> 
-> Example usage:
-> 
->   # perf sched stats record
->   # perf sched stats report
+Hi James,
 
-It'd be great if you could add an example output as well.
+Happy new year!
 
+On Fri, Jan 02, 2026 at 12:15:43PM +0000, James Clark wrote:
+> These are hard to interpret in the raw output because they are printed
+> as hex but are defined in perf_event.h as decimal. Make it much easier
+> to read the raw callchains by just printing their names.
 > 
-> Co-developed-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> Tested-by: James Clark <james.clark@linaro.org>
-> Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
+> For example:
+> 
+>   $ perf report -D
+> 
+>   1798195372321 0x4638 [0xb0]: PERF_RECORD_SAMPLE(IP, 0x4002): 44922/44922: 0x7c8046dd3400 period: 120218 addr: 0
+>   ... FP chain: nr:12
+>   .....  0: fffffffffffffe00 (PERF_CONTEXT_USER)
+>   .....  1: 00007c8046dd3400
+>   .....  2: 00007c8046db86d3
+> 
+> Signed-off-by: James Clark <james.clark@linaro.org>
 > ---
->  tools/perf/builtin-sched.c | 509 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 508 insertions(+), 1 deletion(-)
+>  tools/perf/util/session.c | 25 +++++++++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 2573491fa5f8..e23018798f5b 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -3940,6 +3940,505 @@ static int perf_sched__schedstat_record(struct perf_sched *sched,
->  	return err;
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 4236503c8f6c..e812f8954075 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -841,6 +841,26 @@ static void callchain__lbr_callstack_printf(struct perf_sample *sample)
+>  	}
 >  }
 >  
-> +struct schedstat_domain {
-> +	struct list_head domain_list;
-> +	struct perf_record_schedstat_domain *domain_data;
-> +};
-> +
-> +struct schedstat_cpu {
-> +	struct list_head cpu_list;
-> +	struct list_head domain_head;
-> +	struct perf_record_schedstat_cpu *cpu_data;
-> +};
-> +
-> +static struct list_head cpu_head = LIST_HEAD_INIT(cpu_head);
-> +static struct schedstat_cpu *cpu_second_pass;
-> +static struct schedstat_domain *domain_second_pass;
-> +static bool after_workload_flag;
-> +static bool verbose_field;
-> +
-> +static void store_schedtstat_cpu_diff(struct schedstat_cpu *after_workload)
+> +static const char *callchain_context_str(u64 ip)
 > +{
-> +	struct perf_record_schedstat_cpu *before = cpu_second_pass->cpu_data;
-> +	struct perf_record_schedstat_cpu *after = after_workload->cpu_data;
-> +	__u16 version = after_workload->cpu_data->version;
-> +
-> +#define CPU_FIELD(_type, _name, _desc, _format, _is_pct, _pct_of, _ver)	\
-> +	(before->_ver._name = after->_ver._name - before->_ver._name)
-> +
-> +	if (version == 15) {
-> +#include <perf/schedstat-v15.h>
-> +	} else if (version == 16) {
-> +#include <perf/schedstat-v16.h>
-> +	} else if (version == 17) {
-> +#include <perf/schedstat-v17.h>
-> +	}
-> +
-> +#undef CPU_FIELD
-> +}
-> +
-> +static void store_schedstat_domain_diff(struct schedstat_domain *after_workload)
-> +{
-> +	struct perf_record_schedstat_domain *before = domain_second_pass->domain_data;
-> +	struct perf_record_schedstat_domain *after = after_workload->domain_data;
-> +	__u16 version = after_workload->domain_data->version;
-> +
-> +#define DOMAIN_FIELD(_type, _name, _desc, _format, _is_jiffies, _ver)	\
-> +	(before->_ver._name = after->_ver._name - before->_ver._name)
-> +
-> +	if (version == 15) {
-> +#include <perf/schedstat-v15.h>
-> +	} else if (version == 16) {
-> +#include <perf/schedstat-v16.h>
-> +	} else if (version == 17) {
-> +#include <perf/schedstat-v17.h>
-> +	}
-> +#undef DOMAIN_FIELD
-> +}
-> +
-> +static inline void print_cpu_stats(struct perf_record_schedstat_cpu *cs)
-> +{
-> +	printf("%-65s %12s %12s\n", "DESC", "COUNT", "PCT_CHANGE");
-> +	printf("%.*s\n", 100, graph_dotted_line);
-> +
-> +#define CALC_PCT(_x, _y)	((_y) ? ((double)(_x) / (_y)) * 100 : 0.0)
-> +
-> +#define CPU_FIELD(_type, _name, _desc, _format, _is_pct, _pct_of, _ver)		\
-> +	do {									\
-> +		printf("%-65s: " _format, verbose_field ? _desc : #_name,	\
-> +		       cs->_ver._name);						\
-> +		if (_is_pct) {							\
-> +			printf("  ( %8.2lf%% )",				\
-> +			       CALC_PCT(cs->_ver._name, cs->_ver._pct_of));	\
-> +		}								\
-> +		printf("\n");							\
-> +	} while (0)
-> +
-> +	if (cs->version == 15) {
-> +#include <perf/schedstat-v15.h>
-> +	} else if (cs->version == 16) {
-> +#include <perf/schedstat-v16.h>
-> +	} else if (cs->version == 17) {
-> +#include <perf/schedstat-v17.h>
-> +	}
-> +
-> +#undef CPU_FIELD
-> +#undef CALC_PCT
-> +}
-> +
-> +static inline void print_domain_stats(struct perf_record_schedstat_domain *ds,
-> +				      __u64 jiffies)
-> +{
-> +	printf("%-65s %12s %14s\n", "DESC", "COUNT", "AVG_JIFFIES");
-> +
-> +#define DOMAIN_CATEGORY(_desc)							\
-> +	do {									\
-> +		size_t _len = strlen(_desc);					\
-> +		size_t _pre_dash_cnt = (100 - _len) / 2;			\
-> +		size_t _post_dash_cnt = 100 - _len - _pre_dash_cnt;		\
-> +		print_separator((int)_pre_dash_cnt, _desc, (int)_post_dash_cnt);\
-> +	} while (0)
-> +
-> +#define CALC_AVG(_x, _y)	((_y) ? (long double)(_x) / (_y) : 0.0)
-> +
-> +#define DOMAIN_FIELD(_type, _name, _desc, _format, _is_jiffies, _ver)		\
-> +	do {									\
-> +		printf("%-65s: " _format, verbose_field ? _desc : #_name,	\
-> +		       ds->_ver._name);						\
-> +		if (_is_jiffies) {						\
-> +			printf("  $ %11.2Lf $",					\
-> +			       CALC_AVG(jiffies, ds->_ver._name));		\
-> +		}								\
-> +		printf("\n");							\
-> +	} while (0)
-> +
-> +#define DERIVED_CNT_FIELD(_name, _desc, _format, _x, _y, _z, _ver)		\
-> +	printf("*%-64s: " _format "\n", verbose_field ? _desc : #_name,		\
-> +	       (ds->_ver._x) - (ds->_ver._y) - (ds->_ver._z))
-> +
-> +#define DERIVED_AVG_FIELD(_name, _desc, _format, _x, _y, _z, _w, _ver)		\
-> +	printf("*%-64s: " _format "\n", verbose_field ? _desc : #_name,		\
-> +	       CALC_AVG(ds->_ver._w,						\
-> +			((ds->_ver._x) - (ds->_ver._y) - (ds->_ver._z))))
-> +
-> +	if (ds->version == 15) {
-> +#include <perf/schedstat-v15.h>
-> +	} else if (ds->version == 16) {
-> +#include <perf/schedstat-v16.h>
-> +	} else if (ds->version == 17) {
-> +#include <perf/schedstat-v17.h>
-> +	}
-> +
-> +#undef DERIVED_AVG_FIELD
-> +#undef DERIVED_CNT_FIELD
-> +#undef DOMAIN_FIELD
-> +#undef CALC_AVG
-> +#undef DOMAIN_CATEGORY
-> +}
-> +
-> +static void summarize_schedstat_cpu(struct schedstat_cpu *summary_cpu,
-> +				    struct schedstat_cpu *cptr,
-> +				    int cnt, bool is_last)
-> +{
-> +	struct perf_record_schedstat_cpu *summary_cs = summary_cpu->cpu_data,
-> +					 *temp_cs = cptr->cpu_data;
-> +
-> +#define CPU_FIELD(_type, _name, _desc, _format, _is_pct, _pct_of, _ver)		\
-> +	do {									\
-> +		summary_cs->_ver._name += temp_cs->_ver._name;			\
-> +		if (is_last)							\
-> +			summary_cs->_ver._name /= cnt;				\
-> +	} while (0)
-> +
-> +	if (cptr->cpu_data->version == 15) {
-> +#include <perf/schedstat-v15.h>
-> +	} else if (cptr->cpu_data->version == 16) {
-> +#include <perf/schedstat-v16.h>
-> +	} else if (cptr->cpu_data->version == 17) {
-> +#include <perf/schedstat-v17.h>
-> +	}
-> +#undef CPU_FIELD
-> +}
-> +
-> +static void summarize_schedstat_domain(struct schedstat_domain *summary_domain,
-> +				       struct schedstat_domain *dptr,
-> +				       int cnt, bool is_last)
-> +{
-> +	struct perf_record_schedstat_domain *summary_ds = summary_domain->domain_data,
-> +					    *temp_ds = dptr->domain_data;
-> +
-> +#define DOMAIN_FIELD(_type, _name, _desc, _format, _is_jiffies, _ver)		\
-> +	do {									\
-> +		summary_ds->_ver._name += temp_ds->_ver._name;			\
-> +		if (is_last)							\
-> +			summary_ds->_ver._name /= cnt;				\
-> +	} while (0)
-> +
-> +	if (dptr->domain_data->version == 15) {
-> +#include <perf/schedstat-v15.h>
-> +	} else if (dptr->domain_data->version == 16) {
-> +#include <perf/schedstat-v16.h>
-> +	} else if (dptr->domain_data->version == 17) {
-> +#include <perf/schedstat-v17.h>
-> +	}
-> +#undef DOMAIN_FIELD
-> +}
-> +
-> +static int get_all_cpu_stats(struct list_head *head)
-> +{
-> +	struct schedstat_cpu *cptr = list_first_entry(head, struct schedstat_cpu, cpu_list);
-> +	struct schedstat_cpu *summary_head = NULL;
-> +	struct perf_record_schedstat_domain *ds;
-> +	struct perf_record_schedstat_cpu *cs;
-> +	struct schedstat_domain *dptr, *tdptr;
-> +	bool is_last = false;
-> +	int cnt = 1;
-> +	int ret = 0;
-> +
-> +	if (cptr) {
-> +		summary_head = zalloc(sizeof(*summary_head));
-> +		if (!summary_head)
-> +			return -ENOMEM;
-> +
-> +		summary_head->cpu_data = zalloc(sizeof(*cs));
-> +		memcpy(summary_head->cpu_data, cptr->cpu_data, sizeof(*cs));
-> +
-> +		INIT_LIST_HEAD(&summary_head->domain_head);
-> +
-> +		list_for_each_entry(dptr, &cptr->domain_head, domain_list) {
-> +			tdptr = zalloc(sizeof(*tdptr));
-> +			if (!tdptr)
-> +				return -ENOMEM;
-> +
-> +			tdptr->domain_data = zalloc(sizeof(*ds));
-> +			if (!tdptr->domain_data)
-> +				return -ENOMEM;
+> +	switch (ip) {
+> +	case PERF_CONTEXT_HV:
+> +		return " (PERF_CONTEXT_HV)";
+> +	case PERF_CONTEXT_KERNEL:
+> +		return " (PERF_CONTEXT_KERNEL)";
+> +	case PERF_CONTEXT_USER:
+> +		return " (PERF_CONTEXT_USER)";
 
-Please free tdptr too.
-
-> +
-> +			memcpy(tdptr->domain_data, dptr->domain_data, sizeof(*ds));
-> +			list_add_tail(&tdptr->domain_list, &summary_head->domain_head);
-> +		}
-> +	}
-> +
-> +
-> +	list_for_each_entry(cptr, head, cpu_list) {
-> +		if (list_is_first(&cptr->cpu_list, head))
-> +			continue;
-> +
-> +		if (list_is_last(&cptr->cpu_list, head))
-> +			is_last = true;
-> +
-> +		cnt++;
-> +		summarize_schedstat_cpu(summary_head, cptr, cnt, is_last);
-> +		tdptr = list_first_entry(&summary_head->domain_head, struct schedstat_domain,
-> +					 domain_list);
-> +
-> +		list_for_each_entry(dptr, &cptr->domain_head, domain_list) {
-> +			summarize_schedstat_domain(tdptr, dptr, cnt, is_last);
-> +			tdptr = list_next_entry(tdptr, domain_list);
-> +		}
-> +	}
-> +
-> +	list_add(&summary_head->cpu_list, head);
-> +
-> +	return ret;
-> +}
-> +
-> +static void print_field_description(struct schedstat_cpu *cptr)
-> +{
-> +#define CPU_FIELD(_type, _name, _desc, _format, _is_pct, _pct_of, _ver)		\
-> +		printf("%-30s-> %s\n", #_name, _desc)				\
-> +
-> +#define DOMAIN_CATEGORY(_desc)							\
-> +	do {									\
-> +		size_t _len = strlen(_desc);					\
-> +		size_t _pre_dash_cnt = (100 - _len) / 2;			\
-> +		size_t _post_dash_cnt = 100 - _len - _pre_dash_cnt;		\
-> +		print_separator((int)_pre_dash_cnt, _desc, (int)_post_dash_cnt);\
-> +	} while (0)
-> +
-> +#define DOMAIN_FIELD(_type, _name, _desc, _format, _is_jiffies, _ver)		\
-> +		printf("%-30s-> %s\n", #_name, _desc)				\
-> +
-> +#define DERIVED_CNT_FIELD(_name, _desc, _format, _x, _y, _z, _ver)		\
-> +		printf("*%-29s-> %s\n", #_name, _desc)				\
-> +
-> +#define DERIVED_AVG_FIELD(_name, _desc, _format, _x, _y, _z, _w, _ver)		\
-> +		printf("*%-29s-> %s\n", #_name, _desc)				\
-> +
-> +	if (cptr->cpu_data->version == 15) {
-> +#include <perf/schedstat-v15.h>
-> +	} else if (cptr->cpu_data->version == 16) {
-> +#include <perf/schedstat-v16.h>
-> +	} else if (cptr->cpu_data->version == 17) {
-> +#include <perf/schedstat-v17.h>
-> +	}
-> +#undef CPU_FIELD
-> +#undef DOMAIN_CATEGORY
-> +#undef DERIVED_CNT_FIELD
-> +#undef DERIVED_AVG_FIELD
-> +#undef DOMAIN_FIELD
-> +}
-> +
-> +static int show_schedstat_data(struct list_head *head, struct cpu_domain_map **cd_map)
-> +{
-> +	struct schedstat_cpu *cptr = list_first_entry(head, struct schedstat_cpu, cpu_list);
-> +	__u64 jiffies = cptr->cpu_data->timestamp;
-> +	struct perf_record_schedstat_domain *ds;
-> +	struct perf_record_schedstat_cpu *cs;
-> +	struct schedstat_domain *dptr;
-> +	bool is_summary = true;
-> +	int ret = 0;
-> +
-> +	printf("Description\n");
-> +	print_separator(100, "", 0);
-> +	printf("%-30s-> %s\n", "DESC", "Description of the field");
-> +	printf("%-30s-> %s\n", "COUNT", "Value of the field");
-> +	printf("%-30s-> %s\n", "PCT_CHANGE", "Percent change with corresponding base value");
-> +	printf("%-30s-> %s\n", "AVG_JIFFIES",
-> +	       "Avg time in jiffies between two consecutive occurrence of event");
-> +
-> +	if (!verbose_field) {
-> +		print_separator(100, "", 0);
-> +		print_field_description(cptr);
-> +	}
-> +
-> +	print_separator(100, "", 0);
-> +	printf("\n");
-> +
-> +	printf("%-65s: %11llu\n", "Time elapsed (in jiffies)", jiffies);
-> +	print_separator(100, "", 0);
-> +
-> +	ret = get_all_cpu_stats(head);
-> +
-> +	list_for_each_entry(cptr, head, cpu_list) {
-> +		cs = cptr->cpu_data;
-> +		printf("\n");
-> +		print_separator(100, "", 0);
-> +
-> +		if (is_summary)
-> +			printf("CPU <ALL CPUS SUMMARY>\n");
-> +		else
-> +			printf("CPU %d\n", cs->cpu);
-> +
-> +		print_separator(100, "", 0);
-> +		print_cpu_stats(cs);
-> +		print_separator(100, "", 0);
-> +
-> +		list_for_each_entry(dptr, &cptr->domain_head, domain_list) {
-> +			struct domain_info *dinfo;
-> +
-> +			ds = dptr->domain_data;
-> +			dinfo = cd_map[ds->cpu]->domains[ds->domain];
-> +			if (is_summary)
-
-Please add a pair of braces for multiline statements.
-
-
-> +				if (dinfo->dname)
-> +					printf("CPU <ALL CPUS SUMMARY>, DOMAIN %s\n", dinfo->dname);
-> +				else
-> +					printf("CPU <ALL CPUS SUMMARY>, DOMAIN %d\n", dinfo->domain);
-> +			else {
-> +				if (dinfo->dname)
-> +					printf("CPU %d, DOMAIN %s CPUS ", cs->cpu, dinfo->dname);
-> +				else
-> +					printf("CPU %d, DOMAIN %d CPUS ", cs->cpu, dinfo->domain);
-> +
-> +				printf("%s\n", dinfo->cpulist);
-> +			}
-> +			print_separator(100, "", 0);
-> +			print_domain_stats(ds, jiffies);
-> +			print_separator(100, "", 0);
-> +		}
-> +		is_summary = false;
-> +	}
-> +	return ret;
-> +}
-> +
-> +static int perf_sched__process_schedstat(struct perf_session *session __maybe_unused,
-> +					 union perf_event *event)
-> +{
-> +	struct perf_cpu this_cpu;
-> +	static __u32 initial_cpu;
-> +
-> +	switch (event->header.type) {
-> +	case PERF_RECORD_SCHEDSTAT_CPU:
-> +		this_cpu.cpu = event->schedstat_cpu.cpu;
-> +		break;
-> +	case PERF_RECORD_SCHEDSTAT_DOMAIN:
-> +		this_cpu.cpu = event->schedstat_domain.cpu;
-> +		break;
-> +	default:
-> +		return 0;
-> +	}
-> +
-> +	if (user_requested_cpus && !perf_cpu_map__has(user_requested_cpus, this_cpu))
-> +		return 0;
-> +
-> +	if (event->header.type == PERF_RECORD_SCHEDSTAT_CPU) {
-> +		struct schedstat_cpu *temp = zalloc(sizeof(*temp));
-> +
-> +		if (!temp)
-> +			return -ENOMEM;
-> +
-> +		temp->cpu_data = zalloc(sizeof(*temp->cpu_data));
-> +		if (!temp->cpu_data)
-> +			return -ENOMEM;
-
-Please free temp as well.
-
-> +
-> +		memcpy(temp->cpu_data, &event->schedstat_cpu, sizeof(*temp->cpu_data));
-> +
-> +		if (!list_empty(&cpu_head) && temp->cpu_data->cpu == initial_cpu)
-> +			after_workload_flag = true;
-> +
-> +		if (!after_workload_flag) {
-> +			if (list_empty(&cpu_head))
-> +				initial_cpu = temp->cpu_data->cpu;
-> +
-> +			list_add_tail(&temp->cpu_list, &cpu_head);
-> +			INIT_LIST_HEAD(&temp->domain_head);
-> +		} else {
-> +			if (temp->cpu_data->cpu == initial_cpu) {
-> +				cpu_second_pass = list_first_entry(&cpu_head, struct schedstat_cpu,
-> +								   cpu_list);
-> +				cpu_second_pass->cpu_data->timestamp =
-> +					temp->cpu_data->timestamp - cpu_second_pass->cpu_data->timestamp;
-> +			} else {
-> +				cpu_second_pass = list_next_entry(cpu_second_pass, cpu_list);
-> +			}
-> +			domain_second_pass = list_first_entry(&cpu_second_pass->domain_head,
-> +							      struct schedstat_domain, domain_list);
-> +			store_schedtstat_cpu_diff(temp);
-> +			free(temp);
-
-What about temp->cpu_data?
-
-
-> +		}
-> +	} else if (event->header.type == PERF_RECORD_SCHEDSTAT_DOMAIN) {
-> +		struct schedstat_cpu *cpu_tail;
-> +		struct schedstat_domain *temp = zalloc(sizeof(*temp));
-> +
-> +		if (!temp)
-> +			return -ENOMEM;
-> +
-> +		temp->domain_data = zalloc(sizeof(*temp->domain_data));
-> +		if (!temp->domain_data)
-> +			return -ENOMEM;
-
-Ditto.
-
-> +
-> +		memcpy(temp->domain_data, &event->schedstat_domain, sizeof(*temp->domain_data));
-> +
-> +		if (!after_workload_flag) {
-> +			cpu_tail = list_last_entry(&cpu_head, struct schedstat_cpu, cpu_list);
-> +			list_add_tail(&temp->domain_list, &cpu_tail->domain_head);
-> +		} else {
-> +			store_schedstat_domain_diff(temp);
-> +			domain_second_pass = list_next_entry(domain_second_pass, domain_list);
-> +			free(temp);
-
-Ditto.
+We now have PERF_CONTEXT_USER_DEFERRED too.
 
 Thanks,
 Namhyung
 
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void free_schedstat(struct list_head *head)
-> +{
-> +	struct schedstat_domain *dptr, *n1;
-> +	struct schedstat_cpu *cptr, *n2;
-> +
-> +	list_for_each_entry_safe(cptr, n2, head, cpu_list) {
-> +		list_for_each_entry_safe(dptr, n1, &cptr->domain_head, domain_list) {
-> +			list_del_init(&dptr->domain_list);
-> +			free(dptr);
-> +		}
-> +		list_del_init(&cptr->cpu_list);
-> +		free(cptr);
+
+> +	case PERF_CONTEXT_GUEST:
+> +		return " (PERF_CONTEXT_GUEST)";
+> +	case PERF_CONTEXT_GUEST_KERNEL:
+> +		return " (PERF_CONTEXT_GUEST_KERNEL)";
+> +	case PERF_CONTEXT_GUEST_USER:
+> +		return " (PERF_CONTEXT_GUEST_USER)";
+> +	default:
+> +		return "";
 > +	}
 > +}
 > +
-> +static int perf_sched__schedstat_report(struct perf_sched *sched)
-> +{
-> +	struct cpu_domain_map **cd_map;
-> +	struct perf_session *session;
-> +	struct target target = {};
-> +	struct perf_data data = {
-> +		.path  = input_name,
-> +		.mode  = PERF_DATA_MODE_READ,
-> +	};
-> +	int err = 0;
-> +
-> +	sched->tool.schedstat_cpu = perf_sched__process_schedstat;
-> +	sched->tool.schedstat_domain = perf_sched__process_schedstat;
-> +
-> +	session = perf_session__new(&data, &sched->tool);
-> +	if (IS_ERR(session)) {
-> +		pr_err("Perf session creation failed.\n");
-> +		return PTR_ERR(session);
-> +	}
-> +
-> +	if (cpu_list)
-> +		target.cpu_list = cpu_list;
-> +	else
-> +		target.system_wide = true;
-> +
-> +	err = evlist__create_maps(session->evlist, &target);
-> +	if (err < 0)
-> +		goto out;
-> +
-> +	user_requested_cpus = session->evlist->core.user_requested_cpus;
-> +
-> +	err = perf_session__process_events(session);
-> +
-> +	if (!err) {
-> +		setup_pager();
-> +
-> +		if (list_empty(&cpu_head)) {
-> +			pr_err("Data is not available\n");
-> +			err = -1;
-> +			goto out;
-> +		}
-> +
-> +		cd_map = session->header.env.cpu_domain;
-> +		err = show_schedstat_data(&cpu_head, cd_map);
-> +	}
-> +
-> +out:
-> +	free_schedstat(&cpu_head);
-> +	perf_session__delete(session);
-> +	return err;
-> +}
-> +
->  static bool schedstat_events_exposed(void)
+>  static void callchain__printf(struct evsel *evsel,
+>  			      struct perf_sample *sample)
 >  {
->  	/*
-> @@ -4117,9 +4616,12 @@ int cmd_sched(int argc, const char **argv)
->  	OPT_PARENT(sched_options)
->  	};
->  	const struct option stats_options[] = {
-> +	OPT_STRING('i', "input", &input_name, "file",
-> +		   "`stats report` with input filename"),
->  	OPT_STRING('o', "output", &output_name, "file",
->  		   "`stats record` with output filename"),
->  	OPT_STRING('C', "cpu", &cpu_list, "cpu", "list of cpus to profile"),
-> +	OPT_BOOLEAN('v', "verbose", &verbose_field, "Show explanation for fields in the report"),
->  	OPT_END()
->  	};
+> @@ -853,8 +873,9 @@ static void callchain__printf(struct evsel *evsel,
+>  	printf("... FP chain: nr:%" PRIu64 "\n", callchain->nr);
 >  
-> @@ -4244,7 +4746,7 @@ int cmd_sched(int argc, const char **argv)
->  		if (!ret)
->  			ret = perf_sched__timehist(&sched);
->  	} else if (!strcmp(argv[0], "stats")) {
-> -		const char *const stats_subcommands[] = {"record", NULL};
-> +		const char *const stats_subcommands[] = {"record", "report", NULL};
+>  	for (i = 0; i < callchain->nr; i++)
+> -		printf("..... %2d: %016" PRIx64 "\n",
+> -		       i, callchain->ips[i]);
+> +		printf("..... %2d: %016" PRIx64 "%s\n",
+> +		       i, callchain->ips[i],
+> +		       callchain_context_str(callchain->ips[i]));
 >  
->  		argc = parse_options_subcommand(argc, argv, stats_options,
->  						stats_subcommands,
-> @@ -4256,6 +4758,11 @@ int cmd_sched(int argc, const char **argv)
->  				argc = parse_options(argc, argv, stats_options,
->  						     stats_usage, 0);
->  			return perf_sched__schedstat_record(&sched, argc, argv);
-> +		} else if (argv[0] && !strcmp(argv[0], "report")) {
-> +			if (argc)
-> +				argc = parse_options(argc, argv, stats_options,
-> +						     stats_usage, 0);
-> +			return perf_sched__schedstat_report(&sched);
->  		}
->  		usage_with_options(stats_usage, stats_options);
->  	} else {
+>  	if (sample->deferred_callchain)
+>  		printf("...... (deferred)\n");
+> 
+> ---
+> base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
+> change-id: 20260102-james-perf-dump-callchain-markers-64d175b108c8
+> 
+> Best regards,
 > -- 
-> 2.43.0
+> James Clark <james.clark@linaro.org>
 > 
