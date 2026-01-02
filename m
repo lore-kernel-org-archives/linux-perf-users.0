@@ -1,147 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CC03A1E6C;
-	Fri,  2 Jan 2026 22:01:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDE03597B;
+	Fri,  2 Jan 2026 22:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767391278; cv=none; b=ti6OcxrrA3BngVWWRTYuT4AiAalWkywz0y16S19YqiUkY+ecFGYpbdxf7pGB1z9iWpvTg7jK5mdwsw7yioIOI8RHe9ZJe3jMyMyfaoqklB+e8HB9wX5+6p7LD5S5w8HxNk59W6USWEGjEOdTehZzSUI+l+pd4e+TbJYrfc2AWbk=
+	t=1767391976; cv=none; b=eqXoqss6P9elRP9I/nF1Rfck+uYTCTYBjZXkRvRiM1rv2kIp2m5R8RtPsuTvtai6kGvortdZnVV58f7MzQiBKisUPKfEoStFhWygkDxheQDRFFLvrE5rRrVheX21zCeLtTFLXdugRdLz0GXmPTS30R24n63gSy5sMHywH9YOuhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767391278; c=relaxed/simple;
-	bh=Uh/LMNjKmrWpYkziSkPE4JlCUjQu+3ILa4yLZ8PgglE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QK5hCbG4zy2bOuQqunhjvV6w03/9Q+Lmfab9eEpG8nP4MJaOLXeaotBHmvIQ14KkCrNV2BxKEQAHmyYnKz7zRQdej+ZodOb67qSoKTaOpZ7Xrl4zeFGq3Uwv/5LlF6YoQQiW7y0Q32k6eaCpgwwl9b+3adoDJ4mRqe9kao94AQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QgjCXSli; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767391976; c=relaxed/simple;
+	bh=t/zS0AUdilEeOtzoweZ9oAdExTOY3LYJutsJmfHnwtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ecZ4qhsD3ZtmOgAhjxf9ccsR5OuVMav5Vk2J+d9cVmqI5WxCXmkW59g7qLRwhGTOmGtWdxyzqBdh5aNEQf5vgXoDwaCWLHUPQw6sqKFWzbD4BdbQ+S3gIXS+LzlDXezUBliSBuVAf+yaGGxlWdAfuKEAGtouN3NfbyR8EIWeWc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5mTRsMj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QgjCXSli"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D4ADC116B1;
-	Fri,  2 Jan 2026 22:01:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5mTRsMj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1D6DC116B1;
+	Fri,  2 Jan 2026 22:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767391277;
-	bh=Uh/LMNjKmrWpYkziSkPE4JlCUjQu+3ILa4yLZ8PgglE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QgjCXSliIko/l6kJjLkCIvT3tROqc6SVr0PWVK4hlNhiQyC8GwSQflz1k46FwrYCm
-	 dGlGQnlSXAhrl3dXUX7FTiIKYuaVPiN9gdYugF+DW4luX2LvgUygeb5bQ2o8j0jd4F
-	 09e1uL5iLKlMRE+hhcc0oEQK/BfYwcO80BjnyuAGi0TVgXcfOO9WOSDVQBypIJ11If
-	 fRmth0Gr4mWV0yWbyv8X25u6ckD2eodoVrgycMEAx5EuHVkBEhPiHv2GM9Pk6lDcgm
-	 9zEI4/p3lPoAkUNBNUVCnM6KZyLEeDyX1FuFi8WrLb379aDqt77wPRL2/ETq8kg4yg
-	 Dvy3csh2jA0Lg==
+	s=k20201202; t=1767391976;
+	bh=t/zS0AUdilEeOtzoweZ9oAdExTOY3LYJutsJmfHnwtI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O5mTRsMj/nwDXaA2ZaoIczu9jdOAvKzDgtKFh7fopYU7zZe484QoS1NKnJ+BZDwW8
+	 2KSpgiXTcBkZYOqQZnLtoUO0xOVpbUE9Z91kZi8DjMqwaTN5HHfHZv1W2c59vW2dEh
+	 Y7Z1vVNw/51u+ThjHMNxu41oM/6ygY7j4aigPdp6FulHMm7KItrWNmbRhTAIgxYnh/
+	 4NaGPRU5V4hJ2Q5xKE1o4TtvRraixgQyF74zmX61nan9fWpw6U31g6ZSnxYv823+Gq
+	 SKI8Ken7RfxS9Y1wc9FuNpZHncxE/SAkfGHONrz8ckRZZs2872RRZ0ffz9rhtBITBZ
+	 k0JZT+e8Z0+Pw==
+Date: Fri, 2 Jan 2026 14:12:51 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [GIT PULL] perf-tools fixes for v6.19-rc4
-Date: Fri,  2 Jan 2026 14:01:13 -0800
-Message-ID: <20260102220113.3067493-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.52.0.351.gbe84eed79e-goog
+To: Swapnil Sapkal <swapnil.sapkal@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	irogers@google.com, james.clark@arm.com, ravi.bangoria@amd.com,
+	yu.c.chen@intel.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	rostedt@goodmis.org, vincent.guittot@linaro.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	gautham.shenoy@amd.com, kprateek.nayak@amd.com,
+	juri.lelli@redhat.com, yangjihong@bytedance.com, void@manifault.com,
+	tj@kernel.org, sshegde@linux.ibm.com, ctshao@google.com,
+	quic_zhonhan@quicinc.com, thomas.falcon@intel.com,
+	blakejones@google.com, ashelat@redhat.com, leo.yan@arm.com,
+	dvyukov@google.com, ak@linux.intel.com, yujie.liu@intel.com,
+	graham.woodward@arm.com, ben.gainey@arm.com, vineethr@linux.ibm.com,
+	tim.c.chen@linux.intel.com, linux@treblig.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	santosh.shukla@amd.com, sandipan.das@amd.com
+Subject: Re: [PATCH RESEND v4 01/11] perf: Add print_separator to util
+Message-ID: <aVhC40oJIx1cbfiJ@google.com>
+References: <20250909114227.58802-1-swapnil.sapkal@amd.com>
+ <20250909114227.58802-2-swapnil.sapkal@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250909114227.58802-2-swapnil.sapkal@amd.com>
 
-Hi Linus,
+Hello,
 
-Please consider pulling the following changes in perf tools for v6.19.
-You should be able to find my GPG key from the server now.
+Sorry for the delay and happy new year!
+
+On Tue, Sep 09, 2025 at 11:42:17AM +0000, Swapnil Sapkal wrote:
+> Add print_separator to util.c and use it wherever necessary.
+> 
+> Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
+> ---
+>  tools/perf/builtin-kwork.c | 13 ++++---------
+>  tools/perf/util/util.c     |  6 ++++++
+>  tools/perf/util/util.h     |  2 ++
+>  3 files changed, 12 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+> index d2e08de5976d..842f59ff85ac 100644
+> --- a/tools/perf/builtin-kwork.c
+> +++ b/tools/perf/builtin-kwork.c
+> @@ -1340,11 +1340,6 @@ static struct kwork_class *kwork_class_supported_list[KWORK_CLASS_MAX] = {
+>  	[KWORK_CLASS_SCHED]     = &kwork_sched,
+>  };
+>  
+> -static void print_separator(int len)
+> -{
+> -	printf(" %.*s\n", len, graph_dotted_line);
+> -}
+> -
+>  static int report_print_work(struct perf_kwork *kwork, struct kwork_work *work)
+>  {
+>  	int ret = 0;
+> @@ -1458,7 +1453,7 @@ static int report_print_header(struct perf_kwork *kwork)
+>  	}
+>  
+>  	printf("\n");
+> -	print_separator(ret);
+> +	print_separator(ret, "", 0);
+>  	return ret;
+>  }
+>  
+> @@ -1633,7 +1628,7 @@ static void top_print_header(struct perf_kwork *kwork __maybe_unused)
+>  		     PRINT_RUNTIME_HEADER_WIDTH + RPINT_DECIMAL_WIDTH, "RUNTIME",
+>  		     PRINT_TASK_NAME_WIDTH, "COMMAND");
+>  	printf("\n ");
+> -	print_separator(ret);
+> +	print_separator(ret, "", 0);
+>  }
+>  
+>  static int top_print_work(struct perf_kwork *kwork __maybe_unused, struct kwork_work *work)
+> @@ -1933,11 +1928,11 @@ static int perf_kwork__report(struct perf_kwork *kwork)
+>  		}
+>  		next = rb_next(next);
+>  	}
+> -	print_separator(ret);
+> +	print_separator(ret, "", 0);
+>  
+>  	if (kwork->summary) {
+>  		print_summary(kwork);
+> -		print_separator(ret);
+> +		print_separator(ret, "", 0);
+>  	}
+>  
+>  	print_bad_events(kwork);
+> diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+> index 0f031eb80b4c..1b91834e11de 100644
+> --- a/tools/perf/util/util.c
+> +++ b/tools/perf/util/util.c
+> @@ -257,6 +257,12 @@ static int rm_rf_kcore_dir(const char *path)
+>  	return 0;
+>  }
+>  
+> +void print_separator(int pre_dash_cnt, const char *s, int post_dash_cnt)
+> +{
+> +	printf("%.*s%s%.*s\n", pre_dash_cnt, graph_dotted_line, s, post_dash_cnt,
+> +	       graph_dotted_line);
+> +}
+
+I think it's better to keep the existing interface and add a new one
+like print_separator2() for your case.  The old one can be implemented
+on top of the new API.
 
 Thanks,
 Namhyung
 
-
-The following changes since commit 8f0b4cce4481fb22653697cced8d0d04027cb1e8:
-
-  Linux 6.19-rc1 (2025-12-14 16:05:07 +1200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.19-2026-01-02
-
-for you to fetch changes up to fe072f651083c612278de82ce08bccdfecf574b3:
-
-  tools build: Fix the common set of features test wrt libopenssl (2025-12-27 20:26:44 -0800)
-
-----------------------------------------------------------------
-perf-tools fixes and updates for v6.19
-
-A number of small updates:
-
- - skip building BPF skeletons if libopenssl is missing
- - a couple of test updates
- - handle error cases of filename__read_build_id()
- - support NVIDIA Olympus for ARM SPE profiling
- - update tool headers to sync with the kernel
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (1):
-      tools build: Fix the common set of features test wrt libopenssl
-
-Besar Wicaksono (2):
-      tools headers arm64: Add NVIDIA Olympus part
-      perf arm-spe: Add NVIDIA Olympus to neoverse list
-
-Ian Rogers (3):
-      perf symbol: Fix ENOENT case for filename__read_build_id
-      perf tests kvm: Avoid leaving perf.data.guest file around
-      perf tests top: Make the test exclusive
-
-Namhyung Kim (13):
-      tools/build: Add a feature test for libopenssl
-      perf tools: Disable BPF skeleton if no libopenssl found
-      tools headers: Sync UAPI drm/drm.h with kernel sources
-      tools headers: Sync UAPI KVM headers with kernel sources
-      tools headers: Sync UAPI linux/fcntl.h with kernel sources
-      tools headers: Sync UAPI linux/fs.h with kernel sources
-      tools headers: Sync UAPI linux/mount.h with kernel sources
-      tools headers: Sync UAPI sound/asound.h with kernel sources
-      tools headers: Sync x86 headers with kernel sources
-      tools headers: Sync arm64 headers with kernel sources
-      tools headers: Sync linux/gfp_types.h with kernel sources
-      tools headers: Sync linux/socket.h with kernel sources
-      tools headers: Sync syscall table with kernel sources
-
- tools/arch/arm64/include/asm/cputype.h             |  8 +++---
- tools/arch/x86/include/asm/cpufeatures.h           | 11 ++++++++
- tools/arch/x86/include/asm/msr-index.h             | 30 ++++++++++++++++++++++
- tools/arch/x86/include/uapi/asm/kvm.h              |  1 +
- tools/build/Makefile.feature                       |  6 +++--
- tools/build/feature/Makefile                       | 10 +++++---
- tools/build/feature/test-all.c                     |  5 ++++
- tools/build/feature/test-libopenssl.c              |  7 +++++
- tools/include/linux/gfp_types.h                    |  6 -----
- tools/include/uapi/asm-generic/unistd.h            |  4 ++-
- tools/include/uapi/drm/drm.h                       | 15 +++++++++++
- tools/include/uapi/linux/kvm.h                     | 11 ++++++++
- tools/perf/Makefile.config                         |  8 ++++++
- tools/perf/arch/arm/entry/syscalls/syscall.tbl     |  1 +
- .../perf/arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
- tools/perf/arch/powerpc/entry/syscalls/syscall.tbl |  1 +
- tools/perf/arch/s390/entry/syscalls/syscall.tbl    |  1 +
- tools/perf/arch/sh/entry/syscalls/syscall.tbl      |  1 +
- tools/perf/arch/sparc/entry/syscalls/syscall.tbl   |  1 +
- tools/perf/arch/x86/entry/syscalls/syscall_32.tbl  |  1 +
- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  |  1 +
- tools/perf/arch/xtensa/entry/syscalls/syscall.tbl  |  1 +
- tools/perf/builtin-buildid-cache.c                 |  6 +++--
- tools/perf/tests/shell/kvm.sh                      |  2 +-
- tools/perf/tests/shell/top.sh                      |  2 +-
- tools/perf/trace/beauty/include/linux/socket.h     | 24 ++++++++++++++---
- tools/perf/trace/beauty/include/uapi/linux/fcntl.h | 12 +++++++++
- tools/perf/trace/beauty/include/uapi/linux/fs.h    |  3 ++-
- tools/perf/trace/beauty/include/uapi/linux/mount.h |  2 +-
- .../perf/trace/beauty/include/uapi/sound/asound.h  |  2 +-
- tools/perf/util/arm-spe.c                          |  1 +
- tools/perf/util/libbfd.c                           |  4 ++-
- tools/perf/util/symbol-elf.c                       |  4 ++-
- tools/perf/util/symbol-minimal.c                   |  4 ++-
- tools/scripts/syscall.tbl                          |  1 +
- 35 files changed, 170 insertions(+), 28 deletions(-)
- create mode 100644 tools/build/feature/test-libopenssl.c
+> +
+>  int rm_rf_perf_data(const char *path)
+>  {
+>  	const char *pat[] = {
+> diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+> index 3423778e39a5..de69384380c2 100644
+> --- a/tools/perf/util/util.h
+> +++ b/tools/perf/util/util.h
+> @@ -48,6 +48,8 @@ bool sysctl__nmi_watchdog_enabled(void);
+>  
+>  int perf_tip(char **strp, const char *dirpath);
+>  
+> +void print_separator(int pre_dash_cnt, const char *s, int post_dash_cnt);
+> +
+>  #ifndef HAVE_SCHED_GETCPU_SUPPORT
+>  int sched_getcpu(void);
+>  #endif
+> -- 
+> 2.43.0
+> 
