@@ -1,182 +1,157 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CEA2D780A
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Jan 2026 12:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DA023EAB2
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Jan 2026 15:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767356332; cv=pass; b=MFsNf/CmcA+OmbORZscfCnX+nb1KTtX7GiP76ERON79bUhGJkI1ky3cb0cX8ZDKHipBg09Qm/5a5M1WT6KL5ww7rx0Cq4I/gUSe/WZLjHI9CAQ4wfyTTwnC78mKaF8z4/bQ558mUZwN7p8s3h08Tj4CoyLFgT/DI0wmQUPn/H1Q=
+	t=1767367603; cv=pass; b=gImqxKvJALn2fgDe0systVsLaZFqzBD77Z2jCpkZHWMkSj1qWxHyx+q+hqtGIkD5spe/U0NZvAyW8S22bgyTrIlirXf3o1YX4+osQRWWysiQZrKsGOCnQPTyOLigTRuTcjWSa+k5jO7TpFRzQbuGrx1pWpLMc7GzT2wnmInuww4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767356332; c=relaxed/simple;
-	bh=gaV2E54jvXAqv59CZRqKiFlooAa98YUH8nVsGvascMg=;
+	s=arc-20240116; t=1767367603; c=relaxed/simple;
+	bh=Ns46H+wOPb7rzfATKl0oyBKOfdY5LopQu7nvcAFe+Rg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uXbMaCKsUx/ZZxGxjpw/UvpYHsn9/Oy0zXiNlJoi/tIa7QqAsQdSoo3TPj1WrlQ4eR7NDlqrTmPVIgeYCcez6j1zkSkpX5GSew9AJQmUgkQx/O+5x6eCKWV0ujrVTlrtlZ0x84grNcivCTUqc6dZwrJfAlCognlP90AdXI6AAkk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RwyteiZW; arc=pass smtp.client-ip=209.85.214.181
+	 To:Content-Type; b=TTGQAaJ6KizIMShNTNuNmaPQZOgnDtDSFLnxz+C4NwCp2x0VPxiELHdW55qIwWpg3+oMJuhWE+X5PmD/XkYXio34Z3Eo5doVpGwMjeIWxQaqVqU1yymxpvJNy9V/4QLCBw3QM2rHIjb3A4gmK+Q5lq9+U0oOmfDh6RE/84DJ5mg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FspvpTvH; arc=pass smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RwyteiZW"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2a1462573caso309535ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jan 2026 04:18:50 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1767356330; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FspvpTvH"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-29f02651fccso341265ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jan 2026 07:26:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1767367601; cv=none;
         d=google.com; s=arc-20240605;
-        b=Tj0YWhfFIJGXjY7nzaf9D3sykTeoAotL3OlLgsjyHG1ZjTrAaow99wIgGtO3do3E8a
-         QDR4r5pMHswm3E+imAe7vhPkAYe1+pstZE4gj06vWf12NS3cpC97TvT1llmxkbOeiZbU
-         T6QA0bz50hPQ88jxCYDMLplP3H8MyFKErUeEcq/99UQTpscJNELOtDtLKy07tMmFlbzd
-         wsHXwbIJoSyiNezfVi8uQ5LEX8jeIdzMvPs38fdVCVpt2MWVul0NivjCn5CK1ZP2/FM7
-         gwXSynR4G4FhQUgU39Z1KhTTeQqjEB4nMVKLbWCCG1WycJFZ2mywbjwHo1P6eM/08UAv
-         GP6w==
+        b=PZfrahQfoa2j70Au8erq89s6d4d/BD48buP9gFbU2tlCdYufEKzRGR9Pa8z2eRQnd7
+         n6ORU5/cuNBMrsKx9wv/UgoDj8EC6gdWco01a5xG/Gshsdd0HR7g9pALOw1ZedjsK4Jf
+         nptShDa5alnVxkXu40Wcv/YyrAw7utLo/EVGV5F/lOBtVAyJtKLQfY+bQxevAZFO6H4j
+         fMQFpRx0fcmtf6mIX5UwxGKEaWf3m+VLRpDBWhccDfXKqe4kRj/9YaOLcc7HWiyj+9Fy
+         Jb03QL2KRQ8wZCfGdM0hRr6Runyf4lW7kbV+JyDZZG9BdzmjKxBams2wg+IRCrid54PG
+         06dQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=/vYezMfgmz8SYHACJvkjmERa2rsVqk3TpP5VA6dIFLo=;
-        fh=34BDsmx6u5lYfpljazxqNMK9VBQor/H2DgbvwL4gyNs=;
-        b=kKV0vcqvUqhLR44Qm8YQUIJn4+QgdxGmih7aIA8kW7a3cw4HO5hPC33gLZmz7vZKjp
-         uxEdN6QbChN2CH98TkA+xsAYLjjtkcjUiRwPEeutzJx+wAUpYwGbh2PWJhjF5RFO0fvG
-         OujeyOiOTZdAiYk3i8us5m7ESTZnLy/Yodt9RKm42q2k3prQRv8wCyIl+MCYEMEg6Tk4
-         F5abLFrzgHxdnjJ6U4snLiIaNwAhW2cTZhdOgLx6CSCA3JbNp/tDOIa4wrd8YeNbIxlM
-         1UXIa9RWnGwW6v7Q+lrz4VxPd53ilLU/O6Lh1JSlNaBhKkh/7xMnumeYcIFsqk2dAiwd
-         ffbg==;
+        bh=KYF7wqZrysg/0UlMLYfdnApkPDSv9xM4Mak/A0rFhXg=;
+        fh=VehshbIhybdqQMkDdmSWtXkpw1wDj1J2twT5Q8Oi0Vo=;
+        b=DFFif93QySidiQib7Bb9qp0ZXzFeyqskEbGqBRJ6IXpbqlCJ/Rhc76JjTdZefVmXzP
+         YKquSSwvE8FZvDZOZQvwtkvwrSun22b2JURfbSKEFjrA/19jmIgcoGP1vm2xnfFqcLQk
+         nlWWwwsE6fjjve2F7GujHkYy/3Y4UnXKd+rIJNpzCemWtYdt6j6E5bmNqlrIsXupCoLa
+         u6xbi2m7iEdWU9rbuGiR/yZFGAuTZUHtLGVmH1l/45WJrnLbzyCQ15Gm65YGaXrJf/hJ
+         6lfI93fOWwdYFNZ60IVEJh7jP+1x4gyi9YSxn1wIu1RE7jPgvvD8s5kg1LC4rZhCnk4S
+         UV5Q==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767356330; x=1767961130; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1767367601; x=1767972401; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/vYezMfgmz8SYHACJvkjmERa2rsVqk3TpP5VA6dIFLo=;
-        b=RwyteiZW0J1P1L4ihdFMc4BcXDg6bHU6he3ZyO382UuhwPctkmXOjxCF0iHjXNUh9m
-         lSJL4HsDij6QyGLrp2+QEJ6UbGUIiXl57nz3/hpdekGdD5xlV/MiOam4W171wrsosxy3
-         6A6/bljzySXA6xcFdwlZrtH4FbkRNsK2CbyyA7FyUkkkBP0854+Mgz1z1/8JScHBQmyx
-         lJ3Vxcv8kBS7W3WyS3gvUWKk/YpPepdH+YBxkQw8sAsEU/qp6CvKffBWF8eKvZXm4yc/
-         trkt4DU30PZqDQ0XHljA7wknlXsuY3zz8U1LMg9Xxw2wOhn4eq7CrKtwkI0p8aLuQ5S3
-         bEgA==
+        bh=KYF7wqZrysg/0UlMLYfdnApkPDSv9xM4Mak/A0rFhXg=;
+        b=FspvpTvHp0y8zdepke0YHomLvYimCTj46guh2Wxo7luzpGiROz/OPlATL2Wbqh9kto
+         0Qu/pwSp4BPvMq7FnKXr0s81Vo7CIge9n0ThNztg/P//FDPmKMAsJ3q6BIEDyMns5FVY
+         WXS7Pyz9J7HYgIp4vrFN+/JrlqKJZLY4eSUU8yq7Ai07dfsRtwqpAd1iG9ClTv2lpFkK
+         /jdydUP3YD6tS2jTrBIgT95jKPdqOjUc8hUxcqx9hBd5FdzJx+eKL/LIHpz/dgcyJxYR
+         aeWgo/pmIUt5BsKEthp+vG92q+noJqBxfEFoOzPK3p1Xix1hybABjyDteSHt0/+Ydo59
+         1dPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767356330; x=1767961130;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1767367601; x=1767972401;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=/vYezMfgmz8SYHACJvkjmERa2rsVqk3TpP5VA6dIFLo=;
-        b=sApPeabZTbvcLHmuZZ7zkV7yGjgyKPibAWVKF2aH/zzUIGfevT5YRTLUC//miDskII
-         r3SoSPkl8NzaOeHjby8xVgeKEltvtyKbt632HjIuY+YEjuTeKmDualAxwbfkE+Pixh4q
-         0yh9LP2d+lsrCvSil+xyNs6Hw0r21SqdgiE3Dd9PMKix2FWtOb3HWTYsNPYWgslAf73h
-         pzhmCgJg8tewwtdWuiExloHpwgRDTsXBqKJ0dX7nrzCU5rEg38ILKMeTCOQYkqerwzXk
-         d22u6geWmRk45S6bV50EbhuLHd1+20MvsHoYn3HknDoC9ObxQde6SrCDOO5PbY8nZfnq
-         6deg==
-X-Forwarded-Encrypted: i=1; AJvYcCXoNl7oAmKsXcjCblEGhOBYzVSJ1sf0wVmKEcyBu+Y/dtILJicZeBW7rHyA83kQCOiiRgETl1h/Uaylg+QU6fzs@vger.kernel.org
-X-Gm-Message-State: AOJu0YzE4XQI+d3n1btiri6ox0BCLUNrIdpeI6RC4/YO5qi/JmOwmVxv
-	9ON+py593YzlAoq7EAmYYYR4ZeskV6Sghd9NEBTPvT0V7JHB5SHw9tD2p3E7InjXAT83E0W863B
-	Vm9DyQuQvT+BS289s0If/aROFrhR6YNQ4KThDeGsb
-X-Gm-Gg: AY/fxX7flgEzb5XZgttMOwzxNVT3feNO5Xp7ECIaKjLX5GRQeYST+ygzNBchEE2PFTO
-	PdrEN34YK/bIAj1+d+AXq4khBWP8OXFRTETcQwdWYoUtyc8f+Qt1MMt8t5t32xEIpT1QKQ5EwFw
-	1MXFqp6uDG0Dw9D4la9RafgxUcp1d+zc++azVDNv0ZXz3luvyRccS23dDvXv+lqWJDiC8yTuTGq
-	0Vy7hD1I+/bP4dvlssB+bITmIgwZfOjQfwOzUSPotYGZ3fc0KJAzu3Y4RtD7m86AMoUa2NP
-X-Google-Smtp-Source: AGHT+IFoZ8B1qDvnQCmI0XVq2vhw1PrHKxvfv6Cxy5czSMngQW+2Ftg7KMTM0PF1bbALNVsRMasGkB8UAAU6HlMiVYc=
-X-Received: by 2002:a17:903:1c1:b0:29f:2f83:16d3 with SMTP id
- d9443c01a7336-2a3a3af7fc1mr3531165ad.16.1767356329375; Fri, 02 Jan 2026
- 04:18:49 -0800 (PST)
+        bh=KYF7wqZrysg/0UlMLYfdnApkPDSv9xM4Mak/A0rFhXg=;
+        b=MgApF6zPRTHgn8A7V2bjAdj6amSjM/La2TjRjwHlP1L3zApOi3E7BXtR/XJXsXSKpL
+         icTAAxETFLibvEnT8W9BYz620OSHNfIQZ8ZL1G64LknlFPG/E1nWE82/rEr2N6q7VFFZ
+         AXu6dhWOFSSme6RjvqQ6STzTeknDBY94f+OINY9EvqG6AniOPZu3Qdwl8mvkGZsZWZoM
+         8xFT+o3G8FK7EPAH8JG9QuYvuipiOHHJfr35ekCEN7sREXZIGTVPCpamiC4mR0jFBi8b
+         oIzbiwr62DKf93SjAVefL2aUX7imqup6O8T03ZufGP/SRYss3iEfjj6+DQeODvf6Lbw5
+         zVRw==
+X-Forwarded-Encrypted: i=1; AJvYcCXTAgb99n7+QUFXDkBkTwMXzDP97KTiQPmhWhEOw60N9OfPL9E+pUGDRG9ruM3EG1XZs3mk55Sq4NXMUM+kN+v/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL0QciPtrVVOv9nCXQOKgCZDDhbxRix59WEhq4Av7+Ld5s8vzk
+	Np5MqCOvO+w3XqExF9SziJjO9cIknKlnUUZnCq/aC4pkQUzELxw+JttBhdshSTquc/Mul+lHVt0
+	XWfSE29TKpsX4lcFnb5fRrbOq2vDpDa0Nap1kVu3Y
+X-Gm-Gg: AY/fxX5ZOPQShdO3XOUrreiSZRPnbBtjFwglBST+2zkokfVt6o6+VjVrTb+Hl59Ebr7
+	rBRkLKA5i7P62kAmYPah00PMj3EMUpzMhDPpx3aSwkZrRbsY2D93oa9vltbnE0Al7XrbPTxf2Lo
+	z3efPvlSwCk6GSzsPSwr6dtoNroEhuhHoS+4EzLQaDAezb/giMD4NjhMm0kPHbL2Q4IGDVTqBF2
+	ybkcAyE2LeRdGk6c6+eO9OL4ecIuOm2rag4klSEEPLZuMQngoUfX4aMjjyoh0UFMTk4CgEq
+X-Google-Smtp-Source: AGHT+IF85pwv4OCQlzxVXlMryt0brG7blCJ6Cs7yYrDymGieZo+/wGLtsVTitbRIcacgFZ7X0OFolHrtcJSnlGyOBug=
+X-Received: by 2002:a17:902:ebc3:b0:298:45b1:6ef4 with SMTP id
+ d9443c01a7336-2a3a3af13b7mr4063675ad.12.1767367600524; Fri, 02 Jan 2026
+ 07:26:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260102-james-perf-dump-callchain-markers-v1-1-3a9bdec20c58@linaro.org>
-In-Reply-To: <20260102-james-perf-dump-callchain-markers-v1-1-3a9bdec20c58@linaro.org>
+References: <20251118211326.1840989-1-irogers@google.com>
+In-Reply-To: <20251118211326.1840989-1-irogers@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 2 Jan 2026 04:18:37 -0800
-X-Gm-Features: AQt7F2rCSBYzVybmZSADwN7ss4nCpoqBKI7IjH_hBQJbrD9pwm1zZTt4PoOqe48
-Message-ID: <CAP-5=fUmbpDb0S33qb82Wvh2PjSGOWYYFi-70FZSWD6L7TuwLw@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Dump callchain context marker names
-To: James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+Date: Fri, 2 Jan 2026 07:26:29 -0800
+X-Gm-Features: AQt7F2p70pUha0L-utd0Zus7R8D8B8gN0sZ_k48dpj3GkUG0aURY7ciCmLMG4RU
+Message-ID: <CAP-5=fXk=zaqgfqWQtJGyKj=6+14ZsxxsQra+eax4DzvKD2qeg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] perf stat affinity changes
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Yang Li <yang.lee@linux.alibaba.com>, 
+	James Clark <james.clark@linaro.org>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 2, 2026 at 4:16=E2=80=AFAM James Clark <james.clark@linaro.org>=
- wrote:
+On Tue, Nov 18, 2025 at 1:13=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> These are hard to interpret in the raw output because they are printed
-> as hex but are defined in perf_event.h as decimal. Make it much easier
-> to read the raw callchains by just printing their names.
+> The remnants of:
+> https://lore.kernel.org/lkml/20251113180517.44096-1-irogers@google.com/
 >
-> For example:
+> Read tool events last so that counts shouldn't exceed theoretic
+> maximums.
 >
->   $ perf report -D
->
->   1798195372321 0x4638 [0xb0]: PERF_RECORD_SAMPLE(IP, 0x4002): 44922/4492=
-2: 0x7c8046dd3400 period: 120218 addr: 0
->   ... FP chain: nr:12
->   .....  0: fffffffffffffe00 (PERF_CONTEXT_USER)
->   .....  1: 00007c8046dd3400
->   .....  2: 00007c8046db86d3
->
-> Signed-off-by: James Clark <james.clark@linaro.org>
+> Change how affinities work with evlist__for_each_cpu. Move the
+> affinity code into the iterator to simplify setting it up. Detect when
+> affinities will and won't be profitable, for example a tool event and
+> a regular perf event (or read group) may face less delay from a single
+> IPI for the event read than from a call to sched_setaffinity. Add a
+>  --no-affinity flag to perf stat to allow affinities to be disabled.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Ping.
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/util/session.c | 25 +++++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
+> v5: Drop merged changes. Move tool event reading to first
+>     patch. Change --no-affinity flag to --affinity/--no-affinity flag.
 >
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 4236503c8f6c..e812f8954075 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -841,6 +841,26 @@ static void callchain__lbr_callstack_printf(struct p=
-erf_sample *sample)
->         }
->  }
+> v4: Rebase. Add patch to reduce scope of walltime_nsec_stats now that
+>     the legacy metric code is no more. Minor tweak to the ru_stats
+>     clean up.
+> https://lore.kernel.org/lkml/20251113180517.44096-1-irogers@google.com/
 >
-> +static const char *callchain_context_str(u64 ip)
-> +{
-> +       switch (ip) {
-> +       case PERF_CONTEXT_HV:
-> +               return " (PERF_CONTEXT_HV)";
-> +       case PERF_CONTEXT_KERNEL:
-> +               return " (PERF_CONTEXT_KERNEL)";
-> +       case PERF_CONTEXT_USER:
-> +               return " (PERF_CONTEXT_USER)";
-> +       case PERF_CONTEXT_GUEST:
-> +               return " (PERF_CONTEXT_GUEST)";
-> +       case PERF_CONTEXT_GUEST_KERNEL:
-> +               return " (PERF_CONTEXT_GUEST_KERNEL)";
-> +       case PERF_CONTEXT_GUEST_USER:
-> +               return " (PERF_CONTEXT_GUEST_USER)";
-> +       default:
-> +               return "";
-> +       }
-> +}
-> +
->  static void callchain__printf(struct evsel *evsel,
->                               struct perf_sample *sample)
->  {
-> @@ -853,8 +873,9 @@ static void callchain__printf(struct evsel *evsel,
->         printf("... FP chain: nr:%" PRIu64 "\n", callchain->nr);
+> v3: Add affinity clean ups and read tool events last.
+> https://lore.kernel.org/lkml/20251106071241.141234-1-irogers@google.com/
 >
->         for (i =3D 0; i < callchain->nr; i++)
-> -               printf("..... %2d: %016" PRIx64 "\n",
-> -                      i, callchain->ips[i]);
-> +               printf("..... %2d: %016" PRIx64 "%s\n",
-> +                      i, callchain->ips[i],
-> +                      callchain_context_str(callchain->ips[i]));
+> v2: Fixed an aggregation index issue:
+> https://lore.kernel.org/lkml/20251104234148.3103176-2-irogers@google.com/
 >
->         if (sample->deferred_callchain)
->                 printf("...... (deferred)\n");
+> v1:
+> https://lore.kernel.org/lkml/20251104053449.1208800-1-irogers@google.com/
 >
-> ---
-> base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
-> change-id: 20260102-james-perf-dump-callchain-markers-64d175b108c8
+> Ian Rogers (3):
+>   perf stat: Read tool events last
+>   perf evlist: Reduce affinity use and move into iterator, fix no
+>     affinity
+>   perf stat: Add no-affinity flag
 >
-> Best regards,
+>  tools/perf/Documentation/perf-stat.txt |   4 +
+>  tools/perf/builtin-stat.c              | 159 ++++++++++++++-----------
+>  tools/perf/util/evlist.c               | 156 ++++++++++++++----------
+>  tools/perf/util/evlist.h               |  27 +++--
+>  tools/perf/util/pmu.c                  |  12 ++
+>  tools/perf/util/pmu.h                  |   1 +
+>  6 files changed, 222 insertions(+), 137 deletions(-)
+>
 > --
-> James Clark <james.clark@linaro.org>
+> 2.52.0.rc1.455.g30608eb744-goog
 >
