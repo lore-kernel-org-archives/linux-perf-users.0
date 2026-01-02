@@ -1,157 +1,223 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DA023EAB2
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Jan 2026 15:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F2924337B
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Jan 2026 15:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767367603; cv=pass; b=gImqxKvJALn2fgDe0systVsLaZFqzBD77Z2jCpkZHWMkSj1qWxHyx+q+hqtGIkD5spe/U0NZvAyW8S22bgyTrIlirXf3o1YX4+osQRWWysiQZrKsGOCnQPTyOLigTRuTcjWSa+k5jO7TpFRzQbuGrx1pWpLMc7GzT2wnmInuww4=
+	t=1767367763; cv=pass; b=nmh/bORYzxvxTdIF4Dc0fKLbkDDoOW8r1kvs7a8vKribwrhPzKfWMTQ3RAyI7+EqvIspY0yKB0YB+IeJWoOJiqkDGvWKi5OKGkGsDhGhUTLWpJpDoP/HvHqI7TjhgPlmk6HpSh0UCPU4WXR+/dy6nLvlKYxy840py+pHBbdE7dk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767367603; c=relaxed/simple;
-	bh=Ns46H+wOPb7rzfATKl0oyBKOfdY5LopQu7nvcAFe+Rg=;
+	s=arc-20240116; t=1767367763; c=relaxed/simple;
+	bh=eGoowmSEsPCstoNDJHVFm6y0yKxdukSXYtHUVQfsZWg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=TTGQAaJ6KizIMShNTNuNmaPQZOgnDtDSFLnxz+C4NwCp2x0VPxiELHdW55qIwWpg3+oMJuhWE+X5PmD/XkYXio34Z3Eo5doVpGwMjeIWxQaqVqU1yymxpvJNy9V/4QLCBw3QM2rHIjb3A4gmK+Q5lq9+U0oOmfDh6RE/84DJ5mg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FspvpTvH; arc=pass smtp.client-ip=209.85.214.180
+	 To:Cc:Content-Type; b=YHKSYKNFvlg0jbKB4cwfWtlkKEBV3iOqUOX1y+RXuudUed594INdm1Et4ox8zZc8nfK1QfZ0N1psSrfa+j3cqQggtqQlxgJNL+WX+rxBrKfPf88WVaNVmSk6DvI+g4R6Mhi0UIORufYrkjGQd4fsvyvfYlUF+P9c8Yoh8OxNBBw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L2qz+YSK; arc=pass smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FspvpTvH"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-29f02651fccso341265ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jan 2026 07:26:41 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1767367601; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L2qz+YSK"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-29f02651fccso341835ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jan 2026 07:29:22 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1767367761; cv=none;
         d=google.com; s=arc-20240605;
-        b=PZfrahQfoa2j70Au8erq89s6d4d/BD48buP9gFbU2tlCdYufEKzRGR9Pa8z2eRQnd7
-         n6ORU5/cuNBMrsKx9wv/UgoDj8EC6gdWco01a5xG/Gshsdd0HR7g9pALOw1ZedjsK4Jf
-         nptShDa5alnVxkXu40Wcv/YyrAw7utLo/EVGV5F/lOBtVAyJtKLQfY+bQxevAZFO6H4j
-         fMQFpRx0fcmtf6mIX5UwxGKEaWf3m+VLRpDBWhccDfXKqe4kRj/9YaOLcc7HWiyj+9Fy
-         Jb03QL2KRQ8wZCfGdM0hRr6Runyf4lW7kbV+JyDZZG9BdzmjKxBams2wg+IRCrid54PG
-         06dQ==
+        b=Oe8rO4Avz6LfLXuvhoU2W2M7xEp7ZG8TLlvdIabEYHe5iEuXppQ4DVi5FGciCDBLHT
+         03e1na+Sno8C6Mhy71rcj9glRJaotxk+9RdYVgZOSP2IUqGavjjWuBO8HV+IKt3+icpD
+         gJRM6jhUyRyxa3PVueRiX2ZRrF3XHaUi+DyD5O+5aPNjsM7eg7rVLtbMBqc4Ca0NuwfO
+         Xk/Rav2rrhPoh5qg5sIMnkc8u22F42K9W+33bbufFVuri1t4hhPG+/pO9oHeuy9A3/JL
+         ffPBzxABNPkioFLVNWh1ucjetsoPoky/VRui/ZnP33ls2nzIUMOo0hwc8fL/xacTssjL
+         yXKg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=KYF7wqZrysg/0UlMLYfdnApkPDSv9xM4Mak/A0rFhXg=;
-        fh=VehshbIhybdqQMkDdmSWtXkpw1wDj1J2twT5Q8Oi0Vo=;
-        b=DFFif93QySidiQib7Bb9qp0ZXzFeyqskEbGqBRJ6IXpbqlCJ/Rhc76JjTdZefVmXzP
-         YKquSSwvE8FZvDZOZQvwtkvwrSun22b2JURfbSKEFjrA/19jmIgcoGP1vm2xnfFqcLQk
-         nlWWwwsE6fjjve2F7GujHkYy/3Y4UnXKd+rIJNpzCemWtYdt6j6E5bmNqlrIsXupCoLa
-         u6xbi2m7iEdWU9rbuGiR/yZFGAuTZUHtLGVmH1l/45WJrnLbzyCQ15Gm65YGaXrJf/hJ
-         6lfI93fOWwdYFNZ60IVEJh7jP+1x4gyi9YSxn1wIu1RE7jPgvvD8s5kg1LC4rZhCnk4S
-         UV5Q==;
+        bh=1IrNNLIVA6NEnoB6P01BW0NnGhVoH9ArZXFEJWghKfQ=;
+        fh=wZwlWXHGk/rFx8SmVIiK1KsegSmmH6azPzHBr+9ORpo=;
+        b=Sg9QfAf7w0Q0JLFVUfgo6JdsUg7Dphpcfa+nJy05EesYuCNQesZQMMJKwVnZpw4wSg
+         k4456Poudu8MZuxMPHWewjnxoWyHVBHDBUpx55IdRRqZWZ6KV1vWl2DTwCgsAPZD6fYz
+         bfjcXqx/FCMYsp1dixZQvuchNzPHQj3yB66BRlVCu01jtK52+pc0EWLTO+zck6uZgqCh
+         uLG0sbfMkSWjyo3koyEiZOQJkyTFsl5+PErkG4dO8YPriVPDnr5zhif/Rf1ibP7luwfX
+         wMxJhfY6AiQItU63emWtMbQrC4bmhwXcoJa3hls1LWbEOJbQd1KawOAjV9mXYWE4HU5I
+         DT2g==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767367601; x=1767972401; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1767367761; x=1767972561; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KYF7wqZrysg/0UlMLYfdnApkPDSv9xM4Mak/A0rFhXg=;
-        b=FspvpTvHp0y8zdepke0YHomLvYimCTj46guh2Wxo7luzpGiROz/OPlATL2Wbqh9kto
-         0Qu/pwSp4BPvMq7FnKXr0s81Vo7CIge9n0ThNztg/P//FDPmKMAsJ3q6BIEDyMns5FVY
-         WXS7Pyz9J7HYgIp4vrFN+/JrlqKJZLY4eSUU8yq7Ai07dfsRtwqpAd1iG9ClTv2lpFkK
-         /jdydUP3YD6tS2jTrBIgT95jKPdqOjUc8hUxcqx9hBd5FdzJx+eKL/LIHpz/dgcyJxYR
-         aeWgo/pmIUt5BsKEthp+vG92q+noJqBxfEFoOzPK3p1Xix1hybABjyDteSHt0/+Ydo59
-         1dPA==
+        bh=1IrNNLIVA6NEnoB6P01BW0NnGhVoH9ArZXFEJWghKfQ=;
+        b=L2qz+YSKl4YPq6HE4lQ2u2kNROjpEUwB2Ms1EE31/qyG24Yz1ldlepfkuvZOvffU4C
+         PrFtI0VsjUifjwR66zx479fpVYBsKX43cLuRFEdrl44dqkNoIMVwrNfhzxDzDQD4h1fF
+         HgwOAj0tgcn6eUm12vkK++In4eJLr5cU69cqRvrx8PeZdDoUZx9RG2cj9SuTtS5PlwUI
+         LbEAFR4Q/0V7G0JGTbYJQcP88TBEeLSG2XK+/E9MHAdaIvDpyZwcNEq9pjy64TWN9wk5
+         6TNRdi3iudA5UJu8BEhFee5/zkJFNGXwn88sjchjlKIuVYvTY4BfGFdtPBlOHt+MvXGF
+         ZAfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767367601; x=1767972401;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1767367761; x=1767972561;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=KYF7wqZrysg/0UlMLYfdnApkPDSv9xM4Mak/A0rFhXg=;
-        b=MgApF6zPRTHgn8A7V2bjAdj6amSjM/La2TjRjwHlP1L3zApOi3E7BXtR/XJXsXSKpL
-         icTAAxETFLibvEnT8W9BYz620OSHNfIQZ8ZL1G64LknlFPG/E1nWE82/rEr2N6q7VFFZ
-         AXu6dhWOFSSme6RjvqQ6STzTeknDBY94f+OINY9EvqG6AniOPZu3Qdwl8mvkGZsZWZoM
-         8xFT+o3G8FK7EPAH8JG9QuYvuipiOHHJfr35ekCEN7sREXZIGTVPCpamiC4mR0jFBi8b
-         oIzbiwr62DKf93SjAVefL2aUX7imqup6O8T03ZufGP/SRYss3iEfjj6+DQeODvf6Lbw5
-         zVRw==
-X-Forwarded-Encrypted: i=1; AJvYcCXTAgb99n7+QUFXDkBkTwMXzDP97KTiQPmhWhEOw60N9OfPL9E+pUGDRG9ruM3EG1XZs3mk55Sq4NXMUM+kN+v/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzL0QciPtrVVOv9nCXQOKgCZDDhbxRix59WEhq4Av7+Ld5s8vzk
-	Np5MqCOvO+w3XqExF9SziJjO9cIknKlnUUZnCq/aC4pkQUzELxw+JttBhdshSTquc/Mul+lHVt0
-	XWfSE29TKpsX4lcFnb5fRrbOq2vDpDa0Nap1kVu3Y
-X-Gm-Gg: AY/fxX5ZOPQShdO3XOUrreiSZRPnbBtjFwglBST+2zkokfVt6o6+VjVrTb+Hl59Ebr7
-	rBRkLKA5i7P62kAmYPah00PMj3EMUpzMhDPpx3aSwkZrRbsY2D93oa9vltbnE0Al7XrbPTxf2Lo
-	z3efPvlSwCk6GSzsPSwr6dtoNroEhuhHoS+4EzLQaDAezb/giMD4NjhMm0kPHbL2Q4IGDVTqBF2
-	ybkcAyE2LeRdGk6c6+eO9OL4ecIuOm2rag4klSEEPLZuMQngoUfX4aMjjyoh0UFMTk4CgEq
-X-Google-Smtp-Source: AGHT+IF85pwv4OCQlzxVXlMryt0brG7blCJ6Cs7yYrDymGieZo+/wGLtsVTitbRIcacgFZ7X0OFolHrtcJSnlGyOBug=
-X-Received: by 2002:a17:902:ebc3:b0:298:45b1:6ef4 with SMTP id
- d9443c01a7336-2a3a3af13b7mr4063675ad.12.1767367600524; Fri, 02 Jan 2026
- 07:26:40 -0800 (PST)
+        bh=1IrNNLIVA6NEnoB6P01BW0NnGhVoH9ArZXFEJWghKfQ=;
+        b=WFbIovVlxBz+/g563GgFE1DLLnZ8oXvhYDSsq/WWN58xKMMz1AzsecTyfp96ZflN8l
+         1qGXAKK/TjxtbsKiAabbeXzlLloQYbuSShS2RcdnojZBgzhUUDJJzOaXNw/Eh6h9k2x5
+         XRx50sIWkUUj6mguItW3YiqPmX+n39u55zc6uDqjlfPinBzwn9Zj+E4F3zirHP1U8QfZ
+         CVYb58/tYkXT4pI7rpx0GUPjBOF4ebPLWZd2mKOdh4Ji8pw2DdewAI5bVaVzL94URKay
+         v+ZcZSm9gR5Vp4J62MgC1xhat2geVBw/b6EEmZUBHYiskHexFgkxWJYvmkB6h+uGae4V
+         gHVw==
+X-Forwarded-Encrypted: i=1; AJvYcCWU30M8nN/u28i4uyT4GXfz1OYoODMLN/3v2Ps7X2NEcXO4Rj1XcC8D1/EVT1cxOg+6iyWl5OmKEvTdLfNlK+Kq@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM8N72Kpr6/GhC86lgx/CwlpmQm8+m+9mzEAWs/PlyOrn9oLut
+	CSCzK0+ZG0F28ZhkU+bGedvYjmBr5cRzYQ9toYCGZqbRGupXMYj4fueJMa5dyE2fsa1JaCnERCi
+	35qZiRpIKHLRtIEnElE74xxUj1SMosNcNYhCp9s8I
+X-Gm-Gg: AY/fxX63Bq8Q89pxJzZ2b7lwzSPHNDM2hrhJ7/P4nIdPmPybyuaduZxNSE/P1J2Iodd
+	1haaYt6Vw11dX72bOcpATJA/btRkCUP4zMoRPyRAJjtIefb3OsyFxik9zVsUH6gVBbkxmqKf1+/
+	sxJiIVtSkirI5RC+o4ur6wcasNEmO7c9y33KHUZKP5dpQoumCmNTrmiRf99HtgXaer4YoL0owSY
+	D/bJnSUMCPjUayQ9YmeKFp3JNYHHU8BBMipi7770UeeORvcprBWRnC+H7WdPXQMnLa8wxAh
+X-Google-Smtp-Source: AGHT+IHkRM3nbQcOLPK48izIgmx+1XDVnVC8tPksDt2Q+LaV8kDbzbl+/fNpBXQmPomVnOxMH/Rg7BkIQtTEpzsiFbM=
+X-Received: by 2002:a17:903:32cf:b0:2a1:35df:250f with SMTP id
+ d9443c01a7336-2a3a48b30ebmr3054145ad.15.1767367761024; Fri, 02 Jan 2026
+ 07:29:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251118211326.1840989-1-irogers@google.com>
-In-Reply-To: <20251118211326.1840989-1-irogers@google.com>
+References: <20251231-james-perf-uncountable-events-v1-1-f2d9932999fd@linaro.org>
+In-Reply-To: <20251231-james-perf-uncountable-events-v1-1-f2d9932999fd@linaro.org>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 2 Jan 2026 07:26:29 -0800
-X-Gm-Features: AQt7F2p70pUha0L-utd0Zus7R8D8B8gN0sZ_k48dpj3GkUG0aURY7ciCmLMG4RU
-Message-ID: <CAP-5=fXk=zaqgfqWQtJGyKj=6+14ZsxxsQra+eax4DzvKD2qeg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] perf stat affinity changes
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+Date: Fri, 2 Jan 2026 07:29:09 -0800
+X-Gm-Features: AQt7F2rS--MzMnSf-RM3PcQkHgwOlcc1ZDooZ9mUFWMOcjVEabNgLf8roIrcl70
+Message-ID: <CAP-5=fUNJLoy25rS=diSXNR9h-h4m6EFPTy8M+KpTKxm6HtDSA@mail.gmail.com>
+Subject: Re: [PATCH] perf vendor events arm64: Remove uncountable events
+To: James Clark <james.clark@linaro.org>
+Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Yang Li <yang.lee@linux.alibaba.com>, 
-	James Clark <james.clark@linaro.org>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
+	Adrian Hunter <adrian.hunter@intel.com>, Akio Kakuno <fj3333bs@aa.jp.fujitsu.com>, 
+	Yoshihiro Furudera <fj5100bi@fujitsu.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 18, 2025 at 1:13=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Wed, Dec 31, 2025 at 4:13=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
 >
-> The remnants of:
-> https://lore.kernel.org/lkml/20251113180517.44096-1-irogers@google.com/
->
-> Read tool events last so that counts shouldn't exceed theoretic
-> maximums.
->
-> Change how affinities work with evlist__for_each_cpu. Move the
-> affinity code into the iterator to simplify setting it up. Detect when
-> affinities will and won't be profitable, for example a tool event and
-> a regular perf event (or read group) may face less delay from a single
-> IPI for the event read than from a call to sched_setaffinity. Add a
->  --no-affinity flag to perf stat to allow affinities to be disabled.
+> These events are never countable by the PMU and are only intended to
+> be used as external inputs to trace. Therefore showing them in 'perf
+> list' is misleading so remove them.
 
-Ping.
+What does "trace" mean in this context?
 
 Thanks,
 Ian
 
-> v5: Drop merged changes. Move tool event reading to first
->     patch. Change --no-affinity flag to --affinity/--no-affinity flag.
+> The generator script doesn't emit these events when used with the new
+> telemetry-solution input files [1].
 >
-> v4: Rebase. Add patch to reduce scope of walltime_nsec_stats now that
->     the legacy metric code is no more. Minor tweak to the ru_stats
->     clean up.
-> https://lore.kernel.org/lkml/20251113180517.44096-1-irogers@google.com/
+> 'perf list' should only show countable events because there are events
+> that are sometimes implemented, sometimes countable and sometimes not,
+> for example TRB_TRIG. If we always include any implemented events
+> whether they are countable or not then it's not possible to tell whether
+> they are usable in perf without going to the docs, defeating the point
+> of 'perf list'.
 >
-> v3: Add affinity clean ups and read tool events last.
-> https://lore.kernel.org/lkml/20251106071241.141234-1-irogers@google.com/
+> It's also not useful yet to display implemented events that are not
+> countable (for help in using trace rather than perf stat), because
+> PMU_OVFS and PMU_HOVFS are practically always implemented and TRB_TRIG
+> is always implemented when there is TRBE.
 >
-> v2: Fixed an aggregation index issue:
-> https://lore.kernel.org/lkml/20251104234148.3103176-2-irogers@google.com/
+> [1]: https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/tree/=
+main/data/pmu/cpu
 >
-> v1:
-> https://lore.kernel.org/lkml/20251104053449.1208800-1-irogers@google.com/
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+>  tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json  |  8 --------
+>  tools/perf/pmu-events/arch/arm64/common-and-microarch.json | 12 --------=
+----
+>  tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json   | 10 --------=
+--
+>  3 files changed, 30 deletions(-)
 >
-> Ian Rogers (3):
->   perf stat: Read tool events last
->   perf evlist: Reduce affinity use and move into iterator, fix no
->     affinity
->   perf stat: Add no-affinity flag
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json b/=
+tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json
+> deleted file mode 100644
+> index d8b7b9f9e5fa..000000000000
+> --- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json
+> +++ /dev/null
+> @@ -1,8 +0,0 @@
+> -[
+> -    {
+> -        "ArchStdEvent": "PMU_OVFS"
+> -    },
+> -    {
+> -        "ArchStdEvent": "PMU_HOVFS"
+> -    }
+> -]
+> diff --git a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json b=
+/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
+> index 2416d9f8a83d..468cb085d879 100644
+> --- a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
+> +++ b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
+> @@ -432,24 +432,12 @@
+>          "EventName": "TRB_WRAP",
+>          "BriefDescription": "Trace buffer current write pointer wrapped"
+>      },
+> -    {
+> -        "PublicDescription": "PMU overflow, counters accessible to EL1 a=
+nd EL0",
+> -        "EventCode": "0x400D",
+> -        "EventName": "PMU_OVFS",
+> -        "BriefDescription": "PMU overflow, counters accessible to EL1 an=
+d EL0"
+> -    },
+>      {
+>          "PublicDescription": "Trace buffer Trigger Event",
+>          "EventCode": "0x400E",
+>          "EventName": "TRB_TRIG",
+>          "BriefDescription": "Trace buffer Trigger Event"
+>      },
+> -    {
+> -        "PublicDescription": "PMU overflow, counters reserved for use by=
+ EL2",
+> -        "EventCode": "0x400F",
+> -        "EventName": "PMU_HOVFS",
+> -        "BriefDescription": "PMU overflow, counters reserved for use by =
+EL2"
+> -    },
+>      {
+>          "PublicDescription": "PE Trace Unit external output 0",
+>          "EventCode": "0x4010",
+> diff --git a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json b/t=
+ools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json
+> deleted file mode 100644
+> index 65bd6cdd0dd5..000000000000
+> --- a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json
+> +++ /dev/null
+> @@ -1,10 +0,0 @@
+> -[
+> -    {
+> -        "ArchStdEvent": "PMU_OVFS",
+> -        "BriefDescription": "This event counts the event generated each =
+time one of the condition occurs described in Arm Architecture Reference Ma=
+nual for A-profile architecture. This event is only for output to the trace=
+ unit."
+> -    },
+> -    {
+> -        "ArchStdEvent": "PMU_HOVFS",
+> -        "BriefDescription": "This event counts the event generated each =
+time an event is counted by an event counter <n> and all of the condition o=
+ccur described in Arm Architecture Reference Manual for A-profile architect=
+ure. This event is only for output to the trace unit."
+> -    }
+> -]
 >
->  tools/perf/Documentation/perf-stat.txt |   4 +
->  tools/perf/builtin-stat.c              | 159 ++++++++++++++-----------
->  tools/perf/util/evlist.c               | 156 ++++++++++++++----------
->  tools/perf/util/evlist.h               |  27 +++--
->  tools/perf/util/pmu.c                  |  12 ++
->  tools/perf/util/pmu.h                  |   1 +
->  6 files changed, 222 insertions(+), 137 deletions(-)
+> ---
+> base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
+> change-id: 20251230-james-perf-uncountable-events-28adfb93b73f
 >
+> Best regards,
 > --
-> 2.52.0.rc1.455.g30608eb744-goog
+> James Clark <james.clark@linaro.org>
 >
