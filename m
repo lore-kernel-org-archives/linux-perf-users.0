@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395CD2DC323;
-	Fri,  2 Jan 2026 22:26:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605F02FA0DB;
+	Fri,  2 Jan 2026 22:28:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767392807; cv=none; b=axJ71Ewlocs3A5lu7Na4J9Tj+FWZm95agu8kX9PVQMaK0i/pNjfsTIxJZEYnDEY3BsMMHJyvSTw3uM1ZSLe4f+E/UUpXUzhuv9fx/zF/YFWuNvTYYT4xokXXpkSWKdwl0U9Lr255REygyz/H81uheeE9ro90WOl9WUK62rV0kIw=
+	t=1767392927; cv=none; b=NVM6etSvNOlrOWeslC4iryz9f+iImERlf9AtnTEPQonUPs/c9DzO8CqWIjnRPU2ptXYkY1n2w+Urigkep7LBZSvvmJDDhYS539ogEmwph3Lra6Zaws9kGD0XRrH/FKBRZbrcwZUqJsSHSoOvwpdoMHfgWmZqvhv9UZPtZbXQd6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767392807; c=relaxed/simple;
-	bh=Z0VrCyaCKXkyNFjr5VUb/w6nYUb2u+RJolatc8tXu+w=;
+	s=arc-20240116; t=1767392927; c=relaxed/simple;
+	bh=9JpciJvoaO4yRdvOdy3XQHc/UZmMuASJ8tJZ9jvZDtg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fvqCVIiXFX/kvLuSjWz4T/RLoPb6XjQAYR7LfSwHCDDeeSjwKx2zgpnVIX0ZLFlOkpDBbCwZDDhZhHVx6AEZPVrSffrXxwcA1x0U2sc73Bp2G5aF+DXHNfLOIcqyeLqPJPwMfQ0+g9ZchIx7ddthZ3xNGG82RMQYQfhoUB0E/ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mrrB6vmO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ANur+xogzApAK+lTHERwsjpvwBN7+t8VPO1QVHfrhCbOebHal0DLFX6+p8CMwVZmOCrHgaemS5uHE8zMkIVI/O6T2TitlvWKCQYOSZfPT8WJwQX+1+LBHiZ8RmGWN90AsDnyQ8DrxkanAz/9pBWRJTjumLqjtu92VpW5O0O8jgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E4R0L2Mm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mrrB6vmO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CE2CC116B1;
-	Fri,  2 Jan 2026 22:26:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E4R0L2Mm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6777FC116B1;
+	Fri,  2 Jan 2026 22:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767392806;
-	bh=Z0VrCyaCKXkyNFjr5VUb/w6nYUb2u+RJolatc8tXu+w=;
+	s=k20201202; t=1767392926;
+	bh=9JpciJvoaO4yRdvOdy3XQHc/UZmMuASJ8tJZ9jvZDtg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mrrB6vmOc55tr3aekq8PN/AyDc2nP+OC4ADYZaaMiVLw1QIKI0M0ybNY30PbZXnFv
-	 qXrRyRahgY53wOP3xGgcEVPpC6/jrsF6X2u71qgS8fr+R9/5NCiMJIByh5nIl3qFCe
-	 62sA9UV27LdlFZv7sBFBaxNlVkPopOlTMqWPQbAGizfmCjda6QIZ7iVttF7o4WbEVW
-	 L4SB9qoGIJz3bO3nM2IACS+/vivWHYDbkB0dibEFkot4M7jOjZFHxowdDU5WFM/AFp
-	 o/qMvq/UDbk9/lFsJPGSlP7p9kaS+wusoKzlBcGFdbFZ7x4YJDfTHpLdesajCvibzG
-	 KVpcJYxVg44oQ==
-Date: Fri, 2 Jan 2026 14:26:44 -0800
+	b=E4R0L2MmssSv4sNlAOCbLyHttiG0oNphFGdZOiv9+wa4uOML0XUkTcDunAQrmlch0
+	 QgG3L3DXYU/HosqmYm+0/5CmikdinWSh7nPVWJ8ZjDt9dO8lWxM5YBj8KQUJIzv7Zt
+	 FStVfZ4ZUDci/dI4HsVOjSmzizGMzm9rHmTMOgwpaPvSHHoJxG9FdGbGs/585CqoX5
+	 SEsldx8t5Qjb+PjkvytDEml5ZanpUwJCfFreLto+fo/rLFSQMFky8javMivdu2Jwqd
+	 5IOnH/c3zvL4K7Rs5xISWh4oXHGLISAP4/szygx/ZxfDtVs0ynlSS32jDuhxq0LVm9
+	 7kIC9dlkaC2Ug==
+Date: Fri, 2 Jan 2026 14:28:43 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Swapnil Sapkal <swapnil.sapkal@amd.com>
 Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
@@ -44,12 +44,13 @@ Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
 	graham.woodward@arm.com, ben.gainey@arm.com, vineethr@linux.ibm.com,
 	tim.c.chen@linux.intel.com, linux@treblig.org,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	santosh.shukla@amd.com, sandipan.das@amd.com
-Subject: Re: [PATCH RESEND v4 03/11] perf header: Support CPU DOMAIN relation
- info
-Message-ID: <aVhGJJBp0F5kygFt@google.com>
+	santosh.shukla@amd.com, sandipan.das@amd.com,
+	James Clark <james.clark@linaro.org>
+Subject: Re: [PATCH RESEND v4 05/11] perf sched stats: Add schedstat v16
+ support
+Message-ID: <aVhGm6L2mnecKYHU@google.com>
 References: <20250909114227.58802-1-swapnil.sapkal@amd.com>
- <20250909114227.58802-4-swapnil.sapkal@amd.com>
+ <20250909114227.58802-6-swapnil.sapkal@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,560 +59,298 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250909114227.58802-4-swapnil.sapkal@amd.com>
+In-Reply-To: <20250909114227.58802-6-swapnil.sapkal@amd.com>
 
-On Tue, Sep 09, 2025 at 11:42:19AM +0000, Swapnil Sapkal wrote:
-> '/proc/schedstat' gives the info about load balancing statistics within
-> a given domain. It also contains the cpu_mask giving information about
-> the sibling cpus and domain names after schedstat version 17. Storing
-> this information in perf header will help tools like `perf sched stats`
-> for better analysis.
-> 
-> Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
-> ---
->  .../Documentation/perf.data-file-format.txt   |  17 +
->  tools/perf/builtin-inject.c                   |   1 +
->  tools/perf/util/env.h                         |  16 +
->  tools/perf/util/header.c                      | 304 ++++++++++++++++++
->  tools/perf/util/header.h                      |   1 +
->  tools/perf/util/util.c                        |  42 +++
->  tools/perf/util/util.h                        |   3 +
->  7 files changed, 384 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-> index cd95ba09f727..92dbba1003cf 100644
-> --- a/tools/perf/Documentation/perf.data-file-format.txt
-> +++ b/tools/perf/Documentation/perf.data-file-format.txt
-> @@ -437,6 +437,23 @@ struct {
->  	} [nr_pmu];
->  };
->  
-> +	HEADER_CPU_DOMAIN_INFO = 32,
-> +
-> +List of cpu-domain relation info. The format of the data is as below.
-> +
-> +struct domain_info {
-> +	int domain;
-> +	char dname[];
-> +	char cpumask[];
-> +	char cpulist[];
-> +};
-> +
-> +struct cpu_domain_info {
-> +	int cpu;
-> +	int nr_domains;
-> +	struct domain_info domains[];
-> +};
-> +
->  	other bits are reserved and should ignored for now
->  	HEADER_FEAT_BITS	= 256,
->  
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index a114b3fa1bea..f43a7ec44b5f 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -2058,6 +2058,7 @@ static bool keep_feat(int feat)
->  	case HEADER_CLOCK_DATA:
->  	case HEADER_HYBRID_TOPOLOGY:
->  	case HEADER_PMU_CAPS:
-> +	case HEADER_CPU_DOMAIN_INFO:
->  		return true;
->  	/* Information that can be updated */
->  	case HEADER_BUILD_ID:
-> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-> index e00179787a34..71034c4b4488 100644
-> --- a/tools/perf/util/env.h
-> +++ b/tools/perf/util/env.h
-> @@ -54,6 +54,19 @@ struct pmu_caps {
->  	char            *pmu_name;
->  };
->  
-> +struct domain_info {
-> +	u32	domain;
-> +	char	*dname;
-> +	char	*cpumask;
-> +	char	*cpulist;
-> +};
-> +
-> +struct cpu_domain_map {
-> +	u32			cpu;
-> +	u32			nr_domains;
-> +	struct domain_info	**domains;
-> +};
-> +
->  typedef const char *(arch_syscalls__strerrno_t)(int err);
->  
->  struct perf_env {
-> @@ -70,6 +83,8 @@ struct perf_env {
->  	unsigned int		max_branches;
->  	unsigned int		br_cntr_nr;
->  	unsigned int		br_cntr_width;
-> +	unsigned int		schedstat_version;
-> +	unsigned int		max_sched_domains;
->  	int			kernel_is_64_bit;
->  
->  	int			nr_cmdline;
-> @@ -92,6 +107,7 @@ struct perf_env {
->  	char			**cpu_pmu_caps;
->  	struct cpu_topology_map	*cpu;
->  	struct cpu_cache_level	*caches;
-> +	struct cpu_domain_map	**cpu_domain;
->  	int			 caches_cnt;
->  	u32			comp_ratio;
->  	u32			comp_ver;
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 4f2a6e10ed5c..7ff7434bac2c 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -1621,6 +1621,184 @@ static int write_pmu_caps(struct feat_fd *ff,
->  	return 0;
->  }
->  
-> +static void free_cpu_domain_info(struct cpu_domain_map **cd_map, u32 schedstat_version, u32 nr)
-> +{
-> +	for (u32 i = 0; i < nr; i++) {
-> +		if (cd_map[i]->domains) {
-> +			for (u32 j = 0; j < cd_map[i]->nr_domains; j++) {
-> +				struct domain_info *d_info = cd_map[i]->domains[j];
-> +
+On Tue, Sep 09, 2025 at 11:42:21AM +0000, Swapnil Sapkal wrote:
+> /proc/schedstat file output is standardized with version number.
+> Add support to record and raw dump v16 version layout.
 
-I'm not sure if it needs a NULL check for d_info before access.
-
-
-> +				if (schedstat_version >= 17)
-> +					free(d_info->dname);
-> +
-> +				free(d_info->cpumask);
-> +				free(d_info->cpulist);
-> +			}
-> +			free(cd_map[i]->domains);
-> +		}
-> +	}
-> +
-> +	free(cd_map);
-> +}
-> +
-> +static struct cpu_domain_map  **build_cpu_domain_map(u32 *schedstat_version, u32 *max_sched_domains,
-> +						     u32 nr)
-> +{
-> +	struct domain_info *domain_info;
-> +	struct cpu_domain_map **cd_map;
-> +	char dname[16], cpumask[256];
-> +	char cpulist[1024];
-> +	char *line = NULL;
-> +	u32 cpu, domain;
-> +	u32 dcount = 0;
-> +	size_t len;
-> +	FILE *fp;
-> +
-> +	fp = fopen("/proc/schedstat", "r");
-> +	if (!fp) {
-> +		pr_err("Failed to open /proc/schedstat\n");
-> +		return NULL;
-> +	}
-> +
-> +	cd_map = calloc(nr, sizeof(*cd_map));
-> +	if (!cd_map)
-> +		goto out;
-> +
-> +	while (getline(&line, &len, fp) > 0) {
-> +		int retval;
-> +
-> +		if (strncmp(line, "version", 7) == 0) {
-> +			retval = sscanf(line, "version %d\n", schedstat_version);
-> +			if (retval != 1)
-> +				continue;
-> +
-> +		} else if (strncmp(line, "cpu", 3) == 0) {
-> +			retval = sscanf(line, "cpu%u %*s", &cpu);
-> +			if (retval == 1) {
-> +				cd_map[cpu] = calloc(1, sizeof(*cd_map[cpu]));
-> +				if (!cd_map[cpu])
-> +					goto out_free_line;
-> +				cd_map[cpu]->cpu = cpu;
-> +			} else
-> +				continue;
-> +
-> +			dcount = 0;
-> +		} else if (strncmp(line, "domain", 6) == 0) {
-> +			dcount++;
-> +
-> +			cd_map[cpu]->domains = realloc(cd_map[cpu]->domains,
-> +						       dcount * sizeof(domain_info));
-> +			if (!cd_map[cpu]->domains)
-> +				goto out_free_line;
-
-Please use a temporary variable to save the result in order to not lose
-the original pointer in case of failure.
-
-> +
-> +			domain_info = calloc(1, sizeof(*domain_info));
-> +			if (!domain_info)
-> +				goto out_free_line;
-> +
-> +			cd_map[cpu]->domains[dcount - 1] = domain_info;
-> +
-> +			if (*schedstat_version >= 17) {
-> +				retval = sscanf(line, "domain%u %s %s %*s", &domain, dname,
-> +						cpumask);
-> +				if (retval != 3)
-> +					continue;
-> +
-> +				domain_info->dname = calloc(strlen(dname) + 1, sizeof(char));
-> +				if (!domain_info->dname)
-> +					goto out_free_line;
-> +
-> +				strcpy(domain_info->dname, dname);
-
-This can be simply:
-				domain_info->dname = strdup(dname);
-
-
-> +			} else {
-> +				retval = sscanf(line, "domain%u %s %*s", &domain, cpumask);
-> +				if (retval != 2)
-> +					continue;
-> +			}
-> +
-> +			domain_info->domain = domain;
-> +			if (domain > *max_sched_domains)
-> +				*max_sched_domains = domain;
-> +
-> +			domain_info->cpumask = calloc(strlen(cpumask) + 1, sizeof(char));
-> +			if (!domain_info->cpumask)
-> +				goto out_free_line;
-> +
-> +			strcpy(domain_info->cpumask, cpumask);
-> +
-> +			cpumask_to_cpulist(cpumask, cpulist);
-> +			domain_info->cpulist = calloc(strlen(cpulist) + 1, sizeof(char));
-> +			if (!domain_info->cpulist)
-> +				goto out_free_line;
-
-All error paths should call free_cpu_domain_info() at some point and
-free the intermediate domain_info properly.
-
-> +
-> +			strcpy(domain_info->cpulist, cpulist);
-> +			cd_map[cpu]->nr_domains = dcount;
-> +		}
-> +	}
-> +
-> +out_free_line:
-> +	free(line);
-> +out:
-> +	fclose(fp);
-> +	return cd_map;
-> +}
-> +
-> +static int write_cpu_domain_info(struct feat_fd *ff,
-> +				 struct evlist *evlist __maybe_unused)
-> +{
-> +	u32 max_sched_domains = 0, schedstat_version = 0;
-> +	struct cpu_domain_map **cd_map;
-> +	u32 i, j, nr, ret;
-> +
-> +	nr = cpu__max_present_cpu().cpu;
-> +
-> +	cd_map = build_cpu_domain_map(&schedstat_version, &max_sched_domains, nr);
-> +	if (!cd_map)
-> +		return -1;
-> +
-> +	ret = do_write(ff, &schedstat_version, sizeof(u32));
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	max_sched_domains += 1;
-> +	ret = do_write(ff, &max_sched_domains, sizeof(u32));
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	for (i = 0; i < nr; i++) {
-> +		if (cd_map[i]->domains) {
-
-Is it supposed to have NULL domains?  Anyway it'd be nice if you can
-skip the case like with 'continue' statement to reduce the indentation
-level.
-
-> +			ret = do_write(ff, &cd_map[i]->cpu, sizeof(u32));
-> +			if (ret < 0)
-> +				goto out;
-> +
-> +			ret = do_write(ff, &cd_map[i]->nr_domains, sizeof(u32));
-> +			if (ret < 0)
-> +				goto out;
-> +
-> +			for (j = 0; j < cd_map[i]->nr_domains; j++) {
-> +				ret = do_write(ff, &cd_map[i]->domains[j]->domain, sizeof(u32));
-> +				if (ret < 0)
-> +					goto out;
-> +				if (schedstat_version >= 17) {
-> +					ret = do_write_string(ff, cd_map[i]->domains[j]->dname);
-> +					if (ret < 0)
-> +						goto out;
-> +				}
-> +
-> +				ret = do_write_string(ff, cd_map[i]->domains[j]->cpumask);
-> +				if (ret < 0)
-> +					goto out;
-> +
-> +				ret = do_write_string(ff, cd_map[i]->domains[j]->cpulist);
-> +				if (ret < 0)
-> +					goto out;
-> +			}
-> +		}
-> +	}
-> +
-> +out:
-> +	free_cpu_domain_info(cd_map, schedstat_version, nr);
-> +	return ret;
-> +}
-> +
->  static void print_hostname(struct feat_fd *ff, FILE *fp)
->  {
->  	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
-> @@ -2254,6 +2432,35 @@ static void print_mem_topology(struct feat_fd *ff, FILE *fp)
->  	}
->  }
->  
-> +static void print_cpu_domain_info(struct feat_fd *ff, FILE *fp)
-> +{
-> +	struct cpu_domain_map **cd_map = ff->ph->env.cpu_domain;
-> +	u32 nr = ff->ph->env.nr_cpus_avail;
-> +	struct domain_info *d_info;
-> +	u32 i, j;
-> +
-> +	fprintf(fp, "# schedstat version	: %u\n", ff->ph->env.schedstat_version);
-> +	fprintf(fp, "# Maximum sched domains	: %u\n", ff->ph->env.max_sched_domains);
-> +
-> +	for (i = 0; i < nr; i++) {
-> +		if (cd_map[i]->domains) {
-
-Ditto.
-
-> +			fprintf(fp, "# cpu		: %u\n", cd_map[i]->cpu);
-> +			fprintf(fp, "# nr_domains	: %u\n", cd_map[i]->nr_domains);
-> +
-> +			for (j = 0; j < cd_map[i]->nr_domains; j++) {
-> +				d_info = cd_map[i]->domains[j];
-> +				fprintf(fp, "# Domain		: %u\n", d_info->domain);
-> +
-> +				if (ff->ph->env.schedstat_version >= 17)
-> +					fprintf(fp, "# Domain name      : %s\n", d_info->dname);
-> +
-> +				fprintf(fp, "# Domain cpu map   : %s\n", d_info->cpumask);
-> +				fprintf(fp, "# Domain cpu list  : %s\n", d_info->cpulist);
-> +			}
-> +		}
-> +	}
-> +}
-> +
->  static int __event_process_build_id(struct perf_record_header_build_id *bev,
->  				    char *filename,
->  				    struct perf_session *session)
-> @@ -3395,6 +3602,102 @@ static int process_pmu_caps(struct feat_fd *ff, void *data __maybe_unused)
->  	return ret;
->  }
->  
-> +static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused)
-> +{
-> +	u32 schedstat_version, max_sched_domains, cpu, domain, nr_domains;
-> +	struct perf_env *env = &ff->ph->env;
-> +	char *dname, *cpumask, *cpulist;
-> +	struct cpu_domain_map **cd_map;
-> +	struct domain_info *d_info;
-> +	u32 nra, nr, i, j;
-> +	int ret;
-> +
-> +	nra = env->nr_cpus_avail;
-> +	nr = env->nr_cpus_online;
-> +
-> +	cd_map = calloc(nra, sizeof(*cd_map));
-> +	if (!cd_map)
-> +		return -1;
-> +
-> +	env->cpu_domain = cd_map;
-
-Where is it freed?
+It'd be great if you could write a brief description what's changed in
+v16 (and v17 in the next commit).
 
 Thanks,
 Namhyung
 
-> +
-> +	ret = do_read_u32(ff, &schedstat_version);
-> +	if (ret)
-> +		return ret;
-> +
-> +	env->schedstat_version = schedstat_version;
-> +
-> +	ret = do_read_u32(ff, &max_sched_domains);
-> +	if (ret)
-> +		return ret;
-> +
-> +	env->max_sched_domains = max_sched_domains;
-> +
-> +	for (i = 0; i < nr; i++) {
-> +		if (do_read_u32(ff, &cpu))
-> +			return -1;
-> +
-> +		cd_map[cpu] = calloc(1, sizeof(*cd_map[cpu]));
-> +		if (!cd_map[cpu])
-> +			return -1;
-> +
-> +		cd_map[cpu]->cpu = cpu;
-> +
-> +		if (do_read_u32(ff, &nr_domains))
-> +			return -1;
-> +
-> +		cd_map[cpu]->nr_domains = nr_domains;
-> +
-> +		cd_map[cpu]->domains = calloc(max_sched_domains, sizeof(*d_info));
-> +		if (!cd_map[cpu]->domains)
-> +			return -1;
-> +
-> +		for (j = 0; j < nr_domains; j++) {
-> +			if (do_read_u32(ff, &domain))
-> +				return -1;
-> +
-> +			d_info = calloc(1, sizeof(*d_info));
-> +			if (!d_info)
-> +				return -1;
-> +
-> +			cd_map[cpu]->domains[domain] = d_info;
-> +			d_info->domain = domain;
-> +
-> +			if (schedstat_version >= 17) {
-> +				dname = do_read_string(ff);
-> +				if (!dname)
-> +					return -1;
-> +
-> +				d_info->dname = calloc(strlen(dname) + 1, sizeof(char));
-> +				if (!d_info->dname)
-> +					return -1;
-> +
-> +				strcpy(d_info->dname, dname);
-> +			}
-> +
-> +			cpumask = do_read_string(ff);
-> +			if (!cpumask)
-> +				return -1;
-> +
-> +			d_info->cpumask = calloc(strlen(cpumask) + 1, sizeof(char));
-> +			if (!d_info->cpumask)
-> +				return -1;
-> +			strcpy(d_info->cpumask, cpumask);
-> +
-> +			cpulist = do_read_string(ff);
-> +			if (!cpulist)
-> +				return -1;
-> +
-> +			d_info->cpulist = calloc(strlen(cpulist) + 1, sizeof(char));
-> +			if (!d_info->cpulist)
-> +				return -1;
-> +			strcpy(d_info->cpulist, cpulist);
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  #define FEAT_OPR(n, func, __full_only) \
->  	[HEADER_##n] = {					\
->  		.name	    = __stringify(n),			\
-> @@ -3460,6 +3763,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE] = {
->  	FEAT_OPR(CLOCK_DATA,	clock_data,	false),
->  	FEAT_OPN(HYBRID_TOPOLOGY,	hybrid_topology,	true),
->  	FEAT_OPR(PMU_CAPS,	pmu_caps,	false),
-> +	FEAT_OPR(CPU_DOMAIN_INFO,	cpu_domain_info,	true),
+> 
+> Co-developed-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> Tested-by: James Clark <james.clark@linaro.org>
+> Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
+> ---
+>  tools/lib/perf/Makefile                     |   2 +-
+>  tools/lib/perf/include/perf/event.h         |  14 ++
+>  tools/lib/perf/include/perf/schedstat-v16.h | 146 ++++++++++++++++++++
+>  tools/perf/util/event.c                     |   6 +
+>  tools/perf/util/synthetic-events.c          |   6 +
+>  5 files changed, 173 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/lib/perf/include/perf/schedstat-v16.h
+> 
+> diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+> index 9fa28e512ca8..965e066fd780 100644
+> --- a/tools/lib/perf/Makefile
+> +++ b/tools/lib/perf/Makefile
+> @@ -179,7 +179,7 @@ install_lib: libs
+>  		cp -fpR $(LIBPERF_ALL) $(DESTDIR)$(libdir_SQ)
+>  
+>  HDRS := bpf_perf.h core.h cpumap.h threadmap.h evlist.h evsel.h event.h mmap.h
+> -HDRS += schedstat-v15.h
+> +HDRS += schedstat-v15.h schedstat-v16.h
+>  INTERNAL_HDRS := cpumap.h evlist.h evsel.h lib.h mmap.h rc_check.h threadmap.h xyarray.h
+>  
+>  INSTALL_HDRS_PFX := $(DESTDIR)$(prefix)/include/perf
+> diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+> index 7ed7bae73b55..4c38a58e19c3 100644
+> --- a/tools/lib/perf/include/perf/event.h
+> +++ b/tools/lib/perf/include/perf/event.h
+> @@ -489,6 +489,12 @@ struct perf_record_schedstat_cpu_v15 {
+>  #undef CPU_FIELD
 >  };
 >  
->  struct header_print_data {
-> diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-> index d16dfceccd74..edcb95e0dc49 100644
-> --- a/tools/perf/util/header.h
-> +++ b/tools/perf/util/header.h
-> @@ -53,6 +53,7 @@ enum {
->  	HEADER_CLOCK_DATA,
->  	HEADER_HYBRID_TOPOLOGY,
->  	HEADER_PMU_CAPS,
-> +	HEADER_CPU_DOMAIN_INFO,
->  	HEADER_LAST_FEATURE,
->  	HEADER_FEAT_BITS	= 256,
+> +struct perf_record_schedstat_cpu_v16 {
+> +#define CPU_FIELD(_type, _name, _desc, _format, _is_pct, _pct_of, _ver)		_type _name
+> +#include "schedstat-v16.h"
+> +#undef CPU_FIELD
+> +};
+> +
+>  struct perf_record_schedstat_cpu {
+>  	struct perf_event_header header;
+>  	__u64			 timestamp;
+> @@ -498,6 +504,7 @@ struct perf_record_schedstat_cpu {
+>  	char			 __pad[2];
+>  	union {
+>  		struct perf_record_schedstat_cpu_v15 v15;
+> +		struct perf_record_schedstat_cpu_v16 v16;
+>  	};
 >  };
-> diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-> index 1b91834e11de..47bfc0259b0e 100644
-> --- a/tools/perf/util/util.c
-> +++ b/tools/perf/util/util.c
-> @@ -263,6 +263,48 @@ void print_separator(int pre_dash_cnt, const char *s, int post_dash_cnt)
->  	       graph_dotted_line);
->  }
 >  
-> +void cpumask_to_cpulist(char *cpumask, char *cpulist)
-> +{
-> +	int i, j, bm_size, nbits;
-> +	int len = strlen(cpumask);
-> +	unsigned long *bm;
-> +	char cpus[1024];
-> +
-> +	for (i = 0; i < len; i++) {
-> +		if (cpumask[i] == ',') {
-> +			for (j = i; j < len; j++)
-> +				cpumask[j] = cpumask[j + 1];
-> +		}
-> +	}
-> +
-> +	len = strlen(cpumask);
-> +	bm_size = (len + 15) / 16;
-> +	nbits = bm_size * 64;
-> +	if (nbits <= 0)
-> +		return;
-> +
-> +	bm = calloc(bm_size, sizeof(unsigned long));
-> +	if (!cpumask)
-> +		goto free_bm;
-> +
-> +	for (i = 0; i < bm_size; i++) {
-> +		char blk[17];
-> +		int blklen = len > 16 ? 16 : len;
-> +
-> +		strncpy(blk, cpumask + len - blklen, blklen);
-> +		blk[len] = '\0';
-> +		bm[i] = strtoul(blk, NULL, 16);
-> +		cpumask[len - blklen] = '\0';
-> +		len = strlen(cpumask);
-> +	}
-> +
-> +	bitmap_scnprintf(bm, nbits, cpus, sizeof(cpus));
-> +	strcpy(cpulist, cpus);
-> +
-> +free_bm:
-> +	free(bm);
-> +}
-> +
->  int rm_rf_perf_data(const char *path)
->  {
->  	const char *pat[] = {
-> diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-> index de69384380c2..90a8b4d2e59c 100644
-> --- a/tools/perf/util/util.h
-> +++ b/tools/perf/util/util.h
-> @@ -11,6 +11,7 @@
->  #include <stdbool.h>
->  #include <stddef.h>
->  #include <linux/compiler.h>
-> +#include <linux/bitmap.h>
->  #include <sys/types.h>
->  #ifndef __cplusplus
->  #include <internal/cpumap.h>
-> @@ -50,6 +51,8 @@ int perf_tip(char **strp, const char *dirpath);
+> @@ -507,6 +514,12 @@ struct perf_record_schedstat_domain_v15 {
+>  #undef DOMAIN_FIELD
+>  };
 >  
->  void print_separator(int pre_dash_cnt, const char *s, int post_dash_cnt);
->  
-> +void cpumask_to_cpulist(char *cpumask, char *cpulist);
+> +struct perf_record_schedstat_domain_v16 {
+> +#define DOMAIN_FIELD(_type, _name, _desc, _format, _is_jiffies, _ver)		_type _name
+> +#include "schedstat-v16.h"
+> +#undef DOMAIN_FIELD
+> +};
 > +
->  #ifndef HAVE_SCHED_GETCPU_SUPPORT
->  int sched_getcpu(void);
->  #endif
+>  #define DOMAIN_NAME_LEN		16
+>  
+>  struct perf_record_schedstat_domain {
+> @@ -517,6 +530,7 @@ struct perf_record_schedstat_domain {
+>  	__u16			 domain;
+>  	union {
+>  		struct perf_record_schedstat_domain_v15 v15;
+> +		struct perf_record_schedstat_domain_v16 v16;
+>  	};
+>  };
+>  
+> diff --git a/tools/lib/perf/include/perf/schedstat-v16.h b/tools/lib/perf/include/perf/schedstat-v16.h
+> new file mode 100644
+> index 000000000000..3462b79c29af
+> --- /dev/null
+> +++ b/tools/lib/perf/include/perf/schedstat-v16.h
+> @@ -0,0 +1,146 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifdef CPU_FIELD
+> +CPU_FIELD(__u32, yld_count, "sched_yield() count",
+> +	  "%11u", false, yld_count, v16);
+> +CPU_FIELD(__u32, array_exp, "Legacy counter can be ignored",
+> +	  "%11u", false, array_exp, v16);
+> +CPU_FIELD(__u32, sched_count, "schedule() called",
+> +	  "%11u", false, sched_count, v16);
+> +CPU_FIELD(__u32, sched_goidle, "schedule() left the processor idle",
+> +	  "%11u", true, sched_count, v16);
+> +CPU_FIELD(__u32, ttwu_count, "try_to_wake_up() was called",
+> +	  "%11u", false, ttwu_count, v16);
+> +CPU_FIELD(__u32, ttwu_local, "try_to_wake_up() was called to wake up the local cpu",
+> +	  "%11u", true, ttwu_count, v16);
+> +CPU_FIELD(__u64, rq_cpu_time, "total runtime by tasks on this processor (in jiffies)",
+> +	  "%11llu", false, rq_cpu_time, v16);
+> +CPU_FIELD(__u64, run_delay, "total waittime by tasks on this processor (in jiffies)",
+> +	  "%11llu", true, rq_cpu_time, v16);
+> +CPU_FIELD(__u64, pcount, "total timeslices run on this cpu",
+> +	  "%11llu", false, pcount, v16);
+> +#endif /* CPU_FIELD */
+> +
+> +#ifdef DOMAIN_FIELD
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Category busy> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, busy_lb_count,
+> +	     "load_balance() count on cpu busy", "%11u", true, v16);
+> +DOMAIN_FIELD(__u32, busy_lb_balanced,
+> +	     "load_balance() found balanced on cpu busy", "%11u", true, v16);
+> +DOMAIN_FIELD(__u32, busy_lb_failed,
+> +	     "load_balance() move task failed on cpu busy", "%11u", true, v16);
+> +DOMAIN_FIELD(__u32, busy_lb_imbalance,
+> +	     "imbalance sum on cpu busy", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, busy_lb_gained,
+> +	     "pull_task() count on cpu busy", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, busy_lb_hot_gained,
+> +	     "pull_task() when target task was cache-hot on cpu busy", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, busy_lb_nobusyq,
+> +	     "load_balance() failed to find busier queue on cpu busy", "%11u", true, v16);
+> +DOMAIN_FIELD(__u32, busy_lb_nobusyg,
+> +	     "load_balance() failed to find busier group on cpu busy", "%11u", true, v16);
+> +#ifdef DERIVED_CNT_FIELD
+> +DERIVED_CNT_FIELD(busy_lb_success_count, "load_balance() success count on cpu busy", "%11u",
+> +		  busy_lb_count, busy_lb_balanced, busy_lb_failed, v16);
+> +#endif
+> +#ifdef DERIVED_AVG_FIELD
+> +DERIVED_AVG_FIELD(busy_lb_avg_pulled,
+> +		  "avg task pulled per successful lb attempt (cpu busy)", "%11.2Lf",
+> +		  busy_lb_count, busy_lb_balanced, busy_lb_failed, busy_lb_gained, v16);
+> +#endif
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Category idle> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, idle_lb_count,
+> +	     "load_balance() count on cpu idle", "%11u", true, v16);
+> +DOMAIN_FIELD(__u32, idle_lb_balanced,
+> +	     "load_balance() found balanced on cpu idle", "%11u", true, v16);
+> +DOMAIN_FIELD(__u32, idle_lb_failed,
+> +	     "load_balance() move task failed on cpu idle", "%11u", true, v16);
+> +DOMAIN_FIELD(__u32, idle_lb_imbalance,
+> +	     "imbalance sum on cpu idle", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, idle_lb_gained,
+> +	     "pull_task() count on cpu idle", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, idle_lb_hot_gained,
+> +	     "pull_task() when target task was cache-hot on cpu idle", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, idle_lb_nobusyq,
+> +	     "load_balance() failed to find busier queue on cpu idle", "%11u", true, v16);
+> +DOMAIN_FIELD(__u32, idle_lb_nobusyg,
+> +	     "load_balance() failed to find busier group on cpu idle", "%11u", true, v16);
+> +#ifdef DERIVED_CNT_FIELD
+> +DERIVED_CNT_FIELD(idle_lb_success_count, "load_balance() success count on cpu idle", "%11u",
+> +		  idle_lb_count, idle_lb_balanced, idle_lb_failed, v16);
+> +#endif
+> +#ifdef DERIVED_AVG_FIELD
+> +DERIVED_AVG_FIELD(idle_lb_avg_pulled,
+> +		  "avg task pulled per successful lb attempt (cpu idle)", "%11.2Lf",
+> +		  idle_lb_count, idle_lb_balanced, idle_lb_failed, idle_lb_gained, v16);
+> +#endif
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Category newidle> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, newidle_lb_count,
+> +	     "load_balance() count on cpu newly idle", "%11u", true, v16);
+> +DOMAIN_FIELD(__u32, newidle_lb_balanced,
+> +	     "load_balance() found balanced on cpu newly idle", "%11u", true, v16);
+> +DOMAIN_FIELD(__u32, newidle_lb_failed,
+> +	     "load_balance() move task failed on cpu newly idle", "%11u", true, v16);
+> +DOMAIN_FIELD(__u32, newidle_lb_imbalance,
+> +	     "imbalance sum on cpu newly idle", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, newidle_lb_gained,
+> +	     "pull_task() count on cpu newly idle", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, newidle_lb_hot_gained,
+> +	     "pull_task() when target task was cache-hot on cpu newly idle", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, newidle_lb_nobusyq,
+> +	     "load_balance() failed to find busier queue on cpu newly idle", "%11u", true, v16);
+> +DOMAIN_FIELD(__u32, newidle_lb_nobusyg,
+> +	     "load_balance() failed to find busier group on cpu newly idle", "%11u", true, v16);
+> +#ifdef DERIVED_CNT_FIELD
+> +DERIVED_CNT_FIELD(newidle_lb_success_count,
+> +		  "load_balance() success count on cpu newly idle", "%11u",
+> +		  newidle_lb_count, newidle_lb_balanced, newidle_lb_failed, v16);
+> +#endif
+> +#ifdef DERIVED_AVG_FIELD
+> +DERIVED_AVG_FIELD(newidle_lb_avg_count,
+> +		  "avg task pulled per successful lb attempt (cpu newly idle)", "%11.2Lf",
+> +		  newidle_lb_count, newidle_lb_balanced, newidle_lb_failed, newidle_lb_gained, v16);
+> +#endif
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Category active_load_balance()> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, alb_count,
+> +	     "active_load_balance() count", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, alb_failed,
+> +	     "active_load_balance() move task failed", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, alb_pushed,
+> +	     "active_load_balance() successfully moved a task", "%11u", false, v16);
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Category sched_balance_exec()> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, sbe_count,
+> +	     "sbe_count is not used", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, sbe_balanced,
+> +	     "sbe_balanced is not used", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, sbe_pushed,
+> +	     "sbe_pushed is not used", "%11u", false, v16);
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Category sched_balance_fork()> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, sbf_count,
+> +	     "sbf_count is not used", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, sbf_balanced,
+> +	     "sbf_balanced is not used", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, sbf_pushed,
+> +	     "sbf_pushed is not used", "%11u", false, v16);
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Wakeup Info> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, ttwu_wake_remote,
+> +	     "try_to_wake_up() awoke a task that last ran on a diff cpu", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, ttwu_move_affine,
+> +	     "try_to_wake_up() moved task because cache-cold on own cpu", "%11u", false, v16);
+> +DOMAIN_FIELD(__u32, ttwu_move_balance,
+> +	     "try_to_wake_up() started passive balancing", "%11u", false, v16);
+> +#endif /* DOMAIN_FIELD */
+> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> index 41fb942ef701..88a5dad240ac 100644
+> --- a/tools/perf/util/event.c
+> +++ b/tools/perf/util/event.c
+> @@ -584,6 +584,9 @@ size_t perf_event__fprintf_schedstat_cpu(union perf_event *event, FILE *fp)
+>  	if (version == 15) {
+>  #include <perf/schedstat-v15.h>
+>  		return size;
+> +	} else if (version == 16) {
+> +#include <perf/schedstat-v16.h>
+> +		return size;
+>  	}
+>  #undef CPU_FIELD
+>  
+> @@ -603,6 +606,9 @@ size_t perf_event__fprintf_schedstat_domain(union perf_event *event, FILE *fp)
+>  	if (version == 15) {
+>  #include <perf/schedstat-v15.h>
+>  		return size;
+> +	} else if (version == 16) {
+> +#include <perf/schedstat-v16.h>
+> +		return size;
+>  	}
+>  #undef DOMAIN_FIELD
+>  
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index 01135d80fde5..499c819bb8ff 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -2567,6 +2567,8 @@ static union perf_event *__synthesize_schedstat_cpu(struct io *io, __u16 version
+>  
+>  	if (version == 15) {
+>  #include <perf/schedstat-v15.h>
+> +	} else if (version == 16) {
+> +#include <perf/schedstat-v16.h>
+>  	}
+>  #undef CPU_FIELD
+>  
+> @@ -2620,6 +2622,8 @@ static union perf_event *__synthesize_schedstat_domain(struct io *io, __u16 vers
+>  
+>  	if (version == 15) {
+>  #include <perf/schedstat-v15.h>
+> +	} else if (version == 16) {
+> +#include <perf/schedstat-v16.h>
+>  	}
+>  #undef DOMAIN_FIELD
+>  
+> @@ -2661,6 +2665,8 @@ int perf_event__synthesize_schedstat(const struct perf_tool *tool,
+>  
+>  	if (!strcmp(line, "version 15\n")) {
+>  		version = 15;
+> +	} else if (!strcmp(line, "version 16\n")) {
+> +		version = 16;
+>  	} else {
+>  		pr_err("Unsupported %s version: %s", path, line + 8);
+>  		goto out_free_line;
 > -- 
 > 2.43.0
 > 
