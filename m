@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C51729992A;
-	Sun,  4 Jan 2026 02:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F220E12D1F1;
+	Sun,  4 Jan 2026 02:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767494986; cv=none; b=TNrnLPQD7kxd+UOaWK83zfzF0KWAutBbYLxTPNDbQhO+1lBfsKOJzURrYLrQp0ztoLIVhx34io9f4/+RoDGgxAmV6BWnVflEJ8+6EP5xio/e5r8Hz6NYpqJQOa0JAgODSFrlmQRM7jdkaccapLInNsTQ9pgbZAQCtx0AmcW5oCQ=
+	t=1767495088; cv=none; b=OWBDJaTMhgUzxwrUTuF3e1toB5b69dWQngA+CVry7WAlV7UHAVLIsJKEIzNA0kok5ekpFVO/42tlOAbJG9APp09uqiSrztNSxsLA8+Kf+sy05BOBAX8ccDxUOcvv6FqhALgbWYScsnXsoNvwxTCYNtQ+b/v7HE+7iMMHFUCv29M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767494986; c=relaxed/simple;
-	bh=Z2MCfjHI1oAIdXYm24/1WDleNPPY1GjtRjiHDLJvct8=;
+	s=arc-20240116; t=1767495088; c=relaxed/simple;
+	bh=9zmuqcyczJJP3lDCAdCvFDx3GSm1SPcvYvFYScZgNoc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=As34agcwZjkzAzx9eNvz4ZffD+kcJxOUa1X+LhpfcxW+VtBw6d/mMFaOtgnFE1laiyCcQjYGv7Jbqmzi+csXgE8LvZDAf1egmVT3lWvwoqqrEzkn9faNw6fzmztEvvCl6EsVNJPesjHKzfiom+Q9XMnccRMvSLuGMXVlEfeLFBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=idAHsTIZ; arc=none smtp.client-ip=192.198.163.8
+	 In-Reply-To:Content-Type; b=fuhhuRz15NIJ6E54Y6sqWEC+gst+T8Zih5AMFhJg+oVrqFyUWzzGe1dNq6fj4qKvXJyeqhilXO95s14SLDZZydPJlKAfOK02cMMa0dTe164kJb//Il6MyIwOi8PyZ6RBKuhdt15kzZsJnx6D9mnqDUuq84Y6DGrYprRuK4C3czc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mp04rYYv; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="idAHsTIZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mp04rYYv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767494985; x=1799030985;
+  t=1767495087; x=1799031087;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Z2MCfjHI1oAIdXYm24/1WDleNPPY1GjtRjiHDLJvct8=;
-  b=idAHsTIZXuXlrfOX9dgzyd/WtEXUtgKNV/pS1wVQ15qPk8mGHv+V37JX
-   /fhHWoC3vFpMDCP3IQ7nBvI9zohABleZeiQTrX5Gpwf3e4fz6OrLsgqOw
-   IC0EN8+NxctGmndt/t6dR2TmCfBL/0uC2jssMIqgAq1IQ6d/g+puTSJdh
-   q5Buhy3EkzuC55tPfh2NzV3mjEIEQeVSa7jKl2+ngTbpCavToiNhzJqU4
-   tVaX0iv6DOotOezpX/ScvLpGyMMmHW/iGOd/bjfq2txB2Od5SI7YvYXSH
-   hy+W6DOqncKVmqredOtE8vDk3wNAkFxhjPI8domh2UM0U1QmCPz8YyM8Z
-   w==;
-X-CSE-ConnectionGUID: jU5QRfNFS+ST2bB7aSOT7w==
-X-CSE-MsgGUID: Rp8D76o5TquBjo8miR0YCw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11659"; a="86500972"
+  bh=9zmuqcyczJJP3lDCAdCvFDx3GSm1SPcvYvFYScZgNoc=;
+  b=mp04rYYvrB7AACkDZTDTOPkqpb6EjevhQhsS4wkwHYPTI7la0V0yLZwn
+   YOdqeH/ONBktmj0Izr+NB2R5cKavlBLd3L/kFddWEd9FjgD73YDo5lMTW
+   RxS0LLw9mpR7V/DXeEcUMEcd5F/A1LxMLgl13Fk9R8A5sasl5QbHbnh5J
+   PsKvmabk1NiYHlCLEWCiPJbFCZZTZwUT460yQvJW+1iM5Fb9zcbysd+DN
+   p3u4cIbyJHOproE9cLa3Z5j7qbrnyQ8uPQ7AdFFjslzQkJmjc4Qv94XVd
+   z3rFRu9JA/3wWuW9osGbokuyYXMVIIV9I8dSjPSgwEh/FyWw2+lMYGo14
+   A==;
+X-CSE-ConnectionGUID: zJ20MkQRTcyvqI+4Z/ctRA==
+X-CSE-MsgGUID: 1punSiERTu6PqrR2gDvzPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11659"; a="56476310"
 X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
-   d="scan'208";a="86500972"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 18:49:44 -0800
-X-CSE-ConnectionGUID: YSOUVVxMQ4iBZkk17ZB0DQ==
-X-CSE-MsgGUID: M05rggQfQxu+G7bAKlTb6A==
+   d="scan'208";a="56476310"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 18:51:26 -0800
+X-CSE-ConnectionGUID: cfbLhtHTSKSzzXKoOBaYCQ==
+X-CSE-MsgGUID: 7JX4Bg6jQ9+5j3aVUdwF4w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
-   d="scan'208";a="201321894"
+   d="scan'208";a="232780974"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 18:49:40 -0800
-Message-ID: <ab790924-2e69-4003-9e75-884a0a871012@linux.intel.com>
-Date: Sun, 4 Jan 2026 10:49:38 +0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 18:51:22 -0800
+Message-ID: <469b889f-2497-420e-98ff-b6575d6c5643@linux.intel.com>
+Date: Sun, 4 Jan 2026 10:51:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 12/13] perf/x86/intel/uncore: Add missing PMON units
- for Panther Lake
+Subject: Re: [PATCH V2 13/13] perf/x86/intel/uncore: Add Nova Lake support
 To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
  Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
@@ -63,118 +62,144 @@ To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
 References: <20251231224233.113839-1-zide.chen@intel.com>
- <20251231224233.113839-13-zide.chen@intel.com>
+ <20251231224233.113839-14-zide.chen@intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251231224233.113839-13-zide.chen@intel.com>
+In-Reply-To: <20251231224233.113839-14-zide.chen@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 On 1/1/2026 6:42 AM, Zide Chen wrote:
-> Besides CBOX, Panther Lake includes several legacy uncore PMON units
-> not enumerated via discovery tables, including cNCU, SANTA, and
-> ia_core_bridge.
+> Nova Lake uncore PMON largely follows Panther Lake and supports CBOX,
+> iMC, cNCU, SANTA, sNCU, and HBO units.
 >
-> The cNCU PMON is similar to Meteor Lake but has two boxes with two
-> counters each. SANTA and IA Core Bridge PMON units follow the legacy
-> model used on Lunar Lake, Meteor Lake, and others.
+> As with Panther Lake, CBOX, cNCU, and SANTA are not enumerated via
+> discovery tables.  Their programming model matches Panther Lake, with
+> differences limited to MSR addresses and the number of boxes or counters
+> per box.
 >
-> Panther Lake implements the Global Control Register; the freeze_all bit
-> must be cleared before programming counters.
+> The remaining units are enumerated via discovery tables using a new
+> base MSR (0x711) and otherwise reuse the Panther Lake implementation.
+> Nova Lake also supports iMC free-running counters.
 >
 > Signed-off-by: Zide Chen <zide.chen@intel.com>
 > ---
 > V2: new patch
 >
->  arch/x86/events/intel/uncore.c     |  1 +
->  arch/x86/events/intel/uncore_snb.c | 45 ++++++++++++++++++++++++++++++
->  2 files changed, 46 insertions(+)
+>  arch/x86/events/intel/uncore.c           |  9 ++++++
+>  arch/x86/events/intel/uncore.h           |  1 +
+>  arch/x86/events/intel/uncore_discovery.h |  2 ++
+>  arch/x86/events/intel/uncore_snb.c       | 40 ++++++++++++++++++++++++
+>  4 files changed, 52 insertions(+)
 >
 > diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index 54b3c1e3af32..07a9a2826398 100644
+> index 07a9a2826398..2607bf178658 100644
 > --- a/arch/x86/events/intel/uncore.c
 > +++ b/arch/x86/events/intel/uncore.c
-> @@ -1814,6 +1814,7 @@ static const struct uncore_plat_init ptl_uncore_init __initconst = {
->  	.cpu_init = ptl_uncore_cpu_init,
->  	.mmio_init = ptl_uncore_mmio_init,
->  	.domain[0].discovery_base = UNCORE_DISCOVERY_MSR,
-> +	.domain[0].global_init = uncore_mmio_global_init,
+> @@ -1817,6 +1817,13 @@ static const struct uncore_plat_init ptl_uncore_init __initconst = {
+>  	.domain[0].global_init = uncore_mmio_global_init,
 >  };
 >  
+> +static const struct uncore_plat_init nvl_uncore_init __initconst = {
+> +	.cpu_init = nvl_uncore_cpu_init,
+> +	.mmio_init = ptl_uncore_mmio_init,
+> +	.domain[0].discovery_base = PACKAGE_UNCORE_DISCOVERY_MSR,
+> +	.domain[0].global_init = uncore_mmio_global_init,
+> +};
+> +
 >  static const struct uncore_plat_init icx_uncore_init __initconst = {
+>  	.cpu_init = icx_uncore_cpu_init,
+>  	.pci_init = icx_uncore_pci_init,
+> @@ -1916,6 +1923,8 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+>  	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&lnl_uncore_init),
+>  	X86_MATCH_VFM(INTEL_PANTHERLAKE_L,	&ptl_uncore_init),
+>  	X86_MATCH_VFM(INTEL_WILDCATLAKE_L,	&ptl_uncore_init),
+> +	X86_MATCH_VFM(INTEL_NOVALAKE,		&nvl_uncore_init),
+> +	X86_MATCH_VFM(INTEL_NOVALAKE_L,		&nvl_uncore_init),
+>  	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X,	&spr_uncore_init),
+>  	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X,	&spr_uncore_init),
+>  	X86_MATCH_VFM(INTEL_GRANITERAPIDS_X,	&gnr_uncore_init),
+> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+> index 564cb26c4468..c35918c01afa 100644
+> --- a/arch/x86/events/intel/uncore.h
+> +++ b/arch/x86/events/intel/uncore.h
+> @@ -636,6 +636,7 @@ void adl_uncore_cpu_init(void);
+>  void lnl_uncore_cpu_init(void);
+>  void mtl_uncore_cpu_init(void);
+>  void ptl_uncore_cpu_init(void);
+> +void nvl_uncore_cpu_init(void);
+>  void tgl_uncore_mmio_init(void);
+>  void tgl_l_uncore_mmio_init(void);
+>  void adl_uncore_mmio_init(void);
+> diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
+> index 63b8f7634e42..e1330342b92e 100644
+> --- a/arch/x86/events/intel/uncore_discovery.h
+> +++ b/arch/x86/events/intel/uncore_discovery.h
+> @@ -4,6 +4,8 @@
+>  #define UNCORE_DISCOVERY_MSR			0x201e
+>  /* Base address of uncore perfmon discovery table for CBB domain */
+>  #define CBB_UNCORE_DISCOVERY_MSR		0x710
+> +/* Base address of uncore perfmon discovery table for the package */
+> +#define PACKAGE_UNCORE_DISCOVERY_MSR		0x711
+>  
+>  /* Generic device ID of a discovery table device */
+>  #define UNCORE_DISCOVERY_TABLE_DEVICE		0x09a7
 > diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-> index 807e582b8f17..c663b00b68fe 100644
+> index c663b00b68fe..e8e44741200e 100644
 > --- a/arch/x86/events/intel/uncore_snb.c
 > +++ b/arch/x86/events/intel/uncore_snb.c
-> @@ -245,6 +245,17 @@
->  #define MTL_UNC_HBO_CTR				0x2048
->  #define MTL_UNC_HBO_CTRL			0x2042
+> @@ -256,6 +256,19 @@
+>  /* PTL cNCU register */
+>  #define PTL_UNC_CNCU_MSR_OFFSET			0x140
 >  
-> +/* PTL Low Power Bridge register */
-> +#define PTL_UNC_IA_CORE_BRIDGE_PER_CTR0		0x2028
-> +#define PTL_UNC_IA_CORE_BRIDGE_PERFEVTSEL0	0x2022
+> +/* NVL cNCU register */
+> +#define NVL_UNC_CNCU_BOX_CTL			0x202e
+> +#define NVL_UNC_CNCU_FIXED_CTR			0x2028
+> +#define NVL_UNC_CNCU_FIXED_CTRL			0x2022
 > +
-> +/* PTL Santa register */
-> +#define PTL_UNC_SANTA_CTR0			0x2418
-> +#define PTL_UNC_SANTA_CTRL0			0x2412
+> +/* NVL SANTA register */
+> +#define NVL_UNC_SANTA_CTR0			0x2048
+> +#define NVL_UNC_SANTA_CTRL0			0x2042
 > +
-> +/* PTL cNCU register */
-> +#define PTL_UNC_CNCU_MSR_OFFSET			0x140
+> +/* NVL CBOX register */
+> +#define NVL_UNC_CBOX_PER_CTR0			0x2108
+> +#define NVL_UNC_CBOX_PERFEVTSEL0		0x2102
 > +
 >  DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
 >  DEFINE_UNCORE_FORMAT_ATTR(umask, umask, "config:8-15");
 >  DEFINE_UNCORE_FORMAT_ATTR(chmask, chmask, "config:8-11");
-> @@ -1921,8 +1932,36 @@ void ptl_uncore_mmio_init(void)
->  						 ptl_uncores);
+> @@ -1979,3 +1992,30 @@ void ptl_uncore_cpu_init(void)
 >  }
 >  
-> +static struct intel_uncore_type ptl_uncore_ia_core_bridge = {
-> +	.name		= "ia_core_bridge",
-> +	.num_counters   = 2,
-> +	.num_boxes	= 1,
-> +	.perf_ctr_bits	= 48,
-> +	.perf_ctr	= PTL_UNC_IA_CORE_BRIDGE_PER_CTR0,
-> +	.event_ctl	= PTL_UNC_IA_CORE_BRIDGE_PERFEVTSEL0,
-> +	.event_mask	= ADL_UNC_RAW_EVENT_MASK,
-> +	.ops		= &icl_uncore_msr_ops,
-> +	.format_group	= &adl_uncore_format_group,
-> +};
+>  /* end of Panther Lake uncore support */
 > +
-> +static struct intel_uncore_type ptl_uncore_santa = {
-> +	.name		= "santa",
-> +	.num_counters   = 2,
-> +	.num_boxes	= 2,
-> +	.perf_ctr_bits	= 48,
-> +	.perf_ctr	= PTL_UNC_SANTA_CTR0,
-> +	.event_ctl	= PTL_UNC_SANTA_CTRL0,
-> +	.event_mask	= ADL_UNC_RAW_EVENT_MASK,
-> +	.msr_offset	= SNB_UNC_CBO_MSR_OFFSET,
-> +	.ops		= &icl_uncore_msr_ops,
-> +	.format_group	= &adl_uncore_format_group,
-> +};
+> +/* Nova Lake uncore support */
 > +
->  static struct intel_uncore_type *ptl_msr_uncores[] = {
->  	&mtl_uncore_cbox,
-> +	&ptl_uncore_ia_core_bridge,
+> +static struct intel_uncore_type *nvl_msr_uncores[] = {
+> +	&mtl_uncore_cbox,
 > +	&ptl_uncore_santa,
 > +	&mtl_uncore_cncu,
->  	NULL
->  };
->  
-> @@ -1930,6 +1969,12 @@ void ptl_uncore_cpu_init(void)
->  {
->  	mtl_uncore_cbox.num_boxes = 6;
->  	mtl_uncore_cbox.ops = &lnl_uncore_msr_ops;
+> +	NULL
+> +};
 > +
-> +	mtl_uncore_cncu.num_counters = 2;
-> +	mtl_uncore_cncu.num_boxes = 2;
-> +	mtl_uncore_cncu.msr_offset = PTL_UNC_CNCU_MSR_OFFSET;
-> +	mtl_uncore_cncu.single_fixed = 0;
+> +void nvl_uncore_cpu_init(void)
+> +{
+> +	mtl_uncore_cbox.num_boxes = 12;
+> +	mtl_uncore_cbox.perf_ctr = NVL_UNC_CBOX_PER_CTR0,
+> +	mtl_uncore_cbox.event_ctl = NVL_UNC_CBOX_PERFEVTSEL0,
 > +
->  	uncore_msr_uncores = ptl_msr_uncores;
->  }
->  
+> +	ptl_uncore_santa.perf_ctr = NVL_UNC_SANTA_CTR0,
+> +	ptl_uncore_santa.event_ctl = NVL_UNC_SANTA_CTRL0,
+> +
+> +	mtl_uncore_cncu.box_ctl = NVL_UNC_CNCU_BOX_CTL;
+> +	mtl_uncore_cncu.fixed_ctr = NVL_UNC_CNCU_FIXED_CTR;
+> +	mtl_uncore_cncu.fixed_ctl = NVL_UNC_CNCU_FIXED_CTRL;
+> +
+> +	uncore_msr_uncores = nvl_msr_uncores;
+> +}
+> +
+> +/* end of Nova Lake uncore support */
 
 Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
