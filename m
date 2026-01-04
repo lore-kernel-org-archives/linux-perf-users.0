@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F3329E0E1;
-	Sun,  4 Jan 2026 02:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E2423C4F2;
+	Sun,  4 Jan 2026 02:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767494471; cv=none; b=QatJzlLpN27YtKBlhn8OAVvW+oBaz7oUe27YoINNoBAG6npmuIfQ9YBt4/koXqA/xpSo5KbwP0iX0kIvzPWQD9yo/+ReR4Faft/yE4F9XU97QF4qhJuPxi5cHmcjNdQRRqlqFyMwhyUqIGqrpWMfu612buRV3A/jeVWso+jwcZM=
+	t=1767494888; cv=none; b=NpMMEpmunRXOXX6dNY+tpKuetkBGonivSNMy0CFpr8NRDxJsxh5E7bx7LK35G7Zn7kbEVv81Gi15LdAscA2W+coffyz3la/Rh0KA05og4ZR89aHEpMBNUQIxQQHKS7vFqbWE6SThjsBMN0DICORGcYsAI9koJ5G7HcG6meD8KIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767494471; c=relaxed/simple;
-	bh=Evlu/AyVD5OMlqVAhdWPthzpO3plZhAuzk6EpvM1HJM=;
+	s=arc-20240116; t=1767494888; c=relaxed/simple;
+	bh=Z2MCfjHI1oAIdXYm24/1WDleNPPY1GjtRjiHDLJvct8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L3Pp8g1jj/p0tq1ePfgRu75Gyer1bbFKAZm7EF+MyBi1MTMN0c/nC/c/Dr/9QhSVm6o9XDe4H/393Xw8u+Y02NyM/yF2htTIhQCvMMVMUf3SMpRNSdUsNsmEls7f5Mv3iBiqlCFJsf/2GKpLL6XNeKok2yEg+8PgV2W6gIo5DxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kgx88gzp; arc=none smtp.client-ip=198.175.65.21
+	 In-Reply-To:Content-Type; b=gdDKjqP0kPfx/MEpUWjaoxw+QB4XTQXQcRbbhvaScRPttQmEfJwBGG03nr9pO2Ii8f7KKAjzMhVBYXFiZs9y4/K2AABoB2AZOCEJ/xoDqaIVoN3h36Cn1yhV3IrRIofCnjWvjinEJ5tHcOEWfTeDXcxru4t6BHvC7jW2lexk1xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z5KbvxPO; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kgx88gzp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z5KbvxPO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767494469; x=1799030469;
+  t=1767494886; x=1799030886;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Evlu/AyVD5OMlqVAhdWPthzpO3plZhAuzk6EpvM1HJM=;
-  b=Kgx88gzph9aBQEryZXTTS2EBG8uLWKd6z8it2mRiLKbqBUGyNPiHHgvI
-   /MsfyERPTzPpyWUhzEi+tWa84zkQlx8opFtJfWhJ1k8ToOr0RyeAJdPhL
-   WVCHVRbhQq3rog5Bgn9Gd85FEjLukq56YyCamQms3tKcwKHqqBuIqaRP4
-   1L971mDd8ZT67EuaKZuwuKhq3CVFhBVLxOY86ZYyadMgaiOqdX0YgZ7B2
-   NApluqetmSS4kUA2M9Nt5GVV0KnHsfFYfAN7cO7xEiovcgKL8FU5WQrg4
-   BVtEyMKb5Ptk/PaQjlQSy9csbk06UduXlgqFHqgzHvyte/dR2rYLZCYXa
-   Q==;
-X-CSE-ConnectionGUID: 0WnlrJG/RkO9YT+a9bpoFw==
-X-CSE-MsgGUID: H4S8+IclTcmJkaFGlO3FpA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="68847989"
+  bh=Z2MCfjHI1oAIdXYm24/1WDleNPPY1GjtRjiHDLJvct8=;
+  b=Z5KbvxPOmZYag0QlCDhuu6GSJp96CAeaiofBg4jrXiYzpukCHXVHlQzm
+   HLQsumVZEsTDTlNWpVGXD39GCsOw7BYacleuSAkNuV4Ktb8FZzeN/3q45
+   i+5B5Uis0zC/bwtCSl0+CSkjF5lRC8th+OTppV3qkufSlAATrgPJXOsW6
+   RuzBGUNv+KtuClHASjB1clfOtEp2AlNvhrDyB0z2V1P9NCyrB2r/WeLKh
+   zQbDz6Tg7PnhBqMdD5oWxYmmXoDM2LDVdyzGJ6v2NPMOszfMssmnOEw47
+   pPLkuW7g8qhWDQALmoA5ofxEF59ptVDwcDP8xocMQiA+DlURumZYi+qMI
+   A==;
+X-CSE-ConnectionGUID: i3wQciEpR22zGyl6gLryEw==
+X-CSE-MsgGUID: mepKBtCxQ02vNPt5MjbzOA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="68848170"
 X-IronPort-AV: E=Sophos;i="6.20,256,1758610800"; 
-   d="scan'208";a="68847989"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 18:41:08 -0800
-X-CSE-ConnectionGUID: ATzFmd2xTHeGxhnM0V9R+Q==
-X-CSE-MsgGUID: JyU03ysfTz6RYf+WEjLJPQ==
+   d="scan'208";a="68848170"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 18:48:06 -0800
+X-CSE-ConnectionGUID: fH7muA8JQFS2x4csaB4MsA==
+X-CSE-MsgGUID: Z1j3RbLGRv+vzjidAfJ/tA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
-   d="scan'208";a="201226730"
+   d="scan'208";a="202562841"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 18:41:05 -0800
-Message-ID: <496ac441-b8bf-44a4-a0de-d6e046f20a16@linux.intel.com>
-Date: Sun, 4 Jan 2026 10:41:02 +0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 18:48:02 -0800
+Message-ID: <45a7ed05-8dde-4f53-8e75-5224b6410435@linux.intel.com>
+Date: Sun, 4 Jan 2026 10:48:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 10/13] perf/x86/intel/uncore: Update DMR uncore
- constraints preliminarily
+Subject: Re: [PATCH V2 12/13] perf/x86/intel/uncore: Add missing PMON units
+ for Panther Lake
 To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
  Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
@@ -63,87 +63,118 @@ To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
 References: <20251231224233.113839-1-zide.chen@intel.com>
- <20251231224233.113839-11-zide.chen@intel.com>
+ <20251231224233.113839-13-zide.chen@intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251231224233.113839-11-zide.chen@intel.com>
+In-Reply-To: <20251231224233.113839-13-zide.chen@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 On 1/1/2026 6:42 AM, Zide Chen wrote:
-> Update event constraints base on the latest DMR uncore event list.
+> Besides CBOX, Panther Lake includes several legacy uncore PMON units
+> not enumerated via discovery tables, including cNCU, SANTA, and
+> ia_core_bridge.
+>
+> The cNCU PMON is similar to Meteor Lake but has two boxes with two
+> counters each. SANTA and IA Core Bridge PMON units follow the legacy
+> model used on Lunar Lake, Meteor Lake, and others.
+>
+> Panther Lake implements the Global Control Register; the freeze_all bit
+> must be cleared before programming counters.
 >
 > Signed-off-by: Zide Chen <zide.chen@intel.com>
 > ---
-> V2:
-> - make use of the new UNCORE_EVENT_CONSTRAINT_RANGE
+> V2: new patch
 >
->  arch/x86/events/intel/uncore_snbep.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+>  arch/x86/events/intel/uncore.c     |  1 +
+>  arch/x86/events/intel/uncore_snb.c | 45 ++++++++++++++++++++++++++++++
+>  2 files changed, 46 insertions(+)
 >
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index fac2be780276..3f96fcc8562b 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -6660,10 +6660,19 @@ static const struct attribute_group dmr_cxlcm_uncore_format_group = {
->  	.attrs = dmr_cxlcm_uncore_formats_attr,
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+> index 54b3c1e3af32..07a9a2826398 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -1814,6 +1814,7 @@ static const struct uncore_plat_init ptl_uncore_init __initconst = {
+>  	.cpu_init = ptl_uncore_cpu_init,
+>  	.mmio_init = ptl_uncore_mmio_init,
+>  	.domain[0].discovery_base = UNCORE_DISCOVERY_MSR,
+> +	.domain[0].global_init = uncore_mmio_global_init,
 >  };
 >  
-> +static struct event_constraint dmr_uncore_cxlcm_constraints[] = {
-> +	UNCORE_EVENT_CONSTRAINT_RANGE(0x1, 0x24, 0x0f),
-> +	UNCORE_EVENT_CONSTRAINT_RANGE(0x41, 0x41, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT_RANGE(0x50, 0x5e, 0xf0),
-> +	UNCORE_EVENT_CONSTRAINT_RANGE(0x60, 0x61, 0xf0),
-> +	EVENT_CONSTRAINT_END
+>  static const struct uncore_plat_init icx_uncore_init __initconst = {
+> diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+> index 807e582b8f17..c663b00b68fe 100644
+> --- a/arch/x86/events/intel/uncore_snb.c
+> +++ b/arch/x86/events/intel/uncore_snb.c
+> @@ -245,6 +245,17 @@
+>  #define MTL_UNC_HBO_CTR				0x2048
+>  #define MTL_UNC_HBO_CTRL			0x2042
+>  
+> +/* PTL Low Power Bridge register */
+> +#define PTL_UNC_IA_CORE_BRIDGE_PER_CTR0		0x2028
+> +#define PTL_UNC_IA_CORE_BRIDGE_PERFEVTSEL0	0x2022
+> +
+> +/* PTL Santa register */
+> +#define PTL_UNC_SANTA_CTR0			0x2418
+> +#define PTL_UNC_SANTA_CTRL0			0x2412
+> +
+> +/* PTL cNCU register */
+> +#define PTL_UNC_CNCU_MSR_OFFSET			0x140
+> +
+>  DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
+>  DEFINE_UNCORE_FORMAT_ATTR(umask, umask, "config:8-15");
+>  DEFINE_UNCORE_FORMAT_ATTR(chmask, chmask, "config:8-11");
+> @@ -1921,8 +1932,36 @@ void ptl_uncore_mmio_init(void)
+>  						 ptl_uncores);
+>  }
+>  
+> +static struct intel_uncore_type ptl_uncore_ia_core_bridge = {
+> +	.name		= "ia_core_bridge",
+> +	.num_counters   = 2,
+> +	.num_boxes	= 1,
+> +	.perf_ctr_bits	= 48,
+> +	.perf_ctr	= PTL_UNC_IA_CORE_BRIDGE_PER_CTR0,
+> +	.event_ctl	= PTL_UNC_IA_CORE_BRIDGE_PERFEVTSEL0,
+> +	.event_mask	= ADL_UNC_RAW_EVENT_MASK,
+> +	.ops		= &icl_uncore_msr_ops,
+> +	.format_group	= &adl_uncore_format_group,
 > +};
 > +
->  static struct intel_uncore_type dmr_uncore_cxlcm = {
->  	.name			= "cxlcm",
->  	.event_mask		= GENERIC_PMON_RAW_EVENT_MASK,
->  	.event_mask_ext		= DMR_CXLCM_EVENT_MASK_EXT,
-> +	.constraints		= dmr_uncore_cxlcm_constraints,
->  	.format_group		= &dmr_cxlcm_uncore_format_group,
->  	.attr_update		= uncore_alias_groups,
->  };
-> @@ -6675,9 +6684,20 @@ static struct intel_uncore_type dmr_uncore_hamvf = {
->  	.attr_update		= uncore_alias_groups,
+> +static struct intel_uncore_type ptl_uncore_santa = {
+> +	.name		= "santa",
+> +	.num_counters   = 2,
+> +	.num_boxes	= 2,
+> +	.perf_ctr_bits	= 48,
+> +	.perf_ctr	= PTL_UNC_SANTA_CTR0,
+> +	.event_ctl	= PTL_UNC_SANTA_CTRL0,
+> +	.event_mask	= ADL_UNC_RAW_EVENT_MASK,
+> +	.msr_offset	= SNB_UNC_CBO_MSR_OFFSET,
+> +	.ops		= &icl_uncore_msr_ops,
+> +	.format_group	= &adl_uncore_format_group,
+> +};
+> +
+>  static struct intel_uncore_type *ptl_msr_uncores[] = {
+>  	&mtl_uncore_cbox,
+> +	&ptl_uncore_ia_core_bridge,
+> +	&ptl_uncore_santa,
+> +	&mtl_uncore_cncu,
+>  	NULL
 >  };
 >  
-> +static struct event_constraint dmr_uncore_cbo_constraints[] = {
-> +	UNCORE_EVENT_CONSTRAINT(0x11, 0x1),
-> +	UNCORE_EVENT_CONSTRAINT_RANGE(0x19, 0x1a, 0x1),
-> +	UNCORE_EVENT_CONSTRAINT(0x1f, 0x1),
-> +	UNCORE_EVENT_CONSTRAINT(0x21, 0x1),
-> +	UNCORE_EVENT_CONSTRAINT(0x25, 0x1),
-> +	UNCORE_EVENT_CONSTRAINT(0x36, 0x1),
-> +	EVENT_CONSTRAINT_END
-> +};
+> @@ -1930,6 +1969,12 @@ void ptl_uncore_cpu_init(void)
+>  {
+>  	mtl_uncore_cbox.num_boxes = 6;
+>  	mtl_uncore_cbox.ops = &lnl_uncore_msr_ops;
 > +
->  static struct intel_uncore_type dmr_uncore_cbo = {
->  	.name			= "cbo",
->  	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-> +	.constraints            = dmr_uncore_cbo_constraints,
->  	.format_group		= &dmr_sca_uncore_format_group,
->  	.attr_update		= uncore_alias_groups,
->  };
-> @@ -6711,9 +6731,16 @@ static struct intel_uncore_type dmr_uncore_dda = {
->  	.attr_update		= uncore_alias_groups,
->  };
+> +	mtl_uncore_cncu.num_counters = 2;
+> +	mtl_uncore_cncu.num_boxes = 2;
+> +	mtl_uncore_cncu.msr_offset = PTL_UNC_CNCU_MSR_OFFSET;
+> +	mtl_uncore_cncu.single_fixed = 0;
+> +
+>  	uncore_msr_uncores = ptl_msr_uncores;
+>  }
 >  
-> +static struct event_constraint dmr_uncore_sbo_constraints[] = {
-> +	UNCORE_EVENT_CONSTRAINT(0x1f, 0x01),
-> +	UNCORE_EVENT_CONSTRAINT(0x25, 0x01),
-> +	EVENT_CONSTRAINT_END
-> +};
-> +
->  static struct intel_uncore_type dmr_uncore_sbo = {
->  	.name			= "sbo",
->  	.event_mask_ext		= DMR_HAMVF_EVENT_MASK_EXT,
-> +	.constraints		= dmr_uncore_sbo_constraints,
->  	.format_group		= &dmr_sca_uncore_format_group,
->  	.attr_update		= uncore_alias_groups,
->  };
 
 Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
