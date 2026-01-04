@@ -1,249 +1,389 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DD91C84BB
-	for <linux-perf-users@vger.kernel.org>; Sun,  4 Jan 2026 01:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.179
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767490084; cv=pass; b=KY9trO+FVdWKk5WG3V2VzKNr1IpRQit2AFWOsdsL7ha2er8VCJJizAy7tGXQRlRZzKmjeVbNfMF/n4CkiJn8ij7H/DSfKr80fwqCH9tjJq3aZzyj+u68Be/O11EasDpCwkKeyJDcioNZ+lAszuiBEh6MthT5PsjH74H+o1Mg+nU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767490084; c=relaxed/simple;
-	bh=mk6XYP+qYyyrw5pRhi4f6d+XKyqffL/UvS4FrhIp04k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wy1rbI/3hxc5wXyWF1aD+qAdYfHgvDOstFkBBWKb5/dln4vv4y6mkAkKgN4LJVHqdr2SRz9KVkkPOj7VgywUGuUfa7XlqFAuJSPfOj4oO3reWt4NSjmYsMzDH7Wj/c5buPJRkhXvyMlk5wDt1zL1CmCy0R44zIs0eMgfleRcIIc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vTk4Vsd+; arc=pass smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BBF20458A;
+	Sun,  4 Jan 2026 01:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767491232; cv=none; b=q5V6+VqL7EJZ/UA31rs8XYtTK0rc/BcIsQF+Tf0ZqHxerdlkG1kByGBG9lBs/UmOE5P9SWoGl+qSMlCK2dhp79j6FjxmQMu9hyU8dj+wNpfex3f9qNK22TBjdhC+GtLoEc6+IX81MmgWhxZj7+iL4cbLsJs+Rq3HXWYpab6Z1PY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767491232; c=relaxed/simple;
+	bh=yAaiK4Z0Eo6f5L4841FSvB4WKyy8yCD/x9aENyS2Um0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HkR1pkckYDm8E4yeHJMgGyUYVk6LWVvwNWOAsb1BCz8j+FyOy7ymxg+dAB1E+9TOD0n9MeDCs/gkuVEKrkSJOVF4VIQrBbunEKm+Msjhc5ibCOTrw9zWsSTTqC5AiYZ1U3SlHWCPqQV2LGA/4Sz3vgJ5erZEN9jyB5Tn2vW48t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=InsnulPt; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vTk4Vsd+"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2a0d06cfa93so81615ad.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 03 Jan 2026 17:28:02 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1767490082; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Ev4YakSbwGOFcq7ZO4pRxe8jtXkXzlpx06qp9IaEXNCntf/9czGrGO0VwlRCdfEGSa
-         VXemMuiooNirGPL8QdS1IbqQizMi699JPc9MfePS4E8o8feJoqF/8lMZpb3sWq9/XKNx
-         MdbZ2FmlRBku587rBVC4LnNLNgUK55GbsO2Dd7bGVJ7WXOUtAOECdClL1Dl6CQDA4zlK
-         4bEkVfQd9KTY/hR6xRU2VnUNMiJqWoKjNXHyP5UheJIhlQ4z91QQo3k9hfEPa/XZ7Vg4
-         XH+nxn/LtaqCUtlOgvlJ3nXKLg4xBGaUGBGhaVt3xpodxZlt2d7d3VWZ4VzVH118Km4J
-         igOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=W6D/2JrYUVoSp15zgf9Dc61E217j6/kk7jaW+0mt5Zw=;
-        fh=D10UX0MCxzFeRsVEdkMu0NOouCoTDwC58MdqszEJu/Q=;
-        b=i2oQVJxBMMG8ebRHnYPfqovkHJH3xFR5uE2Vy7F9Tvk60k0e/iyyQXPskmqOkwBMtH
-         ERiPaSr2hX/syfq4Q5B9v9IAFlhFjqsVq9I++1NNpOy9Pw4azGexCnPeEe1rUPE9Ha3c
-         N3PC0K6TkX1/cDJk5dv6KkDYoxlDXdi3Kf31ylWsbnop+0zInKQD5fmPhKfa+BYDE0KG
-         z49dMA/IYkJE3/krF4f/FBHW9oCvJsqH/N2hjxVRWDHPezlgJgfzWUu1wpOqe0nWlS99
-         RW/D1jdL2lMAgKwCcLB5oyNn/KWhgU31fAvbM30oSzL9iA6V5vZRk5snuTQQVUj549UW
-         ImzQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767490082; x=1768094882; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W6D/2JrYUVoSp15zgf9Dc61E217j6/kk7jaW+0mt5Zw=;
-        b=vTk4Vsd+YYO8YaQDr53ju2Ox502n5Q12MSE/WHgDQX7BZJDXaacLXEUQRQBF667CYX
-         cSDeZASM54hN1T1Snk5XdWSqirFNbeHYB/JoopIrnikO6eUE6XXt8bp3e9eKZ3Bz5YXL
-         4T0KGuc1tBFaugLghEIOHDoFYc0BP/kgKpUYHsIXWaGqKu32EP5uiLBy6KjzVnEGzLjp
-         ssducgSiCJ8SS8hhLnwRFzKDfFHmCalELJCLMqauNFM9HNDm+BIdcE6i6T0Dww8gwVVc
-         wivis26KLKYyj1Hk3arnzT9lxKK2e6Ns1nUQNQS1WsUZX9iZ/k8jXUzhb+BpOcduMZDs
-         a+wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767490082; x=1768094882;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=W6D/2JrYUVoSp15zgf9Dc61E217j6/kk7jaW+0mt5Zw=;
-        b=oBPc1Ip2oyseXAYVhqwc2aXh4+dI6+mNwDyivfAbzYFPiObcHofJDwcrBN/f5Y1Kky
-         lT1F2uPu5vhUgBSGK7o5Y7xsqaxnLrP+SW0w0r0eMmErOehp4Tw0LMxMte8NJO711w16
-         HbUfSV0k85kz4ePDUxrq52uQyFz8PYkq5XiLpbSpILSC+QNZ86dCFH+nDwoRycRUA2TG
-         DbHznaAeJHrcUavAVHt002lYl3/SG8BD609ONgmzBcxGFkCtZQYWhEMLMirG71px3/xj
-         5U6Id790h1RPyb024Pm5aE5xRvL5jjeNqaG0b6mRsahMtddzZeYrCqyDuAlH+qR3Rdhc
-         ijaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7X68xvlckXeRaixWL/eiYqReSE5LFfHFhnqa0vufToyzAchtVEFhCKH7URAGoxwhCsMn4hWxyxYXqMu1D8QX1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEUgLClkjvHjuyCoG6qeMagKMF9K4R53M8KE7Yo1H3EFdIpWzV
-	o3HRLDpXd7PPR1pqxT3e5qS9wliQI9JpIEjM7mWIWU8P8yF3BV4oa7x5lX4rwYMOh6h3iCfMcLK
-	HiGXRPDqzKubEf0N0iK+4Qsaoe6ry9Vvc2zSuu4IT
-X-Gm-Gg: AY/fxX7uSsyPXjKY905Ki1wjkoVMaaPXlRqC4btPHU3QB6kjArgI0MiC0GonAL8uS0v
-	c6NMoXXi3Ch2tNNoE8RpgbpckyufTLBa2y9DOOYKWROjmEpmlzYnQp1WAE2dYQlY/u8Ga/ZAGa6
-	cLLvRoG/SvJ18YYGy628gonuuaVLg93uyYpPB3eyR3NupUXykMMVjpTCdxdxrudyGGMSC6lW3P0
-	uK9gNl1TMsyqlVElIYVj2/KKk7e4OowbtyEPPC3TPVBZ/tOX9CtRoHppMHZaoODhHNYH7iGiOLC
-	jq4tSI8=
-X-Google-Smtp-Source: AGHT+IGR0CSdOd5Po/wNVWrEJqUZznOrS/jBm/GnLu5HAE6JT5lGfrjeB9BDoXGSjl8H9zT5JrqJbT2xoUKUsCO9Zig=
-X-Received: by 2002:a05:7022:62a8:b0:120:5719:624c with SMTP id
- a92af1059eb24-121da89a169mr42938c88.19.1767490081402; Sat, 03 Jan 2026
- 17:28:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="InsnulPt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767491230; x=1799027230;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yAaiK4Z0Eo6f5L4841FSvB4WKyy8yCD/x9aENyS2Um0=;
+  b=InsnulPt+OahBJW22mvYogsqTF5hlCaLqAKeIIpmy2q3rl1GwOxTW+U0
+   GhH6RNeSUe87BSAmI/YhK7whKSM5tJKWpTdbxSnF8ol+V/KRv0HrZp0PV
+   3HLWZ+iCgJO9do290LVWvQci5+Q0HCx46AVQQfVByaAv9qU7j4p2S1Amd
+   AhsWy9zLjanLee8LDM7lGbWNsaVKEKH1R17Pl5Vmst1fh/0ihboF844b/
+   l8nFVTb8Lglh43pxAedyFfQnRW9+ps9rh69r33IRAtxU603S7LuFS+iLy
+   8nWhrD1qiwbLKlN+lg5Pq806fF/41et1IOqxIT8clg2x0oeHKK0eLat3z
+   Q==;
+X-CSE-ConnectionGUID: kUJ9cAoyTHqsPJpxmebYhA==
+X-CSE-MsgGUID: T14VdJo4QW2KM3sZQHyFnw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11659"; a="68821680"
+X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
+   d="scan'208";a="68821680"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 17:47:08 -0800
+X-CSE-ConnectionGUID: uPBrPsX5R0OvVePdgiG++w==
+X-CSE-MsgGUID: hW3jJvmqS2OUqK1ZqQ7Ggw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
+   d="scan'208";a="206571395"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 17:47:05 -0800
+Message-ID: <9dec5f35-0e9a-4f1c-bcf1-9b15793b17d1@linux.intel.com>
+Date: Sun, 4 Jan 2026 09:47:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251231-james-perf-uncountable-events-v1-1-f2d9932999fd@linaro.org>
- <CAP-5=fUNJLoy25rS=diSXNR9h-h4m6EFPTy8M+KpTKxm6HtDSA@mail.gmail.com> <951f10c5-e1ac-45d4-b7ca-56aa32e57cd6@linaro.org>
-In-Reply-To: <951f10c5-e1ac-45d4-b7ca-56aa32e57cd6@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 3 Jan 2026 17:27:49 -0800
-X-Gm-Features: AQt7F2o5no2WckBB9YJGcdTGhjJumxJNEyTbpp6daTpOP-viEjkWjPdRLGjbC28
-Message-ID: <CAP-5=fWQU59Vyb6y+W6ObOTh3nzFSofsn8sc6JzwZp7FiV+n6w@mail.gmail.com>
-Subject: Re: [PATCH] perf vendor events arm64: Remove uncountable events
-To: James Clark <james.clark@linaro.org>
-Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Akio Kakuno <fj3333bs@aa.jp.fujitsu.com>, 
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 01/13] perf/x86/intel/uncore: Move uncore discovery
+ init struct to header
+To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
+References: <20251231224233.113839-1-zide.chen@intel.com>
+ <20251231224233.113839-2-zide.chen@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20251231224233.113839-2-zide.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jan 3, 2026 at 8:38=E2=80=AFAM James Clark <james.clark@linaro.org>=
- wrote:
->
->
->
-> On 02/01/2026 3:29 pm, Ian Rogers wrote:
-> > On Wed, Dec 31, 2025 at 4:13=E2=80=AFAM James Clark <james.clark@linaro=
-.org> wrote:
-> >>
-> >> These events are never countable by the PMU and are only intended to
-> >> be used as external inputs to trace. Therefore showing them in 'perf
-> >> list' is misleading so remove them.
-> >
-> > What does "trace" mean in this context?
-> >
->
-> CPU trace, Either ETE (Embedded Trace Extension) or ETM (Embedded Trace
-> Macrocell). You can select PMU events as inputs to the trace block to
-> make it do things like start and stop tracing.
 
-Ah ok, trace immediately makes me think of `perf trace` currently.
-Presumably there's no perf integration for ETE and ETM that somehow
-use these event encodings? Looks not and the changes make sense to me.
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
-> > Thanks,
-> > Ian
-> >
-> >> The generator script doesn't emit these events when used with the new
-> >> telemetry-solution input files [1].
-> >>
-> >> 'perf list' should only show countable events because there are events
-> >> that are sometimes implemented, sometimes countable and sometimes not,
-> >> for example TRB_TRIG. If we always include any implemented events
-> >> whether they are countable or not then it's not possible to tell wheth=
-er
-> >> they are usable in perf without going to the docs, defeating the point
-> >> of 'perf list'.
-> >>
-> >> It's also not useful yet to display implemented events that are not
-> >> countable (for help in using trace rather than perf stat), because
-> >> PMU_OVFS and PMU_HOVFS are practically always implemented and TRB_TRIG
-> >> is always implemented when there is TRBE.
-> >>
-> >> [1]: https://gitlab.arm.com/telemetry-solution/telemetry-solution/-/tr=
-ee/main/data/pmu/cpu
-> >>
-> >> Signed-off-by: James Clark <james.clark@linaro.org>
-> >> ---
-> >>   tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json  |  8 ----=
-----
-> >>   tools/perf/pmu-events/arch/arm64/common-and-microarch.json | 12 ----=
---------
-> >>   tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json   | 10 ----=
-------
-> >>   3 files changed, 30 deletions(-)
-> >>
-> >> diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json=
- b/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json
-> >> deleted file mode 100644
-> >> index d8b7b9f9e5fa..000000000000
-> >> --- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json
-> >> +++ /dev/null
-> >> @@ -1,8 +0,0 @@
-> >> -[
-> >> -    {
-> >> -        "ArchStdEvent": "PMU_OVFS"
-> >> -    },
-> >> -    {
-> >> -        "ArchStdEvent": "PMU_HOVFS"
-> >> -    }
-> >> -]
-> >> diff --git a/tools/perf/pmu-events/arch/arm64/common-and-microarch.jso=
-n b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-> >> index 2416d9f8a83d..468cb085d879 100644
-> >> --- a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-> >> +++ b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-> >> @@ -432,24 +432,12 @@
-> >>           "EventName": "TRB_WRAP",
-> >>           "BriefDescription": "Trace buffer current write pointer wrap=
-ped"
-> >>       },
-> >> -    {
-> >> -        "PublicDescription": "PMU overflow, counters accessible to EL=
-1 and EL0",
-> >> -        "EventCode": "0x400D",
-> >> -        "EventName": "PMU_OVFS",
-> >> -        "BriefDescription": "PMU overflow, counters accessible to EL1=
- and EL0"
-> >> -    },
-> >>       {
-> >>           "PublicDescription": "Trace buffer Trigger Event",
-> >>           "EventCode": "0x400E",
-> >>           "EventName": "TRB_TRIG",
-> >>           "BriefDescription": "Trace buffer Trigger Event"
-> >>       },
-> >> -    {
-> >> -        "PublicDescription": "PMU overflow, counters reserved for use=
- by EL2",
-> >> -        "EventCode": "0x400F",
-> >> -        "EventName": "PMU_HOVFS",
-> >> -        "BriefDescription": "PMU overflow, counters reserved for use =
-by EL2"
-> >> -    },
-> >>       {
-> >>           "PublicDescription": "PE Trace Unit external output 0",
-> >>           "EventCode": "0x4010",
-> >> diff --git a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json =
-b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json
-> >> deleted file mode 100644
-> >> index 65bd6cdd0dd5..000000000000
-> >> --- a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/pmu.json
-> >> +++ /dev/null
-> >> @@ -1,10 +0,0 @@
-> >> -[
-> >> -    {
-> >> -        "ArchStdEvent": "PMU_OVFS",
-> >> -        "BriefDescription": "This event counts the event generated ea=
-ch time one of the condition occurs described in Arm Architecture Reference=
- Manual for A-profile architecture. This event is only for output to the tr=
-ace unit."
-> >> -    },
-> >> -    {
-> >> -        "ArchStdEvent": "PMU_HOVFS",
-> >> -        "BriefDescription": "This event counts the event generated ea=
-ch time an event is counted by an event counter <n> and all of the conditio=
-n occur described in Arm Architecture Reference Manual for A-profile archit=
-ecture. This event is only for output to the trace unit."
-> >> -    }
-> >> -]
-> >>
-> >> ---
-> >> base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
-> >> change-id: 20251230-james-perf-uncountable-events-28adfb93b73f
-> >>
-> >> Best regards,
-> >> --
-> >> James Clark <james.clark@linaro.org>
-> >>
+On 1/1/2026 6:42 AM, Zide Chen wrote:
+> The discovery base MSR or PCI device is platform-specific and must be
+> defined statically in the per-platform init table and passed to the
+> discovery code.
 >
+> Move the definition of struct intel_uncore_init_fun to uncore.h so it
+> can be accessed by discovery code, and rename it to reflect that it
+> now carries more than just init callbacks.
+>
+> Shorten intel_uncore_has_discovery_tables[_pci/msr] to
+> uncore_discovery[_pci/msr] for improved readability and alignment.
+>
+> Drop the `intel_` prefix from new names since the code is under the
+> intel directory and long identifiers make alignment harder.  Further
+> cleanups will continue removing `intel_` prefixes.
+>
+> No functional change intended.
+>
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> ---
+> V2: New patch
+>
+>  arch/x86/events/intel/uncore.c           | 72 ++++++++++--------------
+>  arch/x86/events/intel/uncore.h           | 10 ++++
+>  arch/x86/events/intel/uncore_discovery.c | 12 ++--
+>  arch/x86/events/intel/uncore_discovery.h |  2 +-
+>  4 files changed, 49 insertions(+), 47 deletions(-)
+>
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+> index e228e564b15e..cd561290be8c 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -1697,133 +1697,123 @@ static int __init uncore_mmio_init(void)
+>  	return ret;
+>  }
+>  
+> -struct intel_uncore_init_fun {
+> -	void	(*cpu_init)(void);
+> -	int	(*pci_init)(void);
+> -	void	(*mmio_init)(void);
+> -	/* Discovery table is required */
+> -	bool	use_discovery;
+> -	/* The units in the discovery table should be ignored. */
+> -	int	*uncore_units_ignore;
+> -};
+> -
+> -static const struct intel_uncore_init_fun nhm_uncore_init __initconst = {
+> +static const struct uncore_plat_init nhm_uncore_init __initconst = {
+>  	.cpu_init = nhm_uncore_cpu_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun snb_uncore_init __initconst = {
+> +static const struct uncore_plat_init snb_uncore_init __initconst = {
+>  	.cpu_init = snb_uncore_cpu_init,
+>  	.pci_init = snb_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun ivb_uncore_init __initconst = {
+> +static const struct uncore_plat_init ivb_uncore_init __initconst = {
+>  	.cpu_init = snb_uncore_cpu_init,
+>  	.pci_init = ivb_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun hsw_uncore_init __initconst = {
+> +static const struct uncore_plat_init hsw_uncore_init __initconst = {
+>  	.cpu_init = snb_uncore_cpu_init,
+>  	.pci_init = hsw_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun bdw_uncore_init __initconst = {
+> +static const struct uncore_plat_init bdw_uncore_init __initconst = {
+>  	.cpu_init = snb_uncore_cpu_init,
+>  	.pci_init = bdw_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun snbep_uncore_init __initconst = {
+> +static const struct uncore_plat_init snbep_uncore_init __initconst = {
+>  	.cpu_init = snbep_uncore_cpu_init,
+>  	.pci_init = snbep_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun nhmex_uncore_init __initconst = {
+> +static const struct uncore_plat_init nhmex_uncore_init __initconst = {
+>  	.cpu_init = nhmex_uncore_cpu_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun ivbep_uncore_init __initconst = {
+> +static const struct uncore_plat_init ivbep_uncore_init __initconst = {
+>  	.cpu_init = ivbep_uncore_cpu_init,
+>  	.pci_init = ivbep_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun hswep_uncore_init __initconst = {
+> +static const struct uncore_plat_init hswep_uncore_init __initconst = {
+>  	.cpu_init = hswep_uncore_cpu_init,
+>  	.pci_init = hswep_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun bdx_uncore_init __initconst = {
+> +static const struct uncore_plat_init bdx_uncore_init __initconst = {
+>  	.cpu_init = bdx_uncore_cpu_init,
+>  	.pci_init = bdx_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun knl_uncore_init __initconst = {
+> +static const struct uncore_plat_init knl_uncore_init __initconst = {
+>  	.cpu_init = knl_uncore_cpu_init,
+>  	.pci_init = knl_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun skl_uncore_init __initconst = {
+> +static const struct uncore_plat_init skl_uncore_init __initconst = {
+>  	.cpu_init = skl_uncore_cpu_init,
+>  	.pci_init = skl_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun skx_uncore_init __initconst = {
+> +static const struct uncore_plat_init skx_uncore_init __initconst = {
+>  	.cpu_init = skx_uncore_cpu_init,
+>  	.pci_init = skx_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun icl_uncore_init __initconst = {
+> +static const struct uncore_plat_init icl_uncore_init __initconst = {
+>  	.cpu_init = icl_uncore_cpu_init,
+>  	.pci_init = skl_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun tgl_uncore_init __initconst = {
+> +static const struct uncore_plat_init tgl_uncore_init __initconst = {
+>  	.cpu_init = tgl_uncore_cpu_init,
+>  	.mmio_init = tgl_uncore_mmio_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun tgl_l_uncore_init __initconst = {
+> +static const struct uncore_plat_init tgl_l_uncore_init __initconst = {
+>  	.cpu_init = tgl_uncore_cpu_init,
+>  	.mmio_init = tgl_l_uncore_mmio_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun rkl_uncore_init __initconst = {
+> +static const struct uncore_plat_init rkl_uncore_init __initconst = {
+>  	.cpu_init = tgl_uncore_cpu_init,
+>  	.pci_init = skl_uncore_pci_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun adl_uncore_init __initconst = {
+> +static const struct uncore_plat_init adl_uncore_init __initconst = {
+>  	.cpu_init = adl_uncore_cpu_init,
+>  	.mmio_init = adl_uncore_mmio_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun mtl_uncore_init __initconst = {
+> +static const struct uncore_plat_init mtl_uncore_init __initconst = {
+>  	.cpu_init = mtl_uncore_cpu_init,
+>  	.mmio_init = adl_uncore_mmio_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun lnl_uncore_init __initconst = {
+> +static const struct uncore_plat_init lnl_uncore_init __initconst = {
+>  	.cpu_init = lnl_uncore_cpu_init,
+>  	.mmio_init = lnl_uncore_mmio_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun ptl_uncore_init __initconst = {
+> +static const struct uncore_plat_init ptl_uncore_init __initconst = {
+>  	.cpu_init = ptl_uncore_cpu_init,
+>  	.mmio_init = ptl_uncore_mmio_init,
+>  	.use_discovery = true,
+>  };
+>  
+> -static const struct intel_uncore_init_fun icx_uncore_init __initconst = {
+> +static const struct uncore_plat_init icx_uncore_init __initconst = {
+>  	.cpu_init = icx_uncore_cpu_init,
+>  	.pci_init = icx_uncore_pci_init,
+>  	.mmio_init = icx_uncore_mmio_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun snr_uncore_init __initconst = {
+> +static const struct uncore_plat_init snr_uncore_init __initconst = {
+>  	.cpu_init = snr_uncore_cpu_init,
+>  	.pci_init = snr_uncore_pci_init,
+>  	.mmio_init = snr_uncore_mmio_init,
+>  };
+>  
+> -static const struct intel_uncore_init_fun spr_uncore_init __initconst = {
+> +static const struct uncore_plat_init spr_uncore_init __initconst = {
+>  	.cpu_init = spr_uncore_cpu_init,
+>  	.pci_init = spr_uncore_pci_init,
+>  	.mmio_init = spr_uncore_mmio_init,
+> @@ -1831,7 +1821,7 @@ static const struct intel_uncore_init_fun spr_uncore_init __initconst = {
+>  	.uncore_units_ignore = spr_uncore_units_ignore,
+>  };
+>  
+> -static const struct intel_uncore_init_fun gnr_uncore_init __initconst = {
+> +static const struct uncore_plat_init gnr_uncore_init __initconst = {
+>  	.cpu_init = gnr_uncore_cpu_init,
+>  	.pci_init = gnr_uncore_pci_init,
+>  	.mmio_init = gnr_uncore_mmio_init,
+> @@ -1839,7 +1829,7 @@ static const struct intel_uncore_init_fun gnr_uncore_init __initconst = {
+>  	.uncore_units_ignore = gnr_uncore_units_ignore,
+>  };
+>  
+> -static const struct intel_uncore_init_fun generic_uncore_init __initconst = {
+> +static const struct uncore_plat_init generic_uncore_init __initconst = {
+>  	.cpu_init = intel_uncore_generic_uncore_cpu_init,
+>  	.pci_init = intel_uncore_generic_uncore_pci_init,
+>  	.mmio_init = intel_uncore_generic_uncore_mmio_init,
+> @@ -1910,7 +1900,7 @@ MODULE_DEVICE_TABLE(x86cpu, intel_uncore_match);
+>  static int __init intel_uncore_init(void)
+>  {
+>  	const struct x86_cpu_id *id;
+> -	struct intel_uncore_init_fun *uncore_init;
+> +	struct uncore_plat_init *uncore_init;
+>  	int pret = 0, cret = 0, mret = 0, ret;
+>  
+>  	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+> @@ -1921,16 +1911,16 @@ static int __init intel_uncore_init(void)
+>  
+>  	id = x86_match_cpu(intel_uncore_match);
+>  	if (!id) {
+> -		if (!uncore_no_discover && intel_uncore_has_discovery_tables(NULL))
+> -			uncore_init = (struct intel_uncore_init_fun *)&generic_uncore_init;
+> +		if (!uncore_no_discover && uncore_discovery(NULL))
+> +			uncore_init = (struct uncore_plat_init *)&generic_uncore_init;
+>  		else
+>  			return -ENODEV;
+>  	} else {
+> -		uncore_init = (struct intel_uncore_init_fun *)id->driver_data;
+> +		uncore_init = (struct uncore_plat_init *)id->driver_data;
+>  		if (uncore_no_discover && uncore_init->use_discovery)
+>  			return -ENODEV;
+>  		if (uncore_init->use_discovery &&
+> -		    !intel_uncore_has_discovery_tables(uncore_init->uncore_units_ignore))
+> +		    !uncore_discovery(uncore_init))
+>  			return -ENODEV;
+>  	}
+>  
+> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+> index d8815fff7588..568536ef28ee 100644
+> --- a/arch/x86/events/intel/uncore.h
+> +++ b/arch/x86/events/intel/uncore.h
+> @@ -47,6 +47,16 @@ struct uncore_event_desc;
+>  struct freerunning_counters;
+>  struct intel_uncore_topology;
+>  
+> +struct uncore_plat_init {
+> +	void	(*cpu_init)(void);
+> +	int	(*pci_init)(void);
+> +	void	(*mmio_init)(void);
+> +	/* Discovery table is required */
+> +	bool	use_discovery;
+> +	/* The units in the discovery table should be ignored. */
+> +	int	*uncore_units_ignore;
+> +};
+> +
+>  struct intel_uncore_type {
+>  	const char *name;
+>  	int num_counters;
+> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+> index 7d57ce706feb..d39f6a0b8cc3 100644
+> --- a/arch/x86/events/intel/uncore_discovery.c
+> +++ b/arch/x86/events/intel/uncore_discovery.c
+> @@ -350,7 +350,7 @@ static int parse_discovery_table(struct pci_dev *dev, int die,
+>  	return __parse_discovery_table(addr, die, parsed, ignore);
+>  }
+>  
+> -static bool intel_uncore_has_discovery_tables_pci(int *ignore)
+> +static bool uncore_discovery_pci(int *ignore)
+>  {
+>  	u32 device, val, entry_id, bar_offset;
+>  	int die, dvsec = 0, ret = true;
+> @@ -399,7 +399,7 @@ static bool intel_uncore_has_discovery_tables_pci(int *ignore)
+>  	return ret;
+>  }
+>  
+> -static bool intel_uncore_has_discovery_tables_msr(int *ignore)
+> +static bool uncore_discovery_msr(int *ignore)
+>  {
+>  	unsigned long *die_mask;
+>  	bool parsed = false;
+> @@ -432,10 +432,12 @@ static bool intel_uncore_has_discovery_tables_msr(int *ignore)
+>  	return parsed;
+>  }
+>  
+> -bool intel_uncore_has_discovery_tables(int *ignore)
+> +bool uncore_discovery(struct uncore_plat_init *init)
+>  {
+> -	return intel_uncore_has_discovery_tables_msr(ignore) ||
+> -	       intel_uncore_has_discovery_tables_pci(ignore);
+> +	int *ignore = init ? init->uncore_units_ignore : NULL;
+> +
+> +	return uncore_discovery_msr(ignore) ||
+> +	       uncore_discovery_pci(ignore);
+>  }
+>  
+>  void intel_uncore_clear_discovery_tables(void)
+> diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
+> index dff75c98e22f..dfc237a2b6df 100644
+> --- a/arch/x86/events/intel/uncore_discovery.h
+> +++ b/arch/x86/events/intel/uncore_discovery.h
+> @@ -136,7 +136,7 @@ struct intel_uncore_discovery_type {
+>  	u16		num_units;	/* number of units */
+>  };
+>  
+> -bool intel_uncore_has_discovery_tables(int *ignore);
+> +bool uncore_discovery(struct uncore_plat_init *init);
+>  void intel_uncore_clear_discovery_tables(void);
+>  void intel_uncore_generic_uncore_cpu_init(void);
+>  int intel_uncore_generic_uncore_pci_init(void);
+
+LGTM.
+
+Reviewed-by:  Dapeng Mi <dapeng1.mi@linux.intel.com>
+
+
