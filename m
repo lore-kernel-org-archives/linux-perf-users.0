@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F220E12D1F1;
-	Sun,  4 Jan 2026 02:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE74248F5C;
+	Sun,  4 Jan 2026 04:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767495088; cv=none; b=OWBDJaTMhgUzxwrUTuF3e1toB5b69dWQngA+CVry7WAlV7UHAVLIsJKEIzNA0kok5ekpFVO/42tlOAbJG9APp09uqiSrztNSxsLA8+Kf+sy05BOBAX8ccDxUOcvv6FqhALgbWYScsnXsoNvwxTCYNtQ+b/v7HE+7iMMHFUCv29M=
+	t=1767502701; cv=none; b=klbiJrZ7LDPIPMlG+SvFnZep+2DgTI3NKBoJ3kGhxz5GFcWyaMaL5n9sA5dfP4KFUL84aOPQln7bmvP6uk0Dy+0/nIxgLkHzLO9mFg7CrcYwAnz9cVrgJ4setLcFtWSSV5BAY0sck92PkqgQf4MB0Zgd1f/T15fe1f3q9KhOWhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767495088; c=relaxed/simple;
-	bh=9zmuqcyczJJP3lDCAdCvFDx3GSm1SPcvYvFYScZgNoc=;
+	s=arc-20240116; t=1767502701; c=relaxed/simple;
+	bh=SPk05DH6d+e7NScDZCXch8OVPGw6o0Ni8DWwxHeunWk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fuhhuRz15NIJ6E54Y6sqWEC+gst+T8Zih5AMFhJg+oVrqFyUWzzGe1dNq6fj4qKvXJyeqhilXO95s14SLDZZydPJlKAfOK02cMMa0dTe164kJb//Il6MyIwOi8PyZ6RBKuhdt15kzZsJnx6D9mnqDUuq84Y6DGrYprRuK4C3czc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mp04rYYv; arc=none smtp.client-ip=192.198.163.16
+	 In-Reply-To:Content-Type; b=IKxGmq4suRdSL69I9v2ktwxlHAsHg/kEQDVB86nVUogXkbS21I9f+poe+63zy9Y85Qkh/5LOvqPL5W31PTa58taTHKRlb/L+AqyrqpAobnMd0JBmr5mbXDrlI8dATepsjmA0/95PSQE06wRRpGTGjilB96/jd3j095wGE/lMvrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F2PGc8Na; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mp04rYYv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F2PGc8Na"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767495087; x=1799031087;
+  t=1767502700; x=1799038700;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=9zmuqcyczJJP3lDCAdCvFDx3GSm1SPcvYvFYScZgNoc=;
-  b=mp04rYYvrB7AACkDZTDTOPkqpb6EjevhQhsS4wkwHYPTI7la0V0yLZwn
-   YOdqeH/ONBktmj0Izr+NB2R5cKavlBLd3L/kFddWEd9FjgD73YDo5lMTW
-   RxS0LLw9mpR7V/DXeEcUMEcd5F/A1LxMLgl13Fk9R8A5sasl5QbHbnh5J
-   PsKvmabk1NiYHlCLEWCiPJbFCZZTZwUT460yQvJW+1iM5Fb9zcbysd+DN
-   p3u4cIbyJHOproE9cLa3Z5j7qbrnyQ8uPQ7AdFFjslzQkJmjc4Qv94XVd
-   z3rFRu9JA/3wWuW9osGbokuyYXMVIIV9I8dSjPSgwEh/FyWw2+lMYGo14
-   A==;
-X-CSE-ConnectionGUID: zJ20MkQRTcyvqI+4Z/ctRA==
-X-CSE-MsgGUID: 1punSiERTu6PqrR2gDvzPw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11659"; a="56476310"
+  bh=SPk05DH6d+e7NScDZCXch8OVPGw6o0Ni8DWwxHeunWk=;
+  b=F2PGc8NaIWRMaxUuZhJNfDF+9znhP/43SIb3IrQUnfmXDoJ4OMXMKa8r
+   vGaxGibNvDk0ZODF5BMmmnINkeIgug4oz9/zaXorUdNFPyJZRFjpwq8PQ
+   sVSAYTd+JP+jOA3x4X4YxWTjyAxurGDkYArQdR03tyiQ2cFPRFvbYT+vK
+   mJP21fOqxpn6TdBrdsPsdu9J4MF3ExWuZU8Ka1k6BUuw3/eTnehQlvSul
+   ghIvebdi2DD9RHiW8ZooPvslTvyaGV5FLbngpDCGgIJMeqoXoyEg3+gnP
+   mSj7zKIWAmlWLvctR1whpQGbBloAkuHxGelAKzm1J6SZUpp3davV8e7ZS
+   Q==;
+X-CSE-ConnectionGUID: mfpZ3XTcS/OfvdJShM4HlQ==
+X-CSE-MsgGUID: i9NL0wxDS/2Qr7yPeIdIIw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11659"; a="94383252"
 X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
-   d="scan'208";a="56476310"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 18:51:26 -0800
-X-CSE-ConnectionGUID: cfbLhtHTSKSzzXKoOBaYCQ==
-X-CSE-MsgGUID: 7JX4Bg6jQ9+5j3aVUdwF4w==
+   d="scan'208";a="94383252"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 20:58:19 -0800
+X-CSE-ConnectionGUID: eeOzE9QuRci49bOSmoyeiQ==
+X-CSE-MsgGUID: w8DYRJktSgulAJez2gEiPA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
-   d="scan'208";a="232780974"
+   d="scan'208";a="202576729"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 18:51:22 -0800
-Message-ID: <469b889f-2497-420e-98ff-b6575d6c5643@linux.intel.com>
-Date: Sun, 4 Jan 2026 10:51:20 +0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 20:58:15 -0800
+Message-ID: <7214053a-070c-45c3-8cd8-b4306c49328a@linux.intel.com>
+Date: Sun, 4 Jan 2026 12:58:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,155 +52,132 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 13/13] perf/x86/intel/uncore: Add Nova Lake support
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
+Subject: Re: [PATCH] LoongArch: Fix PMU counter allocation for mixed-type
+ event groups
+To: Lisa Robinson <lisa@bytefly.space>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
-References: <20251231224233.113839-1-zide.chen@intel.com>
- <20251231224233.113839-14-zide.chen@intel.com>
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, WANG Xuerui <kernel@xen0n.name>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20251231091500.530432-1-lisa@bytefly.space>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251231224233.113839-14-zide.chen@intel.com>
+In-Reply-To: <20251231091500.530432-1-lisa@bytefly.space>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 1/1/2026 6:42 AM, Zide Chen wrote:
-> Nova Lake uncore PMON largely follows Panther Lake and supports CBOX,
-> iMC, cNCU, SANTA, sNCU, and HBO units.
+On 12/31/2025 5:15 PM, Lisa Robinson wrote:
+> When validating a perf event group, validate_group() unconditionally
+> attempts to allocate hardware PMU counters for the leader, sibling
+> events and the new event being added.
 >
-> As with Panther Lake, CBOX, cNCU, and SANTA are not enumerated via
-> discovery tables.  Their programming model matches Panther Lake, with
-> differences limited to MSR addresses and the number of boxes or counters
-> per box.
+> This is incorrect for mixed-type groups. If a PERF_TYPE_SOFTWARE event
+> ispart of the group, the current code still tries to allocate a hardware
+> PMU counter for it, which can wrongly consume hardware PMU resources and
+> cause spurious allocation failures.
 >
-> The remaining units are enumerated via discovery tables using a new
-> base MSR (0x711) and otherwise reuse the Panther Lake implementation.
-> Nova Lake also supports iMC free-running counters.
+> Fix this by only allocating PMU counters for hardware events during group
+> validation, and skipping software events.
 >
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> A trimmed down reproducer is as simple as this:
+>
+>   #include <stdio.h>
+>   #include <assert.h>
+>   #include <unistd.h>
+>   #include <string.h>
+>   #include <sys/syscall.h>
+>   #include <linux/perf_event.h>
+>
+>   int
+>   main (int argc, char *argv[])
+>   {
+>   	struct perf_event_attr attr = { 0 };
+>   	int fds[5];
+>
+>   	attr.disabled = 1;
+>   	attr.exclude_kernel = 1;
+>   	attr.exclude_hv = 1;
+>   	attr.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
+>   		PERF_FORMAT_TOTAL_TIME_RUNNING | PERF_FORMAT_ID | PERF_FORMAT_GROUP;
+>   	attr.size = sizeof (attr);
+>
+>   	attr.type = PERF_TYPE_SOFTWARE;
+>   	attr.config = PERF_COUNT_SW_DUMMY;
+>   	fds[0] = syscall (SYS_perf_event_open, &attr, 0, -1, -1, 0);
+>   	assert (fds[0] >= 0);
+>
+>   	attr.type = PERF_TYPE_HARDWARE;
+>   	attr.config = PERF_COUNT_HW_CPU_CYCLES;
+>   	fds[1] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
+>   	assert (fds[1] >= 0);
+>
+>   	attr.type = PERF_TYPE_HARDWARE;
+>   	attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+>   	fds[2] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
+>   	assert (fds[2] >= 0);
+>
+>   	attr.type = PERF_TYPE_HARDWARE;
+>   	attr.config = PERF_COUNT_HW_BRANCH_MISSES;
+>   	fds[3] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
+>   	assert (fds[3] >= 0);
+>
+>   	attr.type = PERF_TYPE_HARDWARE;
+>   	attr.config = PERF_COUNT_HW_CACHE_REFERENCES;
+>   	fds[4] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
+>   	assert (fds[4] >= 0);
+>
+>   	printf ("PASSED\n");
+>
+>   	return 0;
+>   }
+>
+> Fixes: b37042b2bb7c ("LoongArch: Add perf events support")
+> Signed-off-by: Lisa Robinson <lisa@bytefly.space>
 > ---
-> V2: new patch
+>  arch/loongarch/kernel/perf_event.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
 >
->  arch/x86/events/intel/uncore.c           |  9 ++++++
->  arch/x86/events/intel/uncore.h           |  1 +
->  arch/x86/events/intel/uncore_discovery.h |  2 ++
->  arch/x86/events/intel/uncore_snb.c       | 40 ++++++++++++++++++++++++
->  4 files changed, 52 insertions(+)
->
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index 07a9a2826398..2607bf178658 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -1817,6 +1817,13 @@ static const struct uncore_plat_init ptl_uncore_init __initconst = {
->  	.domain[0].global_init = uncore_mmio_global_init,
->  };
+> diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
+> index 9d257c8519c9..82cc08c2b056 100644
+> --- a/arch/loongarch/kernel/perf_event.c
+> +++ b/arch/loongarch/kernel/perf_event.c
+> @@ -633,15 +633,24 @@ static int validate_group(struct perf_event *event)
 >  
-> +static const struct uncore_plat_init nvl_uncore_init __initconst = {
-> +	.cpu_init = nvl_uncore_cpu_init,
-> +	.mmio_init = ptl_uncore_mmio_init,
-> +	.domain[0].discovery_base = PACKAGE_UNCORE_DISCOVERY_MSR,
-> +	.domain[0].global_init = uncore_mmio_global_init,
-> +};
-> +
->  static const struct uncore_plat_init icx_uncore_init __initconst = {
->  	.cpu_init = icx_uncore_cpu_init,
->  	.pci_init = icx_uncore_pci_init,
-> @@ -1916,6 +1923,8 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
->  	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&lnl_uncore_init),
->  	X86_MATCH_VFM(INTEL_PANTHERLAKE_L,	&ptl_uncore_init),
->  	X86_MATCH_VFM(INTEL_WILDCATLAKE_L,	&ptl_uncore_init),
-> +	X86_MATCH_VFM(INTEL_NOVALAKE,		&nvl_uncore_init),
-> +	X86_MATCH_VFM(INTEL_NOVALAKE_L,		&nvl_uncore_init),
->  	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X,	&spr_uncore_init),
->  	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X,	&spr_uncore_init),
->  	X86_MATCH_VFM(INTEL_GRANITERAPIDS_X,	&gnr_uncore_init),
-> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-> index 564cb26c4468..c35918c01afa 100644
-> --- a/arch/x86/events/intel/uncore.h
-> +++ b/arch/x86/events/intel/uncore.h
-> @@ -636,6 +636,7 @@ void adl_uncore_cpu_init(void);
->  void lnl_uncore_cpu_init(void);
->  void mtl_uncore_cpu_init(void);
->  void ptl_uncore_cpu_init(void);
-> +void nvl_uncore_cpu_init(void);
->  void tgl_uncore_mmio_init(void);
->  void tgl_l_uncore_mmio_init(void);
->  void adl_uncore_mmio_init(void);
-> diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
-> index 63b8f7634e42..e1330342b92e 100644
-> --- a/arch/x86/events/intel/uncore_discovery.h
-> +++ b/arch/x86/events/intel/uncore_discovery.h
-> @@ -4,6 +4,8 @@
->  #define UNCORE_DISCOVERY_MSR			0x201e
->  /* Base address of uncore perfmon discovery table for CBB domain */
->  #define CBB_UNCORE_DISCOVERY_MSR		0x710
-> +/* Base address of uncore perfmon discovery table for the package */
-> +#define PACKAGE_UNCORE_DISCOVERY_MSR		0x711
+>  	memset(&fake_cpuc, 0, sizeof(fake_cpuc));
 >  
->  /* Generic device ID of a discovery table device */
->  #define UNCORE_DISCOVERY_TABLE_DEVICE		0x09a7
-> diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-> index c663b00b68fe..e8e44741200e 100644
-> --- a/arch/x86/events/intel/uncore_snb.c
-> +++ b/arch/x86/events/intel/uncore_snb.c
-> @@ -256,6 +256,19 @@
->  /* PTL cNCU register */
->  #define PTL_UNC_CNCU_MSR_OFFSET			0x140
->  
-> +/* NVL cNCU register */
-> +#define NVL_UNC_CNCU_BOX_CTL			0x202e
-> +#define NVL_UNC_CNCU_FIXED_CTR			0x2028
-> +#define NVL_UNC_CNCU_FIXED_CTRL			0x2022
-> +
-> +/* NVL SANTA register */
-> +#define NVL_UNC_SANTA_CTR0			0x2048
-> +#define NVL_UNC_SANTA_CTRL0			0x2042
-> +
-> +/* NVL CBOX register */
-> +#define NVL_UNC_CBOX_PER_CTR0			0x2108
-> +#define NVL_UNC_CBOX_PERFEVTSEL0		0x2102
-> +
->  DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
->  DEFINE_UNCORE_FORMAT_ATTR(umask, umask, "config:8-15");
->  DEFINE_UNCORE_FORMAT_ATTR(chmask, chmask, "config:8-11");
-> @@ -1979,3 +1992,30 @@ void ptl_uncore_cpu_init(void)
->  }
->  
->  /* end of Panther Lake uncore support */
-> +
-> +/* Nova Lake uncore support */
-> +
-> +static struct intel_uncore_type *nvl_msr_uncores[] = {
-> +	&mtl_uncore_cbox,
-> +	&ptl_uncore_santa,
-> +	&mtl_uncore_cncu,
-> +	NULL
-> +};
-> +
-> +void nvl_uncore_cpu_init(void)
-> +{
-> +	mtl_uncore_cbox.num_boxes = 12;
-> +	mtl_uncore_cbox.perf_ctr = NVL_UNC_CBOX_PER_CTR0,
-> +	mtl_uncore_cbox.event_ctl = NVL_UNC_CBOX_PERFEVTSEL0,
-> +
-> +	ptl_uncore_santa.perf_ctr = NVL_UNC_SANTA_CTR0,
-> +	ptl_uncore_santa.event_ctl = NVL_UNC_SANTA_CTRL0,
-> +
-> +	mtl_uncore_cncu.box_ctl = NVL_UNC_CNCU_BOX_CTL;
-> +	mtl_uncore_cncu.fixed_ctr = NVL_UNC_CNCU_FIXED_CTR;
-> +	mtl_uncore_cncu.fixed_ctl = NVL_UNC_CNCU_FIXED_CTRL;
-> +
-> +	uncore_msr_uncores = nvl_msr_uncores;
-> +}
-> +
-> +/* end of Nova Lake uncore support */
+> -	if (loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
+> +	if ((PERF_TYPE_HARDWARE == leader->attr.type ||
+> +	     PERF_TYPE_HW_CACHE == leader->attr.type ||
+> +	     PERF_TYPE_RAW == leader->attr.type) &&
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Better introduce an inline function to check these event types instead of
+duplicating same code.
 
 
+> +	    loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
+>  		return -EINVAL;
+>  
+>  	for_each_sibling_event(sibling, leader) {
+> -		if (loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
+> +		if ((PERF_TYPE_HARDWARE == sibling->attr.type ||
+> +		     PERF_TYPE_HW_CACHE == sibling->attr.type ||
+> +		     PERF_TYPE_RAW == sibling->attr.type) &&
+> +		    loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
+>  			return -EINVAL;
+>  	}
+>  
+> -	if (loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
+> +	if ((PERF_TYPE_HARDWARE == event->attr.type ||
+> +	     PERF_TYPE_HW_CACHE == event->attr.type ||
+> +	     PERF_TYPE_RAW == event->attr.type) &&
+> +	    loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
+>  		return -EINVAL;
+>  
+>  	return 0;
