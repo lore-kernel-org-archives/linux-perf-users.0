@@ -1,141 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B02302CDE;
-	Mon,  5 Jan 2026 15:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626E23358D1
+	for <linux-perf-users@vger.kernel.org>; Mon,  5 Jan 2026 16:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767628220; cv=none; b=sXqEXcmIvBhW8bJxGubS881QjBDM7zwQ8DdB0l25bpqlZ0paPcK4C7+oaF6x4pdig4kRfJPufwUFbYtJGFk/MI3U0Ockli41OYr8dwTp+nNy3IWQWg3wlvJ/UV2QZI3pTT+kfDbCvKwZpM+uKxXLGXAW+D2t3cteKFCvJaSnY4k=
+	t=1767630734; cv=none; b=ne1//T0vz3EwbCuC3m/buGbKatHAexLklCy2WHXns94IpetW2pDO7Wznz8f726H58aXJQYz1pxcjog/zBJqHYIWybr6YbDDDljIS7LEh9eB2E7+eYC+sThYiwqJ1bAy9xS2WwM4kaRI5oQl/u1Zup4oq21BkqgFfVJX48TTQ1o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767628220; c=relaxed/simple;
-	bh=PEBb9wQ9FhUg8cFiXLTuY3wqyM/GKiSBkUlFyaUf5rs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W3q0sbv0tVZLo3ySo9+N0I4L22Bzw88d/FWbIHZj/sZva8zu/Mju+xK3e26AhrDDrgSbU0YzoGcTaVYMq2DIAKZi8vYOyvQysRC9s9twn+FDC9bJDGgtYT7A1cpbI9G4/h68rMmcqtgndsdew59/7FOGWlA9n3780vAkzHP1Sxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R7Rn7+vz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767630734; c=relaxed/simple;
+	bh=72WxtAVZWVZaFoShtwS5ShIjKjBHOhhX3zWaleEeFc4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kfvwcHLusv6wDnmqyHx24qqi1XMUjH9M/vpSM/Kid+0MB6DIIsiOk8Rx90NxG3f4yMHe9YG4sciM0m/h440wqtcbADxucTvGJuhMT3PuhbJpm0uKAEHRv4mkfT7vafWx1fzqAAhhC7Cc6++jCGLbe9iLjSwxxKxGo1/z3F9YGKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PFN4Bvqa; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=tyBIXgb8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R7Rn7+vz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9452EC116D0;
-	Mon,  5 Jan 2026 15:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767628219;
-	bh=PEBb9wQ9FhUg8cFiXLTuY3wqyM/GKiSBkUlFyaUf5rs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R7Rn7+vzVt+oMNXnuQeC1RPbR4DEgVq4UZXIZLLRMMVTEPWCIie1N2Ldspnbr+gju
-	 8SJXafZVhZmrPl0AAdp17Mn7idzAsGfTbvnRDVmeY2mZm9xNoG9f5oq7em7UXTFxz+
-	 1bEXlsnZefiVDn08aUyOAmc1h0AxeoP6vsoFunY/eBYrBeIE8n00/M4s/0QKsxDfoP
-	 +k4hjUjjwaBMuxNUc+0cHN0wvZYi+Y+0fBXqMSjYB5yBIG8C+yOYqpYUa9uzCGCNhB
-	 wWMit6XKEV0GDryt+7Xza90EdUS68GMZ+yX600jHQv4wRbgVecbofsR7DawxNf5OPp
-	 WpSpZR3Or/kcg==
-Date: Mon, 5 Jan 2026 12:50:15 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Gary Guo <gary@garyguo.net>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2] perf symbol: remove Rust symbol workarounds
-Message-ID: <aVvdt90YmhJz3i5i@x1>
-References: <20260105150106.567830-1-gary@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PFN4Bvqa";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="tyBIXgb8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1767630730;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yWAk/D1swbf3R9JheCkOi2Y+A/7sdldSEEFWRTI7Edk=;
+	b=PFN4BvqamTqL8G+8T3vTzdchN0FRdJ5BRBcAA6ydqa8JsZ3P74z0wRm8mnowuMGh8lxV2H
+	BBppvp924TPtOifjpyL9thYDaT87OXBWtMj54oMmQPTY/sHN/TViVTsVN55RhRmpO7xNUY
+	kc+B5ZqtOztDYdNqExuxhvjxN5gthd8=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-92-J5cHsLyRP7ag-9kMsS9CWQ-1; Mon, 05 Jan 2026 11:32:09 -0500
+X-MC-Unique: J5cHsLyRP7ag-9kMsS9CWQ-1
+X-Mimecast-MFC-AGG-ID: J5cHsLyRP7ag-9kMsS9CWQ_1767630728
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-5942c1f786aso24979e87.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Jan 2026 08:32:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1767630727; x=1768235527; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yWAk/D1swbf3R9JheCkOi2Y+A/7sdldSEEFWRTI7Edk=;
+        b=tyBIXgb8iebhEwt4gkHyp6ZBT1+wOM1h85Eqd+/8U97m4mzEMpFCYLHYONA6g9zSBL
+         nbUeTRQzQ1Nfq8Oyvy4AmqZqXs+6BWklj+gF86c8mRJDJscsryMwANbJgVNkWs3Ff5Kk
+         OLwiU5WaXNJtypLgWp4Aeq8HBssjKiwrvM3Wpc2iMf79Akn8wx2MqCaN29yG2YMsy5hX
+         iEcdoteZvYUXWwGFsboJzORf4tX+Ud6wv7p6tLHEr8LmdfG7YKIELwvdPGdA7B5/bJGf
+         NcO04YLvu6EIlNnj7X28/IbxvmFR5zSXHP5sebKZTwG/UNEss//Mb4bQaRPD2N3z2CJj
+         xLFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767630727; x=1768235527;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yWAk/D1swbf3R9JheCkOi2Y+A/7sdldSEEFWRTI7Edk=;
+        b=rf4jqgOUBlxPb/Zd65L3NopjN3PHr/dZE0wb+IeTfjE5OZwtPVhsOQZAU5MLf2qRjN
+         wQPTDuhjc8H2wGhrPFW+4L6yKrYumXgCJWfv5CydcsHLDWmUk521WEa1Vrbf6QNuFFZI
+         59rM9xPe1hUCq4ybOK10tRgH+oREgjQp5ZhCb1oP+UfldjQyiyyR/EvY1qoA2TTgmF+z
+         fsi/yFGzSRsFm0A6e9k0Z2gHVXdgD6ihZceb/13t8hHfbq2zjhaNXshYHi72bkv0qqS4
+         nMjx9TQW+3PDOq2EVPEFuEe7o9Eq9sLIMLyC7igSVo5pfK5RT6oVAmnSzgFMJVTC0Oeg
+         WEnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUsiWozbHsmTWTEOYY+iTomiyGRsfyvoyXg2AXR1xt5Ll8P7iy/PyrEMMuttaCQF8A7gSeKg8wGQmfRBBpSjRR3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4/2ccqiPnBJoYwFfj2RJcQ0MkFOpevUR9sGUva9o6VOmWv0QE
+	+a2r36L6qSqbtygzUkEHHeyzlXBPPOBQ8B2GndbWDMM5fyhHfcmu5SHRx4h1jWZp5wwGFGuTGFm
+	gegRimiBxOeTD90hZKugktZS4Q7FZL7dq/yT+97Os3wRPf1LsdB4VUbB5Zaey3KqcJ7c/B0MSas
+	jijLj1yv1i+6PEolhD5g+XH1hZ0yNK4RBUWPR81tlWws6IMA==
+X-Gm-Gg: AY/fxX4T7VLrlsuW1jVMr3akwdYEzBVjQ8q1+Q7nddh6AqvqyKZhyY6y7lBMF+miRfS
+	8LFAsEhsyTtwDIwXvjrn6lQ0uOXV9KdEla5lP4wADJ7Kf1xSAPNRsPEUBYT0OxdXdawIR/0Sf0X
+	Jk22hRkm61ez0BWzNBOkqaQf+XVKiNqglqVwrFy0y3Hb0b3AdgiOu/+QSzhLRN6w957UgbnJmQx
+	VnMGRphw4Wfgjl7T5SgRLqqhkNb
+X-Received: by 2002:a05:6512:2350:b0:598:ee62:32de with SMTP id 2adb3069b0e04-59b65257e39mr117489e87.24.1767630726891;
+        Mon, 05 Jan 2026 08:32:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH0dl60w4m5VsAYidttfXbla+NufMq+G1L30F/ijcpCvejF/rWD72xkcJFb60dSmjonAQFtGqZG8c8VlfaMHiU=
+X-Received: by 2002:a05:6512:2350:b0:598:ee62:32de with SMTP id
+ 2adb3069b0e04-59b65257e39mr117453e87.24.1767630724945; Mon, 05 Jan 2026
+ 08:32:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260105150106.567830-1-gary@kernel.org>
+References: <20251216211541.111795-2-ashelat@redhat.com> <96a09496-f3df-415b-95d1-92ceda06dd03@linaro.org>
+In-Reply-To: <96a09496-f3df-415b-95d1-92ceda06dd03@linaro.org>
+From: Anubhav Shelat <ashelat@redhat.com>
+Date: Mon, 5 Jan 2026 11:31:53 -0500
+X-Gm-Features: AQt7F2pGSYg2YmqSHAAozDOVZexDygzuwwpZ1YHOJORLgQtVpgkFQrMWGebDkng
+Message-ID: <CA+G8DhJPyXaqUz2Rz6FzmQm=GgqFSUiqei2eJa+m1+H+5_vCSw@mail.gmail.com>
+Subject: Re: [PATCH] arch/powerpc/perf: Fix perf record -d sample loss on
+ non-marked events
+To: James Clark <james.clark@linaro.org>
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, dapeng1.mi@linux.intel.com, mpetlan@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, irogers@google.com, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 05, 2026 at 03:00:57PM +0000, Gary Guo wrote:
-> From: Gary Guo <gary@garyguo.net>
-> 
-> Due to an off-by-one error introduced in commit 73bbb94466fd ("kallsyms:
-> support "big" kernel symbols"), long symbols (which are currently only
-> produced by Rust) can have their symbol type being wrongly parsed by
-> kernel/kallsyms.c.
+ping
 
-Looks sane, applied to perf-tools-next,
+On Wed, Dec 17, 2025 at 7:34=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+>
+>
+> On 16/12/2025 23:15, Anubhav Shelat wrote:
+> > Previously, when running "perf record -d" on powerpc, perf would drop a=
+ll
+> > samples that were not load or store instructions. This is because of an
+> > overly aggressive check introduced in 2ffb26afa642 ("arch/powerpc/perf:
+> > Check the instruction type before creating sample with perf_mem_data_sr=
+c")
+> > which drops samples when the SIER instruction value is considered
+> > reserved (0 or 7 in ISA 3.0, and 0 in ISA 3.1).
+> >
+> > This happens because
+> > 1) "perf record -d" sets PERF_SAMPLE_DATA_SRC for general sampling.
+> > 2) When sampling non-memory instructions, the SIER instruction type is =
+0.
+> > 3) record_and_restart drops anything with SIER instruction type 0.
+> >
+> > "perf mem record" uses marked events by setting MMCRA_SAMPLE_ENABLE
+> > which samples load/store instructions, so a sample with SIER instructio=
+n
+> > type of 0 would be an anomaly and should be dropped. So fix this issue =
+by
+> > loosening the check to only include marked events. For non-marked
+> > events, the sample is kept and isa207_get_mem_data_src initializes
+> > data_src to 0, preserving the original fix in 2ffb26afa642.
+> >
+> > Fixes: 2ffb26afa642 ("arch/powerpc/perf: Check the instruction type
+> > before creating sample with perf_mem_data_src")
+> >
+> > Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+> > ---
+> >   arch/powerpc/perf/core-book3s.c | 5 +++--
+> >   1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-b=
+ook3s.c
+> > index 8b0081441f85..bd44b83db9ec 100644
+> > --- a/arch/powerpc/perf/core-book3s.c
+> > +++ b/arch/powerpc/perf/core-book3s.c
+> > @@ -2304,10 +2304,11 @@ static void record_and_restart(struct perf_even=
+t *event, unsigned long val,
+> >        * In ISA v3.0 and before values "0" and "7" are considered reser=
+ved.
+> >        * In ISA v3.1, value "7" has been used to indicate "larx/stcx".
+> >        * Drop the sample if "type" has reserved values for this field w=
+ith a
+> > -      * ISA version check.
+> > +      * ISA version check for marked events.
+> >        */
+> >       if (event->attr.sample_type & PERF_SAMPLE_DATA_SRC &&
+> > -                     ppmu->get_mem_data_src) {
+> > +                     ppmu->get_mem_data_src &&
+> > +                     (regs->dsisr & MMCRA_SAMPLE_ENABLE)) {
+> >               val =3D (regs->dar & SIER_TYPE_MASK) >> SIER_TYPE_SHIFT;
+> >               if (val =3D=3D 0 || (val =3D=3D 7 && !cpu_has_feature(CPU=
+_FTR_ARCH_31))) {
+> >                       record =3D 0;
+>
+> Reviewed-by: James Clark <james.clark@linaro.org>
+>
 
-- Arnaldo
- 
-> This has been fixed in commit f3f9f42232dee5 ("kallsyms: Fix wrong "big"
-> kernel symbol type read from procfs"), and these symbols are now
-> reported correctly.
-> 
-> Drop the workaround in perf symbol that filter out these symbol types.
-> 
-> Specifically, '1' and 'l' can never be generated by nm -- 'u' does
-> indicate GNU unique, however such symbols are only generated by G++ for
-> C++ templates, and are never generated by LLVM (LLVM generates weak
-> symbols in such cases instead). 'N' can appear if symbols exist inside
-> debug sections, and 'n' may appear for symbols inside note sections,
-> however these sections do not typically have symbol (and they're
-> explicitly filtered out by kallsyms).
-> 
-> Therefore, the previous occurrence of these symbols types must be due to
-> the off-by-one error and can be safely removed.
-> 
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Acked-by: Miguel Ojeda <ojeda@kernel.org>
-> Signed-off-by: Gary Guo <gary@garyguo.net>
-> ---
-> v2:
-> - Removed the "__" change as suggested by Miguel
-> - Expanded the commit message to mention why "N" and "n" cannot appear
-> - Link to v1: https://lore.kernel.org/rust-for-linux/20251223175216.1353814-1-gary@kernel.org/#t
-> ---
->  tools/perf/util/symbol.c | 19 ++++---------------
->  1 file changed, 4 insertions(+), 15 deletions(-)
-> 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 814f960fa8f8d..8662001e1e25b 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -104,21 +104,10 @@ static enum dso_binary_type binary_type_symtab[] = {
->  
->  #define DSO_BINARY_TYPE__SYMTAB_CNT ARRAY_SIZE(binary_type_symtab)
->  
-> -static bool symbol_type__filter(char __symbol_type)
-> -{
-> -	// Since 'U' == undefined and 'u' == unique global symbol, we can't use toupper there
-> -	// 'N' is for debugging symbols, 'n' is a non-data, non-code, non-debug read-only section.
-> -	// According to 'man nm'.
-> -	// 'N' first seen in:
-> -	// ffffffff9b35d130 N __pfx__RNCINvNtNtNtCsbDUBuN8AbD4_4core4iter8adapters3map12map_try_foldjNtCs6vVzKs5jPr6_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-> -	// a seemingly Rust mangled name
-> -	// Ditto for '1':
-> -	// root@x1:~# grep ' 1 ' /proc/kallsyms
-> -	// ffffffffb098bc00 1 __pfx__RNCINvNtNtNtCsfwaGRd4cjqE_4core4iter8adapters3map12map_try_foldjNtCskFudTml27HW_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-> -	// ffffffffb098bc10 1 _RNCINvNtNtNtCsfwaGRd4cjqE_4core4iter8adapters3map12map_try_foldjNtCskFudTml27HW_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-> -	char symbol_type = toupper(__symbol_type);
-> -	return symbol_type == 'T' || symbol_type == 'W' || symbol_type == 'D' || symbol_type == 'B' ||
-> -	       __symbol_type == 'u' || __symbol_type == 'l' || __symbol_type == 'N' || __symbol_type == '1';
-> +static bool symbol_type__filter(char symbol_type)
-> +{
-> +	symbol_type = toupper(symbol_type);
-> +	return symbol_type == 'T' || symbol_type == 'W' || symbol_type == 'D' || symbol_type == 'B';
->  }
->  
->  static int prefix_underscores_count(const char *str)
-> 
-> base-commit: 3609fa95fb0f2c1b099e69e56634edb8fc03f87c
-> -- 
-> 2.51.2
