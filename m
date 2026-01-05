@@ -1,157 +1,297 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE17732E721
-	for <linux-perf-users@vger.kernel.org>; Mon,  5 Jan 2026 16:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1A4532F77B;
+	Mon,  5 Jan 2026 17:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767632080; cv=none; b=VKjRcCRwu2kWpbBvlPTIVhtxeBNbIBC1sTwPsVpy7cHLE6qMVLSDpDvMcj1NdDi4aoQd7OxR6MqhU0chgtG7f6dcxG39472rhvVbqe9irSRLrQxUm0h4YpQxtFdtXOOELWiUNAO1ll7QmoKHLi8Jaevb0FjBbd2k6UQW/AqkPtw=
+	t=1767635370; cv=none; b=ZoyA3KCq0Oy8UWICABOKDbrIsN1O13VUjv2YJM1OxcpBTTSvKErl8AejDSndqQ4+tEkEKZfBoK4B28I1axCObznREiR6F8H9y8TuTthnJ6S78ChJgbWXM2I/w/aad/DATBjpydyM3zwFHO5TcVaGl5t4VRrWXZE0R3xaV7mUtt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767632080; c=relaxed/simple;
-	bh=5iUtKS7P1pExvt8SVQ6tSMP5tPKNfrWuy2K8oV7wXEs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oIRqAnyAPr8T5bOxXV+e20o7SbBFQk/3CoM5AKWkkM/XNTQFnY8uxVV1MS1vKZTmNQQJi9ZusJvdrKJJKZykwd2hfUbv8piIBnDI5EYlcAEAt7il93wpo3t159peT7siQR0uspm9ZHpSBnuBdlTKpV0vAa5EMbyeJ2PqzGhO9V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu; spf=pass smtp.mailfrom=asu.edu; dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b=SPv8LruV; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asu.edu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b="SPv8LruV"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-c13771b2cf9so54023a12.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Jan 2026 08:54:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=asu.edu; s=google; t=1767632077; x=1768236877; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1HkuA2Iz0l5KGRSo9OokGCp9vOWImrmU4vjQF4nroIo=;
-        b=SPv8LruVrnneTHcFCrayi9JzrpXHUGvDanw3iWZnYLIs+xcnsTFQVfQyZ6E9XXmKj2
-         Ag5wkXCqpcRu5rd/TuYE39bRgZGuMtts/zwZCsfBrJhtCqDtMsMB3Jpr0SD6ogLsGFc8
-         svKy9XK996i/fJUzWWrIs/HB09ynrJYB+Z/9kaDuXJu98cYGguXZmt8Pw9hNnAtsVyTU
-         porHmGtKPmILCBxzwa5cnz4lcvlq5nOKmy5LvBKBJyE1lHSmM4Mv3OLzdJs8v6Mp8m8N
-         4JI41ycH4zwQmrU5NtdfwMjFZDcei6FEAA2VubOrdJ3lYH5Q9quCvKimVFR3516x7YGg
-         glow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767632077; x=1768236877;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1HkuA2Iz0l5KGRSo9OokGCp9vOWImrmU4vjQF4nroIo=;
-        b=RArb0GXkuo4KpouLlpmR/yFcptzNxFy+7zv97PfrsANlcLl0rt/25puxSLD4EI2ZIf
-         ZAy8J83x/KzMFq/WpIMVSNMdnuDUq1jbnlD1NT8cQ+imQ32BSfN3qR8k+qWZYRhgts5/
-         7qUl9gGUFaZ1aDhmRxVuDMdbml41HPLtd7kv+pn2P/S0LvwLrlG0qo6x1faQS1RTeHFv
-         GZESjA7cRZ1VUBfA/cHI0DclByqUHZLn0gfDy0/vr2gwb+yYwMAnuJKI8OUW/nCyPATC
-         fSoBcuB9DT/eErpmrthdFkHs7NLAgQ/Z5pOVzyGGn0cCjzl7oZyjoRHdb/5a5ctDNmmI
-         Bbeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOra/8+Nk1z0OXUoIVuKnHxxM5V3aPRTUBFuiImH9tb73X9QHIj0jNj4n7DMSD5+8HVVx5xTlvzGRiPLQh1/yN@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHW7gVHj5ftQKvkyaijDqEl33OqCQ7auC4yQma/t9EsJw2g2ny
-	EXy0kaZ6Q5j2b6055HVPPCbo9fONN/V2285B7P1QiJdSv75oqAqM8x3ZwSWep+wCVw==
-X-Gm-Gg: AY/fxX6YmKAh3HudLeJQAFHHDoayCy/x5rgAsRiYNw7FRdTvK8RBUim1Q0JMT6Ec9Sq
-	eNjxN9A7F3KqJVLMpyYVSsptbk2PBnVNpsnQTgJPWqQxkM2/ko1KglKj6D9A2VlyzCoCydH2LUM
-	eU+cqfnoe2vH0zFh9A1x1HKY04J6V9dT/YPVY62r+2FRCK8ZZeZ4SWx+Qk0uNJPf2Y51EL+LS7J
-	qCv3BS9K67Rdl6uwHrEGJ3xETaNLLFzA+W7SXyqW8iRey6yvmMOujdhSRasWcD5dMD1MPSd+jyL
-	dtTfh+7LAR5OeXoCtZvYTI1kcAhMi+GoicuStHw1PtTp/DG9ZjWnJHtgixmOUSy2sM8FVhsJ+DJ
-	sTLRpF4vF+F/9EIiubW6kTSf8tzdVAdN8S1LWPKKkeL5/SlkPXlURVwXiG0cuQEIyi+K19momoB
-	CAaGGOTjHCBS4MOmggu7n4GoBzrc+4j79yngDfbXocTzslGGHMBSXs0DwXt1M=
-X-Google-Smtp-Source: AGHT+IFhB2kovOaap16+/Ow4rTNM6cvVOkquC68OhGTB9bnFJnOnmXwCYaO6a2DzTDUQ/l5gYCr/2g==
-X-Received: by 2002:a05:7300:f81a:b0:2b0:4e86:815a with SMTP id 5a478bee46e88-2b05ec347fcmr27023919eec.27.1767632076901;
-        Mon, 05 Jan 2026 08:54:36 -0800 (PST)
-Received: from localhost.localdomain (ip72-200-102-19.tc.ph.cox.net. [72.200.102.19])
-        by smtp.googlemail.com with ESMTPSA id 5a478bee46e88-2b16f18e0f2sm213853eec.12.2026.01.05.08.54.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jan 2026 08:54:36 -0800 (PST)
-From: Will Rosenberg <whrosenb@asu.edu>
-To: 
-Cc: yi1.lai@linux.intel.com,
-	Will Rosenberg <whrosenb@asu.edu>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
-Subject: [PATCH v2] perf: Fix refcount warning on event->mmap_count increment
-Date: Mon,  5 Jan 2026 09:51:49 -0700
-Message-Id: <20260105165149.30200-1-whrosenb@asu.edu>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <aVt6tqOp+fGnFuBb@ly-workstation>
-References: <aVt6tqOp+fGnFuBb@ly-workstation>
+	s=arc-20240116; t=1767635370; c=relaxed/simple;
+	bh=LHhp0BPM0+l9H2W7V25rYnLvMmxm19SEfo+ha/WF/sE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GUGpVIRku1u/fk4uWO6e9TshXTlBGQzUf8+4jPRlvD7SbSzZu2lLNitqf6mfqG0bpiVX4Vyt6oPU0c0rbjiRWxHPJVuFhPCBji4bYAHGOI5tCxViATo+jh7/Crc64PWXZ7EoabMz0QyM3Eij5xezFcnajVlRZVjjRdC1LAim930=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 706F9339;
+	Mon,  5 Jan 2026 09:49:20 -0800 (PST)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 926AF3F5A1;
+	Mon,  5 Jan 2026 09:49:24 -0800 (PST)
+Date: Mon, 5 Jan 2026 17:49:18 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: bpf@vger.kernel.org, Puranjay Mohan <puranjay12@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Rob Herring <robh@kernel.org>, Breno Leitao <leitao@debian.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [RFC PATCH] perf/arm64: Add BRBE support for
+ bpf_get_branch_snapshot()
+Message-ID: <aVv5nq5QTVDOz1Zk@J2N7QTR9R3>
+References: <20260102214043.1410242-1-puranjay@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260102214043.1410242-1-puranjay@kernel.org>
 
-When calling refcount_inc(&event->mmap_count) inside perf_mmap_rb(), the
-following warning is triggered:
+Hi Puranjay,
 
-	refcount_t: addition on 0; use-after-free.
-	WARNING: lib/refcount.c:25
+I have a number of techincal concerns with this, noted below. At a high
+level, I don't think this makes sense without a better description of
+the usage, and I suspect we'd need changes to bpf_get_branch_snapshot()
+to be able to implement something useful.
 
-PoC:
+On Fri, Jan 02, 2026 at 01:40:41PM -0800, Puranjay Mohan wrote:
+> Enable the bpf_get_branch_snapshot() BPF helper on ARM64 by implementing
+> the perf_snapshot_branch_stack static call for ARM's Branch Record
+> Buffer Extension (BRBE).
+> 
+> The BPF helper bpf_get_branch_snapshot() allows BPF programs to capture
+> hardware branch records on-demand. This was previously only available on
+> x86 (Intel LBR, AMD BRS) but not on ARM64 despite BRBE being available
+> since ARMv9.
 
-    struct perf_event_attr attr = {0};
-    int fd = syscall(__NR_perf_event_open, &attr, 0, -1, -1, 0);
-    mmap(NULL, 0x3000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    int victim = syscall(__NR_perf_event_open, &attr, 0, -1, fd,
-                         PERF_FLAG_FD_OUTPUT);
-    mmap(NULL, 0x3000, PROT_READ | PROT_WRITE, MAP_SHARED, victim, 0);
+When exactly can bpf_get_branch_snapshot() be called?
 
-This occurs when creating a group member event with the flag
-PERF_FLAG_FD_OUTPUT. The group leader should be mmap-ed and then mmap-ing
-the event triggers the warning.
+How is it expected to be used?
 
-Since the event has copied the output_event in perf_event_set_output(),
-event->rb is set. As a result, perf_mmap_rb() calls
-refcount_inc(&event->mmap_count) when event->mmap_count = 0.
+The driver is written on the expectation that BRBE records are only read
+in the PMUv3 overflow handler.
 
-Account for the case when event->mmap_count = 0. This patch goes against
-the design philosophy of the refcount library by re-enabling an empty
-refcount, but the patch remains inline with the current treatment of
-mmap_count.
+> This implementation:
+> 
+> - Follows the x86 snapshot pattern (intel_pmu_snapshot_branch_stack)
+> - Performs atomic snapshot by pausing BRBE, reading records, and
+>   restoring previous state without disrupting ongoing perf events
 
-Fixes: 448f97fba901 ("perf: Convert mmap() refcounts to refcount_t")
-Signed-off-by: Will Rosenberg <whrosenb@asu.edu>
----
+If BRBE is stopped, then we lost contiguity of branch records (e.g. for
+a series of branches A->B->C->D->E, we could record A->B->D->E). The
+driver is intended to ensure contiguity of those records, and if that's
+lost, we deliberately discard. That's why brbe_enable() calls
+brbe_invalidate().
 
-Notes:
-    v1 -> v2: Add Fixes tag
-    
-    I also have a related concern about code that handles the mmap_count.
-    In perf_mmap_close(), if refcount_dec_and_mutex_lock() decrements
-    event->mmap_count to zero, then event->rb is set to NULL. This
-    effectively undos our ring buffer copy. However, is this desired
-    behavior? Should event->rb remain unchanged since it may still be
-    mmap-ed by other events and can still be used?
+Restarting BRBE without discarding will produce bogus data for other
+consumers. If BRBE is stopped, we *must* discard.
 
- kernel/events/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> - Reads branch records directly from BRBE registers without
+>   event-specific filtering to minimize branch pollution
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 376fb07d869b..49709b627b1f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7279,7 +7279,8 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
- 			 * multiple times.
- 			 */
- 			perf_mmap_account(vma, user_extra, extra);
--			refcount_inc(&event->mmap_count);
-+			if (!refcount_inc_not_zero(&event->mmap_count))
-+				refcount_set(&event->mmap_count, 1);
- 			return 0;
- 		}
- 
+If BRBE is paused, there's no polution, so this rationale doesn't make
+sense to me.
 
-base-commit: 538254cd98afb31b09c4cc58219217d8127c79be
--- 
-2.34.1
+BRBE can be configured with various filters (specific to the event),
+multiple events with distinct filters can be active simultaneously, and
+if no branch-sampling events are active, BRBE won't record anything. I
+do not think it makes sense to record whatever happens to be present,
+without filtering. Regardless, BRBE won't be recording if you don't have
+events. so this doesn't seem to make sense.
 
+> - Handles all BRBE record types (complete, source-only, target-only)
+> - Complies with ARM ARM synchronization requirements (ISB barriers per
+>   rule PPBZP)
+> - Reuses existing BRBE infrastructure (select_brbe_bank,
+>   __read_brbe_regset, brbe_set_perf_entry_type, etc.)
+
+This duplicates other code (e.g. the body of
+brbe_read_filtered_entries()), and I don't think this is justified.
+
+> 
+> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> ---
+> 
+> This patch is only compile tested as I don't have access to hardware with BRBE.
+> 
+> ---
+>  drivers/perf/arm_brbe.c  | 95 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/perf/arm_brbe.h  |  9 ++++
+>  drivers/perf/arm_pmuv3.c |  5 ++-
+>  3 files changed, 108 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
+> index ba554e0c846c..cda7bf522c06 100644
+> --- a/drivers/perf/arm_brbe.c
+> +++ b/drivers/perf/arm_brbe.c
+> @@ -803,3 +803,98 @@ void brbe_read_filtered_entries(struct perf_branch_stack *branch_stack,
+>  done:
+>  	branch_stack->nr = nr_filtered;
+>  }
+> +
+> +/*
+> + * ARM-specific callback invoked through perf_snapshot_branch_stack static
+> + * call, defined in include/linux/perf_event.h. See its definition for API
+> + * details. It's up to caller to provide enough space in *entries* to fit all
+> + * branch records, otherwise returned result will be truncated to *cnt* entries.
+> + *
+> + * This is similar to brbe_read_filtered_entries but optimized for snapshot mode:
+> + * - No filtering based on event attributes (captures everything)
+> + * - Minimal branches to avoid polluting the branch buffer
+> + * - Direct register reads without event-specific processing
+> + */
+
+As above I don't think these differences are necessary nor do I think we
+should be duplicating this.
+
+> +int arm_brbe_snapshot_branch_stack(struct perf_branch_entry *entries, unsigned int cnt)
+> +{
+> +	unsigned long flags;
+> +	int nr_hw, nr_banks, nr_copied = 0;
+> +	u64 brbidr, brbfcr, brbcr;
+> +
+> +	/*
+> +	 * The sequence of steps to freeze BRBE should be completely inlined
+> +	 * and contain no branches to minimize contamination of branch snapshot.
+> +	 */
+> +	local_irq_save(flags);
+
+The PMU overflow interrupt can be delivered as a pNMI, so this can race
+with that. Disabling interrupts is not sufficient.
+
+If this is only called within a perf event overflow handler, then we
+already have the necessary serialization.
+
+> +
+> +	/* Save current BRBE configuration */
+> +	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+> +	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
+> +
+> +	/* Pause BRBE to freeze the buffer */
+> +	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+> +	isb();
+> +
+> +	/* Read BRBIDR to determine number of records */
+> +	brbidr = read_sysreg_s(SYS_BRBIDR0_EL1);
+> +	if (!valid_brbidr(brbidr))
+> +		goto out_restore;
+> +
+> +	nr_hw = FIELD_GET(BRBIDR0_EL1_NUMREC_MASK, brbidr);
+> +	nr_banks = DIV_ROUND_UP(nr_hw, BRBE_BANK_MAX_ENTRIES);
+> +
+> +	/* Read branch records from BRBE banks */
+> +	for (int bank = 0; bank < nr_banks; bank++) {
+> +		int nr_remaining = nr_hw - (bank * BRBE_BANK_MAX_ENTRIES);
+> +		int nr_this_bank = min(nr_remaining, BRBE_BANK_MAX_ENTRIES);
+> +
+> +		select_brbe_bank(bank);
+> +
+> +		for (int i = 0; i < nr_this_bank; i++) {
+> +			struct brbe_regset bregs;
+> +			struct perf_branch_entry *entry;
+> +
+> +			if (nr_copied >= cnt)
+> +				goto out_restore;
+> +
+> +			if (!__read_brbe_regset(&bregs, i))
+> +				goto out_restore;
+> +
+> +			entry = &entries[nr_copied];
+> +			perf_clear_branch_entry_bitfields(entry);
+> +
+> +			/* Simple conversion without filtering */
+> +			if (brbe_record_is_complete(bregs.brbinf)) {
+> +				entry->from = bregs.brbsrc;
+> +				entry->to = bregs.brbtgt;
+> +			} else if (brbe_record_is_source_only(bregs.brbinf)) {
+> +				entry->from = bregs.brbsrc;
+> +				entry->to = 0;
+> +			} else if (brbe_record_is_target_only(bregs.brbinf)) {
+> +				entry->from = 0;
+> +				entry->to = bregs.brbtgt;
+> +			}
+> +
+> +			brbe_set_perf_entry_type(entry, bregs.brbinf);
+> +			entry->cycles = brbinf_get_cycles(bregs.brbinf);
+> +
+> +			if (!brbe_record_is_target_only(bregs.brbinf)) {
+> +				entry->mispred = brbinf_get_mispredict(bregs.brbinf);
+> +				entry->predicted = !entry->mispred;
+> +			}
+> +
+> +			if (!brbe_record_is_source_only(bregs.brbinf))
+> +				entry->priv = brbinf_get_perf_priv(bregs.brbinf);
+> +
+> +			nr_copied++;
+> +		}
+> +	}
+> +
+> +out_restore:
+> +	/* Restore BRBE to its previous state */
+> +	write_sysreg_s(brbcr, SYS_BRBCR_EL1);
+> +	isb();
+> +	write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
+> +	local_irq_restore(flags);
+> +	return nr_copied;
+> +}
+
+As above, this is duplicating a lot of logic we already have. If we
+really need this function, we should be sharing much more logic with
+brbe_read_filtered_entries(), if not using that directly.
+
+Mark.
+
+> diff --git a/drivers/perf/arm_brbe.h b/drivers/perf/arm_brbe.h
+> index b7c7d8796c86..c2a1824437fb 100644
+> --- a/drivers/perf/arm_brbe.h
+> +++ b/drivers/perf/arm_brbe.h
+> @@ -10,6 +10,7 @@
+>  struct arm_pmu;
+>  struct perf_branch_stack;
+>  struct perf_event;
+> +struct perf_branch_entry;
+>  
+>  #ifdef CONFIG_ARM64_BRBE
+>  void brbe_probe(struct arm_pmu *arm_pmu);
+> @@ -22,6 +23,8 @@ void brbe_disable(void);
+>  bool brbe_branch_attr_valid(struct perf_event *event);
+>  void brbe_read_filtered_entries(struct perf_branch_stack *branch_stack,
+>  				const struct perf_event *event);
+> +int arm_brbe_snapshot_branch_stack(struct perf_branch_entry *entries,
+> +				   unsigned int cnt);
+>  #else
+>  static inline void brbe_probe(struct arm_pmu *arm_pmu) { }
+>  static inline unsigned int brbe_num_branch_records(const struct arm_pmu *armpmu)
+> @@ -44,4 +47,10 @@ static void brbe_read_filtered_entries(struct perf_branch_stack *branch_stack,
+>  				       const struct perf_event *event)
+>  {
+>  }
+> +
+> +static inline int arm_brbe_snapshot_branch_stack(struct perf_branch_entry *entries,
+> +						 unsigned int cnt)
+> +{
+> +	return 0;
+> +}
+>  #endif
+> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+> index 8014ff766cff..1a9f129a0f94 100644
+> --- a/drivers/perf/arm_pmuv3.c
+> +++ b/drivers/perf/arm_pmuv3.c
+> @@ -1449,8 +1449,11 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
+>  	cpu_pmu->set_event_filter	= armv8pmu_set_event_filter;
+>  
+>  	cpu_pmu->pmu.event_idx		= armv8pmu_user_event_idx;
+> -	if (brbe_num_branch_records(cpu_pmu))
+> +	if (brbe_num_branch_records(cpu_pmu)) {
+>  		cpu_pmu->pmu.sched_task		= armv8pmu_sched_task;
+> +		static_call_update(perf_snapshot_branch_stack,
+> +				   arm_brbe_snapshot_branch_stack);
+> +	}
+>  
+>  	cpu_pmu->name			= name;
+>  	cpu_pmu->map_event		= map_event;
+> 
+> base-commit: c286e7e9d1f1f3d90ad11c37e896f582b02d19c4
+> -- 
+> 2.47.3
+> 
