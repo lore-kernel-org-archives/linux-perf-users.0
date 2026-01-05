@@ -1,166 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626E23358D1
-	for <linux-perf-users@vger.kernel.org>; Mon,  5 Jan 2026 16:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE17732E721
+	for <linux-perf-users@vger.kernel.org>; Mon,  5 Jan 2026 16:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767630734; cv=none; b=ne1//T0vz3EwbCuC3m/buGbKatHAexLklCy2WHXns94IpetW2pDO7Wznz8f726H58aXJQYz1pxcjog/zBJqHYIWybr6YbDDDljIS7LEh9eB2E7+eYC+sThYiwqJ1bAy9xS2WwM4kaRI5oQl/u1Zup4oq21BkqgFfVJX48TTQ1o0=
+	t=1767632080; cv=none; b=VKjRcCRwu2kWpbBvlPTIVhtxeBNbIBC1sTwPsVpy7cHLE6qMVLSDpDvMcj1NdDi4aoQd7OxR6MqhU0chgtG7f6dcxG39472rhvVbqe9irSRLrQxUm0h4YpQxtFdtXOOELWiUNAO1ll7QmoKHLi8Jaevb0FjBbd2k6UQW/AqkPtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767630734; c=relaxed/simple;
-	bh=72WxtAVZWVZaFoShtwS5ShIjKjBHOhhX3zWaleEeFc4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kfvwcHLusv6wDnmqyHx24qqi1XMUjH9M/vpSM/Kid+0MB6DIIsiOk8Rx90NxG3f4yMHe9YG4sciM0m/h440wqtcbADxucTvGJuhMT3PuhbJpm0uKAEHRv4mkfT7vafWx1fzqAAhhC7Cc6++jCGLbe9iLjSwxxKxGo1/z3F9YGKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PFN4Bvqa; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=tyBIXgb8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1767632080; c=relaxed/simple;
+	bh=5iUtKS7P1pExvt8SVQ6tSMP5tPKNfrWuy2K8oV7wXEs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oIRqAnyAPr8T5bOxXV+e20o7SbBFQk/3CoM5AKWkkM/XNTQFnY8uxVV1MS1vKZTmNQQJi9ZusJvdrKJJKZykwd2hfUbv8piIBnDI5EYlcAEAt7il93wpo3t159peT7siQR0uspm9ZHpSBnuBdlTKpV0vAa5EMbyeJ2PqzGhO9V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu; spf=pass smtp.mailfrom=asu.edu; dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b=SPv8LruV; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PFN4Bvqa";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="tyBIXgb8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767630730;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yWAk/D1swbf3R9JheCkOi2Y+A/7sdldSEEFWRTI7Edk=;
-	b=PFN4BvqamTqL8G+8T3vTzdchN0FRdJ5BRBcAA6ydqa8JsZ3P74z0wRm8mnowuMGh8lxV2H
-	BBppvp924TPtOifjpyL9thYDaT87OXBWtMj54oMmQPTY/sHN/TViVTsVN55RhRmpO7xNUY
-	kc+B5ZqtOztDYdNqExuxhvjxN5gthd8=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-92-J5cHsLyRP7ag-9kMsS9CWQ-1; Mon, 05 Jan 2026 11:32:09 -0500
-X-MC-Unique: J5cHsLyRP7ag-9kMsS9CWQ-1
-X-Mimecast-MFC-AGG-ID: J5cHsLyRP7ag-9kMsS9CWQ_1767630728
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-5942c1f786aso24979e87.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Jan 2026 08:32:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b="SPv8LruV"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-c13771b2cf9so54023a12.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Jan 2026 08:54:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1767630727; x=1768235527; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=asu.edu; s=google; t=1767632077; x=1768236877; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yWAk/D1swbf3R9JheCkOi2Y+A/7sdldSEEFWRTI7Edk=;
-        b=tyBIXgb8iebhEwt4gkHyp6ZBT1+wOM1h85Eqd+/8U97m4mzEMpFCYLHYONA6g9zSBL
-         nbUeTRQzQ1Nfq8Oyvy4AmqZqXs+6BWklj+gF86c8mRJDJscsryMwANbJgVNkWs3Ff5Kk
-         OLwiU5WaXNJtypLgWp4Aeq8HBssjKiwrvM3Wpc2iMf79Akn8wx2MqCaN29yG2YMsy5hX
-         iEcdoteZvYUXWwGFsboJzORf4tX+Ud6wv7p6tLHEr8LmdfG7YKIELwvdPGdA7B5/bJGf
-         NcO04YLvu6EIlNnj7X28/IbxvmFR5zSXHP5sebKZTwG/UNEss//Mb4bQaRPD2N3z2CJj
-         xLFA==
+        bh=1HkuA2Iz0l5KGRSo9OokGCp9vOWImrmU4vjQF4nroIo=;
+        b=SPv8LruVrnneTHcFCrayi9JzrpXHUGvDanw3iWZnYLIs+xcnsTFQVfQyZ6E9XXmKj2
+         Ag5wkXCqpcRu5rd/TuYE39bRgZGuMtts/zwZCsfBrJhtCqDtMsMB3Jpr0SD6ogLsGFc8
+         svKy9XK996i/fJUzWWrIs/HB09ynrJYB+Z/9kaDuXJu98cYGguXZmt8Pw9hNnAtsVyTU
+         porHmGtKPmILCBxzwa5cnz4lcvlq5nOKmy5LvBKBJyE1lHSmM4Mv3OLzdJs8v6Mp8m8N
+         4JI41ycH4zwQmrU5NtdfwMjFZDcei6FEAA2VubOrdJ3lYH5Q9quCvKimVFR3516x7YGg
+         glow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767630727; x=1768235527;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20230601; t=1767632077; x=1768236877;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=yWAk/D1swbf3R9JheCkOi2Y+A/7sdldSEEFWRTI7Edk=;
-        b=rf4jqgOUBlxPb/Zd65L3NopjN3PHr/dZE0wb+IeTfjE5OZwtPVhsOQZAU5MLf2qRjN
-         wQPTDuhjc8H2wGhrPFW+4L6yKrYumXgCJWfv5CydcsHLDWmUk521WEa1Vrbf6QNuFFZI
-         59rM9xPe1hUCq4ybOK10tRgH+oREgjQp5ZhCb1oP+UfldjQyiyyR/EvY1qoA2TTgmF+z
-         fsi/yFGzSRsFm0A6e9k0Z2gHVXdgD6ihZceb/13t8hHfbq2zjhaNXshYHi72bkv0qqS4
-         nMjx9TQW+3PDOq2EVPEFuEe7o9Eq9sLIMLyC7igSVo5pfK5RT6oVAmnSzgFMJVTC0Oeg
-         WEnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsiWozbHsmTWTEOYY+iTomiyGRsfyvoyXg2AXR1xt5Ll8P7iy/PyrEMMuttaCQF8A7gSeKg8wGQmfRBBpSjRR3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4/2ccqiPnBJoYwFfj2RJcQ0MkFOpevUR9sGUva9o6VOmWv0QE
-	+a2r36L6qSqbtygzUkEHHeyzlXBPPOBQ8B2GndbWDMM5fyhHfcmu5SHRx4h1jWZp5wwGFGuTGFm
-	gegRimiBxOeTD90hZKugktZS4Q7FZL7dq/yT+97Os3wRPf1LsdB4VUbB5Zaey3KqcJ7c/B0MSas
-	jijLj1yv1i+6PEolhD5g+XH1hZ0yNK4RBUWPR81tlWws6IMA==
-X-Gm-Gg: AY/fxX4T7VLrlsuW1jVMr3akwdYEzBVjQ8q1+Q7nddh6AqvqyKZhyY6y7lBMF+miRfS
-	8LFAsEhsyTtwDIwXvjrn6lQ0uOXV9KdEla5lP4wADJ7Kf1xSAPNRsPEUBYT0OxdXdawIR/0Sf0X
-	Jk22hRkm61ez0BWzNBOkqaQf+XVKiNqglqVwrFy0y3Hb0b3AdgiOu/+QSzhLRN6w957UgbnJmQx
-	VnMGRphw4Wfgjl7T5SgRLqqhkNb
-X-Received: by 2002:a05:6512:2350:b0:598:ee62:32de with SMTP id 2adb3069b0e04-59b65257e39mr117489e87.24.1767630726891;
-        Mon, 05 Jan 2026 08:32:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH0dl60w4m5VsAYidttfXbla+NufMq+G1L30F/ijcpCvejF/rWD72xkcJFb60dSmjonAQFtGqZG8c8VlfaMHiU=
-X-Received: by 2002:a05:6512:2350:b0:598:ee62:32de with SMTP id
- 2adb3069b0e04-59b65257e39mr117453e87.24.1767630724945; Mon, 05 Jan 2026
- 08:32:04 -0800 (PST)
+        bh=1HkuA2Iz0l5KGRSo9OokGCp9vOWImrmU4vjQF4nroIo=;
+        b=RArb0GXkuo4KpouLlpmR/yFcptzNxFy+7zv97PfrsANlcLl0rt/25puxSLD4EI2ZIf
+         ZAy8J83x/KzMFq/WpIMVSNMdnuDUq1jbnlD1NT8cQ+imQ32BSfN3qR8k+qWZYRhgts5/
+         7qUl9gGUFaZ1aDhmRxVuDMdbml41HPLtd7kv+pn2P/S0LvwLrlG0qo6x1faQS1RTeHFv
+         GZESjA7cRZ1VUBfA/cHI0DclByqUHZLn0gfDy0/vr2gwb+yYwMAnuJKI8OUW/nCyPATC
+         fSoBcuB9DT/eErpmrthdFkHs7NLAgQ/Z5pOVzyGGn0cCjzl7oZyjoRHdb/5a5ctDNmmI
+         Bbeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUOra/8+Nk1z0OXUoIVuKnHxxM5V3aPRTUBFuiImH9tb73X9QHIj0jNj4n7DMSD5+8HVVx5xTlvzGRiPLQh1/yN@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHW7gVHj5ftQKvkyaijDqEl33OqCQ7auC4yQma/t9EsJw2g2ny
+	EXy0kaZ6Q5j2b6055HVPPCbo9fONN/V2285B7P1QiJdSv75oqAqM8x3ZwSWep+wCVw==
+X-Gm-Gg: AY/fxX6YmKAh3HudLeJQAFHHDoayCy/x5rgAsRiYNw7FRdTvK8RBUim1Q0JMT6Ec9Sq
+	eNjxN9A7F3KqJVLMpyYVSsptbk2PBnVNpsnQTgJPWqQxkM2/ko1KglKj6D9A2VlyzCoCydH2LUM
+	eU+cqfnoe2vH0zFh9A1x1HKY04J6V9dT/YPVY62r+2FRCK8ZZeZ4SWx+Qk0uNJPf2Y51EL+LS7J
+	qCv3BS9K67Rdl6uwHrEGJ3xETaNLLFzA+W7SXyqW8iRey6yvmMOujdhSRasWcD5dMD1MPSd+jyL
+	dtTfh+7LAR5OeXoCtZvYTI1kcAhMi+GoicuStHw1PtTp/DG9ZjWnJHtgixmOUSy2sM8FVhsJ+DJ
+	sTLRpF4vF+F/9EIiubW6kTSf8tzdVAdN8S1LWPKKkeL5/SlkPXlURVwXiG0cuQEIyi+K19momoB
+	CAaGGOTjHCBS4MOmggu7n4GoBzrc+4j79yngDfbXocTzslGGHMBSXs0DwXt1M=
+X-Google-Smtp-Source: AGHT+IFhB2kovOaap16+/Ow4rTNM6cvVOkquC68OhGTB9bnFJnOnmXwCYaO6a2DzTDUQ/l5gYCr/2g==
+X-Received: by 2002:a05:7300:f81a:b0:2b0:4e86:815a with SMTP id 5a478bee46e88-2b05ec347fcmr27023919eec.27.1767632076901;
+        Mon, 05 Jan 2026 08:54:36 -0800 (PST)
+Received: from localhost.localdomain (ip72-200-102-19.tc.ph.cox.net. [72.200.102.19])
+        by smtp.googlemail.com with ESMTPSA id 5a478bee46e88-2b16f18e0f2sm213853eec.12.2026.01.05.08.54.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Jan 2026 08:54:36 -0800 (PST)
+From: Will Rosenberg <whrosenb@asu.edu>
+To: 
+Cc: yi1.lai@linux.intel.com,
+	Will Rosenberg <whrosenb@asu.edu>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
+Subject: [PATCH v2] perf: Fix refcount warning on event->mmap_count increment
+Date: Mon,  5 Jan 2026 09:51:49 -0700
+Message-Id: <20260105165149.30200-1-whrosenb@asu.edu>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <aVt6tqOp+fGnFuBb@ly-workstation>
+References: <aVt6tqOp+fGnFuBb@ly-workstation>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251216211541.111795-2-ashelat@redhat.com> <96a09496-f3df-415b-95d1-92ceda06dd03@linaro.org>
-In-Reply-To: <96a09496-f3df-415b-95d1-92ceda06dd03@linaro.org>
-From: Anubhav Shelat <ashelat@redhat.com>
-Date: Mon, 5 Jan 2026 11:31:53 -0500
-X-Gm-Features: AQt7F2pGSYg2YmqSHAAozDOVZexDygzuwwpZ1YHOJORLgQtVpgkFQrMWGebDkng
-Message-ID: <CA+G8DhJPyXaqUz2Rz6FzmQm=GgqFSUiqei2eJa+m1+H+5_vCSw@mail.gmail.com>
-Subject: Re: [PATCH] arch/powerpc/perf: Fix perf record -d sample loss on
- non-marked events
-To: James Clark <james.clark@linaro.org>
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, dapeng1.mi@linux.intel.com, mpetlan@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, irogers@google.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-ping
+When calling refcount_inc(&event->mmap_count) inside perf_mmap_rb(), the
+following warning is triggered:
 
-On Wed, Dec 17, 2025 at 7:34=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
->
->
-> On 16/12/2025 23:15, Anubhav Shelat wrote:
-> > Previously, when running "perf record -d" on powerpc, perf would drop a=
-ll
-> > samples that were not load or store instructions. This is because of an
-> > overly aggressive check introduced in 2ffb26afa642 ("arch/powerpc/perf:
-> > Check the instruction type before creating sample with perf_mem_data_sr=
-c")
-> > which drops samples when the SIER instruction value is considered
-> > reserved (0 or 7 in ISA 3.0, and 0 in ISA 3.1).
-> >
-> > This happens because
-> > 1) "perf record -d" sets PERF_SAMPLE_DATA_SRC for general sampling.
-> > 2) When sampling non-memory instructions, the SIER instruction type is =
-0.
-> > 3) record_and_restart drops anything with SIER instruction type 0.
-> >
-> > "perf mem record" uses marked events by setting MMCRA_SAMPLE_ENABLE
-> > which samples load/store instructions, so a sample with SIER instructio=
-n
-> > type of 0 would be an anomaly and should be dropped. So fix this issue =
-by
-> > loosening the check to only include marked events. For non-marked
-> > events, the sample is kept and isa207_get_mem_data_src initializes
-> > data_src to 0, preserving the original fix in 2ffb26afa642.
-> >
-> > Fixes: 2ffb26afa642 ("arch/powerpc/perf: Check the instruction type
-> > before creating sample with perf_mem_data_src")
-> >
-> > Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
-> > ---
-> >   arch/powerpc/perf/core-book3s.c | 5 +++--
-> >   1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-b=
-ook3s.c
-> > index 8b0081441f85..bd44b83db9ec 100644
-> > --- a/arch/powerpc/perf/core-book3s.c
-> > +++ b/arch/powerpc/perf/core-book3s.c
-> > @@ -2304,10 +2304,11 @@ static void record_and_restart(struct perf_even=
-t *event, unsigned long val,
-> >        * In ISA v3.0 and before values "0" and "7" are considered reser=
-ved.
-> >        * In ISA v3.1, value "7" has been used to indicate "larx/stcx".
-> >        * Drop the sample if "type" has reserved values for this field w=
-ith a
-> > -      * ISA version check.
-> > +      * ISA version check for marked events.
-> >        */
-> >       if (event->attr.sample_type & PERF_SAMPLE_DATA_SRC &&
-> > -                     ppmu->get_mem_data_src) {
-> > +                     ppmu->get_mem_data_src &&
-> > +                     (regs->dsisr & MMCRA_SAMPLE_ENABLE)) {
-> >               val =3D (regs->dar & SIER_TYPE_MASK) >> SIER_TYPE_SHIFT;
-> >               if (val =3D=3D 0 || (val =3D=3D 7 && !cpu_has_feature(CPU=
-_FTR_ARCH_31))) {
-> >                       record =3D 0;
->
-> Reviewed-by: James Clark <james.clark@linaro.org>
->
+	refcount_t: addition on 0; use-after-free.
+	WARNING: lib/refcount.c:25
+
+PoC:
+
+    struct perf_event_attr attr = {0};
+    int fd = syscall(__NR_perf_event_open, &attr, 0, -1, -1, 0);
+    mmap(NULL, 0x3000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    int victim = syscall(__NR_perf_event_open, &attr, 0, -1, fd,
+                         PERF_FLAG_FD_OUTPUT);
+    mmap(NULL, 0x3000, PROT_READ | PROT_WRITE, MAP_SHARED, victim, 0);
+
+This occurs when creating a group member event with the flag
+PERF_FLAG_FD_OUTPUT. The group leader should be mmap-ed and then mmap-ing
+the event triggers the warning.
+
+Since the event has copied the output_event in perf_event_set_output(),
+event->rb is set. As a result, perf_mmap_rb() calls
+refcount_inc(&event->mmap_count) when event->mmap_count = 0.
+
+Account for the case when event->mmap_count = 0. This patch goes against
+the design philosophy of the refcount library by re-enabling an empty
+refcount, but the patch remains inline with the current treatment of
+mmap_count.
+
+Fixes: 448f97fba901 ("perf: Convert mmap() refcounts to refcount_t")
+Signed-off-by: Will Rosenberg <whrosenb@asu.edu>
+---
+
+Notes:
+    v1 -> v2: Add Fixes tag
+    
+    I also have a related concern about code that handles the mmap_count.
+    In perf_mmap_close(), if refcount_dec_and_mutex_lock() decrements
+    event->mmap_count to zero, then event->rb is set to NULL. This
+    effectively undos our ring buffer copy. However, is this desired
+    behavior? Should event->rb remain unchanged since it may still be
+    mmap-ed by other events and can still be used?
+
+ kernel/events/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 376fb07d869b..49709b627b1f 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7279,7 +7279,8 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
+ 			 * multiple times.
+ 			 */
+ 			perf_mmap_account(vma, user_extra, extra);
+-			refcount_inc(&event->mmap_count);
++			if (!refcount_inc_not_zero(&event->mmap_count))
++				refcount_set(&event->mmap_count, 1);
+ 			return 0;
+ 		}
+ 
+
+base-commit: 538254cd98afb31b09c4cc58219217d8127c79be
+-- 
+2.34.1
 
