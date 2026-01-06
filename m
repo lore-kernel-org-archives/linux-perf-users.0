@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 100A5314A7A;
-	Tue,  6 Jan 2026 11:57:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33354314D07;
+	Tue,  6 Jan 2026 11:57:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767700640; cv=none; b=py91aAkoJsHHVOS+dxMBD6Q60ki+B49ThOnjxu0UQx5zUYzum4GGflbXei9LTo87kdvL2QLkLfWy8aSvyKAyA7RS2/JQT7BtR8CDuKcwyKRzlc3AUPA9/McPWq0fgAJ09kQWt1vjnEb20d+eGy8wxiD725IorGNsw/0PQV2zIaY=
+	t=1767700641; cv=none; b=hkalHKd96hDoOuoWNtZ4WmaXhcfQgfV9f4JTGJg9KkP+OQCzl6lbolLuQvWo8wL8qxsFg1vrYQ8206ZmsaoTcYeDHMNzOIhSWX8yL5uISyDL3ZqX6RdSQAVwUJweBisdY9B6/8q1e8rkHPCVmTTy00mL0rYv6oeE+Qx0GP6/Or0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767700640; c=relaxed/simple;
-	bh=unpUmPsbVAfanae3vr0BHr49OvQu961hhpbtWX7uHo8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=a56YpDD2EP53jgZN1tSSeoXwxodfjmba0hXTftiQh7Gr7tM378pgsLxDMbim7qHf6pEwcOuC6RNk/VSwM5bmkBynZjoUqhAK5JyMjkLaxTK9ZVRdRFxnEfUA6M9jhIVwNXFX97yLLvo/UFnGzkIvolt33jXOY7bJwsJRIqgEEAM=
+	s=arc-20240116; t=1767700641; c=relaxed/simple;
+	bh=P0am1qH8J7egjiMzSssp5KMflYyuaqqSh7NHMmr7PGQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=t+ihG5iLd3WgPuCGwIhsNVzx38IFl/XePgvtvkUfKeFyvLie2uBEseBcGpzCxwivraTQXf/qw5RPmmb+9fjv0Phoo04l3lslwqQw50YPNc/Ebm1BmMI9crd3H+i+xlCvnnjq+uuks7ec8eLOjhjj8UuI6tlTkZl/5UXYsnbD61s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EAA56497;
-	Tue,  6 Jan 2026 03:57:09 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DABC1595;
+	Tue,  6 Jan 2026 03:57:12 -0800 (PST)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 957F33F5A1;
-	Tue,  6 Jan 2026 03:57:14 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CC523F5A1;
+	Tue,  6 Jan 2026 03:57:16 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v4 0/8] perf arm_spe: Extend operations
-Date: Tue, 06 Jan 2026 11:56:45 +0000
-Message-Id: <20260106-perf_support_arm_spev1-3-v4-0-bb2d143b3860@arm.com>
+Date: Tue, 06 Jan 2026 11:56:46 +0000
+Subject: [PATCH v4 1/8] perf/uapi: Extend data source fields
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,12 +29,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAH34XGkC/4XOwW7DIAwG4FepOI8JGxJgp73HNEUJmJVDGwRdt
- KnKu89ppVY7rLsg/Vj/Z59Fo5qpiZfdWVRacsvzkYN52omwH48fJHPkLFBhpxwqWaimoX2WMtf
- TMNbD0AotILWcekqxT8HaCQXXS6WUvy702zvnfW6nuX5fNi2w/V5Rr9zfKD9K2ghpNMYDYHzl6
- XOYD9uGax39P3WATk06OO06e6tvFy14uwIU2AcMMoPRABlreoLpN6PvDJ/4gNHMUK+Dd+iTj/7
- OrOv6A4O9d/GLAQAA
-X-Change-ID: 20250820-perf_support_arm_spev1-3-b6efd6fc77b2
+Message-Id: <20260106-perf_support_arm_spev1-3-v4-1-bb2d143b3860@arm.com>
+References: <20260106-perf_support_arm_spev1-3-v4-0-bb2d143b3860@arm.com>
+In-Reply-To: <20260106-perf_support_arm_spev1-3-v4-0-bb2d143b3860@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -44,65 +41,92 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1767700634; l=2305;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1767700634; l=3220;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=unpUmPsbVAfanae3vr0BHr49OvQu961hhpbtWX7uHo8=;
- b=gb6BTTD8pfdDx+a3M1Ccdd4U8S69lekuJdESkBK6thzPsJMKLYY9HvO231FNX4hc0oq3/sNmf
- R9fC3LbKPZsDY9bIqx25BC+dBDjI9w22ZEc5Bjpqdw83FIDuPl+fNfz
+ bh=P0am1qH8J7egjiMzSssp5KMflYyuaqqSh7NHMmr7PGQ=;
+ b=sr2DpbURJ76yWoJjlFmf7HyERIMUQxOxZc3HWsIpG5JK4HVmmRUmny1oox/koCQB0wxk//jaZ
+ 4hdgLYoWzZfD425RifoQZk8IzgR42lxKkSlJNMmCMNO7wBcbH2i1yDN
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-This series sets the operation info into sample's data source and
-SIMD flag, and updated the document.
+Arm CPUs introduce several new types of memory operations, like MTE tag
+accessing, system register access for nested virtualization, memcpy &
+memset, and Guarded Control Stack (GCS).
 
-No changes compared to the previous version; this version is only rebased
-onto the latest perf-tools-next branch.
+For memory operation details, Arm SPE provides information like data
+(parallel) processing, floating-point, predicated, atomic, exclusive,
+acquire/release, gather/scatter, and conditional.
+
+This commit introduces a field 'mem_op_ext' for extended operation type.
+The extended operation type can be combined with the existed operation
+type to express a memory type, for examples, a PERF_MEM_OP_GCS type can
+be set along with PERF_MEM_OP_LOAD to present a load operation for
+GCS register access.
+
+Bit fields are also added to represent detailed operation attributes.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
-Changes in v4:
-- Rebased on the latest perf-tools-next branch.
-- Link to v3: https://lore.kernel.org/r/20251112-perf_support_arm_spev1-3-v3-0-e63c9829f9d9@arm.com
+ include/uapi/linux/perf_event.h | 32 ++++++++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
 
-Changes in v3:
-- Rebased on the latest perf-tools-next branch.
-- Link to v2: https://lore.kernel.org/r/20251017-perf_support_arm_spev1-3-v2-0-2d41e4746e1b@arm.com
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index c44a8fb3e4181c91a1e6e3a40e23fcf1de421af3..3d2c5ee9282efc4a2310f554443082f1d0027889 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -1330,14 +1330,32 @@ union perf_mem_data_src {
+ 			mem_snoopx  :  2, /* Snoop mode, ext */
+ 			mem_blk     :  3, /* Access blocked */
+ 			mem_hops    :  3, /* Hop level */
+-			mem_rsvd    : 18;
++			mem_op_ext  :  4, /* Extended type of opcode */
++			mem_dp      :  1, /* Data processing */
++			mem_fp      :  1, /* Floating-point */
++			mem_pred    :  1, /* Predicated */
++			mem_atomic  :  1, /* Atomic operation */
++			mem_excl    :  1, /* Exclusive */
++			mem_ar      :  1, /* Acquire/release */
++			mem_sg      :  1, /* Scatter/Gather */
++			mem_cond    :  1, /* Conditional */
++			mem_rsvd    :  6;
+ 	};
+ };
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+ union perf_mem_data_src {
+ 	__u64 val;
+ 	struct {
+-		__u64	mem_rsvd    : 18,
++		__u64	mem_rsvd    :  6,
++			mem_cond    :  1, /* Conditional */
++			mem_sg      :  1, /* Scatter/Gather */
++			mem_ar      :  1, /* Acquire/release */
++			mem_excl    :  1, /* Exclusive */
++			mem_atomic  :  1, /* Atomic operation */
++			mem_pred    :  1, /* Predicated */
++			mem_fp      :  1, /* Floating-point */
++			mem_dp      :  1, /* Data processing */
++			mem_op_ext  :  4, /* Extended type of opcode */
+ 			mem_hops    :  3, /* Hop level */
+ 			mem_blk     :  3, /* Access blocked */
+ 			mem_snoopx  :  2, /* Snoop mode, ext */
+@@ -1447,6 +1465,16 @@ union perf_mem_data_src {
+ /* 5-7 available */
+ #define PERF_MEM_HOPS_SHIFT			43
+ 
++/* Extended type of memory opcode: */
++#define PERF_MEM_EXT_OP_NA			0x0    /* Not available */
++#define PERF_MEM_EXT_OP_MTE_TAG			0x1    /* MTE tag */
++#define PERF_MEM_EXT_OP_NESTED_VIRT		0x2    /* Nested virtualization */
++#define PERF_MEM_EXT_OP_MEMCPY			0x3    /* Memory copy */
++#define PERF_MEM_EXT_OP_MEMSET			0x4    /* Memory set */
++#define PERF_MEM_EXT_OP_SIMD			0x5    /* SIMD */
++#define PERF_MEM_EXT_OP_GCS			0x6    /* Guarded Control Stack */
++#define PERF_MEM_EXT_OP_SHIFT			46
++
+ #define PERF_MEM_S(a, s) \
+ 	(((__u64)PERF_MEM_##a##_##s) << PERF_MEM_##a##_SHIFT)
+ 
 
-Changes in v2:
-- Refined to use enums for 2nd operation types. (James)
-- Avoided adjustment bit positions for operations. (James)
-- Used enum for extended operation type in uapi header and defined
-  individual bit field for operation details in uaip header. (James)
-- Refined SIMD flag definitions. (James)
-- Extracted a separate commit for updating tool's header. (James/Arnaldo)
-- Minor improvement for printing memory events.
-- Rebased on the latest perf-tools-next branch.
-- Link to v1: https://lore.kernel.org/r/20250929-perf_support_arm_spev1-3-v1-0-1150b3c83857@arm.com
-
----
-Leo Yan (8):
-      perf/uapi: Extend data source fields
-      tools/include: Sync uapi/linux/perf.h with the kernel sources
-      perf mem: Print extended fields
-      perf arm_spe: Set extended fields in data source
-      perf sort: Support sort ASE and SME
-      perf sort: Sort disabled and full predicated flags
-      perf report: Update document for SIMD flags
-      perf arm_spe: Improve SIMD flags setting
-
- include/uapi/linux/perf_event.h          | 32 +++++++++++++++-
- tools/include/uapi/linux/perf_event.h    | 32 +++++++++++++++-
- tools/perf/Documentation/perf-report.txt |  5 ++-
- tools/perf/util/arm-spe.c                | 56 ++++++++++++++++++++++++---
- tools/perf/util/mem-events.c             | 66 +++++++++++++++++++++++++++++---
- tools/perf/util/sample.h                 | 21 +++++++---
- tools/perf/util/sort.c                   | 21 +++++++---
- 7 files changed, 205 insertions(+), 28 deletions(-)
----
-base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
-change-id: 20250820-perf_support_arm_spev1-3-b6efd6fc77b2
-
-Best regards,
 -- 
-Leo Yan <leo.yan@arm.com>
+2.34.1
 
