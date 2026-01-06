@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87B85327BEE;
-	Tue,  6 Jan 2026 11:57:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7ADB32B989;
+	Tue,  6 Jan 2026 11:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767700649; cv=none; b=OmMYlgg9LzpmbsuCy8K3XfoGB/dyk+lSCojcJmTqO7gacN4zc5/LdqGarm2USXAvIwsByzlFjoP2e8Rw2YU5h/ZusnAuJsT+cmpkp+3XsNDephPUCspYOFFiYqZ1ok6XZdRYcqDI5Ndyswqofxw6ltgwtXXYEB1OP2Lh1wtD08U=
+	t=1767700651; cv=none; b=etEKkbzZzGbQlAKLOCLrjTC1lMyCqqfDD7opdvFEgEgpW4lOq3/g+jSudCjHh2zq4aKLj7RjISF+WxxoY317//4yN24RWUqOXs2bCOR/u56FKo99S0+gKXjlGFLKhof7/dTvSuxdUYFWyejKGNOgjrAaKc3JJOmUpVLdJaFxcfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767700649; c=relaxed/simple;
-	bh=9P9P9ngjsu8nPxAdZLX3+nmmTdlw0sGE1/s7rLcP/ao=;
+	s=arc-20240116; t=1767700651; c=relaxed/simple;
+	bh=Mkcwt5Bm9f8iJndZOvpqNo0Ap0ZS8/5izUDL7CkYee0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Zrz7bePIeR2X0TB2E1Bci761e+FBCHrkH6I/5gVXy0QGn/v2NXFEdo33Nt5ngw4uHdf7RN7rLEHNWcL5X14Gbwc32Sui5wfUT/J798Of638UPvXIzw49IwOWCbwGbM9gv8Jr9egA9cvsAwl0qoBnGZvxzTB1NaRMYCZY2c+u9VM=
+	 In-Reply-To:To:Cc; b=X7BlA2Hc/InhKLzcCuXncVVjgNjcb0NTeTu4USb+XUXxxpV2flwbUxDdbL3UIojQwFukBerDuU/4xQGB48Ir7npji9YHUvL5BCtIdug4DKjd4M4KIXmqLNnUwzn5LAaNS7Kj7FEzv2emfa6hS7m3b3YuR6jHuGmfF1b0NW19sOE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC34E497;
-	Tue,  6 Jan 2026 03:57:19 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7311C1595;
+	Tue,  6 Jan 2026 03:57:22 -0800 (PST)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B8283F5A1;
-	Tue,  6 Jan 2026 03:57:24 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 227423F5A1;
+	Tue,  6 Jan 2026 03:57:26 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 06 Jan 2026 11:56:49 +0000
-Subject: [PATCH v4 4/8] perf arm_spe: Set extended fields in data source
+Date: Tue, 06 Jan 2026 11:56:50 +0000
+Subject: [PATCH v4 5/8] perf sort: Support sort ASE and SME
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260106-perf_support_arm_spev1-3-v4-4-bb2d143b3860@arm.com>
+Message-Id: <20260106-perf_support_arm_spev1-3-v4-5-bb2d143b3860@arm.com>
 References: <20260106-perf_support_arm_spev1-3-v4-0-bb2d143b3860@arm.com>
 In-Reply-To: <20260106-perf_support_arm_spev1-3-v4-0-bb2d143b3860@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -41,80 +41,66 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1767700634; l=3016;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1767700634; l=1741;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=9P9P9ngjsu8nPxAdZLX3+nmmTdlw0sGE1/s7rLcP/ao=;
- b=dfzg/6aqCk/ZHHYezdmF77x3soi/BjX0x0G80fUDP0CpPRnM+nULHFCC0QDhSaHiz5dUE/gJH
- bvIX23UgwH3CIKHzd29l9ixNLQ6SQFdHsVlkdMo5X0pGayuqAL22jUL
+ bh=Mkcwt5Bm9f8iJndZOvpqNo0Ap0ZS8/5izUDL7CkYee0=;
+ b=a6rLB3Jrk8ueLTS8ZqJeNvJ+lJBfNc69KqZF3ho4w5INoSwNoHoALXglf5dcBmhslZusDsyk6
+ mScw+AxZ4L6CQ0Icg3+/XH59plDxRg59SAF+4F+N134jFE+cBV9Suaz
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Set extended operation type and affiliate info in the data source.
-
-Before:
-
-  perf script -F,dso,sym,data_src
-  sve-test 6516696.714341:        288100144 |OP STORE|LVL L1 hit|SNP None|TLB Walker hit|LCK No|BLK  N/A|AFF N/A
-  sve-test 6516696.714341:        288100144 |OP STORE|LVL L1 hit|SNP None|TLB Walker hit|LCK No|BLK  N/A|AFF N/A
-  sve-test 6516696.714341:        288100144 |OP STORE|LVL L1 hit|SNP None|TLB Walker hit|LCK No|BLK  N/A|AFF N/A
-  sve-test 6516696.714344:        288800142 |OP LOAD|LVL L1 hit|SNP HitM|TLB Walker hit|LCK No|BLK  N/A|AFF N/A
-  sve-test 6516696.714344:        288800142 |OP LOAD|LVL L1 hit|SNP HitM|TLB Walker hit|LCK No|BLK  N/A|AFF N/A
-
-After:
-
-  perf script -F,dso,sym,data_src
-  sve-test 6516696.714341:  444000288100144 |OP STORE SIMD|LVL L1 hit|SNP None|TLB Walker hit|LCK No|BLK  N/A|AFF PRED SG
-  sve-test 6516696.714341:  444000288100144 |OP STORE SIMD|LVL L1 hit|SNP None|TLB Walker hit|LCK No|BLK  N/A|AFF PRED SG
-  sve-test 6516696.714341:  444000288100144 |OP STORE SIMD|LVL L1 hit|SNP None|TLB Walker hit|LCK No|BLK  N/A|AFF PRED SG
-  sve-test 6516696.714344:        288800142 |OP LOAD|LVL L1 hit|SNP HitM|TLB Walker hit|LCK No|BLK  N/A|AFF N/A
-  sve-test 6516696.714344:        288800142 |OP LOAD|LVL L1 hit|SNP HitM|TLB Walker hit|LCK No|BLK  N/A|AFF N/A
+Support sort Advance SIMD extension (ASE) and SME.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/arm-spe.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ tools/perf/util/sample.h | 12 +++++++++---
+ tools/perf/util/sort.c   |  6 +++++-
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index dc19e72258f30dd6d89dafbb70cc5f7b5c485589..8e9004213e163a46fcacecb4ee32e199a0ec50b2 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -1006,6 +1006,36 @@ arm_spe__synth_data_source(struct arm_spe_queue *speq,
+diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+index a8307b20a9ea80668deecf65e316ab6036afbfeb..504256474f22fa8ec647429d182a6d04f8d05c39 100644
+--- a/tools/perf/util/sample.h
++++ b/tools/perf/util/sample.h
+@@ -67,12 +67,18 @@ struct aux_sample {
+ };
+ 
+ struct simd_flags {
+-	u8	arch:1,	/* architecture (isa) */
+-		pred:2;	/* predication */
++	u8	arch:  2,	/* architecture (isa) */
++		pred:  2,	/* predication */
++		resv:  4;	/* reserved */
+ };
+ 
+ /* simd architecture flags */
+-#define SIMD_OP_FLAGS_ARCH_SVE		0x01	/* ARM SVE */
++enum simd_op_flags {
++	SIMD_OP_FLAGS_ARCH_NONE = 0x0,	/* No SIMD operation */
++	SIMD_OP_FLAGS_ARCH_SVE,		/* Arm SVE */
++	SIMD_OP_FLAGS_ARCH_SME,		/* Arm SME */
++	SIMD_OP_FLAGS_ARCH_ASE,		/* Arm Advanced SIMD */
++};
+ 
+ /* simd predicate flags */
+ #define SIMD_OP_FLAGS_PRED_PARTIAL	0x01	/* partial predicate */
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index f963d61ac166f9b3f16069b07aa4b0dacfb65c02..e8f793eed33f78b7688b3f949e8254cbb64c3709 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -193,8 +193,12 @@ static const char *hist_entry__get_simd_name(struct simd_flags *simd_flags)
+ {
+ 	u64 arch = simd_flags->arch;
+ 
+-	if (arch & SIMD_OP_FLAGS_ARCH_SVE)
++	if (arch == SIMD_OP_FLAGS_ARCH_SVE)
+ 		return "SVE";
++	else if (arch == SIMD_OP_FLAGS_ARCH_SME)
++		return "SME";
++	else if (arch == SIMD_OP_FLAGS_ARCH_ASE)
++		return "ASE";
  	else
- 		data_src.mem_op = PERF_MEM_OP_NA;
- 
-+	if (record->op & ARM_SPE_OP_MTE_TAG)
-+		data_src.mem_op_ext = PERF_MEM_EXT_OP_MTE_TAG;
-+	else if (record->op & ARM_SPE_OP_NV_SYSREG)
-+		data_src.mem_op_ext = PERF_MEM_EXT_OP_NESTED_VIRT;
-+	else if (record->op & ARM_SPE_OP_MEMCPY)
-+		data_src.mem_op_ext = PERF_MEM_EXT_OP_MEMCPY;
-+	else if (record->op & ARM_SPE_OP_MEMSET)
-+		data_src.mem_op_ext = PERF_MEM_EXT_OP_MEMSET;
-+	else if (record->op & ARM_SPE_OP_GCS)
-+		data_src.mem_op_ext = PERF_MEM_EXT_OP_GCS;
-+	else if (is_simd_op(record->op))
-+		data_src.mem_op_ext = PERF_MEM_EXT_OP_SIMD;
-+
-+	if (record->op & ARM_SPE_OP_DP)
-+		data_src.mem_dp = 1;
-+	if (record->op & ARM_SPE_OP_FP)
-+		data_src.mem_fp = 1;
-+	if (record->op & ARM_SPE_OP_PRED)
-+		data_src.mem_pred = 1;
-+	if (record->op & ARM_SPE_OP_ATOMIC)
-+		data_src.mem_atomic = 1;
-+	if (record->op & ARM_SPE_OP_EXCL)
-+		data_src.mem_excl = 1;
-+	if (record->op & ARM_SPE_OP_AR)
-+		data_src.mem_ar = 1;
-+	if (record->op & ARM_SPE_OP_SG)
-+		data_src.mem_sg = 1;
-+	if (record->op & ARM_SPE_OP_COND)
-+		data_src.mem_cond = 1;
-+
- 	arm_spe__synth_ds(speq, record, &data_src);
- 	arm_spe__synth_memory_level(speq, record, &data_src);
- 
+ 		return "n/a";
+ }
 
 -- 
 2.34.1
