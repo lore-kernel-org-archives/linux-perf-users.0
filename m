@@ -1,137 +1,108 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CC0335557;
-	Tue,  6 Jan 2026 11:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 100A5314A7A;
+	Tue,  6 Jan 2026 11:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767697280; cv=none; b=LyvezR/ejpyURUcvK1RgfUSvh2MRkoR2S4QAgFo9Rj3IXNE2LTI/hRmDvcvS+ZIituTBzg+hs8twIX4y7gIQxYYtlCwCXD+IMlOpacbm+XubRNtEFd0/EITvbwH0mb97Qiep9RVAmBSTwZKB2D6YpTIFcVdWg4CVCCGnj/elLuw=
+	t=1767700640; cv=none; b=py91aAkoJsHHVOS+dxMBD6Q60ki+B49ThOnjxu0UQx5zUYzum4GGflbXei9LTo87kdvL2QLkLfWy8aSvyKAyA7RS2/JQT7BtR8CDuKcwyKRzlc3AUPA9/McPWq0fgAJ09kQWt1vjnEb20d+eGy8wxiD725IorGNsw/0PQV2zIaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767697280; c=relaxed/simple;
-	bh=ns7AV7KdtpZWpsiFswjsTDCpROD3BuxQ7Qc6+GFrSGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ee9VyjEfKCCfPzWKjJB6Vi/EwBWBtdkd5l0RDr+bo1JUf12LTjqH5PLtuld+6qf8ZfIMdrQnW0BDYlQArALerzt+RnNw7eZ2ppBHDSgjQ6tKsh2FETr2oposSKqS4iCuQ6LzZs8wAsDxC0ZOUPJJWiYN/k0r2smZS+7/k1t9qDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=r9a1jdYm; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r9a1jdYm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fUMO7SOFqDjMmjplPe/dBxqKnTCEktvk7ucaUMOcMDk=; b=r9a1jdYmGzNV/LDTJYWHkLAuSe
-	76mSHo17YC4xExOeMg7MVGPIQbXhnTOAGf+qgj+CMB+X+lg8+ZmDmCYZJTfa4H8+xN3cGA3ee2Emg
-	sKe3k1XBoUgFxzUiHijKEUNCbMaxkawsgXM6tWzVOErN99u0qH662J1y0iPRp0xOYXOT32In132vE
-	PrGf2AVAkLFuMX1xUSEHDw7TE8Z7oD8gqm/WGB683wYJJ5fR8vMetm7Unk0iH+sVnJiciIVvEHPhL
-	BYHrI14pvAk15P0BaR5Qtc5CfY0BMbPl6zaHX1yi2e9WCWMDASdZB3csrei0IK7rMy/sz/sBq8fxy
-	b5axszTA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vd4oG-0000000BgWd-1pnW;
-	Tue, 06 Jan 2026 11:01:08 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5DC0B30056B; Tue, 06 Jan 2026 12:01:07 +0100 (CET)
-Date: Tue, 6 Jan 2026 12:01:07 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Zide Chen <zide.chen@intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>
-Subject: Re: [PATCH V2 02/13] perf/x86/intel/uncore: Support per-platform
- discovery base devices
-Message-ID: <20260106110107.GC2393663@noisy.programming.kicks-ass.net>
-References: <20251231224233.113839-1-zide.chen@intel.com>
- <20251231224233.113839-3-zide.chen@intel.com>
+	s=arc-20240116; t=1767700640; c=relaxed/simple;
+	bh=unpUmPsbVAfanae3vr0BHr49OvQu961hhpbtWX7uHo8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=a56YpDD2EP53jgZN1tSSeoXwxodfjmba0hXTftiQh7Gr7tM378pgsLxDMbim7qHf6pEwcOuC6RNk/VSwM5bmkBynZjoUqhAK5JyMjkLaxTK9ZVRdRFxnEfUA6M9jhIVwNXFX97yLLvo/UFnGzkIvolt33jXOY7bJwsJRIqgEEAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EAA56497;
+	Tue,  6 Jan 2026 03:57:09 -0800 (PST)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 957F33F5A1;
+	Tue,  6 Jan 2026 03:57:14 -0800 (PST)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v4 0/8] perf arm_spe: Extend operations
+Date: Tue, 06 Jan 2026 11:56:45 +0000
+Message-Id: <20260106-perf_support_arm_spev1-3-v4-0-bb2d143b3860@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251231224233.113839-3-zide.chen@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAH34XGkC/4XOwW7DIAwG4FepOI8JGxJgp73HNEUJmJVDGwRdt
+ KnKu89ppVY7rLsg/Vj/Z59Fo5qpiZfdWVRacsvzkYN52omwH48fJHPkLFBhpxwqWaimoX2WMtf
+ TMNbD0AotILWcekqxT8HaCQXXS6WUvy702zvnfW6nuX5fNi2w/V5Rr9zfKD9K2ghpNMYDYHzl6
+ XOYD9uGax39P3WATk06OO06e6tvFy14uwIU2AcMMoPRABlreoLpN6PvDJ/4gNHMUK+Dd+iTj/7
+ OrOv6A4O9d/GLAQAA
+X-Change-ID: 20250820-perf_support_arm_spev1-3-b6efd6fc77b2
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1767700634; l=2305;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=unpUmPsbVAfanae3vr0BHr49OvQu961hhpbtWX7uHo8=;
+ b=gb6BTTD8pfdDx+a3M1Ccdd4U8S69lekuJdESkBK6thzPsJMKLYY9HvO231FNX4hc0oq3/sNmf
+ R9fC3LbKPZsDY9bIqx25BC+dBDjI9w22ZEc5Bjpqdw83FIDuPl+fNfz
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Wed, Dec 31, 2025 at 02:42:19PM -0800, Zide Chen wrote:
-> @@ -1897,6 +1899,17 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
->  };
->  MODULE_DEVICE_TABLE(x86cpu, intel_uncore_match);
->  
-> +static bool ucore_use_discovery(struct uncore_plat_init *config)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < UNCORE_DISCOVERY_DOMAINS; i++)
-> +		if (config->domain[i].discovery_base)
-> +			return true;
-> +
-> +	return false;
-> +}
-> +
->  static int __init intel_uncore_init(void)
->  {
->  	const struct x86_cpu_id *id;
-> @@ -1911,15 +1924,14 @@ static int __init intel_uncore_init(void)
->  
->  	id = x86_match_cpu(intel_uncore_match);
->  	if (!id) {
-> -		if (!uncore_no_discover && uncore_discovery(NULL))
-> -			uncore_init = (struct uncore_plat_init *)&generic_uncore_init;
-> -		else
-> +		uncore_init = (struct uncore_plat_init *)&generic_uncore_init;
-> +		if (uncore_no_discover || !uncore_discovery(uncore_init))
->  			return -ENODEV;
->  	} else {
->  		uncore_init = (struct uncore_plat_init *)id->driver_data;
-> -		if (uncore_no_discover && uncore_init->use_discovery)
-> +		if (uncore_no_discover && ucore_use_discovery(uncore_init))
->  			return -ENODEV;
-> -		if (uncore_init->use_discovery &&
-> +		if (ucore_use_discovery(uncore_init) &&
->  		    !uncore_discovery(uncore_init))
->  			return -ENODEV;
->  	}
+This series sets the operation info into sample's data source and
+SIMD flag, and updated the document.
 
-I got triggered by that naming oddity, but then couldn't help but also
-fix the lack of { } and then use for-scoped variables.
+No changes compared to the previous version; this version is only rebased
+onto the latest perf-tools-next branch.
 
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1899,13 +1899,12 @@ static const struct x86_cpu_id intel_unc
- };
- MODULE_DEVICE_TABLE(x86cpu, intel_uncore_match);
- 
--static bool ucore_use_discovery(struct uncore_plat_init *config)
-+static bool uncore_use_discovery(struct uncore_plat_init *config)
- {
--	int i;
--
--	for (i = 0; i < UNCORE_DISCOVERY_DOMAINS; i++)
-+	for (int i = 0; i < UNCORE_DISCOVERY_DOMAINS; i++) {
- 		if (config->domain[i].discovery_base)
- 			return true;
-+	}
- 
- 	return false;
- }
-@@ -1929,9 +1928,9 @@ static int __init intel_uncore_init(void
- 			return -ENODEV;
- 	} else {
- 		uncore_init = (struct uncore_plat_init *)id->driver_data;
--		if (uncore_no_discover && ucore_use_discovery(uncore_init))
-+		if (uncore_no_discover && uncore_use_discovery(uncore_init))
- 			return -ENODEV;
--		if (ucore_use_discovery(uncore_init) &&
-+		if (uncore_use_discovery(uncore_init) &&
- 		    !uncore_discovery(uncore_init))
- 			return -ENODEV;
- 	}
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Changes in v4:
+- Rebased on the latest perf-tools-next branch.
+- Link to v3: https://lore.kernel.org/r/20251112-perf_support_arm_spev1-3-v3-0-e63c9829f9d9@arm.com
+
+Changes in v3:
+- Rebased on the latest perf-tools-next branch.
+- Link to v2: https://lore.kernel.org/r/20251017-perf_support_arm_spev1-3-v2-0-2d41e4746e1b@arm.com
+
+Changes in v2:
+- Refined to use enums for 2nd operation types. (James)
+- Avoided adjustment bit positions for operations. (James)
+- Used enum for extended operation type in uapi header and defined
+  individual bit field for operation details in uaip header. (James)
+- Refined SIMD flag definitions. (James)
+- Extracted a separate commit for updating tool's header. (James/Arnaldo)
+- Minor improvement for printing memory events.
+- Rebased on the latest perf-tools-next branch.
+- Link to v1: https://lore.kernel.org/r/20250929-perf_support_arm_spev1-3-v1-0-1150b3c83857@arm.com
+
+---
+Leo Yan (8):
+      perf/uapi: Extend data source fields
+      tools/include: Sync uapi/linux/perf.h with the kernel sources
+      perf mem: Print extended fields
+      perf arm_spe: Set extended fields in data source
+      perf sort: Support sort ASE and SME
+      perf sort: Sort disabled and full predicated flags
+      perf report: Update document for SIMD flags
+      perf arm_spe: Improve SIMD flags setting
+
+ include/uapi/linux/perf_event.h          | 32 +++++++++++++++-
+ tools/include/uapi/linux/perf_event.h    | 32 +++++++++++++++-
+ tools/perf/Documentation/perf-report.txt |  5 ++-
+ tools/perf/util/arm-spe.c                | 56 ++++++++++++++++++++++++---
+ tools/perf/util/mem-events.c             | 66 +++++++++++++++++++++++++++++---
+ tools/perf/util/sample.h                 | 21 +++++++---
+ tools/perf/util/sort.c                   | 21 +++++++---
+ 7 files changed, 205 insertions(+), 28 deletions(-)
+---
+base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
+change-id: 20250820-perf_support_arm_spev1-3-b6efd6fc77b2
+
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
+
