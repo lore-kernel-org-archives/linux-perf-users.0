@@ -1,45 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18C919C54E;
-	Tue,  6 Jan 2026 22:06:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3775E2DEA6F;
+	Tue,  6 Jan 2026 22:18:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767737206; cv=none; b=t6eenfnTdOXbVSXGVe/sww9KFZoxz3uNd/2B1fJEpAtA5q36l6vtnmRM3/uMmVV+QbQ8rWbfo0zV2waiLE3tWefeJtC70ObXzYocFW27jWDuUxakWC6qBs0gkomTL7LmK0JzJvIscz0iEs3Bflu3c9lS+2QwpO8R6t01+rOMzI8=
+	t=1767737912; cv=none; b=rBj177Fjey/MC4tOXQgE+rwIDcJ+EhfKtPAtBRsyRh9viwSv3X4OeP+Lkiq4ox8isUNToB9bXvxJ8ofR2BdnXO+VF7WQoIB0HZ17wMbtc3RZD0DRT7uLMIKmzb+TQYHPuZni3KEPfKUBx3i2MsnhpVg6LYj2iHqZ8r/9eVN+XWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767737206; c=relaxed/simple;
-	bh=/AERRJCX2sWTHkNrIC8C3qkMc2/aOHGO9gggfiwsXEg=;
+	s=arc-20240116; t=1767737912; c=relaxed/simple;
+	bh=VxP3gN6EuETCO78G27pem7ZWOyviGO5t6cCqAm0GUuE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uWoBiNjUkH4PdGHG2vs+YPxg1W1B5kTtGtIIbpr7n5Rcu2+fSCMC7yj9ys670Wqh3FblLkDZKsC2b9zEzQB7HJGp+H9Z2kdv+bfX6wBeGCxgdrs4k4uGO9EUSDtu/ZFo+LFeH7S2TLYGDh+XCmp6m8EchKSqXpwz8cZyBD+Yq1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mx4LJyRW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jGgYqOepFtChIoqPGje0ilpmxf6uHAGqOf1o4cYaVT/ez+nNEyTqiDDC8LfpxpZJYPUbOX5VWQh4iQcVE3qHmplWVo4wJI8THOK23PHgnjsWnXjUAaJJrjNZ7xddrZSy3KU5oRymQ1vrvL5oq0sJbL0MFvDbcskDRC1pZyAi+xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pxa9uNrx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mx4LJyRW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C70C116C6;
-	Tue,  6 Jan 2026 22:06:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pxa9uNrx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288E8C116C6;
+	Tue,  6 Jan 2026 22:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767737206;
-	bh=/AERRJCX2sWTHkNrIC8C3qkMc2/aOHGO9gggfiwsXEg=;
+	s=k20201202; t=1767737911;
+	bh=VxP3gN6EuETCO78G27pem7ZWOyviGO5t6cCqAm0GUuE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mx4LJyRWKDXAXjm0CvOhHgUOBjR/lOyJXdS3qKu2tSDjpI7E6NsJm4ofc5fs5VjKj
-	 lbToeP4udbWBXkKt6MlRYclTjHVbKj6O07P8VEO03u0a/KqxKq1sQl5TO0fOTcGdEP
-	 5eYJUmvQueCegwCGP2yWcGuNgVZiYGhJp0GO6qBXSQnQUKYKB44EA+fv0I6+RVoE/2
-	 Psk8wuSmbePFz78fN+DR1/ofQi7GdUzWAY9IohB9euQVzQx120i682UeFMOr2mtF0/
-	 zSMxU+8KQc+aQl3TM9RkJPplbkPNNbP7dS6cbivJPMa8wa9LISHDwu3SgLCmPgaQv1
-	 f3rt9WIFrgwkw==
-Date: Tue, 6 Jan 2026 19:06:42 -0300
+	b=Pxa9uNrxiIF4RZGx5HinH42KcBAPUqsaPf6/Ts2txh8VTMXJxo9TLigNtwW1t/nDF
+	 Wq56bhAV4mbhBP2gWfQnkARjrQDLgP0QffP20cR73hQqEQRD0jOZm3zlDLThQS+P+0
+	 rxHYquOg7nOXlLPVgbbOghleN6AaX663rezS4P77jgtGwAcJ3nKeabwCYcAnrzcO5t
+	 5lqwZG9Lgkwykci+43NTUXmTt3p2eTch/bjyTYh+qUHpR+Z5ZynsrSMFERCZlC3LFE
+	 z0zss7oc3sSwBiM5IPgjzU/x+ZsQe3swHn3JZAZ2xinMQ0FCRb1GricmKGM3Ay1oRb
+	 za4PYthjoInog==
+Date: Tue, 6 Jan 2026 19:18:27 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Leo Yan <leo.yan@arm.com>, Thomas Richter <tmricht@linux.ibm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+To: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf test java symbol: Additional libperf-jvmti.so
- path check
-Message-ID: <aV2HchAKw8gDc74m@x1>
-References: <20251205190135.210864-1-irogers@google.com>
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>, Leo Yan <leo.yan@arm.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andres Freund <andres@anarazel.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Nick Terrell <terrelln@fb.com>, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org, llvm@lists.linux.dev,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Quentin Monnet <qmo@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>
+Subject: Re: [PATCH 0/5] perf build: nondistro build tidyups
+Message-ID: <aV2KM5yEAoLWT8rx@x1>
+References: <20251223-james-libbfd-feat-check-v1-0-0e901ba32ed9@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,51 +64,47 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251205190135.210864-1-irogers@google.com>
+In-Reply-To: <20251223-james-libbfd-feat-check-v1-0-0e901ba32ed9@linaro.org>
 
-On Fri, Dec 05, 2025 at 11:01:35AM -0800, Ian Rogers wrote:
-> If perf is built into an output directory then so is
-> libperf-jvmti.so. If `perf test` is run from that directory then PWD
-> needn't also be that directory meaning libperf-jvmti.so won't be found
-> and the test skipped. Add an additional check for libperf-jvmti.so in
-> the same directory as the perf binary for this case, this avoids the
-> test skipping.
+On Tue, Dec 23, 2025 at 05:00:23PM +0000, James Clark wrote:
+> nondistro builds now require a specific version of libbfd, so this adds
+> an error when doing an explicit BUILD_NONDISTRO build and some other
+> related tidyups.
+> 
+> I'm not sure if the intention is to skip build-tests if something is
+> missing, but I see it was done for libbpf versions, so I added the same
+> for libbfd. This is the main thing that I hit, that build-test all of a
+> sudden stopped working for me.
+> 
+> The first commit is also a cherry pick of an old commit that seemed to
+> have been accidentally reverted in the unrelated change linked in the
+> trailers.
 
 Thanks, applied to perf-tools-next,
 
 - Arnaldo
  
-> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/tests/shell/test_java_symbol.sh | 4 ++++
->  1 file changed, 4 insertions(+)
+> James Clark (4):
+>       perf build: Do all non-distro feature checks in one go
+>       perf build: Remove unused libbfd-buildid feature test
+>       perf build: Feature test for libbfd thread safety API
+>       perf build: Skip nondistro build test if libbfd is old
 > 
-> diff --git a/tools/perf/tests/shell/test_java_symbol.sh b/tools/perf/tests/shell/test_java_symbol.sh
-> index 499539d1c479..63a2cc9bf13f 100755
-> --- a/tools/perf/tests/shell/test_java_symbol.sh
-> +++ b/tools/perf/tests/shell/test_java_symbol.sh
-> @@ -22,10 +22,13 @@ cleanup_files()
->  
->  trap cleanup_files exit term int
->  
-> +PERF_DIR=$(dirname "$(which perf)")
->  if [ -e "$PWD/tools/perf/libperf-jvmti.so" ]; then
->  	LIBJVMTI=$PWD/tools/perf/libperf-jvmti.so
->  elif [ -e "$PWD/libperf-jvmti.so" ]; then
->  	LIBJVMTI=$PWD/libperf-jvmti.so
-> +elif [ -e "$PERF_DIR/libperf-jvmti.so" ]; then
-> +	LIBJVMTI=$PERF_DIR/libperf-jvmti.so
->  elif [ -e "$PREFIX/lib64/libperf-jvmti.so" ]; then
->  	LIBJVMTI=$PREFIX/lib64/libperf-jvmti.so
->  elif [ -e "$PREFIX/lib/libperf-jvmti.so" ]; then
-> @@ -34,6 +37,7 @@ elif [ -e "/usr/lib/linux-tools-$(uname -a | awk '{ print $3 }' | sed -r 's/-gen
->  	LIBJVMTI=/usr/lib/linux-tools-$(uname -a | awk '{ print $3 }' | sed -r 's/-generic//')/libperf-jvmti.so
->  else
->  	echo "Fail to find libperf-jvmti.so"
-> +
->  	# JVMTI is a build option, skip the test if fail to find lib
->  	exit 2
->  fi
+> Roberto Sassu (1):
+>       perf build: Remove FEATURE_CHECK_LDFLAGS-disassembler-{four-args,init-styled} setting
+> 
+>  tools/build/Makefile.feature                 |  2 +-
+>  tools/build/feature/Makefile                 |  4 +--
+>  tools/build/feature/test-libbfd-buildid.c    |  8 -----
+>  tools/build/feature/test-libbfd-threadsafe.c | 18 ++++++++++
+>  tools/perf/Makefile.config                   | 54 ++++++++++------------------
+>  tools/perf/tests/make                        |  5 +++
+>  6 files changed, 45 insertions(+), 46 deletions(-)
+> ---
+> base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
+> change-id: 20251223-james-libbfd-feat-check-e0cd09d2c1e1
+> 
+> Best regards,
 > -- 
-> 2.52.0.223.gf5cc29aaa4-goog
-> 
+> James Clark <james.clark@linaro.org>
