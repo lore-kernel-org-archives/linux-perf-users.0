@@ -1,26 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13125327204;
-	Tue,  6 Jan 2026 12:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B3132E6AB;
+	Tue,  6 Jan 2026 12:08:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767701295; cv=none; b=DaYTv0qzzqVBBLADv/HzAVhn/hwWZOG7TqPG/kfnMlTF7nTuoPs6jFavZUZlM8cdZYEkWmksGll6uW4CrvDqaa9J5rXZVfjhit9YWSdvO1wCZTJGKWeM63mnJP3tyb69fpHzOWmNMaykCdhKhCuvNdINWkwytoEFHNoztANsvwk=
+	t=1767701298; cv=none; b=ZSDxw/dLIUvlOW4kDcyMIm8exA8H+8pddLLER3Mrw7tIYs3XNFVV773J9nrflRfCJc8qfyNnP66ISonq9indNF09Veajd07duD8jEaqYqhuOQ7jsEt5cCiNDlQysA+W0kNLI3o+mSrmAURr8ylnh61Z+Ehm/rVc7qLbgjxhMBGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767701295; c=relaxed/simple;
-	bh=2G+BYjlyH9qKU86t+h0jsCAN3vIQLlv3pde/45iJtBw=;
+	s=arc-20240116; t=1767701298; c=relaxed/simple;
+	bh=wqpObe0Nxv5h+lsHQTKeKqAHWgvWXKjfqylNAhef7+o=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VqLyqxM8VTHbZOEpy9qaPHNk6+ieCfb04Mt54Izxykf38blJmV52DbSzAq1ngMnezL5LusmUVEQvGpm6Cg2ywzgzEzjgJW4a2qmo71WUDSY8iq5paHATwrCEJgaZZKEFX0CeNOoTPKdYxGUIgFT8o6lZtylBJg0VnsUV/jVJL0c=
+	 In-Reply-To:To:Cc; b=uKJ6z1w2WAm3b9IOctJ+f2QyYt3HXDXZKJ4AfqnLo1W3T8GzS67Gk8c/LRe5mspv5LJJMmoONv1xbdaBtkR5e18Yf3v8XDe95X2ZVU4xMxazMGx7wxxtuzly33kQRVUlQ+CMDU6eR1WkjjNSLWvFMeV546DVuT6Eb9bqDXjumLo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 901801595;
-	Tue,  6 Jan 2026 04:08:06 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19D7F497;
+	Tue,  6 Jan 2026 04:08:09 -0800 (PST)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F5253F5A1;
-	Tue,  6 Jan 2026 04:08:11 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA69D3F5A1;
+	Tue,  6 Jan 2026 04:08:13 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 06 Jan 2026 12:07:51 +0000
-Subject: [PATCH RESEND v4 1/8] perf/uapi: Extend data source fields
+Date: Tue, 06 Jan 2026 12:07:52 +0000
+Subject: [PATCH RESEND v4 2/8] tools/include: Sync uapi/linux/perf.h with
+ the kernel sources
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +30,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260106-perf_support_arm_spev1-3-v4-1-b887bb999f6e@arm.com>
+Message-Id: <20260106-perf_support_arm_spev1-3-v4-2-b887bb999f6e@arm.com>
 References: <20260106-perf_support_arm_spev1-3-v4-0-b887bb999f6e@arm.com>
 In-Reply-To: <20260106-perf_support_arm_spev1-3-v4-0-b887bb999f6e@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -41,41 +42,27 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1767701288; l=3317;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1767701288; l=2631;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=2G+BYjlyH9qKU86t+h0jsCAN3vIQLlv3pde/45iJtBw=;
- b=hDaTV4oT1KCsYLy2dwgxUBGOkJJgdVLbu6KouoflubzcU5AeAhyjku3dyJMUMXLhQxRM9nlEA
- /Qa6YzkEA2fA2bER0j6T84Ll/6lf7Ur2BFcM8ZCnfJZXaJBP23eauEN
+ bh=wqpObe0Nxv5h+lsHQTKeKqAHWgvWXKjfqylNAhef7+o=;
+ b=dJdN9RAa95S6tnH8yz58u0q+rqXk1WxUL5mnK96T+L+i+mnlAzl0CwfJFE0D8TaWXsuKPLWiM
+ Tn2n864WEqaBCSQzPFg/xCSwFheyrW7hxP2+/9FzoOt2Gav7gUPqU/G
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Arm CPUs introduce several new types of memory operations, like MTE tag
-accessing, system register access for nested virtualization, memcpy &
-memset, and Guarded Control Stack (GCS).
-
-For memory operation details, Arm SPE provides information like data
-(parallel) processing, floating-point, predicated, atomic, exclusive,
-acquire/release, gather/scatter, and conditional.
-
-This commit introduces a field 'mem_op_ext' for extended operation type.
-The extended operation type can be combined with the existed operation
-type to express a memory type, for examples, a PERF_MEM_OP_GCS type can
-be set along with PERF_MEM_OP_LOAD to present a load operation for
-GCS register access.
-
-Bit fields are also added to represent detailed operation attributes.
+Sync for extended memory operation bit fields.
 
 Reviewed-by: James Clark <james.clark@linaro.org>
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- include/uapi/linux/perf_event.h | 32 ++++++++++++++++++++++++++++++--
+ tools/include/uapi/linux/perf_event.h | 32 ++++++++++++++++++++++++++++++--
  1 file changed, 30 insertions(+), 2 deletions(-)
 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
 index c44a8fb3e4181c91a1e6e3a40e23fcf1de421af3..3d2c5ee9282efc4a2310f554443082f1d0027889 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
 @@ -1330,14 +1330,32 @@ union perf_mem_data_src {
  			mem_snoopx  :  2, /* Snoop mode, ext */
  			mem_blk     :  3, /* Access blocked */
