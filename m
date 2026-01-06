@@ -1,45 +1,56 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48323334C3E
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Jan 2026 10:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CC0335557;
+	Tue,  6 Jan 2026 11:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767696897; cv=none; b=WQ+wpL3Lgs2O2+r5r4swgClKmv+QYoGfvMotQcecZSDDQ7acnoDUjPQtsJmBIBNR2IHOHJFBLiqRCv3y+GsIbgUeaM9CNHKcj1bYh6Vb9ky0mlkOSsk3LC+PqDugplL1G/5lI1Vtmx0e5/xdbXOq1gyEcMjYE/en4XXR5bHi9ro=
+	t=1767697280; cv=none; b=LyvezR/ejpyURUcvK1RgfUSvh2MRkoR2S4QAgFo9Rj3IXNE2LTI/hRmDvcvS+ZIituTBzg+hs8twIX4y7gIQxYYtlCwCXD+IMlOpacbm+XubRNtEFd0/EITvbwH0mb97Qiep9RVAmBSTwZKB2D6YpTIFcVdWg4CVCCGnj/elLuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767696897; c=relaxed/simple;
-	bh=aYdFjfxG9nXDOtsLw7U2bKSS7+mqAjt6FhfEdykLhqc=;
+	s=arc-20240116; t=1767697280; c=relaxed/simple;
+	bh=ns7AV7KdtpZWpsiFswjsTDCpROD3BuxQ7Qc6+GFrSGw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oEhOk0aOwqQm8cXybmoDE0sPwJg9OypH6Ez+JKezqTHK2ovOf59IVFJxeQn65LU8llM+Cb5Eg266CA6F3+O/pzoiJiwpqYHimbKjNup17kSzKdOYchLJaKcJgIdUkxXx1gnsNhuSZ+rKa7opnh6tovAS1XKi8O+9OPAympa49iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 573B5497;
-	Tue,  6 Jan 2026 02:54:47 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B632D3F5A1;
-	Tue,  6 Jan 2026 02:54:53 -0800 (PST)
-Date: Tue, 6 Jan 2026 10:54:51 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Puranjay Mohan <puranjay12@gmail.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Breno Leitao <leitao@debian.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [RFC PATCH] perf/arm64: Add BRBE support for
- bpf_get_branch_snapshot()
-Message-ID: <20260106105451.GB336318@e132581.arm.com>
-References: <20260102214043.1410242-1-puranjay@kernel.org>
- <CANk7y0j7hAJ7OcH_HgN0cVGnUh=iBz=iuD9sYZmSy-koMjB_cg@mail.gmail.com>
- <20260105212213.GA336318@e132581.arm.com>
- <CANk7y0gb8TM7obqWgaNY3aK_TZLX_nivYEATv2GndN5Ghz1hcQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ee9VyjEfKCCfPzWKjJB6Vi/EwBWBtdkd5l0RDr+bo1JUf12LTjqH5PLtuld+6qf8ZfIMdrQnW0BDYlQArALerzt+RnNw7eZ2ppBHDSgjQ6tKsh2FETr2oposSKqS4iCuQ6LzZs8wAsDxC0ZOUPJJWiYN/k0r2smZS+7/k1t9qDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=r9a1jdYm; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r9a1jdYm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=fUMO7SOFqDjMmjplPe/dBxqKnTCEktvk7ucaUMOcMDk=; b=r9a1jdYmGzNV/LDTJYWHkLAuSe
+	76mSHo17YC4xExOeMg7MVGPIQbXhnTOAGf+qgj+CMB+X+lg8+ZmDmCYZJTfa4H8+xN3cGA3ee2Emg
+	sKe3k1XBoUgFxzUiHijKEUNCbMaxkawsgXM6tWzVOErN99u0qH662J1y0iPRp0xOYXOT32In132vE
+	PrGf2AVAkLFuMX1xUSEHDw7TE8Z7oD8gqm/WGB683wYJJ5fR8vMetm7Unk0iH+sVnJiciIVvEHPhL
+	BYHrI14pvAk15P0BaR5Qtc5CfY0BMbPl6zaHX1yi2e9WCWMDASdZB3csrei0IK7rMy/sz/sBq8fxy
+	b5axszTA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vd4oG-0000000BgWd-1pnW;
+	Tue, 06 Jan 2026 11:01:08 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5DC0B30056B; Tue, 06 Jan 2026 12:01:07 +0100 (CET)
+Date: Tue, 6 Jan 2026 12:01:07 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Zide Chen <zide.chen@intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>
+Subject: Re: [PATCH V2 02/13] perf/x86/intel/uncore: Support per-platform
+ discovery base devices
+Message-ID: <20260106110107.GC2393663@noisy.programming.kicks-ass.net>
+References: <20251231224233.113839-1-zide.chen@intel.com>
+ <20251231224233.113839-3-zide.chen@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,74 +59,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANk7y0gb8TM7obqWgaNY3aK_TZLX_nivYEATv2GndN5Ghz1hcQ@mail.gmail.com>
+In-Reply-To: <20251231224233.113839-3-zide.chen@intel.com>
 
-On Mon, Jan 05, 2026 at 09:46:01PM +0000, Puranjay Mohan wrote:
+On Wed, Dec 31, 2025 at 02:42:19PM -0800, Zide Chen wrote:
+> @@ -1897,6 +1899,17 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, intel_uncore_match);
+>  
+> +static bool ucore_use_discovery(struct uncore_plat_init *config)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < UNCORE_DISCOVERY_DOMAINS; i++)
+> +		if (config->domain[i].discovery_base)
+> +			return true;
+> +
+> +	return false;
+> +}
+> +
+>  static int __init intel_uncore_init(void)
+>  {
+>  	const struct x86_cpu_id *id;
+> @@ -1911,15 +1924,14 @@ static int __init intel_uncore_init(void)
+>  
+>  	id = x86_match_cpu(intel_uncore_match);
+>  	if (!id) {
+> -		if (!uncore_no_discover && uncore_discovery(NULL))
+> -			uncore_init = (struct uncore_plat_init *)&generic_uncore_init;
+> -		else
+> +		uncore_init = (struct uncore_plat_init *)&generic_uncore_init;
+> +		if (uncore_no_discover || !uncore_discovery(uncore_init))
+>  			return -ENODEV;
+>  	} else {
+>  		uncore_init = (struct uncore_plat_init *)id->driver_data;
+> -		if (uncore_no_discover && uncore_init->use_discovery)
+> +		if (uncore_no_discover && ucore_use_discovery(uncore_init))
+>  			return -ENODEV;
+> -		if (uncore_init->use_discovery &&
+> +		if (ucore_use_discovery(uncore_init) &&
+>  		    !uncore_discovery(uncore_init))
+>  			return -ENODEV;
+>  	}
 
-[...]
+I got triggered by that naming oddity, but then couldn't help but also
+fix the lack of { } and then use for-scoped variables.
 
-> Thanks for running the test, it will help me debug it better. But as
-> Mark pointer out this has fundamental problems which I will try to fix
-> first.
-
-I saw the discussion.  Maybe we can refer to other architecture for
-how to resolve the issues.
-
-> P.S. - The test on FVP RevC, does this need special hardware or this
-> is an emulation platform, in the later case, can I do the test myself
-> somehow?
-
-FVP is an emulation platform, and the best chance is to download
-Shrinkwrap tool [1] for access it.  Below are some notes:
-
-- For a FVP with BRBE enabled, I created a addition.yaml:
-
----8<---
-
-layers:
-     - arch/v9.5.yaml
-
-run:
-   params:
-      -C bp.hostbridge.userNetworking: 1
-      -C bp.hostbridge.userNetPorts: 8022=22
-      -C cluster0.has_brbe: 1
-      -C cluster0.has_brbe_v1p1: 1
-      -C cluster1.has_brbe: 1
-      -C cluster1.has_brbe_v1p1: 1
-   rtvars:
-      CMDLINE:
-         type: string
-         value: console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda rw ip=dhcp kpti=off
-
---->8---
-
-- Build firmware for FVP:
-
-  export PATH=/path/to/shrinkwrap:$PATH
-  shrinkwrap build --overlay=addition.yaml ns-edk2.yaml
-
-- Build Linux kernel:
-
-  ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make Image arm/fvp-base-revc.dtb
-
-- Run FVP:
-
-  shrinkwrap run -o addition.yaml \
-        --rtvar=KERNEL=$KERNEL_PATH/arch/arm64/boot/Image \
-        --rtvar=DTB=$KERNEL_PATH/arch/arm64/boot/dts/arm/fvp-base-revc.dtb \
-        --rtvar=ROOTFS=debian.img ns-edk2.yaml
-
-You can download a root file system image from [2].  Just note, FVP is
-slow so you might need to cross build kernel and eBPF selftest on your
-host machine and then mount your host folder onto FVP's /mnt folder,
-something like:
-
-  sshfs -o allow_other,default_permissions,reconnect \
-      username@host_ip:/path/to/build/folder /mnt
-
-Thanks,
-Leo
-
-[1] https://shrinkwrap.docs.arm.com/en/latest/userguide/quickstart.html#
-[2] https://releases.linaro.org/debian/images/developer-arm64/debian12/debian.img
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1899,13 +1899,12 @@ static const struct x86_cpu_id intel_unc
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_uncore_match);
+ 
+-static bool ucore_use_discovery(struct uncore_plat_init *config)
++static bool uncore_use_discovery(struct uncore_plat_init *config)
+ {
+-	int i;
+-
+-	for (i = 0; i < UNCORE_DISCOVERY_DOMAINS; i++)
++	for (int i = 0; i < UNCORE_DISCOVERY_DOMAINS; i++) {
+ 		if (config->domain[i].discovery_base)
+ 			return true;
++	}
+ 
+ 	return false;
+ }
+@@ -1929,9 +1928,9 @@ static int __init intel_uncore_init(void
+ 			return -ENODEV;
+ 	} else {
+ 		uncore_init = (struct uncore_plat_init *)id->driver_data;
+-		if (uncore_no_discover && ucore_use_discovery(uncore_init))
++		if (uncore_no_discover && uncore_use_discovery(uncore_init))
+ 			return -ENODEV;
+-		if (ucore_use_discovery(uncore_init) &&
++		if (uncore_use_discovery(uncore_init) &&
+ 		    !uncore_discovery(uncore_init))
+ 			return -ENODEV;
+ 	}
