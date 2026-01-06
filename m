@@ -1,98 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14652FE58D;
-	Tue,  6 Jan 2026 21:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60069194C96;
+	Tue,  6 Jan 2026 21:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767734372; cv=none; b=tFjcNUa2i3d4yllbARZIuRCQrJb322KHPUNvUIpEdpZrEL45ZA5EYD+s8xwhm/1VBpuWAZanC3lmpUAUXxJ6JD9hwAOfer041oTVJhQfrEZZVe833NtpsYGm4rti/yl0J1pPXnF1C4nyPgVqAL3BV+n9Wt43AdTOWYOOw1q9DwQ=
+	t=1767735819; cv=none; b=EXmmpaCX9bPma+h5p2LM5VWccDNjNXtbW6k56Wxm/gWXwpIDhMO3vM32upZqbM5yCGLPXgh8lq4kYf3KCxlHR788kyZGJYrOvS2W4iArfl369Bs7KyVhddjYZPIRWATBL7fdxQi8eArmSIxx0ZyBKS73ZBr2E6Ai9Wf0emeiOC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767734372; c=relaxed/simple;
-	bh=8It3JAn5M/kGCFZwgGeGWsjkqFrvQyoZHxCgGzFQcE0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jg7ttbGO89zptmV4eV0ffRbMURMNp91+LDE6c0pdLduXXnJKv+jq6fdyyOY14PnomHO5MF2tng1IRR15nU2+A90KXbjZkPnJ+CkGDkM6GviUrhnI7BqKBCTbuMLhPBv0ejGFpgHFh7ki31o36l+PkMKeDxXehPoCkMOthbz5FIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hiodKmdI; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1767735819; c=relaxed/simple;
+	bh=hUHsHh3FbOTEb3Y9hs5Fw2NpxjDFWmCSLXCPJmeq4FQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oV6bea+LGRdgd91UtaCc6rVg//lS9CZ7B642eVkljAZ8eKFh9uEOkR7YzrNQBWrwayaSLVdZrcgsflWXO5hHfODN5ukpvJB1lJ2RrSYJ1LWeuCSXejFlNt72XZjegl7EQk527luUB6GBRgUtCUgF91AH9u+9VaDqmgNYaWwq94M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OlWubsDj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hiodKmdI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767734371; x=1799270371;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8It3JAn5M/kGCFZwgGeGWsjkqFrvQyoZHxCgGzFQcE0=;
-  b=hiodKmdIO+AfWETLMB/HF8hZuIj0nN2xgq0wFkIWGWJHnfRbgfRDB7vd
-   kkSF9ObZWRXrMqlvZmL0H4fxJLYiQmFdRfdaRE7lwHKDR/nUX+sS1Glet
-   JBQGk8T3hjoO16RMTlFw6hP8j8myiFabrr/JKCih6T65LYrw6AU3yuJCK
-   ZlP1XDN4mbNAguy3OVYP4napeV12x/X0JwXu7IMGkoxnSSbWe1wyLMp68
-   TksHDtp31tt3G7ppz0DXuPPOEseDrLLsv6WM9aNLnCsqOBc1dDw7d8U7i
-   6wO/hjf4H5N3HrGy/JlHGwzeB8HfkusRySJLq4Y0EpDik3ekLd0l1hhBh
-   Q==;
-X-CSE-ConnectionGUID: 2hObKezCRbmnQmTIRUHP/A==
-X-CSE-MsgGUID: NmIiFzXmTJukxEInYUgK/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11663"; a="72952251"
-X-IronPort-AV: E=Sophos;i="6.21,206,1763452800"; 
-   d="scan'208";a="72952251"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 13:19:30 -0800
-X-CSE-ConnectionGUID: Qx3u3eqZRoCXR+NENMUtnQ==
-X-CSE-MsgGUID: x4n46abrSnuS3DdAUbTnGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,206,1763452800"; 
-   d="scan'208";a="202654490"
-Received: from unknown (HELO [10.241.241.119]) ([10.241.241.119])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 13:19:29 -0800
-Message-ID: <0906a9e0-ebec-4a91-9392-aa10bb49d35f@intel.com>
-Date: Tue, 6 Jan 2026 13:19:28 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OlWubsDj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C792C116C6;
+	Tue,  6 Jan 2026 21:43:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767735819;
+	bh=hUHsHh3FbOTEb3Y9hs5Fw2NpxjDFWmCSLXCPJmeq4FQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OlWubsDj4lQBSprNxvhsNImCqdrbDMVJTRmXDXcfeIOGfmJ3WpQ/0na+7ObpWwgp9
+	 nnatXlhNTCBda1TOItyJML5HGAW2KDR7+fetzJO5JIooQWg3yScRk7dgoudMG0J6ge
+	 lZkMORaoW/XDnzs3YduJoRv3okldL0oTBz+n2NqBesnI1hD07okS0HN/dAuQefMfHi
+	 iU+BqAMLLqHTc5mRCiDhZTHLZk/1fCFpE3UutIxVIoIDD8X2yiWy1LNw8rpvi9frp5
+	 91x4UiPUOzmy1jjbVAvwpF+HSJ13TZdzdGdhvo/hmqjobT8kbZOgIzoON4y7dFMjGe
+	 lP19m88H10gzA==
+Date: Tue, 6 Jan 2026 18:43:34 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	namhyung@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
+	sumanthk@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com
+Subject: Re: [PATCH v2] perf test: Fix test case perf evlist tests for s390x
+Message-ID: <aV2CBqwc94wbPCsQ@x1>
+References: <20251210071752.4160369-1-tmricht@linux.ibm.com>
+ <CAP-5=fXZw9NA7bK6bH+hxPYG0nHGPYKqtYt3pg7iNmsQPWHRig@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 00/13] Add DMR/NVL and missing PTL uncore support
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Xudong Hao <xudong.hao@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>
-References: <20251231224233.113839-1-zide.chen@intel.com>
- <20260106150833.GD2393663@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <20260106150833.GD2393663@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXZw9NA7bK6bH+hxPYG0nHGPYKqtYt3pg7iNmsQPWHRig@mail.gmail.com>
 
-
-
-On 1/6/2026 7:08 AM, Peter Zijlstra wrote:
-> On Wed, Dec 31, 2025 at 02:42:17PM -0800, Zide Chen wrote:
+On Wed, Dec 10, 2025 at 10:35:01AM -0800, Ian Rogers wrote:
+> On Tue, Dec 9, 2025 at 11:18 PM Thomas Richter <tmricht@linux.ibm.com> wrote:
+> >
+> > Perf test case 78: perf evlist tests fails on s390. The failure
+> > is causes by grouping events cycles and instructions because
+> > sampling does only support event cycles.
+> > Change the group to software events to fix this.
+> >
+> > Output before:
+> >   # ./perf test 78
+> >   78: perf evlist tests              : FAILED!
+> >   #
+> >
+> > Output after:
+> >   # ./perf test 78
+> >   78: perf evlist tests              : Ok
+> >   #
+> >
+> > Fixes: db452961de939 ("perf tests evlist: Add basic evlist test")
+> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 > 
->> Zide Chen (13):
->>   perf/x86/intel/uncore: Move uncore discovery init struct to header
->>   perf/x86/intel/uncore: Support per-platform discovery base devices
->>   perf/x86/intel/uncore: Remove has_generic_discovery_table()
->>   perf/x86/intel/uncore: Add IMH PMON support for Diamond Rapids
->>   perf/x86/intel/uncore: Add CBB PMON support for Diamond Rapids
->>   perf/x86/intel/uncore: Add domain global init callback
->>   perf/x86/intel/uncore: Add freerunning event descriptor helper macro
->>   perf/x86/intel/uncore: Support IIO free-running counters on DMR
->>   perf/x86/intel/uncore: Support uncore constraint ranges
->>   perf/x86/intel/uncore: Update DMR uncore constraints preliminarily
->>   perf pmu: Relax uncore wildcard matching to allow numeric suffix
->>   perf/x86/intel/uncore: Add missing PMON units for Panther Lake
->>   perf/x86/intel/uncore: Add Nova Lake support
-> 
-> Thanks, pushed out to queue/perf/core for the robots to have a go.
-> 
-> I made a few minor edits, the biggest of which I already shared in a
-> reply.
+> Tested-by: Ian Rogers <irogers@google.com>
 
-Thank you very much!
+Thanks, applied to perf-tools-next,
+
+- Arnaldo
