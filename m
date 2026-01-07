@@ -1,88 +1,136 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF17F229B38;
-	Wed,  7 Jan 2026 08:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8654241139;
+	Wed,  7 Jan 2026 09:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767774406; cv=none; b=MmDPwVEHtG3UB60hS4NXwcbfM7brATEChDwcS5xbt84E0lB5rANRSL8lFjqdd1tOHpx46NP5+a1K8LAmsQcWriSdqpE0/HO4QCHZhb5b5pTtESCMk4p1CJSyTi5MX9zLp7/ZEerLMvcSgQcvmDp5A9DNA7WQNaxnHj/0kSq6IjY=
+	t=1767777422; cv=none; b=HFI4fpbdruJKTkR8FFPzR4LHwgIFx0mVBpHY1Paqvawu1a86vVEuj2HjG9VrTV1W3b33s9o5GDDANHV6HEI4n9b/wql0DdpSA4XvbwhjIWxZ+1bdyylROyBfv0PnFjMYOXodcd88POpF46SzoRtJuBPl5R1+1ciHrwzMGtY4xzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767774406; c=relaxed/simple;
-	bh=2TLQMmVXPUeDbbbdnF41Xo3MjftY2B9+e84ZTJ/leKI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MKkVOdRjW+2rDUfy/EBsaZTl8QOvwBgT2+DU0Fqn2THXJVGoPEHBsGjoLo5vkg314Bfx7femjZ+lUZl3l2TJt1B19PTnjxxprPzkiWdlOvu/aXynDbUJ2IC29VDIWzWDyfdGtSQ3C4aMUyofuKiPP+j2u3cq9n/8GZhwMBeYcsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowAAHIdifGF5pwaPxAw--.29116S2;
-	Wed, 07 Jan 2026 16:26:08 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] perf/x86/core: Remove duplicate include
-Date: Wed,  7 Jan 2026 16:21:59 +0800
-Message-Id: <20260107082159.2150934-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1767777422; c=relaxed/simple;
+	bh=3otYGtdS+u+00PAEZ0SIOpXWoCv6ClN/Oeog/yibKiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TppLJvhXlh854s2BfZUsm1kVNUPk5hB+PFOooAwDuKtVogw0UhgZSYtxyEE4gEkMW+QwI1CgHlniK8yBYM86kvOvaGFit919IAGcKpMFXrf6GlDeW3pR7YbREo9J4G0LjzFBvN1yyfxgwsRgr1kSkmvyxBV4SmlowYs0eE5Ux4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mGknHyCD; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mGknHyCD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=oAUzauUGyZWcAhjUNVxBcRjHqiLd6AQpeI8ke2cG5o8=; b=mGknHyCDvLmW0OTNSFS6fOafEs
+	9KjoSo6zVPdn7UwsKEja4Wad2DrcnVQDgumkR4CvqtkVmpHWODZHIxlkzQPYRvI4eJWG0NFOKaDHQ
+	53aMtFN4MHpqTgrT9BM8rScMCXZjwyxnLSzlosFSdTS2w+ct93DZUv4vEpJ8ctUdnhARZFg33WLvy
+	yRAYhy0l7AVrm6KUwJewbIZyDVHR/VyjMIIUU3vrblbR+fQa4kpcQiicL1dXMepEpuS7EBRl5xOs6
+	Zv6T2bRJYZYMqIS2JOP92s+eSIuB4ZSMnVb5WQFYN4s2jmbeT/lXIhn7zLMw3TlpkFw0c876Wbx92
+	nix70yww==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vdPev-0000000B2iu-0yKP;
+	Wed, 07 Jan 2026 09:16:53 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3FAD130056B; Wed, 07 Jan 2026 10:16:52 +0100 (CET)
+Date: Wed, 7 Jan 2026 10:16:52 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUG] perf/core: Task stuck on global_ctx_data_rwsem
+Message-ID: <20260107091652.GB3707891@noisy.programming.kicks-ass.net>
+References: <aUnVfxDtLNUDJM_v@google.com>
+ <aUnWFc_mILUDFavi@google.com>
+ <aV2OACqA5OpmoeF0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAAHIdifGF5pwaPxAw--.29116S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYW7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aV
-	CY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAq
-	x4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2z280aVAFwI0_XcC_AcWlOx8S6x
-	CaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwAC
-	I402YVCY1x02628vn2kIc2xKxwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4c8EcI
-	0Ec7CjxVAaw2AFwI0_GFv_Wryl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
-	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRAMa0UUUU
-	U
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aV2OACqA5OpmoeF0@google.com>
 
-Remove duplicate inclusion of linux/kvm_types.h.
+On Tue, Jan 06, 2026 at 02:34:40PM -0800, Namhyung Kim wrote:
+> Hello,
+> 
+> On Mon, Dec 22, 2025 at 03:36:53PM -0800, Namhyung Kim wrote:
+> > On Mon, Dec 22, 2025 at 03:34:23PM -0800, Namhyung Kim wrote:
+> > > Hello,
+> > > 
+> > > I got a report that a task is stuck in perf_event_exit_task() waiting
+> > > for global_ctx_data_rwsem.  On large systems, it'd have performance
+> > > issues when it grabs the lock to iterate all threads in the system to
+> > > allocate the context data.  And it'd block task exit path which is
+> > > problematic especially under memory pressure.
+> > > 
+> > >   perf_event_open
+> > >     perf_event_alloc
+> > >       attach_perf_ctx_data
+> > >         attach_global_ctx_data
+> > >           percpu_down_write (global_ctx_data_rwsem)
+> > >             for_each_process_thread
+> > >               alloc_task_ctx_data
+> > >                                                do_exit
+> > >                                                  perf_event_exit_task
+> > >                                                    percpu_down_read (global_ctx_data_rwsem)
+> > > 
+> > > I think attach_global_ctx_data() should skip tasks with PF_EXITING and
+> > > it'd be nice if perf_event_exit_task() could release the ctx_data
+> > > unconditionally.  But I'm not sure how to synchronize them properly.
+> > > 
+> > > Any thoughts?
+> 
+> I'm curious if this makes any sense..  I feel like it needs to check the
+> flag again before allocation.
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 376fb07d869b8b50..2a8847e95d7eb698 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -5469,6 +5469,8 @@ attach_global_ctx_data(struct kmem_cache *ctx_cache)
+>  	/* Allocate everything */
+>  	scoped_guard (rcu) {
+>  		for_each_process_thread(g, p) {
+> +			if (p->flags & PF_EXITING)
+> +				continue;
+>  			cd = rcu_dereference(p->perf_ctx_data);
+>  			if (cd && !cd->global) {
+>  				cd->global = 1;
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- arch/x86/events/core.c | 1 -
- 1 file changed, 1 deletion(-)
+I suppose this makes sense.
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 0ecac9495d74..c182a47f0f38 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -30,7 +30,6 @@
- #include <linux/device.h>
- #include <linux/nospec.h>
- #include <linux/static_call.h>
--#include <linux/kvm_types.h>
- 
- #include <asm/apic.h>
- #include <asm/stacktrace.h>
--- 
-2.25.1
+> @@ -14563,7 +14565,6 @@ void perf_event_exit_task(struct task_struct *task)
+>  	/*
+>  	 * Detach the perf_ctx_data for the system-wide event.
+>  	 */
+> -	guard(percpu_read)(&global_ctx_data_rwsem);
+>  	detach_task_ctx_data(task);
+>  }
 
+This would need a comment; something like:
+
+	/*
+	 * This can be done without holding global_ctx_data_rwsem
+	 * because this is done after setting PF_EXITING such that
+	 * attach_global_ctx_data() will skip over this task.
+	 */
+	WARN_ON_ONCE(!(task->flags & PF_EXITING))
+
+But yes, I suppose this can do. The question is however, how do you get
+into this predicament to begin with? Are you creating and destroying a
+lot of global LBR events or something?
+
+Would it make sense to delay detach_global_ctx_data() for a second or
+so? That is, what is your event creation pattern?
