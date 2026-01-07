@@ -1,117 +1,167 @@
-Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140B53093C4
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Jan 2026 12:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4221EB1AA;
+	Wed,  7 Jan 2026 13:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767787203; cv=none; b=L/0mvld+gCOt9N52NQb6w86MhcUn2IWzU34VKOuR0etFApu85HTrVHTftDYJ2Ql6HZPldSmwDXQm7PmlxAbWxPLgx12F0W1r6YZ77Hdfa9twac/fRqG9A3LFptlLBzZbtOMEyxW1mtP7eEY+PC1X4c3B5ZPEFfqPT+toRMADFko=
+	t=1767790880; cv=none; b=oYLJmZu1vG/rx9Pk7clHrubfEkPrMQl2BVj3GBslp8+jDefHJcOtuYX0emzMFe0glQOYRxMofCKlr1aeMBDpMKJGnTXCrXNWSHUwsV1YCsYYKiERylkp2qMv1kx1sf+H1HgFYQmzlYUIPwSNORTOpTTL4xVQ0zuAmg1j/FjCWDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767787203; c=relaxed/simple;
-	bh=TfMWykcf+8UXGfHGmT9UsPj0B1MObIutniI9d+Q2eso=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=txe39kkSbAalyi7As0dzETgsV2ATwIKLvRfmK8LCFUbV25880svZwiMGaZpnJfyzpEck4e8Ao2TdTtC1vXe5N4tyVn3++N4A2E0NAyzv4qPzyfQzq7rHEqOOcByCJolaVlHS8QZhpgkjOxXfm9pKAxVfqYtqvTrqDIeh9eS9sP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EX8j8UxM; arc=none smtp.client-ip=74.125.82.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767790880; c=relaxed/simple;
+	bh=J7DNc49U0v5Pqr/Z2NI7WTkUwmx2ilro0RTKNW3TSVs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JgQhcKVvO+Ih95/er0Urj2bLcvw/I8aPTNAXc/hbluGsekkclnaQngdtnPKSSt2IJbbXHp1fysawBcJ2NsK3LFeNfQAagKSJEFRRZr/WwWjWZsyKlh2HBRlda55OuKlsvgEUjmeuIUcx3sJtZ41RD3y89uHoR/ZaVIYNzEZNttQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ShG7AQRM; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EX8j8UxM"
-Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-12179b87349so117815c88.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jan 2026 04:00:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767787201; x=1768392001; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IvnLNPW39tzQQ3hSPGDk4srbtyERtKsm0TVoURbB78I=;
-        b=EX8j8UxMGHbulHkJx7eAVFqJ7p2vos0yDKsXal3B9yXyjGot8VTdv62A40SgDKK5bS
-         /IHQZm8rZKVeDecyoN4xG6EIWbiUO0rQ9QW0Tumyl26zTz+3aIVg0cIwRoyUIzoLVQlY
-         lx1WrJO4ANMtWCmsnPdtD/CsaZCOFxTq/ecHc1nOEgJNSvsQuWESvv5Zi+A3M0wspM+4
-         qFPn3HCR6sHaGSf165DRysgp822IeaJ0PRsTfkwzqBsGZnA9tzZnsHeEZ7in5lYvZleR
-         nNTPxVmpVDn5pp+l+A8WlMBTJyCWbIkoSIDlxBRofVoFqod/RW1J/miRS0Vj7MQZLNJD
-         CYUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767787201; x=1768392001;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IvnLNPW39tzQQ3hSPGDk4srbtyERtKsm0TVoURbB78I=;
-        b=jJ/Vj/vus1Buq7xnerbdgYe2UTzrWIapc41bV4ZNI7uC2Fp1zgI/DTC7JZ2uvKV3Hq
-         V+GXzSZuBGMP1m7n6hC/p2Ven8ev7FWkLjINco47UAsxHJBDzVxDlU9nIHzG4Ggczk/D
-         dYM78O6CQS/suErfGD2/kzswAb7T82iU3S2Zm/nsnIH4Oj+wBVN08gn7uXUjAm7mVHaO
-         2UvOM6kTqvwhCu6OZ54+HJ41dMdSvKAMyEK8zN6gn6jJARn45jtR+kPiN5uT718g7yzk
-         X+0eibW8nTO1ESeCxJcPfGZLRUH2jQ1eP234/s3z0cBUpdOYzrW5XA4Tw9+m64/bVuOS
-         aVPg==
-X-Forwarded-Encrypted: i=1; AJvYcCU5kKxpQzd3++/tRNtPA+K0lJqFMrEsI2Spqavw7zbfiqyR8mW0tYoo0P2IVtla+UFmIKPjKtaZqpn8glqnm/OL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxm1OxsDnDhQc8ELrJsh0/tt4mMA3LokKoc6tDTnqIGklj+1wdq
-	iOJBEGvz5tlSEiGT9xwgxk43hzVAMlaLXrjssrgMD4aieym/KqiAc68wt4nxVhwn9WEOX8C/VAF
-	YIg6VN7r7wxOvnSVLqxtwb3oEzKxdET0=
-X-Gm-Gg: AY/fxX4bStIFLXhIJwdzIrXcuRU+nidaPCdm6oiWuEsIMhzvRmX/Vd94CutGr3cKNK6
-	sbUAl237dn4RyU0HRhzasLy4DZqJdNpjFAfXPUdVp6ET1ql67TwQi5XV0KpEwocziYkBANvkRGz
-	r8gWbu8arLIuIZs7bLi4VBC8AlLs3IWdTCd0TasduTfx9IixCkurDSjB7wLuWBJXGkljH1vbKaO
-	rLd3bg9p1A/hbGAD/NyFQKx0CNy7hnYQkuSX8JKRR4Ic1p9ApA9Gxtase4vXd+8LBocyqsyHbgw
-	BEpBduzs6wqMJ6rlvbDk7GLvKYWQkrgAmbC12/Srld6A2V+9VZVppTEQwv3tdphrvuQj685XTQq
-	hR1WraIxpexnn
-X-Google-Smtp-Source: AGHT+IHl2VXT8tuqTG18KAX87XjyJCanrQuK31sAG/wWGLYWMCAEZ3iuh0hHmV4OVYAR5S0P8i88XR+h9IHEV+IH9n8=
-X-Received: by 2002:a05:7301:4288:b0:2a4:3592:cf89 with SMTP id
- 5a478bee46e88-2b17d0d4b88mr704118eec.0.1767787200933; Wed, 07 Jan 2026
- 04:00:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ShG7AQRM"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 607A0qjB032439;
+	Wed, 7 Jan 2026 13:01:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=SN5m8G
+	QzVPJuEj/Z7bYA+x5N5GmhXuzJymeq6dLVo04=; b=ShG7AQRMh9W5rHvctQ0EHQ
+	MmtR8/mRbL8GJ+DSJljDLX3xWu+XtJnlfsPfSmQ6bee6iam31mLSTzrnaVKTDjG6
+	evnKIJs1cQlwU8y40QRfLn9L4ZckhsKD0Hj0zpy0K8ZLfhansz2A6J0rDHMtAIGQ
+	vEE7hkxecQ+pElg7OCxgVpSwxv4lJbvEcg+vFnOMrwwUofGI7930gdq7yrbDjA+D
+	YkpKh81RwoAoyfM2bvHep+XK6InmzDX0Z6rKfxiocs7DQn0jesuXrKxOYk+RKpgT
+	lBbyzRTgAfLUrcgzH7f6VzTHj+/SQd59MEdY8YhSVpIpjf00Cb0QhCrHQrf5xb+w
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4betu68wk2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 Jan 2026 13:01:12 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 607D1CGu032068;
+	Wed, 7 Jan 2026 13:01:12 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4betu68wjx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 Jan 2026 13:01:12 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 607As5bD015205;
+	Wed, 7 Jan 2026 13:01:11 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4bfdesh6v2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 Jan 2026 13:01:11 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 607D17b514483728
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 7 Jan 2026 13:01:07 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6567320049;
+	Wed,  7 Jan 2026 13:01:07 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0BEA520040;
+	Wed,  7 Jan 2026 13:01:07 +0000 (GMT)
+Received: from [9.111.10.96] (unknown [9.111.10.96])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  7 Jan 2026 13:01:06 +0000 (GMT)
+Message-ID: <0f55cde3-cba0-4e43-b2ac-1f1b506f4e15@linux.ibm.com>
+Date: Wed, 7 Jan 2026 14:01:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260105150106.567830-1-gary@kernel.org> <aVvdt90YmhJz3i5i@x1> <aV4TkNE_hAyByISq@google.com>
-In-Reply-To: <aV4TkNE_hAyByISq@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 7 Jan 2026 12:59:48 +0100
-X-Gm-Features: AQt7F2qCZtVjBpQW4g-uNITeBCmbGHFYwnjYgECDW25Z8q9F1kvT6B953AVTAIo
-Message-ID: <CANiq72kUVvMznfFtcjks=0iJ7HE2uvCSyD-Xu5NV=_9ZykVXhg@mail.gmail.com>
-Subject: Re: [PATCH v2] perf symbol: remove Rust symbol workarounds
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf test: Fix test perf stat tests for virtualized
+ machines
+To: James Clark <james.clark@linaro.org>
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, namhyung@kernel.org, irogers@google.com
+References: <20260107094835.131882-1-tmricht@linux.ibm.com>
+ <2e0d7dce-a52f-4825-990e-f4bdaa1175ac@linaro.org>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <2e0d7dce-a52f-4825-990e-f4bdaa1175ac@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=QbNrf8bv c=1 sm=1 tr=0 ts=695e5918 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=Lh2iM_emvY-ES8JQXb4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: miFQb7bvRgM5FlX3aH_AR1a9MKYS35QU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA3MDA5NyBTYWx0ZWRfX/hTW3la+6SmD
+ sFBTyGpoH3iIrV8sKhtIFtTHSTGJdyB5W4ONBzgM2VOZumv7rzTavZXz4Gpt72JZwv8YIXCBFeU
+ TRUluzi9OJ6LfPA59pcmfLIe+wNRhOK02by2TJBz5sZ7DC+dxMSl5MnIXDYUaGtWBQiGZErg3/d
+ K722VHUrUyHOZsksz64lJ1bojJZAzP4A+yu9I0Bv4idl0TGZ3E0B1oi1QENgcgr9Z5VUi9c6TBB
+ yuRuWO46lkj6dhunXNtS8AEsWB2415BOdkXPeIM35lCs1NpYyVDLsJC+68yw1rZWT9fE4tUKwO3
+ BsNBwAdxNVQEOgUUJBEc9c43VBD+W7eyzkgGRMbL1XR8zpglnRBRG0/+vfzToLtFP8K3NdRa5Ip
+ I8ZwOzOXmY8S0rjtXJdT29JIEHsiWJ9fwxs9FEfV8oei9mCO08HKwFZeboACc8iv8oKmnJBWANr
+ PvuzaG++agu/atpFq9g==
+X-Proofpoint-GUID: BVPKldA4AplypkX92HJ2n8NJ704RAPSW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-07_01,2026-01-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 clxscore=1015 bulkscore=0 suspectscore=0 priorityscore=1501
+ adultscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2512120000 definitions=main-2601070097
 
-On Wed, Jan 7, 2026 at 9:04=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> I'm afraid there may be some outdated kernels which don't have the fix
-> yet.  Maybe make sense to wait some more time for them to disappear?
+On 1/7/26 12:18, James Clark wrote:
+> 
+> 
+> On 07/01/2026 9:48 am, Thomas Richter wrote:
+>> On s390 perf test 'perf stat tests', subtest test_hybrid fails
+>> for z/VM systems.
+>> The root cause is this statement:
+>>
+>>    $(perf stat -a -- sleep 0.1 2>&1 |\
+>>                    grep -E "/cpu-cycles/[uH]*|  cpu-cycles[:uH]* -c)
+>>
+>> The perf stat output on a s390 z/VM system is
+>>
+>>   # perf stat -a -- sleep 0.1 2>&1
+>>   Performance counter stats for 'system wide':
+>>
+>>         56      context-switches  #     46.3 cs/sec  cs_per_second
+>>   1,210.41 msec cpu-clock         #     11.9 CPUs  CPUs_utilized
+>>         12      cpu-migrations    #      9.9 migrations/sec ...
+>>         81      page-faults       #     66.9 faults/sec ...
+>>
+>>         0.100891009 seconds time elapsed
+>>
+>> The grep command does not match any single line and exits with error
+>> code 1. As the bash script is executed with set -e, it aborts with the
+>> first error code being non-zero.
+>>
+>> Fix this and use wc -l to count matching lines instead of grep ... -c.
+>>
+>> Output before:
+>>   # perf test 102
+>>   102: perf stat tests                      : FAILED!
+>>   #
+>> Output after:
+>>   # perf test 102
+>>   102: perf stat tests                      : Ok
+>>   #
+>>
+>> Fixes: 65d11821910bd ("perf test: Add a test for default perf stat command")
+> 
+> I think the change looks ok, but doesn't it fix 65d11821910bd ("perf tools: Add fallback for exclude_guest") where the existing wc -l was changed to grep -c?
+> 
 
-Hmm... Do you mean that someone would use a new perf with an old
-kernel? Is that supported etc.?
+You are correct, James.
+I will send V2 with updated Fixes tag.
 
-In any case, the fix is getting backported all the way to 6.1.y, i.e.
-all the supported LTSs:
+Thanks
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
-    761e965d2c61 ("kallsyms: Fix wrong "big" kernel symbol type read
-from procfs")
-    d5fe0c115bbc ("kallsyms: Fix wrong "big" kernel symbol type read
-from procfs")
-    d46ef2bf91ef ("kallsyms: Fix wrong "big" kernel symbol type read
-from procfs")
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
 
-And the one in this thread could in principle be backported too to
-6.18.y now that the fix is there, no?
+Geschäftsführung: David Faller
 
-Thanks!
-
-Cheers,
-Miguel
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
