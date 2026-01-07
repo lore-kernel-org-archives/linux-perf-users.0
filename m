@@ -1,189 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com [209.85.215.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0281F9F70;
-	Wed,  7 Jan 2026 01:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87876207A32
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Jan 2026 06:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767748017; cv=none; b=KZUPPyE0wMExwy8NCGs2qYk2nJ3ypf280phGq/RfVhPHkppZ15jckvKR5zOkekfOsF/vGhdLYd8eCq0wdhbelr/dTLOwWWEavfbZflmCVtpj67IlXRY/qYkMBsWUlumXNz8f5rWOia744Vkv6Hc+tBDfAcwEY64Rnxpbeiq7Pfw=
+	t=1767768250; cv=none; b=cCv7VIaArj5oPcaGvWkScYFuZl2K8xsrrNDhhnqgZCKwW6cyZ0oERHH+wqnxS4akHkpY8U0x45FWldZ4Hls/YmwyyBGafXuXpWBU3KdG9kVO7sG2D4ez6Fz4jxWcgT+gdK11V9Rnv9yH7+CGr5hcW9ic5Mlw1w67ocn2eyzcKwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767748017; c=relaxed/simple;
-	bh=Pwb1sUUoKZW6YO5IHblpVUIzsLaH2y6g3Nw9Wd75mHI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m7/yabB1iTIcMsu5fllDhR/ITmMdSgqXQinjKnL8LAB1bsOnhFtS013MvcHlPAEhc4GhXhRdpJv/TMjjXfkKXRkgG685Nh0yJIhis5auPoVLZJDaR/Wu4EiSXYyyS5qIWD3e+vqlrdv1VyIAULIew50XB1oWnTIzA+VD/2YeA5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SRGVhUkW; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1767768250; c=relaxed/simple;
+	bh=Sp0Y+0T3l52GtbLjQnl10tvPYed8+55/Gn9jek0Hlhk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZwDXjWD2o6IySR20UfQ4L4KG6pOITOEKGvVv075nNWkz1J4O56nHp5rRQ+L8vCdEA1sCP8idblL5zUhFvjJ6iKaYTuURuLvSr+E+D4K3jAQEpH/Nt5ifeSzDej7jdpiBDE0YLgkIyb4DxaAQi7rm2VA/Bfq4ReetcKZfPes2xGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HDjlfyLG; arc=none smtp.client-ip=209.85.215.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SRGVhUkW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767748015; x=1799284015;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Pwb1sUUoKZW6YO5IHblpVUIzsLaH2y6g3Nw9Wd75mHI=;
-  b=SRGVhUkWmBjhxKqIj0IltU+mjuF2nApKmVtrAR1FVaIuIhLSKKya7XNG
-   P9+MSsCUjp8Z2CYb92P2qf9NMj8pMN3AUzLe/fv9COwm6f8N8BvMIlver
-   /JWDJw1fv2uZF25OcVbA7iDB3B/4OKZT5I8U1H4NLqGsPjro8x6AV9794
-   dQ4bG9zD98UqTtVO0drYNMj/xDN1eHmBaE0wi5gl01ZGPOPcQrE99ghfa
-   874m/MED8OIL3ibo1HDOUsIeK49cSDZVjuY3qOZfMYPHm8iiAGMI1Cx/E
-   hX8Zyghlvxp77ODD5nLQoFtwqfvVMalFVLQPrpVeyXf+YGSxmWcMxNixl
-   A==;
-X-CSE-ConnectionGUID: Us4HNuqqQOWH+pl42bTYWw==
-X-CSE-MsgGUID: 4qjH5R7hRT229s3HwL/aPg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11663"; a="69019500"
-X-IronPort-AV: E=Sophos;i="6.21,206,1763452800"; 
-   d="scan'208";a="69019500"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 17:06:55 -0800
-X-CSE-ConnectionGUID: mdAOQ3UYQ72ckBcFPbcb/g==
-X-CSE-MsgGUID: ISPvefs9RA2nd0ZoZ3hFJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,206,1763452800"; 
-   d="scan'208";a="207849361"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 17:06:52 -0800
-Message-ID: <cf4e38dc-6141-4a28-9d5c-b13ab5d2d390@linux.intel.com>
-Date: Wed, 7 Jan 2026 09:06:48 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDjlfyLG"
+Received: by mail-pg1-f195.google.com with SMTP id 41be03b00d2f7-bc09b3d3afeso797633a12.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jan 2026 22:44:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767768249; x=1768373049; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NzWYMY79C2D/HY+8eCPW7BWUMhBd8/GZBfIDTrzUEgU=;
+        b=HDjlfyLGt3noDixYX3ipreKWfKImjVP4uoKYO/SlXtQval4x5nWfnL4FAqqabu6t89
+         uk3+1YpKlAx6TRc9TYHNmrx/vdK3S+JxWQ7Z+neF+SqC26JQ+/bvmgBDEph/DxBtYrDf
+         uvEdDB0p/0xOzI8cLQi854xaNdrP468QDodxtWiwVANEOCMbO2ib54CXeXoqmlKGWoRU
+         5b1x8zqA4kNr2FKx1hFVhUNyqtR+UBO656F/QWZ4ly8vZcAa1lxA+70fH8IiLtg4sSTO
+         YdnbqtbhWTBmQjUIFB3lBqh3wM3KEdZvWMaApkCS1y5aCkZVCQ4RiSZIWyg5vmESoyxR
+         P23g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767768249; x=1768373049;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NzWYMY79C2D/HY+8eCPW7BWUMhBd8/GZBfIDTrzUEgU=;
+        b=RgIfHi7yQpLFbY49iCH5wCvpp6P+T4mAEL3mzAd9osDNETyrmXb1MxldAHPnJcARL5
+         e8gL9pDGcacoQv+hYnrYm24kH6vWGdTVFI6H2DBLbaNPOpJu+w+04RA9c2gJUTWq0uHI
+         I+h1nTw/Kxa2sRVFe7Jfwqg1dWwZgeLqihhQJuF2CTIxIRKJfBy8cpp+dVLJTKM1u4hT
+         a1M8QJpABOeySEs8QtWBs0UBdWuHw2RXu8RmgiL7N+MFG0qcsEzmUSF2D8dBNZOcFbcf
+         2C3zl9PlmLIJ5SfBEKYdag0JIHnRGG89i3ns6NVlTkNq0/s2FLD6KI0IOnmu3Hn2kzq2
+         HVLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWaON50yiI2KZOtLd3vcVYXPUJVNgpk/wgoswZb+irKY/cbhiXln9EX+NSx315L8L4pZkK9/cKbFF7H9430NG3M@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPFn7W1aH99MUQ0YQNxmTCm1yMzrgGHGOrkKKTYLKjhejvuptN
+	8Uyut5mdTQiN+UdfF6L0utJxWPA3NIyUy5nOTJ44Rh8pKJV+WM2EE9Wd
+X-Gm-Gg: AY/fxX5IJKCxNMBDts7RhaYBlOy7c/HNKiTZqznciVNM1QWDUQxPWO2texjEcUUKGO0
+	rSHqUAA3ZtdOwcwGWVUtxRDoRcaeLS3a+bykZTekDhtpnM/NTRZozQOKZEa9hoWNoPOr/42+DDP
+	9SMA0bb4as5yOMdmo/92q+iUYTFa8aVNVkRw894pRU5jYTc6KB4BQCzVTtebN+IzZXXt0f7kiMy
+	MewGttadtUZM3E5s1zFWH+1qrY7N9gBmDwiC/trRRaLqcNxGVXSep+EbTOJIYejMI/9MlyN5E7I
+	ayxwSAUz2MXocCgkeFNTgWsvyYMJIXY6wPy0o1U7zeUSyc+JzWUxgD/LGo/PF1xN2276jBts37S
+	CZ9j/tP21vMo4sZuwpmDdyWqp2rsN/PIAvZEJEsX53nYHkfHApqi8NtzO0rp66TeyChBdc2mmmV
+	GIPELnZS2VlWmLHhTmAu60LgXAER6CxOI/uvYuKQ==
+X-Google-Smtp-Source: AGHT+IHJw1AEc1ap9z7fY+r/uVSz4C0L7S5zD/d2Ze8KVerXKjdbAEaIU5iw1nEP/tURA30QJuYSHg==
+X-Received: by 2002:a05:6a21:3286:b0:37e:4319:d7c8 with SMTP id adf61e73a8af0-3898f9abb78mr1563552637.75.1767768248661;
+        Tue, 06 Jan 2026 22:44:08 -0800 (PST)
+Received: from lima-ubuntu.hz.ali.com ([47.246.98.217])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-819c5de66d1sm3909403b3a.62.2026.01.06.22.44.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jan 2026 22:44:04 -0800 (PST)
+From: Qing Wang <wangqing7171@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	Qing Wang <wangqing7171@gmail.com>
+Subject: [PATCH] perf/core: Drop an unused parameter 'ctx'
+Date: Wed,  7 Jan 2026 14:43:51 +0800
+Message-Id: <20260107064351.3682174-1-wangqing7171@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7] Enable core PMU for DMR and NVL
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>
-References: <20251120053431.491677-1-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251120053431.491677-1-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Peter,
+There is an unused parameter 'ctx' in perf_event_exit_event(), so drop it.
 
-Not sure if you have a chance to review this patch-set? Thanks a lot.
+Fixes: a3c3c66670ce ("perf/core: Fix child_total_time_enabled accounting bug at task exit")
+Signed-off-by: Qing Wang <wangqing7171@gmail.com>
+---
+ kernel/events/core.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index dad0d3d2e85f..d4da96b3ab34 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4584,7 +4584,6 @@ static void perf_event_enable_on_exec(struct perf_event_context *ctx)
+ 
+ static void perf_remove_from_owner(struct perf_event *event);
+ static void perf_event_exit_event(struct perf_event *event,
+-				  struct perf_event_context *ctx,
+ 				  struct task_struct *task,
+ 				  bool revoke);
+ 
+@@ -4613,7 +4612,7 @@ static void perf_event_remove_on_exec(struct perf_event_context *ctx)
+ 
+ 		modified = true;
+ 
+-		perf_event_exit_event(event, ctx, ctx->task, false);
++		perf_event_exit_event(event, ctx->task, false);
+ 	}
+ 
+ 	raw_spin_lock_irqsave(&ctx->lock, flags);
+@@ -12511,12 +12510,12 @@ int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
+ EXPORT_SYMBOL_GPL(perf_pmu_register);
+ 
+ static void __pmu_detach_event(struct pmu *pmu, struct perf_event *event,
+-			       struct perf_event_context *ctx)
++			       struct task_struct *task)
+ {
+ 	/*
+ 	 * De-schedule the event and mark it REVOKED.
+ 	 */
+-	perf_event_exit_event(event, ctx, ctx->task, true);
++	perf_event_exit_event(event, task, true);
+ 
+ 	/*
+ 	 * All _free_event() bits that rely on event->pmu:
+@@ -12555,7 +12554,7 @@ static void pmu_detach_event(struct pmu *pmu, struct perf_event *event)
+ 	struct perf_event_context *ctx;
+ 
+ 	ctx = perf_event_ctx_lock(event);
+-	__pmu_detach_event(pmu, event, ctx);
++	__pmu_detach_event(pmu, event, ctx->task);
+ 	perf_event_ctx_unlock(event, ctx);
+ 
+ 	scoped_guard (spinlock, &pmu->events_lock)
+@@ -14096,11 +14095,9 @@ static void sync_child_event(struct perf_event *child_event,
+ 		     &parent_event->child_total_time_running);
+ }
+ 
+-static void
+-perf_event_exit_event(struct perf_event *event,
+-		      struct perf_event_context *ctx,
+-		      struct task_struct *task,
+-		      bool revoke)
++static void perf_event_exit_event(struct perf_event *event,
++				  struct task_struct *task,
++				  bool revoke)
+ {
+ 	struct perf_event *parent_event = event->parent;
+ 	unsigned long detach_flags = DETACH_EXIT;
+@@ -14217,7 +14214,7 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+ 		perf_event_task(task, ctx, 0);
+ 
+ 	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
+-		perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
++		perf_event_exit_event(child_event, exit ? task : NULL, false);
+ 
+ 	mutex_unlock(&ctx->mutex);
+ 
+-- 
+2.34.1
 
-On 11/20/2025 1:34 PM, Dapeng Mi wrote:
-> This patch-set enables core PMU functionalities for Diamond Rapids (DMR)
-> and Nova Lake (NVL). 
->
-> Comparing with previous platforms, there are 3 main changes on core PMU
-> functionalities.
->
-> 1. Introduce OFF-MODULE RESPONSE (OMR) facility to replace Off-Core
-> Response (OCR) facility
->
-> Legacy microarchitectures used the OCR facility to evaluate off-core and
-> multi-core off-module transactions. The properly renamed, OMR facility,
-> improves the OCR capability for scalable coverage of new memory systems
-> of multi-core module systems.
->
-> Along with the introduction of OMR, 4 equivalent MSRs (OFFMODULE_RSP_0 ~
-> OFFMODULE_RSP_3) are introduced to specify attributes of the off-module
-> transaction and the legacy 2 OFFCORE_RSP MSRs are retired.
->
-> For more details about OMR events and OFFMODULE_RSP_x MSRs, please refer
-> to the section 16.1 "OFF-MODULE RESPONSE (OMR) FACILITY" in latest ISE[1]
-> documentation.
->
-> 2. New PEBS data source encoding layout
->
-> Diamond Rapids and Nova Lake include PEBS Load Latency and Store Latency
-> support similar to previous platforms but with a different data source
-> encoding layout.
->
-> Briefly speaking, the new data source encoding is determined by bit[8] of
-> memory auxiliary info field. The bit[8] indicates whether a L2 cache miss
-> occurs for a memory load or store instruction. If bit[8] is 0, it
-> signifies no L2 cache miss, and bits[7:0] specify the exact cache data
-> source (up to the L2 cache level). If bit[8] is 1, bits[7:0] represents
-> the OMR encoding, indicating the specific L3 cache or memory region
-> involved in the memory access.
->
-> A significant enhancement for OMR encoding is the ability to provide
-> up to 8 fine-grained memory regions in addition to the cache region,
-> offering more detailed insights into memory access regions.
->
-> For more details about the new data source layout, please refer to the
-> section 16.2 "PEBS LOAD LATENCY AND STORE LATENCY FACILITY" in latest
-> ISE documentation.
->
-> 3. Support "rdpmc user disable" feature
->
-> Currently executing RDPMC when CPL > 0 is allowed if the CR4.PCE flag
-> (performance-monitoring counter enable) is set. This introduces a
-> security risk that any user space process can read the count of any PMU
-> counter even though the counter belongs to a system-wide event as long
-> as CR4.PCE = 1.
->
-> To mitigate this security risk, the rdpmc user disable feature is
-> introduced to provide per-counter rdpmc control.
->
-> 'rdpmc user disable' introduces a new bit "RDPMC_USR_DISABLE" to manage
-> if the counter can be read in user space by leveraging rdpmc instruction
-> for each GP and fixed counter.
->
-> The details are
-> - New RDPMC_USR_DISABLE bit in each EVNTSELx[37] MSR to indicate counter
->   can't be read by RDPMC in ring 3.
-> - New RDPMC_USR_DISABLE bits in bits 33,37,41,45,etc.,
->   in IA32_FIXED_CTR_CTRL MSR for fixed counters 0-3, etc.
-> - On RDPMC for counter x, use select to choose the final counter value:
->   If (!CPL0 && RDPMC_USR_DISABLE[x] == 1 ) ? 0 : counter_value
-> - RDPMC_USR_DISABLE is enumerated by CPUID.0x23.0.EBX[2].
->
-> For more details about "rdpmc user disable", please refer to chapter 15
-> "RDPMC USER DISABLE" in latest ISE.
->
-> This patch-set adds support for these 3 new changes or features. Besides
-> the DMR and NVL specific counter constraints are supported together.
->
-> Tests:
->
-> The below tests pass on DMR and NVL (both P-core and E-core).
->  a) Perf counting tests pass.
->  b) Perf sampling tests pass.
->  c) Perf PEBS based sampling tests pass.
->  d) "rdpmc user disable" functionality tests pass.
->
-> Ref:
->
-> ISE (version 60): https://www.intel.com/content/www/us/en/content-details/869288/intel-architecture-instruction-set-extensions-programming-reference.html 
->
-> Dapeng Mi (7):
->   perf/x86/intel: Support newly introduced 4 OMR MSRs for DMR & NVL
->   perf/x86/intel: Add support for PEBS memory auxiliary info field in
->     DMR
->   perf/x86/intel: Add core PMU support for DMR
->   perf/x86/intel: Add support for PEBS memory auxiliary info field in
->     NVL
->   perf/x86/intel: Add core PMU support for Novalake
->   perf/x86: Replace magic numbers with macros for attr_rdpmc
->   perf/x86/intel: Add rdpmc-user-disable support
->
->  .../sysfs-bus-event_source-devices-rdpmc      |  40 ++
->  arch/x86/events/core.c                        |  28 +-
->  arch/x86/events/intel/core.c                  | 352 +++++++++++++++++-
->  arch/x86/events/intel/ds.c                    | 261 +++++++++++++
->  arch/x86/events/intel/p6.c                    |   2 +-
->  arch/x86/events/perf_event.h                  |  26 ++
->  arch/x86/include/asm/msr-index.h              |   5 +
->  arch/x86/include/asm/perf_event.h             |   8 +-
->  include/uapi/linux/perf_event.h               |  27 +-
->  tools/include/uapi/linux/perf_event.h         |  27 +-
->  10 files changed, 751 insertions(+), 25 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-rdpmc
->
->
-> base-commit: 9929dffce5ed7e2988e0274f4db98035508b16d9
