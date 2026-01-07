@@ -1,24 +1,24 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B0723502A1;
-	Wed,  7 Jan 2026 14:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21F5D34DB4E;
+	Wed,  7 Jan 2026 15:05:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767797291; cv=none; b=iz4ucrtqc6qAqAbC6ljDevKlh4PM/scW5lYaB/FiDSpEuIchMA41/YV5fwa0VbnkjBIr6+FcK2rd/F3/OkdegAZSG4f4xoeRnpgqvATfOV+mn6MkfK6QwfKUPRM2QADOlUPna8yLe2MsOLOUspeXC8GeWyOl+ShO4IKpBTstC8I=
+	t=1767798353; cv=none; b=Tul2GZHSkf9PdEplEmHaanghzer8NzMjLwmhNuwct0tdIzllVZO4M9CxQSCXhjLPjTN9gq2dLQF6TjGbtouTpS+wLRISqsAAl3E2boYn/XSYIk0b/JmqBEk7sw57KB63aJwWMtvHTuxA2B99jZKFtwg3OinQli2dDFTC6/ZiEBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767797291; c=relaxed/simple;
-	bh=78V86tyUX/FZ1z9B4qR48kMxNZ0N7pBP0gGXbzJkCHk=;
+	s=arc-20240116; t=1767798353; c=relaxed/simple;
+	bh=mcEKvCND03r52SOEa0CJ1xgCZUfc4qOr1bWcywaWG1s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H4jiwj1rZQKghfNxFDC9cT3TDBADpTT1aQ+h9xAN/tfzmG7v5dN+D8Pli3YDQZp0GMyIPvmJJz1QoDwlteEFrf54YR9bPzDVZm+3QBDkQqoxCzqP6qCvTuxI1BS9jwTOU7eJ/voQOwL9ig0mXDzmo87c/qT3J/FblwNJQ347l3w=
+	 Content-Type:Content-Disposition:In-Reply-To; b=FUMwB8kZgfuH3OosR5zTdYBr7Lqh3Pz9RlS67LeLAGy4I0j4peUroryYM2RnT7kvF2sR9kopcPhliOajSkTGfdbgqrpsb8EnLHWzjWjKTPT0kUSLPAvYNGbyOngPAMlGKzBv3QBz6Pk6k/NWIGGzODEPMdSYZL2yLYHnaj48EuQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BAF5497;
-	Wed,  7 Jan 2026 06:48:02 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A8CB497;
+	Wed,  7 Jan 2026 07:05:43 -0800 (PST)
 Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83C953F6A8;
-	Wed,  7 Jan 2026 06:48:08 -0800 (PST)
-Date: Wed, 7 Jan 2026 14:48:06 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E30D03F5A1;
+	Wed,  7 Jan 2026 07:05:49 -0800 (PST)
+Date: Wed, 7 Jan 2026 15:05:47 +0000
 From: Leo Yan <leo.yan@arm.com>
 To: James Clark <james.clark@linaro.org>
 Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
@@ -27,78 +27,55 @@ Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
 	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v3 1/3] tools headers: Go back to include
- asm-generic/unistd.h for arm64
-Message-ID: <20260107144806.GC336318@e132581.arm.com>
+Subject: Re: [PATCH v3 3/3] tools headers: Don't check arm64's unistd.h
+Message-ID: <20260107150547.GD336318@e132581.arm.com>
 References: <20251222-perf_fix_syscall_header-v3-0-eb4a8b9dfe66@arm.com>
- <20251222-perf_fix_syscall_header-v3-1-eb4a8b9dfe66@arm.com>
- <58e432e4-5825-4f2e-9aba-29be63eac56f@linaro.org>
+ <20251222-perf_fix_syscall_header-v3-3-eb4a8b9dfe66@arm.com>
+ <69a098d8-ff54-4746-96d5-5ce5eb2a8a83@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <58e432e4-5825-4f2e-9aba-29be63eac56f@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <69a098d8-ff54-4746-96d5-5ce5eb2a8a83@linaro.org>
 
-On Wed, Dec 24, 2025 at 01:47:51PM +0000, James Clark wrote:
-
-[...]
-
-> > To fix the issue, it restores to include asm-generic/unistd.h.  This is
+On Wed, Dec 24, 2025 at 01:51:33PM +0000, James Clark wrote:
+> On 22/12/2025 6:06 pm, Leo Yan wrote:
+> > The arm64 unistd.h in tools now diverges from the kernel header.
+> > Comparing the two headers is pointless, remove the check.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@arm.com>
+> > ---
+> >   tools/perf/check-headers.sh | 1 -
+> >   1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+> > index e0537f275da2f79ea9e05b91300aa1e2f996e9f1..da3aca87457fdc56c96d4184f2dee88dab026d98 100755
+> > --- a/tools/perf/check-headers.sh
+> > +++ b/tools/perf/check-headers.sh
+> > @@ -54,7 +54,6 @@ declare -a FILES=(
+> >     "arch/s390/include/uapi/asm/kvm.h"
+> >     "arch/s390/include/uapi/asm/sie.h"
+> >     "arch/arm64/include/uapi/asm/kvm.h"
+> > -  "arch/arm64/include/uapi/asm/unistd.h"
 > 
-> Would this prevent us from using any Arm64 specific syscalls in the future?
+> Isn't this _more_ of a special case for arm64 than continuing to do the
+> consistency check like in v2? It seems like the desire for consistency isn't
+> taking the whole tools/ picture into account and we end up adding more
+> inconsistencies than just the regular static copy + diff check that we have
+> for all the other headers.
 
-I hope the perf code can be general enough so don't call arch specific
-syscalls.
+Ideally, the perf tool should not maintain UAPI headers. These headers
+should be provided by the toolchain or generated dynamically.  From
+this perspective, this patch is on the right way, as it avoids
+maintaining special uAPI copies.
 
-> I think that's a downside of this approach vs copying the generated output
-> that should be noted here.
-
-From pragmatic view, I don't see any issue with using the
-asm-generic/unistd.h on Arm64 at current stage.
-
-If later we need to support new syscalls, I assume it is very likely not
-an issue for Arm64 specific, we need to resolve common issue either
-updating asm-generic/unistd.h or change to use dynamic generated headers.
-
-> > consistent with other architectures and ensures the header is available
-> 
-> 'Consistent' isn't accurate is it? x86 already has static copies of syscalls
-> in tools/arch/x86/include/uapi/asm/unistd_32.h and
-> tools/arch/x86/include/uapi/asm/unistd_64.h.
-
-I went through a bit x86's unistd_32.h/unistd_64.h, it defines some
-special syscall numbers.  Seems removing them will break on x86.
-I'd leave this to x86 maintainers.
-
-To avoid confusion, I will update the commit log:
-
-  Restore to include asm-generic/unistd.h for fixing the issue.  This
-  aligns with most architectures (x86 is a special case that keeps
-  unistd_32.h/unistd_64.h for its particular syscall numbers) and
-  ensures the header is available from the start.
-
-> Maybe something more like "eventual consistency" is intended, if we plan to
-> remove those x86 headers too?
-
-Yes.
-
-> I'm still a bit lost about why Arm64 copying
-> the generated header is considered a special case when we already have these
-> x86 ones.
-
-If arm64 maintains its own unistd.h, there is a concern that other
-architectures will do the same, and we will end up maintaining
-fragmented headers for each architecture.
-
-Later, if we need to support architecture specific syscalls, we should
-explore better approaches, such as using generated headers (e.g.,
-make headers) to provide UAPI headers instead.
-
-IMO, in this case, x86 is not a good example to follow.
+To be clear, I do not suggest removing all synced headers — only the
+UAPI headers.
 
 Thanks,
 Leo
