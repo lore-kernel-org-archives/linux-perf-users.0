@@ -1,153 +1,149 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E263A1CD
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Jan 2026 11:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647303002A5
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Jan 2026 11:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767783931; cv=none; b=Ylm+0k9mOjWqBev0pi/mv0FYXfr9S/3fZyD7tmmHR/4XPYKSaqXUEtCFr37pdStVXeX5FF2CTKdekAyBVUwmTuy1jFy2xEE23WZILyJ8/qucWpCSLI6wV+if1nLp3LxuRGU821ZBfqv6BctQAGrn4p0/hfMmG6vC5Qyt1GxLlgI=
+	t=1767784735; cv=none; b=ZnZm5Ucc7sP2m3LU3H9QNwdhTVU3E/BdeHyTjN8eXRLWkN4+FYX9s5Lm4mJqXIXsf3LEjj3SoGqxP0OQmB4mjt7BkkzAmnizKVpZ+G3IIsu6j7foWWdpQnyI22oBCFO7GnX1BFK5N7BQPnY9H3eX29wPSSxsEUnCupaZvjhZZIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767783931; c=relaxed/simple;
-	bh=Dfgbo6phlRYs3sHOaCfT7tdl/yidpZ1QKIUrWxYX6yk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=dWo06679aqeB46exsEaZFFhV7NUglqZlfntoy4LMbTJJU0lw6lYyQC51fKXCdUgHq5TNOiuHEh+okenkF1hm4WJungOyZxD8sQO1zV8Xzgfq6/cWewXLVG3tbyz2ZVMhrJBeSIY63+uernhuv/yOQ2KYx2PVja94b3FNR2P+GfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hs5o7M5N; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767784735; c=relaxed/simple;
+	bh=UzL/PJ4WX5vvCmozPZQyPzrvr5WcmTXDFYtGpKwmj3U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pGnWBv2EH2nJKR0b5oWz0SFNPjeV6yZ1aJqiUu+/du5WO4MURrzpY4i9nRp1SvTKvN6608jzO7vtJaL0MLNF9TseGYlA1xwW5wkWKXFtms8UtpeldEs4Ohhly0v6cnQF7deRKxdK2ToE4Fc12B+Hp/b3lL38vW5KySdF0KyDJFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YMdcL6Ed; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hs5o7M5N"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-55ad466ad1eso652163e0c.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jan 2026 03:05:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YMdcL6Ed"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-47d3ba3a4deso10831405e9.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jan 2026 03:18:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767783929; x=1768388729; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VKTt4+AFKpYKvPFTTRtpqXGnVYTIMubv2jP5/7+T4+I=;
-        b=hs5o7M5Nh17lsyRRJsoUlfm0ghFFe8DW06vaOWDFM4SgLSYZrLXxkYKGD2us9tHNbn
-         am3FLC1a5EoTlM1TaF3K8sETAsd5QSL4s2dRf6He71t2iQW6Kz44W38WNOPx7+MpmRAr
-         MfepmufBu/JnKlFqx3nkEF68KLHH31g4zfmR8oxbJqSqukA/gktAMF+oihtyJoW5It4j
-         mH0kBGPzn/VRKd8z0Tiq7JzhbaruYnV6eSgB3mP+4NNWqC5YaRK94asGrcrDKcwcXc0C
-         dRhOzcOACjchzmqZ1+Ow6Csq0oEQDEyCXemobjYQYFDYk9GZerEa+kk8LqoAl5G8db01
-         MDsg==
+        d=linaro.org; s=google; t=1767784731; x=1768389531; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=srbwUVQpkv+2W+Dbx7qe/1cM4x/xUhCeQyLE/KUGFh8=;
+        b=YMdcL6EdoDWZGOOLRcya/QGL3hJGE7SMHLN282Q4vEEnwJZL5zQEH0xgVx4UYov39r
+         1KhLM4K2AScJhWtpzxdaU3HWWABPSSQOUq13QrI6NBdsnl9FeayfWzwc2u3we977FuaK
+         fvmXVxrVRM/L89+c914ZCU4JcCbMYOf/bFg/LoF2Mg4KD53sZu+VuvnzG8pNirlHcZ38
+         GDeAiGDwdzK4hG03kvUrOOXW6Ug5LNV2tDMTQ9YZq/Nu49ZklgvkeicszDC32IRjeolo
+         0ruSjcWQ3OUfpbErzJcZc0SRyj69M7hiU6AzeLGD73sBhgggp2gMlTwdR6FOFfGv3xR1
+         hyyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767783929; x=1768388729;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VKTt4+AFKpYKvPFTTRtpqXGnVYTIMubv2jP5/7+T4+I=;
-        b=YN4inVpgbxFwlu1bf84AUHDKdgEbCOkgJpRTVoCor5/imml1+t6KoSonNcOB/Qqik/
-         5bg9OrQXYImVbB+LTUEQl+ubwxwNwmGHRRTzUI9+9sSFvrIdQYK5++zuLBzabwFWLS4g
-         ZlJbsUqMJw3bxhsIvs5UEWIUMFnBxKy1g3pWseT6jDKamYs2HBlahbwQontgOHEmz+bz
-         461Iqeode8UFgZu3xAHtsAmBTl1Y2NHgMqBcgVLOyR6cQMcHPumVnLS5hRlLEyp+MI9d
-         kACLhJkis186ma04K+h54jGKlA1R16RGsUcUAmC44cP3+pNpNUzlVvJRoOM0U/xh0XSz
-         S5UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5fr66tJlHnGKCCJYVGhuQ0dDjFAItQfC0AO8x0EblCTwLF4nZqr3Efzlgq9eivE5mZUTrd3/G/BO+xQWErMJL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgPYKUTyPCQhhmBoLD98EGwAhWASbrR5eOoqXoDfCZ/x5o/Yxo
-	KL218C84JBLkMJ9BYSMwJR58pJm5+08zy6KmkbQc1EYlAYgsl9WoV5Dn5fhsJw==
-X-Gm-Gg: AY/fxX7hM5VtcXl500YSid17K8CYENXXw28Fkt7i9Hgcc9lQpNhd6GKAphR35/eSNGF
-	JULhbHRcgBKSX/zR6JcVEXVKQMR21SLWLLGgpVp4RU5/IAvEJejo3XzhhO5wFTI5bldDl6LhrYg
-	EDx0QTGQs4tWKwShKDvl88yrfLip0+d3CiO0ZXy5imJ0kbRV+Gc2zTr7RCscuCTamnRqt2yI/kt
-	zOGnqSX4h9oXGDwjvMGL8JKIQa2hPp9P4BnmnxS0prs5Ev4onyognVGZWZjmSF2eYi1+Sza3EYJ
-	FZijysgJIjCyLrY/QP/MxxnMUKSn1tiGcV3hxwDh2rQUnBeIrzJ4gl6wnGt8O3JGVnL23/A8YML
-	qucbs3vlKravUEIEfwVZS9LgYU3KuepWLOxxrUqYYb8CQ6MS3emyK1QXOoNZYTO3gx/ZlIrGTEJ
-	2Odq0SGkycUttxe/R9Y5I/KQZOfeFlZi3N0A==
-X-Google-Smtp-Source: AGHT+IGggPiftYVp3LtYBKjyF/Fdi5lbyANw2LP48BA89EBM/zaOrh+B00Aa4eeklC9Wq1oLgmSFxg==
-X-Received: by 2002:a05:6122:31a5:b0:559:70bc:ca54 with SMTP id 71dfb90a1353d-56347fd1becmr510576e0c.14.1767783929046;
-        Wed, 07 Jan 2026 03:05:29 -0800 (PST)
-Received: from ehlo.thunderbird.net ([177.22.194.82])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-944124a34acsm2382059241.10.2026.01.07.03.05.27
+        d=1e100.net; s=20230601; t=1767784731; x=1768389531;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=srbwUVQpkv+2W+Dbx7qe/1cM4x/xUhCeQyLE/KUGFh8=;
+        b=Q1LASIcoiO9L/y24K6VTmEhhwSQvU1NLgyY8uOtpGsyXbKevAQqMNpoyx9aWVRBpZA
+         dZFB/txFu06OdB4/zkDlByai7ZhttuKTlBs9Q5GV3DXVySzw0yG0Tz2LpsVG0XrainfR
+         HYL02BVBgN6RIIJ+KcfHdi6GT/nCzNVL8asl3YwU/0Sa8kjgC+6fiXSM+zo8QJCq8fxU
+         SjjScXRQ/W6zWyHfZzIxObOkqfpK2Ts6iYI4tKt3Mwr65w6L079oV9Jxq72bFHGMk4yJ
+         n41S1BUeB2dPcNJD4DXXUMCXChuXefQhSy/YhoP9UBLIAPYnzLMEyHUQn7ANTrIc9Vfk
+         cugg==
+X-Forwarded-Encrypted: i=1; AJvYcCVKisITsOqqBgFnenHwoEBUZ8P8ylr+vkL0jrSXrQpBKlFKjBlUMbMNmo6rq/m45xMMo9hCbJwiOwD3Fuppm3Bm@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvIxexqDlrKJ+QSTGdWl+HkfpEXZQGlBjgpfX/5hg1FIlmSLFt
+	vGTQ13rEp3R09Vtuk+6VTSF0fGSobUs77LUYhJUz5l4lSv1/rQox6ztNgYKBQFTd8bc=
+X-Gm-Gg: AY/fxX6vUIUwc84wxDHSBZUp0A1e5MUe9IZom1VMI+BOjjDdfKpPbQHgAgltnLXQVIZ
+	3EOjHzDAqFpMQS7bNdRyezVtn79URGxqdHL9Fzq84fHV79xmU2/IAaMRbLWgR4MMSuxsz0vEe9/
+	KJmF6a9MnPS0W4oTxR7awmSxvON8IBzHwwWKJacsMULEZmSCtOghM3PCjdnPzhe0MkpD2A3HmYN
+	J3wbPZYGvKyi3UwVJtO8iCW2NDFkYMUbwJKzQ4c0SU6pY7F/kADHeo9psL1OThz4jtVUABNI/cT
+	tjspYWjmeX9HsVF60FnjQEG3miEoJhqSARfyarwkPQMhe3BvAzgvNvslcTrS5cY2CzU+t8AVY4/
+	xwrZQr67V4f/uOZ0BoPyFa1f1/OZZsMxGimYs7NMeHfeYTSivP+++3Q49/axLQm2AH1IFb0Innq
+	PZyWdgEYaljPkjQjWW
+X-Google-Smtp-Source: AGHT+IF7EjuXmJ0ve9H/QLz/oTWRNqAcHjjHlCUVmQM2B9YbMCKHWx1rYN0YOb/SGupVlIzvpJ0L+Q==
+X-Received: by 2002:a05:600c:6287:b0:475:dcbb:7903 with SMTP id 5b1f17b1804b1-47d84b17b7cmr22995235e9.9.1767784730654;
+        Wed, 07 Jan 2026 03:18:50 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d8636cb0dsm12891305e9.0.2026.01.07.03.18.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Jan 2026 03:05:28 -0800 (PST)
-Date: Wed, 07 Jan 2026 08:05:21 -0300
-From: Arnaldo Melo <arnaldo.melo@gmail.com>
-To: Nicolas Schier <n.schier@avm.de>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>, Michael Petlan <mpetlan@redhat.com>,
- Jakub Brnak <jbrnak@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>
-CC: Philipp Hahn <p.hahn@avm.de>, Arnaldo Carvalho de Melo <acme@redhat.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Nicolas Schier <nsc@kernel.org>
-Subject: Re: [PATCH v2] perf build: Raise minimum shellcheck version to 0.7.2
-User-Agent: Thunderbird for Android
-In-Reply-To: <20260107-perf-raise-minimum-shellcheck-version-v2-1-019ef32d7711@avm.de>
-References: <20260107-perf-raise-minimum-shellcheck-version-v2-1-019ef32d7711@avm.de>
-Message-ID: <413A6A45-CA6B-46F8-BE19-5AD2D1559DD6@gmail.com>
+        Wed, 07 Jan 2026 03:18:50 -0800 (PST)
+Message-ID: <2e0d7dce-a52f-4825-990e-f4bdaa1175ac@linaro.org>
+Date: Wed, 7 Jan 2026 11:18:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf test: Fix test perf stat tests for virtualized
+ machines
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+ hca@linux.ibm.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ acme@kernel.org, namhyung@kernel.org, irogers@google.com
+References: <20260107094835.131882-1-tmricht@linux.ibm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260107094835.131882-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-On January 7, 2026 5:13:26 AM GMT-03:00, Nicolas Schier <n=2Eschier@avm=2E=
-de> wrote:
->Raise the minimum shellcheck version for perf builds to 0=2E7=2E2, so tha=
-t
->systems with shellcheck versions below 0=2E7=2E2 will automatically skip =
-the
->shell script checking, even if NO_SHELLCHECK is unset=2E
->
->Since commit 241f21be7d0f ("perf test perftool_testsuite: Use absolute
->paths"), shellcheck versions before 0=2E7=2E2 break the perf build with
->several SC1090 [2] warnings due to its too strict dynamic source
->handling [1], e=2Eg=2E:
->
->  In tests/shell/base_probe/test_line_semantics=2Esh line 20:
->  =2E "$DIR_PATH/=2E=2E/common/init=2Esh"
->    ^---------------------------^ SC1090: Can't follow non-constant sourc=
-e=2E Use a directive to specify location=2E
->
->Fixes: 241f21be7d0f ("perf test perftool_testsuite: Use absolute paths")
->Link: https://github=2Ecom/koalaman/shellcheck/issues/1998 # [1]
->Link: https://www=2Eshellcheck=2Enet/wiki/SC1090
->Acked-by: Namhyung Kim <namhyung@kernel=2Eorg>
->Signed-off-by: Nicolas Schier <n=2Eschier@avm=2Ede>
->---
->Changes in v2:
->  * Add one of the shellcheck messages to commit message (Namhyung Kim)
->  * Link to v1: https://lore=2Ekernel=2Eorg/r/20260106-perf-raise-minimum=
--shellcheck-version-v1-1-b46739a78888@avm=2Ede
->---
-> tools/perf/Makefile=2Eperf | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/tools/perf/Makefile=2Eperf b/tools/perf/Makefile=2Eperf
->index b3f481a626afa314632876449a11eb79b2978824=2E=2Ee2d668fb7f439befd6d1d=
-9cbf66765f8b815e3c6 100644
->--- a/tools/perf/Makefile=2Eperf
->+++ b/tools/perf/Makefile=2Eperf
->@@ -255,7 +255,7 @@ endif
-> # minimal shellcheck version as v0=2E6=2E0=2E
+On 07/01/2026 9:48 am, Thomas Richter wrote:
+> On s390 perf test 'perf stat tests', subtest test_hybrid fails
+> for z/VM systems.
+> The root cause is this statement:
+> 
+>    $(perf stat -a -- sleep 0.1 2>&1 |\
+>                    grep -E "/cpu-cycles/[uH]*|  cpu-cycles[:uH]* -c)
+> 
+> The perf stat output on a s390 z/VM system is
+> 
+>   # perf stat -a -- sleep 0.1 2>&1
+>   Performance counter stats for 'system wide':
+> 
+>         56      context-switches  #     46.3 cs/sec  cs_per_second
+>   1,210.41 msec cpu-clock         #     11.9 CPUs  CPUs_utilized
+>         12      cpu-migrations    #      9.9 migrations/sec ...
+>         81      page-faults       #     66.9 faults/sec ...
+> 
+>         0.100891009 seconds time elapsed
+> 
+> The grep command does not match any single line and exits with error
+> code 1. As the bash script is executed with set -e, it aborts with the
+> first error code being non-zero.
+> 
+> Fix this and use wc -l to count matching lines instead of grep ... -c.
+> 
+> Output before:
+>   # perf test 102
+>   102: perf stat tests                      : FAILED!
+>   #
+> Output after:
+>   # perf test 102
+>   102: perf stat tests                      : Ok
+>   #
+> 
+> Fixes: 65d11821910bd ("perf test: Add a test for default perf stat command")
 
-I'm looking just add this patch, from the smartphone, but shouldn't the ab=
-ove comment need to be updated as well?
+I think the change looks ok, but doesn't it fix 65d11821910bd ("perf 
+tools: Add fallback for exclude_guest") where the existing wc -l was 
+changed to grep -c?
 
-- Arnaldo
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Ian Rogers <irogers@google.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> ---
+>   tools/perf/tests/shell/stat.sh | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+> index 0b2f0f88ca16..792a0b79f6b8 100755
+> --- a/tools/perf/tests/shell/stat.sh
+> +++ b/tools/perf/tests/shell/stat.sh
+> @@ -233,7 +233,7 @@ test_hybrid() {
+>     fi
+>   
+>     # Run default Perf stat
+> -  cycles_events=$(perf stat -a -- sleep 0.1 2>&1 | grep -E "/cpu-cycles/[uH]*|  cpu-cycles[:uH]*  " -c)
+> +  cycles_events=$(perf stat -a -- sleep 0.1 2>&1 | grep -E "/cpu-cycles/[uH]*|  cpu-cycles[:uH]*  "  | wc -l)
+>   
+>     # The expectation is that default output will have a cycles events on each
+>     # hybrid PMU. In situations with no cycles PMU events, like virtualized, this
 
-> ifneq ($(SHELLCHECK),)
->   ifeq ($(shell expr $(shell $(SHELLCHECK) --version | grep version: | \
->-        sed -e 's/=2E\+ \([0-9]\+\)=2E\([0-9]\+\)=2E\([0-9]\+\)/\1\2\3/g=
-') \< 060), 1)
->+        sed -e 's/=2E\+ \([0-9]\+\)=2E\([0-9]\+\)=2E\([0-9]\+\)/\1\2\3/g=
-') \< 072), 1)
->     SHELLCHECK :=3D
->   else
->     SHELLCHECK :=3D $(SHELLCHECK) -s bash -a -S warning
->
->---
->base-commit: 9ace4753a5202b02191d54e9fdf7f9e3d02b85eb
->change-id: 20260106-perf-raise-minimum-shellcheck-version-5d684fe90a39
->
->Best regards,
-
-- Arnaldo 
