@@ -1,110 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.avm.de (mail.avm.de [212.42.244.119])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F221EFFB4;
-	Wed,  7 Jan 2026 08:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7201DED57;
+	Wed,  7 Jan 2026 08:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767773286; cv=none; b=FPpYy09VfDALcYN63UZzLbRAUaQ9U5QNBTrThzZr6QCr9bTbYxaePTjfk4UDD6fiFKM/uiWIGrVfGYrpTGgHnAKAPipPfuPtPYYjdUXelRd+2Kliw6FzHczDKRipaYJBV7DCc2OQmPlL62SHoKtGFDxk+cBe3Pv+9GL8ou5lh9Y=
+	t=1767773298; cv=none; b=JZTZ/uIVf9ruSZcz11UirTV52yhistyVHdwKPfYx37ae6GZtep2SNiIf7tgE6B1mLJ0bG6Dixevrk5fLnBZ3bO0u1c8uL9O7I2gpo10/TxYdoTYQ7B1OTTPXX+rxsFiFUJ/5lC0iZc97d5RbUcba5SpHDrhlhXu72Xxw5myfqQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767773286; c=relaxed/simple;
-	bh=8VsPOcXwdkALy85Ny+QOC1MBzv447OWUwmSgomb+Ubk=;
+	s=arc-20240116; t=1767773298; c=relaxed/simple;
+	bh=5Gv9sTBQHNIcQ36RKg5wjy/ubB3ucZcxiQ4WZwryQEM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VhiW7VzkyM3dTsHid9yGKGcKQfwd3oKH/5xPb+rskersPItodXw5YNzPRfVr8OS6R9utQ8scX0Y8PYvoUR1ehgyOEqapY8MlelE0ID286e54SDXBxnWqrbnhM9hfELSHdh/YL+pSRjF1VjuYnj2ExtpjXkvwftMbpGz7zV83rR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWUtGsG7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWUtGsG7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D337DC4CEF7;
-	Wed,  7 Jan 2026 08:08:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767773286;
-	bh=8VsPOcXwdkALy85Ny+QOC1MBzv447OWUwmSgomb+Ubk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RWUtGsG76FBmKKTFZ9PnQXyIKxlh0hwsIbjixFAwle+Y6QSdSiXk3VRzsOtdGfZxt
-	 a7sVEyHf7ykz3cFNEii5nbGPmqmXUzXbX3indmyErBDpFLaQxQ5LdBAPs47KCU2w7L
-	 N5OIZG3iy8Y3M7hwhHJnicWBkxYOn1poEvME2+cn9e7GaGVEBIZhGw61QZheXMxpC3
-	 TBKTS6c6kbGm6TuN8lyBCP42oew+EyBmAJ0WFuHRp/8U9PBShviVg1lvS1yEomj44A
-	 nS5IKakMDvK+r7n26sR4nX7xTrhDYxCgR8ls7JW/5W3MTA0LE0jezjWzYcY91wUZEY
-	 Lon9AVWhDaBuw==
-Date: Wed, 7 Jan 2026 00:08:04 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SdEBInNu86Fp6mewPLORI2AHSizUramyioZtKRPoYk/10dtLCk/h/1i5e5+EyfdhcG6U8OUbTo5iK8r3jtzmM/riEgpx5QaVodq5I4f6gYHU8SihP9M/obuac7bxwQveWDHO73zkrFU+QGvqwruQ7KWEr5+dPZ/XRiZ99Wav15I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; arc=none smtp.client-ip=212.42.244.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+Received: from [212.42.244.71] (helo=mail.avm.de)
+	by mail.avm.de with ESMTP (eXpurgate 4.54.3)
+	(envelope-from <nschier-oss@avm.de>)
+	id 695e145d-bfa0-7f0000032729-7f0000018440-1
+	for <multiple-recipients>; Wed, 07 Jan 2026 09:07:57 +0100
+Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Wed,  7 Jan 2026 09:07:57 +0100 (CET)
+Date: Wed, 7 Jan 2026 09:07:56 +0100
+From: Nicolas Schier <nschier-oss@avm.de>
+To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/2] Add procfs based memory and network tool events
-Message-ID: <aV4UZCCc2QOhdeSE@google.com>
-References: <20260104011738.475680-1-irogers@google.com>
+	Michael Petlan <mpetlan@redhat.com>,
+	Jakub Brnak <jbrnak@redhat.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	Philipp Hahn <p.hahn@avm.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nicolas Schier <nsc@kernel.org>
+Subject: Re: [PATCH] perf build: Raise minimum shellcheck version to 0.7.2
+Message-ID: <20260107-transparent-ocelot-of-elevation-e7d336@l-nschier-aarch64>
+References: <20260106-perf-raise-minimum-shellcheck-version-v1-1-b46739a78888@avm.de>
+ <aV4NG14zGnZw1PTq@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3L/GXjG8W+MnDvsB"
+Content-Disposition: inline
+In-Reply-To: <aV4NG14zGnZw1PTq@google.com>
+Organization: AVM GmbH
+x-ms-reactions: disallow
+X-purgate-ID: 149429::1767773277-6BE562AE-5888426F/0/0
+X-purgate-type: clean
+X-purgate-size: 2192
+X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
+
+
+--3L/GXjG8W+MnDvsB
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260104011738.475680-1-irogers@google.com>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ian,
+On Tue, Jan 06, 2026 at 11:36:59PM -0800, Namhyung Kim wrote:
+> On Tue, Jan 06, 2026 at 02:19:28PM +0100, Nicolas Schier wrote:
+> > Raise the minimum shellcheck version for perf builds to 0.7.2, so that
+> > systems with shellcheck versions below 0.7.2 will automatically skip the
+> > shell script checking, even if NO_SHELLCHECK is unset.
+> >=20
+> > Since commit 241f21be7d0f ("perf test perftool_testsuite: Use absolute
+> > paths"), shellcheck versions before 0.7.2 break the perf build with
+> > several SC1090 [2] warnings due to its too strict dynamic source
+> > handling [1].
+>=20
+> It'd be nice if you could copy the error message here.
 
-On Sat, Jan 03, 2026 at 05:17:36PM -0800, Ian Rogers wrote:
-> Add events for memory use and network activity based on data readily
-> available in /prod/pid/statm, /proc/pid/smaps_rollup and
-> /proc/pid/net/dev. For example the network usage of chrome processes
-> on a system may be gathered with:
-> ```
-> $ perf stat -e net_rx_bytes,net_rx_compressed,net_rx_drop,net_rx_errors,net_rx_fifo,net_rx_frame,net_rx_multicast,net_rx_packets,net_tx_bytes,net_tx_carrier,net_tx_colls,net_tx_compressed,net_tx_drop,net_tx_errors,net_tx_fifo,net_tx_packets -p $(pidof -d, chrome) -I 1000
->      1.001023475                  0      net_rx_bytes
->      1.001023475                  0      net_rx_compressed
->      1.001023475         42,647,328      net_rx_drop
->      1.001023475        463,069,152      net_rx_errors
->      1.001023475                  0      net_rx_fifo
->      1.001023475                  0      net_rx_frame
->      1.001023475                  0      net_rx_multicast
->      1.001023475    423,195,831,744      net_rx_packets
->      1.001023475                  0      net_tx_bytes
->      1.001023475                  0      net_tx_carrier
->      1.001023475                  0      net_tx_colls
->      1.001023475                  0      net_tx_compressed
->      1.001023475                  0      net_tx_drop
->      1.001023475                  0      net_tx_errors
->      1.001023475                  0      net_tx_fifo
->      1.001023475                  0      net_tx_packets
-> ```
+Sure.  I'll send v2 with one of the messages included here.
 
-Interesting.
+> >=20
+> > Fixes: 241f21be7d0f ("perf test perftool_testsuite: Use absolute paths")
+> > Link: https://github.com/koalaman/shellcheck/issues/1998 # [1]
+> > Link: https://www.shellcheck.net/wiki/SC1090
+> > Signed-off-by: Nicolas Schier <n.schier@avm.de>
+>=20
+> Other than that,
+>=20
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-> 
-> As the events are in the tool_pmu they can be used in metrics. The
-> json descriptions they are exposed in `perf list` and the events can
-> be seen in the python ilist application.
-> 
-> Note, if a process terminates then the count reading returns an error
-> and this can expose what appear to be latent bugs in the aggregation
-> and display code.
+Thanks.
 
-How do you handle system-wide mode and sampling (perf record)?
+Kind regards,
+Nicolas
 
-Thanks,
-Namhyung
+--3L/GXjG8W+MnDvsB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> Ian Rogers (2):
->   perf tool_pmu: Add memory events
->   perf tool_pmu: Add network events
-> 
->  tools/perf/builtin-stat.c                     |  10 +-
->  .../pmu-events/arch/common/common/tool.json   | 266 ++++++++-
->  tools/perf/pmu-events/empty-pmu-events.c      | 312 +++++++----
->  tools/perf/util/tool_pmu.c                    | 514 +++++++++++++++++-
->  tools/perf/util/tool_pmu.h                    |  44 ++
->  5 files changed, 1026 insertions(+), 120 deletions(-)
-> 
-> -- 
-> 2.52.0.351.gbe84eed79e-goog
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEDv+Fiet06YHnC6RpiMa8nIiabbgFAmleFFEACgkQiMa8nIia
+bbgiLA//aK6OXGOYuUihaA84GDJzvwtG/x5Aasnd/Syejs90duapI1CfYbBXgXtE
+3HQTzZQfNLU+TGMQGcK/H/x1+I8bHL2QkrROpme7wS4h+hFe0nRMsytD/qmWaDSe
++/xVIJBaoKZY28eEftjTfa1ADxCsFUYo3wqfyWFUKdC583QX60vqhA4THDRA3+Co
+4qFxWJAuhOwtOHVK3WVYYiNWSCM3qVylfRGm0lYlgm6ufivBBbMDdVOH8+oQZsm3
+HN78uwu3kDKia46dXgGb/ied8nv2B/h9asV1YkOEW6C64igwZmAFWv0/vBbceqdH
+JawATTbTTwwlCC0gETR1NMdL1xm+qbURpMZnsT6ZhlB3fJZB92z99arzn1A3RB+D
+GBbhsvEINzPmpMfRkKfCtOM5lRf3IxHDGPGH1RMO7kbyKKakaepjCYhJHJ3Wpgg0
+dxnzpA/fhhmV/lXr7wsg2H7E6KO421Gr3yIUyya++fe/IMxLQSTxtMC39VmP81EM
+Cs+2BONJOzxV/ZXqKyUQGO0R2ooefUovQ2BtYbjLU2D0/wDZNM9wSkzUgg5SjfEf
+nEvP3SLZetmEXn7x5GvaBcAblptlvKNAgHVM5gXTadl1hrBPFzCwbmSyDKPZiZVL
+LZ60XSOPmmpmlRnX5h5YktT6CSVWf2k3RZl7AJUJsJHufmcf2hE=
+=Wfx9
+-----END PGP SIGNATURE-----
+
+--3L/GXjG8W+MnDvsB--
