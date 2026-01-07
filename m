@@ -1,59 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B90F18859B;
-	Wed,  7 Jan 2026 08:04:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F221EFFB4;
+	Wed,  7 Jan 2026 08:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767773075; cv=none; b=arFPcADMS7Pw4tKtxmwMkBleraxglzVBDSJoYSlikipgyi1j6o1Ub/y83e0ntKe5NJlS2aZXVt17pwhQfbY01RegGSbAG4/I7G2hj4ljtkuYsEqkMZHw9IKRxq/Ynv/K50rIrhi0R+i4edmC1U1acHNFYCUMRrb4OlgOLAkLWz4=
+	t=1767773286; cv=none; b=FPpYy09VfDALcYN63UZzLbRAUaQ9U5QNBTrThzZr6QCr9bTbYxaePTjfk4UDD6fiFKM/uiWIGrVfGYrpTGgHnAKAPipPfuPtPYYjdUXelRd+2Kliw6FzHczDKRipaYJBV7DCc2OQmPlL62SHoKtGFDxk+cBe3Pv+9GL8ou5lh9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767773075; c=relaxed/simple;
-	bh=KNSQ4jS+uaz7zUizkEDbdTh1ukeuADvTY5T7Q3SBezQ=;
+	s=arc-20240116; t=1767773286; c=relaxed/simple;
+	bh=8VsPOcXwdkALy85Ny+QOC1MBzv447OWUwmSgomb+Ubk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dfh3fVltUIZ+FuQdqT5hd91KK5McCR8ZYxnS1qq2JZcs3tcCuBO89qJUX6o7fue3igOsddoH1rO2jn8CfAhDgYQ4OduX2Jr/JmhHdAlH5/MBVxAtYkm6w/i7YCRCM0cr5/FIEoXn3dHnbY/hrXa8mkouRI1v0oX4EXyEzkadkb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCNZYBKJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=VhiW7VzkyM3dTsHid9yGKGcKQfwd3oKH/5xPb+rskersPItodXw5YNzPRfVr8OS6R9utQ8scX0Y8PYvoUR1ehgyOEqapY8MlelE0ID286e54SDXBxnWqrbnhM9hfELSHdh/YL+pSRjF1VjuYnj2ExtpjXkvwftMbpGz7zV83rR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWUtGsG7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCNZYBKJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE61AC4CEF7;
-	Wed,  7 Jan 2026 08:04:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWUtGsG7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D337DC4CEF7;
+	Wed,  7 Jan 2026 08:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767773074;
-	bh=KNSQ4jS+uaz7zUizkEDbdTh1ukeuADvTY5T7Q3SBezQ=;
+	s=k20201202; t=1767773286;
+	bh=8VsPOcXwdkALy85Ny+QOC1MBzv447OWUwmSgomb+Ubk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RCNZYBKJHLsUtJtomJjDt4QgQQ9nTe3ry74SElBoEH28iVwd5Bxj4EOrfBqfEnHjV
-	 YBwiLPKjxXvn+JzXOpM1RQ83g2wG0oKykt6t3KZPgt9B+Uvl97IDDlJ9scT8nKGxra
-	 xm+mhkSli5V9P8zOVueHTiqEtCs4CLp1IyO3OGTkUkx1EMWHPEppnL19kf7qX+YKGe
-	 JM9sRpU6tqypwTueA/MTlvYV+FUClsZIiIW2bdyRya9SVCHMWrQ9Sa3IUOYsWc+Y2N
-	 zZChHCPoA3uVzgRyFw7nHK3lTzRnKkGSfF19WKjNWTszpBVJ68Ug+lxghtSD8sAllB
-	 +/26YgBkm94ZQ==
-Date: Wed, 7 Jan 2026 00:04:32 -0800
+	b=RWUtGsG76FBmKKTFZ9PnQXyIKxlh0hwsIbjixFAwle+Y6QSdSiXk3VRzsOtdGfZxt
+	 a7sVEyHf7ykz3cFNEii5nbGPmqmXUzXbX3indmyErBDpFLaQxQ5LdBAPs47KCU2w7L
+	 N5OIZG3iy8Y3M7hwhHJnicWBkxYOn1poEvME2+cn9e7GaGVEBIZhGw61QZheXMxpC3
+	 TBKTS6c6kbGm6TuN8lyBCP42oew+EyBmAJ0WFuHRp/8U9PBShviVg1lvS1yEomj44A
+	 nS5IKakMDvK+r7n26sR4nX7xTrhDYxCgR8ls7JW/5W3MTA0LE0jezjWzYcY91wUZEY
+	 Lon9AVWhDaBuw==
+Date: Wed, 7 Jan 2026 00:08:04 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Gary Guo <gary@garyguo.net>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2] perf symbol: remove Rust symbol workarounds
-Message-ID: <aV4TkNE_hAyByISq@google.com>
-References: <20260105150106.567830-1-gary@kernel.org>
- <aVvdt90YmhJz3i5i@x1>
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] Add procfs based memory and network tool events
+Message-ID: <aV4UZCCc2QOhdeSE@google.com>
+References: <20260104011738.475680-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,88 +48,63 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aVvdt90YmhJz3i5i@x1>
+In-Reply-To: <20260104011738.475680-1-irogers@google.com>
 
-Hello,
+Hi Ian,
 
-On Mon, Jan 05, 2026 at 12:50:15PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, Jan 05, 2026 at 03:00:57PM +0000, Gary Guo wrote:
-> > From: Gary Guo <gary@garyguo.net>
-> > 
-> > Due to an off-by-one error introduced in commit 73bbb94466fd ("kallsyms:
-> > support "big" kernel symbols"), long symbols (which are currently only
-> > produced by Rust) can have their symbol type being wrongly parsed by
-> > kernel/kallsyms.c.
+On Sat, Jan 03, 2026 at 05:17:36PM -0800, Ian Rogers wrote:
+> Add events for memory use and network activity based on data readily
+> available in /prod/pid/statm, /proc/pid/smaps_rollup and
+> /proc/pid/net/dev. For example the network usage of chrome processes
+> on a system may be gathered with:
+> ```
+> $ perf stat -e net_rx_bytes,net_rx_compressed,net_rx_drop,net_rx_errors,net_rx_fifo,net_rx_frame,net_rx_multicast,net_rx_packets,net_tx_bytes,net_tx_carrier,net_tx_colls,net_tx_compressed,net_tx_drop,net_tx_errors,net_tx_fifo,net_tx_packets -p $(pidof -d, chrome) -I 1000
+>      1.001023475                  0      net_rx_bytes
+>      1.001023475                  0      net_rx_compressed
+>      1.001023475         42,647,328      net_rx_drop
+>      1.001023475        463,069,152      net_rx_errors
+>      1.001023475                  0      net_rx_fifo
+>      1.001023475                  0      net_rx_frame
+>      1.001023475                  0      net_rx_multicast
+>      1.001023475    423,195,831,744      net_rx_packets
+>      1.001023475                  0      net_tx_bytes
+>      1.001023475                  0      net_tx_carrier
+>      1.001023475                  0      net_tx_colls
+>      1.001023475                  0      net_tx_compressed
+>      1.001023475                  0      net_tx_drop
+>      1.001023475                  0      net_tx_errors
+>      1.001023475                  0      net_tx_fifo
+>      1.001023475                  0      net_tx_packets
+> ```
+
+Interesting.
+
 > 
-> Looks sane, applied to perf-tools-next,
-  
-I'm afraid there may be some outdated kernels which don't have the fix
-yet.  Maybe make sense to wait some more time for them to disappear?
+> As the events are in the tool_pmu they can be used in metrics. The
+> json descriptions they are exposed in `perf list` and the events can
+> be seen in the python ilist application.
+> 
+> Note, if a process terminates then the count reading returns an error
+> and this can expose what appear to be latent bugs in the aggregation
+> and display code.
+
+How do you handle system-wide mode and sampling (perf record)?
 
 Thanks,
 Namhyung
 
-
-> > This has been fixed in commit f3f9f42232dee5 ("kallsyms: Fix wrong "big"
-> > kernel symbol type read from procfs"), and these symbols are now
-> > reported correctly.
-> > 
-> > Drop the workaround in perf symbol that filter out these symbol types.
-> > 
-> > Specifically, '1' and 'l' can never be generated by nm -- 'u' does
-> > indicate GNU unique, however such symbols are only generated by G++ for
-> > C++ templates, and are never generated by LLVM (LLVM generates weak
-> > symbols in such cases instead). 'N' can appear if symbols exist inside
-> > debug sections, and 'n' may appear for symbols inside note sections,
-> > however these sections do not typically have symbol (and they're
-> > explicitly filtered out by kallsyms).
-> > 
-> > Therefore, the previous occurrence of these symbols types must be due to
-> > the off-by-one error and can be safely removed.
-> > 
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Acked-by: Miguel Ojeda <ojeda@kernel.org>
-> > Signed-off-by: Gary Guo <gary@garyguo.net>
-> > ---
-> > v2:
-> > - Removed the "__" change as suggested by Miguel
-> > - Expanded the commit message to mention why "N" and "n" cannot appear
-> > - Link to v1: https://lore.kernel.org/rust-for-linux/20251223175216.1353814-1-gary@kernel.org/#t
-> > ---
-> >  tools/perf/util/symbol.c | 19 ++++---------------
-> >  1 file changed, 4 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > index 814f960fa8f8d..8662001e1e25b 100644
-> > --- a/tools/perf/util/symbol.c
-> > +++ b/tools/perf/util/symbol.c
-> > @@ -104,21 +104,10 @@ static enum dso_binary_type binary_type_symtab[] = {
-> >  
-> >  #define DSO_BINARY_TYPE__SYMTAB_CNT ARRAY_SIZE(binary_type_symtab)
-> >  
-> > -static bool symbol_type__filter(char __symbol_type)
-> > -{
-> > -	// Since 'U' == undefined and 'u' == unique global symbol, we can't use toupper there
-> > -	// 'N' is for debugging symbols, 'n' is a non-data, non-code, non-debug read-only section.
-> > -	// According to 'man nm'.
-> > -	// 'N' first seen in:
-> > -	// ffffffff9b35d130 N __pfx__RNCINvNtNtNtCsbDUBuN8AbD4_4core4iter8adapters3map12map_try_foldjNtCs6vVzKs5jPr6_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-> > -	// a seemingly Rust mangled name
-> > -	// Ditto for '1':
-> > -	// root@x1:~# grep ' 1 ' /proc/kallsyms
-> > -	// ffffffffb098bc00 1 __pfx__RNCINvNtNtNtCsfwaGRd4cjqE_4core4iter8adapters3map12map_try_foldjNtCskFudTml27HW_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-> > -	// ffffffffb098bc10 1 _RNCINvNtNtNtCsfwaGRd4cjqE_4core4iter8adapters3map12map_try_foldjNtCskFudTml27HW_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-> > -	char symbol_type = toupper(__symbol_type);
-> > -	return symbol_type == 'T' || symbol_type == 'W' || symbol_type == 'D' || symbol_type == 'B' ||
-> > -	       __symbol_type == 'u' || __symbol_type == 'l' || __symbol_type == 'N' || __symbol_type == '1';
-> > +static bool symbol_type__filter(char symbol_type)
-> > +{
-> > +	symbol_type = toupper(symbol_type);
-> > +	return symbol_type == 'T' || symbol_type == 'W' || symbol_type == 'D' || symbol_type == 'B';
-> >  }
-> >  
-> >  static int prefix_underscores_count(const char *str)
-> > 
-> > base-commit: 3609fa95fb0f2c1b099e69e56634edb8fc03f87c
-> > -- 
-> > 2.51.2
+> 
+> Ian Rogers (2):
+>   perf tool_pmu: Add memory events
+>   perf tool_pmu: Add network events
+> 
+>  tools/perf/builtin-stat.c                     |  10 +-
+>  .../pmu-events/arch/common/common/tool.json   | 266 ++++++++-
+>  tools/perf/pmu-events/empty-pmu-events.c      | 312 +++++++----
+>  tools/perf/util/tool_pmu.c                    | 514 +++++++++++++++++-
+>  tools/perf/util/tool_pmu.h                    |  44 ++
+>  5 files changed, 1026 insertions(+), 120 deletions(-)
+> 
+> -- 
+> 2.52.0.351.gbe84eed79e-goog
+> 
