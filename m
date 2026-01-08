@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303C832E6BF;
-	Thu,  8 Jan 2026 23:57:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB337329C56;
+	Thu,  8 Jan 2026 23:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767916651; cv=none; b=oE5PootcpHPPw0Wj/d+x/Gb5iHjbOILtwbMMtH3QLC4tQepI+oR9w7XvK/7R/+V6jdkkaow3EExP7fN2d8I9LOhAtINsLdFvX5vZfnAluB499eUVxNPRG3tOUmMiVzhL6LeFGdm00fCmU2meum3B+xyJC0R9iGUqnKrVC6BUV8Y=
+	t=1767916721; cv=none; b=tCQk/oiJNHDCTEpGwWKDjyAT95Ngg6BPs0ns5rBjxVI/yC3/lUbGzw2zJdvQMTzB3HICd+0VeThnU/QLO7edmf8Q3AfderASjs8kmR0V1M4OPNdD1FCBuqovAtrTnVwpXUh0TdrtaMXrAGOvQdVyLFOXoX7B6df1hWaianHR1UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767916651; c=relaxed/simple;
-	bh=KGQRZxShhN31WMXVpQ5cr0GSY9PajzKHZaNjp1gD8x8=;
+	s=arc-20240116; t=1767916721; c=relaxed/simple;
+	bh=N5+QsrVyK9aKwwDqfVuQ8b+wgXlHeo9rjyZsakjqgKc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JQRNcJ+gOElfKQzmoVflRqAVHRKnOhmVTKhI127RA4c0RygBqU2hFMwC/qxDmGhU1VsuDX0DLkRKyH8fx94P2EhqNx1HUUlU1Zze4W3w4CIQHC06SGCF6zzyYwqPYXA69a+KlWWV+g01pHLdPIr6WaQU95DYtDS/UGph/rBhGiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0oND0iH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=V8e8vTBgfjPoFhSChWKCOb7CmDtoZ7p9OF9lh0rdiKjtxj5mFJaOQ1jiIDss/xiLp1OYakoZfvEl/ir+aY76wNSmCjbJFNejFYA/6zX8DCuJx+tqbvxvTYzdKTn5Tz0TVOIFO0bQxD9lKT/Ij7gIR1DmQ+qqADDQwYIjkA64QZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/dy1/1T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0oND0iH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57B29C116C6;
-	Thu,  8 Jan 2026 23:57:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/dy1/1T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F458C116C6;
+	Thu,  8 Jan 2026 23:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767916650;
-	bh=KGQRZxShhN31WMXVpQ5cr0GSY9PajzKHZaNjp1gD8x8=;
+	s=k20201202; t=1767916721;
+	bh=N5+QsrVyK9aKwwDqfVuQ8b+wgXlHeo9rjyZsakjqgKc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N0oND0iH7V0BwZDz8+f6ttO48W4qnePWJFAgEYEtee2sHsYGh+ooWHGFRXOYq+Yma
-	 gh7hOl9rf7YFNNb1m3ZB9sPzL0dZoMKCF0bnSdq4BIuCFsmYezsgnIaptRDT8rIsXP
-	 4Mh+s4QC+Rjq6Fvgj6xi/a9vgF5bV97rWqID0U6QPHcFaCwcwWnRqYwaswaW5MUoRD
-	 bbMhFxUPlKa5FQRlLyoxRNLi5ZyBcO/7rthWu/3SczmH309r4ObOQfwNP/gN4aLbgR
-	 DLwHRNcmxj7uAv6YLdW6v99ewTein+7Cgx+dTCSTzPzuGbho9g6VVO4oCF0LEq+rag
-	 vhhlN7DQiB96A==
-Date: Thu, 8 Jan 2026 15:57:28 -0800
+	b=a/dy1/1TafZLFnKBst7xyGvznphe69yR3jZuaQi7zAJDUDiUwKocUsoPmcL+1hSsb
+	 IhcmU17fHfSe1jO5uGij9YePV48j+R96jZiR6u/AxltHGLZo5L0HiyuUXDGHiejc/E
+	 gowQgqofv95g8FWX7liY2GyjnIyVvYhT0UeEg1T3TrnGK1XQKlWZ9SA9hR6DZrR4CF
+	 /De6LLLH7CXjLV9thuAp8DAyEoQPXExAuhbTV8qZDX8s2R5jbEg82uFlc/OMiTHILy
+	 vr97gikfwaSmRX+1XxqJv9RXX1Adf+4qojhJ0OyfG+9Be5aZ+x9fznDYlqA55HUbjV
+	 wMl9NJFi9IDXQ==
+Date: Thu, 8 Jan 2026 15:58:39 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Gabriel Marin <gmx@google.com>
-Subject: Re: [PATCH] perf inject: Keep build-ID data if no option is used
-Message-ID: <aWBEaNVsoizw4Aax@google.com>
-References: <20251217183927.2259237-1-namhyung@kernel.org>
- <CAP-5=fXShAb9Ez-j64fY8c_XDpRUp33Z1Z75jS9=+UaTKa68HQ@mail.gmail.com>
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/4] perf test: Skip dlfilter test for build failures
+Message-ID: <aWBEr-PCJS4UEvtI@google.com>
+References: <20251219011820.2505506-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,47 +46,48 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXShAb9Ez-j64fY8c_XDpRUp33Z1Z75jS9=+UaTKa68HQ@mail.gmail.com>
+In-Reply-To: <20251219011820.2505506-1-namhyung@kernel.org>
 
-Hi Ian,
-
-On Wed, Dec 17, 2025 at 10:57:01AM -0800, Ian Rogers wrote:
-> On Wed, Dec 17, 2025 at 10:39 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > The keep_feat() determines which header features will be kept or
-> > discarded.  Usually perf inject will add build-IDs based on -b, -B or
-> > other related options.  But it lose build-ID when none of those options
-> > are used.  This is meaningful only when --buildid-mmap is not used.
-> >
-> > The following example shows the impact of this change.
-> >
-> >   $ perf record --no-buildid-mmap true
-> >   [ perf record: Woken up 1 times to write data ]
-> >   [ perf record: Captured and wrote 0.037 MB perf.data (5 samples) ]
-> >
-> >   $ perf inject -i perf.data -o perf.data.inject
-> >
-> >   $ perf buildid-list -i perf.data
-> >   08cccc2a9388d5247ccb3e864f3063b975b0a15d /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
-> >   fd5c4d5673256cd6bda51725dba048dabb0f854e [kernel.kallsyms]
-> >   97a36ce1140071be5c36b147fa0bed173e05a602 [vdso]
-> >
-> >   $ perf buildid-list -i perf.data.inject
-> >   97a36ce1140071be5c36b147fa0bed173e05a602 [vdso]
-> >
-> > With this change, perf.data.inject would show the same list (of course,
-> > you need to run perf inject again).
-> >
-> > Reported-by: Gabriel Marin <gmx@google.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks for the review!
-
-Arnaldo, any chance you can pick this up soon?
+Ping (for the whole series)!
 
 Thanks,
 Namhyung
 
+
+On Thu, Dec 18, 2025 at 05:18:17PM -0800, Namhyung Kim wrote:
+> For some reason, it may fail to build the dlfilter.  Let's skip the test
+> as it's not an error in the perf.  This can happen when you run the perf
+> test without source code or in a different directory.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/tests/shell/script_dlfilter.sh | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/script_dlfilter.sh b/tools/perf/tests/shell/script_dlfilter.sh
+> index 45c97d4a7d5f90e8..7895ab0309b29dd5 100755
+> --- a/tools/perf/tests/shell/script_dlfilter.sh
+> +++ b/tools/perf/tests/shell/script_dlfilter.sh
+> @@ -70,15 +70,15 @@ test_dlfilter() {
+>  	# Build the dlfilter
+>  	if ! cc -c -I tools/perf/include -fpic -x c "${dlfilter_c}" -o "${dlfilter_so}.o"
+>  	then
+> -		echo "Basic --dlfilter test [Failed to build dlfilter object]"
+> -		err=1
+> +		echo "Basic --dlfilter test [Skip - failed to build dlfilter object]"
+> +		err=2
+>  		return
+>  	fi
+>  
+>  	if ! cc -shared -o "${dlfilter_so}" "${dlfilter_so}.o"
+>  	then
+> -		echo "Basic --dlfilter test [Failed to link dlfilter shared object]"
+> -		err=1
+> +		echo "Basic --dlfilter test [Skip - failed to link dlfilter shared object]"
+> +		err=2
+>  		return
+>  	fi
+>  
+> -- 
+> 2.52.0.322.g1dd061c0dc-goog
+> 
