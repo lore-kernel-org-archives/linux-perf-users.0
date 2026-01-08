@@ -1,262 +1,149 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A5A2D12F5
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AD6329363
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767899970; cv=pass; b=exOmSUNAuY3cJ2o7WPWXdZJWH2Jj+3Mm2P6rCIp7IsE7yXMpdsAmZcHL7nxJGqnczg1CE0qxNbbG8awDbgVPaYo/nMSs4ASc8gv+7SQG9Xnglf44hPSvVITO26WroUDiTzdWxa34MJ3gxMIddOcP0IEhVUCAkA0+CMQBzOQPfRg=
+	t=1767900332; cv=pass; b=KuN8Nwfc0CrX3Pqknn1+YrYfhG/KSbSQ3TcQzjRbjihsre9lJjG488eNB/tKyLZ1a2jiAR40jwVA9l1UNKmANJo9n1kaORnHHRZdLSHlSID/mE42EmAc9LBHja1MJCgXu7AWSBHEMcNyBRB4lEaYtNYShYxdtF+uf3xN4Sr6gXw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767899970; c=relaxed/simple;
-	bh=rxeerotoz/i8im58gFpTHn43alXxiw2ZmDatfi0R63A=;
+	s=arc-20240116; t=1767900332; c=relaxed/simple;
+	bh=dNGaP/TwvdzbFrecYbYtaqAbrRCIjXvPVK4PP98HrD4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cl1PNr4zYqkVZYZDyYA6/IO4ZHz8492gu6ojv430O7E+0kFhmfBlFLMHyUvIr0jz6wolvGOa0Xx/nXFnld36n1NyR57c2wqI0rgjhwhkulqnKqcMc35EMRCs9fZESp8DsK23Cq2BxY4chNlI85GN65kEiCG2FXVGNNlKQKzlK2g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S0kXSORr; arc=pass smtp.client-ip=209.85.214.179
+	 To:Cc:Content-Type; b=CzJN0Q12mw057I9T3ATUPPaLjOGeHtGsgCRx8L4q02GpDPS28e4LZ/S+NTZj1Sefg3/gU6GpCAk/ATV0+fjR2fB/uSir/5ywqMzsBjJj/gQ30fjW807gxVt8Bj755/WajQiMGf9sp+SAVfnaTwHi0VpArcCoZGZ7dry3/cht2fo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vRkwW11d; arc=pass smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S0kXSORr"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2a0d06cfa93so11595ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:19:28 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1767899968; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vRkwW11d"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-29f02651fccso12915ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:25:29 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1767900328; cv=none;
         d=google.com; s=arc-20240605;
-        b=L5y1O3QOHR3749nT1u9dWNOVs0DBerDLLZaM2o6wxY0r+3oDOW9WKlu04jrY27wDzO
-         Kis+oUTMTylHJKIXA2x5/vOZWNQBfciE0tlCrTbNLblFua9iBc6zhPoxjZdoDdazZSPG
-         3AygPqHBVD1kQfmXXgd06XYg9Dn9otuwQvjHNW6TMs2kzxvDFUdM2qAhbbmfQfD3emKy
-         V9/OLKEljg/jXpraeJiD90FW0pSzBBuWE42gRYwGvHf2ANuzMUrYABDnI518Q8fpnTLz
-         5RHUuoc+lMqUeVUQ7sZ6PS+0C7uOgTsTtxn8CzVB5sB0IiYgQTM74H9MQrdBeQUDlgjl
-         oGOA==
+        b=a4PCNpu3Q/DKpw4/E0a9gK/cSRxgemUmyzJxKpjdBK+db9AIQ0VDljkuhl1nJEKoBI
+         R6cJugaJRTHhh5WoTQQTB4la4izSFL2VdQ9tOPDt+9VJnrSuJNelNL/y/W0aqg1S+68M
+         IiGzcsHnm7PIFQQK56he2dhHx9ePXD2tQS9klOKHT/SYE3leI48woxVkrw5OfkpWZCoV
+         JaOQVeeDaV5+8V3TAE8AI9YKuZi+bwSL44x3D76jfIDdD7xp8o+nMjIoUqIaPh+km6ad
+         BLQRVuQVuy4RbEtvzB0cxW2gSNdF/MeCEXyW9Co3I28FQX3L5cu6NGj03eeVBbB6edbD
+         4aSA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=wfMp4m13e+udwXOxJ9vqSrP2pn+cCuPSBga/27xwGBA=;
-        fh=+h0hZktAU1GLIVZ2vooUw6+xglak3HxDyWiFbTQxOqw=;
-        b=GbwIrg2+6iIZnX6hVDr4SLVAOe3OtWW7QHHe0LZKwITSTiiLL6SeMiI8Eqe79FMWL5
-         0vV6m3DQvNDzwdoogIIiVWqCDKuGbZ0pBSCHSzgRZTlO0uQxnvY3lRcQLMHuNByJXzOr
-         bYGU6HPZcqM9S9Pu85tySog31oNSNFnFEN22iD5k0VeQXywJj6bn/rur8+DOM3KVf8Hw
-         nzrpNWx+nF2ERSu8pG7yJTQnRv/D3WNvugjkhjlc8W+yEfYKavd259z0ZclEjFABxops
-         jYH0rDQHui2pjTym3EeXCqtITK8V5MV8HXiTS2DDU27pNAyMhu/D2jCklnmMbxG69SCn
-         7SMg==;
+        bh=oa4LdsUiKOkTunqpDqb1Q1uL/jgTX5EodOak7TUcXX8=;
+        fh=aqAUi6WoedPW1/TI+VAQACRQT1IVpyborl4l4uASnLo=;
+        b=A+XIg6zlxw7m3RhSmrkXLSA/19jbqU36qzbeuIfZDbMWFcyVnCa8n4D1ElqwZnw8zP
+         7//w+l9mEbOUHLY+N7t9dynL3Nu/gBSR3xeZqqrEt2myKkXVTwRfuBuRzbFQkFMtlT98
+         9oC18vEojFW4Lo7p57AJue9ZdFejWSDKbQnZQPwCDbCdQb/QkDzEVhN7gFvTE88cSial
+         jZhwPfRqgh/biT8W4TK4UgA4e3ai9cWljqJyYtpoBPRYcPMwYSTUr74jhuYjY3GYGAw0
+         qmduHbR4PTevXclxlugRZRvB7JF7m4l527PkleuheLYzx/xomLs6B1CR2dzgsO0qEFS8
+         G34Q==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767899968; x=1768504768; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1767900328; x=1768505128; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wfMp4m13e+udwXOxJ9vqSrP2pn+cCuPSBga/27xwGBA=;
-        b=S0kXSORrjijEkE8bQynyRI0S7fpYlY0d+K93/x9EAykMifnnjxaT6CtuY5m35mjKFz
-         /AZJCNj504pBeZvYDfx0rPFjCt5qWx+o9sWqpPPtaJ1tLjqGT0RR73f8vxZZYUa9rm1A
-         LHdhVmN9QhPrS8AwXjEpTeKDP3I79AzifcKx7hsdTcavlsvskfV36U49N2Drf4hg1/7G
-         MObGpx0qCwZijbMx9gRqpKPrUKBbpOZOZM1miAu87gDlHeKWERThrEm79UEXtF2C3vVT
-         Wq3TpDaZ0br2daBBa8E4CJmuzNDhOLIXhM3MfuKbNi0YkT85oAif3oZPfd6JdMpQKrBT
-         MEgw==
+        bh=oa4LdsUiKOkTunqpDqb1Q1uL/jgTX5EodOak7TUcXX8=;
+        b=vRkwW11dyfIS1q465tuLac8HjwAzGSNM99+1Cxdj+LrCUp2SRCXx2e9JYhXnupfYle
+         lR7bA+NZBFAfibBTyXYBljhUqWBoYEwJAAlz3R8x+g8TZOcTskWQSzyh7i+mSSq9kuse
+         9USYy4SiUSMPb6rb67vWn0wlETVRNedqKAVrPzsVd7J19GKEgrv1KQHcOCsDPeKPlgPh
+         +DtthmICRPRHwZaYE6fJp69bb/fe9aGGjFntU9l0ZEY3BTU3VY1EYsbYVikSPX+tpY7O
+         1ION3OEaZSJXpwBdVp/D20qd4z3uU0qrZjgH4AA02NFlXwNX/QjxrBaaN2L59jIVdNIq
+         wD/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767899968; x=1768504768;
+        d=1e100.net; s=20230601; t=1767900328; x=1768505128;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=wfMp4m13e+udwXOxJ9vqSrP2pn+cCuPSBga/27xwGBA=;
-        b=tN1Vf+G6cjUY6VmRNTGbIspDbV9QmDH/ub4qZkvsVdu+esZCXuGyhOB3+G657P3fVz
-         7ZXe7eTR/4yxPxPBgYCsUoLMjCuxsPCy9qkm1ZExiwQ4+Pvemoj1Yn30mmRbyNgWIkEb
-         1/TEJ0v7NgRtb1FHctz3EpeskpvSWSCChpCOgM+r4mXhUp3BXzF9dIwu/HTjy8YTpzvM
-         Cv7YvEmFoEKzR/Npa3k80VU+AJB8QsdZEMGb5FYoxFwQGat6wt0ZlKC2UO9W/4wyGlL9
-         qaibevzvI7Z+R5M0VSZ5DKEwAvoodWCrBgXLpNvnnegGNdELHGM2gTOCy1zlPALYcGdU
-         4biw==
-X-Forwarded-Encrypted: i=1; AJvYcCVm0P4BBgkETzoVdHsF1zU+Uw3CX2cYl5eOPMxkS4jMD6GB43j2PK/mk6O5SGT42uGngAbYxVUc2SJ32QtSK4j8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmUGck7Th8LY+BkL1RPoDH2USrfhpdvBBSZDcqDLN6H+8dX1wm
-	+xEVH+MxmwLwWlIjbOjhGpWc52lePFVQtjarhkdNrPWj0aSxKbQ8L0wEFEX4tX2e4EuYKIA32xp
-	urYDuTDOryqE3tqmwtuKnmW3FQ+uGykEp9ad0dluF
-X-Gm-Gg: AY/fxX5+RAznlElYBR+AENDXQcKBZ0Vxc/hMDDkY0nwzfd4rXiGl6Is21gq200wRqRT
-	eUqGwOId1Gk/0ycO0x3b3+/tfCnNZQY+quX1qi2QpGKF1vHGC2+QxneZo2WKgkb4fvSiOe6Qdye
-	pDPzGaoV7+u9vaoxKs2Fc2UNqJX548L+BOnXgSCHPvWX3wr+OvwiUZms9AgNzulddKOB0ahgKYw
-	zh/KdsNyWAFv0aW3hJ19C1jWlkF0bGCASyjmH6pbmyXRSLaRsPStIx3EEGXx4CyjbZhcnqcXMP9
-	6v0rTDZ9tiMjWFo/XDsUPWMZLA==
-X-Received: by 2002:a17:903:41c4:b0:2a0:7fac:c031 with SMTP id
- d9443c01a7336-2a409ab1764mr426415ad.14.1767899967796; Thu, 08 Jan 2026
- 11:19:27 -0800 (PST)
+        bh=oa4LdsUiKOkTunqpDqb1Q1uL/jgTX5EodOak7TUcXX8=;
+        b=iuiK9ZxcH/kQVceqsmiDOq8KkjiMLXvbD7qqmxoseuOHkl0Bjznp/vSP7ih8tfCz/w
+         NT4pOJ1FodT2AbrBIySHNs94RMLRP/DpKEpN4y5KK87NEQA18MX1KiMaWPep6YGlLIS3
+         r2++ZKhWX1M6+E/m4cAuVesnTqeqKJgA43k4SNn4gTRV0/4JUxcynOyl/QaldMadgFXj
+         7uMxwcSawy76xZ199Lel00LP9aGaXfsTgHFCZZOWXDx+PbdhMvG4ibNaR2TyCmvCdKHX
+         kAio8rjoHa3vAcTa6UeVioThc5AwTvKcT81djB+Ll4y18RnYEoJ+rQwVTKQOBk5sW3nC
+         DetA==
+X-Forwarded-Encrypted: i=1; AJvYcCXuGrg4o8xE+618T6flaj9pe+4g5MACifKRZPEeiJMd6mItBqwU4SEUGRB3gbCku2G+dE++RKiMukC/CgeMf4xr@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMpKZDOVx81F7j/dWUim8mj11znHxhY+J4qbTVjSfst7xzySZ4
+	/9at+/ECVC5JW8YUmZeXmnPpuUHiO6G2ON6uUSNTyXUmws8zjyqYPqg8BM+fEv4ip/L/jCX/GVj
+	L5qZDQXdPftzVdSuFzRQ8q7lZTnwHyj8zAo0I1mog
+X-Gm-Gg: AY/fxX72pSCzAN2N3SoV36aaW6h7y2Ky9J595T5chV9LxyU8NxdnLJBcJPgef0ghehv
+	SLV9UnLdXmVQd628B8BRnP7ZuQ6QPlQZk5tUBuKnbGSR7qkmVv2zLMxWPE/LNJK0hI54GW9/bpY
+	gA9/EQnNaosR1C9LzaHkM6ldm7n/FFXTs90QVUwWt6A/koiBh3FEMpTy4LE63P7XToqZbhdg3ZY
+	/AH8qXpm09igGszg7VDfOFpto3sV30k2MA/xExo2Al0Idvt99F7z1OsUeJj8FiofrT9gXydmBGc
+	qPtIWUFBYujwsyl/zeqZoEUEXQ==
+X-Received: by 2002:a17:903:3d0b:b0:2a1:35df:250f with SMTP id
+ d9443c01a7336-2a409b53c61mr433075ad.15.1767900328196; Thu, 08 Jan 2026
+ 11:25:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260108184430.1210223-1-ctshao@google.com>
-In-Reply-To: <20260108184430.1210223-1-ctshao@google.com>
+References: <20251209173610.2033973-1-irogers@google.com> <aThgIB2VQdAtEXKm@gmail.com>
+In-Reply-To: <aThgIB2VQdAtEXKm@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 8 Jan 2026 11:19:16 -0800
-X-Gm-Features: AQt7F2q9AhP8JVbQcPsVpKMXeVN568ss7zLVfD0iJeCD0214kMbHs9NVns8bsUE
-Message-ID: <CAP-5=fVLFVzitYZso2HB7dFgaNbJqW0pLE_AqMhc0ytW0PFvZw@mail.gmail.com>
-Subject: Re: [PATCH] perf pmu intel: Adjust cpumaks for sub-NUMA clusters on Emeraldrapids
-To: Chun-Tse Shao <ctshao@google.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	james.clark@linaro.org, ravi.bangoria@amd.com, 
-	linux-perf-users@vger.kernel.org
+Date: Thu, 8 Jan 2026 11:25:17 -0800
+X-Gm-Features: AQt7F2rUFGsANbDKTWL3Oew_3JYCmSpI6CDFBThwnIOZz6lFUJRv6_wAwXsj54E
+Message-ID: <CAP-5=fVf=Db9+9gxmfoRPDZvp_jz3bwG9FqLwAnKVHjaHbe4MQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf stat display: Make %f precision consistent
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 8, 2026 at 10:45=E2=80=AFAM Chun-Tse Shao <ctshao@google.com> w=
-rote:
+On Tue, Dec 9, 2025 at 9:45=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrote=
+:
 >
-> Similar to GNR [1], Emeraldrapids supports sub-NUMA clusters as well.
-> Adjust cpumasks as the logic for GNR in [1].
+> * Ian Rogers <irogers@google.com> wrote:
 >
-> Tested on Emeraldrapids with SNC2 enabled:
->   $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a -- s=
-leep 1
+> > Commit bc22de9bcdb2 ("perf stat: Display time in precision based on
+> > std deviation") added multirun workload elapsed time. There was an
+> > effort to make the precision in the output most useful for the user,
+> > however, when gathering over runs it means the formatting varies. This
+> > change just makes the output format fixed.
+> >
+> > Before:
+> > ```
+> > $ while :; do perf stat --null --repeat 3 sleep 0.1 2>&1 | grep elapsed=
+; done
+> >           0.101140 +- 0.000149 seconds time elapsed  ( +-  0.15% )
+> >          0.1011396 +- 0.0000218 seconds time elapsed  ( +-  0.02% )
+> >           0.101331 +- 0.000124 seconds time elapsed  ( +-  0.12% )
+> > ^C
+> > $ while :; do perf stat --null --repeat 3 sleep 1 2>&1 | grep elapsed; =
+done
+> >           1.001317 +- 0.000146 seconds time elapsed  ( +-  0.01% )
+> >           1.001377 +- 0.000172 seconds time elapsed  ( +-  0.02% )
+> >            1.00253 +- 0.00131 seconds time elapsed  ( +-  0.13% )
+> > ```
+> >
+> > After:
+> > ```
+> > $ while :; do perf stat --null --repeat 3 sleep 0.1 2>&1 | grep elapsed=
+; done
+> >        0.101406408 +- 0.000064778 seconds time elapsed  ( +-  0.06% )
+> >        0.101367315 +- 0.000027253 seconds time elapsed  ( +-  0.03% )
+> >        0.101434164 +- 0.000084750 seconds time elapsed  ( +-  0.08% )
+> > ^C
+> > $ while :; do perf stat --null --repeat 3 sleep 1 2>&1 | grep elapsed; =
+done
+> >        1.001525467 +- 0.000051703 seconds time elapsed  ( +-  0.01% )
+> >        1.001375093 +- 0.000116200 seconds time elapsed  ( +-  0.01% )
+> >        1.001141025 +- 0.000046361 seconds time elapsed  ( +-  0.00% )
 >
->    Performance counter stats for 'system wide':
+> Perfect, thank you!
 >
->   N0       30        72125876670      UNC_CHA_CLOCKTICKS
->   N0        4         8815163648      UNC_M_CLOCKTICKS
->   N1       30        72124958844      UNC_CHA_CLOCKTICKS
->   N1        4         8815014974      UNC_M_CLOCKTICKS
->   N2       30        72121049022      UNC_CHA_CLOCKTICKS
->   N2        4         8814592626      UNC_M_CLOCKTICKS
->   N3       30        72117133854      UNC_CHA_CLOCKTICKS
->   N3        4         8814012840      UNC_M_CLOCKTICKS
->
->          1.001574118 seconds time elapsed
->
-> [1] lore.kernel.org/20250515181417.491401-1-irogers@google.com
->
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> ---
->  tools/perf/arch/x86/util/pmu.c | 45 +++++++++++++++++++++-------------
->  1 file changed, 28 insertions(+), 17 deletions(-)
->
-> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pm=
-u.c
-> index a3f96221758d..fad68a0f7b5d 100644
-> --- a/tools/perf/arch/x86/util/pmu.c
-> +++ b/tools/perf/arch/x86/util/pmu.c
-> @@ -22,20 +22,29 @@
->  #include "util/env.h"
->  #include "util/header.h"
->
-> -static bool x86__is_intel_graniterapids(void)
-> +static bool x86__is_snc_supported(void)
->  {
-> -       static bool checked_if_graniterapids;
-> -       static bool is_graniterapids;
-> +       static bool checked_if_snc_supported;
-> +       static bool is_supported;
->
-> -       if (!checked_if_graniterapids) {
-> -               const char *graniterapids_cpuid =3D "GenuineIntel-6-A[DE]=
-";
-> +       if (!checked_if_snc_supported) {
-> +
-> +               /* Emeraldrapids and Graniterapids support SNC configurat=
-ion. */
-> +               static const char *const supported_cpuids[] =3D {
-> +                       "GenuineIntel-6-CF", /* Emeraldrapids */
-> +                       "GenuineIntel-6-A[DE]", /* Graniterapids */
-> +               };
->                 char *cpuid =3D get_cpuid_str((struct perf_cpu){0});
->
-> -               is_graniterapids =3D cpuid && strcmp_cpuid_str(graniterap=
-ids_cpuid, cpuid) =3D=3D 0;
-> +               for (size_t i =3D 0; i < ARRAY_SIZE(supported_cpuids); i+=
-+) {
-> +                       is_supported =3D cpuid && strcmp_cpuid_str(suppor=
-ted_cpuids[i], cpuid) =3D=3D 0;
-> +                       if (is_supported)
-> +                               break;
-> +               }
->                 free(cpuid);
-> -               checked_if_graniterapids =3D true;
-> +               checked_if_snc_supported =3D true;
->         }
-> -       return is_graniterapids;
-> +       return checked_if_snc_supported;
->  }
->
->  static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
-> @@ -64,6 +73,7 @@ static int snc_nodes_per_l3_cache(void)
->                         read_sysfs_cpu_map("devices/system/cpu/cpu0/cache=
-/index3/shared_cpu_list");
->
->                 snc_nodes =3D perf_cpu_map__nr(cache_cpus) / perf_cpu_map=
-__nr(node_cpus);
-> +
->                 perf_cpu_map__put(cache_cpus);
->                 perf_cpu_map__put(node_cpus);
->                 checked_snc =3D true;
-> @@ -137,8 +147,8 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
->         // Compute the IMC SNC using lookup tables.
->         unsigned int imc_num;
->         int snc_nodes =3D snc_nodes_per_l3_cache();
-> -       const u8 snc2_map[] =3D {1, 1, 0, 0, 1, 1, 0, 0};
-> -       const u8 snc3_map[] =3D {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
-> +       const u8 snc2_map[] =3D {0, 0, 1, 1};
+> Tested-by: Ingo Molnar <mingo@kernel.org>
 
-Does this alter the behavior on GNR? ie 1,1,0,0 vs 0,0,1,1.
+Ping.
 
 Thanks,
 Ian
 
-> +       const u8 snc3_map[] =3D {1, 1, 0, 0, 2, 2};
->         const u8 *snc_map;
->         size_t snc_map_len;
->
-> @@ -161,11 +171,11 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
->                 pr_warning("Unexpected: unable to compute IMC number '%s'=
-\n", pmu->name);
->                 return 0;
->         }
-> -       if (imc_num >=3D snc_map_len) {
-> +       if (imc_num >=3D snc_map_len * perf_cpu_map__nr(pmu->cpus)) {
->                 pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_n=
-um, snc_nodes);
->                 return 0;
->         }
-> -       return snc_map[imc_num];
-> +       return snc_map[imc_num % snc_map_len];
->  }
->
->  static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
-> @@ -205,7 +215,7 @@ static int uncore_cha_imc_compute_cpu_adjust(int pmu_=
-snc)
->         return cpu_adjust[pmu_snc];
->  }
->
-> -static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *p=
-mu, bool cha)
-> +static void uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, =
-bool cha)
->  {
->         // With sub-NUMA clustering (SNC) there is a NUMA node per SNC in=
- the
->         // topology. For example, a two socket graniterapids machine may =
-be set
-> @@ -304,11 +314,12 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
->                                 pmu->mem_events =3D perf_mem_events_intel=
-_aux;
->                         else
->                                 pmu->mem_events =3D perf_mem_events_intel=
-;
-> -               } else if (x86__is_intel_graniterapids()) {
-> +               } else if (x86__is_snc_supported()) {
->                         if (starts_with(pmu->name, "uncore_cha_"))
-> -                               gnr_uncore_cha_imc_adjust_cpumask_for_snc=
-(pmu, /*cha=3D*/true);
-> -                       else if (starts_with(pmu->name, "uncore_imc_"))
-> -                               gnr_uncore_cha_imc_adjust_cpumask_for_snc=
-(pmu, /*cha=3D*/false);
-> +                               uncore_cha_imc_adjust_cpumask_for_snc(pmu=
-, /*cha=3D*/true);
-> +                       else if (starts_with(pmu->name, "uncore_imc_") &&
-> +                                !starts_with(pmu->name, "uncore_imc_free=
-_running"))
-> +                               uncore_cha_imc_adjust_cpumask_for_snc(pmu=
-, /*cha=3D*/false);
->                 }
->         }
->  }
-> --
-> 2.52.0.457.g6b5491de43-goog
+>         Ingo
 >
