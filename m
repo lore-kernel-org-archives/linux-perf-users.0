@@ -1,105 +1,79 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8F539C621;
-	Thu,  8 Jan 2026 10:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A292DF153;
+	Thu,  8 Jan 2026 11:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767868355; cv=none; b=ikY/XuS5BiXCkWnlB0cZWiKbXHRzf9PCZLPzj8Zy6XLxxM+iZiIo6a19ok60tqWyiyxBP216p1SUtMWBkLawKXcqqf4zB4Vii+mt11bec4ldlyZJ7oTERO8WDQuIK9tkRp+HXYdrA4zcev9pBErao14TatsOJu1TM86SSvazp4A=
+	t=1767870697; cv=none; b=fExB6ySCk4QzGAFGcKlwvl9ijp3uLO94DhgdcFSAzSP8dMZfWLsKX0bcc+ivLsRExrmErRdD8MOXlBG9ERbqlnlqAIEgTJMYGwQMKX8tjo3HUbxIiXUv6PNkAi78X5VXCVuH4BJHLh1ZuwWFDDYox8pDrCAS6LGzLV9QRMeP/PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767868355; c=relaxed/simple;
-	bh=/zozxWp1gAR5kn2D4eO0IR5FOS3lXmmSjPcQFGvZws4=;
+	s=arc-20240116; t=1767870697; c=relaxed/simple;
+	bh=8CGN48JNNgwKs+LFLKHS2Kg9Tyylj9zBMrAZ2Ix4NqM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iyJvGhReC0deqo3N+hyW9101Hgs36QDdMQWo2OURCx5YX7FJVKcOqQojUD1n25bb3BQ5j0wLZJanEeZBOekuqgJazQUeX2qDGe8bpBfLAIPp/dNWH0kUFMsFlMjIO4nku2lHVmaGk6kBGzVTqRVNRXpt/j2klgvbFVUVd2jT3BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NZKxl6FD; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=CawS+jJllwqjF2fZ1FJtitI6tCGacHW9PJh0NG5wFXfqbGmgFRw9S4zcuDbmHB0x5fjAU5tSJuiCW6jilr8qlM5//H6oDrGpmvxONrF5Hz4rAzR96Y/m5N9e23o0MpLczSQ2Y3c6IERrOx1plqCsJgHv8rC6j+dV8mKvHhThIow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vZNvIQ77; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NZKxl6FD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=4TykfQTVnHdzOlmvUj8oYdH4DJAb/a+JosOJz/5k0V8=; b=NZKxl6FDCCZ2InF6XW80ZZuvi6
-	m5I8VhN42y0D6niiT7aLOQ27DbN4/Ic/0Df3wbH+AfbQkjBtvW4vVGTT4EOmJIeGsDe44a8VaUykJ
-	vYcbrUEMD9RDci1/XXoIh0XMscLhGsf7JLntYLAgD4ACa5DUItQjQ3OYV+iDqP/gGDMU22Dlsgtu5
-	mBkjwMf36RC4BlDhwV/rOcUg5CghFnkSaEKNmH4tS4fQS2WFx+eFIAWaG0ngjNSn3wltjnyPtdpAN
-	XdgItHkGrENzKDk7+xkRo5JstbXx6VGzWMZhYjvDnJEHpOoCctHtJHjomJhonPfzNZG2NlDDKhkUN
-	R6SyQYqw==;
-Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdnJQ-0000000Enhd-43rY;
-	Thu, 08 Jan 2026 10:32:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id F2876300E8E; Thu, 08 Jan 2026 11:32:14 +0100 (CET)
-Date: Thu, 8 Jan 2026 11:32:14 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vZNvIQ77"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 504BAC116C6;
+	Thu,  8 Jan 2026 11:11:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1767870696;
+	bh=8CGN48JNNgwKs+LFLKHS2Kg9Tyylj9zBMrAZ2Ix4NqM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vZNvIQ77mok7jNAwIkIYd8+X0QzJ7gnG94/r/jd+BvcjzkwUA5kzRpUwhcaUNYJ+V
+	 z21s4u8JmKM8/UUcN8VI9P5qo7ydIgBCHlMjLti+kle92Oc4JaccFiW2PgSiP/ms6c
+	 atjUINLa/TW39k3436xld2zKjHngf3oRD6aM29r0=
+Date: Thu, 8 Jan 2026 12:11:32 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Leon Hwang <leon.hwang@linux.dev>
+Cc: stable@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jan =?iso-8859-1?Q?H=2E_Sch=F6nherr?= <jschoenh@amazon.de>
-Subject: Re: [PATCH] perf/core: Speed up kexec shutdown by avoiding
- unnecessary cross CPU calls
-Message-ID: <20260108103214.GG272712@noisy.programming.kicks-ass.net>
-References: <0d0b7fe70e6dfa7979cb83b05317deb21187f74d.camel@infradead.org>
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.6.y 0/4] perf/x86/amd: add LBR capture support outside
+ of hardware events
+Message-ID: <2026010809-matchless-reporter-3129@gregkh>
+References: <20260102090320.32843-1-leon.hwang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <0d0b7fe70e6dfa7979cb83b05317deb21187f74d.camel@infradead.org>
+In-Reply-To: <20260102090320.32843-1-leon.hwang@linux.dev>
 
-On Thu, Jan 08, 2026 at 11:14:24AM +0100, David Woodhouse wrote:
-> From: Jan H. Sch=F6nherr <jschoenh@amazon.de>
->=20
-> There are typically a lot of PMUs registered, but in many cases only few
-> of them have an event registered (like the "cpu" PMU in the presence of
-> the watchdog). As the mutex is already held, it's safe to just check for
-> existing events before doing the cross CPU call.
->=20
-> This change saves tens of milliseconds from kexec time (perceived as
-> steal time during a hypervisor host update), with <2ms remaining for
-> this step in the shutdown. There might be additional potential for
-> parallelization or we could just disable performance monitoring during
-> the actual shutdown and be less graceful about it.
->=20
-> Signed-off-by: Jan H. Sch=F6nherr <jschoenh@amazon.de>
-> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-> ---
-
-Fair enough I suppose. Let me go queue this.
-
->  kernel/events/core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 413b88a4e00f..e36372b3c83f 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -14712,7 +14712,8 @@ static void perf_event_exit_cpu_context(int cpu)
->  	ctx =3D &cpuctx->ctx;
-> =20
->  	mutex_lock(&ctx->mutex);
-> -	smp_call_function_single(cpu, __perf_event_exit_context, ctx, 1);
-> +	if (ctx->nr_events)
-> +		smp_call_function_single(cpu, __perf_event_exit_context, ctx, 1);
->  	cpuctx->online =3D 0;
->  	mutex_unlock(&ctx->mutex);
->  	mutex_unlock(&pmus_lock);
-> --=20
-> 2.43.0
->=20
->=20
+On Fri, Jan 02, 2026 at 05:03:16PM +0800, Leon Hwang wrote:
+> Hi all,
+> 
+> This backport wires up AMD perfmon v2 so BPF and other software clients
+> can snapshot LBR stacks on demand, similar to the Intel support
+> upstream. The series keeps the LBR-freeze path branchless, adds the
+> perf_snapshot_branch_stack callback for AMD, and drops the
+> sampling-only restriction now that snapshots can be taken from software
+> contexts.
+> 
+> Leon Hwang (4):
+>   perf/x86/amd: Ensure amd_pmu_core_disable_all() is always inlined
+>   perf/x86/amd: Avoid taking branches before disabling LBR
+>   perf/x86/amd: Support capturing LBR from software events
+>   perf/x86/amd: Don't reject non-sampling events with configured LBR
 
 
+Why is this for a stable kernel?  Isn't it a new feature?  If you need
+this feature, why not use a newer kernel tree?
+
+thanks,
+
+greg k-h
