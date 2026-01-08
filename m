@@ -1,111 +1,120 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6547F328B5F
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 20:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B816833986A
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 21:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767902654; cv=none; b=uqmpTf+z3sy5TnMVkm6RLdrKN4AXKYspTukla2gR7UXhMXvtFkrqcC4fJvWBX2S4Xoc0u0kbEnQ4VFvFeuN483bRZdKPH1G1jgwJu2TJhOBs/Nt1hUjgI4D5xDgETc3Or2rLKp6JjAbvPFrfcRH5QWics1+R2xnvjaMWdH3MPp0=
+	t=1767907637; cv=none; b=hzo26TOiGw8Vg8nkXUgwbxCa8MvJxDd6jKRHRw6cEgqaf41CjlZAbMuc+JY0/O/ATKJTUFJl3Iv0wA6tlerVuBQaNCtZS4ROhtFf+YMoYyGJpH6Abect03w1bjBzxdbwCA2p/7cjDOHq1ejdPg+W/jYHns8Zp8N9zrZe7yXF0ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767902654; c=relaxed/simple;
-	bh=Sc+ak6kXD2O2otUHZGDuYAqOJ/KnbA1ceZEKyhd2zdc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=kGpvOxN4uckBYkKo7HX8A08ON0s5XevwNNWFKlMCz146ZVD3wxuDx+qr+CGo+K+byFbDzONDzDyx/4HPPNvIdyksHG8oV9FTUBv4XORa9YutM7VR7gzoVz2Z6Kv4+z51U2aP+6SZJlQN1HgFW+BeMrqoccHljPngNk4WC9rJeWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0arqA01X; arc=none smtp.client-ip=209.85.215.202
+	s=arc-20240116; t=1767907637; c=relaxed/simple;
+	bh=LeqtgBJPe3g55xa94sjBSL4AcnLeDmG/Kl0HaLcJ2hw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Lcf6Z5zSWQMAtZ3GYj5ertiishRdA7byksLKtmvhlib02KJVYIKKiQt5Hm7FXuUn3uT/xSxwV4AxieXUg+9pWkhB+xucDceTTXH3cb9sZXTdjCmiLpdI9zvi6VuyB5vt0PQJyk13dFiJKFRWFSxTXNKLH+XVp4K9JOxbylrhczQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YonlKML6; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0arqA01X"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c55434c3b09so211556a12.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 12:04:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YonlKML6"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2a0f47c0e60so77734045ad.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 13:27:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767902653; x=1768507453; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RHDeNFz490Nrky17RXCNoP5KLrJVy9PVF3wfzv9VqJU=;
-        b=0arqA01XpbM3TMubUP5H+mLn2n88A6rvPSWzfrsAKarq2TR9qylufJ57fgzE3QI/63
-         i+01Np2Su+UuNW+rNzVa0qSMgG1osn/Et9e4aUK93pxF8el9yVmLbgVqjnu9eLrA9FP9
-         ieR3Km8iaPS+m0gZ4LNas7Ayui7ADg/zd1chuZdTKmxWXufxDilfUA7pNWIbTalRaY8K
-         KSkBR8bfGhaU5CaQsOmSPzxy18Elbcdtc7V/6Fn4UzslkS0T0GEk8ENkAAedKrU43JSq
-         MFYHxw7pxbHzVa8wkZJFKHC9zriuv76mmnnZvmXF9d2wmdRjHcq7FLV6Bu/pRKp2RDle
-         90iA==
+        d=google.com; s=20230601; t=1767907635; x=1768512435; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=p086liaD/KQKFAJCJmw+dgvkW+7Z68Z14bHFI3MN/3g=;
+        b=YonlKML6nrRqNGoBcHmFJbiaxFf+QF3nBg5a75Kgb4Qa2eEYzSejon6kIR6sQeom6r
+         vwClm6344TDCAPFtBRhzpSHWOvRXeO7PjMoC/3GQzd+bbyj/dJmNvCHUfYJ7cZLYa0n2
+         z06f+Yb5UQdqPGMfNuBogFAXqHWzlt6l55KXs2TUgw2x6+poORioEsjIIwB/AD8dZoo4
+         CXZpdW8TWeQUj623z1uXUx80b5LOdsNqXxIYTqGKJYP1L99NaBoEv+QeM4OgkqzBKG3k
+         AWAuL72INwMyYvY6sFrtNZwIRrhWqGAILPL4oniXecvFNuJpkwp6uZKtnTDmDBCdtR4P
+         wsng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767902653; x=1768507453;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RHDeNFz490Nrky17RXCNoP5KLrJVy9PVF3wfzv9VqJU=;
-        b=bIwRSUaj9ivSsYN/QfBCfSNZx+H7ydexpPMydeRUzMb/dPvU5M5cDouyvB7ZL1ViHS
-         11IlIpD15ohqqegbMhCa+RjVs7vjplj5ajXpxJKfq20/DEXZ03xuP+gW8zqXOemFpE3D
-         0sMIOb9yjqz0fyoASAiuX9ApFEBfkFe4i4rWeVC/7DbIo95129O4DluhOzLf5ihB12f9
-         4bma3U05BvEVeN3HptdstmC8iAjKK5VWpdfmwWsjZBLbMtXy9AkzehQ5GTEFOUq3Xsmi
-         dMSxE+jjE7iR1XROtbwgwgw57QLrITCXFCPIqqONudTqJBfPQC4LcCXc6p6Uc0wDI/HB
-         JcMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX9lDQvC2YPVbCHL8egeCZMi3i5nohe0y+1uW6Tnli5brmLGDJ7rgaYRrg3b9rd18V1hwfi/tadn7QRWMygi8li@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEudvSvZWs7zSwzHExe4R8fJWGejNR2Yi9KpXyugYfC7PSGW2Y
-	CqqnHoeSn7V79/Rc+5H/4YBaDmkkGn/PiP0A/3RYyx2tC5wff0KPmRdatsz33SpNld/BOa/BVso
-	swaXc2w==
-X-Google-Smtp-Source: AGHT+IFhKs48GN0WkSDiAO4qPNHLVPhcEoNB+pDwryoeKjyNGQcxURXgfxIrWzkPwVlbxpHNfeozbbrhcz8=
-X-Received: from plhi7.prod.google.com ([2002:a17:903:2ec7:b0:29f:68b:3548])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3947:b0:344:97a7:8c6a
- with SMTP id adf61e73a8af0-3898f9cc49cmr7749765637.51.1767902652739; Thu, 08
- Jan 2026 12:04:12 -0800 (PST)
-Date: Thu, 8 Jan 2026 12:04:11 -0800
-In-Reply-To: <04c70698-e523-43ae-9092-f360c848d797@linux.intel.com>
+        d=1e100.net; s=20230601; t=1767907635; x=1768512435;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=p086liaD/KQKFAJCJmw+dgvkW+7Z68Z14bHFI3MN/3g=;
+        b=v5xEjhGxszW1te6tL29LQzj2+eSJ6/4vpTaLcWeE312VRuKpVzpyBatoDKLxuk6dIg
+         XTeNq4NwIIL+kX5dWBoohbrmdccfNmnOsuqb9oRg4e5AabEszsx4lKG/53mk+DElLLQz
+         j5QySsaK6SvoJYeG4hqyu72adgZIc3FIRXFG5l/kB9WzHCRWWkPLAMnNr1QldtG1c+W5
+         2VXid49D/9mbZn20TgAD+es2zgBebbCu9saTSP4kF2Wtsm5Fws4Kj4xfSR/n9wPj9ry9
+         J7w1n1ZuGwqTNgQmdtd+SiKRbk/XgQ/9+kOeGY1G3Cg3Nbqsv+RvR9kxr1P2FCbQK/7P
+         EnIw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3kRdWVv13wawaaaD3V+9NUuiu7y+ITB9Ip3tWDPzy3m0Jryy9mYItCb4OXz1hQyh/bLzHsoeK/3BdDyLvn5dA@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHvZTAZgbdflfl5I2o7jHYJxh6u8s4FzGx6/v8LugLm4CJyQ1d
+	0Bw11qg06NV7ZGLm1nzJgxd58zsG9QWPJrDWBaMHSoL+/r6C3dG/5xH42slCoit21BC+HjMz20d
+	KVPlmbke+NQ==
+X-Google-Smtp-Source: AGHT+IFp5FjA7Cjuv+s2vsf9WyoqQr9/PFEL77kx5cC9ZHQxA7057WV5eMo9ydyYYUXJZkbl/675oMiNU/Lu
+X-Received: from plbke11.prod.google.com ([2002:a17:903:340b:b0:29e:ebb4:3936])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:234a:b0:298:2e7a:3c47
+ with SMTP id d9443c01a7336-2a3ee49c6cemr72179935ad.42.1767907635059; Thu, 08
+ Jan 2026 13:27:15 -0800 (PST)
+Date: Thu,  8 Jan 2026 13:26:49 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20251206001720.468579-1-seanjc@google.com> <20251206001720.468579-40-seanjc@google.com>
- <04c70698-e523-43ae-9092-f360c848d797@linux.intel.com>
-Message-ID: <aWANuxukqWmo36N0@google.com>
-Subject: Re: [PATCH v6 39/44] KVM: VMX: Bug the VM if either MSR auto-load
- list is full
-From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
+Message-ID: <20260108212652.768875-1-irogers@google.com>
+Subject: [PATCH v6 0/3] perf stat affinity changes
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="us-ascii"
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Yang Li <yang.lee@linux.alibaba.com>, 
+	James Clark <james.clark@linaro.org>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Dec 08, 2025, Dapeng Mi wrote:
-> On 12/6/2025 8:17 AM, Sean Christopherson wrote:
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 38491962b2c1..2c50ebf4ff1b 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -1098,6 +1098,7 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
-> >  {
-> >  	int i, j = 0;
-> >  	struct msr_autoload *m = &vmx->msr_autoload;
-> > +	struct kvm *kvm = vmx->vcpu.kvm;
-> >  
-> >  	switch (msr) {
-> >  	case MSR_EFER:
-> > @@ -1134,12 +1135,10 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
-> >  	i = vmx_find_loadstore_msr_slot(&m->guest, msr);
-> >  	j = vmx_find_loadstore_msr_slot(&m->host, msr);
-> >  
-> > -	if ((i < 0 && m->guest.nr == MAX_NR_LOADSTORE_MSRS) ||
-> > -	    (j < 0 &&  m->host.nr == MAX_NR_LOADSTORE_MSRS)) {
-> > -		printk_once(KERN_WARNING "Not enough msr switch entries. "
-> > -				"Can't add msr %x\n", msr);
-> > +	if (KVM_BUG_ON(i < 0 && m->guest.nr == MAX_NR_LOADSTORE_MSRS, kvm) ||
-> > +	    KVM_BUG_ON(j < 0 &&  m->host.nr == MAX_NR_LOADSTORE_MSRS, kvm))
-> 
-> nit: Remove one extra space before "m->host.nr".
+Change how affinities work with evlist__for_each_cpu. Move the
+affinity code into the iterator to simplify setting it up. Detect when
+affinities will and won't be profitable, for example a tool event and
+a regular perf event (or read group) may face less delay from a single
+IPI for the event read than from a call to sched_setaffinity. Add a
+ --no-affinity flag to perf stat to allow affinities to be disabled.
 
-Oh, that's intentional, so that the rest of the line is aligned with the "guest"
-line above.
+v6: Drop merged tool event change. Move TPEBS fix into its own patch
+    1st.
+
+v5: Drop merged changes. Move tool event reading to first
+    patch. Change --no-affinity flag to --affinity/--no-affinity flag.
+https://lore.kernel.org/lkml/20251118211326.1840989-1-irogers@google.com/
+    On v5 there was discussion with Andi Kleen who points out that
+    affinities will work better with real time priorities but using
+    this requires privileges.
+
+v4: Rebase. Add patch to reduce scope of walltime_nsec_stats now that
+    the legacy metric code is no more. Minor tweak to the ru_stats
+    clean up.
+https://lore.kernel.org/lkml/20251113180517.44096-1-irogers@google.com/
+
+v3: Add affinity clean ups and read tool events last.
+https://lore.kernel.org/lkml/20251106071241.141234-1-irogers@google.com/
+
+v2: Fixed an aggregation index issue:
+https://lore.kernel.org/lkml/20251104234148.3103176-2-irogers@google.com/
+
+v1:
+https://lore.kernel.org/lkml/20251104053449.1208800-1-irogers@google.com/
+
+Ian Rogers (3):
+  perf evlist: Missing TPEBS close in evlist__close
+  perf evlist: Reduce affinity use and move into iterator, fix no
+    affinity
+  perf stat: Add no-affinity flag
+
+ tools/perf/Documentation/perf-stat.txt |   4 +
+ tools/perf/builtin-stat.c              | 114 ++++++++----------
+ tools/perf/util/evlist.c               | 156 +++++++++++++++----------
+ tools/perf/util/evlist.h               |  27 +++--
+ tools/perf/util/pmu.c                  |  12 ++
+ tools/perf/util/pmu.h                  |   1 +
+ 6 files changed, 183 insertions(+), 131 deletions(-)
+
+-- 
+2.52.0.457.g6b5491de43-goog
+
