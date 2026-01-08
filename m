@@ -1,167 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE473101A3;
-	Thu,  8 Jan 2026 19:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6547F328B5F
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 20:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767902221; cv=none; b=e3QZkXPp4cUu5CpZoYcFw+qDXHwvBMaU+ixMmEb1HxeWSaKklgR8qKmphhdUIRPR5osPYR0fhNOEZ4iStlMOSZb6GLXpPE6/RD1YrJNhmq87vHIGV/ubGFyNXZ2nUGMOuB70xrrUjKF7zjW0n1tHz10wP7h71Ywos5n2ib15jdY=
+	t=1767902654; cv=none; b=uqmpTf+z3sy5TnMVkm6RLdrKN4AXKYspTukla2gR7UXhMXvtFkrqcC4fJvWBX2S4Xoc0u0kbEnQ4VFvFeuN483bRZdKPH1G1jgwJu2TJhOBs/Nt1hUjgI4D5xDgETc3Or2rLKp6JjAbvPFrfcRH5QWics1+R2xnvjaMWdH3MPp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767902221; c=relaxed/simple;
-	bh=DzoLsn54qNXGmunDlU26ADsHVkpZ+uQdBbfRL/gyEgw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QHrO3+XUAIHH0LJr8y/19KIOguDCgKXPSXIKEZWBS2dqJ41q52Jb8hsqf0eg0PDJt/uYbB2XiUkpA5TpFbZRLznAz0XnM8XWu+YRyQwWw58ekhRoqSgt0hAnTZliiCTon5YOA0FmJajq6TnVElZ1CwfPKdq/dwUUONPXYUX9d3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hu3xp77b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767902654; c=relaxed/simple;
+	bh=Sc+ak6kXD2O2otUHZGDuYAqOJ/KnbA1ceZEKyhd2zdc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kGpvOxN4uckBYkKo7HX8A08ON0s5XevwNNWFKlMCz146ZVD3wxuDx+qr+CGo+K+byFbDzONDzDyx/4HPPNvIdyksHG8oV9FTUBv4XORa9YutM7VR7gzoVz2Z6Kv4+z51U2aP+6SZJlQN1HgFW+BeMrqoccHljPngNk4WC9rJeWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0arqA01X; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hu3xp77b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6625C116C6;
-	Thu,  8 Jan 2026 19:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767902221;
-	bh=DzoLsn54qNXGmunDlU26ADsHVkpZ+uQdBbfRL/gyEgw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hu3xp77bSe+Dh3jUFL1YbdVl+7DOChiYIN3bVIPjP0a00cIdJsbvGXBYU9C3Lfovx
-	 YbmiZJiwNHuPMGlv/DtHVQr51RHmtvQ6uchXEkcpleV3rSLaQ7BstutGJMjCVeMEfz
-	 2M1+oMKBkakfdEPOLD0VdmcGKQ67z78ygECOBkbfZc1aC5hCi/9Jp6cYnRiPWDl/lb
-	 kDOTKQ59y2eBFe4kSUGBxsl5OKva6UTbdxub9sQ0etmL+k6KyF34bISsqSkjjMKrqY
-	 CbGdjhrxTypqiM/LGsw5sulmBC5svezv9YuabQDpsJX0naJQOA35dW2d3dvOGXVHGI
-	 UNHJpXRfgiBKg==
-Date: Thu, 8 Jan 2026 11:56:59 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BUG] perf/core: Task stuck on global_ctx_data_rwsem
-Message-ID: <aWAMC3HPskHNQeOs@google.com>
-References: <aUnVfxDtLNUDJM_v@google.com>
- <aUnWFc_mILUDFavi@google.com>
- <aV2OACqA5OpmoeF0@google.com>
- <20260107091652.GB3707891@noisy.programming.kicks-ass.net>
- <aV6toexK5LMc1MNY@google.com>
- <20260107222823.GC694817@noisy.programming.kicks-ass.net>
- <20260107223256.GA807925@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0arqA01X"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c55434c3b09so211556a12.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 12:04:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1767902653; x=1768507453; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RHDeNFz490Nrky17RXCNoP5KLrJVy9PVF3wfzv9VqJU=;
+        b=0arqA01XpbM3TMubUP5H+mLn2n88A6rvPSWzfrsAKarq2TR9qylufJ57fgzE3QI/63
+         i+01Np2Su+UuNW+rNzVa0qSMgG1osn/Et9e4aUK93pxF8el9yVmLbgVqjnu9eLrA9FP9
+         ieR3Km8iaPS+m0gZ4LNas7Ayui7ADg/zd1chuZdTKmxWXufxDilfUA7pNWIbTalRaY8K
+         KSkBR8bfGhaU5CaQsOmSPzxy18Elbcdtc7V/6Fn4UzslkS0T0GEk8ENkAAedKrU43JSq
+         MFYHxw7pxbHzVa8wkZJFKHC9zriuv76mmnnZvmXF9d2wmdRjHcq7FLV6Bu/pRKp2RDle
+         90iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767902653; x=1768507453;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RHDeNFz490Nrky17RXCNoP5KLrJVy9PVF3wfzv9VqJU=;
+        b=bIwRSUaj9ivSsYN/QfBCfSNZx+H7ydexpPMydeRUzMb/dPvU5M5cDouyvB7ZL1ViHS
+         11IlIpD15ohqqegbMhCa+RjVs7vjplj5ajXpxJKfq20/DEXZ03xuP+gW8zqXOemFpE3D
+         0sMIOb9yjqz0fyoASAiuX9ApFEBfkFe4i4rWeVC/7DbIo95129O4DluhOzLf5ihB12f9
+         4bma3U05BvEVeN3HptdstmC8iAjKK5VWpdfmwWsjZBLbMtXy9AkzehQ5GTEFOUq3Xsmi
+         dMSxE+jjE7iR1XROtbwgwgw57QLrITCXFCPIqqONudTqJBfPQC4LcCXc6p6Uc0wDI/HB
+         JcMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9lDQvC2YPVbCHL8egeCZMi3i5nohe0y+1uW6Tnli5brmLGDJ7rgaYRrg3b9rd18V1hwfi/tadn7QRWMygi8li@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEudvSvZWs7zSwzHExe4R8fJWGejNR2Yi9KpXyugYfC7PSGW2Y
+	CqqnHoeSn7V79/Rc+5H/4YBaDmkkGn/PiP0A/3RYyx2tC5wff0KPmRdatsz33SpNld/BOa/BVso
+	swaXc2w==
+X-Google-Smtp-Source: AGHT+IFhKs48GN0WkSDiAO4qPNHLVPhcEoNB+pDwryoeKjyNGQcxURXgfxIrWzkPwVlbxpHNfeozbbrhcz8=
+X-Received: from plhi7.prod.google.com ([2002:a17:903:2ec7:b0:29f:68b:3548])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3947:b0:344:97a7:8c6a
+ with SMTP id adf61e73a8af0-3898f9cc49cmr7749765637.51.1767902652739; Thu, 08
+ Jan 2026 12:04:12 -0800 (PST)
+Date: Thu, 8 Jan 2026 12:04:11 -0800
+In-Reply-To: <04c70698-e523-43ae-9092-f360c848d797@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260107223256.GA807925@noisy.programming.kicks-ass.net>
+Mime-Version: 1.0
+References: <20251206001720.468579-1-seanjc@google.com> <20251206001720.468579-40-seanjc@google.com>
+ <04c70698-e523-43ae-9092-f360c848d797@linux.intel.com>
+Message-ID: <aWANuxukqWmo36N0@google.com>
+Subject: Re: [PATCH v6 39/44] KVM: VMX: Bug the VM if either MSR auto-load
+ list is full
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Jan 07, 2026 at 11:32:56PM +0100, Peter Zijlstra wrote:
-> On Wed, Jan 07, 2026 at 11:28:24PM +0100, Peter Zijlstra wrote:
-> > On Wed, Jan 07, 2026 at 11:01:53AM -0800, Namhyung Kim wrote:
-> > 
-> > > > But yes, I suppose this can do. The question is however, how do you get
-> > > > into this predicament to begin with? Are you creating and destroying a
-> > > > lot of global LBR events or something?
-> > > 
-> > > I think it's just because there are too many tasks in the system like
-> > > O(100K).  And any thread going to exit needs to wait for
-> > > attach_global_ctx_data() to finish the iteration over every task.
-> > 
-> > OMG, so many tasks ...
-> > 
-> > > > Would it make sense to delay detach_global_ctx_data() for a second or
-> > > > so? That is, what is your event creation pattern?
-> > > 
-> > > I don't think it has a special pattern, but I'm curious how we can
-> > > handle a race like below.
-> > > 
-> > >   attach_global_ctx_data
-> > >     check p->flags & PF_EXITING
-> > >                                               do_exit
-> > >     (preemption)                                set PF_EXITING
-> > >                                                 detach_task_ctx_data()
-> > >     check p->perf_ctx_data
-> > >     attach_task_ctx_data()   ---> memory leak
-> > 
-> > Oh right. Something like so perhaps?
-> > 
-> > ---
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 3c2a491200c6..e5e716420eb3 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -5421,9 +5421,19 @@ attach_task_ctx_data(struct task_struct *task, struct kmem_cache *ctx_cache,
-> >  		return -ENOMEM;
+On Mon, Dec 08, 2025, Dapeng Mi wrote:
+> On 12/6/2025 8:17 AM, Sean Christopherson wrote:
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 38491962b2c1..2c50ebf4ff1b 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -1098,6 +1098,7 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+> >  {
+> >  	int i, j = 0;
+> >  	struct msr_autoload *m = &vmx->msr_autoload;
+> > +	struct kvm *kvm = vmx->vcpu.kvm;
 > >  
-> >  	for (;;) {
-> > -		if (try_cmpxchg((struct perf_ctx_data **)&task->perf_ctx_data, &old, cd)) {
-> > +		if (try_cmpxchg(&task->perf_ctx_data, &old, cd)) {
-> >  			if (old)
-> >  				perf_free_ctx_data_rcu(old);
-> > +			/*
-> > +			 * try_cmpxchg() pairs with try_cmpxchg() from
-> > +			 * detach_task_ctx_data() such that
-> > +			 * if we race with perf_event_exit_task(), we must
-> > +			 * observe PF_EXITING.
-> > +			 */
-> > +			if (task->flags & PF_EXITING) {
-> > +				task->perf_ctx_data = NULL;
-> > +				perf_free_ctx_data_rcu(cd);
+> >  	switch (msr) {
+> >  	case MSR_EFER:
+> > @@ -1134,12 +1135,10 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+> >  	i = vmx_find_loadstore_msr_slot(&m->guest, msr);
+> >  	j = vmx_find_loadstore_msr_slot(&m->host, msr);
+> >  
+> > -	if ((i < 0 && m->guest.nr == MAX_NR_LOADSTORE_MSRS) ||
+> > -	    (j < 0 &&  m->host.nr == MAX_NR_LOADSTORE_MSRS)) {
+> > -		printk_once(KERN_WARNING "Not enough msr switch entries. "
+> > -				"Can't add msr %x\n", msr);
+> > +	if (KVM_BUG_ON(i < 0 && m->guest.nr == MAX_NR_LOADSTORE_MSRS, kvm) ||
+> > +	    KVM_BUG_ON(j < 0 &&  m->host.nr == MAX_NR_LOADSTORE_MSRS, kvm))
 > 
-> Ugh and now it can race and do a double free, another try_cmpxchg() is
-> needed here.
+> nit: Remove one extra space before "m->host.nr".
 
-Thanks!  Something like this?
-
-Namhyung
-
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 376fb07d869b8b50..cf252d8f49b2b259 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5421,9 +5421,20 @@ attach_task_ctx_data(struct task_struct *task, struct kmem_cache *ctx_cache,
- 		return -ENOMEM;
- 
- 	for (;;) {
--		if (try_cmpxchg((struct perf_ctx_data **)&task->perf_ctx_data, &old, cd)) {
-+		if (try_cmpxchg(&task->perf_ctx_data, &old, cd)) {
- 			if (old)
- 				perf_free_ctx_data_rcu(old);
-+			/*
-+			 * try_cmpxchg() pairs with try_cmpxchg() from
-+			 * detach_task_ctx_data() such that
-+			 * if we race with perf_event_exit_task(), we must
-+			 * observe PF_EXITING.
-+			 */
-+			if (task->flags & PF_EXITING) {
-+				/* detach_task_ctx_data() may free it already */
-+				if (try_cmpxchg(&task->perf_ctx_data, &cd, NULL))
-+					perf_free_ctx_data_rcu(cd);
-+			}
- 			return 0;
- 		}
- 
-@@ -5469,6 +5480,8 @@ attach_global_ctx_data(struct kmem_cache *ctx_cache)
- 	/* Allocate everything */
- 	scoped_guard (rcu) {
- 		for_each_process_thread(g, p) {
-+			if (p->flags & PF_EXITING)
-+				continue;
- 			cd = rcu_dereference(p->perf_ctx_data);
- 			if (cd && !cd->global) {
- 				cd->global = 1;
-@@ -14562,8 +14575,11 @@ void perf_event_exit_task(struct task_struct *task)
- 
- 	/*
- 	 * Detach the perf_ctx_data for the system-wide event.
-+	 *
-+	 * Done without holding global_ctx_data_rwsem; typically
-+	 * attach_global_ctx_data() will skip over this task, but otherwise
-+	 * attach_task_ctx_data() will observe PF_EXITING.
- 	 */
--	guard(percpu_read)(&global_ctx_data_rwsem);
- 	detach_task_ctx_data(task);
- }
- 
+Oh, that's intentional, so that the rest of the line is aligned with the "guest"
+line above.
