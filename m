@@ -1,55 +1,55 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1610932BF2F
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839C132252D
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767899522; cv=none; b=u6a0sGYqxn2mQI1vGj4V5DyS6KEzfiCfbujcK2WxnOwJFiU8NtZ4KV+YKbqyvfITnAgiJIy+WCcDfjZdqqIIqsGHwECiQm4hvPP94aQZG/P3o6eCcHpbATQV+xLhINwvCIpezxwRyNryEIuhrFh2b6MDDNdy2t2G4bXqkjSi+R0=
+	t=1767899523; cv=none; b=cPrshs5+p+mN6hbp9gQ8gRLyDjElwizSeOV7nL+xoPow7at+dM/dCBoV2r85+g51U5TyF6ae7Hn8QRoik6FFiahTdsCE+LUSucb0dORmWPKjNMtDGq7b4Coq1mXXvSd72sgXIY36aT7vumAnTrCfoAebT2sAQeGW8OBJLhFqS8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767899522; c=relaxed/simple;
-	bh=e5HCiCuPrRhKQ5C7WVfdNlfmfEV5F34Gu+L6jhwfY7U=;
+	s=arc-20240116; t=1767899523; c=relaxed/simple;
+	bh=SqSW1HSI4Y1aSQ8k/4kIp/osnr+X4b4UKAj2lYUJFSY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=NB3hzpuJMZ3QFHQxfrqqiBSfTStRa26c1GV39vL8TAf5ykFRnoJiNNUwWaigWYVXiSdxrRejtOopJ45OBWlztevOhsryfwHOF/GHVETh+RWwsV/0wOcm3Ond5KswmAMdUJlVaRs+q8oyq52FiM+g2wiJDlCmdr2k6jIpgCHQx40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kWRQAuTr; arc=none smtp.client-ip=74.125.82.201
+	 To:Content-Type; b=RmWCFd6RFtEnlnFJG/8FhcyeOvx9iiIpN+/Zg2eX5uoYHoP3BUWLVHlbIDyAy33IVpUrrYBDKbljNSbLrW7R20HAHT5IfyhlFO8UkqLi5kZbtLOmJGj0d0zyaqOWsie9hKFw6UW0hBbhpwkdjuHO9GjeIyaeQaXQRoBBV9f6JRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FAuI/e6m; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kWRQAuTr"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ac39bd5501so2530311eec.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:11:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FAuI/e6m"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-119e80a89b1so10527062c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:12:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767899519; x=1768504319; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1767899521; x=1768504321; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=xk6S0HgVzRXTxY7M8qgn9fyMiMtdB0df3ARIvh/RRkI=;
-        b=kWRQAuTrQI0pOQh0Ll4cL1uEIgMeh9EOrKuOMekNXbDZc8KUKhQjN2KPCb8C42lM/+
-         h8r79hImoaviMLQM+xs6y66oxv4nqiNPco5o2zx281V28J8N4xRLDneQ1LrHrlcly7BY
-         PuPpSTYzPAj+5bWdaTdh6q0Gk5lbgnLj0X6FdbVSXeginx6OJM152QiuI39j3IaOiOOl
-         Fqmn2VqKbI7AdkKOobPOpIwfbyV9XrT7RG8bz4HJMcx5OJGqq/U18vJdCemFDYHDjAI4
-         nWQDvv4qy8DQDWwOVcipuv4fsMiXFxi7GOFEmDbpFywajyXo2HjdF1XF/L8UiK1OPLwF
-         RSPA==
+        bh=fOdr8IbPINiK2ARzYXL2NZXJz57sKNu7nLLXlg9pgVg=;
+        b=FAuI/e6m5iKsc88kBgMEGxmUq8fNHFnHD1rG1KO+LOPyg/LdcKJmwNmdgsjot8TrRD
+         8G4n32wf61NnkrwG8B/bRtNTzQCc/uDgtTBKE7+4VVZNc9Qqc2pHahA0ibBsoW3KZXT4
+         8LAHBEJS56v76WKAqjMtBfCympHe62M8XytwBUnUWC26UL86+o0T4mJ4VtJ2HN5Ogq2N
+         RzfqZsy2/WI6Gj9zW9XOaHfOb67Gw4TdV6fV2y4BR2t2uKDHvU8o8jnpODLOmTcuzDOl
+         n4QGXy/dQOubICQqvrKQGHEgDNkOWY0UJ3tAszd8jcQvIGNBjZgBg4GCcJYIjhCswM//
+         RH9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767899519; x=1768504319;
+        d=1e100.net; s=20230601; t=1767899521; x=1768504321;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xk6S0HgVzRXTxY7M8qgn9fyMiMtdB0df3ARIvh/RRkI=;
-        b=ExIKSjXr+QYS370YBI2Zxim2xUXPfNAZxuF2Mk3vSAVIUCvOIDrT9SKzjX8tba7KmF
-         XCm4JhLdhjoAoGMxZb6W6ehdQEESw8HZK32kAuy9Ej4HdX3ar7bBycEpOhpmQda+t9VZ
-         EoY3Hx7YnCvqe/oONtqVGnw2Vvpmu58R6Nn2QooJR7tbjNOv124p+YMsLjbyyreYPpTj
-         byKPJgxYIUvAokRKWsCAKU34kA/NPvN8w0fMk6uJOTyQ1/AgiEDYU7XSFtkt0/lah5Dc
-         izBcbqHOU3RLX61Kv9gvwUZEYVwHsocitKoTod3hC1zkE5Jv8ykrtlW9Txbhk20eA3uA
-         1g4w==
-X-Forwarded-Encrypted: i=1; AJvYcCWr8IWr7xduCB3Y53dGKwgIWZEaIZufp3QgnBq8xBRXtrQvXy4wBVdFtJUKV5rHJGrm2hrveUch6HW8ZuuJontI@vger.kernel.org
-X-Gm-Message-State: AOJu0YydcXTFb9AzsczCbc6/YqsnOjLf0HtxHYdWYgDrENOnprETiWa3
-	tb6yUpSOJMOLY8HlGwSVEyibTKCMBKKKP2o2D/KDb7cGH9jSzpx4hj9l1l6OH08YTfwABb+uw4s
-	JpMnftBAG4g==
-X-Google-Smtp-Source: AGHT+IE0YYVq29C6WQ6XFAWFEiR28SaNnN+3y7gJb4bYD9PO6loo2xXE8EyJOZ5RP0E0T6/QEkZ+ciLweTId
-X-Received: from dycrr1.prod.google.com ([2002:a05:693c:2c81:b0:2a2:47b6:b541])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:b90d:b0:2b0:4965:8829
- with SMTP id 5a478bee46e88-2b17d325943mr4556597eec.34.1767899518910; Thu, 08
- Jan 2026 11:11:58 -0800 (PST)
-Date: Thu,  8 Jan 2026 11:10:47 -0800
+        bh=fOdr8IbPINiK2ARzYXL2NZXJz57sKNu7nLLXlg9pgVg=;
+        b=mR57356H4XsrYJfbc8JAotlUY2HxWJicSPzxfylY/u4tqjCQU3Q2dMZCDF46Bzgg18
+         SuJtTT1wSTacyx8iyQtn4FpwmJkUQyikmhJbCkyvuouPqYo3lR4GSRsDYg0AoYlBBcwY
+         bA+rqh+W0jyZ9MsIpVhyRFNc6K7SvBSdPlwKKEOy0fiz/9z7/H5vBp6U8DgkwI42MxHV
+         mY6ovaQtcqVOqVjhZpljXzAbGiUjllQLnliUXnpm0x/k1SEUnqqyjD8CgS8bqqrs4+OD
+         f706D5pLlunUd20xCg9MRuKauTryTxUsPElRbTVUDeU4RndE0TRGigS/zY1i2LxGLEje
+         NY+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXDBfFDYSRqOQ/5aqbWdbXh+E3H0geVxnC6Psz3lfj6UtsDIt+5x4NqIxkFEevpU0gLJkCdUSWsz0XIKhDa/CsC@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhUj3EVwxKxeiuPWu+lVPGVkaG7dSr7M6MrSQh1Juyzim/UfqZ
+	H5wb5BdnL01ugx+av1o9qcCSIXEy03ishY/tgZEOHxcoHKUd7Wt1vhlCSISfhQZLS+zuO+f6zwP
+	rOp6/xFmeyw==
+X-Google-Smtp-Source: AGHT+IFcOWE2quG2Fo1o19pSXXZ4n2dWrBi8Ysraf6hMlSO44GNOg37dSaIL9lVbr0QQMpPmqfKjex5YebID
+X-Received: from dlbdt12.prod.google.com ([2002:a05:7022:258c:b0:11b:2984:3606])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:31e:b0:11d:fc72:e17f
+ with SMTP id a92af1059eb24-121f8ae75f4mr6734306c88.18.1767899520602; Thu, 08
+ Jan 2026 11:12:00 -0800 (PST)
+Date: Thu,  8 Jan 2026 11:10:48 -0800
 In-Reply-To: <20260108191105.695131-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260108191105.695131-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260108191105.695131-18-irogers@google.com>
-Subject: [PATCH v10 17/35] perf jevents: Add tsx metric group for Intel models
+Message-ID: <20260108191105.695131-19-irogers@google.com>
+Subject: [PATCH v10 18/35] perf jevents: Add br metric group for branch
+ statistics on Intel
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -76,91 +77,171 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Allow duplicated metric to be dropped from json files. Detect when TSX
-is supported by a model by using the json events, use sysfs events at
-runtime as hypervisors, etc. may disable TSX.
-
-Add CheckPmu to metric to determine if which PMUs have been associated
-with the loaded events.
+The br metric group for branches itself comprises metric groups for
+total, taken, conditional, fused and far metric groups using json
+events. Conditional taken and not taken metrics are specific to
+Icelake and later generations, so the presence of the event is used to
+determine whether the metric should exist.
 
 Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 50 ++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 138 +++++++++++++++++++++++++
+ 1 file changed, 138 insertions(+)
 
 diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 94604b1b07d8..05f3d94ec5d5 100755
+index 05f3d94ec5d5..e1944d821248 100755
 --- a/tools/perf/pmu-events/intel_metrics.py
 +++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -3,6 +3,7 @@
- import argparse
- import math
- import os
-+from typing import Optional
- from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
-                     JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
-                     MetricGroup, MetricRef, Select)
-@@ -75,6 +76,54 @@ def Smi() -> MetricGroup:
-     ], description='System Management Interrupt metrics')
+@@ -124,6 +124,143 @@ def Tsx() -> Optional[MetricGroup]:
+     ], description="Breakdown of transactional memory statistics")
  
  
-+def Tsx() -> Optional[MetricGroup]:
-+    pmu = "cpu_core" if CheckPmu("cpu_core") else "cpu"
-+    cycles = Event('cycles')
-+    cycles_in_tx = Event(f'{pmu}/cycles\\-t/')
-+    cycles_in_tx_cp = Event(f'{pmu}/cycles\\-ct/')
-+    try:
-+        # Test if the tsx event is present in the json, prefer the
-+        # sysfs version so that we can detect its presence at runtime.
-+        transaction_start = Event("RTM_RETIRED.START")
-+        transaction_start = Event(f'{pmu}/tx\\-start/')
-+    except:
-+        return None
++def IntelBr():
++    ins = Event("instructions")
 +
-+    elision_start = None
-+    try:
-+        # Elision start isn't supported by all models, but we'll not
-+        # generate the tsx_cycles_per_elision metric in that
-+        # case. Again, prefer the sysfs encoding of the event.
-+        elision_start = Event("HLE_RETIRED.START")
-+        elision_start = Event(f'{pmu}/el\\-start/')
-+    except:
-+        pass
++    def Total() -> MetricGroup:
++        br_all = Event("BR_INST_RETIRED.ALL_BRANCHES", "BR_INST_RETIRED.ANY")
++        br_m_all = Event("BR_MISP_RETIRED.ALL_BRANCHES",
++                         "BR_INST_RETIRED.MISPRED",
++                         "BR_MISP_EXEC.ANY")
++        br_clr = None
++        try:
++            br_clr = Event("BACLEARS.ANY", "BACLEARS.ALL")
++        except:
++            pass
 +
-+    return MetricGroup('transaction', [
-+        Metric('tsx_transactional_cycles',
-+               'Percentage of cycles within a transaction region.',
-+               Select(cycles_in_tx / cycles, has_event(cycles_in_tx), 0),
-+               '100%'),
-+        Metric('tsx_aborted_cycles', 'Percentage of cycles in aborted transactions.',
-+               Select(max(cycles_in_tx - cycles_in_tx_cp, 0) / cycles,
-+                      has_event(cycles_in_tx),
-+                      0),
-+               '100%'),
-+        Metric('tsx_cycles_per_transaction',
-+               'Number of cycles within a transaction divided by the number of transactions.',
-+               Select(cycles_in_tx / transaction_start,
-+                      has_event(cycles_in_tx),
-+                      0),
-+               "cycles / transaction"),
-+        Metric('tsx_cycles_per_elision',
-+               'Number of cycles within a transaction divided by the number of elisions.',
-+               Select(cycles_in_tx / elision_start,
-+                      has_event(elision_start),
-+                      0),
-+               "cycles / elision") if elision_start else None,
-+    ], description="Breakdown of transactional memory statistics")
++        br_r = d_ratio(br_all, interval_sec)
++        ins_r = d_ratio(ins, br_all)
++        misp_r = d_ratio(br_m_all, br_all)
++        clr_r = d_ratio(br_clr, interval_sec) if br_clr else None
++
++        return MetricGroup("lpm_br_total", [
++            Metric("lpm_br_total_retired",
++                   "The number of branch instructions retired per second.", br_r,
++                   "insn/s"),
++            Metric(
++                "lpm_br_total_mispred",
++                "The number of branch instructions retired, of any type, that were "
++                "not correctly predicted as a percentage of all branch instrucions.",
++                misp_r, "100%"),
++            Metric("lpm_br_total_insn_between_branches",
++                   "The number of instructions divided by the number of branches.",
++                   ins_r, "insn"),
++            Metric("lpm_br_total_insn_fe_resteers",
++                   "The number of resync branches per second.", clr_r, "req/s"
++                   ) if clr_r else None
++        ])
++
++    def Taken() -> MetricGroup:
++        br_all = Event("BR_INST_RETIRED.ALL_BRANCHES", "BR_INST_RETIRED.ANY")
++        br_m_tk = None
++        try:
++            br_m_tk = Event("BR_MISP_RETIRED.NEAR_TAKEN",
++                            "BR_MISP_RETIRED.TAKEN_JCC",
++                            "BR_INST_RETIRED.MISPRED_TAKEN")
++        except:
++            pass
++        br_r = d_ratio(br_all, interval_sec)
++        ins_r = d_ratio(ins, br_all)
++        misp_r = d_ratio(br_m_tk, br_all) if br_m_tk else None
++        return MetricGroup("lpm_br_taken", [
++            Metric("lpm_br_taken_retired",
++                   "The number of taken branches that were retired per second.",
++                   br_r, "insn/s"),
++            Metric(
++                "lpm_br_taken_mispred",
++                "The number of retired taken branch instructions that were "
++                "mispredicted as a percentage of all taken branches.", misp_r,
++                "100%") if misp_r else None,
++            Metric(
++                "lpm_br_taken_insn_between_branches",
++                "The number of instructions divided by the number of taken branches.",
++                ins_r, "insn"),
++        ])
++
++    def Conditional() -> Optional[MetricGroup]:
++        try:
++            br_cond = Event("BR_INST_RETIRED.COND",
++                            "BR_INST_RETIRED.CONDITIONAL",
++                            "BR_INST_RETIRED.TAKEN_JCC")
++            br_m_cond = Event("BR_MISP_RETIRED.COND",
++                              "BR_MISP_RETIRED.CONDITIONAL",
++                              "BR_MISP_RETIRED.TAKEN_JCC")
++        except:
++            return None
++
++        br_cond_nt = None
++        br_m_cond_nt = None
++        try:
++            br_cond_nt = Event("BR_INST_RETIRED.COND_NTAKEN")
++            br_m_cond_nt = Event("BR_MISP_RETIRED.COND_NTAKEN")
++        except:
++            pass
++        br_r = d_ratio(br_cond, interval_sec)
++        ins_r = d_ratio(ins, br_cond)
++        misp_r = d_ratio(br_m_cond, br_cond)
++        taken_metrics = [
++            Metric("lpm_br_cond_retired", "Retired conditional branch instructions.",
++                   br_r, "insn/s"),
++            Metric("lpm_br_cond_insn_between_branches",
++                   "The number of instructions divided by the number of conditional "
++                   "branches.", ins_r, "insn"),
++            Metric("lpm_br_cond_mispred",
++                   "Retired conditional branch instructions mispredicted as a "
++                   "percentage of all conditional branches.", misp_r, "100%"),
++        ]
++        if not br_m_cond_nt:
++            return MetricGroup("lpm_br_cond", taken_metrics)
++
++        br_r = d_ratio(br_cond_nt, interval_sec)
++        ins_r = d_ratio(ins, br_cond_nt)
++        misp_r = d_ratio(br_m_cond_nt, br_cond_nt)
++
++        not_taken_metrics = [
++            Metric("lpm_br_cond_retired", "Retired conditional not taken branch instructions.",
++                   br_r, "insn/s"),
++            Metric("lpm_br_cond_insn_between_branches",
++                   "The number of instructions divided by the number of not taken conditional "
++                   "branches.", ins_r, "insn"),
++            Metric("lpm_br_cond_mispred",
++                   "Retired not taken conditional branch instructions mispredicted as a "
++                   "percentage of all not taken conditional branches.", misp_r, "100%"),
++        ]
++        return MetricGroup("lpm_br_cond", [
++            MetricGroup("lpm_br_cond_nt", not_taken_metrics),
++            MetricGroup("lpm_br_cond_tkn", taken_metrics),
++        ])
++
++    def Far() -> Optional[MetricGroup]:
++        try:
++            br_far = Event("BR_INST_RETIRED.FAR_BRANCH")
++        except:
++            return None
++
++        br_r = d_ratio(br_far, interval_sec)
++        ins_r = d_ratio(ins, br_far)
++        return MetricGroup("lpm_br_far", [
++            Metric("lpm_br_far_retired", "Retired far control transfers per second.",
++                   br_r, "insn/s"),
++            Metric(
++                "lpm_br_far_insn_between_branches",
++                "The number of instructions divided by the number of far branches.",
++                ins_r, "insn"),
++        ])
++
++    return MetricGroup("lpm_br", [Total(), Taken(), Conditional(), Far()],
++                       description="breakdown of retired branch instructions")
 +
 +
  def main() -> None:
      global _args
  
-@@ -103,6 +152,7 @@ def main() -> None:
-         Idle(),
+@@ -153,6 +290,7 @@ def main() -> None:
          Rapl(),
          Smi(),
-+        Tsx(),
+         Tsx(),
++        IntelBr(),
      ])
  
      if _args.metricgroups:
