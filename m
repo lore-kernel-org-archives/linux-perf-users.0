@@ -1,55 +1,55 @@
 Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAFC32B990
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:11:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B571D32C939
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:11:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767899503; cv=none; b=pLxC2tP/jTPYDVn0sNJew8PwJYdam4CkElUUpAJc751ANxCcmcTpQusKLjRhS1/u4jz4QzPAd1Vj6ha4Q1ZFoCLVBuUheTaFacGU2ZnrTYVFygb5Ah2fj1+ZWRpfR3DPCLwfNlQLkCJTK1G2vKNwCvByEbQUA4Xigxv67I72QQk=
+	t=1767899508; cv=none; b=Y2I4knZd/9L8CTfX/a+dCK+/AlGVDAzTpNUoqZ6DR5FGgEx5emHpLJhYklIQ6/Hj4qfnkqoqS6L/DxKTV4VbrfdajWL3NpWIlEltRxVb6HfJIHoUgPdlHlsCXtkzo06gG9MpxUlB5UmkB1ccw6uNTR9eN+g3VuNB1JVYTxiptQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767899503; c=relaxed/simple;
-	bh=y7FaKz7L3UAtslgu2x3jUq5vT+1dSABmFKBuMuNMePw=;
+	s=arc-20240116; t=1767899508; c=relaxed/simple;
+	bh=ARE/Q2G89TxiCVGgVTApgtKtNEltPTE3mlntYnL0UpU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=SKuQOwG7VEMrmcYvsbiho+DQgJtIFLf9Fwbnt1OzxjOLXxYWDL2tbABoPNDv8/MWOSyOxwohJ9qmm1VRX01fLHZdvOGy5nPc2BwkwTEQ5jaMbkUqmAIfYqCXS73lbdH05q+4wbfgVNaCh5X+1Tp/fhdGykp9XT/TbaTFjQTH0pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OUeNijPw; arc=none smtp.client-ip=74.125.82.73
+	 To:Content-Type; b=RIHx1Vbre3Mftc2xdc+Hkt04Isr8qJSggie0dq1cI704yG7NATT23Bkd0oL1W3kGzuIgnPbpSuNN4HsIW0VyRlVO0w/rlxw2UULhSv5g9xyz/tTTHBuxVKpaKau0bNRqGomjsF1DxsQDh3GMsU0GR2VoL6WdaFf0oKkgY4apHrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fWPwtOsq; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OUeNijPw"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-11f4617e256so15688403c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:11:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fWPwtOsq"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-11f3b5411c7so248710c88.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:11:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767899499; x=1768504299; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1767899503; x=1768504303; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6JKS6gPP28FO6KPHugmrB/ENZliUhA7YoQoCZ5CSB0Q=;
-        b=OUeNijPwFTKWPfTUG7MSpWEzvflOOfwP37qn0vhKzHf3v/9qbqUQrqKpEqthFnkNzX
-         AYmrQ/9nFXbWbp/60AdUdSeG/xTnBWoQikeIYit9rPQpSUG6/u+sO+z7oxBQK73IQG/T
-         yNkE/2mTmJw9pjFKu/G1Ls9e3bY4oenLdR6N2U+GiiLEJcIkIDV7q9ZHBioQouGyfqqk
-         GJLZYJtLTz/g0E3ZkKZF5uRZixYR4R0uMKd12rIjWibrVtsE4IV1RWhk6yD72grxWJso
-         PgTyRX/8KfAONLAShN1tDx3RM/Ilqecm3hk3G75ms0Eid7cBR/mZqzWJyGw4OMsgw5+R
-         xwiw==
+        bh=rblm5KSHXE6JkXlIc70Vz9oUvY6uCMkftvfXFaxGDFo=;
+        b=fWPwtOsqhf5z4icDx8aHjASzk0M/OfUaxRMjIceUys6eHb+SeboVW3EbBc3wyeRKl6
+         nVZi1Q1AEatkijklQVNk2BfG5CaSqXvrS+IiZtaXKKj+I1QOOGW5+FFxWWTotYMJWg05
+         Iib5Q40eL1oiyfnnwYYvZ/UCESuoZ+wcPeUrUmvwUA/kZnBhQolp7QNinEcBYlFSc2pq
+         kgc69+8swAEgd9Y9U/9YuAS3vz7ssh23WnA7vDIJlYFVD0yYdl5lJXcV0bCMFW54e5iT
+         ogu5LHOXCxvokQvc8cff7HWQNYl4X1KcNOmmkgi8sQSkYh+DxFYtRqtyxrkomSoUdhPu
+         2Stg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767899499; x=1768504299;
+        d=1e100.net; s=20230601; t=1767899503; x=1768504303;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6JKS6gPP28FO6KPHugmrB/ENZliUhA7YoQoCZ5CSB0Q=;
-        b=XDsSoDuN5qMSHFdDedi0VSf8ztmxij1WSfQAy2jjzkxp3xVV+6kKVZNlAX00+5Yb4h
-         oFuWW4+/JaJ9MI8Gd6QFT/2yGo++UI6WIFqY+Ci54pP2IXCUWCvbd0VN6K9K5Er80UdH
-         AC1Mr4L3sEu/gjHORrPCOacivQHM2QiQ7KEWAFRcXG/ui0hSL9wf+3Fmt0ri6iloe6hq
-         8urL701AO77qByoCbLSmzr3axP0QB+ASQrqvBFvm/79+Q7CnH7tUomN/1J2slKMDDB9I
-         4FXUI5NdLOmQUo5CUR9PSHy1efdvQpznBlp0BhQt4MO9qMzq3emVezDuQfSgntLoLCOh
-         hR/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUcSS9i4tE/N+5Np+YPs0pyBK2m1BsGFUAzaG4j4IS4ZPHGJ4dpf9OKpOGm5QAOtOefs0RKKgO3+/k6D+PcXGmH@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPpM5PXLfV2jCMASsDnU2xPbqeparo1X0LE7J5J27xPv9QkYRR
-	eGuhbc6xEnanccT64WnMfhlBlAC160CWaGpyWU0052N7DM29McEiQWWLmmII6zQKBJ/6HIv6wD1
-	KuxBnJjtcog==
-X-Google-Smtp-Source: AGHT+IF9E17SQWbJuQ50ZHhye5/4q7/rhOcbfrEcIRzVHTzDoIZ8q0s+78FGD/28qUw2K73W43movJxHsXH3
-X-Received: from dlbem4.prod.google.com ([2002:a05:7022:1004:b0:11f:330d:ed15])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:41a5:b0:119:e569:f27a
- with SMTP id a92af1059eb24-121f8b5fe14mr6321881c88.35.1767899499231; Thu, 08
- Jan 2026 11:11:39 -0800 (PST)
-Date: Thu,  8 Jan 2026 11:10:37 -0800
+        bh=rblm5KSHXE6JkXlIc70Vz9oUvY6uCMkftvfXFaxGDFo=;
+        b=Up2gixobtttv/Yl5FNXtwYk1C+DRAxxz5Ku0Qt7IoiyeG+cGe6bpkt0T74iasxXDYl
+         w8oghuNQ8B1us41c169wdlxxOYZ2LNNc7N6CHmqTqA1ylQw4qNBJi1xJBzbGHt7BdWb1
+         MqoHZ5RtOX42OYiDa0PxeLWQorHF95VAx/rNe/JiWUR44iJHo9Drpr/62AzZ2s2Lk3nm
+         PbGR5qjGiXf3+v4LzojI9bNsSxQ0Y2roeeOKbPnbj/sU3GOdQWJoQ3krCPopfHSK831w
+         C23hoGxExHmUQzgYBEHBv6FnJEx9bR0TUrFrYsAb088FrHFRl+gZrJu7+8ymWHL8P5mC
+         AEog==
+X-Forwarded-Encrypted: i=1; AJvYcCUGeLnXVinQIaOqHCLEBKRA53Om54IsHBArWESJC5H0hrtchgUerKSACeh0LVMWW4XnZj57GgpzvVlHYis2tPW9@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjE0EC2rUtDnYK/GMFEmqq2W/W2QQQAMDQX8gXoxA+uQBfqtfw
+	FeDWLI9f8FbaWypSpdotg0zi3YUKlwIUI6jP6n5E0tKx5+vU755zdo3GEEUbCjglnSqF/KQuj4y
+	SJLzlijygqw==
+X-Google-Smtp-Source: AGHT+IGycfr/V1MBVAvRRJu+cPILshDBpdVCcPH1A4b61DFn/b7LNM1rkSXlN/gpZHLmomvyiXzogQ1MjY34
+X-Received: from dlbuy4.prod.google.com ([2002:a05:7022:1e04:b0:11f:3f33:f0a5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e08:b0:11b:4351:2687
+ with SMTP id a92af1059eb24-121f8ad0889mr6464293c88.17.1767899503061; Thu, 08
+ Jan 2026 11:11:43 -0800 (PST)
+Date: Thu,  8 Jan 2026 11:10:39 -0800
 In-Reply-To: <20260108191105.695131-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260108191105.695131-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260108191105.695131-8-irogers@google.com>
-Subject: [PATCH v10 07/35] perf jevents: Add itlb metric group for AMD
+Message-ID: <20260108191105.695131-10-irogers@google.com>
+Subject: [PATCH v10 09/35] perf jevents: Add uncore l3 metric group for AMD
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -76,82 +76,51 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add metrics that give an overview and details of the l1 itlb (zen1,
-zen2, zen3) and l2 itlb (all zens).
+Metrics use the amd_l3 PMU for access/miss/hit information.
 
 Reviewed-by: Sandipan Das <sandipan.das@amd.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/amd_metrics.py | 49 ++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ tools/perf/pmu-events/amd_metrics.py | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-index 38948f63cb52..8fb0b55074a2 100755
+index a4ff88de08b5..d71997177239 100755
 --- a/tools/perf/pmu-events/amd_metrics.py
 +++ b/tools/perf/pmu-events/amd_metrics.py
-@@ -122,6 +122,54 @@ def AmdBr():
-                        description="breakdown of retired branch instructions")
+@@ -317,6 +317,24 @@ def Rapl() -> MetricGroup:
+                        description="Processor socket power consumption estimates")
  
  
-+def AmdItlb():
-+    global _zen_model
-+    l2h = Event("bp_l1_tlb_miss_l2_tlb_hit", "bp_l1_tlb_miss_l2_hit")
-+    l2m = Event("l2_itlb_misses")
-+    l2r = l2h + l2m
++def UncoreL3():
++    acc = Event("l3_lookup_state.all_coherent_accesses_to_l3",
++                "l3_lookup_state.all_l3_req_typs")
++    miss = Event("l3_lookup_state.l3_miss",
++                 "l3_comb_clstr_state.request_miss")
++    acc = max(acc, miss)
++    hits = acc - miss
 +
-+    itlb_l1_mg = None
-+    l1m = l2r
-+    if _zen_model <= 3:
-+        l1r = Event("ic_fw32")
-+        l1h = max(l1r - l1m, 0)
-+        itlb_l1_mg = MetricGroup("lpm_itlb_l1", [
-+            Metric("lpm_itlb_l1_hits",
-+                   "L1 ITLB hits as a perecentage of L1 ITLB accesses.",
-+                   d_ratio(l1h, l1h + l1m), "100%"),
-+            Metric("lpm_itlb_l1_miss",
-+                   "L1 ITLB misses as a perecentage of L1 ITLB accesses.",
-+                   d_ratio(l1m, l1h + l1m), "100%"),
-+            Metric("lpm_itlb_l1_reqs",
-+                   "The number of 32B fetch windows transferred from IC pipe to DE "
-+                   "instruction decoder per second.", d_ratio(
-+                       l1r, interval_sec),
-+                   "windows/sec"),
-+        ])
-+
-+    return MetricGroup("lpm_itlb", [
-+        MetricGroup("lpm_itlb_ov", [
-+            Metric("lpm_itlb_ov_insn_bt_l1_miss",
-+                   "Number of instructions between l1 misses", d_ratio(
-+                       ins, l1m), "insns"),
-+            Metric("lpm_itlb_ov_insn_bt_l2_miss",
-+                   "Number of instructions between l2 misses", d_ratio(
-+                       ins, l2m), "insns"),
-+        ]),
-+        itlb_l1_mg,
-+        MetricGroup("lpm_itlb_l2", [
-+            Metric("lpm_itlb_l2_hits",
-+                   "L2 ITLB hits as a percentage of all L2 ITLB accesses.",
-+                   d_ratio(l2h, l2r), "100%"),
-+            Metric("lpm_itlb_l2_miss",
-+                   "L2 ITLB misses as a percentage of all L2 ITLB accesses.",
-+                   d_ratio(l2m, l2r), "100%"),
-+            Metric("lpm_itlb_l2_reqs", "ITLB accesses per second.",
-+                   d_ratio(l2r, interval_sec), "accesses/sec"),
-+        ]),
-+    ], description="Instruction TLB breakdown")
++    return MetricGroup("lpm_l3", [
++        Metric("lpm_l3_accesses", "L3 victim cache accesses",
++               d_ratio(acc, interval_sec), "accesses/sec"),
++        Metric("lpm_l3_hits", "L3 victim cache hit rate",
++               d_ratio(hits, acc), "100%"),
++        Metric("lpm_l3_miss", "L3 victim cache miss rate", d_ratio(miss, acc),
++               "100%"),
++    ], description="L3 cache breakdown per CCX")
 +
 +
- def AmdUpc() -> Metric:
-     ops = Event("ex_ret_ops", "ex_ret_cops")
-     upc = d_ratio(ops, smt_cycles)
-@@ -188,6 +236,7 @@ def main() -> None:
- 
-     all_metrics = MetricGroup("", [
-         AmdBr(),
-+        AmdItlb(),
+ def main() -> None:
+     global _args
+     global _zen_model
+@@ -351,6 +369,7 @@ def main() -> None:
          AmdUpc(),
          Idle(),
          Rapl(),
++        UncoreL3(),
+     ])
+ 
+     if _args.metricgroups:
 -- 
 2.52.0.457.g6b5491de43-goog
 
