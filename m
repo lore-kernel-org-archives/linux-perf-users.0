@@ -1,55 +1,55 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7403C3321B3
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6416332EA4
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767899531; cv=none; b=DAoDLPABDl6toOBbce1mfaAbE0z/S7CV5QHqaxfzKxesubmA4j9UGjPsRFgvyBksC6zhWmZDLDag4Bkjq1L38ZGa+kGL1w3JayjtSMWVKw9Hd1cJszFYudQgwNRApSGq/Fh/eoBhmY8EUxpK2HMmvj+oi75V8QI/bT7x4KTCkXM=
+	t=1767899534; cv=none; b=NFGqGFIw9pzBFzK3GVTQxXdES8pGohaIYyKbBFTSyj0zX7ByAq3vUJGGZxHxbldSwjkXVuK718Ij+T+U07j5zR22vrPwb7+ECdCvVG9DE8zsS1ysdHYC9LN45+lFdtXwPmWID62QDIf5MLpCOLYYmdSmQ7o+fHXtroNvDWTm158=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767899531; c=relaxed/simple;
-	bh=5xiZtz+7A1r9ki67YdNxm6S4vRgkIhkqUDeTkPmh6mI=;
+	s=arc-20240116; t=1767899534; c=relaxed/simple;
+	bh=uBZQbaf2jw+Z+6X/HPLRd2UQ4QNWgpzfDckkTan8FMs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=AY6N+1xT6of2adlkq0ggCrAwW/sjfYRbM4nGDMlkuJq3SB1fiu0Wirlh2HqkEHQc6tDWSWGxr2Q2Q2WQGW+m8J5eEwWggGLq0dDrDXggW17we18Z3taYdKZ32H4er1uX478EBgVwwHxR0hWZelzq+wpANwMWYgwD8wYC/fTSQPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nq5GvhMk; arc=none smtp.client-ip=209.85.210.201
+	 To:Content-Type; b=TL5PThkh9ovdGrZ/brNE0TYxy7Lxi62r5v3SDOubQf85eA5kK7mh+VsC9075zqrzrSUu86RA6w8sX/IeMcNlF/8QhgxUEtWirK9c+ROy/a2LJPdHDpqb8E4ECdwxmGSZDRLcp+6Fb8PaLVcr0i5WyyC2cCCwQif9dFCLJTfxXLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wCvENyBW; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nq5GvhMk"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7b9090d9f2eso3845160b3a.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:12:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wCvENyBW"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ae56205588so3843698eec.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:12:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767899530; x=1768504330; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1767899532; x=1768504332; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=DfvDdkmRBFYOyeN2O+RaG4K637ivAdshUHZLdNirJKE=;
-        b=Nq5GvhMk8ozzZ4jnZqpQyW2pxD07rj5ay3xIyRQAxiBoS7M9wukHVjeODcoRQ8YwGX
-         as77ZsKId06qEQffkSbC0mZ690YsMlhvQWx7iMK+Y4W7Al2Kspmb8iFbf4Qy0wtIKn5D
-         xnfrzfSt4qkay8RwurTjsQqVQi2dSGcedOnHnCAQuPkb/aOlLl19Wo4P1cQWthanVLDy
-         rddW/rYBe5ZVmrcOglHsasKaqvIz+IJBctqbaxkSSr/pO4vYAL3lYqLnsRIetjZ95nP2
-         le0kLEulc80yUKZlqDWzwltwCBgPiri057svQET6Nem5pA6oNNu3F7Bn/yx1MJgoGDvr
-         oNLQ==
+        bh=nTe2zkqt3kO+WTK/oM0HIoGu3LJeTRzWv45QieO9b4w=;
+        b=wCvENyBWGboJG2DyaS/lWJmAY9ZLWbVazcvJvwELfK2WGZSWmdY/y1hUi/kZOLryqD
+         POEnmzwJzsuXmgxPc3dNVUh5AT1KJAda3Ldq+jHQdTgDAgCoLl/OKGq4wM1LM3DBIhwW
+         q9v5p73u8942t0nHO8TkndbI/byoOFmWuf3jjowvw05e+56kE4zS+miYKcXRC0smKb67
+         xVV4MyYEbG8K2BcXK8hcEkYZMTqJIjVcqS8QmWtCU/99vCmCiBVR80TY2M1BeKqZGihi
+         mFLVTAsBMycDyca5GS9mPZRZjX9ESK+I+i9Ry64A3T2qn/IdOmO1cdStk2rePlDJWlE6
+         50+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767899530; x=1768504330;
+        d=1e100.net; s=20230601; t=1767899532; x=1768504332;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DfvDdkmRBFYOyeN2O+RaG4K637ivAdshUHZLdNirJKE=;
-        b=qU2gYK+KQFQAw7JxjgvQHJB7wCIflix8xQEWhxDTJu4MUsPlY8tu6/sadf7512b+TW
-         DC17K4ZB0quMtnWDaMINkTTjTwq6u/8TM8yVEtgn229QNqwljdqAYMpyZOjw/XzBSz/C
-         plxI2lYfZGv3DhREPMeFmFTC/tyuD/6y+EaIl0D0GOB2AEO8btPJpe0AyeNzQ1PdWEMn
-         WNvVtAn0t1nso4oYe7jjzdHwleHzCAlrH4OhZvmRrw3HJ+iBLOYZrJWsFfnrbbp+lV1Y
-         pPAk9ZB0srQbm3Nvb9icW8G3vKmt/+rNwlwkVAo2qqGDJ0B6lx3D7353YlXbLak/xRQF
-         GtRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCdCw59wiMjj1BVktIxZuztzK7TAUj8q2K2AMkCkLKgsaj2eL+uviCtsOja2trVSsDx89XsTPH3+WdbxGd1yoM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0JY+SVHTw72ZGca9TnKo/7RhC9kuml1xMUwvsewnaMX6fOfKe
-	LA4Opb1WlH3LlmiIrhzPuSQc+es3ZeNWG0jp+WY8l8xkbtfTuxPXxqNRXgh4CpFsH0PIygPxoJE
-	ikbZCp9eG8g==
-X-Google-Smtp-Source: AGHT+IFozC1Eaou5LUjCJVDzbtJm3tK9WcS6bFE1tUsqEzHWArRFc8pd2b37WtYxG9w77W3k4O4kFciiUPPl
-X-Received: from pgea7.prod.google.com ([2002:a05:6a02:5387:b0:bac:a20:5eef])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:32a7:b0:364:1337:647a
- with SMTP id adf61e73a8af0-3898f9b97bamr6248506637.38.1767899529821; Thu, 08
- Jan 2026 11:12:09 -0800 (PST)
-Date: Thu,  8 Jan 2026 11:10:53 -0800
+        bh=nTe2zkqt3kO+WTK/oM0HIoGu3LJeTRzWv45QieO9b4w=;
+        b=DDaousQM+ZRet+j8QhAbZx5imFS0yhey1relVwUV/Axcsfeli0Va4zn2zdh3vNelgZ
+         tZU5rKK57H4MT6no1IiDmQAjADKo1Wr1zxmAHEdvMGRaxtOqS2xeojaWU1zcMsojyxlG
+         YV8Gr3wWDVyEdnTI/zpuSY1XRlomik2XNIDFSmbe+YA+jmg78/pkStGcg53ngHhbw9dp
+         rLWtltoY087p8wl+NxWN97MPvzIAwm4hKWjaCOMFyPsFHr+43ExDM8qrLptBGO5NxO30
+         HS5bnInP5Fo1k7BI4n+hhhS/Vu+AfFw2HzR6Ml3h31uuaN5bqLXrRFGtujgJPApxce6Z
+         IK6A==
+X-Forwarded-Encrypted: i=1; AJvYcCX3boYtLtVAxS0EbGqOrh4GkESncOhOdXsACl+52h274po++CeV2GlyLFVhJ4L8GHRjdIgXXW2Xg/JcWOLmu9Ag@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywqj5BtZ7cPlg8BKRG1xVsH1+cIImo6Gi1TfIktkSXl6MnluF16
+	21A8L6Qo4rHAUoWjtPwiHlJ7PPXqz7JwFmzQTyTwC4cg0wNuPsgDG1/biWyj/dlaFrJHCDxdgPW
+	sjFZUNUZxjQ==
+X-Google-Smtp-Source: AGHT+IFbjP+UWSBe29MHc+N1MLgZsL8OyAZWmVkuOZMU5joxNuR39cAh4GxZ/t7opuGsNYq/pZOja6CvhUrc
+X-Received: from dybpm2.prod.google.com ([2002:a05:7301:4342:b0:2ae:34d1:e425])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:fc07:b0:2ae:5af4:7d65
+ with SMTP id 5a478bee46e88-2b17d3211d7mr4597327eec.31.1767899531834; Thu, 08
+ Jan 2026 11:12:11 -0800 (PST)
+Date: Thu,  8 Jan 2026 11:10:54 -0800
 In-Reply-To: <20260108191105.695131-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260108191105.695131-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260108191105.695131-24-irogers@google.com>
-Subject: [PATCH v10 23/35] perf jevents: Add ILP metrics for Intel
+Message-ID: <20260108191105.695131-25-irogers@google.com>
+Subject: [PATCH v10 24/35] perf jevents: Add context switch metrics for Intel
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -76,73 +76,91 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Use the counter mask (cmask) to see how many cycles an instruction
-takes to retire. Present as a set of ILP metrics.
+Metrics break down context switches for different kinds of
+instruction.
 
 Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 40 ++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 58 ++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
 diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 19a284b4c520..bc3c50285916 100755
+index bc3c50285916..9cf4bd8ac769 100755
 --- a/tools/perf/pmu-events/intel_metrics.py
 +++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -263,6 +263,45 @@ def IntelBr():
+@@ -263,6 +263,63 @@ def IntelBr():
                         description="breakdown of retired branch instructions")
  
  
-+def IntelIlp() -> MetricGroup:
-+    tsc = Event("msr/tsc/")
-+    c0 = Event("msr/mperf/")
-+    low = tsc - c0
-+    inst_ret = Event("INST_RETIRED.ANY_P")
-+    inst_ret_c = [Event(f"{inst_ret.name}/cmask={x}/") for x in range(1, 6)]
-+    core_cycles = Event("CPU_CLK_UNHALTED.THREAD_P_ANY",
-+                        "CPU_CLK_UNHALTED.DISTRIBUTED",
-+                        "cycles")
-+    ilp = [d_ratio(max(inst_ret_c[x] - inst_ret_c[x + 1], 0), core_cycles)
-+           for x in range(0, 4)]
-+    ilp.append(d_ratio(inst_ret_c[4], core_cycles))
-+    ilp0 = 1
-+    for x in ilp:
-+        ilp0 -= x
-+    return MetricGroup("lpm_ilp", [
-+        Metric("lpm_ilp_idle", "Lower power cycles as a percentage of all cycles",
-+               d_ratio(low, tsc), "100%"),
-+        Metric("lpm_ilp_inst_ret_0",
-+               "Instructions retired in 0 cycles as a percentage of all cycles",
-+               ilp0, "100%"),
-+        Metric("lpm_ilp_inst_ret_1",
-+               "Instructions retired in 1 cycles as a percentage of all cycles",
-+               ilp[0], "100%"),
-+        Metric("lpm_ilp_inst_ret_2",
-+               "Instructions retired in 2 cycles as a percentage of all cycles",
-+               ilp[1], "100%"),
-+        Metric("lpm_ilp_inst_ret_3",
-+               "Instructions retired in 3 cycles as a percentage of all cycles",
-+               ilp[2], "100%"),
-+        Metric("lpm_ilp_inst_ret_4",
-+               "Instructions retired in 4 cycles as a percentage of all cycles",
-+               ilp[3], "100%"),
-+        Metric("lpm_ilp_inst_ret_5",
-+               "Instructions retired in 5 or more cycles as a percentage of all cycles",
-+               ilp[4], "100%"),
-+    ])
++def IntelCtxSw() -> MetricGroup:
++    cs = Event("context\\-switches")
++    metrics = [
++        Metric("lpm_cs_rate", "Context switches per second",
++               d_ratio(cs, interval_sec), "ctxsw/s")
++    ]
++
++    ev = Event("instructions")
++    metrics.append(Metric("lpm_cs_instr", "Instructions per context switch",
++                          d_ratio(ev, cs), "instr/cs"))
++
++    ev = Event("cycles")
++    metrics.append(Metric("lpm_cs_cycles", "Cycles per context switch",
++                          d_ratio(ev, cs), "cycles/cs"))
++
++    try:
++        ev = Event("MEM_INST_RETIRED.ALL_LOADS", "MEM_UOPS_RETIRED.ALL_LOADS")
++        metrics.append(Metric("lpm_cs_loads", "Loads per context switch",
++                              d_ratio(ev, cs), "loads/cs"))
++    except:
++        pass
++
++    try:
++        ev = Event("MEM_INST_RETIRED.ALL_STORES",
++                   "MEM_UOPS_RETIRED.ALL_STORES")
++        metrics.append(Metric("lpm_cs_stores", "Stores per context switch",
++                              d_ratio(ev, cs), "stores/cs"))
++    except:
++        pass
++
++    try:
++        ev = Event("BR_INST_RETIRED.NEAR_TAKEN", "BR_INST_RETIRED.TAKEN_JCC")
++        metrics.append(Metric("lpm_cs_br_taken", "Branches taken per context switch",
++                              d_ratio(ev, cs), "br_taken/cs"))
++    except:
++        pass
++
++    try:
++        l2_misses = (Event("L2_RQSTS.DEMAND_DATA_RD_MISS") +
++                     Event("L2_RQSTS.RFO_MISS") +
++                     Event("L2_RQSTS.CODE_RD_MISS"))
++        try:
++            l2_misses += Event("L2_RQSTS.HWPF_MISS",
++                               "L2_RQSTS.L2_PF_MISS", "L2_RQSTS.PF_MISS")
++        except:
++            pass
++
++        metrics.append(Metric("lpm_cs_l2_misses", "L2 misses per context switch",
++                              d_ratio(l2_misses, cs), "l2_misses/cs"))
++    except:
++        pass
++
++    return MetricGroup("lpm_cs", metrics,
++                       description=("Number of context switches per second, instructions "
++                                    "retired & core cycles between context switches"))
 +
 +
- def IntelL2() -> Optional[MetricGroup]:
-     try:
-         DC_HIT = Event("L2_RQSTS.DEMAND_DATA_RD_HIT")
-@@ -639,6 +678,7 @@ def main() -> None:
+ def IntelIlp() -> MetricGroup:
+     tsc = Event("msr/tsc/")
+     c0 = Event("msr/mperf/")
+@@ -678,6 +735,7 @@ def main() -> None:
          Smi(),
          Tsx(),
          IntelBr(),
-+        IntelIlp(),
++        IntelCtxSw(),
+         IntelIlp(),
          IntelL2(),
          IntelLdSt(),
-         IntelPorts(),
 -- 
 2.52.0.457.g6b5491de43-goog
 
