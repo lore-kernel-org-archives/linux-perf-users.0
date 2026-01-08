@@ -1,55 +1,55 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4669329389
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18537329C7D
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767899514; cv=none; b=ByW6aIepZwSOkTYOvm5b4TcmJcy1NxBltGw6juecigu+WkViEMgt0vA1yci8Byolw6S22HTP5Re6b0TrM8wUL4Hkovo0HKfZ3Av/cIZRmMsYvrhzhN+LLf/gsceCqMPebZVBC09b+0yBWwYEdqaf4+YFBxHxjRzBGmvbPO0KBhk=
+	t=1767899518; cv=none; b=jDTmxb9yGV45cDcQ2B5bXECjYINzxNYnUuvv8qDCkYI1eWSzK/XWwk5+U34s2c9dAN4EvJrlacNYzjzVlnjhR4fBcFCpRa5GU73x9AxdNUnhZMIJP8EH1Qs35niHsFszJko2zidBA8706CEe/p1YiPshcCL9fcapVJhCq4ppUPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767899514; c=relaxed/simple;
-	bh=4YZdNHoD4OVwl+Z+UboY1dxnW9GaDyHi2p47czxKHP8=;
+	s=arc-20240116; t=1767899518; c=relaxed/simple;
+	bh=bp7wUYlwFQ9u8p8yyH/LWJ+nT+cGLAukFIDqJoid0TM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=OOvbRhDMEMY5KD5jQPOUPQ5h/l1EYi+MIZdw8KAVccJo7BDZX6OyC8rl7G3IpMTbkWMUBHGgJPLSj4Lgf1rsfcxtgEeWRrfWOdiuHFg5+7+g7KtuJd7ouQTwKRvQ451r3kiFwJVG5PMwaxcnGyesk2pzJGKMPWIlNCjQ8OdK6vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZGTvF5Yh; arc=none smtp.client-ip=74.125.82.202
+	 To:Content-Type; b=e3L9wmsWLeErmBdHmXvB059MtkVOzhrBiVQM/WeMMB4iEmHfNhA2iqMQi3vFBfSORT4O+1BS+UaGUicd5wKgclCvKUMYuqA4yfhvW9BRQ2th1KzcxceCQ62K+d7DTg3dT0eC0GTbeHSInBP+7fXzuO+ltcjn1VpouE3K6uXzcBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gOGU9+Xz; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZGTvF5Yh"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ae32686ed0so269003eec.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:11:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gOGU9+Xz"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12175e560b3so4290417c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:11:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767899509; x=1768504309; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1767899513; x=1768504313; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ml2Rrb34ZIoAiVgzhWpgKhiTIZVKvjCF+KWI69P37pc=;
-        b=ZGTvF5YhduVU4Gis7/cljVJ2pQGGHoiNFofLNEfaOtCRs6c6wrDq9zE8tXm++fXQCZ
-         p5w52CcKmF8oh/LJPKni0aA01M69OLlC/TBaqp3+kULmdcQMHaoa+UYjC390iJpc5xZ6
-         pmWnedvNWnwQHKH4VY6rXES2vI9BYoCc9dQx03zChbQqsFjEfmaP6yH7QIDa+3U28FUk
-         DkN5WTdHIbtAxO8Y9pvspVzmMqL9s92KNQ6rDslDKJrbIhrSEs4fsi41/VESm8KKFKgb
-         N6AaisrsxGXsBbEnkoIF3ywawax5/hRDB1ZBveGz/ykolr3nTH4bSdrrNSGISj/x82l7
-         WC/A==
+        bh=ZlwDSvXJTA5pQkOVBh7Jgz1PRQVOZ1b1qdOJqVwcy94=;
+        b=gOGU9+Xzra1JXS/KFB9TeYMLGDl8SuULiFMd9jkEOYzgH4OrmOsnXzku6DMk6pdIJS
+         Q2SVqkpJAADh8oxeyDG0qSBZSQ6qMvAsxhjZeN7v350N2lmkCVR4IK4weD/YP5p23R73
+         W041w3HQSIoQQy1U6h4LA4vsXCinFIjC5zPTLrPXm4e5bgV6fSfXhjduTpi8oB3wSlua
+         XdiyzJbMyUfnhLa0irmzcqazeoAVrOM5LnootJ+GT7unz8FOCESLDTO47SMIScGWQHpQ
+         w2kxHAc5/3Tw42NtI1L7zM8DBY25Rv2mXt7zmbcnKEQMHsHsiNKhoiEsi70pl4K2x8pK
+         EYxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767899509; x=1768504309;
+        d=1e100.net; s=20230601; t=1767899513; x=1768504313;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ml2Rrb34ZIoAiVgzhWpgKhiTIZVKvjCF+KWI69P37pc=;
-        b=HuHtsvHjVD2VQIMQvZ6VGPaDS7Fv4RYwuCDKmbVVZhXzqt30riVfRdk9tTmkBzN5UC
-         j+WZ1AarfiuOHoNha/teetr3x0sHEjhxrSm++ORIjRNngHFHaAQWgET/z9p1ilHwR/tX
-         X6XlzOKs04DV2dXYh5hrxTdwTlBS9VWk5bAgixKL0Z31fQnRJhECIM1REFWtw/4XRMY+
-         M+RgduAgvVa6nkKxHKv+4ExxeHt2Iiwflk/l/fOFZRLZvkmfxAmSH5hUjOBorQkzEHw8
-         NXGWHyt5yVvZuFp+n/K41vo8yo6KE1aVEVWAAtaNqe5r7GqxA/evDfX/Qc5hO3RMzx5/
-         QIzw==
-X-Forwarded-Encrypted: i=1; AJvYcCXISlZUwk2ccEG8SKLE/Y7C7PpK+2kkVl8x7TukcFLJKokbo82rvAwgLhI+dWd5keaADMAnMjEiFMHcU4P8VtZt@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFVynP45YFfVVGgEBbGHBIJEM7PSvN4K5pC6GAs588UTKnVa4b
-	o6ls6j88fNNxnM5xdjzLi4IxHUix6QkIGbBW7qUzWG+kqXMzzD9tKtDzuVdSghCRozW6R9OiITj
-	U6XMSaXeRKA==
-X-Google-Smtp-Source: AGHT+IHoiPGHBovETyUcjQ2WmUMUU3CaN+Uazo3cs7yqtLWEn8FJr6Btj82A1YTfCuiVTgb+PwR3cXLrlNJU
-X-Received: from dycaj16.prod.google.com ([2002:a05:7300:fb90:b0:2a4:7a56:1730])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2215:b0:11b:9386:7ed1
- with SMTP id a92af1059eb24-121f8b72712mr4738901c88.46.1767899509296; Thu, 08
- Jan 2026 11:11:49 -0800 (PST)
-Date: Thu,  8 Jan 2026 11:10:42 -0800
+        bh=ZlwDSvXJTA5pQkOVBh7Jgz1PRQVOZ1b1qdOJqVwcy94=;
+        b=lOt6l3z0ORXgrcdVUP48BJGmPRxGKfMZPQcqGjfJ9qoVKa7XgAlItDnaLpeFcS8ol5
+         Xo7LA2DFd+sUTHtgraRZnK1pSVtq0Ikp2nqpn+B1BjX1gkcRlGu2b2w9Gy8ZDkazGO4P
+         m3m19LucNyqJuKOHhJlYQZWUSXdKszsQluKTQa9ZNdqwf2MpIdacN7OtwSUHQTql/8Xu
+         vYsT0O+colDzdFeOykxUUnIGkk6giFVaFDzSioDbFkMXr54s07D9kUEx1YRO0NNy9p6v
+         I+g38AMqpoWQGbLgpgD4Hc6AGFI6WCep5xinKr6efthbPoDwwzjBJf0BKKFf/14oxMbC
+         MbtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIAQCizyncj3hcphfZMxhdZo2JiLB1AjEJPt6ZjCPZIiFLlJKvJAeM4pyGpieIgJ0m/8ZWbxKEA1wsIJ2rFXhA@vger.kernel.org
+X-Gm-Message-State: AOJu0YztSqZnM16GPX3US8zDHijO/oxfcXtE68cwBeG7vE/A7eGPPMdL
+	d8Jck8m58pPWzJDd34N6PHjJV8C1oJAzQOQ/EEPO98OWgkR16zba/gj8uoRZ/agrcwX2xMBu7m7
+	8q2nzdAjF7Q==
+X-Google-Smtp-Source: AGHT+IGJJ/p0fhtPUPumCcKcm6lbsZ6C8U1Qdqbs2veuIqkmDamfVsqWWn/On2uRaOydb1Ld8CGqKXpAaTnu
+X-Received: from dlbdt22.prod.google.com ([2002:a05:7022:2596:b0:11f:30f6:ea10])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:b82:b0:11b:9386:8258
+ with SMTP id a92af1059eb24-121f8b76b79mr6229029c88.45.1767899513332; Thu, 08
+ Jan 2026 11:11:53 -0800 (PST)
+Date: Thu,  8 Jan 2026 11:10:44 -0800
 In-Reply-To: <20260108191105.695131-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260108191105.695131-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260108191105.695131-13-irogers@google.com>
-Subject: [PATCH v10 12/35] perf jevents: Add RAPL metrics for all Intel models
+Message-ID: <20260108191105.695131-15-irogers@google.com>
+Subject: [PATCH v10 14/35] perf jevents: Add CheckPmu to see if a PMU is in
+ loaded json events
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -76,81 +77,53 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add a 'cpu_power' metric group that computes the power consumption
-from RAPL events if they are present.
+CheckPmu can be used to determine if hybrid events are present,
+allowing for hybrid conditional metrics/events/pmus to be premised on
+the json files rather than hard coded tables.
 
 Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 44 ++++++++++++++++++++++++--
- 1 file changed, 41 insertions(+), 3 deletions(-)
+ tools/perf/pmu-events/metric.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index b287ef115193..61778deedfff 100755
---- a/tools/perf/pmu-events/intel_metrics.py
-+++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -1,12 +1,48 @@
- #!/usr/bin/env python3
- # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
- import argparse
-+import math
- import os
--from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, LoadEvents,
--                    MetricGroup)
-+from metric import (d_ratio, has_event, Event, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
-+                    LoadEvents, Metric, MetricGroup, Select)
+diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
+index e33e163b2815..62d1a1e1d458 100644
+--- a/tools/perf/pmu-events/metric.py
++++ b/tools/perf/pmu-events/metric.py
+@@ -8,10 +8,12 @@ import re
+ from enum import Enum
+ from typing import Dict, List, Optional, Set, Tuple, Union
  
- # Global command line arguments.
- _args = None
-+interval_sec = Event("duration_time")
++all_pmus = set()
+ all_events = set()
+ 
+ def LoadEvents(directory: str) -> None:
+   """Populate a global set of all known events for the purpose of validating Event names"""
++  global all_pmus
+   global all_events
+   all_events = {
+       "context\\-switches",
+@@ -26,6 +28,8 @@ def LoadEvents(directory: str) -> None:
+     if filename.endswith(".json"):
+       try:
+         for x in json.load(open(f"{directory}/{filename}")):
++          if "Unit" in x:
++            all_pmus.add(x["Unit"])
+           if "EventName" in x:
+             all_events.add(x["EventName"])
+           elif "ArchStdEvent" in x:
+@@ -36,6 +40,10 @@ def LoadEvents(directory: str) -> None:
+         pass
+ 
+ 
++def CheckPmu(name: str) -> bool:
++  return name in all_pmus
 +
 +
-+def Rapl() -> MetricGroup:
-+    """Processor power consumption estimate.
-+
-+    Use events from the running average power limit (RAPL) driver.
-+    """
-+    # Watts = joules/second
-+    pkg = Event("power/energy\\-pkg/")
-+    cond_pkg = Select(pkg, has_event(pkg), math.nan)
-+    cores = Event("power/energy\\-cores/")
-+    cond_cores = Select(cores, has_event(cores), math.nan)
-+    ram = Event("power/energy\\-ram/")
-+    cond_ram = Select(ram, has_event(ram), math.nan)
-+    gpu = Event("power/energy\\-gpu/")
-+    cond_gpu = Select(gpu, has_event(gpu), math.nan)
-+    psys = Event("power/energy\\-psys/")
-+    cond_psys = Select(psys, has_event(psys), math.nan)
-+    scale = 2.3283064365386962890625e-10
-+    metrics = [
-+        Metric("lpm_cpu_power_pkg", "",
-+               d_ratio(cond_pkg * scale, interval_sec), "Watts"),
-+        Metric("lpm_cpu_power_cores", "",
-+               d_ratio(cond_cores * scale, interval_sec), "Watts"),
-+        Metric("lpm_cpu_power_ram", "",
-+               d_ratio(cond_ram * scale, interval_sec), "Watts"),
-+        Metric("lpm_cpu_power_gpu", "",
-+               d_ratio(cond_gpu * scale, interval_sec), "Watts"),
-+        Metric("lpm_cpu_power_psys", "",
-+               d_ratio(cond_psys * scale, interval_sec), "Watts"),
-+    ]
-+
-+    return MetricGroup("lpm_cpu_power", metrics,
-+                       description="Running Average Power Limit (RAPL) power consumption estimates")
- 
- 
- def main() -> None:
-@@ -33,7 +69,9 @@ def main() -> None:
-     directory = f"{_args.events_path}/x86/{_args.model}/"
-     LoadEvents(directory)
- 
--    all_metrics = MetricGroup("", [])
-+    all_metrics = MetricGroup("", [
-+        Rapl(),
-+    ])
- 
-     if _args.metricgroups:
-         print(JsonEncodeMetricGroupDescriptions(all_metrics))
+ def CheckEvent(name: str) -> bool:
+   """Check the event name exists in the set of all loaded events"""
+   global all_events
 -- 
 2.52.0.457.g6b5491de43-goog
 
