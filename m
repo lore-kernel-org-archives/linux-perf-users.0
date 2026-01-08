@@ -1,55 +1,55 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18537329C7D
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383C432E6A3
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767899518; cv=none; b=jDTmxb9yGV45cDcQ2B5bXECjYINzxNYnUuvv8qDCkYI1eWSzK/XWwk5+U34s2c9dAN4EvJrlacNYzjzVlnjhR4fBcFCpRa5GU73x9AxdNUnhZMIJP8EH1Qs35niHsFszJko2zidBA8706CEe/p1YiPshcCL9fcapVJhCq4ppUPM=
+	t=1767899519; cv=none; b=K7aBMo1NkjaUpj593W0f+GIthS9yAykoLbM1pALagvk0BD04RDV80XE9AjklUQjh3LcNnD9fXc8LI1T+1aQ9aklQwNIQFqn/p7jKJRlnuTeK2IsbLDv9St0BKxGndf9B9uHQKwrNq+4QWeSAL0YYQ9yZRzuXt3nN/8bCwlhzZJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767899518; c=relaxed/simple;
-	bh=bp7wUYlwFQ9u8p8yyH/LWJ+nT+cGLAukFIDqJoid0TM=;
+	s=arc-20240116; t=1767899519; c=relaxed/simple;
+	bh=YxZ/OsA3lmCo6/plyihzmoA72k7p/jAWTQVj1BOnHOA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=e3L9wmsWLeErmBdHmXvB059MtkVOzhrBiVQM/WeMMB4iEmHfNhA2iqMQi3vFBfSORT4O+1BS+UaGUicd5wKgclCvKUMYuqA4yfhvW9BRQ2th1KzcxceCQ62K+d7DTg3dT0eC0GTbeHSInBP+7fXzuO+ltcjn1VpouE3K6uXzcBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gOGU9+Xz; arc=none smtp.client-ip=74.125.82.74
+	 To:Content-Type; b=m/qb90gJapEnhyybIrgFQe6EMF1mkB3c2Tmft1wtTBPB/l9Kc0E8z+Zh4JmpRKj+oJ0erMGQ3eCz95VwqysIdKbAi3JHOBxUD3UaYpsj/9WkFdSUT2sSi4Mz7tapoXrah1QKBjYjIsP2BbIYdUIEQXAIbw6NuJMBMReEpJs3//k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TZ/cAJ7j; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gOGU9+Xz"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12175e560b3so4290417c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:11:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TZ/cAJ7j"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-121b1cb8377so4582727c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:11:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767899513; x=1768504313; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1767899515; x=1768504315; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZlwDSvXJTA5pQkOVBh7Jgz1PRQVOZ1b1qdOJqVwcy94=;
-        b=gOGU9+Xzra1JXS/KFB9TeYMLGDl8SuULiFMd9jkEOYzgH4OrmOsnXzku6DMk6pdIJS
-         Q2SVqkpJAADh8oxeyDG0qSBZSQ6qMvAsxhjZeN7v350N2lmkCVR4IK4weD/YP5p23R73
-         W041w3HQSIoQQy1U6h4LA4vsXCinFIjC5zPTLrPXm4e5bgV6fSfXhjduTpi8oB3wSlua
-         XdiyzJbMyUfnhLa0irmzcqazeoAVrOM5LnootJ+GT7unz8FOCESLDTO47SMIScGWQHpQ
-         w2kxHAc5/3Tw42NtI1L7zM8DBY25Rv2mXt7zmbcnKEQMHsHsiNKhoiEsi70pl4K2x8pK
-         EYxw==
+        bh=OecttgXJ1EvArNGliMlBZCK1j+fgZte6pz1jbYKv0lI=;
+        b=TZ/cAJ7j659Bl62t/lWGrXZozVeKS4D/rRWMNVyFMMkKKSCLz61c+C8LB+CrPT63Dv
+         26jVmvvil6Z6Xe+qjlW02R2FvxlnVvPoHi/YapnWJQ+rME2J+ap7uOKeYdpmuXIHC6dV
+         hLnpctkFosNEJL9DsA8ZG2V15DQtKwAO7CYZouZBWfbr8lpYspJnRR8r1JJGOBjC4wWD
+         bkY7u/PR198707QH7ssB+oBig9NZ3wWAzyvUNUaiyo4MuXv8f5+V7EgpGu6uw5p51DH1
+         5QNh51VAgxEZSPgyexmqaAv9VHHOzEZA6MvYaUIWvlWurqMUFwDHRiqMCRhujsXlAp9e
+         GAtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767899513; x=1768504313;
+        d=1e100.net; s=20230601; t=1767899515; x=1768504315;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZlwDSvXJTA5pQkOVBh7Jgz1PRQVOZ1b1qdOJqVwcy94=;
-        b=lOt6l3z0ORXgrcdVUP48BJGmPRxGKfMZPQcqGjfJ9qoVKa7XgAlItDnaLpeFcS8ol5
-         Xo7LA2DFd+sUTHtgraRZnK1pSVtq0Ikp2nqpn+B1BjX1gkcRlGu2b2w9Gy8ZDkazGO4P
-         m3m19LucNyqJuKOHhJlYQZWUSXdKszsQluKTQa9ZNdqwf2MpIdacN7OtwSUHQTql/8Xu
-         vYsT0O+colDzdFeOykxUUnIGkk6giFVaFDzSioDbFkMXr54s07D9kUEx1YRO0NNy9p6v
-         I+g38AMqpoWQGbLgpgD4Hc6AGFI6WCep5xinKr6efthbPoDwwzjBJf0BKKFf/14oxMbC
-         MbtA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIAQCizyncj3hcphfZMxhdZo2JiLB1AjEJPt6ZjCPZIiFLlJKvJAeM4pyGpieIgJ0m/8ZWbxKEA1wsIJ2rFXhA@vger.kernel.org
-X-Gm-Message-State: AOJu0YztSqZnM16GPX3US8zDHijO/oxfcXtE68cwBeG7vE/A7eGPPMdL
-	d8Jck8m58pPWzJDd34N6PHjJV8C1oJAzQOQ/EEPO98OWgkR16zba/gj8uoRZ/agrcwX2xMBu7m7
-	8q2nzdAjF7Q==
-X-Google-Smtp-Source: AGHT+IGJJ/p0fhtPUPumCcKcm6lbsZ6C8U1Qdqbs2veuIqkmDamfVsqWWn/On2uRaOydb1Ld8CGqKXpAaTnu
-X-Received: from dlbdt22.prod.google.com ([2002:a05:7022:2596:b0:11f:30f6:ea10])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:b82:b0:11b:9386:8258
- with SMTP id a92af1059eb24-121f8b76b79mr6229029c88.45.1767899513332; Thu, 08
- Jan 2026 11:11:53 -0800 (PST)
-Date: Thu,  8 Jan 2026 11:10:44 -0800
+        bh=OecttgXJ1EvArNGliMlBZCK1j+fgZte6pz1jbYKv0lI=;
+        b=L3sjRMGGlMlevFhWivs6KVJZ8jEYfXhFcM4MRFx9TQHvkHzwZnIFcOtJQEh5dyMHDo
+         BnQEH6yYUt4IK9MdONmgOkIgUNXR/xbmZthrwahfRIALPTLBdkvquLvaLYC5lIx4XVt5
+         QwAiVBczCbxfq2ARK0Ubzss3+/Qzpmq3jReWCPVnej3ZH7QGrdTLxz2cxm5vay6PdkIO
+         T0fjV002k8l/mp3GXIdL3TZ+EbFAC57Foy0vpnHbPD6gnMPBOvsWlSzjeziKjiciFzo3
+         sx9ugb6H2iqExRveTaxGobJCYT+QNP46T4xjeWWSPvSu3ruiQFKXdKe1Q8dq0WjJOyyJ
+         Bg5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVexC/RfFl/FfQs5o3AyE8bfvVuQmD3Z2oY1A619fAvugtKBDCDgzAeLjxd9obQfs69CurlIZ957SEiucEfZX8g@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeKgHbs0SXpHLnYC128GlI0uBdNmTse9zLHELgLCKOdXN/ujHo
+	CqJqbdeOAw+B2MZeccdyCHGJSrBNkTSZlNznYsZGmglYONc1zBpt+PH1Mkyi2xUvrUFOCbJ2jZQ
+	5t+zX/23QyQ==
+X-Google-Smtp-Source: AGHT+IGd2kQf665nloazUkG63CJWxUv5NRwbj0g4dCCQG5Lc6YRA5wiulJJUPQnFlit081KbV48IVNnl6LsC
+X-Received: from dlbdd40.prod.google.com ([2002:a05:7022:aa8:b0:11f:36a2:78d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:425:b0:11b:c0db:a5ea
+ with SMTP id a92af1059eb24-121f8b7abbdmr6160878c88.26.1767899515006; Thu, 08
+ Jan 2026 11:11:55 -0800 (PST)
+Date: Thu,  8 Jan 2026 11:10:45 -0800
 In-Reply-To: <20260108191105.695131-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260108191105.695131-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260108191105.695131-15-irogers@google.com>
-Subject: [PATCH v10 14/35] perf jevents: Add CheckPmu to see if a PMU is in
- loaded json events
+Message-ID: <20260108191105.695131-16-irogers@google.com>
+Subject: [PATCH v10 15/35] perf jevents: Add smi metric group for Intel models
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -77,53 +76,64 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-CheckPmu can be used to determine if hybrid events are present,
-allowing for hybrid conditional metrics/events/pmus to be premised on
-the json files rather than hard coded tables.
+Allow duplicated metric to be dropped from json files.
 
 Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/metric.py | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
-index e33e163b2815..62d1a1e1d458 100644
---- a/tools/perf/pmu-events/metric.py
-+++ b/tools/perf/pmu-events/metric.py
-@@ -8,10 +8,12 @@ import re
- from enum import Enum
- from typing import Dict, List, Optional, Set, Tuple, Union
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index 0cb7a38ad238..94604b1b07d8 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -3,9 +3,9 @@
+ import argparse
+ import math
+ import os
+-from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
++from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
+                     JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
+-                    MetricGroup, Select)
++                    MetricGroup, MetricRef, Select)
  
-+all_pmus = set()
- all_events = set()
- 
- def LoadEvents(directory: str) -> None:
-   """Populate a global set of all known events for the purpose of validating Event names"""
-+  global all_pmus
-   global all_events
-   all_events = {
-       "context\\-switches",
-@@ -26,6 +28,8 @@ def LoadEvents(directory: str) -> None:
-     if filename.endswith(".json"):
-       try:
-         for x in json.load(open(f"{directory}/{filename}")):
-+          if "Unit" in x:
-+            all_pmus.add(x["Unit"])
-           if "EventName" in x:
-             all_events.add(x["EventName"])
-           elif "ArchStdEvent" in x:
-@@ -36,6 +40,10 @@ def LoadEvents(directory: str) -> None:
-         pass
+ # Global command line arguments.
+ _args = None
+@@ -56,6 +56,25 @@ def Rapl() -> MetricGroup:
+                        description="Running Average Power Limit (RAPL) power consumption estimates")
  
  
-+def CheckPmu(name: str) -> bool:
-+  return name in all_pmus
++def Smi() -> MetricGroup:
++    pmu = "<cpu_core or cpu_atom>" if CheckPmu("cpu_core") else "cpu"
++    aperf = Event('msr/aperf/')
++    cycles = Event('cycles')
++    smi_num = Event('msr/smi/')
++    smi_cycles = Select(Select((aperf - cycles) / aperf, smi_num > 0, 0),
++                        has_event(aperf),
++                        0)
++    return MetricGroup('smi', [
++        Metric('smi_num', 'Number of SMI interrupts.',
++               Select(smi_num, has_event(smi_num), 0), 'SMI#'),
++        # Note, the smi_cycles "Event" is really a reference to the metric.
++        Metric('smi_cycles',
++               'Percentage of cycles spent in System Management Interrupts. '
++               f'Requires /sys/bus/event_source/devices/{pmu}/freeze_on_smi to be 1.',
++               smi_cycles, '100%', threshold=(MetricRef('smi_cycles') > 0.10))
++    ], description='System Management Interrupt metrics')
 +
 +
- def CheckEvent(name: str) -> bool:
-   """Check the event name exists in the set of all loaded events"""
-   global all_events
+ def main() -> None:
+     global _args
+ 
+@@ -83,6 +102,7 @@ def main() -> None:
+     all_metrics = MetricGroup("", [
+         Idle(),
+         Rapl(),
++        Smi(),
+     ])
+ 
+     if _args.metricgroups:
 -- 
 2.52.0.457.g6b5491de43-goog
 
