@@ -1,27 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BB2637F11A;
-	Thu,  8 Jan 2026 09:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BDED392C2A;
+	Thu,  8 Jan 2026 09:43:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767865437; cv=none; b=lU31qlVFQdw8Gs340QiLcKAF0C6Fwn+F+bLwgTL3s/28C84PLpS0e5csAje8PNB/+suKH5ggGgmjHxqQcAekgpwuorDp2egxa3Uw0pB7aAHjqfmIFUTIVwYRDugqWNnv0a6rO866wBHmi+l6lyyng5d19kfPyon5xRSQubvJgHQ=
+	t=1767865441; cv=none; b=GC98qYn+UH2W7qtPYCWIRLrPaU/91cUqH7cm2lBXUb9fJtYmB2QoNf+F7h6Nok4EaWQILIyLNZNxiKPPiqKJp+e9lVP9hZwRgi4aaoG+4YgpqjPDs60ZjkkpOFJxVuBh1ecuKKqFBVc4ccD+ayP6lugwmQd6sqg0EXjHOphhigo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767865437; c=relaxed/simple;
-	bh=0b9Ow0mtAqt8qv9s/mRWSem+q6qiDOdZa/XNwm94HnQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PEpP28zlJBnaZoczSAHkGm4bUrnVNUTPpPGEdnT8NIJgkOuNTM8r3HHTQ+ch+90n574FlnJ4eGPcFhAoQtG9GDX50jnRH9KO1tLVaylGtw8jjoj1dTX7WGRUa63FOvZPj7ey9rUnN+YIHZS84yImR1MjLU2Xvl0FfVFoANHk8Vs=
+	s=arc-20240116; t=1767865441; c=relaxed/simple;
+	bh=IRHGTb2KqPzTO7htoevnAj/El48Tg+1tRAZyavqk2pc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LGDN8pp592LXqxSOs0JhDdD0ApaYgDbYvlOROLDVGUdTzKB8smXyWqxjoCQ9vagfLG3znhrRw6m74c1pljc8paVvDcbXEZo3RoPngZ/olMXxc1z0Cs25kGbo5mOzjKe7WkVOaPO4obGZCx8WyP5fXZXv9tCRhuye1A7QH1OgSq0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7627E1515;
-	Thu,  8 Jan 2026 01:43:39 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D33D9497;
+	Thu,  8 Jan 2026 01:43:36 -0800 (PST)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C7023F6A8;
-	Thu,  8 Jan 2026 01:43:43 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6624E3F6A8;
+	Thu,  8 Jan 2026 01:43:41 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
-Date: Thu, 08 Jan 2026 09:43:24 +0000
-Subject: [PATCH v4 1/3] tools headers: Go back to include
- asm-generic/unistd.h for arm64
+Subject: [PATCH v4 0/3] tools build: Fix arm64 unistd.h dependency
+Date: Thu, 08 Jan 2026 09:43:23 +0000
+Message-Id: <20260108-perf_fix_syscall_header-v4-0-5d45d18bc491@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -30,9 +29,11 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260108-perf_fix_syscall_header-v4-1-5d45d18bc491@arm.com>
-References: <20260108-perf_fix_syscall_header-v4-0-5d45d18bc491@arm.com>
-In-Reply-To: <20260108-perf_fix_syscall_header-v4-0-5d45d18bc491@arm.com>
+X-B4-Tracking: v=1; b=H4sIADt8X2kC/3XNSwqDMBCA4atI1k1JJmnUrnqPUiSaSQ34IilSE
+ e/eKJRKweU/zHwzk4DeYSDXZCYeRxdc38WQp4RUte6eSJ2JTYDBhQMTdEBvC+veRZhCpZumqFE
+ b9BQhY1bnghspSbwePMatTb4/YtcuvHo/bY9Gvk6/pjw0R04ZLTOE1KYSjdI37dtz1bdkFUfYK
+ ZwdK7AqPCsV4woZ/ilipwAcKyIqWEqdlbmxqNRPWZblA+0n0ABIAQAA
+X-Change-ID: 20251203-perf_fix_syscall_header-e280fa931d44
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
  Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
@@ -40,82 +41,63 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1767865421; l=2860;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1767865421; l=2150;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=0b9Ow0mtAqt8qv9s/mRWSem+q6qiDOdZa/XNwm94HnQ=;
- b=UZsCgS2Q7hHz/L1N7vpe3xw1tYtAe9DxckcSf97Qt8AbZHA6UxYe1e5IOMaPbDhYagPzkIT06
- RbJACR33otmCMvJeY8cjx+PG3MlfRUQlwtvWziRoT4mco7LH62RmZ3j
+ bh=IRHGTb2KqPzTO7htoevnAj/El48Tg+1tRAZyavqk2pc=;
+ b=sPUuKsHEQRxYCQde8kq8HHGH++IsTSwHMrZtV1r0COUrsJqVKCg3YsrE4L+oY8AX9uwMgyB9G
+ WShlMnFSDtSA6YlbAq/gIwvSPX5U6v0y9usQLm5MgnPs3EZStHrluGk
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-The header unistd.h is included under Arm64's uAPI folder (see
-tools/arch/arm64/include/uapi/asm/), but it does not include its
-dependent header unistd_64.h.  The intention is for unistd_64.h to be
-generated dynamically using scripts/Makefile.asm-headers.
+The perf build includes arm64's unistd.h, but its dependent header
+unistd_64.h is missing.
 
-However, this dynamic approach causes problems because the header is not
-available early enough, even though it is widely included throughout
-tools.  Using the perf build as an example:
+As suggested by Arnd in [1]:
 
- 1) Feature detection: Perf first runs feature tests.
+  "I would suggest using the same method across all architectures:
+   either we figure out how to use the generated headers on all of them
+   (including x86, which uses yet another method), or we just stick with
+   the old asm-generic/unistd.h copy and use that on arm64 as well."
 
-    The BPF feature program test-bpf.c includes unistd.h.  Since
-    unistd_64.h has not been generated yet, the program fails to build,
-    and the BPF feature ends up being disabled.
+A dynamic approach (e.g., make headers_install) may be explored later to
+generate headers for tools, but that will need consensus from the tools
+maintainers.  In the meantime, this series provides a quick fix by using
+the asm-generic/unistd.h copy for arm64.
 
- 2) libperf build:
+[1] https://lore.kernel.org/linux-arm-kernel/20251222173653.GF9788@e132581.arm.com/T/#m69a051aae5e53a65f9b10e1d13f67b3e92f4bbc7
 
-    The libperf Makefile later generates unistd_64.h on the fly, so
-    libperf itself builds successfully.
-
- 3) Final perf build:
-
-    Although the perf binary can build successfully using the generated
-    header, we never get a chance to build BPF skeleton programs,
-    because BPF support was already disabled earlier.
-
-Restore to include asm-generic/unistd.h for fixing the issue.  This
-aligns with most architectures (x86 is a special case that keeps
-unistd_32.h/unistd_64.h for its particular syscall numbers) and ensures
-the header is available from the start.
-
-Fixes: 22f72088ffe6 ("tools headers: Update the syscall table with the kernel sources")
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
+Changes in v4:
+- Updated commit log in patch 01 to avoid confusion (James).
+- Link to v3: https://lore.kernel.org/r/20251222-perf_fix_syscall_header-v3-0-eb4a8b9dfe66@arm.com
+
+Changes in v3:
+- Changed to include asm-generic/unistd.h copy (Arnd).
+- Removed check due to divergence between the kernel and tools.
+- Link to v2: https://lore.kernel.org/r/20251210-perf_fix_syscall_header-v2-0-b18b6016e0ea@arm.com
+
+Changes in v2:
+- Added a consistency check (Ian).
+- Rebased on the latest perf-tools-next.
+- Link to v1: https://lore.kernel.org/r/20251204-perf_fix_syscall_header-v1-0-b8e27f74ed6a@arm.com
+
+---
+Leo Yan (3):
+      tools headers: Go back to include asm-generic/unistd.h for arm64
+      Revert "perf tools: Fix arm64 build by generating unistd_64.h"
+      tools headers: Don't check arm64's unistd.h
+
  tools/arch/arm64/include/uapi/asm/unistd.h | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ tools/lib/perf/Makefile                    | 14 ++------------
+ tools/perf/Makefile.config                 |  1 -
+ tools/perf/check-headers.sh                |  1 -
+ 4 files changed, 25 insertions(+), 15 deletions(-)
+---
+base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
+change-id: 20251203-perf_fix_syscall_header-e280fa931d44
 
-diff --git a/tools/arch/arm64/include/uapi/asm/unistd.h b/tools/arch/arm64/include/uapi/asm/unistd.h
-index df36f23876e863ff0a9e88473d5339f7ab69516d..9306726337fe005e3cf3e1ffd38dc6356191fa95 100644
---- a/tools/arch/arm64/include/uapi/asm/unistd.h
-+++ b/tools/arch/arm64/include/uapi/asm/unistd.h
-@@ -1,2 +1,24 @@
- /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#include <asm/unistd_64.h>
-+/*
-+ * Copyright (C) 2012 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#define __ARCH_WANT_RENAMEAT
-+#define __ARCH_WANT_NEW_STAT
-+#define __ARCH_WANT_SET_GET_RLIMIT
-+#define __ARCH_WANT_TIME32_SYSCALLS
-+#define __ARCH_WANT_MEMFD_SECRET
-+
-+#include <asm-generic/unistd.h>
-
+Best regards,
 -- 
-2.34.1
+Leo Yan <leo.yan@arm.com>
 
