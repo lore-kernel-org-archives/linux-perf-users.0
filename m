@@ -1,55 +1,55 @@
 Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0F33148B2
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:12:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33F93358B0
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2026 19:12:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767899541; cv=none; b=q4hc3cVHOvylnEgE/+2+Y4Z/usrPadOQZslIKaQLED8RsLxAzTKVQHF75FkFAbqea5C9+W1vMrBGWQ16sgR6qMVz5Z2rskt2VTNq/UIs4S7XFgW+/BqpOB/qKZPb7QvNAALCsX5Shj3cjyHrXeU0xut4hv79UqZlOe1xvQ1qyII=
+	t=1767899544; cv=none; b=puphEzvUHoIbBVhkwgemoAD3E0jGMqr1pwUo0zneS9pJrjAGQc8b1nfCosgpH2n8IssfUyUIUon4sJAZ/NHoFK8mYjqFrYezbHnJCy6medZoC23iPRi+QKcsFcgJkTeX+splSGGvKMDxYSC/thTxFyXS5oCQyzWrQKBtGgvMz14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767899541; c=relaxed/simple;
-	bh=iFgxYI8YkDQdRRykiWwbB91svFRxih0jHTs5Ccf/Mo4=;
+	s=arc-20240116; t=1767899544; c=relaxed/simple;
+	bh=Sr+0utK0tNOs2nzfxd6UaoFEVfN9d6C1I9sdXtbKpqg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=b0SgkTuvtTiCK+2YLRco6Z2P5tUqKXNSAAS0QXJaBKeFmmViJYvKTE8sglsctDoUg1fMCozWJA5AdOMg80JOcht34jICyhNcP/Qwqd+S1ZEuVPhvwMY4Oa2Y0X0JCaFQ3BoWgde7KgTV5QJK/OVo70BvjVBBhZ5+OqF1GjTAEao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j2s0/UX/; arc=none smtp.client-ip=74.125.82.73
+	 To:Content-Type; b=cbQ/5btlPlEwjP+8Ya+FTXwf9FAWi4eKbYfYSgJAlnxFqfR4b04RzDOFBrW+cDE7GrP3byRT26y3jt9pGj6e136F4y8oBrbU9sWMhwd51IyXi7GZHE6CKAdDA+kfaeqq+ZDLiEsoaP3EztEA9G1UA/I8fQWXkR4RlAfL3rFTDiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0/lYTG5o; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j2s0/UX/"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-11dd10b03c6so4499375c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:12:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0/lYTG5o"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-11f3d181ef2so14829877c88.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jan 2026 11:12:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767899539; x=1768504339; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1767899541; x=1768504341; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=W5NprC8R5leRz2bKlO+oNnE5MEyD18eL1u1cM1xoByk=;
-        b=j2s0/UX/glgZNq127iJ6xRRny/9q394oDyspEAzXd1+tFbxcnpCbUXML/Sglcs1SQc
-         iKH0Jpbc5ojktYStcpiBo/f+acgwKtobkxjDq6jLdNXbBBxPLC/+DMZoDKVmvaV6h24r
-         KfdDuFB6rz426hGMO6Z4ANbReHjeSjdA3URxwDDb1zaZGaWfWxftqve1ZiRcERSlvhzD
-         7mQHS5CNOhZptzBiX0rOgQBNIFELBt55QUZiZR5PED2OdY+KzDoB8QQ/ovIZTxDT3+eE
-         hKK+BUywqwjdQi1ywVzYpX+xvjPSknWF0ThiIJ6g81LrBKnruBJx0HiS4uWoAaz29UbF
-         ulXA==
+        bh=yAo1MILhGnqZNbLlgKzWKgNCypTb5sxkZ5UVUsguhwU=;
+        b=0/lYTG5oqa3H5V4jRhmYh4aehuFHMJyg3iRXuZiO783mafOTswnlQTGGTMYrCibdoV
+         yBrkk2Um+5gBxiZtkJ+MchchCN7cTaZJj8Wa8kBCnippb2rnNavEtQvohhWS1n2VeGGs
+         rKNpUCei0OUjEcZDUKTRaklnIU5x3KHLXKNiUucwgdZgwPRny7A46TIb6PbIDSB6RpI5
+         6dqfK0Vfl480Wt0LnI4q9JoCQcZtf23jE9AGYoVUC+7w337p1ip2tUxQNy99K8vSeS8X
+         D3ZpELI7gsp5m9ZPDRCXcJdyOQU+W0hrZbyAgys8d4xJNpdBDplPRqAMwcMnqtnkPoNF
+         4PXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767899539; x=1768504339;
+        d=1e100.net; s=20230601; t=1767899541; x=1768504341;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W5NprC8R5leRz2bKlO+oNnE5MEyD18eL1u1cM1xoByk=;
-        b=DN+cnut5Cow59cNsjkwp4AmNSL+EgiMeQlLLh/4b/FKn5gt1reCge9vomps6jzVuV/
-         I5ArCMHqkerUa3AWeS9Hwjd4eISm/cn6X/4O+hL0auiYqwmHJfGoqnrEB+3EdBZoxnFr
-         UOw9uIr23f4cE1xbPFpc3UcAl2u0/+3Nq0vAk8RZCg3R25iJHApsaTGBlBE0Hx4XgQBo
-         TvHqOyG0zWBJ+EdYCzBDmmvysYMx1meKk/1658YWyUubwUH0vjerIyU4CQeAelUjRhHk
-         /F4o6kH+Cqf0I/kIOCKVmeFLF05HgJ7NCE6FIQ4AIlvqOLMc6y3f/dcngePZuxjniSNU
-         SDIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUIgTkNxS92PxMVYX/dvxo3HoOyRCR9W0gs4/12S+MHC5ahv6Rvv/5xDbMwxIqQoGha/QSDsOA9uMVcWyxRj9i@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6ldKGgkm6yO0PQsOfz9Z/OJg72MXNtr2E4YVVhti5nX0+FcEh
-	5iCkeS1DHm0UJRZImD0FF/nM02P6l8UYMzjr7GCzAHlCJZBG18FVhWVDXA1zGsvZHyU9QPEHQbr
-	hZ1pc9Y03Xw==
-X-Google-Smtp-Source: AGHT+IHssv1lJq+ZRAgChOEAZYIXFLkt1Jz/1FBVXh/Ql/90xsmBTYzTMcMzs2V6vrwMNahyuFzfmMachatY
-X-Received: from dll38.prod.google.com ([2002:a05:7022:226:b0:119:78ff:fe0f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6188:b0:119:e569:f620
- with SMTP id a92af1059eb24-121f8b7a9d1mr7194267c88.25.1767899538693; Thu, 08
- Jan 2026 11:12:18 -0800 (PST)
-Date: Thu,  8 Jan 2026 11:10:58 -0800
+        bh=yAo1MILhGnqZNbLlgKzWKgNCypTb5sxkZ5UVUsguhwU=;
+        b=eX/Gkls6SIlhVfepnDf66ofcM4szrJBE89ij2WqhEsj3x3eZKhl132BCqiLjFoS53q
+         lstQvvBZfKZPcNzTf+JF7lGTqmeeHBFTfsOuilCUvLcslgrAOTZ0a8GJRe0ETWJ7DiGt
+         Dfq6gUePJQimcNcK/KEdg362RfrTyxEpHCHP7Sw3W5y5N2wZMKJt8rNZZhyxc30ALzFG
+         qa3wR75hdEzp4WvmzWNwoMIy0YkuGqM9LsQjVdhpDTG2ybCRjsz+FG/MsLbQOnobym09
+         jLj4o8aF3OopCAA2zgdPBGjIDIod40tiCLeq2cgnXDaCQblTpYaaqtuxs4LMlxa3yIwZ
+         S0DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2GplnAe68FpRZa+ITf2liZrdHprkDXsa2ewVbJRuD6gfyr78+/PZWPlaCImg4lu/lTC12G9NxfsOWBUtZWzr5@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoIdJdayalhAlTLYCrd6yHZD5vAiAmx8gSHHKS/+Fi6rqq2THY
+	0I2hbVMdygb5vi+v0adIP27cnekqPQsxD50EqqOLkeEKy+A6rqzqaaPXq7wxcmZIIMgpLiza9yZ
+	p6tscjfoWMA==
+X-Google-Smtp-Source: AGHT+IHADtKBzmaJfGZE2ZC8SLeEnddqoBpOOdUcgbZLPOu11ukMCQntJgnojrBY5MD75XcpS2lbM7IfSVI+
+X-Received: from dlbtz3.prod.google.com ([2002:a05:7022:eac3:b0:119:9f33:34a6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2207:b0:11b:9386:a3c1
+ with SMTP id a92af1059eb24-121f8b750d4mr4494873c88.44.1767899540778; Thu, 08
+ Jan 2026 11:12:20 -0800 (PST)
+Date: Thu,  8 Jan 2026 11:10:59 -0800
 In-Reply-To: <20260108191105.695131-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260108191105.695131-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260108191105.695131-29-irogers@google.com>
-Subject: [PATCH v10 28/35] perf jevents: Add local/remote "mem" breakdown
- metrics for Intel
+Message-ID: <20260108191105.695131-30-irogers@google.com>
+Subject: [PATCH v10 29/35] perf jevents: Add dir breakdown metrics for Intel
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -77,66 +76,70 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Breakdown local and remote memory bandwidth, read and writes. The
-implementation uses the HA and CHA PMUs present in server models
-broadwellde, broadwellx cascadelakex, emeraldrapids, haswellx,
-icelakex, ivytown, sapphirerapids and skylakex.
+Breakdown directory hit, misses and requests. The implementation uses
+the M2M and CHA PMUs present in server models broadwellde, broadwellx
+cascadelakex, emeraldrapids, icelakex, sapphirerapids and skylakex.
 
 Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 31 ++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 36 ++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
 diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index f671d6e4fd67..983e5021f3d3 100755
+index 983e5021f3d3..24ceb7f8719b 100755
 --- a/tools/perf/pmu-events/intel_metrics.py
 +++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -815,6 +815,36 @@ def IntelLdSt() -> Optional[MetricGroup]:
+@@ -815,6 +815,41 @@ def IntelLdSt() -> Optional[MetricGroup]:
      ], description="Breakdown of load/store instructions")
  
  
-+def UncoreMem() -> Optional[MetricGroup]:
++def UncoreDir() -> Optional[MetricGroup]:
 +    try:
-+        loc_rds = Event("UNC_CHA_REQUESTS.READS_LOCAL",
-+                        "UNC_H_REQUESTS.READS_LOCAL")
-+        rem_rds = Event("UNC_CHA_REQUESTS.READS_REMOTE",
-+                        "UNC_H_REQUESTS.READS_REMOTE")
-+        loc_wrs = Event("UNC_CHA_REQUESTS.WRITES_LOCAL",
-+                        "UNC_H_REQUESTS.WRITES_LOCAL")
-+        rem_wrs = Event("UNC_CHA_REQUESTS.WRITES_REMOTE",
-+                        "UNC_H_REQUESTS.WRITES_REMOTE")
++        m2m_upd = Event("UNC_M2M_DIRECTORY_UPDATE.ANY")
++        m2m_hits = Event("UNC_M2M_DIRECTORY_HIT.DIRTY_I")
++        # Turn the umask into a ANY rather than DIRTY_I filter.
++        m2m_hits.name += "/umask=0xFF,name=UNC_M2M_DIRECTORY_HIT.ANY/"
++        m2m_miss = Event("UNC_M2M_DIRECTORY_MISS.DIRTY_I")
++        # Turn the umask into a ANY rather than DIRTY_I filter.
++        m2m_miss.name += "/umask=0xFF,name=UNC_M2M_DIRECTORY_MISS.ANY/"
++        cha_upd = Event("UNC_CHA_DIR_UPDATE.HA")
++        # Turn the umask into a ANY rather than HA filter.
++        cha_upd.name += "/umask=3,name=UNC_CHA_DIR_UPDATE.ANY/"
 +    except:
 +        return None
 +
-+    scale = 64 / 1_000_000
-+    return MetricGroup("lpm_mem", [
-+        MetricGroup("lpm_mem_local", [
-+            Metric("lpm_mem_local_read", "Local memory read bandwidth not including directory updates",
-+                   d_ratio(loc_rds, interval_sec), f"{scale}MB/s"),
-+            Metric("lpm_mem_local_write", "Local memory write bandwidth not including directory updates",
-+                   d_ratio(loc_wrs, interval_sec), f"{scale}MB/s"),
-+        ]),
-+        MetricGroup("lpm_mem_remote", [
-+            Metric("lpm_mem_remote_read", "Remote memory read bandwidth not including directory updates",
-+                   d_ratio(rem_rds, interval_sec), f"{scale}MB/s"),
-+            Metric("lpm_mem_remote_write", "Remote memory write bandwidth not including directory updates",
-+                   d_ratio(rem_wrs, interval_sec), f"{scale}MB/s"),
-+        ]),
-+    ], description="Memory Bandwidth breakdown local vs. remote (remote requests in). directory updates not included")
++    m2m_total = m2m_hits + m2m_miss
++    upd = m2m_upd + cha_upd  # in cache lines
++    upd_r = upd / interval_sec
++    look_r = m2m_total / interval_sec
++
++    scale = 64 / 1_000_000  # Cache lines to MB
++    return MetricGroup("lpm_dir", [
++        Metric("lpm_dir_lookup_rate", "",
++               d_ratio(m2m_total, interval_sec), "requests/s"),
++        Metric("lpm_dir_lookup_hits", "",
++               d_ratio(m2m_hits, m2m_total), "100%"),
++        Metric("lpm_dir_lookup_misses", "",
++               d_ratio(m2m_miss, m2m_total), "100%"),
++        Metric("lpm_dir_update_requests", "",
++               d_ratio(m2m_upd + cha_upd, interval_sec), "requests/s"),
++        Metric("lpm_dir_update_bw", "",
++               d_ratio(m2m_upd + cha_upd, interval_sec), f"{scale}MB/s"),
++    ])
 +
 +
- def UncoreMemBw() -> Optional[MetricGroup]:
-     mem_events = []
+ def UncoreMem() -> Optional[MetricGroup]:
      try:
-@@ -914,6 +944,7 @@ def main() -> None:
+         loc_rds = Event("UNC_CHA_REQUESTS.READS_LOCAL",
+@@ -944,6 +979,7 @@ def main() -> None:
          IntelMlp(),
          IntelPorts(),
          IntelSwpf(),
-+        UncoreMem(),
++        UncoreDir(),
+         UncoreMem(),
          UncoreMemBw(),
      ])
- 
 -- 
 2.52.0.457.g6b5491de43-goog
 
