@@ -1,93 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB337329C56;
-	Thu,  8 Jan 2026 23:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DD71B4F1F;
+	Fri,  9 Jan 2026 00:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767916721; cv=none; b=tCQk/oiJNHDCTEpGwWKDjyAT95Ngg6BPs0ns5rBjxVI/yC3/lUbGzw2zJdvQMTzB3HICd+0VeThnU/QLO7edmf8Q3AfderASjs8kmR0V1M4OPNdD1FCBuqovAtrTnVwpXUh0TdrtaMXrAGOvQdVyLFOXoX7B6df1hWaianHR1UY=
+	t=1767918602; cv=none; b=iTHAbTqDvwmjJs9cNgzRqdaGV/tM/aOiKz5NkhePaV+y7wzpPgnTYtwy85dJnsQ/QQrajI8Md8DHivs+BMQoM4MmHwcuWZVVYCetDEy2Y7SFa+r/ovdThcYGHW/X73Mf36lRfd+3OcGuAsO53zLVN823qweLhm1yQ9FCMrMd7Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767916721; c=relaxed/simple;
-	bh=N5+QsrVyK9aKwwDqfVuQ8b+wgXlHeo9rjyZsakjqgKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V8e8vTBgfjPoFhSChWKCOb7CmDtoZ7p9OF9lh0rdiKjtxj5mFJaOQ1jiIDss/xiLp1OYakoZfvEl/ir+aY76wNSmCjbJFNejFYA/6zX8DCuJx+tqbvxvTYzdKTn5Tz0TVOIFO0bQxD9lKT/Ij7gIR1DmQ+qqADDQwYIjkA64QZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/dy1/1T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767918602; c=relaxed/simple;
+	bh=mX5XbuFq3oY1fgctrRQBbLXQxLXqk+y8wzPmf6LEIxk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GM51FW9Z/G4j9AizNEXNhO3VrZ/Dx2OSXSeKYJoc7eKfbXA0d/j+1CZiJa7mjNAqagp4Ee+mXbCDhe1Q64wZ8S3X2PNhDFxHlSZz7hKa8zX6zjj5CgWx0D2DhisOVsQ+orKW3V9569JukYSbKDSpVC625hkvm4fXpkSyy+YS1I0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CtWgBhSf; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/dy1/1T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F458C116C6;
-	Thu,  8 Jan 2026 23:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767916721;
-	bh=N5+QsrVyK9aKwwDqfVuQ8b+wgXlHeo9rjyZsakjqgKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a/dy1/1TafZLFnKBst7xyGvznphe69yR3jZuaQi7zAJDUDiUwKocUsoPmcL+1hSsb
-	 IhcmU17fHfSe1jO5uGij9YePV48j+R96jZiR6u/AxltHGLZo5L0HiyuUXDGHiejc/E
-	 gowQgqofv95g8FWX7liY2GyjnIyVvYhT0UeEg1T3TrnGK1XQKlWZ9SA9hR6DZrR4CF
-	 /De6LLLH7CXjLV9thuAp8DAyEoQPXExAuhbTV8qZDX8s2R5jbEg82uFlc/OMiTHILy
-	 vr97gikfwaSmRX+1XxqJv9RXX1Adf+4qojhJ0OyfG+9Be5aZ+x9fznDYlqA55HUbjV
-	 wMl9NJFi9IDXQ==
-Date: Thu, 8 Jan 2026 15:58:39 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf test: Skip dlfilter test for build failures
-Message-ID: <aWBEr-PCJS4UEvtI@google.com>
-References: <20251219011820.2505506-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CtWgBhSf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767918601; x=1799454601;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mX5XbuFq3oY1fgctrRQBbLXQxLXqk+y8wzPmf6LEIxk=;
+  b=CtWgBhSft7qKOIpKv4EWtzblbtp+5ef4vZOqBo6fPRpLTQ8QPlzcFGFx
+   GbCHJIpaGrR/EzCq3ypJ1u4kcgZmwm7r2wisNnrBjfIULb/32JGUxfuq8
+   6MG17ViCUoMkzTcOieTh5uuOy86k/AlhyAK4jdDr9hFi9g9ZG+QLJZ7j5
+   uwtVdcc0DY0gFH6tucsLiHxs3QkI7VgtAA4iQRch8bwz8AAOE7ovj+9lu
+   gZXOqqXHDapC+L8L40hWlYSWLx4ESHczBEiaeDiAWJ+MgMOZfI3izI5Q+
+   CmKGAsb6hJLCmGQ7ZaoEEr+PcLXgJ9u9Ha0E+VJk3orIiXEbEgvr3mCxS
+   g==;
+X-CSE-ConnectionGUID: JJia++8rR8qXCtlv/LMKIg==
+X-CSE-MsgGUID: hZT6qR2MSMmIMk15X/lU0g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11665"; a="86720691"
+X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
+   d="scan'208";a="86720691"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 16:30:00 -0800
+X-CSE-ConnectionGUID: +aM55RQfSiK4CVJ+HHZuLw==
+X-CSE-MsgGUID: FprPpiFKRD+vf2GC5TB/5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
+   d="scan'208";a="203255856"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 16:29:52 -0800
+Message-ID: <a34caf32-a0e0-4bd1-a670-14ecb3756ae6@linux.intel.com>
+Date: Fri, 9 Jan 2026 08:29:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251219011820.2505506-1-namhyung@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 39/44] KVM: VMX: Bug the VM if either MSR auto-load
+ list is full
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>,
+ Sandipan Das <sandipan.das@amd.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
+References: <20251206001720.468579-1-seanjc@google.com>
+ <20251206001720.468579-40-seanjc@google.com>
+ <04c70698-e523-43ae-9092-f360c848d797@linux.intel.com>
+ <aWANuxukqWmo36N0@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aWANuxukqWmo36N0@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Ping (for the whole series)!
 
-Thanks,
-Namhyung
+On 1/9/2026 4:04 AM, Sean Christopherson wrote:
+> On Mon, Dec 08, 2025, Dapeng Mi wrote:
+>> On 12/6/2025 8:17 AM, Sean Christopherson wrote:
+>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>> index 38491962b2c1..2c50ebf4ff1b 100644
+>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>> @@ -1098,6 +1098,7 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+>>>  {
+>>>  	int i, j = 0;
+>>>  	struct msr_autoload *m = &vmx->msr_autoload;
+>>> +	struct kvm *kvm = vmx->vcpu.kvm;
+>>>  
+>>>  	switch (msr) {
+>>>  	case MSR_EFER:
+>>> @@ -1134,12 +1135,10 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+>>>  	i = vmx_find_loadstore_msr_slot(&m->guest, msr);
+>>>  	j = vmx_find_loadstore_msr_slot(&m->host, msr);
+>>>  
+>>> -	if ((i < 0 && m->guest.nr == MAX_NR_LOADSTORE_MSRS) ||
+>>> -	    (j < 0 &&  m->host.nr == MAX_NR_LOADSTORE_MSRS)) {
+>>> -		printk_once(KERN_WARNING "Not enough msr switch entries. "
+>>> -				"Can't add msr %x\n", msr);
+>>> +	if (KVM_BUG_ON(i < 0 && m->guest.nr == MAX_NR_LOADSTORE_MSRS, kvm) ||
+>>> +	    KVM_BUG_ON(j < 0 &&  m->host.nr == MAX_NR_LOADSTORE_MSRS, kvm))
+>> nit: Remove one extra space before "m->host.nr".
+> Oh, that's intentional, so that the rest of the line is aligned with the "guest"
+> line above.
+
+Good to know. Thanks.
 
 
-On Thu, Dec 18, 2025 at 05:18:17PM -0800, Namhyung Kim wrote:
-> For some reason, it may fail to build the dlfilter.  Let's skip the test
-> as it's not an error in the perf.  This can happen when you run the perf
-> test without source code or in a different directory.
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/shell/script_dlfilter.sh | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/script_dlfilter.sh b/tools/perf/tests/shell/script_dlfilter.sh
-> index 45c97d4a7d5f90e8..7895ab0309b29dd5 100755
-> --- a/tools/perf/tests/shell/script_dlfilter.sh
-> +++ b/tools/perf/tests/shell/script_dlfilter.sh
-> @@ -70,15 +70,15 @@ test_dlfilter() {
->  	# Build the dlfilter
->  	if ! cc -c -I tools/perf/include -fpic -x c "${dlfilter_c}" -o "${dlfilter_so}.o"
->  	then
-> -		echo "Basic --dlfilter test [Failed to build dlfilter object]"
-> -		err=1
-> +		echo "Basic --dlfilter test [Skip - failed to build dlfilter object]"
-> +		err=2
->  		return
->  	fi
->  
->  	if ! cc -shared -o "${dlfilter_so}" "${dlfilter_so}.o"
->  	then
-> -		echo "Basic --dlfilter test [Failed to link dlfilter shared object]"
-> -		err=1
-> +		echo "Basic --dlfilter test [Skip - failed to link dlfilter shared object]"
-> +		err=2
->  		return
->  	fi
->  
-> -- 
-> 2.52.0.322.g1dd061c0dc-goog
-> 
