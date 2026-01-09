@@ -1,48 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE79C13B;
-	Fri,  9 Jan 2026 01:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F291DE3B7;
+	Fri,  9 Jan 2026 02:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767922272; cv=none; b=CsbLXL2h4cmHfL/GWxkX8lVMsA3FkKLcBov5NJzXCLvEcfBFiiK50H6+pfzPR8TWWdZlylfWOOgDgFRpq33TgYiTvyVCiSVA3T1aa5y51McyFdT/bddeCTSvCY9i5oe1h4N/Hd0G/7ow7L2We8t+Fib+VWeLDU7WAQ7r2uacW5w=
+	t=1767924572; cv=none; b=CRwtvb1PW7LVLMWyheJ4Fnr9alUrHCb7cN/7K43jJijkGZEyTXGuO+rE3AHh68B8HrvnV1mJ3Z7mMqd/bcN+LJKAi2se4rxQ6vF4nu5KQ2ii7LHcrqiEXcWrsvzBsytbkS125dSznMU0FFR8Um70DfHxaQXL5tFAtkhVTA33bVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767922272; c=relaxed/simple;
-	bh=atgpXFJyrfWquoJryVhd48MdKo72LYVYUKiL3UwplRA=;
+	s=arc-20240116; t=1767924572; c=relaxed/simple;
+	bh=m0h5YF/Qtb5rEl0SD1soau4DiBlmKWi/q25PBF1IXo4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nqtn5jWohvZ4DM7P4gcDuLLqNEB+MsJN/KvG5k3H+iHDYpaDRc178GAAQLviDgsUt9Sxki0xKIMKOBe1F03EXalbINXgCEP81JVZtJ1ZRwa5S4ZxLtWl08IxMAYyg/Md0v1sTFSsUM39hNva0IdwQCGEta2vuegHk3NZe60JaaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aGNJqUSI; arc=none smtp.client-ip=198.175.65.18
+	 In-Reply-To:Content-Type; b=QWD4/Q0JQLgDx05sDVr6XsbxYEfFWZeQOcq4OM//wDjT0iXZO4AQrs0xkxE7oYxSfE4SbTud5VpuA2aG8Wh8OUcg3REKG+QNz1c0Puf46QV8LGNaTH4SENz1RMPeQzpupuK2/i9V0SGjUQWZ3AMpKEFPhRlzpNh9ksV6g4/6G0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M4BfsbLm; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aGNJqUSI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M4BfsbLm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767922271; x=1799458271;
+  t=1767924572; x=1799460572;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=atgpXFJyrfWquoJryVhd48MdKo72LYVYUKiL3UwplRA=;
-  b=aGNJqUSIZte37bf+hAfXGQJAtI6iOyqLTLKQjO3rR6C4rOFZc4OGpymL
-   eX8GjYr0CGTTzx+F3OEyxbeO9L1wBIZg6qDBvbcljDLmRyoMRNbvmOL6Q
-   8udI4QEQzY2LcLCcL5YFCq9Ej5Ktl+hrBYW0R5HXqZ8nyv6Rr+M1B3xSS
-   NDdM8itDN/uuSvVqNl5KZEuuqYpOwYINAI5w8t5pA9aS/+LH9JHBMOHYK
-   zkDBmhjKG2l4K1f1+2jfooG1wBymR6Rnsx2eR5XoQPBkR9BgyOeMidnSL
-   S0YY2d+5E2yW7rEzBsPuQcmI5XxWCreOaI0bEy4PUAGVXUHQT4lTqc7YU
+  bh=m0h5YF/Qtb5rEl0SD1soau4DiBlmKWi/q25PBF1IXo4=;
+  b=M4BfsbLmbGOEBch4H6Aw45fzWFOQqDOvn0WBPDd7F8qXGYORiDg+3+Fx
+   KcJ5ctZjNlyxEe45SjXRYImZ0bs8Zqs9Sx77xQJ9FXJKVo24mBLe68hfM
+   tE68u5qpZQE7eWUv69HgYDrhsL9PjYPc0b9zOKzXVxmH/gJRsEm+t/Opv
+   XVBUF2pdaz/BHk6IKD5e9cS6o4uukWWkVC/wRtxWRqgSeXxelGq4tMN+7
+   AQogGtt8SbZEYzkzTTTcLBwTtJO9JHjmrMHuP818zM/tbsBl0hpSXOjCs
+   MPN7fCA9U49Ov/yMHn55GSB0QRTEMVMNMVufBMgL+GPxBkgkhfG3i+IXg
    w==;
-X-CSE-ConnectionGUID: xB4pc3hLSGa4/owPVEGnVA==
-X-CSE-MsgGUID: gWhJoaoVQKeF8xqKiYAkjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11665"; a="69356948"
+X-CSE-ConnectionGUID: nuMPpUhESd2AAMCXqnaLGg==
+X-CSE-MsgGUID: lVmT7Z0gRz+n6XbYIBHMOg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11665"; a="86895193"
 X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
-   d="scan'208";a="69356948"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 17:31:10 -0800
-X-CSE-ConnectionGUID: 1/6zvZQfQmalggsSWwEQ9A==
-X-CSE-MsgGUID: oP29j8GMS12blSBH4caYCQ==
+   d="scan'208";a="86895193"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 18:09:31 -0800
+X-CSE-ConnectionGUID: X4fkGQ62RxOIr9ejo4Gl+A==
+X-CSE-MsgGUID: sT//9fFZQ16IwF9jM5rKUw==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
+   d="scan'208";a="203384811"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 17:31:06 -0800
-Message-ID: <b455ea34-dc59-454e-a1d5-cb8db3a586fb@linux.intel.com>
-Date: Fri, 9 Jan 2026 09:31:04 +0800
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 18:09:27 -0800
+Message-ID: <84956f69-ba22-41f0-a70b-0a28858f64b5@linux.intel.com>
+Date: Fri, 9 Jan 2026 10:09:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,8 +52,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] perf/x86/intel: Support newly introduced 4 OMR MSRs
- for DMR & NVL
+Subject: Re: [PATCH 5/7] perf/x86/intel: Add core PMU support for Novalake
 To: "Chen, Zide" <zide.chen@intel.com>, Peter Zijlstra
  <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -63,147 +64,72 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  Dapeng Mi <dapeng1.mi@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
  Xudong Hao <xudong.hao@intel.com>
 References: <20251120053431.491677-1-dapeng1.mi@linux.intel.com>
- <20251120053431.491677-2-dapeng1.mi@linux.intel.com>
- <b866d09f-bb92-41f3-b120-f5389f7fa290@intel.com>
+ <20251120053431.491677-6-dapeng1.mi@linux.intel.com>
+ <18cc180b-7ce0-46d1-a6f6-af9368f3cc40@intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <b866d09f-bb92-41f3-b120-f5389f7fa290@intel.com>
+In-Reply-To: <18cc180b-7ce0-46d1-a6f6-af9368f3cc40@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-On 1/9/2026 3:34 AM, Chen, Zide wrote:
+On 1/9/2026 3:35 AM, Chen, Zide wrote:
 >
 > On 11/19/2025 9:34 PM, Dapeng Mi wrote:
->> Diamond Rapids and Nova Lake feature an expanded facility called
->> the Off-Module Response (OMR) facility, which replaces the Off-Core
->> Response (OCR) Performance Monitoring of previous processors.
+>> This patch enables core PMU support for Novalake, covering both P-core
+>> and E-core. It includes Arctic Wolf-specific counters, PEBS constraints,
+>> and the OMR registers table.
 >>
->> Legacy microarchitectures used the OCR facility to evaluate off-core
->> and multi-core off-module transactions. The properly renamed, OMR
->> facility, improves the OCR capability for scalable coverage of new
->> memory systems of multi-core module systems.
+>> Since Coyote Cove shares the same PMU capabilities as Panther Cove, the
+>> existing Panther Cove PMU enabling functions are reused for Coyote Cove.
 >>
->> Similarly with OCR, 4 additional off-module configuration MSRs
->> OFFMODULE_RSP_0 ~ OFFMODULE_RSP_3 are introduced to specify
->> attributes of the off-module transaction.
+>> For detailed information about counter constraints, please refer to
+>> section 16.3 "COUNTER RESTRICTIONS" in the ISE documentation.
 >>
->> For more details about OMR, please refer to section 16.1 "OFF-MODULE
->>  RESPONSE (OMR) FACILITY" in ISE documentation.
->>
->> This patch adds support for these 4 OMR events.
->>
->> ISE link: https://www.intel.com/content/www/us/en/content-details/869288/intel-architecture-instruction-set-extensions-programming-reference.html
+>> ISE: https://www.intel.com/content/www/us/en/content-details/869288/intel-architecture-instruction-set-extensions-programming-reference.html
 >>
 >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 >> ---
->>  arch/x86/events/intel/core.c     | 45 +++++++++++++++++++++++---------
->>  arch/x86/events/perf_event.h     |  5 ++++
->>  arch/x86/include/asm/msr-index.h |  5 ++++
->>  3 files changed, 42 insertions(+), 13 deletions(-)
+>>  arch/x86/events/intel/core.c | 99 ++++++++++++++++++++++++++++++++++++
+>>  arch/x86/events/intel/ds.c   | 11 ++++
+>>  arch/x86/events/perf_event.h |  2 +
+>>  3 files changed, 112 insertions(+)
 >>
 >> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index aad89c9d9514..5970f7c20101 100644
+>> index 9f2a93fe23df..a3a1e6e670f8 100644
 >> --- a/arch/x86/events/intel/core.c
 >> +++ b/arch/x86/events/intel/core.c
->> @@ -3529,17 +3529,24 @@ static int intel_alt_er(struct cpu_hw_events *cpuc,
->>  	struct extra_reg *extra_regs = hybrid(cpuc->pmu, extra_regs);
->>  	int alt_idx = idx;
+>> @@ -232,6 +232,29 @@ static struct event_constraint intel_skt_event_constraints[] __read_mostly = {
+>>  	EVENT_CONSTRAINT_END
+>>  };
 >>  
->> -	if (!(x86_pmu.flags & PMU_FL_HAS_RSP_1))
->> -		return idx;
->> -
->> -	if (idx == EXTRA_REG_RSP_0)
->> -		alt_idx = EXTRA_REG_RSP_1;
->> -
->> -	if (idx == EXTRA_REG_RSP_1)
->> -		alt_idx = EXTRA_REG_RSP_0;
->> +	if (idx == EXTRA_REG_RSP_0 || idx == EXTRA_REG_RSP_1) {
->> +		if (!(x86_pmu.flags & PMU_FL_HAS_RSP_1))
->> +			return idx;
->> +		if (++alt_idx > EXTRA_REG_RSP_1)
->> +			alt_idx = EXTRA_REG_RSP_0;
->> +		if (config & ~extra_regs[alt_idx].valid_mask)
->> +			return idx;
->> +	}
->>  
->> -	if (config & ~extra_regs[alt_idx].valid_mask)
->> -		return idx;
->> +	if (idx >= EXTRA_REG_OMR_0 && idx <= EXTRA_REG_OMR_3) {
->> +		if (!(x86_pmu.flags & PMU_FL_HAS_OMR))
->> +			return idx;
->> +		if (++alt_idx > EXTRA_REG_OMR_3)
->> +			alt_idx = EXTRA_REG_OMR_0;
->> +		if (config &
->> +		    ~extra_regs[alt_idx - EXTRA_REG_OMR_0].valid_mask)
-> Why minus EXTRA_REG_OMR_0?
+>> +static struct event_constraint intel_arw_event_constraints[] __read_mostly = {
+>> +	FIXED_EVENT_CONSTRAINT(0x00c0, 0), /* INST_RETIRED.ANY */
+>> +	FIXED_EVENT_CONSTRAINT(0x003c, 1), /* CPU_CLK_UNHALTED.CORE */
+>> +	FIXED_EVENT_CONSTRAINT(0x0300, 2), /* pseudo CPU_CLK_UNHALTED.REF */
+>> +	FIXED_EVENT_CONSTRAINT(0x013c, 2), /* CPU_CLK_UNHALTED.REF_TSC_P */
+>> +	FIXED_EVENT_CONSTRAINT(0x0073, 4), /* TOPDOWN_BAD_SPECULATION.ALL */
+>> +	FIXED_EVENT_CONSTRAINT(0x019c, 5), /* TOPDOWN_FE_BOUND.ALL */
+>> +	FIXED_EVENT_CONSTRAINT(0x02c2, 6), /* TOPDOWN_RETIRING.ALL */
+>> +	INTEL_UEVENT_CONSTRAINT(0x01b7, 0x1),
+>> +	INTEL_UEVENT_CONSTRAINT(0x02b7, 0x2),
+>> +	INTEL_UEVENT_CONSTRAINT(0x04b7, 0x4),
+>> +	INTEL_UEVENT_CONSTRAINT(0x08b7, 0x8),
+> Should be these?
+>
+> INTEL_UEVENT_CONSTRAINT(0x03b7, 0x4),
+> INTEL_UEVENT_CONSTRAINT(0x04b7, 0x8),
 
-This is to get the valid_mask of correct pre-defined extra_regs entry. ALL
-the entries of extra_regs for OCR/OMR must be put the head of the whole
-extra_regs entries (from index 0 starts), so we need to minus the 
-EXTRA_REG_OMR_0 base.
+No, it's a bit mask. Each bit of bits[3:0] corresponds an OMR extra MSR.
+Just found there are conflicts about the ARW OMR events umask in ISE.
 
-See below comments of intel_pnc_extra_regs[].
+The table 16-2 "OMR Events Supported by Arctic Wolf Microarchitecture"
+indicates the umask of these 4 OMR events are 0x1/0x2/0x4/0x8, but the
+umask of OMR events in table 16-9 "Event Counter Restrictions for Arctic
+Wolf Microarchitecture" are described to 0x1/0x2/0x3/0x4. I believe the
+umasks described in table 16-2 are correct and it's a typo in table 16-9.
 
-static struct extra_reg intel_pnc_extra_regs[] __read_mostly = {
-    /* must define OMR_X first, see intel_alt_er() */
-    INTEL_UEVENT_EXTRA_REG(0x012a, MSR_OMR_0, 0x40ffffff0000ffffull, OMR_0),
-    INTEL_UEVENT_EXTRA_REG(0x022a, MSR_OMR_1, 0x40ffffff0000ffffull, OMR_1),
-    INTEL_UEVENT_EXTRA_REG(0x042a, MSR_OMR_2, 0x40ffffff0000ffffull, OMR_2),
-    INTEL_UEVENT_EXTRA_REG(0x082a, MSR_OMR_3, 0x40ffffff0000ffffull, OMR_3),
-    INTEL_UEVENT_PEBS_LDLAT_EXTRA_REG(0x01cd),
-    INTEL_UEVENT_EXTRA_REG(0x02c6, MSR_PEBS_FRONTEND, 0x9, FE),
-    INTEL_UEVENT_EXTRA_REG(0x03c6, MSR_PEBS_FRONTEND, 0x7fff1f, FE),
-    INTEL_UEVENT_EXTRA_REG(0x40ad, MSR_PEBS_FRONTEND, 0xf, FE),
-    INTEL_UEVENT_EXTRA_REG(0x04c2, MSR_PEBS_FRONTEND, 0x8, FE),
-    EVENT_EXTRA_END
-};
-
-I suppose I need to add a comment here to avoid the confusion. Thanks.
+I would double check with PME team and let them update the ISE. Thanks.
 
 
 >
->> +			return idx;
->> +	}
->>  
->>  	return alt_idx;
->>  }
->> @@ -3547,16 +3554,28 @@ static int intel_alt_er(struct cpu_hw_events *cpuc,
->>  static void intel_fixup_er(struct perf_event *event, int idx)
->>  {
->>  	struct extra_reg *extra_regs = hybrid(event->pmu, extra_regs);
->> -	event->hw.extra_reg.idx = idx;
->> +	int omr_idx;
->>  
->> -	if (idx == EXTRA_REG_RSP_0) {
->> +	event->hw.extra_reg.idx = idx;
->> +	switch (idx) {
->> +	case EXTRA_REG_RSP_0:
->>  		event->hw.config &= ~INTEL_ARCH_EVENT_MASK;
->>  		event->hw.config |= extra_regs[EXTRA_REG_RSP_0].event;
->>  		event->hw.extra_reg.reg = MSR_OFFCORE_RSP_0;
->> -	} else if (idx == EXTRA_REG_RSP_1) {
->> +		break;
->> +	case EXTRA_REG_RSP_1:
->>  		event->hw.config &= ~INTEL_ARCH_EVENT_MASK;
->>  		event->hw.config |= extra_regs[EXTRA_REG_RSP_1].event;
->>  		event->hw.extra_reg.reg = MSR_OFFCORE_RSP_1;
-> Keep same style?
-> case EXTRA_REG_RSP_0 ... EXTRA_REG_RSP_1:
-
-Yeah, good idea. Thanks.
-
-
->
->> +		break;
->> +	case EXTRA_REG_OMR_0 ... EXTRA_REG_OMR_3:
->> +		omr_idx = idx - EXTRA_REG_OMR_0;
->> +		event->hw.config &= ~ARCH_PERFMON_EVENTSEL_UMASK;
->> +		event->hw.config |= 1ULL << (8 + omr_idx);
->> +		event->hw.extra_reg.reg = MSR_OMR_0 + omr_idx;
->> +		break;
->> +	default:
->> +		pr_warn("The extra reg idx %d is not supported.\n", idx);
->>  	}
->>  }
->>  
