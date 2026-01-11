@@ -1,217 +1,166 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C851313B58A
-	for <linux-perf-users@vger.kernel.org>; Sat, 10 Jan 2026 16:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E696B20C038
+	for <linux-perf-users@vger.kernel.org>; Sun, 11 Jan 2026 04:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768062348; cv=none; b=IB4PuczZT8cBDHCem3hLIqTuS4SZhjOqACo8bCAf3UQS27t2HRU51nrjr0GDhdDATdUMnsez5iFsF64ZL4i0avl685rIRRkVZ4nF41voYUyxkDpuak/iIGr7oChsDQ7X8cmwU3Jrdoc2gW0UIbUzML9GrfkxhVFXXRVWktagvzI=
+	t=1768104826; cv=none; b=j2RanvYrLq2bMqlbbZV/dt8JWW0sm0luKV2J91gxsZN6WmIGExlrDjxhmOcUdaKEVDC8c5xHhSutjmhzeMqgUUaCq/zs/ef+iJHPgFDDis+gR8CSeIXo6a/x2Vnv1P555FmhuQF3G0PNBdcVs6OTOJ2/Yy5LY2/wnDx9xYk5XAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768062348; c=relaxed/simple;
-	bh=9yq3DORE5qus1JunAr+tdPxhJGn5H4JqrSUtwQEomhE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rOY+ACvhvFrTMParbHVm89huItadZd8URjVFizCWuJmqZ4/scy9qo8pr2LSCs2XVIzUYuN1G7gX260tyRJj7LTqYgBqT/CfrXluXqlClQQ9dzmT/CL333/AkPbBGnWvIpNKmpZuyYOBjF0SrpaYWTnykE6BgPLnsnRxgWBerhVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-8bb6a27d3edso535863185a.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 10 Jan 2026 08:25:46 -0800 (PST)
+	s=arc-20240116; t=1768104826; c=relaxed/simple;
+	bh=Nja/m0h4RQ2UaQT/fyWyV2Uryol8/H0qxxPOlVJFZQg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=jtrJ0/lPKgA5AwHgYa9wsEtnTxP5W7mrPMYUdEYuM/U5JFUFTPOvDIq/42de7Ti2657pe/GvYD8AtN2HAAOrDaNE3o6iVqdEypxCjp4Y2n62TdSPqOJsy/ZG3u+VJ45gf5Iam3W9jXgBuxz3ct5541IXIgWJSZeIl6nCQVxi9+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eIr7i1b0; arc=none smtp.client-ip=74.125.82.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eIr7i1b0"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-11f3b5411c7so14261101c88.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 10 Jan 2026 20:13:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1768104824; x=1768709624; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zDNmCj4/FzILJ1EEl7OfNsUV1E0gc4gk1ndlLX5FrCk=;
+        b=eIr7i1b05bKSeQ62mr+y6aRshB9w2sPFyLEkFaLzBLZvGB9IEkVSSGaOKFVI2c/O/M
+         Tmxp+Tl4EOQxxd6fovHd9Sc+wA1bi75CjNoXXrdorfj8GSzugIogYQxEJ4IfR+5sUn43
+         1f6ZTbJfrX88mmd9U8EMBO6FoEIsvGciccXiKyG61ZOGsODzYL7t4GxAGoWm3ZA7U1te
+         6VHUg4awsICIJTAv1jrVdv1U53GMA8xmhnRoW3QSm9lfM3I5ZczkkkfAJYbaebxxOBZ3
+         zz3cBDGqzNimYEH1v7BUgPb06CwlCo0ZHNq8bd4aCXLQSefEmqnuMWl3NwhF6Ush+0w1
+         GZ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768062345; x=1768667145;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KQdYwLZzXMAU8SmkA7uOTds+binBUVJuHuO0dy4zD+c=;
-        b=sJ4Nt81QmNhm5pBuhCgV+ePsS/MmUlYx0dbC3WYo5c/UbSWPHulN/uwqvcvHcxdtpy
-         AAwyfwDQyR0pGnQsJKAsiEUdxteaIcz27C1OwK1POgxHSkIonWVM2JHEM64YAPnbZC5q
-         h7unwkRPNQj+sJRzxSbJ10g3EguuG82UIhj8OVbRIGMvFXZquU6DZUeTInp/aZWfdtkY
-         wDp9LNkfhI3Qh61aI72UQoBRhVxEpJcA03p0R5SuPvYSWPiKHIZuVP+jbZL4wPaRNUke
-         i/PwfUEY7B2mUWRWwLwRe1e2/Dl0Y0bwsoGutOilHDCxQC1No6leUYZ8wDCueitJkefI
-         2smw==
-X-Forwarded-Encrypted: i=1; AJvYcCVuM1mUErO67hxY1hAXD+dp9o3K9eYDiusCPCjHnflcCVw49YpCaiLQ2037d4vl1yBq7JBIO95a2EO5Sd/zz7Rv@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNWI+Wej9A14+V/Yfx4hTOMMKPORH3ZuA37nbyaW0W1RNN5fUW
-	Mw+7B3fwgLthsyJy0ualQhrUNlPRFPxQ0BA/zOfQze3aD+ZBHI3LqqC8h215Yg==
-X-Gm-Gg: AY/fxX63qebAloZI8FexuvP0ZJKSr58UYLk1zSl2vfg2Fm7n3/uGu9o3sOm2fOkSuaN
-	6xX6qPZD3Esj2kpWfhPPJ8wKqMIwG2yELINuuSKNF0kFxKwBje+06vE7u74JvYX4YdK3TlJL0LR
-	cxhwcl5OAwwYWC8EKe145WN71VdrrFRnLpDxV9qhFxjRZ06DzJIlwIYiapK+r6bCFQLmCdXddq2
-	MZjS+Mj2SDByHBwqo3Uu1e2AkE/BPti6kSI9UEyrWqtyEC2RS1pSfaUyLv3EjPpss33nEHtpXVc
-	oOlAAtPa6aDcPhRh96laMfYPIn+cmfcfyCJTD6A4uy0avmzMo+H5sQZfVyuG/isx5xTLEaIRiqo
-	IKpoohQrQkiJ3bO4ObDuMtjlaolqn7SLf3K7glO/4hPXjzDX6nk1rywJqD7vUVTBNG1dzJQscXL
-	i8E1vHE7ifqTFsp5Dr8w3IpuLCXRsddx97mbFYyU8GhNafv6egjCHPvyYFMnQ/Z0S0p/lDt5kcQ
-	4HK
-X-Google-Smtp-Source: AGHT+IG7DWy1Gh2RQcWa9vGtouapExWe5RtyiBsEbHTrVSSPpVmMFLhlQp7MhKy4TL0m7ZGmwfRfpQ==
-X-Received: by 2002:a05:620a:2847:b0:8c3:6f1e:21ef with SMTP id af79cd13be357-8c38943a4d8mr1855847885a.83.1768062345453;
-        Sat, 10 Jan 2026 08:25:45 -0800 (PST)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com. [209.85.222.172])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c37f51ba4bsm1081304785a.34.2026.01.10.08.25.44
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 Jan 2026 08:25:45 -0800 (PST)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8b2627269d5so577584185a.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 10 Jan 2026 08:25:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWPHk5RPpd2bvEHI64EQ0R0pxQgN6GGTzTXbKcmnDRqKrq4vcOeH8dcxVaOfC7BAU3FZPmVSRI9h89FrO8pUw7U@vger.kernel.org
-X-Received: by 2002:a05:6830:43a3:b0:7c7:162:e0c7 with SMTP id
- 46e09a7af769-7ce50a90f4bmr8147510a34.6.1768061889898; Sat, 10 Jan 2026
- 08:18:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768104824; x=1768709624;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zDNmCj4/FzILJ1EEl7OfNsUV1E0gc4gk1ndlLX5FrCk=;
+        b=w/gCCeWaneKfguoXg5SsMVW6GcFGeHheBUplaK1QBotDf9xme3zRvaYvkFDD/kizxV
+         g5H9TR+OXk5RnuoA6J+563vP+bD14TOuUCAqIS6gEb9yL5D8Z+/92dzfGImYLe68in/N
+         UnaZI5/hyFXP9BZtg3jbm9eIaBgsbbrOZ4xv1CicwVv9RnkoYArQrt60x4k2DS9M7zqX
+         wFmBM2ZjZztplJEidG9Fkm5ceb4+J/l4S5fUJWR29VsONGj7QA7XeyNufKi7Ch5/B68k
+         R4MZQygboJJiUmv32OloXisfiEijhm+peA4F0tqlppnz9pBXk7udg3RHP9QTBxtWag9o
+         CAqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVMGEXP/LQhYPp8X3pCocheB9J8t7GtWDAZXrXCPijX2cWmjfKE1gKwZmUzvpWJVj7IWpJiYBOEBBwf8PSYTeqB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/EauoNq8rzChokHAZSyYHFqBBOM3MpIpQx02HLE4lu/hk/IqC
+	KE46AS60iiL2dOcc2klMPyrAsqe4gfPWFMC/43a8OX7yORCxazZZEAU7oicRrNaLmix33dLqck4
+	QhFMCYva5yw==
+X-Google-Smtp-Source: AGHT+IEjoe3J01xcu4iLlFnphMl7KzwtQ1Rf2k4lV9Uf/aciSL5Tuu+YigUD+qwFAio9rb7L4kZGR5FtVQBI
+X-Received: from dlbds30.prod.google.com ([2002:a05:7022:251e:b0:11d:cde5:d78e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6a3:b0:11a:51f9:db0
+ with SMTP id a92af1059eb24-121f8acf8bfmr16916667c88.11.1768104823910; Sat, 10
+ Jan 2026 20:13:43 -0800 (PST)
+Date: Sat, 10 Jan 2026 20:13:31 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260101-apple-cpmu-v10-0-48812c529ffc@gmail.com>
-In-Reply-To: <20260101-apple-cpmu-v10-0-48812c529ffc@gmail.com>
-From: Neal Gompa <neal@gompa.dev>
-Date: Sat, 10 Jan 2026 11:17:32 -0500
-X-Gmail-Original-Message-ID: <CAEg-Je-HQX+gn6btg2XdSWksKT_LWiZALHYUut6g=nLNyyss-g@mail.gmail.com>
-X-Gm-Features: AQt7F2qg4rFQ5hy8HWAR12VQcLFFsQaKZU4AJgyzrS2WAPR63DqzY544RgrVDKs
-Message-ID: <CAEg-Je-HQX+gn6btg2XdSWksKT_LWiZALHYUut6g=nLNyyss-g@mail.gmail.com>
-Subject: Re: [PATCH v10 00/21] drivers/perf: apple_m1: Add Apple A7-A11, T2
- SoC support
-To: Nick Chan <towinchenmi@gmail.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Janne Grunau <j@jannau.net>, Sven Peter <sven@kernel.org>, 
-	Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
-	asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
+Message-ID: <20260111041338.1817056-1-irogers@google.com>
+Subject: [PATCH v3 0/7] perf: Add a libdw addr2line implementation
+From: Ian Rogers <irogers@google.com>
+To: Tony Jones <tonyj@suse.de>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 1, 2026 at 4:02=E2=80=AFAM Nick Chan <towinchenmi@gmail.com> wr=
-ote:
->
-> This series adds support for the CPU PMU in the older Apple A7-A11, T2
-> SoCs. These PMUs may have a different event layout, less counters, or
-> deliver their interrupts via IRQ instead of a FIQ. Since some of those
-> older SoCs support 32-bit EL0, counting for 32-bit EL0 also need to
-> be enabled by the driver where applicable.
->
-> Patch 1 adds the DT bindings.
-> Patch 2-7 prepares the driver to allow adding support for those
-> older SoCs.
-> Patch 8-12 adds support for the older SoCs.
-> Patch 13-21 are the DT changes.
->
-> Happy new year 2026!
->
-> Signed-off-by: Nick Chan <towinchenmi@gmail.com>
-> ---
-> Changes in v10:
-> - Modify apple_pmu_get_event_idx() to take the number of counters support=
-ed
->   on the current PMU, which allows `perf record` to work correctly on A7-=
-A9
->   with 8 counters in the PMU.
-> - Rename the added counters to nr_counters in apple_pmu_init()
-> - Link to v9: https://lore.kernel.org/r/20251218-apple-cpmu-v9-0-4deadbe6=
-5d03@gmail.com
->
-> Changes in v9:
-> - Rebased on top of v6.19-rc1
-> - Removed non-existent "INST_A32" and "INST_T32" events from Apple A11
-> - Added "INST_A32" and "INST_T32" event affinities for A9 and A10
-> - Link to v8: https://lore.kernel.org/r/20250811-apple-cpmu-v8-0-c560ebd9=
-ca46@gmail.com
->
-> Changes in v8:
-> - Rebased on top of v6.17-rc1
-> - Collect Ivaylo's Tested-by
-> - Drop #define PMCR1_COUNT_A64_EL3_0_7
-> - Reword reason to not initialize PMUv3 remap in EL1
-> - Link to v7: https://lore.kernel.org/r/20250510-apple-cpmu-v7-0-bd505cb6=
-c520@gmail.com
->
-> Changes in v7:
-> - Fix a W=3D1 compile warning in apple_pmu_get_event_idx() as appearently=
- using GENMASK()
-> in a function prototype causes a warning in GCC.
-> - Link to v6: https://lore.kernel.org/r/20250407-apple-cpmu-v6-0-ae8c2f22=
-5c1f@gmail.com
->
-> Changes in v6:
-> - Rebased on top of v6.15-rc1 (Conflict with FEAT_PMUv3 support for KVM o=
-n Apple Hardware)
-> - Add patch to skip initialization of PMUv3 remap in EL1 even though not =
-strictly needed
-> - Include DT patches
-> - Link to v5: https://lore.kernel.org/r/20250228-apple-cpmu-v5-0-9e124cd2=
-8ed4@gmail.com
->
-> Changes in v5:
-> - Slightly change "drivers/perf: apple_m1: Add Apple A11 Support", to kee=
-p things in
-> chronological order.
-> - Link to v4: https://lore.kernel.org/r/20250214-apple-cpmu-v4-0-ffca0e45=
-147e@gmail.com
->
-> Changes in v4:
-> - Support per-implementation event attr group
-> - Fix Apple A7 event attr groups
-> - Link to v3: https://lore.kernel.org/r/20250213-apple-cpmu-v3-0-be7f8ade=
-d81f@gmail.com
->
-> Changes in v3:
-> - Configure PMC8 and PMC9 for 32-bit EL0
-> - Remove redundant _common suffix from shared functions
-> - Link to v2: https://lore.kernel.org/r/20250213-apple-cpmu-v2-0-87b36193=
-2e88@gmail.com
->
-> Changes in v2:
-> - Remove unused flags parameter from apple_pmu_init_common()
-> - Link to v1: https://lore.kernel.org/r/20250212-apple-cpmu-v1-0-f8c7f2ac=
-1743@gmail.com
->
-> ---
-> Nick Chan (21):
->       dt-bindings: arm: pmu: Add Apple A7-A11 SoC CPU PMU compatibles
->       drivers/perf: apple_m1: Only init PMUv3 remap when EL2 is available
->       drivers/perf: apple_m1: Support per-implementation event tables
->       drivers/perf: apple_m1: Support a per-implementation number of coun=
-ters
->       drivers/perf: apple_m1: Support configuring counters for 32-bit EL0
->       drivers/perf: apple_m1: Support per-implementation PMU startup
->       drivers/perf: apple_m1: Support per-implementation event attr group
->       drivers/perf: apple_m1: Add Apple A7 support
->       drivers/perf: apple_m1: Add Apple A8/A8X support
->       drivers/perf: apple_m1: Add A9/A9X support
->       drivers/perf: apple_m1: Add Apple A10/A10X/T2 Support
->       drivers/perf: apple_m1: Add Apple A11 Support
->       arm64: dts: apple: s5l8960x: Add CPU PMU nodes
->       arm64: dts: apple: t7000: Add CPU PMU nodes
->       arm64: dts: apple: t7001: Add CPU PMU nodes
->       arm64: dts: apple: s800-0-3: Add CPU PMU nodes
->       arm64: dts: apple: s8001: Add CPU PMU nodes
->       arm64: dts: apple: t8010: Add CPU PMU nodes
->       arm64: dts: apple: t8011: Add CPU PMU nodes
->       arm64: dts: apple: t8012: Add CPU PMU nodes
->       arm64: dts: apple: t8015: Add CPU PMU nodes
->
->  Documentation/devicetree/bindings/arm/pmu.yaml |   6 +
->  arch/arm64/boot/dts/apple/s5l8960x.dtsi        |   8 +
->  arch/arm64/boot/dts/apple/s800-0-3.dtsi        |   8 +
->  arch/arm64/boot/dts/apple/s8001.dtsi           |   8 +
->  arch/arm64/boot/dts/apple/t7000.dtsi           |   8 +
->  arch/arm64/boot/dts/apple/t7001.dtsi           |   9 +
->  arch/arm64/boot/dts/apple/t8010.dtsi           |   8 +
->  arch/arm64/boot/dts/apple/t8011.dtsi           |   9 +
->  arch/arm64/boot/dts/apple/t8012.dtsi           |   8 +
->  arch/arm64/boot/dts/apple/t8015.dtsi           |  24 +
->  arch/arm64/include/asm/apple_m1_pmu.h          |   2 +
->  drivers/perf/apple_m1_cpu_pmu.c                | 820 +++++++++++++++++++=
-++++--
->  12 files changed, 883 insertions(+), 35 deletions(-)
-> ---
-> base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
-> change-id: 20250211-apple-cpmu-5a5a3da39483
->
+addr2line is a performance bottleneck in perf, add a libdw based
+implementation that avoids forking addr2line and caches the decoded
+debug information.
 
-Seems reasonable to me.
+Allow the addr2line implementation to be picked via the configuration
+file or --addr2line-style with `perf report`.
 
-Acked-by: Neal Gompa <neal@gompa.dev>
+Test/fix that inline callchains are properly displayed by perf script.
 
+An example:
+```
+$ perf record --call-graph dwarf -e cycles:u -- perf test -w inlineloop 1
+[ perf record: Woken up 132 times to write data ]
+[ perf record: Captured and wrote 32.814 MB perf.data (4074 samples) ]
+$ perf script --fields +srcline
+...
+perf-inlineloop 1814670 293100.228871:     640004 cpu_core/cycles/u: 
+            55a11d6e61ee leaf+0x2e
+  inlineloop.c:21 (inlined)
+            55a11d6e61ee middle+0x2e
+  inlineloop.c:27 (inlined)
+            55a11d6e61ee parent+0x2e (perf)
+  inlineloop.c:32
+            55a11d6e629b inlineloop+0x8b (perf)
+  inlineloop.c:47
+            55a11d69a3bc run_workload+0x5a (perf)
+  builtin-test.c:715
+            55a11d69aa9f cmd_test+0x417 (perf)
+  builtin-test.c:825
+            55a11d6155f5 run_builtin+0xd4 (perf)
+  perf.c:349
+            55a11d61588d handle_internal_command+0xdd (perf)
+  perf.c:401
+            55a11d6159e6 run_argv+0x35 (perf)
+  perf.c:445
+            55a11d615d2f main+0x2cb (perf)
+  perf.c:553
+            7fae3d233ca7 __libc_start_call_main+0x77 (libc.so.6)
+  libc_start_call_main.h:58
+            7fae3d233d64 __libc_start_main_impl+0x84
+  libc-start.c:360 (inlined)
+            55a11d565f80 _start+0x20 (perf)
+  ??:0
+...
+```
 
---=20
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
+v3: Make the caller inline file and line number accurate in the libdw
+    addr2line, rather than using the function's declared location.
+    Fix reference counts in unwind-libdw. Add fixes tag for srcline
+    inline printing.
+
+v2: Fix bias issue with libdwfl functions. Use cu_walk_functions_at
+    from perf's dwarf-aux to fully walk inline functions. Add testing
+    that inlined functions are shown in the perf script srcline
+    callchain information. Add configurability as to which addr2line
+    style to use.
+    https://lore.kernel.org/lkml/20260110082647.1487574-1-irogers@google.com/
+
+v1: https://lore.kernel.org/lkml/20251122093934.94971-1-irogers@google.com/
+
+Ian Rogers (7):
+  perf unwind-libdw: Fix invalid reference counts
+  perf addr2line: Add a libdw implementation
+  perf addr2line.c: Rename a2l_style to cmd_a2l_style
+  perf srcline: Add configuration support for the addr2line style
+  perf callchain: Fix srcline printing with inlines
+  perf test workload: Add inlineloop test workload
+  perf test: Test addr2line unwinding works with inline functions
+
+ tools/perf/builtin-report.c                 |  10 ++
+ tools/perf/tests/builtin-test.c             |   1 +
+ tools/perf/tests/shell/addr2line_inlines.sh |  47 ++++++
+ tools/perf/tests/tests.h                    |   1 +
+ tools/perf/tests/workloads/Build            |   2 +
+ tools/perf/tests/workloads/inlineloop.c     |  52 +++++++
+ tools/perf/util/Build                       |   1 +
+ tools/perf/util/addr2line.c                 |  20 +--
+ tools/perf/util/config.c                    |   4 +
+ tools/perf/util/dso.c                       |   2 +
+ tools/perf/util/dso.h                       |  11 ++
+ tools/perf/util/evsel_fprintf.c             |   8 +-
+ tools/perf/util/libdw.c                     | 153 ++++++++++++++++++++
+ tools/perf/util/libdw.h                     |  60 ++++++++
+ tools/perf/util/srcline.c                   | 116 ++++++++++++++-
+ tools/perf/util/srcline.h                   |   3 +
+ tools/perf/util/symbol_conf.h               |  10 ++
+ tools/perf/util/unwind-libdw.c              |   7 +-
+ 18 files changed, 486 insertions(+), 22 deletions(-)
+ create mode 100755 tools/perf/tests/shell/addr2line_inlines.sh
+ create mode 100644 tools/perf/tests/workloads/inlineloop.c
+ create mode 100644 tools/perf/util/libdw.c
+ create mode 100644 tools/perf/util/libdw.h
+
+-- 
+2.52.0.457.g6b5491de43-goog
+
