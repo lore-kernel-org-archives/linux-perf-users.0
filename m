@@ -1,802 +1,443 @@
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
+Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166123382DB
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Jan 2026 21:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2792561A2
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Jan 2026 23:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768253039; cv=pass; b=JBzWaSHvakLpbTEo8IqsxgfafLAZ6d9VQJvrX4XMJ3WXEzP2C/rbY9pK+EgqrCeH3xnfuGo1bRUnvddvIpI13cFlvhmlV5P7/0XiHLD26Mx5n+IN1jwvxy5cJej77vI5WLaie2tbCFL7a6rPcjGjId8xsYf/6eVR6mmlf8rnPqE=
+	t=1768259756; cv=pass; b=YXa4pZU9lWnxXqiYXczZvet2I6vh2ivjYRBNrT5RgbJtbNN3t+NU7VjM49JI9xPeQ3zGLn5h9xhBckALYYU7zaUtJ6/G8lmYixzpfqLxhlJtTO0ZcTFFBB6Y7yHSRw9tyECZcbGjvAx+nzUL0xy0zNMilCGik8iwqR/Oe+VYU/4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768253039; c=relaxed/simple;
-	bh=vSLKPyRTrxihpOkqEeFIAcoAoPoVguCqjUV0mIRTPmA=;
+	s=arc-20240116; t=1768259756; c=relaxed/simple;
+	bh=hWfFh3lt7RBrd3EWPSUdoi1U/l/33jKwHSRaSuT6UNw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D4jaKHoxDqTgqpUTlL4azSKrZkQHje31kfJp5OctI+iJq8qooMZEtmBSTrvoRNi6G+cif61oKmK2PjWOVMV/nMC7kP9cUEPQSDt1p6lqGJUJDlsLV7m3EcFCQdrOqF4osRmZ6GjHXAnpNm0W/lxDf720Uq+e4liBtpAQY/OGM2Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UR6i9pn/; arc=pass smtp.client-ip=74.125.82.49
+	 To:Cc:Content-Type; b=HTEB9UcIK3pzm5ofy9uU6tECDQGQ+WxbQ0f89hLWmsZn8l0EHdHW5aPCuSZoLJFLxFFctJUi1BQ8mHdtYBZiAMUCK9KwO+3Z9s7z+Uu/DpDYXScRskOGhWlrMfyCPshTOUtrQ02bcckCTzK7GRfC3mrmtiloAjTo/VZlvDagjxo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B7hY5+1f; arc=pass smtp.client-ip=74.125.82.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UR6i9pn/"
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-11a247de834so1854c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jan 2026 13:23:56 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1768253036; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B7hY5+1f"
+Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-121b14efcddso1657c88.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jan 2026 15:15:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768259753; cv=none;
         d=google.com; s=arc-20240605;
-        b=jvcjjJSiKyYgNAluoKA2ldDhqEU4qZRKYQPlXjh5/K0yP7zDjce0KhuCGskxO42hyC
-         0OlIPyEuDqj8XJIwsKqhHWvJ5pIrV7FZvdAT1hfZeayJdL3EdR239z0tCPA3lvPxK2jf
-         mCLjBqmlN8fY7sZm46ZDeWiFmwK50QRCULfiuoApurElyRYf+tgiU2CfYbjaSvyPMCN7
-         1zw276Yfp7alyre4DfKgxOSZtnBqWcZdSlURN0tCh7AjUwQWLHfsDAoP96OD5QIVZm82
-         oPvYCAn1sQLCZq+RrKwolC/1V4Y7NIhHg4ID36tsArF1nSwwF9ecNz2qLlXhUZ0etGX6
-         HB4g==
+        b=MvYvR0WjIjVedknw0tid/r4SbJz6YtDsnxq49+Rg4T0ukme7Z7NkQ1E8mVd7WQQuEX
+         hyFye/La+hn+nzvrhLOW70iHX7ybAF2Y+rVtBMP9ptLUmsCU+OcTzJIz2qWNMV+tUwnY
+         kho8u5LnwYlX/BKwRoYJKJnVNxFPYKy6orxOfwuGXAZgmat9RhgSqGfxoVLa54Gb1CM8
+         cx0FKidhDG2lRmBE7eGmr6eQvXSZWvRrodU6Jr3jtNn4X7NkjvA7gNe6+GqTz5p04wVI
+         1wLJk1pAsISxU40Zghb0QjZo5Bgs/OMMvB0GoEGRvx7X7sdlPusB2lJLgbJnMmnRlEqc
+         Kjpw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=lqnswVgcAN2xYnATPjZykGiYXLflZ1TErMsxU8FYtXY=;
-        fh=B0oCgSlrxK8gEbY1X2LePZN116eIh3Td04ktMRbPG6o=;
-        b=bJltiMR+FLBLascmvvWNJBLnQ18cSiZ/sS3h0urV3xnsuiargT+llEuNySgIUk0zBB
-         4ajmcZsIYpy+gtxEcIBMFnPHyawkva1cIJifjaCN1aBfc2vOBoUQrngDWtUDufASRgo2
-         ftSBdmcRN6cpq1xsazrMcNbJsi5tzcT+idA68O1ARu6506nIqbYvgGawftIv6ZbDMvw9
-         mUcL/3FUa7ppYfN2HI26RbAf/R0zzuRrlPc5owsz6fJYVnTHMswVd0cHkboYZn8mZFr2
-         FDtUcM4OOf6V4h82jaUkNOlbPv26fKfhr+TDOTgVQtAFGfYHEywQoGm/QM0KJFMdwhiC
-         +wsw==;
+        bh=J3h86s5+KI1RaR8Q+bN5s/uBdtJeVHpUaqXs4sDVqqc=;
+        fh=MAsBNi8vQ/11havcVsoCWpzB5S+fVxstU8lONgy1+Hk=;
+        b=Pc593As9FRTmDNDsOKHAeHIFXmJHkVmAK7vwU+n8Cnps59k5cNaUn/0ovDRvVHFaOw
+         b48KDUAUaFOEWoOBNA0OHtzmzUIHGf5dgDsSOgeAJWgIEk5CaXB+N7osMW4LBmipUrJJ
+         DwX8W45QXKfzNIvEgkvZZLjYPnvjD+3QZLG1D4HyonDM5L0RAbY+zdvJLWPV8lCl1BB+
+         qeQxY1l1Hijafz6l434qnXYZOvKy5hLr0yxRVxNYwQpo/QLFOqC8gsK7JQpW6PYynsP2
+         cbVeA3JEtyPYYg1tRe8u5GLKWC5VLmqNVFQ0BLcFETnCIwzt3yE9gHRmvEPwaki8InDi
+         MZSQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768253036; x=1768857836; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1768259753; x=1768864553; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lqnswVgcAN2xYnATPjZykGiYXLflZ1TErMsxU8FYtXY=;
-        b=UR6i9pn/kaRknN/qAwcPUI/DdZPSfLgkL+zQvmE6kXyLDQnU1NhF0XcDxIsMtS5ANT
-         chdJWVmeIuRUf7MnuW4ySEVTv4chWxx7UtNwHMUfmNyGOSRNzTYQRABMMGrBZZ3/HOSc
-         jAHuloYpGvu50oTxoEJOUIFq9EGbrs+MODP81xnGXDp5U5Z1Bp0uktAY7vRTZHneDsf1
-         EO35FjZMGp2QOKYG6MYwcK7Z6/GKDJI34MwmaJFwnOMQkNT1LmFEv7AEJ2/R9jfHy3R3
-         fND0JlqhOx87qT2D+AODrbijTfd+qCbU8ysby9eM7KxPXk/MFB7SS17EOF/C2yzZca0Y
-         ymBQ==
+        bh=J3h86s5+KI1RaR8Q+bN5s/uBdtJeVHpUaqXs4sDVqqc=;
+        b=B7hY5+1fLRtuvvWGRi9U4li2RyFsM8Wq200pwbxYbDNEky/U3zmE9kzoSJqGt1RVKG
+         7fziJRV25RzQQU1UQbkxcb3jyUFxRTzJorTAq4H09fWF3c98wzJQrQD/b7pbsJ9nf7Fn
+         +qsCB3WYRvJYErszhxD6m8FmFeXxFzvJ5eLhqqNqAi2sVfaVShn/1fBY8zstIx2chj//
+         CZYsHPa6Oq5VQ8Copht//GbXsOp/AYtnHgx3fyiX7w+BROnCmN0dHh/xawF9HH9YUiYS
+         sXE2ICgqcBwwrW6edgH9qkjdo+jf/vmRT1QX4y426hMvn+atWws+cPn/jQ0CavLvnc0P
+         DPfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768253036; x=1768857836;
+        d=1e100.net; s=20230601; t=1768259753; x=1768864553;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=lqnswVgcAN2xYnATPjZykGiYXLflZ1TErMsxU8FYtXY=;
-        b=IIkOyOKbC7QIn7nixhktrk3bOq5vkqlbgIWI3H2jUDObSb8ahTMm+/QY6KnQAkti8e
-         QkNTA7+s28R7MkRVLZiRwocsRNfgbWzH4dn/Ow36QXhqJs2P/0vH71C0CEYqfhf490Et
-         hEH9aQhMcIXzFWlSIblJyRPFVrAwtFmRMgXm2rZgIsCGe67w7X91SHNLzS2Gv7wLm1zZ
-         ECKkxNL40N6rUHlfUvP9vzAqcBEdxz6lDcI4YP/h7xQG7+qKSayBh4ZIfbbO/byghL+G
-         zqQKJrRm3KRjKqrol2cBqUe9dJkXsj9Ye3yCcd6RQkiEBMT4u78FgbhC9LueevEt/IGL
-         4clQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUNYK/Y5JB1vBruvAWKkOZZU+6ZB81zJ1zZfi2CfKwrLuev6XGMA9UPJNcx5izUKSo8geGpO5UUxtEuh5WbYez@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywj2SetewrIUMEL3FccEEmiOQSM14mrF9bBYOraXosPFMsWcXL/
-	X/D1JrOd2cG71NjyBWQ/Fou0bvUdMyUZvjUHMYi3hItY2LfulxdgsLzR81RZn+qE7O0h5AwlEj2
-	OR4Wu1Qem/rvEZYhJKmlQLxf9dnr7QnHuvscJ3fWo
-X-Gm-Gg: AY/fxX44B3vrbapAvLNOV2DOPf+BEheMPHDwTLDTl8cYqSaMh0sQR2WpvaMvAg43tUY
-	mISLUGz1sk1U8AMEaKxUmmYeGVcCejlzqMqU4CxcxzfQT5ZDLAHwKxsBXbt5Xn/mQhqdjeR4jTx
-	+XFRBlRVOyWVPpDryX5X8DJNhGKQbnsIo3sLPGgXh5havnpJtGH/63y97UbzjzVVhBNi4DdSOIc
-	MjZpjCtytsfFWwgWh5XEcmcbAkzEzeAj0hQnDC90dpgnad3IGuBU/VaIwD2mnG/iV6HEGmRgBIz
-	mHmvAQu8TBRpdbXDL8DUI7iC6sE1SBc+76bB
-X-Received: by 2002:a05:7022:e801:b0:11f:38dd:8927 with SMTP id
- a92af1059eb24-1232ca547f7mr2353c88.5.1768253035651; Mon, 12 Jan 2026 13:23:55
- -0800 (PST)
+        bh=J3h86s5+KI1RaR8Q+bN5s/uBdtJeVHpUaqXs4sDVqqc=;
+        b=qvgUyChWVdjqcA68T+fZMmNLEFFxyBS9fIu6k24FIiTHjiMGeMJi44Od9BFq54xuz+
+         ilSnvJE67rXrOrIM2KUgATEXQwtXb6MF+QXUPxn3JHQix3n8/Gw6WsGh2Z1qjaxEpKwG
+         ctcMsjCmN6UrfhgeROVd39bcMO8bJng43CAFjFMrAFZ9l/kZ4R7/7YcTQ/SiVrsCCsbz
+         cO/UYndlICGeynohUO//56Y1JKgcdkDd0w9+udaV1g6mO4NJpAkSVbCtgNoBDSJUtoam
+         QazDUUTjGBo+4ZStv33TdC0TdjZoyd4tj7m15thGCKT90RnkhMdUbEm09/pC3WqGKVEI
+         puSA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7342mRJTAEqjC4kVEB/zBsG3DSmITISs6bqruNK/nP6zrWMA7wL7KfKSe7p8IY8NTimtrWHyRe4rzD5izWCAc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo4FRIpxNPQ2LwNiK+yQEyav8liH6yfMKUw27U8OTSZkAp8nih
+	8egzwUXNOq4R7yhJr3LgpFsZynx7qy2HOfBkbSGQkXsvYrPvBSQly1LWTHdePo/shTNk0u576hq
+	Ak8BUiwpK3W9FVcrpN1A0cStpBeSB1QMvv6DLyDoU
+X-Gm-Gg: AY/fxX6rr7zjiRf++AlmBTWhEPZFExgr4Ekgr+orVfYw1830Cl7/xgBsKhklcUtwrtd
+	Pk1YJ9P9uGaRXmHVucH4vNb1aBuyFw8ezVx8yWJeHu3hBqYl2m50/iDIL8ySFOm1BuR2G6FgJ/+
+	FcC4+ArIT4u+xiGOU0T6I6coJQ8Y7hvmASerR9tUmDXAnI3tnARjfc5JdfoWC6KyOIIicUoolBe
+	sv6rnMHY9ph0PTmcr1U8tY9fp/WMUP0keUnBE93EOQfH6c2RgC5NVFIZ/thI8XSEOP8gvJCFveC
+	gfQV1Miz0KbR1ccnL9uz79Gfxw==
+X-Received: by 2002:a05:7022:2525:b0:120:5719:1852 with SMTP id
+ a92af1059eb24-1232bed55b8mr33767c88.16.1768259752414; Mon, 12 Jan 2026
+ 15:15:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260111041338.1817056-1-irogers@google.com> <20260111041338.1817056-3-irogers@google.com>
- <aWVQ63NemEu5mNZo@x1>
-In-Reply-To: <aWVQ63NemEu5mNZo@x1>
+References: <20260110011715.1642869-1-namhyung@kernel.org>
+In-Reply-To: <20260110011715.1642869-1-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 12 Jan 2026 13:23:43 -0800
-X-Gm-Features: AZwV_Qho2Ldu-NvQ0FwRygri5gjtVKTroZVQmaMGk6vkyCAl5zYjtow3ioXYtH0
-Message-ID: <CAP-5=fV2++t93_=Ar2+r+i3U3kpt1pUwWOT-fmyOV8F8z9GckQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] perf addr2line: Add a libdw implementation
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Tony Jones <tonyj@suse.de>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Date: Mon, 12 Jan 2026 15:15:40 -0800
+X-Gm-Features: AZwV_QhOiec-7SV7DHH5jT6JqoUmg6xm_P_W41M9KyxbjpCTnMZoXGzyNYbBKaI
+Message-ID: <CAP-5=fUvy2w57fsGxAVpQXZKXw5wv6dSa8OUHYLeTKtEUBwPjg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf inject: Add --convert-callchain option
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 12, 2026 at 11:52=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Fri, Jan 9, 2026 at 5:17=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
 >
-> On Sat, Jan 10, 2026 at 08:13:33PM -0800, Ian Rogers wrote:
-> > Add an implementation of addr2line that uses libdw. Other addr2line
-> > implementations are slow, particularly in the case of forking
-> > addr2line. Add an implementation that caches the libdw information in
-> > the dso and uses it to find the file and line number
-> > information. Inline information is supported but because
-> > cu_walk_functions_at visits the leaf function last add a
-> > inline_list__append_tail to reverse the lists order.
+> There are applications not built with frame pointers, so DWARF is needed
+> to get the stack traces.  So `perf record --call-graph dwarf` saves the
+> stack and register data for each sample to get the stacktrace offline.
+> But sometimes those data may have sensitive information and we don't
+> want to keep them in the file.
 >
-> So while testing I moved the inlineloop 'perf test' workload to the
-> front to test without this new libdw implementation and then with it,
-> and tested using perf probe on it:
+> This perf inject --convert-callchain option parses the callchains and
+> discard the stack and register after that.  This will save storage space
+> and processing time for the new data file.  Of course, users should
+> remove the original data file. :)
 >
-> root@number:/home/acme# perf probe -x ~/bin/perf libdw__addr2line%return =
-'ret=3D$retval'
-> Added new event:
->   probe_perf:libdw_addr2line__return (on libdw__addr2line%return in /home=
-/acme/bin/perf with ret=3D$retval)
+> The down side is that it cannot handle inlined callchain entries as they
+> all have the same IPs.  Maybe we can add an option to perf report to
+> look up inlined functions using DWARF - IIUC it won't requires stack and
+> register data.
 >
-> You can now use it in all perf tools, such as:
+> This is an example.
 >
->         perf record -e probe_perf:libdw_addr2line__return -aR sleep 1
+>   $ perf record --call-graph dwarf -- perf test -w noploop
 >
-> root@number:/home/acme# perf trace -e probe_perf:libdw_addr2line__return =
-perf report -f --dso perf --stdio -s srcfile,srcline
->      0.000 :1204769/1204769 probe_perf:libdw_addr2line__return(__probe_fu=
-nc: 7698362, __probe_ret_ip: 7030548, ret: 1)
->      0.007 :1204769/1204769 probe_perf:libdw_addr2line__return(__probe_fu=
-nc: 7698362, __probe_ret_ip: 7030548)
->      0.680 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.685 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.689 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.692 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.696 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.699 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.702 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.705 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.709 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.712 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.715 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.718 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.721 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.724 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.727 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.729 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.732 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.734 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.737 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.740 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->      0.771 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     13.563 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     13.766 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->     14.099 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548)
->     14.103 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.105 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.134 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.143 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.242 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.244 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.245 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.246 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.248 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.250 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.251 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.252 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.258 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.260 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.265 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.267 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.268 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
->     14.270 perf/1204769 probe_perf:libdw_addr2line__return(__probe_func: =
-7698362, __probe_ret_ip: 7030548, ret: 1)
-> # To display the perf.data header info, please use --header/--header-only=
- options.
-> #
-> #
-> # Total Lost Samples: 0
-> #
-> # Samples: 4K of event 'cpu/cycles/Pu'
-> # Event count (approx.): 5535180842
-> #
-> # Overhead  Source File   Source:Line
-> # ........  ............  ...............
-> #
->     99.04%  inlineloop.c  inlineloop.c:21
->      0.46%  inlineloop.c  inlineloop.c:20
+>   $ perf report --stdio --no-children --percent-limit=3D0 > output-prev
 >
+>   $ perf inject -i perf.data --convert-callchain -o perf.data.out
 >
-> #
-> # (Tip: Save output of perf stat using: perf stat record <target workload=
->)
-> #
-> root@number:/home/acme#
+>   $ perf report --stdio --no-children --percent-limit=3D0 -i perf.data.ou=
+t > output-next
 >
-> Putting more probes to see the fallbacks...
+>   $ diff -u output-prev output-next
+>   ...
+>         0.23%  perf          ld-linux-x86-64.so.2  [.] _dl_relocate_objec=
+t_no_relro
+>                |
+>   -            ---elf_dynamic_do_Rela (inlined)
+>   -               _dl_relocate_object_no_relro
+>   +            ---_dl_relocate_object_no_relro
+>                   _dl_relocate_object
+>                   dl_main
+>                   _dl_sysdep_start
+>   -               _dl_start_final (inlined)
+>                   _dl_start
+>                   _start
 >
-> root@number:/home/acme# perf probe -l
->   probe_perf:cmd_addr2line (on cmd__addr2line@util/addr2line.c in /home/a=
-cme/bin/perf)
->   probe_perf:libbfd_addr2line (on libbfd__addr2line@util/libbfd.h in /hom=
-e/acme/bin/perf)
->   probe_perf:libdw_addr2line (on libdw__addr2line@util/libdw.c in /home/a=
-cme/bin/perf)
->   probe_perf:llvm_addr2line (on llvm__addr2line@util/llvm.c in /home/acme=
-/bin/perf)
->   probe_perf:libdw_addr2line__return (on libdw__addr2line%return@util/lib=
-dw.c in /home/acme/bin/perf with ret)
-> root@number:/home/acme#
->
-> As we have:
->
-> static int addr2line(const char *dso_name, u64 addr, char **file, unsigne=
-d int *line_nr,
->                      struct dso *dso, bool unwind_inlines, struct inline_=
-node *node,
->                      struct symbol *sym)
-> {
->         int ret;
->
->         ret =3D libdw__addr2line(dso_name, addr, file, line_nr, dso, unwi=
-nd_inlines, node, sym);
->         if (ret > 0)
->                 return ret;
->
->         ret =3D llvm__addr2line(dso_name, addr, file, line_nr, dso, unwin=
-d_inlines, node, sym);
->         if (ret > 0)
->                 return ret;
->
->         ret =3D libbfd__addr2line(dso_name, addr, file, line_nr, dso, unw=
-ind_inlines, node, sym);
->         if (ret > 0)
->                 return ret;
->
->         return cmd__addr2line(dso_name, addr, file, line_nr, dso, unwind_=
-inlines, node, sym);
-> }
->
-> root@number:/home/acme# perf stat -e probe_perf:*_addr2line perf report -=
-f --dso perf --stdio -s srcfile,srcline
-> # To display the perf.data header info, please use --header/--header-only=
- options.
-> #
-> #
-> # Total Lost Samples: 0
-> #
-> # Samples: 4K of event 'cpu/cycles/Pu'
-> # Event count (approx.): 5535180842
-> #
-> # Overhead  Source File   Source:Line
-> # ........  ............  ...............
-> #
->     99.04%  inlineloop.c  inlineloop.c:21
->      0.46%  inlineloop.c  inlineloop.c:20
->
->
-> #
-> # (Tip: To set sampling period of individual events use perf record -e cp=
-u/cpu-cycles,period=3D100001/,cpu/branches,period=3D10001/ ...)
-> #
->
->  Performance counter stats for 'perf report -f --dso perf --stdio -s srcf=
-ile,srcline':
->
->                 44      probe_perf:libdw_addr2line
->                 23      probe_perf:llvm_addr2line
->                  0      probe_perf:libbfd_addr2line
->                  0      probe_perf:cmd_addr2line
->
->        0.036554827 seconds time elapsed
->
->        0.030570000 seconds user
->        0.006049000 seconds sys
->
->
-> root@number:/home/acme#
->
-> Maybe asking for the dso_name may help understand why it is falling back
-> 23 times to the llvm based one...
->
-> root@number:/home/acme# perf probe -x ~/bin/perf llvm__addr2line dso_name=
-:string
-> Target program is compiled without optimization. Skipping prologue.
-> Probe on address 0x5f73e4 to force probing at the function entry.
->
-> Added new event:
->   probe_perf:llvm_addr2line (on llvm__addr2line in /home/acme/bin/perf wi=
-th dso_name:string)
->
-> You can now use it in all perf tools, such as:
->
->         perf record -e probe_perf:llvm_addr2line -aR sleep 1
->
-> root@number:/home/acme# perf trace --libtrace -e probe_perf:llvm_addr2lin=
-e perf report -f --dso perf --stdio -s srcfile,srcline
->      0.000 perf/1205478 probe_perf:llvm_addr2line((5f7416) dso_name_strin=
-g=3D"/root/.debug/.build-id/cc/315df11334de01fb444465f08f6bca45a12bd2/elf")
->      0.697 perf/1205478 probe_perf:llvm_addr2line((5f7416) dso_name_strin=
-g=3D"/root/.debug/.build-id/cc/315df11334de01fb444465f08f6bca45a12bd2/elf")
->      0.704 perf/1205478 probe_perf:llvm_addr2line((5f7416) dso_name_strin=
-g=3D"/root/.debug/.build-id/cc/315df11334de01fb444465f08f6bca45a12bd2/elf")
->      0.708 perf/1205478 probe_perf:llvm_addr2line((5f7416) dso_name_strin=
-g=3D"/root/.debug/.build-id/cc/315df11334de01fb444465f08f6bca45a12bd2/elf")
->      0.712 perf/1205478 probe_perf:llvm_addr2line((5f7416) dso_name_strin=
-g=3D"/root/.debug/.build-id/cc/315df11334de01fb444465f08f6bca45a12bd2/elf")
-> <SNIP>
->
-> root@number:/home/acme# readelf -wi /root/.debug/.build-id/cc/315df11334d=
-e01fb444465f08f6bca45a12bd2/elf | head -30
-> Contents of the .debug_info section:
->
->   Compilation Unit @ offset 0:
->    Length:        0x20 (32-bit)
->    Version:       5
->    Unit Type:     DW_UT_partial (3)
->    Abbrev Offset: 0xad87
->    Pointer Size:  8
->  <0><c>: Abbrev Number: 38 (DW_TAG_partial_unit)
->     <d>   DW_AT_stmt_list   : 0
->     <11>   DW_AT_comp_dir    : (indirect line string, offset: 0xc9c): /us=
-r/src/debug/glibc-2.42-5.fc43.x86_64/elf
->  <1><15>: Abbrev Number: 57 (DW_TAG_base_type)
->     <16>   DW_AT_byte_size   : 8
->     <17>   DW_AT_encoding    : 7        (unsigned)
->     <18>   DW_AT_name        : (indirect string, offset: 0x9bf1): long un=
-signed int
->  <1><1c>: Abbrev Number: 57 (DW_TAG_base_type)
->     <1d>   DW_AT_byte_size   : 1
->     <1e>   DW_AT_encoding    : 6        (signed char)
->     <1f>   DW_AT_name        : (indirect string, offset: 0x7bab): char
->  <1><23>: Abbrev Number: 0
->   Compilation Unit @ offset 0x24:
->    Length:        0x20 (32-bit)
->    Version:       5
->    Unit Type:     DW_UT_partial (3)
->    Abbrev Offset: 0xad87
->    Pointer Size:  8
->  <0><30>: Abbrev Number: 38 (DW_TAG_partial_unit)
->     <31>   DW_AT_stmt_list   : 0
->     <35>   DW_AT_comp_dir    : (indirect line string, offset: 0xc9c): /us=
-r/src/debug/glibc-2.42-5.fc43.x86_64/elf
->  <1><39>: Abbrev Number: 57 (DW_TAG_base_type)
-> root@number:/home/acme#
->
-> Some partial unit glibc DWARF 5. I think we need some more libdw setup
-> to handle those?
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Could be. Thanks for the analysis!
+As I mentioned in v1 I think things can be better with a delegate
+tool, but this is definitely a cool new feature.
 
-> But then we can merge what James already reviewed and go on from here,
-> right?
-
-+Masami Hiramatsu
-
-I believe so. I'm not aware of anything outstanding on the patches -
-v2 was using the function's declaration file:line rather than its
-calling file:line, but that's all resolved in v3 and I'm not aware of
-anything else left outstanding. Perhaps James can comment more on the
-(non-blocking) issues he faced with LLVM and perhaps Masami can
-comment on the libdw usage (I just checked that he did a lot of the
-dwarf-aux.c work).
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> - Arnaldo
+> ---
+> v2 changes)
+>  * Use machine__kernel_ip() instead  (James)
+>  * Check sample types for DWARF callchains (James)
+>  * Fix build errors  (James)
+>  * Add a new test  (Ian)
 >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/Build     |   1 +
-> >  tools/perf/util/dso.c     |   2 +
-> >  tools/perf/util/dso.h     |  11 +++
-> >  tools/perf/util/libdw.c   | 153 ++++++++++++++++++++++++++++++++++++++
-> >  tools/perf/util/libdw.h   |  60 +++++++++++++++
-> >  tools/perf/util/srcline.c |  24 ++++++
-> >  tools/perf/util/srcline.h |   1 +
-> >  7 files changed, 252 insertions(+)
-> >  create mode 100644 tools/perf/util/libdw.c
-> >  create mode 100644 tools/perf/util/libdw.h
-> >
-> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > index 1c2a43e1dc68..2bed6274e248 100644
-> > --- a/tools/perf/util/Build
-> > +++ b/tools/perf/util/Build
-> > @@ -224,6 +224,7 @@ perf-util-$(CONFIG_LIBDW) +=3D dwarf-regs-powerpc.o
-> >  perf-util-$(CONFIG_LIBDW) +=3D dwarf-regs-x86.o
-> >  perf-util-$(CONFIG_LIBDW) +=3D debuginfo.o
-> >  perf-util-$(CONFIG_LIBDW) +=3D annotate-data.o
-> > +perf-util-$(CONFIG_LIBDW) +=3D libdw.o
-> >
-> >  perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
-> >  perf-util-$(CONFIG_LOCAL_LIBUNWIND)    +=3D unwind-libunwind-local.o
-> > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> > index 344e689567ee..06980844c014 100644
-> > --- a/tools/perf/util/dso.c
-> > +++ b/tools/perf/util/dso.c
-> > @@ -32,6 +32,7 @@
-> >  #include "string2.h"
-> >  #include "vdso.h"
-> >  #include "annotate-data.h"
-> > +#include "libdw.h"
-> >
-> >  static const char * const debuglink_paths[] =3D {
-> >       "%.0s%s",
-> > @@ -1605,6 +1606,7 @@ void dso__delete(struct dso *dso)
-> >       auxtrace_cache__free(RC_CHK_ACCESS(dso)->auxtrace_cache);
-> >       dso_cache__free(dso);
-> >       dso__free_a2l(dso);
-> > +     dso__free_a2l_libdw(dso);
-> >       dso__free_symsrc_filename(dso);
-> >       nsinfo__zput(RC_CHK_ACCESS(dso)->nsinfo);
-> >       mutex_destroy(dso__lock(dso));
-> > diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> > index f8ccb9816b89..4aee23775054 100644
-> > --- a/tools/perf/util/dso.h
-> > +++ b/tools/perf/util/dso.h
-> > @@ -268,6 +268,7 @@ DECLARE_RC_STRUCT(dso) {
-> >       const char       *short_name;
-> >       const char       *long_name;
-> >       void             *a2l;
-> > +     void             *a2l_libdw;
-> >       char             *symsrc_filename;
-> >  #if defined(__powerpc__)
-> >       void            *dwfl;                  /* DWARF debug info */
-> > @@ -334,6 +335,16 @@ static inline void dso__set_a2l(struct dso *dso, v=
-oid *val)
-> >       RC_CHK_ACCESS(dso)->a2l =3D val;
-> >  }
-> >
-> > +static inline void *dso__a2l_libdw(const struct dso *dso)
-> > +{
-> > +     return RC_CHK_ACCESS(dso)->a2l_libdw;
-> > +}
-> > +
-> > +static inline void dso__set_a2l_libdw(struct dso *dso, void *val)
-> > +{
-> > +     RC_CHK_ACCESS(dso)->a2l_libdw =3D val;
-> > +}
-> > +
-> >  static inline unsigned int dso__a2l_fails(const struct dso *dso)
-> >  {
-> >       return RC_CHK_ACCESS(dso)->a2l_fails;
-> > diff --git a/tools/perf/util/libdw.c b/tools/perf/util/libdw.c
-> > new file mode 100644
-> > index 000000000000..e4bfd52bd172
-> > --- /dev/null
-> > +++ b/tools/perf/util/libdw.c
-> > @@ -0,0 +1,153 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +#include "dso.h"
-> > +#include "libdw.h"
-> > +#include "srcline.h"
-> > +#include "symbol.h"
-> > +#include "dwarf-aux.h"
-> > +#include <fcntl.h>
-> > +#include <unistd.h>
-> > +#include <elfutils/libdwfl.h>
-> > +
-> > +void dso__free_a2l_libdw(struct dso *dso)
-> > +{
-> > +     Dwfl *dwfl =3D dso__a2l_libdw(dso);
-> > +
-> > +     if (dwfl) {
-> > +             dwfl_end(dwfl);
-> > +             dso__set_a2l_libdw(dso, NULL);
-> > +     }
-> > +}
-> > +
-> > +struct libdw_a2l_cb_args {
-> > +     struct dso *dso;
-> > +     struct symbol *sym;
-> > +     struct inline_node *node;
-> > +     char *leaf_srcline;
-> > +     bool leaf_srcline_used;
-> > +};
-> > +
-> > +static int libdw_a2l_cb(Dwarf_Die *die, void *_args)
-> > +{
-> > +     struct libdw_a2l_cb_args *args  =3D _args;
-> > +     struct symbol *inline_sym =3D new_inline_sym(args->dso, args->sym=
-, dwarf_diename(die));
-> > +     const char *call_fname =3D die_get_call_file(die);
-> > +     char *call_srcline =3D srcline__unknown;
-> > +     struct inline_list *ilist;
-> > +
-> > +     if (!inline_sym)
-> > +             return -ENOMEM;
-> > +
-> > +     /* Assign caller information to the parent. */
-> > +     if (call_fname)
-> > +             call_srcline =3D srcline_from_fileline(call_fname, die_ge=
-t_call_lineno(die));
-> > +
-> > +     list_for_each_entry(ilist, &args->node->val, list) {
-> > +             ilist->srcline =3D  call_srcline;
-> > +             call_srcline =3D NULL;
-> > +             break;
-> > +     }
-> > +     if (call_srcline && call_fname)
-> > +             free(call_srcline);
-> > +
-> > +     /* Add this symbol to the chain as the leaf. */
-> > +     inline_list__append_tail(inline_sym, args->leaf_srcline, args->no=
-de);
-> > +     args->leaf_srcline_used =3D true;
-> > +     return 0;
-> > +}
-> > +
-> > +int libdw__addr2line(const char *dso_name, u64 addr,
-> > +                  char **file, unsigned int *line_nr,
-> > +                  struct dso *dso, bool unwind_inlines,
-> > +                  struct inline_node *node, struct symbol *sym)
-> > +{
-> > +     static const Dwfl_Callbacks offline_callbacks =3D {
-> > +             .find_debuginfo =3D dwfl_standard_find_debuginfo,
-> > +             .section_address =3D dwfl_offline_section_address,
-> > +             .find_elf =3D dwfl_build_id_find_elf,
-> > +     };
-> > +     Dwfl *dwfl =3D dso__a2l_libdw(dso);
-> > +     Dwfl_Module *mod;
-> > +     Dwfl_Line *dwline;
-> > +     Dwarf_Addr bias;
-> > +     const char *src;
-> > +     int lineno =3D 0;
-> > +
-> > +     if (!dwfl) {
-> > +             /*
-> > +              * Initialize Dwfl session.
-> > +              * We need to open the DSO file to report it to libdw.
-> > +              */
-> > +             int fd;
-> > +
-> > +             fd =3D open(dso_name, O_RDONLY);
-> > +             if (fd < 0)
-> > +                     return 0;
-> > +
-> > +             dwfl =3D dwfl_begin(&offline_callbacks);
-> > +             if (!dwfl) {
-> > +                     close(fd);
-> > +                     return 0;
-> > +             }
-> > +
-> > +             /*
-> > +              * If the report is successful, the file descriptor fd is=
- consumed
-> > +              * and closed by the Dwfl. If not, it is not closed.
-> > +              */
-> > +             mod =3D dwfl_report_offline(dwfl, dso_name, dso_name, fd)=
-;
-> > +             if (!mod) {
-> > +                     dwfl_end(dwfl);
-> > +                     close(fd);
-> > +                     return 0;
-> > +             }
-> > +
-> > +             dwfl_report_end(dwfl, /*removed=3D*/NULL, /*arg=3D*/NULL)=
-;
-> > +             dso__set_a2l_libdw(dso, dwfl);
-> > +     } else {
-> > +             /* Dwfl session already initialized, get module for addre=
-ss. */
-> > +             mod =3D dwfl_addrmodule(dwfl, addr);
-> > +     }
-> > +
-> > +     if (!mod)
-> > +             return 0;
-> > +
-> > +     /*
-> > +      * Get/ignore the dwarf information. Determine the bias, differen=
-ce
-> > +      * between the regular ELF addr2line addresses and those to use w=
-ith
-> > +      * libdw.
-> > +      */
-> > +     if (!dwfl_module_getdwarf(mod, &bias))
-> > +             return 0;
-> > +
-> > +     /* Find source line information for the address. */
-> > +     dwline =3D dwfl_module_getsrc(mod, addr + bias);
-> > +     if (!dwline)
-> > +             return 0;
-> > +
-> > +     /* Get line information. */
-> > +     src =3D dwfl_lineinfo(dwline, /*addr=3D*/NULL, &lineno, /*col=3D*=
-/NULL, /*mtime=3D*/NULL,
-> > +                         /*length=3D*/NULL);
-> > +
-> > +     if (file)
-> > +             *file =3D src ? strdup(src) : NULL;
-> > +     if (line_nr)
-> > +             *line_nr =3D lineno;
-> > +
-> > +     /* Optionally unwind inline function call chain. */
-> > +     if (unwind_inlines && node) {
-> > +             Dwarf_Addr unused_bias;
-> > +             Dwarf_Die *cudie =3D dwfl_module_addrdie(mod, addr + bias=
-, &unused_bias);
-> > +             struct libdw_a2l_cb_args args =3D {
-> > +                     .dso =3D dso,
-> > +                     .sym =3D sym,
-> > +                     .node =3D node,
-> > +                     .leaf_srcline =3D srcline_from_fileline(src ?: "<=
-unknown>", lineno),
-> > +             };
-> > +
-> > +             /* Walk from the parent down to the leaf. */
-> > +             cu_walk_functions_at(cudie, addr, libdw_a2l_cb, &args);
-> > +
-> > +             if (!args.leaf_srcline_used)
-> > +                     free(args.leaf_srcline);
-> > +     }
-> > +     return 1;
-> > +}
-> > diff --git a/tools/perf/util/libdw.h b/tools/perf/util/libdw.h
-> > new file mode 100644
-> > index 000000000000..0f8d7b4a11a5
-> > --- /dev/null
-> > +++ b/tools/perf/util/libdw.h
-> > @@ -0,0 +1,60 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef PERF_LIBDW_H
-> > +#define PERF_LIBDW_H
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +struct dso;
-> > +struct inline_node;
-> > +struct symbol;
-> > +
-> > +#ifdef HAVE_LIBDW_SUPPORT
-> > +/*
-> > + * libdw__addr2line - Convert address to source location using libdw
-> > + * @dso_name: Name of the DSO
-> > + * @addr: Address to resolve
-> > + * @file: Pointer to return filename (caller must free)
-> > + * @line_nr: Pointer to return line number
-> > + * @dso: The dso struct
-> > + * @unwind_inlines: Whether to unwind inline function calls
-> > + * @node: Inline node list to append to
-> > + * @sym: The symbol associated with the address
-> > + *
-> > + * This function initializes a Dwfl context for the DSO if not already=
- present,
-> > + * finds the source line information for the given address, and option=
-ally
-> > + * resolves inline function call chains.
-> > + *
-> > + * Returns 1 on success (found), 0 on failure (not found).
-> > + */
-> > +int libdw__addr2line(const char *dso_name, u64 addr, char **file,
-> > +                  unsigned int *line_nr, struct dso *dso,
-> > +                  bool unwind_inlines, struct inline_node *node,
-> > +                  struct symbol *sym);
-> > +
-> > +/*
-> > + * dso__free_a2l_libdw - Free libdw resources associated with the DSO
-> > + * @dso: The dso to free resources for
-> > + *
-> > + * This function cleans up the Dwfl context used for addr2line lookups=
+>  tools/perf/Documentation/perf-inject.txt |   5 +
+>  tools/perf/builtin-inject.c              | 151 +++++++++++++++++++++++
+>  2 files changed, 156 insertions(+)
+>
+> diff --git a/tools/perf/Documentation/perf-inject.txt b/tools/perf/Docume=
+ntation/perf-inject.txt
+> index c972032f4ca0d248..95dfdf39666efe89 100644
+> --- a/tools/perf/Documentation/perf-inject.txt
+> +++ b/tools/perf/Documentation/perf-inject.txt
+> @@ -109,6 +109,11 @@ include::itrace.txt[]
+>         should be used, and also --buildid-all and --switch-events may be
+>         useful.
+>
+> +--convert-callchain::
+> +       Parse DWARF callchains and convert them to usual callchains.  Thi=
+s also
+> +       discards stack and register data from the samples.  This will los=
+e
+> +       inlined callchain entries.
+> +
+>  :GMEXAMPLECMD: inject
+>  :GMEXAMPLESUBCMD:
+>  include::guestmount.txt[]
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index 6080afec537d2178..02bd388d602fdd75 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -122,6 +122,7 @@ struct perf_inject {
+>         bool                    in_place_update;
+>         bool                    in_place_update_dry_run;
+>         bool                    copy_kcore_dir;
+> +       bool                    convert_callchain;
+>         const char              *input_name;
+>         struct perf_data        output;
+>         u64                     bytes_written;
+> @@ -133,6 +134,7 @@ struct perf_inject {
+>         struct guest_session    guest_session;
+>         struct strlist          *known_build_ids;
+>         const struct evsel      *mmap_evsel;
+> +       struct ip_callchain     *raw_callchain;
+>  };
+>
+>  struct event_entry {
+> @@ -383,6 +385,89 @@ static int perf_event__repipe_sample(const struct pe=
+rf_tool *tool,
+>         return perf_event__repipe_synth(tool, event);
+>  }
+>
+> +static int perf_event__convert_sample_callchain(const struct perf_tool *=
+tool,
+> +                                               union perf_event *event,
+> +                                               struct perf_sample *sampl=
+e,
+> +                                               struct evsel *evsel,
+> +                                               struct machine *machine)
+> +{
+> +       struct perf_inject *inject =3D container_of(tool, struct perf_inj=
+ect, tool);
+> +       struct callchain_cursor *cursor =3D get_tls_callchain_cursor();
+> +       union perf_event *event_copy =3D (void *)inject->event_copy;
+> +       struct callchain_cursor_node *node;
+> +       struct thread *thread;
+> +       u64 sample_type =3D evsel->core.attr.sample_type;
+> +       u32 sample_size =3D event->header.size;
+> +       u64 i, k;
+> +       int ret;
+> +
+> +       if (event_copy =3D=3D NULL) {
+> +               inject->event_copy =3D malloc(PERF_SAMPLE_MAX_SIZE);
+> +               if (!inject->event_copy)
+> +                       return -ENOMEM;
+> +
+> +               event_copy =3D (void *)inject->event_copy;
+> +       }
+> +
+> +       if (cursor =3D=3D NULL)
+> +               return perf_event__repipe_synth(tool, event);
+> +
+> +       callchain_cursor_reset(cursor);
+> +
+> +       thread =3D machine__find_thread(machine, -1, sample->pid);
+> +       if (thread =3D=3D NULL)
+> +               return perf_event__repipe_synth(tool, event);
+> +
+> +       /* this will parse DWARF using stack and register data */
+> +       ret =3D thread__resolve_callchain(thread, cursor, evsel, sample,
+> +                                       /*parent=3D*/NULL, /*root_al=3D*/=
+NULL,
+> +                                       PERF_MAX_STACK_DEPTH);
+> +       thread__put(thread);
+> +       if (ret !=3D 0)
+> +               return perf_event__repipe_synth(tool, event);
+> +
+> +       /* copy kernel callchain and context entries */
+> +       for (i =3D 0; i < sample->callchain->nr; i++) {
+> +               inject->raw_callchain->ips[i] =3D sample->callchain->ips[=
+i];
+> +               if (sample->callchain->ips[i] =3D=3D PERF_CONTEXT_USER) {
+> +                       i++;
+> +                       break;
+> +               }
+> +       }
+> +       if (i =3D=3D 0 || inject->raw_callchain->ips[i - 1] !=3D PERF_CON=
+TEXT_USER)
+> +               inject->raw_callchain->ips[i++] =3D PERF_CONTEXT_USER;
+> +
+> +       node =3D cursor->first;
+> +       for (k =3D 0; k < cursor->nr && i < PERF_MAX_STACK_DEPTH; k++) {
+> +               if (machine__kernel_ip(machine, node->ip))
+> +                       /* kernel IPs were added already */;
+> +               else if (node->ms.sym && node->ms.sym->inlined)
+> +                       /* we can't handle inlined callchains */;
+> +               else
+> +                       inject->raw_callchain->ips[i++] =3D node->ip;
+> +
+> +               node =3D node->next;
+> +       }
+> +
+> +       inject->raw_callchain->nr =3D i;
+> +       sample->callchain =3D inject->raw_callchain;
+> +
+> +       memcpy(event_copy, event, sizeof(event->header));
+> +
+> +       /* adjust sample size for stack and regs */
+> +       sample_size -=3D sample->user_stack.size;
+> +       sample_size -=3D (hweight64(evsel->core.attr.sample_regs_user) + =
+1) * sizeof(u64);
+> +       sample_size +=3D (sample->callchain->nr + 1) * sizeof(u64);
+> +       event_copy->header.size =3D sample_size;
+> +
+> +       /* remove sample_type {STACK,REGS}_USER for synthesize */
+> +       sample_type &=3D ~(PERF_SAMPLE_STACK_USER | PERF_SAMPLE_REGS_USER=
+);
+> +
+> +       perf_event__synthesize_sample(event_copy, sample_type,
+> +                                     evsel->core.attr.read_format, sampl=
+e);
+> +       return perf_event__repipe_synth(tool, event_copy);
+> +}
+> +
+>  static struct dso *findnew_dso(int pid, int tid, const char *filename,
+>                                const struct dso_id *id, struct machine *m=
+achine)
+>  {
+> @@ -2270,6 +2355,15 @@ static int __cmd_inject(struct perf_inject *inject=
+)
+>                 /* Allow space in the header for guest attributes */
+>                 output_data_offset +=3D gs->session->header.data_offset;
+>                 output_data_offset =3D roundup(output_data_offset, 4096);
+> +       } else if (inject->convert_callchain) {
+> +               inject->tool.sample     =3D perf_event__convert_sample_ca=
+llchain;
+> +               inject->tool.fork       =3D perf_event__repipe_fork;
+> +               inject->tool.comm       =3D perf_event__repipe_comm;
+> +               inject->tool.exit       =3D perf_event__repipe_exit;
+> +               inject->tool.mmap       =3D perf_event__repipe_mmap;
+> +               inject->tool.mmap2      =3D perf_event__repipe_mmap2;
+> +               inject->tool.ordered_events =3D true;
+> +               inject->tool.ordering_requires_timestamps =3D true;
+>         }
+>
+>         if (!inject->itrace_synth_opts.set)
+> @@ -2322,6 +2416,23 @@ static int __cmd_inject(struct perf_inject *inject=
+)
+>                                 perf_header__set_feat(&session->header,
+>                                                       HEADER_BRANCH_STACK=
+);
+>                 }
+> +
+> +               /*
+> +                * The converted data file won't have stack and registers=
 .
-> > + */
-> > +void dso__free_a2l_libdw(struct dso *dso);
-> > +
-> > +#else /* HAVE_LIBDW_SUPPORT */
-> > +
-> > +static inline int libdw__addr2line(const char *dso_name __maybe_unused=
-,
-> > +                                u64 addr __maybe_unused, char **file _=
-_maybe_unused,
-> > +                                unsigned int *line_nr __maybe_unused,
-> > +                                struct dso *dso __maybe_unused,
-> > +                                bool unwind_inlines __maybe_unused,
-> > +                                struct inline_node *node __maybe_unuse=
-d,
-> > +                                struct symbol *sym __maybe_unused)
-> > +{
-> > +     return 0;
-> > +}
-> > +
-> > +static inline void dso__free_a2l_libdw(struct dso *dso __maybe_unused)
-> > +{
-> > +}
-> > +#endif /* HAVE_LIBDW_SUPPORT */
-> > +
-> > +#endif /* PERF_LIBDW_H */
-> > diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-> > index 27c0966611ab..e2d280678b02 100644
-> > --- a/tools/perf/util/srcline.c
-> > +++ b/tools/perf/util/srcline.c
-> > @@ -6,6 +6,7 @@
-> >  #include "libbfd.h"
-> >  #include "llvm.h"
-> >  #include "symbol.h"
-> > +#include "libdw.h"
-> >
-> >  #include <inttypes.h>
-> >  #include <string.h>
-> > @@ -51,6 +52,25 @@ int inline_list__append(struct symbol *symbol, char =
-*srcline, struct inline_node
-> >       return 0;
-> >  }
-> >
-> > +int inline_list__append_tail(struct symbol *symbol, char *srcline, str=
-uct inline_node *node)
-> > +{
-> > +     struct inline_list *ilist;
-> > +
-> > +     ilist =3D zalloc(sizeof(*ilist));
-> > +     if (ilist =3D=3D NULL)
-> > +             return -1;
-> > +
-> > +     ilist->symbol =3D symbol;
-> > +     ilist->srcline =3D srcline;
-> > +
-> > +     if (callchain_param.order =3D=3D ORDER_CALLEE)
-> > +             list_add(&ilist->list, &node->val);
-> > +     else
-> > +             list_add_tail(&ilist->list, &node->val);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  /* basename version that takes a const input string */
-> >  static const char *gnu_basename(const char *path)
-> >  {
-> > @@ -120,6 +140,10 @@ static int addr2line(const char *dso_name, u64 add=
-r, char **file, unsigned int *
-> >  {
-> >       int ret;
-> >
-> > +     ret =3D libdw__addr2line(dso_name, addr, file, line_nr, dso, unwi=
-nd_inlines, node, sym);
-> > +     if (ret > 0)
-> > +             return ret;
-> > +
-> >       ret =3D llvm__addr2line(dso_name, addr, file, line_nr, dso, unwin=
-d_inlines, node, sym);
-> >       if (ret > 0)
-> >               return ret;
-> > diff --git a/tools/perf/util/srcline.h b/tools/perf/util/srcline.h
-> > index c36f573cd339..be9f002bf234 100644
-> > --- a/tools/perf/util/srcline.h
-> > +++ b/tools/perf/util/srcline.h
-> > @@ -57,6 +57,7 @@ struct inline_node *inlines__tree_find(struct rb_root=
-_cached *tree, u64 addr);
-> >  void inlines__tree_delete(struct rb_root_cached *tree);
-> >
-> >  int inline_list__append(struct symbol *symbol, char *srcline, struct i=
-nline_node *node);
-> > +int inline_list__append_tail(struct symbol *symbol, char *srcline, str=
-uct inline_node *node);
-> >  char *srcline_from_fileline(const char *file, unsigned int line);
-> >  struct symbol *new_inline_sym(struct dso *dso,
-> >                             struct symbol *base_sym,
-> > --
-> > 2.52.0.457.g6b5491de43-goog
-> >
+> +                * Update the perf_event_attr to remove them before writi=
+ng.
+> +                */
+> +               if (inject->convert_callchain) {
+> +                       struct evsel *evsel;
+> +
+> +                       evlist__for_each_entry(session->evlist, evsel) {
+> +                               evsel__reset_sample_bit(evsel, REGS_USER)=
+;
+> +                               evsel__reset_sample_bit(evsel, STACK_USER=
+);
+> +                               evsel->core.attr.sample_regs_user =3D 0;
+> +                               evsel->core.attr.sample_stack_user =3D 0;
+> +                               evsel->core.attr.exclude_callchain_user =
+=3D 0;
+> +                       }
+> +               }
+> +
+>                 session->header.data_offset =3D output_data_offset;
+>                 session->header.data_size =3D inject->bytes_written;
+>                 perf_session__inject_header(session, session->evlist, fd,=
+ &inj_fc.fc,
+> @@ -2346,6 +2457,18 @@ static int __cmd_inject(struct perf_inject *inject=
+)
+>         return ret;
+>  }
+>
+> +static bool evsel__has_dwarf_callchain(struct evsel *evsel)
+> +{
+> +       struct perf_event_attr *attr =3D &evsel->core.attr;
+> +       const u64 dwarf_callchain_flags =3D
+> +               PERF_SAMPLE_STACK_USER | PERF_SAMPLE_REGS_USER | PERF_SAM=
+PLE_CALLCHAIN;
+> +
+> +       if (!attr->exclude_callchain_user)
+> +               return false;
+> +
+> +       return (attr->sample_type & dwarf_callchain_flags) =3D=3D dwarf_c=
+allchain_flags;
+> +}
+> +
+>  int cmd_inject(int argc, const char **argv)
+>  {
+>         struct perf_inject inject =3D {
+> @@ -2414,6 +2537,8 @@ int cmd_inject(int argc, const char **argv)
+>                 OPT_STRING(0, "guestmount", &symbol_conf.guestmount, "dir=
+ectory",
+>                            "guest mount directory under which every guest=
+ os"
+>                            " instance has a subdir"),
+> +               OPT_BOOLEAN(0, "convert-callchain", &inject.convert_callc=
+hain,
+> +                           "Generate callchains using DWARF and drop reg=
+ister/stack data"),
+>                 OPT_END()
+>         };
+>         const char * const inject_usage[] =3D {
+> @@ -2429,6 +2554,9 @@ int cmd_inject(int argc, const char **argv)
+>
+>  #ifndef HAVE_JITDUMP
+>         set_option_nobuild(options, 'j', "jit", "NO_LIBELF=3D1", true);
+> +#endif
+> +#ifndef HAVE_LIBDW_SUPPORT
+> +       set_option_nobuild(options, 0, "convert-callchain", "NO_LIBDW=3D1=
+", true);
+>  #endif
+>         argc =3D parse_options(argc, argv, options, inject_usage, 0);
+>
+> @@ -2588,6 +2716,28 @@ int cmd_inject(int argc, const char **argv)
+>                 }
+>         }
+>
+> +       if (inject.convert_callchain) {
+> +               struct evsel *evsel;
+> +
+> +               if (inject.output.is_pipe || inject.session->data->is_pip=
+e) {
+> +                       pr_err("--convert-callchain cannot work with pipe=
+\n");
+> +                       goto out_delete;
+> +               }
+> +
+> +               evlist__for_each_entry(inject.session->evlist, evsel) {
+> +                       if (!evsel__has_dwarf_callchain(evsel)) {
+> +                               pr_err("--convert-callchain requires DWAR=
+F call graph.\n");
+> +                               goto out_delete;
+> +                       }
+> +               }
+> +
+> +               inject.raw_callchain =3D calloc(PERF_MAX_STACK_DEPTH, siz=
+eof(u64));
+> +               if (inject.raw_callchain =3D=3D NULL) {
+> +                       pr_err("callchain allocation failed\n");
+> +                       goto out_delete;
+> +               }
+> +       }
+> +
+>  #ifdef HAVE_JITDUMP
+>         if (inject.jit_mode) {
+>                 inject.tool.mmap2          =3D perf_event__repipe_mmap2;
+> @@ -2618,5 +2768,6 @@ int cmd_inject(int argc, const char **argv)
+>         free(inject.itrace_synth_opts.vm_tm_corr_args);
+>         free(inject.event_copy);
+>         free(inject.guest_session.ev.event_buf);
+> +       free(inject.raw_callchain);
+>         return ret;
+>  }
+> --
+> 2.52.0.457.g6b5491de43-goog
+>
