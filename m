@@ -1,109 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A2B23ED6A;
-	Mon, 12 Jan 2026 16:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B360E34BA56;
+	Mon, 12 Jan 2026 16:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768234557; cv=none; b=QcvH9xqPnLaPlI0Nisz/J4VBWaISTwCZbEfSo1YxjGVtRSP24pwnxRju5/hJ+rYPifUj4jdOu/IlzodVtKmohczte/+IB40mPS4+H/rVdICsV+h+zfbylx8Y3yliu8xOQuvkpqLhOGG5mfWI7ubtgu3KEgtck3GYzouz36LL8dM=
+	t=1768236663; cv=none; b=EGVbjVIjL3912GDBqcqXgNjK79XJl3Ff2ccrmIZdvk9MdKQmABsjbG00mbF9il3He18S1lzqxcj8XvPBHUFAy6xmLnCjkpH6zEj1WfpLdX7sZy2vYl4TPjcoI+ISuOXlzEbVwUEKa3k7TWqeVGCuJ6ascYeNWrwAoZppJsCDvew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768234557; c=relaxed/simple;
-	bh=eI8C8BtDMPqSFRxHRe5KQNURmveRuV+sdj74r3IkIyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G+lG5X9hip+piF9UN2Pmfsw9JrzRZsNMK2IrY2AFMDmtDSyFNegcMmi2AjuRip5KxSFYN1Tg7gNqS+ZooGXtNyNlXYKZMJr5f4g91bHToMYGtJyq/EgjVNC/xxVq7zc9WsZec4o2GfSvq/S9pJxIvPHPtZjSQxTy07oz/WLIpDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DnvYy0hN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768236663; c=relaxed/simple;
+	bh=fnfFypMptK9nR/ENG+mPzO2KwNInH7zg0MNxfXuPPtU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fuv9KiE9xhLCTZbmjW5jGFCG2LmOPB7vclKBZv0ofPaM49W946Tn832d0Rb8CPGc/jBkLACWSiQwSweLlDFhSS2sBbHb1QR9HVcPJb1leytWhB6uCfj3/uJz8vTW+dIZLmm+xYB3KQ4nsI1qkMLJqolWqo8LJr9Kchlm5RJS5pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CgOUCd6V; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DnvYy0hN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73D58C116D0;
-	Mon, 12 Jan 2026 16:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768234557;
-	bh=eI8C8BtDMPqSFRxHRe5KQNURmveRuV+sdj74r3IkIyM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DnvYy0hN/8mVEw+0u+XM+aMPj1rLiTn5BKzlaPyMAPqnObPQpJF0Zxzv/hnEWGDQx
-	 o0AtIYw1N3tBsnyGcD3vaytaTepZHnhxh4DHZrvldB1paSDSDi3PX7tg8YcdHY3SBw
-	 qdcvW3+vXHgSf/VK1T/M9HZuuBpifTAoBJaIVlH/cZESvB2wiUUKqGNiLCoY8zPhT6
-	 B7PTzN0ggIKP2oALcwwWthdNl8PK+GZRd/lCVe6UL11R7yIPK7m1YTYRLYjtvlk2Ck
-	 UZxM7fjocWwNetgUPpw14c/DMv1G2VkuQJvp8qL2CxR/cjYcgAY3oFwUl/gO8/Bv8R
-	 j/rhE5/imOw4Q==
-Date: Mon, 12 Jan 2026 09:15:53 -0700
-From: Tycho Andersen <tycho@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: Re: [PATCH] perf: fix segfault in `lock contention -b`
-Message-ID: <aWUeOQbFOZ2CVBG2@tycho.pizza>
-References: <20260109164417.396138-1-tycho@kernel.org>
- <aWGh_XNyt-hmSamy@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CgOUCd6V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768236661; x=1799772661;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=fnfFypMptK9nR/ENG+mPzO2KwNInH7zg0MNxfXuPPtU=;
+  b=CgOUCd6VW9mJ903rEG5rCtnNFpcBHFJT1eXQKGPj2zaI9gbacajbTcUl
+   imsjEkWGAfr6ywywOgUwaTkEnNLrJNdRlhX77T7be8puMnqk9Z7VbCmPH
+   f73/QBlvVjkPySLQarbVWEPFrcmpFuY07TuL7TIixTO3WjE/AxA5mvQRT
+   qzKKJ/CJZvTSoTwresa6V/h1mgyNODV1tQWjHaDO+SkHqTe02229bR9ta
+   eKefArza+ZP+RBruoJAiICLVvMPXQ5ef8cwwUTjt+go+zVrCLDEPXzqH+
+   b7CzOWF61d/hX4xK4oR8j7nVGsMpoJCG6g+eNrVhd1lSgbZkYg0IWOWjQ
+   w==;
+X-CSE-ConnectionGUID: Nf4V+xGIQA6H40fZYxKorg==
+X-CSE-MsgGUID: Go1gkgJiT5qUf74eueXn/A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="73144478"
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="73144478"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 08:51:00 -0800
+X-CSE-ConnectionGUID: Fv8UnYvNRT6BrKFH0vXztQ==
+X-CSE-MsgGUID: RuOYQtVaQJCUUYymhoVEHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="203292499"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.38.190])
+  by orviesa006.jf.intel.com with ESMTP; 12 Jan 2026 08:51:00 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+	id E2AA1302315; Mon, 12 Jan 2026 08:50:58 -0800 (PST)
+From: Andi Kleen <ak@linux.intel.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,
+  Arnaldo Carvalho de Melo <acme@kernel.org>,  Namhyung Kim
+ <namhyung@kernel.org>,  Jiri Olsa <jolsa@kernel.org>,  Adrian Hunter
+ <adrian.hunter@intel.com>,  James Clark <james.clark@linaro.org>,  Thomas
+ Falcon <thomas.falcon@intel.com>,  Thomas Richter <tmricht@linux.ibm.com>,
+  linux-perf-users@vger.kernel.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] Add procfs based memory and network tool events
+In-Reply-To: <20260104011738.475680-1-irogers@google.com> (Ian Rogers's
+	message of "Sat, 3 Jan 2026 17:17:36 -0800")
+References: <20260104011738.475680-1-irogers@google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Date: Mon, 12 Jan 2026 08:50:58 -0800
+Message-ID: <871pju4vwt.fsf@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aWGh_XNyt-hmSamy@google.com>
+Content-Type: text/plain
 
-On Fri, Jan 09, 2026 at 04:49:01PM -0800, Namhyung Kim wrote:
-> On Fri, Jan 09, 2026 at 09:44:17AM -0700, Tycho Andersen wrote:
-> > From: "Tycho Andersen (AMD)" <tycho@kernel.org>
-> > 
-> > When run on a kernel without BTF info, I get:
-> > 
-> >     libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
-> >     libbpf: failed to find valid kernel BTF
-> > 
-> >     Program received signal SIGSEGV, Segmentation fault.
-> >     0x00005555556915b7 in btf.type_cnt ()
-> >     (gdb) bt
-> >     #0  0x00005555556915b7 in btf.type_cnt ()
-> >     #1  0x0000555555691fbc in btf_find_by_name_kind ()
-> >     #2  0x00005555556920d0 in btf.find_by_name_kind ()
-> >     #3  0x00005555558a1b7c in init_numa_data (con=0x7fffffffd0a0) at util/bpf_lock_contention.c:125
-> >     #4  0x00005555558a264b in lock_contention_prepare (con=0x7fffffffd0a0) at util/bpf_lock_contention.c:313
-> >     #5  0x0000555555620702 in __cmd_contention (argc=0, argv=0x7fffffffea10) at builtin-lock.c:2084
-> >     #6  0x0000555555622c8d in cmd_lock (argc=0, argv=0x7fffffffea10) at builtin-lock.c:2755
-> >     #7  0x0000555555651451 in run_builtin (p=0x555556104f00 <commands+576>, argc=3, argv=0x7fffffffea10)
-> >         at perf.c:349
-> >     #8  0x00005555556516ed in handle_internal_command (argc=3, argv=0x7fffffffea10) at perf.c:401
-> >     #9  0x000055555565184e in run_argv (argcp=0x7fffffffe7fc, argv=0x7fffffffe7f0) at perf.c:445
-> >     #10 0x0000555555651b9f in main (argc=3, argv=0x7fffffffea10) at perf.c:553
-> > 
-> > If we really are running -b without BTF info, the error is fatal, so let's
-> > propagate it and exit accordingly.
-> 
-> Thanks for the patch.
-> 
-> I'm curious how the kernel will react if we want to load the BPF.
-> Probably the verifier will reject as it calls some helpers like
-> bpf_get_current_task_btf().
-> 
-> I think it used to work without BTF - the callstack (default) and task
-> output mode won't need it.  It'd be nice if we could run it when the
-> kernel doesn't have BTF.  But maybe it's out of scope of this patch.
-> 
-> That said, can you add a NULL check in the init_numa_data() instead
-> and see how far it can go?
+Ian Rogers <irogers@google.com> writes:
 
-Looks like not much further, it fails in lock_contention_bpf__load():
+> Add events for memory use and network activity based on data readily
+> available in /prod/pid/statm, /proc/pid/smaps_rollup and
+> /proc/pid/net/dev. For example the network usage of chrome processes
+> on a system may be gathered with:
+> ```
+> $ perf stat -e
+> net_rx_bytes,net_rx_compressed,net_rx_drop,net_rx_errors,net_rx_fifo,net_rx_frame,net_rx_multicast,net_rx_packets,net_tx_bytes,net_tx_carrier,net_tx_colls,net_tx_compressed,net_tx_drop,net_tx_errors,net_tx_fifo,net_tx_packets
+> -p $(pidof -d, chrome) -I 1000
 
-./perf lock contention -b
-libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
-libbpf: failed to find valid kernel BTF
-libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
-libbpf: failed to find valid kernel BTF
-libbpf: Error loading vmlinux BTF: -ESRCH
-libbpf: failed to load BPF skeleton 'lock_contention_bpf': -ESRCH
-Failed to load lock-contention BPF skeleton
-lock contention BPF setup failed
+But AFAIK that's for the complete network name space, not just the
+process, thus highly misleading in perf context because the scope
+is incompatible.
 
-Tycho
+-Andi
