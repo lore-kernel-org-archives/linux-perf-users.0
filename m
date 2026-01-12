@@ -1,66 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6717B37E2FC;
-	Mon, 12 Jan 2026 18:51:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44ECD23C506;
+	Mon, 12 Jan 2026 18:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768243918; cv=none; b=HSeeKM5J9+HecWflu50jTwATlBsmI8n36SUEOICgffp3jVzxaWU9pX4dcpCauG1tQhEx82V4/ukLhkaMrWnUOYvDh0xh2UZq7wExsQ2RfA3tUWST/8nbIlDtnIk9bGDa3NC9cUTORDJJwm4Oo8mxVOzLCmbBc+2N7imzW7Sh/nE=
+	t=1768244065; cv=none; b=Zmq7DzLRo06j5lzD24uIX+GBb94pwMFJGhaEdbqk4h2rzLcF2yBL46Ynf+J3h3+IB8qZWpxbu3lne8zTsp+gVKR2gXv0Mbto1ywsvhWUouZUohcC5DSe1uunZvbQGJ1OAuHfacN23Rwn2nGKHr04JanS6AHs96p1etANO6ls/fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768243918; c=relaxed/simple;
-	bh=lXH34tPpi9gC06FqoWff06TrHtRa1kynr19tm8tSGH4=;
+	s=arc-20240116; t=1768244065; c=relaxed/simple;
+	bh=UO/II2FWxu6Gge78J+8ypItJi8eaR8K2FyTcgqo+Oiw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pv8TxYtSrYV/a4JZovREJMiuxgLXI+oIy//jI01J8mlzIFVnsqZVTo9XGHF8S3fzdVwvlCXWuFgac42EvOB5YqvlfaNegY/GOA7OXJtpnYej3dfVA30IJdbLFBpnCEV1jH+b6Bao+PECeqBHOhhjbSecQLsc7exziWR9EJVezZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYl+kMBu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=k0n29rmVondANREuBVHumSO10aU89RB3yAcLJ5ChJOQpmfnZZ1M/yeNjTuuF/+KpA6BSJFa5KQ7gwuVqKeJA/km25tE0bax8jDUo/GG/FvpW3yhMGez4jN4cRSMa8NK412NZdf805aZ2xonKf7L+7vSfwJiHH6Cr/skxRLNWO3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qcRA0uss; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYl+kMBu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8760C116D0;
-	Mon, 12 Jan 2026 18:51:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qcRA0uss"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84CF5C116D0;
+	Mon, 12 Jan 2026 18:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768243916;
-	bh=lXH34tPpi9gC06FqoWff06TrHtRa1kynr19tm8tSGH4=;
+	s=k20201202; t=1768244065;
+	bh=UO/II2FWxu6Gge78J+8ypItJi8eaR8K2FyTcgqo+Oiw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JYl+kMBuO+4NR/GAihg7u8ryF9XE/ab/21HT7ydThiIb+q/fTlmBzVpXbbURinPQY
-	 LVIGZqnMcWWIVWk2HfTHRd7xWnlIMSbqOYlj1dzeGzG3I25qQqy2kLuUL7ei004ruB
-	 EnK0tNaT1nhrfcmg0aE3QO4VtcrMhbZ1CSZvm7VGCbBQRr1BX58Nf4l4KdcIPdLIi7
-	 Z4Gav1ZtdzIhmn1OqaUcYAQf4AgoFBC4bjJsO671iZzRNl2g1fXRtAa2vS6DXiW+v+
-	 fS8MpFwzhxvZDRteIPeVEr0Z0RKgRlEeDx8gUnCQSJdoTqNRaxR2OFNlGIYxyWrCF4
-	 05mUARebkVs1g==
-Date: Mon, 12 Jan 2026 15:51:52 -0300
+	b=qcRA0ussMdXYg7nKw96mIkV4JEgrw3jrULW93xZLHhsn1MGgPkrHak/13wYqumu/t
+	 gbZNwRp5xrO5KXPhzvdJraSsusxcJX1s1p97m79O1+T5sUzh86XlO+lRYlj84CQxLs
+	 mV44q7gZ7P9wjRpUL7tik9koH8zfuDPi9HVqSAl43pSa4PHWfkgGHWO/LUMsEIQ7ru
+	 2j0rIoemcSxHTCTsTy0XaByfDn8DYJ29buje1pjXAK5xc4jECsSADVPoWaCVLzkFmv
+	 FF9bAySHrDXIGEs7xJ/DjLTh0xw6PW38VKVl1sVBj6KqTI2MLuMBonPqrvbnQckpbW
+	 9qSjJX26MwqeA==
+Date: Mon, 12 Jan 2026 15:54:21 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>,
-	Thomas Richter <tmricht@linux.ibm.com>, agordeev@linux.ibm.com,
-	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com,
-	japo@linux.ibm.com, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	namhyung@kernel.org
-Subject: Re: [PATCH V2] perf test: Fix test perf stat tests for virtualized
- machines
-Message-ID: <aWVCyFX6UURztKXA@x1>
-References: <20260107133216.2070400-1-tmricht@linux.ibm.com>
- <eca46457-0e1a-43b8-b6ac-bd61a7a273f1@linaro.org>
- <CAP-5=fUrqq5fH9DRtXM0KvYhG5LWzWMf0E4r+62=kAQgbzDHAA@mail.gmail.com>
+To: Nicolas Schier <n.schier@avm.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Jakub Brnak <jbrnak@redhat.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	Philipp Hahn <p.hahn@avm.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nicolas Schier <nsc@kernel.org>
+Subject: Re: [PATCH v3] perf build: Raise minimum shellcheck version to 0.7.2
+Message-ID: <aWVDXUv0Jdon_nFB@x1>
+References: <20260108-perf-raise-minimum-shellcheck-version-v3-1-36028909e7d0@avm.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUrqq5fH9DRtXM0KvYhG5LWzWMf0E4r+62=kAQgbzDHAA@mail.gmail.com>
+In-Reply-To: <20260108-perf-raise-minimum-shellcheck-version-v3-1-36028909e7d0@avm.de>
 
-On Thu, Jan 08, 2026 at 10:03:49AM -0800, Ian Rogers wrote:
-> On Wed, Jan 7, 2026 at 7:30 AM James Clark <james.clark@linaro.org> wrote:
-> > On 07/01/2026 1:32 pm, Thomas Richter wrote:
-> > >     # The expectation is that default output will have a cycles events on each
-> > >     # hybrid PMU. In situations with no cycles PMU events, like virtualized, this
-
-> > Reviewed-by: James Clark <james.clark@linaro.org>
- 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+On Thu, Jan 08, 2026 at 12:29:10PM +0100, Nicolas Schier wrote:
+> Raise the minimum shellcheck version for perf builds to 0.7.2, so that
+> systems with shellcheck versions below 0.7.2 will automatically skip the
+> shell script checking, even if NO_SHELLCHECK is unset.
+> 
+> Since commit 241f21be7d0f ("perf test perftool_testsuite: Use absolute
+> paths"), shellcheck versions before 0.7.2 break the perf build with
+> several SC1090 [2] warnings due to its too strict dynamic source
+> handling [1], e.g.:
+> 
+>   In tests/shell/base_probe/test_line_semantics.sh line 20:
+>   . "$DIR_PATH/../common/init.sh"
+>     ^---------------------------^ SC1090: Can't follow non-constant source. Use a directive to specify location.
+> 
+> Fixes: 241f21be7d0f ("perf test perftool_testsuite: Use absolute paths")
 
 Thanks, applied to perf-tools-next,
 
