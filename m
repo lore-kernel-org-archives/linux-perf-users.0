@@ -1,48 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678723148C6;
-	Tue, 13 Jan 2026 20:48:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFF426738C;
+	Tue, 13 Jan 2026 20:51:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768337293; cv=none; b=hmxsPqzhoGqSTWCdLIoOVgTfwuMKujieY4PUldnKlrCwPy2tDCXl9k0JPPn5c43Nq9w7K8cmuLPaowlrRyBQYLouy4FdgQVRLc+fhAVN36hGsTgnhcvw5o4eCTEL4RLNgB7Fjk8HWIkVmhrGY3EFRinl3y8qZsNgZH8CkSmHnck=
+	t=1768337469; cv=none; b=PAJIljQx8vDY0zmA5udUxibWXRwzsDZe5XwwxKl4ux2DUyLJnxYoP8SgyVhnkNvXHSfTZxkWF6rv05qLvFKP1hTLodDWFVosjYn63yXR9ntteffnKXfQX8d7FS8Vk0wzSfhzSvFEV6drufTLYT3stV1H5uHcjsnMLMV20f+UnIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768337293; c=relaxed/simple;
-	bh=vdFG9hByGvH/mt525ZcH9NzV9HauP0cj+HFRj5HNHSQ=;
+	s=arc-20240116; t=1768337469; c=relaxed/simple;
+	bh=NFwBjT4kFkm446c7jci53iP8L/+BbkTGCvjXyVA9DIg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HmTL3MZRSodSpzV/A6FFctsItSZrH5C4eomU8Fo54iYC2BJR+9hDSskp7T7P6Y2JA8I+P/NntJCkvKC5xHIbkLlKr0sRonBeqFy3LiS9nMZ6PFxMXDczdw6wNSnlYFPpQixxdztG30SclLtv/Q7DF1/uXjaIkyGMo6Cdq4zJr4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9uQHZ7y; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tfSpTDGkIL02fADMyEH4M7d+AIzsJJqBvd9W7UpAAoPg7ecWbpqerAsXfVQDZXSR72OzYXlXJsz2cHLFrZuYLEz30KeUl9ndZIi9A1UuNcu1m+z/oc9hLvKzYvd7xZROEIYOeChuVksGBBq+8iNiDGn/aoOQhLmo88+S087IoTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpGcWh0R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9uQHZ7y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B681C116C6;
-	Tue, 13 Jan 2026 20:48:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpGcWh0R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113D5C19422;
+	Tue, 13 Jan 2026 20:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768337292;
-	bh=vdFG9hByGvH/mt525ZcH9NzV9HauP0cj+HFRj5HNHSQ=;
+	s=k20201202; t=1768337468;
+	bh=NFwBjT4kFkm446c7jci53iP8L/+BbkTGCvjXyVA9DIg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R9uQHZ7yMpzuZlZ11q/nQXo4n5HyRgiM02k0n0o5Yew1vmZLRUrGK6NPj8ypzo9wX
-	 0gK2tqL9QxNpJtN0FjP/n5njsf1wfzvok/YYCwsfESw6VB+fxWQ166Rjny0pogfSdL
-	 mo8BUpZdobNLLMjHXQ7hiPpOfkWe8A7TjI5CAddZOyX8WU3UpCRAavQ8OUhOm97MjS
-	 ESppINVyyochfO8cWOMTy1sZxTVq71K12xeThIDjuPOo0wp+asyURbgUv+pSMaWDDQ
-	 LU+CUQxMb1rTx/f2zZ21ljKGY0SEzWgKYQPl6QfddYrmLdWOntSAhvlVE6CbMDe40g
-	 wGX1eGFG0om0Q==
-Date: Tue, 13 Jan 2026 17:48:09 -0300
+	b=JpGcWh0R5DZSq4fqhi8iLVZR+rsMu+oG3PF9MwSocWq80nSppKZSoMZofp9Rm6vDn
+	 fgYBwHuA+87BfEPr8dlizTCBGh6vRpv1HFHxdvp1qcmaQz3zIyQOfTL4IfB89JkYE7
+	 TeepAF3e2oZ9TsTUEUkWJPwv2CU0Mt0//YIOdyuhgZf1iBJoZ5pVmbT7y1BMHDDaU2
+	 E0T8TdvLaOba0U3Lt7a222wAcQnqF+uqXPCgne2uT/Ur/ZPSL4L/qYdPNdGjrbzEbR
+	 2QiQnvRT6vOaUr53xhLsoefy5C2oJpA7Myw6oTL08hjyhcIVMm9MDndB+U1/rObKoT
+	 TRMvH1kf7ohSA==
+Date: Tue, 13 Jan 2026 17:51:05 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Julia Lawall <Julia.Lawall@inria.fr>,
-	Peter Zijlstra <peterz@infradead.org>, yunbolyu@smu.edu.sg,
-	kexinsun@smail.nju.edu.cn, ratnadiraw@smu.edu.sg,
-	xutong.ma@inria.fr, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tools/perf/util/addr_location.c: update outdated comment
-Message-ID: <aWaviUF714ClwvI0@x1>
-References: <20251230165213.102961-1-Julia.Lawall@inria.fr>
- <CAP-5=fWMQ8H8_Y3pNzau8F4pMOZxAXgY=8Rk+YiN2LiYQY+Riw@mail.gmail.com>
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, Leo Yan <leo.yan@arm.com>
+Subject: Re: [PATCH v3 00/12] perf cs-etm/arm-spe: Remove hard coded config
+ fields
+Message-ID: <aWawOTKpREcVTtUL@x1>
+References: <20251212-james-perf-config-bits-v3-0-aa36a4846776@linaro.org>
+ <CAP-5=fXrLck7XACML16hzQO-pHGXA+qAM69kDDC6Za4O5S=SmA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,20 +56,29 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWMQ8H8_Y3pNzau8F4pMOZxAXgY=8Rk+YiN2LiYQY+Riw@mail.gmail.com>
+In-Reply-To: <CAP-5=fXrLck7XACML16hzQO-pHGXA+qAM69kDDC6Za4O5S=SmA@mail.gmail.com>
 
-On Thu, Jan 01, 2026 at 04:07:07PM -0800, Ian Rogers wrote:
-> On Tue, Dec 30, 2025 at 8:52 AM Julia Lawall <Julia.Lawall@inria.fr> wrote:
+On Tue, Dec 16, 2025 at 01:00:32PM -0800, Ian Rogers wrote:
+> On Fri, Dec 12, 2025 at 7:32 AM James Clark <james.clark@linaro.org> wrote:
 > >
-> > The function addr_location__put() was renamed addr_location__exit()
-> > in commit 0dd5041c9a0e ("perf addr_location: Add init/exit/copy
-> > functions").  Make the comment preceding the function consistent with
-> > the function itself.
+> > The specific config field that an event format attribute is in is
+> > consistently hard coded, even though the API is supposed to be that the
+> > driver publishes the config field name. To stop this pattern from being
+> > copy pasted and causing problems in the future, replace them all with
+> > calls to a new helper that returns the value that a user set.
 > >
-> > Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+> > This reveals some issues in evsel__set_config_if_unset(). It doesn't
+> > work with sparse bitfields, which are an unused but documented feature.
+> > And it also only writes to the attr.config field. To fix it we need to
+> > start tracking user changes for all config fields and then use existing
+> > helper functions that support sparse bitfields. Some other refactoring
+> > was also required and a test was added.
+> >
+> > Signed-off-by: James Clark <james.clark@linaro.org>
 > 
+> Outside of some nits, for the series:
 > Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks, applied to perf-tools-next,
+Are you ok with v4?
 
 - Arnaldo
