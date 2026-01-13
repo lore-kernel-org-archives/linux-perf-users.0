@@ -1,78 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DD850094C;
-	Tue, 13 Jan 2026 20:30:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDA150094C;
+	Tue, 13 Jan 2026 20:32:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768336238; cv=none; b=AJpoEzbKBG4ejK5VVykBonFJG/QLEFkmO03OY1RVvoilePR+tFtqE+aJn7+ogzyvrnLCA+NVlISudN4FL9pCJi4WR7SOcnyICzK6PFHSoSMAhJYt3zXSBR4bYqNtCuf2/jClvpBC1iz6VcQstiVI2B//mnrtk/H1V3YHFtrMXWE=
+	t=1768336360; cv=none; b=AqF7yZIlU2+cmoWSkkbmsI0EIGGAu+4lW/TjSTiMj7IT4yKZ8TgBRp0ylpgHc5kYz1MxawGg5QpKdrFzw5qt9d8SfnbHsTIt7J/qfU9e5RBGKOdseTxMHMyEpYzVeWZjKllGI9zGajau2UeWqzjvLKrq3mONd/QtIj4Q7Fhui6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768336238; c=relaxed/simple;
-	bh=Sihjm+ikTVFR+ea0zy0/V6dFHxtfUgZsis7BjlplsWI=;
+	s=arc-20240116; t=1768336360; c=relaxed/simple;
+	bh=H6PhnM2kCppM8aCBeFuEKsIPQgQaguqi5t6ulW9YN7A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ga14MZG0k/Lvcmt+rt6GgNCNl0PIXG6c+VlYWhbXix5avnfxrBLGa3dyHLizgXPahQnzd+/RRZxm+F/Xc0IMlApFsNIOzCJRjDpNm5ufzT6nfL/J9Uzug6Z31LX04sVgRLn83j5s44AAwBKDFGrXcVqXQwHrFVnETQv+EVHRtAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZYg/Seaq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HLroWwGxDmbEzDa1p+cYtDqA0vsK5LohYltYn0ehsnNHTo072xu4oeJEPasM/ji27DoJalx/TPW1VYC+2h7sQj5C/OHzYuiySHsOcFb3BP8nQ7KQutO05VqDKgLIJoATeIF6oLcx3461COHShEK1fBDX49S9sBRHYPeREZODqBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HCsXeInD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZYg/Seaq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D847C116C6;
-	Tue, 13 Jan 2026 20:30:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HCsXeInD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97D85C116C6;
+	Tue, 13 Jan 2026 20:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768336237;
-	bh=Sihjm+ikTVFR+ea0zy0/V6dFHxtfUgZsis7BjlplsWI=;
+	s=k20201202; t=1768336360;
+	bh=H6PhnM2kCppM8aCBeFuEKsIPQgQaguqi5t6ulW9YN7A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZYg/SeaqyBfhQ4J0wPlwVtJGCvOPIukQs7iE4izehrK9GBk361/9SyRt1OmG8VdgI
-	 2XqH28R+wk3Zu82r0bD+UnNRsq5Z7ouUsrd+Fsi3U6XBf88VV0Fb+yKZewe6VlVjoO
-	 VJ8mejAL/D1GPIrwlVGX+ofIE6V5ASZa1gl08c5S24ZZ1TSN4Znmz0BOdJpTi5qoEe
-	 vNOnbKxpj3I8awHIJiLNqCkFNJjP4uuZvbV33PhcWuNgGy7hk4oYf5QtYNnMbT0ANS
-	 Zh03B6zY/9XDC4aKuuYHYYudL/eSFLbziLyaZaPCozI4yBofm8JssU8Vx6WtPsBwo9
-	 /7zOV5aEhoXfw==
-Date: Tue, 13 Jan 2026 17:30:34 -0300
+	b=HCsXeInDtJ3LS6lqB9JbP2I+iXKQxPaFsV2mB+xnT2JM4kPJQQa1uw6n0GjSGKfBJ
+	 8p459RTS77vabkXDF5tDCpmP7BV5usl+yl0q8HwNFkR+BsJqTj1ADn/8ZYGeZlyXj4
+	 yzLyyRuDXyWZx8hcMaeS5mEEw/IvvkEfyYxXpX3dOvV3kJdFVFmCZt5pF+DyTxeDR9
+	 /9h+EDm/6LOQm9ocnfsMWFaJe8cnOlhDY9YDOYZIrL+/Y10TtmkSsinlG8HSfId2ae
+	 9CRQ/S3o6KaAwaxuxZO+Gj7zMUDDi555mdcIBixcMavTsUM8J1xJ1wqoyY9EZILgdm
+	 s22cZ+XaKvHkA==
+Date: Tue, 13 Jan 2026 17:32:37 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] perf Documentation: Correct branch stack sampling
- call-stack option
-Message-ID: <aWaraqlO-swgAdY8@x1>
-References: <20251216013949.1557008-1-dapeng1.mi@linux.intel.com>
- <e2a105fc-8b5c-4c7d-ba29-de8bb560cc85@linux.intel.com>
- <aV9LVqqrhfW6DfbQ@google.com>
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Akio Kakuno <fj3333bs@aa.jp.fujitsu.com>,
+	Yoshihiro Furudera <fj5100bi@fujitsu.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf vendor events arm64: Remove uncountable events
+Message-ID: <aWar5eUPISsiLA00@x1>
+References: <20251231-james-perf-uncountable-events-v1-1-f2d9932999fd@linaro.org>
+ <CAP-5=fUNJLoy25rS=diSXNR9h-h4m6EFPTy8M+KpTKxm6HtDSA@mail.gmail.com>
+ <951f10c5-e1ac-45d4-b7ca-56aa32e57cd6@linaro.org>
+ <CAP-5=fWQU59Vyb6y+W6ObOTh3nzFSofsn8sc6JzwZp7FiV+n6w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aV9LVqqrhfW6DfbQ@google.com>
+In-Reply-To: <CAP-5=fWQU59Vyb6y+W6ObOTh3nzFSofsn8sc6JzwZp7FiV+n6w@mail.gmail.com>
 
-On Wed, Jan 07, 2026 at 10:14:46PM -0800, Namhyung Kim wrote:
-> Hello,
-> 
-> On Wed, Jan 07, 2026 at 08:58:53AM +0800, Mi, Dapeng wrote:
-> > @Arnaldo, @Kim, @Ian
-> > 
-> > Kindly ping ...�
-> 
-> Sorry for the delay.
+On Sat, Jan 03, 2026 at 05:27:49PM -0800, Ian Rogers wrote:
+> On Sat, Jan 3, 2026 at 8:38 AM James Clark <james.clark@linaro.org> wrote:
+> > On 02/01/2026 3:29 pm, Ian Rogers wrote:
+> > > On Wed, Dec 31, 2025 at 4:13 AM James Clark <james.clark@linaro.org> wrote:
+> > >> These events are never countable by the PMU and are only intended to
+> > >> be used as external inputs to trace. Therefore showing them in 'perf
+> > >> list' is misleading so remove them.
 
-Ditto
+> > > What does "trace" mean in this context?
 
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: 955f6def5590 ("perf record: Add remaining branch filters: "no_cycles", "no_flags" & "hw_index"")
-> > > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> > CPU trace, Either ETE (Embedded Trace Extension) or ETM (Embedded Trace
+> > Macrocell). You can select PMU events as inputs to the trace block to
+> > make it do things like start and stop tracing.
+
+> Ah ok, trace immediately makes me think of `perf trace` currently.
+> Presumably there's no perf integration for ETE and ETM that somehow
+> use these event encodings? Looks not and the changes make sense to me.
 > 
-> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks, applied to perf-tools-next,
 
