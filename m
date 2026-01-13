@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D58288C0E;
-	Tue, 13 Jan 2026 01:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94790201278;
+	Tue, 13 Jan 2026 02:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768269576; cv=none; b=XW3ZUbc94yXdUQEtnPK80nkuyuqe2XBhqB7Pk5JVsVgHHH8BeHtFXZkjod3h/6pfqBMRyzI+0hnXObVf4F4pB2n+OcSRJ34EnbU9uSj+YGXt4BFvsOuqXaO70bqdDi0vpvYuYTxacr6MeRn6Znp+YS1+DP9NStbdgZutMi08twg=
+	t=1768271394; cv=none; b=rQy3ZPPgLDknCW5K1QD7b9hen3e4kGr+QFdt7kZZbi4vvXroYXJLB1o3TVveQbg51ewNqo2T3zdnNOIgX9NdohzEUeZ+kpATZ/gnAGkoPZHPE99LJWvR/BdZ5tfH8WzRpSbULAszAQpi2zhO+1bW/uAtzRq7EBhNAqEBzmWB8Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768269576; c=relaxed/simple;
-	bh=OUhOmPKSxFsdzDlgxow29cCFcMM59b32pyTyf1m6AOQ=;
+	s=arc-20240116; t=1768271394; c=relaxed/simple;
+	bh=/R8dHtXcKpyPoXVvJ4FTpRAkbLS4LXUM+SZLruABheo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HuKzUzKxiwcoBbo6j9NiPYyT1CDd0FmvigyR+VCMyXXmywM8Dz+2+cLo2Y4zKuyX6rwLAQgJL2S/YvNcIOjzSEFM/vgQkEMACm2Xdco2LN0A/3YLG/7xW2kKioufu2dFKjQBR0KXkIf7hPLZj3wnItFTX8294WT4yhZJIrkv6Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HPOaeQqb; arc=none smtp.client-ip=192.198.163.16
+	 In-Reply-To:Content-Type; b=TJ3HiwCx7SVO1W2V6XmXugJiSsvO22YOJAafjZcB7mvd9y3mHk4kKxnFKk2sh2dCJwhBbrVf2egIRHxSak5mDjKFb8xSmRl+vUDLHMKivFGlyUqFVCFqgBZPH5OfJuKFU2mzmbaiV3Ko1PjPZ1gRRGCbYOnO9Frq0TL79Xe0kK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MKybxUcD; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HPOaeQqb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MKybxUcD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768269574; x=1799805574;
+  t=1768271393; x=1799807393;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=OUhOmPKSxFsdzDlgxow29cCFcMM59b32pyTyf1m6AOQ=;
-  b=HPOaeQqbZF2Z7TT9b2sNZ/t05Vc/u7pOJuzoCdhrZi6/8o/+tEwpydEZ
-   jTwTfMud3bh6xaGIpdup5Vjuje/KHBMDeGz+kTMIiNc7xzrd5UdQvXpzA
-   z+IEYfrdDm3h3tKUYIExyOAu3JsYthNjUbTclnwfyLdYkGdAFui5g2VTm
-   tzO5XyI41ecXjIGdKsMx6rOyl5LRmmJVnoH5wfX/HfSYMBaKsIJuepuvF
-   3twcmSTRH9Vtr+VCpnR9inBktTX1tszScwzDauuguCt1psuqigSQOESTN
-   9fdVYSLCovTWxxxojkZqybCHzFcptBNbelgvgPzynDW7Ze+EmBpBwj+6e
-   A==;
-X-CSE-ConnectionGUID: g6fyJlx0SzGN3UdjIkpXeQ==
-X-CSE-MsgGUID: Ei6SZq7WRnuqJ5wLNgzrVg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="57106881"
+  bh=/R8dHtXcKpyPoXVvJ4FTpRAkbLS4LXUM+SZLruABheo=;
+  b=MKybxUcDC60h9S69/X5yZuA7Zs677Ygq+NfhbYNUBi1NrlciEa7KjL81
+   2y6f90AFtm4v2J8+gsZOIU97VxFntpF3FuCRcjgwGezb3pXK+3tWF+JX7
+   6GUqW+VeCK6NE7dtyBouiYfqm02KMdngzqRoGz722d6CVSzXVbDyNTISw
+   Bw/vvQ0wuag436nW3BaDgZ8H2P2CSQQVeHW1w+uneM40KbvYbil6QXoiW
+   H82T0EEgHs8tqIgWLEvc0aoe4ewLA/vU7FH8KHMZmUZ8nwGiQCm62t/Th
+   nfjABHajqfPHPNVMWtQKGL6g5rnzMqzulv0dQ9DR8IsrYgZC4i6eWI5rE
+   w==;
+X-CSE-ConnectionGUID: oejvZasXQaGhi+axuyn/LA==
+X-CSE-MsgGUID: KRZ6yLH1Ts+E7qee/noI9Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="80271734"
 X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="57106881"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 17:59:33 -0800
-X-CSE-ConnectionGUID: Y9q7cfnSS1+ClYcVUqrvbQ==
-X-CSE-MsgGUID: qg2QkhnuS8WOj4XO15kpLw==
+   d="scan'208";a="80271734"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 18:29:53 -0800
+X-CSE-ConnectionGUID: 9agw02yzRVG8J5EmBZxoNw==
+X-CSE-MsgGUID: kaSKE/jlTk6DfNppUE3mDg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="204340254"
+   d="scan'208";a="204655806"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 17:59:29 -0800
-Message-ID: <c08e5eeb-2949-4a13-951d-b7ae39d1e062@linux.intel.com>
-Date: Tue, 13 Jan 2026 09:59:26 +0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 18:29:49 -0800
+Message-ID: <35123882-b909-43b7-879d-f3802dca2da1@linux.intel.com>
+Date: Tue, 13 Jan 2026 10:29:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,7 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 3/7] perf/x86/intel: Add core PMU support for DMR
+Subject: Re: [Patch v2 7/7] perf/x86/intel: Add support for rdpmc user disable
+ feature
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
  <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -63,133 +64,57 @@ Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
  Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
  Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>
 References: <20260112051649.1113435-1-dapeng1.mi@linux.intel.com>
- <20260112051649.1113435-4-dapeng1.mi@linux.intel.com>
- <20260112104131.GF830755@noisy.programming.kicks-ass.net>
+ <20260112051649.1113435-8-dapeng1.mi@linux.intel.com>
+ <20260112105738.GG830755@noisy.programming.kicks-ass.net>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260112104131.GF830755@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260112105738.GG830755@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-On 1/12/2026 6:41 PM, Peter Zijlstra wrote:
-> On Mon, Jan 12, 2026 at 01:16:45PM +0800, Dapeng Mi wrote:
->> @@ -7906,6 +8072,22 @@ __init int intel_pmu_init(void)
->>  		intel_pmu_pebs_data_source_skl(true);
->>  		break;
->>  
->> +	case INTEL_DIAMONDRAPIDS_X:
->> +		intel_pmu_init_pnc(NULL);
->> +		x86_pmu.pebs_ept = 1;
->> +		x86_pmu.hw_config = hsw_hw_config;
->> +		x86_pmu.pebs_latency_data = pnc_latency_data;
->> +		x86_pmu.get_event_constraints = glc_get_event_constraints;
->> +		extra_attr = boot_cpu_has(X86_FEATURE_RTM) ?
->> +			hsw_format_attr : nhm_format_attr;
->> +		extra_skl_attr = skl_format_attr;
->> +		mem_attr = glc_events_attrs;
->> +		td_attr = glc_td_events_attrs;
->> +		tsx_attr = glc_tsx_events_attrs;
->> +		pr_cont("Panthercove events, ");
->> +		name = "panthercove";
->> +		break;
->> +
->>  	case INTEL_ALDERLAKE:
->>  	case INTEL_ALDERLAKE_L:
->>  	case INTEL_RAPTORLAKE:
-> Does something like so make sense?
+On 1/12/2026 6:57 PM, Peter Zijlstra wrote:
+> On Mon, Jan 12, 2026 at 01:16:49PM +0800, Dapeng Mi wrote:
 >
+>> +static void intel_pmu_update_rdpmc_user_disable(struct perf_event *event)
+>> +{
+>> +	/*
+>> +	 * Counter scope's user-space rdpmc is disabled by default
+>> +	 * except two cases.
+>> +	 * a. rdpmc = 2 (user space rdpmc enabled unconditionally)
+>> +	 * b. rdpmc = 1 and the event is not a system-wide event.
+>> +	 *    The count of non-system-wide events would be cleared when
+>> +	 *    context switches, so no count data is leaked.
+>> +	 */
+>> +	if (x86_pmu_has_rdpmc_user_disable(event->pmu)) {
+>> +		if (x86_pmu.attr_rdpmc == X86_USER_RDPMC_ALWAYS_ENABLE ||
+>> +		    (x86_pmu.attr_rdpmc == X86_USER_RDPMC_CONDITIONAL_ENABLE &&
+>> +		     event->ctx->task))
+>> +			event->hw.config &= ~ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
+>> +		else
+>> +			event->hw.config |= ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
+>> +	}
+>> +}
+> Is it not simpler to invert that condition?
 >
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -8066,6 +8066,9 @@ __init int intel_pmu_init(void)
->  
->  	glc_common:
->  		intel_pmu_init_glc(NULL);
-> +		intel_pmu_pebs_data_source_skl(true);
-> +	
-> +	glc_base:
->  		x86_pmu.pebs_ept = 1;
->  		x86_pmu.hw_config = hsw_hw_config;
->  		x86_pmu.get_event_constraints = glc_get_event_constraints;
-> @@ -8075,24 +8078,14 @@ __init int intel_pmu_init(void)
->  		mem_attr = glc_events_attrs;
->  		td_attr = glc_td_events_attrs;
->  		tsx_attr = glc_tsx_events_attrs;
-> -		intel_pmu_pebs_data_source_skl(true);
->  		break;
->  
->  	case INTEL_DIAMONDRAPIDS_X:
-> -		intel_pmu_init_pnc(NULL);
-> -		x86_pmu.pebs_ept = 1;
-> -		x86_pmu.hw_config = hsw_hw_config;
-> -		x86_pmu.pebs_latency_data = pnc_latency_data;
-> -		x86_pmu.get_event_constraints = glc_get_event_constraints;
-> -		extra_attr = boot_cpu_has(X86_FEATURE_RTM) ?
-> -			hsw_format_attr : nhm_format_attr;
-> -		extra_skl_attr = skl_format_attr;
-> -		mem_attr = glc_events_attrs;
-> -		td_attr = glc_td_events_attrs;
-> -		tsx_attr = glc_tsx_events_attrs;
->  		pr_cont("Panthercove events, ");
->  		name = "panthercove";
-> -		break;
-> +		intel_pmu_init_pnc(NULL);
-> +		x86_pmu.pebs_latency_data = pnc_latency_data;
-> +		goto glc_base;
->  
->  	case INTEL_ALDERLAKE:
->  	case INTEL_ALDERLAKE_L:
+> 	if (x86_pmu.attr_rdpmc == X86_USER_RDPMC_ALWAYS_NEVER ||
+> 	    !event->ctx->task)
+> 		event->hw.config |= ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
+> 	else
+> 		event->hw.config &= ~ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
 
-Yes, that looks better, but "goto behind" seems a little weird, I tweak the
-code a little bit. Thanks.
+Hmm, it seems the logic changes along with the code change. The system-wide
+event should be allowed to read with rdpmc from user space when attr_rdpmc
+== X86_USER_RDPMC_ALWAYS_ENABLE, but it doesn't with the new code.
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 77cf849a1381..85134d80d9fc 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -8155,26 +8155,23 @@ __init int intel_pmu_init(void)
-                x86_pmu.extra_regs = intel_rwc_extra_regs;
-                pr_cont("Granite Rapids events, ");
-                name = "granite_rapids";
-+               goto glc_common;
-+
-+       case INTEL_DIAMONDRAPIDS_X:
-+               intel_pmu_init_pnc(NULL);
-+               x86_pmu.pebs_latency_data = pnc_latency_data;
-+
-+               pr_cont("Panthercove events, ");
-+               name = "panthercove";
-+               goto glc_base;
+If we don't change the logic and just invert the condition, the code
+simplicity has no much change.
 
-        glc_common:
-                intel_pmu_init_glc(NULL);
--               x86_pmu.pebs_ept = 1;
--               x86_pmu.hw_config = hsw_hw_config;
--               x86_pmu.get_event_constraints = glc_get_event_constraints;
--               extra_attr = boot_cpu_has(X86_FEATURE_RTM) ?
--                       hsw_format_attr : nhm_format_attr;
--               extra_skl_attr = skl_format_attr;
--               mem_attr = glc_events_attrs;
--               td_attr = glc_td_events_attrs;
--               tsx_attr = glc_tsx_events_attrs;
-                intel_pmu_pebs_data_source_skl(true);
--               break;
-
--       case INTEL_DIAMONDRAPIDS_X:
--               intel_pmu_init_pnc(NULL);
-+       glc_base:
-                x86_pmu.pebs_ept = 1;
-                x86_pmu.hw_config = hsw_hw_config;
--               x86_pmu.pebs_latency_data = pnc_latency_data;
-                x86_pmu.get_event_constraints = glc_get_event_constraints;
-                extra_attr = boot_cpu_has(X86_FEATURE_RTM) ?
-                        hsw_format_attr : nhm_format_attr;
-@@ -8182,8 +8179,6 @@ __init int intel_pmu_init(void)
-                mem_attr = glc_events_attrs;
-                td_attr = glc_td_events_attrs;
-                tsx_attr = glc_tsx_events_attrs;
--               pr_cont("Panthercove events, ");
--               name = "panthercove";
+	if (x86_pmu.attr_rdpmc == X86_USER_RDPMC_ALWAYS_NEVER ||
+            (x86_pmu.attr_rdpmc == X86_USER_RDPMC_CONDITIONAL_ENABLE &&
+	    !event->ctx->task))
+		event->hw.config |= ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
+	else
+		event->hw.config &= ~ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
 
 
