@@ -1,163 +1,112 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8839829E0F7;
-	Tue, 13 Jan 2026 14:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5EA1CAA79;
+	Tue, 13 Jan 2026 15:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768315322; cv=none; b=Yo2vobC0zpVZ8dcH36qKhgxG+OkmyDhOgUXZ4fRNqth5ONq6bebAaBWQIi85rPjMYQ5mulZuHrF5JNvXw10EdH7CZo6ijLD1MVlR1HR4+4Ta7ET0pCZXkmBCJ0Se3JYeF71gZUqy17gHGY7CD0ngqladvHmwq/vhA/wNwSw1BzE=
+	t=1768319307; cv=none; b=PTTLq6IGorB8SFBk4gpvEJxdeu39pUl1zEj0u1bFF2iqoEvm8cp8zp5Kq7J28n+uPk2LVvnIL2TUNafJNWeue3+a8ub7Dd0HO8V9jFG0GjqGNx9Qe7n7lYWH2efyrGMrf7szZKGEJyITaxwSjiAHeBeUiY/sg+9+fK5MLPlJm2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768315322; c=relaxed/simple;
-	bh=6hMA6jS4aUELjQ5Z95gzXaxpnknDZ9XcW/J9ztvNWWU=;
+	s=arc-20240116; t=1768319307; c=relaxed/simple;
+	bh=Mw1wuH5t6knsXTu/DD9sgF9X26UR3qFSwgFjSQ4aft4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GWG3BISvh2I0mBpzIvilX3uPM4YomiX00lCGUPUYXGlRkIAg207pGHjC5hD3KWUHwVVn6XZAp+inksxVYmm78FhO9F9sQneHmzspk5Q2GZpy6E++kXAs0mMAYdyasFnOhE7YPiozsDZUIoqm8K6LTN8mJdadhVE7bOGnzy/rg48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from gentoo.org (gentoo.cern.ch [IPv6:2001:1458:202:227::100:45])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: amadio)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 2AFA2341050;
-	Tue, 13 Jan 2026 14:41:58 +0000 (UTC)
-Date: Tue, 13 Jan 2026 15:41:53 +0100
-From: Guilherme Amadio <amadio@gentoo.org>
-To: Ian Rogers <irogers@google.com>
-Cc: "Jayaramappa, Srilakshmi" <sjayaram@akamai.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=eBmC61t5mbRqilIICpcUeGQojsJcmlyUbvhIWfDTXDhr9DTC2dOpIRcD+Ya8fQvpxej7ZxmDxJ+PSPCFwkbRKzYktFAGk+BY3BacoBbxaR7Hn1Caf1m5YSgKVDbBxMBrpWG5vhBL7ZIzICeJQLEZCpfZd8BgjciXX6Ive+1ocY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dWHYGsmj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dWHYGsmj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE6B1C116C6;
+	Tue, 13 Jan 2026 15:48:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768319307;
+	bh=Mw1wuH5t6knsXTu/DD9sgF9X26UR3qFSwgFjSQ4aft4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dWHYGsmjcSKbL0PDWZBeGtbuPGgxz7xJTUIQibOKNTw4N8qSkbRnZLW23lafbf3JY
+	 z5xfPN0SyQm8rT/dZqrTxt5MzYvxjNgac2lMsMDAwWE3undNCPcvnmL02Rg7PjNVsw
+	 ufmWeJfRc1fXQPcsezUQzWhJ8mju1L0Rz7C235IVBnZq+sBYHqROGrWGYGM+A30bXC
+	 vco51mWnea/bmeBAhuWbJmxdjHQFD4QD23A8vAY0OW4/sM0aPLj7wMSwbgoNY2hmZh
+	 YAohly6+eJ7FhN3GhB1C3nZ4bfB6lteJJlxHPmaRS9mZtELfaljuVN+aomff2lBMQK
+	 0V98Qohydsf/Q==
+Date: Tue, 13 Jan 2026 08:48:24 -0700
+From: Tycho Andersen <tycho@kernel.org>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] perf test subcmd help: Add exclude disjoint subcmd
- names
-Message-ID: <aWZZsTdsiDKhlNa4@gentoo.org>
-References: <20251208172339.1445817-1-irogers@google.com>
- <BY3PR17MB518624354091DB1B4FB7A7FCA5A1A@BY3PR17MB5186.namprd17.prod.outlook.com>
- <CAP-5=fXT=s7jnZwOK=HxWHAznjStrHvgZuJ9p62EGMNG1NYnqw@mail.gmail.com>
+	James Clark <james.clark@linaro.org>,
+	Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [PATCH] perf: fix segfault in `lock contention -b`
+Message-ID: <aWZpSBMnz43t1Mss@tycho.pizza>
+References: <20260109164417.396138-1-tycho@kernel.org>
+ <fb38d19e-f4b4-4f89-a41a-78a845861468@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXT=s7jnZwOK=HxWHAznjStrHvgZuJ9p62EGMNG1NYnqw@mail.gmail.com>
+In-Reply-To: <fb38d19e-f4b4-4f89-a41a-78a845861468@amd.com>
 
-Dear Ian,
-
-On Thu, Jan 08, 2026 at 11:27:51AM -0800, Ian Rogers wrote:
-> On Wed, Dec 10, 2025 at 5:12 PM Jayaramappa, Srilakshmi
-> <sjayaram@akamai.com> wrote:
-> >
-> >
-> > ________________________________________
-> > From: Ian Rogers <irogers@google.com>
-> > Sent: Monday, December 8, 2025 9:23 AM
-> > To: Jayaramappa, Srilakshmi; Guilherme Amadio; Peter Zijlstra; Ingo Molnar; Arnaldo Carvalho de Melo; Namhyung Kim; Alexander Shishkin; Jiri Olsa; Ian Rogers; Adrian Hunter; linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: [PATCH v1] perf test subcmd help: Add exclude disjoint subcmd names
-> >
-> > !-------------------------------------------------------------------|
-> >   This Message Is From an External Sender
-> >   This message came from outside your organization.
-> > |-------------------------------------------------------------------!
-> >
-> > The test is based on an error/fix poseted to linux-perf-users.
-> >
-> > Reported-by: Sri Jayaramappa <sjayaram@akamai.com>
-> > Closes: https://urldefense.com/v3/__https://lore.kernel.org/linux-perf-users/20251202213632.2873731-1-sjayaram@akamai.com/__;!!GjvTz_vk!XehekKNUE4Ib_tvqIH6PMIIhly4X3BZ-Y40RC1HKMQ-6OdYEFvUPQhyWv_gk9vsRRN4_RcOLS2Bh0CQ$
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/tests/subcmd-help.c | 26 ++++++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >
-> > diff --git a/tools/perf/tests/subcmd-help.c b/tools/perf/tests/subcmd-help.c
-> > index 2280b4c0e5e7..9da96a16fd20 100644
-> > --- a/tools/perf/tests/subcmd-help.c
-> > +++ b/tools/perf/tests/subcmd-help.c
-> > @@ -95,10 +95,36 @@ static int test__exclude_cmdnames(struct test_suite *test __maybe_unused,
-> >         return TEST_OK;
-> >  }
-> >
-> > +static int test__exclude_cmdnames_no_overlap(struct test_suite *test __maybe_unused,
-> > +                                            int subtest __maybe_unused)
-> > +{
-> > +       struct cmdnames cmds1 = {};
-> > +       struct cmdnames cmds2 = {};
-> > +
-> > +       add_cmdname(&cmds1, "read-vdso32", 11);
-> > +       add_cmdname(&cmds2, "archive", 7);
-> > +
-> > +       TEST_ASSERT_VAL("invalid original size", cmds1.cnt == 1);
-> > +       TEST_ASSERT_VAL("invalid original size", cmds2.cnt == 1);
-> > +
-> > +       exclude_cmds(&cmds1, &cmds2);
-> > +
-> > +       TEST_ASSERT_VAL("invalid excluded size", cmds1.cnt == 1);
-> > +       TEST_ASSERT_VAL("invalid excluded size", cmds2.cnt == 1);
-> > +
-> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "read-vdso32") == 1);
-> > +       TEST_ASSERT_VAL("wrong cmd", is_in_cmdlist(&cmds1, "archive") == 0);
-> > +
-> > +       clean_cmdnames(&cmds1);
-> > +       clean_cmdnames(&cmds2);
-> > +       return TEST_OK;
-> > +}
-> > +
-> >  static struct test_case tests__subcmd_help[] = {
-> >         TEST_CASE("Load subcmd names", load_cmdnames),
-> >         TEST_CASE("Uniquify subcmd names", uniq_cmdnames),
-> >         TEST_CASE("Exclude duplicate subcmd names", exclude_cmdnames),
-> > +       TEST_CASE("Exclude disjoint subcmd names", exclude_cmdnames_no_overlap),
-> >         {       .name = NULL, }
-> >  };
-> >
-> > --
-> > 2.52.0.223.gf5cc29aaa4-goog
-> >
-> >
-> > Reviewed-by: Sri Jayaramappa <sjayaram@akamai.com>
+On Tue, Jan 13, 2026 at 08:41:24AM +0530, K Prateek Nayak wrote:
+> Hello Tycho,
 > 
-> Ping.
+> On 1/9/2026 10:14 PM, Tycho Andersen wrote:
+> > @@ -43,19 +43,20 @@ static void check_slab_cache_iter(struct lock_contention *con)
+> >  	con->btf = btf__load_vmlinux_btf();
+> >  	if (con->btf == NULL) {
+> >  		pr_debug("BTF loading failed: %s\n", strerror(errno));
+> > -		return;
+> > +		return -errno;
+> >  	}
+> >  
+> >  	ret = btf__find_by_name_kind(con->btf, "bpf_iter__kmem_cache", BTF_KIND_STRUCT);
+> >  	if (ret < 0) {
+> >  		bpf_program__set_autoload(skel->progs.slab_cache_iter, false);
+> >  		pr_debug("slab cache iterator is not available: %d\n", ret);
+> > -		return;
+> > +		return ret;
+> >  	}
+> >  
+> >  	has_slab_iter = true;
+> >  
+> >  	bpf_map__set_max_entries(skel->maps.slab_caches, con->map_nr_entries);
+> > +	return 0;
+> >  }
+> >  
+> >  static void run_slab_cache_iter(void)
+> > @@ -301,7 +302,8 @@ int lock_contention_prepare(struct lock_contention *con)
+> >  			skel->rodata->use_cgroup_v2 = 1;
+> >  	}
+> >  
+> > -	check_slab_cache_iter(con);
+> > +	if (check_slab_cache_iter(con) < 0)
+> > +		return -1;
+> >  
+> >  	if (con->filters->nr_slabs && has_slab_iter) {
+> 
+> nit.
+> 
+> Now that lock_contention_prepare() bails out when
+> check_slab_cache_iter() fails, we no longer need the "has_slab_iter"
+> global indicator.
+> 
+> Both this, and run_slab_cache_iter() that depend on "has_slab_iter"
+> will only run if check_slab_cache_iter() succeeded and the global
+> indicator will be true in both those cases.
+> 
+> Can be separate follow-up cleanup.
 
-Assuming this is for me, I just tried the test and it correctly
-fails for me on perf-tools-next (I applied the diff by hand, as it
-didn't apply cleanly onto the commit below):
+I guess this depends on whether it should work without BTF. Presumably
+we'd want to keep this check if the goal is to make it work without
+BTF.
 
-gentoo linux $ git log -1 --format=short
-commit 75326c67aa8c43000819a2ac29f22eb27846d545 (HEAD -> perf-tools-next, perf-tools-next/tmp.perf-tools-next, perf-tools-next/perf-tools-next)
-Author: Derek Foreman <derek.foreman@collabora.com>
+I'm can send an addition cleanup patch if we decide not to go that
+route.
 
-    perf data: Fix coding style
-gentoo linux $ tools/perf/perf version
-perf version 6.19.rc4.g75326c67aa8c
-gentoo linux $ git diff --stat
- tools/perf/tests/subcmd-help.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-gentoo linux $ sudo ./tools/perf/perf test -vF disjoint
---- start ---
-perf: help.c:107: exclude_cmds: Assertion `cmds->names[ci] == NULL' failed.
-Aborted                    (core dumped) tools/perf/perf test -vF disjoint
-
-Then I applied the patch by Sri Jayaramappa with the fix, and the test now works:
-
-gentoo linux $ sudo tools/perf/perf test -vF disjoint
---- start ---
----- end ----
- 68.4: Exclude disjoint subcmd names                                 : Ok
-
-So you can add a Reviewed-by: Guilherme Amadio <amadio@gentoo.org>
-and/or Tested-by: Guilherme Amadio <amadio@gentoo.org> for both this and
-the patch at the link below:
-
-https://lore.kernel.org/lkml/20251202213632.2873731-1-sjayaram@akamai.com/
-
-Cheers,
--Guilherme
+Tycho
