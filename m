@@ -1,53 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDA150094C;
-	Tue, 13 Jan 2026 20:32:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5837A30DECA;
+	Tue, 13 Jan 2026 20:33:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768336360; cv=none; b=AqF7yZIlU2+cmoWSkkbmsI0EIGGAu+4lW/TjSTiMj7IT4yKZ8TgBRp0ylpgHc5kYz1MxawGg5QpKdrFzw5qt9d8SfnbHsTIt7J/qfU9e5RBGKOdseTxMHMyEpYzVeWZjKllGI9zGajau2UeWqzjvLKrq3mONd/QtIj4Q7Fhui6U=
+	t=1768336430; cv=none; b=junhjbVbqYS1X6AB72pDWvYb0hldyK6vfql3Za/4i9TIp3GzBERXt72Mp2xrFwNbEw1ePFYXV4AGq+qIWF8dNS7zBW4ZW1tk3ThoUuGCslQe7tCzE5dRTsrzZfQp7YzaWasxJLiRHKj8X01COvFznXU+GkkrQMPXebkV7Ci3yhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768336360; c=relaxed/simple;
-	bh=H6PhnM2kCppM8aCBeFuEKsIPQgQaguqi5t6ulW9YN7A=;
+	s=arc-20240116; t=1768336430; c=relaxed/simple;
+	bh=3aT+kpbubWgFMw/ZgtUdcRfDKHUmGwhJqnka9NbulE8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HLroWwGxDmbEzDa1p+cYtDqA0vsK5LohYltYn0ehsnNHTo072xu4oeJEPasM/ji27DoJalx/TPW1VYC+2h7sQj5C/OHzYuiySHsOcFb3BP8nQ7KQutO05VqDKgLIJoATeIF6oLcx3461COHShEK1fBDX49S9sBRHYPeREZODqBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HCsXeInD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HO9qX6Q/gGkjpNOiEM7XYQ44Cye2aaqSdZBE5GsxfcIyyrHjJnsy0aucxg/vHaeZBqGJZkI4KAUgbP3C4knRafL9WN1PSQ6Rp7ZruciRq2Itz+Vonivz4E4ka6RtDdjZPEoHztfH8tZU6a7gVNF0KA1qDX49qAnneVlQPaBK3gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABZmwDqt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HCsXeInD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97D85C116C6;
-	Tue, 13 Jan 2026 20:32:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABZmwDqt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 926DAC19423;
+	Tue, 13 Jan 2026 20:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768336360;
-	bh=H6PhnM2kCppM8aCBeFuEKsIPQgQaguqi5t6ulW9YN7A=;
+	s=k20201202; t=1768336428;
+	bh=3aT+kpbubWgFMw/ZgtUdcRfDKHUmGwhJqnka9NbulE8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HCsXeInDtJ3LS6lqB9JbP2I+iXKQxPaFsV2mB+xnT2JM4kPJQQa1uw6n0GjSGKfBJ
-	 8p459RTS77vabkXDF5tDCpmP7BV5usl+yl0q8HwNFkR+BsJqTj1ADn/8ZYGeZlyXj4
-	 yzLyyRuDXyWZx8hcMaeS5mEEw/IvvkEfyYxXpX3dOvV3kJdFVFmCZt5pF+DyTxeDR9
-	 /9h+EDm/6LOQm9ocnfsMWFaJe8cnOlhDY9YDOYZIrL+/Y10TtmkSsinlG8HSfId2ae
-	 9CRQ/S3o6KaAwaxuxZO+Gj7zMUDDi555mdcIBixcMavTsUM8J1xJ1wqoyY9EZILgdm
-	 s22cZ+XaKvHkA==
-Date: Tue, 13 Jan 2026 17:32:37 -0300
+	b=ABZmwDqtugglqef1nApU9lj+aiPMWVJmIg+45UsVxdk/BLz7LQc6QzG1j1D9xfo/L
+	 F64sPGoQtX3vpxcZlaR0Osv5NrXs7cY9vr74kPs4wCJ/6reVWUZnSkXd2y9H0sSNZT
+	 AebcN6veyGc3UPDQkeZkG+hHogIi3ot870muUXwMMfl1to6l+PDMirurjDWkE4FMEs
+	 0i/TLqlcueOiZFpXjGxGbVbI1TY8ZLiIqcU+li09LXpPyWYoaHQLBPdCwgjLCCDqiB
+	 HawcvtMe5M8NNKJlRPc1RNj4BtO7259ovBnDCzXGoe+apfTqto1dUGItiZwm3Qx37V
+	 z9XTbuWKhuYsQ==
+Date: Tue, 13 Jan 2026 17:33:44 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: James Clark <james.clark@linaro.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Akio Kakuno <fj3333bs@aa.jp.fujitsu.com>,
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf vendor events arm64: Remove uncountable events
-Message-ID: <aWar5eUPISsiLA00@x1>
-References: <20251231-james-perf-uncountable-events-v1-1-f2d9932999fd@linaro.org>
- <CAP-5=fUNJLoy25rS=diSXNR9h-h4m6EFPTy8M+KpTKxm6HtDSA@mail.gmail.com>
- <951f10c5-e1ac-45d4-b7ca-56aa32e57cd6@linaro.org>
- <CAP-5=fWQU59Vyb6y+W6ObOTh3nzFSofsn8sc6JzwZp7FiV+n6w@mail.gmail.com>
+	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Dump callchain context marker names
+Message-ID: <aWasKG0TD5dnpDSK@x1>
+References: <20260102-james-perf-dump-callchain-markers-v1-1-3a9bdec20c58@linaro.org>
+ <CAP-5=fUmbpDb0S33qb82Wvh2PjSGOWYYFi-70FZSWD6L7TuwLw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,25 +50,26 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWQU59Vyb6y+W6ObOTh3nzFSofsn8sc6JzwZp7FiV+n6w@mail.gmail.com>
+In-Reply-To: <CAP-5=fUmbpDb0S33qb82Wvh2PjSGOWYYFi-70FZSWD6L7TuwLw@mail.gmail.com>
 
-On Sat, Jan 03, 2026 at 05:27:49PM -0800, Ian Rogers wrote:
-> On Sat, Jan 3, 2026 at 8:38 AM James Clark <james.clark@linaro.org> wrote:
-> > On 02/01/2026 3:29 pm, Ian Rogers wrote:
-> > > On Wed, Dec 31, 2025 at 4:13 AM James Clark <james.clark@linaro.org> wrote:
-> > >> These events are never countable by the PMU and are only intended to
-> > >> be used as external inputs to trace. Therefore showing them in 'perf
-> > >> list' is misleading so remove them.
-
-> > > What does "trace" mean in this context?
-
-> > CPU trace, Either ETE (Embedded Trace Extension) or ETM (Embedded Trace
-> > Macrocell). You can select PMU events as inputs to the trace block to
-> > make it do things like start and stop tracing.
-
-> Ah ok, trace immediately makes me think of `perf trace` currently.
-> Presumably there's no perf integration for ETE and ETM that somehow
-> use these event encodings? Looks not and the changes make sense to me.
+On Fri, Jan 02, 2026 at 04:18:37AM -0800, Ian Rogers wrote:
+> On Fri, Jan 2, 2026 at 4:16 AM James Clark <james.clark@linaro.org> wrote:
+> >
+> > These are hard to interpret in the raw output because they are printed
+> > as hex but are defined in perf_event.h as decimal. Make it much easier
+> > to read the raw callchains by just printing their names.
+> >
+> > For example:
+> >
+> >   $ perf report -D
+> >
+> >   1798195372321 0x4638 [0xb0]: PERF_RECORD_SAMPLE(IP, 0x4002): 44922/44922: 0x7c8046dd3400 period: 120218 addr: 0
+> >   ... FP chain: nr:12
+> >   .....  0: fffffffffffffe00 (PERF_CONTEXT_USER)
+> >   .....  1: 00007c8046dd3400
+> >   .....  2: 00007c8046db86d3
+> >
+> > Signed-off-by: James Clark <james.clark@linaro.org>
 > 
 > Reviewed-by: Ian Rogers <irogers@google.com>
 
