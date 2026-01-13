@@ -1,643 +1,357 @@
-Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FFB27E06C
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Jan 2026 02:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768272110; cv=pass; b=uCa69Qsdp3Lc33NMYA2BBftQlPfHIu7DFCUIsBxmuxdWI2SjT2l7pMfLA8Zz9LhcxI7RRXEFgwX6r+/QCSuNHiwMucE8SjAaJ3coymGz0Uw2kQkpebIdi6QUHlcBFLxhyc3OeDCFUXBogKwZfBvkND0Gwt2Mwdccg7nT5GUDPCQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768272110; c=relaxed/simple;
-	bh=svMl9ux70KbV7Le/Pt6s4iHYNT8ivSU0DHGMDPo2Wvs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UvRA3AlslS7M43v6KgNR0Ep4bBuodj7fReXvTtNvP3My1DNXLVKcx3IMECQykw7U9UoCqDkmxE9pRj+i76V9G/8ery+WjFZM/Xwy/zTxK6wcC6lITsjg4afwpicrmtrryMv0FwRRk03h2kZMFNWaD2KLcVzuhmZofVYcDft40Gw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q3Xb02yV; arc=pass smtp.client-ip=74.125.82.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6F21494C3;
+	Tue, 13 Jan 2026 02:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768272579; cv=none; b=nRHB29+GKRK+hKXA+Czk1NeCgF4AxJBBXa7sJAtpfZUMSXv033fm+eSDts6uLueML4S1t+/szXniBCQhcwn3RrKpRfMTTYyEXGpP/If3QUESaDzhOEy9+3wLgA6m3z4FHxYcQcOKT7E3ms6023Q28WqvIsrROQm/U7eii78DOak=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768272579; c=relaxed/simple;
+	bh=LziKRr1HyWSNxER+lVNHIduaygVqbX3NGCXHDdZrxrA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QRa39RroDIoGh/AHnaieRJvbJ8KMIhzDAwdCz3j5c2Hb6W2XetFuEY/tUgtZETt+L3PPNaLKM2pMcQcLWqMlMfwdsZ5gd6b5Whmnr7aqOSM2WERNF0WVbGhEa4Jy30sZR/LbeVfQR75b96dhpIdD9EuM1Ark6J7+ARnMYU9Gs3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UTftyDKS; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q3Xb02yV"
-Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-121b14efcddso3078c88.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jan 2026 18:41:47 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1768272107; cv=none;
-        d=google.com; s=arc-20240605;
-        b=cqjFpSa8Mng3t0p7DOHVpEylnWvf0rpzgO0hEC2L4fa0giccwfraF8XfG4JVSIAKCR
-         aKmRk6vve/8IxFIPpvFDxoWjo0DdRUvWgoJAacHgwfGsd3Gb4viNONlMNKJfwNg0kMmJ
-         F/fIbbNqR0XC9bZOI1qHEATHjEZBxDT7qEjGIrL7xI2YzZbjceOMlrmUzTePoHNuCjnD
-         h2MZPCdhzxTtVF0Xwwvg4fA18SM2/H6ITgaU/QNVNEdEj2dgRkEhOJKMIJQBamuvYz56
-         eBDLYn0ssB0jy2ibpzzOUSv52tc79EF44OjM0EHMgkv+ebVXfZqXJRczNP93mTsa6YTM
-         rkLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=C6AKUL58zxtdwBeVn+jBaylK1k4DvcK76gK8pdSrhoo=;
-        fh=Hu6ebep08QcBs2N2n2PTdGg8r21qirY7GXuAdX94iUE=;
-        b=OKpQNpGUA2QkVba1vpo3K8W1/zhYNLkmzbImvfX/ORK5rPFukPuEkiKbA9PIp0gb12
-         C07AatFj+vFUJE8EjXTZJ+2k2sAXHYYeJ+fdY/Qnsq3FoUMjQTdjBCwlrUVOAjjgN/ok
-         UbHagYFk8lNQnSRntqTYwlUzJDBNK5m8zOu1dBviPVTVJ30mwodisN1yutCwWKKsYVC8
-         vF9q21w91wTXC+31FVA4BdAezvWrL2hCq/fP3OA8TWD+yBYVykkwvVBWJhcMc8iftlXO
-         IFOn+V7vHnSSPigkIiJRV1c2Udua1ln1FaP8fSnEq1jPBXaJ2P9vokCQaDgbr5cuUKdm
-         SAgw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768272107; x=1768876907; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C6AKUL58zxtdwBeVn+jBaylK1k4DvcK76gK8pdSrhoo=;
-        b=Q3Xb02yVJC/CcunH8dPuUyParP2/m6xIVJyGaI9J0/svu5AVY8CKDJmTkI/lU9nSfV
-         Osg4f0S5HLUBZhZpsZPDILJ66SBrnzJtnCsTBRU7GqgPjRoPxNlrE/Uqb2hs+tQtUlml
-         8VEr+GAMe8UCPa62Qv92NkjTdq/Fz98kzc2wA6hZ1L8EPa4beHFLioUg4iJq0p3bWL+F
-         c+aukIvuG5J5/l18m5nN9m6ob9NPyfk+662Z07fscluc5jSgg9WVL7f/FL7lBDuUa+cA
-         ijQyNPcHbAgezySGb5buqp7KIUCxxNuBUhwoM9LCrBEgi+lLWJnz6a5AwiZsWP8L/w+X
-         5Crw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768272107; x=1768876907;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=C6AKUL58zxtdwBeVn+jBaylK1k4DvcK76gK8pdSrhoo=;
-        b=GdMbX74lzin/UZIOFfFpmH7PyAtD2LP57BASyos63M597e3+CLGznxnWb2Hr+IqjpT
-         MOpxeFvN/0Vi3KkqBacF1fxT/vn+mmYi+0JDqrbPJ5VvCC3Q0smf/1e0Ri6YLazcKGTC
-         DEmig5CaqKuiLxx9y8UVM5rknsoc7FZE/K6aHZbwJYIZ/Dxw0RtaQSQyq8E06nLLqAX9
-         623c9FJPWK3nqtrBG9CI/5Nb6eTealpy6bn3cfBNMtZczF+NyUIios7hBMtKIyBpX9pq
-         cfp6ojwEGfVlGLkO7aMCNL0j9wJqta4f4UPrnsTOPUEjJaVB+l2MtNdjcS8DWmGXSxc2
-         d4QQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU08EjwqDnfw1+BbLllZhScAUxwomEQCE5hC7QInxwZt38B31UtQqjq7uY5A8OWTCXl/USugqAJBjIA67fQpBJf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFHutyBrHZ+BRNLqOgb9KqHPnv6s5+pr/HAKA6bF7+oa1vuvZ+
-	VsI/tlFAXX4NvJuNeDFb3yojsVkEZ+Ik5nVCnzphaEdfcA+HutuxLzMUNF/pvBPnvuc6PgjBe01
-	KnSOU93/c7XI1Vdu2pVFW7wsfnxNfo69y+OVMiZN5
-X-Gm-Gg: AY/fxX5szHyEwFaBJghqSDi6qs0s4DuIpnwuwVidwG5F1uqfJ2eC+ZK5nf0h7MwXV6L
-	yzMS5a8MPkppUyOO61QVeOdJZD48vx4bRSHaG31ZhCg44RDVQHQhEBL7wxIITleGhwNsNL1L/9s
-	1pHsYswntudKpa9wvfbpMiX8siTgY6woA0zYCz7mlZpb8sIwvv0ZyrO11jmHFXL/JeOBagjsbdu
-	HO7gKUdwtZ4DEKWJBxNw6VfO0D+NqW+tZjY0jxDyWSzDZjv9ArjiL38spMJvMpyKRWVrj0X
-X-Received: by 2002:a05:7022:7e07:b0:120:5719:1853 with SMTP id
- a92af1059eb24-1232ca6fdf1mr31130c88.17.1768272106334; Mon, 12 Jan 2026
- 18:41:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UTftyDKS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768272577; x=1799808577;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=LziKRr1HyWSNxER+lVNHIduaygVqbX3NGCXHDdZrxrA=;
+  b=UTftyDKS9grMbnTHUq3yc2Xyuap9JZ4/bP7tlhtj21ozJDOi6Ikpqbhx
+   9OWEZPvcVZGL/XzmdEGYSIGG6/7AjdouBR3ywaqQwlw/pjQdKgWiHuPeM
+   YOnlqXmcHqjhdCZbvJ0Z9Oy+wGkW/p2GnKs1IBd6vwCSduTUALHP7N2hU
+   /IcVLfhu2R0twtYbkYQh0DEbTTO1IH10cy7djf3/rLXbgpQ0MreOtyAv+
+   HSsaQ0NVgMMmAdJV4F4QW/ihbWebQ2bLbM7oexJ1U0vqDZwTufGuPmpdY
+   49wdjILEzJcq9sR7/hi6jn2+N2TKbb0UjUhQJLimNadOyr1NxdIH1aGVt
+   Q==;
+X-CSE-ConnectionGUID: 09b5ryUtRbSZ0b74yIDQmg==
+X-CSE-MsgGUID: CMAZ0xVpRrOwdVe+G/FwvA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="95030196"
+X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
+   d="scan'208";a="95030196"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 18:49:36 -0800
+X-CSE-ConnectionGUID: U/2AT/pFQN6hc4OqQ3uEHg==
+X-CSE-MsgGUID: ckmVKKnwQ/Ojhigiy8k3Ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
+   d="scan'208";a="235503305"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 18:49:32 -0800
+Message-ID: <a7367c65-9289-4abb-8836-f0705bc12df4@linux.intel.com>
+Date: Tue, 13 Jan 2026 10:49:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260107-cross-arch-unwind-v3-1-db0e37c8a652@skydio.com>
-In-Reply-To: <20260107-cross-arch-unwind-v3-1-db0e37c8a652@skydio.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 12 Jan 2026 18:41:34 -0800
-X-Gm-Features: AZwV_Qjx81xRN3u9yzvKPm3mk0d4T_8c0mUYxuqp5IG3DlF6QWOu6fa5DL4Gbzg
-Message-ID: <CAP-5=fXOC5kUQDE-GbbYGgXJNRpvm_p=ssYc31pMJhxqzfbkEg@mail.gmail.com>
-Subject: Re: [PATCH v3] perf unwind-libdw: fix a cross-arch unwinding bug
-To: shimin.guo@skydio.com
-Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2 7/7] perf/x86/intel: Add support for rdpmc user disable
+ feature
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>
+References: <20260112051649.1113435-1-dapeng1.mi@linux.intel.com>
+ <20260112051649.1113435-8-dapeng1.mi@linux.intel.com>
+ <CAP-5=fXE02soq4z0ZjuPYQZTH9bkfrMXqe1nT9A7EcgG0cH6yw@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fXE02soq4z0ZjuPYQZTH9bkfrMXqe1nT9A7EcgG0cH6yw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 7, 2026 at 8:41=E2=80=AFPM Shimin Guo via B4 Relay
-<devnull+shimin.guo.skydio.com@kernel.org> wrote:
->
-> From: Shimin Guo <shimin.guo@skydio.com>
->
-> The set_initial_registers field of Dwfl_Thread_Callbacks needs to be set
-> according to the arch of the stack samples being analyzed, not the arch
-> that perf itself is built for. Currently perf fails to unwind stack sampl=
-es
-> collected from archs different from that of the host perf is running on.
-> This patch moves the arch-specific implementations of set_initial_registe=
-rs
-> from tools/perf/arch to tools/perf/utli/unwind-libdw-arch, similar to the
-> way the perf-regs-arch folder contains arch-specific functions related to
-> registers, and chooses the implementation based on the arch of the data
-> being processed.
->
-> Signed-off-by: Shimin Guo <shimin.guo@skydio.com>
-> ---
-> Changes in v3:
-> - tools/perf/util/unwind-libdw-arch/Build: replacing
-> perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) with simply perf-util-y, as the
-> directory itself is included based on CONFIG_LIBDW_DWARF_UNWIND. Also
-> adding a missing newline at the end.
-> - Changed the include paths in the moved files to be relative to tools/pe=
-rf
-> - Link to v2: https://lore.kernel.org/r/20260105-cross-arch-unwind-v2-1-9=
-a8b0b14ce7b@skydio.com
->
-> Fix a cross-architecture libdw DWARF unwinding bug in perf
->
-> Changes in v2:
-> - Fixed the include path for perf_regs.h in unwind-libdw-x86.c
-> - Removed one level of "../" from the include paths in the moved files
-> now that they are two directory levels under tools/perf instead of three.
-> - Link to v1: https://lore.kernel.org/r/20251223-cross-arch-unwind-v1-1-4=
-d71ee7db512@skydio.com
-> ---
->  tools/perf/arch/arm/util/Build                     |  1 -
->  tools/perf/arch/arm64/util/Build                   |  1 -
->  tools/perf/arch/csky/util/Build                    |  2 -
->  tools/perf/arch/powerpc/util/Build                 |  1 -
->  tools/perf/arch/riscv/util/Build                   |  1 -
->  tools/perf/arch/s390/util/Build                    |  2 -
->  tools/perf/arch/x86/util/Build                     |  1 -
->  tools/perf/util/Build                              |  1 +
->  tools/perf/util/unwind-libdw-arch/Build            |  8 ++++
->  .../unwind-libdw-arch/unwind-libdw-arm.c}          | 10 ++---
->  .../unwind-libdw-arch/unwind-libdw-arm64.c}        | 10 ++---
->  .../unwind-libdw-arch/unwind-libdw-csky.c}         | 10 ++---
->  .../unwind-libdw-arch/unwind-libdw-loongarch.c}    | 10 ++---
->  .../unwind-libdw-arch/unwind-libdw-powerpc.c}      | 10 ++---
->  .../unwind-libdw-arch/unwind-libdw-riscv.c}        | 10 ++---
->  .../unwind-libdw-arch/unwind-libdw-s390.c}         | 14 +++---
->  .../unwind-libdw-arch/unwind-libdw-x86.c}          |  8 ++--
->  tools/perf/util/unwind-libdw.c                     | 51 ++++++++++++++++=
-+++---
->  tools/perf/util/unwind-libdw.h                     | 10 ++++-
->  19 files changed, 104 insertions(+), 57 deletions(-)
->
-> diff --git a/tools/perf/arch/arm/util/Build b/tools/perf/arch/arm/util/Bu=
-ild
-> index fd695e1fdaee2ccc300a206131b8b38a763b00ce..3291f893b943df0722dff5835=
-23fff4ae79919bc 100644
-> --- a/tools/perf/arch/arm/util/Build
-> +++ b/tools/perf/arch/arm/util/Build
-> @@ -1,6 +1,5 @@
->  perf-util-y +=3D perf_regs.o
->
->  perf-util-$(CONFIG_LOCAL_LIBUNWIND)    +=3D unwind-libunwind.o
-> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
->
->  perf-util-y +=3D pmu.o auxtrace.o cs-etm.o
-> diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/uti=
-l/Build
-> index d63881081d2eb1e9a83eabf82104d75308f7fc79..0177af19cc00038d6a6005592=
-ddc530bf7eb1557 100644
-> --- a/tools/perf/arch/arm64/util/Build
-> +++ b/tools/perf/arch/arm64/util/Build
-> @@ -1,4 +1,3 @@
-> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
->  perf-util-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
->  perf-util-$(CONFIG_LOCAL_LIBUNWIND) +=3D unwind-libunwind.o
->  perf-util-y +=3D ../../arm/util/auxtrace.o
-> diff --git a/tools/perf/arch/csky/util/Build b/tools/perf/arch/csky/util/=
-Build
-> index 5e6ea82c42021d3d5651ca4c4a3a6e5138574e4e..6b2d0e021b11464e46d6b5397=
-4260d32ea969732 100644
-> --- a/tools/perf/arch/csky/util/Build
-> +++ b/tools/perf/arch/csky/util/Build
-> @@ -1,3 +1 @@
->  perf-util-y +=3D perf_regs.o
-> -
-> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
-> diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc=
-/util/Build
-> index 3d0d5427aef7f26a8c05c883cc7ad763f08cbb30..5fd28ec713a4db74ecd1d2686=
-6a65ddb20e94bd3 100644
-> --- a/tools/perf/arch/powerpc/util/Build
-> +++ b/tools/perf/arch/powerpc/util/Build
-> @@ -9,5 +9,4 @@ perf-util-y +=3D evsel.o
->  perf-util-$(CONFIG_LIBDW) +=3D skip-callchain-idx.o
->
->  perf-util-$(CONFIG_LIBUNWIND) +=3D unwind-libunwind.o
-> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
->  perf-util-y +=3D auxtrace.o
-> diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/uti=
-l/Build
-> index 58a672246024dd0f72e767d11e9958bd9913ec3c..628b9ebd418bde8cdf1ab1332=
-bf79f7c9d50760e 100644
-> --- a/tools/perf/arch/riscv/util/Build
-> +++ b/tools/perf/arch/riscv/util/Build
-> @@ -2,4 +2,3 @@ perf-util-y +=3D perf_regs.o
->  perf-util-y +=3D header.o
->
->  perf-util-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
-> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
-> diff --git a/tools/perf/arch/s390/util/Build b/tools/perf/arch/s390/util/=
-Build
-> index c64eb18dbdae93adafabf8542e4c9a763ecfe057..5391d26fedd46b7d30a1bef0b=
-ff2ec2d58ec30ed 100644
-> --- a/tools/perf/arch/s390/util/Build
-> +++ b/tools/perf/arch/s390/util/Build
-> @@ -2,8 +2,6 @@ perf-util-y +=3D header.o
->  perf-util-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
->  perf-util-y +=3D perf_regs.o
->
-> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
-> -
->  perf-util-y +=3D machine.o
->  perf-util-y +=3D pmu.o
->
-> diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Bu=
-ild
-> index c0dc5965f3624a6f02525a04d287dff755356d20..fad256252bb95a8f8350b6bb1=
-a54e8074eaebbec 100644
-> --- a/tools/perf/arch/x86/util/Build
-> +++ b/tools/perf/arch/x86/util/Build
-> @@ -12,7 +12,6 @@ perf-util-y +=3D evsel.o
->  perf-util-y +=3D iostat.o
->
->  perf-util-$(CONFIG_LOCAL_LIBUNWIND)    +=3D unwind-libunwind.o
-> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
->
->  perf-util-y +=3D auxtrace.o
->  perf-util-y +=3D archinsn.o
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 1c2a43e1dc68e7f751ec6082352b10de9ffeea62..15f8a4f4b24a46b6300e824f6=
-72dd9c0d5b7865f 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -226,6 +226,7 @@ perf-util-$(CONFIG_LIBDW) +=3D debuginfo.o
->  perf-util-$(CONFIG_LIBDW) +=3D annotate-data.o
->
->  perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
-> +perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw-arch/
->  perf-util-$(CONFIG_LOCAL_LIBUNWIND)    +=3D unwind-libunwind-local.o
->  perf-util-$(CONFIG_LIBUNWIND)          +=3D unwind-libunwind.o
->  perf-util-$(CONFIG_LIBUNWIND_X86)      +=3D libunwind/x86_32.o
-> diff --git a/tools/perf/util/unwind-libdw-arch/Build b/tools/perf/util/un=
-wind-libdw-arch/Build
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..ef17a83a78136d7ab8d44c62d=
-454742638ddf224
-> --- /dev/null
-> +++ b/tools/perf/util/unwind-libdw-arch/Build
-> @@ -0,0 +1,8 @@
-> +perf-util-y +=3D unwind-libdw-x86.o
-> +perf-util-y +=3D unwind-libdw-arm.o
-> +perf-util-y +=3D unwind-libdw-arm64.o
-> +perf-util-y +=3D unwind-libdw-csky.o
-> +perf-util-y +=3D unwind-libdw-loongarch.o
-> +perf-util-y +=3D unwind-libdw-powerpc.o
-> +perf-util-y +=3D unwind-libdw-riscv.o
-> +perf-util-y +=3D unwind-libdw-s390.o
-> diff --git a/tools/perf/arch/arm/util/unwind-libdw.c b/tools/perf/util/un=
-wind-libdw-arch/unwind-libdw-arm.c
-> similarity index 80%
-> rename from tools/perf/arch/arm/util/unwind-libdw.c
-> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-arm.c
-> index fbb643f224ec4b27ce9d67051fe0bc4ad555b05e..56e9b5975bcc60fa1aaae048f=
-3b8aab7f1634db1 100644
-> --- a/tools/perf/arch/arm/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-arm.c
-> @@ -1,11 +1,11 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <elfutils/libdwfl.h>
-> -#include "perf_regs.h"
-> -#include "../../../util/unwind-libdw.h"
-> -#include "../../../util/perf_regs.h"
-> -#include "../../../util/sample.h"
-> +#include "../arch/arm/include/uapi/asm/perf_regs.h"
-> +#include "util/unwind-libdw.h"
-> +#include "util/perf_regs.h"
-> +#include "util/sample.h"
->
-> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-> +bool libdw_set_initial_registers_arm(Dwfl_Thread *thread, void *arg)
->  {
->         struct unwind_info *ui =3D arg;
->         struct regs_dump *user_regs =3D perf_sample__user_regs(ui->sample=
-);
-> diff --git a/tools/perf/arch/arm64/util/unwind-libdw.c b/tools/perf/util/=
-unwind-libdw-arch/unwind-libdw-arm64.c
-> similarity index 87%
-> rename from tools/perf/arch/arm64/util/unwind-libdw.c
-> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-arm64.c
-> index b89b0a7e5ad919fed23643d219fbdc3d84deff1e..29b6833e036cc0d80322eb1f9=
-5aea310df1cba49 100644
-> --- a/tools/perf/arch/arm64/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-arm64.c
-> @@ -1,11 +1,11 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <elfutils/libdwfl.h>
-> -#include "perf_regs.h"
-> -#include "../../../util/unwind-libdw.h"
-> -#include "../../../util/perf_regs.h"
-> -#include "../../../util/sample.h"
-> +#include "../arch/arm64/include/uapi/asm/perf_regs.h"
-> +#include "util/unwind-libdw.h"
-> +#include "util/perf_regs.h"
-> +#include "util/sample.h"
->
-> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-> +bool libdw_set_initial_registers_arm64(Dwfl_Thread *thread, void *arg)
->  {
->         struct unwind_info *ui =3D arg;
->         struct regs_dump *user_regs =3D perf_sample__user_regs(ui->sample=
-);
-> diff --git a/tools/perf/arch/csky/util/unwind-libdw.c b/tools/perf/util/u=
-nwind-libdw-arch/unwind-libdw-csky.c
-> similarity index 90%
-> rename from tools/perf/arch/csky/util/unwind-libdw.c
-> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-csky.c
-> index b20b1569783d7e982e91b1b40120d29ccf2f01d1..2556d034c32a464018b4f03ac=
-57329249b8b1984 100644
-> --- a/tools/perf/arch/csky/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-csky.c
-> @@ -2,12 +2,12 @@
->  // Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
->
->  #include <elfutils/libdwfl.h>
-> -#include "perf_regs.h"
-> -#include "../../util/unwind-libdw.h"
-> -#include "../../util/perf_regs.h"
-> -#include "../../util/event.h"
-> +#include "../arch/csky/include/uapi/asm/perf_regs.h"
-> +#include "util/unwind-libdw.h"
-> +#include "util/perf_regs.h"
-> +#include "util/sample.h"
->
-> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-> +bool libdw_set_initial_registers_csky(Dwfl_Thread *thread, void *arg)
->  {
->         struct unwind_info *ui =3D arg;
->         struct regs_dump *user_regs =3D perf_sample__user_regs(ui->sample=
-);
-> diff --git a/tools/perf/arch/loongarch/util/unwind-libdw.c b/tools/perf/u=
-til/unwind-libdw-arch/unwind-libdw-loongarch.c
-> similarity index 86%
-> rename from tools/perf/arch/loongarch/util/unwind-libdw.c
-> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-loongarch.c
-> index 60b1144bedd5f325e1512eeab05c29a1e8de2b03..5fca673508be8218d4481a0c9=
-5c38b0293789c34 100644
-> --- a/tools/perf/arch/loongarch/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-loongarch.c
-> @@ -2,12 +2,12 @@
->  /* Copyright (C) 2020-2023 Loongson Technology Corporation Limited */
->
->  #include <elfutils/libdwfl.h>
-> -#include "perf_regs.h"
-> -#include "../../util/unwind-libdw.h"
-> -#include "../../util/perf_regs.h"
-> -#include "../../util/sample.h"
-> +#include "../arch/loongarch/include/uapi/asm/perf_regs.h"
-> +#include "util/unwind-libdw.h"
-> +#include "util/perf_regs.h"
-> +#include "util/sample.h"
->
-> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-> +bool libdw_set_initial_registers_loongarch(Dwfl_Thread *thread, void *ar=
-g)
->  {
->         struct unwind_info *ui =3D arg;
->         struct regs_dump *user_regs =3D perf_sample__user_regs(ui->sample=
-);
-> diff --git a/tools/perf/arch/powerpc/util/unwind-libdw.c b/tools/perf/uti=
-l/unwind-libdw-arch/unwind-libdw-powerpc.c
-> similarity index 89%
-> rename from tools/perf/arch/powerpc/util/unwind-libdw.c
-> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-powerpc.c
-> index 82d0c28ae3459ecdb0039cac1f534420d142739b..1560db45e7b464877a5895feb=
-389867937edcf83 100644
-> --- a/tools/perf/arch/powerpc/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-powerpc.c
-> @@ -1,10 +1,10 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <elfutils/libdwfl.h>
->  #include <linux/kernel.h>
-> -#include "perf_regs.h"
-> -#include "../../../util/unwind-libdw.h"
-> -#include "../../../util/perf_regs.h"
-> -#include "../../../util/sample.h"
-> +#include "../arch/powerpc/include/uapi/asm/perf_regs.h"
-> +#include "util/unwind-libdw.h"
-> +#include "util/perf_regs.h"
-> +#include "util/sample.h"
->
->  /* See backends/ppc_initreg.c and backends/ppc_regs.c in elfutils.  */
->  static const int special_regs[3][2] =3D {
-> @@ -13,7 +13,7 @@ static const int special_regs[3][2] =3D {
->         { 109, PERF_REG_POWERPC_CTR },
->  };
->
-> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-> +bool libdw_set_initial_registers_powerpc(Dwfl_Thread *thread, void *arg)
->  {
->         struct unwind_info *ui =3D arg;
->         struct regs_dump *user_regs =3D perf_sample__user_regs(ui->sample=
-);
-> diff --git a/tools/perf/arch/riscv/util/unwind-libdw.c b/tools/perf/util/=
-unwind-libdw-arch/unwind-libdw-riscv.c
-> similarity index 87%
-> rename from tools/perf/arch/riscv/util/unwind-libdw.c
-> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-riscv.c
-> index dc1476e16321736de897ad53a00fbc813bd706db..c2e2c4b6b2e005fff4cb8045e=
-f7d44a4d2458b47 100644
-> --- a/tools/perf/arch/riscv/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-riscv.c
-> @@ -2,12 +2,12 @@
->  /* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
->
->  #include <elfutils/libdwfl.h>
-> -#include "perf_regs.h"
-> -#include "../../util/unwind-libdw.h"
-> -#include "../../util/perf_regs.h"
-> -#include "../../util/sample.h"
-> +#include "../arch/riscv/include/uapi/asm/perf_regs.h"
-> +#include "util/unwind-libdw.h"
-> +#include "util/perf_regs.h"
-> +#include "util/sample.h"
->
-> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-> +bool libdw_set_initial_registers_riscv(Dwfl_Thread *thread, void *arg)
->  {
->         struct unwind_info *ui =3D arg;
->         struct regs_dump *user_regs =3D perf_sample__user_regs(ui->sample=
-);
-> diff --git a/tools/perf/arch/s390/util/unwind-libdw.c b/tools/perf/util/u=
-nwind-libdw-arch/unwind-libdw-s390.c
-> similarity index 84%
-> rename from tools/perf/arch/s390/util/unwind-libdw.c
-> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-s390.c
-> index c27c7a0d1076c890c35ba19543932c4ed5ac9c2a..1e05e9d9d95faf42cc2d538c8=
-2a8e4284a34a426 100644
-> --- a/tools/perf/arch/s390/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-s390.c
-> @@ -1,14 +1,14 @@
->  #include <linux/kernel.h>
->  #include <elfutils/libdwfl.h>
-> -#include "../../util/unwind-libdw.h"
-> -#include "../../util/perf_regs.h"
-> -#include "../../util/event.h"
-> -#include "../../util/sample.h"
-> -#include "dwarf-regs-table.h"
-> -#include "perf_regs.h"
-> +#include "util/unwind-libdw.h"
-> +#include "util/perf_regs.h"
-> +#include "util/event.h"
-> +#include "util/sample.h"
-> +#include "../arch/s390/include/dwarf-regs-table.h"
-> +#include "../arch/s390/include/uapi/asm/perf_regs.h"
->
->
-> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-> +bool libdw_set_initial_registers_s390(Dwfl_Thread *thread, void *arg)
->  {
->         struct unwind_info *ui =3D arg;
->         struct regs_dump *user_regs =3D perf_sample__user_regs(ui->sample=
-);
-> diff --git a/tools/perf/arch/x86/util/unwind-libdw.c b/tools/perf/util/un=
-wind-libdw-arch/unwind-libdw-x86.c
-> similarity index 87%
-> rename from tools/perf/arch/x86/util/unwind-libdw.c
-> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-x86.c
-> index 798493e887d7308cb293e29e4ba11054d0fda722..dd27545a4a68c11e3745a2470=
-8066d88bc2c7209 100644
-> --- a/tools/perf/arch/x86/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-x86.c
-> @@ -1,11 +1,11 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <elfutils/libdwfl.h>
-> -#include "perf_regs.h"
-> -#include "../../../util/unwind-libdw.h"
-> -#include "../../../util/perf_regs.h"
-> +#include "../arch/x86/include/uapi/asm/perf_regs.h"
-> +#include "util/unwind-libdw.h"
-> +#include "util/perf_regs.h"
->  #include "util/sample.h"
->
-> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-> +bool libdw_set_initial_registers_x86(Dwfl_Thread *thread, void *arg)
->  {
->         struct unwind_info *ui =3D arg;
->         struct regs_dump *user_regs =3D perf_sample__user_regs(ui->sample=
-);
-> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libd=
-w.c
-> index ae70fb56a05729b9f06a411d162eabebbf29ac52..f32694ff4ea52d4bf80a38405=
-341864e7ff5e6c8 100644
-> --- a/tools/perf/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw.c
-> @@ -225,11 +225,45 @@ static bool memory_read(Dwfl *dwfl __maybe_unused, =
-Dwarf_Addr addr, Dwarf_Word *
->         return true;
->  }
->
-> -static const Dwfl_Thread_Callbacks callbacks =3D {
-> -       .next_thread            =3D next_thread,
-> -       .memory_read            =3D memory_read,
-> -       .set_initial_registers  =3D libdw__arch_set_initial_registers,
-> -};
-> +#define DEFINE_DWFL_THREAD_CALLBACKS(arch)                           \
-> +static const Dwfl_Thread_Callbacks callbacks_##arch =3D {              \
-> +       .next_thread           =3D next_thread,                        \
-> +       .memory_read           =3D memory_read,                        \
-> +       .set_initial_registers =3D libdw_set_initial_registers_##arch, \
-> +}
-> +
-> +DEFINE_DWFL_THREAD_CALLBACKS(x86);
-> +DEFINE_DWFL_THREAD_CALLBACKS(arm);
-> +DEFINE_DWFL_THREAD_CALLBACKS(arm64);
-> +DEFINE_DWFL_THREAD_CALLBACKS(csky);
-> +DEFINE_DWFL_THREAD_CALLBACKS(loongarch);
-> +DEFINE_DWFL_THREAD_CALLBACKS(powerpc);
-> +DEFINE_DWFL_THREAD_CALLBACKS(riscv);
-> +DEFINE_DWFL_THREAD_CALLBACKS(s390);
-> +
-> +static const Dwfl_Thread_Callbacks *get_thread_callbacks(const char *arc=
-h)
-> +{
-> +       if (!strcmp(arch, "arm"))
-> +               return &callbacks_arm;
-> +       else if (!strcmp(arch, "arm64"))
-> +               return &callbacks_arm64;
-> +       else if (!strcmp(arch, "csky"))
-> +               return &callbacks_csky;
-> +       else if (!strcmp(arch, "loongarch"))
-> +               return &callbacks_loongarch;
-> +       else if (!strcmp(arch, "powerpc"))
-> +               return &callbacks_powerpc;
-> +       else if (!strcmp(arch, "riscv"))
-> +               return &callbacks_riscv;
-> +       else if (!strcmp(arch, "s390"))
-> +               return &callbacks_s390;
-> +       else if (!strcmp(arch, "x86"))
-> +               return &callbacks_x86;
 
-Not a fault of this change, but I kind of wish we used EM_ and EF_
-values as "x86" is less specific than the I386 or X86_64 constants. I
-think we need something like a perf_env__e_machine and
-perf_env__e_flags and for now that could just reinterpret the
-arch/cpuid string. Eventually we should store these values into the
-perf.data file.
+On 1/13/2026 9:49 AM, Ian Rogers wrote:
+> On Sun, Jan 11, 2026 at 9:20 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
+>> Starting with Panther Cove, the rdpmc user disable feature is supported.
+>> This feature allows the perf system to disable user space rdpmc reads at
+>> the counter level.
+>>
+>> Currently, when a global counter is active, any user with rdpmc rights
+>> can read it, even if perf access permissions forbid it (e.g., disallow
+>> reading ring 0 counters). The rdpmc user disable feature mitigates this
+>> security concern.
+>>
+>> Details:
+>>
+>> - A new RDPMC_USR_DISABLE bit (bit 37) in each EVNTSELx MSR indicates
+>>   that the GP counter cannot be read by RDPMC in ring 3.
+>> - New RDPMC_USR_DISABLE bits in IA32_FIXED_CTR_CTRL MSR (bits 33, 37,
+>>   41, 45, etc.) for fixed counters 0, 1, 2, 3, etc.
+>> - When calling rdpmc instruction for counter x, the following pseudo
+>>   code demonstrates how the counter value is obtained:
+>>         If (!CPL0 && RDPMC_USR_DISABLE[x] == 1) ? 0 : counter_value;
+>> - RDPMC_USR_DISABLE is enumerated by CPUID.0x23.0.EBX[2].
+>>
+>> This patch extends the current global user space rdpmc control logic via
+>> the sysfs interface (/sys/devices/cpu/rdpmc) as follows:
+>>
+>> - rdpmc = 0:
+>>   Global user space rdpmc and counter-level user space rdpmc for all
+>>   counters are both disabled.
+>> - rdpmc = 1:
+>>   Global user space rdpmc is enabled during the mmap-enabled time window,
+>>   and counter-level user space rdpmc is enabled only for non-system-wide
+>>   events. This prevents counter data leaks as count data is cleared
+>>   during context switches.
+>> - rdpmc = 2:
+>>   Global user space rdpmc and counter-level user space rdpmc for all
+>>   counters are enabled unconditionally.
+>>
+>> The new rdpmc settings only affect newly activated perf events; currently
+>> active perf events remain unaffected. This simplifies and cleans up the
+>> code. The default value of rdpmc remains unchanged at 1.
+>>
+>> For more details about rdpmc user disable, please refer to chapter 15
+>> "RDPMC USER DISABLE" in ISE documentation.
+>>
+>> ISE: https://www.intel.com/content/www/us/en/content-details/869288/intel-architecture-instruction-set-extensions-programming-reference.html
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  .../sysfs-bus-event_source-devices-rdpmc      | 40 +++++++++++++++++++
+>>  arch/x86/events/core.c                        | 21 ++++++++++
+>>  arch/x86/events/intel/core.c                  | 26 ++++++++++++
+>>  arch/x86/events/perf_event.h                  |  6 +++
+>>  arch/x86/include/asm/perf_event.h             |  8 +++-
+>>  5 files changed, 99 insertions(+), 2 deletions(-)
+>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-rdpmc
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-rdpmc b/Documentation/ABI/testing/sysfs-bus-event_source-devices-rdpmc
+>> new file mode 100644
+>> index 000000000000..d004527ab13e
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-rdpmc
+>> @@ -0,0 +1,40 @@
+>> +What:           /sys/bus/event_source/devices/cpu.../rdpmc
+>> +Date:           November 2011
+>> +KernelVersion:  3.10
+>> +Contact:        Linux kernel mailing list linux-kernel@vger.kernel.org
+>> +Description:    The /sys/bus/event_source/devices/cpu.../rdpmc attribute
+>> +                is used to show/manage if rdpmc instruction can be
+>> +                executed in user space. This attribute supports 3 numbers.
+>> +                - rdpmc = 0
+>> +                user space rdpmc is globally disabled for all PMU
+>> +                counters.
+>> +                - rdpmc = 1
+>> +                user space rdpmc is globally enabled only in event mmap
+>> +                ioctl called time window. If the mmap region is unmapped,
+>> +                user space rdpmc is disabled again.
+>> +                - rdpmc = 2
+>> +                user space rdpmc is globally enabled for all PMU
+>> +                counters.
+> Fwiw, I found it surprising in the test:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/mmap-basic.c?h=perf-tools-next#n375
+> that the enable/disable of rdpmc on cpu_atom affected cpu_core and
+> vice-versa. Perhaps the docs could mention this.
 
-> +
-> +       pr_err("Fail to get thread callbacks for arch %s, returns NULL\n"=
-,
-> +              arch);
-> +       return NULL;
-> +}
->
->  static int
->  frame_callback(Dwfl_Frame *state, void *arg)
-> @@ -278,6 +312,7 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *a=
-rg,
->         const char *arch =3D perf_env__arch(ui_buf.machine->env);
->         Dwarf_Word ip;
->         int err =3D -EINVAL, i;
-> +       const Dwfl_Thread_Callbacks *callbacks;
->
->         if (!data->user_regs || !data->user_regs->regs)
->                 return -EINVAL;
-> @@ -300,7 +335,11 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *=
-arg,
->         if (err)
->                 goto out;
->
-> -       err =3D !dwfl_attach_state(ui->dwfl, EM_NONE, thread__tid(thread)=
-, &callbacks, ui);
-> +       callbacks =3D get_thread_callbacks(arch);
-> +       if (!callbacks)
-> +               goto out;
-> +
-> +       err =3D !dwfl_attach_state(ui->dwfl, EM_NONE, thread__tid(thread)=
-, callbacks, ui);
->         if (err)
->                 goto out;
->
-> diff --git a/tools/perf/util/unwind-libdw.h b/tools/perf/util/unwind-libd=
-w.h
-> index 8c88bc4f2304b59561ffd482469ca63ce0f531f0..574b29848cce31e6bfd93021f=
-752b518cebf73b7 100644
-> --- a/tools/perf/util/unwind-libdw.h
-> +++ b/tools/perf/util/unwind-libdw.h
-> @@ -9,7 +9,15 @@ struct machine;
->  struct perf_sample;
->  struct thread;
->
-> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg);
-> +bool libdw_set_initial_registers_x86(Dwfl_Thread *thread, void *arg);
-> +bool libdw_set_initial_registers_arm(Dwfl_Thread *thread, void *arg);
-> +bool libdw_set_initial_registers_arm64(Dwfl_Thread *thread, void *arg);
-> +bool libdw_set_initial_registers_csky(Dwfl_Thread *thread, void *arg);
-> +bool libdw_set_initial_registers_loongarch(Dwfl_Thread *thread, void *ar=
-g);
-> +bool libdw_set_initial_registers_mips(Dwfl_Thread *thread, void *arg);
-> +bool libdw_set_initial_registers_powerpc(Dwfl_Thread *thread, void *arg)=
-;
-> +bool libdw_set_initial_registers_riscv(Dwfl_Thread *thread, void *arg);
-> +bool libdw_set_initial_registers_s390(Dwfl_Thread *thread, void *arg);
->
->  struct unwind_info {
->         Dwfl                    *dwfl;
->
-> ---
-> base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
-> change-id: 20260105-cross-arch-unwind-7238af40fb14
->
-> Best regards,
-> --
-> Shimin Guo <shimin.guo@skydio.com>
+Yes, currently the rdpmc attribute is implemented as global attribute in
+x86 PMU driver even for the hybrid platform. I suppose it's fine and
+reasonable since there could be no such real requirement to set different
+rdpmc attribute on hybrid platforms.
 
-Less code in arch is always going to lgtm :-)
+Sure. I would add words to mention this.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks,
-Ian
+>
+> Also fwiw, I remember Peter's proposal to improve rdpmc so that
+> restartable sequences or CPU affinities aren't necessary on hybrid
+> machines by handling faults in the kernel:
+> https://lore.kernel.org/linux-perf-users/20250618084522.GE1613376@noisy.programming.kicks-ass.net/
+> which imo would be a welcome addition. Perhaps without that fix we can
+> document the affinity/rseq needs.
+
+I would create an independent patch for Peter's proposal and post it to
+upstream for review. Actually it has been in my to-do list, I'm just always
+interrupted by other higher priority things. Thanks.
+
+
+>
+> Thanks,
+> Ian
+>
+>> +
+>> +                In the Intel platforms supporting counter level's user
+>> +                space rdpmc disable feature (CPUID.23H.EBX[2] = 1), the
+>> +                meaning of 3 numbers is extended to
+>> +                - rdpmc = 0
+>> +                global user space rdpmc and counter level's user space
+>> +                rdpmc of all counters are both disabled.
+>> +                - rdpmc = 1
+>> +                No changes on behavior of global user space rdpmc.
+>> +                counter level's rdpmc of system-wide events is disabled
+>> +                but counter level's rdpmc of non-system-wide events is
+>> +                enabled.
+>> +                - rdpmc = 2
+>> +                global user space rdpmc and counter level's user space
+>> +                rdpmc of all counters are both enabled unconditionally.
+>> +
+>> +                The default value of rdpmc is 1.
+>> +
+>> +                Please notice global user space rdpmc's behavior would
+>> +                change immediately along with the rdpmc value's change,
+>> +                but the behavior of counter level's user space rdpmc
+>> +                won't take effect immediately until the event is
+>> +                reactivated or recreated.
+>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>> index c2717cb5034f..6df73e8398cd 100644
+>> --- a/arch/x86/events/core.c
+>> +++ b/arch/x86/events/core.c
+>> @@ -2616,6 +2616,27 @@ static ssize_t get_attr_rdpmc(struct device *cdev,
+>>         return snprintf(buf, 40, "%d\n", x86_pmu.attr_rdpmc);
+>>  }
+>>
+>> +/*
+>> + * Behaviors of rdpmc value:
+>> + * - rdpmc = 0
+>> + *    global user space rdpmc and counter level's user space rdpmc of all
+>> + *    counters are both disabled.
+>> + * - rdpmc = 1
+>> + *    global user space rdpmc is enabled in mmap enabled time window and
+>> + *    counter level's user space rdpmc is enabled for only non system-wide
+>> + *    events. Counter level's user space rdpmc of system-wide events is
+>> + *    still disabled by default. This won't introduce counter data leak for
+>> + *    non system-wide events since their count data would be cleared when
+>> + *    context switches.
+>> + * - rdpmc = 2
+>> + *    global user space rdpmc and counter level's user space rdpmc of all
+>> + *    counters are enabled unconditionally.
+>> + *
+>> + * Suppose the rdpmc value won't be changed frequently, don't dynamically
+>> + * reschedule events to make the new rpdmc value take effect on active perf
+>> + * events immediately, the new rdpmc value would only impact the new
+>> + * activated perf events. This makes code simpler and cleaner.
+>> + */
+>>  static ssize_t set_attr_rdpmc(struct device *cdev,
+>>                               struct device_attribute *attr,
+>>                               const char *buf, size_t count)
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index dd488a095f33..77cf849a1381 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -3128,6 +3128,8 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
+>>                 bits |= INTEL_FIXED_0_USER;
+>>         if (hwc->config & ARCH_PERFMON_EVENTSEL_OS)
+>>                 bits |= INTEL_FIXED_0_KERNEL;
+>> +       if (hwc->config & ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE)
+>> +               bits |= INTEL_FIXED_0_RDPMC_USER_DISABLE;
+>>
+>>         /*
+>>          * ANY bit is supported in v3 and up
+>> @@ -3263,6 +3265,26 @@ static void intel_pmu_enable_event_ext(struct perf_event *event)
+>>                 __intel_pmu_update_event_ext(hwc->idx, ext);
+>>  }
+>>
+>> +static void intel_pmu_update_rdpmc_user_disable(struct perf_event *event)
+>> +{
+>> +       /*
+>> +        * Counter scope's user-space rdpmc is disabled by default
+>> +        * except two cases.
+>> +        * a. rdpmc = 2 (user space rdpmc enabled unconditionally)
+>> +        * b. rdpmc = 1 and the event is not a system-wide event.
+>> +        *    The count of non-system-wide events would be cleared when
+>> +        *    context switches, so no count data is leaked.
+>> +        */
+>> +       if (x86_pmu_has_rdpmc_user_disable(event->pmu)) {
+>> +               if (x86_pmu.attr_rdpmc == X86_USER_RDPMC_ALWAYS_ENABLE ||
+>> +                   (x86_pmu.attr_rdpmc == X86_USER_RDPMC_CONDITIONAL_ENABLE &&
+>> +                    event->ctx->task))
+>> +                       event->hw.config &= ~ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
+>> +               else
+>> +                       event->hw.config |= ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
+>> +       }
+>> +}
+>> +
+>>  DEFINE_STATIC_CALL_NULL(intel_pmu_enable_event_ext, intel_pmu_enable_event_ext);
+>>
+>>  static void intel_pmu_enable_event(struct perf_event *event)
+>> @@ -3271,6 +3293,8 @@ static void intel_pmu_enable_event(struct perf_event *event)
+>>         struct hw_perf_event *hwc = &event->hw;
+>>         int idx = hwc->idx;
+>>
+>> +       intel_pmu_update_rdpmc_user_disable(event);
+>> +
+>>         if (unlikely(event->attr.precise_ip))
+>>                 static_call(x86_pmu_pebs_enable)(event);
+>>
+>> @@ -5863,6 +5887,8 @@ static void update_pmu_cap(struct pmu *pmu)
+>>                 hybrid(pmu, config_mask) |= ARCH_PERFMON_EVENTSEL_UMASK2;
+>>         if (ebx_0.split.eq)
+>>                 hybrid(pmu, config_mask) |= ARCH_PERFMON_EVENTSEL_EQ;
+>> +       if (ebx_0.split.rdpmc_user_disable)
+>> +               hybrid(pmu, config_mask) |= ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
+>>
+>>         if (eax_0.split.cntr_subleaf) {
+>>                 cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_NUM_COUNTER_LEAF,
+>> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+>> index 24a81d2916e9..cd337f3ffd01 100644
+>> --- a/arch/x86/events/perf_event.h
+>> +++ b/arch/x86/events/perf_event.h
+>> @@ -1333,6 +1333,12 @@ static inline u64 x86_pmu_get_event_config(struct perf_event *event)
+>>         return event->attr.config & hybrid(event->pmu, config_mask);
+>>  }
+>>
+>> +static inline bool x86_pmu_has_rdpmc_user_disable(struct pmu *pmu)
+>> +{
+>> +       return !!(hybrid(pmu, config_mask) &
+>> +                ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE);
+>> +}
+>> +
+>>  extern struct event_constraint emptyconstraint;
+>>
+>>  extern struct event_constraint unconstrained;
+>> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+>> index 0d9af4135e0a..ff5acb8b199b 100644
+>> --- a/arch/x86/include/asm/perf_event.h
+>> +++ b/arch/x86/include/asm/perf_event.h
+>> @@ -33,6 +33,7 @@
+>>  #define ARCH_PERFMON_EVENTSEL_CMASK                    0xFF000000ULL
+>>  #define ARCH_PERFMON_EVENTSEL_BR_CNTR                  (1ULL << 35)
+>>  #define ARCH_PERFMON_EVENTSEL_EQ                       (1ULL << 36)
+>> +#define ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE       (1ULL << 37)
+>>  #define ARCH_PERFMON_EVENTSEL_UMASK2                   (0xFFULL << 40)
+>>
+>>  #define INTEL_FIXED_BITS_STRIDE                        4
+>> @@ -40,6 +41,7 @@
+>>  #define INTEL_FIXED_0_USER                             (1ULL << 1)
+>>  #define INTEL_FIXED_0_ANYTHREAD                        (1ULL << 2)
+>>  #define INTEL_FIXED_0_ENABLE_PMI                       (1ULL << 3)
+>> +#define INTEL_FIXED_0_RDPMC_USER_DISABLE               (1ULL << 33)
+>>  #define INTEL_FIXED_3_METRICS_CLEAR                    (1ULL << 2)
+>>
+>>  #define HSW_IN_TX                                      (1ULL << 32)
+>> @@ -50,7 +52,7 @@
+>>  #define INTEL_FIXED_BITS_MASK                                  \
+>>         (INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER |            \
+>>          INTEL_FIXED_0_ANYTHREAD | INTEL_FIXED_0_ENABLE_PMI |   \
+>> -        ICL_FIXED_0_ADAPTIVE)
+>> +        ICL_FIXED_0_ADAPTIVE | INTEL_FIXED_0_RDPMC_USER_DISABLE)
+>>
+>>  #define intel_fixed_bits_by_idx(_idx, _bits)                   \
+>>         ((_bits) << ((_idx) * INTEL_FIXED_BITS_STRIDE))
+>> @@ -226,7 +228,9 @@ union cpuid35_ebx {
+>>                 unsigned int    umask2:1;
+>>                 /* EQ-bit Supported */
+>>                 unsigned int    eq:1;
+>> -               unsigned int    reserved:30;
+>> +               /* rdpmc user disable Supported */
+>> +               unsigned int    rdpmc_user_disable:1;
+>> +               unsigned int    reserved:29;
+>>         } split;
+>>         unsigned int            full;
+>>  };
+>> --
+>> 2.34.1
+>>
