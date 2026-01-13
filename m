@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72472352FAF;
-	Tue, 13 Jan 2026 23:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 316AE350A2F;
+	Tue, 13 Jan 2026 23:37:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768346945; cv=none; b=ox9xAEugxJFf7k5bRmBlV3Lm0g3Oyq/ZOcOpx+ELc4S4HWo9tzVJl0pnXi4rDVbDwfY4euRZWYwMFpSIOdPv8KwsfWaa6SPheU8sEyDr7+Vh26AZ72KlwmMZ3AkMi9yN08AiWdVQ4pqWnXsJ5PeKFrF8eAFMlb5jrvgEtE61qok=
+	t=1768347479; cv=none; b=YSmbl+AYysm0UpBrrQj2fjHh+g7EX2OBebDk1Pg6uBB0LMgQBMhahJYRna7NAtF2HZHi+V2V3+kjxMX8qiLE4cfWI1+K4SHM+aDAy8F6pNVQ3Q7NjEnuximV2zxuWYcGqi7/38egh+H8oCniyvsYP6ugeN9s3sP1P0CT4BAA5U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768346945; c=relaxed/simple;
-	bh=rPxFyINz1AkcMSYLUgPLaOUj5RwJVnSCz8bryJrBDaY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y/DqW6kXJvbQwbV7puku/e+v9IZaXLu5L5j7GRMdaVmV5C2rJeOrhbfPRsWwCcL4CyN87ZcCnIeaC3XA6tN1AsXJj/g1sMnpF/JxjAzF60pRtzKehKrD5K2cSqD6r0hC6KIabX2ZxI2WV6RX036ojQn2sEH4WCqmZ8MWJX6DE5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0hwTvYa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768347479; c=relaxed/simple;
+	bh=JGTqhV59QkKFc7X6jgO/PsLiLpy3ZTMw89lLplbbB2o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qKZUJ2ZmJf+s00BnE5Ad7+q0RNhlQfqIo1u5+wbbqOadgfraz7E74y0mJsjvDG5deiWTjdHBFnyCVchhU3oDxrAwfpLmZd1b1GRGenT/LkwIPXdGy8E0ZD9mA+fBrOccyWXtBhOT8sPt3eKRfyStOppDtN4SncUNAErlxcTruPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LxQkJ//2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0hwTvYa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EAB5C116C6;
-	Tue, 13 Jan 2026 23:29:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LxQkJ//2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A458EC116C6;
+	Tue, 13 Jan 2026 23:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768346944;
-	bh=rPxFyINz1AkcMSYLUgPLaOUj5RwJVnSCz8bryJrBDaY=;
+	s=k20201202; t=1768347479;
+	bh=JGTqhV59QkKFc7X6jgO/PsLiLpy3ZTMw89lLplbbB2o=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Y0hwTvYa5PscHsvJ5HO3+z+kkB0m8x8iWdvgS5bo9zEkghONCJtf/VD3NJfA1xdIk
-	 OodlAi4sltcwTVxJBj9HU19i6D8g3BRk3Zm/DRODYSMEjDKd3RQT/kMV3+BIaf3hrI
-	 gfGHbfQoHBrMb8t+dy7K51RN9j31vvEp780dDtw10+IL7iL5TbHU6tdUx/zKSREKrJ
-	 fk/ts4+wLSb+5de8rD8BOj5n1D+MzJAKcPb+pnTmoIJApMHq+UEu43CMDTLrUm4Tli
-	 MCjbVsZvHM9gWi/5tPFwWqtB20qgSBX0ur/uG4z6VhUfFljGPRrxpiQhmBXD7mz8L3
-	 SZeFmI3kNuADw==
+	b=LxQkJ//2HlJIpw/akcaeI2PwnVlC5RBhb7iHqbLHB+TdNUAzD3zEkiZ5zjZw+O1Wn
+	 79laLoHfZ98UlsoS9AHsJPy+GtygHgbLpNK1cnh9tNx9Vwj+djH2fwLMWOCaEoKlWc
+	 YCB7iIuq7M68dGE1Krts//kxfFL6YsAQh2SBrs7O10oyMt0h1n3I+RQrlzjlJHxzZL
+	 A/5AwTb0w4ApQvFPFgF2Refvhy3ZI+6SdhfildE6B3XeD109DmTNlbcPDhSfXFgTJi
+	 GTKbixAsShQcuvmn8FbjqN1Ha6jk24931YZwJqY1oYRolyVhAusIauNRyOLn8I5ny3
+	 hhC7DSA+VRrAg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,9 +35,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 1/2] perf inject: Add --convert-callchain option
-Date: Tue, 13 Jan 2026 15:29:02 -0800
-Message-ID: <20260113232903.55021-1-namhyung@kernel.org>
+Subject: [PATCH] perf tools: Get debug info of DSO properly
+Date: Tue, 13 Jan 2026 15:37:57 -0800
+Message-ID: <20260113233757.62347-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -47,298 +47,154 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are applications not built with frame pointers, so DWARF is needed
-to get the stack traces.  So `perf record --call-graph dwarf` saves the
-stack and register data for each sample to get the stacktrace offline.
-But sometimes those data may have sensitive information and we don't
-want to keep them in the file.
+The dso__debuginfo() just used the path name to open the file but it may
+be outdated.  It should check build-ID and use the file in the build-ID
+cache if available rather than just using the path name.
 
-This perf inject --convert-callchain option parses the callchains and
-discard the stack and register after that.  This will save storage space
-and processing time for the new data file.  Of course, users should
-remove the original data file. :)
+Let's factor out dso__get_filename() to avoid code duplicate.
 
-The down side is that it cannot handle inlined callchain entries as they
-all have the same IPs.  Maybe we can add an option to perf report to
-look up inlined functions using DWARF - IIUC it won't requires stack and
-register data.
-
-This is an example.
-
-  $ perf record --call-graph dwarf -- perf test -w noploop
-
-  $ perf report --stdio --no-children --percent-limit=0 > output-prev
-
-  $ perf inject -i perf.data --convert-callchain -o perf.data.out
-
-  $ perf report --stdio --no-children --percent-limit=0 -i perf.data.out > output-next
-
-  $ diff -u output-prev output-next
-  ...
-        0.23%  perf          ld-linux-x86-64.so.2  [.] _dl_relocate_object_no_relro
-               |
-  -            ---elf_dynamic_do_Rela (inlined)
-  -               _dl_relocate_object_no_relro
-  +            ---_dl_relocate_object_no_relro
-                  _dl_relocate_object
-                  dl_main
-                  _dl_sysdep_start
-  -               _dl_start_final (inlined)
-                  _dl_start
-                  _start
-
-Reviewed-by: Ian Rogers <irogers@google.com>
+Fixes: 53a61a6ca279165d ("perf annotate: Add dso__debuginfo() helper")
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
-v3 changes)
- * add Ian's reviewed-by tag
- * handle error cases properly  (Arnaldo)
+ tools/perf/util/dso.c | 63 ++++++++++++++++++++++++++++++++-----------
+ tools/perf/util/dso.h | 11 ++------
+ 2 files changed, 50 insertions(+), 24 deletions(-)
 
- tools/perf/Documentation/perf-inject.txt |   5 +
- tools/perf/builtin-inject.c              | 152 +++++++++++++++++++++++
- 2 files changed, 157 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-inject.txt b/tools/perf/Documentation/perf-inject.txt
-index c972032f4ca0d248..95dfdf39666efe89 100644
---- a/tools/perf/Documentation/perf-inject.txt
-+++ b/tools/perf/Documentation/perf-inject.txt
-@@ -109,6 +109,11 @@ include::itrace.txt[]
- 	should be used, and also --buildid-all and --switch-events may be
- 	useful.
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 06980844c014ec9b..922fcc2f798baa57 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -112,7 +112,7 @@ bool dso__is_object_file(const struct dso *dso)
  
-+--convert-callchain::
-+	Parse DWARF callchains and convert them to usual callchains.  This also
-+	discards stack and register data from the samples.  This will lose
-+	inlined callchain entries.
-+
- :GMEXAMPLECMD: inject
- :GMEXAMPLESUBCMD:
- include::guestmount.txt[]
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 6080afec537d2178..e2a653280e1b8361 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -122,6 +122,7 @@ struct perf_inject {
- 	bool			in_place_update;
- 	bool			in_place_update_dry_run;
- 	bool			copy_kcore_dir;
-+	bool			convert_callchain;
- 	const char		*input_name;
- 	struct perf_data	output;
- 	u64			bytes_written;
-@@ -133,6 +134,7 @@ struct perf_inject {
- 	struct guest_session	guest_session;
- 	struct strlist		*known_build_ids;
- 	const struct evsel	*mmap_evsel;
-+	struct ip_callchain	*raw_callchain;
- };
- 
- struct event_entry {
-@@ -383,6 +385,90 @@ static int perf_event__repipe_sample(const struct perf_tool *tool,
- 	return perf_event__repipe_synth(tool, event);
+ int dso__read_binary_type_filename(const struct dso *dso,
+ 				   enum dso_binary_type type,
+-				   char *root_dir, char *filename, size_t size)
++				   const char *root_dir, char *filename, size_t size)
+ {
+ 	char build_id_hex[SBUILD_ID_SIZE];
+ 	int ret = 0;
+@@ -564,20 +564,15 @@ char *dso__filename_with_chroot(const struct dso *dso, const char *filename)
+ 	return filename_with_chroot(nsinfo__pid(dso__nsinfo_const(dso)), filename);
  }
  
-+static int perf_event__convert_sample_callchain(const struct perf_tool *tool,
-+						union perf_event *event,
-+						struct perf_sample *sample,
-+						struct evsel *evsel,
-+						struct machine *machine)
-+{
-+	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
-+	struct callchain_cursor *cursor = get_tls_callchain_cursor();
-+	union perf_event *event_copy = (void *)inject->event_copy;
-+	struct callchain_cursor_node *node;
-+	struct thread *thread;
-+	u64 sample_type = evsel->core.attr.sample_type;
-+	u32 sample_size = event->header.size;
-+	u64 i, k;
-+	int ret;
-+
-+	if (event_copy == NULL) {
-+		inject->event_copy = malloc(PERF_SAMPLE_MAX_SIZE);
-+		if (!inject->event_copy)
-+			return -ENOMEM;
-+
-+		event_copy = (void *)inject->event_copy;
-+	}
-+
-+	if (cursor == NULL)
-+		return -ENOMEM;
-+
-+	callchain_cursor_reset(cursor);
-+
-+	thread = machine__find_thread(machine, sample->tid, sample->pid);
-+	if (thread == NULL)
-+		goto out;
-+
-+	/* this will parse DWARF using stack and register data */
-+	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
-+					/*parent=*/NULL, /*root_al=*/NULL,
-+					PERF_MAX_STACK_DEPTH);
-+	thread__put(thread);
-+	if (ret != 0)
-+		goto out;
-+
-+	/* copy kernel callchain and context entries */
-+	for (i = 0; i < sample->callchain->nr; i++) {
-+		inject->raw_callchain->ips[i] = sample->callchain->ips[i];
-+		if (sample->callchain->ips[i] == PERF_CONTEXT_USER) {
-+			i++;
-+			break;
-+		}
-+	}
-+	if (i == 0 || inject->raw_callchain->ips[i - 1] != PERF_CONTEXT_USER)
-+		inject->raw_callchain->ips[i++] = PERF_CONTEXT_USER;
-+
-+	node = cursor->first;
-+	for (k = 0; k < cursor->nr && i < PERF_MAX_STACK_DEPTH; k++) {
-+		if (machine__kernel_ip(machine, node->ip))
-+			/* kernel IPs were added already */;
-+		else if (node->ms.sym && node->ms.sym->inlined)
-+			/* we can't handle inlined callchains */;
-+		else
-+			inject->raw_callchain->ips[i++] = node->ip;
-+
-+		node = node->next;
-+	}
-+
-+	inject->raw_callchain->nr = i;
-+	sample->callchain = inject->raw_callchain;
+-static int __open_dso(struct dso *dso, struct machine *machine)
+-	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
++static char *dso__get_filename(struct dso *dso, const char *root_dir,
++			       bool *decomp)
+ {
+-	int fd = -EINVAL;
+-	char *root_dir = (char *)"";
+ 	char *name = malloc(PATH_MAX);
+-	bool decomp = false;
+ 
+-	if (!name)
+-		return -ENOMEM;
++	*decomp = false;
+ 
+-	mutex_lock(dso__lock(dso));
+-	if (machine)
+-		root_dir = machine->root_dir;
++	if (name == NULL)
++		return NULL;
+ 
+ 	if (dso__read_binary_type_filename(dso, dso__binary_type(dso),
+ 					    root_dir, name, PATH_MAX))
+@@ -602,20 +597,38 @@ static int __open_dso(struct dso *dso, struct machine *machine)
+ 		size_t len = sizeof(newpath);
+ 
+ 		if (dso__decompress_kmodule_path(dso, name, newpath, len) < 0) {
+-			fd = -(*dso__load_errno(dso));
++			errno = *dso__load_errno(dso);
+ 			goto out;
+ 		}
+ 
+-		decomp = true;
++		*decomp = true;
+ 		strcpy(name, newpath);
+ 	}
++	return name;
 +
 +out:
-+	memcpy(event_copy, event, sizeof(event->header));
-+
-+	/* adjust sample size for stack and regs */
-+	sample_size -= sample->user_stack.size;
-+	sample_size -= (hweight64(evsel->core.attr.sample_regs_user) + 1) * sizeof(u64);
-+	sample_size += (sample->callchain->nr + 1) * sizeof(u64);
-+	event_copy->header.size = sample_size;
-+
-+	/* remove sample_type {STACK,REGS}_USER for synthesize */
-+	sample_type &= ~(PERF_SAMPLE_STACK_USER | PERF_SAMPLE_REGS_USER);
-+
-+	perf_event__synthesize_sample(event_copy, sample_type,
-+				      evsel->core.attr.read_format, sample);
-+	return perf_event__repipe_synth(tool, event_copy);
++	free(name);
++	return NULL;
 +}
-+
- static struct dso *findnew_dso(int pid, int tid, const char *filename,
- 			       const struct dso_id *id, struct machine *machine)
- {
-@@ -2270,6 +2356,15 @@ static int __cmd_inject(struct perf_inject *inject)
- 		/* Allow space in the header for guest attributes */
- 		output_data_offset += gs->session->header.data_offset;
- 		output_data_offset = roundup(output_data_offset, 4096);
-+	} else if (inject->convert_callchain) {
-+		inject->tool.sample	= perf_event__convert_sample_callchain;
-+		inject->tool.fork	= perf_event__repipe_fork;
-+		inject->tool.comm	= perf_event__repipe_comm;
-+		inject->tool.exit	= perf_event__repipe_exit;
-+		inject->tool.mmap	= perf_event__repipe_mmap;
-+		inject->tool.mmap2	= perf_event__repipe_mmap2;
-+		inject->tool.ordered_events = true;
-+		inject->tool.ordering_requires_timestamps = true;
- 	}
  
- 	if (!inject->itrace_synth_opts.set)
-@@ -2322,6 +2417,23 @@ static int __cmd_inject(struct perf_inject *inject)
- 				perf_header__set_feat(&session->header,
- 						      HEADER_BRANCH_STACK);
- 		}
-+
-+		/*
-+		 * The converted data file won't have stack and registers.
-+		 * Update the perf_event_attr to remove them before writing.
-+		 */
-+		if (inject->convert_callchain) {
-+			struct evsel *evsel;
-+
-+			evlist__for_each_entry(session->evlist, evsel) {
-+				evsel__reset_sample_bit(evsel, REGS_USER);
-+				evsel__reset_sample_bit(evsel, STACK_USER);
-+				evsel->core.attr.sample_regs_user = 0;
-+				evsel->core.attr.sample_stack_user = 0;
-+				evsel->core.attr.exclude_callchain_user = 0;
-+			}
-+		}
-+
- 		session->header.data_offset = output_data_offset;
- 		session->header.data_size = inject->bytes_written;
- 		perf_session__inject_header(session, session->evlist, fd, &inj_fc.fc,
-@@ -2346,6 +2458,18 @@ static int __cmd_inject(struct perf_inject *inject)
- 	return ret;
- }
- 
-+static bool evsel__has_dwarf_callchain(struct evsel *evsel)
+-	fd = do_open(name);
++static int __open_dso(struct dso *dso, struct machine *machine)
++	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
 +{
-+	struct perf_event_attr *attr = &evsel->core.attr;
-+	const u64 dwarf_callchain_flags =
-+		PERF_SAMPLE_STACK_USER | PERF_SAMPLE_REGS_USER | PERF_SAMPLE_CALLCHAIN;
++	int fd = -EINVAL;
++	char *name;
++	bool decomp = false;
 +
-+	if (!attr->exclude_callchain_user)
-+		return false;
++	mutex_lock(dso__lock(dso));
 +
-+	return (attr->sample_type & dwarf_callchain_flags) == dwarf_callchain_flags;
-+}
-+
- int cmd_inject(int argc, const char **argv)
- {
- 	struct perf_inject inject = {
-@@ -2414,6 +2538,8 @@ int cmd_inject(int argc, const char **argv)
- 		OPT_STRING(0, "guestmount", &symbol_conf.guestmount, "directory",
- 			   "guest mount directory under which every guest os"
- 			   " instance has a subdir"),
-+		OPT_BOOLEAN(0, "convert-callchain", &inject.convert_callchain,
-+			    "Generate callchains using DWARF and drop register/stack data"),
- 		OPT_END()
- 	};
- 	const char * const inject_usage[] = {
-@@ -2429,6 +2555,9 @@ int cmd_inject(int argc, const char **argv)
++	name = dso__get_filename(dso, machine ? machine->root_dir : "", &decomp);
++	if (name)
++		fd = do_open(name);
++	else
++		fd = -errno;
  
- #ifndef HAVE_JITDUMP
- 	set_option_nobuild(options, 'j', "jit", "NO_LIBELF=1", true);
-+#endif
-+#ifndef HAVE_LIBDW_SUPPORT
-+	set_option_nobuild(options, 0, "convert-callchain", "NO_LIBDW=1", true);
- #endif
- 	argc = parse_options(argc, argv, options, inject_usage, 0);
+ 	if (decomp)
+ 		unlink(name);
  
-@@ -2588,6 +2717,28 @@ int cmd_inject(int argc, const char **argv)
- 		}
- 	}
- 
-+	if (inject.convert_callchain) {
-+		struct evsel *evsel;
-+
-+		if (inject.output.is_pipe || inject.session->data->is_pipe) {
-+			pr_err("--convert-callchain cannot work with pipe\n");
-+			goto out_delete;
-+		}
-+
-+		evlist__for_each_entry(inject.session->evlist, evsel) {
-+			if (!evsel__has_dwarf_callchain(evsel)) {
-+				pr_err("--convert-callchain requires DWARF call graph.\n");
-+				goto out_delete;
-+			}
-+		}
-+
-+		inject.raw_callchain = calloc(PERF_MAX_STACK_DEPTH, sizeof(u64));
-+		if (inject.raw_callchain == NULL) {
-+			pr_err("callchain allocation failed\n");
-+			goto out_delete;
-+		}
-+	}
-+
- #ifdef HAVE_JITDUMP
- 	if (inject.jit_mode) {
- 		inject.tool.mmap2	   = perf_event__repipe_mmap2;
-@@ -2618,5 +2769,6 @@ int cmd_inject(int argc, const char **argv)
- 	free(inject.itrace_synth_opts.vm_tm_corr_args);
- 	free(inject.event_copy);
- 	free(inject.guest_session.ev.event_buf);
-+	free(inject.raw_callchain);
- 	return ret;
+-out:
+ 	mutex_unlock(dso__lock(dso));
+ 	free(name);
+ 	return fd;
+@@ -1912,3 +1925,23 @@ const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
+ 	return __dso__read_symbol(dso, symfs_filename, start, len,
+ 				  out_buf, out_buf_len, is_64bit);
  }
++
++struct debuginfo *dso__debuginfo(struct dso *dso)
++{
++	char *name;
++	bool decomp = false;
++	struct debuginfo *dinfo = NULL;
++
++	mutex_lock(dso__lock(dso));
++
++	name = dso__get_filename(dso, "", &decomp);
++	if (name)
++		dinfo = debuginfo__new(name);
++
++	if (decomp)
++		unlink(name);
++
++	mutex_unlock(dso__lock(dso));
++	free(name);
++	return dinfo;
++}
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 4aee23775054cf83..3dd7d0fc00797f37 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -777,7 +777,7 @@ int dso__kernel_module_get_build_id(struct dso *dso, const char *root_dir);
+ 
+ char dso__symtab_origin(const struct dso *dso);
+ int dso__read_binary_type_filename(const struct dso *dso, enum dso_binary_type type,
+-				   char *root_dir, char *filename, size_t size);
++				   const char *root_dir, char *filename, size_t size);
+ bool is_kernel_module(const char *pathname, int cpumode);
+ bool dso__needs_decompress(struct dso *dso);
+ int dso__decompress_kmodule_fd(struct dso *dso, const char *name);
+@@ -926,14 +926,7 @@ u64 dso__findnew_global_type(struct dso *dso, u64 addr, u64 offset);
+ bool perf_pid_map_tid(const char *dso_name, int *tid);
+ bool is_perf_pid_map_name(const char *dso_name);
+ 
+-/*
+- * In the future, we may get debuginfo using build-ID (w/o path).
+- * Add this helper is for the smooth conversion.
+- */
+-static inline struct debuginfo *dso__debuginfo(struct dso *dso)
+-{
+-	return debuginfo__new(dso__long_name(dso));
+-}
++struct debuginfo *dso__debuginfo(struct dso *dso);
+ 
+ const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
+ 			   const struct map *map, const struct symbol *sym,
 -- 
 2.52.0.457.g6b5491de43-goog
 
