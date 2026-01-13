@@ -1,51 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D242320A1F;
-	Tue, 13 Jan 2026 22:13:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F4D30EF65;
+	Tue, 13 Jan 2026 22:45:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768342407; cv=none; b=VcQf6mSifotCPHfGcYbj9HmVn2ujoMMaF4DV/NjU4mgBXW319NEtEUHB3fceuCYG8MouDNgpA6117go0koWT58G+9VzYeSnVYut9fA4afxYyyEsYBOaZVD7vjJVlEn59IhxWbTCoG3JvD9mL9mjKGaPDByT54ACtTeREIf5I+j8=
+	t=1768344322; cv=none; b=dUEHu5GHk4BHPE03HVqym6R45tLKWx/WCQrRTEof2IIO0O0DVK45Ib412TKsNpQI+JzOroJeXEt38o0mdRo/dCk0OctIBwumLnyiwRQ5AO6DZnZKRxTG1WWw7TTHbUOUE62ZNW+fC23o2qrfQjSxzLO0NPxll88oYaHONpTD7fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768342407; c=relaxed/simple;
-	bh=ZyRwpdeHQJLYuREFufXZqOyxnfIVStjxw0TP41ppM4A=;
+	s=arc-20240116; t=1768344322; c=relaxed/simple;
+	bh=sGDryFc78FjRjWs+Hjh2JbpPnWg6xuT0iVJ6X1UZhe4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q3xVDixqAlcn20yyQvRTunKs4SpqGQNGCHULax7Q7078IlO5wARW+651LruZ1enm51KG2dk+Jp1sDVzpaUaAemWXswVrqt/k5LeW18z6uvvdkPSp0gYSx3hIfhZn3LFYSMmn4tyBicWzTNvRIWhjwc3cUdywkrEIQj1v10KcKZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FFdkia8P; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=VlrsxVnEgdmnPVHVeVkO8RNDbLNMsWag3MJivTDlHot5Tr23xHdIUhQ8UQrXwejn3a0XtkLvedok+Dz1KgGB6e2W05snFjdaPC4HvwFte0MIXnPnzqYCvzvBpaLfaZcn/VNo4ZM8D5Xen7w9d6t2YxwAsex6B0nPh3oZjBHXZKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hikv+Fpx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FFdkia8P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D2F4C116C6;
-	Tue, 13 Jan 2026 22:13:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hikv+Fpx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36D57C116C6;
+	Tue, 13 Jan 2026 22:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768342406;
-	bh=ZyRwpdeHQJLYuREFufXZqOyxnfIVStjxw0TP41ppM4A=;
+	s=k20201202; t=1768344322;
+	bh=sGDryFc78FjRjWs+Hjh2JbpPnWg6xuT0iVJ6X1UZhe4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FFdkia8Ph0P6rGiCN8k8vqU/Pt1Gxk+ATX0IxBrmZkCKk3tdZC3V80iar6hCGe5Uo
-	 /dNl3ehyTQKliGbDpwFkOA5aKkqry4zBUvonxKjh+8u+RffBEbRBbOdHYVrnq/tz9y
-	 Yloo/9Ky6pgHsKjFDYpxMpAgjNMlFI3X5wNqXNTv8JT7fsTyp+Xq2y0acsIVQGgrgO
-	 1KTyVy+Jhtg1ecClMqvS8LUMKv4xtp5Z2cNgVntFhggnMY4Qe5tcuH5ddTixAlb1EY
-	 NTCFiN+/cjtMtk2DjpgsS4Ig86qEfxRik4cNJx+78B7hFGjJmqLuxAud+VuHO5HWv4
-	 zF73WI5/RiNOQ==
-Date: Tue, 13 Jan 2026 19:13:23 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	b=hikv+FpxFfNUIcbG0fdnVqMskRvn/Ci7+uvznkOLgHhUXn3AESZLe3Wf1dVNLQuq0
+	 WnbPyroN1AJu9GqdIeV6GKfJncEXfCI0iP2jCWKXbjeXS5Cwma8FxJkKf3bTPxNnXu
+	 ulDjjGGaqT228DltWjw1hxSTxWUvGRUEUkMjPdhkwK59oMrnOIBCO0kuIFPeXo0v0m
+	 iR7ltFhU+L3hQaVJ08S6NUrdRPCZTc1rR8pxk8LO/837m7rM0fOD7eY0B+LdHwlPTx
+	 So0sAUV/+7IYq5JPTj+Ld8VkA0IbXfwhqx2dxLaiFdSFbyVE5poSEJFq0709SMNEEW
+	 ITHSpi204zpSg==
+Date: Tue, 13 Jan 2026 14:45:20 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Leo Yan <leo.yan@linux.dev>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 02/14] perf evsel: Refactor
- evsel__set_config_if_unset() arguments
-Message-ID: <aWbDg0kmo-isxkz2@x1>
-References: <20251222-james-perf-config-bits-v4-0-0608438186fc@linaro.org>
- <20251222-james-perf-config-bits-v4-2-0608438186fc@linaro.org>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] perf inject: Add --convert-callchain option
+Message-ID: <aWbLAIjOGj910kIW@google.com>
+References: <20260110011715.1642869-1-namhyung@kernel.org>
+ <aWa6nZCN6xsbxyem@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,141 +47,327 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251222-james-perf-config-bits-v4-2-0608438186fc@linaro.org>
+In-Reply-To: <aWa6nZCN6xsbxyem@x1>
 
-On Mon, Dec 22, 2025 at 03:14:27PM +0000, James Clark wrote:
-> Make the evsel argument first to match the other evsel__* functions
-> and remove the redundant pmu argument, which can be accessed via evsel.
-
-I haven't checked if this is the exactly where this takes place but
-should be in this series, 32-bit build is broken:
-
-   3: almalinux:9-i386WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
-WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
-    21.72 almalinux:9-i386              : FAIL gcc version 11.4.1 20231218 (Red Hat 11.4.1-3) (GCC)
-     1378 |         perf_pmu__format_pack(&bits, val, vp, /*zero=*/true);
-          |                               ^~~~~
-          |                               |
-          |                               u64 * {aka long long unsigned int *}
-    In file included from util/evsel.h:14,
-                     from util/evsel.c:38:
-    util/pmu.h:282:43: note: expected ‘long unsigned int *’ but argument is of type ‘u64 *’ {aka ‘long long unsigned int *’}
-      282 | void perf_pmu__format_pack(unsigned long *format, __u64 value, __u64 *v,
-          |                            ~~~~~~~~~~~~~~~^~~~~~
-
-
-What I have is in perf-tools-next/tmp.perf-tools-next BTW, I'll try and
-fix this tomorrow if you don't do it first. :-)
-
-There are some more build problems in other containers/distros, I'll be
-reporting as replies to the patches that looks related
-
-- Arnaldo
- 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  tools/perf/arch/arm/util/cs-etm.c    | 9 +++------
->  tools/perf/arch/arm64/util/arm-spe.c | 2 +-
->  tools/perf/arch/x86/util/intel-pt.c  | 3 +--
->  tools/perf/util/evsel.h              | 4 ++--
->  tools/perf/util/pmu.c                | 6 +++---
->  5 files changed, 10 insertions(+), 14 deletions(-)
+On Tue, Jan 13, 2026 at 06:35:25PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Fri, Jan 09, 2026 at 05:17:14PM -0800, Namhyung Kim wrote:
+> > There are applications not built with frame pointers, so DWARF is needed
+> > to get the stack traces.  So `perf record --call-graph dwarf` saves the
+> > stack and register data for each sample to get the stacktrace offline.
+> > But sometimes those data may have sensitive information and we don't
+> > want to keep them in the file.
+> > 
+> > This perf inject --convert-callchain option parses the callchains and
+> > discard the stack and register after that.  This will save storage space
+> > and processing time for the new data file.  Of course, users should
+> > remove the original data file. :)
+> > 
+> > The down side is that it cannot handle inlined callchain entries as they
+> > all have the same IPs.  Maybe we can add an option to perf report to
+> > look up inlined functions using DWARF - IIUC it won't requires stack and
+> > register data.
+> > 
+> > This is an example.
+> > 
+> >   $ perf record --call-graph dwarf -- perf test -w noploop
+> > 
+> >   $ perf report --stdio --no-children --percent-limit=0 > output-prev
+> > 
+> >   $ perf inject -i perf.data --convert-callchain -o perf.data.out
+> > 
+> >   $ perf report --stdio --no-children --percent-limit=0 -i perf.data.out > output-next
+> > 
+> >   $ diff -u output-prev output-next
+> >   ...
+> >         0.23%  perf          ld-linux-x86-64.so.2  [.] _dl_relocate_object_no_relro
+> >                |
+> >   -            ---elf_dynamic_do_Rela (inlined)
+> >   -               _dl_relocate_object_no_relro
+> >   +            ---_dl_relocate_object_no_relro
+> >                   _dl_relocate_object
+> >                   dl_main
+> >                   _dl_sysdep_start
+> >   -               _dl_start_final (inlined)
+> >                   _dl_start
+> >                   _start
+> > 
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> > v2 changes)
+> >  * Use machine__kernel_ip() instead  (James)
+> >  * Check sample types for DWARF callchains (James)
+> >  * Fix build errors  (James)
+> >  * Add a new test  (Ian)
+> > 
+> >  tools/perf/Documentation/perf-inject.txt |   5 +
+> >  tools/perf/builtin-inject.c              | 151 +++++++++++++++++++++++
+> >  2 files changed, 156 insertions(+)
+> > 
+> > diff --git a/tools/perf/Documentation/perf-inject.txt b/tools/perf/Documentation/perf-inject.txt
+> > index c972032f4ca0d248..95dfdf39666efe89 100644
+> > --- a/tools/perf/Documentation/perf-inject.txt
+> > +++ b/tools/perf/Documentation/perf-inject.txt
+> > @@ -109,6 +109,11 @@ include::itrace.txt[]
+> >  	should be used, and also --buildid-all and --switch-events may be
+> >  	useful.
+> >  
+> > +--convert-callchain::
+> > +	Parse DWARF callchains and convert them to usual callchains.  This also
+> > +	discards stack and register data from the samples.  This will lose
+> > +	inlined callchain entries.
+> > +
+> >  :GMEXAMPLECMD: inject
+> >  :GMEXAMPLESUBCMD:
+> >  include::guestmount.txt[]
+> > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> > index 6080afec537d2178..02bd388d602fdd75 100644
+> > --- a/tools/perf/builtin-inject.c
+> > +++ b/tools/perf/builtin-inject.c
+> > @@ -122,6 +122,7 @@ struct perf_inject {
+> >  	bool			in_place_update;
+> >  	bool			in_place_update_dry_run;
+> >  	bool			copy_kcore_dir;
+> > +	bool			convert_callchain;
+> >  	const char		*input_name;
+> >  	struct perf_data	output;
+> >  	u64			bytes_written;
+> > @@ -133,6 +134,7 @@ struct perf_inject {
+> >  	struct guest_session	guest_session;
+> >  	struct strlist		*known_build_ids;
+> >  	const struct evsel	*mmap_evsel;
+> > +	struct ip_callchain	*raw_callchain;
+> >  };
+> >  
+> >  struct event_entry {
+> > @@ -383,6 +385,89 @@ static int perf_event__repipe_sample(const struct perf_tool *tool,
+> >  	return perf_event__repipe_synth(tool, event);
+> >  }
+> >  
+> > +static int perf_event__convert_sample_callchain(const struct perf_tool *tool,
+> > +						union perf_event *event,
+> > +						struct perf_sample *sample,
+> > +						struct evsel *evsel,
+> > +						struct machine *machine)
+> > +{
+> > +	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
+> > +	struct callchain_cursor *cursor = get_tls_callchain_cursor();
+> > +	union perf_event *event_copy = (void *)inject->event_copy;
+> > +	struct callchain_cursor_node *node;
+> > +	struct thread *thread;
+> > +	u64 sample_type = evsel->core.attr.sample_type;
+> > +	u32 sample_size = event->header.size;
+> > +	u64 i, k;
+> > +	int ret;
+> > +
+> > +	if (event_copy == NULL) {
+> > +		inject->event_copy = malloc(PERF_SAMPLE_MAX_SIZE);
+> > +		if (!inject->event_copy)
+> > +			return -ENOMEM;
+> > +
+> > +		event_copy = (void *)inject->event_copy;
+> > +	}
+> > +
+> > +	if (cursor == NULL)
+> > +		return perf_event__repipe_synth(tool, event);
 > 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index ea891d12f8f4..c28208361d91 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -441,10 +441,8 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
->  	 * when a context switch happened.
->  	 */
->  	if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
-> -		evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-> -					   "timestamp", 1);
-> -		evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-> -					   "contextid", 1);
-> +		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", 1);
-> +		evsel__set_config_if_unset(cs_etm_evsel, "contextid", 1);
->  	}
->  
->  	/*
-> @@ -453,8 +451,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
->  	 * timestamp tracing.
->  	 */
->  	if (opts->sample_time_set)
-> -		evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-> -					   "timestamp", 1);
-> +		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", 1);
->  
->  	/* Add dummy event to keep tracking */
->  	err = parse_event(evlist, "dummy:u");
-> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-> index d5ec1408d0ae..51014f8bff97 100644
-> --- a/tools/perf/arch/arm64/util/arm-spe.c
-> +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> @@ -274,7 +274,7 @@ static void arm_spe_setup_evsel(struct evsel *evsel, struct perf_cpu_map *cpus)
->  	 */
->  	if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
->  		evsel__set_sample_bit(evsel, CPU);
-> -		evsel__set_config_if_unset(evsel->pmu, evsel, "ts_enable", 1);
-> +		evsel__set_config_if_unset(evsel, "ts_enable", 1);
->  	}
->  
->  	/*
-> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-> index b394ad9cc635..c131a727774f 100644
-> --- a/tools/perf/arch/x86/util/intel-pt.c
-> +++ b/tools/perf/arch/x86/util/intel-pt.c
-> @@ -664,8 +664,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
->  		return 0;
->  
->  	if (opts->auxtrace_sample_mode)
-> -		evsel__set_config_if_unset(intel_pt_pmu, intel_pt_evsel,
-> -					   "psb_period", 0);
-> +		evsel__set_config_if_unset(intel_pt_evsel, "psb_period", 0);
->  
->  	err = intel_pt_validate_config(intel_pt_pmu, intel_pt_evsel);
->  	if (err)
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index a08130ff2e47..2cf87bc67df7 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -575,8 +575,8 @@ void evsel__uniquify_counter(struct evsel *counter);
->  	((((src) >> (pos)) & ((1ull << (size)) - 1)) << (63 - ((pos) + (size) - 1)))
->  
->  u64 evsel__bitfield_swap_branch_flags(u64 value);
-> -void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
-> -				const char *config_name, u64 val);
-> +void evsel__set_config_if_unset(struct evsel *evsel, const char *config_name,
-> +				u64 val);
->  
->  bool evsel__is_offcpu_event(struct evsel *evsel);
->  
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 956ea273c2c7..e87c12946d71 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1382,8 +1382,8 @@ bool evsel__is_aux_event(const struct evsel *evsel)
->   * something to true, pass 1 for val rather than a pre shifted value.
->   */
->  #define field_prep(_mask, _val) (((_val) << (ffsll(_mask) - 1)) & (_mask))
-> -void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
-> -				const char *config_name, u64 val)
-> +void evsel__set_config_if_unset(struct evsel *evsel, const char *config_name,
-> +				u64 val)
->  {
->  	u64 user_bits = 0, bits;
->  	struct evsel_config_term *term = evsel__get_config_term(evsel, CFG_CHG);
-> @@ -1391,7 +1391,7 @@ void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evsel,
->  	if (term)
->  		user_bits = term->val.cfg_chg;
->  
-> -	bits = perf_pmu__format_bits(pmu, config_name);
-> +	bits = perf_pmu__format_bits(evsel->pmu, config_name);
->  
->  	/* Do nothing if the user changed the value */
->  	if (bits & user_bits)
+> So when you don't manage to convert you just repipe the whole event,
+> with all the stack that you're supposed to discard? Shouldn't we do this
+> adjustment anyway?
 > 
-> -- 
-> 2.34.1
+> +	/* adjust sample size for stack and regs */
+> +	sample_size -= sample->user_stack.size;
+> +	sample_size -= (hweight64(evsel->core.attr.sample_regs_user) + 1) * sizeof(u64);
+> +	sample_size += (sample->callchain->nr + 1) * sizeof(u64);
+> +	event_copy->header.size = sample_size;
 > 
+> I.e. we either manage to convert the stack or we throw it away?
+
+Oh.. good point.  I think we should just return failue if cursor is NULL
+which is unexpected.  But thread can be missing or resolve_callchain may
+return failure for some reason.  I think then we should adjust samples
+with kernel stacks only.
+
+Will send v3.
+
+Thanks,
+Namhyung
+
+> 
+> - Arnaldo
+> 
+> > +
+> > +	callchain_cursor_reset(cursor);
+> > +
+> > +	thread = machine__find_thread(machine, -1, sample->pid);
+> > +	if (thread == NULL)
+> > +		return perf_event__repipe_synth(tool, event);
+> > +
+> > +	/* this will parse DWARF using stack and register data */
+> > +	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
+> > +					/*parent=*/NULL, /*root_al=*/NULL,
+> > +					PERF_MAX_STACK_DEPTH);
+> > +	thread__put(thread);
+> > +	if (ret != 0)
+> > +		return perf_event__repipe_synth(tool, event);
+> > +
+> > +	/* copy kernel callchain and context entries */
+> > +	for (i = 0; i < sample->callchain->nr; i++) {
+> > +		inject->raw_callchain->ips[i] = sample->callchain->ips[i];
+> > +		if (sample->callchain->ips[i] == PERF_CONTEXT_USER) {
+> > +			i++;
+> > +			break;
+> > +		}
+> > +	}
+> > +	if (i == 0 || inject->raw_callchain->ips[i - 1] != PERF_CONTEXT_USER)
+> > +		inject->raw_callchain->ips[i++] = PERF_CONTEXT_USER;
+> > +
+> > +	node = cursor->first;
+> > +	for (k = 0; k < cursor->nr && i < PERF_MAX_STACK_DEPTH; k++) {
+> > +		if (machine__kernel_ip(machine, node->ip))
+> > +			/* kernel IPs were added already */;
+> > +		else if (node->ms.sym && node->ms.sym->inlined)
+> > +			/* we can't handle inlined callchains */;
+> > +		else
+> > +			inject->raw_callchain->ips[i++] = node->ip;
+> > +
+> > +		node = node->next;
+> > +	}
+> > +
+> > +	inject->raw_callchain->nr = i;
+> > +	sample->callchain = inject->raw_callchain;
+> > +
+> > +	memcpy(event_copy, event, sizeof(event->header));
+> > +
+> > +	/* adjust sample size for stack and regs */
+> > +	sample_size -= sample->user_stack.size;
+> > +	sample_size -= (hweight64(evsel->core.attr.sample_regs_user) + 1) * sizeof(u64);
+> > +	sample_size += (sample->callchain->nr + 1) * sizeof(u64);
+> > +	event_copy->header.size = sample_size;
+> > +
+> > +	/* remove sample_type {STACK,REGS}_USER for synthesize */
+> > +	sample_type &= ~(PERF_SAMPLE_STACK_USER | PERF_SAMPLE_REGS_USER);
+> > +
+> > +	perf_event__synthesize_sample(event_copy, sample_type,
+> > +				      evsel->core.attr.read_format, sample);
+> > +	return perf_event__repipe_synth(tool, event_copy);
+> > +}
+> > +
+> >  static struct dso *findnew_dso(int pid, int tid, const char *filename,
+> >  			       const struct dso_id *id, struct machine *machine)
+> >  {
+> > @@ -2270,6 +2355,15 @@ static int __cmd_inject(struct perf_inject *inject)
+> >  		/* Allow space in the header for guest attributes */
+> >  		output_data_offset += gs->session->header.data_offset;
+> >  		output_data_offset = roundup(output_data_offset, 4096);
+> > +	} else if (inject->convert_callchain) {
+> > +		inject->tool.sample	= perf_event__convert_sample_callchain;
+> > +		inject->tool.fork	= perf_event__repipe_fork;
+> > +		inject->tool.comm	= perf_event__repipe_comm;
+> > +		inject->tool.exit	= perf_event__repipe_exit;
+> > +		inject->tool.mmap	= perf_event__repipe_mmap;
+> > +		inject->tool.mmap2	= perf_event__repipe_mmap2;
+> > +		inject->tool.ordered_events = true;
+> > +		inject->tool.ordering_requires_timestamps = true;
+> >  	}
+> >  
+> >  	if (!inject->itrace_synth_opts.set)
+> > @@ -2322,6 +2416,23 @@ static int __cmd_inject(struct perf_inject *inject)
+> >  				perf_header__set_feat(&session->header,
+> >  						      HEADER_BRANCH_STACK);
+> >  		}
+> > +
+> > +		/*
+> > +		 * The converted data file won't have stack and registers.
+> > +		 * Update the perf_event_attr to remove them before writing.
+> > +		 */
+> > +		if (inject->convert_callchain) {
+> > +			struct evsel *evsel;
+> > +
+> > +			evlist__for_each_entry(session->evlist, evsel) {
+> > +				evsel__reset_sample_bit(evsel, REGS_USER);
+> > +				evsel__reset_sample_bit(evsel, STACK_USER);
+> > +				evsel->core.attr.sample_regs_user = 0;
+> > +				evsel->core.attr.sample_stack_user = 0;
+> > +				evsel->core.attr.exclude_callchain_user = 0;
+> > +			}
+> > +		}
+> > +
+> >  		session->header.data_offset = output_data_offset;
+> >  		session->header.data_size = inject->bytes_written;
+> >  		perf_session__inject_header(session, session->evlist, fd, &inj_fc.fc,
+> > @@ -2346,6 +2457,18 @@ static int __cmd_inject(struct perf_inject *inject)
+> >  	return ret;
+> >  }
+> >  
+> > +static bool evsel__has_dwarf_callchain(struct evsel *evsel)
+> > +{
+> > +	struct perf_event_attr *attr = &evsel->core.attr;
+> > +	const u64 dwarf_callchain_flags =
+> > +		PERF_SAMPLE_STACK_USER | PERF_SAMPLE_REGS_USER | PERF_SAMPLE_CALLCHAIN;
+> > +
+> > +	if (!attr->exclude_callchain_user)
+> > +		return false;
+> > +
+> > +	return (attr->sample_type & dwarf_callchain_flags) == dwarf_callchain_flags;
+> > +}
+> > +
+> >  int cmd_inject(int argc, const char **argv)
+> >  {
+> >  	struct perf_inject inject = {
+> > @@ -2414,6 +2537,8 @@ int cmd_inject(int argc, const char **argv)
+> >  		OPT_STRING(0, "guestmount", &symbol_conf.guestmount, "directory",
+> >  			   "guest mount directory under which every guest os"
+> >  			   " instance has a subdir"),
+> > +		OPT_BOOLEAN(0, "convert-callchain", &inject.convert_callchain,
+> > +			    "Generate callchains using DWARF and drop register/stack data"),
+> >  		OPT_END()
+> >  	};
+> >  	const char * const inject_usage[] = {
+> > @@ -2429,6 +2554,9 @@ int cmd_inject(int argc, const char **argv)
+> >  
+> >  #ifndef HAVE_JITDUMP
+> >  	set_option_nobuild(options, 'j', "jit", "NO_LIBELF=1", true);
+> > +#endif
+> > +#ifndef HAVE_LIBDW_SUPPORT
+> > +	set_option_nobuild(options, 0, "convert-callchain", "NO_LIBDW=1", true);
+> >  #endif
+> >  	argc = parse_options(argc, argv, options, inject_usage, 0);
+> >  
+> > @@ -2588,6 +2716,28 @@ int cmd_inject(int argc, const char **argv)
+> >  		}
+> >  	}
+> >  
+> > +	if (inject.convert_callchain) {
+> > +		struct evsel *evsel;
+> > +
+> > +		if (inject.output.is_pipe || inject.session->data->is_pipe) {
+> > +			pr_err("--convert-callchain cannot work with pipe\n");
+> > +			goto out_delete;
+> > +		}
+> > +
+> > +		evlist__for_each_entry(inject.session->evlist, evsel) {
+> > +			if (!evsel__has_dwarf_callchain(evsel)) {
+> > +				pr_err("--convert-callchain requires DWARF call graph.\n");
+> > +				goto out_delete;
+> > +			}
+> > +		}
+> > +
+> > +		inject.raw_callchain = calloc(PERF_MAX_STACK_DEPTH, sizeof(u64));
+> > +		if (inject.raw_callchain == NULL) {
+> > +			pr_err("callchain allocation failed\n");
+> > +			goto out_delete;
+> > +		}
+> > +	}
+> > +
+> >  #ifdef HAVE_JITDUMP
+> >  	if (inject.jit_mode) {
+> >  		inject.tool.mmap2	   = perf_event__repipe_mmap2;
+> > @@ -2618,5 +2768,6 @@ int cmd_inject(int argc, const char **argv)
+> >  	free(inject.itrace_synth_opts.vm_tm_corr_args);
+> >  	free(inject.event_copy);
+> >  	free(inject.guest_session.ev.event_buf);
+> > +	free(inject.raw_callchain);
+> >  	return ret;
+> >  }
+> > -- 
+> > 2.52.0.457.g6b5491de43-goog
