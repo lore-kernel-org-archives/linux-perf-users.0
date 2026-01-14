@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976C82874E1;
-	Wed, 14 Jan 2026 01:22:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6239E2874E1;
+	Wed, 14 Jan 2026 01:22:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768353743; cv=none; b=Z8uPNRGYFtbGSA/NtaDpC33+FhZj8DGnQbrpBnk0dAvXfiR507zcbaLBiVuHws7ndLdE5wLJIJan4p5u1kLNfoazKNRwXm1YNiZXdJ/RyK7Uhg4+9Hxo0FjKJmbMq0KVlgzzcoddKWDhkhbKu26liEopaPxJJ6qXu4h9u4iZnVM=
+	t=1768353751; cv=none; b=q0dRAkwI1B4AHj7oe7Bq4hwU/8cmiDMUlRX/5SJ6eKN6BCS/hl1jspfS14eqtl2AuN82qqwexTWvJL91OEQxMChQRlVGVYfCQVzKvBoGLr6lqQ+flcb/3x6HJjAcWyt0uPyfatqABtjWK7hgaUrm1ZAnu1USuX+VcJaNK+/KFPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768353743; c=relaxed/simple;
-	bh=/bqpYVKmFTI0Ol3j3AxBQxHuOUyFVGiVyJnNvDDfau8=;
+	s=arc-20240116; t=1768353751; c=relaxed/simple;
+	bh=8swUns+f4sPnKRPagD2A6Oy6QNSylTblYdaomHLa5sw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pXqUYrsVf6KphY5dZoGF72f29FsLpml5BY6opBpGZ2lh3F2GxFcuOwuRdEKTfz6g5P5fVgCSQnBPQIpAeR2KTb426WIZfqb/GdGpsBl/tlL+3mnQJn//qIZwbhhZSkWTNafMXvm8oD2V0zGXI206Ggb3O0MYcEAf54UoX4g8xYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V9oy/aIf; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=bp6Y28/tlxPv4g3EVUQ7XaJEFVTsH35TPw8h0NY88hH0Bx9jISo4+9EU9FVQoAJbQuwvccR7UtKgn9hrLah0c5LeRsZefrIFB7yaTQ0HxZiy8y3GaHC9QrK/lfiN6nAF3QhZhllO3mEFhYdc0fCnviSExftKXSqi8eqkHyaOejw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SPYEHHHB; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V9oy/aIf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SPYEHHHB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768353741; x=1799889741;
+  t=1768353750; x=1799889750;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=/bqpYVKmFTI0Ol3j3AxBQxHuOUyFVGiVyJnNvDDfau8=;
-  b=V9oy/aIfdG/nUciLiLdD6DzOuJkKUTBXdPsz5WQx9ZbdNUc2DyQOnolk
-   dHe6b5wnvVOSdeGBSIehaY84xOKXaekaJoyGPhC88JraxblYlWDI5eyw5
-   L8uwTZZ97o8SAW1INSzPbiEhubInCDvu0eRbeADN9kdfS4pWEGTviJctj
-   1q4XPDsZQwEZAqvM+KR+Suzqcv6YgVWureZVySpAIPXYybmEkwxV3LKZA
-   sh52S8KST9Cgl/uo8MjF1bR4bjooHYeWJv2wus1yxRIHgxSYq6CQ8jYXS
-   pHBP3K/yqmBFuPpSicqSArv2EJaSvEM9lszL1beEWuAIKm2hfFaCXvcEk
-   w==;
-X-CSE-ConnectionGUID: FMZpc/NOSkiBl0wo2xFtjQ==
-X-CSE-MsgGUID: BuH6EF9SQ+qaSMCyABRj2Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="87231512"
+  bh=8swUns+f4sPnKRPagD2A6Oy6QNSylTblYdaomHLa5sw=;
+  b=SPYEHHHBi6Oi8M/H4zPCutkkrDrurPyqH4HnrP2WuOskuVdv4mQ2unxl
+   nPdtKbmydVaU/pfiyh+1oA/04JKm049/k8tVcXV9luWgALUEItVYK0vvY
+   s7aRdVVRxSccPtMcgwoLuQd3mepELWIBnO/xBIlRqyIYqhOLZaOi6P9s+
+   B4gU4RGZKKI2eQbLf+2xOvfylmoeFRnqgYTRvIrU4XUNVTHeY1etX/UrS
+   B2wJ8YvdH+weFDZoEy6G68+mE1DADMePCUJm4ta0NWFrudhRd/lot9yTA
+   jXYGl9jn/etQFQUgd2hejhkPh46iB8YRvIiq7Eu7YA/wfJG+uRxR8v/6O
+   A==;
+X-CSE-ConnectionGUID: 95AhHwYZSYCg/rqzE478KA==
+X-CSE-MsgGUID: yjpOXLa5S1WEeubqbeFEBA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="87231533"
 X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="87231512"
+   d="scan'208";a="87231533"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 17:22:21 -0800
-X-CSE-ConnectionGUID: oP772wZCRlqMqtwXfaEvGQ==
-X-CSE-MsgGUID: W5PfsqUGQaSn0pNhfLcdyQ==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 17:22:29 -0800
+X-CSE-ConnectionGUID: ComK2FhFRQ2FRiXncdTLbw==
+X-CSE-MsgGUID: R29EW0WgQL2SxWKU3rM8jw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="204561208"
+   d="scan'208";a="204561214"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa007.jf.intel.com with ESMTP; 13 Jan 2026 17:22:17 -0800
+  by orviesa007.jf.intel.com with ESMTP; 13 Jan 2026 17:22:26 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 4/7] perf/x86/intel: Add support for PEBS memory auxiliary info field in NVL
-Date: Wed, 14 Jan 2026 09:17:47 +0800
-Message-Id: <20260114011750.350569-5-dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 6/7] perf/x86: Use macros to replace magic numbers in attr_rdpmc
+Date: Wed, 14 Jan 2026 09:17:49 +0800
+Message-Id: <20260114011750.350569-7-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260114011750.350569-1-dapeng1.mi@linux.intel.com>
 References: <20260114011750.350569-1-dapeng1.mi@linux.intel.com>
@@ -74,157 +74,76 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Similar to DMR (Panther Cove uarch), both P-core (Coyote Cove uarch) and
-E-core (Arctic Wolf uarch) of NVL adopt the new PEBS memory auxiliary
-info layout.
-
-Coyote Cove microarchitecture shares the same PMU capabilities, including
-the memory auxiliary info layout, with Panther Cove. Arctic Wolf
-microarchitecture has a similar layout to Panther Cove, with the only
-difference being specific data source encoding for L2 hit cases (up to
-the L2 cache level). The OMR encoding remains the same as in Panther Cove.
-
-For detailed information on the memory auxiliary info encoding, please
-refer to section 16.2 "PEBS LOAD LATENCY AND STORE LATENCY FACILITY" in
-the latest ISE documentation.
-
-This patch defines Arctic Wolf specific data source encoding and then
-supports PEBS memory auxiliary info field for NVL.
+Replace magic numbers in attr_rdpmc with macros to improve readability
+and make their meanings clearer for users.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/ds.c   | 83 ++++++++++++++++++++++++++++++++++++
- arch/x86/events/perf_event.h |  2 +
- 2 files changed, 85 insertions(+)
+ arch/x86/events/core.c       | 7 ++++---
+ arch/x86/events/intel/p6.c   | 2 +-
+ arch/x86/events/perf_event.h | 7 +++++++
+ 3 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 06e42ac33749..a47f173d411b 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -96,6 +96,18 @@ union intel_x86_pebs_dse {
- 		unsigned int pnc_fb_full:1;
- 		unsigned int ld_reserved8:16;
- 	};
-+	struct {
-+		unsigned int arw_dse:8;
-+		unsigned int arw_l2_miss:1;
-+		unsigned int arw_xq_promotion:1;
-+		unsigned int arw_reissue:1;
-+		unsigned int arw_stlb_miss:1;
-+		unsigned int arw_locked:1;
-+		unsigned int arw_data_blk:1;
-+		unsigned int arw_addr_blk:1;
-+		unsigned int arw_fb_full:1;
-+		unsigned int ld_reserved9:16;
-+	};
- };
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 0ecac9495d74..c2717cb5034f 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2163,7 +2163,8 @@ static int __init init_hw_perf_events(void)
  
+ 	pr_cont("%s PMU driver.\n", x86_pmu.name);
  
-@@ -274,6 +286,29 @@ static u64 pnc_pebs_l2_hit_data_source[PNC_PEBS_DATA_SOURCE_MAX] = {
- 	OP_LH | P(LVL, UNC) | LEVEL(NA) | P(SNOOP, NONE),	/* 0x0f: uncached */
- };
+-	x86_pmu.attr_rdpmc = 1; /* enable userspace RDPMC usage by default */
++	/* enable userspace RDPMC usage by default */
++	x86_pmu.attr_rdpmc = X86_USER_RDPMC_CONDITIONAL_ENABLE;
  
-+/* Version for Arctic Wolf and later */
-+
-+/* L2 hit */
-+#define ARW_PEBS_DATA_SOURCE_MAX	16
-+static u64 arw_pebs_l2_hit_data_source[ARW_PEBS_DATA_SOURCE_MAX] = {
-+	P(OP, LOAD) | P(LVL, NA) | LEVEL(NA) | P(SNOOP, NA),	/* 0x00: non-cache access */
-+	OP_LH | P(LVL, L1)  | LEVEL(L1) | P(SNOOP, NONE),	/* 0x01: L1 hit */
-+	OP_LH | P(LVL, LFB) | LEVEL(LFB) | P(SNOOP, NONE),	/* 0x02: WCB Hit */
-+	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, NONE),	/* 0x03: L2 Hit Clean */
-+	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, HIT),	/* 0x04: L2 Hit Snoop HIT */
-+	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, HITM),	/* 0x05: L2 Hit Snoop Hit Modified */
-+	OP_LH | P(LVL, UNC) | LEVEL(NA) | P(SNOOP, NONE),	/* 0x06: uncached */
-+	0,							/* 0x07: Reserved */
-+	0,							/* 0x08: Reserved */
-+	0,							/* 0x09: Reserved */
-+	0,							/* 0x0a: Reserved */
-+	0,							/* 0x0b: Reserved */
-+	0,							/* 0x0c: Reserved */
-+	0,							/* 0x0d: Reserved */
-+	0,							/* 0x0e: Reserved */
-+	0,							/* 0x0f: Reserved */
-+};
-+
- /* L2 miss */
- #define OMR_DATA_SOURCE_MAX		16
- static u64 omr_data_source[OMR_DATA_SOURCE_MAX] = {
-@@ -458,6 +493,44 @@ u64 cmt_latency_data(struct perf_event *event, u64 status)
- 				  dse.mtl_fwd_blk);
+ 	for (quirk = x86_pmu.quirks; quirk; quirk = quirk->next)
+ 		quirk->func();
+@@ -2643,12 +2644,12 @@ static ssize_t set_attr_rdpmc(struct device *cdev,
+ 		 */
+ 		if (val == 0)
+ 			static_branch_inc(&rdpmc_never_available_key);
+-		else if (x86_pmu.attr_rdpmc == 0)
++		else if (x86_pmu.attr_rdpmc == X86_USER_RDPMC_NEVER_ENABLE)
+ 			static_branch_dec(&rdpmc_never_available_key);
+ 
+ 		if (val == 2)
+ 			static_branch_inc(&rdpmc_always_available_key);
+-		else if (x86_pmu.attr_rdpmc == 2)
++		else if (x86_pmu.attr_rdpmc == X86_USER_RDPMC_ALWAYS_ENABLE)
+ 			static_branch_dec(&rdpmc_always_available_key);
+ 
+ 		on_each_cpu(cr4_update_pce, NULL, 1);
+diff --git a/arch/x86/events/intel/p6.c b/arch/x86/events/intel/p6.c
+index 6e41de355bd8..fb991e0ac614 100644
+--- a/arch/x86/events/intel/p6.c
++++ b/arch/x86/events/intel/p6.c
+@@ -243,7 +243,7 @@ static __init void p6_pmu_rdpmc_quirk(void)
+ 		 */
+ 		pr_warn("Userspace RDPMC support disabled due to a CPU erratum\n");
+ 		x86_pmu.attr_rdpmc_broken = 1;
+-		x86_pmu.attr_rdpmc = 0;
++		x86_pmu.attr_rdpmc = X86_USER_RDPMC_NEVER_ENABLE;
+ 	}
  }
  
-+static u64 arw_latency_data(struct perf_event *event, u64 status)
-+{
-+	union intel_x86_pebs_dse dse;
-+	union perf_mem_data_src src;
-+	u64 val;
-+
-+	dse.val = status;
-+
-+	if (!dse.arw_l2_miss)
-+		val = arw_pebs_l2_hit_data_source[dse.arw_dse & 0xf];
-+	else
-+		val = parse_omr_data_source(dse.arw_dse);
-+
-+	if (!val)
-+		val = P(OP, LOAD) | LEVEL(NA) | P(SNOOP, NA);
-+
-+	if (dse.arw_stlb_miss)
-+		val |= P(TLB, MISS) | P(TLB, L2);
-+	else
-+		val |= P(TLB, HIT) | P(TLB, L1) | P(TLB, L2);
-+
-+	if (dse.arw_locked)
-+		val |= P(LOCK, LOCKED);
-+
-+	if (dse.arw_data_blk)
-+		val |= P(BLK, DATA);
-+	if (dse.arw_addr_blk)
-+		val |= P(BLK, ADDR);
-+	if (!dse.arw_data_blk && !dse.arw_addr_blk)
-+		val |= P(BLK, NA);
-+
-+	src.val = val;
-+	if (event->hw.flags & PERF_X86_EVENT_PEBS_ST_HSW)
-+		src.mem_op = P(OP, STORE);
-+
-+	return src.val;
-+}
-+
- static u64 lnc_latency_data(struct perf_event *event, u64 status)
- {
- 	union intel_x86_pebs_dse dse;
-@@ -551,6 +624,16 @@ u64 pnc_latency_data(struct perf_event *event, u64 status)
- 	return src.val;
- }
- 
-+u64 nvl_latency_data(struct perf_event *event, u64 status)
-+{
-+	struct x86_hybrid_pmu *pmu = hybrid_pmu(event->pmu);
-+
-+	if (pmu->pmu_type == hybrid_small)
-+		return arw_latency_data(event, status);
-+
-+	return pnc_latency_data(event, status);
-+}
-+
- static u64 load_latency_data(struct perf_event *event, u64 status)
- {
- 	union intel_x86_pebs_dse dse;
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index cbca1888e8f7..aedc1a7762c2 100644
+index f7caabc5d487..24a81d2916e9 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -1666,6 +1666,8 @@ u64 arl_h_latency_data(struct perf_event *event, u64 status);
+@@ -187,6 +187,13 @@ struct amd_nb {
+ 	 (1ULL << PERF_REG_X86_R14)   | \
+ 	 (1ULL << PERF_REG_X86_R15))
  
- u64 pnc_latency_data(struct perf_event *event, u64 status);
- 
-+u64 nvl_latency_data(struct perf_event *event, u64 status);
++/* user space rdpmc control values */
++enum {
++	X86_USER_RDPMC_NEVER_ENABLE		= 0,
++	X86_USER_RDPMC_CONDITIONAL_ENABLE	= 1,
++	X86_USER_RDPMC_ALWAYS_ENABLE		= 2,
++};
 +
- extern struct event_constraint intel_core2_pebs_event_constraints[];
- 
- extern struct event_constraint intel_atom_pebs_event_constraints[];
+ /*
+  * Per register state.
+  */
 -- 
 2.34.1
 
