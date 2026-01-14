@@ -1,94 +1,93 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF7A3A63F1
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 16:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F71139E194
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 16:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768409518; cv=pass; b=ci9fT/b0OslnJLtZKQ1FVerTPpUQd9N3L4T+itbBdrBpAH7rmtC8FzXZZ0wgR7daorwm9hC+O0VBo3iS3t+J2jZc8G7vJDUc6CchCyXKAnl1g8Hz0bgeKQ/L6WmewVfZDZwnewDYO6rvKMWFnAZ/9KoYjEVMYw94vis/BcXcDXA=
+	t=1768409540; cv=pass; b=XbuaZG8SPaLG8sE62CBA3UtMHI0W/yOT3bo9vL/AEYEO/P7iWMRt8yycO8JVbaCnHmcho5RJ+fGmFj3valFr/emAeksCHZYrjp+Kky+gsDY3aIdKG4y6bGyLa5HF3fUBsxSLw2YvsbX+ekkmgE7wO6kwvwc7ad1V9z9DbOuc1mQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768409518; c=relaxed/simple;
-	bh=jWogNs53az+Rs1PuEAxyR/b9r0dN84B0kirZzZTCtew=;
+	s=arc-20240116; t=1768409540; c=relaxed/simple;
+	bh=w1nuRTUUWewJm4juziXJDNHbIpuVikZMyuk9Obdvqi0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JS+un+jGBERq5co7E4+s1rkZAUPLncW7FiUruL+qv/IuJ9/Xtp3+mm0VmwAdv1T4qYqKxOCZh+tj2jSf9mrzmRZfboDcw1oksbEPsrFnpR9olamCqYIX0ProjommXvI1KqKNPjrXp0+tUORfKnBYmxJT36zpp1eAdacZaD1xYcQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GvZAeLAr; arc=pass smtp.client-ip=209.85.214.176
+	 To:Cc:Content-Type; b=e4KEchHSJGl1l/SpERsCl/zpVTpeldABPPZwL0GM1ybkIJlbQs0SUdgM7sTY7zdg8C9wXNOywE7T45T6CWe5QqDVoBYBddZx2SkQw7GMhCtJmC6crxfCKqTb3HpEkxhSv8z2XR9vdNlhPza66Qk4xHvB6D4+JypKUuD6WhooyrA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jhxyapSk; arc=pass smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GvZAeLAr"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2a35ae38bdfso81445ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 08:51:56 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1768409516; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jhxyapSk"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2a0d06cfa93so85925ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 08:52:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768409537; cv=none;
         d=google.com; s=arc-20240605;
-        b=Yr0nbF6wJYrCxwIxIddFgQJO/xO5Yr+tGuwunpeeNl7x67Ra/tYhJXK3Qs06JN/tJQ
-         rW5ArOxkDyCceirufxzbZND2/AWXuJ1vSsZEEANRygW4dpdbLmfRwxnVyjcBSRwWuQsq
-         OcuqPJYbRwQCc+4K7N56dLmEshZEqRmmFtiqJ6QAIZQ88n1LaHZugK5eHJpYm8jcxXrK
-         /SE701H8tizQSQ6+E8FXKA2kfcY1M2P8pg1J7wsGneIBT3Ve4wmNC3UzH0NdWQGsgWxI
-         eg3IsHgPR+dPi7MO/SMswE5VbxACNF0hko20oL4XQ48yCX7u88xdtjLJUqaT+29VjAu8
-         z7Dg==
+        b=BYEI8pxuwZ6eWGOYXgU5oRsEKgs5svYKTGC6+s3e50ZQt5fW9KcPWrvkHv+nufXnb5
+         cnjL0FUpOndO35hMIivEp3QEkRCdy00eKSt0ocke2ZZxUm9tE/xmIKVG5mQb7fNn6PmL
+         c0VGMRJf62fU+PtTFnJQiV/JmMB8MeN2kMitvQ60DjpGugd9T1/VpacLG9ukE8LcX+t5
+         lFvVmNP2K7rjhgYwUPRLnvyu5l24eMWY2ZTwxYkqzqKO2CtdjTQ2mPw6lcWASbeqbcJd
+         zoQDA5HQ2Vu2kwbzLxrN1H8BdgHXkbMitpza2Rxqa/xWUTz70uAavDMWtV1hABaMo+Am
+         rTLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Kjv1wVcnUYn4H9c+GgiFr/qboEWraopFEvmNwvkz1TM=;
-        fh=OxlX7mkbcJuXZ5Odq0D6Yx9L7A6TyA203dZ7jBc4gh0=;
-        b=E+8zX8vrcs2ibl7PPrGqLWbed2QRJEhlugdXAoVuE3cHbo03c9cuVWzqe3SOEd8wyp
-         Uw/ZagqGllaajWd/EodYqyRWyWavFa5qMX2R++SThWbEFr6ObilyxrujRzmqasPb16ny
-         ylJYpJ5ECKcWzYE30jTRkhb+m6rIaz5ifI4cTJrfPQJHc6fUA6GQWN9x7TiJF29u3GhF
-         +BjuCUBJn5ez+H5ejrZaStuFcsyOQXl+Px+JjtAcRvWaGJvlgBqgQ0G2ObnDzK7wiNyV
-         v9/Z4XPD0aLktHgRQezKfSLCR6mi3j4TgJvx/KAZtyqARKdPOPVcfeIHr6245F4IDgS6
-         EBAg==;
+        bh=OI1+23JWX8FsCJMhCllis4rPC5JKUcNnLtovuqpzj+8=;
+        fh=wcp0rQie+m0SGqKfFfTeVke8Yum7JVontAlQbWWjcw0=;
+        b=CqHjNps5MA9rYui8L//ZJ0MMlCfxet13csXZ0gymBudpkVMzIiGIkibveKAsf0IncR
+         5iNhcni0v7tuWAp7XNxpAikkV9dediK3aIuWC00TofPlqneBLqzDlcE31/mI8++PO4ww
+         3KIPvbZ0dLPYBgBoVRDq+Wze8nJRKJ8mR8iEq0jw09O7d/ynRbPkw1GPJrFi3FwdCnsC
+         WaJVEHieQXCPxHDe1ucfLZLK8gf23Z5DZGXVB7c3YAxhRbQfVv76/IIkqfcI9UYBhdev
+         mAuKj3DgBCNlD4Q8CyeHs3d429WfRMk8p293cWqGoXwmt+rGWZHwou9GxDtxsOvcYaWH
+         IsnQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768409516; x=1769014316; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1768409537; x=1769014337; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Kjv1wVcnUYn4H9c+GgiFr/qboEWraopFEvmNwvkz1TM=;
-        b=GvZAeLArA02GMJu6JNMdirR5dRGVHhPci0vwhDRUaaoonrO+aXhTd9cIxgVjTtTPRr
-         b1cz9aWdLCCUf/TEQvP+91zA1uwiLWfSqQsc2RnNlqoWTGyOhIhXpLzLlDsAF33hW4yU
-         ThZVy1qCFOynhGBN3ArZjpVlJ4Rivr/Me2l7mp/Z+kaN/82knWfttPiaW60B31+t5tcj
-         447l6n4wSuwq9c9mQkcfv0syE7QVOUhJJq06po8nS+j2D4eSGkcgyYpvNCDalaHEB8F+
-         K/vkq+HVXJld1u/wcKdnszEjwB8kQOHjG7UMamxAkzD6rkEntf5ZhpxQttliEnzSl4sc
-         UigQ==
+        bh=OI1+23JWX8FsCJMhCllis4rPC5JKUcNnLtovuqpzj+8=;
+        b=jhxyapSkmf0L1LEt+2TCposTIodCpFmury5JYREJcwcxoUYLPv1KdjQOYf1gnA3bJD
+         GYGev72PjAH4ah0Rorn5V9EwSuBc/fZ1Z7Djlz2kPT/0ly0D/4u4SLxouAe0K5xQ6EAF
+         w68d9Q+rYBa27Io/1+KCK8sP+rZQA5siZEMa3KiPCUa4DF4Hlj5JHml9HRxFHe1Z0c1/
+         nwb5yxyNd4IYWNFdJTb5fVbAzISqviZVuO4geZw0EgAmGd2bBokPqoXTja3H6mUY/k7D
+         Tm2nzHohiIIIVf3Aa71FU0pkP83bHVM1sziuXng3WlbCkBZ+6YK3uCSXBdbdOLSsf2z+
+         cv0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768409516; x=1769014316;
+        d=1e100.net; s=20230601; t=1768409537; x=1769014337;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Kjv1wVcnUYn4H9c+GgiFr/qboEWraopFEvmNwvkz1TM=;
-        b=lMddmdVNE0VLwLffqGwTLKuZNbewAmNRF2vdTfPo97mXxM1QGd7CUEcbQ+OzMpKmCJ
-         5PqWBd6EEhGHOe+hOvIj3dFSZ2k3bkXMHMMqxYwfwmgCyCcp+JW54wwbFywc+ebElxdB
-         QOv9TxP0pX2lhhjZpZOxHFmHcEXnB4TmCrfGPWQ6rk0Vot6wS/eJc+bbBnYrvnwu3Gx/
-         jyJYgwJTye9B187HmcBv1JKH/4G8PuppkeXhLGahbqQbR4yErNTtglAyYha8QMeUAYVW
-         kycUXcEcfAexHvK4a6Ue3pKBNakhFhfOAzBAcCB1KzO+7Cg7DmFwqsL446a2PGGAW9Zt
-         esig==
-X-Forwarded-Encrypted: i=1; AJvYcCX9gHjHJiq8bnEAN+AXiAsId+J1sV4tba7HTEJwDinslPG+yJ0V1S1pXAE/UTcm7xXmxWjzoDZ85FtTUR9qdwDS@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx46Za7oFsBoHsV6BTnScwq9FNvcmlzK8X5eKV4HVD6/ecn8/OJ
-	8koUBs0T7vvWwnhScTXnIMtkFR/ATat/HmDQvVU0DIfo53WW7RTMp4Bi8LxWaNSDgJFCI7D4zwc
-	4qOF3VZ3exSrEyrQCrnquR+fcfNljqz0PIwqe1RQ9
-X-Gm-Gg: AY/fxX4mwbCozVLd+YsLpIO/C7KytRZdGM88eyh7MraTiRZsoKBVsidugEurQblUvzB
-	6ZXLpds1zjXTKvDOBTzN2c2mJKi/iu4Fm7oXwBtgYWG5TIstuYPmiUGmUF0vvuNEzGSi6rYxU10
-	hyPmTjIt/YUXy+RSDQANFAffhtXgPpU11T7zDxiJ8wadLBD7QhO00RohH+xo2GmJRZUydvkaK6H
-	UNBrr6AYqnqPfWpckhV+XuwbUUQv15bB/Tqi13yW6ZI1sbdxETe/uCGJFvZB6gH3r15yPSCOePP
-	FL7mQ8QzmG96DuTnMDfJESH2dg==
-X-Received: by 2002:a17:902:ec85:b0:290:8ecf:e9f9 with SMTP id
- d9443c01a7336-2a59a918840mr2977165ad.7.1768409515777; Wed, 14 Jan 2026
- 08:51:55 -0800 (PST)
+        bh=OI1+23JWX8FsCJMhCllis4rPC5JKUcNnLtovuqpzj+8=;
+        b=W+hb6OpsR1DvY2k0eQctjuE2BFqpuVEDcX4+jF8LzhFroD+qW2yO6z+mbZUDKT6Nc2
+         E0c68NEQTGi7qDPVnlkUJhUESN9o6qmPW8DCl6EK9VS3uoWh84lpVGRYVZTn37MEMRad
+         IeIv2s4T7og1nlMraP/WXhp0k8jdUuPVAr1Y8SMotEwmCFJBTYna+psLa/n2MHkdBROU
+         8MejnZwRzwyOUibPueypyXmTdRnUzkN4pwQa4OQLIayWkUYakY6QZtEy+YxICBoai2SC
+         wvx4N8VRsVP0DhIPFZVwXATSyiiZhoLIboMcGWxnmrZjy+ek2en8IM++0bl7B2WwDube
+         U+oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU962Somcoqxac/PCJt9F6G1zDUJRpvbjTwU5xQDex4qcUNru1cwNJf0vVgkEkTfWFDlyr6H2kJ+DqZmO47vcvk@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhtIoM6ib+R5m36AjEAoJw0gmV4FGRqmyQQyQ3WByJ/wjMLefV
+	IL8u1oVg8QC8PV3D9x8hvBJtyaeomtDDQuh+9MIwKkXDCCsbfZ/353oUO2LDVQAPcPqLTPYi8g8
+	yPnHXb/8hoTP3W3HWexE487RaUf2F1fgLiInZk6kZ
+X-Gm-Gg: AY/fxX7lWVi3+SkxTNGVIpPMGeWGBkqLfoyNqCt0KSfU4L/zk1tb+mQooLlYbfmTsam
+	iH+eFbL6k7IpUh8SsSA5amdDt5CeM6jl0/4WCq/3v/bc3faCKLrgqiaLqZSvII2kbBLpbEaCMD5
+	9st26ve7HDT+ZL2FGrIAWZlM7S4LeYoBozhKXLBb/QGx8MoQ1GMa+4uTiuf4RSBSiIvqp0LLJpo
+	20KLOu+0uCEw1g0eV4XXjqRZ4hb97iqzpp4llv3XA6i+/JH9WWvc71Ky1dkneQ93OGSkFbeT4dK
+	PT3ePgt/VFkKDoiwaH+qojMJEw==
+X-Received: by 2002:a17:903:2b06:b0:297:dad6:fe58 with SMTP id
+ d9443c01a7336-2a599977232mr3419075ad.0.1768409537092; Wed, 14 Jan 2026
+ 08:52:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260114-james-perf-config-bits-v5-0-0ef97aaf1ac0@linaro.org> <20260114-james-perf-config-bits-v5-2-0ef97aaf1ac0@linaro.org>
-In-Reply-To: <20260114-james-perf-config-bits-v5-2-0ef97aaf1ac0@linaro.org>
+References: <20260114-james-perf-config-bits-v5-0-0ef97aaf1ac0@linaro.org> <20260114-james-perf-config-bits-v5-3-0ef97aaf1ac0@linaro.org>
+In-Reply-To: <20260114-james-perf-config-bits-v5-3-0ef97aaf1ac0@linaro.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 14 Jan 2026 08:51:44 -0800
-X-Gm-Features: AZwV_QgNKI19hlQFGQLMSXvqf0jhHCIRBL8Kn4OmCTj3y6VKnMxjSZb2KJMrP80
-Message-ID: <CAP-5=fUuFAj_wtJ+PMq8iS3gs5Z8XErYdcBeYnEMU_wSb3UAkw@mail.gmail.com>
-Subject: Re: [PATCH v5 02/14] perf evsel: Refactor evsel__set_config_if_unset()
- arguments
+Date: Wed, 14 Jan 2026 08:52:05 -0800
+X-Gm-Features: AZwV_QiKCUV62tv-YCq7vPDV3_F8u4hrLGMT5SirXiVOr8SHGdpodOsJ0fMh5j8
+Message-ID: <CAP-5=fUhHJOiWCKZVKNpRYMvM-6c=xAaqwwSz=bpZSk=X-QKeQ@mail.gmail.com>
+Subject: Re: [PATCH v5 03/14] perf evsel: Move evsel__* functions to evsel.c
 To: James Clark <james.clark@linaro.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -105,9 +104,12 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Jan 14, 2026 at 7:57=E2=80=AFAM James Clark <james.clark@linaro.org=
 > wrote:
 >
-> Make the evsel argument first to match the other evsel__* functions
-> and remove the redundant pmu argument, which can be accessed via evsel.
+> At least one of these were put here to avoid a Python binding linking
+> issue which is no longer present. Put them back in their correct
+> location to avoid confusion about which file to add a new evsel__*
+> function to later.
 >
+> Link: https://lore.kernel.org/all/ZEbAS2yx2fguW60w@kernel.org/
 > Signed-off-by: James Clark <james.clark@linaro.org>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
@@ -116,123 +118,134 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/arch/arm/util/cs-etm.c    | 9 +++------
->  tools/perf/arch/arm64/util/arm-spe.c | 2 +-
->  tools/perf/arch/x86/util/intel-pt.c  | 3 +--
->  tools/perf/util/evsel.h              | 4 ++--
->  tools/perf/util/pmu.c                | 6 +++---
->  5 files changed, 10 insertions(+), 14 deletions(-)
+>  tools/perf/util/evsel.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/pmu.c   | 40 ----------------------------------------
+>  2 files changed, 40 insertions(+), 40 deletions(-)
 >
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util=
-/cs-etm.c
-> index ea891d12f8f4..c28208361d91 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -441,10 +441,8 @@ static int cs_etm_recording_options(struct auxtrace_=
-record *itr,
->          * when a context switch happened.
->          */
->         if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
-> -               evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-> -                                          "timestamp", 1);
-> -               evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-> -                                          "contextid", 1);
-> +               evsel__set_config_if_unset(cs_etm_evsel, "timestamp", 1);
-> +               evsel__set_config_if_unset(cs_etm_evsel, "contextid", 1);
->         }
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index ec6552a6f667..21878e9bd029 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1314,6 +1314,35 @@ struct evsel_config_term *__evsel__get_config_term=
+(struct evsel *evsel, enum evs
+>         return found_term;
+>  }
 >
->         /*
-> @@ -453,8 +451,7 @@ static int cs_etm_recording_options(struct auxtrace_r=
-ecord *itr,
->          * timestamp tracing.
->          */
->         if (opts->sample_time_set)
-> -               evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-> -                                          "timestamp", 1);
-> +               evsel__set_config_if_unset(cs_etm_evsel, "timestamp", 1);
->
->         /* Add dummy event to keep tracking */
->         err =3D parse_event(evlist, "dummy:u");
-> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64=
-/util/arm-spe.c
-> index d5ec1408d0ae..51014f8bff97 100644
-> --- a/tools/perf/arch/arm64/util/arm-spe.c
-> +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> @@ -274,7 +274,7 @@ static void arm_spe_setup_evsel(struct evsel *evsel, =
-struct perf_cpu_map *cpus)
->          */
->         if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
->                 evsel__set_sample_bit(evsel, CPU);
-> -               evsel__set_config_if_unset(evsel->pmu, evsel, "ts_enable"=
-, 1);
-> +               evsel__set_config_if_unset(evsel, "ts_enable", 1);
->         }
->
->         /*
-> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/ut=
-il/intel-pt.c
-> index b394ad9cc635..c131a727774f 100644
-> --- a/tools/perf/arch/x86/util/intel-pt.c
-> +++ b/tools/perf/arch/x86/util/intel-pt.c
-> @@ -664,8 +664,7 @@ static int intel_pt_recording_options(struct auxtrace=
-_record *itr,
->                 return 0;
->
->         if (opts->auxtrace_sample_mode)
-> -               evsel__set_config_if_unset(intel_pt_pmu, intel_pt_evsel,
-> -                                          "psb_period", 0);
-> +               evsel__set_config_if_unset(intel_pt_evsel, "psb_period", =
-0);
->
->         err =3D intel_pt_validate_config(intel_pt_pmu, intel_pt_evsel);
->         if (err)
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index a08130ff2e47..2cf87bc67df7 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -575,8 +575,8 @@ void evsel__uniquify_counter(struct evsel *counter);
->         ((((src) >> (pos)) & ((1ull << (size)) - 1)) << (63 - ((pos) + (s=
-ize) - 1)))
->
->  u64 evsel__bitfield_swap_branch_flags(u64 value);
-> -void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evse=
-l,
-> -                               const char *config_name, u64 val);
-> +void evsel__set_config_if_unset(struct evsel *evsel, const char *config_=
-name,
-> +                               u64 val);
->
->  bool evsel__is_offcpu_event(struct evsel *evsel);
->
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 956ea273c2c7..e87c12946d71 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1382,8 +1382,8 @@ bool evsel__is_aux_event(const struct evsel *evsel)
->   * something to true, pass 1 for val rather than a pre shifted value.
->   */
->  #define field_prep(_mask, _val) (((_val) << (ffsll(_mask) - 1)) & (_mask=
+> +/*
+> + * Set @config_name to @val as long as the user hasn't already set or cl=
+eared it
+> + * by passing a config term on the command line.
+> + *
+> + * @val is the value to put into the bits specified by @config_name rath=
+er than
+> + * the bit pattern. It is shifted into position by this function, so to =
+set
+> + * something to true, pass 1 for val rather than a pre shifted value.
+> + */
+> +#define field_prep(_mask, _val) (((_val) << (ffsll(_mask) - 1)) & (_mask=
 ))
-> -void evsel__set_config_if_unset(struct perf_pmu *pmu, struct evsel *evse=
-l,
-> -                               const char *config_name, u64 val)
 > +void evsel__set_config_if_unset(struct evsel *evsel, const char *config_=
 name,
 > +                               u64 val)
->  {
->         u64 user_bits =3D 0, bits;
->         struct evsel_config_term *term =3D evsel__get_config_term(evsel, =
+> +{
+> +       u64 user_bits =3D 0, bits;
+> +       struct evsel_config_term *term =3D evsel__get_config_term(evsel, =
 CFG_CHG);
-> @@ -1391,7 +1391,7 @@ void evsel__set_config_if_unset(struct perf_pmu *pm=
-u, struct evsel *evsel,
->         if (term)
->                 user_bits =3D term->val.cfg_chg;
->
-> -       bits =3D perf_pmu__format_bits(pmu, config_name);
+> +
+> +       if (term)
+> +               user_bits =3D term->val.cfg_chg;
+> +
 > +       bits =3D perf_pmu__format_bits(evsel->pmu, config_name);
+> +
+> +       /* Do nothing if the user changed the value */
+> +       if (bits & user_bits)
+> +               return;
+> +
+> +       /* Otherwise replace it */
+> +       evsel->core.attr.config &=3D ~bits;
+> +       evsel->core.attr.config |=3D field_prep(bits, val);
+> +}
+> +
+>  void __weak arch_evsel__set_sample_weight(struct evsel *evsel)
+>  {
+>         evsel__set_sample_bit(evsel, WEIGHT);
+> @@ -4098,6 +4127,17 @@ void evsel__set_leader(struct evsel *evsel, struct=
+ evsel *leader)
+>         evsel->core.leader =3D &leader->core;
+>  }
 >
->         /* Do nothing if the user changed the value */
->         if (bits & user_bits)
+> +bool evsel__is_aux_event(const struct evsel *evsel)
+> +{
+> +       struct perf_pmu *pmu;
+> +
+> +       if (evsel->needs_auxtrace_mmap)
+> +               return true;
+> +
+> +       pmu =3D evsel__find_pmu(evsel);
+> +       return pmu && pmu->auxtrace;
+> +}
+> +
+>  int evsel__source_count(const struct evsel *evsel)
+>  {
+>         struct evsel *pos;
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index e87c12946d71..e3a1f26213ec 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1362,46 +1362,6 @@ void perf_pmu__warn_invalid_formats(struct perf_pm=
+u *pmu)
+>         }
+>  }
+>
+> -bool evsel__is_aux_event(const struct evsel *evsel)
+> -{
+> -       struct perf_pmu *pmu;
+> -
+> -       if (evsel->needs_auxtrace_mmap)
+> -               return true;
+> -
+> -       pmu =3D evsel__find_pmu(evsel);
+> -       return pmu && pmu->auxtrace;
+> -}
+> -
+> -/*
+> - * Set @config_name to @val as long as the user hasn't already set or cl=
+eared it
+> - * by passing a config term on the command line.
+> - *
+> - * @val is the value to put into the bits specified by @config_name rath=
+er than
+> - * the bit pattern. It is shifted into position by this function, so to =
+set
+> - * something to true, pass 1 for val rather than a pre shifted value.
+> - */
+> -#define field_prep(_mask, _val) (((_val) << (ffsll(_mask) - 1)) & (_mask=
+))
+> -void evsel__set_config_if_unset(struct evsel *evsel, const char *config_=
+name,
+> -                               u64 val)
+> -{
+> -       u64 user_bits =3D 0, bits;
+> -       struct evsel_config_term *term =3D evsel__get_config_term(evsel, =
+CFG_CHG);
+> -
+> -       if (term)
+> -               user_bits =3D term->val.cfg_chg;
+> -
+> -       bits =3D perf_pmu__format_bits(evsel->pmu, config_name);
+> -
+> -       /* Do nothing if the user changed the value */
+> -       if (bits & user_bits)
+> -               return;
+> -
+> -       /* Otherwise replace it */
+> -       evsel->core.attr.config &=3D ~bits;
+> -       evsel->core.attr.config |=3D field_prep(bits, val);
+> -}
+> -
+>  static struct perf_pmu_format *
+>  pmu_find_format(const struct list_head *formats, const char *name)
+>  {
 >
 > --
 > 2.34.1
