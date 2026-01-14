@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394A4288C26;
-	Wed, 14 Jan 2026 01:22:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41052874E4;
+	Wed, 14 Jan 2026 01:22:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768353729; cv=none; b=Zdpe44RmvvJtYmaHU0J7xJShBF8XW0UmIWz41ELyVFwoRJZ9AxjyYAOK6UuOfcP697TgxybOiWYCel8magMk3TnATmy1bwNCxSUeCkgX/c/S7KytslOER9Ph4bo0m8yyviVMgplhwHLTkuzu4rgvhDd8TBTMAESjjpXRt7nX1uY=
+	t=1768353734; cv=none; b=NIkwMavy7uHBiTPEdeEujTw2NL0AIuQKZlrwUMXKQZvhK5qd8h3BX3q9267J8Pe6vuJxbH1iSaAxIjhr8l6VMAPKDAcSODFrITlJGCIJXM/vYn9YExnCFFDHgp0Hmw4qE0IfUI8fa1XXhkdf6FS3D5K2ssNLsqHOqim90dO9Zb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768353729; c=relaxed/simple;
-	bh=D8xTGkk/V0sD6orEygOPXkhz2ryiacgml5nzER2bOi8=;
+	s=arc-20240116; t=1768353734; c=relaxed/simple;
+	bh=Yd0ptiC0DKyXPv7zgozEa4pMQZgX/J2f8XZ9OoqkPeE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Qzo1T1Y5Vy8YL1KbvAraadu3c5F194EqZW9hKKuDThqy2Mo7TQXqMCkz/RxaoNLXADAh10iMfI1AdViZiJov7NXFhLSWE9QV91ddM6twR6pCOTk+6p6ltNAuqBSng3RIeqvqd4af/DPxgvyyWSagtVsnhOzszGcv+lyF2D1XYP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JV/fetab; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=GRCSFuUgUMJZXIpAM88BOz7kRkbhzqlIn925xhYUCdNG/rNRlueHSKvaFySP4k5Dx2hoK9FdtJJHFnSp9THBILj4l7BxVWubiAf+Jb6w5AqA5tiNvBT0Cnl5FFKZ1atgNe505/kXHDCQnuCL6cRtW2SHuoHOfueAP4Wz3exyebs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U+IQaKLz; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JV/fetab"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U+IQaKLz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768353728; x=1799889728;
+  t=1768353732; x=1799889732;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=D8xTGkk/V0sD6orEygOPXkhz2ryiacgml5nzER2bOi8=;
-  b=JV/fetablCCPnMCkmfH0h98Ags9ATCfFDSxurPdAtFWXKL9Zou6crsay
-   DXIZsmr2p9wTg6MHkJakis0WlwKaWTSxNxhVcPSNDf3G+MKQMETa8V7pB
-   1Y/5pZOPkRaErnVy3yFU+zfh8KEhJLF/qlgLal7cXNNj7jCH6+6+Dh1NH
-   YBLFoRPX9NUG5ayForjjGg22nIZj5n3CSgAOSG0lwYchtEM1Km7V6c2eD
-   +GtHJFn2qxNu9APhwRaSQYkSHWYVwcOuINbPz4sT/HSp08fzsWKQlyoGv
-   ZAm7A2fyEo/OxUAcB1+GZ3U3cG8a4iEZXLjBrfWIh9KPzty0+p6z1Ee5z
-   w==;
-X-CSE-ConnectionGUID: BUm1ld9KSsylKzl7loy+HA==
-X-CSE-MsgGUID: NiT8d6HXR+SWd225b/o9PQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="87231488"
+  bh=Yd0ptiC0DKyXPv7zgozEa4pMQZgX/J2f8XZ9OoqkPeE=;
+  b=U+IQaKLz8MPvj8CEsCbyF5u5UNwGnYXCmeayjh8w1s5IxJWMKVUbZiPd
+   aubTyej348ojE9DtrEJIbMTPbbn4M2bxhSJ26UzqReOnQ5xeT49w3Xpi5
+   pXFVhWFW1MNr1Pbi57YKB5sXMh8CSqsEZUBu4kY9WWwgtZWU/Rdt+A2qs
+   Cy36inUBc2hIucLwSOnXUQAxkD9iyOWNuXpbs0Y9FFpHW7ziRL7prpRuN
+   JBZFzlNLfyc7KNcCxCmdxzYLImpx/Ta9BUxXbvY1YAERkZKmzIBIRPvQr
+   ajxNmgnQJoTTHkUPa0i3ZP9K5pUJA/fBn1Jjns292cU+jS4HckDox/nlE
+   A==;
+X-CSE-ConnectionGUID: xLUHfJ0tTWyFmpuksLkQ3w==
+X-CSE-MsgGUID: eFGqySQjT6eDbDUHX/K7vw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="87231494"
 X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="87231488"
+   d="scan'208";a="87231494"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 17:22:08 -0800
-X-CSE-ConnectionGUID: j1vXCdWlSY6/toMMYdqCpA==
-X-CSE-MsgGUID: xrm5cz0rSxeF2Q4iuTYS0Q==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 17:22:12 -0800
+X-CSE-ConnectionGUID: Q+uESye9TPCxIx6TUypcCQ==
+X-CSE-MsgGUID: TDQ4imcgTLK6l+vM1CLDeA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="204561191"
+   d="scan'208";a="204561195"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa007.jf.intel.com with ESMTP; 13 Jan 2026 17:22:04 -0800
+  by orviesa007.jf.intel.com with ESMTP; 13 Jan 2026 17:22:08 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 1/7] perf/x86/intel: Support the 4 new OMR MSRs introduced in DMR and NVL
-Date: Wed, 14 Jan 2026 09:17:44 +0800
-Message-Id: <20260114011750.350569-2-dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 2/7] perf/x86/intel: Add support for PEBS memory auxiliary info field in DMR
+Date: Wed, 14 Jan 2026 09:17:45 +0800
+Message-Id: <20260114011750.350569-3-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260114011750.350569-1-dapeng1.mi@linux.intel.com>
 References: <20260114011750.350569-1-dapeng1.mi@linux.intel.com>
@@ -74,157 +74,336 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Diamond Rapids (DMR) and Nova Lake (NVL) introduce an enhanced
-Off-Module Response (OMR) facility, replacing the Off-Core Response (OCR)
-Performance Monitoring of previous processors.
+With the introduction of the OMR feature, the PEBS memory auxiliary info
+field for load and store latency events has been restructured for DMR.
 
-Legacy microarchitectures used the OCR facility to evaluate off-core and
-multi-core off-module transactions. The newly named OMR facility improves
-OCR capabilities for scalable coverage of new memory systems in
-multi-core module systems.
+The memory auxiliary info field's bit[8] indicates whether a L2 cache
+miss occurred for a memory load or store instruction. If bit[8] is 0,
+it signifies no L2 cache miss, and bits[7:0] specify the exact cache data
+source (up to the L2 cache level). If bit[8] is 1, bits[7:0] represent
+the OMR encoding, indicating the specific L3 cache or memory region
+involved in the memory access. A significant enhancement is OMR encoding
+provides up to 8 fine-grained memory regions besides the cache region.
 
-Similar to OCR, 4 additional off-module configuration MSRs
-(OFFMODULE_RSP_0 to OFFMODULE_RSP_3) are introduced to specify attributes
-of off-module transactions. When multiple identical OMR events are
-created, they need to occupy the same OFFMODULE_RSP_x MSR. To ensure
-these multiple identical OMR events can work simultaneously, the
-intel_alt_er() and intel_fixup_er() helpers are enhanced to rotate these
-OMR events across different OFFMODULE_RSP_* MSRs, similar to previous OCR
-events.
+A significant enhancement for OMR encoding is the ability to provide
+up to 8 fine-grained memory regions in addition to the cache region,
+offering more detailed insights into memory access regions.
 
-For more details about OMR, please refer to section 16.1 "OFF-MODULE
- RESPONSE (OMR) FACILITY" in ISE documentation.
+For detailed information on the memory auxiliary info encoding, please
+refer to section 16.2 "PEBS LOAD LATENCY AND STORE LATENCY FACILITY" in
+the ISE documentation.
+
+This patch ensures that the PEBS memory auxiliary info field is correctly
+interpreted and utilized in DMR.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
+ arch/x86/events/intel/ds.c            | 140 ++++++++++++++++++++++++++
+ arch/x86/events/perf_event.h          |   2 +
+ include/uapi/linux/perf_event.h       |  27 ++++-
+ tools/include/uapi/linux/perf_event.h |  27 ++++-
+ 4 files changed, 190 insertions(+), 6 deletions(-)
 
-v3: Enhance intel_alt_er() to align with intel_fixup_er() on code style.
-v2: Optimize intel_fixup_er().
-
- arch/x86/events/intel/core.c     | 59 +++++++++++++++++++++++---------
- arch/x86/events/perf_event.h     |  5 +++
- arch/x86/include/asm/msr-index.h |  5 +++
- 3 files changed, 52 insertions(+), 17 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 1840ca1918d1..3578c660a904 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3532,17 +3532,32 @@ static int intel_alt_er(struct cpu_hw_events *cpuc,
- 	struct extra_reg *extra_regs = hybrid(cpuc->pmu, extra_regs);
- 	int alt_idx = idx;
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index feb1c3cf63e4..272e652f25fc 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -34,6 +34,17 @@ struct pebs_record_32 {
  
--	if (!(x86_pmu.flags & PMU_FL_HAS_RSP_1))
--		return idx;
--
--	if (idx == EXTRA_REG_RSP_0)
--		alt_idx = EXTRA_REG_RSP_1;
-+	switch (idx) {
-+	case EXTRA_REG_RSP_0 ... EXTRA_REG_RSP_1:
-+		if (!(x86_pmu.flags & PMU_FL_HAS_RSP_1))
-+			return idx;
-+		if (++alt_idx > EXTRA_REG_RSP_1)
-+			alt_idx = EXTRA_REG_RSP_0;
-+		if (config & ~extra_regs[alt_idx].valid_mask)
-+			return idx;
-+		break;
+  */
  
--	if (idx == EXTRA_REG_RSP_1)
--		alt_idx = EXTRA_REG_RSP_0;
-+	case EXTRA_REG_OMR_0 ... EXTRA_REG_OMR_3:
-+		if (!(x86_pmu.flags & PMU_FL_HAS_OMR))
-+			return idx;
-+		if (++alt_idx > EXTRA_REG_OMR_3)
-+			alt_idx = EXTRA_REG_OMR_0;
-+		/*
-+		 * Subtracting EXTRA_REG_OMR_0 ensures to get correct
-+		 * OMR extra_reg entries which start from 0.
-+		 */
-+		if (config & ~extra_regs[alt_idx - EXTRA_REG_OMR_0].valid_mask)
-+			return idx;
-+		break;
++union omr_encoding {
++	struct {
++		u8 omr_source : 4;
++		u8 omr_remote : 1;
++		u8 omr_hitm : 1;
++		u8 omr_snoop : 1;
++		u8 omr_promoted : 1;
++	};
++	u8 omr_full;
++};
++
+ union intel_x86_pebs_dse {
+ 	u64 val;
+ 	struct {
+@@ -73,6 +84,18 @@ union intel_x86_pebs_dse {
+ 		unsigned int lnc_addr_blk:1;
+ 		unsigned int ld_reserved6:18;
+ 	};
++	struct {
++		unsigned int pnc_dse: 8;
++		unsigned int pnc_l2_miss:1;
++		unsigned int pnc_stlb_clean_hit:1;
++		unsigned int pnc_stlb_any_hit:1;
++		unsigned int pnc_stlb_miss:1;
++		unsigned int pnc_locked:1;
++		unsigned int pnc_data_blk:1;
++		unsigned int pnc_addr_blk:1;
++		unsigned int pnc_fb_full:1;
++		unsigned int ld_reserved8:16;
++	};
+ };
  
--	if (config & ~extra_regs[alt_idx].valid_mask)
--		return idx;
-+	default:
-+		break;
+ 
+@@ -228,6 +251,85 @@ void __init intel_pmu_pebs_data_source_lnl(void)
+ 	__intel_pmu_pebs_data_source_cmt(data_source);
+ }
+ 
++/* Version for Panthercove and later */
++
++/* L2 hit */
++#define PNC_PEBS_DATA_SOURCE_MAX	16
++static u64 pnc_pebs_l2_hit_data_source[PNC_PEBS_DATA_SOURCE_MAX] = {
++	P(OP, LOAD) | P(LVL, NA) | LEVEL(NA) | P(SNOOP, NA),	/* 0x00: non-cache access */
++	OP_LH               | LEVEL(L0) | P(SNOOP, NONE),	/* 0x01: L0 hit */
++	OP_LH | P(LVL, L1)  | LEVEL(L1) | P(SNOOP, NONE),	/* 0x02: L1 hit */
++	OP_LH | P(LVL, LFB) | LEVEL(LFB) | P(SNOOP, NONE),	/* 0x03: L1 Miss Handling Buffer hit */
++	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, NONE),	/* 0x04: L2 Hit Clean */
++	0,							/* 0x05: Reserved */
++	0,							/* 0x06: Reserved */
++	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, HIT),	/* 0x07: L2 Hit Snoop HIT */
++	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, HITM),	/* 0x08: L2 Hit Snoop Hit Modified */
++	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, MISS),	/* 0x09: Prefetch Promotion */
++	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, MISS),	/* 0x0a: Cross Core Prefetch Promotion */
++	0,							/* 0x0b: Reserved */
++	0,							/* 0x0c: Reserved */
++	0,							/* 0x0d: Reserved */
++	0,							/* 0x0e: Reserved */
++	OP_LH | P(LVL, UNC) | LEVEL(NA) | P(SNOOP, NONE),	/* 0x0f: uncached */
++};
++
++/* L2 miss */
++#define OMR_DATA_SOURCE_MAX		16
++static u64 omr_data_source[OMR_DATA_SOURCE_MAX] = {
++	P(OP, LOAD) | P(LVL, NA) | LEVEL(NA) | P(SNOOP, NA),	/* 0x00: invalid */
++	0,							/* 0x01: Reserved */
++	OP_LH | P(LVL, L3) | LEVEL(L3) | P(REGION, L_SHARE),	/* 0x02: local CA shared cache */
++	OP_LH | P(LVL, L3) | LEVEL(L3) | P(REGION, L_NON_SHARE),/* 0x03: local CA non-shared cache */
++	OP_LH | P(LVL, L3) | LEVEL(L3) | P(REGION, O_IO),	/* 0x04: other CA IO agent */
++	OP_LH | P(LVL, L3) | LEVEL(L3) | P(REGION, O_SHARE),	/* 0x05: other CA shared cache */
++	OP_LH | P(LVL, L3) | LEVEL(L3) | P(REGION, O_NON_SHARE),/* 0x06: other CA non-shared cache */
++	OP_LH | LEVEL(RAM) | P(REGION, MMIO),			/* 0x07: MMIO */
++	OP_LH | LEVEL(RAM) | P(REGION, MEM0),			/* 0x08: Memory region 0 */
++	OP_LH | LEVEL(RAM) | P(REGION, MEM1),			/* 0x09: Memory region 1 */
++	OP_LH | LEVEL(RAM) | P(REGION, MEM2),			/* 0x0a: Memory region 2 */
++	OP_LH | LEVEL(RAM) | P(REGION, MEM3),			/* 0x0b: Memory region 3 */
++	OP_LH | LEVEL(RAM) | P(REGION, MEM4),			/* 0x0c: Memory region 4 */
++	OP_LH | LEVEL(RAM) | P(REGION, MEM5),			/* 0x0d: Memory region 5 */
++	OP_LH | LEVEL(RAM) | P(REGION, MEM6),			/* 0x0e: Memory region 6 */
++	OP_LH | LEVEL(RAM) | P(REGION, MEM7),			/* 0x0f: Memory region 7 */
++};
++
++static u64 parse_omr_data_source(u8 dse)
++{
++	union omr_encoding omr;
++	u64 val = 0;
++
++	omr.omr_full = dse;
++	val = omr_data_source[omr.omr_source];
++	if (omr.omr_source > 0x1 && omr.omr_source < 0x7)
++		val |= omr.omr_remote ? P(LVL, REM_CCE1) : 0;
++	else if (omr.omr_source > 0x7)
++		val |= omr.omr_remote ? P(LVL, REM_RAM1) : P(LVL, LOC_RAM);
++
++	if (omr.omr_remote)
++		val |= REM;
++
++	val |= omr.omr_hitm ? P(SNOOP, HITM) : P(SNOOP, HIT);
++
++	if (omr.omr_source == 0x2) {
++		u8 snoop = omr.omr_snoop | omr.omr_promoted;
++
++		if (snoop == 0x0)
++			val |= P(SNOOP, NA);
++		else if (snoop == 0x1)
++			val |= P(SNOOP, MISS);
++		else if (snoop == 0x2)
++			val |= P(SNOOP, HIT);
++		else if (snoop == 0x3)
++			val |= P(SNOOP, NONE);
++	} else if (omr.omr_source > 0x2 && omr.omr_source < 0x7) {
++		val |= omr.omr_snoop ? P(SNOOPX, FWD) : 0;
 +	}
- 
- 	return alt_idx;
- }
-@@ -3550,16 +3565,26 @@ static int intel_alt_er(struct cpu_hw_events *cpuc,
- static void intel_fixup_er(struct perf_event *event, int idx)
++
++	return val;
++}
++
+ static u64 precise_store_data(u64 status)
  {
- 	struct extra_reg *extra_regs = hybrid(event->pmu, extra_regs);
--	event->hw.extra_reg.idx = idx;
-+	int er_idx;
- 
--	if (idx == EXTRA_REG_RSP_0) {
--		event->hw.config &= ~INTEL_ARCH_EVENT_MASK;
--		event->hw.config |= extra_regs[EXTRA_REG_RSP_0].event;
--		event->hw.extra_reg.reg = MSR_OFFCORE_RSP_0;
--	} else if (idx == EXTRA_REG_RSP_1) {
-+	event->hw.extra_reg.idx = idx;
-+	switch (idx) {
-+	case EXTRA_REG_RSP_0 ... EXTRA_REG_RSP_1:
-+		er_idx = idx - EXTRA_REG_RSP_0;
- 		event->hw.config &= ~INTEL_ARCH_EVENT_MASK;
--		event->hw.config |= extra_regs[EXTRA_REG_RSP_1].event;
--		event->hw.extra_reg.reg = MSR_OFFCORE_RSP_1;
-+		event->hw.config |= extra_regs[er_idx].event;
-+		event->hw.extra_reg.reg = MSR_OFFCORE_RSP_0 + er_idx;
-+		break;
-+
-+	case EXTRA_REG_OMR_0 ... EXTRA_REG_OMR_3:
-+		er_idx = idx - EXTRA_REG_OMR_0;
-+		event->hw.config &= ~ARCH_PERFMON_EVENTSEL_UMASK;
-+		event->hw.config |= 1ULL << (8 + er_idx);
-+		event->hw.extra_reg.reg = MSR_OMR_0 + er_idx;
-+		break;
-+
-+	default:
-+		pr_warn("The extra reg idx %d is not supported.\n", idx);
- 	}
+ 	union intel_x86_pebs_dse dse;
+@@ -411,6 +513,44 @@ u64 arl_h_latency_data(struct perf_event *event, u64 status)
+ 	return lnl_latency_data(event, status);
  }
  
++u64 pnc_latency_data(struct perf_event *event, u64 status)
++{
++	union intel_x86_pebs_dse dse;
++	union perf_mem_data_src src;
++	u64 val;
++
++	dse.val = status;
++
++	if (!dse.pnc_l2_miss)
++		val = pnc_pebs_l2_hit_data_source[dse.pnc_dse & 0xf];
++	else
++		val = parse_omr_data_source(dse.pnc_dse);
++
++	if (!val)
++		val = P(OP, LOAD) | LEVEL(NA) | P(SNOOP, NA);
++
++	if (dse.pnc_stlb_miss)
++		val |= P(TLB, MISS) | P(TLB, L2);
++	else
++		val |= P(TLB, HIT) | P(TLB, L1) | P(TLB, L2);
++
++	if (dse.pnc_locked)
++		val |= P(LOCK, LOCKED);
++
++	if (dse.pnc_data_blk)
++		val |= P(BLK, DATA);
++	if (dse.pnc_addr_blk)
++		val |= P(BLK, ADDR);
++	if (!dse.pnc_data_blk && !dse.pnc_addr_blk)
++		val |= P(BLK, NA);
++
++	src.val = val;
++	if (event->hw.flags & PERF_X86_EVENT_PEBS_ST_HSW)
++		src.mem_op = P(OP, STORE);
++
++	return src.val;
++}
++
+ static u64 load_latency_data(struct perf_event *event, u64 status)
+ {
+ 	union intel_x86_pebs_dse dse;
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 3161ec0a3416..586e3fdfe6d8 100644
+index 586e3fdfe6d8..bd501c2a0f73 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -45,6 +45,10 @@ enum extra_reg_type {
- 	EXTRA_REG_FE		= 4,  /* fe_* */
- 	EXTRA_REG_SNOOP_0	= 5,  /* snoop response 0 */
- 	EXTRA_REG_SNOOP_1	= 6,  /* snoop response 1 */
-+	EXTRA_REG_OMR_0		= 7,  /* OMR 0 */
-+	EXTRA_REG_OMR_1		= 8,  /* OMR 1 */
-+	EXTRA_REG_OMR_2		= 9,  /* OMR 2 */
-+	EXTRA_REG_OMR_3		= 10,  /* OMR 3 */
+@@ -1664,6 +1664,8 @@ u64 lnl_latency_data(struct perf_event *event, u64 status);
  
- 	EXTRA_REG_MAX		      /* number of entries needed */
- };
-@@ -1099,6 +1103,7 @@ do {									\
- #define PMU_FL_RETIRE_LATENCY	0x200 /* Support Retire Latency in PEBS */
- #define PMU_FL_BR_CNTR		0x400 /* Support branch counter logging */
- #define PMU_FL_DYN_CONSTRAINT	0x800 /* Needs dynamic constraint */
-+#define PMU_FL_HAS_OMR		0x1000 /* has 4 equivalent OMR regs */
+ u64 arl_h_latency_data(struct perf_event *event, u64 status);
  
- #define EVENT_VAR(_id)  event_attr_##_id
- #define EVENT_PTR(_id) &event_attr_##_id.attr.attr
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 3d0a0950d20a..6d1b69ea01c2 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -263,6 +263,11 @@
- #define MSR_SNOOP_RSP_0			0x00001328
- #define MSR_SNOOP_RSP_1			0x00001329
- 
-+#define MSR_OMR_0			0x000003e0
-+#define MSR_OMR_1			0x000003e1
-+#define MSR_OMR_2			0x000003e2
-+#define MSR_OMR_3			0x000003e3
++u64 pnc_latency_data(struct perf_event *event, u64 status);
 +
- #define MSR_LBR_SELECT			0x000001c8
- #define MSR_LBR_TOS			0x000001c9
+ extern struct event_constraint intel_core2_pebs_event_constraints[];
+ 
+ extern struct event_constraint intel_atom_pebs_event_constraints[];
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index c44a8fb3e418..533393ec94d0 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -1330,14 +1330,16 @@ union perf_mem_data_src {
+ 			mem_snoopx  :  2, /* Snoop mode, ext */
+ 			mem_blk     :  3, /* Access blocked */
+ 			mem_hops    :  3, /* Hop level */
+-			mem_rsvd    : 18;
++			mem_region  :  5, /* cache/memory regions */
++			mem_rsvd    : 13;
+ 	};
+ };
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+ union perf_mem_data_src {
+ 	__u64 val;
+ 	struct {
+-		__u64	mem_rsvd    : 18,
++		__u64	mem_rsvd    : 13,
++			mem_region  :  5, /* cache/memory regions */
+ 			mem_hops    :  3, /* Hop level */
+ 			mem_blk     :  3, /* Access blocked */
+ 			mem_snoopx  :  2, /* Snoop mode, ext */
+@@ -1394,7 +1396,7 @@ union perf_mem_data_src {
+ #define PERF_MEM_LVLNUM_L4			0x0004 /* L4 */
+ #define PERF_MEM_LVLNUM_L2_MHB			0x0005 /* L2 Miss Handling Buffer */
+ #define PERF_MEM_LVLNUM_MSC			0x0006 /* Memory-side Cache */
+-/* 0x007 available */
++#define PERF_MEM_LVLNUM_L0			0x0007 /* L0 */
+ #define PERF_MEM_LVLNUM_UNC			0x0008 /* Uncached */
+ #define PERF_MEM_LVLNUM_CXL			0x0009 /* CXL */
+ #define PERF_MEM_LVLNUM_IO			0x000a /* I/O */
+@@ -1447,6 +1449,25 @@ union perf_mem_data_src {
+ /* 5-7 available */
+ #define PERF_MEM_HOPS_SHIFT			43
+ 
++/* Cache/Memory region */
++#define PERF_MEM_REGION_NA		0x0  /* Invalid */
++#define PERF_MEM_REGION_RSVD		0x01 /* Reserved */
++#define PERF_MEM_REGION_L_SHARE		0x02 /* Local CA shared cache */
++#define PERF_MEM_REGION_L_NON_SHARE	0x03 /* Local CA non-shared cache */
++#define PERF_MEM_REGION_O_IO		0x04 /* Other CA IO agent */
++#define PERF_MEM_REGION_O_SHARE		0x05 /* Other CA shared cache */
++#define PERF_MEM_REGION_O_NON_SHARE	0x06 /* Other CA non-shared cache */
++#define PERF_MEM_REGION_MMIO		0x07 /* MMIO */
++#define PERF_MEM_REGION_MEM0		0x08 /* Memory region 0 */
++#define PERF_MEM_REGION_MEM1		0x09 /* Memory region 1 */
++#define PERF_MEM_REGION_MEM2		0x0a /* Memory region 2 */
++#define PERF_MEM_REGION_MEM3		0x0b /* Memory region 3 */
++#define PERF_MEM_REGION_MEM4		0x0c /* Memory region 4 */
++#define PERF_MEM_REGION_MEM5		0x0d /* Memory region 5 */
++#define PERF_MEM_REGION_MEM6		0x0e /* Memory region 6 */
++#define PERF_MEM_REGION_MEM7		0x0f /* Memory region 7 */
++#define PERF_MEM_REGION_SHIFT		46
++
+ #define PERF_MEM_S(a, s) \
+ 	(((__u64)PERF_MEM_##a##_##s) << PERF_MEM_##a##_SHIFT)
+ 
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index c44a8fb3e418..d4b99610a3b0 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -1330,14 +1330,16 @@ union perf_mem_data_src {
+ 			mem_snoopx  :  2, /* Snoop mode, ext */
+ 			mem_blk     :  3, /* Access blocked */
+ 			mem_hops    :  3, /* Hop level */
+-			mem_rsvd    : 18;
++			mem_region  :  5, /* cache/memory regions */
++			mem_rsvd    : 13;
+ 	};
+ };
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+ union perf_mem_data_src {
+ 	__u64 val;
+ 	struct {
+-		__u64	mem_rsvd    : 18,
++		__u64	mem_rsvd    : 13,
++			mem_region  :  5, /* cache/memory regions */
+ 			mem_hops    :  3, /* Hop level */
+ 			mem_blk     :  3, /* Access blocked */
+ 			mem_snoopx  :  2, /* Snoop mode, ext */
+@@ -1394,7 +1396,7 @@ union perf_mem_data_src {
+ #define PERF_MEM_LVLNUM_L4			0x0004 /* L4 */
+ #define PERF_MEM_LVLNUM_L2_MHB			0x0005 /* L2 Miss Handling Buffer */
+ #define PERF_MEM_LVLNUM_MSC			0x0006 /* Memory-side Cache */
+-/* 0x007 available */
++#define PERF_MEM_LVLNUM_L0			0x0007   /* L0 */
+ #define PERF_MEM_LVLNUM_UNC			0x0008 /* Uncached */
+ #define PERF_MEM_LVLNUM_CXL			0x0009 /* CXL */
+ #define PERF_MEM_LVLNUM_IO			0x000a /* I/O */
+@@ -1447,6 +1449,25 @@ union perf_mem_data_src {
+ /* 5-7 available */
+ #define PERF_MEM_HOPS_SHIFT			43
+ 
++/* Cache/Memory region */
++#define PERF_MEM_REGION_NA		0x0  /* Invalid */
++#define PERF_MEM_REGION_RSVD		0x01 /* Reserved */
++#define PERF_MEM_REGION_L_SHARE		0x02 /* Local CA shared cache */
++#define PERF_MEM_REGION_L_NON_SHARE	0x03 /* Local CA non-shared cache */
++#define PERF_MEM_REGION_O_IO		0x04 /* Other CA IO agent */
++#define PERF_MEM_REGION_O_SHARE		0x05 /* Other CA shared cache */
++#define PERF_MEM_REGION_O_NON_SHARE	0x06 /* Other CA non-shared cache */
++#define PERF_MEM_REGION_MMIO		0x07 /* MMIO */
++#define PERF_MEM_REGION_MEM0		0x08 /* Memory region 0 */
++#define PERF_MEM_REGION_MEM1		0x09 /* Memory region 1 */
++#define PERF_MEM_REGION_MEM2		0x0a /* Memory region 2 */
++#define PERF_MEM_REGION_MEM3		0x0b /* Memory region 3 */
++#define PERF_MEM_REGION_MEM4		0x0c /* Memory region 4 */
++#define PERF_MEM_REGION_MEM5		0x0d /* Memory region 5 */
++#define PERF_MEM_REGION_MEM6		0x0e /* Memory region 6 */
++#define PERF_MEM_REGION_MEM7		0x0f /* Memory region 7 */
++#define PERF_MEM_REGION_SHIFT		46
++
+ #define PERF_MEM_S(a, s) \
+ 	(((__u64)PERF_MEM_##a##_##s) << PERF_MEM_##a##_SHIFT)
  
 -- 
 2.34.1
