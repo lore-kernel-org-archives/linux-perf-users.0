@@ -1,66 +1,66 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0946F3A1A3A
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 15:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E014A3A1A28
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 15:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768406273; cv=none; b=IcyXh+ZX+p1eccn1u4TGZx5udovxCqoPS4YtQywoxhJhkyjR6eBbpxOwxUGGD1C62vJSczw3RP6lwb646ssXELXyae4QO48zoY4BZBz33fQEIQzxpDdvq34UbQKvdEBcFJfP7zBBSbdlNb79FUIGWhRkd46jKzDldT70lnyjWwk=
+	t=1768406276; cv=none; b=uMjHxxom2oWL68C8Vs7TXbZQ/4UkMPsol5pxSCL28LBX3LMhOnHEvIhIWcmQdl2tPUbesg0ZHOQQNVTRvWWovN1RJRxeCYuESXD3svTFidb6b+bIRur5FyAmcSOEY6tNFJyATbP95ZFECxFeVWnwBxWW8TkMKbM9IlqjWWrbgBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768406273; c=relaxed/simple;
-	bh=7YYoqOIAjjMEaf57v2iXEXgdQFmEmn/LvBsi7H9riRc=;
+	s=arc-20240116; t=1768406276; c=relaxed/simple;
+	bh=IlGWCJT2qBGC3XXCJRsXxYfQz51Y104FxCfSOx1WSLU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jaQ5bCS39fxjImpn6qCE6DPtDGofwDZDV1t0Xc19Ji7QyHaU5BI9UGrG4WnrlsqRa6meT8WuDy53mwy0LM7DVdLqcMxZxzTtxlJlCFfN3dzE4yGXZl+mfBS/hR61WmNA43DkuUdD826qraD6nI9SxPSRbvyRXAplx4fOSxSZr00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xbHr3vqs; arc=none smtp.client-ip=209.85.128.49
+	 In-Reply-To:To:Cc; b=JRo23yFqDyocFXBSFLndrCjUAHvQRWIUEwi0S2hoc291RiufWgmwpu+9/ilQt/0Uj2t9C3agc2gBWhBnYyDUFHNxMssJPx6flsLSUsJArj9lW83FvLMWYwQn+fzyQHJ6JyCjb/Tucgzb1wm9cPcNnGPwogGUWhudhlJdIGw9TRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YaJezoi+; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xbHr3vqs"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-477619f8ae5so66071205e9.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 07:57:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YaJezoi+"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-47d493a9b96so51040035e9.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 07:57:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1768406267; x=1769011067; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1768406271; x=1769011071; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zxU1vsfrqBADbCFBEcH8TNvakDJOOuWqCmLiru2LKyg=;
-        b=xbHr3vqsvyaAt2sPVLgT0OQjWL38MZ3mBPBfulhizIzNjP3Cgfvgerku7PF4Mpne/F
-         7r2eJDaZEnq/BlYywQAY52R4FDWgU/WGqfE+cc8ZGo0vWoJQKc+Mq+Fc391+R+9dQwBf
-         ijtGyVR75N34TDXiCViDHX8++sKI3GXb7xJ0RyE+iJJPvn1D0ChduAcci8nt8gzUk5mY
-         RIzeb/D6rS/OzEBpcL0+z7mTEU3dStSgvAOOyzLgqi2UELQYEcw3/cZfMYAYgBoiYZRh
-         2HlYHkPR7DN97Jqczc6nOave0OfPYRiLDWhuc4nPkRx629YjwlxxKQCOMBHKVy9PaV3/
-         hhUw==
+        bh=eIFLeU/rZDWgQfxqeduMgDTr6BnNNm0nr5ZzvbheRLg=;
+        b=YaJezoi+mYDGJT4Jjlh3we/6zaOCxjJteM5f28YqUA65x8UARrqND6BHh7zBWM/Jdd
+         TfAOkrYHk3sFCsCVJfr554K7Or0WzTxb5mYNjSSRSzsprX6swNMC0IVWePf9vuxO4ek7
+         NBtiHQc92Y3E4WGeuGJUhL+MCEDV6dzzUEq3agNMMl8CB2zCtP99X9YxIC6IBSDgvYQm
+         L4GO1bjxTuJS+aUOb+sqvAeU3w4I2Nb4bVQ/l27uqd05NKCLgbxhsKBvFbpyorYFn1WV
+         VUziWSE/q2b1cyQi/cFzPSQ8XbXUKE6lx2h7xcFlTdy7Mt7azEPAgmgDB5/HLwWNFSEi
+         YXXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768406267; x=1769011067;
+        d=1e100.net; s=20230601; t=1768406271; x=1769011071;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=zxU1vsfrqBADbCFBEcH8TNvakDJOOuWqCmLiru2LKyg=;
-        b=sKxxN2qo0Re/0SHLcAkCjUSIWzdHCYeTVYLCahpt6KLBHoRZv+CqtiIwpqrvQ89Uqy
-         CWy9gPY+AwZXU3Jg4I+sM+SjOactxCDpTKp39r2YXQeObKvuTdchVT9BDNrP4woGWwYU
-         BbgIvpDR/ytL4Vu/btmdYZr/vfVwJGb8RMCp5naQwYeAMdR4qzk3WGnSUGtYUfC4hYCO
-         4HYCM730o54oqzV7FbGoD33iX95GXhNTQxW4swqD/5RT3bIAUWLutKS3lJrV90oh/QFa
-         H+toIU+HDX+q0p/qiepxXNesr5/vm1bJa2LV9roWg1YN7H0W9SJIZT3OIUWZ6l9w5ukb
-         zh1g==
-X-Gm-Message-State: AOJu0YxHLOOc9DkP7zSC664e/OmxQOi5W/uYJ3oDScsretZ1kiekFQLD
-	bCwBsyqCCgOccegVD3OZqk4K5OX5vvNb3jRStPb/tAufVdSRiEd9q6Ld6j/Og2zwyFk=
-X-Gm-Gg: AY/fxX6jOqq2Ujc7kyAmw70MaGTFhLw5F06ZFpV8ijS3m4mXG6o9amPzfPOSFsM+Bh8
-	GEhfh8Mrj6yvIf6Nki4Xy4/yk5R4ssaIF8oC/tgVSfIx8+BDzbOuIIa46BKLcPHQvcnG4y/4Amp
-	lfBmoyjB5ho1TegTniKWIq/HgXlQtqAsz1Kof/C4cQqy39P8xH7t0b7mD9y9gcBjMJ4y8OeYwIy
-	9YYeRkvYKhHI7DMqzZX2hPrWuLYrsH7JFshauNr4HwZ+QaFhQspYuJy7Lb93j4ywy1GebFRpBd7
-	fUYofHtbK6GrzL8WW7eGvHgVd3y9RBfREGDut+lKr4UQ5pC/JdTbWhlGTuoDsGknhqSXUSaPI5Z
-	Squk8yJ+kcW44SHodZHyILBXoDn5pJBwQ8JIFJOALoQKkuoQZx1nc6V/SMfvzyJmR8uCpR3+oTr
-	MXXOJvEuIcqau/nNyuji13IBFv7uffKVU=
-X-Received: by 2002:a05:600c:3544:b0:479:2f95:5179 with SMTP id 5b1f17b1804b1-47ee335494fmr40564695e9.15.1768406267278;
-        Wed, 14 Jan 2026 07:57:47 -0800 (PST)
+        bh=eIFLeU/rZDWgQfxqeduMgDTr6BnNNm0nr5ZzvbheRLg=;
+        b=uekrc4zz4aVParGifMarOiR2BQWSEWOBUAoibyGsXKGzTJlzdvzWlJ4MktHha4eJeP
+         h2+8SgN65QzCeDWcp6O0MoMkKaHHSgfPSmmSBjdLI+OeUgOsa+xq29nkFKTGhJ2zgCEy
+         D7Y63RBINOO7j0sVfR7cqS06T7haDpdONECG82KFWYbUjU/4JkTc/oosnRh8yI2rlLMV
+         9ZU0e/ilV28azfthAoI4Dc2fetX3L5ljUFKk5ajI82yEXLI17fFlzX011cjDGtgvLKxU
+         ZDqTXDTuPVhuxyTNDCb0LsXAHY3TTW9bQvRudl85K3Lx1lg57gMgyIQUv/DAQiGKQ3Sw
+         2tbQ==
+X-Gm-Message-State: AOJu0YyYt8s9Fc74BeJ/GqS9Qh7L3NlNlpNc5iTj1Yo0r9xWbAZb7I/L
+	l1NhPpBPOVs572iaB5Nx2A05IE0ruQvbf/SbgTN0bl7uI5jnbnXbPkkQ4syFLSatXx0=
+X-Gm-Gg: AY/fxX4ACB57LWcFD1H99zs7NrdorjTIqWjeI8LJiog8Apy8uUMmtqjKHcP1lnaDY9C
+	f9Tux+WfU5I6vOROs4+dn2mVwKGJ8MZMLwnwfffG83MrXMk20H6+Jo9a4I+F3RYtM2tpPG2nliE
+	ZhKs9V81fk6Iwi5OusIfWEjSFWXjdIMmHL9RByi7UpZewTs6u4Ib2BbhZ32E/Ua59mcNyxaqS3/
+	TeDHXJuf9VfmSr75WmscDFOb7+m9NT1TXq2SF3s5L+zFL5l3XGtcqBrfYLqP77tjBBpzS6uGsDG
+	e2fL+mf8suYULW/HKktBkcSOCla+qh6JHK4qbarklLu9yse4Dsaxv0Vbk4lnAhpPeowHuGm+CMS
+	L9a89B1SP0eG9FTCO6RX+Y+7yDMDd4HCOspxruNN1ICECQ2KOKmU1Mk53ORh6P2UKh+T2OMFetF
+	EIqGJ80e10jLVB2cjqxnAg
+X-Received: by 2002:a05:600c:35c6:b0:477:5897:a0c4 with SMTP id 5b1f17b1804b1-47ee3323ccbmr41291455e9.4.1768406271314;
+        Wed, 14 Jan 2026 07:57:51 -0800 (PST)
 Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47ee85e8807sm7426475e9.16.2026.01.14.07.57.46
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47ee85e8807sm7426475e9.16.2026.01.14.07.57.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 07:57:46 -0800 (PST)
+        Wed, 14 Jan 2026 07:57:50 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Wed, 14 Jan 2026 15:57:20 +0000
-Subject: [PATCH v5 08/14] perf parse-events: Always track user config
- changes
+Date: Wed, 14 Jan 2026 15:57:23 +0000
+Subject: [PATCH v5 11/14] perf cs-etm: Don't use hard coded config bits
+ when setting up ETMCR
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260114-james-perf-config-bits-v5-8-0ef97aaf1ac0@linaro.org>
+Message-Id: <20260114-james-perf-config-bits-v5-11-0ef97aaf1ac0@linaro.org>
 References: <20260114-james-perf-config-bits-v5-0-0ef97aaf1ac0@linaro.org>
 In-Reply-To: <20260114-james-perf-config-bits-v5-0-0ef97aaf1ac0@linaro.org>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -86,46 +86,86 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-Requiring the 'pmu->perf_event_attr_init_default' callback to be set to
-track user changes is a bit of a trap to fall in. It's hard to see that
-this is required when depending on the user change tracking.
+Perf only looks at attr.config when determining what was programmed into
+ETMCR. These bits could theoretically be in any of the config fields.
+Add a generic helper to find the value of any named format field in any
+config field and then use it to get the attributes relevant to ETMCR.
 
-It's possible to want all 0 defaults so not set it, but at the same time
-still do some programmatic setting of configs with
-evsel__set_config_if_unset(). Also if a PMU reverts to 0 defaults and
-deletes its existing callback, it will silently break existing uses of
-evsel__set_config_if_unset().
+The kernel will also stop publishing the ETMCR register bits in a header
+[1] so preempt that by defining them here.
 
-One way to fix this would be to assert in evsel__set_config_if_unset()
-if the changes weren't tracked, but that would be a possibly untested
-runtime failure. Instead, always track it as it's harmless and
-simplifies testing too.
+Move field_prep() to util.h so we can define it along side field_get().
+Unfortunately FIELD_PREP() and FIELD_GET() from the kernel can't be used
+as they require the mask to be a compile time constant.
+
+[1]: https://lore.kernel.org/linux-arm-kernel/20251128-james-cs-syncfreq-v8-10-4d319764cc58@linaro.org/
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/parse-events.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ tools/perf/arch/arm/util/cs-etm.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 1f6e2213326d..c8f2962a06c7 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1528,12 +1528,8 @@ static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 		return -ENOMEM;
- 	}
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index a49753f0d20f..f535027ce862 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -68,6 +68,12 @@ static const char * const metadata_ete_ro[] = {
  
--	/*
--	 * When using default config, record which bits of attr->config were
--	 * changed by the user.
--	 */
--	if (pmu->perf_event_attr_init_default &&
--	    get_config_chgs(pmu, &parsed_terms, &config_terms)) {
-+	/* Record which bits of attr->config were changed by the user. */
-+	if (get_config_chgs(pmu, &parsed_terms, &config_terms)) {
- 		parse_events_terms__exit(&parsed_terms);
- 		return -ENOMEM;
- 	}
+ enum cs_etm_version { CS_NOT_PRESENT, CS_ETMV3, CS_ETMV4, CS_ETE };
+ 
++
++/* ETMv3 ETMCR register bits */
++#define ETMCR_CYC_ACC		BIT(12)
++#define ETMCR_TIMESTAMP_EN	BIT(28)
++#define ETMCR_RETURN_STACK	BIT(29)
++
+ static bool cs_etm_is_ete(struct perf_pmu *cs_etm_pmu, struct perf_cpu cpu);
+ static int cs_etm_get_ro(struct perf_pmu *pmu, struct perf_cpu cpu, const char *path, __u64 *val);
+ static bool cs_etm_pmu_path_exists(struct perf_pmu *pmu, struct perf_cpu cpu, const char *path);
+@@ -484,6 +490,33 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+ 	return err;
+ }
+ 
++static u64 cs_etm_synth_etmcr(struct auxtrace_record *itr)
++{
++	struct cs_etm_recording *ptr =
++		container_of(itr, struct cs_etm_recording, itr);
++	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
++	struct evsel *evsel = cs_etm_get_evsel(ptr->evlist, cs_etm_pmu);
++	u64 etmcr = 0;
++	u64 val;
++
++	if (!evsel)
++		return 0;
++
++	/*
++	 * Synthesize what the kernel programmed into ETMCR based on
++	 * what options the event was opened with. This doesn't have to be
++	 * complete or 100% accurate, not all bits used by OpenCSD anyway.
++	 */
++	if (!evsel__get_config_val(evsel, "cycacc", &val) && val)
++		etmcr |= ETMCR_CYC_ACC;
++	if (!evsel__get_config_val(evsel, "timestamp", &val) && val)
++		etmcr |= ETMCR_TIMESTAMP_EN;
++	if (!evsel__get_config_val(evsel, "retstack", &val) && val)
++		etmcr |= ETMCR_RETURN_STACK;
++
++	return etmcr;
++}
++
+ static u64 cs_etm_get_config(struct auxtrace_record *itr)
+ {
+ 	struct cs_etm_recording *ptr =
+@@ -743,7 +776,7 @@ static void cs_etm_get_metadata(struct perf_cpu cpu, u32 *offset,
+ 	case CS_ETMV3:
+ 		magic = __perf_cs_etmv3_magic;
+ 		/* Get configuration register */
+-		info->priv[*offset + CS_ETM_ETMCR] = cs_etm_get_config(itr);
++		info->priv[*offset + CS_ETM_ETMCR] = cs_etm_synth_etmcr(itr);
+ 		/* traceID set to legacy value in case new perf running on old system */
+ 		info->priv[*offset + CS_ETM_ETMTRACEIDR] = cs_etm_get_legacy_trace_id(cpu);
+ 		/* Get read-only information from sysFS */
 
 -- 
 2.34.1
