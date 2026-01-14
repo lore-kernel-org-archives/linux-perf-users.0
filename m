@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41052874E4;
-	Wed, 14 Jan 2026 01:22:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF702877D4;
+	Wed, 14 Jan 2026 01:22:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768353734; cv=none; b=NIkwMavy7uHBiTPEdeEujTw2NL0AIuQKZlrwUMXKQZvhK5qd8h3BX3q9267J8Pe6vuJxbH1iSaAxIjhr8l6VMAPKDAcSODFrITlJGCIJXM/vYn9YExnCFFDHgp0Hmw4qE0IfUI8fa1XXhkdf6FS3D5K2ssNLsqHOqim90dO9Zb0=
+	t=1768353738; cv=none; b=rGmV5j5bljb8B4nuiGCrwNHNyj1ZccgTAqgB/Zz6WI42UlmbBLNnAFZ68qmYmoSVSw5j0uUlWFIi5yIhkOOFzxxPNEBbtIR/GudKhZqsDLexPYcVrozabm+PJKi+5xurIKjMriUSKOfYEsRavQDsEYW8qN7sigiiKaofTnRKt2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768353734; c=relaxed/simple;
-	bh=Yd0ptiC0DKyXPv7zgozEa4pMQZgX/J2f8XZ9OoqkPeE=;
+	s=arc-20240116; t=1768353738; c=relaxed/simple;
+	bh=bLQH7U4F1iwRQOJiV8yrDDnZQK2NtYt2aU9qMf0ZVm4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GRCSFuUgUMJZXIpAM88BOz7kRkbhzqlIn925xhYUCdNG/rNRlueHSKvaFySP4k5Dx2hoK9FdtJJHFnSp9THBILj4l7BxVWubiAf+Jb6w5AqA5tiNvBT0Cnl5FFKZ1atgNe505/kXHDCQnuCL6cRtW2SHuoHOfueAP4Wz3exyebs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U+IQaKLz; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=i3iYmv3H/U95zPgViDTc3xiDkug2ZmGinK6+DnuID2jTvufM/G0rSpLQzY0yi8x9GnM1+lz6bjry7g/ztEYLZG7R8Cl0fhprG5Zy00bkHaXz6gVKrhkF3X71fiyCYXIwG4lowZb11T7U/FbiiRGDhwcJQAg+O36MChQRd7LV0ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NIoqi69R; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U+IQaKLz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NIoqi69R"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768353732; x=1799889732;
+  t=1768353737; x=1799889737;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Yd0ptiC0DKyXPv7zgozEa4pMQZgX/J2f8XZ9OoqkPeE=;
-  b=U+IQaKLz8MPvj8CEsCbyF5u5UNwGnYXCmeayjh8w1s5IxJWMKVUbZiPd
-   aubTyej348ojE9DtrEJIbMTPbbn4M2bxhSJ26UzqReOnQ5xeT49w3Xpi5
-   pXFVhWFW1MNr1Pbi57YKB5sXMh8CSqsEZUBu4kY9WWwgtZWU/Rdt+A2qs
-   Cy36inUBc2hIucLwSOnXUQAxkD9iyOWNuXpbs0Y9FFpHW7ziRL7prpRuN
-   JBZFzlNLfyc7KNcCxCmdxzYLImpx/Ta9BUxXbvY1YAERkZKmzIBIRPvQr
-   ajxNmgnQJoTTHkUPa0i3ZP9K5pUJA/fBn1Jjns292cU+jS4HckDox/nlE
-   A==;
-X-CSE-ConnectionGUID: xLUHfJ0tTWyFmpuksLkQ3w==
-X-CSE-MsgGUID: eFGqySQjT6eDbDUHX/K7vw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="87231494"
+  bh=bLQH7U4F1iwRQOJiV8yrDDnZQK2NtYt2aU9qMf0ZVm4=;
+  b=NIoqi69R17HTLzVOK9+yXearrlPo6WeF/6VmZ1oKIZBzhba6u4TeQEyq
+   H51xxsBajggcNSAcMReVKnF5bgOHmsJGLu5xQ5a6gb0r6IchwP6CfoGkY
+   tR/ZTppCvCz7ctJPSNCaAC5f9J0NVsabBOxpGsNF0zpn5hfcNpZb7illK
+   ekH/HUOwnAiRHRYL9ATjrWOr7JG8+JyhERBNt3x00W+YLXd4FHCISqIhM
+   4IEqPt3jWTT/ATLLiCCMreo5n+ufBeg+gs/o+NyvdrP9g4z70rGmx8H06
+   PaZQllE0bFIPjNwgXZDEk2XRqfmbe0eFgubQSg3mkaRuTdMboKpEQUQFr
+   Q==;
+X-CSE-ConnectionGUID: /Sli4bDVR/qTuaRlVC9TCg==
+X-CSE-MsgGUID: BrmhzPRVR/mZ3zsvsne6uQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="87231504"
 X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="87231494"
+   d="scan'208";a="87231504"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 17:22:12 -0800
-X-CSE-ConnectionGUID: Q+uESye9TPCxIx6TUypcCQ==
-X-CSE-MsgGUID: TDQ4imcgTLK6l+vM1CLDeA==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 17:22:17 -0800
+X-CSE-ConnectionGUID: J5gv1G+bTjaZRqwK8nxFLg==
+X-CSE-MsgGUID: 80jSULETREG1aQd9XxPrXw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="204561195"
+   d="scan'208";a="204561200"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa007.jf.intel.com with ESMTP; 13 Jan 2026 17:22:08 -0800
+  by orviesa007.jf.intel.com with ESMTP; 13 Jan 2026 17:22:12 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 2/7] perf/x86/intel: Add support for PEBS memory auxiliary info field in DMR
-Date: Wed, 14 Jan 2026 09:17:45 +0800
-Message-Id: <20260114011750.350569-3-dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 3/7] perf/x86/intel: Add core PMU support for DMR
+Date: Wed, 14 Jan 2026 09:17:46 +0800
+Message-Id: <20260114011750.350569-4-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260114011750.350569-1-dapeng1.mi@linux.intel.com>
 References: <20260114011750.350569-1-dapeng1.mi@linux.intel.com>
@@ -74,337 +74,297 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With the introduction of the OMR feature, the PEBS memory auxiliary info
-field for load and store latency events has been restructured for DMR.
+This patch enables core PMU features for Diamond Rapids (Panther Cove
+microarchitecture), including Panther Cove specific counter and PEBS
+constraints, a new cache events ID table, and the model-specific OMR
+events extra registers table.
 
-The memory auxiliary info field's bit[8] indicates whether a L2 cache
-miss occurred for a memory load or store instruction. If bit[8] is 0,
-it signifies no L2 cache miss, and bits[7:0] specify the exact cache data
-source (up to the L2 cache level). If bit[8] is 1, bits[7:0] represent
-the OMR encoding, indicating the specific L3 cache or memory region
-involved in the memory access. A significant enhancement is OMR encoding
-provides up to 8 fine-grained memory regions besides the cache region.
-
-A significant enhancement for OMR encoding is the ability to provide
-up to 8 fine-grained memory regions in addition to the cache region,
-offering more detailed insights into memory access regions.
-
-For detailed information on the memory auxiliary info encoding, please
-refer to section 16.2 "PEBS LOAD LATENCY AND STORE LATENCY FACILITY" in
-the ISE documentation.
-
-This patch ensures that the PEBS memory auxiliary info field is correctly
-interpreted and utilized in DMR.
+For detailed information about counter constraints, please refer to
+section 16.3 "COUNTER RESTRICTIONS" in the ISE documentation.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/ds.c            | 140 ++++++++++++++++++++++++++
- arch/x86/events/perf_event.h          |   2 +
- include/uapi/linux/perf_event.h       |  27 ++++-
- tools/include/uapi/linux/perf_event.h |  27 ++++-
- 4 files changed, 190 insertions(+), 6 deletions(-)
 
+v3: Simplify DMR enabling code in intel_pmu_init() by reusing the
+enabling code of previous platforms. 
+
+ arch/x86/events/intel/core.c | 179 ++++++++++++++++++++++++++++++++++-
+ arch/x86/events/intel/ds.c   |  27 ++++++
+ arch/x86/events/perf_event.h |   2 +
+ 3 files changed, 207 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 3578c660a904..b2f99d47292b 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -435,6 +435,62 @@ static struct extra_reg intel_lnc_extra_regs[] __read_mostly = {
+ 	EVENT_EXTRA_END
+ };
+ 
++static struct event_constraint intel_pnc_event_constraints[] = {
++	FIXED_EVENT_CONSTRAINT(0x00c0, 0),	/* INST_RETIRED.ANY */
++	FIXED_EVENT_CONSTRAINT(0x0100, 0),	/* INST_RETIRED.PREC_DIST */
++	FIXED_EVENT_CONSTRAINT(0x003c, 1),	/* CPU_CLK_UNHALTED.CORE */
++	FIXED_EVENT_CONSTRAINT(0x0300, 2),	/* CPU_CLK_UNHALTED.REF */
++	FIXED_EVENT_CONSTRAINT(0x013c, 2),	/* CPU_CLK_UNHALTED.REF_TSC_P */
++	FIXED_EVENT_CONSTRAINT(0x0400, 3),	/* SLOTS */
++	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_RETIRING, 0),
++	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_BAD_SPEC, 1),
++	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_FE_BOUND, 2),
++	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_BE_BOUND, 3),
++	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_HEAVY_OPS, 4),
++	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_BR_MISPREDICT, 5),
++	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_FETCH_LAT, 6),
++	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_MEM_BOUND, 7),
++
++	INTEL_EVENT_CONSTRAINT(0x20, 0xf),
++	INTEL_EVENT_CONSTRAINT(0x79, 0xf),
++
++	INTEL_UEVENT_CONSTRAINT(0x0275, 0xf),
++	INTEL_UEVENT_CONSTRAINT(0x0176, 0xf),
++	INTEL_UEVENT_CONSTRAINT(0x04a4, 0x1),
++	INTEL_UEVENT_CONSTRAINT(0x08a4, 0x1),
++	INTEL_UEVENT_CONSTRAINT(0x01cd, 0xfc),
++	INTEL_UEVENT_CONSTRAINT(0x02cd, 0x3),
++
++	INTEL_EVENT_CONSTRAINT(0xd0, 0xf),
++	INTEL_EVENT_CONSTRAINT(0xd1, 0xf),
++	INTEL_EVENT_CONSTRAINT(0xd4, 0xf),
++	INTEL_EVENT_CONSTRAINT(0xd6, 0xf),
++	INTEL_EVENT_CONSTRAINT(0xdf, 0xf),
++	INTEL_EVENT_CONSTRAINT(0xce, 0x1),
++
++	INTEL_UEVENT_CONSTRAINT(0x01b1, 0x8),
++	INTEL_UEVENT_CONSTRAINT(0x0847, 0xf),
++	INTEL_UEVENT_CONSTRAINT(0x0446, 0xf),
++	INTEL_UEVENT_CONSTRAINT(0x0846, 0xf),
++	INTEL_UEVENT_CONSTRAINT(0x0148, 0xf),
++
++	EVENT_CONSTRAINT_END
++};
++
++static struct extra_reg intel_pnc_extra_regs[] __read_mostly = {
++	/* must define OMR_X first, see intel_alt_er() */
++	INTEL_UEVENT_EXTRA_REG(0x012a, MSR_OMR_0, 0x40ffffff0000ffffull, OMR_0),
++	INTEL_UEVENT_EXTRA_REG(0x022a, MSR_OMR_1, 0x40ffffff0000ffffull, OMR_1),
++	INTEL_UEVENT_EXTRA_REG(0x042a, MSR_OMR_2, 0x40ffffff0000ffffull, OMR_2),
++	INTEL_UEVENT_EXTRA_REG(0x082a, MSR_OMR_3, 0x40ffffff0000ffffull, OMR_3),
++	INTEL_UEVENT_PEBS_LDLAT_EXTRA_REG(0x01cd),
++	INTEL_UEVENT_EXTRA_REG(0x02c6, MSR_PEBS_FRONTEND, 0x9, FE),
++	INTEL_UEVENT_EXTRA_REG(0x03c6, MSR_PEBS_FRONTEND, 0x7fff1f, FE),
++	INTEL_UEVENT_EXTRA_REG(0x40ad, MSR_PEBS_FRONTEND, 0xf, FE),
++	INTEL_UEVENT_EXTRA_REG(0x04c2, MSR_PEBS_FRONTEND, 0x8, FE),
++	EVENT_EXTRA_END
++};
++
+ EVENT_ATTR_STR(mem-loads,	mem_ld_nhm,	"event=0x0b,umask=0x10,ldlat=3");
+ EVENT_ATTR_STR(mem-loads,	mem_ld_snb,	"event=0xcd,umask=0x1,ldlat=3");
+ EVENT_ATTR_STR(mem-stores,	mem_st_snb,	"event=0xcd,umask=0x2");
+@@ -650,6 +706,102 @@ static __initconst const u64 glc_hw_cache_extra_regs
+  },
+ };
+ 
++static __initconst const u64 pnc_hw_cache_event_ids
++				[PERF_COUNT_HW_CACHE_MAX]
++				[PERF_COUNT_HW_CACHE_OP_MAX]
++				[PERF_COUNT_HW_CACHE_RESULT_MAX] =
++{
++ [ C(L1D ) ] = {
++	[ C(OP_READ) ] = {
++		[ C(RESULT_ACCESS) ] = 0x81d0,
++		[ C(RESULT_MISS)   ] = 0xe124,
++	},
++	[ C(OP_WRITE) ] = {
++		[ C(RESULT_ACCESS) ] = 0x82d0,
++	},
++ },
++ [ C(L1I ) ] = {
++	[ C(OP_READ) ] = {
++		[ C(RESULT_MISS)   ] = 0xe424,
++	},
++	[ C(OP_WRITE) ] = {
++		[ C(RESULT_ACCESS) ] = -1,
++		[ C(RESULT_MISS)   ] = -1,
++	},
++ },
++ [ C(LL  ) ] = {
++	[ C(OP_READ) ] = {
++		[ C(RESULT_ACCESS) ] = 0x12a,
++		[ C(RESULT_MISS)   ] = 0x12a,
++	},
++	[ C(OP_WRITE) ] = {
++		[ C(RESULT_ACCESS) ] = 0x12a,
++		[ C(RESULT_MISS)   ] = 0x12a,
++	},
++ },
++ [ C(DTLB) ] = {
++	[ C(OP_READ) ] = {
++		[ C(RESULT_ACCESS) ] = 0x81d0,
++		[ C(RESULT_MISS)   ] = 0xe12,
++	},
++	[ C(OP_WRITE) ] = {
++		[ C(RESULT_ACCESS) ] = 0x82d0,
++		[ C(RESULT_MISS)   ] = 0xe13,
++	},
++ },
++ [ C(ITLB) ] = {
++	[ C(OP_READ) ] = {
++		[ C(RESULT_ACCESS) ] = -1,
++		[ C(RESULT_MISS)   ] = 0xe11,
++	},
++	[ C(OP_WRITE) ] = {
++		[ C(RESULT_ACCESS) ] = -1,
++		[ C(RESULT_MISS)   ] = -1,
++	},
++	[ C(OP_PREFETCH) ] = {
++		[ C(RESULT_ACCESS) ] = -1,
++		[ C(RESULT_MISS)   ] = -1,
++	},
++ },
++ [ C(BPU ) ] = {
++	[ C(OP_READ) ] = {
++		[ C(RESULT_ACCESS) ] = 0x4c4,
++		[ C(RESULT_MISS)   ] = 0x4c5,
++	},
++	[ C(OP_WRITE) ] = {
++		[ C(RESULT_ACCESS) ] = -1,
++		[ C(RESULT_MISS)   ] = -1,
++	},
++	[ C(OP_PREFETCH) ] = {
++		[ C(RESULT_ACCESS) ] = -1,
++		[ C(RESULT_MISS)   ] = -1,
++	},
++ },
++ [ C(NODE) ] = {
++	[ C(OP_READ) ] = {
++		[ C(RESULT_ACCESS) ] = -1,
++		[ C(RESULT_MISS)   ] = -1,
++	},
++ },
++};
++
++static __initconst const u64 pnc_hw_cache_extra_regs
++				[PERF_COUNT_HW_CACHE_MAX]
++				[PERF_COUNT_HW_CACHE_OP_MAX]
++				[PERF_COUNT_HW_CACHE_RESULT_MAX] =
++{
++ [ C(LL  ) ] = {
++	[ C(OP_READ) ] = {
++		[ C(RESULT_ACCESS) ] = 0x4000000000000001,
++		[ C(RESULT_MISS)   ] = 0xFFFFF000000001,
++	},
++	[ C(OP_WRITE) ] = {
++		[ C(RESULT_ACCESS) ] = 0x4000000000000002,
++		[ C(RESULT_MISS)   ] = 0xFFFFF000000002,
++	},
++ },
++};
++
+ /*
+  * Notes on the events:
+  * - data reads do not include code reads (comparable to earlier tables)
+@@ -7236,6 +7388,20 @@ static __always_inline void intel_pmu_init_lnc(struct pmu *pmu)
+ 	hybrid(pmu, extra_regs) = intel_lnc_extra_regs;
+ }
+ 
++static __always_inline void intel_pmu_init_pnc(struct pmu *pmu)
++{
++	intel_pmu_init_glc(pmu);
++	x86_pmu.flags &= ~PMU_FL_HAS_RSP_1;
++	x86_pmu.flags |= PMU_FL_HAS_OMR;
++	memcpy(hybrid_var(pmu, hw_cache_event_ids),
++	       pnc_hw_cache_event_ids, sizeof(hw_cache_event_ids));
++	memcpy(hybrid_var(pmu, hw_cache_extra_regs),
++	       pnc_hw_cache_extra_regs, sizeof(hw_cache_extra_regs));
++	hybrid(pmu, event_constraints) = intel_pnc_event_constraints;
++	hybrid(pmu, pebs_constraints) = intel_pnc_pebs_event_constraints;
++	hybrid(pmu, extra_regs) = intel_pnc_extra_regs;
++}
++
+ static __always_inline void intel_pmu_init_skt(struct pmu *pmu)
+ {
+ 	intel_pmu_init_grt(pmu);
+@@ -7897,9 +8063,21 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.extra_regs = intel_rwc_extra_regs;
+ 		pr_cont("Granite Rapids events, ");
+ 		name = "granite_rapids";
++		goto glc_common;
++
++	case INTEL_DIAMONDRAPIDS_X:
++		intel_pmu_init_pnc(NULL);
++		x86_pmu.pebs_latency_data = pnc_latency_data;
++
++		pr_cont("Panthercove events, ");
++		name = "panthercove";
++		goto glc_base;
+ 
+ 	glc_common:
+ 		intel_pmu_init_glc(NULL);
++		intel_pmu_pebs_data_source_skl(true);
++
++	glc_base:
+ 		x86_pmu.pebs_ept = 1;
+ 		x86_pmu.hw_config = hsw_hw_config;
+ 		x86_pmu.get_event_constraints = glc_get_event_constraints;
+@@ -7909,7 +8087,6 @@ __init int intel_pmu_init(void)
+ 		mem_attr = glc_events_attrs;
+ 		td_attr = glc_td_events_attrs;
+ 		tsx_attr = glc_tsx_events_attrs;
+-		intel_pmu_pebs_data_source_skl(true);
+ 		break;
+ 
+ 	case INTEL_ALDERLAKE:
 diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index feb1c3cf63e4..272e652f25fc 100644
+index 272e652f25fc..06e42ac33749 100644
 --- a/arch/x86/events/intel/ds.c
 +++ b/arch/x86/events/intel/ds.c
-@@ -34,6 +34,17 @@ struct pebs_record_32 {
- 
-  */
- 
-+union omr_encoding {
-+	struct {
-+		u8 omr_source : 4;
-+		u8 omr_remote : 1;
-+		u8 omr_hitm : 1;
-+		u8 omr_snoop : 1;
-+		u8 omr_promoted : 1;
-+	};
-+	u8 omr_full;
-+};
-+
- union intel_x86_pebs_dse {
- 	u64 val;
- 	struct {
-@@ -73,6 +84,18 @@ union intel_x86_pebs_dse {
- 		unsigned int lnc_addr_blk:1;
- 		unsigned int ld_reserved6:18;
- 	};
-+	struct {
-+		unsigned int pnc_dse: 8;
-+		unsigned int pnc_l2_miss:1;
-+		unsigned int pnc_stlb_clean_hit:1;
-+		unsigned int pnc_stlb_any_hit:1;
-+		unsigned int pnc_stlb_miss:1;
-+		unsigned int pnc_locked:1;
-+		unsigned int pnc_data_blk:1;
-+		unsigned int pnc_addr_blk:1;
-+		unsigned int pnc_fb_full:1;
-+		unsigned int ld_reserved8:16;
-+	};
+@@ -1425,6 +1425,33 @@ struct event_constraint intel_lnc_pebs_event_constraints[] = {
+ 	EVENT_CONSTRAINT_END
  };
  
- 
-@@ -228,6 +251,85 @@ void __init intel_pmu_pebs_data_source_lnl(void)
- 	__intel_pmu_pebs_data_source_cmt(data_source);
- }
- 
-+/* Version for Panthercove and later */
++struct event_constraint intel_pnc_pebs_event_constraints[] = {
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
 +
-+/* L2 hit */
-+#define PNC_PEBS_DATA_SOURCE_MAX	16
-+static u64 pnc_pebs_l2_hit_data_source[PNC_PEBS_DATA_SOURCE_MAX] = {
-+	P(OP, LOAD) | P(LVL, NA) | LEVEL(NA) | P(SNOOP, NA),	/* 0x00: non-cache access */
-+	OP_LH               | LEVEL(L0) | P(SNOOP, NONE),	/* 0x01: L0 hit */
-+	OP_LH | P(LVL, L1)  | LEVEL(L1) | P(SNOOP, NONE),	/* 0x02: L1 hit */
-+	OP_LH | P(LVL, LFB) | LEVEL(LFB) | P(SNOOP, NONE),	/* 0x03: L1 Miss Handling Buffer hit */
-+	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, NONE),	/* 0x04: L2 Hit Clean */
-+	0,							/* 0x05: Reserved */
-+	0,							/* 0x06: Reserved */
-+	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, HIT),	/* 0x07: L2 Hit Snoop HIT */
-+	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, HITM),	/* 0x08: L2 Hit Snoop Hit Modified */
-+	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, MISS),	/* 0x09: Prefetch Promotion */
-+	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, MISS),	/* 0x0a: Cross Core Prefetch Promotion */
-+	0,							/* 0x0b: Reserved */
-+	0,							/* 0x0c: Reserved */
-+	0,							/* 0x0d: Reserved */
-+	0,							/* 0x0e: Reserved */
-+	OP_LH | P(LVL, UNC) | LEVEL(NA) | P(SNOOP, NONE),	/* 0x0f: uncached */
++	INTEL_HYBRID_LDLAT_CONSTRAINT(0x1cd, 0xfc),
++	INTEL_HYBRID_STLAT_CONSTRAINT(0x2cd, 0x3),
++	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_LOADS */
++	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_STORES */
++	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x21d0, 0xf),	/* MEM_INST_RETIRED.LOCK_LOADS */
++	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x41d0, 0xf),	/* MEM_INST_RETIRED.SPLIT_LOADS */
++	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x42d0, 0xf),	/* MEM_INST_RETIRED.SPLIT_STORES */
++	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x81d0, 0xf),	/* MEM_INST_RETIRED.ALL_LOADS */
++	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x82d0, 0xf),	/* MEM_INST_RETIRED.ALL_STORES */
++
++	INTEL_FLAGS_EVENT_CONSTRAINT_DATALA_LD_RANGE(0xd1, 0xd4, 0xf),
++
++	INTEL_FLAGS_EVENT_CONSTRAINT(0xd0, 0xf),
++	INTEL_FLAGS_EVENT_CONSTRAINT(0xd6, 0xf),
++
++	/*
++	 * Everything else is handled by PMU_FL_PEBS_ALL, because we
++	 * need the full constraints from the main table.
++	 */
++
++	EVENT_CONSTRAINT_END
 +};
 +
-+/* L2 miss */
-+#define OMR_DATA_SOURCE_MAX		16
-+static u64 omr_data_source[OMR_DATA_SOURCE_MAX] = {
-+	P(OP, LOAD) | P(LVL, NA) | LEVEL(NA) | P(SNOOP, NA),	/* 0x00: invalid */
-+	0,							/* 0x01: Reserved */
-+	OP_LH | P(LVL, L3) | LEVEL(L3) | P(REGION, L_SHARE),	/* 0x02: local CA shared cache */
-+	OP_LH | P(LVL, L3) | LEVEL(L3) | P(REGION, L_NON_SHARE),/* 0x03: local CA non-shared cache */
-+	OP_LH | P(LVL, L3) | LEVEL(L3) | P(REGION, O_IO),	/* 0x04: other CA IO agent */
-+	OP_LH | P(LVL, L3) | LEVEL(L3) | P(REGION, O_SHARE),	/* 0x05: other CA shared cache */
-+	OP_LH | P(LVL, L3) | LEVEL(L3) | P(REGION, O_NON_SHARE),/* 0x06: other CA non-shared cache */
-+	OP_LH | LEVEL(RAM) | P(REGION, MMIO),			/* 0x07: MMIO */
-+	OP_LH | LEVEL(RAM) | P(REGION, MEM0),			/* 0x08: Memory region 0 */
-+	OP_LH | LEVEL(RAM) | P(REGION, MEM1),			/* 0x09: Memory region 1 */
-+	OP_LH | LEVEL(RAM) | P(REGION, MEM2),			/* 0x0a: Memory region 2 */
-+	OP_LH | LEVEL(RAM) | P(REGION, MEM3),			/* 0x0b: Memory region 3 */
-+	OP_LH | LEVEL(RAM) | P(REGION, MEM4),			/* 0x0c: Memory region 4 */
-+	OP_LH | LEVEL(RAM) | P(REGION, MEM5),			/* 0x0d: Memory region 5 */
-+	OP_LH | LEVEL(RAM) | P(REGION, MEM6),			/* 0x0e: Memory region 6 */
-+	OP_LH | LEVEL(RAM) | P(REGION, MEM7),			/* 0x0f: Memory region 7 */
-+};
-+
-+static u64 parse_omr_data_source(u8 dse)
-+{
-+	union omr_encoding omr;
-+	u64 val = 0;
-+
-+	omr.omr_full = dse;
-+	val = omr_data_source[omr.omr_source];
-+	if (omr.omr_source > 0x1 && omr.omr_source < 0x7)
-+		val |= omr.omr_remote ? P(LVL, REM_CCE1) : 0;
-+	else if (omr.omr_source > 0x7)
-+		val |= omr.omr_remote ? P(LVL, REM_RAM1) : P(LVL, LOC_RAM);
-+
-+	if (omr.omr_remote)
-+		val |= REM;
-+
-+	val |= omr.omr_hitm ? P(SNOOP, HITM) : P(SNOOP, HIT);
-+
-+	if (omr.omr_source == 0x2) {
-+		u8 snoop = omr.omr_snoop | omr.omr_promoted;
-+
-+		if (snoop == 0x0)
-+			val |= P(SNOOP, NA);
-+		else if (snoop == 0x1)
-+			val |= P(SNOOP, MISS);
-+		else if (snoop == 0x2)
-+			val |= P(SNOOP, HIT);
-+		else if (snoop == 0x3)
-+			val |= P(SNOOP, NONE);
-+	} else if (omr.omr_source > 0x2 && omr.omr_source < 0x7) {
-+		val |= omr.omr_snoop ? P(SNOOPX, FWD) : 0;
-+	}
-+
-+	return val;
-+}
-+
- static u64 precise_store_data(u64 status)
+ struct event_constraint *intel_pebs_constraints(struct perf_event *event)
  {
- 	union intel_x86_pebs_dse dse;
-@@ -411,6 +513,44 @@ u64 arl_h_latency_data(struct perf_event *event, u64 status)
- 	return lnl_latency_data(event, status);
- }
- 
-+u64 pnc_latency_data(struct perf_event *event, u64 status)
-+{
-+	union intel_x86_pebs_dse dse;
-+	union perf_mem_data_src src;
-+	u64 val;
-+
-+	dse.val = status;
-+
-+	if (!dse.pnc_l2_miss)
-+		val = pnc_pebs_l2_hit_data_source[dse.pnc_dse & 0xf];
-+	else
-+		val = parse_omr_data_source(dse.pnc_dse);
-+
-+	if (!val)
-+		val = P(OP, LOAD) | LEVEL(NA) | P(SNOOP, NA);
-+
-+	if (dse.pnc_stlb_miss)
-+		val |= P(TLB, MISS) | P(TLB, L2);
-+	else
-+		val |= P(TLB, HIT) | P(TLB, L1) | P(TLB, L2);
-+
-+	if (dse.pnc_locked)
-+		val |= P(LOCK, LOCKED);
-+
-+	if (dse.pnc_data_blk)
-+		val |= P(BLK, DATA);
-+	if (dse.pnc_addr_blk)
-+		val |= P(BLK, ADDR);
-+	if (!dse.pnc_data_blk && !dse.pnc_addr_blk)
-+		val |= P(BLK, NA);
-+
-+	src.val = val;
-+	if (event->hw.flags & PERF_X86_EVENT_PEBS_ST_HSW)
-+		src.mem_op = P(OP, STORE);
-+
-+	return src.val;
-+}
-+
- static u64 load_latency_data(struct perf_event *event, u64 status)
- {
- 	union intel_x86_pebs_dse dse;
+ 	struct event_constraint *pebs_constraints = hybrid(event->pmu, pebs_constraints);
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 586e3fdfe6d8..bd501c2a0f73 100644
+index bd501c2a0f73..cbca1888e8f7 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -1664,6 +1664,8 @@ u64 lnl_latency_data(struct perf_event *event, u64 status);
+@@ -1698,6 +1698,8 @@ extern struct event_constraint intel_glc_pebs_event_constraints[];
  
- u64 arl_h_latency_data(struct perf_event *event, u64 status);
+ extern struct event_constraint intel_lnc_pebs_event_constraints[];
  
-+u64 pnc_latency_data(struct perf_event *event, u64 status);
++extern struct event_constraint intel_pnc_pebs_event_constraints[];
 +
- extern struct event_constraint intel_core2_pebs_event_constraints[];
+ struct event_constraint *intel_pebs_constraints(struct perf_event *event);
  
- extern struct event_constraint intel_atom_pebs_event_constraints[];
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index c44a8fb3e418..533393ec94d0 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -1330,14 +1330,16 @@ union perf_mem_data_src {
- 			mem_snoopx  :  2, /* Snoop mode, ext */
- 			mem_blk     :  3, /* Access blocked */
- 			mem_hops    :  3, /* Hop level */
--			mem_rsvd    : 18;
-+			mem_region  :  5, /* cache/memory regions */
-+			mem_rsvd    : 13;
- 	};
- };
- #elif defined(__BIG_ENDIAN_BITFIELD)
- union perf_mem_data_src {
- 	__u64 val;
- 	struct {
--		__u64	mem_rsvd    : 18,
-+		__u64	mem_rsvd    : 13,
-+			mem_region  :  5, /* cache/memory regions */
- 			mem_hops    :  3, /* Hop level */
- 			mem_blk     :  3, /* Access blocked */
- 			mem_snoopx  :  2, /* Snoop mode, ext */
-@@ -1394,7 +1396,7 @@ union perf_mem_data_src {
- #define PERF_MEM_LVLNUM_L4			0x0004 /* L4 */
- #define PERF_MEM_LVLNUM_L2_MHB			0x0005 /* L2 Miss Handling Buffer */
- #define PERF_MEM_LVLNUM_MSC			0x0006 /* Memory-side Cache */
--/* 0x007 available */
-+#define PERF_MEM_LVLNUM_L0			0x0007 /* L0 */
- #define PERF_MEM_LVLNUM_UNC			0x0008 /* Uncached */
- #define PERF_MEM_LVLNUM_CXL			0x0009 /* CXL */
- #define PERF_MEM_LVLNUM_IO			0x000a /* I/O */
-@@ -1447,6 +1449,25 @@ union perf_mem_data_src {
- /* 5-7 available */
- #define PERF_MEM_HOPS_SHIFT			43
- 
-+/* Cache/Memory region */
-+#define PERF_MEM_REGION_NA		0x0  /* Invalid */
-+#define PERF_MEM_REGION_RSVD		0x01 /* Reserved */
-+#define PERF_MEM_REGION_L_SHARE		0x02 /* Local CA shared cache */
-+#define PERF_MEM_REGION_L_NON_SHARE	0x03 /* Local CA non-shared cache */
-+#define PERF_MEM_REGION_O_IO		0x04 /* Other CA IO agent */
-+#define PERF_MEM_REGION_O_SHARE		0x05 /* Other CA shared cache */
-+#define PERF_MEM_REGION_O_NON_SHARE	0x06 /* Other CA non-shared cache */
-+#define PERF_MEM_REGION_MMIO		0x07 /* MMIO */
-+#define PERF_MEM_REGION_MEM0		0x08 /* Memory region 0 */
-+#define PERF_MEM_REGION_MEM1		0x09 /* Memory region 1 */
-+#define PERF_MEM_REGION_MEM2		0x0a /* Memory region 2 */
-+#define PERF_MEM_REGION_MEM3		0x0b /* Memory region 3 */
-+#define PERF_MEM_REGION_MEM4		0x0c /* Memory region 4 */
-+#define PERF_MEM_REGION_MEM5		0x0d /* Memory region 5 */
-+#define PERF_MEM_REGION_MEM6		0x0e /* Memory region 6 */
-+#define PERF_MEM_REGION_MEM7		0x0f /* Memory region 7 */
-+#define PERF_MEM_REGION_SHIFT		46
-+
- #define PERF_MEM_S(a, s) \
- 	(((__u64)PERF_MEM_##a##_##s) << PERF_MEM_##a##_SHIFT)
- 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index c44a8fb3e418..d4b99610a3b0 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -1330,14 +1330,16 @@ union perf_mem_data_src {
- 			mem_snoopx  :  2, /* Snoop mode, ext */
- 			mem_blk     :  3, /* Access blocked */
- 			mem_hops    :  3, /* Hop level */
--			mem_rsvd    : 18;
-+			mem_region  :  5, /* cache/memory regions */
-+			mem_rsvd    : 13;
- 	};
- };
- #elif defined(__BIG_ENDIAN_BITFIELD)
- union perf_mem_data_src {
- 	__u64 val;
- 	struct {
--		__u64	mem_rsvd    : 18,
-+		__u64	mem_rsvd    : 13,
-+			mem_region  :  5, /* cache/memory regions */
- 			mem_hops    :  3, /* Hop level */
- 			mem_blk     :  3, /* Access blocked */
- 			mem_snoopx  :  2, /* Snoop mode, ext */
-@@ -1394,7 +1396,7 @@ union perf_mem_data_src {
- #define PERF_MEM_LVLNUM_L4			0x0004 /* L4 */
- #define PERF_MEM_LVLNUM_L2_MHB			0x0005 /* L2 Miss Handling Buffer */
- #define PERF_MEM_LVLNUM_MSC			0x0006 /* Memory-side Cache */
--/* 0x007 available */
-+#define PERF_MEM_LVLNUM_L0			0x0007   /* L0 */
- #define PERF_MEM_LVLNUM_UNC			0x0008 /* Uncached */
- #define PERF_MEM_LVLNUM_CXL			0x0009 /* CXL */
- #define PERF_MEM_LVLNUM_IO			0x000a /* I/O */
-@@ -1447,6 +1449,25 @@ union perf_mem_data_src {
- /* 5-7 available */
- #define PERF_MEM_HOPS_SHIFT			43
- 
-+/* Cache/Memory region */
-+#define PERF_MEM_REGION_NA		0x0  /* Invalid */
-+#define PERF_MEM_REGION_RSVD		0x01 /* Reserved */
-+#define PERF_MEM_REGION_L_SHARE		0x02 /* Local CA shared cache */
-+#define PERF_MEM_REGION_L_NON_SHARE	0x03 /* Local CA non-shared cache */
-+#define PERF_MEM_REGION_O_IO		0x04 /* Other CA IO agent */
-+#define PERF_MEM_REGION_O_SHARE		0x05 /* Other CA shared cache */
-+#define PERF_MEM_REGION_O_NON_SHARE	0x06 /* Other CA non-shared cache */
-+#define PERF_MEM_REGION_MMIO		0x07 /* MMIO */
-+#define PERF_MEM_REGION_MEM0		0x08 /* Memory region 0 */
-+#define PERF_MEM_REGION_MEM1		0x09 /* Memory region 1 */
-+#define PERF_MEM_REGION_MEM2		0x0a /* Memory region 2 */
-+#define PERF_MEM_REGION_MEM3		0x0b /* Memory region 3 */
-+#define PERF_MEM_REGION_MEM4		0x0c /* Memory region 4 */
-+#define PERF_MEM_REGION_MEM5		0x0d /* Memory region 5 */
-+#define PERF_MEM_REGION_MEM6		0x0e /* Memory region 6 */
-+#define PERF_MEM_REGION_MEM7		0x0f /* Memory region 7 */
-+#define PERF_MEM_REGION_SHIFT		46
-+
- #define PERF_MEM_S(a, s) \
- 	(((__u64)PERF_MEM_##a##_##s) << PERF_MEM_##a##_SHIFT)
- 
+ void intel_pmu_pebs_add(struct perf_event *event);
 -- 
 2.34.1
 
