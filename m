@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6239E2874E1;
-	Wed, 14 Jan 2026 01:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A8B28EA72;
+	Wed, 14 Jan 2026 01:22:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768353751; cv=none; b=q0dRAkwI1B4AHj7oe7Bq4hwU/8cmiDMUlRX/5SJ6eKN6BCS/hl1jspfS14eqtl2AuN82qqwexTWvJL91OEQxMChQRlVGVYfCQVzKvBoGLr6lqQ+flcb/3x6HJjAcWyt0uPyfatqABtjWK7hgaUrm1ZAnu1USuX+VcJaNK+/KFPg=
+	t=1768353753; cv=none; b=BBQ2NglLyrTMd2Dri9mxGo+Z6m4kzqeat56mlu3M3KRqUECxLjL3M3zNYGoMusz5GEJ1pUIcBLwadsiFS8uKzRdI0O4s8xiQnnzcoAFdxGKfumVLn1k/GLJ9C/0gyNztarMrWBAT8jUws40NlHHKwIXLxke2K9y2T33EcSEChKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768353751; c=relaxed/simple;
-	bh=8swUns+f4sPnKRPagD2A6Oy6QNSylTblYdaomHLa5sw=;
+	s=arc-20240116; t=1768353753; c=relaxed/simple;
+	bh=dj6fJjiu66Dc+j4JkPElvhDNYxDd0nW4JSiUeCSR30M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bp6Y28/tlxPv4g3EVUQ7XaJEFVTsH35TPw8h0NY88hH0Bx9jISo4+9EU9FVQoAJbQuwvccR7UtKgn9hrLah0c5LeRsZefrIFB7yaTQ0HxZiy8y3GaHC9QrK/lfiN6nAF3QhZhllO3mEFhYdc0fCnviSExftKXSqi8eqkHyaOejw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SPYEHHHB; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=hcKgmYlEtMrU0dbbTnpSQ/NSmOt0Rwv7jticW3OsOE4xgE7yweN/t1rOaJFUa3/ftaCjOp0a8k5P50vOzYyaA+rRfTF8I9/b/sDmsSGwNVhBhSDMdAgvjhHyJcheZ14XD1QPZWST4tMaxALGkysqdBdknC53Q6qmP94EOPNISv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NG7855uR; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SPYEHHHB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NG7855uR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768353750; x=1799889750;
+  t=1768353746; x=1799889746;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=8swUns+f4sPnKRPagD2A6Oy6QNSylTblYdaomHLa5sw=;
-  b=SPYEHHHBi6Oi8M/H4zPCutkkrDrurPyqH4HnrP2WuOskuVdv4mQ2unxl
-   nPdtKbmydVaU/pfiyh+1oA/04JKm049/k8tVcXV9luWgALUEItVYK0vvY
-   s7aRdVVRxSccPtMcgwoLuQd3mepELWIBnO/xBIlRqyIYqhOLZaOi6P9s+
-   B4gU4RGZKKI2eQbLf+2xOvfylmoeFRnqgYTRvIrU4XUNVTHeY1etX/UrS
-   B2wJ8YvdH+weFDZoEy6G68+mE1DADMePCUJm4ta0NWFrudhRd/lot9yTA
-   jXYGl9jn/etQFQUgd2hejhkPh46iB8YRvIiq7Eu7YA/wfJG+uRxR8v/6O
-   A==;
-X-CSE-ConnectionGUID: 95AhHwYZSYCg/rqzE478KA==
-X-CSE-MsgGUID: yjpOXLa5S1WEeubqbeFEBA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="87231533"
+  bh=dj6fJjiu66Dc+j4JkPElvhDNYxDd0nW4JSiUeCSR30M=;
+  b=NG7855uRH7EO21EjcTFPke39Q4m+Lm2bHsBMOxGLTo4/sBgD7xLprK8c
+   fbFSov9ozV3lYd5OecuxJ4XjTeqQxpF2V1vwHrWrmKz/rfHPiUmHIpgwD
+   q28xV4kBL4UlwoR9HfHdnijPN8FIu8eMvI5VTDtJHwtbTxSkUjqUEs7CD
+   4XiQP+dOV95R+e7wdSW5MNLnyxe6CwjKP9yZ62k6FGLgs9YOsMEx3Zxm5
+   ve2QUCADsfgSmbKbrzxZjks3JSJFQBXLk6iMh2OES+R9/vkJSQax7n6eh
+   3qLbbs+q/lC3CcqyJnwvNaklnrFQYdE89tN+ZK1C7uuxHgSq2whGGKAQI
+   w==;
+X-CSE-ConnectionGUID: ZgLlBd3SSr+4zbGLmzkA4Q==
+X-CSE-MsgGUID: cwGSeJS7S1GPxcC7NXM5kA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="87231524"
 X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="87231533"
+   d="scan'208";a="87231524"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 17:22:29 -0800
-X-CSE-ConnectionGUID: ComK2FhFRQ2FRiXncdTLbw==
-X-CSE-MsgGUID: R29EW0WgQL2SxWKU3rM8jw==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 17:22:25 -0800
+X-CSE-ConnectionGUID: kiu74P3UTIajlp7FURNymQ==
+X-CSE-MsgGUID: WsNOoLsBTHyPmXw2/F/F6Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="204561214"
+   d="scan'208";a="204561211"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa007.jf.intel.com with ESMTP; 13 Jan 2026 17:22:26 -0800
+  by orviesa007.jf.intel.com with ESMTP; 13 Jan 2026 17:22:21 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 6/7] perf/x86: Use macros to replace magic numbers in attr_rdpmc
-Date: Wed, 14 Jan 2026 09:17:49 +0800
-Message-Id: <20260114011750.350569-7-dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 5/7] perf/x86/intel: Add core PMU support for Novalake
+Date: Wed, 14 Jan 2026 09:17:48 +0800
+Message-Id: <20260114011750.350569-6-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260114011750.350569-1-dapeng1.mi@linux.intel.com>
 References: <20260114011750.350569-1-dapeng1.mi@linux.intel.com>
@@ -74,76 +74,196 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace magic numbers in attr_rdpmc with macros to improve readability
-and make their meanings clearer for users.
+This patch enables core PMU support for Novalake, covering both P-core
+and E-core. It includes Arctic Wolf-specific counters and PEBS
+constraints, and the model-specific OMR extra registers table.
+
+Since Coyote Cove shares the same PMU capabilities as Panther Cove, the
+existing Panther Cove PMU enabling functions are reused for Coyote Cove.
+
+For detailed information about counter constraints, please refer to
+section 16.3 "COUNTER RESTRICTIONS" in the ISE documentation.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/core.c       | 7 ++++---
- arch/x86/events/intel/p6.c   | 2 +-
- arch/x86/events/perf_event.h | 7 +++++++
- 3 files changed, 12 insertions(+), 4 deletions(-)
+ arch/x86/events/intel/core.c | 99 ++++++++++++++++++++++++++++++++++++
+ arch/x86/events/intel/ds.c   | 11 ++++
+ arch/x86/events/perf_event.h |  2 +
+ 3 files changed, 112 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 0ecac9495d74..c2717cb5034f 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2163,7 +2163,8 @@ static int __init init_hw_perf_events(void)
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index b2f99d47292b..d6bdbb7e449a 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -232,6 +232,29 @@ static struct event_constraint intel_skt_event_constraints[] __read_mostly = {
+ 	EVENT_CONSTRAINT_END
+ };
  
- 	pr_cont("%s PMU driver.\n", x86_pmu.name);
- 
--	x86_pmu.attr_rdpmc = 1; /* enable userspace RDPMC usage by default */
-+	/* enable userspace RDPMC usage by default */
-+	x86_pmu.attr_rdpmc = X86_USER_RDPMC_CONDITIONAL_ENABLE;
- 
- 	for (quirk = x86_pmu.quirks; quirk; quirk = quirk->next)
- 		quirk->func();
-@@ -2643,12 +2644,12 @@ static ssize_t set_attr_rdpmc(struct device *cdev,
- 		 */
- 		if (val == 0)
- 			static_branch_inc(&rdpmc_never_available_key);
--		else if (x86_pmu.attr_rdpmc == 0)
-+		else if (x86_pmu.attr_rdpmc == X86_USER_RDPMC_NEVER_ENABLE)
- 			static_branch_dec(&rdpmc_never_available_key);
- 
- 		if (val == 2)
- 			static_branch_inc(&rdpmc_always_available_key);
--		else if (x86_pmu.attr_rdpmc == 2)
-+		else if (x86_pmu.attr_rdpmc == X86_USER_RDPMC_ALWAYS_ENABLE)
- 			static_branch_dec(&rdpmc_always_available_key);
- 
- 		on_each_cpu(cr4_update_pce, NULL, 1);
-diff --git a/arch/x86/events/intel/p6.c b/arch/x86/events/intel/p6.c
-index 6e41de355bd8..fb991e0ac614 100644
---- a/arch/x86/events/intel/p6.c
-+++ b/arch/x86/events/intel/p6.c
-@@ -243,7 +243,7 @@ static __init void p6_pmu_rdpmc_quirk(void)
- 		 */
- 		pr_warn("Userspace RDPMC support disabled due to a CPU erratum\n");
- 		x86_pmu.attr_rdpmc_broken = 1;
--		x86_pmu.attr_rdpmc = 0;
-+		x86_pmu.attr_rdpmc = X86_USER_RDPMC_NEVER_ENABLE;
- 	}
- }
- 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index f7caabc5d487..24a81d2916e9 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -187,6 +187,13 @@ struct amd_nb {
- 	 (1ULL << PERF_REG_X86_R14)   | \
- 	 (1ULL << PERF_REG_X86_R15))
- 
-+/* user space rdpmc control values */
-+enum {
-+	X86_USER_RDPMC_NEVER_ENABLE		= 0,
-+	X86_USER_RDPMC_CONDITIONAL_ENABLE	= 1,
-+	X86_USER_RDPMC_ALWAYS_ENABLE		= 2,
++static struct event_constraint intel_arw_event_constraints[] __read_mostly = {
++	FIXED_EVENT_CONSTRAINT(0x00c0, 0), /* INST_RETIRED.ANY */
++	FIXED_EVENT_CONSTRAINT(0x003c, 1), /* CPU_CLK_UNHALTED.CORE */
++	FIXED_EVENT_CONSTRAINT(0x0300, 2), /* pseudo CPU_CLK_UNHALTED.REF */
++	FIXED_EVENT_CONSTRAINT(0x013c, 2), /* CPU_CLK_UNHALTED.REF_TSC_P */
++	FIXED_EVENT_CONSTRAINT(0x0073, 4), /* TOPDOWN_BAD_SPECULATION.ALL */
++	FIXED_EVENT_CONSTRAINT(0x019c, 5), /* TOPDOWN_FE_BOUND.ALL */
++	FIXED_EVENT_CONSTRAINT(0x02c2, 6), /* TOPDOWN_RETIRING.ALL */
++	INTEL_UEVENT_CONSTRAINT(0x01b7, 0x1),
++	INTEL_UEVENT_CONSTRAINT(0x02b7, 0x2),
++	INTEL_UEVENT_CONSTRAINT(0x04b7, 0x4),
++	INTEL_UEVENT_CONSTRAINT(0x08b7, 0x8),
++	INTEL_UEVENT_CONSTRAINT(0x01d4, 0x1),
++	INTEL_UEVENT_CONSTRAINT(0x02d4, 0x2),
++	INTEL_UEVENT_CONSTRAINT(0x04d4, 0x4),
++	INTEL_UEVENT_CONSTRAINT(0x08d4, 0x8),
++	INTEL_UEVENT_CONSTRAINT(0x0175, 0x1),
++	INTEL_UEVENT_CONSTRAINT(0x0275, 0x2),
++	INTEL_UEVENT_CONSTRAINT(0x21d3, 0x1),
++	INTEL_UEVENT_CONSTRAINT(0x22d3, 0x1),
++	EVENT_CONSTRAINT_END
 +};
 +
- /*
-  * Per register state.
-  */
+ static struct event_constraint intel_skl_event_constraints[] = {
+ 	FIXED_EVENT_CONSTRAINT(0x00c0, 0),	/* INST_RETIRED.ANY */
+ 	FIXED_EVENT_CONSTRAINT(0x003c, 1),	/* CPU_CLK_UNHALTED.CORE */
+@@ -2319,6 +2342,26 @@ static __initconst const u64 tnt_hw_cache_extra_regs
+ 	},
+ };
+ 
++static __initconst const u64 arw_hw_cache_extra_regs
++				[PERF_COUNT_HW_CACHE_MAX]
++				[PERF_COUNT_HW_CACHE_OP_MAX]
++				[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
++	[C(LL)] = {
++		[C(OP_READ)] = {
++			[C(RESULT_ACCESS)]	= 0x4000000000000001,
++			[C(RESULT_MISS)]	= 0xFFFFF000000001,
++		},
++		[C(OP_WRITE)] = {
++			[C(RESULT_ACCESS)]	= 0x4000000000000002,
++			[C(RESULT_MISS)]	= 0xFFFFF000000002,
++		},
++		[C(OP_PREFETCH)] = {
++			[C(RESULT_ACCESS)]	= 0x0,
++			[C(RESULT_MISS)]	= 0x0,
++		},
++	},
++};
++
+ EVENT_ATTR_STR(topdown-fe-bound,       td_fe_bound_tnt,        "event=0x71,umask=0x0");
+ EVENT_ATTR_STR(topdown-retiring,       td_retiring_tnt,        "event=0xc2,umask=0x0");
+ EVENT_ATTR_STR(topdown-bad-spec,       td_bad_spec_tnt,        "event=0x73,umask=0x6");
+@@ -2377,6 +2420,22 @@ static struct extra_reg intel_cmt_extra_regs[] __read_mostly = {
+ 	EVENT_EXTRA_END
+ };
+ 
++static struct extra_reg intel_arw_extra_regs[] __read_mostly = {
++	/* must define OMR_X first, see intel_alt_er() */
++	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OMR_0, 0xc0ffffffffffffffull, OMR_0),
++	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OMR_1, 0xc0ffffffffffffffull, OMR_1),
++	INTEL_UEVENT_EXTRA_REG(0x04b7, MSR_OMR_2, 0xc0ffffffffffffffull, OMR_2),
++	INTEL_UEVENT_EXTRA_REG(0x08b7, MSR_OMR_3, 0xc0ffffffffffffffull, OMR_3),
++	INTEL_UEVENT_EXTRA_REG(0x01d4, MSR_OMR_0, 0xc0ffffffffffffffull, OMR_0),
++	INTEL_UEVENT_EXTRA_REG(0x02d4, MSR_OMR_1, 0xc0ffffffffffffffull, OMR_1),
++	INTEL_UEVENT_EXTRA_REG(0x04d4, MSR_OMR_2, 0xc0ffffffffffffffull, OMR_2),
++	INTEL_UEVENT_EXTRA_REG(0x08d4, MSR_OMR_3, 0xc0ffffffffffffffull, OMR_3),
++	INTEL_UEVENT_PEBS_LDLAT_EXTRA_REG(0x5d0),
++	INTEL_UEVENT_EXTRA_REG(0x0127, MSR_SNOOP_RSP_0, 0xffffffffffffffffull, SNOOP_0),
++	INTEL_UEVENT_EXTRA_REG(0x0227, MSR_SNOOP_RSP_1, 0xffffffffffffffffull, SNOOP_1),
++	EVENT_EXTRA_END
++};
++
+ EVENT_ATTR_STR(topdown-fe-bound,       td_fe_bound_skt,        "event=0x9c,umask=0x01");
+ EVENT_ATTR_STR(topdown-retiring,       td_retiring_skt,        "event=0xc2,umask=0x02");
+ EVENT_ATTR_STR(topdown-be-bound,       td_be_bound_skt,        "event=0xa4,umask=0x02");
+@@ -7410,6 +7469,19 @@ static __always_inline void intel_pmu_init_skt(struct pmu *pmu)
+ 	static_call_update(intel_pmu_enable_acr_event, intel_pmu_enable_acr);
+ }
+ 
++static __always_inline void intel_pmu_init_arw(struct pmu *pmu)
++{
++	intel_pmu_init_grt(pmu);
++	x86_pmu.flags &= ~PMU_FL_HAS_RSP_1;
++	x86_pmu.flags |= PMU_FL_HAS_OMR;
++	memcpy(hybrid_var(pmu, hw_cache_extra_regs),
++	       arw_hw_cache_extra_regs, sizeof(hw_cache_extra_regs));
++	hybrid(pmu, event_constraints) = intel_arw_event_constraints;
++	hybrid(pmu, pebs_constraints) = intel_arw_pebs_event_constraints;
++	hybrid(pmu, extra_regs) = intel_arw_extra_regs;
++	static_call_update(intel_pmu_enable_acr_event, intel_pmu_enable_acr);
++}
++
+ __init int intel_pmu_init(void)
+ {
+ 	struct attribute **extra_skl_attr = &empty_attrs;
+@@ -8250,6 +8322,33 @@ __init int intel_pmu_init(void)
+ 		name = "arrowlake_h_hybrid";
+ 		break;
+ 
++	case INTEL_NOVALAKE:
++	case INTEL_NOVALAKE_L:
++		pr_cont("Novalake Hybrid events, ");
++		name = "novalake_hybrid";
++		intel_pmu_init_hybrid(hybrid_big_small);
++
++		x86_pmu.pebs_latency_data = nvl_latency_data;
++		x86_pmu.get_event_constraints = mtl_get_event_constraints;
++		x86_pmu.hw_config = adl_hw_config;
++
++		td_attr = lnl_hybrid_events_attrs;
++		mem_attr = mtl_hybrid_mem_attrs;
++		tsx_attr = adl_hybrid_tsx_attrs;
++		extra_attr = boot_cpu_has(X86_FEATURE_RTM) ?
++			mtl_hybrid_extra_attr_rtm : mtl_hybrid_extra_attr;
++
++		/* Initialize big core specific PerfMon capabilities.*/
++		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
++		intel_pmu_init_pnc(&pmu->pmu);
++
++		/* Initialize Atom core specific PerfMon capabilities.*/
++		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_ATOM_IDX];
++		intel_pmu_init_arw(&pmu->pmu);
++
++		intel_pmu_pebs_data_source_lnl();
++		break;
++
+ 	default:
+ 		switch (x86_pmu.version) {
+ 		case 1:
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index a47f173d411b..5027afc97b65 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1293,6 +1293,17 @@ struct event_constraint intel_grt_pebs_event_constraints[] = {
+ 	EVENT_CONSTRAINT_END
+ };
+ 
++struct event_constraint intel_arw_pebs_event_constraints[] = {
++	/* Allow all events as PEBS with no flags */
++	INTEL_HYBRID_LAT_CONSTRAINT(0x5d0, 0xff),
++	INTEL_HYBRID_LAT_CONSTRAINT(0x6d0, 0xff),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01d4, 0x1),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x02d4, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x04d4, 0x4),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x08d4, 0x8),
++	EVENT_CONSTRAINT_END
++};
++
+ struct event_constraint intel_nehalem_pebs_event_constraints[] = {
+ 	INTEL_PLD_CONSTRAINT(0x100b, 0xf),      /* MEM_INST_RETIRED.* */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0x0f, 0xf),    /* MEM_UNCORE_RETIRED.* */
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index aedc1a7762c2..f7caabc5d487 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1680,6 +1680,8 @@ extern struct event_constraint intel_glp_pebs_event_constraints[];
+ 
+ extern struct event_constraint intel_grt_pebs_event_constraints[];
+ 
++extern struct event_constraint intel_arw_pebs_event_constraints[];
++
+ extern struct event_constraint intel_nehalem_pebs_event_constraints[];
+ 
+ extern struct event_constraint intel_westmere_pebs_event_constraints[];
 -- 
 2.34.1
 
