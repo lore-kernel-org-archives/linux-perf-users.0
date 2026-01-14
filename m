@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9F332D44B;
-	Wed, 14 Jan 2026 05:19:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E747F3570D3;
+	Wed, 14 Jan 2026 05:25:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768368007; cv=none; b=BEIXqkSDWnSKZHnGw8sk6F4/zwxFawN4Hg9XCCvlzjRfRfk9Ix0ScMY1HcmpLKYhkcc8g2B2dLMdIKVVMFyQprqK+zUTlSQtI6plxrEvig2ofuTz28E3s03gZdl3wIvLpZB4Vdz1E3Dc97roSH5cuLvEubJAmNjS4o4pYKLEDtY=
+	t=1768368331; cv=none; b=l0lIMxxcoU42DIoU9tZTt6yC6y8EDm21g+wu2StvHE2b3JR9VAbWWDqmvFwkIv7CrVtZ7RyrQE3kjdK1NMCUlqruc3aVUETrmzPWbGUWrI92jP409aVjVntvMBVZkxdCDZcixjvLlnt/VlWf0i2p/vG7IRrTcmBfV5gfG9yHn2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768368007; c=relaxed/simple;
-	bh=+sHfezcMA4HcbHZoQMs4d3VkAepOHntKWbJUqg1hupw=;
+	s=arc-20240116; t=1768368331; c=relaxed/simple;
+	bh=Wjv52xi2F/AZ+4o2QZiAV95k6o6QaEUHsHFTJPU7maA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CCC+udyu2FBzCaP3GX7qoZ9Iuq2psA2Qa/SXr8WlQh6XkjMPcbj6YtyEMnXOtb88/UlYMQM0VWLQ0YgTITanP5rXWD2YefUDg6JaSm2oQY07ZMa0UXcIADh69AFcEIC8iHE9yBd9jGW9Pry8rSDJNzhW8CXFQ5DkthfmRoUndEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DpxGLkLZ; arc=none smtp.client-ip=192.198.163.7
+	 In-Reply-To:Content-Type; b=G+/irmtrbn49hgpqEdc8uucHxw2fJB4Cdmsohboolm/DAjfdqvVVWITUprxN4+YI41CXs1ZO0kPbjuuXsgX8incc+ijuwvIYlI84tlLCQBWVI/BFPN8J0N5a+dhqbvlwCu7v4XPBoH+KdpZ007w8ZB3Kv48ZXyJAugJnlc9cvK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FK4c5f/a; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DpxGLkLZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FK4c5f/a"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768367998; x=1799903998;
+  t=1768368319; x=1799904319;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=+sHfezcMA4HcbHZoQMs4d3VkAepOHntKWbJUqg1hupw=;
-  b=DpxGLkLZ2o7WsC/kt5u+s4x6a4PgeHO1PWqBt64J+QN3PPd7U9C1IUyH
-   VVl7N8y3bRaT36s3+ECpJErohIhRTpdXrZ65UrLBs9hd0p/UXaQq9BV5H
-   opnueofNg0wiSk7nQ9zpUgOjrhviFqbjw0Qxph8UtTYfLLPs/DC8CMf91
-   JJOBQrcFYiUefHaUEAmPSkl65bvC77XVNQcZ7cK4XkIyg4Z0GFhWtKbGe
-   EvqjRpRTQByBSm1b5qjY1Gi5XSKoGO7sALqd00wVh6Y7i9x6hsnludSCY
-   b2CZny/0ym+AwnAUNZ5p6TfshjxHvGzzSFZGPCeRK0BHLgmEMDzgjAWkd
-   A==;
-X-CSE-ConnectionGUID: vr5inedCShy/tbJgnjvQcw==
-X-CSE-MsgGUID: cDPT+NK/TomYnenHc5CApg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="95136172"
+  bh=Wjv52xi2F/AZ+4o2QZiAV95k6o6QaEUHsHFTJPU7maA=;
+  b=FK4c5f/a0dE+kuj2s6BtWnkbTSQfVQkV6iRgSsf9vnY22goqOEk7GX6S
+   xEnGLTvdgKTOewSXvzQdP0uXcG6kIrYwzYDHmffRB2e4cE609hKuCruYg
+   P5U3m0nt0sKc9FeoTOphdS4uBeD1JmN/PvTei/7JZeaGUDIqRL+gj26mv
+   OtOQqXp1xO9plFoslSfYxNy3EBfMbznYRod/MjI0XkkXByl5TqQZrzZSR
+   rjz5W3hyIGM8dH8bYRW4CwAN+xQ9UG/itAIntL912blYITMBxIxVAyYpK
+   Gj9R7okplj+YeVGvyOGm9o3+VE8qJ/XjwO9Su4D0+lADuAhzbYPZHJfWA
+   g==;
+X-CSE-ConnectionGUID: FshbMVmURB6q6SCHX5LtcA==
+X-CSE-MsgGUID: hHwj1BNKRguWaFM1kaetKA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="95136492"
 X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="95136172"
+   d="scan'208";a="95136492"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 21:19:51 -0800
-X-CSE-ConnectionGUID: XcWO3ktiTra2KGbD59At1w==
-X-CSE-MsgGUID: ivPiugF+SWeVsxKCskP41A==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 21:25:14 -0800
+X-CSE-ConnectionGUID: VbG+2/g4QFK0FGDBQiMPWw==
+X-CSE-MsgGUID: rnaZU0ygQYK6KRh0HSrMUw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="204474163"
+   d="scan'208";a="204474468"
 Received: from unknown (HELO [10.238.4.29]) ([10.238.4.29])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 21:19:48 -0800
-Message-ID: <54ac8a9e-e846-42eb-b09e-76e781a4375f@linux.intel.com>
-Date: Wed, 14 Jan 2026 13:19:46 +0800
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 21:25:09 -0800
+Message-ID: <c4382e16-cc9a-42d3-a610-8978e946b765@linux.intel.com>
+Date: Wed, 14 Jan 2026 13:25:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,124 +52,66 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/2] perf/x86/intel/uncore: Fix die ID init and look up
- bugs
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Steve Wahl <steve.wahl@hpe.com>
-References: <20260113205650.5201-1-zide.chen@intel.com>
- <20260113205650.5201-2-zide.chen@intel.com>
+Subject: Re: [PATCH v2] perf/x86/intel/uncore: Convert comma to semicolon
+To: Chen Ni <nichen@iscas.ac.cn>, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, james.clark@linaro.org, tglx@kernel.org,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ zide.chen@intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260114023652.3926117-1-nichen@iscas.ac.cn>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260113205650.5201-2-zide.chen@intel.com>
+In-Reply-To: <20260114023652.3926117-1-nichen@iscas.ac.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-On 1/14/2026 4:56 AM, Zide Chen wrote:
-> In snbep_pci2phy_map_init(), in the nr_node_ids > 8 path,
-> uncore_device_to_die() may return -1 when all CPUs associated
-> with the UBOX device are offline.
+On 1/14/2026 10:36 AM, Chen Ni wrote:
+> Replace comma between expressions with semicolons.
 >
-> Remove the WARN_ON_ONCE(die_id == -1) check for two reasons:
+> Using a ',' in place of a ';' can have unintended side effects.
+> Although that is not the case here, it is seems best to use ';'
+> unless ',' is intended.
 >
-> - The current code breaks out of the loop. This is incorrect because
->   pci_get_device() does not guarantee iteration in domain or bus order,
->   so additional UBOX devices may be skipped during the scan.
+> Found by inspection.
+> No functional change intended.
+> Compile tested only.
 >
-> - Returning -EINVAL is incorrect, since marking offline buses with
->   die_id == -1 is expected and should not be treated as an error.
->
-> Separately, when NUMA is disabled on a NUMA-capable platform,
-> pcibus_to_node() returns NUMA_NO_NODE, causing uncore_device_to_die()
-> to return -1 for all PCI devices.  As a result,
-> spr_update_device_location(), used on Intel SPR and EMR, ignores the
-> corresponding PMON units and does not add them to the RB tree.
->
-> Fix this by using uncore_pcibus_to_dieid(), which retrieves topology
-> from the UBOX GIDNIDMAP register and works regardless of whether NUMA
-> is enabled in Linux.  This requires snbep_pci2phy_map_init() to be
-> added in spr_uncore_pci_init().
->
-> Keep uncore_device_to_die() only for the nr_node_ids > 8 case, where
-> NUMA is expected to be enabled.
->
-> Fixes: 9a7832ce3d92 ("perf/x86/intel/uncore: With > 8 nodes, get pci bus die id from NUMA info")
-> Fixes: 65248a9a9ee1 ("perf/x86/uncore: Add a quirk for UPI on SPR")
-> Tested-by: Steve Wahl <steve.wahl@hpe.com>
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> Fixes: e7d5f2ea0923 ("perf/x86/intel/uncore: Add Nova Lake support")
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 > ---
-> V2:
-> - Fix the commit message to note that spr_update_device_location() is
->   used by EMR, not GNR.
-> - Rewrite the commit message for clarity.
-> - Add a Tested-by tag.
+> Changelog:
 >
->  arch/x86/events/intel/uncore.c       |  1 +
->  arch/x86/events/intel/uncore_snbep.c | 13 ++++++-------
->  2 files changed, 7 insertions(+), 7 deletions(-)
+> v1 -> v2:
 >
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index c126a29ab729..c721042be629 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -67,6 +67,7 @@ int uncore_die_to_segment(int die)
->  	return bus ? pci_domain_nr(bus) : -EINVAL;
->  }
->  
-> +/* Note: This API can only be used when NUMA information is available. */
->  int uncore_device_to_die(struct pci_dev *dev)
-
-Not everyone could look at the comment and follow the rule. Could we add a
-WARN_ON in this function and WARN the users if it's not used appropriately? 
-
-Others look good to me.
-
-
+> - Add Fixes tag.
+> ---
+>  arch/x86/events/intel/uncore_snb.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+> index e8e44741200e..3dbc6bacbd9d 100644
+> --- a/arch/x86/events/intel/uncore_snb.c
+> +++ b/arch/x86/events/intel/uncore_snb.c
+> @@ -2005,11 +2005,11 @@ static struct intel_uncore_type *nvl_msr_uncores[] = {
+>  void nvl_uncore_cpu_init(void)
 >  {
->  	int node = pcibus_to_node(dev->bus);
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index 7ca0429c4004..52dec34d18c4 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -1459,13 +1459,7 @@ static int snbep_pci2phy_map_init(int devid, int nodeid_loc, int idmap_loc, bool
->  			}
+>  	mtl_uncore_cbox.num_boxes = 12;
+> -	mtl_uncore_cbox.perf_ctr = NVL_UNC_CBOX_PER_CTR0,
+> -	mtl_uncore_cbox.event_ctl = NVL_UNC_CBOX_PERFEVTSEL0,
+> +	mtl_uncore_cbox.perf_ctr = NVL_UNC_CBOX_PER_CTR0;
+> +	mtl_uncore_cbox.event_ctl = NVL_UNC_CBOX_PERFEVTSEL0;
 >  
->  			map->pbus_to_dieid[bus] = die_id = uncore_device_to_die(ubox_dev);
-> -
->  			raw_spin_unlock(&pci2phy_map_lock);
-> -
-> -			if (WARN_ON_ONCE(die_id == -1)) {
-> -				err = -EINVAL;
-> -				break;
-> -			}
->  		}
->  	}
+> -	ptl_uncore_santa.perf_ctr = NVL_UNC_SANTA_CTR0,
+> -	ptl_uncore_santa.event_ctl = NVL_UNC_SANTA_CTRL0,
+> +	ptl_uncore_santa.perf_ctr = NVL_UNC_SANTA_CTR0;
+> +	ptl_uncore_santa.event_ctl = NVL_UNC_SANTA_CTRL0;
 >  
-> @@ -6420,7 +6414,7 @@ static void spr_update_device_location(int type_id)
->  
->  	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, device, dev)) != NULL) {
->  
-> -		die = uncore_device_to_die(dev);
-> +		die = uncore_pcibus_to_dieid(dev->bus);
->  		if (die < 0)
->  			continue;
->  
-> @@ -6444,6 +6438,11 @@ static void spr_update_device_location(int type_id)
->  
->  int spr_uncore_pci_init(void)
->  {
-> +	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
-> +
-> +	if (ret)
-> +		return ret;
-> +
->  	/*
->  	 * The discovery table of UPI on some SPR variant is broken,
->  	 * which impacts the detection of both UPI and M3UPI uncore PMON.
+>  	mtl_uncore_cncu.box_ctl = NVL_UNC_CNCU_BOX_CTL;
+>  	mtl_uncore_cncu.fixed_ctr = NVL_UNC_CNCU_FIXED_CTR;
+
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+
+
