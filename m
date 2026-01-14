@@ -1,66 +1,67 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E014A3A1A28
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 15:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B71D3A1CE7
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 15:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768406276; cv=none; b=uMjHxxom2oWL68C8Vs7TXbZQ/4UkMPsol5pxSCL28LBX3LMhOnHEvIhIWcmQdl2tPUbesg0ZHOQQNVTRvWWovN1RJRxeCYuESXD3svTFidb6b+bIRur5FyAmcSOEY6tNFJyATbP95ZFECxFeVWnwBxWW8TkMKbM9IlqjWWrbgBg=
+	t=1768406278; cv=none; b=kaZ/IPjkPq3VmSyhz5MkJ9VNQslmIF7/vT39bOYjrmGtcKLBwwwczVuO+i856RXGVl8DO04ymNjyH5JPr920nka6BlVZV9MUlrWr4KRw8DDmFYCp/SckN1off1wobvu1x5ZH9i4kdrWDKjqDNa+5soxzpXi493tbkVyBjbjCSiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768406276; c=relaxed/simple;
-	bh=IlGWCJT2qBGC3XXCJRsXxYfQz51Y104FxCfSOx1WSLU=;
+	s=arc-20240116; t=1768406278; c=relaxed/simple;
+	bh=h3UUZ+MTt/jVXlppiWB5dfmCDIA0ulaZv1PvNfguK3Q=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JRo23yFqDyocFXBSFLndrCjUAHvQRWIUEwi0S2hoc291RiufWgmwpu+9/ilQt/0Uj2t9C3agc2gBWhBnYyDUFHNxMssJPx6flsLSUsJArj9lW83FvLMWYwQn+fzyQHJ6JyCjb/Tucgzb1wm9cPcNnGPwogGUWhudhlJdIGw9TRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YaJezoi+; arc=none smtp.client-ip=209.85.128.50
+	 In-Reply-To:To:Cc; b=fQLPDdvg/pGT1XF4tDhu0sT9gQ5D/WTYPzZXVkc43n2WVAAdUvBsvEcZKKQWGzrWXlDMJxZjJuSB0Oyg4ep/bDfTM2Qkfc+jnZnNUNMmxszKuIpQrH/e5L+MEct/D3sZ7iyGjFyUwut4uojPMdxyaujPD2Q6sixMaE9mrbR50xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OKdjk2q2; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YaJezoi+"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-47d493a9b96so51040035e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 07:57:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OKdjk2q2"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-47d493a9b96so51040455e9.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 07:57:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1768406271; x=1769011071; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1768406274; x=1769011074; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=eIFLeU/rZDWgQfxqeduMgDTr6BnNNm0nr5ZzvbheRLg=;
-        b=YaJezoi+mYDGJT4Jjlh3we/6zaOCxjJteM5f28YqUA65x8UARrqND6BHh7zBWM/Jdd
-         TfAOkrYHk3sFCsCVJfr554K7Or0WzTxb5mYNjSSRSzsprX6swNMC0IVWePf9vuxO4ek7
-         NBtiHQc92Y3E4WGeuGJUhL+MCEDV6dzzUEq3agNMMl8CB2zCtP99X9YxIC6IBSDgvYQm
-         L4GO1bjxTuJS+aUOb+sqvAeU3w4I2Nb4bVQ/l27uqd05NKCLgbxhsKBvFbpyorYFn1WV
-         VUziWSE/q2b1cyQi/cFzPSQ8XbXUKE6lx2h7xcFlTdy7Mt7azEPAgmgDB5/HLwWNFSEi
-         YXXw==
+        bh=NZnllZdyzmPDgDLg3NsetnXCFaQjqpO0nxPQg2XzMvs=;
+        b=OKdjk2q2+SHhPlM3rAXrthAA902+5Z05MjPAZ6/LXkQXbG2g3zTX1GonMBdkMJ7qhr
+         b/Q21wUc+ty54PRt+uzuyePWvvNGGzq8F0hbc+wX7kg5sSnOokC4coztM3TViDAW5dod
+         q4sxlx1yGT+F9bYYfo0Ye2dJe7C72B0Dp+DiveNQAcSneYNDUZ/me+h0qwEwiJ6E1Ey4
+         Zu1FDfoQ3uRoQ5TtyLRN5mNpl1sP+bB6lBpk44wHLjT5s4pkVTXQUt9efq2QSotTNfmn
+         EtealiEXR4+h0NiMzV6GzaMfo/OGyATzwvwRKQqKCe/F+xTLKH899SEwXCtILrpmING2
+         ZPDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768406271; x=1769011071;
+        d=1e100.net; s=20230601; t=1768406274; x=1769011074;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=eIFLeU/rZDWgQfxqeduMgDTr6BnNNm0nr5ZzvbheRLg=;
-        b=uekrc4zz4aVParGifMarOiR2BQWSEWOBUAoibyGsXKGzTJlzdvzWlJ4MktHha4eJeP
-         h2+8SgN65QzCeDWcp6O0MoMkKaHHSgfPSmmSBjdLI+OeUgOsa+xq29nkFKTGhJ2zgCEy
-         D7Y63RBINOO7j0sVfR7cqS06T7haDpdONECG82KFWYbUjU/4JkTc/oosnRh8yI2rlLMV
-         9ZU0e/ilV28azfthAoI4Dc2fetX3L5ljUFKk5ajI82yEXLI17fFlzX011cjDGtgvLKxU
-         ZDqTXDTuPVhuxyTNDCb0LsXAHY3TTW9bQvRudl85K3Lx1lg57gMgyIQUv/DAQiGKQ3Sw
-         2tbQ==
-X-Gm-Message-State: AOJu0YyYt8s9Fc74BeJ/GqS9Qh7L3NlNlpNc5iTj1Yo0r9xWbAZb7I/L
-	l1NhPpBPOVs572iaB5Nx2A05IE0ruQvbf/SbgTN0bl7uI5jnbnXbPkkQ4syFLSatXx0=
-X-Gm-Gg: AY/fxX4ACB57LWcFD1H99zs7NrdorjTIqWjeI8LJiog8Apy8uUMmtqjKHcP1lnaDY9C
-	f9Tux+WfU5I6vOROs4+dn2mVwKGJ8MZMLwnwfffG83MrXMk20H6+Jo9a4I+F3RYtM2tpPG2nliE
-	ZhKs9V81fk6Iwi5OusIfWEjSFWXjdIMmHL9RByi7UpZewTs6u4Ib2BbhZ32E/Ua59mcNyxaqS3/
-	TeDHXJuf9VfmSr75WmscDFOb7+m9NT1TXq2SF3s5L+zFL5l3XGtcqBrfYLqP77tjBBpzS6uGsDG
-	e2fL+mf8suYULW/HKktBkcSOCla+qh6JHK4qbarklLu9yse4Dsaxv0Vbk4lnAhpPeowHuGm+CMS
-	L9a89B1SP0eG9FTCO6RX+Y+7yDMDd4HCOspxruNN1ICECQ2KOKmU1Mk53ORh6P2UKh+T2OMFetF
-	EIqGJ80e10jLVB2cjqxnAg
-X-Received: by 2002:a05:600c:35c6:b0:477:5897:a0c4 with SMTP id 5b1f17b1804b1-47ee3323ccbmr41291455e9.4.1768406271314;
-        Wed, 14 Jan 2026 07:57:51 -0800 (PST)
+        bh=NZnllZdyzmPDgDLg3NsetnXCFaQjqpO0nxPQg2XzMvs=;
+        b=CQ5xhVwAlL0Ueo25RzhR+YPML9SlERIoJHphNcwSwF6SWaUkeR+w272QqNFQBVD05k
+         FBNm9QheOHHvYbe23sa9dj+dlEa0ZZZCFSjSt+hwIJpdeWgQVNOjcqnxQbFmjjb7Bxzl
+         TkXWJK/YJRFcvsx3zZ3ALpsTc921LWAVRUon/ofZDa7TUA3jQFL2ytojUCd8CY42YjC+
+         nb2SsHabEoEpsogppuXJVmKFH3EL+MJsrVqOlRTsJ0z+PKtAhaO6bOVo6VBhEOCXlIGX
+         KZzWk1lKZXizaRwNNLU0R9Q1o21GngypMbx/T6udQjBk7QLGMZDzZqkuMC+98X2QdPgg
+         pGww==
+X-Gm-Message-State: AOJu0Yy0lDQmupoA4G3wQZizwjsiLzwExZZdHrBFkeoAHlbP2vgQ9GIa
+	AhNF3mqgjFTsCdVck9z1iHwMIUx/YFhPyLGLM7ZwlFYNYhhhY6pr/tqbZvSesBRWAMattD/OnNM
+	eyS7/
+X-Gm-Gg: AY/fxX6KSQCqX0jOQcoVvlg3zKwx3pM3KsWBFjH1ZDVfVXdJ5lnj612a05kMH4fnMW2
+	ySaEC+Lrv6RDirFJYxbDf8qh1BFKjiTTRhRFxzV9vMpck0LbRmJgPM8bU721+AR17QMA7NfVIJ5
+	iQluwr2J161JMCZ73oSz5uTuXi2Ukznp5QJQyuswdRc46v1OQxXqTneRtXKd/fZGIxBd46wteq5
+	pLXspOAWI7BZZBp8ArhU9R5cTqnad89wq8iozF1NKcU+/4Gq9QXC4UMz2ivuF+YHcrGesBJhW3y
+	zhBsfeUYDJPJueXROTPVeJ6gxESYecVZP8fh+tDN90V3sR8q8eOVEekkh0ELsVHdbFKV7Os/j8s
+	wqFX8/Olw7uEdF0YcOljdN2qjDrhm6OPXkUSu2EqaqV4hoveyDd33qjQCQmrrLmN4JbRNwJ7wv4
+	zf4MOVQl5bgFYNFxWc7AWuNfBuXp1eaWE=
+X-Received: by 2002:a05:600c:c4b8:b0:471:1765:839c with SMTP id 5b1f17b1804b1-47ee3394887mr36283365e9.20.1768406273776;
+        Wed, 14 Jan 2026 07:57:53 -0800 (PST)
 Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47ee85e8807sm7426475e9.16.2026.01.14.07.57.50
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47ee85e8807sm7426475e9.16.2026.01.14.07.57.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 07:57:50 -0800 (PST)
+        Wed, 14 Jan 2026 07:57:53 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Wed, 14 Jan 2026 15:57:23 +0000
-Subject: [PATCH v5 11/14] perf cs-etm: Don't use hard coded config bits
- when setting up ETMCR
+Date: Wed, 14 Jan 2026 15:57:25 +0000
+Subject: [PATCH v5 13/14] perf cs-etm: Don't hard code config attribute
+ when configuring the event
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,7 +70,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260114-james-perf-config-bits-v5-11-0ef97aaf1ac0@linaro.org>
+Message-Id: <20260114-james-perf-config-bits-v5-13-0ef97aaf1ac0@linaro.org>
 References: <20260114-james-perf-config-bits-v5-0-0ef97aaf1ac0@linaro.org>
 In-Reply-To: <20260114-james-perf-config-bits-v5-0-0ef97aaf1ac0@linaro.org>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -86,86 +87,161 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-Perf only looks at attr.config when determining what was programmed into
-ETMCR. These bits could theoretically be in any of the config fields.
-Add a generic helper to find the value of any named format field in any
-config field and then use it to get the attributes relevant to ETMCR.
-
-The kernel will also stop publishing the ETMCR register bits in a header
-[1] so preempt that by defining them here.
-
-Move field_prep() to util.h so we can define it along side field_get().
-Unfortunately FIELD_PREP() and FIELD_GET() from the kernel can't be used
-as they require the mask to be a compile time constant.
-
-[1]: https://lore.kernel.org/linux-arm-kernel/20251128-james-cs-syncfreq-v8-10-4d319764cc58@linaro.org/
+These instances of hard coded config attributes are used for configuring
+and validating the event options. Use the config attribute that's
+published by the driver by replacing the open coded operations with
+evsel__get_config_val() and evsel__set_config_if_unset().
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/arch/arm/util/cs-etm.c | 35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+ tools/perf/arch/arm/util/cs-etm.c | 56 +++++++++++++++++++--------------------
+ 1 file changed, 27 insertions(+), 29 deletions(-)
 
 diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index a49753f0d20f..f535027ce862 100644
+index 12b28562c2f3..dc3f4e86b075 100644
 --- a/tools/perf/arch/arm/util/cs-etm.c
 +++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -68,6 +68,12 @@ static const char * const metadata_ete_ro[] = {
+@@ -103,13 +103,14 @@ static int cs_etm_validate_context_id(struct perf_pmu *cs_etm_pmu, struct evsel
+ 				      struct perf_cpu cpu)
+ {
+ 	int err;
+-	__u64 val;
+-	u64 contextid = evsel->core.attr.config &
+-		(perf_pmu__format_bits(cs_etm_pmu, "contextid") |
+-		 perf_pmu__format_bits(cs_etm_pmu, "contextid1") |
+-		 perf_pmu__format_bits(cs_etm_pmu, "contextid2"));
++	u64 ctxt, ctxt1, ctxt2;
++	__u64 trcidr2;
  
- enum cs_etm_version { CS_NOT_PRESENT, CS_ETMV3, CS_ETMV4, CS_ETE };
+-	if (!contextid)
++	evsel__get_config_val(evsel, "contextid", &ctxt);
++	evsel__get_config_val(evsel, "contextid1", &ctxt1);
++	evsel__get_config_val(evsel, "contextid2", &ctxt2);
++
++	if (!ctxt && !ctxt1 && !ctxt2)
+ 		return 0;
  
-+
-+/* ETMv3 ETMCR register bits */
-+#define ETMCR_CYC_ACC		BIT(12)
-+#define ETMCR_TIMESTAMP_EN	BIT(28)
-+#define ETMCR_RETURN_STACK	BIT(29)
-+
- static bool cs_etm_is_ete(struct perf_pmu *cs_etm_pmu, struct perf_cpu cpu);
- static int cs_etm_get_ro(struct perf_pmu *pmu, struct perf_cpu cpu, const char *path, __u64 *val);
- static bool cs_etm_pmu_path_exists(struct perf_pmu *pmu, struct perf_cpu cpu, const char *path);
-@@ -484,6 +490,33 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
- 	return err;
+ 	/* Not supported in etmv3 */
+@@ -120,12 +121,11 @@ static int cs_etm_validate_context_id(struct perf_pmu *cs_etm_pmu, struct evsel
+ 	}
+ 
+ 	/* Get a handle on TRCIDR2 */
+-	err = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR2], &val);
++	err = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR2], &trcidr2);
+ 	if (err)
+ 		return err;
+ 
+-	if (contextid &
+-	    perf_pmu__format_bits(cs_etm_pmu, "contextid1")) {
++	if (ctxt1) {
+ 		/*
+ 		 * TRCIDR2.CIDSIZE, bit [9-5], indicates whether contextID
+ 		 * tracing is supported:
+@@ -133,15 +133,14 @@ static int cs_etm_validate_context_id(struct perf_pmu *cs_etm_pmu, struct evsel
+ 		 *  0b00100 Maximum of 32-bit Context ID size.
+ 		 *  All other values are reserved.
+ 		 */
+-		if (BMVAL(val, 5, 9) != 0x4) {
++		if (BMVAL(trcidr2, 5, 9) != 0x4) {
+ 			pr_err("%s: CONTEXTIDR_EL1 isn't supported, disable with %s/contextid1=0/\n",
+ 			       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
+ 			return -EINVAL;
+ 		}
+ 	}
+ 
+-	if (contextid &
+-	    perf_pmu__format_bits(cs_etm_pmu, "contextid2")) {
++	if (ctxt2) {
+ 		/*
+ 		 * TRCIDR2.VMIDOPT[30:29] != 0 and
+ 		 * TRCIDR2.VMIDSIZE[14:10] == 0b00100 (32bit virtual contextid)
+@@ -149,7 +148,7 @@ static int cs_etm_validate_context_id(struct perf_pmu *cs_etm_pmu, struct evsel
+ 		 * virtual context id is < 32bit.
+ 		 * Any value of VMIDSIZE >= 4 (i.e, > 32bit) is fine for us.
+ 		 */
+-		if (!BMVAL(val, 29, 30) || BMVAL(val, 10, 14) < 4) {
++		if (!BMVAL(trcidr2, 29, 30) || BMVAL(trcidr2, 10, 14) < 4) {
+ 			pr_err("%s: CONTEXTIDR_EL2 isn't supported, disable with %s/contextid2=0/\n",
+ 			       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
+ 			return -EINVAL;
+@@ -163,10 +162,11 @@ static int cs_etm_validate_timestamp(struct perf_pmu *cs_etm_pmu, struct evsel *
+ 				     struct perf_cpu cpu)
+ {
+ 	int err;
+-	__u64 val;
++	u64 val;
++	__u64 trcidr0;
+ 
+-	if (!(evsel->core.attr.config &
+-	      perf_pmu__format_bits(cs_etm_pmu, "timestamp")))
++	evsel__get_config_val(evsel, "timestamp", &val);
++	if (!val)
+ 		return 0;
+ 
+ 	if (cs_etm_get_version(cs_etm_pmu, cpu) == CS_ETMV3) {
+@@ -176,7 +176,7 @@ static int cs_etm_validate_timestamp(struct perf_pmu *cs_etm_pmu, struct evsel *
+ 	}
+ 
+ 	/* Get a handle on TRCIRD0 */
+-	err = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0], &val);
++	err = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0], &trcidr0);
+ 	if (err)
+ 		return err;
+ 
+@@ -187,10 +187,9 @@ static int cs_etm_validate_timestamp(struct perf_pmu *cs_etm_pmu, struct evsel *
+ 	 *  0b00110 Implementation supports a maximum timestamp of 48bits.
+ 	 *  0b01000 Implementation supports a maximum timestamp of 64bits.
+ 	 */
+-	val &= GENMASK(28, 24);
+-	if (!val) {
++	trcidr0 &= GENMASK(28, 24);
++	if (!trcidr0)
+ 		return -EINVAL;
+-	}
+ 
+ 	return 0;
+ }
+@@ -273,16 +272,19 @@ static int cs_etm_parse_snapshot_options(struct auxtrace_record *itr,
+ 	return 0;
  }
  
-+static u64 cs_etm_synth_etmcr(struct auxtrace_record *itr)
-+{
-+	struct cs_etm_recording *ptr =
-+		container_of(itr, struct cs_etm_recording, itr);
-+	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
-+	struct evsel *evsel = cs_etm_get_evsel(ptr->evlist, cs_etm_pmu);
-+	u64 etmcr = 0;
-+	u64 val;
-+
-+	if (!evsel)
-+		return 0;
-+
-+	/*
-+	 * Synthesize what the kernel programmed into ETMCR based on
-+	 * what options the event was opened with. This doesn't have to be
-+	 * complete or 100% accurate, not all bits used by OpenCSD anyway.
-+	 */
-+	if (!evsel__get_config_val(evsel, "cycacc", &val) && val)
-+		etmcr |= ETMCR_CYC_ACC;
-+	if (!evsel__get_config_val(evsel, "timestamp", &val) && val)
-+		etmcr |= ETMCR_TIMESTAMP_EN;
-+	if (!evsel__get_config_val(evsel, "retstack", &val) && val)
-+		etmcr |= ETMCR_RETURN_STACK;
-+
-+	return etmcr;
-+}
-+
- static u64 cs_etm_get_config(struct auxtrace_record *itr)
++/*
++ * If the sink name format "@sink_name" is used, lookup the sink by name to convert to
++ * "sinkid=sink_hash" format. If the user has already manually provided a hash then
++ * "sinkid" isn't overwritten. If neither are provided then the driver will pick the best
++ * sink.
++ */
+ static int cs_etm_set_sink_attr(struct perf_pmu *pmu,
+ 				struct evsel *evsel)
  {
- 	struct cs_etm_recording *ptr =
-@@ -743,7 +776,7 @@ static void cs_etm_get_metadata(struct perf_cpu cpu, u32 *offset,
- 	case CS_ETMV3:
- 		magic = __perf_cs_etmv3_magic;
- 		/* Get configuration register */
--		info->priv[*offset + CS_ETM_ETMCR] = cs_etm_get_config(itr);
-+		info->priv[*offset + CS_ETM_ETMCR] = cs_etm_synth_etmcr(itr);
- 		/* traceID set to legacy value in case new perf running on old system */
- 		info->priv[*offset + CS_ETM_ETMTRACEIDR] = cs_etm_get_legacy_trace_id(cpu);
- 		/* Get read-only information from sysFS */
+ 	char msg[BUFSIZ], path[PATH_MAX], *sink;
+ 	struct evsel_config_term *term;
+-	int ret = -EINVAL;
+ 	u32 hash;
+-
+-	if (evsel->core.attr.config2 & GENMASK(31, 0))
+-		return 0;
++	int ret;
+ 
+ 	list_for_each_entry(term, &evsel->config_terms, list) {
+ 		if (term->type != EVSEL__CONFIG_TERM_DRV_CFG)
+@@ -305,14 +307,10 @@ static int cs_etm_set_sink_attr(struct perf_pmu *pmu,
+ 			return ret;
+ 		}
+ 
+-		evsel->core.attr.config2 |= hash;
++		evsel__set_config_if_unset(evsel, "sinkid", hash);
+ 		return 0;
+ 	}
+ 
+-	/*
+-	 * No sink was provided on the command line - allow the CoreSight
+-	 * system to look for a default
+-	 */
+ 	return 0;
+ }
+ 
 
 -- 
 2.34.1
