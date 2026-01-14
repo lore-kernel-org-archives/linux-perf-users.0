@@ -1,230 +1,322 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD451A08AF;
-	Wed, 14 Jan 2026 00:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768351379; cv=none; b=SOLkPZLlX0sPksgQSgz/EDl2QttFJUhbPi78kdF39dLK5y0JzqjiXHm1VlC9vEiGIvxtO4uUY+91YCzAVNVSiFmmCsbTuSA82gLEZF5A4NtpFf7c/JOC9f+jXDaSLWGHjLceSxFcBXectUvuThPqUKXu/DNepLAuRdGIw72rx0I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768351379; c=relaxed/simple;
-	bh=vxmyzGrGmbOZ3eo4v93sXcaAWzE9c4eMYr9p3UqrZes=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h0o9mge/XoVn9DabYObZdiNXB3jB5cCOlSUDsUHAqlcJ88jO825qO2mf/FVo+j9CyGw5XoHuW3LX/+fuKlBFCc6r4wBMflhbLmN51ILTs/vHfzR2voGybBhU3szcMk+1IL6IoZsxdyI55AeMldcGUxsiITIEItBvBOTuoQ05fgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gfq7I+4s; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FF029CE1
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 00:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.175
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768351563; cv=pass; b=YvDgaPyaJx9nJjpR33BCXtn3A2bD9UxXxFqJhYIfCMmAlZrspEYmoQ3rZxGc1w5LiUifdXIu+HL77BSwzshkn/ex5jAovppukDAx8GqYlhfVE6F6svE9CVCRTvfH9NYGdL7PL59DiIrZglLqOatvpS/zUgGCOvxAXoAG9VX7SC8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768351563; c=relaxed/simple;
+	bh=cZguz2z9KYR9uIePJq9T/79HDv2M87pDUwWRQm6DQFs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mMmpUdoadkk0JQbmqgL7QGtqtLLtcjp3LlvLe9ibTcKSX+p9mmLR+wL6+endJ20gzw3rc1dDNac5rz21GkAU+2cQe0NzJpMn1C5bVzi8vKh0DXruEPJfgMOzFZ8wYxZfEuXWOcKMaRdUb/xd8xyF8R7H6Lxol9mxN6PatqKFVws=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3RyBpY/E; arc=pass smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gfq7I+4s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768351377; x=1799887377;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vxmyzGrGmbOZ3eo4v93sXcaAWzE9c4eMYr9p3UqrZes=;
-  b=Gfq7I+4sIPcDd8Ct3ynNQR1S12GiAYsR6ysmmKZmGuZXDZqPMjSBNYMe
-   uWtjSjbKM35qt0a6Mmdon7lRPK8Y5TdJk5LZjSvqGcziw6DgFLas/6HZQ
-   D8hAB9+vozb4zOofcrufQ/JqNlapNZMMFgRdYYdA4u2WHuxM4lLG9gFar
-   +26dyZ7yV+sjrBTz9tV3DhWYIGs0liKDSA07yfwJpoed/Q6Q1CuVJYLtJ
-   vVXXWy8H3SyJietXJ0EBFQ3eA3wS+MoVPHhKGPOewZ6Oy/kWY5eLozXWA
-   uNUbYNq8E8T2MNVTXAX6n1OXVM79H94kvYky3B8TFCGc6PJTSTh/4WKAI
-   w==;
-X-CSE-ConnectionGUID: QRjY+tN7RvOEaq3IKa1xiw==
-X-CSE-MsgGUID: BoDHiU/HRP2zv4oe0EdoMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="80368459"
-X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="80368459"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 16:42:56 -0800
-X-CSE-ConnectionGUID: 0xQS2EHoStqUi6KHxucVhg==
-X-CSE-MsgGUID: I9MJP1kSTKqEXJ6ozeiDdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="209379277"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 16:42:53 -0800
-Message-ID: <76406086-7175-43ac-90bc-3b268186ebbc@linux.intel.com>
-Date: Wed, 14 Jan 2026 08:42:50 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3RyBpY/E"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-29f02651fccso30765ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jan 2026 16:46:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768351561; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ZZdz+rbiZRMfMzp5wd+zY9Duo7GWPMhSmFF+6L/zwubBvtOdc+nccabkHyLwYiPium
+         iBkZBui0Qeeeauj9L5R+DaixNTj9mydrESpsjy8XySiJahmViD+IChGnBFhj6bLbj0Sw
+         qN9lP8fh522RnG/FOR+gSzV5EH5SjehUP0E813Bw6WrP8ASeiL0EornXnlPVIBrQY6du
+         jEeFz+NtvDYmRmCjHHvHe+ST3A0jxhWcy+zbl+lIn/FiiMPRi3yXuKiwVtd5j2qv+ntn
+         8Y9Vss8uOotrZPOdvGsjD3+YfTmZd6MeilKGp50vHsEWM2DhJcIfiqnezBp5p54LE1r/
+         2JUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=sSRY80aHidtcTGCyOCewYizbr1fOXy5wVFHAwp9wyq4=;
+        fh=YpuwaDcWGKg1DiAJTPBPiEUi8X0pJgO3oA0tOpU7yzw=;
+        b=iPmWHkBlM+SWGYn5OHMB7mza0X+dIK4iop7HQuH9caS6vsk2otgpbNxLjoM8HPtxec
+         RkpZG6ErRqZODCQP16p3RiuozwMIfPBXDWROfIhEIPTXRfHETyS/Zo43VYjrpVxFXLOQ
+         y7Dpt11VqIGXjpJndopWNFfApeUShZsPsS9W5hftm+yE5EjLX8UAYF9sq/mc8t47Npye
+         FtJINsHZ/ObVd4CmTShXH/m1Nb8Y08w1L3UBcUcqvuV1L5dtUvh8cWccLvr3nNz4H7NV
+         ViFTifJzo0M4BlP6SNo0r1NGOFMPZm/sVesErBnbYlglav78OB6LkrfJs52Y3DAGowny
+         uDOg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1768351561; x=1768956361; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sSRY80aHidtcTGCyOCewYizbr1fOXy5wVFHAwp9wyq4=;
+        b=3RyBpY/E+SVbFf7WW7vJpo+2Ruq8Gg6W7oS6N029z7RMg8SpzG3nQAXh64vREaCjZl
+         bgYf31HaYAxFuvMm//4aSgbPGCjFzDuMar/fNpIqasG9Z0DpnmJGZOj3vmK3YjW9OWrz
+         BZVnG1Xq4kwEUneW7GpQXUWzmh2iHIhySbT6ltqiGnBaaAKSAxn/z7OUodeSKak2D5X8
+         8ruAtKgjUJr+wt2WJlVfXC7mlUOEmYc7UlMBOLjM4IWF1oalVBAkAvumpdUtNY//npT6
+         OXgNqLA2/EM2dvyLgwDB8i+0FzoI0EogPhoUXsE6AP3zB9Pf9IvDVMHXtKCtfhhuRONU
+         JRow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768351561; x=1768956361;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=sSRY80aHidtcTGCyOCewYizbr1fOXy5wVFHAwp9wyq4=;
+        b=SVvo2foS4ajVCKTDoPWU6+ePeFFY5JU1IwYgJdMdxEDjtcHkw/K/QCPWtjQWeuIits
+         5heJlTBtX5/t1/4g8O2L0Pf2lkof4NLBidzuCQNngfr55hhTCKtgYFpMUGMgu9n7DDfD
+         nLBHrUvHFTU1KY2hBtU7LwQ2ViuY2T61zqek9jm+UFZrK9xBc9oaNq9Osml7Lhokjm5D
+         jwX0cWCuqpQGBQ5FMFqmbSDq4wlsmHEjvbRgEQqC9Nlz48buiRYbALvKG26AQnrLYmyC
+         y4IKP1FOE10+uQJfCnZ/IqqgpvlclnNjim7P1HIR8Nk5FcGT01H90dW8kD3/2ZmariIM
+         uqrg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/LMubXwOmeseeBmRgrAoinVWsUG9sSH9nfuMhvOFDDaqv3SC/j06OJisjvGPRSzmrCtXpvujxGH25bj2Y271/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkAJWcO4BkBTGQ+dZEbGYMxkp2RRuUc4gdO9W84GvuzX3WLwRS
+	dgFBgwWG8fL8NR4/CtUFQG9KJRsM5+DBD7ASxyWt2VLfLIkZwkCUwW+XQWST6LGDbdmmTUKcpR/
+	7Oc4TRTFj978ssc/pgCGb+V7tzkUhFQLtE3JR5HSe
+X-Gm-Gg: AY/fxX4ytyIAOMe2CQbJFKOe93ZR0a+lQ+2TxjyXsHadvh0ZDmDGMNUC/X5v69LPCng
+	XucLyzjVEnmdTi0ddzJ82KTCB72IFmhFxhLGLgPyDP2lX/6zoPLEn6MkRIRE0ZKv+Yc51jpdLMk
+	EngSQDQLY2t48laIsKD+oLsvLMYlLqvls2J+YywcLubz6ioIW0+07h5ImW23w7DTUjTVV5xLTj3
+	6yW3tOXumWtMnbhrNXeO1hAhkle2OEsYzUhNkp9tcNNLJX3Qg7Ansr7wMAPV+2ywCie8I0SujPB
+	3U0bZvJ+Roj4DUdBjJENQrWX9Q==
+X-Received: by 2002:a17:902:e890:b0:265:e66:6c10 with SMTP id
+ d9443c01a7336-2a599a24a2amr1623665ad.4.1768351561256; Tue, 13 Jan 2026
+ 16:46:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf pmu intel: Adjust cpumaks for sub-NUMA clusters on
- Emeraldrapids
-To: Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>
-Cc: Thomas Falcon <thomas.falcon@intel.com>, linux-kernel@vger.kernel.org,
- peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- adrian.hunter@intel.com, james.clark@linaro.org, ravi.bangoria@amd.com,
- linux-perf-users@vger.kernel.org
-References: <20260108184430.1210223-1-ctshao@google.com>
- <CAP-5=fVLFVzitYZso2HB7dFgaNbJqW0pLE_AqMhc0ytW0PFvZw@mail.gmail.com>
- <CAJpZYjVadSgX6eSczFsqxJpMSq8q67CkA_WA+8jf+atgUScBNA@mail.gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAJpZYjVadSgX6eSczFsqxJpMSq8q67CkA_WA+8jf+atgUScBNA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260113233757.62347-1-namhyung@kernel.org>
+In-Reply-To: <20260113233757.62347-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 13 Jan 2026 16:45:50 -0800
+X-Gm-Features: AZwV_QiY5_FFF45LtiYOfrvxPks12q3FUavbEGrt2jwvSoNXUvbHyekthPiX8F4
+Message-ID: <CAP-5=fX+zw-CUEYEtrPA6vYUKqpp4LZp-p==QsbZaNwLcX0Whw@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: Get debug info of DSO properly
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 1/14/2026 2:06 AM, Chun-Tse Shao wrote:
-> Ping.
+On Tue, Jan 13, 2026 at 3:37=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> Thanks for your comment, Ian. To Intel team, can we get confirmation
-> of the GNR SNR2 configuration?
-
-It seems you missed Ian's comments. 
-
-I have same question with Ian, the snc map for uncore IMC is changed. It
-may not change the total count of uncore_imc events, but it would change
-the count of the uncore_imc events for a specific SNC node. What's the
-reason you did the change?
-
-I have no GNR/EMR on my hand, I can't check how the SNC nodes are mapped on
-these 2 machines.
-
-
+> The dso__debuginfo() just used the path name to open the file but it may
+> be outdated.  It should check build-ID and use the file in the build-ID
+> cache if available rather than just using the path name.
 >
-> -CT
+> Let's factor out dso__get_filename() to avoid code duplicate.
+
+This change lgtm:
+
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+I should have recognized this earlier, we seem to be getting multiple
+copies of the dwfl and I wonder repeatedly parsing the debug info has
+costs:
+1) for arch powerpc there is a dwfl used in
+tools/perf/arch/powerpc/util/skip-callchain-idx.c
+2) there is a dwfl for the libdw addr2line
+3) there is a dwfl in debuginfo
+4) there is a dwfl in unwind_info in unwind-libdw
+
+So 1 and 2 both associate the dwfl with the dso and lazily add it, 1
+leaks the dwfl whereas 2 ties it to the lifetime of the dso.
+For 3 there are individual debuginfo uses as well as a debuginfo cache
+in probe-event.
+For 4 the lifetime is an unwind of a stacktrace by unwind__get_entries.
+
+1 and 4 load an ELF with a path using dwfl_report_elf  and specifying
+a base load address.
+2 and 3 use dwfl_report_offline with no load address.
+
+My understanding is that if you have the Dwfl the Dwfl_module and
+Dwarf are cheap to compute. The module is cached in the Dwfl and with
+a single Dwfl/Dwfl_module per dso then there should only ever be 1
+value:
+https://github.com/cuviper/elfutils/blob/master/libdwfl/libdwflP.h#L131
+And the Dwarf is held in the module:
+https://github.com/cuviper/elfutils/blob/master/libdwfl/libdwflP.h#L195
+This makes me think the debuginfo may be holding onto more values than
+it needs to and perhaps we can simplify it.
+
+I think ideally we'd have a single Dwfl but that means the
+Dwfl_modules will need different addresses to avoid overlapping. It
+doesn't seem to be possible to relocate a module once it is loaded
+(e.g with dwfl_module_relocate_address -
+https://github.com/cuviper/elfutils/blob/master/libdwfl/libdwfl.h#L397)
+and so we'd need some way to come up with an address to keep the
+modules separate (we couldn't just use the virtual address for a
+thread as the module address may differ per thread in different
+processes).
+
+So I wonder if we should have a single global Dwfl, and have each dso
+have a made up load address to get the Dwfl_Module from it - the dso
+could hold the Dwfl_Module* or the made up load address. 1 and 4 can
+use their current base load address and adjust it by the made up load
+address that would be associated with the dso. 2 and 3 can just use
+the made up load address with the dso to get the module and possibly
+with (2) remove some of the bias logic. This should speed up a bunch
+of things by avoiding unnecessary/repeated dwfl_report_elf and
+dwfl_report_offline calls, it would also cut down on duplication.
+
+Thanks,
+Ian
+
+> Fixes: 53a61a6ca279165d ("perf annotate: Add dso__debuginfo() helper")
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/dso.c | 63 ++++++++++++++++++++++++++++++++-----------
+>  tools/perf/util/dso.h | 11 ++------
+>  2 files changed, 50 insertions(+), 24 deletions(-)
 >
-> On Thu, Jan 8, 2026 at 11:19 AM Ian Rogers <irogers@google.com> wrote:
->> On Thu, Jan 8, 2026 at 10:45 AM Chun-Tse Shao <ctshao@google.com> wrote:
->>> Similar to GNR [1], Emeraldrapids supports sub-NUMA clusters as well.
->>> Adjust cpumasks as the logic for GNR in [1].
->>>
->>> Tested on Emeraldrapids with SNC2 enabled:
->>>   $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a -- sleep 1
->>>
->>>    Performance counter stats for 'system wide':
->>>
->>>   N0       30        72125876670      UNC_CHA_CLOCKTICKS
->>>   N0        4         8815163648      UNC_M_CLOCKTICKS
->>>   N1       30        72124958844      UNC_CHA_CLOCKTICKS
->>>   N1        4         8815014974      UNC_M_CLOCKTICKS
->>>   N2       30        72121049022      UNC_CHA_CLOCKTICKS
->>>   N2        4         8814592626      UNC_M_CLOCKTICKS
->>>   N3       30        72117133854      UNC_CHA_CLOCKTICKS
->>>   N3        4         8814012840      UNC_M_CLOCKTICKS
->>>
->>>          1.001574118 seconds time elapsed
->>>
->>> [1] lore.kernel.org/20250515181417.491401-1-irogers@google.com
->>>
->>> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
->>> ---
->>>  tools/perf/arch/x86/util/pmu.c | 45 +++++++++++++++++++++-------------
->>>  1 file changed, 28 insertions(+), 17 deletions(-)
->>>
->>> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
->>> index a3f96221758d..fad68a0f7b5d 100644
->>> --- a/tools/perf/arch/x86/util/pmu.c
->>> +++ b/tools/perf/arch/x86/util/pmu.c
->>> @@ -22,20 +22,29 @@
->>>  #include "util/env.h"
->>>  #include "util/header.h"
->>>
->>> -static bool x86__is_intel_graniterapids(void)
->>> +static bool x86__is_snc_supported(void)
->>>  {
->>> -       static bool checked_if_graniterapids;
->>> -       static bool is_graniterapids;
->>> +       static bool checked_if_snc_supported;
->>> +       static bool is_supported;
->>>
->>> -       if (!checked_if_graniterapids) {
->>> -               const char *graniterapids_cpuid = "GenuineIntel-6-A[DE]";
->>> +       if (!checked_if_snc_supported) {
->>> +
->>> +               /* Emeraldrapids and Graniterapids support SNC configuration. */
->>> +               static const char *const supported_cpuids[] = {
->>> +                       "GenuineIntel-6-CF", /* Emeraldrapids */
->>> +                       "GenuineIntel-6-A[DE]", /* Graniterapids */
->>> +               };
->>>                 char *cpuid = get_cpuid_str((struct perf_cpu){0});
->>>
->>> -               is_graniterapids = cpuid && strcmp_cpuid_str(graniterapids_cpuid, cpuid) == 0;
->>> +               for (size_t i = 0; i < ARRAY_SIZE(supported_cpuids); i++) {
->>> +                       is_supported = cpuid && strcmp_cpuid_str(supported_cpuids[i], cpuid) == 0;
->>> +                       if (is_supported)
->>> +                               break;
->>> +               }
->>>                 free(cpuid);
->>> -               checked_if_graniterapids = true;
->>> +               checked_if_snc_supported = true;
->>>         }
->>> -       return is_graniterapids;
->>> +       return checked_if_snc_supported;
->>>  }
->>>
->>>  static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
->>> @@ -64,6 +73,7 @@ static int snc_nodes_per_l3_cache(void)
->>>                         read_sysfs_cpu_map("devices/system/cpu/cpu0/cache/index3/shared_cpu_list");
->>>
->>>                 snc_nodes = perf_cpu_map__nr(cache_cpus) / perf_cpu_map__nr(node_cpus);
->>> +
->>>                 perf_cpu_map__put(cache_cpus);
->>>                 perf_cpu_map__put(node_cpus);
->>>                 checked_snc = true;
->>> @@ -137,8 +147,8 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
->>>         // Compute the IMC SNC using lookup tables.
->>>         unsigned int imc_num;
->>>         int snc_nodes = snc_nodes_per_l3_cache();
->>> -       const u8 snc2_map[] = {1, 1, 0, 0, 1, 1, 0, 0};
->>> -       const u8 snc3_map[] = {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
->>> +       const u8 snc2_map[] = {0, 0, 1, 1};
->> Does this alter the behavior on GNR? ie 1,1,0,0 vs 0,0,1,1.
->>
->> Thanks,
->> Ian
->>
->>> +       const u8 snc3_map[] = {1, 1, 0, 0, 2, 2};
->>>         const u8 *snc_map;
->>>         size_t snc_map_len;
->>>
->>> @@ -161,11 +171,11 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
->>>                 pr_warning("Unexpected: unable to compute IMC number '%s'\n", pmu->name);
->>>                 return 0;
->>>         }
->>> -       if (imc_num >= snc_map_len) {
->>> +       if (imc_num >= snc_map_len * perf_cpu_map__nr(pmu->cpus)) {
->>>                 pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_num, snc_nodes);
->>>                 return 0;
->>>         }
->>> -       return snc_map[imc_num];
->>> +       return snc_map[imc_num % snc_map_len];
->>>  }
->>>
->>>  static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
->>> @@ -205,7 +215,7 @@ static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
->>>         return cpu_adjust[pmu_snc];
->>>  }
->>>
->>> -static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
->>> +static void uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
->>>  {
->>>         // With sub-NUMA clustering (SNC) there is a NUMA node per SNC in the
->>>         // topology. For example, a two socket graniterapids machine may be set
->>> @@ -304,11 +314,12 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
->>>                                 pmu->mem_events = perf_mem_events_intel_aux;
->>>                         else
->>>                                 pmu->mem_events = perf_mem_events_intel;
->>> -               } else if (x86__is_intel_graniterapids()) {
->>> +               } else if (x86__is_snc_supported()) {
->>>                         if (starts_with(pmu->name, "uncore_cha_"))
->>> -                               gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
->>> -                       else if (starts_with(pmu->name, "uncore_imc_"))
->>> -                               gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
->>> +                               uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
->>> +                       else if (starts_with(pmu->name, "uncore_imc_") &&
->>> +                                !starts_with(pmu->name, "uncore_imc_free_running"))
->>> +                               uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
->>>                 }
->>>         }
->>>  }
->>> --
->>> 2.52.0.457.g6b5491de43-goog
->>>
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 06980844c014ec9b..922fcc2f798baa57 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -112,7 +112,7 @@ bool dso__is_object_file(const struct dso *dso)
+>
+>  int dso__read_binary_type_filename(const struct dso *dso,
+>                                    enum dso_binary_type type,
+> -                                  char *root_dir, char *filename, size_t=
+ size)
+> +                                  const char *root_dir, char *filename, =
+size_t size)
+>  {
+>         char build_id_hex[SBUILD_ID_SIZE];
+>         int ret =3D 0;
+> @@ -564,20 +564,15 @@ char *dso__filename_with_chroot(const struct dso *d=
+so, const char *filename)
+>         return filename_with_chroot(nsinfo__pid(dso__nsinfo_const(dso)), =
+filename);
+>  }
+>
+> -static int __open_dso(struct dso *dso, struct machine *machine)
+> -       EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
+> +static char *dso__get_filename(struct dso *dso, const char *root_dir,
+> +                              bool *decomp)
+>  {
+> -       int fd =3D -EINVAL;
+> -       char *root_dir =3D (char *)"";
+>         char *name =3D malloc(PATH_MAX);
+> -       bool decomp =3D false;
+>
+> -       if (!name)
+> -               return -ENOMEM;
+> +       *decomp =3D false;
+>
+> -       mutex_lock(dso__lock(dso));
+> -       if (machine)
+> -               root_dir =3D machine->root_dir;
+> +       if (name =3D=3D NULL)
+> +               return NULL;
+>
+>         if (dso__read_binary_type_filename(dso, dso__binary_type(dso),
+>                                             root_dir, name, PATH_MAX))
+> @@ -602,20 +597,38 @@ static int __open_dso(struct dso *dso, struct machi=
+ne *machine)
+>                 size_t len =3D sizeof(newpath);
+>
+>                 if (dso__decompress_kmodule_path(dso, name, newpath, len)=
+ < 0) {
+> -                       fd =3D -(*dso__load_errno(dso));
+> +                       errno =3D *dso__load_errno(dso);
+>                         goto out;
+>                 }
+>
+> -               decomp =3D true;
+> +               *decomp =3D true;
+>                 strcpy(name, newpath);
+>         }
+> +       return name;
+> +
+> +out:
+> +       free(name);
+> +       return NULL;
+> +}
+>
+> -       fd =3D do_open(name);
+> +static int __open_dso(struct dso *dso, struct machine *machine)
+> +       EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
+> +{
+> +       int fd =3D -EINVAL;
+> +       char *name;
+> +       bool decomp =3D false;
+> +
+> +       mutex_lock(dso__lock(dso));
+> +
+> +       name =3D dso__get_filename(dso, machine ? machine->root_dir : "",=
+ &decomp);
+> +       if (name)
+> +               fd =3D do_open(name);
+> +       else
+> +               fd =3D -errno;
+>
+>         if (decomp)
+>                 unlink(name);
+>
+> -out:
+>         mutex_unlock(dso__lock(dso));
+>         free(name);
+>         return fd;
+> @@ -1912,3 +1925,23 @@ const u8 *dso__read_symbol(struct dso *dso, const =
+char *symfs_filename,
+>         return __dso__read_symbol(dso, symfs_filename, start, len,
+>                                   out_buf, out_buf_len, is_64bit);
+>  }
+> +
+> +struct debuginfo *dso__debuginfo(struct dso *dso)
+> +{
+> +       char *name;
+> +       bool decomp =3D false;
+> +       struct debuginfo *dinfo =3D NULL;
+> +
+> +       mutex_lock(dso__lock(dso));
+> +
+> +       name =3D dso__get_filename(dso, "", &decomp);
+> +       if (name)
+> +               dinfo =3D debuginfo__new(name);
+> +
+> +       if (decomp)
+> +               unlink(name);
+> +
+> +       mutex_unlock(dso__lock(dso));
+> +       free(name);
+> +       return dinfo;
+> +}
+> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> index 4aee23775054cf83..3dd7d0fc00797f37 100644
+> --- a/tools/perf/util/dso.h
+> +++ b/tools/perf/util/dso.h
+> @@ -777,7 +777,7 @@ int dso__kernel_module_get_build_id(struct dso *dso, =
+const char *root_dir);
+>
+>  char dso__symtab_origin(const struct dso *dso);
+>  int dso__read_binary_type_filename(const struct dso *dso, enum dso_binar=
+y_type type,
+> -                                  char *root_dir, char *filename, size_t=
+ size);
+> +                                  const char *root_dir, char *filename, =
+size_t size);
+>  bool is_kernel_module(const char *pathname, int cpumode);
+>  bool dso__needs_decompress(struct dso *dso);
+>  int dso__decompress_kmodule_fd(struct dso *dso, const char *name);
+> @@ -926,14 +926,7 @@ u64 dso__findnew_global_type(struct dso *dso, u64 ad=
+dr, u64 offset);
+>  bool perf_pid_map_tid(const char *dso_name, int *tid);
+>  bool is_perf_pid_map_name(const char *dso_name);
+>
+> -/*
+> - * In the future, we may get debuginfo using build-ID (w/o path).
+> - * Add this helper is for the smooth conversion.
+> - */
+> -static inline struct debuginfo *dso__debuginfo(struct dso *dso)
+> -{
+> -       return debuginfo__new(dso__long_name(dso));
+> -}
+> +struct debuginfo *dso__debuginfo(struct dso *dso);
+>
+>  const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
+>                            const struct map *map, const struct symbol *sy=
+m,
+> --
+> 2.52.0.457.g6b5491de43-goog
+>
