@@ -1,123 +1,208 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F76E20F067
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 21:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BA91E7C18;
+	Thu, 15 Jan 2026 00:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768427981; cv=none; b=JmDB8vpyQL9eMtuOdBS7E7DTFYqE+E0xG2WF1WgEUpv/LD7PXPTs2yDGAgHoMK2tdHkgGOUwoXD6e6q4jRHIr4brhotQJPDrHVReHQk1LyFxHsXUfkHKR8dQLxhLMoOYuTkdqoUdGnmrUsyp/AeBB0YBS+AGqKhvZHKWNL0mFaU=
+	t=1768438647; cv=none; b=Qxyr2kT1VZ+qBXGTWtw3mt5N19x91Ui19nAbLs9vxHvAOMB54fO4oYwKwa8t9FyW6faoyKRx2gKorqpJm3daS6e3fvztyDxjWPZphYdqXbiOd4ibc87SAaWxHj+a4t5WdL6GhZkMa5xTsEIPu1Al6lYCOXcOujPWsGxOFmKRcFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768427981; c=relaxed/simple;
-	bh=tO0znVmDXAymHNCdzPnVwtYP7QD1kxrOykARoYLTeBE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=p1v6kew6vI9c1VXgegxMnadoF9mra0gTNaxejJPm70oEiucSMmi2gzx1rKG6de2Tu+iF/ClqcxRbNA0iwfthIIktJpV0t5Ku8XTpWv2twJpzJ/b13Nsf51SSjuwGi+UuQMRtEWZYfmAiGZdPREGETGEcE62rGJWhE828K+qQBRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hSW5Vy+S; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1768438647; c=relaxed/simple;
+	bh=zEASgpzMnTBOx5k5qb7inlLX6bpS4I2vBZeS+Zmhr7w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E1EsantnRnmSFRBOhK6fZLthdcygHeJEIVFYL51u/PqKUF7ej+M3QXmtn5WT1gv+tTkBh08mrx+72WdAfqOMu5RkB8vL9T3L8UZPdr9KxTn3adNdsNN3sBEhrBMPqt/7nS1XEJAhWji5VbUbgJ0sewFlyaGNLdmOMHPY5o59W/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TyQA+yeV; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hSW5Vy+S"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34c904a1168so170160a91.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jan 2026 13:59:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768427965; x=1769032765; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wc5IYW1fIu5cyAHFpaj29f0bgcaP13LBp3YapifQT5w=;
-        b=hSW5Vy+SGhQcYxbEd5IwbQss4zcbV4g2hELRx9Isus+w4SC0+K55AFsf5LThNPaD0z
-         iX0qvcGmeRXiOJHpd0TW7z1fwfq5SfuIRL6IAQGWkzrkXFg++BDcf65CDgRNUQ13HqO/
-         Ucr/ZIMFRzYZwT+qn1DZpZAekxqBeeV/NLKibGnhHihyKDKUNxvs2+2pSTVoI6e3Oxuu
-         HJVB2ASDVT69USBw4+bEkh1ThVcyILL8IXhEyzD1tgkNsx2EZQC4qtjS1fk+LMe/3e7R
-         /OIouO1efH52uxgwQxriWCIRsWnwj+8vUwGNZdL5tNVyvn4y5ATbVkpFPmKnxpDZToX2
-         xQNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768427965; x=1769032765;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wc5IYW1fIu5cyAHFpaj29f0bgcaP13LBp3YapifQT5w=;
-        b=rIdHoRQ5s72sCNkVKylPmD6T1HM933qphOplaUOFgLil5ZG+e4A9A2zfcSuJVTCG1f
-         LRJgTrG4IK0ryhLkMc2Ui+4MvMk3TRC++/KumJkbz1nHwg8NY7GR0KwdEfn/Pnu2m+Dh
-         3m6YOjaPfcUfplMcCuUxDlRtZKVEhWu/lbpCXFOrAU2ErkWlGcFH13gGYrAZoBaVtJAn
-         3BQO5KAKICdj29L9Xc14KPzJCJsP6OTqt4TVnJ1QCxULG0rq/G1pXtvxQgO2YaCCu8jZ
-         rU6kzss5ElSlbDDfzX+qkjR3l5edClvPAOGV95FJiFAvt+dqNk9KaHlwhRgSXj3IsPds
-         NkWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFHlzf+yK/OP3L5MNRqS1hvzSg4YPqS9dZW/6OibcpjFIzw6gYYJj/teaolHO9jHj3++XVKbAui+6IVDjVHyS8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaKS6UUX+yMqWqSpIKlev2ibFjJNCFJhZCI1mpYmRnUTkQnWdX
-	9tE9dkqOlAuFiCcnNM3ZF4fruz/0t582byjw8+lWvpj4iXG3hXlsXk4t7Uw+3FkVixgdRnSyBu4
-	ZzZlXYw==
-X-Received: from pjbga22.prod.google.com ([2002:a17:90b:396:b0:34c:9f0b:fd7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:6d0:b0:341:6164:c27d
- with SMTP id 98e67ed59e1d1-35109091a6cmr3714526a91.3.1768427965337; Wed, 14
- Jan 2026 13:59:25 -0800 (PST)
-Date: Wed, 14 Jan 2026 13:59:24 -0800
-In-Reply-To: <jf2zfqo6jrrcdkdatztiijmf7tgkho7bks4q4oaegiqpeflrkj@7blq6f5ck2hf>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TyQA+yeV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768438646; x=1799974646;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zEASgpzMnTBOx5k5qb7inlLX6bpS4I2vBZeS+Zmhr7w=;
+  b=TyQA+yeVqr5u/mawt2kxjcAvBq+f7+NdJNXIROlamioux/36BTMQylMk
+   dMRGEYjpRQykbuSX6lxM1eItxp/5VG0niWxYsj3BUbx8ZZONVNCyJOC25
+   qYCsEPCX89wLBi6rTYUJHNGsRvK+DhHTPR3peD7PvOCNZ4+CT49p7MgGd
+   PqWxKp7d5qTWDR5siFeooQogjl7ZFsyuUgpxSEYmuilah82Ao6Wo7E/jY
+   1YyLHXA+r1LGxnBNoV53yI73ayobWdb2BfwI7wNooyu45nkGejNp9i9V+
+   1OS4iu0fNI1R/Gd8Mppkng3L6+7HDKEqzO4PBb4T2oq0ncqOSgcC7O73S
+   w==;
+X-CSE-ConnectionGUID: XDW4vSK+TKGoLtd5uowOog==
+X-CSE-MsgGUID: dIaImfVTR7Wfuzk23FuFrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="69722761"
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="69722761"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 16:57:25 -0800
+X-CSE-ConnectionGUID: 49UBJqk5RfOd0rHlv9r9GQ==
+X-CSE-MsgGUID: T7MqZkWLSHChHJdshgMJnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="235542721"
+Received: from fhuang-mobl1.amr.corp.intel.com (HELO [10.125.38.93]) ([10.125.38.93])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 16:57:25 -0800
+Message-ID: <32386e0a-09d9-4f13-a5e1-c6f9dd3afdfd@intel.com>
+Date: Wed, 14 Jan 2026 16:57:24 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250901051656.209083-1-manali.shukla@amd.com>
- <20250901052146.209158-1-manali.shukla@amd.com> <jf2zfqo6jrrcdkdatztiijmf7tgkho7bks4q4oaegiqpeflrkj@7blq6f5ck2hf>
-Message-ID: <aWgRvCdPsAFHRwcU@google.com>
-Subject: Re: [PATCH v2 03/12] KVM: Add KVM_GET_EXT_LAPIC and KVM_SET_EXT_LAPIC
- for extapic
-From: Sean Christopherson <seanjc@google.com>
-To: Naveen N Rao <naveen@kernel.org>
-Cc: Manali Shukla <manali.shukla@amd.com>, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, 
-	pbonzini@redhat.com, nikunj@amd.com, bp@alien8.de, peterz@infradead.org, 
-	mingo@redhat.com, mizhang@google.com, thomas.lendacky@amd.com, 
-	ravi.bangoria@amd.com, Sandipan.Das@amd.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] perf/x86/intel/uncore: Fix iounmap() leak on
+ global_init failure
+To: Markus Elfring <Markus.Elfring@web.de>, linux-perf-users@vger.kernel.org,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Namhyung Kim <namhyung@kernel.org>, Stephane Eranian <eranian@google.com>
+Cc: lkp@intel.com, LKML <linux-kernel@vger.kernel.org>,
+ kernel-janitors@vger.kernel.org, Thomas Falcon <thomas.falcon@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>
+References: <20260114193825.17973-1-zide.chen@intel.com>
+ <cda9ab9b-4581-409f-a9bb-0e8a67ad3530@web.de>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <cda9ab9b-4581-409f-a9bb-0e8a67ad3530@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 16, 2025, Naveen N Rao wrote:
-> On Mon, Sep 01, 2025 at 10:51:46AM +0530, Manali Shukla wrote:
-> > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> > index 6aa40ee05a4a..0653718a4f04 100644
-> > --- a/Documentation/virt/kvm/api.rst
-> > +++ b/Documentation/virt/kvm/api.rst
-> > @@ -2048,6 +2048,18 @@ error.
-> >  Reads the Local APIC registers and copies them into the input argument.  The
-> >  data format and layout are the same as documented in the architecture manual.
-> >  
-> > +::
-> > +
-> > +  #define KVM_APIC_EXT_REG_SIZE 0x540
 
-As discussed in PUCK, just go the full 0x1000 bytes, and do:
 
-#define KVM_GET_LAPIC2            _IOR(KVMIO,  0x8e, struct kvm_lapic_state2)
-#define KVM_SET_LAPIC2            _IOW(KVMIO,  0x8f, struct kvm_lapic_state2)
-
-> > +  struct kvm_ext_lapic_state {
-> > +	__DECLARE_FLEX_ARRAY(__u8, regs);
-> > +  };
-> > +
-> > +Applications should use KVM_GET_EXT_LAPIC ioctl if extended APIC is
-> > +enabled. KVM_GET_EXT_LAPIC reads Local APIC registers with extended
-> > +APIC register space located at offsets 400h-530h and copies them into input
-> > +argument.
+On 1/14/2026 12:57 PM, Markus Elfring wrote:
+>> Kernel test robot reported:
 > 
-> I suppose the reason for using a flex array was for addressing review 
-> comments on the previous version -- to make the new APIs extensible so 
-> that they can accommodate any future changes to the extended APIC 
-> register space.
+> Is this duplicate information according to a known tag?
+
+I was trying to follow some examples of how test robot reports are shown
+in commit messages, for example:
+
+https://lore.kernel.org/all/20240626151131.550535-2-torvalds@linux-foundation.org/
+
+https://lore.kernel.org/all/173058261037.3137.8690137124888546964.tip-bot2@tip-bot2/
+
+
+>> Unverified Error/Warning (likely false positive, kindly check if
+>> interested):
+>>     arch/x86/events/intel/uncore_discovery.c:293:2-8:
+>>     ERROR: missing iounmap; ioremap on line 288 and execution via
+>>     conditional on line 292
 > 
-> I wonder if it would be better to introduce a KVM extension, say 
-> KVM_CAP_EXT_LAPIC (along the lines of KVM_CAP_PMU_CAPABILITY).
+> See also:
+> https://elixir.bootlin.com/linux/v6.19-rc5/source/scripts/coccinelle/free/iounmap.cocci#L2-L8
+> 
+> 
+>> If domain->global_init() fails in __parse_discovery_table(), the
+>> ioremap'ed MMIO region is not released before returning, resulting
+>> in an MMIO mapping leak.
+>>
+>> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> See also once more:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.19-rc5#n94
+> 
+> Will another imperative wording approach become helpful for an improved change description?
 
-Please figure out a different name than "ext_lapic".  Verbatim from the SDM
-(minus a closing parenthesis)
+My apologies — I did try to address the feedback, but I may still be
+missing something.  Could you please point out what specifically could
+be improved?
 
-  the xAPIC architecture) is an extension of the APIC architecture
 
-and
+> …
+>> ---
+>>  arch/x86/events/intel/uncore_discovery.c | 15 ++++++++++-----
+> …
+> 
+> Some contributors would appreciate patch version descriptions.
+> https://lore.kernel.org/all/?q=%22This+looks+like+a+new+version+of+a+previously+submitted+patch%22
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.19-rc5#n310
 
-  EXTENDED XAPIC (X2APIC)
-  The x2APIC architecture extends the xAPIC architecture
+Yes, that was the intention for v2.
 
-There's zero chance I'm going to remember which "extended" we're talking about. 
+V2:
+- As suggested by Markus, add an `out` label and use goto-based error
+  handling to reduce duplicated iounmap() code.
+- Add the original warning from the kernel test robot to the commit message.
+- Trivial rewording of the commit message.
 
-KVM_CAP_X2APIC_API further muddies the waters, so maybe something absurd and
-arbitrary like KVM_CAP_LAPIC2?  The capability doesn't have to strictly follow
-the naming of the underlying feature(s) it supports.
+> 
+> Is there a need to perform desirable changes by a small patch series?
+> 
+> * Specific fix
+> * Related refinements
+
+It seems to me that the changes in this patch are small and closely
+related, so I wondered whether splitting it might be unnecessary.
+
+> 
+>> +++ b/arch/x86/events/intel/uncore_discovery.c
+>> @@ -264,6 +264,7 @@ static int __parse_discovery_table(struct uncore_discovery_domain *domain,
+>>  	struct uncore_unit_discovery unit;
+>>  	void __iomem *io_addr;
+>>  	unsigned long size;
+>> +	int ret = 0;
+>>  	int i;
+> 
+> Would scope adjustments become helpful for any of these local variables?
+
+As mentioned in my earlier reply, my suggestion was to avoid doing other
+unrelated optimizations in this patch.
+
+https://lore.kernel.org/all/e7d74d9d-cb45-4f5f-8e44-502dd7c4bcff@intel.com/T/#t
+
+
+
+>> @@ -273,21 +274,23 @@ static int __parse_discovery_table(struct uncore_discovery_domain *domain,
+>>  
+>>  	/* Read Global Discovery State */
+>>  	memcpy_fromio(&global, io_addr, sizeof(struct uncore_global_discovery));
+>> +	iounmap(io_addr);
+>> +
+>>  	if (uncore_discovery_invalid_unit(global)) {
+> …
+>>  	}
+>> -	iounmap(io_addr);
+> 
+> Can this modification part be interpreted as an optimisation?
+
+Yes, this is technically an optimization. Since the patch is already
+refactoring the iounmap() handling, my thinking was that it would be
+reasonable to include it in the same patch.
+
+> …
+>> -	if (domain->global_init && domain->global_init(global.ctl))
+>> -		return -ENODEV;
+>> +	if (domain->global_init && domain->global_init(global.ctl)) {
+>> +		ret = -ENODEV;
+>> +		goto out;
+>> +	}
+> …
+>>  	*parsed = true;
+>> +
+>> +out:
+> 
+> Would an other label be a bit clearer here?
+
+I’d suggest keeping the label name out for style consistency, as
+mentioned in my earlier reply.
+
+https://lore.kernel.org/all/e7d74d9d-cb45-4f5f-8e44-502dd7c4bcff@intel.com/T/#t
+
+> 
+> unmap_io:
+> 
+>>  	iounmap(io_addr);
+>> -	return 0;
+>> +	return ret;
+>>  }
+> …
+> 
+> 
+> Regards,
+> Markus
+
