@@ -1,158 +1,259 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D57B33A6E2
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Jan 2026 15:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6567C2745C;
+	Fri, 16 Jan 2026 16:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768577608; cv=none; b=jL7cST9E5XtX78BjOK/8+WoNKU5lj+keJwuiMMdv4zk8LDvPKuTW4fCW7gnGVq8qxbRGD+98LdJz6fmc/dCdnGQlJwyCLM1V9ive8oZpu2yVnFY4VsureWMjfURmjenB4chQebuxkM5fVAaenP2ei64l+ofobhirM7GWn+0t10E=
+	t=1768582548; cv=none; b=BdQLcYgbozCxjv8P5K/+wjIzHM9A3uphyPT1I4WNX1nh/eh80L+IhRr/1zs959R+qBVRgY7w96CqKKPPU244DJ5JDOfEr4kqET6L8DDNHHLbeBNvNfk0/LDcSamseQHVSKzrq5C6MkzeyOcBwrm/lJmXHiGGUQ/5Gn09KfOd2CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768577608; c=relaxed/simple;
-	bh=oYQJjlZIpsIZF7YLAGKB4ZoezlcIQxYNhsIH/ahTxms=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gFI/2L/OtQgcy9n4nsic8Q1ikzVTpZl+UEGOyP71mz6U3/tdcnLk1S7atvTDfilWjl0+jfymqAiF2hdv3WZxIvc1B3pae4az9SkSzSBbbbQZXCn8oJL31t7wMmYcM68tziYkwO4oldVJECZeQY5mjktmvs1A0rt7cEZKbVd5/XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QPQlIZlt; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1768582548; c=relaxed/simple;
+	bh=U5bU8uy3QaFXX5fGrfSABXJUkdycUgsBChvWEXs/MjM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gSMBAwa60M+/Uxka4A1MR59movTL6G7CWO/k16SreXDxCao18vsOrPOJnbjZIypQ/3p3RBicK5z4951SL5Exp38rRvq2zJhuFVkEXTfPHTSZY7P86ULaCfL+hBQmeymi920Q+lUbqWjOFB73saSDuEC6grdXCPW/JULxFeWoBHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZVrdg5dq; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QPQlIZlt"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34aa6655510so2104951a91.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jan 2026 07:33:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768577606; x=1769182406; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MFDMwcUB+g0lr3+O0uNE+y+KlNYemC0Uyu3/6hhSiCE=;
-        b=QPQlIZltlMacfSq+JUF2zmC7QUxM9RH0MPnqYQEsH6JnLgdE4dagHVjtoL0nLSrw9C
-         qPpNKwLAVgccJKks2nHxGq6DwuoLrmOY/wBZuSt8EArFeXZoudwJOCd+kN4zR09bC1hz
-         yFuowYhNMHKlMeRtY7bGDLw3wQPcLh1nwd6cYlm0lfEP8mUh3fkcn8AKhl7++ciT6BBw
-         Ji8hyaegUHGVzN7QmyQY9a94DrV9kzZbHwnAaImHn5EuGNAZRBMM7pdxcjxiV1cIePn3
-         Y/FF1wu8Z6JPiUFxHV/PqxVz6o8ws9KS7+813ZK61GNQ/N0yuicmRCGn4KoDF6TvmGgD
-         NAvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768577606; x=1769182406;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MFDMwcUB+g0lr3+O0uNE+y+KlNYemC0Uyu3/6hhSiCE=;
-        b=ih8zQPhNdwDI839QG9oaL67Zf3OdV7V7VW0vM5NmsA3tWITu9V0pB2Nd+y8V7esUKt
-         z9OSCFxxNBbtlt6fodLirAjCgDb7s705A3iNwRPHWFNT8LeW/Ti9SQF0mEGT2eZ3ni+c
-         ev1Q1tZlqMBrzf/S3EnG/jfsAeAmfkbaOAa4PySznrUgGnABBw3npNcWmHG6Qwx12EU1
-         wT83zU6Ai/WPU1+25EVytZa9+vun4g8Mbn1CqudCbfKMcVvmCNQcIDlY5IFgN8lkCjwn
-         r1b72Qv+a8c1YmqrZN20bXAdKxOPoR2UQCqkWD4+M55aAtiWewET5YmoW94PZBBMw++D
-         DhJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxnm04Krmob6cDiM6qmmGP5JjJaNHdlLU9N8BWh4oQX8idbAnyaBN9s2Q1vLdzG3vJZBwg6BRLpc4MUQQd5SBk@vger.kernel.org
-X-Gm-Message-State: AOJu0YztrDac0B5F4TGeQwijMrspcb0bRxDz/XQhr8yg/2wKBd1gWGQT
-	coXsaPu08vqEV1pmZKY5PlKFe4QSbU8y2R3FZWch0qzfFcOOjcM/20sh0DRjvN5Vcqd4pWLshz0
-	qt19xDw==
-X-Received: from pjbsh12.prod.google.com ([2002:a17:90b:524c:b0:34c:2156:9de7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5803:b0:32e:3829:a71c
- with SMTP id 98e67ed59e1d1-35272efcc92mr2558426a91.16.1768577606439; Fri, 16
- Jan 2026 07:33:26 -0800 (PST)
-Date: Fri, 16 Jan 2026 07:32:47 -0800
-In-Reply-To: <20251206001720.468579-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZVrdg5dq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768582545; x=1800118545;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=U5bU8uy3QaFXX5fGrfSABXJUkdycUgsBChvWEXs/MjM=;
+  b=ZVrdg5dqAIlADQxkQCs3UH4z4oviwGQ1uJMLz9rEVQLrqB0W+HP2y09n
+   ku2hXg2EReYusgYffedZ5vC1TEiFsnenuVMcOywdJcCIKrNo3jVFfW2wP
+   nXiMXWR7v1etdNFPIl7dJ38TSTsvjdjTdKySFYVoxNE3cb79J+FJc3Ohh
+   sUOEJrJtwgQiXVOQLeQfuV7P/WIQU08Eg/rasYwGweYMq3kLkrgGZzIQz
+   jfelGrzZaYkFZytPgHgRIp0HWnsc5pusPoBK2cQNw7iVoNOqguE0Mj690
+   JHfggp/Zck2UAR3CZXgRrB62yflTDKtWgLskWR1F6G7xw4t2V5b8fLgTm
+   Q==;
+X-CSE-ConnectionGUID: VAf4bgPER6Km7lvociwtjg==
+X-CSE-MsgGUID: olcZ9BNZSN6SxTLWLcj49Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11673"; a="81268608"
+X-IronPort-AV: E=Sophos;i="6.21,231,1763452800"; 
+   d="scan'208";a="81268608"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 08:55:45 -0800
+X-CSE-ConnectionGUID: TCwzQ+lEQKa14nj5j/vJzA==
+X-CSE-MsgGUID: qN1g3zWBRoOgw3uLPMoKiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,231,1763452800"; 
+   d="scan'208";a="235978480"
+Received: from dnelso3-mobl.amr.corp.intel.com (HELO [10.125.85.28]) ([10.125.85.28])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 08:55:44 -0800
+Message-ID: <092c955c-4f27-44ed-9e88-dc721e1d2959@intel.com>
+Date: Fri, 16 Jan 2026 08:55:44 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251206001720.468579-1-seanjc@google.com>
-X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <176857711424.940905.14821355548518788463.b4-ty@google.com>
-Subject: Re: [PATCH v6 00/44] KVM: x86: Add support for mediated vPMUs
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Mingwei Zhang <mizhang@google.com>, 
-	Xudong Hao <xudong.hao@intel.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [V2] perf/x86/intel/uncore: Fix iounmap() leak on global_init
+ failure
+To: Markus Elfring <Markus.Elfring@web.de>, linux-perf-users@vger.kernel.org,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>
+Cc: lkp@intel.com, LKML <linux-kernel@vger.kernel.org>,
+ kernel-janitors@vger.kernel.org, Thomas Falcon <thomas.falcon@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>
+References: <20260114193825.17973-1-zide.chen@intel.com>
+ <cda9ab9b-4581-409f-a9bb-0e8a67ad3530@web.de>
+ <32386e0a-09d9-4f13-a5e1-c6f9dd3afdfd@intel.com>
+ <25f39aaa-1e72-47ce-92e7-d6b8ecc2750a@web.de>
+ <b7c46240-d0b3-472d-87dc-88cdbd8e0b92@intel.com>
+ <afc060ac-0cb9-4e2f-8cdc-029ac7679246@web.de>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <afc060ac-0cb9-4e2f-8cdc-029ac7679246@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 05 Dec 2025 16:16:36 -0800, Sean Christopherson wrote:
-> This series is based on 'https://github.com/kvm-x86/linux next', but except
-> for one minor conflict in perf should apply on Linus' tree once the KVM 6.19
-> pull request lands.  I considered waiting until 6.19-rc1 to post this, but
-> I've had this in a "ready" state for a few weeks and want to get it out there.
+
+
+On 1/15/2026 11:15 PM, Markus Elfring wrote:
+>>>>> See also once more:
+>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.19-rc5#n94
+>>>>>
+>>>>> Will another imperative wording approach become helpful for an improved change description?
+>>>>
+>>>> My apologies — I did try to address the feedback, but I may still be
+>>>> missing something.  Could you please point out what specifically could
+>>>> be improved?
+>>>
+>>> I hope that the understanding will improve somehow also for a development
+>>> communication requirement like “imperative mood”.
+>>
+>> For the commit message itself, I’ve tried to improve it as much as I can
+>> based on the feedback so far. If there are still specific phrases or
+>> wording that should be adjusted, I’d really appreciate it if you could
+>> point them out.
 > 
-> My hope/plan is that the perf changes will go through the tip tree with a
-> stable tag/branch, and the KVM changes will go the kvm-x86 tree.
+> 1. The mentioned source code analysis report is obviously helpful.
 > 
-> [...]
+> 2. You added a custom explanation accordingly.
+> 
+> 3. Which text part of your change description does contain “orders to
+>    the codebase to change its behaviour”?
 
-Applied the KVM patches to kvm-x86 pmu, thanks!
+OK, I see your point. Yes, it's good to add one sentence to describe
+what the patches does. But I guess this patch is simple enough.
 
-[14/44] KVM: Add a simplified wrapper for registering perf callbacks
-        https://github.com/kvm-x86/linux/commit/4b24910c0569
-[15/44] KVM: Add a simplified wrapper for registering perf callbacks
-        [DROPPED - already merged (and then fixed)]
-[16/44] KVM: x86/pmu: Start stubbing in mediated PMU support
-        https://github.com/kvm-x86/linux/commit/3e51822b2fdf
-[17/44] KVM: x86/pmu: Implement Intel mediated PMU requirements and constraints
-        https://github.com/kvm-x86/linux/commit/bfee4f07d880
-[18/44] KVM: x86/pmu: Implement AMD mediated PMU requirements
-        https://github.com/kvm-x86/linux/commit/9ba0bb4ae76a
-[19/44] KVM: x86/pmu: Register PMI handler for mediated vPMU
-        https://github.com/kvm-x86/linux/commit/1c4ba7286afb
-[20/44] KVM: x86/pmu: Disable RDPMC interception for compatible mediated vPMU
-        https://github.com/kvm-x86/linux/commit/80624272129e
-[21/44] KVM: x86/pmu: Load/save GLOBAL_CTRL via entry/exit fields for mediated PMU
-        https://github.com/kvm-x86/linux/commit/d3ba32d1ff2a
-[22/44] KVM: x86/pmu: Disable interception of select PMU MSRs for mediated vPMUs
-        https://github.com/kvm-x86/linux/commit/2904df6692f4
-[23/44] KVM: x86/pmu: Bypass perf checks when emulating mediated PMU counter accesses
-        https://github.com/kvm-x86/linux/commit/0ea0d6314870
-[24/44] KVM: x86/pmu: Introduce eventsel_hw to prepare for pmu event filtering
-        https://github.com/kvm-x86/linux/commit/02918f007792
-[25/44] KVM: x86/pmu: Reprogram mediated PMU event selectors on event filter updates
-        https://github.com/kvm-x86/linux/commit/3db871fe185b
-[26/44] KVM: x86/pmu: Always stuff GuestOnly=1,HostOnly=0 for mediated PMCs on AMD
-        https://github.com/kvm-x86/linux/commit/a2f4ba534cc5
-[27/44] KVM: x86/pmu: Load/put mediated PMU context when entering/exiting guest
-        https://github.com/kvm-x86/linux/commit/56bb27369750
-[28/44] KVM: x86/pmu: Disallow emulation in the fastpath if mediated PMCs are active
-        https://github.com/kvm-x86/linux/commit/f7a65e58d643
-[29/44] KVM: x86/pmu: Handle emulated instruction for mediated vPMU
-        https://github.com/kvm-x86/linux/commit/283a5aa57b22
-[30/44] KVM: nVMX: Add macros to simplify nested MSR interception setting
-        https://github.com/kvm-x86/linux/commit/cb58327c4c8a
-[31/44] KVM: nVMX: Disable PMU MSR interception as appropriate while running L2
-        https://github.com/kvm-x86/linux/commit/88ebc2a3199c
-[32/44] KVM: nSVM: Disable PMU MSR interception as appropriate while running L2
-        https://github.com/kvm-x86/linux/commit/3b36160d9406
-[33/44] KVM: x86/pmu: Expose enable_mediated_pmu parameter to user space
-        https://github.com/kvm-x86/linux/commit/860bcb1021f5
-[34/44] KVM: x86/pmu: Elide WRMSRs when loading guest PMCs if values already match
-        https://github.com/kvm-x86/linux/commit/b0b6a8d3be16
-[35/44] KVM: VMX: Drop intermediate "guest" field from msr_autostore
-        https://github.com/kvm-x86/linux/commit/462f092dc55c
-[36/44] KVM: nVMX: Don't update msr_autostore count when saving TSC for vmcs12
-        https://github.com/kvm-x86/linux/commit/58f21a01417f
-[37/44] KVM: VMX: Dedup code for removing MSR from VMCS's auto-load list
-        https://github.com/kvm-x86/linux/commit/0bd29379114b
-[38/44] KVM: VMX: Drop unused @entry_only param from add_atomic_switch_msr()
-        https://github.com/kvm-x86/linux/commit/84ac00042a28
-[39/44] KVM: VMX: Bug the VM if either MSR auto-load list is full
-        https://github.com/kvm-x86/linux/commit/2ed57bb89976
-[40/44] KVM: VMX: Set MSR index auto-load entry if and only if entry is "new"
-        https://github.com/kvm-x86/linux/commit/0c4ff0866fc1
-[41/44] KVM: VMX: Compartmentalize adding MSRs to host vs. guest auto-load list
-        https://github.com/kvm-x86/linux/commit/2239d137a71d
-[42/44] KVM: VMX: Dedup code for adding MSR to VMCS's auto list
-        https://github.com/kvm-x86/linux/commit/c3d6a7210a4d
-[43/44] KVM: VMX: Initialize vmcs01.VM_EXIT_MSR_STORE_ADDR with list address
-        https://github.com/kvm-x86/linux/commit/9757a5aebcd6
-[44/44] KVM: VMX: Add mediated PMU support for CPUs without "save perf global ctrl"
-        https://github.com/kvm-x86/linux/commit/d374b89edbb9
 
---
-https://github.com/kvm-x86/linux/tree/next
+>>>>> Is there a need to perform desirable changes by a small patch series?
+>>>>>
+>>>>> * Specific fix
+>>>>> * Related refinements
+>>>>
+>>>> It seems to me that the changes in this patch are small and closely
+>>>> related, so I wondered whether splitting it might be unnecessary.
+>>>
+>>> I propose to apply a more detailed change granularity.
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.19-rc5#n81
+>>
+>> Thanks for the reference. I considered this a single logical fix, which
+>> is why I kept the changes together.
+> 
+> I find this adjustment approach also “logical” (in principle).
+> 
+> 
+>>>>>> +++ b/arch/x86/events/intel/uncore_discovery.c
+>>>>>> @@ -264,6 +264,7 @@ static int __parse_discovery_table(struct uncore_discovery_domain *domain,
+>>>>>>  	struct uncore_unit_discovery unit;
+>>>>>>  	void __iomem *io_addr;
+>>>>>>  	unsigned long size;
+>>>>>> +	int ret = 0;
+>>>>>>  	int i;
+>>>>>
+>>>>> Would scope adjustments become helpful for any of these local variables?
+>>>>
+>>>> As mentioned in my earlier reply, my suggestion was to avoid doing other
+>>>> unrelated optimizations in this patch.
+>>>
+>>> Will development interests grow for related update steps?
+>>
+>> Are you suggesting including this change in this patch?
+> 
+> Does anything hinder you to take patch series better into account?
+
+
+This “optimization” is trivial and does not appear to be related to the
+issue this patch is trying to address.
+
+I don’t think this change alone justifies a separate patch, as it would
+add review overhead without providing much practical benefit.
+
+-  int i;
+-       for (i = 0; i < global.max_units; i++) {
++       for (int i = 0; i < global.max_units; i++) {
+
+Overall, the Intel perf driver largely follows a pre-C99 coding style.
+Updating a single instance in isolation does not seem very helpful; if
+there is interest, this could be handled as part of a broader,
+driver-wide cleanup.
+
+> 
+>>                                                         My understanding
+>> is that it isn’t directly related to the scope of this patch, so I would
+>> prefer not to include it here.
+> 
+> Can we imagine further patch variations?
+
+Ditto.
+
+> 
+>>                                Please let me know if you see it differently.
+> 
+> This is the case according to another evolving patch review.
+> 
+> 
+>>>> https://lore.kernel.org/all/e7d74d9d-cb45-4f5f-8e44-502dd7c4bcff@intel.com/T/#t
+>>>
+>>> Re: [PATCH] perf/x86/intel/uncore: Fix iounmap() leak on global_init failure
+>>>
+>>> Can the timing trigger special considerations?
+>>
+>> Sorry if I’m missing your point, but it seems to me that there are no
+>> special considerations involved here.
+> 
+> 1. You announced planned changes for an initial patch.
+>    https://lore.kernel.org/linux-perf-users/fc565620-a3ef-4a28-bfb8-87bb5ce135f5@intel.com/
+> 
+> 2. I offered review comments accordingly.
+> 
+> 3. You published the second patch version.
+>    https://lore.kernel.org/linux-perf-users/20260114193825.17973-1-zide.chen@intel.com/
+> 
+> 4. You replied to the mentioned review approach three minutes later, didn't you?
+>    https://lore.kernel.org/linux-perf-users/e7d74d9d-cb45-4f5f-8e44-502dd7c4bcff@intel.com/
+> 
+
+Really appreciated for your review!
+
+
+>>>>                                           Since the patch is already
+>>>> refactoring the iounmap() handling, my thinking was that it would be
+>>>> reasonable to include it in the same patch.
+>>>
+>>> I dare to point another opinion out.
+>>>
+>>> I assume that backporting concerns can influence this detail also a bit more.
+>>
+>> Thanks for pointing that out. This patch is intended as a quick fix for
+>> a change that is still staging in perf/core, so I assume that
+>> backporting is unlikely to be needed.
+> 
+> Will backporting be usually desirable for Linux software components?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/backporting.rst?h=v6.19-rc5#n14
+> 
+> It happened again that further change possibilities were noticed.
+> Thus companion patches can be considered on demand.
+> The corresponding change recombination can occasionally become more interesting
+> for selected development ideas.
+
+
+Are you suggesting putting this into a separate patch?
+My impression is that the change is simple and closely related, though I
+may be missing something. I understand others may see it differently.
+
+@@ -273,21 +274,23 @@ static int __parse_discovery_table(struct
+uncore_discovery_domain *domain,
+
+        /* Read Global Discovery State */
+        memcpy_fromio(&global, io_addr, sizeof(struct
+uncore_global_discovery));
++       iounmap(io_addr);
++
+        if (uncore_discovery_invalid_unit(global)) {
+                pr_info("Invalid Global Discovery State: 0x%llx 0x%llx
+0x%llx\n",
+                        global.table1, global.ctl, global.table3);
+-               iounmap(io_addr);
+                return -EINVAL;
+        }
+-       iounmap(io_addr);
+
+
+>>> How do you think about to increase the application of scope-based resource management?
+>>
+>> That’s an interesting topic, but for this patch I’d like to keep the
+>> change minimal and focused.
+> 
+> This software design technique influences also if we would still like to fiddle
+> with goto chains (or not).
+> https://elixir.bootlin.com/linux/v6.19-rc5/source/include/linux/cleanup.h#L12-L17
+> 
+> Do you see opportunities fur further collateral evolution?
+
+Yes, there are some code cleanup/improvement ideas in mind.
+
+> Regards,
+> Markus
+
