@@ -1,254 +1,116 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCC0327C05
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Jan 2026 04:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795CF2264AB;
+	Fri, 16 Jan 2026 05:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768538134; cv=none; b=hhEXNIUcuhHlQHNKm/ZlHPdTK1VbjJhKj8xgg+6CywR9W8jcTpI9W3s2c5frFw1X8Na9L6unxgjhzHvJPKWw7Pvq0PFxhmWAVqlGOu4x2Mam6nESWLB4me6ZBKqT8eTEPg/6oJgQJmYgCg8Zj84qSesFo0fjc9Up0qb3EPCVm2s=
+	t=1768540781; cv=none; b=BbiKDQx2g7dZxyjqW4W2vnX/Gfi5fGxs8NK+Rkzj5WhSV6MXGbupNStbT4vjdahzOuJ7OzCT74ZNbygvfQgwDhKOpnZRijcNr6OosOVUycVT+2541fLPzjKK9y8A7SL41gAnZ3DiufVUb2COt1XuCei+1cs0bY57Txc0+T/gtUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768538134; c=relaxed/simple;
-	bh=J/Rpx69WQVWJmBctzDnKoQEU5I697W1VYyNDjIvQ2CI=;
+	s=arc-20240116; t=1768540781; c=relaxed/simple;
+	bh=NjaRIeNPuqZQMSohOVwbQjJNUp0QgDUE9NRk+PWzX20=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ELUp5kkNqsNKtj0m9dxSC0shDW8ovZawW8Am83f19VGikIjZkOF7xTO0Vlo50uQPNWGAC4P+18AR8RX3D65GK7cq1E8zWN2F1eTFRIIXM2LdOeaUie4XPiw/5YqPvAVumwcNUmnnIfEjRkhEAWCd/0S7roAeWSFjQyu53ulN4hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=F7nDuSyR; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=FJUEov2cgu1F1wq/3nMAo1NhpKagXSf9cgScId0WZxp3Xfx8vuDOVHC/Fc4p7ZyhExuZkV9vlkyF6c1A7BF4qsX/ERKL2KzHJ3cP50IITMcAF0bKhiC7q4VTa23bkWgeqr6MIlayk9Ndf138eeIEfbQ0f7nsGfrR1T0Sx4i+wxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iPKh8hMc; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="F7nDuSyR"
-Message-ID: <6dbaff1f-09d3-421a-9813-c9c1cda8e7d8@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768538129;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tI5hey17l5h284K+S50zyAtjfyhLgi4YnoQ9GpEBMZ8=;
-	b=F7nDuSyROyEAdZI5M7UCLKzwk7eCpV63OZbD7paufIC1iRZA0hQ7EH6nVAeLFAyt3tJXlg
-	G3iM/jz4E82gTjq3RWF4KpNpr7kBQzbkKYY0hHHikV8spjSeTzgvWFRdu67VD3WXnU2Dw3
-	jQOzH8uci/ATBh2EyNaWeQPuByYyXxY=
-Date: Fri, 16 Jan 2026 12:35:14 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iPKh8hMc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768540780; x=1800076780;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=NjaRIeNPuqZQMSohOVwbQjJNUp0QgDUE9NRk+PWzX20=;
+  b=iPKh8hMcCw5ldFgL27y0KBAG//3z3DVWjCEl9QHBM27FZ4+7pwW4jjtL
+   I8m+7j6dw8e8Q00+rDo7gXuJ2u3xOKbLP/E4xzVENh3zblBWyDLqzE3JK
+   I/MC3Qci0YORWaxtV/y0n40ieygEFTBnUX1N8g26JpglHJUyUsPLeDeHA
+   Sk/KmQOgBVUsjhCH7qxExXbAdL+3UThKpplQSY0vGJNMox+CyUTn+sNV9
+   FjrpNTdVoDzdM+O2SA93g3WCOAhKSBTmetGgQYmr/HrmtrvkXNnsCODvy
+   gGeyYHcaLZSTlBmtnMjDPYa9wRLJ7c+TgzVdRFII21YtWx5Cix0RyKTRI
+   g==;
+X-CSE-ConnectionGUID: cFQcaRtGT6WVYzBXxGGZmQ==
+X-CSE-MsgGUID: sQjotz/lQdm3xscnPgvEsw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="68864804"
+X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
+   d="scan'208";a="68864804"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 21:19:39 -0800
+X-CSE-ConnectionGUID: MhnpS4J3Qrm+5u1tqdm1Ug==
+X-CSE-MsgGUID: xaor9QoZREuOzzNXZu2z0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
+   d="scan'208";a="210185822"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 21:19:34 -0800
+Message-ID: <047a815b-2b69-4dda-9ba0-6a91f5d955ce@linux.intel.com>
+Date: Fri, 16 Jan 2026 13:19:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v7 2/2] bpf: Hold the perf callchain entry until
- used completely
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, peterz@infradead.org
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- song@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20251217093326.1745307-1-chen.dylane@linux.dev>
- <20251217093326.1745307-3-chen.dylane@linux.dev>
- <db97ccea-8cb4-40ea-b040-79f0f63a398e@linux.dev>
- <0e954e9a-12af-4f4f-95e2-7afedbd8f63f@linux.dev>
- <CAEf4BzZLCVMXFyfD9R0SUq_3Sinc_uFzJWnDcwZtdhJWpB3+uA@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <CAEf4BzZLCVMXFyfD9R0SUq_3Sinc_uFzJWnDcwZtdhJWpB3+uA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 1/2] perf/x86/intel/uncore: Skip discovery table for
+ offline dies
+To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
+ Steve Wahl <steve.wahl@hpe.com>
+References: <20260116031113.45098-1-zide.chen@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260116031113.45098-1-zide.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-在 2026/1/10 07:47, Andrii Nakryiko 写道:
-> On Tue, Jan 6, 2026 at 8:00 AM Tao Chen <chen.dylane@linux.dev> wrote:
->>
->> 在 2025/12/23 14:29, Tao Chen 写道:
->>> 在 2025/12/17 17:33, Tao Chen 写道:
->>>> As Alexei noted, get_perf_callchain() return values may be reused
->>>> if a task is preempted after the BPF program enters migrate disable
->>>> mode. The perf_callchain_entres has a small stack of entries, and
->>>> we can reuse it as follows:
->>>>
->>>> 1. get the perf callchain entry
->>>> 2. BPF use...
->>>> 3. put the perf callchain entry
->>>>
->>>> And Peter suggested that get_recursion_context used with preemption
->>>> disabled, so we should disable preemption at BPF side.
->>>>
->>>> Acked-by: Yonghong Song <yonghong.song@linux.dev>
->>>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->>>> ---
->>>>    kernel/bpf/stackmap.c | 68 +++++++++++++++++++++++++++++++++++--------
->>>>    1 file changed, 56 insertions(+), 12 deletions(-)
->>>>
->>>> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
->>>> index da3d328f5c1..3bdd99a630d 100644
->>>> --- a/kernel/bpf/stackmap.c
->>>> +++ b/kernel/bpf/stackmap.c
->>>> @@ -210,13 +210,14 @@ static void stack_map_get_build_id_offset(struct
->>>> bpf_stack_build_id *id_offs,
->>>>    }
->>>>    static struct perf_callchain_entry *
->>>> -get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
->>>> +get_callchain_entry_for_task(int *rctx, struct task_struct *task, u32
->>>> max_depth)
->>>>    {
->>>>    #ifdef CONFIG_STACKTRACE
->>>>        struct perf_callchain_entry *entry;
->>>> -    int rctx;
->>>> -    entry = get_callchain_entry(&rctx);
->>>> +    preempt_disable();
->>>> +    entry = get_callchain_entry(rctx);
->>>> +    preempt_enable();
->>>>        if (!entry)
->>>>            return NULL;
->>>> @@ -238,8 +239,6 @@ get_callchain_entry_for_task(struct task_struct
->>>> *task, u32 max_depth)
->>>>                to[i] = (u64)(from[i]);
->>>>        }
->>>> -    put_callchain_entry(rctx);
->>>> -
->>>>        return entry;
->>>>    #else /* CONFIG_STACKTRACE */
->>>>        return NULL;
->>>> @@ -320,6 +319,34 @@ static long __bpf_get_stackid(struct bpf_map *map,
->>>>        return id;
->>>>    }
->>>> +static struct perf_callchain_entry *
->>>> +bpf_get_perf_callchain(int *rctx, struct pt_regs *regs, bool kernel,
->>>> bool user,
->>>> +               int max_stack, bool crosstask)
->>>> +{
->>>> +    struct perf_callchain_entry_ctx ctx;
->>>> +    struct perf_callchain_entry *entry;
->>>> +
->>>> +    preempt_disable();
->>>> +    entry = get_callchain_entry(rctx);
->>>> +    preempt_enable();
->>>> +
->>>> +    if (unlikely(!entry))
->>>> +        return NULL;
->>>> +
->>>> +    __init_perf_callchain_ctx(&ctx, entry, max_stack, false);
->>>> +    if (kernel)
->>>> +        __get_perf_callchain_kernel(&ctx, regs);
->>>> +    if (user && !crosstask)
->>>> +        __get_perf_callchain_user(&ctx, regs, 0);
->>>> +
->>>> +    return entry;
->>>> +}
->>>> +
->>>> +static void bpf_put_perf_callchain(int rctx)
->>>> +{
->>>> +    put_callchain_entry(rctx);
->>>> +}
->>>> +
->>>>    BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map
->>>> *, map,
->>>>           u64, flags)
->>>>    {
->>>> @@ -328,20 +355,25 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *,
->>>> regs, struct bpf_map *, map,
->>>>        struct perf_callchain_entry *trace;
->>>>        bool kernel = !user;
->>>>        u32 max_depth;
->>>> +    int rctx, ret;
->>>>        if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
->>>>                       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
->>>>            return -EINVAL;
->>>>        max_depth = stack_map_calculate_max_depth(map->value_size,
->>>> elem_size, flags);
->>>> -    trace = get_perf_callchain(regs, kernel, user, max_depth,
->>>> -                   false, false, 0);
->>>> +
->>>> +    trace = bpf_get_perf_callchain(&rctx, regs, kernel, user, max_depth,
->>>> +                       false);
->>>>        if (unlikely(!trace))
->>>>            /* couldn't fetch the stack trace */
->>>>            return -EFAULT;
->>>> -    return __bpf_get_stackid(map, trace, flags);
->>>> +    ret = __bpf_get_stackid(map, trace, flags);
->>>> +    bpf_put_perf_callchain(rctx);
->>>> +
->>>> +    return ret;
->>>>    }
->>>>    const struct bpf_func_proto bpf_get_stackid_proto = {
->>>> @@ -435,6 +467,7 @@ static long __bpf_get_stack(struct pt_regs *regs,
->>>> struct task_struct *task,
->>>>        bool kernel = !user;
->>>>        int err = -EINVAL;
->>>>        u64 *ips;
->>>> +    int rctx;
->>>>        if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
->>>>                       BPF_F_USER_BUILD_ID)))
->>>> @@ -467,18 +500,26 @@ static long __bpf_get_stack(struct pt_regs
->>>> *regs, struct task_struct *task,
->>>>            trace = trace_in;
->>>>            trace->nr = min_t(u32, trace->nr, max_depth);
->>>>        } else if (kernel && task) {
->>>> -        trace = get_callchain_entry_for_task(task, max_depth);
->>>> +        trace = get_callchain_entry_for_task(&rctx, task, max_depth);
->>>>        } else {
->>>> -        trace = get_perf_callchain(regs, kernel, user, max_depth,
->>>> -                       crosstask, false, 0);
->>>> +        trace = bpf_get_perf_callchain(&rctx, regs, kernel, user,
->>>> max_depth,
->>>> +                           crosstask);
->>>>        }
->>>> -    if (unlikely(!trace) || trace->nr < skip) {
->>>> +    if (unlikely(!trace)) {
->>>>            if (may_fault)
->>>>                rcu_read_unlock();
->>>>            goto err_fault;
->>>>        }
->>>> +    if (trace->nr < skip) {
->>>> +        if (may_fault)
->>>> +            rcu_read_unlock();
->>>> +        if (!trace_in)
->>>> +            bpf_put_perf_callchain(rctx);
->>>> +        goto err_fault;
->>>> +    }
->>>> +
->>>>        trace_nr = trace->nr - skip;
->>>>        copy_len = trace_nr * elem_size;
->>>> @@ -497,6 +538,9 @@ static long __bpf_get_stack(struct pt_regs *regs,
->>>> struct task_struct *task,
->>>>        if (may_fault)
->>>>            rcu_read_unlock();
->>>> +    if (!trace_in)
->>>> +        bpf_put_perf_callchain(rctx);
->>>> +
->>>>        if (user_build_id)
->>>>            stack_map_get_build_id_offset(buf, trace_nr, user, may_fault);
->>>
->>> Hi Peter,
->>>
->>> As Alexei said, the patch needs your ack, please review again, thanks.
->>>
->>
->> ping...
-> 
-> Peter, if I understand correctly, this will go through bpf-next tree,
-> but it would be great if you could take a look and confirm this
-> overall is not broken. Thanks!
-> 
->>
->> --
->> Best Regards
->> Tao Chen
 
-Hi Andrii, Peter
+On 1/16/2026 11:11 AM, Zide Chen wrote:
+> This warning can be triggered if NUMA is disabled and the system
+> boots with fewer CPUs than the number of CPUs in die 0.
+>
+> WARNING: CPU: 9 PID: 7257 at uncore.c:1157 uncore_pci_pmu_register+0x136/0x160 [intel_uncore]
+>
+> Currently, the discovery table continues to be parsed even if all CPUs
+> in the associated die are offline.  This can lead to an array overflow
+> at "pmu->boxes[die] = box" in uncore_pci_pmu_register(), which may
+> trigger the warning above or cause other issues.
+>
+> Reported-by: Steve Wahl <steve.wahl@hpe.com>
+> Tested-by: Steve Wahl <steve.wahl@hpe.com>
+> Fixes: edae1f06c2cd ("perf/x86/intel/uncore: Parse uncore discovery tables")
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> ---
+> V2:
+> - Add the Tested-by tag
+> - Rebase onto perf/core (base commit: a491c02c2770)
+>
+> V3:
+> - Remove the overly cautious WARN_ON()
+>
+>  arch/x86/events/intel/uncore_discovery.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+> index b46575254dbe..0e414cecb6f2 100644
+> --- a/arch/x86/events/intel/uncore_discovery.c
+> +++ b/arch/x86/events/intel/uncore_discovery.c
+> @@ -366,7 +366,7 @@ static bool uncore_discovery_pci(struct uncore_discovery_domain *domain)
+>  				     (val & UNCORE_DISCOVERY_DVSEC2_BIR_MASK) * UNCORE_DISCOVERY_BIR_STEP;
+>  
+>  			die = get_device_die_id(dev);
+> -			if (die < 0)
+> +			if ((die < 0) || (die >= uncore_max_dies()))
+>  				continue;
+>  
+>  			parse_discovery_table(domain, dev, die, bar_offset, &parsed);
 
-It appears that the code does not require a rebase, and the latest CI 
-build is valid. Looking forward to your response. Thanks.
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-CI has tested the following submission:
-Status:     SUCCESS
-Name:       [RESEND,bpf-next,v7,0/2] Pass external callchain entry to 
-get_perf_callchain
-Patchwork: 
-https://patchwork.kernel.org/project/netdevbpf/list/?series=1034091&state=*
-Matrix:     https://github.com/kernel-patches/bpf/actions/runs/21051611369
 
--- 
-Best Regards
-Tao Chen
