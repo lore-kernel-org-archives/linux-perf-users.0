@@ -1,125 +1,158 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1707F1FDE31;
-	Fri, 16 Jan 2026 15:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D57B33A6E2
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Jan 2026 15:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768577232; cv=none; b=SdCNAFNvrIN6ma49tG/xmIAswYgDwLUKmJ+sG+ynOHb5K80+IteBes+3skg9nN5MWmXX9hBdr+Ban1JxlFGRPgeWynyDRjcn6LL01C2AD7lxDP/raK9NgyFWo7Tmg/9XR7H2Uze2qdgamTEzea3qpYd/7esawYdyjuyhOS2WaWM=
+	t=1768577608; cv=none; b=jL7cST9E5XtX78BjOK/8+WoNKU5lj+keJwuiMMdv4zk8LDvPKuTW4fCW7gnGVq8qxbRGD+98LdJz6fmc/dCdnGQlJwyCLM1V9ive8oZpu2yVnFY4VsureWMjfURmjenB4chQebuxkM5fVAaenP2ei64l+ofobhirM7GWn+0t10E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768577232; c=relaxed/simple;
-	bh=GHdKe6MrN+POgw8s+p42M8nBMB8sTHKWSIMRgJcnVC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dGNdHoXgGDVVKV9P/dE4OGxLlIxsHBvUUkv6qIcsvzfOVVHsjh3QswYglehFVhg6GtbI5TEPulnkoMA5fBVUAyNNMSWcz7sP+HeEpD/X9OB3OOA50NQ8tCZjaoINtw7vRtQU4x7qGeNT5pDcC23W5pGKWR/a+sAyTzWo1luVDpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1C9E1515;
-	Fri, 16 Jan 2026 07:26:58 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D66AE3F59E;
-	Fri, 16 Jan 2026 07:27:04 -0800 (PST)
-Date: Fri, 16 Jan 2026 15:27:02 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v4 2/8] tools/include: Sync uapi/linux/perf.h with
- the kernel sources
-Message-ID: <20260116152702.GC1286628@e132581.arm.com>
-References: <20260106-perf_support_arm_spev1-3-v4-0-b887bb999f6e@arm.com>
- <20260106-perf_support_arm_spev1-3-v4-2-b887bb999f6e@arm.com>
+	s=arc-20240116; t=1768577608; c=relaxed/simple;
+	bh=oYQJjlZIpsIZF7YLAGKB4ZoezlcIQxYNhsIH/ahTxms=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=gFI/2L/OtQgcy9n4nsic8Q1ikzVTpZl+UEGOyP71mz6U3/tdcnLk1S7atvTDfilWjl0+jfymqAiF2hdv3WZxIvc1B3pae4az9SkSzSBbbbQZXCn8oJL31t7wMmYcM68tziYkwO4oldVJECZeQY5mjktmvs1A0rt7cEZKbVd5/XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QPQlIZlt; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QPQlIZlt"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34aa6655510so2104951a91.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jan 2026 07:33:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1768577606; x=1769182406; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MFDMwcUB+g0lr3+O0uNE+y+KlNYemC0Uyu3/6hhSiCE=;
+        b=QPQlIZltlMacfSq+JUF2zmC7QUxM9RH0MPnqYQEsH6JnLgdE4dagHVjtoL0nLSrw9C
+         qPpNKwLAVgccJKks2nHxGq6DwuoLrmOY/wBZuSt8EArFeXZoudwJOCd+kN4zR09bC1hz
+         yFuowYhNMHKlMeRtY7bGDLw3wQPcLh1nwd6cYlm0lfEP8mUh3fkcn8AKhl7++ciT6BBw
+         Ji8hyaegUHGVzN7QmyQY9a94DrV9kzZbHwnAaImHn5EuGNAZRBMM7pdxcjxiV1cIePn3
+         Y/FF1wu8Z6JPiUFxHV/PqxVz6o8ws9KS7+813ZK61GNQ/N0yuicmRCGn4KoDF6TvmGgD
+         NAvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768577606; x=1769182406;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MFDMwcUB+g0lr3+O0uNE+y+KlNYemC0Uyu3/6hhSiCE=;
+        b=ih8zQPhNdwDI839QG9oaL67Zf3OdV7V7VW0vM5NmsA3tWITu9V0pB2Nd+y8V7esUKt
+         z9OSCFxxNBbtlt6fodLirAjCgDb7s705A3iNwRPHWFNT8LeW/Ti9SQF0mEGT2eZ3ni+c
+         ev1Q1tZlqMBrzf/S3EnG/jfsAeAmfkbaOAa4PySznrUgGnABBw3npNcWmHG6Qwx12EU1
+         wT83zU6Ai/WPU1+25EVytZa9+vun4g8Mbn1CqudCbfKMcVvmCNQcIDlY5IFgN8lkCjwn
+         r1b72Qv+a8c1YmqrZN20bXAdKxOPoR2UQCqkWD4+M55aAtiWewET5YmoW94PZBBMw++D
+         DhJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxnm04Krmob6cDiM6qmmGP5JjJaNHdlLU9N8BWh4oQX8idbAnyaBN9s2Q1vLdzG3vJZBwg6BRLpc4MUQQd5SBk@vger.kernel.org
+X-Gm-Message-State: AOJu0YztrDac0B5F4TGeQwijMrspcb0bRxDz/XQhr8yg/2wKBd1gWGQT
+	coXsaPu08vqEV1pmZKY5PlKFe4QSbU8y2R3FZWch0qzfFcOOjcM/20sh0DRjvN5Vcqd4pWLshz0
+	qt19xDw==
+X-Received: from pjbsh12.prod.google.com ([2002:a17:90b:524c:b0:34c:2156:9de7])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5803:b0:32e:3829:a71c
+ with SMTP id 98e67ed59e1d1-35272efcc92mr2558426a91.16.1768577606439; Fri, 16
+ Jan 2026 07:33:26 -0800 (PST)
+Date: Fri, 16 Jan 2026 07:32:47 -0800
+In-Reply-To: <20251206001720.468579-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260106-perf_support_arm_spev1-3-v4-2-b887bb999f6e@arm.com>
+Mime-Version: 1.0
+References: <20251206001720.468579-1-seanjc@google.com>
+X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
+Message-ID: <176857711424.940905.14821355548518788463.b4-ty@google.com>
+Subject: Re: [PATCH v6 00/44] KVM: x86: Add support for mediated vPMUs
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Mingwei Zhang <mizhang@google.com>, 
+	Xudong Hao <xudong.hao@intel.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Jan 06, 2026 at 12:07:52PM +0000, Leo Yan wrote:
-> Sync for extended memory operation bit fields.
-
-Hi Peter, Ingo,
-
-This patch is important for enabling the Arm SPE feature, I appreciate
-if you could give a review; otherwise, the changes in the perf cannot
-proceed.
-
-Thanks a lot!
-
-> Reviewed-by: James Clark <james.clark@linaro.org>
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  tools/include/uapi/linux/perf_event.h | 32 ++++++++++++++++++++++++++++++--
->  1 file changed, 30 insertions(+), 2 deletions(-)
+On Fri, 05 Dec 2025 16:16:36 -0800, Sean Christopherson wrote:
+> This series is based on 'https://github.com/kvm-x86/linux next', but except
+> for one minor conflict in perf should apply on Linus' tree once the KVM 6.19
+> pull request lands.  I considered waiting until 6.19-rc1 to post this, but
+> I've had this in a "ready" state for a few weeks and want to get it out there.
 > 
-> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-> index c44a8fb3e4181c91a1e6e3a40e23fcf1de421af3..3d2c5ee9282efc4a2310f554443082f1d0027889 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -1330,14 +1330,32 @@ union perf_mem_data_src {
->  			mem_snoopx  :  2, /* Snoop mode, ext */
->  			mem_blk     :  3, /* Access blocked */
->  			mem_hops    :  3, /* Hop level */
-> -			mem_rsvd    : 18;
-> +			mem_op_ext  :  4, /* Extended type of opcode */
-> +			mem_dp      :  1, /* Data processing */
-> +			mem_fp      :  1, /* Floating-point */
-> +			mem_pred    :  1, /* Predicated */
-> +			mem_atomic  :  1, /* Atomic operation */
-> +			mem_excl    :  1, /* Exclusive */
-> +			mem_ar      :  1, /* Acquire/release */
-> +			mem_sg      :  1, /* Scatter/Gather */
-> +			mem_cond    :  1, /* Conditional */
-> +			mem_rsvd    :  6;
->  	};
->  };
->  #elif defined(__BIG_ENDIAN_BITFIELD)
->  union perf_mem_data_src {
->  	__u64 val;
->  	struct {
-> -		__u64	mem_rsvd    : 18,
-> +		__u64	mem_rsvd    :  6,
-> +			mem_cond    :  1, /* Conditional */
-> +			mem_sg      :  1, /* Scatter/Gather */
-> +			mem_ar      :  1, /* Acquire/release */
-> +			mem_excl    :  1, /* Exclusive */
-> +			mem_atomic  :  1, /* Atomic operation */
-> +			mem_pred    :  1, /* Predicated */
-> +			mem_fp      :  1, /* Floating-point */
-> +			mem_dp      :  1, /* Data processing */
-> +			mem_op_ext  :  4, /* Extended type of opcode */
->  			mem_hops    :  3, /* Hop level */
->  			mem_blk     :  3, /* Access blocked */
->  			mem_snoopx  :  2, /* Snoop mode, ext */
-> @@ -1447,6 +1465,16 @@ union perf_mem_data_src {
->  /* 5-7 available */
->  #define PERF_MEM_HOPS_SHIFT			43
->  
-> +/* Extended type of memory opcode: */
-> +#define PERF_MEM_EXT_OP_NA			0x0    /* Not available */
-> +#define PERF_MEM_EXT_OP_MTE_TAG			0x1    /* MTE tag */
-> +#define PERF_MEM_EXT_OP_NESTED_VIRT		0x2    /* Nested virtualization */
-> +#define PERF_MEM_EXT_OP_MEMCPY			0x3    /* Memory copy */
-> +#define PERF_MEM_EXT_OP_MEMSET			0x4    /* Memory set */
-> +#define PERF_MEM_EXT_OP_SIMD			0x5    /* SIMD */
-> +#define PERF_MEM_EXT_OP_GCS			0x6    /* Guarded Control Stack */
-> +#define PERF_MEM_EXT_OP_SHIFT			46
-> +
->  #define PERF_MEM_S(a, s) \
->  	(((__u64)PERF_MEM_##a##_##s) << PERF_MEM_##a##_SHIFT)
->  
+> My hope/plan is that the perf changes will go through the tip tree with a
+> stable tag/branch, and the KVM changes will go the kvm-x86 tree.
 > 
-> -- 
-> 2.34.1
-> 
+> [...]
+
+Applied the KVM patches to kvm-x86 pmu, thanks!
+
+[14/44] KVM: Add a simplified wrapper for registering perf callbacks
+        https://github.com/kvm-x86/linux/commit/4b24910c0569
+[15/44] KVM: Add a simplified wrapper for registering perf callbacks
+        [DROPPED - already merged (and then fixed)]
+[16/44] KVM: x86/pmu: Start stubbing in mediated PMU support
+        https://github.com/kvm-x86/linux/commit/3e51822b2fdf
+[17/44] KVM: x86/pmu: Implement Intel mediated PMU requirements and constraints
+        https://github.com/kvm-x86/linux/commit/bfee4f07d880
+[18/44] KVM: x86/pmu: Implement AMD mediated PMU requirements
+        https://github.com/kvm-x86/linux/commit/9ba0bb4ae76a
+[19/44] KVM: x86/pmu: Register PMI handler for mediated vPMU
+        https://github.com/kvm-x86/linux/commit/1c4ba7286afb
+[20/44] KVM: x86/pmu: Disable RDPMC interception for compatible mediated vPMU
+        https://github.com/kvm-x86/linux/commit/80624272129e
+[21/44] KVM: x86/pmu: Load/save GLOBAL_CTRL via entry/exit fields for mediated PMU
+        https://github.com/kvm-x86/linux/commit/d3ba32d1ff2a
+[22/44] KVM: x86/pmu: Disable interception of select PMU MSRs for mediated vPMUs
+        https://github.com/kvm-x86/linux/commit/2904df6692f4
+[23/44] KVM: x86/pmu: Bypass perf checks when emulating mediated PMU counter accesses
+        https://github.com/kvm-x86/linux/commit/0ea0d6314870
+[24/44] KVM: x86/pmu: Introduce eventsel_hw to prepare for pmu event filtering
+        https://github.com/kvm-x86/linux/commit/02918f007792
+[25/44] KVM: x86/pmu: Reprogram mediated PMU event selectors on event filter updates
+        https://github.com/kvm-x86/linux/commit/3db871fe185b
+[26/44] KVM: x86/pmu: Always stuff GuestOnly=1,HostOnly=0 for mediated PMCs on AMD
+        https://github.com/kvm-x86/linux/commit/a2f4ba534cc5
+[27/44] KVM: x86/pmu: Load/put mediated PMU context when entering/exiting guest
+        https://github.com/kvm-x86/linux/commit/56bb27369750
+[28/44] KVM: x86/pmu: Disallow emulation in the fastpath if mediated PMCs are active
+        https://github.com/kvm-x86/linux/commit/f7a65e58d643
+[29/44] KVM: x86/pmu: Handle emulated instruction for mediated vPMU
+        https://github.com/kvm-x86/linux/commit/283a5aa57b22
+[30/44] KVM: nVMX: Add macros to simplify nested MSR interception setting
+        https://github.com/kvm-x86/linux/commit/cb58327c4c8a
+[31/44] KVM: nVMX: Disable PMU MSR interception as appropriate while running L2
+        https://github.com/kvm-x86/linux/commit/88ebc2a3199c
+[32/44] KVM: nSVM: Disable PMU MSR interception as appropriate while running L2
+        https://github.com/kvm-x86/linux/commit/3b36160d9406
+[33/44] KVM: x86/pmu: Expose enable_mediated_pmu parameter to user space
+        https://github.com/kvm-x86/linux/commit/860bcb1021f5
+[34/44] KVM: x86/pmu: Elide WRMSRs when loading guest PMCs if values already match
+        https://github.com/kvm-x86/linux/commit/b0b6a8d3be16
+[35/44] KVM: VMX: Drop intermediate "guest" field from msr_autostore
+        https://github.com/kvm-x86/linux/commit/462f092dc55c
+[36/44] KVM: nVMX: Don't update msr_autostore count when saving TSC for vmcs12
+        https://github.com/kvm-x86/linux/commit/58f21a01417f
+[37/44] KVM: VMX: Dedup code for removing MSR from VMCS's auto-load list
+        https://github.com/kvm-x86/linux/commit/0bd29379114b
+[38/44] KVM: VMX: Drop unused @entry_only param from add_atomic_switch_msr()
+        https://github.com/kvm-x86/linux/commit/84ac00042a28
+[39/44] KVM: VMX: Bug the VM if either MSR auto-load list is full
+        https://github.com/kvm-x86/linux/commit/2ed57bb89976
+[40/44] KVM: VMX: Set MSR index auto-load entry if and only if entry is "new"
+        https://github.com/kvm-x86/linux/commit/0c4ff0866fc1
+[41/44] KVM: VMX: Compartmentalize adding MSRs to host vs. guest auto-load list
+        https://github.com/kvm-x86/linux/commit/2239d137a71d
+[42/44] KVM: VMX: Dedup code for adding MSR to VMCS's auto list
+        https://github.com/kvm-x86/linux/commit/c3d6a7210a4d
+[43/44] KVM: VMX: Initialize vmcs01.VM_EXIT_MSR_STORE_ADDR with list address
+        https://github.com/kvm-x86/linux/commit/9757a5aebcd6
+[44/44] KVM: VMX: Add mediated PMU support for CPUs without "save perf global ctrl"
+        https://github.com/kvm-x86/linux/commit/d374b89edbb9
+
+--
+https://github.com/kvm-x86/linux/tree/next
