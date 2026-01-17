@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD53B31C576
-	for <linux-perf-users@vger.kernel.org>; Sat, 17 Jan 2026 05:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68227328B53
+	for <linux-perf-users@vger.kernel.org>; Sat, 17 Jan 2026 05:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768627764; cv=none; b=IenS0GyK6YCEZ4OJk8x/fWpmJ/H7L6VtrYTHwJGL2Odzzv+u1pOpWXaScCWt0nHNNlp10RC2UCgdieiC3dKn1O0tNOuNr7rhm07IEnGgCxDBdRwg+pT5kv/UPvAo1BnznfF9v84MDVoo7nnV4dlbuewovpUXaiIavdaKuOlu+KQ=
+	t=1768627764; cv=none; b=lTmuc05VnjsvfAn0x3CSMgw9p/jUgefCYKyuyOsfWadbg0TUAtdCdSiZzdvWzpL9k8YIXJ4EAV6LVYqC9N+WdahVHE8maa0nW7GZo90PCHjlhZzXBqmoZfCJzOXgZDXQ5sOM/kFp0nb9a8Juk3yGCuhWnKO0yUcvWbtq41iq1KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1768627764; c=relaxed/simple;
-	bh=gbFw65gKDB9Q7CSGbuP34AO5oPVulM2chbHXMkIGkC8=;
+	bh=72XsDyD4QhqC99XxL2NKKPs+ap/5CJLt+GafEN9+hzM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=r0iZgdRWJEQEtRXm0L36+jkQu1UzjyCE4uIvMXDnIAsywivi/wb5Du/xsFQeCaKOfl4c1JD0hsTGFsV3HibEzUrcBieOzTjFR2ZPZgzlb4NPXcq4/9Fv8k4zqu5ZGxc/57M/T6HU8PaUJEaRkpzYuUVNGtFU31bZN8wxYH2NAVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H1bGZTB9; arc=none smtp.client-ip=74.125.82.202
+	 To:Content-Type; b=MYyhSpbG2EpjPkUB16V8/04b0R/RlYMDgXYsy3P7xWnxKFtfz18+1uEheAsbH8jY4/KeMWGYMRCT/ZJiH2oayAG7Sf8ZvC+neguLWd830uS8Ok8yi2iQsU/vBtsDqBcwZsgX6LDAxWVmQgVrcblnRhLlQGW+FctJ4bhk6QIt0kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NrP1sPFD; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H1bGZTB9"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b21d136010so4465044eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jan 2026 21:29:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NrP1sPFD"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-29f8e6a5de4so24605265ad.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jan 2026 21:29:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768627761; x=1769232561; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1768627763; x=1769232563; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7OS8+jcXChzbawXYGLy5k5VOyetH1gbj+eqgOcCR0OU=;
-        b=H1bGZTB9/sYMy7T9/JjX2ZVtV5ZK1u2ryhz88RYKQUHOZRtrLax2Y9p87nXXaXHr9Q
-         4p8mChrMEdd3RMgx+A80yNCgZtEmGM3Ss6TffX/ltIqUnLhXU3/FWI1daTRwIdQop/v2
-         lQaw1Oge1f+2n/yAXFG4xep/0YB0IlqiaAOyZ3IJFqoIshZAf+OHbQG1FmKqUrhCtABD
-         3es8irDPceXBV92FBnF3XWbc8hivatbsjzV2vqFOPh+ec8N4PJcKM1arMtU2I1sbCGDt
-         p4bAbsdX0Bm3nFpWuUr+cb2LnhwmO+sfQgqyPKinzB43TujVWsq92IW/Kw6gdf3j4xOs
-         nenA==
+        bh=kK4WpTbjYTQ30LMox0FYXGUlgDkXshdRvemGVnSiQqs=;
+        b=NrP1sPFDNLf8KZljOW9peOaBCL26dkr3UexLZGDlM5v/SCNryFX0Ln6RwyanHUGseZ
+         FVBqBlH7JhuEOcx3iWbJC/PjfcrcOhtWU90ySb9TX9VbRenu+Wdk/Cx/yK9iIAHkWa66
+         9viRN/QQn7yUIg1mJYoPkTtzVW6EHNWxjYmg2ORJFPPr6VW8iXndD3h9hZTNEzsjKHTt
+         k3OInXqXQx5Tbt8J0UenspACFM32zTMgn300I6i+GKZPTNowK+iKDgeX4bK42fGgeGqK
+         FGqE0qoBzMu5pifiaJB8hckFTs1/ZmhY/pzBan5duZGRr7Wd5YSjbTggtfXRxKnQQ8IJ
+         PYxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768627761; x=1769232561;
+        d=1e100.net; s=20230601; t=1768627763; x=1769232563;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7OS8+jcXChzbawXYGLy5k5VOyetH1gbj+eqgOcCR0OU=;
-        b=CtXiD9RVk+nADW98xX1QwKmqlfx9LHFcTfphnsOr5nJ6u3G3pPMNdyqNPOAmy+CuHx
-         IKE6Z9sHWdnDMvWYuZhINQRP+Lch8AHFpK2ew5wVc+tPD5HeO8Lz8kQtMgHGEYEO4+0e
-         ufvocEx6sdfuZQ2nMoF1WOV1MPeynxA2MoQeqvxkDZvscQQ8XOUH3CLmORbF90nvq3ke
-         lBmhDZBs40QH0Uy0pAVx23cScjOHlIkGe2ib3DyeTCqsm1AibOfbJdRsajkAWSqgmXlo
-         ujP2ptPlLuGl89t5KvubvOjOYg3mwDVNI6xa49uxEPPXDvB4ZHe9dZPXUm2H2vBd8JFn
-         o60g==
-X-Forwarded-Encrypted: i=1; AJvYcCWln0YbVul9/jFUmjzIjqSOK8TzD67RvFSBZjRkcaS4kNouz3qKY/UEviHUyoh3MpsSY9xcSPPWlwfJtVmUdtYq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7Z+ODIyjdYDXayoncTMbB+Dj9NQNc8aTOCiLKjC0rvE2J1aKl
-	LxVCAHW3POYW+tvtAMQiAik8+ilzQr8CUq2RWL+7k1dyoAZOaXy2IrO02VRhA4C+Dl/qGVJIsTX
-	Oht7QQUqUbw==
-X-Received: from dlbrh14.prod.google.com ([2002:a05:7022:f30e:b0:11a:44f1:daa3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:dc04:b0:2ae:5b71:d226
- with SMTP id 5a478bee46e88-2b6b3ed9044mr3890490eec.3.1768627760880; Fri, 16
- Jan 2026 21:29:20 -0800 (PST)
-Date: Fri, 16 Jan 2026 21:28:27 -0800
+        bh=kK4WpTbjYTQ30LMox0FYXGUlgDkXshdRvemGVnSiQqs=;
+        b=qrvFetfMgJBbbqHPiGUusr9vcnCo81U9BmztWophcXwDRV4Q6XFsJNYQOwxqyyzSH3
+         GXtfS8Eh1sxfpnbS2sT+fWVsUZJr+/srT3Xa9cc0fXiFs2sxySchtB1HkgUGf5EBmBmE
+         0wTCqfNxbyRoYuVugpppYfn8Nsm5qfemRSOTfGuCh0KuoSXn/qo4KHXp2qWrcO1m/D22
+         XHR/76ti96nYTFIiDC5fqWuOLfatDRdiPm+qpWKspXvWNLwirqP5EDWS7yh4U6NR09Fd
+         ZvVMgGYovqa+r2qekdkNxMsXwKcMpKPHwaITQwEsekveWHKfp89WXF0p32X6jf9iwksD
+         dt3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXwPdPYzlnH+IZgAo0TLxke+C2Tmw83kF6tjwyGiEZQ4HOzr0kMrlM8AuvScyZr/O00m0q2zSj5nTucVeTAvIqi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU+iT7nUPTnNTvaO8h51DNb/Kj+zKM9TVxBsj7bYaYrFY9ZqB2
+	DhXcXMpFhl3AbbGJw/9v/KqI2TxLYbC8qfwCd/AUqmirs6dwKP8ELZYaLzqG+ZjhtURC5WVuRQC
+	RBZRII0d4pw==
+X-Received: from plov5.prod.google.com ([2002:a17:902:8d85:b0:29d:7778:2d65])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2f8a:b0:2a2:f0cb:dfa2
+ with SMTP id d9443c01a7336-2a71754509fmr50340175ad.13.1768627762755; Fri, 16
+ Jan 2026 21:29:22 -0800 (PST)
+Date: Fri, 16 Jan 2026 21:28:28 -0800
 In-Reply-To: <20260117052849.2205545-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260117052849.2205545-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260117052849.2205545-2-irogers@google.com>
-Subject: [PATCH v1 01/23] perf symbol-elf: Fix leak of ELF files with GNU debugdata
+Message-ID: <20260117052849.2205545-3-irogers@google.com>
+Subject: [PATCH v1 02/23] perf dso: Extra validity checks that e_machine is valid
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -80,30 +80,59 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Mark Wielaard <mark@klomp.org>
 Content-Type: text/plain; charset="UTF-8"
 
-The processing of DSO_BINARY_TYPE__GNU_DEBUGDATA in symsrc__init
-happens with an open ELF file but the error path only closes the
-associate fd. Fix the goto so that the ELF file is also ended and
-memory released.
+Better ensure a read e_machine is valid by checking the file appears
+like an ELF file and the read e_machine value is less than
+EM_NUM. This better avoids spurious e_machine values when looking for
+an e_machine in say a thread.
 
-Fixes: b10f74308e13 ("perf symbol: Support .gnu_debugdata for symbols")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/symbol-elf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/dso.c | 31 +++++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index b8fea12997a0..76912c62b6a0 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1173,7 +1173,7 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
- 		Elf *embedded = read_gnu_debugdata(dso, elf, name, &new_fd);
- 
- 		if (!embedded)
--			goto out_close;
-+			goto out_elf_end;
- 
- 		elf_end(elf);
- 		close(fd);
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 18e656712f5a..143720d1ecb1 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -1236,17 +1236,28 @@ uint16_t dso__e_machine(struct dso *dso, struct machine *machine)
+ 	try_to_open_dso(dso, machine);
+ 	fd = dso__data(dso)->fd;
+ 	if (fd >= 0) {
+-		_Static_assert(offsetof(Elf32_Ehdr, e_machine) == 18, "Unexpected offset");
+-		_Static_assert(offsetof(Elf64_Ehdr, e_machine) == 18, "Unexpected offset");
+-		if (dso__needs_swap(dso) == DSO_SWAP__UNSET) {
+-			unsigned char eidata;
+-
+-			if (pread(fd, &eidata, sizeof(eidata), EI_DATA) == sizeof(eidata))
+-				dso__swap_init(dso, eidata);
++		unsigned char e_ident[EI_NIDENT];
++
++		_Static_assert(offsetof(Elf32_Ehdr, e_ident) == 0, "Unexpected offset");
++		_Static_assert(offsetof(Elf64_Ehdr, e_ident) == 0, "Unexpected offset");
++		if (pread(fd, &e_ident, sizeof(e_ident), 0) == sizeof(e_ident) &&
++		    memcmp(e_ident, ELFMAG, SELFMAG) == 0 &&
++		    e_ident[EI_CLASS] > ELFCLASSNONE && e_ident[EI_CLASS] < ELFCLASSNUM &&
++		    e_ident[EI_DATA] > ELFDATANONE && e_ident[EI_DATA] < ELFDATANUM &&
++		    e_ident[EI_VERSION] == EV_CURRENT) {
++			_Static_assert(offsetof(Elf32_Ehdr, e_machine) == 18, "Unexpected offset");
++			_Static_assert(offsetof(Elf64_Ehdr, e_machine) == 18, "Unexpected offset");
++
++			if (dso__needs_swap(dso) == DSO_SWAP__UNSET)
++				dso__swap_init(dso, e_ident[EI_DATA]);
++
++			if (dso__needs_swap(dso) != DSO_SWAP__UNSET &&
++			    pread(fd, &e_machine, sizeof(e_machine), 18) == sizeof(e_machine) &&
++			    e_machine < EM_NUM)
++				e_machine = DSO__SWAP(dso, uint16_t, e_machine);
++			else
++				e_machine = EM_NONE;
+ 		}
+-		if (dso__needs_swap(dso) != DSO_SWAP__UNSET &&
+-		    pread(fd, &e_machine, sizeof(e_machine), 18) == sizeof(e_machine))
+-			e_machine = DSO__SWAP(dso, uint16_t, e_machine);
+ 	}
+ 	mutex_unlock(dso__data_open_lock());
+ 	return e_machine;
 -- 
 2.52.0.457.g6b5491de43-goog
 
