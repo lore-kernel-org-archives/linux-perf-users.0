@@ -1,170 +1,276 @@
-Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5C7325711
-	for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 18:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768848608; cv=none; b=dw/C+7+JB6I5QEUAUzx1B/X6BYEmp0sE3eAA92WeZolOokpBCQ9VicWyVTJ6Rc4v9mVideLPrOUl7FjKD5sFG6xe4Ko/vO2P/YQkoSennI8wuh2w7M31JZlUv6VgJS80HM0Q/rvyWAFoCsNbH265nysx6ci4I5IqE4ccuQ/EbxM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768848608; c=relaxed/simple;
-	bh=sRvXaccqEOLfZpTQKHnPoLP/VGpY5fCf0tZuR1ywRxM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HwUhlggLC3Pvfedyj9bmCdd6dtzWuqAPUaxoedsVPoiXPthhf0P5cTyfSGVaW6XWunUssTCw9Y2TvZ94TUUJnKrEtI4HewpTLZubSlvRzk6W3ii1UCTcD2wwN7GfgW4vf2+LhFryt5CNWBu8BeVUW5+qng6hRJEgxKdduyNjGH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu; spf=pass smtp.mailfrom=asu.edu; dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b=bYUb0NJ+; arc=none smtp.client-ip=74.125.82.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asu.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7716923FC54
+	for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 20:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768854361; cv=pass; b=Bmcm8g054OIUatG0KI5c2OnKtYjuXQVyL2LDnsWWL/DxgOQy/LagoUxZPERG4bjtRXZ/zBgq7Md/WQ0ocaYSHp0uKBHMbzt2XqLQ9AUwbQswHPSS+V9ryTSMTeWJI4IprTlkjDuRJTjK+jSNYwuqq2lLK+eQIRqA6JRrl2kY0hg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768854361; c=relaxed/simple;
+	bh=aWeZf3oIyxUrz6xRTZLJ3zu/FRder3H/ARAjzbiFAzk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=abxqIWYaHvkpi8fyBVTb1Oq4lGKtdfwFlZfJkuprc6cqN0Cgpqv5D8UxELM1Azdqd6bpm2QMQbGx4XrHWV0swDhMQT+4hMAdfezcDAPVhFIVUkoLmXfGgwDoyrg8VIa17PDvJKu4zS6pNPvfUjfltDOyX78CaOPyRNKE3QcK6nI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bUyvNuov; arc=pass smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b="bYUb0NJ+"
-Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2ac3d5ab81bso4826535eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 10:50:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bUyvNuov"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-29f02651fccso29015ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 12:26:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768854360; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Zj74VapsWTPJ15FY3DUwk9bZef0XAgH9K455oZDv9x9MhvtzziG0+2bxEg5jXO51OA
+         7i0FvxFUAZJ+SJqJn8yODyb313exP0APB7b9LarGIlrVxXnC99uX7F5KVRQtQxuc30+Y
+         06RtYCp34LzbuFzQnt8dpTKKb9hrD2Ka8eSVkw/DHhgUjMSBzmOG1YBMrDFZ6SpLaSIa
+         D81btyS6Z9VGw4CVzo9cRY6rvno5iAyTfIUjTIsPrJmF5/SDDvAqmvXHcFh4YfMHY/E4
+         wCyiO8bZPlqqGrY+JDkz5tIotc2U6coDRBdHHen/k7uCW9Pv9fBoWMYUUYJwkqfc6c15
+         lsFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=OrY1HeodPWb34pZP2cp5GI/dTdWTlUDIu0627CmByyU=;
+        fh=ebLWjQ4JcLZEJTUaxKLpBNUBpY/DAhDAxxqHyv6LRxA=;
+        b=DyABq9T5Qy46jiL3SJzUzpf9il9FI/32zoKJMksVpKmBNxGEwpdL08tyT3LmjqnjKD
+         pHsk4KIAHx1fGr89bDWtdMn8okyDdn9qJkFZkDaLrh37zZgz0hFdXHEIy9e93kvSRmlw
+         zyTkxFvUB5n1yEFFx7ZkSPjvkOmYDvVFZSFwp0BSkeN1JlxK9WzIcxUnqrUunq0MO0bJ
+         dG1LOrr0q3BOBBy9VrXzr1xWxjJlbqag43cXA6+wWatX1Nhh8qeRbKyD8Se9EGPOj/CZ
+         6aFw0SsfdqMCMfsM6chLYXkIxXwuL3D41K7ZT5EGTmG4e4061jeIrKX1ekKGETnT74C+
+         mdfQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=asu.edu; s=google; t=1768848605; x=1769453405; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1768854360; x=1769459160; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oM7YwFaYfpzWin0JEzaV48zpKRTcuAip989AP9etaf0=;
-        b=bYUb0NJ+rT3f1MKaGfsWepTwD1k5aNQaPYu5Ho7mGdZa++i4I+zhL++xOkVmLGNpDi
-         K1jaMFOORDnKGKRhaI6HKFO7q1JSoWsIN51uFSKaTI+cn5tVJ7hPbG0D5ivkLSPJGSEd
-         WM//7XTOOE+5ENZNh0F3Yemb7RoyHLoUHx+T0NBFeRDVTdgIIpJOj9SVtwl0BfpMRF/K
-         6IEL0dXPpl+bx85ANiXw1GLYdpkrv3f5yJDX5xhrzL7Rc3LuevYCITVGmoXgVVrjhE1R
-         u5Dii+CYKPLYngQhbwvh02WenlQjxoyrqNH/eQy4tUC+9HxbxWy5h3OdYfheGSkkserx
-         q/Sg==
+        bh=OrY1HeodPWb34pZP2cp5GI/dTdWTlUDIu0627CmByyU=;
+        b=bUyvNuovTFqFtp4F0csnG8rqGTtWgPiVAGY+aj/06W4K2AvxRzJ/WCgGQSObrBR9mZ
+         ZFu294ZYvdP7qvDCucuwCeTYrvf0BiJDLZQc2YN/p734slQb0pGYdSlTreC+DtD9nmNE
+         cEV4foLfXTRwea2RjzoOzLVUwbWnWmxiAk+z4dl4eOG5n1uESg9ycLp8bU3xrLP2UfBg
+         FLxjfWv/ATomdEFsVA61kTTfoanKRLbnhAxUVYNt81h05yldRQjnl6eJhVrep0Hqc5Mg
+         pU9xTkFSHCILoFTlQeTkHEFVXf6SoHzMXkSjtxDK0sgv04sntvNAJxHkif0O/opGu4l7
+         ZwUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768848605; x=1769453405;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20230601; t=1768854360; x=1769459160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=oM7YwFaYfpzWin0JEzaV48zpKRTcuAip989AP9etaf0=;
-        b=b8Ug2x23FNzql64W8loI7y5Da96GhAtom8zENQCEWUnCA4rOCosE6dS5dCRa9Deghp
-         Dlnx2fUKa6ZCIW1d4cog6paDunP9kk1GJK6gKAjXvEVIokefvON5UZc/b/1tb+NqP/A7
-         FcIwOaJILugKJY1/BaHx9y6aNM6lrZZTPoFelDMAHsNzk7ruCBCEj6WV7zirNPoErZmK
-         R0uMcsUHBIQOwuTsfaVnmxM6C4BxmbS/9LEt3/esSH3s5TWOa2/YtBwhKNrvCw1FLJJO
-         AraWYCvzkMDGQARvvqLtuo2w9NjHaAt/b1Uj0hn811v8K1zinOnKK0Q4Bxk++stn+a0f
-         do6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUTnT+E3PhOawe3ofI2ERrwto7pBK15uoAvMsalcCe4nqemlJuJGXxiurZMKfOKA2CLjZAPLgGXsieloE60q01b@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkAGmQPu+uJLsZ7r3p+6FRcdNHy7MXhOTlK37rvQby4U71TU6N
-	iITM1YkPfFRbhPADweSBHIkbaLi2raSQa39jURIAzEIsuhLgrt1W64gE3nsnD7uEPA==
-X-Gm-Gg: AZuq6aKsdVOcX4l7Y4AMmIgU0EpvLS7APHpdY/d1mCRzF9S6n790nU6sQda4cxjn6wx
-	qDz6uTblc+X1zbai3hFKXqKxe7BxCUJWeqevhM/eckFgoS7zs9ZzLPz3Ujld5HqWIDep0/wL8q2
-	Vyxhcy8PGxBKiU90PltAJg10+9mT8bGl1VQRrS3jbCDCOD/YZ5T1bFRKit8OzWaa7/0ecyorirM
-	9I5odKmQryBOruwURNpHBDPVen4mE9Jqw8+hhgVf0cegugCX67qkRm4BeLgmgNIGhJfL1iYbpDK
-	Kzxm10y2SCC1oJx+1OE5wPL/UhEln/wRv8SJyHLY7FIm2DmhbEK6X+ydrHdqt84mxu1Fuaym23V
-	9RklqZzi3ZcGzwslUFzaJqFSj8ed/p89Bt0AZtfq4enbghA9euVZoyg90W9TyqKqHQ+tcPF8O8F
-	GRzHd2sKf9JwCQFVYnzcifIZqaD4TxK2kgFM6/qjuTOOApA4Vmzg==
-X-Received: by 2002:a05:7300:54d:b0:2a4:3593:ddd9 with SMTP id 5a478bee46e88-2b6b46c69ebmr8731975eec.6.1768848603315;
-        Mon, 19 Jan 2026 10:50:03 -0800 (PST)
-Received: from will-mint.dhcp.asu.edu (209-147-139-190.nat.asu.edu. [209.147.139.190])
-        by smtp.googlemail.com with ESMTPSA id 5a478bee46e88-2b6b34c1177sm15926209eec.7.2026.01.19.10.50.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jan 2026 10:50:02 -0800 (PST)
-From: Will Rosenberg <whrosenb@asu.edu>
-To: 
-Cc: yi1.lai@linux.intel.com,
-	Will Rosenberg <whrosenb@asu.edu>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
-Subject: [PATCH v3 RESEND] perf: Fix refcount warning on event->mmap_count increment
-Date: Mon, 19 Jan 2026 11:49:56 -0700
-Message-Id: <20260119184956.801238-1-whrosenb@asu.edu>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260106203547.38354-1-whrosenb@asu.edu>
-References: <20260106203547.38354-1-whrosenb@asu.edu>
+        bh=OrY1HeodPWb34pZP2cp5GI/dTdWTlUDIu0627CmByyU=;
+        b=NE/g/c5lmQ6V5PhjBxPZQ8xfH2kLdui09BW3KaYvauETqa2S24xm+mAYPDA/EWJkzD
+         LimmTAGh0dq5iABZSURRyzMf0atXcJpjeHrtiQwACyxPzbqh3+fM+x2YgVqmiZ+KQWkp
+         kRbOgWfZpgKgDOBcqvGmXONuNN0PRM3b3R8qwrGzCzueuvnuILWSUC7eETNyabNKzg1I
+         3+V7qwhNv0hwKxcS0ZkhlkdAbOrQHUb6wrCAXYclHHsKS8zCGeYxJTvHz+zyz6inLkHG
+         a+ubhM4a8poO0024fp7Hjap1QgT060qJ3CbPAlDV+1ufdW4Upz/X+kF6M1b42YGmC5t1
+         jCPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIyElH6EqxANniE7ZZQe/HLTb489cCOMSbRkl4BrmwyloPuAqzzCy/B5lvMb3NLtTF7ozcxFeOCHil3+KN6xzb@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKF8Wd5HRzJ+DlYGwueTm0m4kOxCppnkp106zWC8ZRjrzCC2Gg
+	zPGGJky+Fzrv3bh9EnNVTAaqMHXhRcACpLewh73zwlUmgVp5hbd1yOYWM1IOFLpVsfErujvCyBw
+	US0IA348jbwn7eNib/SipFsqEITDWSROujNF/ymWm
+X-Gm-Gg: AZuq6aIUDwOZvEPObi71nw1c/nh21RB2Sq0Zss6atg8MwEgIdIpg53RD9XLmW5UR8YS
+	YRZhphVnOnNHhr8DoAzWzyET6N02y34Pta3ScYy823eTVz78dr2yVgQYtHlf5YY1R4AikipzB/2
+	bTrfAemdI2DyU6rCaHIo2pLeuC57xMfzk8MYoXUHkCnUAoV05UOJX16D3ijnAYWaF49ooXDQQpT
+	Lj5XQxxvOfbc4ATWhPmkkQPs2A+sSM5ccwfpu770/gWPQiY4yQNSRxVZ4PzSWRb3X3DI1aG
+X-Received: by 2002:a17:903:2b0b:b0:265:e66:6c10 with SMTP id
+ d9443c01a7336-2a7286208c1mr5262625ad.4.1768854359307; Mon, 19 Jan 2026
+ 12:25:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
+ <20251203065500.2597594-19-dapeng1.mi@linux.intel.com> <CAP-5=fVk7+iGn+jhfE3a9iY_G1Gdph9Sh0RNco+745XQMfubLg@mail.gmail.com>
+ <9d97e2f4-3971-4486-8689-ab50b06c3810@linux.intel.com> <CAP-5=fU+JeBqCNfKVR9O2cd0zzPO1bsYORtEBzeTeTpMLg4m5Q@mail.gmail.com>
+ <0a99aaac-d51c-4c65-addd-5e366408a3f0@linux.intel.com> <CAP-5=fV_dbFzQ8_xHsduFytEq+6H0M0iPof0Krb0dBB+Bsd42g@mail.gmail.com>
+ <3d95b037-e1c1-40db-b357-889c62c70221@linux.intel.com> <CAP-5=fW5g-_Owf2wWtXZwpbtTy9uns_pqr=BFumohHxWGU+i0Q@mail.gmail.com>
+ <47014c3e-0fca-4248-9f23-09007f9ee95f@linux.intel.com> <CAP-5=fVbWp5bdnxrcA4XQPvFa2iYB3583C4DzOP7wA=oPqvcKQ@mail.gmail.com>
+ <8b932ae4-5f65-454e-ae9e-0d9377a92254@linux.intel.com> <54c173b0-55f1-42d2-a43d-d6389d3fbfe3@linux.intel.com>
+ <CAP-5=fV0iPapwbKX-rjbF86_WcZPji8opKNgO=r_kDSJB7T8XA@mail.gmail.com> <9f73d1f1-80f5-45ed-946f-6a920ba34980@linux.intel.com>
+In-Reply-To: <9f73d1f1-80f5-45ed-946f-6a920ba34980@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 19 Jan 2026 12:25:48 -0800
+X-Gm-Features: AZwV_QgIYL5QrwGwgWg5FjKoLZfgoewe771-bIXfA2V4LrbyIhCphyZaPymJWyc
+Message-ID: <CAP-5=fUNeJpj-rdi+552-o9xhCiT41q-Q8Zhg8U7ev0Wbiyhog@mail.gmail.com>
+Subject: Re: [Patch v5 18/19] perf parse-regs: Support new SIMD sampling format
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Eranian Stephane <eranian@google.com>, Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>, 
+	Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>, 
+	Xudong Hao <xudong.hao@intel.com>, Kan Liang <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When calling refcount_inc(&event->mmap_count) inside perf_mmap_rb(), the
-following warning is triggered:
+On Sun, Jan 18, 2026 at 10:55=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel=
+.com> wrote:
+>
+>
+> On 1/17/2026 1:50 PM, Ian Rogers wrote:
+> > On Mon, Jan 5, 2026 at 11:27=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.in=
+tel.com> wrote:
+> >> Ian,
+> >>
+> >> I looked at these perf regs __weak helpers again, like
+> >> arch__intr_reg_mask()/arch__user_reg_mask(). It could be really hard t=
+o
+> >> eliminate these __weak helpers and convert them into a generic functio=
+n
+> >> like perf_reg_name(). All these __weak helpers are arch-dependent and
+> >> usually need to call perf_event_open sysctrl to get the required regis=
+ters
+> >> mask. So even we convert them into a generic function, we still have n=
+o way
+> >> to get the registers mask of a different arch, like get x86 registers =
+mask
+> >> on arm machine. Another reason is that these __weak helpers may contai=
+n
+> >> some arch-specific instructions. If we want to convert them into a gen=
+eral
+> >> perf function like perf_reg_name(). It may cause building error since =
+these
+> >> arch-specific instructions may not exist on the building machine.
+> > Hi Dapeng,
+> >
+> > There was already a patch to better support cross architecture
+> > libdw-unwind-ing and I've just sent out a series to clean this up so
+> > that this is achieved by having mapping functions between perf and
+> > dwarf register names. The functions use the e_machine of the binary to
+> > determine how to map, etc. The series is here:
+> > https://lore.kernel.org/lkml/20260117052849.2205545-1-irogers@google.co=
+m/
+> > and I think it can be the foundation for avoiding the weak functions.
+>
+> Hi Ian,
+>
+> Thanks for the reference patch. But they are different. The reference
+> patches mainly parse the regs from perf.data and the __weak functions can
+> be eliminated in the parsing phase since the registers bitmap is fixed fo=
+r
+> a fixed arch. While these __weak functions
+> arch__intr_reg_mask()/arch__user_reg_mask() are used to obtain the suppor=
+t
+> sampling registers on a specific platform.
+>
+> We know different platforms even for same arch may support different
+> registers, e.g., some x86 platforms may only support XMM registers, but
+> some others may support XMM/YMM/ZMM registers, then all these arch-specif=
+ic
+> arch__intr_reg_mask()/arch__user_reg_mask() functions have to depend on t=
+he
+> perf_event_open() syscall to retrieve the supported registers mask from k=
+ernel.
+>
+> Thus, it becomes impossible to retrieve the supported registers mask for =
+a
+> x86 specific platform from running on a arm platform.
+>
+> Even we don't consider this limitation and forcibly convert the
+> __weak arch__intr_reg_mask() function to some kind of below function, jus=
+t
+> like currently what perf_reg_name() does.
+>
+> uint64_t perf_intr_reg_mask(const char *arch)
+> {
+>     uint64_t mask =3D 0;
+>
+>     if (!strcmp(arch, "csky"))
+>         mask =3D perf_intr_reg_mask_csky(id);
+>     else if (!strcmp(arch, "loongarch"))
+>         mask =3D perf_intr_reg_mask_loongarch(id);
+>     else if (!strcmp(arch, "mips"))
+>         mask =3D perf_intr_reg_mask_mips(id);
+>     else if (!strcmp(arch, "powerpc"))
+>         mask =3D perf_intr_reg_mask_powerpc(id);
+>     else if (!strcmp(arch, "riscv"))
+>         mask =3D perf_intr_reg_mask_riscv(id);
+>     else if (!strcmp(arch, "s390"))
+>         mask =3D perf_intr_reg_mask_s390(id);
+>     else if (!strcmp(arch, "x86"))
+>         mask =3D perf_intr_reg_mask_x86(id);
+>     else if (!strcmp(arch, "arm"))
+>         mask =3D perf_intr_reg_mask_arm(id);
+>     else if (!strcmp(arch, "arm64"))
+>         mask =3D perf_intr_reg_mask_arm64(id);
+>
+>     return mask;
+> }
+>
+> But currently there are some arch-dependent instructions in these
+> arch-specific instructions, like the below code in powerpc specific
+> arch__intr_reg_mask().
+>
+>     version =3D (((mfspr(SPRN_PVR)) >>  16) & 0xFFFF);
+>
+> mfspr is a powerpc specific instruction, building this converted
+> perf_intr_reg_mask on non-powerpc platform would lead to building error.
 
-        refcount_t: addition on 0; use-after-free.
-        WARNING: lib/refcount.c:25
+Hi Dapeng,
 
-PoC:
+So my main point is the arch directory and ifdefs, how do they differ
+from writing code that uses the ELF machine? For example, your code
+uses the arch/x86 directory and has ifdefs on
+HAVE_ARCH_X86_64_SUPPORT. How is that different from:
+```
+switch(e_machine) {
+case EM_X86_64:
+...
+case EM_I386:
+...
+default:
+return 0;
+}
+```
+If we need to determine for the current running machine then e_machine
+can equal EM_HOST that is set up for this purpose.
 
-    struct perf_event_attr attr = {0};
-    int fd = syscall(__NR_perf_event_open, &attr, 0, -1, -1, 0);
-    mmap(NULL, 0x3000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    int victim = syscall(__NR_perf_event_open, &attr, 0, -1, fd,
-                         PERF_FLAG_FD_OUTPUT);
-    mmap(NULL, 0x3000, PROT_READ | PROT_WRITE, MAP_SHARED, victim, 0);
+I agree that determining features needs calls that may not be
+supported on other architectures. That should yield EOPNOTSUPP and we
+can use information like that to populate generic information like the
+PMU missing features:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/pmu.h?h=3Dperf-tools-next#n190
+we also probe API support with:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/perf_api_probe.h?h=3Dperf-tools-next
 
-This occurs when creating a group member event with the flag
-PERF_FLAG_FD_OUTPUT. The group leader should be mmap-ed and then mmap-ing
-the event triggers the warning.
+The current code doing lots of string comparisons is unnecessary
+overhead and imprecise (x86 is used for both 32-bit and 64-bit x86).
+It is removed in the series I linked to, I think we can eventually get
+rid of the whole arch string for similar reasons of trying to minimize
+the use of the arch directory. I'm curious what happens with APX, will
+the e_machine change? We may need to pass in the sample regs_dump's
+abi field for cases like this.
 
-Since the event has copied the output_event in perf_event_set_output(),
-event->rb is set. As a result, perf_mmap_rb() calls
-refcount_inc(&event->mmap_count) when event->mmap_count = 0.
+My point on the unwinding is that the sample register mask appears to
+be set up the same regardless, whereas for stack samples
+(--call-graph=3Ddwarf) maybe just sample IP and SP suffices. So perhaps
+there should be additional registers to set up the sample mask.
 
-Disallow the case when event->mmap_count = 0. This also prevents two
-events from updating the same user_page.
+By avoiding the arch functions we can avoid the problem of broken
+cross architecture support, we can also lay the groundwork for support
+on different architectures that may want to do similar things. I agree
+that doesn't matter until >1 architecture is trying to have more
+register masks, my concern is trying to keep the code generic and
+trying to make sure cross architecture is working. New weak functions
+is going in the opposite direction to that.
 
-Fixes: 448f97fba901 ("perf: Convert mmap() refcounts to refcount_t")
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Will Rosenberg <whrosenb@asu.edu>
----
+Thanks,
+Ian
 
-Notes:
-    v2 -> v3: Update patch to error out instead of incrementing.
-    
-    Thank you, this is a much better solution. I was not thinking
-    that the mmap itself was unintended.
-    
-    I believe you are missing a "!" in your patch. After adding
-    that, I tested the patch, and it fixed the bug.
-    
-    I also wanted to check my understanding of the race with
-    perf_mmap_close() to double check this patch will not cause
-    an issue. perf_mmap_rb() should always hold the
-    event->mmap_mutex, so there should be no race on
-    event->mmap_count with perf_mmap_close()'s
-    refcount_dec_and_mutex_lock(). If there was a race, we would
-    risk returning -EBUSY when we should "continue as if !event->rb."
-    
-    Thank you for your help.
-
- kernel/events/core.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 3c2a491200c6..ac7f12560172 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7273,6 +7273,15 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
- 		if (data_page_nr(event->rb) != nr_pages)
- 			return -EINVAL;
- 
-+		/*
-+		 * If this event doesn't have mmap_count, we're attempting to
-+		 * create an alias of another event's mmap(); this would mean
-+		 * both events will end up scribbling the same user_page;
-+		 * which makes no sense.
-+		 */
-+		if (!refcount_read(&event->mmap_count))
-+			return -EBUSY;
-+
- 		if (refcount_inc_not_zero(&event->rb->mmap_count)) {
- 			/*
- 			 * Success -- managed to mmap() the same buffer
-
-base-commit: 5d3b0106245d467fd5ba0bd9a373a13356684f6e
--- 
-2.34.1
-
+> -Dapeng Mi
+>
+> >
+> > I also noticed that I think we're sampling the XMM registers for dwarf
+> > unwinding, but it seems unlikely the XMM registers will hold stack
+> > frame information - so this is probably an x86 inefficiency.
+> >
+> > Thanks,
+> > Ian
+> >
