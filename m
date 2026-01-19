@@ -1,46 +1,46 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012000.outbound.protection.outlook.com [40.93.195.0])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010022.outbound.protection.outlook.com [52.101.56.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC6A25C804;
-	Mon, 19 Jan 2026 02:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F698258CE7;
+	Mon, 19 Jan 2026 02:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.22
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768790656; cv=fail; b=n8edcRIZBF9WS76dFa0vv5zhxtMZcexEvQ+DIHe0WcIoLJ+l+aO/TglU8eRZFoFQDduf+syhbykvSC/gV110T9BUBBeC76L/8pPCNNANMI0Y8vxDzLLrYXKwpRzr05HyvWSHgaxMCOstNxpas8Gj8CMZ4/v49KIGjDvKdZFz7wg=
+	t=1768790663; cv=fail; b=cWELoJPTqbaUe/rMj/UxWq26QSg3YNrC6GBtA54WJgRfeEm+0ck8IPBqo40bq0ibHG4eb7ha1DhoSeOGAnXNKL863UPKsu1dX4uHPP0sgtygD4m2cTSztMizUbY8XS6bdmbTkGclJpnA5tmB76Pse3ZkgfaNDj6qufmGai9RBRA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768790656; c=relaxed/simple;
-	bh=YMLKID5snhWa0l0DEQKipprdayy5qUYA9uYiqiY7rSg=;
+	s=arc-20240116; t=1768790663; c=relaxed/simple;
+	bh=u/Hb7VHOogFbgR2O2KAPYSaS5XMLXgeyO1npv21wy9Q=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hfC4feYjm7GorcDjTxaLhP3SeqNgWmBeLIVtoxwvZxMMpg+4V/Vdnr/Ddi+0FUfYX+j/YZjPJhtlyTirvY/W9tw/TPikcNHihrXhbrYR4iApgyxlE2bTx7EqaQcUU9m9Aio5nL5tD5ptgSIFe6b5cg3lKCsxhGkQ0WsNXFee7kc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4HYOlMtE; arc=fail smtp.client-ip=40.93.195.0
+	 MIME-Version:Content-Type; b=KSykdXXc2Tefv8k69NVosZmFKO7E3RbBT8s5d4ssDJYWIWHrNZ7zv0ZkLYHD0qgQ5YOpEAQcMXNQUX4/KI+lknriOE6cYf/vzZJX5ZZPYWXmLxw8B8J5jpc2TF8Zm0cLHPyypJDIENItJKVFkaL4jdtnGj+2MEqErpQ19zCEXO4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mwfVwTB3; arc=fail smtp.client-ip=52.101.56.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4HYOlMtE"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mwfVwTB3"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=caqQLJJBy83lywQ8WEwuUDdLzjARIVLDWbg/AcCduR9cxNtUHjBAiz7C17XbuliMA8g0wxcpPz+WGNU2g2dj635NhfcGzlsaFoIt8sK17kGvtpJzFkoDXm71AQWzbFv/UNiIzI+ArvVlKd4lJqr7Chihsxu1qntyMqjFwPPPnBTLmjppghYGybBlnZnha/5Zvw0uy7eMON+ytmHL7wYQba2NM0WrqOsNipVWHQ6TE0yMVcADTqox7oFGo75PSWoFr0AqxM3cRDXBcoE2mTa2T9nxSbDakAIfte3Ya+JomMJx/902+UUyvx3Y2Y14bkzikzjGshyCRCej8cGYoG8Smw==
+ b=gZqqAIIrmJYdr0WsXTUvEhEZWVvcYOV7+2voOjV0HnUHopcNrxeSQRMYX/flTAp1YbQDIv9+Bq3vZA+s4s6dmx4xkY0hWiouyq/RgF2w3lDaV8V7Bm5cflS/5XgQn8N8s2/TxqCTAJh7JGKcUak5rDYNxoQsrpIDbJ/2fJdpUHc1ignTvf0bJmWrld5dfPbP07Mp5Hi7sP3ijIroEHWYLCU6yl+6voKjfxsCUcjQDaZBJpo1sa+stGB2/XFhmJlcJHpc4mLqzKMQoUqhRYlYPrBbs13PrcyaKqqqxVJS2uIoq9p0V4S6Y4V1iwiLp16SrULzNKZ0SepTKUXtsSbh8g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=obPHnOBWkSi/A924eg/cZJPBFjAJL/rqCQ8oAyubP1Q=;
- b=VUCqGJl1TqRJHH4iYRQ+OV7RUWPTUslynnhAkBpoH3JaJigSs1VrrnNhyr8LmBnBByjEHTJdJdQFOKzyS0RvrIbKVfF4BujWMDh9G2G/jTDakBA8hMUA1V8bBo+Gty5ggp+LAOU0vZrBwrmHgM8Om25OMAMRReN8HI2edcpivew4qXcXO3t6iG7wy2uOJoUumYT7t7TFtgzuuIE/zoheY/pT4u7Y6Lz8JGhOTEY2cF5O5KC28XzLVg2psyjrR3kwsDzr9501Xspg6HaMZw5XmCzkJ12HEqQ80iaSb5FxDHeDcaYXcNEK/fdE4proArtp1is4D8rlELT8VqxEmx6PbQ==
+ bh=Z/mC/oSGtswWu7E4SRmWNVm8GoFdxsqPHzskbxB/fyE=;
+ b=OHXcawKN85nrkNOVq0MAPInJC3qcH+W2HSqxDlyPwsCUtJ5fCRZviUAOdBMttuBeYwwwh7vW9dXzcOtWlYRdXlFYByCOgP8molbolGISTRJ8UMGhdBVVzlF8QXwG/ogycv4aKq3C7TFvKRjCfrfxz7DXSGDt3CR7xSURKSrkKyr+Vm5OZSaq8r5N2cPegJpyk5+HRSjYYSElOPMsMWMlNIt+EweQ+Nh4JJ2lOab4rmRAnOktPY7vxzViLOwEJJXT9NzPxP3ZAJNKSU26eOCivD/OwcLPMJGCvS1eQPXsXIsUPhVwev3PmOnVsjybqqo8ehRcKSQ/UdUv0/sVlJQXRw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=obPHnOBWkSi/A924eg/cZJPBFjAJL/rqCQ8oAyubP1Q=;
- b=4HYOlMtEWEAkv5z1eQ4cTu5ciWLTgZq1z3T9e3uj2SKqlXmF7C+HcRmhFpeYiYQoEOut4IMrQRtkMjhTUjkwVao2g39Vg2T41w1J4FU2JgE1Q8/wm1YAfdUpJUXPgqQYEYmQEQXEnXiF4GKWtSbLKp+Tg2s54vE8NPzgkWXJnCA=
-Received: from PH7PR13CA0014.namprd13.prod.outlook.com (2603:10b6:510:174::28)
- by MW4PR12MB6922.namprd12.prod.outlook.com (2603:10b6:303:207::16) with
+ bh=Z/mC/oSGtswWu7E4SRmWNVm8GoFdxsqPHzskbxB/fyE=;
+ b=mwfVwTB3T1ewrqOlYtsMrM5ekkM/ZMw9cwyWbuIDvyYdoC0QmSteqaEz0WwptHY8Mg8leJs7ykXojkaMhQynoX77snO3Gf2mLvk2eKaYZyJA8cARwK19BY0F+HIyWBr02D7CxgkOhwXY29wmL49iT3dJcDC5FrSIK9tBaEkrkOI=
+Received: from PH7P223CA0008.NAMP223.PROD.OUTLOOK.COM (2603:10b6:510:338::6)
+ by LV2PR12MB5800.namprd12.prod.outlook.com (2603:10b6:408:178::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.8; Mon, 19 Jan
- 2026 02:44:11 +0000
-Received: from CY4PEPF0000E9D5.namprd05.prod.outlook.com
- (2603:10b6:510:174:cafe::91) by PH7PR13CA0014.outlook.office365.com
- (2603:10b6:510:174::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9542.8 via Frontend Transport; Mon,
- 19 Jan 2026 02:44:01 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.12; Mon, 19 Jan
+ 2026 02:44:18 +0000
+Received: from CY4PEPF0000E9DB.namprd05.prod.outlook.com
+ (2603:10b6:510:338:cafe::f7) by PH7P223CA0008.outlook.office365.com
+ (2603:10b6:510:338::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.12 via Frontend Transport; Mon,
+ 19 Jan 2026 02:44:14 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- CY4PEPF0000E9D5.mail.protection.outlook.com (10.167.241.68) with Microsoft
+ CY4PEPF0000E9DB.mail.protection.outlook.com (10.167.241.74) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9542.4 via Frontend Transport; Mon, 19 Jan 2026 02:44:10 +0000
+ 15.20.9542.4 via Frontend Transport; Mon, 19 Jan 2026 02:44:17 +0000
 Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sun, 18 Jan
- 2026 20:44:04 -0600
+ 2026 20:44:10 -0600
 From: Ravi Bangoria <ravi.bangoria@amd.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
 CC: Ravi Bangoria <ravi.bangoria@amd.com>, Arnaldo Carvalho de Melo
@@ -64,9 +64,9 @@ CC: Ravi Bangoria <ravi.bangoria@amd.com>, Arnaldo Carvalho de Melo
 	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Manali
  Shukla" <manali.shukla@amd.com>, Santosh Shukla <santosh.shukla@amd.com>,
 	Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH 4/6] perf amd ibs: Make Fetch status bits dependent on PhyAddrValid for newer platforms
-Date: Mon, 19 Jan 2026 02:43:25 +0000
-Message-ID: <20260119024328.897-5-ravi.bangoria@amd.com>
+Subject: [PATCH 5/6] perf amd ibs: Decode Remote-Socket flag in IBS OP raw dump
+Date: Mon, 19 Jan 2026 02:43:26 +0000
+Message-ID: <20260119024328.897-6-ravi.bangoria@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260119024328.897-1-ravi.bangoria@amd.com>
 References: <20260119024328.897-1-ravi.bangoria@amd.com>
@@ -82,143 +82,117 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D5:EE_|MW4PR12MB6922:EE_
-X-MS-Office365-Filtering-Correlation-Id: 55d2b53a-4f38-4cf2-8b39-08de57049fa6
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DB:EE_|LV2PR12MB5800:EE_
+X-MS-Office365-Filtering-Correlation-Id: dee76ddc-8849-4b2b-ee4e-08de5704a434
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|7416014|36860700013|376014;
+	BCL:0;ARA:13230040|82310400026|376014|7416014|1800799024|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QjCyKBWxe82Du4dHS+uiFiLk8W9XsSz8oXXg2hyyKQj+2u1A8JDgj8RG+qRG?=
- =?us-ascii?Q?SYDdJgQe/ss30uD6mb2O+7zp/mxfTm/aiMhxBT/YdYaVezZI3Z57ktg/Vtor?=
- =?us-ascii?Q?mJkjyT+7VOakGqcwWK3ysMzN8kE+yIEw1DbpPrivjJ31EcfidMWxs1SehA0G?=
- =?us-ascii?Q?/L+8mkvpcCVVcNEjTSKoCSVBa2kL3vUr5NqtsPeha43OFLsnFUuNVgwYzvm+?=
- =?us-ascii?Q?Kyo1prhMADIv/PeNUMBZaQvv4h7TQ6h2BMygX0kO86NIhFsmpbKmjMBYigwI?=
- =?us-ascii?Q?75Nah/OhWbR5s9jscMJUMqgchk3qkQmTK5jRbhmDFrhIe1LeknKWrBgKVFuM?=
- =?us-ascii?Q?mYZ8dl2f7n7IwCFk2snaRCSOJjlfLvOGwyIWVtw0874nDFcRJLn95Cb9rflQ?=
- =?us-ascii?Q?E4mRQJFFkIpGcFRmLPmQn2XacBc9+TYqeEt+SCl+k/tjnwfgiERUzISCgtjw?=
- =?us-ascii?Q?A1th1CJGt/FZokptdv/Ggz0FCUXdlViHcmZg9YnpWVqVk/Ff1iY/E8FNlN+U?=
- =?us-ascii?Q?wU6uEPLp1NDIo98dNpjNeaX8n3gw5L7ho7os7Ud0CN+uxsnRmwox0Bx8sHul?=
- =?us-ascii?Q?w2K/Dy1n2K5MJNJr3AC11qIcSG8zeWpIppYeQDABfmCig1ad+WFCXlSChPRJ?=
- =?us-ascii?Q?8q0QqRW5M8vtYiDbr6AmI0dwZ0zbV5d+xfqeLN3oE+J8RFxT2iOukIunYSx2?=
- =?us-ascii?Q?7DUXuUE69n9EnZu0vpLTXft/38hweABnCBSHUV5e7gJpDzV+ZdYXTWnviaBB?=
- =?us-ascii?Q?PIoifzNFrrqaypLfLeClmfc0prmgbe/NtfXuO3LVsL5tSNZxwK4l6Ywl45iO?=
- =?us-ascii?Q?z0l40RKiMpCvaqP2qLg0CHbDJ//gFh2BcVNFvt1pmAYv+isC11q91eKFYxQE?=
- =?us-ascii?Q?1sGmCQ9EJfRt8LAhLDvkEAFxScyGTPEeRePcYo1oLa0uoVrFSwh85VbBZvF7?=
- =?us-ascii?Q?xTJo9VGXE4LscVU4wr0cFcBEdvZukQlfX53UDznRgmi3ahpuuW9DLgrZtpLG?=
- =?us-ascii?Q?tlrtvIEwbL2C3HLTvWe2+87/GJR69b0I0ubKRPdDqXlbgOEWx9Qz54Ng5K6K?=
- =?us-ascii?Q?ZETUEBGhkz4tl1YivhYOXPHxYYhhQ8zsgRMWomM0X86NaOcx0riOAMyrBIlL?=
- =?us-ascii?Q?XwuVwh7t6brjJSjthYs8p7PAZy4jfi2u0d/4f9CVm3SPzWxBGrcgykRFA/S+?=
- =?us-ascii?Q?vsrIslI0wWN+fikh8ahnoXrAv8yaBO7sCS+bDcBxnTBgnsZ6tdlz3BqzG/6n?=
- =?us-ascii?Q?2039ZZLqUPbIgmcVINUfZ0PpI5+0uNC3UUBM8xSfDU3bV+Q75FyG4c+lI9KP?=
- =?us-ascii?Q?MTCqrJvib5eaY4rcWeluO+c/reVXWh0TZrj6mhnug5ZEnclxbLMoBIHDzY0b?=
- =?us-ascii?Q?od0MS6ZuOmZP0+ptLdGp6VZxF8+S+T8xbX2lhUpDLQI7CR+Lc8bbBBpGEatA?=
- =?us-ascii?Q?04velXkWFehkyx1DYuE0Htz65CKDy+R079TClhKNJWC4T6HwXBL7ahmagmG/?=
- =?us-ascii?Q?to8b2tUY0r1KjMjCdSn+5c+IuWynA6D++bZ56QgYZHXrQRFAOYBxRAscj0cS?=
- =?us-ascii?Q?8YxtLw9pS07ApA/Za5VhCsGKipOb79Vyx8Clxr9dk/laEFq312fz6pp7QXS9?=
- =?us-ascii?Q?lN493zxncQ1XKF1T9NRNCrwEDfJyYOunVYFkXUk+nNCU7M/EA1M3ubIbjoIs?=
- =?us-ascii?Q?Rr6n1A=3D=3D?=
+	=?us-ascii?Q?J4xVNeMw3OaE731H0mMk4dosS168AuvKSN/R0X0av1nEvOINVQ5W6vG6RAYS?=
+ =?us-ascii?Q?U9bTT4UTbJxx54lt14lzAHF2xEtCjPeEGdMMRvUjAdqQPJ3EgbD9G8siPmjK?=
+ =?us-ascii?Q?nNCCyx/W8/8lzpvUm/xYw2Pys4l2kTyKl2R4/PeHPTyDtlhlZM0Y0quPwi/H?=
+ =?us-ascii?Q?fwvvJ3pB+K9hJIAf4CIkFTEiz+K/lzKHck75hIWlKOFKYDDNO0dZ7rLuyVVr?=
+ =?us-ascii?Q?uzEw8yNiCb5sPPdyL/sG/5QkP9tDfL/xFOwZL9bhcwXx3VoEL3IIUsobMUha?=
+ =?us-ascii?Q?tswJR892GmBAicUtMY2vNiEw68RCxlnnuTApif7mCCKVNXbjGFAVzu/Mp/G7?=
+ =?us-ascii?Q?g5+E1uiquvzUIgrt19Y1zTQ3OMeL91HkT8R7HVpAR58LixmrdTRbECf+znL+?=
+ =?us-ascii?Q?YEiBE8hhFmtrf1jp5heY2wnjpo/1kZeBWxV5TzE+EuiZbFMcaggmU7CmMddd?=
+ =?us-ascii?Q?tAZUt1Mqo173FvdurGcUpa4N/GEIqQHFXqbl59urJ9U7LqyjmfL8WYDd1vIr?=
+ =?us-ascii?Q?iH0mjBJJcP+PP7KyD+uoODnwsIBcXY/rETHNxMmxz9TalsCOUzuWzMSuAQs7?=
+ =?us-ascii?Q?WV0lzl8yDiiKMg2iM3mGN7NKIScdfaRQV2KiyQyrbczjw7IOSIiAxoFpgoMO?=
+ =?us-ascii?Q?BdwFbIPzyTA1LtkUhrvsllXTsCP4A8ED9y7mcX1kdYyupWaN1zhWj8rJfl40?=
+ =?us-ascii?Q?hASBKl+HmjqMvYgtmXMOZ+BRlJyua+489SlVTftS3mXQwJzb1uCdy2Z8ne++?=
+ =?us-ascii?Q?AC8AiiJUKh1BU269m0ATItPS5h2xaTRXmpPnZvyi49PGxr4Gv0vhH5ygO2nk?=
+ =?us-ascii?Q?XrWays/2zpvjm3YWYBof0AMCJ68FHIQrVZnE61x/bFLQIYVDgM/5A8lSEpVG?=
+ =?us-ascii?Q?JZxdxFV8UBzP7ONdXq9eW4RwGW6SrnB6kvcqczhIDJ8FP2F099gFs8iUje/d?=
+ =?us-ascii?Q?xfO0ltDKxqhXnQKllZLSg2mM3k0j8jyEqgKM/elIwvqYt04ZV+0bO10NLlI1?=
+ =?us-ascii?Q?ks8Dsd6jT4wPLgH/LRbOfiFGykchZNobNU/OWhT3QSVwVtUmr+4U/dTROkUp?=
+ =?us-ascii?Q?k0s798lPLHmSlQ++711/Bf7hQbvl8Hp8ZGUfMlV3mInMFUCnkW4RW181sJw6?=
+ =?us-ascii?Q?nJVXtggIdMHv5VDK/XJjJICu6l8jae10dbVSXrqEOcpnbqbofuTsXIqg6b2g?=
+ =?us-ascii?Q?0gN5eXMqwYGnjcSevcarYzq3AcetqzHfgSanLeuwz3AQ5ICPu05YdaoFTN3k?=
+ =?us-ascii?Q?hZYkpzm/KHfQYVlE0mXPp6zL06UvbgmgZEj2LXEunkvdGNOm1F7N4R4A3jlI?=
+ =?us-ascii?Q?6Ff7Aia/AbbW7yG839ySybkBTUNNYd+XGCInEjGQfY6CAYYde+NUMBpGOMYs?=
+ =?us-ascii?Q?vxOIva0j8CvcvGFnnqSOVcPZSLPq8CBXINMQb0gDDXY5GaVPyT7Z/qbw8mM3?=
+ =?us-ascii?Q?LkLHKUoyjUbgxuIf39r9nfFdtMm2eEzIXeyFeoWNm15tsb7PVEMNDr2nuxXo?=
+ =?us-ascii?Q?M69OKA0rC2EbV60wzHUYaTF3H//qxrq6tlw2usRxY56Gga09RMpRsEeJnDbu?=
+ =?us-ascii?Q?58eJ2uC3rbnOgO2u1Kd2CtHe9OjrYdcY3gHlxO+/SFFCRiG2ZwbZCll2x8aa?=
+ =?us-ascii?Q?tL2386HPwySpQ2kfc+IA16kxZsccy+0rzfLZy6v0AbTg2M6DFIyhkFuSffFm?=
+ =?us-ascii?Q?j4/81g=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(36860700013)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 02:44:10.2291
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 02:44:17.8729
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55d2b53a-4f38-4cf2-8b39-08de57049fa6
+X-MS-Exchange-CrossTenant-Network-Message-Id: dee76ddc-8849-4b2b-ee4e-08de5704a434
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D5.namprd05.prod.outlook.com
+	CY4PEPF0000E9DB.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6922
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5800
 
-On future CPU SOCs, all IBS_FETCH_CTL status fields are valid only if
-IBS_FETCH_CTL[IbsPhyAddrValid] is set. Ditto for IBS_FETCH_CTL_EXT. Add
-these checks while decoding IBS MSRs.
-
-Unfortunately, there is no CPUID bit to indicate the change. Fallback
-to Family/Model check.
+Newer AMD CPUs can mark a data source as coming from a remote socket.
+When the PMU advertises this feature, interpret IBS_OP_DATA2[9] bit
+as the Remote-Socket indicator and show it in the raw dump output.
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
- tools/perf/util/amd-sample-raw.c | 42 ++++++++++++++++++++++++++++++--
- 1 file changed, 40 insertions(+), 2 deletions(-)
+ tools/perf/util/amd-sample-raw.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/amd-sample-raw.c b/tools/perf/util/amd-sample-raw.c
-index 385308c55f34..ae005eb0363d 100644
+index ae005eb0363d..3e5530008b14 100644
 --- a/tools/perf/util/amd-sample-raw.c
 +++ b/tools/perf/util/amd-sample-raw.c
-@@ -22,6 +22,29 @@ static bool zen4_ibs_extensions;
+@@ -21,6 +21,7 @@ static u32 cpu_family, cpu_model, ibs_fetch_type, ibs_op_type;
+ static bool zen4_ibs_extensions;
  static bool ldlat_cap;
  static bool dtlb_pgsize_cap;
- 
-+/*
-+ * Status fields of IBS_FETCH_CTL and IBS_FETCH_CTL_EXT are valid only if
-+ * IBS_FETCH_CTL[PhyAddrValid] is set.
-+ */
-+static int fetch_ctl_depends_on_phy_addr_valid(void)
-+{
-+	static int depends = -1; /* -1: Don't know, 1: Yes, 0: No */
-+
-+	if (depends != -1)
-+		return depends;
-+
-+	depends = 0;
-+	if (cpu_family > 0x1a ||
-+	    (cpu_family == 0x1a && (
-+	     (cpu_model >= 0x50 && cpu_model <= 0x5f) ||
-+	     (cpu_model >= 0x80 && cpu_model <= 0xaf) ||
-+	     (cpu_model >= 0xc0 && cpu_model <= 0xcf)))) {
-+		depends = 1;
-+	}
-+
-+	return depends;
-+}
-+
- static void pr_ibs_fetch_ctl(union ibs_fetch_ctl reg)
- {
- 	const char * const ic_miss_strs[] = {
-@@ -43,6 +66,18 @@ static void pr_ibs_fetch_ctl(union ibs_fetch_ctl reg)
- 	const char *ic_miss_str = NULL;
- 	const char *l1tlb_pgsz_str = NULL;
- 	char l3_miss_str[sizeof(" L3MissOnly _ FetchOcMiss _ FetchL3Miss _")] = "";
-+	char l3_miss_only_str[sizeof(" L3MissOnly _")] = "";
-+
-+	if (fetch_ctl_depends_on_phy_addr_valid() && !reg.phy_addr_valid) {
-+		snprintf(l3_miss_only_str, sizeof(l3_miss_only_str),
-+			 " L3MissOnly %d", reg.l3_miss_only);
-+
-+		printf("ibs_fetch_ctl:\t%016llx MaxCnt %7d Cnt %7d En %d Val %d Comp %d "
-+		       "PhyAddrValid 0 RandEn %d%s\n", reg.val, reg.fetch_maxcnt << 4,
-+		       reg.fetch_cnt << 4, reg.fetch_en, reg.fetch_val, reg.fetch_comp,
-+		       reg.rand_en, l3_miss_only_str);
-+		return;
-+	}
- 
- 	if (cpu_family == 0x19 && cpu_model < 0x10) {
- 		/*
-@@ -72,8 +107,11 @@ static void pr_ibs_fetch_ctl(union ibs_fetch_ctl reg)
- 		l3_miss_str);
- }
- 
--static void pr_ic_ibs_extd_ctl(union ic_ibs_extd_ctl reg)
-+static void pr_ic_ibs_extd_ctl(union ibs_fetch_ctl fetch_ctl, union ic_ibs_extd_ctl reg)
- {
-+	if (fetch_ctl_depends_on_phy_addr_valid() && !fetch_ctl.phy_addr_valid)
-+		return;
-+
- 	printf("ic_ibs_ext_ctl:\t%016llx IbsItlbRefillLat %3d\n", reg.val, reg.itlb_refill_lat);
- }
- 
-@@ -285,7 +323,7 @@ static void amd_dump_ibs_fetch(struct perf_sample *sample)
- 	printf("IbsFetchLinAd:\t%016llx\n", *addr++);
- 	if (fetch_ctl->phy_addr_valid)
- 		printf("IbsFetchPhysAd:\t%016llx\n", *addr);
--	pr_ic_ibs_extd_ctl(*extd_ctl);
-+	pr_ic_ibs_extd_ctl(*fetch_ctl, *extd_ctl);
- }
++static bool rmtsocket_cap;
  
  /*
+  * Status fields of IBS_FETCH_CTL and IBS_FETCH_CTL_EXT are valid only if
+@@ -164,8 +165,13 @@ static void pr_ibs_op_data2_extended(union ibs_op_data2 reg)
+ 		/* 13 to 31 are reserved. Avoid printing them. */
+ 	};
+ 	int data_src = (reg.data_src_hi << 3) | reg.data_src_lo;
++	char rmtsocket[sizeof("RmtSocket _ ")] = "";
+ 
+-	printf("ibs_op_data2:\t%016llx %sRmtNode %d%s\n", reg.val,
++	if (rmtsocket_cap)
++		snprintf(rmtsocket, sizeof(rmtsocket), "RmtSocket %d ", reg.rmt_socket);
++
++	printf("ibs_op_data2:\t%016llx %s%sRmtNode %d%s\n", reg.val,
++		rmtsocket,
+ 		(data_src == 1 || data_src == 2 || data_src == 5) ?
+ 			(reg.cache_hit_st ? "CacheHitSt 1=O-State " : "CacheHitSt 0=M-state ") : "",
+ 		reg.rmt_node,
+@@ -184,8 +190,13 @@ static void pr_ibs_op_data2_default(union ibs_op_data2 reg)
+ 		" DataSrc 6=(reserved)",
+ 		" DataSrc 7=Other"
+ 	};
++	char rmtsocket[sizeof("RmtSocket _ ")] = "";
++
++	if (rmtsocket_cap)
++		snprintf(rmtsocket, sizeof(rmtsocket), "RmtSocket %d ", reg.rmt_socket);
+ 
+-	printf("ibs_op_data2:\t%016llx %sRmtNode %d%s\n", reg.val,
++	printf("ibs_op_data2:\t%016llx %s%sRmtNode %d%s\n", reg.val,
++	       rmtsocket,
+ 	       reg.data_src_lo == 2 ? (reg.cache_hit_st ? "CacheHitSt 1=O-State "
+ 						     : "CacheHitSt 0=M-state ") : "",
+ 	       reg.rmt_node, data_src_str[reg.data_src_lo]);
+@@ -429,6 +440,9 @@ bool evlist__has_amd_ibs(struct evlist *evlist)
+ 	if (perf_env__find_pmu_cap(env, "ibs_op", "dtlb_pgsize"))
+ 		dtlb_pgsize_cap = 1;
+ 
++	if (perf_env__find_pmu_cap(env, "ibs_op", "rmtsocket"))
++		rmtsocket_cap = 1;
++
+ 	if (ibs_fetch_type || ibs_op_type) {
+ 		if (!cpu_family)
+ 			parse_cpuid(env);
 -- 
 2.43.0
 
