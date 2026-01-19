@@ -1,66 +1,66 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC2E3563D7
-	for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 10:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A862033EAEB
+	for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 10:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768817360; cv=none; b=ULdG+WBAyRU3X/vJXkPmxXMygrkmccpOepjfL0yO1fKXQxkH4nwrBfrRQJC8p6+VMJn3cE2gIJevpJ07tGarV9busfbizrNFC8n2N4e6qoMNQBLdT8nVOZETRw3RTnYp9p+jYXhU+jRheIGgCU4+BrHrIxDNIaltvTTMNjVImt8=
+	t=1768817361; cv=none; b=lajWHFHOvhhzh3uoUFyOEiR/1TomvAntPeaYVPIXZLW2xNWg6FugPE+fykplG6SE+U9//hXL27Hv8wWxJNjkIZ2ibRDhI5LVeLZYNVsUu3OptkUvr7IPLik2hOftW18y2cVG5RgJpP7PsQPXpN1kmQTv4mh99YshrhMadGAlPts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768817360; c=relaxed/simple;
-	bh=1tLEjrX0DxwPR8iJljGId1dCNiDm6OtJc2dK61ClIak=;
+	s=arc-20240116; t=1768817361; c=relaxed/simple;
+	bh=ABbYua5BR3/xyb8DnooUzvs5L17xzguh4+jQNRu1w1A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N3P10NqueQfvRxxgadapiQpASkahUmteSzEHq8WnoNufqQbF0RBABM18lmWiujCo6mbndWxHu/vLhgH/nleVyHsNGI3YsD+azLDwXlmkj/Ywmditqd0fMYr79+YtXRi/pe4tkwTKm8eiBa1ZGZVUbdLMrj2KULjCtEJ0/5JVYsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EodyK1vQ; arc=none smtp.client-ip=209.85.221.52
+	 In-Reply-To:To:Cc; b=GCdLqX9sH9gXXdHN2Od0FxW8hIteUrTyKq9v+OrjZ3wyvxPw7sb95oiAwEdeND95YpuNN4levxSYOrZqapEcqJ1v1ODlmlD5/wFsjGmgfxxWhhDpGZeznAJTqhd9Y9bfcEdgwtlVfbw052DT0dVbyDMCLBRGnj1Jm2rEjBkd7No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZTKQwywz; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EodyK1vQ"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-43284ed32a0so2274199f8f.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 02:09:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZTKQwywz"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-4327555464cso2024852f8f.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 02:09:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1768817357; x=1769422157; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1768817358; x=1769422158; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pk+482C5QT64UqLIfTHE0exsRm+80jWHxmqcZbu6Fsg=;
-        b=EodyK1vQrdU1KCv77hhQEHQMdjW7YQOQo5TYuIfea+INyEwa9bKN/XI6CKgxm1b4zZ
-         9KKyy82P18I1L4QJ3FsgB6rEGV2oaHAGqDrLTGKESyQW3MpQXWESMMBXoY7s7rQmDOXf
-         d3HHts7Qf5aH7iCJEtOxOEREZsuWueq3wZ/Ijw944URViHUk+ZVkPedQMwJCLm2os48R
-         S1XipHN4e47s0Vhgs0CNUObUtHyOMx1mz0+0E3ucEAhf+T/EHb/+kQA5hsyoYnJ+AkBA
-         h6ECT+0xcMSxoSMYDbzFr+sJCbhWwI3ZzA+YeHF47imaeqCa8etXvUlIzTIv15h+mgzw
-         Vdrg==
+        bh=rQboqiyM1bMVlCd/3rehrhWCEvcz3KFGOF/fcvtDHSE=;
+        b=ZTKQwywz6zxuf1QnuB9xvP/hH/Kk8+zYtRY63AnmEXudZ5N7Gr770ssIZcOM8HsEHB
+         Q0s63fqXbkOm8aP2va+2RCGwYbRM5Mx+IMkHTEEmaR4NxY2NbOPPRuor0/NLVqTN3H0Y
+         GQTDVQrKvO4nRqTm/BU+CB0xBWdCZ3z2rNOPefoqwVLbr/zFpThjz42kxkTL2tAAvKUI
+         3nDUY5Mw0UO3wwwITfmhVy0RfvNYr368zer6SJPy/7LwTuFIkjHd/I7XDrw/47Wrn1Gp
+         DvPEEgXpsl+C/D7mPCwTcAs7d43J6BvS3KldoCkCB3QHP3TcW8nllIsDVEVqkGXQaSDr
+         9tcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768817357; x=1769422157;
+        d=1e100.net; s=20230601; t=1768817358; x=1769422158;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=pk+482C5QT64UqLIfTHE0exsRm+80jWHxmqcZbu6Fsg=;
-        b=tYn/2SNpTzJh9U8ZHh+dDEY3/blywftXs5LSNAhbsDTPAQ0JZ/AH587r3DdLbaPMmo
-         s2gE3+qCH5mPoDr8zRueifANvDm1jLg9bYisUCk6c/OI8vHkiKrmwqqbZFwDgBmaMkCG
-         9HT2BzoJjQVaDr3ANM6RVC76oAWEDmKQwBeKKP6EI2XPuT5cts/TmC+4wfGN0RsuN+EI
-         MXFL8K1BcTIqxTx3cjIq+yDoNTUer6yMRCa88kCjWxEtCf/28/Q8GJ6PmxQGPAOJAU1R
-         bTI9Tor/aV6ZiBb0FYnnmhTrIAaRXNff/ZCp5uSnd2iCYE42ZGrL5XQZQBfZJhVw9xlh
-         HIiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ7j95K94Fng4mc8szgTXLp0YG6v+yPnQ++gz4aC4DmolCWnLmdoWv7f7azkfL2FlUT7P6u1jfxfcyoSJO5HMo@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJv8xpBJ6R/C87bFUFOLelCyuUHdlaq11Up8T8NCbK483MBCJS
-	ADGgaTMDUX1N8Zw96W8Mi8XzQvsXWlWafyemmnuezdrRtOt8Tt0T/zWpvmz6mAOpPyI=
-X-Gm-Gg: AY/fxX42zvSdK81OHjLny/wR+ppwk7Mm8AsTkHq1atgz/5VPHy8pUMzBDfTI2TypJjD
-	+jClnNeT7hJfgwVPNnvX+NtNngZ/FC6ywRxW4PnuROebmMNyTsna4i8FEIcb7kaM2poZsFTBonu
-	WwEUuCeL7uMiD/2PIUq0kNjaAkWZuS+kTUBT49zk/pMVuLa3lhAaM3hl/itkzCU1HH2PpaPHdP+
-	1ATFvZI0J4JhBY8bA7PcNUO2ZwqVhpKYo8fPTeUBz50cgLAtwsotllmqaqQbqgehl8YkNE+eK7U
-	rUP7I/8sFAAWGmzSsFP4iogvD6VBxUlsiNQ7JobV7NXLKLoGLlfIMwkUKRA4N3ZOD2Y+N2hu7j5
-	FvXYEj5DWpa7Qz/C9qiUJDKW39mM8+a4Twsk7gz4UGBtrTzvSEsvGCUYbHm9nwhywemT3Tqv+9s
-	hIfNY/s3M762/ELgsAAvXV
-X-Received: by 2002:a05:6000:4387:b0:431:9b2:61c0 with SMTP id ffacd0b85a97d-4356998af28mr13237053f8f.24.1768817356877;
-        Mon, 19 Jan 2026 02:09:16 -0800 (PST)
+        bh=rQboqiyM1bMVlCd/3rehrhWCEvcz3KFGOF/fcvtDHSE=;
+        b=vZaKzaaSw8m8CyTWeAHM2/8MKeMwLXbByzZReMy/E7qedVd+UmjAT62AYQ13wlk0os
+         dfR/NvIBfhVZuXxwX4sBoXsZXDDNUfukHfh6AFpP1iU9IlIFIzF4N9xYEsYW5ZqqQy1p
+         Z79RP2ts37AhKm99wqlx4taT34Gh/p1xG6RalDPNtAi8xTXRq76lSqwaiUWDv1dblbdw
+         bmU51GCFvHsmMNZfd8Lkp14IuIim1GRHHwljtM8oj7m8jNR6eawObU/9UeCXvlAVnfzC
+         omfMmojf+hC35RyaD/f9nUzlSQbXpPU4mrSLXh5RN4Kox6B8XrCpbo6cPGLBq8eB3YNJ
+         yrDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWtUI6VDbtJ7rBztZJNSF4w3gDiN1x9IlkzCuSgBBZVecZmcznWQVFjyXJjxmhcCLf4YyZjYc1wzqkHuWCkcB01@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9MiAVVF5AEDjZWoR/7s2aj1umOyRZdHjYAoahABw+T9u4KXln
+	j2IGqv7BAeRfp1Gedu98zz7KDTihyuO+O234NoYxd0J1o+wHXat27Cwj9XqgsgLWzyk=
+X-Gm-Gg: AY/fxX67DiPnkyPtUsiBA7SIBHulZ1BCwbTEBeeAwq2CILHS3wKchkZpfpxeAJgMIlD
+	YskBQXHtR2mmPkkjVF9YnWMoiQuQExV2wMDr/UZQdMnxf5RWc9C8Sg3lqZcnX4/49L/C9om7Vqr
+	7lAAgnKS4mPFo5o6hCM0FAg8zhfee/rjIdBRDjnELZyMse2+5zbBKr0M79zIrLf1D9AvrXYah0C
+	96+O/ChUwnhN9fs6ylxiHw3AGKtHRtUhIFCy7hJNVOVU7MhsJpcMhEl/zbrm5Av5tc56T3EWd0g
+	ikzmJNo5tsVhu6VbBqzEVN5CI52oJ2gxCoiBX2NWUPzYXPULpCWdTZXizPfuWSu5yahilDBD/Y+
+	ii0wZyTpxqLGOr1OIX2VPg/rh0POaSYVwmjSH4ARSdvdvP9sFJnFd0C3doDRcm2lXY8ZHkuzIyc
+	tW9CphIjURF0wKxRyLI//r
+X-Received: by 2002:a05:6000:144b:b0:432:586f:2a9d with SMTP id ffacd0b85a97d-43569bbffa4mr14213616f8f.32.1768817358124;
+        Mon, 19 Jan 2026 02:09:18 -0800 (PST)
 Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356997e6cdsm23234802f8f.31.2026.01.19.02.09.15
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356997e6cdsm23234802f8f.31.2026.01.19.02.09.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jan 2026 02:09:16 -0800 (PST)
+        Mon, 19 Jan 2026 02:09:17 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Mon, 19 Jan 2026 10:08:16 +0000
-Subject: [PATCH 1/2] perf cs-etm: Fix decoding for sparse CPU maps
+Date: Mon, 19 Jan 2026 10:08:17 +0000
+Subject: [PATCH 2/2] perf cs-etm: Test sparse CPU maps
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260119-james-perf-coresight-cpu-map-segfault-v1-1-a9cfd67653ae@linaro.org>
+Message-Id: <20260119-james-perf-coresight-cpu-map-segfault-v1-2-a9cfd67653ae@linaro.org>
 References: <20260119-james-perf-coresight-cpu-map-segfault-v1-0-a9cfd67653ae@linaro.org>
 In-Reply-To: <20260119-james-perf-coresight-cpu-map-segfault-v1-0-a9cfd67653ae@linaro.org>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -87,97 +87,85 @@ Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-The ETM decoder incorrectly assumed that auxtrace queue indices were
-equivalent to CPU number. This assumption is used for inserting records
-into the queue, and for fetching queues when given a CPU number. This
-assumption held when Perf always opened a dummy event on every CPU, even
-if the user provided a subset of CPUs on the commandline, resulting in
-the indices aligning.
+We only currently test with default (all CPUs) or --per-thread mode.
+Different permutations of the "-C" option can affect decoding so add
+tests for some of them.
 
-For example:
-
-  # event : name = cs_etm//u, , id = { 2451, 2452 }, type = 11 (cs_etm), size = 136, config = 0x4010, { sample_period, samp>
-  # event : name = dummy:u, , id = { 2453, 2454, 2455, 2456 }, type = 1 (PERF_TYPE_SOFTWARE), size = 136, config = 0x9 (PER>
-
-  0 0 0x200 [0xd0]: PERF_RECORD_ID_INDEX nr: 6
-  ... id: 2451  idx: 2  cpu: 2  tid: -1
-  ... id: 2452  idx: 3  cpu: 3  tid: -1
-  ... id: 2453  idx: 0  cpu: 0  tid: -1
-  ... id: 2454  idx: 1  cpu: 1  tid: -1
-  ... id: 2455  idx: 2  cpu: 2  tid: -1
-  ... id: 2456  idx: 3  cpu: 3  tid: -1
-
-Since commit 811082e4b668 ("perf parse-events: Support user CPUs mixed
-with threads/processes") the dummy event no longer behaves in this way,
-making the ETM event indices start from 0 on the first CPU recorded
-regardless of its ID:
-
-  # event : name = cs_etm//u, , id = { 771, 772 }, type = 11 (cs_etm), size = 144, config = 0x4010, { sample_period, sample>
-  # event : name = dummy:u, , id = { 773, 774 }, type = 1 (PERF_TYPE_SOFTWARE), size = 144, config = 0x9 (PERF_COUNT_SW_DUM>
-
-  0 0 0x200 [0x90]: PERF_RECORD_ID_INDEX nr: 4
-  ... id: 771  idx: 0  cpu: 2  tid: -1
-  ... id: 772  idx: 1  cpu: 3  tid: -1
-  ... id: 773  idx: 0  cpu: 2  tid: -1
-  ... id: 774  idx: 1  cpu: 3  tid: -1
-
-This causes the following segfault when decoding:
-
-  $ perf record -e cs_etm//u -C 2,3 -- true
-  $ perf report
-
-  perf: Segmentation fault
-  -------- backtrace --------
-  #0 0xaaaabf9fd020 in ui__signal_backtrace setup.c:110
-  #1 0xffffab5c7930 in __kernel_rt_sigreturn [vdso][930]
-  #2 0xaaaabfb68d30 in cs_etm_decoder__reset cs-etm-decoder.c:85
-  #3 0xaaaabfb65930 in cs_etm__get_data_block cs-etm.c:2032
-  #4 0xaaaabfb666fc in cs_etm__run_per_cpu_timeless_decoder cs-etm.c:2551
-  #5 0xaaaabfb6692c in (cs_etm__process_timeless_queues cs-etm.c:2612
-  #6 0xaaaabfb63390 in cs_etm__flush_events cs-etm.c:921
-  #7 0xaaaabfb324c0 in auxtrace__flush_events auxtrace.c:2915
-  #8 0xaaaabfaac378 in __perf_session__process_events session.c:2285
-  #9 0xaaaabfaacc9c in perf_session__process_events session.c:2442
-  #10 0xaaaabf8d3d90 in __cmd_report builtin-report.c:1085
-  #11 0xaaaabf8d6944 in cmd_report builtin-report.c:1866
-  #12 0xaaaabf95ebfc in run_builtin perf.c:351
-  #13 0xaaaabf95eeb0 in handle_internal_command perf.c:404
-  #14 0xaaaabf95f068 in run_argv perf.c:451
-  #15 0xaaaabf95f390 in main perf.c:558
-  #16 0xffffaab97400 in __libc_start_call_main libc_start_call_main.h:74
-  #17 0xffffaab974d8 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
-  #18 0xaaaabf8aa8f0 in _start perf[7a8f0]
-
-Fix it by inserting into the queues based on CPU number, rather than
-using the index.
-
-Fixes: 811082e4b668 ("perf parse-events: Support user CPUs mixed with threads/processes")
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/cs-etm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/test_arm_coresight.sh | 54 ++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 25d56e0f1c07..12b55c2bc2ca 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -3086,7 +3086,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+index 1c750b67d141..bbf89e944e7b 100755
+--- a/tools/perf/tests/shell/test_arm_coresight.sh
++++ b/tools/perf/tests/shell/test_arm_coresight.sh
+@@ -198,6 +198,58 @@ arm_cs_etm_basic_test() {
+ 	arm_cs_report "CoreSight basic testing with '$*'" $err
+ }
  
- 	if (aux_offset >= auxtrace_event->offset &&
- 	    aux_offset + aux_size <= auxtrace_event->offset + auxtrace_event->size) {
--		struct cs_etm_queue *etmq = etm->queues.queue_array[auxtrace_event->idx].priv;
-+		struct cs_etm_queue *etmq = cs_etm__get_queue(etm, auxtrace_event->cpu);
++arm_cs_etm_test_cpu_list() {
++	echo "Testing sparse CPU list: $1"
++	perf record -o ${perfdata} -e cs_etm//u -C $1 \
++		-- taskset --cpu-list $1 true > /dev/null 2>&1
++	perf_script_branch_samples true
++	err=$?
++	arm_cs_report "CoreSight sparse CPUs with '$*'" $err
++}
++
++arm_cs_etm_sparse_cpus_test() {
++	# Iterate for every ETM device
++	cpus=()
++	for dev in /sys/bus/event_source/devices/cs_etm/cpu*; do
++		# Canonicalize the path
++		dev=`readlink -f $dev`
++
++		# Find the ETM device belonging to which CPU
++		cpus+=("$(cat $dev/cpu)")
++	done
++
++	mapfile -t cpus < <(printf '%s\n' "${cpus[@]}" | sort -n)
++	total=${#cpus[@]}
++
++	# Need more than 1 to test
++	if [ $total -le 1 ]; then
++		return 0
++	fi
++
++	half=$((total / 2))
++
++	# First half
++	first_half=$(IFS=,; echo "${cpus[*]:0:$half}")
++	arm_cs_etm_test_cpu_list $first_half
++
++	# Second half
++	second_half=$(IFS=,; echo "${cpus[*]:$half}")
++	arm_cs_etm_test_cpu_list $second_half
++
++	# Odd list is the same as halves unless >= 4 CPUs
++	if [ $total -lt 4 ]; then
++		return 0
++	fi
++
++	# Odd indices
++	odd_cpus=()
++	for ((i=1; i<total; i+=2)); do
++		odd_cpus+=("${cpus[$i]}")
++	done
++	odd_list=$(IFS=,; echo "${odd_cpus[*]}")
++	arm_cs_etm_test_cpu_list $odd_list
++}
++
+ arm_cs_etm_traverse_path_test
+ arm_cs_etm_system_wide_test
+ arm_cs_etm_snapshot_test
+@@ -211,4 +263,6 @@ arm_cs_etm_basic_test -e cs_etm/timestamp=1/ -a
+ arm_cs_etm_basic_test -e cs_etm/timestamp=0/
+ arm_cs_etm_basic_test -e cs_etm/timestamp=1/
  
- 		/*
- 		 * If this AUX event was inside this buffer somewhere, create a new auxtrace event
-@@ -3095,6 +3095,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
- 		auxtrace_fragment.auxtrace = *auxtrace_event;
- 		auxtrace_fragment.auxtrace.size = aux_size;
- 		auxtrace_fragment.auxtrace.offset = aux_offset;
-+		auxtrace_fragment.auxtrace.idx = etmq->queue_nr;
- 		file_offset += aux_offset - auxtrace_event->offset + auxtrace_event->header.size;
- 
- 		pr_debug3("CS ETM: Queue buffer size: %#"PRI_lx64" offset: %#"PRI_lx64
++arm_cs_etm_sparse_cpus_test
++
+ exit $glb_err
 
 -- 
 2.34.1
