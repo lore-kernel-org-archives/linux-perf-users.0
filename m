@@ -1,66 +1,65 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A862033EAEB
-	for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 10:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E78A27B336
+	for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 10:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768817361; cv=none; b=lajWHFHOvhhzh3uoUFyOEiR/1TomvAntPeaYVPIXZLW2xNWg6FugPE+fykplG6SE+U9//hXL27Hv8wWxJNjkIZ2ibRDhI5LVeLZYNVsUu3OptkUvr7IPLik2hOftW18y2cVG5RgJpP7PsQPXpN1kmQTv4mh99YshrhMadGAlPts=
+	t=1768817933; cv=none; b=czF5S+ObznYI5pAFCBLZx9t2zAbG741K6J63nKgmoQT2CNe087Wq8mn8DAAVJNYZbV5PA9BFZ2yxvNbbqSffEw7zJRoi2ZSYg0/N79Kn9pzMINqLKFLytCnO2t99n2JK0fksc7Z6cxyeGy96Gk8V1Cq6+CqpxiB/yhkTPDhVDHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768817361; c=relaxed/simple;
-	bh=ABbYua5BR3/xyb8DnooUzvs5L17xzguh4+jQNRu1w1A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GCdLqX9sH9gXXdHN2Od0FxW8hIteUrTyKq9v+OrjZ3wyvxPw7sb95oiAwEdeND95YpuNN4levxSYOrZqapEcqJ1v1ODlmlD5/wFsjGmgfxxWhhDpGZeznAJTqhd9Y9bfcEdgwtlVfbw052DT0dVbyDMCLBRGnj1Jm2rEjBkd7No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZTKQwywz; arc=none smtp.client-ip=209.85.221.51
+	s=arc-20240116; t=1768817933; c=relaxed/simple;
+	bh=2jXClWYETblrv7/GNCDCHF2VA6IMOI2Zs7BVfmEIGvg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rmXSBX+fXVPj75FQneMMcNeP2Ipt2+/Fls1uh36AW5IrJ8sQaxAs+fVQagDidrtzq0b0k99byHg56jf/euLe88ZMFvek83rVGvxdzSCOprt3+Bh8ZI7Vg3lscm4FifO686F6KH5Gb7wnTnLHraHgMYbbafDqRQuecwCeUpu3j20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DrtU42dY; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZTKQwywz"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-4327555464cso2024852f8f.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 02:09:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DrtU42dY"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-431048c4068so2388177f8f.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 02:18:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1768817358; x=1769422158; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rQboqiyM1bMVlCd/3rehrhWCEvcz3KFGOF/fcvtDHSE=;
-        b=ZTKQwywz6zxuf1QnuB9xvP/hH/Kk8+zYtRY63AnmEXudZ5N7Gr770ssIZcOM8HsEHB
-         Q0s63fqXbkOm8aP2va+2RCGwYbRM5Mx+IMkHTEEmaR4NxY2NbOPPRuor0/NLVqTN3H0Y
-         GQTDVQrKvO4nRqTm/BU+CB0xBWdCZ3z2rNOPefoqwVLbr/zFpThjz42kxkTL2tAAvKUI
-         3nDUY5Mw0UO3wwwITfmhVy0RfvNYr368zer6SJPy/7LwTuFIkjHd/I7XDrw/47Wrn1Gp
-         DvPEEgXpsl+C/D7mPCwTcAs7d43J6BvS3KldoCkCB3QHP3TcW8nllIsDVEVqkGXQaSDr
-         9tcw==
+        d=linaro.org; s=google; t=1768817930; x=1769422730; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MhEi7wyHnyPXObmogB/mGJrCmlxVONKsyXqEGSo+Aug=;
+        b=DrtU42dYTR9QorQlwDMBKgLCyAUsiT4zUWaYS67xVemH5NdXXNfUEiM+aopBjdHN8L
+         kKq+tdbcyh6QB6g3bwg6vJObguLyDbPzPVdH3wbm8/vwg0e10hc/QmYDTUbW73eD8xcN
+         269rn4STRCo5Cj1hShxVR+CIVJXwZenGyPcFLm4XoxZjSIJLD/hxEvSLjcaY4zGEtMSp
+         PAZ5QvDa5ZN+kY7YegLqpOzz4lnAvDc3xyK+MW9ttCibIAV0hGvcatbk4Ljj58NB9fEo
+         Kf2b+6QlMxn11Iosje0mqtoo6aZMQ4i8O+AqedcqhToMtMj+b1Dces1egFvTuwptS464
+         3tjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768817358; x=1769422158;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rQboqiyM1bMVlCd/3rehrhWCEvcz3KFGOF/fcvtDHSE=;
-        b=vZaKzaaSw8m8CyTWeAHM2/8MKeMwLXbByzZReMy/E7qedVd+UmjAT62AYQ13wlk0os
-         dfR/NvIBfhVZuXxwX4sBoXsZXDDNUfukHfh6AFpP1iU9IlIFIzF4N9xYEsYW5ZqqQy1p
-         Z79RP2ts37AhKm99wqlx4taT34Gh/p1xG6RalDPNtAi8xTXRq76lSqwaiUWDv1dblbdw
-         bmU51GCFvHsmMNZfd8Lkp14IuIim1GRHHwljtM8oj7m8jNR6eawObU/9UeCXvlAVnfzC
-         omfMmojf+hC35RyaD/f9nUzlSQbXpPU4mrSLXh5RN4Kox6B8XrCpbo6cPGLBq8eB3YNJ
-         yrDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtUI6VDbtJ7rBztZJNSF4w3gDiN1x9IlkzCuSgBBZVecZmcznWQVFjyXJjxmhcCLf4YyZjYc1wzqkHuWCkcB01@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9MiAVVF5AEDjZWoR/7s2aj1umOyRZdHjYAoahABw+T9u4KXln
-	j2IGqv7BAeRfp1Gedu98zz7KDTihyuO+O234NoYxd0J1o+wHXat27Cwj9XqgsgLWzyk=
-X-Gm-Gg: AY/fxX67DiPnkyPtUsiBA7SIBHulZ1BCwbTEBeeAwq2CILHS3wKchkZpfpxeAJgMIlD
-	YskBQXHtR2mmPkkjVF9YnWMoiQuQExV2wMDr/UZQdMnxf5RWc9C8Sg3lqZcnX4/49L/C9om7Vqr
-	7lAAgnKS4mPFo5o6hCM0FAg8zhfee/rjIdBRDjnELZyMse2+5zbBKr0M79zIrLf1D9AvrXYah0C
-	96+O/ChUwnhN9fs6ylxiHw3AGKtHRtUhIFCy7hJNVOVU7MhsJpcMhEl/zbrm5Av5tc56T3EWd0g
-	ikzmJNo5tsVhu6VbBqzEVN5CI52oJ2gxCoiBX2NWUPzYXPULpCWdTZXizPfuWSu5yahilDBD/Y+
-	ii0wZyTpxqLGOr1OIX2VPg/rh0POaSYVwmjSH4ARSdvdvP9sFJnFd0C3doDRcm2lXY8ZHkuzIyc
-	tW9CphIjURF0wKxRyLI//r
-X-Received: by 2002:a05:6000:144b:b0:432:586f:2a9d with SMTP id ffacd0b85a97d-43569bbffa4mr14213616f8f.32.1768817358124;
-        Mon, 19 Jan 2026 02:09:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768817930; x=1769422730;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MhEi7wyHnyPXObmogB/mGJrCmlxVONKsyXqEGSo+Aug=;
+        b=id6vo8W5NhlUEUZ0ZcNz89FO/5Vr/N7VOYci2VcB5uezXcP9DflwD4LDI2cxL6iFSE
+         vfhRNMTrZ/IkdpYUFC+cPd4Tm/0ZWZvkVHNtPcCJsqsG9KyBBovk+7foxFf6Ms3VkylQ
+         9wH/QUyqbTXkO87+Z1rKXHB0hnYcuFEEIho1pfydQY0XMq2odpkclQ+oje6VgEQWSWmp
+         HbN2e813/sVyi0qDVKL+aYVFxXLI1RDz0AKl2s8rx678MN1iKV7zII9QTtAZY/2p1IoO
+         Dk+k4LhnJHsq+szE2fsEu77FwtYYRV9zm1dVF/U4Usgjg4H8aT7olE+QQVe6b/RYQNil
+         We1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVQZPoiPhlpnpX22Ge97mghC+QJC/5hLOBhMlBFxkrfemSQB16Fo5fyE1dN6dbPFST/P4u5d/nQJArCW1vMnREf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSbdPFes6/jmSxP9plABny0LWB+1Buaq53QqIRQesKzWJ04pd8
+	XzJyUQMRvqLVIsrYmvWVxz+uciDTTW6zJdbUSPDrzSBXQKo127tjh0vPAqBsUuzs03I=
+X-Gm-Gg: AY/fxX6T66TSobJ/kizzkDSjOcVhmtBFV9d61d77bwTHP9kLK7xv7ip68MA4jq6j6jQ
+	bb9rSYwTcBSZOhH4F6UqM8vIfpfz+vvzYzaqSb0ZnQvqZxfdgmVT9WDDCq9XS+WorDSurI943Bb
+	9Kwp8lbRNPCGUqLhdOF1H+pknUDOahTFZVtoeyno+fhL3xfCp8Kwq1FCJzaAnmO6DhqGUCMnmCZ
+	NyEMI3cqAiCZGQN9oBMl7UJiK9b9hayzAgbiLSdARnE6u428YRJqjSFX0HdjxeAw2WXodbaQcEH
+	RbyC1TAo7PwoK76vEai8L9/W4TJuIPDCBa8padqFk3D1wTDyCRwZb92GPmUtzSkCGnJmqBxwVFx
+	EYP975xKcnrN8XAL/tCCYvWwOu/p/6tVVW235QQM4OyeWhu2ad5zXKcBBMR3ynxXZSZYt1kCiFO
+	9i1rLq2CC3vQwEjvJj+7GO
+X-Received: by 2002:a05:6000:2c01:b0:42f:b6ea:5e4 with SMTP id ffacd0b85a97d-434df1164damr19213925f8f.28.1768817930307;
+        Mon, 19 Jan 2026 02:18:50 -0800 (PST)
 Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356997e6cdsm23234802f8f.31.2026.01.19.02.09.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356997e6cdsm23286150f8f.31.2026.01.19.02.18.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jan 2026 02:09:17 -0800 (PST)
+        Mon, 19 Jan 2026 02:18:49 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Mon, 19 Jan 2026 10:08:17 +0000
-Subject: [PATCH 2/2] perf cs-etm: Test sparse CPU maps
+Subject: [PATCH v2 0/2] perf cs-etm: Fix decoding for sparse CPU maps
+Date: Mon, 19 Jan 2026 10:18:34 +0000
+Message-Id: <20260119-james-perf-coresight-cpu-map-segfault-v2-0-56b956a629ee@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,9 +68,10 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260119-james-perf-coresight-cpu-map-segfault-v1-2-a9cfd67653ae@linaro.org>
-References: <20260119-james-perf-coresight-cpu-map-segfault-v1-0-a9cfd67653ae@linaro.org>
-In-Reply-To: <20260119-james-perf-coresight-cpu-map-segfault-v1-0-a9cfd67653ae@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAPoEbmkC/43NQQ6CMBCF4auQrh1TagriynsYFpMyLWOANi0QD
+ eHuVhL3Lv+3eN8mEkWmJG7FJiKtnNhPOdSpEKbHyRFwl1soqSpZlhqeOFKCQNGC8ZESu34GExY
+ YMUAiZ3EZZiClJVqNWNdXkb9CJMuvw3m0uXtOs4/vg13L7/oTmj+FtQQJ2BjbVXWlL0j3gSeM/
+ uyjE+2+7x9z7o902wAAAA==
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
  Mike Leach <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>, 
  Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
@@ -87,86 +87,27 @@ Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-We only currently test with default (all CPUs) or --per-thread mode.
-Different permutations of the "-C" option can affect decoding so add
-tests for some of them.
+Fix a regression caused by an incorrect assumption about auxtrace
+indices. Then add a test that would have caught it.
 
-Signed-off-by: James Clark <james.clark@linaro.org>
 ---
+Changes in v2:
+- Fix cover letter and subject
+- Link to v1: https://lore.kernel.org/r/20260119-james-perf-coresight-cpu-map-segfault-v1-0-a9cfd67653ae@linaro.org
+
+---
+James Clark (2):
+      perf cs-etm: Fix decoding for sparse CPU maps
+      perf cs-etm: Test sparse CPU maps
+
  tools/perf/tests/shell/test_arm_coresight.sh | 54 ++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ tools/perf/util/cs-etm.c                     |  3 +-
+ 2 files changed, 56 insertions(+), 1 deletion(-)
+---
+base-commit: 571d29baa07e83e637075239f379f91353c24ec9
+change-id: 20260115-james-perf-coresight-cpu-map-segfault-e250af5aa778
 
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-index 1c750b67d141..bbf89e944e7b 100755
---- a/tools/perf/tests/shell/test_arm_coresight.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight.sh
-@@ -198,6 +198,58 @@ arm_cs_etm_basic_test() {
- 	arm_cs_report "CoreSight basic testing with '$*'" $err
- }
- 
-+arm_cs_etm_test_cpu_list() {
-+	echo "Testing sparse CPU list: $1"
-+	perf record -o ${perfdata} -e cs_etm//u -C $1 \
-+		-- taskset --cpu-list $1 true > /dev/null 2>&1
-+	perf_script_branch_samples true
-+	err=$?
-+	arm_cs_report "CoreSight sparse CPUs with '$*'" $err
-+}
-+
-+arm_cs_etm_sparse_cpus_test() {
-+	# Iterate for every ETM device
-+	cpus=()
-+	for dev in /sys/bus/event_source/devices/cs_etm/cpu*; do
-+		# Canonicalize the path
-+		dev=`readlink -f $dev`
-+
-+		# Find the ETM device belonging to which CPU
-+		cpus+=("$(cat $dev/cpu)")
-+	done
-+
-+	mapfile -t cpus < <(printf '%s\n' "${cpus[@]}" | sort -n)
-+	total=${#cpus[@]}
-+
-+	# Need more than 1 to test
-+	if [ $total -le 1 ]; then
-+		return 0
-+	fi
-+
-+	half=$((total / 2))
-+
-+	# First half
-+	first_half=$(IFS=,; echo "${cpus[*]:0:$half}")
-+	arm_cs_etm_test_cpu_list $first_half
-+
-+	# Second half
-+	second_half=$(IFS=,; echo "${cpus[*]:$half}")
-+	arm_cs_etm_test_cpu_list $second_half
-+
-+	# Odd list is the same as halves unless >= 4 CPUs
-+	if [ $total -lt 4 ]; then
-+		return 0
-+	fi
-+
-+	# Odd indices
-+	odd_cpus=()
-+	for ((i=1; i<total; i+=2)); do
-+		odd_cpus+=("${cpus[$i]}")
-+	done
-+	odd_list=$(IFS=,; echo "${odd_cpus[*]}")
-+	arm_cs_etm_test_cpu_list $odd_list
-+}
-+
- arm_cs_etm_traverse_path_test
- arm_cs_etm_system_wide_test
- arm_cs_etm_snapshot_test
-@@ -211,4 +263,6 @@ arm_cs_etm_basic_test -e cs_etm/timestamp=1/ -a
- arm_cs_etm_basic_test -e cs_etm/timestamp=0/
- arm_cs_etm_basic_test -e cs_etm/timestamp=1/
- 
-+arm_cs_etm_sparse_cpus_test
-+
- exit $glb_err
-
+Best regards,
 -- 
-2.34.1
+James Clark <james.clark@linaro.org>
 
