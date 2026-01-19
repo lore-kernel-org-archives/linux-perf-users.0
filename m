@@ -1,172 +1,159 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899892BEC41
-	for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 10:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4D5826FA57;
+	Mon, 19 Jan 2026 11:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768817940; cv=none; b=Bd+oA/zzBJkmAxrzDKRHz5nCN7FrCaBisysWxT+f8rTcYa1I7bFv+UNOqOCnMjOHP1TYxay1tuopArTk4RcmzD+Bs3l4C4CItUGVPaH42o/Gezljs023mXAgfgBO6rTXkGHvUb5JamuKPZ8f4XMkTN0NcmrR/DSFUz+KSf9RHk0=
+	t=1768821314; cv=none; b=oaS+e6aRZdb/wGVYGevjhFoynvZUDRdGQTXiTRFaCLyEYHzDNt4fIZGpt9X3v2o9W0NWJEI0Y+afYwhcKBdpI6KzI6U6Tyc0kVzctKj0XEJQkxZPaZ0VWMVFWPK0zsnegLxjkHI7eXrM9lCa+IPXKajiNxr9v3qN0WIMt/fS5fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768817940; c=relaxed/simple;
-	bh=ABbYua5BR3/xyb8DnooUzvs5L17xzguh4+jQNRu1w1A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=A/CFRr2FO0TRfAmFQdfFce9L1VhTQ/I6NBGhhz/C2xqfCM+pvSR0Lvan9e7JRmAgqAP6s+DUHA/8R0GttrXhLV9Q2mUOpGCschLwo8GvKRWExElevMuVbjTgukNOmw6wajpBiexo01K6baGMU+jwMb8DceiRiakVo/vC2mfHZbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fJvOaTnl; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fJvOaTnl"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-430f2ee2f00so2048756f8f.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 02:18:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1768817933; x=1769422733; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rQboqiyM1bMVlCd/3rehrhWCEvcz3KFGOF/fcvtDHSE=;
-        b=fJvOaTnlTa8fYLDTjpS3h6X/dOTo0rq/UvMdc25d4DE2uMEBFfZkXKDHTQhZtekoDJ
-         1d4hi7C6XUCmjP6FJLbQY0aU5S7/5Yybra6ehZojFeAFQyX3J8ODKGhArhVihlr+o+33
-         KWMZd/lYFuRvX3A5Re/pThNo19sVuuWkml8NzXHVUApgUUkblwzSKsTST9DVu3xK53k1
-         bxSI34LGBRsHH4nGZOOBKPvMilTqrSqtkYNl5l43sps0ky45X3+YAcCHNiIgbwlx9wEH
-         bVN60+f/SUBun+7mm+zJ7pBddHC9XElXO/1NKjljyyi8vso0zOutHD+L0YQv10GwhJVV
-         C+7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768817933; x=1769422733;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rQboqiyM1bMVlCd/3rehrhWCEvcz3KFGOF/fcvtDHSE=;
-        b=shLHR6kc3dCFhsNyfb7k4K7inlJNrwYRAiF2miXBPqIeftqISxM0VwtOVHbQ9sOgIM
-         XM6s/wJM0YwT7ZeX5vJhWsBXIfE3gq8Bxw+ENeBjH4Enia4Lv61yykh/etQ1ZRgVf7N7
-         OlNUtsQeU+gWVK8I8xy8JTaWUnRP7oLq2XaWw/nv3C4DbuhNjvZ7VbziTRA76M2XHjyZ
-         yHab+HXaldGWiax2rS7VBy6PmX3P/6EOUu1V+ynORF49oK75kkCjoNjkhVQUGE0bK7tP
-         R2r24cG1/L3cJ0VhcTJ8ulN0dYEaki/JUmW1qB/VfCDHP1m2fDRA8Y5ONNWK93pCYpnL
-         5iiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVKjjvOM7WCHJmlzVY9m9MKDtqf3aMxbnYFaaY2/zXDQdirV+ejMEx0re8ug/+HLBUgYpKelUkGyM0yzFXGby+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9v0rrNJYVSn5kHN6wzck30wdYh+hvUctQYLEdX5ve+2cdc2Lp
-	YZPUuNoKurO+cU2a3e92Od/8jPrj0IdCtGdSUo24DwAR/GpIQMay4CPtXp26iuLmZJY=
-X-Gm-Gg: AY/fxX5RJ0dLPZVYFtIiJ9DKrkwq2JgxU5+gfM8l9k0yaRyGJsO+f7Z0/jkv8gb1oI2
-	MBRbU+kvZo3vD2Kf1J4GA1MTc3q/Ks3cEjnKffogRMSADdN+oDH4GEUGTTS64jB/TppYinFd7uc
-	fWqkCZGr4T7iDW/fWloLUCn10rJjdJ227aBQW6htBnEIEpBfpDiM4ydqcxnwk32mzAYxPZRQkaO
-	12DI2aveedEzDE1DxLky40kLAt+kOT6wvo7u0xICFx0TsmxwjACbxetgl29OEWHR5u0YU11SDBN
-	Tl4myfkjjxebH1DVWRUSu1b/kuNuVA3Is1/NqCQPvtILUAjBqFP49ZhQ2qukgssctjkokL09YtD
-	1M7yvyVYm9tMkk/GNMEA6R2yIzcG0sxGjKhN5AVHiOAXcCcCLVaj3ROG4b7YLve0c+uYAhUiSkY
-	AAMzHDAIIh6VSpnBtvsFd7vcAbBPFAO9w=
-X-Received: by 2002:a05:6000:288c:b0:431:2b2:9629 with SMTP id ffacd0b85a97d-43569bc7d95mr13515115f8f.51.1768817932877;
-        Mon, 19 Jan 2026 02:18:52 -0800 (PST)
-Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356997e6cdsm23286150f8f.31.2026.01.19.02.18.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jan 2026 02:18:52 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-Date: Mon, 19 Jan 2026 10:18:36 +0000
-Subject: [PATCH v2 2/2] perf cs-etm: Test sparse CPU maps
+	s=arc-20240116; t=1768821314; c=relaxed/simple;
+	bh=fDuvdnvPuHmKyUXuBWa9lTk6I3l6aEASPq+0vYopeeY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MgJDgtyFHLmOaSy05esQmnzmvxNnggebMVtNXfrlEDXu2nPsYPZwzruccDx3nN5nx9xjI4VhbYLTl8qdJbprj2sfLFecQwY58LYNqTo+KZAC/Fco9q6JWvIqON1Y/dkf/l1K/gfNN68M4bvG+YWNCUDWMNH4mvgqux/6SYPHFLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74FFB1517;
+	Mon, 19 Jan 2026 03:15:05 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A11043F740;
+	Mon, 19 Jan 2026 03:15:11 -0800 (PST)
+Date: Mon, 19 Jan 2026 11:15:09 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] perf cs-etm: Fix decoding for sparse CPU maps
+Message-ID: <20260119111509.GD1286628@e132581.arm.com>
+References: <20260119-james-perf-coresight-cpu-map-segfault-v2-0-56b956a629ee@linaro.org>
+ <20260119-james-perf-coresight-cpu-map-segfault-v2-1-56b956a629ee@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260119-james-perf-coresight-cpu-map-segfault-v2-2-56b956a629ee@linaro.org>
-References: <20260119-james-perf-coresight-cpu-map-segfault-v2-0-56b956a629ee@linaro.org>
-In-Reply-To: <20260119-james-perf-coresight-cpu-map-segfault-v2-0-56b956a629ee@linaro.org>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>, 
- Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Thomas Falcon <thomas.falcon@intel.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260119-james-perf-coresight-cpu-map-segfault-v2-1-56b956a629ee@linaro.org>
 
-We only currently test with default (all CPUs) or --per-thread mode.
-Different permutations of the "-C" option can affect decoding so add
-tests for some of them.
+On Mon, Jan 19, 2026 at 10:18:35AM +0000, Coresight ML wrote:
+> The ETM decoder incorrectly assumed that auxtrace queue indices were
+> equivalent to CPU number. This assumption is used for inserting records
+> into the queue, and for fetching queues when given a CPU number. This
+> assumption held when Perf always opened a dummy event on every CPU, even
+> if the user provided a subset of CPUs on the commandline, resulting in
+> the indices aligning.
+> 
+> For example:
+> 
+>   # event : name = cs_etm//u, , id = { 2451, 2452 }, type = 11 (cs_etm), size = 136, config = 0x4010, { sample_period, samp>
+>   # event : name = dummy:u, , id = { 2453, 2454, 2455, 2456 }, type = 1 (PERF_TYPE_SOFTWARE), size = 136, config = 0x9 (PER>
+> 
+>   0 0 0x200 [0xd0]: PERF_RECORD_ID_INDEX nr: 6
+>   ... id: 2451  idx: 2  cpu: 2  tid: -1
+>   ... id: 2452  idx: 3  cpu: 3  tid: -1
+>   ... id: 2453  idx: 0  cpu: 0  tid: -1
+>   ... id: 2454  idx: 1  cpu: 1  tid: -1
+>   ... id: 2455  idx: 2  cpu: 2  tid: -1
+>   ... id: 2456  idx: 3  cpu: 3  tid: -1
+> 
+> Since commit 811082e4b668 ("perf parse-events: Support user CPUs mixed
+> with threads/processes") the dummy event no longer behaves in this way,
+> making the ETM event indices start from 0 on the first CPU recorded
+> regardless of its ID:
+> 
+>   # event : name = cs_etm//u, , id = { 771, 772 }, type = 11 (cs_etm), size = 144, config = 0x4010, { sample_period, sample>
+>   # event : name = dummy:u, , id = { 773, 774 }, type = 1 (PERF_TYPE_SOFTWARE), size = 144, config = 0x9 (PERF_COUNT_SW_DUM>
+> 
+>   0 0 0x200 [0x90]: PERF_RECORD_ID_INDEX nr: 4
+>   ... id: 771  idx: 0  cpu: 2  tid: -1
+>   ... id: 772  idx: 1  cpu: 3  tid: -1
+>   ... id: 773  idx: 0  cpu: 2  tid: -1
+>   ... id: 774  idx: 1  cpu: 3  tid: -1
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/tests/shell/test_arm_coresight.sh | 54 ++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+Seems to me that this patch works around the issue by using the CPU ID
+instead, but event->auxtrace.idx is broken.
 
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-index 1c750b67d141..bbf89e944e7b 100755
---- a/tools/perf/tests/shell/test_arm_coresight.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight.sh
-@@ -198,6 +198,58 @@ arm_cs_etm_basic_test() {
- 	arm_cs_report "CoreSight basic testing with '$*'" $err
- }
- 
-+arm_cs_etm_test_cpu_list() {
-+	echo "Testing sparse CPU list: $1"
-+	perf record -o ${perfdata} -e cs_etm//u -C $1 \
-+		-- taskset --cpu-list $1 true > /dev/null 2>&1
-+	perf_script_branch_samples true
-+	err=$?
-+	arm_cs_report "CoreSight sparse CPUs with '$*'" $err
-+}
-+
-+arm_cs_etm_sparse_cpus_test() {
-+	# Iterate for every ETM device
-+	cpus=()
-+	for dev in /sys/bus/event_source/devices/cs_etm/cpu*; do
-+		# Canonicalize the path
-+		dev=`readlink -f $dev`
-+
-+		# Find the ETM device belonging to which CPU
-+		cpus+=("$(cat $dev/cpu)")
-+	done
-+
-+	mapfile -t cpus < <(printf '%s\n' "${cpus[@]}" | sort -n)
-+	total=${#cpus[@]}
-+
-+	# Need more than 1 to test
-+	if [ $total -le 1 ]; then
-+		return 0
-+	fi
-+
-+	half=$((total / 2))
-+
-+	# First half
-+	first_half=$(IFS=,; echo "${cpus[*]:0:$half}")
-+	arm_cs_etm_test_cpu_list $first_half
-+
-+	# Second half
-+	second_half=$(IFS=,; echo "${cpus[*]:$half}")
-+	arm_cs_etm_test_cpu_list $second_half
-+
-+	# Odd list is the same as halves unless >= 4 CPUs
-+	if [ $total -lt 4 ]; then
-+		return 0
-+	fi
-+
-+	# Odd indices
-+	odd_cpus=()
-+	for ((i=1; i<total; i+=2)); do
-+		odd_cpus+=("${cpus[$i]}")
-+	done
-+	odd_list=$(IFS=,; echo "${odd_cpus[*]}")
-+	arm_cs_etm_test_cpu_list $odd_list
-+}
-+
- arm_cs_etm_traverse_path_test
- arm_cs_etm_system_wide_test
- arm_cs_etm_snapshot_test
-@@ -211,4 +263,6 @@ arm_cs_etm_basic_test -e cs_etm/timestamp=1/ -a
- arm_cs_etm_basic_test -e cs_etm/timestamp=0/
- arm_cs_etm_basic_test -e cs_etm/timestamp=1/
- 
-+arm_cs_etm_sparse_cpus_test
-+
- exit $glb_err
+Should we store the correct index in event->auxtrace.idx (e.g., in the
+__perf_event__synthesize_id_index()) ?
 
--- 
-2.34.1
+Thanks,
+Leo
 
+> This causes the following segfault when decoding:
+> 
+>   $ perf record -e cs_etm//u -C 2,3 -- true
+>   $ perf report
+> 
+>   perf: Segmentation fault
+>   -------- backtrace --------
+>   #0 0xaaaabf9fd020 in ui__signal_backtrace setup.c:110
+>   #1 0xffffab5c7930 in __kernel_rt_sigreturn [vdso][930]
+>   #2 0xaaaabfb68d30 in cs_etm_decoder__reset cs-etm-decoder.c:85
+>   #3 0xaaaabfb65930 in cs_etm__get_data_block cs-etm.c:2032
+>   #4 0xaaaabfb666fc in cs_etm__run_per_cpu_timeless_decoder cs-etm.c:2551
+>   #5 0xaaaabfb6692c in (cs_etm__process_timeless_queues cs-etm.c:2612
+>   #6 0xaaaabfb63390 in cs_etm__flush_events cs-etm.c:921
+>   #7 0xaaaabfb324c0 in auxtrace__flush_events auxtrace.c:2915
+>   #8 0xaaaabfaac378 in __perf_session__process_events session.c:2285
+>   #9 0xaaaabfaacc9c in perf_session__process_events session.c:2442
+>   #10 0xaaaabf8d3d90 in __cmd_report builtin-report.c:1085
+>   #11 0xaaaabf8d6944 in cmd_report builtin-report.c:1866
+>   #12 0xaaaabf95ebfc in run_builtin perf.c:351
+>   #13 0xaaaabf95eeb0 in handle_internal_command perf.c:404
+>   #14 0xaaaabf95f068 in run_argv perf.c:451
+>   #15 0xaaaabf95f390 in main perf.c:558
+>   #16 0xffffaab97400 in __libc_start_call_main libc_start_call_main.h:74
+>   #17 0xffffaab974d8 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
+>   #18 0xaaaabf8aa8f0 in _start perf[7a8f0]
+> 
+> Fix it by inserting into the queues based on CPU number, rather than
+> using the index.
+> 
+> Fixes: 811082e4b668 ("perf parse-events: Support user CPUs mixed with threads/processes")
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+>  tools/perf/util/cs-etm.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 25d56e0f1c07..12b55c2bc2ca 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -3086,7 +3086,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+>  
+>  	if (aux_offset >= auxtrace_event->offset &&
+>  	    aux_offset + aux_size <= auxtrace_event->offset + auxtrace_event->size) {
+> -		struct cs_etm_queue *etmq = etm->queues.queue_array[auxtrace_event->idx].priv;
+> +		struct cs_etm_queue *etmq = cs_etm__get_queue(etm, auxtrace_event->cpu);
+>  
+>  		/*
+>  		 * If this AUX event was inside this buffer somewhere, create a new auxtrace event
+> @@ -3095,6 +3095,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+>  		auxtrace_fragment.auxtrace = *auxtrace_event;
+>  		auxtrace_fragment.auxtrace.size = aux_size;
+>  		auxtrace_fragment.auxtrace.offset = aux_offset;
+> +		auxtrace_fragment.auxtrace.idx = etmq->queue_nr;
+>  		file_offset += aux_offset - auxtrace_event->offset + auxtrace_event->header.size;
+>  
+>  		pr_debug3("CS ETM: Queue buffer size: %#"PRI_lx64" offset: %#"PRI_lx64
+> 
+> -- 
+> 2.34.1
+> 
+> _______________________________________________
+> CoreSight mailing list -- coresight@lists.linaro.org
+> To unsubscribe send an email to coresight-leave@lists.linaro.org
