@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C897E33557C;
-	Mon, 19 Jan 2026 07:31:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07837277CAF;
+	Mon, 19 Jan 2026 07:38:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768807888; cv=none; b=gLIWrAwm4IYDtpgZ8uceZ93P7gI9vncuXx5kIultAn9StNK7qGb7OEASszbU5EPE7gQz6SVMd4Y579al+IOhIFJQLPDq1hHoO82vFCdEA2bdmbxDXmdBV2zm6EKnK8gmtPKZ7S3fk/GISqeSdDGqJPFXZuhOTOg4yK2USYesDO8=
+	t=1768808298; cv=none; b=vFs8uoGUxEs7ak4/3Ij/N1OBgZzG6gwYkX0w38MIKmuEtpx7xbsdr/6ClQW9u4WuQcNdAxCuW/payqJ8I3KZiJ+/slGlmFhW7JXMSrCs+wJJwTKi7HcNy/88R73l6WfCLiTZczKQ33lBotCwQAOiEjxsMU7jFo6shjYsAdf4uHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768807888; c=relaxed/simple;
-	bh=iynO06n787J9EPVUutaj8xE+B65ig6lXz0/4ZM8wkHU=;
+	s=arc-20240116; t=1768808298; c=relaxed/simple;
+	bh=JoH1DSTlUbe4mzS1ORqIMcGBCUe5KB3rwzHLQE5e60E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gsxZ+HDLUFF3KJ/WZTSZkzpt2hHFdNyvuBjlVKRNPzUSM6AdVe6YmCNphGGvFqK8F5J5tyRrMpjt1j4bgdLkFJ9PM85y4BZk6/jz0BAyPvdd2PmJHuE36pN/zsFIxTiU5WTK2l4gVht/VG4f70CgZ++8YoSgIQRFteyzU4i529c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WCIb0lg6; arc=none smtp.client-ip=198.175.65.10
+	 In-Reply-To:Content-Type; b=BeptI9IndiWdlWBsUKzq0B/0uz99nIj/Xt1KFHX/U6oMgR52ibUzB0RrNqhw7g+NDeLY6v8n7O4Al8Zd1Vrq216R+oA5s65tslEw2kKrd7cKjtbYpXq+4fSnhNQNK9fHWzynpKqhKh5EWyHPZi16dbDI4+jHk7rLYAX7ct7u46g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TyEh3Wjz; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WCIb0lg6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TyEh3Wjz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768807887; x=1800343887;
+  t=1768808298; x=1800344298;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=iynO06n787J9EPVUutaj8xE+B65ig6lXz0/4ZM8wkHU=;
-  b=WCIb0lg6ND1L2XGv2KfxWpHVtFt2/aJQdJvl2YrSoGeIxQ/O3UILAWnS
-   tJMy6cKzFInWpf6xuT1aj++E2gNiGq8IieF8iNjYo4FGUaUticHEl4eJH
-   UTiT/GZqCh83WLAXD9yD9VC0BGQfovuFYQBh3OXwMRmx0tC8viJjNbalz
-   5InVKhiY2Pn4Kk+gQuLTp7G/ED6C2VEGJJKkevdGwdhNAje2cJ1ufKfrU
-   AB8ag3HKlALEwcgX5LFVYDfA8qsute1OBhI06frGm5dJQ+WMUh0aea8s8
-   zR3Bnsb2cnO0U3e6JAKrACJJ24k+pPjlzrjUsT4+Uvimnv7NQRM/C78Ua
-   g==;
-X-CSE-ConnectionGUID: gpV2qoxQT3SfeVHwp2Hl7w==
-X-CSE-MsgGUID: 5t8eJA24TO2m/Z1CwZhFXQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11675"; a="87429649"
+  bh=JoH1DSTlUbe4mzS1ORqIMcGBCUe5KB3rwzHLQE5e60E=;
+  b=TyEh3WjzxKZ9PfYwX4OOUX5rzLk+JxPBn61e8PsReFPVLJkLoPzfNDe1
+   h4XpP5TnOgLQ2NObBfTiEFSJqNbQDUytZe9yvotrO8XZqgBT8Vt9R1uo5
+   qz2bRRAOocE8mkbAcv3Z4AUJWReUA0AXz5fC6/MJDU5LC6mxCa7FDMME7
+   r2YXQczWBiKRBDAtUVJK3qGFfdJXtexd2zyz0fvhndXiYjS9x5ONs0Ex2
+   mFdKxRF31K9sjOEmdnkZddMgNXQwbssFJaD7x+GG9Uogko3dIC+AFrmr1
+   AR9fOD4ucByfxQd0rQVstTzzllsqOMksdegT9xSWBlSsaflXqmY1/cOdb
+   w==;
+X-CSE-ConnectionGUID: FVhJGw7sSjSfLpTib/btOw==
+X-CSE-MsgGUID: bsBY+ojuRrOJGgH3HPijwg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11675"; a="87430168"
 X-IronPort-AV: E=Sophos;i="6.21,237,1763452800"; 
-   d="scan'208";a="87429649"
+   d="scan'208";a="87430168"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 23:31:27 -0800
-X-CSE-ConnectionGUID: DNkg1cBXRmaZNRk8ZUYGew==
-X-CSE-MsgGUID: Ge57W9zYRbKW7TUF3vla6Q==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 23:38:17 -0800
+X-CSE-ConnectionGUID: XcJmpoDSQUyM+PRwV9cdkQ==
+X-CSE-MsgGUID: mC5hlVcjRZijcNM76/HpCg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,237,1763452800"; 
-   d="scan'208";a="206154006"
+   d="scan'208";a="206155423"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 23:31:22 -0800
-Message-ID: <de24ee43-fa1d-418b-855f-aef5c681a302@linux.intel.com>
-Date: Mon, 19 Jan 2026 15:31:20 +0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 23:38:13 -0800
+Message-ID: <9b1806c7-c1ae-44f4-a03a-2a607dcf144e@linux.intel.com>
+Date: Mon, 19 Jan 2026 15:38:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/11] perf/amd/ibs: Throttle interrupts with filtered
- ldlat samples
+Subject: Re: [PATCH 05/11] perf/amd/ibs: Define macro for ldlat mask
 To: Ravi Bangoria <ravi.bangoria@amd.com>,
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -64,47 +63,67 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
  Santosh Shukla <santosh.shukla@amd.com>,
  Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>
 References: <20260116033450.965-1-ravi.bangoria@amd.com>
- <20260116033450.965-2-ravi.bangoria@amd.com>
+ <20260116033450.965-6-ravi.bangoria@amd.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260116033450.965-2-ravi.bangoria@amd.com>
+In-Reply-To: <20260116033450.965-6-ravi.bangoria@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 On 1/16/2026 11:34 AM, Ravi Bangoria wrote:
-> IBS NMI handler has a software filter (on top of hardware filter) to
-> discard samples with load latency value lesser than user requested
-> threshold. However, since software filter still involves NMI, check
-> for NMI overhead and throttle the sample rate if needed.
+> Load latency filter threshold is encoded in config1[11:0]. Define a mask
+> for it instead of hardcoded 0xFFF. Unlike "config" fields whose layout
+> maps to PERF_{FETCH|OP}_CTL MSR, layout of "config1" is custom defined
+> so a new set of macros are needed for "config1" fields.
 >
 > Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 > ---
->  arch/x86/events/amd/ibs.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  arch/x86/events/amd/ibs.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 >
 > diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index aca89f23d2e0..96bb0974057f 100644
+> index 27b764eee6c7..02e7bffe1208 100644
 > --- a/arch/x86/events/amd/ibs.c
 > +++ b/arch/x86/events/amd/ibs.c
-> @@ -1293,8 +1293,10 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+> @@ -32,6 +32,9 @@ static u32 ibs_caps;
+>  /* attr.config2 */
+>  #define IBS_SW_FILTER_MASK	1
+>  
+> +/* attr.config1 */
+> +#define IBS_OP_CONFIG1_LDLAT_MASK		(0xFFFULL <<  0)
+> +
+>  /*
+>   * IBS states:
+>   *
+> @@ -274,7 +277,7 @@ static bool perf_ibs_ldlat_event(struct perf_ibs *perf_ibs,
+>  {
+>  	return perf_ibs == &perf_ibs_op &&
+>  	       (ibs_caps & IBS_CAPS_OPLDLAT) &&
+> -	       (event->attr.config1 & 0xFFF);
+> +	       (event->attr.config1 & IBS_OP_CONFIG1_LDLAT_MASK);
+>  }
+>  
+>  static int perf_ibs_init(struct perf_event *event)
+> @@ -349,7 +352,7 @@ static int perf_ibs_init(struct perf_event *event)
+>  	}
+>  
+>  	if (perf_ibs_ldlat_event(perf_ibs, event)) {
+> -		u64 ldlat = event->attr.config1 & 0xFFF;
+> +		u64 ldlat = event->attr.config1 & IBS_OP_CONFIG1_LDLAT_MASK;
+>  
+>  		if (ldlat < 128 || ldlat > 2048)
+>  			return -EINVAL;
+> @@ -1302,7 +1305,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
 >  		 * within [128, 2048] range.
 >  		 */
 >  		if (!op_data3.ld_op || !op_data3.dc_miss ||
-> -		    op_data3.dc_miss_lat <= (event->attr.config1 & 0xFFF))
-> +		    op_data3.dc_miss_lat <= (event->attr.config1 & 0xFFF)) {
-> +			throttle = perf_event_account_interrupt(event);
+> -		    op_data3.dc_miss_lat <= (event->attr.config1 & 0xFFF)) {
+> +		    op_data3.dc_miss_lat <= (event->attr.config1 & IBS_OP_CONFIG1_LDLAT_MASK)) {
+>  			throttle = perf_event_account_interrupt(event);
 >  			goto out;
-> +		}
->  	}
+>  		}
 
-Not quite familiar with IBS code, but should the below code call the
-throttle as well?
-
-        /* Workaround for erratum #1197 */
-        if (perf_ibs->fetch_ignore_if_zero_rip && !(ibs_data.regs[1]))
-            goto out;
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
 
->  
->  	/*
