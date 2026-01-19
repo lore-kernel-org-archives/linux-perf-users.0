@@ -1,232 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C6F3396E6;
-	Mon, 19 Jan 2026 07:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E04346E73
+	for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 10:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768809479; cv=none; b=JoSMt628ccwffGX/cu1Gf3EaTbsPXBCQbnlUUtKlbcdoH8viFh4uQFDGvm6jFpBcknGu7Haz65+TRYbsxrgvVRv/OZjvghGL7s0ru1UBoNzFEmpe8yy2BDL38MHv7DKDS4TjY0retyeqVPrgmuy0GuWxB+4IUJubnsP89YCQN1w=
+	t=1768817359; cv=none; b=AXcyhv5I29qPoZagPdJBSJYLGeUqivKvTGAr0rDVLrWBrrFk5I35fOw+D09GCwpaYFcGL5tMHr98IM0U3JAwsOUpvSL+TOmE5q+WdIzbZpTMa1K996+yvuEMFD7FcR7azNC/1X/o8WliBr5EzB+VOpDbw9Vtx8WNSmgILX0qQEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768809479; c=relaxed/simple;
-	bh=EgEarnNCNoWw5WMlH/rxxknFABUcg4Vn0fitElKXhf0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VThjqQeIjkQSZnMLnlOrZDUL3ZWPQUjR1phlK2Us0A5aJcX3cB+ou7Uvj/wtub2rnzJuiaPy+x42k7SSRtejxTal8LGbhU+pVZ08WtysA8YWlG2iCCnwijLSm/MMbVraj9M8BcK+yhen4ZpRqbcjmykBhsILSZXcuFx1mMV7O+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y9XVSiAn; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1768817359; c=relaxed/simple;
+	bh=6OtsfBJe1JSHH8yLATY55PLU/2hL9l3HRbry6j3+/JI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mXWjWWzaLy2uMwDS3XzxBCK8yCtCjSEvNkhuQr5k7Gb+AkHc62vT0+DDSA2wvnRiSqBy538sGQdObj6jRmZSXZ2wVF0yy8uWNVcmyS58ijFGvjSTbFIDtgKa8k5rxnF9Eeoeg4Oc0d2DwN3//8XV+uMP9zYt8prBeId5PDvWHlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X3s3cwtA; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y9XVSiAn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768809477; x=1800345477;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=EgEarnNCNoWw5WMlH/rxxknFABUcg4Vn0fitElKXhf0=;
-  b=Y9XVSiAn8mHKqn0RX9ZHQkr73qM6RdSVSWOTx6FKznNlRoMJs01MfSWr
-   eZgabvG9tyZSne0qpc7j9BllCLCbOigEF7gn/DY6F2HDV0bWXWeJ0Wj/R
-   Z/G871FITCD9t8aYXV6ISMHQcGhdlfub9gxByFe62rhb8v6ATcdJ7zWHG
-   2dXijNmK+LPP7l11nqfAEGi1C7F9a0Toq0LXkNpA8YXShr+MHdczvd7WL
-   OUrn2osVjcXl0oAw1zo106bX5PDS20QipmHx3L8ZrrOAMuXtnfITEaoFx
-   lOCSphZARlClEDEbBPyEdNt7TFikOHCgalRHvCNSYPNVbAs+TkiZNWsCZ
-   w==;
-X-CSE-ConnectionGUID: denhMLcXTi2BB+JFalZJNw==
-X-CSE-MsgGUID: +b0qpyZdRwSkBu9z1AiucQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11675"; a="69918933"
-X-IronPort-AV: E=Sophos;i="6.21,237,1763452800"; 
-   d="scan'208";a="69918933"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 23:57:52 -0800
-X-CSE-ConnectionGUID: CeuIcRSQTRaz2uj5ckl8Bw==
-X-CSE-MsgGUID: X4q3YgRaSduSOq+MtqoD2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,237,1763452800"; 
-   d="scan'208";a="205418121"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 23:57:49 -0800
-Message-ID: <ebc19c7f-191e-4e94-bc58-6f431ad5fff6@linux.intel.com>
-Date: Mon, 19 Jan 2026 15:57:45 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X3s3cwtA"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42fb03c3cf2so2738695f8f.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 02:09:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1768817356; x=1769422156; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=19Tlxmtj1wgd7c/Wqw3aq86mSes++ziMKVUPZDLOdm4=;
+        b=X3s3cwtACIhSjfwAvyKmeo6Tg7Fc8qDL/3fiHd/cNjbHh7GtI3+L2pA9sjhgAHKm2n
+         TZlbdGzQNY6A4TGxjhHnnTKtyI6GhdUyoBZqkj1wYwIp0ozPW9jCiLZ1sFU/xJIzg2Kc
+         YNOV5FdmL6/pEx3vIN8bWBTLVKq7MJQF8IfKhCIjH9ggXIp+WkYlvI8eoMH64evqrC6Q
+         AYS84BkqSXvEwNdJC6r86gdy8M4KV/IQOZ6sHOXYtx5tzRFojRb29EuPQ+FnzY4BEUpc
+         2V2Yz7LfvYjvEI0YjgR/inxFz8sN5qCe6Q42KBcfkr0+3cX6ZshtLCTMq0V+HitTH89M
+         6slg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768817356; x=1769422156;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=19Tlxmtj1wgd7c/Wqw3aq86mSes++ziMKVUPZDLOdm4=;
+        b=Dw3aUgX/FJOmJhJ0RDlpHpeEaxU2IbQ/cs3pqyhNUR2yutEbM2W4d0pRrPSqamz/aD
+         qVi+wwBdKT+cTyXtP//LvqPm8t8dOMRoJ/MdLYl0GpuN8FxcEXetCUF74gPrHWnltWNR
+         lTvNWCJIxAQNi6bZ4rohLLFAsaV0EXQlWIzDQhZoER0nGgpAUjwHMgY2Qx2bXITvkm2G
+         c0AjTr92yTfvyRPJwylyigNV254Ygdp+Tmf15UNVlWBrgMWbJ5n4S1162cdMrqVLuneA
+         x9HQU8TyfW4r980UaoosgyUSxvQaUaK6tVntQBj05dNKfUU5hFp/yZPlZlPwALgGWUYE
+         dk5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU+Zyb7ZHJ3OtQyxEKB0kkWT3uhmsqLSCRDTKIYcSUtsHPDiuq1k5nVSY1/mfIElAqiUXOcrmYqrk2CpeATXtI5@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxK2uNOSoAAbtE5RvDP3yM9shjs9/MvyAP90ChhtLErqRgXnVn
+	JcnBR5sJauaGeTAHSyhp3wdHFKbqBfguLeFNLIXkp4PcrpXmc+cUlRZgaL6NrA8//UM=
+X-Gm-Gg: AZuq6aKRqQoNVpKERndp49oP7oELM5mYEMfznfH/T7sVYQx2yVSg9MzftLcJsiPp0Up
+	NDjESR2Mdf9uD8XpPJnbbH0ZG9gI7FsGgx4MDAGqTv+AHqF2HodUoI8NvT3O0BlPlDixcSYOX5Z
+	WMpBirM1utF8XV7DfYR3/mdR325gsPGfRjnnlfDTZaZaDwCVVA/Yf0A00BOWbfMkH1jqyfteLOQ
+	rJqBlenm/f7S4PmydcRCo6NnvhR6jUcAxTMOr5tM6Plmd3N7eZQ/EsXF/uI9JZEhhzGXybafF7L
+	YvPfdvqM3R1DCbgr8pgYcP+LHhfxDspZPHnLCJuubQfH57zSk03KXnWfGlxcLsVb+gWPXualAmb
+	NqhOeYE4EbypdOHe1mm7fTL8fPPCAJPJDbiUJhUxLAxdNA8ENkzMgYr77+75Ti0O6RO9Am5sKip
+	0LlX1c2xdlZ0ePaxYyhFLX
+X-Received: by 2002:a05:6000:25c7:b0:432:dfa8:e1b6 with SMTP id ffacd0b85a97d-4356a053748mr14605338f8f.39.1768817355664;
+        Mon, 19 Jan 2026 02:09:15 -0800 (PST)
+Received: from ho-tower-lan.lan ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356997e6cdsm23234802f8f.31.2026.01.19.02.09.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jan 2026 02:09:15 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH 0/2] (no cover subject)
+Date: Mon, 19 Jan 2026 10:08:15 +0000
+Message-Id: <20260119-james-perf-coresight-cpu-map-segfault-v1-0-a9cfd67653ae@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/11] perf/amd/ibs: Enable streaming store filter
-To: Ravi Bangoria <ravi.bangoria@amd.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- James Clark <james.clark@linaro.org>, x86@kernel.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Manali Shukla <manali.shukla@amd.com>,
- Santosh Shukla <santosh.shukla@amd.com>,
- Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>
-References: <20260116033450.965-1-ravi.bangoria@amd.com>
- <20260116033450.965-11-ravi.bangoria@amd.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260116033450.965-11-ravi.bangoria@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAI8CbmkC/x3NwQqDMAyA4VeRnBdoC51jrzJ2CF1aM6aWRGUgv
+ rvF43f5/x2MVdjg2e2gvInJPDX4WwdpoKkwyqcZggt3533EL41sWFkzplnZpAwLprriSBWNS6b
+ 1tyCH6ChHor5/QGtV5Sz/6/N6H8cJgYXI4HcAAAA=
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>, 
+ Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Thomas Falcon <thomas.falcon@intel.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
 
-On 1/16/2026 11:34 AM, Ravi Bangoria wrote:
-> IBS OP on future hardware supports recording samples only for instructions
-> that does streaming store. Like the existing IBS filters, samples pointing
-> to instruction which does not cause streaming store are discarded and IBS
-> restarts internally.
->
-> Example:
->
->   $ perf record -e ibs_op/strmst=1/ -- <workload>
->
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->  arch/x86/events/amd/ibs.c      | 50 ++++++++++++++++++++++++++++++++++
->  arch/x86/include/asm/amd/ibs.h |  3 +-
->  2 files changed, 52 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index a768a82d7ad2..0331bcd82272 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-> @@ -34,6 +34,7 @@ static u32 ibs_caps;
->  
->  /* attr.config1 */
->  #define IBS_OP_CONFIG1_LDLAT_MASK		(0xFFFULL <<  0)
-> +#define IBS_OP_CONFIG1_STRMST_MASK		(    1ULL << 12)
->  
->  #define IBS_FETCH_CONFIG1_FETCHLAT_MASK		(0x7FFULL <<  0)
->  
-> @@ -292,6 +293,14 @@ static bool perf_ibs_fetch_lat_event(struct perf_ibs *perf_ibs,
->  	       (event->attr.config1 & IBS_FETCH_CONFIG1_FETCHLAT_MASK);
->  }
->  
-> +static bool perf_ibs_strmst_event(struct perf_ibs *perf_ibs,
-> +				  struct perf_event *event)
-> +{
-> +	return perf_ibs == &perf_ibs_op &&
-> +	       (ibs_caps & IBS_CAPS_STRMST_RMTSOCKET) &&
-> +	       (event->attr.config1 & IBS_OP_CONFIG1_STRMST_MASK);
-> +}
-> +
->  static int perf_ibs_init(struct perf_event *event)
->  {
->  	struct hw_perf_event *hwc = &event->hw;
-> @@ -416,6 +425,15 @@ static int perf_ibs_init(struct perf_event *event)
->  		hwc->extra_reg.config |= fetchlat << 1;
->  	}
->  
-> +	if (perf_ibs_strmst_event(perf_ibs, event)) {
-> +		u64 strmst = event->attr.config1 & IBS_OP_CONFIG1_STRMST_MASK;
-> +
-> +		strmst >>= 12;
+---
+James Clark (2):
+      perf cs-etm: Fix decoding for sparse CPU maps
+      perf cs-etm: Test sparse CPU maps
 
-The right shift can be directly merged into previous sentence, and better
-define some macro instead of use these magic numbers.
+ tools/perf/tests/shell/test_arm_coresight.sh | 54 ++++++++++++++++++++++++++++
+ tools/perf/util/cs-etm.c                     |  3 +-
+ 2 files changed, 56 insertions(+), 1 deletion(-)
+---
+base-commit: 571d29baa07e83e637075239f379f91353c24ec9
+change-id: 20260115-james-perf-coresight-cpu-map-segfault-e250af5aa778
 
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
 
-> +
-> +		hwc->extra_reg.reg = perf_ibs->msr2;
-> +		hwc->extra_reg.config |= strmst << 3;
-> +	}
-> +
->  	/*
->  	 * If we modify hwc->sample_period, we also need to update
->  	 * hwc->last_period and hwc->period_left.
-> @@ -706,6 +724,8 @@ PMU_EVENT_ATTR_STRING(ldlat, ibs_op_ldlat_cap, "1");
->  PMU_EVENT_ATTR_STRING(dtlb_pgsize, ibs_op_dtlb_pgsize_cap, "1");
->  PMU_EVENT_ATTR_STRING(fetchlat, ibs_fetch_lat_format, "config1:0-10");
->  PMU_EVENT_ATTR_STRING(fetchlat, ibs_fetch_lat_cap, "1");
-> +PMU_EVENT_ATTR_STRING(strmst, ibs_op_strmst_format, "config1:12");
-> +PMU_EVENT_ATTR_STRING(strmst, ibs_op_strmst_cap, "1");
->  
->  static umode_t
->  zen4_ibs_extensions_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-> @@ -719,6 +739,12 @@ ibs_fetch_lat_is_visible(struct kobject *kobj, struct attribute *attr, int i)
->  	return ibs_caps & IBS_CAPS_FETCHLAT ? attr->mode : 0;
->  }
->  
-> +static umode_t
-> +ibs_op_strmst_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-> +{
-> +	return ibs_caps & IBS_CAPS_STRMST_RMTSOCKET ? attr->mode : 0;
-> +}
-> +
->  static umode_t
->  ibs_op_ldlat_is_visible(struct kobject *kobj, struct attribute *attr, int i)
->  {
-> @@ -767,6 +793,11 @@ static struct attribute *ibs_op_dtlb_pgsize_cap_attrs[] = {
->  	NULL,
->  };
->  
-> +static struct attribute *ibs_op_strmst_cap_attrs[] = {
-> +	&ibs_op_strmst_cap.attr.attr,
-> +	NULL,
-> +};
-> +
->  static struct attribute_group group_fetch_formats = {
->  	.name = "format",
->  	.attrs = fetch_attrs,
-> @@ -808,6 +839,12 @@ static struct attribute_group group_ibs_op_dtlb_pgsize_cap = {
->  	.is_visible = ibs_op_dtlb_pgsize_is_visible,
->  };
->  
-> +static struct attribute_group group_ibs_op_strmst_cap = {
-> +	.name = "caps",
-> +	.attrs = ibs_op_strmst_cap_attrs,
-> +	.is_visible = ibs_op_strmst_is_visible,
-> +};
-> +
->  static const struct attribute_group *fetch_attr_groups[] = {
->  	&group_fetch_formats,
->  	&empty_caps_group,
-> @@ -853,6 +890,11 @@ static struct attribute *ibs_op_ldlat_format_attrs[] = {
->  	NULL,
->  };
->  
-> +static struct attribute *ibs_op_strmst_format_attrs[] = {
-> +	&ibs_op_strmst_format.attr.attr,
-> +	NULL,
-> +};
-> +
->  static struct attribute_group group_cnt_ctl = {
->  	.name = "format",
->  	.attrs = cnt_ctl_attrs,
-> @@ -877,6 +919,12 @@ static struct attribute_group group_ibs_op_ldlat_format = {
->  	.is_visible = ibs_op_ldlat_is_visible,
->  };
->  
-> +static struct attribute_group group_ibs_op_strmst_format = {
-> +	.name = "format",
-> +	.attrs = ibs_op_strmst_format_attrs,
-> +	.is_visible = ibs_op_strmst_is_visible,
-> +};
-> +
->  static const struct attribute_group *op_attr_update[] = {
->  	&group_cnt_ctl,
->  	&group_op_l3missonly,
-> @@ -884,6 +932,8 @@ static const struct attribute_group *op_attr_update[] = {
->  	&group_ibs_op_ldlat_cap,
->  	&group_ibs_op_ldlat_format,
->  	&group_ibs_op_dtlb_pgsize_cap,
-> +	&group_ibs_op_strmst_cap,
-> +	&group_ibs_op_strmst_format,
->  	NULL,
->  };
->  
-> diff --git a/arch/x86/include/asm/amd/ibs.h b/arch/x86/include/asm/amd/ibs.h
-> index 3ee5903982c2..b940156b7d23 100644
-> --- a/arch/x86/include/asm/amd/ibs.h
-> +++ b/arch/x86/include/asm/amd/ibs.h
-> @@ -99,7 +99,8 @@ union ibs_op_data2 {
->  			rmt_node:1,	/* 4: destination node */
->  			cache_hit_st:1,	/* 5: cache hit state */
->  			data_src_hi:2,	/* 6-7: data source high */
-> -			reserved1:56;	/* 8-63: reserved */
-> +			strm_st:1,	/* 8: streaming store */
-> +			reserved1:55;	/* 9-63: reserved */
->  	};
->  };
->  
