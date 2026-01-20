@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC063A89CC;
-	Tue, 20 Jan 2026 20:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFC43AA183;
+	Tue, 20 Jan 2026 20:30:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768940931; cv=none; b=uThf4Yej6FWyZg+GEDKRkxNK3txxs94N+yLZhfvOH4RI3/cIzlWG4pKr6b7PynVkyTrbvTDVXnEdJs3ssD0onu3VkL0AqizWR4gMetIxODnI1a4OcX2mjA0G0EZHbxirA5LzRo790+IDiu+/JONZSdg7ng3oTyAnO9h2JGA4H/M=
+	t=1768941011; cv=none; b=NhJgoOm8VwyFlBWMLYEj4PSKrQQZGN9kQu/kFWGJXkI4UFH7snHcl8AseVa/ro5L749u/IZQpywxcX0ukVKeT09j6z4Ipp6jCB/vC0U9be0/NvH0V8l1jvD3k8JETW+Ww2FfXQOpLISkdSE7CFDMZfFnlEkTw9V0AMuNROpaHu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768940931; c=relaxed/simple;
-	bh=S+EooQ7GlTBK8gMrVfBuRTV8I4TyAXJP9I1rGzVjhyM=;
+	s=arc-20240116; t=1768941011; c=relaxed/simple;
+	bh=v10dL5M4XOZyFg5P34VvdCJ7I9741+7UypUpPryGbq4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bnwrR0g27zCb4TxkjKDUVRTc8+enbqSGVJR1Wi/wwlEfNPvxHNlez7Q15Y6bMGo4FeDwTrXH1u+Dhrczu/Qlq7RPkf3X/b6OQs6cKh/hVqjQ23Udw73oOUmfqVBJk/4Poznb7/+K6OpCqWZnzRdGf4NoZXEbF3+SJX89FDUr2nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LkoZ8BNa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mlxn6so8MBUCJ5oM0NWfvtUpoNIvj8mKwMHDcv/3OuD314t/PliVOevgxaUp8WAm6XD0hbMl6IIKeoO+HBtWoU8+NWYUY4k8iBLrINskDpSS14C/tvACzntW6AfYiyfkcE1NrDJeRz4kr8yrQ3hCNaTcjhn+MuCkbrGbHnjcddM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=re0uo1Hi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LkoZ8BNa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0DA8C16AAE;
-	Tue, 20 Jan 2026 20:28:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="re0uo1Hi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DCA7C16AAE;
+	Tue, 20 Jan 2026 20:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768940931;
-	bh=S+EooQ7GlTBK8gMrVfBuRTV8I4TyAXJP9I1rGzVjhyM=;
+	s=k20201202; t=1768941011;
+	bh=v10dL5M4XOZyFg5P34VvdCJ7I9741+7UypUpPryGbq4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LkoZ8BNavPjES4DcMY2X5Ho0xzFQn9KF3OrN+3QR2cCsExjC/HbVcA8hGNOwj9PVj
-	 MyG8IFSzXOvH0CS2VXwTYN798mJQbxgRtD0Z7Xl2CFDyZjhMehMMSTx7RwrkBBWKmI
-	 URjyTNsJUKrzcjU9O7kBXC3mqynVayzQ2PWg7tR34Pt1hvE7DhPkb2bjssPoFKHtwv
-	 8fZtuH6bBx/79AbHxibIk0uQnK1Z/DwfdU4Hxv0264QFuRbXgC4Qg3KFOT8xrNM88a
-	 rQwtf/uZqy1AQ3wNt4qM6RHIx2NYJIaO+qBR8IZdQztbk06M+d4JrUCbrnZF38Oxe1
-	 qVvGPgCPm5t6g==
-Date: Tue, 20 Jan 2026 17:28:47 -0300
+	b=re0uo1HiOExb64ED+8L8NaNxeZYI/hXpT3XOoNng41VkK76a/+ayPMjH/9ep7cu47
+	 JVP1StMTFTCJWVD+xLQr4+4Ii7cls4LKaWuvPDMFuPM3wwuexTw+IU4tdHnQPp0Mlw
+	 Lu7sHNVn4rkOzMFdR6qQ9IEPc7vaOCbQH9idU51pET2G/GwXCMNalrEd7/bJ2AONdy
+	 tFJO4OZP3PX4luFpNzGzBQXsPrrXf23bqYYp1oYXjNowMwUyRZKqoOHDUAQpn27yQ2
+	 sHhquoZkl1xyz30Ux8tTqi6UmucErtZt7lY6J8Ay8VvMIQz1NdFRJxL0Koj+qIEMII
+	 Bo/N7ky4jHdVg==
+Date: Tue, 20 Jan 2026 17:30:07 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: James Clark <james.clark@linaro.org>
-Cc: Haiyue Wang <haiyuewa@163.com>, linux-perf-users@vger.kernel.org,
+Cc: Ian Rogers <irogers@google.com>,
+	kernel test robot <oliver.sang@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] perf tools: Add the legacy-cache.json to .gitignore
-Message-ID: <aW_lf4P_bRXcv5mQ@x1>
-References: <20251208021524.10101-1-haiyuewa@163.com>
- <f08a244f-864f-4e68-b448-c17ec9ff89b2@linaro.org>
+	Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf tests kallsyms: Fix missed map__put
+Message-ID: <aW_lzwpy-nUCiu1B@x1>
+References: <20251210190141.12725-1-irogers@google.com>
+ <e0410f42-f70d-464e-82aa-7237d779ba6b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,33 +47,26 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f08a244f-864f-4e68-b448-c17ec9ff89b2@linaro.org>
+In-Reply-To: <e0410f42-f70d-464e-82aa-7237d779ba6b@linaro.org>
 
-On Tue, Dec 09, 2025 at 12:55:45PM +0000, James Clark wrote:
-> 
-> 
-> On 08/12/2025 2:15 am, Haiyue Wang wrote:
-> > The commit 0012e0fa221b ("perf jevents: Add legacy-hardware and legacy-cache json")
-> > will auto-generate: "pmu-events/arch/common/common/legacy-cache.json".
-> > 
-> > Signed-off-by: Haiyue Wang <haiyuewa@163.com>
-> > ---
-> >   tools/perf/.gitignore | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
-> > index b64302a76144..5c59f954f52a 100644
-> > --- a/tools/perf/.gitignore
-> > +++ b/tools/perf/.gitignore
-> > @@ -36,6 +36,7 @@ config.mak.autogen
-> >   util/intel-pt-decoder/inat-tables.c
-> >   arch/*/include/generated/
-> >   trace/beauty/generated/
-> > +pmu-events/arch/common/common/legacy-cache.json
-> >   pmu-events/pmu-events.c
-> >   pmu-events/jevents
-> >   pmu-events/metric_test.log
-> 
+On Fri, Dec 12, 2025 at 05:19:47PM +0200, James Clark wrote:
+> On 10/12/2025 21:01, Ian Rogers wrote:
+> > Issue was caught by leak sanitizer and the test robot.
+
+> > Reported-by: kernel test robot <oliver.sang@intel.com>
+> > Closes: https://lore.kernel.org/oe-lkp/202512101502.f3819cd3-lkp@intel.com
+> > Fixes: 34e271ae5538 ("perf test: Add kallsyms split test")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+
+> > +++ b/tools/perf/tests/kallsyms-split.c
+> > @@ -148,6 +148,7 @@ static int test__kallsyms_split(struct test_suite *test __maybe_unused,
+> >   	ret = TEST_OK;
+> >   out:
+> > +	map__put(map);
+> >   	remove_proc_dir(0);
+> >   	machine__exit(&m);
+> >   	return ret;
+ 
 > Reviewed-by: James Clark <james.clark@linaro.org>
 
 Thanks, applied to perf-tools-next,
