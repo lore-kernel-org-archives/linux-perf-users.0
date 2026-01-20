@@ -1,716 +1,349 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667D63375CB
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2026 19:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A63A3A9DB1;
+	Tue, 20 Jan 2026 20:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768937868; cv=none; b=N0KVReVIaAZepUf6UnMV2RvqtWLMhFiDJfrpoxuzn7W2lNdeZK+9nGonmLScqDSHTORNT5F/oSA7Gg28Y+OjFYlK/J4h6yQjxLu14Jx0V+g6MTGBQ722CvrxVPrA8kiK/arndl2VELuA2bUIoeEuFNETIu6+eeHp/Xe65T6ElPU=
+	t=1768940331; cv=none; b=TEP/MoxyU2dXVj0yZGX+QZJI10ZmZOwhdr99INSfGQ/Jzx++aKEdYst35kQBAELX2UnopWvNvAwJavpkIvkedM5gTDS5etgiuTw5LHXmD1z38n823O+TSHiSLSJpMMgzl7xhgLp5YlSKx/b20LnXtF6ImGsodBDnq9ZiLaBgBdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768937868; c=relaxed/simple;
-	bh=xRX3c8/jJWu7kXR4SMTMSE7D+MsWKpvJrh83qCFH1YQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Dy+aExOEAutpMrJBkQe4NYpDYFU1QevSlxFiQPqz5YE7QlKM9WoDXgbqMwM0OfsGW84xtBPzyLv4+Noe39OSgKQPTuuop7Q4bfFLT+QNIj3GJiN1DPI5SJUIepksF/Ejv2FtVcgwWs6Trd4kVAZwZFGcceqg0ljgwgpljEEk6mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lxdBMJuk; arc=none smtp.client-ip=74.125.82.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1768940331; c=relaxed/simple;
+	bh=PU/7S/vc+zeqZS0B2GmmDAW6BOqWzuE8ycGgTfUkAek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EM36G17wYK3jXjwyovblaPgPH+V2pT7YI1RymIgnQOhmOFPyv47s9fCFZARQp0tlGt/1WCvdUrSK/huhMGuEWke43PEpMnmjX8G0mCJER4o3r7S39Qet3rMWg3qEzuVUAsE80S7/GrJBCeil7Dlg3n8mv+VzpI1MMxpHgEngA3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OS7xkzLV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lxdBMJuk"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-121b1cb8377so9323281c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2026 11:37:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768937862; x=1769542662; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=G4PXsjOGmmF0tp8XVeqAaq0yeQLCr/0MZyVOC/9kIQY=;
-        b=lxdBMJukZ0lhqAfZwiOYdJ2SEzONeIp8CFe4yM5ZUDtDIUDX3VW63+KbCyczj4tT6y
-         IINUH5j/ERXFPg01Awdeq+araaQq8Az9MZK9jOxdedGLxpZZp5zlG6PHUe8EniK0uEwW
-         ReQalEJlm/ugOz7JojZatVhQPZsc9de97hDMHV1cKCj4MKXToEQJ9xQuTCG0dY9JZ0s7
-         nmxOnO6OxH1gqnPYpdtnzP6mnkG6n5/2p7H/ji2OAt9bmUfl3oCIRF3Tit85kGeYagFM
-         Wozu+eQwiBti8C5HRr1JVFAAoW6r+SKeGQdoYptCUYlk9UgEbvT1w4QPrG6RbLrkfmLO
-         jiaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768937862; x=1769542662;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=G4PXsjOGmmF0tp8XVeqAaq0yeQLCr/0MZyVOC/9kIQY=;
-        b=IDXYt9RONjengJbvTunO1kqzKYmxo/u/la9/QydMK8m5cjmn1qK/hUp1KfY22FBgFo
-         anKTJz+zwi2zqwVf8BI5jH1Rcl865USLLEH5DPa/06ECE9Xz6rmM6QD9syfq4Kwe4Ph8
-         p+1zXyYLjK8J6rRBZMmNVj3u7xExyJ2n1JO0nMnTI+Im9vgQe9zxIhpCHvgXnJfjiJlY
-         6DBVNgNadYsdZsMbQbDrQZXvI40A7QSzJ91t/bWaWqmaN9WWqlUXxpfxYridgbGosjuf
-         aZ6ZlhFvJKGbxvwTosSmk9HG+gxevyNOGV22krXJx3EszElOyDCCybKxU3zqTg4rvhBt
-         kGbA==
-X-Forwarded-Encrypted: i=1; AJvYcCVS5kgtxjReTjgiOgIgnYCNFOCnhxPM3iJkiRuQu/OJGTc4fDPZdG9dZiA69al0YD+Eyc78vnxNlXf8CtEB9jgA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0wKDJvhz0tjUXyGWQEa8EZF/w8LpVTp9pdgOhrnaV5pZpC9AA
-	LYFDNyGH0XvaCULA+4mdUXuJzP49GcUr2LgMptlnKC1odPGRAZajMYUEhyLIHXETV+wah8EtKyR
-	Oi6y2uhReeQ==
-X-Received: from dlbcj30.prod.google.com ([2002:a05:7022:699e:b0:11b:b756:3e9b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4394:b0:11c:ec20:ea1f
- with SMTP id a92af1059eb24-1246aabebb7mr2429584c88.33.1768937862357; Tue, 20
- Jan 2026 11:37:42 -0800 (PST)
-Date: Tue, 20 Jan 2026 11:37:37 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OS7xkzLV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D64FC16AAE;
+	Tue, 20 Jan 2026 20:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768940331;
+	bh=PU/7S/vc+zeqZS0B2GmmDAW6BOqWzuE8ycGgTfUkAek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OS7xkzLVNidImwtFfFYAMzZQ9M4Rh4QemGlbxlwBmKR32ce0zTZ8b5+4H2a/jdW27
+	 wucwgUq1bW9twN+2jsEszzXQdzdSL0663kFXeYrKn6zbtInzplOSN44uk74Pm0+ESo
+	 hQnxCWT22D2VT1W7ReEl0/NcKCp3If+Ai27rAS6Gw3g3+xRWPmer3RdEqGBt55a2fR
+	 pQIKnRhjhVoKImbc6guxUe18NnaRGzzYW/mbMwWOMsQkbmDTBX86dxhREOWZd+VoCX
+	 YUgjP/mQ2uGwE5sBi+YjxU8Ev/ehovPKP6jiA/t8xNhrMihEeDYDl4SjkdMsn4IJBM
+	 dXMjSPhOIMdXg==
+Date: Tue, 20 Jan 2026 17:18:48 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] perf inject: Add --convert-callchain option
+Message-ID: <aW_jKCBas1FCwbRT@x1>
+References: <20260113232903.55021-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260120193737.3513656-1-irogers@google.com>
-Subject: [PATCH v1] perf regs: Refactor use of arch__sample_reg_masks to perf_reg_name
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Shimin Guo <shimin.guo@skydio.com>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	Howard Chu <howardchu95@gmail.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Dmitry Vyukov <dvyukov@google.com>, 
-	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, Chun-Tse Shao <ctshao@google.com>, 
-	Aditya Bodkhe <aditya.b1@linux.ibm.com>, Haibo Xu <haibo1.xu@intel.com>, 
-	Sergei Trofimovich <slyich@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260113232903.55021-1-namhyung@kernel.org>
 
-arch__sample_reg_masks isn't supported on ARM(32), csky, loongarch,
-MIPS, RISC-V and s390. The table returned by the function just has the
-name of a register paired with the corresponding sample_regs_user mask
-value. For a given perf register we can compute the name with
-perf_reg_name and the mask is just 1 left-shifted by the perf register
-number. Change __parse_regs to use this method for finding registers
-rather than arch__sample_reg_masks, thereby adding __parse_regs
-support for ARM(32), csky, loongarch, MIPS, RISC-V and s390. As
-arch__sample_reg_masks is then unused, remove the now unneeded
-declarations.
+On Tue, Jan 13, 2026 at 03:29:02PM -0800, Namhyung Kim wrote:
+> There are applications not built with frame pointers, so DWARF is needed
+> to get the stack traces.  So `perf record --call-graph dwarf` saves the
+> stack and register data for each sample to get the stacktrace offline.
+> But sometimes those data may have sensitive information and we don't
+> want to keep them in the file.
+> 
+> This perf inject --convert-callchain option parses the callchains and
+> discard the stack and register after that.  This will save storage space
+> and processing time for the new data file.  Of course, users should
+> remove the original data file. :)
+> 
+> The down side is that it cannot handle inlined callchain entries as they
+> all have the same IPs.  Maybe we can add an option to perf report to
+> look up inlined functions using DWARF - IIUC it won't requires stack and
+> register data.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-The idea for this patch came up in conversation with Dapeng Mi to
-avoid additional functions and tables for x86 APX support:
-https://lore.kernel.org/lkml/CAP-5=fWOsvAXuu8qx0tk9q8j8BoXPMJB3Gxto+iu6wf06i4cVA@mail.gmail.com/
+Thanks, applied to perf-tools-next,
 
-The patch is on top of the dwfl clean up patches that switch perf
-register functions to using e_machine as an argument rather than the
-arch string, this means that EM_HOST can be used with perf_reg_name:
-https://lore.kernel.org/lkml/20260117052849.2205545-1-irogers@google.com/
----
- tools/perf/arch/arm/util/perf_regs.c          |   9 --
- tools/perf/arch/arm64/util/machine.c          |  14 +--
- tools/perf/arch/arm64/util/perf_regs.c        |  45 +------
- tools/perf/arch/csky/util/perf_regs.c         |   9 --
- tools/perf/arch/loongarch/util/perf_regs.c    |   9 --
- tools/perf/arch/mips/util/perf_regs.c         |   9 --
- tools/perf/arch/powerpc/util/perf_regs.c      |  68 -----------
- tools/perf/arch/riscv/util/perf_regs.c        |   9 --
- tools/perf/arch/s390/util/perf_regs.c         |   9 --
- tools/perf/arch/x86/util/perf_regs.c          |  47 --------
- .../util/arm64-frame-pointer-unwind-support.c |   3 +-
- tools/perf/util/parse-regs-options.c          | 114 +++++++++++-------
- tools/perf/util/perf_regs.c                   |   9 --
- tools/perf/util/perf_regs.h                   |  12 --
- 14 files changed, 79 insertions(+), 287 deletions(-)
-
-diff --git a/tools/perf/arch/arm/util/perf_regs.c b/tools/perf/arch/arm/util/perf_regs.c
-index f94a0210c7b7..03a5bc0cf64c 100644
---- a/tools/perf/arch/arm/util/perf_regs.c
-+++ b/tools/perf/arch/arm/util/perf_regs.c
-@@ -2,10 +2,6 @@
- #include "perf_regs.h"
- #include "../../../util/perf_regs.h"
+- Arnaldo
  
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
-@@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
-index aab1cc2bc283..80fb13c958d9 100644
---- a/tools/perf/arch/arm64/util/machine.c
-+++ b/tools/perf/arch/arm64/util/machine.c
-@@ -1,18 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
- 
--#include <inttypes.h>
--#include <stdio.h>
--#include <string.h>
--#include "debug.h"
--#include "symbol.h"
--#include "callchain.h"
-+#include "callchain.h" // prototype of arch__add_leaf_frame_record_opts
- #include "perf_regs.h"
- #include "record.h"
--#include "util/perf_regs.h"
-+
-+#define SMPL_REG_MASK(b) (1ULL << (b))
- 
- void arch__add_leaf_frame_record_opts(struct record_opts *opts)
- {
--	const struct sample_reg *sample_reg_masks = arch__sample_reg_masks();
--
--	opts->sample_user_regs |= sample_reg_masks[PERF_REG_ARM64_LR].mask;
-+	opts->sample_user_regs |= SMPL_REG_MASK(PERF_REG_ARM64_LR);
- }
-diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
-index 09308665e28a..9bb768e1bea1 100644
---- a/tools/perf/arch/arm64/util/perf_regs.c
-+++ b/tools/perf/arch/arm64/util/perf_regs.c
-@@ -12,48 +12,12 @@
- #include "../../../util/event.h"
- #include "../../../util/perf_regs.h"
- 
-+#define SMPL_REG_MASK(b) (1ULL << (b))
-+
- #ifndef HWCAP_SVE
- #define HWCAP_SVE	(1 << 22)
- #endif
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG(x0, PERF_REG_ARM64_X0),
--	SMPL_REG(x1, PERF_REG_ARM64_X1),
--	SMPL_REG(x2, PERF_REG_ARM64_X2),
--	SMPL_REG(x3, PERF_REG_ARM64_X3),
--	SMPL_REG(x4, PERF_REG_ARM64_X4),
--	SMPL_REG(x5, PERF_REG_ARM64_X5),
--	SMPL_REG(x6, PERF_REG_ARM64_X6),
--	SMPL_REG(x7, PERF_REG_ARM64_X7),
--	SMPL_REG(x8, PERF_REG_ARM64_X8),
--	SMPL_REG(x9, PERF_REG_ARM64_X9),
--	SMPL_REG(x10, PERF_REG_ARM64_X10),
--	SMPL_REG(x11, PERF_REG_ARM64_X11),
--	SMPL_REG(x12, PERF_REG_ARM64_X12),
--	SMPL_REG(x13, PERF_REG_ARM64_X13),
--	SMPL_REG(x14, PERF_REG_ARM64_X14),
--	SMPL_REG(x15, PERF_REG_ARM64_X15),
--	SMPL_REG(x16, PERF_REG_ARM64_X16),
--	SMPL_REG(x17, PERF_REG_ARM64_X17),
--	SMPL_REG(x18, PERF_REG_ARM64_X18),
--	SMPL_REG(x19, PERF_REG_ARM64_X19),
--	SMPL_REG(x20, PERF_REG_ARM64_X20),
--	SMPL_REG(x21, PERF_REG_ARM64_X21),
--	SMPL_REG(x22, PERF_REG_ARM64_X22),
--	SMPL_REG(x23, PERF_REG_ARM64_X23),
--	SMPL_REG(x24, PERF_REG_ARM64_X24),
--	SMPL_REG(x25, PERF_REG_ARM64_X25),
--	SMPL_REG(x26, PERF_REG_ARM64_X26),
--	SMPL_REG(x27, PERF_REG_ARM64_X27),
--	SMPL_REG(x28, PERF_REG_ARM64_X28),
--	SMPL_REG(x29, PERF_REG_ARM64_X29),
--	SMPL_REG(lr, PERF_REG_ARM64_LR),
--	SMPL_REG(sp, PERF_REG_ARM64_SP),
--	SMPL_REG(pc, PERF_REG_ARM64_PC),
--	SMPL_REG(vg, PERF_REG_ARM64_VG),
--	SMPL_REG_END
--};
--
- /* %xNUM */
- #define SDT_OP_REGEX1  "^(x[1-2]?[0-9]|3[0-1])$"
- 
-@@ -175,8 +139,3 @@ uint64_t arch__user_reg_mask(void)
- 	}
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/csky/util/perf_regs.c b/tools/perf/arch/csky/util/perf_regs.c
-index 6b1665f41180..2cf7a54106e0 100644
---- a/tools/perf/arch/csky/util/perf_regs.c
-+++ b/tools/perf/arch/csky/util/perf_regs.c
-@@ -2,10 +2,6 @@
- #include "perf_regs.h"
- #include "../../util/perf_regs.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
-@@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/loongarch/util/perf_regs.c b/tools/perf/arch/loongarch/util/perf_regs.c
-index f94a0210c7b7..03a5bc0cf64c 100644
---- a/tools/perf/arch/loongarch/util/perf_regs.c
-+++ b/tools/perf/arch/loongarch/util/perf_regs.c
-@@ -2,10 +2,6 @@
- #include "perf_regs.h"
- #include "../../../util/perf_regs.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
-@@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/mips/util/perf_regs.c b/tools/perf/arch/mips/util/perf_regs.c
-index 6b1665f41180..2cf7a54106e0 100644
---- a/tools/perf/arch/mips/util/perf_regs.c
-+++ b/tools/perf/arch/mips/util/perf_regs.c
-@@ -2,10 +2,6 @@
- #include "perf_regs.h"
- #include "../../util/perf_regs.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
-@@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
-index bd36cfd420a2..779073f7e992 100644
---- a/tools/perf/arch/powerpc/util/perf_regs.c
-+++ b/tools/perf/arch/powerpc/util/perf_regs.c
-@@ -18,69 +18,6 @@
- #define PVR_POWER10		0x0080
- #define PVR_POWER11		0x0082
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG(r0, PERF_REG_POWERPC_R0),
--	SMPL_REG(r1, PERF_REG_POWERPC_R1),
--	SMPL_REG(r2, PERF_REG_POWERPC_R2),
--	SMPL_REG(r3, PERF_REG_POWERPC_R3),
--	SMPL_REG(r4, PERF_REG_POWERPC_R4),
--	SMPL_REG(r5, PERF_REG_POWERPC_R5),
--	SMPL_REG(r6, PERF_REG_POWERPC_R6),
--	SMPL_REG(r7, PERF_REG_POWERPC_R7),
--	SMPL_REG(r8, PERF_REG_POWERPC_R8),
--	SMPL_REG(r9, PERF_REG_POWERPC_R9),
--	SMPL_REG(r10, PERF_REG_POWERPC_R10),
--	SMPL_REG(r11, PERF_REG_POWERPC_R11),
--	SMPL_REG(r12, PERF_REG_POWERPC_R12),
--	SMPL_REG(r13, PERF_REG_POWERPC_R13),
--	SMPL_REG(r14, PERF_REG_POWERPC_R14),
--	SMPL_REG(r15, PERF_REG_POWERPC_R15),
--	SMPL_REG(r16, PERF_REG_POWERPC_R16),
--	SMPL_REG(r17, PERF_REG_POWERPC_R17),
--	SMPL_REG(r18, PERF_REG_POWERPC_R18),
--	SMPL_REG(r19, PERF_REG_POWERPC_R19),
--	SMPL_REG(r20, PERF_REG_POWERPC_R20),
--	SMPL_REG(r21, PERF_REG_POWERPC_R21),
--	SMPL_REG(r22, PERF_REG_POWERPC_R22),
--	SMPL_REG(r23, PERF_REG_POWERPC_R23),
--	SMPL_REG(r24, PERF_REG_POWERPC_R24),
--	SMPL_REG(r25, PERF_REG_POWERPC_R25),
--	SMPL_REG(r26, PERF_REG_POWERPC_R26),
--	SMPL_REG(r27, PERF_REG_POWERPC_R27),
--	SMPL_REG(r28, PERF_REG_POWERPC_R28),
--	SMPL_REG(r29, PERF_REG_POWERPC_R29),
--	SMPL_REG(r30, PERF_REG_POWERPC_R30),
--	SMPL_REG(r31, PERF_REG_POWERPC_R31),
--	SMPL_REG(nip, PERF_REG_POWERPC_NIP),
--	SMPL_REG(msr, PERF_REG_POWERPC_MSR),
--	SMPL_REG(orig_r3, PERF_REG_POWERPC_ORIG_R3),
--	SMPL_REG(ctr, PERF_REG_POWERPC_CTR),
--	SMPL_REG(link, PERF_REG_POWERPC_LINK),
--	SMPL_REG(xer, PERF_REG_POWERPC_XER),
--	SMPL_REG(ccr, PERF_REG_POWERPC_CCR),
--	SMPL_REG(softe, PERF_REG_POWERPC_SOFTE),
--	SMPL_REG(trap, PERF_REG_POWERPC_TRAP),
--	SMPL_REG(dar, PERF_REG_POWERPC_DAR),
--	SMPL_REG(dsisr, PERF_REG_POWERPC_DSISR),
--	SMPL_REG(sier, PERF_REG_POWERPC_SIER),
--	SMPL_REG(mmcra, PERF_REG_POWERPC_MMCRA),
--	SMPL_REG(mmcr0, PERF_REG_POWERPC_MMCR0),
--	SMPL_REG(mmcr1, PERF_REG_POWERPC_MMCR1),
--	SMPL_REG(mmcr2, PERF_REG_POWERPC_MMCR2),
--	SMPL_REG(mmcr3, PERF_REG_POWERPC_MMCR3),
--	SMPL_REG(sier2, PERF_REG_POWERPC_SIER2),
--	SMPL_REG(sier3, PERF_REG_POWERPC_SIER3),
--	SMPL_REG(pmc1, PERF_REG_POWERPC_PMC1),
--	SMPL_REG(pmc2, PERF_REG_POWERPC_PMC2),
--	SMPL_REG(pmc3, PERF_REG_POWERPC_PMC3),
--	SMPL_REG(pmc4, PERF_REG_POWERPC_PMC4),
--	SMPL_REG(pmc5, PERF_REG_POWERPC_PMC5),
--	SMPL_REG(pmc6, PERF_REG_POWERPC_PMC6),
--	SMPL_REG(sdar, PERF_REG_POWERPC_SDAR),
--	SMPL_REG(siar, PERF_REG_POWERPC_SIAR),
--	SMPL_REG_END
--};
--
- /* REG or %rREG */
- #define SDT_OP_REGEX1  "^(%r)?([1-2]?[0-9]|3[0-1])$"
- 
-@@ -233,8 +170,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/riscv/util/perf_regs.c
-index 6b1665f41180..2cf7a54106e0 100644
---- a/tools/perf/arch/riscv/util/perf_regs.c
-+++ b/tools/perf/arch/riscv/util/perf_regs.c
-@@ -2,10 +2,6 @@
- #include "perf_regs.h"
- #include "../../util/perf_regs.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
-@@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/s390/util/perf_regs.c b/tools/perf/arch/s390/util/perf_regs.c
-index 6b1665f41180..2cf7a54106e0 100644
---- a/tools/perf/arch/s390/util/perf_regs.c
-+++ b/tools/perf/arch/s390/util/perf_regs.c
-@@ -2,10 +2,6 @@
- #include "perf_regs.h"
- #include "../../util/perf_regs.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
-@@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
-index 12fd93f04802..a7ca4154fdf9 100644
---- a/tools/perf/arch/x86/util/perf_regs.c
-+++ b/tools/perf/arch/x86/util/perf_regs.c
-@@ -13,48 +13,6 @@
- #include "../../../util/pmu.h"
- #include "../../../util/pmus.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG(AX, PERF_REG_X86_AX),
--	SMPL_REG(BX, PERF_REG_X86_BX),
--	SMPL_REG(CX, PERF_REG_X86_CX),
--	SMPL_REG(DX, PERF_REG_X86_DX),
--	SMPL_REG(SI, PERF_REG_X86_SI),
--	SMPL_REG(DI, PERF_REG_X86_DI),
--	SMPL_REG(BP, PERF_REG_X86_BP),
--	SMPL_REG(SP, PERF_REG_X86_SP),
--	SMPL_REG(IP, PERF_REG_X86_IP),
--	SMPL_REG(FLAGS, PERF_REG_X86_FLAGS),
--	SMPL_REG(CS, PERF_REG_X86_CS),
--	SMPL_REG(SS, PERF_REG_X86_SS),
--#ifdef HAVE_ARCH_X86_64_SUPPORT
--	SMPL_REG(R8, PERF_REG_X86_R8),
--	SMPL_REG(R9, PERF_REG_X86_R9),
--	SMPL_REG(R10, PERF_REG_X86_R10),
--	SMPL_REG(R11, PERF_REG_X86_R11),
--	SMPL_REG(R12, PERF_REG_X86_R12),
--	SMPL_REG(R13, PERF_REG_X86_R13),
--	SMPL_REG(R14, PERF_REG_X86_R14),
--	SMPL_REG(R15, PERF_REG_X86_R15),
--#endif
--	SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
--	SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
--	SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
--	SMPL_REG2(XMM3, PERF_REG_X86_XMM3),
--	SMPL_REG2(XMM4, PERF_REG_X86_XMM4),
--	SMPL_REG2(XMM5, PERF_REG_X86_XMM5),
--	SMPL_REG2(XMM6, PERF_REG_X86_XMM6),
--	SMPL_REG2(XMM7, PERF_REG_X86_XMM7),
--	SMPL_REG2(XMM8, PERF_REG_X86_XMM8),
--	SMPL_REG2(XMM9, PERF_REG_X86_XMM9),
--	SMPL_REG2(XMM10, PERF_REG_X86_XMM10),
--	SMPL_REG2(XMM11, PERF_REG_X86_XMM11),
--	SMPL_REG2(XMM12, PERF_REG_X86_XMM12),
--	SMPL_REG2(XMM13, PERF_REG_X86_XMM13),
--	SMPL_REG2(XMM14, PERF_REG_X86_XMM14),
--	SMPL_REG2(XMM15, PERF_REG_X86_XMM15),
--	SMPL_REG_END
--};
--
- struct sdt_name_reg {
- 	const char *sdt_name;
- 	const char *uprobe_name;
-@@ -276,11 +234,6 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
- 	return SDT_ARG_VALID;
- }
- 
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	struct perf_event_attr attr = {
-diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.c b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-index 958afe8b821e..858ce2b01812 100644
---- a/tools/perf/util/arm64-frame-pointer-unwind-support.c
-+++ b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-@@ -2,7 +2,6 @@
- #include "arm64-frame-pointer-unwind-support.h"
- #include "callchain.h"
- #include "event.h"
--#include "perf_regs.h" // SMPL_REG_MASK
- #include "unwind.h"
- #include <string.h>
- 
-@@ -15,6 +14,8 @@ struct entries {
- 	size_t length;
- };
- 
-+#define SMPL_REG_MASK(b) (1ULL << (b))
-+
- static bool get_leaf_frame_caller_enabled(struct perf_sample *sample)
- {
- 	struct regs_dump *regs;
-diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
-index cda1c620968e..d3a429f2477f 100644
---- a/tools/perf/util/parse-regs-options.c
-+++ b/tools/perf/util/parse-regs-options.c
-@@ -5,15 +5,52 @@
- #include <string.h>
- #include <stdio.h>
- #include "util/debug.h"
-+#include <dwarf-regs.h>
- #include <subcmd/parse-options.h>
- #include "util/perf_regs.h"
- #include "util/parse-regs-options.h"
- 
-+static void list_perf_regs(FILE *fp, uint64_t mask)
-+{
-+	const char *last_name = NULL;
-+
-+	fprintf(fp, "available registers: ");
-+	for (int reg = 0; reg < 64; reg++) {
-+		const char *name;
-+
-+		if (((1ULL << reg) & mask) == 0)
-+			continue;
-+
-+		name = perf_reg_name(reg, EM_HOST);
-+		if (name && (!last_name || strcmp(last_name, name)))
-+			fprintf(fp, "%s%s", reg > 0 ? " " : "", name);
-+		last_name = name;
-+	}
-+	fputc('\n', fp);
-+}
-+
-+static int name_to_perf_reg(const char *to_match, uint64_t mask)
-+{
-+	for (int reg = 0; reg < 64; reg++) {
-+		const char *name;
-+
-+		if (((1ULL << reg) & mask) == 0)
-+			continue;
-+
-+		name = perf_reg_name(reg, EM_HOST);
-+		if (!name)
-+			continue;
-+
-+		if (!strcasecmp(to_match, name))
-+			return reg;
-+	}
-+	return -1;
-+}
-+
- static int
- __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- {
- 	uint64_t *mode = (uint64_t *)opt->value;
--	const struct sample_reg *r = NULL;
- 	char *s, *os = NULL, *p;
- 	int ret = -1;
- 	uint64_t mask;
-@@ -27,50 +64,41 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 	if (*mode)
- 		return -1;
- 
--	if (intr)
--		mask = arch__intr_reg_mask();
--	else
--		mask = arch__user_reg_mask();
--
- 	/* str may be NULL in case no arg is passed to -I */
--	if (str) {
--		/* because str is read-only */
--		s = os = strdup(str);
--		if (!s)
--			return -1;
--
--		for (;;) {
--			p = strchr(s, ',');
--			if (p)
--				*p = '\0';
--
--			if (!strcmp(s, "?")) {
--				fprintf(stderr, "available registers: ");
--				for (r = arch__sample_reg_masks(); r->name; r++) {
--					if (r->mask & mask)
--						fprintf(stderr, "%s ", r->name);
--				}
--				fputc('\n', stderr);
--				/* just printing available regs */
--				goto error;
--			}
--			for (r = arch__sample_reg_masks(); r->name; r++) {
--				if ((r->mask & mask) && !strcasecmp(s, r->name))
--					break;
--			}
--			if (!r || !r->name) {
--				ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
--					    s, intr ? "-I" : "--user-regs=");
--				goto error;
--			}
--
--			*mode |= r->mask;
--
--			if (!p)
--				break;
--
--			s = p + 1;
-+	if (!str)
-+		return -1;
-+
-+	mask = intr ? arch__intr_reg_mask(): arch__user_reg_mask();
-+
-+	/* because str is read-only */
-+	s = os = strdup(str);
-+	if (!s)
-+		return -1;
-+
-+	for (;;) {
-+		int reg;
-+
-+		p = strchr(s, ',');
-+		if (p)
-+			*p = '\0';
-+
-+		if (!strcmp(s, "?")) {
-+			list_perf_regs(stderr, mask);
-+			goto error;
-+		}
-+		reg = name_to_perf_reg(s, mask);
-+		if (reg < 0) {
-+			ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
-+				s, intr ? "-I" : "--user-regs=");
-+			goto error;
- 		}
-+
-+		*mode |= 1ULL << reg;
-+
-+		if (!p)
-+			break;
-+
-+		s = p + 1;
- 	}
- 	ret = 0;
- 
-diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-index b58d59b84fb1..ec602da1aeb6 100644
---- a/tools/perf/util/perf_regs.c
-+++ b/tools/perf/util/perf_regs.c
-@@ -22,15 +22,6 @@ uint64_t __weak arch__user_reg_mask(void)
- 	return 0;
- }
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
--const struct sample_reg * __weak arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
--
- const char *perf_reg_name(int id, uint16_t e_machine)
- {
- 	const char *reg_name = NULL;
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index 7bfc6a34c02b..2c2a8de6912d 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -7,17 +7,6 @@
- 
- struct regs_dump;
- 
--struct sample_reg {
--	const char *name;
--	uint64_t mask;
--};
--
--#define SMPL_REG_MASK(b) (1ULL << (b))
--#define SMPL_REG(n, b) { .name = #n, .mask = SMPL_REG_MASK(b) }
--#define SMPL_REG2_MASK(b) (3ULL << (b))
--#define SMPL_REG2(n, b) { .name = #n, .mask = SMPL_REG2_MASK(b) }
--#define SMPL_REG_END { .name = NULL }
--
- enum {
- 	SDT_ARG_VALID = 0,
- 	SDT_ARG_SKIP,
-@@ -26,7 +15,6 @@ enum {
- int arch_sdt_arg_parse_op(char *old_op, char **new_op);
- uint64_t arch__intr_reg_mask(void);
- uint64_t arch__user_reg_mask(void);
--const struct sample_reg *arch__sample_reg_masks(void);
- 
- const char *perf_reg_name(int id, uint16_t e_machine);
- int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
--- 
-2.52.0.457.g6b5491de43-goog
-
+> This is an example.
+> 
+>   $ perf record --call-graph dwarf -- perf test -w noploop
+> 
+>   $ perf report --stdio --no-children --percent-limit=0 > output-prev
+> 
+>   $ perf inject -i perf.data --convert-callchain -o perf.data.out
+> 
+>   $ perf report --stdio --no-children --percent-limit=0 -i perf.data.out > output-next
+> 
+>   $ diff -u output-prev output-next
+>   ...
+>         0.23%  perf          ld-linux-x86-64.so.2  [.] _dl_relocate_object_no_relro
+>                |
+>   -            ---elf_dynamic_do_Rela (inlined)
+>   -               _dl_relocate_object_no_relro
+>   +            ---_dl_relocate_object_no_relro
+>                   _dl_relocate_object
+>                   dl_main
+>                   _dl_sysdep_start
+>   -               _dl_start_final (inlined)
+>                   _dl_start
+>                   _start
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+> v3 changes)
+>  * add Ian's reviewed-by tag
+>  * handle error cases properly  (Arnaldo)
+> 
+>  tools/perf/Documentation/perf-inject.txt |   5 +
+>  tools/perf/builtin-inject.c              | 152 +++++++++++++++++++++++
+>  2 files changed, 157 insertions(+)
+> 
+> diff --git a/tools/perf/Documentation/perf-inject.txt b/tools/perf/Documentation/perf-inject.txt
+> index c972032f4ca0d248..95dfdf39666efe89 100644
+> --- a/tools/perf/Documentation/perf-inject.txt
+> +++ b/tools/perf/Documentation/perf-inject.txt
+> @@ -109,6 +109,11 @@ include::itrace.txt[]
+>  	should be used, and also --buildid-all and --switch-events may be
+>  	useful.
+>  
+> +--convert-callchain::
+> +	Parse DWARF callchains and convert them to usual callchains.  This also
+> +	discards stack and register data from the samples.  This will lose
+> +	inlined callchain entries.
+> +
+>  :GMEXAMPLECMD: inject
+>  :GMEXAMPLESUBCMD:
+>  include::guestmount.txt[]
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index 6080afec537d2178..e2a653280e1b8361 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -122,6 +122,7 @@ struct perf_inject {
+>  	bool			in_place_update;
+>  	bool			in_place_update_dry_run;
+>  	bool			copy_kcore_dir;
+> +	bool			convert_callchain;
+>  	const char		*input_name;
+>  	struct perf_data	output;
+>  	u64			bytes_written;
+> @@ -133,6 +134,7 @@ struct perf_inject {
+>  	struct guest_session	guest_session;
+>  	struct strlist		*known_build_ids;
+>  	const struct evsel	*mmap_evsel;
+> +	struct ip_callchain	*raw_callchain;
+>  };
+>  
+>  struct event_entry {
+> @@ -383,6 +385,90 @@ static int perf_event__repipe_sample(const struct perf_tool *tool,
+>  	return perf_event__repipe_synth(tool, event);
+>  }
+>  
+> +static int perf_event__convert_sample_callchain(const struct perf_tool *tool,
+> +						union perf_event *event,
+> +						struct perf_sample *sample,
+> +						struct evsel *evsel,
+> +						struct machine *machine)
+> +{
+> +	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
+> +	struct callchain_cursor *cursor = get_tls_callchain_cursor();
+> +	union perf_event *event_copy = (void *)inject->event_copy;
+> +	struct callchain_cursor_node *node;
+> +	struct thread *thread;
+> +	u64 sample_type = evsel->core.attr.sample_type;
+> +	u32 sample_size = event->header.size;
+> +	u64 i, k;
+> +	int ret;
+> +
+> +	if (event_copy == NULL) {
+> +		inject->event_copy = malloc(PERF_SAMPLE_MAX_SIZE);
+> +		if (!inject->event_copy)
+> +			return -ENOMEM;
+> +
+> +		event_copy = (void *)inject->event_copy;
+> +	}
+> +
+> +	if (cursor == NULL)
+> +		return -ENOMEM;
+> +
+> +	callchain_cursor_reset(cursor);
+> +
+> +	thread = machine__find_thread(machine, sample->tid, sample->pid);
+> +	if (thread == NULL)
+> +		goto out;
+> +
+> +	/* this will parse DWARF using stack and register data */
+> +	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
+> +					/*parent=*/NULL, /*root_al=*/NULL,
+> +					PERF_MAX_STACK_DEPTH);
+> +	thread__put(thread);
+> +	if (ret != 0)
+> +		goto out;
+> +
+> +	/* copy kernel callchain and context entries */
+> +	for (i = 0; i < sample->callchain->nr; i++) {
+> +		inject->raw_callchain->ips[i] = sample->callchain->ips[i];
+> +		if (sample->callchain->ips[i] == PERF_CONTEXT_USER) {
+> +			i++;
+> +			break;
+> +		}
+> +	}
+> +	if (i == 0 || inject->raw_callchain->ips[i - 1] != PERF_CONTEXT_USER)
+> +		inject->raw_callchain->ips[i++] = PERF_CONTEXT_USER;
+> +
+> +	node = cursor->first;
+> +	for (k = 0; k < cursor->nr && i < PERF_MAX_STACK_DEPTH; k++) {
+> +		if (machine__kernel_ip(machine, node->ip))
+> +			/* kernel IPs were added already */;
+> +		else if (node->ms.sym && node->ms.sym->inlined)
+> +			/* we can't handle inlined callchains */;
+> +		else
+> +			inject->raw_callchain->ips[i++] = node->ip;
+> +
+> +		node = node->next;
+> +	}
+> +
+> +	inject->raw_callchain->nr = i;
+> +	sample->callchain = inject->raw_callchain;
+> +
+> +out:
+> +	memcpy(event_copy, event, sizeof(event->header));
+> +
+> +	/* adjust sample size for stack and regs */
+> +	sample_size -= sample->user_stack.size;
+> +	sample_size -= (hweight64(evsel->core.attr.sample_regs_user) + 1) * sizeof(u64);
+> +	sample_size += (sample->callchain->nr + 1) * sizeof(u64);
+> +	event_copy->header.size = sample_size;
+> +
+> +	/* remove sample_type {STACK,REGS}_USER for synthesize */
+> +	sample_type &= ~(PERF_SAMPLE_STACK_USER | PERF_SAMPLE_REGS_USER);
+> +
+> +	perf_event__synthesize_sample(event_copy, sample_type,
+> +				      evsel->core.attr.read_format, sample);
+> +	return perf_event__repipe_synth(tool, event_copy);
+> +}
+> +
+>  static struct dso *findnew_dso(int pid, int tid, const char *filename,
+>  			       const struct dso_id *id, struct machine *machine)
+>  {
+> @@ -2270,6 +2356,15 @@ static int __cmd_inject(struct perf_inject *inject)
+>  		/* Allow space in the header for guest attributes */
+>  		output_data_offset += gs->session->header.data_offset;
+>  		output_data_offset = roundup(output_data_offset, 4096);
+> +	} else if (inject->convert_callchain) {
+> +		inject->tool.sample	= perf_event__convert_sample_callchain;
+> +		inject->tool.fork	= perf_event__repipe_fork;
+> +		inject->tool.comm	= perf_event__repipe_comm;
+> +		inject->tool.exit	= perf_event__repipe_exit;
+> +		inject->tool.mmap	= perf_event__repipe_mmap;
+> +		inject->tool.mmap2	= perf_event__repipe_mmap2;
+> +		inject->tool.ordered_events = true;
+> +		inject->tool.ordering_requires_timestamps = true;
+>  	}
+>  
+>  	if (!inject->itrace_synth_opts.set)
+> @@ -2322,6 +2417,23 @@ static int __cmd_inject(struct perf_inject *inject)
+>  				perf_header__set_feat(&session->header,
+>  						      HEADER_BRANCH_STACK);
+>  		}
+> +
+> +		/*
+> +		 * The converted data file won't have stack and registers.
+> +		 * Update the perf_event_attr to remove them before writing.
+> +		 */
+> +		if (inject->convert_callchain) {
+> +			struct evsel *evsel;
+> +
+> +			evlist__for_each_entry(session->evlist, evsel) {
+> +				evsel__reset_sample_bit(evsel, REGS_USER);
+> +				evsel__reset_sample_bit(evsel, STACK_USER);
+> +				evsel->core.attr.sample_regs_user = 0;
+> +				evsel->core.attr.sample_stack_user = 0;
+> +				evsel->core.attr.exclude_callchain_user = 0;
+> +			}
+> +		}
+> +
+>  		session->header.data_offset = output_data_offset;
+>  		session->header.data_size = inject->bytes_written;
+>  		perf_session__inject_header(session, session->evlist, fd, &inj_fc.fc,
+> @@ -2346,6 +2458,18 @@ static int __cmd_inject(struct perf_inject *inject)
+>  	return ret;
+>  }
+>  
+> +static bool evsel__has_dwarf_callchain(struct evsel *evsel)
+> +{
+> +	struct perf_event_attr *attr = &evsel->core.attr;
+> +	const u64 dwarf_callchain_flags =
+> +		PERF_SAMPLE_STACK_USER | PERF_SAMPLE_REGS_USER | PERF_SAMPLE_CALLCHAIN;
+> +
+> +	if (!attr->exclude_callchain_user)
+> +		return false;
+> +
+> +	return (attr->sample_type & dwarf_callchain_flags) == dwarf_callchain_flags;
+> +}
+> +
+>  int cmd_inject(int argc, const char **argv)
+>  {
+>  	struct perf_inject inject = {
+> @@ -2414,6 +2538,8 @@ int cmd_inject(int argc, const char **argv)
+>  		OPT_STRING(0, "guestmount", &symbol_conf.guestmount, "directory",
+>  			   "guest mount directory under which every guest os"
+>  			   " instance has a subdir"),
+> +		OPT_BOOLEAN(0, "convert-callchain", &inject.convert_callchain,
+> +			    "Generate callchains using DWARF and drop register/stack data"),
+>  		OPT_END()
+>  	};
+>  	const char * const inject_usage[] = {
+> @@ -2429,6 +2555,9 @@ int cmd_inject(int argc, const char **argv)
+>  
+>  #ifndef HAVE_JITDUMP
+>  	set_option_nobuild(options, 'j', "jit", "NO_LIBELF=1", true);
+> +#endif
+> +#ifndef HAVE_LIBDW_SUPPORT
+> +	set_option_nobuild(options, 0, "convert-callchain", "NO_LIBDW=1", true);
+>  #endif
+>  	argc = parse_options(argc, argv, options, inject_usage, 0);
+>  
+> @@ -2588,6 +2717,28 @@ int cmd_inject(int argc, const char **argv)
+>  		}
+>  	}
+>  
+> +	if (inject.convert_callchain) {
+> +		struct evsel *evsel;
+> +
+> +		if (inject.output.is_pipe || inject.session->data->is_pipe) {
+> +			pr_err("--convert-callchain cannot work with pipe\n");
+> +			goto out_delete;
+> +		}
+> +
+> +		evlist__for_each_entry(inject.session->evlist, evsel) {
+> +			if (!evsel__has_dwarf_callchain(evsel)) {
+> +				pr_err("--convert-callchain requires DWARF call graph.\n");
+> +				goto out_delete;
+> +			}
+> +		}
+> +
+> +		inject.raw_callchain = calloc(PERF_MAX_STACK_DEPTH, sizeof(u64));
+> +		if (inject.raw_callchain == NULL) {
+> +			pr_err("callchain allocation failed\n");
+> +			goto out_delete;
+> +		}
+> +	}
+> +
+>  #ifdef HAVE_JITDUMP
+>  	if (inject.jit_mode) {
+>  		inject.tool.mmap2	   = perf_event__repipe_mmap2;
+> @@ -2618,5 +2769,6 @@ int cmd_inject(int argc, const char **argv)
+>  	free(inject.itrace_synth_opts.vm_tm_corr_args);
+>  	free(inject.event_copy);
+>  	free(inject.guest_session.ev.event_buf);
+> +	free(inject.raw_callchain);
+>  	return ret;
+>  }
+> -- 
+> 2.52.0.457.g6b5491de43-goog
