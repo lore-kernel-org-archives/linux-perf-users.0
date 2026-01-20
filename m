@@ -1,80 +1,79 @@
-Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
+Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C72387564
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2026 07:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827B3354AF6
+	for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2026 07:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768892539; cv=pass; b=BPJS4aqEWh1LN8vvGYFHuA8LUX3sniDc4F1DsY4434d1GA22x0c44b6Cv3Tj0bH3/KqQirQjGEAHyRbcvci9YOY0KEM+bQ4hGJtBUePkcHxe5R1DyFvnX3ONVbp3gYy1inQ+XPDCEP/MmpIQ1RiBv6K0sMEs5jvzcDwCqKTlCRc=
+	t=1768893416; cv=pass; b=WxB/GpLUrKJtVT27PQ68eJMa+sxnoQHQVnEkmdRHEPIWaSdnuXVmXnWa240aNqk54Dx+VFWSkYg6CAIvZ3tQ792Is+9/OBl0Ch9vjrERxUBDuqzpEEUc7Tt7kCTrPPN5zJfGshMSUfbydJSI6lLXBSFeJxB1lONELththT+DmMA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768892539; c=relaxed/simple;
-	bh=7CiU3xAcGmF0aGJSs6foaU4S5JpGb+sF6YMWhZkMbeQ=;
+	s=arc-20240116; t=1768893416; c=relaxed/simple;
+	bh=cNjr206LRyO/Iq6hkgZgDfkivsMohHnE1fUJEgHOcyM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gkLkIddwsmMDDCUIRgbEUS36oJVo6rd6Lr16nuyBim0Q+IkANU8aGnz3XRrdt/MLPGPBIutc1u7D3sngmtxClfPePc6hOdmL373u9xVTtWh2vDxEeW3VjFqaRvdCdeFwUFxtEtGvc87oSOb0IcGPEXKnZ+SSRxv4wEfxfiGzYeg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vzWXToMr; arc=pass smtp.client-ip=74.125.82.51
+	 To:Cc:Content-Type; b=LSRWAXUlybE8DzQvEAHCRDjmdeUAviWMh7/Pw1PDjPK1u0B3UJqubxcKB0amACn+GPmASXTiw8RZNftXIPVa10UtyJbm7R8tp+9cQ52R5nvuJP3UZL4itada/ZCL9lV+mW1zCJux1p7znEekOmJHQ4JVulQJ7KHz+8KA1SJhY64=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OHVihg2W; arc=pass smtp.client-ip=74.125.82.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vzWXToMr"
-Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-11a247de834so17335c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 23:02:12 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1768892528; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OHVihg2W"
+Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-11a247de834so17400c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2026 23:16:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768893402; cv=none;
         d=google.com; s=arc-20240605;
-        b=c9IS2mWtlIlvV5q5Ggng75MhfEUCKnf+3AB5Y2Awd0ZpeIQxXU/jBD5ogdVI+Wni23
-         QUD/lwA11jjlrl6OZ6GMQ1ZjIQF0B50a9LMkjWCysPpwDvwH0R2Ptj3J/uMCGvsDbXdl
-         HqdU1NZocW6sRFIczjtQkLdLPq5nHPFxrKhhA4MOvikHYSRey/8aWPCIEekAOASZOuWr
-         DDdZOEHf95vqgSZyurvpkJ51sWzedWcKBY4hT5QQ8LPGGYvFwRehVfBFdVvraX0NnPUP
-         0wyK3dA9YSqNCSkTfZJM/ymxFePTrikzQEvsMOD9UzJu11SBfEhR1Wc5k0DlRiBZvpyK
-         2tCg==
+        b=HjEPJDMdr+fDZ3DMoDqDlIdtkXTxK66Sz+c+th0GzKM5Mx9aBLZ8aFk7E6YojuWJCT
+         L3FRIDwBJX8K9UFZkikhHpT72oR3Yk6Q22q6chgzchc+q082HBUfdndnE0q52+6u3qNA
+         ux/UNyX6HIY96ZrHOIexM4UGDgfRejoW1CbZUB6OTqHxmfntRhmEuBfrwCw/UKYhyTnh
+         37bgXvXvNEHLC7zhoDgasYYUWbB5eXreAF4Iid8MgsTFENTNkorS5L5tnHRZW1iy5xCi
+         ItUcXQiiQPblaYyVpIUq5P7pe9QPqHFNd58M0bmdgxIjh7dR8OAMKlD4TNMnSisdWu7o
+         /R3g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=fGkZO0eAaLHjDvSQ8Jz+T4HimifGdYEoV7H1TT6lRf4=;
-        fh=LJ43zqZJuxnU82MUerIC3+bRTHYSS/BMeU2gN3xyAvs=;
-        b=QpEKlNy5KDcA0DtFQu0YOxmeBWGNAsiWIU6zvZtZBLiOafvlAC+9jgsvf3H7tZzd0o
-         NvfBxwNYBeyj2b+/7dNr/jd4iSgV3Dfh94rPxn+LQ+6NOCwEtFdwxHTCCvU+HHZia9Rc
-         +T2Hfr+QbvxnU+f8UuqVTtA4rgUp9Ma6Ak/RH+32fNUNgVGbv+2CLEtCMPx/HqwaNMl2
-         Gi6f6DQf9V6kbHSz7MS2O0Of7bs8+alYyAqyhc5JRwFifNLW52NpHVsi3zbQiG0VFtS1
-         L0ha5/G7blwL3l9pCbUHywtGtLwsPJ8FJUjUWKfJTlZRPOlO9SvHKd1TmkxeRgCNT4Uf
-         HFwA==;
+        bh=W36M3fvPnoatii7yFm4j8WXZX/v1MfGgkmZ9jmuNoAc=;
+        fh=Z+2WbroQsidrguzC8guhlyp8y2ou520JChSIm1JMrCI=;
+        b=JzvZNFiU9pzndzopBJ/V8rfCNspmeW41W4yRPN+quzB6uu+ErI8SqDlkUejG6fIDim
+         bpPfgJyyTDF/tSkyf+C0R/zL6ZayG6jix71XYlZN0fqrVKcSRqw98frtDgpn+RxPN0Oi
+         FcfXD8GLDe4HVRQ08+eByj0XFbXdlDwzSYdEm01xgwEtAMMGOVJHtyeBIoDG1oNEKPEh
+         mDCMvu5BLrlLVo1DBtpFUp/3bDqPfkfGholKZvS3FGPEXxwnnbbwtRYdvgcCQLlI6A6Z
+         1sR/eVKng87YgaSj5ajq9dXz7qERo7Xxel9TN0Krt88M1pTEIVbpw6ApFnA6nyGhuWwg
+         po+Q==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768892528; x=1769497328; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1768893402; x=1769498202; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fGkZO0eAaLHjDvSQ8Jz+T4HimifGdYEoV7H1TT6lRf4=;
-        b=vzWXToMrSyp8uVzNtGnZACQTu3oiTFB0knkjnp3nnwhz0g5dRPqZCNMGWBHyep3Tou
-         GqL6r1hhFUc01wR0jCKR/5YUeJydwlD0ZhQvKuY07/f7jFkaGpc2PYo0xShypAb9U4Qq
-         mzJFjrdn8z2AHa4D1kkbMZMeku1CpDKfOb43Ox1Bpu3XdSexs0xUKbGTDR6An9X17bZC
-         PYV90VYbLGoEMBuAD63yw15ygdRVmIeg+Wgfs79pxX++MEF/v1lcRHJlXeX7M+vYUfun
-         iwGo62POGeov2MQBHZ7S4tlB+xL1eRszf6V0U8XUlt0T2sUh9q35JnZpcW269A+yR3Lk
-         nLCQ==
+        bh=W36M3fvPnoatii7yFm4j8WXZX/v1MfGgkmZ9jmuNoAc=;
+        b=OHVihg2Wsj0QNJY3SD7A2i2eJLBjqEcJDVy06RIrbASve8GXg6pNFL7t9LWupBG8XF
+         ZH6jB6ucQepPQv9L8+oMScrABbLUEk0UcqhU5rNk7oIojV/yB0Qw9f09j6nWN4bKqEqY
+         RqTDuQwUwJqTeDCvNbJlnfa9CfU/aUuS3s6BIqIty23A9sOEvwgyQROXmwEqlPi9Pi6K
+         EczRdHq4H7ea1mNQnW0ghXhAjgDJb6yKclMq4QVidKKCSlRsTHBNuEucoWK+L5DLWW3p
+         mTfTB8c8TL6/SZsFqoGZzDdqQpqCOjNwt83KGDe93+wPzwausdS2j+3bAEk/l6NGFUvh
+         DJow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768892528; x=1769497328;
+        d=1e100.net; s=20230601; t=1768893402; x=1769498202;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=fGkZO0eAaLHjDvSQ8Jz+T4HimifGdYEoV7H1TT6lRf4=;
-        b=An+qOyrRa16k/VwaCwrRAnl9hMIAkV0E2v6yYMsITGqZ6wDR3hMg04tTwm3QDeyKxh
-         BwIRrJzMe2PHPW9cWz60uFOGWFfQEJBJAi4GZdBadHRJuV59V3+INEdnmTAEb8JP6/G+
-         G/xQrl31AWUVvTwYA8ww4MOsZyCXhh3YOkByCLcO46bOGYMgzQqFFw/ItRsv9fN3ugnh
-         HfQD/w6jLOyqMrOJoiZNAWirx/tzoirSH5/F8Ds6ECrWrTohpdtuKK1RmH8N1bAC8e31
-         GLL8NnwZHv/sQKfVF65dl3Uet9/4PZ4+dBHYlHGmCzgea4u1xSSaDjdpev/ur4sSxoqK
-         2wRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGXfqxHwy1lFBc9oJCmmEPC15TS2Hs+JF0Ue+KX9eYiFWxUkUEBc8behSA8N4PXsfTdjSPSGk9D0LbaxeBKhzL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCzGjaS7f8NET+PJQ7jwZQHD9SGJiSOmhqBMiln0+3Z+ybzibO
-	LMT9Q+MWXCHCtUhIhBpnyKVAjP5Sbo3vH+dBWQKP6SXe8t2HO0kToiz7l1gB8bA13m9g9movf7B
-	K0118kyTTt4tPxtGpiVzcyCFHt9fF8OQJlwOVBhE0
-X-Gm-Gg: AY/fxX41KBPF35qdTwsps9IzLX5d51Cce7O1/W17Hk3D/qeaLhZWSTpxM/iTof+lHoS
-	qj3WS95vYZy95Lqq3DDIzkPhNMpqKR3nl7TvpH8Ra6CB/9xOvVu8QPxZn6OXuvqmT9qQ3PVSZeY
-	dNqHg4yZKO8xUoQIKb/fHB1E3WudvG3FuVnyKZdX/5J8IkBHp3j8UkRa2At8PIO88lXtzGnh3tN
-	d+PjirswgllBLRxpfgNMfdSbXxX4Zxh6UJLjJBDHulTpPxxqyiaEpraOKPXf8rJ09VKN0Q272+x
-	xkKXpeI=
-X-Received: by 2002:a05:7022:3a08:b0:122:8d:3538 with SMTP id
- a92af1059eb24-12453d1b7afmr341750c88.2.1768892527682; Mon, 19 Jan 2026
- 23:02:07 -0800 (PST)
+        bh=W36M3fvPnoatii7yFm4j8WXZX/v1MfGgkmZ9jmuNoAc=;
+        b=jF8sEWU9mAhpAJSJ0BBzXL9fmjZ5ojfU17mhoXqegpFY2LrDDT13wg901z7SccMPNI
+         /H0o5n4q/wpoRwZxFbeOORBUkoMxGhPHBJuOobRe6LLDlYoMsnDDaGN2EEal64ZJBqMN
+         aSqYXZaOu24U3uF7ThBsQV0RHyJN7Tk6dxD7eYe1CjqHtqE6rXUegNCplXJQ7vq4oUMI
+         1uLKof/PcmxYQZTkYM3fk/OzVzssJ5w+scNdz23iw3o8774QCm540XQoWVyQdG7l1nTD
+         lO0+b7aMi7G3AsGWJa2yuo9xTAb9RzDRcwh0Mw/QORA04Hrq+Fp8oHHT22W6uXPiMxYG
+         YL4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUzD5wHfV05sHHl4OibAG7euZdNAMnROHGP8fGZKh4W1kTK0LaIJq3yPEH/1OT3xmDCXyxySuwoJt5eeul/xv9S@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0hJi4ZLwewJ0EvH+SQtBPoXItlV3BniCK9zOuYZKWqh+wUGVp
+	Fqt2pgwG6sL+4a8nGwIDGcZpndz6F6d91uSZAlEawwIRg7PZTwMGwBaS7NbYYB0iIdewERAuyrz
+	QNOb9ydpcZKxp1/oj+29bx3q/bClcxGz/wG/9tnNQ
+X-Gm-Gg: AY/fxX45GKWTtWcU2rKkwnqaIa4q3i6o6+iXymm+5WvAomsmHcNSkkz48y/SX44HewS
+	HTI7bE3tTCREiVF8ZHXg5pdTCM7v9Q/3BOXuqBuZouqnwZJmIsfsGIkvuBHTZMUhB0i0pgs1H00
+	scdrpq2WSPKDfQ+OLwWE9tDLVPuMYcZnXIrnS7V4UKxtRxDH0Z5SpdDr0wvWEIKx1E3e8QkVSrD
+	Lt0Aq5VXd2AY2OnZQcb8gYF6oLODcZAuaERcJnTKot7Uodof7fbhy+axnIcxr74SwE41pOh
+X-Received: by 2002:a05:7022:3d03:b0:120:5719:1855 with SMTP id
+ a92af1059eb24-124545668bdmr205705c88.19.1768893401085; Mon, 19 Jan 2026
+ 23:16:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -84,9 +83,9 @@ MIME-Version: 1.0
 References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com> <20251203065500.2597594-18-dapeng1.mi@linux.intel.com>
 In-Reply-To: <20251203065500.2597594-18-dapeng1.mi@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 19 Jan 2026 23:01:56 -0800
-X-Gm-Features: AZwV_Qh-r7UhxcY3tSCqqxMH7P1Mw0xupkyDp24GKStVEhfzo4po3isb5a7jBXw
-Message-ID: <CAP-5=fUAOErzzU=tPk0adQkqqwnc7BU0FxNgKrXwWQUN=Qjoug@mail.gmail.com>
+Date: Mon, 19 Jan 2026 23:16:29 -0800
+X-Gm-Features: AZwV_Qiong-LGvcdwhytX70dcgffnT01up0kWkVakHdr8D6CkN4gXdCaEbI8u_c
+Message-ID: <CAP-5=fWPgdiRve_xk_t04wr_p1tccRu1eU7C3v+=yvc4OD4PVg@mail.gmail.com>
 Subject: Re: [Patch v5 17/19] perf headers: Sync with the kernel headers
 To: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -250,34 +249,9 @@ md_{pred,vec}_reg_* */
 > +               __u16 sample_simd_regs_enabled;
 > +               __u16 sample_simd_pred_reg_qwords;
 > +       };
-
-Shouldn't there be 16-bits of reserved data here as the next __u32
-will require it for alignment?
-
 > +       __u32 sample_simd_pred_reg_intr;
 > +       __u32 sample_simd_pred_reg_user;
 > +       __u16 sample_simd_vec_reg_qwords;
-
-Shouldn't there be 48-bits of reserved data here as the next __u64
-will require it for alignment?
-
-I wonder the order should be:
-```
-union {
-__u16 sample_simd_regs_enabled;
-__u16 sample_simd_pred_reg_qwords;
-};
-__u16 sample_simd_vec_reg_qwords;
-__u32 sample_simd_pred_reg_intr;
-__u32 sample_simd_pred_reg_user;
-__u32 __reserved_4;
-__u64 sample_simd_vec_reg_intr;
-__u64 sample_simd_vec_reg_user;
-```
-
-Thanks,
-Ian
-
 > +       __u64 sample_simd_vec_reg_intr;
 > +       __u64 sample_simd_vec_reg_user;
 > +       __u32 __reserved_4;
@@ -299,6 +273,16 @@ PLE_REGS_USER
 > +        *              u64 data[nr_vectors * vector_qwords + nr_pred * p=
 red_qwords];
 > +        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
+
+Why can't these values be taken from the perf_event_attr? The abi is
+needed as there could be both 32-bit and 64-bit samples for the same
+event - presumably x32 appears as 64-bit. If the ABI has SIMD within
+it (implied by the "} && (abi & PERF_SAMPLE_REGS_ABI_SIMD)" below)
+then why can't we just use the perf_event_attr values? For example,
+data could be "data[weight(sample_simd_vec_reg_user) *
+sample_simd_vec_reg_qwords + weight(sample_simd_pred_reg_user) *
+sample_simd_pred_reg_qwords]".
+
 > +        *      } && PERF_SAMPLE_REGS_USER
 >          *
 >          *      { u64                   size;
@@ -320,6 +304,12 @@ PLE_REGS_INTR
 > +        *              u64 data[nr_vectors * vector_qwords + nr_pred * p=
 red_qwords];
 > +        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
+
+Same comment.
+
+Thanks,
+Ian
+
 > +        *      } && PERF_SAMPLE_REGS_INTR
 >          *      { u64                   phys_addr;} && PERF_SAMPLE_PHYS_A=
 DDR
