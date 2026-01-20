@@ -1,282 +1,271 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5675F3A89DD;
-	Tue, 20 Jan 2026 07:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768895022; cv=none; b=GY39FF6QXCl5z4ghcwnRwPN8tZiqFv5vUN3bI3INDlA6/N7RpScZS3U5N/HP7QiZoQpM88vEAqXDBeGM1T0AoxgkqXj2sEEcVJhua3VG5EjjYiksPzmcbVLIEFe+/DuoWAewJTQ67/lOu+nWhGHhmG7k1ZN2Vf5xMYwyecHU91E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768895022; c=relaxed/simple;
-	bh=YRQEfMnWIT/sjwi96Q33wCRw82Od4zkV7AS9HFQf8wY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ONDajBHJuZWZZE1eEGwJfNp4bOg7cGSraQvUmI63vzHicf6HSZl8nTra7mtUjCbq2Shsv8dGBlosB9+s470CBNWd5M0bpuRYjJh94NYUM3HK492W2iAYICE/PdZtKA3jA3+YuWJPUDQRMblNl1ycEw0l5q6PcaPjLbbSfF3OJs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GAi9AEnm; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829A03A35AA;
+	Tue, 20 Jan 2026 07:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768895898; cv=fail; b=oJwa9X8gTp4Bc2EtAMhZNbTxvxfOHctiNvHbRX2CT4dGZnSxdHpv6pBh0uRMAZO3p9myWq0xBuUlDDoo0jkjZ+sN+0122qcsYkcGuiNexb70SqinTQGq2qNZQW44/PQt3jJuaqPs++XuiY3L9Q5Z/P6Pf9VF8kGllIt8XErcHjo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768895898; c=relaxed/simple;
+	bh=YaDc8WGtjTWsEdXc1jtRElOfOQCJdCm9qMEOlx08pTQ=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=Vp1Kz2gIPNTROjRMl94WzfcRkPKSSd7jqoLH3ocdcVoQglwvm+0Pn3/4cLuORBftU33OLA49QSUvwoI8UM1E4kEMV/TeU3cynMjvRYlrLepX7ol1IIlcrkRrmxrR5WzzVepv4acxfY2aIZg4VhcKOeuSzbx7shYctBv34k6FUWE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=arVsLWbC; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GAi9AEnm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="arVsLWbC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768895019; x=1800431019;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YRQEfMnWIT/sjwi96Q33wCRw82Od4zkV7AS9HFQf8wY=;
-  b=GAi9AEnm7UXATAIn0W1wTAYX+WtFWadhTynIK/nglv9+B4ZAV8metwDe
-   DzKVMrqmD9vFZbiaRFME7SUEGNv3BkUJwMQcAY2mv7s0beu4D/XwOIYIi
-   Pd3gwdcWhapAqv+Xwk6XdW+e0ZPx3102w5PlMJZ0gLXrGkejMun2JAMRm
-   P+SXJ+tbApzvN1Mu7aBCLRfD2Mafpm0P7C1+ku6jlcibA29PIxI4KXyC7
-   v79/JmHecneXMIN2iuteeIVMkfnEoO5hkE/27wjJjPjR4ZFwRWPjtNeBm
-   tXRc4uB9wnZTuIL3q0DeiVBFhODB3bUn4e2Wf7CBrFFePS8Zm7D6t/0hq
-   A==;
-X-CSE-ConnectionGUID: TWF/lszAR4Odht3Nyu4jZQ==
-X-CSE-MsgGUID: 7iT0tWqbR5GxWDPcdnAgSw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="69107913"
+  t=1768895896; x=1800431896;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=YaDc8WGtjTWsEdXc1jtRElOfOQCJdCm9qMEOlx08pTQ=;
+  b=arVsLWbC165S1oQA9ZHybbyIs1/kbhV5pWR962FsKvbRXhtNPYIYxnDq
+   PrSJGg8kplKUh8M0Xgh2ldmtwwmczFMRmWX8j5g5LdTubcvzkv9eV4ixm
+   0zv9fjGMjwz2iQ3w5kB64g5dnr8g5I66GDQW5lCIShBfJZaDRVkDxi3IK
+   GhPaToe9Cx2R9X6uosz8OJ0gI5dzxSGubRSZHSCswrfbI/Fhc6ceHwf4A
+   7+eMXexIF8w8bvN67UWCrZAuyOwE+bZGIGuM96zNNZhgeIXXKyi6+grxK
+   oyVtNfPO5eRfEWh+6xJkjzqOgsNzKXIp7JviWbnu4h+7Ox6smPBi7MVwx
+   g==;
+X-CSE-ConnectionGUID: zriuFRchQASdopbEVqxEcA==
+X-CSE-MsgGUID: TyucNl3lRiaYEvZBW2I+fw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="70262634"
 X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="69107913"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 23:43:38 -0800
-X-CSE-ConnectionGUID: 2QpPsRW9SmuJtXBe+OEfgw==
-X-CSE-MsgGUID: cikL+/rNSuG5JurqrehkQg==
+   d="scan'208";a="70262634"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 23:58:16 -0800
+X-CSE-ConnectionGUID: P5BeNv6MQdKWsgomejs4/g==
+X-CSE-MsgGUID: aks+WxrZQ+uUm5HEeXyRhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="210191429"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 23:43:32 -0800
-Message-ID: <9b429aa8-d269-4af8-9236-350cb9543f2a@linux.intel.com>
-Date: Tue, 20 Jan 2026 15:43:29 +0800
+   d="scan'208";a="206316826"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 23:58:15 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Mon, 19 Jan 2026 23:58:14 -0800
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35 via Frontend Transport; Mon, 19 Jan 2026 23:58:14 -0800
+Received: from CH1PR05CU001.outbound.protection.outlook.com (52.101.193.55) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Mon, 19 Jan 2026 23:58:14 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JHbsjwshFmL9V6Ko+iDGo3XXCXW4Z/hBAS98oROeYA1TZ7xABzFb/Sw1njLxIUrEcj5sjKltXkze/lNQHRJR4CeS8NBjLIyI+kS8LKb/dPHnr7JR1gHHLqm+HRQ0EgIoLsYW1xuIbIkd8+1wGNI/BG6iEoxqWZ2PnTd1TW0XbR1sW7wJtrHm1kcPUFhjcLRdKugUvvDUeGPkBKVHw9lRBYSjNno3gA4NaIV4v9gZx3HO2pJ1mu5Ow5J4F2A2oTWcpZNqeTTBrMBoeEhlYpiWX8sb76Q+W3Jy2tl7H8ycjj7noIN0S+2i3dooN7yTEHVkclglDHpFMLjSnJdXgvMoCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QQEs0wRn+lx7Jg+fDnIg8DQBlExYZ9oPBx6Hs/D6ONg=;
+ b=majbTt3lS5VjwkvZUymysfKLLvHLfH2MyTg+zZBz+NiQTT5m6fhe0Ki8wak+RhSYjaTngYtN6P4gpSVS1gIj9lEye83FIKrj6mORVvbCTT/nzQYoEkWTX0cwIJ5XFpSNpvPxxyEFpJxv89QEIpbiHHBwRiPvQtjhhQUXnChw8+JkAcmJUTwruDJrOe1x4yo6CbSHVgQZwkYfCnn0W5G61O8IsDnrlcSt9XQD/X9LDAz0ZSx1MeQH01J+fbZ1jGsgr5HsOzBfC1TJEcfFjGs9EtAk6yw9Etz71MW3RWrq5lx9Q66Aj7a76/ikJ5ILSNfto4uSjzms6weRswEMkcvjew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by SJ0PR11MB4991.namprd11.prod.outlook.com (2603:10b6:a03:2df::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.9; Tue, 20 Jan
+ 2026 07:58:11 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.9520.010; Tue, 20 Jan 2026
+ 07:58:11 +0000
+Date: Tue, 20 Jan 2026 15:57:58 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Ian Rogers <irogers@google.com>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, Arnaldo Carvalho de Melo
+	<acme@redhat.com>, Sri Jayaramappa <sjayaram@akamai.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Guilherme Amadio <amadio@gentoo.org>,
+	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<oliver.sang@intel.com>
+Subject: [linux-next:master] [perf test subcmd help]  ef92c4351e:
+ kmsg.sanitizer.indirect_leak/malloc/___interceptor_backtrace/child_test_sig_handler/raise/abort
+Message-ID: <202601201519.ce4c3ab3-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+User-Agent: s-nail v14.9.25
+X-ClientProxiedBy: KU2P306CA0064.MYSP306.PROD.OUTLOOK.COM
+ (2603:1096:d10:39::15) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v5 17/19] perf headers: Sync with the kernel headers
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- Xudong Hao <xudong.hao@intel.com>, Kan Liang <kan.liang@linux.intel.com>
-References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
- <20251203065500.2597594-18-dapeng1.mi@linux.intel.com>
- <CAP-5=fWPgdiRve_xk_t04wr_p1tccRu1eU7C3v+=yvc4OD4PVg@mail.gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAP-5=fWPgdiRve_xk_t04wr_p1tccRu1eU7C3v+=yvc4OD4PVg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|SJ0PR11MB4991:EE_
+X-MS-Office365-Filtering-Correlation-Id: a0fa1d65-134e-447c-a53b-08de57f9a83a
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?mwe6xRcylR/HznMOyXOogbaeueknJ6RvMAvukd0okPAc8zynZZ03xFinL8Bz?=
+ =?us-ascii?Q?sPs/JH5zUh6mvh9P+RnsqaOUv/19bPth7PRBSFXtieWzDj9CFxATq6DoQyBU?=
+ =?us-ascii?Q?CAg+iZ3HT8MD3uPM08CNFGBHdLFxj3xXBrZjZ4XGOyfRMaEeoA1IxQ78wl+d?=
+ =?us-ascii?Q?s8tQhCCCAVCX5OPV1NXUwN4p6XqLGMPHmQ3O9whvtTU76ZiK34i6V11fY5cb?=
+ =?us-ascii?Q?OOThBxTgYzwV3JoUZzPRop4NnUfNVZXRCU06XzU7C+M1sypes7S6Rc9leSk6?=
+ =?us-ascii?Q?P0DnhAEzem+QbEvLW4g1TMTGbGilVFebhKcFxtiUgClCSz3gktmxo5lB5xUd?=
+ =?us-ascii?Q?AJRug5WnVD4CbFuNf2PYyQTHoGifKIOsV5WZCA7pbAMoOm8yAlxhJ40fQLAC?=
+ =?us-ascii?Q?yWt2J1nMLPN/Ollv1sQJwsyzvngRxcF8UniMhEwdSlSy+nHote18Wb3EfDeD?=
+ =?us-ascii?Q?jQc9/MNS03pLXlbNJj57DBrhiMUmud/gqrl/kX5il3JoflqBPt7cYnAsVGJn?=
+ =?us-ascii?Q?djXdn87UdiTL8w9rS83T2fqqKf1hhHEGT8DfTVr60EGjYJEwpl3SaLmxN73/?=
+ =?us-ascii?Q?U68rExP5/dahwqD1udRgogrpIZQsyb+xS7GLqqOndZqIqjTa3emL2x9pTMKL?=
+ =?us-ascii?Q?kyXnaDKkHqXU4qqY/CjIIrUH0GVxewkgRy8imwhF6SSU6EsAOViDd5rVFwIJ?=
+ =?us-ascii?Q?2Lt4heWR6jh3yBROROXBSZ9CZkUmuVgfEEplT7A99LuJCwR0ZYOvyJ+pOeaO?=
+ =?us-ascii?Q?JxWM55zzQhnTygbTOqLXvkah9XApUceYezhI2bG/SDmvLM5J94RYHTcw15ut?=
+ =?us-ascii?Q?VtQLWJV1C0lGbUpkaN8BCrC/J9thePKvJRAYx8gaeDlQjn+giPssl+QQ3SZp?=
+ =?us-ascii?Q?pJHCsWAi2FAEFN3VoRFdo9t+sLHtrmrPJM9LccqXU0nCrD3qeCjHpSKzwaTe?=
+ =?us-ascii?Q?d7o2SsV3+ESbIJqQCtAOs5NXj7ezemZcOZXZW2PHqKi0ealtxlenGE4rCXSf?=
+ =?us-ascii?Q?OAHJBcDIltoX4OSMVwsWOeDJleJWW6z3DsKEhHqOm/dLW86ZL8V8cLMxmg7S?=
+ =?us-ascii?Q?TjKfceiwLIIfX89M8RU7EsHwA79OuAdmGa0UEbxWWoUvaUzXnvmTQVTyNhVy?=
+ =?us-ascii?Q?4ba7mnW1oMejEJKQtU4WjrbJKGxMuMISi9JuB1LzBpyBkrO4W+rchk3b9Cu3?=
+ =?us-ascii?Q?sstC0iJrbcJDOUXv0/X926xiunslsWfKmr0+xSZhdi0Pd/BGolbznurEbnGe?=
+ =?us-ascii?Q?Hg1pRfKAc9Rdr7SsKaPjm07tarwXgG9PzAEmS2pLuLlI1zK8tsipwhKQBLNc?=
+ =?us-ascii?Q?oPKKc/egmjOj2lCaTK2hC03QKHlVYKsJuzWXo1dIKGB0vXwrg8RIY7fIrdCM?=
+ =?us-ascii?Q?IW2ONCKMCRNHcjy7u5aOnoYQn5XMWIWmQgQiMwuvP8ueAdobRdMjqWyIey9v?=
+ =?us-ascii?Q?/qkwiQZKHN+MqHrZE5pdlHu4mtfejWX9Nq8I28E0+rKMRkNKHM1hg+GZWrej?=
+ =?us-ascii?Q?8fV7G9fbsGxIn4Qtm9zN7cFs4fzCIVD31hhGq87fV8yDqH0PLaUqDBkmNcqJ?=
+ =?us-ascii?Q?anBZuWfkCeH1gfF8FkhVm0jEm6KBEjgYctcc7OTH?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ymhvmHnoX6JAgbSj+QhDsduJX3KHKiIp1Jc+j/NPlCpIFOpBlAO8gL9x+rjf?=
+ =?us-ascii?Q?KwdLhJNYdH+x822qMgRfZRU+w5yBosPgySfU98JcFxzPezjpDcL4z4VIkov+?=
+ =?us-ascii?Q?CkqVA7CmVcxemBS7pCJqsOTlgGUtng2ffggjg43bRj+/A9l5SBWBsSrojoiz?=
+ =?us-ascii?Q?sQoYhlv4J7VcDsuedXdvfhNr9mUrGkMj0HjMDFLWWKmfIZWEfI6Astv9BCgO?=
+ =?us-ascii?Q?B6qlvvdh9HGQQlb+f2aVCWxLuat9t2+O7wSmJQBF9tEmKmNZ0UQcxzpAaEUW?=
+ =?us-ascii?Q?+S5m3Ir36iGo0jGbLSraG1xyFTOQ6y2L6maY9Yo6XjHt6zYEK+qwQgh2pQid?=
+ =?us-ascii?Q?NmjGs3ewTVOlJ1yXpuxTY1sLiO1+4Pkwl5autnf3S0vySF5vjeA4yu7gq31W?=
+ =?us-ascii?Q?ObPYHUCt0/n8LtrWQ7lVw5tCLKAGXdH6uPw2+Pc0jEoHpA6SuA/MbrcIRpXG?=
+ =?us-ascii?Q?j6/D76RGnD0IIbZFIKMj0Z00OgUiHiiV2cScGkB/ofNyMyXfZzaJ/NMe4AbJ?=
+ =?us-ascii?Q?O9hkDC7Bv0MzPLKJSlJelM8Vr2IR/Kw9KEBZwWC2KLqFinmeTcz3o9omXTZ7?=
+ =?us-ascii?Q?CKqf6YPM0StiZ+/z7GUX70kBg0X7SCoyr0/sh6Lcxo4FcuP0FI2jfwcm5Uku?=
+ =?us-ascii?Q?YAeCltxNCW8l1ymLUtwVV/9lKwCwKKpITNANfTz4MxVR79nS0LbOd1OJGdBl?=
+ =?us-ascii?Q?QzR1g6cNwS3vgTDtwLjru7m6iKTNqWhJ/iAoCWEKWAQ79Era9vuQWUO2I1SB?=
+ =?us-ascii?Q?n3sx1zUVDkUYGMSS76ITAyWIAKbEhO00Qel7PjiaXpRIbONDv9AjvmqrdXlT?=
+ =?us-ascii?Q?rbijTaN1uk4au2GGe7/770Fo9KP3cP9oFZq7WvHjkndDTEbd+dQ33DnysGdb?=
+ =?us-ascii?Q?Jx5dXvPGNE/ikXgyv12o+yWoecdMw2ZhGc0dQI6mNFBwjbFM9lQsU46wfNWD?=
+ =?us-ascii?Q?mzcRalr2uLk2SmwFKLPlYYPLKy2GJLM5cnsJgjbEtHz4v7I0Fr+ZASHYU6rr?=
+ =?us-ascii?Q?2/d/8Xt2+fVhRZNrCVPWHHVO4H/kt/xoVpcfp5gb/f1MN6UoRDVT+PSOA7C7?=
+ =?us-ascii?Q?gxT65wcaoD6BysMDqybYvrMlEnaj19YEFuI1/eWjayy/lTTJdEDkn+CzH2Ep?=
+ =?us-ascii?Q?lsikSQK50SIrZMSbE6vn6FIK2s9okoL6oSdtnlQ1PwPPvbmWkGaeC9q1BVdG?=
+ =?us-ascii?Q?UZ+uACoPG9aSPVDPo3t2ZLV2fJttfEXMZRQ9BpTuRvyOJ8sJuXFa8O4r64so?=
+ =?us-ascii?Q?q67geOKOt+75cd4mlHkA8RNLtB3KfV/xgx4KADOzFqLea+BxsrcCWbtWHBvI?=
+ =?us-ascii?Q?TqKEoiOuZQjjQsYc/vmFyvvFzHfkA0tGoFuFIjKPfWWthKTW+zSqW2HJdSom?=
+ =?us-ascii?Q?XYqNSMadbPGpn8ISh+eXL69unPjPhEU9TzQ/SF+0C1NpuKKoesnkjUysSl5k?=
+ =?us-ascii?Q?HVq9O0kAbo5rzdEBHIGN3hJIQ4Sbny8CZdkXIPolXZbI8SM5WBcBXt1R65Ih?=
+ =?us-ascii?Q?hrVVPvQW7JzFK60qzeuZ3H/dXYITix20/bvM7ix7Uss3J3bfsBn+t6cej4L5?=
+ =?us-ascii?Q?8cUHEEHCuwDfr02zaP67gObKuluznjflIE9knu9DjNBaXt/aTZd+guKt3gRH?=
+ =?us-ascii?Q?2ttY/l3x+P5HlnfCZUksird4zaWNei+xi8rinTlC8zlU7wFv1MZub22jSAqR?=
+ =?us-ascii?Q?Uuv/E6k+BxIb2DYSoS6NK2cZFVn7bWm13kcBKqWvAo9tXwCZk9dxtdv3Tiua?=
+ =?us-ascii?Q?eHhjY6nYsg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0fa1d65-134e-447c-a53b-08de57f9a83a
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2026 07:58:11.5219
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: x225akidOTkLFPpcGeu14MzZduOmzj3lmQTEtPW5omK8d92etJ9c5XIZ3537rKlBfPuPBFRkB9qmW7zCzvX+Zw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4991
+X-OriginatorOrg: intel.com
 
 
-On 1/20/2026 3:16 PM, Ian Rogers wrote:
-> On Tue, Dec 2, 2025 at 10:59 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> Update include/uapi/linux/perf_event.h and
->> arch/x86/include/uapi/asm/perf_regs.h to support extended regs.
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  tools/arch/x86/include/uapi/asm/perf_regs.h | 62 +++++++++++++++++++++
->>  tools/include/uapi/linux/perf_event.h       | 45 +++++++++++++--
->>  2 files changed, 103 insertions(+), 4 deletions(-)
->>
->> diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
->> index 7c9d2bb3833b..f3561ed10041 100644
->> --- a/tools/arch/x86/include/uapi/asm/perf_regs.h
->> +++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
->> @@ -27,9 +27,34 @@ enum perf_event_x86_regs {
->>         PERF_REG_X86_R13,
->>         PERF_REG_X86_R14,
->>         PERF_REG_X86_R15,
->> +       /*
->> +        * The EGPRs/SSP and XMM have overlaps. Only one can be used
->> +        * at a time. For the ABI type PERF_SAMPLE_REGS_ABI_SIMD,
->> +        * utilize EGPRs/SSP. For the other ABI type, XMM is used.
->> +        *
->> +        * Extended GPRs (EGPRs)
->> +        */
->> +       PERF_REG_X86_R16,
->> +       PERF_REG_X86_R17,
->> +       PERF_REG_X86_R18,
->> +       PERF_REG_X86_R19,
->> +       PERF_REG_X86_R20,
->> +       PERF_REG_X86_R21,
->> +       PERF_REG_X86_R22,
->> +       PERF_REG_X86_R23,
->> +       PERF_REG_X86_R24,
->> +       PERF_REG_X86_R25,
->> +       PERF_REG_X86_R26,
->> +       PERF_REG_X86_R27,
->> +       PERF_REG_X86_R28,
->> +       PERF_REG_X86_R29,
->> +       PERF_REG_X86_R30,
->> +       PERF_REG_X86_R31,
->> +       PERF_REG_X86_SSP,
->>         /* These are the limits for the GPRs. */
->>         PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
->>         PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
->> +       PERF_REG_MISC_MAX = PERF_REG_X86_SSP + 1,
->>
->>         /* These all need two bits set because they are 128bit */
->>         PERF_REG_X86_XMM0  = 32,
->> @@ -54,5 +79,42 @@ enum perf_event_x86_regs {
->>  };
->>
->>  #define PERF_REG_EXTENDED_MASK (~((1ULL << PERF_REG_X86_XMM0) - 1))
->> +#define PERF_X86_EGPRS_MASK    GENMASK_ULL(PERF_REG_X86_R31, PERF_REG_X86_R16)
->> +
->> +enum {
->> +       PERF_REG_X86_XMM,
->> +       PERF_REG_X86_YMM,
->> +       PERF_REG_X86_ZMM,
->> +       PERF_REG_X86_MAX_SIMD_REGS,
->> +
->> +       PERF_REG_X86_OPMASK = 0,
->> +       PERF_REG_X86_MAX_PRED_REGS = 1,
->> +};
->> +
->> +enum {
->> +       PERF_X86_SIMD_XMM_REGS      = 16,
->> +       PERF_X86_SIMD_YMM_REGS      = 16,
->> +       PERF_X86_SIMD_ZMMH_REGS     = 16,
->> +       PERF_X86_SIMD_ZMM_REGS      = 32,
->> +       PERF_X86_SIMD_VEC_REGS_MAX  = PERF_X86_SIMD_ZMM_REGS,
->> +
->> +       PERF_X86_SIMD_OPMASK_REGS   = 8,
->> +       PERF_X86_SIMD_PRED_REGS_MAX = PERF_X86_SIMD_OPMASK_REGS,
->> +};
->> +
->> +#define PERF_X86_SIMD_PRED_MASK                GENMASK(PERF_X86_SIMD_PRED_REGS_MAX - 1, 0)
->> +#define PERF_X86_SIMD_VEC_MASK         GENMASK_ULL(PERF_X86_SIMD_VEC_REGS_MAX - 1, 0)
->> +
->> +#define PERF_X86_H16ZMM_BASE           PERF_X86_SIMD_ZMMH_REGS
->> +
->> +enum {
->> +       PERF_X86_OPMASK_QWORDS   = 1,
->> +       PERF_X86_XMM_QWORDS      = 2,
->> +       PERF_X86_YMMH_QWORDS     = 2,
->> +       PERF_X86_YMM_QWORDS      = 4,
->> +       PERF_X86_ZMMH_QWORDS     = 4,
->> +       PERF_X86_ZMM_QWORDS      = 8,
->> +       PERF_X86_SIMD_QWORDS_MAX = PERF_X86_ZMM_QWORDS,
->> +};
->>
->>  #endif /* _ASM_X86_PERF_REGS_H */
->> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
->> index d292f96bc06f..f1474da32622 100644
->> --- a/tools/include/uapi/linux/perf_event.h
->> +++ b/tools/include/uapi/linux/perf_event.h
->> @@ -314,8 +314,9 @@ enum {
->>   */
->>  enum perf_sample_regs_abi {
->>         PERF_SAMPLE_REGS_ABI_NONE               = 0,
->> -       PERF_SAMPLE_REGS_ABI_32                 = 1,
->> -       PERF_SAMPLE_REGS_ABI_64                 = 2,
->> +       PERF_SAMPLE_REGS_ABI_32                 = (1 << 0),
->> +       PERF_SAMPLE_REGS_ABI_64                 = (1 << 1),
->> +       PERF_SAMPLE_REGS_ABI_SIMD               = (1 << 2),
->>  };
->>
->>  /*
->> @@ -382,6 +383,7 @@ enum perf_event_read_format {
->>  #define PERF_ATTR_SIZE_VER6                    120     /* Add: aux_sample_size */
->>  #define PERF_ATTR_SIZE_VER7                    128     /* Add: sig_data */
->>  #define PERF_ATTR_SIZE_VER8                    136     /* Add: config3 */
->> +#define PERF_ATTR_SIZE_VER9                    168     /* Add: sample_simd_{pred,vec}_reg_* */
->>
->>  /*
->>   * 'struct perf_event_attr' contains various attributes that define
->> @@ -545,6 +547,25 @@ struct perf_event_attr {
->>         __u64   sig_data;
->>
->>         __u64   config3; /* extension of config2 */
->> +
->> +
->> +       /*
->> +        * Defines set of SIMD registers to dump on samples.
->> +        * The sample_simd_regs_enabled !=0 implies the
->> +        * set of SIMD registers is used to config all SIMD registers.
->> +        * If !sample_simd_regs_enabled, sample_regs_XXX may be used to
->> +        * config some SIMD registers on X86.
->> +        */
->> +       union {
->> +               __u16 sample_simd_regs_enabled;
->> +               __u16 sample_simd_pred_reg_qwords;
->> +       };
->> +       __u32 sample_simd_pred_reg_intr;
->> +       __u32 sample_simd_pred_reg_user;
->> +       __u16 sample_simd_vec_reg_qwords;
->> +       __u64 sample_simd_vec_reg_intr;
->> +       __u64 sample_simd_vec_reg_user;
->> +       __u32 __reserved_4;
->>  };
->>
->>  /*
->> @@ -1018,7 +1039,15 @@ enum perf_event_type {
->>          *      } && PERF_SAMPLE_BRANCH_STACK
->>          *
->>          *      { u64                   abi; # enum perf_sample_regs_abi
->> -        *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
->> +        *        u64                   regs[weight(mask)];
->> +        *        struct {
->> +        *              u16 nr_vectors;
->> +        *              u16 vector_qwords;
->> +        *              u16 nr_pred;
->> +        *              u16 pred_qwords;
->> +        *              u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
->> +        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
-> Why can't these values be taken from the perf_event_attr? The abi is
-> needed as there could be both 32-bit and 64-bit samples for the same
-> event - presumably x32 appears as 64-bit. If the ABI has SIMD within
-> it (implied by the "} && (abi & PERF_SAMPLE_REGS_ABI_SIMD)" below)
-> then why can't we just use the perf_event_attr values? For example,
-> data could be "data[weight(sample_simd_vec_reg_user) *
-> sample_simd_vec_reg_qwords + weight(sample_simd_pred_reg_user) *
-> sample_simd_pred_reg_qwords]".
 
-The main reason is that the sampled SIMD regs could only be a subset of the
-requested SIMD regs in perf_event_attr, so we need to show the bitmask and
-qwords length explicitly in the sample record. 
+Hello,
+
+kernel test robot noticed "kmsg.sanitizer.indirect_leak/malloc/___interceptor_backtrace/child_test_sig_handler/raise/abort" on:
+
+commit: ef92c4351ec75bcfb8a1cc3a88109b5339f296ef ("perf test subcmd help: Add exclude disjoint subcmd names")
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+
+[test failed on linux-next/master d08c85ac8894995d4b0d8fb48d2f6a3e53cd79ab]
+
+in testcase: perf-sanity-tests
+version: 
+with following parameters:
+
+	perf_compiler: clang
+	group: group-02
 
 
->
->> +        *      } && PERF_SAMPLE_REGS_USER
->>          *
->>          *      { u64                   size;
->>          *        char                  data[size];
->> @@ -1045,7 +1074,15 @@ enum perf_event_type {
->>          *      { u64                   data_src; } && PERF_SAMPLE_DATA_SRC
->>          *      { u64                   transaction; } && PERF_SAMPLE_TRANSACTION
->>          *      { u64                   abi; # enum perf_sample_regs_abi
->> -        *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_INTR
->> +        *        u64                   regs[weight(mask)];
->> +        *        struct {
->> +        *              u16 nr_vectors;
->> +        *              u16 vector_qwords;
->> +        *              u16 nr_pred;
->> +        *              u16 pred_qwords;
->> +        *              u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
->> +        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
-> Same comment.
->
-> Thanks,
-> Ian
->
->> +        *      } && PERF_SAMPLE_REGS_INTR
->>          *      { u64                   phys_addr;} && PERF_SAMPLE_PHYS_ADDR
->>          *      { u64                   cgroup;} && PERF_SAMPLE_CGROUP
->>          *      { u64                   data_page_size;} && PERF_SAMPLE_DATA_PAGE_SIZE
->> --
->> 2.34.1
->>
+
+config: x86_64-rhel-9.4-bpf
+compiler: gcc-14
+test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202601201519.ce4c3ab3-lkp@intel.com
+
+
+--- start ---
+test child forked, pid 11710
+perf: help.c:107: exclude_cmds: Assertion `cmds->names[ci] == NULL' failed.
+
+---- unexpected signal (6) ----
+    #0 0x7f7688c77403 in ___interceptor_backtrace.part.0 sanitizer_common_interceptors.inc:4358
+    #1 0x55f34adb6c34 in child_test_sig_handler builtin-test.c:312
+    #2 0x7f767ea2bdf0 libc.so.6[3fdf0]
+    #3 0x7f767ea8095c libc.so.6[9495c]
+    #4 0x7f767ea2bcc2 in raise libc.so.6[3fcc2]
+    #5 0x7f767ea144ac in abort libc.so.6[284ac]
+    #6 0x7f767ea14420 in __assert_perror_fail libc.so.6[28420]
+    #7 0x55f34acf4e70 in exclude_cmds help.c:106
+    #8 0x55f34ae9a646 in test__exclude_cmdnames_no_overlap subcmd-help.c:112
+    #9 0x55f34adb74c5 in run_test_child builtin-test.c:340
+    #10 0x55f34ad08db3 in start_command run-command.c:128
+    #11 0x55f34adb99a1 in start_test builtin-test.c:546
+    #12 0x55f34adba90d in __cmd_test builtin-test.c:648
+    #13 0x55f34adbd2c0 in cmd_test builtin-test.c:850
+    #14 0x55f34acc2a45 in run_builtin perf.c:349
+    #15 0x55f34acc3336 in handle_internal_command perf.c:401
+    #16 0x55f34acc388c in run_argv perf.c:448
+    #17 0x55f34acc4033 in main perf.c:555
+    #18 0x7f767ea15ca8 libc.so.6[29ca8]
+    #19 0x7f767ea15d65 in __libc_start_main libc.so.6[29d65]
+    #20 0x55f34aa28241 in _start perf[102f241]
+
+=================================================================
+==11710==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 30952 byte(s) in 3 object(s) allocated from:
+    #0 0x7f7688ced610 in calloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:77
+    #1 0x7f7688ace808  (/lib/x86_64-linux-gnu/libelf.so.1+0x3808) (BuildId: d6a40be9eadcbcb0562b7bb13bbe81166e82cc40)
+
+Indirect leak of 9280 byte(s) in 3 object(s) allocated from:
+    #0 0x7f7688cedc57 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x7f7688ad6550  (/lib/x86_64-linux-gnu/libelf.so.1+0xb550) (BuildId: d6a40be9eadcbcb0562b7bb13bbe81166e82cc40)
+
+Indirect leak of 1873 byte(s) in 3 object(s) allocated from:
+    #0 0x7f7688cedc57 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x7f7688ad73fa  (/lib/x86_64-linux-gnu/libelf.so.1+0xc3fa) (BuildId: d6a40be9eadcbcb0562b7bb13bbe81166e82cc40)
+
+SUMMARY: AddressSanitizer: 42105 byte(s) leaked in 9 allocation(s).
+ 68.4: Exclude disjoint subcmd names                                 : FAILED!
+
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20260120/202601201519.ce4c3ab3-lkp@intel.com
+
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
