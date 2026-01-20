@@ -1,175 +1,531 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF633093AB
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2026 15:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245ED3271E8;
+	Tue, 20 Jan 2026 16:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768923546; cv=none; b=JbTrWxB9FkCr5g1histwudCfYA56uyOezc5QrmuUNFJ42J2f1hPZmpC0ocWVgJaTLW8raSREWCEhzur+52CteKO4rl/gTaPUjQxaM6lOXPU0++JcOxAZaNoNp6jUk7/1QIWrIkcrGaC5IOHV4R61O84xFAh2tIo9vhwlgf2+fFY=
+	t=1768924949; cv=none; b=eN6U609rbbGBaKG/dL3EnaFwW3dnoEKH8YPXSbAT9/csEovTDMALdJlf5piOUiKU7EZ/+3v98Uc2mwA1vfW/MiPdHCCZuHl9V8fyRHk2Pxu/Q7DBKUgeJ76m3A7BBqWv9QWXzKrkOQoOjV2QshM6flsefqOvBvKJj5+eq+rCXd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768923546; c=relaxed/simple;
-	bh=fRsf/FEB4GjuaGWyi/d9cHIRU0MmCx8JFwRy6Zni2Pg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lKbc4DhHRV0aePnmpzG5lrnMMxfmYwBCUAmxH0bzyXmC6KV3dBEuPhHgRtBmzUHzV0FnXDLQerHDfXSfpBGA0kl5vnvWHNkgavVxiR7lZVkODy22WBJghcG+qoMMU0lMB/Z0TS8kvCHTzxIPRSDwcecsFlXvCaKqpE9b5tyKASU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fr8tFHkn; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1768924949; c=relaxed/simple;
+	bh=POp9Br/GjY16pFxIky7ybA0oF8vk9z23j4qQDzK/ZPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rbvkq+otn8mULog/58PYlTdeuUCbTTsF8weGxlELMex7eTpu/+dQXY9TKOZ6somWaUl4DOgwDvqRIoo11u45u+ZLYVAumSAN3ZROn5q3JCKBgpNK7ucnO7PlFKnX17mI7keuEjIa6P2ITLiMQESxMCNCdXndpqc10FxSLIm+GW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=myzua1S2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fr8tFHkn"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-432d2c7dd52so5032141f8f.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2026 07:39:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1768923542; x=1769528342; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3sj9dRhbBSv6PKEmM/O/5RJygiIW/moxPpbnXDMDVNw=;
-        b=fr8tFHkntkN8xDi5cssK8tqbhv7k0P5v46Dvs73/AV2knHRh4O2UjOwkv/TZwTDCFI
-         RGie2lWnemIdorOmnKiF/XtmyhIAUddUbVLYieiVTODkIQfdZqhnHvWrCP9J77+VkyMF
-         qsfbDt6TwUyhy7+YNSsCchjx+SInQzxYu12PKGsY3Ix9ejhZjpt5TdRaiQyfyy/MqsxW
-         YIi5RaQfH1OVXlc1s3MCuYHB2JKVjnGZ4ng4xXdXpzzsmT228sQv8mzNgKSO00TWK32Y
-         eenk78eAmw44q2Uyo7R1sT96RYHd5YLT37OtpFX63oejo3O4RhUClZd5rU5LCEwJChl5
-         OG3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768923542; x=1769528342;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3sj9dRhbBSv6PKEmM/O/5RJygiIW/moxPpbnXDMDVNw=;
-        b=gyPmxzR3izOLC1TKSC6O3eptkjtUFKXop276IFVOAw/AfYDGzhS2MK28oR3jaxFmJM
-         u3Mr68kDuJE9rWNrnNXnfYYnPJ8FRrvzID42iRKkcNS3rwA+pY8Hf7pz9pALj3d28g1j
-         CRR/LhO0OcZEen/2abegXX5X4aLEIWikfx3HLugy2cWAJ9Ye7a0Hvw0XUzgbTPEsWMCk
-         5dcjuwXDQ2swMBeSWCypu68YKRKU/H+Ptz14l+rcb6hK4iEXdCIYplX5JvzubfB+MgB1
-         cCKiO8/EVm8ICB/oanc2WClGwoUADvlb4XY8V4xLWidPY440pXsJxJ6bCwy9wfbOTT50
-         3M2A==
-X-Gm-Message-State: AOJu0YwjQE9Xv0kMRqfxb5BdZ9ALFMngqvGwPNdIgkMW8cS8xiWh0ZLO
-	OjZvfmdNy8mJiv9LNKfOQHuYqLvPcPb8wBZC1I3BWkIHWdNPbKZYO3Q7zGy0ZWA2uEw=
-X-Gm-Gg: AZuq6aKwZlB6zpE1FxUY6G1HjjGzffgxZiRpPHolDF0UUaixdbWCwpKxsZJGu17piFJ
-	/rDeGA2VFYx4+Xv0cgSi8gf+LJ5w5sUTApFPqVXLw5dZkWtj010PQk4NKVKBqzPHaYIME8iwPrT
-	uxA0PxHQbE0YUF+iAukunR8/gt/gFy9weIhQdvYVwLGSM+8ZcZp1U602N2G5i/ytySk+6QwcZpn
-	Aym02TBDVkb2ji5pp805clZRs9mXd5fxWPNg3Ipgc5D4VRy73axQsJhjIsDgdhy0gI1CadYA0u2
-	l/9cY1sU2G8ioPkeQ2yMGsFIKVgh4N/8Aw6aEHhLMjbpeKKLezK/rmHEBCW0o887fccG8pmSrCY
-	zPH5cdWAxARZIvrsR/v07xPgdIiDqEAlGsZeAQypMqwYiydwNdIxRq7+NbraByEJoNs8O79j3JL
-	DLxh9k+e7u+fkIDP6MijXI
-X-Received: by 2002:a05:6000:2486:b0:430:f3ab:56af with SMTP id ffacd0b85a97d-4358ff3026amr3361684f8f.48.1768923542189;
-        Tue, 20 Jan 2026 07:39:02 -0800 (PST)
-Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435924ae723sm3375552f8f.41.2026.01.20.07.39.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 07:39:01 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-Date: Tue, 20 Jan 2026 15:38:19 +0000
-Subject: [PATCH] perf jevents: Handle deleted JSONS in out of source builds
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="myzua1S2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38B2FC16AAE;
+	Tue, 20 Jan 2026 16:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768924948;
+	bh=POp9Br/GjY16pFxIky7ybA0oF8vk9z23j4qQDzK/ZPA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=myzua1S23JzBeptV8QD4lcLJ/dk9AOp8TFuoFlSmMhHmHuo6iwvgdlymAJ3du2hup
+	 dxfQS1AJ9c59OAHn5NDY/LM69XT7OeljnQgiVi7D7SzIkLB0W4rRDANmBPzw2JfaTH
+	 x+VNQ5l6MauRD0lJBzwghDKg4EDh9P341gBR27B9m0iniX/4H57IKQ6H9m4M1XDO0H
+	 Df8kquc3rdTbugqtMIHDwA9VlRtjrBBBrd3N/gNM6dgODNMkjur4MwaeCZLdfCQFqS
+	 SuKgITKW1Z/84qrJj67UFH1ijJA78dRteRtACWK7BS0UfhLun4f+v//xeikRxzfLzi
+	 9nXJeIyumG7AA==
+Date: Tue, 20 Jan 2026 13:02:25 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Shimin Guo <shimin.guo@skydio.com>,
+	Athira Rajeev <atrajeev@linux.ibm.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Aditya Bodkhe <aditya.b1@linux.ibm.com>,
+	Haibo Xu <haibo1.xu@intel.com>,
+	Sergei Trofimovich <slyich@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-riscv@lists.infradead.org, Mark Wielaard <mark@klomp.org>
+Subject: Re: [PATCH v1 04/23] perf unwind-libdw: fix a cross-arch unwinding
+ bug
+Message-ID: <aW-nEbT9iPF06CwY@x1>
+References: <20260117052849.2205545-1-irogers@google.com>
+ <20260117052849.2205545-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260120-james-perf-json-delete-fix-v1-1-bae2194b1dcf@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAGqhb2kC/x3MQQqDMBBG4avIrB1IIja2VxEXWv/UkTZKRkQQ7
- 27o8nuLd5IiCZRexUkJu6gsMcOWBb2nPn7AMmaTM+5hrDM89z8or0iBZ10ij/hiAwc52Nu6rob
- KP9GA8mBNyPk/b7vrugG+E5h2bAAAAA==
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260117052849.2205545-5-irogers@google.com>
 
-The cp command here doesn't remove files that have been removed from the
-sourcetree. That means incremental builds can either succeed with stale
-events or will fail completely if a stale json file has a broken
-reference in it.
+On Fri, Jan 16, 2026 at 09:28:30PM -0800, Ian Rogers wrote:
+> From: Shimin Guo <shimin.guo@skydio.com>
+> 
+> The set_initial_registers field of Dwfl_Thread_Callbacks needs to be set
+> according to the arch of the stack samples being analyzed, not the arch
+> that perf itself is built for. Currently perf fails to unwind stack samples
+> collected from archs different from that of the host perf is running on.
+> This patch moves the arch-specific implementations of set_initial_registers
+> from tools/perf/arch to tools/perf/utli/unwind-libdw-arch, similar to the
+> way the perf-regs-arch folder contains arch-specific functions related to
+> registers, and chooses the implementation based on the arch of the data
+> being processed.
 
-Fix it by using rsync instead of cp. legacy-cache.json has to be
-excluded as this is a generated file isn't present in the source tree.
+Since this one is coming thru you, we need your:
 
-This only happens when deleting a JSON file, which has only happened
-once since the linked commit. The fixes commit is marked as the origin
-of the problem in case any future changes that delete JSONs are back
-ported, rather than the first commit that deleted a JSON file.
+Signed-off-by: Ian Rogers <irogers@google.com>
 
-Reported-by: Mark Brown <broonie@kernel.org>
-Closes: https://lore.kernel.org/linux-next/aW5XSAo88_LBPSYI@sirena.org.uk/
-Fixes: 4bb55de4ff03 ("perf jevents: Support copying the source json files to OUTPUT")
-Signed-off-by: James Clark <james.clark@linaro.org>
----
-This is a bit of a hack and I thought that making jevents.py handle
-multiple input folders would be a much better solution than this. Then
-we could have "gen-pmu-events" for only generated files and "pmu-events"
-for only in-tree input files. It would be very clear what's generated
-and what's not and all copying rules and special clean rules just
-disappear (and this isn't the first time these rules have caused build
-issues).
+Ok?
 
-Unfortunately, after a while of trying to modify the script I thought it
-was too invasive for now. The script does output per-file at the very
-bottom of the logic in process_one_file(), so adding files in another
-folder ends up re-emitting section headers when another chunk is output.
-Although other parts of the script do build things up in memory before
-outputting so it was possible to make those parts work with multiple
-folders transparently.
----
- tools/perf/pmu-events/Build | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+I'm adding it here, please ack.
 
-diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-index a46ab7b612df..079d04c4f7d8 100644
---- a/tools/perf/pmu-events/Build
-+++ b/tools/perf/pmu-events/Build
-@@ -12,13 +12,16 @@ METRIC_TEST_LOG	=  $(OUTPUT)pmu-events/metric_test.log
- TEST_EMPTY_PMU_EVENTS_C = $(OUTPUT)pmu-events/test-empty-pmu-events.c
- EMPTY_PMU_EVENTS_TEST_LOG = $(OUTPUT)pmu-events/empty-pmu-events.log
- LEGACY_CACHE_PY	=  pmu-events/make_legacy_cache.py
--LEGACY_CACHE_JSON = $(OUTPUT)pmu-events/arch/common/common/legacy-cache.json
-+LEGACY_CACHE_SYNC_PATH = arch/common/common/legacy-cache.json
-+LEGACY_CACHE_JSON = $(OUTPUT)pmu-events/$(LEGACY_CACHE_SYNC_PATH)
+- Arnaldo
  
- ifeq ($(JEVENTS_ARCH),)
- JEVENTS_ARCH=$(SRCARCH)
- endif
- JEVENTS_MODEL ?= all
- 
-+GEN_JSON = $(patsubst %,$(OUTPUT)%,$(JSON)) $(LEGACY_CACHE_JSON)
-+
- #
- # Locate/process JSON files in pmu-events/arch/
- # directory and create tables in pmu-events.c.
-@@ -31,17 +34,20 @@ $(PMU_EVENTS_C): $(EMPTY_PMU_EVENTS_C)
- else
- # Copy checked-in json to OUTPUT for generation if it's an out of source build
- ifneq ($(OUTPUT),)
--$(OUTPUT)pmu-events/arch/%: pmu-events/arch/%
-+SYNC_PMU_EVENTS := $(OUTPUT)pmu-events/.synced
-+$(SYNC_PMU_EVENTS): $(JSON)
- 	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,gen)cp $< $@
-+	$(Q)$(call echo-cmd,gen)rsync -a --delete --exclude=$(LEGACY_CACHE_SYNC_PATH) \
-+		--include="*.json" --include="*.csv" pmu-events/arch $(OUTPUT)pmu-events/
-+	$(Q)touch $@
-+
-+$(GEN_JSON): $(SYNC_PMU_EVENTS)
- endif
- 
- $(LEGACY_CACHE_JSON): $(LEGACY_CACHE_PY)
- 	$(call rule_mkdir)
- 	$(Q)$(call echo-cmd,gen)$(PYTHON) $(LEGACY_CACHE_PY) > $@
- 
--GEN_JSON = $(patsubst %,$(OUTPUT)%,$(JSON)) $(LEGACY_CACHE_JSON)
--
- $(METRIC_TEST_LOG): $(METRIC_TEST_PY) $(METRIC_PY)
- 	$(call rule_mkdir)
- 	$(Q)$(call echo-cmd,test)$(PYTHON) $< 2> $@ || (cat $@ && false)
-
----
-base-commit: 571d29baa07e83e637075239f379f91353c24ec9
-change-id: 20260120-james-perf-json-delete-fix-71553b379e8e
-
-Best regards,
--- 
-James Clark <james.clark@linaro.org>
-
+> Signed-off-by: Shimin Guo <shimin.guo@skydio.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/arch/arm/util/Build                |  1 -
+>  tools/perf/arch/arm64/util/Build              |  1 -
+>  tools/perf/arch/csky/util/Build               |  2 -
+>  tools/perf/arch/powerpc/util/Build            |  1 -
+>  tools/perf/arch/riscv/util/Build              |  1 -
+>  tools/perf/arch/s390/util/Build               |  2 -
+>  tools/perf/arch/x86/util/Build                |  1 -
+>  tools/perf/util/Build                         |  1 +
+>  tools/perf/util/unwind-libdw-arch/Build       |  8 +++
+>  .../unwind-libdw-arch/unwind-libdw-arm.c}     | 10 ++--
+>  .../unwind-libdw-arch/unwind-libdw-arm64.c}   | 10 ++--
+>  .../unwind-libdw-arch/unwind-libdw-csky.c}    | 10 ++--
+>  .../unwind-libdw-loongarch.c}                 | 10 ++--
+>  .../unwind-libdw-arch/unwind-libdw-powerpc.c} | 10 ++--
+>  .../unwind-libdw-arch/unwind-libdw-riscv.c}   | 10 ++--
+>  .../unwind-libdw-arch/unwind-libdw-s390.c}    | 14 ++---
+>  .../unwind-libdw-arch/unwind-libdw-x86.c}     |  8 +--
+>  tools/perf/util/unwind-libdw.c                | 51 ++++++++++++++++---
+>  tools/perf/util/unwind-libdw.h                | 10 +++-
+>  19 files changed, 104 insertions(+), 57 deletions(-)
+>  create mode 100644 tools/perf/util/unwind-libdw-arch/Build
+>  rename tools/perf/{arch/arm/util/unwind-libdw.c => util/unwind-libdw-arch/unwind-libdw-arm.c} (80%)
+>  rename tools/perf/{arch/arm64/util/unwind-libdw.c => util/unwind-libdw-arch/unwind-libdw-arm64.c} (87%)
+>  rename tools/perf/{arch/csky/util/unwind-libdw.c => util/unwind-libdw-arch/unwind-libdw-csky.c} (90%)
+>  rename tools/perf/{arch/loongarch/util/unwind-libdw.c => util/unwind-libdw-arch/unwind-libdw-loongarch.c} (86%)
+>  rename tools/perf/{arch/powerpc/util/unwind-libdw.c => util/unwind-libdw-arch/unwind-libdw-powerpc.c} (89%)
+>  rename tools/perf/{arch/riscv/util/unwind-libdw.c => util/unwind-libdw-arch/unwind-libdw-riscv.c} (87%)
+>  rename tools/perf/{arch/s390/util/unwind-libdw.c => util/unwind-libdw-arch/unwind-libdw-s390.c} (84%)
+>  rename tools/perf/{arch/x86/util/unwind-libdw.c => util/unwind-libdw-arch/unwind-libdw-x86.c} (87%)
+> 
+> diff --git a/tools/perf/arch/arm/util/Build b/tools/perf/arch/arm/util/Build
+> index fd695e1fdaee..3291f893b943 100644
+> --- a/tools/perf/arch/arm/util/Build
+> +++ b/tools/perf/arch/arm/util/Build
+> @@ -1,6 +1,5 @@
+>  perf-util-y += perf_regs.o
+>  
+>  perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
+> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+>  
+>  perf-util-y += pmu.o auxtrace.o cs-etm.o
+> diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+> index d63881081d2e..0177af19cc00 100644
+> --- a/tools/perf/arch/arm64/util/Build
+> +++ b/tools/perf/arch/arm64/util/Build
+> @@ -1,4 +1,3 @@
+> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+>  perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+>  perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+>  perf-util-y += ../../arm/util/auxtrace.o
+> diff --git a/tools/perf/arch/csky/util/Build b/tools/perf/arch/csky/util/Build
+> index 5e6ea82c4202..6b2d0e021b11 100644
+> --- a/tools/perf/arch/csky/util/Build
+> +++ b/tools/perf/arch/csky/util/Build
+> @@ -1,3 +1 @@
+>  perf-util-y += perf_regs.o
+> -
+> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+> diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
+> index 3d0d5427aef7..5fd28ec713a4 100644
+> --- a/tools/perf/arch/powerpc/util/Build
+> +++ b/tools/perf/arch/powerpc/util/Build
+> @@ -9,5 +9,4 @@ perf-util-y += evsel.o
+>  perf-util-$(CONFIG_LIBDW) += skip-callchain-idx.o
+>  
+>  perf-util-$(CONFIG_LIBUNWIND) += unwind-libunwind.o
+> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+>  perf-util-y += auxtrace.o
+> diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
+> index 58a672246024..628b9ebd418b 100644
+> --- a/tools/perf/arch/riscv/util/Build
+> +++ b/tools/perf/arch/riscv/util/Build
+> @@ -2,4 +2,3 @@ perf-util-y += perf_regs.o
+>  perf-util-y += header.o
+>  
+>  perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+> diff --git a/tools/perf/arch/s390/util/Build b/tools/perf/arch/s390/util/Build
+> index c64eb18dbdae..5391d26fedd4 100644
+> --- a/tools/perf/arch/s390/util/Build
+> +++ b/tools/perf/arch/s390/util/Build
+> @@ -2,8 +2,6 @@ perf-util-y += header.o
+>  perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+>  perf-util-y += perf_regs.o
+>  
+> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+> -
+>  perf-util-y += machine.o
+>  perf-util-y += pmu.o
+>  
+> diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
+> index c0dc5965f362..fad256252bb9 100644
+> --- a/tools/perf/arch/x86/util/Build
+> +++ b/tools/perf/arch/x86/util/Build
+> @@ -12,7 +12,6 @@ perf-util-y += evsel.o
+>  perf-util-y += iostat.o
+>  
+>  perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
+> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+>  
+>  perf-util-y += auxtrace.o
+>  perf-util-y += archinsn.o
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 4915f237ba9e..5efec73be474 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -227,6 +227,7 @@ perf-util-$(CONFIG_LIBDW) += annotate-data.o
+>  perf-util-$(CONFIG_LIBDW) += libdw.o
+>  
+>  perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+> +perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw-arch/
+>  perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind-local.o
+>  perf-util-$(CONFIG_LIBUNWIND)          += unwind-libunwind.o
+>  perf-util-$(CONFIG_LIBUNWIND_X86)      += libunwind/x86_32.o
+> diff --git a/tools/perf/util/unwind-libdw-arch/Build b/tools/perf/util/unwind-libdw-arch/Build
+> new file mode 100644
+> index 000000000000..ef17a83a7813
+> --- /dev/null
+> +++ b/tools/perf/util/unwind-libdw-arch/Build
+> @@ -0,0 +1,8 @@
+> +perf-util-y += unwind-libdw-x86.o
+> +perf-util-y += unwind-libdw-arm.o
+> +perf-util-y += unwind-libdw-arm64.o
+> +perf-util-y += unwind-libdw-csky.o
+> +perf-util-y += unwind-libdw-loongarch.o
+> +perf-util-y += unwind-libdw-powerpc.o
+> +perf-util-y += unwind-libdw-riscv.o
+> +perf-util-y += unwind-libdw-s390.o
+> diff --git a/tools/perf/arch/arm/util/unwind-libdw.c b/tools/perf/util/unwind-libdw-arch/unwind-libdw-arm.c
+> similarity index 80%
+> rename from tools/perf/arch/arm/util/unwind-libdw.c
+> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-arm.c
+> index fbb643f224ec..56e9b5975bcc 100644
+> --- a/tools/perf/arch/arm/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-arm.c
+> @@ -1,11 +1,11 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <elfutils/libdwfl.h>
+> -#include "perf_regs.h"
+> -#include "../../../util/unwind-libdw.h"
+> -#include "../../../util/perf_regs.h"
+> -#include "../../../util/sample.h"
+> +#include "../arch/arm/include/uapi/asm/perf_regs.h"
+> +#include "util/unwind-libdw.h"
+> +#include "util/perf_regs.h"
+> +#include "util/sample.h"
+>  
+> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+> +bool libdw_set_initial_registers_arm(Dwfl_Thread *thread, void *arg)
+>  {
+>  	struct unwind_info *ui = arg;
+>  	struct regs_dump *user_regs = perf_sample__user_regs(ui->sample);
+> diff --git a/tools/perf/arch/arm64/util/unwind-libdw.c b/tools/perf/util/unwind-libdw-arch/unwind-libdw-arm64.c
+> similarity index 87%
+> rename from tools/perf/arch/arm64/util/unwind-libdw.c
+> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-arm64.c
+> index b89b0a7e5ad9..29b6833e036c 100644
+> --- a/tools/perf/arch/arm64/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-arm64.c
+> @@ -1,11 +1,11 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <elfutils/libdwfl.h>
+> -#include "perf_regs.h"
+> -#include "../../../util/unwind-libdw.h"
+> -#include "../../../util/perf_regs.h"
+> -#include "../../../util/sample.h"
+> +#include "../arch/arm64/include/uapi/asm/perf_regs.h"
+> +#include "util/unwind-libdw.h"
+> +#include "util/perf_regs.h"
+> +#include "util/sample.h"
+>  
+> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+> +bool libdw_set_initial_registers_arm64(Dwfl_Thread *thread, void *arg)
+>  {
+>  	struct unwind_info *ui = arg;
+>  	struct regs_dump *user_regs = perf_sample__user_regs(ui->sample);
+> diff --git a/tools/perf/arch/csky/util/unwind-libdw.c b/tools/perf/util/unwind-libdw-arch/unwind-libdw-csky.c
+> similarity index 90%
+> rename from tools/perf/arch/csky/util/unwind-libdw.c
+> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-csky.c
+> index b20b1569783d..2556d034c32a 100644
+> --- a/tools/perf/arch/csky/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-csky.c
+> @@ -2,12 +2,12 @@
+>  // Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
+>  
+>  #include <elfutils/libdwfl.h>
+> -#include "perf_regs.h"
+> -#include "../../util/unwind-libdw.h"
+> -#include "../../util/perf_regs.h"
+> -#include "../../util/event.h"
+> +#include "../arch/csky/include/uapi/asm/perf_regs.h"
+> +#include "util/unwind-libdw.h"
+> +#include "util/perf_regs.h"
+> +#include "util/sample.h"
+>  
+> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+> +bool libdw_set_initial_registers_csky(Dwfl_Thread *thread, void *arg)
+>  {
+>  	struct unwind_info *ui = arg;
+>  	struct regs_dump *user_regs = perf_sample__user_regs(ui->sample);
+> diff --git a/tools/perf/arch/loongarch/util/unwind-libdw.c b/tools/perf/util/unwind-libdw-arch/unwind-libdw-loongarch.c
+> similarity index 86%
+> rename from tools/perf/arch/loongarch/util/unwind-libdw.c
+> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-loongarch.c
+> index 60b1144bedd5..5fca673508be 100644
+> --- a/tools/perf/arch/loongarch/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-loongarch.c
+> @@ -2,12 +2,12 @@
+>  /* Copyright (C) 2020-2023 Loongson Technology Corporation Limited */
+>  
+>  #include <elfutils/libdwfl.h>
+> -#include "perf_regs.h"
+> -#include "../../util/unwind-libdw.h"
+> -#include "../../util/perf_regs.h"
+> -#include "../../util/sample.h"
+> +#include "../arch/loongarch/include/uapi/asm/perf_regs.h"
+> +#include "util/unwind-libdw.h"
+> +#include "util/perf_regs.h"
+> +#include "util/sample.h"
+>  
+> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+> +bool libdw_set_initial_registers_loongarch(Dwfl_Thread *thread, void *arg)
+>  {
+>  	struct unwind_info *ui = arg;
+>  	struct regs_dump *user_regs = perf_sample__user_regs(ui->sample);
+> diff --git a/tools/perf/arch/powerpc/util/unwind-libdw.c b/tools/perf/util/unwind-libdw-arch/unwind-libdw-powerpc.c
+> similarity index 89%
+> rename from tools/perf/arch/powerpc/util/unwind-libdw.c
+> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-powerpc.c
+> index 82d0c28ae345..1560db45e7b4 100644
+> --- a/tools/perf/arch/powerpc/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-powerpc.c
+> @@ -1,10 +1,10 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <elfutils/libdwfl.h>
+>  #include <linux/kernel.h>
+> -#include "perf_regs.h"
+> -#include "../../../util/unwind-libdw.h"
+> -#include "../../../util/perf_regs.h"
+> -#include "../../../util/sample.h"
+> +#include "../arch/powerpc/include/uapi/asm/perf_regs.h"
+> +#include "util/unwind-libdw.h"
+> +#include "util/perf_regs.h"
+> +#include "util/sample.h"
+>  
+>  /* See backends/ppc_initreg.c and backends/ppc_regs.c in elfutils.  */
+>  static const int special_regs[3][2] = {
+> @@ -13,7 +13,7 @@ static const int special_regs[3][2] = {
+>  	{ 109, PERF_REG_POWERPC_CTR },
+>  };
+>  
+> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+> +bool libdw_set_initial_registers_powerpc(Dwfl_Thread *thread, void *arg)
+>  {
+>  	struct unwind_info *ui = arg;
+>  	struct regs_dump *user_regs = perf_sample__user_regs(ui->sample);
+> diff --git a/tools/perf/arch/riscv/util/unwind-libdw.c b/tools/perf/util/unwind-libdw-arch/unwind-libdw-riscv.c
+> similarity index 87%
+> rename from tools/perf/arch/riscv/util/unwind-libdw.c
+> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-riscv.c
+> index dc1476e16321..c2e2c4b6b2e0 100644
+> --- a/tools/perf/arch/riscv/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-riscv.c
+> @@ -2,12 +2,12 @@
+>  /* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
+>  
+>  #include <elfutils/libdwfl.h>
+> -#include "perf_regs.h"
+> -#include "../../util/unwind-libdw.h"
+> -#include "../../util/perf_regs.h"
+> -#include "../../util/sample.h"
+> +#include "../arch/riscv/include/uapi/asm/perf_regs.h"
+> +#include "util/unwind-libdw.h"
+> +#include "util/perf_regs.h"
+> +#include "util/sample.h"
+>  
+> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+> +bool libdw_set_initial_registers_riscv(Dwfl_Thread *thread, void *arg)
+>  {
+>  	struct unwind_info *ui = arg;
+>  	struct regs_dump *user_regs = perf_sample__user_regs(ui->sample);
+> diff --git a/tools/perf/arch/s390/util/unwind-libdw.c b/tools/perf/util/unwind-libdw-arch/unwind-libdw-s390.c
+> similarity index 84%
+> rename from tools/perf/arch/s390/util/unwind-libdw.c
+> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-s390.c
+> index c27c7a0d1076..1e05e9d9d95f 100644
+> --- a/tools/perf/arch/s390/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-s390.c
+> @@ -1,14 +1,14 @@
+>  #include <linux/kernel.h>
+>  #include <elfutils/libdwfl.h>
+> -#include "../../util/unwind-libdw.h"
+> -#include "../../util/perf_regs.h"
+> -#include "../../util/event.h"
+> -#include "../../util/sample.h"
+> -#include "dwarf-regs-table.h"
+> -#include "perf_regs.h"
+> +#include "util/unwind-libdw.h"
+> +#include "util/perf_regs.h"
+> +#include "util/event.h"
+> +#include "util/sample.h"
+> +#include "../arch/s390/include/dwarf-regs-table.h"
+> +#include "../arch/s390/include/uapi/asm/perf_regs.h"
+>  
+>  
+> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+> +bool libdw_set_initial_registers_s390(Dwfl_Thread *thread, void *arg)
+>  {
+>  	struct unwind_info *ui = arg;
+>  	struct regs_dump *user_regs = perf_sample__user_regs(ui->sample);
+> diff --git a/tools/perf/arch/x86/util/unwind-libdw.c b/tools/perf/util/unwind-libdw-arch/unwind-libdw-x86.c
+> similarity index 87%
+> rename from tools/perf/arch/x86/util/unwind-libdw.c
+> rename to tools/perf/util/unwind-libdw-arch/unwind-libdw-x86.c
+> index 798493e887d7..dd27545a4a68 100644
+> --- a/tools/perf/arch/x86/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw-arch/unwind-libdw-x86.c
+> @@ -1,11 +1,11 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <elfutils/libdwfl.h>
+> -#include "perf_regs.h"
+> -#include "../../../util/unwind-libdw.h"
+> -#include "../../../util/perf_regs.h"
+> +#include "../arch/x86/include/uapi/asm/perf_regs.h"
+> +#include "util/unwind-libdw.h"
+> +#include "util/perf_regs.h"
+>  #include "util/sample.h"
+>  
+> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+> +bool libdw_set_initial_registers_x86(Dwfl_Thread *thread, void *arg)
+>  {
+>  	struct unwind_info *ui = arg;
+>  	struct regs_dump *user_regs = perf_sample__user_regs(ui->sample);
+> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+> index 3ff427a49e4c..b2e194a8be39 100644
+> --- a/tools/perf/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw.c
+> @@ -225,11 +225,45 @@ static bool memory_read(Dwfl *dwfl __maybe_unused, Dwarf_Addr addr, Dwarf_Word *
+>  	return true;
+>  }
+>  
+> -static const Dwfl_Thread_Callbacks callbacks = {
+> -	.next_thread		= next_thread,
+> -	.memory_read		= memory_read,
+> -	.set_initial_registers	= libdw__arch_set_initial_registers,
+> -};
+> +#define DEFINE_DWFL_THREAD_CALLBACKS(arch)                           \
+> +static const Dwfl_Thread_Callbacks callbacks_##arch = {              \
+> +	.next_thread           = next_thread,                        \
+> +	.memory_read           = memory_read,                        \
+> +	.set_initial_registers = libdw_set_initial_registers_##arch, \
+> +}
+> +
+> +DEFINE_DWFL_THREAD_CALLBACKS(x86);
+> +DEFINE_DWFL_THREAD_CALLBACKS(arm);
+> +DEFINE_DWFL_THREAD_CALLBACKS(arm64);
+> +DEFINE_DWFL_THREAD_CALLBACKS(csky);
+> +DEFINE_DWFL_THREAD_CALLBACKS(loongarch);
+> +DEFINE_DWFL_THREAD_CALLBACKS(powerpc);
+> +DEFINE_DWFL_THREAD_CALLBACKS(riscv);
+> +DEFINE_DWFL_THREAD_CALLBACKS(s390);
+> +
+> +static const Dwfl_Thread_Callbacks *get_thread_callbacks(const char *arch)
+> +{
+> +	if (!strcmp(arch, "arm"))
+> +		return &callbacks_arm;
+> +	else if (!strcmp(arch, "arm64"))
+> +		return &callbacks_arm64;
+> +	else if (!strcmp(arch, "csky"))
+> +		return &callbacks_csky;
+> +	else if (!strcmp(arch, "loongarch"))
+> +		return &callbacks_loongarch;
+> +	else if (!strcmp(arch, "powerpc"))
+> +		return &callbacks_powerpc;
+> +	else if (!strcmp(arch, "riscv"))
+> +		return &callbacks_riscv;
+> +	else if (!strcmp(arch, "s390"))
+> +		return &callbacks_s390;
+> +	else if (!strcmp(arch, "x86"))
+> +		return &callbacks_x86;
+> +
+> +	pr_err("Fail to get thread callbacks for arch %s, returns NULL\n",
+> +	       arch);
+> +	return NULL;
+> +}
+>  
+>  static int
+>  frame_callback(Dwfl_Frame *state, void *arg)
+> @@ -278,6 +312,7 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
+>  	const char *arch = perf_env__arch(ui_buf.machine->env);
+>  	Dwarf_Word ip;
+>  	int err = -EINVAL, i;
+> +	const Dwfl_Thread_Callbacks *callbacks;
+>  
+>  	if (!data->user_regs || !data->user_regs->regs)
+>  		return -EINVAL;
+> @@ -300,7 +335,11 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
+>  	if (err)
+>  		goto out;
+>  
+> -	err = !dwfl_attach_state(ui->dwfl, EM_NONE, thread__tid(thread), &callbacks, ui);
+> +	callbacks = get_thread_callbacks(arch);
+> +	if (!callbacks)
+> +		goto out;
+> +
+> +	err = !dwfl_attach_state(ui->dwfl, EM_NONE, thread__tid(thread), callbacks, ui);
+>  	if (err)
+>  		goto out;
+>  
+> diff --git a/tools/perf/util/unwind-libdw.h b/tools/perf/util/unwind-libdw.h
+> index 8c88bc4f2304..574b29848cce 100644
+> --- a/tools/perf/util/unwind-libdw.h
+> +++ b/tools/perf/util/unwind-libdw.h
+> @@ -9,7 +9,15 @@ struct machine;
+>  struct perf_sample;
+>  struct thread;
+>  
+> -bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg);
+> +bool libdw_set_initial_registers_x86(Dwfl_Thread *thread, void *arg);
+> +bool libdw_set_initial_registers_arm(Dwfl_Thread *thread, void *arg);
+> +bool libdw_set_initial_registers_arm64(Dwfl_Thread *thread, void *arg);
+> +bool libdw_set_initial_registers_csky(Dwfl_Thread *thread, void *arg);
+> +bool libdw_set_initial_registers_loongarch(Dwfl_Thread *thread, void *arg);
+> +bool libdw_set_initial_registers_mips(Dwfl_Thread *thread, void *arg);
+> +bool libdw_set_initial_registers_powerpc(Dwfl_Thread *thread, void *arg);
+> +bool libdw_set_initial_registers_riscv(Dwfl_Thread *thread, void *arg);
+> +bool libdw_set_initial_registers_s390(Dwfl_Thread *thread, void *arg);
+>  
+>  struct unwind_info {
+>  	Dwfl			*dwfl;
+> -- 
+> 2.52.0.457.g6b5491de43-goog
+> 
