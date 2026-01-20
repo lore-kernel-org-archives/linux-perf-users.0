@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BC73A4ACB;
-	Tue, 20 Jan 2026 22:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE573D6688;
+	Tue, 20 Jan 2026 22:11:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768947077; cv=none; b=ez6A37tXMwKuGa9Ipyv2LybBEcNkNc5jBjaqp1dk676aqf5XdN4HKFs2os4Cx+k1RgCp6Y354z6ffkToEgvXNF2cb4BmsG1mGeY1M52L6Nf7XC11cPUmMp3IvKlbQZrNJlijy119q6VnN5ilgCdZnD3OQTLfkbuvqsN7ezbqexg=
+	t=1768947079; cv=none; b=lzOcZRk0C5a6mzFEERhW5S6rTWk0Upc1jsfqcknF9sMm7c6IeeY8kwDZQ0uWC6gbulgESkrHCK4a8P8qQ81Gf5kMsw1YtkBws2J7K1wMB8/YnNDgUnHZrafjF2hOeQAT4ubzAKokepjjMeI+vbk8g+zifqPepMK1RWmwcMZFMLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768947077; c=relaxed/simple;
-	bh=O/k3DVs0BGaLNR34AKBzHjFKzvWiuY34s1jVP7TTY0M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lUXO/keBWLnRGOmsZjblKmp1OCctpyGrf/AKuVfAebFDwM7qD/iRSwIr9fIIdeczPhDSRHdqRyeL5XBxFX16aKtMef26VZcYSKKUM4ZbsYFbmcYJc9uYvUtOnc/IDj5QZAOTRz5QmvTNG1JhkbpKGvToLNBmG5mwGVaDOb19cZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DXDIIxPS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768947079; c=relaxed/simple;
+	bh=9AQ04Q45KYJvgiQU6eyRgu+IU8LONLjTjfGyl0Bpwi4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JndacWyDmmmOI0AgnY2duerMngjsqbtOon5+vYACAE8wF1MLiPOsQJ2G8F8ArTZtqkxUr/uLvwZhKs2ZjrrMD3A7lw5vIQiR6um98ywTI2Nlb0iO7KwrzUubLQSoUen1gsb7zyTucpnkf83rBmZvmBHJNf8pCIgz5ElGTL6q3sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vhq6UHwL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXDIIxPS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37A60C16AAE;
-	Tue, 20 Jan 2026 22:11:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vhq6UHwL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BCBAC19422;
+	Tue, 20 Jan 2026 22:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768947074;
-	bh=O/k3DVs0BGaLNR34AKBzHjFKzvWiuY34s1jVP7TTY0M=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DXDIIxPShHohLoiaEPSs8Z/+3OxvxEw7pftT+I2byUCCszQI781GLe4PqXXhaVF+g
-	 agu6rXwsGZ3LCLTqjuR1k25MAld3crUhRXs7h4Lox0qiLA4QYSp/VLkx/vxWxeLI9P
-	 7lmgF27AhIZ2zBa/msu0/vur7505ImihtyJu9yVrr0tS0hVQIDmZIY3FADhNLej24z
-	 NXew0QSnu8zMwm93Nc/gVRk0FfRTUGevBj9QfWxIXJARaDf49PI0GbP9ScTuKnyecn
-	 mXDQVNo7ZcQzY3ou6bQN7FjFe0K9jrG9evreDubeGD8YUUBdmiAOlCBcOmhFouue7/
-	 2vBE7B1v7+jmA==
+	s=k20201202; t=1768947078;
+	bh=9AQ04Q45KYJvgiQU6eyRgu+IU8LONLjTjfGyl0Bpwi4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Vhq6UHwLs31n5OYRl7O4R6lW97+tl/MF6JcSIT63Pd7IwWpvfk8P6A6V86ZqNMOFJ
+	 mj0A8aLa/ttnmSidn4G0iJZ9/liTYZnWRL4px5vRMt+cBjXngxVjQ+NQ5py7uLYN1x
+	 OG7bWeg9Wr+d14dvfZGoxkJEqd2U6ehSpgF8+IiuGAV4qalcCd1lbhc3AQPVfKcfM4
+	 kckSPHH6jLcZQ0Quf1ROKXtjJJfZRvZjrmuDjTqkKKU82v0kZA3DXawS4zAoBlqMU9
+	 eDjxqzJVr/aV2RE0WPr6KYcx1Q7351fcQKZftFX7zKG7W+ermQlxCyw2/eOlqOhW0m
+	 WhL3/X9EXzMXQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,10 +39,12 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 0/4] Fixes for gcc 16.0.1
-Date: Tue, 20 Jan 2026 19:08:56 -0300
-Message-ID: <20260120220900.366451-1-acme@kernel.org>
+Subject: [PATCH 1/4] perf tests sw-clock: Mark the volatile tmp variable as __maybe_unused
+Date: Tue, 20 Jan 2026 19:08:57 -0300
+Message-ID: <20260120220900.366451-2-acme@kernel.org>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260120220900.366451-1-acme@kernel.org>
+References: <20260120220900.366451-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,23 +55,42 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Hi,
+As it is just used to waste some cycles, not being used as all, to
+silence some compilers.
 
-	A bunch of fixes for recent gcc versions,
+Noticed with gcc version 16.0.1 20260115 on fedora 44:
 
-- Arnaldo
+    tests/sw-clock.c: In function '__test__sw_clock_freq':
+    tests/sw-clock.c:31:22: error: variable 'tmp' set but not used [-Werror=unused-but-set-variable=]
+       31 |         volatile int tmp = 0;
+          |                      ^~~
 
-Arnaldo Carvalho de Melo (4):
-  perf tests sw-clock: Mark the volatile tmp variable as __maybe_unused
-  perf trace: Deal with compiler const checks
-  perf list: Don't write to const memory
-  perf list: Signal changing const memory is ok
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/sw-clock.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- tools/perf/builtin-trace.c     |  2 +-
- tools/perf/tests/sw-clock.c    |  3 ++-
- tools/perf/util/print-events.c | 15 ++++++---------
- 3 files changed, 9 insertions(+), 11 deletions(-)
-
+diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
+index 4a2ad7176fa07be0..b6e46975379cd5ef 100644
+--- a/tools/perf/tests/sw-clock.c
++++ b/tools/perf/tests/sw-clock.c
+@@ -5,6 +5,7 @@
+ #include <stdlib.h>
+ #include <signal.h>
+ #include <sys/mman.h>
++#include <linux/compiler.h>
+ #include <linux/string.h>
+ 
+ #include "tests.h"
+@@ -28,7 +29,7 @@
+ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
+ {
+ 	int i, err = -1;
+-	volatile int tmp = 0;
++	volatile int tmp __maybe_unused = 0;
+ 	u64 total_periods = 0;
+ 	int nr_samples = 0;
+ 	char sbuf[STRERR_BUFSIZE];
 -- 
 2.52.0
 
