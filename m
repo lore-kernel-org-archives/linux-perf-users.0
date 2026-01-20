@@ -1,222 +1,142 @@
-Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A230335066;
-	Tue, 20 Jan 2026 09:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F523F074B
+	for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2026 10:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768902672; cv=none; b=u8rLj8fpiXL2/ziQ5WC2+RdHPWqE+Wfvp5p/o/8BXBbCrnZzoSoTOQF/1Yay6tQf+7xdAcinOhCgwc+zWpIEUYeq6wjM5BmfiyNisYlJdkBJvikKn4f0Gxt7w8Mu2y/uw9Glq9s35Pk8xsV4ejX09eKPT16jzQeEbxUqEanwipI=
+	t=1768905038; cv=none; b=bQ3KH2P3yLBQCPppjkMWGFPDsA0WyDXMZ4FWAwoA9p/s7t1SetCzDQuq2/W6IEXYo9e11PA8MjDu6rZGLY8g+w9c4bbqTZHpfNVYcFX/MUODuQ0w2iXf1Kc5qSMr5kBH+lVaNHx1BqGaupaNuKrdPlqaxGsIAtzjUwT8JhxFVHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768902672; c=relaxed/simple;
-	bh=sjgjuzNZ01vPQT5EGfQigj4qjU1ryOBzaiAooaIjlWg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TSef0Jbhap2PU9x8mQPzKen5B9RLm76wWxJHd8ZNBkPcpo+d7S+g09j0fEQj4CcnJYCJbw1tEoWTB71KYmiqrYmunw702hfFdLYfaJiZW9kFHOLpcI9Wr2BpfZcpgNs6HTXchFGoYiPvv8zYjJRl6t7V7GNN7qxNaE8qL5y3a9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=0peX5yex; arc=none smtp.client-ip=113.46.200.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1768905038; c=relaxed/simple;
+	bh=+QlPmRUmjUTT2vQBuLtL9xyB/Rn0Y4EsVVcEiCiig1Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FYgPXeBTea+EmTukpEHssTV78e2NK9NxMErH7gKIyy45+aknIXKbDK7vHhRwgS7xc7oUajzCqu/h+9D1CFaQgazpcrqB+6Lnqe4aFhbhYK84jjcUh1WoSWA0GGwQDWw7urvokrTn5yhfjZnZL/5KbEQLCmwdv85FqFoKsFpEBdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vSWte0FV; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="0peX5yex"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=42MOztteCtilGOJ/7kcSahBhslYQw7ZPCwuPIdQb/r4=;
-	b=0peX5yex0o58xHiHGYa/LL582bGxk5wOBM/A6LYbu/SBTlh5IRxl9DW05cnqnkzkriW9vjFsj
-	g7iwFlNeypdfbtj+E4NfeW/dzxxnGNgpnKL0/+iWuEfOUz0Jlvm7OY8xu/HcQfYsEcUJ9nVapAQ
-	H93eYOdOVx/cULGC2yJ3vsU=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4dwMtG3VLxz12LFy;
-	Tue, 20 Jan 2026 17:47:02 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 656DA40567;
-	Tue, 20 Jan 2026 17:51:01 +0800 (CST)
-Received: from localhost.huawei.com (10.90.31.46) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 20 Jan 2026 17:51:00 +0800
-From: Qinxin Xia <xiaqinxin@huawei.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <wangyushan12@huawei.com>, <xiaqinxin@huawei.com>,
-	<hejunhao3@h-partners.com>, <jonathan.cameron@huawei.com>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-	<james.clark@linaro.org>, <linuxarm@huawei.com>
-Subject: [RFC PATCH] perf: Add --uncorepmu option for filtering uncore PMUs
-Date: Tue, 20 Jan 2026 17:50:58 +0800
-Message-ID: <20260120095058.2778834-1-xiaqinxin@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vSWte0FV"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-47edd9024b1so32310855e9.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2026 02:30:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1768905035; x=1769509835; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fZae7LTTeVVmKwoYCa2ULF7/qiJrsJL8H69g33drKkc=;
+        b=vSWte0FVYrocYalKE3F60XpbIEAmGjV4P1abV8p+PEwoS58pRikKlwm22YBE2LHz9+
+         AdSOO/ogaW/U86P7IEEFQGYcaMaRPLt6GrIv1xeSfIsnoxDyOT6PuhzPz1ElhDp3tCzl
+         43P6wB1zyCxkCbsEWRlukVM6cHH1rqirVQfX26EGqRAr4/v+nU7bcV30e2K2XjaQ3nuQ
+         RcpRy0l3lm3OMll9pRj+aaNpbxyfhMmmOb+LcCb9lxxE7LI684xsTIiDa8sVtjlPaeQJ
+         LrRNExZul82RKzNQQ3MSWh6PttzdOF0z2TtkV4oXVFOE12VHtS+aFVwGgaVHsG9pyEqj
+         g3hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768905035; x=1769509835;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fZae7LTTeVVmKwoYCa2ULF7/qiJrsJL8H69g33drKkc=;
+        b=CzizS+cCqz2DOWeNX8oqyimwUH5axWdIy1VSbac6ArUHIXABT/fN3RmCYcJsjFY8M8
+         gCaGbte2bBSZVkWzBfu3zujeMXKpp0tkhXGnB4R4ra1O7ljz5QCjTJV8nqgWYXWLMner
+         PnEHzUSSkBKP0EdI+/PQBgN35xoARSJ33BUiwVvARuTHTyFeyCZwNG5S6PKoSuGevVnZ
+         4yIiOKrHQMGGMqLJ9E/PC2WXiMXA2T14BXBLhNvhAOp0OiUQ/5sdIZTFcmwQYZ6wr2Ff
+         K4QjVAjaBGmYrxmC/L1SUVW2V4EXRMq/abLGKfNd8eZL7k1ypCXXGvwZ5N9WZ1f/hTv2
+         NDgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQNpLh5r7tlxHonDLwbq+deMD+XsTy87fyqDfSPB2YVjrP5ASkXeDoYfObCtTK59g4k7W54TrrU0DcmxXo00wZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTZ5BeVzbXZc9wc/znui68zOdBDQ9Fl4Ap9BvC2dIzNVFP7xWT
+	sHm8B0ejd2b58z9QBRuYLrVEsjS5cMgmnKQQECaR4aGijLwaR5QV2eo5ZVxY1JvV7ho=
+X-Gm-Gg: AY/fxX6Kr8xAEW5GbSUEQahhp4qyYyrnvnz4kmIZkIIpjwBeHcG7+cRuQFbIMsEqhMx
+	+EaEqn8uwkDFphJnNR4+8a18LiPtlkRBi3n8jEXTtGcwumpi+zjZ9ZB/1RWgi3MS3un8wlBCO/+
+	Z0PIP4a12QBMosyeX3aqFCYnXliohCDloTFEuCi9e6jii9shk5GQ0xuGqd+tanqdd9t37boN0br
+	VX7G2T5KurM7SEBvnCbp2ZvADxXWEDkxObhWXsiklAGhN1nL77lOAEoT4hlk2idgIMXHqBSAMw7
+	XHgwcbQ8FkiTD4FBg3/v5KrVxSw8pBTpRFEEJ9iqU7HRcp8OxqyUfPWKO+FwyaaXe0GW6LK4czq
+	VTl2EmVSxqLoc02VlzQhwaFWC/mp0WAsrM/PhRY7TE/zl/qq90eETWLN3yGZuyKVavQRmhF6CAK
+	Bw4GUtpgMfVu0xlls3
+X-Received: by 2002:a05:600c:4e15:b0:46e:37a7:48d1 with SMTP id 5b1f17b1804b1-4801eb181a8mr190615255e9.34.1768905034899;
+        Tue, 20 Jan 2026 02:30:34 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356996e2d8sm28686617f8f.28.2026.01.20.02.30.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Jan 2026 02:30:34 -0800 (PST)
+Message-ID: <436fd905-f54c-473a-8bc6-93245761ebe4@linaro.org>
+Date: Tue, 20 Jan 2026 10:30:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemj200003.china.huawei.com (7.202.194.15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] tools build: Fix arm64 unistd.h dependency
+To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260108-perf_fix_syscall_header-v4-0-5d45d18bc491@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260108-perf_fix_syscall_header-v4-0-5d45d18bc491@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This patch adds a new --uncorepmu option to perf-stat command to allow
-filtering events on specific uncore PMUs. This is useful when there are
-multiple uncore PMUs with the same type (e.g. hisi_sicl2_cpa0 and
-hisi_sicl0_cpa0).
 
-eg:
-[root@localhost tmp]# ./perf stat -M cpa_p0_avg_bw
- Performance counter stats for 'system wide':
 
-    19,417,779,115      hisi_sicl0_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw             
-                 0      hisi_sicl0_cpa0/cpa_p0_wr_dat/                                        
-                 0      hisi_sicl0_cpa0/cpa_p0_rd_dat_64b/                                      
-                 0      hisi_sicl0_cpa0/cpa_p0_rd_dat_32b/                                      
-    19,417,751,103      hisi_sicl10_cpa0/cpa_cycles/     #     0.00 cpa_p0_avg_bw             
-                 0      hisi_sicl10_cpa0/cpa_p0_wr_dat/                                       
-                 0      hisi_sicl10_cpa0/cpa_p0_rd_dat_64b/                                      
-                 0      hisi_sicl10_cpa0/cpa_p0_rd_dat_32b/                                      
-    19,417,730,679      hisi_sicl2_cpa0/cpa_cycles/      #     0.31 cpa_p0_avg_bw             
-        75,635,749      hisi_sicl2_cpa0/cpa_p0_wr_dat/                                        
-        18,520,640      hisi_sicl2_cpa0/cpa_p0_rd_dat_64b/                                      
-                 0      hisi_sicl2_cpa0/cpa_p0_rd_dat_32b/                                      
-    19,417,674,227      hisi_sicl8_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw             
-                 0      hisi_sicl8_cpa0/cpa_p0_wr_dat/                                        
-                 0      hisi_sicl8_cpa0/cpa_p0_rd_dat_64b/                                      
-                 0      hisi_sicl8_cpa0/cpa_p0_rd_dat_32b/                                      
+On 08/01/2026 9:43 am, Leo Yan wrote:
+> The perf build includes arm64's unistd.h, but its dependent header
+> unistd_64.h is missing.
+> 
+> As suggested by Arnd in [1]:
+> 
+>    "I would suggest using the same method across all architectures:
+>     either we figure out how to use the generated headers on all of them
+>     (including x86, which uses yet another method), or we just stick with
+>     the old asm-generic/unistd.h copy and use that on arm64 as well."
+> 
+> A dynamic approach (e.g., make headers_install) may be explored later to
+> generate headers for tools, but that will need consensus from the tools
+> maintainers.  In the meantime, this series provides a quick fix by using
+> the asm-generic/unistd.h copy for arm64.
+> 
 
-      19.417734480 seconds time elapsed
+BPF feature detection is fixed on Arm with this change. And the make 
+headers_install idea sounds good for later.
 
-[root@localhost tmp]# ./perf stat --uncorepmu hisi_sicl2_cpa0 -M cpa_p0_avg_bw
- Performance counter stats for 'system wide':
+Reviewed-by: James Clark <james.clark@linaro.org>
 
-     6,234,093,559      cpa_cycles                       #     0.60 cpa_p0_avg_bw             
-        50,548,465      cpa_p0_wr_dat                                                         
-         7,552,182      cpa_p0_rd_dat_64b                                                     
-                 0      cpa_p0_rd_dat_32b                                                     
-
-       6.234139320 seconds time elapsed
-
-Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
----
- tools/perf/Documentation/perf-stat.txt |  4 ++++
- tools/perf/builtin-stat.c              | 26 ++++++++++++++++++++++++++
- tools/perf/util/metricgroup.c          | 18 +++++++++++++-----
- 3 files changed, 43 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 1a766d4a2233..9c0952b43a57 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -573,6 +573,10 @@ $ perf config stat.no-csv-summary=true
- Only enable events on applying cpu with this type for hybrid platform
- (e.g. core or atom)"
- 
-+--uncorepmu::
-+Only enable events on applying uncore pmu with specified for multiple
-+uncore pmus with same type (e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)
-+
- EXAMPLES
- --------
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index ab40d85fb125..3f34bfc79179 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1235,6 +1235,28 @@ static int parse_cputype(const struct option *opt,
- 	return 0;
- }
- 
-+static int parse_uncorepmu(const struct option *opt,
-+			   const char *str,
-+			   int unset __maybe_unused)
-+{
-+	const struct perf_pmu *pmu;
-+	struct evlist *evlist = *(struct evlist **)opt->value;
-+
-+	if (!list_empty(&evlist->core.entries)) {
-+		fprintf(stderr, "Must define uncorepmu before events/metrics\n");
-+		return -1;
-+	}
-+
-+	pmu = perf_pmus__pmu_for_pmu_filter(str);
-+	if (!pmu || pmu->is_core) {
-+		fprintf(stderr, "--uncorepmu %s is not supported!\n", str);
-+		return -1;
-+	}
-+	parse_events_option_args.pmu_filter = pmu->name;
-+
-+	return 0;
-+}
-+
- static int parse_cache_level(const struct option *opt,
- 			     const char *str,
- 			     int unset __maybe_unused)
-@@ -2579,6 +2601,10 @@ int cmd_stat(int argc, const char **argv)
- 			"Only enable events on applying cpu with this type "
- 			"for hybrid platform (e.g. core or atom)",
- 			parse_cputype),
-+		OPT_CALLBACK(0, "uncorepmu", &evsel_list, "uncore pmu",
-+			"Only enable events on applying uncore pmu with specified "
-+			"for multiple uncore pmus with same type(e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)",
-+			parse_uncorepmu),
- #ifdef HAVE_LIBPFM
- 		OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
- 			"libpfm4 event selector. use 'perf list' to list available events",
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 25c75fdbfc52..59ef71df20bd 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -387,8 +387,13 @@ static bool match_pm_metric_or_groups(const struct pmu_metric *pm, const char *p
- 				      const char *metric_or_groups)
- {
- 	const char *pm_pmu = pm->pmu ?: "cpu";
-+	struct perf_pmu *perf_pmu = NULL;
- 
--	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu))
-+	if (pm->pmu)
-+		perf_pmu = perf_pmus__find(pm->pmu);
-+
-+	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu) &&
-+	   (perf_pmu && !perf_pmu__name_wildcard_match(perf_pmu, pmu)))
- 		return false;
- 
- 	return match_metric_or_groups(pm->metric_group, metric_or_groups) ||
-@@ -1260,7 +1265,8 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
- static int parse_ids(bool metric_no_merge, bool fake_pmu,
- 		     struct expr_parse_ctx *ids, const char *modifier,
- 		     bool group_events, const bool tool_events[TOOL_PMU__EVENT_MAX],
--		     struct evlist **out_evlist)
-+		     struct evlist **out_evlist,
-+		     const char *filter_pmu)
- {
- 	struct parse_events_error parse_error;
- 	struct evlist *parsed_evlist;
-@@ -1314,7 +1320,7 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
- 	}
- 	pr_debug("Parsing metric events '%s'\n", events.buf);
- 	parse_events_error__init(&parse_error);
--	ret = __parse_events(parsed_evlist, events.buf, /*pmu_filter=*/NULL,
-+	ret = __parse_events(parsed_evlist, events.buf, filter_pmu,
- 			     &parse_error, fake_pmu, /*warn_if_reordered=*/false,
- 			     /*fake_tp=*/false);
- 	if (ret) {
-@@ -1417,7 +1423,8 @@ static int parse_groups(struct evlist *perf_evlist,
- 					/*modifier=*/NULL,
- 					/*group_events=*/false,
- 					tool_events,
--					&combined_evlist);
-+					&combined_evlist,
-+					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
- 		}
- 		if (combined)
- 			expr__ctx_free(combined);
-@@ -1472,7 +1479,8 @@ static int parse_groups(struct evlist *perf_evlist,
- 		}
- 		if (!metric_evlist) {
- 			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
--					m->group_events, tool_events, &m->evlist);
-+					m->group_events, tool_events, &m->evlist,
-+					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
- 			if (ret)
- 				goto out;
- 
--- 
-2.33.0
+> [1] https://lore.kernel.org/linux-arm-kernel/20251222173653.GF9788@e132581.arm.com/T/#m69a051aae5e53a65f9b10e1d13f67b3e92f4bbc7
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+> Changes in v4:
+> - Updated commit log in patch 01 to avoid confusion (James).
+> - Link to v3: https://lore.kernel.org/r/20251222-perf_fix_syscall_header-v3-0-eb4a8b9dfe66@arm.com
+> 
+> Changes in v3:
+> - Changed to include asm-generic/unistd.h copy (Arnd).
+> - Removed check due to divergence between the kernel and tools.
+> - Link to v2: https://lore.kernel.org/r/20251210-perf_fix_syscall_header-v2-0-b18b6016e0ea@arm.com
+> 
+> Changes in v2:
+> - Added a consistency check (Ian).
+> - Rebased on the latest perf-tools-next.
+> - Link to v1: https://lore.kernel.org/r/20251204-perf_fix_syscall_header-v1-0-b8e27f74ed6a@arm.com
+> 
+> ---
+> Leo Yan (3):
+>        tools headers: Go back to include asm-generic/unistd.h for arm64
+>        Revert "perf tools: Fix arm64 build by generating unistd_64.h"
+>        tools headers: Don't check arm64's unistd.h
+> 
+>   tools/arch/arm64/include/uapi/asm/unistd.h | 24 +++++++++++++++++++++++-
+>   tools/lib/perf/Makefile                    | 14 ++------------
+>   tools/perf/Makefile.config                 |  1 -
+>   tools/perf/check-headers.sh                |  1 -
+>   4 files changed, 25 insertions(+), 15 deletions(-)
+> ---
+> base-commit: cbd41c6d4c26c161a2b0e70ad411d3885ff13507
+> change-id: 20251203-perf_fix_syscall_header-e280fa931d44
+> 
+> Best regards,
 
