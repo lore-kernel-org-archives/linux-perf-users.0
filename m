@@ -1,721 +1,314 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C17220298D
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Jan 2026 02:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F9632D435;
+	Wed, 21 Jan 2026 03:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768961863; cv=none; b=gcqEwudinDIanfzgTKYliQDWMxeRIoFaHuae45varUpiIlpjA8urlo5kvNz0wvORoC5mJibrQ1zb5/LPNMVFC9Vu37WYDYqppr3KKZ1xUpAeL6AtoemK3EirPKnIki4XLTYQAGLGZz0RIMrlpmauXyzROfny+QUdsEIBk1Slb9E=
+	t=1768965321; cv=none; b=TrWjWfAjNU4l8uLJdr9eVgAT38HBtrMYh6e9V5ZIB7ScxtPqWnoYI+2OTOWXLeyzg/Hs8WrydgB7X5N0vZY8mZIwI4nmdhClZwqT4xpXHquAHfsA+k5p+JPcgRRMZ/hVugAGu2SMucH1x0EeCtl9OayK9BjhVjYxisSMgs9pOb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768961863; c=relaxed/simple;
-	bh=cksDpaaSOHP4dHmC9iILRRvmDN9k5CYu60rMp5127xo=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=BCDiTtJA4gTRVcl6wQQ/fnMFPYL2hluJnHiWOma1Ng2sYca8uiZyaHYjIeTofFYg+WwIvFLSU/NkLaK7iSjr5hjwYuvkO1gLz444gRGsFWiVtwXIXJIIkb5cFKzAeRSSiJMuLrSjeoq132n/ojnlspl+p5dNRqu2T5aE7y0KZeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HruEHcA2; arc=none smtp.client-ip=74.125.82.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1768965321; c=relaxed/simple;
+	bh=EJUwIubY877WbQk63UGlOlimf0ntp9+6wcYRP+7KH3Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XdfOOARW/dp0Q6TG6G3/HeZ+7/ArX17GmJG8OT0Z6ZZv+ljZfEFIH4RwMS5wmRtRkgLLTUp3qXnYQXzb3SzjuKHPGb+RddR60tUTaWSOquW/MxW53zdCOYnGO5k7xPJqwdFqfpDrfsyS0s3VUq5cjFHEx50FB8TIvoDTXeUU5nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=m26pb32E; arc=none smtp.client-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HruEHcA2"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2b6a8afb513so7107654eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2026 18:17:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768961860; x=1769566660; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1KtlT1K2oWdKUb2onAeC4KkqX9C8HDRXf3/BK/XtjGw=;
-        b=HruEHcA2Tk7xiXPwBBWC7VCKpYHYEHiWWOKPWGQGpouOQ6tIUAytyFEetp4SYNoHyW
-         wAm62nP1vzV/4v1SAawMP9XigT32eMNpGhA7GQ4l7wIAm9nCEJ2Ih14oxH/xF3lbjqMe
-         BQqZxQlTfb5hQdINqsQVAiPWnlt98ALeAQqevKgxL+pzPeO2kdRnpqrFCh2bf9qe3Zy/
-         yIwIqDbZWE1Cak9JtMVSbLMvhhDDyK2kMWmz6oFUi49X0/BSwiAlU2ICSjMWe2sWuxNs
-         trJ01SKvf/JvVI/EIPAMS/J28c//SFPM4htLXVwJ5cnuSZeUAxoueJcu5LH8yv40NgOz
-         ygnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768961860; x=1769566660;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1KtlT1K2oWdKUb2onAeC4KkqX9C8HDRXf3/BK/XtjGw=;
-        b=N41urqIdAvN5XhDv7w3jGh60dvx/JeA7uZ2um3tCiCjbUE8gxKYIN3DX+XCxkWsRwd
-         R5b/zldjXIY9RCHzAfg/t0vkaoUYCuXSoopLtrjQSIXOetg15GbIiym1pAJLUEJlhji3
-         rlEhgOIBhCJadMLoeBfaShKfOmBjqJm8+uKYsXQCsYAH9w+veP1+mJ4suHtIlNmkWN5X
-         JUilAceJq4rRV/Jes3FGPHazFH516pSH6t/QJ+Xv6GggbA3c9JyPVynOUDa6c1WNL/Db
-         qM72zRNKczj7UhUVnC0lx4Fad8PXA0QesyxTeg1jkGNxBkbOsvp/xuoSwX7SKPwvFLPG
-         R8VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbzbBQIlU3YGtzpMfN3j75ZK7tEnVZZwd/E0lyYkLyQh+dMw4fvN5oga4QS06AQrTyecODQ8Pbe4JrNO4es/FY@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQj9xrS7CxXSj7iBol7C+pZlz5EKKnXo0iTv0b1Eezs3OQI5Q+
-	6UhhjtcRz5j3IY9mcmrcs3wszpEvs66Ff2/Y5fmpJVVFL7qEfCnlGMr2lpQxMQXzJVqWCvAbAPl
-	I8SEQlta4jw==
-X-Received: from dlbeg7.prod.google.com ([2002:a05:7022:f87:b0:120:5f59:867])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:3d0d:b0:2a4:3593:dde0
- with SMTP id 5a478bee46e88-2b6b46e7cf6mr11117283eec.13.1768961860027; Tue, 20
- Jan 2026 18:17:40 -0800 (PST)
-Date: Tue, 20 Jan 2026 18:17:35 -0800
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="m26pb32E"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=7NZklfFTFGOOxN0TruesuQXdxFIRQiht8I7RfAV8A8A=;
+	b=m26pb32E3SEv6FJt2g8kIqaBZx9V7lSTtqkGz4KaY3cn9QyUVtQ6YGV+quLqO4ksOX4PjfIQt
+	7cXt+ayFIPNwA5MQS2W+2YltCVtM0Wp0M0uNdlJYiW1gvS2kDKh+vzQ1LGPSc2Y8MoGhIlx27rH
+	Zu30LbT2aWqc9nAujP0pWeE=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4dwq3g2K5nz1prM8;
+	Wed, 21 Jan 2026 11:11:43 +0800 (CST)
+Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id E151340539;
+	Wed, 21 Jan 2026 11:15:08 +0800 (CST)
+Received: from [10.67.120.170] (10.67.120.170) by
+ kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 21 Jan 2026 11:15:08 +0800
+Message-ID: <b53c62a5-a752-436a-b039-cdc82b055fdd@huawei.com>
+Date: Wed, 21 Jan 2026 11:15:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260121021735.3625244-1-irogers@google.com>
-Subject: [PATCH v2] perf regs: Refactor use of arch__sample_reg_masks to perf_reg_name
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Shimin Guo <shimin.guo@skydio.com>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	Howard Chu <howardchu95@gmail.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Dmitry Vyukov <dvyukov@google.com>, 
-	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, Chun-Tse Shao <ctshao@google.com>, 
-	Aditya Bodkhe <aditya.b1@linux.ibm.com>, Haibo Xu <haibo1.xu@intel.com>, 
-	Sergei Trofimovich <slyich@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] perf: Add --uncorepmu option for filtering uncore
+ PMUs
+To: Ian Rogers <irogers@google.com>
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <wangyushan12@huawei.com>, <hejunhao3@h-partners.com>,
+	<jonathan.cameron@huawei.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<adrian.hunter@intel.com>, <james.clark@linaro.org>, <linuxarm@huawei.com>
+References: <20260120095058.2778834-1-xiaqinxin@huawei.com>
+ <CAP-5=fVHMeWP3Ct_uOwYw4XKNdK7-eR=tbbUOFHwTdCVwBCZVg@mail.gmail.com>
+From: Qinxin Xia <xiaqinxin@huawei.com>
+In-Reply-To: <CAP-5=fVHMeWP3Ct_uOwYw4XKNdK7-eR=tbbUOFHwTdCVwBCZVg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemj200003.china.huawei.com (7.202.194.15)
 
-arch__sample_reg_masks isn't supported on ARM(32), csky, loongarch,
-MIPS, RISC-V and s390. The table returned by the function just has the
-name of a register paired with the corresponding sample_regs_user mask
-value. For a given perf register we can compute the name with
-perf_reg_name and the mask is just 1 left-shifted by the perf register
-number. Change __parse_regs to use this method for finding registers
-rather than arch__sample_reg_masks, thereby adding __parse_regs
-support for ARM(32), csky, loongarch, MIPS, RISC-V and s390. As
-arch__sample_reg_masks is then unused, remove the now unneeded
-declarations.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-v2: Correct the setting of reg mask for registers that need >1 bit set
-    like XMMs.
 
-The idea for this patch came up in conversation with Dapeng Mi to
-avoid additional functions and tables for x86 APX support:
-https://lore.kernel.org/lkml/CAP-5=fWOsvAXuu8qx0tk9q8j8BoXPMJB3Gxto+iu6wf06i4cVA@mail.gmail.com/
+On 2026/1/21 04:55:30, Ian Rogers <irogers@google.com> wrote:
+> On Tue, Jan 20, 2026 at 1:51 AM Qinxin Xia <xiaqinxin@huawei.com> wrote:
+>>
+>> This patch adds a new --uncorepmu option to perf-stat command to allow
+>> filtering events on specific uncore PMUs. This is useful when there are
+>> multiple uncore PMUs with the same type (e.g. hisi_sicl2_cpa0 and
+>> hisi_sicl0_cpa0).
+>>
+>> eg:
+>> [root@localhost tmp]# ./perf stat -M cpa_p0_avg_bw
+>>   Performance counter stats for 'system wide':
+>>
+>>      19,417,779,115      hisi_sicl0_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
+>>                   0      hisi_sicl0_cpa0/cpa_p0_wr_dat/
+>>                   0      hisi_sicl0_cpa0/cpa_p0_rd_dat_64b/
+>>                   0      hisi_sicl0_cpa0/cpa_p0_rd_dat_32b/
+>>      19,417,751,103      hisi_sicl10_cpa0/cpa_cycles/     #     0.00 cpa_p0_avg_bw
+>>                   0      hisi_sicl10_cpa0/cpa_p0_wr_dat/
+>>                   0      hisi_sicl10_cpa0/cpa_p0_rd_dat_64b/
+>>                   0      hisi_sicl10_cpa0/cpa_p0_rd_dat_32b/
+>>      19,417,730,679      hisi_sicl2_cpa0/cpa_cycles/      #     0.31 cpa_p0_avg_bw
+>>          75,635,749      hisi_sicl2_cpa0/cpa_p0_wr_dat/
+>>          18,520,640      hisi_sicl2_cpa0/cpa_p0_rd_dat_64b/
+>>                   0      hisi_sicl2_cpa0/cpa_p0_rd_dat_32b/
+>>      19,417,674,227      hisi_sicl8_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
+>>                   0      hisi_sicl8_cpa0/cpa_p0_wr_dat/
+>>                   0      hisi_sicl8_cpa0/cpa_p0_rd_dat_64b/
+>>                   0      hisi_sicl8_cpa0/cpa_p0_rd_dat_32b/
+>>
+>>        19.417734480 seconds time elapsed
+>>
+>> [root@localhost tmp]# ./perf stat --uncorepmu hisi_sicl2_cpa0 -M cpa_p0_avg_bw
+>>   Performance counter stats for 'system wide':
+>>
+>>       6,234,093,559      cpa_cycles                       #     0.60 cpa_p0_avg_bw
+>>          50,548,465      cpa_p0_wr_dat
+>>           7,552,182      cpa_p0_rd_dat_64b
+>>                   0      cpa_p0_rd_dat_32b
+>>
+>>         6.234139320 seconds time elapsed
+> 
+> So normally for this case the -A/--no-merge will give you a per-PMU
+> breakdown. It isn't restricted to a single PMU like the output here,
+> but we similarly don't have options to restrict per-socket, per-dir,
+> per-cluster and per-core. There is an option with --per-cache but that
+> looks like a way to avoid having many --per-cache options rather than
+> taking a value for a particular cache to only dump.
+> 
+> I did deliberate make the --cputype code generic so it could be used
+> in ways like this, but it'd be nice to glob match the names for
+> consistency with event parsing:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/pmu.c#n2647
+> I needed to have --cputype as Intel's early hybrid patches had added
+> it before I cleaned things up to be more PMU oriented.
+> 
+Hello, Ian!
 
-The patch is on top of the dwfl clean up patches that switch perf
-register functions to using e_machine as an argument rather than the
-arch string, this means that EM_HOST can be used with perf_reg_name:
-https://lore.kernel.org/lkml/20260117052849.2205545-1-irogers@google.com/
----
- tools/perf/arch/arm/util/perf_regs.c          |   9 --
- tools/perf/arch/arm64/util/machine.c          |  14 +--
- tools/perf/arch/arm64/util/perf_regs.c        |  45 +------
- tools/perf/arch/csky/util/perf_regs.c         |   9 --
- tools/perf/arch/loongarch/util/perf_regs.c    |   9 --
- tools/perf/arch/mips/util/perf_regs.c         |   9 --
- tools/perf/arch/powerpc/util/perf_regs.c      |  68 ----------
- tools/perf/arch/riscv/util/perf_regs.c        |   9 --
- tools/perf/arch/s390/util/perf_regs.c         |   9 --
- tools/perf/arch/x86/util/perf_regs.c          |  47 -------
- .../util/arm64-frame-pointer-unwind-support.c |   3 +-
- tools/perf/util/parse-regs-options.c          | 116 +++++++++++-------
- tools/perf/util/perf_regs.c                   |   9 --
- tools/perf/util/perf_regs.h                   |  12 --
- 14 files changed, 81 insertions(+), 287 deletions(-)
+For core-related events and metric, we usually care about which core it
+happens on, so we can filter it with -C.
 
-diff --git a/tools/perf/arch/arm/util/perf_regs.c b/tools/perf/arch/arm/util/perf_regs.c
-index f94a0210c7b7..03a5bc0cf64c 100644
---- a/tools/perf/arch/arm/util/perf_regs.c
-+++ b/tools/perf/arch/arm/util/perf_regs.c
-@@ -2,10 +2,6 @@
- #include "perf_regs.h"
- #include "../../../util/perf_regs.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
-@@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
-index aab1cc2bc283..80fb13c958d9 100644
---- a/tools/perf/arch/arm64/util/machine.c
-+++ b/tools/perf/arch/arm64/util/machine.c
-@@ -1,18 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
- 
--#include <inttypes.h>
--#include <stdio.h>
--#include <string.h>
--#include "debug.h"
--#include "symbol.h"
--#include "callchain.h"
-+#include "callchain.h" // prototype of arch__add_leaf_frame_record_opts
- #include "perf_regs.h"
- #include "record.h"
--#include "util/perf_regs.h"
-+
-+#define SMPL_REG_MASK(b) (1ULL << (b))
- 
- void arch__add_leaf_frame_record_opts(struct record_opts *opts)
- {
--	const struct sample_reg *sample_reg_masks = arch__sample_reg_masks();
--
--	opts->sample_user_regs |= sample_reg_masks[PERF_REG_ARM64_LR].mask;
-+	opts->sample_user_regs |= SMPL_REG_MASK(PERF_REG_ARM64_LR);
- }
-diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
-index 09308665e28a..9bb768e1bea1 100644
---- a/tools/perf/arch/arm64/util/perf_regs.c
-+++ b/tools/perf/arch/arm64/util/perf_regs.c
-@@ -12,48 +12,12 @@
- #include "../../../util/event.h"
- #include "../../../util/perf_regs.h"
- 
-+#define SMPL_REG_MASK(b) (1ULL << (b))
-+
- #ifndef HWCAP_SVE
- #define HWCAP_SVE	(1 << 22)
- #endif
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG(x0, PERF_REG_ARM64_X0),
--	SMPL_REG(x1, PERF_REG_ARM64_X1),
--	SMPL_REG(x2, PERF_REG_ARM64_X2),
--	SMPL_REG(x3, PERF_REG_ARM64_X3),
--	SMPL_REG(x4, PERF_REG_ARM64_X4),
--	SMPL_REG(x5, PERF_REG_ARM64_X5),
--	SMPL_REG(x6, PERF_REG_ARM64_X6),
--	SMPL_REG(x7, PERF_REG_ARM64_X7),
--	SMPL_REG(x8, PERF_REG_ARM64_X8),
--	SMPL_REG(x9, PERF_REG_ARM64_X9),
--	SMPL_REG(x10, PERF_REG_ARM64_X10),
--	SMPL_REG(x11, PERF_REG_ARM64_X11),
--	SMPL_REG(x12, PERF_REG_ARM64_X12),
--	SMPL_REG(x13, PERF_REG_ARM64_X13),
--	SMPL_REG(x14, PERF_REG_ARM64_X14),
--	SMPL_REG(x15, PERF_REG_ARM64_X15),
--	SMPL_REG(x16, PERF_REG_ARM64_X16),
--	SMPL_REG(x17, PERF_REG_ARM64_X17),
--	SMPL_REG(x18, PERF_REG_ARM64_X18),
--	SMPL_REG(x19, PERF_REG_ARM64_X19),
--	SMPL_REG(x20, PERF_REG_ARM64_X20),
--	SMPL_REG(x21, PERF_REG_ARM64_X21),
--	SMPL_REG(x22, PERF_REG_ARM64_X22),
--	SMPL_REG(x23, PERF_REG_ARM64_X23),
--	SMPL_REG(x24, PERF_REG_ARM64_X24),
--	SMPL_REG(x25, PERF_REG_ARM64_X25),
--	SMPL_REG(x26, PERF_REG_ARM64_X26),
--	SMPL_REG(x27, PERF_REG_ARM64_X27),
--	SMPL_REG(x28, PERF_REG_ARM64_X28),
--	SMPL_REG(x29, PERF_REG_ARM64_X29),
--	SMPL_REG(lr, PERF_REG_ARM64_LR),
--	SMPL_REG(sp, PERF_REG_ARM64_SP),
--	SMPL_REG(pc, PERF_REG_ARM64_PC),
--	SMPL_REG(vg, PERF_REG_ARM64_VG),
--	SMPL_REG_END
--};
--
- /* %xNUM */
- #define SDT_OP_REGEX1  "^(x[1-2]?[0-9]|3[0-1])$"
- 
-@@ -175,8 +139,3 @@ uint64_t arch__user_reg_mask(void)
- 	}
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/csky/util/perf_regs.c b/tools/perf/arch/csky/util/perf_regs.c
-index 6b1665f41180..2cf7a54106e0 100644
---- a/tools/perf/arch/csky/util/perf_regs.c
-+++ b/tools/perf/arch/csky/util/perf_regs.c
-@@ -2,10 +2,6 @@
- #include "perf_regs.h"
- #include "../../util/perf_regs.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
-@@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/loongarch/util/perf_regs.c b/tools/perf/arch/loongarch/util/perf_regs.c
-index f94a0210c7b7..03a5bc0cf64c 100644
---- a/tools/perf/arch/loongarch/util/perf_regs.c
-+++ b/tools/perf/arch/loongarch/util/perf_regs.c
-@@ -2,10 +2,6 @@
- #include "perf_regs.h"
- #include "../../../util/perf_regs.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
-@@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/mips/util/perf_regs.c b/tools/perf/arch/mips/util/perf_regs.c
-index 6b1665f41180..2cf7a54106e0 100644
---- a/tools/perf/arch/mips/util/perf_regs.c
-+++ b/tools/perf/arch/mips/util/perf_regs.c
-@@ -2,10 +2,6 @@
- #include "perf_regs.h"
- #include "../../util/perf_regs.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
-@@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
-index bd36cfd420a2..779073f7e992 100644
---- a/tools/perf/arch/powerpc/util/perf_regs.c
-+++ b/tools/perf/arch/powerpc/util/perf_regs.c
-@@ -18,69 +18,6 @@
- #define PVR_POWER10		0x0080
- #define PVR_POWER11		0x0082
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG(r0, PERF_REG_POWERPC_R0),
--	SMPL_REG(r1, PERF_REG_POWERPC_R1),
--	SMPL_REG(r2, PERF_REG_POWERPC_R2),
--	SMPL_REG(r3, PERF_REG_POWERPC_R3),
--	SMPL_REG(r4, PERF_REG_POWERPC_R4),
--	SMPL_REG(r5, PERF_REG_POWERPC_R5),
--	SMPL_REG(r6, PERF_REG_POWERPC_R6),
--	SMPL_REG(r7, PERF_REG_POWERPC_R7),
--	SMPL_REG(r8, PERF_REG_POWERPC_R8),
--	SMPL_REG(r9, PERF_REG_POWERPC_R9),
--	SMPL_REG(r10, PERF_REG_POWERPC_R10),
--	SMPL_REG(r11, PERF_REG_POWERPC_R11),
--	SMPL_REG(r12, PERF_REG_POWERPC_R12),
--	SMPL_REG(r13, PERF_REG_POWERPC_R13),
--	SMPL_REG(r14, PERF_REG_POWERPC_R14),
--	SMPL_REG(r15, PERF_REG_POWERPC_R15),
--	SMPL_REG(r16, PERF_REG_POWERPC_R16),
--	SMPL_REG(r17, PERF_REG_POWERPC_R17),
--	SMPL_REG(r18, PERF_REG_POWERPC_R18),
--	SMPL_REG(r19, PERF_REG_POWERPC_R19),
--	SMPL_REG(r20, PERF_REG_POWERPC_R20),
--	SMPL_REG(r21, PERF_REG_POWERPC_R21),
--	SMPL_REG(r22, PERF_REG_POWERPC_R22),
--	SMPL_REG(r23, PERF_REG_POWERPC_R23),
--	SMPL_REG(r24, PERF_REG_POWERPC_R24),
--	SMPL_REG(r25, PERF_REG_POWERPC_R25),
--	SMPL_REG(r26, PERF_REG_POWERPC_R26),
--	SMPL_REG(r27, PERF_REG_POWERPC_R27),
--	SMPL_REG(r28, PERF_REG_POWERPC_R28),
--	SMPL_REG(r29, PERF_REG_POWERPC_R29),
--	SMPL_REG(r30, PERF_REG_POWERPC_R30),
--	SMPL_REG(r31, PERF_REG_POWERPC_R31),
--	SMPL_REG(nip, PERF_REG_POWERPC_NIP),
--	SMPL_REG(msr, PERF_REG_POWERPC_MSR),
--	SMPL_REG(orig_r3, PERF_REG_POWERPC_ORIG_R3),
--	SMPL_REG(ctr, PERF_REG_POWERPC_CTR),
--	SMPL_REG(link, PERF_REG_POWERPC_LINK),
--	SMPL_REG(xer, PERF_REG_POWERPC_XER),
--	SMPL_REG(ccr, PERF_REG_POWERPC_CCR),
--	SMPL_REG(softe, PERF_REG_POWERPC_SOFTE),
--	SMPL_REG(trap, PERF_REG_POWERPC_TRAP),
--	SMPL_REG(dar, PERF_REG_POWERPC_DAR),
--	SMPL_REG(dsisr, PERF_REG_POWERPC_DSISR),
--	SMPL_REG(sier, PERF_REG_POWERPC_SIER),
--	SMPL_REG(mmcra, PERF_REG_POWERPC_MMCRA),
--	SMPL_REG(mmcr0, PERF_REG_POWERPC_MMCR0),
--	SMPL_REG(mmcr1, PERF_REG_POWERPC_MMCR1),
--	SMPL_REG(mmcr2, PERF_REG_POWERPC_MMCR2),
--	SMPL_REG(mmcr3, PERF_REG_POWERPC_MMCR3),
--	SMPL_REG(sier2, PERF_REG_POWERPC_SIER2),
--	SMPL_REG(sier3, PERF_REG_POWERPC_SIER3),
--	SMPL_REG(pmc1, PERF_REG_POWERPC_PMC1),
--	SMPL_REG(pmc2, PERF_REG_POWERPC_PMC2),
--	SMPL_REG(pmc3, PERF_REG_POWERPC_PMC3),
--	SMPL_REG(pmc4, PERF_REG_POWERPC_PMC4),
--	SMPL_REG(pmc5, PERF_REG_POWERPC_PMC5),
--	SMPL_REG(pmc6, PERF_REG_POWERPC_PMC6),
--	SMPL_REG(sdar, PERF_REG_POWERPC_SDAR),
--	SMPL_REG(siar, PERF_REG_POWERPC_SIAR),
--	SMPL_REG_END
--};
--
- /* REG or %rREG */
- #define SDT_OP_REGEX1  "^(%r)?([1-2]?[0-9]|3[0-1])$"
- 
-@@ -233,8 +170,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/riscv/util/perf_regs.c
-index 6b1665f41180..2cf7a54106e0 100644
---- a/tools/perf/arch/riscv/util/perf_regs.c
-+++ b/tools/perf/arch/riscv/util/perf_regs.c
-@@ -2,10 +2,6 @@
- #include "perf_regs.h"
- #include "../../util/perf_regs.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
-@@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/s390/util/perf_regs.c b/tools/perf/arch/s390/util/perf_regs.c
-index 6b1665f41180..2cf7a54106e0 100644
---- a/tools/perf/arch/s390/util/perf_regs.c
-+++ b/tools/perf/arch/s390/util/perf_regs.c
-@@ -2,10 +2,6 @@
- #include "perf_regs.h"
- #include "../../util/perf_regs.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
-@@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
- {
- 	return PERF_REGS_MASK;
- }
--
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
-diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
-index 12fd93f04802..a7ca4154fdf9 100644
---- a/tools/perf/arch/x86/util/perf_regs.c
-+++ b/tools/perf/arch/x86/util/perf_regs.c
-@@ -13,48 +13,6 @@
- #include "../../../util/pmu.h"
- #include "../../../util/pmus.h"
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG(AX, PERF_REG_X86_AX),
--	SMPL_REG(BX, PERF_REG_X86_BX),
--	SMPL_REG(CX, PERF_REG_X86_CX),
--	SMPL_REG(DX, PERF_REG_X86_DX),
--	SMPL_REG(SI, PERF_REG_X86_SI),
--	SMPL_REG(DI, PERF_REG_X86_DI),
--	SMPL_REG(BP, PERF_REG_X86_BP),
--	SMPL_REG(SP, PERF_REG_X86_SP),
--	SMPL_REG(IP, PERF_REG_X86_IP),
--	SMPL_REG(FLAGS, PERF_REG_X86_FLAGS),
--	SMPL_REG(CS, PERF_REG_X86_CS),
--	SMPL_REG(SS, PERF_REG_X86_SS),
--#ifdef HAVE_ARCH_X86_64_SUPPORT
--	SMPL_REG(R8, PERF_REG_X86_R8),
--	SMPL_REG(R9, PERF_REG_X86_R9),
--	SMPL_REG(R10, PERF_REG_X86_R10),
--	SMPL_REG(R11, PERF_REG_X86_R11),
--	SMPL_REG(R12, PERF_REG_X86_R12),
--	SMPL_REG(R13, PERF_REG_X86_R13),
--	SMPL_REG(R14, PERF_REG_X86_R14),
--	SMPL_REG(R15, PERF_REG_X86_R15),
--#endif
--	SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
--	SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
--	SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
--	SMPL_REG2(XMM3, PERF_REG_X86_XMM3),
--	SMPL_REG2(XMM4, PERF_REG_X86_XMM4),
--	SMPL_REG2(XMM5, PERF_REG_X86_XMM5),
--	SMPL_REG2(XMM6, PERF_REG_X86_XMM6),
--	SMPL_REG2(XMM7, PERF_REG_X86_XMM7),
--	SMPL_REG2(XMM8, PERF_REG_X86_XMM8),
--	SMPL_REG2(XMM9, PERF_REG_X86_XMM9),
--	SMPL_REG2(XMM10, PERF_REG_X86_XMM10),
--	SMPL_REG2(XMM11, PERF_REG_X86_XMM11),
--	SMPL_REG2(XMM12, PERF_REG_X86_XMM12),
--	SMPL_REG2(XMM13, PERF_REG_X86_XMM13),
--	SMPL_REG2(XMM14, PERF_REG_X86_XMM14),
--	SMPL_REG2(XMM15, PERF_REG_X86_XMM15),
--	SMPL_REG_END
--};
--
- struct sdt_name_reg {
- 	const char *sdt_name;
- 	const char *uprobe_name;
-@@ -276,11 +234,6 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
- 	return SDT_ARG_VALID;
- }
- 
--const struct sample_reg *arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
--
- uint64_t arch__intr_reg_mask(void)
- {
- 	struct perf_event_attr attr = {
-diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.c b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-index 958afe8b821e..858ce2b01812 100644
---- a/tools/perf/util/arm64-frame-pointer-unwind-support.c
-+++ b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-@@ -2,7 +2,6 @@
- #include "arm64-frame-pointer-unwind-support.h"
- #include "callchain.h"
- #include "event.h"
--#include "perf_regs.h" // SMPL_REG_MASK
- #include "unwind.h"
- #include <string.h>
- 
-@@ -15,6 +14,8 @@ struct entries {
- 	size_t length;
- };
- 
-+#define SMPL_REG_MASK(b) (1ULL << (b))
-+
- static bool get_leaf_frame_caller_enabled(struct perf_sample *sample)
- {
- 	struct regs_dump *regs;
-diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
-index cda1c620968e..c0d0ef9fd495 100644
---- a/tools/perf/util/parse-regs-options.c
-+++ b/tools/perf/util/parse-regs-options.c
-@@ -5,15 +5,54 @@
- #include <string.h>
- #include <stdio.h>
- #include "util/debug.h"
-+#include <dwarf-regs.h>
- #include <subcmd/parse-options.h>
- #include "util/perf_regs.h"
- #include "util/parse-regs-options.h"
- 
-+static void list_perf_regs(FILE *fp, uint64_t mask)
-+{
-+	const char *last_name = NULL;
-+
-+	fprintf(fp, "available registers: ");
-+	for (int reg = 0; reg < 64; reg++) {
-+		const char *name;
-+
-+		if (((1ULL << reg) & mask) == 0)
-+			continue;
-+
-+		name = perf_reg_name(reg, EM_HOST);
-+		if (name && (!last_name || strcmp(last_name, name)))
-+			fprintf(fp, "%s%s", reg > 0 ? " " : "", name);
-+		last_name = name;
-+	}
-+	fputc('\n', fp);
-+}
-+
-+static uint64_t name_to_perf_reg_mask(const char *to_match, uint64_t mask)
-+{
-+	uint64_t reg_mask = 0;
-+
-+	for (int reg = 0; reg < 64; reg++) {
-+		const char *name;
-+
-+		if (((1ULL << reg) & mask) == 0)
-+			continue;
-+
-+		name = perf_reg_name(reg, EM_HOST);
-+		if (!name)
-+			continue;
-+
-+		if (!strcasecmp(to_match, name))
-+			reg_mask |= 1ULL << reg;
-+	}
-+	return reg_mask;
-+}
-+
- static int
- __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- {
- 	uint64_t *mode = (uint64_t *)opt->value;
--	const struct sample_reg *r = NULL;
- 	char *s, *os = NULL, *p;
- 	int ret = -1;
- 	uint64_t mask;
-@@ -27,50 +66,41 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 	if (*mode)
- 		return -1;
- 
--	if (intr)
--		mask = arch__intr_reg_mask();
--	else
--		mask = arch__user_reg_mask();
--
- 	/* str may be NULL in case no arg is passed to -I */
--	if (str) {
--		/* because str is read-only */
--		s = os = strdup(str);
--		if (!s)
--			return -1;
--
--		for (;;) {
--			p = strchr(s, ',');
--			if (p)
--				*p = '\0';
--
--			if (!strcmp(s, "?")) {
--				fprintf(stderr, "available registers: ");
--				for (r = arch__sample_reg_masks(); r->name; r++) {
--					if (r->mask & mask)
--						fprintf(stderr, "%s ", r->name);
--				}
--				fputc('\n', stderr);
--				/* just printing available regs */
--				goto error;
--			}
--			for (r = arch__sample_reg_masks(); r->name; r++) {
--				if ((r->mask & mask) && !strcasecmp(s, r->name))
--					break;
--			}
--			if (!r || !r->name) {
--				ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
--					    s, intr ? "-I" : "--user-regs=");
--				goto error;
--			}
--
--			*mode |= r->mask;
--
--			if (!p)
--				break;
--
--			s = p + 1;
-+	if (!str)
-+		return -1;
-+
-+	mask = intr ? arch__intr_reg_mask() : arch__user_reg_mask();
-+
-+	/* because str is read-only */
-+	s = os = strdup(str);
-+	if (!s)
-+		return -1;
-+
-+	for (;;) {
-+		uint64_t reg_mask;
-+
-+		p = strchr(s, ',');
-+		if (p)
-+			*p = '\0';
-+
-+		if (!strcmp(s, "?")) {
-+			list_perf_regs(stderr, mask);
-+			goto error;
-+		}
-+
-+		reg_mask = name_to_perf_reg_mask(s, mask);
-+		if (reg_mask == 0) {
-+			ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
-+				s, intr ? "-I" : "--user-regs=");
-+			goto error;
- 		}
-+		*mode |= reg_mask;
-+
-+		if (!p)
-+			break;
-+
-+		s = p + 1;
- 	}
- 	ret = 0;
- 
-diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-index b58d59b84fb1..ec602da1aeb6 100644
---- a/tools/perf/util/perf_regs.c
-+++ b/tools/perf/util/perf_regs.c
-@@ -22,15 +22,6 @@ uint64_t __weak arch__user_reg_mask(void)
- 	return 0;
- }
- 
--static const struct sample_reg sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
--const struct sample_reg * __weak arch__sample_reg_masks(void)
--{
--	return sample_reg_masks;
--}
--
- const char *perf_reg_name(int id, uint16_t e_machine)
- {
- 	const char *reg_name = NULL;
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index 7bfc6a34c02b..2c2a8de6912d 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -7,17 +7,6 @@
- 
- struct regs_dump;
- 
--struct sample_reg {
--	const char *name;
--	uint64_t mask;
--};
--
--#define SMPL_REG_MASK(b) (1ULL << (b))
--#define SMPL_REG(n, b) { .name = #n, .mask = SMPL_REG_MASK(b) }
--#define SMPL_REG2_MASK(b) (3ULL << (b))
--#define SMPL_REG2(n, b) { .name = #n, .mask = SMPL_REG2_MASK(b) }
--#define SMPL_REG_END { .name = NULL }
--
- enum {
- 	SDT_ARG_VALID = 0,
- 	SDT_ARG_SKIP,
-@@ -26,7 +15,6 @@ enum {
- int arch_sdt_arg_parse_op(char *old_op, char **new_op);
- uint64_t arch__intr_reg_mask(void);
- uint64_t arch__user_reg_mask(void);
--const struct sample_reg *arch__sample_reg_masks(void);
- 
- const char *perf_reg_name(int id, uint16_t e_machine);
- int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
+Such as:
+
+[root@localhost ~]# perf stat -C 0 -e L1-dcache-loads sleep 3
+
+  Performance counter stats for 'CPU(s) 0':
+
+            136,578      L1-dcache-loads 
+
+
+        3.099147550 seconds time elapsed
+
+[root@localhost tool]# ./perf stat -C 0 -M l1d_miss_rate sleep 3
+
+  Performance counter stats for 'CPU(s) 0':
+
+             18,708      L1-dcache-load-misses            #      3.6 % 
+l1d_miss_rate
+            513,038      L1-dcache-loads 
+
+
+        3.004649800 seconds time elapsed
+
+For core-independent events and metrics such as ddrc, smmu, and cpa, we
+care about which hardware module they occur. (The example provided in
+commit info is sicl.) so we want to filter it by pmu, for events I can
+filter it with'cputype' (This is a little strange because sicl does not
+belong to any cputype.). However, metric does not support this mode.
+
+[root@localhost ~]# perf stat --cputype hisi_sicl0_cpa0 -e cpa_cycles
+sleep 3
+
+  Performance counter stats for 'system wide':
+
+      3,003,492,731      cpa_cycles 
+
+
+        3.003484270 seconds time elapsed
+
+
+[root@localhost ~]# perf stat --cputype hisi_sicl0_cpa0 -M
+cpa_p0_wr_dat sleep 3
+
+Cannot find metric or group `cpa_p0_wr_dat'
+
+This patch supports the metric scenario through '--uncorepmu'.
+
+> So I can see the purpose of this patch in being low overhead compared
+> to -A, I'm just not sure whether this is a PMU or an aggregation
+> option. I also think the term "uncore" is kind of confusing and so
+> have tried to keep it away from command line options. Why isn't is it
+> just a pmu filter?
+> 
+> Thanks,
+> Ian
+> 
+Perhaps we could make cputype a little more generic so that it could
+also include pmu-filter functionality.
+
+>> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+>> ---
+>>   tools/perf/Documentation/perf-stat.txt |  4 ++++
+>>   tools/perf/builtin-stat.c              | 26 ++++++++++++++++++++++++++
+>>   tools/perf/util/metricgroup.c          | 18 +++++++++++++-----
+>>   3 files changed, 43 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+>> index 1a766d4a2233..9c0952b43a57 100644
+>> --- a/tools/perf/Documentation/perf-stat.txt
+>> +++ b/tools/perf/Documentation/perf-stat.txt
+>> @@ -573,6 +573,10 @@ $ perf config stat.no-csv-summary=true
+>>   Only enable events on applying cpu with this type for hybrid platform
+>>   (e.g. core or atom)"
+>>
+>> +--uncorepmu::
+>> +Only enable events on applying uncore pmu with specified for multiple
+>> +uncore pmus with same type (e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)
+>> +
+>>   EXAMPLES
+>>   --------
+>>
+>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>> index ab40d85fb125..3f34bfc79179 100644
+>> --- a/tools/perf/builtin-stat.c
+>> +++ b/tools/perf/builtin-stat.c
+>> @@ -1235,6 +1235,28 @@ static int parse_cputype(const struct option *opt,
+>>          return 0;
+>>   }
+>>
+>> +static int parse_uncorepmu(const struct option *opt,
+>> +                          const char *str,
+>> +                          int unset __maybe_unused)
+>> +{
+>> +       const struct perf_pmu *pmu;
+>> +       struct evlist *evlist = *(struct evlist **)opt->value;
+>> +
+>> +       if (!list_empty(&evlist->core.entries)) {
+>> +               fprintf(stderr, "Must define uncorepmu before events/metrics\n");
+>> +               return -1;
+>> +       }
+>> +
+>> +       pmu = perf_pmus__pmu_for_pmu_filter(str);
+>> +       if (!pmu || pmu->is_core) {
+>> +               fprintf(stderr, "--uncorepmu %s is not supported!\n", str);
+>> +               return -1;
+>> +       }
+>> +       parse_events_option_args.pmu_filter = pmu->name;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>>   static int parse_cache_level(const struct option *opt,
+>>                               const char *str,
+>>                               int unset __maybe_unused)
+>> @@ -2579,6 +2601,10 @@ int cmd_stat(int argc, const char **argv)
+>>                          "Only enable events on applying cpu with this type "
+>>                          "for hybrid platform (e.g. core or atom)",
+>>                          parse_cputype),
+>> +               OPT_CALLBACK(0, "uncorepmu", &evsel_list, "uncore pmu",
+>> +                       "Only enable events on applying uncore pmu with specified "
+>> +                       "for multiple uncore pmus with same type(e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)",
+>> +                       parse_uncorepmu),
+>>   #ifdef HAVE_LIBPFM
+>>                  OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
+>>                          "libpfm4 event selector. use 'perf list' to list available events",
+>> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+>> index 25c75fdbfc52..59ef71df20bd 100644
+>> --- a/tools/perf/util/metricgroup.c
+>> +++ b/tools/perf/util/metricgroup.c
+>> @@ -387,8 +387,13 @@ static bool match_pm_metric_or_groups(const struct pmu_metric *pm, const char *p
+>>                                        const char *metric_or_groups)
+>>   {
+>>          const char *pm_pmu = pm->pmu ?: "cpu";
+>> +       struct perf_pmu *perf_pmu = NULL;
+>>
+>> -       if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu))
+>> +       if (pm->pmu)
+>> +               perf_pmu = perf_pmus__find(pm->pmu);
+>> +
+>> +       if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu) &&
+>> +          (perf_pmu && !perf_pmu__name_wildcard_match(perf_pmu, pmu)))
+>>                  return false;
+>>
+>>          return match_metric_or_groups(pm->metric_group, metric_or_groups) ||
+>> @@ -1260,7 +1265,8 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
+>>   static int parse_ids(bool metric_no_merge, bool fake_pmu,
+>>                       struct expr_parse_ctx *ids, const char *modifier,
+>>                       bool group_events, const bool tool_events[TOOL_PMU__EVENT_MAX],
+>> -                    struct evlist **out_evlist)
+>> +                    struct evlist **out_evlist,
+>> +                    const char *filter_pmu)
+>>   {
+>>          struct parse_events_error parse_error;
+>>          struct evlist *parsed_evlist;
+>> @@ -1314,7 +1320,7 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
+>>          }
+>>          pr_debug("Parsing metric events '%s'\n", events.buf);
+>>          parse_events_error__init(&parse_error);
+>> -       ret = __parse_events(parsed_evlist, events.buf, /*pmu_filter=*/NULL,
+>> +       ret = __parse_events(parsed_evlist, events.buf, filter_pmu,
+>>                               &parse_error, fake_pmu, /*warn_if_reordered=*/false,
+>>                               /*fake_tp=*/false);
+>>          if (ret) {
+>> @@ -1417,7 +1423,8 @@ static int parse_groups(struct evlist *perf_evlist,
+>>                                          /*modifier=*/NULL,
+>>                                          /*group_events=*/false,
+>>                                          tool_events,
+>> -                                       &combined_evlist);
+>> +                                       &combined_evlist,
+>> +                                       (pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
+>>                  }
+>>                  if (combined)
+>>                          expr__ctx_free(combined);
+>> @@ -1472,7 +1479,8 @@ static int parse_groups(struct evlist *perf_evlist,
+>>                  }
+>>                  if (!metric_evlist) {
+>>                          ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
+>> -                                       m->group_events, tool_events, &m->evlist);
+>> +                                       m->group_events, tool_events, &m->evlist,
+>> +                                       (pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
+>>                          if (ret)
+>>                                  goto out;
+>>
+>> --
+>> 2.33.0
+>>
+
 -- 
-2.52.0.457.g6b5491de43-goog
+Thanks,
+Qinxin
 
