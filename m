@@ -1,219 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B75A2D541B;
-	Wed, 21 Jan 2026 19:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E65A3A7F58;
+	Wed, 21 Jan 2026 19:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769022191; cv=none; b=maiR4zsWNBDQ1UEFaJm698rK5B/qPqQ7AEWBe3irh8zeJMhtzMvizlEe9tBSVlyxrbv3foa3aiR6/rjsuoNtKdZrhAi0vLypk7yBMhwmEDq74YkytbcdRSLeHVfpobumaD8PSFcI8FsfzvMO1EJKvYJwM0wLD0lSFniR8eEZIMg=
+	t=1769025135; cv=none; b=K9T4+vRd0odDqL28MI+aMntM22QjjpIE6Kdz9KM9XAENzvAkcSigENE0vm+3rJqvpZNlcx/TEXgqnAFMB2+gGJY4csbVZrNEBbe1AO+h//xsJivQeMcswjNOHq+VImcduV6kxAAeMrux0nmE6VmlXMp/8OegbUU6mmKC3KiXFbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769022191; c=relaxed/simple;
-	bh=YDd0hyt+7ABJd5mN+Pa6NwSeiJNvysGG4ohkDlB3rRk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t3d1tiW6cu9ZaKQuehvkqJDgi4BDVwzTVGS341HZXoGKnz7S/ajGtZ5312cD1wNkLF/gakpUrTZuJiFgaiGQ5cuTg0AM/L92HJTEkaFYlFxZVUzvPjAcrs+KNzm9hzKiA7p8J0VUCd+FYFr/U7xPEIIGdNkY/k8DOsUwuLHFgBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BwFTHDeK; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1769025135; c=relaxed/simple;
+	bh=svxYNJpVS8XzHWG/VcJk8g3kHMyWpP174pnBUuF91aY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JR7AbYw7NcUGCBRljYVrezsm11mGd69AF78BSxbQSMqND3P1fqPMezT35IX4OozqeF780U3X6k7ddy+17QdiosRAFc5vsvy2eYgU6MpKB6FAtFVpPstI8taQ49NQVddkU8BvOrLyHFimXAgcDEJMfbHp/92uY56Y3t4DI07wiRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ThS38EAE; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BwFTHDeK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769022189; x=1800558189;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YDd0hyt+7ABJd5mN+Pa6NwSeiJNvysGG4ohkDlB3rRk=;
-  b=BwFTHDeKw2QbPmS/FFfZcgtDAKMKzRYpdESKtsd5xZhFjEDQTp5B9qzx
-   FqFc9P22d5Z72NSbIz5hwXrOnJowq7S5CbzWz+KBe445OEu+E0SZEYHpZ
-   t8Hg9Wio65jDdBgmmLzuHH5rmofN46mBcIHyqbUFej9HBpUczskn8Snzy
-   za4/deiA1lWvSfX9uZ+iQQTHIvLGgvyLEdUq3vlEvKEKtRkeRWHEbiygj
-   tH/vu73+WLF0CMKfavI2/Izp/pW+UbzViiEu4zLwTx2JZb5dxhVDswmMk
-   3xm9KDUIYdOBjkOWymCHGF5nYnYjv8wpQFPO96nNvuKISVOkNFMUjKeb6
-   g==;
-X-CSE-ConnectionGUID: fZ1YbSGIS5SEqTOEH1U/Fw==
-X-CSE-MsgGUID: jXZqq/x+TfqmprAOPE/HwA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="87670964"
-X-IronPort-AV: E=Sophos;i="6.21,244,1763452800"; 
-   d="scan'208";a="87670964"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 11:03:08 -0800
-X-CSE-ConnectionGUID: OkMKh1XjT1eXpvu35xozyQ==
-X-CSE-MsgGUID: 2jxAfB0+QWGi/gNPkMZ3+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,244,1763452800"; 
-   d="scan'208";a="211028566"
-Received: from unknown (HELO [10.241.241.119]) ([10.241.241.119])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 11:03:08 -0800
-Message-ID: <d8b6e506-a235-4d50-b223-bf979247c4ca@intel.com>
-Date: Wed, 21 Jan 2026 11:03:07 -0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ThS38EAE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Y2HuPnAHG2V9KhuHLyOdXH5hlStIJb9kToRsMrD2JbQ=; b=ThS38EAERyKVyYc6BJG8FJkayc
+	1+nU7azXlFm8w0WLJ8qQdpTihV6QCEve6W9LnS0pXER/NZlzphVHjnw7C3JsWg8Rqo/Ki5WcQ/pyl
+	nQYONJF+emoZIim9281ldZJfIQP4r3hvCK0lOSoMX//oL3Qj1gMSbkrmvqwM9DZcKbch99h+7zjNQ
+	uBqQr0MGbTbGgMp8FEFS8b2oZxj9OE1lhLoGIbQu3+sAhy5TOEMkV8jCRxd3yR5PD+v1uKomZbFqU
+	nXN0hwrK7pCa6GI+XrciVc6fQu7uDkKAQwKhEUK1eKjvqhocwEd0JTUeHAQ1BeeA1OC61oO2CxQq9
+	XAf0yF4g==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vieFA-0000000Gq48-1M2x;
+	Wed, 21 Jan 2026 19:51:56 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 40B61300328; Wed, 21 Jan 2026 20:51:55 +0100 (CET)
+Date: Wed, 21 Jan 2026 20:51:55 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ian Rogers <irogers@google.com>
+Cc: "Chen, Yu C" <yu.c.chen@intel.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>, ravi.bangoria@amd.com,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, rostedt@goodmis.org, vincent.guittot@linaro.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	gautham.shenoy@amd.com, kprateek.nayak@amd.com,
+	juri.lelli@redhat.com, yangjihong@bytedance.com, void@manifault.com,
+	tj@kernel.org, sshegde@linux.ibm.com, ctshao@google.com,
+	quic_zhonhan@quicinc.com, thomas.falcon@intel.com,
+	blakejones@google.com, ashelat@redhat.com, leo.yan@arm.com,
+	dvyukov@google.com, ak@linux.intel.com, yujie.liu@intel.com,
+	graham.woodward@arm.com, ben.gainey@arm.com, vineethr@linux.ibm.com,
+	tim.c.chen@linux.intel.com, linux@treblig.org,
+	santosh.shukla@amd.com, sandipan.das@amd.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mingo@redhat.com, namhyung@kernel.org, james.clark@arm.com,
+	acme@kernel.org
+Subject: Re: [PATCH v5 00/10] perf sched: Introduce stats tool
+Message-ID: <20260121195155.GP166857@noisy.programming.kicks-ass.net>
+References: <20260119175833.340369-1-swapnil.sapkal@amd.com>
+ <6a434657-5b5b-41ec-a79a-c648c2829602@intel.com>
+ <20260121163342.GI166857@noisy.programming.kicks-ass.net>
+ <CAP-5=fX=QuRw8M4Xco=A8WbBfDSPmyjtQ-JdnBEM-VRdX65_1g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 11/13] perf pmu: Relax uncore wildcard matching to
- allow numeric suffix
-To: Ian Rogers <irogers@google.com>, "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
-References: <20251231224233.113839-1-zide.chen@intel.com>
- <20251231224233.113839-12-zide.chen@intel.com>
- <CAP-5=fVO+dSstWmYiTvu7o66hahiUKig4r=FEfu+FvUN8+nvcg@mail.gmail.com>
- <12dbc1f5-022d-4653-8ac7-01c503a860dd@linux.intel.com>
- <CAP-5=fXnMgwoa=VF2oK6D_rXvEOLCyq2PHkXoyN42KOgaWBTgQ@mail.gmail.com>
- <CAP-5=fVVZbb0qSDw+geqbb2m0rtb4gS3xSgO-iK6hJp-R2MWLQ@mail.gmail.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <CAP-5=fVVZbb0qSDw+geqbb2m0rtb4gS3xSgO-iK6hJp-R2MWLQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fX=QuRw8M4Xco=A8WbBfDSPmyjtQ-JdnBEM-VRdX65_1g@mail.gmail.com>
 
+On Wed, Jan 21, 2026 at 09:12:20AM -0800, Ian Rogers wrote:
 
+> I'm still wondering if we can make some of the /proc/schedstat data
+> appear as tool events similar to proposals for networking and memory
+> tool events in:
+> https://lore.kernel.org/lkml/20260104011738.475680-1-irogers@google.com/
 
-On 1/21/2026 10:19 AM, Ian Rogers wrote:
-> On Wed, Jan 21, 2026 at 6:33 AM Ian Rogers <irogers@google.com> wrote:
->>
->> On Wed, Jan 21, 2026 at 12:02 AM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
->>>
->>>
->>> On 1/21/2026 3:18 PM, Ian Rogers wrote:
->>>> On Wed, Dec 31, 2025 at 2:49 PM Zide Chen <zide.chen@intel.com> wrote:
->>>>> Diamond Rapids introduces two types of PCIe related uncore PMUs:
->>>>> "uncore_pcie4_*" and "uncore_pcie6_*".
->>>>>
->>>>> To ensure that generic PCIe events (e.g., UNC_PCIE_CLOCKTICKS) can match
->>>>> and collect events from both PMU types, slightly relax the wildcard
->>>>> matching logic in perf_pmu__match_wildcard().
->>>>>
->>>>> This change allows a wildcard such as "pcie" to match PMU names that
->>>>> include a numeric suffix, such as "pcie4_*" and "pcie6_*".
->>>>>
->>>>> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>>> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>>> Signed-off-by: Zide Chen <zide.chen@intel.com>
->>>> Can we not merge this. I'd missed a perf tool patch as it was hiding
->>>> in a bunch of kernel uncore updates. At the very least if wildcard
->>>> conventions are updated then the corresponding documentation needs
->>>> updating:
->>>> Documentation/ABI/testing/sysfs-bus-event_source-devices
->>>
->>> Ian, thanks for the information. We didn't notice there is such
->>> documentation to describe the name. :(
->>>
->>> Besides the documentation, are there other comments? We can update it
->>> together. Thanks.
->>
->> The suffix handling is notoriously brittle. For example, ARM added hex
->> suffixes which are generally 12 characters of physical address rather
->> than the typical _0, _1, etc. What could go wrong? Well in some
->> situations ARM make their core PMU's follow the model name, so rather
->> than armv8_pmuv3_0 the core pmu is a name that ends with a model
->> number something like _a76, however, that is also a valid hex suffix.
->> So we have bumped the hex suffix to be at least 2 characters:
->> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/pmus.c?h=tmp.perf-tools-next#n81
->> This also works around the naming of s390 PMUs (comments in the code).
->> ARM now have models like a720ae which would appear as a 5 character
->> hex suffix, and so this whole hex suffix thing is hanging together for
->> some part because we treat core and uncore PMUs differently. From my
->> pov, ideally the ARM uncore PMUs would have just used the _0, _1, etc.
->> naming convention and placed the physical address information into a
->> caps file, rather than trying to shoehorn it into the PMU name.
->> s390 pmu names have discrepancies that mean lots of their core PMUs
->> can match suffixes and Intel's i915 PMU name ("i915") will happily
->> match as just "i" as the underscore before the number is optional. A
->> change like this needs a range of testing on a variety of
->> architectures because the code has broken things in a lot of different
->> architecture types.
->>
->> Besides a lack of testing, going in through the wrong tree, the change
->> is changing suffix handling in one place but not all - at least
->> pmu_name_len_no_suffix wasn't updated. Let's get this out of the tree
->> and start again.
-> 
-> To be explicit, things that I think are broken by this change:
-> 
-> 1) ARM has PMUs called armv8_pmuv3_0, previously _0 would be the
-> suffix and now 3_0 becomes the suffix. There may be other existing
-> PMUs where this unintended behavioral change has happened. This may
-> break output formatting but I think as the patch is incomplete that
-> hasn't happened here.
-> 
-> 2) as pmu_name_len_no_suffix wasn't updated it and assuming a machine
-> with uncore_pcie4_0, uncore_pcie4_1, uncore_pcie6_0, uncore_pcie6_1
-> and a common data_read event, the wildcarding for "pcie/data_read/"
-> should match the event on the 4 PMUs, however, rather than the PMU
-> name with no suffix (what pmu_name_len_no_suffix gives) being
-> uncore_pcie it will be either uncore_pcie4 or uncore_pcie6 depending
-> on which event/evsel we get the PMU name for. As the output will show
-> an aggregated amount the output for "perf stat -e pcie/data_read/ .."
-> the output may show just 1 event "pcie4/data_read/" rather than
-> "pcie/data_read/" as the suffix length calculation is off and the
-> number before the underscore not removed. In this example, it makes it
-> look like just 2 events on 2 PMUs were read rather than the full 4
-> events.
-> 
-> So my point is, resolving this is complex and needs buy-in and testing
-> from at least s390 and ARM. The easiest thing to do for now is to
-> drop/revert the change.
+Yeah, someone with a bit of spare time could make it happen:
 
-Agreed. Thank you very much for pointing this out!
+  https://lkml.kernel.org/r/20250703141800.GX1613200@noisy.programming.kicks-ass.net
 
+It would be:
 
-> Thanks,
-> Ian
-> 
->> Thanks,
->> Ian
->>
->>>>
->>>> Thanks,
->>>> Ian
->>>>
->>>>> ---
->>>>>  tools/perf/util/pmu.c | 14 ++++++++------
->>>>>  1 file changed, 8 insertions(+), 6 deletions(-)
->>>>>
->>>>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->>>>> index 956ea273c2c7..01a21b6aa031 100644
->>>>> --- a/tools/perf/util/pmu.c
->>>>> +++ b/tools/perf/util/pmu.c
->>>>> @@ -939,6 +939,7 @@ static bool perf_pmu__match_wildcard(const char *pmu_name, const char *tok)
->>>>>  {
->>>>>         const char *p, *suffix;
->>>>>         bool has_hex = false;
->>>>> +       bool has_underscore = false;
->>>>>         size_t tok_len = strlen(tok);
->>>>>
->>>>>         /* Check start of pmu_name for equality. */
->>>>> @@ -949,13 +950,14 @@ static bool perf_pmu__match_wildcard(const char *pmu_name, const char *tok)
->>>>>         if (*p == 0)
->>>>>                 return true;
->>>>>
->>>>> -       if (*p == '_') {
->>>>> -               ++p;
->>>>> -               ++suffix;
->>>>> -       }
->>>>> -
->>>>> -       /* Ensure we end in a number */
->>>>> +       /* Ensure we end in a number or a mix of number and "_". */
->>>>>         while (1) {
->>>>> +               if (!has_underscore && (*p == '_')) {
->>>>> +                       has_underscore = true;
->>>>> +                       ++p;
->>>>> +                       ++suffix;
->>>>> +               }
->>>>> +
->>>>>                 if (!isxdigit(*p))
->>>>>                         return false;
->>>>>                 if (!has_hex)
->>>>> --
->>>>> 2.52.0
->>>>>
+ - convert all the accounting sites to tracepoints
+ - write modules that connect to relevant tracepoints to provide the
+   'legacy' interface
+ - convince world+dog to not auto-load above modules
+ - have beer and wait for people to complain about something :-)
 
+I'm sure there's 'interesting' details glossed over, but I *think* it
+should be doable.
