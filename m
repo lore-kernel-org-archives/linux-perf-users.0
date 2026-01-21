@@ -1,140 +1,160 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAC03A1A33
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Jan 2026 11:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E3393D3003;
+	Wed, 21 Jan 2026 11:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768994742; cv=none; b=sEFutwuwIe2UFXxl6HrfnU61Au0plqB81lsH+Fq8Zs2DwMaD2swJG59Y5XpcftOEzKEX33fP0DtJwLwgHwfqRbcMBmJ5dLTtuYYjNbo87Rcznbqnw5XBvk/XU23dLbKvUTx/vU0aTrtrdkrHPxguGKD4BmH4PV/zPQ4BuUdJzEc=
+	t=1768995227; cv=none; b=a/gKtgBlZmyjz2V5b5IVKNzoluMeXpnnvyhKc5gdNB+EqdWhT6m843uopp5oktTLUCcit7qAxG30wrbJ6DJ2V1b94St9sASxZZhnp3lVphe8Dcy4+zep2GrKPgk9QfNf68KorSmdROlGP4zhApwkCih5TWX9vt8yh1rxxR+FQr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768994742; c=relaxed/simple;
-	bh=tLVK4di/mJbG0rt4yh7jUH9/iQkvUkcnYMDVn7GHvlc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ja4TKe0rSq2pyCtiBREQm2CJlr9q2qZVrxDWCkzhjRLOF2IonTAJdNPk6hP3pAlZQL7R9t45kB8LJmm9tNaFO/1K2w+CLX9Vwrisx0vV0eVC7pniF7daFKPerWNL99V7qLfiLZ8jL3jU5PoM7wk4vhU3WKFhcVXb4QPvHmN3bBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jYjpmF21; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYjpmF21"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-47ee3a63300so61765085e9.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jan 2026 03:25:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768994739; x=1769599539; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MZcOCzMzN58rEfAspc9Xym1mOpiIyhkHUUmjF6zLfds=;
-        b=jYjpmF21ZgPC68mllLn6NN+0HwPhfN2yjPwnUMuC0tyY1COskOVP2FshosEsqP2tA1
-         QOOGG29PxHFNcXaGhVQ2XeBGtkOKAYNdm6kzaNcqnZrCUx2TFpfRxYUFiOtUntG/ej93
-         JfvKAvGWBG1toM7d6oNo1MlhKqY6JJ6+R71BnPx1Y6V9nOrkcxvAy3CdTj++0v6dX3Qf
-         CFYKCHlgbGXzIBFle7QZyWKVpcoeTkpTl8MxZ73h9o/hyk+ZqmmIJ8mk0UZwyCmnVxRD
-         OMDxyEjG+8ydGXqMEiKL9vGae2oDBgIt5BIFTHIL7s8eW8V9aSTcNrk5/ZFP9CS8jDUH
-         VTgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768994739; x=1769599539;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MZcOCzMzN58rEfAspc9Xym1mOpiIyhkHUUmjF6zLfds=;
-        b=vDAH96SkjtzVQn8r9faC1IZhLLyXNCbIWU8HfjdKhye+XppRL2CPLCcyrFYrra9OAX
-         zENm8DCbPy9pVkcUEjaqS9VbH8QMd5KTaaSQKbwWb7woFEs1QOuEJm6atBdxr5t6jVRN
-         pZnaj2GXbDlE5lU5jiEh+Oi3gTAZ6h13qbQ8WX+z/1gZmK0bfAVjFGAozuq1+chqgpkd
-         mBjrojkErCSsah1ZlBmSB2PosvqarhaUzRkbUY/Sx73GJDGhP/JLtNjc6sbImZRd1mbT
-         PKKEj6VLk9/MGYWXOVVQctj3afBUY1Tl2Ofmv/4cIOHwINPGFyY+HeOn1s1dmubRZ9S8
-         b2yg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjoYVEldBO0tsApAiUcrfZMBo6Lov0sGRb+xY4krRJ/LvVjwRHYnCJldL75OQoA4hibD7PlTo0cn9ol6BlzMUV@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmWcCWResc4QE9Lt0Zv/X5fX0Z990zt+jPf2HDX91RAad16X8c
-	N6z/jspij2EBGbl17HHwSKL/rQ5NI/XyhZaYB/H9IM3+UxCMVs5/n2FD
-X-Gm-Gg: AZuq6aLjsZG6itn+4VorxADP6trqSOguEfonz362KH/YFLhr9JWA7IVj/rEG3aK0IZN
-	ND2mIjN4ops/41PiE+3BRzGrfirVfQ0Onb7T7lR6vxFkl6U8dw516cK5NGvLBQoleVhNfpPDHvJ
-	4faP7valB5eW9xiui+34KM+eNQ/Y37cKj8iFiNV3LepZcNhiwbppia2iFAAMtRDnUYOxoH0zHd6
-	o3L0ZTJddu05IngzgiN4Z+3UT+2tHX7aTj/DCiLfu6Vf+G4Lzn3uTfx7w9aU6b8zvKyg2cXX+ju
-	hJyYg74ToxrTJF1yj21CInhz7bR8Ds0bpdmyTjCs29nxGMU1qsB2tyN+AwDKSDrHi5NBQiIWcrX
-	iJytPzjJdSdvby8ygRaUM55OEgqMO37gnd6jcsweDTMWFhG41Ndk+kM+YniPDzYgJ01RvV23lhx
-	WhUqrvFcvXP16VsDSH9xCE4DHHTiiwYINty5GEHwZ4HXNR2RH+/qVy
-X-Received: by 2002:a05:600c:3f0f:b0:47e:e076:c7a2 with SMTP id 5b1f17b1804b1-4803e7a2d74mr79194685e9.15.1768994738668;
-        Wed, 21 Jan 2026 03:25:38 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801e86c197sm306901805e9.1.2026.01.21.03.25.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jan 2026 03:25:38 -0800 (PST)
-Date: Wed, 21 Jan 2026 11:25:36 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian
- Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>,
- Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo
- <acme@redhat.com>
-Subject: Re: [PATCH 3/4] perf list: Don't write to const memory
-Message-ID: <20260121112536.27fd5d11@pumpkin>
-In-Reply-To: <20260120220900.366451-4-acme@kernel.org>
-References: <20260120220900.366451-1-acme@kernel.org>
-	<20260120220900.366451-4-acme@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	s=arc-20240116; t=1768995227; c=relaxed/simple;
+	bh=LmaBYsW9FqbnsXv7SfDorSFPOjfm3Ijv1uXk0j4TWBk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=BCNJ0dIz7Z2xfXT+wK1POM4+ZjzCX23z3HIaS9ohCX7AzTFOHFvfU6VQgbS9UkYq2e1qqk+9vZWuMlw/sMhOe5p5U+4ygr3pVKcHBSl7u3VLruHG0DWappWSecVfngJLtI1P0wylv1Ql3dpvlYhro9d7alumQrSyrQ5I/xUQc0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BFC51476;
+	Wed, 21 Jan 2026 03:33:36 -0800 (PST)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0BFC3F632;
+	Wed, 21 Jan 2026 03:33:41 -0800 (PST)
+From: Leo Yan <leo.yan@arm.com>
+Date: Wed, 21 Jan 2026 11:33:21 +0000
+Subject: [PATCH v3] perf: arm_spe: Properly set hw.state on failures
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260121-arm_spe_fix_truncated_flag-v3-1-214747f68b50@arm.com>
+X-B4-Tracking: v=1; b=H4sIAIC5cGkC/43NTQ6CMBAF4KuYrq3ptA6CK+9hTFPKAE3kJy02G
+ sLdLWzYGZfvzcs3MwvkHQV2PczMU3TBDX0K6nhgtjV9Q9xVKTMpJIIA5MZ3Ooyka/fWk3/11kx
+ U6fppGg4GS5VJYZQpWQJGT2m14fdHyq0L0+A/268Ia/sXG4EDR0RSMrelEXhL45MdOraiUe4Qg
+ PgJSZ7umSwuZ1HkaO0OLcvyBTsgsGILAQAA
+X-Change-ID: 20251015-arm_spe_fix_truncated_flag-1a5b3620a3ab
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexandru Elisei <alexandru.elisei@arm.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768995221; l=4365;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=LmaBYsW9FqbnsXv7SfDorSFPOjfm3Ijv1uXk0j4TWBk=;
+ b=uwAGDsaU4MXHVWZAV63Or2xC/4jiAeXBNq4FasdQPwNvTulHkgnC9FegBPw2zOgD9VbFSYWBw
+ HHKJ+0jebN4Au8jUWmoVRI/X1Fscax5W22fjEqgQUUE8oKlCzVSnoCF
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Tue, 20 Jan 2026 19:08:59 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+When arm_spe_pmu_next_off() fails to calculate a valid limit, it returns
+zero to indicate that tracing should not start.  However, the caller
+arm_spe_perf_aux_output_begin() does not propagate this failure by
+updating hwc->state, cause the error to be silently ignored by upper
+layers.
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Something now detected on fedora 44, where strchr() returns const if it
-> is passed a const pointer:
-> 
->   util/print-events.c: In function 'print_sdt_events':
->   util/print-events.c:89:29: error: initialization discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
->      89 |                 char *bid = strchr(sdt_name->s, '@');
->         |                             ^~~~~~
-> 
-> Fix it by using strnchr() if strchr finds the separator instead of
-> temporarily scrubbing it with '\0'.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/print-events.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-> index 8f3ed83853a9e468..898cf426509790cd 100644
-> --- a/tools/perf/util/print-events.c
-> +++ b/tools/perf/util/print-events.c
-> @@ -97,14 +97,11 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
->  		} else {
->  			next_sdt_name = strlist__next(sdt_name);
->  			if (next_sdt_name) {
-> -				char *bid2 = strchr(next_sdt_name->s, '@');
-> -
-> -				if (bid2)
-> -					*bid2 = '\0';
-> -				if (strcmp(sdt_name->s, next_sdt_name->s) == 0)
-> -					show_detail = true;
-> -				if (bid2)
-> -					*bid2 = '@';
-> +				const char *bid2 = strchr(next_sdt_name->s, '@');
-> +
-> +				show_detail = bid2 ?
-> +						strncmp(sdt_name->s, next_sdt_name->s, bid2 - next_sdt_name->s) == 0 :
-> +						strcmp(sdt_name->s, next_sdt_name->s) == 0;
+Because hwc->state remains zero after a failure, arm_spe_pmu_start()
+continues to programs filter registers unnecessarily.  The driver
+still reports success to the perf core, so the core assumes the SPE
+event was enabled and proceeds to enable other events.  This breaks
+event group semantics: SPE is already stopped while other events in the
+same group are enabled.
 
-You could use:
-	show_detail = strncmp(sdt_name->s, next_sdt_name->s, strcspn(sdt_name->s, "@"));
-strcspn() will be slower, but it is succinct.
-I'm sure there is a function like strchr() that returns a pointer to the '\0'
-when the character isn't found - but I can't remember what it is called :-(
+Fix this by updating arm_spe_perf_aux_output_begin() to return a status
+code indicating success (0) or failure (-EAGAIN).  Both the interrupt
+handler and arm_spe_pmu_start() check the return value and call
+arm_spe_pmu_stop() to set PERF_HES_STOPPED in hwc->state.
 
-	David
+In the interrupt handler, the period (e.g., period_left) needs to be
+updated, so PERF_EF_UPDATE is passed to arm_spe_pmu_stop().  When the
+error occurs during event start, the trace unit is not yet enabled, so
+a flag '0' is used to drain buffer and update state only.
 
->  			}
->  		}
->  		last_sdt_name = sdt_name->s;
+Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+This change has been verified on Orion6 board.
+---
+Changes in v3:
+- Updated arm_spe_perf_aux_output_begin() for returning error and used
+  arm_spe_pmu_stop() for setting hw_state properly (Will).
+- Link to v2: https://lore.kernel.org/r/20251110-arm_spe_fix_truncated_flag-v2-0-a629740985cc@arm.com
+---
+ drivers/perf/arm_spe_pmu.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index 4801115f2b54052d584b59881f458c2640e974ff..b9a6748827cc5557c42023f323a90b5826eadb54 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -106,6 +106,8 @@ struct arm_spe_pmu {
+ /* Keep track of our dynamic hotplug state */
+ static enum cpuhp_state arm_spe_pmu_online;
+ 
++static void arm_spe_pmu_stop(struct perf_event *event, int flags);
++
+ enum arm_spe_pmu_buf_fault_action {
+ 	SPE_PMU_BUF_FAULT_ACT_SPURIOUS,
+ 	SPE_PMU_BUF_FAULT_ACT_FATAL,
+@@ -607,8 +609,8 @@ static u64 arm_spe_pmu_next_off(struct perf_output_handle *handle)
+ 	return limit;
+ }
+ 
+-static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
+-					  struct perf_event *event)
++static int arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
++					 struct perf_event *event)
+ {
+ 	u64 base, limit;
+ 	struct arm_spe_pmu_buf *buf;
+@@ -622,7 +624,6 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
+ 	/* Start a new aux session */
+ 	buf = perf_aux_output_begin(handle, event);
+ 	if (!buf) {
+-		event->hw.state |= PERF_HES_STOPPED;
+ 		/*
+ 		 * We still need to clear the limit pointer, since the
+ 		 * profiler might only be disabled by virtue of a fault.
+@@ -642,6 +643,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
+ 
+ out_write_limit:
+ 	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
++	return (limit & PMBLIMITR_EL1_E) ? 0 : -EAGAIN;
+ }
+ 
+ static void arm_spe_perf_aux_output_end(struct perf_output_handle *handle)
+@@ -781,7 +783,10 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
+ 		 * when we get to it.
+ 		 */
+ 		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)) {
+-			arm_spe_perf_aux_output_begin(handle, event);
++			if (arm_spe_perf_aux_output_begin(handle, event)) {
++				arm_spe_pmu_stop(event, PERF_EF_UPDATE);
++				break;
++			}
+ 			isb();
+ 		}
+ 		break;
+@@ -880,9 +885,10 @@ static void arm_spe_pmu_start(struct perf_event *event, int flags)
+ 	struct perf_output_handle *handle = this_cpu_ptr(spe_pmu->handle);
+ 
+ 	hwc->state = 0;
+-	arm_spe_perf_aux_output_begin(handle, event);
+-	if (hwc->state)
++	if (arm_spe_perf_aux_output_begin(handle, event)) {
++		arm_spe_pmu_stop(event, 0);
+ 		return;
++	}
+ 
+ 	reg = arm_spe_event_to_pmsfcr(event);
+ 	write_sysreg_s(reg, SYS_PMSFCR_EL1);
+
+---
+base-commit: c03e9c42ae8f9be76a0cf55ef3f88663f0f6a63a
+change-id: 20251015-arm_spe_fix_truncated_flag-1a5b3620a3ab
+
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
 
