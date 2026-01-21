@@ -1,185 +1,170 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22A333C51A
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Jan 2026 07:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8572B2DCF71
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Jan 2026 07:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768979416; cv=pass; b=VfexZ4F26EYN/h28QF0zEIzsC4vS7Qc+nyF7muR+1jNqazPS4YgnMWwAauPgsdGwzuO3B2uLxZ1+pwugYBha8yDY/RSDHmOzdu9KkiDTxGNgsFv5tV+pxzH7MkwZrWCVHJIq1BN9WFliemAW67Zl3j9elaCe5XA4TqbMNdg+9Ng=
+	t=1768979943; cv=pass; b=YmONBhoZ9fPWCswgLxCTlORjbDuDePBP5OjxocSK3z40ldq9XEAVwy0haCUqJyL3umK6/DvvqHuTyHDwq8aHqPbJsDatrEMVYyoUNSKHy2kF3KCopxS2fAGBYOCfqJQU5JpJMR7vaCvUvFk4paGxA7QIx0imJB8P5lT0eLJUFpY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768979416; c=relaxed/simple;
-	bh=qf2rdxV+2bNdiBdM/cScn2LLwNY/bIbiz/3Fcc5fVRw=;
+	s=arc-20240116; t=1768979943; c=relaxed/simple;
+	bh=64VV5VbrmAaOkFB/5fdR0Q5NQIFsbjIERWI9nz07w8g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gI4MPS1YSN2Bho9WxGyesmJA/RKmJyE1YbKojEIWnfCl9JeM517Wq3XewbKeUMbG2/pvE8VYJAGm/hmFwtFJZzYhdZat7EDpx4PUgKteOcSxGS3/Y+N4AN4S/Z9MERRQpsL0ni6/kCK/pnc5ytjCFSQvgSuNx6dV3259kZMZDpc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lKmIqXLr; arc=pass smtp.client-ip=209.85.214.172
+	 To:Cc:Content-Type; b=EUnbFUZ8GyuUSU6NdfJxL+bs5ErcAOq4qHYKHtoBBe70zJYuFIdDVkyX98R7WBzFZTF02I0wcukMfE/51iyRxgvYI6iPKCiHBfvI6MHqY83Gj1g0kv1kJepFVtbSmbVQc9Q21WkWKOA7B7XWiqudATkbERhcp2tF0HR0eIyHWvA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i5xEu51F; arc=pass smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lKmIqXLr"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2a76b39587aso60955ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2026 23:10:14 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1768979414; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i5xEu51F"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a35ae38bdfso45695ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2026 23:18:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768979934; cv=none;
         d=google.com; s=arc-20240605;
-        b=EC9V4fpjL/ZDrfqUuLTjLsJjEH1HCsF6oyxc86YTErU4JZRzz1TKNpOYf+Ow6FpdoV
-         FAGNmpgigcPtJcUS3siu/p/lO/IU3+OyU73J5fPZbpOcFo4jUNBhdK72tWa/3ozGQMfv
-         j9EJ4PMDMqOcsi0gdnoDbO2Z1YCfwCPS7SZ5VleXygzkNcQ6L9ecasrNWju9R6Cf5QqB
-         4/qUiNx5jQsBW7SJp/pyd6Lfe/qNlHbUWeSSeyfOqbxhoo7gzXydlwKCVDI0t96lpYjr
-         mXw7cdaFnF/LJFQ6YsSYzWun6o+htaRyVupEjDfz/Bs9uqFlGVbV2zXuWkeDjl8eZWzO
-         kJhg==
+        b=cxa6UtxKaZ7/U6FIqHVYmokk7HCa2Dai+2ZCQ0X58Rl5xogEduoOjVBvDxWujOu6z6
+         5otu0AYML18Bza0n/WohwnLDr1YOMJ/dwxWD0qC5K7pLikDQCLrkSBDPC72ot87li9sK
+         uBGXhivkPSSjfJ9Xvn6v7DzqcdDPxYd9pqDkwDpRuZdIrAGZzejFMMXb5ABQ1m2OmWcW
+         tuuZNDJ5gngaRizdFRs8cmvImMuBcVksBYhGwEL6WFTWiAe+Hp9NdhHCXVbsEz+QYz6d
+         4TAzVllzYgS3P9XUZ+1w8cDWmxpyZKOa13Fgcmwh0Tk9XjRIW4ukFZqGrmI71GpiVk62
+         WJhw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=hJ81YcHVJUXCUDOSqTEo4fpneXYhzAyyqlg4VRJWSOc=;
-        fh=hizxuRUKoUHY8DKTgz1bn7oGqRv16QUVqFE1alBz7C4=;
-        b=hesaqj+hND/nLcg1hSu07b6k9wRwOfeLfi4RMCSd9CRe+gBO3rHGIiCCYEpAhq+hdQ
-         SKud/SWyZ3P4GYidt4OFP9FrVYkXgeSMcaTUAA3EAwCm/yxD1Kbz8mJDVAOk22pn4NFJ
-         Flel05yIlEmVKrw1qXn62IjnRmrzoaXmaxnd64N22q/m44/pYDoa+6FjJ6WnQhz8k9nk
-         YDGYZjpRW7ovu/7APGcryTkwPtGckmjOkuB0qA3PyPN1bUooiGPZnL9i0R3aLS1WmOY5
-         R62Df9//d7+DuVZ33aQ3OVON6GII/u3xj2ID2Bhak14osTRH9jMFWbFbeQD0QWS34oHk
-         ijuQ==;
+        bh=0//XAUFi/BEZH5+bUVqHfm6heoaPE1vlqEuf95UAgT4=;
+        fh=mGDP4DAQS9YiSxoTbzDLMgLwDZc7UVF9nnZ2l1iavew=;
+        b=VcQQchMAQCInJQeGM1L5BKQ+RChiJXpR2x2pApJo801HE9HAX55DNGmsP3fac9hw4K
+         AJUunu5JWFzRBn4WWKn3+CQ+J2y2gtA8EzIwrq9njvDHhB9MdoAD1XmNhWJdMtgRYivS
+         AEHcwNv8Il8tdl4f50GCLXGfjFNUXL06mTUh0mqlwfuJwWwCRWirb7fALpRqcNmuZPGG
+         4G6VOrmH5iuyuX1F6+C+eEVN52jlss1ilV0KHrBcNLdcA1viC/Fc+s8UEt1kAl98X04e
+         6qMn82kRUw/w60+07YXjupnJFW62ZoH2PljBDEEVbDlWYR8UYLKVcBvHp9try3LGfPZN
+         CTrA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768979414; x=1769584214; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1768979934; x=1769584734; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hJ81YcHVJUXCUDOSqTEo4fpneXYhzAyyqlg4VRJWSOc=;
-        b=lKmIqXLrjReJdCpGRuKw+tU1E9xGbzDiOL8DNhUZCoHFVk8biP/+mLGqgEV1wcNZlr
-         RdOmD9uPLnpQxGxcK6ZLSIufVKIn6rW91KbpXJqplkyiCJG5DtNpBtdg/MS0X5WiTJE9
-         64/pYqNV1FgPd3vjPBwtAipt4e/9mkBkYOjMObm8lEw/QbeWQrF5gcte9sln83K+2D9Y
-         07TekfhhdO5iI17eLsZ3673jyUkOgOQ0tDXBuz6rwkR5+hROoGVBAYKSC4n/0EqhDTaM
-         rXaL1RW7HwgHDNO1YoC9hPdHY4qLN0jsF6ocoh6bnUAXQJ030f8pfPEOQOSVOqQTn6Rh
-         e4Xg==
+        bh=0//XAUFi/BEZH5+bUVqHfm6heoaPE1vlqEuf95UAgT4=;
+        b=i5xEu51Fu/vpizkuPhZCVDTcnT0c3fl/B4hpdGNAqMYvvHXUTf6ALGTqDvzh6mIzRs
+         mKNMNxJwsFBkMFO2mfkztfAu/7TKUuVkoP4iygMOK5121MIl4Q57TnOK/bHT9HuGIZB0
+         RwDM9YhqQBKOMfHmU0YKMd5Z4qbEe7BG06SJO9mD98B/aBiYhsklKCcOIJ3qqfdfw1Uv
+         EscrqZKVjz8qe0auxDilMLuHdYpa0CTRwBGCloCt7ICT4s+2jXZvL5ySMzPgwVAeggki
+         DAVVFTmWsdRvEV1lTB/GiDBZPi/okvQncb6fu+Qv2vclvJ8h8Vdwc+tOS97r3X9Cvhgx
+         mCAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768979414; x=1769584214;
+        d=1e100.net; s=20230601; t=1768979934; x=1769584734;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=hJ81YcHVJUXCUDOSqTEo4fpneXYhzAyyqlg4VRJWSOc=;
-        b=UiRbN4CTVODoA5H9EQ8BvCTrqGJNFWcpts7v0EZ+v6FK8z0lt00VFiODVKEsnOv4wn
-         BTcxnK589/KeIsyi7Hn72MsctbPz/7ogvFc0mzQUWZgCJvZGgZVXrq+M451Tz96kTjaW
-         bImA4VgVTDo+oTsK9V2s0a/NY0QHr18bjfZf4s0V7fxEEm6yULg8sMzNk2G3GlB2vOKR
-         ond8Vs02sf6a+2cWv8mOY9bvVMnZuxW2vbyx6RofVhGCXiGI3svRCLXOlpQrma0/i7lj
-         q4tvP0Zbj7XYfgeuEIoopaIlcmEzRPdwxwK8206+oXMK+cnvXrSmuqIFyLeSGmokSVvl
-         QxDg==
-X-Forwarded-Encrypted: i=1; AJvYcCVk1Jpm+gEAdTFePBicylQdYj/a1kPSGd5/2F9L1U2aQBu7xNkLNeeZStlGP92sBwMZglbJI1wXrB39oh8TctqW@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpKDOYQahDz5PmQ+NdgpRJrSOePjyhHAK6ZFja0mPCvMOlER3R
-	Hy2QAItzWR0t55KwFnQOJJUC6ZxR183UoXPjIv6GTLu2+DfqRK5zS0IAefHhSFphzcYHOQG0eup
-	ZMEf89BH7rCsMKYd4NXuSjCe/+oauoPifZdPGwino
-X-Gm-Gg: AZuq6aIhZ/f9PlCFImPfn5tGwXf8wNR9/u9aT0G3G6ZMjuWAA/2Jpt9G2pkKYrysU7C
-	X0XfoRziW4W77XWd7bebjyeDc1OWezSSID6tchCt5wvNZQkaqkRCi28zqWbhsPYrwTY8Nuyap9e
-	9VmwUSk7FCx92bssBF0PNYRKkZa+0biYL2gW45UqtBB3sVz2XUM6FttJ2JyfTrnh/CRY2vldTLv
-	4TSbA8d+BvdH5XrEIA1M62GkA4uecs6holl+UKji2Z1e7xxY58yngM/hDUugfUTCgRVbjEHw8Uu
-	DjwS6gM=
+        bh=0//XAUFi/BEZH5+bUVqHfm6heoaPE1vlqEuf95UAgT4=;
+        b=aCdzlysjTX+6VSkShRPp+vbTGAIjrYqHO9mQCm1UbSINYHGYur10p2uqLTZzif6H3V
+         iWC8yz+dsaBMOa4jd2mZ27TiGUE+bGXUJaj3JHtPcARjJabY5JdAKXqUgCP5Q8gj7LVs
+         VtgLl0D8wmadrPxuyxmL1dEpuF+RrPY/o/LbklJrah61UiCh8t67tMxexOScefC9T9Tk
+         Erpk5CAH/cpAqHZv7GkxlMxLy7aS003m/YaPdCbw1VquhnRrKubnQRCLiL5gqmbT4VO0
+         X1yxjMlV8o3z/D+hmROFygEgTNz9TszvCRor6M5IHqdpt7Or0VX0/BPk3AhObXYNV3IV
+         iIIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUN14ofHKsxbU01tx9bnVGK6/aQJhk6Yof+4wouNdORUr+zpE4TH0+81+xt2RHxK44Dj98VKmA4BJJGnMKHB6Xi@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZC7FpQN4A+v+N4a4RkZ8XGWXFWmWHRPQXNfdb/WOv2HBqJ+wj
+	fFAotBVNCFB1wDM8HnmSRP41G3xl8zkY5UgBujU8wKqfxiG7YOQgFQ0ytQZkGKluCowKYpxXS3W
+	v8xg+yzGf4a8Th3BlolTmZxC1Wlg2ngvqH75Q+FxS
+X-Gm-Gg: AZuq6aKY1V5TuhghvyHdiWBspbaf/fYJ5QGFaUVzXen5hrBD85ffjZcv/aB6TOfyOyf
+	YAOL1KKNUxyzQjmVBQcJCIXY6t+G5IntusU6OxneJuNCCs4Jn0yUi7ZbOGf83biDTyJI8IA5HwT
+	zldXnUh8Rh9hBDAZ2aVbcJ+d14dATgeSKw2durpenS8m6sKYoe4d96UA9RPrWHlXPdUU4K4TyhC
+	qfpS8C+8CfY83XyRFAhf1bqO2EgimcpVjCAguabxJzZzEN6Vfp4UeAO7I8NACI954duZpTC
 X-Received: by 2002:a17:902:e746:b0:290:8ecf:e9f9 with SMTP id
- d9443c01a7336-2a7a2443b58mr1503495ad.7.1768979413636; Tue, 20 Jan 2026
- 23:10:13 -0800 (PST)
+ d9443c01a7336-2a7a2443b58mr1521975ad.7.1768979933104; Tue, 20 Jan 2026
+ 23:18:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260117052849.2205545-1-irogers@google.com> <20260117052849.2205545-9-irogers@google.com>
- <aW_OV72q5rAVrgRE@x1> <8c1fefd6-4f4c-42a7-9007-5c9df3975080@linux.intel.com>
-In-Reply-To: <8c1fefd6-4f4c-42a7-9007-5c9df3975080@linux.intel.com>
+References: <20251231224233.113839-1-zide.chen@intel.com> <20251231224233.113839-12-zide.chen@intel.com>
+In-Reply-To: <20251231224233.113839-12-zide.chen@intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 20 Jan 2026 23:10:01 -0800
-X-Gm-Features: AZwV_Qg0iOIpO5Pzoy2b7YabxBnL-fqXhU8D44tCtQG-FBoEqke8sFeoam8z8tY
-Message-ID: <CAP-5=fXUw=LLXX6Pzrab37TTrVrMdHJim1QOnvbP9gXsRQZFUg@mail.gmail.com>
-Subject: Re: [PATCH v1 08/23] perf perf_regs: Switch from arch string to int e_machine
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
-	Guo Ren <guoren@kernel.org>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Shimin Guo <shimin.guo@skydio.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Howard Chu <howardchu95@gmail.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Dmitry Vyukov <dvyukov@google.com>, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Aditya Bodkhe <aditya.b1@linux.ibm.com>, 
-	Haibo Xu <haibo1.xu@intel.com>, Sergei Trofimovich <slyich@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Mark Wielaard <mark@klomp.org>
+Date: Tue, 20 Jan 2026 23:18:42 -0800
+X-Gm-Features: AZwV_QiQDnxV5_vG-c9WR6XWAjDYg1h75pFCh4Vs3ChSwOjmq-Cj4iExMNeSw6c
+Message-ID: <CAP-5=fVO+dSstWmYiTvu7o66hahiUKig4r=FEfu+FvUN8+nvcg@mail.gmail.com>
+Subject: Re: [PATCH V2 11/13] perf pmu: Relax uncore wildcard matching to
+ allow numeric suffix
+To: Zide Chen <zide.chen@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 20, 2026 at 10:58=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel=
-.com> wrote:
+On Wed, Dec 31, 2025 at 2:49=E2=80=AFPM Zide Chen <zide.chen@intel.com> wro=
+te:
 >
+> Diamond Rapids introduces two types of PCIe related uncore PMUs:
+> "uncore_pcie4_*" and "uncore_pcie6_*".
 >
-> On 1/21/2026 2:49 AM, Arnaldo Carvalho de Melo wrote:
-> > On Fri, Jan 16, 2026 at 09:28:34PM -0800, Ian Rogers wrote:
-> >> The arch string requires multiple strcmp to identify things like the
-> >> IP and SP. Switch to passing in an e_machine that in the bulk of cases
-> >> is computed using a current thread load. The e_machine also allows
-> >> identification of 32-bit vs 64-bit processes.
-> >>
-> >> Signed-off-by: Ian Rogers <irogers@google.com>
-> >> ---
-> >>  tools/perf/builtin-script.c                   |  17 ++-
-> >>  tools/perf/util/evsel.c                       |  14 ++-
-> >>  tools/perf/util/perf_regs.c                   | 105 +++++++++++------=
--
-> > [ Include dwarf-regs.h to get conditional defines for EM_CSKY and EM_LO=
-ONGARCH, not available in old distros ]
-> >
-> > - Arnaldo
+> To ensure that generic PCIe events (e.g., UNC_PCIE_CLOCKTICKS) can match
+> and collect events from both PMU types, slightly relax the wildcard
+> matching logic in perf_pmu__match_wildcard().
 >
-> Seems the change would introduce the below building error.
+> This change allows a wildcard such as "pcie" to match PMU names that
+> include a numeric suffix, such as "pcie4_*" and "pcie6_*".
 >
-> util/perf_regs.c: In function =E2=80=98perf_reg_name=E2=80=99:
-> util/perf_regs.c:48:14: error: =E2=80=98EM_LOONGARCH=E2=80=99 undeclared =
-(first use in this
-> function)
->    48 |         case EM_LOONGARCH:
->       |              ^~~~~~~~~~~~
-> util/perf_regs.c:48:14: note: each undeclared identifier is reported only
-> once for each function it appears in
-> util/perf_regs.c: In function =E2=80=98perf_arch_reg_ip=E2=80=99:
-> util/perf_regs.c:114:14: error: =E2=80=98EM_LOONGARCH=E2=80=99 undeclared=
- (first use in
-> this function)
->   114 |         case EM_LOONGARCH:
->       |              ^~~~~~~~~~~~
-> util/perf_regs.c: In function =E2=80=98perf_arch_reg_sp=E2=80=99:
-> util/perf_regs.c:143:14: error: =E2=80=98EM_LOONGARCH=E2=80=99 undeclared=
- (first use in
-> this function)
->   143 |         case EM_LOONGARCH:
->       |              ^~~~~~~~~~~~
->
-> It looks EM_LOONGARCH is not defined in the <elf.h> header file, not sure
-> which one is better, include  dwarf-regs.h suggested by Arnaldo or direct
-> add the define,
->
-> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-> index b58d59b84fb1..ce839df19fa3 100644
-> --- a/tools/perf/util/perf_regs.c
-> +++ b/tools/perf/util/perf_regs.c
-> @@ -6,6 +6,10 @@
->  #include "util/sample.h"
->  #include "debug.h"
->
-> +#ifndef EM_LOONGARCH
-> +#define EM_LOONGARCH           258
-> +#endif
+> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
 
-Or #include <dwarf-regs.h> which I think is the fix Arnaldo is
-carrying at the moment.
+Can we not merge this. I'd missed a perf tool patch as it was hiding
+in a bunch of kernel uncore updates. At the very least if wildcard
+conventions are updated then the corresponding documentation needs
+updating:
+Documentation/ABI/testing/sysfs-bus-event_source-devices
 
 Thanks,
 Ian
 
-> +
->  int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
->                                  char **new_op __maybe_unused)
+> ---
+>  tools/perf/util/pmu.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 956ea273c2c7..01a21b6aa031 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -939,6 +939,7 @@ static bool perf_pmu__match_wildcard(const char *pmu_=
+name, const char *tok)
 >  {
+>         const char *p, *suffix;
+>         bool has_hex =3D false;
+> +       bool has_underscore =3D false;
+>         size_t tok_len =3D strlen(tok);
 >
+>         /* Check start of pmu_name for equality. */
+> @@ -949,13 +950,14 @@ static bool perf_pmu__match_wildcard(const char *pm=
+u_name, const char *tok)
+>         if (*p =3D=3D 0)
+>                 return true;
 >
-> >
+> -       if (*p =3D=3D '_') {
+> -               ++p;
+> -               ++suffix;
+> -       }
+> -
+> -       /* Ensure we end in a number */
+> +       /* Ensure we end in a number or a mix of number and "_". */
+>         while (1) {
+> +               if (!has_underscore && (*p =3D=3D '_')) {
+> +                       has_underscore =3D true;
+> +                       ++p;
+> +                       ++suffix;
+> +               }
+> +
+>                 if (!isxdigit(*p))
+>                         return false;
+>                 if (!has_hex)
+> --
+> 2.52.0
+>
