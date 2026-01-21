@@ -1,34 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292153A9D8F;
-	Wed, 21 Jan 2026 20:08:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB4B347BD1;
+	Wed, 21 Jan 2026 20:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769026088; cv=none; b=glOMxFE406fRUMdfzKsbHHgHG7UQZ7rZU5gN2dJiNQ8cXzRJxvWYFh8LbP7gP0rNFBb3sIQfk3LZPtaRdvkl2gtmeC7oL+7sDnQpbJ02vwrcTKhA3ZoNSFFy1Tue06tFVDa37+HzZoVVbvDGf9C1eugaMIrX3zAEHcQ9DHBQiwM=
+	t=1769026366; cv=none; b=HUnvIPKdri8F2kzM8HmcR4BF93sQjWZkyw9uR6zboKzuuBdJ5NVGwsBEPK+d5WYvv1s/0RGf2wBPdEAnwoyZ1G4Ytim7g1KVOSzTif3bKLbTRw8vfhIK8nFvf2IIowlvm3/wUX64x2apntS8yc9dTKeoZ0Jdf/QRg4tdypFZIyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769026088; c=relaxed/simple;
-	bh=OaCXhNLY+714b45sFlRGOUce1pgNelCmICycCWCZ7CQ=;
+	s=arc-20240116; t=1769026366; c=relaxed/simple;
+	bh=hj98sqSLJGoAyR/XPsT3P1sw3welqFbz22SY8T0pBIg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=evU9QTrDEv03QbqWOOWiuFtRbAFlrxwUhP0sNOzn/5NiFzaOSgR1QN94cJDY8LuN9yislrBhRHUpsnDpKqzBcUaGdH2bxYotZQkko4T/y6Rt2NDDPfPU4ra2yKjlmA4saHvDsX/zL5Hn3BXjMo5kzGBT6fsJtx488P6bJxpS8EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OSAch2kN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ug4yCrTipPeavW+JygpaZFcI70/EtCRj2PW9obLYTUQO4ZfZswTQKIyuqv3Rpt5uWWXIWBDjN6gnqTyofhybNJ6KiXJlF4E93ew+ZxBfzOT68SsOj73cfUoRpR0yerzQ31uyhvOLxnHJOOqHi7dnio6gX7k21M6vFub0fJ7Hmdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Pqm/xYL1; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OSAch2kN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E224C4CEF1;
-	Wed, 21 Jan 2026 20:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769026087;
-	bh=OaCXhNLY+714b45sFlRGOUce1pgNelCmICycCWCZ7CQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OSAch2kNVClSy8H3bi2yS6rhuULqaMosKVZ61+fHT0z7GSt+tQGzjVN3Rhj8yI5Es
-	 AeF20EeuPMLn/DB78wk3UcZv6WWDatE7Z+Su/NSnS6oKHmUac2Tir1OQ4AJ89ptPc2
-	 rWMAmeJN/816w1E4jgVdd8m6e6TlFqiSl4vapwg9lrhYx2CXhQBb+DNUx+AE/kDYnM
-	 +1MIaXj1Mzj2KNvRUzws+oxRyNg6lY5v8nNTlyiGrbkf6eowKKJkCqTq+t0oThqzRI
-	 CGADg/MHq/3FrlUr2ZlfagMIzNLknHqIhCv87Y02ux4P1itWZdiORu3Nmd8HQu44cU
-	 OXcweyDrcKtyg==
-Date: Wed, 21 Jan 2026 17:08:04 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pqm/xYL1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=hj98sqSLJGoAyR/XPsT3P1sw3welqFbz22SY8T0pBIg=; b=Pqm/xYL1C+RL7hnFCLSN/ppz31
+	6Powf3mQ9bRM/ofyaQt4Q9eZZYHeLtWRqRrbknCp8rOMfgOWPjYZjpTIZmZOMbM4afNSgk/yYa8r1
+	k6sEPSWWsHr4nm3nhaURZSAzqaDY+QEZctQ0cQ5n082yOdmzGdnXVOfxSJ2iHgPcz3yVSiluvC79C
+	4XtzOKCgxzY+bdsTKOv8fTKr3ej0ckBg8ei0KhcC5lS8bkrp43AHSn+TzLdWqIRUzn0X5exjJ7+yH
+	UJpkRAsG0YsZAF8uLYfEo+cG5d2cPcjNDXjXbE1tKY/apQff3jfQVrg5e5T5vpjai6D4r4klMoeSz
+	RxWG0jcg==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vieXD-0000000Gkz8-2sTz;
+	Wed, 21 Jan 2026 20:10:39 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3ECA8300328; Wed, 21 Jan 2026 21:10:34 +0100 (CET)
+Date: Wed, 21 Jan 2026 21:10:34 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>, "Chen, Yu C" <yu.c.chen@intel.com>,
 	Swapnil Sapkal <swapnil.sapkal@amd.com>, ravi.bangoria@amd.com,
 	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
@@ -46,12 +52,13 @@ Cc: Ian Rogers <irogers@google.com>, "Chen, Yu C" <yu.c.chen@intel.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
 	mingo@redhat.com, namhyung@kernel.org, james.clark@arm.com
 Subject: Re: [PATCH v5 00/10] perf sched: Introduce stats tool
-Message-ID: <aXEyJCSqlPPUS9YG@x1>
+Message-ID: <20260121201034.GC171111@noisy.programming.kicks-ass.net>
 References: <20260119175833.340369-1-swapnil.sapkal@amd.com>
  <6a434657-5b5b-41ec-a79a-c648c2829602@intel.com>
  <20260121163342.GI166857@noisy.programming.kicks-ass.net>
  <CAP-5=fX=QuRw8M4Xco=A8WbBfDSPmyjtQ-JdnBEM-VRdX65_1g@mail.gmail.com>
  <20260121195155.GP166857@noisy.programming.kicks-ass.net>
+ <aXEyJCSqlPPUS9YG@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,34 +67,11 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260121195155.GP166857@noisy.programming.kicks-ass.net>
+In-Reply-To: <aXEyJCSqlPPUS9YG@x1>
 
-On Wed, Jan 21, 2026 at 08:51:55PM +0100, Peter Zijlstra wrote:
-> On Wed, Jan 21, 2026 at 09:12:20AM -0800, Ian Rogers wrote:
-> 
-> > I'm still wondering if we can make some of the /proc/schedstat data
-> > appear as tool events similar to proposals for networking and memory
-> > tool events in:
-> > https://lore.kernel.org/lkml/20260104011738.475680-1-irogers@google.com/
-> 
-> Yeah, someone with a bit of spare time could make it happen:
-> 
->   https://lkml.kernel.org/r/20250703141800.GX1613200@noisy.programming.kicks-ass.net
-> 
-> It would be:
-> 
->  - convert all the accounting sites to tracepoints
->  - write modules that connect to relevant tracepoints to provide the
->    'legacy' interface
->  - convince world+dog to not auto-load above modules
->  - have beer and wait for people to complain about something :-)
-> 
-> I'm sure there's 'interesting' details glossed over, but I *think* it
-> should be doable.
+On Wed, Jan 21, 2026 at 05:08:04PM -0300, Arnaldo Carvalho de Melo wrote:
 
-Until then, since you and Ian acked this one, I'm going over it and
-tentatively merging it,
+> Until then, since you and Ian acked this one, I'm going over it and
+> tentatively merging it,
 
-Thanks,
-
-- Arnaldo
+Thanks!
