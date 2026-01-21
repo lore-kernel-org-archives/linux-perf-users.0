@@ -1,222 +1,257 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3460F41325B
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Jan 2026 15:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2052369224;
+	Wed, 21 Jan 2026 16:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769010751; cv=pass; b=dVLxZSojbThAcEeS71gCyrp7YUDIIcR6riaL2Wf1ADu2NCRii0tSjqYKFgRAEzxKavu/E2EZvqboGauZzw1AnejT8kKmwmF6TuwPOfM4h9b1rb/4rDkNWwh+mUO6ZTF+QjGqPyil5YLttApRamNUU7lotTzAKpfkbGOCdY3yNLE=
+	t=1769011797; cv=fail; b=SaOtZGy+PJGMpTKrBYk1ZHqFPkYUjwkD8zVcU2mBwA0Hj5Hcf8LrGVHo9XX/iSFj+JIrrYiro23fJQ3lEDt9fkLx1dsodo0FUcUsctiNrnufEEwPMBm6hOTDWSxa/cVvixHp70kae5Px1d3ILL+/UI5KRV1u7zWRXF46MDcJ9M0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769010751; c=relaxed/simple;
-	bh=sp9lVOVgrCwa+GC2LA8cImW8uEZ8E+UM4nbD/5yMiis=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nTJc5cgslUTNoN/NhMTQlvlNHMJuw4gux736fgCzBfZx74CvnpbG7byIyc0Vkp1UAmeOsct7M2118YU5sKLsXCd7B2etDjIfbg7Lh1hjQEYzFSZJ1ak5wBncv03Eb+/a9d4ep4/RTfw4OWx61tDPeg89sOAgAvszSErREnicRMc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BsOpiSZP; arc=pass smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1769011797; c=relaxed/simple;
+	bh=FWwY/HZ5Alc/nVyoZPPpD7yVoe67AZoSyWf8AOnvU7k=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tY+baDzQPDmqDslEU+PdGzt9EoSnbejRUCkWT1l8Iq/FeOYHfAHKvLTLt0HuAvFfdnu7/IAXNbLlvAokjyN2ZDjwSufFe5J1LCsKXXy4shZpkmj6FT6lqSsI4MdgZfcCbeLpowTBpChzDsRckrXJNJeCWbTwKZ2ZxGPHoDeg/9k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gQ3PRooD; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BsOpiSZP"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a76b39587aso99375ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jan 2026 07:52:28 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769010748; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ZfpcNPc6yx9xzUvLaHOSapoGyoPb2YUSlS3YzPpkaZQBKfrIrPO+4RulwwN5+Rl7tF
-         qzx3yda1/CjiU6huhptwfgfSB/y7yrfUNlP4M3AYyCMNQrVVrdm2vcPEPeSJV7i1RS0m
-         2wjT+wgcMYaAK1pVQHX47SKIm9kOpDiak5arz4CZtYVFIrvCGoo/NO+3gFL+ab2T1P54
-         CMeZQUApDvbCeZ/+HTVItNlOTwUer+twV0YC9Tk+mYqSqcWcldNlgelyokJ39oNtDBvT
-         KFyNKsDIQbv0UgBTU7apZq9b8JSOveUJTJcgyzXL0wAH4uchit6TUYhgY4sBfeb8+Isp
-         aBhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=0O2fp8A64qYqm8pwFgzTtPg0CXEySON6wKIA5P4ADvE=;
-        fh=9tWPIZ7GbRH6r9eyzuJMZ8GGmu5V85rPg0fqOjlg3RA=;
-        b=RP+g0nuaKJ6oFfEmG9uvTluGSVKxqSGIq/mzjp4S5kYZyGQZSHTDorGbKXl753doK1
-         XDlJa6wzoSUDzStJ72DTGe2AYUaraAcmMb/cwhsF9xbdOUJZt9OOu/GqjBd5Bvql3GO2
-         Fx9JtuLZCE2AYbdlzlcex0EoPUl0mBWJzfRvXnT5Pp19OH5+HVVzEABcVWQ4QeL6uBHu
-         /gaKi15mNpj33h+hYj8JL7z2IsMtKfAHk+RBi3m8+hH9nE8RjL68qBi/aZkcYVFSPwg5
-         VDRrFSMIGgOD7x4puq2+FesaH/gxJzKx+pONbfddYoOVzMvTDe8W+g+5wKRCFlMv1700
-         AM1w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769010748; x=1769615548; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0O2fp8A64qYqm8pwFgzTtPg0CXEySON6wKIA5P4ADvE=;
-        b=BsOpiSZP8UIBFWCMTtxQeOi0dzxRr3Moe64jQaE6Ll6Lc2ZikFRKBMyvhqyNKp/5NS
-         KQV0NnTlrQpxAnppWVMfjFIQiutunKNNEQz+zHKJlR+x/Z6typsABGEKQecgaZG4sVOB
-         aWn1S6IwGRPQ/ytxBpPasOMMWvnUsFtP/Xt9zVlykWIIY3WfiR2R8wzwvIQRyscaLtYJ
-         TGseq8S4/SymjnQMOCI2/y2zIT6X3BDjdE05mFnzNBElIl499FRygQWMVpAjK32Wqmsm
-         +56Of7+onkhLXqFtWzY83wekxkBntpFlR+dLtvpfHv7UcRj7bbCby9BbNVXsMqnFrXlg
-         tLnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769010748; x=1769615548;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0O2fp8A64qYqm8pwFgzTtPg0CXEySON6wKIA5P4ADvE=;
-        b=uOImmjH8j66P2BviDL/ihXo4SPqrkYg42PL9cQhEbf/eqj5qxFDqjzFbBedG4NFciQ
-         wG0YBnK2VI24DFWErBNWFe0IGoxMZcT2FO9cmPmMIa3s8Y/9eUE3Y/RrtPkclgCYdGYY
-         EGanxkI8fp/mz3wjYavUw3LBTNrC27haDO27rIDbC+ES6h42YfTA+Zc0TT1pQ8lydJrm
-         ludo/UAjEjdiakmTA8LfLtLiouCPLwbetcpdw2tiE2lPCuk7XYMTdL+3sHh1gg72PwMC
-         8q1/NZIsm0cJobHQqlrs9z90Dc0Mt0EwNupKi94Jy2mP9WVMh65Npyrs1wpFQ2u158nx
-         UcXA==
-X-Forwarded-Encrypted: i=1; AJvYcCXwJbfodt81Kdyx+rTgmbfE+v5zB268T5R0uSyqPG/f7I6Hpfcqyftsh2Nc4CR7thitVEDZhCVU8GuDWUXnNQOa@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRbS+XEKBHTAKKDIOmqbTraCJlaoTMazV2HMDCNrCHeKoeEGBV
-	UvDj2NGD67y8Xzw4lmXqFyPJd1vMtXYhIVy/2xvp0cxrZZlZthVz3zf8EnfX6eLprtmnTZ3zh6B
-	tcvOmANCFH8CjmP4ED0du1kq9SaHtMd3hfHAb91az
-X-Gm-Gg: AZuq6aJRQ1tpASqoR9TFEjbwAJuh8//jqFGPXaK87lo64weam8nlV9VSobNoXFAyXSy
-	1+6kSr0Q8/W5y1d2Gqhccss8k9UKXnnVK5vSkF6+QOvHe5omyaqq1tUXi2Z9lomhqcRIN81ZZhY
-	FfdzEoCZXMtA8KTnqgwJzahjUd3twVJVvljPKVD6WLfeTgJY5aliBKGDEQc8sBfcPjyue9g4Lxc
-	DffRBRlUIGPadhRMe+4wkR4nVdRHiqkTN894h3TWt6E/ujPNl9tCeHhQ+M8n2J7dTTiw/SkVSlo
-	YNvQnbRQR72+G/dW8vEwc4tbNg==
-X-Received: by 2002:a17:903:acd:b0:29e:27f4:bac0 with SMTP id
- d9443c01a7336-2a79a61d716mr3015795ad.16.1769010747897; Wed, 21 Jan 2026
- 07:52:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gQ3PRooD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769011794; x=1800547794;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=FWwY/HZ5Alc/nVyoZPPpD7yVoe67AZoSyWf8AOnvU7k=;
+  b=gQ3PRooDhX2AJ3mzPvU5ZajiKBCFxgMi/g0uAv2DzCNM/vDLUhD6avYQ
+   aOWGQ/eaD5niUByMDjc9jLGs1vJRrtZpPmgbwYffqzMO3QkwMixV/HfFA
+   OLfUinrKrZzoE0KrSrKRGZMO1GKBlu5bmRMK6DjAVkQFx0t46BZeKZk7j
+   vUQNTfXBgXqYj7TBABR7iSq/UdffTAhcrpjPf6MoxBH1ghnXz1YbBRM9n
+   KhUncPLUHF407ViqWzEEfc+eLSI0BTpBadMXq9HKv3pufhbIVpWsE2GbE
+   KbWAG3wit0xu9f0iFHoioRASixwo8suVZtAIVEtFjOVtGTJ0z0MXGG8XU
+   Q==;
+X-CSE-ConnectionGUID: eTMjjefxQf6QqQEr03KkaA==
+X-CSE-MsgGUID: sZpZCXbpRZuciX2BMnVHnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="72831705"
+X-IronPort-AV: E=Sophos;i="6.21,242,1763452800"; 
+   d="scan'208";a="72831705"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 08:09:51 -0800
+X-CSE-ConnectionGUID: YJ8fGJ8DTUGPhWLbsepfuw==
+X-CSE-MsgGUID: 00xssYI6QSq6REk8HaQe9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,242,1763452800"; 
+   d="scan'208";a="210644691"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 08:09:50 -0800
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Wed, 21 Jan 2026 08:09:49 -0800
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35 via Frontend Transport; Wed, 21 Jan 2026 08:09:49 -0800
+Received: from CH1PR05CU001.outbound.protection.outlook.com (52.101.193.16) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Wed, 21 Jan 2026 08:09:48 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=X6gMvHNfbXNvGNGRfXI6gMEltpFny7/hhvXBHzj4n6jS2F9j3EmtzbXNwyPBU0dKWtFDIT9amd3LYc2Otqe9f8pEfuwmr0QZ6v5KqZ7LLS4en8RzBqSZQpKdj0R9saSEmfMcAaOykxuwhKVdrad9V8d+Hy92lIvZoSLFdTx2j3grs0diISiqXi2fQmHtw/H7byJCMyu8a0t8xz/DNHPQqk8K6anXnQIQQV/0SqSh43mCYHBUcqUtJfbunpy7ikJE/fMwxP5lB7oVEkrIlarFN8+RWOWn99mReN4/cRJ1mP/0eR6y0iPkM3GbkJo7gmfeOWsxHjXOXNkFJ50TcjKgRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XGG0ZAdWnWOl3hWUTjLpRLGVHHsd0wV3lMMz6du+ssU=;
+ b=qhmqF63LqXhxrmWVPmTT/xRt7UNPH5khl0VM2zobIRNo7nFy0qCA9tLdZGA813IB0jQ+NAYPNjUojoSwE4ummRrvhyKv2LYOEbJhHiXjCrVJh2oQPKbGcyhl3FnoOvKTQ75UFY+W5RHc/FqyezRn2TJR3D3ns9Zo/+J7r5J7hy3HyI1Uw1eIFV3EO8z6P/cpHX5p7kCR3ro3rUfYcC5RnjHtAWZ1KmIHo7ZiiD0DFucp6uNyGOxqF27F1eFs2+EhKGERVvBVMcBgJNvJ7CuUfGH9CIJzyTtyyPt88Fzouo3PSFtUYLcN6gMa1qYWONr/WDqtCmb3O/cXL0r6xkP//w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB6020.namprd11.prod.outlook.com (2603:10b6:8:61::19) by
+ IA4PR11MB9107.namprd11.prod.outlook.com (2603:10b6:208:562::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9456.14; Wed, 21 Jan
+ 2026 16:09:45 +0000
+Received: from DM4PR11MB6020.namprd11.prod.outlook.com
+ ([fe80::4af6:d44e:b6b0:fdce]) by DM4PR11MB6020.namprd11.prod.outlook.com
+ ([fe80::4af6:d44e:b6b0:fdce%4]) with mapi id 15.20.9542.008; Wed, 21 Jan 2026
+ 16:09:45 +0000
+Message-ID: <6a434657-5b5b-41ec-a79a-c648c2829602@intel.com>
+Date: Thu, 22 Jan 2026 00:09:25 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 00/10] perf sched: Introduce stats tool
+To: Swapnil Sapkal <swapnil.sapkal@amd.com>
+CC: <ravi.bangoria@amd.com>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
+	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
+	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
+	<sshegde@linux.ibm.com>, <ctshao@google.com>, <quic_zhonhan@quicinc.com>,
+	<thomas.falcon@intel.com>, <blakejones@google.com>, <ashelat@redhat.com>,
+	<leo.yan@arm.com>, <dvyukov@google.com>, <ak@linux.intel.com>,
+	<yujie.liu@intel.com>, <graham.woodward@arm.com>, <ben.gainey@arm.com>,
+	<vineethr@linux.ibm.com>, <tim.c.chen@linux.intel.com>, <linux@treblig.org>,
+	<santosh.shukla@amd.com>, <sandipan.das@amd.com>,
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+	<irogers@google.com>, <james.clark@arm.com>, <acme@kernel.org>
+References: <20260119175833.340369-1-swapnil.sapkal@amd.com>
+Content-Language: en-US
+From: "Chen, Yu C" <yu.c.chen@intel.com>
+In-Reply-To: <20260119175833.340369-1-swapnil.sapkal@amd.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: KU0P306CA0073.MYSP306.PROD.OUTLOOK.COM
+ (2603:1096:d10:2b::18) To DM4PR11MB6020.namprd11.prod.outlook.com
+ (2603:10b6:8:61::19)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202601201519.ce4c3ab3-lkp@intel.com>
-In-Reply-To: <202601201519.ce4c3ab3-lkp@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 21 Jan 2026 07:52:15 -0800
-X-Gm-Features: AZwV_Qh98e04YDZFFaxkVB-W7l3tozUgfMUKiMM2Yyutk-HVwNDWVgfCxG7ECV8
-Message-ID: <CAP-5=fVyGswdFrEw7=P8RGPJP+2wW3qQhzCfz1BoJ9Uvg4iKDg@mail.gmail.com>
-Subject: Re: [linux-next:master] [perf test subcmd help] ef92c4351e: kmsg.sanitizer.indirect_leak/malloc/___interceptor_backtrace/child_test_sig_handler/raise/abort
-To: kernel test robot <oliver.sang@intel.com>, Thomas Richter <tmricht@linux.ibm.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Sri Jayaramappa <sjayaram@akamai.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Guilherme Amadio <amadio@gentoo.org>, 
-	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB6020:EE_|IA4PR11MB9107:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9462eba-29d3-4e90-df6d-08de59077e0b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?b1diQlNjV0FQSTdEQjN2OTR2VWEzdG1FRWhtSDYzY0FmZWdLaGZBL0w0MkMv?=
+ =?utf-8?B?SVpwQWpJMFVEaHA2UUp1UE5uWklnUVpQdkRPZG81T1ZpaS9nLzVTcVF4RVVP?=
+ =?utf-8?B?V3AxTFgyTVI5SnozNGgvQTYzK3pNYmJxYzhueDFFemJBNEdRMTVSNk9SQ09M?=
+ =?utf-8?B?TFpkVzF2YjNCak9Ubm9xTFE2UWFXUEdhVEhLTDVNVFYzenNhbTBpNmc3SXVu?=
+ =?utf-8?B?ZUxSb1VNNS9aTDg4V2tPWWdEWnhTVXZXUll1NzZWcU9yeEhtS0tzTDJnTEE4?=
+ =?utf-8?B?UXY0bTZ5RFNjclg2elB0MzRrampvVVlqQUM5cHJpc1JyMFQrRVlRc0JuTjJY?=
+ =?utf-8?B?YWxtaHhLTFRFeGcyNlQ3ZG1BTkIvSVlCMFV4cDlLMm5tMFBaWjl6bjRvM0s1?=
+ =?utf-8?B?K2tPVzc1SUZ5NkhwcFVUYUFjekxIYXZvMVMxRFBQUmx3MGd3OFNqSllQL2tZ?=
+ =?utf-8?B?aVFiMzQ2dDF5bTE4VU9IS0VLU3A4Ulk3RFlLK1pkN05namFpUlRaNWhnM0sv?=
+ =?utf-8?B?Vk0wUjljR2tOM1BNUmp2Yi9NVWFNZTRiMkdVKzZxcHdvdEw3RVorRzJpc1FY?=
+ =?utf-8?B?L2pEempGVzhEL0RzbDZ0NkgrdmVySmNkd1Iyb25LMldOVWo2NjRCYnFocHM2?=
+ =?utf-8?B?QU8yckYwb1pibU9CbVlNbzZnbGhDMWV4c1h6NXhuVnNNcHBoNDYxWElSTExh?=
+ =?utf-8?B?K2VTV2xpd3RHRlY2Q01EbkIrcXRlZldzWnFzVTZNU2wrZmFUdktwV3dWbUZv?=
+ =?utf-8?B?VWdiM0VmN1dycHl6K1dJM0wwZTV2NU9haGtmaVZKUWJ4TTRYdVNGODFXdnFH?=
+ =?utf-8?B?M0lnaWNrVlMrRFpuLzdNaW81eG9tNDRHK2RqQzU5bng0QjZzVDdwbENxeTZP?=
+ =?utf-8?B?bUt5T2U0NVVtMGdiak4rcTd0N1RCZ0xCdkJvWVBOTnA3dHpXcTIzMXNMNHFL?=
+ =?utf-8?B?WDQ3b25iQ2w0U1hZbmpxRVlyekZlTGVyRVVjUk5xUTFvbk1iSHJQNnZvQmkw?=
+ =?utf-8?B?em8xQTBUNTQvanMrdHF4SDlDUW9yYXBRR0Ezdk1TeUdGd01MUWl4d0xWKzdL?=
+ =?utf-8?B?Q3JVbElTUHlOWWI2aDdBcEJhMWp0ZjJHMUJvNy9yekwrU3VYM2dEV3BkZGhp?=
+ =?utf-8?B?WmdHellaNHZjVUlObVh5MmV4OUpjWTZsNW9tMlliMlcxbUZySEpyOUwyd1lC?=
+ =?utf-8?B?cnBPMno3UzhUbHMrQmpYbXFoSkpnVFF2N0U1Nnp3dGM0MzFnMUo0MGFTcE1z?=
+ =?utf-8?B?WitzNHNpQjJMODROemFjSnIyMlhrS1VMNmFFL0g4MUZYSmtpc1N3dEVHVjZq?=
+ =?utf-8?B?UWQ1NHBrMndUSno3amVTTGFWZWs5ZUJUelV4S3V5OG1uZGFRRlhJclpjNXpB?=
+ =?utf-8?B?Y1U5dUUycytDbkV6ZGxsTThUZlhzS0M1VTZEYjhXUXR1ZlNUSnFZSko5dERk?=
+ =?utf-8?B?bVVDMGxneXJlcWlRZ2pjcktxRDRMN0gvbW4wdFJ1ZVdtRGM4M1pGeUNUTnJv?=
+ =?utf-8?B?MExBcEh5S1FRQVZpTzJ0dHEwL25McmV3QW1hbjZNN0srb0ZSKzJBWTY1SzFM?=
+ =?utf-8?B?RnVWeGlSSXpsNWV5SDdCSUNLT2FKUlpuVUhiQmRXT283RGhwWUhqODhDZ3RT?=
+ =?utf-8?B?Tm9KWnpmaXJUa2RDWlVLN2ZVbFRDeXFmaU1ZYkxuQkN4RitqaDh5cFlGZHcx?=
+ =?utf-8?B?aWlPR0VaTmpNOE1IbUt1bVZkbWpmSFMwMFRPcXFGa0ZrdC9VYUdnSlVCZUJz?=
+ =?utf-8?B?Njd5cWZiRlpRa0pSK2hZejlsN2xpdlF5WlljRFdIRk1PbHNHZEo4UkxHTFh4?=
+ =?utf-8?B?Z1BTK2dEQmI1S0hxbW9oZ1pMUzJEaVZDb0F5TXpRaHZiVk1iMDVWM3c5SlAv?=
+ =?utf-8?B?UUQ5cFZlWlZiSzdFamVMNnJPS0d4amE3WXRreXZvK09rQnpHQmZKQWRRTUk2?=
+ =?utf-8?B?b2YyMnlzN2h4NmtseHo2RFlaN3J0WGxsM0tRNHZQcmFuSFJ2VXhjRmpvUXVJ?=
+ =?utf-8?B?SHZheTNEYzlLZDFWRzlYcktDaDdybHQwZWRsMFRQdW85aU5TMzNpKzgyN0VG?=
+ =?utf-8?B?d0R2b0NWTTQ3blpYZG55SlZUQzlSWG01U3VjaEU4WDFobUt6WWs3T2FuUmhI?=
+ =?utf-8?Q?FcD4=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6020.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dEpJbk5iZ001V3NmMXZPQ3loQ2x1OTRSY3Q4TGhOMUtSc2FKYTB6b1UwZlJo?=
+ =?utf-8?B?WWpGYmMyMEtaOGxBYWxyZk9IQngxbW5zYXRWdndld0dIZ2pYOWVsOHFHQkxa?=
+ =?utf-8?B?Y1kwcTg5VFVENmZENVFCOGh2MGRsekQ0V2pPMTlXUmxDc2ZUR3IwTCtjcFV2?=
+ =?utf-8?B?OEtkRzdMVVRJeXdNRHVTN05zMndJLzdLVDEvWEM4a2Ztc1NCQ3lMWmViRDF4?=
+ =?utf-8?B?Ni83Y2NwaGdtVWRRYy8zcnN3Kyt4QjNxbGU0aWUwTzRQam1PUU5qQi9JKzJm?=
+ =?utf-8?B?cFh4MXR4QVNhZkZjZVQ4Vk1NK0VFVEkwWmVucjdHVnVEQVgrUWJaTnQ0MWE0?=
+ =?utf-8?B?VDZkcUZRSU5adzdUSEp2M3JxNFVxWU0xb2ZCZmV6R0dWUkdqZXJSTGdsVlpR?=
+ =?utf-8?B?b0FwQmVxL1pJd2ErK1FPd3JWb2EycEZ6cnVMOEJudmg0L2RFMnMvQUd5SXhR?=
+ =?utf-8?B?WFNpTVJLQWpDSWFEMFRGblRDS3dHOTlKcVJyMjd1eGNDUGE4RXd2SU5ZTklj?=
+ =?utf-8?B?ZE43UDU4WHNOQ2lmQXR3TnVNa3JZU3Evb09RbEY4ZXJaWjEvOWszZTQ1WUpB?=
+ =?utf-8?B?NkNpL3FGQkhFOGRSYmM0SVhoWW1vZTBRdytEUWw0Vk5YSUJIaTMzUmZpdGZZ?=
+ =?utf-8?B?WkF4dTJvZDB3WG9VUWQxR2tLV3ZWR0ZJL1VuclB5NUJMNDhhWTc5Q1RvYUF2?=
+ =?utf-8?B?cGxZR0RndHhGVkxUenFYU05uZWR1T2NzNnAzQ3VPckZiUEJjTmtvZ1JDbHMz?=
+ =?utf-8?B?dmxUQTRRMkZweE1BRnlTNnFnTFk1MTEwSHE5RWx1QythSUZINkN1c0VhNURH?=
+ =?utf-8?B?MFdMQTNXcTVFZEpYRVNpRlkvTWovZHMvS2laNFlSd1B2NUF6cTB4M3BqZzEw?=
+ =?utf-8?B?aHE0N2NhRHN4bDd4ZE5sWFNBQzc5Y01scjNqVFRuUEdrODNqbGtBeTBON1RG?=
+ =?utf-8?B?RWowRWR4K2U1UDd1N0pVNXkzUTVQN3hrWW9DNmIwamNPb01OUk1OZWwzYXc2?=
+ =?utf-8?B?WWViK0g3NmptLzN1V3hIU3lWZU05OHhrR2V5MXV5SVgrcmwyMWhBS1hXTTFa?=
+ =?utf-8?B?Y3RnUGxZQXB5SURhNVVsQWNRZkptdHZWNFNmeU1nUmRwbE5ndHRSbXFiZ2F6?=
+ =?utf-8?B?ajFCRGpvdExLQndjQWRScTRQbDVuOEtPb2hJbnVuQm5mSjlBMGphWWZTSW1W?=
+ =?utf-8?B?K1Z4R2FKS3EvbVI2NUZaU0svbG1JRHZFL1FCbmtXVW1kRUs4QTM1QlY2dSta?=
+ =?utf-8?B?N0JyZDMwSktKQXVSS3VuZURmOHJEUFB3S3VUcWV0dTN5bUJSRUdpNU55VHRJ?=
+ =?utf-8?B?aW9PeTFpK2VOSHI5aGtJeTZOcE5TRlRybUtXZVBYZVA4RFg5TkVZb2xpTFky?=
+ =?utf-8?B?N0xOazBWekc4dEpmcHdsZjVva0xUTVh1b1JCa1B4ZkIyRndXd0ZaYlVXYk5O?=
+ =?utf-8?B?a3pEMDJCN0VSZjJKanZpMGVWYldXTWdnODdQekE0ZHpPTUN0YUkwb2R1dHFk?=
+ =?utf-8?B?aDlCS0xyMXJpb0VKaG5uSVdwMTliVFVGczU2VzAwYjlXNm1QVE56VTNZWjNl?=
+ =?utf-8?B?ZnJFNHdkUFd3R1EyREY1TnFpVTJzREg2Mk1kaE1iSkUxY0hwQXRieDJvWkxw?=
+ =?utf-8?B?UERHbXFIYzdQdGRaZDk4SjJTaGdrb0NvcGFHaDZGaVg2UUNka3BITk1ZWWZL?=
+ =?utf-8?B?eS83S1ZBSjN6WkI1S245Tm56dXlTc2ZtcGQ2MjFTdndUTXVtTjRzQWZUNmZp?=
+ =?utf-8?B?SllSMDF1R0pYWnhGVVpCYUU3bW05NDJUd0JMNXZhZVdocFZYU1EzWC8venRI?=
+ =?utf-8?B?V24wN3RmeUNwRHF2Q2JVangyTVlpUGZUektNTW12RjBmN2ZJSHlzOEsyc3do?=
+ =?utf-8?B?M25pK3ZTQUpIZ2xNdUpVbmlDNU5DNThORUZEOEp1RzYwdm1nZ0E3UGhWZTAr?=
+ =?utf-8?B?Z29OQ3U2NU1YcFJRM1pkNHlWNythTWlBaCtMRmxIemxWOHpySGVwYUh3eUtX?=
+ =?utf-8?B?SVhyYlhXa2RHWEczZ0JDYnl3VWZpOFVkN2dBRm1TMTdSeEhJdlpGOFNURnpD?=
+ =?utf-8?B?eGhHOG1acjlsYy8yd3lYZG0rN1pVWVdDYUtIa25YblFqaHR2eFlMa25HUXRk?=
+ =?utf-8?B?bUQ0bkFZbTV3a2l4L3hrVlp5bnFUc1BKb2Y1L1NSV1dhdVZ5Wk1XeVhjVnFO?=
+ =?utf-8?B?ZXgra20yS3JvWHVxd1d3dC92TFZwMFhOcWptYWRzVE9wS0RJOHBDTDc0S0gx?=
+ =?utf-8?B?Lzdzb0tESE1NUVk1OU1XT0haMTlRVm44Rytka1p0Z1RQTFYyMEVjbENNc1FO?=
+ =?utf-8?B?L1hmcjM4eHQyWVBsNUxRcXpwVk4vSlZlVXEzZXEzb3pLNHdhTnViQT09?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9462eba-29d3-4e90-df6d-08de59077e0b
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6020.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2026 16:09:45.1278
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OlstfCtRubnDwcpzlAT614TQNTCbN1hDsxQeYDYuoCeF+u7A2Xh4cvx7xBDopzd1I9syUjAm203+sR1WXHDfLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9107
+X-OriginatorOrg: intel.com
 
-On Mon, Jan 19, 2026 at 11:58=E2=80=AFPM kernel test robot
-<oliver.sang@intel.com> wrote:
->
->
->
-> Hello,
->
-> kernel test robot noticed "kmsg.sanitizer.indirect_leak/malloc/___interce=
-ptor_backtrace/child_test_sig_handler/raise/abort" on:
->
-> commit: ef92c4351ec75bcfb8a1cc3a88109b5339f296ef ("perf test subcmd help:=
- Add exclude disjoint subcmd names")
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
->
-> [test failed on linux-next/master d08c85ac8894995d4b0d8fb48d2f6a3e53cd79a=
-b]
->
-> in testcase: perf-sanity-tests
-> version:
-> with following parameters:
->
->         perf_compiler: clang
->         group: group-02
->
->
->
-> config: x86_64-rhel-9.4-bpf
-> compiler: gcc-14
-> test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10G=
-Hz (Ice Lake) with 256G memory
->
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
->
->
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202601201519.ce4c3ab3-lkp@intel.=
-com
->
->
-> --- start ---
-> test child forked, pid 11710
-> perf: help.c:107: exclude_cmds: Assertion `cmds->names[ci] =3D=3D NULL' f=
-ailed.
->
-> ---- unexpected signal (6) ----
->     #0 0x7f7688c77403 in ___interceptor_backtrace.part.0 sanitizer_common=
-_interceptors.inc:4358
->     #1 0x55f34adb6c34 in child_test_sig_handler builtin-test.c:312
->     #2 0x7f767ea2bdf0 libc.so.6[3fdf0]
->     #3 0x7f767ea8095c libc.so.6[9495c]
->     #4 0x7f767ea2bcc2 in raise libc.so.6[3fcc2]
->     #5 0x7f767ea144ac in abort libc.so.6[284ac]
->     #6 0x7f767ea14420 in __assert_perror_fail libc.so.6[28420]
->     #7 0x55f34acf4e70 in exclude_cmds help.c:106
->     #8 0x55f34ae9a646 in test__exclude_cmdnames_no_overlap subcmd-help.c:=
-112
->     #9 0x55f34adb74c5 in run_test_child builtin-test.c:340
->     #10 0x55f34ad08db3 in start_command run-command.c:128
->     #11 0x55f34adb99a1 in start_test builtin-test.c:546
->     #12 0x55f34adba90d in __cmd_test builtin-test.c:648
->     #13 0x55f34adbd2c0 in cmd_test builtin-test.c:850
->     #14 0x55f34acc2a45 in run_builtin perf.c:349
->     #15 0x55f34acc3336 in handle_internal_command perf.c:401
->     #16 0x55f34acc388c in run_argv perf.c:448
->     #17 0x55f34acc4033 in main perf.c:555
->     #18 0x7f767ea15ca8 libc.so.6[29ca8]
->     #19 0x7f767ea15d65 in __libc_start_main libc.so.6[29d65]
->     #20 0x55f34aa28241 in _start perf[102f241]
+On 1/20/2026 1:58 AM, Swapnil Sapkal wrote:
+> MOTIVATION
+> ----------
+> 
+> Existing `perf sched` is quite exhaustive and provides lot of insights
+> into scheduler behavior but it quickly becomes impractical to use for
+> long running or scheduler intensive workload. For ex, `perf sched record`
+> has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
+> on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
+> generates huge 56G perf.data for which perf takes ~137 mins to prepare
+> and write it to disk [1].
+> 
+> Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
+> and generates samples on a tracepoint hit, `perf sched stats record` takes
+> snapshot of the /proc/schedstat file before and after the workload, i.e.
+> there is almost zero interference on workload run. Also, it takes very
+> minimal time to parse /proc/schedstat, convert it into perf samples and
+> save those samples into perf.data file. Result perf.data file is much
+> smaller. So, overall `perf sched stats record` is much more light weight
+> compare to `perf sched record`.
+> 
+> We, internally at AMD, have been using this (a variant of this, known as
+> "sched-scoreboard"[2]) and found it to be very useful to analyse impact
+> of any scheduler code changes[3][4]. Prateek used v2[5] of this patch
+> series to report the analysis[6][7].
+> 
+> Please note that, this is not a replacement of perf sched record/report.
+> The intended users of the new tool are scheduler developers, not regular
+> users.
+> 
+> USAGE
+> -----
+> 
+>    # perf sched stats record
+>    # perf sched stats report
+>    # perf sched stats diff
+> 
+> Note: Although `perf sched stats` tool supports workload profiling syntax
+> (i.e. -- <workload> ), the recorded profile is still systemwide since the
+> /proc/schedstat is a systemwide file.
+> 
 
-I believe this is resolved by:
-https://lore.kernel.org/lkml/20260121082402.2311962-1-tmricht@linux.ibm.com=
-/
+I found this is useful for load balance analysis on my
+384 CPUs system with 6.19.0-rc1, please feel free to add
 
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =3D=3D11710=3D=3DERROR: LeakSanitizer: detected memory leaks
->
-> Direct leak of 30952 byte(s) in 3 object(s) allocated from:
->     #0 0x7f7688ced610 in calloc ../../../../src/libsanitizer/asan/asan_ma=
-lloc_linux.cpp:77
->     #1 0x7f7688ace808  (/lib/x86_64-linux-gnu/libelf.so.1+0x3808) (BuildI=
-d: d6a40be9eadcbcb0562b7bb13bbe81166e82cc40)
->
-> Indirect leak of 9280 byte(s) in 3 object(s) allocated from:
->     #0 0x7f7688cedc57 in malloc ../../../../src/libsanitizer/asan/asan_ma=
-lloc_linux.cpp:69
->     #1 0x7f7688ad6550  (/lib/x86_64-linux-gnu/libelf.so.1+0xb550) (BuildI=
-d: d6a40be9eadcbcb0562b7bb13bbe81166e82cc40)
->
-> Indirect leak of 1873 byte(s) in 3 object(s) allocated from:
->     #0 0x7f7688cedc57 in malloc ../../../../src/libsanitizer/asan/asan_ma=
-lloc_linux.cpp:69
->     #1 0x7f7688ad73fa  (/lib/x86_64-linux-gnu/libelf.so.1+0xc3fa) (BuildI=
-d: d6a40be9eadcbcb0562b7bb13bbe81166e82cc40)
->
-> SUMMARY: AddressSanitizer: 42105 byte(s) leaked in 9 allocation(s).
->  68.4: Exclude disjoint subcmd names                                 : FA=
-ILED!
+Tested-by: Chen Yu <yu.c.chen@intel.com>
 
-To better diagnose these leaks could you disable the fast asan stack unwind=
-er:
-ASAN_OPTIONS=3Dfast_unwind_on_malloc=3D0
-
-Thanks,
-Ian
-
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20260120/202601201519.ce4c3ab3-lk=
-p@intel.com
->
->
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
->
+thanks,
+Chenyu
