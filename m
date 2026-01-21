@@ -1,415 +1,469 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922333C00BC
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Jan 2026 22:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F58212554;
+	Wed, 21 Jan 2026 22:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769036121; cv=none; b=Dh6/GDSZu2XvoxNkrgkLxqZ+wM2bk/1gafUG5IFLLg+uLXhL8A8PDDQy6ovFapjTZxwYUj/WYgzOCouhTb6X3ceXXNgo36KWtcClNsErGUBNfX0tcuxVoA9RDtxJIGtfZ0pUPEyLY+Rd9uW87cSRbr9pN2NGjVbp0s2WJcMzl1Q=
+	t=1769036358; cv=none; b=IRFrckGGD2M9QMgk9VVgrRt1+fISf7TFybjW0WzfIhZdPJjSDgWUrMwS4tqBnbT6jNjXYVvoDmJ/sxu4GAMWMd4yF13pTLyW3zUIl2iKNA9lPqw1t9hPEkkArEDDqXN/XmEtA/20m+cfoYyUVLDSpAkoDCPDcsr4Ystvjv+VX8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769036121; c=relaxed/simple;
-	bh=rYmfFxJAIso34omZtNLieNENfALkCc2zmC93xUg6tbg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tUBmsBjpGaYQRQP6jL56jJ6d2+4wV1IyXoJDD/yxtP54Hd+XKRnX9LRP7K3tgmVOt0LBQ+eGvMnSlSbv+P19fgs8rwtYsuYo699qpyjePsBkTaM86sMUixdhUrAw3wgUT1VEVabNV4b2J2VlgC0aIYcJDbN6SHIbCarXbA6X/u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YM4kIzrz; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com
+	s=arc-20240116; t=1769036358; c=relaxed/simple;
+	bh=p+SUaN1S39W1llhQV2r+w7OFfX1HupKCb5YkOCfb+uI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iYMxwsV9WcI9qE9WFcLhZ+CdIzwao79HGfDjRDDvyR2YSrThx04DbIP/Xtqs33u+ZMzbaOndgI+dneZrx8WXDwAR8UkhTthdGlg+J0Us4iqcL+FBLgOMGTUlpdKoml4LrbQUJBsjeopG2QxjpFdYKvagcFElmYRRoDCoxjCjQL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+y447+N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YM4kIzrz"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2a0a4b748a0so6084515ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jan 2026 14:55:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769036113; x=1769640913; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JICyYLoyMG4i3hAuwsrXfwlezARecCmtVIZbGsycDJA=;
-        b=YM4kIzrz/CQDC0z+5+Gsyce9xKPiCX6241qpVUMWk2dvwefYz9g3YfdqCNF6tGqwE4
-         vYVGE9GX5jAtBRz+Twp8ZNEi5q4Yfb5vzwbFAeNtQmJubIO59M224W2dGxmxBR5JWgeS
-         /eKjOU9WOz/Fasb7b0iNl5h6nfIBoWDRkjXIaIlPi/KjiA7z17mUNeYmFuZf9fz5c8wK
-         s+4kzokwk7k5kaQBIw4aGy8uWomdd0oy/9uwgweu3qtJKRkJ610uAbRz8E1aQFOnnedh
-         +b4hs2VfKqlRhKpgF7HWybiXx00NGyB2an/AjoAg7ywRU5U/dU0iBuh5KNjozj7ghwIf
-         8deQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769036113; x=1769640913;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JICyYLoyMG4i3hAuwsrXfwlezARecCmtVIZbGsycDJA=;
-        b=r8NBOGmg44QzDaxHlaEzcnWEb9j88x2Rnpsz+h8aQ2vudcVAlWPMZbASmwPEohn5SG
-         MaKq1eDf5hFO83wak8imKxyOV5CmryuKbg6kxnWR6huuqnQLdY86TPJDmemGgiBILrtI
-         qd8LwS4wwraaS9B19rJuQEgsQW8IY0c5Q/kS4Fk+/x9pMJEgQn/bcYlQiSXX5Aun2g/d
-         FSkPQAizXnF+mrg2hHBXNowPjHEs8tldkqyHvmSmDfTgLr8Il6CbPW9V6tRejReTqxWT
-         p1vmNsP2InD/VcpBjYyko8dxmX3sinWrWSplBdMYgmlJsO2JfsLejk/iONqXAQtVzeOM
-         KfUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWB2MHXCl1GHPb+8Z160FWbDkrpDC4mHvsMe8PTUn7DCdNWxotdS1Z8XMkCqdGZQQoy2DCyrCOwi2xYlbF7LKAf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyiU0bNmN7PUBLwB9KW6VvyoVweI9bCPMmpcvHoDhHZUdSVYpF
-	5+PSZbeMXpHCgW9iHoMP72cB8+vclnsOmAfXUkEs6zkgWE5RNspPUx+hwmjuOFWLvnsQcq3jwB3
-	OD9sLL/aZL5YxfQ==
-X-Received: from plat13.prod.google.com ([2002:a17:902:e1cd:b0:29f:13b1:d028])
- (user=jmattson job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:196d:b0:2a7:6cdc:7f14 with SMTP id d9443c01a7336-2a76cdc8521mr50987495ad.60.1769036112692;
- Wed, 21 Jan 2026 14:55:12 -0800 (PST)
-Date: Wed, 21 Jan 2026 14:54:04 -0800
-In-Reply-To: <20260121225438.3908422-1-jmattson@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+y447+N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A11DEC4CEF1;
+	Wed, 21 Jan 2026 22:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769036357;
+	bh=p+SUaN1S39W1llhQV2r+w7OFfX1HupKCb5YkOCfb+uI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F+y447+Nc+dPXUml4GFXq/0DOmWwbWB3eUio0M/k90jfgHcaHFrk8fM+WQ4tYoVFZ
+	 WfR60c5rbBxhFgorx92oozH5e1CQPAZdA28uW9Y7iY8a9Ozbc5y28QJTfnad1XeU65
+	 ytV55Ugctd/OM52s/k/Rjs2tA0h3B3TQwBRpsLt/OUu/9W/wyVLrb0KGqWNvxKZB8+
+	 eYYG/8fzdRb5F3M6/o9fBLaupAZHmhC0MZtCNUcnLoucOD4qV/kp9Zr3fD5QZg2nga
+	 bHXGOTYGE3+cdmswu4EoeugSKnjQT7kevhgysQDmFOYIgWKZVIGXC9uGB1N+0UfEqI
+	 82Pfl4OVaT69w==
+Date: Wed, 21 Jan 2026 14:59:14 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Swapnil Sapkal <swapnil.sapkal@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	irogers@google.com, james.clark@arm.com, ravi.bangoria@amd.com,
+	yu.c.chen@intel.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	rostedt@goodmis.org, vincent.guittot@linaro.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	gautham.shenoy@amd.com, kprateek.nayak@amd.com,
+	juri.lelli@redhat.com, yangjihong@bytedance.com, void@manifault.com,
+	tj@kernel.org, sshegde@linux.ibm.com, ctshao@google.com,
+	quic_zhonhan@quicinc.com, thomas.falcon@intel.com,
+	blakejones@google.com, ashelat@redhat.com, leo.yan@arm.com,
+	dvyukov@google.com, ak@linux.intel.com, yujie.liu@intel.com,
+	graham.woodward@arm.com, ben.gainey@arm.com, vineethr@linux.ibm.com,
+	tim.c.chen@linux.intel.com, linux@treblig.org,
+	santosh.shukla@amd.com, sandipan.das@amd.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v5 00/10] perf sched: Introduce stats tool
+Message-ID: <aXFaQjtBbJT5WRfJ@google.com>
+References: <20260119175833.340369-1-swapnil.sapkal@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260121225438.3908422-1-jmattson@google.com>
-X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260121225438.3908422-7-jmattson@google.com>
-Subject: [PATCH 6/6] KVM: selftests: x86: Add svm_pmu_hg_test for HG_ONLY bits
-From: Jim Mattson <jmattson@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Cc: Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260119175833.340369-1-swapnil.sapkal@amd.com>
 
-Add a selftest to verify KVM correctly virtualizes the AMD PMU Host-Only
-(bit 41) and Guest-Only (bit 40) event selector bits across all relevant
-SVM state transitions.
+Hello,
 
-For both Guest-Only and Host-Only counters, verify that:
-  1. SVME=0: counter counts (HG_ONLY bits ignored)
-  2. Set SVME=1: counter behavior changes based on HG_ONLY bit
-  3. VMRUN to L2: counter behavior switches (guest vs host mode)
-  4. VMEXIT to L1: counter behavior switches back
-  5. Clear SVME=0: counter counts (HG_ONLY bits ignored again)
+On Mon, Jan 19, 2026 at 05:58:22PM +0000, Swapnil Sapkal wrote:
+> MOTIVATION
+> ----------
+> 
+> Existing `perf sched` is quite exhaustive and provides lot of insights
+> into scheduler behavior but it quickly becomes impractical to use for
+> long running or scheduler intensive workload. For ex, `perf sched record`
+> has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
+> on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
+> generates huge 56G perf.data for which perf takes ~137 mins to prepare
+> and write it to disk [1].
+> 
+> Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
+> and generates samples on a tracepoint hit, `perf sched stats record` takes
+> snapshot of the /proc/schedstat file before and after the workload, i.e.
+> there is almost zero interference on workload run. Also, it takes very
+> minimal time to parse /proc/schedstat, convert it into perf samples and
+> save those samples into perf.data file. Result perf.data file is much
+> smaller. So, overall `perf sched stats record` is much more light weight
+> compare to `perf sched record`.
+> 
+> We, internally at AMD, have been using this (a variant of this, known as
+> "sched-scoreboard"[2]) and found it to be very useful to analyse impact
+> of any scheduler code changes[3][4]. Prateek used v2[5] of this patch
+> series to report the analysis[6][7].
+> 
+> Please note that, this is not a replacement of perf sched record/report.
+> The intended users of the new tool are scheduler developers, not regular
+> users.
+> 
+> USAGE
+> -----
+> 
+>   # perf sched stats record
+>   # perf sched stats report
+>   # perf sched stats diff
+> 
+> Note: Although `perf sched stats` tool supports workload profiling syntax
+> (i.e. -- <workload> ), the recorded profile is still systemwide since the
+> /proc/schedstat is a systemwide file.
+> 
+> HOW TO INTERPRET THE REPORT
+> ---------------------------
+> 
+> The `perf sched stats report` starts with description of the columns
+> present in the report. These column names are given before cpu and
+> domain stats to improve the readability of the report.
+> 
+>   ----------------------------------------------------------------------------------------------------
+>   DESC                    -> Description of the field
+>   COUNT                   -> Value of the field
+>   PCT_CHANGE              -> Percent change with corresponding base value
+>   AVG_JIFFIES             -> Avg time in jiffies between two consecutive occurrence of event
+>   ----------------------------------------------------------------------------------------------------
+> 
+> Next is the total profiling time in terms of jiffies:
+> 
+>   ----------------------------------------------------------------------------------------------------
+>   Time elapsed (in jiffies)                                   :       24537
+>   ----------------------------------------------------------------------------------------------------
+> 
+> Next is CPU scheduling statistics. These are simple diffs of
+> /proc/schedstat CPU lines along with description. The report also
+> prints % relative to base stat.
+> 
+> In the example below, schedule() left the CPU0 idle 36.58% of the time.
+> 0.45% of total try_to_wake_up() was to wakeup local CPU. And, the total
+> waittime by tasks on CPU0 is 48.70% of the total runtime by tasks on the
+> same CPU.
+> 
+>   ----------------------------------------------------------------------------------------------------
+>   CPU 0
+>   ----------------------------------------------------------------------------------------------------
+>   DESC                                                                     COUNT   PCT_CHANGE
+>   ----------------------------------------------------------------------------------------------------
+>   yld_count                                                        :           0
+>   array_exp                                                        :           0
+>   sched_count                                                      :      402267
+>   sched_goidle                                                     :      147161  (    36.58% )
+>   ttwu_count                                                       :      236309
+>   ttwu_local                                                       :        1062  (     0.45% )
+>   rq_cpu_time                                                      :  7083791148
+>   run_delay                                                        :  3449973971  (    48.70% )
+>   pcount                                                           :      255035
+>   ----------------------------------------------------------------------------------------------------
+> 
+> Next is load balancing statistics. For each of the sched domains
+> (eg: `SMT`, `MC`, `DIE`...), the scheduler computes statistics under
+> the following three categories:
+> 
+>   1) Idle Load Balance: Load balancing performed on behalf of a long
+>                         idling CPU by some other CPU.
+>   2) Busy Load Balance: Load balancing performed when the CPU was busy.
+>   3) New Idle Balance : Load balancing performed when a CPU just became
+>                         idle.
+> 
+> Under each of these three categories, sched stats report provides
+> different load balancing statistics. Along with direct stats, the
+> report also contains derived metrics prefixed with *. Example:
+> 
+>   ----------------------------------------------------------------------------------------------------
+>   CPU: 0 | DOMAIN: SMT | DOMAIN_CPUS: 0,64
+>   ----------------------------------------------------------------------------------------------------
+>   DESC                                                                     COUNT    AVG_JIFFIES
+>   ----------------------------------------- <Category busy> ------------------------------------------
+>   busy_lb_count                                                    :         136  $       17.08 $
+>   busy_lb_balanced                                                 :         131  $       17.73 $
+>   busy_lb_failed                                                   :           0  $        0.00 $
+>   busy_lb_imbalance_load                                           :          58
+>   busy_lb_imbalance_util                                           :           0
+>   busy_lb_imbalance_task                                           :           0
+>   busy_lb_imbalance_misfit                                         :           0
+>   busy_lb_gained                                                   :           7
+>   busy_lb_hot_gained                                               :           0
+>   busy_lb_nobusyq                                                  :           2  $     1161.50 $
+>   busy_lb_nobusyg                                                  :         129  $       18.01 $
+>   *busy_lb_success_count                                           :           5
+>   *busy_lb_avg_pulled                                              :        1.40
+>   ----------------------------------------- <Category idle> ------------------------------------------
+>   idle_lb_count                                                    :         449  $        5.17 $
+>   idle_lb_balanced                                                 :         382  $        6.08 $
+>   idle_lb_failed                                                   :           3  $      774.33 $
+>   idle_lb_imbalance_load                                           :           0
+>   idle_lb_imbalance_util                                           :           0
+>   idle_lb_imbalance_task                                           :          71
+>   idle_lb_imbalance_misfit                                         :           0
+>   idle_lb_gained                                                   :          67
+>   idle_lb_hot_gained                                               :           0
+>   idle_lb_nobusyq                                                  :           0  $        0.00 $
+>   idle_lb_nobusyg                                                  :         382  $        6.08 $
+>   *idle_lb_success_count                                           :          64
+>   *idle_lb_avg_pulled                                              :        1.05
+>   ---------------------------------------- <Category newidle> ----------------------------------------
+>   newidle_lb_count                                                 :       30471  $        0.08 $
+>   newidle_lb_balanced                                              :       28490  $        0.08 $
+>   newidle_lb_failed                                                :         633  $        3.67 $
+>   newidle_lb_imbalance_load                                        :           0
+>   newidle_lb_imbalance_util                                        :           0
+>   newidle_lb_imbalance_task                                        :        2040
+>   newidle_lb_imbalance_misfit                                      :           0
+>   newidle_lb_gained                                                :        1348
+>   newidle_lb_hot_gained                                            :           0
+>   newidle_lb_nobusyq                                               :           6  $      387.17 $
+>   newidle_lb_nobusyg                                               :       26634  $        0.09 $
+>   *newidle_lb_success_count                                        :        1348
+>   *newidle_lb_avg_pulled                                           :        1.00
+>   ----------------------------------------------------------------------------------------------------
+> 
+> Consider following line:
+> 
+> newidle_lb_balanced                                              :       28490  $        0.08 $
+> 
+> While profiling was active, the load-balancer found 28490 times the load
+> needs to be balanced on a newly idle CPU 0. Following value encapsulated
+> inside $ is average jiffies between two events (28490 / 24537 = 0.08).
+> 
+> Next are active_load_balance() stats. alb did not trigger while the
+> profiling was active, hence it's all 0s.
+> 
+> 
+>   --------------------------------- <Category active_load_balance()> ---------------------------------
+>   alb_count                                                        :           0
+>   alb_failed                                                       :           0
+>   alb_pushed                                                       :           0
+>   ----------------------------------------------------------------------------------------------------
+> 
+> Next are sched_balance_exec() and sched_balance_fork() stats. They are
+> not used but we kept it in RFC just for legacy purpose. Unless opposed,
+> we plan to remove them in next revision.
+> 
+> Next are wakeup statistics. For every domain, the report also shows
+> task-wakeup statistics. Example:
+> 
+>   ------------------------------------------ <Wakeup Info> -------------------------------------------
+>   ttwu_wake_remote                                                 :        1590
+>   ttwu_move_affine                                                 :          84
+>   ttwu_move_balance                                                :           0
+>   ----------------------------------------------------------------------------------------------------
+> 
+> Same set of stats are reported for each CPU and each domain level.
+> 
+> HOW TO INTERPRET THE DIFF
+> -------------------------
+> 
+> The `perf sched stats diff` will also start with explaining the columns
+> present in the diff. Then it will show the diff in time in terms of
+> jiffies. The order of the values depends on the order of input data
+> files. Example:
+> 
+>   ----------------------------------------------------------------------------------------------------
+>   Time elapsed (in jiffies)                                        :        2763,       2763
+>   ----------------------------------------------------------------------------------------------------
+> 
+> Below is the sample representing the difference in cpu and domain stats of
+> two runs. Here third column or the values enclosed in `|...|` shows the
+> percent change between the two. Second and fourth columns shows the
+> side-by-side representions of the corresponding fields from `perf sched
+> stats report`.
+> 
+>   ----------------------------------------------------------------------------------------------------
+>   CPU: <ALL CPUS SUMMARY>
+>   ----------------------------------------------------------------------------------------------------
+>   DESC                                                                    COUNT1      COUNT2   PCT_CHANG>
+>   ----------------------------------------------------------------------------------------------------
+>   yld_count                                                        :           0,          0  |     0.00>
+>   array_exp                                                        :           0,          0  |     0.00>
+>   sched_count                                                      :      528533,     412573  |   -21.94>
+>   sched_goidle                                                     :      193426,     146082  |   -24.48>
+>   ttwu_count                                                       :      313134,     385975  |    23.26>
+>   ttwu_local                                                       :        1126,       1282  |    13.85>
+>   rq_cpu_time                                                      :  8257200244, 8301250047  |     0.53>
+>   run_delay                                                        :  4728347053, 3997100703  |   -15.47>
+>   pcount                                                           :      335031,     266396  |   -20.49>
+>   ----------------------------------------------------------------------------------------------------
+> 
+> Below is the sample of domain stats diff:
+> 
+>   ----------------------------------------------------------------------------------------------------
+>   CPU: <ALL CPUS SUMMARY> | DOMAIN: SMT
+>   ----------------------------------------------------------------------------------------------------
+>   DESC                                                                    COUNT1      COUNT2   PCT_CHANG>
+>   ----------------------------------------- <Category busy> ------------------------------------------
+>   busy_lb_count                                                    :         122,         80  |   -34.43>
+>   busy_lb_balanced                                                 :         115,         76  |   -33.91>
+>   busy_lb_failed                                                   :           1,          3  |   200.00>
+>   busy_lb_imbalance_load                                           :          35,         49  |    40.00>
+>   busy_lb_imbalance_util                                           :           0,          0  |     0.00>
+>   busy_lb_imbalance_task                                           :           0,          0  |     0.00>
+>   busy_lb_imbalance_misfit                                         :           0,          0  |     0.00>
+>   busy_lb_gained                                                   :           7,          2  |   -71.43>
+>   busy_lb_hot_gained                                               :           0,          0  |     0.00>
+>   busy_lb_nobusyq                                                  :           0,          0  |     0.00>
+>   busy_lb_nobusyg                                                  :         115,         76  |   -33.91>
+>   *busy_lb_success_count                                           :           6,          1  |   -83.33>
+>   *busy_lb_avg_pulled                                              :        1.17,       2.00  |    71.43>
+>   ----------------------------------------- <Category idle> ------------------------------------------
+>   idle_lb_count                                                    :         568,        620  |     9.15>
+>   idle_lb_balanced                                                 :         462,        449  |    -2.81>
+>   idle_lb_failed                                                   :          11,         21  |    90.91>
+>   idle_lb_imbalance_load                                           :           0,          0  |     0.00>
+>   idle_lb_imbalance_util                                           :           0,          0  |     0.00>
+>   idle_lb_imbalance_task                                           :         115,        189  |    64.35>
+>   idle_lb_imbalance_misfit                                         :           0,          0  |     0.00>
+>   idle_lb_gained                                                   :         103,        169  |    64.08>
+>   idle_lb_hot_gained                                               :           0,          0  |     0.00>
+>   idle_lb_nobusyq                                                  :           0,          0  |     0.00>
+>   idle_lb_nobusyg                                                  :         462,        449  |    -2.81>
+>   *idle_lb_success_count                                           :          95,        150  |    57.89>
+>   *idle_lb_avg_pulled                                              :        1.08,       1.13  |     3.92>
+>   ---------------------------------------- <Category newidle> ----------------------------------------
+>   newidle_lb_count                                                 :       16961,       3155  |   -81.40>
+>   newidle_lb_balanced                                              :       15646,       2556  |   -83.66>
+>   newidle_lb_failed                                                :         397,        142  |   -64.23>
+>   newidle_lb_imbalance_load                                        :           0,          0  |     0.00>
+>   newidle_lb_imbalance_util                                        :           0,          0  |     0.00>
+>   newidle_lb_imbalance_task                                        :        1376,        655  |   -52.40>
+>   newidle_lb_imbalance_misfit                                      :           0,          0  |     0.00>
+>   newidle_lb_gained                                                :         917,        457  |   -50.16>
+>   newidle_lb_hot_gained                                            :           0,          0  |     0.00>
+>   newidle_lb_nobusyq                                               :           3,          1  |   -66.67>
+>   newidle_lb_nobusyg                                               :       14480,       2103  |   -85.48>
+>   *newidle_lb_success_count                                        :         918,        457  |   -50.22>
+>   *newidle_lb_avg_pulled                                           :        1.00,       1.00  |     0.11>
+>   --------------------------------- <Category active_load_balance()> ---------------------------------
+>   alb_count                                                        :           0,          1  |     0.00>
+>   alb_failed                                                       :           0,          0  |     0.00>
+>   alb_pushed                                                       :           0,          1  |     0.00>
+>   --------------------------------- <Category sched_balance_exec()> ----------------------------------
+>   sbe_count                                                        :           0,          0  |     0.00>
+>   sbe_balanced                                                     :           0,          0  |     0.00>
+>   sbe_pushed                                                       :           0,          0  |     0.00>
+>   --------------------------------- <Category sched_balance_fork()> ----------------------------------
+>   sbf_count                                                        :           0,          0  |     0.00>
+>   sbf_balanced                                                     :           0,          0  |     0.00>
+>   sbf_pushed                                                       :           0,          0  |     0.00>
+>   ------------------------------------------ <Wakeup Info> -------------------------------------------
+>   ttwu_wake_remote                                                 :        2031,       2914  |    43.48>
+>   ttwu_move_affine                                                 :          73,        124  |    69.86>
+>   ttwu_move_balance                                                :           0,          0  |     0.00>
+>   ----------------------------------------------------------------------------------------------------
+> 
+> v4: https://lore.kernel.org/lkml/20250909114227.58802-1-swapnil.sapkal@amd.com/
+> v4->v5:
+>  - Address review comments from v4 [Namhyung Kim]
+>  - Resolve the issue reported by kernel test rebot
+>  - Debug and resolve issue reported in the perf sched stats diff [Prateek]
+>  - Rebase on top of perf-tools-next(571d29baa07e)
+> 
+> v3: https://lore.kernel.org/all/20250311120230.61774-1-swapnil.sapkal@amd.com/
+> v3->v4:
+>  - All the review comments from v3 are addressed [Namhyung Kim].
+>  - Print short names instead of field descripion in the report [Peter Zijlstra]
+>  - Fix the double free issue [Cristian Prundeanu]
+>  - Documentation update related to `perf sched stats diff` [Chen yu]
+>  - Bail out `perf sched stats diff` if perf.data files have different schedstat
+>    versions [Peter Zijlstra]
+> 
+> v2: https://lore.kernel.org/all/20241122084452.1064968-1-swapnil.sapkal@amd.com/
+> v2->v3:
+>  - Add perf unit test for basic sched stats functionalities
+>  - Describe new tool, it's usage and interpretation of report data in the
+>    perf-sched man page.
+>  - Add /proc/schedstat version 17 support.
+> 
+> v1: https://lore.kernel.org/lkml/20240916164722.1838-1-ravi.bangoria@amd.com
+> v1->v2
+>  - Add the support for `perf sched stats diff`
+>  - Add column header in report for better readability. Use
+>    procfs__mountpoint for consistency. Add hint for enabling
+>    CONFIG_SCHEDSTAT if disabled. [James Clark]
+>  - Use a single header file for both cpu and domain fileds. Change
+>    the layout of structs to minimise the padding. I tried changing
+>    `v15` to `15` in the header files but it was not giving any
+>    benefits so drop the idea. [Namhyung Kim]
+>  - Add tested-by.
+> 
+> RFC: https://lore.kernel.org/r/20240508060427.417-1-ravi.bangoria@amd.com
+> RFC->v1:
+>  - [Kernel] Print domain name along with domain number in /proc/schedstat
+>    file.
+>  - s/schedstat/stats/ for the subcommand.
+>  - Record domain name and cpumask details, also show them in report.
+>  - Add CPU filtering capability at record and report time.
+>  - Add /proc/schedstat v16 support.
+>  - Live mode support. Similar to perf stat command, live mode prints the
+>    sched stats on the stdout.
+>  - Add pager support in `perf sched stats report` for better scrolling.
+>  - Some minor cosmetic changes in report output to improve readability.
+>  - Rebase to latest perf-tools-next/perf-tools-next (1de5b5dcb835).
+> 
+> TODO:
+>  - perf sched stats records /proc/schedstat which is a CPU and domain
+>    level scheduler statistic. We are planning to add taskstat tool which
+>    reads task stats from procfs and generate scheduler statistic report
+>    at task granularity. this will probably a standalone tool, something
+>    like `perf sched taskstat record/report`.
+>  - Except pre-processor related checkpatch warnings, we have addressed
+>    most of the other possible warnings.
+>  - This version supports diff for two perf.data files captured for same
+>    schedstats version but the target is to show diff for multiple
+>    perf.data files. Plan is to support diff if perf.data files provided
+>    has different schedstat versions.
+> 
+> Patches are prepared on top of perf-tools-next(571d29baa07e).
+> 
+> [1] https://youtu.be/lg-9aG2ajA0?t=283
+> [2] https://github.com/AMDESE/sched-scoreboard
+> [3] https://lore.kernel.org/lkml/c50bdbfe-02ce-c1bc-c761-c95f8e216ca0@amd.com/
+> [4] https://lore.kernel.org/lkml/3e32bec6-5e59-c66a-7676-7d15df2c961c@amd.com/
+> [5] https://lore.kernel.org/all/20241122084452.1064968-1-swapnil.sapkal@amd.com/
+> [6] https://lore.kernel.org/lkml/3170d16e-eb67-4db8-a327-eb8188397fdb@amd.com/
+> [7] https://lore.kernel.org/lkml/feb31b6e-6457-454c-a4f3-ce8ad96bf8de@amd.com/
+> 
+> Swapnil Sapkal (10):
+>   tools/lib: Add list_is_first()
+>   perf header: Support CPU DOMAIN relation info
+>   perf sched stats: Add record and rawdump support
+>   perf sched stats: Add schedstat v16 support
+>   perf sched stats: Add schedstat v17 support
+>   perf sched stats: Add support for report subcommand
+>   perf sched stats: Add support for live mode
+>   perf sched stats: Add support for diff subcommand
+>   perf sched stats: Add basic perf sched stats test
+>   perf sched stats: Add details in man page
 
-Also confirm that setting both bits is the same as setting neither bit.
+Nice work!
 
-Signed-off-by: Jim Mattson <jmattson@google.com>
----
- tools/testing/selftests/kvm/Makefile.kvm      |   1 +
- .../selftests/kvm/x86/svm_pmu_hg_test.c       | 297 ++++++++++++++++++
- 2 files changed, 298 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/x86/svm_pmu_hg_test.c
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index e88699e227dd..06ba85d97618 100644
---- a/tools/testing/selftests/kvm/Makefile.kvm
-+++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -112,6 +112,7 @@ TEST_GEN_PROGS_x86 += x86/svm_vmcall_test
- TEST_GEN_PROGS_x86 += x86/svm_int_ctl_test
- TEST_GEN_PROGS_x86 += x86/svm_nested_shutdown_test
- TEST_GEN_PROGS_x86 += x86/svm_nested_soft_inject_test
-+TEST_GEN_PROGS_x86 += x86/svm_pmu_hg_test
- TEST_GEN_PROGS_x86 += x86/tsc_scaling_sync
- TEST_GEN_PROGS_x86 += x86/sync_regs_test
- TEST_GEN_PROGS_x86 += x86/ucna_injection_test
-diff --git a/tools/testing/selftests/kvm/x86/svm_pmu_hg_test.c b/tools/testing/selftests/kvm/x86/svm_pmu_hg_test.c
-new file mode 100644
-index 000000000000..e811b4c1a818
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86/svm_pmu_hg_test.c
-@@ -0,0 +1,297 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * KVM nested SVM PMU Host-Only/Guest-Only test
-+ *
-+ * Copyright (C) 2026, Google LLC.
-+ *
-+ * Test that KVM correctly virtualizes the AMD PMU Host-Only (bit 41) and
-+ * Guest-Only (bit 40) event selector bits across all SVM state transitions.
-+ *
-+ * For Guest-Only counters:
-+ *   1. SVME=0: counter counts (HG_ONLY bits ignored)
-+ *   2. Set SVME=1: counter stops (in host mode)
-+ *   3. VMRUN to L2: counter counts (in guest mode)
-+ *   4. VMEXIT to L1: counter stops (back to host mode)
-+ *   5. Clear SVME=0: counter counts (HG_ONLY bits ignored)
-+ *
-+ * For Host-Only counters:
-+ *   1. SVME=0: counter counts (HG_ONLY bits ignored)
-+ *   2. Set SVME=1: counter counts (in host mode)
-+ *   3. VMRUN to L2: counter stops (in guest mode)
-+ *   4. VMEXIT to L1: counter counts (back to host mode)
-+ *   5. Clear SVME=0: counter counts (HG_ONLY bits ignored)
-+ */
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+
-+#include "test_util.h"
-+#include "kvm_util.h"
-+#include "processor.h"
-+#include "svm_util.h"
-+#include "pmu.h"
-+
-+#define L2_GUEST_STACK_SIZE	256
-+
-+#define MSR_F15H_PERF_CTL0	0xc0010200
-+#define MSR_F15H_PERF_CTR0	0xc0010201
-+
-+#define AMD64_EVENTSEL_GUESTONLY	BIT_ULL(40)
-+#define AMD64_EVENTSEL_HOSTONLY		BIT_ULL(41)
-+
-+#define EVENTSEL_RETIRED_INSNS	(ARCH_PERFMON_EVENTSEL_OS |	\
-+				 ARCH_PERFMON_EVENTSEL_USR |	\
-+				 ARCH_PERFMON_EVENTSEL_ENABLE | \
-+				 AMD_ZEN_INSTRUCTIONS_RETIRED)
-+
-+#define LOOP_INSNS	1000
-+
-+static __always_inline void run_instruction_loop(void)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < LOOP_INSNS; i++)
-+		__asm__ __volatile__("nop");
-+}
-+
-+static __always_inline uint64_t run_and_measure(void)
-+{
-+	uint64_t count_before, count_after;
-+
-+	count_before = rdmsr(MSR_F15H_PERF_CTR0);
-+	run_instruction_loop();
-+	count_after = rdmsr(MSR_F15H_PERF_CTR0);
-+
-+	return count_after - count_before;
-+}
-+
-+struct hg_test_data {
-+	uint64_t l2_delta;
-+	bool l2_done;
-+};
-+
-+static struct hg_test_data *hg_data;
-+
-+static void l2_guest_code(void)
-+{
-+	hg_data->l2_delta = run_and_measure();
-+	hg_data->l2_done = true;
-+	vmmcall();
-+}
-+
-+/*
-+ * Test Guest-Only counter across all relevant state transitions.
-+ */
-+static void l1_guest_code_guestonly(struct svm_test_data *svm,
-+				    struct hg_test_data *data)
-+{
-+	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-+	struct vmcb *vmcb = svm->vmcb;
-+	uint64_t eventsel, delta;
-+
-+	hg_data = data;
-+
-+	eventsel = EVENTSEL_RETIRED_INSNS | AMD64_EVENTSEL_GUESTONLY;
-+	wrmsr(MSR_F15H_PERF_CTL0, eventsel);
-+	wrmsr(MSR_F15H_PERF_CTR0, 0);
-+
-+	/* Step 1: SVME=0; HG_ONLY ignored */
-+	wrmsr(MSR_EFER, rdmsr(MSR_EFER) & ~EFER_SVME);
-+	delta = run_and_measure();
-+	GUEST_ASSERT_NE(delta, 0);
-+
-+	/* Step 2: Set SVME=1; Guest-Only counter stops */
-+	wrmsr(MSR_EFER, rdmsr(MSR_EFER) | EFER_SVME);
-+	delta = run_and_measure();
-+	GUEST_ASSERT_EQ(delta, 0);
-+
-+	/* Step 3: VMRUN to L2; Guest-Only counter counts */
-+	generic_svm_setup(svm, l2_guest_code,
-+			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
-+	vmcb->control.intercept &= ~(1ULL << INTERCEPT_MSR_PROT);
-+
-+	run_guest(vmcb, svm->vmcb_gpa);
-+
-+	GUEST_ASSERT_EQ(vmcb->control.exit_code, SVM_EXIT_VMMCALL);
-+	GUEST_ASSERT(data->l2_done);
-+	GUEST_ASSERT_NE(data->l2_delta, 0);
-+
-+	/* Step 4: After VMEXIT to L1; Guest-Only counter stops */
-+	delta = run_and_measure();
-+	GUEST_ASSERT_EQ(delta, 0);
-+
-+	/* Step 5: Clear SVME; HG_ONLY ignored */
-+	wrmsr(MSR_EFER, rdmsr(MSR_EFER) & ~EFER_SVME);
-+	delta = run_and_measure();
-+	GUEST_ASSERT_NE(delta, 0);
-+
-+	GUEST_DONE();
-+}
-+
-+/*
-+ * Test Host-Only counter across all relevant state transitions.
-+ */
-+static void l1_guest_code_hostonly(struct svm_test_data *svm,
-+				   struct hg_test_data *data)
-+{
-+	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-+	struct vmcb *vmcb = svm->vmcb;
-+	uint64_t eventsel, delta;
-+
-+	hg_data = data;
-+
-+	eventsel = EVENTSEL_RETIRED_INSNS | AMD64_EVENTSEL_HOSTONLY;
-+	wrmsr(MSR_F15H_PERF_CTL0, eventsel);
-+	wrmsr(MSR_F15H_PERF_CTR0, 0);
-+
-+
-+	/* Step 1: SVME=0; HG_ONLY ignored */
-+	wrmsr(MSR_EFER, rdmsr(MSR_EFER) & ~EFER_SVME);
-+	delta = run_and_measure();
-+	GUEST_ASSERT_NE(delta, 0);
-+
-+	/* Step 2: Set SVME=1; Host-Only counter still counts */
-+	wrmsr(MSR_EFER, rdmsr(MSR_EFER) | EFER_SVME);
-+	delta = run_and_measure();
-+	GUEST_ASSERT_NE(delta, 0);
-+
-+	/* Step 3: VMRUN to L2; Host-Only counter stops */
-+	generic_svm_setup(svm, l2_guest_code,
-+			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
-+	vmcb->control.intercept &= ~(1ULL << INTERCEPT_MSR_PROT);
-+
-+	run_guest(vmcb, svm->vmcb_gpa);
-+
-+	GUEST_ASSERT_EQ(vmcb->control.exit_code, SVM_EXIT_VMMCALL);
-+	GUEST_ASSERT(data->l2_done);
-+	GUEST_ASSERT_EQ(data->l2_delta, 0);
-+
-+	/* Step 4: After VMEXIT to L1; Host-Only counter counts */
-+	delta = run_and_measure();
-+	GUEST_ASSERT_NE(delta, 0);
-+
-+	/* Step 5: Clear SVME; HG_ONLY ignored */
-+	wrmsr(MSR_EFER, rdmsr(MSR_EFER) & ~EFER_SVME);
-+	delta = run_and_measure();
-+	GUEST_ASSERT_NE(delta, 0);
-+
-+	GUEST_DONE();
-+}
-+
-+/*
-+ * Test that both bits set is the same as neither bit set (always counts).
-+ */
-+static void l1_guest_code_both_bits(struct svm_test_data *svm,
-+				    struct hg_test_data *data)
-+{
-+	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-+	struct vmcb *vmcb = svm->vmcb;
-+	uint64_t eventsel, delta;
-+
-+	hg_data = data;
-+
-+	eventsel = EVENTSEL_RETIRED_INSNS |
-+		AMD64_EVENTSEL_HOSTONLY | AMD64_EVENTSEL_GUESTONLY;
-+	wrmsr(MSR_F15H_PERF_CTL0, eventsel);
-+	wrmsr(MSR_F15H_PERF_CTR0, 0);
-+
-+	/* Step 1: SVME=0 */
-+	wrmsr(MSR_EFER, rdmsr(MSR_EFER) & ~EFER_SVME);
-+	delta = run_and_measure();
-+	GUEST_ASSERT_NE(delta, 0);
-+
-+	/* Step 2: Set SVME=1 */
-+	wrmsr(MSR_EFER, rdmsr(MSR_EFER) | EFER_SVME);
-+	delta = run_and_measure();
-+	GUEST_ASSERT_NE(delta, 0);
-+
-+	/* Step 3: VMRUN to L2 */
-+	generic_svm_setup(svm, l2_guest_code,
-+			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
-+	vmcb->control.intercept &= ~(1ULL << INTERCEPT_MSR_PROT);
-+
-+	run_guest(vmcb, svm->vmcb_gpa);
-+
-+	GUEST_ASSERT_EQ(vmcb->control.exit_code, SVM_EXIT_VMMCALL);
-+	GUEST_ASSERT(data->l2_done);
-+	GUEST_ASSERT_NE(data->l2_delta, 0);
-+
-+	/* Step 4: After VMEXIT to L1 */
-+	delta = run_and_measure();
-+	GUEST_ASSERT_NE(delta, 0);
-+
-+	/* Step 5: Clear SVME */
-+	wrmsr(MSR_EFER, rdmsr(MSR_EFER) & ~EFER_SVME);
-+	delta = run_and_measure();
-+	GUEST_ASSERT_NE(delta, 0);
-+
-+	GUEST_DONE();
-+}
-+
-+static void l1_guest_code(struct svm_test_data *svm, struct hg_test_data *data,
-+			  int test_num)
-+{
-+	switch (test_num) {
-+	case 0:
-+		l1_guest_code_guestonly(svm, data);
-+		break;
-+	case 1:
-+		l1_guest_code_hostonly(svm, data);
-+		break;
-+	case 2:
-+		l1_guest_code_both_bits(svm, data);
-+		break;
-+	}
-+}
-+
-+static void run_test(int test_number, const char *test_name)
-+{
-+	struct hg_test_data *data_hva;
-+	vm_vaddr_t svm_gva, data_gva;
-+	struct kvm_vcpu *vcpu;
-+	struct kvm_vm *vm;
-+	struct ucall uc;
-+
-+	pr_info("Testing: %s\n", test_name);
-+
-+	vm = vm_create_with_one_vcpu(&vcpu, l1_guest_code);
-+
-+	vcpu_alloc_svm(vm, &svm_gva);
-+
-+	data_gva = vm_vaddr_alloc_page(vm);
-+	data_hva = addr_gva2hva(vm, data_gva);
-+	memset(data_hva, 0, sizeof(*data_hva));
-+
-+	vcpu_args_set(vcpu, 3, svm_gva, data_gva, test_number);
-+
-+	for (;;) {
-+		vcpu_run(vcpu);
-+		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
-+
-+		switch (get_ucall(vcpu, &uc)) {
-+		case UCALL_ABORT:
-+			REPORT_GUEST_ASSERT(uc);
-+			/* NOT REACHED */
-+		case UCALL_DONE:
-+			pr_info("  PASSED\n");
-+			kvm_vm_free(vm);
-+			return;
-+		default:
-+			TEST_FAIL("Unknown ucall %lu", uc.cmd);
-+		}
-+	}
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	TEST_REQUIRE(kvm_cpu_has(X86_FEATURE_SVM));
-+	TEST_REQUIRE(kvm_is_pmu_enabled());
-+	TEST_REQUIRE(get_kvm_amd_param_bool("enable_mediated_pmu"));
-+
-+	run_test(0, "Guest-Only counter across all transitions");
-+	run_test(1, "Host-Only counter across all transitions");
-+	run_test(2, "Both HG_ONLY bits set (always count)");
-+
-+	return 0;
-+}
--- 
-2.52.0.457.g6b5491de43-goog
+Thanks,
+Namhyung
 
+> 
+>  tools/include/linux/list.h                    |   10 +
+>  tools/lib/perf/Documentation/libperf.txt      |    2 +
+>  tools/lib/perf/Makefile                       |    1 +
+>  tools/lib/perf/include/perf/event.h           |   69 ++
+>  tools/lib/perf/include/perf/schedstat-v15.h   |  146 +++
+>  tools/lib/perf/include/perf/schedstat-v16.h   |  146 +++
+>  tools/lib/perf/include/perf/schedstat-v17.h   |  164 +++
+>  tools/perf/Documentation/perf-sched.txt       |  261 ++++-
+>  .../Documentation/perf.data-file-format.txt   |   17 +
+>  tools/perf/builtin-inject.c                   |    3 +
+>  tools/perf/builtin-sched.c                    | 1028 ++++++++++++++++-
+>  tools/perf/tests/shell/perf_sched_stats.sh    |   64 +
+>  tools/perf/util/env.c                         |   29 +
+>  tools/perf/util/env.h                         |   17 +
+>  tools/perf/util/event.c                       |   52 +
+>  tools/perf/util/event.h                       |    2 +
+>  tools/perf/util/header.c                      |  285 +++++
+>  tools/perf/util/header.h                      |    4 +
+>  tools/perf/util/session.c                     |   22 +
+>  tools/perf/util/synthetic-events.c            |  196 ++++
+>  tools/perf/util/synthetic-events.h            |    3 +
+>  tools/perf/util/tool.c                        |   20 +
+>  tools/perf/util/tool.h                        |    4 +-
+>  tools/perf/util/util.c                        |   48 +
+>  tools/perf/util/util.h                        |    5 +
+>  25 files changed, 2595 insertions(+), 3 deletions(-)
+>  create mode 100644 tools/lib/perf/include/perf/schedstat-v15.h
+>  create mode 100644 tools/lib/perf/include/perf/schedstat-v16.h
+>  create mode 100644 tools/lib/perf/include/perf/schedstat-v17.h
+>  create mode 100755 tools/perf/tests/shell/perf_sched_stats.sh
+> 
+> -- 
+> 2.43.0
+> 
