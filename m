@@ -1,1042 +1,268 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC303C23BC
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 21:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F093A2AD3;
+	Thu, 22 Jan 2026 21:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769117764; cv=none; b=mec8w6G23GtJsrse3igyDP2+9y+5GYIFTLGHqyGNjPb7rgUfilP8REmF9HVPP8kTp+03QzKB0U/4mtHrtEcQ5OWNxiKer/zHZ9FlPT0TT4TivBAgrQ8cyz3wbbNaV02MZ3SWtFkBj5takpTU7t1uMG2uHeRT7Nh1iHOKtT3uGaE=
+	t=1769118538; cv=none; b=T9hz+889BBS9jYhs4jXZ1FSesAn8/MUuC098ttzS2Hwy8N0DLOcLY/CTgqg/jcw5SLdsMRGQi6e8gTLY8CWp0hp1tdN8AbObSCU3jM91ry2F6oPMcopH/7Vs0QdDUL1BH4v1rLJ/ljoyVFjMZAHBamAw128xIily9hrMHJeCt8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769117764; c=relaxed/simple;
-	bh=NwFGOoTcKVwwV/YH4o31FgfuzG4YYi7ZB6uRptCduAQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=qRkmLlivO/n/5wBNW5pdIEvdfNpCB7WHqn5KPNBg0/kIMeVqVx0fdHNTeoAwib/7fzIE3A1IsaMg9S3ZgZQugDtITtZNmAexNZM5ezJCFWLNea0CI6ZQYx6PZKb9JmLujgyGEkn2M58UoRpQSBgFWA0E+Q1qFLJaoXKeeXNH1QM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ntyg4ho0; arc=none smtp.client-ip=74.125.82.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1769118538; c=relaxed/simple;
+	bh=jk/BZkKE7eAsZnmgnHYY/seh+HNbDkmTSZu3H0tNUqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IdEhkjLqE8JgugECIhf6MkIK5WDOXkU5jRBo6iDxK1eWzA3Ui9bflEE44W9ma7AUSZ4n/i2+QAqEHxmrnO0OIR7XNXPd3+ZLvNws1rP6MriaHTWQE8Yq4F2LXOs6ciZPTXjD6NbsAHzXhgzH6cNrOYebPy1GWUN2OXkt1Gd9vTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hmlkxomR; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ntyg4ho0"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2b70bd4a2ccso6673952eec.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 13:35:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769117745; x=1769722545; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eDcfOmFRduQB0EoLjxExuXCkRWy+uierOMTnTsI2Mjs=;
-        b=ntyg4ho0wQeuxguPzUy42byHvmz8VzYXuSdC0DYRKjr2HVByKYDkI8JELc1jCJtRuQ
-         PQ0RFah+lZWhXoJx+MOcogJK3DrANPjPPLvI/DXjJYBecIj2vUvTYl+i9alcFcH3OPWL
-         9Afldzfc1ST8sfk47wwYi3/nqGsb1TlIzP49fSmzbbn0eanI37vdzqYQ/YRe+sK0Wnv2
-         bZkNO/LZg2LU3gBpA2fk7yzuE9d+3XTdLBE7pygvrSoEm6sAbhZpLMT6V1IfvZeYo9vT
-         8HKh9DlBP6MyiAjNnigphDiM87NMADrus/1PeD/8MHD0Eqw14DJ4C41QhawZ7f0+6vlq
-         jPHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769117745; x=1769722545;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eDcfOmFRduQB0EoLjxExuXCkRWy+uierOMTnTsI2Mjs=;
-        b=iUSO745j963Kg1LX9b/TAhLgZNnAz5ZBWue6TFo1VTeKq5QX4sb9MAP6WYHl4mYO7B
-         0yeSgh8oztw1hQEQeprO86UkDi/kXWa4jpwQM3rc6D/uJ7NPPAhWdOkUyymw3mtIlv1a
-         hjvP0FfNFn7SW2pcgE9yzDeR8+sHRzyRvqS85yC6mcPmzbWSvVj9FbU952ziJp+hUDSR
-         XQQS3WY8SqKJdPTi6bcN9MD0L/u9qAastoZ9qlwsIBu4+PpfFGg0cBPhb3fE8jsgcYgB
-         9JKSLAIvwAWEtxEXBkRfsXKKd+ZHJ0pkMB8jqBfL6Mgnqe2ppLX464bD5EcZG9Wzg7v3
-         7WEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgNJVINVAiN5TduQAfYR8lG+N3jBPzIPSoCnlIKz7wjdG7yxmdrPLK0ifxvyis71It4VR3boQBjBpBNNYaKYiq@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZEcEKGidNKXOx9AlmQTF9ysIgCVFyiqSSGCp01UhyABCaIAqo
-	USs+mOZxbz/97bJWV3HME2Ub9y6qWhnwIjb1PdzAAFayvWFKDUJ1WhCAumXsGB4E5JkrM77LIv7
-	TLPizHi3YoQ==
-X-Received: from dybmc48.prod.google.com ([2002:a05:7301:19b0:b0:2ae:51e3:c162])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d509:b0:2b7:2e24:d5d6
- with SMTP id 5a478bee46e88-2b7399ba311mr423287eec.19.1769117744670; Thu, 22
- Jan 2026 13:35:44 -0800 (PST)
-Date: Thu, 22 Jan 2026 13:35:15 -0800
-In-Reply-To: <20260122213516.671089-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hmlkxomR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769118534; x=1800654534;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jk/BZkKE7eAsZnmgnHYY/seh+HNbDkmTSZu3H0tNUqg=;
+  b=hmlkxomRzKn0j9PHunZDoTLTCNCoNGpesLX/dk4efmDiYIyFC6yLFeir
+   9jsXZ1XZKKheI0sDoBr3/O4GUDl9x4gD/xpxCYmuTgq565n3fapiGyDrJ
+   wWGn3o65auMf1aRiiy94huawIh4JS0SyNzyK8m+8jZkZO1QYiaI6r+rPV
+   W3QYU/OgvKf9WneucOSW+D2qfnMB51Ksd4w3vF7e31sFq6GU04MRcB9zl
+   eH/RAmC/eN1OvupSi9rqe4PfMRfvcKiFri9doLMjohirZ+mXZanSKFl/R
+   CHK7bhvptg71JbNWIP4o3oFvKXDYiZP5UGQf3hJpsY6eO+oLO5PlKKhHR
+   g==;
+X-CSE-ConnectionGUID: 1n47l2/uROuL5y/TEbgFRg==
+X-CSE-MsgGUID: TceL9iUVQuyd93hDWOPLYA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11679"; a="69387579"
+X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
+   d="scan'208";a="69387579"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 13:48:51 -0800
+X-CSE-ConnectionGUID: KKHInuNgS3Og36L1CptP1Q==
+X-CSE-MsgGUID: 2hnRq4ymQJO3bGL3fDjZRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
+   d="scan'208";a="210976158"
+Received: from unknown (HELO [10.241.241.119]) ([10.241.241.119])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 13:48:51 -0800
+Message-ID: <0a12411d-c86c-470a-afe2-105a2858d37a@intel.com>
+Date: Thu, 22 Jan 2026 13:48:50 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260122213516.671089-1-irogers@google.com>
-X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260122213516.671089-12-irogers@google.com>
-Subject: [PATCH v3 11/12] perf disasm: Refactor arch__find and initialization
- of arch structs
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Zecheng Li <zecheng@google.com>, 
-	Tianyou Li <tianyou.li@intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Julia Lawall <Julia.Lawall@inria.fr>, Suchit Karunakaran <suchitkarunakaran@gmail.com>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Aditya Bodkhe <aditya.b1@linux.ibm.com>, 
-	Howard Chu <howardchu95@gmail.com>, 
-	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Shimin Guo <shimin.guo@skydio.com>, 
-	Sergei Trofimovich <slyich@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf pmu intel: Adjust cpumaks for sub-NUMA clusters on
+ Emeraldrapids
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+ Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>
+Cc: Thomas Falcon <thomas.falcon@intel.com>, linux-kernel@vger.kernel.org,
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ adrian.hunter@intel.com, james.clark@linaro.org, ravi.bangoria@amd.com,
+ linux-perf-users@vger.kernel.org
+References: <20260108184430.1210223-1-ctshao@google.com>
+ <CAP-5=fVLFVzitYZso2HB7dFgaNbJqW0pLE_AqMhc0ytW0PFvZw@mail.gmail.com>
+ <CAJpZYjVadSgX6eSczFsqxJpMSq8q67CkA_WA+8jf+atgUScBNA@mail.gmail.com>
+ <09ff8b36-eb35-425d-b36c-d33237f2623a@linux.intel.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <09ff8b36-eb35-425d-b36c-d33237f2623a@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Switch arch__find to using an ELF machine number rather than a
-string. Rather than an array of fixed size arch structs turn the init
-functions into new functions indexed by the ELF machine they
-correspond to. This allows data to be stored with a struct arch with
-the container_of trick, so the priv variable can be removed. Switch to
-using the thread to find the arch rather than the evsel as the evsel
-only has limited notions of the running thread upon which disassembly
-is performed. Factor out the e_machine and e_flags into their own
-struct to make them easier to pass around.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/ui/browsers/annotate.c             |   2 +-
- tools/perf/util/annotate-arch/annotate-arc.c  |  14 +-
- tools/perf/util/annotate-arch/annotate-arm.c  |  39 ++---
- .../perf/util/annotate-arch/annotate-arm64.c  |  39 ++---
- tools/perf/util/annotate-arch/annotate-csky.c |  14 +-
- .../util/annotate-arch/annotate-loongarch.c   |  19 ++-
- tools/perf/util/annotate-arch/annotate-mips.c |  19 ++-
- .../util/annotate-arch/annotate-powerpc.c     |  24 +--
- .../util/annotate-arch/annotate-riscv64.c     |  19 ++-
- tools/perf/util/annotate-arch/annotate-s390.c |  29 ++--
- .../perf/util/annotate-arch/annotate-sparc.c  |  19 ++-
- tools/perf/util/annotate-arch/annotate-x86.c  |  24 +--
- tools/perf/util/annotate.c                    |  46 +++---
- tools/perf/util/annotate.h                    |   2 +-
- tools/perf/util/disasm.c                      | 153 ++++++++----------
- tools/perf/util/disasm.h                      |  59 +++----
- 16 files changed, 279 insertions(+), 242 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 91ded9c271ee..ea17e6d29a7e 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -1198,7 +1198,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
- 				ui__warning("Annotation has no source code.");
- 		}
- 	} else {
--		err = evsel__get_arch(evsel, &browser.arch);
-+		err = thread__get_arch(ms->thread, &browser.arch);
- 		if (err) {
- 			annotate_browser__symbol_annotate_error(&browser, err);
- 			return -1;
-diff --git a/tools/perf/util/annotate-arch/annotate-arc.c b/tools/perf/util/annotate-arch/annotate-arc.c
-index d7ca08ca5600..170103e383a4 100644
---- a/tools/perf/util/annotate-arch/annotate-arc.c
-+++ b/tools/perf/util/annotate-arch/annotate-arc.c
-@@ -1,10 +1,18 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/compiler.h>
-+#include <linux/zalloc.h>
- #include "../disasm.h"
- 
--int arc__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
-+const struct arch *arch__new_arc(const struct e_machine_and_e_flags *id,
-+				 const char *cpuid __maybe_unused)
- {
--	arch->initialized = true;
-+	struct arch *arch = zalloc(sizeof(*arch));
-+
-+	if (!arch)
-+		return NULL;
-+
-+	arch->name = "arc";
-+	arch->id = *id;
- 	arch->objdump.comment_char = ';';
--	return 0;
-+	return arch;
- }
-diff --git a/tools/perf/util/annotate-arch/annotate-arm.c b/tools/perf/util/annotate-arch/annotate-arm.c
-index 08c49067c3c9..afb413c80156 100644
---- a/tools/perf/util/annotate-arch/annotate-arm.c
-+++ b/tools/perf/util/annotate-arch/annotate-arm.c
-@@ -7,14 +7,15 @@
- #include "../annotate.h"
- #include "../disasm.h"
- 
--struct arm_annotate {
--	regex_t call_insn,
--		jump_insn;
-+struct arch_arm {
-+	struct arch arch;
-+	regex_t call_insn;
-+	regex_t jump_insn;
- };
- 
- static const struct ins_ops *arm__associate_instruction_ops(struct arch *arch, const char *name)
- {
--	struct arm_annotate *arm = arch->priv;
-+	struct arch_arm *arm = container_of(arch, struct arch_arm, arch);
- 	const struct ins_ops *ops;
- 	regmatch_t match[2];
- 
-@@ -29,37 +30,39 @@ static const struct ins_ops *arm__associate_instruction_ops(struct arch *arch, c
- 	return ops;
- }
- 
--int arm__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
-+const struct arch *arch__new_arm(const struct e_machine_and_e_flags *id,
-+				 const char *cpuid __maybe_unused)
- {
--	struct arm_annotate *arm;
- 	int err;
-+	struct arch_arm *arm = zalloc(sizeof(*arm));
-+	struct arch *arch;
- 
--	if (arch->initialized)
--		return 0;
--
--	arm = zalloc(sizeof(*arm));
- 	if (!arm)
--		return ENOMEM;
-+		return NULL;
-+
-+	arch = &arm->arch;
-+	arch->name = "arm";
-+	arch->id = *id;
-+	arch->objdump.comment_char	  = ';';
-+	arch->objdump.skip_functions_char = '+';
-+	arch->associate_instruction_ops   = arm__associate_instruction_ops;
- 
- #define ARM_CONDS "(cc|cs|eq|ge|gt|hi|le|ls|lt|mi|ne|pl|vc|vs)"
- 	err = regcomp(&arm->call_insn, "^blx?" ARM_CONDS "?$", REG_EXTENDED);
- 	if (err)
- 		goto out_free_arm;
-+
- 	err = regcomp(&arm->jump_insn, "^bx?" ARM_CONDS "?$", REG_EXTENDED);
- 	if (err)
- 		goto out_free_call;
- #undef ARM_CONDS
- 
--	arch->initialized = true;
--	arch->priv	  = arm;
--	arch->associate_instruction_ops   = arm__associate_instruction_ops;
--	arch->objdump.comment_char	  = ';';
--	arch->objdump.skip_functions_char = '+';
--	return 0;
-+	return arch;
- 
- out_free_call:
- 	regfree(&arm->call_insn);
- out_free_arm:
- 	free(arm);
--	return SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_REGEXP;
-+	errno = SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_REGEXP;
-+	return NULL;
- }
-diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
-index d2ea32984b0d..33080fdca125 100644
---- a/tools/perf/util/annotate-arch/annotate-arm64.c
-+++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-@@ -8,9 +8,10 @@
- #include "../annotate.h"
- #include "../disasm.h"
- 
--struct arm64_annotate {
--	regex_t call_insn,
--		jump_insn;
-+struct arch_arm64 {
-+	struct arch arch;
-+	regex_t call_insn;
-+	regex_t jump_insn;
- };
- 
- static int arm64_mov__parse(const struct arch *arch __maybe_unused,
-@@ -70,7 +71,7 @@ static const struct ins_ops arm64_mov_ops = {
- 
- static const struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const char *name)
- {
--	struct arm64_annotate *arm = arch->priv;
-+	struct arch_arm64 *arm = container_of(arch, struct arch_arm64, arch);
- 	const struct ins_ops *ops;
- 	regmatch_t match[2];
- 
-@@ -87,38 +88,40 @@ static const struct ins_ops *arm64__associate_instruction_ops(struct arch *arch,
- 	return ops;
- }
- 
--int arm64__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
-+const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
-+				   const char *cpuid __maybe_unused)
- {
--	struct arm64_annotate *arm;
- 	int err;
-+	struct arch_arm64 *arm = zalloc(sizeof(*arm));
-+	struct arch *arch;
- 
--	if (arch->initialized)
--		return 0;
--
--	arm = zalloc(sizeof(*arm));
- 	if (!arm)
--		return ENOMEM;
-+		return NULL;
-+
-+	arch = &arm->arch;
-+	arch->name = "arm64";
-+	arch->id = *id;
-+	arch->objdump.comment_char	  = '/';
-+	arch->objdump.skip_functions_char = '+';
-+	arch->associate_instruction_ops   = arm64__associate_instruction_ops;
- 
- 	/* bl, blr */
- 	err = regcomp(&arm->call_insn, "^blr?$", REG_EXTENDED);
- 	if (err)
- 		goto out_free_arm;
-+
- 	/* b, b.cond, br, cbz/cbnz, tbz/tbnz */
- 	err = regcomp(&arm->jump_insn, "^[ct]?br?\\.?(cc|cs|eq|ge|gt|hi|hs|le|lo|ls|lt|mi|ne|pl|vc|vs)?n?z?$",
- 		      REG_EXTENDED);
- 	if (err)
- 		goto out_free_call;
- 
--	arch->initialized = true;
--	arch->priv	  = arm;
--	arch->associate_instruction_ops   = arm64__associate_instruction_ops;
--	arch->objdump.comment_char	  = '/';
--	arch->objdump.skip_functions_char = '+';
--	return 0;
-+	return arch;
- 
- out_free_call:
- 	regfree(&arm->call_insn);
- out_free_arm:
- 	free(arm);
--	return SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_REGEXP;
-+	errno = SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_REGEXP;
-+	return NULL;
- }
-diff --git a/tools/perf/util/annotate-arch/annotate-csky.c b/tools/perf/util/annotate-arch/annotate-csky.c
-index 0b0b09b068ec..d2b18e4ea2c9 100644
---- a/tools/perf/util/annotate-arch/annotate-csky.c
-+++ b/tools/perf/util/annotate-arch/annotate-csky.c
-@@ -2,6 +2,7 @@
- // Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
- #include <string.h>
- #include <linux/compiler.h>
-+#include <linux/zalloc.h>
- #include "../disasm.h"
- 
- static const struct ins_ops *csky__associate_ins_ops(struct arch *arch,
-@@ -39,10 +40,17 @@ static const struct ins_ops *csky__associate_ins_ops(struct arch *arch,
- 	return ops;
- }
- 
--int csky__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
-+const struct arch *arch__new_csky(const struct e_machine_and_e_flags *id,
-+				  const char *cpuid __maybe_unused)
- {
--	arch->initialized = true;
-+	struct arch *arch = zalloc(sizeof(*arch));
-+
-+	if (!arch)
-+		return NULL;
-+
-+	arch->name = "csky";
-+	arch->id = *id;
- 	arch->objdump.comment_char = '/';
- 	arch->associate_instruction_ops = csky__associate_ins_ops;
--	return 0;
-+	return arch;
- }
-diff --git a/tools/perf/util/annotate-arch/annotate-loongarch.c b/tools/perf/util/annotate-arch/annotate-loongarch.c
-index 6c94cb98a104..3aeab453a059 100644
---- a/tools/perf/util/annotate-arch/annotate-loongarch.c
-+++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
-@@ -7,6 +7,7 @@
- #include <stdlib.h>
- #include <string.h>
- #include <linux/compiler.h>
-+#include <linux/zalloc.h>
- #include "../disasm.h"
- #include "../map.h"
- #include "../maps.h"
-@@ -139,13 +140,17 @@ const struct ins_ops *loongarch__associate_ins_ops(struct arch *arch, const char
- 	return ops;
- }
- 
--int loongarch__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
-+const struct arch *arch__new_loongarch(const struct e_machine_and_e_flags *id,
-+				       const char *cpuid __maybe_unused)
- {
--	if (!arch->initialized) {
--		arch->associate_instruction_ops = loongarch__associate_ins_ops;
--		arch->initialized = true;
--		arch->objdump.comment_char = '#';
--	}
-+	struct arch *arch = zalloc(sizeof(*arch));
- 
--	return 0;
-+	if (!arch)
-+		return NULL;
-+
-+	arch->name = "loongarch";
-+	arch->id = *id;
-+	arch->associate_instruction_ops = loongarch__associate_ins_ops;
-+	arch->objdump.comment_char = '#';
-+	return arch;
- }
-diff --git a/tools/perf/util/annotate-arch/annotate-mips.c b/tools/perf/util/annotate-arch/annotate-mips.c
-index f14b34ed77d3..e8d1c6c7e9f3 100644
---- a/tools/perf/util/annotate-arch/annotate-mips.c
-+++ b/tools/perf/util/annotate-arch/annotate-mips.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <string.h>
- #include <linux/compiler.h>
-+#include <linux/zalloc.h>
- #include "../disasm.h"
- 
- static
-@@ -36,13 +37,17 @@ const struct ins_ops *mips__associate_ins_ops(struct arch *arch, const char *nam
- 	return ops;
- }
- 
--int mips__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
-+const struct arch *arch__new_mips(const struct e_machine_and_e_flags *id,
-+				  const char *cpuid __maybe_unused)
- {
--	if (!arch->initialized) {
--		arch->associate_instruction_ops = mips__associate_ins_ops;
--		arch->initialized = true;
--		arch->objdump.comment_char = '#';
--	}
-+	struct arch *arch = zalloc(sizeof(*arch));
- 
--	return 0;
-+	if (!arch)
-+		return NULL;
-+
-+	arch->name = "mips";
-+	arch->id = *id;
-+	arch->objdump.comment_char = '#';
-+	arch->associate_instruction_ops = mips__associate_ins_ops;
-+	return arch;
- }
-diff --git a/tools/perf/util/annotate-arch/annotate-powerpc.c b/tools/perf/util/annotate-arch/annotate-powerpc.c
-index 593c138c8104..218207b52581 100644
---- a/tools/perf/util/annotate-arch/annotate-powerpc.c
-+++ b/tools/perf/util/annotate-arch/annotate-powerpc.c
-@@ -390,17 +390,21 @@ static void update_insn_state_powerpc(struct type_state *state,
- }
- #endif /* HAVE_LIBDW_SUPPORT */
- 
--int powerpc__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
-+const struct arch *arch__new_powerpc(const struct e_machine_and_e_flags *id,
-+				     const char *cpuid __maybe_unused)
- {
--	if (!arch->initialized) {
--		arch->initialized = true;
--		arch->associate_instruction_ops = powerpc__associate_instruction_ops;
--		arch->objdump.comment_char      = '#';
--		annotate_opts.show_asm_raw = true;
-+	struct arch *arch = zalloc(sizeof(*arch));
-+
-+	if (!arch)
-+		return NULL;
-+
-+	arch->name = "powerpc";
-+	arch->id = *id;
-+	arch->objdump.comment_char = '#';
-+	annotate_opts.show_asm_raw = true;
-+	arch->associate_instruction_ops = powerpc__associate_instruction_ops;
- #ifdef HAVE_LIBDW_SUPPORT
--		arch->update_insn_state = update_insn_state_powerpc;
-+	arch->update_insn_state = update_insn_state_powerpc;
- #endif
--	}
--
--	return 0;
-+	return arch;
- }
-diff --git a/tools/perf/util/annotate-arch/annotate-riscv64.c b/tools/perf/util/annotate-arch/annotate-riscv64.c
-index 15526824037a..29a988fca8c9 100644
---- a/tools/perf/util/annotate-arch/annotate-riscv64.c
-+++ b/tools/perf/util/annotate-arch/annotate-riscv64.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <string.h>
- #include <linux/compiler.h>
-+#include <linux/zalloc.h>
- #include "../disasm.h"
- 
- static
-@@ -24,13 +25,17 @@ const struct ins_ops *riscv64__associate_ins_ops(struct arch *arch, const char *
- 	return ops;
- }
- 
--int riscv64__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
-+const struct arch *arch__new_riscv64(const struct e_machine_and_e_flags *id,
-+				     const char *cpuid __maybe_unused)
- {
--	if (!arch->initialized) {
--		arch->associate_instruction_ops = riscv64__associate_ins_ops;
--		arch->initialized = true;
--		arch->objdump.comment_char = '#';
--	}
-+	struct arch *arch = zalloc(sizeof(*arch));
- 
--	return 0;
-+	if (!arch)
-+		return NULL;
-+
-+	arch->name = "riscv";
-+	arch->id = *id;
-+	arch->objdump.comment_char = '#';
-+	arch->associate_instruction_ops = riscv64__associate_ins_ops;
-+	return arch;
- }
-diff --git a/tools/perf/util/annotate-arch/annotate-s390.c b/tools/perf/util/annotate-arch/annotate-s390.c
-index 47573f0310c1..af9cabd0a586 100644
---- a/tools/perf/util/annotate-arch/annotate-s390.c
-+++ b/tools/perf/util/annotate-arch/annotate-s390.c
-@@ -148,7 +148,7 @@ static const struct ins_ops *s390__associate_ins_ops(struct arch *arch, const ch
- 	return ops;
- }
- 
--static int s390__cpuid_parse(struct arch *arch, char *cpuid)
-+static int s390__cpuid_parse(struct arch *arch, const char *cpuid)
- {
- 	unsigned int family;
- 	char model[16], model_c[16], cpumf_v[16], cpumf_a[16];
-@@ -169,19 +169,22 @@ static int s390__cpuid_parse(struct arch *arch, char *cpuid)
- 	return -1;
- }
- 
--int s390__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
-+const struct arch *arch__new_s390(const struct e_machine_and_e_flags *id, const char *cpuid)
- {
--	int err = 0;
--
--	if (!arch->initialized) {
--		arch->initialized = true;
--		arch->associate_instruction_ops = s390__associate_ins_ops;
--		if (cpuid) {
--			if (s390__cpuid_parse(arch, cpuid))
--				err = SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_CPUID_PARSING;
-+	struct arch *arch = zalloc(sizeof(*arch));
-+
-+	if (!arch)
-+		return NULL;
-+
-+	arch->name = "s390";
-+	arch->id = *id;
-+	arch->associate_instruction_ops = s390__associate_ins_ops;
-+	if (cpuid) {
-+		if (s390__cpuid_parse(arch, cpuid)) {
-+			errno = SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_CPUID_PARSING;
-+			return NULL;
- 		}
--		arch->objdump.comment_char = '#';
- 	}
--
--	return err;
-+	arch->objdump.comment_char = '#';
-+	return arch;
- }
-diff --git a/tools/perf/util/annotate-arch/annotate-sparc.c b/tools/perf/util/annotate-arch/annotate-sparc.c
-index 66a0174376dd..2f07bc7a56dd 100644
---- a/tools/perf/util/annotate-arch/annotate-sparc.c
-+++ b/tools/perf/util/annotate-arch/annotate-sparc.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <string.h>
- #include <linux/compiler.h>
-+#include <linux/zalloc.h>
- #include "../../util/disasm.h"
- 
- static int is_branch_cond(const char *cond)
-@@ -160,13 +161,17 @@ static const struct ins_ops *sparc__associate_instruction_ops(struct arch *arch,
- 	return ops;
- }
- 
--int sparc__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
-+const struct arch *arch__new_sparc(const struct e_machine_and_e_flags *id,
-+				   const char *cpuid __maybe_unused)
- {
--	if (!arch->initialized) {
--		arch->initialized = true;
--		arch->associate_instruction_ops = sparc__associate_instruction_ops;
--		arch->objdump.comment_char = '#';
--	}
-+	struct arch *arch = zalloc(sizeof(*arch));
- 
--	return 0;
-+	if (!arch)
-+		return NULL;
-+
-+	arch->name = "sparc";
-+	arch->id = *id;
-+	arch->associate_instruction_ops = sparc__associate_instruction_ops;
-+	arch->objdump.comment_char = '#';
-+	return arch;
- }
-diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
-index 0c7957fe60da..eb9a649ca656 100644
---- a/tools/perf/util/annotate-arch/annotate-x86.c
-+++ b/tools/perf/util/annotate-arch/annotate-x86.c
-@@ -182,7 +182,7 @@ static bool intel__ins_is_fused(const struct arch *arch, const char *ins1,
- 	return false;
- }
- 
--static int x86__cpuid_parse(struct arch *arch, char *cpuid)
-+static int x86__cpuid_parse(struct arch *arch, const char *cpuid)
- {
- 	unsigned int family, model, stepping;
- 	int ret;
-@@ -777,18 +777,21 @@ static void update_insn_state_x86(struct type_state *state,
- }
- #endif
- 
--int x86__annotate_init(struct arch *arch, char *cpuid)
-+const struct arch *arch__new_x86(const struct e_machine_and_e_flags *id, const char *cpuid)
- {
--	int err = 0;
-+	struct arch *arch = zalloc(sizeof(*arch));
- 
--	if (arch->initialized)
--		return 0;
-+	if (!arch)
-+		return NULL;
- 
-+	arch->name = "x86";
-+	arch->id = *id;
- 	if (cpuid) {
--		if (x86__cpuid_parse(arch, cpuid))
--			err = SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_CPUID_PARSING;
-+		if (x86__cpuid_parse(arch, cpuid)) {
-+			errno = SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_CPUID_PARSING;
-+			return NULL;
-+		}
- 	}
--
- 	arch->instructions = x86__instructions;
- 	arch->nr_instructions = ARRAY_SIZE(x86__instructions);
- #ifndef NDEBUG
-@@ -810,11 +813,8 @@ int x86__annotate_init(struct arch *arch, char *cpuid)
- 	arch->objdump.memory_ref_char = '(';
- 	arch->objdump.imm_char = '$';
- 	arch->insn_suffix = "bwlq";
--	arch->e_machine = EM_X86_64;
--	arch->e_flags = 0;
--	arch->initialized = true;
- #ifdef HAVE_LIBDW_SUPPORT
- 	arch->update_insn_state = update_insn_state_x86;
- #endif
--	return err;
-+	return arch;
- }
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 79702072568b..c16c6dfaa959 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -980,32 +980,27 @@ void symbol__calc_percent(struct symbol *sym, struct evsel *evsel)
- 	annotation__calc_percent(notes, evsel, symbol__size(sym));
- }
- 
--int evsel__get_arch(struct evsel *evsel, const struct arch **parch)
-+int thread__get_arch(struct thread *thread, const struct arch **parch)
- {
--	struct perf_env *env = evsel__env(evsel);
--	const char *arch_name = perf_env__arch(env);
- 	const struct arch *arch;
--	int err;
-+	struct machine *machine;
-+	uint16_t e_machine;
- 
--	if (!arch_name) {
-+	if (!thread) {
- 		*parch = NULL;
--		return errno;
-+		return -1;
- 	}
- 
--	*parch = arch = arch__find(arch_name);
-+	machine = maps__machine(thread__maps(thread));
-+	e_machine = thread__e_machine(thread, machine);
-+	arch = arch__find(e_machine, machine->env ? machine->env->cpuid : NULL);
- 	if (arch == NULL) {
--		pr_err("%s: unsupported arch %s\n", __func__, arch_name);
--		return ENOTSUP;
-+		pr_err("%s: unsupported arch %d\n", __func__, e_machine);
-+		return errno;
- 	}
-+	if (parch)
-+		*parch = arch;
- 
--	if (arch->init) {
--		err = arch->init((struct arch *)arch, env ? env->cpuid : NULL);
--		if (err) {
--			pr_err("%s: failed to initialize %s arch priv area\n",
--			       __func__, arch->name);
--			return err;
--		}
--	}
- 	return 0;
- }
- 
-@@ -1020,7 +1015,7 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
- 	const struct arch *arch = NULL;
- 	int err, nr;
- 
--	err = evsel__get_arch(evsel, &arch);
-+	err = thread__get_arch(ms->thread, &arch);
- 	if (err)
- 		return err;
- 
-@@ -1268,7 +1263,7 @@ int hist_entry__annotate_printf(struct hist_entry *he, struct evsel *evsel)
- 
- 	apd.addr_fmt_width = annotated_source__addr_fmt_width(&notes->src->source,
- 							      notes->src->start);
--	evsel__get_arch(evsel, &apd.arch);
-+	thread__get_arch(ms->thread, &apd.arch);
- 	apd.dbg = dso__debuginfo(dso);
- 
- 	list_for_each_entry(pos, &notes->src->source, node) {
-@@ -1373,7 +1368,7 @@ static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp,
- 	struct annotation_line *al;
- 
- 	if (annotate_opts.code_with_type) {
--		evsel__get_arch(apd->evsel, &apd->arch);
-+		thread__get_arch(apd->he->ms.thread, &apd->arch);
- 		apd->dbg = dso__debuginfo(map__dso(apd->he->ms.map));
- 	}
- 
-@@ -2495,7 +2490,7 @@ static int extract_reg_offset(const struct arch *arch, const char *str,
- 	if (regname == NULL)
- 		return -1;
- 
--	op_loc->reg1 = get_dwarf_regnum(regname, arch->e_machine, arch->e_flags);
-+	op_loc->reg1 = get_dwarf_regnum(regname, arch->id.e_machine, arch->id.e_flags);
- 	free(regname);
- 
- 	/* Get the second register */
-@@ -2508,7 +2503,7 @@ static int extract_reg_offset(const struct arch *arch, const char *str,
- 		if (regname == NULL)
- 			return -1;
- 
--		op_loc->reg2 = get_dwarf_regnum(regname, arch->e_machine, arch->e_flags);
-+		op_loc->reg2 = get_dwarf_regnum(regname, arch->id.e_machine, arch->id.e_flags);
- 		free(regname);
- 	}
- 	return 0;
-@@ -2607,8 +2602,11 @@ int annotate_get_insn_location(const struct arch *arch, struct disasm_line *dl,
- 			if (s == NULL)
- 				return -1;
- 
--			if (*s == arch->objdump.register_char)
--				op_loc->reg1 = get_dwarf_regnum(s, arch->e_machine, arch->e_flags);
-+			if (*s == arch->objdump.register_char) {
-+				op_loc->reg1 = get_dwarf_regnum(s,
-+								arch->id.e_machine,
-+								arch->id.e_flags);
-+			}
- 			else if (*s == arch->objdump.imm_char) {
- 				op_loc->offset = strtol(s + 1, &p, 0);
- 				if (p && p != s + 1)
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 58eaf4b2fa65..696e36dbf013 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -586,5 +586,5 @@ int annotation_br_cntr_entry(char **str, int br_cntr_nr, u64 *br_cntr,
- 			     int num_aggr, struct evsel *evsel);
- int annotation_br_cntr_abbr_list(char **str, struct evsel *evsel, bool header);
- 
--int evsel__get_arch(struct evsel *evsel, const struct arch **parch);
-+int thread__get_arch(struct thread *thread, const struct arch **parch);
- #endif	/* __PERF_ANNOTATE_H */
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index d81469db0aac..46740d1e5858 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -102,112 +102,101 @@ int arch__associate_ins_ops(struct arch *arch, const char *name, const struct in
- 	return 0;
- }
- 
--static struct arch architectures[] = {
--	{
--		.name = "arc",
--		.init = arc__annotate_init,
--		.e_machine = EM_ARC,
--	},
--	{
--		.name = "arm",
--		.init = arm__annotate_init,
--		.e_machine = EM_ARM,
--	},
--	{
--		.name = "arm64",
--		.init = arm64__annotate_init,
--		.e_machine = EM_AARCH64,
--	},
--	{
--		.name = "csky",
--		.init = csky__annotate_init,
--		.e_machine = EM_CSKY,
--#if defined(__CSKYABIV2__)
--		.e_flags = EF_CSKY_ABIV2,
--#else
--		.e_flags = EF_CSKY_ABIV1,
--#endif
--	},
--	{
--		.name = "mips",
--		.init = mips__annotate_init,
--		.e_machine = EM_MIPS,
--	},
--	{
--		.name = "x86",
--		.init = x86__annotate_init,
--		.e_machine = EM_X86_64, // TODO: EM_386 too.
--	},
--	{
--		.name = "powerpc",
--		.init = powerpc__annotate_init,
--		.e_machine = EM_PPC, // TODO: EM_PPC64 too.
--	},
--	{
--		.name = "riscv64",
--		.init = riscv64__annotate_init,
--		.e_machine = EM_RISCV,
--	},
--	{
--		.name = "s390",
--		.init = s390__annotate_init,
--		.e_machine = EM_S390,
--	},
--	{
--		.name = "sparc",
--		.init = sparc__annotate_init,
--		.e_machine = EM_SPARC,
--	},
--	{
--		.name = "loongarch",
--		.init = loongarch__annotate_init,
--		.e_machine = EM_LOONGARCH,
--	},
--};
-+static int e_machine_and_eflags__cmp(const struct e_machine_and_e_flags *val1,
-+				     const struct e_machine_and_e_flags *val2)
-+{
-+	if (val1->e_machine == val2->e_machine) {
-+		if (val1->e_machine != EM_CSKY)
-+			return 0;
-+		if ((val1->e_flags & EF_CSKY_ABIMASK) < (val2->e_flags & EF_CSKY_ABIMASK))
-+			return -1;
-+		return (val1->e_flags & EF_CSKY_ABIMASK) > (val2->e_flags & EF_CSKY_ABIMASK);
-+	}
-+	return val1->e_machine < val2->e_machine ? -1 : 1;
-+}
- 
--static int arch__key_cmp(const void *name, const void *archp)
-+static int arch__key_cmp(const void *key, const void *archp)
- {
--	const struct arch *arch = archp;
-+	const struct arch *const *arch = archp;
- 
--	return strcmp(name, arch->name);
-+	return e_machine_and_eflags__cmp(key, &(*arch)->id);
- }
- 
- static int arch__cmp(const void *a, const void *b)
- {
--	const struct arch *aa = a;
--	const struct arch *ab = b;
-+	const struct arch *const *aa = a;
-+	const struct arch *const *ab = b;
- 
--	return strcmp(aa->name, ab->name);
-+	return e_machine_and_eflags__cmp(&(*aa)->id, &(*ab)->id);
- }
- 
--static void arch__sort(void)
-+const struct arch *arch__find(uint16_t e_machine, const char *cpuid)
- {
--	const int nmemb = ARRAY_SIZE(architectures);
-+	static const struct arch *(*const arch_new_fn[])(const struct e_machine_and_e_flags *id,
-+							 const char *cpuid) = {
-+		[EM_386]	= arch__new_x86,
-+		[EM_ARC]	= arch__new_arc,
-+		[EM_ARM]	= arch__new_arm,
-+		[EM_AARCH64]	= arch__new_arm64,
-+		[EM_CSKY]	= arch__new_csky,
-+		[EM_LOONGARCH]	= arch__new_loongarch,
-+		[EM_MIPS]	= arch__new_mips,
-+		[EM_PPC64]	= arch__new_powerpc,
-+		[EM_PPC]	= arch__new_powerpc,
-+		[EM_RISCV]	= arch__new_riscv64,
-+		[EM_S390]	= arch__new_s390,
-+		[EM_SPARC]	= arch__new_sparc,
-+		[EM_SPARCV9]	= arch__new_sparc,
-+		[EM_X86_64]	= arch__new_x86,
-+	};
-+	static const struct arch **archs;
-+	static size_t num_archs;
-+	struct e_machine_and_e_flags key = {
-+		.e_machine = e_machine,
-+		// TODO: e_flags should really come from the same source as e_machine.
-+		.e_flags = EF_HOST,
-+	};
-+	const struct arch *result = NULL, **tmp;
- 
--	qsort(architectures, nmemb, sizeof(struct arch), arch__cmp);
--}
-+	if (num_archs > 0) {
-+		tmp = bsearch(&key, archs, num_archs, sizeof(*archs), arch__key_cmp);
-+		if (tmp)
-+			result = *tmp;
-+	}
- 
--const struct arch *arch__find(const char *name)
--{
--	const int nmemb = ARRAY_SIZE(architectures);
--	static bool sorted;
-+	if (result)
-+		return result;
- 
--	if (!sorted) {
--		arch__sort();
--		sorted = true;
-+	if (e_machine >= ARRAY_SIZE(arch_new_fn) || arch_new_fn[e_machine] == NULL) {
-+		errno = ENOTSUP;
-+		return NULL;
- 	}
- 
--	return bsearch(name, architectures, nmemb, sizeof(struct arch), arch__key_cmp);
-+	tmp = reallocarray(archs, num_archs + 1, sizeof(*archs));
-+	if (!tmp)
-+		return NULL;
-+
-+	result = arch_new_fn[e_machine](&key, cpuid);
-+	if (!result) {
-+		pr_err("%s: failed to initialize %s (%u) arch priv area\n",
-+			__func__, result->name, e_machine);
-+		free(tmp);
-+		return NULL;
-+	}
-+	archs = tmp;
-+	archs[num_archs++] = result;
-+	qsort(archs, num_archs, sizeof(*archs), arch__cmp);
-+	return result;
- }
- 
- bool arch__is_x86(const struct arch *arch)
- {
--	return arch->e_machine == EM_386 || arch->e_machine == EM_X86_64;
-+	return arch->id.e_machine == EM_386 || arch->id.e_machine == EM_X86_64;
- }
- 
- bool arch__is_powerpc(const struct arch *arch)
- {
--	return arch->e_machine == EM_PPC || arch->e_machine == EM_PPC64;
-+	return arch->id.e_machine == EM_PPC || arch->id.e_machine == EM_PPC64;
- }
- 
- static void ins_ops__delete(struct ins_operands *ops)
-diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-index b6a2a30fdf27..2793d48aa04e 100644
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -17,21 +17,23 @@ struct data_loc_info;
- struct type_state;
- struct disasm_line;
- 
-+struct e_machine_and_e_flags {
-+	uint16_t e_machine;
-+	uint32_t e_flags;
-+};
-+
- struct arch {
--	const char	*name;
-+	/** @id: ELF machine and flags associated with arch. */
-+	struct e_machine_and_e_flags id;
-+	/** @name: name such as "x86" or "powerpc". */
-+	const char		*name;
- 	const struct ins	*instructions;
--	size_t		nr_instructions;
--	size_t		nr_instructions_allocated;
--	const struct ins_ops  *(*associate_instruction_ops)(struct arch *arch, const char *name);
--	bool		sorted_instructions;
--	bool		initialized;
--	const char	*insn_suffix;
--	void		*priv;
--	unsigned int	model;
--	unsigned int	family;
--	int		(*init)(struct arch *arch, char *cpuid);
--	bool		(*ins_is_fused)(const struct arch *arch, const char *ins1,
--					const char *ins2);
-+	size_t			nr_instructions;
-+	size_t			nr_instructions_allocated;
-+	bool			sorted_instructions;
-+	const char		*insn_suffix;
-+	unsigned int		model;
-+	unsigned int		family;
- 	struct		{
- 		char comment_char;
- 		char skip_functions_char;
-@@ -39,15 +41,14 @@ struct arch {
- 		char memory_ref_char;
- 		char imm_char;
- 	} objdump;
-+	bool		(*ins_is_fused)(const struct arch *arch, const char *ins1,
-+					const char *ins2);
-+	const struct ins_ops  *(*associate_instruction_ops)(struct arch *arch, const char *name);
- #ifdef HAVE_LIBDW_SUPPORT
- 	void		(*update_insn_state)(struct type_state *state,
- 				struct data_loc_info *dloc, Dwarf_Die *cu_die,
- 				struct disasm_line *dl);
- #endif
--	/** @e_machine: ELF machine associated with arch. */
--	unsigned int e_machine;
--	/** @e_flags: Optional ELF flags associated with arch. */
--	unsigned int e_flags;
- };
- 
- struct ins {
-@@ -107,7 +108,7 @@ struct annotate_args {
- 	char			  *fileloc;
- };
- 
--const struct arch *arch__find(const char *name);
-+const struct arch *arch__find(uint16_t e_machine, const char *cpuid);
- bool arch__is_x86(const struct arch *arch);
- bool arch__is_powerpc(const struct arch *arch);
- 
-@@ -121,17 +122,17 @@ extern const struct ins_ops ret_ops;
- 
- int arch__associate_ins_ops(struct arch *arch, const char *name, const struct ins_ops *ops);
- 
--int arc__annotate_init(struct arch *arch, char *cpuid);
--int arm__annotate_init(struct arch *arch, char *cpuid);
--int arm64__annotate_init(struct arch *arch, char *cpuid);
--int csky__annotate_init(struct arch *arch, char *cpuid);
--int loongarch__annotate_init(struct arch *arch, char *cpuid);
--int mips__annotate_init(struct arch *arch, char *cpuid);
--int powerpc__annotate_init(struct arch *arch, char *cpuid);
--int riscv64__annotate_init(struct arch *arch, char *cpuid);
--int s390__annotate_init(struct arch *arch, char *cpuid);
--int sparc__annotate_init(struct arch *arch, char *cpuid);
--int x86__annotate_init(struct arch *arch, char *cpuid);
-+const struct arch *arch__new_arc(const struct e_machine_and_e_flags *id, const char *cpuid);
-+const struct arch *arch__new_arm(const struct e_machine_and_e_flags *id, const char *cpuid);
-+const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id, const char *cpuid);
-+const struct arch *arch__new_csky(const struct e_machine_and_e_flags *id, const char *cpuid);
-+const struct arch *arch__new_loongarch(const struct e_machine_and_e_flags *id, const char *cpuid);
-+const struct arch *arch__new_mips(const struct e_machine_and_e_flags *id, const char *cpuid);
-+const struct arch *arch__new_powerpc(const struct e_machine_and_e_flags *id, const char *cpuid);
-+const struct arch *arch__new_riscv64(const struct e_machine_and_e_flags *id, const char *cpuid);
-+const struct arch *arch__new_s390(const struct e_machine_and_e_flags *id, const char *cpuid);
-+const struct arch *arch__new_sparc(const struct e_machine_and_e_flags *id, const char *cpuid);
-+const struct arch *arch__new_x86(const struct e_machine_and_e_flags *id, const char *cpuid);
- 
- const struct ins_ops *ins__find(const struct arch *arch, const char *name, struct disasm_line *dl);
- 
--- 
-2.52.0.457.g6b5491de43-goog
+On 1/18/2026 4:51 PM, Mi, Dapeng wrote:
+> 
+> On 1/14/2026 2:06 AM, Chun-Tse Shao wrote:
+>> Ping.
+>>
+>> Thanks for your comment, Ian. To Intel team, can we get confirmation
+>> of the GNR SNR2 configuration?
+>>
+>> -CT
+>>
+>> On Thu, Jan 8, 2026 at 11:19 AM Ian Rogers <irogers@google.com> wrote:
+>>> On Thu, Jan 8, 2026 at 10:45 AM Chun-Tse Shao <ctshao@google.com> wrote:
+>>>> Similar to GNR [1], Emeraldrapids supports sub-NUMA clusters as well.
+>>>> Adjust cpumasks as the logic for GNR in [1].
+>>>>
+>>>> Tested on Emeraldrapids with SNC2 enabled:
+>>>>   $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a -- sleep 1
+>>>>
+>>>>    Performance counter stats for 'system wide':
+>>>>
+>>>>   N0       30        72125876670      UNC_CHA_CLOCKTICKS
+>>>>   N0        4         8815163648      UNC_M_CLOCKTICKS
+>>>>   N1       30        72124958844      UNC_CHA_CLOCKTICKS
+>>>>   N1        4         8815014974      UNC_M_CLOCKTICKS
+>>>>   N2       30        72121049022      UNC_CHA_CLOCKTICKS
+>>>>   N2        4         8814592626      UNC_M_CLOCKTICKS
+>>>>   N3       30        72117133854      UNC_CHA_CLOCKTICKS
+>>>>   N3        4         8814012840      UNC_M_CLOCKTICKS
+>>>>
+>>>>          1.001574118 seconds time elapsed
+>>>>
+>>>> [1] lore.kernel.org/20250515181417.491401-1-irogers@google.com
+>>>>
+>>>> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+>>>> ---
+>>>>  tools/perf/arch/x86/util/pmu.c | 45 +++++++++++++++++++++-------------
+>>>>  1 file changed, 28 insertions(+), 17 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+>>>> index a3f96221758d..fad68a0f7b5d 100644
+>>>> --- a/tools/perf/arch/x86/util/pmu.c
+>>>> +++ b/tools/perf/arch/x86/util/pmu.c
+>>>> @@ -22,20 +22,29 @@
+>>>>  #include "util/env.h"
+>>>>  #include "util/header.h"
+>>>>
+>>>> -static bool x86__is_intel_graniterapids(void)
+>>>> +static bool x86__is_snc_supported(void)
+>>>>  {
+>>>> -       static bool checked_if_graniterapids;
+>>>> -       static bool is_graniterapids;
+>>>> +       static bool checked_if_snc_supported;
+>>>> +       static bool is_supported;
+>>>>
+>>>> -       if (!checked_if_graniterapids) {
+>>>> -               const char *graniterapids_cpuid = "GenuineIntel-6-A[DE]";
+>>>> +       if (!checked_if_snc_supported) {
+>>>> +
+>>>> +               /* Emeraldrapids and Graniterapids support SNC configuration. */
+>>>> +               static const char *const supported_cpuids[] = {
+>>>> +                       "GenuineIntel-6-CF", /* Emeraldrapids */
+>>>> +                       "GenuineIntel-6-A[DE]", /* Graniterapids */
+>>>> +               };
+>>>>                 char *cpuid = get_cpuid_str((struct perf_cpu){0});
+>>>>
+>>>> -               is_graniterapids = cpuid && strcmp_cpuid_str(graniterapids_cpuid, cpuid) == 0;
+>>>> +               for (size_t i = 0; i < ARRAY_SIZE(supported_cpuids); i++) {
+>>>> +                       is_supported = cpuid && strcmp_cpuid_str(supported_cpuids[i], cpuid) == 0;
+>>>> +                       if (is_supported)
+>>>> +                               break;
+>>>> +               }
+>>>>                 free(cpuid);
+>>>> -               checked_if_graniterapids = true;
+>>>> +               checked_if_snc_supported = true;
+>>>>         }
+>>>> -       return is_graniterapids;
+>>>> +       return checked_if_snc_supported;
+>>>>  }
+>>>>
+>>>>  static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
+>>>> @@ -64,6 +73,7 @@ static int snc_nodes_per_l3_cache(void)
+>>>>                         read_sysfs_cpu_map("devices/system/cpu/cpu0/cache/index3/shared_cpu_list");
+>>>>
+>>>>                 snc_nodes = perf_cpu_map__nr(cache_cpus) / perf_cpu_map__nr(node_cpus);
+>>>> +
+>>>>                 perf_cpu_map__put(cache_cpus);
+>>>>                 perf_cpu_map__put(node_cpus);
+>>>>                 checked_snc = true;
+>>>> @@ -137,8 +147,8 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
+>>>>         // Compute the IMC SNC using lookup tables.
+>>>>         unsigned int imc_num;
+>>>>         int snc_nodes = snc_nodes_per_l3_cache();
+>>>> -       const u8 snc2_map[] = {1, 1, 0, 0, 1, 1, 0, 0};
+>>>> -       const u8 snc3_map[] = {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
+>>>> +       const u8 snc2_map[] = {0, 0, 1, 1};
+>>> Does this alter the behavior on GNR? ie 1,1,0,0 vs 0,0,1,1.
+
+It appears to break GNR SNC2. While it works for the --per-node test, it
+fails the following affinity test. Testing on EMR shows that it follows
+the new lookup table. Should we use a model-specific lookup table here?
+
+$ taskset -c CPU0 stress-ng --vm 1 --vm-bytes 2G --vm-method all
+--timeout 30s
+
+# UNC_M_PRE_COUNT.ALL
+$ perf stat \
+        -e uncore_imc_0/event=0x03,umask=0xFF/ \
+        -e uncore_imc_1/event=0x03,umask=0xFF/ \
+        -e uncore_imc_2/event=0x03,umask=0xFF/ \
+        -e uncore_imc_3/event=0x03,umask=0xFF/ \
+        -e uncore_imc_4/event=0x03,umask=0xFF/ \
+        -e uncore_imc_5/event=0x03,umask=0xFF/ \
+        -e uncore_imc_6/event=0x03,umask=0xFF/ \
+        -e uncore_imc_7/event=0x03,umask=0xFF/ \
+        -a -I 1000
+
+This shows that the uncore_imc_[2|3|6|7] boxes are affinitized to CPU0.
+
+     6.015968927          1,598,800      uncore_imc_0/event=0x03,umask=0xFF/
+     6.015968927          1,605,301      uncore_imc_1/event=0x03,umask=0xFF/
+     6.015968927         20,252,028      uncore_imc_2/event=0x03,umask=0xFF/
+     6.015968927         20,256,187      uncore_imc_3/event=0x03,umask=0xFF/
+     6.015968927          1,594,551      uncore_imc_4/event=0x03,umask=0xFF/
+     6.015968927          1,598,350      uncore_imc_5/event=0x03,umask=0xFF/
+     6.015968927         20,185,615      uncore_imc_6/event=0x03,umask=0xFF/
+     6.015968927         20,128,015      uncore_imc_7/event=0x03,umask=0xFF/
+
+Testing with additional CPUs confirms that the original GNR SNC2 lookup
+table is correct.
+
+                        CPU                     uncore_imc_n
+NUMA node0 CPU(s):      0-42,344-386            2 3 6 7
+NUMA node1 CPU(s):      43-85,387-429           0 1 4 5
+NUMA node2 CPU(s):      86-128,430-472          2 3 6 7
+NUMA node3 CPU(s):      129-171,473-515         0 1 4 5
+NUMA node4 CPU(s):      172-214,516-558         2 3 6 7
+NUMA node5 CPU(s):      215-257,559-601         0 1 4 5
+NUMA node6 CPU(s):      258-300,602-644         2 3 6 7
+NUMA node7 CPU(s):      301-343,645-687         0 1 4 5
+
+>>>
+>>> Thanks,
+>>> Ian
+>>>
+>>>> +       const u8 snc3_map[] = {1, 1, 0, 0, 2, 2};
+>>>>         const u8 *snc_map;
+>>>>         size_t snc_map_len;
+>>>>
+>>>> @@ -161,11 +171,11 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
+>>>>                 pr_warning("Unexpected: unable to compute IMC number '%s'\n", pmu->name);
+>>>>                 return 0;
+>>>>         }
+>>>> -       if (imc_num >= snc_map_len) {
+>>>> +       if (imc_num >= snc_map_len * perf_cpu_map__nr(pmu->cpus)) {
+>>>>                 pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_num, snc_nodes);
+>>>>                 return 0;
+>>>>         }
+>>>> -       return snc_map[imc_num];
+>>>> +       return snc_map[imc_num % snc_map_len];
+>>>>  }
+>>>>
+>>>>  static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+>>>> @@ -205,7 +215,7 @@ static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+>>>>         return cpu_adjust[pmu_snc];
+>>>>  }
+>>>>
+>>>> -static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
+>>>> +static void uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
+>>>>  {
+>>>>         // With sub-NUMA clustering (SNC) there is a NUMA node per SNC in the
+>>>>         // topology. For example, a two socket graniterapids machine may be set
+>>>> @@ -304,11 +314,12 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+>>>>                                 pmu->mem_events = perf_mem_events_intel_aux;
+>>>>                         else
+>>>>                                 pmu->mem_events = perf_mem_events_intel;
+>>>> -               } else if (x86__is_intel_graniterapids()) {
+>>>> +               } else if (x86__is_snc_supported()) {
+>>>>                         if (starts_with(pmu->name, "uncore_cha_"))
+>>>> -                               gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
+>>>> -                       else if (starts_with(pmu->name, "uncore_imc_"))
+>>>> -                               gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
+>>>> +                               uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
+>>>> +                       else if (starts_with(pmu->name, "uncore_imc_") &&
+>>>> +                                !starts_with(pmu->name, "uncore_imc_free_running"))
+>>>> +                               uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
+>>>>                 }
+>>>>         }
+>>>>  }
+>>>> --
+>>>> 2.52.0.457.g6b5491de43-goog
+>>>>
 
