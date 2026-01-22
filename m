@@ -1,105 +1,105 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C181D3A0B09
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 11:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10ED1392C2A
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 11:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.179
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769082428; cv=pass; b=b7Wbbv8IqbMPp8GJTt1lffUgsHyjOFa2NtV4kpPyXEoAlsmHpWR+Qj/yJml42GtsJFK/Js8TCDdE9l0HXX91twD0uZ0JIucqM3mP1JQyli4MAkimJ/zMI5npoZZdjtxi/y8DgW9lZO/VH+TPIXiAdJtKftpzYXYcik3IBfhzp2k=
+	t=1769083023; cv=pass; b=bhekf4K7snozKyEq9PfhEXHNI2fe3ReRXRP0d/v04RgxygzYjdHSeZqyJ8DwfvqGk9CeXv8OTzqr22owxgnEzaiS5kYNtRSMoIIJyMMQem6ZlANnDo+68LwdwB32dlIuyVJ9ZVk48a2nfDamCpThlwPbazx7QFgjxW5UgOioJwg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769082428; c=relaxed/simple;
-	bh=n4SQWlevJx/WdvMfV1rCMA1VgLwX7M282m1WRU8aY5w=;
+	s=arc-20240116; t=1769083023; c=relaxed/simple;
+	bh=hJ007eQWrmiiTyhYCIG5NbIfhXzJmaHuigzDsGpKYoA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m9NP4t16Jipz0yqOEYfYWe2jj+2oHtlazMKsWlg4GBvmumAUaCVV/loTTgtJHeMARpP0PHSJEPFbJvFwH+RIXP84/TIQCSWaBaZIBz/poEnlQlAuxA+ma7sDGe9Hbu9T/aVmWUehM6+ZdBpc8eVcMRgVtql7XbIhGSCKcVJdvOQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fpYOiGHi; arc=pass smtp.client-ip=209.85.167.172
+	 To:Cc:Content-Type; b=Kzgdv9a/sWKkHX3Pr1+yz1Mb39WPpZlJGSZxcPn9QNM8vhp+in9m4wSi9StVonggg8aeikRPHrvmoERpyntJx6LOgd8NOAuXkrbER9VM9P5NlAJdIk+w3zwHsm8DGU3bunwQJte2XO+0tAGJTOLPoCMEorFU5OXQBVvldmmN97Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d2XBRXnw; arc=pass smtp.client-ip=209.85.167.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpYOiGHi"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-45c958d480aso300575b6e.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 03:47:05 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769082424; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d2XBRXnw"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-45c92df37fdso339089b6e.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 03:57:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769083021; cv=none;
         d=google.com; s=arc-20240605;
-        b=FwiZSeXEvxWOG6ps3m3Ma7GbiF3HXWhyIvgkA4XlhUDleGIc2hgTWe6gx+byJkpGdW
-         NRnJT88qe8H/RJ+qunrXKxQhXplrmOkMCZ2M1Y6DIRW8Ip8+iRZJMX8TJ1SSLQGLI+ji
-         CHyYFfVhziGcmPPRKwn6f62PmnIruLRGLP4eAU3IuNAMo+hkKd3oxLLWQY9rLddUMYbG
-         GcmQd6AcQTCvj2ohS8UUO5DF+TEAIvrOtHmESJc8jyvHzUaVT3R+HOEExWuj4J6SVYws
-         0V7wjx23ds2U/G6XEwEAwOtC6BiNlTZ7RH20GbDuStJlmQB2erC99oUtNjSSPv7ozw4N
-         Sv6g==
+        b=UGdCMo6d0SimUTLSfC+CSsCtrSvZXgk+/2edyWb6CPPpX0VqbLlpdwsy6LTsKx94Dg
+         OMmRtpmmYW27tSlzD0N8ZvAxPSTeb24/QNSVhZdXnLF3aMlViwBNW6LQfH3uVMCcUKwE
+         +5eRV6nPtsBh/+Ye2tw3qfHZtRi1kjc+pve0cNu78qxalsUT2DoSlJpeLkCMRL06BLOa
+         7kj0wy8zcbXJKZNxysimUN1jC/LgqnHKkJ/2i8zCpDbWJgWp8O62sHl+Nmi0w1We4+mX
+         aUB4IxhwX9uHgVYx3K2OTBqZ/hRrY6S6TLz9MnMS4u4E3rcdpS3uqAtf+FdSh9Xe0VOm
+         vcqw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=0GEdFKTShC0ZpJHoWL5oV3syGXTsJmRbqldb2CgIg7Y=;
-        fh=GyfYlLVSM72dGjfs7ZbeVckrlJJGRMeCiWplFeA0Tyc=;
-        b=JXtCG83RwagdywAbRjVPcpWjazoUQn64c8hicoggBpFW2lNW2rhKldqlNZBUkFoFic
-         NPMiJKXXmeMFCcTrh47n5SUiywSxtfBHuoCYYxeDTZCSOmELedNMf//8FHpbSs7XKoMx
-         aoOpU+Hy8XwCRwH3mTrwo7mc8lXGdtplTBIWknTElV90VMEA8XCh37vp4/hJH55i2uWJ
-         VTEvp/YOm+yoAdJ2m44OQ+4Kz1Ae/KEx204EtY3cy4JRPfdOB1Erqf3JiskA0bILZlUC
-         VzBrdvVL9SEx2YKwSlGPq9kiICRM/4JJdImu+iPENxvqojvKbnRcqhRdCCSXZcik834X
-         +/VA==;
+        bh=BJsfpOClmaQvG81S67nCd+VIer0uq8erZuxF5hyxS28=;
+        fh=qJlNw2edwwVAXHX5w1fHZK7s63vUnUiIpDQsaMJFpL8=;
+        b=kJ/34wsp9Rfp/mGs21abJx3VIZtki88nsbaoPXKA9dY6IzpfFF8dXsyekwaNQsDp6U
+         1jCS6HfdK5IQ9yj1Cd82Iix2DLfCPg+9mGMoHCdkw9i8HT9sTMgDmJnaDqx6fDku2SRi
+         sJoCS3zUq0W9vO3gzs0dNBo10Gb+vTEGkGNXr4OronKMijqhz0LwKC3d7ZquJDU55mD5
+         BeZ4mMOqMBMYBg8MIlucUJnnFRudWwSC8D2+jDlzjH8rRoBN2nQCFYBj9BQBnsPmmYcY
+         hqrkKz7gaORLdxqdZAe6SLwS8LgPZciPolRP+Ch/l1VG+znxBFJEQ9UKnug+C8/prc01
+         wiGQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769082424; x=1769687224; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1769083021; x=1769687821; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0GEdFKTShC0ZpJHoWL5oV3syGXTsJmRbqldb2CgIg7Y=;
-        b=fpYOiGHifCl8ph3SG9opZlgEx7T1SAyKjcthXICsV1xbmLpgi9hcJ1dJR9E+S+pdVj
-         N9+V6A9RqdfpAWPTlX7qIeDpRVXc/G9cxInH2weyt1bkVNaJ8DO940dMfYP6f7X7zLZy
-         3WotOZkCP+LVjvbayRFg0B78hIAGNXqDGC28qCfUpF8rdcM4d8I8Oh9JJBdqK/xn5l8j
-         M1qc+E/p2gq5hl7GIeA+P1cuyZYmNHb0+lBBR6AxQMap5f7Vp35gT1jVQmZiAwhxfetp
-         Hfnj7gGPAjaP/dOgUgwBN4HQbbmtH646Mzb6svTlSACfgc/fMatNK6+NXVP6yWsaC9/t
-         x+fQ==
+        bh=BJsfpOClmaQvG81S67nCd+VIer0uq8erZuxF5hyxS28=;
+        b=d2XBRXnwJAV3Iu89GZptHtxI/2k1bbUUzHrgf1kn1Z3qYqMHOXheWEr+5rsmNICoJI
+         t/DNSZj/Ar/JUyDJRboisrSBH7jlonzvQ48vl0XEP7l9FUPPkJmcUoxwOSo+yu514HP4
+         4997OcyrRSxXLWTGFxexH9ZBcwChyAFCLzUlRg0d4V5HcaXaJvh/m506m4c6zFvnKpsx
+         AdPFTYZcACKAxBcdXGWwb+Q356dHiX3q8bh3JPeEi06uuwL+D7b2S55JGLvjYhtWRX2Q
+         Hls9psDgDt9FcpAP7kyCOiv3/fq7gibOzzPHhJPRqnxfF/zK871VhkjFN7sTKK/Err9n
+         ARUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769082424; x=1769687224;
+        d=1e100.net; s=20230601; t=1769083021; x=1769687821;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0GEdFKTShC0ZpJHoWL5oV3syGXTsJmRbqldb2CgIg7Y=;
-        b=pBR9MXNEldAmRLFfEqaqxQ6UhHkmuvXls2ksZx19IKlSVochVH1Qi8ii09gQHthl9p
-         sJzSd0DHuLZ2RrhwgmPjtLbo4qqZILFKU92tA4UlickY7dikTIA7eQrq862H5ytUNuUk
-         RQiM6KioCC0gNyGxWLiIg3+1E/ouFHYqX8xE8ZD0OFfvO0FsOC+Jh7B2vCSWltypzHW8
-         QpPkWul9IB3Ak1yUIl810l/Fp9rBqkN7BNpO+llFQtg9P18MV2rpHMrmZP655bRUVLpg
-         eoE7QC/Sts+KvTHvVLyWooEfQQx4cNP4OoY7fq0QCIQBouzCfdIFyn8r/dX4JXHdeZM2
-         xDyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWM4DMXXybBfW2lKmgicmQdcyUEOQL4/IsBTBBrXjVEITzuQmca7gi9ID6qZG81D8oP3Rw3h7Lfr/i6Sb9zQOwM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx97ConSlBODK+xDSY8i8/G6pO+skSsG66lBvYJmx24Z1Pn+P7U
-	3IRD2hX19GAifPEbxenHtFOHxEaw9tsld8uuyojBoizVvIxIQwMlRGRYHpc1qJ6yA2O29mI+6W8
-	PEJmJlgDp0bdBN8uKwsyZqKr/jTVNNbyQ0HI4h/8=
-X-Gm-Gg: AZuq6aKi9wKDOJCB30cdU1cQh7LONYmYI5tBuI+KUnX8yfza2Iv7/EmPGQ3xJbpjePH
-	JVPg0J8RfiEY41ACni3D7mlTufnTdWr6eU3qtpiu92uU2jgSHw3qbG+E40I/YOdhYbqJGhxNxFG
-	K/OTsG6F1W1UKoGtM14EaIN++UgLHgFWSXlwpuBIIpbDAJ0SRcnQS3jUnjW0JdrBYGWo2KsOVQt
-	QBBGdpI/YqJf1yDqfxeTpQDiuBii9pgKg93ocqvuaQxbHqwKazPTQ4ackeQHXQW2UFVR4jB
-X-Received: by 2002:a05:6808:538d:b0:450:340:2693 with SMTP id
- 5614622812f47-45e8aa24273mr3205271b6e.42.1769082424420; Thu, 22 Jan 2026
- 03:47:04 -0800 (PST)
+        bh=BJsfpOClmaQvG81S67nCd+VIer0uq8erZuxF5hyxS28=;
+        b=iYUH0isjT1kl0qKgJg9meywrjMqPrKww1SSjiyeqTPLKW0Fz+WxP7ejMgbKJU+1eaU
+         OkxNvLpcJohOyynidWA++OoSpDlNM3/sQcy7se7KIRv9sJaypJo47KMuoRVZdsGKG2zf
+         HwUkTDpSNOghuAXhGE4xs4404wUiw3UwLVWLSr4ubvl1yUqdjk6WrQeO6GLGvUymj4t1
+         eGf1lwlOzDFNkPh2grxVN4+60/CvwhOR5r1XtpmsZbvdg/DP+9/IJWz6nQOKGl+ph3dC
+         emm1wwJNBaz2EJG9f7NWWJdBsjszb4Mvlyg8ZRfPCwCFM+zIZy+8PeANOrVlwCquP1sg
+         yr8w==
+X-Forwarded-Encrypted: i=1; AJvYcCWaCRxwOc0H9IrgE2bRJuaxbgECW61bCd3n+sVTFchih6nesvxP2VCI5uqTDOh5crfWw8M62VyE4xPWWUW2LqrX@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfQFyzIeK7fGSJVXLyfYAgS2DVR6WKvQGZ+PY425SAVSHbidmd
+	eq2gXtnNOGesSxdF0aqHlc7jczBxOMmGfcxrZsqdwCsp2BZI9saadIur3EI/98M0DiM/8GwFHvk
+	lSuK/BWL0l80czBKLDQvAsojyYwfoayU=
+X-Gm-Gg: AZuq6aLWRjwV7pB/oKS1Ca0rhLVv2Iu2G2I3RUImkdNGVRc15UdrkSVOhyHZlyr8aT/
+	pdzuuDOZzr7EJm9cZKM/SuDV5GgMnvQkiDB8T7vDztsP8dyJBCcRa0XWJB2wqr8kp8Lk5dbZn69
+	FJU8pPbao4yOLPC5TIdZPV4FpVRuzfjx+XImiQs3Pp+SZXPq57+1vAumzs0dl6QAFTyW/Sk5gch
+	89VZiVjzI15gIgXHQXtckhueWiE//pUQrgMr6ZEkPEo90vsWXwzE4wnwWDy8qr27bjQoJjX
+X-Received: by 2002:a05:6870:c69b:b0:3fd:ec4f:d1d2 with SMTP id
+ 586e51a60fabf-4044c157df6mr10910160fac.10.1769083020732; Thu, 22 Jan 2026
+ 03:57:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260122073127.375139-1-irogers@google.com> <20260122073127.375139-3-irogers@google.com>
-In-Reply-To: <20260122073127.375139-3-irogers@google.com>
+References: <20260122073127.375139-1-irogers@google.com> <9fd8375c-2de7-4305-ac3e-42ff8f919964@linaro.org>
+ <10c875e6-6cc2-4695-a0aa-01507541daf4@linaro.org>
+In-Reply-To: <10c875e6-6cc2-4695-a0aa-01507541daf4@linaro.org>
 From: Suchit Karunakaran <suchitkarunakaran@gmail.com>
-Date: Thu, 22 Jan 2026 17:16:52 +0530
-X-Gm-Features: AZwV_QjrC7BYx4_l0qj0u58o9jMWpinoFh5JfqyMmM-71XKtG3yyoT8qR6m_7W0
-Message-ID: <CAO9wTFh01Qzn9tAiXf8_eGd7AAJiKzjmHNw-hBBCzcYR9Mb8xg@mail.gmail.com>
-Subject: Re: [PATCH v1 02/11] perf annotate: Fix args leak of map_symbol
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+Date: Thu, 22 Jan 2026 17:26:49 +0530
+X-Gm-Features: AZwV_QjFtuAtj7gs3qI-DenUm1XMW9RrPz13HXtm-zTDxJ_0wzsKC5Z_5vStStw
+Message-ID: <CAO9wTFjaxNMcH7TgQyYjKR=3fNoO+D3cp6FgtRd9Li6JparYbA@mail.gmail.com>
+Subject: Re: [PATCH v1 00/11] perf annotate arch clean up
+To: James Clark <james.clark@linaro.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
-	Guo Ren <guoren@kernel.org>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Zecheng Li <zecheng@google.com>, Tianyou Li <tianyou.li@intel.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Julia Lawall <Julia.Lawall@inria.fr>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Aditya Bodkhe <aditya.b1@linux.ibm.com>, 
-	Howard Chu <howardchu95@gmail.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Zecheng Li <zecheng@google.com>, 
+	Tianyou Li <tianyou.li@intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Julia Lawall <Julia.Lawall@inria.fr>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Aditya Bodkhe <aditya.b1@linux.ibm.com>, Howard Chu <howardchu95@gmail.com>, 
 	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
 	"Dr. David Alan Gilbert" <linux@treblig.org>, Shimin Guo <shimin.guo@skydio.com>, 
 	Sergei Trofimovich <slyich@gmail.com>, linux-kernel@vger.kernel.org, 
@@ -107,41 +107,159 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-> @@ -1119,7 +1121,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
->                                       struct annotate_args *args,
->                                       char *parsed_line, int *line_nr, char **fileloc)
->  {
-> -       struct map *map = args->ms.map;
-> +       struct map *map = args->ms->map;
->         struct annotation *notes = symbol__annotation(sym);
->         struct disasm_line *dl;
->         char *tmp;
-> @@ -1151,7 +1153,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
->         args->line    = parsed_line;
->         args->line_nr = *line_nr;
->         args->fileloc = *fileloc;
-> -       args->ms.sym  = sym;
-> +       args->ms->sym  = sym;
+On Thu, 22 Jan 2026 at 16:17, James Clark <james.clark@linaro.org> wrote:
 >
->         dl = disasm_line__new(args);
->         (*line_nr)++;
-> @@ -1172,7 +1174,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
->                         .ms = { .map = map, },
->                 };
 >
-> -               if (!maps__find_ams(args->ms.maps, &target) &&
-> +               if (!maps__find_ams(args->ms->maps, &target) &&
->                     target.ms.sym->start == target.al_addr)
->                         dl->ops.target.sym = target.ms.sym;
->         }
+>
+> On 22/01/2026 10:43 am, James Clark wrote:
+> >
+> >
+> > On 22/01/2026 7:31 am, Ian Rogers wrote:
+> >> 2 initial memory leak fix patches for perf annotate.
+> >>
+> >> Move the disasm.c #included arch files into a new util/annotate-arch
+> >> directory. Make the code compile standalone. Try to better encapsulate
+> >> architecture specific code within the files and with a
+> >> arch__new_<arch> function that allows additional data to be associated
+> >> with the struct arch using the standard container_of trick.
+> >>
+> >> Make the lookup of struct arch use the ELF machine gather from a
+> >> thread rather than an evsel. For example, the evsel can't determine
+> >> the difference between EM_386 and EM_X86_64 so generally the latter
+> >> has currently been used. This means the dwarf registers are off as
+> >> register 1 is CX with EM_386 and DX with EM_X86_64. To facilitate this
+> >> change map_symbol is refactored to use a struct thread rather than a
+> >> struct maps, the maps being obtainable from the thread.
+> >>
+> >> To make in and out arguments clearer, for safety, etc. try to constify
+> >> struct arch and its related structs.
+> >>
+> >
+> > Hi Ian,
+> >
+> > I get this crash, not sure which commit causes it exactly but it
+> > happened 2/2 times on both x86 and arm:
+> >
+> >   $ perf record -- true
+> >   $ perf report
+> >
+> >   < Select first sample >
+> >   < Select annotate >
+> >
+> > perf: Segmentation fault
+> > -------- backtrace --------
+> >      #0 0x5df8f58ba973 in ui__signal_backtrace setup.c:110
+> >      #1 0x74373a642520 in __restore_rt libc_sigaction.c:0
+> >      #2 0x5df8f5963f0d in dso__kernel dso.h:532
+> >      #3 0x5df8f5965d0a in __map__const_kmap map.c:627
+> >      #4 0x5df8f5965a36 in map__rip_2objdump map.c:531
+> >      #5 0x5df8f58e5bef in symbol__parse_objdump_line disasm.c:1032
+> >      #6 0x5df8f58e498b in symbol__disassemble_objdump disasm.c:1503
+> >      #7 0x5df8f58e3852 in symbol__disassemble disasm.c:1621
+> >      #8 0x5df8f58c638d in symbol__annotate annotate.c:1055
+> >      #9 0x5df8f58c8628 in symbol__annotate2 annotate.c:2209
+> >      #10 0x5df8f58a36b7 in __hist_entry__tui_annotate annotate.c:1189
+> >      #11 0x5df8f58adf86 in do_annotate hists.c:2488
+> >      #12 0x5df8f58ad762 in evsel__hists_browse hists.c:3441
+> >      #13 0x5df8f58b78f2 in perf_evsel_menu__run hists.c:3556
+> >      #14 0x5df8f58adabc in __evlist__tui_browse_hists hists.c:3643
+> >      #15 0x5df8f58abf3b in evlist__tui_browse_hists hists.c:3691
+> >      #16 0x5df8f571ac3a in report__browse_hists builtin-report.c:688
+> >      #17 0x5df8f5719943 in __cmd_report builtin-report.c:1177
+> >      #18 0x5df8f57181bc in cmd_report builtin-report.c:1890
+> >      #19 0x5df8f57b5c3a in run_builtin perf.c:348
+> >      #20 0x5df8f57b53b3 in handle_internal_command perf.c:398
+> >      #21 0x5df8f57b5b2f in run_argv perf.c:445
+> >      #22 0x5df8f57b5091 in main perf.c:551
+> >      #23 0x74373a629d90 in __libc_start_call_main libc_start_call_main.h:58
+> >      #24 0x74373a629e40 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
+> >      #25 0x5df8f56ead35 in _start perf[55d35]
+> >
+> >
+>
+> Also the annotate test fails:
+>
+>   $ sudo perf test 74
+>   74: perf annotate basic tests                       : FAILED!
+>
+>
+> >> Ian Rogers (11):
+> >>    perf maps: Fix reference count leak in maps__find_ams
+> >>    perf annotate: Fix args leak of map_symbol
+> >>    perf disasm: Constify use of struct arch
+> >>    perf disasm: Constify use of struct ins_op
+> >>    perf disasm: Constify use of struct ins
+> >>    perf disasm: Rework the string arch__is to use the ELF machine
+> >>    perf disasm: Don't include C files from the arch directory
+> >>    perf disasm: Refactor ins__is_call/jump to avoid exposing arch ins_ops
+> >>    perf map_symbol: Switch from holding maps to holding thread
+> >>    perf disasm: Refactor arch__find and initialization of arch structs
+> >>    perf disasm: Minor layout tweaks for struct arch
+> >>
+> >>   tools/perf/arch/arc/annotate/instructions.c   |  11 -
+> >>   .../perf/arch/riscv64/annotate/instructions.c |  36 --
+> >>   tools/perf/ui/browsers/annotate.c             |   6 +-
+> >>   tools/perf/ui/browsers/hists.c                |   3 +-
+> >>   tools/perf/util/Build                         |   1 +
+> >>   tools/perf/util/addr_location.c               |   4 -
+> >>   tools/perf/util/addr_location.h               |   1 -
+> >>   tools/perf/util/annotate-arch/Build           |  11 +
+> >>   tools/perf/util/annotate-arch/annotate-arc.c  |  18 +
+> >>   .../annotate-arch/annotate-arm.c}             |  48 +-
+> >>   .../annotate-arch/annotate-arm64.c}           |  59 +--
+> >>   .../annotate-arch/annotate-csky.c}            |  29 +-
+> >>   .../annotate-arch/annotate-loongarch.c}       |  57 ++-
+> >>   .../annotate-arch/annotate-mips.c}            |  29 +-
+> >>   .../annotate-arch/annotate-powerpc.c}         | 125 +++++-
+> >>   .../util/annotate-arch/annotate-riscv64.c     |  41 ++
+> >>   .../annotate-arch/annotate-s390.c}            |  59 ++-
+> >>   .../annotate-arch/annotate-sparc.c}           |  26 +-
+> >>   .../annotate-arch/annotate-x86.c}             |  89 ++--
+> >>   tools/perf/util/annotate-data.c               |  12 +-
+> >>   tools/perf/util/annotate-data.h               |   2 +-
+> >>   tools/perf/util/annotate.c                    |  88 ++--
+> >>   tools/perf/util/annotate.h                    |  10 +-
+> >>   tools/perf/util/callchain.c                   |  12 +-
+> >>   tools/perf/util/capstone.c                    |  18 +-
+> >>   tools/perf/util/db-export.c                   |   1 -
+> >>   tools/perf/util/disasm.c                      | 424 +++++++-----------
+> >>   tools/perf/util/disasm.h                      |  95 ++--
+> >>   tools/perf/util/event.c                       |   2 -
+> >>   tools/perf/util/hist.c                        |  18 +-
+> >>   tools/perf/util/llvm.c                        |   8 +-
+> >>   tools/perf/util/machine.c                     |  13 +-
+> >>   tools/perf/util/map_symbol.c                  |   5 +-
+> >>   tools/perf/util/map_symbol.h                  |   3 +-
+> >>   tools/perf/util/maps.c                        |   1 +
+> >>   tools/perf/util/sort.c                        |   2 +-
+> >>   tools/perf/util/unwind-libdw.c                |   2 +-
+> >>   tools/perf/util/unwind-libunwind-local.c      |   2 +-
+> >>   38 files changed, 752 insertions(+), 619 deletions(-)
+> >>   delete mode 100644 tools/perf/arch/arc/annotate/instructions.c
+> >>   delete mode 100644 tools/perf/arch/riscv64/annotate/instructions.c
+> >>   create mode 100644 tools/perf/util/annotate-arch/Build
+> >>   create mode 100644 tools/perf/util/annotate-arch/annotate-arc.c
+> >>   rename tools/perf/{arch/arm/annotate/instructions.c => util/
+> >> annotate-arch/annotate-arm.c} (59%)
+> >>   rename tools/perf/{arch/arm64/annotate/instructions.c => util/
+> >> annotate-arch/annotate-arm64.c} (70%)
+> >>   rename tools/perf/{arch/csky/annotate/instructions.c => util/
+> >> annotate-arch/annotate-csky.c} (67%)
+> >>   rename tools/perf/{arch/loongarch/annotate/instructions.c => util/
+> >> annotate-arch/annotate-loongarch.c} (66%)
+> >>   rename tools/perf/{arch/mips/annotate/instructions.c => util/
+> >> annotate-arch/annotate-mips.c} (59%)
+> >>   rename tools/perf/{arch/powerpc/annotate/instructions.c => util/
+> >> annotate-arch/annotate-powerpc.c} (73%)
+> >>   create mode 100644 tools/perf/util/annotate-arch/annotate-riscv64.c
+> >>   rename tools/perf/{arch/s390/annotate/instructions.c => util/
+> >> annotate-arch/annotate-s390.c} (70%)
+> >>   rename tools/perf/{arch/sparc/annotate/instructions.c => util/
+> >> annotate-arch/annotate-sparc.c} (85%)
+> >>   rename tools/perf/{arch/x86/annotate/instructions.c => util/
+> >> annotate-arch/annotate-x86.c} (93%)
+> >>
+> >
+>
 
-Hi, a noob here so please correct me if I'm wrong.
-Looking at symbol__parse_objdump_line(), shouldn't we be calling
-map__get() when initializing the target struct? Since maps__find_ams()
-now calls map__put() (after patch 1).
-struct addr_map_symbol target = {
-    .addr = dl->ops.target.addr,
-    .ms = { .map = map__get(map), },
-};
-This would match the pattern used in call__parse() and jump__parse()
-that were fixed in patch 2.
+The annotate test fails after applying the 4th patch.
