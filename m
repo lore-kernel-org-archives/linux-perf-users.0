@@ -1,98 +1,147 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF6531A04E
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 17:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769104738; cv=none; b=r+YzrSrraIGEHUSJf/3m8Dj835xPO1GYCePrssoZj183VS98SPYMbppwH4AQCJmnQDDkZwLo7rIugX02R3WW8PlLmvV6FecIp4vpP6/D08WeznHnT97CONqeXHy22qRzULaNhd3+8wyOQzZb3mtcqtoTD3SqX6yNsIYFw6I1ZkQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769104738; c=relaxed/simple;
-	bh=61ieGi6tgxBt9xA4874XhGbiTWFJlqnS1CJ8/YE/2+4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=fKD7QlAmKxFuguspyNMMeT5vYZpxRY+4+LakBRG7ZjNkoHcQCik/7pdh9f/pd70z5WACblzdjoeGWR5bSagx83bUBVULxyq52BMtYppNjnFY6YJldL1Aw8wQ18neGphGvCGeyMCBNYLrD7bMMG6QHpjnMzkFlEFifK7+f/9ledA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UEIWb2nB; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C46C378831
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 18:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769106472; cv=pass; b=MfLejbkSfwgREvJxhLAw5s6msYG90JzcNCUbG/pNqoSh0TjMlbMJ296DvUDbjD1OhJ3Bg9gJeK/y86RGPaarOEDkZUxaELOgV1+rYP215FKl2tK1goHxuToNijk9BPWstB+vo0UfPVs8MP3r+nq68Q1f+CLxU6EEmZs9yHaQjRA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769106472; c=relaxed/simple;
+	bh=JyLxtvnE64ixGrgwDLQoLKsU4qPZEkI3GHp54dqCSuI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LP8FH/G6J9q16SHpx3y7o/emyspQaL0h4eOjalI2AQu5nctPQl7TPYpEgAeu5KcUqvhG2Uk8FBfS68dN+GnPibxhysdBjcmGffSNofECjp1CchviI5OYkg4jIyjLoln6PS5FMFUXjTrHLH0QxqxAZbbPVHxH5Fo7y4Q3PAaXvcs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4utpq25r; arc=pass smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UEIWb2nB"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-124743cf760so1834563c88.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 09:58:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4utpq25r"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2a1462573caso4525ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 10:27:47 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769106461; cv=none;
+        d=google.com; s=arc-20240605;
+        b=TLr1D3V14Eo4UpOPRFn500TYaV3t9aBo+cBz7j5B26cBBZtmuRwMAnyc2fuI4nMzdM
+         ljr67y3wY2QkpwwHr5rVhuuvUjppEV5Gl2M5DCtmn+bpMIoctqZ8ZLRBBFfDe9jJXwU9
+         bRqSy0ZkLUyCCqAebwAmSWl0w4TSyjyK1OgMKLP5RInTorWsQStG3/RjPbZn5Oh0cgU8
+         sk9Xcyu9C9sNgixXaEp4jt3YwhZ5yOxsWveeWjG2kSa2v7Dne74F5BteNhg1DQ0pRUDx
+         JkzUUGyWop0iGoAGBG3PPOD/Bc+pIHes+4vv+KVaoDTRdMZ40xQMz3Vpd32eizTL4gh3
+         xqcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=niO0TVx6ckVY9GU9pRuiDUDuM5tSmcMrUe8PmuupJdU=;
+        fh=y5I7MF/10QxLVVX7tL9QEpd2d5iufxiVYSWlU+wQE/k=;
+        b=bIjO4pP5O6DyoqzZBOMQuLF4jNs1jBbbKOj3L4tR1u+3gOlvrRLNYhm9osysgb7MiD
+         25RZj/e0gIrm/OiC44Y4iGHlWqa/tik7x297x+RrONOM9BAeWCik0rsQiUwNvc8Hz6Kk
+         NyqZRToOLMWA1WuqAiWKAt8y0SO3G8Txqj5pe19SruS2QRIyJlA8/afEVjQgFV03keR9
+         lwicnXI1SPDsb6wVEdg10Pz3jLex+mQ99xabpDPxdQJvCkzpdN0PUULgw5nBQVjCR58U
+         1vv14Cs2xn3w+8Xbd7bZwO2T8RdMQo+IuJIhQmd+S5KfpnkdP8sHj1nF4Qtn+UYjZvSw
+         dVHA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769104730; x=1769709530; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZtNnciwt61qdu/VZ1nvJdHEqwS5GTCcyAYHlwDlKrLw=;
-        b=UEIWb2nBixitlJhCStVV6u0ORO5NXu8NX+9vcIC/lO7/HMCE/H2d+IOi1XNsiEAcMb
-         Jkx3fAEHPrGGFtGsSQBcSyVu+kcyQe4FiIClFiurBHPtIFR/dDsvZvZPs8KJoDkdqndD
-         grCj0+MM3YU46SggTQgoEiJ/CCr5ghDt9a7JoELLhIQe/T/tJVMlPO0yNHpoAau0bDIx
-         gUMsPqOuWY0HFcvG37Vg4MQSRGZfpyNSE4piMInres7AXcLHW4+U5dQOfrOkHWtjUVUs
-         j/e4JkCMvS05a0CExFPopUyHpG/Mh71V9xHBk6LOVla4H1YLpk9Cpp5l4zcUFMk+QKKB
-         R1/g==
+        d=google.com; s=20230601; t=1769106461; x=1769711261; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=niO0TVx6ckVY9GU9pRuiDUDuM5tSmcMrUe8PmuupJdU=;
+        b=4utpq25ri3urWhvunmKV499fbt95NNotnuEf6Ou5IFkygyB7N6eCqPls0fFuCDnIDh
+         uZflL3v0G8xLddGCqixmmdjiY+Gd/mJ8HijyDlnO6jy0ONOzOLxiSC9u25wq8La7n70f
+         yPgDtEL5pWc+4x9ZDy7fhMlRGAtKfPK8flFPt3/5NI3O5LC+lLR37qixVq6lLdhyPrFC
+         DVPZFip54rrfj42WYCGEgd5brkHFch805iXKoG245LJJeBhi7MbRFiq0434IG130LSle
+         kUHMXZCpXWfZIzJ7RVvHAr7tfMKutORAbwic2savxUxhS1giy68riJ4nZQ4jIgflW7xk
+         hgaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769104730; x=1769709530;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZtNnciwt61qdu/VZ1nvJdHEqwS5GTCcyAYHlwDlKrLw=;
-        b=q1mJqSCN9F4+JmJtFISSmlaoBCfXYZY+QAXkERqsQBzRU+Y9RUfBDGRGt3n0/bTAnW
-         POjkzPudRqTCX6jeGP1HzdLtVQTMSccNvKRT6k18xzein8QEJFi65k86e2NhKuj0p0+q
-         cjyK3ZJlQeXckqjqKnFhIU2+6WPc5SAEeStMWbY/pZL3jDzao5eKwbFnWSDznlxIPETI
-         O7KbxDvvdDW4F7B4AQnjUInCBwrzG2qfIw85On+SP7MI9EZxkhZGz0+eyOmJIm7WYwhk
-         Do92BLMc6rSPUCHIhF5sC0Hsz6XJtFCktmBvJTVJp4FWq6dqY5oX8u7WST3+BXZ5Kq2C
-         7VPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEK1zRTFsSCttoZ6Aj8gHBY8BkxnHxMLR3PRaAoFdsPwRmD2OxRvLpsU5cxQn0K6w+5EY5CjDBckdDkcrJDS3u@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmcaFgul1fma9nE5oxhuj+JIb4XG+/KhKcxwipLJHjlqpJiwk2
-	6LUMqhoKlN0RZln8SIy6zNn0IwK86no4X8dYm9a6iSi/hvfVGZs8bJdjDdnc1ylvDOOGONTnTQr
-	B3O0Q4ZUdfA==
-X-Received: from dlbrh26.prod.google.com ([2002:a05:7022:f31a:b0:124:4ff9:fb25])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:618e:b0:122:2f4:b24b
- with SMTP id a92af1059eb24-1247dbf8d52mr73222c88.25.1769104730026; Thu, 22
- Jan 2026 09:58:50 -0800 (PST)
-Date: Thu, 22 Jan 2026 09:58:46 -0800
+        d=1e100.net; s=20230601; t=1769106461; x=1769711261;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=niO0TVx6ckVY9GU9pRuiDUDuM5tSmcMrUe8PmuupJdU=;
+        b=slXmuTDRHL4VIESxcsAPUTT35yPlwsEsXt28ODptUjzTNdn2BUPy3p6b2oRc+o+7aX
+         renD937kXwdQyPBgv5qL7OzLurStPVer582tm1zxX7NVrKGtj518Ho6/piCrmhduWdbj
+         UVQUs1wpq4Xfaw6raWmYsQfG75DytGXcrJT8g2S97zjJZ4wE8hAccg7w0ufOXgYFsNcO
+         j7xxlYMjvj1zQzW1rDMxRV3M84g9RyxsL9YwmqaO9/GXJ/qbYtZ5O1BkGn4r2F6ZgNrH
+         CGBfJY/WzlU2ZNyHEbQZ0PBZhBr0Us9c5naFzSgN7SkMekKicOmTSpdwBb7xydzMo+IR
+         hb+A==
+X-Forwarded-Encrypted: i=1; AJvYcCXBV8eApzjJ2h09nKLakrHJy/G4Rvbx5ZhkQfjxI7yhT0jzp4Zcz4ZjTjR/UboPQPn0cfTUs/0tEisJWaeGiDA2@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYEqIpqiZdj0vn9uquDF6IrxOyIqNKEPImQbL+DhKVrixf/xwu
+	pq/qbAbhBBGEbX3s2NbnScQXCvMaqk8jupmocXYXEU8JJ2+IGzSWElwlvtdCaeQ4LqbpC2gmy3c
+	D7urNPo5NZbrLEfB32Glb9bcws+iT7V/2t5cFIPnJ
+X-Gm-Gg: AZuq6aK+/O0OG3NgfSZ2Lly1Og+a70fXrLY3QLzqkxdB6bsW5akBSayPd1vShyw59iT
+	puORe7xK30o3IP9K5HMUcQhZKwCse1fSEvJk/cbH6iAyO/AojsBkTiZyp/YpoivQC46aqHgz780
+	DRzAStTqDW0S/fnhYHh27jbcwjxFc/0hIMRnFKwBTZseWhVtIfEaL8VksKeuLFVcs4krBaiBLYg
+	8lUFBmQ8UwfGEWxiYGkPMKFiWqGdDZU4zMPFvgGyJjMeZ5Tn5rzDbyYyoqmC/URpyyQqAnV3KOL
+	JBjztUMb0dmfIzQCM4HXRzQfkVus9bsWg2w=
+X-Received: by 2002:a17:902:c411:b0:292:b6a0:80df with SMTP id
+ d9443c01a7336-2a8024e3411mr149045ad.10.1769106460724; Thu, 22 Jan 2026
+ 10:27:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260122175846.592786-1-irogers@google.com>
-Subject: [PATCH v1] perf inject: With --convert-callchain ignore the dummy
- event for dwarf stacks
+MIME-Version: 1.0
+References: <20260122171704.142218-1-suchitkarunakaran@gmail.com>
+In-Reply-To: <20260122171704.142218-1-suchitkarunakaran@gmail.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+Date: Thu, 22 Jan 2026 10:27:27 -0800
+X-Gm-Features: AZwV_QjIDZ-6UjHBLWyHrzew7bdcW6ZYbIhWgHmqHco45mhhzkP8UcFuypwLMTI
+Message-ID: <CAP-5=fVOeYCU_6ukDi_3g=H=K5HXoN+UjcNCysEbCO3LAY3ukw@mail.gmail.com>
+Subject: Re: [PATCH] perf annotate: Fix memcpy size in arch__grow_instructions
+To: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
+	peterz@infradead.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	mark.rutland@arm.com, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On hybrid systems there is generally >1 event and a dummy event. The
-perf inject --convert-callchain option is failing to convert perf.data
-files on such systems reporting "--convert-callchain requires DWARF
-call graph." The failing event is the dummy event that doesn't need to
-be set up for samples. As such ignore this event when checking the
-evsels.
+On Thu, Jan 22, 2026 at 9:17=E2=80=AFAM Suchit Karunakaran
+<suchitkarunakaran@gmail.com> wrote:
+>
+> The memcpy in arch__grow_instructions() is copying the wrong number of
+> bytes when growing from a non-allocated table. It should copy
+> arch->nr_instructions * sizeof(struct ins) bytes, not just
+> arch->nr_instructions bytes.
+>
+> This bug causes data corruption as only a partial copy of the
+> instruction table is made, leading to garbage data in most entries and
+> potential crashes
+>
+> Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+> ---
+>  tools/perf/util/disasm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index 50b9433f3f8e..6faa9df8e373 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+> @@ -81,7 +81,7 @@ static int arch__grow_instructions(struct arch *arch)
+>         if (new_instructions =3D=3D NULL)
+>                 return -1;
+>
+> -       memcpy(new_instructions, arch->instructions, arch->nr_instruction=
+s);
+> +       memcpy(new_instructions, arch->instructions, arch->nr_instruction=
+s * sizeof(struct ins));
 
-Fixes: 92ea788d2af4 ("perf inject: Add --convert-callchain option")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-inject.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index c89ac85ec112..ea3ac35256ce 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -2727,7 +2727,7 @@ int cmd_inject(int argc, const char **argv)
- 		}
- 
- 		evlist__for_each_entry(inject.session->evlist, evsel) {
--			if (!evsel__has_dwarf_callchain(evsel)) {
-+			if (!evsel__has_dwarf_callchain(evsel) && !evsel__is_dummy_event(evsel)) {
- 				pr_err("--convert-callchain requires DWARF call graph.\n");
- 				goto out_delete;
- 			}
--- 
-2.52.0.457.g6b5491de43-goog
+Nice catch! I think we've been trying to make code like this more like:
+memcpy(new_instructions, arch->instructions, arch->nr_instructions *
+sizeof(*new_instructions));
+but the immediately preceding calloc isn't doing this, so your patch
+is consistent. There is also a clean up in this code to switch to
+using reallocarray rather than realloc.
 
+Thanks,
+Ian
+
+>         goto out_update_instructions;
+>  }
+>
+> --
+> 2.52.0
+>
