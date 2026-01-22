@@ -1,477 +1,147 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9063335C188
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 16:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785D72459DD
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 16:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769100892; cv=none; b=PDIpUexvoIpqBUAQG2wpjwQl0JCcxw9tIOoFAi4sXZdLZ9WYUQD1yKFMLeIKIRmUjL0bYgr9TWThFNSDKNIuKpLzv7TpbwDWEAvWqCr8/rZCqeGX6z6FTHYzPEgsTHhXuQKo0XdNZ7CHHA+cao4+lOAJH72YAZjZV4FxZuWsayc=
+	t=1769100957; cv=none; b=bLHAyTxaopJxsHpxZ7thed6bQrMoF5VaJk0m+nYZ7rRvMpuvo1pnVRpY6zEusdeDGkxeXZjUu7tDU7YkneK6LsBEEsZOJqo+PwFno1sqwqX3JxVQ/jibo4k+wjIwz44+/BxmQ5k3CtPiwdRLkQ7LS84RUr0tSXyLi4Guh1dUtlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769100892; c=relaxed/simple;
-	bh=rD9vOzeeXzOTCD+l66o8DhGrmT+MJuoo1UTvO0WycIQ=;
+	s=arc-20240116; t=1769100957; c=relaxed/simple;
+	bh=X+S9iGT2HZuWijXLu7tolVZGrlzdF76ew/mCGKUwvJE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=WUmMgtBl4zzYQxLA0vQJVDNCLaHAREv4JGvfve2uTRhKRoDUy8WeHA1jxFsxvHwzanDuzHtH/Vz3ECRwyOALWRyIcAyQi4IzGI+40Auu6nsVwsIHVvEj4ScPRRAIIVMaf0pUnbpk/5ZcTjQE6B0XNxiMndvGttn7ALvXU/GUQes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kmBlCllM; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=MWfRCKVmR6qCrq7KbOCg9mxU5/k2/8Sq7UY8cDB+8Md4e2HsKoInWnJz7LK8aeBM5tCxCEwJmZrihnqzqfc/mcvT/CN6aVFf7t0sf58GBELXgWLl2VAguPtudFoIynqvAVEPQekDjxULLIqk6CzSN4npsLYPoqH4S0Z1jtonQ2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r/uiTo7s; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kmBlCllM"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b6b9c1249fso2215427eec.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 08:54:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r/uiTo7s"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2a0d058fc56so9886055ad.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 08:55:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769100864; x=1769705664; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ANZB4nsW0oD2Yy9bdDZ7x29IcTZAs2bHCHMIwFReZjE=;
-        b=kmBlCllMeIKwBJfPY14u+sz/7jEtzhhRpsN+5p5Kyd4sc67xd9rGVQK3DzsOuWpxJp
-         u3+2APA3pAgKHoVoq79cNXsBq9G/Tc2WiHcKJW/XTsLJJj9nOJfpbOgqmEQUxFKBb1T7
-         f8Sx1ZVpP6YipyTwK6RQ6DjBAOr6U5CzFXhELjhNkhoEIdk7MFRkCb62pydIDrnZgQvh
-         DC31uXd6YH+CejrZ8cnnS59C10xJR7JCk/ddmi0EFU26LJh4qA/Aco6yPzMY9rSyqCyV
-         MwZYaBOM4il2sVrQUf/YxpxFrOPlftP8WmB9xctBwGbT8m/ylL0ziTLeppLWgF05SPVV
-         OxfA==
+        d=google.com; s=20230601; t=1769100946; x=1769705746; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zrRnfOe0PxE3nW6MpoxAPcIWhyGqLCRkYDS8HFbpPvg=;
+        b=r/uiTo7sNASbUmviSbHcoHRPVmYC5EuVH9ifUucmktHpwz4EoLxZHY0xYKQrU+8Bep
+         5BKJxDqTUbKnrCtVW90LwPuNvFT+rmE2IX6LgaqsgGslJ3F9xuU7WBZAsdGHDrv/cE85
+         ZxNFOW/nEtUVIY0domMjs8VUhkzb1j34vGXSM+31u0vJ35e7bkM1Wg1ifpKhA7QfmaTM
+         UTqW2cqxnmaRwn3K/lxs7MbG7dZkvVzcLLl9yk64jaf1f3bpGsc46okS8gWafSPHqZeg
+         23HmHtgAOGJlf4PNAN0GRc5y/e29jdv8P/tCcOezO2BiegaIcSE8aA6yZcZkaZBw6Ioa
+         7vSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769100864; x=1769705664;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ANZB4nsW0oD2Yy9bdDZ7x29IcTZAs2bHCHMIwFReZjE=;
-        b=guZfJB+eAMMwmSyZZkxxMhLY87OyzriPdAMaAUgKqzElzj0Qx21WFWDkDITMFMCsIx
-         TjcsByIrR4sDyZFFQTAyV+cjzuhqfN+uQUhuWwGD4jjGisBYLNx33WhkDcUOwBlk68Dz
-         5jOBJTDl6L1yFTicjPfurQMTsaHGX38ahOr2p10SvjDw0kYbkPRp91apWhAkI+sa2Tw5
-         CRU8lgXi5BKC9FcCMVGPQQeacVS75XIIX+v/lRBD6j/wWTd14M5xwBh7vmSNVu70BQmv
-         GIgpYt0NUVCCrzWQ87A6v+bD5Wl65SbElZuGLW1B+REQ6oUPQPg9/3IX7iATRUj92Jb8
-         aW2A==
-X-Forwarded-Encrypted: i=1; AJvYcCV6F1mHHX3Jlia8NKJZOVbIXBWHNnuuZJDMAyA7v9jLbipvIPK4Dd9M5SXA8MtDJLeb1CnxlnVohXsaHANJ3E0W@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhfGKyIb30Qn0wNPnweiSMoeVYrFYmmFL3qGrVVdbGxdSF7OG9
-	oCR0cESylLlF9Wxrm3ZsbGR6ie8ihXky9o2iIiLojCzHG/JQLTE/TaDpvvhNmJB/aqWdvThyIyf
-	j80QPcVNlyA==
-X-Received: from dyx1.prod.google.com ([2002:a05:693c:8201:b0:2ac:2109:f65f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:550:b0:2b6:a622:25f5
- with SMTP id 5a478bee46e88-2b6b470d64bmr12140816eec.11.1769100863572; Thu, 22
- Jan 2026 08:54:23 -0800 (PST)
-Date: Thu, 22 Jan 2026 08:54:00 -0800
-In-Reply-To: <20260122165407.561888-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1769100946; x=1769705746;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zrRnfOe0PxE3nW6MpoxAPcIWhyGqLCRkYDS8HFbpPvg=;
+        b=qx/FK0TltML/w9aS/BRL9v1E6AUqDVaUyw0NWodfD4RSXucPic9Ttnh5figGBx+RIL
+         FzbK0lZGLmhknVByyVlo71E7uDxcX1PErEtZzmk//z5+8l2BojuUKkDXK4zQO7r/hFuq
+         QZi65vQM0wJ9ks+zpePYL5lCXKAfEwzOLqXZieJ+NOlO5+5ZduE+qiZj70Fxykqy3GLi
+         8dJaO5Xu/S86jheagWUY/1nBBhaLb8U/DULBF3+Wp48+BIZaPFlPNZAodO0waXFdO1iO
+         AM8zjnmJ9CZuGOs3gvJlrGW6qVNjvkbXBrZflcvlFbcU8QpEEn8m+XxzeW5snWJJK0pr
+         ukNg==
+X-Forwarded-Encrypted: i=1; AJvYcCWVTEwzd9OHfa0iVCf0jq6va4qs/amzF13z0xv7+5EpgMN1a05GBdPkGePlbJUgWWHxoeYq1Quiglv1/6VpK7+f@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjG99UuXwf976l7BO0ld41VJUHsPCRJk+jHD4HKfIJSLkMPJh0
+	c+uzpiI0akGVu7suTToFLTSys5qM1GWlSjgW5hmgkXh+OoN9B+wA99Mbs0ie5bND4QSw3fELJQ9
+	3Dvmpfg==
+X-Received: from plot23.prod.google.com ([2002:a17:902:8c97:b0:2a7:ca54:ed0f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:22c2:b0:29e:e642:95d6
+ with SMTP id d9443c01a7336-2a7fe77dd00mr370985ad.59.1769100945836; Thu, 22
+ Jan 2026 08:55:45 -0800 (PST)
+Date: Thu, 22 Jan 2026 08:55:44 -0800
+In-Reply-To: <20260121225438.3908422-5-jmattson@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260122165407.561888-1-irogers@google.com>
-X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260122165407.561888-6-irogers@google.com>
-Subject: [PATCH v2 05/12] perf disasm: Constify use of struct ins_op
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+References: <20260121225438.3908422-1-jmattson@google.com> <20260121225438.3908422-5-jmattson@google.com>
+Message-ID: <aXJWkIw0oSzOmxLS@google.com>
+Subject: Re: [PATCH 4/6] KVM: x86/pmu: [De]activate HG_ONLY PMCs at SVME
+ changes and nested transitions
+From: Sean Christopherson <seanjc@google.com>
+To: Jim Mattson <jmattson@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Zecheng Li <zecheng@google.com>, 
-	Tianyou Li <tianyou.li@intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Julia Lawall <Julia.Lawall@inria.fr>, Suchit Karunakaran <suchitkarunakaran@gmail.com>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Aditya Bodkhe <aditya.b1@linux.ibm.com>, 
-	Howard Chu <howardchu95@gmail.com>, 
-	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Shimin Guo <shimin.guo@skydio.com>, 
-	Sergei Trofimovich <slyich@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+	James Clark <james.clark@linaro.org>, Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-The struct ins_op holds variables to function pointers that are read
-but not written. Change uses to be for a "const struct ins_op *"
-version to capture this immutability.
+On Wed, Jan 21, 2026, Jim Mattson wrote:
+> diff --git a/arch/x86/include/asm/kvm-x86-pmu-ops.h b/arch/x86/include/asm/kvm-x86-pmu-ops.h
+> index f0aa6996811f..7b32796213a0 100644
+> --- a/arch/x86/include/asm/kvm-x86-pmu-ops.h
+> +++ b/arch/x86/include/asm/kvm-x86-pmu-ops.h
+> @@ -26,6 +26,7 @@ KVM_X86_PMU_OP_OPTIONAL(cleanup)
+>  KVM_X86_PMU_OP_OPTIONAL(write_global_ctrl)
+>  KVM_X86_PMU_OP(mediated_load)
+>  KVM_X86_PMU_OP(mediated_put)
+> +KVM_X86_PMU_OP_OPTIONAL(set_pmc_eventsel_hw_enable)
+>  
+>  #undef KVM_X86_PMU_OP
+>  #undef KVM_X86_PMU_OP_OPTIONAL
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index 833ee2ecd43f..1541c201285b 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -1142,6 +1142,13 @@ void kvm_pmu_branch_retired(struct kvm_vcpu *vcpu)
+>  }
+>  EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_pmu_branch_retired);
+>  
+> +void kvm_pmu_set_pmc_eventsel_hw_enable(struct kvm_vcpu *vcpu,
+> +				       unsigned long *bitmap, bool enable)
+> +{
+> +	kvm_pmu_call(set_pmc_eventsel_hw_enable)(vcpu, bitmap, enable);
+> +}
+> +EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_pmu_set_pmc_eventsel_hw_enable);
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/arch/arm/annotate/instructions.c   |  4 +-
- tools/perf/arch/arm64/annotate/instructions.c |  6 +--
- tools/perf/arch/csky/annotate/instructions.c  |  6 +--
- .../arch/loongarch/annotate/instructions.c    |  8 ++--
- tools/perf/arch/mips/annotate/instructions.c  |  4 +-
- .../perf/arch/powerpc/annotate/instructions.c |  6 +--
- .../perf/arch/riscv64/annotate/instructions.c |  4 +-
- tools/perf/arch/s390/annotate/instructions.c  |  8 ++--
- tools/perf/arch/sparc/annotate/instructions.c |  4 +-
- tools/perf/util/disasm.c                      | 46 +++++++++----------
- tools/perf/util/disasm.h                      |  6 +--
- 11 files changed, 51 insertions(+), 51 deletions(-)
+Why bounce through a PMU op just to go from nested.c to pmu.c?  AFAICT, common
+x86 code never calls kvm_pmu_set_pmc_eventsel_hw_enable(), just wire up calls
+directly to amd_pmu_refresh_host_guest_eventsels().
 
-diff --git a/tools/perf/arch/arm/annotate/instructions.c b/tools/perf/arch/arm/annotate/instructions.c
-index 5e667b0f5512..b997d127fedd 100644
---- a/tools/perf/arch/arm/annotate/instructions.c
-+++ b/tools/perf/arch/arm/annotate/instructions.c
-@@ -11,10 +11,10 @@ struct arm_annotate {
- 		jump_insn;
- };
- 
--static struct ins_ops *arm__associate_instruction_ops(struct arch *arch, const char *name)
-+static const struct ins_ops *arm__associate_instruction_ops(struct arch *arch, const char *name)
- {
- 	struct arm_annotate *arm = arch->priv;
--	struct ins_ops *ops;
-+	const struct ins_ops *ops;
- 	regmatch_t match[2];
- 
- 	if (!regexec(&arm->call_insn, name, 2, match, 0))
-diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/perf/arch/arm64/annotate/instructions.c
-index 5099fa36180d..363af2f55122 100644
---- a/tools/perf/arch/arm64/annotate/instructions.c
-+++ b/tools/perf/arch/arm64/annotate/instructions.c
-@@ -63,15 +63,15 @@ static int arm64_mov__parse(const struct arch *arch __maybe_unused,
- static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
- 			  struct ins_operands *ops, int max_ins_name);
- 
--static struct ins_ops arm64_mov_ops = {
-+static const struct ins_ops arm64_mov_ops = {
- 	.parse	   = arm64_mov__parse,
- 	.scnprintf = mov__scnprintf,
- };
- 
--static struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const char *name)
-+static const struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const char *name)
- {
- 	struct arm64_annotate *arm = arch->priv;
--	struct ins_ops *ops;
-+	const struct ins_ops *ops;
- 	regmatch_t match[2];
- 
- 	if (!regexec(&arm->jump_insn, name, 2, match, 0))
-diff --git a/tools/perf/arch/csky/annotate/instructions.c b/tools/perf/arch/csky/annotate/instructions.c
-index 14270311d215..4a55c84a320a 100644
---- a/tools/perf/arch/csky/annotate/instructions.c
-+++ b/tools/perf/arch/csky/annotate/instructions.c
-@@ -3,10 +3,10 @@
- 
- #include <linux/compiler.h>
- 
--static struct ins_ops *csky__associate_ins_ops(struct arch *arch,
--					       const char *name)
-+static const struct ins_ops *csky__associate_ins_ops(struct arch *arch,
-+						     const char *name)
- {
--	struct ins_ops *ops = NULL;
-+	const struct ins_ops *ops = NULL;
- 
- 	/* catch all kind of jumps */
- 	if (!strcmp(name, "bt") ||
-diff --git a/tools/perf/arch/loongarch/annotate/instructions.c b/tools/perf/arch/loongarch/annotate/instructions.c
-index 5ebfe629ea68..5010d5d58375 100644
---- a/tools/perf/arch/loongarch/annotate/instructions.c
-+++ b/tools/perf/arch/loongarch/annotate/instructions.c
-@@ -51,7 +51,7 @@ static int loongarch_call__parse(const struct arch *arch, struct ins_operands *o
- 	return 0;
- }
- 
--static struct ins_ops loongarch_call_ops = {
-+static const struct ins_ops loongarch_call_ops = {
- 	.parse	   = loongarch_call__parse,
- 	.scnprintf = call__scnprintf,
- };
-@@ -100,15 +100,15 @@ static int loongarch_jump__parse(const struct arch *arch, struct ins_operands *o
- 	return 0;
- }
- 
--static struct ins_ops loongarch_jump_ops = {
-+static const struct ins_ops loongarch_jump_ops = {
- 	.parse	   = loongarch_jump__parse,
- 	.scnprintf = jump__scnprintf,
- };
- 
- static
--struct ins_ops *loongarch__associate_ins_ops(struct arch *arch, const char *name)
-+const struct ins_ops *loongarch__associate_ins_ops(struct arch *arch, const char *name)
- {
--	struct ins_ops *ops = NULL;
-+	const struct ins_ops *ops = NULL;
- 
- 	if (!strcmp(name, "bl"))
- 		ops = &loongarch_call_ops;
-diff --git a/tools/perf/arch/mips/annotate/instructions.c b/tools/perf/arch/mips/annotate/instructions.c
-index b50b46c613d6..0fbe0a7df95a 100644
---- a/tools/perf/arch/mips/annotate/instructions.c
-+++ b/tools/perf/arch/mips/annotate/instructions.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- static
--struct ins_ops *mips__associate_ins_ops(struct arch *arch, const char *name)
-+const struct ins_ops *mips__associate_ins_ops(struct arch *arch, const char *name)
- {
--	struct ins_ops *ops = NULL;
-+	const struct ins_ops *ops = NULL;
- 
- 	if (!strncmp(name, "bal", 3) ||
- 	    !strncmp(name, "bgezal", 6) ||
-diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
-index ca567cfdcbdb..d1be55425e35 100644
---- a/tools/perf/arch/powerpc/annotate/instructions.c
-+++ b/tools/perf/arch/powerpc/annotate/instructions.c
-@@ -1,10 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/compiler.h>
- 
--static struct ins_ops *powerpc__associate_instruction_ops(struct arch *arch, const char *name)
-+static const struct ins_ops *powerpc__associate_instruction_ops(struct arch *arch, const char *name)
- {
- 	int i;
--	struct ins_ops *ops;
-+	const struct ins_ops *ops;
- 
- 	/*
- 	 * - Interested only if instruction starts with 'b'.
-@@ -189,7 +189,7 @@ static int cmp_offset(const void *a, const void *b)
- 	return (val1->value - val2->value);
- }
- 
--static struct ins_ops *check_ppc_insn(struct disasm_line *dl)
-+static const struct ins_ops *check_ppc_insn(struct disasm_line *dl)
- {
- 	int raw_insn = dl->raw.raw_insn;
- 	int opcode = PPC_OP(raw_insn);
-diff --git a/tools/perf/arch/riscv64/annotate/instructions.c b/tools/perf/arch/riscv64/annotate/instructions.c
-index 55cf911633f8..a34798864fab 100644
---- a/tools/perf/arch/riscv64/annotate/instructions.c
-+++ b/tools/perf/arch/riscv64/annotate/instructions.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- static
--struct ins_ops *riscv64__associate_ins_ops(struct arch *arch, const char *name)
-+const struct ins_ops *riscv64__associate_ins_ops(struct arch *arch, const char *name)
- {
--	struct ins_ops *ops = NULL;
-+	const struct ins_ops *ops = NULL;
- 
- 	if (!strncmp(name, "jal", 3) ||
- 	    !strncmp(name, "jr", 2) ||
-diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
-index 37c1b62641d8..1b22e6276e7d 100644
---- a/tools/perf/arch/s390/annotate/instructions.c
-+++ b/tools/perf/arch/s390/annotate/instructions.c
-@@ -49,7 +49,7 @@ static int s390_call__parse(const struct arch *arch, struct ins_operands *ops,
- 	return 0;
- }
- 
--static struct ins_ops s390_call_ops = {
-+static const struct ins_ops s390_call_ops = {
- 	.parse	   = s390_call__parse,
- 	.scnprintf = call__scnprintf,
- };
-@@ -103,14 +103,14 @@ static int s390_mov__parse(const struct arch *arch __maybe_unused,
- }
- 
- 
--static struct ins_ops s390_mov_ops = {
-+static const struct ins_ops s390_mov_ops = {
- 	.parse	   = s390_mov__parse,
- 	.scnprintf = mov__scnprintf,
- };
- 
--static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *name)
-+static const struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *name)
- {
--	struct ins_ops *ops = NULL;
-+	const struct ins_ops *ops = NULL;
- 
- 	/* catch all kind of jumps */
- 	if (strchr(name, 'j') ||
-diff --git a/tools/perf/arch/sparc/annotate/instructions.c b/tools/perf/arch/sparc/annotate/instructions.c
-index 68c31580ccfc..a08d8734c883 100644
---- a/tools/perf/arch/sparc/annotate/instructions.c
-+++ b/tools/perf/arch/sparc/annotate/instructions.c
-@@ -117,9 +117,9 @@ static int is_branch_float_cond(const char *cond)
- 	return 0;
- }
- 
--static struct ins_ops *sparc__associate_instruction_ops(struct arch *arch, const char *name)
-+static const struct ins_ops *sparc__associate_instruction_ops(struct arch *arch, const char *name)
- {
--	struct ins_ops *ops = NULL;
-+	const struct ins_ops *ops = NULL;
- 
- 	if (!strcmp(name, "call") ||
- 	    !strcmp(name, "jmp") ||
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index d92c0424e8fc..9bc9b1de98db 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -33,15 +33,15 @@
- static regex_t	 file_lineno;
- 
- /* These can be referred from the arch-dependent code */
--static struct ins_ops call_ops;
--static struct ins_ops dec_ops;
--static struct ins_ops jump_ops;
--static struct ins_ops mov_ops;
--static struct ins_ops nop_ops;
--static struct ins_ops lock_ops;
--static struct ins_ops ret_ops;
--static struct ins_ops load_store_ops;
--static struct ins_ops arithmetic_ops;
-+static const struct ins_ops call_ops;
-+static const struct ins_ops dec_ops;
-+static const struct ins_ops jump_ops;
-+static const struct ins_ops mov_ops;
-+static const struct ins_ops nop_ops;
-+static const struct ins_ops lock_ops;
-+static const struct ins_ops ret_ops;
-+static const struct ins_ops load_store_ops;
-+static const struct ins_ops arithmetic_ops;
- 
- static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
- 			   struct ins_operands *ops, int max_ins_name);
-@@ -85,7 +85,7 @@ static int arch__grow_instructions(struct arch *arch)
- 	goto out_update_instructions;
- }
- 
--static int arch__associate_ins_ops(struct arch* arch, const char *name, struct ins_ops *ops)
-+static int arch__associate_ins_ops(struct arch *arch, const char *name, const struct ins_ops *ops)
- {
- 	struct ins *ins;
- 
-@@ -334,7 +334,7 @@ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
- 	return scnprintf(bf, size, "%-*s *%" PRIx64, max_ins_name, ins->name, ops->target.addr);
- }
- 
--static struct ins_ops call_ops = {
-+static const struct ins_ops call_ops = {
- 	.parse	   = call__parse,
- 	.scnprintf = call__scnprintf,
- };
-@@ -487,7 +487,7 @@ static void jump__delete(struct ins_operands *ops __maybe_unused)
- 	 */
- }
- 
--static struct ins_ops jump_ops = {
-+static const struct ins_ops jump_ops = {
- 	.free	   = jump__delete,
- 	.parse	   = jump__parse,
- 	.scnprintf = jump__scnprintf,
-@@ -579,7 +579,7 @@ static void lock__delete(struct ins_operands *ops)
- 	zfree(&ops->target.name);
- }
- 
--static struct ins_ops lock_ops = {
-+static const struct ins_ops lock_ops = {
- 	.free	   = lock__delete,
- 	.parse	   = lock__parse,
- 	.scnprintf = lock__scnprintf,
-@@ -688,7 +688,7 @@ static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
- 			 ops->target.name ?: ops->target.raw);
- }
- 
--static struct ins_ops mov_ops = {
-+static const struct ins_ops mov_ops = {
- 	.parse	   = mov__parse,
- 	.scnprintf = mov__scnprintf,
- };
-@@ -738,7 +738,7 @@ static int arithmetic__parse(const struct arch *arch __maybe_unused, struct ins_
- 	return 0;
- }
- 
--static struct ins_ops arithmetic_ops = {
-+static const struct ins_ops arithmetic_ops = {
- 	.parse     = arithmetic__parse,
- 	.scnprintf = arithmetic__scnprintf,
- };
-@@ -772,7 +772,7 @@ static int load_store__parse(const struct arch *arch __maybe_unused, struct ins_
- 	return 0;
- }
- 
--static struct ins_ops load_store_ops = {
-+static const struct ins_ops load_store_ops = {
- 	.parse     = load_store__parse,
- 	.scnprintf = load_store__scnprintf,
- };
-@@ -813,7 +813,7 @@ static int dec__scnprintf(struct ins *ins, char *bf, size_t size,
- 			 ops->target.name ?: ops->target.raw);
- }
- 
--static struct ins_ops dec_ops = {
-+static const struct ins_ops dec_ops = {
- 	.parse	   = dec__parse,
- 	.scnprintf = dec__scnprintf,
- };
-@@ -824,11 +824,11 @@ static int nop__scnprintf(struct ins *ins __maybe_unused, char *bf, size_t size,
- 	return scnprintf(bf, size, "%-*s", max_ins_name, "nop");
- }
- 
--static struct ins_ops nop_ops = {
-+static const struct ins_ops nop_ops = {
- 	.scnprintf = nop__scnprintf,
- };
- 
--static struct ins_ops ret_ops = {
-+static const struct ins_ops ret_ops = {
- 	.scnprintf = ins__raw_scnprintf,
- };
- 
-@@ -869,7 +869,7 @@ static void ins__sort(struct arch *arch)
- 	qsort(arch->instructions, nmemb, sizeof(struct ins), ins__cmp);
- }
- 
--static struct ins_ops *__ins__find(const struct arch *arch, const char *name,
-+static const struct ins_ops *__ins__find(const struct arch *arch, const char *name,
- 				     struct disasm_line *dl)
- {
- 	struct ins *ins;
-@@ -880,7 +880,7 @@ static struct ins_ops *__ins__find(const struct arch *arch, const char *name,
- 		 * For powerpc, identify the instruction ops
- 		 * from the opcode using raw_insn.
- 		 */
--		struct ins_ops *ops;
-+		const struct ins_ops *ops;
- 
- 		ops = check_ppc_insn(dl);
- 		if (ops)
-@@ -916,9 +916,9 @@ static struct ins_ops *__ins__find(const struct arch *arch, const char *name,
- 	return ins ? ins->ops : NULL;
- }
- 
--struct ins_ops *ins__find(const struct arch *arch, const char *name, struct disasm_line *dl)
-+const struct ins_ops *ins__find(const struct arch *arch, const char *name, struct disasm_line *dl)
- {
--	struct ins_ops *ops = __ins__find(arch, name, dl);
-+	const struct ins_ops *ops = __ins__find(arch, name, dl);
- 
- 	if (!ops && arch->associate_instruction_ops)
- 		ops = arch->associate_instruction_ops((struct arch *)arch, name);
-diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-index 273a9c906514..dc5233f2a773 100644
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -22,7 +22,7 @@ struct arch {
- 	struct ins	*instructions;
- 	size_t		nr_instructions;
- 	size_t		nr_instructions_allocated;
--	struct ins_ops  *(*associate_instruction_ops)(struct arch *arch, const char *name);
-+	const struct ins_ops  *(*associate_instruction_ops)(struct arch *arch, const char *name);
- 	bool		sorted_instructions;
- 	bool		initialized;
- 	const char	*insn_suffix;
-@@ -52,7 +52,7 @@ struct arch {
- 
- struct ins {
- 	const char     *name;
--	struct ins_ops *ops;
-+	const struct ins_ops *ops;
- };
- 
- struct ins_operands {
-@@ -108,7 +108,7 @@ struct annotate_args {
- const struct arch *arch__find(const char *name);
- bool arch__is(const struct arch *arch, const char *name);
- 
--struct ins_ops *ins__find(const struct arch *arch, const char *name, struct disasm_line *dl);
-+const struct ins_ops *ins__find(const struct arch *arch, const char *name, struct disasm_line *dl);
- 
- bool ins__is_call(const struct ins *ins);
- bool ins__is_jump(const struct ins *ins);
--- 
-2.52.0.457.g6b5491de43-goog
+> @@ -1054,6 +1055,11 @@ int nested_svm_vmrun(struct kvm_vcpu *vcpu)
+>  	if (enter_svm_guest_mode(vcpu, vmcb12_gpa, vmcb12, true))
+>  		goto out_exit_err;
+>  
+> +	kvm_pmu_set_pmc_eventsel_hw_enable(vcpu,
+> +		vcpu_to_pmu(vcpu)->pmc_hostonly, false);
+> +	kvm_pmu_set_pmc_eventsel_hw_enable(vcpu,
+> +		vcpu_to_pmu(vcpu)->pmc_guestonly, true);
+> +
+>  	if (nested_svm_merge_msrpm(vcpu))
+>  		goto out;
+>  
+> @@ -1137,6 +1143,10 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
+>  
+>  	/* Exit Guest-Mode */
+>  	leave_guest_mode(vcpu);
+> +	kvm_pmu_set_pmc_eventsel_hw_enable(vcpu,
+> +		vcpu_to_pmu(vcpu)->pmc_hostonly, true);
+> +	kvm_pmu_set_pmc_eventsel_hw_enable(vcpu,
+> +		vcpu_to_pmu(vcpu)->pmc_guestonly, false);
+>  	svm->nested.vmcb12_gpa = 0;
+>  	WARN_ON_ONCE(svm->nested.nested_run_pending);
 
+I don't think these are the right places to hook.  Shouldn't KVM update the
+event selectors on _all_ transitions, whether they're architectural or not?  E.g.
+by wrapping {enter,leave}_guest_mode()?
+
+static void svm_enter_guest_mode(struct kvm_vcpu *vcpu)
+{
+	enter_guest_mode(vcpu);
+	amd_pmu_refresh_host_guest_eventsels(vcpu);
+}
+
+static void svm_leave_guest_mode(struct kvm_vcpu *vcpu)
+{
+	leave_guest_mode(vcpu);
+	amd_pmu_refresh_host_guest_eventsels(vcpu);
+}
