@@ -1,65 +1,65 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A497385538
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 16:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDB32F90C4
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 16:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769099618; cv=none; b=BLSGq3/Hl5FvsNxFGPSJcvSD4xLEW/ciMdMMVr02UoeqMTi5EBuBNgEQyEd5rJHH163vGdqsGbtWDhtZbdTOsCdGOyarxj01rgKPUiCrUTA3Me+7eYV/oOQmn5Kmyu3QSdGBF/LbsXWzFTe6ENOUCW5MW8h+TyzDFZtwNG7+yOo=
+	t=1769100609; cv=none; b=kgDjfHTvrJnplrs3cwzxI7MpX7MVsJ5vCedAJfmOB6nJ9DmeIVSlSSL+/tD+7TZcWtcpRO6P2+m1vaefrj5+GbpdC2IP3AWtzur9VkcwBuiW3XiMsRD7XlaKqw7nPbNHOGru7wjLc/yGmhE8uWf+IL6HxcYh82G64pTVyzi1Zf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769099618; c=relaxed/simple;
-	bh=Y/DxrZLydpwmmz0Syms0uR2pI10+1mDz4PNBLrDgRbk=;
+	s=arc-20240116; t=1769100609; c=relaxed/simple;
+	bh=w3tyOVuN8FQUsemqueqs7+KcZYp9hKV/p0FncAPIIMs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CDwd6fMcmZgR5K0BVEUovjMSu6rP+OUUaSKaAQSsll2dFIi9nBOes98Z/6yKI1TPVwriweLJNPHhjVxjaGhLCrNyKic3qfOrnUhUq7d0i8H9RNBbqD4yj5D/zOLaNTP31TgwHBk+GqiyHiEf0NEVEPrywRUegr3/VU3MR54jqcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2NmUl2eb; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=TUymQvdBcZvv9xG/S9BdYsE9GS2oZpfg4268QpH/4TWZPUgI5bzRF9LsVTgNDYiw9LrOMZ4IYZBED0hngWnydMdOZqcGzUzszT06UlQbDDTbRMmOdhzKxAiQ6LcqSXpT12SNHJAN6k/msl9o+Mp9MurTGsIKXlEKnxiphSWHaAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NxvW/Fz5; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2NmUl2eb"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-29f25e494c2so12974715ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 08:33:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NxvW/Fz5"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34c48a76e75so1183630a91.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 08:49:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769099613; x=1769704413; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769100593; x=1769705393; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0DHre52zcfUG5Dlxo0L5XhBtVLSt791ZQgqxsuF7FrM=;
-        b=2NmUl2ebtpbENV5/kQCF9lDFfIlwJxVRZRFZ4XBnM4FljWw2fb3jLrLNixAV6e6Opb
-         FYYcMYpvLz9uL6atZjY6b+i8VZCX8S18Lf0RnQTAYLqQUtevx4hiPi652YnR+1iQ/RLV
-         WTxXfBBOQnT4i+MrsuNQCOCCGd4qBj7CLqBc8houpnuZ4ob+9SNcY4TRe5Tbar1jp6Iu
-         KU2sdpMWKjjeJv3iReueDihV9ykZAQo6AEj+lRbtEVPmJ/YohdOJ0vvyMimBaylbYCj/
-         GGrd4lneZLrVlL4xkRl9ojdU0eC/q+gCKklwsN8WxlyiST7tbz+Wcl1RFhCS81JFbhPb
-         1mGw==
+        bh=BWFocFVTKOU7XXlm8Mgwvdw60IDe+g00em82J1zaTlc=;
+        b=NxvW/Fz5eNMTIBrHtTudISubFlf9ClQ0hiLKefYQ3+s69HC12o3NBFmEPxzYR0ZY0Y
+         31YDqv2iNd5rVtnzcq/0IxEVTnrkZcu1aXT/0+glS/g4HwPISM/84RGuVbtF/gSFzdEJ
+         L5X2cRXPviwCxV4dA4tZZMnlYSYUx2c0OcZ2OByfvoye0NrbVB6iUcCqhF3/OegBTU22
+         ja5HZDciQGZpQHalV08hlUPQ74WAf2FmlTaazJv5E2JuGGXxFyuHkZo6FRNCrDhzL00T
+         hXsGNtOKyovIQStaY3uRT6NKvmQeaTCHFObElU+m/aEhBuVbPVDC4hO4dB7B9BXpYMeE
+         6KsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769099613; x=1769704413;
+        d=1e100.net; s=20230601; t=1769100593; x=1769705393;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0DHre52zcfUG5Dlxo0L5XhBtVLSt791ZQgqxsuF7FrM=;
-        b=kw5m4WoUWN9bwSbIcqYs3U+0JSZ/DwVexLdI4mTkdVH4HLpduXS+RA7+C6nj/8gYMk
-         +T/YB3mKWDTt8bJbETa7+HaKFG0+MUS7iCWrovZNziMX0PaIaR9wdjgcVwPVxoMcYrsz
-         QzlDy+cQKXG6o7nV+mYZAoHooFthbJzHVESNCrkMfy/Ld5MJ0S0BLri/ydnf2KB8nEDJ
-         hbpz5b4f01DhTfUYv3TZA4KRliZ1pkkOZfeviKqq9xErwSg/l13M/XFB9Nycr2/MPE6h
-         rnHjan+9VjwMYQXsShJ30fCLMUdRrAv391QXXhDVgzgY/5ITPNHZMtQ1bzSl1ZKnHK9A
-         rSzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0QYGnMZ9HP9qr0Ojl0IdGMEsPgyDf7FKBzm0gAnF4fmzs0GFy3eyMjEuzbXfep1RN7dqsQKEGCV653jQlrREV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFna54It7Pq3o2xsJ/ZNI4pNoIGxARZIms1GVR3GigX+7LFdr+
-	7snTI4vf98+eGoN0Btu3w2w8FGQkAX41pw1skep+QU1cDHvVxG7H/IS5GjlVHvsaxLtwus2hS71
-	5x5fOsQ==
-X-Received: from plbkm11.prod.google.com ([2002:a17:903:27cb:b0:2a0:9570:8e5b])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1aa7:b0:2a0:b432:4a6
- with SMTP id d9443c01a7336-2a7d2f34befmr38192235ad.15.1769099612668; Thu, 22
- Jan 2026 08:33:32 -0800 (PST)
-Date: Thu, 22 Jan 2026 08:33:30 -0800
-In-Reply-To: <20260121225438.3908422-3-jmattson@google.com>
+        bh=BWFocFVTKOU7XXlm8Mgwvdw60IDe+g00em82J1zaTlc=;
+        b=mzNqm/m23r/cYn8qiiTNwuDXgtqmsUWWlSgoVzv8N12yux3N92P8zwMoQ1OGXV5L7I
+         JdYlzEQ0jEZE9imr97euNnhFCcrGPuu76Crybulib+b+SOzLhVFuQ0og6/ivp+/ADEOg
+         x/fL0fVUQEnBgPXfJ3/EknFdnu3Lio1oA5KWpcE8GzwO4+/TJqkzyZNYUuM4DGCh5ArW
+         V1lpQ92scgS52X6/x0a2/8BdVGLyBCXPGq3tCtvIvpFzSy4Yutwq9wk3yY9DRNgy022V
+         To92r1IcTqFxjXqS07RkoxEzmpedu2Rx7uy4eIcS4BrmkkZZMOy2C26x9TuD8JNhskCa
+         HGqA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7o990yN80PVapmppJDGS+HrYZ2ywvAtc7IJhzdzjGUuZXKRQZBU8ghbM0Gk3H688EzqLZiVYQuFAgB18kB1aP@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM+V5c8At/WzBuYf9AAuO3HHhXhMdmMCGjX/Vga0NtzrnU3rbS
+	OTz5taxLk6D+SqXCig1dhTE8Z9gEKCXo4qEMEZYgm0vUdnKlDpZXGSteMNmZQjZXuD8zFURHQmZ
+	s1l2pkA==
+X-Received: from pjbbg10.prod.google.com ([2002:a17:90b:d8a:b0:34c:1d76:2fe9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:582f:b0:343:e461:9022
+ with SMTP id 98e67ed59e1d1-353688502bemr107887a91.24.1769100592593; Thu, 22
+ Jan 2026 08:49:52 -0800 (PST)
+Date: Thu, 22 Jan 2026 08:49:44 -0800
+In-Reply-To: <20260121225438.3908422-4-jmattson@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260121225438.3908422-1-jmattson@google.com> <20260121225438.3908422-3-jmattson@google.com>
-Message-ID: <aXJRWtdzjcb8_APA@google.com>
-Subject: Re: [PATCH 2/6] KVM: x86/pmu: Disable HG_ONLY events as appropriate
- for current vCPU state
+References: <20260121225438.3908422-1-jmattson@google.com> <20260121225438.3908422-4-jmattson@google.com>
+Message-ID: <aXJVKFs54eVI1Mjo@google.com>
+Subject: Re: [PATCH 3/6] KVM: x86/pmu: Track enabled AMD PMCs with Host-Only
+ xor Guest-Only bits set
 From: Sean Christopherson <seanjc@google.com>
 To: Jim Mattson <jmattson@google.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -76,132 +76,111 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
 Content-Type: text/plain; charset="us-ascii"
 
 On Wed, Jan 21, 2026, Jim Mattson wrote:
-> Introduce amd_pmu_dormant_hg_event(), which determines whether an AMD PMC
-> should be dormant (i.e. not count) based on the guest's Host-Only and
-> Guest-Only event selector bits and the current vCPU state.
-> 
-> Update amd_pmu_set_eventsel_hw() to clear the event selector's enable bit
-> when the event is dormant.
-> 
-> Signed-off-by: Jim Mattson <jmattson@google.com>
-> ---
->  arch/x86/include/asm/perf_event.h |  2 ++
->  arch/x86/kvm/svm/pmu.c            | 23 +++++++++++++++++++++++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-> index 0d9af4135e0a..7649d79d91a6 100644
-> --- a/arch/x86/include/asm/perf_event.h
-> +++ b/arch/x86/include/asm/perf_event.h
-> @@ -58,6 +58,8 @@
->  #define AMD64_EVENTSEL_INT_CORE_ENABLE			(1ULL << 36)
->  #define AMD64_EVENTSEL_GUESTONLY			(1ULL << 40)
->  #define AMD64_EVENTSEL_HOSTONLY				(1ULL << 41)
-> +#define AMD64_EVENTSEL_HG_ONLY				\
+> Add pmc_hostonly and pmc_guestonly bitmaps to struct kvm_pmu to track which
+> guest-enabled performance counters have just one of the Host-Only and
+> Guest-Only event selector bits set. PMCs that are disabled, have neither
+> HG_ONLY bit set, or have both HG_ONLY bits set are not tracked, because
+> they don't require special handling at vCPU state transitions.
 
-I would strongly prefer to avoid the HG acronym, as it's not immediately obvious
-that it's HOST_GUEST, and avoiding long lines even with the full HOST_GUEST is
-pretty easy.
+Why bother with bitmaps?  The bitmaps are basically just eliding the checks in
+amd_pmc_is_active() (my name), and those checks are super fast compared to
+emulating transitions between L1 and L2.
 
-The name should also have "MASK" at the end to make it more obvious this is a
-multi-flag macro, i.e. not a single-flag value.  Otherwise the intent and thus
-correctness of code like this isn't obvious:
+Can't we simply do:
 
-	if (eventsel & AMD64_EVENTSEL_HG_ONLY)
+  void amd_pmu_refresh_host_guest_eventsels(struct kvm_vcpu *vcpu)
+  {
+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+	struct kvm_pmc *pmc;
+	int i;
 
-How about AMD64_EVENTSEL_HOST_GUEST_MASK?
+	kvm_for_each_pmc(pmu, pmc, i, pmu->all_valid_pmc_idx)
+		amd_pmu_set_eventsel_hw(pmc);
 
-> +	(AMD64_EVENTSEL_HOSTONLY | AMD64_EVENTSEL_GUESTONLY)
->  
->  #define AMD64_EVENTSEL_INT_CORE_SEL_SHIFT		37
->  #define AMD64_EVENTSEL_INT_CORE_SEL_MASK		\
-> diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
-> index 33c139b23a9e..f619417557f9 100644
-> --- a/arch/x86/kvm/svm/pmu.c
-> +++ b/arch/x86/kvm/svm/pmu.c
-> @@ -147,10 +147,33 @@ static int amd_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	return 1;
->  }
->  
-> +static bool amd_pmu_dormant_hg_event(struct kvm_pmc *pmc)
+  }
 
-I think I would prefer to flip the polarity, even though the only caller would
-then need to invert the return value.  Partly because I think we can come up with
-a more intuitive name, partly because it'll make the last check in particular
-more intutive, i.e. IMO, checking "guest == guest"
+And then call that helper on all transitions?
 
-	return !!(hg_only & AMD64_EVENTSEL_GUESTONLY) == is_guest_mode(vcpu);
-
-is more obvious than checking "host == guest":
-
-	return !!(hg_only & AMD64_EVENTSEL_GUESTONLY) == is_guest_mode(vcpu);
-
-Maybe amd_pmc_is_active() or amd_pmc_counts_in_current_mode()?
-
+> +static void amd_pmu_update_hg_bitmaps(struct kvm_pmc *pmc)
 > +{
-> +	u64 hg_only = pmc->eventsel & AMD64_EVENTSEL_HG_ONLY;
-> +	struct kvm_vcpu *vcpu = pmc->vcpu;
+> +	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+> +	u64 eventsel = pmc->eventsel;
 > +
-> +	if (hg_only == 0)
-
-!hg_only
-
-In the spirit of avoiding the "hg" acronym, what if we do something like this?
-
-	const u64 HOST_GUEST_MASK = AMD64_EVENTSEL_HOST_GUEST_MASK;
-	struct kvm_vcpu *vcpu = pmc->vcpu;
-	u64 eventsel = pmc->eventsel;
-
-	/*
-	 * PMCs count in both host and guest if neither {HOST,GUEST}_ONLY flags
-	 * are set, or if both flags are set.
-	 */
-	if (!(eventsel & HOST_GUEST_MASK) ||
-	    ((eventsel & HOST_GUEST_MASK) == HOST_GUEST_MASK))
-		return true;
-
-	/* {HOST,GUEST}_ONLY bits are ignored when SVME is clear. */
-	if (!(vcpu->arch.efer & EFER_SVME))
-		return true;
-
-	return !!(eventsel & AMD64_EVENTSEL_GUESTONLY) == is_guest_mode(vcpu);
-
-> +		/* Not an HG_ONLY event */
-
-Please don't put comments inside single-line if-statements.  99% of the time
-it's easy to put the comment outside of the if-statement, and doing so encourages
-a more verbose comment and avoids a "does this if-statement need curly-braces"
-debate.
-
-> +		return false;
+> +	if (!(eventsel & ARCH_PERFMON_EVENTSEL_ENABLE)) {
+> +		bitmap_clear(pmu->pmc_hostonly, pmc->idx, 1);
+> +		bitmap_clear(pmu->pmc_guestonly, pmc->idx, 1);
+> +		return;
+> +	}
 > +
-> +	if (!(vcpu->arch.efer & EFER_SVME))
-> +		/* HG_ONLY bits are ignored when SVME is clear */
-> +		return false;
-> +
-> +	/* Always active if both HG_ONLY bits are set */
-> +	if (hg_only == AMD64_EVENTSEL_HG_ONLY)
-
-I vote to check this condition at the same time !hg_only is checked.  From a
-*very* pedantic perspective, one could argue it's "wrong" to check the bits when
-SVME=0, but the purpose of the helper is to detect if the PMC is active or not.
-Precisely following the architectural behavior is unnecessary.
-
-> +		return false;
-> +
-> +	return !!(hg_only & AMD64_EVENTSEL_HOSTONLY) == is_guest_mode(vcpu);
+> +	switch (eventsel & AMD64_EVENTSEL_HG_ONLY) {
+> +	case AMD64_EVENTSEL_HOSTONLY:
+> +		bitmap_set(pmu->pmc_hostonly, pmc->idx, 1);
+> +		bitmap_clear(pmu->pmc_guestonly, pmc->idx, 1);
+> +		break;
+> +	case AMD64_EVENTSEL_GUESTONLY:
+> +		bitmap_clear(pmu->pmc_hostonly, pmc->idx, 1);
+> +		bitmap_set(pmu->pmc_guestonly, pmc->idx, 1);
+> +		break;
+> +	default:
+> +		bitmap_clear(pmu->pmc_hostonly, pmc->idx, 1);
+> +		bitmap_clear(pmu->pmc_guestonly, pmc->idx, 1);
+> +		break;
+> +	}
 > +}
 > +
->  static void amd_pmu_set_eventsel_hw(struct kvm_pmc *pmc)
+>  static bool amd_pmu_dormant_hg_event(struct kvm_pmc *pmc)
 >  {
->  	pmc->eventsel_hw = (pmc->eventsel & ~AMD64_EVENTSEL_HOSTONLY) |
->  		AMD64_EVENTSEL_GUESTONLY;
-> +
-> +	if (amd_pmu_dormant_hg_event(pmc))
-> +		pmc->eventsel_hw &= ~ARCH_PERFMON_EVENTSEL_ENABLE;
->  }
->  
->  static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  	u64 hg_only = pmc->eventsel & AMD64_EVENTSEL_HG_ONLY;
+> @@ -196,6 +223,7 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		if (data != pmc->eventsel) {
+>  			pmc->eventsel = data;
+>  			amd_pmu_set_eventsel_hw(pmc);
+> +			amd_pmu_update_hg_bitmaps(pmc);
+
+If we're going to bother adding amd_pmu_set_eventsel_hw(), and not reuse it as
+suggested above, then it amd_pmu_set_eventsel_hw() should be renamed to just
+amd_pmu_set_eventsel() and it should be the one configuring the bitmaps.  Because
+KVM should never write to an eventsel without updating the bitmaps.  That would
+also better capture the relationship between the bitmaps and eventsel_hw, e.g.
+
+	pmc->eventsel_hw = (pmc->eventsel & ~AMD64_EVENTSEL_HOSTONLY) |
+			   AMD64_EVENTSEL_GUESTONLY;
+
+	if (!amd_pmc_is_active(pmc))
+		pmc->eventsel_hw &= ~ARCH_PERFMON_EVENTSEL_ENABLE;
+
+	/*
+	 * Update the host/guest bitmaps used to reconfigure eventsel_hw on
+	 * transitions to/from an L2 guest, so that KVM can quickly refresh
+	 * the event selectors programmed into hardware, e.g. without having
+	 * to 
+	 */
+	if (!(eventsel & ARCH_PERFMON_EVENTSEL_ENABLE)) {
+		bitmap_clear(pmu->pmc_hostonly, pmc->idx, 1);
+		bitmap_clear(pmu->pmc_guestonly, pmc->idx, 1);
+		return;
+	}
+
+	switch (eventsel & AMD64_EVENTSEL_HG_ONLY) {
+	case AMD64_EVENTSEL_HOSTONLY:
+		bitmap_set(pmu->pmc_hostonly, pmc->idx, 1);
+		bitmap_clear(pmu->pmc_guestonly, pmc->idx, 1);
+		break;
+	case AMD64_EVENTSEL_GUESTONLY:
+		bitmap_clear(pmu->pmc_hostonly, pmc->idx, 1);
+		bitmap_set(pmu->pmc_guestonly, pmc->idx, 1);
+		break;
+	default:
+		bitmap_clear(pmu->pmc_hostonly, pmc->idx, 1);
+		bitmap_clear(pmu->pmc_guestonly, pmc->idx, 1);
+		break;
+	}
+
+But I still don't see any point in the bitmaps.
+
+>  			kvm_pmu_request_counter_reprogram(pmc);
+>  		}
+>  		return 0;
 > -- 
 > 2.52.0.457.g6b5491de43-goog
 > 
