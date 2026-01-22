@@ -1,65 +1,62 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEF937649A
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 16:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FBD367F24
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 16:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769100868; cv=none; b=ZGzM6Cf9NIRRftAj7VKgVC39B4MDj4IWrG3vVsQi4XGOr3dsp9gsVOtYLUqAVxmegboNmDZRuJjcRnsuZt5Ey9NDnDDAzzQLIQFtyg4/QNYpRTkIQ4KmdO260SHg/8YaqGv0ggSuw/DapICT0MnsMPaQ4AeZ+uionW6YOsMEl0M=
+	t=1769100869; cv=none; b=TC475pPh7JQxMgp6zWzkENuyuQADEo0vrRge90J2L/LAIGf3jRINndm+a+v6qAYA3iy40CBcYxwzPgrWgO96ltCRC9+lfDANhqbVPFqOna3MEj39AJPPCmoByawaUNQRyXgTHkfR31bUYSGB0l3YBWpi0E7MII8U1K+k7D91/xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769100868; c=relaxed/simple;
-	bh=U3CxrbAAlN8gTA3wMaXLOq+KQ2KCxALBwEtyEmQVEng=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=RTT1gqYWLUmdyxrYkKUCaCdN7senwyJMflKiaFUARQ3sURb4FK0xbZC2BV1OzpKsNi7o4Q9K7A9CY7kFZmRsVrLYRrGdg+RF+cwX5ugfBtYVWKHm74r0TXxuZm71WwRnTc6r+J3Gm5F5Xs5FE7rKf6TZjdpzZLeqnQTMZdofPoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oEImuKVd; arc=none smtp.client-ip=74.125.82.202
+	s=arc-20240116; t=1769100869; c=relaxed/simple;
+	bh=tI6CnFHFGW2mHe/ilKBHMpKa7DzCNr0AjpSz8C0GdXU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=dNqyVHBgs92ZkQS91HrkxMfT8oTKFaLjRoNgYf4DBOSbMSGkZgXS490/YY6tJ2yJ0UOtS9i1+oGmRYse7n5FGU27MuCk30YvKQY7hyhLkcOQphEolrE0YXZY4fT5fWB4eafXAcFlbclAlq1T+DgohgkGJTWBNh2iJt2CcuO+oCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hFPF4O7L; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oEImuKVd"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b7155ca88cso921462eec.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 08:54:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hFPF4O7L"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2b70bd4a2ccso5364654eec.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 08:54:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769100856; x=1769705656; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zalmwLrK8cPj7cYoTUj/KkGE6/xfnap/Tev3VqTduZw=;
-        b=oEImuKVdED36izjuwCT+ZZuLoE4ZtXRodRbC7Z5dfZhJO/A3UO/nxuoeLZmrvPq1n4
-         UwUaOVfvYxuqxx/060C3wvyLW/AATEEx3HJwYmkZFlDVpCiUDp+6xMoCImKS/mZEkxuO
-         58ZeIRXe83rbDmu0afEZGyIGIEnjUEAZFFInRRvK9XUCWoDBVbd/2BELtkrJbSffcvwm
-         ojBHUKbVvZHtrPJJchO5hiydHyxNpp8dQQv5aSmAaGtpuE2jiQ9gPoNQupSpQPgBrSD0
-         1Ulbu8dnaPpfeshjO/QmVhhl6agiPifTUsS/qugjs3WW/ncDmCmZpqxGPGis7OIHrY/p
-         ANaA==
+        d=google.com; s=20230601; t=1769100855; x=1769705655; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ptohnX8yCM46UmZak3D8AP5tKkb3cPUe+4O8l8XtsLs=;
+        b=hFPF4O7LLQhPU1E679fOzOI7s0dlGyeS4TGkUMe4ePXneJ2Eun6r4wcw8gfh/1w03A
+         go5yG12geARak4vsCQusXYhx2wNgyzEUUmKFU+z/JSSvXXS03tQGYnAWFxN5S1+SwICA
+         vaHd9T6ro4ZstNQ3uLWrQ83CTKWY7CGytTPZsumk2nM6zMdCkmSiTd26/7JtKfLhvrqa
+         DlOxFmy/5u4F5/nj4+xt0hP9SQhQE+oFWwnRcsQJsehtkCDAI2EO1aOvDDN6Nr2UFsc2
+         z7CHVagvS+L+cUgLn6hlgzlhv7xedqvevYGQzLTIMCGix3hF8d5+i2jCQ8rabP/Bzi0l
+         k4gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769100856; x=1769705656;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zalmwLrK8cPj7cYoTUj/KkGE6/xfnap/Tev3VqTduZw=;
-        b=K14iL0qFcw5T4U57odQOkcsXUc06PT/LACPQpSSzgymcLUZfEaOfTdDKoVmf55qiel
-         VSkgJMWlaH9uk9I7/HALM/gvpb1eZwWuL8jfRzArC1jYFGrKhgbws0mA4T+W0xRZ2Zai
-         8gYM6m0T0hC3GatKXpeAKQcHPGWJSaPA+qK0XguIQH54hyxz8gjvxTJfTqyGomZE1bcz
-         62MxCFjuAUR0tFnAV6hzOVXnh54h18fU2luIdqLKXu08CCo7zmor3z9M745qR89nyxOR
-         mhpcbR0zu04LdHNVVYYmgjLaw7Zj7Zx34jXop4VCXyx7ZGGbD1CHfOzNz1WnkrdIiORz
-         C7EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVp0VSmhlqsrh7YGxHJwKw/8eSRktG2OEEv+2RAyTByFNm7qoPzlC/TKVdS5C+V87JPMGnnpPnbiW6qyBx5Np26@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuC0ebKx36QWdV0BZDHdaSoT1Qz4OpewrUrQalAfXTQCx7X7fl
-	1Y7WB0QKGqnB4HV8lKbZ2A36p8D0f/ZGrTG2Y7i1dl/AdfZHfnH5RocPTkzZuJnTeybHSCMyt5F
-	kWKscsibHnw==
-X-Received: from dlbqj5.prod.google.com ([2002:a05:7022:ec05:b0:123:2b17:f461])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4582:b0:11b:95fe:bee3
- with SMTP id a92af1059eb24-1246aabf3f6mr7269627c88.37.1769100856331; Thu, 22
- Jan 2026 08:54:16 -0800 (PST)
-Date: Thu, 22 Jan 2026 08:53:56 -0800
-In-Reply-To: <20260122165407.561888-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1769100855; x=1769705655;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ptohnX8yCM46UmZak3D8AP5tKkb3cPUe+4O8l8XtsLs=;
+        b=JS2x0bZbmjLpvms2CLgwT0m/ljTMzbllWVPDuTqfvYaHychLZ3uxrBKhTNugM2EbTz
+         5SZKyEx8t6ZDjJ6bOkEy4WYiaSrA8YYey/M9e+fZfscCV2qwJk86h0TKnyHmwwzg97pg
+         5CllypLyGjKcxcP9o1zeIYartfWhnDmKkFJCypw/9DlwZ9L1bbzlT30eHST/GsTi5PhO
+         MMiaz5aQWI8Dpz8ZNee2dMVI3Qwb1ebJdkmJXl9F8YoUNHJyeKfVO+YUptOklfd1oQzX
+         tb0bhG1jUAJKNhv3owqr9yjbHk0KHL9GKTbnfXTMN1PBI6crtYUvVFfyrf+zGMR/xrPh
+         1Y3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWUYynDFf69GGPK2QhiWTqCO73ebWE5u1jXFL49WzF8ahWxrRgZjr3SaR85Hqs67srurGLDTzQYD0dfqFIrS4Av@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyh2k3KzMiVAcGp64s7RMKbyVP6/efS6UEWl4uP9pJTbB7hS/1M
+	jzaPQzGkXBqVXPxVKA4jdh5LdZoFpzl3NywrJnnmH6yvI9p6ba++T8QLeFGd5jDIkMlC2ExhXmY
+	lN4p6No+TGQ==
+X-Received: from dybgn17.prod.google.com ([2002:a05:7301:2511:b0:2b7:3bb:5997])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:650c:b0:2ae:51ae:5cfd
+ with SMTP id 5a478bee46e88-2b6b4104264mr16128244eec.22.1769100854683; Thu, 22
+ Jan 2026 08:54:14 -0800 (PST)
+Date: Thu, 22 Jan 2026 08:53:55 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260122165407.561888-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260122165407.561888-2-irogers@google.com>
-Subject: [PATCH v2 01/12] perf header: Fix memory leaks in process_cpu_domain_info
+Message-ID: <20260122165407.561888-1-irogers@google.com>
+Subject: [PATCH v2 00/12] perf annotate arch clean up
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -82,62 +79,103 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-do_read_string returns a string in allocated memory, for some reason
-there was unused memory allocations and unnecessary strdups. Remove
-these and make the "perf annotate basic tests" leak sanitizer clean.
+3 initial memory leak fix patches for perf annotate.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Fixes: d40c68a49f69 ("perf header: Support CPU DOMAIN relation info")
----
- tools/perf/util/header.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+Move the disasm.c #included arch files into a new util/annotate-arch
+directory. Make the code compile standalone. Try to better encapsulate
+architecture specific code within the files and with a
+arch__new_<arch> function that allows additional data to be associated
+with the struct arch using the standard container_of trick.
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 9a15dd4b7640..eefd1cd73b6a 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3634,6 +3634,7 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
- 			if (!d_info)
- 				return -1;
- 
-+			assert(cd_map[cpu]->domains[domain] == NULL);
- 			cd_map[cpu]->domains[domain] = d_info;
- 			d_info->domain = domain;
- 
-@@ -3642,30 +3643,20 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
- 				if (!dname)
- 					return -1;
- 
--				d_info->dname = zalloc(strlen(dname) + 1);
--				if (!d_info->dname)
--					return -1;
--
--				d_info->dname = strdup(dname);
-+				d_info->dname = dname;
- 			}
- 
- 			cpumask = do_read_string(ff);
- 			if (!cpumask)
- 				return -1;
- 
--			d_info->cpumask = zalloc(strlen(cpumask) + 1);
--			if (!d_info->cpumask)
--				return -1;
--			d_info->cpumask = strdup(cpumask);
-+			d_info->cpumask = cpumask;
- 
- 			cpulist = do_read_string(ff);
- 			if (!cpulist)
- 				return -1;
- 
--			d_info->cpulist = zalloc(strlen(cpulist) + 1);
--			if (!d_info->cpulist)
--				return -1;
--			d_info->cpulist = strdup(cpulist);
-+			d_info->cpulist = cpulist;
- 		}
- 	}
- 
+Make the lookup of struct arch use the ELF machine gather from a
+thread rather than an evsel. For example, the evsel can't determine
+the difference between EM_386 and EM_X86_64 so generally the latter
+has currently been used. This means the dwarf registers are off as
+register 1 is CX with EM_386 and DX with EM_X86_64. To facilitate this
+change map_symbol is refactored to use a struct thread rather than a
+struct maps, the maps being obtainable from the thread.
+
+To make in and out arguments clearer, for safety, etc. try to constify
+struct arch and its related structs.
+
+v2: Add a patch to fix a domain info memory leak that was blocking
+    leak sanitizer analysis. Fix more map_symbol leaks or uses after
+    reference count put (Suchit Karunakaran
+    <suchitkarunakaran@gmail.com>).  Try to repro annotate test crash
+    (James Clark) but suspect it was addressed in the other reference
+    count fixes.
+
+v1: https://lore.kernel.org/lkml/20260122073127.375139-1-irogers@google.com/
+
+Ian Rogers (12):
+  perf header: Fix memory leaks in process_cpu_domain_info
+  perf annotate: Fix args leak of map_symbol
+  perf maps: Fix reference count leak in maps__find_ams
+  perf disasm: Constify use of struct arch
+  perf disasm: Constify use of struct ins_op
+  perf disasm: Constify use of struct ins
+  perf disasm: Rework the string arch__is to use the ELF machine
+  perf disasm: Don't include C files from the arch directory
+  perf disasm: Refactor ins__is_call/jump to avoid exposing arch ins_ops
+  perf map_symbol: Switch from holding maps to holding thread
+  perf disasm: Refactor arch__find and initialization of arch structs
+  perf disasm: Minor layout tweaks for struct arch
+
+ tools/perf/arch/arc/annotate/instructions.c   |  11 -
+ .../perf/arch/riscv64/annotate/instructions.c |  36 --
+ tools/perf/ui/browsers/annotate.c             |   6 +-
+ tools/perf/ui/browsers/hists.c                |   3 +-
+ tools/perf/util/Build                         |   1 +
+ tools/perf/util/addr_location.c               |   4 -
+ tools/perf/util/addr_location.h               |   1 -
+ tools/perf/util/annotate-arch/Build           |  11 +
+ tools/perf/util/annotate-arch/annotate-arc.c  |  18 +
+ .../annotate-arch/annotate-arm.c}             |  48 +-
+ .../annotate-arch/annotate-arm64.c}           |  59 +--
+ .../annotate-arch/annotate-csky.c}            |  29 +-
+ .../annotate-arch/annotate-loongarch.c}       |  71 +--
+ .../annotate-arch/annotate-mips.c}            |  29 +-
+ .../annotate-arch/annotate-powerpc.c}         | 125 ++++-
+ .../util/annotate-arch/annotate-riscv64.c     |  41 ++
+ .../annotate-arch/annotate-s390.c}            |  70 +--
+ .../annotate-arch/annotate-sparc.c}           |  26 +-
+ .../annotate-arch/annotate-x86.c}             |  89 ++--
+ tools/perf/util/annotate-data.c               |  12 +-
+ tools/perf/util/annotate-data.h               |   2 +-
+ tools/perf/util/annotate.c                    |  88 ++--
+ tools/perf/util/annotate.h                    |  10 +-
+ tools/perf/util/callchain.c                   |  12 +-
+ tools/perf/util/capstone.c                    |  18 +-
+ tools/perf/util/db-export.c                   |   1 -
+ tools/perf/util/disasm.c                      | 428 +++++++-----------
+ tools/perf/util/disasm.h                      |  95 ++--
+ tools/perf/util/event.c                       |   2 -
+ tools/perf/util/header.c                      |  17 +-
+ tools/perf/util/hist.c                        |  18 +-
+ tools/perf/util/llvm.c                        |   8 +-
+ tools/perf/util/machine.c                     |  13 +-
+ tools/perf/util/map_symbol.c                  |   5 +-
+ tools/perf/util/map_symbol.h                  |   3 +-
+ tools/perf/util/maps.c                        |   1 +
+ tools/perf/util/sort.c                        |   2 +-
+ tools/perf/util/unwind-libdw.c                |   2 +-
+ tools/perf/util/unwind-libunwind-local.c      |   2 +-
+ 39 files changed, 774 insertions(+), 643 deletions(-)
+ delete mode 100644 tools/perf/arch/arc/annotate/instructions.c
+ delete mode 100644 tools/perf/arch/riscv64/annotate/instructions.c
+ create mode 100644 tools/perf/util/annotate-arch/Build
+ create mode 100644 tools/perf/util/annotate-arch/annotate-arc.c
+ rename tools/perf/{arch/arm/annotate/instructions.c => util/annotate-arch/annotate-arm.c} (59%)
+ rename tools/perf/{arch/arm64/annotate/instructions.c => util/annotate-arch/annotate-arm64.c} (70%)
+ rename tools/perf/{arch/csky/annotate/instructions.c => util/annotate-arch/annotate-csky.c} (67%)
+ rename tools/perf/{arch/loongarch/annotate/instructions.c => util/annotate-arch/annotate-loongarch.c} (60%)
+ rename tools/perf/{arch/mips/annotate/instructions.c => util/annotate-arch/annotate-mips.c} (59%)
+ rename tools/perf/{arch/powerpc/annotate/instructions.c => util/annotate-arch/annotate-powerpc.c} (73%)
+ create mode 100644 tools/perf/util/annotate-arch/annotate-riscv64.c
+ rename tools/perf/{arch/s390/annotate/instructions.c => util/annotate-arch/annotate-s390.c} (66%)
+ rename tools/perf/{arch/sparc/annotate/instructions.c => util/annotate-arch/annotate-sparc.c} (85%)
+ rename tools/perf/{arch/x86/annotate/instructions.c => util/annotate-arch/annotate-x86.c} (93%)
+
 -- 
 2.52.0.457.g6b5491de43-goog
 
