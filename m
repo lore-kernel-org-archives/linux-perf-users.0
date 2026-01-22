@@ -1,136 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D2B313554;
-	Thu, 22 Jan 2026 01:10:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D37F2765DF;
+	Thu, 22 Jan 2026 01:32:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769044223; cv=none; b=njcAJ28DNplnq9eB8Kvuba80CNgsdmBy/FhbqcZhNEU/uAg+qzVCzjHy3VJyO4h+eJS0V8B6Q9pa2e1j/YienCrkXRs0LbvU5Tp5RnLDo435UryNtTYt0ydB6MGckfDf55Cv2Ie+X+VmcR/FIvJbC9juKmPxBRYs7XGlfC8fTrg=
+	t=1769045577; cv=none; b=YapFO+JHEPFpzRAbrSP8+YnzhUgP57OHqsxUC0w80cVJSesO+irOckKmRXpqsDJ/Xk8aTMewtb57KbSjhgQ+Ad7AbUjEcZF4W6Lgw4PAZKix4UlUkYXofLTsVx/5fUIecun32mPb/xmhp+eYx6jNN5YNmLPWZ5Sw+K5MBmTjh9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769044223; c=relaxed/simple;
-	bh=hrOHBakHr2eq48KDg5NIU00AjzRvKCXAg0ATc4N28Aw=;
+	s=arc-20240116; t=1769045577; c=relaxed/simple;
+	bh=4XFiPAs8jnYhz1j9qg/XDog+5uvcWAWFIKqPse5lFOY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qdCVprzmePumlGrYrTsJXtcY63sOgSYMxFxQMsU367EZnL8FrJG7F8syYV92j5rlrftLYw9F33Fhgd1FAOxSEVBY3DZsih33e8WtYbwRiNNPDunXrChCD3pHdnh9ZRYhCVXx3Ipz5W45VXa4aQkjgzxA+eRCHQBC3rGLzqB/MEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJk0aAGK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UtB5Xnk1lVQe3ZaB+mEzz/S7dg0Yo7h9GCkjXbb8/6S4Yc1AAh7w6O6TIL2qisJVI020v2Zz4iJ3PXwtnVqdGa6/7vALQ3h+QwGlqdNEUMm+q2nZIyQ+xXDuleNEt1P/qLh3VFkA7kTwX7nJvF7ptY/fJU4pSCgi0cEmWNGU+wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=knU6+T/5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJk0aAGK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02DCFC4CEF1;
-	Thu, 22 Jan 2026 01:10:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="knU6+T/5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80ACBC4CEF1;
+	Thu, 22 Jan 2026 01:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769044222;
-	bh=hrOHBakHr2eq48KDg5NIU00AjzRvKCXAg0ATc4N28Aw=;
+	s=k20201202; t=1769045577;
+	bh=4XFiPAs8jnYhz1j9qg/XDog+5uvcWAWFIKqPse5lFOY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GJk0aAGKo72fPLjVJjj9KV69ekJm6Z6exCOQlaDVG+tV3RrqhtnmhLQHvKUFbx8Qr
-	 JG0dR6mCQQJSvfQuXhuPGWLoNkOr5F9VUSlJdMI9q0mXxDGXIKPqvN14C+ZQoCSx+c
-	 xdzrO0drSQRudkgp5jRWZb5uqX2KdhFZd2GlBQ/VUO+glW/iroEFfl8/66TmCEisyP
-	 1CKaA6QgIUFx+MCpkX6OK6f0MG7Hi3BTPuimBJTJitckQVKS1UrA+JYwz/34Ej85ab
-	 74ZpKvbr3DqlgAqA+/CZ41PA8Yt3iNj1Y1aJcgzA/99MdHnjW1MIpzoqP2rEOv3zEI
-	 13/77o56YDydw==
-Date: Wed, 21 Jan 2026 22:10:18 -0300
+	b=knU6+T/5mkRnstY2YflDDZSOSRfzeQwh8MC7RMZinADVihZdinKBl3bEGEeF7LRJo
+	 8T3eHHYIrEXvBIswd0GtHfCwc8CR+92ATlQl/V57L3Ab0z65jIQ2SXUasq4cUmBxNQ
+	 dLEHVBdMuwEcJsLpQ2/bOBpxe9dYaGM6anmhDzlu/yf1F69xkQ0Wpmb7zZ4aeZ3UQO
+	 2norVvxXjca2pYdvoEhKBrsIHXeH5qG1ChdSppf3S9f2Ax3+j6Buc24AeAYU+kgzqn
+	 f6vbQBfJ0Mu8bjwdghkK59+DvwKO0cQiZA5mg5fKwzDOYUDNF8mFFftXWDTgBhug93
+	 tf31N5xdJUB9g==
+Date: Wed, 21 Jan 2026 22:32:54 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 3/4] perf list: Don't write to const memory
-Message-ID: <aXF4-vLA9DvhsPdc@x1>
-References: <20260120220900.366451-1-acme@kernel.org>
- <20260120220900.366451-4-acme@kernel.org>
- <20260121221713.1e7e0cf9@pumpkin>
+To: Swapnil Sapkal <swapnil.sapkal@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	irogers@google.com, james.clark@arm.com, ravi.bangoria@amd.com,
+	yu.c.chen@intel.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	rostedt@goodmis.org, vincent.guittot@linaro.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	gautham.shenoy@amd.com, kprateek.nayak@amd.com,
+	juri.lelli@redhat.com, yangjihong@bytedance.com, void@manifault.com,
+	tj@kernel.org, sshegde@linux.ibm.com, ctshao@google.com,
+	quic_zhonhan@quicinc.com, thomas.falcon@intel.com,
+	blakejones@google.com, ashelat@redhat.com, leo.yan@arm.com,
+	dvyukov@google.com, ak@linux.intel.com, yujie.liu@intel.com,
+	graham.woodward@arm.com, ben.gainey@arm.com, vineethr@linux.ibm.com,
+	tim.c.chen@linux.intel.com, linux@treblig.org,
+	santosh.shukla@amd.com, sandipan.das@amd.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	James Clark <james.clark@linaro.org>
+Subject: Re: [PATCH v5 07/10] perf sched stats: Add support for live mode
+Message-ID: <aXF-RvjGU-mPA_B1@x1>
+References: <20260119175833.340369-1-swapnil.sapkal@amd.com>
+ <20260119175833.340369-8-swapnil.sapkal@amd.com>
+ <aXF1OECUByl0kgCF@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260121221713.1e7e0cf9@pumpkin>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aXF1OECUByl0kgCF@x1>
 
-On Wed, Jan 21, 2026 at 10:17:13PM +0000, David Laight wrote:
-> On Tue, 20 Jan 2026 19:08:59 -0300
-> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> 
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > Something now detected on fedora 44, where strchr() returns const if it
-> > is passed a const pointer:
-> > 
-> >   util/print-events.c: In function 'print_sdt_events':
-> >   util/print-events.c:89:29: error: initialization discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
-> >      89 |                 char *bid = strchr(sdt_name->s, '@');
-> >         |                             ^~~~~~
-> > 
-> > Fix it by using strnchr() if strchr finds the separator instead of
-> > temporarily scrubbing it with '\0'.
-> 
-> I've just looked at the full function to see WTF it is doing.
-> You've fixed the second strchr() not the one the compiler bleated about.
-
-It complained about both, no?
-
-> Line 89 is followed by:
-> 	if (bid)
-> 		*bid++ = 0;
-> but if it is NULL there is a fair chance the code will just explode a bit later on.
-
-Why, can you elaborate?
-
-> I suspect it is an error if the strings aren't "name@bar"
+On Wed, Jan 21, 2026 at 09:54:16PM -0300, Arnaldo Carvalho de Melo wrote:
+> So continuing to test build up to:
  
-> 'show_detail' seems to be set if either the previous or next entries in the
-> list/tree have the same "name" - which seems strange to me.
+> ⬢ [acme@toolbx perf-tools-next]$ git log --oneline -5
+> 139b45df27c05531 (HEAD -> perf-tools-next) perf sched stats: Add schedstat v17 support
+> e092c5d4541da7f0 perf sched stats: Add schedstat v16 support
+> e659d5e11000b7ff perf sched stats: Add record and rawdump support
+> 900884770020691c perf header: Support CPU DOMAIN relation info
+> a02829a0e6c65b12 tools/lib: Add list_is_first()
+> ⬢ [acme@toolbx perf-tools-next]$
 
-All this is strange, a corner case, it looks as if we may have multiple
-binaries, differentiated by buildids, that would have different SDTs.
-
-The code seems to be trying to reduce the amount of info (not showing
-the buildid if there are no more at that point multiple versions of a
-DSO with SDTs in place).
-
-Further analysis of the changesets that put all this in place is needed
-to clarify, but looking just at fixing what the compiler is complaining,
-do you think the patches are bad?
+Just the first two patches build on 32-bit arches, I'll look at it
+tomorrow after some coffee, for now at least the first two are merged,
+to make some progress.
 
 - Arnaldo
- 
-> The while thing needs more work :-(
-> 
-> 	David
-> 
-> > 
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/util/print-events.c | 13 +++++--------
-> >  1 file changed, 5 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-> > index 8f3ed83853a9e468..898cf426509790cd 100644
-> > --- a/tools/perf/util/print-events.c
-> > +++ b/tools/perf/util/print-events.c
-> > @@ -97,14 +97,11 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
-> >  		} else {
-> >  			next_sdt_name = strlist__next(sdt_name);
-> >  			if (next_sdt_name) {
-> > -				char *bid2 = strchr(next_sdt_name->s, '@');
-> > -
-> > -				if (bid2)
-> > -					*bid2 = '\0';
-> > -				if (strcmp(sdt_name->s, next_sdt_name->s) == 0)
-> > -					show_detail = true;
-> > -				if (bid2)
-> > -					*bid2 = '@';
-> > +				const char *bid2 = strchr(next_sdt_name->s, '@');
-> > +
-> > +				show_detail = bid2 ?
-> > +						strncmp(sdt_name->s, next_sdt_name->s, bid2 - next_sdt_name->s) == 0 :
-> > +						strcmp(sdt_name->s, next_sdt_name->s) == 0;
-> >  			}
-> >  		}
-> >  		last_sdt_name = sdt_name->s;
