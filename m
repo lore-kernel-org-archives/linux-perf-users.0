@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888D5318EF7
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 21:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D834F3C088D
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 21:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769117737; cv=none; b=SiUEibLGLQ0TCAdzrxkL59etlAGOqg+lhtIOLB/B84NlxuVxYWB5e7qGAYtXGHlPQGoxVk4DfivB+BsZICbUAuCUCMdl9iSutdiCINstbGyyJD7plRuk7DDUykbx/GkQSHjJ48MF887NBl/DBWgNi2RH8HYwYYItjTi9wLN+Ano=
+	t=1769117743; cv=none; b=aIDr9D8tTfC5918QWaNkh4YcVYbnT0WU+2WcS5N7nhsevzSNoMkniEkdVzhQBVxquOfglPQubmOBUNmhslGwF7FcOR1qqYmaKvjR5VoH40LGpYWkwwnufw/K7ywSUA2e78e+gmoKckcHy2z4useNZWcOV6f796lldWTnIhZUT1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769117737; c=relaxed/simple;
-	bh=U3CxrbAAlN8gTA3wMaXLOq+KQ2KCxALBwEtyEmQVEng=;
+	s=arc-20240116; t=1769117743; c=relaxed/simple;
+	bh=WqOiFcX/heg3IGph3C/ogbRzFLpcL0diaA21e5ry5lo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=IgteoOaCWT9dnlKllHABYlDSlV4Ma5FRaNUUhKhXSRujeTxXmn+bVeB4JdUCSI8DHaxdg3Oj0b6Pjqf/XA4I0OJM5GzQewTrSxM6/oYJEB1LODItTwxG47LLOVbnrPlS8XYq90ARJ4XYkEX/YAF4sm3JPp6OaRZKLDx9AMX4WU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yANl44qH; arc=none smtp.client-ip=74.125.82.74
+	 To:Content-Type; b=EaWnrY5ZMZazzuWJhFuGtbyIQFAwR2rO6mE1K/ARcOFiW8OKm2DgNWQeyt3Q4c9FcRf/pVkGIzjlcSTlgIUCMKUVLiGKG/ZuhFsP9iLdVKM+b5Wd+lN/KAPfnDk6QTLBSLiyOYcPd3SacycYSy81QCBmzpkUPUp7kTjJMZSVQgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Y8nq/S7; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yANl44qH"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12338749ea9so2028349c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 13:35:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Y8nq/S7"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2b71c5826fbso1481507eec.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 13:35:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769117725; x=1769722525; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769117729; x=1769722529; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=zalmwLrK8cPj7cYoTUj/KkGE6/xfnap/Tev3VqTduZw=;
-        b=yANl44qHNJ1er8muLcjEqtLhDdjFZ0Qq8NLCQ4MOZqLvuO2YBZDcaI34QXWTR80iLA
-         JwK6cpBb4R/wsWd3ylbjM9lKcr20sjCnh01segm7L/GqGTekZleJ4PR8gclcqE5u57Vy
-         J+j/tES/8RgQ6oVhmPeRIPX//WQoe8omlk5s0ODlTw/1AMOXa7hDUhlTYIWqEuZ2mcpi
-         PxtrAdYIcBECIn3cMxBL71wtXrc6CsunxX744SQpdUQVW/5uVaYavUJRjsGL7lK4NBH8
-         Ah+jCZuxoTc55Lv5Ojfmo3Tlk6kO4d1n3KjrddLnurV8zZVOipmO4BNuw6Mg1qucDPlA
-         GwWg==
+        bh=DnbHjkP7sr2MY8dvLIuI6wPgadGKGFiX6WTYohRo5Kw=;
+        b=1Y8nq/S7wN0VV3NB0L8PwHjj08D3Y9JAraVXXMj6G/a76O2pZxgMPKygDo7kVYZOHj
+         JgkWrADou6WXqOvhWxo3jf0iSbLAJaLH8F7jmRmMXL9wLICY2H/3+BkgFHwTnnf4gzF9
+         DpBbtiRxiB47KT3qNFvFt7bTvVmITCnZVHRNjfonbwiSNeRs8pqvuHkSIeiX7eFvi0Vw
+         yZlvsjOVqJZ1oAVBZLO6ltwjY1N4yUoD0bbeLoAo/A/EsSV0Zu9zBYjGgqnJqgTjOSq5
+         6qX7pZxUDZJd/3JbvKFrB/w05O381VUMhDmxgBSzBCuA+imfuhgEp58v3u9mujeL5mo1
+         NRQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769117725; x=1769722525;
+        d=1e100.net; s=20230601; t=1769117729; x=1769722529;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zalmwLrK8cPj7cYoTUj/KkGE6/xfnap/Tev3VqTduZw=;
-        b=aPGeF9Lg4pX1kJzOi7+v3O+M3C7wK6z13sxXnEF+n/AnXgsI0N+pX8nDKQ2x12nRQe
-         6v+lwdvRYhGaPykde1YdPYNlrQYbvzOADrXumgO66HIVr9OVf4qnqocrOGqw7OqLZLMs
-         wev3ofBjMFknl+g9bd5Nen+OVks8o0RxuujbugQWiLUlIMPxYvoRh7wS6oi6wsLdPsxe
-         x+8P8bXm3i9Y/lpb/uYP/FYbfdKhD23xLCm1Q0BMwCsYW+aEIQWaB8rxIiCGpuFkbNJA
-         /Kwz5HiQ5LxP0W0jNA5TuvWVn2nFP9FAnHAPLtlbTrBkAtirlSPxT4Nm8uJsl9usDzWD
-         QtXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXey/Bxvwrcy09k7Fz8U3jVQGKC/4BbWs/9PRaYd0l5cUiV0N/AZcW6aVbIr/7BIIZ6d/wTAOsPD/5wUH5Qo9FB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSw+VxXsVmMhABK06DFtPId94/zgFQHfqYu9sWN6zpWaWp2mVA
-	u4tLnnapu0+Fhu+dYVq2lQ/URuUjuzVeruid1s7WfZEzL16gB3jk4Fse5/UT0BUl9DxeEDFMJbq
-	mXlFcPxqwfw==
-X-Received: from dlii17.prod.google.com ([2002:a05:7022:4191:b0:11d:cd2a:4c1b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2397:b0:119:e56b:91ea
- with SMTP id a92af1059eb24-1247dbf80ecmr276440c88.27.1769117724953; Thu, 22
- Jan 2026 13:35:24 -0800 (PST)
-Date: Thu, 22 Jan 2026 13:35:05 -0800
+        bh=DnbHjkP7sr2MY8dvLIuI6wPgadGKGFiX6WTYohRo5Kw=;
+        b=crqr6tWGrc92ULKQ5Abd/XapHOu1518iIQXL9m7xgSKA9A3Ifruc21DHIjlLJ27SPx
+         GxuXVVuNW74dHpasGuTKy5SGrs2lCiXU6BwyUpxnU9WhGjXGiZcxNR47Ln+dO5TvFqd9
+         C1JIOiLU4CkXEk6leNWDVk8w0Y2LPKzzH/O0/CHoLanaJh0KfQ7YSaUFerYqMNynCsP5
+         4e4CkF5FlOhk/Jr7N1B5LsM6FAqEp1tsEnyTBfdyWbPlXvs1jYT5d6zen6cduUjidOpt
+         IV+IXP99Sk6fOHmvsAlW4P0i12odchFSJUZGlWfyF9fDUFv5B8dmY3kgPd5v20B3zkqc
+         hunw==
+X-Forwarded-Encrypted: i=1; AJvYcCXr7s4kHj24apL7NBFjPbhnJYiw+V5sqZJNuHYs2NNzwBGqnu71OxpcxluKTNNtkv9L/9w5juSrTittjm+7smA2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEXPhLWSpZ0YDOen/NEcMAFsZzwmp0T4O3KeRGiC5f6Y3YnH1t
+	uBcogMnIctapEwE6nt51tPIUCp6Ry5kW2vv+7oICT9CKAqTI7SWlTewG+Aqs7xMNlV3leins5Ua
+	+vBOy+Atm9A==
+X-Received: from dycok8.prod.google.com ([2002:a05:7301:db08:b0:2ac:32e7:3ccd])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:4084:b0:2b7:2263:3d3c
+ with SMTP id 5a478bee46e88-2b739b6d29fmr262486eec.24.1769117728705; Thu, 22
+ Jan 2026 13:35:28 -0800 (PST)
+Date: Thu, 22 Jan 2026 13:35:07 -0800
 In-Reply-To: <20260122213516.671089-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260122213516.671089-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260122213516.671089-2-irogers@google.com>
-Subject: [PATCH v3 01/12] perf header: Fix memory leaks in process_cpu_domain_info
+Message-ID: <20260122213516.671089-4-irogers@google.com>
+Subject: [PATCH v3 03/12] perf maps: Fix reference count leak in maps__find_ams
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -82,62 +82,28 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-do_read_string returns a string in allocated memory, for some reason
-there was unused memory allocations and unnecessary strdups. Remove
-these and make the "perf annotate basic tests" leak sanitizer clean.
+ams and so ams->ms.map is an in argument, however, it is also
+overwritten. As a map is reference counted, ensure a map__put is done
+before overwriting it.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
-Fixes: d40c68a49f69 ("perf header: Support CPU DOMAIN relation info")
+Fixes: 42fd623b58db ("perf maps: Get map before returning in maps__find")
 ---
- tools/perf/util/header.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+ tools/perf/util/maps.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 9a15dd4b7640..eefd1cd73b6a 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3634,6 +3634,7 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
- 			if (!d_info)
- 				return -1;
- 
-+			assert(cd_map[cpu]->domains[domain] == NULL);
- 			cd_map[cpu]->domains[domain] = d_info;
- 			d_info->domain = domain;
- 
-@@ -3642,30 +3643,20 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
- 				if (!dname)
- 					return -1;
- 
--				d_info->dname = zalloc(strlen(dname) + 1);
--				if (!d_info->dname)
--					return -1;
--
--				d_info->dname = strdup(dname);
-+				d_info->dname = dname;
- 			}
- 
- 			cpumask = do_read_string(ff);
- 			if (!cpumask)
- 				return -1;
- 
--			d_info->cpumask = zalloc(strlen(cpumask) + 1);
--			if (!d_info->cpumask)
--				return -1;
--			d_info->cpumask = strdup(cpumask);
-+			d_info->cpumask = cpumask;
- 
- 			cpulist = do_read_string(ff);
- 			if (!cpulist)
- 				return -1;
- 
--			d_info->cpulist = zalloc(strlen(cpulist) + 1);
--			if (!d_info->cpulist)
--				return -1;
--			d_info->cpulist = strdup(cpulist);
-+			d_info->cpulist = cpulist;
- 		}
- 	}
- 
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 8ccc46d515b6..4092211cff62 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -708,6 +708,7 @@ int maps__find_ams(struct maps *maps, struct addr_map_symbol *ams)
+ 	if (ams->addr < map__start(ams->ms.map) || ams->addr >= map__end(ams->ms.map)) {
+ 		if (maps == NULL)
+ 			return -1;
++		map__put(ams->ms.map);
+ 		ams->ms.map = maps__find(maps, ams->addr);
+ 		if (ams->ms.map == NULL)
+ 			return -1;
 -- 
 2.52.0.457.g6b5491de43-goog
 
