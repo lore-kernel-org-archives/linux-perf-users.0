@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E5E33C52F
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 16:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CA536EA9E
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 16:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769100885; cv=none; b=os3S4TjaFkP1tKpq6AA1mAV17SC/RcqWyuf/Kcf6CIAF7h5DqesikeobruElHVPGEmKHBLz51zBsZoG0RQbpuDMYC1x8XnQPOYeBxSRniG/MdgmasAfoUjDbdXutj2swI00tjsOuSGagECXH86xX4yZtT4axom1xJb8NoY9Iri8=
+	t=1769100885; cv=none; b=k+un0zQ8WDRxuoUny+ceHjeXTuyJIXaLwcv+T3O13mm0TKm8FDOOqjwBJhdE21Urxr4OW2Zw6HcsDPCCwhOoFcv6qI1IqKu5/3onbXlD/Mw9o8U11kJX6E0uVdX+CoOgQyMxFhoU5m3TocnedZVZACn9U2fCZc8aAPU68/DWI/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769100885; c=relaxed/simple;
-	bh=Fw5zeAM2zfnnadmaZE6GhH2s1pBqPvkeHIHlR9oq9uk=;
+	bh=IKxUvpqeaDRrmwDOL8vjDyn+1FMS+KE+94Prsf8lXdI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=diV2S5I//b5SR7z16ucdSZFZD87EiRQ+3z8eyxbqzUHqqEv8IQWfzd1LCyE0EmA10so/JmfrfZjmx3RMDPD6v7dzJ16udpJFmARJDONchtiYWvHBz1hCB8+6b8UXx52F1+ikoTVceCwbVnQIHUAYehYFJS5sHxE62EToGKFYpoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vTAaLbmN; arc=none smtp.client-ip=74.125.82.74
+	 To:Content-Type; b=usJZaXxr8DDFdVU9+oEZDxyPxLiEaOd+Lj6ONKJN+KzPnoFdRDBISC5XfbOiejOdN17nT9vcb9UpFTXVwmaH2nu965NE9TAO2QdZazPRCwwC7Q3wspJS1jWxA2zKMRZoYc5E3hLWkqTwtstEqeBGprwH3BYlYd4+E0X4ZXu+A50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lcAuf6L6; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vTAaLbmN"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-11b9786fb51so7209692c88.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 08:54:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lcAuf6L6"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-121b1cb8377so2489939c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 08:54:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769100873; x=1769705673; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769100862; x=1769705662; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ad2GwIvXnuBM0K5HE3V72oHuf8IYiJKy1/A8wVQtlzk=;
-        b=vTAaLbmNCYOrfQFpAB+GzHKt7eJQuE51VXLZSkLl46TWr0V35cBuKAK9uUyKEW7x6v
-         x+iD1E+7ZNpG/8A0zEu9LRZ8gBPggtDULy6bq+BQtDXOOgn3yix6BNvCu953ljh3xS7m
-         A/sOy6pNBEgZeefqVHu9ZSuOIBcS8AnNz5OnKL1f4v7xwjYoLBlcMl6lphwRHzx1Pifd
-         OUDmcTXRTwSaacpf3PPZk0Noq7S+kjsK2mjBbxOzHQTE+nog/nbBlO314Sj8IMFlRgHU
-         FoovNyqe8z4m/Pg0LsHS4IBsMv4DzLNput88ZSIY08vJ5rMuMvBKqEcOWxgHrgLl3dxn
-         e6pg==
+        bh=CaWbewelcoZI5s3t7J3uxiLpveJf3lfY5rNIyg6IXOI=;
+        b=lcAuf6L6uuP8ftVM6QqpnjgklyqkUeJLegT8YCcCCYXFA78UpQgUX3V9CBXaeYYm3I
+         nmgTq+4ydYgZulZngiU+zejSwbaLIJ29ZePqP6hAJolbGRJvwlzyHMK1Kz+gDDgq5uTC
+         CSslXqUnKMceVdbQ8e9mO6Fs6SnLX2vJJeBVJZXc2xgTFrazVipOP7khhfLLh0ZgNAY3
+         r9NYmM6SQncuwOAyOOjGlFc/ElciONPR6tTlkEkXCQY2uQUf2iimEY3KytHNgk624Q2O
+         pKS4g2tke8l4o3H85MNlZxoPdUrbTdQP8yEhjzI7YKud6V4eNXcobwbTv8ttnyz+mGUk
+         mwbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769100873; x=1769705673;
+        d=1e100.net; s=20230601; t=1769100862; x=1769705662;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ad2GwIvXnuBM0K5HE3V72oHuf8IYiJKy1/A8wVQtlzk=;
-        b=vQWKFMIvg2pSCErhX6zGwNcY1SqDGnpH+RynKiQVcBbspEL08r6OUrc3yPJztpdQVD
-         rSTA8XJ4Y2S9Y+giaGUMCm2PUErYMMCrTevlaCGXlRsSy3YSDq/fki4TM+najIQHHv0M
-         qYliudrEbFqMV9zW/+dvG5ksGEhH8w1RyY5JWiKloUWTbhJQKqURL4VEnVZkuftgoii8
-         iS078PbmULoal8SP5+bAhv7Xn0uuaRxDMu77wD+ogslqhJEG6b0i+gn0IVQNsyFa6Nt2
-         +DWr7l2udEJjwITHLMcYjkxd126WeNEdbchXpSFoQKfZtTieU2PfK83ST6VNyzWtUaCQ
-         ynZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ17hGcCkzV5XPsg2iP+yRIeoJrWAFiAqpoFsI2SZY/ACTkTSV9YKe3ebCtZDhr1s/F5AlPmU5NwX4NeQ8FATg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxv25iDP+jsqLJwQINORS0dpUE2lcRSQDeJrJ3Gv2/LOxorpLzz
-	iXIQiPRU8HYfZUSA/Q0OIdjdsES2OZqvONwPmAa2TV1PDpM7//9/R9Bn99yCygzg1cpPFY4eejq
-	hU5mgqd3c7w==
-X-Received: from dld13.prod.google.com ([2002:a05:7022:30d:b0:121:79a7:ec2d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:128b:b0:11f:3483:bbb0
- with SMTP id a92af1059eb24-1244a72aef2mr18517708c88.19.1769100873225; Thu, 22
- Jan 2026 08:54:33 -0800 (PST)
-Date: Thu, 22 Jan 2026 08:54:05 -0800
+        bh=CaWbewelcoZI5s3t7J3uxiLpveJf3lfY5rNIyg6IXOI=;
+        b=toEwCtwodFUDhmIyjtaunXhVV92jaWsXEoKsdUyh3QeTrxdVXDudiooXkjEDdgXztt
+         dw/58ojicfwcKDFoLGn9EgS8FzxHlcbvn/oTgQ2WuR1XIJco5IXvT+2cNLsJFCbyAWW7
+         EmharJFoVtiznZNoR28hPl3JxKJSidye14eo+GKL1/4lJDEQhph3FcQueVS5FSZA/kDa
+         3VZsCi4oyxdRm7Dho/vKjaMppktJHbPwx62c339SoOnWwXEh5WTGUe0JCq0SIUtt/zlb
+         KM9Epyr83oW9ynP6v+0R/TEEegi/hlh05XImCrh4/IBtYM95kOXFyK0g9N8Z2F2+SaoE
+         fNAg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdlmiF4UhBePS+88wkgaCK8HXRjChHkQTX4AhZ6xwRjNd/kshLVd8OoYJFyRYsuUSvvdeVLuRG1fS7/r/UkE3r@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ2HgNfeX5nyCoB8lBu6xy8Q62GBJGoxdnZj2vDVYqcipkNrd5
+	n5aJEeBb7dqjTMAAMjHmvuqFDQo9QcPniO0pXv9RcZtElZYrVpA/NiLL/cTRfHzsaaujGqWPqiq
+	EbI2bK6iNFQ==
+X-Received: from dlbpy14.prod.google.com ([2002:a05:7022:e98e:b0:11d:cfa0:5ddf])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1284:b0:11b:9386:a38b
+ with SMTP id a92af1059eb24-1246aacb81amr6462562c88.46.1769100861789; Thu, 22
+ Jan 2026 08:54:21 -0800 (PST)
+Date: Thu, 22 Jan 2026 08:53:59 -0800
 In-Reply-To: <20260122165407.561888-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260122165407.561888-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260122165407.561888-11-irogers@google.com>
-Subject: [PATCH v2 10/12] perf map_symbol: Switch from holding maps to holding thread
+Message-ID: <20260122165407.561888-5-irogers@google.com>
+Subject: [PATCH v2 04/12] perf disasm: Constify use of struct arch
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -82,508 +82,522 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-maps may belong to >1 thread. In contexts like symbolization
-information from the thread may be useful, such as the ELF machine. As
-the maps can be gained from the thread switch from holding maps in
-struct map_symbol to holding the thread. Holding the maps in
-addr_location is also redundant, switch this to using thread__maps.
+The struct arch holds variables that are read but not written, except
+during some initialization. Change most uses to be for a "const struct
+arch *" version to capture this immutability.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/ui/browsers/annotate.c              |  2 +-
- tools/perf/ui/browsers/hists.c                 |  3 ++-
- tools/perf/util/addr_location.c                |  4 ----
- tools/perf/util/addr_location.h                |  1 -
- .../util/annotate-arch/annotate-loongarch.c    |  5 +++--
- tools/perf/util/annotate-arch/annotate-s390.c  |  3 ++-
- tools/perf/util/callchain.c                    | 12 +++++++-----
- tools/perf/util/capstone.c                     |  6 ++++--
- tools/perf/util/db-export.c                    |  1 -
- tools/perf/util/disasm.c                       |  7 ++++---
- tools/perf/util/event.c                        |  2 --
- tools/perf/util/hist.c                         | 18 +++++++++---------
- tools/perf/util/machine.c                      | 13 +++++++------
- tools/perf/util/map_symbol.c                   |  5 +++--
- tools/perf/util/map_symbol.h                   |  3 ++-
- tools/perf/util/sort.c                         |  2 +-
- tools/perf/util/unwind-libdw.c                 |  2 +-
- tools/perf/util/unwind-libunwind-local.c       |  2 +-
- 18 files changed, 47 insertions(+), 44 deletions(-)
+ tools/perf/arch/arm64/annotate/instructions.c |  2 +-
+ .../arch/loongarch/annotate/instructions.c    | 12 ++++--
+ tools/perf/arch/s390/annotate/instructions.c  |  7 ++--
+ tools/perf/arch/x86/annotate/instructions.c   |  4 +-
+ tools/perf/ui/browsers/annotate.c             |  2 +-
+ tools/perf/util/annotate-data.c               |  2 +-
+ tools/perf/util/annotate-data.h               |  2 +-
+ tools/perf/util/annotate.c                    | 28 ++++++-------
+ tools/perf/util/annotate.h                    | 10 ++---
+ tools/perf/util/disasm.c                      | 42 ++++++++++---------
+ tools/perf/util/disasm.h                      | 14 +++----
+ 11 files changed, 67 insertions(+), 58 deletions(-)
 
+diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/perf/arch/arm64/annotate/instructions.c
+index 16cb62d40bd9..5099fa36180d 100644
+--- a/tools/perf/arch/arm64/annotate/instructions.c
++++ b/tools/perf/arch/arm64/annotate/instructions.c
+@@ -10,7 +10,7 @@ struct arm64_annotate {
+ 		jump_insn;
+ };
+ 
+-static int arm64_mov__parse(struct arch *arch __maybe_unused,
++static int arm64_mov__parse(const struct arch *arch __maybe_unused,
+ 			    struct ins_operands *ops,
+ 			    struct map_symbol *ms __maybe_unused,
+ 			    struct disasm_line *dl __maybe_unused)
+diff --git a/tools/perf/arch/loongarch/annotate/instructions.c b/tools/perf/arch/loongarch/annotate/instructions.c
+index 1c3abb43c8d7..5ebfe629ea68 100644
+--- a/tools/perf/arch/loongarch/annotate/instructions.c
++++ b/tools/perf/arch/loongarch/annotate/instructions.c
+@@ -5,8 +5,10 @@
+  * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+  */
+ 
+-static int loongarch_call__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms,
+-		struct disasm_line *dl __maybe_unused)
++static int loongarch_call__parse(const struct arch *arch, struct ins_operands *ops,
++				 struct map_symbol *ms,
++				 struct disasm_line *dl __maybe_unused)
++
+ {
+ 	char *c, *endptr, *tok, *name;
+ 	struct map *map = ms->map;
+@@ -54,8 +56,10 @@ static struct ins_ops loongarch_call_ops = {
+ 	.scnprintf = call__scnprintf,
+ };
+ 
+-static int loongarch_jump__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms,
+-		struct disasm_line *dl __maybe_unused)
++static int loongarch_jump__parse(const struct arch *arch, struct ins_operands *ops,
++				 struct map_symbol *ms,
++				 struct disasm_line *dl __maybe_unused)
++
+ {
+ 	struct map *map = ms->map;
+ 	struct symbol *sym = ms->sym;
+diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
+index 626e6d2cbc81..37c1b62641d8 100644
+--- a/tools/perf/arch/s390/annotate/instructions.c
++++ b/tools/perf/arch/s390/annotate/instructions.c
+@@ -1,8 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/compiler.h>
+ 
+-static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
+-			    struct map_symbol *ms, struct disasm_line *dl __maybe_unused)
++static int s390_call__parse(const struct arch *arch, struct ins_operands *ops,
++			    struct map_symbol *ms,
++			    struct disasm_line *dl __maybe_unused)
+ {
+ 	char *endptr, *tok, *name;
+ 	struct map *map = ms->map;
+@@ -53,7 +54,7 @@ static struct ins_ops s390_call_ops = {
+ 	.scnprintf = call__scnprintf,
+ };
+ 
+-static int s390_mov__parse(struct arch *arch __maybe_unused,
++static int s390_mov__parse(const struct arch *arch __maybe_unused,
+ 			   struct ins_operands *ops,
+ 			   struct map_symbol *ms __maybe_unused,
+ 			   struct disasm_line *dl __maybe_unused)
+diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
+index 803f9351a3fb..24b388bacdae 100644
+--- a/tools/perf/arch/x86/annotate/instructions.c
++++ b/tools/perf/arch/x86/annotate/instructions.c
+@@ -119,7 +119,7 @@ static struct ins x86__instructions[] = {
+ 	{ .name = "xorps",	.ops = &mov_ops, },
+ };
+ 
+-static bool amd__ins_is_fused(struct arch *arch, const char *ins1,
++static bool amd__ins_is_fused(const struct arch *arch, const char *ins1,
+ 			      const char *ins2)
+ {
+ 	if (strstr(ins2, "jmp"))
+@@ -142,7 +142,7 @@ static bool amd__ins_is_fused(struct arch *arch, const char *ins1,
+ 	return false;
+ }
+ 
+-static bool intel__ins_is_fused(struct arch *arch, const char *ins1,
++static bool intel__ins_is_fused(const struct arch *arch, const char *ins1,
+ 				const char *ins2)
+ {
+ 	if (arch->family != 6 || arch->model < 0x1e || strstr(ins2, "jmp"))
 diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 3df61cd46652..91ded9c271ee 100644
+index 36aca8d6d003..3df61cd46652 100644
 --- a/tools/perf/ui/browsers/annotate.c
 +++ b/tools/perf/ui/browsers/annotate.c
-@@ -601,7 +601,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 		return true;
- 	}
- 
--	target_ms.maps = ms->maps;
-+	target_ms.thread = ms->thread;
- 	target_ms.map = ms->map;
- 	target_ms.sym = dl->ops.target.sym;
- 	annotation__unlock(notes);
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 08fecbe28a52..cfa6386e6e1d 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -3189,7 +3189,8 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
- 		case 'k':
- 			if (browser->selection != NULL)
- 				hists_browser__zoom_map(browser,
--					      maps__machine(browser->selection->maps)->vmlinux_map);
-+					maps__machine(thread__maps(browser->selection->thread)
-+						     )->vmlinux_map);
- 			continue;
- 		case 'V':
- 			verbose = (verbose + 1) % 4;
-diff --git a/tools/perf/util/addr_location.c b/tools/perf/util/addr_location.c
-index 81a0b79c5e10..57e8217a00f9 100644
---- a/tools/perf/util/addr_location.c
-+++ b/tools/perf/util/addr_location.c
-@@ -7,7 +7,6 @@
- void addr_location__init(struct addr_location *al)
- {
- 	al->thread = NULL;
--	al->maps = NULL;
- 	al->map = NULL;
- 	al->sym = NULL;
- 	al->srcline = NULL;
-@@ -30,16 +29,13 @@ void addr_location__exit(struct addr_location *al)
- {
- 	map__zput(al->map);
- 	thread__zput(al->thread);
--	maps__zput(al->maps);
+@@ -30,7 +30,7 @@ struct annotate_browser {
+ 	struct rb_root		    entries;
+ 	struct rb_node		   *curr_hot;
+ 	struct annotation_line	   *selection;
+-	struct arch		   *arch;
++	const struct arch	   *arch;
+ 	/*
+ 	 * perf top can delete hist_entry anytime.  Callers should make sure
+ 	 * its lifetime.
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 07cf9c334be0..edfcd6e9df9c 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -160,7 +160,7 @@ bool has_reg_type(struct type_state *state, int reg)
+ 	return (unsigned)reg < ARRAY_SIZE(state->regs);
  }
  
- void addr_location__copy(struct addr_location *dst, struct addr_location *src)
+-static void init_type_state(struct type_state *state, struct arch *arch)
++static void init_type_state(struct type_state *state, const struct arch *arch)
  {
- 	thread__put(dst->thread);
--	maps__put(dst->maps);
- 	map__put(dst->map);
- 	*dst = *src;
- 	dst->thread = thread__get(src->thread);
--	dst->maps = maps__get(src->maps);
- 	dst->map = map__get(src->map);
- }
-diff --git a/tools/perf/util/addr_location.h b/tools/perf/util/addr_location.h
-index 64b551025216..fdc4d3f3a68b 100644
---- a/tools/perf/util/addr_location.h
-+++ b/tools/perf/util/addr_location.h
-@@ -11,7 +11,6 @@ struct symbol;
- 
- struct addr_location {
+ 	memset(state, 0, sizeof(*state));
+ 	INIT_LIST_HEAD(&state->stack_vars);
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 869307c7f130..9b222869e42d 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -117,7 +117,7 @@ extern struct annotated_data_type canary_type;
+  */
+ struct data_loc_info {
+ 	/* These are input field, should be filled by caller */
+-	struct arch *arch;
++	const struct arch *arch;
  	struct thread *thread;
--	struct maps   *maps;
- 	struct map    *map;
- 	struct symbol *sym;
- 	const char    *srcline;
-diff --git a/tools/perf/util/annotate-arch/annotate-loongarch.c b/tools/perf/util/annotate-arch/annotate-loongarch.c
-index 79dc116ade2f..6c94cb98a104 100644
---- a/tools/perf/util/annotate-arch/annotate-loongarch.c
-+++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
-@@ -11,6 +11,7 @@
- #include "../map.h"
- #include "../maps.h"
- #include "../symbol.h"
-+#include "../thread.h"
+ 	struct map_symbol *ms;
+ 	u64 ip;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 791d60f97c23..132af2556aec 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -761,7 +761,7 @@ static int disasm_line__print(struct disasm_line *dl, u64 start, int addr_fmt_wi
+ }
  
- static int loongarch_call__parse(const struct arch *arch, struct ins_operands *ops,
- 				 struct map_symbol *ms,
-@@ -49,7 +50,7 @@ static int loongarch_call__parse(const struct arch *arch, struct ins_operands *o
- 		.addr = map__objdump_2mem(map, ops->target.addr),
- 	};
+ static struct annotated_data_type *
+-__hist_entry__get_data_type(struct hist_entry *he, struct arch *arch,
++__hist_entry__get_data_type(struct hist_entry *he, const struct arch *arch,
+ 			    struct debuginfo *dbg, struct disasm_line *dl,
+ 			    int *type_offset);
  
--	if (maps__find_ams(ms->maps, &target) == 0 &&
-+	if (maps__find_ams(thread__maps(ms->thread), &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map__map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
+@@ -980,11 +980,11 @@ void symbol__calc_percent(struct symbol *sym, struct evsel *evsel)
+ 	annotation__calc_percent(notes, evsel, symbol__size(sym));
+ }
  
-@@ -93,7 +94,7 @@ static int loongarch_jump__parse(const struct arch *arch, struct ins_operands *o
- 
- 	ops->target.outside = target.addr < start || target.addr > end;
- 
--	if (maps__find_ams(ms->maps, &target) == 0 &&
-+	if (maps__find_ams(thread__maps(ms->thread), &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map__map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
- 
-diff --git a/tools/perf/util/annotate-arch/annotate-s390.c b/tools/perf/util/annotate-arch/annotate-s390.c
-index 7b2d27b62e6b..47573f0310c1 100644
---- a/tools/perf/util/annotate-arch/annotate-s390.c
-+++ b/tools/perf/util/annotate-arch/annotate-s390.c
-@@ -6,6 +6,7 @@
- #include "../map.h"
- #include "../maps.h"
- #include "../symbol.h"
-+#include "../thread.h"
- #include "../annotate.h"
- #include "../annotate-data.h"
- 
-@@ -49,7 +50,7 @@ static int s390_call__parse(const struct arch *arch, struct ins_operands *ops,
- 		.addr = map__objdump_2mem(map, ops->target.addr),
- 	};
- 
--	if (maps__find_ams(ms->maps, &target) == 0 &&
-+	if (maps__find_ams(thread__maps(ms->thread), &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map__map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
- 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 428e5350d7a2..515bb8b5da01 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -31,6 +31,7 @@
- #include "callchain.h"
- #include "branch.h"
- #include "symbol.h"
-+#include "thread.h"
- #include "util.h"
- #include "../perf.h"
- 
-@@ -1042,7 +1043,7 @@ merge_chain_branch(struct callchain_cursor *cursor,
- 
- 	list_for_each_entry_safe(list, next_list, &src->val, list) {
- 		struct map_symbol ms = {
--			.maps = maps__get(list->ms.maps),
-+			.thread = thread__get(list->ms.thread),
- 			.map = map__get(list->ms.map),
- 		};
- 		callchain_cursor_append(cursor, list->ip, &ms, false, NULL, 0, 0, 0, list->srcline);
-@@ -1147,10 +1148,11 @@ int hist_entry__append_callchain(struct hist_entry *he, struct perf_sample *samp
- int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *node,
- 			bool hide_unresolved)
+-int evsel__get_arch(struct evsel *evsel, struct arch **parch)
++int evsel__get_arch(struct evsel *evsel, const struct arch **parch)
  {
--	struct machine *machine = node->ms.maps ? maps__machine(node->ms.maps) : NULL;
-+	struct machine *machine = NULL;
-+
-+	if (node->ms.thread)
-+		machine = maps__machine(thread__maps(node->ms.thread));
+ 	struct perf_env *env = evsel__env(evsel);
+ 	const char *arch_name = perf_env__arch(env);
+-	struct arch *arch;
++	const struct arch *arch;
+ 	int err;
  
--	maps__put(al->maps);
--	al->maps = maps__get(node->ms.maps);
- 	map__put(al->map);
- 	al->map = map__get(node->ms.map);
- 	al->sym = node->ms.sym;
-@@ -1163,7 +1165,7 @@ int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *
- 		if (al->map == NULL)
- 			goto out;
+ 	if (!arch_name) {
+@@ -999,7 +999,7 @@ int evsel__get_arch(struct evsel *evsel, struct arch **parch)
  	}
--	if (maps__equal(al->maps, machine__kernel_maps(machine))) {
-+	if (maps__equal(thread__maps(al->thread), machine__kernel_maps(machine))) {
- 		if (machine__is_host(machine)) {
- 			al->cpumode = PERF_RECORD_MISC_KERNEL;
- 			al->level = 'k';
-diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
-index ce06cfd253ef..9216916f848f 100644
---- a/tools/perf/util/capstone.c
-+++ b/tools/perf/util/capstone.c
-@@ -268,7 +268,8 @@ int symbol__disassemble_capstone(const char *filename __maybe_unused,
- 	    !strcmp(args->options->disassembler_style, "att"))
- 		disassembler_style = true;
  
--	if (capstone_init(maps__machine(args->ms->maps), &handle, is_64bit, disassembler_style) < 0)
-+	if (capstone_init(maps__machine(thread__maps(args->ms->thread)), &handle, is_64bit,
-+			  disassembler_style) < 0)
- 		goto err;
+ 	if (arch->init) {
+-		err = arch->init(arch, env ? env->cpuid : NULL);
++		err = arch->init((struct arch *)arch, env ? env->cpuid : NULL);
+ 		if (err) {
+ 			pr_err("%s: failed to initialize %s arch priv area\n",
+ 			       __func__, arch->name);
+@@ -1010,14 +1010,14 @@ int evsel__get_arch(struct evsel *evsel, struct arch **parch)
+ }
  
- 	needs_cs_close = true;
-@@ -382,7 +383,8 @@ int symbol__disassemble_capstone_powerpc(const char *filename __maybe_unused,
- 	    !strcmp(args->options->disassembler_style, "att"))
- 		disassembler_style = true;
+ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
+-		     struct arch **parch)
++		     const struct arch **parch)
+ {
+ 	struct symbol *sym = ms->sym;
+ 	struct annotation *notes = symbol__annotation(sym);
+ 	struct annotate_args args = {
+ 		.options	= &annotate_opts,
+ 	};
+-	struct arch *arch = NULL;
++	const struct arch *arch = NULL;
+ 	int err, nr;
  
--	if (capstone_init(maps__machine(args->ms->maps), &handle, is_64bit, disassembler_style) < 0)
-+	if (capstone_init(maps__machine(thread__maps(args->ms->thread)), &handle, is_64bit,
-+			  disassembler_style) < 0)
- 		goto err;
+ 	err = evsel__get_arch(evsel, &arch);
+@@ -2204,7 +2204,7 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
+ }
  
- 	needs_cs_close = true;
-diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index 8f52e8cefcf3..ae9a9065aab7 100644
---- a/tools/perf/util/db-export.c
-+++ b/tools/perf/util/db-export.c
-@@ -254,7 +254,6 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
- 		addr_location__init(&al);
- 		al.sym = node->ms.sym;
- 		al.map = map__get(node->ms.map);
--		al.maps = maps__get(thread__maps(thread));
- 		al.addr = node->ip;
- 		al.thread = thread__get(thread);
+ int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
+-		      struct arch **parch)
++		      const struct arch **parch)
+ {
+ 	struct symbol *sym = ms->sym;
+ 	struct annotation *notes = symbol__annotation(sym);
+@@ -2457,7 +2457,7 @@ int annotate_check_args(void)
+  * to revisit the format when it handles different architecture.
+  * Fills @reg and @offset when return 0.
+  */
+-static int extract_reg_offset(struct arch *arch, const char *str,
++static int extract_reg_offset(const struct arch *arch, const char *str,
+ 			      struct annotated_op_loc *op_loc)
+ {
+ 	char *p;
+@@ -2538,7 +2538,7 @@ static int extract_reg_offset(struct arch *arch, const char *str,
+  *                              # dst_reg1 = rbx, dst_reg2 = rcx, dst_mem = 1
+  *                              # dst_multi_regs = 1, dst_offset = 8
+  */
+-int annotate_get_insn_location(struct arch *arch, struct disasm_line *dl,
++int annotate_get_insn_location(const struct arch *arch, struct disasm_line *dl,
+ 			       struct annotated_insn_loc *loc)
+ {
+ 	struct ins_operands *ops;
+@@ -2673,7 +2673,7 @@ static struct annotated_item_stat *annotate_data_stat(struct list_head *head,
+ 	return istat;
+ }
  
+-static bool is_stack_operation(struct arch *arch, struct disasm_line *dl)
++static bool is_stack_operation(const struct arch *arch, struct disasm_line *dl)
+ {
+ 	if (arch__is(arch, "x86")) {
+ 		if (!strncmp(dl->ins.name, "push", 4) ||
+@@ -2686,7 +2686,7 @@ static bool is_stack_operation(struct arch *arch, struct disasm_line *dl)
+ 	return false;
+ }
+ 
+-static bool is_stack_canary(struct arch *arch, struct annotated_op_loc *loc)
++static bool is_stack_canary(const struct arch *arch, struct annotated_op_loc *loc)
+ {
+ 	/* On x86_64, %gs:40 is used for stack canary */
+ 	if (arch__is(arch, "x86")) {
+@@ -2702,7 +2702,7 @@ static bool is_stack_canary(struct arch *arch, struct annotated_op_loc *loc)
+  * Returns true if the instruction has a memory operand without
+  * performing a load/store
+  */
+-static bool is_address_gen_insn(struct arch *arch, struct disasm_line *dl)
++static bool is_address_gen_insn(const struct arch *arch, struct disasm_line *dl)
+ {
+ 	if (arch__is(arch, "x86")) {
+ 		if (!strncmp(dl->ins.name, "lea", 3))
+@@ -2791,7 +2791,7 @@ void debuginfo_cache__delete(void)
+ }
+ 
+ static struct annotated_data_type *
+-__hist_entry__get_data_type(struct hist_entry *he, struct arch *arch,
++__hist_entry__get_data_type(struct hist_entry *he, const struct arch *arch,
+ 			    struct debuginfo *dbg, struct disasm_line *dl,
+ 			    int *type_offset)
+ {
+@@ -2895,7 +2895,7 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
+ {
+ 	struct map_symbol *ms = &he->ms;
+ 	struct evsel *evsel = hists_to_evsel(he->hists);
+-	struct arch *arch;
++	const struct arch *arch;
+ 	struct disasm_line *dl;
+ 	struct annotated_data_type *mem_type;
+ 	struct annotated_item_stat *istat;
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index d4990bff29a7..58eaf4b2fa65 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -202,7 +202,7 @@ struct annotation_write_ops {
+ struct annotation_print_data {
+ 	struct hist_entry *he;
+ 	struct evsel *evsel;
+-	struct arch *arch;
++	const struct arch *arch;
+ 	struct debuginfo *dbg;
+ 	/* save data type info keyed by al->offset */
+ 	struct hashmap *type_hash;
+@@ -441,10 +441,10 @@ void symbol__annotate_zero_histograms(struct symbol *sym);
+ 
+ int symbol__annotate(struct map_symbol *ms,
+ 		     struct evsel *evsel,
+-		     struct arch **parch);
++		     const struct arch **parch);
+ int symbol__annotate2(struct map_symbol *ms,
+ 		      struct evsel *evsel,
+-		      struct arch **parch);
++		      const struct arch **parch);
+ 
+ enum symbol_disassemble_errno {
+ 	SYMBOL_ANNOTATE_ERRNO__SUCCESS		= 0,
+@@ -546,7 +546,7 @@ struct annotated_insn_loc {
+ 	     i++, op_loc++)
+ 
+ /* Get detailed location info in the instruction */
+-int annotate_get_insn_location(struct arch *arch, struct disasm_line *dl,
++int annotate_get_insn_location(const struct arch *arch, struct disasm_line *dl,
+ 			       struct annotated_insn_loc *loc);
+ 
+ /* Returns a data type from the sample instruction (if any) */
+@@ -586,5 +586,5 @@ int annotation_br_cntr_entry(char **str, int br_cntr_nr, u64 *br_cntr,
+ 			     int num_aggr, struct evsel *evsel);
+ int annotation_br_cntr_abbr_list(char **str, struct evsel *evsel, bool header);
+ 
+-int evsel__get_arch(struct evsel *evsel, struct arch **parch);
++int evsel__get_arch(struct evsel *evsel, const struct arch **parch);
+ #endif	/* __PERF_ANNOTATE_H */
 diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 8c3e9094600a..d81469db0aac 100644
+index 924429142631..d92c0424e8fc 100644
 --- a/tools/perf/util/disasm.c
 +++ b/tools/perf/util/disasm.c
-@@ -28,6 +28,7 @@
- #include "namespaces.h"
- #include "srcline.h"
- #include "symbol.h"
-+#include "thread.h"
- #include "util.h"
- 
- static regex_t	 file_lineno;
-@@ -277,7 +278,7 @@ static int call__parse(const struct arch *arch, struct ins_operands *ops, struct
- 		.addr = map__objdump_2mem(map, ops->target.addr),
- 	};
- 
--	if (maps__find_ams(ms->maps, &target) == 0 &&
-+	if (maps__find_ams(thread__maps(ms->thread), &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map__map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
- 
-@@ -411,7 +412,7 @@ static int jump__parse(const struct arch *arch, struct ins_operands *ops, struct
- 	 * Actual navigation will come next, with further understanding of how
- 	 * the symbol searching and disassembly should be done.
- 	 */
--	if (maps__find_ams(ms->maps, &target) == 0 &&
-+	if (maps__find_ams(thread__maps(ms->thread), &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map__map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
- 
-@@ -1074,7 +1075,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
- 			.ms = { .map = map__get(map), },
- 		};
- 
--		if (!maps__find_ams(args->ms->maps, &target) &&
-+		if (!maps__find_ams(thread__maps(args->ms->thread), &target) &&
- 		    target.ms.sym->start == target.al_addr)
- 			dl->ops.target.sym = target.ms.sym;
- 
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 2dde1044b5a7..bc045fddf7d5 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -698,7 +698,6 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 	struct machine *machine = maps__machine(maps);
- 	bool load_map = false;
- 
--	maps__zput(al->maps);
- 	map__zput(al->map);
- 	thread__zput(al->thread);
- 	al->thread = thread__get(thread);
-@@ -736,7 +735,6 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 
- 		return NULL;
- 	}
--	al->maps = maps__get(maps);
- 	al->map = maps__find(maps, al->addr);
- 	if (al->map != NULL) {
- 		/*
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index ef4b569f7df4..7ffaa3d9851b 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -251,7 +251,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
- 
- 	if (h->cgroup) {
- 		const char *cgrp_name = "unknown";
--		struct cgroup *cgrp = cgroup__find(maps__machine(h->ms.maps)->env,
-+		struct cgroup *cgrp = cgroup__find(maps__machine(thread__maps(h->ms.thread))->env,
- 						   h->cgroup);
- 		if (cgrp != NULL)
- 			cgrp_name = cgrp->name;
-@@ -536,7 +536,7 @@ static int hist_entry__init(struct hist_entry *he,
- 			memset(&he->stat, 0, sizeof(he->stat));
- 	}
- 
--	he->ms.maps = maps__get(he->ms.maps);
-+	he->ms.thread = thread__get(he->ms.thread);
- 	he->ms.map = map__get(he->ms.map);
- 
- 	if (he->branch_info) {
-@@ -552,9 +552,9 @@ static int hist_entry__init(struct hist_entry *he,
- 		memcpy(he->branch_info, template->branch_info,
- 		       sizeof(*he->branch_info));
- 
--		he->branch_info->from.ms.maps = maps__get(he->branch_info->from.ms.maps);
-+		he->branch_info->from.ms.thread = thread__get(he->branch_info->from.ms.thread);
- 		he->branch_info->from.ms.map = map__get(he->branch_info->from.ms.map);
--		he->branch_info->to.ms.maps = maps__get(he->branch_info->to.ms.maps);
-+		he->branch_info->to.ms.thread = thread__get(he->branch_info->to.ms.thread);
- 		he->branch_info->to.ms.map = map__get(he->branch_info->to.ms.map);
- 	}
- 
-@@ -810,7 +810,7 @@ __hists__add_entry(struct hists *hists,
- 		},
- 		.cgroup = sample->cgroup,
- 		.ms = {
--			.maps	= al->maps,
-+			.thread	= al->thread,
- 			.map	= al->map,
- 			.sym	= al->sym,
- 		},
-@@ -890,7 +890,7 @@ struct hist_entry *hists__add_entry_block(struct hists *hists,
- 		.block_info = block_info,
- 		.hists = hists,
- 		.ms = {
--			.maps = al->maps,
-+			.thread = al->thread,
- 			.map = al->map,
- 			.sym = al->sym,
- 		},
-@@ -1020,8 +1020,8 @@ iter_next_branch_entry(struct hist_entry_iter *iter, struct addr_location *al)
- 	if (iter->curr >= iter->total)
- 		return 0;
- 
--	maps__put(al->maps);
--	al->maps = maps__get(bi[i].to.ms.maps);
-+	thread__put(al->thread);
-+	al->thread = thread__get(bi[i].to.ms.thread);
- 	map__put(al->map);
- 	al->map = map__get(bi[i].to.ms.map);
- 	al->sym = bi[i].to.ms.sym;
-@@ -1232,7 +1232,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
- 		.comm = thread__comm(al->thread),
- 		.ip = al->addr,
- 		.ms = {
--			.maps = al->maps,
-+			.thread = al->thread,
- 			.map = al->map,
- 			.sym = al->sym,
- 		},
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 30d606fbf040..5b0f5a48ffd4 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2016,7 +2016,7 @@ static void ip__resolve_ams(struct thread *thread,
- 	ams->addr = ip;
- 	ams->al_addr = al.addr;
- 	ams->al_level = al.level;
--	ams->ms.maps = maps__get(al.maps);
-+	ams->ms.thread = thread__get(al.thread);
- 	ams->ms.sym = al.sym;
- 	ams->ms.map = map__get(al.map);
- 	ams->phys_addr = 0;
-@@ -2037,7 +2037,7 @@ static void ip__resolve_data(struct thread *thread,
- 	ams->addr = addr;
- 	ams->al_addr = al.addr;
- 	ams->al_level = al.level;
--	ams->ms.maps = maps__get(al.maps);
-+	ams->ms.thread = thread__get(al.thread);
- 	ams->ms.sym = al.sym;
- 	ams->ms.map = map__get(al.map);
- 	ams->phys_addr = phys_addr;
-@@ -2120,7 +2120,7 @@ static int append_inlines(struct callchain_cursor *cursor, struct map_symbol *ms
- 	}
- 
- 	ilist_ms = (struct map_symbol) {
--		.maps = maps__get(ms->maps),
-+		.thread = thread__get(ms->thread),
- 		.map = map__get(map),
- 	};
- 	list_for_each_entry(ilist, &inline_node->val, list) {
-@@ -2220,7 +2220,7 @@ static int add_callchain_ip(struct thread *thread,
- 		iter_cycles = iter->cycles;
- 	}
- 
--	ms.maps = maps__get(al.maps);
-+	ms.thread = thread__get(al.thread);
- 	ms.map = map__get(al.map);
- 	ms.sym = al.sym;
- 
-@@ -2383,7 +2383,7 @@ static void save_lbr_cursor_node(struct thread *thread,
- 	map_symbol__exit(&lbr_stitch->prev_lbr_cursor[idx].ms);
- 	memcpy(&lbr_stitch->prev_lbr_cursor[idx], cursor->curr,
- 	       sizeof(struct callchain_cursor_node));
--	lbr_stitch->prev_lbr_cursor[idx].ms.maps = maps__get(cursor->curr->ms.maps);
-+	lbr_stitch->prev_lbr_cursor[idx].ms.thread = thread__get(cursor->curr->ms.thread);
- 	lbr_stitch->prev_lbr_cursor[idx].ms.map = map__get(cursor->curr->ms.map);
- 
- 	lbr_stitch->prev_lbr_cursor[idx].valid = true;
-@@ -2596,7 +2596,8 @@ static bool has_stitched_lbr(struct thread *thread,
- 		memcpy(&stitch_node->cursor, &lbr_stitch->prev_lbr_cursor[i],
- 		       sizeof(struct callchain_cursor_node));
- 
--		stitch_node->cursor.ms.maps = maps__get(lbr_stitch->prev_lbr_cursor[i].ms.maps);
-+		stitch_node->cursor.ms.thread =
-+			thread__get(lbr_stitch->prev_lbr_cursor[i].ms.thread);
- 		stitch_node->cursor.ms.map = map__get(lbr_stitch->prev_lbr_cursor[i].ms.map);
- 
- 		if (callee)
-diff --git a/tools/perf/util/map_symbol.c b/tools/perf/util/map_symbol.c
-index 6ad2960bc289..11bc0a7f704c 100644
---- a/tools/perf/util/map_symbol.c
-+++ b/tools/perf/util/map_symbol.c
-@@ -2,10 +2,11 @@
- #include "map_symbol.h"
- #include "maps.h"
- #include "map.h"
-+#include "thread.h"
- 
- void map_symbol__exit(struct map_symbol *ms)
- {
--	maps__zput(ms->maps);
-+	thread__zput(ms->thread);
- 	map__zput(ms->map);
+@@ -213,7 +213,7 @@ static void arch__sort(void)
+ 	qsort(architectures, nmemb, sizeof(struct arch), arch__cmp);
  }
  
-@@ -16,7 +17,7 @@ void addr_map_symbol__exit(struct addr_map_symbol *ams)
- 
- void map_symbol__copy(struct map_symbol *dst, struct map_symbol *src)
+-struct arch *arch__find(const char *name)
++const struct arch *arch__find(const char *name)
  {
--	dst->maps = maps__get(src->maps);
-+	dst->thread = thread__get(src->thread);
- 	dst->map = map__get(src->map);
- 	dst->sym = src->sym;
+ 	const int nmemb = ARRAY_SIZE(architectures);
+ 	static bool sorted;
+@@ -226,7 +226,7 @@ struct arch *arch__find(const char *name)
+ 	return bsearch(name, architectures, nmemb, sizeof(struct arch), arch__key_cmp);
  }
-diff --git a/tools/perf/util/map_symbol.h b/tools/perf/util/map_symbol.h
-index e370bb32ed47..7437e319f4a3 100644
---- a/tools/perf/util/map_symbol.h
-+++ b/tools/perf/util/map_symbol.h
-@@ -4,12 +4,13 @@
  
- #include <linux/types.h>
+-bool arch__is(struct arch *arch, const char *name)
++bool arch__is(const struct arch *arch, const char *name)
+ {
+ 	return !strcmp(arch->name, name);
+ }
+@@ -256,7 +256,7 @@ static int ins__scnprintf(struct ins *ins, char *bf, size_t size,
+ 	return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
+ }
  
-+struct thread;
- struct maps;
- struct map;
- struct symbol;
+-bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2)
++bool ins__is_fused(const struct arch *arch, const char *ins1, const char *ins2)
+ {
+ 	if (!arch || !arch->ins_is_fused)
+ 		return false;
+@@ -264,7 +264,7 @@ bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2)
+ 	return arch->ins_is_fused(arch, ins1, ins2);
+ }
  
- struct map_symbol {
--	struct maps   *maps;
-+	struct thread *thread;
- 	struct map    *map;
- 	struct symbol *sym;
+-static int call__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms,
++static int call__parse(const struct arch *arch, struct ins_operands *ops, struct map_symbol *ms,
+ 		struct disasm_line *dl __maybe_unused)
+ {
+ 	char *endptr, *tok, *name;
+@@ -362,7 +362,7 @@ static inline const char *validate_comma(const char *c, struct ins_operands *ops
+ 	return c;
+ }
+ 
+-static int jump__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms,
++static int jump__parse(const struct arch *arch, struct ins_operands *ops, struct map_symbol *ms,
+ 		struct disasm_line *dl __maybe_unused)
+ {
+ 	struct map *map = ms->map;
+@@ -525,7 +525,7 @@ static int comment__symbol(char *raw, char *comment, u64 *addrp, char **namep)
+ 	return 0;
+ }
+ 
+-static int lock__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms,
++static int lock__parse(const struct arch *arch, struct ins_operands *ops, struct map_symbol *ms,
+ 		struct disasm_line *dl __maybe_unused)
+ {
+ 	ops->locked.ops = zalloc(sizeof(*ops->locked.ops));
+@@ -592,7 +592,7 @@ static struct ins_ops lock_ops = {
+  * But it doesn't care segment selectors like %gs:0x5678(%rcx), so just check
+  * the input string after 'memory_ref_char' if exists.
+  */
+-static bool check_multi_regs(struct arch *arch, const char *op)
++static bool check_multi_regs(const struct arch *arch, const char *op)
+ {
+ 	int count = 0;
+ 
+@@ -613,8 +613,9 @@ static bool check_multi_regs(struct arch *arch, const char *op)
+ 	return count > 1;
+ }
+ 
+-static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms __maybe_unused,
+-		struct disasm_line *dl __maybe_unused)
++static int mov__parse(const struct arch *arch, struct ins_operands *ops,
++		      struct map_symbol *ms __maybe_unused,
++		      struct disasm_line *dl __maybe_unused)
+ {
+ 	char *s = strchr(ops->raw, ','), *target, *comment, prev;
+ 
+@@ -719,7 +720,7 @@ static int arithmetic__scnprintf(struct ins *ins, char *bf, size_t size,
+  * - Add to Zero Extended XO-form ( Ex: addze, addzeo )
+  * - Subtract From Zero Extended XO-form ( Ex: subfze )
+  */
+-static int arithmetic__parse(struct arch *arch __maybe_unused, struct ins_operands *ops,
++static int arithmetic__parse(const struct arch *arch __maybe_unused, struct ins_operands *ops,
+ 		struct map_symbol *ms __maybe_unused, struct disasm_line *dl)
+ {
+ 	int opcode = PPC_OP(dl->raw.raw_insn);
+@@ -756,7 +757,7 @@ static int load_store__scnprintf(struct ins *ins, char *bf, size_t size,
+  * used by powerpc and since binary instruction code is used to
+  * extract opcode, regs and offset, no other parsing is needed here
+  */
+-static int load_store__parse(struct arch *arch __maybe_unused, struct ins_operands *ops,
++static int load_store__parse(const struct arch *arch __maybe_unused, struct ins_operands *ops,
+ 		struct map_symbol *ms __maybe_unused, struct disasm_line *dl __maybe_unused)
+ {
+ 	ops->source.mem_ref = true;
+@@ -776,8 +777,9 @@ static struct ins_ops load_store_ops = {
+ 	.scnprintf = load_store__scnprintf,
  };
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index f963d61ac166..01a9d73ae348 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -1016,7 +1016,7 @@ static int hist_entry__cgroup_snprintf(struct hist_entry *he,
- 	const char *cgrp_name = "N/A";
  
- 	if (he->cgroup) {
--		struct cgroup *cgrp = cgroup__find(maps__machine(he->ms.maps)->env,
-+		struct cgroup *cgrp = cgroup__find(maps__machine(thread__maps(he->ms.thread))->env,
- 						   he->cgroup);
- 		if (cgrp != NULL)
- 			cgrp_name = cgrp->name;
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index c1646ef5f971..9cb0960ef905 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -161,7 +161,7 @@ static int entry(u64 ip, struct unwind_info *ui)
+-static int dec__parse(struct arch *arch __maybe_unused, struct ins_operands *ops, struct map_symbol *ms __maybe_unused,
+-		struct disasm_line *dl __maybe_unused)
++static int dec__parse(const struct arch *arch __maybe_unused, struct ins_operands *ops,
++		      struct map_symbol *ms __maybe_unused,
++		      struct disasm_line *dl __maybe_unused)
+ {
+ 	char *target, *comment, *s, prev;
+ 
+@@ -867,7 +869,8 @@ static void ins__sort(struct arch *arch)
+ 	qsort(arch->instructions, nmemb, sizeof(struct ins), ins__cmp);
+ }
+ 
+-static struct ins_ops *__ins__find(struct arch *arch, const char *name, struct disasm_line *dl)
++static struct ins_ops *__ins__find(const struct arch *arch, const char *name,
++				     struct disasm_line *dl)
+ {
+ 	struct ins *ins;
+ 	const int nmemb = arch->nr_instructions;
+@@ -885,8 +888,8 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name, struct d
  	}
  
- 	e->ip	  = ip;
--	e->ms.maps = maps__get(al.maps);
-+	e->ms.thread = thread__get(al.thread);
- 	e->ms.map = map__get(al.map);
- 	e->ms.sym = al.sym;
+ 	if (!arch->sorted_instructions) {
+-		ins__sort(arch);
+-		arch->sorted_instructions = true;
++		ins__sort((struct arch *)arch);
++		((struct arch *)arch)->sorted_instructions = true;
+ 	}
  
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index a24b45106acd..ecf0c01fe51f 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -666,7 +666,7 @@ static int entry(u64 ip, struct thread *thread,
- 	e.ms.sym = thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
- 	e.ip     = ip;
- 	e.ms.map = al.map;
--	e.ms.maps = al.maps;
-+	e.ms.thread = thread__get(al.thread);
+ 	ins = bsearch(name, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
+@@ -913,17 +916,18 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name, struct d
+ 	return ins ? ins->ops : NULL;
+ }
  
- 	pr_debug("unwind: %s:ip = 0x%" PRIx64 " (0x%" PRIx64 ")\n",
- 		 al.sym ? al.sym->name : "''",
+-struct ins_ops *ins__find(struct arch *arch, const char *name, struct disasm_line *dl)
++struct ins_ops *ins__find(const struct arch *arch, const char *name, struct disasm_line *dl)
+ {
+ 	struct ins_ops *ops = __ins__find(arch, name, dl);
+ 
+ 	if (!ops && arch->associate_instruction_ops)
+-		ops = arch->associate_instruction_ops(arch, name);
++		ops = arch->associate_instruction_ops((struct arch *)arch, name);
+ 
+ 	return ops;
+ }
+ 
+-static void disasm_line__init_ins(struct disasm_line *dl, struct arch *arch, struct map_symbol *ms)
++static void disasm_line__init_ins(struct disasm_line *dl, const struct arch *arch,
++				    struct map_symbol *ms)
+ {
+ 	dl->ins.ops = ins__find(arch, dl->ins.name, dl);
+ 
+diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
+index a3ea9d676281..273a9c906514 100644
+--- a/tools/perf/util/disasm.h
++++ b/tools/perf/util/disasm.h
+@@ -30,7 +30,7 @@ struct arch {
+ 	unsigned int	model;
+ 	unsigned int	family;
+ 	int		(*init)(struct arch *arch, char *cpuid);
+-	bool		(*ins_is_fused)(struct arch *arch, const char *ins1,
++	bool		(*ins_is_fused)(const struct arch *arch, const char *ins1,
+ 					const char *ins2);
+ 	struct		{
+ 		char comment_char;
+@@ -89,14 +89,14 @@ struct ins_operands {
+ 
+ struct ins_ops {
+ 	void (*free)(struct ins_operands *ops);
+-	int (*parse)(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms,
++	int (*parse)(const struct arch *arch, struct ins_operands *ops, struct map_symbol *ms,
+ 			struct disasm_line *dl);
+ 	int (*scnprintf)(struct ins *ins, char *bf, size_t size,
+ 			 struct ins_operands *ops, int max_ins_name);
+ };
+ 
+ struct annotate_args {
+-	struct arch		  *arch;
++	const struct arch	  *arch;
+ 	struct map_symbol	  *ms;
+ 	struct annotation_options *options;
+ 	s64			  offset;
+@@ -105,14 +105,14 @@ struct annotate_args {
+ 	char			  *fileloc;
+ };
+ 
+-struct arch *arch__find(const char *name);
+-bool arch__is(struct arch *arch, const char *name);
++const struct arch *arch__find(const char *name);
++bool arch__is(const struct arch *arch, const char *name);
+ 
+-struct ins_ops *ins__find(struct arch *arch, const char *name, struct disasm_line *dl);
++struct ins_ops *ins__find(const struct arch *arch, const char *name, struct disasm_line *dl);
+ 
+ bool ins__is_call(const struct ins *ins);
+ bool ins__is_jump(const struct ins *ins);
+-bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
++bool ins__is_fused(const struct arch *arch, const char *ins1, const char *ins2);
+ bool ins__is_ret(const struct ins *ins);
+ bool ins__is_lock(const struct ins *ins);
+ 
 -- 
 2.52.0.457.g6b5491de43-goog
 
