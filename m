@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8BB340D98;
-	Thu, 22 Jan 2026 01:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7581D5CEA;
+	Thu, 22 Jan 2026 02:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769046601; cv=none; b=mpzIPtvUPGiwA5pcYtiLXq2KlOjcJIyNLvtSnLoqmquIRPjd56gPEWHySTrlIl6UwX4gPJduLYGG9SCCggY+bdoMjMyFJes7zICnYuWFrov4hM7dbVG5wEr0izAdorwgI196MPRxQN5QCsdNJPrW5mq1CUPYoZ1ZGtuI4cVpErc=
+	t=1769047557; cv=none; b=mfxH6KNADTAkGrgVXAkkzw3+n669rsqobQ21Xs+Wwzqe1fv50A5VxnBJg5t2/kmn7yJHfQqI5vKcr9EJ9xpozEhvgtVdUhPE0I2fygBzcyDo2wQr+YHoVDmKMbn5StuLt7gyNIzK/Nj1nUj1M1PG0Yb+iZHNMRsUiuq64Mm7Tzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769046601; c=relaxed/simple;
-	bh=3gji0pD7u+KXkcffACLWYczf3yO5gvSNHbiBmoaaki4=;
+	s=arc-20240116; t=1769047557; c=relaxed/simple;
+	bh=Z5B5wh//Qt82C/gDTTGyeFpKCNKDQxO0GBvNPK37V/A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hmU/Lo0tQ4wfHbjW0BBvSip4S6MCTlPY2wAgHV84YzCJNtRCiKe/tHWqZMCXr5PL61yqN1WvS5h5N4ISw9OxOGUIFWoyI5UdxaBQSF2B0T7v0CmtPOtjC/YPR8FIEkAHwPAMlgdO7lAl9pCdCjIR6QERsSrb8hDWDvNEEMMZcrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FyakZ1Ra; arc=none smtp.client-ip=198.175.65.17
+	 In-Reply-To:Content-Type; b=lSQJxoGcui0UgNpL9kCiNSWp9lbehFIt9Zjm2XpzrLcYZDbUasDYS588ZBm/J0Vtut14orCMmvGEc/7xl0JTZ1kVb/FlIlgDPNcMi2BF8kUv5wFap5o5nfNdNcaU+VsZbM/E8I874GytYOsRDtY33PvK21RopBf/5jH2pj8V+0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UMMtPOKH; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FyakZ1Ra"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UMMtPOKH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769046596; x=1800582596;
+  t=1769047554; x=1800583554;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=3gji0pD7u+KXkcffACLWYczf3yO5gvSNHbiBmoaaki4=;
-  b=FyakZ1RaPKYpx46jAQjbXo3fCeJPLgD8xjtMlo2Evv9vlKEKC0SILEDl
-   7Rawbazdig6niPisO3vRqVGzkXgT4jgppw2I7lXnkGRLdCz4J8YPn42D3
-   YEXRpR5sW0kIvBES0g1hBR6It66Ya6vjTydSKHlSoTczFgDaBNV7p5vlA
-   uD1nI4PaW2+qg16kX55nBwqGba7ML/ZAq61ZxIog/dxNM9CtIgY9TDL/B
-   FqR3ME3td0Y7tDxi4Ki/uvkQAKJUE8rPoGhP9tfBJF5SD2R5C7bqY99Xd
-   oVP13pOAgzGNgwkLzXnDhIKVA/FqKWltbYWQ83dRqLSuffAR2Gl2la6HX
-   Q==;
-X-CSE-ConnectionGUID: gkZYXj4+SQuXcHrvbBVrYw==
-X-CSE-MsgGUID: 8DTb2hGaRoqJkhqaG+n3Bg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="70255827"
+  bh=Z5B5wh//Qt82C/gDTTGyeFpKCNKDQxO0GBvNPK37V/A=;
+  b=UMMtPOKHt4kGlMR+HWrzCWa8ARI2idFkQ/gyrAU/T/NZqjBG/KOSXzrB
+   v8lPMxzLRIGpb4mZtBuxFvbsB6malsWZP5mcyr+owCeJuPuQj7UQbSLI0
+   LWB0kMbipTp+0xRxL8Nuyn/nzcxzoRPNw4HURPmqrkFD1BEhtFuA+o0pC
+   VcavrJV9B++bTo8IbtQFwadEJ9ASwLAHfbl2gZPKttv+YJKXo/2tYCOor
+   hUER0cAUHWJ9Zt/g7OjM0cqWd67C7le0sxco0vbKc+XxREz+PHaGY7nVU
+   Rc1jGRRPTGjLbgs/s4PBvHiIfP2y6EIX5WyKwQQ8t9Iul4H/BQx3p8NWf
+   g==;
+X-CSE-ConnectionGUID: sxH3azNpSKiK5cZnrrLSSg==
+X-CSE-MsgGUID: GCeWrtqTQpyYXlOOiKNL3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="87699324"
 X-IronPort-AV: E=Sophos;i="6.21,244,1763452800"; 
-   d="scan'208";a="70255827"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 17:49:55 -0800
-X-CSE-ConnectionGUID: wcChj0p+TXWEAwcL2Iw9AA==
-X-CSE-MsgGUID: 9X4Z2BpEQXO7X9gsZUo80g==
+   d="scan'208";a="87699324"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 18:05:53 -0800
+X-CSE-ConnectionGUID: nc8BKj1qQESfmr2ZlalFVA==
+X-CSE-MsgGUID: 2VjWfv2qTjmYLOW/Xg0vYw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,244,1763452800"; 
-   d="scan'208";a="244194604"
+   d="scan'208";a="229579471"
 Received: from unknown (HELO [10.238.3.254]) ([10.238.3.254])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 17:49:49 -0800
-Message-ID: <efcac676-0b83-480b-8e9c-9734264df693@linux.intel.com>
-Date: Thu, 22 Jan 2026 09:49:47 +0800
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 18:05:46 -0800
+Message-ID: <e600bf85-c4f0-42fa-95fd-33000830f28d@linux.intel.com>
+Date: Thu, 22 Jan 2026 10:05:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,1275 +52,731 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v5 18/19] perf parse-regs: Support new SIMD sampling
- format
+Subject: Re: [PATCH v2] perf regs: Refactor use of arch__sample_reg_masks to
+ perf_reg_name
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- Xudong Hao <xudong.hao@intel.com>, Kan Liang <kan.liang@linux.intel.com>
-References: <20251203065500.2597594-1-dapeng1.mi@linux.intel.com>
- <20251203065500.2597594-19-dapeng1.mi@linux.intel.com>
- <CAP-5=fWOsvAXuu8qx0tk9q8j8BoXPMJB3Gxto+iu6wf06i4cVA@mail.gmail.com>
- <ec427fd5-06f8-4b05-a074-bfc2aa196ffa@linux.intel.com>
- <CAP-5=fWmKLZtK-BOdRd5hhh=Yd6SedmLBAt6cUcEjdP73V3xrQ@mail.gmail.com>
- <174bcc6a-8598-4a15-a701-88aa2b105b70@linux.intel.com>
- <CAP-5=fV5QyLtuMDGm5KMcz0vO1kiHm+H0VCzq7pLJuSNDGhg1A@mail.gmail.com>
- <e00c9041-fee9-4dec-8650-ae5fe9286d87@linux.intel.com>
- <CAP-5=fUHgGj-+Zwpy4BDNPTGXAzUXLEY0QaKXZQB__d8yze2uQ@mail.gmail.com>
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>,
+ Guo Ren <guoren@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Shimin Guo <shimin.guo@skydio.com>,
+ Athira Rajeev <atrajeev@linux.ibm.com>,
+ Stephen Brennan <stephen.s.brennan@oracle.com>,
+ Howard Chu <howardchu95@gmail.com>, Thomas Falcon <thomas.falcon@intel.com>,
+ Andi Kleen <ak@linux.intel.com>, "Dr. David Alan Gilbert"
+ <linux@treblig.org>, Dmitry Vyukov <dvyukov@google.com>,
+ =?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+ Chun-Tse Shao <ctshao@google.com>, Aditya Bodkhe <aditya.b1@linux.ibm.com>,
+ Haibo Xu <haibo1.xu@intel.com>, Sergei Trofimovich <slyich@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20260121021735.3625244-1-irogers@google.com>
+ <56bb6d4d-ad9e-485f-af15-e0f6fbc261c1@linux.intel.com>
+ <CAP-5=fWS+1412_ZOca3QfbjLzsZRbrYoLh9zGHDx5G_ZpTdg6Q@mail.gmail.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAP-5=fUHgGj-+Zwpy4BDNPTGXAzUXLEY0QaKXZQB__d8yze2uQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fWS+1412_ZOca3QfbjLzsZRbrYoLh9zGHDx5G_ZpTdg6Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On 1/21/2026 10:48 PM, Ian Rogers wrote:
-> On Tue, Jan 20, 2026 at 11:52 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+On 1/21/2026 10:38 PM, Ian Rogers wrote:
+> On Wed, Jan 21, 2026 at 12:28 AM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
 >>
->> On 1/21/2026 3:09 PM, Ian Rogers wrote:
->>> On Tue, Jan 20, 2026 at 9:17 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
->>>> On 1/21/2026 2:20 AM, Ian Rogers wrote:
->>>>> On Tue, Jan 20, 2026 at 1:04 AM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
->>>>>> On 1/20/2026 3:39 PM, Ian Rogers wrote:
->>>>>>> On Tue, Dec 2, 2025 at 10:59 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->>>>>>>> From: Kan Liang <kan.liang@linux.intel.com>
->>>>>>>>
->>>>>>>> This patch adds support for the newly introduced SIMD register sampling
->>>>>>>> format by adding the following functions:
->>>>>>>>
->>>>>>>> uint64_t arch__intr_simd_reg_mask(void);
->>>>>>>> uint64_t arch__user_simd_reg_mask(void);
->>>>>>>> uint64_t arch__intr_pred_reg_mask(void);
->>>>>>>> uint64_t arch__user_pred_reg_mask(void);
->>>>>>>> uint64_t arch__intr_simd_reg_bitmap_qwords(int reg, u16 *qwords);
->>>>>>>> uint64_t arch__user_simd_reg_bitmap_qwords(int reg, u16 *qwords);
->>>>>>>> uint64_t arch__intr_pred_reg_bitmap_qwords(int reg, u16 *qwords);
->>>>>>>> uint64_t arch__user_pred_reg_bitmap_qwords(int reg, u16 *qwords);
->>>>>>>>
->>>>>>>> The arch__{intr|user}_simd_reg_mask() functions retrieve the bitmap of
->>>>>>>> supported SIMD registers, such as XMM/YMM/ZMM on x86 platforms.
->>>>>>>>
->>>>>>>> The arch__{intr|user}_pred_reg_mask() functions retrieve the bitmap of
->>>>>>>> supported PRED registers, such as OPMASK on x86 platforms.
->>>>>>>>
->>>>>>>> The arch__{intr|user}_simd_reg_bitmap_qwords() functions provide the
->>>>>>>> exact bitmap and number of qwords for a specific type of SIMD register.
->>>>>>>> For example, for XMM registers on x86 platforms, the returned bitmap is
->>>>>>>> 0xffff (XMM0 ~ XMM15) and the qwords number is 2 (128 bits for each XMM).
->>>>>>>>
->>>>>>>> The arch__{intr|user}_pred_reg_bitmap_qwords() functions provide the
->>>>>>>> exact bitmap and number of qwords for a specific type of PRED register.
->>>>>>>> For example, for OPMASK registers on x86 platforms, the returned bitmap
->>>>>>>> is 0xff (OPMASK0 ~ OPMASK7) and the qwords number is 1 (64 bits for each
->>>>>>>> OPMASK).
->>>>>>>>
->>>>>>>> Additionally, the function __parse_regs() is enhanced to support parsing
->>>>>>>> these newly introduced SIMD registers. Currently, each type of register
->>>>>>>> can only be sampled collectively; sampling a specific SIMD register is
->>>>>>>> not supported. For example, all XMM registers are sampled together rather
->>>>>>>> than sampling only XMM0.
->>>>>>>>
->>>>>>>> When multiple overlapping register types, such as XMM and YMM, are
->>>>>>>> sampled simultaneously, only the superset (YMM registers) is sampled.
->>>>>>>>
->>>>>>>> With this patch, all supported sampling registers on x86 platforms are
->>>>>>>> displayed as follows.
->>>>>>>>
->>>>>>>>  $perf record -I?
->>>>>>>>  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
->>>>>>>>  R11 R12 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 R23 R24 R25 R26 R27 R28
->>>>>>>>  R29 R30 R31 SSP XMM0-15 YMM0-15 ZMM0-31 OPMASK0-7
->>>>>>>>
->>>>>>>>  $perf record --user-regs=?
->>>>>>>>  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
->>>>>>>>  R11 R12 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 R23 R24 R25 R26 R27 R28
->>>>>>>>  R29 R30 R31 SSP XMM0-15 YMM0-15 ZMM0-31 OPMASK0-7
->>>>>>>>
->>>>>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->>>>>>>> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>>>>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>>>>>> ---
->>>>>>>>  tools/perf/arch/x86/util/perf_regs.c      | 470 +++++++++++++++++++++-
->>>>>>>>  tools/perf/util/evsel.c                   |  27 ++
->>>>>>>>  tools/perf/util/parse-regs-options.c      | 151 ++++++-
->>>>>>>>  tools/perf/util/perf_event_attr_fprintf.c |   6 +
->>>>>>>>  tools/perf/util/perf_regs.c               |  59 +++
->>>>>>>>  tools/perf/util/perf_regs.h               |  11 +
->>>>>>>>  tools/perf/util/record.h                  |   6 +
->>>>>>>>  7 files changed, 714 insertions(+), 16 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
->>>>>>>> index 12fd93f04802..db41430f3b07 100644
->>>>>>>> --- a/tools/perf/arch/x86/util/perf_regs.c
->>>>>>>> +++ b/tools/perf/arch/x86/util/perf_regs.c
->>>>>>>> @@ -13,6 +13,49 @@
->>>>>>>>  #include "../../../util/pmu.h"
->>>>>>>>  #include "../../../util/pmus.h"
->>>>>>>>
->>>>>>>> +static const struct sample_reg sample_reg_masks_ext[] = {
->>>>>>>> +       SMPL_REG(AX, PERF_REG_X86_AX),
->>>>>>>> +       SMPL_REG(BX, PERF_REG_X86_BX),
->>>>>>>> +       SMPL_REG(CX, PERF_REG_X86_CX),
->>>>>>>> +       SMPL_REG(DX, PERF_REG_X86_DX),
->>>>>>>> +       SMPL_REG(SI, PERF_REG_X86_SI),
->>>>>>>> +       SMPL_REG(DI, PERF_REG_X86_DI),
->>>>>>>> +       SMPL_REG(BP, PERF_REG_X86_BP),
->>>>>>>> +       SMPL_REG(SP, PERF_REG_X86_SP),
->>>>>>>> +       SMPL_REG(IP, PERF_REG_X86_IP),
->>>>>>>> +       SMPL_REG(FLAGS, PERF_REG_X86_FLAGS),
->>>>>>>> +       SMPL_REG(CS, PERF_REG_X86_CS),
->>>>>>>> +       SMPL_REG(SS, PERF_REG_X86_SS),
->>>>>>>> +#ifdef HAVE_ARCH_X86_64_SUPPORT
->>>>>>>> +       SMPL_REG(R8, PERF_REG_X86_R8),
->>>>>>>> +       SMPL_REG(R9, PERF_REG_X86_R9),
->>>>>>>> +       SMPL_REG(R10, PERF_REG_X86_R10),
->>>>>>>> +       SMPL_REG(R11, PERF_REG_X86_R11),
->>>>>>>> +       SMPL_REG(R12, PERF_REG_X86_R12),
->>>>>>>> +       SMPL_REG(R13, PERF_REG_X86_R13),
->>>>>>>> +       SMPL_REG(R14, PERF_REG_X86_R14),
->>>>>>>> +       SMPL_REG(R15, PERF_REG_X86_R15),
->>>>>>>> +       SMPL_REG(R16, PERF_REG_X86_R16),
->>>>>>>> +       SMPL_REG(R17, PERF_REG_X86_R17),
->>>>>>>> +       SMPL_REG(R18, PERF_REG_X86_R18),
->>>>>>>> +       SMPL_REG(R19, PERF_REG_X86_R19),
->>>>>>>> +       SMPL_REG(R20, PERF_REG_X86_R20),
->>>>>>>> +       SMPL_REG(R21, PERF_REG_X86_R21),
->>>>>>>> +       SMPL_REG(R22, PERF_REG_X86_R22),
->>>>>>>> +       SMPL_REG(R23, PERF_REG_X86_R23),
->>>>>>>> +       SMPL_REG(R24, PERF_REG_X86_R24),
->>>>>>>> +       SMPL_REG(R25, PERF_REG_X86_R25),
->>>>>>>> +       SMPL_REG(R26, PERF_REG_X86_R26),
->>>>>>>> +       SMPL_REG(R27, PERF_REG_X86_R27),
->>>>>>>> +       SMPL_REG(R28, PERF_REG_X86_R28),
->>>>>>>> +       SMPL_REG(R29, PERF_REG_X86_R29),
->>>>>>>> +       SMPL_REG(R30, PERF_REG_X86_R30),
->>>>>>>> +       SMPL_REG(R31, PERF_REG_X86_R31),
->>>>>>>> +       SMPL_REG(SSP, PERF_REG_X86_SSP),
->>>>>>>> +#endif
->>>>>>>> +       SMPL_REG_END
->>>>>>>> +};
->>>>>>>> +
->>>>>>>>  static const struct sample_reg sample_reg_masks[] = {
->>>>>>>>         SMPL_REG(AX, PERF_REG_X86_AX),
->>>>>>>>         SMPL_REG(BX, PERF_REG_X86_BX),
->>>>>>>> @@ -276,27 +319,404 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
->>>>>>>>         return SDT_ARG_VALID;
->>>>>>>>  }
->>>>>>>>
->>>>>>>> +static bool support_simd_reg(u64 sample_type, u16 qwords, u64 mask, bool pred)
->>>>>>>> +{
->>>>>>>> +       struct perf_event_attr attr = {
->>>>>>>> +               .type                           = PERF_TYPE_HARDWARE,
->>>>>>>> +               .config                         = PERF_COUNT_HW_CPU_CYCLES,
->>>>>>>> +               .sample_type                    = sample_type,
->>>>>>>> +               .disabled                       = 1,
->>>>>>>> +               .exclude_kernel                 = 1,
->>>>>>>> +               .sample_simd_regs_enabled       = 1,
->>>>>>>> +       };
->>>>>>>> +       int fd;
->>>>>>>> +
->>>>>>>> +       attr.sample_period = 1;
->>>>>>>> +
->>>>>>>> +       if (!pred) {
->>>>>>>> +               attr.sample_simd_vec_reg_qwords = qwords;
->>>>>>>> +               if (sample_type == PERF_SAMPLE_REGS_INTR)
->>>>>>>> +                       attr.sample_simd_vec_reg_intr = mask;
->>>>>>>> +               else
->>>>>>>> +                       attr.sample_simd_vec_reg_user = mask;
->>>>>>>> +       } else {
->>>>>>>> +               attr.sample_simd_pred_reg_qwords = PERF_X86_OPMASK_QWORDS;
->>>>>>>> +               if (sample_type == PERF_SAMPLE_REGS_INTR)
->>>>>>>> +                       attr.sample_simd_pred_reg_intr = PERF_X86_SIMD_PRED_MASK;
->>>>>>>> +               else
->>>>>>>> +                       attr.sample_simd_pred_reg_user = PERF_X86_SIMD_PRED_MASK;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       if (perf_pmus__num_core_pmus() > 1) {
->>>>>>>> +               struct perf_pmu *pmu = NULL;
->>>>>>>> +               __u64 type = PERF_TYPE_RAW;
->>>>>>>> +
->>>>>>>> +               /*
->>>>>>>> +                * The same register set is supported among different hybrid PMUs.
->>>>>>>> +                * Only check the first available one.
->>>>>>>> +                */
->>>>>>>> +               while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
->>>>>>>> +                       type = pmu->type;
->>>>>>>> +                       break;
->>>>>>>> +               }
->>>>>>>> +               attr.config |= type << PERF_PMU_TYPE_SHIFT;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       event_attr_init(&attr);
->>>>>>>> +
->>>>>>>> +       fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
->>>>>>>> +       if (fd != -1) {
->>>>>>>> +               close(fd);
->>>>>>>> +               return true;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       return false;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static bool __arch_simd_reg_mask(u64 sample_type, int reg, uint64_t *mask, u16 *qwords)
->>>>>>>> +{
->>>>>>>> +       bool supported = false;
->>>>>>>> +       u64 bits;
->>>>>>>> +
->>>>>>>> +       *mask = 0;
->>>>>>>> +       *qwords = 0;
->>>>>>>> +
->>>>>>>> +       switch (reg) {
->>>>>>>> +       case PERF_REG_X86_XMM:
->>>>>>>> +               bits = BIT_ULL(PERF_X86_SIMD_XMM_REGS) - 1;
->>>>>>>> +               supported = support_simd_reg(sample_type, PERF_X86_XMM_QWORDS, bits, false);
->>>>>>>> +               if (supported) {
->>>>>>>> +                       *mask = bits;
->>>>>>>> +                       *qwords = PERF_X86_XMM_QWORDS;
->>>>>>>> +               }
->>>>>>>> +               break;
->>>>>>>> +       case PERF_REG_X86_YMM:
->>>>>>>> +               bits = BIT_ULL(PERF_X86_SIMD_YMM_REGS) - 1;
->>>>>>>> +               supported = support_simd_reg(sample_type, PERF_X86_YMM_QWORDS, bits, false);
->>>>>>>> +               if (supported) {
->>>>>>>> +                       *mask = bits;
->>>>>>>> +                       *qwords = PERF_X86_YMM_QWORDS;
->>>>>>>> +               }
->>>>>>>> +               break;
->>>>>>>> +       case PERF_REG_X86_ZMM:
->>>>>>>> +               bits = BIT_ULL(PERF_X86_SIMD_ZMM_REGS) - 1;
->>>>>>>> +               supported = support_simd_reg(sample_type, PERF_X86_ZMM_QWORDS, bits, false);
->>>>>>>> +               if (supported) {
->>>>>>>> +                       *mask = bits;
->>>>>>>> +                       *qwords = PERF_X86_ZMM_QWORDS;
->>>>>>>> +                       break;
->>>>>>>> +               }
->>>>>>>> +
->>>>>>>> +               bits = BIT_ULL(PERF_X86_SIMD_ZMMH_REGS) - 1;
->>>>>>>> +               supported = support_simd_reg(sample_type, PERF_X86_ZMM_QWORDS, bits, false);
->>>>>>>> +               if (supported) {
->>>>>>>> +                       *mask = bits;
->>>>>>>> +                       *qwords = PERF_X86_ZMMH_QWORDS;
->>>>>>>> +               }
->>>>>>>> +               break;
->>>>>>>> +       default:
->>>>>>>> +               break;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       return supported;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static bool __arch_pred_reg_mask(u64 sample_type, int reg, uint64_t *mask, u16 *qwords)
->>>>>>>> +{
->>>>>>>> +       bool supported = false;
->>>>>>>> +       u64 bits;
->>>>>>>> +
->>>>>>>> +       *mask = 0;
->>>>>>>> +       *qwords = 0;
->>>>>>>> +
->>>>>>>> +       switch (reg) {
->>>>>>>> +       case PERF_REG_X86_OPMASK:
->>>>>>>> +               bits = BIT_ULL(PERF_X86_SIMD_OPMASK_REGS) - 1;
->>>>>>>> +               supported = support_simd_reg(sample_type, PERF_X86_OPMASK_QWORDS, bits, true);
->>>>>>>> +               if (supported) {
->>>>>>>> +                       *mask = bits;
->>>>>>>> +                       *qwords = PERF_X86_OPMASK_QWORDS;
->>>>>>>> +               }
->>>>>>>> +               break;
->>>>>>>> +       default:
->>>>>>>> +               break;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       return supported;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static bool has_cap_simd_regs(void)
->>>>>>>> +{
->>>>>>>> +       uint64_t mask = BIT_ULL(PERF_X86_SIMD_XMM_REGS) - 1;
->>>>>>>> +       u16 qwords = PERF_X86_XMM_QWORDS;
->>>>>>>> +       static bool has_cap_simd_regs;
->>>>>>>> +       static bool cached;
->>>>>>>> +
->>>>>>>> +       if (cached)
->>>>>>>> +               return has_cap_simd_regs;
->>>>>>>> +
->>>>>>>> +       has_cap_simd_regs = __arch_simd_reg_mask(PERF_SAMPLE_REGS_INTR,
->>>>>>>> +                                                PERF_REG_X86_XMM, &mask, &qwords);
->>>>>>>> +       has_cap_simd_regs |= __arch_simd_reg_mask(PERF_SAMPLE_REGS_USER,
->>>>>>>> +                                                PERF_REG_X86_XMM, &mask, &qwords);
->>>>>>>> +       cached = true;
->>>>>>>> +
->>>>>>>> +       return has_cap_simd_regs;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +bool arch_has_simd_regs(u64 mask)
->>>>>>>> +{
->>>>>>>> +       return has_cap_simd_regs() &&
->>>>>>>> +              mask & GENMASK_ULL(PERF_REG_X86_SSP, PERF_REG_X86_R16);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static const struct sample_reg sample_simd_reg_masks[] = {
->>>>>>>> +       SMPL_REG(XMM, PERF_REG_X86_XMM),
->>>>>>>> +       SMPL_REG(YMM, PERF_REG_X86_YMM),
->>>>>>>> +       SMPL_REG(ZMM, PERF_REG_X86_ZMM),
->>>>>>>> +       SMPL_REG_END
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static const struct sample_reg sample_pred_reg_masks[] = {
->>>>>>>> +       SMPL_REG(OPMASK, PERF_REG_X86_OPMASK),
->>>>>>>> +       SMPL_REG_END
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +const struct sample_reg *arch__sample_simd_reg_masks(void)
->>>>>>>> +{
->>>>>>>> +       return sample_simd_reg_masks;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +const struct sample_reg *arch__sample_pred_reg_masks(void)
->>>>>>>> +{
->>>>>>>> +       return sample_pred_reg_masks;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static bool x86_intr_simd_updated;
->>>>>>>> +static u64 x86_intr_simd_reg_mask;
->>>>>>>> +static u64 x86_intr_simd_mask[PERF_REG_X86_MAX_SIMD_REGS];
->>>>>>>> +static u16 x86_intr_simd_qwords[PERF_REG_X86_MAX_SIMD_REGS];
->>>>>>>> +static bool x86_user_simd_updated;
->>>>>>>> +static u64 x86_user_simd_reg_mask;
->>>>>>>> +static u64 x86_user_simd_mask[PERF_REG_X86_MAX_SIMD_REGS];
->>>>>>>> +static u16 x86_user_simd_qwords[PERF_REG_X86_MAX_SIMD_REGS];
->>>>>>>> +
->>>>>>>> +static bool x86_intr_pred_updated;
->>>>>>>> +static u64 x86_intr_pred_reg_mask;
->>>>>>>> +static u64 x86_intr_pred_mask[PERF_REG_X86_MAX_PRED_REGS];
->>>>>>>> +static u16 x86_intr_pred_qwords[PERF_REG_X86_MAX_PRED_REGS];
->>>>>>>> +static bool x86_user_pred_updated;
->>>>>>>> +static u64 x86_user_pred_reg_mask;
->>>>>>>> +static u64 x86_user_pred_mask[PERF_REG_X86_MAX_PRED_REGS];
->>>>>>>> +static u16 x86_user_pred_qwords[PERF_REG_X86_MAX_PRED_REGS];
->>>>>>>> +
->>>>>>>> +static uint64_t __arch__simd_reg_mask(u64 sample_type)
->>>>>>>> +{
->>>>>>>> +       const struct sample_reg *r = NULL;
->>>>>>>> +       bool supported;
->>>>>>>> +       u64 mask = 0;
->>>>>>>> +       int reg;
->>>>>>>> +
->>>>>>>> +       if (!has_cap_simd_regs())
->>>>>>>> +               return 0;
->>>>>>>> +
->>>>>>>> +       if (sample_type == PERF_SAMPLE_REGS_INTR && x86_intr_simd_updated)
->>>>>>>> +               return x86_intr_simd_reg_mask;
->>>>>>>> +
->>>>>>>> +       if (sample_type == PERF_SAMPLE_REGS_USER && x86_user_simd_updated)
->>>>>>>> +               return x86_user_simd_reg_mask;
->>>>>>>> +
->>>>>>>> +       for (r = arch__sample_simd_reg_masks(); r->name; r++) {
->>>>>>>> +               supported = false;
->>>>>>>> +
->>>>>>>> +               if (!r->mask)
->>>>>>>> +                       continue;
->>>>>>>> +               reg = fls64(r->mask) - 1;
->>>>>>>> +
->>>>>>>> +               if (reg >= PERF_REG_X86_MAX_SIMD_REGS)
->>>>>>>> +                       break;
->>>>>>>> +               if (sample_type == PERF_SAMPLE_REGS_INTR)
->>>>>>>> +                       supported = __arch_simd_reg_mask(sample_type, reg,
->>>>>>>> +                                                        &x86_intr_simd_mask[reg],
->>>>>>>> +                                                        &x86_intr_simd_qwords[reg]);
->>>>>>>> +               else if (sample_type == PERF_SAMPLE_REGS_USER)
->>>>>>>> +                       supported = __arch_simd_reg_mask(sample_type, reg,
->>>>>>>> +                                                        &x86_user_simd_mask[reg],
->>>>>>>> +                                                        &x86_user_simd_qwords[reg]);
->>>>>>>> +               if (supported)
->>>>>>>> +                       mask |= BIT_ULL(reg);
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       if (sample_type == PERF_SAMPLE_REGS_INTR) {
->>>>>>>> +               x86_intr_simd_reg_mask = mask;
->>>>>>>> +               x86_intr_simd_updated = true;
->>>>>>>> +       } else {
->>>>>>>> +               x86_user_simd_reg_mask = mask;
->>>>>>>> +               x86_user_simd_updated = true;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       return mask;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static uint64_t __arch__pred_reg_mask(u64 sample_type)
->>>>>>>> +{
->>>>>>>> +       const struct sample_reg *r = NULL;
->>>>>>>> +       bool supported;
->>>>>>>> +       u64 mask = 0;
->>>>>>>> +       int reg;
->>>>>>>> +
->>>>>>>> +       if (!has_cap_simd_regs())
->>>>>>>> +               return 0;
->>>>>>>> +
->>>>>>>> +       if (sample_type == PERF_SAMPLE_REGS_INTR && x86_intr_pred_updated)
->>>>>>>> +               return x86_intr_pred_reg_mask;
->>>>>>>> +
->>>>>>>> +       if (sample_type == PERF_SAMPLE_REGS_USER && x86_user_pred_updated)
->>>>>>>> +               return x86_user_pred_reg_mask;
->>>>>>>> +
->>>>>>>> +       for (r = arch__sample_pred_reg_masks(); r->name; r++) {
->>>>>>>> +               supported = false;
->>>>>>>> +
->>>>>>>> +               if (!r->mask)
->>>>>>>> +                       continue;
->>>>>>>> +               reg = fls64(r->mask) - 1;
->>>>>>>> +
->>>>>>>> +               if (reg >= PERF_REG_X86_MAX_PRED_REGS)
->>>>>>>> +                       break;
->>>>>>>> +               if (sample_type == PERF_SAMPLE_REGS_INTR)
->>>>>>>> +                       supported = __arch_pred_reg_mask(sample_type, reg,
->>>>>>>> +                                                        &x86_intr_pred_mask[reg],
->>>>>>>> +                                                        &x86_intr_pred_qwords[reg]);
->>>>>>>> +               else if (sample_type == PERF_SAMPLE_REGS_USER)
->>>>>>>> +                       supported = __arch_pred_reg_mask(sample_type, reg,
->>>>>>>> +                                                        &x86_user_pred_mask[reg],
->>>>>>>> +                                                        &x86_user_pred_qwords[reg]);
->>>>>>>> +               if (supported)
->>>>>>>> +                       mask |= BIT_ULL(reg);
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       if (sample_type == PERF_SAMPLE_REGS_INTR) {
->>>>>>>> +               x86_intr_pred_reg_mask = mask;
->>>>>>>> +               x86_intr_pred_updated = true;
->>>>>>>> +       } else {
->>>>>>>> +               x86_user_pred_reg_mask = mask;
->>>>>>>> +               x86_user_pred_updated = true;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       return mask;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t arch__intr_simd_reg_mask(void)
->>>>>>>> +{
->>>>>>>> +       return __arch__simd_reg_mask(PERF_SAMPLE_REGS_INTR);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t arch__user_simd_reg_mask(void)
->>>>>>>> +{
->>>>>>>> +       return __arch__simd_reg_mask(PERF_SAMPLE_REGS_USER);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t arch__intr_pred_reg_mask(void)
->>>>>>>> +{
->>>>>>>> +       return __arch__pred_reg_mask(PERF_SAMPLE_REGS_INTR);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t arch__user_pred_reg_mask(void)
->>>>>>>> +{
->>>>>>>> +       return __arch__pred_reg_mask(PERF_SAMPLE_REGS_USER);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static uint64_t arch__simd_reg_bitmap_qwords(int reg, u16 *qwords, bool intr)
->>>>>>>> +{
->>>>>>>> +       uint64_t mask = 0;
->>>>>>>> +
->>>>>>>> +       *qwords = 0;
->>>>>>>> +       if (reg < PERF_REG_X86_MAX_SIMD_REGS) {
->>>>>>>> +               if (intr) {
->>>>>>>> +                       *qwords = x86_intr_simd_qwords[reg];
->>>>>>>> +                       mask = x86_intr_simd_mask[reg];
->>>>>>>> +               } else {
->>>>>>>> +                       *qwords = x86_user_simd_qwords[reg];
->>>>>>>> +                       mask = x86_user_simd_mask[reg];
->>>>>>>> +               }
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       return mask;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static uint64_t arch__pred_reg_bitmap_qwords(int reg, u16 *qwords, bool intr)
->>>>>>>> +{
->>>>>>>> +       uint64_t mask = 0;
->>>>>>>> +
->>>>>>>> +       *qwords = 0;
->>>>>>>> +       if (reg < PERF_REG_X86_MAX_PRED_REGS) {
->>>>>>>> +               if (intr) {
->>>>>>>> +                       *qwords = x86_intr_pred_qwords[reg];
->>>>>>>> +                       mask = x86_intr_pred_mask[reg];
->>>>>>>> +               } else {
->>>>>>>> +                       *qwords = x86_user_pred_qwords[reg];
->>>>>>>> +                       mask = x86_user_pred_mask[reg];
->>>>>>>> +               }
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       return mask;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t arch__intr_simd_reg_bitmap_qwords(int reg, u16 *qwords)
->>>>>>>> +{
->>>>>>>> +       if (!x86_intr_simd_updated)
->>>>>>>> +               arch__intr_simd_reg_mask();
->>>>>>>> +       return arch__simd_reg_bitmap_qwords(reg, qwords, true);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t arch__user_simd_reg_bitmap_qwords(int reg, u16 *qwords)
->>>>>>>> +{
->>>>>>>> +       if (!x86_user_simd_updated)
->>>>>>>> +               arch__user_simd_reg_mask();
->>>>>>>> +       return arch__simd_reg_bitmap_qwords(reg, qwords, false);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t arch__intr_pred_reg_bitmap_qwords(int reg, u16 *qwords)
->>>>>>>> +{
->>>>>>>> +       if (!x86_intr_pred_updated)
->>>>>>>> +               arch__intr_pred_reg_mask();
->>>>>>>> +       return arch__pred_reg_bitmap_qwords(reg, qwords, true);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t arch__user_pred_reg_bitmap_qwords(int reg, u16 *qwords)
->>>>>>>> +{
->>>>>>>> +       if (!x86_user_pred_updated)
->>>>>>>> +               arch__user_pred_reg_mask();
->>>>>>>> +       return arch__pred_reg_bitmap_qwords(reg, qwords, false);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>>  const struct sample_reg *arch__sample_reg_masks(void)
->>>>>>>>  {
->>>>>>>> +       if (has_cap_simd_regs())
->>>>>>>> +               return sample_reg_masks_ext;
->>>>>>>>         return sample_reg_masks;
->>>>>>>>  }
->>>>>>>>
->>>>>>>> -uint64_t arch__intr_reg_mask(void)
->>>>>>>> +static uint64_t __arch__reg_mask(u64 sample_type, u64 mask, bool has_simd_regs)
->>>>>>>>  {
->>>>>>>>         struct perf_event_attr attr = {
->>>>>>>> -               .type                   = PERF_TYPE_HARDWARE,
->>>>>>>> -               .config                 = PERF_COUNT_HW_CPU_CYCLES,
->>>>>>>> -               .sample_type            = PERF_SAMPLE_REGS_INTR,
->>>>>>>> -               .sample_regs_intr       = PERF_REG_EXTENDED_MASK,
->>>>>>>> -               .precise_ip             = 1,
->>>>>>>> -               .disabled               = 1,
->>>>>>>> -               .exclude_kernel         = 1,
->>>>>>>> +               .type                           = PERF_TYPE_HARDWARE,
->>>>>>>> +               .config                         = PERF_COUNT_HW_CPU_CYCLES,
->>>>>>>> +               .sample_type                    = sample_type,
->>>>>>>> +               .precise_ip                     = 1,
->>>>>>>> +               .disabled                       = 1,
->>>>>>>> +               .exclude_kernel                 = 1,
->>>>>>>> +               .sample_simd_regs_enabled       = has_simd_regs,
->>>>>>>>         };
->>>>>>>>         int fd;
->>>>>>>>         /*
->>>>>>>>          * In an unnamed union, init it here to build on older gcc versions
->>>>>>>>          */
->>>>>>>>         attr.sample_period = 1;
->>>>>>>> +       if (sample_type == PERF_SAMPLE_REGS_INTR)
->>>>>>>> +               attr.sample_regs_intr = mask;
->>>>>>>> +       else
->>>>>>>> +               attr.sample_regs_user = mask;
->>>>>>>>
->>>>>>>>         if (perf_pmus__num_core_pmus() > 1) {
->>>>>>>>                 struct perf_pmu *pmu = NULL;
->>>>>>>> @@ -318,13 +738,41 @@ uint64_t arch__intr_reg_mask(void)
->>>>>>>>         fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
->>>>>>>>         if (fd != -1) {
->>>>>>>>                 close(fd);
->>>>>>>> -               return (PERF_REG_EXTENDED_MASK | PERF_REGS_MASK);
->>>>>>>> +               return mask;
->>>>>>>>         }
->>>>>>>>
->>>>>>>> -       return PERF_REGS_MASK;
->>>>>>>> +       return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t arch__intr_reg_mask(void)
->>>>>>>> +{
->>>>>>>> +       uint64_t mask = PERF_REGS_MASK;
->>>>>>>> +
->>>>>>>> +       if (has_cap_simd_regs()) {
->>>>>>>> +               mask |= __arch__reg_mask(PERF_SAMPLE_REGS_INTR,
->>>>>>>> +                                        GENMASK_ULL(PERF_REG_X86_R31, PERF_REG_X86_R16),
->>>>>>>> +                                        true);
->>>>>>>> +               mask |= __arch__reg_mask(PERF_SAMPLE_REGS_INTR,
->>>>>>>> +                                        BIT_ULL(PERF_REG_X86_SSP),
->>>>>>>> +                                        true);
->>>>>>>> +       } else
->>>>>>>> +               mask |= __arch__reg_mask(PERF_SAMPLE_REGS_INTR, PERF_REG_EXTENDED_MASK, false);
->>>>>>>> +
->>>>>>>> +       return mask;
->>>>>>>>  }
->>>>>>>>
->>>>>>>>  uint64_t arch__user_reg_mask(void)
->>>>>>>>  {
->>>>>>>> -       return PERF_REGS_MASK;
->>>>>>>> +       uint64_t mask = PERF_REGS_MASK;
->>>>>>>> +
->>>>>>>> +       if (has_cap_simd_regs()) {
->>>>>>>> +               mask |= __arch__reg_mask(PERF_SAMPLE_REGS_USER,
->>>>>>>> +                                        GENMASK_ULL(PERF_REG_X86_R31, PERF_REG_X86_R16),
->>>>>>>> +                                        true);
->>>>>>>> +               mask |= __arch__reg_mask(PERF_SAMPLE_REGS_USER,
->>>>>>>> +                                        BIT_ULL(PERF_REG_X86_SSP),
->>>>>>>> +                                        true);
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       return mask;
->>>>>>>>  }
->>>>>>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->>>>>>>> index 56ebefd075f2..5d1d90cf9488 100644
->>>>>>>> --- a/tools/perf/util/evsel.c
->>>>>>>> +++ b/tools/perf/util/evsel.c
->>>>>>>> @@ -1461,12 +1461,39 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
->>>>>>>>         if (opts->sample_intr_regs && !evsel->no_aux_samples &&
->>>>>>>>             !evsel__is_dummy_event(evsel)) {
->>>>>>>>                 attr->sample_regs_intr = opts->sample_intr_regs;
->>>>>>>> +               attr->sample_simd_regs_enabled = arch_has_simd_regs(attr->sample_regs_intr);
->>>>>>>> +               evsel__set_sample_bit(evsel, REGS_INTR);
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       if ((opts->sample_intr_vec_regs || opts->sample_intr_pred_regs) &&
->>>>>>>> +           !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) {
->>>>>>>> +               /* The pred qwords is to implies the set of SIMD registers is used */
->>>>>>>> +               if (opts->sample_pred_regs_qwords)
->>>>>>>> +                       attr->sample_simd_pred_reg_qwords = opts->sample_pred_regs_qwords;
->>>>>>>> +               else
->>>>>>>> +                       attr->sample_simd_pred_reg_qwords = 1;
->>>>>>>> +               attr->sample_simd_vec_reg_intr = opts->sample_intr_vec_regs;
->>>>>>>> +               attr->sample_simd_vec_reg_qwords = opts->sample_vec_regs_qwords;
->>>>>>>> +               attr->sample_simd_pred_reg_intr = opts->sample_intr_pred_regs;
->>>>>>>>                 evsel__set_sample_bit(evsel, REGS_INTR);
->>>>>>>>         }
->>>>>>>>
->>>>>>>>         if (opts->sample_user_regs && !evsel->no_aux_samples &&
->>>>>>>>             !evsel__is_dummy_event(evsel)) {
->>>>>>>>                 attr->sample_regs_user |= opts->sample_user_regs;
->>>>>>>> +               attr->sample_simd_regs_enabled = arch_has_simd_regs(attr->sample_regs_user);
->>>>>>>> +               evsel__set_sample_bit(evsel, REGS_USER);
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       if ((opts->sample_user_vec_regs || opts->sample_user_pred_regs) &&
->>>>>>>> +           !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) {
->>>>>>>> +               if (opts->sample_pred_regs_qwords)
->>>>>>>> +                       attr->sample_simd_pred_reg_qwords = opts->sample_pred_regs_qwords;
->>>>>>>> +               else
->>>>>>>> +                       attr->sample_simd_pred_reg_qwords = 1;
->>>>>>>> +               attr->sample_simd_vec_reg_user = opts->sample_user_vec_regs;
->>>>>>>> +               attr->sample_simd_vec_reg_qwords = opts->sample_vec_regs_qwords;
->>>>>>>> +               attr->sample_simd_pred_reg_user = opts->sample_user_pred_regs;
->>>>>>>>                 evsel__set_sample_bit(evsel, REGS_USER);
->>>>>>>>         }
->>>>>>>>
->>>>>>>> diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
->>>>>>>> index cda1c620968e..0bd100392889 100644
->>>>>>>> --- a/tools/perf/util/parse-regs-options.c
->>>>>>>> +++ b/tools/perf/util/parse-regs-options.c
->>>>>>>> @@ -4,19 +4,139 @@
->>>>>>>>  #include <stdint.h>
->>>>>>>>  #include <string.h>
->>>>>>>>  #include <stdio.h>
->>>>>>>> +#include <linux/bitops.h>
->>>>>>>>  #include "util/debug.h"
->>>>>>>>  #include <subcmd/parse-options.h>
->>>>>>>>  #include "util/perf_regs.h"
->>>>>>>>  #include "util/parse-regs-options.h"
->>>>>>>> +#include "record.h"
->>>>>>>> +
->>>>>>>> +static void __print_simd_regs(bool intr, uint64_t simd_mask)
->>>>>>>> +{
->>>>>>>> +       const struct sample_reg *r = NULL;
->>>>>>>> +       uint64_t bitmap = 0;
->>>>>>>> +       u16 qwords = 0;
->>>>>>>> +       int reg_idx;
->>>>>>>> +
->>>>>>>> +       if (!simd_mask)
->>>>>>>> +               return;
->>>>>>>> +
->>>>>>>> +       for (r = arch__sample_simd_reg_masks(); r->name; r++) {
->>>>>>>> +               if (!(r->mask & simd_mask))
->>>>>>>> +                       continue;
->>>>>>>> +               reg_idx = fls64(r->mask) - 1;
->>>>>>>> +               if (intr)
->>>>>>>> +                       bitmap = arch__intr_simd_reg_bitmap_qwords(reg_idx, &qwords);
->>>>>>>> +               else
->>>>>>>> +                       bitmap = arch__user_simd_reg_bitmap_qwords(reg_idx, &qwords);
->>>>>>>> +               if (bitmap)
->>>>>>>> +                       fprintf(stderr, "%s0-%d ", r->name, fls64(bitmap) - 1);
->>>>>>>> +       }
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static void __print_pred_regs(bool intr, uint64_t pred_mask)
->>>>>>>> +{
->>>>>>>> +       const struct sample_reg *r = NULL;
->>>>>>>> +       uint64_t bitmap = 0;
->>>>>>>> +       u16 qwords = 0;
->>>>>>>> +       int reg_idx;
->>>>>>>> +
->>>>>>>> +       if (!pred_mask)
->>>>>>>> +               return;
->>>>>>>> +
->>>>>>>> +       for (r = arch__sample_pred_reg_masks(); r->name; r++) {
->>>>>>>> +               if (!(r->mask & pred_mask))
->>>>>>>> +                       continue;
->>>>>>>> +               reg_idx = fls64(r->mask) - 1;
->>>>>>>> +               if (intr)
->>>>>>>> +                       bitmap = arch__intr_pred_reg_bitmap_qwords(reg_idx, &qwords);
->>>>>>>> +               else
->>>>>>>> +                       bitmap = arch__user_pred_reg_bitmap_qwords(reg_idx, &qwords);
->>>>>>>> +               if (bitmap)
->>>>>>>> +                       fprintf(stderr, "%s0-%d ", r->name, fls64(bitmap) - 1);
->>>>>>>> +       }
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static bool __parse_simd_regs(struct record_opts *opts, char *s, bool intr)
->>>>>>>> +{
->>>>>>>> +       const struct sample_reg *r = NULL;
->>>>>>>> +       bool matched = false;
->>>>>>>> +       uint64_t bitmap = 0;
->>>>>>>> +       u16 qwords = 0;
->>>>>>>> +       int reg_idx;
->>>>>>>> +
->>>>>>>> +       for (r = arch__sample_simd_reg_masks(); r->name; r++) {
->>>>>>>> +               if (strcasecmp(s, r->name))
->>>>>>>> +                       continue;
->>>>>>>> +               if (!fls64(r->mask))
->>>>>>>> +                       continue;
->>>>>>>> +               reg_idx = fls64(r->mask) - 1;
->>>>>>>> +               if (intr)
->>>>>>>> +                       bitmap = arch__intr_simd_reg_bitmap_qwords(reg_idx, &qwords);
->>>>>>>> +               else
->>>>>>>> +                       bitmap = arch__user_simd_reg_bitmap_qwords(reg_idx, &qwords);
->>>>>>>> +               matched = true;
->>>>>>>> +               break;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       /* Just need the highest qwords */
->>>>>>>> +       if (qwords > opts->sample_vec_regs_qwords) {
->>>>>>>> +               opts->sample_vec_regs_qwords = qwords;
->>>>>>>> +               if (intr)
->>>>>>>> +                       opts->sample_intr_vec_regs = bitmap;
->>>>>>>> +               else
->>>>>>>> +                       opts->sample_user_vec_regs = bitmap;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       return matched;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static bool __parse_pred_regs(struct record_opts *opts, char *s, bool intr)
->>>>>>>> +{
->>>>>>>> +       const struct sample_reg *r = NULL;
->>>>>>>> +       bool matched = false;
->>>>>>>> +       uint64_t bitmap = 0;
->>>>>>>> +       u16 qwords = 0;
->>>>>>>> +       int reg_idx;
->>>>>>>> +
->>>>>>>> +       for (r = arch__sample_pred_reg_masks(); r->name; r++) {
->>>>>>>> +               if (strcasecmp(s, r->name))
->>>>>>>> +                       continue;
->>>>>>>> +               if (!fls64(r->mask))
->>>>>>>> +                       continue;
->>>>>>>> +               reg_idx = fls64(r->mask) - 1;
->>>>>>>> +               if (intr)
->>>>>>>> +                       bitmap = arch__intr_pred_reg_bitmap_qwords(reg_idx, &qwords);
->>>>>>>> +               else
->>>>>>>> +                       bitmap = arch__user_pred_reg_bitmap_qwords(reg_idx, &qwords);
->>>>>>>> +               matched = true;
->>>>>>>> +               break;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       /* Just need the highest qwords */
->>>>>>>> +       if (qwords > opts->sample_pred_regs_qwords) {
->>>>>>>> +               opts->sample_pred_regs_qwords = qwords;
->>>>>>>> +               if (intr)
->>>>>>>> +                       opts->sample_intr_pred_regs = bitmap;
->>>>>>>> +               else
->>>>>>>> +                       opts->sample_user_pred_regs = bitmap;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       return matched;
->>>>>>>> +}
->>>>>>>>
->>>>>>>>  static int
->>>>>>>>  __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
->>>>>>>>  {
->>>>>>>>         uint64_t *mode = (uint64_t *)opt->value;
->>>>>>>>         const struct sample_reg *r = NULL;
->>>>>>>> +       struct record_opts *opts;
->>>>>>>>         char *s, *os = NULL, *p;
->>>>>>>> -       int ret = -1;
->>>>>>>> +       bool has_simd_regs = false;
->>>>>>>>         uint64_t mask;
->>>>>>>> +       uint64_t simd_mask;
->>>>>>>> +       uint64_t pred_mask;
->>>>>>>> +       int ret = -1;
->>>>>>>>
->>>>>>>>         if (unset)
->>>>>>>>                 return 0;
->>>>>>>> @@ -27,10 +147,17 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
->>>>>>>>         if (*mode)
->>>>>>>>                 return -1;
->>>>>>>>
->>>>>>>> -       if (intr)
->>>>>>>> +       if (intr) {
->>>>>>>> +               opts = container_of(opt->value, struct record_opts, sample_intr_regs);
->>>>>>>>                 mask = arch__intr_reg_mask();
->>>>>>>> -       else
->>>>>>>> +               simd_mask = arch__intr_simd_reg_mask();
->>>>>>>> +               pred_mask = arch__intr_pred_reg_mask();
->>>>>>>> +       } else {
->>>>>>>> +               opts = container_of(opt->value, struct record_opts, sample_user_regs);
->>>>>>>>                 mask = arch__user_reg_mask();
->>>>>>>> +               simd_mask = arch__user_simd_reg_mask();
->>>>>>>> +               pred_mask = arch__user_pred_reg_mask();
->>>>>>>> +       }
->>>>>>>>
->>>>>>>>         /* str may be NULL in case no arg is passed to -I */
->>>>>>>>         if (str) {
->>>>>>>> @@ -50,10 +177,24 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
->>>>>>>>                                         if (r->mask & mask)
->>>>>>>>                                                 fprintf(stderr, "%s ", r->name);
->>>>>>>>                                 }
->>>>>>>> +                               __print_simd_regs(intr, simd_mask);
->>>>>>>> +                               __print_pred_regs(intr, pred_mask);
->>>>>>>>                                 fputc('\n', stderr);
->>>>>>>>                                 /* just printing available regs */
->>>>>>>>                                 goto error;
->>>>>>>>                         }
->>>>>>>> +
->>>>>>>> +                       if (simd_mask) {
->>>>>>>> +                               has_simd_regs = __parse_simd_regs(opts, s, intr);
->>>>>>>> +                               if (has_simd_regs)
->>>>>>>> +                                       goto next;
->>>>>>>> +                       }
->>>>>>>> +                       if (pred_mask) {
->>>>>>>> +                               has_simd_regs = __parse_pred_regs(opts, s, intr);
->>>>>>>> +                               if (has_simd_regs)
->>>>>>>> +                                       goto next;
->>>>>>>> +                       }
->>>>>>>> +
->>>>>>>>                         for (r = arch__sample_reg_masks(); r->name; r++) {
->>>>>>>>                                 if ((r->mask & mask) && !strcasecmp(s, r->name))
->>>>>>>>                                         break;
->>>>>>>> @@ -65,7 +206,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
->>>>>>>>                         }
->>>>>>>>
->>>>>>>>                         *mode |= r->mask;
->>>>>>>> -
->>>>>>>> +next:
->>>>>>>>                         if (!p)
->>>>>>>>                                 break;
->>>>>>>>
->>>>>>>> @@ -75,7 +216,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
->>>>>>>>         ret = 0;
->>>>>>>>
->>>>>>>>         /* default to all possible regs */
->>>>>>>> -       if (*mode == 0)
->>>>>>>> +       if (*mode == 0 && !has_simd_regs)
->>>>>>>>                 *mode = mask;
->>>>>>>>  error:
->>>>>>>>         free(os);
->>>>>>>> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
->>>>>>>> index 66b666d9ce64..fb0366d050cf 100644
->>>>>>>> --- a/tools/perf/util/perf_event_attr_fprintf.c
->>>>>>>> +++ b/tools/perf/util/perf_event_attr_fprintf.c
->>>>>>>> @@ -360,6 +360,12 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
->>>>>>>>         PRINT_ATTRf(aux_start_paused, p_unsigned);
->>>>>>>>         PRINT_ATTRf(aux_pause, p_unsigned);
->>>>>>>>         PRINT_ATTRf(aux_resume, p_unsigned);
->>>>>>>> +       PRINT_ATTRf(sample_simd_pred_reg_qwords, p_unsigned);
->>>>>>>> +       PRINT_ATTRf(sample_simd_pred_reg_intr, p_hex);
->>>>>>>> +       PRINT_ATTRf(sample_simd_pred_reg_user, p_hex);
->>>>>>>> +       PRINT_ATTRf(sample_simd_vec_reg_qwords, p_unsigned);
->>>>>>>> +       PRINT_ATTRf(sample_simd_vec_reg_intr, p_hex);
->>>>>>>> +       PRINT_ATTRf(sample_simd_vec_reg_user, p_hex);
->>>>>>>>
->>>>>>>>         return ret;
->>>>>>>>  }
->>>>>>>> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
->>>>>>>> index 44b90bbf2d07..e8a9fabc92e6 100644
->>>>>>>> --- a/tools/perf/util/perf_regs.c
->>>>>>>> +++ b/tools/perf/util/perf_regs.c
->>>>>>>> @@ -11,6 +11,11 @@ int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
->>>>>>>>         return SDT_ARG_SKIP;
->>>>>>>>  }
->>>>>>>>
->>>>>>>> +bool __weak arch_has_simd_regs(u64 mask __maybe_unused)
->>>>>>>> +{
->>>>>>>> +       return false;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>>  uint64_t __weak arch__intr_reg_mask(void)
->>>>>>>>  {
->>>>>>>>         return 0;
->>>>>>>> @@ -21,6 +26,50 @@ uint64_t __weak arch__user_reg_mask(void)
->>>>>>>>         return 0;
->>>>>>>>  }
->>>>>>>>
->>>>>>>> +uint64_t __weak arch__intr_simd_reg_mask(void)
->>>>>>>> +{
->>>>>>>> +       return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t __weak arch__user_simd_reg_mask(void)
->>>>>>>> +{
->>>>>>>> +       return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t __weak arch__intr_pred_reg_mask(void)
->>>>>>>> +{
->>>>>>>> +       return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t __weak arch__user_pred_reg_mask(void)
->>>>>>>> +{
->>>>>>>> +       return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t __weak arch__intr_simd_reg_bitmap_qwords(int reg  __maybe_unused, u16 *qwords)
->>>>>>>> +{
->>>>>>>> +       *qwords = 0;
->>>>>>>> +       return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t __weak arch__user_simd_reg_bitmap_qwords(int reg __maybe_unused, u16 *qwords)
->>>>>>>> +{
->>>>>>>> +       *qwords = 0;
->>>>>>>> +       return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t __weak arch__intr_pred_reg_bitmap_qwords(int reg  __maybe_unused, u16 *qwords)
->>>>>>>> +{
->>>>>>>> +       *qwords = 0;
->>>>>>>> +       return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +uint64_t __weak arch__user_pred_reg_bitmap_qwords(int reg __maybe_unused, u16 *qwords)
->>>>>>>> +{
->>>>>>>> +       *qwords = 0;
->>>>>>>> +       return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>>  static const struct sample_reg sample_reg_masks[] = {
->>>>>>>>         SMPL_REG_END
->>>>>>>>  };
->>>>>>>> @@ -30,6 +79,16 @@ const struct sample_reg * __weak arch__sample_reg_masks(void)
->>>>>>>>         return sample_reg_masks;
->>>>>>>>  }
->>>>>>>>
->>>>>>>> +const struct sample_reg * __weak arch__sample_simd_reg_masks(void)
->>>>>>>> +{
->>>>>>>> +       return sample_reg_masks;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +const struct sample_reg * __weak arch__sample_pred_reg_masks(void)
->>>>>>>> +{
->>>>>>>> +       return sample_reg_masks;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>>  const char *perf_reg_name(int id, const char *arch)
->>>>>>>>  {
->>>>>>>>         const char *reg_name = NULL;
->>>>>>>> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
->>>>>>>> index f2d0736d65cc..bce9c4cfd1bf 100644
->>>>>>>> --- a/tools/perf/util/perf_regs.h
->>>>>>>> +++ b/tools/perf/util/perf_regs.h
->>>>>>>> @@ -24,9 +24,20 @@ enum {
->>>>>>>>  };
->>>>>>>>
->>>>>>>>  int arch_sdt_arg_parse_op(char *old_op, char **new_op);
->>>>>>>> +bool arch_has_simd_regs(u64 mask);
->>>>>>>>  uint64_t arch__intr_reg_mask(void);
->>>>>>>>  uint64_t arch__user_reg_mask(void);
->>>>>>>>  const struct sample_reg *arch__sample_reg_masks(void);
->>>>>>>> +const struct sample_reg *arch__sample_simd_reg_masks(void);
->>>>>>>> +const struct sample_reg *arch__sample_pred_reg_masks(void);
->>>>>>> I wonder we can remove these functions. perf_reg_name(int id, uint16_t
->>>>>>> e_machine) maps a perf register number and e_machine to a string. So
->>>>>>> the sample_reg array could be replaced with:
->>>>>>> ```
->>>>>>> for (int perf_reg = 0; perf_reg < 64; perf_reg++) {
->>>>>>>   uint64_t mask = 1LL << perf_reg;
->>>>>>>   const char *name = perf_reg_name(perf_reg, EM_HOST);
->>>>>>>   if (name == NULL)
->>>>>>>     break;
->>>>>>>   // use mask and name
->>>>>>> ```
->>>>>>> To make it work for SIMD and PRED then I guess we need to iterate
->>>>>>> through the ABIs of enum perf_sample_regs_abi.
->>>>>> Suppose so.
->>>>>>
->>>>>>
->>>>>>>> +uint64_t arch__intr_simd_reg_mask(void);
->>>>>>>> +uint64_t arch__user_simd_reg_mask(void);
->>>>>>>> +uint64_t arch__intr_pred_reg_mask(void);
->>>>>>>> +uint64_t arch__user_pred_reg_mask(void);
->>>>>>> I think some comments would be useful here like:
->>>>>>> ```
->>>>>>> /* Perf register bit map with valid bits for
->>>>>>> perf_event_attr.sample_regs_user. */
->>>>>>> uint64_t arch__intr_reg_mask(void);
->>>>>>> /* Perf register bit map with valid bits for
->>>>>>> perf_event_attr.sample_regs_intr. */
->>>>>>> uint64_t arch__user_reg_mask(void);
->>>>>>> /* Perf register bit map with valid bits for
->>>>>>> perf_event_attr.sample_simd_vec_reg_intr. */
->>>>>>> uint64_t arch__intr_simd_reg_mask(void);
->>>>>>> /* Perf register bit map with valid bits for
->>>>>>> perf_event_attr.sample_simd_vec_reg_user. */
->>>>>>> uint64_t arch__user_simd_reg_mask(void);
->>>>>>> /* Perf register bit map with valid bits for
->>>>>>> perf_event_attr.sample_simd_pred_reg_intr. */
->>>>>>> uint64_t arch__intr_pred_reg_mask(void);
->>>>>>> /* Perf register bit map with valid bits for
->>>>>>> perf_event_attr.sample_simd_pred_reg_user. */
->>>>>>> uint64_t arch__user_pred_reg_mask(void);
->>>>>> Sure. Thanks.
->>>>>>
->>>>>>
->>>>>>> ```
->>>>>>>
->>>>>>> Why do the arch__user_pred_reg_mask return a uint64_t when the
->>>>>>> perf_event_attr variable is a __u32?
->>>>>> Suppose it's a bug. :)
->>>>>>
->>>>>>
->>>>>>>> +uint64_t arch__intr_simd_reg_bitmap_qwords(int reg, u16 *qwords);
->>>>>>>> +uint64_t arch__user_simd_reg_bitmap_qwords(int reg, u16 *qwords);
->>>>>>>> +uint64_t arch__intr_pred_reg_bitmap_qwords(int reg, u16 *qwords);
->>>>>>>> +uint64_t arch__user_pred_reg_bitmap_qwords(int reg, u16 *qwords);
->>>>>>> I don't understand this function. The qwords is specific to a
->>>>>>> perf_event_attr. We could have an evlist with an evsel set up to
->>>>>>> sample say XMM registers and another evsel set up to sample ZMM
->>>>>>> registers. Are the qwords here always for the ZMM case, or is XMM,
->>>>>>> YMM, ZMM depending on architecture support? Why does it vary per
->>>>>>> register? The surrounding code uses the term mask but here bitmap is
->>>>>>> used, is the inconsistency deliberate? Why are there user and intr
->>>>>>> functions when in the perf_event_attr there are only
->>>>>>> sample_simd_pred_reg_qwords and sample_simd_ved_reg_qwords variables?
->>>>>> These 4 functions is designed to get the bitmask and qwords length for a
->>>>>> specific SIMD registers. E.g., For XMM on x86 platforms, the returned
->>>>>> bitmask is 0xffff (xmm0 ~ xmm15) and the qwords length is 2 (128 bits). For
->>>>>> ZMM on x86 platforms, if the platform only supports 16 ZMM registers, then
->>>>>> the returned bitmask is 0xffff (zmm0 ~ zmm15) and qwords length is 8 (512
->>>>>> bits). If the platform supports 32 ZMM registers, then the returned bitmask
->>>>>> is 0xffffffff (zmm0 ~ zmm31) and qwords length is 8 (512 bits).
->>>>> What is the meaning of reg? In this file it is normally the integer
->>>>> index for a bit in the sample_regs_user mask, but for x86 I don't see
->>>>> enum perf_event_x86_regs having differing XMM, YMM and ZMM encodings.
->>>>> Similarly, is qwords an out argument, but then you also have the
->>>>> bitmap. It looks like the code is caching values but that assumes a
->>>>> single qword length for all events.
->>>> Yes, the "reg" argument indicates the SIMD register index. Strictly
->>>> speaking for x86 platform, the qwords length is fixed for a specific SIMD
->>>> register and only the register number could vary, e.g., some platforms
->>>> could only support 16 ZMM registers, but some other platforms could support
->>>> 32 ZMM registers. But considering this is a generic function for all kinds
->>>> of archs, we can't ensure there are fixed length for a specific SIMD
->>>> register on any arch, so I introduce  the "qwords" argument to increase the
->>>> flexibility.
->>> I'm still not understanding this still :-) What is a "SIMD register
->>> index", the file is for perf registers and naturally enum
->>> perf_event_x86_regs on x86, but that doesn't encode YMM and ZMM
->>> registers. Perhaps you can give some examples?
->> Yes, it's something just like the register index in the enum
->> perf_event_x86_regs, e.g. the index of AX register is PERF_REG_X86_AX, the
->> index of BX is PERF_REG_X86_BX, and so on.
->>
->> But the difference is that each index in the perf_event_x86_regs can only
->> represent a u64 word. Assume we still want to represent the SIMD registers
->> with the perf_event_x86_regs enum, then each XMM register needs 2 indexes,
->> each YMM register needs 4 indexes and each ZMM needs 8 indexes. Considering
->> there are 16 XMM registers, 16 YMM registers and 32 ZMM registers. To
->> represent all these indexes, then the enum perf_event_x86_regs would become
->> quite large, and correspondingly the sample_regs_intr/sample_regs_user
->> fields in the perf_event_attr would have to inflate much. That would
->> consume much memory.
->>
->> So that's why we introduce the new below attributes.
->>
->> + union { + __u16 sample_simd_regs_enabled; + __u16
->> sample_simd_pred_reg_qwords; + }; + __u32 sample_simd_pred_reg_intr; +
->> __u32 sample_simd_pred_reg_user; + __u16 sample_simd_vec_reg_qwords; +
->> __u64 sample_simd_vec_reg_intr; + __u64 sample_simd_vec_reg_user; + __u32
->> __reserved_4; For SIMD registers, each kind of SIMD register would be
->> treated as a whole. The sample_simd_vec_reg_qwords would be used to
->> identify the length of SIMD register, simultaneously it also hint which
->> kind of SIMD register it is since the length of each kind of SIMD register
->> is different. E.g. we want to sample XMM registers. We know there are 16
->> XMM registers on the x86 platform and qwords length of XMM register is 2.
->> So user space needs to set the attributes like this,
->>
->> sample_simd_vec_reg_intr = 0xffff;
->>
->> sample_simd_vec_reg_qwords = 2;
->>
->> Come back to "reg" argument, we know there could be multiple kinds of SIMD
->> registers supported on some kind of arch, e.g., x86 support XMM, YMM, ZMM
->> and OPMASK SIMD registers. As each kind of SIMD register is always sampled
->> as a whole, we don't need to represent each of SIMD register, like XMM0,
->> XMM1, but we indeed need to distinguish different kinds of SIMD register,
->> like XMM and YMM registers, since they have different register length and
->> number.
->>
->> That's why we define the index for each kind of SIMD register, like below,
->>
->> +enum { + PERF_REG_X86_XMM, + PERF_REG_X86_YMM, + PERF_REG_X86_ZMM, +
->> PERF_REG_X86_MAX_SIMD_REGS, + + PERF_REG_X86_OPMASK = 0, +
->> PERF_REG_X86_MAX_PRED_REGS = 1, +}; It's similar withperf_event_x86_regs, but each index represents a kind of SIMD register instead of a specific SIMD register.
-> Could you give me an example call to say
-> arch__intr_simd_reg_bitmap_qwords where you say what the value of reg
-> is, what the expected value of qwords is and what the result will be?
-> Could you do it for say a model without AVX, a model with AVX, a model
-> with AVX512 and a model with APX.
+>> On 1/21/2026 10:17 AM, Ian Rogers wrote:
+>>> arch__sample_reg_masks isn't supported on ARM(32), csky, loongarch,
+>>> MIPS, RISC-V and s390. The table returned by the function just has the
+>>> name of a register paired with the corresponding sample_regs_user mask
+>>> value. For a given perf register we can compute the name with
+>>> perf_reg_name and the mask is just 1 left-shifted by the perf register
+>>> number. Change __parse_regs to use this method for finding registers
+>>> rather than arch__sample_reg_masks, thereby adding __parse_regs
+>>> support for ARM(32), csky, loongarch, MIPS, RISC-V and s390. As
+>>> arch__sample_reg_masks is then unused, remove the now unneeded
+>>> declarations.
+>>>
+>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>> ---
+>>> v2: Correct the setting of reg mask for registers that need >1 bit set
+>>>     like XMMs.
+>>>
+>>> The idea for this patch came up in conversation with Dapeng Mi to
+>>> avoid additional functions and tables for x86 APX support:
+>>> https://lore.kernel.org/lkml/CAP-5=fWOsvAXuu8qx0tk9q8j8BoXPMJB3Gxto+iu6wf06i4cVA@mail.gmail.com/
+>>>
+>>> The patch is on top of the dwfl clean up patches that switch perf
+>>> register functions to using e_machine as an argument rather than the
+>>> arch string, this means that EM_HOST can be used with perf_reg_name:
+>>> https://lore.kernel.org/lkml/20260117052849.2205545-1-irogers@google.com/
+>>> ---
+>>>  tools/perf/arch/arm/util/perf_regs.c          |   9 --
+>>>  tools/perf/arch/arm64/util/machine.c          |  14 +--
+>>>  tools/perf/arch/arm64/util/perf_regs.c        |  45 +------
+>>>  tools/perf/arch/csky/util/perf_regs.c         |   9 --
+>>>  tools/perf/arch/loongarch/util/perf_regs.c    |   9 --
+>>>  tools/perf/arch/mips/util/perf_regs.c         |   9 --
+>>>  tools/perf/arch/powerpc/util/perf_regs.c      |  68 ----------
+>>>  tools/perf/arch/riscv/util/perf_regs.c        |   9 --
+>>>  tools/perf/arch/s390/util/perf_regs.c         |   9 --
+>>>  tools/perf/arch/x86/util/perf_regs.c          |  47 -------
+>>>  .../util/arm64-frame-pointer-unwind-support.c |   3 +-
+>>>  tools/perf/util/parse-regs-options.c          | 116 +++++++++++-------
+>>>  tools/perf/util/perf_regs.c                   |   9 --
+>>>  tools/perf/util/perf_regs.h                   |  12 --
+>>>  14 files changed, 81 insertions(+), 287 deletions(-)
+>>>
+>>> diff --git a/tools/perf/arch/arm/util/perf_regs.c b/tools/perf/arch/arm/util/perf_regs.c
+>>> index f94a0210c7b7..03a5bc0cf64c 100644
+>>> --- a/tools/perf/arch/arm/util/perf_regs.c
+>>> +++ b/tools/perf/arch/arm/util/perf_regs.c
+>>> @@ -2,10 +2,6 @@
+>>>  #include "perf_regs.h"
+>>>  #include "../../../util/perf_regs.h"
+>>>
+>>> -static const struct sample_reg sample_reg_masks[] = {
+>>> -     SMPL_REG_END
+>>> -};
+>>> -
+>>>  uint64_t arch__intr_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>> @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>>  }
+>>> -
+>>> -const struct sample_reg *arch__sample_reg_masks(void)
+>>> -{
+>>> -     return sample_reg_masks;
+>>> -}
+>>> diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
+>>> index aab1cc2bc283..80fb13c958d9 100644
+>>> --- a/tools/perf/arch/arm64/util/machine.c
+>>> +++ b/tools/perf/arch/arm64/util/machine.c
+>>> @@ -1,18 +1,12 @@
+>>>  // SPDX-License-Identifier: GPL-2.0
+>>>
+>>> -#include <inttypes.h>
+>>> -#include <stdio.h>
+>>> -#include <string.h>
+>>> -#include "debug.h"
+>>> -#include "symbol.h"
+>>> -#include "callchain.h"
+>>> +#include "callchain.h" // prototype of arch__add_leaf_frame_record_opts
+>>>  #include "perf_regs.h"
+>>>  #include "record.h"
+>>> -#include "util/perf_regs.h"
+>>> +
+>>> +#define SMPL_REG_MASK(b) (1ULL << (b))
+>>>
+>>>  void arch__add_leaf_frame_record_opts(struct record_opts *opts)
+>>>  {
+>>> -     const struct sample_reg *sample_reg_masks = arch__sample_reg_masks();
+>>> -
+>>> -     opts->sample_user_regs |= sample_reg_masks[PERF_REG_ARM64_LR].mask;
+>>> +     opts->sample_user_regs |= SMPL_REG_MASK(PERF_REG_ARM64_LR);
+>>>  }
+>>> diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
+>>> index 09308665e28a..9bb768e1bea1 100644
+>>> --- a/tools/perf/arch/arm64/util/perf_regs.c
+>>> +++ b/tools/perf/arch/arm64/util/perf_regs.c
+>>> @@ -12,48 +12,12 @@
+>>>  #include "../../../util/event.h"
+>>>  #include "../../../util/perf_regs.h"
+>>>
+>>> +#define SMPL_REG_MASK(b) (1ULL << (b))
+>>> +
+>>>  #ifndef HWCAP_SVE
+>>>  #define HWCAP_SVE    (1 << 22)
+>>>  #endif
+>>>
+>>> -static const struct sample_reg sample_reg_masks[] = {
+>>> -     SMPL_REG(x0, PERF_REG_ARM64_X0),
+>>> -     SMPL_REG(x1, PERF_REG_ARM64_X1),
+>>> -     SMPL_REG(x2, PERF_REG_ARM64_X2),
+>>> -     SMPL_REG(x3, PERF_REG_ARM64_X3),
+>>> -     SMPL_REG(x4, PERF_REG_ARM64_X4),
+>>> -     SMPL_REG(x5, PERF_REG_ARM64_X5),
+>>> -     SMPL_REG(x6, PERF_REG_ARM64_X6),
+>>> -     SMPL_REG(x7, PERF_REG_ARM64_X7),
+>>> -     SMPL_REG(x8, PERF_REG_ARM64_X8),
+>>> -     SMPL_REG(x9, PERF_REG_ARM64_X9),
+>>> -     SMPL_REG(x10, PERF_REG_ARM64_X10),
+>>> -     SMPL_REG(x11, PERF_REG_ARM64_X11),
+>>> -     SMPL_REG(x12, PERF_REG_ARM64_X12),
+>>> -     SMPL_REG(x13, PERF_REG_ARM64_X13),
+>>> -     SMPL_REG(x14, PERF_REG_ARM64_X14),
+>>> -     SMPL_REG(x15, PERF_REG_ARM64_X15),
+>>> -     SMPL_REG(x16, PERF_REG_ARM64_X16),
+>>> -     SMPL_REG(x17, PERF_REG_ARM64_X17),
+>>> -     SMPL_REG(x18, PERF_REG_ARM64_X18),
+>>> -     SMPL_REG(x19, PERF_REG_ARM64_X19),
+>>> -     SMPL_REG(x20, PERF_REG_ARM64_X20),
+>>> -     SMPL_REG(x21, PERF_REG_ARM64_X21),
+>>> -     SMPL_REG(x22, PERF_REG_ARM64_X22),
+>>> -     SMPL_REG(x23, PERF_REG_ARM64_X23),
+>>> -     SMPL_REG(x24, PERF_REG_ARM64_X24),
+>>> -     SMPL_REG(x25, PERF_REG_ARM64_X25),
+>>> -     SMPL_REG(x26, PERF_REG_ARM64_X26),
+>>> -     SMPL_REG(x27, PERF_REG_ARM64_X27),
+>>> -     SMPL_REG(x28, PERF_REG_ARM64_X28),
+>>> -     SMPL_REG(x29, PERF_REG_ARM64_X29),
+>>> -     SMPL_REG(lr, PERF_REG_ARM64_LR),
+>>> -     SMPL_REG(sp, PERF_REG_ARM64_SP),
+>>> -     SMPL_REG(pc, PERF_REG_ARM64_PC),
+>>> -     SMPL_REG(vg, PERF_REG_ARM64_VG),
+>>> -     SMPL_REG_END
+>>> -};
+>>> -
+>>>  /* %xNUM */
+>>>  #define SDT_OP_REGEX1  "^(x[1-2]?[0-9]|3[0-1])$"
+>>>
+>>> @@ -175,8 +139,3 @@ uint64_t arch__user_reg_mask(void)
+>>>       }
+>>>       return PERF_REGS_MASK;
+>>>  }
+>>> -
+>>> -const struct sample_reg *arch__sample_reg_masks(void)
+>>> -{
+>>> -     return sample_reg_masks;
+>>> -}
+>>> diff --git a/tools/perf/arch/csky/util/perf_regs.c b/tools/perf/arch/csky/util/perf_regs.c
+>>> index 6b1665f41180..2cf7a54106e0 100644
+>>> --- a/tools/perf/arch/csky/util/perf_regs.c
+>>> +++ b/tools/perf/arch/csky/util/perf_regs.c
+>>> @@ -2,10 +2,6 @@
+>>>  #include "perf_regs.h"
+>>>  #include "../../util/perf_regs.h"
+>>>
+>>> -static const struct sample_reg sample_reg_masks[] = {
+>>> -     SMPL_REG_END
+>>> -};
+>>> -
+>>>  uint64_t arch__intr_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>> @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>>  }
+>>> -
+>>> -const struct sample_reg *arch__sample_reg_masks(void)
+>>> -{
+>>> -     return sample_reg_masks;
+>>> -}
+>>> diff --git a/tools/perf/arch/loongarch/util/perf_regs.c b/tools/perf/arch/loongarch/util/perf_regs.c
+>>> index f94a0210c7b7..03a5bc0cf64c 100644
+>>> --- a/tools/perf/arch/loongarch/util/perf_regs.c
+>>> +++ b/tools/perf/arch/loongarch/util/perf_regs.c
+>>> @@ -2,10 +2,6 @@
+>>>  #include "perf_regs.h"
+>>>  #include "../../../util/perf_regs.h"
+>>>
+>>> -static const struct sample_reg sample_reg_masks[] = {
+>>> -     SMPL_REG_END
+>>> -};
+>>> -
+>>>  uint64_t arch__intr_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>> @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>>  }
+>>> -
+>>> -const struct sample_reg *arch__sample_reg_masks(void)
+>>> -{
+>>> -     return sample_reg_masks;
+>>> -}
+>>> diff --git a/tools/perf/arch/mips/util/perf_regs.c b/tools/perf/arch/mips/util/perf_regs.c
+>>> index 6b1665f41180..2cf7a54106e0 100644
+>>> --- a/tools/perf/arch/mips/util/perf_regs.c
+>>> +++ b/tools/perf/arch/mips/util/perf_regs.c
+>>> @@ -2,10 +2,6 @@
+>>>  #include "perf_regs.h"
+>>>  #include "../../util/perf_regs.h"
+>>>
+>>> -static const struct sample_reg sample_reg_masks[] = {
+>>> -     SMPL_REG_END
+>>> -};
+>>> -
+>>>  uint64_t arch__intr_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>> @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>>  }
+>>> -
+>>> -const struct sample_reg *arch__sample_reg_masks(void)
+>>> -{
+>>> -     return sample_reg_masks;
+>>> -}
+>>> diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
+>>> index bd36cfd420a2..779073f7e992 100644
+>>> --- a/tools/perf/arch/powerpc/util/perf_regs.c
+>>> +++ b/tools/perf/arch/powerpc/util/perf_regs.c
+>>> @@ -18,69 +18,6 @@
+>>>  #define PVR_POWER10          0x0080
+>>>  #define PVR_POWER11          0x0082
+>>>
+>>> -static const struct sample_reg sample_reg_masks[] = {
+>>> -     SMPL_REG(r0, PERF_REG_POWERPC_R0),
+>>> -     SMPL_REG(r1, PERF_REG_POWERPC_R1),
+>>> -     SMPL_REG(r2, PERF_REG_POWERPC_R2),
+>>> -     SMPL_REG(r3, PERF_REG_POWERPC_R3),
+>>> -     SMPL_REG(r4, PERF_REG_POWERPC_R4),
+>>> -     SMPL_REG(r5, PERF_REG_POWERPC_R5),
+>>> -     SMPL_REG(r6, PERF_REG_POWERPC_R6),
+>>> -     SMPL_REG(r7, PERF_REG_POWERPC_R7),
+>>> -     SMPL_REG(r8, PERF_REG_POWERPC_R8),
+>>> -     SMPL_REG(r9, PERF_REG_POWERPC_R9),
+>>> -     SMPL_REG(r10, PERF_REG_POWERPC_R10),
+>>> -     SMPL_REG(r11, PERF_REG_POWERPC_R11),
+>>> -     SMPL_REG(r12, PERF_REG_POWERPC_R12),
+>>> -     SMPL_REG(r13, PERF_REG_POWERPC_R13),
+>>> -     SMPL_REG(r14, PERF_REG_POWERPC_R14),
+>>> -     SMPL_REG(r15, PERF_REG_POWERPC_R15),
+>>> -     SMPL_REG(r16, PERF_REG_POWERPC_R16),
+>>> -     SMPL_REG(r17, PERF_REG_POWERPC_R17),
+>>> -     SMPL_REG(r18, PERF_REG_POWERPC_R18),
+>>> -     SMPL_REG(r19, PERF_REG_POWERPC_R19),
+>>> -     SMPL_REG(r20, PERF_REG_POWERPC_R20),
+>>> -     SMPL_REG(r21, PERF_REG_POWERPC_R21),
+>>> -     SMPL_REG(r22, PERF_REG_POWERPC_R22),
+>>> -     SMPL_REG(r23, PERF_REG_POWERPC_R23),
+>>> -     SMPL_REG(r24, PERF_REG_POWERPC_R24),
+>>> -     SMPL_REG(r25, PERF_REG_POWERPC_R25),
+>>> -     SMPL_REG(r26, PERF_REG_POWERPC_R26),
+>>> -     SMPL_REG(r27, PERF_REG_POWERPC_R27),
+>>> -     SMPL_REG(r28, PERF_REG_POWERPC_R28),
+>>> -     SMPL_REG(r29, PERF_REG_POWERPC_R29),
+>>> -     SMPL_REG(r30, PERF_REG_POWERPC_R30),
+>>> -     SMPL_REG(r31, PERF_REG_POWERPC_R31),
+>>> -     SMPL_REG(nip, PERF_REG_POWERPC_NIP),
+>>> -     SMPL_REG(msr, PERF_REG_POWERPC_MSR),
+>>> -     SMPL_REG(orig_r3, PERF_REG_POWERPC_ORIG_R3),
+>>> -     SMPL_REG(ctr, PERF_REG_POWERPC_CTR),
+>>> -     SMPL_REG(link, PERF_REG_POWERPC_LINK),
+>>> -     SMPL_REG(xer, PERF_REG_POWERPC_XER),
+>>> -     SMPL_REG(ccr, PERF_REG_POWERPC_CCR),
+>>> -     SMPL_REG(softe, PERF_REG_POWERPC_SOFTE),
+>>> -     SMPL_REG(trap, PERF_REG_POWERPC_TRAP),
+>>> -     SMPL_REG(dar, PERF_REG_POWERPC_DAR),
+>>> -     SMPL_REG(dsisr, PERF_REG_POWERPC_DSISR),
+>>> -     SMPL_REG(sier, PERF_REG_POWERPC_SIER),
+>>> -     SMPL_REG(mmcra, PERF_REG_POWERPC_MMCRA),
+>>> -     SMPL_REG(mmcr0, PERF_REG_POWERPC_MMCR0),
+>>> -     SMPL_REG(mmcr1, PERF_REG_POWERPC_MMCR1),
+>>> -     SMPL_REG(mmcr2, PERF_REG_POWERPC_MMCR2),
+>>> -     SMPL_REG(mmcr3, PERF_REG_POWERPC_MMCR3),
+>>> -     SMPL_REG(sier2, PERF_REG_POWERPC_SIER2),
+>>> -     SMPL_REG(sier3, PERF_REG_POWERPC_SIER3),
+>>> -     SMPL_REG(pmc1, PERF_REG_POWERPC_PMC1),
+>>> -     SMPL_REG(pmc2, PERF_REG_POWERPC_PMC2),
+>>> -     SMPL_REG(pmc3, PERF_REG_POWERPC_PMC3),
+>>> -     SMPL_REG(pmc4, PERF_REG_POWERPC_PMC4),
+>>> -     SMPL_REG(pmc5, PERF_REG_POWERPC_PMC5),
+>>> -     SMPL_REG(pmc6, PERF_REG_POWERPC_PMC6),
+>>> -     SMPL_REG(sdar, PERF_REG_POWERPC_SDAR),
+>>> -     SMPL_REG(siar, PERF_REG_POWERPC_SIAR),
+>>> -     SMPL_REG_END
+>>> -};
+>>> -
+>>>  /* REG or %rREG */
+>>>  #define SDT_OP_REGEX1  "^(%r)?([1-2]?[0-9]|3[0-1])$"
+>>>
+>>> @@ -233,8 +170,3 @@ uint64_t arch__user_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>>  }
+>>> -
+>>> -const struct sample_reg *arch__sample_reg_masks(void)
+>>> -{
+>>> -     return sample_reg_masks;
+>>> -}
+>>> diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/riscv/util/perf_regs.c
+>>> index 6b1665f41180..2cf7a54106e0 100644
+>>> --- a/tools/perf/arch/riscv/util/perf_regs.c
+>>> +++ b/tools/perf/arch/riscv/util/perf_regs.c
+>>> @@ -2,10 +2,6 @@
+>>>  #include "perf_regs.h"
+>>>  #include "../../util/perf_regs.h"
+>>>
+>>> -static const struct sample_reg sample_reg_masks[] = {
+>>> -     SMPL_REG_END
+>>> -};
+>>> -
+>>>  uint64_t arch__intr_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>> @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>>  }
+>>> -
+>>> -const struct sample_reg *arch__sample_reg_masks(void)
+>>> -{
+>>> -     return sample_reg_masks;
+>>> -}
+>>> diff --git a/tools/perf/arch/s390/util/perf_regs.c b/tools/perf/arch/s390/util/perf_regs.c
+>>> index 6b1665f41180..2cf7a54106e0 100644
+>>> --- a/tools/perf/arch/s390/util/perf_regs.c
+>>> +++ b/tools/perf/arch/s390/util/perf_regs.c
+>>> @@ -2,10 +2,6 @@
+>>>  #include "perf_regs.h"
+>>>  #include "../../util/perf_regs.h"
+>>>
+>>> -static const struct sample_reg sample_reg_masks[] = {
+>>> -     SMPL_REG_END
+>>> -};
+>>> -
+>>>  uint64_t arch__intr_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>> @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
+>>>  {
+>>>       return PERF_REGS_MASK;
+>>>  }
+>>> -
+>>> -const struct sample_reg *arch__sample_reg_masks(void)
+>>> -{
+>>> -     return sample_reg_masks;
+>>> -}
+>>> diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+>>> index 12fd93f04802..a7ca4154fdf9 100644
+>>> --- a/tools/perf/arch/x86/util/perf_regs.c
+>>> +++ b/tools/perf/arch/x86/util/perf_regs.c
+>>> @@ -13,48 +13,6 @@
+>>>  #include "../../../util/pmu.h"
+>>>  #include "../../../util/pmus.h"
+>>>
+>>> -static const struct sample_reg sample_reg_masks[] = {
+>>> -     SMPL_REG(AX, PERF_REG_X86_AX),
+>>> -     SMPL_REG(BX, PERF_REG_X86_BX),
+>>> -     SMPL_REG(CX, PERF_REG_X86_CX),
+>>> -     SMPL_REG(DX, PERF_REG_X86_DX),
+>>> -     SMPL_REG(SI, PERF_REG_X86_SI),
+>>> -     SMPL_REG(DI, PERF_REG_X86_DI),
+>>> -     SMPL_REG(BP, PERF_REG_X86_BP),
+>>> -     SMPL_REG(SP, PERF_REG_X86_SP),
+>>> -     SMPL_REG(IP, PERF_REG_X86_IP),
+>>> -     SMPL_REG(FLAGS, PERF_REG_X86_FLAGS),
+>>> -     SMPL_REG(CS, PERF_REG_X86_CS),
+>>> -     SMPL_REG(SS, PERF_REG_X86_SS),
+>>> -#ifdef HAVE_ARCH_X86_64_SUPPORT
+>>> -     SMPL_REG(R8, PERF_REG_X86_R8),
+>>> -     SMPL_REG(R9, PERF_REG_X86_R9),
+>>> -     SMPL_REG(R10, PERF_REG_X86_R10),
+>>> -     SMPL_REG(R11, PERF_REG_X86_R11),
+>>> -     SMPL_REG(R12, PERF_REG_X86_R12),
+>>> -     SMPL_REG(R13, PERF_REG_X86_R13),
+>>> -     SMPL_REG(R14, PERF_REG_X86_R14),
+>>> -     SMPL_REG(R15, PERF_REG_X86_R15),
+>>> -#endif
+>>> -     SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
+>>> -     SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
+>>> -     SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
+>>> -     SMPL_REG2(XMM3, PERF_REG_X86_XMM3),
+>>> -     SMPL_REG2(XMM4, PERF_REG_X86_XMM4),
+>>> -     SMPL_REG2(XMM5, PERF_REG_X86_XMM5),
+>>> -     SMPL_REG2(XMM6, PERF_REG_X86_XMM6),
+>>> -     SMPL_REG2(XMM7, PERF_REG_X86_XMM7),
+>>> -     SMPL_REG2(XMM8, PERF_REG_X86_XMM8),
+>>> -     SMPL_REG2(XMM9, PERF_REG_X86_XMM9),
+>>> -     SMPL_REG2(XMM10, PERF_REG_X86_XMM10),
+>>> -     SMPL_REG2(XMM11, PERF_REG_X86_XMM11),
+>>> -     SMPL_REG2(XMM12, PERF_REG_X86_XMM12),
+>>> -     SMPL_REG2(XMM13, PERF_REG_X86_XMM13),
+>>> -     SMPL_REG2(XMM14, PERF_REG_X86_XMM14),
+>>> -     SMPL_REG2(XMM15, PERF_REG_X86_XMM15),
+>>> -     SMPL_REG_END
+>>> -};
+>>> -
+>>>  struct sdt_name_reg {
+>>>       const char *sdt_name;
+>>>       const char *uprobe_name;
+>>> @@ -276,11 +234,6 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
+>>>       return SDT_ARG_VALID;
+>>>  }
+>>>
+>>> -const struct sample_reg *arch__sample_reg_masks(void)
+>>> -{
+>>> -     return sample_reg_masks;
+>>> -}
+>>> -
+>>>  uint64_t arch__intr_reg_mask(void)
+>>>  {
+>>>       struct perf_event_attr attr = {
+>>> diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.c b/tools/perf/util/arm64-frame-pointer-unwind-support.c
+>>> index 958afe8b821e..858ce2b01812 100644
+>>> --- a/tools/perf/util/arm64-frame-pointer-unwind-support.c
+>>> +++ b/tools/perf/util/arm64-frame-pointer-unwind-support.c
+>>> @@ -2,7 +2,6 @@
+>>>  #include "arm64-frame-pointer-unwind-support.h"
+>>>  #include "callchain.h"
+>>>  #include "event.h"
+>>> -#include "perf_regs.h" // SMPL_REG_MASK
+>>>  #include "unwind.h"
+>>>  #include <string.h>
+>>>
+>>> @@ -15,6 +14,8 @@ struct entries {
+>>>       size_t length;
+>>>  };
+>>>
+>>> +#define SMPL_REG_MASK(b) (1ULL << (b))
+>>> +
+>>>  static bool get_leaf_frame_caller_enabled(struct perf_sample *sample)
+>>>  {
+>>>       struct regs_dump *regs;
+>>> diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
+>>> index cda1c620968e..c0d0ef9fd495 100644
+>>> --- a/tools/perf/util/parse-regs-options.c
+>>> +++ b/tools/perf/util/parse-regs-options.c
+>>> @@ -5,15 +5,54 @@
+>>>  #include <string.h>
+>>>  #include <stdio.h>
+>>>  #include "util/debug.h"
+>>> +#include <dwarf-regs.h>
+>>>  #include <subcmd/parse-options.h>
+>>>  #include "util/perf_regs.h"
+>>>  #include "util/parse-regs-options.h"
+>>>
+>>> +static void list_perf_regs(FILE *fp, uint64_t mask)
+>>> +{
+>>> +     const char *last_name = NULL;
+>>> +
+>>> +     fprintf(fp, "available registers: ");
+>>> +     for (int reg = 0; reg < 64; reg++) {
+>> Could we not use the magic number 64? It's not safe, the supported GP
+>> register number could exceed 64 in the future, then the exceeded register
+>> won't be iterated.
+> How will such a register appear in sample_regs_user/sample_regs_intr?
+> There's a requirement that perf registers be indices into the 64-bit
+> mask.
 
-Assume we are on a x86 platform which only supports XMM registers (AVX) and
-call the function arch__intr_simd_reg_bitmap_qwords() with SIMD register index,
-
-1. reg = PERF_REG_X86_XMM
-
-The return value (XMM registers bitmask) = 0xffff and the qwords = 2 (128 bits).
-
-2. reg = PERF_REG_X86_YMM
-
-The return value (YMM registers bitmask) = 0 and the qwords = 0 since YMM registers are not supported.
-
-3. reg = PERF_REG_X86_ZMM
-
-The return value (ZMM registers bitmask) = 0 and the qwords = 0 since ZMM registers are not supported.
-
-Assume we are on a x86 platform which supports XMM/YMM/ZMM registers (AVX512) and call the function arch__intr_simd_reg_bitmap_qwords() with SIMD register index,
-
-1. reg = PERF_REG_X86_XMM
-
-The return value (XMM registers bitmask) = 0xffff and the qwords = 2 (128 bits).
-
-2. reg = PERF_REG_X86_YMM
-
-The return value (YMM registers bitmask) = 0xffff and the qwords = 4 (256 bits).
-
-3. reg = PERF_REG_X86_ZMM
-
-The return value (ZMM registers bitmask) = 0xffffffff and the qwords = 8 (512 bits). We assume this platform supports 32 ZMM registers (ZMM0 ~ ZMM31).
-
-As for APX, it has nothing to do with these 4 functions, whether it's supported is determined by the helpers arch__intr_reg_mask()/arch__user_reg_mask().
-e.g.,
-
-```
-	if (has_cap_simd_regs()) {
-		mask |= __arch__reg_mask(PERF_SAMPLE_REGS_INTR,
-					 GENMASK_ULL(PERF_REG_X86_R31, PERF_REG_X86_R16),
-					 true);
-		mask |= __arch__reg_mask(PERF_SAMPLE_REGS_INTR,
-					 BIT_ULL(PERF_REG_X86_SSP),
-					 true); 
-```
-If the platform supports APX eGPRs, then the returned mask from arch__intr_reg_mask()/arch__user_reg_mask() would contain the eGPRs mask, otherwise, it would not.
-
+In theory, if the GPRs exceeds 64, then sample_regs_user/sample_regs_intr
+could become an u64 array. So if the user missed to modify the magic number
+64, then there would be something wrong. IMO, the below change looks safer
+and I personally doesn't like the magic number. :)
 
 
 >
-> I have looked at the code and read the changes to perf_event_attr
-> which is why I was confused by your saying that ZMM could be passed in
-> as a perf register number. I am confused as why when the
-> perf_event_attr has 2 qword length related variables this code seems
-> to be setting things up so that every register can have a qword
-> length. I'm confused what is happening with the return value of this
-> function. As values are being stored into global variables, and you
-> are saying they aren't a max value, then how does this impact the
-> setting up of multiple register sampling events?
+>> How about this?
+>>
+>> diff --git a/tools/perf/util/parse-regs-options.c
+>> b/tools/perf/util/parse-regs-options.c
+>> index c0d0ef9fd495..5177016a7ad4 100644
+>> --- a/tools/perf/util/parse-regs-options.c
+>> +++ b/tools/perf/util/parse-regs-options.c
+>> @@ -15,7 +15,7 @@ static void list_perf_regs(FILE *fp, uint64_t mask)
+>>         const char *last_name = NULL;
+>>
+>>         fprintf(fp, "available registers: ");
+>> -       for (int reg = 0; reg < 64; reg++) {
+>> +       for (unsigned long reg = 0; reg < sizeof(mask) * BITS_PER_BYTE;
+>> reg++) {
+>>                 const char *name;
+>>
+>>                 if (((1ULL << reg) & mask) == 0)
+>>
+>>
+>>> +             const char *name;
+>>> +
+>>> +             if (((1ULL << reg) & mask) == 0)
+>>> +                     continue;
+>>> +
+>>> +             name = perf_reg_name(reg, EM_HOST);
+>>> +             if (name && (!last_name || strcmp(last_name, name)))
+>>> +                     fprintf(fp, "%s%s", reg > 0 ? " " : "", name);
+>>> +             last_name = name;
+>>> +     }
+>>> +     fputc('\n', fp);
+>>> +}
+>>> +
+>>> +static uint64_t name_to_perf_reg_mask(const char *to_match, uint64_t mask)
+>>> +{
+>>> +     uint64_t reg_mask = 0;
+>>> +
+>>> +     for (int reg = 0; reg < 64; reg++) {
+>> ditto.
+>>
+>>
+>>> +             const char *name;
+>>> +
+>>> +             if (((1ULL << reg) & mask) == 0)
+>>> +                     continue;
+>>> +
+>>> +             name = perf_reg_name(reg, EM_HOST);
+>>> +             if (!name)
+>>> +                     continue;
+>>> +
+>>> +             if (!strcasecmp(to_match, name))
+>>> +                     reg_mask |= 1ULL << reg;
+>> How much register names are expected to match here? It seems the function
+>> expects to match only one register name. If so, we can "break" here.
+> Registers like XMM0 double up so that they have two 64-bit slots in
+> the sample data. You need to match the name multiple times so that all
+> bits can be set in the mask.
 
-The 2 qwords length, sample_simd_pred_reg_qwords is to store the PRED
-register length, and sample_simd_vec_reg_qwords is to store the SIMD 
-register length. Since the SIMD/PRED registers with larger length would
-contain the SIMD/PRED register with shorter length, so only the largest
-length would be set  to into the variables
-sample_simd_vec_reg_qwords/sample_simd_vec_reg_qwords .
-
-E.g.,
-
-perf record -e cyles:p -Ixmm,ymm,zmm -c 10000 -- sleep 1
-
-The sample_simd_vec_reg_qwords would be set to 8 to represent the largest
-length (ZMM) and kernel directly samples ZMM registers since ZMM registers
-fully contains YMM and XMM registers.
-
-The reason that caching bitmask and qwords is that the bitmask and qwords
-for a specific SIMD/PRED register is fixed on a certain x86 platform,
-right?  E.g. the qwords length of XMM register is always 2, YMM is 4, etc...
-
-The bitmask and qwords values are retrieved from kernel by
-perf_event_open() syscall which is quite expensive, if it's called
-frequently, it would impact the performance heavily. 
+Oh, yes. I missed XMM registers. Thanks.
 
 
 >
 > Thanks,
 > Ian
 >
->>> How does the generic differing qword per register case get encoded
->>> into a perf_event_attr? If it can't be then this seems like
->>> functionality for no benefit. I also don't understand how the data in
->>> the PERF_SAMPLE_REGS_USER part of a sample could be decoded as that is
->>> assuming a constant qword number.
->>>
->>>> No, the qwords would be assigned to true register length if the register
->>>> exists on the platform, e.g., xmm = 2, ymm =  4 and zmm = 8. if the
->>>> register is not support on the platfom, the qwords would be set to 0.
->>> So it is a max function of the vector/pred qwords supported on the architecture.
->> Strictly speaking, it's not "max" function of the vector/pred qwords, it's
->> just a function to get the exact vector/pred qwords supported on the
->> architecture since qwords length won't vary for a fixed kind of SIMD register.
+>> Thanks.
 >>
 >>
->>>>>> Since the qword length is always fixed for any certain SIMD register
->>>>>> regardless of intr or user, so there is only one
->>>>>> sample_simd_pred_reg_qwords or sample_simd_ved_reg_qwords variable.
->>>>> Ok.  2 variables, but 4 functions here. I think there should just be 2
->>>>> because of this.
->>>> Yes, the user and intr variants would be merged into only one.
->>> Thanks,
->>> Ian
+>>> +     }
+>>> +     return reg_mask;
+>>> +}
+>>> +
+>>>  static int
+>>>  __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>>>  {
+>>>       uint64_t *mode = (uint64_t *)opt->value;
+>>> -     const struct sample_reg *r = NULL;
+>>>       char *s, *os = NULL, *p;
+>>>       int ret = -1;
+>>>       uint64_t mask;
+>>> @@ -27,50 +66,41 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>>>       if (*mode)
+>>>               return -1;
 >>>
->>>>> Thanks,
->>>>> Ian
->>>>>
->>>>>>> Perhaps these functions should be something more like:
->>>>>>> ```
->>>>>>> /* Maximum value that can be assigned to
->>>>>>> perf_event_atttr.sample_simd_pred_reg_qwords. */
->>>>>>> uint16_t arch__simd_pred_reg_qwords_max(void);
->>>>>>> /* Maximum value that can be assigned to
->>>>>>> perf_event_atttr.sample_simd_vec_reg_qwords. */
->>>>>>> uint16_t arch__simd_vec_reg_qwords_max(void);
->>>>>>> ```
->>>>>>> Then the bitmap computation logic can all be moved into parse-regs-options.c.
->>>>>>>
->>>>>>> Thanks,
->>>>>>> Ian
->>>>>>>
->>>>>>>>  const char *perf_reg_name(int id, const char *arch);
->>>>>>>>  int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
->>>>>>>> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
->>>>>>>> index ea3a6c4657ee..825ffb4cc53f 100644
->>>>>>>> --- a/tools/perf/util/record.h
->>>>>>>> +++ b/tools/perf/util/record.h
->>>>>>>> @@ -59,7 +59,13 @@ struct record_opts {
->>>>>>>>         unsigned int  user_freq;
->>>>>>>>         u64           branch_stack;
->>>>>>>>         u64           sample_intr_regs;
->>>>>>>> +       u64           sample_intr_vec_regs;
->>>>>>>>         u64           sample_user_regs;
->>>>>>>> +       u64           sample_user_vec_regs;
->>>>>>>> +       u16           sample_pred_regs_qwords;
->>>>>>>> +       u16           sample_vec_regs_qwords;
->>>>>>>> +       u16           sample_intr_pred_regs;
->>>>>>>> +       u16           sample_user_pred_regs;
->>>>>>>>         u64           default_interval;
->>>>>>>>         u64           user_interval;
->>>>>>>>         size_t        auxtrace_snapshot_size;
->>>>>>>> --
->>>>>>>> 2.34.1
->>>>>>>>
+>>> -     if (intr)
+>>> -             mask = arch__intr_reg_mask();
+>>> -     else
+>>> -             mask = arch__user_reg_mask();
+>>> -
+>>>       /* str may be NULL in case no arg is passed to -I */
+>>> -     if (str) {
+>>> -             /* because str is read-only */
+>>> -             s = os = strdup(str);
+>>> -             if (!s)
+>>> -                     return -1;
+>>> -
+>>> -             for (;;) {
+>>> -                     p = strchr(s, ',');
+>>> -                     if (p)
+>>> -                             *p = '\0';
+>>> -
+>>> -                     if (!strcmp(s, "?")) {
+>>> -                             fprintf(stderr, "available registers: ");
+>>> -                             for (r = arch__sample_reg_masks(); r->name; r++) {
+>>> -                                     if (r->mask & mask)
+>>> -                                             fprintf(stderr, "%s ", r->name);
+>>> -                             }
+>>> -                             fputc('\n', stderr);
+>>> -                             /* just printing available regs */
+>>> -                             goto error;
+>>> -                     }
+>>> -                     for (r = arch__sample_reg_masks(); r->name; r++) {
+>>> -                             if ((r->mask & mask) && !strcasecmp(s, r->name))
+>>> -                                     break;
+>>> -                     }
+>>> -                     if (!r || !r->name) {
+>>> -                             ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
+>>> -                                         s, intr ? "-I" : "--user-regs=");
+>>> -                             goto error;
+>>> -                     }
+>>> -
+>>> -                     *mode |= r->mask;
+>>> -
+>>> -                     if (!p)
+>>> -                             break;
+>>> -
+>>> -                     s = p + 1;
+>>> +     if (!str)
+>>> +             return -1;
+>>> +
+>>> +     mask = intr ? arch__intr_reg_mask() : arch__user_reg_mask();
+>>> +
+>>> +     /* because str is read-only */
+>>> +     s = os = strdup(str);
+>>> +     if (!s)
+>>> +             return -1;
+>>> +
+>>> +     for (;;) {
+>>> +             uint64_t reg_mask;
+>>> +
+>>> +             p = strchr(s, ',');
+>>> +             if (p)
+>>> +                     *p = '\0';
+>>> +
+>>> +             if (!strcmp(s, "?")) {
+>>> +                     list_perf_regs(stderr, mask);
+>>> +                     goto error;
+>>> +             }
+>>> +
+>>> +             reg_mask = name_to_perf_reg_mask(s, mask);
+>>> +             if (reg_mask == 0) {
+>>> +                     ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
+>>> +                             s, intr ? "-I" : "--user-regs=");
+>>> +                     goto error;
+>>>               }
+>>> +             *mode |= reg_mask;
+>>> +
+>>> +             if (!p)
+>>> +                     break;
+>>> +
+>>> +             s = p + 1;
+>>>       }
+>>>       ret = 0;
+>>>
+>>> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+>>> index b58d59b84fb1..ec602da1aeb6 100644
+>>> --- a/tools/perf/util/perf_regs.c
+>>> +++ b/tools/perf/util/perf_regs.c
+>>> @@ -22,15 +22,6 @@ uint64_t __weak arch__user_reg_mask(void)
+>>>       return 0;
+>>>  }
+>>>
+>>> -static const struct sample_reg sample_reg_masks[] = {
+>>> -     SMPL_REG_END
+>>> -};
+>>> -
+>>> -const struct sample_reg * __weak arch__sample_reg_masks(void)
+>>> -{
+>>> -     return sample_reg_masks;
+>>> -}
+>>> -
+>>>  const char *perf_reg_name(int id, uint16_t e_machine)
+>>>  {
+>>>       const char *reg_name = NULL;
+>>> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+>>> index 7bfc6a34c02b..2c2a8de6912d 100644
+>>> --- a/tools/perf/util/perf_regs.h
+>>> +++ b/tools/perf/util/perf_regs.h
+>>> @@ -7,17 +7,6 @@
+>>>
+>>>  struct regs_dump;
+>>>
+>>> -struct sample_reg {
+>>> -     const char *name;
+>>> -     uint64_t mask;
+>>> -};
+>>> -
+>>> -#define SMPL_REG_MASK(b) (1ULL << (b))
+>>> -#define SMPL_REG(n, b) { .name = #n, .mask = SMPL_REG_MASK(b) }
+>>> -#define SMPL_REG2_MASK(b) (3ULL << (b))
+>>> -#define SMPL_REG2(n, b) { .name = #n, .mask = SMPL_REG2_MASK(b) }
+>>> -#define SMPL_REG_END { .name = NULL }
+>>> -
+>>>  enum {
+>>>       SDT_ARG_VALID = 0,
+>>>       SDT_ARG_SKIP,
+>>> @@ -26,7 +15,6 @@ enum {
+>>>  int arch_sdt_arg_parse_op(char *old_op, char **new_op);
+>>>  uint64_t arch__intr_reg_mask(void);
+>>>  uint64_t arch__user_reg_mask(void);
+>>> -const struct sample_reg *arch__sample_reg_masks(void);
+>>>
+>>>  const char *perf_reg_name(int id, uint16_t e_machine);
+>>>  int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
