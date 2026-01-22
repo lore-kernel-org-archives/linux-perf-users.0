@@ -1,198 +1,184 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86EE3A9627;
-	Thu, 22 Jan 2026 09:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73728285C84
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 09:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769075334; cv=none; b=MNGUmMkWJwbNUUTnVjaAK2pKEoopGYbx/qtGtH3Ylo6QuHRl5lZtIQ2bPaz3IPVOS1Xe/CCnV7VbYyRohWJ9h/HCakAYr4cg4hgY+Wih6bFhtPeN15vV4J0HQmheiKq52yW5NUDxibFssTMSBp2yvzmXrDsmk1G6aQgeZYO2Kfk=
+	t=1769075762; cv=none; b=JhMyIoIRKgi0ILr1rgOYM1pSgRnKxiaMytPkNiP6wm1ZRrsLgmsa/kYPPX7EWDDUXigqy77sw83jgKkir/DWT/FVvq+rJYVmW1ms44ErSsGMbPc203DA93uBmbDeKr422Ts6Mg3F3bcCYlr3UvUVchL8CDBFQRVytpe27W1MtlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769075334; c=relaxed/simple;
-	bh=I7VaJtC15QPsbRyJEZs7oEMYTP4IZLTiYkQx5MRzcE8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NvlnpQ/eGKc2tIswKMNur/2OTxYoLl1mTq5ihA7xX0Ejk9NoCz9STEe+fncj28mjoVySggvAGhlZws2PvWQxpcSrdcZenZFXKxfRYwG2A63U4MR5RpReAFYbHoQ6+5MF9ln3y1vDQvpYuyQclkGynoUBfJ/jwjl9KVOgEDXHmfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=qTu1xlFk; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1769075762; c=relaxed/simple;
+	bh=N8lJFPOlxJuGnNzcSZHaqB6OKRGn99rucfnx664Zc1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L9SJ+aw7mWavAGNxxtpBxM+Ehdrj8szry/76Tlq0pUloE6vto/qKVmuxQnf0KZnTk1TfWKC0a+qogCYkniWuN/mfCYYWg3i9chbhGRD0B8KlMQiUFLwaLmD55GMexT1Q6OvRf3/lbz/1B/6pvfj50hHFzYp0wIK42Pmip5i47m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C1pujeWd; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="qTu1xlFk"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1769075326; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=IB6qe+WiM6Jdm4e2JZteSt/S9JwOmUm8EGeoq5GhI0A=;
-	b=qTu1xlFk0GuZWZqOOhcRDRPH2m1KeplmUBGLA1g9/4IfcVTAeB3QKUqd7GhfQ9WwjyaQ7mbwDN6Mf6BnL1m4rucwqdLsr04gmrebHOK1AciD4HQpuQ5M3TQUFK8/1VU7zBaZrQh08NiAbY33oQpPxnjm7e/Md/L67XB/IMcL5Jk=
-Received: from localhost(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0WxbwhFR_1769075322 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 22 Jan 2026 17:48:45 +0800
-From: Ruidong Tian <tianruidong@linux.alibaba.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	lpieralisi@kernel.org,
-	guohanjun@huawei.com,
-	sudeep.holla@arm.com,
-	rafael@kernel.org,
-	robin.murphy@arm.com,
-	mark.rutland@arm.com,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	tglx@linutronix.de,
-	peterz@infradead.org
-Cc: lenb@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-acpi@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	mchehab@kernel.org,
-	xueshuai@linux.alibaba.com,
-	zhuo.song@linux.alibaba.com,
-	oliver.yang@linux.alibaba.com,
-	Ruidong Tian <tianruidong@linux.alibaba.com>
-Subject: [PATCH v6 16/16] trace, ras: add ARM RAS extension trace event
-Date: Thu, 22 Jan 2026 17:46:56 +0800
-Message-Id: <20260122094656.73399-17-tianruidong@linux.alibaba.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20260122094656.73399-1-tianruidong@linux.alibaba.com>
-References: <20260122094656.73399-1-tianruidong@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1pujeWd"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-47d59da3d81so12422525e9.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 01:56:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769075759; x=1769680559; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yujnH9wU+TNdDReDnr98/rum5BScCCRa/k+ogGj8Y8E=;
+        b=C1pujeWdiS5+a4Jnl8J2LCd6JU0XyfPEU16eWpNw0+gW/B1rrDzSLXrYh5AehAmWHs
+         4tOp6K8qsj79AOhtBxZRbDtHz0+70BIEZJF4Xg0dxaD8fr877SAAq3j8KUa+aUlbdHKZ
+         fvBUOqfQZ+8CelrLa+71UtrM0FOWqN3U9O+wSfbmjTi8GzRSxZehH37Xjakd857MeU/4
+         aeOiLLD4M0Dl1GJyj9a23I4jP6OUrJOjEa87xHeIWXeoYbs/mX4H0bDNG/dVWXxGzKSX
+         egFYIdtgkSS4KqWQAps4Qh2/Eldzuqm/Lph7TP3SfdsgwqVsjNHoTaBJrp/Ye7gB3U5k
+         oAfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769075759; x=1769680559;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yujnH9wU+TNdDReDnr98/rum5BScCCRa/k+ogGj8Y8E=;
+        b=kb7cH5H1bnRJ6nZEsd/YniIjh2Xdb+r/eoehzOGog4cQJDlHrHQ6xsgFrjSsZTSG9+
+         kFPrhcw1ZyRfmoueQSX1wYHm/nsefLnOaTxj5+ZnLlBV+p7Q2bmYxdBs5Nb8cYp/7U5N
+         Gzk6z9+ROzsce6ZWMlnRD56A6BpLUbhW2wuF5aTFlAYQcbD3KMPl/cW2IAf3pCUVmWxa
+         39YUlW1wYeA3fHnF5iQ02R9sejcR55HAc/fsOxL+R3TS8aEJ7nSUKE6G3PrSNNcaPwCp
+         birk4vIW03+tL4BO3U8Lm/xkupK2Y3y0QbriPPuvDwWzS6mpr4g5bL8hx2tryRx37UmU
+         1vxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEv1LIvMx0MEnnAOQHkpZR0+vv2F2lUCxogKwQhOWVJ47XOBr6B/qfhg8DO1DcIJBxPYz9hkmDOiTG58Rq6AJr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjkRKnx6splnattlbGkkz5bWZcYKxc6LmsFzzTWJXxpZsdqoCe
+	Azi5HVIFeJKwdYg0k5UA4Bq0p+dr2DpbBAodXs1uCxLMvlvfS3p3BiHN
+X-Gm-Gg: AZuq6aKkDfS904nCo026oQYgti5yCSLuSFOwDSE3nFIzLa0b7fWKqayo1+pDor6Jnmm
+	chaU0Kbf6KXM+uK6vaAKgB1vYlhZOaqO/hCpbbGD+rH8Unq+tTTIIbL5kezw7He+NvwXY/7qyfu
+	p4HU5d1cZ7q0ZJFzu+oIBlUH5IxulXfdX3LUAYzzX8MP17AdM7a/TQXhyJ/FihzUWOONaqDsmVM
+	vUHr0I1kJPhHJtiH0dtaC9C7j5qh+3AcqWi62T2IjiSbBGXaR+gk/cieaqGUuUb/02vFhzUEYcm
+	ILJ6kXtaXjxIwQHPJBihm80DX1ykiUPMjCui4DbKMoiew8/6q0D2F15kKwvm/9uQdW8AMtfmx9I
+	NVrqpilbK6yZsBCtlnW9JUKArIh4cvmPa0l57Zl7jEz0PjnEVDDhMQ3PU+wlAghcC3QJL5auZX3
+	n9GQSY+vW9hlTwIx20XtM1iQ8HdZtoJv1JDAS0poQdOAK4LKP2CA2J
+X-Received: by 2002:a5d:5d0e:0:b0:430:fdc8:8bd6 with SMTP id ffacd0b85a97d-435a5fa70b4mr4276032f8f.31.1769075758458;
+        Thu, 22 Jan 2026 01:55:58 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356992201csm44726792f8f.2.2026.01.22.01.55.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jan 2026 01:55:58 -0800 (PST)
+Date: Thu, 22 Jan 2026 09:55:56 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian
+ Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>,
+ Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo
+ <acme@redhat.com>
+Subject: Re: [PATCH 3/4] perf list: Don't write to const memory
+Message-ID: <20260122095556.6e9fe2bd@pumpkin>
+In-Reply-To: <aXF4-vLA9DvhsPdc@x1>
+References: <20260120220900.366451-1-acme@kernel.org>
+	<20260120220900.366451-4-acme@kernel.org>
+	<20260121221713.1e7e0cf9@pumpkin>
+	<aXF4-vLA9DvhsPdc@x1>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add a trace event for hardware errors reported by the ARMv8
-RAS extension registers. userspace app can monitor this
-trace event and decode error information.
+On Wed, 21 Jan 2026 22:10:18 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
----
- drivers/ras/aest/aest-core.c |  6 +++
- drivers/ras/ras.c            |  3 ++
- include/ras/ras_event.h      | 71 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 80 insertions(+)
+> On Wed, Jan 21, 2026 at 10:17:13PM +0000, David Laight wrote:
+> > On Tue, 20 Jan 2026 19:08:59 -0300
+> > Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >   
+> > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > 
+> > > Something now detected on fedora 44, where strchr() returns const if it
+> > > is passed a const pointer:
+> > > 
+> > >   util/print-events.c: In function 'print_sdt_events':
+> > >   util/print-events.c:89:29: error: initialization discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
+> > >      89 |                 char *bid = strchr(sdt_name->s, '@');
+> > >         |                             ^~~~~~
+> > > 
+> > > Fix it by using strnchr() if strchr finds the separator instead of
+> > > temporarily scrubbing it with '\0'.  
+> > 
+> > I've just looked at the full function to see WTF it is doing.
+> > You've fixed the second strchr() not the one the compiler bleated about.  
+> 
+> It complained about both, no?
+> 
+> > Line 89 is followed by:
+> > 	if (bid)
+> > 		*bid++ = 0;
+> > but if it is NULL there is a fair chance the code will just explode a bit later on.  
+> 
+> Why, can you elaborate?
 
-diff --git a/drivers/ras/aest/aest-core.c b/drivers/ras/aest/aest-core.c
-index bbf8b1142be7..6a2d84b47721 100644
---- a/drivers/ras/aest/aest-core.c
-+++ b/drivers/ras/aest/aest-core.c
-@@ -13,6 +13,8 @@
- #include <linux/genalloc.h>
- #include <linux/ras.h>
- 
-+#include <ras/ras_event.h>
-+
- #include "aest.h"
- 
- DEFINE_PER_CPU(struct aest_device, percpu_adev);
-@@ -90,6 +92,10 @@ static void aest_print(struct aest_event *event)
- 		pr_err("%s  ERR%dMISC3: 0x%llx\n", pfx_seq, index,
- 		       regs->err_misc[3]);
- 	}
-+
-+	trace_arm_ras_ext_event(event->type, event->id0, event->id1,
-+				event->index, event->hid, &event->regs,
-+				event->vendor_data, event->vendor_data_size);
- }
- 
- static void aest_handle_memory_failure(u64 addr)
-diff --git a/drivers/ras/ras.c b/drivers/ras/ras.c
-index 2a5b5a9fdcb3..28ef30ddfeaf 100644
---- a/drivers/ras/ras.c
-+++ b/drivers/ras/ras.c
-@@ -111,6 +111,9 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(extlog_mem_event);
- EXPORT_TRACEPOINT_SYMBOL_GPL(mc_event);
- EXPORT_TRACEPOINT_SYMBOL_GPL(non_standard_event);
- EXPORT_TRACEPOINT_SYMBOL_GPL(arm_event);
-+#ifdef CONFIG_ARM64_RAS_EXTN
-+EXPORT_TRACEPOINT_SYMBOL_GPL(arm_ras_ext_event);
-+#endif
- 
- static int __init parse_ras_param(char *str)
- {
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index eaecc3c5f772..3a4a0c0e4dbe 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -377,6 +377,77 @@ TRACE_EVENT(aer_event,
- 			"Not available")
- );
- #endif /* CONFIG_PCIEAER */
-+
-+/*
-+ * ARM RAS Extension Events Report
-+ *
-+ * This event is generated when an error reported by the ARM RAS extension
-+ * hardware is detected.
-+ */
-+
-+#ifdef CONFIG_ARM64_RAS_EXTN
-+#include <asm/ras.h>
-+TRACE_EVENT(arm_ras_ext_event,
-+
-+	TP_PROTO(const u8 type,
-+		 const u32 id0,
-+		 const u32 id1,
-+		 const u32 index,
-+		 char *hid,
-+		 struct ras_ext_regs *regs,
-+		 const u8 *data,
-+		 const u32 len),
-+
-+	TP_ARGS(type, id0, id1, index, hid, regs, data, len),
-+
-+	TP_STRUCT__entry(
-+		__field(u8,  type)
-+		__field(u32, id0)
-+		__field(u32, id1)
-+		__field(u32, index)
-+		__field(char *, hid)
-+		__field(u64, err_fr)
-+		__field(u64, err_ctlr)
-+		__field(u64, err_status)
-+		__field(u64, err_addr)
-+		__field(u64, err_misc0)
-+		__field(u64, err_misc1)
-+		__field(u64, err_misc2)
-+		__field(u64, err_misc3)
-+		__field(u32, len)
-+		__dynamic_array(u8, buf, len)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->type = type;
-+		__entry->id0 = id0;
-+		__entry->id1 = id1;
-+		__entry->index = index;
-+		__entry->hid = hid;
-+		__entry->err_fr = regs->err_fr;
-+		__entry->err_ctlr = regs->err_ctlr;
-+		__entry->err_status = regs->err_status;
-+		__entry->err_addr = regs->err_addr;
-+		__entry->err_misc0 = regs->err_misc[0];
-+		__entry->err_misc1 = regs->err_misc[1];
-+		__entry->err_misc2 = regs->err_misc[2];
-+		__entry->err_misc3 = regs->err_misc[3];
-+		__entry->len = len;
-+		memcpy(__get_dynamic_array(buf), data, len);
-+	),
-+
-+	TP_printk("type: %d; id0: %d; id1: %d; index: %d; hid: %s; "
-+		  "ERR_FR: %llx; ERR_CTLR: %llx; ERR_STATUS: %llx; "
-+		  "ERR_ADDR: %llx; ERR_MISC0: %llx; ERR_MISC1: %llx; "
-+		  "ERR_MISC2: %llx; ERR_MISC3: %llx; data len:%d; raw data:%s",
-+		  __entry->type, __entry->id0, __entry->id1, __entry->index,
-+		  __entry->hid, __entry->err_fr, __entry->err_ctlr,
-+		  __entry->err_status, __entry->err_addr, __entry->err_misc0,
-+		  __entry->err_misc1, __entry->err_misc2, __entry->err_misc3,
-+		  __entry->len,
-+		  __print_hex(__get_dynamic_array(buf), __entry->len))
-+);
-+#endif /* CONFIG_ARM64_RAS_EXTN */
- #endif /* _TRACE_HW_EVENT_MC_H */
- 
- /* This part must be outside protection */
--- 
-2.51.2.612.gdc70283dfc
+I don't see why it can't end up in:
+		if (show_detail) {
+			char *path = build_id_cache__origname(bid);
+with 'bid == NULL' and the function just dereferences it.
+
+> 
+> > I suspect it is an error if the strings aren't "name@bar"  
+>  
+> > 'show_detail' seems to be set if either the previous or next entries in the
+> > list/tree have the same "name" - which seems strange to me.  
+> 
+> All this is strange, a corner case, it looks as if we may have multiple
+> binaries, differentiated by buildids, that would have different SDTs.
+> 
+> The code seems to be trying to reduce the amount of info (not showing
+> the buildid if there are no more at that point multiple versions of a
+> DSO with SDTs in place).
+> 
+> Further analysis of the changesets that put all this in place is needed
+> to clarify, but looking just at fixing what the compiler is complaining,
+> do you think the patches are bad?
+
+I didn't see a patch to fix the first one.
+But can you just change the structure so that 's' is 'char *'?
+
+	David
+
+> 
+> - Arnaldo
+>  
+> > The while thing needs more work :-(
+> > 
+> > 	David
+> >   
+> > > 
+> > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > ---
+> > >  tools/perf/util/print-events.c | 13 +++++--------
+> > >  1 file changed, 5 insertions(+), 8 deletions(-)
+> > > 
+> > > diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+> > > index 8f3ed83853a9e468..898cf426509790cd 100644
+> > > --- a/tools/perf/util/print-events.c
+> > > +++ b/tools/perf/util/print-events.c
+> > > @@ -97,14 +97,11 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
+> > >  		} else {
+> > >  			next_sdt_name = strlist__next(sdt_name);
+> > >  			if (next_sdt_name) {
+> > > -				char *bid2 = strchr(next_sdt_name->s, '@');
+> > > -
+> > > -				if (bid2)
+> > > -					*bid2 = '\0';
+> > > -				if (strcmp(sdt_name->s, next_sdt_name->s) == 0)
+> > > -					show_detail = true;
+> > > -				if (bid2)
+> > > -					*bid2 = '@';
+> > > +				const char *bid2 = strchr(next_sdt_name->s, '@');
+> > > +
+> > > +				show_detail = bid2 ?
+> > > +						strncmp(sdt_name->s, next_sdt_name->s, bid2 - next_sdt_name->s) == 0 :
+> > > +						strcmp(sdt_name->s, next_sdt_name->s) == 0;
+> > >  			}
+> > >  		}
+> > >  		last_sdt_name = sdt_name->s;  
 
