@@ -1,149 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011038.outbound.protection.outlook.com [52.101.52.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314742F60D1;
-	Thu, 22 Jan 2026 13:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769089110; cv=none; b=STnmy1uSZLO32c97qGuhMqLJnMFFbWd/X+F1dQDn4mIcfpvnaWCC8OqslGym4winWf28caG6qzKXTmXxvQ26k85EE10hWIIrZpcsjihgu/VVLVT41L0iSRJa3ivrFZjSmt+S0ex8uPglzzGoVNTyQLpIfGAvyGL8DAlkpEjJwtc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769089110; c=relaxed/simple;
-	bh=AV3ZCPbAFUyxCCu4Dz1CucUUm9mQCshkFe7ZO65A/kI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ws1BNAGf7V2JN0rfVSHr8yPAmHra9Cxckknqi72h+xzq8tTpqC2e/xffurrcE7ztzGr1YNCDpHW9naY4fl6kLY4q+liroi36rGkAIcZL37F4++HqXcnBHWCpQiY33on5AxgraYb5pbp0fZ22e3TD6OEvdwiste+bley69I64VPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/FJUT7Q; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2D2274B59;
+	Thu, 22 Jan 2026 14:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.38
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769093624; cv=fail; b=ejklTLpcMdqO0vhJOBZZIT2HeOlygHyZTGZSVPXyN7S1xv/fvo9BZENt50ETs8lxA5b/i0ZMht/V7LNIZENPwejbqkX7I0W407sCbHaCmAImvfzUp2Vj4hzTgnWMs86JepkbVaaL/IGpDxuelWs4TNlKSVcJyvf9B8E1Pj+yLlg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769093624; c=relaxed/simple;
+	bh=ZF3B8kavsBc7FsGdjrxVOJIHVqLtAedrcK48Pb8Sy80=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=d4CtA9Smrq4YY7MNDwImu84ueDrwA8BVNEkz9fS1zVx4GPGP+3JwTda8Chr1nOdQQEYbO5WX/a/eLP0YUA89IirwBfNyFqSlk5oTdDMbNVg71653vxOpI7pravnzHqcZnU6CVkc2Zfje4vRPAulyEuCZhNh6cKTRJoGPhoUMKjk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4my55+rl; arc=fail smtp.client-ip=52.101.52.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/FJUT7Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50279C116C6;
-	Thu, 22 Jan 2026 13:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769089109;
-	bh=AV3ZCPbAFUyxCCu4Dz1CucUUm9mQCshkFe7ZO65A/kI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J/FJUT7QsalzK3vkTyosdRDIxYUDH0Gk+pD3KR7eY2Hz7wQzUg/V8e0h5lFmBQXf4
-	 KMZ9+56k381nE2GBCp3uy/vSjEYuX+D966HJ0Lz6SOLZ3uSF9ynOfUaBqtlAYWf727
-	 tS1JO0bQIq+CCig545u8j0kv+DAT09Lx4nxmqpjm6PX/syTJyCg69K4L5M9SGBpIat
-	 1XdDhSWNSMwldzKa7/u6ryyd8fuNW8Obc9wasbRcVrJn3hVDZF4V3VjXI7G8jrFiYr
-	 eCArtwPs4NYUXk2WnHFzh78lTQfRos3QTERG2DyGX+NfQCQFYQr4UeFUD89up0JnSM
-	 d+ikL+oQ1nTBw==
-Date: Thu, 22 Jan 2026 13:38:24 +0000
-From: Will Deacon <will@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf: arm_spe: Properly set hw.state on failures
-Message-ID: <aXIoUMLF6aClRrjv@willie-the-truck>
-References: <20260121-arm_spe_fix_truncated_flag-v3-1-214747f68b50@arm.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4my55+rl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z9ZPGaQ9h1JM/uf7PghxfM9Ri3D6ap6pScS9+UTIalm0MNI3mGgCxNhgv/1p2mma+j4tWdfLZ/CmFqsrP4IDzmLEj2ZzyomLjeaMdih7WRFRngOnu+BLgL3pZJFsYMGDFIcjubcBnEAV6x8+DGddczXh9V8IScMsepVoT5YxGSjWBhVi5nmom1KT1X0G+xm9cMkXLKHcYadxsgNh/JGcT3E+wgLaF472CmAhEIpc//qCUZSjfWyHtsm56TYBtUSi2nGE3NBLBNa03is2gXwmMuubKPxPPFB2/GKoOd1JrnJ/Re8PS4WxfTG4/wtuOQ6DTv6VfxZ/Ytn0pBNon9859Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mdw/HnlBh07SOgXHbjT2oRC6VXHwuVqINg0v3aVacVE=;
+ b=eUaVhWX4QdEvES1OnuKlL8o/E+dQdWBQD7QrrRhY7w0SuqYVh8ZSQYd5pbG96GdAFsEnUJaQCfqVeFa95+/KBNWflaThcd2iaYeX0VWEnlqCVs6kJbnk6Wi9G2MZ/lClzzD670E96URVmT09dRln5W+d/8oKMDokECfUnhxx1mO+miWdYVhbFXxFyGfyXIp0gcyyVzWxQ9FTL/xe1d6iZp/y7wqOvnKV+AY7fUqfrwGghbKZIuUFW3Xa0NgTG08V0vdpMnyolvrrf6crAohTHQoVYyjR8VuIKqbr+HH37a9lXa9+b7N5MCmTQg4OpeCXnrgmtn/Gl8m0p4jufcZtsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mdw/HnlBh07SOgXHbjT2oRC6VXHwuVqINg0v3aVacVE=;
+ b=4my55+rlyMbBzORBvkYBHn3XfNsMtE7An+2wXSmx6RZlDW9CCcpa2jmWX8dC6BCnVE7IbFohbo8k+M5pe1eCCZVH18R38WllOX9ssjZmHgTKJHFTnpbfPBRg32zRrGXq9xmQQnmbKqAXanr4qpJJmfWsXYwzXag/uP/8tz5Buyo=
+Received: from MN2PR20CA0006.namprd20.prod.outlook.com (2603:10b6:208:e8::19)
+ by CH2PR12MB4040.namprd12.prod.outlook.com (2603:10b6:610:ac::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.11; Thu, 22 Jan
+ 2026 14:53:37 +0000
+Received: from MN1PEPF0000F0E3.namprd04.prod.outlook.com
+ (2603:10b6:208:e8:cafe::35) by MN2PR20CA0006.outlook.office365.com
+ (2603:10b6:208:e8::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9542.11 via Frontend Transport; Thu,
+ 22 Jan 2026 14:53:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ MN1PEPF0000F0E3.mail.protection.outlook.com (10.167.242.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9564.3 via Frontend Transport; Thu, 22 Jan 2026 14:53:37 +0000
+Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 22 Jan
+ 2026 08:53:37 -0600
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb09.amd.com
+ (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 22 Jan
+ 2026 06:53:36 -0800
+Received: from [10.252.219.255] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Thu, 22 Jan 2026 06:53:32 -0800
+Message-ID: <56716e48-951b-4ca0-a411-79dd72da7024@amd.com>
+Date: Thu, 22 Jan 2026 20:23:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260121-arm_spe_fix_truncated_flag-v3-1-214747f68b50@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/12] KVM: Add KVM_GET_EXT_LAPIC and KVM_SET_EXT_LAPIC
+ for extapic
+To: Sean Christopherson <seanjc@google.com>, Naveen N Rao <naveen@kernel.org>
+CC: <kvm@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <pbonzini@redhat.com>, <nikunj@amd.com>,
+	<bp@alien8.de>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<mizhang@google.com>, <thomas.lendacky@amd.com>, <ravi.bangoria@amd.com>,
+	<Sandipan.Das@amd.com>
+References: <20250901051656.209083-1-manali.shukla@amd.com>
+ <20250901052146.209158-1-manali.shukla@amd.com>
+ <jf2zfqo6jrrcdkdatztiijmf7tgkho7bks4q4oaegiqpeflrkj@7blq6f5ck2hf>
+ <aWgRvCdPsAFHRwcU@google.com>
+Content-Language: en-US
+From: Manali Shukla <manali.shukla@amd.com>
+In-Reply-To: <aWgRvCdPsAFHRwcU@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E3:EE_|CH2PR12MB4040:EE_
+X-MS-Office365-Filtering-Correlation-Id: 84611941-20e0-43e1-c43b-08de59c60609
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|30052699003|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UFJXaXhzVGo2OGNWdmVuQlJxOUo4NmNLSjEySGJqYTJGTFEzSjFUN3VxQU5j?=
+ =?utf-8?B?ZHlNMHliSXR3b25OV2lZeExmYXFsejlSY050ejJ0WXVEaDVjdmJNSWxyM2pt?=
+ =?utf-8?B?alBRMEo4OG52YkpIa1JKc1NjS0JJdnhzWkd1UGVKbWJ4SFdwRVNKU0NUMmt6?=
+ =?utf-8?B?cXpuL1c4Y3loUHRzSFk3Qkd4eFNDQ0loR1pMQ0RsTGdLcFJOV1UvVThhUDl5?=
+ =?utf-8?B?OUNncmJRclJ0R3J2VEY3YVhUT0l2ZWgyM0xLbWtkY296SnludGRqcFNMRDV1?=
+ =?utf-8?B?Nmo4NmZ2clMzKzBtbHJQVzYyYUNQWkFpMmtxOUxSdDRwRytRNkFmeFVHdDZD?=
+ =?utf-8?B?eWttTE5CblNvK2l6ZjNlNTEwMUU4TTFlTUFpWXo5SWRoajNSL3lMUFRIek0v?=
+ =?utf-8?B?UHV0Vnlhd3BPY1c0ZDZnWUEybmRicmZpQ25KRmhlUzI1dndIcEhIcnpNRExX?=
+ =?utf-8?B?QlZ1cEpZK3hjSlQwSjhqTkZaTnVYeUpTWHVxcVg1NlluSm5hUi83cG9yV0lu?=
+ =?utf-8?B?dUY5UGVPZE9tczg1K3l3aC9neHJHdlBGdFNZUVh5TG14UDBoTnBISEJQSm1X?=
+ =?utf-8?B?QWVJMjdBOHQ2MmRuVWNIWXdYL2FBV3c4U3NBUFdrcFBXZytLVzlzZ0lROVRh?=
+ =?utf-8?B?blk3V2ErcDZZc2VsZm9GaUVlY1lVL2dYVXdSNGUxZWNMbnNlU3k4VlJTczZa?=
+ =?utf-8?B?bFFoZWVKTlBZMVZBaWtNYVRsZm9QZ2lJa1RKUkFlMGMxWDdoOUR6MVhScWo0?=
+ =?utf-8?B?MlBGM25JTU1WV1hlcmRWMEd4ZUdIS3dqVlhCS3d5TFE0SnFlWkp3UVU5dmtJ?=
+ =?utf-8?B?N0ZDK1dlUEdRZDBJZCsyKzZtS0xldlNuV1FObWxzZ2x6NmJTQlZhUWZVb0xw?=
+ =?utf-8?B?UUt5MlZJeTd1aEU3RzczeDgxT3RMYTRXV3VOYnhoMEJLOVF0aUlTWHp3L2c4?=
+ =?utf-8?B?TFJRYURzTFBKQU5zeGpIYVVUNXQxVWhOemlIL2cyS0lSVWlDZUZTU2FtT2Zy?=
+ =?utf-8?B?L0JhdjlON2RNNksyZ1J6RnBPeVM4THRkMVhjdGR0SW5wbWFsRER6Z2NxcGVU?=
+ =?utf-8?B?endlZzlBR3ZDdUtsUzNOd1FPTFBqK1ZqaEVudDV1VXRnWXo0UFVzOGJSR2pX?=
+ =?utf-8?B?d3NuTXViSW0zYzdQcjRhMnR4aSswQXp5RWVKZEJBUWh3azduSlNOR0VVbUhj?=
+ =?utf-8?B?QSt3em5ndVRiYm9GWTFnRXJwd1J5d0FhbGpDbVdXbk4vbTZMRFVVSFVVeDM3?=
+ =?utf-8?B?cWFhVTh2S1RTc0lZeTBZY1hSMHo1OEpWT0cwYU5VdGhtdk13NGNNeHh0WGlo?=
+ =?utf-8?B?WTd6aWRGS01ORElJSWVTY0k0Ty95UGRJV3AzTFhUR0IyVjNReDYxVWQ3VzJn?=
+ =?utf-8?B?dGYwRU83enVzaFY3RTBTVUlnSGNBK0JLWmgrN0FLVFU4OGdINjVuRURMbHBX?=
+ =?utf-8?B?ZENubHFhSzBhM2ZIZ0FPVnUyR003ekwvMFcwS3BZRGNRanU3UW1RNWM5TFBV?=
+ =?utf-8?B?V0VpY042NGtMa1ZjQmVRMkpNY01RT251bjlsMjVDd0pna1VqeVRTNXpaazhD?=
+ =?utf-8?B?ODR0WlZoS2d6VHEzVFgxbEpIUnlJMlV1Yy9xOEs0Vzc0UUpMdVRkVWFzRmd0?=
+ =?utf-8?B?a0NIWXRqZUY5RlZaSEVlc0lmWGNXQ3lYNHByTkNEVVFzZnFwK1k5cmdKL1Nv?=
+ =?utf-8?B?VEtQbDdBbS9zNytsY3pnS3pjQS9oeS8xTVB4ekRYQ2hiUGZtTnRhV3lIVFR1?=
+ =?utf-8?B?eWtselBlckd6T1U5eFJRZ0RZcjc3T1laWGlMMnpHUzBiWmoxc01vQUFxejJw?=
+ =?utf-8?B?bHRqR0dPUmRpdDZCZzZjWG5yVkl0c3haVGY2WW1ROVh3cmVVeDJnWGVqV3Jo?=
+ =?utf-8?B?cWJnaEZjTDlJQkRoYjBTd1ovbEFwQTNwWDF3MWlza3NhWE1zdEFBenI2enBX?=
+ =?utf-8?B?WWZhT0YyZXpOdnFDWnpTODVvRVB6T2hUNjNEdElubU1nMU55eXZhRDBYYUtq?=
+ =?utf-8?B?eTFHWHp6OFIxUUphYlJsWEEwTWxQSUZwNnBCZG4yNGp5NHIzWllUbG82Nk5H?=
+ =?utf-8?B?ZVN4RTkvY2dGaU1qWGlUSURaNkRobDFzc1ZHWm5oOW5UTUV0b0FCcWpYUEFT?=
+ =?utf-8?B?aC92cVV3WkJwbXAvYjlFTWNEOGNJYVUzcTdYWHloNEhDTUFuKzA0UmJUNnl5?=
+ =?utf-8?B?aEo0alowNXRmQkpuMTdJZ0pGYXgvRjlCdkVwSnMyNmp1WXM3cHJUaHFhQmda?=
+ =?utf-8?B?VzRLRFpaNDM3L1VLUEdkM1FDc1BBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(30052699003)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2026 14:53:37.2450
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84611941-20e0-43e1-c43b-08de59c60609
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000F0E3.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4040
 
-On Wed, Jan 21, 2026 at 11:33:21AM +0000, Leo Yan wrote:
-> When arm_spe_pmu_next_off() fails to calculate a valid limit, it returns
-> zero to indicate that tracing should not start.  However, the caller
-> arm_spe_perf_aux_output_begin() does not propagate this failure by
-> updating hwc->state, cause the error to be silently ignored by upper
-> layers.
+On 1/15/2026 3:29 AM, Sean Christopherson wrote:
+> On Tue, Dec 16, 2025, Naveen N Rao wrote:
+>> On Mon, Sep 01, 2025 at 10:51:46AM +0530, Manali Shukla wrote:
+>>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+>>> index 6aa40ee05a4a..0653718a4f04 100644
+>>> --- a/Documentation/virt/kvm/api.rst
+>>> +++ b/Documentation/virt/kvm/api.rst
+>>> @@ -2048,6 +2048,18 @@ error.
+>>>  Reads the Local APIC registers and copies them into the input argument.  The
+>>>  data format and layout are the same as documented in the architecture manual.
+>>>  
+>>> +::
+>>> +
+>>> +  #define KVM_APIC_EXT_REG_SIZE 0x540
 > 
-> Because hwc->state remains zero after a failure, arm_spe_pmu_start()
-> continues to programs filter registers unnecessarily.  The driver
-> still reports success to the perf core, so the core assumes the SPE
-> event was enabled and proceeds to enable other events.  This breaks
-> event group semantics: SPE is already stopped while other events in the
-> same group are enabled.
+> As discussed in PUCK, just go the full 0x1000 bytes, and do:
 > 
-> Fix this by updating arm_spe_perf_aux_output_begin() to return a status
-> code indicating success (0) or failure (-EAGAIN).  Both the interrupt
-> handler and arm_spe_pmu_start() check the return value and call
-> arm_spe_pmu_stop() to set PERF_HES_STOPPED in hwc->state.
+> #define KVM_GET_LAPIC2            _IOR(KVMIO,  0x8e, struct kvm_lapic_state2)
+> #define KVM_SET_LAPIC2            _IOW(KVMIO,  0x8f, struct kvm_lapic_state2)
 > 
-> In the interrupt handler, the period (e.g., period_left) needs to be
-> updated, so PERF_EF_UPDATE is passed to arm_spe_pmu_stop().  When the
-> error occurs during event start, the trace unit is not yet enabled, so
-> a flag '0' is used to drain buffer and update state only.
+
+Ack.
+
+>>> +  struct kvm_ext_lapic_state {
+>>> +	__DECLARE_FLEX_ARRAY(__u8, regs);
+>>> +  };
+>>> +
+>>> +Applications should use KVM_GET_EXT_LAPIC ioctl if extended APIC is
+>>> +enabled. KVM_GET_EXT_LAPIC reads Local APIC registers with extended
+>>> +APIC register space located at offsets 400h-530h and copies them into input
+>>> +argument.
+>>
+>> I suppose the reason for using a flex array was for addressing review 
+>> comments on the previous version -- to make the new APIs extensible so 
+>> that they can accommodate any future changes to the extended APIC 
+>> register space.
+>>
+>> I wonder if it would be better to introduce a KVM extension, say 
+>> KVM_CAP_EXT_LAPIC (along the lines of KVM_CAP_PMU_CAPABILITY).
 > 
-> Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
-> This change has been verified on Orion6 board.
-> ---
-> Changes in v3:
-> - Updated arm_spe_perf_aux_output_begin() for returning error and used
->   arm_spe_pmu_stop() for setting hw_state properly (Will).
-> - Link to v2: https://lore.kernel.org/r/20251110-arm_spe_fix_truncated_flag-v2-0-a629740985cc@arm.com
-> ---
->  drivers/perf/arm_spe_pmu.c | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
+> Please figure out a different name than "ext_lapic".  Verbatim from the SDM
+> (minus a closing parenthesis)
 > 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 4801115f2b54052d584b59881f458c2640e974ff..b9a6748827cc5557c42023f323a90b5826eadb54 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -106,6 +106,8 @@ struct arm_spe_pmu {
->  /* Keep track of our dynamic hotplug state */
->  static enum cpuhp_state arm_spe_pmu_online;
->  
-> +static void arm_spe_pmu_stop(struct perf_event *event, int flags);
+>   the xAPIC architecture) is an extension of the APIC architecture
+> 
+> and
+> 
+>   EXTENDED XAPIC (X2APIC)
+>   The x2APIC architecture extends the xAPIC architecture
+> 
+> There's zero chance I'm going to remember which "extended" we're talking about. 
+> 
+> KVM_CAP_X2APIC_API further muddies the waters, so maybe something absurd and
+> arbitrary like KVM_CAP_LAPIC2?  The capability doesn't have to strictly follow
+> the naming of the underlying feature(s) it supports.
 
-This is fine, but I'm also happy if you want to move the functions around
-to avoid the forward declaration.
+Thank you for the feedback.
 
->  enum arm_spe_pmu_buf_fault_action {
->  	SPE_PMU_BUF_FAULT_ACT_SPURIOUS,
->  	SPE_PMU_BUF_FAULT_ACT_FATAL,
-> @@ -607,8 +609,8 @@ static u64 arm_spe_pmu_next_off(struct perf_output_handle *handle)
->  	return limit;
->  }
->  
-> -static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
-> -					  struct perf_event *event)
-> +static int arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
-> +					 struct perf_event *event)
->  {
->  	u64 base, limit;
->  	struct arm_spe_pmu_buf *buf;
-> @@ -622,7 +624,6 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
->  	/* Start a new aux session */
->  	buf = perf_aux_output_begin(handle, event);
->  	if (!buf) {
-> -		event->hw.state |= PERF_HES_STOPPED;
->  		/*
->  		 * We still need to clear the limit pointer, since the
->  		 * profiler might only be disabled by virtue of a fault.
-> @@ -642,6 +643,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
->  
->  out_write_limit:
->  	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
-> +	return (limit & PMBLIMITR_EL1_E) ? 0 : -EAGAIN;
+I'll rename the capability to KVM_CAP_LAPIC2 and the new ioctls will be
+KVM_GET_LAPIC2/KVM_SET_LAPIC2 as you suggested.
 
-I'd probably go with -EIO here. -EAGAIN implies that if the caller
-retries the operation then it might succeed, which probably isn't the
-case for these failures.
+I'm planning to send the extended APIC register emulation as a separate
+series rather than bundling it with vIBS.
 
->  static void arm_spe_perf_aux_output_end(struct perf_output_handle *handle)
-> @@ -781,7 +783,10 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
->  		 * when we get to it.
->  		 */
->  		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)) {
-> -			arm_spe_perf_aux_output_begin(handle, event);
-> +			if (arm_spe_perf_aux_output_begin(handle, event)) {
-> +				arm_spe_pmu_stop(event, PERF_EF_UPDATE);
+- Manali
 
-Why do you need to pass PERF_EF_UPDATE in this case? It looks to me
-like we're going to get into a mess with PMBSR_EL1, as that will get
-re-read by arm_spe_pmu_buf_get_fault_act() in arm_spe_pmu_stop()
-before we've cleared it here in the irq handler.
-
-I was expecting that we would always pass 0 for the flags when handling
-the case where we get an error back from arm_spe_perf_aux_output_begin().
-
-Will
