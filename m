@@ -1,155 +1,123 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6025A2BD036
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 16:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769097627; cv=pass; b=tHWR+RB5pgpDgEv1QiFA+yud4VvvaPjRdA9997e/zbvjFkwoeuEDHChoJp/wuUpb/QORdPaCdP/p0P/MmcuaxnqLMzJo7RtoM7d09DvkXALpTLSUs1ge64+bZkkaSwVm9INPniXh1c+8xO/cSkBx5Ffl87ogb6wwEfQRmHjzezY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769097627; c=relaxed/simple;
-	bh=FpJBjU4YZpNaIxCHIe1yIVRCNSbNaoLTUhhOcTb3Ccw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OeI03DoJd1mwkxeGTonduunGsB43OxKxyDNuk8jvEY8/+eJPkKPrx156gUH5nFyMxqWYa+j7rVkYFSEnfZkaNqG7emOf0mBAOS2Lt6nXPKyhPDH9Sx9APfOfbqNJpYAJ+6hxQwT4NvEaCXW24STHku+JGANN0AgVY3QSdAVyUuU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nPlliIlS; arc=pass smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9EC3921DC
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 16:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769097855; cv=none; b=l0F5dYBGICGDQHjdYre5vR8oquRAtTJP5uBak4ouKERW/muTo4I0hd5ewXwsfBwajRE+9xjO6a2z+iQZaTAERVTqP+be07QczYprb3Wicdy9XHdEz6WL1inmfOOTnOdTTp53wu80Y45gMpdRvuL+f9UdvtY/cOGaOZxTYYLkVD4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769097855; c=relaxed/simple;
+	bh=viNnaReSsAyqS/zLOY2ifZng9HyswNpsZThiO/XVk1s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=las95bgZEbGQmlzyO+ays43JxULqJ+ZY+Ij7Dp+1puCXEvg5ASP/epMYZPocR7w830efM8dTa9WDBD4SgjX+/CPXIt/yDh7ZvMYrEo3Y8eg2hFxXn3hGW/UovwGjmHWByUuduapxRUmoNBAE68FZ6n2veKeRbGjCFmQHYbIZqkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y4v2IVtM; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nPlliIlS"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2a0d06cfa93so71615ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 08:00:23 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769097621; cv=none;
-        d=google.com; s=arc-20240605;
-        b=VbeSVgjM8CKCHhCs/9Zi09DmVMPP3qi+jMRIDWqVDg3T7jK9/LZAR8iNQCjsW+4I3P
-         9CouYWm5lmio01vBQqGJS+J5+tkpv+Rijfc0vxfquOXmgyE3J6asuvijp/2rt/BCv1UW
-         Hi9wZ+BYFcYz0ucqg6f1OvYAoLnqA+bkzx1UlzQ++RRBbZgHP7+MLnoETiINtFqwqVwB
-         D+W9OVLEs8JUHVZqHlXuUetaro/t73KhbXUEyymkVvrM7JRzHMQcveI/MUYEbxt7+JEs
-         G7m9MPnbRsxejhtCtSMLuYcGKBK51U/qtefk1hBLL4fXjtF2+2LhwgqGvoOc4GTAi8A4
-         aFOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=k+gcw1623lQHo2cfnTvIWFjPYSweoDjGuO09+tINKEw=;
-        fh=/jv9R5lSzDeV08Hq/FAwu625v7AwVn3xGHyUFz3NLcI=;
-        b=kkbftGoP9+o0XtxhIcpoPd72My7aR1QOiKgkaNPfgUXLIh70g+w1ul32Q4HBP6NR5p
-         fwBaTSfwFCeUu5/5/oxHPKM6hyEFte7YRS8p7Lf5yFA5hUEQtCU+n/kS6iTQa9PxQane
-         SF90hZqwMNqxCJem5xiLp0YOjiEA4j/kgnkAMD24t3wUemhZ9LQDWnEPkWk+DUMQsmwT
-         StJWZvxCS0yCbh/D5EUzFe+k2xQTfgjFG0X4VJFj64vHgwk0IDgPXHRboljY5odcxMeu
-         H8KfuESvGsQKWomv0lg55Bkt1IYbP0Yg1OEQ5ysqDVc0ikEH4AlqEKhGtvrea1knyeEV
-         de7A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y4v2IVtM"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-29f1f69eec6so10190935ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 08:04:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769097621; x=1769702421; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k+gcw1623lQHo2cfnTvIWFjPYSweoDjGuO09+tINKEw=;
-        b=nPlliIlSbdo5gp/aPrT1ApOF7jRNFgBaSRugsoYpirenLDIDTCy46YPKRfjp3+rjY8
-         trU+jEf+bmnEvMEZqVc2lOy9s5/T3k0JLskTlJLB3f1grG+Q3W+Y9157dtoKUId9tx/b
-         hWjkrNWbGDNo2i5vXyU35A32wNcUU/vbEHDyfD9X7N0Q9GcqYAJim3aVkmvigfGkDqGj
-         BEVjHtr2L8/YGsyh1tAhossLAw9IJ6UKFNYia8FiPir3PYB09q+XBMc32YEYLP5l8hnz
-         JDpwBfTav7RYPvX8e1Cv1h/s+F+X7P5Vnc+Xxm+h47HAnnlUEx6CEO20qzkDxXRKaaga
-         lPVQ==
+        d=google.com; s=20230601; t=1769097848; x=1769702648; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LD2LZ6P6QaQ5VD5Wh4MR8dbmyUc9EnoiEwigMQRIrTc=;
+        b=Y4v2IVtM0BkDOyuRdJqbjoJxqyfmoGS39JUV2Bo/sM19bW5u6wojwwa35/8lFRDzA1
+         quVRKzDNcgwIl5CtdbyNKtsAJmJB9tm6PZDKXDP8neXc9BZX1p9roP7ve17ug39vutro
+         urTIOulDUu0OA381er/9Kz+YhvEPbORgueJ67uVT8jLh8qqAjdFFUNvElpf+gMCtNKuz
+         dKeSHHy9lsgGHVTCbAXg/GRnJJTzgwYepOYzMNywryy9ccXy2nUgTf32VR7JZr+4MSDO
+         NvBuVi+BGLBPoEOpBGKcv8FLgL4FSMrjNjTT9z5EsnAHqHxTOXtf/6PUTFsgDH6zFie+
+         bwrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769097621; x=1769702421;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=k+gcw1623lQHo2cfnTvIWFjPYSweoDjGuO09+tINKEw=;
-        b=lroQgV8UST0G9vby4WcS18rTPh2kM+JKsANjfpP5sVeLV/JcJMdTMd3R2cA8vOm+nr
-         5hwHV2Axj0itApUnXa9EdP1SpxOXeJ80pNMPtfUwaMKk6jD5OCA3p1sOClBWh8N37kDK
-         jFXI0RxRAb8Q0wLkZslsPRrWLa8M8aZgQciRsmJCeZ78QGZy8WVQvOMWUZyHo59ZZLi/
-         T8HugE0dGtZlkHwBCyfoydANaw8sJA5pFagITCy/Y1LpPpSrHAYeFDuh9fNBElxT5GCJ
-         ywmqCssLzuTsn194DO0ZTKD3XNtFyE6SfbOuHyq6NtYjuoE4P9o6l/sWbtk3ODyjpeXr
-         Ty/g==
-X-Gm-Message-State: AOJu0YwfrMAfZrsf0bbq4LyIp6+KUh+kHaPxeTqUX2nAyQryPfyN8OQl
-	tUmjViyl/MSrIRQjw1GE0ixuwedJWxNbomCZ4wgVPPrHhuOfbn/y/WLO6W8dy6qZ2NvsOAsLEvt
-	0cdpbKJJhkg0J4BGxOiusH7+01GS+zN0HUGwpfwSp
-X-Gm-Gg: AZuq6aJTjSpT5f/PLvOUn/VzZQJBRXsS5gAAbQKU093WHXbxBJ8AnsRlD62DaUpqRWJ
-	Rfak9fz/Ktad5jbQuTTy/ZIrONE+2+R/rnCE8nXJMk3318pYvi+QGPtl2Rvrzsi/OwSMd1gVgqH
-	Z9X9MleccypcrTV/p1d90QYB49Hg0pQDZeR4F7WJd1i/4REsim2Pt/AUQKdKXYDtljYv4lOtOIw
-	pZolAsHb8wkteszV0vS9vAa4SS5jKGHlhy9TYtHJh8wmUbdkETKGAdAumWnw7/wdkjJC6nnIo52
-	X6KikW3VQRpyAxy7fBxEExWFZhHqY+xxmcmrRc9jqJ6tqBo=
-X-Received: by 2002:a17:903:120b:b0:26d:72f8:8cfa with SMTP id
- d9443c01a7336-2a7d67659c9mr2355425ad.13.1769097620474; Thu, 22 Jan 2026
- 08:00:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1769097848; x=1769702648;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LD2LZ6P6QaQ5VD5Wh4MR8dbmyUc9EnoiEwigMQRIrTc=;
+        b=sYKXqWGs6/Ky8WKcNR9qR8zWRyZ5VM+p0ub35tbwqDHnMDMM+/6BqqDUQIF7z+4RTV
+         cKAFvBqeeIvtc9ra3Ifx/tdkpELc7Eo7liu44Rxehlc7tsW+t+V8HObc4seVBHQLohCk
+         rJR6EWJq3zU+0KiN5dUBAYMI592mM+jMsfMX+ObX4xCTyLVzbRC8271g7D32d9jX6/zm
+         Mgpw5qRGASTR+CA8IeUYuOel3jL+rgrj4SYWYz6IN17rXYRu2Rfh2QKIlrp9mJF/Y46y
+         Cs/0+kyUCEl8TqJ88LIXnKQ119pQ1E8bFb+mtZOzuD13E3nhV7qeVIVs4ikG/pF6IHGj
+         y8BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXeospHbj3rjY8kx+zk/QgeCUzBi97A3D54kHcfCzOgcnbX/AV9jc5nfoeRVMCVX8OBLD3zDXaxjaXaHVD6WHL2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwodbEeckD5Fhepmni78w0x87vzBocH2VbHCCxmNj3ZUXjMlDp2
+	iDRr64wVLHIJi74ohbELiM9hj42jzHMjlWR5wzUFcgWMIQlHc7ufz6MRNGWDg4Uj5GgQP22/YMi
+	09SXTdA==
+X-Received: from plbmi13.prod.google.com ([2002:a17:902:fccd:b0:29f:cd:e7da])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ec90:b0:2a2:d2e8:9f25
+ with SMTP id d9443c01a7336-2a76ad742e9mr77688705ad.33.1769097848122; Thu, 22
+ Jan 2026 08:04:08 -0800 (PST)
+Date: Thu, 22 Jan 2026 08:04:06 -0800
+In-Reply-To: <20260121225438.3908422-2-jmattson@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <9a7eaa4f2e50a4ab2d98781c52bce6f98568a888.1769069215.git.sandipan.das@amd.com>
-In-Reply-To: <9a7eaa4f2e50a4ab2d98781c52bce6f98568a888.1769069215.git.sandipan.das@amd.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 22 Jan 2026 08:00:09 -0800
-X-Gm-Features: AZwV_Qhc0xAEoNE0zWyMtOvAikMxZo0_98iQoe24FizmlAQVi71aDp33NIfPBpw
-Message-ID: <CAP-5=fWH+GT-wuw5e-0MQQanUNMqUGVD+V=y7vq2jN4xe_GEmQ@mail.gmail.com>
-Subject: Re: [PATCH] perf vendor events amd: Fix Zen 5 MAB allocation events
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+Mime-Version: 1.0
+References: <20260121225438.3908422-1-jmattson@google.com> <20260121225438.3908422-2-jmattson@google.com>
+Message-ID: <aXJKdlJI3fg42gim@google.com>
+Subject: Re: [PATCH 1/6] KVM: x86/pmu: Introduce amd_pmu_set_eventsel_hw()
+From: Sean Christopherson <seanjc@google.com>
+To: Jim Mattson <jmattson@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Suyash Mahar <smahar@meta.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Ananth Narayan <ananth.narayan@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Jan 22, 2026 at 12:10=E2=80=AFAM Sandipan Das <sandipan.das@amd.com=
-> wrote:
->
-> The unit masks for PMCx041 vary across different generations of Zen
-> processors. Fix the Zen 5 events based on PMCx041 as they incorrectly
-> use the same unit masks as that of Zen 4.
->
-> Fixes: 45c072f2537a ("perf vendor events amd: Add Zen 5 core events")
-> Reported-by: Suyash Mahar <smahar@meta.com>
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
+On Wed, Jan 21, 2026, Jim Mattson wrote:
+> Extract the computation of eventsel_hw from amd_pmu_set_msr() into a
+> separate helper function, amd_pmu_set_eventsel_hw().
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Jim Mattson <jmattson@google.com>
 > ---
->  tools/perf/pmu-events/arch/x86/amdzen5/load-store.json | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/pmu-events/arch/x86/amdzen5/load-store.json b/too=
-ls/perf/pmu-events/arch/x86/amdzen5/load-store.json
-> index ff6627a77805..06bbaea15925 100644
-> --- a/tools/perf/pmu-events/arch/x86/amdzen5/load-store.json
-> +++ b/tools/perf/pmu-events/arch/x86/amdzen5/load-store.json
-> @@ -70,19 +70,19 @@
->      "EventName": "ls_mab_alloc.load_store_allocations",
->      "EventCode": "0x41",
->      "BriefDescription": "Miss Address Buffer (MAB) entries allocated by =
-a Load-Store (LS) pipe for load-store allocations.",
-> -    "UMask": "0x3f"
-> +    "UMask": "0x07"
->    },
->    {
->      "EventName": "ls_mab_alloc.hardware_prefetcher_allocations",
->      "EventCode": "0x41",
->      "BriefDescription": "Miss Address Buffer (MAB) entries allocated by =
-a Load-Store (LS) pipe for hardware prefetcher allocations.",
-> -    "UMask": "0x40"
-> +    "UMask": "0x08"
->    },
->    {
->      "EventName": "ls_mab_alloc.all_allocations",
->      "EventCode": "0x41",
->      "BriefDescription": "Miss Address Buffer (MAB) entries allocated by =
-a Load-Store (LS) pipe for all types of allocations.",
-> -    "UMask": "0x7f"
-> +    "UMask": "0x0f"
->    },
->    {
->      "EventName": "ls_dmnd_fills_from_sys.local_l2",
-> --
-> 2.43.0
->
+>  arch/x86/kvm/svm/pmu.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
+> index 7aa298eeb072..33c139b23a9e 100644
+> --- a/arch/x86/kvm/svm/pmu.c
+> +++ b/arch/x86/kvm/svm/pmu.c
+> @@ -147,6 +147,12 @@ static int amd_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  	return 1;
+>  }
+>  
+> +static void amd_pmu_set_eventsel_hw(struct kvm_pmc *pmc)
+> +{
+> +	pmc->eventsel_hw = (pmc->eventsel & ~AMD64_EVENTSEL_HOSTONLY) |
+> +		AMD64_EVENTSEL_GUESTONLY;
+
+Align indentation.
+
+	pmc->eventsel_hw = (pmc->eventsel & ~AMD64_EVENTSEL_HOSTONLY) |
+			   AMD64_EVENTSEL_GUESTONLY;
+
+> +}
+> +
+>  static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  {
+>  	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> @@ -166,8 +172,7 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		data &= ~pmu->reserved_bits;
+>  		if (data != pmc->eventsel) {
+>  			pmc->eventsel = data;
+> -			pmc->eventsel_hw = (data & ~AMD64_EVENTSEL_HOSTONLY) |
+> -					   AMD64_EVENTSEL_GUESTONLY;
+> +			amd_pmu_set_eventsel_hw(pmc);
+>  			kvm_pmu_request_counter_reprogram(pmc);
+>  		}
+>  		return 0;
+> -- 
+> 2.52.0.457.g6b5491de43-goog
+> 
