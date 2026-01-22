@@ -1,65 +1,67 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA883644B6
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 10:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7E5221578;
+	Thu, 22 Jan 2026 10:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769078828; cv=none; b=qkZFUhe1FZhRQcNPluyVnJu2SHUAYBV8FqNmjxE/71cAYgmXkN19gBNjH7g0ss8+HD6RSBmU+yNG++wqzoVnB6lVTNG3LZTImwKTX40jowYV15JxCuYsG9Sw4caGkQdvMJV1vrIPIUahDN+9GMI0yY+l8JA75+/1nuJOgMeJV60=
+	t=1769078930; cv=none; b=DR38TbmYOmruTO6uiYy4SCEQv7145cMsX6AUonexbA3q9S7YY8ZCTWqkYBo7aIVmpa8D0+vJqnyeVxlRWqSlZgve3+b69sTudFBg4H5sM61i+Lt88sMnuiovDEiG3pHMTSwewNpjwOV7etQBNNglk47xsst1a6tXT0vzPrSLLmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769078828; c=relaxed/simple;
-	bh=48YBA/wPZzNiV48KWg/GIGgM+avsbs3uTsgLWY6rttQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Ae0qmfATKuB1xZqQcsnOPfsNUlBTA3ppeozzU/WHPvPKhIf61+EhRINfZnkpykfB2U6cSbCWoyhqlePYy5pL2XTWr2gOulQpZTD1AMJWUlb7aZvgETXK1Rz3Q6jn2T3UO9hF9BfC/w3zAWW5GDsoAK84we9b6yLZsr3a9QdGWoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jPwsi3bZ; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1769078930; c=relaxed/simple;
+	bh=kPiiJETIxUP9WsAPxqgNFZO0zZM5C0cJmzk3IqciBOM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZkyNxQoSo2V/K49LjzOZyBPK2hlZSKdr54cEozLo63tN4DTVeOYQaQ36D9pjPnVXV0ybO4fHJiqbGakCejHudeOoVIKE9aX6JibjMbEgnl4jFXr53yKHemf1zVeC6ITqlLZzk7FKbGAr7CjQe8kY2GDQO6GAGNvuPAesIdVwK9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T5BIC/2i; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jPwsi3bZ"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-430f3ef2d37so665964f8f.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 02:47:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1769078824; x=1769683624; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=p3kgZdZGe15qcgbvjAtESEFU8KlhQRc0to8H1amWHdU=;
-        b=jPwsi3bZC8G1LJBY7OXtHscMFNTYk7DMBpbU3szMWQMQMYaGvWJqX3EQ8xrDiS/z0O
-         unP7Xo97NgBrP7XqKqq6g7dGEbod+uyk5XkMQQlynWMER6NGjkR/P/5u7/F4DLp5ZuYQ
-         +Q7/sedTuLpH3CDUQgVvn/SCiFqfWVC/vHhvSyQVZ8vO7qK0VwMzDlGlvxGJ1F7xIyOE
-         MvyZGzV7vc9qEMzRX5PsqHyhCQkxpbD6cR1tAmLt1IRET3tk5b8X6ThnfRzIseyQjvhW
-         uO6v3urI4dvXi0LlAMSUIdRV1QATnpBwF8qfeJHqejYbMHUkmnu+BLmvlXaXZqePSEhm
-         SpJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769078824; x=1769683624;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p3kgZdZGe15qcgbvjAtESEFU8KlhQRc0to8H1amWHdU=;
-        b=B6P5nM1eMSG5BHFHTAVEC4ESth4Ysh1Sw05Qk5qOOhuRBDR7NvE2M7gFY75mg7Pq0d
-         mMIJNa/mXu3yDTvXFutYq6f5e3Ew+LIclApMgnhSGW5iLgXo0Y30vlYNuLOJ27uH3ZYn
-         DCZLT4tlLQDGAYyOpGvq8qc3OUcNWvzsWoYL7VK6B9TE6yP1TDMnYldB6GItwfD/LDlP
-         FkWG3UohhwG1qnWfPFNBERsnYGxSzLvYLIc0ZgVtBjH7Vf2zXUU3m4Xo7CvDIwGpuioJ
-         8k1iTRT/kVk2p9skMLyjBBH1snvXbW/p8YrGk5qYF7DBHETAcMIBxR4cKuWFj2lsOy0E
-         BdXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVl7ryOhdD+r0vAQ7O/BtIR6dmADdZmqRAlWqg2+3nfnAe+LFceAq3ZJNgYlieNLcg/50cmTnX4wRNcVyAQ3/NA@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn25RR7TAaJRdlxvwd/VH8KUueBlSrzjlIxK7y0E0QSbt4pIYY
-	cCsQc0MK6h0FwM5cGt0FyeitjbdUyMiwdY/Tzw35+67g+7oSiJ0Vb5UDfOaKQp103JQ=
-X-Gm-Gg: AZuq6aJB/ZnzV0V/5hbPceI2Nz1cKPKyfh7Xgrrg35NG4J5mR+SwmyOleWIC6bi9Or6
-	MmYCQr3o6ODHWL6qw02Q3u+8hg9rEHHzOfgfHsPxCvIU9JZB126YjfBNPBM+I88+NV+Zw3Eg1w2
-	p+9NGrxYO0AuyzXpWeEvj70X5zxQFHG4yP+TIIXhmTk98XWYX9wXJeJT3y6XRGz6W4wnjiU6QBY
-	PknmOMoP0Ld7AIYNT8wSLURJsAVIuw0NR41v6ceSd+sT0NSREPfnGcGE7JLwT3h+VNRUmJLWfmt
-	FmT6lWvVLmjA+6V0sIMvNbGEP6ACVZHxwhboGUb2Gb1955BREq9o29SCyNqePGRgkGZNws5B11i
-	lBPE963Z1OF9Uxa/QLGfWD5SwBMSRPDvotxVnSa5py/gEyL71rWBbRJH/PgUlp/Tm1KrhrC3J3L
-	iM4pFxC1D/F3lb7QNq
-X-Received: by 2002:a05:6000:2dc5:b0:435:8f1b:bb28 with SMTP id ffacd0b85a97d-4358fe9d0fcmr12333244f8f.0.1769078823855;
-        Thu, 22 Jan 2026 02:47:03 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43597719d1fsm14789146f8f.23.2026.01.22.02.47.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Jan 2026 02:47:03 -0800 (PST)
-Message-ID: <10c875e6-6cc2-4695-a0aa-01507541daf4@linaro.org>
-Date: Thu, 22 Jan 2026 10:47:01 +0000
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T5BIC/2i"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60M00DxX028856;
+	Thu, 22 Jan 2026 10:48:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=JNDE2R
+	YtSAzYx77ZcKAr+u5QG1KpD5RS54LtC4BwprM=; b=T5BIC/2iPPrLjFv5kExttY
+	dNpstnCYKO0TgSUNb2kwoG0K0P5iARD5l6186s8nOZuW5WVAQZ/WCswwiFpuApwT
+	4T6Ln8rxYQdALZkPUx0RB+5gT8skEKa1iKNdOGCEcTq+bllbbnSJjoeJ1pwvCp3O
+	cx6B1Lb0BmKKQFmihU616AGgnmwMo+LGdYvMVjGl4YlxT6jh00ttn+l86UbMMHUL
+	+81bSbe5ALe8Yo+O+VuD6Nmwx2cMCG5sTTtRmmDQr9dS+SLyQ0s029Y7wxNeAX5u
+	dvrDJ3HzxqGQNK88cPMe1OitbA7mLu/VXGAu/3SZ4l4dFmxLDbwVefEr/GdrOCuw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bt60evr38-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Jan 2026 10:48:38 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60MAZf1X032071;
+	Thu, 22 Jan 2026 10:48:37 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bt60evr33-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Jan 2026 10:48:37 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60M9tHW0017070;
+	Thu, 22 Jan 2026 10:48:36 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4brn4y9sb3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Jan 2026 10:48:36 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60MAmW7358851776
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 22 Jan 2026 10:48:32 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EC7D22004B;
+	Thu, 22 Jan 2026 10:48:31 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 75E5F20043;
+	Thu, 22 Jan 2026 10:48:31 +0000 (GMT)
+Received: from [9.111.56.62] (unknown [9.111.56.62])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 22 Jan 2026 10:48:31 +0000 (GMT)
+Message-ID: <38a7bed7-1272-40a5-8612-6be20d9493ef@linux.ibm.com>
+Date: Thu, 22 Jan 2026 11:48:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,188 +69,142 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 00/11] perf annotate arch clean up
-From: James Clark <james.clark@linaro.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Zecheng Li <zecheng@google.com>, Tianyou Li <tianyou.li@intel.com>,
- Thomas Falcon <thomas.falcon@intel.com>, Julia Lawall
- <Julia.Lawall@inria.fr>, Suchit Karunakaran <suchitkarunakaran@gmail.com>,
- Athira Rajeev <atrajeev@linux.ibm.com>,
- Aditya Bodkhe <aditya.b1@linux.ibm.com>, Howard Chu <howardchu95@gmail.com>,
- =?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
- "Dr. David Alan Gilbert" <linux@treblig.org>,
- Shimin Guo <shimin.guo@skydio.com>, Sergei Trofimovich <slyich@gmail.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <20260122073127.375139-1-irogers@google.com>
- <9fd8375c-2de7-4305-ac3e-42ff8f919964@linaro.org>
+Subject: Re: [PATCH V2 linux-next] perf test: Subtest Exclude disjoint subcmd
+ names fails
+To: Ian Rogers <irogers@google.com>,
+        "Jayaramappa, Srilakshmi" <sjayaram@akamai.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com
+References: <20260121082402.2311962-1-tmricht@linux.ibm.com>
+ <CAP-5=fXwPrR-gwPbD7CcY6_fKg=s0yfNWSasFyYVQxCDhKKm=A@mail.gmail.com>
+ <CAP-5=fWjzR0WqD7RyDE66ChUQnt4_qwauEPiDsrhtL02u_zo4A@mail.gmail.com>
 Content-Language: en-US
-In-Reply-To: <9fd8375c-2de7-4305-ac3e-42ff8f919964@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <CAP-5=fWjzR0WqD7RyDE66ChUQnt4_qwauEPiDsrhtL02u_zo4A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=WMdyn3sR c=1 sm=1 tr=0 ts=69720086 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=X7Ea-ya5AAAA:8 a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8
+ a=fmlYeatMnGT4I4VfyBoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: oSAH5abIN6coRfqOOJ9GqWjlnmQFL52Q
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTIyMDA3NyBTYWx0ZWRfX4QufSCCLtHJE
+ HQYiQGXMzpT7PQH+O5nyTsqhIqj+N+PB9EgvKI1j1hpWp0bR5OJ6R/v4xCAlFe6b6iYhXGWmAgq
+ Nuw5SjGHXG5sTCbKR3idZ7oAA2Y7LfnDH8U8YDkwxpRxcJ3stPkAtg5pjXKSz+iA1bLT3jdadt1
+ ZudlnO7dOxFyfByi+2Zbs17CHLQj3w/lHkyUFawRB2wtvEGlVGTtewTfxFKiKZpCR+Lf0wYh6s3
+ cmGqiGB+UCXEfbJPVVDqFnbDNErYDERgXzCK3yhcJCEzOsPCMbisWP/omhf7Ts0OjRb5eAfl8nq
+ rJ9hvxCi1MPXSy1wHiCl+GxlZXiXvPw9QlCSeTotfHImY6I3nU6sA6u34Q2kyrCxBRtxlCjp0sa
+ KulDRi9wIk49ViRGP9KjoXBZ8VPHmLHkqDCNphmxT0Qle4T7g01jcXJGM7h2pOA7qxSRqbzxQl/
+ X3Hy44g/XRIy5uosskQ==
+X-Proofpoint-ORIG-GUID: J320bGWI5U96L3gZilDtDcug0YG6h8Fg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
+ definitions=2026-01-22_01,2026-01-20_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 malwarescore=0 suspectscore=0 bulkscore=0 adultscore=0
+ impostorscore=0 spamscore=0 clxscore=1011 priorityscore=1501
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2601150000
+ definitions=main-2601220077
 
-
-
-On 22/01/2026 10:43 am, James Clark wrote:
-> 
-> 
-> On 22/01/2026 7:31 am, Ian Rogers wrote:
->> 2 initial memory leak fix patches for perf annotate.
+On 1/21/26 17:14, Ian Rogers wrote:
+> On Wed, Jan 21, 2026 at 8:12 AM Ian Rogers <irogers@google.com> wrote:
 >>
->> Move the disasm.c #included arch files into a new util/annotate-arch
->> directory. Make the code compile standalone. Try to better encapsulate
->> architecture specific code within the files and with a
->> arch__new_<arch> function that allows additional data to be associated
->> with the struct arch using the standard container_of trick.
+>> On Wed, Jan 21, 2026 at 12:24 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>>>
+>>> V1 --> V2: Add linux next repository
+>>>            s/needed/unneeded/ in commit message
+>>>
+>>> The perf test case 'libsubcmd help tests', subtest
+>>> 'Exclude disjoint subcmd names' fails all the time.
+>>>
+>>> Root case is a special case of sorted input which the exclude_cmds()
+>>> in libsubcmd can not handle. Assume the following inputs:
+>>> cmds = { X, Y, Z } and excludes = { A, B }.
+>>>
+>>> This leads to
+>>>  ci  cj  ei   cmds-name  excludes
+>>>  ----------|--------------------
+>>>  0   0   0 |     X         A       :    cmp > 0, ei++
+>>>  0   0   1 |     X         B       :    cmp > 0, ei++
+>>>
+>>> At this point, the loop is terminated due to ei == excludes->cnt.
+>>> The for-loop now checks for trailing names which had to be deleted.
+>>> But the first entry points to a name: cmds->names[0].name == "X"
+>>> and this is a valid entry.
+>>>
+>>> This is the case when all commands listed in excludes are less than
+>>> all commands listed in cmds.
+>>> Only check for existing names when cmds list was changed, that is ci != cj.
+>>>
+>>> Also remove an unneeded if (cmp > 0).
+>>>
+>>> -
+>>> Output before:
+>>>  # ./perf test -F 68
+>>>  68.1: Load subcmd names                           : Ok
+>>>  68.2: Uniquify subcmd names                       : Ok
+>>>  68.3: Exclude duplicate subcmd names              : Ok
+>>>  perf: help.c:112: exclude_cmds: Assertion `cmds->names[ci] == NULL' \
+>>>         failed.
+>>>  Aborted                    ./perf test -F 68
+>>>
+>>> Output after:
+>>>  # ./perf test -F 68
+>>>  68.1: Load subcmd names                           : Ok
+>>>  68.2: Uniquify subcmd names                       : Ok
+>>>  68.3: Exclude duplicate subcmd names              : Ok
+>>>  68.4: Exclude disjoint subcmd names               : Ok
+>>>
+>>> Fixes: 1fdf938168c4 ("perf tools: Fix use-after-free in help_unknown_cmd()")
+>>> Cc: Namhyung Kim <namhyung@kernel.org>
+>>> Cc: Ian Rogers <irogers@google.com>
+>>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 >>
->> Make the lookup of struct arch use the ELF machine gather from a
->> thread rather than an evsel. For example, the evsel can't determine
->> the difference between EM_386 and EM_X86_64 so generally the latter
->> has currently been used. This means the dwarf registers are off as
->> register 1 is CX with EM_386 and DX with EM_X86_64. To facilitate this
->> change map_symbol is refactored to use a struct thread rather than a
->> struct maps, the maps being obtainable from the thread.
+>> Thanks Thomas!
 >>
->> To make in and out arguments clearer, for safety, etc. try to constify
->> struct arch and its related structs.
+>> I tried to apply this on a perf-tools-next tree but it fails. Looking
+>> into the git logs I see on linux-next:
+>> https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/tools/lib/subcmd/help.c
+>> the last patch is:
+>> 2025-09-12 perf subcmd: avoid crash in exclude_cmds when excludes is empty
+>> In perf-tools-next:
+>> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/tools/lib/subcmd/help.c?h=tmp.perf-tools-next
+>> I see:
+>> 8 days libsubcmd: Fix null intersection case in exclude_cmds()
+>> 2025-09-12 perf subcmd: avoid crash in exclude_cmds when excludes is empty
 >>
-> 
-> Hi Ian,
-> 
-> I get this crash, not sure which commit causes it exactly but it 
-> happened 2/2 times on both x86 and arm:
-> 
->   $ perf record -- true
->   $ perf report
-> 
->   < Select first sample >
->   < Select annotate >
-> 
-> perf: Segmentation fault
-> -------- backtrace --------
->      #0 0x5df8f58ba973 in ui__signal_backtrace setup.c:110
->      #1 0x74373a642520 in __restore_rt libc_sigaction.c:0
->      #2 0x5df8f5963f0d in dso__kernel dso.h:532
->      #3 0x5df8f5965d0a in __map__const_kmap map.c:627
->      #4 0x5df8f5965a36 in map__rip_2objdump map.c:531
->      #5 0x5df8f58e5bef in symbol__parse_objdump_line disasm.c:1032
->      #6 0x5df8f58e498b in symbol__disassemble_objdump disasm.c:1503
->      #7 0x5df8f58e3852 in symbol__disassemble disasm.c:1621
->      #8 0x5df8f58c638d in symbol__annotate annotate.c:1055
->      #9 0x5df8f58c8628 in symbol__annotate2 annotate.c:2209
->      #10 0x5df8f58a36b7 in __hist_entry__tui_annotate annotate.c:1189
->      #11 0x5df8f58adf86 in do_annotate hists.c:2488
->      #12 0x5df8f58ad762 in evsel__hists_browse hists.c:3441
->      #13 0x5df8f58b78f2 in perf_evsel_menu__run hists.c:3556
->      #14 0x5df8f58adabc in __evlist__tui_browse_hists hists.c:3643
->      #15 0x5df8f58abf3b in evlist__tui_browse_hists hists.c:3691
->      #16 0x5df8f571ac3a in report__browse_hists builtin-report.c:688
->      #17 0x5df8f5719943 in __cmd_report builtin-report.c:1177
->      #18 0x5df8f57181bc in cmd_report builtin-report.c:1890
->      #19 0x5df8f57b5c3a in run_builtin perf.c:348
->      #20 0x5df8f57b53b3 in handle_internal_command perf.c:398
->      #21 0x5df8f57b5b2f in run_argv perf.c:445
->      #22 0x5df8f57b5091 in main perf.c:551
->      #23 0x74373a629d90 in __libc_start_call_main libc_start_call_main.h:58
->      #24 0x74373a629e40 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
->      #25 0x5df8f56ead35 in _start perf[55d35]
-> 
-> 
-
-Also the annotate test fails:
-
-  $ sudo perf test 74
-  74: perf annotate basic tests                       : FAILED!
-
-
->> Ian Rogers (11):
->>    perf maps: Fix reference count leak in maps__find_ams
->>    perf annotate: Fix args leak of map_symbol
->>    perf disasm: Constify use of struct arch
->>    perf disasm: Constify use of struct ins_op
->>    perf disasm: Constify use of struct ins
->>    perf disasm: Rework the string arch__is to use the ELF machine
->>    perf disasm: Don't include C files from the arch directory
->>    perf disasm: Refactor ins__is_call/jump to avoid exposing arch ins_ops
->>    perf map_symbol: Switch from holding maps to holding thread
->>    perf disasm: Refactor arch__find and initialization of arch structs
->>    perf disasm: Minor layout tweaks for struct arch
+>> The test I wrote was to give coverage for  Sri Jayaramappa's fix:
+>> https://lore.kernel.org/r/20251202213632.2873731-1-sjayaram@akamai.com
 >>
->>   tools/perf/arch/arc/annotate/instructions.c   |  11 -
->>   .../perf/arch/riscv64/annotate/instructions.c |  36 --
->>   tools/perf/ui/browsers/annotate.c             |   6 +-
->>   tools/perf/ui/browsers/hists.c                |   3 +-
->>   tools/perf/util/Build                         |   1 +
->>   tools/perf/util/addr_location.c               |   4 -
->>   tools/perf/util/addr_location.h               |   1 -
->>   tools/perf/util/annotate-arch/Build           |  11 +
->>   tools/perf/util/annotate-arch/annotate-arc.c  |  18 +
->>   .../annotate-arch/annotate-arm.c}             |  48 +-
->>   .../annotate-arch/annotate-arm64.c}           |  59 +--
->>   .../annotate-arch/annotate-csky.c}            |  29 +-
->>   .../annotate-arch/annotate-loongarch.c}       |  57 ++-
->>   .../annotate-arch/annotate-mips.c}            |  29 +-
->>   .../annotate-arch/annotate-powerpc.c}         | 125 +++++-
->>   .../util/annotate-arch/annotate-riscv64.c     |  41 ++
->>   .../annotate-arch/annotate-s390.c}            |  59 ++-
->>   .../annotate-arch/annotate-sparc.c}           |  26 +-
->>   .../annotate-arch/annotate-x86.c}             |  89 ++--
->>   tools/perf/util/annotate-data.c               |  12 +-
->>   tools/perf/util/annotate-data.h               |   2 +-
->>   tools/perf/util/annotate.c                    |  88 ++--
->>   tools/perf/util/annotate.h                    |  10 +-
->>   tools/perf/util/callchain.c                   |  12 +-
->>   tools/perf/util/capstone.c                    |  18 +-
->>   tools/perf/util/db-export.c                   |   1 -
->>   tools/perf/util/disasm.c                      | 424 +++++++-----------
->>   tools/perf/util/disasm.h                      |  95 ++--
->>   tools/perf/util/event.c                       |   2 -
->>   tools/perf/util/hist.c                        |  18 +-
->>   tools/perf/util/llvm.c                        |   8 +-
->>   tools/perf/util/machine.c                     |  13 +-
->>   tools/perf/util/map_symbol.c                  |   5 +-
->>   tools/perf/util/map_symbol.h                  |   3 +-
->>   tools/perf/util/maps.c                        |   1 +
->>   tools/perf/util/sort.c                        |   2 +-
->>   tools/perf/util/unwind-libdw.c                |   2 +-
->>   tools/perf/util/unwind-libunwind-local.c      |   2 +-
->>   38 files changed, 752 insertions(+), 619 deletions(-)
->>   delete mode 100644 tools/perf/arch/arc/annotate/instructions.c
->>   delete mode 100644 tools/perf/arch/riscv64/annotate/instructions.c
->>   create mode 100644 tools/perf/util/annotate-arch/Build
->>   create mode 100644 tools/perf/util/annotate-arch/annotate-arc.c
->>   rename tools/perf/{arch/arm/annotate/instructions.c => util/ 
->> annotate-arch/annotate-arm.c} (59%)
->>   rename tools/perf/{arch/arm64/annotate/instructions.c => util/ 
->> annotate-arch/annotate-arm64.c} (70%)
->>   rename tools/perf/{arch/csky/annotate/instructions.c => util/ 
->> annotate-arch/annotate-csky.c} (67%)
->>   rename tools/perf/{arch/loongarch/annotate/instructions.c => util/ 
->> annotate-arch/annotate-loongarch.c} (66%)
->>   rename tools/perf/{arch/mips/annotate/instructions.c => util/ 
->> annotate-arch/annotate-mips.c} (59%)
->>   rename tools/perf/{arch/powerpc/annotate/instructions.c => util/ 
->> annotate-arch/annotate-powerpc.c} (73%)
->>   create mode 100644 tools/perf/util/annotate-arch/annotate-riscv64.c
->>   rename tools/perf/{arch/s390/annotate/instructions.c => util/ 
->> annotate-arch/annotate-s390.c} (70%)
->>   rename tools/perf/{arch/sparc/annotate/instructions.c => util/ 
->> annotate-arch/annotate-sparc.c} (85%)
->>   rename tools/perf/{arch/x86/annotate/instructions.c => util/ 
->> annotate-arch/annotate-x86.c} (93%)
+>> I wonder if we've put the test into linux-next but not Sri's fix, well
+>> that's what it looks like to me.
 >>
+>> Now that we have both your fix and Sri's fix, and they differ :-) I'm
+>> wondering how to resolve the differences.
 > 
+> Sorry, resending as I got Sri's email address wrong.
+> Ian
+> 
+Hi Ian, Jayaramappa,
 
+I have looked at both patches and Jayaramappa's patch is already
+in perf-tool-next and solves the issue too. I am fine with this one.
+So lets simply drop mine.
+
+Thanks Thomas
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
