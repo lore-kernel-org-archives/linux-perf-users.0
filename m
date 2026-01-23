@@ -1,118 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D2630F93C
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Jan 2026 14:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFFA623D7DC;
+	Fri, 23 Jan 2026 14:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769178431; cv=none; b=Jvo2FNSGeX8aAa0MLPl+cagbB/YR4gWReswMnY6ltdmmjqA3FMFdERBXK0tqqpjjahhB9D79xRATPmhKP5Pl8Tam7aw8x5GYttTo+tIHD9rWradQ3DSV6EY1Df3EwKzTP6u2xw0kSgbLDRf6/bQM6UyteXWPMWCb/2BZ2oZutvg=
+	t=1769179284; cv=none; b=gAsYfgOOGXhbspE+AmuRhR5irlnPsZR3J/7ZErQwWjGFvuQzTkLE23QpMOhJF4HHLKgd0h5w6PmDG7QIBoMB03UhJMRvDU6i0VtVbs88IyTI0N6o9piOWTwp8e1URDHxJCm4SGRAGOnGXJ8zFnyvveU2WV73tHVxYvesQqXbPbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769178431; c=relaxed/simple;
-	bh=Eb77ID3UnO3ePz3cljWhsayZrA0trFF+xq3jcmAhpvc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=k337AmF/NPn4GUEV+9Io5UcfLWcvgrH8PcJb+qbRyHOv7e+zwGBWvNrgs5N4/DmZDB3gTV/jAJlnZ8jFAWeIH/REaiCiTb2giy7bHt6w7FhnlvAJ1u81c6Jz48ll7zqQvk6t6SbX0FGCOPHwhyNMN1CperN4HC2lVBo2sQyG/i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U8HnDGga; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U8HnDGga"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769178426;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1Oj3kc35jazdHGK3EMpfjOpIQ4hKn3RMT1LLNy1PFV4=;
-	b=U8HnDGgai9KUOqNP3wiBalApFnFfn7vkjhUJY7/e5ioNVEzoVoaEo5qQL6ETPH0hJNYJ0W
-	UrzvyZWn/4s25uZkJp+JUnJqu6jwGgpW0gXzeipKnyMovrVcSX/LjFloPYPFJmb4SKYeQC
-	NzwC1PNUBXcg9ce+tbMwbKuEhKW4S1o=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-498-uPpw8eybM-qA0_yLrVbmjw-1; Fri,
- 23 Jan 2026 09:27:02 -0500
-X-MC-Unique: uPpw8eybM-qA0_yLrVbmjw-1
-X-Mimecast-MFC-AGG-ID: uPpw8eybM-qA0_yLrVbmjw_1769178421
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5293F19775A5;
-	Fri, 23 Jan 2026 14:27:01 +0000 (UTC)
-Received: from Carbon (unknown [10.45.242.13])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C6F0618004D8;
-	Fri, 23 Jan 2026 14:26:58 +0000 (UTC)
-Date: Fri, 23 Jan 2026 15:26:54 +0100 (CET)
-From: Michael Petlan <mpetlan@redhat.com>
-To: Jakub Brnak <jbrnak@redhat.com>
-cc: acme@kernel.org, acme@redhat.com, linux-perf-users@vger.kernel.org, 
-    namhyung@kernel.org, irogers@google.com
-Subject: Re: [PATCH v5 0/7] Introduce structure for shell tests
-In-Reply-To: <20251125155648.197527-1-jbrnak@redhat.com>
-Message-ID: <a5f59c64-0da-6928-7a9-c5b6c2be8ef8@redhat.com>
-References: <20251125155648.197527-1-jbrnak@redhat.com>
+	s=arc-20240116; t=1769179284; c=relaxed/simple;
+	bh=uv1CtOsiJc6r4s8Pfj+sLjNth3vSmN60bqHdaQ5XL3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZqZqckQI3mdcuRnFf5tqMd0NMLGIF84B0/BPAunTvAS8N7ldfs3PT8tx9AjArsUXmfvETc7e8oyQ9jrZkfoLwPFQRRumx/4vRSyxD3nm+TUQzhGkfhbjPrG1RTz+L7V/enzqVKf4dFjtYEqsEqstbIf6BtEtUVlYEIYqzo0xbMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B34E11476;
+	Fri, 23 Jan 2026 06:41:15 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE1B93F694;
+	Fri, 23 Jan 2026 06:41:21 -0800 (PST)
+Date: Fri, 23 Jan 2026 14:41:19 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: James Clark <james.clark@linaro.org>, Thomas Voegtle <tv@lio96.de>,
+	stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf arm_spe: Fix bitfield dependency failure
+Message-ID: <20260123144119.GC40455@e132581.arm.com>
+References: <20260123100218.233246-1-leo.yan@arm.com>
+ <705c0889-ffb6-4758-941c-ccfdb367d9c8@linaro.org>
+ <20260123120847.GB40455@e132581.arm.com>
+ <20260123140317.4bd85cdb@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260123140317.4bd85cdb@pumpkin>
 
-Hello Ian and Namhyung,
+On Fri, Jan 23, 2026 at 02:03:17PM +0000, David Laight wrote:
 
-kindly reminding this patchset. Could we get it merged soon please?
-Or is there still anything to address?
+[...]
 
-Thanks in advance!
+> > bitfield.h is a common header so I did not change it.  I digged a bit
+> > and found diverage between kernel's bitfield.h and tool's bitfield.h.
+> > 
+> > 1) The kernel's bitfield.h includes asm/byteorder.h, and finally it
+> >    includes linux/byteorder/generic.h, cpu_to_le{16|32|64} are defined
+> >    in this file.
+> > 
+> > 2) The tool's bitfield.h will includes asm/byteorder.h, but this hooks
+> >    to the headers provided by the toolchain.  cpu_to_le{16|32|64} are
+> >    not C lib API, they are defined in tool's kernel.h.
+> 
+> Perhaps cpu_to_le16() and friends should be defined in the tools
+> asm/byteorder.h rather than its kernel.h.
 
-Regards,
-Michael
+This will override the toolchain's asm/byteorder.h.
 
-On Tue, 25 Nov 2025, Jakub Brnak wrote:
-> Hi maintainers,
-> 
-> This revision of series of patches continues the effort of upstreaming a perftool-testsuite and 
-> incorporates the review feedback that was previously discussed.
-> A new patch (7/7) was added to fix the incorrect relative path for locating stderr-whitelist.txt 
-> in report tests.
-> 
-> Thanks,
-> Jakub
-> 
-> Link to v4: https://lore.kernel.org/linux-perf-users/20250930160923.13728-1-jbrnak@redhat.com/#t
-> 
-> Changes since v4:
-> Patch 1: applied review feedback, renamed shell_info -> shell_test_info, minor cleanups
-> Patch 2: renamed shell_info -> shell_test_info
-> Patch 4: renamed shell_info -> shell_test_info
-> Patch 7: added in v5, fix for relative path to 
-> stderr-whitelist.txt in report tests
-> 
-> Jakub Brnak (7):
->   perf tests: Create a structure for shell tests
->   perf test: Provide setup for the shell test suite
->   perftool-testsuite: Add empty setup for base_probe
->   perf test: Introduce storing logs for shell tests
->   perf test: Format log directories for shell tests
->   perf test: Remove perftool drivers
->   perf test: Fix relative path for 'stderr-whitelist.txt'
-> 
->  tools/perf/tests/builtin-test.c               | 129 +++++++-
->  tools/perf/tests/shell/base_probe/setup.sh    |  13 +
->  .../tests/shell/base_report/test_basic.sh     |   6 +-
->  .../tests/shell/perftool-testsuite_probe.sh   |  24 --
->  .../tests/shell/perftool-testsuite_report.sh  |  23 --
->  tools/perf/tests/tests-scripts.c              | 288 +++++++++++++++---
->  tools/perf/tests/tests-scripts.h              |  15 +
->  tools/perf/tests/tests.h                      |   8 +-
->  8 files changed, 398 insertions(+), 108 deletions(-)
->  create mode 100755 tools/perf/tests/shell/base_probe/setup.sh
->  delete mode 100755 tools/perf/tests/shell/perftool-testsuite_probe.sh
->  delete mode 100755 tools/perf/tests/shell/perftool-testsuite_report.sh
-> 
-> -- 
-> 2.51.1
-> 
-> 
+Another issue is:
 
+  $ git grep -l cpu_to_le tools/
+  tools/arch/x86/include/asm/insn.h
+  tools/include/asm-generic/io.h
+  tools/include/linux/bitfield.h
+  tools/include/linux/kernel.h
+  tools/include/linux/unaligned.h
+  tools/perf/util/intel-pt.c
+  tools/testing/cxl/test/mem.c
+  tools/testing/nvdimm/test/ndtest.c
+  tools/testing/selftests/arm64/fp/fp-ptrace.c
+  tools/testing/selftests/kvm/include/arm64/processor.h
+  tools/testing/selftests/kvm/lib/arm64/gic_v3_its.c
+  tools/usb/ffs-aio-example/simple/device_app/aio_simple.c
+  tools/usb/ffs-test.c
+
+I assume these programs include kernel.h for calling cpu_to_le(), if
+move cpu_to_le() out from kernel.h, it will break build for these
+programs.
+
+Thanks,
+Leo
