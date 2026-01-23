@@ -1,195 +1,183 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011064.outbound.protection.outlook.com [52.101.62.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E3B173;
-	Fri, 23 Jan 2026 15:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769181617; cv=fail; b=usOML3R4m8lkjWa9nN3qDspr9rkhbGIiVPXpadKeXp/NT3A8hHNJnVM4rklKoaXChMp+7TDcHq5zcEcxHDFe6eWhfxKbZ91qLbYB6ZQbD4Qx7nLeB4tHDQb3eHcAvbP6y/JB3qTWZwgtRT3DInRCL4Gi0TvxIe3YUklSdAFa4jE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769181617; c=relaxed/simple;
-	bh=rDKJL8m4iDs9ynlHtmLrzWOq8siYWrwWcyE3uVtneZw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IrhhqMEzIOm8XQ9xKJJWka4tYU1YxmjYFWMNPY3JG0cJcaBuM9oy3zvJgdj/sy9M3qdCd3TS9CrQ+K/4HpFNUzx3R3Y8SiPXdnWGxCsen++yM9S53l45UgfWNlhg7FL7ZoRs/7hV0dZhvhx6BVMtwNgFKbSYeXTfk1RSCv4PajU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=skMhMchP; arc=fail smtp.client-ip=52.101.62.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D601821CA02
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Jan 2026 16:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769184259; cv=none; b=kbAr3Vu+irHLCX8qz9l0ES7Vv6jBTJmieBdYAluTb+31l3vu5SMG489t/RHRfT0muPDrzR7iBTPpq64MeqyusRbZHyPWxMXmxXb76RNBwHcGR9HMXxUycQJ25QKgjU1tkJWaiMFxo7GEPfNCIoDmFEsL0QhmnO+a4EBgfa7cjko=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769184259; c=relaxed/simple;
+	bh=J2NUFjvvXMu9+MHY1GKuFX/hcjZoK4TGwPSbICa6OJU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eTpsV8/pUOuchyR1fuW6n0zKSwroMUwb9OoM/2YUJEeT4sDC53pg9sf8pP3sDRYL5F/Oz7Zebe8C59jLDBge/MTx3tjP3Jn7nsKiSltMLflPng/8aGdIdTrE2aZrodcQoGJCLRx2TqIh1ZeAXzvBQytKuKE9bMi9y3Iq75RBz38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G0LNyTYW; arc=none smtp.client-ip=209.85.128.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="skMhMchP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dMGNjjJ56CghQwiuQsru14X3LDQpJJqqyor/Vu6NLUx7pe6mmCgVgrmFO/MW/hlf9sZC9UvjECbiMu1DeWGGpI/Sm5M3zF9HMMFrwSh4W4byQSPuwlqGkMWLOx7ZE2qepDlekght8j9DnDjiYPaOjEOkkd0YXSU7O4uHB5CmwZjzLByhh/AUAMeTP5N4G/QAh5z2foVggrmeEHQHzxsebtsAgAakAtRLR3FJP6/IeLt4nq1mF1yt+4/6LS9tHByhY4BQuYEvdTT2jKXSFiWIQY/GqRLT5DskkPoGwleKUwYL8OWEFaWhcUBRBs25+sL2/n48m2zMNmOCJoRI9OQaqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OSEQ1qNFLXFEm+boLs498Tf0Oyek0nUEzCZEOC+fb8A=;
- b=Pg1Cvew8e02ZqSWgftU9LzM6jJaE7nIsxERrfFCpkA4g1kb4LkTTp0/XN3Pvk7njTdf3WxSXZf4BnUdxx7WKYmpzYhvqZudB6ySuwypLuHbf2a/TpJZglosKIWJ9J0y38xGlm6TebP1swybxT44Ip8jL7Cru2oUS60f+KwhnTxnp8hEO5EgR+Bw2mrI/QXIEPboOUjjslA+JGZt1R4mrPzL0x6nUm+Xl2BXrOI807Y6J7EsZc47Y6ZoJOXG6UgEP35LAryry1ux9QYO10jX+f+RkK6IqGOFdvega2GLCPSuaWT+P46mEwVzH9NDn5ga3Pf0Pc89KbULEBcKK4iP6EQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.ibm.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OSEQ1qNFLXFEm+boLs498Tf0Oyek0nUEzCZEOC+fb8A=;
- b=skMhMchPOEktvMUhymNRZeVX3lEnaPCm73xpLqng27tPVN0hjaewCIz7ZRwiJpv2wMnWEDmIYGM7kZKLosKFSxxV2KMyrhwm7RwAMG0bkwlqN7ILrefQ5F77S3bYgIfJRtHCzyShK/QiSYH9goSqV/0Xr6ITa9kWWHlD0jEGYMk=
-Received: from DS7PR03CA0271.namprd03.prod.outlook.com (2603:10b6:5:3ad::6) by
- LV8PR12MB9619.namprd12.prod.outlook.com (2603:10b6:408:2a1::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.11; Fri, 23 Jan
- 2026 15:19:53 +0000
-Received: from CY4PEPF0000E9D1.namprd03.prod.outlook.com
- (2603:10b6:5:3ad:cafe::16) by DS7PR03CA0271.outlook.office365.com
- (2603:10b6:5:3ad::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9542.9 via Frontend Transport; Fri,
- 23 Jan 2026 15:19:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- CY4PEPF0000E9D1.mail.protection.outlook.com (10.167.241.136) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9564.3 via Frontend Transport; Fri, 23 Jan 2026 15:19:53 +0000
-Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 23 Jan
- 2026 09:19:52 -0600
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb09.amd.com
- (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 23 Jan
- 2026 07:19:51 -0800
-Received: from [10.252.222.65] (10.180.168.240) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
- Transport; Fri, 23 Jan 2026 09:19:42 -0600
-Message-ID: <16b0e37d-978b-4991-a16d-425f00e50029@amd.com>
-Date: Fri, 23 Jan 2026 20:49:40 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G0LNyTYW"
+Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-48049955f7fso18039025e9.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jan 2026 08:04:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1769184256; x=1769789056; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HRaAyzpQLD9z0tMt/n74ydmpLXpoLNEfmnc5Kofzl7k=;
+        b=G0LNyTYWnCXnECn9ZETLZhUbyRAJVSlwrXXayexjEGi2y4IlEvhL0hHci/Y6d2pCt5
+         GhMZXK3zDCsFn+iVxv6T9BawoazHbRC1nkd22vhmRMmK0Svu0dr82f/n6njwFiTw+Ag9
+         hsJp6pFDgt2P/kwEqQWSPi6pKjco5J1YD1HJVwF0dVn7E33fhBlMVP3Mg3LKH6oRS9OF
+         HwUENDLa/3xuFwzCKSgcVKpmax3CvqzI7NMJTBrEO2+t6K6l3p9lvysRdza9lfrCpr17
+         R/43xU/Vx10LrRl7SWtGDlrqcklfSkh+uMY1/5EpuI0a1ZJsjzkQqiAC0BRnc7d9dULl
+         h9Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769184256; x=1769789056;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HRaAyzpQLD9z0tMt/n74ydmpLXpoLNEfmnc5Kofzl7k=;
+        b=g6+R6+lPn9cUQN3tGY9a1+J1keko+JEiKAuDnuhYOVpCVHuImsV5C6OzNE7VWRRdWp
+         k/WKat6C6ejt7kVT512S/uWXuWYv4djcDhBgzGdEbZ60Ew0nyiU2x5zvjDfc0uUnaqQz
+         IQUr9NxKkgQ7/Tf/+SenZZ2rCE0AHKeYKd12h1gcKkvZeBnZMnwPrK8i41FUoaN6GMB1
+         HRJVnnNqu+aL8AQbkZThFZUPd35WD1ozy+m8klxzaFwijcCu1M4kDsj5hVKRNoOWPIWO
+         Qdt61+EpTjH9RHQ+efMEqAMOGWQZqANorjkG/B5db/jvHnyn43aDlvuZWXjOYwHMsYLz
+         u62w==
+X-Forwarded-Encrypted: i=1; AJvYcCWyS6hPeuWPSociY8dGIbodtczxlYPavMd/79aisQ4wg4X4n9jYhXhkLw1bKCnrSujuwNVoZgYSG49GkuSuxPhu@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkR4KjOHfwpIHoaqR5GC/DF3+XbWE53jcsOAyUIIS17eA0ll5r
+	BWSmF27ORFe7av9iiMQbe9AG4cJzL+CGWn/2mq+0laTUL/ow6TvWmNh3tINNrlVSa/8=
+X-Gm-Gg: AZuq6aItKcnJ9nT8zgjIJLP2Ok1fHblHrMTHx7FytuGkdUzikwgL+ihoZEJP3yHBDZq
+	YPCvHyI+yhVdMOu5vnAagZNvImhYZ7TOhHf/7PTZF4tKELc4Az+QfPIzVOSJ4SQuiQXEOD29Bos
+	1oa0/tia5oiaT0kPBtHQ+IPYhN0SYTA109IR5OcYQXX23/2yON6VCCceyCuRLIo2KgmbHut0Emk
+	QcQo29DP4R7CoKlgEse2H5aX9JL+BQn6K8zrkJRcUraKuTQ4uF5Pq4LLSw8du/XNzqf1RK4wOJ1
+	faNoqYUjcuLhzsy07lyqoKPcs4qik6/Qfl6wVGBaZUtPgSFU8Txl7lNIepqfxhIm2KVoiGv5YfB
+	VciQJqbYgQ1qxT4YSRkv4AQ8IRgKGCDpxFumfHtrJ3tU5wv1D/aNKwLbqsw2DtGBhjFeZwAVF9f
+	5rs4EqJOitY1LW7Om3GcB9
+X-Received: by 2002:a05:600c:638e:b0:480:4ae2:def1 with SMTP id 5b1f17b1804b1-480511f42d4mr29154775e9.13.1769184256022;
+        Fri, 23 Jan 2026 08:04:16 -0800 (PST)
+Received: from ho-tower-lan.lan ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435b1f7b4d8sm7382016f8f.38.2026.01.23.08.04.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jan 2026 08:04:15 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+Date: Fri, 23 Jan 2026 16:03:53 +0000
+Subject: [PATCH] perf: arm_spe: Add barrier before enabling profiling
+ buffer
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/10] perf header: Support CPU DOMAIN relation info
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-CC: <ravi.bangoria@amd.com>, <yu.c.chen@intel.com>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
-	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
-	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
-	<ctshao@google.com>, <quic_zhonhan@quicinc.com>, <thomas.falcon@intel.com>,
-	<blakejones@google.com>, <ashelat@redhat.com>, <leo.yan@arm.com>,
-	<dvyukov@google.com>, <ak@linux.intel.com>, <yujie.liu@intel.com>,
-	<graham.woodward@arm.com>, <ben.gainey@arm.com>, <vineethr@linux.ibm.com>,
-	<tim.c.chen@linux.intel.com>, <linux@treblig.org>, <santosh.shukla@amd.com>,
-	<sandipan.das@amd.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
-	<irogers@google.com>, <james.clark@arm.com>
-References: <20260119175833.340369-1-swapnil.sapkal@amd.com>
- <20260119175833.340369-3-swapnil.sapkal@amd.com>
- <ae0de6b0-82d8-4016-8011-0439ae2851e2@linux.ibm.com>
-Content-Language: en-GB
-From: Swapnil Sapkal <swapnil.sapkal@amd.com>
-In-Reply-To: <ae0de6b0-82d8-4016-8011-0439ae2851e2@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D1:EE_|LV8PR12MB9619:EE_
-X-MS-Office365-Filtering-Correlation-Id: afbbb68b-09a3-4b31-90a1-08de5a92dbdf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?b2JtaE1nQkJQbWpYYWg3RCs5c3JLWFdwcFRLL2VOVEhTaVkwOXdCOGtITFE5?=
- =?utf-8?B?YXRRZDRLWmJxY3YvZDY1NGIySkE5WEFCbmVxUjJxcnp1bEFqdlRKWmltdDZV?=
- =?utf-8?B?di9WUFdkNXBmdCsxaFJBNndSc1k5WTdYTHNUNzk0QUFFV2NSMXF6OUs5dzJH?=
- =?utf-8?B?eEFCM1B3ZFd3dWJ5V1ZIaDZ4VndsV2N4Yk5OK3FNbGwrc3JoUHAzZXlPQnhw?=
- =?utf-8?B?dzBjc3cyRFY4dDNtcHg5cG43MGxBbzlLOVVuYVd6aW42T3RHUmMzNEhsOE1I?=
- =?utf-8?B?dytoTUlOajhxajFjbFZ0UHQxQzd0VU5wVDVlV1FZYWVpSDZWcWNBVGpsNERU?=
- =?utf-8?B?WENSYVNxQkw4ZGxDcHc0SVRNL21IdXY1RzBoSFdsNVAyVVUxMWRKQ1BZeWlP?=
- =?utf-8?B?dlJoRSszb01Xdmhxb25GdFptUkV4TUQ5dXlmcFFabHExb0dCOVpoUVdScnBQ?=
- =?utf-8?B?cldlVEhrakp5TDZkYmlrYm1PRVVYemh2eDUxZTBmOWlFaXpTdWZuSlRRT24w?=
- =?utf-8?B?N1VScnE5TkNsb2pnZExMNWxDSXdsRmIvTFc5eEpXUTY5SGNQRnlOL1VKdWdv?=
- =?utf-8?B?a2hvdkhXSEY3Z3MxNEFPUk1rdjlxdVVGV1ZoM0kxdzNkNHp3SU9tMHNkMTRK?=
- =?utf-8?B?VGJ1ODRzeXErYmZ0VXg0M1hKS3dHVnR3d2tyZWx2RzVselhZYU1jUVovYzh6?=
- =?utf-8?B?VHNMTFduaGJEN1pNc2dSZ0pFNytqQnBrSWprSHowVkRjR1hEbE9lUkxDa3JD?=
- =?utf-8?B?Yno4ZkZ4dkVBcC96ZnFhYXVMUlg1MjVBMUhaRjBCV0RzRHdZRmhUYWU4SEVN?=
- =?utf-8?B?V0RIMy9XZnZSaTdRaGV0MEhCbTVhVVlXeXYyRU1peTJobC92SUVveXBickN0?=
- =?utf-8?B?aGsyQlFHdGtldHltZE8rOXlId2lONkpFMXN4SmRJRitjcm8vY3JlVHpHM2J0?=
- =?utf-8?B?S1JPcVFTNWl6R2tTZ2I4ZzBlWWlPOGwzdEMxdWxpQWNpdWwvd1JWUzVLOFFn?=
- =?utf-8?B?MVR1T1lwUEVNQ3Z0QnJzNTZyNzR4MTRtbmROTkRKWERPb2FaS3d1WGpXaVl3?=
- =?utf-8?B?NXJiNXZMQlBTQ2xFTXJ6VVdXSDkrSXYwK1lNSWtJTkFSSTcyOHc5bXQzMkFn?=
- =?utf-8?B?bkFBSVV5UkJIZm81UklaTHVjdHVRWEVYVC9YS3RsYWZ6eDByeityOEExWXAy?=
- =?utf-8?B?ODRpdk5teVNuaG5RRWgxS0xKVmkxQ2hCOHA2aVh5aDhxeEhJeE5GWlhYNjNG?=
- =?utf-8?B?RjI0YTdITXIzOE1qa2pKdENXbm5xcTl3SUJHaWIzNUxVYmdIYUxzblNUQk9i?=
- =?utf-8?B?bWtyN1VWc3VjUWhrcFo5VFBZZnRKcWcyQ3NXOUU3VitOTDAzdGU0VEE3NDM3?=
- =?utf-8?B?T3BOYmZiaVpMU29iUStNd0JxU0RsN2tlRjFTZ2VrdS9IMXFUWmRWZ1lwSjRF?=
- =?utf-8?B?RmlScVA1QUNJUGtWUkVSK0laOEhqenFXUXNIa01iU0RsMkY2TWxhUU5LNW5j?=
- =?utf-8?B?TlNNRjhPT0NVTmM0clBod0lQT3JDaW1mWi9wd0hpamxZaDg1TS9jbVgwa3Vi?=
- =?utf-8?B?d09UTXQyRkNScnBtamNGbC92MC92anlCWGdFcS9OdnVoWjUrcG4xbCtDL3pN?=
- =?utf-8?B?WWtFU29yWm1hWHMyS2tmeDZzeUxIdENkRGlrQVA0TXpsTEZoZWM1elI5OFJP?=
- =?utf-8?B?QUdnTkRZdGk5SDlrVWk5eTNpeGNJME56dEZjMTkxKzBOOUdzYnl3bDdoQStv?=
- =?utf-8?B?eFdXNFpGSmJwdisyeFJqU1RMQmtiaWxlc25XbDNsV09hUVlnanNFdlJMNThl?=
- =?utf-8?B?MjU3Y3pkOWphcUdTYWdLZlVhN2N5WXRJaHhTcUFSWEtSLy9hOEVCSXpmUkE5?=
- =?utf-8?B?TTNkQVA5Z3Qvbm9YaVFaaytEbTAxVHNuOGZ0SDFZM0JWeG00Zk5GYnJzMnZZ?=
- =?utf-8?B?eExUMUhBQk1oMXFxaUVxa05ZdVZleGRCZnVqbko0azVnN25pMW01WmFiYzJX?=
- =?utf-8?B?aDRwaHZpalRCQmU2UWN0UXJFUkZCeXZ1RENkN2YxSEMrVldZem9UWk8wQVJD?=
- =?utf-8?B?dlkyVEttUk5JdXFRalkzSTh0YlBvaXFydGNxdWJ0d2VMSVF2RjVxSXluRnJS?=
- =?utf-8?B?TlFKRC84enQxa1lWeHNaUUlzUk8zdHRvK3lTWEN6VVA5enhLZFdDeVVzVlpE?=
- =?utf-8?B?ZnZQS2tCR05GaW95cFpvY0RMcFZWYW9kcVB0cldKOTZpQXZMNjBiVm1lNjls?=
- =?utf-8?B?M0RPNW5hbXIrOXRBVWsyYmV0dmZ3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2026 15:19:53.1917
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: afbbb68b-09a3-4b31-90a1-08de5a92dbdf
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D1.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9619
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260123-james-spe-relaxation-v1-1-4ccb88fa7bc5@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAOibc2kC/x3MSwqAMAwA0auUrA3YClW8irgImmrET2lEBPHuF
+ pezePOAchJWaM0DiS9ROfYctjAwzLRPjDLmBlc6X1pX4UIbK2pkTLzSTWcGOHrv7FCTb0KATGP
+ iIPe/7fr3/QABhG0pZgAAAA==
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, 
+ Alexandru Elisei <Alexandru.Elisei@arm.com>, 
+ Anshuman Khandual <Anshuman.Khandual@arm.com>, 
+ Rob Herring <Rob.Herring@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>, 
+ Robin Murphy <Robin.Murphy@arm.com>, Leo Yan <leo.yan@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
-Hi Shrikanth,
+The Arm ARM known issues document [1] states that the architecture will
+be relaxed so that the profiling buffer must be correctly configured
+when ProfilingBufferEnabled() && !SPEProfilingStopped() &&
+PMBLIMITR_EL1.FM != DISCARD:
 
-Thanks for the review.
+  R24557
 
-On 21-01-2026 22:48, Shrikanth Hegde wrote:
-> Hi Swapnil.
-> 
-> 
+  While the Profiling Buffer is enabled, profiling is not stopped, and
+  Discard mode is not enabled, all of the following must be true:
 
-[...]
+  * The current write pointer must be at least one sample record below
+    the write limit pointer.
 
->>   }
->> +static struct cpu_domain_map **build_cpu_domain_map(u32 
->> *schedstat_version, u32 *max_sched_domains,
->> +                            u32 nr)
->> +{
->> +    struct domain_info *domain_info;
->> +    struct cpu_domain_map **cd_map;
->> +    char dname[16], cpumask[256];
-> 
-> You should likely make cpumask and cpulist as NR_CPUS to be
-> safe.
-> 
-> 256 will work till 1024 CPUs no? These days there are systems with
-> more CPUs than that.
-> 
-> Making it NR_CPUS will likely cover all crazy cases/configurations.
-> 
+The same relaxation also says that writes may be completely ignored:
 
-This was a miss at my end. This should be NR_CPUS.
+  When the Profiling Buffer is enabled, profiling is not stopped, and
+  Discard mode is not enabled, the PE might ignore a direct write to any
+  of the following Profiling Buffer registers, other than a direct write
+  to PMBLIMITR_EL1 that clears PMBLIMITR_EL1.E from 1 to 0:
 
---
-Thanks and Regards,
-Swapnil
+  * The current write pointer, PMBPTR_EL1.
+  * The Limit pointer, PMBLIMITR_EL1.
+  * PMBSR_EL1.
 
+When arm_spe_pmu_start() occurs, SPEProfilingStopped() is false
+(PMBSR_EL1.S == 0) meaning that the write to PMBLIMITR_EL1 now becomes
+the point where the buffer configuration must be correct by, rather than
+the "When profiling becomes enabled" (StatisticalProfilingEnabled())
+from the old rule which is much later when PMSCR_EL1 is written.
+
+If the writes to PMBLIMITR_EL1 and PMBPTR_EL1 are re-ordered then a
+misconfigured state could be observed, resulting in a buffer management
+event. Or the write to PMBPTR_EL1 could be ignored.
+
+Fix it by adding an isb() after the write to PMBPTR_EL1 to ensure that
+this completes before enabling the buffer.
+
+To avoid redundant isb()s in the IRQ handler, remove the isb() between
+the PMBLIMITR_EL1 write and SYS_PMBSR_EL1 as it doesn't matter which
+order these happen in now that all the previous configuration is covered
+by the new isb().
+
+This issue is only present in arm_spe_pmu_start() and not in the IRQ
+handler because SPEProfilingStopped() is true in the IRQ handler. Jumps
+to the out_write_limit label will skip the isb() but this is ok as they
+only happen if discard mode is set or the buffer isn't enabled so
+correct configuration is not required.
+
+[1]: https://developer.arm.com/documentation/102105/latest/
+
+Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+A previous version of this was posted here [1] bundled with other
+changes to support running in a guest. Since then the known issues doc
+linked in the commit message has been released so this is a resend of
+only the critical part that also needs to be fixed for hosts.
+
+A redundant isb() has also been removed in this version which is not
+present in the previous version.
+
+[1]: https://lore.kernel.org/linux-arm-kernel/20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org/
+---
+ drivers/perf/arm_spe_pmu.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index 4801115f2b54..62ae409fd5b4 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -639,6 +639,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
+ 	limit += (u64)buf->base;
+ 	base = (u64)buf->base + PERF_IDX2OFF(handle->head, buf);
+ 	write_sysreg_s(base, SYS_PMBPTR_EL1);
++	isb();
+ 
+ out_write_limit:
+ 	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
+@@ -780,10 +781,8 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
+ 		 * PMBPTR might be misaligned, but we'll burn that bridge
+ 		 * when we get to it.
+ 		 */
+-		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)) {
++		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED))
+ 			arm_spe_perf_aux_output_begin(handle, event);
+-			isb();
+-		}
+ 		break;
+ 	case SPE_PMU_BUF_FAULT_ACT_SPURIOUS:
+ 		/* We've seen you before, but GCC has the memory of a sieve. */
+
+---
+base-commit: c072629f05d7bca1148ab17690d7922a31423984
+change-id: 20260123-james-spe-relaxation-d6621c7a68ff
+
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
 
