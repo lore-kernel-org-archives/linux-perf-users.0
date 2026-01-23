@@ -1,208 +1,319 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F0D2E2EF9
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 23:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769125919; cv=none; b=P6mCtQr1N0rKILvhSa4m2rkSzH4JTv2HWHAauV1IB2V5B1i1sJi+pc0SJupwDxQ1vZIowhDKF0mg4ZX5lmnchJ7zrAB7C3HZQxgqWbI2H5JVMEthCHqu0EOsiIJM1gzdKXvanc8RDR+scJomxZkD5jCVbEVH544r8fF1IJt77Go=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769125919; c=relaxed/simple;
-	bh=eg/uF2a/r4RV0wMUdb2r4rz1ahydy14nqiUDK71upgI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XOyxhnv/aH3UhQLa9IVAKZKxyjej7Db/v6H1+zPobTaqMzEwsx4QLve5BARpUDlhca3u+bIAkThDk3fV7m6reBqbPA9bNDvDflcq0SV7R1tgHJtfdxBSBueyRg982cPixco4OKkUOkeI8HiBjodfHtiCDQD8b49WiQb2HW0JWZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Anddpwk; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF60F27F01B
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Jan 2026 00:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.172
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769128718; cv=pass; b=Og86mMyYI1PNwfs8XbmQ9DTQYZPrfPyKKV7Qet+KHyoBeJtZ8htAUdS8sO50Oq1wVCvKevav2HHlS69UJdyIUe7oLAkjDgS1E/mbDE2IkY5onD9lSOn+QtLIYydBVallW0lqpo1ztSW74RaT+kfJPNm4S+zTcbt1zPRaknyRt+E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769128718; c=relaxed/simple;
+	bh=EQN+iIM8+dm37iZHB7GD4DOloPZVK3vMmDu9SRdIhIQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eVHdiPkQVf6z4FuH348+dZ6g9cjyS9mjGIlBfkgKQhHPWDxyVC+NC13eqG8GKV5fd0NByzs0baxZRb8nE59r6EL94JaTjyr768Ko9+XHzWRVk8r6IEdLKPlIdDJYrxWA+9MjpAHZ5v+wcMmxcoiGZk//il4DLdUJxXO3lXsf8JI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fofY/QnG; arc=pass smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Anddpwk"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34c2f670a06so1497004a91.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 15:51:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fofY/QnG"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-c634bb5bd8eso267211a12.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jan 2026 16:38:31 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769128709; cv=none;
+        d=google.com; s=arc-20240605;
+        b=GyF5FrgTGOBMlb5mTy7oCHwjvjiMl8aDYtEeF2vkyfwhaE/WwqssoyNmeISA0mUyju
+         Zprl2MeJPHeqWo/nQFHFjLQxpwk2pXuvNWZRTgiCA1QErOzyHtNP+xNfPC+R2pcMzoiI
+         lt5oVS+fIQBr+JagLA4lmcSVN6VFQNpeYbKY66IOGnjxdQoKN3+rgSnWFtpQbbfvqJBD
+         sh9t2TUJEGfvhuA5ZBzx5g0H3u2hmOsGcG+YNRrjAhelqnni7tnKkvqQ70kCSYb5LjcA
+         MEtgJe+RG1CRxv15hiL6+ctdWSy4Z+irTxJwnB05l3d/A9pgu92cHpfQEFjXz5v+n053
+         5JXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=rnmdPKuoPhsIINyfYoC1nWb1eqqRXOyPg3w53hnHIow=;
+        fh=rbRQF6HESQmpiSJzrQ1k0w8C6aGWJ3Eqrnt56AYvwhk=;
+        b=YWYGRsqcInfND2tAHWhxKRyFJQCPNp3e8bt2JReXgCFmG2V9KhBhVj8DmOh4QIN5aY
+         skm1S/YPEtgxs/y4bYGi4U4ljmJFYj1awipiPS9KDm5Vx9xu7KmEjhEGJmu8k7Ux1fZd
+         r7h23f+4hs7350NA4wfVe+oBdyefvK8X/ZQIwTbh3kh2IKNQtGDeegu1jJBXg8cJ4RdW
+         E2e3c96+DfDPIn1nFMAwG1Uc3BJk13Xdov6zm5jGq7CEz1gUO6HeS8/rMo8ldAlCp6/j
+         GQjld5X0X8ZmPI4HKPpps/BotmxcW4iAbNGjln1J2QXwrXMkcpLFqU5IgYQPiLlpEZfZ
+         J41A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769125905; x=1769730705; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5JvuW//joH48qvnygxaY0rXMq+dLySISFF3AXf42AjY=;
-        b=1Anddpwkmc3idNJUtqUmplnCmDgf2pUTKguk/Y/Eqdlu2aGPErJNcleORevZrR/N72
-         JVUXDejWWwjoFWjxfqwkx+zbAhcl092M1zUYxQPxzG6jtkTv2HZ43giflBbQCDfxyqi3
-         2iEItji2xkNdgWwwrFGNfc6xRwl0apLYd3is5lDwOLyecT0Fre5wIRjQ2I9F1PvynsVG
-         5RW+OVn3ZYBeQQ5UgLxSh6+1bQ1sFzGJs2wqkCIO94qFG0Q4uiGg1DEZL9aActAegz42
-         axBLeX7mUYpOSz315Py0jaHai+Rnl3nMY0IBqm/py3vwclYc07RIyOIQmOpEoxKkuXPm
-         QQrA==
+        d=gmail.com; s=20230601; t=1769128709; x=1769733509; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rnmdPKuoPhsIINyfYoC1nWb1eqqRXOyPg3w53hnHIow=;
+        b=fofY/QnGXNsqtldx8i0PKqpGn0kWgvRy7lQ2ypKQQidxYauRWp5ma/aQD3iftcf0ub
+         iXTKggjUQP6ht4pXkJEYmNXM7Y5sSjGtSjyL5sJGukZxUPy86m4gOHhocThbyOEHoeP4
+         02RJKDbC9Z43VhUL779lFZcNiUGfwHfrrTdovZQh3a6EwhZcRU6fKAT7uHMQaeCBzU/X
+         p31cyGfi+x0NeuOj4Z7qR9aUpHBmuchRrirg+BduRKZ3m1tgAoXS/QyZFjp7aJ8usT7t
+         CYfgc8grDgnbGV0rMZP4YDBdiSEjvX8zwQynRhoyyY39ed8ISduwQ4lwyvn4ZdMX1Lu2
+         2Zbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769125905; x=1769730705;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5JvuW//joH48qvnygxaY0rXMq+dLySISFF3AXf42AjY=;
-        b=Hym4rMnGUQyJ/Kl1Bwz2NuDEaAgFGFapTQ5s57cfw249FG6AIuz65d4y4OG5YOOiMz
-         lQTi7D59vmdtj+aIAvjdwQU2EN6M5VolyceOAYJwuYCh2ePeKyc/5Yzd4FuvoQ6zzu6C
-         4oIwd9VhNS0A9z9e0PJPZQWExp0wDqWBpqeGzWMeZKx2H7x2lxeN25DWr/Jsr3kudiNl
-         7tmo4eomtYFclExzP8rnPFLjfTpYQN32X/Z1h458aTGXOzeRkK6NHhro8J1sI98k7N8S
-         9j5lmsJnFefDHp9FS6sGcHgREtmgrXL3gJsaybP0T6HB9B3DQy1SAJmsf17okfVQlIal
-         I1YA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxpTOiluraKZORC5E+VmURV+V0p2HK54Q/4vRJH7JINwmD5Vk1aH3VEUWI4jbEFO0PPtX4DwIz0WZQMlVEawre@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywtd/2K8OBKcatEtDvrIdy5bvShwThXKYBIbdzMYFB+2kOnWN+U
-	4I02BHczHdOQnrCBFZLkIuYaZBxEAQ+gN9duc+C/NT0gy3SG50QumIydhq02/a1QQ+hR4eR1ITE
-	M77gW9A==
-X-Received: from pjbpv11.prod.google.com ([2002:a17:90b:3c8b:b0:34c:489a:f4c9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:57e6:b0:34c:c866:81f2
- with SMTP id 98e67ed59e1d1-35367015003mr843153a91.4.1769125905538; Thu, 22
- Jan 2026 15:51:45 -0800 (PST)
-Date: Thu, 22 Jan 2026 15:51:43 -0800
-In-Reply-To: <CALMp9eRGj3rNeNN82H12f=XO5iXi5s2ri2K71CnjoVp9eKzz1w@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1769128709; x=1769733509;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=rnmdPKuoPhsIINyfYoC1nWb1eqqRXOyPg3w53hnHIow=;
+        b=JrHD4tj4uyTbmnln/qpQcQgAemgi8nnPhPfLe8qSHMx8/kHZ8xS0mYpTzy5SSL/jeF
+         /jM3Lzo3x/6fCmhGWBws9u4E9zxYDHrtIxCbHqarZ0nVxlNr0Y3KDQx7E+Jrbebvh7dw
+         gybSlyMCcY5s1DjrJK+pyROikxFOMNnw1y1uO7E/ETH7LJ8RgRSxch0ztpXKXVO2uju4
+         90hAC22ZSN1URWAD67f7uO40ZXsjjhYNxpd1facEw9vPGQPo9DwlaWzGydDMpS6/0uLd
+         Jpa2i4xg9JLI1ros+J9ny5IWQbguwCTzIOErUUzj3pc+bDWuSAej5upOzvQNR/XyQL6V
+         Rb6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVjcoh/+xhFi/FRDAN+qtfoKJrzmHxSLOUFCGb2V+vA0G+X2ubuRazv5Bafpwf2cD+saFvJGmOV/+eyQdYCF/aR@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuRe/13oKW6kULVMOOVP1YrmRlWPXV+H9Yuc5WmrvHn67+Efp8
+	w3RWU14Pb0L7qa9BFZLwqvJfK52WL0j6QU8jr4a+K+QuFIezlcsmWHaxFZxC6L/AFLJGNKGw+4L
+	RLxOKddi5cSa9hQtVe3l4oEJHWRA7V9E=
+X-Gm-Gg: AZuq6aLaYvR4d+D4gkWTD04w7V/lrs4Qb9kdtYoU1mdQ6flnHDs1uwOvplTrQfCTO2r
+	sn2jw67TChnXRx99ggiZlM6wgv31SvfOfu+e3t4BmNs9k2D8hQs0UU10yMuJPy93sJt5wTvrW+p
+	1a4MA+RFB9g0wMJZfJ6xnk5dEKw87vdNbNUu8hbnEMuOvc+Djxlo5OpNfbCfpLZaEwpNUKK1ivo
+	cZ0XaZQ1006IpRBt39UKj0gOU5Xbh2v+rzGZilqK1ZtiCXBbPi/u4Hc2iLUElgpFs+ka8dFq3Tb
+	c0dDHOeD+HY=
+X-Received: by 2002:a05:6a20:9d94:b0:35e:3d4b:4cfe with SMTP id
+ adf61e73a8af0-38e6f7be6ccmr1138557637.39.1769128708578; Thu, 22 Jan 2026
+ 16:38:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260121225438.3908422-1-jmattson@google.com> <20260121225438.3908422-3-jmattson@google.com>
- <aXJRWtdzjcb8_APA@google.com> <CALMp9eRGj3rNeNN82H12f=XO5iXi5s2ri2K71CnjoVp9eKzz1w@mail.gmail.com>
-Message-ID: <aXK4DzweZLy9O8n1@google.com>
-Subject: Re: [PATCH 2/6] KVM: x86/pmu: Disable HG_ONLY events as appropriate
- for current vCPU state
-From: Sean Christopherson <seanjc@google.com>
-To: Jim Mattson <jmattson@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20251217093326.1745307-1-chen.dylane@linux.dev> <20251217093326.1745307-3-chen.dylane@linux.dev>
+In-Reply-To: <20251217093326.1745307-3-chen.dylane@linux.dev>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 22 Jan 2026 16:38:15 -0800
+X-Gm-Features: AZwV_QifoUzy0XFoMYGDQsg9TBiqXuPA6VKirh7287oD12DKmY7OOfbENLMadiI
+Message-ID: <CAEf4BzYEsKQxT--=oQELZ7g402FWpEuDEmxcovZXkck+k2U8HQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v7 2/2] bpf: Hold the perf callchain entry until
+ used completely
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, song@kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 22, 2026, Jim Mattson wrote:
-> On Thu, Jan 22, 2026 at 8:33=E2=80=AFAM Sean Christopherson <seanjc@googl=
-e.com> wrote:
-> > On Wed, Jan 21, 2026, Jim Mattson wrote:
-> > > Introduce amd_pmu_dormant_hg_event(), which determines whether an AMD=
- PMC
-> > > should be dormant (i.e. not count) based on the guest's Host-Only and
-> > > Guest-Only event selector bits and the current vCPU state.
-> > >
-> > > Update amd_pmu_set_eventsel_hw() to clear the event selector's enable=
- bit
-> > > when the event is dormant.
-> > >
-> > > Signed-off-by: Jim Mattson <jmattson@google.com>
-> > > ---
-> > >  arch/x86/include/asm/perf_event.h |  2 ++
-> > >  arch/x86/kvm/svm/pmu.c            | 23 +++++++++++++++++++++++
-> > >  2 files changed, 25 insertions(+)
-> > >
-> > > diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm=
-/perf_event.h
-> > > index 0d9af4135e0a..7649d79d91a6 100644
-> > > --- a/arch/x86/include/asm/perf_event.h
-> > > +++ b/arch/x86/include/asm/perf_event.h
-> > > @@ -58,6 +58,8 @@
-> > >  #define AMD64_EVENTSEL_INT_CORE_ENABLE                       (1ULL <=
-< 36)
-> > >  #define AMD64_EVENTSEL_GUESTONLY                     (1ULL << 40)
-> > >  #define AMD64_EVENTSEL_HOSTONLY                              (1ULL <=
-< 41)
-> > > +#define AMD64_EVENTSEL_HG_ONLY                               \
-> >
-> > I would strongly prefer to avoid the HG acronym, as it's not immediatel=
-y obvious
-> > that it's HOST_GUEST, and avoiding long lines even with the full HOST_G=
-UEST is
-> > pretty easy.
->=20
-> In this instance, I'm happy to make the suggested change, but I think
-> your overall distaste for HG_ONLY is unwarranted.
-> These bits are documented in the APM as:
->=20
-> > HG_ONLY (Host/Guest Only)=E2=80=94Bits 41:40, read/write
+On Wed, Dec 17, 2025 at 1:34=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wr=
+ote:
+>
+> As Alexei noted, get_perf_callchain() return values may be reused
+> if a task is preempted after the BPF program enters migrate disable
+> mode. The perf_callchain_entres has a small stack of entries, and
+> we can reuse it as follows:
+>
+> 1. get the perf callchain entry
+> 2. BPF use...
+> 3. put the perf callchain entry
+>
+> And Peter suggested that get_recursion_context used with preemption
+> disabled, so we should disable preemption at BPF side.
+>
+> Acked-by: Yonghong Song <yonghong.song@linux.dev>
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> ---
+>  kernel/bpf/stackmap.c | 68 +++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 56 insertions(+), 12 deletions(-)
+>
 
-Ugh, stupid APM.  That makes me hate it a little less, but still, ugh.
+I took a bit closer look at these changes and I'm a fan of the
+particular implementation, tbh. It's a bit of a maze how all these
+different call chain cases are handled, so I might be missing
+something, but I'd address this a bit differently.
 
-> > Maybe amd_pmc_is_active() or amd_pmc_counts_in_current_mode()?
->=20
-> I think amd_pmc_is_active() is a much stronger statement, implying
-> that both enable bits are also set.
+First, instead of manipulating this obscure rctx as part of interface,
+I'd record rctx inside the perf_callchain_entry itself, and make sure
+that get_callchain_entry does have any output arguments.
+put_callchain_entry() would then accept perf_callchain_entry reference
+and just fetch rctx from inside it.
 
-Ooh, good point.
+Then instead of open-coding get_perf_callchain by exposing
+__init_perf_callchain_ctx, __get_perf_callchain_kernel, and
+__get_perf_callchain_user, can't we have __get_perf_callchain() which
+will accept perf_callchain_entry as an input and won't do get/put
+internally. And then existing get_perf_callchain() will just do get +
+__get_perf_callchain + put, while BPF-side code will do it's own get
+(with preemption temporarily disabled), will fetch callstack in one of
+a few possible ways, and then put it (unless callchain_entry is coming
+from outside, that trace_in thing).
 
-> Similarly, amd_pmc_counts_in_current_mode() sounds like it looks at
-> OS/USR bits as well.
+It's close to what you are doing, but I don't think anyone likes those
+exposed __init_perf_callchain_ctx + __get_perf_callchain_kernel +
+__get_perf_callchain_user. Can't we avoid that? (and also not sure we
+need add_mark inside the ctx itself, do we?)
 
-Yeah, I didn't like that collision either.  :-/
+pw-bot: cr
 
-> I'll see if I can think of a better name that isn't misleading. I
-> actually went with this polarity because of the naming problem. But, I
-> agree that the reverse polarity is marginally better.
->=20
-> > > +{
-> > > +     u64 hg_only =3D pmc->eventsel & AMD64_EVENTSEL_HG_ONLY;
-> > > +     struct kvm_vcpu *vcpu =3D pmc->vcpu;
-> > > +
-> > > +     if (hg_only =3D=3D 0)
-> >
-> > !hg_only
->=20
-> Now, you're just being petty. But, okay.
 
-Eh, that's a very standard kernel style thing.
 
-> > In the spirit of avoiding the "hg" acronym, what if we do something lik=
-e this?
-> >
-> >         const u64 HOST_GUEST_MASK =3D AMD64_EVENTSEL_HOST_GUEST_MASK;
->=20
-> Ugh. No. You can't both prefer the longer name and yet avoid it like
-> the plague. If you need to introduce a shorter alias, the longer name
-> is a bad choice.
-
-IMO, there's a big difference between a global macro that may be read in a =
-variety
-of contexts, and a variable that's scoped to a function and consumed within=
- a few
-lines of its definition.
-
-That said, I'm definitely open to other ways to write this code that don't =
-require
-a local const, it's HG_ONLY that I really dislike.
-
-> >         struct kvm_vcpu *vcpu =3D pmc->vcpu;
-> >         u64 eventsel =3D pmc->eventsel;
-> >
-> >         /*
-> >          * PMCs count in both host and guest if neither {HOST,GUEST}_ON=
-LY flags
-> >          * are set, or if both flags are set.
-> >          */
-> >         if (!(eventsel & HOST_GUEST_MASK) ||
-> >             ((eventsel & HOST_GUEST_MASK) =3D=3D HOST_GUEST_MASK))
-> >                 return true;
-> >
-> >         /* {HOST,GUEST}_ONLY bits are ignored when SVME is clear. */
-> >         if (!(vcpu->arch.efer & EFER_SVME))
-> >                 return true;
-> >
-> >         return !!(eventsel & AMD64_EVENTSEL_GUESTONLY) =3D=3D is_guest_=
-mode(vcpu);
-> >
-> > > +             /* Not an HG_ONLY event */
-> >
-> > Please don't put comments inside single-line if-statements.  99% of the=
- time
-> > it's easy to put the comment outside of the if-statement, and doing so =
-encourages
-> > a more verbose comment and avoids a "does this if-statement need curly-=
-braces"
-> > debate.
->=20
-> There is no debate. A comment is not a statement. But, okay.
-
-LOL, dollars to donuts says I can find someone to debate you on the "correc=
-t"
-style. :-D
+> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+> index da3d328f5c1..3bdd99a630d 100644
+> --- a/kernel/bpf/stackmap.c
+> +++ b/kernel/bpf/stackmap.c
+> @@ -210,13 +210,14 @@ static void stack_map_get_build_id_offset(struct bp=
+f_stack_build_id *id_offs,
+>  }
+>
+>  static struct perf_callchain_entry *
+> -get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
+> +get_callchain_entry_for_task(int *rctx, struct task_struct *task, u32 ma=
+x_depth)
+>  {
+>  #ifdef CONFIG_STACKTRACE
+>         struct perf_callchain_entry *entry;
+> -       int rctx;
+>
+> -       entry =3D get_callchain_entry(&rctx);
+> +       preempt_disable();
+> +       entry =3D get_callchain_entry(rctx);
+> +       preempt_enable();
+>
+>         if (!entry)
+>                 return NULL;
+> @@ -238,8 +239,6 @@ get_callchain_entry_for_task(struct task_struct *task=
+, u32 max_depth)
+>                         to[i] =3D (u64)(from[i]);
+>         }
+>
+> -       put_callchain_entry(rctx);
+> -
+>         return entry;
+>  #else /* CONFIG_STACKTRACE */
+>         return NULL;
+> @@ -320,6 +319,34 @@ static long __bpf_get_stackid(struct bpf_map *map,
+>         return id;
+>  }
+>
+> +static struct perf_callchain_entry *
+> +bpf_get_perf_callchain(int *rctx, struct pt_regs *regs, bool kernel, boo=
+l user,
+> +                      int max_stack, bool crosstask)
+> +{
+> +       struct perf_callchain_entry_ctx ctx;
+> +       struct perf_callchain_entry *entry;
+> +
+> +       preempt_disable();
+> +       entry =3D get_callchain_entry(rctx);
+> +       preempt_enable();
+> +
+> +       if (unlikely(!entry))
+> +               return NULL;
+> +
+> +       __init_perf_callchain_ctx(&ctx, entry, max_stack, false);
+> +       if (kernel)
+> +               __get_perf_callchain_kernel(&ctx, regs);
+> +       if (user && !crosstask)
+> +               __get_perf_callchain_user(&ctx, regs, 0);
+> +
+> +       return entry;
+> +}
+> +
+> +static void bpf_put_perf_callchain(int rctx)
+> +{
+> +       put_callchain_entry(rctx);
+> +}
+> +
+>  BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, ma=
+p,
+>            u64, flags)
+>  {
+> @@ -328,20 +355,25 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs,=
+ struct bpf_map *, map,
+>         struct perf_callchain_entry *trace;
+>         bool kernel =3D !user;
+>         u32 max_depth;
+> +       int rctx, ret;
+>
+>         if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
+>                                BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID=
+)))
+>                 return -EINVAL;
+>
+>         max_depth =3D stack_map_calculate_max_depth(map->value_size, elem=
+_size, flags);
+> -       trace =3D get_perf_callchain(regs, kernel, user, max_depth,
+> -                                  false, false, 0);
+> +
+> +       trace =3D bpf_get_perf_callchain(&rctx, regs, kernel, user, max_d=
+epth,
+> +                                      false);
+>
+>         if (unlikely(!trace))
+>                 /* couldn't fetch the stack trace */
+>                 return -EFAULT;
+>
+> -       return __bpf_get_stackid(map, trace, flags);
+> +       ret =3D __bpf_get_stackid(map, trace, flags);
+> +       bpf_put_perf_callchain(rctx);
+> +
+> +       return ret;
+>  }
+>
+>  const struct bpf_func_proto bpf_get_stackid_proto =3D {
+> @@ -435,6 +467,7 @@ static long __bpf_get_stack(struct pt_regs *regs, str=
+uct task_struct *task,
+>         bool kernel =3D !user;
+>         int err =3D -EINVAL;
+>         u64 *ips;
+> +       int rctx;
+>
+>         if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
+>                                BPF_F_USER_BUILD_ID)))
+> @@ -467,18 +500,26 @@ static long __bpf_get_stack(struct pt_regs *regs, s=
+truct task_struct *task,
+>                 trace =3D trace_in;
+>                 trace->nr =3D min_t(u32, trace->nr, max_depth);
+>         } else if (kernel && task) {
+> -               trace =3D get_callchain_entry_for_task(task, max_depth);
+> +               trace =3D get_callchain_entry_for_task(&rctx, task, max_d=
+epth);
+>         } else {
+> -               trace =3D get_perf_callchain(regs, kernel, user, max_dept=
+h,
+> -                                          crosstask, false, 0);
+> +               trace =3D bpf_get_perf_callchain(&rctx, regs, kernel, use=
+r, max_depth,
+> +                                              crosstask);
+>         }
+>
+> -       if (unlikely(!trace) || trace->nr < skip) {
+> +       if (unlikely(!trace)) {
+>                 if (may_fault)
+>                         rcu_read_unlock();
+>                 goto err_fault;
+>         }
+>
+> +       if (trace->nr < skip) {
+> +               if (may_fault)
+> +                       rcu_read_unlock();
+> +               if (!trace_in)
+> +                       bpf_put_perf_callchain(rctx);
+> +               goto err_fault;
+> +       }
+> +
+>         trace_nr =3D trace->nr - skip;
+>         copy_len =3D trace_nr * elem_size;
+>
+> @@ -497,6 +538,9 @@ static long __bpf_get_stack(struct pt_regs *regs, str=
+uct task_struct *task,
+>         if (may_fault)
+>                 rcu_read_unlock();
+>
+> +       if (!trace_in)
+> +               bpf_put_perf_callchain(rctx);
+> +
+>         if (user_build_id)
+>                 stack_map_get_build_id_offset(buf, trace_nr, user, may_fa=
+ult);
+>
+> --
+> 2.48.1
+>
