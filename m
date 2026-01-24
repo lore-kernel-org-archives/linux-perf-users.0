@@ -1,227 +1,148 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA2D41C63
-	for <linux-perf-users@vger.kernel.org>; Sat, 24 Jan 2026 01:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769217002; cv=pass; b=WxjK57v17Nb8Fst/2cSc+KJP+T/LkmwRZdJYTQdoHBkRstasrVZFapk5dEQcAxc7C7yYI1PvwK/i0iqd85C2WbNfggmwXYICCumPQzmakoNTILOS4RvGXHS7N0M3nExMgCJkpfioCpyp/3bk61U02zqkFnkYdK4f6RC5f3wKlio=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769217002; c=relaxed/simple;
-	bh=ik36GtNfwR73DWLryLS0LVZwCrhyeVu3jU+pknIlVJ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oK9/ugkbzn7+6HDIGeeEU1sCm4IrlLeOKVG52SmTygmabgA4zm2610aJcM5Xa12QnkBH/2mHmrB4MEYfqp0T3hnLbqShA0orGJ7HSzmqWne99K4W0/UIVzZ6Flaq9ptu35zgI7fIUUwN/fVgreEQdGNXpm53pyrpKMlD9vvwZcs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h76QzGy3; arc=pass smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A68E571;
+	Sat, 24 Jan 2026 02:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769222891; cv=none; b=V7QqUzvvJ+VMZ/NqIBv33JCG9WEW5OJZK+Zd+4LEjAoul3TlDR8RKKnVhHkGfOKSvP5D5z00IqQqCSqvyZ3uZHYFI+hUZ5KaBSZ1xpC+6AO8Da0QBmnBwdhNk82xxh+Jj63HjA32AyY9OBuuOwLgfr2W6nWEMAHE4Pt5OrRguCs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769222891; c=relaxed/simple;
+	bh=VzaMqe48iN0XZTX4vhaBuP8tfowR7R/vjCTaWf/n5m4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=e0HB7eDzHEhZBcr2z/Vb1Fri2jnZBlncOmCG/NkdLfNeYxQaQ66uXG65gMu0h+gvhK+rqOOTKuETSSh95STfVP2fEX4jXzdnXQiD9WYORsO9OZPchmaEWQwOVvh5Rer846KRin4jeo7UNrY4qFEowb904IkR57yUnfJ4mbdIqck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTNS6NvG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h76QzGy3"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-652fe3bf65aso1544a12.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jan 2026 17:09:59 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769216998; cv=none;
-        d=google.com; s=arc-20240605;
-        b=WsfMmi9Ir5LX0gMEj/4tpkP74C4aRvzvqf3Uk+5xmF4TZ0JmKVzoSbzxrZRO67/+/L
-         YBxVmCXfV9u/TukH9IZaWcHieNZMkEG3UsutZQlKJPVqkybFFAXTcfU3EDs8t3OYd8l/
-         K3imBNlJmj+EWwqEJ8F03SEaCYQX8F/Ee46nddYPGI4VkvWisLJ3c8LHz+6pE6rImgT+
-         HHKXwKk/C199OXfCAGGwCOfiXY1t1IGtc7o36cJoA1Pbx5I5N1UrBSbi9zdbQKBhYmiJ
-         viAndYbVBE/OiA8ILITd70VTlcXfkc5RCN7zYfDJyzf7pQNgfFe0mnu8ZeC1Onhg9Zu3
-         zfcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=4EFvfBCWbL1lQgpc/+fXouK4fB7VqTYve4/x//+dWzE=;
-        fh=Q/sHZa1nbT6r1iZ0S69wvSUzDgucps/2WF5IfP93Q0g=;
-        b=beRCL22uyy9XfCgPb/Ld0YuWBlu0wc/+gCjESCQpYH51vYipe2PCYne8wSdfSutiqF
-         f7F5hpU61XELqCvbHx7m4W8qA1DXBtNo68jrf3NrziOn1YxYJAAvVMG4ccYVWdS5X+gB
-         bIbeh+V1aagK3eu1Si05/aC0B2jVT71SaoXqA4bGvABqN6j5kK3qQiXRh3i0PjfeiDlC
-         9vsGbZd9c7+mjAkVE1EobaKamY1gfmDGJxqXjSO0png7X3KCoBavHMx8+arM2KcOYidW
-         9zXw1L+hLb8jI+cLknNlQjG+Ma98Bu05/OOEVddYoJzuRMUPvx6TM6h45GJNXNq6jWUN
-         MFHw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769216998; x=1769821798; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4EFvfBCWbL1lQgpc/+fXouK4fB7VqTYve4/x//+dWzE=;
-        b=h76QzGy3t1OJZLasGyM/4jMNq8Dck99KVeDz7NEIR1e9EG147UflQLGyuktTb18NJM
-         KQuM4Rg9FyuQJ8afFQ6yrSaa3262hPh6ZEp8VI9gyJC05O4Lkn8AV6GT7XDp9+d9IMNi
-         nn70OEeI0Vb5DpfcHIrT6SF/n+2ebK/WEkjVv4Dz0J4FYsGrdABvrHg1ysNN+g9h7EcL
-         4dKD8ZFFymPCznT0ycoi+kpknwQGF3SUwXPx4f7T8n18zwtzYcAOevMBGXZv5ZP7QsrI
-         213voPJ8CThXb5auKZ4vdszW7AjCLx3622Vhfs+rJsfPpN5pdcaTQSNYaI5Z1KXJC/M1
-         NVgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769216998; x=1769821798;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4EFvfBCWbL1lQgpc/+fXouK4fB7VqTYve4/x//+dWzE=;
-        b=YsJ24IvG1f9bw47Hqy7LxrqjBCp1xFZofyiBY+PUZ/4TYP0y2S2D3Dgm7dJ6AUhPeb
-         MKJfDgxju9zMkfmTdxFAfx+gtaGscHQabIFysAiZPXX8rpFw797ZXinkTIBL9PXGRHwc
-         I/PaRsCW7zoKV7Irmdum9dQOUEyHYn+YAd9nVW+HMDdSf+lWC35CXK3VGeTQJbSW75HJ
-         6XaOXANgXpM0unRibTAYGCybgD6C94/0Kw6QWxR+zYPF7EjRnacS3XEVxXI6k4zFySvu
-         S9HB5IN+4HG6jrATX5FWRDyZg3o3u4vaIRk3zNSjtqdC1bcFlL9m79d2jDJ8GAV5F5iw
-         bLOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjUPYL8gA/T7lP1hMlzGFGsO7K5p7tkIZy01IUEN0W2ym5S5f0/zx/nQGef7+HP1XIHtDcEVUeTN2tmim2nsqA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2qFay9qLBYbsjbszEDn3fOY7k/6xFthDuJDoxw34KA3RLYph8
-	VsSqiqPqVQ5midpj2ZkWEXVoXXsRG7x8XwoY+aeiM9JFF6AHf6ou+xupxSaQTx5WWQvm5nkrxfm
-	dtlNRjDEquimKslNJ32gezuAfWZ8ksW5z3cNnKcRl
-X-Gm-Gg: AZuq6aJwcCazTb7QO+vk2VHU7Stmp4gIwpz0ck2MJYP86R9pL2aS4SfLxskGv94JGYh
-	BfI9CHUV9kLXNCDBZ8lIu9A9ZwN+sXF1K7hKt3DYJ4TQKi0+FGK1JrNjQdiIaEk7b2DW8ZdNZUp
-	IWNZUwpevvhFmSDYEpisPXcPm2UitQjykfatoxO7GN3caHUQJRXMkRaMl36p5NeSN8rKayrV2/5
-	OyNShbwwX3rw0ZwcU6txx1L+mt4n8C7xVgBa+cBQ+cOlmHi78L16rrx4B7JkDkNWgYG+CgyXQgE
-	iq2b6g==
-X-Received: by 2002:a05:6402:5356:10b0:658:ec8:ea96 with SMTP id
- 4fb4d7f45d1cf-6585d65e4b8mr16080a12.12.1769216998384; Fri, 23 Jan 2026
- 17:09:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTNS6NvG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F9B7C4CEF1;
+	Sat, 24 Jan 2026 02:48:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769222891;
+	bh=VzaMqe48iN0XZTX4vhaBuP8tfowR7R/vjCTaWf/n5m4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fTNS6NvGEAGQeTb9Bmwh9QGZp2xLUT1pdCeIEyeocIpnjJrYqpK0FFpmSdTGORVmF
+	 IksK+bH+ENec075q163PAfFmQ/FOINkifNTgrlp5NA7KlOZ839YIBSFo3pSP38DzvG
+	 Ff6/oUPWAI+ed47YcXgUJ9IVXH66nbi1rwgPJ/Ma79NT3G6QK9mOv3NzAtuLZbe4kI
+	 ByfF65eRG699UkyHEdfVebk2DZpKnM0MxP8n8PbbQ91l5MW0mGlRzQzW3zMnL6Fi0r
+	 V2kkku7W+DmETCqKV6Hw+SpmRzANiqqob42HEyRCQirkr0yo+tfK5wjTi3kWN3L/id
+	 qgfqAOrt6pXqw==
+From: SeongJae Park <sj@kernel.org>
+To: SeongJae Park <sj@kernel.org>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>,
+	damon@lists.linux.dev,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH 0/4] mm/damon: introduce perf event based access check
+Date: Fri, 23 Jan 2026 18:48:03 -0800
+Message-ID: <20260124024804.78869-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260124023917.78649-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260121225438.3908422-1-jmattson@google.com> <20260121225438.3908422-4-jmattson@google.com>
- <aXJVKFs54eVI1Mjo@google.com>
-In-Reply-To: <aXJVKFs54eVI1Mjo@google.com>
-From: Jim Mattson <jmattson@google.com>
-Date: Fri, 23 Jan 2026 17:09:46 -0800
-X-Gm-Features: AZwV_QihxGhmlb0R1pQUUg5REU3nZJkQnS8K32xs5XyEnk2F66ZdZyLEPHxipk4
-Message-ID: <CALMp9eSTzEZSUAF2hXQ17RqviAA2gWbnxEEzscxA3OuvqLDjVg@mail.gmail.com>
-Subject: Re: [PATCH 3/6] KVM: x86/pmu: Track enabled AMD PMCs with Host-Only
- xor Guest-Only bits set
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 22, 2026 at 8:49=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Wed, Jan 21, 2026, Jim Mattson wrote:
-> > Add pmc_hostonly and pmc_guestonly bitmaps to struct kvm_pmu to track w=
-hich
-> > guest-enabled performance counters have just one of the Host-Only and
-> > Guest-Only event selector bits set. PMCs that are disabled, have neithe=
-r
-> > HG_ONLY bit set, or have both HG_ONLY bits set are not tracked, because
-> > they don't require special handling at vCPU state transitions.
->
-> Why bother with bitmaps?  The bitmaps are basically just eliding the chec=
-ks in
-> amd_pmc_is_active() (my name), and those checks are super fast compared t=
-o
-> emulating transitions between L1 and L2.
->
-> Can't we simply do:
->
->   void amd_pmu_refresh_host_guest_eventsels(struct kvm_vcpu *vcpu)
->   {
->         struct kvm_pmu *pmu =3D vcpu_to_pmu(vcpu);
->         struct kvm_pmc *pmc;
->         int i;
->
->         kvm_for_each_pmc(pmu, pmc, i, pmu->all_valid_pmc_idx)
->                 amd_pmu_set_eventsel_hw(pmc);
->
->   }
->
-> And then call that helper on all transitions?
->
-> > +static void amd_pmu_update_hg_bitmaps(struct kvm_pmc *pmc)
-> > +{
-> > +     struct kvm_pmu *pmu =3D pmc_to_pmu(pmc);
-> > +     u64 eventsel =3D pmc->eventsel;
-> > +
-> > +     if (!(eventsel & ARCH_PERFMON_EVENTSEL_ENABLE)) {
-> > +             bitmap_clear(pmu->pmc_hostonly, pmc->idx, 1);
-> > +             bitmap_clear(pmu->pmc_guestonly, pmc->idx, 1);
-> > +             return;
-> > +     }
-> > +
-> > +     switch (eventsel & AMD64_EVENTSEL_HG_ONLY) {
-> > +     case AMD64_EVENTSEL_HOSTONLY:
-> > +             bitmap_set(pmu->pmc_hostonly, pmc->idx, 1);
-> > +             bitmap_clear(pmu->pmc_guestonly, pmc->idx, 1);
-> > +             break;
-> > +     case AMD64_EVENTSEL_GUESTONLY:
-> > +             bitmap_clear(pmu->pmc_hostonly, pmc->idx, 1);
-> > +             bitmap_set(pmu->pmc_guestonly, pmc->idx, 1);
-> > +             break;
-> > +     default:
-> > +             bitmap_clear(pmu->pmc_hostonly, pmc->idx, 1);
-> > +             bitmap_clear(pmu->pmc_guestonly, pmc->idx, 1);
-> > +             break;
-> > +     }
-> > +}
-> > +
-> >  static bool amd_pmu_dormant_hg_event(struct kvm_pmc *pmc)
-> >  {
-> >       u64 hg_only =3D pmc->eventsel & AMD64_EVENTSEL_HG_ONLY;
-> > @@ -196,6 +223,7 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, s=
-truct msr_data *msr_info)
-> >               if (data !=3D pmc->eventsel) {
-> >                       pmc->eventsel =3D data;
-> >                       amd_pmu_set_eventsel_hw(pmc);
-> > +                     amd_pmu_update_hg_bitmaps(pmc);
->
-> If we're going to bother adding amd_pmu_set_eventsel_hw(), and not reuse =
-it as
-> suggested above, then it amd_pmu_set_eventsel_hw() should be renamed to j=
-ust
-> amd_pmu_set_eventsel() and it should be the one configuring the bitmaps. =
- Because
-> KVM should never write to an eventsel without updating the bitmaps.  That=
- would
-> also better capture the relationship between the bitmaps and eventsel_hw,=
- e.g.
->
->         pmc->eventsel_hw =3D (pmc->eventsel & ~AMD64_EVENTSEL_HOSTONLY) |
->                            AMD64_EVENTSEL_GUESTONLY;
->
->         if (!amd_pmc_is_active(pmc))
->                 pmc->eventsel_hw &=3D ~ARCH_PERFMON_EVENTSEL_ENABLE;
->
->         /*
->          * Update the host/guest bitmaps used to reconfigure eventsel_hw =
-on
->          * transitions to/from an L2 guest, so that KVM can quickly refre=
-sh
->          * the event selectors programmed into hardware, e.g. without hav=
-ing
->          * to
->          */
->         if (!(eventsel & ARCH_PERFMON_EVENTSEL_ENABLE)) {
->                 bitmap_clear(pmu->pmc_hostonly, pmc->idx, 1);
->                 bitmap_clear(pmu->pmc_guestonly, pmc->idx, 1);
->                 return;
->         }
->
->         switch (eventsel & AMD64_EVENTSEL_HG_ONLY) {
->         case AMD64_EVENTSEL_HOSTONLY:
->                 bitmap_set(pmu->pmc_hostonly, pmc->idx, 1);
->                 bitmap_clear(pmu->pmc_guestonly, pmc->idx, 1);
->                 break;
->         case AMD64_EVENTSEL_GUESTONLY:
->                 bitmap_clear(pmu->pmc_hostonly, pmc->idx, 1);
->                 bitmap_set(pmu->pmc_guestonly, pmc->idx, 1);
->                 break;
->         default:
->                 bitmap_clear(pmu->pmc_hostonly, pmc->idx, 1);
->                 bitmap_clear(pmu->pmc_guestonly, pmc->idx, 1);
->                 break;
->         }
->
-> But I still don't see any point in the bitmaps.
+Cc-ing linux-perf-users@ for any comment from perf people, about the use of
+perf event from DAMON.
 
-No problem. I will drop them in the next version.
+
+Thanks,
+SJ
+
+On Fri, 23 Jan 2026 18:39:20 SeongJae Park <sj@kernel.org> wrote:
+
+> On Fri, 23 Jan 2026 11:10:10 +0900 Akinobu Mita <akinobu.mita@gmail.com> wrote:
+> 
+> > DAMON currently only provides PTE accessed-bit based access check, this
+> > patch series adds a new perf event based access check.
+> 
+> Very interesting patch series.  Thank you for sharing this Akinobu!
+> 
+> I only took a glance on the patches, but my understanding is that this series
+> modifies DAMON to be able to enable perf events of PERF_SAMPLE_ADDR type, and
+> utilize the sampled perf events in the perf events buffer as the source of
+> DAMON's access checks.  In more detail, I understand enabling PERF_SAMPLE_ADDR
+> type perf events makes the perf events buffer filled with memory access event
+> information with the access destination address.  The event will be sampled
+> based on time (e.g., one access event per X milliseconds).  And probably that
+> sample data could include more information includign the CPU and the process
+> that executing the sampled access?  Please correct me if I'm wrong and add more
+> details I'm missing, as my understanding of perf event is very poor.
+> 
+> And one quick question.  Can this work on virtual machines?  I'm asking this
+> question the for following reason.  I'm actuaally working on a similar project
+> that extends DAMON for page fault based access events sampling [1].  The
+> project aims to use page fault event rather than other h/w features such as AMD
+> IBS or Intel PEBS, because my understanding is that such h/w features are not
+> available on virtual machines.
+> 
+> > 
+> > Since perf event-based access checks do not require modifying the PTE
+> > accessed-bit for pages representing each damon region, this patch series
+> > also includes a feature that allows you to set upper and lower limits on
+> > the damon region size to enable access checks with finer granularity.
+> 
+> I was also thinking about extending DAMON with AMD IBS or Intel PEBS like h/w
+> features for this kind of sub-page granularity access monitoring.  So this
+> makes sense to me, and sounds useful!
+> 
+> > 
+> > Using these features also requires modifications to damo, but these are
+> > not included in this patch series and are currently under development in
+> > the following branch:
+> > 
+> > https://github.com/mita/damo/tree/damo-perf-for-v3.1.0
+> > 
+> > Any feedback or advice on the patch set would be greatly appreciated.
+> > 
+> > Akinobu Mita (4):
+> >   mm/damon/core: add common code for perf event based access check
+> >   mm/damon/vaddr: support perf event based access check
+> >   mm/damon/paddr: support perf event based access check
+> 
+> I find your patches are introducing new infra code for this extension.  It
+> seems bit specialized for perf event only, though.  I'm concerned if future
+> extension for another access check primitives cannot reuse the infra.
+> 
+> My DAMON extension project [1] is for page fault based access monitoring, but
+> it also introduces a framework for general multiple access sampling primitives.
+> I'm wondering if perf event based extension can be implemented using the
+> general acces ssampling primitives infra code, and if you already considered
+> that but found it is not feasible.
+> 
+> >   mm/damon: allow user to set min and max size of region
+> 
+> The min size setup makes sense.  I understand the max size is for disabling the
+> regions adjustment (merge/split) mechanism.  IOW, for fixed granularity
+> monitoring.  Users can do that by setting min_nr_regions and max_nr_regions
+> same [2], though.  So, max size setting seems not really needed.
+> 
+> Again, great RFC patch series, thank you for sharing!  I'm looking forward to
+> your answers to above high level questions and comments.
+> 
+> > 
+> >  .../ABI/testing/sysfs-kernel-mm-damon         |  11 +
+> >  include/linux/damon.h                         |  42 +-
+> >  mm/damon/core.c                               | 202 ++++-
+> >  mm/damon/ops-common.h                         |  39 +
+> >  mm/damon/paddr.c                              | 106 ++-
+> >  mm/damon/sysfs.c                              | 402 +++++++++-
+> >  mm/damon/tests/core-kunit.h                   |   2 +-
+> >  mm/damon/tests/sysfs-kunit.h                  |   2 +
+> >  mm/damon/tests/vaddr-kunit.h                  |   7 +-
+> >  mm/damon/vaddr.c                              | 690 ++++++++++++++++--
+> >  10 files changed, 1425 insertions(+), 78 deletions(-)
+> > 
+> > -- 
+> > 2.43.0
+> 
+> [1] https://lore.kernel.org/damon/20251208062943.68824-1-sj@kernel.org/
+> [2] https://origin.kernel.org/doc/html/latest/mm/damon/faq.html#can-i-simply-monitor-page-granularity
+> 
+> 
+> Thanks,
+> SJ
+> 
