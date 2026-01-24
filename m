@@ -1,149 +1,111 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DA22D5C97
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Jan 2026 22:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749773F9FB
+	for <linux-perf-users@vger.kernel.org>; Sat, 24 Jan 2026 00:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769206955; cv=none; b=rwneO29Ux9k71nIIIkXK9PU6YvkuTC4VSR1jbSiC7dDZx00y3401G74anjDqWeW0/LkHOgeoEqeUmgh9Eu24p80w9kc0SqlPl9fbFiBvI71oEwDm2UHnYHlBEzrxVrW0BxG005GBdB2o90d5KFVIB9RS6LeWF22iM68EYuGdjFw=
+	t=1769213779; cv=none; b=FobW3Gd1MphRYfVVfQNjJKEkarrUHCJ2+J0SesqW0ZP0pQWExL6OC5h94J/z8d0msZhHUYSMMsU2slTU4RexOr9s0UaKCR4YtHEmQRdS7g9XUjH67wDDfg2spm+BHG4uuqLtKuUDpt74M10DgjERni2n4fPdzLRP8ucuurJ7Qbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769206955; c=relaxed/simple;
-	bh=kC9AZtpAHUdBYY6O6Nxkfi+ezy8yHcBLFEIPAVk6JdQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=umRhz5Q1OrF6xw28SuhatRel4knTl9+k4+Wwk6iu9r+U23KQDIn2bvZ+I96biLytWrUau7Y1Zu7tqD7z5o1vkVscq1uFOywTUSVTmtW/73XRl8hSuFfmuzlmmxZKH2OEPaXJxh0hbQajEiNf5IxT6Lwymn6fGFyoY+2SRcmxeKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QjRB6D3B; arc=none smtp.client-ip=74.125.82.202
+	s=arc-20240116; t=1769213779; c=relaxed/simple;
+	bh=l1OtJNRmVlpHOTj2Smi8RX+2ZAUb7q4TwQvX+GYCjZQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Jy7MhWaPmiaTtBcfn8S4LAYWKWJ3lu/cmlbRo6i9YXqmI1LBW3wXC7Sv+YFUbUsLGCRs0fVg4xDyVxc7NsTTcBSUWnN93HTqthkyDPjlWhB10HHn6YQiAwZ5o1Km4nZ6AnQfu/pkPv+bf3gmBhOKXnmxVTy/MUoEqsf+IB5+znI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cekQm7hV; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QjRB6D3B"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b71bdcd037so1679779eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jan 2026 14:22:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cekQm7hV"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2b708fa4093so9915337eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jan 2026 16:16:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769206953; x=1769811753; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=M71H9eDQwgF4ql2WlmE8laY3Y552yAYpetkw1WK6z+k=;
-        b=QjRB6D3B1yyIHL6WKTP04dcfdQQVfMZDVevlH55HFOqk6PzzIAQWVJNgjjcHcUAY3k
-         7dYaGrvNTUBto1zon0GcrWDYvuPc4naloDtxOesX0GOePUtVwiabh3d/UXqGzLo4V6oQ
-         qJVd/+/8LNT6WhWI0wVxkUCrPrLaRPhBx9qe/KdUIZah8Yu2NPxeUSI5FloLJwKfz1MG
-         AvuGLOuVpZ917g854P/F7Nl6n/GlDajJn21JfSL6L2DuP9ZAoq/SkGXPiLu3wRJU/XZZ
-         FdIcuxZ9FxjkU2/RFdUQ+eeoGKSrokhsJyShKt36OzZjXgaxk8d63dw7TJA+lXIVlhaj
-         aBaQ==
+        d=google.com; s=20230601; t=1769213777; x=1769818577; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cWBaKaTJtS+F22NaAxygstDx+g/XbGwM2Z3qb0zl83k=;
+        b=cekQm7hVJJwM/07iNjDMLxwSUtHXhs9/eY3b3gj1EMiCvfVCK2KZRi0U4PkW64h6We
+         MeLrrvla7qeyJXEaediYBWYrhaZOPGytPwygHRGuQk1zhgYLgF2z/V4FmD6iY7ut1iNi
+         GdYPm6McR8PuA+1o8bf3UgEKfZh8m2UAei3EfjWk5hpzMfhLUFhaxZSFW0zN+MUWCymK
+         dwk9pDya5EV8tHWZfjigUbiec6bfRHeD/eTNzpi2ix+IRwGAgDAsWcGbMbfIVO0u6gFt
+         NfuUJfEAxP8fI7t9hD3Mi5SIj4I2vZOrM2Lj+M5e/idUVjC2s8V3Ths4f8yHUH1bv9yy
+         5pRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769206953; x=1769811753;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M71H9eDQwgF4ql2WlmE8laY3Y552yAYpetkw1WK6z+k=;
-        b=AIu96bomlpEzRhU3FPGPAf5B0GWplcN8HVSi/ljxEWkFnsLfNVvBEq14XjEIUdXDry
-         zwP+QFv0WR6NeAjKcyurzzFvtN3tcHMorU3+pSfdjXZFD3I1h1iX3MukkfZy9IFy2wW3
-         7+UNhhrurRZIZil1CpGOJIh6NofF4pUjtcmHCn/mG1lw+SlfeMvhuZk5pzp866uW04e0
-         ZRr4hNPtKoSXRwM+YaZp4/OrZRU2RdG++A1whyWPSnFo4REGMY3h7RHq5w3Xszs3fk0W
-         Hx3Z4p8DwuUqS42xiCXDLUm9rqAOI13YwwxJFGzOKwh6R7PaZq8kNzR/qfcVP+zKw6Qi
-         jJMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhr/YwdGwGi9hsSgi7qXikDOj6lO5mF5IOlhBZ/17/QnlcmvlP56hct4dEOypqBJXSWgG82ww80y9JuO1YZH+T@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRF8T7IjddkLZXbjP41jKhPdrqnhGZBEeAD8OVq584Ghs866Dg
-	rl/XdPCjm+0RBn5GpB8Kd+I+Gdf5DxRVOxARsPmhOZcxYrCyfs0kiPrIj68SMOX6/MP29cIb/u4
-	hyw0daeZUQA==
-X-Received: from dyjm31.prod.google.com ([2002:a05:7300:169f:b0:2b6:fdc8:cdf6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:8622:b0:2b0:6a03:f08c
- with SMTP id 5a478bee46e88-2b72471588cmr4230043eec.5.1769206952582; Fri, 23
- Jan 2026 14:22:32 -0800 (PST)
-Date: Fri, 23 Jan 2026 14:22:09 -0800
-In-Reply-To: <20260123222209.1181249-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1769213777; x=1769818577;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cWBaKaTJtS+F22NaAxygstDx+g/XbGwM2Z3qb0zl83k=;
+        b=JpJNr0GgTh/SriCnacMDuJARPhfni6P/1JqCmmO6qDqoKZxNVRci9SG/tK0RFaL69N
+         TtBJm6vEitgreEmV0XnYdOIqdriNy+5fC6GUHHLjXBSQRuJ5SAtWyNESFFNBPz3USnMM
+         EChkqb0kj6XzQ8JPUKCHm7TgxpDTJS3z+KWg9C0KBf5uAL3BU51leGF7JZo4r+W17x1w
+         0rRFWLhx0T5Hvx4CsEqB9h5aDjQqz7u+6vp7x8eM/u9+FZG5vsFOR1WV0BwFXnN+p6n5
+         9Vet0Xm5iJxUT8NK7xYgk7yJJvGj2IecYMqUTT8ga5JBNba+lBiOlgAC4caW3CNBpYKh
+         W62g==
+X-Forwarded-Encrypted: i=1; AJvYcCXylqAI/d0PYieltS9v/73+tpYNWVhWsCoQjW8Dkkt6iMi5C/bqut6/8CAVgD16d/tFiMzhQMa1cgGDt5YIXKMy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz86cvtv+y3QQ8a7q3FAD/IE/zpPgws6+NjLkxJ/ErwDeAHpRY6
+	L0l1hgI2/yPdd6Ej34uBFdHywpZMyCKMBz2Mn1AHkDIbYRimA8YoQPKkx6iDh0HDMStXQvYST0s
+	PLvEQuYEEQA==
+X-Received: from dybqy24.prod.google.com ([2002:a05:7300:d718:b0:2ae:3309:a304])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:2393:b0:2ab:ecd0:5221
+ with SMTP id 5a478bee46e88-2b739beb562mr2094171eec.42.1769213777390; Fri, 23
+ Jan 2026 16:16:17 -0800 (PST)
+Date: Fri, 23 Jan 2026 16:16:08 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260123222209.1181249-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260123222209.1181249-5-irogers@google.com>
-Subject: [PATCH v1 4/4] perf unwind-libdw: Wire up e_flags for CSKY
+Message-ID: <20260124001611.1332019-1-irogers@google.com>
+Subject: [PATCH v1 0/3] perf more ELF machine usage
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Guo Ren <guoren@kernel.org>, 
-	Tianyou Li <tianyou.li@intel.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Aditya Bodkhe <aditya.b1@linux.ibm.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	Howard Chu <howardchu95@gmail.com>, Sergei Trofimovich <slyich@gmail.com>, 
-	Shimin Guo <shimin.guo@skydio.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org
+	James Clark <james.clark@linaro.org>, Shimin Guo <shimin.guo@skydio.com>, 
+	Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@arm.com>, Yujie Liu <yujie.liu@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Wire up the e_flags now it can be read for a thread. The e_flags
-encode the CSKY ABI level and this can impact which perf registers
-need setting up for unwinding.
+Switch 3 more cases where the perf_env arch was being used to
+determine the architecture type and switch to using the ELF
+machine. This includes the addition of minimal instruction parsing in
+perf script for architectures other than x86, or x86 when
+cross-platform.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/unwind-libdw.c | 9 +++++----
- tools/perf/util/unwind-libdw.h | 1 +
- 2 files changed, 6 insertions(+), 4 deletions(-)
+Note: this series will conflict with the e_flags series:
+https://lore.kernel.org/lkml/20260123222209.1181249-1-irogers@google.com/
+that adds an additional out argument to thread__e_machine. In all the
+cases here that argument should be NULL. So:
+  thread__e_machine(thread, machine)
+becomes:
+  thread__e_machine(thread, machine, /*e_flags=*/NULL)
 
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index 3fdcfa06bf22..05e8e68bd49c 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -213,7 +213,6 @@ static bool memory_read(Dwfl *dwfl __maybe_unused, Dwarf_Addr addr, Dwarf_Word *
- {
- 	struct dwfl_ui_thread_info *dwfl_ui_ti = arg;
- 	struct unwind_info *ui = dwfl_ui_ti->ui;
--	uint16_t e_machine = thread__e_machine(ui->thread, ui->machine, /*e_flags=*/NULL);
- 	struct stack_dump *stack = &ui->sample->user_stack;
- 	u64 start, end;
- 	int offset;
-@@ -223,7 +222,7 @@ static bool memory_read(Dwfl *dwfl __maybe_unused, Dwarf_Addr addr, Dwarf_Word *
- 		return false;
- 
- 	ret = perf_reg_value(&start, ui->sample->user_regs,
--			     perf_arch_reg_sp(e_machine));
-+			     perf_arch_reg_sp(ui->e_machine));
- 	if (ret)
- 		return false;
- 
-@@ -260,7 +259,7 @@ static bool libdw_set_initial_registers(Dwfl_Thread *thread, void *arg)
- 	int max_dwarf_reg = 0;
- 	bool ret;
- 	uint16_t e_machine = ui->e_machine;
--	int e_flags = 0;
-+	int e_flags = ui->e_flags;
- 	uint64_t ip_perf_reg = perf_arch_reg_ip(e_machine);
- 	Dwarf_Word val = 0;
- 
-@@ -348,7 +347,8 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- {
- 	struct maps *maps = thread__maps(thread);
- 	struct machine *machine = maps__machine(maps);
--	uint16_t e_machine = thread__e_machine(thread, machine, /*e_flags=*/NULL);
-+	uint32_t e_flags = 0;
-+	uint16_t e_machine = thread__e_machine(thread, machine, &e_flags);
- 	struct dwfl_ui_thread_info *dwfl_ui_ti;
- 	static struct unwind_info *ui;
- 	Dwfl *dwfl;
-@@ -370,6 +370,7 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- 		.arg		= arg,
- 		.max_stack	= max_stack,
- 		.e_machine	= e_machine,
-+		.e_flags	= e_flags,
- 		.best_effort    = best_effort
- 	};
- 
-diff --git a/tools/perf/util/unwind-libdw.h b/tools/perf/util/unwind-libdw.h
-index 3dec0ab8bd50..6423bf5a2492 100644
---- a/tools/perf/util/unwind-libdw.h
-+++ b/tools/perf/util/unwind-libdw.h
-@@ -20,6 +20,7 @@ struct unwind_info {
- 	void			*arg;
- 	int			max_stack;
- 	int			idx;
-+	uint32_t		e_flags;
- 	uint16_t		e_machine;
- 	bool			best_effort;
- 	struct unwind_entry	entries[];
+Ian Rogers (3):
+  perf script: Fix script_fetch_insn for more than just x86
+  perf callchain: Switch callchain_param_setup from an arch to an
+    e_machine
+  perf thread-stack: Switch thread_stack__init to use e_machine
+
+ tools/perf/arch/x86/util/Build                |  1 -
+ tools/perf/arch/x86/util/archinsn.c           | 27 -------
+ tools/perf/builtin-report.c                   |  6 +-
+ tools/perf/builtin-script.c                   | 20 +-----
+ .../scripts/python/Perf-Trace-Util/Context.c  |  2 +-
+ tools/perf/tests/dlfilter-test.c              |  1 -
+ tools/perf/util/archinsn.h                    | 12 ----
+ tools/perf/util/callchain.c                   |  5 +-
+ tools/perf/util/callchain.h                   |  2 +-
+ tools/perf/util/dlfilter.c                    |  3 +-
+ tools/perf/util/sample.c                      | 71 +++++++++++++++++++
+ tools/perf/util/sample.h                      |  7 ++
+ tools/perf/util/thread-stack.c                |  4 +-
+ tools/perf/util/trace-event-scripting.c       | 16 -----
+ tools/perf/util/trace-event.h                 |  3 -
+ 15 files changed, 91 insertions(+), 89 deletions(-)
+ delete mode 100644 tools/perf/arch/x86/util/archinsn.c
+ delete mode 100644 tools/perf/util/archinsn.h
+
 -- 
 2.52.0.457.g6b5491de43-goog
 
