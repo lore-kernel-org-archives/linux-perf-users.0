@@ -1,116 +1,208 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EABB0340DA4;
-	Mon, 26 Jan 2026 16:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769445269; cv=none; b=Hm693k8nCSZuSQE2GV3bw4rCSVN4/xLU9rkLrPoTm+tZ05wzjj8B5L2PF1APRevAJPcTxSaiMIebw6Fm8UsP59fFnDt6GhFc1g/dEaarBBFKxXKOZmVjuZ0szUagjEWbx95MKPi5lCVYdkNEL3x3sn9iPS914yOVwnJrrffwGeA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769445269; c=relaxed/simple;
-	bh=BPZ2o64ACc8rHB5MyAqAflouWLP2/Jgd/OtqX5i7PPw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f/O4Q+WFmn1EkWvB0/kaeENpeQY7Niz1FIWvwbV34mrms3uJxhxYxcReg0Fe6sYrhTAPdQe/CJCUEo89NCq6vcEinosjguTVCYqFGWZOeRK2vhMUt3XDMj5jrQsn9fKVr8pWu2LJyhlE1rSi3kukIjzvydPgldIWm8CGxzLXRX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1965339;
-	Mon, 26 Jan 2026 08:34:20 -0800 (PST)
-Received: from [10.57.51.176] (unknown [10.57.51.176])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02A783F5CA;
-	Mon, 26 Jan 2026 08:34:24 -0800 (PST)
-Message-ID: <b5f268cb-f9b9-4880-9fb5-b5f3a8eb9251@arm.com>
-Date: Mon, 26 Jan 2026 16:34:22 +0000
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1DE344DB7
+	for <linux-perf-users@vger.kernel.org>; Mon, 26 Jan 2026 16:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769445859; cv=pass; b=uu5wV5pCLzkPmMy9RSUtlO20e3z4stVptE0jxds/ii9P9is4qgfz8ePh4yhivJi3oATTbNLR3z3FrD0YS1ONlfgNSpFJGtgU2eW1YOEs6rRGTc8V3zbsWTggCpxJBCnpdz39FZnLl8z0U5v3SmoUdbmU4IaQdZboGjfGD5f2wk0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769445859; c=relaxed/simple;
+	bh=ijBB1BRvhhOEdEQDllwKzoQbnf42S4Wm/dbRHau5Dpw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HMDfugmoi+GKcbnTjI/MjUaGC8Nd9unT5ISoKME+nRTpn2lZxPcXo64n8nPTke8BSpD+9mIwBscrqkSGgKPh9g7VNG3BtxbjyO6/rYg+nPIUhoww1ukZeCwQg/aR0WS8Js3uO9LufzK3akeWI+IEREjFovY6mXMf63DX14y9F44=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=etwylixs; arc=pass smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="etwylixs"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2a0d06cfa93so151095ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jan 2026 08:44:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769445855; cv=none;
+        d=google.com; s=arc-20240605;
+        b=RkfEd1YcrSt4M9hFyOAhfAS97pYItEpnV00cyonzVKnGl1ZXDFF6q5yKfdY7BPn9AV
+         rTbqP4z7IkB9EAQ7xhxGWgJZpdCqg2Y8r7LAXinp8368J0g2kmS9jOwWpC8T/cjDREpt
+         O9J0jly8RFp+7vhOIsDD68UaS2QVCnCe8Xrlinmk+qieiawvAqO2M9FJPdV5dcxK3NrX
+         4Vh2z/h+CfznSPjipB/7rLheVLf4Q8Imd8IEaLrMmu8CjiVvq5xrneZ1R2krSVfYGkXg
+         +RX0C5qqRZpYLbKl9FBMAZUFFYGEihBsETt5J1IZj8HSVNU/nOVY2eaUItskzGqtAeGs
+         kISw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=mGAy20/G0aLhcGacwfot8jtNaLKVL17HJucsdvURcXU=;
+        fh=RzWYv11tz4ht14ZA0tgUseHW33MHFPhnjlb9VHb5ia8=;
+        b=Oimop3BNLxJMsTk19tqbjCV9XKyfdTGZM14EaDZ4gbnuniYcPInLm8zwHPQu2BuqZO
+         /IqMWbaxCLGPAnKhmrKiR2sHOHAoRmsDMsR/SHPNQ69aNSDNu1yZp/PuKcLD6NgORuO5
+         zw7xQbMu6EpkYK4a3SMEeSfzWXuHoLHoGuhPAVX1sAhmWbPHPIgJEyjED7zh+43GUDTx
+         Uf2j0r6jptWhalCMz7rFoX+ayiHFWU2xFXQSHPWWqM8Q6GlXpUSgWvuKsuJZO5dAC81i
+         kRutzvzm1UoN2FM/rddZykKMQULbPTVPaxeaNFCraZpoLcpj///SChiL6NXfSwuvZZz2
+         hVwQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1769445855; x=1770050655; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mGAy20/G0aLhcGacwfot8jtNaLKVL17HJucsdvURcXU=;
+        b=etwylixsQjIH33t8vpV2sUnU56OtVypUsd0eFu1GvX4YhOilUJ3KbBjl6k7J8bVyYX
+         oZ3qcurbhFLY/J1+74Jyr4CAgFNd6mttQA9YoYEnw6myR57c/yE2ANDfBlNYNPydzLkN
+         v/E9qMzh9HDpdoboTd7QDL5D5Mz2rXXcFXvVA11wujGZrwEljZIuB1q3ZLtHOkwWO96p
+         wH/PEQ2EXbwwVfY5MC0ZMCXFvyhDmo7F28FdQQVes71XUnUx5dqCVy59Is9jVXAWO7xp
+         2MhYmSgyQJ6s3NmnrL5pTkEpA51dZJP7orr/lFOx4md1odp8EWoqunuX6OA5Mon8lfIy
+         L/yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769445855; x=1770050655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mGAy20/G0aLhcGacwfot8jtNaLKVL17HJucsdvURcXU=;
+        b=UgP+h31ZWN65kG8zMtuj6PbjvE6AwV94Spt8SLQ/CQATHYF4uVjdp3DqgRZLofPkC0
+         dSfp4BU9vuz89+VHw0GCEP3Hgz4XNnqBndImTJHOs3AVpgldvwielVG7Q65djognqwNj
+         6Bv4cUPnrH6nlWT5yaScGrBB03Ys2vBQ0GaqnBmAJ20BY1WHOK+q0bOnb9yPk5vbAzak
+         tOxOp6cWRynlw21PTs8Ky9m2rx42OEdbiL778s7ObyKHlR+/RFLxGbMrhPTOxZrbltvI
+         /evgh4KCak+HvsQWf1XNyN2pigQZ/PDpQ/3lK9a5GdwyA06/kJaThc9XiXtk+vN2OVGH
+         Bneg==
+X-Forwarded-Encrypted: i=1; AJvYcCXI29ws/7tRhby/wC8k9ObePSlNTl7FNZiAycRKcQLmDtM5CTNO9Aa1aJeZpoCpra5PiaSwWT+sa7u4SVH5vfVm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy51FhKEjZgyDCBFrODMSSZY+lZYgb4iUewlRGSd18hV/gN1Wy2
+	TGIk9chrPDhEN2Rb0Ban/RoqbpcFdwLY58CZJsmTyHJRR5KFgajy+EJABQOcFHiRAgJ5tqlz0+h
+	K/5NlZroJmAVxQpIiq7Pu2VuOZGme8KKzuMZlPEyY
+X-Gm-Gg: AZuq6aLBTFHd0HEXpj8prMFcXI9Pt2J9toL6LuhxoBgeqhzNyxYx40m7xR0HH2Yx0Ql
+	zTFe5g6lVChoOt5o5et9IXP1/x/X8s6JQmUBpcpZXxJgPDEmUUfZv9DtIiOyVrl47x1t5CtrmCb
+	/oPsaWx4D1Ec7PwkYwNk09mU75g/FoRBvgSF3OO4XKeliRAoLub2sSCCMbs3wRTM1TA2G6+FqPS
+	jckeXkU7HO/l1FPRkE27OF3t51B+Oiu7UNRKHf74Dd++iy5b42pXfHnHiEdAXJXiIszHt0uNN7l
+	XqQ+DMplhBT8sS5xEm5buel4Umro4SEjUXTD
+X-Received: by 2002:a17:903:384d:b0:2a7:6c4e:5924 with SMTP id
+ d9443c01a7336-2a844e5b2d4mr2521265ad.12.1769445854175; Mon, 26 Jan 2026
+ 08:44:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf/arm-ni: Don't crash in probing clock domains
- without a PMU instance
-To: Baisheng Gao <baisheng.gao@unisoc.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: cixi.geng@linux.dev, hao_hao.wang@unisoc.com,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20260126033029.7923-1-baisheng.gao@unisoc.com>
- <20260126033029.7923-2-baisheng.gao@unisoc.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260126033029.7923-2-baisheng.gao@unisoc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260126123514.3238425-1-wangyushan12@huawei.com> <20260126123514.3238425-6-wangyushan12@huawei.com>
+In-Reply-To: <20260126123514.3238425-6-wangyushan12@huawei.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 26 Jan 2026 08:44:01 -0800
+X-Gm-Features: AZwV_QjpSdff-setUw1tB91cPILzxIvHf82sL-c45HvujlcAZIHtKG667DnWY6U
+Message-ID: <CAP-5=fXJSPbZkSvcLMEM7rdaGqYJGzrh+8qmZodrWy=ZGVRp_Q@mail.gmail.com>
+Subject: Re: [RFT PATCH 5/7] perf-iostat: Support wilder wildcard-match for pmus
+To: Yushan Wang <wangyushan12@huawei.com>
+Cc: mike.leach@linaro.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, peterz@infradead.org, 
+	john.g.garry@oracle.com, Jonathan.Cameron@huawei.com, shiju.jose@huawei.com, 
+	will@kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, 
+	liuyonglong@huawei.com, prime.zeng@hisilicon.com, fanghao11@huawei.com, 
+	wangzhou1@hisilicon.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2026-01-26 3:30 am, Baisheng Gao wrote:
-> The NULL pmusela pointer implies that current clock domain doesn't have
-> a PMU instance. Return 0 for probing the next clock domain. Otherwise a
-> kernel crash will happen.
+On Mon, Jan 26, 2026 at 4:35=E2=80=AFAM Yushan Wang <wangyushan12@huawei.co=
+m> wrote:
+>
+> Current wildcard matching of pmu names only support the form of
+> "<pmu_name>%d", which may not be sufficient for pmus with other forms of
+> name (e.g. HiSilicon PCIe PMU has the name of "hisi_pcie%d_pmu%d").
+>
+> To address that, change the wildcard matching function into a callback,
+> and add a new version of wildcard-matching function using the callback
+> to support more flexible pmu names.
 
-Sorry, this doesn't add up with the diff below. All of the documentation 
-says that the PMU is in integral part of the clock domain, and I can 
-find no mention of any configuration parameter allowing it to be 
-omitted. It is possible for the PMU registers to be inaccessible because 
-Non-Secure access has not been enabled, but we account for that already.
+There's some discussion around PMU name matching here (and the replies):
+https://lore.kernel.org/lkml/20251231224233.113839-12-zide.chen@intel.com/
+that I think is relevant.
 
-> Signed-off-by: Baisheng Gao <baisheng.gao@unisoc.com>
+> Signed-off-by: Yushan Wang <wangyushan12@huawei.com>
 > ---
->   drivers/perf/arm-ni.c | 8 +++++++-
->   1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
-> index 66858c65215d..53b656983da1 100644
-> --- a/drivers/perf/arm-ni.c
-> +++ b/drivers/perf/arm-ni.c
-> @@ -526,6 +526,7 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
->   {
->   	struct arm_ni_cd *cd = ni->cds + node->id;
->   	const char *name;
-> +	static atomic_t id;
->   
->   	cd->id = node->id;
->   	cd->num_units = node->num_components;
-> @@ -562,6 +563,11 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
->   		case NI_TMNI:
->   		case NI_CMNI:
->   			unit->pmusela = arm_ni_get_pmusel(ni, unit_base);
-> +			if (!unit->pmusela) {
+>  tools/perf/util/pmus.c | 12 +++++++++---
+>  tools/perf/util/pmus.h |  3 +++
+>  2 files changed, 12 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> index 98be2eb8f1f0..35184d477d07 100644
+> --- a/tools/perf/util/pmus.c
+> +++ b/tools/perf/util/pmus.c
+> @@ -402,7 +402,8 @@ struct perf_pmu *perf_pmus__scan_for_event(struct per=
+f_pmu *pmu, const char *eve
+>         return NULL;
+>  }
+>
+> -struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu,=
+ const char *wildcard)
+> +struct perf_pmu *perf_pmus__scan_matching(struct perf_pmu *pmu, const ch=
+ar *wildcard,
+> +                                         perf_pmus_match_t match)
+>  {
+>         bool use_core_pmus =3D !pmu || pmu->is_core;
+>
+> @@ -436,19 +437,24 @@ struct perf_pmu *perf_pmus__scan_matching_wildcard(=
+struct perf_pmu *pmu, const c
+>         }
+>         if (use_core_pmus) {
+>                 list_for_each_entry_continue(pmu, &core_pmus, list) {
+> -                       if (perf_pmu__wildcard_match(pmu, wildcard))
+> +                       if (match(pmu, wildcard))
+>                                 return pmu;
+>                 }
+>                 pmu =3D NULL;
+>                 pmu =3D list_prepare_entry(pmu, &other_pmus, list);
+>         }
+>         list_for_each_entry_continue(pmu, &other_pmus, list) {
+> -               if (perf_pmu__wildcard_match(pmu, wildcard))
+> +               if (match(pmu, wildcard))
+>                         return pmu;
+>         }
+>         return NULL;
+>  }
+>
+> +struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu,=
+ const char *wildcard)
+> +{
+> +       return perf_pmus__scan_matching(pmu, wildcard, perf_pmu__wildcard=
+_match);
+> +}
+> +
+>  static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu =
+*pmu)
+>  {
+>         bool use_core_pmus =3D !pmu || pmu->is_core;
+> diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+> index 7cb36863711a..9308afb5a7b8 100644
+> --- a/tools/perf/util/pmus.h
+> +++ b/tools/perf/util/pmus.h
+> @@ -9,6 +9,8 @@ struct perf_event_attr;
+>  struct perf_pmu;
+>  struct print_callbacks;
+>
+> +typedef _Bool (*perf_pmus_match_t)(const struct perf_pmu *, const char *=
+);
 
-...However this is not about the PMU node anyway; this would represent 
-the FCU at an interface node being missing. Again, it's possible for 
-access to the FCU itself to be restricted, per the test below, but the 
-subfeature ID registers should always be readable, and per the "Should 
-be impossible" comment in arm_ni_get_pmusel(), the nodes that can 
-generate PMU events should always include an FCU.
-
-Could you please clarify some more details of what the exact situation 
-is that you're trying to deal with here?
-
-> +				dev_info(ni->dev, "No have PMU %d\n", cd->id);
-> +				devm_kfree(ni->dev, cd->units);
-> +				return 0;
-> +			}
->   			writel_relaxed(1, unit->pmusela);
->   			if (readl_relaxed(unit->pmusela) != 1)
->   				dev_info(ni->dev, "No access to node 0x%04x%04x\n", unit->id, unit->type);
-> @@ -591,7 +597,7 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
->   	writel_relaxed(U32_MAX, cd->pmu_base + NI_PMCNTENCLR);
->   	writel_relaxed(U32_MAX, cd->pmu_base + NI_PMOVSCLR);
->   
-> -	cd->irq = platform_get_irq(to_platform_device(ni->dev), cd->id);
-> +	cd->irq = platform_get_irq(to_platform_device(ni->dev), atomic_fetch_inc(&id));
-
-This is clearly wrong. Disregarding how badly it would go with multiple 
-NI instances, even within a single instance I don';t think there's any 
-obvious guarantee of a stable order. The firmware bindings are already 
-defined, and that definition is not "the order in which a particular 
-version of the Linux driver happens to parse things".
+nit: can we use stdbool.h and make this return a bool?
+nit: in general Linux style is to avoid typedefs:
+https://www.kernel.org/doc/html/v4.10/process/coding-style.html#typedefs
 
 Thanks,
-Robin.
+Ian
 
->   	if (cd->irq < 0)
->   		return cd->irq;
->   
-
+> +
+>  size_t pmu_name_len_no_suffix(const char *str);
+>  /* Exposed for testing only. */
+>  int pmu_name_cmp(const char *lhs_pmu_name, const char *rhs_pmu_name);
+> @@ -22,6 +24,7 @@ struct perf_pmu *perf_pmus__find_by_attr(const struct p=
+erf_event_attr *attr);
+>  struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
+>  struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
+>  struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const c=
+har *event);
+> +struct perf_pmu *perf_pmus__scan_matching(struct perf_pmu *pmu, const ch=
+ar *wildcard, perf_pmus_match_t match);
+>  struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu,=
+ const char *wildcard);
+>
+>  const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
+> --
+> 2.33.0
+>
