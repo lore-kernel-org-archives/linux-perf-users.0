@@ -1,87 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D44E27F010;
-	Mon, 26 Jan 2026 20:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769460793; cv=none; b=Ei+OKcAkzygnkwOpuNmqv07Ua2/6scammXITgr05duOLpFNqpbm/vSxcZp2MBwpwqTfVfCxeUsnLial0kQ8IE3Mkdhi75zyYUum3S3NmerIpOoA6wahpC4Q3TKXQFBDJmNtfz125TAyzgUVWB1GwRZIb1igHEWuB34shxogU12w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769460793; c=relaxed/simple;
-	bh=JQR+rydd6TVtpjqwvvPc7pyZWC9fW0lYqxzqur8LTSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gBsp+1xKtDAIwSS0nLj0gZRLKy0vqYYHgLIhqMhRjRIqajqfEqBnYqWCIHMutwLB01s5xSY4Jf4xUPfB1e/yHiEWYrjum3XhoupcuAOschDCTPsotMoJ5JbdCqn6V3rvr+qx8phTxv+Y/NhTVtxdjZQJWVWGLuKkHQgdvnfaOfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0xCs0tz; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B11F28CF49
+	for <linux-perf-users@vger.kernel.org>; Mon, 26 Jan 2026 21:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.169
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769462165; cv=pass; b=kfrrUXpVySeR1/IPw7j2x6xNgpBZ7pOfG6wMnOqTplukrGvmdLz2cuIsk0KX+H9tTabgeln+f1dl4fjXPkh7PSAGgZ2S2IideYUS1gVldUCr4+6buHhBWKbJsDaHnkQN/JSwBcvc5w92zZCEyS85Z7i+x/EqGrdL3SfxymB+FsE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769462165; c=relaxed/simple;
+	bh=ZTNi3GiUl+7Y1ponx1HbvnBvuEQ/jQ5xft9CZQ+VJOI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Kphg86uK7H1IjyC7WOh0P3n4cadZdfsX/fBHk6MPO3CAcX8CBxj1pP9Tv9QSdYcGMXLkli9P1d0YI+VyHdrNqhEwMo9QcMI2Xug2Pw8AkkTzJtEy3h32ZX72rw7xKbv3+jo5SP+JHK5i2FSq4w0X8hH1Dv/NN04Ci1QXIdX4xCU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yf//41Hy; arc=pass smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0xCs0tz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10569C116C6;
-	Mon, 26 Jan 2026 20:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769460792;
-	bh=JQR+rydd6TVtpjqwvvPc7pyZWC9fW0lYqxzqur8LTSY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O0xCs0tzj+CsL08a0ImnkfVqeKJreOOpP2t6t1qVmgRD4c26+ENWYiT7FcBaMTzNj
-	 6SCUivpi1/X11Ocxt4Y8kbUf2RedMZng5aAM4KHjVZu88NuYO3lJ4ZN+FVX6jFYFMu
-	 hIz5d3i8nFFw6hL9VEgGlXdq8OZm8YdCtKMLSfY6kudg5kinRS5+pEdPBsCUoW0Z/U
-	 HKlD/O9UZYo1L/3ag4uu4AUctGnXWFv9GHluSleXt+EiVqPPk7j6Rqtod/as3D9iok
-	 ezh/1bnv2h5lCfRHyPH+h9jd9M4x/qaqmj7gPe4OybmO9Z3TwM0FVKJUbJGdDSJ2LV
-	 rU02nlx8murqg==
-Date: Mon, 26 Jan 2026 17:53:09 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Shimin Guo <shimin.guo@skydio.com>, Andi Kleen <ak@linux.intel.com>,
-	Leo Yan <leo.yan@arm.com>, Yujie Liu <yujie.liu@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] perf more ELF machine usage
-Message-ID: <aXfUNewGdbqqQL18@x1>
-References: <20260124001611.1332019-1-irogers@google.com>
- <aXfUFBfCQ4m_DFrx@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yf//41Hy"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2a0d06cfa93so5295ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jan 2026 13:16:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769462163; cv=none;
+        d=google.com; s=arc-20240605;
+        b=HUMDW+T42II6dZaI/gp8DQOg+vMQd0MfUDj/3s22w1HwLs8P8futDxFP5ZNz9oqfai
+         uBr1TZ71X5CG+kr+a6LaeklaMlpqlbRaMURaMul/s2mw+2wyxfSCTxU0XmXIrB1mUtpy
+         VGQQSkVN1UnqdETzjC2gllyoGFZ6lt97lZHSOZmOa9o1OS3CzK39Lnyroxn9UkvW3cqP
+         M1Hj0h6hJnagGOymWD5RNZD9uL1vAohHJvcqtz5MSDV1iH+Cjf5FpWgP+KK6/uLUoQvd
+         qSi50z219fVHvhThQHLW82w2mq28XqZF2pdLGeGvG4HOn/4dz1EJrN3hChALyy8SA5gG
+         BGcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=NHpO0OKLKkRT50mpuDRbrQIaNZHpeE7fFo+wyzARoyg=;
+        fh=VDA9n80Gw1DYmAoLDOrh6aKcobegC+MWWmOzfhzNz54=;
+        b=hLHAwaCP+Be6cThOMmojOvDvx+ou0VM0xYHZ6YsbuOPTPf3Vf7XL+PHvMOfK9axfzf
+         DU85OT+0+mgXIL+XwtSLe3AzBMyTGchpmYAXhKFyRCx4XVVc8Ub7eTcO2YjJVoyGgeQ3
+         MPnMom4zSIPr8MO4c+Iyg5cB9J1ppbnyWbJjCNgtXNSGn/kw4IRxGuYwFvk2gJrURfxh
+         FrH6K1YVnACwmmAOsyK2prwEu4d3Qq2M0BefyjC+9D7dn7BB/Pk26iXfwPPL9Z9pXpGe
+         gstJIJRZrvMfo+CIpWyNdoUrulZIbhvRpE1L06tbaxHng3MH0/HnxHQuoLS4UunI8EFd
+         QHfA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1769462163; x=1770066963; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NHpO0OKLKkRT50mpuDRbrQIaNZHpeE7fFo+wyzARoyg=;
+        b=Yf//41HyH2QJnN11i7s1t4kzvximnL4hra3fjmBrXrnOzd/BEWJhMKXNU7ETIZpOzl
+         7JTiIDUdSOdLY02gFxz1ZFXq/Dv+BVfzZ6hjfGNOsw3PTDd97eyiTZEMN7TPmPaax5jb
+         WXybWlHesO9pOLDGmRiaxxp4Py9EhmMgTTFtAsYk93g4Gmxig0x3ODebN2+dXjWtqC7Z
+         +0kQHvIb18RSOpalNt6Zhzy5L6PZhvxdzfZEx9jU3m7vjrPPcaJtCUJzvXpWifW1tPrx
+         zJx4wDbgjIhttVBlkybiJPExvJ+b1QCDkg6PAddGD8aib/iWZ7ssGBarBIAQ1dj3IDcr
+         aS7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769462163; x=1770066963;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=NHpO0OKLKkRT50mpuDRbrQIaNZHpeE7fFo+wyzARoyg=;
+        b=B3W4uMRfOhEx2KW9zGeBw50UOUK+YQ1VaMtiSE+w9VybYdlTNBJ9q9fXyxjiCZL6Qh
+         LFDzqMjWYDKvAcSWP5ehudhYLqSpn84KXD23w4ECDOTWHoe9ZcIUBykvQJAtHIJ+alPh
+         +utovjKfFSQtC3dJYEFj3vkLIN2e04NL3pKilcBbiDOrt3AN6cEwL0dcMJKWIVMsMnoH
+         vY/UC3ok5rZ9L5N7HCbshU5kZmR+DK72VbL5bU+tzmeCDmB99IuCQy3wo/V+ER1cIWEB
+         3nTinXWGauQZftA5QciFOWtyE4K0WV+7dIwMfZV+PivWErzWlIVSM4isKMaLsG0al9ae
+         znuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtShevH98fiMHygyhMcp8gGzBYzTviLwl77QAB7Cetcb9W/084EnDLIKudEe27AlK9utAbH02G0NOASPnKbz23@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9T1Pwr+ayi8u+ZYwk89JecBJqR4OY4jP644VIAt2qy7dcbPPR
+	4zRBpOAOOhIRsLneWfBaG2I7LDz6FLn9kLuuVKLH0pV0Q5oGRAmDXnrZpUxl/Oyu6vH1fW8SM7H
+	haBP8aVxZupfsldy7TH8U9mu92d9KG/ZXyWUBLbi+
+X-Gm-Gg: AZuq6aJIGC8vAs5Sf2lutNxJU4ozMUVG740gOj6W+ArXwcPZ+dJlj/kdSvZeocWUjNp
+	MV8jJRaMxLCjKFKm4GtZTaVW3CmK6nFLzcQL+3EGpk3jswjXGeq62kNPjcLIXSPhVjH3UaGrJfC
+	xAtEggkCeFRbUojolpx13laUgWckBvg4qDEjycCDzndvnqG2YNkI6kjdoribvXqEe+LIpocDpJx
+	QuUIcpN/nUuNKd4JKtoTbzYDjR0MP8GXViZlq+tEfQ3S6Ul0tFCfF/geB4jVRQ1ZhxspxEODQqx
+	/4hXRkphF/aWKCeIJB3TY967yw==
+X-Received: by 2002:a17:903:3bc8:b0:2a3:2844:98cd with SMTP id
+ d9443c01a7336-2a844b09e26mr2637735ad.8.1769462162869; Mon, 26 Jan 2026
+ 13:16:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aXfUFBfCQ4m_DFrx@x1>
+References: <aXfPTjbtnG7fXR8b@x1>
+In-Reply-To: <aXfPTjbtnG7fXR8b@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 26 Jan 2026 13:15:51 -0800
+X-Gm-Features: AZwV_Qh7AkbnKEN8qg2XVB3dvvRf_rpnYK6w6LJbhwHVy679xaxgK8GNnvWUe6M
+Message-ID: <CAP-5=fVEfYNzzTwQ4k0UUQ5xQ+U+G9UJo+qr6tPkXDcWOZsC9Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1 next] perf annotate: Fix BUILD_NONDISTRO=1 missing
+ args->ms conversions to pointer
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 26, 2026 at 05:52:39PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Jan 23, 2026 at 04:16:08PM -0800, Ian Rogers wrote:
-> > Switch 3 more cases where the perf_env arch was being used to
-> > determine the architecture type and switch to using the ELF
-> > machine. This includes the addition of minimal instruction parsing in
-> > perf script for architectures other than x86, or x86 when
-> > cross-platform.
-> > 
-> > Note: this series will conflict with the e_flags series:
-> > https://lore.kernel.org/lkml/20260123222209.1181249-1-irogers@google.com/
-> > that adds an additional out argument to thread__e_machine. In all the
-> > cases here that argument should be NULL. So:
-> >   thread__e_machine(thread, machine)
-> > becomes:
-> >   thread__e_machine(thread, machine, /*e_flags=*/NULL)
-> 
-> This one isn't applying.
+On Mon, Jan 26, 2026 at 12:32=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Fix a few missing conversions to pointer in the usage of 'struct
+> annotate_args' 'ms' member in symbol__disassemble_bpf_libbfd().
+>
+> Fixes: 00419892bac28bf1 ("perf annotate: Fix args leak of map_symbol")
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-⬢ [acme@toolbx perf-tools-next]$        git am ./20260123_irogers_perf_more_elf_machine_usage.mbx
-Applying: perf script: Fix script_fetch_insn for more than just x86
-Applying: perf callchain: Switch callchain_param_setup from an arch to an e_machine
-error: patch failed: tools/perf/util/callchain.c:31
-error: tools/perf/util/callchain.c: patch does not apply
-Patch failed at 0002 perf callchain: Switch callchain_param_setup from an arch to an e_machine
-hint: Use 'git am --show-current-patch=diff' to see the failed patch
-hint: When you have resolved this problem, run "git am --continue".
-hint: If you prefer to skip this patch, run "git am --skip" instead.
-hint: To restore the original branch and stop patching, run "git am --abort".
-hint: Disable this message with "git config set advice.mergeConflict false"
-⬢ [acme@toolbx perf-tools-next]$
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-- Arnaldo
+Thanks!
+Ian
+
+> ---
+>  tools/perf/util/libbfd.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+> index 79f4528234a9d6d5..63ea3fb53e77d5fb 100644
+> --- a/tools/perf/util/libbfd.c
+> +++ b/tools/perf/util/libbfd.c
+> @@ -501,7 +501,7 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sym=
+ __maybe_unused,
+>         struct bpf_prog_info_node *info_node;
+>         int len =3D sym->end - sym->start;
+>         disassembler_ftype disassemble;
+> -       struct map *map =3D args->ms.map;
+> +       struct map *map =3D args->ms->map;
+>         struct perf_bpil *info_linear;
+>         struct disassemble_info info;
+>         struct dso *dso =3D map__dso(map);
+> @@ -612,7 +612,7 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sym=
+ __maybe_unused,
+>                         args->line =3D strdup(srcline);
+>                         args->line_nr =3D 0;
+>                         args->fileloc =3D NULL;
+> -                       args->ms.sym  =3D sym;
+> +                       args->ms->sym =3D sym;
+>                         dl =3D disasm_line__new(args);
+>                         if (dl) {
+>                                 annotation_line__add(&dl->al,
+> @@ -624,7 +624,7 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sym=
+ __maybe_unused,
+>                 args->line =3D buf + prev_buf_size;
+>                 args->line_nr =3D 0;
+>                 args->fileloc =3D NULL;
+> -               args->ms.sym  =3D sym;
+> +               args->ms->sym =3D sym;
+>                 dl =3D disasm_line__new(args);
+>                 if (dl)
+>                         annotation_line__add(&dl->al, &notes->src->source=
+);
+> --
+> 2.52.0
+>
