@@ -1,150 +1,238 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713C1330327;
-	Mon, 26 Jan 2026 10:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898852045AD
+	for <linux-perf-users@vger.kernel.org>; Mon, 26 Jan 2026 11:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769422733; cv=none; b=lqyg9FOANEguz4aZQCrLK0aR0nE1ZDmpKcC1i86etbKLM1IWAsP35/RoB2yTqReQgMn/WUfnkK6cAMKjXiIVcobITeejGba7V7Fk0jgSJX34kJQ3/75O/RgpRzywQ26Q+yRd4P0qfbHSPBun2/G85IXUEXoYWyNYWxJzThaNgEI=
+	t=1769426483; cv=none; b=gdr4o9s/dexgZd6JT5j9aPG2q14bJ+3i/iJZOIewMKeLWWVmH3vGcjumrMNZA3KOXouCdz0XfmZ++kJnIe0VRExgMNJ1jiKic1zYLX7Iskrd04CAKTSQfAmjBadncfNd61IxX8Q+ccf0MP/UKSwhN8eDdqiV9vqalZ1W3Uq1af0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769422733; c=relaxed/simple;
-	bh=Ucmve+dluwtbj64/JNEJDhr/8sDAs37zDDHqIbQQZHo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V6AsLN+O37OnON605FGzyv7+0iWxpLciuqKKtck/GXNSNQwqxGrAHAyiydRl93aJspt7GZRnnotsOHNxoJa538XcZXJwHtMfF/IYEgoIVu81MsO9A1WEOt30Ni793Kcjsz0+ZfTS/pVJSJwg9J4USKryZoh2lrM+/7nzXUh1SHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dWWpu+o1; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1769426483; c=relaxed/simple;
+	bh=mxnNEWvjiSwDqY9eOfwfzc//W2+S4RWx+p9kGxZ1/r8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=roa/GnQksBVG7c+wx4HJjc0h8Zwqwv0hlGwoLytp2b6j1kPo37oMPsC1JY632eam/AsTg9IRsaSCI8Hb9mQCRFWIOWBOUhoASQZd38fm2MgyXfbDzvJ2ZaFBibZ4eV31/AdejXmFpEHnf6m5voinEKlCvisy0q1YRiejKKzxIvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lFu/h3zs; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dWWpu+o1"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60PDP21P021571;
-	Mon, 26 Jan 2026 10:18:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=2qjptHA0YmxDPIgJHXhmwBovQ8WntJd8SiYn0/Dpr
-	q8=; b=dWWpu+o1xH4/2suz8Gn0MqbQyTLYzeSz5BLuffjifaIx2FW0/3Q5xVYwn
-	Eazu/t/XZKJNjCBpARXT/kjSDBx18VJSVrjN6zvbiFm8Q+eIbikusB6LnYoKGheO
-	co7wKOMAmHptnlayg4UPk1z67MWH2WEx/tPhnWUqzGrBLT95xBCE5sLCevYDGDvB
-	XpK8RY6jb6P3gZxkSgbK3co/GC1/kcZ21+HNU0B3l3kHdTf6QgLATNZ6Coqvclkk
-	PBbFazRCAFZ5NrVH6j/1IatjA7w1tse4OcJDZLPvhnfD08HnLa15U1stWW0Mhl17
-	fCskIsH7Kvda06odsrgehPa9zkYSg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnt7fg30-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Jan 2026 10:18:44 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60QAGaHx025557;
-	Mon, 26 Jan 2026 10:18:43 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnt7fg2x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Jan 2026 10:18:43 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60Q5oc88019630;
-	Mon, 26 Jan 2026 10:18:42 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4bw9dmv67k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Jan 2026 10:18:42 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60QAIb8l61669794
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 Jan 2026 10:18:38 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CCE332004F;
-	Mon, 26 Jan 2026 10:18:37 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9F2702004E;
-	Mon, 26 Jan 2026 10:18:37 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 26 Jan 2026 10:18:37 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        irogers@google.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH linux-next] perf test: Fix test perf evlist for z/VM s390x
-Date: Mon, 26 Jan 2026 11:18:23 +0100
-Message-ID: <20260126101823.2090077-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lFu/h3zs"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-47edd9024b1so35857325e9.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jan 2026 03:21:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1769426480; x=1770031280; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AZnOqoPJbA2vcVZDzCW8SWXfAN6VANeVTkDMhtLBF68=;
+        b=lFu/h3zskQ7/fI4YBUEJ4DhAwUoikFoNt0t/HJCMT/LpH8D4oE4V3lIGV7omVz6+fq
+         DT4h+7GAUhOed5opySH+pVPDA4QoZsgdeukDrOUuEQJ5iZ5gYN5NNox9aMkpGS0Ts7yl
+         V0Wd+jra6Mqi8wpdviPkePHx0B2PZgZRz683ky4RMQZe1BlIfCoMPAmpbBTFjxgin8kx
+         Bsa5N6QL0XhYwKi5xGsWj5fV/w8kB4q3uiTKt/0HE5zdzWDKrYnz4t29g/AAVIEKuNBy
+         FY0JUQJOhfVoWOVwyEsSMCK5y/jsZXPCqN6ZIP3IYJbtpyrIRl7E6UlCr5lsIWZmIc43
+         qL8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769426480; x=1770031280;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AZnOqoPJbA2vcVZDzCW8SWXfAN6VANeVTkDMhtLBF68=;
+        b=Jhz9hu+zsTuHJ4i+Na6PEn3vwfxObtTMw7BNdjFbrEyxXO3tqZ/lwP04pRDQIud2WU
+         8OCYKVOkNYpoHIFzIq8E1K+moI8CZnGRsgOI8LOjg/EIPEkMGAZTIyFIfyXW5IFHeLAO
+         bV7o/CPVcRFki/8EK2TWBD9x9SltlP4KX3YQDGx+/y5UALyJVgeF3QIxbpJHISy3dVRn
+         FUiUWHgsx3xOUS5KTlhI/a8O5QfcTaeYOlrpuyJbpBAwl2q7XMYB+auhALQTvbqEdI8Y
+         95J/mrBGMiEJNqQYIzhjPkD145jtjgmijYLxvlc7Pi8yCcYETsXFLR5MH0JqKttWoMzV
+         6fHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUa7nPSJr1IBTPhVM1U0nxltrGjYDoL6yJgEgU0kSMIbF+nnNCi3PmN7p6cSnhkKZuRJQXUdAvZiLM2a0ny5gcL@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoaoEHZcclffWKb+5rMASmYqmCXW/Sx37iR4HrMfIEJsC4D/Kw
+	g8ukJ/OyEmjXmQ1C0YPhYqyfA0HkmihctrVCmp/TSEHB22VXhVqxtdzDnBZlEi3UulF3CuU8vQx
+	axunU
+X-Gm-Gg: AZuq6aK2b8prY1kl6kEjqTYKUj6eGosjmmZOcnUh8u0P+45ZY5XZB9lhooAg0SDSHlM
+	m+fSNCjjMISZjNw7ZtJdo2CuuuSdncudO70WE/PiRAtG2CUza0lSQebDarcp26fnBI4AFzemLfp
+	qY42QplqvnyNTVi0P6E++rBQPxNGYJWL1RjIGW75NMDm+E2Ds5GxA0U7zUOTowE4nFcplsgZb+/
+	bm63PMqEKVu+KG+bhKUIFEjv052KWdSSO6ZgMkrFQUWlI2Jus/uUjY0ODnnS6gcSp544lscdCro
+	0OeeoXwgpqwiKaykyLhbHCPxteBFkrVUpLyvoep7YY723eAdZzNeYCWLlYlwngjd2EmDT7RL3rR
+	oVeImtc42KJd3z6q8LY5BYcycFL9nZY0dLSHiWX6Jjixcc0UmFXPqsmfyIU3hpoBrAAmjgNHI6w
+	i8Y+CUqm5RBGFVNBXK
+X-Received: by 2002:a05:600c:45cf:b0:477:2f7c:314f with SMTP id 5b1f17b1804b1-4805ce3f810mr58902445e9.10.1769426479754;
+        Mon, 26 Jan 2026 03:21:19 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-480470cf385sm336217465e9.13.2026.01.26.03.21.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Jan 2026 03:21:19 -0800 (PST)
+Message-ID: <72bc7c74-a2da-4cdc-b647-1c9e93388c4b@linaro.org>
+Date: Mon, 26 Jan 2026 11:21:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf tests: mmap: skip user counter tests when runtime
+ PMU access is unavailable
+To: Ian Rogers <irogers@google.com>, Qiao Zhao <qzhao@redhat.com>,
+ Leo Yan <leo.yan@linux.dev>
+Cc: namhyung@kernel.org, mpetlan@redhat.com, acme@kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20260120090522.1193981-1-qzhao@redhat.com>
+ <CAATMXfkYH8w7sLpDSHTf1JRGdQiK5Ey8pX6u=5t+Nsi091SXgA@mail.gmail.com>
+ <CAP-5=fWPpeLS2D_XgsyM5OYDvWkoTapSb0XfPu-K7ue31BCTCg@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fWPpeLS2D_XgsyM5OYDvWkoTapSb0XfPu-K7ue31BCTCg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Lcn6XM0tDV287h4KNVlgvwpqvVKko1Z0
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI2MDA4OCBTYWx0ZWRfX5EmYOGKpqBkm
- 2WeOwJDngoAOv4Y5i5oyUrQQEY9rGtAklme+yBaFP4+3sXazqMc70CtYdsiKG6ph7Cie+1z/T4e
- YeKh4uAu5MF0zKrtHxTDxkP5aqpj1oJaedpZ7+bn7lDHGQ742FfoB5hPjkIyhpEQ6bocZzlV8z6
- CbTqGtEuiFT49pvvW83QEiWTrycB20LOT3olO4qi8lmxhS9DHCn92Glu9Zw4UtjRzWlIkYedDl/
- KZ/oJoz9ne1ow5IdXQtLQt+ACfB4KTgvNzYKDC91UqeFwHF3/e66C02XbSAGmO4hhQ1B6WSaqeY
- O7ir0MExb6M0yH8aiq5rRZqdUvdqSE4soOsPTmNp26m93q3m3AKyxOtH1J4GFJmCQ3InNFV+Ewh
- b8sVUKup6fz/pVwNX1vT57U9vjsXXZswisyDkcmS040TW4rrkWT9eDZKaIxKa8MRygf1KQliKA8
- d4/xC1qSVjpEgfBgz9w==
-X-Authority-Analysis: v=2.4 cv=Zs3g6t7G c=1 sm=1 tr=0 ts=69773f84 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8
- a=wtJ5Ps83P7bbEB45bnAA:9
-X-Proofpoint-ORIG-GUID: 44tDskLyFHCKiXVPU9L22Dosj6seD7AJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
- definitions=2026-01-26_02,2026-01-22_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 lowpriorityscore=0 adultscore=0 phishscore=0 suspectscore=0
- bulkscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2601150000 definitions=main-2601260088
 
-Perf test case 'perf evlist tests' fails on z/VM machines on s390.
 
-The failure is causes by event cycles. This event is not available
-on virtualized machines like z/VM on s390.
-Change to software event cpu-clock to fix this.
 
-    Output before:
-      # ./perf test 78
-      79: perf evlist tests              : FAILED!
-      #
+On 23/01/2026 6:01 am, Ian Rogers wrote:
+> On Thu, Jan 22, 2026 at 7:11 PM Qiao Zhao <qzhao@redhat.com> wrote:
+>>
+>> Hi Kim, Ian,
+>>
+>> Do you mind reviewing this change?
+>>
+>> On Tue, Jan 20, 2026 at 5:05 PM Qiao Zhao <qzhao@redhat.com> wrote:
+>>>
+>>> On some platforms (e.g. ARM systems with restricted PMU access), user space
+>>> PMU counters may be reported as supported but blocked at runtime. Failing
+>>> the mmap interface tests in this case is incorrect.
+>>>
+>>> [Test Log]
+>>> 124.2: User space counter reading of instructions                    : FAILED!
+>>> --- start ---
+>>> User space counter reading 0
+>>> User space counter reading for PMU armv8_pmuv3_0
+>>> User space counter reading for PMU armv8_pmuv3_0 [Failed unexpected unsupported counter access 1]
+>>> ---- end ----
+>>> 124.3: User space counter reading of cycles                          : FAILED!
+>>> --- start ---
+>>> User space counter reading 1
+>>> User space counter reading for PMU armv8_pmuv3_0
+>>> User space counter reading for PMU armv8_pmuv3_0 [Failed unexpected unsupported counter access 1]
+>>> ---- end ----
+>>> [/Test Log]
+>>>
+>>> Skip the user counter mmap tests when runtime PMU access is not available,
+>>> while preserving failure for genuinely inconsistent states.
+>>>
+>>> Signed-off-by: Qiao Zhao <qzhao@redhat.com>
+>>> ---
+>>>   tools/perf/tests/mmap-basic.c | 4 ++--
+>>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+>>> index 3313c236104e..4881a641749b 100644
+>>> --- a/tools/perf/tests/mmap-basic.c
+>>> +++ b/tools/perf/tests/mmap-basic.c
+>>> @@ -308,9 +308,9 @@ static int test_stat_user_read(u64 event, enum user_read_state enabled)
+>>>                  }
+>>>
+>>>                  if (!rdpmc_supported && pc->cap_user_rdpmc) {
+>>> -                       pr_err("User space counter reading for PMU %s [Failed unexpected unsupported counter access %d]\n",
+>>> +                       pr_debug("User space counter reading for PMU %s is not supported (cap_user_rdpmc=%d), skipping!\n",
+>>>                                  pmu->name, pc->cap_user_rdpmc);
+>>> -                       ret = TEST_FAIL;
+>>> +                       ret = TEST_SKIP;
+> 
+> Hi Qiao,
+> 
+> It sounds like the ARM behavior is divergent from the Intel behavior,
+> but that said Intel hybrid rdpmc is known to be problematic. There's a
+> fix for part of that which will hopefully land [1]. One weird thing on
+> Intel hybrid is that the rdpmc permission file within the PMU is kind
+> of "shared" between all core PMUs, so disabling rdpmc on the e-core
+> PMU disables it on the p-core. In one iteration of this test tried to
+> incorporate support for this. Anyway, ARM...
+> 
+> So in the test we're doing:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/mmap-basic.c?h=perf-tools-next#n243
+> ```
+> #ifdef __aarch64__
+> .config1 = 0x2, /* Request user access */
+> #endif
+> ```
+> So 1 question is why the perf_event_open is succeeding with a request
+> user access bit set in the config in a system where this is blocked?
 
-    Output after:
-      # ./perf test 78
-      79: perf evlist tests              : Ok
-      #
+That's because sysctl_perf_user_access isn't checked when opening the 
+event, only when scheduling it in. I don't think that's a bug, but just 
+how it is. I suppose one benefit is that it allows you to add or revoke 
+the permission at run time without recreating events.
 
-Fixes: b04d2b919912 ("perf test: Fix test case perf evlist tests for s390x")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Jan Polensky <japo@linux.ibm.com>
-Reviewed-by: Jan Polensky <japo@linux.ibm.com>
-Cc: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/evlist.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The canonical rdpmc example in perf_event.h does say the index should be 
+checked before reading the event:
 
-diff --git a/tools/perf/tests/shell/evlist.sh b/tools/perf/tests/shell/evlist.sh
-index 5632be391710..8a22f4171c07 100755
---- a/tools/perf/tests/shell/evlist.sh
-+++ b/tools/perf/tests/shell/evlist.sh
-@@ -21,13 +21,13 @@ trap trap_cleanup EXIT TERM INT
- 
- test_evlist_simple() {
- 	echo "Simple evlist test"
--	if ! perf record -e cycles -o "${perfdata}" true 2> /dev/null
-+	if ! perf record -e cpu-clock -o "${perfdata}" true 2> /dev/null
- 	then
- 		echo "Simple evlist [Failed record]"
- 		err=1
- 		return
- 	fi
--	if ! perf evlist -i "${perfdata}" | grep -q "cycles"
-+	if ! perf evlist -i "${perfdata}" | grep -q "cpu-clock"
- 	then
- 		echo "Simple evlist [Failed to list event]"
- 		err=1
--- 
-2.52.0
+   * index = pc->index;
+   * count = pc->offset;
+   * if (pc->cap_user_rdpmc && index) {
+   *   width = pc->pmc_width;
+   *   pmc = rdpmc(index - 1);
+   * }
+
+The version of this test before commit 588d22b40480 ("perf test: Expand 
+user space event reading (rdpmc) tests") treated "supported" and 
+"enabled" as things that could exist separately and skipped if the 
+system has /proc/sys/kernel/perf_user_access = 0:
+
+   $ echo 0 > /proc/sys/kernel/perf_user_access
+   $ perf test -vv "user space counter"
+   ...
+   userspace counter access not enabled
+   4.2: User space counter reading of instructions  : Skip (permissions)
+   ..
+
+Setting /proc/sys/kernel/perf_user_access makes that version of the test 
+and the current version of the test pass. That also aligns with what's 
+currently in the libperf test tools/lib/perf/tests/test-evsel.c which 
+also checks both supported and enabled separately for a skip.
+
+So it looks like commit 588d22b40480 has added the assumption that 
+"supported" must equal "enabled" if rdmpc was asked for, but that's 
+probably not right.
+
+I think Qiao's change is ok, except it could probably go a bit further 
+because we don't need to check pc->cap_user_rdpmc if !rdpmc_supported. 
+Maybe the original separate "is supported" (pc->cap_user_rdpmc) and "is 
+enabled" (pc->index) checks are clearer. Each can result in a skip on 
+their own.
+
+Thanks
+James
+
+> 
+> I'm not sure on the support for the rdpmc file on ARM but it looks to
+> be wired up:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/drivers/perf/arm_pmuv3.c?h=perf-tools-next#n324
+> 
+> So in the test where you've changed it we've determined that rdpmc
+> shouldn't be supported but the shared page is saying the
+> cap_uesr_rdpmc is available. So is this an ARM PMU driver bug?
+> I wonder if the setting of cap_user_read:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/drivers/perf/arm_pmuv3.c?h=perf-tools-next#n1615
+> should also be testing whether support has been disabled through the
+> rdpmc attribute? Hmm.. but x86 doesn't do that:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/events/core.c?h=perf-tools-next#n2753
+> 
+> So given that ARM and x86 look in sync, x86 doesn't have issues I'm
+> aware of, and it certainly looks like a failure inconsistency that the
+> test thinks that user rdpmc support is disabled but the page says
+> otherwise. I could use more details to understand this, like what's
+> the contents of the rdpmc file? In your commit message, is the
+> restricted PMU access the rdpmc file or a different capability? Could
+> this be a weird hybrid/BIG.little issue like on x86?
+> 
+> Thanks,
+> Ian
+> 
+> [1] https://lore.kernel.org/lkml/24bc287a-a3e0-45f6-a8f1-20a34e2f9af2@linux.intel.com/
+> 
+>>>                          goto cleanup;
+>>>                  }
+>>>
+>>> --
+>>> 2.49.0
+>>>
+>>
 
