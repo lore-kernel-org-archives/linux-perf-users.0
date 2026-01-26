@@ -1,195 +1,137 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895F725771
-	for <linux-perf-users@vger.kernel.org>; Mon, 26 Jan 2026 17:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769446915; cv=pass; b=mCRGahMHdKvwBswD+8+LGDs26vfWFEGFP76q29c/LPJJqJdI/5QCe1LKqVmt7mfp6OnHJbnjKQLDpOug7h3KmRq/Hlzte6LDPlo1dckm89AfMxzXHdNPJXNdPmtrT8xo9ubAEDg03lzACvUgpNjWNSsTm2PY0peW5Vnw9vbAdng=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769446915; c=relaxed/simple;
-	bh=fEMdqrR87qvh19uuLTo6iRMM7fYGSlRgae5OTjZk1J0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QrbYrlepBihtu0ZRyEYhdPo57j3VW2SYK76aNoESzGcwEq9ISjgwEpc3ggDh+AKbnAGZdvvtWfR6FlnaGCvBGizWO1rei4sjIzIeDvdyrbSzCkVhViwA/KzI6vcGcaT5I6UzCoFwFP9uLUKVeGon+DsXxqenKxFFvDfjQ+SC5Zw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EnMV1z5F; arc=pass smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB062EA156;
+	Mon, 26 Jan 2026 17:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769447160; cv=none; b=O5uwYQKhnSZhWH3iacwcvbZtRVU/kKUCUHIs/IFFvW8hlMfU/gB4sGSYEJjeBCKyDCPLKLKIPSNi4j6G0uNmQcq1wJac/O4JRWtS/3hNNyrbq8Zt84GU0CUasvEK9qgyLHw/LNHc1zCqgTiTSK2P0n/t/bBg3PUM2/tkv2qKFDw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769447160; c=relaxed/simple;
+	bh=Jr3JpXfvPESmmq6HTTCKanzCKC9BSKYku2/D5i+UlLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Uwn2gDfrdaLqMa0SABH1YgxdzOVv6LEu4RyrjsyqmVIfM5NN7vY5Wm4ovGLkHQ5QnTjgXyqDbvDyHsek0yCf/fa4Z3w+LAYeZdmEpLuY1jaUfAMRlfEDWz58iKAHPuUz9H94Oyghc2ZXF0mpK5vBY60W+EhqMN3Nr9Lggo/Dj24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfXumpwL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EnMV1z5F"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a35ae38bdfso160505ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jan 2026 09:01:54 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769446914; cv=none;
-        d=google.com; s=arc-20240605;
-        b=XM2LRF6isgTe951wLNuxaiTc2ydLsYVDVMZhyU6oP3fqrU63BQDTmO2oJhSyXlyUIS
-         +v3gWedHSzTKrkiL4xgD3p3EOWPuF0N9kd8EPegCeZbvdaqZMU1OdWFqZ9cZS7b84J7R
-         60Mv5RCKhVUDDxtBzM5FnOg1UbkhEKcXsIZKBB+nUZtO7+XWy6s0hwCkOCHxf7c0UQgl
-         PAIIcGIre/xPe+pHzmyQwixjiAFz5IJmCs4iDM6QDjNhCl4T0CjT/62cyMHywlZ+eaMo
-         Ed81bQdp6h3Vfk4vSlSM/vSim3L8/ukBuSidjkdfxhzxn5yaH3EwOx7CtA+u2inM6fBb
-         fR5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=NZordIwPzkQDLZvR5baDaNuLBEyybU6EqCMS5GRysUY=;
-        fh=P4j55f5ZC1aV7gmipoH0u3W5Wygj09kzZEtWTaMD/fc=;
-        b=GFBJYOlTauWL3CJrmLw8l6AehZa2XTH8EO6Z5whdvcf0TKDUZ+SO77SJbHX4zTwQWZ
-         7jXVUgX/J5gwKnhjDVymUVbJOR5Ht6k1FEazmQ1d7i19YogzGqh/oDU8HFg6h9Qq6Uu2
-         w6AyNF+xxFvgrmEJaxmzOCrUlTcY4qhXoPnZqJ+j2+q3Qa4m8u/OajMohHU8WdaJ/nbR
-         KPC6FdW84wTlVB4eW7FAQwspMvbZWbcO3paephS/5FTQUT/iFulT94GyVP0SUfNHi70y
-         9yFAfd7+p6kFp/q7QTEzVgXQ0443QZCS99ypenTyQ0JzybGbu2spbLg8ykgqmA/4+CLX
-         viUQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769446914; x=1770051714; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NZordIwPzkQDLZvR5baDaNuLBEyybU6EqCMS5GRysUY=;
-        b=EnMV1z5FB1Yd+RsPYDccYQJzKnea8CzU5CwB1HS+lO92uCRCHxAExupYddviQrL7x7
-         VNAmETC55C6cJutSuJVyBtyg+WSf9sWcz2TAsRQFGUwUwhKpvF5DD68SXZsciWwiCIWE
-         Z6h8QpHQIvovTuVaJmrG9J6BtH3TqoX4j/zBdGZiB6oAeg1ZuoQY9FbCFXnDw+BPMRDX
-         zR/AxvHXHR1rYMjpT9HYyTkr9PTl3E9vOX3+Z1OTRNIBbdyQqCoWUGyrODiPSeboUzUv
-         wZoqKQn7eBVWrrHl8+EJaRYUCP7NNNhs6GDHj3vWPE/jYz8Wt8wLURACkRbc1cpYZbKm
-         ZOBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769446914; x=1770051714;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NZordIwPzkQDLZvR5baDaNuLBEyybU6EqCMS5GRysUY=;
-        b=weFbPMPfm67SUhsiwseaF2An/LtpIeuv1qeIw/E43+5BYWmSxoxjxcnkRvn7ak7wmN
-         0hOR0Sre3TWPDY7q1CChHmLAfynuJTBLRFMorWmMADnWwXvgvW0eFmH+N6iLnNCvkDKd
-         WWaUFViKPphzjugtevwSV7Axpy0XDeCqqMAgsBrKyLot31Ejt2S7xe1uiv9hFJg1qOHa
-         bnR3kp3BFZvSm52bK7ZUu917SPK5DnZdbakhGHAvcf3ECRS+f8rRz0QlpCqk9lgj8rkV
-         m9c16aUlrdWVwBnpH0iKfi19Wqt9ZGJCw3lD0ljkTfZTGG0a8MKM+2UnOCP3G57pOqjQ
-         94jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/ARZFZse/X91mshMgfPbGj+QU298GO5aWVfmPL5E7KZfmwXMEDEyMOhwmx8zfXp3cn7CzDx+reIHR7eVtgm+p@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk+TdSCP4lqGaVjasCUXn1Ay7dJ15m4xA/1CLRCvv34j7lcXP1
-	fnNG7I0YonuQoLxJIypXq/YAkxgBI5+qD7gvcze+lTdfDTJqAdavyhRU93LcO2tPexWxjEw+ArO
-	rAYT6M1Cn/y5xMUa0bpO4RdfIRieets8dxD1JteO13LrIaLLLs+gJE0ihqb8=
-X-Gm-Gg: AZuq6aIyKimHLyPkJz5+NLZEZAQY1mq8FBINuW5jGSajvgp/vsJyc2vP52PFWcHQlAI
-	UjQpS6V6d77TEOiw35w506+AIOiOChmOUxsQoaqKQEtXsaI4nsokgQktV3fOBpuWfMa3dfLCnwh
-	YDVKnIs4MSEhcnvKr+SoDn+mTw1tFZi1S/FUlHVGdxCLEIIavYpk1AsLSu6Q36sx5yuOMRN0Zuq
-	1A4ayWBP3VXz/97gkyFbElGjflu2WNzCt6iQjBYCNibqNCO8oDsGE6TBJKCayTJkdPOXPq4NDDI
-	hImm7vzrDNsGZAtrKPKRk7FYI3qFZpw8WYED
-X-Received: by 2002:a17:902:ef09:b0:2a0:89b0:71d7 with SMTP id
- d9443c01a7336-2a844e77f45mr2176075ad.13.1769446913375; Mon, 26 Jan 2026
- 09:01:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfXumpwL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84D7EC116C6;
+	Mon, 26 Jan 2026 17:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769447160;
+	bh=Jr3JpXfvPESmmq6HTTCKanzCKC9BSKYku2/D5i+UlLs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gfXumpwLe9HEm0/Rn0J6FSijJ2fTrlwmpGNJeOJXilQgjkFYrJsBa4EZU7jZUjYN6
+	 adBRs5+Qb8puRwbcdazwoABxWtCDYEDa+jC/opdscvsngI8evjTyh3fxBFrfABUdWn
+	 24qmQYtvHYdkWBEjoY2ezgMjX+fjhidaWYPvwNF4bUHYeqOKGtkQSHOGPOktxafjs3
+	 zG5CXedsW/4mc6i/QGriR5iIalL/N8atDCEd1UKngE7lQUTkloL1cRzM7XJhi/owTc
+	 CRZJwdvxuE4/wuA7KmD8rTNZ/3uwrCr3/FO/mn2ghZ8kNKWhA6Hd7z869SJsDImt6O
+	 7acW0R2MyWfeQ==
+Date: Mon, 26 Jan 2026 12:05:53 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
+ Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Thomas Gleixner
+ <tglx@linutronix.de>
+Subject: Re: [RESEND][PATCH 3/5] perf: Use current->flags &
+ PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL
+Message-ID: <20260126120553.2fa79048@gandalf.local.home>
+In-Reply-To: <0d877e6f-41a7-4724-875d-0b0a27b8a545@roeck-us.net>
+References: <20250820180338.701352023@kernel.org>
+	<20250820180428.592367294@kernel.org>
+	<0d877e6f-41a7-4724-875d-0b0a27b8a545@roeck-us.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260126123514.3238425-1-wangyushan12@huawei.com>
-In-Reply-To: <20260126123514.3238425-1-wangyushan12@huawei.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 26 Jan 2026 09:01:41 -0800
-X-Gm-Features: AZwV_Qg2tWe8uippZ5ldvtEYGALSf4Ro55wkqzh5HcjULP3PISqa2vUjOU2M7k4
-Message-ID: <CAP-5=fWkBjJy2i=e+zn1Ou5g3J8rapGKi8O7ryQ-ic2vXFEOoQ@mail.gmail.com>
-Subject: Re: [RFT PATCH 0/7] perf tool: Support iostat for multiple platforms
-To: Yushan Wang <wangyushan12@huawei.com>
-Cc: mike.leach@linaro.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, peterz@infradead.org, 
-	john.g.garry@oracle.com, Jonathan.Cameron@huawei.com, shiju.jose@huawei.com, 
-	will@kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, 
-	liuyonglong@huawei.com, prime.zeng@hisilicon.com, fanghao11@huawei.com, 
-	wangzhou1@hisilicon.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 26, 2026 at 4:35=E2=80=AFAM Yushan Wang <wangyushan12@huawei.co=
-m> wrote:
->
-> Currently, platform-specific iostat code for PMUs is implemented as a
-> common iostat callback interface and invoked based on what is being
-> built. This approach limits support for iostat across different types of
-> PMUs.
->
-> Support of HiSilicon PCIe PMU iostat was raised at [1], which uses the
-> similar approach.
->
-> To extend support of iostat across platforms, change common iostat
-> interface to framework to allow perf to probe PMU capabilities during
-> runtime and route iostat request to the correct PMU-specific functions.
-> Then HiSilicon PCIe PMU iostat is supported with the new framework.
->
-> Request For Test:
-> Refactors has been made to x86 iostat to adapt the iostat framework, the
-> probe function that checks if there's any PMU's name contains 'x86-iio'
-> may not work properly, tests of that would be appreciated.
->
-> [1] https://lore.kernel.org/all/4688a613-c94a-49b0-9d0f-09173c64082d@arm.=
-com/
->
-> Shiju Jose (2):
->   perf-iostat: Extend iostat interface to support different iostat PMUs
->   perf-iostat: Make x86 iostat compatible with new iostat framework
->
-> Yicong Yang (1):
->   perf-iostat: Enable iostat mode for HiSilicon PCIe PMU
->
-> Yushan Wang (4):
->   perf stat: Check color's length instead of the pointer
->   perf stat: Save unnecessary print_metric() call
->   perf-x86: iostat: Change iostat_prefix() to static
->   perf-iostat: Support wilder wildcard-match for pmus
+On Wed, 12 Nov 2025 19:11:15 -0800
+Guenter Roeck <linux@roeck-us.net> wrote:
 
-Hi,
+> [  120.334908] BUG: kernel NULL pointer dereference, address: 0000000000000078
+> [  120.341901] #PF: supervisor read access in kernel mode
+> [  120.347055] #PF: error_code(0x0000) - not-present page
+> [  120.352208] PGD 0 P4D 0
+> [  120.354750] Oops: Oops: 0000 [#1] SMP NOPTI
+> [  120.358946] CPU: 36 UID: 0 PID: 14127 Comm: page_table_stre Tainted: G S         O        6.18.0-smp-DEV #2 NONE
+> [  120.369242] Tainted: [S]=CPU_OUT_OF_SPEC, [O]=OOT_MODULE
+> [  120.374568] Hardware name: Google LLC Indus/Indus_QC_03, BIOS 30.116.4 08/29/2025
+> [  120.382075] RIP: 0010:gup_fast_fallback+0x150/0xb60
+> [  120.386977] Code: d0 c9 8b 48 89 84 24 a0 00 00 00 48 8b 80 30 05 00 00 0f b6 0d 0d 6b 1a 01 49 89 f8 49 d3 e8 41 81 e0 ff 01 00 00 41 c1 e0
+>  03 <4c> 03 40 78 4c 8d 5b ff 44 89 c8 83 e0 01 48 8d 04 45 05 00 00 00
+> [  120.405809] RSP: 0018:ffffa32be5f9b7a0 EFLAGS: 00010006
+> [  120.411051] RAX: 0000000000000000 RBX: 00007f0f57dfd000 RCX: 0000000000000027
+> [  120.418210] RDX: 0000000000000046 RSI: 0000000000000001 RDI: 00007f0f57dfc000
+> [  120.425368] RBP: 0000000000000000 R08: 00000000000007f0 R09: 0000000000100002
+> [  120.432526] R10: ffffa32be5f9b8c8 R11: 0000000000000000 R12: 00007f0f57dfc6c0
+> [  120.439683] R13: ffff99b44dd7c800 R14: 00000000fffffff2 R15: 00000000000800c3
+> [  120.446842] FS:  0000000000000000(0000) GS:ffff9a127357b000(0000) knlGS:0000000000000000
+> [  120.454956] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  120.460721] CR2: 0000000000000078 CR3: 000000512d03e006 CR4: 00000000007706f0
+> [  120.467879] PKRU: 55555554
+> [  120.470592] Call Trace:
+> [  120.473045]  <TASK>
+> [  120.475152]  perf_prepare_sample+0x77b/0x910
+> [  120.479445]  perf_event_output+0x35/0x100
+> [  120.483467]  intel_pmu_drain_pebs_nhm+0x570/0x750
+> [  120.488198]  intel_pmu_pebs_sched_task+0x74/0x80
+> [  120.492839]  ? __put_partials+0xd6/0x130
+> [  120.496775]  ? __mt_destroy+0x3f/0x80
+> [  120.500451]  ? put_cpu_partial+0x9b/0xc0
+> [  120.504384]  ? __slab_free+0x249/0x320
+> [  120.508144]  ? refill_obj_stock+0x120/0x1a0
+> [  120.512341]  ? __mt_destroy+0x3f/0x80
+> [  120.516013]  ? kfree+0x2ca/0x390
+> [  120.519254]  ? update_load_avg+0x1c8/0x7d0
+> [  120.523364]  ? update_entity_lag+0xf6/0x110
+> [  120.527560]  intel_pmu_sched_task+0x1d/0x30
+> [  120.531755]  perf_pmu_sched_task+0xf2/0x1a0
+> [  120.535952]  __perf_event_task_sched_out+0x3f/0x1f0
+> [  120.540844]  ? pick_next_task_fair+0x3e/0x2a0
+> [  120.545214]  __schedule+0xad0/0xb40
+> [  120.548715]  do_task_dead+0x48/0xa0
 
-Thanks for the changes! Given the iostat code is display code, it'd be
-great if we could avoid the arch directory usage. For example, I may
-record data on a machine with a HiSilicon PCIe PMU but then want to
-look at the data on an x86 laptop, as the code is under arch/arm64 it
-won't get built. Given the PMU name is unique, is it possible to put
-this code into tools/perf/util and determine whether to use it or not
-by seeing if the PMU is present by its name? I know that means
-refactoring the x86 code that hasn't done this.
+Ah, this is called at do_task_dead()
 
-A thought that is away from the iostat code and may simplify the code
-base is that we could introduce system PMU, rather than CPU, dependent
-metrics. Perhaps the iostat code could be replaced by a particular
-metric group like Default or TopdownL1, so `perf iostat` becomes
-something of a synonym for `perf stat -M iostat`. An example of what
-this may look like is (unmerged):
-https://lore.kernel.org/lkml/20260108191105.695131-34-irogers@google.com/
-where I introduce a memory bandwidth saturation metric dependent on
-uncore PMUs (either cbox or cha) on Intel. There is a metric
-"have_event" function that can be used to make a metric conditional.
-If you `perf stat record` a metric today and then look at the
-perf.data with `perf script --fields metric` (IIRC) then every metric
-that has the recorded events within it will be computed, although the
-code needs better testing, etc. I suspect the biggest downside to this
-approach is in how the output looks, but perhaps that can be tweaked.
-For example, the `ilist.py` command:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/python/ilist.py?h=3Dperf-tools-next
-supports regular metrics.
+I guess we need to also test for !current->mm because the flags set for an
+exiting task is done when we can still do callchains. Thus, the only way to
+know if it is safe to do a callchain when a task is exiting is via task->mm
+and not task->flags :-/
 
-That said, I'm not against the changes, the arch directory usage, not
-using json metrics, etc. and this change is doing clean up, following
-existing patterns, etc. Sometimes the codebase has evolved but certain
-commands haven't kept up. I think `perf iostat` is a command like
-that.
+-- Steve
 
-Thanks,
-Ian
 
->  tools/perf/arch/arm64/util/Build         |   1 +
->  tools/perf/arch/arm64/util/hisi-iostat.c | 479 +++++++++++++++++++++++
->  tools/perf/arch/x86/util/iostat.c        | 105 +++--
->  tools/perf/builtin-script.c              |   2 +-
->  tools/perf/util/iostat.c                 |  79 ++--
->  tools/perf/util/iostat.h                 |  21 +-
->  tools/perf/util/pmus.c                   |  12 +-
->  tools/perf/util/pmus.h                   |   3 +
->  tools/perf/util/stat-display.c           |   4 +-
->  tools/perf/util/stat-shadow.c            |   4 +-
->  10 files changed, 638 insertions(+), 72 deletions(-)
->  create mode 100644 tools/perf/arch/arm64/util/hisi-iostat.c
->
-> --
-> 2.33.0
->
+
+> [  120.552215]  do_exit+0x734/0x920
+> [  120.555463]  ? do_exit+0x9/0x920
+> [  120.558699]  do_group_exit+0x85/0x90
+> [  120.562284]  __x64_sys_exit_group+0x17/0x20
+> [  120.566478]  x64_sys_call+0x21f7/0x2200
+> [  120.570327]  do_syscall_64+0x6f/0x940
+> [  120.574001]  ? clear_bhb_loop+0x50/0xa0
+> [  120.577849]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [  120.582915] RIP: 0033:0x7f0f5a0d2c48
+> [  120.586501] Code: Unable to access opcode bytes at 0x7f0f5a0d2c1e.
+> [  120.592700] RSP: 002b:00007f0f57dfcec8 EFLAGS: 00000207 ORIG_RAX: 00000000000000e7
+> [  120.600294] RAX: ffffffffffffffda RBX: 00007f0f57dfd700 RCX: 00007f0f5a0d2c48
+> [  120.607452] RDX: 00007f0f57dfd660 RSI: 0000000000000000 RDI: 0000000000000000
+> [  120.614607] RBP: 00007f0f57dfcef0 R08: 00007f0f57dfd700 R09: 00007f0f57dfd700
+> [  120.621765] R10: 00007f0f5a17a6c0 R11: 0000000000000207 R12: 00007f0f57dfd9d0
+> [  120.628923] R13: 00007ffc64840aa6 R14: 00007f0f57dfdd1c R15: 00007f0f57dfcfc0
+> [  120.636081]  </TASK>
+> [  120.638272] Modules linked in: vfat fat i2c_mux_pca954x i2c_mux spidev cdc_acm xhci_pci xhci_hcd gq(O) sha3_generic
+> [  120.649976] gsmi: Log Shutdown Reason 0x03
+> [  120.654086] CR2: 0000000000000078
+> [  120.657409] ---[ end trace 0000000000000000 ]---
