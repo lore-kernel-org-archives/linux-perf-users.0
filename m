@@ -1,1260 +1,1484 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DB8362139
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 16:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769532902; cv=pass; b=lHWRD2ngB637CzbYL5/fBrzBepi2igCJFFAGGUkFH/+IDZJrlo//fSdHwt6v/AbOZ8FOEJmBu3JSUp09rzYx24oXRESdL05M3768vbSvVrYO1/EOV/DL3Ru4IYFh87rN2cYEgb/GPioXT4yzUf3IsuDo9JmaVuKGmKDLy+ij+M8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769532902; c=relaxed/simple;
-	bh=nihNIxZ1kHEtrF5L3VAbwPeXGAMrbcgim0mw/RCkRPs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=elNR/kHZUl0GaGr5V0SW6EmkvTQDEOYIz1uEmMO+b2qXxTWv+hkjdzBf1e8j8PDNafDrBpkz6rhRj8EcyRHv7ywvHLfsz91XlMsvN+rp4knjsfHRpfYixFYbAW940TwxvqH4x7vw2rjQc8SqcsOZtvC6OIFjIYn0n/Xn+geN8s0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=un7dEK5D; arc=pass smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A4D35FF58;
+	Tue, 27 Jan 2026 17:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769533213; cv=none; b=Ua8BM8WhE3OTXC2Iq3qGdYnc4aPNJI2isdF+idx1I5j5QFy+8IdaZ0hdRvhcY9xLqV5uSmSlVXiWWPUdcTFTdyFUu4fuzCvsOHSa63QN6QZvMtXFA0Z/TzRO06E+dC6kBFBnlCWADvxbaij4Kg5sgbIEPlIvvlixpxkTBnEut8U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769533213; c=relaxed/simple;
+	bh=tfX05SI2kFswNjgccICbl8aXow5v7scVJgUrnyfDZWc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iWJmyFZj65XfWAMzD2IXDekkjRSIps1ONJqbJnBx1ytOTCdrR//6y0fKTewIrFZBfGa8FGsZswMIUHlMITnX3rdL1sKCWcRydAzyFstwMYw+I/DCy0WwdyYcCKF09taED9KCEX5uuVj4uiT5DSDpXxU/6HP0uNnc7DZuy9L98nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqQSBRFP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="un7dEK5D"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2a0d06cfa93so89625ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 08:55:00 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769532899; cv=none;
-        d=google.com; s=arc-20240605;
-        b=YsmFhvMmAeOvFXWGiIoX7lXrS9kf1XMxfaNVRSY/OtPAQj7FGAn8twZKQcMLbXT+zJ
-         cltt/n5dgBkZH4QgCaoMMT129u9zA5QT0HgKPxWhb0ieZE6SNkCA/3egL7sKmFFxhlYl
-         biTNW5gdhrD3mJCfsHDY8b1+QCQDVT0S9Ir2xGkKEj+qA5Zy12Nktu/zVgb4eye1BVss
-         tsjS/XxXTSubAII5Wj+LFI9oslcwrg0maEdohELpVCiw5Ya21QzGcm3dicCPm6lzPPPK
-         xLmNZYpmMsRb1Q8rH6zHeAfxJl0WucsjFEwDZiLYreU/1nDpjgMfokVhYowRbHeBaTTX
-         Blxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=EoqZJbxGiyM8QC16Ea78T0gDAzuyRWpmVpSIjUw7tIg=;
-        fh=O1xDfs+bqn5r75n5Rw/8qEJYHwEKbLw2BT6b86WXNbg=;
-        b=Vj2QCmsqZKGKc+svee4kqsOf+2nCf9wDzjqGi6/rU64GfCviQkS9ZQ7krY4exGlvNO
-         AdIB46v+ofxVk11kc/8npH+LmDpxHHyZNxInBa/AGRgddmc/hZ4X0K9XIof6t1HsT+xR
-         tMeOEg+wQgc2tj7biiY5XMHSmpSh7amCdvymAddmS9T9ro3LdJdsV5P7H0uRDlWI7Na6
-         xW197cwVGtCvsvvfZEenYZgfczXltJgO/fz6EkvJULQ562NRyv9QZreEOC0fwmr4LmB0
-         Mb+blFhG/K/VLhVA0shGqO9PXauDpEwDLAiAAgCt6pl/g0bPynG4FqEFLcLiUV1cmSue
-         VRVw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769532899; x=1770137699; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EoqZJbxGiyM8QC16Ea78T0gDAzuyRWpmVpSIjUw7tIg=;
-        b=un7dEK5DhffNM+dkN45Kw6MWMNDimUuEUq9ubYFZY6pOdANWXVjJbi4SFktacm3k6T
-         VxSvN7F3LnvPtWPt1F90iPGNpF3th9zfVUYYYkYuAx+GFs9zaW6Xh9mp0IA0Eew4ZO2S
-         3eHL9/UclTm0FGD8YA8I2hMWAB2xfHfh0hahAZD5SmZIOxj0YjcEImuIDN0txYxSmRgZ
-         SEOx19m7uoGtU/Eh2BsJTxFE8pxDdbD5ykcPpl65g3sIr8jLBAIZMmE/0SyCFFGQxokJ
-         s6z0ny1S2qkoaGmXpk6Tyw1euQ53cgk4xfprXE7S1XWG9FLoOtatjB+X0Bhm2cA41qRd
-         p2Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769532899; x=1770137699;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=EoqZJbxGiyM8QC16Ea78T0gDAzuyRWpmVpSIjUw7tIg=;
-        b=ISI0wqBF+dLEKuI+1IV5IvKHj2ZZx6hhAfIa7NtocdgYiKjGH0jtSj69gG+c5CR+/H
-         7zvxhVj1G6PncC6YPRc01yjhUCBgkBd7IKRZj2cZY+dARBOKtCoL4b7OwwLa2BbtW/vH
-         1azoesY6JJViSgPbXJvMQg3wnBJdLtUOgzHrUBW3KGTIPbeew4nbOCDMJm2UX0bXALw0
-         FRJpRml7NLoA2y4OPJcD852lBl3GIlcs/iNKxeTSyUHS7JsLORIdBfCi1+ZFCvqiWM4T
-         JNx4AIbCi0/YZs0PDbMbLOk+nYjOnjXeegkYO9P8WGvOzYx990r9ENebJpBE0EhzY5M+
-         ZmdA==
-X-Forwarded-Encrypted: i=1; AJvYcCXIW1iYPHbNF4VecXtY75cEKLDIMwsIqYXbY7NcF+Pm2CeVAgmaTfZSwVwQ9a6rLwmBZUCycAzaJe3fFi2Y33YM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl6kZKIRB89HtwZ33yUTgsEDfLQtw6kHM9wUQucIWPMg31u6yP
-	sJWEUesdfN9HsnHhxhyefZ18hPgR7b1qWVhiedc8L+OsXmgBHF+/2+Dd1k8zsJXXB811qgd1k54
-	2XPCtJIQnGKTQ2DC3NKGo6Nc0pwP2Mvs5jaG8CrN4
-X-Gm-Gg: AZuq6aL+1Hg+IKBp9bziXzYyllJFO6l765RGo1SAoRSzveLNl1GibzUPfyvg7h+bq9C
-	vskcFf8fwrO50ne3yLlxcz0g3clverzdhi6oD2+BB2RPQLc401kgHqAPLTNB3rK17RUwuE3yUmi
-	Gfc2KidOEpfAPdUpEQhepOYpXj6jWHLNPjK6BbsGHAJhAvqPArqC9Q6EOtlOQ7rnnMRCOOw21ni
-	7zeH8M0bZb8Cb+KMIAk8QSuOfS9moT5efckBFz1d69h+1SPFwO5rCZRKR4qXLKiMgunzC47b+iA
-	uLjfR44pURw+5J2511H9f4NV
-X-Received: by 2002:a17:903:94e:b0:291:6858:ee60 with SMTP id
- d9443c01a7336-2a8708e0198mr2329855ad.4.1769532898820; Tue, 27 Jan 2026
- 08:54:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqQSBRFP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B3FC16AAE;
+	Tue, 27 Jan 2026 17:00:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769533212;
+	bh=tfX05SI2kFswNjgccICbl8aXow5v7scVJgUrnyfDZWc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EqQSBRFPpJMfLRzvok9kAOCOTij5EAiSvs1DGlsU9Dn5HIpYDuV53mzqeutwrcMG9
+	 Q+j3z8Gc9hL+YQklDngn9zGrQ5G1/ga/ILogupHPkxpZvxiJ+9AtWVCyL6Em/VkbWd
+	 QPPb5Hynpe/FtYyGi9qpbcdrAVOqmK2owSbLKiEZDbNYM40kLmsyumFW0yAoFgayKv
+	 e+KDiHThRs1DqZRFXv2RtUT3MnzEEzU+71g+dUOeaULmjXg1mlRMa24ZtObmZDu4i0
+	 nywAm7oK1m/fVEL7cER805q0IU6fjChvM9hCHgwgzYTHhOQW6YiG6Ag2OxlXTXopYQ
+	 Vv1Muw6gupHMA==
+Date: Tue, 27 Jan 2026 14:00:07 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Dmitrii Dolgov <9erthalion6@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v1] perf tests: Test annotate with data type
+ profiling and rust
+Message-ID: <aXjvF3N5ZGJlZzFi@x1>
+References: <20260127083030.5909-1-9erthalion6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260127070259.2720468-1-dapeng1.mi@linux.intel.com> <20260127070259.2720468-4-dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260127070259.2720468-4-dapeng1.mi@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 27 Jan 2026 08:54:47 -0800
-X-Gm-Features: AZwV_QjQK2UL4a6GggSJc5VtmWg4tjgQHMP67eBZAqC_BYj0oWpDnEbqBx5PWDg
-Message-ID: <CAP-5=fUT3zyVW96Gd4j6jvRhM1OrMvP=-qDp_cLRMgXmoujfgQ@mail.gmail.com>
-Subject: Re: [Patch v2 3/3] perf regs: Remove __weak attributive
- arch_sdt_arg_parse_op() function
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Mike Leach <mike.leach@linaro.org>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>, 
-	Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260127083030.5909-1-9erthalion6@gmail.com>
 
-On Mon, Jan 26, 2026 at 11:06=E2=80=AFPM Dapeng Mi <dapeng1.mi@linux.intel.=
-com> wrote:
->
-> In line with the previous patch, the __weak arch_sdt_arg_parse_op()
-> function is removed. Architectural-specific implementations in the arch/
-> directory are now converted into sub-functions within the
-> util/perf-regs-arch/ directory. The perf_sdt_arg_parse_op() function
-> will call these sub-functions based on the EM_HOST.
->
-> This change enables cross-architecture calls to arch_sdt_arg_parse_op().
->
-> No functional changes are intended.
->
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->  tools/perf/arch/arm64/util/Build              |   1 -
->  tools/perf/arch/arm64/util/perf_regs.c        | 105 --------
->  tools/perf/arch/powerpc/util/Build            |   1 -
->  tools/perf/arch/powerpc/util/perf_regs.c      | 125 ----------
->  tools/perf/arch/x86/util/Build                |   1 -
->  tools/perf/arch/x86/util/perf_regs.c          | 235 ------------------
->  .../util/perf-regs-arch/perf_regs_aarch64.c   |  86 +++++++
->  .../util/perf-regs-arch/perf_regs_powerpc.c   | 106 ++++++++
->  .../perf/util/perf-regs-arch/perf_regs_x86.c  | 221 ++++++++++++++++
->  tools/perf/util/perf_regs.c                   |  23 +-
->  tools/perf/util/perf_regs.h                   |   5 +-
->  tools/perf/util/probe-file.c                  |   3 +-
->  12 files changed, 439 insertions(+), 473 deletions(-)
->  delete mode 100644 tools/perf/arch/arm64/util/perf_regs.c
->  delete mode 100644 tools/perf/arch/powerpc/util/perf_regs.c
->  delete mode 100644 tools/perf/arch/x86/util/perf_regs.c
->
-> diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/uti=
-l/Build
-> index 0177af19cc00..bc12c35d06c8 100644
-> --- a/tools/perf/arch/arm64/util/Build
-> +++ b/tools/perf/arch/arm64/util/Build
-> @@ -8,6 +8,5 @@ perf-util-y +=3D header.o
->  perf-util-y +=3D hisi-ptt.o
->  perf-util-y +=3D machine.o
->  perf-util-y +=3D mem-events.o
-> -perf-util-y +=3D perf_regs.o
->  perf-util-y +=3D pmu.o
->  perf-util-y +=3D tsc.o
-> diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm=
-64/util/perf_regs.c
-> deleted file mode 100644
-> index 47f58eaba032..000000000000
-> --- a/tools/perf/arch/arm64/util/perf_regs.c
-> +++ /dev/null
-> @@ -1,105 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -#include <errno.h>
-> -#include <regex.h>
-> -#include <string.h>
-> -#include <sys/auxv.h>
-> -#include <linux/kernel.h>
-> -#include <linux/zalloc.h>
-> -
-> -#include "perf_regs.h"
-> -#include "../../../perf-sys.h"
-> -#include "../../../util/debug.h"
-> -#include "../../../util/event.h"
-> -#include "../../../util/perf_regs.h"
-> -
-> -#define SMPL_REG_MASK(b) (1ULL << (b))
-> -
-> -#ifndef HWCAP_SVE
-> -#define HWCAP_SVE      (1 << 22)
-> -#endif
-> -
-> -/* %xNUM */
-> -#define SDT_OP_REGEX1  "^(x[1-2]?[0-9]|3[0-1])$"
-> -
-> -/* [sp], [sp, NUM] */
-> -#define SDT_OP_REGEX2  "^\\[sp(, )?([0-9]+)?\\]$"
-> -
-> -static regex_t sdt_op_regex1, sdt_op_regex2;
-> -
-> -static int sdt_init_op_regex(void)
-> -{
-> -       static int initialized;
-> -       int ret =3D 0;
-> -
-> -       if (initialized)
-> -               return 0;
-> -
-> -       ret =3D regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
-> -       if (ret)
-> -               goto error;
-> -
-> -       ret =3D regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
-> -       if (ret)
-> -               goto free_regex1;
-> -
-> -       initialized =3D 1;
-> -       return 0;
-> -
-> -free_regex1:
-> -       regfree(&sdt_op_regex1);
-> -error:
-> -       pr_debug4("Regex compilation error.\n");
-> -       return ret;
-> -}
-> -
-> -/*
-> - * SDT marker arguments on Arm64 uses %xREG or [sp, NUM], currently
-> - * support these two formats.
-> - */
-> -int arch_sdt_arg_parse_op(char *old_op, char **new_op)
-> -{
-> -       int ret, new_len;
-> -       regmatch_t rm[5];
-> -
-> -       ret =3D sdt_init_op_regex();
-> -       if (ret < 0)
-> -               return ret;
-> -
-> -       if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
-> -               /* Extract xNUM */
-> -               new_len =3D 2;    /* % NULL */
-> -               new_len +=3D (int)(rm[1].rm_eo - rm[1].rm_so);
-> -
-> -               *new_op =3D zalloc(new_len);
-> -               if (!*new_op)
-> -                       return -ENOMEM;
-> -
-> -               scnprintf(*new_op, new_len, "%%%.*s",
-> -                       (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1].=
-rm_so);
-> -       } else if (!regexec(&sdt_op_regex2, old_op, 5, rm, 0)) {
-> -               /* [sp], [sp, NUM] or [sp,NUM] */
-> -               new_len =3D 7;    /* + ( % s p ) NULL */
-> -
-> -               /* If the argument is [sp], need to fill offset '0' */
-> -               if (rm[2].rm_so =3D=3D -1)
-> -                       new_len +=3D 1;
-> -               else
-> -                       new_len +=3D (int)(rm[2].rm_eo - rm[2].rm_so);
-> -
-> -               *new_op =3D zalloc(new_len);
-> -               if (!*new_op)
-> -                       return -ENOMEM;
-> -
-> -               if (rm[2].rm_so =3D=3D -1)
-> -                       scnprintf(*new_op, new_len, "+0(%%sp)");
-> -               else
-> -                       scnprintf(*new_op, new_len, "+%.*s(%%sp)",
-> -                                 (int)(rm[2].rm_eo - rm[2].rm_so),
-> -                                 old_op + rm[2].rm_so);
-> -       } else {
-> -               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
-op);
-> -               return SDT_ARG_SKIP;
-> -       }
-> -
-> -       return SDT_ARG_VALID;
-> -}
-> diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc=
-/util/Build
-> index 5fd28ec713a4..43c3e7c450a3 100644
-> --- a/tools/perf/arch/powerpc/util/Build
-> +++ b/tools/perf/arch/powerpc/util/Build
-> @@ -1,6 +1,5 @@
->  perf-util-y +=3D header.o
->  perf-util-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
-> -perf-util-y +=3D perf_regs.o
->  perf-util-y +=3D mem-events.o
->  perf-util-y +=3D pmu.o
->  perf-util-y +=3D sym-handling.o
-> diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/p=
-owerpc/util/perf_regs.c
-> deleted file mode 100644
-> index 93f929fc32e3..000000000000
-> --- a/tools/perf/arch/powerpc/util/perf_regs.c
-> +++ /dev/null
-> @@ -1,125 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -#include <errno.h>
-> -#include <string.h>
-> -#include <regex.h>
-> -#include <linux/zalloc.h>
-> -
-> -#include "perf_regs.h"
-> -#include "../../../util/perf_regs.h"
-> -#include "../../../util/debug.h"
-> -#include "../../../util/event.h"
-> -#include "../../../util/header.h"
-> -#include "../../../perf-sys.h"
-> -#include "utils_header.h"
-> -
-> -#include <linux/kernel.h>
-> -
-> -#define PVR_POWER9             0x004E
-> -#define PVR_POWER10            0x0080
-> -#define PVR_POWER11            0x0082
-> -
-> -/* REG or %rREG */
-> -#define SDT_OP_REGEX1  "^(%r)?([1-2]?[0-9]|3[0-1])$"
-> -
-> -/* -NUM(REG) or NUM(REG) or -NUM(%rREG) or NUM(%rREG) */
-> -#define SDT_OP_REGEX2  "^(\\-)?([0-9]+)\\((%r)?([1-2]?[0-9]|3[0-1])\\)$"
-> -
-> -static regex_t sdt_op_regex1, sdt_op_regex2;
-> -
-> -static int sdt_init_op_regex(void)
-> -{
-> -       static int initialized;
-> -       int ret =3D 0;
-> -
-> -       if (initialized)
-> -               return 0;
-> -
-> -       ret =3D regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
-> -       if (ret)
-> -               goto error;
-> -
-> -       ret =3D regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
-> -       if (ret)
-> -               goto free_regex1;
-> -
-> -       initialized =3D 1;
-> -       return 0;
-> -
-> -free_regex1:
-> -       regfree(&sdt_op_regex1);
-> -error:
-> -       pr_debug4("Regex compilation error.\n");
-> -       return ret;
-> -}
-> -
-> -/*
-> - * Parse OP and convert it into uprobe format, which is, +/-NUM(%gprREG)=
-.
-> - * Possible variants of OP are:
-> - *     Format          Example
-> - *     -------------------------
-> - *     NUM(REG)        48(18)
-> - *     -NUM(REG)       -48(18)
-> - *     NUM(%rREG)      48(%r18)
-> - *     -NUM(%rREG)     -48(%r18)
-> - *     REG             18
-> - *     %rREG           %r18
-> - *     iNUM            i0
-> - *     i-NUM           i-1
-> - *
-> - * SDT marker arguments on Powerpc uses %rREG form with -mregnames flag
-> - * and REG form with -mno-regnames. Here REG is general purpose register=
-,
-> - * which is in 0 to 31 range.
-> - */
-> -int arch_sdt_arg_parse_op(char *old_op, char **new_op)
-> -{
-> -       int ret, new_len;
-> -       regmatch_t rm[5];
-> -       char prefix;
-> -
-> -       /* Constant argument. Uprobe does not support it */
-> -       if (old_op[0] =3D=3D 'i') {
-> -               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
-op);
-> -               return SDT_ARG_SKIP;
-> -       }
-> -
-> -       ret =3D sdt_init_op_regex();
-> -       if (ret < 0)
-> -               return ret;
-> -
-> -       if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
-> -               /* REG or %rREG --> %gprREG */
-> -
-> -               new_len =3D 5;    /* % g p r NULL */
-> -               new_len +=3D (int)(rm[2].rm_eo - rm[2].rm_so);
-> -
-> -               *new_op =3D zalloc(new_len);
-> -               if (!*new_op)
-> -                       return -ENOMEM;
-> -
-> -               scnprintf(*new_op, new_len, "%%gpr%.*s",
-> -                       (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].=
-rm_so);
-> -       } else if (!regexec(&sdt_op_regex2, old_op, 5, rm, 0)) {
-> -               /*
-> -                * -NUM(REG) or NUM(REG) or -NUM(%rREG) or NUM(%rREG) -->
-> -                *      +/-NUM(%gprREG)
-> -                */
-> -               prefix =3D (rm[1].rm_so =3D=3D -1) ? '+' : '-';
-> -
-> -               new_len =3D 8;    /* +/- ( % g p r ) NULL */
-> -               new_len +=3D (int)(rm[2].rm_eo - rm[2].rm_so);
-> -               new_len +=3D (int)(rm[4].rm_eo - rm[4].rm_so);
-> -
-> -               *new_op =3D zalloc(new_len);
-> -               if (!*new_op)
-> -                       return -ENOMEM;
-> -
-> -               scnprintf(*new_op, new_len, "%c%.*s(%%gpr%.*s)", prefix,
-> -                       (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].=
-rm_so,
-> -                       (int)(rm[4].rm_eo - rm[4].rm_so), old_op + rm[4].=
-rm_so);
-> -       } else {
-> -               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
-op);
-> -               return SDT_ARG_SKIP;
-> -       }
-> -
-> -       return SDT_ARG_VALID;
-> -}
-> diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Bu=
-ild
-> index fad256252bb9..b7b401cfbd45 100644
-> --- a/tools/perf/arch/x86/util/Build
-> +++ b/tools/perf/arch/x86/util/Build
-> @@ -2,7 +2,6 @@ perf-util-y +=3D header.o
->  perf-util-y +=3D tsc.o
->  perf-util-y +=3D pmu.o
->  perf-util-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
-> -perf-util-y +=3D perf_regs.o
->  perf-util-y +=3D topdown.o
->  perf-util-y +=3D machine.o
->  perf-util-y +=3D event.o
-> diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/u=
-til/perf_regs.c
-> deleted file mode 100644
-> index 41141cebe226..000000000000
-> --- a/tools/perf/arch/x86/util/perf_regs.c
-> +++ /dev/null
-> @@ -1,235 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -#include <errno.h>
-> -#include <string.h>
-> -#include <regex.h>
-> -#include <linux/kernel.h>
-> -#include <linux/zalloc.h>
-> -
-> -#include "perf_regs.h"
-> -#include "../../../perf-sys.h"
-> -#include "../../../util/perf_regs.h"
-> -#include "../../../util/debug.h"
-> -#include "../../../util/event.h"
-> -#include "../../../util/pmu.h"
-> -#include "../../../util/pmus.h"
-> -
-> -struct sdt_name_reg {
-> -       const char *sdt_name;
-> -       const char *uprobe_name;
-> -};
-> -#define SDT_NAME_REG(n, m) {.sdt_name =3D "%" #n, .uprobe_name =3D "%" #=
-m}
-> -#define SDT_NAME_REG_END {.sdt_name =3D NULL, .uprobe_name =3D NULL}
-> -
-> -static const struct sdt_name_reg sdt_reg_tbl[] =3D {
-> -       SDT_NAME_REG(eax, ax),
-> -       SDT_NAME_REG(rax, ax),
-> -       SDT_NAME_REG(al,  ax),
-> -       SDT_NAME_REG(ah,  ax),
-> -       SDT_NAME_REG(ebx, bx),
-> -       SDT_NAME_REG(rbx, bx),
-> -       SDT_NAME_REG(bl,  bx),
-> -       SDT_NAME_REG(bh,  bx),
-> -       SDT_NAME_REG(ecx, cx),
-> -       SDT_NAME_REG(rcx, cx),
-> -       SDT_NAME_REG(cl,  cx),
-> -       SDT_NAME_REG(ch,  cx),
-> -       SDT_NAME_REG(edx, dx),
-> -       SDT_NAME_REG(rdx, dx),
-> -       SDT_NAME_REG(dl,  dx),
-> -       SDT_NAME_REG(dh,  dx),
-> -       SDT_NAME_REG(esi, si),
-> -       SDT_NAME_REG(rsi, si),
-> -       SDT_NAME_REG(sil, si),
-> -       SDT_NAME_REG(edi, di),
-> -       SDT_NAME_REG(rdi, di),
-> -       SDT_NAME_REG(dil, di),
-> -       SDT_NAME_REG(ebp, bp),
-> -       SDT_NAME_REG(rbp, bp),
-> -       SDT_NAME_REG(bpl, bp),
-> -       SDT_NAME_REG(rsp, sp),
-> -       SDT_NAME_REG(esp, sp),
-> -       SDT_NAME_REG(spl, sp),
-> -
-> -       /* rNN registers */
-> -       SDT_NAME_REG(r8b,  r8),
-> -       SDT_NAME_REG(r8w,  r8),
-> -       SDT_NAME_REG(r8d,  r8),
-> -       SDT_NAME_REG(r9b,  r9),
-> -       SDT_NAME_REG(r9w,  r9),
-> -       SDT_NAME_REG(r9d,  r9),
-> -       SDT_NAME_REG(r10b, r10),
-> -       SDT_NAME_REG(r10w, r10),
-> -       SDT_NAME_REG(r10d, r10),
-> -       SDT_NAME_REG(r11b, r11),
-> -       SDT_NAME_REG(r11w, r11),
-> -       SDT_NAME_REG(r11d, r11),
-> -       SDT_NAME_REG(r12b, r12),
-> -       SDT_NAME_REG(r12w, r12),
-> -       SDT_NAME_REG(r12d, r12),
-> -       SDT_NAME_REG(r13b, r13),
-> -       SDT_NAME_REG(r13w, r13),
-> -       SDT_NAME_REG(r13d, r13),
-> -       SDT_NAME_REG(r14b, r14),
-> -       SDT_NAME_REG(r14w, r14),
-> -       SDT_NAME_REG(r14d, r14),
-> -       SDT_NAME_REG(r15b, r15),
-> -       SDT_NAME_REG(r15w, r15),
-> -       SDT_NAME_REG(r15d, r15),
-> -       SDT_NAME_REG_END,
-> -};
-> -
-> -/*
-> - * Perf only supports OP which is in  +/-NUM(REG)  form.
-> - * Here plus-minus sign, NUM and parenthesis are optional,
-> - * only REG is mandatory.
-> - *
-> - * SDT events also supports indirect addressing mode with a
-> - * symbol as offset, scaled mode and constants in OP. But
-> - * perf does not support them yet. Below are few examples.
-> - *
-> - * OP with scaled mode:
-> - *     (%rax,%rsi,8)
-> - *     10(%ras,%rsi,8)
-> - *
-> - * OP with indirect addressing mode:
-> - *     check_action(%rip)
-> - *     mp_+52(%rip)
-> - *     44+mp_(%rip)
-> - *
-> - * OP with constant values:
-> - *     $0
-> - *     $123
-> - *     $-1
-> - */
-> -#define SDT_OP_REGEX  "^([+\\-]?)([0-9]*)(\\(?)(%[a-z][a-z0-9]+)(\\)?)$"
-> -
-> -static regex_t sdt_op_regex;
-> -
-> -static int sdt_init_op_regex(void)
-> -{
-> -       static int initialized;
-> -       int ret =3D 0;
-> -
-> -       if (initialized)
-> -               return 0;
-> -
-> -       ret =3D regcomp(&sdt_op_regex, SDT_OP_REGEX, REG_EXTENDED);
-> -       if (ret < 0) {
-> -               pr_debug4("Regex compilation error.\n");
-> -               return ret;
-> -       }
-> -
-> -       initialized =3D 1;
-> -       return 0;
-> -}
-> -
-> -/*
-> - * Max x86 register name length is 5(ex: %r15d). So, 6th char
-> - * should always contain NULL. This helps to find register name
-> - * length using strlen, instead of maintaining one more variable.
-> - */
-> -#define SDT_REG_NAME_SIZE  6
-> -
-> -/*
-> - * The uprobe parser does not support all gas register names;
-> - * so, we have to replace them (ex. for x86_64: %rax -> %ax).
-> - * Note: If register does not require renaming, just copy
-> - * paste as it is, but don't leave it empty.
-> - */
-> -static void sdt_rename_register(char *sdt_reg, int sdt_len, char *uprobe=
-_reg)
-> -{
-> -       int i =3D 0;
-> -
-> -       for (i =3D 0; sdt_reg_tbl[i].sdt_name !=3D NULL; i++) {
-> -               if (!strncmp(sdt_reg_tbl[i].sdt_name, sdt_reg, sdt_len)) =
-{
-> -                       strcpy(uprobe_reg, sdt_reg_tbl[i].uprobe_name);
-> -                       return;
-> -               }
-> -       }
-> -
-> -       strncpy(uprobe_reg, sdt_reg, sdt_len);
-> -}
-> -
-> -int arch_sdt_arg_parse_op(char *old_op, char **new_op)
-> -{
-> -       char new_reg[SDT_REG_NAME_SIZE] =3D {0};
-> -       int new_len =3D 0, ret;
-> -       /*
-> -        * rm[0]:  +/-NUM(REG)
-> -        * rm[1]:  +/-
-> -        * rm[2]:  NUM
-> -        * rm[3]:  (
-> -        * rm[4]:  REG
-> -        * rm[5]:  )
-> -        */
-> -       regmatch_t rm[6];
-> -       /*
-> -        * Max prefix length is 2 as it may contains sign(+/-)
-> -        * and displacement 0 (Both sign and displacement 0 are
-> -        * optional so it may be empty). Use one more character
-> -        * to hold last NULL so that strlen can be used to find
-> -        * prefix length, instead of maintaining one more variable.
-> -        */
-> -       char prefix[3] =3D {0};
-> -
-> -       ret =3D sdt_init_op_regex();
-> -       if (ret < 0)
-> -               return ret;
-> -
-> -       /*
-> -        * If unsupported OR does not match with regex OR
-> -        * register name too long, skip it.
-> -        */
-> -       if (strchr(old_op, ',') || strchr(old_op, '$') ||
-> -           regexec(&sdt_op_regex, old_op, 6, rm, 0)   ||
-> -           rm[4].rm_eo - rm[4].rm_so > SDT_REG_NAME_SIZE) {
-> -               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
-op);
-> -               return SDT_ARG_SKIP;
-> -       }
-> -
-> -       /*
-> -        * Prepare prefix.
-> -        * If SDT OP has parenthesis but does not provide
-> -        * displacement, add 0 for displacement.
-> -        *     SDT         Uprobe     Prefix
-> -        *     -----------------------------
-> -        *     +24(%rdi)   +24(%di)   +
-> -        *     24(%rdi)    +24(%di)   +
-> -        *     %rdi        %di
-> -        *     (%rdi)      +0(%di)    +0
-> -        *     -80(%rbx)   -80(%bx)   -
-> -        */
-> -       if (rm[3].rm_so !=3D rm[3].rm_eo) {
-> -               if (rm[1].rm_so !=3D rm[1].rm_eo)
-> -                       prefix[0] =3D *(old_op + rm[1].rm_so);
-> -               else if (rm[2].rm_so !=3D rm[2].rm_eo)
-> -                       prefix[0] =3D '+';
-> -               else
-> -                       scnprintf(prefix, sizeof(prefix), "+0");
-> -       }
-> -
-> -       /* Rename register */
-> -       sdt_rename_register(old_op + rm[4].rm_so, rm[4].rm_eo - rm[4].rm_=
-so,
-> -                           new_reg);
-> -
-> -       /* Prepare final OP which should be valid for uprobe_events */
-> -       new_len =3D strlen(prefix)              +
-> -                 (rm[2].rm_eo - rm[2].rm_so) +
-> -                 (rm[3].rm_eo - rm[3].rm_so) +
-> -                 strlen(new_reg)             +
-> -                 (rm[5].rm_eo - rm[5].rm_so) +
-> -                 1;                                    /* NULL */
-> -
-> -       *new_op =3D zalloc(new_len);
-> -       if (!*new_op)
-> -               return -ENOMEM;
-> -
-> -       scnprintf(*new_op, new_len, "%.*s%.*s%.*s%.*s%.*s",
-> -                 strlen(prefix), prefix,
-> -                 (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].rm_so,
-> -                 (int)(rm[3].rm_eo - rm[3].rm_so), old_op + rm[3].rm_so,
-> -                 strlen(new_reg), new_reg,
-> -                 (int)(rm[5].rm_eo - rm[5].rm_so), old_op + rm[5].rm_so)=
-;
-> -
-> -       return SDT_ARG_VALID;
-> -}
-> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_aarch64.c b/tools/p=
-erf/util/perf-regs-arch/perf_regs_aarch64.c
-> index 21a432671f04..1b536c60ceb4 100644
-> --- a/tools/perf/util/perf-regs-arch/perf_regs_aarch64.c
-> +++ b/tools/perf/util/perf-regs-arch/perf_regs_aarch64.c
-> @@ -18,6 +18,92 @@
->  #define HWCAP_SVE      (1 << 22)
->  #endif
->
-> +/* %xNUM */
-> +#define SDT_OP_REGEX1  "^(x[1-2]?[0-9]|3[0-1])$"
-> +
-> +/* [sp], [sp, NUM] */
-> +#define SDT_OP_REGEX2  "^\\[sp(, )?([0-9]+)?\\]$"
-> +
-> +static regex_t sdt_op_regex1, sdt_op_regex2;
-> +
-> +static int sdt_init_op_regex(void)
-> +{
-> +       static int initialized;
-> +       int ret =3D 0;
-> +
-> +       if (initialized)
-> +               return 0;
-> +
-> +       ret =3D regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
-> +       if (ret)
-> +               goto error;
-> +
-> +       ret =3D regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
-> +       if (ret)
-> +               goto free_regex1;
-> +
-> +       initialized =3D 1;
-> +       return 0;
-> +
-> +free_regex1:
-> +       regfree(&sdt_op_regex1);
-> +error:
-> +       pr_debug4("Regex compilation error.\n");
-> +       return ret;
-> +}
-> +
-> +/*
-> + * SDT marker arguments on Arm64 uses %xREG or [sp, NUM], currently
-> + * support these two formats.
-> + */
-> +int __perf_sdt_arg_parse_op_arm64(char *old_op, char **new_op)
-> +{
-> +       int ret, new_len;
-> +       regmatch_t rm[5];
-> +
-> +       ret =3D sdt_init_op_regex();
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
-> +               /* Extract xNUM */
-> +               new_len =3D 2;    /* % NULL */
-> +               new_len +=3D (int)(rm[1].rm_eo - rm[1].rm_so);
-> +
-> +               *new_op =3D zalloc(new_len);
-> +               if (!*new_op)
-> +                       return -ENOMEM;
-> +
-> +               scnprintf(*new_op, new_len, "%%%.*s",
-> +                       (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1].=
-rm_so);
-> +       } else if (!regexec(&sdt_op_regex2, old_op, 5, rm, 0)) {
-> +               /* [sp], [sp, NUM] or [sp,NUM] */
-> +               new_len =3D 7;    /* + ( % s p ) NULL */
-> +
-> +               /* If the argument is [sp], need to fill offset '0' */
-> +               if (rm[2].rm_so =3D=3D -1)
-> +                       new_len +=3D 1;
-> +               else
-> +                       new_len +=3D (int)(rm[2].rm_eo - rm[2].rm_so);
-> +
-> +               *new_op =3D zalloc(new_len);
-> +               if (!*new_op)
-> +                       return -ENOMEM;
-> +
-> +               if (rm[2].rm_so =3D=3D -1)
-> +                       scnprintf(*new_op, new_len, "+0(%%sp)");
-> +               else
-> +                       scnprintf(*new_op, new_len, "+%.*s(%%sp)",
-> +                                 (int)(rm[2].rm_eo - rm[2].rm_so),
-> +                                 old_op + rm[2].rm_so);
-> +       } else {
-> +               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
-op);
-> +               return SDT_ARG_SKIP;
-> +       }
-> +
-> +       return SDT_ARG_VALID;
-> +}
-> +
->  uint64_t __perf_reg_mask_arm64(bool intr)
->  {
->         struct perf_event_attr attr =3D {
-> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_powerpc.c b/tools/p=
-erf/util/perf-regs-arch/perf_regs_powerpc.c
-> index 5211cc0c4e81..eb21a214990f 100644
-> --- a/tools/perf/util/perf-regs-arch/perf_regs_powerpc.c
-> +++ b/tools/perf/util/perf-regs-arch/perf_regs_powerpc.c
-> @@ -19,6 +19,112 @@
->  #define PVR_POWER10            0x0080
->  #define PVR_POWER11            0x0082
->
-> +/* REG or %rREG */
-> +#define SDT_OP_REGEX1  "^(%r)?([1-2]?[0-9]|3[0-1])$"
-> +
-> +/* -NUM(REG) or NUM(REG) or -NUM(%rREG) or NUM(%rREG) */
-> +#define SDT_OP_REGEX2  "^(\\-)?([0-9]+)\\((%r)?([1-2]?[0-9]|3[0-1])\\)$"
-> +
-> +static regex_t sdt_op_regex1, sdt_op_regex2;
-> +
-> +static int sdt_init_op_regex(void)
-> +{
-> +       static int initialized;
-> +       int ret =3D 0;
-> +
-> +       if (initialized)
-> +               return 0;
-> +
-> +       ret =3D regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
-> +       if (ret)
-> +               goto error;
-> +
-> +       ret =3D regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
-> +       if (ret)
-> +               goto free_regex1;
-> +
-> +       initialized =3D 1;
-> +       return 0;
-> +
-> +free_regex1:
-> +       regfree(&sdt_op_regex1);
-> +error:
-> +       pr_debug4("Regex compilation error.\n");
-> +       return ret;
-> +}
-> +
-> +/*
-> + * Parse OP and convert it into uprobe format, which is, +/-NUM(%gprREG)=
-.
-> + * Possible variants of OP are:
-> + *     Format          Example
-> + *     -------------------------
-> + *     NUM(REG)        48(18)
-> + *     -NUM(REG)       -48(18)
-> + *     NUM(%rREG)      48(%r18)
-> + *     -NUM(%rREG)     -48(%r18)
-> + *     REG             18
-> + *     %rREG           %r18
-> + *     iNUM            i0
-> + *     i-NUM           i-1
-> + *
-> + * SDT marker arguments on Powerpc uses %rREG form with -mregnames flag
-> + * and REG form with -mno-regnames. Here REG is general purpose register=
-,
-> + * which is in 0 to 31 range.
+On Tue, Jan 27, 2026 at 09:30:27AM +0100, Dmitrii Dolgov wrote:
+> Exercise the annotate command with data type profiling feature on the
+> rust runtime:
+ 
+> * Add a new type of workload code_with_type, which has a dummy rust
+>   library linked with it. It's recommended that for such scenarios rust
+>   library is statically linked [1].
+ 
+> * Add a new shell test, which will profile the new workload, then
+>   annotate the result expecting to see some data structures from the
+>   rust code.
 
-This powerpc comment looks a lot like ...
+I think this should be split into at least two patchs, one introducing
+the new workload and then the new perf test.
 
-> + */
-> +int __perf_sdt_arg_parse_op_powerpc(char *old_op, char **new_op)
-> +{
-> +       int ret, new_len;
-> +       regmatch_t rm[5];
-> +       char prefix;
-> +
-> +       /* Constant argument. Uprobe does not support it */
-> +       if (old_op[0] =3D=3D 'i') {
-> +               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
-op);
-> +               return SDT_ARG_SKIP;
-> +       }
-> +
-> +       ret =3D sdt_init_op_regex();
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
-> +               /* REG or %rREG --> %gprREG */
-> +
-> +               new_len =3D 5;    /* % g p r NULL */
-> +               new_len +=3D (int)(rm[2].rm_eo - rm[2].rm_so);
-> +
-> +               *new_op =3D zalloc(new_len);
-> +               if (!*new_op)
-> +                       return -ENOMEM;
-> +
-> +               scnprintf(*new_op, new_len, "%%gpr%.*s",
-> +                       (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].=
-rm_so);
-> +       } else if (!regexec(&sdt_op_regex2, old_op, 5, rm, 0)) {
-> +               /*
-> +                * -NUM(REG) or NUM(REG) or -NUM(%rREG) or NUM(%rREG) -->
-> +                *      +/-NUM(%gprREG)
-> +                */
-> +               prefix =3D (rm[1].rm_so =3D=3D -1) ? '+' : '-';
-> +
-> +               new_len =3D 8;    /* +/- ( % g p r ) NULL */
-> +               new_len +=3D (int)(rm[2].rm_eo - rm[2].rm_so);
-> +               new_len +=3D (int)(rm[4].rm_eo - rm[4].rm_so);
-> +
-> +               *new_op =3D zalloc(new_len);
-> +               if (!*new_op)
-> +                       return -ENOMEM;
-> +
-> +               scnprintf(*new_op, new_len, "%c%.*s(%%gpr%.*s)", prefix,
-> +                       (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].=
-rm_so,
-> +                       (int)(rm[4].rm_eo - rm[4].rm_so), old_op + rm[4].=
-rm_so);
-> +       } else {
-> +               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
-op);
-> +               return SDT_ARG_SKIP;
-> +       }
-> +
-> +       return SDT_ARG_VALID;
-> +}
-> +
->  #if defined(__powerpc64__) && defined(__powerpc__)
->  uint64_t __perf_reg_mask_powerpc(bool intr)
->  {
-> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/perf/=
-util/perf-regs-arch/perf_regs_x86.c
-> index d319106dc7b2..47de64d45168 100644
-> --- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
-> +++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
-> @@ -14,6 +14,227 @@
->  #include "../../perf-sys.h"
->  #include "../../arch/x86/include/perf_regs.h"
->
-> +struct sdt_name_reg {
-> +       const char *sdt_name;
-> +       const char *uprobe_name;
-> +};
-> +#define SDT_NAME_REG(n, m) {.sdt_name =3D "%" #n, .uprobe_name =3D "%" #=
-m}
-> +#define SDT_NAME_REG_END {.sdt_name =3D NULL, .uprobe_name =3D NULL}
-> +
-> +static const struct sdt_name_reg sdt_reg_tbl[] =3D {
-> +       SDT_NAME_REG(eax, ax),
-> +       SDT_NAME_REG(rax, ax),
-> +       SDT_NAME_REG(al,  ax),
-> +       SDT_NAME_REG(ah,  ax),
-> +       SDT_NAME_REG(ebx, bx),
-> +       SDT_NAME_REG(rbx, bx),
-> +       SDT_NAME_REG(bl,  bx),
-> +       SDT_NAME_REG(bh,  bx),
-> +       SDT_NAME_REG(ecx, cx),
-> +       SDT_NAME_REG(rcx, cx),
-> +       SDT_NAME_REG(cl,  cx),
-> +       SDT_NAME_REG(ch,  cx),
-> +       SDT_NAME_REG(edx, dx),
-> +       SDT_NAME_REG(rdx, dx),
-> +       SDT_NAME_REG(dl,  dx),
-> +       SDT_NAME_REG(dh,  dx),
-> +       SDT_NAME_REG(esi, si),
-> +       SDT_NAME_REG(rsi, si),
-> +       SDT_NAME_REG(sil, si),
-> +       SDT_NAME_REG(edi, di),
-> +       SDT_NAME_REG(rdi, di),
-> +       SDT_NAME_REG(dil, di),
-> +       SDT_NAME_REG(ebp, bp),
-> +       SDT_NAME_REG(rbp, bp),
-> +       SDT_NAME_REG(bpl, bp),
-> +       SDT_NAME_REG(rsp, sp),
-> +       SDT_NAME_REG(esp, sp),
-> +       SDT_NAME_REG(spl, sp),
-> +
-> +       /* rNN registers */
-> +       SDT_NAME_REG(r8b,  r8),
-> +       SDT_NAME_REG(r8w,  r8),
-> +       SDT_NAME_REG(r8d,  r8),
-> +       SDT_NAME_REG(r9b,  r9),
-> +       SDT_NAME_REG(r9w,  r9),
-> +       SDT_NAME_REG(r9d,  r9),
-> +       SDT_NAME_REG(r10b, r10),
-> +       SDT_NAME_REG(r10w, r10),
-> +       SDT_NAME_REG(r10d, r10),
-> +       SDT_NAME_REG(r11b, r11),
-> +       SDT_NAME_REG(r11w, r11),
-> +       SDT_NAME_REG(r11d, r11),
-> +       SDT_NAME_REG(r12b, r12),
-> +       SDT_NAME_REG(r12w, r12),
-> +       SDT_NAME_REG(r12d, r12),
-> +       SDT_NAME_REG(r13b, r13),
-> +       SDT_NAME_REG(r13w, r13),
-> +       SDT_NAME_REG(r13d, r13),
-> +       SDT_NAME_REG(r14b, r14),
-> +       SDT_NAME_REG(r14w, r14),
-> +       SDT_NAME_REG(r14d, r14),
-> +       SDT_NAME_REG(r15b, r15),
-> +       SDT_NAME_REG(r15w, r15),
-> +       SDT_NAME_REG(r15d, r15),
-> +       SDT_NAME_REG_END,
-> +};
-> +
-> +/*
-> + * Perf only supports OP which is in  +/-NUM(REG)  form.
-> + * Here plus-minus sign, NUM and parenthesis are optional,
-> + * only REG is mandatory.
-> + *
-> + * SDT events also supports indirect addressing mode with a
-> + * symbol as offset, scaled mode and constants in OP. But
-> + * perf does not support them yet. Below are few examples.
-> + *
-> + * OP with scaled mode:
-> + *     (%rax,%rsi,8)
-> + *     10(%ras,%rsi,8)
-> + *
-> + * OP with indirect addressing mode:
-> + *     check_action(%rip)
-> + *     mp_+52(%rip)
-> + *     44+mp_(%rip)
-> + *
-> + * OP with constant values:
-> + *     $0
-> + *     $123
-> + *     $-1
-> + */
-> +#define SDT_OP_REGEX  "^([+\\-]?)([0-9]*)(\\(?)(%[a-z][a-z0-9]+)(\\)?)$"
-> +
-> +static regex_t sdt_op_regex;
-> +
-> +static int sdt_init_op_regex(void)
-> +{
-> +       static int initialized;
-> +       int ret =3D 0;
-> +
-> +       if (initialized)
-> +               return 0;
-> +
-> +       ret =3D regcomp(&sdt_op_regex, SDT_OP_REGEX, REG_EXTENDED);
-> +       if (ret < 0) {
-> +               pr_debug4("Regex compilation error.\n");
-> +               return ret;
-> +       }
-> +
-> +       initialized =3D 1;
-> +       return 0;
-> +}
-> +
-> +/*
-> + * Max x86 register name length is 5(ex: %r15d). So, 6th char
-> + * should always contain NULL. This helps to find register name
-> + * length using strlen, instead of maintaining one more variable.
-> + */
-> +#define SDT_REG_NAME_SIZE  6
-> +
-> +/*
-> + * The uprobe parser does not support all gas register names;
-> + * so, we have to replace them (ex. for x86_64: %rax -> %ax).
-> + * Note: If register does not require renaming, just copy
-> + * paste as it is, but don't leave it empty.
-> + */
-> +static void sdt_rename_register(char *sdt_reg, int sdt_len, char *uprobe=
-_reg)
-> +{
-> +       int i =3D 0;
-> +
-> +       for (i =3D 0; sdt_reg_tbl[i].sdt_name !=3D NULL; i++) {
-> +               if (!strncmp(sdt_reg_tbl[i].sdt_name, sdt_reg, sdt_len)) =
-{
-> +                       strcpy(uprobe_reg, sdt_reg_tbl[i].uprobe_name);
-> +                       return;
-> +               }
-> +       }
-> +
-> +       strncpy(uprobe_reg, sdt_reg, sdt_len);
-> +}
-> +
-> +int __perf_sdt_arg_parse_op_x86(char *old_op, char **new_op)
-> +{
-> +       char new_reg[SDT_REG_NAME_SIZE] =3D {0};
-> +       int new_len =3D 0, ret;
-> +       /*
-> +        * rm[0]:  +/-NUM(REG)
-> +        * rm[1]:  +/-
-> +        * rm[2]:  NUM
-> +        * rm[3]:  (
-> +        * rm[4]:  REG
-> +        * rm[5]:  )
-> +        */
-> +       regmatch_t rm[6];
-> +       /*
-> +        * Max prefix length is 2 as it may contains sign(+/-)
-> +        * and displacement 0 (Both sign and displacement 0 are
-> +        * optional so it may be empty). Use one more character
-> +        * to hold last NULL so that strlen can be used to find
-> +        * prefix length, instead of maintaining one more variable.
-> +        */
-> +       char prefix[3] =3D {0};
-> +
-> +       ret =3D sdt_init_op_regex();
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       /*
-> +        * If unsupported OR does not match with regex OR
-> +        * register name too long, skip it.
-> +        */
-> +       if (strchr(old_op, ',') || strchr(old_op, '$') ||
-> +           regexec(&sdt_op_regex, old_op, 6, rm, 0)   ||
-> +           rm[4].rm_eo - rm[4].rm_so > SDT_REG_NAME_SIZE) {
-> +               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
-op);
-> +               return SDT_ARG_SKIP;
-> +       }
-> +
-> +       /*
-> +        * Prepare prefix.
-> +        * If SDT OP has parenthesis but does not provide
-> +        * displacement, add 0 for displacement.
-> +        *     SDT         Uprobe     Prefix
-> +        *     -----------------------------
-> +        *     +24(%rdi)   +24(%di)   +
-> +        *     24(%rdi)    +24(%di)   +
-> +        *     %rdi        %di
-> +        *     (%rdi)      +0(%di)    +0
-> +        *     -80(%rbx)   -80(%bx)   -
-> +        */
+Trying it now it is failing for me on both an AMD 9950X3D with Fedora 43
+and on a Gen Intel(R) Core(TM) i7-1365U Lenovo X1 Carbon notebook also
+with Fedora 43, both with:
 
-... this x86 comment. I wonder if we had standard functions like
-sdt_reg_name or uprobe_reg_name, similar to  perf_reg_name, and maybe
-that perf_reg_name was the default when an ELF machine isn't
-implemented, whether we could make this code shared and support more
-than just arm64, powerpc and x86.
+⬢ [acme@toolbx perf-tools-next]$ rustc --version
+rustc 1.92.0 (ded5c06cf 2025-12-08) (Fedora 1.92.0-1.fc43)
+⬢ [acme@toolbx perf-tools-next]$
 
-Again this is likely follow up clean up.
 
-> +       if (rm[3].rm_so !=3D rm[3].rm_eo) {
-> +               if (rm[1].rm_so !=3D rm[1].rm_eo)
-> +                       prefix[0] =3D *(old_op + rm[1].rm_so);
-> +               else if (rm[2].rm_so !=3D rm[2].rm_eo)
-> +                       prefix[0] =3D '+';
-> +               else
-> +                       scnprintf(prefix, sizeof(prefix), "+0");
-> +       }
-> +
-> +       /* Rename register */
-> +       sdt_rename_register(old_op + rm[4].rm_so, rm[4].rm_eo - rm[4].rm_=
-so,
-> +                           new_reg);
-> +
-> +       /* Prepare final OP which should be valid for uprobe_events */
-> +       new_len =3D strlen(prefix)              +
-> +                 (rm[2].rm_eo - rm[2].rm_so) +
-> +                 (rm[3].rm_eo - rm[3].rm_so) +
-> +                 strlen(new_reg)             +
-> +                 (rm[5].rm_eo - rm[5].rm_so) +
-> +                 1;                                    /* NULL */
-> +
-> +       *new_op =3D zalloc(new_len);
-> +       if (!*new_op)
-> +               return -ENOMEM;
-> +
-> +       scnprintf(*new_op, new_len, "%.*s%.*s%.*s%.*s%.*s",
-> +                 strlen(prefix), prefix,
-> +                 (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].rm_so,
-> +                 (int)(rm[3].rm_eo - rm[3].rm_so), old_op + rm[3].rm_so,
-> +                 strlen(new_reg), new_reg,
-> +                 (int)(rm[5].rm_eo - rm[5].rm_so), old_op + rm[5].rm_so)=
-;
-> +
-> +       return SDT_ARG_VALID;
-> +}
-> +
->  uint64_t __perf_reg_mask_x86(bool intr)
->  {
->         struct perf_event_attr attr =3D {
-> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-> index 900929cff4b5..4082e8da9633 100644
-> --- a/tools/perf/util/perf_regs.c
-> +++ b/tools/perf/util/perf_regs.c
-> @@ -7,10 +7,27 @@
->  #include "debug.h"
->  #include "dwarf-regs.h"
->
-> -int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
-> -                                char **new_op __maybe_unused)
-> +int perf_sdt_arg_parse_op(uint16_t e_machine, char *old_op, char **new_o=
-p)
->  {
-> -       return SDT_ARG_SKIP;
-> +       int ret =3D SDT_ARG_SKIP;
-> +
-> +       switch (e_machine) {
-> +       case EM_AARCH64:
-> +               ret =3D __perf_sdt_arg_parse_op_arm64(old_op, new_op);
-> +               break;
-> +       case EM_PPC:
-> +       case EM_PPC64:
-> +               ret =3D __perf_sdt_arg_parse_op_powerpc(old_op, new_op);
-> +               break;
-> +       case EM_386:
-> +       case EM_X86_64:
-> +               ret =3D __perf_sdt_arg_parse_op_x86(old_op, new_op);
-> +               break;
-> +       default:
+Isn't that 'perf record' just using cycles? Wouldn't it be better to use
+'perf mem record'?
 
-I think there should be at least a debug warning here.
+Like:
 
-Thanks!
-Ian
+acme@x1:~/git/perf-tools-next$ tools/perf/perf mem record perf test -w code_with_type
+Error:
+Failure to open event 'cpu_core/mem-loads,ldlat=30/u' on PMU 'cpu_core' which will be removed.
+No fallback found for 'cpu_core/mem-loads,ldlat=30/u' for error 61
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.351 MB perf.data (4672 samples) ]
+acme@x1:~/git/perf-tools-next$ perf evlist -v
+cpu_atom/mem-loads,ldlat=30/Pu: type: 10 (cpu_atom), size: 144, config: 0x5d0 (mem_uops_retired.load_latency_gt_16), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1, { bp_addr, config1 }: 0x1f
+cpu_atom/mem-stores/Pu: type: 10 (cpu_atom), size: 144, config: 0x6d0 (mem_uops_retired.store_latency), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1
+cpu_core/mem-loads-aux/u: type: 4 (cpu_core), size: 144, config: 0x8203 (mem-loads-aux), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1
+cpu_core/mem-stores/Pu: type: 4 (cpu_core), size: 144, config: 0x2cd (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1
+dummy:u: type: 1 (PERF_TYPE_SOFTWARE), size: 144, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|ADDR|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, mmap_data: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, build_id: 1
+# Tip: use 'perf evlist -g' to show group information
+acme@x1:~/git/perf-tools-next$
 
-> +               break;
-> +       }
-> +
-> +       return ret;
->  }
->
->  uint64_t perf_intr_reg_mask(uint16_t e_machine)
-> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-> index 8531584bc1b1..77c0b517b94a 100644
-> --- a/tools/perf/util/perf_regs.h
-> +++ b/tools/perf/util/perf_regs.h
-> @@ -12,7 +12,7 @@ enum {
->         SDT_ARG_SKIP,
->  };
->
-> -int arch_sdt_arg_parse_op(char *old_op, char **new_op);
-> +int perf_sdt_arg_parse_op(uint16_t e_machine, char *old_op, char **new_o=
-p);
->  uint64_t perf_intr_reg_mask(uint16_t e_machine);
->  uint64_t perf_user_reg_mask(uint16_t e_machine);
->
-> @@ -21,6 +21,7 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, i=
-nt id);
->  uint64_t perf_arch_reg_ip(uint16_t e_machine);
->  uint64_t perf_arch_reg_sp(uint16_t e_machine);
->
-> +int __perf_sdt_arg_parse_op_arm64(char *old_op, char **new_op);
->  uint64_t __perf_reg_mask_arm64(bool intr);
->  const char *__perf_reg_name_arm64(int id);
->  uint64_t __perf_reg_ip_arm64(void);
-> @@ -46,6 +47,7 @@ const char *__perf_reg_name_mips(int id);
->  uint64_t __perf_reg_ip_mips(void);
->  uint64_t __perf_reg_sp_mips(void);
->
-> +int __perf_sdt_arg_parse_op_powerpc(char *old_op, char **new_op);
->  uint64_t __perf_reg_mask_powerpc(bool intr);
->  const char *__perf_reg_name_powerpc(int id);
->  uint64_t __perf_reg_ip_powerpc(void);
-> @@ -61,6 +63,7 @@ const char *__perf_reg_name_s390(int id);
->  uint64_t __perf_reg_ip_s390(void);
->  uint64_t __perf_reg_sp_s390(void);
->
-> +int __perf_sdt_arg_parse_op_x86(char *old_op, char **new_op);
->  uint64_t __perf_reg_mask_x86(bool intr);
->  const char *__perf_reg_name_x86(int id);
->  uint64_t __perf_reg_ip_x86(void);
-> diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-> index 5069fb61f48c..f78c3bc3d601 100644
-> --- a/tools/perf/util/probe-file.c
-> +++ b/tools/perf/util/probe-file.c
-> @@ -28,6 +28,7 @@
->  #include "session.h"
->  #include "perf_regs.h"
->  #include "string2.h"
-> +#include "dwarf-regs.h"
->
->  /* 4096 - 2 ('\n' + '\0') */
->  #define MAX_CMDLEN 4094
-> @@ -784,7 +785,7 @@ static int synthesize_sdt_probe_arg(struct strbuf *bu=
-f, int i, const char *arg)
->                 op =3D desc;
->         }
->
-> -       ret =3D arch_sdt_arg_parse_op(op, &new_op);
-> +       ret =3D perf_sdt_arg_parse_op(EM_HOST, op, &new_op);
->
->         if (ret < 0)
->                 goto error;
-> --
-> 2.34.1
->
+Then:
+
+perf annotate --code-with-type 
+
+And one of the functions on the TUI is:
+
+Samples: 4K of events 'anon group { cpu_core/mem-loads-aux/u, cpu_core/mem-stores/Pu }', 4000 Hz, Event count (approx.): 2746033426
+alloc::raw_vec::RawVecInner<A>::with_capacity_in  /home/acme/git/perf-tools-next/tools/perf/perf [Percent: local period] [Type]
+
+
+[Type] is there, matching --code-with-type, but I see no types in the
+annotation output., even with { cpu_core/mem-loads-aux/u, cpu_core/mem-stores/Pu }
+
+Now on the 9950X3D, AMD, using IBS:
+
+acme@number:~/git/perf-tools-next$ tools/perf/perf mem record perf test -w code_with_type
+Error:
+Failure to open event 'ibs_op/ldlat=0/u' on PMU 'ibs_op' which will be removed.
+No fallback found for 'ibs_op/ldlat=0/u' for error 22
+Error:
+Failure to open any events for recording.
+acme@number:~/git/perf-tools-next$ sudo tools/perf/perf mem record perf test -w code_with_type
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.307 MB perf.data (4005 samples) ]
+acme@number:~/git/perf-tools-next$ sudo tools/perf/perf annotate --code-with-type
+File perf.data not owned by current user or root (use -f to override)
+acme@number:~/git/perf-tools-next$ sudo tools/perf/perf annotate -f --code-with-type
+
+Again, [Type] is there, but no types:
+
+Samples: 4K of event 'ibs_op/ldlat=0/', 4000 Hz, Event count (approx.): 5414001952
+test_rs  /home/acme/git/perf-tools-next/tools/perf/perf [Percent: local period] [Type]
+   0.14 │       sub    $0x98,%rsp                                                                                                                                       ◆
+        │       mov    %edi,0x2c(%rsp)                                                                                                                                  ▒
+        │       mov    %edi,0x84(%rsp)                                                                                                                                  ▒
+        │       lea    _IO_stdin_used+0x20,%rsi                                                                                                                         ▒
+   0.07 │       lea    0x60(%rsp),%rdi                                                                                                                                  ▒
+   0.07 │       mov    $0x4,%edx                                                                                                                                        ▒
+        │     → call   <alloc::string::String as core::convert::From<&str>>::f
+
+I'm not managing to reproduce your results, can you please elaborate
+some more?
+
+- Arnaldo
+
+The tests with your patch as-is:
+
+
+⬢ [acme@toolbx perf-tools-next]$ m
+make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
+  BUILD:   Doing 'make -j32' parallel build
+Warning: Kernel ABI header differences:
+  diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+  diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
+
+Auto-detecting system features:
+...                                   libdw: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                               libpython: [ on  ]
+...                             libcapstone: [ on  ]
+...                               llvm-perf: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+...                              libopenssl: [ on  ]
+
+  INSTALL libsubcmd_headers
+  INSTALL libperf_headers
+  INSTALL libapi_headers
+  INSTALL libsymbol_headers
+  INSTALL libbpf_headers
+  AR      /tmp/build/perf-tools-next/libpmu-events.a
+make[5]: *** No rule to make target '/tmp/build/perf-tools-next/tests/workloads/libcode_with_type.a', needed by '/tmp/build/perf-tools-next/tests/workloads/perf-test-in.o'.  Stop.
+make[4]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:156: workloads] Error 2
+make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:156: tests] Error 2
+make[2]: *** [Makefile.perf:784: /tmp/build/perf-tools-next/perf-test-in.o] Error 2
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [Makefile.perf:288: sub-make] Error 2
+make: *** [Makefile:119: install-bin] Error 2
+make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+⬢ [acme@toolbx perf-tools-next]$
+
+I don't have rust installed in this container, in this case we need some
+sort of capability query to tell the user that rust is needed for this
+feature to be present in perf.
+
+Lemme try installing it:
+
+$ sudo dnf install rust
+
+Not enough.
+
+I see, it doesn't work if I use 'make O=/some/directory/ -C tools/perf'
+
+Worked when I did:
+
+make -C tools/perf
+
+Where it ended up doing:
+
+  CC      util/namespaces.o
+  CC      util/comm.o
+  CC      util/thread.o
+  CC      util/threads.o
+  CC      util/thread_map.o
+  rustc  tests/workloads/libcode_with_type.a
+  CC      util/parse-events-bison.o
+  BISON   util/pmu-bison.c
+
+
+⬢ [acme@toolbx perf-tools-next]$ tools/perf/perf test "data type profiling"
+ 83: perf data type profiling tests                                  : FAILED!
+⬢ [acme@toolbx perf-tools-next]$ tools/perf/perf test -v "data type profiling"
+Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+--- start ---
+test child forked, pid 1455079
+Basic perf annotate test
+Basic annotate [Failed: missing target data type]
+ Percent |	Source code & Disassembly of perf for cpu/cycles/Pu (1718 samples, percent: local period)
+---------------------------------------------------------------------------------------------------------
+         : 0      0x55bcb0 <test_rs>:
+    0.00 :   55bcb0:        subq    $0x98, %rsp
+    0.24 :   55bcb7:        movl    %edi, 0x2c(%rsp)
+    0.12 :   55bcbb:        movl    %edi, 0x84(%rsp)
+    0.00 :   55bcc2:        leaq    0x22b557(%rip), %rsi  # 0x787220
+    0.00 :   55bcc9:        leaq    0x60(%rsp), %rdi
+    0.00 :   55bcce:        movl    $0x4, %edx
+    0.00 :   55bcd3:        callq   0x55baf0 <<alloc::string::String as core::convert::From<&str>>::from>
+    0.06 :   55bcd8:        jmp     0x55bce0 <test_rs+0x30>
+    0.00 :   55bcda:        callq   *0xa493b0(%rip)  # 0xfa5090 <_DYNAMIC+0x650>
+    0.00 :   55bce0:        movl    0x2c(%rsp), %esi
+    0.00 :   55bce4:        movq    $0x0, 0x48(%rsp)
+    0.00 :   55bced:        movq    0x70(%rsp), %rax
+    0.06 :   55bcf2:        movq    %rax, 0x40(%rsp)
+    0.00 :   55bcf7:        movups  0x60(%rsp), %xmm0
+    8.01 :   55bcfc:        movaps  %xmm0, 0x30(%rsp)
+    0.00 :   55bd01:        movq    $0x0, 0x50(%rsp)
+    0.00 :   55bd0a:        movl    $0x1, %edi
+    0.00 :   55bd0f:        callq   0x55bae0 <<I as core::iter::traits::collect::IntoIterator>::into_iter>
+    0.00 :   55bd14:        movl    %edx, 0x24(%rsp)
+    0.00 :   55bd18:        movl    %eax, 0x28(%rsp)
+    0.00 :   55bd1c:        jmp     0x55bd40 <test_rs+0x90>
+    0.00 :   55bd1e:        leaq    0x30(%rsp), %rdi
+    0.00 :   55bd23:        callq   0x55b6f0 <core::ptr::drop_in_place<code_with_type::Buf>>
+    0.00 :   55bd28:        jmp     0x55bd95 <test_rs+0xe5>
+    0.00 :   55bd2a:        movq    %rax, %rcx
+    0.00 :   55bd2d:        movl    %edx, %eax
+    0.00 :   55bd2f:        movq    %rcx, 0x88(%rsp)
+    0.00 :   55bd37:        movl    %eax, 0x90(%rsp)
+    0.00 :   55bd3e:        jmp     0x55bd1e <test_rs+0x6e>
+    0.00 :   55bd40:        movl    0x24(%rsp), %eax
+    0.00 :   55bd44:        movl    0x28(%rsp), %ecx
+    0.00 :   55bd48:        movl    %ecx, 0x7c(%rsp)
+    0.00 :   55bd4c:        movl    %eax, 0x80(%rsp)
+    0.22 :   55bd53:        leaq    0x7c(%rsp), %rdi
+   70.17 :   55bd58:        callq   0x55b820 <core::iter::range::<impl core::iter::traits::iterator::Iterator for core::ops::range::Range<A>>::next>
+    0.00 :   55bd5d:        movl    %eax, 0x20(%rsp)
+   19.94 :   55bd61:        jmp     0x55bd63 <test_rs+0xb3>
+    0.00 :   55bd63:        movl    0x20(%rsp), %eax
+    0.62 :   55bd67:        movl    %eax, %eax
+    0.00 :   55bd69:        testq   $0x1, %rax
+    0.00 :   55bd6f:        je      0x55bd89 <test_rs+0xd9>
+    0.00 :   55bd71:        movq    0x48(%rsp), %rcx
+    0.00 :   55bd76:        movq    %rcx, %rax
+    0.12 :   55bd79:        addq    $0x1, %rax
+    0.00 :   55bd7d:        movq    %rax, 0x18(%rsp)
+    0.00 :   55bd82:        cmpq    %rcx, %rax
+    0.00 :   55bd85:        jb      0x55bdcd <test_rs+0x11d>
+    0.00 :   55bd87:        jmp     0x55bdb9 <test_rs+0x109>
+    0.00 :   55bd89:        leaq    0x30(%rsp), %rdi
+    0.06 :   55bd8e:        callq   0x55b6f0 <core::ptr::drop_in_place<code_with_type::Buf>>
+    0.06 :   55bd93:        jmp     0x55bdb1 <test_rs+0x101>
+    0.00 :   55bd95:        callq   *0xa492f5(%rip)  # 0xfa5090 <_DYNAMIC+0x650>
+    0.00 :   55bd9b:        movq    %rax, %rcx
+    0.00 :   55bd9e:        movl    %edx, %eax
+    0.00 :   55bda0:        movq    %rcx, 0x88(%rsp)
+    0.00 :   55bda8:        movl    %eax, 0x90(%rsp)
+    0.00 :   55bdaf:        jmp     0x55bd95 <test_rs+0xe5>
+    0.00 :   55bdb1:        addq    $0x98, %rsp
+    0.00 :   55bdb8:        retq
+    0.00 :   55bdb9:        movq    0x18(%rsp), %rax
+    0.00 :   55bdbe:        movq    %rax, 0x48(%rsp)
+    0.00 :   55bdc3:        cmpq    $0x7b, 0x48(%rsp)
+    0.05 :   55bdc9:        je      0x55bde1 <test_rs+0x131>
+    0.00 :   55bdcb:        jmp     0x55bdf9 <test_rs+0x149>
+    0.00 :   55bdcd:        leaq    0xa3fc44(%rip), %rdi  # 0xf9ba18
+    0.00 :   55bdd4:        leaq    -0x150ffb(%rip), %rax  # 0x40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55bddb:        callq   *%rax
+    0.00 :   55bddd:        jmp     0x55bddf <test_rs+0x12f>
+    0.00 :   55bddf:        ud2
+    0.00 :   55bde1:        movq    0x48(%rsp), %rcx
+    0.00 :   55bde6:        movq    %rcx, %rax
+    0.00 :   55bde9:        addq    $0x1, %rax
+    0.00 :   55bded:        movq    %rax, 0x10(%rsp)
+    0.00 :   55bdf2:        cmpq    %rcx, %rax
+    0.00 :   55bdf5:        jb      0x55be21 <test_rs+0x171>
+    0.00 :   55bdf7:        jmp     0x55be15 <test_rs+0x165>
+    0.00 :   55bdf9:        movq    0x48(%rsp), %rdx
+    0.06 :   55bdfe:        movq    0x50(%rsp), %rcx
+    0.00 :   55be03:        movq    %rcx, %rax
+    0.00 :   55be06:        addq    %rdx, %rax
+    0.00 :   55be09:        movq    %rax, 0x8(%rsp)
+    0.06 :   55be0e:        cmpq    %rcx, %rax
+    0.00 :   55be11:        jb      0x55be42 <test_rs+0x192>
+    0.00 :   55be13:        jmp     0x55be33 <test_rs+0x183>
+    0.00 :   55be15:        movq    0x10(%rsp), %rax
+    0.00 :   55be1a:        movq    %rax, 0x48(%rsp)
+    0.00 :   55be1f:        jmp     0x55bdf9 <test_rs+0x149>
+    0.00 :   55be21:        leaq    0xa3fc08(%rip), %rdi  # 0xf9ba30
+    0.00 :   55be28:        leaq    -0x15104f(%rip), %rax  # 0x40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55be2f:        callq   *%rax
+    0.00 :   55be31:        jmp     0x55bddf <test_rs+0x12f>
+    0.00 :   55be33:        movq    0x8(%rsp), %rax
+    0.16 :   55be38:        movq    %rax, 0x50(%rsp)
+    0.00 :   55be3d:        jmp     0x55bd53 <test_rs+0xa3>
+    0.00 :   55be42:        leaq    0xa3fbff(%rip), %rdi  # 0xf9ba48
+    0.00 :   55be49:        leaq    -0x151070(%rip), %rax  # 0x40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55be50:        callq   *%rax
+    0.00 :   55be52:        jmp     0x55bddf <test_rs+0x12f>
+    0.00 :   55be54:        callq   *0xa49c2e(%rip)  # 0xfa5a88 <_DYNAMIC+0x1048>
+ Percent |	Source code & Disassembly of perf for cpu/cycles/Pu (1050 samples, percent: local period)
+---------------------------------------------------------------------------------------------------------
+         : 0      0x55bc40 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next>:
+    0.00 :   55bc40:        subq    $0x38, %rsp
+   17.94 :   55bc44:        movq    %rdi, 0x8(%rsp)
+    0.00 :   55bc49:        movq    %rdi, 0x18(%rsp)
+    3.18 :   55bc4e:        movq    %rdi, %rax
+    0.00 :   55bc51:        addq    $0x4, %rax
+    0.00 :   55bc55:        movq    %rdi, 0x28(%rsp)
+    0.00 :   55bc5a:        movq    %rax, 0x30(%rsp)
+    0.08 :   55bc5f:        movl    (%rdi), %eax
+    0.92 :   55bc61:        cmpl    0x4(%rdi), %eax
+    0.00 :   55bc64:        jb      0x55bc70 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x30>
+    0.00 :   55bc66:        movl    $0x0, 0x10(%rsp)
+    0.00 :   55bc6e:        jmp     0x55bca2 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x62>
+    0.00 :   55bc70:        movq    0x8(%rsp), %rax
+    1.82 :   55bc75:        movl    (%rax), %edi
+    0.08 :   55bc77:        movl    %edi, 0x4(%rsp)
+    0.00 :   55bc7b:        movl    %edi, 0x24(%rsp)
+    0.00 :   55bc7f:        movl    $0x1, %esi
+    0.00 :   55bc84:        callq   0x55b140 <<u32 as core::iter::range::Step>::forward_unchecked>
+    0.08 :   55bc89:        movq    0x8(%rsp), %rcx
+   73.65 :   55bc8e:        movl    %eax, %edx
+    0.00 :   55bc90:        movl    0x4(%rsp), %eax
+    0.00 :   55bc94:        movl    %edx, (%rcx)
+    0.27 :   55bc96:        movl    %eax, 0x14(%rsp)
+    1.58 :   55bc9a:        movl    $0x1, 0x10(%rsp)
+    0.00 :   55bca2:        movl    0x10(%rsp), %eax
+    0.08 :   55bca6:        movl    0x14(%rsp), %edx
+    0.33 :   55bcaa:        addq    $0x38, %rsp
+    0.00 :   55bcae:        retq
+ Percent |	Source code & Disassembly of perf for cpu/cycles/Pu (708 samples, percent: local period)
+--------------------------------------------------------------------------------------------------------
+         : 0      0x55b140 <<u32 as core::iter::range::Step>::forward_unchecked>:
+   25.56 :   55b140:        subq    $0x28, %rsp
+   64.05 :   55b144:        movl    %edi, 0xc(%rsp)
+    0.12 :   55b148:        movl    %edi, 0x14(%rsp)
+    0.00 :   55b14c:        movq    %rsi, 0x18(%rsp)
+    0.00 :   55b151:        movl    %esi, %eax
+    0.00 :   55b153:        movl    %eax, 0x10(%rsp)
+    0.43 :   55b157:        movl    %eax, 0x24(%rsp)
+    0.00 :   55b15b:        movl    0x10(%rsp), %esi
+    0.52 :   55b15f:        movl    0xc(%rsp), %edi
+    0.00 :   55b163:        leaq    0xa40826(%rip), %rdx  # 0xf9b990
+    0.00 :   55b16a:        callq   0x55b190 <core::num::<impl u32>::unchecked_add::precondition_check>
+    0.00 :   55b16f:        movl    0x10(%rsp), %ecx
+    0.00 :   55b173:        movl    0xc(%rsp), %eax
+    0.00 :   55b177:        addl    %ecx, %eax
+    0.00 :   55b179:        addq    $0x28, %rsp
+    9.32 :   55b17d:        retq
+Pipe perf annotate test
+Pipe annotate [Failed: missing target data type]
+ Percent |	Source code & Disassembly of perf for cpu/cycles/Pu (1824 samples, percent: local period)
+---------------------------------------------------------------------------------------------------------
+         : 0      0x55bc40 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next>:
+    0.00 :   55bc40:        subq    $0x38, %rsp
+   15.47 :   55bc44:        movq    %rdi, 0x8(%rsp)
+    0.00 :   55bc49:        movq    %rdi, 0x18(%rsp)
+    3.89 :   55bc4e:        movq    %rdi, %rax
+    0.00 :   55bc51:        addq    $0x4, %rax
+    0.00 :   55bc55:        movq    %rdi, 0x28(%rsp)
+    0.00 :   55bc5a:        movq    %rax, 0x30(%rsp)
+    0.00 :   55bc5f:        movl    (%rdi), %eax
+    7.62 :   55bc61:        cmpl    0x4(%rdi), %eax
+    0.00 :   55bc64:        jb      0x55bc70 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x30>
+    0.00 :   55bc66:        movl    $0x0, 0x10(%rsp)
+    0.00 :   55bc6e:        jmp     0x55bca2 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x62>
+    0.00 :   55bc70:        movq    0x8(%rsp), %rax
+   28.40 :   55bc75:        movl    (%rax), %edi
+    0.00 :   55bc77:        movl    %edi, 0x4(%rsp)
+    0.00 :   55bc7b:        movl    %edi, 0x24(%rsp)
+    0.00 :   55bc7f:        movl    $0x1, %esi
+    0.00 :   55bc84:        callq   0x55b140 <<u32 as core::iter::range::Step>::forward_unchecked>
+    0.05 :   55bc89:        movq    0x8(%rsp), %rcx
+   40.94 :   55bc8e:        movl    %eax, %edx
+    0.00 :   55bc90:        movl    0x4(%rsp), %eax
+    0.00 :   55bc94:        movl    %edx, (%rcx)
+    0.00 :   55bc96:        movl    %eax, 0x14(%rsp)
+    3.62 :   55bc9a:        movl    $0x1, 0x10(%rsp)
+    0.00 :   55bca2:        movl    0x10(%rsp), %eax
+    0.00 :   55bca6:        movl    0x14(%rsp), %edx
+    0.00 :   55bcaa:        addq    $0x38, %rsp
+    0.00 :   55bcae:        retq
+ Percent |	Source code & Disassembly of perf for cpu/cycles/Pu (871 samples, percent: local period)
+--------------------------------------------------------------------------------------------------------
+         : 0      0x55b190 <core::num::<impl u32>::unchecked_add::precondition_check>:
+    0.00 :   55b190:        subq    $0x68, %rsp
+   21.36 :   55b194:        movl    %edi, %eax
+   78.52 :   55b196:        movq    %rdx, (%rsp)
+    0.00 :   55b19a:        movl    %eax, 0x48(%rsp)
+    0.00 :   55b19e:        movl    %esi, 0x4c(%rsp)
+    0.00 :   55b1a2:        leaq    0x2922af(%rip), %rcx  # 0x7ed458
+    0.00 :   55b1a9:        movq    %rcx, 0x50(%rsp)
+    0.00 :   55b1ae:        movq    $0xb8, 0x58(%rsp)
+    0.00 :   55b1b7:        movl    %eax, %edi
+    0.00 :   55b1b9:        addl    %esi, %edi
+    0.00 :   55b1bb:        cmpl    %eax, %edi
+    0.00 :   55b1bd:        jb      0x55b1c4 <core::num::<impl u32>::unchecked_add::precondition_check+0x34>
+    0.00 :   55b1bf:        addq    $0x68, %rsp
+    0.11 :   55b1c3:        retq
+    0.00 :   55b1c4:        movq    (%rsp), %rdx
+    0.00 :   55b1c8:        leaq    0x292289(%rip), %rax  # 0x7ed458
+    0.00 :   55b1cf:        movq    %rax, 0x38(%rsp)
+    0.00 :   55b1d4:        movq    $0xb8, 0x40(%rsp)
+    0.00 :   55b1dd:        leaq    0x38(%rsp), %rax
+    0.00 :   55b1e2:        movq    %rax, 0x60(%rsp)
+    0.00 :   55b1e7:        leaq    0x38(%rsp), %rax
+    0.00 :   55b1ec:        movq    %rax, 0x8(%rsp)
+    0.00 :   55b1f1:        movq    $0x1, 0x10(%rsp)
+    0.00 :   55b1fa:        movq    0x27efdf(%rip), %rcx  # 0x7da1e0
+    0.00 :   55b201:        movq    0x27efe0(%rip), %rax  # 0x7da1e8
+    0.00 :   55b208:        movq    %rcx, 0x28(%rsp)
+    0.00 :   55b20d:        movq    %rax, 0x30(%rsp)
+    0.00 :   55b212:        movl    $0x8, %eax
+    0.00 :   55b217:        movq    %rax, 0x18(%rsp)
+    0.00 :   55b21c:        movq    $0x0, 0x20(%rsp)
+    0.00 :   55b225:        leaq    0x8(%rsp), %rdi
+    0.00 :   55b22a:        xorl    %esi, %esi
+    0.00 :   55b22c:        callq   *0xa4ad96(%rip)  # 0xfa5fc8 <_DYNAMIC+0x1588>
+ Percent |	Source code & Disassembly of perf for cpu/cycles/Pu (708 samples, percent: local period)
+--------------------------------------------------------------------------------------------------------
+         : 0      0x55b140 <<u32 as core::iter::range::Step>::forward_unchecked>:
+   18.36 :   55b140:        subq    $0x28, %rsp
+   78.53 :   55b144:        movl    %edi, 0xc(%rsp)
+    0.00 :   55b148:        movl    %edi, 0x14(%rsp)
+    0.00 :   55b14c:        movq    %rsi, 0x18(%rsp)
+    0.00 :   55b151:        movl    %esi, %eax
+    0.00 :   55b153:        movl    %eax, 0x10(%rsp)
+    3.11 :   55b157:        movl    %eax, 0x24(%rsp)
+    0.00 :   55b15b:        movl    0x10(%rsp), %esi
+    0.00 :   55b15f:        movl    0xc(%rsp), %edi
+    0.00 :   55b163:        leaq    0xa40826(%rip), %rdx  # 0xf9b990
+    0.00 :   55b16a:        callq   0x55b190 <core::num::<impl u32>::unchecked_add::precondition_check>
+    0.00 :   55b16f:        movl    0x10(%rsp), %ecx
+    0.00 :   55b173:        movl    0xc(%rsp), %eax
+    0.00 :   55b177:        addl    %ecx, %eax
+    0.00 :   55b179:        addq    $0x28, %rsp
+    0.00 :   55b17d:        retq
+---- end(-1) ----
+ 83: perf data type profiling tests                                  : FAILED!
+⬢ [acme@toolbx perf-tools-next]$
+
+Failed as root as well:
+
+root@number:/home/acme/git/perf-tools-next# tools/perf/perf test 'data type profiling'
+ 83: perf data type profiling tests                                  : FAILED!
+root@number:/home/acme/git/perf-tools-next# tools/perf/perf test -v 'data type profiling'
+--- start ---
+test child forked, pid 1455516
+Basic perf annotate test
+Basic annotate [Failed: missing target data type]
+ Percent |	Source code & Disassembly of perf for cpu/cycles/P (1359 samples, percent: local period)
+--------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3      Disassembly of section .text:
+         :
+         : 5      000000000055bcb0 <test_rs>:
+         : 6      data2: String,
+         : 7      data3: u64,
+         : 8      }
+         :
+         : 10     #[no_mangle]
+         : 11     pub extern "C" fn test_rs(count: u32) {
+    0.07 :   55bcb0: sub    $0x98,%rsp
+    0.07 :   55bcb7: mov    %edi,0x2c(%rsp)
+    0.07 :   55bcbb: mov    %edi,0x84(%rsp)
+         : 15     let mut b =  Buf { data1: 0, data2: String::from("data"), data3: 0};
+    0.00 :   55bcc2: lea    0x22b557(%rip),%rsi        # 787220 <_IO_stdin_used+0x20>
+    0.00 :   55bcc9: lea    0x60(%rsp),%rdi
+    0.22 :   55bcce: mov    $0x4,%edx
+    0.07 :   55bcd3: call   55baf0 <<alloc::string::String as core::convert::From<&str>>::from>
+    0.07 :   55bcd8: jmp    55bce0 <test_rs+0x30>
+         : 21     pub extern "C" fn test_rs(count: u32) {
+    0.00 :   55bcda: call   *0xa493b0(%rip)        # fa5090 <_DYNAMIC+0x650>
+    0.07 :   55bce0: mov    0x2c(%rsp),%esi
+         : 24     let mut b =  Buf { data1: 0, data2: String::from("data"), data3: 0};
+    0.29 :   55bce4: movq   $0x0,0x48(%rsp)
+    0.15 :   55bced: mov    0x70(%rsp),%rax
+    0.00 :   55bcf2: mov    %rax,0x40(%rsp)
+    0.07 :   55bcf7: movups 0x60(%rsp),%xmm0
+    0.00 :   55bcfc: movaps %xmm0,0x30(%rsp)
+    0.07 :   55bd01: movq   $0x0,0x50(%rsp)
+    0.00 :   55bd0a: mov    $0x1,%edi
+         :
+         : 33     for _ in 1..count {
+    0.00 :   55bd0f: call   55bae0 <<I as core::iter::traits::collect::IntoIterator>::into_iter>
+    0.07 :   55bd14: mov    %edx,0x24(%rsp)
+    0.37 :   55bd18: mov    %eax,0x28(%rsp)
+    0.00 :   55bd1c: jmp    55bd40 <test_rs+0x90>
+    0.00 :   55bd1e: lea    0x30(%rsp),%rdi
+         : 39     b.data1 += 1;
+         : 40     }
+         :
+         : 42     b.data3 += b.data1;
+         : 43     }
+         : 44     }
+    0.00 :   55bd23: call   55b6f0 <core::ptr::drop_in_place<code_with_type::Buf>>
+    0.00 :   55bd28: jmp    55bd95 <test_rs+0xe5>
+    0.00 :   55bd2a: mov    %rax,%rcx
+    0.00 :   55bd2d: mov    %edx,%eax
+    0.00 :   55bd2f: mov    %rcx,0x88(%rsp)
+    0.00 :   55bd37: mov    %eax,0x90(%rsp)
+    0.00 :   55bd3e: jmp    55bd1e <test_rs+0x6e>
+    0.00 :   55bd40: mov    0x24(%rsp),%eax
+    0.00 :   55bd44: mov    0x28(%rsp),%ecx
+         : 54     for _ in 1..count {
+    0.00 :   55bd48: mov    %ecx,0x7c(%rsp)
+    0.07 :   55bd4c: mov    %eax,0x80(%rsp)
+    2.08 :   55bd53: lea    0x7c(%rsp),%rdi
+    4.92 :   55bd58: call   55b820 <core::iter::range::<impl core::iter::traits::iterator::Iterator for core::ops::range::Range<A>>::next>
+   19.10 :   55bd5d: mov    %eax,0x20(%rsp)
+   17.78 :   55bd61: jmp    55bd63 <test_rs+0xb3>
+    1.55 :   55bd63: mov    0x20(%rsp),%eax
+    2.06 :   55bd67: mov    %eax,%eax
+    1.99 :   55bd69: test   $0x1,%rax
+    0.00 :   55bd6f: je     55bd89 <test_rs+0xd9>
+         : 65     b.data1 += 1;
+    1.83 :   55bd71: mov    0x48(%rsp),%rcx
+    1.84 :   55bd76: mov    %rcx,%rax
+    0.00 :   55bd79: add    $0x1,%rax
+    1.91 :   55bd7d: mov    %rax,0x18(%rsp)
+    2.72 :   55bd82: cmp    %rcx,%rax
+    0.00 :   55bd85: jb     55bdcd <test_rs+0x11d>
+    2.65 :   55bd87: jmp    55bdb9 <test_rs+0x109>
+    0.15 :   55bd89: lea    0x30(%rsp),%rdi
+         : 74     }
+    0.00 :   55bd8e: call   55b6f0 <core::ptr::drop_in_place<code_with_type::Buf>>
+    0.44 :   55bd93: jmp    55bdb1 <test_rs+0x101>
+         : 77     pub extern "C" fn test_rs(count: u32) {
+    0.00 :   55bd95: call   *0xa492f5(%rip)        # fa5090 <_DYNAMIC+0x650>
+    0.00 :   55bd9b: mov    %rax,%rcx
+    0.00 :   55bd9e: mov    %edx,%eax
+    0.00 :   55bda0: mov    %rcx,0x88(%rsp)
+    0.00 :   55bda8: mov    %eax,0x90(%rsp)
+    0.00 :   55bdaf: jmp    55bd95 <test_rs+0xe5>
+         : 84     }
+    0.07 :   55bdb1: add    $0x98,%rsp
+    0.07 :   55bdb8: ret
+    1.32 :   55bdb9: mov    0x18(%rsp),%rax
+         : 88     b.data1 += 1;
+    4.28 :   55bdbe: mov    %rax,0x48(%rsp)
+         : 90     if b.data1 == 123 {
+    4.50 :   55bdc3: cmpq   $0x7b,0x48(%rsp)
+    0.00 :   55bdc9: je     55bde1 <test_rs+0x131>
+    1.84 :   55bdcb: jmp    55bdf9 <test_rs+0x149>
+         : 94     b.data1 += 1;
+    0.00 :   55bdcd: lea    0xa3fc44(%rip),%rdi        # f9ba18 <workloads+0xd8>
+    0.00 :   55bdd4: lea    -0x150ffb(%rip),%rax        # 40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55bddb: call   *%rax
+    0.00 :   55bddd: jmp    55bddf <test_rs+0x12f>
+    0.00 :   55bddf: ud2
+         : 100    b.data1 += 1;
+    0.00 :   55bde1: mov    0x48(%rsp),%rcx
+    0.00 :   55bde6: mov    %rcx,%rax
+    0.00 :   55bde9: add    $0x1,%rax
+    0.00 :   55bded: mov    %rax,0x10(%rsp)
+    0.00 :   55bdf2: cmp    %rcx,%rax
+    0.00 :   55bdf5: jb     55be21 <test_rs+0x171>
+    0.00 :   55bdf7: jmp    55be15 <test_rs+0x165>
+         : 108    b.data3 += b.data1;
+    1.40 :   55bdf9: mov    0x48(%rsp),%rdx
+    1.25 :   55bdfe: mov    0x50(%rsp),%rcx
+    1.17 :   55be03: mov    %rcx,%rax
+    0.00 :   55be06: add    %rdx,%rax
+    3.30 :   55be09: mov    %rax,0x8(%rsp)
+    3.91 :   55be0e: cmp    %rcx,%rax
+    0.00 :   55be11: jb     55be42 <test_rs+0x192>
+    1.48 :   55be13: jmp    55be33 <test_rs+0x183>
+    0.00 :   55be15: mov    0x10(%rsp),%rax
+         : 118    b.data1 += 1;
+    0.00 :   55be1a: mov    %rax,0x48(%rsp)
+         : 120    if b.data1 == 123 {
+    0.00 :   55be1f: jmp    55bdf9 <test_rs+0x149>
+         : 122    b.data1 += 1;
+    0.00 :   55be21: lea    0xa3fc08(%rip),%rdi        # f9ba30 <workloads+0xf0>
+    0.00 :   55be28: lea    -0x15104f(%rip),%rax        # 40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55be2f: call   *%rax
+    0.00 :   55be31: jmp    55bddf <test_rs+0x12f>
+    4.27 :   55be33: mov    0x8(%rsp),%rax
+         : 128    b.data3 += b.data1;
+    4.87 :   55be38: mov    %rax,0x50(%rsp)
+         : 130    for _ in 1..count {
+    3.47 :   55be3d: jmp    55bd53 <test_rs+0xa3>
+         : 132    b.data3 += b.data1;
+    0.00 :   55be42: lea    0xa3fbff(%rip),%rdi        # f9ba48 <workloads+0x108>
+    0.00 :   55be49: lea    -0x151070(%rip),%rax        # 40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55be50: call   *%rax
+    0.00 :   55be52: jmp    55bddf <test_rs+0x12f>
+         : 137    pub extern "C" fn test_rs(count: u32) {
+    0.00 :   55be54: call   *0xa49c2e(%rip)        # fa5a88 <_DYNAMIC+0x1048>
+ Percent |	Source code & Disassembly of perf for cpu/cycles/P (1145 samples, percent: local period)
+--------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3      Disassembly of section .text:
+         :
+         : 5      000000000055bc40 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next>:
+    5.22 :   55bc40: sub    $0x38,%rsp
+    1.83 :   55bc44: mov    %rdi,0x8(%rsp)
+    2.01 :   55bc49: mov    %rdi,0x18(%rsp)
+    1.92 :   55bc4e: mov    %rdi,%rax
+    0.00 :   55bc51: add    $0x4,%rax
+    4.17 :   55bc55: mov    %rdi,0x28(%rsp)
+    2.54 :   55bc5a: mov    %rax,0x30(%rsp)
+    6.28 :   55bc5f: mov    (%rdi),%eax
+    5.77 :   55bc61: cmp    0x4(%rdi),%eax
+    0.00 :   55bc64: jb     55bc70 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x30>
+    0.96 :   55bc66: movl   $0x0,0x10(%rsp)
+    1.03 :   55bc6e: jmp    55bca2 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x62>
+    1.57 :   55bc70: mov    0x8(%rsp),%rax
+    2.73 :   55bc75: mov    (%rax),%edi
+    2.54 :   55bc77: mov    %edi,0x4(%rsp)
+    2.01 :   55bc7b: mov    %edi,0x24(%rsp)
+    1.75 :   55bc7f: mov    $0x1,%esi
+    5.73 :   55bc84: call   55b140 <<u32 as core::iter::range::Step>::forward_unchecked>
+    3.67 :   55bc89: mov    0x8(%rsp),%rcx
+    3.41 :   55bc8e: mov    %eax,%edx
+    3.57 :   55bc90: mov    0x4(%rsp),%eax
+    3.78 :   55bc94: mov    %edx,(%rcx)
+    2.27 :   55bc96: mov    %eax,0x14(%rsp)
+    6.12 :   55bc9a: movl   $0x1,0x10(%rsp)
+    2.79 :   55bca2: mov    0x10(%rsp),%eax
+   12.41 :   55bca6: mov    0x14(%rsp),%edx
+   10.04 :   55bcaa: add    $0x38,%rsp
+    3.87 :   55bcae: ret
+ Percent |	Source code & Disassembly of perf for cpu/cycles/P (636 samples, percent: local period)
+-------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3      Disassembly of section .text:
+         :
+         : 5      000000000055b140 <<u32 as core::iter::range::Step>::forward_unchecked>:
+    8.04 :   55b140: sub    $0x28,%rsp
+    4.23 :   55b144: mov    %edi,0xc(%rsp)
+    3.30 :   55b148: mov    %edi,0x14(%rsp)
+    5.36 :   55b14c: mov    %rsi,0x18(%rsp)
+    7.37 :   55b151: mov    %esi,%eax
+    4.72 :   55b153: mov    %eax,0x10(%rsp)
+    3.32 :   55b157: mov    %eax,0x24(%rsp)
+    3.59 :   55b15b: mov    0x10(%rsp),%esi
+    2.99 :   55b15f: mov    0xc(%rsp),%edi
+    3.92 :   55b163: lea    0xa40826(%rip),%rdx        # f9b990 <workloads+0x50>
+    8.49 :   55b16a: call   55b190 <core::num::<impl u32>::unchecked_add::precondition_check>
+    4.84 :   55b16f: mov    0x10(%rsp),%ecx
+    6.62 :   55b173: mov    0xc(%rsp),%eax
+    5.65 :   55b177: add    %ecx,%eax
+   21.09 :   55b179: add    $0x28,%rsp
+    6.47 :   55b17d: ret
+Pipe perf annotate test
+Pipe annotate [Failed: missing target data type]
+ Percent |	Source code & Disassembly of perf for cpu/cycles/P (1415 samples, percent: local period)
+--------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3      Disassembly of section .text:
+         :
+         : 5      000000000055bcb0 <test_rs>:
+         : 6      data2: String,
+         : 7      data3: u64,
+         : 8      }
+         :
+         : 10     #[no_mangle]
+         : 11     pub extern "C" fn test_rs(count: u32) {
+    0.07 :   55bcb0: sub    $0x98,%rsp
+    0.00 :   55bcb7: mov    %edi,0x2c(%rsp)
+    0.06 :   55bcbb: mov    %edi,0x84(%rsp)
+         : 15     let mut b =  Buf { data1: 0, data2: String::from("data"), data3: 0};
+    0.14 :   55bcc2: lea    0x22b557(%rip),%rsi        # 787220 <_IO_stdin_used+0x20>
+    0.07 :   55bcc9: lea    0x60(%rsp),%rdi
+    0.00 :   55bcce: mov    $0x4,%edx
+    0.00 :   55bcd3: call   55baf0 <<alloc::string::String as core::convert::From<&str>>::from>
+    0.00 :   55bcd8: jmp    55bce0 <test_rs+0x30>
+         : 21     pub extern "C" fn test_rs(count: u32) {
+    0.00 :   55bcda: call   *0xa493b0(%rip)        # fa5090 <_DYNAMIC+0x650>
+    0.07 :   55bce0: mov    0x2c(%rsp),%esi
+         : 24     let mut b =  Buf { data1: 0, data2: String::from("data"), data3: 0};
+    0.07 :   55bce4: movq   $0x0,0x48(%rsp)
+    0.21 :   55bced: mov    0x70(%rsp),%rax
+    0.14 :   55bcf2: mov    %rax,0x40(%rsp)
+    0.00 :   55bcf7: movups 0x60(%rsp),%xmm0
+    0.00 :   55bcfc: movaps %xmm0,0x30(%rsp)
+    0.00 :   55bd01: movq   $0x0,0x50(%rsp)
+    0.00 :   55bd0a: mov    $0x1,%edi
+         :
+         : 33     for _ in 1..count {
+    0.07 :   55bd0f: call   55bae0 <<I as core::iter::traits::collect::IntoIterator>::into_iter>
+    0.42 :   55bd14: mov    %edx,0x24(%rsp)
+    0.07 :   55bd18: mov    %eax,0x28(%rsp)
+    0.07 :   55bd1c: jmp    55bd40 <test_rs+0x90>
+    0.00 :   55bd1e: lea    0x30(%rsp),%rdi
+         : 39     b.data1 += 1;
+         : 40     }
+         :
+         : 42     b.data3 += b.data1;
+         : 43     }
+         : 44     }
+    0.00 :   55bd23: call   55b6f0 <core::ptr::drop_in_place<code_with_type::Buf>>
+    0.00 :   55bd28: jmp    55bd95 <test_rs+0xe5>
+    0.00 :   55bd2a: mov    %rax,%rcx
+    0.00 :   55bd2d: mov    %edx,%eax
+    0.00 :   55bd2f: mov    %rcx,0x88(%rsp)
+    0.00 :   55bd37: mov    %eax,0x90(%rsp)
+    0.00 :   55bd3e: jmp    55bd1e <test_rs+0x6e>
+    0.00 :   55bd40: mov    0x24(%rsp),%eax
+    0.00 :   55bd44: mov    0x28(%rsp),%ecx
+         : 54     for _ in 1..count {
+    0.00 :   55bd48: mov    %ecx,0x7c(%rsp)
+    0.00 :   55bd4c: mov    %eax,0x80(%rsp)
+    3.18 :   55bd53: lea    0x7c(%rsp),%rdi
+    3.46 :   55bd58: call   55b820 <core::iter::range::<impl core::iter::traits::iterator::Iterator for core::ops::range::Range<A>>::next>
+   18.28 :   55bd5d: mov    %eax,0x20(%rsp)
+   18.43 :   55bd61: jmp    55bd63 <test_rs+0xb3>
+    1.84 :   55bd63: mov    0x20(%rsp),%eax
+    1.34 :   55bd67: mov    %eax,%eax
+    1.55 :   55bd69: test   $0x1,%rax
+    0.00 :   55bd6f: je     55bd89 <test_rs+0xd9>
+         : 65     b.data1 += 1;
+    2.62 :   55bd71: mov    0x48(%rsp),%rcx
+    2.13 :   55bd76: mov    %rcx,%rax
+    0.00 :   55bd79: add    $0x1,%rax
+    1.64 :   55bd7d: mov    %rax,0x18(%rsp)
+    3.11 :   55bd82: cmp    %rcx,%rax
+    0.00 :   55bd85: jb     55bdcd <test_rs+0x11d>
+    2.26 :   55bd87: jmp    55bdb9 <test_rs+0x109>
+    0.00 :   55bd89: lea    0x30(%rsp),%rdi
+         : 74     }
+    0.21 :   55bd8e: call   55b6f0 <core::ptr::drop_in_place<code_with_type::Buf>>
+    0.28 :   55bd93: jmp    55bdb1 <test_rs+0x101>
+         : 77     pub extern "C" fn test_rs(count: u32) {
+    0.00 :   55bd95: call   *0xa492f5(%rip)        # fa5090 <_DYNAMIC+0x650>
+    0.00 :   55bd9b: mov    %rax,%rcx
+    0.00 :   55bd9e: mov    %edx,%eax
+    0.00 :   55bda0: mov    %rcx,0x88(%rsp)
+    0.00 :   55bda8: mov    %eax,0x90(%rsp)
+    0.00 :   55bdaf: jmp    55bd95 <test_rs+0xe5>
+         : 84     }
+    0.00 :   55bdb1: add    $0x98,%rsp
+    0.00 :   55bdb8: ret
+    1.90 :   55bdb9: mov    0x18(%rsp),%rax
+         : 88     b.data1 += 1;
+    4.70 :   55bdbe: mov    %rax,0x48(%rsp)
+         : 90     if b.data1 == 123 {
+    4.95 :   55bdc3: cmpq   $0x7b,0x48(%rsp)
+    0.00 :   55bdc9: je     55bde1 <test_rs+0x131>
+    1.63 :   55bdcb: jmp    55bdf9 <test_rs+0x149>
+         : 94     b.data1 += 1;
+    0.00 :   55bdcd: lea    0xa3fc44(%rip),%rdi        # f9ba18 <workloads+0xd8>
+    0.00 :   55bdd4: lea    -0x150ffb(%rip),%rax        # 40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55bddb: call   *%rax
+    0.00 :   55bddd: jmp    55bddf <test_rs+0x12f>
+    0.00 :   55bddf: ud2
+         : 100    b.data1 += 1;
+    0.00 :   55bde1: mov    0x48(%rsp),%rcx
+    0.00 :   55bde6: mov    %rcx,%rax
+    0.00 :   55bde9: add    $0x1,%rax
+    0.00 :   55bded: mov    %rax,0x10(%rsp)
+    0.00 :   55bdf2: cmp    %rcx,%rax
+    0.00 :   55bdf5: jb     55be21 <test_rs+0x171>
+    0.00 :   55bdf7: jmp    55be15 <test_rs+0x165>
+         : 108    b.data3 += b.data1;
+    1.20 :   55bdf9: mov    0x48(%rsp),%rdx
+    1.63 :   55bdfe: mov    0x50(%rsp),%rcx
+    1.36 :   55be03: mov    %rcx,%rax
+    0.00 :   55be06: add    %rdx,%rax
+    3.11 :   55be09: mov    %rax,0x8(%rsp)
+    2.89 :   55be0e: cmp    %rcx,%rax
+    0.00 :   55be11: jb     55be42 <test_rs+0x192>
+    1.90 :   55be13: jmp    55be33 <test_rs+0x183>
+    0.00 :   55be15: mov    0x10(%rsp),%rax
+         : 118    b.data1 += 1;
+    0.00 :   55be1a: mov    %rax,0x48(%rsp)
+         : 120    if b.data1 == 123 {
+    0.00 :   55be1f: jmp    55bdf9 <test_rs+0x149>
+         : 122    b.data1 += 1;
+    0.00 :   55be21: lea    0xa3fc08(%rip),%rdi        # f9ba30 <workloads+0xf0>
+    0.00 :   55be28: lea    -0x15104f(%rip),%rax        # 40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55be2f: call   *%rax
+    0.00 :   55be31: jmp    55bddf <test_rs+0x12f>
+    4.86 :   55be33: mov    0x8(%rsp),%rax
+         : 128    b.data3 += b.data1;
+    4.60 :   55be38: mov    %rax,0x50(%rsp)
+         : 130    for _ in 1..count {
+    3.46 :   55be3d: jmp    55bd53 <test_rs+0xa3>
+         : 132    b.data3 += b.data1;
+    0.00 :   55be42: lea    0xa3fbff(%rip),%rdi        # f9ba48 <workloads+0x108>
+    0.00 :   55be49: lea    -0x151070(%rip),%rax        # 40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55be50: call   *%rax
+    0.00 :   55be52: jmp    55bddf <test_rs+0x12f>
+         : 137    pub extern "C" fn test_rs(count: u32) {
+    0.00 :   55be54: call   *0xa49c2e(%rip)        # fa5a88 <_DYNAMIC+0x1048>
+ Percent |	Source code & Disassembly of perf for cpu/cycles/P (1142 samples, percent: local period)
+--------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3      Disassembly of section .text:
+         :
+         : 5      000000000055bc40 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next>:
+    4.12 :   55bc40: sub    $0x38,%rsp
+    2.04 :   55bc44: mov    %rdi,0x8(%rsp)
+    2.11 :   55bc49: mov    %rdi,0x18(%rsp)
+    2.80 :   55bc4e: mov    %rdi,%rax
+    0.00 :   55bc51: add    $0x4,%rax
+    3.95 :   55bc55: mov    %rdi,0x28(%rsp)
+    2.28 :   55bc5a: mov    %rax,0x30(%rsp)
+    6.73 :   55bc5f: mov    (%rdi),%eax
+    5.17 :   55bc61: cmp    0x4(%rdi),%eax
+    0.00 :   55bc64: jb     55bc70 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x30>
+    1.14 :   55bc66: movl   $0x0,0x10(%rsp)
+    0.70 :   55bc6e: jmp    55bca2 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x62>
+    1.67 :   55bc70: mov    0x8(%rsp),%rax
+    2.20 :   55bc75: mov    (%rax),%edi
+    1.75 :   55bc77: mov    %edi,0x4(%rsp)
+    2.63 :   55bc7b: mov    %edi,0x24(%rsp)
+    2.18 :   55bc7f: mov    $0x1,%esi
+    5.15 :   55bc84: call   55b140 <<u32 as core::iter::range::Step>::forward_unchecked>
+    2.71 :   55bc89: mov    0x8(%rsp),%rcx
+    3.43 :   55bc8e: mov    %eax,%edx
+    2.89 :   55bc90: mov    0x4(%rsp),%eax
+    2.56 :   55bc94: mov    %edx,(%rcx)
+    2.44 :   55bc96: mov    %eax,0x14(%rsp)
+    6.22 :   55bc9a: movl   $0x1,0x10(%rsp)
+    3.06 :   55bca2: mov    0x10(%rsp),%eax
+   14.55 :   55bca6: mov    0x14(%rsp),%edx
+   11.64 :   55bcaa: add    $0x38,%rsp
+    3.87 :   55bcae: ret
+ Percent |	Source code & Disassembly of perf for cpu/cycles/P (590 samples, percent: local period)
+-------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3      Disassembly of section .text:
+         :
+         : 5      000000000055b140 <<u32 as core::iter::range::Step>::forward_unchecked>:
+    8.72 :   55b140: sub    $0x28,%rsp
+    2.54 :   55b144: mov    %edi,0xc(%rsp)
+    3.90 :   55b148: mov    %edi,0x14(%rsp)
+    4.61 :   55b14c: mov    %rsi,0x18(%rsp)
+    6.76 :   55b151: mov    %esi,%eax
+    3.74 :   55b153: mov    %eax,0x10(%rsp)
+    3.22 :   55b157: mov    %eax,0x24(%rsp)
+    4.10 :   55b15b: mov    0x10(%rsp),%esi
+    3.37 :   55b15f: mov    0xc(%rsp),%edi
+    4.57 :   55b163: lea    0xa40826(%rip),%rdx        # f9b990 <workloads+0x50>
+    8.30 :   55b16a: call   55b190 <core::num::<impl u32>::unchecked_add::precondition_check>
+    6.43 :   55b16f: mov    0x10(%rsp),%ecx
+    7.13 :   55b173: mov    0xc(%rsp),%eax
+    3.85 :   55b177: add    %ecx,%eax
+   21.24 :   55b179: add    $0x28,%rsp
+    7.51 :   55b17d: ret
+---- end(-1) ----
+ 83: perf data type profiling tests                                  : FAILED!
+root@number:/home/acme/git/perf-tools-next#
+
+
+Ok, this is on a:
+
+root@five:~# grep "model name" -m1 /proc/cpuinfo
+model name	: AMD Ryzen 9 5950X 16-Core Processor
+root@five:~#
+
+Now trying on a:
+
+acme@x1:~/git/perf-tools-next$ grep -m1 "model name" /proc/cpuinfo 
+model name	: 13th Gen Intel(R) Core(TM) i7-1365U
+acme@x1:~/git/perf-tools-next$ 
+
+⬢ [acme@toolbx perf-tools-next]$ tools/perf/perf test "data type profiling"
+ 83: perf data type profiling tests                                  : FAILED!
+⬢ [acme@toolbx perf-tools-next]$ tools/perf/perf test -v "data type profiling"
+Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+--- start ---
+test child forked, pid 615260
+Basic perf annotate test
+Basic annotate [Failed: missing target data type]
+ Percent |	Source code & Disassembly of perf for cpu_atom/cycles/Pu (108 samples, percent: local period)
+-------------------------------------------------------------------------------------------------------------
+         : 0      0x55bcb0 <test_rs>:
+    0.00 :   55bcb0:        subq    $0x98, %rsp
+    0.00 :   55bcb7:        movl    %edi, 0x2c(%rsp)
+    0.00 :   55bcbb:        movl    %edi, 0x84(%rsp)
+    0.00 :   55bcc2:        leaq    0x22b557(%rip), %rsi  # 0x787220
+    0.00 :   55bcc9:        leaq    0x60(%rsp), %rdi
+    0.00 :   55bcce:        movl    $0x4, %edx
+    0.00 :   55bcd3:        callq   0x55baf0 <<alloc::string::String as core::convert::From<&str>>::from>
+    0.00 :   55bcd8:        jmp     0x55bce0 <test_rs+0x30>
+    0.00 :   55bcda:        callq   *0xa493b0(%rip)  # 0xfa5090 <_DYNAMIC+0x650>
+    0.00 :   55bce0:        movl    0x2c(%rsp), %esi
+    0.00 :   55bce4:        movq    $0x0, 0x48(%rsp)
+    0.00 :   55bced:        movq    0x70(%rsp), %rax
+    0.00 :   55bcf2:        movq    %rax, 0x40(%rsp)
+    1.92 :   55bcf7:        movups  0x60(%rsp), %xmm0
+    0.00 :   55bcfc:        movaps  %xmm0, 0x30(%rsp)
+    0.00 :   55bd01:        movq    $0x0, 0x50(%rsp)
+    0.00 :   55bd0a:        movl    $0x1, %edi
+    0.00 :   55bd0f:        callq   0x55bae0 <<I as core::iter::traits::collect::IntoIterator>::into_iter>
+    0.00 :   55bd14:        movl    %edx, 0x24(%rsp)
+    0.00 :   55bd18:        movl    %eax, 0x28(%rsp)
+    0.00 :   55bd1c:        jmp     0x55bd40 <test_rs+0x90>
+    0.00 :   55bd1e:        leaq    0x30(%rsp), %rdi
+    0.00 :   55bd23:        callq   0x55b6f0 <core::ptr::drop_in_place<code_with_type::Buf>>
+    0.00 :   55bd28:        jmp     0x55bd95 <test_rs+0xe5>
+    0.00 :   55bd2a:        movq    %rax, %rcx
+    0.00 :   55bd2d:        movl    %edx, %eax
+    0.00 :   55bd2f:        movq    %rcx, 0x88(%rsp)
+    0.00 :   55bd37:        movl    %eax, 0x90(%rsp)
+    0.00 :   55bd3e:        jmp     0x55bd1e <test_rs+0x6e>
+    0.96 :   55bd40:        movl    0x24(%rsp), %eax
+    0.00 :   55bd44:        movl    0x28(%rsp), %ecx
+    0.00 :   55bd48:        movl    %ecx, 0x7c(%rsp)
+    0.00 :   55bd4c:        movl    %eax, 0x80(%rsp)
+    1.92 :   55bd53:        leaq    0x7c(%rsp), %rdi
+    0.96 :   55bd58:        callq   0x55b820 <core::iter::range::<impl core::iter::traits::iterator::Iterator for core::ops::range::Range<A>>::next>
+    7.56 :   55bd5d:        movl    %eax, 0x20(%rsp)
+    4.10 :   55bd61:        jmp     0x55bd63 <test_rs+0xb3>
+    3.83 :   55bd63:        movl    0x20(%rsp), %eax
+    2.88 :   55bd67:        movl    %eax, %eax
+    1.92 :   55bd69:        testq   $0x1, %rax
+    1.92 :   55bd6f:        je      0x55bd89 <test_rs+0xd9>
+    2.88 :   55bd71:        movq    0x48(%rsp), %rcx
+    5.71 :   55bd76:        movq    %rcx, %rax
+    3.84 :   55bd79:        addq    $0x1, %rax
+    1.93 :   55bd7d:        movq    %rax, 0x18(%rsp)
+    3.66 :   55bd82:        cmpq    %rcx, %rax
+    1.48 :   55bd85:        jb      0x55bdcd <test_rs+0x11d>
+    0.96 :   55bd87:        jmp     0x55bdb9 <test_rs+0x109>
+    0.00 :   55bd89:        leaq    0x30(%rsp), %rdi
+    0.00 :   55bd8e:        callq   0x55b6f0 <core::ptr::drop_in_place<code_with_type::Buf>>
+    0.00 :   55bd93:        jmp     0x55bdb1 <test_rs+0x101>
+    0.00 :   55bd95:        callq   *0xa492f5(%rip)  # 0xfa5090 <_DYNAMIC+0x650>
+    0.00 :   55bd9b:        movq    %rax, %rcx
+    0.00 :   55bd9e:        movl    %edx, %eax
+    0.00 :   55bda0:        movq    %rcx, 0x88(%rsp)
+    0.00 :   55bda8:        movl    %eax, 0x90(%rsp)
+    0.00 :   55bdaf:        jmp     0x55bd95 <test_rs+0xe5>
+    0.00 :   55bdb1:        addq    $0x98, %rsp
+    0.00 :   55bdb8:        retq
+    3.81 :   55bdb9:        movq    0x18(%rsp), %rax
+    1.91 :   55bdbe:        movq    %rax, 0x48(%rsp)
+    3.44 :   55bdc3:        cmpq    $0x7b, 0x48(%rsp)
+    1.92 :   55bdc9:        je      0x55bde1 <test_rs+0x131>
+    3.84 :   55bdcb:        jmp     0x55bdf9 <test_rs+0x149>
+    0.00 :   55bdcd:        leaq    0xa3fc44(%rip), %rdi  # 0xf9ba18
+    0.00 :   55bdd4:        leaq    -0x150ffb(%rip), %rax  # 0x40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55bddb:        callq   *%rax
+    0.00 :   55bddd:        jmp     0x55bddf <test_rs+0x12f>
+    0.00 :   55bddf:        ud2
+    0.00 :   55bde1:        movq    0x48(%rsp), %rcx
+    0.00 :   55bde6:        movq    %rcx, %rax
+    0.00 :   55bde9:        addq    $0x1, %rax
+    0.00 :   55bded:        movq    %rax, 0x10(%rsp)
+    0.00 :   55bdf2:        cmpq    %rcx, %rax
+    0.00 :   55bdf5:        jb      0x55be21 <test_rs+0x171>
+    0.00 :   55bdf7:        jmp     0x55be15 <test_rs+0x165>
+    1.92 :   55bdf9:        movq    0x48(%rsp), %rdx
+    2.88 :   55bdfe:        movq    0x50(%rsp), %rcx
+    5.76 :   55be03:        movq    %rcx, %rax
+    0.96 :   55be06:        addq    %rdx, %rax
+    4.80 :   55be09:        movq    %rax, 0x8(%rsp)
+    1.92 :   55be0e:        cmpq    %rcx, %rax
+    3.20 :   55be11:        jb      0x55be42 <test_rs+0x192>
+    3.84 :   55be13:        jmp     0x55be33 <test_rs+0x183>
+    0.00 :   55be15:        movq    0x10(%rsp), %rax
+    0.00 :   55be1a:        movq    %rax, 0x48(%rsp)
+    0.00 :   55be1f:        jmp     0x55bdf9 <test_rs+0x149>
+    0.00 :   55be21:        leaq    0xa3fc08(%rip), %rdi  # 0xf9ba30
+    0.00 :   55be28:        leaq    -0x15104f(%rip), %rax  # 0x40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55be2f:        callq   *%rax
+    0.00 :   55be31:        jmp     0x55bddf <test_rs+0x12f>
+    2.35 :   55be33:        movq    0x8(%rsp), %rax
+    9.00 :   55be38:        movq    %rax, 0x50(%rsp)
+    0.00 :   55be3d:        jmp     0x55bd53 <test_rs+0xa3>
+    0.00 :   55be42:        leaq    0xa3fbff(%rip), %rdi  # 0xf9ba48
+    0.00 :   55be49:        leaq    -0x151070(%rip), %rax  # 0x40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55be50:        callq   *%rax
+    0.00 :   55be52:        jmp     0x55bddf <test_rs+0x12f>
+    0.00 :   55be54:        callq   *0xa49c2e(%rip)  # 0xfa5a88 <_DYNAMIC+0x1048>
+ Percent |	Source code & Disassembly of perf for cpu_atom/cycles/Pu (99 samples, percent: local period)
+------------------------------------------------------------------------------------------------------------
+         : 0      0x55bc40 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next>:
+    3.13 :   55bc40:        subq    $0x38, %rsp
+    6.23 :   55bc44:        movq    %rdi, 0x8(%rsp)
+    4.63 :   55bc49:        movq    %rdi, 0x18(%rsp)
+    5.15 :   55bc4e:        movq    %rdi, %rax
+    5.22 :   55bc51:        addq    $0x4, %rax
+    1.04 :   55bc55:        movq    %rdi, 0x28(%rsp)
+    3.13 :   55bc5a:        movq    %rax, 0x30(%rsp)
+    2.09 :   55bc5f:        movl    (%rdi), %eax
+    1.04 :   55bc61:        cmpl    0x4(%rdi), %eax
+    1.04 :   55bc64:        jb      0x55bc70 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x30>
+    3.13 :   55bc66:        movl    $0x0, 0x10(%rsp)
+    0.00 :   55bc6e:        jmp     0x55bca2 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x62>
+    4.01 :   55bc70:        movq    0x8(%rsp), %rax
+    5.22 :   55bc75:        movl    (%rax), %edi
+    4.98 :   55bc77:        movl    %edi, 0x4(%rsp)
+    3.06 :   55bc7b:        movl    %edi, 0x24(%rsp)
+    4.18 :   55bc7f:        movl    $0x1, %esi
+    2.08 :   55bc84:        callq   0x55b140 <<u32 as core::iter::range::Step>::forward_unchecked>
+    4.55 :   55bc89:        movq    0x8(%rsp), %rcx
+    7.23 :   55bc8e:        movl    %eax, %edx
+    3.61 :   55bc90:        movl    0x4(%rsp), %eax
+    1.49 :   55bc94:        movl    %edx, (%rcx)
+    4.14 :   55bc96:        movl    %eax, 0x14(%rsp)
+    6.22 :   55bc9a:        movl    $0x1, 0x10(%rsp)
+    4.04 :   55bca2:        movl    0x10(%rsp), %eax
+    4.09 :   55bca6:        movl    0x14(%rsp), %edx
+    3.13 :   55bcaa:        addq    $0x38, %rsp
+    2.09 :   55bcae:        retq
+ Percent |	Source code & Disassembly of perf for cpu_atom/cycles/Pu (69 samples, percent: local period)
+------------------------------------------------------------------------------------------------------------
+         : 0      0x55b140 <<u32 as core::iter::range::Step>::forward_unchecked>:
+   12.97 :   55b140:        subq    $0x28, %rsp
+    3.00 :   55b144:        movl    %edi, 0xc(%rsp)
+    3.00 :   55b148:        movl    %edi, 0x14(%rsp)
+   10.49 :   55b14c:        movq    %rsi, 0x18(%rsp)
+    8.98 :   55b151:        movl    %esi, %eax
+    7.11 :   55b153:        movl    %eax, 0x10(%rsp)
+    5.99 :   55b157:        movl    %eax, 0x24(%rsp)
+    8.67 :   55b15b:        movl    0x10(%rsp), %esi
+    0.00 :   55b15f:        movl    0xc(%rsp), %edi
+    1.50 :   55b163:        leaq    0xa40826(%rip), %rdx  # 0xf9b990
+    4.50 :   55b16a:        callq   0x55b190 <core::num::<impl u32>::unchecked_add::precondition_check>
+   21.79 :   55b16f:        movl    0x10(%rsp), %ecx
+    4.49 :   55b173:        movl    0xc(%rsp), %eax
+    3.00 :   55b177:        addl    %ecx, %eax
+    1.50 :   55b179:        addq    $0x28, %rsp
+    3.00 :   55b17d:        retq
+ Percent |	Source code & Disassembly of perf for cpu_atom/cycles/Pu (65 samples, percent: local period)
+------------------------------------------------------------------------------------------------------------
+         : 0      0x55b190 <core::num::<impl u32>::unchecked_add::precondition_check>:
+   12.87 :   55b190:        subq    $0x68, %rsp
+    8.03 :   55b194:        movl    %edi, %eax
+   17.01 :   55b196:        movq    %rdx, (%rsp)
+    7.53 :   55b19a:        movl    %eax, 0x48(%rsp)
+    2.92 :   55b19e:        movl    %esi, 0x4c(%rsp)
+    6.44 :   55b1a2:        leaq    0x2922af(%rip), %rcx  # 0x7ed458
+    1.60 :   55b1a9:        movq    %rcx, 0x50(%rsp)
+    3.22 :   55b1ae:        movq    $0xb8, 0x58(%rsp)
+    3.67 :   55b1b7:        movl    %eax, %edi
+    9.65 :   55b1b9:        addl    %esi, %edi
+    6.43 :   55b1bb:        cmpl    %eax, %edi
+    9.63 :   55b1bd:        jb      0x55b1c4 <core::num::<impl u32>::unchecked_add::precondition_check+0x34>
+    4.56 :   55b1bf:        addq    $0x68, %rsp
+    6.44 :   55b1c3:        retq
+    0.00 :   55b1c4:        movq    (%rsp), %rdx
+    0.00 :   55b1c8:        leaq    0x292289(%rip), %rax  # 0x7ed458
+    0.00 :   55b1cf:        movq    %rax, 0x38(%rsp)
+    0.00 :   55b1d4:        movq    $0xb8, 0x40(%rsp)
+    0.00 :   55b1dd:        leaq    0x38(%rsp), %rax
+    0.00 :   55b1e2:        movq    %rax, 0x60(%rsp)
+    0.00 :   55b1e7:        leaq    0x38(%rsp), %rax
+    0.00 :   55b1ec:        movq    %rax, 0x8(%rsp)
+    0.00 :   55b1f1:        movq    $0x1, 0x10(%rsp)
+    0.00 :   55b1fa:        movq    0x27efdf(%rip), %rcx  # 0x7da1e0
+    0.00 :   55b201:        movq    0x27efe0(%rip), %rax  # 0x7da1e8
+    0.00 :   55b208:        movq    %rcx, 0x28(%rsp)
+    0.00 :   55b20d:        movq    %rax, 0x30(%rsp)
+    0.00 :   55b212:        movl    $0x8, %eax
+    0.00 :   55b217:        movq    %rax, 0x18(%rsp)
+    0.00 :   55b21c:        movq    $0x0, 0x20(%rsp)
+    0.00 :   55b225:        leaq    0x8(%rsp), %rdi
+    0.00 :   55b22a:        xorl    %esi, %esi
+    0.00 :   55b22c:        callq   *0xa4ad96(%rip)  # 0xfa5fc8 <_DYNAMIC+0x1588>
+ Percent |	Source code & Disassembly of perf for cpu_core/cycles/Pu (1046 samples, percent: local period)
+--------------------------------------------------------------------------------------------------------------
+         : 0      0x55bc40 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next>:
+    0.00 :   55bc40:        subq    $0x38, %rsp
+    0.00 :   55bc44:        movq    %rdi, 0x8(%rsp)
+    0.00 :   55bc49:        movq    %rdi, 0x18(%rsp)
+   16.36 :   55bc4e:        movq    %rdi, %rax
+    0.00 :   55bc51:        addq    $0x4, %rax
+    0.00 :   55bc55:        movq    %rdi, 0x28(%rsp)
+    0.00 :   55bc5a:        movq    %rax, 0x30(%rsp)
+    7.25 :   55bc5f:        movl    (%rdi), %eax
+    0.00 :   55bc61:        cmpl    0x4(%rdi), %eax
+   15.21 :   55bc64:        jb      0x55bc70 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x30>
+    0.00 :   55bc66:        movl    $0x0, 0x10(%rsp)
+    0.10 :   55bc6e:        jmp     0x55bca2 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x62>
+    0.00 :   55bc70:        movq    0x8(%rsp), %rax
+    0.10 :   55bc75:        movl    (%rax), %edi
+    0.00 :   55bc77:        movl    %edi, 0x4(%rsp)
+   14.93 :   55bc7b:        movl    %edi, 0x24(%rsp)
+    0.00 :   55bc7f:        movl    $0x1, %esi
+    1.05 :   55bc84:        callq   0x55b140 <<u32 as core::iter::range::Step>::forward_unchecked>
+    0.00 :   55bc89:        movq    0x8(%rsp), %rcx
+    0.00 :   55bc8e:        movl    %eax, %edx
+    0.00 :   55bc90:        movl    0x4(%rsp), %eax
+   15.51 :   55bc94:        movl    %edx, (%rcx)
+    0.00 :   55bc96:        movl    %eax, 0x14(%rsp)
+    0.00 :   55bc9a:        movl    $0x1, 0x10(%rsp)
+    0.00 :   55bca2:        movl    0x10(%rsp), %eax
+   14.21 :   55bca6:        movl    0x14(%rsp), %edx
+    0.00 :   55bcaa:        addq    $0x38, %rsp
+   15.28 :   55bcae:        retq
+ Percent |	Source code & Disassembly of perf for cpu_core/cycles/Pu (954 samples, percent: local period)
+-------------------------------------------------------------------------------------------------------------
+         : 0      0x55bcb0 <test_rs>:
+    0.00 :   55bcb0:        subq    $0x98, %rsp
+    0.00 :   55bcb7:        movl    %edi, 0x2c(%rsp)
+    0.00 :   55bcbb:        movl    %edi, 0x84(%rsp)
+    0.10 :   55bcc2:        leaq    0x22b557(%rip), %rsi  # 0x787220
+    0.00 :   55bcc9:        leaq    0x60(%rsp), %rdi
+    0.00 :   55bcce:        movl    $0x4, %edx
+    0.00 :   55bcd3:        callq   0x55baf0 <<alloc::string::String as core::convert::From<&str>>::from>
+    0.10 :   55bcd8:        jmp     0x55bce0 <test_rs+0x30>
+    0.00 :   55bcda:        callq   *0xa493b0(%rip)  # 0xfa5090 <_DYNAMIC+0x650>
+    0.00 :   55bce0:        movl    0x2c(%rsp), %esi
+    0.00 :   55bce4:        movq    $0x0, 0x48(%rsp)
+    0.11 :   55bced:        movq    0x70(%rsp), %rax
+    0.21 :   55bcf2:        movq    %rax, 0x40(%rsp)
+    2.20 :   55bcf7:        movups  0x60(%rsp), %xmm0
+    0.73 :   55bcfc:        movaps  %xmm0, 0x30(%rsp)
+    0.00 :   55bd01:        movq    $0x0, 0x50(%rsp)
+    0.00 :   55bd0a:        movl    $0x1, %edi
+    0.00 :   55bd0f:        callq   0x55bae0 <<I as core::iter::traits::collect::IntoIterator>::into_iter>
+    0.00 :   55bd14:        movl    %edx, 0x24(%rsp)
+    0.00 :   55bd18:        movl    %eax, 0x28(%rsp)
+    0.10 :   55bd1c:        jmp     0x55bd40 <test_rs+0x90>
+    0.00 :   55bd1e:        leaq    0x30(%rsp), %rdi
+    0.00 :   55bd23:        callq   0x55b6f0 <core::ptr::drop_in_place<code_with_type::Buf>>
+    0.00 :   55bd28:        jmp     0x55bd95 <test_rs+0xe5>
+    0.00 :   55bd2a:        movq    %rax, %rcx
+    0.00 :   55bd2d:        movl    %edx, %eax
+    0.00 :   55bd2f:        movq    %rcx, 0x88(%rsp)
+    0.00 :   55bd37:        movl    %eax, 0x90(%rsp)
+    0.00 :   55bd3e:        jmp     0x55bd1e <test_rs+0x6e>
+    0.00 :   55bd40:        movl    0x24(%rsp), %eax
+    0.00 :   55bd44:        movl    0x28(%rsp), %ecx
+    0.00 :   55bd48:        movl    %ecx, 0x7c(%rsp)
+    0.21 :   55bd4c:        movl    %eax, 0x80(%rsp)
+    0.00 :   55bd53:        leaq    0x7c(%rsp), %rdi
+   11.96 :   55bd58:        callq   0x55b820 <core::iter::range::<impl core::iter::traits::iterator::Iterator for core::ops::range::Range<A>>::next>
+    0.00 :   55bd5d:        movl    %eax, 0x20(%rsp)
+    1.36 :   55bd61:        jmp     0x55bd63 <test_rs+0xb3>
+    0.00 :   55bd63:        movl    0x20(%rsp), %eax
+    0.00 :   55bd67:        movl    %eax, %eax
+    0.00 :   55bd69:        testq   $0x1, %rax
+    0.10 :   55bd6f:        je      0x55bd89 <test_rs+0xd9>
+   16.76 :   55bd71:        movq    0x48(%rsp), %rcx
+    0.00 :   55bd76:        movq    %rcx, %rax
+    0.00 :   55bd79:        addq    $0x1, %rax
+    0.00 :   55bd7d:        movq    %rax, 0x18(%rsp)
+    2.20 :   55bd82:        cmpq    %rcx, %rax
+    0.00 :   55bd85:        jb      0x55bdcd <test_rs+0x11d>
+    3.04 :   55bd87:        jmp     0x55bdb9 <test_rs+0x109>
+    0.00 :   55bd89:        leaq    0x30(%rsp), %rdi
+    0.00 :   55bd8e:        callq   0x55b6f0 <core::ptr::drop_in_place<code_with_type::Buf>>
+    0.00 :   55bd93:        jmp     0x55bdb1 <test_rs+0x101>
+    0.00 :   55bd95:        callq   *0xa492f5(%rip)  # 0xfa5090 <_DYNAMIC+0x650>
+    0.00 :   55bd9b:        movq    %rax, %rcx
+    0.00 :   55bd9e:        movl    %edx, %eax
+    0.00 :   55bda0:        movq    %rcx, 0x88(%rsp)
+    0.00 :   55bda8:        movl    %eax, 0x90(%rsp)
+    0.00 :   55bdaf:        jmp     0x55bd95 <test_rs+0xe5>
+    0.00 :   55bdb1:        addq    $0x98, %rsp
+    0.21 :   55bdb8:        retq
+    0.10 :   55bdb9:        movq    0x18(%rsp), %rax
+    0.00 :   55bdbe:        movq    %rax, 0x48(%rsp)
+    0.00 :   55bdc3:        cmpq    $0x7b, 0x48(%rsp)
+   17.41 :   55bdc9:        je      0x55bde1 <test_rs+0x131>
+    6.19 :   55bdcb:        jmp     0x55bdf9 <test_rs+0x149>
+    0.00 :   55bdcd:        leaq    0xa3fc44(%rip), %rdi  # 0xf9ba18
+    0.00 :   55bdd4:        leaq    -0x150ffb(%rip), %rax  # 0x40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55bddb:        callq   *%rax
+    0.00 :   55bddd:        jmp     0x55bddf <test_rs+0x12f>
+    0.00 :   55bddf:        ud2
+    0.00 :   55bde1:        movq    0x48(%rsp), %rcx
+    0.00 :   55bde6:        movq    %rcx, %rax
+    0.00 :   55bde9:        addq    $0x1, %rax
+    0.00 :   55bded:        movq    %rax, 0x10(%rsp)
+    0.00 :   55bdf2:        cmpq    %rcx, %rax
+    0.00 :   55bdf5:        jb      0x55be21 <test_rs+0x171>
+    0.00 :   55bdf7:        jmp     0x55be15 <test_rs+0x165>
+    0.00 :   55bdf9:        movq    0x48(%rsp), %rdx
+    0.00 :   55bdfe:        movq    0x50(%rsp), %rcx
+    0.00 :   55be03:        movq    %rcx, %rax
+   16.66 :   55be06:        addq    %rdx, %rax
+    0.00 :   55be09:        movq    %rax, 0x8(%rsp)
+    0.00 :   55be0e:        cmpq    %rcx, %rax
+    0.00 :   55be11:        jb      0x55be42 <test_rs+0x192>
+   19.06 :   55be13:        jmp     0x55be33 <test_rs+0x183>
+    0.00 :   55be15:        movq    0x10(%rsp), %rax
+    0.00 :   55be1a:        movq    %rax, 0x48(%rsp)
+    0.00 :   55be1f:        jmp     0x55bdf9 <test_rs+0x149>
+    0.00 :   55be21:        leaq    0xa3fc08(%rip), %rdi  # 0xf9ba30
+    0.00 :   55be28:        leaq    -0x15104f(%rip), %rax  # 0x40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55be2f:        callq   *%rax
+    0.00 :   55be31:        jmp     0x55bddf <test_rs+0x12f>
+    0.00 :   55be33:        movq    0x8(%rsp), %rax
+    0.00 :   55be38:        movq    %rax, 0x50(%rsp)
+    1.15 :   55be3d:        jmp     0x55bd53 <test_rs+0xa3>
+    0.00 :   55be42:        leaq    0xa3fbff(%rip), %rdi  # 0xf9ba48
+    0.00 :   55be49:        leaq    -0x151070(%rip), %rax  # 0x40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55be50:        callq   *%rax
+    0.00 :   55be52:        jmp     0x55bddf <test_rs+0x12f>
+    0.00 :   55be54:        callq   *0xa49c2e(%rip)  # 0xfa5a88 <_DYNAMIC+0x1048>
+ Percent |	Source code & Disassembly of perf for cpu_core/cycles/Pu (522 samples, percent: local period)
+-------------------------------------------------------------------------------------------------------------
+         : 0      0x55b190 <core::num::<impl u32>::unchecked_add::precondition_check>:
+    0.00 :   55b190:        subq    $0x68, %rsp
+    0.00 :   55b194:        movl    %edi, %eax
+    0.00 :   55b196:        movq    %rdx, (%rsp)
+   33.53 :   55b19a:        movl    %eax, 0x48(%rsp)
+    0.00 :   55b19e:        movl    %esi, 0x4c(%rsp)
+    0.00 :   55b1a2:        leaq    0x2922af(%rip), %rcx  # 0x7ed458
+    0.00 :   55b1a9:        movq    %rcx, 0x50(%rsp)
+   33.92 :   55b1ae:        movq    $0xb8, 0x58(%rsp)
+    0.00 :   55b1b7:        movl    %eax, %edi
+    0.00 :   55b1b9:        addl    %esi, %edi
+    0.00 :   55b1bb:        cmpl    %eax, %edi
+    0.00 :   55b1bd:        jb      0x55b1c4 <core::num::<impl u32>::unchecked_add::precondition_check+0x34>
+    3.43 :   55b1bf:        addq    $0x68, %rsp
+   29.12 :   55b1c3:        retq
+    0.00 :   55b1c4:        movq    (%rsp), %rdx
+    0.00 :   55b1c8:        leaq    0x292289(%rip), %rax  # 0x7ed458
+    0.00 :   55b1cf:        movq    %rax, 0x38(%rsp)
+    0.00 :   55b1d4:        movq    $0xb8, 0x40(%rsp)
+    0.00 :   55b1dd:        leaq    0x38(%rsp), %rax
+    0.00 :   55b1e2:        movq    %rax, 0x60(%rsp)
+    0.00 :   55b1e7:        leaq    0x38(%rsp), %rax
+    0.00 :   55b1ec:        movq    %rax, 0x8(%rsp)
+    0.00 :   55b1f1:        movq    $0x1, 0x10(%rsp)
+    0.00 :   55b1fa:        movq    0x27efdf(%rip), %rcx  # 0x7da1e0
+    0.00 :   55b201:        movq    0x27efe0(%rip), %rax  # 0x7da1e8
+    0.00 :   55b208:        movq    %rcx, 0x28(%rsp)
+    0.00 :   55b20d:        movq    %rax, 0x30(%rsp)
+    0.00 :   55b212:        movl    $0x8, %eax
+    0.00 :   55b217:        movq    %rax, 0x18(%rsp)
+    0.00 :   55b21c:        movq    $0x0, 0x20(%rsp)
+    0.00 :   55b225:        leaq    0x8(%rsp), %rdi
+    0.00 :   55b22a:        xorl    %esi, %esi
+    0.00 :   55b22c:        callq   *0xa4ad96(%rip)  # 0xfa5fc8 <_DYNAMIC+0x1588>
+ Percent |	Source code & Disassembly of perf for cpu_core/cycles/Pu (471 samples, percent: local period)
+-------------------------------------------------------------------------------------------------------------
+         : 0      0x55b140 <<u32 as core::iter::range::Step>::forward_unchecked>:
+    0.00 :   55b140:        subq    $0x28, %rsp
+    0.00 :   55b144:        movl    %edi, 0xc(%rsp)
+    0.00 :   55b148:        movl    %edi, 0x14(%rsp)
+   24.00 :   55b14c:        movq    %rsi, 0x18(%rsp)
+    0.00 :   55b151:        movl    %esi, %eax
+    0.00 :   55b153:        movl    %eax, 0x10(%rsp)
+    0.00 :   55b157:        movl    %eax, 0x24(%rsp)
+   13.42 :   55b15b:        movl    0x10(%rsp), %esi
+    0.00 :   55b15f:        movl    0xc(%rsp), %edi
+    0.00 :   55b163:        leaq    0xa40826(%rip), %rdx  # 0xf9b990
+    2.33 :   55b16a:        callq   0x55b190 <core::num::<impl u32>::unchecked_add::precondition_check>
+    0.00 :   55b16f:        movl    0x10(%rsp), %ecx
+    0.00 :   55b173:        movl    0xc(%rsp), %eax
+    0.00 :   55b177:        addl    %ecx, %eax
+   30.61 :   55b179:        addq    $0x28, %rsp
+   29.63 :   55b17d:        retq
+ Percent |	Source code & Disassembly of perf for cpu_core/cycles/Pu (405 samples, percent: local period)
+-------------------------------------------------------------------------------------------------------------
+         : 0      0x55b820 <core::iter::range::<impl core::iter::traits::iterator::Iterator for core::ops::range::Range<A>>::next>:
+    0.00 :   55b820:        pushq   %rax
+    0.00 :   55b821:        movq    %rdi, (%rsp)
+   58.32 :   55b825:        callq   0x55bc40 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next>
+    0.00 :   55b82a:        popq    %rcx
+   41.68 :   55b82b:        retq
+Pipe perf annotate test
+Pipe annotate [Failed: missing target data type]
+ Percent |	Source code & Disassembly of perf for cpu_core/cycles/Pu (1159 samples, percent: local period)
+--------------------------------------------------------------------------------------------------------------
+         : 0      0x55bc40 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next>:
+    0.00 :   55bc40:        subq    $0x38, %rsp
+    0.00 :   55bc44:        movq    %rdi, 0x8(%rsp)
+    0.00 :   55bc49:        movq    %rdi, 0x18(%rsp)
+   13.73 :   55bc4e:        movq    %rdi, %rax
+    0.00 :   55bc51:        addq    $0x4, %rax
+    0.00 :   55bc55:        movq    %rdi, 0x28(%rsp)
+    0.00 :   55bc5a:        movq    %rax, 0x30(%rsp)
+    8.03 :   55bc5f:        movl    (%rdi), %eax
+    0.00 :   55bc61:        cmpl    0x4(%rdi), %eax
+   13.37 :   55bc64:        jb      0x55bc70 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x30>
+    0.00 :   55bc66:        movl    $0x0, 0x10(%rsp)
+    0.35 :   55bc6e:        jmp     0x55bca2 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next+0x62>
+    0.00 :   55bc70:        movq    0x8(%rsp), %rax
+    0.00 :   55bc75:        movl    (%rax), %edi
+    0.00 :   55bc77:        movl    %edi, 0x4(%rsp)
+   13.69 :   55bc7b:        movl    %edi, 0x24(%rsp)
+    0.00 :   55bc7f:        movl    $0x1, %esi
+    1.47 :   55bc84:        callq   0x55b140 <<u32 as core::iter::range::Step>::forward_unchecked>
+    0.00 :   55bc89:        movq    0x8(%rsp), %rcx
+    0.00 :   55bc8e:        movl    %eax, %edx
+    0.00 :   55bc90:        movl    0x4(%rsp), %eax
+   16.56 :   55bc94:        movl    %edx, (%rcx)
+    0.00 :   55bc96:        movl    %eax, 0x14(%rsp)
+    0.00 :   55bc9a:        movl    $0x1, 0x10(%rsp)
+    0.00 :   55bca2:        movl    0x10(%rsp), %eax
+   16.32 :   55bca6:        movl    0x14(%rsp), %edx
+    0.00 :   55bcaa:        addq    $0x38, %rsp
+   16.48 :   55bcae:        retq
+ Percent |	Source code & Disassembly of perf for cpu_core/cycles/Pu (1034 samples, percent: local period)
+--------------------------------------------------------------------------------------------------------------
+         : 0      0x55bcb0 <test_rs>:
+    0.00 :   55bcb0:        subq    $0x98, %rsp
+    0.00 :   55bcb7:        movl    %edi, 0x2c(%rsp)
+    0.00 :   55bcbb:        movl    %edi, 0x84(%rsp)
+    0.29 :   55bcc2:        leaq    0x22b557(%rip), %rsi  # 0x787220
+    0.00 :   55bcc9:        leaq    0x60(%rsp), %rdi
+    0.00 :   55bcce:        movl    $0x4, %edx
+    0.29 :   55bcd3:        callq   0x55baf0 <<alloc::string::String as core::convert::From<&str>>::from>
+    0.10 :   55bcd8:        jmp     0x55bce0 <test_rs+0x30>
+    0.00 :   55bcda:        callq   *0xa493b0(%rip)  # 0xfa5090 <_DYNAMIC+0x650>
+    0.00 :   55bce0:        movl    0x2c(%rsp), %esi
+    0.00 :   55bce4:        movq    $0x0, 0x48(%rsp)
+    0.00 :   55bced:        movq    0x70(%rsp), %rax
+    0.00 :   55bcf2:        movq    %rax, 0x40(%rsp)
+    2.23 :   55bcf7:        movups  0x60(%rsp), %xmm0
+    0.58 :   55bcfc:        movaps  %xmm0, 0x30(%rsp)
+    0.00 :   55bd01:        movq    $0x0, 0x50(%rsp)
+    0.00 :   55bd0a:        movl    $0x1, %edi
+    0.19 :   55bd0f:        callq   0x55bae0 <<I as core::iter::traits::collect::IntoIterator>::into_iter>
+    0.00 :   55bd14:        movl    %edx, 0x24(%rsp)
+    0.00 :   55bd18:        movl    %eax, 0x28(%rsp)
+    0.10 :   55bd1c:        jmp     0x55bd40 <test_rs+0x90>
+    0.00 :   55bd1e:        leaq    0x30(%rsp), %rdi
+    0.00 :   55bd23:        callq   0x55b6f0 <core::ptr::drop_in_place<code_with_type::Buf>>
+    0.00 :   55bd28:        jmp     0x55bd95 <test_rs+0xe5>
+    0.00 :   55bd2a:        movq    %rax, %rcx
+    0.00 :   55bd2d:        movl    %edx, %eax
+    0.00 :   55bd2f:        movq    %rcx, 0x88(%rsp)
+    0.00 :   55bd37:        movl    %eax, 0x90(%rsp)
+    0.00 :   55bd3e:        jmp     0x55bd1e <test_rs+0x6e>
+    0.00 :   55bd40:        movl    0x24(%rsp), %eax
+    0.00 :   55bd44:        movl    0x28(%rsp), %ecx
+    0.00 :   55bd48:        movl    %ecx, 0x7c(%rsp)
+    0.10 :   55bd4c:        movl    %eax, 0x80(%rsp)
+    0.00 :   55bd53:        leaq    0x7c(%rsp), %rdi
+   11.89 :   55bd58:        callq   0x55b820 <core::iter::range::<impl core::iter::traits::iterator::Iterator for core::ops::range::Range<A>>::next>
+    0.00 :   55bd5d:        movl    %eax, 0x20(%rsp)
+    1.84 :   55bd61:        jmp     0x55bd63 <test_rs+0xb3>
+    0.00 :   55bd63:        movl    0x20(%rsp), %eax
+    0.00 :   55bd67:        movl    %eax, %eax
+    0.00 :   55bd69:        testq   $0x1, %rax
+    0.19 :   55bd6f:        je      0x55bd89 <test_rs+0xd9>
+   16.73 :   55bd71:        movq    0x48(%rsp), %rcx
+    0.00 :   55bd76:        movq    %rcx, %rax
+    0.00 :   55bd79:        addq    $0x1, %rax
+    0.00 :   55bd7d:        movq    %rax, 0x18(%rsp)
+    2.03 :   55bd82:        cmpq    %rcx, %rax
+    0.00 :   55bd85:        jb      0x55bdcd <test_rs+0x11d>
+    3.48 :   55bd87:        jmp     0x55bdb9 <test_rs+0x109>
+    0.00 :   55bd89:        leaq    0x30(%rsp), %rdi
+    0.48 :   55bd8e:        callq   0x55b6f0 <core::ptr::drop_in_place<code_with_type::Buf>>
+    0.10 :   55bd93:        jmp     0x55bdb1 <test_rs+0x101>
+    0.00 :   55bd95:        callq   *0xa492f5(%rip)  # 0xfa5090 <_DYNAMIC+0x650>
+    0.00 :   55bd9b:        movq    %rax, %rcx
+    0.00 :   55bd9e:        movl    %edx, %eax
+    0.00 :   55bda0:        movq    %rcx, 0x88(%rsp)
+    0.00 :   55bda8:        movl    %eax, 0x90(%rsp)
+    0.00 :   55bdaf:        jmp     0x55bd95 <test_rs+0xe5>
+    0.00 :   55bdb1:        addq    $0x98, %rsp
+    0.19 :   55bdb8:        retq
+    0.00 :   55bdb9:        movq    0x18(%rsp), %rax
+    0.00 :   55bdbe:        movq    %rax, 0x48(%rsp)
+    0.00 :   55bdc3:        cmpq    $0x7b, 0x48(%rsp)
+   14.19 :   55bdc9:        je      0x55bde1 <test_rs+0x131>
+    6.68 :   55bdcb:        jmp     0x55bdf9 <test_rs+0x149>
+    0.00 :   55bdcd:        leaq    0xa3fc44(%rip), %rdi  # 0xf9ba18
+    0.00 :   55bdd4:        leaq    -0x150ffb(%rip), %rax  # 0x40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55bddb:        callq   *%rax
+    0.00 :   55bddd:        jmp     0x55bddf <test_rs+0x12f>
+    0.00 :   55bddf:        ud2
+    0.00 :   55bde1:        movq    0x48(%rsp), %rcx
+    0.00 :   55bde6:        movq    %rcx, %rax
+    0.00 :   55bde9:        addq    $0x1, %rax
+    0.00 :   55bded:        movq    %rax, 0x10(%rsp)
+    0.00 :   55bdf2:        cmpq    %rcx, %rax
+    0.00 :   55bdf5:        jb      0x55be21 <test_rs+0x171>
+    0.00 :   55bdf7:        jmp     0x55be15 <test_rs+0x165>
+    0.00 :   55bdf9:        movq    0x48(%rsp), %rdx
+    0.00 :   55bdfe:        movq    0x50(%rsp), %rcx
+    0.00 :   55be03:        movq    %rcx, %rax
+   17.03 :   55be06:        addq    %rdx, %rax
+    0.00 :   55be09:        movq    %rax, 0x8(%rsp)
+    0.00 :   55be0e:        cmpq    %rcx, %rax
+    0.00 :   55be11:        jb      0x55be42 <test_rs+0x192>
+   19.93 :   55be13:        jmp     0x55be33 <test_rs+0x183>
+    0.00 :   55be15:        movq    0x10(%rsp), %rax
+    0.00 :   55be1a:        movq    %rax, 0x48(%rsp)
+    0.00 :   55be1f:        jmp     0x55bdf9 <test_rs+0x149>
+    0.00 :   55be21:        leaq    0xa3fc08(%rip), %rdi  # 0xf9ba30
+    0.00 :   55be28:        leaq    -0x15104f(%rip), %rax  # 0x40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55be2f:        callq   *%rax
+    0.00 :   55be31:        jmp     0x55bddf <test_rs+0x12f>
+    0.00 :   55be33:        movq    0x8(%rsp), %rax
+    0.00 :   55be38:        movq    %rax, 0x50(%rsp)
+    1.35 :   55be3d:        jmp     0x55bd53 <test_rs+0xa3>
+    0.00 :   55be42:        leaq    0xa3fbff(%rip), %rdi  # 0xf9ba48
+    0.00 :   55be49:        leaq    -0x151070(%rip), %rax  # 0x40ade0 <core::panicking::panic_const::panic_const_add_overflow>
+    0.00 :   55be50:        callq   *%rax
+    0.00 :   55be52:        jmp     0x55bddf <test_rs+0x12f>
+    0.00 :   55be54:        callq   *0xa49c2e(%rip)  # 0xfa5a88 <_DYNAMIC+0x1048>
+ Percent |	Source code & Disassembly of perf for cpu_core/cycles/Pu (576 samples, percent: local period)
+-------------------------------------------------------------------------------------------------------------
+         : 0      0x55b190 <core::num::<impl u32>::unchecked_add::precondition_check>:
+    0.00 :   55b190:        subq    $0x68, %rsp
+    0.00 :   55b194:        movl    %edi, %eax
+    0.00 :   55b196:        movq    %rdx, (%rsp)
+   34.20 :   55b19a:        movl    %eax, 0x48(%rsp)
+    0.00 :   55b19e:        movl    %esi, 0x4c(%rsp)
+    0.00 :   55b1a2:        leaq    0x2922af(%rip), %rcx  # 0x7ed458
+    0.00 :   55b1a9:        movq    %rcx, 0x50(%rsp)
+   31.25 :   55b1ae:        movq    $0xb8, 0x58(%rsp)
+    0.00 :   55b1b7:        movl    %eax, %edi
+    0.00 :   55b1b9:        addl    %esi, %edi
+    0.00 :   55b1bb:        cmpl    %eax, %edi
+    0.00 :   55b1bd:        jb      0x55b1c4 <core::num::<impl u32>::unchecked_add::precondition_check+0x34>
+    3.82 :   55b1bf:        addq    $0x68, %rsp
+   30.73 :   55b1c3:        retq
+    0.00 :   55b1c4:        movq    (%rsp), %rdx
+    0.00 :   55b1c8:        leaq    0x292289(%rip), %rax  # 0x7ed458
+    0.00 :   55b1cf:        movq    %rax, 0x38(%rsp)
+    0.00 :   55b1d4:        movq    $0xb8, 0x40(%rsp)
+    0.00 :   55b1dd:        leaq    0x38(%rsp), %rax
+    0.00 :   55b1e2:        movq    %rax, 0x60(%rsp)
+    0.00 :   55b1e7:        leaq    0x38(%rsp), %rax
+    0.00 :   55b1ec:        movq    %rax, 0x8(%rsp)
+    0.00 :   55b1f1:        movq    $0x1, 0x10(%rsp)
+    0.00 :   55b1fa:        movq    0x27efdf(%rip), %rcx  # 0x7da1e0
+    0.00 :   55b201:        movq    0x27efe0(%rip), %rax  # 0x7da1e8
+    0.00 :   55b208:        movq    %rcx, 0x28(%rsp)
+    0.00 :   55b20d:        movq    %rax, 0x30(%rsp)
+    0.00 :   55b212:        movl    $0x8, %eax
+    0.00 :   55b217:        movq    %rax, 0x18(%rsp)
+    0.00 :   55b21c:        movq    $0x0, 0x20(%rsp)
+    0.00 :   55b225:        leaq    0x8(%rsp), %rdi
+    0.00 :   55b22a:        xorl    %esi, %esi
+    0.00 :   55b22c:        callq   *0xa4ad96(%rip)  # 0xfa5fc8 <_DYNAMIC+0x1588>
+ Percent |	Source code & Disassembly of perf for cpu_core/cycles/Pu (554 samples, percent: local period)
+-------------------------------------------------------------------------------------------------------------
+         : 0      0x55b140 <<u32 as core::iter::range::Step>::forward_unchecked>:
+    0.00 :   55b140:        subq    $0x28, %rsp
+    0.00 :   55b144:        movl    %edi, 0xc(%rsp)
+    0.00 :   55b148:        movl    %edi, 0x14(%rsp)
+   22.19 :   55b14c:        movq    %rsi, 0x18(%rsp)
+    0.00 :   55b151:        movl    %esi, %eax
+    0.00 :   55b153:        movl    %eax, 0x10(%rsp)
+    0.00 :   55b157:        movl    %eax, 0x24(%rsp)
+   14.28 :   55b15b:        movl    0x10(%rsp), %esi
+    0.00 :   55b15f:        movl    0xc(%rsp), %edi
+    0.00 :   55b163:        leaq    0xa40826(%rip), %rdx  # 0xf9b990
+    3.98 :   55b16a:        callq   0x55b190 <core::num::<impl u32>::unchecked_add::precondition_check>
+    0.00 :   55b16f:        movl    0x10(%rsp), %ecx
+    0.00 :   55b173:        movl    0xc(%rsp), %eax
+    0.00 :   55b177:        addl    %ecx, %eax
+   30.49 :   55b179:        addq    $0x28, %rsp
+   29.07 :   55b17d:        retq
+ Percent |	Source code & Disassembly of perf for cpu_core/cycles/Pu (429 samples, percent: local period)
+-------------------------------------------------------------------------------------------------------------
+         : 0      0x55b820 <core::iter::range::<impl core::iter::traits::iterator::Iterator for core::ops::range::Range<A>>::next>:
+    0.00 :   55b820:        pushq   %rax
+    0.00 :   55b821:        movq    %rdi, (%rsp)
+   60.17 :   55b825:        callq   0x55bc40 <<core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next>
+    0.23 :   55b82a:        popq    %rcx
+   39.60 :   55b82b:        retq
+---- end(-1) ----
+ 83: perf data type profiling tests                                  : FAILED!
+⬢ [acme@toolbx perf-tools-next]$ 
+
+
