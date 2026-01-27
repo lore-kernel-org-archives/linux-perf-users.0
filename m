@@ -1,140 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BD53557F3;
-	Tue, 27 Jan 2026 12:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C187A34EF1B;
+	Tue, 27 Jan 2026 15:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769518354; cv=none; b=bDcliDO3TOwq0pol9RhO1jsoeBw0fvoqmpvsdmrsf8SwHEbKTGinlkIMAYiigDgLVfI2+Gz68RJ8Wxyl5wTdS246d/f2sGdpTlyh8j7AbCpmvraezFef/hpPvOYsqNgllc0uY9vuJ2se4IdzkWSOkzRh4RGo94t7VvgGB9nQkHw=
+	t=1769527362; cv=none; b=dxtDZYOmM9BXQAxPGpG8L9UG+clD6C1xWRjVlQyxHIjnDx0WoyP1T3Vwu3RCzEDo2HDOKviRscv8mGqqBTaBrjOHuSh8yk/kGjXEdekys/FCzdgsDuDuYrHk7h+O8eSxhy/a8mMVrF0a/Y7InkwhUqW+DkZrLDPCjpZTbp5Pbig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769518354; c=relaxed/simple;
-	bh=vgbQx0vDwWYjR3sK+ZddrCDH4qHiveEQokdGsfxcS2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4nJ/cYJK4gCNtOBysP8YsUT0n0ydOZVzwxKJTYUSHISB2DyvcXE/QJ2Tz8ij/0koEImIK5pDNH6CAu/MQ2fbnrMFhWz32GJR6pwjx9uo/QosAOPrPKLBOszs8PjauaAXkBAAZNnenorY6XlK//0w7iWF1glISbhgKdpeSMG8w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SES5YQjN; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SES5YQjN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769518352; x=1801054352;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vgbQx0vDwWYjR3sK+ZddrCDH4qHiveEQokdGsfxcS2g=;
-  b=SES5YQjNcyUd8k/laP9GFC14cP68poR/dc6b6XTEnFsdEraYHJ23evy/
-   6DO5aEgWGrfliAqgJxweNzstlIFiPUKtz21Cm14DlV3KdhIs+DNl1QjLY
-   HUGPeWxwKVpLtmL28GGY3gIR2iqaLOUDMNCqrJiBWMnJpKAGTtmC+2XBA
-   SvQLbu0CesrmolT3nfD7csmfJ5d7k+q+wYMYhYG9IdTHwzBz50/URyppV
-   jVc3qzwgHzRF+U7t5ZSV4NU7dHaIO2eVBPrAMDJhz9zhnX0nFm92To6Jr
-   yLvxRLpLwCLS3xqQu9RIWox4JvKwS+mH72tmLvQ4auIGeEfDy22eZB1eW
-   Q==;
-X-CSE-ConnectionGUID: VJ3/AMv7Q+WeToXBwSOX8g==
-X-CSE-MsgGUID: tbfwidlfTBy/sAoaVEZY8Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11684"; a="69911720"
-X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
-   d="scan'208";a="69911720"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 04:52:31 -0800
-X-CSE-ConnectionGUID: wIcgciS6QfOH3oFLtMWbAA==
-X-CSE-MsgGUID: Xwu+uTG+Su+JHQ8O8Uf/EQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
-   d="scan'208";a="230922383"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 27 Jan 2026 04:52:26 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vkiYR-00000000YUG-3ffS;
-	Tue, 27 Jan 2026 12:52:23 +0000
-Date: Tue, 27 Jan 2026 20:52:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ruidong Tian <tianruidong@linux.alibaba.com>, catalin.marinas@arm.com,
-	will@kernel.org, lpieralisi@kernel.org, guohanjun@huawei.com,
-	sudeep.holla@arm.com, rafael@kernel.org, robin.murphy@arm.com,
-	mark.rutland@arm.com, tony.luck@intel.com, bp@alien8.de,
-	tglx@linutronix.de, peterz@infradead.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, lenb@kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-acpi@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-edac@vger.kernel.org, mchehab@kernel.org,
-	xueshuai@linux.alibaba.com, zhuo.song@linux.alibaba.com,
-	oliver.yang@linux.alibaba.com,
-	Ruidong Tian <tianruidong@linux.alibaba.com>
-Subject: Re: [PATCH v6 13/16] ras: AEST: Introduce AEST inject interface to
- test AEST driver
-Message-ID: <202601272009.SKq0aXMN-lkp@intel.com>
-References: <20260122094656.73399-14-tianruidong@linux.alibaba.com>
+	s=arc-20240116; t=1769527362; c=relaxed/simple;
+	bh=Hou3k/YcDUMSmtvqCulcR2nRe7AtIjNjZF4uNZFK+O0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g4b0bBN60YmeKbd78SLq5OGqFSMR+k+OmvxNK7Q6GwdEwpPRVSMH4+IcnPQBazfyKi4LcW9sJBGns0XYWqEnOpT4YUaytZgtuNlQ3YjyBAIfj5CgkbqNs6BkYlkyIAcOhQh35/O1b9wODfjj1pDKpEPpO94B9P1LL23WD0WxNdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id D832814012A;
+	Tue, 27 Jan 2026 15:22:32 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 56F3D2D;
+	Tue, 27 Jan 2026 15:22:29 +0000 (UTC)
+Date: Tue, 27 Jan 2026 10:22:34 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
+ Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RESEND][PATCH 3/5] perf: Use current->flags &
+ PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL
+Message-ID: <20260127102234.755d8c4e@gandalf.local.home>
+In-Reply-To: <27f9a957-67c7-4c88-b320-0f8725e9b03d@roeck-us.net>
+References: <20250820180338.701352023@kernel.org>
+	<20250820180428.592367294@kernel.org>
+	<0d877e6f-41a7-4724-875d-0b0a27b8a545@roeck-us.net>
+	<20260126120553.2fa79048@gandalf.local.home>
+	<20260126121803.4a90c959@gandalf.local.home>
+	<27f9a957-67c7-4c88-b320-0f8725e9b03d@roeck-us.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260122094656.73399-14-tianruidong@linux.alibaba.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 56F3D2D
+X-Stat-Signature: y3dht6s46cac557phezgp57ms64ubspr
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+sMSEd3/nbnTD7cCLRgruhuMiDCGUh7no=
+X-HE-Tag: 1769527349-467222
+X-HE-Meta: U2FsdGVkX19wi/5GZpUyP+BSQqWhDYL1T8dLa8uCE/dr9JD+jG8FrH4NY/oBVpREvELdR+pwpbkOCwYRHXdEsBbcLLLL9JK6ggA3qt7XtISl0TjDmR/QlsXYbUxXpqHpZ+WRaUIejWaeYKdeT8f4404wgwewi04i8n099PiYGuo0ZH82lI5Y0zVTUGe38P7B8cfeSBrQiqp26M++DmKtmzzYHPJ2gfuxQi2nUMcQZJVMe/fYkQ1AjiVDKIs2U7PQoLkecNqnRhVxiAOUQdf62aGZdGeHJQMT//TmszS9OELshDiZw/ATy+pzUestxrsyOo6dnF+OkmV/UUcWXzlogFWrVT+ObvGS31OFUkKvspcvpw+IqhhhTif/XJRC5AljdNfzuHPgrzcrZFC23q7tK43hBlsegpo3u+C1UNw12QVVdhlWK97glND0jPaGku7QbRCcnS2oBR+ELzp3G9ogeA==
 
-Hi Ruidong,
+On Mon, 26 Jan 2026 17:32:35 -0800
+Guenter Roeck <linux@roeck-us.net> wrote:
 
-kernel test robot noticed the following build warnings:
+> Still crashing, though not as often and with a slightly different backtrace.
+> I added the backtrace to the bug report @ Google.
 
-[auto build test WARNING on arm64/for-next/core]
-[also build test WARNING on rafael-pm/linux-next rafael-pm/bleeding-edge linus/master v6.19-rc7 next-20260126]
-[cannot apply to tip/smp/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I figured there would be other locations. A while ago I had a patch to wrap
+the checks in a "is_user_thread()" helper function[1], but Ingo had issues
+with it. It seems now it's biting us in the butt and let's see if it would
+help now. I modified it slightly.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ruidong-Tian/ACPI-AEST-Parse-the-AEST-table/20260122-180219
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
-patch link:    https://lore.kernel.org/r/20260122094656.73399-14-tianruidong%40linux.alibaba.com
-patch subject: [PATCH v6 13/16] ras: AEST: Introduce AEST inject interface to test AEST driver
-config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20260127/202601272009.SKq0aXMN-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260127/202601272009.SKq0aXMN-lkp@intel.com/reproduce)
+[1] https://lore.kernel.org/linux-trace-kernel/20250425204313.616425861@goodmis.org/
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601272009.SKq0aXMN-lkp@intel.com/
+If the below fixes it, I'll resend it, but now as a real bug fix.
 
-All warnings (new ones prefixed by >>):
+-- Steve
 
->> drivers/ras/aest/aest-sysfs.c:194:45: warning: more '%' conversions than data arguments [-Wformat-insufficient-args]
-     194 |                 snprintf(name, sizeof(name), "processor%u%u", cpu);
-         |                                                          ~^
-   1 warning generated.
-
-
-vim +194 drivers/ras/aest/aest-sysfs.c
-
-   182	
-   183	static void
-   184	aest_oncore_dev_init_debugfs(struct aest_device *adev)
-   185	{
-   186		int cpu, i;
-   187		struct aest_node *node;
-   188		struct aest_device *percpu_dev;
-   189		char name[16];
-   190	
-   191		for_each_possible_cpu(cpu) {
-   192			percpu_dev = this_cpu_ptr(adev->adev_oncore);
-   193	
- > 194			snprintf(name, sizeof(name), "processor%u%u", cpu);
-   195			percpu_dev->debugfs = debugfs_create_dir(name, adev->debugfs);
-   196	
-   197			for (i = 0; i < adev->node_cnt; i++) {
-   198				node = &adev->nodes[i];
-   199	
-   200				node->debugfs = debugfs_create_dir(node->name,
-   201								percpu_dev->debugfs);
-   202				aest_node_init_debugfs(node);
-   203			}
-   204		}
-   205	}
-   206	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index da0133524d08..5f00b5ed0f3b 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1776,6 +1776,11 @@ static __always_inline bool is_percpu_thread(void)
+ 		(current->nr_cpus_allowed  == 1);
+ }
+ 
++static __always_inline bool is_user_task(struct task_struct *task)
++{
++	return task->mm && !(task->flags & (PF_KTHREAD | PF_USER_WORKER));
++}
++
+ /* Per-process atomic flags. */
+ #define PFA_NO_NEW_PRIVS		0	/* May not gain new privileges. */
+ #define PFA_SPREAD_PAGE			1	/* Spread page cache over cpuset */
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index 1f6589578703..9d24b6e0c91f 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -246,7 +246,7 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 
+ 	if (user && !crosstask) {
+ 		if (!user_mode(regs)) {
+-			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
++			if (!is_user_task(current))
+ 				goto exit_put;
+ 			regs = task_pt_regs(current);
+ 		}
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index a0fa488bce84..8cca80094624 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7460,7 +7460,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+ 	if (user_mode(regs)) {
+ 		regs_user->abi = perf_reg_abi(current);
+ 		regs_user->regs = regs;
+-	} else if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
++	} else if (is_user_task(current)) {
+ 		perf_get_regs_user(regs_user, regs);
+ 	} else {
+ 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
+@@ -8100,7 +8100,7 @@ static u64 perf_virt_to_phys(u64 virt)
+ 		 * Try IRQ-safe get_user_page_fast_only first.
+ 		 * If failed, leave phys_addr as 0.
+ 		 */
+-		if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
++		if (is_user_task(current)) {
+ 			struct page *p;
+ 
+ 			pagefault_disable();
+@@ -8215,7 +8215,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+ {
+ 	bool kernel = !event->attr.exclude_callchain_kernel;
+ 	bool user   = !event->attr.exclude_callchain_user &&
+-		!(current->flags & (PF_KTHREAD | PF_USER_WORKER));
++		is_user_task(current);
+ 	/* Disallow cross-task user callchains. */
+ 	bool crosstask = event->ctx->task && event->ctx->task != current;
+ 	bool defer_user = IS_ENABLED(CONFIG_UNWIND_USER) && user &&
