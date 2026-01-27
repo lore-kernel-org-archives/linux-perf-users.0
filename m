@@ -1,148 +1,301 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556F232143D;
-	Tue, 27 Jan 2026 17:04:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9312D47E1;
+	Tue, 27 Jan 2026 17:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769533466; cv=none; b=kwCjH6DWGmDnGWybYzXLS3aRowy6EQrWQM2x0mIbbCUWSvV6nQLw4RfjAPArvAuIcOe1hWCMiBZnRO7pP/pvT+lrDKdN0362Ld7P/ivGaWrOsR6Q+kmGyh0xHsI2zKpR4ppAFxfwxk6q/ZvQIfONxLGbPlwNFeLrzzyKCc7tAAo=
+	t=1769533676; cv=none; b=uvo7vyq/jmzZLMS9dsEF516Ciz3gXY9Q5udjsY9VUhOsZeS7V1CRjZETKBTQ5B7vw2gHATfyK+fGo4E/77jV85RDfTOHS4rb2SGftvl3O45uEQ18nDp8GNuFWde4LsFnlhQOTkDN419b87468EtDJ4C6MPTycIMU1m3Q+h0MC8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769533466; c=relaxed/simple;
-	bh=w+myaO0UhxZy5SuASeIiGUGV4FZVrE/r4B3Z3adX5Qk=;
+	s=arc-20240116; t=1769533676; c=relaxed/simple;
+	bh=eGnwa6PItKGn0e1o5BHdXl5sS8AxITUph3KQV8K1ZIM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U7BxsK/sSvhmA8HBY76QWtgHqRbFBWiAaKBmLDKguV5ojQWFSlTadghDC5zMEmEwfK0Roi5V9UIIE/vK1wqW3h0OvBtv9cLqActTGXDydtyHf2JwNtU03gQRaXFKIWKQoD0JCSxRR1PKZPlvWlhhlnbaXEo909MNbDytaxYVmTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUuyH/L8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UJFTV9TwXLJtz9uEkUAhsskHioFWj+GabT1mdl1lJXh5sMyQkL0dlBEXsjRiFnOB/O06eWti6JJBj9rXsWj2k7sRyqUgxmHfUhYVXzjKrzS70PDOtpwsIWOODcY0nMtjYps9XiI2p6UveVW1FmGak1fJwLH27gIu9El4xBvEFkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NaK7Ij2n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUuyH/L8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81E7DC116C6;
-	Tue, 27 Jan 2026 17:04:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NaK7Ij2n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F293C116C6;
+	Tue, 27 Jan 2026 17:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769533465;
-	bh=w+myaO0UhxZy5SuASeIiGUGV4FZVrE/r4B3Z3adX5Qk=;
+	s=k20201202; t=1769533675;
+	bh=eGnwa6PItKGn0e1o5BHdXl5sS8AxITUph3KQV8K1ZIM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VUuyH/L8SQ+XpzEaODzm2EOldBm7R7GdPB70AoQ9uwb/1lnSdVOcqusCYBp8YbUCg
-	 +rlRd+m5AeqApjnGZg65d1AWsKWxNzfd3koSqfyiAysmcMosASo7voaoMXyq8CX1nC
-	 KVckiDudMI43oxKpxnP9beYpwoClFfk17Xm1DxFt+q7BXTFHCb9IBfg8S7iubRQRUA
-	 /Weumu2MOK4olxyz+uTJOhZxlk0OqBZjcZd9sdbp9EiMAQjhG+F0V1e0iy+MruVxLD
-	 ezNI70+sichm+n1w88d563wXRHw2ipEjJp8/tcFEAA6TbNAdWo1Cl8/Mk0EoOhuWv7
-	 n+HO9CKLcJFww==
-Date: Tue, 27 Jan 2026 14:04:22 -0300
+	b=NaK7Ij2n43fbhcTMtwNeEtkpB2If+q3ojhS3vd9gtcCIjIRw/tlFm0RzFgHT5yYCu
+	 jxqM7L1VsnphmNw0MujvAPjdNNr2nbot2ab33hmWaIsnv4PeaVdjuMNeJ/ZgIPKUYA
+	 uQskvNnG4R61GNVHjov90T1Mf984B4Mez1PGLCqXZz1nxVoYEMGh2I+JQGadpeSjwq
+	 EaKKWY/rwd+nApeO3Z0kCVyN85ym/aUQy/e6YgPJSx3argC/hZ3h6UMCzB7NbD2tXM
+	 jSW7Js5EN8mSFZZRdm//8TwkzRtntstNqkdgyJeFweyVKYQY+YT/q4sBv8HBrfSVGS
+	 GOLYo73WWSWNQ==
+Date: Tue, 27 Jan 2026 14:07:51 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2] perf jevents: Handle deleted JSONS in out of source
- builds
-Message-ID: <aXjwFhUEOUc7rNnZ@x1>
-References: <20260121-james-perf-json-delete-fix-v2-1-2e10f895bfd7@linaro.org>
+	Benjamin Gray <bgray@linux.ibm.com>,
+	Caleb Biggers <caleb.biggers@intel.com>,
+	Edward Baker <edward.baker@intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Jiri Olsa <jolsa@kernel.org>, John Garry <john.g.garry@oracle.com>,
+	Leo Yan <leo.yan@arm.com>, Namhyung Kim <namhyung@kernel.org>,
+	Perry Taylor <perry.taylor@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v10 00/35] AMD and Intel metric generation with Python
+Message-ID: <aXjw5_4PW9M3ZFgD@x1>
+References: <20260108191105.695131-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260121-james-perf-json-delete-fix-v2-1-2e10f895bfd7@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260108191105.695131-1-irogers@google.com>
 
-On Wed, Jan 21, 2026 at 04:19:40PM +0000, James Clark wrote:
-> Make the source folders a dependency for the generated folder root so
-> that whenever a file is deleted from the source it will force a new
-> fresh copy of all the JSON files and avoid stale deleted files.
+On Thu, Jan 08, 2026 at 11:10:30AM -0800, Ian Rogers wrote:
+> Metrics in the perf tool come in via json. Json doesn't allow
+> comments, line breaks, etc. making it an inconvenient way to write
+> metrics. Further, it is useful to detect when writing a metric that
+> the event specified is supported within the event json for a
+> model. From the metric python code Event(s) are used, with fallback
+> events provided, if no event is found then an exception is thrown and
+> that can either indicate a failure or an unsupported model. To avoid
+> confusion all the metrics and their metricgroups are prefixed with
+> 'lpm_', where LPM is an abbreviation of Linux Perf Metric. While extra
+> characters aren't ideal, this separates the metrics from other vendor
+> provided metrics.
 > 
-> JSON_DIRS_OUTPUT_ROOT needs to be a dependency of LEGACY_CACHE_JSON so
-> that the root folder doesn't get cleaned after the legacy JSON is
-> generated. But this is a no-op with in-source builds as
-> JSON_DIRS_OUTPUT_ROOT is unset.
-> 
-> JSON_DIRS is added as a dependency of PMU_EVENTS_C which also forces a
-> re-build for in source builds when JSON files are deleted. This could
-> have also resulted in stale builds, but never a broken one.
+> * The first 2 patches introduce infrastructure for the addition of
+>   metrics written in python for Arm64, AMD Zen and Intel CPUs.
 
-Thanks, applied to perf-tools-next,
+Tried this one now:
+
+Cover: ./v10_20260108_irogers_amd_and_intel_metric_generation_with_python.cover
+ Link: https://lore.kernel.org/r/20260108191105.695131-1-irogers@google.com
+ Base: not specified
+       git am ./v10_20260108_irogers_amd_and_intel_metric_generation_with_python.mbx
+⬢ [acme@toolbx perf-tools-next]$        git am ./v10_20260108_irogers_amd_and_intel_metric_generation_with_python.mbx
+Applying: perf jevents: Build support for generating metrics from python
+error: patch failed: tools/perf/pmu-events/Build:29
+error: tools/perf/pmu-events/Build: patch does not apply
+Patch failed at 0001 perf jevents: Build support for generating metrics from python
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
+⬢ [acme@toolbx perf-tools-next]$ git am --abort
+⬢ [acme@toolbx perf-tools-next]$
+
+Can you please take a look?
 
 - Arnaldo
  
-> Reported-by: Mark Brown <broonie@kernel.org>
-> Closes: https://lore.kernel.org/linux-next/aW5XSAo88_LBPSYI@sirena.org.uk/
-> Fixes: 4bb55de4ff03 ("perf jevents: Support copying the source json files to OUTPUT")
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
-> This is a bit of a hack and I thought that making jevents.py handle
-> multiple input folders would be a much better solution than this. Then
-> we could have "gen-pmu-events" for only generated files and "pmu-events"
-> for only in-tree input files. It would be very clear what's generated
-> and what's not and all copying rules and special clean rules just
-> disappear (and this isn't the first time these rules have caused build
-> issues).
+> * The next 9 patches generate additional metrics for AMD zen.  Rapl
+>   and Idle metrics aren't specific to AMD but are placed here for ease
+>   and convenience. Uncore L3 metrics are added along with the majority
+>   of core metrics.
 > 
-> Unfortunately, after a while of trying to modify the script I thought it
-> was too invasive for now. The script does output per-file at the very
-> bottom of the logic in process_one_file(), so adding files in another
-> folder ends up re-emitting section headers when another chunk is output.
-> Although other parts of the script do build things up in memory before
-> outputting so it was possible to make those parts work with multiple
-> folders transparently.
-> ---
-> Changes in v2:
-> - Drop dependency on rsync by wiping the output folder any time a source
->   folder is updated.
-> - Also fix the same issue for in source builds by adding the source
->   folders as a dependency of PMU_EVENTS_C.
-> - Link to v1: https://lore.kernel.org/r/20260120-james-perf-json-delete-fix-v1-1-bae2194b1dcf@linaro.org
-> ---
->  tools/perf/pmu-events/Build | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
+> * The next 22 patches add additional metrics for Intel. Rapl and Idle
+>   metrics aren't specific to Intel but are placed here for ease and
+>   convenience. Smi and tsx metrics are added so they can be dropped
+>   from the per model json files. There are four uncore sets of metrics
+>   and eleven core metrics. Add a CheckPmu function to metric to
+>   simplify detecting the presence of hybrid PMUs in events. Metrics
+>   with experimental events are flagged as experimental in their
+>   description.
 > 
-> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-> index a46ab7b612df..4f9ef624ba70 100644
-> --- a/tools/perf/pmu-events/Build
-> +++ b/tools/perf/pmu-events/Build
-> @@ -1,5 +1,6 @@
->  pmu-events-y	+= pmu-events.o
->  JSON		=  $(shell find pmu-events/arch -name '*.json' -o -name '*.csv')
-> +JSON_DIRS	=  $(shell find pmu-events/arch -type d)
->  JDIR_TEST	=  pmu-events/arch/test
->  JSON_TEST	=  $(shell [ -d $(JDIR_TEST) ] &&			\
->  			find $(JDIR_TEST) -name '*.json')
-> @@ -31,16 +32,23 @@ $(PMU_EVENTS_C): $(EMPTY_PMU_EVENTS_C)
->  else
->  # Copy checked-in json to OUTPUT for generation if it's an out of source build
->  ifneq ($(OUTPUT),)
-> -$(OUTPUT)pmu-events/arch/%: pmu-events/arch/%
-> +# Remove all output directories when any source directory timestamp changes
-> +# so there are no stale deleted files
-> +JSON_DIRS_ROOT = $(OUTPUT)pmu-events/arch/
-> +$(JSON_DIRS_ROOT): $(JSON_DIRS)
-> +	$(Q)$(call echo-cmd,gen)rm -rf $@
-> +	$(Q)mkdir -p $@
-> +
-> +$(OUTPUT)pmu-events/arch/%: pmu-events/arch/% $(JSON_DIRS_ROOT)
->  	$(call rule_mkdir)
->  	$(Q)$(call echo-cmd,gen)cp $< $@
->  endif
->  
-> -$(LEGACY_CACHE_JSON): $(LEGACY_CACHE_PY)
-> +$(LEGACY_CACHE_JSON): $(LEGACY_CACHE_PY) $(JSON_DIRS_ROOT)
->  	$(call rule_mkdir)
->  	$(Q)$(call echo-cmd,gen)$(PYTHON) $(LEGACY_CACHE_PY) > $@
->  
-> -GEN_JSON = $(patsubst %,$(OUTPUT)%,$(JSON)) $(LEGACY_CACHE_JSON)
-> +GEN_JSON = $(patsubst %,$(OUTPUT)%,$(JSON)) $(LEGACY_CACHE_JSON) $(JSON_DIRS)
->  
->  $(METRIC_TEST_LOG): $(METRIC_TEST_PY) $(METRIC_PY)
->  	$(call rule_mkdir)
+> * The next patch adds a cycles metrics based on perf event modifiers
+>   for AMD, Intel and Arm64.
 > 
-> ---
-> base-commit: 571d29baa07e83e637075239f379f91353c24ec9
-> change-id: 20260120-james-perf-json-delete-fix-71553b379e8e
+> * The final patch validates that all events provided to an Event
+>   object exist in a json file somewhere. This is to avoid mistakes
+>   like unfortunate typos.
 > 
-> Best regards,
+> This series has benefitted from the input of Leo Yan
+>  <leo.yan@arm.com>, Sandipan Das <sandidas@amd.com>, Thomas Falcon
+>  <thomas.falcon@intel.com> and Perry Taylor <perry.taylor@intel.com>.
+> 
+> v10. Drop already merged non-vendor patches (Namhyung). Drop "Add
+>      collection of topdown like metrics for arm64" as requested by
+>      James Clark. Update AMD metrics for changes to AMD Zen6 event
+>      names from the series:
+>      https://lore.kernel.org/lkml/cover.1767858676.git.sandipan.das@amd.com/
+> 
+> v9. Drop (for now) 4 AMD sets of metrics for additional follow up. Add
+>     reviewed-by tags from Sandipan Das (AMD) and tested-by tags from
+>     Thomas Falcon (Intel).
+>     https://lore.kernel.org/lkml/20251202175043.623597-1-irogers@google.com/
+> 
+> v8. Combine the previous 4 series for clarity. Rebase on top of the
+>     more recent legacy metric and event changes. Make the python more
+>     pep8 and pylint compliant.
+>     https://lore.kernel.org/lkml/20251113032040.1994090-1-irogers@google.com/
+> 
+> Foundations:
+> v6. Fix issue with '\-' escape not being '\\-' (reported-by Sandipan
+>     Das <sandidas@amd.com>) which didn't alter the generated json.
+>     https://lore.kernel.org/lkml/20250904043208.995243-1-irogers@google.com/
+> 
+> v5. Rebase on top of legacy hardware/cache changes that now generate
+>     events using python:
+>     https://lore.kernel.org/lkml/20250828205930.4007284-1-irogers@google.com/
+>     the v5 series is:
+>     https://lore.kernel.org/lkml/20250829030727.4159703-1-irogers@google.com/
+> 
+> v4. Rebase and small Build/Makefile tweak
+>     https://lore.kernel.org/lkml/20240926173554.404411-1-irogers@google.com/
+> 
+> v3. Some code tidying, make the input directory a command line
+>     argument, but no other functional or output changes.
+>     https://lore.kernel.org/lkml/20240314055051.1960527-1-irogers@google.com/
+> 
+> v2. Fixes two type issues in the python code but no functional or
+>     output changes.
+>     https://lore.kernel.org/lkml/20240302005950.2847058-1-irogers@google.com/
+> 
+> v1. https://lore.kernel.org/lkml/20240302005950.2847058-1-irogers@google.com/
+> 
+> AMD:
+> v6. Fix issue with '\-' escape not being '\\-' (reported-by Sandipan
+>     Das <sandidas@amd.com>) which didn't alter the generated json.
+>     https://lore.kernel.org/lkml/20250904044047.999031-1-irogers@google.com/
+> 
+> v5. Rebase. Add uop cache hit/miss rates patch. Prefix all metric
+>     names with lpm_ (short for Linux Perf Metric) so that python
+>     generated metrics are clearly namespaced.
+>     https://lore.kernel.org/lkml/20250829033138.4166591-1-irogers@google.com/
+> 
+> v4. Rebase.
+>     https://lore.kernel.org/lkml/20240926174101.406874-1-irogers@google.com/
+> 
+> v3. Some minor code cleanup changes.
+>     https://lore.kernel.org/lkml/20240314055839.1975063-1-irogers@google.com/
+> 
+> v2. Drop the cycles breakdown in favor of having it as a common
+>     metric, suggested by Kan Liang <kan.liang@linux.intel.com>.
+>     https://lore.kernel.org/lkml/20240301184737.2660108-1-irogers@google.com/
+> 
+> v1. https://lore.kernel.org/lkml/20240229001537.4158049-1-irogers@google.com/
+> 
+> Intel:
+> v6. Fix issue with '\-' escape not being '\\-' (reported-by Sandipan
+>     Das <sandidas@amd.com>) which didn't alter the generated json.
+>     https://lore.kernel.org/lkml/20250904044653.1002362-1-irogers@google.com/
+> 
+> v5. Rebase. Fix description for smi metric (Kan). Prefix all metric
+>     names with lpm_ (short for Linux Perf Metric) so that python
+>     generated metrics are clearly namespaced. Kan requested a
+>     namespace in his review:
+>     https://lore.kernel.org/lkml/43548903-b7c8-47c4-b1da-0258293ecbd4@linux.intel.com/
+>     The v5 series is:
+>     https://lore.kernel.org/lkml/20250829041104.4186320-1-irogers@google.com/
+> 
+> v4. Experimental metric descriptions. Add mesh bandwidth metric. Rebase.
+>     https://lore.kernel.org/lkml/20240926175035.408668-1-irogers@google.com/
+> 
+> v3. Swap tsx and CheckPMU patches that were in the wrong order. Some
+>     minor code cleanup changes. Drop reference to merged fix for
+>     umasks/occ_sel in PCU events and for cstate metrics.
+>     https://lore.kernel.org/lkml/20240314055919.1979781-1-irogers@google.com/
+> 
+> v2. Drop the cycles breakdown in favor of having it as a common
+>     metric, spelling and other improvements suggested by Kan Liang
+>     <kan.liang@linux.intel.com>.
+>     https://lore.kernel.org/lkml/20240301185559.2661241-1-irogers@google.com/
+> 
+> v1. https://lore.kernel.org/lkml/20240229001806.4158429-1-irogers@google.com/
+> 
+> ARM:
+> 
+> v7. Switch a use of cycles to cpu-cycles due to ARM having too many
+>     cycles events.
+>     https://lore.kernel.org/lkml/20250904194139.1540230-1-irogers@google.com/
+> 
+> v6. Fix issue with '\-' escape not being '\\-' (reported-by Sandipan
+>     Das <sandidas@amd.com>) which didn't alter the generated json.
+>     https://lore.kernel.org/lkml/20250904045253.1007052-1-irogers@google.com/
+> 
+> v5. Rebase. Address review comments from Leo Yan
+>     <leo.yan@arm.com>. Prefix all metric names with lpm_ (short for
+>     Linux Perf Metric) so that python generated metrics are clearly
+>     namespaced. Use cpu-cycles rather than cycles legacy event for
+>     cycles metrics to avoid confusion with ARM PMUs. Add patch that
+>     checks events to ensure all possible event names are present in at
+>     least one json file.
+>     https://lore.kernel.org/lkml/20250829053235.21994-1-irogers@google.com/
+> 
+> v4. Tweak to build dependencies and rebase.
+>     https://lore.kernel.org/lkml/20240926175709.410022-1-irogers@google.com/
+> 
+> v3. Some minor code cleanup changes.
+>     https://lore.kernel.org/lkml/20240314055801.1973422-1-irogers@google.com/
+> 
+> v2. The cycles metrics are now made common and shared with AMD and
+>     Intel, suggested by Kan Liang <kan.liang@linux.intel.com>. This
+>     assumes these patches come after the AMD and Intel sets.
+>     https://lore.kernel.org/lkml/20240301184942.2660478-1-irogers@google.com/
+> 
+> v1. https://lore.kernel.org/lkml/20240229001325.4157655-1-irogers@google.com/
+> 
+> Ian Rogers (35):
+>   perf jevents: Build support for generating metrics from python
+>   perf jevents: Add load event json to verify and allow fallbacks
+>   perf jevents: Add RAPL event metric for AMD zen models
+>   perf jevents: Add idle metric for AMD zen models
+>   perf jevents: Add upc metric for uops per cycle for AMD
+>   perf jevents: Add br metric group for branch statistics on AMD
+>   perf jevents: Add itlb metric group for AMD
+>   perf jevents: Add dtlb metric group for AMD
+>   perf jevents: Add uncore l3 metric group for AMD
+>   perf jevents: Add load store breakdown metrics ldst for AMD
+>   perf jevents: Add context switch metrics for AMD
+>   perf jevents: Add RAPL metrics for all Intel models
+>   perf jevents: Add idle metric for Intel models
+>   perf jevents: Add CheckPmu to see if a PMU is in loaded json events
+>   perf jevents: Add smi metric group for Intel models
+>   perf jevents: Mark metrics with experimental events as experimental
+>   perf jevents: Add tsx metric group for Intel models
+>   perf jevents: Add br metric group for branch statistics on Intel
+>   perf jevents: Add software prefetch (swpf) metric group for Intel
+>   perf jevents: Add ports metric group giving utilization on Intel
+>   perf jevents: Add L2 metrics for Intel
+>   perf jevents: Add load store breakdown metrics ldst for Intel
+>   perf jevents: Add ILP metrics for Intel
+>   perf jevents: Add context switch metrics for Intel
+>   perf jevents: Add FPU metrics for Intel
+>   perf jevents: Add Miss Level Parallelism (MLP) metric for Intel
+>   perf jevents: Add mem_bw metric for Intel
+>   perf jevents: Add local/remote "mem" breakdown metrics for Intel
+>   perf jevents: Add dir breakdown metrics for Intel
+>   perf jevents: Add C-State metrics from the PCU PMU for Intel
+>   perf jevents: Add local/remote miss latency metrics for Intel
+>   perf jevents: Add upi_bw metric for Intel
+>   perf jevents: Add mesh bandwidth saturation metric for Intel
+>   perf jevents: Add cycles breakdown metric for arm64/AMD/Intel
+>   perf jevents: Validate that all names given an Event
+> 
+>  tools/perf/.gitignore                   |    5 +
+>  tools/perf/Makefile.perf                |    2 +
+>  tools/perf/pmu-events/Build             |   51 +-
+>  tools/perf/pmu-events/amd_metrics.py    |  492 ++++++++++
+>  tools/perf/pmu-events/arm64_metrics.py  |   49 +
+>  tools/perf/pmu-events/common_metrics.py |   19 +
+>  tools/perf/pmu-events/intel_metrics.py  | 1129 +++++++++++++++++++++++
+>  tools/perf/pmu-events/metric.py         |  171 +++-
+>  8 files changed, 1914 insertions(+), 4 deletions(-)
+>  create mode 100755 tools/perf/pmu-events/amd_metrics.py
+>  create mode 100755 tools/perf/pmu-events/arm64_metrics.py
+>  create mode 100644 tools/perf/pmu-events/common_metrics.py
+>  create mode 100755 tools/perf/pmu-events/intel_metrics.py
+> 
 > -- 
-> James Clark <james.clark@linaro.org>
+> 2.52.0.457.g6b5491de43-goog
