@@ -1,191 +1,303 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD1E324B1E;
-	Tue, 27 Jan 2026 18:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769540218; cv=none; b=ezhMpWPF0uSez+erYVDFF9kxYjQZuINwonaENOlVk7XmM+7BkiQM1+qmHPFMZsRjCiGh5OJzSFOTUjm+Hb5GFKgDWipdKUHBETboqmC9sT5Ksg6LtgKIE43ffyh0IWun6uP9hcOyYEndTL9EQxAMKvOUu5MreS0r0C+QPUdwoxo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769540218; c=relaxed/simple;
-	bh=Ch0LIB4X3I+61DsXgHOBKVGaZxOxxpivi8bEXcVQRqI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YLhCz/sjxBHhq5uSAsF7ofShWk+slMq5Hkocvp02LCLYI7NI28GUvk8w8QTx7ImMBjBLQmuNTL78nC0jg0nVv9Pzxi5KbcH9rXqSc5ecM8C0zqmXbURGzxSfHXLoR8N4aeZ4CE4eO4u9u9chbTSX0AfwztOyzZHz7y0a2AoOgGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PeneBB5K; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B982FFDFA
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 19:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769540878; cv=pass; b=Nn0dpNXI9FVwr0qFODCl/9G/3EFJMDqd+v1gPMv7w7Ny3FC7V2wAI5Lwfml9GuRj5+4U9/Lycyz1fzIhIJb4yXwtFZqq7G0YF4QiYkCO6eIWUoFEpLMSKC8oDXp9s5thPtwfKraoME4fUARoPCFu3ytxKkhG3StxR+u4jVUEtuw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769540878; c=relaxed/simple;
+	bh=urIIFwDCdWAK34onKuLXJ1hrtsco0FxwK4U14DFWbb0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BwzoJIOOouHZC3vApZyjrfwGi/b1NzsphDO8Vvt1ME2BLg0RSUAEUr1xVoFIm/vAjs6iQRMTqAr4bZN8PFGMPBN/Om2xN8QozY7iChf80OEwCclY72wnMYFB/C5bjYgFfLG/IAXpBDTQI1pRDU05RV1MOORetFmNtbGu5YSEeXo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iEV4+ODu; arc=pass smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PeneBB5K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769540217; x=1801076217;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ch0LIB4X3I+61DsXgHOBKVGaZxOxxpivi8bEXcVQRqI=;
-  b=PeneBB5K61qZ6UsrDgFrzFsILjKlQBhFVzefPAq0/HWBP5aqXn/PAfcW
-   uLiLOqBx0KficCZkvJnMTol4m9hq1I1p91i8vtK+qXASHFvd2F3Qk/e94
-   /BJ31y4c72md5KoMj/anFrYXGZ7vT8r0ibXp0PUZXLh6OJiRjitS+GMUs
-   +2FrK+Q8jVem2oKtK+gEkwCGXPdIXF/djhPiCGTf4035uWXlvxc2UTw/h
-   M4n0Z6zPaJGHLKOJV4phe8Tu1VeR1GSXkkcziF1MNzpKo58avXIBoT6r7
-   EnTk4aZAIsAI+rfSyZVJxBLKKX+u9WM9EsfVnMCt85pGt1qKc+A+HJMrY
-   Q==;
-X-CSE-ConnectionGUID: 3f01NgDtRdCiCJYklNZ28A==
-X-CSE-MsgGUID: J4vS+HKHS6u2dsJ0KUptcA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11684"; a="81377730"
-X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
-   d="scan'208";a="81377730"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 10:56:56 -0800
-X-CSE-ConnectionGUID: 943+XywOTBeCmu+rfv8XIg==
-X-CSE-MsgGUID: 27YhhHwpQZ6G6ZLX+E50Fw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
-   d="scan'208";a="208409714"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 27 Jan 2026 10:56:51 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vkoF6-00000000YrA-2dUf;
-	Tue, 27 Jan 2026 18:56:48 +0000
-Date: Wed, 28 Jan 2026 02:56:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ruidong Tian <tianruidong@linux.alibaba.com>, catalin.marinas@arm.com,
-	will@kernel.org, lpieralisi@kernel.org, guohanjun@huawei.com,
-	sudeep.holla@arm.com, rafael@kernel.org, robin.murphy@arm.com,
-	mark.rutland@arm.com, tony.luck@intel.com, bp@alien8.de,
-	tglx@linutronix.de
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, lenb@kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-acpi@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-edac@vger.kernel.org, mchehab@kernel.org,
-	xueshuai@linux.alibaba.com, zhuo.song@linux.alibaba.com,
-	oliver.yang@linux.alibaba.com,
-	Ruidong Tian <tianruidong@linux.alibaba.com>
-Subject: Re: [PATCH v6 15/16] ras: AEST: support vendor node CMN700
-Message-ID: <202601280228.CbJgYMRG-lkp@intel.com>
-References: <20260122094656.73399-16-tianruidong@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iEV4+ODu"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a0d06cfa93so9705ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 11:07:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769540874; cv=none;
+        d=google.com; s=arc-20240605;
+        b=RwxL1L+WaE7yDE7W9vYdqaYxVluB9CjB0ibG77RTowvHNqEi+ad5o+3t9Q39+LZN8I
+         sVJW/cJggYTbFOqlJ8apAN6BweVNgotAGqlAV26A4iMUp51VaSYpMUcra/7ahigm1urs
+         r04ZX09dSeI9sOPU3SizC1/PUg/8ePsOWwm2wpx3FIjCNkkle5PgLHsoi+Uilvp4oLFC
+         Yt9UPba0nPKWrZiNJ4SnvTgtIJVRvYlXJ881BrcZxUZCUzbJc/0VsdTMh08/KG2KybgR
+         SgY5NnvZy5DNfNRQ4gAOK3haUaiPb1UxQ4/6FT9tIxjZjVSyTfIYI6MzQRUo5RzTCuGa
+         JL3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=PdYVKoPSvOw/L0lYFnEfLC+5ATp/EMO+wdpJLYpb3EQ=;
+        fh=dPmOUqL5g+o3nCsitEVppGTmJWv/SoH9qGFusy32i5g=;
+        b=BcU8z0bcmjXKA7loRXI/gxCIwkBLCl/so+M/jbNacRv1Y/AJcsuBmPdGk62oSMw4MF
+         7jdlvHyX0mOVbD2rKUGFw7zfqPYoyJct9Q/aoBoM0fyeFsx6IlqpzEBdxH7tMusArh4q
+         ULGc1Yy5T4l5oh+lJX1t/xoY1cBlTebJmnUNqvRtYG5ncT4cJ2kOiHOtWifLjwUMUT9H
+         rLQL2YEpmAGThNauxxmBWsdwf9aP+XIVdw8kbWBLp4+6d4z0Z2xsk+5QsZg4N4wgQ5JH
+         cKZeiIqaugQgfOeI6dParlgBckXaRMMeBPzb01rJH2OTvPKnSxMQnsh/6C5mSfaGpY+q
+         HTXA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1769540874; x=1770145674; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PdYVKoPSvOw/L0lYFnEfLC+5ATp/EMO+wdpJLYpb3EQ=;
+        b=iEV4+ODuYPTgPNbzKyCtLYbCsf7kTWsxs+tkWBOJxq7pmDWjXLX9w/J3lNCfJFCLDM
+         7mmYApWaqFETVcoQ6AH9rF+J4eZ4gHRy/5cwVQWWcfcVIXBfA0F4wqPhwoZ39cRqAfOq
+         ef5lydHmeCMDXkB9LntXogyDm2OdvLUhf65Ejz4Lu84b/wT/sIJGzbCkcXLW//uy/TGP
+         X3ucXcz8CjRkXSrZM9ETlS1Cv3Kigjn4Au0/2BDzK7PNSE/yLqbTLe9d4H4ITIecakrs
+         EhZK69aESNWbKZcGigtfJNgnGoU8+MoQJ+6BWjhNcgocOq58FX8eIo1VRuVVQUWoZrZw
+         sJ4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769540874; x=1770145674;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=PdYVKoPSvOw/L0lYFnEfLC+5ATp/EMO+wdpJLYpb3EQ=;
+        b=DTKFBLa/d7AHSHZx/DqFfuLpkbgS64bTUbXEUiRpBIx3B7lHQEsas98bAHEniJnzTS
+         aPzOsz6pwKaH6LDAb3Frf8yygfxvG9QRjCSgRqxye/01ae3hVz3Si3aJhmRU0W79Aug0
+         U785WoPX2ENfcAIAMbVlajfTeLsYWkcwEBxV186vlNVsEgZXLU94brhOuqAmu8raahqY
+         /CRo94sjlhqhDQ2t/dhM5BFmvRWMGzaSrJovz51cKCxWK34B9usEpFb6nj+Ya1YcUOPR
+         sN9p+rJzTSi+mMtupn4Ba5Uh9kgEgU6ygSq6NnpAs18IRc3hpiVeb7tYTElegVKBPQfg
+         Lq+A==
+X-Forwarded-Encrypted: i=1; AJvYcCW3v7d/JVMKBsn2ntBX/H6WT9FokN1Pfz0FYD+rZi6nu9tvh9jr2QVEAX+WZczAy7FnhOKJBjuK5RLBVsYhcWv6@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwShAtNJj2tsw4XDnp/28RiVfjwf35yMH91kSbL8TxV9QNX3iS
+	UL8QtinPg9qwhtyPgAkZqWxZJYDt0WqUYx3cd7Cg9SAX9t9YcGVXb5lJIC0s01rqtqqdhFb4pdz
+	MljAfsf6ZUWcNI8Oizjqh8hKKhzpe0jJ6m3Ok4vRp
+X-Gm-Gg: AZuq6aIFZKq8aJCkzB6zkZmoATdPZjhuaXlCFrHcfhGR+eCVmfQkTyXIJ9OYDXZlwIr
+	Q4iNwWaH+F6hOPBsMzK2uO4irVrXiOJa6vbegdU38MR77azFPrsQdD8Vu0GKHrZvsi2qT8LE/XH
+	i+xvTDh+wRAW5lVUSs4CmpmR7espP1AWOrYq2ILTE+e0FoSNM2DTMOjAs5TkrmG6cq9l9RCLsT0
+	2oPgsJR4zZWA9rJlv4vwWUkDLmi/27+4PfV2CVBZVczAHVDsnWsUW2EnWx84G9WoivX74rmHAm8
+	v0un3XWnXmBYlWGK5zLerm5N
+X-Received: by 2002:a17:903:38cc:b0:2a7:4151:2c74 with SMTP id
+ d9443c01a7336-2a870b63e57mr2453415ad.16.1769540873513; Tue, 27 Jan 2026
+ 11:07:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260122094656.73399-16-tianruidong@linux.alibaba.com>
+References: <aXjjSR1s3CJQn0bY@x1>
+In-Reply-To: <aXjjSR1s3CJQn0bY@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 27 Jan 2026 11:07:41 -0800
+X-Gm-Features: AZwV_Qg-vkoG063DHBhGQ5cMLZF24Bzmsw9DPggISimSN0MSY8UOE3PI52UqHbg
+Message-ID: <CAP-5=fUor0SPQ8PjEHHaE1qSnZ5TX1H=feUCERzwXGibqKAfNg@mail.gmail.com>
+Subject: Re: [PATCH 1/1 next] perf strlist: Remove dont_dupstr logic, used
+ only once
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ruidong,
+On Tue, Jan 27, 2026 at 8:09=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Ian Rogers noticed that 678ed6b707e4b2db ("perf strlist: Don't write to
+> const memory") breaks the 'Remove thread map' 'perf test' entry, because
+> it keeps pointers to the temporary string introduced to avoid touching
+> the const memory.
+>
+> This is because the thread_map__new_by_[pt]id_str() were the only
+> methods using the slist->dont_dupstr knob to keep pointers to the
+> original const string list, as it uses strtol to parse numbers and it
+> stops at the comma.
+>
+> As this is the only case of dont_dupstr use, dupstr being the default,
+> and it gets in the way of getting rid of the last const-correctness,
+> remove this knob, with it:
+>
+>   $ perf test 37
+>   37: Remove thread map   : Ok
+>   $
+>
+> Fixes: 678ed6b707e4b2db ("perf strlist: Don't write to const memory")
+> Reported-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-kernel test robot noticed the following build warnings:
+Tested-by: Ian Rogers <irogers@google.com>
 
-[auto build test WARNING on arm64/for-next/core]
-[also build test WARNING on rafael-pm/linux-next rafael-pm/bleeding-edge linus/master v6.19-rc7 next-20260126]
-[cannot apply to tip/smp/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks,
+Ian
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ruidong-Tian/ACPI-AEST-Parse-the-AEST-table/20260122-180219
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
-patch link:    https://lore.kernel.org/r/20260122094656.73399-16-tianruidong%40linux.alibaba.com
-patch subject: [PATCH v6 15/16] ras: AEST: support vendor node CMN700
-config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20260128/202601280228.CbJgYMRG-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260128/202601280228.CbJgYMRG-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601280228.CbJgYMRG-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/ras/aest/aest-cmn.c:209:19: warning: variable 'hnd_base' set but not used [-Wunused-but-set-variable]
-     209 |         u64 errgsr_addr, hnd_base;
-         |                          ^
-   1 warning generated.
-
-
-vim +/hnd_base +209 drivers/ras/aest/aest-cmn.c
-
-   203	
-   204	static int aest_cmn_reorgnize_node(struct aest_device *adev,
-   205					   struct acpi_aest_node *anode, u64 base)
-   206	{
-   207		struct aest_node *cmn_node;
-   208		u64 hnd_offset, cmn_node_offset, reg, logic_id, type, node_id;
- > 209		u64 errgsr_addr, hnd_base;
-   210		struct aest_record *record;
-   211		int ret, node_index;
-   212		struct cmn_vendor_data *vendor_data;
-   213	
-   214		if (anode->interface_hdr->type !=
-   215		    ACPI_AEST_NODE_SINGLE_RECORD_MEMORY_MAPPED) {
-   216			aest_dev_err(adev, "CMN just use single memory mapping\n");
-   217			return -ENODEV;
-   218		}
-   219	
-   220		hnd_offset = *((u64 *)anode->vendor->vendor_specific_data);
-   221		cmn_node_offset = *((u64 *)&anode->vendor->vendor_specific_data[8]);
-   222	
-   223		reg = readq_relaxed((void *)base + cmn_node_offset + CMN_NODE_INFO);
-   224	
-   225		logic_id = FIELD_GET(CMN_NI_LOGICAL_ID, reg);
-   226		type = FIELD_GET(CMN_NI_NODE_TYPE, reg);
-   227		node_id = FIELD_GET(CMN_NI_NODE_ID, reg);
-   228	
-   229		hnd_base = base + hnd_offset;
-   230		node_index = cmn_config->node_id_map[type];
-   231		errgsr_addr = base + cmn_config->errgsr_offset(hnd_offset, node_index);
-   232	
-   233		// node not register, create it
-   234		cmn_node = &adev->nodes[node_index];
-   235		if (!cmn_node->errgsr) {
-   236			ret = aest_cmn_init_node(adev, cmn_node, anode, type,
-   237						 errgsr_addr);
-   238			if (ret)
-   239				return -ENOMEM;
-   240		}
-   241	
-   242		aest_dev_dbg(adev, "node type %llx, id %llx, offset %llx\n", type,
-   243			     logic_id, cmn_node_offset);
-   244	
-   245		if (!test_bit(0, anode->record_implemented))
-   246			clear_bit(logic_id, cmn_node->record_implemented);
-   247	
-   248		if (!test_bit(0, anode->status_reporting))
-   249			clear_bit(logic_id, cmn_node->status_reporting);
-   250	
-   251		record = &cmn_node->records[logic_id];
-   252		record->name =
-   253			devm_kasprintf(adev->dev, GFP_KERNEL, "record%lld", logic_id);
-   254		if (!record->name)
-   255			return -ENOMEM;
-   256		record->regs_base = devm_ioremap(
-   257			adev->dev, (resource_size_t)anode->interface_hdr->address,
-   258			sizeof(struct ras_ext_regs));
-   259		if (!record->regs_base)
-   260			return -ENOMEM;
-   261		record->addressing_mode = test_bit(0, anode->addressing_mode);
-   262		record->node = cmn_node;
-   263		record->index = logic_id;
-   264		record->access = &aest_access[anode->interface_hdr->type];
-   265	
-   266		vendor_data = devm_kzalloc(adev->dev, sizeof(struct cmn_vendor_data),
-   267					   GFP_KERNEL);
-   268		vendor_data->node_type = type;
-   269		vendor_data->node_id = node_id;
-   270		vendor_data->logic_id = logic_id;
-   271	
-   272		record->vendor_data = vendor_data;
-   273		record->vendor_data_size = sizeof(struct cmn_vendor_data);
-   274	
-   275		aest_record_dbg(record, "base %llx\n", anode->interface_hdr->address);
-   276	
-   277		return 0;
-   278	}
-   279	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  tools/perf/util/strlist.c    | 25 ++++++++-----------------
+>  tools/perf/util/strlist.h    |  2 --
+>  tools/perf/util/thread_map.c | 18 ++++++------------
+>  3 files changed, 14 insertions(+), 31 deletions(-)
+>
+> diff --git a/tools/perf/util/strlist.c b/tools/perf/util/strlist.c
+> index 98883672fcf47102..50add72575e0c60c 100644
+> --- a/tools/perf/util/strlist.c
+> +++ b/tools/perf/util/strlist.c
+> @@ -12,20 +12,16 @@
+>  #include <linux/zalloc.h>
+>
+>  static
+> -struct rb_node *strlist__node_new(struct rblist *rblist, const void *ent=
+ry)
+> +struct rb_node *strlist__node_new(struct rblist *rblist __maybe_unused, =
+const void *entry)
+>  {
+>         const char *s =3D entry;
+>         struct rb_node *rc =3D NULL;
+> -       struct strlist *strlist =3D container_of(rblist, struct strlist, =
+rblist);
+>         struct str_node *snode =3D malloc(sizeof(*snode));
+>
+>         if (snode !=3D NULL) {
+> -               if (strlist->dupstr) {
+> -                       s =3D strdup(s);
+> -                       if (s =3D=3D NULL)
+> -                               goto out_delete;
+> -               }
+> -               snode->s =3D s;
+> +               snode->s =3D strdup(s);
+> +               if (snode->s =3D=3D NULL)
+> +                       goto out_delete;
+>                 rc =3D &snode->rb_node;
+>         }
+>
+> @@ -36,20 +32,18 @@ struct rb_node *strlist__node_new(struct rblist *rbli=
+st, const void *entry)
+>         return NULL;
+>  }
+>
+> -static void str_node__delete(struct str_node *snode, bool dupstr)
+> +static void str_node__delete(struct str_node *snode)
+>  {
+> -       if (dupstr)
+> -               zfree((char **)&snode->s);
+> +       zfree((char **)&snode->s);
+>         free(snode);
+>  }
+>
+>  static
+> -void strlist__node_delete(struct rblist *rblist, struct rb_node *rb_node=
+)
+> +void strlist__node_delete(struct rblist *rblist __maybe_unused, struct r=
+b_node *rb_node)
+>  {
+> -       struct strlist *slist =3D container_of(rblist, struct strlist, rb=
+list);
+>         struct str_node *snode =3D container_of(rb_node, struct str_node,=
+ rb_node);
+>
+> -       str_node__delete(snode, slist->dupstr);
+> +       str_node__delete(snode);
+>  }
+>
+>  static int strlist__node_cmp(struct rb_node *rb_node, const void *entry)
+> @@ -165,12 +159,10 @@ struct strlist *strlist__new(const char *list, cons=
+t struct strlist_config *conf
+>         struct strlist *slist =3D malloc(sizeof(*slist));
+>
+>         if (slist !=3D NULL) {
+> -               bool dupstr =3D true;
+>                 bool file_only =3D false;
+>                 const char *dirname =3D NULL;
+>
+>                 if (config) {
+> -                       dupstr =3D !config->dont_dupstr;
+>                         dirname =3D config->dirname;
+>                         file_only =3D config->file_only;
+>                 }
+> @@ -180,7 +172,6 @@ struct strlist *strlist__new(const char *list, const =
+struct strlist_config *conf
+>                 slist->rblist.node_new    =3D strlist__node_new;
+>                 slist->rblist.node_delete =3D strlist__node_delete;
+>
+> -               slist->dupstr    =3D dupstr;
+>                 slist->file_only =3D file_only;
+>
+>                 if (list && strlist__parse_list(slist, list, dirname) !=
+=3D 0)
+> diff --git a/tools/perf/util/strlist.h b/tools/perf/util/strlist.h
+> index 7e82c71dcc422d7e..3e9533e66ca9ee11 100644
+> --- a/tools/perf/util/strlist.h
+> +++ b/tools/perf/util/strlist.h
+> @@ -14,7 +14,6 @@ struct str_node {
+>
+>  struct strlist {
+>         struct rblist rblist;
+> -       bool          dupstr;
+>         bool          file_only;
+>  };
+>
+> @@ -24,7 +23,6 @@ struct strlist {
+>   *             found
+>   */
+>  struct strlist_config {
+> -       bool dont_dupstr;
+>         bool file_only;
+>         const char *dirname;
+>  };
+> diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
+> index ca193c1374ed4823..48c70f149e9201dc 100644
+> --- a/tools/perf/util/thread_map.c
+> +++ b/tools/perf/util/thread_map.c
+> @@ -164,19 +164,16 @@ static struct perf_thread_map *thread_map__new_by_p=
+id_str(const char *pid_str)
+>         struct dirent **namelist =3D NULL;
+>         int i, j =3D 0;
+>         pid_t pid, prev_pid =3D INT_MAX;
+> -       char *end_ptr;
+>         struct str_node *pos;
+> -       struct strlist_config slist_config =3D { .dont_dupstr =3D true, }=
+;
+> -       struct strlist *slist =3D strlist__new(pid_str, &slist_config);
+> +       struct strlist *slist =3D strlist__new(pid_str, NULL);
+>
+>         if (!slist)
+>                 return NULL;
+>
+>         strlist__for_each_entry(pos, slist) {
+> -               pid =3D strtol(pos->s, &end_ptr, 10);
+> +               pid =3D strtol(pos->s, NULL, 10);
+>
+> -               if (pid =3D=3D INT_MIN || pid =3D=3D INT_MAX ||
+> -                   (*end_ptr !=3D '\0' && *end_ptr !=3D ','))
+> +               if (pid =3D=3D INT_MIN || pid =3D=3D INT_MAX)
+>                         goto out_free_threads;
+>
+>                 if (pid =3D=3D prev_pid)
+> @@ -223,24 +220,21 @@ struct perf_thread_map *thread_map__new_by_tid_str(=
+const char *tid_str)
+>         struct perf_thread_map *threads =3D NULL, *nt;
+>         int ntasks =3D 0;
+>         pid_t tid, prev_tid =3D INT_MAX;
+> -       char *end_ptr;
+>         struct str_node *pos;
+> -       struct strlist_config slist_config =3D { .dont_dupstr =3D true, }=
+;
+>         struct strlist *slist;
+>
+>         /* perf-stat expects threads to be generated even if tid not give=
+n */
+>         if (!tid_str)
+>                 return perf_thread_map__new_dummy();
+>
+> -       slist =3D strlist__new(tid_str, &slist_config);
+> +       slist =3D strlist__new(tid_str, NULL);
+>         if (!slist)
+>                 return NULL;
+>
+>         strlist__for_each_entry(pos, slist) {
+> -               tid =3D strtol(pos->s, &end_ptr, 10);
+> +               tid =3D strtol(pos->s, NULL, 10);
+>
+> -               if (tid =3D=3D INT_MIN || tid =3D=3D INT_MAX ||
+> -                   (*end_ptr !=3D '\0' && *end_ptr !=3D ','))
+> +               if (tid =3D=3D INT_MIN || tid =3D=3D INT_MAX)
+>                         goto out_free_threads;
+>
+>                 if (tid =3D=3D prev_tid)
+> --
+> 2.52.0
+>
