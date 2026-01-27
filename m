@@ -1,54 +1,54 @@
 Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CBE3659E8
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:45:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59CF32939B
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:45:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769539549; cv=none; b=H1MsEbQQPXCsCkNG5yF3UPJyIKc4jbCWaHYG1LYiNok8Up4l0IdjlxfJ8EiHN5wRvoue7N/mCVt1hIDjV8HboL/hoDf5hlRZ6Kr9AKCc++IG0VbkMIqgT0YK3pelik5c+A0MlKpdv11Me3oIwM9LhwuMXpNasBsynj8GGCfmShA=
+	t=1769539552; cv=none; b=umo1q+emsupLItjPcF7rqD3BJku47NIxMB9FEflkcG8yZmGklqFipJZb7uBs0ozWG8/tBJbz2BF9BEGf7FKsE28kfvDEinhl1eCuWXa8cv/tFMcNwo6GsBPyULX4zctR+v+ENbLaF8gN3cTsdGB0I4vABdvBZgm9S2V3h+fZidc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769539549; c=relaxed/simple;
-	bh=jGvHnBOIRlpXNzPDylmnrl70NxmK3iS0ZSa2PimW/OY=;
+	s=arc-20240116; t=1769539552; c=relaxed/simple;
+	bh=4YZdNHoD4OVwl+Z+UboY1dxnW9GaDyHi2p47czxKHP8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=aQyfD1Du0R41hWRMHysZRKHS6z0+B/aCUla8n+voeRTf9ne0d8UYM21CFtJpiVYf01Xv8hJjjTXM1kmRcYwejKAx3PilzeOgFW07lhf2tjHSzyw/ZVjuZ5VKb4T/ybFZ+pWLBZJlbweDTzmQFIKqRGSIIFpv4D5OtkdQ/Y5E7XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jnv4Werr; arc=none smtp.client-ip=74.125.82.202
+	 To:Content-Type; b=WE05VkZf+02vUR5tTi6KVjcJQQwz0eWv9ar4OrOl/D/ti3Yn/FjTx5IA5USU9jDMkX6Tcl59Jpm/weaaHinMG3LgpyNPjMTz8pxSRhHnqdw2Y7DoQsDj40ADHRqO171j+GI+WbcG3vU38yTuVrVx/p5kuSnqsIhdR/c9kc1UKEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P8nUJ/nP; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jnv4Werr"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b7155ca88cso5835203eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 10:45:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P8nUJ/nP"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b74aff34efso4922550eec.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 10:45:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769539548; x=1770144348; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769539550; x=1770144350; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/bQwBUeqFHmxPyvU6W3Kgyx2XHVX/3kNh3j54lLQrKs=;
-        b=Jnv4WerrqrEB+YsRRRIJD7QS5NPatx5Rb+QBuP2d3EVlFHVjqVm6k/iQ8Fn5Kutw07
-         EuzHMlXG7WfjV+cWT4MvjYr1nQWKZqCrEJuwh1/2Y2EW7DwdWOm5+05hZQJgVF4FmzQ9
-         XaymvYzYFhURhy3Xim1ZihlCslpvYXphMQxPHEf1V9GVEP+X2xPCoCkPye8CbvlGJP87
-         aTBuEeitDpGklT3u1J/rWriUwmuBmqduPvmkWuaEqv0FWs3PlXdWKBjJPNQCeyg1EGoS
-         92rU4RV/Fz19/7vG/v4IWBUwYEvpVLs0lEqCXcl/uwBCk1XUjKdEvepBhUDMuxx9zvfU
-         aXrA==
+        bh=Ml2Rrb34ZIoAiVgzhWpgKhiTIZVKvjCF+KWI69P37pc=;
+        b=P8nUJ/nPOWeLeOCSwadKKaS8IRtd9R/BFbLISxHtw6WHF7XrNox9ZPpCUtcKcYoHNY
+         2L5Q9VpgwAtV3zPRxzGNr0qfBiSYwFLSoqZnFbpiSQBFyW40EJnKolJilORB2m+fALLm
+         88QOI9XjfGUBxxP7nVHuTFc4/YHKnzcWFSEPlEYVcY1pfogjUI7bzJ7JzuyWoKXSjV49
+         qrn9WlviOqoNnFpvD0PCCrS/I53CcJS9BeL97NN/liHyGbLbAqF6buI34j5/318dstKS
+         vUb5T3XTTs9/3qc5GoyTMuiZwpgWN9IzKenl4P2VLCSnlDpQpBMczO1gqZUCWsvxqcNn
+         vWow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769539548; x=1770144348;
+        d=1e100.net; s=20230601; t=1769539550; x=1770144350;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/bQwBUeqFHmxPyvU6W3Kgyx2XHVX/3kNh3j54lLQrKs=;
-        b=Rjbu1eghqHhfkxqdhAaRA8V/VP9kBfhWIhz7yrZtxZ83y2C5iE9o2UQ5SS9tiXyxLt
-         orFy6+s9P+coezYpuvlIKQCa+yCwqbyED0QFg85n6AdkA8vdE5XuT7/9MXeK6qoagteN
-         LsMNxv/4QqISiUMYN+UnVt3HO8AfgUai0N08+ckkRHh86rcTJugzM1LdJ6KWVT+JOsps
-         1K9rATasijo4dKIpaGr4+wPsqflw75A3L79KmBatjtH8sfO6z1mPtzR9WwNDoz6wcLHa
-         M6mfSP77KmtbzDmtZOEZiAX1ok0iMPlNQeDF3PoY1HUnSg9DCu372eF1tkyCXQ+anb+W
-         5E3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXIdpJEUinG0dbYCUnZI7rVvgN/xOhia1Vm/7lP5wElnS3EivqOb6sH2v+YJ7DzVzFVaLf+6yK947gtiaH0xfvl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsuitTNQ48Girn9FB1aBsm0vlxJhmzJS5B/pos0fZUTkdfFSvM
-	2pvVug8VrZWeOXz4VrvbOTGKzYvmq4hXeOgaWvuibinfNmuABUSaeI0nadmKOznztHFHMu7O8RY
-	MR+lt6hRNBw==
-X-Received: from dyt2.prod.google.com ([2002:a05:693c:8082:b0:2b7:499d:745f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e80c:b0:2b6:b23b:d488
- with SMTP id 5a478bee46e88-2b78d98df7dmr2125109eec.25.1769539547575; Tue, 27
- Jan 2026 10:45:47 -0800 (PST)
-Date: Tue, 27 Jan 2026 10:44:42 -0800
+        bh=Ml2Rrb34ZIoAiVgzhWpgKhiTIZVKvjCF+KWI69P37pc=;
+        b=P0Xtpfm0DzClZGlqoy8x6II0ypwHX8zZj5XceKQLoImoA6YlF30lc86uxMspnTVT5s
+         KHzJtO8u6JQHNo8yFtFAhDXEkwgajF178JJAwfQToEM5AyQdDm2Qv7cXcvzH6/m2Zai+
+         1VSvcUgfLLY7GXd2n+mycrXoN/fMWHMmkcCgreD+D4xXtxxwgkmn6NT9ndsK3CwHzbTo
+         p/46Jn8QurPTlKyenKKflLGdBDYXNQPLYRIOTY4SN0ygoD21VqWK81OyvVH9qxKDLoYD
+         aGjv6n7QvBffiqq8MBjaegiK/U74GGqKMuIs/IFZA5pDKBPegSLK1btY0LtyyOpnGEPA
+         jfRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJPnAU7rSCTYoZ2ZuhXF1rC8a7F5sMLJKCUxoZ3eqV/tTHGX4o8qxHwOa84NkDFUP8qDNHwwpXJCwmHiBgZ+vz@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzXR0Mn5+f41miLRGsR9avjbEuhRaSnqUCg8fOllc75TBUHpvD
+	jvZ+iljwFHHld0gY9/RpOc0YpTzoFVCyMdeFzI0i4pR+I/ccguAGDJF6Oq6RgYpNPSS2gpdnjJM
+	FIXIxP6NETg==
+X-Received: from dycnh8.prod.google.com ([2002:a05:7300:ce88:b0:2a4:6ffc:87c9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:688c:b0:2b6:f0fc:8c47
+ with SMTP id 5a478bee46e88-2b78d9147f6mr1565661eec.16.1769539549765; Tue, 27
+ Jan 2026 10:45:49 -0800 (PST)
+Date: Tue, 27 Jan 2026 10:44:43 -0800
 In-Reply-To: <20260127184506.3059493-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260127184506.3059493-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260127184506.3059493-12-irogers@google.com>
-Subject: [PATCH v11 11/35] perf jevents: Add context switch metrics for AMD
+Message-ID: <20260127184506.3059493-13-irogers@google.com>
+Subject: [PATCH v11 12/35] perf jevents: Add RAPL metrics for all Intel models
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -75,66 +75,81 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Metrics break down context switches for different kinds of
-instruction.
+Add a 'cpu_power' metric group that computes the power consumption
+from RAPL events if they are present.
 
-Reviewed-by: Sandipan Das <sandipan.das@amd.com>
+Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/amd_metrics.py | 33 ++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 44 ++++++++++++++++++++++++--
+ 1 file changed, 41 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-index b3de74babe40..83e77ccc059e 100755
---- a/tools/perf/pmu-events/amd_metrics.py
-+++ b/tools/perf/pmu-events/amd_metrics.py
-@@ -122,6 +122,38 @@ def AmdBr():
-                        description="breakdown of retired branch instructions")
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index b287ef115193..61778deedfff 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -1,12 +1,48 @@
+ #!/usr/bin/env python3
+ # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+ import argparse
++import math
+ import os
+-from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, LoadEvents,
+-                    MetricGroup)
++from metric import (d_ratio, has_event, Event, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
++                    LoadEvents, Metric, MetricGroup, Select)
  
- 
-+def AmdCtxSw() -> MetricGroup:
-+    cs = Event("context\\-switches")
+ # Global command line arguments.
+ _args = None
++interval_sec = Event("duration_time")
++
++
++def Rapl() -> MetricGroup:
++    """Processor power consumption estimate.
++
++    Use events from the running average power limit (RAPL) driver.
++    """
++    # Watts = joules/second
++    pkg = Event("power/energy\\-pkg/")
++    cond_pkg = Select(pkg, has_event(pkg), math.nan)
++    cores = Event("power/energy\\-cores/")
++    cond_cores = Select(cores, has_event(cores), math.nan)
++    ram = Event("power/energy\\-ram/")
++    cond_ram = Select(ram, has_event(ram), math.nan)
++    gpu = Event("power/energy\\-gpu/")
++    cond_gpu = Select(gpu, has_event(gpu), math.nan)
++    psys = Event("power/energy\\-psys/")
++    cond_psys = Select(psys, has_event(psys), math.nan)
++    scale = 2.3283064365386962890625e-10
 +    metrics = [
-+        Metric("lpm_cs_rate", "Context switches per second",
-+               d_ratio(cs, interval_sec), "ctxsw/s")
++        Metric("lpm_cpu_power_pkg", "",
++               d_ratio(cond_pkg * scale, interval_sec), "Watts"),
++        Metric("lpm_cpu_power_cores", "",
++               d_ratio(cond_cores * scale, interval_sec), "Watts"),
++        Metric("lpm_cpu_power_ram", "",
++               d_ratio(cond_ram * scale, interval_sec), "Watts"),
++        Metric("lpm_cpu_power_gpu", "",
++               d_ratio(cond_gpu * scale, interval_sec), "Watts"),
++        Metric("lpm_cpu_power_psys", "",
++               d_ratio(cond_psys * scale, interval_sec), "Watts"),
 +    ]
 +
-+    ev = Event("instructions")
-+    metrics.append(Metric("lpm_cs_instr", "Instructions per context switch",
-+                          d_ratio(ev, cs), "instr/cs"))
-+
-+    ev = Event("cycles")
-+    metrics.append(Metric("lpm_cs_cycles", "Cycles per context switch",
-+                          d_ratio(ev, cs), "cycles/cs"))
-+
-+    ev = Event("ls_dispatch.pure_ld", "ls_dispatch.ld_dispatch")
-+    metrics.append(Metric("lpm_cs_loads", "Loads per context switch",
-+                          d_ratio(ev, cs), "loads/cs"))
-+
-+    ev = Event("ls_dispatch.pure_st", "ls_dispatch.store_dispatch")
-+    metrics.append(Metric("lpm_cs_stores", "Stores per context switch",
-+                          d_ratio(ev, cs), "stores/cs"))
-+
-+    ev = Event("ex_ret_brn_tkn")
-+    metrics.append(Metric("lpm_cs_br_taken", "Branches taken per context switch",
-+                          d_ratio(ev, cs), "br_taken/cs"))
-+
-+    return MetricGroup("lpm_cs", metrics,
-+                       description=("Number of context switches per second, instructions "
-+                                    "retired & core cycles between context switches"))
-+
-+
- def AmdDtlb() -> Optional[MetricGroup]:
-     global _zen_model
-     if _zen_model >= 4:
-@@ -438,6 +470,7 @@ def main() -> None:
++    return MetricGroup("lpm_cpu_power", metrics,
++                       description="Running Average Power Limit (RAPL) power consumption estimates")
  
-     all_metrics = MetricGroup("", [
-         AmdBr(),
-+        AmdCtxSw(),
-         AmdDtlb(),
-         AmdItlb(),
-         AmdLdSt(),
+ 
+ def main() -> None:
+@@ -33,7 +69,9 @@ def main() -> None:
+     directory = f"{_args.events_path}/x86/{_args.model}/"
+     LoadEvents(directory)
+ 
+-    all_metrics = MetricGroup("", [])
++    all_metrics = MetricGroup("", [
++        Rapl(),
++    ])
+ 
+     if _args.metricgroups:
+         print(JsonEncodeMetricGroupDescriptions(all_metrics))
 -- 
 2.52.0.457.g6b5491de43-goog
 
