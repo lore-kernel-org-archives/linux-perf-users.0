@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB0036B045
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1988636BCCE
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769539584; cv=none; b=CMN5XbPy3m6KCqpPItLnu+0FUjhqJXwufjtqK7hBgOwpc1Ko/bmStCJmhkVA7Xcojs8oIZROEBxD4zsy531K3M01LJPUlNWItdzt8FUddFK31sKKqOofwT3GqnWUbPOunRdFJvshZ3NKDRilEAJ9TaUV4onnMqvW45/M+GbxVjc=
+	t=1769539586; cv=none; b=KhshkMDQcPAcHmabFowI5ZQp1kwRSXkcUhrVDmaJQ8wA8Z17fe8b4K2pq1uAUNw45bgk7EdMqKrz23MX6pgV4MQI4Tb4dICuQgRr9OEKKsF/RmrBEcYZgHs4ZbQZRYEOCZn3Z8kngEmaRcILeMHo3BLFh02JA65NJll7XeQ+fhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769539584; c=relaxed/simple;
-	bh=Sr+0utK0tNOs2nzfxd6UaoFEVfN9d6C1I9sdXtbKpqg=;
+	s=arc-20240116; t=1769539586; c=relaxed/simple;
+	bh=0/p47u8XI/jepoD/8n27VWWYDMXq2JoIclYASBN8NcM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=il8raAKCQ9iZ12RRrg45Vk5a2YmNSAF6spBU0LhWY90kWV1+eH/YqR6LUzfKoelRkXKyfqA/Uth4DzOBIEP8r0omfBxndmrIR2l2V6wl7fqrWdAduIxl9enryapEJYRrPzgxJsOB8oJJcCgLNfwQHEygkpMeTMTpT8dV5zVUkEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p1orKiuM; arc=none smtp.client-ip=74.125.82.73
+	 To:Content-Type; b=KRDRBWVng4XGGip91g4yWnkzJvKMvDqLJf7+GU/AZffNtsn5cUq0+T9JX/ODPLJ2PQWS8poCHzaK3qCc5qk0VGVrlpfLCvJM8+GpCDtfkSvvPA79VSvopq2GVAqcJy0bRmU5WglazlYPaIvk7Cfp6lZRFBq9V7hF7TM+kHsWvu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PjUpvf1y; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p1orKiuM"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1248da4d2d6so4567575c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 10:46:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PjUpvf1y"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b71c5826fbso6471376eec.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 10:46:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769539582; x=1770144382; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769539584; x=1770144384; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=yAo1MILhGnqZNbLlgKzWKgNCypTb5sxkZ5UVUsguhwU=;
-        b=p1orKiuMg5IvS5tFwcqxkK7NDMuV45sYyxxczAQZUHy58nE3cS6RswXrObYTAsO62x
-         A8YQ0fCHuOyU84dsuXTIMZlYZyQqkVWoLkuENjOrH3Ans8pj45wd3BsqW31ciEqMuxX/
-         +cAXAy0zmwNRY3PLQc7RHHVu8OhSOx4SCmlZET35zl8Fw5vkzJMagH6TH7/JR1b4NgR9
-         OMBd5OItFVUoA73uPARJ+OdLkKFIPledCVzx8vyIcl1isbANBwtMARD7SnVYFQqVjNRG
-         oikayJug/2cgtoEd6oPdQ3Wr1uFLxXy5yWjkcNW/zWqyW7uFbV1rx5QVLArg5TLnEPYD
-         dAXQ==
+        bh=a8hELqlVqsPd53TkBvYAfiL9c8Iu/vvPZfjM7X/WNAc=;
+        b=PjUpvf1ygi+Hbk8spsqC5wR8y/0AlujyVQ9vmQPR/4bmkb5wwJp/pQb9yGCz8T3OnO
+         C4ICh+BGtLGSxV+YTsnzHa4mnYc1T08qxtqzOoDl5GPh8Nf8iDCDVQTFvZx265eXptTX
+         XRXhYjBGcTPPeXqBDqZdF2tZpYB8y9obv3cMfKWdLWNV4VNExdOO217odvZXJQmIVxxF
+         PBojYiB6GNhSJLCc6NVeTgf5w8+czxOvi2dPrbwhEtO38GTj6BpJWsLNvtk4IMfUTaJQ
+         7R07tfbPS98z0o1Zm4Smv6RWAQ8ahoye2qGA/rnm7z8Zo1hAmlQHUDe6fBF9Lray+eZR
+         LHcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769539582; x=1770144382;
+        d=1e100.net; s=20230601; t=1769539584; x=1770144384;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yAo1MILhGnqZNbLlgKzWKgNCypTb5sxkZ5UVUsguhwU=;
-        b=oLc4WXhK3D52cc7eyqCKFYAuuQnDIkNTJ3wz3WB1hrQHLLqWV6xynIYkpVTLzw90/A
-         ieonOcCoLpmyV1T0S2G6gTE+fBAMgbgK6/bWB0mE8HHMsyMs01KRoN9KwXEeF1GAnJur
-         lBVDT//pHyK+VIwE9njGi/IollbiHinUU3qxPHjQWr26QXEJHRK60dlWYBeHXykIaHRk
-         obfx0+K8AUI5hoX9bHJo7a+i8Uwx5JUQGuMG4Zk9zfPas/bRJxJna3ZuIp1GOpg7G2Zw
-         Lz75Jesjziuh0+/QrQrkWEobxxYaP3d0Zir+4l8m5or23O4xlztoNDE0yWcWyZE2/QXW
-         jb8A==
-X-Forwarded-Encrypted: i=1; AJvYcCVkUogIfkcslnD8p75Ey0yf2YRE151K9s71GMyxuH0yWoqxMEQjxyta2h5D4xd3sI/JsY7D65ref1MA3C0tv2bc@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXyZvvM+9g901K6MJ0UBS5O+jr00wjrrTJpltyhW5ziRB9LPg1
-	2ocUAiwPvbT8QRUVaESRbz9f5dnmUc5QEb4L+OQLlKHzmptXNiyzib3ROfbd2jVSnjtfl3Ae7h3
-	U0o8bRQ/T6g==
-X-Received: from dlbcf3.prod.google.com ([2002:a05:7022:4583:b0:123:12b9:c4e5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:128c:b0:123:361e:e87c
- with SMTP id a92af1059eb24-124a0098f90mr1789109c88.11.1769539581994; Tue, 27
- Jan 2026 10:46:21 -0800 (PST)
-Date: Tue, 27 Jan 2026 10:45:00 -0800
+        bh=a8hELqlVqsPd53TkBvYAfiL9c8Iu/vvPZfjM7X/WNAc=;
+        b=C3mIqtl1w79CoYro0lQjxY2W0BT641chuwabIwK9pzMCSbRgPT+7n0vtapfxAlBSAy
+         BhDVYFvVEHHp9h+UQUiKSOvXU7GTLfQ6Shp3VIwFiFjq2XFW8QCtgx98JVCgyhItNxl0
+         dgJmaXGmKpvvMAK8iyOKN9j317KQnt2q59cbKf3gAR18lnicRZ/qtrIf61zuEUme1XM2
+         ytEXDf6G5DLMupar3Dt0IhFhQ9f2WRYOIk7vr8RChkDQO1f2dQbdkIZqhqovGdN6Kv7P
+         HiJR9IOiI0ObGhpe1fv4go8JQdokqzIFXMQmp7bT7poPS2THBbsH3feXC1EQCfwW56L+
+         HmFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbm4VZoCNQQrh0od5ruKAQqdbPR25PdlbPHT2yGuNR2ZwEdgdEWhi0zpIMlbIP6mCfvnVlO24ZvUcui+UTyqiU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdnmiwvvnNn4AUs5ohrmlxkAo9yGpHdV7qL76FW+ybto63V8eu
+	yb9gjzMeZGKHL40bRxKtjTQODF480lfP/w7EexcOeziNKnmzkoysC45bwVQgKhwjGQBNzhhrVd6
+	meYauUFFjUQ==
+X-Received: from dlbtu19.prod.google.com ([2002:a05:7022:3c13:b0:123:2dd9:db4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6286:b0:11b:9386:a37d
+ with SMTP id a92af1059eb24-124a00e8ae7mr1367052c88.44.1769539583947; Tue, 27
+ Jan 2026 10:46:23 -0800 (PST)
+Date: Tue, 27 Jan 2026 10:45:01 -0800
 In-Reply-To: <20260127184506.3059493-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260127184506.3059493-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260127184506.3059493-30-irogers@google.com>
-Subject: [PATCH v11 29/35] perf jevents: Add dir breakdown metrics for Intel
+Message-ID: <20260127184506.3059493-31-irogers@google.com>
+Subject: [PATCH v11 30/35] perf jevents: Add C-State metrics from the PCU PMU
+ for Intel
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -75,70 +76,65 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Breakdown directory hit, misses and requests. The implementation uses
-the M2M and CHA PMUs present in server models broadwellde, broadwellx
-cascadelakex, emeraldrapids, icelakex, sapphirerapids and skylakex.
+Use occupancy events fixed in:
+https://lore.kernel.org/lkml/20240226201517.3540187-1-irogers@google.com/
+
+Metrics are at the socket level referring to cores, not hyperthreads.
 
 Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 36 ++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 30 ++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
 diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 983e5021f3d3..24ceb7f8719b 100755
+index 24ceb7f8719b..118fe0fc05a3 100755
 --- a/tools/perf/pmu-events/intel_metrics.py
 +++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -815,6 +815,41 @@ def IntelLdSt() -> Optional[MetricGroup]:
+@@ -815,6 +815,35 @@ def IntelLdSt() -> Optional[MetricGroup]:
      ], description="Breakdown of load/store instructions")
  
  
-+def UncoreDir() -> Optional[MetricGroup]:
++def UncoreCState() -> Optional[MetricGroup]:
 +    try:
-+        m2m_upd = Event("UNC_M2M_DIRECTORY_UPDATE.ANY")
-+        m2m_hits = Event("UNC_M2M_DIRECTORY_HIT.DIRTY_I")
-+        # Turn the umask into a ANY rather than DIRTY_I filter.
-+        m2m_hits.name += "/umask=0xFF,name=UNC_M2M_DIRECTORY_HIT.ANY/"
-+        m2m_miss = Event("UNC_M2M_DIRECTORY_MISS.DIRTY_I")
-+        # Turn the umask into a ANY rather than DIRTY_I filter.
-+        m2m_miss.name += "/umask=0xFF,name=UNC_M2M_DIRECTORY_MISS.ANY/"
-+        cha_upd = Event("UNC_CHA_DIR_UPDATE.HA")
-+        # Turn the umask into a ANY rather than HA filter.
-+        cha_upd.name += "/umask=3,name=UNC_CHA_DIR_UPDATE.ANY/"
++        pcu_ticks = Event("UNC_P_CLOCKTICKS")
++        c0 = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C0")
++        c3 = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C3")
++        c6 = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C6")
 +    except:
 +        return None
 +
-+    m2m_total = m2m_hits + m2m_miss
-+    upd = m2m_upd + cha_upd  # in cache lines
-+    upd_r = upd / interval_sec
-+    look_r = m2m_total / interval_sec
++    num_cores = Literal("#num_cores") / Literal("#num_packages")
 +
-+    scale = 64 / 1_000_000  # Cache lines to MB
-+    return MetricGroup("lpm_dir", [
-+        Metric("lpm_dir_lookup_rate", "",
-+               d_ratio(m2m_total, interval_sec), "requests/s"),
-+        Metric("lpm_dir_lookup_hits", "",
-+               d_ratio(m2m_hits, m2m_total), "100%"),
-+        Metric("lpm_dir_lookup_misses", "",
-+               d_ratio(m2m_miss, m2m_total), "100%"),
-+        Metric("lpm_dir_update_requests", "",
-+               d_ratio(m2m_upd + cha_upd, interval_sec), "requests/s"),
-+        Metric("lpm_dir_update_bw", "",
-+               d_ratio(m2m_upd + cha_upd, interval_sec), f"{scale}MB/s"),
++    max_cycles = pcu_ticks * num_cores
++    total_cycles = c0 + c3 + c6
++
++    # remove fused-off cores which show up in C6/C7.
++    c6 = Select(max(c6 - (total_cycles - max_cycles), 0),
++                total_cycles > max_cycles,
++                c6)
++
++    return MetricGroup("lpm_cstate", [
++        Metric("lpm_cstate_c0", "C-State cores in C0/C1",
++               d_ratio(c0, pcu_ticks), "cores"),
++        Metric("lpm_cstate_c3", "C-State cores in C3",
++               d_ratio(c3, pcu_ticks), "cores"),
++        Metric("lpm_cstate_c6", "C-State cores in C6/C7",
++               d_ratio(c6, pcu_ticks), "cores"),
 +    ])
 +
 +
- def UncoreMem() -> Optional[MetricGroup]:
+ def UncoreDir() -> Optional[MetricGroup]:
      try:
-         loc_rds = Event("UNC_CHA_REQUESTS.READS_LOCAL",
-@@ -944,6 +979,7 @@ def main() -> None:
+         m2m_upd = Event("UNC_M2M_DIRECTORY_UPDATE.ANY")
+@@ -979,6 +1008,7 @@ def main() -> None:
          IntelMlp(),
          IntelPorts(),
          IntelSwpf(),
-+        UncoreDir(),
++        UncoreCState(),
+         UncoreDir(),
          UncoreMem(),
          UncoreMemBw(),
-     ])
 -- 
 2.52.0.457.g6b5491de43-goog
 
