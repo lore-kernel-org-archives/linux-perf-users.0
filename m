@@ -1,62 +1,63 @@
-Received: from mail-yx1-f43.google.com (mail-yx1-f43.google.com [74.125.224.43])
+Received: from mail-yx1-f54.google.com (mail-yx1-f54.google.com [74.125.224.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6572BE7CD
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 02:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE322BE62E
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 02:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769479597; cv=none; b=B1XHZ9AiuX5dJFeeqCdAUkgHpPdb/lq5BKrSxKZopWfEi2IZID4gwHBD7agLZqR+f9VecHJR7ICSj/uWjsvVg6j1P8KfkrnO+rzSNDd5QAh7iI5Pxc8n+ro3YpT2aVKamI7QBnzeUMpx0bX/jO0sVkXQroiuzNaJgefaW90B17k=
+	t=1769479598; cv=none; b=lXlJoJV+2oQJ5mkwuCsdki7acdo5FBbZrNYFIWFSKB+6sP1pKW/YjOIItYxbAaeXI0lTRjJaDSeP0LI1p2YuGt0BimDY1lKHlFsiLcSFgBicfJSnViZSwYknBC+rmsofXmbZT2RFJSphCnCy0qzWWevERGFSgFB1PHhuc8cFdCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769479597; c=relaxed/simple;
-	bh=i80TKajRiEuVneQrCHiSCEPg83oHdF+i7sToJtpIIX8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z/N8TuOv8LdbcSB6iDREIDOinm8VzfY6X/vUbG7fK7+O/HmiF5GDN4jsTyOn70B8j8DPZnAliK7oJheDLbBv0lmc8YhzZBc6G5/dDKehXH3hAscX+/zPyrQVg8DVw/kGPwItpkhEw0we/cFDR4MKpl5LbyFUV2VqJcKRYAYTIbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=FdKqIANi; arc=none smtp.client-ip=74.125.224.43
+	s=arc-20240116; t=1769479598; c=relaxed/simple;
+	bh=wNN3N/NzCz3P3ZWWF+PAB9YUE3liWJE6VpsO9my8gCw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uSEkOhFjqXygSj2ePoEFKLLsW3lU9CfT0/wJ+96Z5+2sdXFPwIYFZNIE94zqG3j/3aZZOZaGGnLdHNgDnZZB8NVjiLBp6eeHvGtjczIIM18vz6kkacQplf2ftUL/9xX2J6hWhUfyEwMmoYgiwIX/ozraU7hqe5seKEWRGI20Yqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=EzI45eaO; arc=none smtp.client-ip=74.125.224.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="FdKqIANi"
-Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-6494a3d92f5so5511263d50.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jan 2026 18:06:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="EzI45eaO"
+Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-6446c924f9eso4437381d50.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jan 2026 18:06:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ncsu.edu; s=google; t=1769479594; x=1770084394; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=E/VSRhcfTfb5hhDHzDq8bEnhOPc5XRtqbWUqCb7o3as=;
-        b=FdKqIANipF/LERt6lIEgfSuX5Fbvm0TzO/Zv86/PjQF5YHZbQal+xkBCtveZt9LXJh
-         Pa7jilNDhf+yYRCZTDDgEZ5sBRUOXIAl4AEP52oDghjb6KtOEtxinlR56QGE9zZUBKJN
-         Nu2k+xHZFcKDFT14bvnu22AQSYtL242CwiECaJFHk0xom8cv/fytQe0iGNP0ERcP2+zE
-         rRB4FSWCEbx2zdbO86VwODbbDF6O0ZSOcRoXJHTAR0QFXx5TbC5le9ijxBlDLFgUW3eG
-         6sJ+w4fCF4fKShBXx0+0J6pRpPv1Ulu4y29rAlQncBQPxwyD8ulfrt7tMgrw3bzjkwKW
-         ywiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769479594; x=1770084394;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=ncsu.edu; s=google; t=1769479595; x=1770084395; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E/VSRhcfTfb5hhDHzDq8bEnhOPc5XRtqbWUqCb7o3as=;
-        b=OU90vhnMIBKg1sQu0dw5Zn2zeA0r6eXOMfX9q0JggCrxih3UTdxom/jO5JeW7Gar8z
-         609YH7XBRpPwwCUzg1uy3UvgPy9PE/HLAm5rWXW1P0N9UyOvxXlCEQ7laaHPpVKj3U7G
-         JKZEatujuZkHTHl6sz5qpFyB4BBtYeoyjCv1+9HeabEmeT12zbeV44sQbTEbD389dcbj
-         YaLA3eQ00tSwZvXT9ohzVG0bGZdpXkDq9BHOx/F8fOuZX7y+y/+xrT2juSGqJvuZZDuJ
-         ersLWEDnWyQi6rf7+oAD3A5Aib1FBUiVY/LdFsNClvaPs1tWCeAIcb13MfYvbjs7uqb+
-         0W2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUv6RTpWisY2F3KyHfl+KwjYvLQNyxGZzKrybL/wq5mPiBxDEOWCfjpN4vRjc+Kln2eCtheNKyI48+wOXOB5Y1W@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy87aFDInEo+IFpsP7rX9amRj7rMrIRuJTr7sW9UOQFhplhhQds
-	kQYfIaGBADVLvQIhnKd4j/GhMKQLdLoIliSidsnQFMSGLFVtgDgKpv9UHlKzZZXAyKk2maptbzS
-	lMaxVvg==
-X-Gm-Gg: AZuq6aImp11Lme0vxfovWYXWIKxgzfln9a5IVg8GlNndzAc1mQKsGLHVlogtgmUzg90
-	vRbw1LwDlxheDSPOWMHFnYQChr/7S7eG0KdoJLKXYcGn3a9UqMd1S1QcWfxvXhUdc7PqaqO0nsz
-	BPlq6AiKhtmV3hP1ddOVcE/vYk4HgmvYNqxG/t+o4gjlo0fmY1kifhfx4uP93ftvibYsYIUWodp
-	oOMvUcOq3pLMaOCH14XDd1bp5xVXca7kPAXPzW9QYqpVEMx07BWA2CG8KwXmv2iqStxh38XXUBZ
-	DAFaui2U/Zla/81nEvxxB9qIEQ/Lrp073Ujj4Xhkjaa4wjCF7kHPXwVvBNXU1iPFBnK/FEh/66p
-	FzI8FDI+l5SqruCO1AvNEyzW06Yw+hIGkz3ErfgwezcMaJPsOiLWzFMprbJUNSl6AXdnhekN3iy
-	rmxHKRZ/KyeQ==
-X-Received: by 2002:a05:690e:4011:b0:644:472d:db04 with SMTP id 956f58d0204a3-6498fc4c76bmr310d50.55.1769479593659;
-        Mon, 26 Jan 2026 18:06:33 -0800 (PST)
+        bh=FY3qFNg3bogjE9vzWIEBFHpGKQmyoJ2iv+HZhNJmLDM=;
+        b=EzI45eaOMqfR1K5sebAa/hLwgG74eegui+6cYb503nE0x7ixLeBN5+ee4wn5aOXgNe
+         Nc7BIdgABKpiqdkpPSlw9cH+FpFK5gV85iW2nLq8LprDh50r3DY+AVLnRjeHkkCWy/Ua
+         2RGi8Z5WNsQsLwVe59dmNS2UxfCHBgaBRBNKbc2/TfvaOWkHRgB/vXoTc8V5b3lkJlt+
+         9wxRseIHiStr6zPgzpklug5oF+k7ThWswd/wJ24vhqZQvcD1MMM/HwNUuFQ3jOARPIvZ
+         VGZCtRe0Q0/1wBCRyb+m0N+MVdeIqKVkYQpC/1bQ1KujsHCqZvrY0M99jlmUZXSzYLsp
+         OnIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769479595; x=1770084395;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=FY3qFNg3bogjE9vzWIEBFHpGKQmyoJ2iv+HZhNJmLDM=;
+        b=E+OKczcpFtUriZuy84KpfRpTMGG8Izzt6LDHd/et9bTaFt6CgJAtv8KVYlNo5y17zc
+         aC0XXEwyKtu6Fp2PBEdVgSmRThYQxrjwoggQCiaTpuJce+2NBXlpn8KoXtSwMrAyHYG8
+         WzDOXBWUGd7EglCrFV4e9tMmxvzqeygegouyC2aV0W641jkqF1ahaMjZzrnawFbyerS0
+         Jrp+oOy7NB7s0ZeX+21I0LGCB3IL3TR2bkqjzKk4bAREBoUbxiTSWFW/w46q74wchmAy
+         9Mnb5MnotXg3CQFm/dQ3vyNzTLrB8THd1a1vg4ch4CN8vOuw/Xib6u0o65E+NfLkhYCt
+         HQNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWtI5yWRdYiYHjh1meAylBm/SKHVX1mp7kKmJBadBc1wKeQ6LKBXUruKxYmFJDlQxLtBLOyPsB7N0g5+ZHKn/yd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1DgQJdf3St2HFpjUMK7RxYnbt0tIzSmU+YO5So1Xl1lDNYDXA
+	FKpX6hlEXdNp+Gor9SYV2Ntxivl7KiZsNfnh4jQhv34/jc3TOrrld/PIA0c7/T8tRw==
+X-Gm-Gg: AZuq6aK6I/UW+bx1HpdiE9RfMJL6uTmVAikAYKz0W+l99cG9a1cVHzP+DCaOqFKrmVS
+	QbdJlDvaqlwG5Ad3cApngwNHjZrBLnfoBfXrfMTwOP/ziL0ETvQuuf/nQYTtKLaN+LG/31SGDyJ
+	1PTzanGH+gYJbe4FvOh3P5tOl1XkJHtPF4MHQ1jiUaXRjwpehuTSe7FvTqXGip1zIp4nziFaenW
+	6l2daYHvHei2Z4/y9cQtg+5j9xPj5V0z79832Fl0iv0YTah2N8viJPJYdhKrpPC4gCNAB+z60Yu
+	xA7tV0arIeOzpo67rqTYeh5wickjWWxPS6rpRFkYzHliV8rN0bipXWSHMrQf/9J1QZJoI3Msqxp
+	VsWAFBhlzs83J20nWgP7mDSXo0Wrk2c9+cZycp75OTsWcaWHcaXgWNNEeb9KSRmSq411mpglR15
+	rpvEIV5lDV+A==
+X-Received: by 2002:a53:8613:0:b0:644:60d9:7510 with SMTP id 956f58d0204a3-64970d8386emr3518532d50.96.1769479594770;
+        Mon, 26 Jan 2026 18:06:34 -0800 (PST)
 Received: from um773-cachyos ([2600:1700:cc0:94af:eca6:9ff9:6f3c:5de9])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6496855d65esm4217415d50.12.2026.01.26.18.06.32
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6496855d65esm4217415d50.12.2026.01.26.18.06.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jan 2026 18:06:33 -0800 (PST)
+        Mon, 26 Jan 2026 18:06:34 -0800 (PST)
 From: Zecheng Li <zli94@ncsu.edu>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -71,11 +72,14 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Zecheng Li <zli94@ncsu.edu>,
 	xliuprof@google.com,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 00/11] perf tools: Improvements to data type profiler
-Date: Mon, 26 Jan 2026 21:04:53 -0500
-Message-ID: <20260127020617.2804780-1-zli94@ncsu.edu>
+	linux-kernel@vger.kernel.org,
+	Zecheng Li <zecheng@google.com>
+Subject: [PATCH v1 01/11] perf dwarf-aux: Skip check_variable for die_find_variable_by_reg
+Date: Mon, 26 Jan 2026 21:04:54 -0500
+Message-ID: <20260127020617.2804780-2-zli94@ncsu.edu>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260127020617.2804780-1-zli94@ncsu.edu>
+References: <20260127020617.2804780-1-zli94@ncsu.edu>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -84,87 +88,131 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series improves the coverage and correctness of data type
-annotations in the perf tools.
+From: Zecheng Li <zecheng@google.com>
 
-Here's a breakdown of the patches:
+In die_find_variable_by_reg, match_var_offset already performs
+sufficient checking and type matching. The additional check_variable
+call is redundant, and its need_pointer logic is only a heuristic. Since
+DWARF encodes accurate type information, which match_var_offset
+verifies, skipping check_variable improves both coverage and accuracy.
 
-Patches 1-4 improve variable type matching:
-- Skip redundant check_variable for die_find_variable_by_reg since
-  match_var_offset already performs sufficient checking
-- Add die_get_pointer_type() to properly handle typedef'd pointer types
-- Preserve typedefs in match_var_offset for consistent type handling
-- Improve type comparison when variables are found in different scopes
+Return type from die_find_variable_by_reg via a new `type` field in
+find_var_data.
 
-Patch 5 handles array types in die_get_member_type, allowing proper
-resolution of struct members that are arrays.
+Signed-off-by: Zecheng Li <zecheng@google.com>
+Signed-off-by: Zecheng Li <zli94@ncsu.edu>
+---
+ tools/perf/util/annotate-data.c |  8 +++++---
+ tools/perf/util/dwarf-aux.c     | 18 +++++++++++-------
+ tools/perf/util/dwarf-aux.h     |  2 +-
+ 3 files changed, 17 insertions(+), 11 deletions(-)
 
-Patches 6-7 improve global variable handling:
-- Allow collecting global variables without symbol names (DWARF provides
-  the address directly via DW_OP_addr)
-- Handle global variable access when a register holds a const value
-  with negative offset
-
-Patches 8-9 improve caller-saved register handling:
-- Add invalidate_reg_state() helper for consistent register invalidation
-- Always invalidate caller-saved registers for call instructions per ABI
-  requirements, even when the call target is unknown
-
-Patches 10-11 use DWARF location ranges to improve type tracking:
-- Track DWARF location lifetime to preserve register state across calls
-  when the debug info indicates the value is still valid
-- Collect all variable location entries instead of just the first one
-
-Tested with the Linux kernel vmlinux with sampled functions and five
-programs from binutils (as, ld, nm, objdump, readelf) with all
-functions. Coverage rate includes all memory assess instructions,
-excluding stack memory accesses.
-
-`lost` means coverage loss (only including annotated -> none);
-`chg` means type name change. Net coverage gain is new_rate - prev_rate.
-
-         -------- vmlinux --------   ------- binutils -------
-  Patch  rate     lost     chg       rate     lost     chg
-  ----------------------------------------------------------------
-  base   88.78%   -        -         72.55%   -        -
-  1      72.95%   15.63%   .71%      65.01%   8.59%    22.89%
-  2      72.95%   0%       0%        65.16%   0%       0%
-  3      88.88%   0%       .73%      74.73%   0%       23.72%
-  4      88.88%   0%       .83%      74.73%   0%       .17%
-  5      89.09%   .01%     .08%      74.75%   0%       .01%
-  6      89.10%   0%       .02%      75.67%   0%       1.62%
-  7      89.16%   0%       0%        75.67%   0%       0%
-  8      89.16%   0%       0%        75.64%   .02%     0%
-  9      89.07%   .08%     0%        75.59%   .05%     0%
-  10     89.02%   .08%     .09%      75.85%   .03%     .03%
-  11     89.95%   0%       .10%      76.94%   .26%     .07%
-
-  Total: vmlinux  88.78% -> 89.95% (+1.17%)
-         binutils 72.55% -> 76.94% (+4.39%)
-
-Note: Patches 1-3 are designed to work together. Patch 1 causes a
-temporary regression that patch 3 resolves while adding typedef support.
-
-Zecheng Li (11):
-  perf dwarf-aux: Skip check_variable for die_find_variable_by_reg
-  perf dwarf-aux: Add die_get_pointer_type to get pointer types
-  perf dwarf-aux: Preserve typedefs in match_var_offset
-  perf annotate-data: Improve type comparison from different scopes
-  perf dwarf-aux: Handle array types in die_get_member_type
-  perf annotate-data: Collect global variables without name
-  perf annotate-data: Handle global variable access with const register
-  perf annotate-data: Add invalidate_reg_state() helper for x86
-  perf annotate-data: Invalidate caller-saved regs for all calls
-  perf annotate-data: Use DWARF location ranges to preserve reg state
-  perf dwarf-aux: Collect all variable locations for insn tracking
-
- tools/perf/arch/x86/annotate/instructions.c |  69 +++++++---
- tools/perf/util/annotate-data.c             |  86 ++++++++----
- tools/perf/util/annotate-data.h             |   3 +
- tools/perf/util/dwarf-aux.c                 | 139 ++++++++++++++------
- tools/perf/util/dwarf-aux.h                 |   6 +-
- 5 files changed, 211 insertions(+), 92 deletions(-)
-
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 07cf9c334be0..99ffc6d70565 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -1603,19 +1603,21 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+ 			if (!die_find_variable_by_addr(&scopes[i], dloc->var_addr,
+ 						       &var_die, &type_offset))
+ 				continue;
++			/* Found a variable, see if it's correct */
++			result = check_variable(dloc, &var_die, &mem_die, reg,
++						type_offset, is_fbreg);
+ 		} else {
+ 			/* Look up variables/parameters in this scope */
+ 			if (!die_find_variable_by_reg(&scopes[i], pc, reg,
+-						      &type_offset, is_fbreg, &var_die))
++						      &mem_die, &type_offset, is_fbreg, &var_die))
+ 				continue;
++			result = PERF_TMR_OK;
+ 		}
+ 
+ 		pr_debug_dtp("found \"%s\" (die: %#lx) in scope=%d/%d (die: %#lx) ",
+ 			     dwarf_diename(&var_die), (long)dwarf_dieoffset(&var_die),
+ 			     i+1, nr_scopes, (long)dwarf_dieoffset(&scopes[i]));
+ 
+-		/* Found a variable, see if it's correct */
+-		result = check_variable(dloc, &var_die, &mem_die, reg, type_offset, is_fbreg);
+ 		if (result == PERF_TMR_OK) {
+ 			if (reg == DWARF_REG_PC) {
+ 				pr_debug_dtp("addr=%#"PRIx64" type_offset=%#x\n",
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 9267af204c7d..b57cdc8860f0 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -1378,6 +1378,8 @@ struct find_var_data {
+ 	Dwarf_Addr addr;
+ 	/* Target register */
+ 	unsigned reg;
++	/* Access data type */
++	Dwarf_Die type;
+ 	/* Access offset, set for global data */
+ 	int offset;
+ 	/* True if the current register is the frame base */
+@@ -1390,7 +1392,6 @@ struct find_var_data {
+ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
+ 			     s64 addr_offset, s64 addr_type, bool is_pointer)
+ {
+-	Dwarf_Die type_die;
+ 	Dwarf_Word size;
+ 	s64 offset = addr_offset - addr_type;
+ 
+@@ -1403,16 +1404,16 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
+ 	if (offset < 0)
+ 		return false;
+ 
+-	if (die_get_real_type(die_mem, &type_die) == NULL)
++	if (die_get_real_type(die_mem, &data->type) == NULL)
+ 		return false;
+ 
+-	if (is_pointer && dwarf_tag(&type_die) == DW_TAG_pointer_type) {
++	if (is_pointer && dwarf_tag(&data->type) == DW_TAG_pointer_type) {
+ 		/* Get the target type of the pointer */
+-		if (die_get_real_type(&type_die, &type_die) == NULL)
++		if (die_get_real_type(&data->type, &data->type) == NULL)
+ 			return false;
+ 	}
+ 
+-	if (dwarf_aggregate_size(&type_die, &size) < 0)
++	if (dwarf_aggregate_size(&data->type, &size) < 0)
+ 		return false;
+ 
+ 	if ((u64)offset >= size)
+@@ -1529,7 +1530,7 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+  * when the variable is in the stack.
+  */
+ Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
+-				    int *poffset, bool is_fbreg,
++				    Dwarf_Die *type_die, int *poffset, bool is_fbreg,
+ 				    Dwarf_Die *die_mem)
+ {
+ 	struct find_var_data data = {
+@@ -1541,8 +1542,11 @@ Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
+ 	Dwarf_Die *result;
+ 
+ 	result = die_find_child(sc_die, __die_find_var_reg_cb, &data, die_mem);
+-	if (result)
++	if (result) {
+ 		*poffset = data.offset;
++		*type_die = data.type;
++	}
++
+ 	return result;
+ }
+ 
+diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+index cd481ec9c5a1..b3ee5df0b6be 100644
+--- a/tools/perf/util/dwarf-aux.h
++++ b/tools/perf/util/dwarf-aux.h
+@@ -163,7 +163,7 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf);
+ 
+ /* Find a variable saved in the 'reg' at given address */
+ Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
+-				    int *poffset, bool is_fbreg,
++				    Dwarf_Die *type_die, int *poffset, bool is_fbreg,
+ 				    Dwarf_Die *die_mem);
+ 
+ /* Find a (global) variable located in the 'addr' */
 -- 
 2.52.0
 
