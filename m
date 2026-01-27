@@ -1,63 +1,63 @@
-Received: from mail-yx1-f41.google.com (mail-yx1-f41.google.com [74.125.224.41])
+Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014CA2D97A6
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 02:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53302C08D5
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 02:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769479604; cv=none; b=RNJKeXXjqZvcN0NldW1OtnwuOU+elyOnaJLrt2wp64ZOf2Ujx2M+3q5u+Nb6/HfEHPCS4bbykR+hlSf6y28UhvoNpIiuJs2P1JiU9TDLLViqT4tO9ZtkHCTpcP+GVi0qx2El36y9qi7RSTt6yGSdRmjx3fc3OKFA0kUUdwJxf8E=
+	t=1769479604; cv=none; b=Xo6BLNzl+cyPsfiU7NGj7a+M2/EVdG7snO8HXvB0d5410zdnHkbo4/uxwETmvtwKN+5HIpA4MSkgeEuQuIC21FD4eqyQSpFBe2MewpQyfBQXB5Wokh79IJcnj2I+mhaOH1pv4tv3MVslOcR6VYpw94BGnl8ijTdDl27bnJKlQ/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769479604; c=relaxed/simple;
-	bh=mYBobRXu3FK4wXmLvDov/G1ul6SSw5NijXnRXbItZpk=;
+	bh=/ewm3WATBiT0DnxOwn8y9wg14IR21nssXLkB3T2qWfM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CNh9ronCGm7FxLu4Bg2hJiz3GrsNe9FGnaBV8TbTCWY9wLXe3pNHIBG0FkwYhnApfOl0ljfn1j95CrsQIIEIXoNLTImraWDLPwRjbK3ju3OtWByuqfNvUdFCxLGm0krBK+z6XjW13FLphioF8By1Ou1t46mKXIm+rTKpylORLGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=An2dUA4x; arc=none smtp.client-ip=74.125.224.41
+	 MIME-Version; b=uGUzm3Uk6FY13O40T1DWiJwIdoKa8aScklAJoclZ+rgVo1L6Pt4lVuoGUBJDlqixm1FPw5g/MfFqgIK0yPWp35MWMvrcsGNvLLtwJF0QYdtYN6J+lTt/VelvkxFzWYAPPwLEVoyK1s1G6TDVPireRfBRIhF/Ywiwsw4C/UiTNPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=Co/0hxmy; arc=none smtp.client-ip=74.125.224.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="An2dUA4x"
-Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-64965ee303dso2632616d50.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jan 2026 18:06:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="Co/0hxmy"
+Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-64960418d46so3191268d50.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Jan 2026 18:06:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ncsu.edu; s=google; t=1769479600; x=1770084400; darn=vger.kernel.org;
+        d=ncsu.edu; s=google; t=1769479601; x=1770084401; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iNHFu4kzRwC9eEJaKe6PAV5wflRvk28X4nOD9s6tJhI=;
-        b=An2dUA4xcnbtdFDvXT66q7tFj9s8SiMmb28O2pxbxh1BDRRpx6nSlF0QFRLCwbwZTE
-         amLJd0I7te/OfOFsCiqq8P4U2x0/2DKKQZfFN9MaSPFD1m0lVC6Glg0v1QEmjNwPuQOg
-         2mxtbPHTrpamoFjhB+Bpy9TUSPJVRG73xApzijknou1x80KkSjQmUy+tY1DljAP9LlUQ
-         IFfsCN4aEl90ldfypI7rwi3u1LvIIamjIozsLDPuWLvW31cwkDoOHqFWRzRpGSeKRlWB
-         xgkBklDxE0xFDOdLFqzFr6bH3hClyVKnic6dWfkPFTaoEtvi9Z9FPQfS09PL3+VaCYKR
-         0ooQ==
+        bh=RUTDEas+pFI9zxM7B/p19P+ipqufAuvebaix0EtFBQY=;
+        b=Co/0hxmyI3nuwg11HZBvmBXiAVQYX35HSgWpBEIcPcmWFd8ljQ6ylnQY0Mx4DzxOeI
+         DV0T53ZinfTM2FUnJs6l5FJl9SR1ASzrqmIi1WwNOo5YDqvBkqMhL3K3pbmyOogP2ETn
+         1Sx895o693ic1fyUV7X9L8xTqGxxCqicGtoTlVsp7mlcFg5aCR+STHNtf/3vfulozxw9
+         neiL2mPjMoS9QoXihdKSHUGBlBm7RGhKX/6jdmbKJf8IHvaqHL5JKtocTNNX94d9gNmr
+         g/tl8Evyr0ingYEifNZU894ex6ZIeqa5IeoLKx3DrGKSSAtuBQwgWvFSFkucJDP6pSkQ
+         v99Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769479600; x=1770084400;
+        d=1e100.net; s=20230601; t=1769479601; x=1770084401;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=iNHFu4kzRwC9eEJaKe6PAV5wflRvk28X4nOD9s6tJhI=;
-        b=OvHAeGZJs2jBpbqcDBixeF7lg+phGFa5yPFkTyAS1oVLw9oPc583UkOXdkj1rGjKmx
-         4L1byCSdTYdJFOKrifJOAitk0O3LDitUz4XW2xaLeZvgBT348CeeHXHrfEYCH0JhKe/L
-         BJjlzT44g3AFHDhGPCnzHockBhxQREBId6jQZ6pHG5qR6nRzfcOwoq7XqWaab91x75qy
-         PCcsbhIVopaGcpfFnp+MSGoIIfG8ZYH4VWfKyTKjcsxpTXxeV5Uw4tRfbEIEwJFg94XG
-         idTH5auGZGHL7elY8PtBsfpLDAX3YvpMQJ4ysXEXNBfNlsqVhJugLXvOtwcDyrBR8/+G
-         UoXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwI36VPgsuDL/4vih0LFZymz+1YkS2fwBj2iz0n7V3Zs22LaMLjrXOiFQF/YqBesHv9ecfrD/44y3IXtEyvrk9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2GrVIyPFfxuiiKEOfLXcytZMPSwTCDsse5b5pz7PyijmWBc8j
-	OtoNGxID4Ea+pyKX5jD6MCnWeiyqjhGMvXukc6uPr7GS0l5/TsABa+6Xu7DT3f8ytQ==
-X-Gm-Gg: AZuq6aJlPzs+Zg3+/ZCt1CeCVCKxsU/twlNtTGH9S+f+ErSYpodTtNVHIQPENSEXwnZ
-	FwxLAiuMdeskpw1rv0OLimcad5SM4PvOFzbzs0rKBo8ytNK48C3vqR9eg6eQ+yLrq8vcUe931Xf
-	H6VM8d2oYZO+MFnF/nIQczdiJFHgJkEjXqQvajm3SqYU6h3eY6TLTQCG05Nj+70ep04khUOtSNb
-	tTvd/6Zc2W2yj65dOXY20mTqQT2s/eYC56GmBzwzP7l22vtfxx4hNxATNHI35ljQ/dJ+RaSqvLK
-	DE3fvtYZKCGMlD6py/qlfkEf/8jkcCb8SkrDVaOlmE24QNtp5ANJLrasdANi7TOUK9x4FPJniPH
-	OaJrHb6K4adsgOULvdMjNjjnyu0kDG640k91GYyvhyR08Z6GMiMer9+1XYbDSourOjQePhAywuM
-	S7YEeHVnmwQg==
-X-Received: by 2002:a05:690e:1698:b0:649:447b:5857 with SMTP id 956f58d0204a3-6498fbf6fecmr11847d50.40.1769479600319;
-        Mon, 26 Jan 2026 18:06:40 -0800 (PST)
+        bh=RUTDEas+pFI9zxM7B/p19P+ipqufAuvebaix0EtFBQY=;
+        b=TTfL074JsX+6hCwCfOf8NydPOt03gnsiob4aMW+fJEAz7UQTTJKQfw/ykMKhU0LTO5
+         hsN70KAou1a7ZTs+FKoqY6Fn59v4TPFQ3LUZyL+L4pfPlHHxbcyTm37o3JWeMbNCCvRu
+         Bpp9QhdicNvn3kuR6dssIj3uANMKs5+gpJGey8lblyiTOIjDY/sZd33IHymcO4nE45+Z
+         Dr9Sst8dYYx7QY2dKIhVl/CXrfoCGWYdj9w3LdmbXSmMvblgWbuBj+j3B5N23wWblhp1
+         U5jPEqkAC+PGDBnOAPo4WNGwDOjDGPsd7+1CkWbvEo5VhWwk8b+b+cAJYH3LEnpintSD
+         EY1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXbYdK61bpifCv/j4U7cfNHxfOrAd8YU7kOBn5vOIa6pM8KVwEcpdbXXgohbD5/riYxU65yueflX0mAQJixtJ5Z@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU6JzSvQ4jF4GGPG2m5EwZCdOwbt0KU8O5bQnoYKCoODTDvxpa
+	8NXTPwtPqe0U0/aOJAINSf7swc4g4HMtYOC253KXZEcNJu+H5P+8Nqc8L8j/FoXkgw==
+X-Gm-Gg: AZuq6aIv/8xEv03VGlccv85BgPj753iwSA7RFkERjI7qNuR7LcLPCRk3SUaw4X8HLRn
+	6gk1KZShXE6r3nOPhgamjx5Wm4OPoIadn0xIiB2182bR6tFAIOs2GT+lut7vr7X/53g45HHiT5n
+	nnH/S9Pd1xfPCKf2Cp76QeaJiBc/XM0MKcJ9XUWcIu3ciiCva8YKyWFt08i0bcuH9vU11vcA7mV
+	0RTSbEuy9O91/WTN5QCCNZrKDE3jSr0LPsekEOs+Ao9TKL81SnfKtYoPILe4buhDHA0PS9g0MqG
+	blHWuPwKg8C1z7I6NsgjFSJxmBhGkB6G96rN3v3m+nEe5v5VQuN0Owngag5J/YC3xILNkQLSYUj
+	iMNjhhAmPEIllWLop4GDVLuwI0HC4jt3eUz6IgVNJDdxHcLWxqg+sgrk2fO+tx49N1u2bO4wWj/
+	RLhbrrgpBnMA==
+X-Received: by 2002:a05:690e:4088:b0:63f:9c70:84ed with SMTP id 956f58d0204a3-6498fc46089mr694d50.58.1769479601298;
+        Mon, 26 Jan 2026 18:06:41 -0800 (PST)
 Received: from um773-cachyos ([2600:1700:cc0:94af:eca6:9ff9:6f3c:5de9])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6496855d65esm4217415d50.12.2026.01.26.18.06.39
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6496855d65esm4217415d50.12.2026.01.26.18.06.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jan 2026 18:06:39 -0800 (PST)
+        Mon, 26 Jan 2026 18:06:40 -0800 (PST)
 From: Zecheng Li <zli94@ncsu.edu>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -73,9 +73,9 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	xliuprof@google.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 06/11] perf annotate-data: Collect global variables without name
-Date: Mon, 26 Jan 2026 21:04:59 -0500
-Message-ID: <20260127020617.2804780-7-zli94@ncsu.edu>
+Subject: [PATCH v1 07/11] perf annotate-data: Handle global variable access with const register
+Date: Mon, 26 Jan 2026 21:05:00 -0500
+Message-ID: <20260127020617.2804780-8-zli94@ncsu.edu>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260127020617.2804780-1-zli94@ncsu.edu>
 References: <20260127020617.2804780-1-zli94@ncsu.edu>
@@ -87,47 +87,43 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Previously, global_var__collect() required get_global_var_info() to
-succeed (i.e., the variable must have a symbol name) before caching a
-global variable. This prevented variables that exist in DWARF but lack
-symbol table coverage from being cached.
+When a register holds a constant value (TSR_KIND_CONST) and is used with
+a negative offset, treat it as a potential global variable access
+instead of falling through to CFA (frame) handling.
 
-Remove the symbol table requirement since DW_OP_addr already provides
-the variable's address directly from DWARF. The symbol table lookup is
-now optional to obtain the variable name when available.
+This fixes cases like array indexing with computed offsets:
 
-Also remove the var_offset != 0 check, which was intended to skip
-variables where the access address doesn't match the symbol start.
-The symbol table lookup is now optional and I found removing this check
-has no effect on the annotation results for both kernel and userspace
-programs.
+    movzbl -0x7d72725a(%rax), %eax   # array[%rax]
 
-Test results show improved annotation coverage especially for userspace
-programs with RIP-relative addressing instructions.
+Where %rax contains a computed index and the negative offset points to a
+global array. Previously this fell through to the CFA path which doesn't
+handle global variables, resulting in "no type information".
+
+The fix redirects such accesses to check_kernel which calls
+get_global_var_type() to resolve the type from the global variable
+cache. We could also treat registers with integer types to the global
+variable path, but this requires more changes.
 
 Signed-off-by: Zecheng Li <zli94@ncsu.edu>
 ---
- tools/perf/util/annotate-data.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ tools/perf/util/annotate-data.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 8ea3e8b024e8..970238bc81b7 100644
+index 970238bc81b7..177aa6634504 100644
 --- a/tools/perf/util/annotate-data.c
 +++ b/tools/perf/util/annotate-data.c
-@@ -774,12 +774,7 @@ static void global_var__collect(struct data_loc_info *dloc)
- 			if (!dwarf_offdie(dwarf, pos->die_off, &type_die))
- 				continue;
+@@ -1230,6 +1230,10 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 		return PERF_TMR_BAIL_OUT;
+ 	}
  
--			if (!get_global_var_info(dloc, pos->addr, &var_name,
--						 &var_offset))
--				continue;
--
--			if (var_offset != 0)
--				continue;
-+			get_global_var_info(dloc, pos->addr, &var_name, &var_offset);
- 
- 			global_var__add(dloc, pos->addr, var_name, &type_die);
- 		}
++	if (state->regs[reg].kind == TSR_KIND_CONST) {
++		if (dloc->op->offset < 0 && reg != state->stack_reg && reg != dloc->fbreg)
++			goto check_kernel;
++	}
+ check_non_register:
+ 	if (reg == dloc->fbreg || reg == state->stack_reg) {
+ 		struct type_state_stack *stack;
 -- 
 2.52.0
 
