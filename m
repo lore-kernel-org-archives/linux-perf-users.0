@@ -1,94 +1,229 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C654422425B
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 16:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3E72C031B;
+	Tue, 27 Jan 2026 16:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769529684; cv=none; b=XIXndpHDMwt00aAlRgN5iOZMJhSCSh8d/N7rQ4v8YXCmWGm8u0hAujqO3HUZltZBpyJKjZ5auM6SayzWPB0EcL7zZEXmQMC4S+Ig3yCfOcpZsDpC19VplW3sy4QopYnWXAx61md3UU1hxLluGWN5st81gBjbuxJSMMhjpcVmf98=
+	t=1769530189; cv=none; b=o0DZi88hAZsks6Xq/q339hlYod+FNsL4SsDUsBk1IWBkW5VukTelmwwqSxd6mLnAGEZ67/+1byK4kPABE5TrCoRQeDPdE/T5WCLdTkkfZuyXlB+hL9HIGDqKmw+l2bzNA1GSeTKG3ijJ00vF7nbXLW8LTKditOAMIkuE4s2DVzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769529684; c=relaxed/simple;
-	bh=S4QHnB4xM59GcaJRCDxqr/69wvVWQhiHtWaLzEKkcL4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NCRZtE49Tgj7qVl+E3d6unB4ZDPqoH7jgd3YwvL2cXcUaMPcuB6OTJQgI8xdfqOT4eFNfKahQCGBThgwjx4J11+uYeuo0bGRbmJSWMvMDsbcOSC8moWWCAkG8UN/XaK0tpObSXtfarGpM+4ESZQDZ/WkMiZVGYPZR7s6S8YDKYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4f0qrD5pBGzJ46Cf;
-	Wed, 28 Jan 2026 00:00:44 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id E929B40569;
-	Wed, 28 Jan 2026 00:01:20 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 27 Jan
- 2026 16:01:19 +0000
-Date: Tue, 27 Jan 2026 16:01:18 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Yushan Wang <wangyushan12@huawei.com>
-CC: <mike.leach@linaro.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <peterz@infradead.org>,
-	<john.g.garry@oracle.com>, <shiju.jose@huawei.com>, <will@kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linuxarm@huawei.com>, <liuyonglong@huawei.com>, <prime.zeng@hisilicon.com>,
-	<fanghao11@huawei.com>, <wangzhou1@hisilicon.com>
-Subject: Re: [RFT PATCH 2/7] perf stat: Save unnecessary print_metric() call
-Message-ID: <20260127160118.00001692@huawei.com>
-In-Reply-To: <20260126123514.3238425-3-wangyushan12@huawei.com>
-References: <20260126123514.3238425-1-wangyushan12@huawei.com>
-	<20260126123514.3238425-3-wangyushan12@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1769530189; c=relaxed/simple;
+	bh=JGH1tEsu0no5CiHAVwYuTwzbubIxQmp2wf0x7AT7v+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QsFyUi6cdpemGDFsnLxBx/Z00gTUi8NeAgk/w193XxH4DaEyfMikc/fl9SeRwl1nFlRtLUuVp9BhplIcItSoLp0uPkQ947PZM/Vvgyjwjh7PKpSUZcqTZIOkxKR44+ma68dcl2xKsMtG6anYYfKLqyjOzKyO+bYZDHL7ViiiEcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIWqHu36; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIWqHu36"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA06C116C6;
+	Tue, 27 Jan 2026 16:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769530188;
+	bh=JGH1tEsu0no5CiHAVwYuTwzbubIxQmp2wf0x7AT7v+w=;
+	h=Date:From:To:Cc:Subject:From;
+	b=jIWqHu36UuqOHfbsHhspOyd6BnqBR6QZrd+EaY/9WFxeqfkdrwHvdi/qHvV+2jYOI
+	 FIgJPcocOa3n14m5rVDr0uUHYN5+D9CGH81DcQ5CbiyV2xVS6ia9JzzFj20XMWqit0
+	 nh9feVIswIMgaCT97ukkip9rtNj2v7XZ/G6yFkxVhDgtBo0Yz//LbnntdvYL4Tv+tM
+	 7dabgeT+4XNkh41F1ZyKYvqd2a4wskIacSeEHjpWo+azFd1gX/yXZWN1Nj/BAagd1u
+	 RZfmS5eg1VoZ2Fso7BVV/mwEKOd7D1hNrhmv0F6pyX2tLI6raQJOj8F24QooAxZZ6w
+	 J/2kBEkWFduaw==
+Date: Tue, 27 Jan 2026 13:09:45 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1 next] perf strlist: Remove dont_dupstr logic, used only
+ once
+Message-ID: <aXjjSR1s3CJQn0bY@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 26 Jan 2026 20:35:09 +0800
-Yushan Wang <wangyushan12@huawei.com> wrote:
+Ian Rogers noticed that 678ed6b707e4b2db ("perf strlist: Don't write to
+const memory") breaks the 'Remove thread map' 'perf test' entry, because
+it keeps pointers to the temporary string introduced to avoid touching
+the const memory.
 
-> Patch [1] removed the second branch of iostat_run, and changed num to 0
-> since it is the default behavior. But during iostat_run, default value 1
-> of num is required to avoid print_metric() call later.
-> 
-> Set num as 1 to avoid redundant print_metric() call that causes
-> unaligned blank printed.
-> 
-> Fixes: b71f46a6a708 ("perf stat: Remove hard coded shadow metrics")
-> 
-> [1]: https://lore.kernel.org/all/20251111212206.631711-8-irogers@google.com/
+This is because the thread_map__new_by_[pt]id_str() were the only
+methods using the slist->dont_dupstr knob to keep pointers to the
+original const string list, as it uses strtol to parse numbers and it
+stops at the comma.
 
-Use a Link tag for links, but don't add them when they just point to the patch
-you already have as a fixes tag.  Just refer to it as "The patch listed under
-Fixes".
-> 
-> Signed-off-by: Yushan Wang <wangyushan12@huawei.com>
-> ---
->  tools/perf/util/stat-shadow.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-> index 9c83f7d96caa..9439baf8002f 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -319,8 +319,10 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
->  	void *ctxp = out->ctx;
->  	int num = 0;
->  
-> -	if (config->iostat_run)
-> +	if (config->iostat_run) {
->  		iostat_print_metric(config, evsel, out);
-> +		num = 1;
-> +	}
->  
->  	perf_stat__print_shadow_stats_metricgroup(config, evsel, aggr_idx,
->  						  &num, NULL, out);
+As this is the only case of dont_dupstr use, dupstr being the default,
+and it gets in the way of getting rid of the last const-correctness,
+remove this knob, with it:
+
+  $ perf test 37
+  37: Remove thread map   : Ok
+  $
+
+Fixes: 678ed6b707e4b2db ("perf strlist: Don't write to const memory")
+Reported-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/strlist.c    | 25 ++++++++-----------------
+ tools/perf/util/strlist.h    |  2 --
+ tools/perf/util/thread_map.c | 18 ++++++------------
+ 3 files changed, 14 insertions(+), 31 deletions(-)
+
+diff --git a/tools/perf/util/strlist.c b/tools/perf/util/strlist.c
+index 98883672fcf47102..50add72575e0c60c 100644
+--- a/tools/perf/util/strlist.c
++++ b/tools/perf/util/strlist.c
+@@ -12,20 +12,16 @@
+ #include <linux/zalloc.h>
+ 
+ static
+-struct rb_node *strlist__node_new(struct rblist *rblist, const void *entry)
++struct rb_node *strlist__node_new(struct rblist *rblist __maybe_unused, const void *entry)
+ {
+ 	const char *s = entry;
+ 	struct rb_node *rc = NULL;
+-	struct strlist *strlist = container_of(rblist, struct strlist, rblist);
+ 	struct str_node *snode = malloc(sizeof(*snode));
+ 
+ 	if (snode != NULL) {
+-		if (strlist->dupstr) {
+-			s = strdup(s);
+-			if (s == NULL)
+-				goto out_delete;
+-		}
+-		snode->s = s;
++		snode->s = strdup(s);
++		if (snode->s == NULL)
++			goto out_delete;
+ 		rc = &snode->rb_node;
+ 	}
+ 
+@@ -36,20 +32,18 @@ struct rb_node *strlist__node_new(struct rblist *rblist, const void *entry)
+ 	return NULL;
+ }
+ 
+-static void str_node__delete(struct str_node *snode, bool dupstr)
++static void str_node__delete(struct str_node *snode)
+ {
+-	if (dupstr)
+-		zfree((char **)&snode->s);
++	zfree((char **)&snode->s);
+ 	free(snode);
+ }
+ 
+ static
+-void strlist__node_delete(struct rblist *rblist, struct rb_node *rb_node)
++void strlist__node_delete(struct rblist *rblist __maybe_unused, struct rb_node *rb_node)
+ {
+-	struct strlist *slist = container_of(rblist, struct strlist, rblist);
+ 	struct str_node *snode = container_of(rb_node, struct str_node, rb_node);
+ 
+-	str_node__delete(snode, slist->dupstr);
++	str_node__delete(snode);
+ }
+ 
+ static int strlist__node_cmp(struct rb_node *rb_node, const void *entry)
+@@ -165,12 +159,10 @@ struct strlist *strlist__new(const char *list, const struct strlist_config *conf
+ 	struct strlist *slist = malloc(sizeof(*slist));
+ 
+ 	if (slist != NULL) {
+-		bool dupstr = true;
+ 		bool file_only = false;
+ 		const char *dirname = NULL;
+ 
+ 		if (config) {
+-			dupstr = !config->dont_dupstr;
+ 			dirname = config->dirname;
+ 			file_only = config->file_only;
+ 		}
+@@ -180,7 +172,6 @@ struct strlist *strlist__new(const char *list, const struct strlist_config *conf
+ 		slist->rblist.node_new    = strlist__node_new;
+ 		slist->rblist.node_delete = strlist__node_delete;
+ 
+-		slist->dupstr	 = dupstr;
+ 		slist->file_only = file_only;
+ 
+ 		if (list && strlist__parse_list(slist, list, dirname) != 0)
+diff --git a/tools/perf/util/strlist.h b/tools/perf/util/strlist.h
+index 7e82c71dcc422d7e..3e9533e66ca9ee11 100644
+--- a/tools/perf/util/strlist.h
++++ b/tools/perf/util/strlist.h
+@@ -14,7 +14,6 @@ struct str_node {
+ 
+ struct strlist {
+ 	struct rblist rblist;
+-	bool	      dupstr;
+ 	bool	      file_only;
+ };
+ 
+@@ -24,7 +23,6 @@ struct strlist {
+  *             found
+  */
+ struct strlist_config {
+-	bool dont_dupstr;
+ 	bool file_only;
+ 	const char *dirname;
+ };
+diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
+index ca193c1374ed4823..48c70f149e9201dc 100644
+--- a/tools/perf/util/thread_map.c
++++ b/tools/perf/util/thread_map.c
+@@ -164,19 +164,16 @@ static struct perf_thread_map *thread_map__new_by_pid_str(const char *pid_str)
+ 	struct dirent **namelist = NULL;
+ 	int i, j = 0;
+ 	pid_t pid, prev_pid = INT_MAX;
+-	char *end_ptr;
+ 	struct str_node *pos;
+-	struct strlist_config slist_config = { .dont_dupstr = true, };
+-	struct strlist *slist = strlist__new(pid_str, &slist_config);
++	struct strlist *slist = strlist__new(pid_str, NULL);
+ 
+ 	if (!slist)
+ 		return NULL;
+ 
+ 	strlist__for_each_entry(pos, slist) {
+-		pid = strtol(pos->s, &end_ptr, 10);
++		pid = strtol(pos->s, NULL, 10);
+ 
+-		if (pid == INT_MIN || pid == INT_MAX ||
+-		    (*end_ptr != '\0' && *end_ptr != ','))
++		if (pid == INT_MIN || pid == INT_MAX)
+ 			goto out_free_threads;
+ 
+ 		if (pid == prev_pid)
+@@ -223,24 +220,21 @@ struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str)
+ 	struct perf_thread_map *threads = NULL, *nt;
+ 	int ntasks = 0;
+ 	pid_t tid, prev_tid = INT_MAX;
+-	char *end_ptr;
+ 	struct str_node *pos;
+-	struct strlist_config slist_config = { .dont_dupstr = true, };
+ 	struct strlist *slist;
+ 
+ 	/* perf-stat expects threads to be generated even if tid not given */
+ 	if (!tid_str)
+ 		return perf_thread_map__new_dummy();
+ 
+-	slist = strlist__new(tid_str, &slist_config);
++	slist = strlist__new(tid_str, NULL);
+ 	if (!slist)
+ 		return NULL;
+ 
+ 	strlist__for_each_entry(pos, slist) {
+-		tid = strtol(pos->s, &end_ptr, 10);
++		tid = strtol(pos->s, NULL, 10);
+ 
+-		if (tid == INT_MIN || tid == INT_MAX ||
+-		    (*end_ptr != '\0' && *end_ptr != ','))
++		if (tid == INT_MIN || tid == INT_MAX)
+ 			goto out_free_threads;
+ 
+ 		if (tid == prev_tid)
+-- 
+2.52.0
 
