@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14169364EBE
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23FB356A0D
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769539593; cv=none; b=Vw6ZMQ38W51IvLNqZ07RDjiH8db1FdaiGj7Ezo7bYheyj6d56iseF6jsti7tZTZ1/sxHiUE4p72D4digkcYeb+zAL0nLJ12+5aFsEFB3LPaBxNJO8fHhgNF9iKIXgM6xzYmZIGtVO/P5BDEpcCQ7wAMrabODoV80fp6ftaz8XSM=
+	t=1769539595; cv=none; b=FqyOjFmamfHNqS1X1gegWXjznVI8Dw7R5U50Dmyl9UehUS0TCJvmqU3z6iZwxMh/fIqoThdxuGPdIDUwZPSK3mUnep8KTVP0//FZSXcjXhabqxR1OFRhh5wd29ocUbGvA7a/pwdF448sqdqlaGTefhK7jO11aWjE5ItP61+KP6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769539593; c=relaxed/simple;
-	bh=1zUi4F0wnFrKUNubA5dgAmMBGudhKmfRBZtS61CeTbE=;
+	s=arc-20240116; t=1769539595; c=relaxed/simple;
+	bh=J+f02vC6vGMWfbo7N83jJBpPCUC7ojdATQyc1Sr4ucs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=WyKkiWF4IOobPnLKlBuQ20qu0zYopLmj4JFhknP5mf5HLm9XH74UOmT0JZwDiwGokql2PMdaey36NTEBZrVONFvjXSwSDS82Mx+4n8+7Rx1QmqMAoRtEi0IYUaFD1Xl9bM4coF36dKEqsegOnZfTLWnn9ShD9iIFZhhLcT8kyjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kBUnFBWo; arc=none smtp.client-ip=74.125.82.73
+	 To:Content-Type; b=a3UrFakw1QK/i/fjF8VlsYJYgyh3FfXHlAqtrxAB6VubEQNYGgFhJ/jjum/2Fm+/g00pjEy3FBTUnC63kobaCBPLiDtXo9Y57yJ411ztK9bjlMoFS6ENIANwDlLycTr+AbzV896BIJOfVmpdnxz5p/+TPvMf1yJu2OS266B1HxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WslYIB4t; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kBUnFBWo"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-124743cf760so5124715c88.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 10:46:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WslYIB4t"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-124743cf760so5124926c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 10:46:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769539591; x=1770144391; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769539593; x=1770144393; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gpcaviiC3LGw00gXygGe2ykJpAMPCjE5SQ665o5d7iE=;
-        b=kBUnFBWoH+jsZOhcMyaUKR1xZm3A9haJp5GdmM1rupdSXaeF3tgV1cnW1C+jjD8U0A
-         GVmTu7E+ZmC9FICkWV+V2OZCQj2IKDFp89wBmhEuy9NwadYTE1AhPyL66gt/MzSSYAsC
-         6pgHPglmKjLqBBAmBuBTrlYAbEkTEP++TqG7O6kEysIHmU7FlYl9bErUw52D8+Z2Xuj0
-         6pKlOGc3/vUM/EWFHOv5dXCl79YfiOiwZUjbCR1DLF9b+Wo73KY8vqxxSotUgtOIJgM+
-         SNJF1oMCIqQZmpFqFhRWxZSB1FCklgXmTKPMRz1oRY40EjxRxh7mPzZAVrAT0e+yz7Fi
-         n33Q==
+        bh=FbXTdK+dMmj1w20jlEWvuTScD9bjGDPfd4CifWDSxbc=;
+        b=WslYIB4tvvY6N3zionTBQFmFLxHDc2nGAxGF9pc1yydjYnCHynz31f/wafZocfyUOj
+         vvv8qccnLl9ArQbJugI8KPenKt9oQe/vF3QlPvunigkGo25niLZ5Y67r1oul5YuSgmYZ
+         TnG53xwM+3cML6Dk3x55L/WvXlcyEWsYysX5JElVZVw/hKwqzn1V5DqbPpTF9sXKmDol
+         bvb4uPLswRi0fsJvWtFukgCEKDKIyyXHI3W3urtGogDvUKnvl911c246E/X6roeyIBJD
+         i0XN5jwV3lq7kZbIpCv5Psey2rvt6UUs1vS4Qol/hlhNrSqixFLYO0M19cc8ZhA8ogZC
+         0U7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769539591; x=1770144391;
+        d=1e100.net; s=20230601; t=1769539593; x=1770144393;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gpcaviiC3LGw00gXygGe2ykJpAMPCjE5SQ665o5d7iE=;
-        b=pk0KiGapdaGPYtvzRYs4Pi6SfmTA2LgP6Q66dad8habGxdLl6liVV735eUD/Bmb9oW
-         7edtdESsuQppXQdpDHCkBE6a9oxLcgymaz4E5mIRfRESNbvMOn81gRZo5/JCcTeszPVN
-         qAOPvhntX5lH9Qed+L1fAnEsmDbkMibRQHqfT27oPu4olLjec6kplFdQNimQArFAksqO
-         RIke5fHv6vgdMr2BS21IjXzjFPoCyJv5hLALZDKaMaVLS0XbT1YrMRmwOygo56adadzP
-         7j71yAVAsDQd6eMmioCpUyKcV75S3UbkO5I5c25QpQapFL9chbQcPbGD6X7X0Dh/UYgD
-         +jvw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9fJm6wTce6yIlEihEk4eLQAkAwYhG+4iwP3dhaNZUCJobUFTmupKJ9WCdtBGexR7uD3/j5gvsIUKrIx4HtitJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/NiAw4qLiSp6jeJlOHBwGyOAjgyM1MP3FgrChO8b/C1pYrZM0
-	y+JgROhGEr+Z2xFNBzaKm5FqxkaZos54C0hJKAlXBtPjcejsZil1e9BEE85JkO/uI7wKDqNplYw
-	Vj7C0SzsBjw==
-X-Received: from dlbeb5.prod.google.com ([2002:a05:7022:d45:b0:121:7b85:782a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701a:c94e:b0:11d:fcb2:3311
- with SMTP id a92af1059eb24-124a00c7d5dmr1467924c88.27.1769539591175; Tue, 27
- Jan 2026 10:46:31 -0800 (PST)
-Date: Tue, 27 Jan 2026 10:45:05 -0800
+        bh=FbXTdK+dMmj1w20jlEWvuTScD9bjGDPfd4CifWDSxbc=;
+        b=MCkTijoGu5hwkOAxe1tTUHt7hnAlfZm/QJ8QyFDLUhJciv104Z43beXfkvJTuCInAz
+         BtM4K1NB1sgAqvGDkBhB59Desby0IxGkLjJJmV72i7bXbNlK5c4u33jZd39yeGQq9I1O
+         yMDg+HYZyeBkZZyY9hgnh+kVnS5MtUUxHijDWNIa45TL2ZQ7lnyZsyzNcCS6q8Qlgl74
+         XNJuIThUlEhGeNsvk54DTqy5Xu09SnH6T+Vw8ZRNJ4ETAsfp5J53j5217C46mlScXWeJ
+         v7R/VIzI1/9OoT1MYuHthv25qB0MwEr0phfylYrYW4qyf6LukPEHzNid4Cy9b/rKnmxW
+         wDSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXmbk71ORz9kOWMP/U8qYH8qT0w2emQOaY6rLZ728aAbtssNFoP2J0+jZt27bHn4zMF5dt5WmOc+ezHsJpoFrxd@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhiC3+IbiwU06R/g8QdHI+yc3PxBrMFmk7eeUAMGf3bKoADMo/
+	GtCeQ7U/sgMnD/jOaCDRrmL9GBuBCWqcBjwG+mDIXO7fT0fbszva3/s94YjB7urCm2jnU19Ty7/
+	GlIHJXyll2Q==
+X-Received: from dlbsv14.prod.google.com ([2002:a05:7022:3a0e:b0:124:9d31:3581])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6082:b0:119:e56b:c762
+ with SMTP id a92af1059eb24-124a00df67fmr1557216c88.39.1769539592876; Tue, 27
+ Jan 2026 10:46:32 -0800 (PST)
+Date: Tue, 27 Jan 2026 10:45:06 -0800
 In-Reply-To: <20260127184506.3059493-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260127184506.3059493-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260127184506.3059493-35-irogers@google.com>
-Subject: [PATCH v11 34/35] perf jevents: Add cycles breakdown metric for arm64/AMD/Intel
+Message-ID: <20260127184506.3059493-36-irogers@google.com>
+Subject: [PATCH v11 35/35] perf jevents: Validate that all names given an Event
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -75,121 +75,90 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Breakdown cycles to user, kernel and guest. Add a common_metrics.py
-file for such metrics.
+Validate they exist in a json file from one directory found from one
+directory above the model's json directory. This avoids broken
+fallback encodings being created.
 
 Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/Build             |  2 +-
- tools/perf/pmu-events/amd_metrics.py    |  2 ++
- tools/perf/pmu-events/arm64_metrics.py  |  5 ++++-
- tools/perf/pmu-events/common_metrics.py | 19 +++++++++++++++++++
- tools/perf/pmu-events/intel_metrics.py  |  2 ++
- 5 files changed, 28 insertions(+), 2 deletions(-)
- create mode 100644 tools/perf/pmu-events/common_metrics.py
+ tools/perf/pmu-events/metric.py | 36 +++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-index 4878d922a732..537d27851ca9 100644
---- a/tools/perf/pmu-events/Build
-+++ b/tools/perf/pmu-events/Build
-@@ -44,7 +44,7 @@ $(LEGACY_CACHE_JSON): $(LEGACY_CACHE_PY)
- 	$(call rule_mkdir)
- 	$(Q)$(call echo-cmd,gen)$(PYTHON) $(LEGACY_CACHE_PY) > $@
+diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
+index 2029b6e28365..585454828c2f 100644
+--- a/tools/perf/pmu-events/metric.py
++++ b/tools/perf/pmu-events/metric.py
+@@ -11,12 +11,14 @@ from typing import Dict, List, Optional, Set, Tuple, Union
+ all_pmus = set()
+ all_events = set()
+ experimental_events = set()
++all_events_all_models = set()
  
--GEN_METRIC_DEPS := pmu-events/metric.py
-+GEN_METRIC_DEPS := pmu-events/metric.py pmu-events/common_metrics.py
+ def LoadEvents(directory: str) -> None:
+   """Populate a global set of all known events for the purpose of validating Event names"""
+   global all_pmus
+   global all_events
+   global experimental_events
++  global all_events_all_models
+   all_events = {
+       "context\\-switches",
+       "cpu\\-cycles",
+@@ -42,6 +44,20 @@ def LoadEvents(directory: str) -> None:
+         # The generated directory may be the same as the input, which
+         # causes partial json files. Ignore errors.
+         pass
++  all_events_all_models = all_events.copy()
++  for root, dirs, files in os.walk(directory + ".."):
++    for filename in files:
++      if filename.endswith(".json"):
++        try:
++          for x in json.load(open(f"{root}/{filename}")):
++            if "EventName" in x:
++              all_events_all_models.add(x["EventName"])
++            elif "ArchStdEvent" in x:
++              all_events_all_models.add(x["ArchStdEvent"])
++        except json.decoder.JSONDecodeError:
++          # The generated directory may be the same as the input, which
++          # causes partial json files. Ignore errors.
++          pass
  
- # Generate AMD Json
- ZENS = $(shell ls -d pmu-events/arch/x86/amdzen*)
-diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-index 83e77ccc059e..e2defaffde3e 100755
---- a/tools/perf/pmu-events/amd_metrics.py
-+++ b/tools/perf/pmu-events/amd_metrics.py
-@@ -4,6 +4,7 @@ import argparse
- import math
- import os
- from typing import Optional
-+from common_metrics import Cycles
- from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
-                     JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
-                     Metric, MetricGroup, Select)
-@@ -475,6 +476,7 @@ def main() -> None:
-         AmdItlb(),
-         AmdLdSt(),
-         AmdUpc(),
-+        Cycles(),
-         Idle(),
-         Rapl(),
-         UncoreL3(),
-diff --git a/tools/perf/pmu-events/arm64_metrics.py b/tools/perf/pmu-events/arm64_metrics.py
-index ac717ca3513a..4ecda96d11fa 100755
---- a/tools/perf/pmu-events/arm64_metrics.py
-+++ b/tools/perf/pmu-events/arm64_metrics.py
-@@ -4,6 +4,7 @@ import argparse
- import os
- from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, LoadEvents,
-                     MetricGroup)
-+from common_metrics import Cycles
  
- # Global command line arguments.
- _args = None
-@@ -34,7 +35,9 @@ def main() -> None:
-     directory = f"{_args.events_path}/arm64/{_args.vendor}/{_args.model}/"
-     LoadEvents(directory)
+ def CheckPmu(name: str) -> bool:
+@@ -64,6 +80,25 @@ def CheckEvent(name: str) -> bool:
  
--    all_metrics = MetricGroup("", [])
-+    all_metrics = MetricGroup("", [
-+        Cycles(),
-+    ])
+   return name in all_events
  
-     if _args.metricgroups:
-         print(JsonEncodeMetricGroupDescriptions(all_metrics))
-diff --git a/tools/perf/pmu-events/common_metrics.py b/tools/perf/pmu-events/common_metrics.py
-new file mode 100644
-index 000000000000..fcdfb9d3e648
---- /dev/null
-+++ b/tools/perf/pmu-events/common_metrics.py
-@@ -0,0 +1,19 @@
-+# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+from metric import (d_ratio, Event, Metric, MetricGroup)
++def CheckEveryEvent(*names: str) -> None:
++  """Check all the events exist in at least one json file"""
++  global all_events_all_models
++  if len(all_events_all_models) == 0:
++    assert len(names) == 1, f"Cannot determine valid events in {names}"
++    # No events loaded so assume any event is good.
++    return
 +
++  for name in names:
++    # Remove trailing modifier.
++    if ':' in name:
++      name = name[:name.find(':')]
++    elif '/' in name:
++      name = name[:name.find('/')]
++      if any([name.startswith(x) for x in ['amd', 'arm', 'cpu', 'msr', 'power']]):
++        continue
++    if name not in all_events_all_models:
++      raise Exception(f"Is {name} a named json event?")
 +
-+def Cycles() -> MetricGroup:
-+    cyc_k = Event("cpu\\-cycles:kHh")  # exclude user and guest
-+    cyc_g = Event("cpu\\-cycles:G")   # exclude host
-+    cyc_u = Event("cpu\\-cycles:uH")  # exclude kernel, hypervisor and guest
-+    cyc = cyc_k + cyc_g + cyc_u
-+
-+    return MetricGroup("lpm_cycles", [
-+        Metric("lpm_cycles_total", "Total number of cycles", cyc, "cycles"),
-+        Metric("lpm_cycles_user", "User cycles as a percentage of all cycles",
-+               d_ratio(cyc_u, cyc), "100%"),
-+        Metric("lpm_cycles_kernel", "Kernel cycles as a percentage of all cycles",
-+               d_ratio(cyc_k, cyc), "100%"),
-+        Metric("lpm_cycles_guest", "Hypervisor guest cycles as a percentage of all cycles",
-+               d_ratio(cyc_g, cyc), "100%"),
-+    ], description="cycles breakdown per privilege level (users, kernel, guest)")
-diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index d56bab7337df..52035433b505 100755
---- a/tools/perf/pmu-events/intel_metrics.py
-+++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -6,6 +6,7 @@ import math
- import os
- import re
- from typing import Optional
-+from common_metrics import Cycles
- from metric import (d_ratio, has_event, max, source_count, CheckPmu, Event,
-                     JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
-                     Literal, LoadEvents, Metric, MetricConstraint, MetricGroup,
-@@ -1095,6 +1096,7 @@ def main() -> None:
-     LoadEvents(directory)
  
-     all_metrics = MetricGroup("", [
-+        Cycles(),
-         Idle(),
-         Rapl(),
-         Smi(),
+ def IsExperimentalEvent(name: str) -> bool:
+   global experimental_events
+@@ -403,6 +438,7 @@ class Event(Expression):
+ 
+   def __init__(self, *args: str):
+     error = ""
++    CheckEveryEvent(*args)
+     for name in args:
+       if CheckEvent(name):
+         self.name = _FixEscapes(name)
 -- 
 2.52.0.457.g6b5491de43-goog
 
