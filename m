@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23FB356A0D
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3096936C0A3
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769539595; cv=none; b=FqyOjFmamfHNqS1X1gegWXjznVI8Dw7R5U50Dmyl9UehUS0TCJvmqU3z6iZwxMh/fIqoThdxuGPdIDUwZPSK3mUnep8KTVP0//FZSXcjXhabqxR1OFRhh5wd29ocUbGvA7a/pwdF448sqdqlaGTefhK7jO11aWjE5ItP61+KP6A=
+	t=1769539595; cv=none; b=X/fAXCWMScWwmVSHl1U4Jj78wWo2W2uq9py9n2GqMO6h8Hc0+4fKjwzbLqiY6JZSluQNZZZrR+0193bFEd1FK4CQtG6Q2hC8BLobUYX7/cm3BPlmdK4D+FbDS1y3KT13sSVa705ubGEzhrHQyH28Mx2dRiWCyG4iGUvqxqrQpo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769539595; c=relaxed/simple;
-	bh=J+f02vC6vGMWfbo7N83jJBpPCUC7ojdATQyc1Sr4ucs=;
+	bh=ehb9+lTGbZ1qDk8zx/gxtgX32wpwcKjuLsajxpEl9rk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=a3UrFakw1QK/i/fjF8VlsYJYgyh3FfXHlAqtrxAB6VubEQNYGgFhJ/jjum/2Fm+/g00pjEy3FBTUnC63kobaCBPLiDtXo9Y57yJ411ztK9bjlMoFS6ENIANwDlLycTr+AbzV896BIJOfVmpdnxz5p/+TPvMf1yJu2OS266B1HxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WslYIB4t; arc=none smtp.client-ip=74.125.82.74
+	 To:Content-Type; b=tgiK7PY/6MI//zYpQmmJ0zbGj6FYXxl2SdWrklGgNcvUY+Bx7tZ2osla6BOlkgv9yrV65a6v+vKUHLdNKP5psj3WuWakjut9EaDvS4KWiuFRsAz42jT5e2nec1Xt/dWgzNikpvy8MAggR+ICPgyd60u7ZjJNBWF8Hkzw88evHjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yncgfIVb; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WslYIB4t"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-124743cf760so5124926c88.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 10:46:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yncgfIVb"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1233b81a92dso148472c88.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 10:46:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769539593; x=1770144393; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769539589; x=1770144389; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=FbXTdK+dMmj1w20jlEWvuTScD9bjGDPfd4CifWDSxbc=;
-        b=WslYIB4tvvY6N3zionTBQFmFLxHDc2nGAxGF9pc1yydjYnCHynz31f/wafZocfyUOj
-         vvv8qccnLl9ArQbJugI8KPenKt9oQe/vF3QlPvunigkGo25niLZ5Y67r1oul5YuSgmYZ
-         TnG53xwM+3cML6Dk3x55L/WvXlcyEWsYysX5JElVZVw/hKwqzn1V5DqbPpTF9sXKmDol
-         bvb4uPLswRi0fsJvWtFukgCEKDKIyyXHI3W3urtGogDvUKnvl911c246E/X6roeyIBJD
-         i0XN5jwV3lq7kZbIpCv5Psey2rvt6UUs1vS4Qol/hlhNrSqixFLYO0M19cc8ZhA8ogZC
-         0U7A==
+        bh=paWFxLvTCvU+EVxViFjzHOc9++WhWxJTYiWc7P0l41k=;
+        b=yncgfIVbQAq6949fsTylzq66hXOy0Cn2KkQ/lAtbWcEl19TG2TWD30r7FTEL19L/lQ
+         llO6COACwS5OwguujOvu5jkIzVxVWbM5wqLRZq++HedtlvS1NJ2dlQBqKSuPbT7I6hPp
+         Cil/myrATwO0wfdSQGObTMkHCi36t7Ey7g9Gz+0l0cJo0JutpiZHR/VdwG6oe3s1CYRh
+         733qi3XNKvjPiYF1z73tWaIbLkMhZiaEGVNNAddO80GmmhI6tDlVJI1eBWnfwK7rUXgW
+         o6X/xMSzCenP25urxf2zc2F6EdptVPQ1M28qnw09pH7c3YYWUMdAau+aVTO/VMUjC+8H
+         vxvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769539593; x=1770144393;
+        d=1e100.net; s=20230601; t=1769539589; x=1770144389;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FbXTdK+dMmj1w20jlEWvuTScD9bjGDPfd4CifWDSxbc=;
-        b=MCkTijoGu5hwkOAxe1tTUHt7hnAlfZm/QJ8QyFDLUhJciv104Z43beXfkvJTuCInAz
-         BtM4K1NB1sgAqvGDkBhB59Desby0IxGkLjJJmV72i7bXbNlK5c4u33jZd39yeGQq9I1O
-         yMDg+HYZyeBkZZyY9hgnh+kVnS5MtUUxHijDWNIa45TL2ZQ7lnyZsyzNcCS6q8Qlgl74
-         XNJuIThUlEhGeNsvk54DTqy5Xu09SnH6T+Vw8ZRNJ4ETAsfp5J53j5217C46mlScXWeJ
-         v7R/VIzI1/9OoT1MYuHthv25qB0MwEr0phfylYrYW4qyf6LukPEHzNid4Cy9b/rKnmxW
-         wDSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXmbk71ORz9kOWMP/U8qYH8qT0w2emQOaY6rLZ728aAbtssNFoP2J0+jZt27bHn4zMF5dt5WmOc+ezHsJpoFrxd@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhiC3+IbiwU06R/g8QdHI+yc3PxBrMFmk7eeUAMGf3bKoADMo/
-	GtCeQ7U/sgMnD/jOaCDRrmL9GBuBCWqcBjwG+mDIXO7fT0fbszva3/s94YjB7urCm2jnU19Ty7/
-	GlIHJXyll2Q==
-X-Received: from dlbsv14.prod.google.com ([2002:a05:7022:3a0e:b0:124:9d31:3581])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6082:b0:119:e56b:c762
- with SMTP id a92af1059eb24-124a00df67fmr1557216c88.39.1769539592876; Tue, 27
- Jan 2026 10:46:32 -0800 (PST)
-Date: Tue, 27 Jan 2026 10:45:06 -0800
+        bh=paWFxLvTCvU+EVxViFjzHOc9++WhWxJTYiWc7P0l41k=;
+        b=rnRnSl5mXngMF4FqU7mXd7xrEmwT/x241ckpsCWxcuTyRJGLQVxzleLrpf9hMhDgBe
+         t3MyQABEtPQVinFos5WmcCDM434V9uQzz1g+dzlzx9ag49i6Vb0YrtuMZcu+siI7uozU
+         YO5hl3m+iBL8va+j30Giv6YbpwDybdE9r6SEC7Ejc+MIRLr60Q5JCJU/0TXukCGDPp+V
+         o9FY5DycBqhJWD+gN4uTqhIxzhLVKlQL+9A4FpiRBOr9o8Z8Qu3XnSGqmzjLOkrzL744
+         URt2Khj20s4RxxtKV1QQHMyBQc2qNL476l3Nj7L1xV0IvcRVXg6+5HKWprupGnIHB5Rr
+         C1HA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhGW5jhUpSxmOa8yHYybp6/h1rOYqEP3tRx5/nr/kOz77Usj9m6x8FAFVP8BxgkFN9ZG34KAjoXdzH4DjCiTvy@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFeyMImh1O6L+fFmQxQbrr0AYlpxzWBalkVZu0kieHONuImdhz
+	AoVaTHwcBqKVA0nGdG8AWs13SL1CLJBZTn/y3Cj9I1xebht4GSIjnfg7tuogHeag97Ie+MKnUS7
+	r3Q+19HF5ZQ==
+X-Received: from dlbcq17.prod.google.com ([2002:a05:7022:2491:b0:124:9694:5535])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f90:b0:11b:a8e3:847b
+ with SMTP id a92af1059eb24-124a0577d9bmr1429544c88.5.1769539589230; Tue, 27
+ Jan 2026 10:46:29 -0800 (PST)
+Date: Tue, 27 Jan 2026 10:45:04 -0800
 In-Reply-To: <20260127184506.3059493-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260127184506.3059493-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260127184506.3059493-36-irogers@google.com>
-Subject: [PATCH v11 35/35] perf jevents: Validate that all names given an Event
+Message-ID: <20260127184506.3059493-34-irogers@google.com>
+Subject: [PATCH v11 33/35] perf jevents: Add mesh bandwidth saturation metric
+ for Intel
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -75,90 +76,51 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Validate they exist in a json file from one directory found from one
-directory above the model's json directory. This avoids broken
-fallback encodings being created.
+Memory bandwidth saturation from CBOX/CHA events present in
+broadwellde, broadwellx, cascadelakex, haswellx, icelakex, skylakex
+and snowridgex.
 
 Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/metric.py | 36 +++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
-index 2029b6e28365..585454828c2f 100644
---- a/tools/perf/pmu-events/metric.py
-+++ b/tools/perf/pmu-events/metric.py
-@@ -11,12 +11,14 @@ from typing import Dict, List, Optional, Set, Tuple, Union
- all_pmus = set()
- all_events = set()
- experimental_events = set()
-+all_events_all_models = set()
- 
- def LoadEvents(directory: str) -> None:
-   """Populate a global set of all known events for the purpose of validating Event names"""
-   global all_pmus
-   global all_events
-   global experimental_events
-+  global all_events_all_models
-   all_events = {
-       "context\\-switches",
-       "cpu\\-cycles",
-@@ -42,6 +44,20 @@ def LoadEvents(directory: str) -> None:
-         # The generated directory may be the same as the input, which
-         # causes partial json files. Ignore errors.
-         pass
-+  all_events_all_models = all_events.copy()
-+  for root, dirs, files in os.walk(directory + ".."):
-+    for filename in files:
-+      if filename.endswith(".json"):
-+        try:
-+          for x in json.load(open(f"{root}/{filename}")):
-+            if "EventName" in x:
-+              all_events_all_models.add(x["EventName"])
-+            elif "ArchStdEvent" in x:
-+              all_events_all_models.add(x["ArchStdEvent"])
-+        except json.decoder.JSONDecodeError:
-+          # The generated directory may be the same as the input, which
-+          # causes partial json files. Ignore errors.
-+          pass
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index f6bb691dc5bb..d56bab7337df 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -1033,6 +1033,22 @@ def UncoreMemBw() -> Optional[MetricGroup]:
+     ], description="Memory Bandwidth")
  
  
- def CheckPmu(name: str) -> bool:
-@@ -64,6 +80,25 @@ def CheckEvent(name: str) -> bool:
- 
-   return name in all_events
- 
-+def CheckEveryEvent(*names: str) -> None:
-+  """Check all the events exist in at least one json file"""
-+  global all_events_all_models
-+  if len(all_events_all_models) == 0:
-+    assert len(names) == 1, f"Cannot determine valid events in {names}"
-+    # No events loaded so assume any event is good.
-+    return
++def UncoreMemSat() -> Optional[Metric]:
++    try:
++        clocks = Event("UNC_CHA_CLOCKTICKS", "UNC_C_CLOCKTICKS")
++        sat = Event("UNC_CHA_DISTRESS_ASSERTED.VERT", "UNC_CHA_FAST_ASSERTED.VERT",
++                    "UNC_C_FAST_ASSERTED")
++    except:
++        return None
 +
-+  for name in names:
-+    # Remove trailing modifier.
-+    if ':' in name:
-+      name = name[:name.find(':')]
-+    elif '/' in name:
-+      name = name[:name.find('/')]
-+      if any([name.startswith(x) for x in ['amd', 'arm', 'cpu', 'msr', 'power']]):
-+        continue
-+    if name not in all_events_all_models:
-+      raise Exception(f"Is {name} a named json event?")
++    desc = ("Mesh Bandwidth saturation (% CBOX cycles with FAST signal asserted, "
++            "include QPI bandwidth saturation), lower is better")
++    if "UNC_CHA_" in sat.name:
++        desc = ("Mesh Bandwidth saturation (% CHA cycles with FAST signal asserted, "
++                "include UPI bandwidth saturation), lower is better")
++    return Metric("lpm_mem_sat", desc, d_ratio(sat, clocks), "100%")
 +
++
+ def UncoreUpiBw() -> Optional[MetricGroup]:
+     try:
+         upi_rds = Event("UNC_UPI_RxL_FLITS.ALL_DATA")
+@@ -1097,6 +1113,7 @@ def main() -> None:
+         UncoreDir(),
+         UncoreMem(),
+         UncoreMemBw(),
++        UncoreMemSat(),
+         UncoreUpiBw(),
+     ])
  
- def IsExperimentalEvent(name: str) -> bool:
-   global experimental_events
-@@ -403,6 +438,7 @@ class Event(Expression):
- 
-   def __init__(self, *args: str):
-     error = ""
-+    CheckEveryEvent(*args)
-     for name in args:
-       if CheckEvent(name):
-         self.name = _FixEscapes(name)
 -- 
 2.52.0.457.g6b5491de43-goog
 
