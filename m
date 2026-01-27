@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1988636BCCE
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631073659E5
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769539586; cv=none; b=KhshkMDQcPAcHmabFowI5ZQp1kwRSXkcUhrVDmaJQ8wA8Z17fe8b4K2pq1uAUNw45bgk7EdMqKrz23MX6pgV4MQI4Tb4dICuQgRr9OEKKsF/RmrBEcYZgHs4ZbQZRYEOCZn3Z8kngEmaRcILeMHo3BLFh02JA65NJll7XeQ+fhI=
+	t=1769539588; cv=none; b=tgr+GzAZY8+OX8/AKetYyt6qkPzjxPAFISbzun0ev29azOWaZZxRfwT6Z5dgigUWm0MCcb6G0fhTIRn6k9IZwkvBts5iRJICPzjqFEB6hc8TXpoFFdCbAdf/NWDr8E1XfKjwjMcrTSfmj2U/TAhK0nKzZXiRria5/4ri9nbpxGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769539586; c=relaxed/simple;
-	bh=0/p47u8XI/jepoD/8n27VWWYDMXq2JoIclYASBN8NcM=;
+	s=arc-20240116; t=1769539588; c=relaxed/simple;
+	bh=w/E20u8/Wao9eymMi66Gt2Oyo3Q+Ckqd/d41pO69OCQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=KRDRBWVng4XGGip91g4yWnkzJvKMvDqLJf7+GU/AZffNtsn5cUq0+T9JX/ODPLJ2PQWS8poCHzaK3qCc5qk0VGVrlpfLCvJM8+GpCDtfkSvvPA79VSvopq2GVAqcJy0bRmU5WglazlYPaIvk7Cfp6lZRFBq9V7hF7TM+kHsWvu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PjUpvf1y; arc=none smtp.client-ip=74.125.82.202
+	 To:Content-Type; b=TaMmaDayupdUe+CqsAe5Ek76yObe6qUE9YjjOKQKg6QGzwonJr/xTZNhMzM4d/IXFzcTv0rMEvzjm3tdhrbfjoZ4f4gVhf5pcTSuo2TX6oHqE+3IvsuiVM211TO6T2MUD++pWLFYSPw5FvLNJvg4x8+9OSTGroZ7Lgv/fvYRpF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TSuMD/SH; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PjUpvf1y"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b71c5826fbso6471376eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 10:46:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TSuMD/SH"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12339eea50bso4659347c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 10:46:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769539584; x=1770144384; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769539586; x=1770144386; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=a8hELqlVqsPd53TkBvYAfiL9c8Iu/vvPZfjM7X/WNAc=;
-        b=PjUpvf1ygi+Hbk8spsqC5wR8y/0AlujyVQ9vmQPR/4bmkb5wwJp/pQb9yGCz8T3OnO
-         C4ICh+BGtLGSxV+YTsnzHa4mnYc1T08qxtqzOoDl5GPh8Nf8iDCDVQTFvZx265eXptTX
-         XRXhYjBGcTPPeXqBDqZdF2tZpYB8y9obv3cMfKWdLWNV4VNExdOO217odvZXJQmIVxxF
-         PBojYiB6GNhSJLCc6NVeTgf5w8+czxOvi2dPrbwhEtO38GTj6BpJWsLNvtk4IMfUTaJQ
-         7R07tfbPS98z0o1Zm4Smv6RWAQ8ahoye2qGA/rnm7z8Zo1hAmlQHUDe6fBF9Lray+eZR
-         LHcg==
+        bh=bkrL8HvCBil8dXshWsOcY3GoMPnFAn1ScNAR1TTPj0A=;
+        b=TSuMD/SHhCDH2Kl40+pzXUy9B/RqpQJptBTgtyxqYUv1CVlpdzVM92Q+79knv+1suT
+         I2h+dBYt3G9PWVOvU+Laaf2Xpj/wOh9zi60sQQ7XduVDX9outLFbPQyFlFvibixtLiJA
+         GlIDCZgV5/sC5f7calk/lh/UJUtWMgNX9o1Qh/yJkGQYsiKCJ0h4stOGohqh4uKhV4K9
+         eYD9UE97YmZVvDjeBOaVqajfjSIhSlpd2u9ClJkmM6jeyX85Ua18RYLKosjMKzfhlFhw
+         3CYfel/tnm52uR3W46CWzqXCRPpVBRUaBAZQBWH+v1Q+fHudNxEjypN8pY0FYx62exSl
+         2yCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769539584; x=1770144384;
+        d=1e100.net; s=20230601; t=1769539586; x=1770144386;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a8hELqlVqsPd53TkBvYAfiL9c8Iu/vvPZfjM7X/WNAc=;
-        b=C3mIqtl1w79CoYro0lQjxY2W0BT641chuwabIwK9pzMCSbRgPT+7n0vtapfxAlBSAy
-         BhDVYFvVEHHp9h+UQUiKSOvXU7GTLfQ6Shp3VIwFiFjq2XFW8QCtgx98JVCgyhItNxl0
-         dgJmaXGmKpvvMAK8iyOKN9j317KQnt2q59cbKf3gAR18lnicRZ/qtrIf61zuEUme1XM2
-         ytEXDf6G5DLMupar3Dt0IhFhQ9f2WRYOIk7vr8RChkDQO1f2dQbdkIZqhqovGdN6Kv7P
-         HiJR9IOiI0ObGhpe1fv4go8JQdokqzIFXMQmp7bT7poPS2THBbsH3feXC1EQCfwW56L+
-         HmFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbm4VZoCNQQrh0od5ruKAQqdbPR25PdlbPHT2yGuNR2ZwEdgdEWhi0zpIMlbIP6mCfvnVlO24ZvUcui+UTyqiU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdnmiwvvnNn4AUs5ohrmlxkAo9yGpHdV7qL76FW+ybto63V8eu
-	yb9gjzMeZGKHL40bRxKtjTQODF480lfP/w7EexcOeziNKnmzkoysC45bwVQgKhwjGQBNzhhrVd6
-	meYauUFFjUQ==
-X-Received: from dlbtu19.prod.google.com ([2002:a05:7022:3c13:b0:123:2dd9:db4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6286:b0:11b:9386:a37d
- with SMTP id a92af1059eb24-124a00e8ae7mr1367052c88.44.1769539583947; Tue, 27
- Jan 2026 10:46:23 -0800 (PST)
-Date: Tue, 27 Jan 2026 10:45:01 -0800
+        bh=bkrL8HvCBil8dXshWsOcY3GoMPnFAn1ScNAR1TTPj0A=;
+        b=xUCiQ1ENCqQjPhoai5Ts6TNoeRgwn4FcC/vXthKGtx8BomRPS2tUTHsjWg08uITLAU
+         /3Q9nLA4EA6jD6eJIBl5YgKZ3MGMVVS74brDkfZcFg9rGUUhkZ4D3S5HY3UQVZxetsB0
+         mNhPwiZRO4kVunuWUDGmfsuyk33gG1xrJTwC8UVjsSkT8hMf/qAENRR7YWu3fjjXjZpZ
+         JruwoO5UHRa6HS5hFnoBYlFKbveTLhuwWAdSOCIrxivjxdIXp7uzzCyKLG84yWc20PMo
+         HXK3VzwU3/+LgsVPxHXPnjG8+WhaHyCZCuT+C0IiqUey3r/QOBdzIex31j9ITY/1tw3G
+         1RZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWsOpoVGEv9gff6k79qBS/R3INYY9LnFwvLpz+LKgKrPh6+pV7nGehNbDFVH37SJCt3/Wg8Ashz/SaE2+CEoClB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yztepd/Oi+S0fSvlRYQa/x0HpKNZj8sCXF6H0ljIdrY6tkkOguP
+	NKTIn4cl9NvYg1YV7shTSf/77cmWIXz/m3ka7Ol4rVAPEljbqKdvrqQ8D9ohPG8oLyERW29QmLF
+	m8//gV13kJA==
+X-Received: from dlbbz1.prod.google.com ([2002:a05:7022:2381:b0:11f:3484:4f15])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:786:b0:11d:f440:b758
+ with SMTP id a92af1059eb24-124a00f496dmr1951656c88.25.1769539585577; Tue, 27
+ Jan 2026 10:46:25 -0800 (PST)
+Date: Tue, 27 Jan 2026 10:45:02 -0800
 In-Reply-To: <20260127184506.3059493-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260127184506.3059493-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260127184506.3059493-31-irogers@google.com>
-Subject: [PATCH v11 30/35] perf jevents: Add C-State metrics from the PCU PMU
+Message-ID: <20260127184506.3059493-32-irogers@google.com>
+Subject: [PATCH v11 31/35] perf jevents: Add local/remote miss latency metrics
  for Intel
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
@@ -76,65 +76,110 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Use occupancy events fixed in:
-https://lore.kernel.org/lkml/20240226201517.3540187-1-irogers@google.com/
-
-Metrics are at the socket level referring to cores, not hyperthreads.
+Derive from CBOX/CHA occupancy and inserts the average latency as is
+provided in Intel's uncore performance monitoring reference.
 
 Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 30 ++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 70 ++++++++++++++++++++++++--
+ 1 file changed, 67 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 24ceb7f8719b..118fe0fc05a3 100755
+index 118fe0fc05a3..037f9b2ea1b6 100755
 --- a/tools/perf/pmu-events/intel_metrics.py
 +++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -815,6 +815,35 @@ def IntelLdSt() -> Optional[MetricGroup]:
-     ], description="Breakdown of load/store instructions")
+@@ -6,9 +6,10 @@ import math
+ import os
+ import re
+ from typing import Optional
+-from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
+-                    JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
+-                    Metric, MetricConstraint, MetricGroup, MetricRef, Select)
++from metric import (d_ratio, has_event, max, source_count, CheckPmu, Event,
++                    JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
++                    Literal, LoadEvents, Metric, MetricConstraint, MetricGroup,
++                    MetricRef, Select)
+ 
+ # Global command line arguments.
+ _args = None
+@@ -624,6 +625,68 @@ def IntelL2() -> Optional[MetricGroup]:
+     ], description="L2 data cache analysis")
  
  
-+def UncoreCState() -> Optional[MetricGroup]:
++def IntelMissLat() -> Optional[MetricGroup]:
 +    try:
-+        pcu_ticks = Event("UNC_P_CLOCKTICKS")
-+        c0 = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C0")
-+        c3 = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C3")
-+        c6 = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C6")
++        ticks = Event("UNC_CHA_CLOCKTICKS", "UNC_C_CLOCKTICKS")
++        data_rd_loc_occ = Event("UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD_LOCAL",
++                                "UNC_CHA_TOR_OCCUPANCY.IA_MISS",
++                                "UNC_C_TOR_OCCUPANCY.MISS_LOCAL_OPCODE",
++                                "UNC_C_TOR_OCCUPANCY.MISS_OPCODE")
++        data_rd_loc_ins = Event("UNC_CHA_TOR_INSERTS.IA_MISS_DRD_LOCAL",
++                                "UNC_CHA_TOR_INSERTS.IA_MISS",
++                                "UNC_C_TOR_INSERTS.MISS_LOCAL_OPCODE",
++                                "UNC_C_TOR_INSERTS.MISS_OPCODE")
++        data_rd_rem_occ = Event("UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD_REMOTE",
++                                "UNC_CHA_TOR_OCCUPANCY.IA_MISS",
++                                "UNC_C_TOR_OCCUPANCY.MISS_REMOTE_OPCODE",
++                                "UNC_C_TOR_OCCUPANCY.NID_MISS_OPCODE")
++        data_rd_rem_ins = Event("UNC_CHA_TOR_INSERTS.IA_MISS_DRD_REMOTE",
++                                "UNC_CHA_TOR_INSERTS.IA_MISS",
++                                "UNC_C_TOR_INSERTS.MISS_REMOTE_OPCODE",
++                                "UNC_C_TOR_INSERTS.NID_MISS_OPCODE")
 +    except:
 +        return None
 +
-+    num_cores = Literal("#num_cores") / Literal("#num_packages")
++    if (data_rd_loc_occ.name == "UNC_C_TOR_OCCUPANCY.MISS_LOCAL_OPCODE" or
++            data_rd_loc_occ.name == "UNC_C_TOR_OCCUPANCY.MISS_OPCODE"):
++        data_rd = 0x182
++        for e in [data_rd_loc_occ, data_rd_loc_ins, data_rd_rem_occ, data_rd_rem_ins]:
++            e.name += f"/filter_opc={hex(data_rd)}/"
++    elif data_rd_loc_occ.name == "UNC_CHA_TOR_OCCUPANCY.IA_MISS":
++        # Demand Data Read - Full cache-line read requests from core for
++        # lines to be cached in S or E, typically for data
++        demand_data_rd = 0x202
++        #  LLC Prefetch Data - Uncore will first look up the line in the
++        #  LLC; for a cache hit, the LRU will be updated, on a miss, the
++        #  DRd will be initiated
++        llc_prefetch_data = 0x25a
++        local_filter = (f"/filter_opc0={hex(demand_data_rd)},"
++                        f"filter_opc1={hex(llc_prefetch_data)},"
++                        "filter_loc,filter_nm,filter_not_nm/")
++        remote_filter = (f"/filter_opc0={hex(demand_data_rd)},"
++                         f"filter_opc1={hex(llc_prefetch_data)},"
++                         "filter_rem,filter_nm,filter_not_nm/")
++        for e in [data_rd_loc_occ, data_rd_loc_ins]:
++            e.name += local_filter
++        for e in [data_rd_rem_occ, data_rd_rem_ins]:
++            e.name += remote_filter
++    else:
++        assert data_rd_loc_occ.name == "UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD_LOCAL", data_rd_loc_occ
 +
-+    max_cycles = pcu_ticks * num_cores
-+    total_cycles = c0 + c3 + c6
-+
-+    # remove fused-off cores which show up in C6/C7.
-+    c6 = Select(max(c6 - (total_cycles - max_cycles), 0),
-+                total_cycles > max_cycles,
-+                c6)
-+
-+    return MetricGroup("lpm_cstate", [
-+        Metric("lpm_cstate_c0", "C-State cores in C0/C1",
-+               d_ratio(c0, pcu_ticks), "cores"),
-+        Metric("lpm_cstate_c3", "C-State cores in C3",
-+               d_ratio(c3, pcu_ticks), "cores"),
-+        Metric("lpm_cstate_c6", "C-State cores in C6/C7",
-+               d_ratio(c6, pcu_ticks), "cores"),
++    ticks_per_cha = ticks / source_count(data_rd_loc_ins)
++    loc_lat = interval_sec * 1e9 * data_rd_loc_occ / \
++        (ticks_per_cha * data_rd_loc_ins)
++    ticks_per_cha = ticks / source_count(data_rd_rem_ins)
++    rem_lat = interval_sec * 1e9 * data_rd_rem_occ / \
++        (ticks_per_cha * data_rd_rem_ins)
++    return MetricGroup("lpm_miss_lat", [
++        Metric("lpm_miss_lat_loc", "Local to a socket miss latency in nanoseconds",
++               loc_lat, "ns"),
++        Metric("lpm_miss_lat_rem", "Remote to a socket miss latency in nanoseconds",
++               rem_lat, "ns"),
 +    ])
 +
 +
- def UncoreDir() -> Optional[MetricGroup]:
+ def IntelMlp() -> Optional[Metric]:
      try:
-         m2m_upd = Event("UNC_M2M_DIRECTORY_UPDATE.ANY")
-@@ -979,6 +1008,7 @@ def main() -> None:
+         l1d = Event("L1D_PEND_MISS.PENDING")
+@@ -1005,6 +1068,7 @@ def main() -> None:
+         IntelIlp(),
+         IntelL2(),
+         IntelLdSt(),
++        IntelMissLat(),
          IntelMlp(),
          IntelPorts(),
          IntelSwpf(),
-+        UncoreCState(),
-         UncoreDir(),
-         UncoreMem(),
-         UncoreMemBw(),
 -- 
 2.52.0.457.g6b5491de43-goog
 
