@@ -1,229 +1,271 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3E72C031B;
-	Tue, 27 Jan 2026 16:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769530189; cv=none; b=o0DZi88hAZsks6Xq/q339hlYod+FNsL4SsDUsBk1IWBkW5VukTelmwwqSxd6mLnAGEZ67/+1byK4kPABE5TrCoRQeDPdE/T5WCLdTkkfZuyXlB+hL9HIGDqKmw+l2bzNA1GSeTKG3ijJ00vF7nbXLW8LTKditOAMIkuE4s2DVzg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769530189; c=relaxed/simple;
-	bh=JGH1tEsu0no5CiHAVwYuTwzbubIxQmp2wf0x7AT7v+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QsFyUi6cdpemGDFsnLxBx/Z00gTUi8NeAgk/w193XxH4DaEyfMikc/fl9SeRwl1nFlRtLUuVp9BhplIcItSoLp0uPkQ947PZM/Vvgyjwjh7PKpSUZcqTZIOkxKR44+ma68dcl2xKsMtG6anYYfKLqyjOzKyO+bYZDHL7ViiiEcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIWqHu36; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E5B33D50B
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 16:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769530295; cv=pass; b=TeiBtaU4V+WTW1cdVPGuCi7zH23mfQy4nDg2/2wrhqnQL4OQ/WS1fXKyygNf8cX4icgBphPkqwLaIse/r+34dz69XMpP0wa7abjJhREH+NwYURapx1IWrDzSlugUKILiNRxeVAvEo4aYa5hNKcearc59Yzc/T5SX5/zYT/tM9hc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769530295; c=relaxed/simple;
+	bh=GvJu3aOsTnHupmWRfgd6HU0cCVtOB8EiB56nq3pcWkA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J0RUVvMDMvHNCM6c7NVVbdt0dOfHStIixtILGxyjfhvAUMGXdbonL9s5YGdc76zqwpTbSfXyVk7bQtsrDoiTXQrjs/Vapl3zTHmz4sSF/P8ANHJcznYQ/nM/HMk4tDEVTUeLIFvaXkJuGECnFlY3MF2Dq+lSOSxXGOalDMH+G/E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dnQ9xOdy; arc=pass smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIWqHu36"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA06C116C6;
-	Tue, 27 Jan 2026 16:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769530188;
-	bh=JGH1tEsu0no5CiHAVwYuTwzbubIxQmp2wf0x7AT7v+w=;
-	h=Date:From:To:Cc:Subject:From;
-	b=jIWqHu36UuqOHfbsHhspOyd6BnqBR6QZrd+EaY/9WFxeqfkdrwHvdi/qHvV+2jYOI
-	 FIgJPcocOa3n14m5rVDr0uUHYN5+D9CGH81DcQ5CbiyV2xVS6ia9JzzFj20XMWqit0
-	 nh9feVIswIMgaCT97ukkip9rtNj2v7XZ/G6yFkxVhDgtBo0Yz//LbnntdvYL4Tv+tM
-	 7dabgeT+4XNkh41F1ZyKYvqd2a4wskIacSeEHjpWo+azFd1gX/yXZWN1Nj/BAagd1u
-	 RZfmS5eg1VoZ2Fso7BVV/mwEKOd7D1hNrhmv0F6pyX2tLI6raQJOj8F24QooAxZZ6w
-	 J/2kBEkWFduaw==
-Date: Tue, 27 Jan 2026 13:09:45 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1 next] perf strlist: Remove dont_dupstr logic, used only
- once
-Message-ID: <aXjjSR1s3CJQn0bY@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dnQ9xOdy"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2a1462573caso77785ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 08:11:33 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769530293; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Vsef6wqsL7Dqv3OCftUvF/Ke/ebhWgf0acjxbDGdrjS5jC6TC+6a0URvBhDfmPop6O
+         PDeF1krpoP0GMdubAE5YaD51mJUCWpfF5JjEA83vP1XuBDizO+ur3TAnXecOTLmWk5ya
+         3Mp6tPOinOwOYEgv19ndsYWjRDpddtU63qHuo7tgs0d3nLr2GkHMc/9XTxeauBs92Y0k
+         MWRqYeU410YUN11meLTLdJD5Ly7nwxpjsamhOTLDYpKPjpkL6pAfZ9mkHc2UXU2hC9OQ
+         NsyF3aAcoilmmRMZhEdB4DeFY+MtwEiKKxXHrOz8Mt7yiSfk2P1lXgSzUl93u5YncnsM
+         elDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=A/mleTy9B4/UIaLOH3Gao4Wnx4rcDBQf6oq8eOX91jQ=;
+        fh=LGN01x6Lp4Zl13OQRCZIwUGcARu2zpTyuyFLmob2598=;
+        b=H2lB5YnaBx2UfNbTv3v42FcnJLJSlBd0aSjerSv4aa2EBdFC3gGi7ZKVzO9lfmxYAp
+         an5GJbmsdQXPgbHi71XcoADh4tWHzvz5KElA534KBVrHuy/6uy8FgkVWvY8xWJNJEc9q
+         rPAK8k5epl4mEY1wH2YFPhn0t4T+AtXCQeprlvLJfeFfqC6uZZ/LRoymB8jqqMtCYf53
+         4F0fW6ulN7dOvkSHqfA9VLK2gMR6g3efv7HghqbKSvQN+eHrHxuiVqHa3/fGNLJQoAt/
+         GtGtL77YR0Fc/l+V0d2P9QnigDcNHJboXie7+7kx+JL8DZ7SHt+R0ZfMO9dHRjlIw2Yh
+         hsdw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1769530293; x=1770135093; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A/mleTy9B4/UIaLOH3Gao4Wnx4rcDBQf6oq8eOX91jQ=;
+        b=dnQ9xOdy6kz7Tx6/F2Ysphbh2ZF6677NnZsP3FsQXKTM8fcW8Dc5JH3ZNNbCfann9Z
+         JswA3q2b34b44lKDbFFrks/VYTvcHTwz8f4OgMn6tGVKA3+CCrMQUZIg3M+8cez2jwXd
+         B7e3+I05suHaRGpWjAr6jGoGd12I+sGhqI+l/q71litXrIBU0SEB9l2lydQYd644ys3Y
+         2nmBa9/bJ4UgSz5S5S7qBvNxupqfLzUZ8Ifb85USCZnEIIzwwAzXbYlFUwBnK4dKTCwT
+         3LjBdZVcqzX3wGBtDEqH8UQMQ8j+y0UA6dQV3GL64KNlje7k5DJ3lsfp00mvTU9abgCk
+         oqQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769530293; x=1770135093;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=A/mleTy9B4/UIaLOH3Gao4Wnx4rcDBQf6oq8eOX91jQ=;
+        b=E09VpfJPAOnUoRLqMd+pxDRxsstyOjuoQy4gEU917ec/DuNRg9wIQurcMBQ0G9Gr9I
+         MnWMg+P7eZ2Y6z4ex19wvx+TX7Q+GhkoVKVNtEPSBtJLJwDDTQ36psUlC2Vs8RwbYSOh
+         1C0b6abRoDoLTyJynYRiJEdHVKDljv41KR8mErPI5V+fuNE/oLjYfc5Cut/odIt13fWM
+         n3dQ9PMuRqkzi1jwx87dseHHItUwA897UCbfWs2lVeenDNxl3C9iMh55KTvoCmxIONUv
+         kbHHQyYdiRFMjGTS86XdQlMVDmy0DwCQhlYaII5A9fc7MaRqmzwwytQZh7YcnsHIn2JE
+         MAow==
+X-Forwarded-Encrypted: i=1; AJvYcCVnnFpP7NmjJD1l1UD3g0u9e8AiKAyL3tWz+LxIwxSQBbKNKf0vYKSMa48Bp4aP8AZl4pm33v+uKippoBSz6uZR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw5rmZsNOb2RKMmJQHK67NYXuNLAiBEHPqwxcg/SUzSCAnOxLj
+	QP6XfBk/NaRvC5tP4DdDRmJpKKsSSopEzigyhxJ13dnWevexAEaUMQg0Jdmn61ef5o2Rck1ZdQD
+	X3+wwyDFMRsZye0zzTUuauJxuZxev6X4tWqhikuOM
+X-Gm-Gg: AZuq6aKfrN09ZdATvQrqII4eCxGhqIwEJ440vhjaAdqKAcKWWABV6CzXEWjW7/f9sZS
+	M2/9rK9I6l5LEyMUPR9QA+7tk2TQ4nfutyo8h/w66hZ8wXkV/n5z6Ht8hwaykFaIfNqpFpuEdr9
+	2UxVUllT0T82Jdu9fnF1aP0mODGGyn/UGler0XYAvkPmn7D2iPYuzbarrkOpbeTcZpuhUkSbgkl
+	56XI0MDm/3/h33jZanoOjEQ3jDbpbbzjv+MCCxtIFMn+fmk6I9yGtcbwpzLvQPuAaithW6FUfml
+	KHczAAqseI50yB60PkHvBvYT
+X-Received: by 2002:a17:902:cecb:b0:2a1:3cdc:7720 with SMTP id
+ d9443c01a7336-2a870b9a583mr2100165ad.21.1769530292678; Tue, 27 Jan 2026
+ 08:11:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20260127070259.2720468-1-dapeng1.mi@linux.intel.com>
+ <20260127070259.2720468-2-dapeng1.mi@linux.intel.com> <a97ff1d6-7712-4315-95ff-4079ffc752f7@linux.intel.com>
+In-Reply-To: <a97ff1d6-7712-4315-95ff-4079ffc752f7@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 27 Jan 2026 08:11:21 -0800
+X-Gm-Features: AZwV_QjW0pwOnDUxPFtiXQXGGTFi90qXyv8gN_Wjk26BamAh3tH23kY_UBLKyTk
+Message-ID: <CAP-5=fXW2KiHy+wT16nRgQK4xboTzcTH3pMEe3=En7dwUNGJPQ@mail.gmail.com>
+Subject: Re: [Patch v2 1/3] perf arch: Update arch headers to use relative
+ UAPI paths
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Mike Leach <mike.leach@linaro.org>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ian Rogers noticed that 678ed6b707e4b2db ("perf strlist: Don't write to
-const memory") breaks the 'Remove thread map' 'perf test' entry, because
-it keeps pointers to the temporary string introduced to avoid touching
-the const memory.
+On Tue, Jan 27, 2026 at 4:38=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.intel.=
+com> wrote:
+>
+>
+> On 1/27/2026 3:02 PM, Dapeng Mi wrote:
+> > The architectural specific headers perf_regs.h currently rely on the
+> > host architecture's 'asm/perf_regs.h'. This can lead to compilation
+> > inconsistencies or failures when including and building perf for a
+> > target architecture that differs from the host's architecture.
+> >
+> > Explicitly point to the UAPI headers within the tools source tree using
+> > relative paths. This ensures that perf is always built against the
+> > intended architecture.
+> >
+> > No functional changes are intended.
+> >
+> > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> > ---
+> >  tools/perf/arch/arm/include/perf_regs.h       | 2 +-
+> >  tools/perf/arch/arm64/include/perf_regs.h     | 2 +-
+> >  tools/perf/arch/csky/include/perf_regs.h      | 1 +
+> >  tools/perf/arch/loongarch/include/perf_regs.h | 2 +-
+> >  tools/perf/arch/mips/include/perf_regs.h      | 2 +-
+> >  tools/perf/arch/powerpc/include/perf_regs.h   | 2 +-
+> >  tools/perf/arch/riscv/include/perf_regs.h     | 2 +-
+> >  tools/perf/arch/s390/include/perf_regs.h      | 2 +-
+> >  tools/perf/arch/x86/include/perf_regs.h       | 2 +-
+> >  9 files changed, 9 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/tools/perf/arch/arm/include/perf_regs.h b/tools/perf/arch/=
+arm/include/perf_regs.h
+> > index 75ce1c370114..20c54766e3a0 100644
+> > --- a/tools/perf/arch/arm/include/perf_regs.h
+> > +++ b/tools/perf/arch/arm/include/perf_regs.h
+> > @@ -4,7 +4,7 @@
+> >
+> >  #include <stdlib.h>
+> >  #include <linux/types.h>
+> > -#include <asm/perf_regs.h>
+> > +#include "../../../../arch/arm/include/uapi/asm/perf_regs.h"
+> >
+> >  void perf_regs_load(u64 *regs);
+> >
+> > diff --git a/tools/perf/arch/arm64/include/perf_regs.h b/tools/perf/arc=
+h/arm64/include/perf_regs.h
+> > index 58639ee9f7ea..372f2565a9dd 100644
+> > --- a/tools/perf/arch/arm64/include/perf_regs.h
+> > +++ b/tools/perf/arch/arm64/include/perf_regs.h
+> > @@ -5,7 +5,7 @@
+> >  #include <stdlib.h>
+> >  #include <linux/types.h>
+> >  #define perf_event_arm_regs perf_event_arm64_regs
+> > -#include <asm/perf_regs.h>
+> > +#include "../../../../arch/arm64/include/uapi/asm/perf_regs.h"
+> >  #undef perf_event_arm_regs
+> >
+> >  void perf_regs_load(u64 *regs);
+> > diff --git a/tools/perf/arch/csky/include/perf_regs.h b/tools/perf/arch=
+/csky/include/perf_regs.h
+> > index 076c7746c8a2..9520e6aa319e 100644
+> > --- a/tools/perf/arch/csky/include/perf_regs.h
+> > +++ b/tools/perf/arch/csky/include/perf_regs.h
+> > @@ -7,6 +7,7 @@
+> >  #include <stdlib.h>
+> >  #include <linux/types.h>
+> >  #include <asm/perf_regs.h>
+>
+> Oops, the above line was not removed. Would remove it in next version.
 
-This is because the thread_map__new_by_[pt]id_str() were the only
-methods using the slist->dont_dupstr knob to keep pointers to the
-original const string list, as it uses strtol to parse numbers and it
-stops at the comma.
+Aside from this:
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-As this is the only case of dont_dupstr use, dupstr being the default,
-and it gets in the way of getting rid of the last const-correctness,
-remove this knob, with it:
+Thanks,
+Ian
 
-  $ perf test 37
-  37: Remove thread map   : Ok
-  $
-
-Fixes: 678ed6b707e4b2db ("perf strlist: Don't write to const memory")
-Reported-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/strlist.c    | 25 ++++++++-----------------
- tools/perf/util/strlist.h    |  2 --
- tools/perf/util/thread_map.c | 18 ++++++------------
- 3 files changed, 14 insertions(+), 31 deletions(-)
-
-diff --git a/tools/perf/util/strlist.c b/tools/perf/util/strlist.c
-index 98883672fcf47102..50add72575e0c60c 100644
---- a/tools/perf/util/strlist.c
-+++ b/tools/perf/util/strlist.c
-@@ -12,20 +12,16 @@
- #include <linux/zalloc.h>
- 
- static
--struct rb_node *strlist__node_new(struct rblist *rblist, const void *entry)
-+struct rb_node *strlist__node_new(struct rblist *rblist __maybe_unused, const void *entry)
- {
- 	const char *s = entry;
- 	struct rb_node *rc = NULL;
--	struct strlist *strlist = container_of(rblist, struct strlist, rblist);
- 	struct str_node *snode = malloc(sizeof(*snode));
- 
- 	if (snode != NULL) {
--		if (strlist->dupstr) {
--			s = strdup(s);
--			if (s == NULL)
--				goto out_delete;
--		}
--		snode->s = s;
-+		snode->s = strdup(s);
-+		if (snode->s == NULL)
-+			goto out_delete;
- 		rc = &snode->rb_node;
- 	}
- 
-@@ -36,20 +32,18 @@ struct rb_node *strlist__node_new(struct rblist *rblist, const void *entry)
- 	return NULL;
- }
- 
--static void str_node__delete(struct str_node *snode, bool dupstr)
-+static void str_node__delete(struct str_node *snode)
- {
--	if (dupstr)
--		zfree((char **)&snode->s);
-+	zfree((char **)&snode->s);
- 	free(snode);
- }
- 
- static
--void strlist__node_delete(struct rblist *rblist, struct rb_node *rb_node)
-+void strlist__node_delete(struct rblist *rblist __maybe_unused, struct rb_node *rb_node)
- {
--	struct strlist *slist = container_of(rblist, struct strlist, rblist);
- 	struct str_node *snode = container_of(rb_node, struct str_node, rb_node);
- 
--	str_node__delete(snode, slist->dupstr);
-+	str_node__delete(snode);
- }
- 
- static int strlist__node_cmp(struct rb_node *rb_node, const void *entry)
-@@ -165,12 +159,10 @@ struct strlist *strlist__new(const char *list, const struct strlist_config *conf
- 	struct strlist *slist = malloc(sizeof(*slist));
- 
- 	if (slist != NULL) {
--		bool dupstr = true;
- 		bool file_only = false;
- 		const char *dirname = NULL;
- 
- 		if (config) {
--			dupstr = !config->dont_dupstr;
- 			dirname = config->dirname;
- 			file_only = config->file_only;
- 		}
-@@ -180,7 +172,6 @@ struct strlist *strlist__new(const char *list, const struct strlist_config *conf
- 		slist->rblist.node_new    = strlist__node_new;
- 		slist->rblist.node_delete = strlist__node_delete;
- 
--		slist->dupstr	 = dupstr;
- 		slist->file_only = file_only;
- 
- 		if (list && strlist__parse_list(slist, list, dirname) != 0)
-diff --git a/tools/perf/util/strlist.h b/tools/perf/util/strlist.h
-index 7e82c71dcc422d7e..3e9533e66ca9ee11 100644
---- a/tools/perf/util/strlist.h
-+++ b/tools/perf/util/strlist.h
-@@ -14,7 +14,6 @@ struct str_node {
- 
- struct strlist {
- 	struct rblist rblist;
--	bool	      dupstr;
- 	bool	      file_only;
- };
- 
-@@ -24,7 +23,6 @@ struct strlist {
-  *             found
-  */
- struct strlist_config {
--	bool dont_dupstr;
- 	bool file_only;
- 	const char *dirname;
- };
-diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
-index ca193c1374ed4823..48c70f149e9201dc 100644
---- a/tools/perf/util/thread_map.c
-+++ b/tools/perf/util/thread_map.c
-@@ -164,19 +164,16 @@ static struct perf_thread_map *thread_map__new_by_pid_str(const char *pid_str)
- 	struct dirent **namelist = NULL;
- 	int i, j = 0;
- 	pid_t pid, prev_pid = INT_MAX;
--	char *end_ptr;
- 	struct str_node *pos;
--	struct strlist_config slist_config = { .dont_dupstr = true, };
--	struct strlist *slist = strlist__new(pid_str, &slist_config);
-+	struct strlist *slist = strlist__new(pid_str, NULL);
- 
- 	if (!slist)
- 		return NULL;
- 
- 	strlist__for_each_entry(pos, slist) {
--		pid = strtol(pos->s, &end_ptr, 10);
-+		pid = strtol(pos->s, NULL, 10);
- 
--		if (pid == INT_MIN || pid == INT_MAX ||
--		    (*end_ptr != '\0' && *end_ptr != ','))
-+		if (pid == INT_MIN || pid == INT_MAX)
- 			goto out_free_threads;
- 
- 		if (pid == prev_pid)
-@@ -223,24 +220,21 @@ struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str)
- 	struct perf_thread_map *threads = NULL, *nt;
- 	int ntasks = 0;
- 	pid_t tid, prev_tid = INT_MAX;
--	char *end_ptr;
- 	struct str_node *pos;
--	struct strlist_config slist_config = { .dont_dupstr = true, };
- 	struct strlist *slist;
- 
- 	/* perf-stat expects threads to be generated even if tid not given */
- 	if (!tid_str)
- 		return perf_thread_map__new_dummy();
- 
--	slist = strlist__new(tid_str, &slist_config);
-+	slist = strlist__new(tid_str, NULL);
- 	if (!slist)
- 		return NULL;
- 
- 	strlist__for_each_entry(pos, slist) {
--		tid = strtol(pos->s, &end_ptr, 10);
-+		tid = strtol(pos->s, NULL, 10);
- 
--		if (tid == INT_MIN || tid == INT_MAX ||
--		    (*end_ptr != '\0' && *end_ptr != ','))
-+		if (tid == INT_MIN || tid == INT_MAX)
- 			goto out_free_threads;
- 
- 		if (tid == prev_tid)
--- 
-2.52.0
-
+> > +#include "../../../../arch/csky/include/uapi/asm/perf_regs.h"
+> >
+> >  #define PERF_REGS_MASK       ((1ULL << PERF_REG_CSKY_MAX) - 1)
+> >  #define PERF_REGS_MAX        PERF_REG_CSKY_MAX
+> > diff --git a/tools/perf/arch/loongarch/include/perf_regs.h b/tools/perf=
+/arch/loongarch/include/perf_regs.h
+> > index 45c799fa5330..b86078a55e90 100644
+> > --- a/tools/perf/arch/loongarch/include/perf_regs.h
+> > +++ b/tools/perf/arch/loongarch/include/perf_regs.h
+> > @@ -4,7 +4,7 @@
+> >
+> >  #include <stdlib.h>
+> >  #include <linux/types.h>
+> > -#include <asm/perf_regs.h>
+> > +#include "../../../../arch/loongarch/include/uapi/asm/perf_regs.h"
+> >
+> >  #define PERF_REGS_MAX PERF_REG_LOONGARCH_MAX
+> >
+> > diff --git a/tools/perf/arch/mips/include/perf_regs.h b/tools/perf/arch=
+/mips/include/perf_regs.h
+> > index 7082e91e0ed1..66655f0c4fea 100644
+> > --- a/tools/perf/arch/mips/include/perf_regs.h
+> > +++ b/tools/perf/arch/mips/include/perf_regs.h
+> > @@ -4,7 +4,7 @@
+> >
+> >  #include <stdlib.h>
+> >  #include <linux/types.h>
+> > -#include <asm/perf_regs.h>
+> > +#include "../../../../arch/mips/include/uapi/asm/perf_regs.h"
+> >
+> >  #define PERF_REGS_MAX PERF_REG_MIPS_MAX
+> >
+> > diff --git a/tools/perf/arch/powerpc/include/perf_regs.h b/tools/perf/a=
+rch/powerpc/include/perf_regs.h
+> > index 1c66f6ba6773..22b492a3dd58 100644
+> > --- a/tools/perf/arch/powerpc/include/perf_regs.h
+> > +++ b/tools/perf/arch/powerpc/include/perf_regs.h
+> > @@ -4,7 +4,7 @@
+> >
+> >  #include <stdlib.h>
+> >  #include <linux/types.h>
+> > -#include <asm/perf_regs.h>
+> > +#include "../../../../arch/powerpc/include/uapi/asm/perf_regs.h"
+> >
+> >  void perf_regs_load(u64 *regs);
+> >
+> > diff --git a/tools/perf/arch/riscv/include/perf_regs.h b/tools/perf/arc=
+h/riscv/include/perf_regs.h
+> > index d482edb413e5..89d5bbb8d2b8 100644
+> > --- a/tools/perf/arch/riscv/include/perf_regs.h
+> > +++ b/tools/perf/arch/riscv/include/perf_regs.h
+> > @@ -6,7 +6,7 @@
+> >
+> >  #include <stdlib.h>
+> >  #include <linux/types.h>
+> > -#include <asm/perf_regs.h>
+> > +#include "../../../../arch/riscv/include/uapi/asm/perf_regs.h"
+> >
+> >  #define PERF_REGS_MASK       ((1ULL << PERF_REG_RISCV_MAX) - 1)
+> >  #define PERF_REGS_MAX        PERF_REG_RISCV_MAX
+> > diff --git a/tools/perf/arch/s390/include/perf_regs.h b/tools/perf/arch=
+/s390/include/perf_regs.h
+> > index 130dfad2b96a..9c95589965fe 100644
+> > --- a/tools/perf/arch/s390/include/perf_regs.h
+> > +++ b/tools/perf/arch/s390/include/perf_regs.h
+> > @@ -3,7 +3,7 @@
+> >
+> >  #include <stdlib.h>
+> >  #include <linux/types.h>
+> > -#include <asm/perf_regs.h>
+> > +#include "../../../../arch/s390/include/uapi/asm/perf_regs.h"
+> >
+> >  void perf_regs_load(u64 *regs);
+> >
+> > diff --git a/tools/perf/arch/x86/include/perf_regs.h b/tools/perf/arch/=
+x86/include/perf_regs.h
+> > index f209ce2c1dd9..5495e5ca7cdc 100644
+> > --- a/tools/perf/arch/x86/include/perf_regs.h
+> > +++ b/tools/perf/arch/x86/include/perf_regs.h
+> > @@ -4,7 +4,7 @@
+> >
+> >  #include <stdlib.h>
+> >  #include <linux/types.h>
+> > -#include <asm/perf_regs.h>
+> > +#include "../../../../arch/x86/include/uapi/asm/perf_regs.h"
+> >
+> >  void perf_regs_load(u64 *regs);
+> >
