@@ -1,54 +1,54 @@
 Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1347F366074
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEEE9366077
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:45:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769539557; cv=none; b=E0PFFYPx5b5TO/cUrLEn0MzVTl+81Act07H76daNIhWt/HcO3r4JoILTgqJqw2E9NKQUQ+51pm78cpzXrgIyGetAhcCiPtLKqk7dfccnEWkXkCJLLfel4FKRzGsKX6cE+IZepMXqSUGdEnYvwDzD+nHJHdqxJUwwVg16+HNRUl0=
+	t=1769539559; cv=none; b=IlkKaXejTJ1IsyF0EdDnlmZqjcYQNbh3unm7QvK0zr2DQodMsfx+UnvCho+C+Ng8f1eLGHSpG3ttAEmKaoywn4MOaEE3ImDC75x5IKwkRg2x6Tnhc8+9jH3FP/3RsqZ4wtag0JXaNvyXilNrKTMP5KBnKM0nJHFo7QLa0DIxU8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769539557; c=relaxed/simple;
-	bh=YxZ/OsA3lmCo6/plyihzmoA72k7p/jAWTQVj1BOnHOA=;
+	s=arc-20240116; t=1769539559; c=relaxed/simple;
+	bh=Tg0u9xgINTvX1H6FGlOJHenHBu6latCGVtmFgleOH30=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=pMwcIkWMA+jeIa+giyG9WKpEFFayAuKJdEKiQMwLrz4h5AP0uqXsOc3xX+SAWN0oSZq4JhLv6jzaulgQJpHt47xDCaGbB1pyfW7nUP3xu1WMtqw/dS6gCHIFkoart47zRtGTq+COR2JxARjtUwMqf9AoZf23IuIeNmwEvIBZxaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mQyAx5cX; arc=none smtp.client-ip=74.125.82.201
+	 To:Content-Type; b=XJkcIPzipNZXfS8ToIvvlDSFgOOPR3gUS5AkXI7z4NQ5BP2luFlxVzto5hfXeWgHPMuYKdR9xKKPNV9DkuWGgQSL+bV4nMsmqbPkSFSMAuYpYFcKf63P16otmuv2nX3oQu72SWssVuwxKS+p8tibYf+GJE3kbUtckyVSo8NU5Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bEwtQxXX; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mQyAx5cX"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2b799f7a603so1113929eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 10:45:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bEwtQxXX"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2b738854780so6598489eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 10:45:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769539555; x=1770144355; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769539557; x=1770144357; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=OecttgXJ1EvArNGliMlBZCK1j+fgZte6pz1jbYKv0lI=;
-        b=mQyAx5cXZHO2nMklf0R0c5wQXehqmPUXsXaf/EqJcGyq50DecZ1lk/6xYvFCPl6bFm
-         1usWfWfaFuQtuJSkcF0T7zbFEK6eG8HuCi/tNFR19ky5Zd9rrYdgant6+RMqXAXZzaJh
-         Ov+w+1nkQHXXr3W6eeayDe96+0Vd9IqHeqQarAqNpucOK19wl/+3eXKeNsXzRcQ6Tg6R
-         m+VJb79U5PpMyYlOh9q7JYYu3YLZoyAuLksU319Hv9K6aNEq0ADiPSDw5joEyOFWptT+
-         9M46dg/jo56ZbHvZHEHBcUsygFHiNzPrq0u8QHPh6t3SG/rZVB+Al1FJU6qiChFs99KH
-         rMrg==
+        bh=U6hcFPxi9yX1voNwD9X4pnHV7jvDzOlcX84euGlTBqw=;
+        b=bEwtQxXXM9DPR/NmuS4/qRLFp6uPpjwRTzH6Vod4t81L94wWcZ2Co1p27k8+dJsEJV
+         huWuQKBPuyNT+I/hnE4JaVs2xeJoIAwhnJpSEzKx9crfwokXw30Xwvxh6umUuRGqvvk/
+         xQYZfrilku3x+MRUikx2mCNNzuO37tLnTUpqjg+g6MMH3svHSl+f6A+0JcrVFAymv6wl
+         0R3q/sf5QAg0ZCdL6WFn2ZTbq5hfwIvNVvCt/hIUdyrkxhh7gnwaqRnaVBciDreKA0nG
+         fREi93xNwhra9Cm2zyxkteUJfWUmUs//qSN8Bzi8uxTk29VSIplI3hugL9x9e52zV1W8
+         L5ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769539555; x=1770144355;
+        d=1e100.net; s=20230601; t=1769539557; x=1770144357;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OecttgXJ1EvArNGliMlBZCK1j+fgZte6pz1jbYKv0lI=;
-        b=s9LUJGNEhpqeJEZxHxhz5le50xFmA1YAVTPX9dNy04T8t4e84tXcBFQWXSn3odsJjI
-         z2KzxIald4mLy+O1LHSZxSXa4QRpJI1e3A6JJsY5TQmC3aD6tvjl1nhSS8dou7Ih/Z35
-         5mVq37Feu/BPbW5Gv0Dt+KowaErX1P7Zkw5OtjALnVvZLs8zGsaHw9MCEpq3w7wozapZ
-         tO9Iy6ejnFYrlhA5O9v9r1RyVz/jQE2faHODI9jiFgBj0gpjoo5xjxeJh5ybuH9nxR3C
-         yMeeBfqHCQT61npRDyiGOgzNCmQN/aVuaQxLC5RXRPFX+6ATs0/RPZOYY+K6eM7+f8qj
-         y4/w==
-X-Forwarded-Encrypted: i=1; AJvYcCX6VCoje5ZEloNzkfU8vDAh/j+X489Tt4B7qI+Wby8aZHDa9H3POuPE0jzP+D/62HSVCHvRNTzeU0D/HTukzoOP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc1RNk69HaogjNaTNfBbMhCQR9K+xpuku4y2i9ebxFdKjYYXUC
-	wGFX018DXA0POUDqI86BPg6xasvcHWYxABbfgdT0OhM9kUVGqGg4zTJoglf5TZ0jZWUy2AzOa+Q
-	8DyX5T5N02g==
-X-Received: from dybkl23.prod.google.com ([2002:a05:7301:d17:b0:2b6:b833:a98d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d02:b0:2a4:61d1:f451
- with SMTP id 5a478bee46e88-2b78d8da0a6mr1537521eec.16.1769539555104; Tue, 27
- Jan 2026 10:45:55 -0800 (PST)
-Date: Tue, 27 Jan 2026 10:44:46 -0800
+        bh=U6hcFPxi9yX1voNwD9X4pnHV7jvDzOlcX84euGlTBqw=;
+        b=G2yoSZOJ+rMWkcd6rL40Km+QZXCDXH+vsB+O31feT1tOA1S42UfS6mW4EF1yvZrEUs
+         RKUrZkQ06mOhJCowjx9MotxOx8MMZLKTswwKlFt4iv96zH/xK3idugA1JD7YeuPNuz/M
+         ea7/eI2h/XU6zv9Qizqkqa0parfRT5MN1tD7Bte0amv4dLspscsP9YUNwCkB1bIPr2bW
+         iUacEBFyeFFRcf62e4fXeIfLYyEQDVIw+teHSOcpRqc5WlB+uuqwy8FgkEKfZoBufzl8
+         +3D68z0Y58AG0lGuL8eLWg2Tb7XOrxhv+SV2sMNqKn4ds+NpyK2ogLK2TGrsaTKTtowp
+         DPmg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgAfaTXxO6vUSHkFLg2Gs9klEwsjgC/f/sIuEGxphE1vjWFvv+uVNBNxkMosW9lZ+gn9zZAA/pzVndWFZ35hNF@vger.kernel.org
+X-Gm-Message-State: AOJu0YztMkJvlkSzujJvUj/Qe85cf9XRQzJ1fZLA3Lum3saOXJEWPJ6c
+	TaVsRHwHdD56+qmntPIoEpP1jcmui1Yqi5IQI7v/+xKdGTvwm/6vEWpk6hxC7HZ1TmFWZ5KK3jB
+	FZO0kWoiklA==
+X-Received: from dlai16.prod.google.com ([2002:a05:701b:2710:b0:11a:51f9:d69])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1284:b0:123:35a4:e8be
+ with SMTP id a92af1059eb24-124a006ef1cmr1274154c88.13.1769539557024; Tue, 27
+ Jan 2026 10:45:57 -0800 (PST)
+Date: Tue, 27 Jan 2026 10:44:47 -0800
 In-Reply-To: <20260127184506.3059493-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260127184506.3059493-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260127184506.3059493-16-irogers@google.com>
-Subject: [PATCH v11 15/35] perf jevents: Add smi metric group for Intel models
+Message-ID: <20260127184506.3059493-17-irogers@google.com>
+Subject: [PATCH v11 16/35] perf jevents: Mark metrics with experimental events
+ as experimental
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -75,64 +76,154 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Allow duplicated metric to be dropped from json files.
+When metrics are made with experimental events it is desirable the
+metric description also carries this information in case of metric
+inaccuracies.
 
+Suggested-by: Perry Taylor <perry.taylor@intel.com>
 Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ tools/perf/pmu-events/metric.py | 44 +++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 0cb7a38ad238..94604b1b07d8 100755
---- a/tools/perf/pmu-events/intel_metrics.py
-+++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -3,9 +3,9 @@
- import argparse
- import math
- import os
--from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
-+from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
-                     JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
--                    MetricGroup, Select)
-+                    MetricGroup, MetricRef, Select)
+diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
+index 62d1a1e1d458..2029b6e28365 100644
+--- a/tools/perf/pmu-events/metric.py
++++ b/tools/perf/pmu-events/metric.py
+@@ -10,11 +10,13 @@ from typing import Dict, List, Optional, Set, Tuple, Union
  
- # Global command line arguments.
- _args = None
-@@ -56,6 +56,25 @@ def Rapl() -> MetricGroup:
-                        description="Running Average Power Limit (RAPL) power consumption estimates")
+ all_pmus = set()
+ all_events = set()
++experimental_events = set()
+ 
+ def LoadEvents(directory: str) -> None:
+   """Populate a global set of all known events for the purpose of validating Event names"""
+   global all_pmus
+   global all_events
++  global experimental_events
+   all_events = {
+       "context\\-switches",
+       "cpu\\-cycles",
+@@ -32,6 +34,8 @@ def LoadEvents(directory: str) -> None:
+             all_pmus.add(x["Unit"])
+           if "EventName" in x:
+             all_events.add(x["EventName"])
++            if "Experimental" in x and x["Experimental"] == "1":
++              experimental_events.add(x["EventName"])
+           elif "ArchStdEvent" in x:
+             all_events.add(x["ArchStdEvent"])
+       except json.decoder.JSONDecodeError:
+@@ -61,6 +65,18 @@ def CheckEvent(name: str) -> bool:
+   return name in all_events
  
  
-+def Smi() -> MetricGroup:
-+    pmu = "<cpu_core or cpu_atom>" if CheckPmu("cpu_core") else "cpu"
-+    aperf = Event('msr/aperf/')
-+    cycles = Event('cycles')
-+    smi_num = Event('msr/smi/')
-+    smi_cycles = Select(Select((aperf - cycles) / aperf, smi_num > 0, 0),
-+                        has_event(aperf),
-+                        0)
-+    return MetricGroup('smi', [
-+        Metric('smi_num', 'Number of SMI interrupts.',
-+               Select(smi_num, has_event(smi_num), 0), 'SMI#'),
-+        # Note, the smi_cycles "Event" is really a reference to the metric.
-+        Metric('smi_cycles',
-+               'Percentage of cycles spent in System Management Interrupts. '
-+               f'Requires /sys/bus/event_source/devices/{pmu}/freeze_on_smi to be 1.',
-+               smi_cycles, '100%', threshold=(MetricRef('smi_cycles') > 0.10))
-+    ], description='System Management Interrupt metrics')
++def IsExperimentalEvent(name: str) -> bool:
++  global experimental_events
++  if ':' in name:
++    # Remove trailing modifier.
++    name = name[:name.find(':')]
++  elif '/' in name:
++    # Name could begin with a PMU or an event, for now assume it is not experimental.
++    return False
++
++  return name in experimental_events
 +
 +
- def main() -> None:
-     global _args
+ class MetricConstraint(Enum):
+   GROUPED_EVENTS = 0
+   NO_GROUP_EVENTS = 1
+@@ -82,6 +98,10 @@ class Expression:
+     """Returns a simplified version of self."""
+     raise NotImplementedError()
  
-@@ -83,6 +102,7 @@ def main() -> None:
-     all_metrics = MetricGroup("", [
-         Idle(),
-         Rapl(),
-+        Smi(),
-     ])
++  def HasExperimentalEvents(self) -> bool:
++    """Are experimental events used in the expression?"""
++    raise NotImplementedError()
++
+   def Equals(self, other) -> bool:
+     """Returns true when two expressions are the same."""
+     raise NotImplementedError()
+@@ -249,6 +269,9 @@ class Operator(Expression):
  
-     if _args.metricgroups:
+     return Operator(self.operator, lhs, rhs)
+ 
++  def HasExperimentalEvents(self) -> bool:
++    return self.lhs.HasExperimentalEvents() or self.rhs.HasExperimentalEvents()
++
+   def Equals(self, other: Expression) -> bool:
+     if isinstance(other, Operator):
+       return self.operator == other.operator and self.lhs.Equals(
+@@ -297,6 +320,10 @@ class Select(Expression):
+ 
+     return Select(true_val, cond, false_val)
+ 
++  def HasExperimentalEvents(self) -> bool:
++    return (self.cond.HasExperimentalEvents() or self.true_val.HasExperimentalEvents() or
++            self.false_val.HasExperimentalEvents())
++
+   def Equals(self, other: Expression) -> bool:
+     if isinstance(other, Select):
+       return self.cond.Equals(other.cond) and self.false_val.Equals(
+@@ -345,6 +372,9 @@ class Function(Expression):
+ 
+     return Function(self.fn, lhs, rhs)
+ 
++  def HasExperimentalEvents(self) -> bool:
++    return self.lhs.HasExperimentalEvents() or (self.rhs and self.rhs.HasExperimentalEvents())
++
+   def Equals(self, other: Expression) -> bool:
+     if isinstance(other, Function):
+       result = self.fn == other.fn and self.lhs.Equals(other.lhs)
+@@ -384,6 +414,9 @@ class Event(Expression):
+     global all_events
+     raise Exception(f"No event {error} in:\n{all_events}")
+ 
++  def HasExperimentalEvents(self) -> bool:
++    return IsExperimentalEvent(self.name)
++
+   def ToPerfJson(self):
+     result = re.sub('/', '@', self.name)
+     return result
+@@ -416,6 +449,9 @@ class MetricRef(Expression):
+   def Simplify(self) -> Expression:
+     return self
+ 
++  def HasExperimentalEvents(self) -> bool:
++    return False
++
+   def Equals(self, other: Expression) -> bool:
+     return isinstance(other, MetricRef) and self.name == other.name
+ 
+@@ -443,6 +479,9 @@ class Constant(Expression):
+   def Simplify(self) -> Expression:
+     return self
+ 
++  def HasExperimentalEvents(self) -> bool:
++    return False
++
+   def Equals(self, other: Expression) -> bool:
+     return isinstance(other, Constant) and self.value == other.value
+ 
+@@ -465,6 +504,9 @@ class Literal(Expression):
+   def Simplify(self) -> Expression:
+     return self
+ 
++  def HasExperimentalEvents(self) -> bool:
++    return False
++
+   def Equals(self, other: Expression) -> bool:
+     return isinstance(other, Literal) and self.value == other.value
+ 
+@@ -527,6 +569,8 @@ class Metric:
+     self.name = name
+     self.description = description
+     self.expr = expr.Simplify()
++    if self.expr.HasExperimentalEvents():
++      self.description += " (metric should be considered experimental as it contains experimental events)."
+     # Workraound valid_only_metric hiding certain metrics based on unit.
+     scale_unit = scale_unit.replace('/sec', ' per sec')
+     if scale_unit[0].isdigit():
 -- 
 2.52.0.457.g6b5491de43-goog
 
