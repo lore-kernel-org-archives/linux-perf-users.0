@@ -1,308 +1,155 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com [209.85.210.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58593B28D;
-	Wed, 28 Jan 2026 04:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B6A2FE58D
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Jan 2026 04:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769574113; cv=none; b=FyNHWb/ESHPEgi66mPKLLjLA9M8F/fAJCD59OMlcxGwhPh+GpygVkueaV/VRlvlBZHsd/S4zkXXPauZnT89Ap/xvmsqw+1OfTeBCShxHIGCJUK29d6I8ljOuR0dGWSM5i8mmpyi97BKw2T2nYfrAls7+B/a1o6KR+ObKjjdVECQ=
+	t=1769574365; cv=none; b=u7CmR4NpodDHZFBnZlc9mfS3pHqt6Ogj/uXBisluykQJaCbD0olLm/FFYR941YN1c3KQu0KjxrdfAegunH087H5eQZ7cID0BK/gJG8mzbbUnYoTDJc5Oruv7bmZuE/CQ6EiVJxWtRMxcOYj6xVKFdlhIOmd7Aprr1mdpFHHIaII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769574113; c=relaxed/simple;
-	bh=fnfSexX3nTY4kLO+8MDEEy+q/XQ/vKO+lDDb4iCUqUY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hGClKDcQ5Nl+ltZCk8sZI6WKBgz5WwNV3xCnx0WQA5xpfVpwxi7KReJl4zO2h90pt6PddXiEWocK2ZURhJ7YFUmISE1Z8xyXBu6G6A4N9BYyfbRXaTAP2hhLlyYmd+z1z9MiOmWRZ3F9jQSYa2LtL2RdzlrDw0hVOiv1feVUxug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pnpPYZM/; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pnpPYZM/"
-Message-ID: <e609a4d6-1b28-4858-8a46-a95f0794bb33@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1769574105;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8iLSt35krLeyCU2JfA78lW6/p0Uk0QktVVx4ZqWTJpg=;
-	b=pnpPYZM/U4UdfdB0arNcrdbHGEGWUE5OZ6/Je5NY1d0dilTyNRiNqknd1b67oVC70MYezX
-	vXqUwqmNKReHfigiJoUCNoOv8Z2ZyvWdbwPrBJZuaJvAv986JqFtXFaQi4P1X1cc5CDrPl
-	ZjhusiSky0mKw1OUGm0xVtWV24+18Nk=
-Date: Wed, 28 Jan 2026 12:21:30 +0800
+	s=arc-20240116; t=1769574365; c=relaxed/simple;
+	bh=6q2BY7BCsFeXluFzWctLz8UKtqBpiwKIbsWnV67LiYM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=u+SpfydDZyaAIJ3mON73h9CLyx2aXYIgXZpjSa/c061c2IgNHfuaZoT9oA5kuzmA1c4h28A9Oiz98S0vwXvL1FtiBXqBEE0DbFnD23oRk9OSE5kYTgDXIdGjetDk2t4YbIm/VQrQNQH7CFtadsryCnEHMWZFysKlZYVPOnYwMIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.210.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-7d1872bbb5eso3208278a34.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 20:26:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769574362; x=1770179162;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IFiX9dgWtWSO0KafQQTiVfiDNQYdy+cwBHLlhTLTOUI=;
+        b=hm8Y9Av4ZKqVYdwQ0y9OQ+PMWhXsm6Muqc1l4DJ03qRHevWPqXjMinW6JNLMQSRUDt
+         mGgLCmtZHn3T8ZDmWg9466BN4rlgY2tRS3/Xl9wSN/qwN9lFENe9hnWMw4jpWwav9f1R
+         XAGFvLRPPr+zchokeS+oIJ6DpU0dySo+DKlRuh8YlzXsEDm3mlQ4QQW8YXGRG64JIVIg
+         o54C4Uvtrke97FFGAo57M5TThegT12XScnPlcgLtpllu7kMR5Bypvpyt32WWJ3pDCqec
+         ze76PW3kyEZ+CnFHBBTY1Ot3kSFrZHhabr2GPsrtKrHfVcdMGChMCeOqQViRWXzj48ET
+         bK1A==
+X-Forwarded-Encrypted: i=1; AJvYcCV77HInSBZm8iASBKEHiCg30ACpPIgWSKTTv6C7Gcmuf00rj+ypx0j2BStZ+82XPT8Jfqy7CiMDBpaXri4wuO2h@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzpjJQ3Mq6+aeJJ6fio85/AA3Qr8DR2SrZ8U9a2HsBcPBFOfEM
+	d4TVmT8DlEF5VQBTwuSMuX3Wri5LfhM/zL7RDMGBmYuf1np9xEybl0jFafxZmksyQAGR86szq1Y
+	UIcfVfPP70sYgo0utEOwYpQ9PSd3ARZYkG9kQMgPlMfmpHtg22ydyiyhOqhI=
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v8 3/3] bpf: Hold ther perf callchain entry until
- used completely
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, song@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20260126074331.815684-1-chen.dylane@linux.dev>
- <20260126074331.815684-4-chen.dylane@linux.dev>
- <CAEf4BzbubXxLHsO_2aVBG_oYE1Sc9iafLyvcX-PEjcQ7EXWCqA@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <CAEf4BzbubXxLHsO_2aVBG_oYE1Sc9iafLyvcX-PEjcQ7EXWCqA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-Received: by 2002:a05:6820:4513:b0:662:c6ef:4e6 with SMTP id
+ 006d021491bc7-662f2064846mr1926785eaf.36.1769574362487; Tue, 27 Jan 2026
+ 20:26:02 -0800 (PST)
+Date: Tue, 27 Jan 2026 20:26:02 -0800
+In-Reply-To: <20260128035241.1839686-1-wangqing7171@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <69798fda.050a0220.c9109.0033.GAE@google.com>
+Subject: Re: [syzbot] [perf?] WARNING: suspicious RCU usage in get_callchain_entry
+From: syzbot <syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com, wangqing7171@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-在 2026/1/28 05:35, Andrii Nakryiko 写道:
-> On Sun, Jan 25, 2026 at 11:46 PM Tao Chen <chen.dylane@linux.dev> wrote:
->>
->> As Alexei noted, get_perf_callchain() return values may be reused
->> if a task is preempted after the BPF program enters migrate disable
->> mode. The perf_callchain_entres has a small stack of entries, and
->> we can reuse it as follows:
->>
->> 1. get the perf callchain entry
->> 2. BPF use...
->> 3. put the perf callchain entry
->>
->> And Peter suggested that get_recursion_context used with preemption
->> disabled, so we should disable preemption at BPF side.
->>
->> Acked-by: Yonghong Song <yonghong.song@linux.dev>
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->> ---
->>   kernel/bpf/stackmap.c | 55 ++++++++++++++++++++++++++++++++++++-------
->>   1 file changed, 47 insertions(+), 8 deletions(-)
->>
->> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
->> index e77dcdc2164..6bdee6cc05f 100644
->> --- a/kernel/bpf/stackmap.c
->> +++ b/kernel/bpf/stackmap.c
->> @@ -215,7 +215,9 @@ get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
->>   #ifdef CONFIG_STACKTRACE
->>          struct perf_callchain_entry *entry;
->>
->> +       preempt_disable();
->>          entry = get_callchain_entry();
->> +       preempt_enable();
-> 
-> pass perf_callchain_entry as input argument, to keep similar approach
-> to __get_perf_callchain, see below
-> 
->>
->>          if (!entry)
->>                  return NULL;
->> @@ -237,14 +239,40 @@ get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
->>                          to[i] = (u64)(from[i]);
->>          }
->>
->> -       put_callchain_entry(entry);
->> -
->>          return entry;
->>   #else /* CONFIG_STACKTRACE */
->>          return NULL;
->>   #endif
->>   }
->>
->> +static struct perf_callchain_entry *
->> +bpf_get_perf_callchain(struct pt_regs *regs, bool kernel, bool user, int max_stack,
->> +                      bool crosstask)
->> +{
-> 
-> I don't really like having this wrapper, it feels like the flow will
-> be cleaner and easier to follow if we modify the code as suggested
-> below
-> 
+Hello,
 
-Ok, will use it directly.
->> +       struct perf_callchain_entry *entry;
->> +       int ret;
->> +
->> +       preempt_disable();
->> +       entry = get_callchain_entry();
->> +       preempt_enable();
-> 
-> I'd actually consider having __get_callchain_entry() that does what
-> get_callchain_entry() does right now under assumption that
-> preemption/migration is disabled, and then make get_callchain_entry do
-> preempt_disable + fetch entry + preevent_enable + return entry dance.
-> 
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+BUG: sleeping function called from invalid context in bpf_prog_test_run_syscall
 
-in v4, YongHong suggested add preempt_disable in get_callchain_entry,
-but Peter suggested that do it from BPF side, so maybe keeping the 
-existing method is a compromise.
+BUG: sleeping function called from invalid context at ./include/linux/uaccess.h:201
+in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 6641, name: syz.0.17
+preempt_count: 0, expected: 0
+RCU nest depth: 1, expected: 0
+1 lock held by syz.0.17/6641:
+ #0: ffffffff8dbc77c0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #0: ffffffff8dbc77c0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:867 [inline]
+ #0: ffffffff8dbc77c0 (rcu_read_lock){....}-{1:3}, at: __bpf_get_stack+0x269/0xab0 kernel/bpf/stackmap.c:463
+CPU: 1 UID: 0 PID: 6641 Comm: syz.0.17 Not tainted syzkaller #0 PREEMPT_{RT,(full)} 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/13/2026
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0xe8/0x150 lib/dump_stack.c:120
+ __might_resched+0x329/0x480 kernel/sched/core.c:8829
+ __might_fault+0x76/0x130 mm/memory.c:7175
+ _inline_copy_to_user include/linux/uaccess.h:201 [inline]
+ _copy_to_user+0x2c/0xb0 lib/usercopy.c:26
+ copy_to_user include/linux/uaccess.h:236 [inline]
+ bpf_prog_test_run_syscall+0x337/0x4c0 net/bpf/test_run.c:1642
+ bpf_prog_test_run+0x2cd/0x340 kernel/bpf/syscall.c:4703
+ __sys_bpf+0x5cb/0x920 kernel/bpf/syscall.c:6182
+ __do_sys_bpf kernel/bpf/syscall.c:6274 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:6272 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6272
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xe2/0xf80 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7efdae6faeb9
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007efdadd5e028 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007efdae975fa0 RCX: 00007efdae6faeb9
+RDX: 000000000000000c RSI: 00002000000004c0 RDI: 000000000000000a
+RBP: 00007efdae768c1f R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007efdae976038 R14: 00007efdae975fa0 R15: 00007fffcdbbfb78
+ </TASK>
 
-> This will simplify the flow here to just with no explicit
-> preempt_{disable,enable} visible. Either way all of this has
-> assumption that we are staying on the same CPU throughout (so at the
-> very least we need to have migration disabled)
-> 
-> entry = get_callchain_entry();
-> __get_perf_callchain(entry, ...);
-> put_callchain_entry();
-> 
-> 
-> BTW, is there a way to assert that either preemption or migration is
-> currently disabled? I think both get_callchain_entry and
-> put_callchain_entry would benefit from that
-> 
-> pw-bot: cr
-> 
-> 
->> +
->> +       if (unlikely(!entry))
->> +               return NULL;
->> +
->> +       ret = __get_perf_callchain(entry, regs, kernel, user, max_stack, crosstask, false, 0);
->> +       if (ret) {
->> +               put_callchain_entry(entry);
->> +               return NULL;
->> +       }
->> +
->> +       return entry;
->> +}
->> +
->> +static void bpf_put_perf_callchain(struct perf_callchain_entry *entry)
->> +{
->> +       put_callchain_entry(entry);
->> +}
->> +
->>   static long __bpf_get_stackid(struct bpf_map *map,
->>                                struct perf_callchain_entry *trace, u64 flags)
->>   {
->> @@ -327,20 +355,23 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
->>          struct perf_callchain_entry *trace;
->>          bool kernel = !user;
->>          u32 max_depth;
->> +       int ret;
->>
->>          if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
->>                                 BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
->>                  return -EINVAL;
->>
->>          max_depth = stack_map_calculate_max_depth(map->value_size, elem_size, flags);
->> -       trace = get_perf_callchain(regs, kernel, user, max_depth,
->> -                                  false, false, 0);
->> +       trace = bpf_get_perf_callchain(regs, kernel, user, max_depth, false);
->>
->>          if (unlikely(!trace))
->>                  /* couldn't fetch the stack trace */
->>                  return -EFAULT;
->>
->> -       return __bpf_get_stackid(map, trace, flags);
->> +       ret = __bpf_get_stackid(map, trace, flags);
->> +       bpf_put_perf_callchain(trace);
-> 
-> Just as above, I think get_callchain_entry + __get_perf_callchain +
-> put_callchain_entry is better, IMO
-> 
->> +
->> +       return ret;
->>   }
->>
->>   const struct bpf_func_proto bpf_get_stackid_proto = {
->> @@ -468,13 +499,19 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
->>          } else if (kernel && task) {
->>                  trace = get_callchain_entry_for_task(task, max_depth);
->>          } else {
->> -               trace = get_perf_callchain(regs, kernel, user, max_depth,
->> -                                          crosstask, false, 0);
->> +               trace = bpf_get_perf_callchain(regs, kernel, user, max_depth, crosstask);
->>          }
-> 
-> with the above suggestions this will be a pretty streamlined:
-> 
-> trace = trace_in ?: get_callchain_entry();
-> if (!trace)
->      goto err_fault;
-> 
-> if (trace_in) {
->      trace->nr = ...
->      err = 0
-> } else if (kernel && task) {
->      err = get_callchain_entry_for_task(trace, ...);
-> } else {
->      err = __get_perf_callchain(trace, ...);
-> }
-> if (err)
->      goto clear;
-> 
-
-This code looks much cleaner, i will change it, thanks.
-
-> ... proceed as before, we have our stack trace inside trace ...
-> 
-> for successful and failed paths (you'll have to duplicate this logic):
-> 
-> if (trace != trace_in)
->      put_callchain_entry(trace);
-> 
->>
->> -       if (unlikely(!trace) || trace->nr < skip) {
->> +       if (unlikely(!trace)) {
-> 
-> this condition cannot happen: we either get trace_in != NULL or we get
-> it using __get_callchain_entry and then validate it's not NULL
-> earlier, so drop this condition
->
-
-will remove it.
-
->> +               if (may_fault)
->> +                       rcu_read_unlock();
->> +               goto err_fault;
->> +       }
->> +       if (trace->nr < skip) {
->>                  if (may_fault)
->>                          rcu_read_unlock();
->> +               if (!trace_in)
->> +                       bpf_put_perf_callchain(trace);
-> 
-> do this clean up in one place, behind the new goto label? it's a bit
-> too easy to miss this, IMO
-> 
-
-ok, will do.
-
->>                  goto err_fault;
->>          }
->>
->> @@ -495,6 +532,8 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
->>          /* trace/ips should not be dereferenced after this point */
->>          if (may_fault)
->>                  rcu_read_unlock();
-> 
-> now that I looked at this code, I feel like we don't really need this
-> rcu_read_{lock,unlock}() dance (even though I added it in the first
-> place). I this RCU was supposed to be need to keep
-> perf_callchain_entry alive long enough, but for BPF this is guaranteed
-> because either BPF stack map will keep them alive by delaying
-> put_callchain_buffer() until freeing time (after RCU Tasks Trace + RCU
-> grace periods), or for bpf_get_stack/bpf_get_task_stack, BPF program
-> itself will hold these buffers alive again, until freeing time which
-> is delayed until after RCU Tasks Trace + RCU grace period.
-
-It seems so, for both, put_callchain_buffer is always called at the end, 
-which ensures it won't be released during use, i will remove it as a new
-patch.
-
-> 
-> Please send this clean up as the first patch in the series so we can
-> review and ack this separately. Thanks!
-> 
->> +       if (!trace_in)
->> +               bpf_put_perf_callchain(trace);
->>
->>          if (user_build_id)
->>                  stack_map_get_build_id_offset(buf, trace_nr, user, may_fault);
->> --
->> 2.48.1
->>
+=============================
+[ BUG: Invalid wait context ]
+syzkaller #0 Tainted: G        W          
+-----------------------------
+syz.0.17/6641 is trying to lock:
+ffff88803daa5cf0 (&mm->mmap_lock){++++}-{4:4}, at: __might_fault+0xaf/0x130 mm/memory.c:7177
+other info that might help us debug this:
+context-{5:5}
+1 lock held by syz.0.17/6641:
+ #0: ffffffff8dbc77c0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #0: ffffffff8dbc77c0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:867 [inline]
+ #0: ffffffff8dbc77c0 (rcu_read_lock){....}-{1:3}, at: __bpf_get_stack+0x269/0xab0 kernel/bpf/stackmap.c:463
+stack backtrace:
+CPU: 1 UID: 0 PID: 6641 Comm: syz.0.17 Tainted: G        W           syzkaller #0 PREEMPT_{RT,(full)} 
+Tainted: [W]=WARN
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/13/2026
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0xe8/0x150 lib/dump_stack.c:120
+ print_lock_invalid_wait_context kernel/locking/lockdep.c:4830 [inline]
+ check_wait_context kernel/locking/lockdep.c:4902 [inline]
+ __lock_acquire+0xec1/0x2cf0 kernel/locking/lockdep.c:5187
+ lock_acquire+0x106/0x330 kernel/locking/lockdep.c:5868
+ __might_fault+0xcb/0x130 mm/memory.c:7177
+ _inline_copy_to_user include/linux/uaccess.h:201 [inline]
+ _copy_to_user+0x2c/0xb0 lib/usercopy.c:26
+ copy_to_user include/linux/uaccess.h:236 [inline]
+ bpf_prog_test_run_syscall+0x337/0x4c0 net/bpf/test_run.c:1642
+ bpf_prog_test_run+0x2cd/0x340 kernel/bpf/syscall.c:4703
+ __sys_bpf+0x5cb/0x920 kernel/bpf/syscall.c:6182
+ __do_sys_bpf kernel/bpf/syscall.c:6274 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:6272 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6272
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xe2/0xf80 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7efdae6faeb9
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007efdadd5e028 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007efdae975fa0 RCX: 00007efdae6faeb9
+RDX: 000000000000000c RSI: 00002000000004c0 RDI: 000000000000000a
+RBP: 00007efdae768c1f R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007efdae976038 R14: 00007efdae975fa0 R15: 00007fffcdbbfb78
+ </TASK>
 
 
--- 
-Best Regards
-Tao Chen
+Tested on:
+
+commit:         1f97d9dc Merge tag 'vfio-v6.19-rc8' of https://github...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1573a6ef980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=151a39927f1e10b4
+dashboard link: https://syzkaller.appspot.com/bug?extid=72a43cdb78469f7fbad1
+compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=14eb785a580000
+
