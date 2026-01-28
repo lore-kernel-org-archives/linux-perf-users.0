@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8227A230BF6;
-	Wed, 28 Jan 2026 14:10:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A808A26560A;
+	Wed, 28 Jan 2026 14:10:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769609400; cv=none; b=IJhCKBB7mRJPNiBCvg20wXvuGVAcTiI3Ga25DY6QYG+RNvNd5x4VlK1XMXggJd72PJB3udTzR334H7aEbjNBHUqnAxJfA4vFzGlMNF6b2GMu3OJ24d6J9AM7L8n8CDpG6Ev6ADNc6sCxwhmHMP6E69xySZx3IeqjS/gyEY+WGj4=
+	t=1769609412; cv=none; b=h2E/ANzu77tavyuHrSOCPH6dzDVu2JO3vUZwyL+XKb73RyIyGcvuondUDhGAkNZQg0G/CNOjWctoIaqMFDxuVDbbdbi+CJ59bJrO89EODByTWP3hOU2GONfmC3+yLWmzlYq+/MkuO9OgzRxfcPyd/kOHmZzkO0Ql5tZ16OS3CRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769609400; c=relaxed/simple;
-	bh=LillPVj+D01tzFsPNb4HRfbZ2n9V6Am4yy1/k9dGmvE=;
+	s=arc-20240116; t=1769609412; c=relaxed/simple;
+	bh=FwofjpaBIP939xlrMtaUiM5BSY7RsnvWLxex1YGY+5Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i+RtJ5XQ0wFKKAk9pZuLamSZ8cRuQGRRLmWWLHzwxp8Kehoh45ZTsWu5OrutihD9IPErLKRJd1Vtev3uHTKOOriZq3MP8+49ex1Qvm3yfeXC2c/pgduZMCiMVXw8K/crk6wCPxwFNI5idne73qFZyz24UJjwSf+SR+pBI1tzQV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tml10nKW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=f1P2nh8kPLCgxERthuuscU5/oElJEDBZ5ixLVSHNFNxt20ntb4sv5g+GbnERlcHoB/Waa+T2ujp75+j58urD3s3q2OBx+qEwYcAwhKG9TAu0lkTw0oFXyGv/+0pUK3xxMxRWuqbeeuKqHHp/NbvSt4rZliRTvfi2Zi2nnrdOZA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iUmaSUtA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tml10nKW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9716AC4CEF1;
-	Wed, 28 Jan 2026 14:09:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iUmaSUtA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A677C2BC9E;
+	Wed, 28 Jan 2026 14:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769609400;
-	bh=LillPVj+D01tzFsPNb4HRfbZ2n9V6Am4yy1/k9dGmvE=;
+	s=k20201202; t=1769609412;
+	bh=FwofjpaBIP939xlrMtaUiM5BSY7RsnvWLxex1YGY+5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tml10nKWeU387O4x0je4hPABZkRdkplgyN1Q3c91Wxvrcmt7nPNACwS3E52NCd902
-	 knjrPfj6D2XlDCWPFXCM0LwsfTKiQX0xXJ1fZd/LjslhFFf2CeZ67IstbruwnIsDBW
-	 4CFzvSy/3s9MuIeJW+VFqcJbMyvHIziirGYHDJzROFalqtPoJs7NT6HuFu3gLCVUyU
-	 hIM0T0nOC7xE3WvEUSGHzC+491E+oH0ujknEesFD9jAQJx5UoCubPZVYtolaZQX2wg
-	 SXdbMxBaq4PRFm3yqSs15OjKx7fBJ5Co9Hjy53VSLue2BoPeVDq64r5gJsBfFfIEZG
-	 +8DDLrBzNFVEA==
+	b=iUmaSUtAoRo8DZ83BAyA2fqm25sMgWPESKcbIbjv/pt4C6eiEosFAtB0l1563j/PP
+	 /JoK7wKgdZQkwCiTZ4FateTQOQ/6OO2Am2pP+Otmhbjv0zNf/S72Lx39fxZkHKoQnz
+	 pqXzDDf9yxSKXbOBgi+YCHVm3TXT+9w/TCGYCMB3LOJt7iXKTIV/G9vqrR4SlVfL4J
+	 Ym/zzihVuZ0PSxVaOxaWevBu9FI+dSa0z70MPum7g05TTISvwecx5imjqcAOeMxG7k
+	 X0yeQ/sPq8I75Xv70Cm8OacT1SEdLDH9Z7LOzKh8atuOR1fqfPzKYDSW30uB02OSaM
+	 YvQuNgtE3xjXg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v6 05/11] tracing: wprobe: Fix to use IS_ERR_PCPU() for per-cpu pointer
-Date: Wed, 28 Jan 2026 23:09:54 +0900
-Message-ID: <176960939425.182525.15663394581634314970.stgit@devnote2>
+Subject: [PATCH v6 06/11] tracing: wprobe: Use a new seq_print_ip_sym_offset() wrapper
+Date: Wed, 28 Jan 2026 23:10:05 +0900
+Message-ID: <176960940550.182525.13602015884277238925.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <176960933881.182525.11984731584313026309.stgit@devnote2>
 References: <176960933881.182525.11984731584313026309.stgit@devnote2>
@@ -62,42 +62,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Since wprobe uses IS_ERR() for per-cpu pointer, it failed to build.
+Use a new seq_print_ip_sym_offset() wrapper function instead of
+using TRACE_ITER(SYM_OFFSET) mask directly.
 
-/tmp/next/build/kernel/trace/trace_wprobe.c: In function '__register_trace_wprobe':
-/tmp/next/build/kernel/trace/trace_wprobe.c:176:20: error: cast to generic address space pointer from disjoint '__seg_gs' address space pointer [-Werror]
-  176 |         if (IS_ERR((void * __force)tw->bp_event)) {
-      |                    ^
-/tmp/next/build/kernel/trace/trace_wprobe.c:177:35: error: cast to generic address space pointer from disjoint '__seg_gs' address space pointer [-Werror]
-  177 |                 int ret = PTR_ERR((void * __force)tw->bp_event);
-      |                                   ^
+Link: https://lore.kernel.org/all/176226550596.59499.18020648957674458755.stgit@devnote2/
 
-Use IS_ERR_PCPU() instead.
-
-Link: https://lore.kernel.org/all/175979899246.1800846.1725245135731182727.stgit@devnote2/
-
-Reported-by: Mark Brown <broonie@kernel.org>
-Closes: https://lore.kernel.org/all/aN6fTmAjD7-SJsw2@sirena.org.uk/
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Reviewed-by: Menglong Dong <menglong8.dong@gmail.com>
 ---
- kernel/trace/trace_wprobe.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_wprobe.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-index 4b00a8e917c1..98605b207f43 100644
+index 98605b207f43..eae952a4f9e9 100644
 --- a/kernel/trace/trace_wprobe.c
 +++ b/kernel/trace/trace_wprobe.c
-@@ -173,8 +173,8 @@ static int __register_trace_wprobe(struct trace_wprobe *tw)
- 	attr.bp_type = tw->type;
+@@ -20,6 +20,7 @@
+ #include <asm/ptrace.h>
  
- 	tw->bp_event = register_wide_hw_breakpoint(&attr, wprobe_perf_handler, tw);
--	if (IS_ERR((void * __force)tw->bp_event)) {
--		int ret = PTR_ERR((void * __force)tw->bp_event);
-+	if (IS_ERR_PCPU(tw->bp_event)) {
-+		int ret = PTR_ERR_PCPU(tw->bp_event);
+ #include "trace_dynevent.h"
++#include "trace_output.h"
+ #include "trace_probe.h"
+ #include "trace_probe_kernel.h"
+ #include "trace_probe_tmpl.h"
+@@ -260,7 +261,7 @@ print_wprobe_event(struct trace_iterator *iter, int flags,
  
- 		tw->bp_event = NULL;
- 		return ret;
+ 	trace_seq_printf(s, "%s: (", trace_probe_name(tp));
+ 
+-	if (!seq_print_ip_sym(s, field->ip, flags | TRACE_ITER_SYM_OFFSET))
++	if (!seq_print_ip_sym_offset(s, field->ip, flags))
+ 		goto out;
+ 
+ 	trace_seq_putc(s, ')');
 
