@@ -1,126 +1,92 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7551B1531C1
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Jan 2026 02:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AC57080E
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Jan 2026 02:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769568199; cv=none; b=HuEZpOzGC2/Gs79O3m+vU5Mh67hA5f9DoOs518VO1D9tBFd6ZKVpyEdUeXMwWD/rsdQk6AG1Rd6W65cOZ+VWsVIQ4r92dgte8D3LCDjBqMnO04ToP3uqZZLL01g/PDMH8VAveC+ngDWEZ/KUsSk4MhJMfnnzjyLnk9Wi3PghCiE=
+	t=1769568527; cv=none; b=QzzygzOY8X0EWwMP/zVDWz/q4Ruea8eGs/14WHOObmiC+N2F8SA9H21NZn1lZXv19GZG0fn5ttdsK1WA7Sm/QdcGY+PyMoBMrHBtdMJDPPqz/f38RxKeLhCPhBNXm+VX2NSk45tBZp4ECxXD6Ul7rKo+7JRo/8L4rnQzompebN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769568199; c=relaxed/simple;
-	bh=PbWvRcJ3c+xdZWQtluSKFLPOZnTrfryBFE4JLh7QeOM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vhcjpt0r2BCKnzuLxcOD/bXuZ8oLNBVaW5EdfcyACE+/JW8se2Dcomu/AVXDoLq24FfSFMnLttHmCAo1GTfTnCMMJNIiB46SwTrRJcTVh3ZTfj1j+rJOo0f+IBZuGde+UIhw4/8oKoeHPO/SkvkqYK/Z5Dli1DVYneIfW/kuOzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IumkEMS6; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1769568527; c=relaxed/simple;
+	bh=QWrLLW916vtkzNC2YAUSDv3SX9rSiSe81hUMKGcqSc0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TkdBwgHDisuXcXoaT7TbozHSUAjAQkzI4SrUIRtzszTkIK+OCwxPtcmdCRFMe+1Ssin3CNX56EyP/hSWgXKNfP3DnDHHdf3MynVxI+QCWbpF+MRSVGywsSKSUYRlQjNsqO7IqbZ14oOL6LrxqdGXjbh2UhYpb63OKJ6ckXJqhXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WF2naVz+; arc=none smtp.client-ip=209.85.216.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IumkEMS6"
-Message-ID: <3b84f222-8d4c-4bb6-b224-946cd934ba56@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1769568186;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cr0HBAa6ysK/fvkpmCswuBf4NAEKUQJpxydwXpZQlRw=;
-	b=IumkEMS6gxgZModB023g2qIvBFgS7QwV+QoCJrkLVQCk4Qv47YOC2AKfIfQGmiBd8fwu3Z
-	njh5nJx8w1eoYbT5DEYUL/XcTKrkecweqSearnw6rXhtek2LK9bfTC5DZUrG1lq7pB31Ro
-	e47dGR41S55P+7JEnflFX9y/tKlhSLw=
-Date: Wed, 28 Jan 2026 10:42:53 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WF2naVz+"
+Received: by mail-pj1-f68.google.com with SMTP id 98e67ed59e1d1-34c708702dfso3471721a91.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:48:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769568526; x=1770173326; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QWrLLW916vtkzNC2YAUSDv3SX9rSiSe81hUMKGcqSc0=;
+        b=WF2naVz+IMR/m3XOqAkiNSMx+BTpay3mkQMw9mxmvlC7rvVuiyhiHiOiM/niuiHTmP
+         EM+bQxLtDJGDSsVpYzP4IY4vXeOwBnjBGFCrU6od40K5Rfju15X+6YD/KY781qIi139k
+         qcFgLYI2YnVt/REvNFPd5ILuQ18L6rJRacj9UQt8r29/IZJrUDpdenV2ahbvMaIElzs2
+         fKVc9yGbadoR6YYVoVwS49Vs3pdh6DbrR2DVak3BoU4wvgkKHpl30yVe/GwGu1bpg1j8
+         ScRyLFV5SfQEPCQ2NficU+dxetit9G6LY7nrzqOvlywxoKpYthgHYU9lix3otLRDXyl8
+         YiEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769568526; x=1770173326;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QWrLLW916vtkzNC2YAUSDv3SX9rSiSe81hUMKGcqSc0=;
+        b=HgqIsOzQRS/He6+DyPsGUx/wrYkYfIMKdwjWljkLyRNQwR1XBW0h8EDV+7ROpID68i
+         RO7c15yckQJaYAOC/OzN1nRCYU/8qazNJPEmnUnXBFNdS2anb6OB4GptGIIIw/GRaDPl
+         64A2iQ9mcRTlyNMin8pIv+aGqs2IoPPUGtfNOJqCLQMY6iJlOUoQyVzII2O7ve/BCOeW
+         5/h0yMRs+58qXKVkCk9HVrPKKMzmYeQGyfMRH6qf55N085dreNaDXncmrVlkz2fppr8a
+         458TapY7vduzH1uYD0hRD7UddXDMG+ShhudmUWhYep8N/ZDGdZcY7ULmQdC59DPbPs6E
+         x6YA==
+X-Forwarded-Encrypted: i=1; AJvYcCXHPR+jCtHTgPde1Jv6mJlMCbVTimKiqMyBWImeqnuuZmm1pG/ctsrYo1htdFNb4myE8ksjlOPVIvJRyiuzOYJJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyME35Sgf+IFMHuRkT6UNHOiV7ysbt5yoMVulnCK12NtY6/TzS0
+	LlT7bxnC8uJnhb42Ji9L+D4FVB8OH0R3OgampqhamphDZKrCJsCdZ62K
+X-Gm-Gg: AZuq6aKU3XEY1WlAc8LCPCnf5YKjcUY2C8zynVm2Ctu4kDCSECL/w1B2CMeHqQ0aJn0
+	V3OFElv4MUt+4hVUksRIpMw5i7qj/uDYbCEuXfyVNElAbmp9Z/683bqMYq5lXtSTIJvyT1yyw0O
+	j8uDXBpq28C8LdSf4aVsxhQdON3s1spJCVPmnoZMhdYeczfBclTfetnWApee/aBNAFW8kkFGC8i
+	5Mm2QTW4ALcVvguH6exAbWY5kCa7zFvuai+0RQN6rN0PJaySIIaluB06uGe6RjfHGLAxwYprrnt
+	pv8pNW2vqJq6P8qRIV4F+9rhw7tBDEPwt17Wxl0QiCB7Qi7oBjpJtsELm23xvoTXdxd6HCNnJGE
+	MmCnHCU3lx6mHwojLKtA8ncpSLXZkuAao3aOYe3VQEq57eySg39UfTPIpi5Rre6XWiAQAcwf8s5
+	WCtw8oU9ricjNK9rWroC9C5+huVs6EwosQus4wpA==
+X-Received: by 2002:a17:90a:f946:b0:353:f7b:6d60 with SMTP id 98e67ed59e1d1-353feda10admr3573735a91.33.1769568525887;
+        Tue, 27 Jan 2026 18:48:45 -0800 (PST)
+Received: from lima-ubuntu.hz.ali.com ([47.246.98.220])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82379b1ee2bsm896545b3a.3.2026.01.27.18.48.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jan 2026 18:48:45 -0800 (PST)
+From: Qing Wang <wangqing7171@gmail.com>
+To: zeri@umich.edu
+Cc: acme@kernel.org,
+	henryzhangjcle@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	syzbot+2a077cb788749964cf68@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com,
+	wangqing7171@gmail.com
+Subject: Re: [PATCH] perf: Fix data race in perf_event_set_bpf_handler()
+Date: Wed, 28 Jan 2026 10:48:38 +0800
+Message-Id: <20260128024838.1820026-1-wangqing7171@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <CACkPEmne--T_3bdwJEy8-GEYm4EJF60xSoqbrQ-m_LuZhJhCuQ@mail.gmail.com>
+References: <CACkPEmne--T_3bdwJEy8-GEYm4EJF60xSoqbrQ-m_LuZhJhCuQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v8 2/3] perf: Refactor get_perf_callchain
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, song@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20260126074331.815684-1-chen.dylane@linux.dev>
- <20260126074331.815684-3-chen.dylane@linux.dev>
- <CAEf4BzZq8g_BciT3JNXuYZpzq9zphaVsvOTuOVnqjDS=9w73Gw@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <CAEf4BzZq8g_BciT3JNXuYZpzq9zphaVsvOTuOVnqjDS=9w73Gw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-在 2026/1/28 05:07, Andrii Nakryiko 写道:
-> On Sun, Jan 25, 2026 at 11:45 PM Tao Chen <chen.dylane@linux.dev> wrote:
->>
->>  From BPF stack map, we want to ensure that the callchain buffer
->> will not be overwritten by other preemptive tasks and we also aim
->> to reduce the preempt disable interval, Based on the suggestions from Peter
->> and Andrrii, export new API __get_perf_callchain and the usage scenarios
->> are as follows from BPF side:
->>
->> preempt_disable()
->> entry = get_callchain_entry()
->> preempt_enable()
->> __get_perf_callchain(entry)
->> put_callchain_entry(entry)
->>
->> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->> ---
->>   include/linux/perf_event.h |  5 +++++
->>   kernel/events/callchain.c  | 34 ++++++++++++++++++++++------------
->>   2 files changed, 27 insertions(+), 12 deletions(-)
-> 
-> [...]
-> 
->> +struct perf_callchain_entry *
->> +get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
->> +                  u32 max_stack, bool crosstask, bool add_mark, u64 defer_cookie)
->> +{
->> +       struct perf_callchain_entry *entry;
->> +       int ret;
->> +
->> +       entry = get_callchain_entry();
->> +       if (!entry)
->> +               return NULL;
->>
->> -exit_put:
->> +       ret = __get_perf_callchain(entry, regs, kernel, user, max_stack, crosstask, add_mark,
->> +                                  defer_cookie);
->>          put_callchain_entry(entry);
->> +       if (ret)
->> +               entry = NULL;
->>
-> 
-> purely stylistical nit, so this can be ignored if you disagree, but I
-> find code that modifies some variable before returning it slightly
-> less preferable to more explicit:
-> 
-> 
-> if (__get_perf_callchain(...)) {
->      put_callchain_entry(entry);
->      return NULL;
-> }
-> 
-> return entry;
-> 
->>          return entry;
->>   }
-> 
+On Wed, 28 Jan 2026 at 05:29, Henry Zhang <zeri@umich.edu> wrote:
+> Thanks, this looks good.
 
-agree, will change it in v9, thanks.
+Thanks for your review. Let's wait for maintainer's reply.
 
->> --
->> 2.48.1
->>
-
-
--- 
-Best Regards
-Tao Chen
+--
+Qing
