@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58D62BEC2E;
-	Wed, 28 Jan 2026 18:13:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62801DE885;
+	Wed, 28 Jan 2026 18:15:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769623990; cv=none; b=CerBNcsLL+k6iYdIXYXPQ3AdzqPeUPKYVD6GW49n1yK/1bpAjJUKzdgVjEl7gNRlOhcVhw5k8Ji8SLuv9JRuapUbAplMDMmEjiW+YiX71Sz61UbKkyGfPUtrpMmCeJ2JIa6FxJisnLklsxELKrmiYOZZMCK94/I8Sph9Ih1sNRE=
+	t=1769624141; cv=none; b=gsNquJr8igBfm57QbfI7giNIRGqT8lT7jCXH5CPSe0+UD6asMNAMPJdgQGCZar5RxCPe5mNqeSRGLcYPQSR6XMO2oq3+PICis7Qru/FultP5F6DDZBaLCe5OLbqdhYKB3xf4nnJQeMOZtMQTyRA7CDrNcuj1wyV7z1a1CLTj/f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769623990; c=relaxed/simple;
-	bh=hoFbcdX6evDvF6hpNkWwofSlIg5xVobSR7oL1SWXtTc=;
+	s=arc-20240116; t=1769624141; c=relaxed/simple;
+	bh=7XmaObTSqUJRF6jbNDiR6aslI2HW5hF7c/1N0j8zDT4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VeSiuqwpcNJ8SbnUVsXDF6cEFoLCprm0doWUq7WIOIhw8+OLt/nVVtce6EJ/Zaele8JZLFvpgdJz1FVg28uOUYhhIka12/D42JUMkmstFwQKBGB3upG8tPuzHAVrs0f54jNJJS+D0hvZOSa1LiHtOR/hEjuoaHVctLdnz1ilhuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuNxuFq6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LRd+etSedIVQ57ChtB1zddfvXwyhKf5jbjHmwAvAFvvT49SmTMJ2mGy4q2Z1aaTEG9vkvKS2yWwX6fEyJioFBtXXTj7HZZ5tZIIsR5CcPhN8LWnYAHHw68hVvVoIqoQRynmZxv8j3/9HvgKipxdbYQT51v77HPAqf8ibrqptSqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1efsc1m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuNxuFq6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D97E4C4CEF1;
-	Wed, 28 Jan 2026 18:13:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1efsc1m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E39F5C4CEF1;
+	Wed, 28 Jan 2026 18:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769623990;
-	bh=hoFbcdX6evDvF6hpNkWwofSlIg5xVobSR7oL1SWXtTc=;
+	s=k20201202; t=1769624140;
+	bh=7XmaObTSqUJRF6jbNDiR6aslI2HW5hF7c/1N0j8zDT4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EuNxuFq6XeggsV+/eF+Fn95EYuTztyxsSQvGXXonXXUdzUgOZMiSqqLbf4elRYuN7
-	 WpEuHmRmTlecVCKWhvzAt5ZWM0IXNWbvRhQRkEGCGMpqLJV+XYm3ECxvCsKmFk4Kjj
-	 ssRhH5ZmEVfSPh61aT076nnFHiuCXfTeGlk0N/N6sO3sRvqTwLPRiCncXMJ96RZrBU
-	 AhhMmfWlte5fOE8W+qL+/EMwjN84KznfI6TZ/ZNgybgcP/PNC4LdGQHdPSds7MfyPp
-	 7bmscET3tsiRHw7Ks0VQGKa/x3r7vHy3/58qr/YN6K/iTLBgOS2ukzPEpr8pFyAO0x
-	 M4atu3sXveTAA==
-Date: Wed, 28 Jan 2026 15:13:07 -0300
+	b=k1efsc1mbfI/XZtg081I4HwI1s/PfYWHA2AAUzndzOxyPZlYwOTDyFui6XgfsLj7x
+	 m/BErtJgObZIL8HAszhr1AdES398GnLhXJF9BAAw/I6x3m21MNRTYGEUus2DzjGTwU
+	 0kAxs44mBD4T/tMCy4JoJPw8vkUcnE9xbkIfHt0UtsIyPLGU/dWTthYS7udVPwma2b
+	 s8Uj+SKtDIe2WieuQZ26oYgfkwb9JXXhn0Aye8MxneHG7oIMla+rCdzYugKx1AfzY1
+	 J9ym73kpMnSUUcJTvOpDrEQlwiz+6vpDONy5tpNVj3H6Mn+o/1ua6zhJtUxZDMh9dc
+	 YBLjtKd3JtzVQ==
+Date: Wed, 28 Jan 2026 15:15:37 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Swapnil Sapkal <swapnil.sapkal@amd.com>
 Cc: Shrikanth Hegde <sshegde@linux.ibm.com>, mark.rutland@arm.com,
@@ -39,7 +39,7 @@ Cc: Shrikanth Hegde <sshegde@linux.ibm.com>, mark.rutland@arm.com,
 	james.clark@arm.com
 Subject: Re: [PATCH v1 1/6] perf header: Replace hardcoded max cpus by
  MAX_NR_CPUS
-Message-ID: <aXpRsyEURQkh9nme@x1>
+Message-ID: <aXpSSaMdBhKDRzsY@x1>
 References: <20260127185000.431884-1-swapnil.sapkal@amd.com>
  <20260127185000.431884-2-swapnil.sapkal@amd.com>
  <0117fe41-0016-49d7-bc73-1ec682ca8783@linux.ibm.com>
@@ -113,11 +113,7 @@ On Wed, Jan 28, 2026 at 09:55:05PM +0530, Swapnil Sapkal wrote:
 > 
 > Arnaldo, can you please consider the below diff? Let me know if you'd like
 > me to respin the patch.
-
-Sure, will add it.
-
-- Arnaldo
- 
+> 
 > --
 > Thanks and Regards,
 > Swapnil
@@ -144,6 +140,11 @@ Sure, will add it.
 >  #define _DEFAULT_SOURCE 1
 > 
 > +#include "perf.h"
+
+Why add it to util.h? I'll add it to where it is used, util.c, ok?
+
+- Arnaldo
+
 >  #include <dirent.h>
 >  #include <fcntl.h>
 >  #include <stdbool.h>
