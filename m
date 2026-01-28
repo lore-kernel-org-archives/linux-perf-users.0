@@ -1,80 +1,83 @@
-Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AC57080E
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Jan 2026 02:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1530A2DC32A
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Jan 2026 03:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769568527; cv=none; b=QzzygzOY8X0EWwMP/zVDWz/q4Ruea8eGs/14WHOObmiC+N2F8SA9H21NZn1lZXv19GZG0fn5ttdsK1WA7Sm/QdcGY+PyMoBMrHBtdMJDPPqz/f38RxKeLhCPhBNXm+VX2NSk45tBZp4ECxXD6Ul7rKo+7JRo/8L4rnQzompebN0=
+	t=1769572372; cv=none; b=Lz1x/p7V/PrRuK8iLKAniOI4MRYDZ16GxReWd6N63SeAozcavVGZF3Mz7bqCsNwpcfkZsnyQ/KAkQCshQOTGiyo1xL2oxWHLoEbOQdthKVepVtowhnI4WTxUwdp/zhheQMGtqAyI/CFxj8LV492GkmdDzkT6cCVUruTBXmXpiqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769568527; c=relaxed/simple;
-	bh=QWrLLW916vtkzNC2YAUSDv3SX9rSiSe81hUMKGcqSc0=;
+	s=arc-20240116; t=1769572372; c=relaxed/simple;
+	bh=jSdlqSXMehB9BbGIf+CvOfSjGhjSiz8lASujmMLi4AQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TkdBwgHDisuXcXoaT7TbozHSUAjAQkzI4SrUIRtzszTkIK+OCwxPtcmdCRFMe+1Ssin3CNX56EyP/hSWgXKNfP3DnDHHdf3MynVxI+QCWbpF+MRSVGywsSKSUYRlQjNsqO7IqbZ14oOL6LrxqdGXjbh2UhYpb63OKJ6ckXJqhXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WF2naVz+; arc=none smtp.client-ip=209.85.216.68
+	 MIME-Version; b=BFH5MaSt/hVmZcKOOlKL96qOVTTBDG4bYwJ642uYbPfcPSQ3xqCqse9P2Y/CaTVEIgDwJ3yYPfiVG1tOW/rj257hOm2jfmeZZ7u7zDutJfaX026Ef446Ym968ypagbgsbEm4VSZQruFXSAy4g+xUBlj1wvaw8+4gwitGWWqohwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WN9XXBY6; arc=none smtp.client-ip=209.85.210.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WF2naVz+"
-Received: by mail-pj1-f68.google.com with SMTP id 98e67ed59e1d1-34c708702dfso3471721a91.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 18:48:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WN9XXBY6"
+Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-8230f2140beso235732b3a.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 19:52:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769568526; x=1770173326; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1769572370; x=1770177170; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QWrLLW916vtkzNC2YAUSDv3SX9rSiSe81hUMKGcqSc0=;
-        b=WF2naVz+IMR/m3XOqAkiNSMx+BTpay3mkQMw9mxmvlC7rvVuiyhiHiOiM/niuiHTmP
-         EM+bQxLtDJGDSsVpYzP4IY4vXeOwBnjBGFCrU6od40K5Rfju15X+6YD/KY781qIi139k
-         qcFgLYI2YnVt/REvNFPd5ILuQ18L6rJRacj9UQt8r29/IZJrUDpdenV2ahbvMaIElzs2
-         fKVc9yGbadoR6YYVoVwS49Vs3pdh6DbrR2DVak3BoU4wvgkKHpl30yVe/GwGu1bpg1j8
-         ScRyLFV5SfQEPCQ2NficU+dxetit9G6LY7nrzqOvlywxoKpYthgHYU9lix3otLRDXyl8
-         YiEw==
+        bh=vzjZmQg+KemvQlHGb9aPeU+IfGIuMW24Vm0tVU7jCyw=;
+        b=WN9XXBY6d63jHWm2yhojEr4VLCyzBdgYCDNdnEnrH06Mj6s2St4lq9tqGd+7/7L6+9
+         otH7YqbcLYg4W0L/uYuMk8mxsCWW4qrTOI6zDB4M43818AT2+cHDmc9SJilvX/mED3Ga
+         04OSaxJMkg1Utyxkmfz0phi+fN27GBpwtaklnvMPfofOLnThrILliBuRIEpU87PLWVi0
+         GLQRobYReVvYG1nx+3ddwNZA+djarlfViJVQLVqvuUhFMCx4P3a5tOCncLM5mhmnJB1o
+         b486NtcIPFDViYbCryE8E89fjQm7B7XMR+dHbDLG99NQJuIkFzItGngB5DQoKYZH7fGZ
+         052w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769568526; x=1770173326;
+        d=1e100.net; s=20230601; t=1769572370; x=1770177170;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=QWrLLW916vtkzNC2YAUSDv3SX9rSiSe81hUMKGcqSc0=;
-        b=HgqIsOzQRS/He6+DyPsGUx/wrYkYfIMKdwjWljkLyRNQwR1XBW0h8EDV+7ROpID68i
-         RO7c15yckQJaYAOC/OzN1nRCYU/8qazNJPEmnUnXBFNdS2anb6OB4GptGIIIw/GRaDPl
-         64A2iQ9mcRTlyNMin8pIv+aGqs2IoPPUGtfNOJqCLQMY6iJlOUoQyVzII2O7ve/BCOeW
-         5/h0yMRs+58qXKVkCk9HVrPKKMzmYeQGyfMRH6qf55N085dreNaDXncmrVlkz2fppr8a
-         458TapY7vduzH1uYD0hRD7UddXDMG+ShhudmUWhYep8N/ZDGdZcY7ULmQdC59DPbPs6E
-         x6YA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHPR+jCtHTgPde1Jv6mJlMCbVTimKiqMyBWImeqnuuZmm1pG/ctsrYo1htdFNb4myE8ksjlOPVIvJRyiuzOYJJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyME35Sgf+IFMHuRkT6UNHOiV7ysbt5yoMVulnCK12NtY6/TzS0
-	LlT7bxnC8uJnhb42Ji9L+D4FVB8OH0R3OgampqhamphDZKrCJsCdZ62K
-X-Gm-Gg: AZuq6aKU3XEY1WlAc8LCPCnf5YKjcUY2C8zynVm2Ctu4kDCSECL/w1B2CMeHqQ0aJn0
-	V3OFElv4MUt+4hVUksRIpMw5i7qj/uDYbCEuXfyVNElAbmp9Z/683bqMYq5lXtSTIJvyT1yyw0O
-	j8uDXBpq28C8LdSf4aVsxhQdON3s1spJCVPmnoZMhdYeczfBclTfetnWApee/aBNAFW8kkFGC8i
-	5Mm2QTW4ALcVvguH6exAbWY5kCa7zFvuai+0RQN6rN0PJaySIIaluB06uGe6RjfHGLAxwYprrnt
-	pv8pNW2vqJq6P8qRIV4F+9rhw7tBDEPwt17Wxl0QiCB7Qi7oBjpJtsELm23xvoTXdxd6HCNnJGE
-	MmCnHCU3lx6mHwojLKtA8ncpSLXZkuAao3aOYe3VQEq57eySg39UfTPIpi5Rre6XWiAQAcwf8s5
-	WCtw8oU9ricjNK9rWroC9C5+huVs6EwosQus4wpA==
-X-Received: by 2002:a17:90a:f946:b0:353:f7b:6d60 with SMTP id 98e67ed59e1d1-353feda10admr3573735a91.33.1769568525887;
-        Tue, 27 Jan 2026 18:48:45 -0800 (PST)
+        bh=vzjZmQg+KemvQlHGb9aPeU+IfGIuMW24Vm0tVU7jCyw=;
+        b=VqScIjSvQVrAz6iFNZn4H0zRYbUjogFjR1lQ7gWCMBeO5vlsvLIoKUc/k636OcbeH6
+         KcSmqabSswtc6jCLTYRTTx9m0MWnKyzxO2UzBddkKUKFpYlsZBFWArphkELKEmjY6GnE
+         8/AvOx3L5ejExGu1zFyKpaM458htHBLjp/oyI0EjCO8PX3G96aTAYHHUPDz3Z2/o/aNc
+         aUHwcTC6O3+tAErHV1c82Jr3o1NU8bdIbo2RNVWsugdVBfHGTuCEGGzAkooQB8RJXeL2
+         XDevKL7Eqxf5MAg7rqPQf33q3XymMlD6eOYHAg/eubO/KM8Qgzg9DXI7MtEe9sh835i4
+         dIzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPD666nV5zY+T7AtBYeVklgaFIKXe5ndhr2v+fpaOgFLoJuK8AI3HQfi/ryh5H3YPpsynvDWBh6Pe0H16IOF+F@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJCejqROMYSmCzcydRjqXjfraX2c4J/e9UgbbR+G7/QYROAbz2
+	Gf3ILvCnUORZxSYI+gqCTxlKeeNKCHp42El1xJ+CGQcbbJKV5sbArTSi
+X-Gm-Gg: AZuq6aIOdAUnezfzZdXsakKhDGVqs2gLCp0Z5qelvhTfN+voTXZ613RyrJgo5KKRTbZ
+	mr5yk5DXn0WsFg0z1t5mmSYwkB+70BtDYufDtcQ4EoZIq/RWl9Ve5+/eAkVSZmb9JYiF9KjN+OW
+	qYlV8JY7oEIP7sF/ZAnyK4D4Y4s++5pz2beZAS7byNh5lkea1YfNnIFjKzrHNwvCTMYW8T8uwJ3
+	iMlh7zAXFKD6vqQvqFp9L71EtuwQD+paBk1j3hQ1JQXjKSkp5SK/WMTlqODz/cS280vSO0NcUkM
+	IOt31o6ANaafl48RpyOSy61nfoqTZFaYxl1nCzGeLSGP3oCH5q4fKKtU2YS1kKuyHMu9pAv+D66
+	CygDizIU/+9fozVdE9Fs20SRRpZwgC3PF088nn9GzBqA2Y7oSboiyn9gaB9G1ZtRByidzK0aikl
+	KIEXgg/sDFd/thdIaFMjVPH5x0xwp7vXlmHCWqwg==
+X-Received: by 2002:a05:6a21:2d4a:b0:35d:8881:e69b with SMTP id adf61e73a8af0-38ec5e7b92bmr3895558637.18.1769572370480;
+        Tue, 27 Jan 2026 19:52:50 -0800 (PST)
 Received: from lima-ubuntu.hz.ali.com ([47.246.98.220])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82379b1ee2bsm896545b3a.3.2026.01.27.18.48.41
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c642a33566csm759883a12.21.2026.01.27.19.52.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jan 2026 18:48:45 -0800 (PST)
+        Tue, 27 Jan 2026 19:52:50 -0800 (PST)
 From: Qing Wang <wangqing7171@gmail.com>
-To: zeri@umich.edu
+To: syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com
 Cc: acme@kernel.org,
-	henryzhangjcle@gmail.com,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	irogers@google.com,
+	jolsa@kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
+	mark.rutland@arm.com,
 	mingo@redhat.com,
+	namhyung@kernel.org,
 	peterz@infradead.org,
-	syzbot+2a077cb788749964cf68@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com,
-	wangqing7171@gmail.com
-Subject: Re: [PATCH] perf: Fix data race in perf_event_set_bpf_handler()
-Date: Wed, 28 Jan 2026 10:48:38 +0800
-Message-Id: <20260128024838.1820026-1-wangqing7171@gmail.com>
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [perf?] WARNING: suspicious RCU usage in get_callchain_entry
+Date: Wed, 28 Jan 2026 11:52:41 +0800
+Message-Id: <20260128035241.1839686-1-wangqing7171@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <CACkPEmne--T_3bdwJEy8-GEYm4EJF60xSoqbrQ-m_LuZhJhCuQ@mail.gmail.com>
-References: <CACkPEmne--T_3bdwJEy8-GEYm4EJF60xSoqbrQ-m_LuZhJhCuQ@mail.gmail.com>
+In-Reply-To: <000000000000fe324606174e1f9e@google.com>
+References: <000000000000fe324606174e1f9e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -83,10 +86,29 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Wed, 28 Jan 2026 at 05:29, Henry Zhang <zeri@umich.edu> wrote:
-> Thanks, this looks good.
+#syz test
 
-Thanks for your review. Let's wait for maintainer's reply.
-
---
-Qing
+diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+index da3d328f5c15..6e53c2d916cd 100644
+--- a/kernel/bpf/stackmap.c
++++ b/kernel/bpf/stackmap.c
+@@ -460,8 +460,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+ 
+ 	max_depth = stack_map_calculate_max_depth(size, elem_size, flags);
+ 
+-	if (may_fault)
+-		rcu_read_lock(); /* need RCU for perf's callchain below */
++	rcu_read_lock(); /* need RCU for perf's callchain below */
+ 
+ 	if (trace_in) {
+ 		trace = trace_in;
+@@ -474,8 +473,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+ 	}
+ 
+ 	if (unlikely(!trace) || trace->nr < skip) {
+-		if (may_fault)
+-			rcu_read_unlock();
++		rcu_read_unlock();
+ 		goto err_fault;
+ 	}
+ 
