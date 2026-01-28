@@ -1,234 +1,123 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0A0346FA8
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Jan 2026 09:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD3D34DB7B;
+	Wed, 28 Jan 2026 09:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769592997; cv=none; b=M7rke+OGxHkkr+OmqNdFX5t1apsextaz83INVYK8jpTnxvzoLKenwehUEa6326qCY8Yx+AYEgZ4N6jwahQUkIjse+69ArknHq9qf8r9a7OszsTEMCIP22/rsLgFGi8XPgdDo/zw2gI+plDYhiD/L8B7Qe5jHOKZwHESIhZyruxM=
+	t=1769594369; cv=none; b=HTEGSn4x1plFhJCFKFDJdepzRGIf0d/Ve8QuEyXNGZogOF0OEZaKPa0DqiK+lfVpnsfxWVOmhbKsbslGHNbh7rEfFiMxMuOvUHaiX38p1oUP8ErYkoS3m5ow82CxnmnDDkIQRpowXq/JfR4MvYwDJ9Zo2bOXGo9khGgcLHNlPvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769592997; c=relaxed/simple;
-	bh=/uC7aNV9amlBzPrhhufTmDfbCA17HBx2GKUUDq1+IJE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VIWNt5ubOrLOkQf/pn30kN6AthWzlzv/vvOELaaT4L/QzbSfBA+vyGalma7Sd8kp0WcbVe8dUAlu6iAnt6L3qia+x26WTCB7TieZJpDPwuW73Byj6033QIqwodG01EQp5MHRmBwuy7Cis6N/QpUux51Iv3uB7xHWAr+TGIIID90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dG71KE7k; arc=none smtp.client-ip=209.85.221.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1769594369; c=relaxed/simple;
+	bh=UHbJI7QHhCf6/qLiCs9zoyOI0n9rgQsghe0accS1jGE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Jv6o6EPJPVs/rMk+YFU8CtEnKmg4Bk2YCKc1IcX3qTuVaH4QFsbFWxeUdaf/z9zQAtrir6ui7mIl+NNzj3ZOBeaBhf4cN22tLk8j2mdqCwFdfLCUl/UtFMbYJy3E452jjvFeO5KkeG00E88g/i52C0B2x+nlCNdVMuZGn5xnX6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=goawlMG4; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dG71KE7k"
-Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-43284ed32a0so3925806f8f.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Jan 2026 01:36:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1769592994; x=1770197794; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DhF98Nun2om+lYN0JL6mwSJXbtKFe/yYyeyl1TtEz3I=;
-        b=dG71KE7kpxiyPenfxxeUrV0UfFdSFGJ1bmHG7uxyFUth9c3yFzJSXd2gWc1t5sdCgc
-         81S0udSd2krx5IeZ1od3ooBtamv781h1SXEwgELG4/GyjJjQ2IUt9rKmcCrehQ/rKBkV
-         Cxo/Tv82NWk8uPYGS3B8+q7BclRmhR7WycGi0s6bs/8z1mboVoWX8t4z99hmGV4DmK8S
-         1i9HscDHczThS+fUJFEkqnAb8howqsSUJeI6xtflRk/wuZXRIaxUbYMLyNBj3g8FT/Zo
-         WMhTFJj4ej7t/J1pHSoG0SdIvKJvGv3TUqUsUYEkKmnswoXe/EpG7vFXIDgELVgR7/kU
-         E1pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769592994; x=1770197794;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DhF98Nun2om+lYN0JL6mwSJXbtKFe/yYyeyl1TtEz3I=;
-        b=A7MQGQaOkzUxtLOLK2IcGHln7xgg3F8J6bHiwPYl7LHwD2L2nZQYVGH0wOiionC+E7
-         oOgzMUX80s6q09h05cprxnEunk5blavL1mGIxWZ1Y0OKdmtY5IRBsdwlVKZzWw1MCvto
-         zefDvDzxRZ2D05f1n6X/2jHEN7eMsYwli9SRwKivgTN4fmtl1QBwFaOwIcHzII21RFo2
-         OmkUh85RXyU02mlKjWa8oEwT9HqJknkAnG1MVEqxfhRSiO/HrJhpgs6qn8VJtP6Imc9E
-         LHZnaQCF/rFp5pmcuQESSnWOTXgHrw6u+LQAJziPK9U5SE+88YaUKtQSLuJ3FYYlZMmS
-         b7Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+z/Mxca7j1f/aN9CkqfCqUqui381mIzh2JzpDz1OBwIpUrUr4zwlUBcrG5Vm66cpZWY7mtUjuhffXKB+8Y8hq@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYIJ3R+46Dfs1LDETgH0AgTw7O2wjAOAHqjSk6OTstJw5hYqdo
-	SLjJCmmOBMuCOWaLuoRDQhITNZEXiPupxd9Jeto5PfEEYYd7IJN24qdOZbWK4urPmRo=
-X-Gm-Gg: AZuq6aJWKanFYwRpbyEDt0tNpMAU1yXuDwXjqph0QHv9Xt21oTSEVcCsb5twlNK0X5t
-	EMzhoPLbdVIGquI2upT/6bj2gOfh0spmo0nI3qSSy5atMgEdLrG5/rncXbiMkr8mwxfWkJER/3Z
-	YWshzMOxB+mgj3gTsWUChGvXC0ZlN3BLYo+lZZw7gNz/FZ0QVolDJC7UJjJ03JgCwE6a5JksEku
-	pamvUo/rg8O3lYltR9jWfcqllErwKIunAZbpca1LdbnTCo4dHEnYLtTRuIU36rSI4saPcNwzwfu
-	TbeedhuIE9z7JVcThHZbroYMaaqq7lRkPuXwT2TAiXpieAJmxhoE9sJGnOQVKdCGu7eCldBe3xX
-	E9LirEeFDTd4/iccbcbX5KfwSrrNRH2X8KhvVOvv60Gcx/TduO7lrwE1ZYD4xjP8QCusHHrxLSP
-	Z0p8ZZTjOXeeaw6k5hnIFKoTyP2xs=
-X-Received: by 2002:a5d:5f43:0:b0:435:907f:e439 with SMTP id ffacd0b85a97d-435dd05c4bamr6010824f8f.18.1769592994091;
-        Wed, 28 Jan 2026 01:36:34 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435e10e4762sm5489795f8f.6.2026.01.28.01.36.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Jan 2026 01:36:33 -0800 (PST)
-Message-ID: <40988c57-ee6f-4693-afe4-2615dc43f395@linaro.org>
-Date: Wed, 28 Jan 2026 09:36:32 +0000
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="goawlMG4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
+	bh=1nO7a828YUpcLhY+o95VylGAfy5FWZlAkk3njZ1MCEI=; b=goawlMG45qxczHtuUUTkTzGoaT
+	wmeTAzlZtiTXbPJQlnrBWCd8rz9ceTMyEdB4hkQKOJfKLG9kQNC/g1VaUsWyInVvmkeRD2ceRN2pN
+	rzuPs8zKQEESQMXgs0Uomkrmt55ReFcMixnSKApXeFBGJb5hX0kOrULEdq0YVHPxF/32X88xInQLv
+	ozlFD+Af/GaJ3LTsbHC3SayEw2TWdVcwIRbPOix39Ycs71LRPduOkUd2S+EK7wlHwP7UfPmUOQxGJ
+	VeyojMfgMl7KJH4y3OLke39jnAe9UArBlQqs/hj8wQJYobnI48vRvw9/4vPaD4ifsZL6ToGvoKs2h
+	ib31C5Eg==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1vl2KC-0005Fc-JM; Wed, 28 Jan 2026 09:59:00 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Wed, 28 Jan 2026 01:58:38 -0800
+Subject: [PATCH] uprobes: fix incorrect lockdep condition in filter_chain()
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf vendor events arm64: Add Tegra410 Olympus PMU events
-To: Ian Rogers <irogers@google.com>, Besar Wicaksono <bwicaksono@nvidia.com>
-Cc: john.g.garry@oracle.com, will@kernel.org, mike.leach@linaro.org,
- leo.yan@linux.dev, mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
- jolsa@kernel.org, adrian.hunter@intel.com, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- tmakin@nvidia.com, vsethi@nvidia.com, rwiley@nvidia.com, skelley@nvidia.com,
- ywan@nvidia.com, treding@nvidia.com, jonathanh@nvidia.com, mochs@nvidia.com
-References: <20260127225909.3296202-1-bwicaksono@nvidia.com>
- <CAP-5=fUxhbR1xs1f9mrkcUXZZNLrVqDG0ebhwW--WtgVRnNxNw@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fUxhbR1xs1f9mrkcUXZZNLrVqDG0ebhwW--WtgVRnNxNw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260128-uprobe_rcu-v1-1-d41316763799@debian.org>
+X-B4-Tracking: v=1; b=H4sIAM3deWkC/yXMQQqDMBAF0KsMf23AhKKSq5RSTBx1XKhMGimId
+ xd1+TZvR2IVTvC0Q3mTJMsMT7YgxLGdBzbSwRNc6arSusbkVZfAX43ZsLNNVbfhFW1AQViVe/n
+ f2fvzOOUwcfxdA47jBL/kjupuAAAA
+X-Change-ID: 20260128-uprobe_rcu-e21867ab4c1b
+To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, kernel-team@meta.com, 
+ stable@vger.kernel.org, Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-f4305
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1516; i=leitao@debian.org;
+ h=from:subject:message-id; bh=UHbJI7QHhCf6/qLiCs9zoyOI0n9rgQsghe0accS1jGE=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBped3eu5M3fbHiVCjgixTSGNxB1xtTmYxjWM1FB
+ DXMve5svYCJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaXnd3gAKCRA1o5Of/Hh3
+ bX5HEACaYpnFCKsGemw7IqE6IiSiUz7qQKBRkinhy/JCZIMdrL8RWTBXM6Kr1qjODZDgwgnLV9L
+ YqWBavrscM5AGEvcGc8JUg8x81UuMdHEfHvE2pYY+Ufqy9XYfknj7XbAxQxmZOW3sbYYQKbWslt
+ LyaToEZndlXC6HkegyAw7SCMP8NUInPdu8v5BcYK8rB4ZgvDiFKIsoM5B9ErluHufnvCQuYgg1Y
+ PpKuK2mXP2B9jIfaQZfDTpxMSVqps7JL65Ek2Sr3iKBadj9cP8Jvwl0qolBkg+tHNObg/5q3Huy
+ psQGfX6Xn1BypxCr6b+cQMFyA0mB5OHllXs7OqZBP5ljoAMfnkjEOHsIxrkTphPOd/Va0fALa5h
+ ppaxOJVzIDv9Wq//0oQqqDuzBPJaGKi1C+3g4qzum9jhOBpH15Di9IOsx2l4xP6ACvkP6nNIJpg
+ tCoakdwC3T+x5FyLK2gL23m4v2IXGjyQjY6DdOB3UJkUboZVRVQ985g2Mq8mgkGfsmFss9CH4Ey
+ gjchBe+bLP/e+Nqwi1i87teZiBs3ALVCkE3gYb3xIt5HKgfYgn5ZEjbW1ENfE6T1hTIdSNMkFf/
+ ZAC1lZ2bKkoFODPDy1S4Nwss3djhl7kADncosu59GojxPQdu0DM+aNYDLZYgXx3DaerqdPEzeJ3
+ esiqqRXZBrR6s5w==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
+The list_for_each_entry_rcu() in filter_chain() uses
+rcu_read_lock_trace_held() as the lockdep condition, but the function
+holds consumer_rwsem, not the RCU trace lock.
 
+This gives me the following output when running with some locking debug
+option enabled:
 
-On 28/01/2026 8:03 am, Ian Rogers wrote:
-> On Tue, Jan 27, 2026 at 3:00 PM Besar Wicaksono <bwicaksono@nvidia.com> wrote:
->>
->> Add JSON files for NVIDIA Tegra410 Olympus core PMU events.
->> Also updated the common-and-microarch.json.
->>
->> Signed-off-by: Besar Wicaksono <bwicaksono@nvidia.com>
->> ---
->>   .../arch/arm64/common-and-microarch.json      |  90 +++
->>   tools/perf/pmu-events/arch/arm64/mapfile.csv  |   1 +
->>   .../arch/arm64/nvidia/t410/branch.json        |  45 ++
->>   .../arch/arm64/nvidia/t410/brbe.json          |   6 +
->>   .../arch/arm64/nvidia/t410/bus.json           |  48 ++
->>   .../arch/arm64/nvidia/t410/exception.json     |  62 ++
->>   .../arch/arm64/nvidia/t410/fp_operation.json  |  78 ++
->>   .../arch/arm64/nvidia/t410/general.json       |  15 +
->>   .../arch/arm64/nvidia/t410/l1d_cache.json     | 122 +++
->>   .../arch/arm64/nvidia/t410/l1i_cache.json     | 114 +++
->>   .../arch/arm64/nvidia/t410/l2d_cache.json     | 134 ++++
->>   .../arch/arm64/nvidia/t410/ll_cache.json      | 107 +++
->>   .../arch/arm64/nvidia/t410/memory.json        |  46 ++
->>   .../arch/arm64/nvidia/t410/metrics.json       | 722 ++++++++++++++++++
->>   .../arch/arm64/nvidia/t410/misc.json          | 646 ++++++++++++++++
->>   .../arch/arm64/nvidia/t410/retired.json       |  94 +++
->>   .../arch/arm64/nvidia/t410/spe.json           |  42 +
->>   .../arm64/nvidia/t410/spec_operation.json     | 230 ++++++
->>   .../arch/arm64/nvidia/t410/stall.json         | 145 ++++
->>   .../arch/arm64/nvidia/t410/tlb.json           | 158 ++++
->>   20 files changed, 2905 insertions(+)
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/branch.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/brbe.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/bus.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/exception.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/fp_operation.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/general.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/l1d_cache.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/l1i_cache.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/l2d_cache.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/ll_cache.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/memory.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/metrics.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/misc.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/retired.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/spe.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/spec_operation.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/stall.json
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/tlb.json
->>
->> diff --git a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
->> index 468cb085d879..6af15776ff17 100644
->> --- a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
->> +++ b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
->> @@ -179,6 +179,11 @@
->>           "EventName": "BUS_CYCLES",
->>           "BriefDescription": "Bus cycle"
->>       },
->> +    {
->> +        "EventCode": "0x001E",
->> +        "EventName": "CHAIN",
->> +        "BriefDescription": "Chain a pair of event counters."
->> +    },
-> 
-> Cool stuff :-)
-> 
-> For wider counters AMD does something similar, but should this be an
-> implementation detail rather than an exposed event? How does it
-> operate as an event?
-> 
+  kernel/events/uprobes.c:1141 RCU-list traversed in non-reader section!!
+    filter_chain
+    register_for_each_vma
+    uprobe_unregister_nosync
+    __probe_event_disable
 
-CHAIN should be excluded from the json, it's used internally by the 
-driver when you want 64 bit counters. Userspace can't use it because it 
-can't control where counters are placed to make sure they're adjacent.
+Remove the incorrect lockdep condition since the rwsem provides
+sufficient protection for the list traversal.
 
-> [snip]
->> diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
->> index bb3fa8a33496..7f0eaa702048 100644
->> --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
->> +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
->> @@ -46,3 +46,4 @@
->>   0x00000000500f0000,v1,ampere/emag,core
->>   0x00000000c00fac30,v1,ampere/ampereone,core
->>   0x00000000c00fac40,v1,ampere/ampereonex,core
->> +0x000000004e0f0100,v1,nvidia/t410,core
->> diff --git a/tools/perf/pmu-events/arch/arm64/nvidia/t410/branch.json b/tools/perf/pmu-events/arch/arm64/nvidia/t410/branch.json
->> new file mode 100644
->> index 000000000000..532bc59dc573
->> --- /dev/null
->> +++ b/tools/perf/pmu-events/arch/arm64/nvidia/t410/branch.json
->> @@ -0,0 +1,45 @@
->> +[
->> +    {
->> +        "ArchStdEvent": "BR_MIS_PRED",
->> +        "PublicDescription": "The Event counts Branches which are speculatively executed and mis-predicted."
-> 
-> nit: The capitalization on Event and Branches, as well as other words,
-> is a little unusual.
-> 
+Cc: stable@vger.kernel.org
+Fixes: 87195a1ee332a ("uprobes: switch to RCU Tasks Trace flavor for better performance")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ kernel/events/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If there's nothing specific to this CPU then the public description 
-could be left out entierly. The common strings already say the same 
-thing as this:
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index d546d32390a81..726d13b375f3d 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1138,7 +1138,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
+ 	bool ret = false;
+ 
+ 	down_read(&uprobe->consumer_rwsem);
+-	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
++	list_for_each_entry(uc, &uprobe->consumers, cons_node) {
+ 		ret = consumer_filter(uc, mm);
+ 		if (ret)
+ 			break;
 
-     {
-         "PublicDescription": "Mispredicted or not predicted branch
-                               speculatively executed",
-         "EventCode": "0x10",
-         "EventName": "BR_MIS_PRED",
-         "BriefDescription": "Mispredicted or not predicted branch
-                              speculatively executed"
-     },
+---
+base-commit: 1f97d9dcf53649c41c33227b345a36902cbb08ad
+change-id: 20260128-uprobe_rcu-e21867ab4c1b
 
-
-> [snip]
->> diff --git a/tools/perf/pmu-events/arch/arm64/nvidia/t410/metrics.json b/tools/perf/pmu-events/arch/arm64/nvidia/t410/metrics.json
->> new file mode 100644
->> index 000000000000..18c2fd58ee9e
->> --- /dev/null
->> +++ b/tools/perf/pmu-events/arch/arm64/nvidia/t410/metrics.json
->> @@ -0,0 +1,722 @@
->> +[
->> +    {
->> +        "MetricName": "backend_bound",
->> +        "MetricExpr": "100 * (STALL_SLOT_BACKEND / CPU_SLOT)",
->> +        "BriefDescription": "This metric is the percentage of total slots that were stalled due to resource constraints in the backend of the processor.",
->> +        "ScaleUnit": "1percent of slots",
->> +        "MetricGroup": "TopdownL1"
-> 
-> Note, on x86 we place TopdownL1 in the Default metric group so it is
-> shown by `perf stat` when it isn't given events or metrics to compute.
-> Perhaps you want to do something similar?
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json?h=tmp.perf-tools-next#n116
-> 
-> Thanks,
-> Ian
-
-That's currently true for the Arm topdown metrics in sbsa.json, but we 
-probably don't actually want this because there aren't enough counters 
-for the perf stat defaults plus topdown and it results in multiplexing 
-and bad results.
-
-I was planning to change it but we also don't currently expose the 
-number of counters available either...
-
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
 
