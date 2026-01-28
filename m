@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504072459CF;
-	Wed, 28 Jan 2026 14:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8685024A078;
+	Wed, 28 Jan 2026 14:09:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769609367; cv=none; b=roQQ8ARKe15/45cyAT2JQystu8MwhDFIa9nyTVKD1+493vZoonl8CIrP21yJW+qiXR2XW8olSo4DE7WxIjxzLcIm6MoZYQ1SjSjcLWMdODpzmP6QriVnt+GxbdFHrUXcYygmroAy68MterZE727dTsqQBPTASn9k3yt05quLPno=
+	t=1769609378; cv=none; b=cHuyA7zSFzXlaD3bRyLZKAYgTNzyEjn0ZPdnxeec2H0SdE1ou1Bn/QkluBrWPX8CMGrwW5idpSWzH/eBe5QIXWzX0+TcUHPPsvmPf2+vqbhLAM14IhXYzR7ip5nzeRTkZ75yxeMmrw7xMdOK8k/iMYZF9sLiXrhTmN1ja2BsVUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769609367; c=relaxed/simple;
-	bh=IOA1nulwhlQiMwwdC60wxKYixclv7M0o/Z/A6GZogk0=;
+	s=arc-20240116; t=1769609378; c=relaxed/simple;
+	bh=XkgXf+BmWb1gm42X0hFSsPY2QiN+40F9WNZpKmrmhe0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SkuxmRDWmqZaAosTBVw/yZiHoUvBNtLolO5gsN+E40Cm2qSgK9Td1dKd0dRlmije7TdfhHjcGFWGLCJA/geQfZMTu5NyDNFpia3W8/Qig2ex8G9/uBbm5dQOqKbRqQ/z5xdfLWLSvjAPm646YEeXigYsi6ax8ykCFuAurs8Ouxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C3yv3qQC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=b1rMGzQgqTRC3CghKVLQ4nM2aNpzWyCApImOzzWYDqn4DgbpOqw8VUaHGCWCBl4y/RkynQxLDzQPAVwdLGfWAGD9/90/uLMRVgNz4gjs4gGFXBQG+5Ji+HVUiL4ORKHFuk+5zVx0d9jY/JvVtty5mxN/ZwhERGZN6XtLLdJebCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aw7nGGC4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C3yv3qQC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 404F2C4CEF1;
-	Wed, 28 Jan 2026 14:09:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aw7nGGC4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1704C4CEF1;
+	Wed, 28 Jan 2026 14:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769609367;
-	bh=IOA1nulwhlQiMwwdC60wxKYixclv7M0o/Z/A6GZogk0=;
+	s=k20201202; t=1769609378;
+	bh=XkgXf+BmWb1gm42X0hFSsPY2QiN+40F9WNZpKmrmhe0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C3yv3qQC9L30CI2ktH6zkw/TixbhdD/RVPjHJcTcvR5KJBL9dD3O9Op2dD5yxj0Ln
-	 4NVlxDGKqiueX4yiDxzdDTzvhvWNp7biKUoF6nJMXRzY8b4XCo0RrhPcw1+tq7ZXnC
-	 UMq9GIfF1Xk0NgocKMU5TVHjwITbPOvewY2qWGKkvS3h6E8I6aj7YL699TJUDtcUxx
-	 jeTlTCp6nzTpIOCSbSPVkLWf29LGznreUMDsWBXBMYgF+GUW8uS3Uv4hI4rhsAqGsF
-	 IUAqOLcNfVf5jT9G+nFD1dF8QhqkreQ6Ooiqj9jJI8+JldCVj6BeDN83lt0RkvFS9D
-	 C9C0cxoa5UjvQ==
+	b=Aw7nGGC4UNYoZWyQ4rHJ0MXmatEaqC7GyfGGFpfKE8wLg76B9QGK+vDmcJBpbKZ2x
+	 inKIHprlRK7XE3OeilW2BDXJN4d98FU+5BhvZRZUUt46YMV2pDBGOHiXcxcwvGfKnl
+	 dAEEjCSEIMXI1Wjj38ROLLJx9ML1pTZWTULYiyB7bZhdP0W8l6tlateYssFXE3Wm2e
+	 KaSvF9G9MfBETwXddybdfQvkvPshKMZmWkGKjuKCr7ZC6DiOX7Z1Kp/Xvdr4Oy3KU7
+	 FcLtj6vw6k4UUrDiQurFhA033BztFgWAMcyjN5S/qrXvzXX7WTyBfqPLo4MM6M/Uvh
+	 DXyqUM0YrQyDw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v6 02/11] x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
-Date: Wed, 28 Jan 2026 23:09:21 +0900
-Message-ID: <176960936178.182525.3819325751118979093.stgit@devnote2>
+Subject: [PATCH v6 03/11] selftests: tracing: Add a basic testcase for wprobe
+Date: Wed, 28 Jan 2026 23:09:32 +0900
+Message-ID: <176960937225.182525.10205736065393489911.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <176960933881.182525.11984731584313026309.stgit@devnote2>
 References: <176960933881.182525.11984731584313026309.stgit@devnote2>
@@ -62,60 +62,99 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add CONFIG_HAVE_POST_BREAKPOINT_HOOK which indicates the hw_breakpoint
-on that architecture fires after the target memory has been modified.
-This is currently x86 only behavior.
+Add 'add_remove_wprobe.tc' testcase for testing wprobe event that
+tests adding and removing operations of the wprobe event.
+
+Link: https://lore.kernel.org/all/175859026716.374439.14852239332989324292.stgit@devnote2/
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- arch/Kconfig         |   10 ++++++++++
- arch/x86/Kconfig     |    1 +
- kernel/trace/Kconfig |    1 +
- 3 files changed, 12 insertions(+)
+ tools/testing/selftests/ftrace/config              |    1 
+ .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   68 ++++++++++++++++++++
+ 2 files changed, 69 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 31220f512b16..64adda21c5f6 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -453,6 +453,16 @@ config HAVE_MIXED_BREAKPOINTS_REGS
- 	  Select this option if your arch implements breakpoints under the
- 	  latter fashion.
- 
-+config HAVE_POST_BREAKPOINT_HOOK
-+	bool
-+	depends on HAVE_HW_BREAKPOINT
-+	help
-+	  Depending on the arch implementation of hardware breakpoints,
-+	  some of them provide breakpoint hook after the target memory
-+	  is modified.
-+	  Select this option if your arch implements breakpoints overflow
-+	  handler hooks after the target memory is modified.
+diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
+index 544de0db5f58..d2f503722020 100644
+--- a/tools/testing/selftests/ftrace/config
++++ b/tools/testing/selftests/ftrace/config
+@@ -27,3 +27,4 @@ CONFIG_STACK_TRACER=y
+ CONFIG_TRACER_SNAPSHOT=y
+ CONFIG_UPROBES=y
+ CONFIG_UPROBE_EVENTS=y
++CONFIG_WPROBE_EVENTS=y
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+new file mode 100644
+index 000000000000..20774c7f69f8
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+@@ -0,0 +1,68 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Generic dynamic event - add/remove wprobe events
++# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README
 +
- config HAVE_USER_RETURN_NOTIFIER
- 	bool
- 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 80527299f859..755fd3bd4334 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -246,6 +246,7 @@ config X86
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_GCC_PLUGINS
- 	select HAVE_HW_BREAKPOINT
-+	select HAVE_POST_BREAKPOINT_HOOK
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_IRQ_EXIT_ON_IRQ_STACK	if X86_64
- 	select HAVE_IRQ_TIME_ACCOUNTING
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index e09494c09cd5..087a27b56eb1 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -851,6 +851,7 @@ config WPROBE_EVENTS
- 	bool "Enable wprobe-based dynamic events"
- 	depends on TRACING
- 	depends on HAVE_HW_BREAKPOINT
-+	depends on HAVE_POST_BREAKPOINT_HOOK
- 	select PROBE_EVENTS
- 	select DYNAMIC_EVENTS
- 	help
++echo 0 > events/enable
++echo > dynamic_events
++
++# Use jiffies as a variable that is frequently written to.
++TARGET=jiffies
++
++echo "w:my_wprobe w@$TARGET" >> dynamic_events
++
++grep -q my_wprobe dynamic_events
++if [ $? -ne 0 ]; then
++    echo "Failed to create wprobe event"
++    exit_fail
++fi
++
++test -d events/wprobes/my_wprobe
++if [ $? -ne 0 ]; then
++    echo "Failed to create wprobe event directory"
++    exit_fail
++fi
++
++echo 1 > events/wprobes/my_wprobe/enable
++
++# Check if the event is enabled
++cat events/wprobes/my_wprobe/enable | grep -q 1
++if [ $? -ne 0 ]; then
++    echo "Failed to enable wprobe event"
++    exit_fail
++fi
++
++# Let some time pass to trigger the breakpoint
++sleep 1
++
++# Check if we got any trace output
++if !grep -q my_wprobe trace; then
++    echo "wprobe event was not triggered"
++fi
++
++echo 0 > events/wprobes/my_wprobe/enable
++
++# Check if the event is disabled
++cat events/wprobes/my_wprobe/enable | grep -q 0
++if [ $? -ne 0 ]; then
++    echo "Failed to disable wprobe event"
++    exit_fail
++fi
++
++echo "-:my_wprobe" >> dynamic_events
++
++! grep -q my_wprobe dynamic_events
++if [ $? -ne 0 ]; then
++    echo "Failed to remove wprobe event"
++    exit_fail
++fi
++
++! test -d events/wprobes/my_wprobe
++if [ $? -ne 0 ]; then
++    echo "Failed to remove wprobe event directory"
++    exit_fail
++fi
++
++clear_trace
++
++exit 0
 
