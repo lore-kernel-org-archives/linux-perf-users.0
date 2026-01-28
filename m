@@ -1,131 +1,142 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113622737E0;
-	Wed, 28 Jan 2026 18:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769626590; cv=none; b=FmY0UDCWd9dSW8Q4i/1QAGMm8E5SXLrLYPE0B1i4d5WNMJlfCHb2y3R96SBFWe9sqZ4iGKUPuDNfnjU76YppgnGovGY1l8js+1SufDaYQMbF688cCv5hCe0Eg27fXwqRujbN2MQNNsCuL8lX2ELVvTvwyFvK0Xc05kpM0CCwLRQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769626590; c=relaxed/simple;
-	bh=JQ6oAOMrOWrgsxXhHdDHSefRhwRr44NnCHveM5HrUtY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=c4C6Hm6MjJ0MrjB0moMCAZ7Ir+JpWc/DhKT7nnkcT0keN4iJVpvp3JSRUQSq1eoS2m11hYbsEe0vVz018nnJTmWbhzmq9jzAs3HvbOj5qDE/efUEMEQYUZllHh5f96Yy9uMP1jbuZNlfPeb32Cbe+uRgO+it4S5XMYLYShZGIKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=GJGkJQYm; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B8F371068
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Jan 2026 18:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769626773; cv=pass; b=k8HRQpvAlvZQwCDFBuQ3oYwGhhLbcvBzsH5W4QlBpOlAJRSu9IAi0lC4RH+a0NzFNV65v/pu2ZRx00n6+7SKCxTJpEu//3FZBWDnW18quzbpVOAFEQRZKMbQQ4364wukWlRA+OQXZuVgBdSynkQcM4B2UB/HHabV1jTaxtObZ+0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769626773; c=relaxed/simple;
+	bh=ZUuhuB/0J2fpvmMoXKZsjO3MnD0BmMp/y5PlorPBH+o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZJoQJKxw/kmpWxz4z4x0vvVVYo+wIinPnGV0ZC9lhFflR+XWW/3qVyKbYNk7yvPfBwOrN8eBbM6w74BGN9akXRWeKVWU8X35Y/GqKOJyDAEpkyciou6zAdMYxXzyeYo6WQDO5IwmO0EOEf70/12orOEAfaOu1UHKVvcUyqoT8yk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nTqFHXD1; arc=pass smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="GJGkJQYm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
-	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
-	bh=gQch948IyA92V6h0BzqtNv/cqMWX5k0kFZ5KJwnzom4=; b=GJGkJQYmfGdEWblFdVo1dSx3js
-	JimX3mckTI69QcFWJsK3YOizzVgE05r4EvllQFNWP2QY+8nuWX89m2Vd1RyKBajkYrGCQUujVPcFT
-	DcbpxCaRbqMtm6/m3zBtIuDF5NivczHcxg3F7KeDX1M1P5BpObHOLNyJHBgbzln5CpKo/SRtInlS8
-	WFVPPNv1h7T+PmHJGOSoh3kz7aBTdWTcke7fWhDx27h3VYUfR566zHX8wcMuDDvItzflSl9GqZjxn
-	MgLY2KWPqQTu+sUzFok1yAcGhDW6G9NeCV5ebX8B0mD7pQ3L6gTTfmzGAQkNC1TTEkr7VopEif1sj
-	scKLFLBA==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1vlAi4-000NHU-05; Wed, 28 Jan 2026 18:56:13 +0000
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 28 Jan 2026 10:16:11 -0800
-Subject: [PATCH v2] uprobes: fix incorrect lockdep condition in
- filter_chain()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nTqFHXD1"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-34c363eb612so78478a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Jan 2026 10:59:32 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769626771; cv=none;
+        d=google.com; s=arc-20240605;
+        b=MOPBVNdHzYWbAK4TSL+FIafoSR3Mxr5p3vMS25h7hae1NyR5mpMYtkrfDvAe7Ugl1P
+         c9Yoo8IpxC2Xg9Lub5tAcpmGbEr/rEqa7dS1HJL5ltyfILkm0A9qcJKOXy++4sv4Qy5r
+         OzMSI+GQDslzU1Sx8VK6MvmHBtop0i5Z3VwomeAqRJnyqEhAOBizTc/a3ZMlAPbPx7Cg
+         ziuVgqOCoTUcVkq/NjsOBjSr715k4187gdWtB2Qy7mEKf79ge0/84zBDQIPgntZLoHx0
+         XFYECI5IBNG+CRASpNicy2GEbiyKIVcCQk6EqiqqvWRzGWM1vkvc3NvygDsVMSHj3cy9
+         4tHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ZUuhuB/0J2fpvmMoXKZsjO3MnD0BmMp/y5PlorPBH+o=;
+        fh=V/x2ufdsr4wYb1mU0qnkhinAHVBg9mfNtOi2lqEQryQ=;
+        b=Wk0+cg8zWzXgRtiVxr/jkbritOE2R9gCK3MggTt4NcD+1zE4tkraFNcWoaRZVZau7S
+         ABLOsF0ZrivP1Ood1nMvPIJll9PA5fEKcO3ECk17wzwkiUU4eiCdO5bLRiFxHE3QRvZk
+         k6bu/XS2Y2A9NC4oAuq1JzkeozRfqalJ5rWsfowOKzv6Ln/jywZO7CwPPWuNKohJV96R
+         snjOj1dLBQwuFJb2aQ3Qwuqgmhufhh37cIl7M9uaOiNTiBYbVAsAZ9P0td4Au5iGJGsk
+         sFPXPvy0OsFVYAL3BNYU34GSp5ux8ZhPKrCXnMRt7CCI828c1LradjQH/ZxNqP+PfG2i
+         ppRA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769626771; x=1770231571; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZUuhuB/0J2fpvmMoXKZsjO3MnD0BmMp/y5PlorPBH+o=;
+        b=nTqFHXD1cRx5d/aaLdS0n+I1BvN+k0KWXXGjtiu4Nz9crenqITcJXU92RHD7O/xilG
+         K9ku6egzSdptIgiDu+shAxgUM7taeGpvXyMLHhyjlcv4Upu7YaOItfFHg8cGd0ui4Nl6
+         B0oGDZYf0sBi3MMKtJ19qxlmAhWwmGZg5et95P+86KK0lPdR/bLMi3uQz9A2EgPLKbqt
+         TGy462kiLSPd28Gzdj7dYX8gR3RkPNlyZ5+lTT0ma3QJcXqgLFRSJH0tfOK3YFd5ECvI
+         y31Lg0srioe1ngh0Wz66k2duZxSwZChbVUZQOdTmNwH/HZl3H51aLiaKakAQ3clGgtxT
+         4xIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769626771; x=1770231571;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZUuhuB/0J2fpvmMoXKZsjO3MnD0BmMp/y5PlorPBH+o=;
+        b=aC+YHhsnXBBFxcBV+1lB2NKewanyiHpgtG6HpbvyvaGlfOgm5r5Aa2nTWHXZkoZo1C
+         rfzHhggRq13aqQIBh35iuK3WQQQeykghNN9m4DuLzmN1WixeUk61F+ySerDcw09V0K+8
+         MCjlDD+R4qniknMaJFl/j/2vNV7IV7v52MpGLD3cWDkLXezSO0taVsHR/CHu2UC9ob9o
+         7JLRVG4bJeKEl+3KBz5yZT1RuOEi59kiMM1wkKQXZh/BUomvLRPBBPlFTjXid0oNIAAT
+         EiGmWz2FfWVjJqH302dVLlN6q0K/qv6E5sxsTWaS2p9RpPKXpp7U6teE8/FLt+q/MZO4
+         apxA==
+X-Forwarded-Encrypted: i=1; AJvYcCXh4ouZ2/NGzb+feLXxniYqHHxIKvXeVp3q5E3xQTJ7pBQUyZePwGGTGXoJtUbJi3HFV4QZFi0UCYqlDk3U9rng@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqWHoTPClRRJLdwTAXi6UEx639JJUWzoMEj8Bb0PPiHqIdftj/
+	trMJgdC1egC9Spx1yIKYN3GNHeQhkNHXXaW4nVCdpN/uCyEORqaMfN7apCtgo+teVS073hHO3SB
+	rKwmORpthyox2KcWxQIBFcM8y8kZqaCg=
+X-Gm-Gg: AZuq6aKQNrMN2DVn2vXTy9Tz0NCuAiNwEblp5g16FQRO331yGygiirATwnnAcBWwB8L
+	g1V82ZMy6WjaLBgyNdBqYb0FKFIRM6M19Rwql9m/pSn09HtmruXhKxUG2FubzfJmYpAQv76riQM
+	UKPiUgOW622be0PnHp2Mod9m/Z9j9EiBbQxx42un5/zmrUV7hM3tEPgIUdhZ2FbunStxi7Ugm+o
+	xmL9HfNsF0BUBZm8cc5Xks9pnYtjwVQzj2P9fSIGeq+4Qqm+whCgdRO6aaiQq+QbTZa6zL+AsYR
+	4THHVukmG69MHDRgSEXdQA==
+X-Received: by 2002:a17:90b:3c88:b0:340:ac7c:6387 with SMTP id
+ 98e67ed59e1d1-353fecc6756mr6041046a91.7.1769626771524; Wed, 28 Jan 2026
+ 10:59:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260128-uprobe_rcu-v2-1-994ea6d32730@debian.org>
-X-B4-Tracking: v=1; b=H4sIAGtSemkC/23NywqDMBCF4VcJszbFiRIvK9+jSDFxqtOFkYlKi
- /juRbvt8sDPd3aIJEwRarWD0MaRwwS1MokCP3bTQJp7qBWY1NgUTanXWYKjh/hVk8HSFp3LPTp
- IFMxCT35f2L397bi6F/nlFM5i5LgE+VxvG57dX3hDjbrPMUNb2KyoqqYnx910CzJAexzHF/aA7
- g63AAAA
-X-Change-ID: 20260128-uprobe_rcu-e21867ab4c1b
-To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, kernel-team@meta.com, 
- stable@vger.kernel.org, Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-f4305
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1757; i=leitao@debian.org;
- h=from:subject:message-id; bh=JQ6oAOMrOWrgsxXhHdDHSefRhwRr44NnCHveM5HrUtY=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpelvHWMWjX6l5l5feVpQ3ElIS/APObRyOLPum7
- y++fBZELCCJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaXpbxwAKCRA1o5Of/Hh3
- bVboD/9SvqYw73jXei3fdACOZqB9zgjK25WzACp/I0D+Ybu9luAFdziZxivizmp9P+nNMxn6bsx
- 1Iqil8ZHPAvsUqJ2JrQKLr/9rmBbcma2h7AXMSMhcjPCLMrUy/+YeOKRKvW2LDWIX0v+VAzJJCh
- krEXEP2r76NqVnv5jTOY/ljDcr4o2DQARnONbmN4a8AokDL6WQXJFiAHJuzzo4Lxb2sVMJYSShV
- ueDS2sLjhuCZYzjzOURNkzLKT//glryvYluC6SROIPZPBTZpGGxKhOBqyBuY1dKyX/HMDdnHu7Z
- +p/IQ3rNYbFEft8qad0U352Nf+WpJy5naltKZP793UVHvZeA9ND4j1mp9jp9djHfwEmecQbdkIa
- gY9takeUnZKMKTtJ2gfLQL/vH6FtlpSEq4GWiBnwqddaBmLx1TZI9xy1VCvjdNu6FsHA9Gemgme
- u4DSx+PzmQipC5qcom2PyHfjfjQqxMURCXeM/gOl34X8kQAFiTH8zKpwoyUcUBLgr2DrDCuYezZ
- Agq5jC8zOixFFD+5qfcsqPUJAo/wjWgA4kAiMUGem8lz3MaFjTrEBi5vLSBR+odf7V0Zry/2q4a
- Hhk8J7Yg++6kcJ01JbxSOQywyYXif7OXMNWNx4WF2O6EKI/H+3EbD6EOWtTi1LLc9+FtmilIgJY
- MWZqdUnT2+PnK/A==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
-X-Debian-User: leitao
+References: <20260126074331.815684-1-chen.dylane@linux.dev>
+ <20260126074331.815684-2-chen.dylane@linux.dev> <20260128085945.GF3372621@noisy.programming.kicks-ass.net>
+ <00fd7c67-dffa-4647-8370-59a195a41deb@linux.dev>
+In-Reply-To: <00fd7c67-dffa-4647-8370-59a195a41deb@linux.dev>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 28 Jan 2026 10:59:18 -0800
+X-Gm-Features: AZwV_QjkUNRJR2Sau_L0ou-dN1plaIysd0UYjWytfNzLKLYwjuh8FIQT8Px8kog
+Message-ID: <CAEf4BzY5tQYSnn4Jwg+cwypnwG6BLLOu6e6=f938d33eSCDObg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v8 1/3] perf: Add rctx in perf_callchain_entry
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, song@kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The list_for_each_entry_rcu() in filter_chain() uses
-rcu_read_lock_trace_held() as the lockdep condition, but the function
-holds consumer_rwsem, not the RCU trace lock.
+On Wed, Jan 28, 2026 at 8:53=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wr=
+ote:
+>
+> =E5=9C=A8 2026/1/28 16:59, Peter Zijlstra =E5=86=99=E9=81=93:
+> > On Mon, Jan 26, 2026 at 03:43:29PM +0800, Tao Chen wrote:
+> >> Record rctx inside the perf_callchain_entry itself, when callers of
+> >> get_callchain_entry no longer care about the assignment of rctx, and
+> >> will be used in the next patch.
+> >
+> > Sorry, what?
+> >
+> > The recursion context is very much about the caller, and very much not
+> > about the data. This just doesn't make sense.
+>
+> Well, Andrii, it seems we have to go back to the original way.
 
-This gives me the following output when running with some locking debug
-option enabled:
+Huh, why? Peter is confused by your wording, he didn't say that what
+you are doing is broken.
 
-  kernel/events/uprobes.c:1141 RCU-list traversed in non-reader section!!
-    filter_chain
-    register_for_each_vma
-    uprobe_unregister_nosync
-    __probe_event_disable
+The point is to couple rctx with the exact perf_callchain_entry
+returned to the caller in that recursion context. There is no
+contradiction.
 
-Remove the incorrect lockdep condition since the rwsem provides
-sufficient protection for the list traversal.
+It's purely about simplifying the interface. While previously the
+caller would have to juggle perf_callchain_entry and rctx separately
+(but still ensure that entry and rctx do match each other when calling
+put_callchain_entry), now it's more convenient and less error-prone
+because returned entry will record rctx it was retrieved with.
 
-Cc: stable@vger.kernel.org
-Fixes: cc01bd044e6a ("uprobes: travers uprobe's consumer list locklessly under SRCU protection")
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
-Changes in v2:
-- updated the "fixes" tag (Oleg)
-- Link to v1: https://patch.msgid.link/20260128-uprobe_rcu-v1-1-d41316763799@debian.org
----
- kernel/events/uprobes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That perf_callchain_entry should not be reused by anyone else between
+successful get_callchain_entry and put_callchain_entry, so there is no
+problem here.
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index d546d32390a81..726d13b375f3d 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1138,7 +1138,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
- 	bool ret = false;
- 
- 	down_read(&uprobe->consumer_rwsem);
--	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
-+	list_for_each_entry(uc, &uprobe->consumers, cons_node) {
- 		ret = consumer_filter(uc, mm);
- 		if (ret)
- 			break;
-
----
-base-commit: 1f97d9dcf53649c41c33227b345a36902cbb08ad
-change-id: 20260128-uprobe_rcu-e21867ab4c1b
-
-Best regards,
---  
-Breno Leitao <leitao@debian.org>
-
+>
+> --
+> Best Regards
+> Tao Chen
