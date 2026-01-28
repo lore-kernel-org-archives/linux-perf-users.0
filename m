@@ -1,63 +1,63 @@
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1530A2DC32A
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Jan 2026 03:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074CF32BF47
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Jan 2026 03:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769572372; cv=none; b=Lz1x/p7V/PrRuK8iLKAniOI4MRYDZ16GxReWd6N63SeAozcavVGZF3Mz7bqCsNwpcfkZsnyQ/KAkQCshQOTGiyo1xL2oxWHLoEbOQdthKVepVtowhnI4WTxUwdp/zhheQMGtqAyI/CFxj8LV492GkmdDzkT6cCVUruTBXmXpiqI=
+	t=1769572518; cv=none; b=J9wCEkmdVmbPUgciLuf9JwfTD3zBySY99Cb6f/Sw1pt30KjKoMoQlf4Z86w+2qMqAOCjI/9n+ZbJo533kWMmrvrwUlTcvKX4O42rwuW+/MTG+e2etQG2ixokEAuwWfgzGUaTgNUxnBSioALFEStMezULy6kGSKJ9dqqlcp5Sxq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769572372; c=relaxed/simple;
-	bh=jSdlqSXMehB9BbGIf+CvOfSjGhjSiz8lASujmMLi4AQ=;
+	s=arc-20240116; t=1769572518; c=relaxed/simple;
+	bh=5XHkihF9gAuzs5H0t3ZJTPCDGmTEqi1qzaU/bcuplUY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BFH5MaSt/hVmZcKOOlKL96qOVTTBDG4bYwJ642uYbPfcPSQ3xqCqse9P2Y/CaTVEIgDwJ3yYPfiVG1tOW/rj257hOm2jfmeZZ7u7zDutJfaX026Ef446Ym968ypagbgsbEm4VSZQruFXSAy4g+xUBlj1wvaw8+4gwitGWWqohwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WN9XXBY6; arc=none smtp.client-ip=209.85.210.195
+	 MIME-Version; b=Ue2H1jU5eAft0cDYSuOtQOG7Ksp92MvRjYaW5m8FAoPz6byOeZIJ5J9UUkfAHZBWqXOloA0XlOoQ6Tj+OyFdqNOAgiENUI9tiuxmci9Ed1xe5+F5AI4fY1aVbYqMCOy0/gbnamxTF9GVSndO7b3KDF40HEKOZtH4D0ep6BG2WxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bngtXuII; arc=none smtp.client-ip=209.85.215.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WN9XXBY6"
-Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-8230f2140beso235732b3a.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 19:52:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bngtXuII"
+Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-c5e051a47ddso3960736a12.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Jan 2026 19:55:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769572370; x=1770177170; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1769572516; x=1770177316; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vzjZmQg+KemvQlHGb9aPeU+IfGIuMW24Vm0tVU7jCyw=;
-        b=WN9XXBY6d63jHWm2yhojEr4VLCyzBdgYCDNdnEnrH06Mj6s2St4lq9tqGd+7/7L6+9
-         otH7YqbcLYg4W0L/uYuMk8mxsCWW4qrTOI6zDB4M43818AT2+cHDmc9SJilvX/mED3Ga
-         04OSaxJMkg1Utyxkmfz0phi+fN27GBpwtaklnvMPfofOLnThrILliBuRIEpU87PLWVi0
-         GLQRobYReVvYG1nx+3ddwNZA+djarlfViJVQLVqvuUhFMCx4P3a5tOCncLM5mhmnJB1o
-         b486NtcIPFDViYbCryE8E89fjQm7B7XMR+dHbDLG99NQJuIkFzItGngB5DQoKYZH7fGZ
-         052w==
+        bh=DtNlArvxgYAFVn81Dj8mmoJZHV823pAprWaDRjsr45Q=;
+        b=bngtXuIIA3LQryQEWQRGW4OKB0DWFzgjmisfQ55hP6CPCQpSgNhRSLQ2MaEuFp4NLG
+         X1ekpXi4YKAUf+LfkoNAWjZYlsVqMVAyeTvgjmFLFGIz+Uc9cLHgz1O2kKYwAdlZGge2
+         RZbpaaL8B2KzAOKhyXfMtgj+diwlWLfqICICf2BDHDXl+BfgZBM8KwSOewSfS/REBp5W
+         88V8d2p3iK0KQK3oNGRlsfZ2A0Ovm5WBwxlOYUiS5DkItcQ4a+tNYlepaQesVgPJIwHu
+         ynu5Y/FkJMQaHUYvsaiWJIUVB1M156gK6U+uLdqsfgAkTDFDsAEQbiVJlXk2nJU/WpnZ
+         P1fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769572370; x=1770177170;
+        d=1e100.net; s=20230601; t=1769572516; x=1770177316;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=vzjZmQg+KemvQlHGb9aPeU+IfGIuMW24Vm0tVU7jCyw=;
-        b=VqScIjSvQVrAz6iFNZn4H0zRYbUjogFjR1lQ7gWCMBeO5vlsvLIoKUc/k636OcbeH6
-         KcSmqabSswtc6jCLTYRTTx9m0MWnKyzxO2UzBddkKUKFpYlsZBFWArphkELKEmjY6GnE
-         8/AvOx3L5ejExGu1zFyKpaM458htHBLjp/oyI0EjCO8PX3G96aTAYHHUPDz3Z2/o/aNc
-         aUHwcTC6O3+tAErHV1c82Jr3o1NU8bdIbo2RNVWsugdVBfHGTuCEGGzAkooQB8RJXeL2
-         XDevKL7Eqxf5MAg7rqPQf33q3XymMlD6eOYHAg/eubO/KM8Qgzg9DXI7MtEe9sh835i4
-         dIzg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPD666nV5zY+T7AtBYeVklgaFIKXe5ndhr2v+fpaOgFLoJuK8AI3HQfi/ryh5H3YPpsynvDWBh6Pe0H16IOF+F@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJCejqROMYSmCzcydRjqXjfraX2c4J/e9UgbbR+G7/QYROAbz2
-	Gf3ILvCnUORZxSYI+gqCTxlKeeNKCHp42El1xJ+CGQcbbJKV5sbArTSi
-X-Gm-Gg: AZuq6aIOdAUnezfzZdXsakKhDGVqs2gLCp0Z5qelvhTfN+voTXZ613RyrJgo5KKRTbZ
-	mr5yk5DXn0WsFg0z1t5mmSYwkB+70BtDYufDtcQ4EoZIq/RWl9Ve5+/eAkVSZmb9JYiF9KjN+OW
-	qYlV8JY7oEIP7sF/ZAnyK4D4Y4s++5pz2beZAS7byNh5lkea1YfNnIFjKzrHNwvCTMYW8T8uwJ3
-	iMlh7zAXFKD6vqQvqFp9L71EtuwQD+paBk1j3hQ1JQXjKSkp5SK/WMTlqODz/cS280vSO0NcUkM
-	IOt31o6ANaafl48RpyOSy61nfoqTZFaYxl1nCzGeLSGP3oCH5q4fKKtU2YS1kKuyHMu9pAv+D66
-	CygDizIU/+9fozVdE9Fs20SRRpZwgC3PF088nn9GzBqA2Y7oSboiyn9gaB9G1ZtRByidzK0aikl
-	KIEXgg/sDFd/thdIaFMjVPH5x0xwp7vXlmHCWqwg==
-X-Received: by 2002:a05:6a21:2d4a:b0:35d:8881:e69b with SMTP id adf61e73a8af0-38ec5e7b92bmr3895558637.18.1769572370480;
-        Tue, 27 Jan 2026 19:52:50 -0800 (PST)
+        bh=DtNlArvxgYAFVn81Dj8mmoJZHV823pAprWaDRjsr45Q=;
+        b=GOBZ/qHVeaQtkcF0OAI9MLffKMnuoL0ITtQdAENQCpLUdNmUyy3bEKNtgJc87arwMI
+         EpA+PipLyJBdTSv+rfkC4es/IprUxE+20wEpl8D/Q6LjF0Qa+b743R7w1DJwJ+4ydzWF
+         AqSVB+9ueS0yR+Zjd1vp3NxZ6E0wBTcFYAF+gS0WRpNb3kYg89kszGTx5+z25awysDxk
+         PeMF0K1mXGvCOFTwszUC5nRHYcHju/PIDRBqZA9xhcA3iu62n93S9fkp768EQEo9DekC
+         ad60xGnqkMyvEHW/XsTw4QHjeLtAS0x1MGHI3KUnOHYKP+RyKahOM+vi4m3T4ghwvv1z
+         lLdg==
+X-Forwarded-Encrypted: i=1; AJvYcCWli49e/vWJ0bymHrxcEQNz5lrVLK9qA2YBbvIkkaeU98adIiCnz/mVOtjoP3muFStJOqHYswHxw9faCTFraWCn@vger.kernel.org
+X-Gm-Message-State: AOJu0YwngbCe+1Izg+WQ2rHHAPEfea9xDOBe04KCd4w2yaU0WFddaTPY
+	FPqVqtld+gBI2vIH3QaDC5BhYXjKi07tGn6wTqKDhqBkMuNVC9S5pvNO
+X-Gm-Gg: AZuq6aJC2DAqMp0l6ogk1l5hc/ATg3Vg4VJmewvjuWnI88SParf9GqitTGuMKSJ6StN
+	RIvyxZUkTxkRLuP66OWdH1fyzSeKdtK6b31OJGEqat07+HHbKyYC89oLRoJ7amHUXpAcLDdXjn+
+	Gw2yURUJ14wKpzNDKCPfNbreZL/jfUD6JXydgFi2mGiHWzMsjBMTzKJiYuIOuLGemTxdHl2TtM7
+	K8NpXHNSHJ+o0mqWCaz61KAE6SkvRqW/vNRBmZu66XwlKsUX79WH6mwFv5T4hLQ6RnnT5AOnJlT
+	ENIXyltdx2dWA8+1yvHEHQc659isWqgOsHRUu6H5GtH+UceWdhXV9+a+5fZyP4+3YrTdZ9J40q1
+	dgkpelXWfstytWLzSbGJg5ZjkGPoee+ZaSipyM71E0X+H6a4gunLP6dRYK4a/vUjgyhHOBhgequ
+	f0GezkOfIWmhhjH9SK+xEei2g32amYvpxj+NE+vg==
+X-Received: by 2002:a17:902:ce8c:b0:2a2:ecb6:55ac with SMTP id d9443c01a7336-2a870d4cca5mr40087085ad.7.1769572516282;
+        Tue, 27 Jan 2026 19:55:16 -0800 (PST)
 Received: from lima-ubuntu.hz.ali.com ([47.246.98.220])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c642a33566csm759883a12.21.2026.01.27.19.52.45
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a88b414066sm7649705ad.26.2026.01.27.19.55.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jan 2026 19:52:50 -0800 (PST)
+        Tue, 27 Jan 2026 19:55:15 -0800 (PST)
 From: Qing Wang <wangqing7171@gmail.com>
 To: syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com
 Cc: acme@kernel.org,
@@ -73,8 +73,8 @@ Cc: acme@kernel.org,
 	peterz@infradead.org,
 	syzkaller-bugs@googlegroups.com
 Subject: Re: [syzbot] [perf?] WARNING: suspicious RCU usage in get_callchain_entry
-Date: Wed, 28 Jan 2026 11:52:41 +0800
-Message-Id: <20260128035241.1839686-1-wangqing7171@gmail.com>
+Date: Wed, 28 Jan 2026 11:55:08 +0800
+Message-Id: <20260128035508.1840613-1-wangqing7171@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <000000000000fe324606174e1f9e@google.com>
 References: <000000000000fe324606174e1f9e@google.com>
@@ -89,26 +89,34 @@ Content-Transfer-Encoding: 8bit
 #syz test
 
 diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index da3d328f5c15..6e53c2d916cd 100644
+index da3d328f5c15..f97d4aa9d038 100644
 --- a/kernel/bpf/stackmap.c
 +++ b/kernel/bpf/stackmap.c
-@@ -460,8 +460,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+@@ -460,7 +460,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
  
  	max_depth = stack_map_calculate_max_depth(size, elem_size, flags);
  
 -	if (may_fault)
--		rcu_read_lock(); /* need RCU for perf's callchain below */
-+	rcu_read_lock(); /* need RCU for perf's callchain below */
++	if (!trace_in)
+ 		rcu_read_lock(); /* need RCU for perf's callchain below */
  
  	if (trace_in) {
- 		trace = trace_in;
-@@ -474,8 +473,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+@@ -474,7 +474,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
  	}
  
  	if (unlikely(!trace) || trace->nr < skip) {
 -		if (may_fault)
--			rcu_read_unlock();
-+		rcu_read_unlock();
++		if (!trace_in)
+ 			rcu_read_unlock();
  		goto err_fault;
  	}
+@@ -494,7 +494,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+ 	}
  
+ 	/* trace/ips should not be dereferenced after this point */
+-	if (may_fault)
++	if (!trace_in)
+ 		rcu_read_unlock();
+ 
+ 	if (user_build_id)
+
