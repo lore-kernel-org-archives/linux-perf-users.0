@@ -1,43 +1,33 @@
-Received: from sg-1-11.ptr.blmpb.com (sg-1-11.ptr.blmpb.com [118.26.132.11])
+Received: from sg-1-23.ptr.blmpb.com (sg-1-23.ptr.blmpb.com [118.26.132.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0F9377545
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 Jan 2026 06:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE4D37757E
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Jan 2026 06:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769666971; cv=none; b=QXlweOMxOY5FCblcmj+2pUOYk9DRLVbQ+WwkXxIaZn61ZZd8D+6xZA4L7g+OINPHHnVHU0MK8JFCIw7cfIs0OUYhATJU17z4SITjnh6ULvnqibKhIOP7Vv6Hxhw4p/JGoEm85zGBQ0Tmf/aHfZ87dWa78f3xfNBVBUruuuaeMQ8=
+	t=1769666976; cv=none; b=QAd8PuuV7vlFEvD8Z5szB5OlasHlRSop7o/VgQpJ7MMU1iDOnEZ4bR8gRWvWg0RUJoNivUrJQ6hUxVMn3ivrIIG1RtH2pR26VIau2knIUjAUliKmRdujkx6V8SHRKODundcamzrZA59NwcSdCQ652nYmoKX90mOiBiY/yX6PsWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769666971; c=relaxed/simple;
-	bh=nm4fMFeZjEGLN1Nxa+5Br+7EWnJNyqeW7DVkCweO7sc=;
-	h=In-Reply-To:Date:Message-Id:Content-Type:From:Subject:References:
-	 To:Cc:Mime-Version; b=Ue0yGtbHvEpNtBqJQK+wu87Y2FAAolP3Xp86LW9NJ7XehXmFjrKESWHCDgFOxwQywyTZf1A3YRBUnG+D9+9rsp/94+57cesLCRgQDxB1ns0SBC2iTodJn4yaUA3YPIGMya8IgyTLfAOydL0GB40MpgbUPRYMydRii4FsgJvMU7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=spacemit.com; spf=pass smtp.mailfrom=spacemit.com; dkim=pass (2048-bit key) header.d=spacemit.com header.i=@spacemit.com header.b=jgS4H0s+; arc=none smtp.client-ip=118.26.132.11
+	s=arc-20240116; t=1769666976; c=relaxed/simple;
+	bh=ame34v3QDEJt6sNYp0N81IgJpUEhk4J+e/D0tCMi9aE=;
+	h=From:In-Reply-To:To:Cc:Subject:Date:References:Content-Type:
+	 Message-Id:Mime-Version; b=O9AvCz8Lv4dMjafzn9XGVoiRTlY7cyunwSEwviraQ3JozEI0yLDB7AKtNlExAIYl4Igq3k2Qk3XSeH4AWScasaKDWzBU88kff/MqF2TkzuMYY24XzTjJoHC76VGvgP5Ky1mDSiPbzMouHkz4CNuKNzUkJAqWDpjqUXSUBS0M4qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=spacemit.com; spf=pass smtp.mailfrom=spacemit.com; dkim=pass (2048-bit key) header.d=spacemit.com header.i=@spacemit.com header.b=mo0ZdkzH; arc=none smtp.client-ip=118.26.132.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=spacemit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=spacemit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=spacemit.com header.i=@spacemit.com header.b="jgS4H0s+"
+	dkim=pass (2048-bit key) header.d=spacemit.com header.i=@spacemit.com header.b="mo0ZdkzH"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=feishu2303021642; d=spacemit.com; t=1769666960; h=from:subject:
+ s=feishu2303021642; d=spacemit.com; t=1769666968; h=from:subject:
  mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
  mime-version:in-reply-to:message-id;
- bh=3ZzioC5tfgK2XZtNHpLeHVEJ7KAWBR9O0yIXwBSvQsU=;
- b=jgS4H0s+3JMv0/9bSTBvPDYzxjHi1DLDRyP4tThcSiioD80AMvuv8hZ5pF7yRLVSnz03bS
- ZYpzRU4i4v7tdoVl9n6jcg1+UwTtKTKHH3+hiCMwN/tPbQDH9API1CLZqehLX+5G1E4gV0
- fGajb2dvxUOoe89rD2Q5UUtqHwLcDEORwxwExRigU6Ml3vX4pKULizBItqzwKr9CEPYHye
- 7Jmgh4A+HPfheSIQqqlPlOSMkL2zSv/xsk1N1tZTYZw6QPz87q2iQPP+PndpAyb0P+6CL4
- m9jr+K0Oboah1l3t/3HPCHw2BKoL4PPzkcVro1LgddT69DzbmUkMgcXRux+BRg==
-X-Lms-Return-Path: <lba+2697af98e+6efbca+vger.kernel.org+lv.zheng@spacemit.com>
-Received: from SurfaceBook2-B.localdomain ([122.224.183.70]) by smtp.feishu.cn with ESMTPS; Thu, 29 Jan 2026 14:09:17 +0800
-In-Reply-To: <cover.1769666438.git.lv.zheng@spacemit.com>
-Date: Thu, 29 Jan 2026 14:09:13 +0800
-X-Mailer: git-send-email 2.43.0
-Message-Id: <15209d7b8c5a5055f8944ab7261e440d70a18a03.1769666438.git.lv.zheng@spacemit.com>
-Content-Type: text/plain; charset=UTF-8
+ bh=fN+qdnRevCPtyecCCM4q5UaZqzoByBHEskLdtxlK7PY=;
+ b=mo0ZdkzHWfs/WPWqXo3TeWtPoygMF5OHFR5jGyFqg+CE2IBRJZ2ogwE9yG4Vb2qpsdnX0V
+ +0zzgqX/xYDDUTVWOHJQer5RpXs2iG/fKq/e3IX82rBI7wVZK3rh31gMwC+HPktrYvlMyT
+ Pl9KPnLhALv6wbYxbDaCKbhci+1ajhgWEMHlvbwe/iqrJLbpTdXl+XPIqNx1oDkV+ZvY5o
+ 095dNaDP/dUOt5LRjPpDuBArwhazLUdwvTXavfPNaDFPh6ZZ5ZoGs+tFXwcSIK7Sojq6Z0
+ ETjfq7Rs8HW7DGEZ6Foz6T6canVlo2Md+e+U5dOhhv+8jNuI4kqkL7HNn5Ar9g==
 From: "Lv Zheng" <lv.zheng@spacemit.com>
-Subject: [PATCH v1.1 4/7] dt-bindings: iommu: Add spacemit/t100 features
-Content-Transfer-Encoding: quoted-printable
-X-Original-From: Lv Zheng <lv.zheng@spacemit.com>
-References: <cover.1769562575.git.lv.zheng@spacemit.com> <cover.1769666438.git.lv.zheng@spacemit.com>
+In-Reply-To: <cover.1769666438.git.lv.zheng@spacemit.com>
 To: "Tomasz Jeznach" <tjeznach@rivosinc.com>, 
 	"Joerg Roedel" <joro@8bytes.org>, "Will Deacon" <will@kernel.org>, 
 	"Robin Murphy" <robin.murphy@arm.com>, "Rob Herring" <robh@kernel.org>, 
@@ -49,113 +39,173 @@ Cc: "Jingyu Li" <joey.li@spacemit.com>, "Lv Zheng" <lv.zheng@spacemit.com>,
 	"Zhijian Chen" <zhijian@spacemit.com>, <iommu@lists.linux.dev>, 
 	<linux-perf-users@vger.kernel.org>, <linux-riscv@lists.infradead.org>, 
 	<spacemit@lists.linux.dev>, <devicetree@vger.kernel.org>
+Subject: [PATCH v1.1 5/7] spacemit/t100: Add vendor event support for RISC-V IOMMU HPM
+X-Original-From: Lv Zheng <lv.zheng@spacemit.com>
+Date: Thu, 29 Jan 2026 14:09:21 +0800
+References: <cover.1769562575.git.lv.zheng@spacemit.com> <cover.1769666438.git.lv.zheng@spacemit.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Message-Id: <c6451de644e47fe37200aa7b945b5b2c29c863e4.1769666438.git.lv.zheng@spacemit.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+Received: from SurfaceBook2-B.localdomain ([122.224.183.70]) by smtp.feishu.cn with ESMTPS; Thu, 29 Jan 2026 14:09:24 +0800
+X-Lms-Return-Path: <lba+2697af996+677ef7+vger.kernel.org+lv.zheng@spacemit.com>
 
-Adds device tree bindings for SpacemiT T100 specific features.
-
-vendor-hpm-events: Allow vendor events to be customized in the device
-                   tree.
-global-filter: The feature saves silicon area by reducing filters to
-               one and use it as a global filter across all events.
-               This usually is sufficient for real applications.
+Adds mechanism to allow vendor events to be registered via device tree.
+This is useful to support SpacemiT T100 IOMMU where the maximum 128 event
+IDs should be supported by T100 IOATS.
 
 Signed-off-by: Lv Zheng <lv.zheng@spacemit.com>
 Signed-off-by: Jingyu Li <joey.li@spacemit.com>
 ---
- .../bindings/iommu/riscv,iommu.yaml           | 60 ++++++++++++++++++-
- 1 file changed, 59 insertions(+), 1 deletion(-)
+ drivers/iommu/riscv/iommu-bits.h |  2 +-
+ drivers/iommu/riscv/iommu-hpm.c  | 94 +++++++++++++++++++++++++++++++-
+ 2 files changed, 94 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml b/Doc=
-umentation/devicetree/bindings/iommu/riscv,iommu.yaml
-index d4838c3b3741..0378eef1f34e 100644
---- a/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
-@@ -57,17 +57,42 @@ properties:
+diff --git a/drivers/iommu/riscv/iommu-bits.h b/drivers/iommu/riscv/iommu-b=
+its.h
+index cc6bea064d8f..f1fbf3cc6ba5 100644
+--- a/drivers/iommu/riscv/iommu-bits.h
++++ b/drivers/iommu/riscv/iommu-bits.h
+@@ -251,7 +251,7 @@ enum riscv_iommu_hpmevent_id {
+ 	RISCV_IOMMU_HPMEVENT_PD_WALK    =3D 6,
+ 	RISCV_IOMMU_HPMEVENT_S_VS_WALKS =3D 7,
+ 	RISCV_IOMMU_HPMEVENT_G_WALKS    =3D 8,
+-	RISCV_IOMMU_HPMEVENT_MAX        =3D 9
++	RISCV_IOMMU_HPMEVENT_MAX        =3D 128
+ };
 =20
-   interrupts:
-     minItems: 1
--    maxItems: 4
-+    maxItems: 68
-     description:
-       Wired interrupt vectors available for RISC-V IOMMU to notify the
-       RISC-V HARTS. The cause to interrupt vector is software defined
-       using IVEC IOMMU register.
-+      Normally the number of interrupt vectors available is 4 for IOATS
-+      civ/fiv/pmiv/piv interrupts. But for SpacemiT distributed IOMMU,
-+      the number of interrupt vectors includes IOATC pmiv wired
-+      interrupts and the maximum number of IOATCs can be up to 64.
-+
-+  interrupt-names:
-+    minItems: 1
-+    maxItems: 68
+ #define RISCV_IOMMU_HPMEVENT_CYCLES	RISCV_IOMMU_HPMEVENT_INVALID
+diff --git a/drivers/iommu/riscv/iommu-hpm.c b/drivers/iommu/riscv/iommu-hp=
+m.c
+index 67827b4c1d26..b01d72dd056f 100644
+--- a/drivers/iommu/riscv/iommu-hpm.c
++++ b/drivers/iommu/riscv/iommu-hpm.c
+@@ -584,6 +584,81 @@ static void riscv_iommu_hpm_reset(struct riscv_iommu_h=
+pm *iommu_hpm)
+ 	riscv_iommu_hpm_interrupt_clear(iommu_hpm);
+ }
 =20
-   msi-parent: true
++static int riscv_iommu_hpm_init_vendor_events(struct riscv_iommu_hpm *iomm=
+u_hpm,
++					      struct attribute ***vendor_attrs)
++{
++	struct device *dev =3D iommu_hpm->iommu->dev;
++	struct device_node *np =3D dev->of_node;
++	struct perf_pmu_events_attr *vendor_event_attrs;
++	struct attribute **attrs;
++	const char *event_str;
++	int num_events, i, j;
++	char *event_copy, *colon, *event_name;
++	u32 event_id;
++
++	*vendor_attrs =3D NULL;
++
++	if (!np)
++		return 0;
++
++	num_events =3D of_property_count_strings(np, "vendor-hpm-events");
++	if (num_events <=3D 0)
++		return 0;
++
++	attrs =3D devm_kcalloc(dev, num_events + 1, sizeof(*attrs), GFP_KERNEL);
++	if (!attrs)
++		return -ENOMEM;
++	vendor_event_attrs =3D devm_kcalloc(dev, num_events,
++					  sizeof(*vendor_event_attrs),
++					  GFP_KERNEL);
++	if (!vendor_event_attrs)
++		return -ENOMEM;
++
++	/*
++	 * Parse vendor events from device tree.
++	 * Format: "event-name:0xNN" where NN is hex event ID
++	 */
++	j =3D 0;
++	for (i =3D 0; i < num_events; i++) {
++		if (of_property_read_string_index(np, "vendor,hpm-events",
++						  i, &event_str))
++			continue;
++
++		event_copy =3D devm_kstrdup(dev, event_str, GFP_KERNEL);
++		if (!event_copy) {
++			dev_warn(dev, "HPM: Failed to copy string for vendor event '%s'\n",
++				 event_str);
++			continue;
++		}
++		colon =3D strchr(event_copy, ':');
++		if (colon) {
++			*colon =3D '\0';
++			event_name =3D colon + 1;
++		} else
++			event_name =3D event_copy;
++		if (kstrtou32(event_copy, 0, &event_id))
++			continue;
++		if (event_id >=3D RISCV_IOMMU_HPMEVENT_MAX)
++			continue;
++
++		sysfs_attr_init(&vendor_event_attrs[j].attr.attr);
++		vendor_event_attrs[j].attr.attr.name =3D event_name;
++		vendor_event_attrs[j].attr.attr.mode =3D 0444;
++		vendor_event_attrs[j].attr.show =3D riscv_iommu_hpm_event_show;
++		vendor_event_attrs[j].id =3D event_id;
++		attrs[j] =3D &vendor_event_attrs[j].attr.attr;
++		set_bit(event_id, iommu_hpm->supported_events);
++		dev_info(dev, "HPM: Registered vendor event '%s' (0x%x)\n",
++			 event_name, event_id);
++		j++;
++	}
++
++	attrs[j] =3D NULL;
++	*vendor_attrs =3D attrs;
++
++	return j;
++}
++
+ static void riscv_iommu_hpm_set_standard_events(struct riscv_iommu_hpm *io=
+mmu_hpm)
+ {
+ 	/* Cycles counter is always supported */
+@@ -749,8 +824,10 @@ static void riscv_iommu_hpm_exit(void)
+ int riscv_iommu_add_hpm(struct riscv_iommu_device *iommu)
+ {
+ 	struct device *dev =3D iommu->dev;
++	struct attribute **vendor_attrs =3D NULL;
++	int num_vendor_events;
+ 	int irq;
+-	int rc;
++	int rc, i;
 =20
-   power-domains:
-     maxItems: 1
+ 	if (!FIELD_GET(RISCV_IOMMU_CAPABILITIES_HPM, iommu->caps)) {
+ 		dev_dbg(dev, "HPM: Not supported\n");
+@@ -773,6 +850,21 @@ int riscv_iommu_add_hpm(struct riscv_iommu_device *iom=
+mu)
+ 					   "riscv_iommu_hpm", -1);
+ 	if (rc < 0)
+ 		goto err_module;
++
++	num_vendor_events =3D riscv_iommu_hpm_init_vendor_events(&iommu->hpm,
++							       &vendor_attrs);
++	if (num_vendor_events > 0 && vendor_attrs) {
++		for (i =3D 0; i < num_vendor_events && vendor_attrs[i]; i++) {
++			rc =3D sysfs_add_file_to_group(&iommu->hpm.pmu.dev->kobj,
++						     vendor_attrs[i],
++						     "events");
++			if (rc)
++				dev_warn(dev,
++					 "HPM: Failed to create sysfs for vendor event '%s'\n",
++					 vendor_attrs[i]->name);
++		}
++	}
++
+ 	return 0;
 =20
-+  vendor-hpm-events:
-+    minItems: 1
-+    maxItems: 120
-+    description:
-+      Each item defines a vendor specific event using the format of
-+      "eventId[:eventName]", where the eventId is an integer filling the
-+      eventID field of the iohpmevt register and the eventName is an
-+      optional string used as the annotation of the event instead of the
-+      default name "eventId".
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+
-+  global-filter:
-+    type: boolean
-+    description:
-+      Indicate the filters programmed across iohpmevt registers are wired
-+      together in hardware as a global filter applied to all HPM events.
-+
- required:
-   - compatible
-   - reg
-@@ -145,3 +170,36 @@ examples:
-             };
-         };
-     };
-+
-+  - |+
-+    /* Example 5 (SpacemiT distributed IOMMU) */
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    iommu4: iommu@1bccd000 {
-+        compatible =3D "qemu,riscv-iommu", "riscv,iommu";
-+        reg =3D <0x1bccd000 0x1000>;
-+        interrupts =3D <58 IRQ_TYPE_LEVEL_HIGH>, <58 IRQ_TYPE_LEVEL_HIGH>,
-+                     <58 IRQ_TYPE_LEVEL_HIGH>, <58 IRQ_TYPE_LEVEL_HIGH>,
-+                     <62 IRQ_TYPE_LEVEL_HIGH>, <63 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names =3D "civ", "fiv", "ioats-pmiv", "piv",
-+                          "ioatc0-pmiv", "ioatc1-pmiv";
-+        interrupt-parent =3D <&saplic>;
-+        #iommu-cells =3D <0x01>;
-+        /* SpacemiT T100 features */
-+        global-filter;
-+        vendor-hpm-events =3D "0x10:pri_page_reqs",
-+                            "0x11:ptw_cache_reqs",
-+                            "0x12:dtw_cache_reqs",
-+                            "0x15:all_trans_reqs",
-+                            "0x20:dtw_cache_lkps",
-+                            "0x28:s1l0_ptw_cache_lkps",
-+                            "0x2A:s1l1_ptw_cache_lkps",
-+                            "0x2C:s1l2_ptw_cache_lkps",
-+                            "0x2E:s1l3_ptw_cache_lkps",
-+                            "0x30:s2l0_ptw_cache_lkps",
-+                            "0x32:s2l1_ptw_cache_lkps",
-+                            "0x34:s2l2_ptw_cache_lkps",
-+                            "0x36:s2l3_ptw_cache_lkps",
-+                            "0x38:mtlb_lkps",
-+                            "0x3A:utlb_lkps";
-+    };
+ err_module:
 --=20
 2.43.0
 
