@@ -1,62 +1,66 @@
-Received: from mail-vs1-f73.google.com (mail-vs1-f73.google.com [209.85.217.73])
+Received: from mail-ua1-f74.google.com (mail-ua1-f74.google.com [209.85.222.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7A6337BB5
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 Jan 2026 23:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57C2337BB5
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Jan 2026 23:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769729851; cv=none; b=UdfPLifOw+DxDhuDXp3ZgIT3L3mDZBP2Sc/hjTNG+vC2BeMGQcK2AYi7H2KiuZn56Rd2HFv0l0CEWJSDo1uUIX9QkzsRySrWqg+OijivTXy7p8DS+VbXdz95u0AZjaiyByj/rJMA4hPTBGXA+pkAL3m/04/cT63Jo+t92ulpQEs=
+	t=1769729881; cv=none; b=H1sjtgzITr6e92zAIW9VINiIR8z5Ql1Py4yEMiwWwqzRuUVBIEXzqWCA1lmRycPcfUEj7hlg51IEm6O5T2SnxtK+NtKvaMonRqcXYrbTg/qkLz5ETnNu8ZXQYq5EUl+VK5CHR5c3nOEdusQnFnz4+qwOm/hDSmJfFgH6T9VsT1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769729851; c=relaxed/simple;
-	bh=62qGoba01/4xKWg0SglqZtm4/p5doWh/TYXL8RIiyWM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=XqvszXIZsc39LlMk8KxA4KyXIHQ3bcXU39eBhQdeWMYaLb0LOxny3J6MEBWTRDWBdDzTaL/95jjASoxlXW6WhvR1S/Wc5ez+LFko/74Me1xGRd6eXS7MgdQ2ShltZVWAo0e2rQSUXTlRHkxSRYaBGIY6jraa+6RQIXz4C+cMvkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G3iQZIhn; arc=none smtp.client-ip=209.85.217.73
+	s=arc-20240116; t=1769729881; c=relaxed/simple;
+	bh=P2gomgDRGmJ4vLTkCMnRaUel1qN8UOZyfcbTRRVQbSk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=XzD1AovUtxSLvvDIlGZRY9g9ZEEZhLx7OGTZzO6dJWmv9LuwX+hgHC+8oMb9bYl4gDWVZ600GYNfX2VHP5lWt1qvZr0b9JImXrebxiJqYEJ8iM4iy4dfEJf6rmN27TLLthB5+gMbEH1qc5AgJLU56OF1LPiBQmN0ztl+EHTJpfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P4DLWFDz; arc=none smtp.client-ip=209.85.222.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G3iQZIhn"
-Received: by mail-vs1-f73.google.com with SMTP id ada2fe7eead31-5f8e0011662so1415592137.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Jan 2026 15:37:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P4DLWFDz"
+Received: by mail-ua1-f74.google.com with SMTP id a1e0cc1a2514c-9426773a207so5338968241.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Jan 2026 15:37:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769729849; x=1770334649; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HJBNjw3RNtSCw9MLJW2nzX+EmjmcAxr1O5/9KOr8e5k=;
-        b=G3iQZIhnJ0exA8Cp8Ozixv5hoq596uJI/UaG7GntX/8msFr6+ok6WF+8b7jQaG1Uu5
-         oTldMeBTxQq2874Q+n7BHzNcv6KyyJ4JoiMSnwWeGrHZYjXjyOBWo7+v+VxP+aBtBkzM
-         C1O/fHZ15kxenFBgzfp3I8iVT+R3lHESxjKGYMcL720BT8C0vBNxC/xlNuXTMykrodMl
-         5fCQv1F49b37++mn3CTYSeSapfaY0DNj/FmU8DG+MdKJ/+VlKuBbvkdZRbUBWY1+8TJo
-         Ym4C1fxP6phxXjJbDkTB+fPMzpB8EBwCQqS+OX6Cks/pjun10FGxshp4ySpG6NuBJ8Z6
-         sgow==
+        d=google.com; s=20230601; t=1769729879; x=1770334679; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9edmz9F0+Ueeg69+oBnQppllXkvN4AaYJE9iZBV8Nzc=;
+        b=P4DLWFDz/der70FqsWMufnP/AZ+FmsKeX5/kVMpGgOKFCsMoLEAAOeZ+rPxmlERKca
+         9vSIH4kHE51TrzoE8RN0IzrIuuUGojNDuZdnXAOttMwVLH01GUulZIFnsJ4pkg4F8mZ4
+         5fIVv/eYm/kbMhufI9sJGBKFThrObZKi7RnPQNaFRxtKPMlNwPKHdHpQ9c8oSr00IjDO
+         8PSLdvB5SBW7w9+ujkKXMfRpSs1FUTiZXaAoF7RoODAdGFrAxM9DNdPm+qDaXPa5LjnD
+         OpzNg25gIPdaWZZ0ZbirYNN/k9Kr9S1sVd/TX7cYB289J8oz8ynP1YUBxyjl4LEfdf6g
+         kg8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769729849; x=1770334649;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HJBNjw3RNtSCw9MLJW2nzX+EmjmcAxr1O5/9KOr8e5k=;
-        b=YEMYOmijM/w33ErO6vzxQnfyNDNGvyL8L7LWUJyUVrTz7jP5xIP6PK0pasuWUtm1Ic
-         A3TVLgX+ydE2U9Y7TWEJCXeDd6l8wMbnx3jSRFj9pUCcvn154vcbGo+XKXSnFPkU5mQp
-         c5vptVAW1tqSocY9UY6hnSJf6CRI8EeQQM1z8fAhyXJUrqYVSvP0+0DNNgqU/4sInNaU
-         0OZSIryF5dZWdxG5eFSAStKikx/xU6O6jh7oHK6WLZkFOU3qDuJzZeZ644yWmA33aRN1
-         x/JfwOsoUSj47RKc7kbxESftWaCn7Z0R95NqIVm7rW4VVjQePivPqoJXMSIwGpN44oeW
-         Xraw==
-X-Forwarded-Encrypted: i=1; AJvYcCUhtjb9WMuAUt7bN8JH9LCKRo5WHYju6LoiWv2Hjbi5pc6/kh6XmzMyVP82ni8BqgK2rHQ3JaXARKzAHUOAzxnr@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfDUxghQfm6sSjm74644Bmgor+TnNXJ4wmu339ppPbIKf52QXf
-	SiUULLykF1QLM/Wvw+hoHfEK3TMQCbTmGEvv70TcLaKnjiU+yIETN8G7N7S9Vt/iFUlBSmcgeM9
-	zAiP1m2RZDE11oQ==
-X-Received: from ploc15.prod.google.com ([2002:a17:902:848f:b0:2a0:86eb:ac5f])
+        d=1e100.net; s=20230601; t=1769729879; x=1770334679;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9edmz9F0+Ueeg69+oBnQppllXkvN4AaYJE9iZBV8Nzc=;
+        b=cAJ2VOwTNOAZf+r4z5EUJs5gBEGozHWgnRh4FmAJ7V4WUDvWLG8tXCMJo3EOM8Z9CM
+         nr4NI+HB0Sc3rAkdcaWyEvCM9krxAjHb0qGPp10a6swFuec0mdXnsZl00BZzaRm07GJh
+         5XZT7hoXL6RTNCo1xNo5P5HsMmoGC+9iBSCrlEQxCxkCtX1kjzfJTH3WmQ+LT7UQrWDq
+         JJZWtDEho1LArxgACRuUFfj8g9vXsSerQwCh0pBlCLHFC+2vu6gRqPsc8k7IQgzSBNUc
+         nYgeL6YW5lkEQIhpg59mlzkOAvh1Oqp4l9TWPSQL71XBQ3kNlWHZg4FgLw0+7i821Fly
+         QFww==
+X-Forwarded-Encrypted: i=1; AJvYcCWns7Gf/DmbTLgzi82Ak+PIM3SU/IK1rMIhSqVjjlV7lrX1RKAhdSWde6mzQCIxSukBTNAAPeR/+3YrBY7DCC2w@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBiUL22l2VxbRhbLPL6kd9EUP7AiVx7ZaW3LptOMI8ZfG8M3q2
+	B7K26/SQLMTQ61jzmRoBDxceTZcf/e5Z5NZwyuqZmeCC1ukZejIHqMue4WOnwOCBRCN6eRcTcYz
+	ySqsljocBE5lXeQ==
+X-Received: from plbll8.prod.google.com ([2002:a17:903:908:b0:2a8:759b:173d])
  (user=jmattson job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:cf01:b0:2a0:d629:903c with SMTP id d9443c01a7336-2a8d992f074mr7921925ad.30.1769729340083;
- Thu, 29 Jan 2026 15:29:00 -0800 (PST)
-Date: Thu, 29 Jan 2026 15:28:05 -0800
+ 2002:a17:902:d485:b0:2a0:9eed:5182 with SMTP id d9443c01a7336-2a8d96a6b54mr8177095ad.20.1769729346081;
+ Thu, 29 Jan 2026 15:29:06 -0800 (PST)
+Date: Thu, 29 Jan 2026 15:28:09 -0800
+In-Reply-To: <20260129232835.3710773-1-jmattson@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20260129232835.3710773-1-jmattson@google.com>
 X-Mailer: git-send-email 2.53.0.rc1.225.gd81095ad13-goog
-Message-ID: <20260129232835.3710773-1-jmattson@google.com>
-Subject: [PATCH v2 0/5] KVM: x86/pmu: Add support for AMD Host-Only/Guest-Only bits
+Message-ID: <20260129232835.3710773-5-jmattson@google.com>
+Subject: [PATCH v2 4/5] KVM: x86/pmu: Allow Host-Only/Guest-Only bits with
+ nSVM and mediated PMU
 From: Jim Mattson <jmattson@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,61 +77,28 @@ Cc: mizhang@google.com, yosryahmed@google.com, sandipan.das@amd.com,
 	Jim Mattson <jmattson@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-This series adds support for AMD's Host-Only and Guest-Only performance
-counter eventsel bits in KVM's mediated PMU passthrough implementation.
+If the vCPU advertises SVM and uses the mediated PMU, allow the guest to
+set the Host-Only and Guest-Only bits in the event selector MSRs.
 
-These bits allow an nSVM-enabled guest to configure performance counters
-that count only during L1 execution (Host-Only) or only during L2 execution
-(Guest-Only).
+Signed-off-by: Jim Mattson <jmattson@google.com>
+---
+ arch/x86/kvm/svm/pmu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-KVM updates the hardware event selector ENABLE bit at the following state
-transitions to ensure counters only count in the appropriate mode:
-
-  - EFER.SVME changes: Enable/disable Guest-Only counters
-  - Nested VMRUN: Disable Host-Only, enable Guest-Only counters
-  - Nested VMEXIT: Enable Host-Only, disable Guest-Only counters
-
-v1: https://lore.kernel.org/kvm/20260121225438.3908422-1-jmattson@google.com/
-
-v1 -> v2:
-  - Fixed various style issues, including indentation, comment
-    placement, and comparison to 0 [Sean]
-  - Replaced "hg_only" with "host_guest" [Sean]
-  - Reversed the polarity of the dormant/active logic [Sean]
-  - Removed the pmc_hostonly and pmc_guestonly bitmaps [Sean]
-  - Added a refresh helper that iterates over PMCs during transitions [Sean]
-  - Introduced svm_enter_guest_mode() and svm_leave_guest_mode() [Sean]
-  - Moved transition logic from VMRUN/VMEXIT emulation to the above [Sean]
-  - Moved architectural definitions in the selftest to pmu.h [Sean]
-  - Added a test for neither Host-Only nor Guest-Only [Sean]
-  - Refactored the selftest to program all 4 bit combinations
-    simultaneously, reducing code replication [Sean]
-
-
-Jim Mattson (5):
-  KVM: x86/pmu: Introduce amd_pmu_set_eventsel_hw()
-  KVM: x86/pmu: Disable Host-Only/Guest-Only events as appropriate for
-    vCPU state
-  KVM: x86/pmu: Refresh Host-Only/Guest-Only eventsel at nested
-    transitions
-  KVM: x86/pmu: Allow Host-Only/Guest-Only bits with nSVM and mediated
-    PMU
-  KVM: selftests: x86: Add svm_pmu_host_guest_test for
-    Host-Only/Guest-Only bits
-
- arch/x86/include/asm/perf_event.h             |   2 +
- arch/x86/kvm/svm/nested.c                     |   6 +-
- arch/x86/kvm/svm/pmu.c                        |  42 +++-
- arch/x86/kvm/svm/svm.c                        |   2 +
- arch/x86/kvm/svm/svm.h                        |  17 ++
- tools/testing/selftests/kvm/Makefile.kvm      |   1 +
- tools/testing/selftests/kvm/include/x86/pmu.h |   6 +
- .../kvm/x86/svm_pmu_host_guest_test.c         | 199 ++++++++++++++++++
- 8 files changed, 270 insertions(+), 5 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/x86/svm_pmu_host_guest_test.c
-
-
-base-commit: 1a424e9e0616db91010f08e5985bcc6edc504205
+diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
+index e2a849fc7daa..7de7d8d00427 100644
+--- a/arch/x86/kvm/svm/pmu.c
++++ b/arch/x86/kvm/svm/pmu.c
+@@ -243,6 +243,9 @@ static void amd_pmu_refresh(struct kvm_vcpu *vcpu)
+ 
+ 	pmu->counter_bitmask[KVM_PMC_GP] = BIT_ULL(48) - 1;
+ 	pmu->reserved_bits = 0xfffffff000280000ull;
++	if (guest_cpu_cap_has(vcpu, X86_FEATURE_SVM) &&
++	    kvm_vcpu_has_mediated_pmu(vcpu))
++		pmu->reserved_bits &= ~AMD64_EVENTSEL_HOST_GUEST_MASK;
+ 	pmu->raw_event_mask = AMD64_RAW_EVENT_MASK;
+ 	/* not applicable to AMD; but clean them to prevent any fall out */
+ 	pmu->counter_bitmask[KVM_PMC_FIXED] = 0;
 -- 
 2.53.0.rc1.225.gd81095ad13-goog
 
