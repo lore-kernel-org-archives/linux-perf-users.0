@@ -1,115 +1,103 @@
-Received: from mail-244123.protonmail.ch (mail-244123.protonmail.ch [109.224.244.123])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824F92472A2
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 Jan 2026 00:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D287723E34C
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Jan 2026 03:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769647363; cv=none; b=GsVnzu2aGzcKy/WsJTZSYJTcY88lGiIwpXg2JTiKEtfxZNTVC6PwuZRS6NTj9fasJnXAyroDjTEhJFMLI1kW3l4ki5ZQGTLWRfYA1sBgwnSEDh8SuRK+yQofageYP1zx/9kuu5M0Yi7WimrS1TfeATYVN3cTTb2OHzxq8ZI99pc=
+	t=1769655797; cv=none; b=ILXVdOmPOBnDn7RIXAHZR7dfwCAsPU/YBfBh80ybnVqlllivjEiXULPlTydkCnS5DDx3OdzpxB6JYY1ewn+AX+moHo04wVYZqinkgclR1XXvmpQBF6CIxF+9AlQTU0WXscS487e4+AA0EKUiRUO5+NMAo+UVrSUm3FcG6AIWm0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769647363; c=relaxed/simple;
-	bh=QxfqLmHwy166Y55kPd89pD+vOqDX4or1HidWnexD+9k=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hRaXK3GUrDMWORoBlSwMcHKKp8mVz5Ed6zjr3N96BJENaOcrRWhIQx2TgnkuxXa2kSjWeTQ57YBJxc4M4Q55EQK+1J+dcIk3o/x58v89Df0lVsDvXCsCUe8rEXpyvGYMeWRdzDf+cOd0S1T1np2y0sdml/zFbcQxVUWD2SzxhT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=bDUERcAQ; arc=none smtp.client-ip=109.224.244.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1769655797; c=relaxed/simple;
+	bh=P6xf8lFB1hTmPq1NVVLE+dooHI5xqpYcpXWYE5P0BAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YQbS7ErxDibPmWbFcSF07QZJVLNtOF/+spEXpCxjYAut9apvyz6cNPfxTv/k/AlvwLzNGYzCpcNlffXgLRudk0djnb1GlgONqZiRL+1hTUDdjtP2vmSH09kqgBUQ83yRScm1wET9VqrU0a94FAx7huftPLH8ta4HcQxOWJwKqEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=S+gvwAXH; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="bDUERcAQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=woagusryhretfguybrxssnov7q.protonmail; t=1769647352; x=1769906552;
-	bh=Lg3lj3uGNwWa8cfLr6yePQD8sO+Z5xWVi6WopoLlNTY=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=bDUERcAQZaQjThu1z7/DvxXFn0RlBP9+++EYc3lwj2JIKDEyz0UymBaWFSbh1Py6+
-	 4bgjKj7BskPJBOp3Ycud9SBZgVbPRcxc9fLTPiBeDSe5IhETsizcLMfWsx8lR2o7PE
-	 mRxkCUWxZJWOsqewdQ7txIBYrhoAcFX9/zSZmrLsH8cZ64jrqdxzDrBMG8phNJoI1c
-	 L5QYMHK2/RTBAMoqpVi2LeR4j8j1BrQHiYmBnMN1WDOv13S+d/JOnzUq/aRihtkYbh
-	 1XHMHceZbsXsWWGiSolvgSVphw1MF2RDiVCIHgPNVWmukPMAody1brIBu7MuFGp2NM
-	 7IW55jcZr1xVw==
-Date: Thu, 29 Jan 2026 00:42:27 +0000
-To: peterz@infradead.org
-From: Ricky Ringler <ricky.ringler@proton.me>
-Cc: namhyung@kernel.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Ricky Ringler <ricky.ringler@proton.me>
-Subject: [PATCH] perf utilities: Replace static cacheline size with sysconf cacheline size
-Message-ID: <20260129004223.26799-1-ricky.ringler@proton.me>
-Feedback-ID: 171348601:user:proton
-X-Pm-Message-ID: a641278577c516cda8fac7d498fac42baac73e81
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="S+gvwAXH"
+Message-ID: <459af099-540f-4ce3-945e-fdf38896d03c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1769655792;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=evNmSKHBc95d34h6t/+bPmvmGHn/9tXbG9cMw4fwkfU=;
+	b=S+gvwAXHrPnOF5+rIrYovEQTKjWbvgM6EJNzkx9LlNL1KmYBAKRjgZTu1rqzWjXfyTNhru
+	VHCGh2WhT0zt5uWXtv8ifqlhCd7giUFNWtzQ3lCEtFHht48+8nvC01+HJAQbi7WPQ5i44k
+	d9Jo4jvvvgUIG2TjodmEk2q1G4eC+1k=
+Date: Thu, 29 Jan 2026 11:03:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH bpf-next v8 1/3] perf: Add rctx in perf_callchain_entry
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, song@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
+ john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20260126074331.815684-1-chen.dylane@linux.dev>
+ <20260126074331.815684-2-chen.dylane@linux.dev>
+ <20260128085945.GF3372621@noisy.programming.kicks-ass.net>
+ <00fd7c67-dffa-4647-8370-59a195a41deb@linux.dev>
+ <CAEf4BzY5tQYSnn4Jwg+cwypnwG6BLLOu6e6=f938d33eSCDObg@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <CAEf4BzY5tQYSnn4Jwg+cwypnwG6BLLOu6e6=f938d33eSCDObg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Testing:
-- Built perf
-- Executed perf mem record and report
+在 2026/1/29 02:59, Andrii Nakryiko 写道:
+> On Wed, Jan 28, 2026 at 8:53 AM Tao Chen <chen.dylane@linux.dev> wrote:
+>>
+>> 在 2026/1/28 16:59, Peter Zijlstra 写道:
+>>> On Mon, Jan 26, 2026 at 03:43:29PM +0800, Tao Chen wrote:
+>>>> Record rctx inside the perf_callchain_entry itself, when callers of
+>>>> get_callchain_entry no longer care about the assignment of rctx, and
+>>>> will be used in the next patch.
+>>>
+>>> Sorry, what?
+>>>
+>>> The recursion context is very much about the caller, and very much not
+>>> about the data. This just doesn't make sense.
+>>
+>> Well, Andrii, it seems we have to go back to the original way.
+> 
+> Huh, why? Peter is confused by your wording, he didn't say that what
+> you are doing is broken.
+>
 
-Tested-by: Ricky Ringler <ricky.ringler@proton.me>
-
-Signed-off-by: Ricky Ringler <ricky.ringler@proton.me>
----
- tools/perf/util/sort.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index f3a565b0e230..aa79eb6476dd 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2474,8 +2474,7 @@ struct sort_entry sort_type_offset =3D {
-=20
- /* --sort typecln */
-=20
--/* TODO: use actual value in the system */
--#define TYPE_CACHELINE_SIZE  64
-+#define DEFAULT_CACHELINE_SIZE 64
-=20
- static int64_t
- sort__typecln_sort(struct hist_entry *left, struct hist_entry *right)
-@@ -2484,6 +2483,10 @@ sort__typecln_sort(struct hist_entry *left, struct h=
-ist_entry *right)
- =09struct annotated_data_type *right_type =3D right->mem_type;
- =09int64_t left_cln, right_cln;
- =09int64_t ret;
-+=09int cln_size =3D cacheline_size();
-+
-+=09if (cln_size =3D=3D 0)
-+=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
-=20
- =09if (!left_type) {
- =09=09sort__type_init(left);
-@@ -2499,8 +2502,8 @@ sort__typecln_sort(struct hist_entry *left, struct hi=
-st_entry *right)
- =09if (ret)
- =09=09return ret;
-=20
--=09left_cln =3D left->mem_type_off / TYPE_CACHELINE_SIZE;
--=09right_cln =3D right->mem_type_off / TYPE_CACHELINE_SIZE;
-+=09left_cln =3D left->mem_type_off / cln_size;
-+=09right_cln =3D right->mem_type_off / cln_size;
- =09return left_cln - right_cln;
- }
-=20
-@@ -2508,9 +2511,13 @@ static int hist_entry__typecln_snprintf(struct hist_=
-entry *he, char *bf,
- =09=09=09=09     size_t size, unsigned int width __maybe_unused)
- {
- =09struct annotated_data_type *he_type =3D he->mem_type;
-+=09int cln_size =3D cacheline_size();
-+
-+=09if (cln_size =3D=3D 0)
-+=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
-=20
- =09return repsep_snprintf(bf, size, "%s: cache-line %d", he_type->self.typ=
-e_name,
--=09=09=09       he->mem_type_off / TYPE_CACHELINE_SIZE);
-+=09=09=09       he->mem_type_off / cln_size);
- }
-=20
- struct sort_entry sort_type_cacheline =3D {
---=20
-2.52.0
+I see, will update the changelog, thanks.
+> The point is to couple rctx with the exact perf_callchain_entry
+> returned to the caller in that recursion context. There is no
+> contradiction.
+> 
+> It's purely about simplifying the interface. While previously the
+> caller would have to juggle perf_callchain_entry and rctx separately
+> (but still ensure that entry and rctx do match each other when calling
+> put_callchain_entry), now it's more convenient and less error-prone
+> because returned entry will record rctx it was retrieved with.
+> 
+> That perf_callchain_entry should not be reused by anyone else between
+> successful get_callchain_entry and put_callchain_entry, so there is no
+> problem here.
+> 
+>>
+>> --
+>> Best Regards
+>> Tao Chen
 
 
+-- 
+Best Regards
+Tao Chen
