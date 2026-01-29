@@ -1,137 +1,158 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9849F2C159A;
-	Thu, 29 Jan 2026 15:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FCD3191C0;
+	Thu, 29 Jan 2026 15:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769700454; cv=none; b=UdCaZ/oGsNybEo5g3JI1cRNjzb/GMhCCTu23SHQxX3npzW8r6HccmK8oejS/N7qZF5Xsm3wUPGlTnPnhmx+49yfq+VisIKehnHWW3Cl4xSX2qNmfmKE62TwyR/5xawZ8I3W9QQDItaHpxatmK4WRgMn9BKkrGs3OKOBLWIi8ztA=
+	t=1769700506; cv=none; b=pDyGOkBGfiRcbh8jm21k3ygBgVehqo38+MJ9kBTDBZ+qMaDfVlThXEY0RxKTFQwT+2JE/4BK7WR40jm+BuVDNxDJ3hmZJidL5N+T9aPZTFfu13/SFDzoxWL5f+Mt5A6bgSf2uEG5abtI5HQ9KAet6TP1UfTmcQ9uqZOli6Uvh/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769700454; c=relaxed/simple;
-	bh=odgCc5+aoK8mxQN6vNEY2yndFEFbv3fDCHjWgzYbJ7w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dDLV4ZMwS9jTT7GkvN2B+0lWXiQn8lXy96hCN5xm8aPwbKG9kEPNwZKaQNV1E5wpSnLWZj0CUFTkjie+Ba3kMeHNQt74JdNVmA5lNmnuJOVZCd5p6qcfA8TyXBfbK+dvuKncFBvjeXknnpL48qo+3jQYbMqFQ54KqztynhQwsGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 366DD1576;
-	Thu, 29 Jan 2026 07:27:24 -0800 (PST)
-Received: from [10.1.196.85] (e121345-lin.cambridge.arm.com [10.1.196.85])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA1593F73F;
-	Thu, 29 Jan 2026 07:27:29 -0800 (PST)
-Message-ID: <299083f7-07e4-436e-ba56-36901aba2855@arm.com>
-Date: Thu, 29 Jan 2026 15:27:28 +0000
+	s=arc-20240116; t=1769700506; c=relaxed/simple;
+	bh=jIUz84h8NpknCoCKer98gGhkUtY4yP88mwSL06t66Ik=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=I5EjUyzYng2XUNOPkGoy6O9waoaX2YZCLUlNXWkdJ84ua4iAf8CF6eDORZ6MLFkZWOr+TLzvdenvflHugoyfCNIDxeeGmWR6TaB0q/1OAjVUjSNp3zwJH+Rsf1qhDL2jSxRLka0rgh3brEZJUqeTdeifX1Ys1M6E4tBKe3L1N68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 828881401DE;
+	Thu, 29 Jan 2026 15:28:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id B6EF020012;
+	Thu, 29 Jan 2026 15:28:09 +0000 (UTC)
+Date: Thu, 29 Jan 2026 10:28:21 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Guenter
+ Roeck <linux@roeck-us.net>, Ian Rogers <irogers@google.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] perf: sched: Fix perf crash with new is_user_task() helper
+Message-ID: <20260129102821.46484722@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/arm-cmn: Reject unsupported hardware configurations
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: will@kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-References: <bb47722fc593baf1e1cc0f944089592a4ec708da.1769695523.git.robin.murphy@arm.com>
- <aXttVVoVUQoIjWG6@J2N7QTR9R3>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <aXttVVoVUQoIjWG6@J2N7QTR9R3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: B6EF020012
+X-Stat-Signature: 6f4xe3n3sy64h8j83wxap6838jfyi1xk
+X-Rspamd-Server: rspamout08
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18s5DsNJarFzjHYIZlHVcllmYy6uaey7uo=
+X-HE-Tag: 1769700489-570781
+X-HE-Meta: U2FsdGVkX197N4Z4jt36RlEyw64DYuzOwg4kfEGQnpA7/FAnG9ifXyTmhmsPPnMO6MJqRBnuo+UEoprIP02XtpzGvEQlmbeTXbUsmdBISZ6OHh09mMAGp4RN0ouGGO0PBaEdT/LjgPDCdn2nWXqMxtJLKwDJ3pSIXQ8zYA5D5ROjIIb/R/VpGIx9W8UTJZt+WHPacFZv+UKcKvpM4wqQGKyaqCpLuzAYak3+Us3/fxgNNMo0ZnVzWxg6J1RU26s8wix8Y1wXAmmzDCwyc6fCJNNvWM02jIeMqZLizgGkBKA5ivevpgrp88W5Ar9Xled7h9k0GtiIqzBm0wOoiXRkWriEXsNXhGvevu0xXUb7iuhGgEpWiXGsbrh/o7xIZquQCE55G53aCR9w5WFRqzbMdwJrnqJrgZ+t7vhMtC20YwRFsST1Es/Wvn8GM38lreY1SLt8Bli7ECn+vVFkQCflpA==
 
-On 29/01/2026 2:23 pm, Mark Rutland wrote:
-> On Thu, Jan 29, 2026 at 02:11:22PM +0000, Robin Murphy wrote:
->> So far we've been fairly lax about accepting both unknown CMN models
->> (at least with a warning), and unknown revisions of those which we
->> do know, as although things do frequently change between releases,
->> typically enough remains the same to be somewhat useful for at least
->> some basic bringup checks. However, we also make assumptions of the
->> maximum supported sizes and numbers of things in various places, and
->> there's no guarantee that something new might not be bigger and lead
->> to nasty array overflows. Make sure we only try to run on things that
->> actually match our assumptions and so will not risk memory corruption.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: 7819e05a0dce ("perf/arm-cmn: Revamp model detection")
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->> ---
->>   drivers/perf/arm-cmn.c | 13 +++++++++++++
->>   1 file changed, 13 insertions(+)
->>
->> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
->> index 2903e01f951f..24fec53ceccc 100644
->> --- a/drivers/perf/arm-cmn.c
->> +++ b/drivers/perf/arm-cmn.c
->> @@ -2422,6 +2422,15 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
->>   			arm_cmn_init_node_info(cmn, reg & CMN_CHILD_NODE_ADDR, dn);
->>   			dn->portid_bits = xp->portid_bits;
->>   			dn->deviceid_bits = xp->deviceid_bits;
->> +			/*
->> +			 * Logical IDs are assigned from 0 per node type, so as
->> +			 * soon as we one bigger than expected, we can assume
->> +			 * there are more than we can cope with.
->> +			 */
->> +			if (dn->logid > CMN_MAX_NODES_PER_EVENT) {
->> +				dev_err(cmn->dev, "Invalid node number: %d\n", dn->logid);
->> +				return -ENODEV;
-> 
-> I think "Invalid" is ambiguous (it can read like we're saying the HW is
-> wrong), and it would be better to say "Unsupported", or something to
-> that effect, e.g.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Yeah, it's a bit fiddly, because "unsupported" doesn't just mean "the 
-number in the driver could be bigger" either, these driver limits are 
-based on the documented maximum sizes for any currently known product, i.e.:
+In order to do a user space stacktrace the current task needs to be a user
+task that has executed in user space. It use to be possible to test if a
+task is a user task or not by simply checking the task_struct mm field. If
+it was non NULL, it was a user task and if not it was a kernel task.
 
-https://developer.arm.com/documentation/107858/0203/About-CMN-S3-AE-/Configurable-options/Mesh-sizing-and-top-level-configuration
+But things have changed over time, and some kernel tasks now have their
+own mm field.
 
-So while larger values might be "valid" for future products we don't 
-know about, hardware claiming to be, say, a 16x16 CMN-650 would indeed 
-arguably be "wrong".
+An idea was made to instead test PF_KTHREAD and two functions were used to
+wrap this check in case it became more complex to test if a task was a
+user task or not[1]. But this was rejected and the C code simply checked
+the PF_KTHREAD directly.
 
-> 	dev_err(cmn->dev, "Node number (%d) larger than supported (%d)\n",
-> 		dn->logid, CMN_MAX_NODES_PER_EVENT)
-> 
->> +			}
->>   
->>   			switch (dn->type) {
->>   			case CMN_TYPE_DTC:
->> @@ -2499,6 +2508,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
->>   		cmn->mesh_x = cmn->num_xps;
->>   	cmn->mesh_y = cmn->num_xps / cmn->mesh_x;
->>   
->> +	if (max(cmn->mesh_x, cmn->mesh_y) > CMN_MAX_DIMENSION) {
->> +		dev_err(cmn->dev, "Invalid mesh size: %dx%d\n", cmn->mesh_x, cmn->mesh_y);
-> 
-> Likewise:
-> 
-> 	dev_err(cmn->dev, "Mesh size (%%dx%d) larger than supported
-> 		(%d)\n", cmn->mesh_x, cmn->mesh_y, CMN_MAX_DIMENSION);
-> 
->> +		return -ENODEV;
->> +	}
->>   	/* 1x1 config plays havoc with XP event encodings */
->>   	if (cmn->num_xps == 1)
->>   		dev_warn(cmn->dev, "1x1 config not fully supported, translate XP events manually\n");
-> 
-> ... or you could align with the wording here.
+It was later found that not all kernel threads set PF_KTHREAD. The io-uring
+helpers instead set PF_USER_WORKER and this needed to be added as well.
 
-That one is different because it *is* purely a driver limitation - the 
-different event encoding is known, it's just that having to have dynamic 
-format attributes for the relevant event aliases would be a massive pain 
-to implement, and so far nobody's asked for it. So this is just a 
-reminder to the user that in this situation the "p0" aliases will 
-actually encode events for port 4, "n" means port 0, etc., per the TRM:
+But checking the flags is still not enough. There's a very small window
+when a task exits that it frees its mm field and it is set back to NULL.
+If perf were to trigger at this moment, the flags test would say its a
+user space task but when perf would read the mm field it would crash with
+at NULL pointer dereference.
 
-https://developer.arm.com/documentation/101569/0300/Programmers-model/Register-descriptions/XP-register-descriptions/por-mxp-pmu-event-sel?lang=en
+Now there are flags that can be used to test if a task is exiting, but
+they are set in areas that perf may still want to profile the user space
+task (to see where it exited). The only real test is to check both the
+flags and the mm field.
 
-This is aligned with the "invalid device node type" message (other than 
-capitalisation, bah!) that's been there from day 1 to fail probing on 
-anything so new and unknown that it has components we can't even comprehend.
+Instead of making this modification in every location, create a new
+is_user_task() helper function that does all the tests needed to know if
+it is safe to read the user space memory or not.
 
-> Aside from the specific wording for the messages, this looks god to me.
+[1] https://lore.kernel.org/all/20250425204120.639530125@goodmis.org/
 
-Hallelujah!
+Cc: stable@vger.kernel.org
+Fixes: 90942f9fac05 ("perf: Use current->flags & PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL")
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Closes: https://lore.kernel.org/all/0d877e6f-41a7-4724-875d-0b0a27b8a545@roeck-us.net/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/sched.h     | 5 +++++
+ kernel/events/callchain.c | 2 +-
+ kernel/events/core.c      | 6 +++---
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
-Thanks,
-Robin.
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index d395f2810fac..f29ebeeac970 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1776,6 +1776,11 @@ static __always_inline bool is_percpu_thread(void)
+ 		(current->nr_cpus_allowed  == 1);
+ }
+ 
++static __always_inline bool is_user_task(struct task_struct *task)
++{
++	return task->mm && !(task->flags & (PF_KTHREAD | PF_USER_WORKER));
++}
++
+ /* Per-process atomic flags. */
+ #define PFA_NO_NEW_PRIVS		0	/* May not gain new privileges. */
+ #define PFA_SPREAD_PAGE			1	/* Spread page cache over cpuset */
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index b9c7e00725d6..636ffa5e5364 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -246,7 +246,7 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 
+ 	if (user && !crosstask) {
+ 		if (!user_mode(regs)) {
+-			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
++			if (!is_user_task(current))
+ 				goto exit_put;
+ 			regs = task_pt_regs(current);
+ 		}
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index da013b9a595f..1a06adebd2f2 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7745,7 +7745,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+ 	if (user_mode(regs)) {
+ 		regs_user->abi = perf_reg_abi(current);
+ 		regs_user->regs = regs;
+-	} else if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
++	} else if (is_user_task(current)) {
+ 		perf_get_regs_user(regs_user, regs);
+ 	} else {
+ 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
+@@ -8383,7 +8383,7 @@ static u64 perf_virt_to_phys(u64 virt)
+ 		 * Try IRQ-safe get_user_page_fast_only first.
+ 		 * If failed, leave phys_addr as 0.
+ 		 */
+-		if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
++		if (is_user_task(current)) {
+ 			struct page *p;
+ 
+ 			pagefault_disable();
+@@ -8498,7 +8498,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+ {
+ 	bool kernel = !event->attr.exclude_callchain_kernel;
+ 	bool user   = !event->attr.exclude_callchain_user &&
+-		!(current->flags & (PF_KTHREAD | PF_USER_WORKER));
++		is_user_task(current);
+ 	/* Disallow cross-task user callchains. */
+ 	bool crosstask = event->ctx->task && event->ctx->task != current;
+ 	bool defer_user = IS_ENABLED(CONFIG_UNWIND_USER) && user &&
+-- 
+2.51.0
+
