@@ -1,140 +1,106 @@
 Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADB52D063E
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 14:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E51376BC3;
+	Fri, 30 Jan 2026 15:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769782501; cv=none; b=UC1dQWRQhLFFuZFuae0VQvSnXUcwIZkfp81vI4TVbGEr8u4tq0ULFk2N+pBw6zFzTz2niB6bNPlJX0kNSnXB0XXMhvtPO/2Jemn5tR8h0qICw1gK/DAqdsjjpFt7O1+tODhFiWFxlaYT9zNvUTu4QKChlz/NwPeJf84m11xzVX0=
+	t=1769786827; cv=none; b=a1jPiahDbePtv6i4jK950qty1AVsRKNoJMWxi2YIXkcx9WQMT7DDRs821G0OUT3Rm8s98+UwshMyR8LCOfxgmsSVEFXtcDfyhAxqro6gDuogPzWyjMhs3zuqKjQrZQC+W+W0RprWBaUIXza5wBQhWjQFOeBdwU+pSsDKTql8ZBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769782501; c=relaxed/simple;
-	bh=1wQZXnJ2Cdr/Pz7A1F1VgsqCX5pJ8RniXpMYExSjsjk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XQRmjiZnaXDhfCtXNtMjCG+zBPgKxTxrxCIvPHbRuJrLBEDBUsBcfLlAyvgWbq0L8Ky107SMeN+36NK29YIlGHZv/tNkCAVPpMJduq457kio99XU4bKy9Yg3RbA4iX3z3rNdJsbpREc1W1y/ulFhsFKbsbpkp+LMMgjQTLKV2Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=w6qEZ7yW; arc=none smtp.client-ip=95.215.58.171
+	s=arc-20240116; t=1769786827; c=relaxed/simple;
+	bh=WKbgIjvqYsLnhI8lLynWC+gpwRwjqUOcqoGqHgkaXhE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gW3RXJle2JvROqQMm+11fk15F8zBZzIVz8S1CGrGYkjK6HlPBPPfDq4ddsHlFRP8/5Xag7/tv/IWWiBvDfeZdR7H6cuh+CEAvJszVZk/pwlxaXliyNQisitIcCaoRcxB6vPbtrU2yVyiJCpxNwTUKIft6ovlLzTWSPBtCfKFLg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EfBMc1L3; arc=none smtp.client-ip=95.215.58.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="w6qEZ7yW"
-Message-ID: <6e149b55-9700-411b-b330-00de0fb93378@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EfBMc1L3"
+Date: Fri, 30 Jan 2026 15:26:14 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1769782488;
+	t=1769786808;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WgjEYvTFriYrUDdQIwSAHaaPs9j5W76Yn2YZsjaQAbE=;
-	b=w6qEZ7yWMER53O2BM36jYMKgpFau1vClH0a5fTYFYsc1YKfsGYvh29Wr5M54yY5/qoHypo
-	AsMBceZAvoGZ8klFAJaxBRxp73mejPQw/xydg+GhlbHFfx/rBCymHZHFL8AIBbwsKyekG7
-	cUBaKs8MVy5n7HI/Sv0eo16ByMhpsN0=
-Date: Fri, 30 Jan 2026 22:14:35 +0800
+	bh=jnluWOJvX1pbBkYtIrk0e2TYXTHoU6kY5S2rGU4X2jU=;
+	b=EfBMc1L343Kx6i2tvM/2pzmneB0CHfg31wKiPXSm4XuiAJ51giqKIPr6B9H+r03eyfu2su
+	QCsABahe3heQOdfXC3xJ3UY72b5VBj4BTVLmSFjWdWgz8xlOTMnye9D12Oqtc7wG9CTNxp
+	fvlCwm7mEWVycugXwOh7zyKJ0fbFDVA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Jim Mattson <jmattson@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, mizhang@google.com, 
+	sandipan.das@amd.com
+Subject: Re: [PATCH v2 3/5] KVM: x86/pmu: Refresh Host-Only/Guest-Only
+ eventsel at nested transitions
+Message-ID: <zzgnirkreq5r57favstiuxuc66ep3npassqgcymntrttgttt3c@g4pi4l2bvi6q>
+References: <20260129232835.3710773-1-jmattson@google.com>
+ <20260129232835.3710773-4-jmattson@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 1/2] bpf: Allow sleepable programs to use tail
- calls
-To: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Martin KaFai Lau <kafai@fb.com>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
-References: <20260130081208.1130204-1-jolsa@kernel.org>
- <20260130081208.1130204-2-jolsa@kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <20260130081208.1130204-2-jolsa@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260129232835.3710773-4-jmattson@google.com>
 X-Migadu-Flow: FLOW_OUT
 
-
-
-On 2026/1/30 16:12, Jiri Olsa wrote:
-> Allowing sleepable programs to use tail calls.
+On Thu, Jan 29, 2026 at 03:28:08PM -0800, Jim Mattson wrote:
+> Add amd_pmu_refresh_host_guest_eventsel_hw() to recalculate eventsel_hw for
+> all PMCs based on the current vCPU state. This is needed because Host-Only
+> and Guest-Only counters must be enabled/disabled at:
 > 
-> Making sure we can't mix sleepable and non-sleepable bpf programs
-> in tail call map (BPF_MAP_TYPE_PROG_ARRAY) and allowing it to be
-> used in sleepable programs.
+>   - SVME changes: When EFER.SVME is modified, counters with Guest-Only bits
+>     need their hardware enable state updated.
 > 
-> Sleepable programs can be preempted and sleep which might bring
-> new source of race conditions, but both direct and indirect tail
-> calls should not be affected.
+>   - Nested transitions: When entering or leaving guest mode, Host-Only
+>     counters should be disabled/enabled and Guest-Only counters should be
+>     enabled/disabled accordingly.
 > 
-> Direct tail calls work by patching direct jump to callee into bpf
-> caller program, so no problem there. We atomically switch from nop
-> to jump instruction.
+> Introduce svm_enter_guest_mode() and svm_leave_guest_mode() wrappers that
+> call enter_guest_mode()/leave_guest_mode() followed by the PMU refresh,
+> ensuring the PMU state stays synchronized with guest mode transitions.
 > 
-> Indirect tail call reads the callee from the map and then jumps to
-> it. The callee bpf program can't disappear (be released) from the
-> caller, because it is executed under rcu lock (rcu_read_lock_trace).
-> 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Jim Mattson <jmattson@google.com>
 > ---
->  include/linux/bpf.h   | 1 +
->  kernel/bpf/core.c     | 4 +++-
->  kernel/bpf/verifier.c | 1 +
->  3 files changed, 5 insertions(+), 1 deletion(-)
+>  arch/x86/kvm/svm/nested.c |  6 +++---
+>  arch/x86/kvm/svm/pmu.c    | 12 ++++++++++++
+>  arch/x86/kvm/svm/svm.c    |  2 ++
+>  arch/x86/kvm/svm/svm.h    | 17 +++++++++++++++++
+>  4 files changed, 34 insertions(+), 3 deletions(-)
 > 
-> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> index 5524f9429e76..3b0ceb759075 100644
-> --- a/include/linux/bpf.h
-> +++ b/include/linux/bpf.h
-> @@ -287,6 +287,7 @@ struct bpf_map_owner {
->  	enum bpf_prog_type type;
->  	bool jited;
->  	bool xdp_has_frags;
-> +	bool sleepable;
->  	u64 storage_cookie[MAX_BPF_CGROUP_STORAGE_TYPE];
->  	const struct btf_type *attach_func_proto;
->  	enum bpf_attach_type expected_attach_type;
-> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> index e0b8a8a5aaa9..5ebece600aeb 100644
-> --- a/kernel/bpf/core.c
-> +++ b/kernel/bpf/core.c
-> @@ -2401,6 +2401,7 @@ static bool __bpf_prog_map_compatible(struct bpf_map *map,
->  		map->owner->type  = prog_type;
->  		map->owner->jited = fp->jited;
->  		map->owner->xdp_has_frags = aux->xdp_has_frags;
-> +		map->owner->sleepable = fp->sleepable;
->  		map->owner->expected_attach_type = fp->expected_attach_type;
->  		map->owner->attach_func_proto = aux->attach_func_proto;
->  		for_each_cgroup_storage_type(i) {
-> @@ -2412,7 +2413,8 @@ static bool __bpf_prog_map_compatible(struct bpf_map *map,
->  	} else {
->  		ret = map->owner->type  == prog_type &&
->  		      map->owner->jited == fp->jited &&
-> -		      map->owner->xdp_has_frags == aux->xdp_has_frags;
-> +		      map->owner->xdp_has_frags == aux->xdp_has_frags &&
-> +		      map->owner->sleepable == fp->sleepable;
->  		if (ret &&
->  		    map->map_type == BPF_MAP_TYPE_PROG_ARRAY &&
->  		    map->owner->expected_attach_type != fp->expected_attach_type)
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index e7ff8394e0da..f185ebc6748d 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -21386,6 +21386,7 @@ static int check_map_prog_compatibility(struct bpf_verifier_env *env,
->  		case BPF_MAP_TYPE_STACK:
->  		case BPF_MAP_TYPE_ARENA:
->  		case BPF_MAP_TYPE_INSN_ARRAY:
-> +		case BPF_MAP_TYPE_PROG_ARRAY:
->  			break;
->  		default:
->  			verbose(env,
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index de90b104a0dd..a7d1901f256b 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -757,7 +757,7 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
+>  	nested_svm_transition_tlb_flush(vcpu);
+>  
+>  	/* Enter Guest-Mode */
+> -	enter_guest_mode(vcpu);
+> +	svm_enter_guest_mode(vcpu);
 
-This change also prevents a bad use case: a sleepable program FD could
-be inserted into a prog_array map whose owner is a non-sleepable program.
+FWIW, I think this name is a bit confusing because we also have
+enter_svm_guest_mode(). So we end up with:
 
-Looking at __bpf_prog_map_compatible(), are there any other program
-properties we should consider checking to ensure compatibility when
-updating a prog_array map?
+enter_svm_guest_mode() -> nested_vmcb02_prepare_control() ->
+svm_enter_guest_mode() -> enter_guest_mode()
 
-From the tail call compatibility point of view, the restriction on
-mixing sleepable and non-sleepable programs looks correct to me.
+I actually have another proposed change [1] that moves
+enter_guest_mode() directly into enter_svm_guest_mode(), so the sequence
+would end up being:
 
-Acked-by: Leon Hwang <leon.hwang@linux.dev>
+enter_svm_guest_mode() -> svm_enter_guest_mode() -> enter_guest_mode()
 
+[1] https://lore.kernel.org/kvm/20260115011312.3675857-9-yosry.ahmed@linux.dev/
