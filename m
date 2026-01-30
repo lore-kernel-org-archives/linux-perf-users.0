@@ -1,196 +1,361 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F4B30AD1C
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 20:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6149E2737F2
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 20:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769803499; cv=pass; b=dIyXI4Ro9IzLd1v/kAPJ0l0oDZLYwniJY1nBfkUN8162oJYk1XPyy367IF3CgO3NtKj0xYdiXFkIUYppw3Ss5baACAk49141DJwL79LacR11EJLR4JGGozaCMxbtLFLSabqRPq763JubTfHOH9YIiWGaAgmZOOpnaP0m5yFxZNA=
+	t=1769803665; cv=pass; b=uP8swTNF4bnQRELgPwmCgMsTpbnSAAnpeLJKZD/0S9raUSr54az6CBbocrowfR1n5Gujmk8XeShqj/ooiqbqkY312AyHyPgASgt4/Rs2VHiacIH93t/G80Kct8kUuaprq2PVA22mifuksOkiNuaiEuvFDQ8EaQGW3piZzE0Lg5s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769803499; c=relaxed/simple;
-	bh=oGoBRgPPoitzO+sWNnImbteEFTL97pD/pkLJ6YZ87Q8=;
+	s=arc-20240116; t=1769803665; c=relaxed/simple;
+	bh=JN6foRqG40JPLGE38gjlFr46l76oJx2SOKRwokKq1T8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tbT6tm8plqxgN0wBnLT4Q/0ZIFF/B64VQ8Jvvuhs9S4ZAwSavGzN4u4veU+FrZEjN695ONMubm1QX35sY/EM5peLFMBOVJXCbtRPKtUj35u83G48wVFim1VZOWuG2nRMkGeN4YNosscUJAwOpDsRLwjgisvsqSW8Mq6Xn/QUiBE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ae/z5pIP; arc=pass smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=c0UNlnNxApQrkD5NehDer/SDJsE/Fc0EcNmP5oKN/OqiNex2txx6VUX0AyG3q/FZzVGTq5LUqnNQfwWO8rb0VLLENCQVatTJNkAZbkHE06OpPJ/Pi04+0U8ZhwBlYMVEs03/mNMvr+jolcCTirWPbEpUTOas8kgv5LkU35FEFs0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ddyj3eEC; arc=pass smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ae/z5pIP"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-34c93e0269cso2185826a91.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 12:04:58 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769803498; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ddyj3eEC"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2a8e4ae61a0so15195ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 12:07:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769803663; cv=none;
         d=google.com; s=arc-20240605;
-        b=Daz3fNkMhkaI+jHqrv4sLQX2D7fb1kEq8AVHWOPLHTsLFFdEJLiSFwrvd9wN//FOoo
-         sdyix/nzvt6ZMlGZHn+y70HufbGmouuUaMCLt1C7a0s5sd8+KKuNrl8A3v4YFQa1z31K
-         WyyyeAvfHfLLtlaDR4gx99zA+sb+gvaPObPQ9EtIpFogN4nr7vZsd6LGGyrU92XGfz5c
-         HgFBYuP3v6RUYBrZyM2PN0k5M01UwSAAAsEP1c9dTv/Bgc1dCjt6CXrox1hrw59NPinb
-         pLP5ixUUUGjHwH3e/8Un/B6OWCIC/YCCnxFYDeHjllmzHN+QxzSJkX2/5ta+0s5E7uvp
-         QQjQ==
+        b=fpgA+Gt2N5qd+9FRAHGf+VTCm25PrTe22q3xDsaabIHgLJ5cQMFf3DlXspCRiJhgG4
+         Y8BAZ6fTMxtyfE/DCuDqicQ92xzlxEILPMit0/IvtRKZ5wDoQzEGpECPxodLGG+z6VkZ
+         9wJK0G7G25/pEcNr6qRwI8qJM0p6OJXpz+Rd7KJmmk0YyVV1WFZoY64nUy69msU5VNtp
+         0yHDyFl4tN2VglzhFw077f4uYDetEclxiU7fLi4BjDgrtnpaiwc+r/EEW+nveYfr7GQM
+         5O8fDRmxVfXA3vl2pPhNYQjh3ZBrOjZu+7KS/2MPd81oUoE4GdnErVjyFjdG+Dp5LooV
+         3aIg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=oGoBRgPPoitzO+sWNnImbteEFTL97pD/pkLJ6YZ87Q8=;
-        fh=o8GAJ/stMJaJjfr73lbyU7g6G7sHjOSqxV/6n/NsQMQ=;
-        b=lwvdfjnZ/ZV3HKck6SqJ4DiQivBNI8fG5pt5XJxBO2P+VPsmBT8+1wOoUF4T+hm5n5
-         pDnSUPKOz2mW+sCG773cYpAqa5aOnt/HJDU6TSoW9AG5U0chGmhYEUZZlwlKwm/K2y8o
-         7OdihPgxwYLbFmciBjuERHMCKe9+tZPS2dX3h9l5E0MoiICNXUusOEP3Spnnou05OZDa
-         I3FJXbtnT8UROHFpF/OoS+/qaA15aDZ70RFmKwqo6NIxxXJuUz7NmO6DGWclJrmK80mz
-         8Q828YBcn/7yOhvuzP7t+7ArC4eNIRcor3veYAEc1rLRl9k0daQrDz56mKHI/kqhP0Cz
-         qHJA==;
+        bh=xfZ/yn2sX+8CvDNrIoBnhlU34L/OaV7M5POjaoUPrSs=;
+        fh=OCjgoy/IA5rUytOS7MbVJOBPtnp2wWAB2n7sq25A5wM=;
+        b=kJYjeihSagG4GCvSjiTliWtH3MOiaeWc8ZCz3LgqyYYLL/L8w3QpNK+LXady8Hqz+e
+         z6TQ8GkhgD1AS8soiXHrWjWW+FM5mTJ/3V4y4ds3plTCHWp4WpmRCVTxAugl1bzpIU+D
+         fcf2ekTM9kztHDfgkMXLtt2I5topzCw470L71Ivju9T7oAj2Qbef8K1O+uArLjfjCjsz
+         bc8Ty48IVGdMc9pCTk7POCVZ555p/M9rIK3DPznoDlA5jjIu4wBqZPPvaVvsCTm4EnJ+
+         ggJzty39O+h2/+B4Fk6iUFUEZZ+EePDKPEqB6K1DSezBag5T3I/D4PUSrKUDLCW2d8Hj
+         OP8A==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769803498; x=1770408298; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769803663; x=1770408463; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oGoBRgPPoitzO+sWNnImbteEFTL97pD/pkLJ6YZ87Q8=;
-        b=Ae/z5pIP8sEBMWpbOlwKHH+5+N5k/NNnDlBqvP6ETtUWkt9EDy9ht4MsSeVU06H/0O
-         4V6JkS4El4UvLaRK22Eeir1bamXb2qs4i6a3SreZlOelJezCpReBokkKdVWxLr/bcEV1
-         RLKIgRpGc7o5ltcFV4aN9U0V/E1PHleEtBug1chB25yXLV7Tl1ZbTTBlbqVj2iza2fFG
-         AOaQQG8jVWSus7xfFfPlJ39aIpItYJcRwAgjBxlQ0IHnOqHFDAUdvCc9u1mtQi5rGtnG
-         NHP5/gZjvKtLN8Lo1DhJ463DAmF+wlQqmlgkOnMcdBg1npQ33+FA1bw0ZzcVrmcASgCC
-         wWQQ==
+        bh=xfZ/yn2sX+8CvDNrIoBnhlU34L/OaV7M5POjaoUPrSs=;
+        b=Ddyj3eECiWcQOxTCLGp6hMoD8PP3lJ96qZMoAclBiJX1T7IB4ZxawYb9iYSB9JabD6
+         Za5nOiXNgPtaT3ei9icAHpSugQN2sSzXRBucBaey1xQnVcB93MjmbvABdAgT1BK6XZpT
+         TMAEKNFbMy9XFqg/UWzJTDNjLH1Qk2p05mWehwa2uV9KiO/1VVegfCifQG2uAGCAdGxU
+         4/pZ72zNbI7fFfHYRbcTPhBv6WFE0JWsxwTwcAZPL2d9DqI+xRaocJ9GvLc6vMmbUgs1
+         4KnIYaZ/xvCwOCBOJE3e6vuygOal0KBInCcPPyFdPQurUqhHiisO94cCQv0VySPGN93B
+         6glA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769803498; x=1770408298;
+        d=1e100.net; s=20230601; t=1769803663; x=1770408463;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=oGoBRgPPoitzO+sWNnImbteEFTL97pD/pkLJ6YZ87Q8=;
-        b=IgQNuDAfpNzIWZ6/km9wjCbKQzZqeGrqauTbLvu95z07niENpym4h77Dq0LLs1Fl10
-         JGe/9tjCqrLoaH9P/MjyYDEGjRr+KS5IHY989AlgVI/3mHXU1Q77yShdlFXlZaxTafRN
-         6nqdlkO8Ddk68j4FbRf6vh3u339mgveAZA3sxET2RUy6gRu/kQBIDUFoC84fxLjAYm9e
-         l5zpsYT83m0ulHmiIuBIz+BpYevqpZqQzh5oZ3iaGAOXf3RRBB9I/75aAMvefZbICY16
-         2cLmm0Br0nM1CQzXIj8qBc73O9yOZ62aWII+XJps8inovX2l/pTy83VBGOvA7w46QwIF
-         uzKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWOwdYmw6CC3OFN9soNqh1rSqpde+4N68snjI1R2VOKmB6pAdYe4GdLu+VGPoybn9LAAZ0s+YGtJC8W+KguVGAn@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUxE0YK2ak2zaJ4xI9P7l3PhSIdELfW/r6N5XYHi4JYUORPfSs
-	GfGCO8mFj7xXJ4Hz9ul6GTOhnTXLoRf0HtvrOw0KGm4U7a+T2n2pAS2qH8v5soGVpKzKliD9hIf
-	Gz71M8H2qP7jG93wAj38vLGRERQDh6DQ=
-X-Gm-Gg: AZuq6aKL75rInORahT284K3fWtYngws3YRu3DKqGXvTk43+xHsJBrG6T+JoWV4cYyY+
-	rWmsoNQSNFnrDq3DEsxR0w7CZaw/2sqyrH5bDnUcN/CUmjgBHOTdxXalD+UVeSy4A6nkfeirx95
-	3Er4ilkH5NYJ+LGKAQKl3dsEBItLVFcnWXgoYpC3EGjyj6yPKcNtzdKPE8fZTsbdua+4HyYe37P
-	J+3roRYdblHF3/3Vqltyu+0ZVFO3tzX/AM/55tO+25PjDJG2IEMNMOScWwkE3kA5vIFNEukELfw
-	yGVD9XilFyY=
-X-Received: by 2002:a17:90b:35d2:b0:352:dbcc:d74c with SMTP id
- 98e67ed59e1d1-3543c504f9bmr3899719a91.15.1769803497900; Fri, 30 Jan 2026
- 12:04:57 -0800 (PST)
+        bh=xfZ/yn2sX+8CvDNrIoBnhlU34L/OaV7M5POjaoUPrSs=;
+        b=ZfdWEhIvbsjsnDZV98x5GI6lJSkrwX7ZcQqfEFxfSa000SUYYl+9GY2whwB2kneYwG
+         Hdd93efoq9mZdOIenRhVOn/NZdbCbKE1/tdsIvRZmIaaOYY7ikgG9WviSvXOz2r7DYM+
+         Wlj85J61dB2057/SiBFikoeb0DQBFS9kqV6U1O2O2gZQgeGI/ntW1eue/Su1+ugv0E6b
+         wIa5oEvXPw9n+/m4DWzN0n3aj9bFIvpQ/yl8j/V4c2mfx9aBkZqFwB8hflD1rqFlPXeJ
+         LEd0jpJr3lq8fyLAzSVyRDvv0T6pKMf0pLHYUGqREwexE/PhczE+uT2Tx0/A+ntWsmOw
+         fVGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmU+cFkttVeV2cANZ2j/kytrR4k/EMgJhBNT8Pxi5TFmTaIX5lHsYHQ0UNEyVVlD3V8GpFx+rJaiiQsF9/OqNz@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlMM5QQgAZpO4hEaHHHaefAHHD1XI9fuekCR/qYJ3a8nRP65Xb
+	Qp7n7hAiCFp0PTZYe+JHzlvgVG1wW8UqZPCN5eWSo35oJfYMRR3UJ8Dbu5qEKhlBKJEZq/f6Sr0
+	TqSX9X9KiaEOZRsBMba6iF5JPLkvL95SDc1AweV64
+X-Gm-Gg: AZuq6aKAnEgtKSwra9lnieWG6q4DXa/hbIh1rrIAJTd+XpvZQDiHVEdzNuxhEjVQsTN
+	C/HLxFtZLwoA8CtSx2fVMul/32fCiVp5MJxQEYw0wJfBhAazu2NLpKzGHzZU4Sg8s5DTmKGBUHA
+	8Ga9X1bt6wE8ArGdyOyVHt4Z9TOW2l4LheHriqGCsE5sV1pj8hiRVd++m8q96GsVzj4UavdBaiZ
+	RsgLPac0k6a3n9RLbfHcSFBL8fupVm2Ef7mVmtgqVKzkEofdgr0k1zXDBag8WDOq2xVgBumde+2
+	cgYwG+/N1UxKvp383sA4e7UN
+X-Received: by 2002:a17:903:3d07:b0:2a7:4151:2c74 with SMTP id
+ d9443c01a7336-2a8f32da681mr397915ad.16.1769803662323; Fri, 30 Jan 2026
+ 12:07:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260126074331.815684-1-chen.dylane@linux.dev>
- <20260126074331.815684-3-chen.dylane@linux.dev> <20260128091033.GG3372621@noisy.programming.kicks-ass.net>
- <CAEf4BzYpcgC0Pi0f_ScUavJ_Tw74PKULsbPdexKsWmb8RmxLKg@mail.gmail.com> <20260130113150.GB166857@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260130113150.GB166857@noisy.programming.kicks-ass.net>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 30 Jan 2026 12:04:45 -0800
-X-Gm-Features: AZwV_QgnGlAMMCWYO2hOpTAbHl4pZuXMosvtjB3dgI88kFwaBbShTBvig50tbQ4
-Message-ID: <CAEf4BzZNOqxhkjuePzeG=ivqBSHXnWzPLPPHJdoC91c+u-WjAg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v8 2/3] perf: Refactor get_perf_callchain
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Tao Chen <chen.dylane@linux.dev>, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, song@kernel.org, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
+References: <20260127225909.3296202-1-bwicaksono@nvidia.com>
+ <CAP-5=fUxhbR1xs1f9mrkcUXZZNLrVqDG0ebhwW--WtgVRnNxNw@mail.gmail.com>
+ <40988c57-ee6f-4693-afe4-2615dc43f395@linaro.org> <MW5PR12MB5681E958BDDCEB137E65CE54A09FA@MW5PR12MB5681.namprd12.prod.outlook.com>
+In-Reply-To: <MW5PR12MB5681E958BDDCEB137E65CE54A09FA@MW5PR12MB5681.namprd12.prod.outlook.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 30 Jan 2026 12:07:31 -0800
+X-Gm-Features: AZwV_QgiJyUG5mr0pnscOQIDv9TtdTed9GqfFQg3UrXw3XStpF8ShZ6gj_R5UHg
+Message-ID: <CAP-5=fWB_nbnc6W9X-6iJH-ZasFriASOtduLjFLgY_exRKCqnQ@mail.gmail.com>
+Subject: Re: [PATCH] perf vendor events arm64: Add Tegra410 Olympus PMU events
+To: Besar Wicaksono <bwicaksono@nvidia.com>
+Cc: James Clark <james.clark@linaro.org>, 
+	"john.g.garry@oracle.com" <john.g.garry@oracle.com>, "will@kernel.org" <will@kernel.org>, 
+	"mike.leach@linaro.org" <mike.leach@linaro.org>, "leo.yan@linux.dev" <leo.yan@linux.dev>, 
+	"mark.rutland@arm.com" <mark.rutland@arm.com>, 
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>, "peterz@infradead.org" <peterz@infradead.org>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, 
+	"namhyung@kernel.org" <namhyung@kernel.org>, 
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Makin <tmakin@nvidia.com>, 
+	Vikram Sethi <vsethi@nvidia.com>, Rich Wiley <rwiley@nvidia.com>, Sean Kelley <skelley@nvidia.com>, 
+	Yifei Wan <YWan@nvidia.com>, Thierry Reding <treding@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, 
+	Matt Ochs <mochs@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 30, 2026 at 3:31=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Fri, Jan 30, 2026 at 10:08=E2=80=AFAM Besar Wicaksono <bwicaksono@nvidia=
+.com> wrote:
 >
-> On Wed, Jan 28, 2026 at 11:12:09AM -0800, Andrii Nakryiko wrote:
-> > On Wed, Jan 28, 2026 at 1:10=E2=80=AFAM Peter Zijlstra <peterz@infradea=
-d.org> wrote:
+> Thank you James and Ian for the comments.
+> I will try to address the spelling mistakes on v2.
+>
+> Please see my other comments inline.
+>
+> > -----Original Message-----
+> > From: James Clark <james.clark@linaro.org>
+> > Sent: Wednesday, January 28, 2026 3:37 AM
+> > To: Ian Rogers <irogers@google.com>; Besar Wicaksono
+> > <bwicaksono@nvidia.com>
+> > Cc: john.g.garry@oracle.com; will@kernel.org; mike.leach@linaro.org;
+> > leo.yan@linux.dev; mark.rutland@arm.com;
+> > alexander.shishkin@linux.intel.com; jolsa@kernel.org;
+> > adrian.hunter@intel.com; peterz@infradead.org; mingo@redhat.com;
+> > acme@kernel.org; namhyung@kernel.org; linux-tegra@vger.kernel.org; linu=
+x-
+> > arm-kernel@lists.infradead.org; linux-perf-users@vger.kernel.org; linux=
+-
+> > kernel@vger.kernel.org; Thomas Makin <tmakin@nvidia.com>; Vikram Sethi
+> > <vsethi@nvidia.com>; Rich Wiley <rwiley@nvidia.com>; Sean Kelley
+> > <skelley@nvidia.com>; Yifei Wan <ywan@nvidia.com>; Thierry Reding
+> > <treding@nvidia.com>; Jon Hunter <jonathanh@nvidia.com>; Matt Ochs
+> > <mochs@nvidia.com>
+> > Subject: Re: [PATCH] perf vendor events arm64: Add Tegra410 Olympus PMU
+> > events
+> >
+> > External email: Use caution opening links or attachments
+> >
+> >
+> > On 28/01/2026 8:03 am, Ian Rogers wrote:
+> > > On Tue, Jan 27, 2026 at 3:00=E2=80=AFPM Besar Wicaksono
+> > <bwicaksono@nvidia.com> wrote:
+> > >>
+> > >> Add JSON files for NVIDIA Tegra410 Olympus core PMU events.
+> > >> Also updated the common-and-microarch.json.
+> > >>
+> > >> Signed-off-by: Besar Wicaksono <bwicaksono@nvidia.com>
+> > >> ---
+> > >>   .../arch/arm64/common-and-microarch.json      |  90 +++
+> > >>   tools/perf/pmu-events/arch/arm64/mapfile.csv  |   1 +
+> > >>   .../arch/arm64/nvidia/t410/branch.json        |  45 ++
+> > >>   .../arch/arm64/nvidia/t410/brbe.json          |   6 +
+> > >>   .../arch/arm64/nvidia/t410/bus.json           |  48 ++
+> > >>   .../arch/arm64/nvidia/t410/exception.json     |  62 ++
+> > >>   .../arch/arm64/nvidia/t410/fp_operation.json  |  78 ++
+> > >>   .../arch/arm64/nvidia/t410/general.json       |  15 +
+> > >>   .../arch/arm64/nvidia/t410/l1d_cache.json     | 122 +++
+> > >>   .../arch/arm64/nvidia/t410/l1i_cache.json     | 114 +++
+> > >>   .../arch/arm64/nvidia/t410/l2d_cache.json     | 134 ++++
+> > >>   .../arch/arm64/nvidia/t410/ll_cache.json      | 107 +++
+> > >>   .../arch/arm64/nvidia/t410/memory.json        |  46 ++
+> > >>   .../arch/arm64/nvidia/t410/metrics.json       | 722
+> > ++++++++++++++++++
+> > >>   .../arch/arm64/nvidia/t410/misc.json          | 646 ++++++++++++++=
+++
+> > >>   .../arch/arm64/nvidia/t410/retired.json       |  94 +++
+> > >>   .../arch/arm64/nvidia/t410/spe.json           |  42 +
+> > >>   .../arm64/nvidia/t410/spec_operation.json     | 230 ++++++
+> > >>   .../arch/arm64/nvidia/t410/stall.json         | 145 ++++
+> > >>   .../arch/arm64/nvidia/t410/tlb.json           | 158 ++++
+> > >>   20 files changed, 2905 insertions(+)
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/branch.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/brbe.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/bus.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/exception.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/fp_operation.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/general.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/l1d_cache.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/l1i_cache.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/l2d_cache.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/ll_cache.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/memory.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/metrics.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/misc.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/retired.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/spe.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/spec_operation.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/stall.json
+> > >>   create mode 100644 tools/perf/pmu-
+> > events/arch/arm64/nvidia/t410/tlb.json
+> > >>
+> > >> diff --git a/tools/perf/pmu-events/arch/arm64/common-and-
+> > microarch.json b/tools/perf/pmu-events/arch/arm64/common-and-
+> > microarch.json
+> > >> index 468cb085d879..6af15776ff17 100644
+> > >> --- a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
+> > >> +++ b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
+> > >> @@ -179,6 +179,11 @@
+> > >>           "EventName": "BUS_CYCLES",
+> > >>           "BriefDescription": "Bus cycle"
+> > >>       },
+> > >> +    {
+> > >> +        "EventCode": "0x001E",
+> > >> +        "EventName": "CHAIN",
+> > >> +        "BriefDescription": "Chain a pair of event counters."
+> > >> +    },
 > > >
-> > > On Mon, Jan 26, 2026 at 03:43:30PM +0800, Tao Chen wrote:
-> > > > From BPF stack map, we want to ensure that the callchain buffer
-> > > > will not be overwritten by other preemptive tasks and we also aim
-> > > > to reduce the preempt disable interval, Based on the suggestions fr=
-om Peter
-> > > > and Andrrii, export new API __get_perf_callchain and the usage scen=
-arios
-> > > > are as follows from BPF side:
-> > > >
-> > > > preempt_disable()
-> > > > entry =3D get_callchain_entry()
-> > > > preempt_enable()
-> > > > __get_perf_callchain(entry)
-> > > > put_callchain_entry(entry)
+> > > Cool stuff :-)
 > > >
-> > > That makes no sense, this means any other task on that CPU is getting
-> > > screwed over.
+> > > For wider counters AMD does something similar, but should this be an
+> > > implementation detail rather than an exposed event? How does it
+> > > operate as an event?
+> > >
 > >
-> > Yes, unfortunately, but unless we dynamically allocate new entry each
-> > time and/or keep per-current entry cached there isn't much choice we
-> > have here, no?
+> > CHAIN should be excluded from the json, it's used internally by the
+> > driver when you want 64 bit counters. Userspace can't use it because it
+> > can't control where counters are placed to make sure they're adjacent.
 > >
-> > Maybe that's what we have to do, honestly, because
-> > get_perf_callchain() usage we have right now from sleepable BPF isn't
-> > great no matter with or without changes in this patch set.
 >
-> All of the perf stuff is based on the fact that if we do it from IRQ/NMI
-> context, we can certainly do it with preemption disabled.
+> Sure, will address this in V2.
 >
-> Bending the interface this way is just horrible.
-
-Sure, but I'm just trying to help mitigate the issue at hand (way too
-long preemption disabled region). I agree that we should do something
-better in terms of perf_callchain_entry retrieval and reuse, but maybe
-one thing at a time?
-
->
-> > > Why are you worried about the preempt_disable() here? If this were an
-> > > interrupt context we'd still do that unwind -- but then with IRQs
-> > > disabled.
+> > > [snip]
+> > >> diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> > b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> > >> index bb3fa8a33496..7f0eaa702048 100644
+> > >> --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> > >> +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> > >> @@ -46,3 +46,4 @@
+> > >>   0x00000000500f0000,v1,ampere/emag,core
+> > >>   0x00000000c00fac30,v1,ampere/ampereone,core
+> > >>   0x00000000c00fac40,v1,ampere/ampereonex,core
+> > >> +0x000000004e0f0100,v1,nvidia/t410,core
+> > >> diff --git a/tools/perf/pmu-events/arch/arm64/nvidia/t410/branch.jso=
+n
+> > b/tools/perf/pmu-events/arch/arm64/nvidia/t410/branch.json
+> > >> new file mode 100644
+> > >> index 000000000000..532bc59dc573
+> > >> --- /dev/null
+> > >> +++ b/tools/perf/pmu-events/arch/arm64/nvidia/t410/branch.json
+> > >> @@ -0,0 +1,45 @@
+> > >> +[
+> > >> +    {
+> > >> +        "ArchStdEvent": "BR_MIS_PRED",
+> > >> +        "PublicDescription": "The Event counts Branches which are
+> > speculatively executed and mis-predicted."
+> > >
+> > > nit: The capitalization on Event and Branches, as well as other words=
+,
+> > > is a little unusual.
+> > >
 > >
-> > Because __bpf_get_stack() from kernel/bpf/stackmap.c can be called
-> > from sleepable/faultable context and also we can do a rather expensive
-> > build ID resolution (either in sleepable or not, which only changes if
-> > build ID parsing logic waits for file backed pages to be paged in or
-> > not).
+> > If there's nothing specific to this CPU then the public description
+> > could be left out entierly. The common strings already say the same
+> > thing as this:
+> >
+> >      {
+> >          "PublicDescription": "Mispredicted or not predicted branch
+> >                                speculatively executed",
+> >          "EventCode": "0x10",
+> >          "EventName": "BR_MIS_PRED",
+> >          "BriefDescription": "Mispredicted or not predicted branch
+> >                               speculatively executed"
+> >      },
+> >
+> >
 >
-> <rant>
-> So stack_map_get_build_id_offset() is a piece of crap -- and I've always
-> said it was. And I hate that any of that ever got merged -- its the
-> pinnacle of bad engineering and simply refusing to do the right thing in
-> the interest of hack now, fix never :/
-> </rant>
-
-<hug><nod></hug>
-
+> I will check on this and other events.
 >
-> Anyway, as you well know, we now *do* have lockless vma lookups and
-> should be able to do this buildid thing much saner.
-
-Yes, probably, and I am aware of a mmap_lock use inside
-stack_map_get_build_id_offset() being problematic, we'll need to fix
-this as well. One step at a time.
-
+> > > [snip]
+> > >> diff --git a/tools/perf/pmu-events/arch/arm64/nvidia/t410/metrics.js=
+on
+> > b/tools/perf/pmu-events/arch/arm64/nvidia/t410/metrics.json
+> > >> new file mode 100644
+> > >> index 000000000000..18c2fd58ee9e
+> > >> --- /dev/null
+> > >> +++ b/tools/perf/pmu-events/arch/arm64/nvidia/t410/metrics.json
+> > >> @@ -0,0 +1,722 @@
+> > >> +[
+> > >> +    {
+> > >> +        "MetricName": "backend_bound",
+> > >> +        "MetricExpr": "100 * (STALL_SLOT_BACKEND / CPU_SLOT)",
+> > >> +        "BriefDescription": "This metric is the percentage of total=
+ slots that
+> > were stalled due to resource constraints in the backend of the processo=
+r.",
+> > >> +        "ScaleUnit": "1percent of slots",
+> > >> +        "MetricGroup": "TopdownL1"
+> > >
+> > > Note, on x86 we place TopdownL1 in the Default metric group so it is
+> > > shown by `perf stat` when it isn't given events or metrics to compute=
+.
+> > > Perhaps you want to do something similar?
+> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-
+> > next.git/tree/tools/perf/pmu-events/arch/x86/icelake/icl-
+> > metrics.json?h=3Dtmp.perf-tools-next#n116
+> > >
+> > > Thanks,
+> > > Ian
+> >
+> > That's currently true for the Arm topdown metrics in sbsa.json, but we
+> > probably don't actually want this because there aren't enough counters
+> > for the perf stat defaults plus topdown and it results in multiplexing
+> > and bad results.
+> >
+> > I was planning to change it but we also don't currently expose the
+> > number of counters available either...
+> >
 >
-> Also, there appears to be no buildid caching what so ever, surely that
-> would help some.
-
-Jiri Olsa proposed caching build id per file or per inode some time
-back, there was vehement opposition to it. And doing some locked
-global resizable hash that might need to be used from NMI sounds
-horrible, tbh. So we have what we have today.
-
+> Agree with James, we may not be able to cover all the events in
+> Default + TopdownL1 group.
 >
-> (and I'm not sure I've ever understood why the buildid crap needs to be
-> in this path in any case)
+> Ian, James, in general, is it fine to put some metrics in a same group be=
+cause
+> they are actually correlating even though it may cause multiplexing?
+> For example, "Miss_Ratio" group in this patch provides miss ratio from L1=
+, L2, TLB, etc.
+> It's convenient to have this and get the miss ratio from all cache levels=
+.
+> There are many events needed for this group and it might not be accurate =
+due to
+> multiplexing, but user can get a (rough) broad view in the beginning.
 
-Yeah, perhaps, I haven't dealt with stack_map_get_build_id_offset()
-much, so will need to go a bit deeper and analyze. As I said we have
-mmap_lock problem there, so we need to address that. I'll think if/how
-we can improve this.
+These things are strings so there's no real rules for how they get
+organized other than Default being a special name. For Intel topdown
+there's a convention of having a _group as a suffix to allow some kind
+of drill down. There's even some support in ilist.py for this:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/python/ilist.py?h=3Dperf-tools-next#n477
+As writing json is painful there's code for generating metrics from
+Python and that tries to structure metrics inside groups of groups:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/intel_metrics.py?h=3Dperf-tools-next#n264
+My hope is that at some point this will allow some kind of pretty
+printing of headers and the like.
 
-Do I understand correctly that you'd rather just not touch all this
-for now and we should just drop this patch set?
+Thanks,
+Ian
+
+> Thanks,
+> Besar
