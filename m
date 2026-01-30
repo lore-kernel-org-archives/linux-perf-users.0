@@ -1,174 +1,104 @@
-Received: from sg-1-31.ptr.blmpb.com (sg-1-31.ptr.blmpb.com [118.26.132.31])
+Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707B1330D22
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 01:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605A61B4138
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 03:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769737195; cv=none; b=QvGyLy+UmCj6iqG+gDBXVhC0XxzYs6sRwofb8dt+xBTpsHvnNFnlTK/vryIt94K5IjeZmYz+IwiwsHAThjEDR1Es7m46LrXx3jAVZeZT9PuiuaPBiRbu9bJ3u9ymdVpVOQET6JOT2VoylB6dTb80fe8Lz0gA7UqbqTrBA86a9bg=
+	t=1769744068; cv=none; b=D9UlqN3LA9tSwis/LbWTQDJY6wgtxbpPoNUtUJyp/PryD4QJ+J3Vhm0Uyc5xnCsdWHSix+cguYF1lJoSeEJstozPLKqkiS8jutFKBIj7Inp5OappAh0n9hruQrUhGFBboEmA0Br6wnemO8RJQBcQ8uYpw3hwPHq1QG9QBvX+Nx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769737195; c=relaxed/simple;
-	bh=/1CUBsDJd927BySIY8L9Fe7Z6JCInyOrDcCzO6bWOZ0=;
-	h=Message-Id:References:In-Reply-To:Content-Type:Date:To:Cc:Subject:
-	 From:Mime-Version; b=NIqA4RUNVmrt1WEY47QPc/S1/u8Zq2go7q2ObjLnk173yQWDEJKZ/u4up1ywltlYSTOnGs6cQ71ZQmtPaQkNdUnpsmlYeKDP2EbiUaDzo7N6CGB4di5he00QUyKzhLlUHsSVJTZu+mJWbvUePioL1gUqcv0flkHZeJZzvlqaZ08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=spacemit.com; spf=pass smtp.mailfrom=spacemit.com; dkim=pass (2048-bit key) header.d=spacemit.com header.i=@spacemit.com header.b=CMsIf+xE; arc=none smtp.client-ip=118.26.132.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=spacemit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=spacemit.com
+	s=arc-20240116; t=1769744068; c=relaxed/simple;
+	bh=QVKshjrmITWt9exp1ZUKXHqWgOlKpwlhierbwT/A83M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=EjiQREf3fgibwO7478uCsunihJ3Ng9YxJaOK2K2ytCIZI1TBDFp2dwzFCWVp4v0oK59/ziLM1sf/L6a68YS9Y29QmfWDwe2GQUlaNgCxCcWVTOLN13vCmAQr5pywpAzo8Bs9XDzb28ApoQo2OcNGqGswUR7tQbimjsRr/jb+Xhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WM4oHje7; arc=none smtp.client-ip=209.85.216.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=spacemit.com header.i=@spacemit.com header.b="CMsIf+xE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=feishu2303021642; d=spacemit.com; t=1769737181; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=/1CUBsDJd927BySIY8L9Fe7Z6JCInyOrDcCzO6bWOZ0=;
- b=CMsIf+xE0H3KAtdj7fBL2J7G+2JI8x66aUS39iii9gbWdlgd+D9ixTNjtalZQkfeGSreKs
- wwDz76b2zWVUsGpyeHz5s5MLRs/1ztgYuxNCjrqvqc7Wc/tyNTK1rHeUrfsvrww/VjZHsa
- OfMOGkT00g8r4kAmVnGVn2V4DrHVozImQIQLIpnPB6zsf+UztpOyO+trpa/g+ZMuHumf2D
- 835xIOFZ+6xDkTj/m3+0SwNBKb4uElN/FvkW4m7vSDgFgPw8XeJ3W06cnYPgiToPcNVGcM
- URT/da8lluctXwamy1RpIU3vclARIe6xQFRToU3Hzpr/j/FFkMLOYAmv+8Vg6A==
-Message-Id: <a4684b7f094a6a5ee87d9db722b75594f851b9fb.f8d0aa16.da0e.4b42.9f4d.e17634051da8@feishu.cn>
-References: <cover.1769562575.git.lv.zheng@spacemit.com> <cover.1769666438.git.lv.zheng@spacemit.com> <15209d7b8c5a5055f8944ab7261e440d70a18a03.1769666438.git.lv.zheng@spacemit.com> <20260129-evolution-femur-84eb5668f4a7@spud> <a4684b7f094a6a5ee87d9db722b75594f851b9fb.d4fb292a.1570.47af.8025.bf9af089dc8a@feishu.cn>
-	<20260129-grandly-compare-e8e3a105f690@spud>
-In-Reply-To: <20260129-grandly-compare-e8e3a105f690@spud>
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 30 Jan 2026 09:39:38 +0800
-To: "Conor Dooley" <conor@kernel.org>
-Cc: "Tomasz Jeznach" <tjeznach@rivosinc.com>, 
-	"Joerg Roedel" <joro@8bytes.org>, "Will Deacon" <will@kernel.org>, 
-	"Robin Murphy" <robin.murphy@arm.com>, "Rob Herring" <robh@kernel.org>, 
-	"Krzysztof Kozlowski" <krzk+dt@kernel.org>, 
-	"Conor Dooley" <conor+dt@kernel.org>, "Paul Walmsley" <pjw@kernel.org>, 
-	"Palmer Dabbelt" <palmer@dabbelt.com>, 
-	"Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre Ghiti" <alex@ghiti.fr>, 
-	"Jingyu Li" <joey.li@spacemit.com>, "iommu" <iommu@lists.linux.dev>, 
-	"linux-perf-users" <linux-perf-users@vger.kernel.org>, 
-	"linux-riscv" <linux-riscv@lists.infradead.org>, 
-	"spacemit" <spacemit@lists.linux.dev>, 
-	"devicetree" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v1.1 4/7] dt-bindings: iommu: Add spacemit/t100 features
-From: =?utf-8?q?=E9=83=91=E5=BE=8B?= <lv.zheng@spacemit.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WM4oHje7"
+Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-35305538592so1416785a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Jan 2026 19:34:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769744067; x=1770348867; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QVKshjrmITWt9exp1ZUKXHqWgOlKpwlhierbwT/A83M=;
+        b=WM4oHje7MbsQlVj6wxcr7DH2s3f/FfwKZO/DfMIodnSTmKppaHBLpSl5bpIz6bDwqj
+         +CFhZ7fMeLOgUbz1wEBNTYpLXVlcIBEt7wLv9TJM83zSmlqojXdA86WNbBJL+7bu5v3X
+         akmAvxXQ7bSBiHdoVuHqZ6yqRNx2NIKNAZRKTqD8lwnpf5Jr5IdToAuanw2Bi/+9HvwB
+         3wlW4vGgftwit8oeLMcCftLz6f2S6kptyRprIL+lp18OdFKHQrRwuM9GWRr3Z4mp2879
+         mwqumPk/H9NjEsXoiRlZFlEzGrGUcmc/sfYWrD2Av2WeJBSmVI9pSxWz8RRoZpZh2eqP
+         KPXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769744067; x=1770348867;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QVKshjrmITWt9exp1ZUKXHqWgOlKpwlhierbwT/A83M=;
+        b=ij/taB93E0p72D/pGHLPbDNaBojG1CP+x0eiuNXQ8kiVWBqgFMzCIJzKJLr448J0Cb
+         X15KgTH4GAP+Cm7OOT+3br2FySG+NJgEc4kyX1jUfJde39VGHoNOFf0xHZ4BfAfnHz3s
+         40LE/oUmKVC3J+r7nNOeSeByQkIMZVoFVvv1Sr/muU8FyiFZRPBB3Eoa9PyISu3yBQUz
+         1vOTajOl4dm+r4ktvTf7Y61FMgQvC32wfmkL9d0Uf5PmkJuLlw0+nLSy1Rv7/MomAD8n
+         5l8kvWQpF5TX7gJhHO7VCVYk1anJoi/pJsW3+i/kIToxPojv9YaADSbEL3pMG3Nm7K3j
+         pJAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQOGv3kTVI/NTs+RCoc7fBpEwd6pkU57z7G44aCLGjkmVWwXghqJ+MfFGOozQ3mI1ksX2O1lHwhuDlG9dpYQQc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5+yexw6PI/gSAZ4x3AvsVhDV2ovL8F7GASEmkijfB+E5D/axM
+	domSj4sHspYS24HFBMpo5qaCM9FHFKd2GtcTx+VokCdc7ye2MqVyJQp/
+X-Gm-Gg: AZuq6aJHNYOOKvw3iEKqK36TMiHDO3kvsklG5CtQ6stjaPaP/YG8scMGgQRWzPbuXR5
+	ps/BqS6/ixcdZWih2EGbr7TKXJ2McVaM0yYy/dIVExcm96ssHkb0pQp+yj13JgulLwb7oONdEbm
+	uN9ChFDVXd3mjV674y6pQa+iBXPqY9yZFJEihga40qdxEzyan7wcpwTWnwQYbL8Jb3/X7iSWVaX
+	oF28O5F+QaJsQb3mv13OCT80SNsFq0hyYSgoG6z8CaBXpfKY+u4K1eexhfYGBmOvbVYnLt6Ga2e
+	cNuwxf1zGgYmR1smoe1WCTPxw296kPpozeRJJ5lQTPtQs+0U872ISEYqREaXN0IF7EPD6f+XGzc
+	4trEnWFG7jPS53Ht2tH4ps9Ln9QZy7YFneLh1UPr/0zuXm3edGFZpMzcZzkCl5OzXmFA+e9RIij
+	y8gfAZMZKF6vwAmxnwcd6VKaxlpP5FC61RDPhMyQ==
+X-Received: by 2002:a17:90b:2b43:b0:340:ad5e:ca with SMTP id 98e67ed59e1d1-3543b30535fmr1577516a91.12.1769744066630;
+        Thu, 29 Jan 2026 19:34:26 -0800 (PST)
+Received: from lima-ubuntu.hz.ali.com ([47.246.98.220])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3540f3f0872sm6439833a91.16.2026.01.29.19.34.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Jan 2026 19:34:26 -0800 (PST)
+From: Qing Wang <wangqing7171@gmail.com>
+To: zeri@umich.edu
+Cc: acme@kernel.org,
+	henryzhangjcle@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	syzbot+2a077cb788749964cf68@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com,
+	wangqing7171@gmail.com
+Subject: Re: [PATCH] perf: Fix data race in perf_event_set_bpf_handler()
+Date: Fri, 30 Jan 2026 11:34:20 +0800
+Message-Id: <20260130033420.23612-1-wangqing7171@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <CACkPEmne--T_3bdwJEy8-GEYm4EJF60xSoqbrQ-m_LuZhJhCuQ@mail.gmail.com>
+References: <CACkPEmne--T_3bdwJEy8-GEYm4EJF60xSoqbrQ-m_LuZhJhCuQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Lms-Return-Path: <lba+1697c0bdb+2f6400+vger.kernel.org+lv.zheng@spacemit.com>
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> From: "Conor Dooley"<conor@kernel.org>
-> Date:=C2=A0 Fri, Jan 30, 2026, 00:42
-> Subject:=C2=A0 Re: [PATCH v1.1 4/7] dt-bindings: iommu: Add spacemit/t100=
- features
-> To: "=E9=83=91=E5=BE=8B"<lv.zheng@spacemit.com>
-> Cc: "Tomasz Jeznach"<tjeznach@rivosinc.com>, "Joerg Roedel"<joro@8bytes.o=
-rg>, "Will Deacon"<will@kernel.org>, "Robin Murphy"<robin.murphy@arm.com>, =
-"Rob Herring"<robh@kernel.org>, "Krzysztof Kozlowski"<krzk+dt@kernel.org>, =
-"Conor Dooley"<conor+dt@kernel.org>, "Paul Walmsley"<pjw@kernel.org>, "Palm=
-er Dabbelt"<palmer@dabbelt.com>, "Albert Ou"<aou@eecs.berkeley.edu>, "Alexa=
-ndre Ghiti"<alex@ghiti.fr>, "Jingyu Li"<joey.li@spacemit.com>, "iommu"<iomm=
-u@lists.linux.dev>, "linux-perf-users"<linux-perf-users@vger.kernel.org>, "=
-linux-riscv"<linux-riscv@lists.infradead.org>, "spacemit"<spacemit@lists.li=
-nux.dev>, "devicetree"<devicetree@vger.kernel.org>
-> On Thu, Jan 29, 2026 at 06:43:03PM +0800, =E9=83=91=E5=BE=8B wrote:
-> > > From: "Conor Dooley"<conor@kernel.org>
-> > > Date:=C2=A0 Thu, Jan 29, 2026, 18:08
-> > > Subject:=C2=A0 Re: [PATCH v1.1 4/7] dt-bindings: iommu: Add spacemit/=
-t100 features
-> > > To: "Lv Zheng"<lv.zheng@spacemit.com>
-> > > Cc: "Tomasz Jeznach"<tjeznach@rivosinc.com>, "Joerg Roedel"<joro@8byt=
-es.org>, "Will Deacon"<will@kernel.org>, "Robin Murphy"<robin.murphy@arm.co=
-m>, "Rob Herring"<robh@kernel.org>, "Krzysztof Kozlowski"<krzk+dt@kernel.or=
-g>, "Conor Dooley"<conor+dt@kernel.org>, "Paul Walmsley"<pjw@kernel.org>, "=
-Palmer Dabbelt"<palmer@dabbelt.com>, "Albert Ou"<aou@eecs.berkeley.edu>, "A=
-lexandre Ghiti"<alex@ghiti.fr>, "Jingyu Li"<joey.li@spacemit.com>, "Zhijian=
- Chen"<zhijian@spacemit.com>, <iommu@lists.linux.dev>, <linux-perf-users@vg=
-er.kernel.org>, <linux-riscv@lists.infradead.org>, <spacemit@lists.linux.de=
-v>, <devicetree@vger.kernel.org>
-> > > On Thu, Jan 29, 2026 at 02:09:13PM +0800, Lv Zheng wrote:
-> > > > Adds device tree bindings for SpacemiT T100 specific features.
-> > > >=C2=A0
-> > > > vendor-hpm-events: Allow vendor events to be customized in the devi=
-ce
-> > > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0tree.
-> > > > global-filter: The feature saves silicon area by reducing filters t=
-o
-> > > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0one and use =
-it as a global filter across all events.
-> > > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0This usually=
- is sufficient for real applications.
-> > >=C2=A0
-> > > Why can these not be determined from a device specific compatible?
-> >=C2=A0
-> > The specification only defines less than 10 standard event types while =
-the
-> > real silicons should have implemented many other event types based on
-> > their micro-architecture. I tried to provide a common mechanism for all
-> > vendor specific event types across different vendors.
->=C2=A0
-> Given that the variance is based on uarch, it sounds like it can be
-> determined from the compatible.
+On Wed, 28 Jan 2026 at 05:29, Henry Zhang <zeri@umich.edu> wrote:
+> Thanks, this looks good.
 
-I'll give Robin's suggestion a try.
+I thought my patch is incorrect after review.
 
-> > It is similar for the global filter, the global filter mechanism actual=
-ly
-> > complies to the IOMMU specification, users can alter the iohpmevt
-> > registers as is what is specified in the IOMMU specification. It only
-> > provides slight application difference between the final effection. Thu=
-s
-> > this could also be a non-device specific option.
->=C2=A0
-> What is a "user" in this context? Given you're talking about reducing
-> silicon area, it sounds like this will be set in stone for each SoC, and
-> therefore can be determined by compatible. If other devices do this,
-> they can also determine it from their compatible.
->=C2=A0
-> Properties for things that can be determined based on compatible are
-> generally not permitted, so you'll need to provide a compelling
-> rationale. Common mechanism isn't one, since determining based on
-> compatible would be a common mechanism based on match data that people
-> can tack onto for their devices.
+1. The RCU protects 'prog->aux' but not 'prog', so 'rcu_dereference(event->prog)'
+is incorrect.
+2. The UAF issue of 'prog' may not exist. It's needed further anlysis.
 
-I see. This sounds like a reasonable rule of DT attributes. I'll do similar
-stuffs based on compatible.
+Let's forget my patch.
 
-Thanks and best regards,
-Lv
+The data race is correctly fixed by your patch but there is still a little
+suggestion:
 
+The 'event->prog = NULL' in perf_event_free_bpf_handler is needed WRITE_ONCE.
 
-This message and any attachment are confidential and may be privileged or o=
-therwise protected from disclosure. If you are not an intended recipient of=
- this message, please delete it and any attachment from your system and not=
-ify the sender immediately by reply e-mail. Unintended recipients should no=
-t use, copy, disclose or take any action based on this message or any infor=
-mation contained in this message. Emails cannot be guaranteed to be secure =
-or error free as they can be intercepted, amended, lost or destroyed, and y=
-ou should take full responsibility for security checking.=20
-=20
-=E6=9C=AC=E9=82=AE=E4=BB=B6=E5=8F=8A=E5=85=B6=E4=BB=BB=E4=BD=95=E9=99=84=E4=
-=BB=B6=E5=85=B7=E6=9C=89=E4=BF=9D=E5=AF=86=E6=80=A7=E8=B4=A8=EF=BC=8C=E5=B9=
-=B6=E5=8F=AF=E8=83=BD=E5=8F=97=E5=85=B6=E4=BB=96=E4=BF=9D=E6=8A=A4=E6=88=96=
-=E4=B8=8D=E5=85=81=E8=AE=B8=E8=A2=AB=E6=8A=AB=E9=9C=B2=E7=BB=99=E7=AC=AC=E4=
-=B8=89=E6=96=B9=E3=80=82=E5=A6=82=E9=98=81=E4=B8=8B=E8=AF=AF=E6=94=B6=E5=88=
-=B0=E6=9C=AC=E9=82=AE=E4=BB=B6=EF=BC=8C=E6=95=AC=E8=AF=B7=E7=AB=8B=E5=8D=B3=
-=E4=BB=A5=E5=9B=9E=E5=A4=8D=E7=94=B5=E5=AD=90=E9=82=AE=E4=BB=B6=E7=9A=84=E6=
-=96=B9=E5=BC=8F=E9=80=9A=E7=9F=A5=E5=8F=91=E4=BB=B6=E4=BA=BA=EF=BC=8C=E5=B9=
-=B6=E5=B0=86=E6=9C=AC=E9=82=AE=E4=BB=B6=E5=8F=8A=E5=85=B6=E4=BB=BB=E4=BD=95=
-=E9=99=84=E4=BB=B6=E4=BB=8E=E9=98=81=E4=B8=8B=E7=B3=BB=E7=BB=9F=E4=B8=AD=E4=
-=BA=88=E4=BB=A5=E5=88=A0=E9=99=A4=E3=80=82=E5=A6=82=E9=98=81=E4=B8=8B=E5=B9=
-=B6=E9=9D=9E=E6=9C=AC=E9=82=AE=E4=BB=B6=E5=86=99=E6=98=8E=E4=B9=8B=E6=94=B6=
-=E4=BB=B6=E4=BA=BA=EF=BC=8C=E6=95=AC=E8=AF=B7=E5=88=87=E5=8B=BF=E4=BD=BF=E7=
-=94=A8=E3=80=81=E5=A4=8D=E5=88=B6=E3=80=81=E6=8A=AB=E9=9C=B2=E6=9C=AC=E9=82=
-=AE=E4=BB=B6=E6=88=96=E5=85=B6=E4=BB=BB=E4=BD=95=E5=86=85=E5=AE=B9=EF=BC=8C=
-=E4=BA=A6=E8=AF=B7=E5=88=87=E5=8B=BF=E4=BE=9D=E6=9C=AC=E9=82=AE=E4=BB=B6=E6=
-=88=96=E5=85=B6=E4=BB=BB=E4=BD=95=E5=86=85=E5=AE=B9=E8=80=8C=E9=87=87=E5=8F=
-=96=E4=BB=BB=E4=BD=95=E8=A1=8C=E5=8A=A8=E3=80=82=E7=94=B5=E5=AD=90=E9=82=AE=
-=E4=BB=B6=E6=97=A0=E6=B3=95=E4=BF=9D=E8=AF=81=E6=98=AF=E4=B8=80=E7=A7=8D=E5=
-=AE=89=E5=85=A8=E5=92=8C=E4=B8=8D=E4=BC=9A=E5=87=BA=E7=8E=B0=E4=BB=BB=E4=BD=
-=95=E5=B7=AE=E9=94=99=E7=9A=84=E9=80=9A=E4=BF=A1=E6=96=B9=E5=BC=8F=EF=BC=8C=
-=E5=8F=AF=E8=83=BD=E4=BC=9A=E8=A2=AB=E6=8B=A6=E6=88=AA=E3=80=81=E4=BF=AE=E6=
-=94=B9=E3=80=81=E4=B8=A2=E5=A4=B1=E6=88=96=E6=8D=9F=E5=9D=8F=EF=BC=8C=E6=94=
-=B6=E4=BB=B6=E4=BA=BA=E9=9C=80=E8=87=AA=E8=A1=8C=E8=B4=9F=E8=B4=A3=E5=81=9A=
-=E5=A5=BD=E5=AE=89=E5=85=A8=E6=A3=80=E6=9F=A5=E3=80=82
+--
+Best regards,
+Qing
