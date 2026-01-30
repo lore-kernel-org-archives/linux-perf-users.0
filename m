@@ -1,187 +1,183 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AED1345CD0;
-	Fri, 30 Jan 2026 20:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769804683; cv=none; b=eekwfxKXSggYqc0vn8hIqkel/kROYX5+Wa74ZdfU8O9DG+RNKX60aDiL+AzOZuyuC70woa4cvllDWKEOz4ULbu0iMM2IJefxbWPmczI/E1YStYIRAeKxY4xuDSQBbdU2Q48Zw/oezHPoWCjLpLb0addZeJgiBxbEuKOsKcVxFyY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769804683; c=relaxed/simple;
-	bh=TkqzMYDMbt0vc/MGSw8V1QU5W25D2LpTNrkNwITlieM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eoPBA56uxlZ9JlYZWGi/rommHmTjybf26ne35RwyJmYlfF4SZ+5orneOIEyxx88aZsUdDXAb2tqEalULTiI0+G8JNLA13JpCFYKFTOixoNEzh35K5/F0ClSlrqbSbj2+RBcn9UmavytVyMtNXY58D0blb3MFJh/GsvId6XV6vRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE40B153B;
-	Fri, 30 Jan 2026 12:24:33 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDC243F5CA;
-	Fri, 30 Jan 2026 12:24:39 -0800 (PST)
-Date: Fri, 30 Jan 2026 20:24:37 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Alexandru Elisei <Alexandru.Elisei@arm.com>,
-	Anshuman Khandual <Anshuman.Khandual@arm.com>,
-	Rob Herring <Rob.Herring@arm.com>,
-	Suzuki Poulose <Suzuki.Poulose@arm.com>,
-	Robin Murphy <Robin.Murphy@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: arm_spe: Add barrier before enabling profiling
- buffer
-Message-ID: <20260130202437.GB3481290@e132581.arm.com>
-References: <20260123-james-spe-relaxation-v1-1-4ccb88fa7bc5@linaro.org>
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD8F2E40B
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 20:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769805167; cv=pass; b=a3gx58OZp509cQdwz9VYdd6hDpdAspLgUxETju04+KvZgpHDC5CJ8iz8GFaH1kQs/6X567sQSDu4NcF4sCy2ZvEru/RqxAxHaim6k1FcOBVhplQjTXgve5uxbFf0ncWAzCpPXg5aqPA+09c7pSndPUhLsel3qw80PtS5vLMDVkw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769805167; c=relaxed/simple;
+	bh=fyjn8T2fK3Y1QyHDpsxZwhGYVrBaYACnbn3w6xSn/NE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rJMOZTHzOK+FEhNrIClc+hpL9v+5HPuvuCNIXMEnpEy0DdEcbRkoll4lFAs3e6bIarIt8dkeU+4ljjTidncHGZmtpI7EjMaYz/KhR/1O5YD6/NNMFeEX3lkVmmv45c4P/3ltijUG62w8IJ+fjidc0zgSG0DMdyPRDwT3/0pDGeI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=StPTqJc7; arc=pass smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StPTqJc7"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-bc17d39ccd2so1025922a12.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 12:32:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769805162; cv=none;
+        d=google.com; s=arc-20240605;
+        b=VfsTy4rYMlVEZ6LfAHmSIxUVliDesx+oxyjM2NygE1FFW3uDZvXX5kecA5orCDaMNQ
+         3Bei32vmM3Jl99+MtIl011vEhAS55z0TTg/oYtotaErWKd22Zta+INyiQxoH05bXKXOw
+         DHKpSiE1pjNy54xzXa99l+28Tx0UVSROaXYyEiacQJmgSctMVslKg5R8XiVuCbkqa+Td
+         y4hB/i8xg9Ph9OuLylv/OFdqNPWvE7AhsJRXjTPTKoJSJ+ypm7aBfIelugna3GZdIgPD
+         cFwA/1QSy4EavlqnvOWPWD9BvPmTM80VvnQm+Pwy+ocDsL8QhYeRvHZN1sg6QjFbdUbI
+         rUPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=P4p+gASIzn5rW2H2oCIdf7dVgnctkRAm3XiVfcDdGFQ=;
+        fh=vOQAvUgyi+GJAxhi4D3DSqCSgC5c+xGy0dgUDE1X56U=;
+        b=VGGplxrLOWBJFD6zVtd6f5wZN99z4f5ZNrj0NE9F7TIg3zq0pCa2f2TZVCiVgd/c3n
+         yMa2YWAQuCE+yQbXBrmiq8JpBUKi3sDLuZrvXKz0qPyLPGkmv7GwrSKxBLcGz3FSgAXx
+         B3k/C2fUz3sruyjvWmtf3BfDBoaYv082fbBvjtItsLertcCt9FbcB8YLPFG7I7to/X/G
+         9CSN+pNU+gBerQ51GZRknCqI89iVJ/ph42YzDRh8FMSW5/W7yFxjyejuvx8Cwv49a6hV
+         GSP7kQduPdsqfnbR/zQC6Fy0mV0Ecn67f14VIJDvElgsBfNIV6pWN2r/dG/GiwaKpwVZ
+         Eurw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769805162; x=1770409962; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P4p+gASIzn5rW2H2oCIdf7dVgnctkRAm3XiVfcDdGFQ=;
+        b=StPTqJc7IrEenQs62xmFSy9cGIeabwUkAPEQy+Y8bGupSGSHByTnH+JqgkhfxUTxuc
+         Ih2dQhl4ZdzyAx2cTJq2W+u/0coMHaqc8a5sc6xdopO6iSxkjAHWBx1oQEG6h5PlBBOX
+         tEo73RwpgQI1mmp/3ShzojxG0zkZ7MyJ2FOXcBicDxt6baQdqwiRQ9c0Y9eJZuKDezf6
+         T93RXYlV3n4UOlsFXgrvSDenKelKubXj5rGFZrzcadeDR+gv/2FOG0WbaqgurIvhuxLK
+         sq3IO5VixXIqPCBYb0YWx5PsFlTPvKebZ8RomO9n6pXGEXfjudAAWUkSSE0NauQHFrAX
+         d0kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769805162; x=1770409962;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=P4p+gASIzn5rW2H2oCIdf7dVgnctkRAm3XiVfcDdGFQ=;
+        b=FFEBlQdBBWxpjdJZ3mcjQVEDIYNIGTv+QgP6111iIrzXD/cGdXW79PDumzLLxwgewi
+         2MS0lzxX0GfBjVvrS+cMdwkh/acUijFJOMneolJgN/aII4+hS46VOlRRNZgSSU+chMJ8
+         JkheEg5qz/ppkTNy3SN5CcguOoQF61NP5visAso2/zi54qKh/4KHfPxPrTf/2m0c7DUh
+         Pn87OUIIU6N1eTkVMufWRovTZzQ4o6av5VEfUGIK9efPPAgN40AfHht8iKNOjDELmofR
+         7so4gfL/B0GzPL+PfWS6l2g+aH74PAOM8XiWVKcjfi3e4d2Jcg1hPbY5vTBliw7ZT54E
+         Kz1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXVvWSHP5IycIsHZ1P5EZSinbs7pi74i8qv+CqMzuG7nZFI+MSSLLI/yKOc7XqxZtAk8ttTpmMeiOoC8PnTIPIZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh/1jGZVPsNDY/ZsRCL5jD0mZmN6BZtj3aIpHEOvCY6CBCwJFp
+	s2k4ucWTVNbAUpukeobHBLDQlZT1pkItlHVI2iSpTSoxy3bkn1IEMPXHiQCl+Nhw3FOa2Dyoyfh
+	cIev/5s2GUcrLLKbg5nQN3WwjUic6isc=
+X-Gm-Gg: AZuq6aKSI5XuQYk+Ho/QfDy14lxtrgf8XZcNc2Ej30rUNivbOdMc4G0QXxnv4kD/A5r
+	Cj3X1KBohkKhjdj0yEz8uqHO0zrl8JldS/Oj4Dzj/5wx+r0YluPbxfNKQoTGCCJv9KcFGmzfjF3
+	gu/9oV1lD1j93kxJexbUxY8hmy5MwZJtXMhXVBh8GtBxkyUxI1cwfdU/J5/jADqJCFQF1mBdbAc
+	EVy9gWFctIfw1S4YV9nvQH5mU52iRK2L25CpTYJTlIPI2t847T90NVKZjRXfUplkI3eOLQ+sbBM
+	BkLpGHb1VaA=
+X-Received: by 2002:a17:90b:53c5:b0:34c:3cbc:db8e with SMTP id
+ 98e67ed59e1d1-3543b3d0262mr3832492a91.25.1769805162196; Fri, 30 Jan 2026
+ 12:32:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260123-james-spe-relaxation-v1-1-4ccb88fa7bc5@linaro.org>
+References: <20260127023618.1469937-1-zeri@umich.edu> <20260130102300.GA171111@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260130102300.GA171111@noisy.programming.kicks-ass.net>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 30 Jan 2026 12:32:29 -0800
+X-Gm-Features: AZwV_QidrVTjqLumikxCKlaD6XVlqLqIqwQyz0r7VB3D0P9YN6jXJY3NyntkSs4
+Message-ID: <CAEf4BzahX2oRRU7a9n8NsM-b+MMMjbDKpOEXe_zpR8XQ9=9H=A@mail.gmail.com>
+Subject: Re: [PATCH] perf: Fix data race in perf_event_set_bpf_handler()
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Henry Zhang <henryzhangjcle@gmail.com>, mingo@redhat.com, acme@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, Henry Zhang <zeri@umich.edu>, 
+	syzbot+2a077cb788749964cf68@syzkaller.appspotmail.com, andrii@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 23, 2026 at 04:03:53PM +0000, James Clark wrote:
-> The Arm ARM known issues document [1] states that the architecture will
-> be relaxed so that the profiling buffer must be correctly configured
-> when ProfilingBufferEnabled() && !SPEProfilingStopped() &&
-> PMBLIMITR_EL1.FM != DISCARD:
-> 
->   R24557
-> 
->   While the Profiling Buffer is enabled, profiling is not stopped, and
->   Discard mode is not enabled, all of the following must be true:
-> 
->   * The current write pointer must be at least one sample record below
->     the write limit pointer.
-> 
-> The same relaxation also says that writes may be completely ignored:
-> 
->   When the Profiling Buffer is enabled, profiling is not stopped, and
->   Discard mode is not enabled, the PE might ignore a direct write to any
->   of the following Profiling Buffer registers, other than a direct write
->   to PMBLIMITR_EL1 that clears PMBLIMITR_EL1.E from 1 to 0:
-> 
->   * The current write pointer, PMBPTR_EL1.
->   * The Limit pointer, PMBLIMITR_EL1.
->   * PMBSR_EL1.
-> 
-> When arm_spe_pmu_start() occurs, SPEProfilingStopped() is false
-> (PMBSR_EL1.S == 0) meaning that the write to PMBLIMITR_EL1 now becomes
-> the point where the buffer configuration must be correct by, rather than
-> the "When profiling becomes enabled" (StatisticalProfilingEnabled())
-> from the old rule which is much later when PMSCR_EL1 is written.
-> 
-> If the writes to PMBLIMITR_EL1 and PMBPTR_EL1 are re-ordered then a
-> misconfigured state could be observed, resulting in a buffer management
-> event. Or the write to PMBPTR_EL1 could be ignored.
-> 
-> Fix it by adding an isb() after the write to PMBPTR_EL1 to ensure that
-> this completes before enabling the buffer.
+On Fri, Jan 30, 2026 at 2:23=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Mon, Jan 26, 2026 at 09:36:18PM -0500, Henry Zhang wrote:
+> > KCSAN reported a data race where perf_event_set_bpf_handler() writes
+> > event->prog while __perf_event_overflow() reads it concurrently from
+> > interrupt context:
+> >
+> > BUG: KCSAN: data-race in __perf_event_overflow / __perf_event_set_bpf_p=
+rog
+> >
+> > write to 0xffff88811b219168 of 8 bytes by task 13065 on cpu 0:
+> >  perf_event_set_bpf_handler kernel/events/core.c:10352 [inline]
+> >  __perf_event_set_bpf_prog+0x418/0x470 kernel/events/core.c:11303
+> > ...
+> >
+> > read to 0xffff88811b219168 of 8 bytes by interrupt on cpu 1:
+> >  __perf_event_overflow+0x252/0x920 kernel/events/core.c:10410
+> > ...
+> >
+> > Annotate event->prog access with WRITE_ONCE/READ_ONCE.
+> >
+> > Reported-by: syzbot+2a077cb788749964cf68@syzkaller.appspotmail.com
+> > Closes: https://syzkaller.appspot.com/bug?extid=3D2a077cb788749964cf68
+> > Signed-off-by: Henry Zhang <zeri@umich.edu>
+> > ---
+> >  kernel/events/core.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index a0fa488bce84..1f3ed9e87507 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -10349,7 +10349,7 @@ static inline int perf_event_set_bpf_handler(st=
+ruct perf_event *event,
+> >               return -EPROTO;
+> >       }
+> >
+> > -     event->prog =3D prog;
+> > +     WRITE_ONCE(event->prog, prog);
+> >       event->bpf_cookie =3D bpf_cookie;
+>
+> What about that cookie thing? The consumer seems to be a bpf function
+> (bpf_get_attach_cookie_pe) which can equally run concurrently, no?
+>
+> Also, there seems to be a coherency issue here, if prog runs, it expects
+> cookie to be present and all that.
+>
+> Would that not suggest something like:
+>
+>         WRITE_ONCE(event->bpf_cookie, bpf_cookie);
+>         smp_store_release(&event->prog, prog);
 
-Makes sense.
+yeah, once we set event->prog, we can theoretically have that BPF
+program triggered before we set event->bpf_cookie.
 
-> To avoid redundant isb()s in the IRQ handler, remove the isb() between
-> the PMBLIMITR_EL1 write and SYS_PMBSR_EL1 as it doesn't matter which
-> order these happen in now that all the previous configuration is covered
-> by the new isb().
+But this setup thing is one-time and can be expensive...
 
-The isb() in the interrupt handler is useful and should not be removed.
+>
+> >       return 0;
+> >  }
+> > @@ -10407,7 +10407,9 @@ static int __perf_event_overflow(struct perf_ev=
+ent *event,
+> >       if (event->attr.aux_pause)
+> >               perf_event_aux_pause(event->aux_event, true);
+> >
+> > -     if (event->prog && event->prog->type =3D=3D BPF_PROG_TYPE_PERF_EV=
+ENT &&
+> > +     struct bpf_prog *prog =3D READ_ONCE(event->prog);
+>
+> smp_load_acquire(&event->prog);
 
-See the sequence in the interrupt handler:
+while this is very frequent. So shouldn't we try to avoid unnecessary
+overhead here? Maybe just use more expensive memory barriers in
+perf_event_set_bpf_handler() to ensure that bpf_cookie will always be
+set before event->prog can be seen by any CPU?
 
-    arm_spe_perf_aux_output_begin() {
-        write_sysreg_s(base, SYS_PMBPTR_EL1);
-
-        // Ensure the write pointer is ordered
-        isb();
-
-        write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
-    }
-
-    // Ensure the limit pointer is ordered
-    isb();
-
-    // Profiling is enabled:
-    //   (PMBLIMITR_EL1.E==1) && (PMBSR_EL1.S==0) && (not discard mode)
-    write_sysreg_s(0, SYS_PMBSR_EL1);
-
-The first isb() ensures that the write pointer update is ordered.  The
-second isb() ensures that the limit pointer is visible before profiling
-is enabled by clearing the PMBSR_EL1.S bit.  When handling a normal
-maintenance interrupt, PMBSR_EL1.S is set by the SPE to stop tracing,
-while PMBLIMITR_EL1.E remains set.  Clearing PMBSR_EL1.S therefore
-effectively re-enables profiling.
-
-Since the second isb() is a synchronization for both the write pointer
-and the limit pointer before profiling is enabled, it could be argued
-that the first isb() is redundant in the interrupt handling.  However,
-the first isb() is crucial for the arm_spe_pmu_start() case, and keeping
-it in the interrupt handler does no harm and simplifies code maintenance.
-
-In short, if preserves the second isb() instead of removing it, the
-change looks good to me.
-
-Thanks,
-Leo
-
-> This issue is only present in arm_spe_pmu_start() and not in the IRQ
-> handler because SPEProfilingStopped() is true in the IRQ handler. Jumps
-> to the out_write_limit label will skip the isb() but this is ok as they
-> only happen if discard mode is set or the buffer isn't enabled so
-> correct configuration is not required.
-> 
-> [1]: https://developer.arm.com/documentation/102105/latest/
-> 
-> Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
-> A previous version of this was posted here [1] bundled with other
-> changes to support running in a guest. Since then the known issues doc
-> linked in the commit message has been released so this is a resend of
-> only the critical part that also needs to be fixed for hosts.
-> 
-> A redundant isb() has also been removed in this version which is not
-> present in the previous version.
-> 
-> [1]: https://lore.kernel.org/linux-arm-kernel/20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org/
-> ---
->  drivers/perf/arm_spe_pmu.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 4801115f2b54..62ae409fd5b4 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -639,6 +639,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
->  	limit += (u64)buf->base;
->  	base = (u64)buf->base + PERF_IDX2OFF(handle->head, buf);
->  	write_sysreg_s(base, SYS_PMBPTR_EL1);
-> +	isb();
->  
->  out_write_limit:
->  	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
-> @@ -780,10 +781,8 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
->  		 * PMBPTR might be misaligned, but we'll burn that bridge
->  		 * when we get to it.
->  		 */
-> -		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)) {
-> +		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED))
->  			arm_spe_perf_aux_output_begin(handle, event);
-> -			isb();
-> -		}
->  		break;
->  	case SPE_PMU_BUF_FAULT_ACT_SPURIOUS:
->  		/* We've seen you before, but GCC has the memory of a sieve. */
-> 
-> ---
-> base-commit: c072629f05d7bca1148ab17690d7922a31423984
-> change-id: 20260123-james-spe-relaxation-d6621c7a68ff
-> 
-> Best regards,
-> -- 
-> James Clark <james.clark@linaro.org>
-> 
+>
+> > +
+> > +     if (prog && prog->type =3D=3D BPF_PROG_TYPE_PERF_EVENT &&
+> >           !bpf_overflow_handler(event, data, regs))
+> >               goto out;
+> >
+>
+> Hmm?
