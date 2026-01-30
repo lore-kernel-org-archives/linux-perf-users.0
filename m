@@ -1,850 +1,351 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012004.outbound.protection.outlook.com [40.107.209.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0303D345729
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 17:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A1D2BDC3F;
+	Fri, 30 Jan 2026 18:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.4
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769794791; cv=pass; b=mPX+2lDGfTMGO46xsKH5dcO4sxC8UKGspF3nQ/doGWiiTFR8/3kNiu2KocsFwse6y9txZhBygQbGvWe71LT9iB1+4bHFhNU6PvjPZPWMl+uXgckEgbqFviwisH8m70J77T9SDxjK4s3YG2DbIQjqPfMUa/xJ0kE/D8JXIODpDLg=
+	t=1769796531; cv=fail; b=G+V+Jam/S83P/y4WIr1MsbJ3iIQbIdhuCb/fYDQrvgYOwU81aGlJNGfdaS7a2a6MNU7nomZXKGt22KSLypGNIezXVDlLi/Cpv4r8mmFA0QzTuz/SiYvEjkqkheEqYC8w4XMyupPlL0FjesQM+Q/orCPr6IgrGpCNYQG3ChlH49o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769794791; c=relaxed/simple;
-	bh=W2fZHY5dBgUQ7bDp5fsYa8OrH/i3jFAoXSvn3ataYYA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hoZX10NhcDUZAL/khOQLpKYvFchaVBu6/VVuxyPD6j9Fmoa44cq7zVlj9XqfuUj03Ud1tVDpT0LwTU+uqrL3cUVbSy9beJ56ZmAgEy2JLeY9uMced5//foPCTL/3ua9A8JvkSeu3bvDILLzh5iAnGLppXWk0IJdSLJZMv+B0EE4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UMyhDC7a; arc=pass smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1769796531; c=relaxed/simple;
+	bh=i5RNilTDhrzBzSwrL8c9jsl24Kfot+AzZk/nj28xXcU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=JtROP61tCvj7GuTp5WxOY4fE1SK1XmtLXXblWLHJq4TdTRAqFREfQyox9N9W2NQNebJG+nS2UePxBfcLtLI9tnCc9XHMuggggQpuwmAkN+u26puCWxnw59PlmscvLfoLICYSvsDG2YXF5HFKcNyddjkmhjbf8jWKKu71KnkJ0WI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Jif2euwY; arc=fail smtp.client-ip=40.107.209.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UMyhDC7a"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a1462573caso1195ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 09:39:48 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769794788; cv=none;
-        d=google.com; s=arc-20240605;
-        b=lzgtX67iQLYTgBOpEk5lLzrQbH2eNfSwxzyCM5+qaTSgcHtq1tRZtWLikP2UhKe0m8
-         UHJLI20zHxO5f7yzph48FkGPgz/ZaJK1Kk89PpA9FTRm8RaSHaFhbeAGWDPjJd/WB0/2
-         iASBY+5ciDIKfH+CB+N2K2B4v4rZ9bHThzRrOmO0RREyTpXXc6i/4ixmGZQQSN9niu3N
-         Vjm90WdjNdmFczx4mYMtx7soXHkx0duubwVBufn4RuWQf1X8LzMrzUOjWuG4LEMqhaXp
-         kpqZMRHjyEkVdlZQHWTZcjx4L+N53ikffEH3xJuwalyoZ/Dmz3JKepe2xFiThVlhJDjJ
-         sGoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=g+VDfCB8Des5sPdMHgB5MQCPfyBJlzi4PXNdgRSD0DI=;
-        fh=KHPhOOaM/dHPReJgpixzRXhkVlmwnHsBmz0WqIu8Fr0=;
-        b=XOuNMML6jEXjU5UC+x1Rc5DMTCjUTIQ57uy2Mh2QItUnuBfMJM3D4KrxaPkdOL2xfc
-         v8ucyqzRt2q05v8bIHHWkt3Idxzl+BAL6Sb8jsOCQ3UfHG597mXiHe2CUyylAuVeXwo5
-         rWXfvLhvbAJfzn1BTGR4y6voX87aGR6e5a5L/xTyr6OtCQw3sMNuQn40V3olBg8xQrtB
-         mN8gp5VntsFxW0sxORXrqORwG80iFU65I2Au0JzUNRTuqCUcfrLpYyZDnFGi3dl1v9KT
-         5To7s8igf7FrJcSrk4WDN30eMVduTLEJ7zMavlbgX2GasD/Dk9UsiMuL6AxIydhHMMPm
-         D+SQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769794788; x=1770399588; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g+VDfCB8Des5sPdMHgB5MQCPfyBJlzi4PXNdgRSD0DI=;
-        b=UMyhDC7at9oLBLoGP6TnP4W9nd+Yc0lFivH0QGYuK+W357WsVQ+otDjVKRG/11pllH
-         IBUXmDwESMkZVxLwm4MkaPF2qTkRUeRQ9GVOsX60CV8D0WOobYSsVdDfr2pjx715EVFg
-         F/AsxcVWrmjyT1TGV2OMCFHWIX4GNUYyddINye1m9Q+tZEvD6obGi83L4gmkej//PsHY
-         zt2G33ZQO0ePKwD/4c9dK7JciY6bylFrXOhMYdrhhAOpUUOUOcs7euy37Sde8xrJd6pS
-         lLXJ2ZK1mDgyRO489zVin9lQTV6QvvzxdvdSXoin0DogAZPBFxqV7eXk8GLNZJSIZ/DF
-         xVCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769794788; x=1770399588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=g+VDfCB8Des5sPdMHgB5MQCPfyBJlzi4PXNdgRSD0DI=;
-        b=YR+RGgANV3CYt0B2DrqPwFQPYgk5yQrQoWeneKz9AhoVkQBvKb7+86JZKyQP7SfB0Y
-         mmNtYCMQOPJA7ofhMvnw/PDLy0ihsamCD4HkCMzp7kJ9AGg2+1QkTcGnNrlMN4COvhKT
-         VXlTkYNSqeP3xic4I5pcQBUJonzsJnJfrWBeDmh6AEIWUrAPOfrOUw9vI7h+JqDP+Z80
-         ERGE8YZWp1ykbZfa1ZAsymGTkRS6gSg8D7cpzZnfgKodCKq7rgi+AyouupoZXRp+lSGK
-         xRp/TQKEIuIXeDbxutuwYYaKeEI9VOCfj8GdsKJrMwEfcV5fBWYBERScOaKWHi3XKw5F
-         SnJg==
-X-Forwarded-Encrypted: i=1; AJvYcCXFYS+xWEHdWyGAWcOkqBdcm44FRy0ZNJgpBhL32lT5XrkVRljMgK67glf2nL1bC+WIjSfldlzZT/oMuDpE7lJz@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywf0hHlbV7UsRIMgTpOrl+G3AtJoNEtMfwUtkAlIHQ1pUKJjcBa
-	S5xzaxpiV+wrEtOJV0jfnLZ6FaNXay6O8aTgM4823vPrGXUcKzAPaLAbDUcEV/Zq7gdDYX0MSGm
-	UlsZkijmKk2soL6ydehCZgSpKQPjadbW2NLCQQM0l
-X-Gm-Gg: AZuq6aK90n0+aa891/JsSX3GpSQejf26/t70hzJpc0+HPHQTUUZLll4IBxLm8tbPRcv
-	P/AGRhugudtP6CwcWN4bZmUSZbLNc3bSuyu5d3UU1jN5fgwqrRE1Xs1aq4gw4A4Qt6umMK/5b2Y
-	XDkz7zBzHSSOLLb0JkP553wAEKRDhpyNVomga0jZYV0khspcnqYxwFbdZBaS0u6FrPTVxsPm5nh
-	a2QnvFtqDiPtaR6wVejXuC2ONxOU8F2ol1697GBGrAHH0m3qp0tZ+6WREdRxz22ZVxPGsS7sAZg
-	+bC2wmPy8F/164QVzumrQqXI
-X-Received: by 2002:a17:902:cecb:b0:2a0:867c:60e2 with SMTP id
- d9443c01a7336-2a8dbbd78femr3040605ad.19.1769794787816; Fri, 30 Jan 2026
- 09:39:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Jif2euwY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=O8gTPNrXvEUK0Wi32vPrzwh/Y5A2N3HclnR25mvtgQ30nCboMmauaqVqN5XOAmzKkfpOMI0ures9Ppd175kOkwWyzYPIZm66yJv6LWtKtRFm3FTSBeJeFVZmnCz3D0bh5bmtWGGiQ6NWKeyeNv+7NrdonZ8QoAiXQSfDnfXfPvz5jEhJgGFbMpWFpbFMEp8n3Y6kf7fP57GZ0fcZRrWUSIwcGz9GSVyI/Ksu+S6sWpIPaHMNdWvKs10rX0QYDfchyZMplJc0zDNFLFvNW8JDX3VbT25aPlPq38OGPTvl6ezEusnEO72uDYI6xbmsEiZ+3kHclTp6yegONxedHEmySg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i5RNilTDhrzBzSwrL8c9jsl24Kfot+AzZk/nj28xXcU=;
+ b=fdLJYp+RMljTo1kLHsyjiIf6eHMF2w+UQGSXcFFJpwy8OOayPQnR7nrihCZRcZstPqD0E2+B/sBIHHLyGaqaWXUbJ2T4QgLEN+c6mROYlvVmk+fA9V+ofU7vm5v2erDFQMpXlaYfmsYcT0QMPJG0LBZmKzkqZSEwUmGtby3k+UNoK8cy02rB8HLsK7TEY99G6HTS6rSdelDRCcjFaUrJxBqGg4vVE8HcqtYySvHsnWybNSC88bajSO1RS69Gyx9qEgFN0hdJ/bHBMVV/dbDQBsVmg4pCvMqdHPmU1tx7FQUukz85ljXtYSy0dlfRwH8ZvHRit2Jd9yNpkY1mJc0GJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i5RNilTDhrzBzSwrL8c9jsl24Kfot+AzZk/nj28xXcU=;
+ b=Jif2euwYfEq+gS7c8gn9zlEedRzV3OvIVdXttLTYgupgvOc9Lkp+nfbB6Cgd8Bk1eFsBGosvCvJhMtkzs1GRu/KY7ymF3kTyi1wVvLDxVdIg0n/7dMA0YFA9ZIG9+4KX95d/R7fXq4XbSjnXINikXDfWVRVgzbiWJEDVjhf8881ig75G3cl9b4eZ9/xtpqgCbfqM9Whwnays32EmIun8zryAA99vBM0rVB1Z5hU4uZ1oV+idVCxhX16XTAP/D3bUyIGnffsqoLJRW78u6/6voCUPgz5c8q7DDGC4+fJUw3ggzbiny6YYQzPWHdLj+3wIz2oVNMzZhpLABHrrhvGM1A==
+Received: from MW5PR12MB5681.namprd12.prod.outlook.com (2603:10b6:303:19e::20)
+ by LV0PR12MB999067.namprd12.prod.outlook.com (2603:10b6:408:32d::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Fri, 30 Jan
+ 2026 18:08:46 +0000
+Received: from MW5PR12MB5681.namprd12.prod.outlook.com
+ ([fe80::e5fb:15be:ad9e:5911]) by MW5PR12MB5681.namprd12.prod.outlook.com
+ ([fe80::e5fb:15be:ad9e:5911%4]) with mapi id 15.20.9564.006; Fri, 30 Jan 2026
+ 18:08:45 +0000
+From: Besar Wicaksono <bwicaksono@nvidia.com>
+To: James Clark <james.clark@linaro.org>, Ian Rogers <irogers@google.com>
+CC: "john.g.garry@oracle.com" <john.g.garry@oracle.com>, "will@kernel.org"
+	<will@kernel.org>, "mike.leach@linaro.org" <mike.leach@linaro.org>,
+	"leo.yan@linux.dev" <leo.yan@linux.dev>, "mark.rutland@arm.com"
+	<mark.rutland@arm.com>, "alexander.shishkin@linux.intel.com"
+	<alexander.shishkin@linux.intel.com>, "jolsa@kernel.org" <jolsa@kernel.org>,
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>, "peterz@infradead.org"
+	<peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>,
+	"acme@kernel.org" <acme@kernel.org>, "namhyung@kernel.org"
+	<namhyung@kernel.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Thomas Makin <tmakin@nvidia.com>, Vikram
+ Sethi <vsethi@nvidia.com>, Rich Wiley <rwiley@nvidia.com>, Sean Kelley
+	<skelley@nvidia.com>, Yifei Wan <YWan@nvidia.com>, Thierry Reding
+	<treding@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Matt Ochs
+	<mochs@nvidia.com>
+Subject: RE: [PATCH] perf vendor events arm64: Add Tegra410 Olympus PMU events
+Thread-Topic: [PATCH] perf vendor events arm64: Add Tegra410 Olympus PMU
+ events
+Thread-Index: AQHcj+Cj3WKkUXlrNk6a56HCQEVPPbVnOXgAgAAZ8gCAA6t7IA==
+Date: Fri, 30 Jan 2026 18:08:45 +0000
+Message-ID:
+ <MW5PR12MB5681E958BDDCEB137E65CE54A09FA@MW5PR12MB5681.namprd12.prod.outlook.com>
+References: <20260127225909.3296202-1-bwicaksono@nvidia.com>
+ <CAP-5=fUxhbR1xs1f9mrkcUXZZNLrVqDG0ebhwW--WtgVRnNxNw@mail.gmail.com>
+ <40988c57-ee6f-4693-afe4-2615dc43f395@linaro.org>
+In-Reply-To: <40988c57-ee6f-4693-afe4-2615dc43f395@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW5PR12MB5681:EE_|LV0PR12MB999067:EE_
+x-ms-office365-filtering-correlation-id: 04fd5603-b711-4cba-694c-08de602a9c2a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700021;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?Y2RLdmxzZW9JOXlVTU9rM1RZOEdJL3V3R1lZbndnK28wNENVUXdaWUIvcnVu?=
+ =?utf-8?B?aHowREFKM0tPMFVGa2YwM1hWMVpnTmZTcDV0SHRWZUxPSkZPbEJWTTk5ODJV?=
+ =?utf-8?B?K3RKeUwxb05vRWIrQVZOY2tuZ00xOC9yM3hMOHA1R0pYc29NRFYxSTRtYTZi?=
+ =?utf-8?B?ZWtvTlZhVnZhMkxzcmdOVHg2NENwWXRKWDlVQ2cvYUFUejBLMTZ0T1U5VUo4?=
+ =?utf-8?B?Qmt2QXp6dXY4L0ZxWldMVWR0VVVBRGNvSk5sbXRRQWxPbUh1VlRJMVY0Z2Ji?=
+ =?utf-8?B?N2tQQVdTaVZOa3plV0doUFNHTXFLblRHNmhaU01ZN0FWZlp5Y3orMjgxRFVH?=
+ =?utf-8?B?YXlENXZuN2FXV2dmenhmMmM1Wm9xODMxaXpYQm02anF2eG5pbmdSYmJuYXBW?=
+ =?utf-8?B?SDR0MjNQOXRDL0FqNmc4aE1OVFFWenJncHpTVForS0NCbml2bGVkMlg1b3A3?=
+ =?utf-8?B?UFJCREFkQ1lwRGw2bWtDTDBmdmRoa2p6dG1NM3VTVDJrWFVmMU94QWJQWnRJ?=
+ =?utf-8?B?WWpuOFdnRFhPS3dmTjJsMGJWVkFyMU94RDVPaEpkZ1lCcC9pS2hCRGxkMW5R?=
+ =?utf-8?B?VXVuV0N6WHNYaGVTMldUZkN1bU1BSVlqd05WWC9DeWk5TEo2cDZrdVVJMWJ2?=
+ =?utf-8?B?U1Z2OW44c0Vub2QvRW45NnhPNGRZME5IUUVRbmV3VkwzMU1QQ1ZCUTFmS3d0?=
+ =?utf-8?B?WFpwbng3UndMMmxhY0dneHArSUptTlpSYVEycFNmR2F3b3RBdWY5NFV2dUpK?=
+ =?utf-8?B?aGZRZzBQU1R5dlVzMkRlUnNSZ3Fyb1hTUkZPeFA4dlZBN1pYRElVdHI0b054?=
+ =?utf-8?B?UzZXeDdweXRkNnBlZVQ3YjR2bGRqSmwxQkFyMlBTbngxbHlFKzFNakpCNFp5?=
+ =?utf-8?B?VlYxcHRmdHMwaEpUdGZERlE4U1B2Rkl3K3dheXhkaEh6SWVZazFyZHJkclFw?=
+ =?utf-8?B?MDRYVGhzem9YZURJRGJ5K1pFMlFkYnBNZ3ZTN0gvSFcxYXMwL0lHSGdoUnk4?=
+ =?utf-8?B?d2lIcDE3bE5xL1p0YUEvQlBIY3l6dStNMEVKUVJzOTZKTVgvVmhQQTEzcklS?=
+ =?utf-8?B?UTV3d3BJamttWkpzKzNyVmcxUDMxUkE1bFE1WXFwNzZFajVta0g5b1ZoMmpE?=
+ =?utf-8?B?M1pUMHJXeUVxVHRLTlFEYitiNEZwWWVGbTlHemRCb1JOSWNaV1llMk5YV3FB?=
+ =?utf-8?B?Wmh6VWFiTHlRczl1d1dvZEZnMXl3UVA2VEZTbkZ6L3FSL0VCK0RYelMxQ0RF?=
+ =?utf-8?B?MFZHM3hsRWd6S1NLODh6TDdkZjhJQS9hNTdvRmJkbW1KSnRERHc1QVQzRVpK?=
+ =?utf-8?B?bkVITVpZcFd4QXZKT2lncGVYdTJwSmE2d0NqRWJzRWJLbHdQWkhyV21nZkJI?=
+ =?utf-8?B?MUVnZjk3VEx1RW1TbVZHYkhKdkI1V0gzREN1NjlyZDd4cE13ZTEwN3NhY3gw?=
+ =?utf-8?B?VkU4dE9CMEJBWXN5N1FyQ3lOOFBjREpYbUhFd0FvOTkvZjRDb0VYZTVCUFVm?=
+ =?utf-8?B?TDNDbFB4bDVrWnp5SGFDcGNJQm9kM2w2VTlCMzNPRkJ1Vzdla3hhWnVwelVk?=
+ =?utf-8?B?SHVIdFlnMjJGWUdxekR6S2hmSlAzbk0xVnNvaDJyeG5VWVVzYzd0NXdZRkpX?=
+ =?utf-8?B?S2tHenRHM0ZpRGo2Q1ZyWDBjRDJ4a01aejZvVWJiQkRtR1BMQndFUUI1MThq?=
+ =?utf-8?B?bDNBL3ViVnBBNERuM29kdnBVbk8ycVFlTGkrVGxQbGRLbWV0UmI4d09aU0FE?=
+ =?utf-8?B?TDlDWFp6Q0VYN1QzMjRBRDYxd1pqOWhLTVkrV1lNM1NIRml5WklBTzltUnNQ?=
+ =?utf-8?B?c3IyWFNqSDEyWWNqRXN1Ly8rMkxTL1U4Sk5wRWJObmNFMTZzWlNzUEo4d09s?=
+ =?utf-8?B?cG4wRGpLSW9Ocy9Xeno5RWtmVmxwTU5BcTNyWGx3WjdDd1pRWkhZWXFjMmZI?=
+ =?utf-8?B?MERvSEY2R0E2RlNJMDFnYjBZNkxTN3MxWUVaanpUMTg1QW1xSTNVUXJQRXV0?=
+ =?utf-8?B?b0tEVTNuVnJ5aTdpaU03ZllRRFlzNkQ1QzcyaUJ3cE1Dano5VE5qM25DelRW?=
+ =?utf-8?B?MTdEcEN5ZlVtWEJNdGNFUWJyNnJXZTdUKzQwRG0xM2taVWxnVVloVWFpMmdG?=
+ =?utf-8?B?MlRRYnF2TEgxSUZvSFR4akR5S3pyNmNHM244ZU96RC9qUURGQ2F4YzJSV1VD?=
+ =?utf-8?Q?DSjhoLyPP7SvzATFQ4SZ5Pg=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR12MB5681.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?dnhiQUVtYmMwaytJL2hGRkVTdmpRTFRNai96dTc5NVJYenptR3VhejN5UXpP?=
+ =?utf-8?B?VnhUWHhMZWNFZEt3OWtzdFJENXJwbFV5SWdFM2xIdWFXN3Q4VjArQ1ZuSjNy?=
+ =?utf-8?B?Y3NDajBhRkgvWnJzK3JOdzJzWG9NMHdYTTMvejdnN0EzVzVsRmNUL2xZSXds?=
+ =?utf-8?B?Ri9SeGluczFua1EzZGRwbWRkTGdXNEpKRkpBVDRwemZFdmxtOFNsKys3VFhk?=
+ =?utf-8?B?aFpXdURlVDhDM2tjdkMydlZ0VWlEOFVVYXpEVnVlYTArbkgzZHQ0N0VESElq?=
+ =?utf-8?B?WDlIZm5LeWVUQjNLOGtIMFpYNmlGdlNKWDc3OEFqQ0pYbk1hYjVscmRxdnUw?=
+ =?utf-8?B?SEg2cmxMTDJ0bkVxMTJHNThLZjQ4KzVOMnlxSklhNjhISklnWlJxUXZuM2ZJ?=
+ =?utf-8?B?cXhqVTFsdS9mOFk3YTJGNjRIdWpkd0pxVTU0ZncxL2RUM2o5cUhEY296dGxD?=
+ =?utf-8?B?RytkR0w1TWRweGtER2Z2ZG5WSEVFQmZ0UTRTUU9ISlRIK2hvT0lveW9vbmJE?=
+ =?utf-8?B?TDNNZG5HaXUrU3d4ZldhYWd5ZUdWa1FqY2tFREJyQVVYQ1pRcUJzbjhmL1RU?=
+ =?utf-8?B?RzdJRk9yUG4vVFhBMFAyVGcyK2lzcjI3RmliN1pWSXp5ejlNY05mbVdzb3h2?=
+ =?utf-8?B?bG4wSktTQ2NDVXY0REZPS3E1bkpKdmtJN0I0dHFibGVEZythaGxQOVpWT0h4?=
+ =?utf-8?B?bE41MEgyelFlYXRkZGlvYzQ5MWpoV1hEMks1dE53cVB2SGZGclpydU40NnlS?=
+ =?utf-8?B?ZFNQdE1WdlF4OE5NN2p6RWtYNkRJSnhrdkE1R3B1QWtUY05wVTg0WFFyS0Ro?=
+ =?utf-8?B?S2xRQ2Y5TjU3YjUrSXBvRzR4STJtL2M4TS9LdEkvdFdqcWpIZ3VqSEp1TGRs?=
+ =?utf-8?B?bExGeklUbVcrRXkyT05BcVZZa2hyTWR3Y0FGb1lESk16czhocW5URUg3ZU1I?=
+ =?utf-8?B?a2JNNlE3U2R5RkhhOG5waktmNWdyUWZOWWwvbFFoaWJlSjJBOE9kc2tsdklm?=
+ =?utf-8?B?cGRZVVZoQ1cxV2JtZ1Jqa29QdnFmZVh6UHVINmxtbEtYaXNCUkxGVnRMaUNU?=
+ =?utf-8?B?U001OGJtZndLSXJjdXA0N2NWS1JJeHlzWHQ4TnZFb2ZqOWJiVWZRdXZzU0hk?=
+ =?utf-8?B?eXMvOUtaY2dtYzBVVldUWDBtY0orUEI3UVNJZjBiTXp1ZHR2QjZYU05NdFVw?=
+ =?utf-8?B?SFcySmplaldpVXpYTyswbUpjdGd5bWdVOXFaRVNrR3ZnWEp2NW1DMjVBRWtP?=
+ =?utf-8?B?TWt3M1crbkpKQ2xmNkJXbEJPZW1XMkVib0V5QVZmTXFXbnplaDJiNEFYUkh4?=
+ =?utf-8?B?aWFwakJiTzZ1NXQyc0djaVhXRUYyR1JQQ1UwQVd0SmQ4cUpkazlJQVZwYTIv?=
+ =?utf-8?B?VkhaVHdpbkdZaUdhblVjWksxRGRjM01hdmZLSlRMSGhBMDkya2ljc2NqWGgv?=
+ =?utf-8?B?RG1zV0RZWDMzUStLTTZtd1hUdXh1MUU2ZDNwanBPTlptdEJSU1BFV04vTTA4?=
+ =?utf-8?B?b0gyVEgyZTAvSDUvcno4NWtJNU5FU1JYK0hpTmJFOCs4TVVjZUViN05QS0ZP?=
+ =?utf-8?B?RHpGU2pNUnkrU3lpbzdNNytIcG9IbHkxM0wxa2hxY1BuUGVwNnlPR0E3QWtM?=
+ =?utf-8?B?anhVN1hjM2VkdEtXSkppZVIvY3d6ZTRRRW0xaXRtdk80SnFXZTFRR2FRNThQ?=
+ =?utf-8?B?YTI0aktPendSQklmNlhFWng1bGZQOTVkRnB6NGIvd0ViL3ZzSXJCZHFyeFEw?=
+ =?utf-8?B?TnJTMklSOFV1RGhzUkhYNmZ4WDBmQkRsODJmNWFrRG1MdDAwOGV6MFhnc1Y5?=
+ =?utf-8?B?UlJxRUFwTjBhYnRlRi9sSEpzbDRrRjdPTTluR2o0UlhuT3BOWGYwd1hrSWxP?=
+ =?utf-8?B?T2xyczkwYVBQODZDdnJFaTRrS3puYytyOGJuS0pDdWVZV25TYUR2V2FKcDZE?=
+ =?utf-8?B?Mjd0QlRMT2d5UnhSS08xWE5OVlNoS3JLSHBOWE5WM08rWWVQa2FiWGJ4dDA5?=
+ =?utf-8?B?VklncDNURklJM3RCcU1JelFuWUVnK3daWW1Fcjl5eis5TCtIcXhFMWJTeXRx?=
+ =?utf-8?B?eUZBbGFOL0hLZVI5U2tYNjQ3a1ljR3BkNGxQTGVkNWpiOFhDRXgweTh4ZHYy?=
+ =?utf-8?B?Q0J2OWxHamc0SEhpdFg2aUwxZUgzTWUvMWZ6bG81TjJlVlYweThHcVEvSExF?=
+ =?utf-8?B?Q2JWODdXV0dBc21ob3NGMFFYL3JmSHRKN0NqRC9VNVl4QWFuZldicmNYNnM1?=
+ =?utf-8?B?SVZrMjdTaHdCZ0daUFpjMWwzSmdmNTEvdE45ZGV0TUhLemxoOVMvL3d6L3Jk?=
+ =?utf-8?B?d3pxMklwbWFmeFh0T0hnd3hyRDdvM0IxdnFDY0Rpamo1MzZ2M3JTdz09?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260121021735.3625244-1-irogers@google.com> <c3bb3f21-327b-402f-b5fc-69cbd1ed52f2@linux.intel.com>
-In-Reply-To: <c3bb3f21-327b-402f-b5fc-69cbd1ed52f2@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 30 Jan 2026 09:39:36 -0800
-X-Gm-Features: AZwV_QgZUwMgnkdUGde4Yg-3d4qjO2cif7qmSSCQ3eT3J9e5PWxlARNc0100pgc
-Message-ID: <CAP-5=fXSqR07uf44fGHPpuBfiLG-bh=DengnbQYFaS43ckv2sw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf regs: Refactor use of arch__sample_reg_masks to perf_reg_name
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
-	Guo Ren <guoren@kernel.org>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Shimin Guo <shimin.guo@skydio.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Howard Chu <howardchu95@gmail.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Dmitry Vyukov <dvyukov@google.com>, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Aditya Bodkhe <aditya.b1@linux.ibm.com>, 
-	Haibo Xu <haibo1.xu@intel.com>, Sergei Trofimovich <slyich@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW5PR12MB5681.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04fd5603-b711-4cba-694c-08de602a9c2a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2026 18:08:45.7718
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GjGERGM5oZBGaJzwrx7GE+TeqQghv2RaL1gw9GCi9SuR9xh4yKSYtdzxR2Q6cYHxY7Akt8dlK8mGBIVTHLX9Og==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV0PR12MB999067
 
-On Thu, Jan 29, 2026 at 11:21=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel=
-.com> wrote:
->
->
-> On 1/21/2026 10:17 AM, Ian Rogers wrote:
-> > arch__sample_reg_masks isn't supported on ARM(32), csky, loongarch,
-> > MIPS, RISC-V and s390. The table returned by the function just has the
-> > name of a register paired with the corresponding sample_regs_user mask
-> > value. For a given perf register we can compute the name with
-> > perf_reg_name and the mask is just 1 left-shifted by the perf register
-> > number. Change __parse_regs to use this method for finding registers
-> > rather than arch__sample_reg_masks, thereby adding __parse_regs
-> > support for ARM(32), csky, loongarch, MIPS, RISC-V and s390. As
-> > arch__sample_reg_masks is then unused, remove the now unneeded
-> > declarations.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> > v2: Correct the setting of reg mask for registers that need >1 bit set
-> >     like XMMs.
-> >
-> > The idea for this patch came up in conversation with Dapeng Mi to
-> > avoid additional functions and tables for x86 APX support:
-> > https://lore.kernel.org/lkml/CAP-5=3DfWOsvAXuu8qx0tk9q8j8BoXPMJB3Gxto+i=
-u6wf06i4cVA@mail.gmail.com/
-> >
-> > The patch is on top of the dwfl clean up patches that switch perf
-> > register functions to using e_machine as an argument rather than the
-> > arch string, this means that EM_HOST can be used with perf_reg_name:
-> > https://lore.kernel.org/lkml/20260117052849.2205545-1-irogers@google.co=
-m/
-> > ---
-> >  tools/perf/arch/arm/util/perf_regs.c          |   9 --
-> >  tools/perf/arch/arm64/util/machine.c          |  14 +--
-> >  tools/perf/arch/arm64/util/perf_regs.c        |  45 +------
-> >  tools/perf/arch/csky/util/perf_regs.c         |   9 --
-> >  tools/perf/arch/loongarch/util/perf_regs.c    |   9 --
-> >  tools/perf/arch/mips/util/perf_regs.c         |   9 --
-> >  tools/perf/arch/powerpc/util/perf_regs.c      |  68 ----------
-> >  tools/perf/arch/riscv/util/perf_regs.c        |   9 --
-> >  tools/perf/arch/s390/util/perf_regs.c         |   9 --
-> >  tools/perf/arch/x86/util/perf_regs.c          |  47 -------
-> >  .../util/arm64-frame-pointer-unwind-support.c |   3 +-
-> >  tools/perf/util/parse-regs-options.c          | 116 +++++++++++-------
-> >  tools/perf/util/perf_regs.c                   |   9 --
-> >  tools/perf/util/perf_regs.h                   |  12 --
-> >  14 files changed, 81 insertions(+), 287 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/arm/util/perf_regs.c b/tools/perf/arch/arm=
-/util/perf_regs.c
-> > index f94a0210c7b7..03a5bc0cf64c 100644
-> > --- a/tools/perf/arch/arm/util/perf_regs.c
-> > +++ b/tools/perf/arch/arm/util/perf_regs.c
-> > @@ -2,10 +2,6 @@
-> >  #include "perf_regs.h"
-> >  #include "../../../util/perf_regs.h"
-> >
-> > -static const struct sample_reg sample_reg_masks[] =3D {
-> > -     SMPL_REG_END
-> > -};
-> > -
-> >  uint64_t arch__intr_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> > @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> >  }
-> > -
-> > -const struct sample_reg *arch__sample_reg_masks(void)
-> > -{
-> > -     return sample_reg_masks;
-> > -}
-> > diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm=
-64/util/machine.c
-> > index aab1cc2bc283..80fb13c958d9 100644
-> > --- a/tools/perf/arch/arm64/util/machine.c
-> > +++ b/tools/perf/arch/arm64/util/machine.c
-> > @@ -1,18 +1,12 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >
-> > -#include <inttypes.h>
-> > -#include <stdio.h>
-> > -#include <string.h>
-> > -#include "debug.h"
-> > -#include "symbol.h"
-> > -#include "callchain.h"
-> > +#include "callchain.h" // prototype of arch__add_leaf_frame_record_opt=
-s
-> >  #include "perf_regs.h"
-> >  #include "record.h"
-> > -#include "util/perf_regs.h"
-> > +
-> > +#define SMPL_REG_MASK(b) (1ULL << (b))
-> >
-> >  void arch__add_leaf_frame_record_opts(struct record_opts *opts)
-> >  {
-> > -     const struct sample_reg *sample_reg_masks =3D arch__sample_reg_ma=
-sks();
-> > -
-> > -     opts->sample_user_regs |=3D sample_reg_masks[PERF_REG_ARM64_LR].m=
-ask;
-> > +     opts->sample_user_regs |=3D SMPL_REG_MASK(PERF_REG_ARM64_LR);
-> >  }
-> > diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/a=
-rm64/util/perf_regs.c
-> > index 09308665e28a..9bb768e1bea1 100644
-> > --- a/tools/perf/arch/arm64/util/perf_regs.c
-> > +++ b/tools/perf/arch/arm64/util/perf_regs.c
-> > @@ -12,48 +12,12 @@
-> >  #include "../../../util/event.h"
-> >  #include "../../../util/perf_regs.h"
-> >
-> > +#define SMPL_REG_MASK(b) (1ULL << (b))
-> > +
-> >  #ifndef HWCAP_SVE
-> >  #define HWCAP_SVE    (1 << 22)
-> >  #endif
-> >
-> > -static const struct sample_reg sample_reg_masks[] =3D {
-> > -     SMPL_REG(x0, PERF_REG_ARM64_X0),
-> > -     SMPL_REG(x1, PERF_REG_ARM64_X1),
-> > -     SMPL_REG(x2, PERF_REG_ARM64_X2),
-> > -     SMPL_REG(x3, PERF_REG_ARM64_X3),
-> > -     SMPL_REG(x4, PERF_REG_ARM64_X4),
-> > -     SMPL_REG(x5, PERF_REG_ARM64_X5),
-> > -     SMPL_REG(x6, PERF_REG_ARM64_X6),
-> > -     SMPL_REG(x7, PERF_REG_ARM64_X7),
-> > -     SMPL_REG(x8, PERF_REG_ARM64_X8),
-> > -     SMPL_REG(x9, PERF_REG_ARM64_X9),
-> > -     SMPL_REG(x10, PERF_REG_ARM64_X10),
-> > -     SMPL_REG(x11, PERF_REG_ARM64_X11),
-> > -     SMPL_REG(x12, PERF_REG_ARM64_X12),
-> > -     SMPL_REG(x13, PERF_REG_ARM64_X13),
-> > -     SMPL_REG(x14, PERF_REG_ARM64_X14),
-> > -     SMPL_REG(x15, PERF_REG_ARM64_X15),
-> > -     SMPL_REG(x16, PERF_REG_ARM64_X16),
-> > -     SMPL_REG(x17, PERF_REG_ARM64_X17),
-> > -     SMPL_REG(x18, PERF_REG_ARM64_X18),
-> > -     SMPL_REG(x19, PERF_REG_ARM64_X19),
-> > -     SMPL_REG(x20, PERF_REG_ARM64_X20),
-> > -     SMPL_REG(x21, PERF_REG_ARM64_X21),
-> > -     SMPL_REG(x22, PERF_REG_ARM64_X22),
-> > -     SMPL_REG(x23, PERF_REG_ARM64_X23),
-> > -     SMPL_REG(x24, PERF_REG_ARM64_X24),
-> > -     SMPL_REG(x25, PERF_REG_ARM64_X25),
-> > -     SMPL_REG(x26, PERF_REG_ARM64_X26),
-> > -     SMPL_REG(x27, PERF_REG_ARM64_X27),
-> > -     SMPL_REG(x28, PERF_REG_ARM64_X28),
-> > -     SMPL_REG(x29, PERF_REG_ARM64_X29),
-> > -     SMPL_REG(lr, PERF_REG_ARM64_LR),
-> > -     SMPL_REG(sp, PERF_REG_ARM64_SP),
-> > -     SMPL_REG(pc, PERF_REG_ARM64_PC),
-> > -     SMPL_REG(vg, PERF_REG_ARM64_VG),
-> > -     SMPL_REG_END
-> > -};
-> > -
-> >  /* %xNUM */
-> >  #define SDT_OP_REGEX1  "^(x[1-2]?[0-9]|3[0-1])$"
-> >
-> > @@ -175,8 +139,3 @@ uint64_t arch__user_reg_mask(void)
-> >       }
-> >       return PERF_REGS_MASK;
-> >  }
-> > -
-> > -const struct sample_reg *arch__sample_reg_masks(void)
-> > -{
-> > -     return sample_reg_masks;
-> > -}
-> > diff --git a/tools/perf/arch/csky/util/perf_regs.c b/tools/perf/arch/cs=
-ky/util/perf_regs.c
-> > index 6b1665f41180..2cf7a54106e0 100644
-> > --- a/tools/perf/arch/csky/util/perf_regs.c
-> > +++ b/tools/perf/arch/csky/util/perf_regs.c
-> > @@ -2,10 +2,6 @@
-> >  #include "perf_regs.h"
-> >  #include "../../util/perf_regs.h"
-> >
-> > -static const struct sample_reg sample_reg_masks[] =3D {
-> > -     SMPL_REG_END
-> > -};
-> > -
-> >  uint64_t arch__intr_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> > @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> >  }
-> > -
-> > -const struct sample_reg *arch__sample_reg_masks(void)
-> > -{
-> > -     return sample_reg_masks;
-> > -}
-> > diff --git a/tools/perf/arch/loongarch/util/perf_regs.c b/tools/perf/ar=
-ch/loongarch/util/perf_regs.c
-> > index f94a0210c7b7..03a5bc0cf64c 100644
-> > --- a/tools/perf/arch/loongarch/util/perf_regs.c
-> > +++ b/tools/perf/arch/loongarch/util/perf_regs.c
-> > @@ -2,10 +2,6 @@
-> >  #include "perf_regs.h"
-> >  #include "../../../util/perf_regs.h"
-> >
-> > -static const struct sample_reg sample_reg_masks[] =3D {
-> > -     SMPL_REG_END
-> > -};
-> > -
-> >  uint64_t arch__intr_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> > @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> >  }
-> > -
-> > -const struct sample_reg *arch__sample_reg_masks(void)
-> > -{
-> > -     return sample_reg_masks;
-> > -}
-> > diff --git a/tools/perf/arch/mips/util/perf_regs.c b/tools/perf/arch/mi=
-ps/util/perf_regs.c
-> > index 6b1665f41180..2cf7a54106e0 100644
-> > --- a/tools/perf/arch/mips/util/perf_regs.c
-> > +++ b/tools/perf/arch/mips/util/perf_regs.c
-> > @@ -2,10 +2,6 @@
-> >  #include "perf_regs.h"
-> >  #include "../../util/perf_regs.h"
-> >
-> > -static const struct sample_reg sample_reg_masks[] =3D {
-> > -     SMPL_REG_END
-> > -};
-> > -
-> >  uint64_t arch__intr_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> > @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> >  }
-> > -
-> > -const struct sample_reg *arch__sample_reg_masks(void)
-> > -{
-> > -     return sample_reg_masks;
-> > -}
-> > diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch=
-/powerpc/util/perf_regs.c
-> > index bd36cfd420a2..779073f7e992 100644
-> > --- a/tools/perf/arch/powerpc/util/perf_regs.c
-> > +++ b/tools/perf/arch/powerpc/util/perf_regs.c
-> > @@ -18,69 +18,6 @@
-> >  #define PVR_POWER10          0x0080
-> >  #define PVR_POWER11          0x0082
-> >
-> > -static const struct sample_reg sample_reg_masks[] =3D {
-> > -     SMPL_REG(r0, PERF_REG_POWERPC_R0),
-> > -     SMPL_REG(r1, PERF_REG_POWERPC_R1),
-> > -     SMPL_REG(r2, PERF_REG_POWERPC_R2),
-> > -     SMPL_REG(r3, PERF_REG_POWERPC_R3),
-> > -     SMPL_REG(r4, PERF_REG_POWERPC_R4),
-> > -     SMPL_REG(r5, PERF_REG_POWERPC_R5),
-> > -     SMPL_REG(r6, PERF_REG_POWERPC_R6),
-> > -     SMPL_REG(r7, PERF_REG_POWERPC_R7),
-> > -     SMPL_REG(r8, PERF_REG_POWERPC_R8),
-> > -     SMPL_REG(r9, PERF_REG_POWERPC_R9),
-> > -     SMPL_REG(r10, PERF_REG_POWERPC_R10),
-> > -     SMPL_REG(r11, PERF_REG_POWERPC_R11),
-> > -     SMPL_REG(r12, PERF_REG_POWERPC_R12),
-> > -     SMPL_REG(r13, PERF_REG_POWERPC_R13),
-> > -     SMPL_REG(r14, PERF_REG_POWERPC_R14),
-> > -     SMPL_REG(r15, PERF_REG_POWERPC_R15),
-> > -     SMPL_REG(r16, PERF_REG_POWERPC_R16),
-> > -     SMPL_REG(r17, PERF_REG_POWERPC_R17),
-> > -     SMPL_REG(r18, PERF_REG_POWERPC_R18),
-> > -     SMPL_REG(r19, PERF_REG_POWERPC_R19),
-> > -     SMPL_REG(r20, PERF_REG_POWERPC_R20),
-> > -     SMPL_REG(r21, PERF_REG_POWERPC_R21),
-> > -     SMPL_REG(r22, PERF_REG_POWERPC_R22),
-> > -     SMPL_REG(r23, PERF_REG_POWERPC_R23),
-> > -     SMPL_REG(r24, PERF_REG_POWERPC_R24),
-> > -     SMPL_REG(r25, PERF_REG_POWERPC_R25),
-> > -     SMPL_REG(r26, PERF_REG_POWERPC_R26),
-> > -     SMPL_REG(r27, PERF_REG_POWERPC_R27),
-> > -     SMPL_REG(r28, PERF_REG_POWERPC_R28),
-> > -     SMPL_REG(r29, PERF_REG_POWERPC_R29),
-> > -     SMPL_REG(r30, PERF_REG_POWERPC_R30),
-> > -     SMPL_REG(r31, PERF_REG_POWERPC_R31),
-> > -     SMPL_REG(nip, PERF_REG_POWERPC_NIP),
-> > -     SMPL_REG(msr, PERF_REG_POWERPC_MSR),
-> > -     SMPL_REG(orig_r3, PERF_REG_POWERPC_ORIG_R3),
-> > -     SMPL_REG(ctr, PERF_REG_POWERPC_CTR),
-> > -     SMPL_REG(link, PERF_REG_POWERPC_LINK),
-> > -     SMPL_REG(xer, PERF_REG_POWERPC_XER),
-> > -     SMPL_REG(ccr, PERF_REG_POWERPC_CCR),
-> > -     SMPL_REG(softe, PERF_REG_POWERPC_SOFTE),
-> > -     SMPL_REG(trap, PERF_REG_POWERPC_TRAP),
-> > -     SMPL_REG(dar, PERF_REG_POWERPC_DAR),
-> > -     SMPL_REG(dsisr, PERF_REG_POWERPC_DSISR),
-> > -     SMPL_REG(sier, PERF_REG_POWERPC_SIER),
-> > -     SMPL_REG(mmcra, PERF_REG_POWERPC_MMCRA),
-> > -     SMPL_REG(mmcr0, PERF_REG_POWERPC_MMCR0),
-> > -     SMPL_REG(mmcr1, PERF_REG_POWERPC_MMCR1),
-> > -     SMPL_REG(mmcr2, PERF_REG_POWERPC_MMCR2),
-> > -     SMPL_REG(mmcr3, PERF_REG_POWERPC_MMCR3),
-> > -     SMPL_REG(sier2, PERF_REG_POWERPC_SIER2),
-> > -     SMPL_REG(sier3, PERF_REG_POWERPC_SIER3),
-> > -     SMPL_REG(pmc1, PERF_REG_POWERPC_PMC1),
-> > -     SMPL_REG(pmc2, PERF_REG_POWERPC_PMC2),
-> > -     SMPL_REG(pmc3, PERF_REG_POWERPC_PMC3),
-> > -     SMPL_REG(pmc4, PERF_REG_POWERPC_PMC4),
-> > -     SMPL_REG(pmc5, PERF_REG_POWERPC_PMC5),
-> > -     SMPL_REG(pmc6, PERF_REG_POWERPC_PMC6),
-> > -     SMPL_REG(sdar, PERF_REG_POWERPC_SDAR),
-> > -     SMPL_REG(siar, PERF_REG_POWERPC_SIAR),
-> > -     SMPL_REG_END
-> > -};
-> > -
-> >  /* REG or %rREG */
-> >  #define SDT_OP_REGEX1  "^(%r)?([1-2]?[0-9]|3[0-1])$"
-> >
-> > @@ -233,8 +170,3 @@ uint64_t arch__user_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> >  }
-> > -
-> > -const struct sample_reg *arch__sample_reg_masks(void)
-> > -{
-> > -     return sample_reg_masks;
-> > -}
-> > diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/r=
-iscv/util/perf_regs.c
-> > index 6b1665f41180..2cf7a54106e0 100644
-> > --- a/tools/perf/arch/riscv/util/perf_regs.c
-> > +++ b/tools/perf/arch/riscv/util/perf_regs.c
-> > @@ -2,10 +2,6 @@
-> >  #include "perf_regs.h"
-> >  #include "../../util/perf_regs.h"
-> >
-> > -static const struct sample_reg sample_reg_masks[] =3D {
-> > -     SMPL_REG_END
-> > -};
-> > -
-> >  uint64_t arch__intr_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> > @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> >  }
-> > -
-> > -const struct sample_reg *arch__sample_reg_masks(void)
-> > -{
-> > -     return sample_reg_masks;
-> > -}
-> > diff --git a/tools/perf/arch/s390/util/perf_regs.c b/tools/perf/arch/s3=
-90/util/perf_regs.c
-> > index 6b1665f41180..2cf7a54106e0 100644
-> > --- a/tools/perf/arch/s390/util/perf_regs.c
-> > +++ b/tools/perf/arch/s390/util/perf_regs.c
-> > @@ -2,10 +2,6 @@
-> >  #include "perf_regs.h"
-> >  #include "../../util/perf_regs.h"
-> >
-> > -static const struct sample_reg sample_reg_masks[] =3D {
-> > -     SMPL_REG_END
-> > -};
-> > -
-> >  uint64_t arch__intr_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> > @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
-> >  {
-> >       return PERF_REGS_MASK;
-> >  }
-> > -
-> > -const struct sample_reg *arch__sample_reg_masks(void)
-> > -{
-> > -     return sample_reg_masks;
-> > -}
-> > diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86=
-/util/perf_regs.c
-> > index 12fd93f04802..a7ca4154fdf9 100644
-> > --- a/tools/perf/arch/x86/util/perf_regs.c
-> > +++ b/tools/perf/arch/x86/util/perf_regs.c
-> > @@ -13,48 +13,6 @@
-> >  #include "../../../util/pmu.h"
-> >  #include "../../../util/pmus.h"
-> >
-> > -static const struct sample_reg sample_reg_masks[] =3D {
-> > -     SMPL_REG(AX, PERF_REG_X86_AX),
-> > -     SMPL_REG(BX, PERF_REG_X86_BX),
-> > -     SMPL_REG(CX, PERF_REG_X86_CX),
-> > -     SMPL_REG(DX, PERF_REG_X86_DX),
-> > -     SMPL_REG(SI, PERF_REG_X86_SI),
-> > -     SMPL_REG(DI, PERF_REG_X86_DI),
-> > -     SMPL_REG(BP, PERF_REG_X86_BP),
-> > -     SMPL_REG(SP, PERF_REG_X86_SP),
-> > -     SMPL_REG(IP, PERF_REG_X86_IP),
-> > -     SMPL_REG(FLAGS, PERF_REG_X86_FLAGS),
-> > -     SMPL_REG(CS, PERF_REG_X86_CS),
-> > -     SMPL_REG(SS, PERF_REG_X86_SS),
-> > -#ifdef HAVE_ARCH_X86_64_SUPPORT
-> > -     SMPL_REG(R8, PERF_REG_X86_R8),
-> > -     SMPL_REG(R9, PERF_REG_X86_R9),
-> > -     SMPL_REG(R10, PERF_REG_X86_R10),
-> > -     SMPL_REG(R11, PERF_REG_X86_R11),
-> > -     SMPL_REG(R12, PERF_REG_X86_R12),
-> > -     SMPL_REG(R13, PERF_REG_X86_R13),
-> > -     SMPL_REG(R14, PERF_REG_X86_R14),
-> > -     SMPL_REG(R15, PERF_REG_X86_R15),
-> > -#endif
-> > -     SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
-> > -     SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
-> > -     SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
-> > -     SMPL_REG2(XMM3, PERF_REG_X86_XMM3),
-> > -     SMPL_REG2(XMM4, PERF_REG_X86_XMM4),
-> > -     SMPL_REG2(XMM5, PERF_REG_X86_XMM5),
-> > -     SMPL_REG2(XMM6, PERF_REG_X86_XMM6),
-> > -     SMPL_REG2(XMM7, PERF_REG_X86_XMM7),
-> > -     SMPL_REG2(XMM8, PERF_REG_X86_XMM8),
-> > -     SMPL_REG2(XMM9, PERF_REG_X86_XMM9),
-> > -     SMPL_REG2(XMM10, PERF_REG_X86_XMM10),
-> > -     SMPL_REG2(XMM11, PERF_REG_X86_XMM11),
-> > -     SMPL_REG2(XMM12, PERF_REG_X86_XMM12),
-> > -     SMPL_REG2(XMM13, PERF_REG_X86_XMM13),
-> > -     SMPL_REG2(XMM14, PERF_REG_X86_XMM14),
-> > -     SMPL_REG2(XMM15, PERF_REG_X86_XMM15),
-> > -     SMPL_REG_END
-> > -};
-> > -
-> >  struct sdt_name_reg {
-> >       const char *sdt_name;
-> >       const char *uprobe_name;
-> > @@ -276,11 +234,6 @@ int arch_sdt_arg_parse_op(char *old_op, char **new=
-_op)
-> >       return SDT_ARG_VALID;
-> >  }
-> >
-> > -const struct sample_reg *arch__sample_reg_masks(void)
-> > -{
-> > -     return sample_reg_masks;
-> > -}
-> > -
-> >  uint64_t arch__intr_reg_mask(void)
-> >  {
-> >       struct perf_event_attr attr =3D {
-> > diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.c b/too=
-ls/perf/util/arm64-frame-pointer-unwind-support.c
-> > index 958afe8b821e..858ce2b01812 100644
-> > --- a/tools/perf/util/arm64-frame-pointer-unwind-support.c
-> > +++ b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-> > @@ -2,7 +2,6 @@
-> >  #include "arm64-frame-pointer-unwind-support.h"
-> >  #include "callchain.h"
-> >  #include "event.h"
-> > -#include "perf_regs.h" // SMPL_REG_MASK
-> >  #include "unwind.h"
-> >  #include <string.h>
-> >
-> > @@ -15,6 +14,8 @@ struct entries {
-> >       size_t length;
-> >  };
-> >
-> > +#define SMPL_REG_MASK(b) (1ULL << (b))
-> > +
-> >  static bool get_leaf_frame_caller_enabled(struct perf_sample *sample)
-> >  {
-> >       struct regs_dump *regs;
-> > diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/par=
-se-regs-options.c
-> > index cda1c620968e..c0d0ef9fd495 100644
-> > --- a/tools/perf/util/parse-regs-options.c
-> > +++ b/tools/perf/util/parse-regs-options.c
-> > @@ -5,15 +5,54 @@
-> >  #include <string.h>
-> >  #include <stdio.h>
-> >  #include "util/debug.h"
-> > +#include <dwarf-regs.h>
-> >  #include <subcmd/parse-options.h>
-> >  #include "util/perf_regs.h"
-> >  #include "util/parse-regs-options.h"
-> >
-> > +static void list_perf_regs(FILE *fp, uint64_t mask)
-> > +{
-> > +     const char *last_name =3D NULL;
-> > +
-> > +     fprintf(fp, "available registers: ");
-> > +     for (int reg =3D 0; reg < 64; reg++) {
-> > +             const char *name;
-> > +
-> > +             if (((1ULL << reg) & mask) =3D=3D 0)
-> > +                     continue;
-> > +
-> > +             name =3D perf_reg_name(reg, EM_HOST);
-> > +             if (name && (!last_name || strcmp(last_name, name)))
-> > +                     fprintf(fp, "%s%s", reg > 0 ? " " : "", name);
-> > +             last_name =3D name;
-> > +     }
-> > +     fputc('\n', fp);
-> > +}
-> > +
-> > +static uint64_t name_to_perf_reg_mask(const char *to_match, uint64_t m=
-ask)
-> > +{
-> > +     uint64_t reg_mask =3D 0;
-> > +
-> > +     for (int reg =3D 0; reg < 64; reg++) {
-> > +             const char *name;
-> > +
-> > +             if (((1ULL << reg) & mask) =3D=3D 0)
-> > +                     continue;
-> > +
-> > +             name =3D perf_reg_name(reg, EM_HOST);
-> > +             if (!name)
-> > +                     continue;
-> > +
-> > +             if (!strcasecmp(to_match, name))
-> > +                     reg_mask |=3D 1ULL << reg;
-> > +     }
-> > +     return reg_mask;
-> > +}
-> > +
-> >  static int
-> >  __parse_regs(const struct option *opt, const char *str, int unset, boo=
-l intr)
-> >  {
-> >       uint64_t *mode =3D (uint64_t *)opt->value;
-> > -     const struct sample_reg *r =3D NULL;
-> >       char *s, *os =3D NULL, *p;
-> >       int ret =3D -1;
-> >       uint64_t mask;
-> > @@ -27,50 +66,41 @@ __parse_regs(const struct option *opt, const char *=
-str, int unset, bool intr)
-> >       if (*mode)
-> >               return -1;
-> >
-> > -     if (intr)
-> > -             mask =3D arch__intr_reg_mask();
-> > -     else
-> > -             mask =3D arch__user_reg_mask();
-> > -
-> >       /* str may be NULL in case no arg is passed to -I */
-> > -     if (str) {
-> > -             /* because str is read-only */
-> > -             s =3D os =3D strdup(str);
-> > -             if (!s)
-> > -                     return -1;
-> > -
-> > -             for (;;) {
-> > -                     p =3D strchr(s, ',');
-> > -                     if (p)
-> > -                             *p =3D '\0';
-> > -
-> > -                     if (!strcmp(s, "?")) {
-> > -                             fprintf(stderr, "available registers: ");
-> > -                             for (r =3D arch__sample_reg_masks(); r->n=
-ame; r++) {
-> > -                                     if (r->mask & mask)
-> > -                                             fprintf(stderr, "%s ", r-=
->name);
-> > -                             }
-> > -                             fputc('\n', stderr);
-> > -                             /* just printing available regs */
-> > -                             goto error;
-> > -                     }
-> > -                     for (r =3D arch__sample_reg_masks(); r->name; r++=
-) {
-> > -                             if ((r->mask & mask) && !strcasecmp(s, r-=
->name))
-> > -                                     break;
-> > -                     }
-> > -                     if (!r || !r->name) {
-> > -                             ui__warning("Unknown register \"%s\", che=
-ck man page or run \"perf record %s?\"\n",
-> > -                                         s, intr ? "-I" : "--user-regs=
-=3D");
-> > -                             goto error;
-> > -                     }
-> > -
-> > -                     *mode |=3D r->mask;
-> > -
-> > -                     if (!p)
-> > -                             break;
-> > -
-> > -                     s =3D p + 1;
-> > +     if (!str)
-> > +             return -1;
->
-> Just found the above change would break the option "-I" or "--user-regs"
-> which intends to sample all supported general purpose registers, e.g.,
->
-> $ sudo ./perf record -e cycles:p -I -- true
->
->  Usage: perf record [<options>] [<command>]
->     or: perf record [<options>] -- <command> [<options>]
->
->     -I, --intr-regs[=3D<any register>]
->                           sample selected machine registers on interrupt,
-> use '-I?' to list register names
->
-> We may need the below changes to fix this issue.
->
-> ```
->
-> diff --git a/tools/perf/util/parse-regs-options.c
-> b/tools/perf/util/parse-regs-options.c
-> index c0d0ef9fd495..37932fcd8c04 100644
-> --- a/tools/perf/util/parse-regs-options.c
-> +++ b/tools/perf/util/parse-regs-options.c
-> @@ -66,12 +66,14 @@ __parse_regs(const struct option *opt, const char *st=
-r,
-> int unset, bool intr)
->         if (*mode)
->                 return -1;
->
-> -       /* str may be NULL in case no arg is passed to -I */
-> -       if (!str)
-> -               return -1;
-> -
->         mask =3D intr ? arch__intr_reg_mask() : arch__user_reg_mask();
->
-> +       /* str may be NULL in case no arg is passed to -I */
-> +       if (!str) {
-> +               *mode =3D mask;
-> +               return 0;
-> +       }
-> +
->         /* because str is read-only */
->         s =3D os =3D strdup(str);
->         if (!s)
-> @@ -104,9 +106,6 @@ __parse_regs(const struct option *opt, const char *st=
-r,
-> int unset, bool intr)
->         }
->         ret =3D 0;
->
-> -       /* default to all possible regs */
-> -       if (*mode =3D=3D 0)
-> -               *mode =3D mask;
->  error:
->         free(os);
->         return ret;
->
-> ```
->
-> With above change, the "-I" option can be sampled as expect.
->
-> $ sudo ./perf record -e cycles:p -I -- true
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.029 MB perf.data (4 samples) ]
-
-Yep, agreed. Could you create the patch?
-
-Thanks,
-Ian
-
-> > +
-> > +     mask =3D intr ? arch__intr_reg_mask() : arch__user_reg_mask();
-> > +
-> > +     /* because str is read-only */
-> > +     s =3D os =3D strdup(str);
-> > +     if (!s)
-> > +             return -1;
-> > +
-> > +     for (;;) {
-> > +             uint64_t reg_mask;
-> > +
-> > +             p =3D strchr(s, ',');
-> > +             if (p)
-> > +                     *p =3D '\0';
-> > +
-> > +             if (!strcmp(s, "?")) {
-> > +                     list_perf_regs(stderr, mask);
-> > +                     goto error;
-> > +             }
-> > +
-> > +             reg_mask =3D name_to_perf_reg_mask(s, mask);
-> > +             if (reg_mask =3D=3D 0) {
-> > +                     ui__warning("Unknown register \"%s\", check man p=
-age or run \"perf record %s?\"\n",
-> > +                             s, intr ? "-I" : "--user-regs=3D");
-> > +                     goto error;
-> >               }
-> > +             *mode |=3D reg_mask;
-> > +
-> > +             if (!p)
-> > +                     break;
-> > +
-> > +             s =3D p + 1;
-> >       }
-> >       ret =3D 0;
-> >
-> > diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-> > index b58d59b84fb1..ec602da1aeb6 100644
-> > --- a/tools/perf/util/perf_regs.c
-> > +++ b/tools/perf/util/perf_regs.c
-> > @@ -22,15 +22,6 @@ uint64_t __weak arch__user_reg_mask(void)
-> >       return 0;
-> >  }
-> >
-> > -static const struct sample_reg sample_reg_masks[] =3D {
-> > -     SMPL_REG_END
-> > -};
-> > -
-> > -const struct sample_reg * __weak arch__sample_reg_masks(void)
-> > -{
-> > -     return sample_reg_masks;
-> > -}
-> > -
-> >  const char *perf_reg_name(int id, uint16_t e_machine)
-> >  {
-> >       const char *reg_name =3D NULL;
-> > diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-> > index 7bfc6a34c02b..2c2a8de6912d 100644
-> > --- a/tools/perf/util/perf_regs.h
-> > +++ b/tools/perf/util/perf_regs.h
-> > @@ -7,17 +7,6 @@
-> >
-> >  struct regs_dump;
-> >
-> > -struct sample_reg {
-> > -     const char *name;
-> > -     uint64_t mask;
-> > -};
-> > -
-> > -#define SMPL_REG_MASK(b) (1ULL << (b))
-> > -#define SMPL_REG(n, b) { .name =3D #n, .mask =3D SMPL_REG_MASK(b) }
-> > -#define SMPL_REG2_MASK(b) (3ULL << (b))
-> > -#define SMPL_REG2(n, b) { .name =3D #n, .mask =3D SMPL_REG2_MASK(b) }
-> > -#define SMPL_REG_END { .name =3D NULL }
-> > -
-> >  enum {
-> >       SDT_ARG_VALID =3D 0,
-> >       SDT_ARG_SKIP,
-> > @@ -26,7 +15,6 @@ enum {
-> >  int arch_sdt_arg_parse_op(char *old_op, char **new_op);
-> >  uint64_t arch__intr_reg_mask(void);
-> >  uint64_t arch__user_reg_mask(void);
-> > -const struct sample_reg *arch__sample_reg_masks(void);
-> >
-> >  const char *perf_reg_name(int id, uint16_t e_machine);
-> >  int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
+VGhhbmsgeW91IEphbWVzIGFuZCBJYW4gZm9yIHRoZSBjb21tZW50cy4NCkkgd2lsbCB0cnkgdG8g
+YWRkcmVzcyB0aGUgc3BlbGxpbmcgbWlzdGFrZXMgb24gdjIuDQoNClBsZWFzZSBzZWUgbXkgb3Ro
+ZXIgY29tbWVudHMgaW5saW5lLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
+b206IEphbWVzIENsYXJrIDxqYW1lcy5jbGFya0BsaW5hcm8ub3JnPg0KPiBTZW50OiBXZWRuZXNk
+YXksIEphbnVhcnkgMjgsIDIwMjYgMzozNyBBTQ0KPiBUbzogSWFuIFJvZ2VycyA8aXJvZ2Vyc0Bn
+b29nbGUuY29tPjsgQmVzYXIgV2ljYWtzb25vDQo+IDxid2ljYWtzb25vQG52aWRpYS5jb20+DQo+
+IENjOiBqb2huLmcuZ2FycnlAb3JhY2xlLmNvbTsgd2lsbEBrZXJuZWwub3JnOyBtaWtlLmxlYWNo
+QGxpbmFyby5vcmc7DQo+IGxlby55YW5AbGludXguZGV2OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
+Cj4gYWxleGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNvbTsgam9sc2FAa2VybmVsLm9yZzsN
+Cj4gYWRyaWFuLmh1bnRlckBpbnRlbC5jb207IHBldGVyekBpbmZyYWRlYWQub3JnOyBtaW5nb0By
+ZWRoYXQuY29tOw0KPiBhY21lQGtlcm5lbC5vcmc7IG5hbWh5dW5nQGtlcm5lbC5vcmc7IGxpbnV4
+LXRlZ3JhQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZzsgbGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJu
+ZWxAdmdlci5rZXJuZWwub3JnOyBUaG9tYXMgTWFraW4gPHRtYWtpbkBudmlkaWEuY29tPjsgVmlr
+cmFtIFNldGhpDQo+IDx2c2V0aGlAbnZpZGlhLmNvbT47IFJpY2ggV2lsZXkgPHJ3aWxleUBudmlk
+aWEuY29tPjsgU2VhbiBLZWxsZXkNCj4gPHNrZWxsZXlAbnZpZGlhLmNvbT47IFlpZmVpIFdhbiA8
+eXdhbkBudmlkaWEuY29tPjsgVGhpZXJyeSBSZWRpbmcNCj4gPHRyZWRpbmdAbnZpZGlhLmNvbT47
+IEpvbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlkaWEuY29tPjsgTWF0dCBPY2hzDQo+IDxtb2Noc0Bu
+dmlkaWEuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBwZXJmIHZlbmRvciBldmVudHMgYXJt
+NjQ6IEFkZCBUZWdyYTQxMCBPbHltcHVzIFBNVQ0KPiBldmVudHMNCj4gDQo+IEV4dGVybmFsIGVt
+YWlsOiBVc2UgY2F1dGlvbiBvcGVuaW5nIGxpbmtzIG9yIGF0dGFjaG1lbnRzDQo+IA0KPiANCj4g
+T24gMjgvMDEvMjAyNiA4OjAzIGFtLCBJYW4gUm9nZXJzIHdyb3RlOg0KPiA+IE9uIFR1ZSwgSmFu
+IDI3LCAyMDI2IGF0IDM6MDDigK9QTSBCZXNhciBXaWNha3Nvbm8NCj4gPGJ3aWNha3Nvbm9AbnZp
+ZGlhLmNvbT4gd3JvdGU6DQo+ID4+DQo+ID4+IEFkZCBKU09OIGZpbGVzIGZvciBOVklESUEgVGVn
+cmE0MTAgT2x5bXB1cyBjb3JlIFBNVSBldmVudHMuDQo+ID4+IEFsc28gdXBkYXRlZCB0aGUgY29t
+bW9uLWFuZC1taWNyb2FyY2guanNvbi4NCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTogQmVzYXIg
+V2ljYWtzb25vIDxid2ljYWtzb25vQG52aWRpYS5jb20+DQo+ID4+IC0tLQ0KPiA+PiAgIC4uLi9h
+cmNoL2FybTY0L2NvbW1vbi1hbmQtbWljcm9hcmNoLmpzb24gICAgICB8ICA5MCArKysNCj4gPj4g
+ICB0b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9tYXBmaWxlLmNzdiAgfCAgIDEgKw0K
+PiA+PiAgIC4uLi9hcmNoL2FybTY0L252aWRpYS90NDEwL2JyYW5jaC5qc29uICAgICAgICB8ICA0
+NSArKw0KPiA+PiAgIC4uLi9hcmNoL2FybTY0L252aWRpYS90NDEwL2JyYmUuanNvbiAgICAgICAg
+ICB8ICAgNiArDQo+ID4+ICAgLi4uL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAvYnVzLmpzb24gICAg
+ICAgICAgIHwgIDQ4ICsrDQo+ID4+ICAgLi4uL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAvZXhjZXB0
+aW9uLmpzb24gICAgIHwgIDYyICsrDQo+ID4+ICAgLi4uL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAv
+ZnBfb3BlcmF0aW9uLmpzb24gIHwgIDc4ICsrDQo+ID4+ICAgLi4uL2FyY2gvYXJtNjQvbnZpZGlh
+L3Q0MTAvZ2VuZXJhbC5qc29uICAgICAgIHwgIDE1ICsNCj4gPj4gICAuLi4vYXJjaC9hcm02NC9u
+dmlkaWEvdDQxMC9sMWRfY2FjaGUuanNvbiAgICAgfCAxMjIgKysrDQo+ID4+ICAgLi4uL2FyY2gv
+YXJtNjQvbnZpZGlhL3Q0MTAvbDFpX2NhY2hlLmpzb24gICAgIHwgMTE0ICsrKw0KPiA+PiAgIC4u
+Li9hcmNoL2FybTY0L252aWRpYS90NDEwL2wyZF9jYWNoZS5qc29uICAgICB8IDEzNCArKysrDQo+
+ID4+ICAgLi4uL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAvbGxfY2FjaGUuanNvbiAgICAgIHwgMTA3
+ICsrKw0KPiA+PiAgIC4uLi9hcmNoL2FybTY0L252aWRpYS90NDEwL21lbW9yeS5qc29uICAgICAg
+ICB8ICA0NiArKw0KPiA+PiAgIC4uLi9hcmNoL2FybTY0L252aWRpYS90NDEwL21ldHJpY3MuanNv
+biAgICAgICB8IDcyMg0KPiArKysrKysrKysrKysrKysrKysNCj4gPj4gICAuLi4vYXJjaC9hcm02
+NC9udmlkaWEvdDQxMC9taXNjLmpzb24gICAgICAgICAgfCA2NDYgKysrKysrKysrKysrKysrKw0K
+PiA+PiAgIC4uLi9hcmNoL2FybTY0L252aWRpYS90NDEwL3JldGlyZWQuanNvbiAgICAgICB8ICA5
+NCArKysNCj4gPj4gICAuLi4vYXJjaC9hcm02NC9udmlkaWEvdDQxMC9zcGUuanNvbiAgICAgICAg
+ICAgfCAgNDIgKw0KPiA+PiAgIC4uLi9hcm02NC9udmlkaWEvdDQxMC9zcGVjX29wZXJhdGlvbi5q
+c29uICAgICB8IDIzMCArKysrKysNCj4gPj4gICAuLi4vYXJjaC9hcm02NC9udmlkaWEvdDQxMC9z
+dGFsbC5qc29uICAgICAgICAgfCAxNDUgKysrKw0KPiA+PiAgIC4uLi9hcmNoL2FybTY0L252aWRp
+YS90NDEwL3RsYi5qc29uICAgICAgICAgICB8IDE1OCArKysrDQo+ID4+ICAgMjAgZmlsZXMgY2hh
+bmdlZCwgMjkwNSBpbnNlcnRpb25zKCspDQo+ID4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xz
+L3BlcmYvcG11LQ0KPiBldmVudHMvYXJjaC9hcm02NC9udmlkaWEvdDQxMC9icmFuY2guanNvbg0K
+PiA+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2FyY2gv
+YXJtNjQvbnZpZGlhL3Q0MTAvYnJiZS5qc29uDQo+ID4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRv
+b2xzL3BlcmYvcG11LQ0KPiBldmVudHMvYXJjaC9hcm02NC9udmlkaWEvdDQxMC9idXMuanNvbg0K
+PiA+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2FyY2gv
+YXJtNjQvbnZpZGlhL3Q0MTAvZXhjZXB0aW9uLmpzb24NCj4gPj4gICBjcmVhdGUgbW9kZSAxMDA2
+NDQgdG9vbHMvcGVyZi9wbXUtDQo+IGV2ZW50cy9hcmNoL2FybTY0L252aWRpYS90NDEwL2ZwX29w
+ZXJhdGlvbi5qc29uDQo+ID4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3BlcmYvcG11LQ0K
+PiBldmVudHMvYXJjaC9hcm02NC9udmlkaWEvdDQxMC9nZW5lcmFsLmpzb24NCj4gPj4gICBjcmVh
+dGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9wbXUtDQo+IGV2ZW50cy9hcmNoL2FybTY0L252aWRp
+YS90NDEwL2wxZF9jYWNoZS5qc29uDQo+ID4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3Bl
+cmYvcG11LQ0KPiBldmVudHMvYXJjaC9hcm02NC9udmlkaWEvdDQxMC9sMWlfY2FjaGUuanNvbg0K
+PiA+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2FyY2gv
+YXJtNjQvbnZpZGlhL3Q0MTAvbDJkX2NhY2hlLmpzb24NCj4gPj4gICBjcmVhdGUgbW9kZSAxMDA2
+NDQgdG9vbHMvcGVyZi9wbXUtDQo+IGV2ZW50cy9hcmNoL2FybTY0L252aWRpYS90NDEwL2xsX2Nh
+Y2hlLmpzb24NCj4gPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9wbXUtDQo+IGV2
+ZW50cy9hcmNoL2FybTY0L252aWRpYS90NDEwL21lbW9yeS5qc29uDQo+ID4+ICAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IHRvb2xzL3BlcmYvcG11LQ0KPiBldmVudHMvYXJjaC9hcm02NC9udmlkaWEvdDQx
+MC9tZXRyaWNzLmpzb24NCj4gPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9wbXUt
+DQo+IGV2ZW50cy9hcmNoL2FybTY0L252aWRpYS90NDEwL21pc2MuanNvbg0KPiA+PiAgIGNyZWF0
+ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2FyY2gvYXJtNjQvbnZpZGlh
+L3Q0MTAvcmV0aXJlZC5qc29uDQo+ID4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3BlcmYv
+cG11LQ0KPiBldmVudHMvYXJjaC9hcm02NC9udmlkaWEvdDQxMC9zcGUuanNvbg0KPiA+PiAgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2FyY2gvYXJtNjQvbnZp
+ZGlhL3Q0MTAvc3BlY19vcGVyYXRpb24uanNvbg0KPiA+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCB0
+b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAvc3RhbGwuanNv
+bg0KPiA+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2Fy
+Y2gvYXJtNjQvbnZpZGlhL3Q0MTAvdGxiLmpzb24NCj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL3Rv
+b2xzL3BlcmYvcG11LWV2ZW50cy9hcmNoL2FybTY0L2NvbW1vbi1hbmQtDQo+IG1pY3JvYXJjaC5q
+c29uIGIvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQvY29tbW9uLWFuZC0NCj4gbWlj
+cm9hcmNoLmpzb24NCj4gPj4gaW5kZXggNDY4Y2IwODVkODc5Li42YWYxNTc3NmZmMTcgMTAwNjQ0
+DQo+ID4+IC0tLSBhL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9hcmNoL2FybTY0L2NvbW1vbi1hbmQt
+bWljcm9hcmNoLmpzb24NCj4gPj4gKysrIGIvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJt
+NjQvY29tbW9uLWFuZC1taWNyb2FyY2guanNvbg0KPiA+PiBAQCAtMTc5LDYgKzE3OSwxMSBAQA0K
+PiA+PiAgICAgICAgICAgIkV2ZW50TmFtZSI6ICJCVVNfQ1lDTEVTIiwNCj4gPj4gICAgICAgICAg
+ICJCcmllZkRlc2NyaXB0aW9uIjogIkJ1cyBjeWNsZSINCj4gPj4gICAgICAgfSwNCj4gPj4gKyAg
+ICB7DQo+ID4+ICsgICAgICAgICJFdmVudENvZGUiOiAiMHgwMDFFIiwNCj4gPj4gKyAgICAgICAg
+IkV2ZW50TmFtZSI6ICJDSEFJTiIsDQo+ID4+ICsgICAgICAgICJCcmllZkRlc2NyaXB0aW9uIjog
+IkNoYWluIGEgcGFpciBvZiBldmVudCBjb3VudGVycy4iDQo+ID4+ICsgICAgfSwNCj4gPg0KPiA+
+IENvb2wgc3R1ZmYgOi0pDQo+ID4NCj4gPiBGb3Igd2lkZXIgY291bnRlcnMgQU1EIGRvZXMgc29t
+ZXRoaW5nIHNpbWlsYXIsIGJ1dCBzaG91bGQgdGhpcyBiZSBhbg0KPiA+IGltcGxlbWVudGF0aW9u
+IGRldGFpbCByYXRoZXIgdGhhbiBhbiBleHBvc2VkIGV2ZW50PyBIb3cgZG9lcyBpdA0KPiA+IG9w
+ZXJhdGUgYXMgYW4gZXZlbnQ/DQo+ID4NCj4gDQo+IENIQUlOIHNob3VsZCBiZSBleGNsdWRlZCBm
+cm9tIHRoZSBqc29uLCBpdCdzIHVzZWQgaW50ZXJuYWxseSBieSB0aGUNCj4gZHJpdmVyIHdoZW4g
+eW91IHdhbnQgNjQgYml0IGNvdW50ZXJzLiBVc2Vyc3BhY2UgY2FuJ3QgdXNlIGl0IGJlY2F1c2Ug
+aXQNCj4gY2FuJ3QgY29udHJvbCB3aGVyZSBjb3VudGVycyBhcmUgcGxhY2VkIHRvIG1ha2Ugc3Vy
+ZSB0aGV5J3JlIGFkamFjZW50Lg0KPiANCg0KU3VyZSwgd2lsbCBhZGRyZXNzIHRoaXMgaW4gVjIu
+DQoNCj4gPiBbc25pcF0NCj4gPj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9h
+cmNoL2FybTY0L21hcGZpbGUuY3N2DQo+IGIvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJt
+NjQvbWFwZmlsZS5jc3YNCj4gPj4gaW5kZXggYmIzZmE4YTMzNDk2Li43ZjBlYWE3MDIwNDggMTAw
+NjQ0DQo+ID4+IC0tLSBhL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9hcmNoL2FybTY0L21hcGZpbGUu
+Y3N2DQo+ID4+ICsrKyBiL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9hcmNoL2FybTY0L21hcGZpbGUu
+Y3N2DQo+ID4+IEBAIC00NiwzICs0Niw0IEBADQo+ID4+ICAgMHgwMDAwMDAwMDUwMGYwMDAwLHYx
+LGFtcGVyZS9lbWFnLGNvcmUNCj4gPj4gICAweDAwMDAwMDAwYzAwZmFjMzAsdjEsYW1wZXJlL2Ft
+cGVyZW9uZSxjb3JlDQo+ID4+ICAgMHgwMDAwMDAwMGMwMGZhYzQwLHYxLGFtcGVyZS9hbXBlcmVv
+bmV4LGNvcmUNCj4gPj4gKzB4MDAwMDAwMDA0ZTBmMDEwMCx2MSxudmlkaWEvdDQxMCxjb3JlDQo+
+ID4+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9udmlkaWEv
+dDQxMC9icmFuY2guanNvbg0KPiBiL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9hcmNoL2FybTY0L252
+aWRpYS90NDEwL2JyYW5jaC5qc29uDQo+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4+IGlu
+ZGV4IDAwMDAwMDAwMDAwMC4uNTMyYmM1OWRjNTczDQo+ID4+IC0tLSAvZGV2L251bGwNCj4gPj4g
+KysrIGIvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAvYnJhbmNo
+Lmpzb24NCj4gPj4gQEAgLTAsMCArMSw0NSBAQA0KPiA+PiArWw0KPiA+PiArICAgIHsNCj4gPj4g
+KyAgICAgICAgIkFyY2hTdGRFdmVudCI6ICJCUl9NSVNfUFJFRCIsDQo+ID4+ICsgICAgICAgICJQ
+dWJsaWNEZXNjcmlwdGlvbiI6ICJUaGUgRXZlbnQgY291bnRzIEJyYW5jaGVzIHdoaWNoIGFyZQ0K
+PiBzcGVjdWxhdGl2ZWx5IGV4ZWN1dGVkIGFuZCBtaXMtcHJlZGljdGVkLiINCj4gPg0KPiA+IG5p
+dDogVGhlIGNhcGl0YWxpemF0aW9uIG9uIEV2ZW50IGFuZCBCcmFuY2hlcywgYXMgd2VsbCBhcyBv
+dGhlciB3b3JkcywNCj4gPiBpcyBhIGxpdHRsZSB1bnVzdWFsLg0KPiA+DQo+IA0KPiBJZiB0aGVy
+ZSdzIG5vdGhpbmcgc3BlY2lmaWMgdG8gdGhpcyBDUFUgdGhlbiB0aGUgcHVibGljIGRlc2NyaXB0
+aW9uDQo+IGNvdWxkIGJlIGxlZnQgb3V0IGVudGllcmx5LiBUaGUgY29tbW9uIHN0cmluZ3MgYWxy
+ZWFkeSBzYXkgdGhlIHNhbWUNCj4gdGhpbmcgYXMgdGhpczoNCj4gDQo+ICAgICAgew0KPiAgICAg
+ICAgICAiUHVibGljRGVzY3JpcHRpb24iOiAiTWlzcHJlZGljdGVkIG9yIG5vdCBwcmVkaWN0ZWQg
+YnJhbmNoDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzcGVjdWxhdGl2ZWx5IGV4
+ZWN1dGVkIiwNCj4gICAgICAgICAgIkV2ZW50Q29kZSI6ICIweDEwIiwNCj4gICAgICAgICAgIkV2
+ZW50TmFtZSI6ICJCUl9NSVNfUFJFRCIsDQo+ICAgICAgICAgICJCcmllZkRlc2NyaXB0aW9uIjog
+Ik1pc3ByZWRpY3RlZCBvciBub3QgcHJlZGljdGVkIGJyYW5jaA0KPiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBzcGVjdWxhdGl2ZWx5IGV4ZWN1dGVkIg0KPiAgICAgIH0sDQo+IA0KPiAN
+Cg0KSSB3aWxsIGNoZWNrIG9uIHRoaXMgYW5kIG90aGVyIGV2ZW50cy4NCg0KPiA+IFtzbmlwXQ0K
+PiA+PiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQvbnZpZGlh
+L3Q0MTAvbWV0cmljcy5qc29uDQo+IGIvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQv
+bnZpZGlhL3Q0MTAvbWV0cmljcy5qc29uDQo+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4+
+IGluZGV4IDAwMDAwMDAwMDAwMC4uMThjMmZkNThlZTllDQo+ID4+IC0tLSAvZGV2L251bGwNCj4g
+Pj4gKysrIGIvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAvbWV0
+cmljcy5qc29uDQo+ID4+IEBAIC0wLDAgKzEsNzIyIEBADQo+ID4+ICtbDQo+ID4+ICsgICAgew0K
+PiA+PiArICAgICAgICAiTWV0cmljTmFtZSI6ICJiYWNrZW5kX2JvdW5kIiwNCj4gPj4gKyAgICAg
+ICAgIk1ldHJpY0V4cHIiOiAiMTAwICogKFNUQUxMX1NMT1RfQkFDS0VORCAvIENQVV9TTE9UKSIs
+DQo+ID4+ICsgICAgICAgICJCcmllZkRlc2NyaXB0aW9uIjogIlRoaXMgbWV0cmljIGlzIHRoZSBw
+ZXJjZW50YWdlIG9mIHRvdGFsIHNsb3RzIHRoYXQNCj4gd2VyZSBzdGFsbGVkIGR1ZSB0byByZXNv
+dXJjZSBjb25zdHJhaW50cyBpbiB0aGUgYmFja2VuZCBvZiB0aGUgcHJvY2Vzc29yLiIsDQo+ID4+
+ICsgICAgICAgICJTY2FsZVVuaXQiOiAiMXBlcmNlbnQgb2Ygc2xvdHMiLA0KPiA+PiArICAgICAg
+ICAiTWV0cmljR3JvdXAiOiAiVG9wZG93bkwxIg0KPiA+DQo+ID4gTm90ZSwgb24geDg2IHdlIHBs
+YWNlIFRvcGRvd25MMSBpbiB0aGUgRGVmYXVsdCBtZXRyaWMgZ3JvdXAgc28gaXQgaXMNCj4gPiBz
+aG93biBieSBgcGVyZiBzdGF0YCB3aGVuIGl0IGlzbid0IGdpdmVuIGV2ZW50cyBvciBtZXRyaWNz
+IHRvIGNvbXB1dGUuDQo+ID4gUGVyaGFwcyB5b3Ugd2FudCB0byBkbyBzb21ldGhpbmcgc2ltaWxh
+cj8NCj4gPiBodHRwczovL3dlYi5naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9n
+aXQvcGVyZi9wZXJmLXRvb2xzLQ0KPiBuZXh0LmdpdC90cmVlL3Rvb2xzL3BlcmYvcG11LWV2ZW50
+cy9hcmNoL3g4Ni9pY2VsYWtlL2ljbC0NCj4gbWV0cmljcy5qc29uP2g9dG1wLnBlcmYtdG9vbHMt
+bmV4dCNuMTE2DQo+ID4NCj4gPiBUaGFua3MsDQo+ID4gSWFuDQo+IA0KPiBUaGF0J3MgY3VycmVu
+dGx5IHRydWUgZm9yIHRoZSBBcm0gdG9wZG93biBtZXRyaWNzIGluIHNic2EuanNvbiwgYnV0IHdl
+DQo+IHByb2JhYmx5IGRvbid0IGFjdHVhbGx5IHdhbnQgdGhpcyBiZWNhdXNlIHRoZXJlIGFyZW4n
+dCBlbm91Z2ggY291bnRlcnMNCj4gZm9yIHRoZSBwZXJmIHN0YXQgZGVmYXVsdHMgcGx1cyB0b3Bk
+b3duIGFuZCBpdCByZXN1bHRzIGluIG11bHRpcGxleGluZw0KPiBhbmQgYmFkIHJlc3VsdHMuDQo+
+IA0KPiBJIHdhcyBwbGFubmluZyB0byBjaGFuZ2UgaXQgYnV0IHdlIGFsc28gZG9uJ3QgY3VycmVu
+dGx5IGV4cG9zZSB0aGUNCj4gbnVtYmVyIG9mIGNvdW50ZXJzIGF2YWlsYWJsZSBlaXRoZXIuLi4N
+Cj4gDQoNCkFncmVlIHdpdGggSmFtZXMsIHdlIG1heSBub3QgYmUgYWJsZSB0byBjb3ZlciBhbGwg
+dGhlIGV2ZW50cyBpbg0KRGVmYXVsdCArIFRvcGRvd25MMSBncm91cC4NCg0KSWFuLCBKYW1lcywg
+aW4gZ2VuZXJhbCwgaXMgaXQgZmluZSB0byBwdXQgc29tZSBtZXRyaWNzIGluIGEgc2FtZSBncm91
+cCBiZWNhdXNlIA0KdGhleSBhcmUgYWN0dWFsbHkgY29ycmVsYXRpbmcgZXZlbiB0aG91Z2ggaXQg
+bWF5IGNhdXNlIG11bHRpcGxleGluZz8NCkZvciBleGFtcGxlLCAiTWlzc19SYXRpbyIgZ3JvdXAg
+aW4gdGhpcyBwYXRjaCBwcm92aWRlcyBtaXNzIHJhdGlvIGZyb20gTDEsIEwyLCBUTEIsIGV0Yy4N
+Ckl0J3MgY29udmVuaWVudCB0byBoYXZlIHRoaXMgYW5kIGdldCB0aGUgbWlzcyByYXRpbyBmcm9t
+IGFsbCBjYWNoZSBsZXZlbHMuDQpUaGVyZSBhcmUgbWFueSBldmVudHMgbmVlZGVkIGZvciB0aGlz
+IGdyb3VwIGFuZCBpdCBtaWdodCBub3QgYmUgYWNjdXJhdGUgZHVlIHRvDQptdWx0aXBsZXhpbmcs
+IGJ1dCB1c2VyIGNhbiBnZXQgYSAocm91Z2gpIGJyb2FkIHZpZXcgaW4gdGhlIGJlZ2lubmluZy4N
+Cg0KVGhhbmtzLA0KQmVzYXINCg==
