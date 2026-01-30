@@ -1,121 +1,121 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C600F17BCA;
-	Fri, 30 Jan 2026 10:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD952FB983;
+	Fri, 30 Jan 2026 11:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769768588; cv=none; b=D5PSmYpJxuta7UmpD6YyIznoRhMd/xCXy/Vy8nGT1HIoMPHjxrTb/opkxeybkhnVstflgax0rlFEmqjtiOrB0FNhKDj4luojP9spcIoYN+A7UjUPO19KNujYBumLtQkAxxByuZcq+0Ht1Y7UxaqewDPmeq4HTDbmnNXxkHvCp4g=
+	t=1769772730; cv=none; b=C59TRIE/6TBbXTS9ScJHhfs56pBuHUKWfKM3WMArJBArU+eJOVCFlf+oZakAR3fISmUeY6CnQ+8bz1xEd5EHwILNftQgolJMo0upPl8R/yS2moPgob+KEM12AT7d6IDg3ImRgpa6xLZD3iunPPO7IoPS5sP0SnhsKLQdGl+R04o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769768588; c=relaxed/simple;
-	bh=qMBOafVGCTH88IYyfHxlvW2KTuXT3aCn+vgg6N7/myA=;
+	s=arc-20240116; t=1769772730; c=relaxed/simple;
+	bh=9CBTdkizXR3bvR6U0NbZn8CmRgegKQKZcEI88R5O3A0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fbFc+QFaHJ383pmFwvtrL/s+DzdbBEBGrmi6vq/H4CTtxO0C/3Ng4sPuteqQdh8gBGk/Fj3d7YKP7wwPU2Yr4Zjz1p5DzfqKaE1caZjpo/KgvRIlbZHb0arWYE5o5wG1SLexrTJTOwrmu6dGWTCzIQ/nP9yEKzsRhkPtNHmHDlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HOYTzIPB; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=YzpgN0yeiw5Bf65EGXN+eHQX+xy6O9sWkk15Fx7q/Ha1emQ6KsoGegsFzE5UAwVJfE79w2a54nBZFHPKjnOw7rZZwOuR+DRBej4eYcge5lgeaTynVH/VYO++YoVUBUa4FVPVhUcdGfNHSOtqRZcBijGgK5anRYIcNOzdCfdBBqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LYqT/+Fi; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HOYTzIPB"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LYqT/+Fi"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BVh+chDyG+s+tV3ClqBUlFmOiGpBgy6M929kQydFBkM=; b=HOYTzIPBzwiMyej170IjZbTqF8
-	me4s6iWqZclaDh17c2TWDFXjgcON1PwUztlg2t9fYX9/rK/rz0n07oNETA9Dxo4Kz4ry/Qnh2jdZj
-	DosoDy+SQIFDVUHsAq41+SJdagiPFFHo/ccd2FS8HftmZCJ7d0RHq0uqnzx5pXUyGgVo6r/Jihh0P
-	fiqvi4xvSRCS4aRG7istDMJiXee6DxY/wXVna3aPmhfCc2lwvzysNVtYVy9GHMwqR7UdEWiPEPSWB
-	yOBA8B/eSNWN81ALeyfqYnQHeODe16vRGuZIDT4UVmf4JtFyJD53n4nCaIfLhNmXAiSuYj51mxLYy
-	fd/PSWCg==;
-Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlleX-0000000BcRJ-1FXV;
-	Fri, 30 Jan 2026 10:23:01 +0000
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=+772sjzaBjbh9fzVpZfNORG2qh1TnA8emQl3XrkxweE=; b=LYqT/+Fiy3VGj6BDtmhFMGv9jk
+	rRhYEHN4BHzQLi6yrkadlJLaR2QB1PnbM+dbt44B54bY0CQwu9WF0oacIYL6qsBnrxi/Ca0RrjCQw
+	EUDJVj/Q6MCRaHEQqiUPIr2ToGCsxxAGrLQGeA1F8JMOO+t7T20pa1rJk/FWxv2nP0OzVtFQ2eXYa
+	eSW9VZsFDuuDkmLaVCLp6oHKlxCsPpBCciqbCaAv10XgPaeivUgH2/93SWPEmj4v0QwN2zwEtJYnJ
+	IpLTZD+mMhR11AtY/9/f2Cc4/ZLEdj/tgCH3bQMkeQfTpzMXZVT22yb6faDnxUyMbfE2DugqdCOsh
+	K3nyJYPQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vlmjA-0000000C6hu-0wbY;
+	Fri, 30 Jan 2026 11:31:52 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2C26930331F; Fri, 30 Jan 2026 11:23:00 +0100 (CET)
-Date: Fri, 30 Jan 2026 11:23:00 +0100
+	id 70F1D300BD2; Fri, 30 Jan 2026 12:31:50 +0100 (CET)
+Date: Fri, 30 Jan 2026 12:31:50 +0100
 From: Peter Zijlstra <peterz@infradead.org>
-To: Henry Zhang <henryzhangjcle@gmail.com>
-Cc: mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	Henry Zhang <zeri@umich.edu>,
-	syzbot+2a077cb788749964cf68@syzkaller.appspotmail.com,
-	andrii@kernel.org
-Subject: Re: [PATCH] perf: Fix data race in perf_event_set_bpf_handler()
-Message-ID: <20260130102300.GA171111@noisy.programming.kicks-ass.net>
-References: <20260127023618.1469937-1-zeri@umich.edu>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Tao Chen <chen.dylane@linux.dev>, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, song@kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+	haoluo@google.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH bpf-next v8 2/3] perf: Refactor get_perf_callchain
+Message-ID: <20260130113150.GB166857@noisy.programming.kicks-ass.net>
+References: <20260126074331.815684-1-chen.dylane@linux.dev>
+ <20260126074331.815684-3-chen.dylane@linux.dev>
+ <20260128091033.GG3372621@noisy.programming.kicks-ass.net>
+ <CAEf4BzYpcgC0Pi0f_ScUavJ_Tw74PKULsbPdexKsWmb8RmxLKg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260127023618.1469937-1-zeri@umich.edu>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYpcgC0Pi0f_ScUavJ_Tw74PKULsbPdexKsWmb8RmxLKg@mail.gmail.com>
 
-On Mon, Jan 26, 2026 at 09:36:18PM -0500, Henry Zhang wrote:
-> KCSAN reported a data race where perf_event_set_bpf_handler() writes
-> event->prog while __perf_event_overflow() reads it concurrently from
-> interrupt context:
+On Wed, Jan 28, 2026 at 11:12:09AM -0800, Andrii Nakryiko wrote:
+> On Wed, Jan 28, 2026 at 1:10 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Mon, Jan 26, 2026 at 03:43:30PM +0800, Tao Chen wrote:
+> > > From BPF stack map, we want to ensure that the callchain buffer
+> > > will not be overwritten by other preemptive tasks and we also aim
+> > > to reduce the preempt disable interval, Based on the suggestions from Peter
+> > > and Andrrii, export new API __get_perf_callchain and the usage scenarios
+> > > are as follows from BPF side:
+> > >
+> > > preempt_disable()
+> > > entry = get_callchain_entry()
+> > > preempt_enable()
+> > > __get_perf_callchain(entry)
+> > > put_callchain_entry(entry)
+> >
+> > That makes no sense, this means any other task on that CPU is getting
+> > screwed over.
 > 
-> BUG: KCSAN: data-race in __perf_event_overflow / __perf_event_set_bpf_prog
+> Yes, unfortunately, but unless we dynamically allocate new entry each
+> time and/or keep per-current entry cached there isn't much choice we
+> have here, no?
 > 
-> write to 0xffff88811b219168 of 8 bytes by task 13065 on cpu 0:
->  perf_event_set_bpf_handler kernel/events/core.c:10352 [inline]
->  __perf_event_set_bpf_prog+0x418/0x470 kernel/events/core.c:11303
-> ...
+> Maybe that's what we have to do, honestly, because
+> get_perf_callchain() usage we have right now from sleepable BPF isn't
+> great no matter with or without changes in this patch set.
+
+All of the perf stuff is based on the fact that if we do it from IRQ/NMI
+context, we can certainly do it with preemption disabled.
+
+Bending the interface this way is just horrible.
+
+> > Why are you worried about the preempt_disable() here? If this were an
+> > interrupt context we'd still do that unwind -- but then with IRQs
+> > disabled.
 > 
-> read to 0xffff88811b219168 of 8 bytes by interrupt on cpu 1:
->  __perf_event_overflow+0x252/0x920 kernel/events/core.c:10410
-> ...
-> 
-> Annotate event->prog access with WRITE_ONCE/READ_ONCE.
-> 
-> Reported-by: syzbot+2a077cb788749964cf68@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=2a077cb788749964cf68
-> Signed-off-by: Henry Zhang <zeri@umich.edu>
-> ---
->  kernel/events/core.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index a0fa488bce84..1f3ed9e87507 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10349,7 +10349,7 @@ static inline int perf_event_set_bpf_handler(struct perf_event *event,
->  		return -EPROTO;
->  	}
->  
-> -	event->prog = prog;
-> +	WRITE_ONCE(event->prog, prog);
->  	event->bpf_cookie = bpf_cookie;
+> Because __bpf_get_stack() from kernel/bpf/stackmap.c can be called
+> from sleepable/faultable context and also we can do a rather expensive
+> build ID resolution (either in sleepable or not, which only changes if
+> build ID parsing logic waits for file backed pages to be paged in or
+> not).
 
-What about that cookie thing? The consumer seems to be a bpf function
-(bpf_get_attach_cookie_pe) which can equally run concurrently, no?
+<rant>
+So stack_map_get_build_id_offset() is a piece of crap -- and I've always
+said it was. And I hate that any of that ever got merged -- its the
+pinnacle of bad engineering and simply refusing to do the right thing in
+the interest of hack now, fix never :/
+</rant>
 
-Also, there seems to be a coherency issue here, if prog runs, it expects
-cookie to be present and all that.
+Anyway, as you well know, we now *do* have lockless vma lookups and
+should be able to do this buildid thing much saner.
 
-Would that not suggest something like:
+Also, there appears to be no buildid caching what so ever, surely that
+would help some.
 
-	WRITE_ONCE(event->bpf_cookie, bpf_cookie);
-	smp_store_release(&event->prog, prog);
-
->  	return 0;
->  }
-> @@ -10407,7 +10407,9 @@ static int __perf_event_overflow(struct perf_event *event,
->  	if (event->attr.aux_pause)
->  		perf_event_aux_pause(event->aux_event, true);
->  
-> -	if (event->prog && event->prog->type == BPF_PROG_TYPE_PERF_EVENT &&
-> +	struct bpf_prog *prog = READ_ONCE(event->prog);
-
-smp_load_acquire(&event->prog);
-
-> +
-> +	if (prog && prog->type == BPF_PROG_TYPE_PERF_EVENT &&
->  	    !bpf_overflow_handler(event, data, regs))
->  		goto out;
->  
-
-Hmm?
+(and I'm not sure I've ever understood why the buildid crap needs to be
+in this path in any case)
