@@ -1,351 +1,835 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012004.outbound.protection.outlook.com [40.107.209.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A1D2BDC3F;
-	Fri, 30 Jan 2026 18:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8FC3859EE
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 19:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.175
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769796531; cv=fail; b=G+V+Jam/S83P/y4WIr1MsbJ3iIQbIdhuCb/fYDQrvgYOwU81aGlJNGfdaS7a2a6MNU7nomZXKGt22KSLypGNIezXVDlLi/Cpv4r8mmFA0QzTuz/SiYvEjkqkheEqYC8w4XMyupPlL0FjesQM+Q/orCPr6IgrGpCNYQG3ChlH49o=
+	t=1769799623; cv=pass; b=MTIBekfbDF3KEKBo3v8/UhvHO35GzG8HjRsVC0sl+HzbER6NmdHM+EPT2Cqg9ozRIFR4irl+qlI/69chkdPLuWQlW5moUrKE9KFuuRYIiAmvRfUMn5JF3tGt13vZ+/gW0bN8Sa4tEBqLAlxwBvzbu5bFrLejE14b7lMFn+Gu0uc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769796531; c=relaxed/simple;
-	bh=i5RNilTDhrzBzSwrL8c9jsl24Kfot+AzZk/nj28xXcU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=JtROP61tCvj7GuTp5WxOY4fE1SK1XmtLXXblWLHJq4TdTRAqFREfQyox9N9W2NQNebJG+nS2UePxBfcLtLI9tnCc9XHMuggggQpuwmAkN+u26puCWxnw59PlmscvLfoLICYSvsDG2YXF5HFKcNyddjkmhjbf8jWKKu71KnkJ0WI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Jif2euwY; arc=fail smtp.client-ip=40.107.209.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1769799623; c=relaxed/simple;
+	bh=NhbmuSTLkYKdG9BeEJF2hiRSY2HooXC7JFtgQNMN9ZE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mzL2NWQyVzjDB7uUHTF3jVZN/DLJpRYjqb8pcyQicPVAbA68eIvplOsGVffY2hzxk86Xo28KVkgbNwKOUWlYuSR5URObtuWQd0O8BMUgj25lUL8OGWIMVhj3OWek14wTiQbUa0sd0z+2dwop10jQDrW/q8DNRGF9bw2gur5ER98=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2ckdHBME; arc=pass smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Jif2euwY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O8gTPNrXvEUK0Wi32vPrzwh/Y5A2N3HclnR25mvtgQ30nCboMmauaqVqN5XOAmzKkfpOMI0ures9Ppd175kOkwWyzYPIZm66yJv6LWtKtRFm3FTSBeJeFVZmnCz3D0bh5bmtWGGiQ6NWKeyeNv+7NrdonZ8QoAiXQSfDnfXfPvz5jEhJgGFbMpWFpbFMEp8n3Y6kf7fP57GZ0fcZRrWUSIwcGz9GSVyI/Ksu+S6sWpIPaHMNdWvKs10rX0QYDfchyZMplJc0zDNFLFvNW8JDX3VbT25aPlPq38OGPTvl6ezEusnEO72uDYI6xbmsEiZ+3kHclTp6yegONxedHEmySg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i5RNilTDhrzBzSwrL8c9jsl24Kfot+AzZk/nj28xXcU=;
- b=fdLJYp+RMljTo1kLHsyjiIf6eHMF2w+UQGSXcFFJpwy8OOayPQnR7nrihCZRcZstPqD0E2+B/sBIHHLyGaqaWXUbJ2T4QgLEN+c6mROYlvVmk+fA9V+ofU7vm5v2erDFQMpXlaYfmsYcT0QMPJG0LBZmKzkqZSEwUmGtby3k+UNoK8cy02rB8HLsK7TEY99G6HTS6rSdelDRCcjFaUrJxBqGg4vVE8HcqtYySvHsnWybNSC88bajSO1RS69Gyx9qEgFN0hdJ/bHBMVV/dbDQBsVmg4pCvMqdHPmU1tx7FQUukz85ljXtYSy0dlfRwH8ZvHRit2Jd9yNpkY1mJc0GJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i5RNilTDhrzBzSwrL8c9jsl24Kfot+AzZk/nj28xXcU=;
- b=Jif2euwYfEq+gS7c8gn9zlEedRzV3OvIVdXttLTYgupgvOc9Lkp+nfbB6Cgd8Bk1eFsBGosvCvJhMtkzs1GRu/KY7ymF3kTyi1wVvLDxVdIg0n/7dMA0YFA9ZIG9+4KX95d/R7fXq4XbSjnXINikXDfWVRVgzbiWJEDVjhf8881ig75G3cl9b4eZ9/xtpqgCbfqM9Whwnays32EmIun8zryAA99vBM0rVB1Z5hU4uZ1oV+idVCxhX16XTAP/D3bUyIGnffsqoLJRW78u6/6voCUPgz5c8q7DDGC4+fJUw3ggzbiny6YYQzPWHdLj+3wIz2oVNMzZhpLABHrrhvGM1A==
-Received: from MW5PR12MB5681.namprd12.prod.outlook.com (2603:10b6:303:19e::20)
- by LV0PR12MB999067.namprd12.prod.outlook.com (2603:10b6:408:32d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Fri, 30 Jan
- 2026 18:08:46 +0000
-Received: from MW5PR12MB5681.namprd12.prod.outlook.com
- ([fe80::e5fb:15be:ad9e:5911]) by MW5PR12MB5681.namprd12.prod.outlook.com
- ([fe80::e5fb:15be:ad9e:5911%4]) with mapi id 15.20.9564.006; Fri, 30 Jan 2026
- 18:08:45 +0000
-From: Besar Wicaksono <bwicaksono@nvidia.com>
-To: James Clark <james.clark@linaro.org>, Ian Rogers <irogers@google.com>
-CC: "john.g.garry@oracle.com" <john.g.garry@oracle.com>, "will@kernel.org"
-	<will@kernel.org>, "mike.leach@linaro.org" <mike.leach@linaro.org>,
-	"leo.yan@linux.dev" <leo.yan@linux.dev>, "mark.rutland@arm.com"
-	<mark.rutland@arm.com>, "alexander.shishkin@linux.intel.com"
-	<alexander.shishkin@linux.intel.com>, "jolsa@kernel.org" <jolsa@kernel.org>,
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>,
-	"acme@kernel.org" <acme@kernel.org>, "namhyung@kernel.org"
-	<namhyung@kernel.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Thomas Makin <tmakin@nvidia.com>, Vikram
- Sethi <vsethi@nvidia.com>, Rich Wiley <rwiley@nvidia.com>, Sean Kelley
-	<skelley@nvidia.com>, Yifei Wan <YWan@nvidia.com>, Thierry Reding
-	<treding@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Matt Ochs
-	<mochs@nvidia.com>
-Subject: RE: [PATCH] perf vendor events arm64: Add Tegra410 Olympus PMU events
-Thread-Topic: [PATCH] perf vendor events arm64: Add Tegra410 Olympus PMU
- events
-Thread-Index: AQHcj+Cj3WKkUXlrNk6a56HCQEVPPbVnOXgAgAAZ8gCAA6t7IA==
-Date: Fri, 30 Jan 2026 18:08:45 +0000
-Message-ID:
- <MW5PR12MB5681E958BDDCEB137E65CE54A09FA@MW5PR12MB5681.namprd12.prod.outlook.com>
-References: <20260127225909.3296202-1-bwicaksono@nvidia.com>
- <CAP-5=fUxhbR1xs1f9mrkcUXZZNLrVqDG0ebhwW--WtgVRnNxNw@mail.gmail.com>
- <40988c57-ee6f-4693-afe4-2615dc43f395@linaro.org>
-In-Reply-To: <40988c57-ee6f-4693-afe4-2615dc43f395@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW5PR12MB5681:EE_|LV0PR12MB999067:EE_
-x-ms-office365-filtering-correlation-id: 04fd5603-b711-4cba-694c-08de602a9c2a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700021;
-x-microsoft-antispam-message-info:
- =?utf-8?B?Y2RLdmxzZW9JOXlVTU9rM1RZOEdJL3V3R1lZbndnK28wNENVUXdaWUIvcnVu?=
- =?utf-8?B?aHowREFKM0tPMFVGa2YwM1hWMVpnTmZTcDV0SHRWZUxPSkZPbEJWTTk5ODJV?=
- =?utf-8?B?K3RKeUwxb05vRWIrQVZOY2tuZ00xOC9yM3hMOHA1R0pYc29NRFYxSTRtYTZi?=
- =?utf-8?B?ZWtvTlZhVnZhMkxzcmdOVHg2NENwWXRKWDlVQ2cvYUFUejBLMTZ0T1U5VUo4?=
- =?utf-8?B?Qmt2QXp6dXY4L0ZxWldMVWR0VVVBRGNvSk5sbXRRQWxPbUh1VlRJMVY0Z2Ji?=
- =?utf-8?B?N2tQQVdTaVZOa3plV0doUFNHTXFLblRHNmhaU01ZN0FWZlp5Y3orMjgxRFVH?=
- =?utf-8?B?YXlENXZuN2FXV2dmenhmMmM1Wm9xODMxaXpYQm02anF2eG5pbmdSYmJuYXBW?=
- =?utf-8?B?SDR0MjNQOXRDL0FqNmc4aE1OVFFWenJncHpTVForS0NCbml2bGVkMlg1b3A3?=
- =?utf-8?B?UFJCREFkQ1lwRGw2bWtDTDBmdmRoa2p6dG1NM3VTVDJrWFVmMU94QWJQWnRJ?=
- =?utf-8?B?WWpuOFdnRFhPS3dmTjJsMGJWVkFyMU94RDVPaEpkZ1lCcC9pS2hCRGxkMW5R?=
- =?utf-8?B?VXVuV0N6WHNYaGVTMldUZkN1bU1BSVlqd05WWC9DeWk5TEo2cDZrdVVJMWJ2?=
- =?utf-8?B?U1Z2OW44c0Vub2QvRW45NnhPNGRZME5IUUVRbmV3VkwzMU1QQ1ZCUTFmS3d0?=
- =?utf-8?B?WFpwbng3UndMMmxhY0dneHArSUptTlpSYVEycFNmR2F3b3RBdWY5NFV2dUpK?=
- =?utf-8?B?aGZRZzBQU1R5dlVzMkRlUnNSZ3Fyb1hTUkZPeFA4dlZBN1pYRElVdHI0b054?=
- =?utf-8?B?UzZXeDdweXRkNnBlZVQ3YjR2bGRqSmwxQkFyMlBTbngxbHlFKzFNakpCNFp5?=
- =?utf-8?B?VlYxcHRmdHMwaEpUdGZERlE4U1B2Rkl3K3dheXhkaEh6SWVZazFyZHJkclFw?=
- =?utf-8?B?MDRYVGhzem9YZURJRGJ5K1pFMlFkYnBNZ3ZTN0gvSFcxYXMwL0lHSGdoUnk4?=
- =?utf-8?B?d2lIcDE3bE5xL1p0YUEvQlBIY3l6dStNMEVKUVJzOTZKTVgvVmhQQTEzcklS?=
- =?utf-8?B?UTV3d3BJamttWkpzKzNyVmcxUDMxUkE1bFE1WXFwNzZFajVta0g5b1ZoMmpE?=
- =?utf-8?B?M1pUMHJXeUVxVHRLTlFEYitiNEZwWWVGbTlHemRCb1JOSWNaV1llMk5YV3FB?=
- =?utf-8?B?Wmh6VWFiTHlRczl1d1dvZEZnMXl3UVA2VEZTbkZ6L3FSL0VCK0RYelMxQ0RF?=
- =?utf-8?B?MFZHM3hsRWd6S1NLODh6TDdkZjhJQS9hNTdvRmJkbW1KSnRERHc1QVQzRVpK?=
- =?utf-8?B?bkVITVpZcFd4QXZKT2lncGVYdTJwSmE2d0NqRWJzRWJLbHdQWkhyV21nZkJI?=
- =?utf-8?B?MUVnZjk3VEx1RW1TbVZHYkhKdkI1V0gzREN1NjlyZDd4cE13ZTEwN3NhY3gw?=
- =?utf-8?B?VkU4dE9CMEJBWXN5N1FyQ3lOOFBjREpYbUhFd0FvOTkvZjRDb0VYZTVCUFVm?=
- =?utf-8?B?TDNDbFB4bDVrWnp5SGFDcGNJQm9kM2w2VTlCMzNPRkJ1Vzdla3hhWnVwelVk?=
- =?utf-8?B?SHVIdFlnMjJGWUdxekR6S2hmSlAzbk0xVnNvaDJyeG5VWVVzYzd0NXdZRkpX?=
- =?utf-8?B?S2tHenRHM0ZpRGo2Q1ZyWDBjRDJ4a01aejZvVWJiQkRtR1BMQndFUUI1MThq?=
- =?utf-8?B?bDNBL3ViVnBBNERuM29kdnBVbk8ycVFlTGkrVGxQbGRLbWV0UmI4d09aU0FE?=
- =?utf-8?B?TDlDWFp6Q0VYN1QzMjRBRDYxd1pqOWhLTVkrV1lNM1NIRml5WklBTzltUnNQ?=
- =?utf-8?B?c3IyWFNqSDEyWWNqRXN1Ly8rMkxTL1U4Sk5wRWJObmNFMTZzWlNzUEo4d09s?=
- =?utf-8?B?cG4wRGpLSW9Ocy9Xeno5RWtmVmxwTU5BcTNyWGx3WjdDd1pRWkhZWXFjMmZI?=
- =?utf-8?B?MERvSEY2R0E2RlNJMDFnYjBZNkxTN3MxWUVaanpUMTg1QW1xSTNVUXJQRXV0?=
- =?utf-8?B?b0tEVTNuVnJ5aTdpaU03ZllRRFlzNkQ1QzcyaUJ3cE1Dano5VE5qM25DelRW?=
- =?utf-8?B?MTdEcEN5ZlVtWEJNdGNFUWJyNnJXZTdUKzQwRG0xM2taVWxnVVloVWFpMmdG?=
- =?utf-8?B?MlRRYnF2TEgxSUZvSFR4akR5S3pyNmNHM244ZU96RC9qUURGQ2F4YzJSV1VD?=
- =?utf-8?Q?DSjhoLyPP7SvzATFQ4SZ5Pg=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR12MB5681.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?dnhiQUVtYmMwaytJL2hGRkVTdmpRTFRNai96dTc5NVJYenptR3VhejN5UXpP?=
- =?utf-8?B?VnhUWHhMZWNFZEt3OWtzdFJENXJwbFV5SWdFM2xIdWFXN3Q4VjArQ1ZuSjNy?=
- =?utf-8?B?Y3NDajBhRkgvWnJzK3JOdzJzWG9NMHdYTTMvejdnN0EzVzVsRmNUL2xZSXds?=
- =?utf-8?B?Ri9SeGluczFua1EzZGRwbWRkTGdXNEpKRkpBVDRwemZFdmxtOFNsKys3VFhk?=
- =?utf-8?B?aFpXdURlVDhDM2tjdkMydlZ0VWlEOFVVYXpEVnVlYTArbkgzZHQ0N0VESElq?=
- =?utf-8?B?WDlIZm5LeWVUQjNLOGtIMFpYNmlGdlNKWDc3OEFqQ0pYbk1hYjVscmRxdnUw?=
- =?utf-8?B?SEg2cmxMTDJ0bkVxMTJHNThLZjQ4KzVOMnlxSklhNjhISklnWlJxUXZuM2ZJ?=
- =?utf-8?B?cXhqVTFsdS9mOFk3YTJGNjRIdWpkd0pxVTU0ZncxL2RUM2o5cUhEY296dGxD?=
- =?utf-8?B?RytkR0w1TWRweGtER2Z2ZG5WSEVFQmZ0UTRTUU9ISlRIK2hvT0lveW9vbmJE?=
- =?utf-8?B?TDNNZG5HaXUrU3d4ZldhYWd5ZUdWa1FqY2tFREJyQVVYQ1pRcUJzbjhmL1RU?=
- =?utf-8?B?RzdJRk9yUG4vVFhBMFAyVGcyK2lzcjI3RmliN1pWSXp5ejlNY05mbVdzb3h2?=
- =?utf-8?B?bG4wSktTQ2NDVXY0REZPS3E1bkpKdmtJN0I0dHFibGVEZythaGxQOVpWT0h4?=
- =?utf-8?B?bE41MEgyelFlYXRkZGlvYzQ5MWpoV1hEMks1dE53cVB2SGZGclpydU40NnlS?=
- =?utf-8?B?ZFNQdE1WdlF4OE5NN2p6RWtYNkRJSnhrdkE1R3B1QWtUY05wVTg0WFFyS0Ro?=
- =?utf-8?B?S2xRQ2Y5TjU3YjUrSXBvRzR4STJtL2M4TS9LdEkvdFdqcWpIZ3VqSEp1TGRs?=
- =?utf-8?B?bExGeklUbVcrRXkyT05BcVZZa2hyTWR3Y0FGb1lESk16czhocW5URUg3ZU1I?=
- =?utf-8?B?a2JNNlE3U2R5RkhhOG5waktmNWdyUWZOWWwvbFFoaWJlSjJBOE9kc2tsdklm?=
- =?utf-8?B?cGRZVVZoQ1cxV2JtZ1Jqa29QdnFmZVh6UHVINmxtbEtYaXNCUkxGVnRMaUNU?=
- =?utf-8?B?U001OGJtZndLSXJjdXA0N2NWS1JJeHlzWHQ4TnZFb2ZqOWJiVWZRdXZzU0hk?=
- =?utf-8?B?eXMvOUtaY2dtYzBVVldUWDBtY0orUEI3UVNJZjBiTXp1ZHR2QjZYU05NdFVw?=
- =?utf-8?B?SFcySmplaldpVXpYTyswbUpjdGd5bWdVOXFaRVNrR3ZnWEp2NW1DMjVBRWtP?=
- =?utf-8?B?TWt3M1crbkpKQ2xmNkJXbEJPZW1XMkVib0V5QVZmTXFXbnplaDJiNEFYUkh4?=
- =?utf-8?B?aWFwakJiTzZ1NXQyc0djaVhXRUYyR1JQQ1UwQVd0SmQ4cUpkazlJQVZwYTIv?=
- =?utf-8?B?VkhaVHdpbkdZaUdhblVjWksxRGRjM01hdmZLSlRMSGhBMDkya2ljc2NqWGgv?=
- =?utf-8?B?RG1zV0RZWDMzUStLTTZtd1hUdXh1MUU2ZDNwanBPTlptdEJSU1BFV04vTTA4?=
- =?utf-8?B?b0gyVEgyZTAvSDUvcno4NWtJNU5FU1JYK0hpTmJFOCs4TVVjZUViN05QS0ZP?=
- =?utf-8?B?RHpGU2pNUnkrU3lpbzdNNytIcG9IbHkxM0wxa2hxY1BuUGVwNnlPR0E3QWtM?=
- =?utf-8?B?anhVN1hjM2VkdEtXSkppZVIvY3d6ZTRRRW0xaXRtdk80SnFXZTFRR2FRNThQ?=
- =?utf-8?B?YTI0aktPendSQklmNlhFWng1bGZQOTVkRnB6NGIvd0ViL3ZzSXJCZHFyeFEw?=
- =?utf-8?B?TnJTMklSOFV1RGhzUkhYNmZ4WDBmQkRsODJmNWFrRG1MdDAwOGV6MFhnc1Y5?=
- =?utf-8?B?UlJxRUFwTjBhYnRlRi9sSEpzbDRrRjdPTTluR2o0UlhuT3BOWGYwd1hrSWxP?=
- =?utf-8?B?T2xyczkwYVBQODZDdnJFaTRrS3puYytyOGJuS0pDdWVZV25TYUR2V2FKcDZE?=
- =?utf-8?B?Mjd0QlRMT2d5UnhSS08xWE5OVlNoS3JLSHBOWE5WM08rWWVQa2FiWGJ4dDA5?=
- =?utf-8?B?VklncDNURklJM3RCcU1JelFuWUVnK3daWW1Fcjl5eis5TCtIcXhFMWJTeXRx?=
- =?utf-8?B?eUZBbGFOL0hLZVI5U2tYNjQ3a1ljR3BkNGxQTGVkNWpiOFhDRXgweTh4ZHYy?=
- =?utf-8?B?Q0J2OWxHamc0SEhpdFg2aUwxZUgzTWUvMWZ6bG81TjJlVlYweThHcVEvSExF?=
- =?utf-8?B?Q2JWODdXV0dBc21ob3NGMFFYL3JmSHRKN0NqRC9VNVl4QWFuZldicmNYNnM1?=
- =?utf-8?B?SVZrMjdTaHdCZ0daUFpjMWwzSmdmNTEvdE45ZGV0TUhLemxoOVMvL3d6L3Jk?=
- =?utf-8?B?d3pxMklwbWFmeFh0T0hnd3hyRDdvM0IxdnFDY0Rpamo1MzZ2M3JTdz09?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2ckdHBME"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2a8e4ae61a0so8585ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 11:00:11 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769799611; cv=none;
+        d=google.com; s=arc-20240605;
+        b=HyhaX6hoVgcSqU0liKVrjd6qCj8PPKs1CIOZO9+xqH4Z7sHXKnppBDpdeyZfovF6b1
+         te9qpvT2L0+Hjw+rqGA2W2b8VMD2vqduLpLsBLIu9XI24yng3XF37VY0wl08myBDNudo
+         fVWDfNyJvqQGOYuD3dNpBw4+KrereFunOBhgR3G9e3w+4X3fHSZ4al/83JSYiHAfJOL3
+         6kiLcPCOvrOGTFMdjXFQRLbPHUWnoL6lz73Mek8OM7hO1bZ24qWRW/PYUDCOJQubhUlJ
+         ELCqZ8reGVGiy9emCMvFLeOvOAV7VDBBTASURD4mUHv4MXyt6IMix7CSmLO9MPnSQ0gF
+         cXDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=r6RcU6AeNk7P4EPwKiF1KtguLXFCSbP10h3roHW3P7c=;
+        fh=DN46pmYwIeeOrIG8kn3FXfD7VZ8e1/f7frHP+y4OSws=;
+        b=io+yVRVE4dSh7y6ZGzoIPtS0o9t2FOjyHpddZCl9So1H7CM6ohUOrlHEax8nM+uu9q
+         nq/EEGWUNhJLgruxjsoWxA1o3eTp3CF/fCOMFClqyNP35BtZc/PZ/MPfIiD4OSRJJZOP
+         6PZT683sAb1wALY2uaGRmHneomwmfaqH4AKxYVg1sxzn1YFrdmCOvgQtiB5EOEBUd89m
+         yIsekHJ1+s6KGKkEadQHvHM1eCQtY8VgSP817zeAAvcW/BYGXOZ86AYcGm2zmDaAYkMs
+         0TNq0sXEhEyEzAF+8/B+41nzb91HpDhZrzMbNco66jsWPNyaV+k4Ocr6LwPiiQ90KnSR
+         VdtQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1769799611; x=1770404411; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r6RcU6AeNk7P4EPwKiF1KtguLXFCSbP10h3roHW3P7c=;
+        b=2ckdHBMEXvghkwKtm4YrMTxfnJ+hXs9CqLInIjSQPvAKam9uO93SVEwxnJ3DoKMF27
+         UzC1AftRKWZSDDuNpftx4uaoWRYeNwvKWwdJ1TLQX+1ONoCSbXla293pbHkE4C8i632/
+         FUztq6Fu15RVvDmy0u6LuyzsL713iUjx9JWPdBVMCJleriA/yr4YGqYJju4zb3SBHf0t
+         OfM84GEbmwsjxVJvA0qnvj8uIvFbzXfAMw6HgJFiUNucPNr6DF8xIWCk4zNsGRnMGJWS
+         zdpymdMShbrVlYZ+Lm46P+NfMTs0MRctDmh/t2JrWWqkbnqZ2IINXRGJAHINzYvqdkcm
+         f8Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769799611; x=1770404411;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=r6RcU6AeNk7P4EPwKiF1KtguLXFCSbP10h3roHW3P7c=;
+        b=Bbt4tR6J2KH72d1pCfHgg17imgFBAhjexi9jz1UjitSX3cugN5paegw1UD8mebHReP
+         eZwY7P6475ILP7QOWh0+R2NlDpiELVksT9WgrQO+bW2zls1qmaXUeOPtReog+yhanxIa
+         B+kcqMyjqf4yhGFThZqj037Tz3Y1dksYIdDMcSCHPii/w4jreOcp2ND2ghM4SZji0id3
+         cK+lvWhWQ/oR3ChRI4+YoZmLVWXdcKrs2XwMfGRyePC8PaPn3tWuuyHO/HK7/xCWJMm8
+         JzjZ+V9Pew74Vcx/tNV8P9809dvzSN9Q20+rW3youzQOF5ViopNSsI7KM1BkE76cq3yg
+         q2zg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwonjPwv67JnaBdqvk+51ACjIXFyTlgJOxvS6JNd2sb4QjnrKmS+5t8YlW88aYMI5dvbT4NebhRMKDOwnBMg1K@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbNFpKDNx+4pds1rM+kN+MScaCz/6VeKUmKKv2HD8hqESA++ry
+	LIpXKnWC+i5EBbR+pRecS/58pNTrmpgvTxILzqAc0w8xrhqV9cqBxrYod8qrAc4IoFFTdXlFRoW
+	0/JiHe6gbNYrT51oeO/3LXkgtbYCJ1wuRekuxVXcm
+X-Gm-Gg: AZuq6aLHLC42uIM1kwVCV25SoAXBrKQIjC6LKH9SyfKFVslc+RAwPm76df1ckdFKT9e
+	wDRaQLxxBJa9GsItoQuz5XMCThDEt0vvRxF94Loa9Wh8J+9ZjLwuyrBZ6xAJbCEbuZMMRyuI5I/
+	pTWWYrHuGTiN9B3MRHD0aJHqnYVYy8dw7sIC6n1leX+DPq6ujZ8trvnbpfIq809Z7GElbtCh3Fv
+	eptEPkWtk3NwXbBipyelOrSpp1SLJY27sWT780X08kRdbuq9rMyHOUmtzbQ/4zPBqA++Gcc1KIT
+	YGCbJNYDvbF+yBhmN+lTGCSp
+X-Received: by 2002:a17:902:e885:b0:2a7:6c4e:5924 with SMTP id
+ d9443c01a7336-2a8f32da4c7mr246105ad.12.1769799610348; Fri, 30 Jan 2026
+ 11:00:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW5PR12MB5681.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04fd5603-b711-4cba-694c-08de602a9c2a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2026 18:08:45.7718
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GjGERGM5oZBGaJzwrx7GE+TeqQghv2RaL1gw9GCi9SuR9xh4yKSYtdzxR2Q6cYHxY7Akt8dlK8mGBIVTHLX9Og==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV0PR12MB999067
+References: <20260127062302.544809-1-irogers@google.com> <20260127062302.544809-2-irogers@google.com>
+ <aXpZvOZyQLIz5gTF@x1>
+In-Reply-To: <aXpZvOZyQLIz5gTF@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 30 Jan 2026 10:59:59 -0800
+X-Gm-Features: AZwV_QguAtmWzmTD1a48Cjpho1UB2faxT84HaY6nm5MyET3PzQ57vTQM5dFRNNc
+Message-ID: <CAP-5=fX2+UMzhMCEBVtA0Es_-T7QNxn2c7rPJi4se6bamLsD=w@mail.gmail.com>
+Subject: Re: [PATCH v9 1/3] perf capstone: Support for dlopen-ing libcapstone.so
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Collin Funk <collin.funk1@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-VGhhbmsgeW91IEphbWVzIGFuZCBJYW4gZm9yIHRoZSBjb21tZW50cy4NCkkgd2lsbCB0cnkgdG8g
-YWRkcmVzcyB0aGUgc3BlbGxpbmcgbWlzdGFrZXMgb24gdjIuDQoNClBsZWFzZSBzZWUgbXkgb3Ro
-ZXIgY29tbWVudHMgaW5saW5lLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
-b206IEphbWVzIENsYXJrIDxqYW1lcy5jbGFya0BsaW5hcm8ub3JnPg0KPiBTZW50OiBXZWRuZXNk
-YXksIEphbnVhcnkgMjgsIDIwMjYgMzozNyBBTQ0KPiBUbzogSWFuIFJvZ2VycyA8aXJvZ2Vyc0Bn
-b29nbGUuY29tPjsgQmVzYXIgV2ljYWtzb25vDQo+IDxid2ljYWtzb25vQG52aWRpYS5jb20+DQo+
-IENjOiBqb2huLmcuZ2FycnlAb3JhY2xlLmNvbTsgd2lsbEBrZXJuZWwub3JnOyBtaWtlLmxlYWNo
-QGxpbmFyby5vcmc7DQo+IGxlby55YW5AbGludXguZGV2OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
-Cj4gYWxleGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNvbTsgam9sc2FAa2VybmVsLm9yZzsN
-Cj4gYWRyaWFuLmh1bnRlckBpbnRlbC5jb207IHBldGVyekBpbmZyYWRlYWQub3JnOyBtaW5nb0By
-ZWRoYXQuY29tOw0KPiBhY21lQGtlcm5lbC5vcmc7IG5hbWh5dW5nQGtlcm5lbC5vcmc7IGxpbnV4
-LXRlZ3JhQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZzsgbGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOyBUaG9tYXMgTWFraW4gPHRtYWtpbkBudmlkaWEuY29tPjsgVmlr
-cmFtIFNldGhpDQo+IDx2c2V0aGlAbnZpZGlhLmNvbT47IFJpY2ggV2lsZXkgPHJ3aWxleUBudmlk
-aWEuY29tPjsgU2VhbiBLZWxsZXkNCj4gPHNrZWxsZXlAbnZpZGlhLmNvbT47IFlpZmVpIFdhbiA8
-eXdhbkBudmlkaWEuY29tPjsgVGhpZXJyeSBSZWRpbmcNCj4gPHRyZWRpbmdAbnZpZGlhLmNvbT47
-IEpvbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlkaWEuY29tPjsgTWF0dCBPY2hzDQo+IDxtb2Noc0Bu
-dmlkaWEuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBwZXJmIHZlbmRvciBldmVudHMgYXJt
-NjQ6IEFkZCBUZWdyYTQxMCBPbHltcHVzIFBNVQ0KPiBldmVudHMNCj4gDQo+IEV4dGVybmFsIGVt
-YWlsOiBVc2UgY2F1dGlvbiBvcGVuaW5nIGxpbmtzIG9yIGF0dGFjaG1lbnRzDQo+IA0KPiANCj4g
-T24gMjgvMDEvMjAyNiA4OjAzIGFtLCBJYW4gUm9nZXJzIHdyb3RlOg0KPiA+IE9uIFR1ZSwgSmFu
-IDI3LCAyMDI2IGF0IDM6MDDigK9QTSBCZXNhciBXaWNha3Nvbm8NCj4gPGJ3aWNha3Nvbm9AbnZp
-ZGlhLmNvbT4gd3JvdGU6DQo+ID4+DQo+ID4+IEFkZCBKU09OIGZpbGVzIGZvciBOVklESUEgVGVn
-cmE0MTAgT2x5bXB1cyBjb3JlIFBNVSBldmVudHMuDQo+ID4+IEFsc28gdXBkYXRlZCB0aGUgY29t
-bW9uLWFuZC1taWNyb2FyY2guanNvbi4NCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTogQmVzYXIg
-V2ljYWtzb25vIDxid2ljYWtzb25vQG52aWRpYS5jb20+DQo+ID4+IC0tLQ0KPiA+PiAgIC4uLi9h
-cmNoL2FybTY0L2NvbW1vbi1hbmQtbWljcm9hcmNoLmpzb24gICAgICB8ICA5MCArKysNCj4gPj4g
-ICB0b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9tYXBmaWxlLmNzdiAgfCAgIDEgKw0K
-PiA+PiAgIC4uLi9hcmNoL2FybTY0L252aWRpYS90NDEwL2JyYW5jaC5qc29uICAgICAgICB8ICA0
-NSArKw0KPiA+PiAgIC4uLi9hcmNoL2FybTY0L252aWRpYS90NDEwL2JyYmUuanNvbiAgICAgICAg
-ICB8ICAgNiArDQo+ID4+ICAgLi4uL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAvYnVzLmpzb24gICAg
-ICAgICAgIHwgIDQ4ICsrDQo+ID4+ICAgLi4uL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAvZXhjZXB0
-aW9uLmpzb24gICAgIHwgIDYyICsrDQo+ID4+ICAgLi4uL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAv
-ZnBfb3BlcmF0aW9uLmpzb24gIHwgIDc4ICsrDQo+ID4+ICAgLi4uL2FyY2gvYXJtNjQvbnZpZGlh
-L3Q0MTAvZ2VuZXJhbC5qc29uICAgICAgIHwgIDE1ICsNCj4gPj4gICAuLi4vYXJjaC9hcm02NC9u
-dmlkaWEvdDQxMC9sMWRfY2FjaGUuanNvbiAgICAgfCAxMjIgKysrDQo+ID4+ICAgLi4uL2FyY2gv
-YXJtNjQvbnZpZGlhL3Q0MTAvbDFpX2NhY2hlLmpzb24gICAgIHwgMTE0ICsrKw0KPiA+PiAgIC4u
-Li9hcmNoL2FybTY0L252aWRpYS90NDEwL2wyZF9jYWNoZS5qc29uICAgICB8IDEzNCArKysrDQo+
-ID4+ICAgLi4uL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAvbGxfY2FjaGUuanNvbiAgICAgIHwgMTA3
-ICsrKw0KPiA+PiAgIC4uLi9hcmNoL2FybTY0L252aWRpYS90NDEwL21lbW9yeS5qc29uICAgICAg
-ICB8ICA0NiArKw0KPiA+PiAgIC4uLi9hcmNoL2FybTY0L252aWRpYS90NDEwL21ldHJpY3MuanNv
-biAgICAgICB8IDcyMg0KPiArKysrKysrKysrKysrKysrKysNCj4gPj4gICAuLi4vYXJjaC9hcm02
-NC9udmlkaWEvdDQxMC9taXNjLmpzb24gICAgICAgICAgfCA2NDYgKysrKysrKysrKysrKysrKw0K
-PiA+PiAgIC4uLi9hcmNoL2FybTY0L252aWRpYS90NDEwL3JldGlyZWQuanNvbiAgICAgICB8ICA5
-NCArKysNCj4gPj4gICAuLi4vYXJjaC9hcm02NC9udmlkaWEvdDQxMC9zcGUuanNvbiAgICAgICAg
-ICAgfCAgNDIgKw0KPiA+PiAgIC4uLi9hcm02NC9udmlkaWEvdDQxMC9zcGVjX29wZXJhdGlvbi5q
-c29uICAgICB8IDIzMCArKysrKysNCj4gPj4gICAuLi4vYXJjaC9hcm02NC9udmlkaWEvdDQxMC9z
-dGFsbC5qc29uICAgICAgICAgfCAxNDUgKysrKw0KPiA+PiAgIC4uLi9hcmNoL2FybTY0L252aWRp
-YS90NDEwL3RsYi5qc29uICAgICAgICAgICB8IDE1OCArKysrDQo+ID4+ICAgMjAgZmlsZXMgY2hh
-bmdlZCwgMjkwNSBpbnNlcnRpb25zKCspDQo+ID4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xz
-L3BlcmYvcG11LQ0KPiBldmVudHMvYXJjaC9hcm02NC9udmlkaWEvdDQxMC9icmFuY2guanNvbg0K
-PiA+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2FyY2gv
-YXJtNjQvbnZpZGlhL3Q0MTAvYnJiZS5qc29uDQo+ID4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRv
-b2xzL3BlcmYvcG11LQ0KPiBldmVudHMvYXJjaC9hcm02NC9udmlkaWEvdDQxMC9idXMuanNvbg0K
-PiA+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2FyY2gv
-YXJtNjQvbnZpZGlhL3Q0MTAvZXhjZXB0aW9uLmpzb24NCj4gPj4gICBjcmVhdGUgbW9kZSAxMDA2
-NDQgdG9vbHMvcGVyZi9wbXUtDQo+IGV2ZW50cy9hcmNoL2FybTY0L252aWRpYS90NDEwL2ZwX29w
-ZXJhdGlvbi5qc29uDQo+ID4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3BlcmYvcG11LQ0K
-PiBldmVudHMvYXJjaC9hcm02NC9udmlkaWEvdDQxMC9nZW5lcmFsLmpzb24NCj4gPj4gICBjcmVh
-dGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9wbXUtDQo+IGV2ZW50cy9hcmNoL2FybTY0L252aWRp
-YS90NDEwL2wxZF9jYWNoZS5qc29uDQo+ID4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3Bl
-cmYvcG11LQ0KPiBldmVudHMvYXJjaC9hcm02NC9udmlkaWEvdDQxMC9sMWlfY2FjaGUuanNvbg0K
-PiA+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2FyY2gv
-YXJtNjQvbnZpZGlhL3Q0MTAvbDJkX2NhY2hlLmpzb24NCj4gPj4gICBjcmVhdGUgbW9kZSAxMDA2
-NDQgdG9vbHMvcGVyZi9wbXUtDQo+IGV2ZW50cy9hcmNoL2FybTY0L252aWRpYS90NDEwL2xsX2Nh
-Y2hlLmpzb24NCj4gPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9wbXUtDQo+IGV2
-ZW50cy9hcmNoL2FybTY0L252aWRpYS90NDEwL21lbW9yeS5qc29uDQo+ID4+ICAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IHRvb2xzL3BlcmYvcG11LQ0KPiBldmVudHMvYXJjaC9hcm02NC9udmlkaWEvdDQx
-MC9tZXRyaWNzLmpzb24NCj4gPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9wbXUt
-DQo+IGV2ZW50cy9hcmNoL2FybTY0L252aWRpYS90NDEwL21pc2MuanNvbg0KPiA+PiAgIGNyZWF0
-ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2FyY2gvYXJtNjQvbnZpZGlh
-L3Q0MTAvcmV0aXJlZC5qc29uDQo+ID4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3BlcmYv
-cG11LQ0KPiBldmVudHMvYXJjaC9hcm02NC9udmlkaWEvdDQxMC9zcGUuanNvbg0KPiA+PiAgIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2FyY2gvYXJtNjQvbnZp
-ZGlhL3Q0MTAvc3BlY19vcGVyYXRpb24uanNvbg0KPiA+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCB0
-b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAvc3RhbGwuanNv
-bg0KPiA+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2Fy
-Y2gvYXJtNjQvbnZpZGlhL3Q0MTAvdGxiLmpzb24NCj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL3Rv
-b2xzL3BlcmYvcG11LWV2ZW50cy9hcmNoL2FybTY0L2NvbW1vbi1hbmQtDQo+IG1pY3JvYXJjaC5q
-c29uIGIvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQvY29tbW9uLWFuZC0NCj4gbWlj
-cm9hcmNoLmpzb24NCj4gPj4gaW5kZXggNDY4Y2IwODVkODc5Li42YWYxNTc3NmZmMTcgMTAwNjQ0
-DQo+ID4+IC0tLSBhL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9hcmNoL2FybTY0L2NvbW1vbi1hbmQt
-bWljcm9hcmNoLmpzb24NCj4gPj4gKysrIGIvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJt
-NjQvY29tbW9uLWFuZC1taWNyb2FyY2guanNvbg0KPiA+PiBAQCAtMTc5LDYgKzE3OSwxMSBAQA0K
-PiA+PiAgICAgICAgICAgIkV2ZW50TmFtZSI6ICJCVVNfQ1lDTEVTIiwNCj4gPj4gICAgICAgICAg
-ICJCcmllZkRlc2NyaXB0aW9uIjogIkJ1cyBjeWNsZSINCj4gPj4gICAgICAgfSwNCj4gPj4gKyAg
-ICB7DQo+ID4+ICsgICAgICAgICJFdmVudENvZGUiOiAiMHgwMDFFIiwNCj4gPj4gKyAgICAgICAg
-IkV2ZW50TmFtZSI6ICJDSEFJTiIsDQo+ID4+ICsgICAgICAgICJCcmllZkRlc2NyaXB0aW9uIjog
-IkNoYWluIGEgcGFpciBvZiBldmVudCBjb3VudGVycy4iDQo+ID4+ICsgICAgfSwNCj4gPg0KPiA+
-IENvb2wgc3R1ZmYgOi0pDQo+ID4NCj4gPiBGb3Igd2lkZXIgY291bnRlcnMgQU1EIGRvZXMgc29t
-ZXRoaW5nIHNpbWlsYXIsIGJ1dCBzaG91bGQgdGhpcyBiZSBhbg0KPiA+IGltcGxlbWVudGF0aW9u
-IGRldGFpbCByYXRoZXIgdGhhbiBhbiBleHBvc2VkIGV2ZW50PyBIb3cgZG9lcyBpdA0KPiA+IG9w
-ZXJhdGUgYXMgYW4gZXZlbnQ/DQo+ID4NCj4gDQo+IENIQUlOIHNob3VsZCBiZSBleGNsdWRlZCBm
-cm9tIHRoZSBqc29uLCBpdCdzIHVzZWQgaW50ZXJuYWxseSBieSB0aGUNCj4gZHJpdmVyIHdoZW4g
-eW91IHdhbnQgNjQgYml0IGNvdW50ZXJzLiBVc2Vyc3BhY2UgY2FuJ3QgdXNlIGl0IGJlY2F1c2Ug
-aXQNCj4gY2FuJ3QgY29udHJvbCB3aGVyZSBjb3VudGVycyBhcmUgcGxhY2VkIHRvIG1ha2Ugc3Vy
-ZSB0aGV5J3JlIGFkamFjZW50Lg0KPiANCg0KU3VyZSwgd2lsbCBhZGRyZXNzIHRoaXMgaW4gVjIu
-DQoNCj4gPiBbc25pcF0NCj4gPj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9h
-cmNoL2FybTY0L21hcGZpbGUuY3N2DQo+IGIvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJt
-NjQvbWFwZmlsZS5jc3YNCj4gPj4gaW5kZXggYmIzZmE4YTMzNDk2Li43ZjBlYWE3MDIwNDggMTAw
-NjQ0DQo+ID4+IC0tLSBhL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9hcmNoL2FybTY0L21hcGZpbGUu
-Y3N2DQo+ID4+ICsrKyBiL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9hcmNoL2FybTY0L21hcGZpbGUu
-Y3N2DQo+ID4+IEBAIC00NiwzICs0Niw0IEBADQo+ID4+ICAgMHgwMDAwMDAwMDUwMGYwMDAwLHYx
-LGFtcGVyZS9lbWFnLGNvcmUNCj4gPj4gICAweDAwMDAwMDAwYzAwZmFjMzAsdjEsYW1wZXJlL2Ft
-cGVyZW9uZSxjb3JlDQo+ID4+ICAgMHgwMDAwMDAwMGMwMGZhYzQwLHYxLGFtcGVyZS9hbXBlcmVv
-bmV4LGNvcmUNCj4gPj4gKzB4MDAwMDAwMDA0ZTBmMDEwMCx2MSxudmlkaWEvdDQxMCxjb3JlDQo+
-ID4+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9udmlkaWEv
-dDQxMC9icmFuY2guanNvbg0KPiBiL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9hcmNoL2FybTY0L252
-aWRpYS90NDEwL2JyYW5jaC5qc29uDQo+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4+IGlu
-ZGV4IDAwMDAwMDAwMDAwMC4uNTMyYmM1OWRjNTczDQo+ID4+IC0tLSAvZGV2L251bGwNCj4gPj4g
-KysrIGIvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAvYnJhbmNo
-Lmpzb24NCj4gPj4gQEAgLTAsMCArMSw0NSBAQA0KPiA+PiArWw0KPiA+PiArICAgIHsNCj4gPj4g
-KyAgICAgICAgIkFyY2hTdGRFdmVudCI6ICJCUl9NSVNfUFJFRCIsDQo+ID4+ICsgICAgICAgICJQ
-dWJsaWNEZXNjcmlwdGlvbiI6ICJUaGUgRXZlbnQgY291bnRzIEJyYW5jaGVzIHdoaWNoIGFyZQ0K
-PiBzcGVjdWxhdGl2ZWx5IGV4ZWN1dGVkIGFuZCBtaXMtcHJlZGljdGVkLiINCj4gPg0KPiA+IG5p
-dDogVGhlIGNhcGl0YWxpemF0aW9uIG9uIEV2ZW50IGFuZCBCcmFuY2hlcywgYXMgd2VsbCBhcyBv
-dGhlciB3b3JkcywNCj4gPiBpcyBhIGxpdHRsZSB1bnVzdWFsLg0KPiA+DQo+IA0KPiBJZiB0aGVy
-ZSdzIG5vdGhpbmcgc3BlY2lmaWMgdG8gdGhpcyBDUFUgdGhlbiB0aGUgcHVibGljIGRlc2NyaXB0
-aW9uDQo+IGNvdWxkIGJlIGxlZnQgb3V0IGVudGllcmx5LiBUaGUgY29tbW9uIHN0cmluZ3MgYWxy
-ZWFkeSBzYXkgdGhlIHNhbWUNCj4gdGhpbmcgYXMgdGhpczoNCj4gDQo+ICAgICAgew0KPiAgICAg
-ICAgICAiUHVibGljRGVzY3JpcHRpb24iOiAiTWlzcHJlZGljdGVkIG9yIG5vdCBwcmVkaWN0ZWQg
-YnJhbmNoDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzcGVjdWxhdGl2ZWx5IGV4
-ZWN1dGVkIiwNCj4gICAgICAgICAgIkV2ZW50Q29kZSI6ICIweDEwIiwNCj4gICAgICAgICAgIkV2
-ZW50TmFtZSI6ICJCUl9NSVNfUFJFRCIsDQo+ICAgICAgICAgICJCcmllZkRlc2NyaXB0aW9uIjog
-Ik1pc3ByZWRpY3RlZCBvciBub3QgcHJlZGljdGVkIGJyYW5jaA0KPiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBzcGVjdWxhdGl2ZWx5IGV4ZWN1dGVkIg0KPiAgICAgIH0sDQo+IA0KPiAN
-Cg0KSSB3aWxsIGNoZWNrIG9uIHRoaXMgYW5kIG90aGVyIGV2ZW50cy4NCg0KPiA+IFtzbmlwXQ0K
-PiA+PiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQvbnZpZGlh
-L3Q0MTAvbWV0cmljcy5qc29uDQo+IGIvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQv
-bnZpZGlhL3Q0MTAvbWV0cmljcy5qc29uDQo+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4+
-IGluZGV4IDAwMDAwMDAwMDAwMC4uMThjMmZkNThlZTllDQo+ID4+IC0tLSAvZGV2L251bGwNCj4g
-Pj4gKysrIGIvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQvbnZpZGlhL3Q0MTAvbWV0
-cmljcy5qc29uDQo+ID4+IEBAIC0wLDAgKzEsNzIyIEBADQo+ID4+ICtbDQo+ID4+ICsgICAgew0K
-PiA+PiArICAgICAgICAiTWV0cmljTmFtZSI6ICJiYWNrZW5kX2JvdW5kIiwNCj4gPj4gKyAgICAg
-ICAgIk1ldHJpY0V4cHIiOiAiMTAwICogKFNUQUxMX1NMT1RfQkFDS0VORCAvIENQVV9TTE9UKSIs
-DQo+ID4+ICsgICAgICAgICJCcmllZkRlc2NyaXB0aW9uIjogIlRoaXMgbWV0cmljIGlzIHRoZSBw
-ZXJjZW50YWdlIG9mIHRvdGFsIHNsb3RzIHRoYXQNCj4gd2VyZSBzdGFsbGVkIGR1ZSB0byByZXNv
-dXJjZSBjb25zdHJhaW50cyBpbiB0aGUgYmFja2VuZCBvZiB0aGUgcHJvY2Vzc29yLiIsDQo+ID4+
-ICsgICAgICAgICJTY2FsZVVuaXQiOiAiMXBlcmNlbnQgb2Ygc2xvdHMiLA0KPiA+PiArICAgICAg
-ICAiTWV0cmljR3JvdXAiOiAiVG9wZG93bkwxIg0KPiA+DQo+ID4gTm90ZSwgb24geDg2IHdlIHBs
-YWNlIFRvcGRvd25MMSBpbiB0aGUgRGVmYXVsdCBtZXRyaWMgZ3JvdXAgc28gaXQgaXMNCj4gPiBz
-aG93biBieSBgcGVyZiBzdGF0YCB3aGVuIGl0IGlzbid0IGdpdmVuIGV2ZW50cyBvciBtZXRyaWNz
-IHRvIGNvbXB1dGUuDQo+ID4gUGVyaGFwcyB5b3Ugd2FudCB0byBkbyBzb21ldGhpbmcgc2ltaWxh
-cj8NCj4gPiBodHRwczovL3dlYi5naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9n
-aXQvcGVyZi9wZXJmLXRvb2xzLQ0KPiBuZXh0LmdpdC90cmVlL3Rvb2xzL3BlcmYvcG11LWV2ZW50
-cy9hcmNoL3g4Ni9pY2VsYWtlL2ljbC0NCj4gbWV0cmljcy5qc29uP2g9dG1wLnBlcmYtdG9vbHMt
-bmV4dCNuMTE2DQo+ID4NCj4gPiBUaGFua3MsDQo+ID4gSWFuDQo+IA0KPiBUaGF0J3MgY3VycmVu
-dGx5IHRydWUgZm9yIHRoZSBBcm0gdG9wZG93biBtZXRyaWNzIGluIHNic2EuanNvbiwgYnV0IHdl
-DQo+IHByb2JhYmx5IGRvbid0IGFjdHVhbGx5IHdhbnQgdGhpcyBiZWNhdXNlIHRoZXJlIGFyZW4n
-dCBlbm91Z2ggY291bnRlcnMNCj4gZm9yIHRoZSBwZXJmIHN0YXQgZGVmYXVsdHMgcGx1cyB0b3Bk
-b3duIGFuZCBpdCByZXN1bHRzIGluIG11bHRpcGxleGluZw0KPiBhbmQgYmFkIHJlc3VsdHMuDQo+
-IA0KPiBJIHdhcyBwbGFubmluZyB0byBjaGFuZ2UgaXQgYnV0IHdlIGFsc28gZG9uJ3QgY3VycmVu
-dGx5IGV4cG9zZSB0aGUNCj4gbnVtYmVyIG9mIGNvdW50ZXJzIGF2YWlsYWJsZSBlaXRoZXIuLi4N
-Cj4gDQoNCkFncmVlIHdpdGggSmFtZXMsIHdlIG1heSBub3QgYmUgYWJsZSB0byBjb3ZlciBhbGwg
-dGhlIGV2ZW50cyBpbg0KRGVmYXVsdCArIFRvcGRvd25MMSBncm91cC4NCg0KSWFuLCBKYW1lcywg
-aW4gZ2VuZXJhbCwgaXMgaXQgZmluZSB0byBwdXQgc29tZSBtZXRyaWNzIGluIGEgc2FtZSBncm91
-cCBiZWNhdXNlIA0KdGhleSBhcmUgYWN0dWFsbHkgY29ycmVsYXRpbmcgZXZlbiB0aG91Z2ggaXQg
-bWF5IGNhdXNlIG11bHRpcGxleGluZz8NCkZvciBleGFtcGxlLCAiTWlzc19SYXRpbyIgZ3JvdXAg
-aW4gdGhpcyBwYXRjaCBwcm92aWRlcyBtaXNzIHJhdGlvIGZyb20gTDEsIEwyLCBUTEIsIGV0Yy4N
-Ckl0J3MgY29udmVuaWVudCB0byBoYXZlIHRoaXMgYW5kIGdldCB0aGUgbWlzcyByYXRpbyBmcm9t
-IGFsbCBjYWNoZSBsZXZlbHMuDQpUaGVyZSBhcmUgbWFueSBldmVudHMgbmVlZGVkIGZvciB0aGlz
-IGdyb3VwIGFuZCBpdCBtaWdodCBub3QgYmUgYWNjdXJhdGUgZHVlIHRvDQptdWx0aXBsZXhpbmcs
-IGJ1dCB1c2VyIGNhbiBnZXQgYSAocm91Z2gpIGJyb2FkIHZpZXcgaW4gdGhlIGJlZ2lubmluZy4N
-Cg0KVGhhbmtzLA0KQmVzYXINCg==
+On Wed, Jan 28, 2026 at 10:47=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Mon, Jan 26, 2026 at 10:23:00PM -0800, Ian Rogers wrote:
+> > If perf wasn't built against libcapstone, no HAVE_LIBCAPSTONE_SUPPORT,
+> > support dlopen-ing libcapstone.so and then calling the necessary
+> > functions by looking them up using dlsym. Reverse engineer the types
+> > in the API using pahole, adding only what's used in the perf code or
+> > necessary for the sake of struct size and alignment.
+>
+> Trying to test this, I built it with NO_CAPSTONE=3D1 but with:
+>
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ perf config
+> annotate.disassemblers=3Dcapstone
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+>
+> And:
+>
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ rpm -qa | grep capstone
+> capstone-5.0.5-7.fc43.x86_64
+> capstone-devel-5.0.5-7.fc43.x86_64
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+>
+> It manages to build with the needed dlopen magic, etc and ends up
+> calling dlopen, locates the .so, loads it, etc, but eventually fails:
+>
+>
+> Breakpoint 1, perf_cs_open (arch=3DCS_ARCH_X86, mode=3DCS_MODE_64, handle=
+=3D0x7fffffff93a8) at util/capstone.c:152
+> 152     {
+> (gdb) bt
+> #0  perf_cs_open (arch=3DCS_ARCH_X86, mode=3DCS_MODE_64, handle=3D0x7ffff=
+fff93a8) at util/capstone.c:152
+> #1  0x00000000005e2eb8 in capstone_init (machine=3D0x1083b98, cs_handle=
+=3D0x7fffffff93a8, is64=3Dtrue, disassembler_style=3Dtrue) at util/capstone=
+.c:278
+> #2  0x00000000005e37f7 in symbol__disassemble_capstone (filename=3D0x7fff=
+ffff96f0 "/home/acme/.debug/.build-id/cc/315df11334de01fb444465f08f6bca45a1=
+2bd2/elf", sym=3D0x10b0d20, args=3D0x7fffffffa770)
+>     at util/capstone.c:489
+> #3  0x00000000005ee303 in symbol__disassemble (sym=3D0x10b0d20, args=3D0x=
+7fffffffa770) at util/disasm.c:1622
+> #4  0x00000000005d25be in symbol__annotate (ms=3D0x10a4dd0, evsel=3D0x108=
+42f0, parch=3D0x0) at util/annotate.c:1056
+> #5  0x00000000005d4808 in hist_entry__tty_annotate (he=3D0x10a4d30, evsel=
+=3D0x10842f0) at util/annotate.c:1710
+> #6  0x0000000000404544 in hist_entry__stdio_annotate (he=3D0x10a4d30, evs=
+el=3D0x10842f0, ann=3D0x7fffffffcae0) at builtin-annotate.c:332
+> #7  0x000000000040516c in hists__find_annotations (hists=3D0x10845b0, evs=
+el=3D0x10842f0, ann=3D0x7fffffffcae0) at builtin-annotate.c:545
+> #8  0x000000000040569c in __cmd_annotate (ann=3D0x7fffffffcae0) at builti=
+n-annotate.c:655
+> #9  0x000000000040685e in cmd_annotate (argc=3D0, argv=3D0x7fffffffe070) =
+at builtin-annotate.c:949
+> #10 0x00000000004cbebb in run_builtin (p=3D0xff2cb0 <commands+432>, argc=
+=3D2, argv=3D0x7fffffffe070) at perf.c:348
+> #11 0x00000000004cc10d in handle_internal_command (argc=3D2, argv=3D0x7ff=
+fffffe070) at perf.c:398
+> #12 0x00000000004cc269 in run_argv (argcp=3D0x7fffffffdeec, argv=3D0x7fff=
+ffffdee0) at perf.c:442
+> #13 0x00000000004cc53d in main (argc=3D2, argv=3D0x7fffffffe070) at perf.=
+c:549
+> (gdb) n
+> 159             if (!fn_init) {
+> (gdb) n
+> 160                     fn =3D dlsym(perf_cs_dll_handle(), "cs_open");
+> (gdb) n
+> Downloading 8.80 M separate debug info for /usr/lib64/libcapstone.so
+> Downloading 2.02 M separate debug info for /home/acme/.cache/debuginfod_c=
+lient/6f0ac051dccbc6a7a322a5950c4955eca60e8498/debuginfo
+> 161                     if (!fn)
+> (gdb) p fn
+> $1 =3D (enum cs_err (*)(enum cs_arch, enum cs_mode, csh *)) 0x7fffecad7cd=
+0 <cs_open>
+> (gdb) n
+> 163                     fn_init =3D true;
+> (gdb) n
+> 165             if (!fn)
+> (gdb) n
+> 167             return fn(arch, mode, handle);
+> (gdb) n
+> 169     }
+> (gdb) n
+> capstone_init (machine=3D0x1083b98, cs_handle=3D0x7fffffff93a8, is64=3Dtr=
+ue, disassembler_style=3Dtrue) at util/capstone.c:283
+> 283             if (machine__normalized_is(machine, "x86")) {
+> (gdb) n
+> 289                     if (disassembler_style)
+> (gdb) n
+> 290                             perf_cs_option(*cs_handle, CS_OPT_SYNTAX,=
+ CS_OPT_SYNTAX_ATT);
+> (gdb) n
+> 295                     perf_cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_=
+ON);
+> (gdb) n
+> 298             return 0;
+> (gdb) n
+> 299     }
+> (gdb) n
+> symbol__disassemble_capstone (filename=3D0x7fffffff96f0 "/home/acme/.debu=
+g/.build-id/cc/315df11334de01fb444465f08f6bca45a12bd2/elf", sym=3D0x10b0d20=
+, args=3D0x7fffffffa770) at util/capstone.c:493
+> 493             needs_cs_close =3D true;
+> (gdb) n
+> 495             free_count =3D count =3D perf_cs_disasm(handle, buf, buf_=
+len, start, buf_len, &insn);
+> (gdb) n
+> 496             for (i =3D 0, offset =3D 0; i < count; i++) {
+> (gdb) p count
+> $2 =3D 32
+> (gdb) n
+> 501                                         insn[i].mnemonic, insn[i].op_=
+str);
+> (gdb) n
+> 499                     printed =3D scnprintf(disasm_buf, sizeof(disasm_b=
+uf),
+> (gdb) n
+> 502                     print_capstone_detail(&insn[i], disasm_buf + prin=
+ted,
+> (gdb) n
+> 503                                           sizeof(disasm_buf) - printe=
+d, args,
+> (gdb) n
+> 502                     print_capstone_detail(&insn[i], disasm_buf + prin=
+ted,
+> (gdb) n
+> 506                     args->offset =3D offset;
+> (gdb) n
+> 507                     args->line =3D disasm_buf;
+> (gdb) n
+> 509                     dl =3D disasm_line__new(args);
+> (gdb) n
+> 510                     if (dl =3D=3D NULL)
+> (gdb) n
+> 511                             goto err;
+>
+> While doing it without NO_CAPSTONE=3D1, i.e. dyn linking against capstone
+> seems to work:
+>
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ perf config
+> annotate.disassemblers=3Dcapstone
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ ldd ~/bin/perf | grep capstone
+>         libcapstone.so.5 =3D> /usr/lib64/libcapstone.so.5 (0x00007f1f9458=
+8000)
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ perf -vv | grep capst
+>            libcapstone: [ on  ]  # HAVE_LIBCAPSTONE_SUPPORT
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ perf annotate -v | head
+> symbol__disassemble: filename=3D/home/acme/.debug/.build-id/cc/315df11334=
+de01fb444465f08f6bca45a12bd2/elf, sym=3Dcache_rpath, start=3D0x7efd8294fd90=
+, end=3D0x7efd8294fdfc
+> annotating [0x1d043db0] /usr/lib64/ld-linux-x86-64.so.2 : [0x1d0c2b50]   =
+                 cache_rpath
+> Disassembled with capstone
+> Open Debuginfo file: /home/acme/.debug/.build-id/cc/315df11334de01fb44446=
+5f08f6bca45a12bd2/elf
+> symbol__disassemble: filename=3D/home/acme/.debug/.build-id/cc/315df11334=
+de01fb444465f08f6bca45a12bd2/elf, sym=3D_dl_start, start=3D0x7efd82967990, =
+end=3D0x7efd82968069
+> annotating [0x1d043db0] /usr/lib64/ld-linux-x86-64.so.2 : [0x1d0c6470]   =
+                   _dl_start
+> Disassembled with capstone
+> Open Debuginfo file: /home/acme/.debug/.build-id/cc/315df11334de01fb44446=
+5f08f6bca45a12bd2/elf
+>  Percent |      Source code & Disassembly of ld-linux-x86-64.so.2 for cpu=
+/cycles/Pu (1 samples, percent: local period)
+> -------------------------------------------------------------------------=
+---------------------------------------------
+>                             6d93: 1
+>                    h->nr_samples: 1
+>          : 0    0x6d90 <cache_rpath>:
+>     0.00 :   6d90:       movq    (%rsi), %rax
+>   100.00 :   6d93:       movq    %rsi, %r8
+>     0.00 :   6d96:       movq    %rcx, %r9
+>     0.00 :   6d99:       cmpq    $-1, %rax
+>     0.00 :   6d9d:       je      0x6df7
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+>
+> What am I missing?
+>
+> Fedora 43.
+>
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ git log --oneline -20
+> e88f915e5f2a809b (HEAD -> perf-tools-next) perf llvm: Mangle libperf-llvm=
+.so function names
+> cf0b92a9652719c1 perf llvm: Support for dlopen-ing libLLVM.so
+> b8bf08b8e4e22c39 perf capstone: Support for dlopen-ing libcapstone.so
+> e205952db7717557 perf jevents: Validate that all names given an Event
+> 82e53e7ae09a054b perf jevents: Add cycles breakdown metric for arm64/AMD/=
+Intel
+> e74f72a7e2178233 perf jevents: Add mesh bandwidth saturation metric for I=
+ntel
+> 5dc81578ad77c298 perf jevents: Add upi_bw metric for Intel
+> 6ec3058e709cc635 perf jevents: Add local/remote miss latency metrics for =
+Intel
+> 1fee2701a7d35fa7 perf jevents: Add C-State metrics from the PCU PMU for I=
+ntel
+> 2166b44be9384209 perf jevents: Add dir breakdown metrics for Intel
+> cde9c1a5d92520a8 perf jevents: Add local/remote "mem" breakdown metrics f=
+or Intel
+> 130f4245af99e140 perf jevents: Add mem_bw metric for Intel
+> 426b8442898de9af perf jevents: Add Miss Level Parallelism (MLP) metric fo=
+r Intel
+> d666f0172ab306fa perf jevents: Add FPU metrics for Intel
+> 2f3d6ea05deca7c1 perf jevents: Add context switch metrics for Intel
+> 59341f4e171170d3 perf jevents: Add ILP metrics for Intel
+> d80edef23124baff perf jevents: Add load store breakdown metrics ldst for =
+Intel
+> 7413633e255cb02d perf jevents: Add L2 metrics for Intel
+> cd1c6a487407a350 perf jevents: Add ports metric group giving utilization =
+on Intel
+> 397fdb3a24435f55 perf jevents: Add software prefetch (swpf) metric group =
+for Intel
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+
+I can repro the issue. I'm noticing that the patch has:
+CS_ARCH_X86 =3D 3,
+but that doesn't match here:
+https://github.com/capstone-engine/capstone/blob/next/include/capstone/caps=
+tone.h#L90
+where X86 now has value 4. Fixing up the values I still get the issue
+and so more exploration is necessary. Given capstone's ABI isn't
+stable we may not be able to use pahole constants and require a header
+file like Namhyung asked for.
+
+Thanks,
+Ian
+
+> - Arnaldo
+>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/capstone.c | 285 ++++++++++++++++++++++++++++++++-----
+> >  1 file changed, 248 insertions(+), 37 deletions(-)
+> >
+> > diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
+> > index 9216916f848f..43168d43e4a3 100644
+> > --- a/tools/perf/util/capstone.c
+> > +++ b/tools/perf/util/capstone.c
+> > @@ -11,20 +11,250 @@
+> >  #include "print_insn.h"
+> >  #include "symbol.h"
+> >  #include "thread.h"
+> > +#include <dlfcn.h>
+> >  #include <errno.h>
+> >  #include <fcntl.h>
+> > +#include <inttypes.h>
+> >  #include <string.h>
+> >
+> >  #ifdef HAVE_LIBCAPSTONE_SUPPORT
+> >  #include <capstone/capstone.h>
+> > +#else
+> > +typedef size_t csh;
+> > +enum cs_arch {
+> > +     CS_ARCH_ARM =3D 0,
+> > +     CS_ARCH_ARM64 =3D 1,
+> > +     CS_ARCH_X86 =3D 3,
+> > +     CS_ARCH_SYSZ =3D 6,
+> > +};
+> > +enum cs_mode {
+> > +     CS_MODE_ARM =3D 0,
+> > +     CS_MODE_32 =3D 1 << 2,
+> > +     CS_MODE_64 =3D 1 << 3,
+> > +     CS_MODE_V8 =3D 1 << 6,
+> > +     CS_MODE_BIG_ENDIAN =3D 1 << 31,
+> > +};
+> > +enum cs_opt_type {
+> > +     CS_OPT_SYNTAX =3D 1,
+> > +     CS_OPT_DETAIL =3D 2,
+> > +};
+> > +enum cs_opt_value {
+> > +     CS_OPT_SYNTAX_ATT =3D 2,
+> > +     CS_OPT_ON =3D 3,
+> > +};
+> > +enum cs_err {
+> > +     CS_ERR_OK =3D 0,
+> > +     CS_ERR_HANDLE =3D 3,
+> > +};
+> > +enum x86_op_type {
+> > +     X86_OP_IMM =3D 2,
+> > +     X86_OP_MEM =3D 3,
+> > +};
+> > +enum x86_reg {
+> > +     X86_REG_RIP =3D 41,
+> > +};
+> > +typedef int32_t x86_avx_bcast;
+> > +struct x86_op_mem {
+> > +     enum x86_reg segment;
+> > +     enum x86_reg base;
+> > +     enum x86_reg index;
+> > +     int scale;
+> > +     int64_t disp;
+> > +};
+> > +
+> > +struct cs_x86_op {
+> > +     enum x86_op_type type;
+> > +     union {
+> > +             enum x86_reg  reg;
+> > +             int64_t imm;
+> > +             struct x86_op_mem mem;
+> > +     };
+> > +     uint8_t size;
+> > +     uint8_t access;
+> > +     x86_avx_bcast avx_bcast;
+> > +     bool avx_zero_opmask;
+> > +};
+> > +struct cs_x86_encoding {
+> > +     uint8_t modrm_offset;
+> > +     uint8_t disp_offset;
+> > +     uint8_t disp_size;
+> > +     uint8_t imm_offset;
+> > +     uint8_t imm_size;
+> > +};
+> > +typedef int32_t  x86_xop_cc;
+> > +typedef int32_t  x86_sse_cc;
+> > +typedef int32_t  x86_avx_cc;
+> > +typedef int32_t  x86_avx_rm;
+> > +struct cs_x86 {
+> > +     uint8_t prefix[4];
+> > +     uint8_t opcode[4];
+> > +     uint8_t rex;
+> > +     uint8_t addr_size;
+> > +     uint8_t modrm;
+> > +     uint8_t sib;
+> > +     int64_t disp;
+> > +     enum x86_reg sib_index;
+> > +     int8_t sib_scale;
+> > +     enum x86_reg sib_base;
+> > +     x86_xop_cc xop_cc;
+> > +     x86_sse_cc sse_cc;
+> > +     x86_avx_cc avx_cc;
+> > +     bool avx_sae;
+> > +     x86_avx_rm avx_rm;
+> > +     union {
+> > +             uint64_t eflags;
+> > +             uint64_t fpu_flags;
+> > +     };
+> > +     uint8_t op_count;
+> > +     struct cs_x86_op operands[8];
+> > +     struct cs_x86_encoding encoding;
+> > +};
+> > +struct cs_detail {
+> > +     uint16_t regs_read[12];
+> > +     uint8_t regs_read_count;
+> > +     uint16_t regs_write[20];
+> > +     uint8_t regs_write_count;
+> > +     uint8_t groups[8];
+> > +     uint8_t groups_count;
+> > +
+> > +     union {
+> > +             struct cs_x86 x86;
+> > +     };
+> > +};
+> > +struct cs_insn {
+> > +     unsigned int id;
+> > +     uint64_t address;
+> > +     uint16_t size;
+> > +     uint8_t bytes[16];
+> > +     char mnemonic[32];
+> > +     char op_str[160];
+> > +     struct cs_detail *detail;
+> > +};
+> > +#endif
+> > +
+> > +#ifndef HAVE_LIBCAPSTONE_SUPPORT
+> > +static void *perf_cs_dll_handle(void)
+> > +{
+> > +     static bool dll_handle_init;
+> > +     static void *dll_handle;
+> > +
+> > +     if (!dll_handle_init) {
+> > +             dll_handle_init =3D true;
+> > +             dll_handle =3D dlopen("libcapstone.so", RTLD_LAZY);
+> > +             if (!dll_handle)
+> > +                     pr_debug("dlopen failed for libcapstone.so\n");
+> > +     }
+> > +     return dll_handle;
+> > +}
+> > +#endif
+> > +
+> > +static enum cs_err perf_cs_open(enum cs_arch arch, enum cs_mode mode, =
+csh *handle)
+> > +{
+> > +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > +     return cs_open(arch, mode, handle);
+> > +#else
+> > +     static bool fn_init;
+> > +     static enum cs_err (*fn)(enum cs_arch arch, enum cs_mode mode, cs=
+h *handle);
+> > +
+> > +     if (!fn_init) {
+> > +             fn =3D dlsym(perf_cs_dll_handle(), "cs_open");
+> > +             if (!fn)
+> > +                     pr_debug("dlsym failed for cs_open\n");
+> > +             fn_init =3D true;
+> > +     }
+> > +     if (!fn)
+> > +             return CS_ERR_HANDLE;
+> > +     return fn(arch, mode, handle);
+> > +#endif
+> > +}
+> > +
+> > +static enum cs_err perf_cs_option(csh handle, enum cs_opt_type type, s=
+ize_t value)
+> > +{
+> > +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > +     return cs_option(handle, type, value);
+> > +#else
+> > +     static bool fn_init;
+> > +     static enum cs_err (*fn)(csh handle, enum cs_opt_type type, size_=
+t value);
+> > +
+> > +     if (!fn_init) {
+> > +             fn =3D dlsym(perf_cs_dll_handle(), "cs_option");
+> > +             if (!fn)
+> > +                     pr_debug("dlsym failed for cs_option\n");
+> > +             fn_init =3D true;
+> > +     }
+> > +     if (!fn)
+> > +             return CS_ERR_HANDLE;
+> > +     return fn(handle, type, value);
+> > +#endif
+> > +}
+> > +
+> > +static size_t perf_cs_disasm(csh handle, const uint8_t *code, size_t c=
+ode_size,
+> > +                     uint64_t address, size_t count, struct cs_insn **=
+insn)
+> > +{
+> > +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > +     return cs_disasm(handle, code, code_size, address, count, insn);
+> > +#else
+> > +     static bool fn_init;
+> > +     static enum cs_err (*fn)(csh handle, const uint8_t *code, size_t =
+code_size,
+> > +                              uint64_t address, size_t count, struct c=
+s_insn **insn);
+> > +
+> > +     if (!fn_init) {
+> > +             fn =3D dlsym(perf_cs_dll_handle(), "cs_disasm");
+> > +             if (!fn)
+> > +                     pr_debug("dlsym failed for cs_disasm\n");
+> > +             fn_init =3D true;
+> > +     }
+> > +     if (!fn)
+> > +             return CS_ERR_HANDLE;
+> > +     return fn(handle, code, code_size, address, count, insn);
+> >  #endif
+> > +}
+> >
+> > +static void perf_cs_free(struct cs_insn *insn, size_t count)
+> > +{
+> >  #ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > +     cs_free(insn, count);
+> > +#else
+> > +     static bool fn_init;
+> > +     static void (*fn)(struct cs_insn *insn, size_t count);
+> > +
+> > +     if (!fn_init) {
+> > +             fn =3D dlsym(perf_cs_dll_handle(), "cs_free");
+> > +             if (!fn)
+> > +                     pr_debug("dlsym failed for cs_free\n");
+> > +             fn_init =3D true;
+> > +     }
+> > +     if (!fn)
+> > +             return;
+> > +     fn(insn, count);
+> > +#endif
+> > +}
+> > +
+> > +static enum cs_err perf_cs_close(csh *handle)
+> > +{
+> > +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > +     return cs_close(handle);
+> > +#else
+> > +     static bool fn_init;
+> > +     static enum cs_err (*fn)(csh *handle);
+> > +
+> > +     if (!fn_init) {
+> > +             fn =3D dlsym(perf_cs_dll_handle(), "cs_close");
+> > +             if (!fn)
+> > +                     pr_debug("dlsym failed for cs_close\n");
+> > +             fn_init =3D true;
+> > +     }
+> > +     if (!fn)
+> > +             return CS_ERR_HANDLE;
+> > +     return fn(handle);
+> > +#endif
+> > +}
+> > +
+> >  static int capstone_init(struct machine *machine, csh *cs_handle, bool=
+ is64,
+> >                        bool disassembler_style)
+> >  {
+> > -     cs_arch arch;
+> > -     cs_mode mode;
+> > +     enum cs_arch arch;
+> > +     enum cs_mode mode;
+> >
+> >       if (machine__is(machine, "x86_64") && is64) {
+> >               arch =3D CS_ARCH_X86;
+> > @@ -45,7 +275,7 @@ static int capstone_init(struct machine *machine, cs=
+h *cs_handle, bool is64,
+> >               return -1;
+> >       }
+> >
+> > -     if (cs_open(arch, mode, cs_handle) !=3D CS_ERR_OK) {
+> > +     if (perf_cs_open(arch, mode, cs_handle) !=3D CS_ERR_OK) {
+> >               pr_warning_once("cs_open failed\n");
+> >               return -1;
+> >       }
+> > @@ -57,27 +287,25 @@ static int capstone_init(struct machine *machine, =
+csh *cs_handle, bool is64,
+> >                * is set via annotation args
+> >                */
+> >               if (disassembler_style)
+> > -                     cs_option(*cs_handle, CS_OPT_SYNTAX, CS_OPT_SYNTA=
+X_ATT);
+> > +                     perf_cs_option(*cs_handle, CS_OPT_SYNTAX, CS_OPT_=
+SYNTAX_ATT);
+> >               /*
+> >                * Resolving address operands to symbols is implemented
+> >                * on x86 by investigating instruction details.
+> >                */
+> > -             cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
+> > +             perf_cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
+> >       }
+> >
+> >       return 0;
+> >  }
+> > -#endif
+> >
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > -static size_t print_insn_x86(struct thread *thread, u8 cpumode, cs_ins=
+n *insn,
+> > +static size_t print_insn_x86(struct thread *thread, u8 cpumode, struct=
+ cs_insn *insn,
+> >                            int print_opts, FILE *fp)
+> >  {
+> >       struct addr_location al;
+> >       size_t printed =3D 0;
+> >
+> >       if (insn->detail && insn->detail->x86.op_count =3D=3D 1) {
+> > -             cs_x86_op *op =3D &insn->detail->x86.operands[0];
+> > +             struct cs_x86_op *op =3D &insn->detail->x86.operands[0];
+> >
+> >               addr_location__init(&al);
+> >               if (op->type =3D=3D X86_OP_IMM &&
+> > @@ -95,7 +323,6 @@ static size_t print_insn_x86(struct thread *thread, =
+u8 cpumode, cs_insn *insn,
+> >       printed +=3D fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_st=
+r);
+> >       return printed;
+> >  }
+> > -#endif
+> >
+> >
+> >  ssize_t capstone__fprintf_insn_asm(struct machine *machine __maybe_unu=
+sed,
+> > @@ -106,9 +333,8 @@ ssize_t capstone__fprintf_insn_asm(struct machine *=
+machine __maybe_unused,
+> >                                  uint64_t ip __maybe_unused, int *lenp =
+__maybe_unused,
+> >                                  int print_opts __maybe_unused, FILE *f=
+p __maybe_unused)
+> >  {
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> >       size_t printed;
+> > -     cs_insn *insn;
+> > +     struct cs_insn *insn;
+> >       csh cs_handle;
+> >       size_t count;
+> >       int ret;
+> > @@ -118,7 +344,7 @@ ssize_t capstone__fprintf_insn_asm(struct machine *=
+machine __maybe_unused,
+> >       if (ret < 0)
+> >               return ret;
+> >
+> > -     count =3D cs_disasm(cs_handle, code, code_size, ip, 1, &insn);
+> > +     count =3D perf_cs_disasm(cs_handle, code, code_size, ip, 1, &insn=
+);
+> >       if (count > 0) {
+> >               if (machine__normalized_is(machine, "x86"))
+> >                       printed =3D print_insn_x86(thread, cpumode, &insn=
+[0], print_opts, fp);
+> > @@ -126,20 +352,16 @@ ssize_t capstone__fprintf_insn_asm(struct machine=
+ *machine __maybe_unused,
+> >                       printed =3D fprintf(fp, "%s %s", insn[0].mnemonic=
+, insn[0].op_str);
+> >               if (lenp)
+> >                       *lenp =3D insn->size;
+> > -             cs_free(insn, count);
+> > +             perf_cs_free(insn, count);
+> >       } else {
+> >               printed =3D -1;
+> >       }
+> >
+> > -     cs_close(&cs_handle);
+> > +     perf_cs_close(&cs_handle);
+> >       return printed;
+> > -#else
+> > -     return -1;
+> > -#endif
+> >  }
+> >
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > -static void print_capstone_detail(cs_insn *insn, char *buf, size_t len=
+,
+> > +static void print_capstone_detail(struct cs_insn *insn, char *buf, siz=
+e_t len,
+> >                                 struct annotate_args *args, u64 addr)
+> >  {
+> >       int i;
+> > @@ -154,7 +376,7 @@ static void print_capstone_detail(cs_insn *insn, ch=
+ar *buf, size_t len,
+> >               return;
+> >
+> >       for (i =3D 0; i < insn->detail->x86.op_count; i++) {
+> > -             cs_x86_op *op =3D &insn->detail->x86.operands[i];
+> > +             struct cs_x86_op *op =3D &insn->detail->x86.operands[i];
+> >               u64 orig_addr;
+> >
+> >               if (op->type !=3D X86_OP_MEM)
+> > @@ -195,9 +417,7 @@ static void print_capstone_detail(cs_insn *insn, ch=
+ar *buf, size_t len,
+> >               break;
+> >       }
+> >  }
+> > -#endif
+> >
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> >  struct find_file_offset_data {
+> >       u64 ip;
+> >       u64 offset;
+> > @@ -214,13 +434,11 @@ static int find_file_offset(u64 start, u64 len, u=
+64 pgoff, void *arg)
+> >       }
+> >       return 0;
+> >  }
+> > -#endif
+> >
+> >  int symbol__disassemble_capstone(const char *filename __maybe_unused,
+> >                                struct symbol *sym __maybe_unused,
+> >                                struct annotate_args *args __maybe_unuse=
+d)
+> >  {
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> >       struct annotation *notes =3D symbol__annotation(sym);
+> >       struct map *map =3D args->ms->map;
+> >       struct dso *dso =3D map__dso(map);
+> > @@ -235,7 +453,7 @@ int symbol__disassemble_capstone(const char *filena=
+me __maybe_unused,
+> >       const u8 *buf;
+> >       u64 buf_len;
+> >       csh handle;
+> > -     cs_insn *insn =3D NULL;
+> > +     struct cs_insn *insn =3D NULL;
+> >       char disasm_buf[512];
+> >       struct disasm_line *dl;
+> >       bool disassembler_style =3D false;
+> > @@ -274,7 +492,7 @@ int symbol__disassemble_capstone(const char *filena=
+me __maybe_unused,
+> >
+> >       needs_cs_close =3D true;
+> >
+> > -     free_count =3D count =3D cs_disasm(handle, buf, buf_len, start, b=
+uf_len, &insn);
+> > +     free_count =3D count =3D perf_cs_disasm(handle, buf, buf_len, sta=
+rt, buf_len, &insn);
+> >       for (i =3D 0, offset =3D 0; i < count; i++) {
+> >               int printed;
+> >
+> > @@ -313,9 +531,9 @@ int symbol__disassemble_capstone(const char *filena=
+me __maybe_unused,
+> >
+> >  out:
+> >       if (needs_cs_close) {
+> > -             cs_close(&handle);
+> > +             perf_cs_close(&handle);
+> >               if (free_count > 0)
+> > -                     cs_free(insn, free_count);
+> > +                     perf_cs_free(insn, free_count);
+> >       }
+> >       free(code_buf);
+> >       return count < 0 ? count : 0;
+> > @@ -335,16 +553,12 @@ int symbol__disassemble_capstone(const char *file=
+name __maybe_unused,
+> >       }
+> >       count =3D -1;
+> >       goto out;
+> > -#else
+> > -     return -1;
+> > -#endif
+> >  }
+> >
+> >  int symbol__disassemble_capstone_powerpc(const char *filename __maybe_=
+unused,
+> >                                        struct symbol *sym __maybe_unuse=
+d,
+> >                                        struct annotate_args *args __may=
+be_unused)
+> >  {
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> >       struct annotation *notes =3D symbol__annotation(sym);
+> >       struct map *map =3D args->ms->map;
+> >       struct dso *dso =3D map__dso(map);
+> > @@ -458,7 +672,7 @@ int symbol__disassemble_capstone_powerpc(const char=
+ *filename __maybe_unused,
+> >
+> >  out:
+> >       if (needs_cs_close)
+> > -             cs_close(&handle);
+> > +             perf_cs_close(&handle);
+> >       free(buf);
+> >       return count < 0 ? count : 0;
+> >
+> > @@ -467,7 +681,4 @@ int symbol__disassemble_capstone_powerpc(const char=
+ *filename __maybe_unused,
+> >               close(fd);
+> >       count =3D -1;
+> >       goto out;
+> > -#else
+> > -     return -1;
+> > -#endif
+> >  }
+> > --
+> > 2.52.0.457.g6b5491de43-goog
+> >
+>
