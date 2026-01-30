@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14C930BF7D;
-	Fri, 30 Jan 2026 08:12:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71C033A008;
+	Fri, 30 Jan 2026 08:12:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769760750; cv=none; b=J/TzNJH490+GiwN+6JNDueD5s6a3I/uFdWqkL0M9W78PyyIwC+tNjzzOZLfflSYMUfCxLzbsMLsFlImGe5J4L6dWdefbz4k1N24umud5JISE7vZltIC38RlsPwGoVwAxWYIZr37V9P5sTzPEqqXGjwOlVe517Z1iCwzu2fVywKI=
+	t=1769760760; cv=none; b=McZ5aXeIh2qRKMx72C0FjTsc9epf//s3lDF0y3cBaevYaRgZ4st3GL9io97EVy7ESYy5kQTKtNBWIvuY7etIqB8NbJs+eQP2JjvD9xuv4p9VZV63963O1/jzWyeAhhqveJtpki6Hu/f5tIWo229xRLZnWndWwnL+t+LmCLiPkiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769760750; c=relaxed/simple;
-	bh=Vhq+a2UVJKeuCAqKKXVd7GtYXPof3EWmspb1D3V//1o=;
+	s=arc-20240116; t=1769760760; c=relaxed/simple;
+	bh=SVIpyXH+J9AE9HD2uV+44XeBjo93Rh+rKl/Xx9W0N44=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pHIrkmY27fkJ/SkB9fDzm3kRUkBzHzF41pcwRACcTVjIqbt8FUNDA+JXPJ8BeJFIQk9pkI0huhih2fPdiiFoCTi5K3uyDv5+3ypSo2OcupveV9saXAjFqYELO96O9gN52uicjftCRr/h9TPOAI8Wm8tEcxbqQCf4g0sjY52479s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PTKyvvTS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NNDSkn9XBvTR7yhVIaDmj7QZlvHpsv7dlTUArrrzPn+oJc9wY1SDKnd0hFdq0r60KMRZ1nCI4N9IQKEmuh6Sk5dI2+8jXMb7aCQI47wv0pLRxFn21AQVFchm8wm7N8uk1SUQdbxmd0YAzk0FgCfwDCYkuf/CByE4nY30ux8Hzz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnYZruIT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PTKyvvTS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBF0EC4CEF7;
-	Fri, 30 Jan 2026 08:12:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnYZruIT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF26CC4CEF7;
+	Fri, 30 Jan 2026 08:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769760750;
-	bh=Vhq+a2UVJKeuCAqKKXVd7GtYXPof3EWmspb1D3V//1o=;
+	s=k20201202; t=1769760760;
+	bh=SVIpyXH+J9AE9HD2uV+44XeBjo93Rh+rKl/Xx9W0N44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PTKyvvTStQs+1NCjS9AP20fDYDPtcAr73LlfgHoth7zXk1La6MVENzB4gIWJBapwP
-	 jgzU1XCkmK42BYpg03zbhTPtHdGpMcElkjNHsy38NpWOVbItwY9O8cfuy/NTGoVZtK
-	 Iv06o6fnqtnS8YSa0ruuA8OvX13ta1tFcH6u4zwLIVunjMH5svhAGQFqg+g9bRIaqW
-	 hyfAUniUQ3iTQv9II/UeC1LqxuKzm004aUTqG5w7PX/8PXUZU4vIFJksIx9llRkIRo
-	 YE+b2ClmftURhFYm04tEroeCFiHcs7ZLnAtyRx8l0MziiBhEWSub+7k6fhuo8LQpYE
-	 qatUtRsSgh8gQ==
+	b=AnYZruITU6BewYdgCyONA7nF16LHJ9BEiteGJ7qNmUChebq9M7KTtD0ZB/UUVzQTs
+	 FgOBrBQiB+WD41cEbYIFPrcEPdlkUERaw1kVfB/mXOEWzluE1Z45katipRmpf+RRLF
+	 7j8mdwlDXhQso0oynergeKBM+8a+RuGdE54lcgYUPFjlzgP8OkChtTJ1jx20SsUnrY
+	 IA73dk0WxQFIqbMih7eX1asNHKjpWQGJI4V7wKQdKIC+sDsqQvZZzsUBJemzTOHLA9
+	 KSpBpVP577Rv9IdNE1mGhFKszumQLeJwSykmAIJNeUbz8yI5+V+5fXSbRsILE4I1f2
+	 KD6mI+MHBVqlQ==
 From: Jiri Olsa <jolsa@kernel.org>
 To: Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
@@ -36,9 +36,9 @@ Cc: bpf@vger.kernel.org,
 	Eduard Zingerman <eddyz87@gmail.com>,
 	Song Liu <songliubraving@fb.com>,
 	Yonghong Song <yhs@fb.com>
-Subject: [PATCH bpf-next 1/2] bpf: Allow sleepable programs to use tail calls
-Date: Fri, 30 Jan 2026 09:12:07 +0100
-Message-ID: <20260130081208.1130204-2-jolsa@kernel.org>
+Subject: [PATCH bpf-next 2/2] selftests/bpf: Add test for sleepable program tailcalls
+Date: Fri, 30 Jan 2026 09:12:08 +0100
+Message-ID: <20260130081208.1130204-3-jolsa@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260130081208.1130204-1-jolsa@kernel.org>
 References: <20260130081208.1130204-1-jolsa@kernel.org>
@@ -50,77 +50,163 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Allowing sleepable programs to use tail calls.
-
-Making sure we can't mix sleepable and non-sleepable bpf programs
-in tail call map (BPF_MAP_TYPE_PROG_ARRAY) and allowing it to be
-used in sleepable programs.
-
-Sleepable programs can be preempted and sleep which might bring
-new source of race conditions, but both direct and indirect tail
-calls should not be affected.
-
-Direct tail calls work by patching direct jump to callee into bpf
-caller program, so no problem there. We atomically switch from nop
-to jump instruction.
-
-Indirect tail call reads the callee from the map and then jumps to
-it. The callee bpf program can't disappear (be released) from the
-caller, because it is executed under rcu lock (rcu_read_lock_trace).
+Adding test that makes sure we can't mix sleepable and non-sleepable
+bpf programs in the BPF_MAP_TYPE_PROG_ARRAY map and that we can do
+tail call in the sleepable program.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- include/linux/bpf.h   | 1 +
- kernel/bpf/core.c     | 4 +++-
- kernel/bpf/verifier.c | 1 +
- 3 files changed, 5 insertions(+), 1 deletion(-)
+ .../selftests/bpf/prog_tests/tailcalls.c      | 74 +++++++++++++++++++
+ .../selftests/bpf/progs/tailcall_sleepable.c  | 43 +++++++++++
+ 2 files changed, 117 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/progs/tailcall_sleepable.c
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 5524f9429e76..3b0ceb759075 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -287,6 +287,7 @@ struct bpf_map_owner {
- 	enum bpf_prog_type type;
- 	bool jited;
- 	bool xdp_has_frags;
-+	bool sleepable;
- 	u64 storage_cookie[MAX_BPF_CGROUP_STORAGE_TYPE];
- 	const struct btf_type *attach_func_proto;
- 	enum bpf_attach_type expected_attach_type;
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index e0b8a8a5aaa9..5ebece600aeb 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -2401,6 +2401,7 @@ static bool __bpf_prog_map_compatible(struct bpf_map *map,
- 		map->owner->type  = prog_type;
- 		map->owner->jited = fp->jited;
- 		map->owner->xdp_has_frags = aux->xdp_has_frags;
-+		map->owner->sleepable = fp->sleepable;
- 		map->owner->expected_attach_type = fp->expected_attach_type;
- 		map->owner->attach_func_proto = aux->attach_func_proto;
- 		for_each_cgroup_storage_type(i) {
-@@ -2412,7 +2413,8 @@ static bool __bpf_prog_map_compatible(struct bpf_map *map,
- 	} else {
- 		ret = map->owner->type  == prog_type &&
- 		      map->owner->jited == fp->jited &&
--		      map->owner->xdp_has_frags == aux->xdp_has_frags;
-+		      map->owner->xdp_has_frags == aux->xdp_has_frags &&
-+		      map->owner->sleepable == fp->sleepable;
- 		if (ret &&
- 		    map->map_type == BPF_MAP_TYPE_PROG_ARRAY &&
- 		    map->owner->expected_attach_type != fp->expected_attach_type)
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index e7ff8394e0da..f185ebc6748d 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -21386,6 +21386,7 @@ static int check_map_prog_compatibility(struct bpf_verifier_env *env,
- 		case BPF_MAP_TYPE_STACK:
- 		case BPF_MAP_TYPE_ARENA:
- 		case BPF_MAP_TYPE_INSN_ARRAY:
-+		case BPF_MAP_TYPE_PROG_ARRAY:
- 			break;
- 		default:
- 			verbose(env,
+diff --git a/tools/testing/selftests/bpf/prog_tests/tailcalls.c b/tools/testing/selftests/bpf/prog_tests/tailcalls.c
+index 0ab36503c3b2..7d534fde0af9 100644
+--- a/tools/testing/selftests/bpf/prog_tests/tailcalls.c
++++ b/tools/testing/selftests/bpf/prog_tests/tailcalls.c
+@@ -8,6 +8,7 @@
+ #include "tailcall_freplace.skel.h"
+ #include "tc_bpf2bpf.skel.h"
+ #include "tailcall_fail.skel.h"
++#include "tailcall_sleepable.skel.h"
+ 
+ /* test_tailcall_1 checks basic functionality by patching multiple locations
+  * in a single program for a single tail call slot with nop->jmp, jmp->nop
+@@ -1653,6 +1654,77 @@ static void test_tailcall_failure()
+ 	RUN_TESTS(tailcall_fail);
+ }
+ 
++noinline void uprobe_sleepable_trigger(void)
++{
++	asm volatile ("");
++}
++
++static void test_tailcall_sleepable(void)
++{
++	LIBBPF_OPTS(bpf_uprobe_opts, opts);
++	struct tailcall_sleepable *skel;
++	int prog_fd, map_fd;
++	int err, key;
++
++	skel = tailcall_sleepable__open();
++	if (!ASSERT_OK_PTR(skel, "tailcall_sleepable__open"))
++		return;
++
++	/*
++	 * Test that we can't load uprobe_normal and uprobe_sleepable_1,
++	 * because they share tailcall map.
++	 */
++	bpf_program__set_autoload(skel->progs.uprobe_normal, true);
++	bpf_program__set_autoload(skel->progs.uprobe_sleepable_1, true);
++
++	err = tailcall_sleepable__load(skel);
++	if (!ASSERT_ERR(err, "tailcall_sleepable__load"))
++		goto out;
++
++	tailcall_sleepable__destroy(skel);
++
++	/*
++	 * Test that we can tail call from sleepable to sleepable program.
++	 */
++	skel = tailcall_sleepable__open();
++	if (!ASSERT_OK_PTR(skel, "tailcall_sleepable__open"))
++		return;
++
++	bpf_program__set_autoload(skel->progs.uprobe_sleepable_1, true);
++	bpf_program__set_autoload(skel->progs.uprobe_sleepable_2, true);
++
++	err = tailcall_sleepable__load(skel);
++	if (!ASSERT_OK(err, "tailcall_sleepable__load"))
++		goto out;
++
++	/* Add sleepable uprobe_sleepable_2 to jmp_table[0]. */
++	key = 0;
++	prog_fd = bpf_program__fd(skel->progs.uprobe_sleepable_2);
++	map_fd = bpf_map__fd(skel->maps.jmp_table);
++	err = bpf_map_update_elem(map_fd, &key, &prog_fd, BPF_ANY);
++	if (!ASSERT_OK(err, "update jmp_table"))
++		goto out;
++
++	skel->bss->my_pid = getpid();
++
++	/* Attach uprobe_sleepable_1 to uprobe_sleepable_trigger and hit it.  */
++	opts.func_name = "uprobe_sleepable_trigger";
++	skel->links.uprobe_sleepable_1 = bpf_program__attach_uprobe_opts(
++						skel->progs.uprobe_sleepable_1,
++						-1,
++						"/proc/self/exe",
++						0 /* offset */,
++						&opts);
++	if (!ASSERT_OK_PTR(skel->links.uprobe_sleepable_1, "bpf_program__attach_uprobe_opts"))
++		goto out;
++
++	uprobe_sleepable_trigger();
++	ASSERT_EQ(skel->bss->executed, 1, "executed");
++
++out:
++	tailcall_sleepable__destroy(skel);
++}
++
+ void test_tailcalls(void)
+ {
+ 	if (test__start_subtest("tailcall_1"))
+@@ -1707,4 +1779,6 @@ void test_tailcalls(void)
+ 		test_tailcall_bpf2bpf_freplace();
+ 	if (test__start_subtest("tailcall_failure"))
+ 		test_tailcall_failure();
++	if (test__start_subtest("tailcall_sleepable"))
++		test_tailcall_sleepable();
+ }
+diff --git a/tools/testing/selftests/bpf/progs/tailcall_sleepable.c b/tools/testing/selftests/bpf/progs/tailcall_sleepable.c
+new file mode 100644
+index 000000000000..d959a9eaaa9c
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/tailcall_sleepable.c
+@@ -0,0 +1,43 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/bpf.h>
++#include <bpf/bpf_helpers.h>
++#include "bpf_misc.h"
++#include "bpf_test_utils.h"
++
++struct {
++	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
++	__uint(max_entries, 1);
++	__uint(key_size, sizeof(__u32));
++	__array(values, void (void));
++} jmp_table SEC(".maps");
++
++SEC("?uprobe")
++int uprobe_normal(void *ctx)
++{
++	bpf_tail_call_static(ctx, &jmp_table, 0);
++	return 0;
++}
++
++SEC("?uprobe.s")
++int uprobe_sleepable_1(void *ctx)
++{
++	bpf_tail_call_static(ctx, &jmp_table, 0);
++	return 0;
++}
++
++int executed = 0;
++int my_pid = 0;
++
++SEC("?uprobe.s")
++int uprobe_sleepable_2(void *ctx)
++{
++	int pid = bpf_get_current_pid_tgid() >> 32;
++
++	if (pid != my_pid)
++		return 0;
++
++	executed++;
++	return 0;
++}
++
++char __license[] SEC("license") = "GPL";
 -- 
 2.52.0
 
