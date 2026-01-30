@@ -1,183 +1,170 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD8F2E40B
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 20:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A1730E84B
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 23:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769805167; cv=pass; b=a3gx58OZp509cQdwz9VYdd6hDpdAspLgUxETju04+KvZgpHDC5CJ8iz8GFaH1kQs/6X567sQSDu4NcF4sCy2ZvEru/RqxAxHaim6k1FcOBVhplQjTXgve5uxbFf0ncWAzCpPXg5aqPA+09c7pSndPUhLsel3qw80PtS5vLMDVkw=
+	t=1769815856; cv=pass; b=CBwO1xEnwawnN3ntPVjq4Bk1dfyz6hdcj5bKLQqFYxbCzT5Axu3yMNmU95fvUEUpgeQthqMdGBv7USnFBSA6lgKRdNa14j+/bRML6Y8aLXjwYc1SgMjZxqqutKZkuWKWbvfjPIySF4yhUfXgjEdPWfpU1gZdvX32wEkTYZINxKs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769805167; c=relaxed/simple;
-	bh=fyjn8T2fK3Y1QyHDpsxZwhGYVrBaYACnbn3w6xSn/NE=;
+	s=arc-20240116; t=1769815856; c=relaxed/simple;
+	bh=uP3AnfWxksp7Fq17hXZgZwEtBM8hOyGlJYnoXXxtPoc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rJMOZTHzOK+FEhNrIClc+hpL9v+5HPuvuCNIXMEnpEy0DdEcbRkoll4lFAs3e6bIarIt8dkeU+4ljjTidncHGZmtpI7EjMaYz/KhR/1O5YD6/NNMFeEX3lkVmmv45c4P/3ltijUG62w8IJ+fjidc0zgSG0DMdyPRDwT3/0pDGeI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=StPTqJc7; arc=pass smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=VDhiXTJm6zfzszdjxQJ0OCO4S0btRZHO3hCmBUI3eNEVkkI1AXqcM+jJa0dQe07yAwnmLOvguEkvmt4dueSbdB9EPx9Ci6oewIULtwJGUtwnYH9yoiYQNdGrUrnyhBBVUXJGZryCALVF5IaJVhr2kS24Qko50nzInXlB4dD4eUc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LGUoB9dD; arc=pass smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StPTqJc7"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-bc17d39ccd2so1025922a12.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 12:32:43 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769805162; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LGUoB9dD"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6581551aa88so1818a12.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 15:30:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769815853; cv=none;
         d=google.com; s=arc-20240605;
-        b=VfsTy4rYMlVEZ6LfAHmSIxUVliDesx+oxyjM2NygE1FFW3uDZvXX5kecA5orCDaMNQ
-         3Bei32vmM3Jl99+MtIl011vEhAS55z0TTg/oYtotaErWKd22Zta+INyiQxoH05bXKXOw
-         DHKpSiE1pjNy54xzXa99l+28Tx0UVSROaXYyEiacQJmgSctMVslKg5R8XiVuCbkqa+Td
-         y4hB/i8xg9Ph9OuLylv/OFdqNPWvE7AhsJRXjTPTKoJSJ+ypm7aBfIelugna3GZdIgPD
-         cFwA/1QSy4EavlqnvOWPWD9BvPmTM80VvnQm+Pwy+ocDsL8QhYeRvHZN1sg6QjFbdUbI
-         rUPQ==
+        b=SvMZTxUKX77sJFdownSTRaPvCqy6iP+qFecAI0ObhP+CYscGfck0H+JkJbsltsOUjw
+         PeM3ukaElIXwbzRHfnO6NDNypQb3AKczzbkUCCqA6cjfitL3itrtDZIABSWElWFQCR2j
+         nmm9QnE7nsWbGDe11JUKTegGkiIgLppPgdNrUCBI9YxFECd8UYzan+j2jwYg+GdwZ+VD
+         JfYGcwS6wuGvHktWeub4R/zROFTSogEDBzGaneyr29hWiW74KDkc1mmYeGazhhfor6ce
+         EEa4om3br1chfdJtvolR/IW05hfYUPzGf/t6fCb6GAgpGaFxHDpPGpoE4GBDdrNtzxqF
+         rhfQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=P4p+gASIzn5rW2H2oCIdf7dVgnctkRAm3XiVfcDdGFQ=;
-        fh=vOQAvUgyi+GJAxhi4D3DSqCSgC5c+xGy0dgUDE1X56U=;
-        b=VGGplxrLOWBJFD6zVtd6f5wZN99z4f5ZNrj0NE9F7TIg3zq0pCa2f2TZVCiVgd/c3n
-         yMa2YWAQuCE+yQbXBrmiq8JpBUKi3sDLuZrvXKz0qPyLPGkmv7GwrSKxBLcGz3FSgAXx
-         B3k/C2fUz3sruyjvWmtf3BfDBoaYv082fbBvjtItsLertcCt9FbcB8YLPFG7I7to/X/G
-         9CSN+pNU+gBerQ51GZRknCqI89iVJ/ph42YzDRh8FMSW5/W7yFxjyejuvx8Cwv49a6hV
-         GSP7kQduPdsqfnbR/zQC6Fy0mV0Ecn67f14VIJDvElgsBfNIV6pWN2r/dG/GiwaKpwVZ
-         Eurw==;
+        bh=OWGbD3Q1oYxtbYVSNos0BG2kmeyuKAEZoyrEWcfmjO8=;
+        fh=IjoePzS4nEnpC+8jC5ji0cuoMJBRF7jCMIkndP5KxYI=;
+        b=iNADHqbgL5YVkwNM7JHWskaR1/v/iOB+XQy6MPQhHd94HjigKpLRNrBXTJkMtZDRbq
+         /GGy0D1N+xpvICHYAx6o08TRBXncpy8AuoKUSKfjTNKVG61joHeSfnYsphRDPXQdKfud
+         eaqBTvwCmatdJLYplIpZySezNJsgBhhu9gJgC3QLm1JZbYXrLWbeQhUK5dZrHT0mTOiV
+         di7RXyw22gpXjZCqzxExsdCWXqK0rGgIqC/aDh9ZR9fW3WtGIPbyC+Bmd4QKwm5cmzT9
+         XUcS9VPl7N8ZFl14Fwq8R4+58I/0BnwTSNN/T8ZRoW9SINazaqBv/wxrCgWljKo+vY96
+         /8qg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769805162; x=1770409962; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769815853; x=1770420653; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P4p+gASIzn5rW2H2oCIdf7dVgnctkRAm3XiVfcDdGFQ=;
-        b=StPTqJc7IrEenQs62xmFSy9cGIeabwUkAPEQy+Y8bGupSGSHByTnH+JqgkhfxUTxuc
-         Ih2dQhl4ZdzyAx2cTJq2W+u/0coMHaqc8a5sc6xdopO6iSxkjAHWBx1oQEG6h5PlBBOX
-         tEo73RwpgQI1mmp/3ShzojxG0zkZ7MyJ2FOXcBicDxt6baQdqwiRQ9c0Y9eJZuKDezf6
-         T93RXYlV3n4UOlsFXgrvSDenKelKubXj5rGFZrzcadeDR+gv/2FOG0WbaqgurIvhuxLK
-         sq3IO5VixXIqPCBYb0YWx5PsFlTPvKebZ8RomO9n6pXGEXfjudAAWUkSSE0NauQHFrAX
-         d0kw==
+        bh=OWGbD3Q1oYxtbYVSNos0BG2kmeyuKAEZoyrEWcfmjO8=;
+        b=LGUoB9dD9y23kkeGF6qyeo0n3Ir84ufMDaVQNwJAQRRYgFfC5UGI3UZI7zQ4yY2++u
+         /LZSVMRsJkE3rdNvN50O3eWJArx05s+8Nufw/8pRtuMraTyLHfilPVIILi0JRk5jkqyh
+         zYI88PnJiIrzEwW0Ljw5JyCLyDs9M6iPW5LYbQkUZunQLbAY7jrdxFRGXD6iunRKK6Cp
+         m9JgnbAm009iodgRdrONT3RfwhnocFL8tDucmoN6WoUUVwAaTebxcIq3GdSG49aUXFGg
+         RQRhTTO+6ybI3jMnmEGT3F5q5EA/kCm6IEOIIdpkXSrWMdxLO9ZcLyCsJnkRCXR7S+Aa
+         Vbug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769805162; x=1770409962;
+        d=1e100.net; s=20230601; t=1769815853; x=1770420653;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=P4p+gASIzn5rW2H2oCIdf7dVgnctkRAm3XiVfcDdGFQ=;
-        b=FFEBlQdBBWxpjdJZ3mcjQVEDIYNIGTv+QgP6111iIrzXD/cGdXW79PDumzLLxwgewi
-         2MS0lzxX0GfBjVvrS+cMdwkh/acUijFJOMneolJgN/aII4+hS46VOlRRNZgSSU+chMJ8
-         JkheEg5qz/ppkTNy3SN5CcguOoQF61NP5visAso2/zi54qKh/4KHfPxPrTf/2m0c7DUh
-         Pn87OUIIU6N1eTkVMufWRovTZzQ4o6av5VEfUGIK9efPPAgN40AfHht8iKNOjDELmofR
-         7so4gfL/B0GzPL+PfWS6l2g+aH74PAOM8XiWVKcjfi3e4d2Jcg1hPbY5vTBliw7ZT54E
-         Kz1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXVvWSHP5IycIsHZ1P5EZSinbs7pi74i8qv+CqMzuG7nZFI+MSSLLI/yKOc7XqxZtAk8ttTpmMeiOoC8PnTIPIZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzh/1jGZVPsNDY/ZsRCL5jD0mZmN6BZtj3aIpHEOvCY6CBCwJFp
-	s2k4ucWTVNbAUpukeobHBLDQlZT1pkItlHVI2iSpTSoxy3bkn1IEMPXHiQCl+Nhw3FOa2Dyoyfh
-	cIev/5s2GUcrLLKbg5nQN3WwjUic6isc=
-X-Gm-Gg: AZuq6aKSI5XuQYk+Ho/QfDy14lxtrgf8XZcNc2Ej30rUNivbOdMc4G0QXxnv4kD/A5r
-	Cj3X1KBohkKhjdj0yEz8uqHO0zrl8JldS/Oj4Dzj/5wx+r0YluPbxfNKQoTGCCJv9KcFGmzfjF3
-	gu/9oV1lD1j93kxJexbUxY8hmy5MwZJtXMhXVBh8GtBxkyUxI1cwfdU/J5/jADqJCFQF1mBdbAc
-	EVy9gWFctIfw1S4YV9nvQH5mU52iRK2L25CpTYJTlIPI2t847T90NVKZjRXfUplkI3eOLQ+sbBM
-	BkLpGHb1VaA=
-X-Received: by 2002:a17:90b:53c5:b0:34c:3cbc:db8e with SMTP id
- 98e67ed59e1d1-3543b3d0262mr3832492a91.25.1769805162196; Fri, 30 Jan 2026
- 12:32:42 -0800 (PST)
+        bh=OWGbD3Q1oYxtbYVSNos0BG2kmeyuKAEZoyrEWcfmjO8=;
+        b=wUDKJJJh3xt9cs9izq8z2gQFxeNC568gQBV/8stcm8jkd8f7BeznSI1TuPk10vzy6/
+         sIkH8D+McLs0vGIT2Im5cZNfcOd3P/xg9aM4+WqF+N++0/InhuHjPH9cIIIhHgoppSgG
+         jMDTAxzG3HMztbqlV/ABHccyyJB0GdjuIUkyz3u9PNh7aTB1GSnE9jOaPonsNfPwtNJD
+         6UVFu+GD2Chdxleev259kFJ8buY2BW7w3CCIkmNHoRHNyP5U1WtFGIXIWAagduIqrEF4
+         OIlRM9DGpbEOl35w7e3Xnrkqk3g7KctnD47Ex1gLGl24a2Jf+0w7BK43OzV5IP9jJ55B
+         d5yg==
+X-Forwarded-Encrypted: i=1; AJvYcCX1lCEtAyDSZMmp7zvib75DSQOar2qwHQ1fkXegxUazLTfA4njjXiY3Qvb1O4QisTM8NHD8z9wTxoBWgQ+WyUnp@vger.kernel.org
+X-Gm-Message-State: AOJu0YycUEj1jKWKlitn5QHsk0LDvApJg+7HI0kBQajqR3Dr1XY2nK3p
+	XZtXxZ2qM14uUW6pfD5OTBY6IbZGiiock8n5wZtoL2fU3wXhW8lK0oppE21NOrk8W/NBCYu3Zzj
+	/QpRP+WQgx3swHi2IC0Krtbyr/FfZ4Pva9WuQDyWB
+X-Gm-Gg: AZuq6aIEcg1PnjxSFbl/S9LisX6aLblYCoQQc0vxh+vqq2FJhr6wNqHl4Cddb85SH8V
+	nBquP8hEbeVz1sqSXLIIlUY0Aw0GDv43UbS1AYr5FjZVD6GjziQZg4qbwQHyL1qjYvq8lG3rs4n
+	kCNMUJ7x7/wqZ3/4fIx9IoWytk8JX1Yv6GW+CnZX6onch33t5r5ZvjHUpGr1RjMug3XOe7JPBGc
+	nyUZkrBYKMd5asR0B+BPp3K3hRqziO1dp4zJGWXcNW/WEl/pvqOU2zNB1CGZC/uLdDlyB0=
+X-Received: by 2002:aa7:ccc6:0:b0:658:a54c:d6f3 with SMTP id
+ 4fb4d7f45d1cf-658f6c75eaemr14062a12.6.1769815852677; Fri, 30 Jan 2026
+ 15:30:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260127023618.1469937-1-zeri@umich.edu> <20260130102300.GA171111@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260130102300.GA171111@noisy.programming.kicks-ass.net>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 30 Jan 2026 12:32:29 -0800
-X-Gm-Features: AZwV_QidrVTjqLumikxCKlaD6XVlqLqIqwQyz0r7VB3D0P9YN6jXJY3NyntkSs4
-Message-ID: <CAEf4BzahX2oRRU7a9n8NsM-b+MMMjbDKpOEXe_zpR8XQ9=9H=A@mail.gmail.com>
-Subject: Re: [PATCH] perf: Fix data race in perf_event_set_bpf_handler()
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Henry Zhang <henryzhangjcle@gmail.com>, mingo@redhat.com, acme@kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, Henry Zhang <zeri@umich.edu>, 
-	syzbot+2a077cb788749964cf68@syzkaller.appspotmail.com, andrii@kernel.org
+References: <20260129232835.3710773-1-jmattson@google.com> <20260129232835.3710773-4-jmattson@google.com>
+ <zzgnirkreq5r57favstiuxuc66ep3npassqgcymntrttgttt3c@g4pi4l2bvi6q>
+In-Reply-To: <zzgnirkreq5r57favstiuxuc66ep3npassqgcymntrttgttt3c@g4pi4l2bvi6q>
+From: Jim Mattson <jmattson@google.com>
+Date: Fri, 30 Jan 2026 15:30:40 -0800
+X-Gm-Features: AZwV_QjGWdMQTuDf_firyiB8uJrobAc3g0L2GOgNb852oEYE3viONZnLUBrlkRc
+Message-ID: <CALMp9eS7Za_vFdh8YBzycV2g87gZ9uj_S1MOYrgJ1+ShwVVWZw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] KVM: x86/pmu: Refresh Host-Only/Guest-Only
+ eventsel at nested transitions
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, mizhang@google.com, sandipan.das@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 30, 2026 at 2:23=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Fri, Jan 30, 2026 at 7:26=E2=80=AFAM Yosry Ahmed <yosry.ahmed@linux.dev>=
+ wrote:
 >
-> On Mon, Jan 26, 2026 at 09:36:18PM -0500, Henry Zhang wrote:
-> > KCSAN reported a data race where perf_event_set_bpf_handler() writes
-> > event->prog while __perf_event_overflow() reads it concurrently from
-> > interrupt context:
+> On Thu, Jan 29, 2026 at 03:28:08PM -0800, Jim Mattson wrote:
+> > Add amd_pmu_refresh_host_guest_eventsel_hw() to recalculate eventsel_hw=
+ for
+> > all PMCs based on the current vCPU state. This is needed because Host-O=
+nly
+> > and Guest-Only counters must be enabled/disabled at:
 > >
-> > BUG: KCSAN: data-race in __perf_event_overflow / __perf_event_set_bpf_p=
-rog
+> >   - SVME changes: When EFER.SVME is modified, counters with Guest-Only =
+bits
+> >     need their hardware enable state updated.
 > >
-> > write to 0xffff88811b219168 of 8 bytes by task 13065 on cpu 0:
-> >  perf_event_set_bpf_handler kernel/events/core.c:10352 [inline]
-> >  __perf_event_set_bpf_prog+0x418/0x470 kernel/events/core.c:11303
-> > ...
+> >   - Nested transitions: When entering or leaving guest mode, Host-Only
+> >     counters should be disabled/enabled and Guest-Only counters should =
+be
+> >     enabled/disabled accordingly.
 > >
-> > read to 0xffff88811b219168 of 8 bytes by interrupt on cpu 1:
-> >  __perf_event_overflow+0x252/0x920 kernel/events/core.c:10410
-> > ...
+> > Introduce svm_enter_guest_mode() and svm_leave_guest_mode() wrappers th=
+at
+> > call enter_guest_mode()/leave_guest_mode() followed by the PMU refresh,
+> > ensuring the PMU state stays synchronized with guest mode transitions.
 > >
-> > Annotate event->prog access with WRITE_ONCE/READ_ONCE.
-> >
-> > Reported-by: syzbot+2a077cb788749964cf68@syzkaller.appspotmail.com
-> > Closes: https://syzkaller.appspot.com/bug?extid=3D2a077cb788749964cf68
-> > Signed-off-by: Henry Zhang <zeri@umich.edu>
+> > Signed-off-by: Jim Mattson <jmattson@google.com>
 > > ---
-> >  kernel/events/core.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >  arch/x86/kvm/svm/nested.c |  6 +++---
+> >  arch/x86/kvm/svm/pmu.c    | 12 ++++++++++++
+> >  arch/x86/kvm/svm/svm.c    |  2 ++
+> >  arch/x86/kvm/svm/svm.h    | 17 +++++++++++++++++
+> >  4 files changed, 34 insertions(+), 3 deletions(-)
 > >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index a0fa488bce84..1f3ed9e87507 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -10349,7 +10349,7 @@ static inline int perf_event_set_bpf_handler(st=
-ruct perf_event *event,
-> >               return -EPROTO;
-> >       }
+> > diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> > index de90b104a0dd..a7d1901f256b 100644
+> > --- a/arch/x86/kvm/svm/nested.c
+> > +++ b/arch/x86/kvm/svm/nested.c
+> > @@ -757,7 +757,7 @@ static void nested_vmcb02_prepare_control(struct vc=
+pu_svm *svm,
+> >       nested_svm_transition_tlb_flush(vcpu);
 > >
-> > -     event->prog =3D prog;
-> > +     WRITE_ONCE(event->prog, prog);
-> >       event->bpf_cookie =3D bpf_cookie;
+> >       /* Enter Guest-Mode */
+> > -     enter_guest_mode(vcpu);
+> > +     svm_enter_guest_mode(vcpu);
 >
-> What about that cookie thing? The consumer seems to be a bpf function
-> (bpf_get_attach_cookie_pe) which can equally run concurrently, no?
+> FWIW, I think this name is a bit confusing because we also have
+> enter_svm_guest_mode(). So we end up with:
 >
-> Also, there seems to be a coherency issue here, if prog runs, it expects
-> cookie to be present and all that.
+> enter_svm_guest_mode() -> nested_vmcb02_prepare_control() ->
+> svm_enter_guest_mode() -> enter_guest_mode()
 >
-> Would that not suggest something like:
+> I actually have another proposed change [1] that moves
+> enter_guest_mode() directly into enter_svm_guest_mode(), so the sequence
+> would end up being:
 >
->         WRITE_ONCE(event->bpf_cookie, bpf_cookie);
->         smp_store_release(&event->prog, prog);
+> enter_svm_guest_mode() -> svm_enter_guest_mode() -> enter_guest_mode()
 
-yeah, once we set event->prog, we can theoretically have that BPF
-program triggered before we set event->bpf_cookie.
+Yes, that is confusing. What if I renamed the existing function to
+something like svm_nested_switch_to_vmcb02()?
 
-But this setup thing is one-time and can be expensive...
+Alternatively, I could go back to introducing a new PMU_OP, call it
+from {enter,leave}_guest_mode(), and drop the wrappers.
 
->
-> >       return 0;
-> >  }
-> > @@ -10407,7 +10407,9 @@ static int __perf_event_overflow(struct perf_ev=
-ent *event,
-> >       if (event->attr.aux_pause)
-> >               perf_event_aux_pause(event->aux_event, true);
-> >
-> > -     if (event->prog && event->prog->type =3D=3D BPF_PROG_TYPE_PERF_EV=
-ENT &&
-> > +     struct bpf_prog *prog =3D READ_ONCE(event->prog);
->
-> smp_load_acquire(&event->prog);
-
-while this is very frequent. So shouldn't we try to avoid unnecessary
-overhead here? Maybe just use more expensive memory barriers in
-perf_event_set_bpf_handler() to ensure that bpf_cookie will always be
-set before event->prog can be seen by any CPU?
-
->
-> > +
-> > +     if (prog && prog->type =3D=3D BPF_PROG_TYPE_PERF_EVENT &&
-> >           !bpf_overflow_handler(event, data, regs))
-> >               goto out;
-> >
->
-> Hmm?
+> [1] https://lore.kernel.org/kvm/20260115011312.3675857-9-yosry.ahmed@linu=
+x.dev/
