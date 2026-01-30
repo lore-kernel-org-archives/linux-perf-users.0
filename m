@@ -1,233 +1,109 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75343876D5
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 23:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D8238A297
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 23:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769816091; cv=none; b=IGixCITfaLh4G3vrFN0p3J9BldVH5v/3aRbCYoNZ7FD5jD+xc40LIuQv2mRt8Ha1vvsJSoGyEfeOEk1EMMozfjprc+xLHQ+FHz/ENwViTPjp0NUBt+FvVY24Hwd3CZRIj1KFrgrx/6SwoTUo+9kqqmr/2q2xtRRNmO+XYjYx6lY=
+	t=1769816151; cv=none; b=OJxs1SYUA5jDorDLWBg0Dce3oGpwgTPMUd1p+22X/Avq3r1rzAiiP52DLUK9t5IfkMdrHH5FzUvc8hvQsFNiX0+hDChdv7Ez0I8S8Ysc6ebv+OT+SiNW4LOKrfNZsxZgtl8lTWb3heTHazQpxhtXeo1CVGVHjsa/T1G666Vd+80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769816091; c=relaxed/simple;
-	bh=f3IwAF4xFUnZiQ0qPUpCQZ3A9awCCpK1Sq8wBjN9MYU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qToS19zv3TXRAOSTaMKahkS4x7RbO4VpQiJHKAimULYQJCPsA4i0CdzWOZKcPaKyFejU7KgNHlxAXwIs3Yay4OMVjv47vnPuw3w48qVGxwRcdxQV/z0STh0bfXGl+2TrNJCGrzY+Cf/Tjvi8jtog43rT5NNEZB/4a1L8A/kXpCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BDg1BLd1; arc=none smtp.client-ip=74.125.82.202
+	s=arc-20240116; t=1769816151; c=relaxed/simple;
+	bh=4povVCWc/uOwDyXyZgP1NZh7UFpxzBSi+gimE0ulTt4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=dEjWdMkLqtby9QpaI4mnWeh9sVeRGLBUTKTHKK2UfeNXqEnCbspTUsLwDzFDNO0kWUoAR3TYu/ZWmWMzaM8gMfJtjhurJzrptFE+4+K/ze0fND0Uu057CBtuEe1CgQgcv8OhEXwsfs/m3bav2DNF56q92az257xFFzHpkoT3bnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eIghKRFA; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BDg1BLd1"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b74766fae7so3261728eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 15:34:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eIghKRFA"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-11b94abc09dso3965352c88.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jan 2026 15:35:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769816089; x=1770420889; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5WXtY1sGpzNmP+KMWAj1QK4gOAMZ7b1jw8oU2SjTVnA=;
-        b=BDg1BLd1C/7iL7/JZuQwnTZ4/y1Plvko0jOxpi/D+pxEqYkOaDVFEzvIIvIGY8bOWy
-         tgweH/zpKwVTpuJSCnvkUn+nnFIAyXzjbu1mK5kVbIZnHSIT6ybFcPk6bbHVft/tM5zZ
-         lIvYfyaU5DR8Iqrpi0PGNEUHbIyMqGRQysYev5i/st9AZeZMLjw3Zeb5ZBiPRW5CU8IP
-         sGrbwzGgpTF8VOyY0FpFcs+X6TC48/MA/CfLrA1YFQ0Ea4/frHScb+VbCPag/7fVKDSG
-         DXXRFRFA6GRUAr2ZNMnu8FV5ZynoIGyOmeoL+8LJIAzkIQ3Q1kGSNEppnSieIUdLa/0G
-         v30g==
+        d=google.com; s=20230601; t=1769816149; x=1770420949; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SOExR1o1xpQiK2TtbFX75aFUmhaOzHbXYkENmPUuitI=;
+        b=eIghKRFATLka+hWMNBEONQgG/urNxprCCSVTQYWhRtEl7LrE92EDSDt2DLO+hkO9mA
+         uBh3dDxqNERX/ADXwbXvGkFNjPFf1Oka2u8yH90MBipIUgnuV5ydJa/40rG1jO6OkXCF
+         0Spx7XhVgyXhZBADf0e4yQjrEDkYSZpz2FjXm+xANOi8Rxkqr8K5Yu8FbK5JLqyZJOZM
+         l1n8P378lmr+Xv/rJNrYPQXv/0zGFmwCY/nKey7tGCfrlmWjuPcfMJIxCIMHk7P7Vu7L
+         SQXECVLlFyizsK1cIVuhdgTIuArKgdU9N/ElqZWLEFPC/Jcg1x/TtQRB/gMeD9vZOzzm
+         cmVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769816089; x=1770420889;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5WXtY1sGpzNmP+KMWAj1QK4gOAMZ7b1jw8oU2SjTVnA=;
-        b=efg1OF05ap6SEoIUr39hCN5WVqS/YvD8vNHgNmhR6HgrIxrlEqxvsARYutGo+Dj14A
-         vw8dD0WmcSfXy0b9apO9V9elXrTXy+rFSptFEuRyXFXRF4NW0PeOARK7MoJDvOVBeGax
-         woiOb1AQr1IFS1fRCTFzGX8FA+8SbEUvGwrBoTWJQffeLXGNSqTz9hVfosABXsnNM1/Z
-         JLZZ8S/JNkr6omQXPhVsjqEK3IoXn8sbniSC2+EV0R5cqJ7GGPdv2hSATuFafafO4WuM
-         /SEn/XBKZ9/ooqwDv+AHVqs7ARY/cCDW83EsTjDeam0Mf+1pB7JG/PcbD8Mw7v+AHae1
-         evfA==
-X-Forwarded-Encrypted: i=1; AJvYcCXk63+adXvA+0YznUcw1mHaWEe8YO+DNiJA2SyiYRYt2vwYa2aocQBxSKOQAJhExrUgKkQJygNpWogkvOSJdNLP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYRrTYFCgsvjfaz6Vo9tXB7KxHToHxfCsbCbBjBz8UV/6Bpy63
-	H//w/9gWX63sZB0uLHRnD9FHLAJ6KpZvDcvA3xrX72LUI5uEd63AZZiO4klBShni/ckdTplVgLx
-	EOlBWkTjhwg==
-X-Received: from dysc40.prod.google.com ([2002:a05:7300:3b28:b0:2b6:b71d:d4f0])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:fb83:b0:2a4:3594:72d7
- with SMTP id 5a478bee46e88-2b7c863a245mr2711669eec.6.1769816088831; Fri, 30
- Jan 2026 15:34:48 -0800 (PST)
-Date: Fri, 30 Jan 2026 15:34:39 -0800
-In-Reply-To: <20260130233439.647447-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1769816149; x=1770420949;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SOExR1o1xpQiK2TtbFX75aFUmhaOzHbXYkENmPUuitI=;
+        b=MPJsXmn2utoxcs6DZGrvaok/xkAgc/jcysOJEYddze2YzZ1T7S5TZr8lSYBA3psLcu
+         4lHF6UZf8DAkuxRV5SdaMgsBqecxGAqtE+in0iZUdwNsIFCwDrFmK+KEsaL7a7or7X0Q
+         Ov1zzJrKBmJFs7qe6e6+qdM9gGpbu3jGojUc9XIrfRYlNC3bUAXQnHuBnjHURiP2X0ix
+         b7d5Or1mjUwihhu3BI092uPcAp3mzBsAjSNAXbTujGaQYApQB5xD2JE/R4PPiXkKGptt
+         kkj70FEr0O5t+zuLt6qoKvcjgteSAQ3R5yhBHGC8bTWIja2q65qW74qfwnxTbPdXXglY
+         j72Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWPIFXFkGtADYsN8wtauiouf8fDOVbjiW5/b55aigtmpvAYMDarva+YkG3lMmoH8UcMoUBk+Tt6TBDWx4gSTRiU@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQAO7RDnDV30v29A7Ifd6Zoh6PEOHXH1i2a5AB9AvHS59tmOoa
+	4yDEfRrVlBi6JOwsZz1+FRZ3eHMP6cYkzgsj3jPM+ARCAqpmZ4YrXcvdoNYUDaDVGO+Bnvl2uVd
+	XqFXJ0bc2cQ==
+X-Received: from dll4.prod.google.com ([2002:a05:7022:204:b0:123:350a:ef0b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:49b:b0:119:e56c:18ab
+ with SMTP id a92af1059eb24-125c0fafff6mr2496553c88.19.1769816149534; Fri, 30
+ Jan 2026 15:35:49 -0800 (PST)
+Date: Fri, 30 Jan 2026 15:35:39 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260130233439.647447-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.rc1.225.gd81095ad13-goog
-Message-ID: <20260130233439.647447-4-irogers@google.com>
-Subject: [PATCH v10 3/3] perf llvm: Mangle libperf-llvm.so function names
+Message-ID: <20260130233539.648186-1-irogers@google.com>
+Subject: [PATCH v1] perf build: Remove NO_LIBCAP that controls nothing
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Collin Funk <collin.funk1@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev
-Cc: Ian Rogers <irogers@google.com>
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-For a function like llvm_addr2line having the libperf-llvm.so exported
-symbol named llvm_addr2line meant that the perf llvm_addr2line could
-sometimes erroneously be returned. This led to infinite recursion and
-eventual stack overflow. To avoid this conflict add a new
-BUILDING_PERF_LLVMSO when libperf-llvm.so is being built and use it to
-alter the behavior of MANGLE_PERF_LLVM_API, a macro that prefixes the
-name when libperf-llvm.so is being built. The prefixed named avoids
-the name collision.
+Using libcap was removed in commit e25ebda78e23 ("perf cap: Tidy up
+and improve capability testing"), however, some build documentation
+and a use of the NO_LIBCAP=1 were lingering. Remove these left over
+bits.
 
+Fixes: e25ebda78e23 ("perf cap: Tidy up and improve capability testing")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Makefile.perf           |  3 ++-
- tools/perf/util/llvm-c-helpers.cpp | 29 ++++++++++++++++++-----------
- tools/perf/util/llvm-c-helpers.h   | 24 ++++++++++++++++--------
- 3 files changed, 36 insertions(+), 20 deletions(-)
+ tools/perf/Makefile.perf | 2 --
+ tools/perf/tests/make    | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 525025af1530..5b634efbead0 100644
+index b6edc8100c8e..2a7e5814b159 100644
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -996,7 +996,8 @@ $(LIBSYMBOL)-clean:
- 	$(Q)$(RM) -r -- $(LIBSYMBOL_OUTPUT)
+@@ -86,8 +86,6 @@ include ../scripts/utilities.mak
+ #
+ # Define NO_LIBBPF if you do not want BPF support
+ #
+-# Define NO_LIBCAP if you do not want process capabilities considered by perf
+-#
+ # Define NO_SDT if you do not want to define SDT event in perf tools,
+ # note that it doesn't disable SDT scanning support.
+ #
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index 767ad9e147a8..0b16c9c81c7f 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -121,7 +121,7 @@ make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_BACKTRACE=1
+ make_minimal        += NO_LIBNUMA=1 NO_LIBBIONIC=1 NO_LIBDW=1
+ make_minimal        += NO_LIBBPF=1
+ make_minimal        += NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
+-make_minimal        += NO_LIBCAP=1 NO_CAPSTONE=1
++make_minimal        += NO_CAPSTONE=1
  
- ifdef LIBLLVM_DYNAMIC
--LIBPERF_LLVM_CXXFLAGS := $(call filter-out,-DHAVE_LIBLLVM_DYNAMIC,$(CXXFLAGS)) -DHAVE_LIBLLVM_SUPPORT
-+LIBPERF_LLVM_CXXFLAGS := $(call filter-out,-DHAVE_LIBLLVM_DYNAMIC,$(CXXFLAGS))
-+LIBPERF_LLVM_CXXFLAGS += -DHAVE_LIBLLVM_SUPPORT -DBUILDING_PERF_LLVMSO
- LIBPERF_LLVM_LIBS = -L$(shell $(LLVM_CONFIG) --libdir) $(LIBLLVM) -lstdc++
- 
- $(OUTPUT)$(LIBPERF_LLVM): util/llvm-c-helpers.cpp
-diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-helpers.cpp
-index 5a6f76e6b705..8cea380be5c2 100644
---- a/tools/perf/util/llvm-c-helpers.cpp
-+++ b/tools/perf/util/llvm-c-helpers.cpp
-@@ -99,10 +99,12 @@ static int extract_file_and_line(const DILineInfo &line_info, char **file,
- #endif
- 
- extern "C"
--int llvm_addr2line(const char *dso_name __maybe_unused, u64 addr __maybe_unused,
--		   char **file __maybe_unused, unsigned int *line __maybe_unused,
--		   bool unwind_inlines __maybe_unused,
--		   llvm_a2l_frame **inline_frames __maybe_unused)
-+int MANGLE_PERF_LLVM_API(llvm_addr2line)(const char *dso_name __maybe_unused,
-+                                         u64 addr __maybe_unused,
-+                                         char **file __maybe_unused,
-+                                         unsigned int *line __maybe_unused,
-+                                         bool unwind_inlines __maybe_unused,
-+                                         llvm_a2l_frame **inline_frames __maybe_unused)
- {
- #if defined(HAVE_LIBLLVM_SUPPORT) && !defined(HAVE_LIBLLVM_DYNAMIC)
- 	LLVMSymbolizer *symbolizer = get_symbolizer();
-@@ -177,7 +179,8 @@ int llvm_addr2line(const char *dso_name __maybe_unused, u64 addr __maybe_unused,
- 		if (!handle)
- 			return 0;
- 
--		fn = reinterpret_cast<decltype(fn)>(dlsym(handle, "llvm_addr2line"));
-+		fn = reinterpret_cast<decltype(fn)>(
-+			dlsym(handle, MANGLE_PERF_LLVM_API_STR(llvm_addr2line)));
- 		if (!fn)
- 			pr_debug("dlsym failed for llvm_addr2line\n");
- 		fn_init = true;
-@@ -215,8 +218,9 @@ make_symbol_relative_string(struct dso *dso, const char *sym_name,
- #endif
- 
- extern "C"
--char *llvm_name_for_code(struct dso *dso __maybe_unused, const char *dso_name __maybe_unused,
--			 u64 addr __maybe_unused)
-+char *MANGLE_PERF_LLVM_API(llvm_name_for_code)(struct dso *dso __maybe_unused,
-+					       const char *dso_name __maybe_unused,
-+					       u64 addr __maybe_unused)
- {
- #if defined(HAVE_LIBLLVM_SUPPORT) && !defined(HAVE_LIBLLVM_DYNAMIC)
- 	LLVMSymbolizer *symbolizer = get_symbolizer();
-@@ -242,7 +246,8 @@ char *llvm_name_for_code(struct dso *dso __maybe_unused, const char *dso_name __
- 		if (!handle)
- 			return NULL;
- 
--		fn = reinterpret_cast<decltype(fn)>(dlsym(handle, "llvm_name_for_code"));
-+		fn = reinterpret_cast<decltype(fn)>(
-+			dlsym(handle, MANGLE_PERF_LLVM_API_STR(llvm_name_for_code)));
- 		if (!fn)
- 			pr_debug("dlsym failed for llvm_name_for_code\n");
- 		fn_init = true;
-@@ -256,8 +261,9 @@ char *llvm_name_for_code(struct dso *dso __maybe_unused, const char *dso_name __
- }
- 
- extern "C"
--char *llvm_name_for_data(struct dso *dso __maybe_unused, const char *dso_name __maybe_unused,
--			 u64 addr __maybe_unused)
-+char *MANGLE_PERF_LLVM_API(llvm_name_for_data)(struct dso *dso __maybe_unused,
-+					       const char *dso_name __maybe_unused,
-+					       u64 addr __maybe_unused)
- {
- #if defined(HAVE_LIBLLVM_SUPPORT) && !defined(HAVE_LIBLLVM_DYNAMIC)
- 	LLVMSymbolizer *symbolizer = get_symbolizer();
-@@ -283,7 +289,8 @@ char *llvm_name_for_data(struct dso *dso __maybe_unused, const char *dso_name __
- 		if (!handle)
- 			return NULL;
- 
--		fn = reinterpret_cast<decltype(fn)>(dlsym(handle, "llvm_name_for_data"));
-+		fn = reinterpret_cast<decltype(fn)>(
-+			dlsym(handle, MANGLE_PERF_LLVM_API_STR(llvm_name_for_data)));
- 		if (!fn)
- 			pr_debug("dlsym failed for llvm_name_for_data\n");
- 		fn_init = true;
-diff --git a/tools/perf/util/llvm-c-helpers.h b/tools/perf/util/llvm-c-helpers.h
-index d2b99637a28a..cfcfd540cdae 100644
---- a/tools/perf/util/llvm-c-helpers.h
-+++ b/tools/perf/util/llvm-c-helpers.h
-@@ -13,6 +13,14 @@
- extern "C" {
- #endif
- 
-+/* Support name mangling so that libperf_llvm.so's names don't match those in perf. */
-+#ifdef BUILDING_PERF_LLVMSO
-+#define MANGLE_PERF_LLVM_API(x) PERF_LLVM_SO_ ## x
-+#else
-+#define MANGLE_PERF_LLVM_API(x) x
-+#endif
-+#define MANGLE_PERF_LLVM_API_STR(x) "PERF_LLVM_SO_" #x
-+
- struct dso;
- 
- struct llvm_a2l_frame {
-@@ -37,12 +45,12 @@ struct llvm_a2l_frame {
-  * a newly allocated array with that length. The caller is then responsible
-  * for freeing both the strings and the array itself.
-  */
--int llvm_addr2line(const char* dso_name,
--                   u64 addr,
--                   char** file,
--                   unsigned int* line,
--                   bool unwind_inlines,
--                   struct llvm_a2l_frame** inline_frames);
-+int MANGLE_PERF_LLVM_API(llvm_addr2line)(const char *dso_name,
-+					 u64 addr,
-+					 char **file,
-+					 unsigned int *line,
-+					 bool unwind_inlines,
-+					 struct llvm_a2l_frame **inline_frames);
- 
- /*
-  * Simple symbolizers for addresses; will convert something like
-@@ -50,8 +58,8 @@ int llvm_addr2line(const char* dso_name,
-  *
-  * The returned value must be freed by the caller, with free().
-  */
--char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr);
--char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr);
-+char *MANGLE_PERF_LLVM_API(llvm_name_for_code)(struct dso *dso, const char *dso_name, u64 addr);
-+char *MANGLE_PERF_LLVM_API(llvm_name_for_data)(struct dso *dso, const char *dso_name, u64 addr);
- 
- #ifdef __cplusplus
- }
+ # binutils 2_42 and newer have bfd_thread_init()
+ new_libbfd := $(shell echo '#include <bfd.h>' | $(CC) -E -x c - | grep bfd_thread_init)
 -- 
 2.53.0.rc1.225.gd81095ad13-goog
 
