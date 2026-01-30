@@ -1,214 +1,787 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11023126.outbound.protection.outlook.com [40.93.196.126])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F952F5A01;
-	Fri, 30 Jan 2026 03:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.126
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769745478; cv=fail; b=AdLFqiL7OwDGfrCkMHBcQEyrY2RwFfBHwWF+ADgXmk9k65oKEStoPhf+CWRZtoxrGTMuu11TvYjsPgWI6OLwAGV5nC7z0ny/GfBnHabxRzDgq6ca0ZXp6FpkmHy+kc3WXN2XK/XDMOeDz+iuEKXCPrzvl5bj9zNVeKVc38BXDpI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769745478; c=relaxed/simple;
-	bh=waKtvMA4yfZDb5ITGtk+T3kCt8M4W3qg9ZikZD77/WU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 Content-Type:MIME-Version; b=Am8D0HVe84J3sKFWNzEaVbruWcQPKWLdKJkMsnea0N9EColfYjT9kVTmKG4V6o1X6lgF0FGMr+MKQU1MChUMvpu9Xq9lXUt3PkGjnhRn7I9QXXpPSeCOy5fT8pf9Nd1X0DOPSlFGn+o8Hcs1xL9MLJsL6wXbnSTmsdWi0n49Vrg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=UQp7+dc0; arc=fail smtp.client-ip=40.93.196.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58355258CDF;
+	Fri, 30 Jan 2026 07:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769757676; cv=none; b=GdyUiHMq3Cx783f1E6ZAF8wYBas4AQE2xyQFzyl2qbq55jQnmkjAdmPqwi/Btt3vD09cT8QQmufZXKC3Jed8WWVGla5SI4N5AGlVqpikPnd+u5EjWzL/dx0fOnnLaW0rKX53U+tCXNbXmjVDCOAoRrIZpYSuipKAyLX8a2Rl0Qw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769757676; c=relaxed/simple;
+	bh=yx3pbmntd/vEbgwiSKR8BK3VNDwoWAHoZ5DhpyuxSqI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DAeo06dFQn3wtSXf0gSPdcUO0PaE5vXupd9V1DJ1QaHyibezXPercUHmy05VTwVjMB0jWFpV1PydKtyI7dYIAwqOr6gh6rhlqn5yg/udmXjeR4EZm7vaelGLev/uNIi8kvuVu88qqkn84G94tZd0lfXUVwU+6Z1EBIT1bvfklIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z2aRI0Xg; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="UQp7+dc0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E3TLVPTz50Iy+GIlBfoPn1ZxBoSXFWh1JbmiLkxaU0O5jtsIIgD64VUF063bSQpnjDtN4ZKVi++6VpuyF2lYBU9E8A4f8+5+qgVCBK2Ccq3aAXcudEMq/6uKt8jSr/FnPdfEXBefFxNwn9ToKEt2mpOKYyDi+GZfxKWzFIAfeRR3OPStCk7bbKL1gQo1SvW7S9BxWTQ6eydMtI9OVgdf+hxH+1FV0aDtd8Z5TdX8ROLX4uZtmujufDDGZGGg8ljQudISv8JxyjMsZT59fjTX273fOgiCoIMTUOLif93P/h7DB8sd28Zu6GgPKlaLrzkklosU/jTtHmRcPpRdREPVzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kDhFrWue8nVkOG3nQowFHXwgfeIXIS3fxNiam5V+7JU=;
- b=cELpDlEgXw6hIk/yRlxw4eWfGMF4EjXTAOsk7COrxzKIGhKxyucKbYIr8BL+hIofir/nfJMqD31AtlPJxSxAP/r0rz9p9DZ8ePlnTIuMhl/O5leEQVaC8DgBodEf5p6hWCVwhlW1VfRpfs2BmRJM6gWKKaswLfY9z7d/wWVONAuL0/gkXYjPKUYw9QKxeM4wmiYymnQsxyNAxTGhasXS+f+UZp6Mdv4I7jxoCLTIRqBcse47XsUBGMbJ13KuyWt26KuDxXP+/uXjUecE457emarSDS30JYtk9nEiS5RDqozb4KxZvEEv5g/8pqcfToRplZY1G3zdn4mq2mg0B+kw6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kDhFrWue8nVkOG3nQowFHXwgfeIXIS3fxNiam5V+7JU=;
- b=UQp7+dc013zfgwM3lRY2wxqPHp51LgtR3YKi2S7JZIHSvdbXtIrYOMQQtHW3yceUZuRXNLutta45RTqlYhNF8+QFh730YfEm9F+SV26vxZhVKm0BwjSTItvS4d5/hBpFGmSZt3yxnCty9NIWlmSph9B4GXLMuY+C+8Mmlv9mdeE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from MW4PR01MB6228.prod.exchangelabs.com (2603:10b6:303:76::7) by
- SA1PR01MB9108.prod.exchangelabs.com (2603:10b6:806:459::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9564.7; Fri, 30 Jan 2026 03:57:53 +0000
-Received: from MW4PR01MB6228.prod.exchangelabs.com
- ([fe80::86f5:4db2:7ad5:7fc4]) by MW4PR01MB6228.prod.exchangelabs.com
- ([fe80::86f5:4db2:7ad5:7fc4%6]) with mapi id 15.20.9542.010; Fri, 30 Jan 2026
- 03:57:53 +0000
-Date: Thu, 29 Jan 2026 19:57:51 -0800 (PST)
-From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To: Robin Murphy <robin.murphy@arm.com>
-cc: will@kernel.org, mark.rutland@arm.com, linux-perf-users@vger.kernel.org, 
-    linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-Subject: Re: [PATCH] perf/arm-cmn: Reject unsupported hardware
- configurations
-In-Reply-To: <bb47722fc593baf1e1cc0f944089592a4ec708da.1769695523.git.robin.murphy@arm.com>
-Message-ID: <0b85786d-ab5c-e9ed-f060-e7854810b1bb@os.amperecomputing.com>
-References: <bb47722fc593baf1e1cc0f944089592a4ec708da.1769695523.git.robin.murphy@arm.com>
-Content-Type: text/plain; format=flowed; charset=US-ASCII
-X-ClientProxiedBy: MW4PR04CA0330.namprd04.prod.outlook.com
- (2603:10b6:303:82::35) To MW4PR01MB6228.prod.exchangelabs.com
- (2603:10b6:303:76::7)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z2aRI0Xg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769757674; x=1801293674;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=yx3pbmntd/vEbgwiSKR8BK3VNDwoWAHoZ5DhpyuxSqI=;
+  b=Z2aRI0XgWr2ioWskSU0EU2Jlbn280qg9O4MlnAtv3y6+KLOZaGv6514P
+   ky40SeWc/OREo5j/JIBbOIewbuyX00h/U85XVtbqJk0bp38/LXhtdlHNq
+   U0N6LJD6d1aAM95G5tXVmBeiLJsbZa4vSO++K5k3Hj+TnjmqGQs1MvSeI
+   pivqLgVf+EQw+5WIvO1rRD+mRu8Ur9iLvZjYWugNfv8dwviMElhX7a1Ru
+   FzlmW2zOsfQMfvuTSqZaqFyK0Mb46d2kJpqu6BiqMBdC7ksFra/QoyCda
+   YHwtueHNRxHRzxsz8c3nDcck8nt4ODsx45IxOYd58OVu7UCjmfnsRf4Xo
+   Q==;
+X-CSE-ConnectionGUID: txHEcKGyQb2YVThkSv1/fw==
+X-CSE-MsgGUID: 0DQJaBtwSf658+8SUPrsgw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11686"; a="70724596"
+X-IronPort-AV: E=Sophos;i="6.21,262,1763452800"; 
+   d="scan'208";a="70724596"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2026 23:21:13 -0800
+X-CSE-ConnectionGUID: rlbJ9RDmTvCHGlrlazpKlw==
+X-CSE-MsgGUID: d0dg3FxiRg+VzA3ayK0oPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,262,1763452800"; 
+   d="scan'208";a="246406937"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2026 23:21:05 -0800
+Message-ID: <c3bb3f21-327b-402f-b5fc-69cbd1ed52f2@linux.intel.com>
+Date: Fri, 30 Jan 2026 15:21:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR01MB6228:EE_|SA1PR01MB9108:EE_
-X-MS-Office365-Filtering-Correlation-Id: c66dd694-d20f-4386-df66-08de5fb3be42
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lA/wP4viHb1xNh1SjWOO+IQQWqYlnu89gHKTWvc4QhYQIQK2Ouh83YcsG1Zo?=
- =?us-ascii?Q?WOOfjRAIyZZg4yl21T0dJPaGgwa7TJR24er5JxInsgREvtEtaedYwPBH1v6d?=
- =?us-ascii?Q?Vzh94yfAnU4hZ2F5ozkTd4fIwpRJh6Jo57kN2pw72hhwy/zS8ziCBUy2atmV?=
- =?us-ascii?Q?Kquei9C/gulh1NAQTfMvHuFJRp/0XrKZQsNqpHxdOJVRvBPhH34VMe0t9ewL?=
- =?us-ascii?Q?2d7+sesEceG9dsnMGES5HsEO6aFCfG2iM9RCZhgVCpeONqNfrTYOTAAV3rwg?=
- =?us-ascii?Q?0pt4SpaxyjPFNVGEZ2mgdQv8+FjjVpsQM8zV97rvaUityh2sbYTsmqKzT6MG?=
- =?us-ascii?Q?6/RYUubSAXbGJwmEf+fNpA6pj5GAIUaVo7GzadvM8jMYkkPbS6T2VUTB+4mz?=
- =?us-ascii?Q?kXRC5doSRZhvV3Y0YRjXgttWsUPz098O5yQuRkjRTYKJvlDhQS9HXK7BT6uO?=
- =?us-ascii?Q?DvpEyclai8Cy9g+hMGuLh9sPEYnDBC4gXwHXdHGwANyb9d+FLvlO7CuA5xZD?=
- =?us-ascii?Q?kOtyjwPlqPZpR4ofZZs6fDL3F08qVPJfXWUnwa9XNPczFM2rkfFXF4fuwZV1?=
- =?us-ascii?Q?KaaUXZiDF9Yd3i3exIJKNwu0VNQBIyhD/Pk6v8UCIMMjpfMJteC74hHlG9SD?=
- =?us-ascii?Q?QX6PF/Awfz/Mn0vExA5/Z6j0GdmHicelkfsN3NKuE6B4kwglQqrwnq1VF/2e?=
- =?us-ascii?Q?ANS7wlVNZrbWqND50N94Z7Q7NhsRyunVqSLnI0tY5N3/wufSBCERcn4aDLSw?=
- =?us-ascii?Q?uyE8k1Wog/qk63vkknO5MgkOi4mK+WjCX3M2nD5/gBmSkiJkwxUY0GGFHqVA?=
- =?us-ascii?Q?/aAWNF4azpVajYPZyb198KYtX2icMdNOZnb6hNiBfvVVHcC8FuIJH9M8VZs8?=
- =?us-ascii?Q?1GiGlQ/LO4eAeau+YI8zvL2Wxtm+WVKAp3ntg2dFdh3PwHniB1EWt1/mLMXL?=
- =?us-ascii?Q?kEjqDJsLda+kEGaPiE30gmlk7mMkX1mVlBoVkmTsrxH6v1hxUg+CpjsQfnyq?=
- =?us-ascii?Q?/QbbKjm9+Oeh8MUOjDNNZjbLe2/73hAlNZYPm/QeLIvzn8XJsa5o5kLnBszs?=
- =?us-ascii?Q?ihZAwmmioYkfOKgekCJYsMmlCq81Lt6e3SiRkdkRwXIg2Kbljy7jvWohUf3a?=
- =?us-ascii?Q?s/SpFLB799yIN/bQ83T0r7aO+cajrGipWVpUkd+Yp1NVo8p80SVaI9GPtCLi?=
- =?us-ascii?Q?3GAxUxyxnWv8af7erKnxdJDuiV4fUxlCpCMQ/DgoGDAURj0KhLb8heU1VTEb?=
- =?us-ascii?Q?UfCovuKBsNneHw6DFy6Xlnx+dVpdJGTpmnPTWz9t295jDYREpb3CUAyKn2aG?=
- =?us-ascii?Q?6FKeoX2MxILJuF7hhdNztVMiqS4vKjYRzhMOLR6jmTJKsUHsSJE62ZnU4Qm+?=
- =?us-ascii?Q?eEcgJw5t7vKy+dtfAiaZeQfMtVON/XqUZABpi1mAwz6ZzAkHIP/1mSayXxaF?=
- =?us-ascii?Q?sEXn0CNfxXlCAxDR8UA6+ekp3VAqg+SGjvzOFORUHLFtLgF4WIBBW3or2xaF?=
- =?us-ascii?Q?NyR8/owoRNJmyNdiiEgAKQw+92sOyuzt6RYeyRNdcyAgv+vlhcxOZL3bDHZV?=
- =?us-ascii?Q?OXbsqQkJhn1vRxCG4YY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR01MB6228.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?sddWSaYx+r/oF7zQpUeXdPRQDgMHrZDi/HC9CziL1BbMftemV1SnQ9gdyk6Q?=
- =?us-ascii?Q?px4icg4QDKRKSIWLlTf1VrPruP/4juZXcrid2obvHhG5KBFw1KDmFGnKMYg/?=
- =?us-ascii?Q?CJkbfVE90a31wCfyYEkIEAOJ233Vx+oLLqoWRTCqJ5M6oNN+FRCNQtVJKgqG?=
- =?us-ascii?Q?H4b1Mjdi8lDffK9uRat5QopfblQB70Dky7lW7l9w/rScBaxwq67eH+34duRU?=
- =?us-ascii?Q?Wf3YrIyhYVpO4E3pr9eoAuN6qTkDAa6195ysRyOh8TQ7YxjE488eAMAN36ek?=
- =?us-ascii?Q?EQCoIehbB2fqXnjLpB/Po3w43gnx+gJSjFwHdEgDBfbj0c4Ko3HTGQE3sx8L?=
- =?us-ascii?Q?ZWkI54/JJxXg/w2QbEyKPmk7T34FUQFmc4ghKgRPZNct4LORGPwQvyDZcgOH?=
- =?us-ascii?Q?9HbpSck65UI6KTnPxBU09zLWguRaRiETw9HC133gMBOzH4uGmqKxaQLOjfQp?=
- =?us-ascii?Q?9BzgSP/Yi3fFht9XgDvvn49zWK3WsZwkYXvTcgEkRTrNV3JKYdDkQSEVxVlB?=
- =?us-ascii?Q?a9I/jGBFkcxwmYyxbl+Is1EBDu/Yb5Ab/wHL8CAYeAMBbxsoN/B1zaylQJlv?=
- =?us-ascii?Q?zqPysai04GSBxdkBYTuwzqBKxbOeh6WXaJCLjLJ2fpo/Rh7Z+jmge2Zk8/NS?=
- =?us-ascii?Q?pUCBflvFNc349JUikeoycDfKhIcDasbq56k8d6O6oDdnRUaNEg051Mq1A/Ly?=
- =?us-ascii?Q?x8yafsXT9Ycl7LMe/AAo9yTCgCA6jZkMZi82ZAe7QYCA7uemxdgbRbDMEimV?=
- =?us-ascii?Q?eyCZHQGtaRn9UxG7aHSelRznZCI7VG/vfHhWW9QxvR5uYdABdvU1D8NBFHkB?=
- =?us-ascii?Q?fkIlPdbv0a0dAlWBFRtV84/KSZPJarEB8Eu0uZC0EJ1eV1g1rGpJ50HKA1dC?=
- =?us-ascii?Q?xVUAEA9RfVO3dI5oBmBR/l7GpP0KERfgLgCKBLlq69hUSv7te6h46Pqs0QJc?=
- =?us-ascii?Q?/iVoum6Yp6B4aVntIomtOUuZIUnBwNZgYunrVLE+W8di/DVc7Cl1UJPQMocr?=
- =?us-ascii?Q?Q7W71K+9EW9WBsX/JTUskdZZ3Wj6MVesvNl4IjUXNy2XdPf96QnCEuEIys1B?=
- =?us-ascii?Q?5i+gIQu7QiA2POdaz4RwnityC/py7xym4aYYWqjU2Kcs3yDy7j4/11YUu+qt?=
- =?us-ascii?Q?nXrV42CsE0GvWIi+HQxlUf9oKvKRB3UNuoXpDrPNlzvQBrKjT0FVZWFDRboq?=
- =?us-ascii?Q?ly6cOcuoa0UNQ/0th5hzCJ5qC2Huqc3aB2VrV7QH06nznaNxAYmJJ3mNDwWW?=
- =?us-ascii?Q?TF4/gZ8eLyYBRk654EpqdCUlz8r4q/PmlIRzTX+UoS6LucqS0+I59ScyB65D?=
- =?us-ascii?Q?pCwmJaBY1UxXJ/CfjZBY/1TtAzi6eHO2pE5YS5SFfbH7kZ3EhWhKS+Lx+0jh?=
- =?us-ascii?Q?HOUDso6V+t15EVXJ1TnqH6ZIw83USYzzIqRT9jrq1kImBmc9NUgNq84/bN7F?=
- =?us-ascii?Q?71pxo42xZTXSJQOjzsbRnss3PBiqUdGmCA3DSV4d7Dq84f6aSdQuMkcjFfSv?=
- =?us-ascii?Q?F5766IIByWDcbOtCJy/SJ+7TCiTD5/eE9dHW+6B0ttzmv1sEg5RGUVeqxSKf?=
- =?us-ascii?Q?EtuAU4AAUnaDqBCK6pq3dSPD1XF5nGg4Y+9HHvUJxSoMhsgzjI6uKut/CbLq?=
- =?us-ascii?Q?+jba8O116wqIP/aXkaVdQMsSQmt1QKd4fHv+vbL3kpBuZeqUoCg4fhjUOc4n?=
- =?us-ascii?Q?wkB4QB8foRT0nOYMPJ2VN1IDjf4njrag32whMYCl8DyvuHL2FCcmN1vnv55i?=
- =?us-ascii?Q?QZ/4Q1k/uenhUd72nivR93Rf0MEfEJs=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c66dd694-d20f-4386-df66-08de5fb3be42
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR01MB6228.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2026 03:57:53.2941
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TDVtekTLKHuZrd9SMKtme2o15c/NCLs+hsf+1Bg9JYlNYNfVlFJvFWk01PatTlvwuezP1EYIfOQZXwqY1cpPZjmRWNp4AzLoZuPxE5zt6Q9TP8IXMNVLgfbMZ28qqEfb
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR01MB9108
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf regs: Refactor use of arch__sample_reg_masks to
+ perf_reg_name
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>,
+ Guo Ren <guoren@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Shimin Guo <shimin.guo@skydio.com>,
+ Athira Rajeev <atrajeev@linux.ibm.com>,
+ Stephen Brennan <stephen.s.brennan@oracle.com>,
+ Howard Chu <howardchu95@gmail.com>, Thomas Falcon <thomas.falcon@intel.com>,
+ Andi Kleen <ak@linux.intel.com>, "Dr. David Alan Gilbert"
+ <linux@treblig.org>, Dmitry Vyukov <dvyukov@google.com>,
+ =?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+ Chun-Tse Shao <ctshao@google.com>, Aditya Bodkhe <aditya.b1@linux.ibm.com>,
+ Haibo Xu <haibo1.xu@intel.com>, Sergei Trofimovich <slyich@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20260121021735.3625244-1-irogers@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260121021735.3625244-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-
-Hi Robin,
-
-On Thu, 29 Jan 2026, Robin Murphy wrote:
-> So far we've been fairly lax about accepting both unknown CMN models
-> (at least with a warning), and unknown revisions of those which we
-> do know, as although things do frequently change between releases,
-> typically enough remains the same to be somewhat useful for at least
-> some basic bringup checks. However, we also make assumptions of the
-> maximum supported sizes and numbers of things in various places, and
-> there's no guarantee that something new might not be bigger and lead
-> to nasty array overflows. Make sure we only try to run on things that
-> actually match our assumptions and so will not risk memory corruption.
+On 1/21/2026 10:17 AM, Ian Rogers wrote:
+> arch__sample_reg_masks isn't supported on ARM(32), csky, loongarch,
+> MIPS, RISC-V and s390. The table returned by the function just has the
+> name of a register paired with the corresponding sample_regs_user mask
+> value. For a given perf register we can compute the name with
+> perf_reg_name and the mask is just 1 left-shifted by the perf register
+> number. Change __parse_regs to use this method for finding registers
+> rather than arch__sample_reg_masks, thereby adding __parse_regs
+> support for ARM(32), csky, loongarch, MIPS, RISC-V and s390. As
+> arch__sample_reg_masks is then unused, remove the now unneeded
+> declarations.
 >
-> Cc: stable@vger.kernel.org
-> Fixes: 7819e05a0dce ("perf/arm-cmn: Revamp model detection")
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
-> drivers/perf/arm-cmn.c | 13 +++++++++++++
-> 1 file changed, 13 insertions(+)
+> v2: Correct the setting of reg mask for registers that need >1 bit set
+>     like XMMs.
 >
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index 2903e01f951f..24fec53ceccc 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -2422,6 +2422,15 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
-> 			arm_cmn_init_node_info(cmn, reg & CMN_CHILD_NODE_ADDR, dn);
-> 			dn->portid_bits = xp->portid_bits;
-> 			dn->deviceid_bits = xp->deviceid_bits;
-> +			/*
-> +			 * Logical IDs are assigned from 0 per node type, so as
-> +			 * soon as we one bigger than expected, we can assume
-
-Should that be something like:
-
- 			"...as soon as we see one bigger than expected.."
-
-Other than that, the patch looks good to me.
-
-Reviewed-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-
-Cheers, Ilkka
-
-> +			 * there are more than we can cope with.
-> +			 */
-> +			if (dn->logid > CMN_MAX_NODES_PER_EVENT) {
-> +				dev_err(cmn->dev, "Invalid node number: %d\n", dn->logid);
-> +				return -ENODEV;
-> +			}
+> The idea for this patch came up in conversation with Dapeng Mi to
+> avoid additional functions and tables for x86 APX support:
+> https://lore.kernel.org/lkml/CAP-5=fWOsvAXuu8qx0tk9q8j8BoXPMJB3Gxto+iu6wf06i4cVA@mail.gmail.com/
 >
-> 			switch (dn->type) {
-> 			case CMN_TYPE_DTC:
-> @@ -2499,6 +2508,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
-> 		cmn->mesh_x = cmn->num_xps;
-> 	cmn->mesh_y = cmn->num_xps / cmn->mesh_x;
+> The patch is on top of the dwfl clean up patches that switch perf
+> register functions to using e_machine as an argument rather than the
+> arch string, this means that EM_HOST can be used with perf_reg_name:
+> https://lore.kernel.org/lkml/20260117052849.2205545-1-irogers@google.com/
+> ---
+>  tools/perf/arch/arm/util/perf_regs.c          |   9 --
+>  tools/perf/arch/arm64/util/machine.c          |  14 +--
+>  tools/perf/arch/arm64/util/perf_regs.c        |  45 +------
+>  tools/perf/arch/csky/util/perf_regs.c         |   9 --
+>  tools/perf/arch/loongarch/util/perf_regs.c    |   9 --
+>  tools/perf/arch/mips/util/perf_regs.c         |   9 --
+>  tools/perf/arch/powerpc/util/perf_regs.c      |  68 ----------
+>  tools/perf/arch/riscv/util/perf_regs.c        |   9 --
+>  tools/perf/arch/s390/util/perf_regs.c         |   9 --
+>  tools/perf/arch/x86/util/perf_regs.c          |  47 -------
+>  .../util/arm64-frame-pointer-unwind-support.c |   3 +-
+>  tools/perf/util/parse-regs-options.c          | 116 +++++++++++-------
+>  tools/perf/util/perf_regs.c                   |   9 --
+>  tools/perf/util/perf_regs.h                   |  12 --
+>  14 files changed, 81 insertions(+), 287 deletions(-)
 >
-> +	if (max(cmn->mesh_x, cmn->mesh_y) > CMN_MAX_DIMENSION) {
-> +		dev_err(cmn->dev, "Invalid mesh size: %dx%d\n", cmn->mesh_x, cmn->mesh_y);
-> +		return -ENODEV;
+> diff --git a/tools/perf/arch/arm/util/perf_regs.c b/tools/perf/arch/arm/util/perf_regs.c
+> index f94a0210c7b7..03a5bc0cf64c 100644
+> --- a/tools/perf/arch/arm/util/perf_regs.c
+> +++ b/tools/perf/arch/arm/util/perf_regs.c
+> @@ -2,10 +2,6 @@
+>  #include "perf_regs.h"
+>  #include "../../../util/perf_regs.h"
+>  
+> -static const struct sample_reg sample_reg_masks[] = {
+> -	SMPL_REG_END
+> -};
+> -
+>  uint64_t arch__intr_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+> @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+>  }
+> -
+> -const struct sample_reg *arch__sample_reg_masks(void)
+> -{
+> -	return sample_reg_masks;
+> -}
+> diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
+> index aab1cc2bc283..80fb13c958d9 100644
+> --- a/tools/perf/arch/arm64/util/machine.c
+> +++ b/tools/perf/arch/arm64/util/machine.c
+> @@ -1,18 +1,12 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  
+> -#include <inttypes.h>
+> -#include <stdio.h>
+> -#include <string.h>
+> -#include "debug.h"
+> -#include "symbol.h"
+> -#include "callchain.h"
+> +#include "callchain.h" // prototype of arch__add_leaf_frame_record_opts
+>  #include "perf_regs.h"
+>  #include "record.h"
+> -#include "util/perf_regs.h"
+> +
+> +#define SMPL_REG_MASK(b) (1ULL << (b))
+>  
+>  void arch__add_leaf_frame_record_opts(struct record_opts *opts)
+>  {
+> -	const struct sample_reg *sample_reg_masks = arch__sample_reg_masks();
+> -
+> -	opts->sample_user_regs |= sample_reg_masks[PERF_REG_ARM64_LR].mask;
+> +	opts->sample_user_regs |= SMPL_REG_MASK(PERF_REG_ARM64_LR);
+>  }
+> diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
+> index 09308665e28a..9bb768e1bea1 100644
+> --- a/tools/perf/arch/arm64/util/perf_regs.c
+> +++ b/tools/perf/arch/arm64/util/perf_regs.c
+> @@ -12,48 +12,12 @@
+>  #include "../../../util/event.h"
+>  #include "../../../util/perf_regs.h"
+>  
+> +#define SMPL_REG_MASK(b) (1ULL << (b))
+> +
+>  #ifndef HWCAP_SVE
+>  #define HWCAP_SVE	(1 << 22)
+>  #endif
+>  
+> -static const struct sample_reg sample_reg_masks[] = {
+> -	SMPL_REG(x0, PERF_REG_ARM64_X0),
+> -	SMPL_REG(x1, PERF_REG_ARM64_X1),
+> -	SMPL_REG(x2, PERF_REG_ARM64_X2),
+> -	SMPL_REG(x3, PERF_REG_ARM64_X3),
+> -	SMPL_REG(x4, PERF_REG_ARM64_X4),
+> -	SMPL_REG(x5, PERF_REG_ARM64_X5),
+> -	SMPL_REG(x6, PERF_REG_ARM64_X6),
+> -	SMPL_REG(x7, PERF_REG_ARM64_X7),
+> -	SMPL_REG(x8, PERF_REG_ARM64_X8),
+> -	SMPL_REG(x9, PERF_REG_ARM64_X9),
+> -	SMPL_REG(x10, PERF_REG_ARM64_X10),
+> -	SMPL_REG(x11, PERF_REG_ARM64_X11),
+> -	SMPL_REG(x12, PERF_REG_ARM64_X12),
+> -	SMPL_REG(x13, PERF_REG_ARM64_X13),
+> -	SMPL_REG(x14, PERF_REG_ARM64_X14),
+> -	SMPL_REG(x15, PERF_REG_ARM64_X15),
+> -	SMPL_REG(x16, PERF_REG_ARM64_X16),
+> -	SMPL_REG(x17, PERF_REG_ARM64_X17),
+> -	SMPL_REG(x18, PERF_REG_ARM64_X18),
+> -	SMPL_REG(x19, PERF_REG_ARM64_X19),
+> -	SMPL_REG(x20, PERF_REG_ARM64_X20),
+> -	SMPL_REG(x21, PERF_REG_ARM64_X21),
+> -	SMPL_REG(x22, PERF_REG_ARM64_X22),
+> -	SMPL_REG(x23, PERF_REG_ARM64_X23),
+> -	SMPL_REG(x24, PERF_REG_ARM64_X24),
+> -	SMPL_REG(x25, PERF_REG_ARM64_X25),
+> -	SMPL_REG(x26, PERF_REG_ARM64_X26),
+> -	SMPL_REG(x27, PERF_REG_ARM64_X27),
+> -	SMPL_REG(x28, PERF_REG_ARM64_X28),
+> -	SMPL_REG(x29, PERF_REG_ARM64_X29),
+> -	SMPL_REG(lr, PERF_REG_ARM64_LR),
+> -	SMPL_REG(sp, PERF_REG_ARM64_SP),
+> -	SMPL_REG(pc, PERF_REG_ARM64_PC),
+> -	SMPL_REG(vg, PERF_REG_ARM64_VG),
+> -	SMPL_REG_END
+> -};
+> -
+>  /* %xNUM */
+>  #define SDT_OP_REGEX1  "^(x[1-2]?[0-9]|3[0-1])$"
+>  
+> @@ -175,8 +139,3 @@ uint64_t arch__user_reg_mask(void)
+>  	}
+>  	return PERF_REGS_MASK;
+>  }
+> -
+> -const struct sample_reg *arch__sample_reg_masks(void)
+> -{
+> -	return sample_reg_masks;
+> -}
+> diff --git a/tools/perf/arch/csky/util/perf_regs.c b/tools/perf/arch/csky/util/perf_regs.c
+> index 6b1665f41180..2cf7a54106e0 100644
+> --- a/tools/perf/arch/csky/util/perf_regs.c
+> +++ b/tools/perf/arch/csky/util/perf_regs.c
+> @@ -2,10 +2,6 @@
+>  #include "perf_regs.h"
+>  #include "../../util/perf_regs.h"
+>  
+> -static const struct sample_reg sample_reg_masks[] = {
+> -	SMPL_REG_END
+> -};
+> -
+>  uint64_t arch__intr_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+> @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+>  }
+> -
+> -const struct sample_reg *arch__sample_reg_masks(void)
+> -{
+> -	return sample_reg_masks;
+> -}
+> diff --git a/tools/perf/arch/loongarch/util/perf_regs.c b/tools/perf/arch/loongarch/util/perf_regs.c
+> index f94a0210c7b7..03a5bc0cf64c 100644
+> --- a/tools/perf/arch/loongarch/util/perf_regs.c
+> +++ b/tools/perf/arch/loongarch/util/perf_regs.c
+> @@ -2,10 +2,6 @@
+>  #include "perf_regs.h"
+>  #include "../../../util/perf_regs.h"
+>  
+> -static const struct sample_reg sample_reg_masks[] = {
+> -	SMPL_REG_END
+> -};
+> -
+>  uint64_t arch__intr_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+> @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+>  }
+> -
+> -const struct sample_reg *arch__sample_reg_masks(void)
+> -{
+> -	return sample_reg_masks;
+> -}
+> diff --git a/tools/perf/arch/mips/util/perf_regs.c b/tools/perf/arch/mips/util/perf_regs.c
+> index 6b1665f41180..2cf7a54106e0 100644
+> --- a/tools/perf/arch/mips/util/perf_regs.c
+> +++ b/tools/perf/arch/mips/util/perf_regs.c
+> @@ -2,10 +2,6 @@
+>  #include "perf_regs.h"
+>  #include "../../util/perf_regs.h"
+>  
+> -static const struct sample_reg sample_reg_masks[] = {
+> -	SMPL_REG_END
+> -};
+> -
+>  uint64_t arch__intr_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+> @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+>  }
+> -
+> -const struct sample_reg *arch__sample_reg_masks(void)
+> -{
+> -	return sample_reg_masks;
+> -}
+> diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
+> index bd36cfd420a2..779073f7e992 100644
+> --- a/tools/perf/arch/powerpc/util/perf_regs.c
+> +++ b/tools/perf/arch/powerpc/util/perf_regs.c
+> @@ -18,69 +18,6 @@
+>  #define PVR_POWER10		0x0080
+>  #define PVR_POWER11		0x0082
+>  
+> -static const struct sample_reg sample_reg_masks[] = {
+> -	SMPL_REG(r0, PERF_REG_POWERPC_R0),
+> -	SMPL_REG(r1, PERF_REG_POWERPC_R1),
+> -	SMPL_REG(r2, PERF_REG_POWERPC_R2),
+> -	SMPL_REG(r3, PERF_REG_POWERPC_R3),
+> -	SMPL_REG(r4, PERF_REG_POWERPC_R4),
+> -	SMPL_REG(r5, PERF_REG_POWERPC_R5),
+> -	SMPL_REG(r6, PERF_REG_POWERPC_R6),
+> -	SMPL_REG(r7, PERF_REG_POWERPC_R7),
+> -	SMPL_REG(r8, PERF_REG_POWERPC_R8),
+> -	SMPL_REG(r9, PERF_REG_POWERPC_R9),
+> -	SMPL_REG(r10, PERF_REG_POWERPC_R10),
+> -	SMPL_REG(r11, PERF_REG_POWERPC_R11),
+> -	SMPL_REG(r12, PERF_REG_POWERPC_R12),
+> -	SMPL_REG(r13, PERF_REG_POWERPC_R13),
+> -	SMPL_REG(r14, PERF_REG_POWERPC_R14),
+> -	SMPL_REG(r15, PERF_REG_POWERPC_R15),
+> -	SMPL_REG(r16, PERF_REG_POWERPC_R16),
+> -	SMPL_REG(r17, PERF_REG_POWERPC_R17),
+> -	SMPL_REG(r18, PERF_REG_POWERPC_R18),
+> -	SMPL_REG(r19, PERF_REG_POWERPC_R19),
+> -	SMPL_REG(r20, PERF_REG_POWERPC_R20),
+> -	SMPL_REG(r21, PERF_REG_POWERPC_R21),
+> -	SMPL_REG(r22, PERF_REG_POWERPC_R22),
+> -	SMPL_REG(r23, PERF_REG_POWERPC_R23),
+> -	SMPL_REG(r24, PERF_REG_POWERPC_R24),
+> -	SMPL_REG(r25, PERF_REG_POWERPC_R25),
+> -	SMPL_REG(r26, PERF_REG_POWERPC_R26),
+> -	SMPL_REG(r27, PERF_REG_POWERPC_R27),
+> -	SMPL_REG(r28, PERF_REG_POWERPC_R28),
+> -	SMPL_REG(r29, PERF_REG_POWERPC_R29),
+> -	SMPL_REG(r30, PERF_REG_POWERPC_R30),
+> -	SMPL_REG(r31, PERF_REG_POWERPC_R31),
+> -	SMPL_REG(nip, PERF_REG_POWERPC_NIP),
+> -	SMPL_REG(msr, PERF_REG_POWERPC_MSR),
+> -	SMPL_REG(orig_r3, PERF_REG_POWERPC_ORIG_R3),
+> -	SMPL_REG(ctr, PERF_REG_POWERPC_CTR),
+> -	SMPL_REG(link, PERF_REG_POWERPC_LINK),
+> -	SMPL_REG(xer, PERF_REG_POWERPC_XER),
+> -	SMPL_REG(ccr, PERF_REG_POWERPC_CCR),
+> -	SMPL_REG(softe, PERF_REG_POWERPC_SOFTE),
+> -	SMPL_REG(trap, PERF_REG_POWERPC_TRAP),
+> -	SMPL_REG(dar, PERF_REG_POWERPC_DAR),
+> -	SMPL_REG(dsisr, PERF_REG_POWERPC_DSISR),
+> -	SMPL_REG(sier, PERF_REG_POWERPC_SIER),
+> -	SMPL_REG(mmcra, PERF_REG_POWERPC_MMCRA),
+> -	SMPL_REG(mmcr0, PERF_REG_POWERPC_MMCR0),
+> -	SMPL_REG(mmcr1, PERF_REG_POWERPC_MMCR1),
+> -	SMPL_REG(mmcr2, PERF_REG_POWERPC_MMCR2),
+> -	SMPL_REG(mmcr3, PERF_REG_POWERPC_MMCR3),
+> -	SMPL_REG(sier2, PERF_REG_POWERPC_SIER2),
+> -	SMPL_REG(sier3, PERF_REG_POWERPC_SIER3),
+> -	SMPL_REG(pmc1, PERF_REG_POWERPC_PMC1),
+> -	SMPL_REG(pmc2, PERF_REG_POWERPC_PMC2),
+> -	SMPL_REG(pmc3, PERF_REG_POWERPC_PMC3),
+> -	SMPL_REG(pmc4, PERF_REG_POWERPC_PMC4),
+> -	SMPL_REG(pmc5, PERF_REG_POWERPC_PMC5),
+> -	SMPL_REG(pmc6, PERF_REG_POWERPC_PMC6),
+> -	SMPL_REG(sdar, PERF_REG_POWERPC_SDAR),
+> -	SMPL_REG(siar, PERF_REG_POWERPC_SIAR),
+> -	SMPL_REG_END
+> -};
+> -
+>  /* REG or %rREG */
+>  #define SDT_OP_REGEX1  "^(%r)?([1-2]?[0-9]|3[0-1])$"
+>  
+> @@ -233,8 +170,3 @@ uint64_t arch__user_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+>  }
+> -
+> -const struct sample_reg *arch__sample_reg_masks(void)
+> -{
+> -	return sample_reg_masks;
+> -}
+> diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/riscv/util/perf_regs.c
+> index 6b1665f41180..2cf7a54106e0 100644
+> --- a/tools/perf/arch/riscv/util/perf_regs.c
+> +++ b/tools/perf/arch/riscv/util/perf_regs.c
+> @@ -2,10 +2,6 @@
+>  #include "perf_regs.h"
+>  #include "../../util/perf_regs.h"
+>  
+> -static const struct sample_reg sample_reg_masks[] = {
+> -	SMPL_REG_END
+> -};
+> -
+>  uint64_t arch__intr_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+> @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+>  }
+> -
+> -const struct sample_reg *arch__sample_reg_masks(void)
+> -{
+> -	return sample_reg_masks;
+> -}
+> diff --git a/tools/perf/arch/s390/util/perf_regs.c b/tools/perf/arch/s390/util/perf_regs.c
+> index 6b1665f41180..2cf7a54106e0 100644
+> --- a/tools/perf/arch/s390/util/perf_regs.c
+> +++ b/tools/perf/arch/s390/util/perf_regs.c
+> @@ -2,10 +2,6 @@
+>  #include "perf_regs.h"
+>  #include "../../util/perf_regs.h"
+>  
+> -static const struct sample_reg sample_reg_masks[] = {
+> -	SMPL_REG_END
+> -};
+> -
+>  uint64_t arch__intr_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+> @@ -15,8 +11,3 @@ uint64_t arch__user_reg_mask(void)
+>  {
+>  	return PERF_REGS_MASK;
+>  }
+> -
+> -const struct sample_reg *arch__sample_reg_masks(void)
+> -{
+> -	return sample_reg_masks;
+> -}
+> diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+> index 12fd93f04802..a7ca4154fdf9 100644
+> --- a/tools/perf/arch/x86/util/perf_regs.c
+> +++ b/tools/perf/arch/x86/util/perf_regs.c
+> @@ -13,48 +13,6 @@
+>  #include "../../../util/pmu.h"
+>  #include "../../../util/pmus.h"
+>  
+> -static const struct sample_reg sample_reg_masks[] = {
+> -	SMPL_REG(AX, PERF_REG_X86_AX),
+> -	SMPL_REG(BX, PERF_REG_X86_BX),
+> -	SMPL_REG(CX, PERF_REG_X86_CX),
+> -	SMPL_REG(DX, PERF_REG_X86_DX),
+> -	SMPL_REG(SI, PERF_REG_X86_SI),
+> -	SMPL_REG(DI, PERF_REG_X86_DI),
+> -	SMPL_REG(BP, PERF_REG_X86_BP),
+> -	SMPL_REG(SP, PERF_REG_X86_SP),
+> -	SMPL_REG(IP, PERF_REG_X86_IP),
+> -	SMPL_REG(FLAGS, PERF_REG_X86_FLAGS),
+> -	SMPL_REG(CS, PERF_REG_X86_CS),
+> -	SMPL_REG(SS, PERF_REG_X86_SS),
+> -#ifdef HAVE_ARCH_X86_64_SUPPORT
+> -	SMPL_REG(R8, PERF_REG_X86_R8),
+> -	SMPL_REG(R9, PERF_REG_X86_R9),
+> -	SMPL_REG(R10, PERF_REG_X86_R10),
+> -	SMPL_REG(R11, PERF_REG_X86_R11),
+> -	SMPL_REG(R12, PERF_REG_X86_R12),
+> -	SMPL_REG(R13, PERF_REG_X86_R13),
+> -	SMPL_REG(R14, PERF_REG_X86_R14),
+> -	SMPL_REG(R15, PERF_REG_X86_R15),
+> -#endif
+> -	SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
+> -	SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
+> -	SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
+> -	SMPL_REG2(XMM3, PERF_REG_X86_XMM3),
+> -	SMPL_REG2(XMM4, PERF_REG_X86_XMM4),
+> -	SMPL_REG2(XMM5, PERF_REG_X86_XMM5),
+> -	SMPL_REG2(XMM6, PERF_REG_X86_XMM6),
+> -	SMPL_REG2(XMM7, PERF_REG_X86_XMM7),
+> -	SMPL_REG2(XMM8, PERF_REG_X86_XMM8),
+> -	SMPL_REG2(XMM9, PERF_REG_X86_XMM9),
+> -	SMPL_REG2(XMM10, PERF_REG_X86_XMM10),
+> -	SMPL_REG2(XMM11, PERF_REG_X86_XMM11),
+> -	SMPL_REG2(XMM12, PERF_REG_X86_XMM12),
+> -	SMPL_REG2(XMM13, PERF_REG_X86_XMM13),
+> -	SMPL_REG2(XMM14, PERF_REG_X86_XMM14),
+> -	SMPL_REG2(XMM15, PERF_REG_X86_XMM15),
+> -	SMPL_REG_END
+> -};
+> -
+>  struct sdt_name_reg {
+>  	const char *sdt_name;
+>  	const char *uprobe_name;
+> @@ -276,11 +234,6 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
+>  	return SDT_ARG_VALID;
+>  }
+>  
+> -const struct sample_reg *arch__sample_reg_masks(void)
+> -{
+> -	return sample_reg_masks;
+> -}
+> -
+>  uint64_t arch__intr_reg_mask(void)
+>  {
+>  	struct perf_event_attr attr = {
+> diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.c b/tools/perf/util/arm64-frame-pointer-unwind-support.c
+> index 958afe8b821e..858ce2b01812 100644
+> --- a/tools/perf/util/arm64-frame-pointer-unwind-support.c
+> +++ b/tools/perf/util/arm64-frame-pointer-unwind-support.c
+> @@ -2,7 +2,6 @@
+>  #include "arm64-frame-pointer-unwind-support.h"
+>  #include "callchain.h"
+>  #include "event.h"
+> -#include "perf_regs.h" // SMPL_REG_MASK
+>  #include "unwind.h"
+>  #include <string.h>
+>  
+> @@ -15,6 +14,8 @@ struct entries {
+>  	size_t length;
+>  };
+>  
+> +#define SMPL_REG_MASK(b) (1ULL << (b))
+> +
+>  static bool get_leaf_frame_caller_enabled(struct perf_sample *sample)
+>  {
+>  	struct regs_dump *regs;
+> diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
+> index cda1c620968e..c0d0ef9fd495 100644
+> --- a/tools/perf/util/parse-regs-options.c
+> +++ b/tools/perf/util/parse-regs-options.c
+> @@ -5,15 +5,54 @@
+>  #include <string.h>
+>  #include <stdio.h>
+>  #include "util/debug.h"
+> +#include <dwarf-regs.h>
+>  #include <subcmd/parse-options.h>
+>  #include "util/perf_regs.h"
+>  #include "util/parse-regs-options.h"
+>  
+> +static void list_perf_regs(FILE *fp, uint64_t mask)
+> +{
+> +	const char *last_name = NULL;
+> +
+> +	fprintf(fp, "available registers: ");
+> +	for (int reg = 0; reg < 64; reg++) {
+> +		const char *name;
+> +
+> +		if (((1ULL << reg) & mask) == 0)
+> +			continue;
+> +
+> +		name = perf_reg_name(reg, EM_HOST);
+> +		if (name && (!last_name || strcmp(last_name, name)))
+> +			fprintf(fp, "%s%s", reg > 0 ? " " : "", name);
+> +		last_name = name;
 > +	}
-> 	/* 1x1 config plays havoc with XP event encodings */
-> 	if (cmn->num_xps == 1)
-> 		dev_warn(cmn->dev, "1x1 config not fully supported, translate XP events manually\n");
-> -- 
-> 2.39.2.101.g768bb238c484.dirty
->
->
->
+> +	fputc('\n', fp);
+> +}
+> +
+> +static uint64_t name_to_perf_reg_mask(const char *to_match, uint64_t mask)
+> +{
+> +	uint64_t reg_mask = 0;
+> +
+> +	for (int reg = 0; reg < 64; reg++) {
+> +		const char *name;
+> +
+> +		if (((1ULL << reg) & mask) == 0)
+> +			continue;
+> +
+> +		name = perf_reg_name(reg, EM_HOST);
+> +		if (!name)
+> +			continue;
+> +
+> +		if (!strcasecmp(to_match, name))
+> +			reg_mask |= 1ULL << reg;
+> +	}
+> +	return reg_mask;
+> +}
+> +
+>  static int
+>  __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>  {
+>  	uint64_t *mode = (uint64_t *)opt->value;
+> -	const struct sample_reg *r = NULL;
+>  	char *s, *os = NULL, *p;
+>  	int ret = -1;
+>  	uint64_t mask;
+> @@ -27,50 +66,41 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>  	if (*mode)
+>  		return -1;
+>  
+> -	if (intr)
+> -		mask = arch__intr_reg_mask();
+> -	else
+> -		mask = arch__user_reg_mask();
+> -
+>  	/* str may be NULL in case no arg is passed to -I */
+> -	if (str) {
+> -		/* because str is read-only */
+> -		s = os = strdup(str);
+> -		if (!s)
+> -			return -1;
+> -
+> -		for (;;) {
+> -			p = strchr(s, ',');
+> -			if (p)
+> -				*p = '\0';
+> -
+> -			if (!strcmp(s, "?")) {
+> -				fprintf(stderr, "available registers: ");
+> -				for (r = arch__sample_reg_masks(); r->name; r++) {
+> -					if (r->mask & mask)
+> -						fprintf(stderr, "%s ", r->name);
+> -				}
+> -				fputc('\n', stderr);
+> -				/* just printing available regs */
+> -				goto error;
+> -			}
+> -			for (r = arch__sample_reg_masks(); r->name; r++) {
+> -				if ((r->mask & mask) && !strcasecmp(s, r->name))
+> -					break;
+> -			}
+> -			if (!r || !r->name) {
+> -				ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
+> -					    s, intr ? "-I" : "--user-regs=");
+> -				goto error;
+> -			}
+> -
+> -			*mode |= r->mask;
+> -
+> -			if (!p)
+> -				break;
+> -
+> -			s = p + 1;
+> +	if (!str)
+> +		return -1;
+
+Just found the above change would break the option "-I" or "--user-regs"
+which intends to sample all supported general purpose registers, e.g.,
+
+$ sudo ./perf record -e cycles:p -I -- true
+
+ Usage: perf record [<options>] [<command>]
+    or: perf record [<options>] -- <command> [<options>]
+
+    -I, --intr-regs[=<any register>]
+                          sample selected machine registers on interrupt,
+use '-I?' to list register names
+
+We may need the below changes to fix this issue.
+
+```
+
+diff --git a/tools/perf/util/parse-regs-options.c
+b/tools/perf/util/parse-regs-options.c
+index c0d0ef9fd495..37932fcd8c04 100644
+--- a/tools/perf/util/parse-regs-options.c
++++ b/tools/perf/util/parse-regs-options.c
+@@ -66,12 +66,14 @@ __parse_regs(const struct option *opt, const char *str,
+int unset, bool intr)
+        if (*mode)
+                return -1;
+
+-       /* str may be NULL in case no arg is passed to -I */
+-       if (!str)
+-               return -1;
+-
+        mask = intr ? arch__intr_reg_mask() : arch__user_reg_mask();
+
++       /* str may be NULL in case no arg is passed to -I */
++       if (!str) {
++               *mode = mask;
++               return 0;
++       }
++
+        /* because str is read-only */
+        s = os = strdup(str);
+        if (!s)
+@@ -104,9 +106,6 @@ __parse_regs(const struct option *opt, const char *str,
+int unset, bool intr)
+        }
+        ret = 0;
+
+-       /* default to all possible regs */
+-       if (*mode == 0)
+-               *mode = mask;
+ error:
+        free(os);
+        return ret;
+
+```
+
+With above change, the "-I" option can be sampled as expect.
+
+$ sudo ./perf record -e cycles:p -I -- true
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.029 MB perf.data (4 samples) ]
+
+
+> +
+> +	mask = intr ? arch__intr_reg_mask() : arch__user_reg_mask();
+> +
+> +	/* because str is read-only */
+> +	s = os = strdup(str);
+> +	if (!s)
+> +		return -1;
+> +
+> +	for (;;) {
+> +		uint64_t reg_mask;
+> +
+> +		p = strchr(s, ',');
+> +		if (p)
+> +			*p = '\0';
+> +
+> +		if (!strcmp(s, "?")) {
+> +			list_perf_regs(stderr, mask);
+> +			goto error;
+> +		}
+> +
+> +		reg_mask = name_to_perf_reg_mask(s, mask);
+> +		if (reg_mask == 0) {
+> +			ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
+> +				s, intr ? "-I" : "--user-regs=");
+> +			goto error;
+>  		}
+> +		*mode |= reg_mask;
+> +
+> +		if (!p)
+> +			break;
+> +
+> +		s = p + 1;
+>  	}
+>  	ret = 0;
+>  
+> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+> index b58d59b84fb1..ec602da1aeb6 100644
+> --- a/tools/perf/util/perf_regs.c
+> +++ b/tools/perf/util/perf_regs.c
+> @@ -22,15 +22,6 @@ uint64_t __weak arch__user_reg_mask(void)
+>  	return 0;
+>  }
+>  
+> -static const struct sample_reg sample_reg_masks[] = {
+> -	SMPL_REG_END
+> -};
+> -
+> -const struct sample_reg * __weak arch__sample_reg_masks(void)
+> -{
+> -	return sample_reg_masks;
+> -}
+> -
+>  const char *perf_reg_name(int id, uint16_t e_machine)
+>  {
+>  	const char *reg_name = NULL;
+> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+> index 7bfc6a34c02b..2c2a8de6912d 100644
+> --- a/tools/perf/util/perf_regs.h
+> +++ b/tools/perf/util/perf_regs.h
+> @@ -7,17 +7,6 @@
+>  
+>  struct regs_dump;
+>  
+> -struct sample_reg {
+> -	const char *name;
+> -	uint64_t mask;
+> -};
+> -
+> -#define SMPL_REG_MASK(b) (1ULL << (b))
+> -#define SMPL_REG(n, b) { .name = #n, .mask = SMPL_REG_MASK(b) }
+> -#define SMPL_REG2_MASK(b) (3ULL << (b))
+> -#define SMPL_REG2(n, b) { .name = #n, .mask = SMPL_REG2_MASK(b) }
+> -#define SMPL_REG_END { .name = NULL }
+> -
+>  enum {
+>  	SDT_ARG_VALID = 0,
+>  	SDT_ARG_SKIP,
+> @@ -26,7 +15,6 @@ enum {
+>  int arch_sdt_arg_parse_op(char *old_op, char **new_op);
+>  uint64_t arch__intr_reg_mask(void);
+>  uint64_t arch__user_reg_mask(void);
+> -const struct sample_reg *arch__sample_reg_masks(void);
+>  
+>  const char *perf_reg_name(int id, uint16_t e_machine);
+>  int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
