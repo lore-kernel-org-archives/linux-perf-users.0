@@ -1,54 +1,54 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087CA36EAAB
-	for <linux-perf-users@vger.kernel.org>; Sat, 31 Jan 2026 20:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2768636EAAB
+	for <linux-perf-users@vger.kernel.org>; Sat, 31 Jan 2026 20:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769889759; cv=none; b=Nno/x0cNGPNb0rtR5cZp1SfNMNiBNbjJX2XKrQvOOM2ELqnmc4NVlbGAZy0w/GVYhXji0+lhfpBTzJ8ePMr9E6pmiOT7QgkxnQqSW4QIO7pX0/OzkSbsG7lsiEl/lfK3fKm2hlIWOdvDU1iKzC2jFOQWCQxrSSfEO8XyXqIBUBA=
+	t=1769889761; cv=none; b=ACggOHi5c+UgsCTFvYRQ6D7GYNCGmTFdpd6b5YZb5pDCG7H+ptANRgX7Qeh2YNQnVVnZfuMjaMvn8TYmUdzDh0C8ruh94EelEkAudyIPl/Q2mP23qTUHozNswUGGtAm13a3uNl0Xq2/ERl2nvqDsStGfil1UNuakR0mvBpPLcFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769889759; c=relaxed/simple;
-	bh=7n7fpTuVsLpW5dTaoi783s2qeiHqMmMBKZjZu/WCqdM=;
+	s=arc-20240116; t=1769889761; c=relaxed/simple;
+	bh=OzSHZgVSQiPsRKExjnMPTpTbG3IhOOTKw3fuldg3o4k=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=NCGhIcaHefuX/EwYI4vWnLWnYFhWWt0BOCrnnBprS2spNM+VlwJpYG1c0p3h7ZlfTLj09dFX9n18Ov4QlJnahMWqVngJNMYRzNeOUOIS8edmjVJKB4Sqe3NCxJD5ILu9DULAbQ1fRqZKJbVl84gK9Q+Zn5QY1eyqOz/k7gifbc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ehpd3Ood; arc=none smtp.client-ip=209.85.216.73
+	 To:Content-Type; b=LYj9ZKAaHDf+IlocZBTDfiRK0l0P+ryuIA/5REByWvwWdm2lVgGW6FafutL5oc6lDz2sYmb5p6mO4XVxVGXKk/70eoMx3vKKHpUMZZDfLbZd7IXKqqMVxSzPU2rwmA2+WU2YvYyOeKwB1s8TuchmYrvAqknQh0TYHqP4YNRuR98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KSfIHd2H; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ehpd3Ood"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-34c314af2d4so2409725a91.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 31 Jan 2026 12:02:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KSfIHd2H"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2b799f7a603so17524344eec.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 31 Jan 2026 12:02:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769889757; x=1770494557; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769889759; x=1770494559; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=CH19sZmi6OhmnuWmP/MMQ8cKU7/WOZcdh//pactV2Lg=;
-        b=Ehpd3OodArfedbo+1eKeaZnTS8nAgsMUigigfs7+K2MAYHIdZahy42HZ4rz8X1W1bz
-         gyu9hSpO0AM5lEA33Vm8KMaxx0khOFS3Z/qVD2bZU6cBBB/rW4YDejPZiooHvd69hYGQ
-         COq4WQRRYT7r5qumAfhJ2j7VE4pF+tUyMdkksBM0IAAWql0jkuGhQkpH32c41zcmK1EK
-         AU9wllHSGQe8QIfAMD8wIUkvOTEMearNEDGFBuY5bAVG2F9uhRJwAjd5YzLHqteRI7rF
-         Cdi/LGiCLeZD/5qqId9aLPCRgQARKgtky8BZ9P1OrLP0NPz6OyaoCtRf4jto8CLDf4a/
-         ZoOg==
+        bh=hbIIGfMQy8kU/29JW+xHk5T5mRSTZKfA14hCK/ZK1Tw=;
+        b=KSfIHd2HBrbZCM+FKwPAInhYPbUEazvXCZHwsFC3+q80lQN22WeqQa+ufNMm0h+wq9
+         by5LsKtLPUxbXv/Ay+ZOTeMoU9QSaTe54B3yZ9It1htNQCR5OY1NljAO2jhHtS57mkVs
+         1EM++xo86V8bh6dAOokEKIPdP3KGExGwGmKxYf5HnhL0qG6RsjS1SPrGbZKmNmuaSLS/
+         To1m2gQc7jClwvOuZ0DgpYcFCxYl0YLu3oYKRA6YJVb7Iqsgc+u9FzmA2EQJy+pn+ae+
+         Wjw1bFGZYOjIyEuEEfQG2qF+fPf1KxEZt2tHwY7YylEJ/+LoqVOLzrpp/H5YMCjbm/Mt
+         IAsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769889757; x=1770494557;
+        d=1e100.net; s=20230601; t=1769889759; x=1770494559;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CH19sZmi6OhmnuWmP/MMQ8cKU7/WOZcdh//pactV2Lg=;
-        b=nhCpsIOx1175js9JmLN4/Dt4sSRqKg14aI2lcG0yWKnzBtbfGyEkKhwoyCFYC5CJrt
-         jWUJowDQO/ksa52+3vbjdwVCE6HwODliWrs16xVGrYUd7r4fDhfRnc6jzFXsgNfwUlfE
-         1JoCprHq0g0zYGeiFeEpR6Ya8oow/Uhy0S/Lb7PqXlO9I02nmhd/72lmN7owFzUVuyUr
-         v/N8Mspo3ErqHn/AMFUx17gGVLfM2eNUsczeEOvfdWeLJZS3fmRnnJalPlr+6jjFyZa5
-         mMo/j1oA7L/SFRkcmlZZ/l7HrHYu4+z/ueb450MDKjA5DeEYiWlsvxesQHEM2t832w9k
-         ickQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2zFRlw0Uej/7tQSI0Sxxl3Ct8/K1XYdYVGmcSPvR5FbsxOzJ9/+ZgU7uH+z/s8KjKouuIzqLtmDf0kQYIMGjm@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKQj70aoBB7JhAqFHrv7TUSlaFrHEF1JXaRgxVA+OJnZbTo/M+
-	YFlgMeApdkZSO/SgqpfuMNV4Pz5WwO79h3w5a0a+Ce4wSJ6r2btc2FD4vky2bbrav/PhL8rLM6g
-	VX6zdDzH14w==
-X-Received: from pgvz8.prod.google.com ([2002:a65:6648:0:b0:bd9:a349:94a8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d19:b0:348:b7a1:431
- with SMTP id adf61e73a8af0-392dffe0bbemr7270573637.10.1769889757129; Sat, 31
- Jan 2026 12:02:37 -0800 (PST)
-Date: Sat, 31 Jan 2026 12:02:22 -0800
+        bh=hbIIGfMQy8kU/29JW+xHk5T5mRSTZKfA14hCK/ZK1Tw=;
+        b=gHIwSO4EiD8hp61sumiLgMmmLGf98FqZ8rwuUwxB2bDGKx17pExOG5Jug8w5XiGbCG
+         ds7i9KRKZ24OoHL7M1Jq42MwotNZpwBvXJ0p07VEO7A3HnoHL5s1CltSlqTHejpsCwBa
+         7/NzSR2zGo3Mqs6Xp66wZRjCJFijkH0gWmDiH21vlxDJ49TeRFqNxHTZ09ldWDP0Uq6v
+         8vnPHcuWFF9XS95Hmi3vmH/2I4h0R4r3UeBIdTvMK5WhEGfqjVwiizGA63vju0q2aHm+
+         vuaUrlJTJGuspLO5osFlRG48OM961q3I2RTwqSb/yQ09CuHxHu95sSe8OEp6STA64Ka4
+         19EA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdpJmEwXZXWq4rI5EViuPRrPVDntNRFOn+KLfLdSKgtU7VsJJ1JKwdz81T92XqvylVLp948BJgproTM4fkF2Mq@vger.kernel.org
+X-Gm-Message-State: AOJu0YywFW0bjVQ9IuQXnBpC5vpL0aZwWeZ7jhJM9BDn+jS+DN5JddgE
+	xICQW3fvqpEVDuI8HSiHqe5O7uaZPBU5l9lsVH6YXhk8yFPM75FETmVFsDQ9mjvuWoHzCRneU3a
+	jZWx44bByIw==
+X-Received: from dycoz4.prod.google.com ([2002:a05:7301:fc84:b0:2b6:bdce:fb0])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:434f:b0:2b7:1746:c947
+ with SMTP id 5a478bee46e88-2b7c86268ebmr3367037eec.6.1769889759132; Sat, 31
+ Jan 2026 12:02:39 -0800 (PST)
+Date: Sat, 31 Jan 2026 12:02:23 -0800
 In-Reply-To: <20260131200224.1296136-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260131200224.1296136-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.rc1.225.gd81095ad13-goog
-Message-ID: <20260131200224.1296136-5-irogers@google.com>
-Subject: [PATCH v2 4/6] perf session: Add e_flags to the e_machine helper
+Message-ID: <20260131200224.1296136-6-irogers@google.com>
+Subject: [PATCH v2 5/6] perf header: Add e_machine/e_flags to the header
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -81,267 +81,182 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Allow e_flags as well as e_machine to be computed using the e_machine
-helper. This isn't currently used, the argument is always NULL, but it
-will be used for a new header feature.
+Add 64-bits of feature data to record the ELF machine and flags. This
+allows readers to initialize based on the data. For example, `perf kvm
+stat` wants to initialize based on the kind of data to be read, but at
+initialization time there are no threads to base this data upon and
+using the host means cross platform support won't work. The values in
+the perf_env also act as a cache for these within the session.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-kvm.c    |  9 +++++----
- tools/perf/builtin-report.c |  4 ++--
- tools/perf/builtin-script.c |  6 ++++--
- tools/perf/util/evsel.c     |  6 +++---
- tools/perf/util/evsel.h     |  2 +-
- tools/perf/util/kvm-stat.c  | 12 ++++++++---
- tools/perf/util/session.c   | 40 +++++++++++++++++++++++++++----------
- tools/perf/util/session.h   |  2 +-
- 8 files changed, 55 insertions(+), 26 deletions(-)
+ tools/perf/util/env.h     |  3 +++
+ tools/perf/util/header.c  | 33 +++++++++++++++++++++++++++++++++
+ tools/perf/util/header.h  |  1 +
+ tools/perf/util/session.c | 33 +++++++++++++++++++++++++++------
+ 4 files changed, 64 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 93ba07c58290..0c5e6b3aac74 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -902,7 +902,7 @@ static bool handle_end_event(struct perf_kvm_stat *kvm,
- 
- 	if (kvm->duration && time_diff > kvm->duration) {
- 		char decode[KVM_EVENT_NAME_LEN];
--		uint16_t e_machine = perf_session__e_machine(kvm->session);
-+		uint16_t e_machine = perf_session__e_machine(kvm->session, /*e_flags=*/NULL);
- 
- 		kvm->events_ops->decode_key(kvm, &event->key, decode);
- 		if (!skip_event(e_machine, decode)) {
-@@ -1187,7 +1187,7 @@ static int cpu_isa_config(struct perf_kvm_stat *kvm)
- 		return -EINVAL;
- 	}
- 
--	e_machine = perf_session__e_machine(kvm->session);
-+	e_machine = perf_session__e_machine(kvm->session, /*e_flags=*/NULL);
- 	err = cpu_isa_init(kvm, e_machine, cpuid);
- 	if (err == -ENOTSUP)
- 		pr_err("CPU %s is not supported.\n", cpuid);
-@@ -1549,7 +1549,7 @@ static int kvm_live_open_events(struct perf_kvm_stat *kvm)
- static int read_events(struct perf_kvm_stat *kvm)
- {
- 	int ret;
--
-+	uint16_t e_machine;
- 	struct perf_data file = {
- 		.path  = kvm->file_name,
- 		.mode  = PERF_DATA_MODE_READ,
-@@ -1574,7 +1574,8 @@ static int read_events(struct perf_kvm_stat *kvm)
- 		goto out_delete;
- 	}
- 
--	if (!register_kvm_events_ops(kvm, perf_session__e_machine(kvm->session))) {
-+	e_machine = perf_session__e_machine(kvm->session, /*e_flags=*/NULL);
-+	if (!register_kvm_events_ops(kvm, e_machine)) {
- 		ret = -EINVAL;
- 		goto out_delete;
- 	}
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 810ffd66b11c..3b81f4b3dc49 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -448,7 +448,7 @@ static int report__setup_sample_type(struct report *rep)
- 		}
- 	}
- 
--	callchain_param_setup(sample_type, perf_session__e_machine(session));
-+	callchain_param_setup(sample_type, perf_session__e_machine(session, /*e_flags=*/NULL));
- 
- 	if (rep->stitch_lbr && (callchain_param.record_mode != CALLCHAIN_LBR)) {
- 		ui__warning("Can't find LBR callchain. Switch off --stitch-lbr.\n"
-@@ -1296,7 +1296,7 @@ static int process_attr(const struct perf_tool *tool __maybe_unused,
- 	 */
- 	sample_type = evlist__combined_sample_type(*pevlist);
- 	session = (*pevlist)->session;
--	callchain_param_setup(sample_type, perf_session__e_machine(session));
-+	callchain_param_setup(sample_type, perf_session__e_machine(session, /*e_flags=*/NULL));
- 	return 0;
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index 76ba1a36e9ff..a4501cbca375 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -74,6 +74,9 @@ struct perf_env {
+ 	char			*os_release;
+ 	char			*version;
+ 	char			*arch;
++	/* e_machine expanded from 16 to 32-bits for alignment. */
++	u32			e_machine;
++	u32			e_flags;
+ 	int			nr_cpus_online;
+ 	int			nr_cpus_avail;
+ 	char			*cpu_desc;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index eefd1cd73b6a..196bbe0c8407 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -378,6 +378,21 @@ static int write_arch(struct feat_fd *ff,
+ 	return do_write_string(ff, uts.machine);
  }
  
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index c7d5a325b5cb..14c6f6c3c4f2 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2818,6 +2818,7 @@ static int process_attr(const struct perf_tool *tool, union perf_event *event,
- 	struct perf_script *scr = container_of(tool, struct perf_script, tool);
- 	struct evlist *evlist;
- 	struct evsel *evsel, *pos;
-+	uint16_t e_machine;
- 	u64 sample_type;
- 	int err;
- 
-@@ -2859,7 +2860,8 @@ static int process_attr(const struct perf_tool *tool, union perf_event *event,
- 	 * on events sample_type.
- 	 */
- 	sample_type = evlist__combined_sample_type(evlist);
--	callchain_param_setup(sample_type, perf_session__e_machine(evsel__session(evsel)));
-+	e_machine = perf_session__e_machine(evsel__session(evsel), /*e_flags=*/NULL);
-+	callchain_param_setup(sample_type, e_machine);
- 
- 	/* Enable fields for callchain entries */
- 	if (symbol_conf.use_callchain &&
-@@ -3834,7 +3836,7 @@ static void script__setup_sample_type(struct perf_script *script)
- 	struct perf_session *session = script->session;
- 	u64 sample_type = evlist__combined_sample_type(session->evlist);
- 
--	callchain_param_setup(sample_type, perf_session__e_machine(session));
-+	callchain_param_setup(sample_type, perf_session__e_machine(session, /*e_flags=*/NULL));
- 
- 	if (script->stitch_lbr && (callchain_param.record_mode != CALLCHAIN_LBR)) {
- 		pr_warning("Can't find LBR callchain. Switch off --stitch-lbr.\n"
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 848d0faf6698..aff44ffd3ff1 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1008,11 +1008,11 @@ int evsel__group_desc(struct evsel *evsel, char *buf, size_t size)
- 	return ret;
- }
- 
--uint16_t evsel__e_machine(struct evsel *evsel)
-+uint16_t evsel__e_machine(struct evsel *evsel, uint32_t *e_flags)
- {
- 	struct perf_session *session = evsel__session(evsel);
- 
--	return session ? perf_session__e_machine(session) : EM_HOST;
-+	return perf_session__e_machine(session, e_flags);
- }
- 
- static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *opts,
-@@ -1050,7 +1050,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
- 
- 	if (param->record_mode == CALLCHAIN_DWARF) {
- 		if (!function) {
--			uint16_t e_machine = evsel__e_machine(evsel);
-+			uint16_t e_machine = evsel__e_machine(evsel, /*e_flags=*/NULL);
- 
- 			evsel__set_sample_bit(evsel, REGS_USER);
- 			evsel__set_sample_bit(evsel, STACK_USER);
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index eefb5d569971..a3d754c029a0 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -546,7 +546,7 @@ static inline bool evsel__is_dummy_event(struct evsel *evsel)
- 
- struct perf_session *evsel__session(struct evsel *evsel);
- struct perf_env *evsel__env(struct evsel *evsel);
--uint16_t evsel__e_machine(struct evsel *evsel);
-+uint16_t evsel__e_machine(struct evsel *evsel, uint32_t *e_flags);
- 
- int evsel__store_ids(struct evsel *evsel, struct evlist *evlist);
- 
-diff --git a/tools/perf/util/kvm-stat.c b/tools/perf/util/kvm-stat.c
-index 858b5dbd39f6..27f16810498c 100644
---- a/tools/perf/util/kvm-stat.c
-+++ b/tools/perf/util/kvm-stat.c
-@@ -6,15 +6,19 @@
- 
- bool kvm_exit_event(struct evsel *evsel)
- {
--	return evsel__name_is(evsel, kvm_exit_trace(evsel__e_machine(evsel)));
-+	uint16_t e_machine = evsel__e_machine(evsel, /*e_flags=*/NULL);
++static int write_e_machine(struct feat_fd *ff,
++			   struct evlist *evlist __maybe_unused)
++{
++	/* e_machine expanded from 16 to 32-bits for alignment. */
++	uint32_t e_flags;
++	uint32_t e_machine = perf_session__e_machine(evlist->session, &e_flags);
++	int ret;
 +
-+	return evsel__name_is(evsel, kvm_exit_trace(e_machine));
- }
- 
- void exit_event_get_key(struct evsel *evsel,
- 			struct perf_sample *sample,
- 			struct event_key *key)
- {
-+	uint16_t e_machine = evsel__e_machine(evsel, /*e_flags=*/NULL);
++	ret = do_write(ff, &e_machine, sizeof(e_machine));
++	if (ret)
++		return ret;
 +
- 	key->info = 0;
--	key->key  = evsel__intval(evsel, sample, kvm_exit_reason(evsel__e_machine(evsel)));
-+	key->key  = evsel__intval(evsel, sample, kvm_exit_reason(e_machine));
- }
- 
- 
-@@ -31,7 +35,9 @@ bool exit_event_begin(struct evsel *evsel,
- 
- bool kvm_entry_event(struct evsel *evsel)
- {
--	return evsel__name_is(evsel, kvm_entry_trace(evsel__e_machine(evsel)));
-+	uint16_t e_machine = evsel__e_machine(evsel, /*e_flags=*/NULL);
++	return do_write(ff, &e_flags, sizeof(e_flags));
++}
 +
-+	return evsel__name_is(evsel, kvm_entry_trace(e_machine));
+ static int write_version(struct feat_fd *ff,
+ 			 struct evlist *evlist __maybe_unused)
+ {
+@@ -1784,6 +1799,12 @@ static void print_arch(struct feat_fd *ff, FILE *fp)
+ 	fprintf(fp, "# arch : %s\n", ff->ph->env.arch);
  }
  
- bool exit_event_end(struct evsel *evsel,
++static void print_e_machine(struct feat_fd *ff, FILE *fp)
++{
++	fprintf(fp, "# e_machine : %u\n", ff->ph->env.e_machine);
++	fprintf(fp, "#   e_flags : %u\n", ff->ph->env.e_flags);
++}
++
+ static void print_cpudesc(struct feat_fd *ff, FILE *fp)
+ {
+ 	fprintf(fp, "# cpudesc : %s\n", ff->ph->env.cpu_desc);
+@@ -2611,6 +2632,17 @@ FEAT_PROCESS_STR_FUN(arch, arch);
+ FEAT_PROCESS_STR_FUN(cpudesc, cpu_desc);
+ FEAT_PROCESS_STR_FUN(cpuid, cpuid);
+ 
++static int process_e_machine(struct feat_fd *ff, void *data __maybe_unused)
++{
++	int ret;
++
++	ret = do_read_u32(ff, &ff->ph->env.e_machine);
++	if (ret)
++		return ret;
++
++	return do_read_u32(ff, &ff->ph->env.e_flags);
++}
++
+ #ifdef HAVE_LIBTRACEEVENT
+ static int process_tracing_data(struct feat_fd *ff, void *data)
+ {
+@@ -3729,6 +3761,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+ 	FEAT_OPN(HYBRID_TOPOLOGY,	hybrid_topology,	true),
+ 	FEAT_OPR(PMU_CAPS,	pmu_caps,	false),
+ 	FEAT_OPR(CPU_DOMAIN_INFO,	cpu_domain_info,	true),
++	FEAT_OPR(E_MACHINE,	e_machine,	false),
+ };
+ 
+ struct header_print_data {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 36cc74e2d14d..cc40ac796f52 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -54,6 +54,7 @@ enum {
+ 	HEADER_HYBRID_TOPOLOGY,
+ 	HEADER_PMU_CAPS,
+ 	HEADER_CPU_DOMAIN_INFO,
++	HEADER_E_MACHINE,
+ 	HEADER_LAST_FEATURE,
+ 	HEADER_FEAT_BITS	= 256,
+ };
 diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index d0053618f540..72e8bb67d740 100644
+index 72e8bb67d740..53f51c3f9603 100644
 --- a/tools/perf/util/session.c
 +++ b/tools/perf/util/session.c
-@@ -2964,27 +2964,47 @@ struct perf_env *perf_session__env(struct perf_session *session)
- 	return &session->header.env;
- }
+@@ -2967,7 +2967,6 @@ struct perf_env *perf_session__env(struct perf_session *session)
+ struct perf_session__e_machine_cb_args {
+ 	uint32_t e_flags;
+ 	uint16_t e_machine;
+-	bool need_e_flags;
+ };
  
--static int perf_session__e_machine_cb(struct thread *thread,
--				      void *arg __maybe_unused)
-+struct perf_session__e_machine_cb_args {
-+	uint32_t e_flags;
-+	uint16_t e_machine;
-+	bool need_e_flags;
-+};
-+
-+static int perf_session__e_machine_cb(struct thread *thread, void *_args)
- {
--	uint16_t *result = arg;
-+	struct perf_session__e_machine_cb_args *args = _args;
+ static int perf_session__e_machine_cb(struct thread *thread, void *_args)
+@@ -2975,8 +2974,7 @@ static int perf_session__e_machine_cb(struct thread *thread, void *_args)
+ 	struct perf_session__e_machine_cb_args *args = _args;
  	struct machine *machine = maps__machine(thread__maps(thread));
  
--	*result = thread__e_machine(thread, machine, /*e_flags=*/NULL);
--	return *result != EM_NONE ? 1 : 0;
-+	args->e_machine = thread__e_machine(thread, machine,
-+					    args->need_e_flags ? &args->e_flags : NULL);
-+	return args->e_machine != EM_NONE ? 1 : 0;
+-	args->e_machine = thread__e_machine(thread, machine,
+-					    args->need_e_flags ? &args->e_flags : NULL);
++	args->e_machine = thread__e_machine(thread, machine, &args->e_flags);
+ 	return args->e_machine != EM_NONE ? 1 : 0;
  }
  
- /*
-  * Note, a machine may have mixed 32-bit and 64-bit processes and so mixed
-  * e_machines. Use thread__e_machine when this matters.
-  */
--uint16_t perf_session__e_machine(struct perf_session *session)
-+uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags)
+@@ -2988,8 +2986,8 @@ uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags
  {
--	uint16_t e_machine = EM_NONE;
-+	struct perf_session__e_machine_cb_args args = {
-+		.e_machine = EM_NONE,
-+		.need_e_flags = e_flags != NULL,
-+	};
-+
-+	if (!session) {
-+		/* Default to assuming a host machine. */
+ 	struct perf_session__e_machine_cb_args args = {
+ 		.e_machine = EM_NONE,
+-		.need_e_flags = e_flags != NULL,
+ 	};
++	struct perf_env *env;
+ 
+ 	if (!session) {
+ 		/* Default to assuming a host machine. */
+@@ -2999,12 +2997,35 @@ uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags
+ 		return EM_HOST;
+ 	}
+ 
++	env = perf_session__env(session);
++	if (env && env->e_machine != EM_NONE) {
 +		if (e_flags)
-+			*e_flags = EF_HOST;
++			*e_flags = env->e_flags;
 +
-+		return EM_HOST;
++		return env->e_machine;
 +	}
- 
- 	machines__for_each_thread(&session->machines,
--					 perf_session__e_machine_cb,
--					 &e_machine);
-+				  perf_session__e_machine_cb,
-+				  &args);
 +
-+	if (e_flags)
-+		*e_flags = args.e_flags;
+ 	machines__for_each_thread(&session->machines,
+ 				  perf_session__e_machine_cb,
+ 				  &args);
  
--	return e_machine == EM_NONE ? EM_HOST : e_machine;
-+	return args.e_machine == EM_NONE ? EM_HOST : args.e_machine;
++	if (args.e_machine != EM_NONE) {
++		if (env) {
++			env->e_machine = args.e_machine;
++			env->e_flags = args.e_flags;
++		}
++		if (e_flags)
++			*e_flags = args.e_flags;
++
++		return args.e_machine;
++	}
++
++	/*
++	 * Couldn't determine from the perf_env or current set of
++	 * threads. Default to the host.
++	 */
+ 	if (e_flags)
+-		*e_flags = args.e_flags;
++		*e_flags = EF_HOST;
+ 
+-	return args.e_machine == EM_NONE ? EM_HOST : args.e_machine;
++	return EM_HOST;
  }
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index eddc4c630b33..f05f0d4a6c23 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -211,6 +211,6 @@ int perf_event__process_finished_round(const struct perf_tool *tool,
- 				       struct ordered_events *oe);
- 
- struct perf_env *perf_session__env(struct perf_session *session);
--uint16_t perf_session__e_machine(struct perf_session *session);
-+uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags);
- 
- #endif /* __PERF_SESSION_H */
 -- 
 2.53.0.rc1.225.gd81095ad13-goog
 
