@@ -1,154 +1,121 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE543371058
-	for <linux-perf-users@vger.kernel.org>; Sat, 31 Jan 2026 20:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0808531D399
+	for <linux-perf-users@vger.kernel.org>; Sun,  1 Feb 2026 10:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769889763; cv=none; b=OUVQiNwxH5+aRHx9AOQmDH3czgKPyOxHhGVEymS66QyqsVTZuNPXdOr5RKgYmA0BJdCAKblfJ66mvTnWIYp5+KOzIl4J2GF3BF7qygG6jgCt7WfNHjI7z0oNHDsun9e3QyYGwlz43Mqr43+lEcib8jg39lIOpNgm+ZqgvYUvNR4=
+	t=1769942041; cv=none; b=PPzn7uznEADPF50cjG6QktRJm6PvlMljp1MMKGwdmitto57QyC5mhKIMQj5Wv+tuomca+/u5orgEKXGjJyvNlXzH2GpVFk7SdHwEkLi3DEEHMJmG9Fc9ygaW43neJS42hG04XLCkXkAhMlG2EPo97TRYNRnQxU2dj5IBwcpQmOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769889763; c=relaxed/simple;
-	bh=d4upQRvP0lDqXZNMbJh/OXbkaabdEA1OKhcE2+JqhOA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=OgmxkUE59GlV3oVPqFv+rENQ+BWVpTDCsKOYTvDThPMK9DcDM5C3xGbXJ1Sxn7Pu6B4JfdAE42OZRaOoSfTztdY5SA3UV04Gi4+orIrPni61a1wSf8GAODDexBTfekvtBcJQNIgg6Omw4XBaCSdSc5ZktbwEQCmh+HbMr65ZxFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BHD1wGy+; arc=none smtp.client-ip=74.125.82.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1769942041; c=relaxed/simple;
+	bh=LCVi1w9tgKb26P8thxfAdXWHXQkrmDVmsXxXvMJrYv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I4dyiL95YuPLs9wVhLt6K3/yeI5fJ4uaB4czIfxf/Tfoc+LvwENnfT7UcKJkNRo/ktwtg/tYDPMbzTjj+d92rM4Z3apXsl8YqVsEN9nEIIOSZ+toNIjHeRgeZO3INKs9AId++E/E/buXXAn3BG2A+ExZSgbjPD9EkveRvL3TpGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XBsk4L51; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BHD1wGy+"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2b724ff60e6so3679628eec.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 31 Jan 2026 12:02:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBsk4L51"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-42fb2314eb0so2984317f8f.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 01 Feb 2026 02:33:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769889761; x=1770494561; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yU/No/CiRXNK30X5BW5gARgpwLegeQsixxR3xJoI9G0=;
-        b=BHD1wGy+XKylBq57TAt25VNR7heUwP3MnJr5Rjq/atmcGdblHY4wFrpMKMjigA16rs
-         xAB8jJZ3a/yZPCN45knZVVDLbemZe+IjsrBHowAmpgxQNnbYWIr5iiaGJUKpoProxYUL
-         XatGJfRehKLpwL/sMt9YBQ6vtHDQQH+U7ELVkRFS3JFaQDGNQssPRIOu7tLCgyXjynVj
-         +DaHlkbQtAXmfIKl24uQQ35VbF6KhxPt9wEBiBJ3OsjQF1u+9bzd7KKX4Ly5u2OnKpPs
-         UcqDvJe1ya/B0DwBRtNklCh9oVWBDpMGf/56BWmretONqdb1XPnrR3qVJd9GKHUj6PP3
-         gQKA==
+        d=gmail.com; s=20230601; t=1769942038; x=1770546838; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ltBgBJWZ9IoIK6qZcKGPuw+QqjYZzBZ31BgEFRyKDhU=;
+        b=XBsk4L51JhJeJx3OxWvnJX8s10/DJfEFoYBszysx9yUmf1wXKTp2DSy3unCozITI4o
+         n80CWqowBGe0x9vDQqV/f1z3+ViruiVRhsPkw/oC2tZef93vIm7ypzWYEjvRdqWljSoK
+         5nqpEIGdNnDcVkivb2e16FWVSDNsBCWwEnb2FLcMMN8ZKfHM99/gdnt+l3cv2DpWSlBB
+         5Vo6rveZ54ZbW8nkANNGJaVIT9QlQ0m5VGg+hdoOJ1EfIlzPRM3nyR9LIjlgmTugcfFe
+         Q0YFxTz7+YYQx3XY+i7cRVCrdI4Iaqm6GBTeZGCBkMoH0fLuxMTYKZiS40TF6DXM2JDt
+         NvQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769889761; x=1770494561;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yU/No/CiRXNK30X5BW5gARgpwLegeQsixxR3xJoI9G0=;
-        b=kz3Jujzz1EHKASZxc5La6/gUPb4LLI2oFnOI8QPvV7DXD3AbRhFVbej9bRel/yPhME
-         oCX18k1HWG/QDO5tMg9QpDzgnKdVHPQw/qLvGBbihNhFg351zCayLAuhw1UK10fWSddh
-         zJ8qhJvmj0/9D4dUxf8widb3XFhpjT3xIuPreJRZM3KLRs/eGKaXLunfYgXEnkhNX4cP
-         /Ny7KQsHuWDaKVNRWzig8O4R/Y7JpkasI38idWZ4PrOFg+RcYEvfOEH6BRac+r+5lQdv
-         rEv1ndUcow+JXkcqC50Do6w0mTpPD2OtIWl8smSrmcVtSC5NMNKDPQfzC6K1JbOOfMTC
-         Gxlg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIlRBnnGb0KxEGuwDdwRdUUJ8lW/p5jlKD7FFgY/eTa+YGf6Vx5fRV213w68lNxZ3YpitWrCNG2rqdWoG57R9j@vger.kernel.org
-X-Gm-Message-State: AOJu0YybIzSTUbhjPPQvkf0lXdfijZ/X9jOFR55Ao0aYCc+tMK1jzQtL
-	afvJaKw36/gdNa2lKR7NEsEkFeEjn9MVZNHR6u/g8zLCwzU4zQTTKVc9LEN6ZF12tXMh33KcVDJ
-	zQAA5xKIJzg==
-X-Received: from dyek9.prod.google.com ([2002:a05:7300:6409:b0:2b7:4867:6bd0])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:2b13:b0:2ae:614a:330e
- with SMTP id 5a478bee46e88-2b7c8943db0mr3682412eec.41.1769889761125; Sat, 31
- Jan 2026 12:02:41 -0800 (PST)
-Date: Sat, 31 Jan 2026 12:02:24 -0800
-In-Reply-To: <20260131200224.1296136-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1769942038; x=1770546838;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ltBgBJWZ9IoIK6qZcKGPuw+QqjYZzBZ31BgEFRyKDhU=;
+        b=o6iO1GLuR3LwK0f4phmadXBSHB5+BlMy43qJKEwvxwbMAm8ujiFQxVHs/P18hHcJKX
+         905VoywbYdPONTI/xNYpcEk2u18mK6CWypqQUVfT1+bx7iD/g+WU/yvbYXtPOmzEHc/N
+         Z+mgW5F4GLxNd3WFvnCCBxMaBh3tPxjUb1gYw00x9E+wTTUmreQrOVncqs37H9zk86yG
+         cke17KFCzbdZc7ZuUadRxfU1Z/IIKT/E6GtM/F2KyciZG/01WssELfVo9zP30l1p3gdF
+         FUf/dUmQmorJ7FuKtxDZN6PYE9ewV20ucFIlQcKAHQ4j/IZIve/2YxGSUrQYmjCZErve
+         elhQ==
+X-Gm-Message-State: AOJu0YxXndxJZPlHB4vS1ehPPYBih/+gq1cCWyzk2cuEQ9c0niS4IbZg
+	J1nQysQXk8ABabqTIe8eYE/PKIwLdJDhl9zxRydZw1vuZWuS5tZyp2KG
+X-Gm-Gg: AZuq6aIzGT4LpRuFFZ3U8kbHfuJ2oV9DA7hlThWEnIg8FTwKOsHfQyNE7HE8SfZVawq
+	t4gZjAX3IcKTi5YpwasIlgkMihVZlyIsq5OGuvsL+BgIvgVu6z9IIQm3TknXNSLEQGi6ePQJ6To
+	mor/P4Ce95vnrkwtWwbBeH+PaRLUSmtqssyqEcqjJ/8VHFTOvZs7Ui+BIcZDlma6LI55QmUxNz1
+	wMgfhXEV4EVckJiVPBB/oI9bsRdaYXJ48PAiVvFhpe+W83/xK8cC6hbWEHynwGiEU1rm81h89ja
+	d2EyK1fzPdcs+0NvbVHcWdk41ggnDhozkL6y5XsQI2lBgCJp10XAqYHwz4xn5UU+0Rf3p4e+IQA
+	k8VZ2hKZ5p/TZ+ejG/42/ME0KUbub0g/1RVsDgQ+vDAwYslsrKX+w6HcwSbE+sR79vopVSo48uM
+	6ai+muT8N2uYEiJZASxtOxKoHiELDFkZr9KV5IIvFTP1ukXLleFvvbVqec56HAQJICN6tbiKBYr
+	Y7AYVk=
+X-Received: by 2002:a05:6000:2905:b0:435:a48a:123f with SMTP id ffacd0b85a97d-435f3aac163mr13213480f8f.42.1769942038127;
+        Sun, 01 Feb 2026 02:33:58 -0800 (PST)
+Received: from ddolgov-thinkpadt14sgen1.rmtde.csb (ip-109-40-177-195.web.vodafone.de. [109.40.177.195])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435e1354205sm36022865f8f.41.2026.02.01.02.33.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Feb 2026 02:33:57 -0800 (PST)
+Date: Sun, 1 Feb 2026 11:33:54 +0100
+From: Dmitry Dolgov <9erthalion6@gmail.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v1] perf tests: Test annotate with data type
+ profiling and rust
+Message-ID: <7d3n23li6drroxrdlpxn7ixehdeszkjdftah3zyngjl2qs22ef@yelcjv53v42o>
+References: <20260127083030.5909-1-9erthalion6@gmail.com>
+ <aXjvF3N5ZGJlZzFi@x1>
+ <2frzr2cebxes2qoxofwqshfkb5k3d7jeq72srqnt4ywrlpkz5r@7pzb7cpbm4yw>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260131200224.1296136-1-irogers@google.com>
-X-Mailer: git-send-email 2.53.0.rc1.225.gd81095ad13-goog
-Message-ID: <20260131200224.1296136-7-irogers@google.com>
-Subject: [PATCH v2 6/6] perf thread: Don't require machine to compute the e_machine
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Shimin Guo <shimin.guo@skydio.com>, Yunseong Kim <ysk@kzalloc.com>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Quan Zhou <zhouquan@iscas.ac.cn>, 
-	Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Blake Jones <blakejones@google.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	Anubhav Shelat <ashelat@redhat.com>, Aditya Bodkhe <aditya.b1@linux.ibm.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2frzr2cebxes2qoxofwqshfkb5k3d7jeq72srqnt4ywrlpkz5r@7pzb7cpbm4yw>
 
-The machine can be calculated from a thread via its maps. Don't
-require the machine argument to simplify callers and also to delay
-computing the machine until a little later.
+> On Fri, Jan 30, 2026 at 09:44:47AM +0100, Dmitry Dolgov wrote:
+> > I'm not managing to reproduce your results, can you please elaborate
+> > some more?
+> 
+> That's most unexpected for me, the test output I see looks like this:
+> 
+>          : 54     for _ in 1..count {
+>     0.00 :   5423b8: mov    %ecx,0x7c(%rsp)
+>     0.00 :   5423bc: mov    %eax,0x80(%rsp)
+>     0.00 :   5423c3: lea    0x7c(%rsp),%rdi
+>    12.28 :   5423c8: call   541f00 <core::iter::range::<impl core::iter::traits::iterator::Iterator for core::ops::range::Range<A>>::next>
+>     0.00 :   5423cd: mov    %eax,0x20(%rsp)
+>    10.21 :   5423d1: jmp    5423d3 <test_rs+0xb3>
+>     0.00 :   5423d3: mov    0x20(%rsp),%eax
+>     0.00 :   5423d7: mov    %eax,%eax
+>     0.00 :   5423d9: test   $0x1,%rax
+>     0.29 :   5423df: je     5423f6 <test_rs+0xd6>
+>          : 65     b.data1 += 1;
+>    13.69 :   5423e1: mov    0x48(%rsp),%rax     # data-type: struct Buf +0x18 (data1)
+>     0.00 :   5423e6: add    $0x1,%rax
+>     0.00 :   5423ea: mov    %rax,0x18(%rsp)     # data-type: u64 +0
+>     0.00 :   5423ef: setb   %al
+>    11.17 :   5423f2: jb     54243a <test_rs+0x11a>
+>     0.00 :   5423f4: jmp    542426 <test_rs+0x106>
+>     0.00 :   5423f6: lea    0x30(%rsp),%rdi
+>          : 73     }
+> 
+> Where '# data-type: struct Buf' is as far as I understand a manifestation of
+> data type profiling succeeding. But my environment has slightly different
+> version of rust -- I need to figure out what's going on here, thanks.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/scripting-engines/trace-event-python.c | 8 +++-----
- tools/perf/util/session.c                              | 3 +--
- tools/perf/util/thread.c                               | 5 +++++
- 3 files changed, 9 insertions(+), 7 deletions(-)
+I've being testing this in the same way, but without any rust code --
+just on a simple datasym workload. Surprisingly, it seems that
+'data-type: buf' marks are disappearing even in this case starting from:
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 62c9c73daef5..2b0df7bd9a46 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -837,7 +837,6 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
- 					 PyObject *callchain)
- {
- 	PyObject *dict, *dict_sample, *brstack, *brstacksym;
--	struct machine *machine;
- 	uint16_t e_machine = EM_HOST;
- 	uint32_t e_flags = EF_HOST;
- 
-@@ -926,10 +925,9 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
- 			PyLong_FromUnsignedLongLong(sample->cyc_cnt));
- 	}
- 
--	if (al->thread) {
--		machine = maps__machine(thread__maps(al->thread));
--		e_machine = thread__e_machine(al->thread, machine, &e_flags);
--	}
-+	if (al->thread)
-+		e_machine = thread__e_machine(al->thread, /*machine=*/NULL, &e_flags);
-+
- 	if (set_regs_in_dict(dict, sample, evsel, e_machine, e_flags))
- 		Py_FatalError("Failed to setting regs in dict");
- 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 53f51c3f9603..4b465abfa36c 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2972,9 +2972,8 @@ struct perf_session__e_machine_cb_args {
- static int perf_session__e_machine_cb(struct thread *thread, void *_args)
- {
- 	struct perf_session__e_machine_cb_args *args = _args;
--	struct machine *machine = maps__machine(thread__maps(thread));
- 
--	args->e_machine = thread__e_machine(thread, machine, &args->e_flags);
-+	args->e_machine = thread__e_machine(thread, /*machine=*/NULL, &args->e_flags);
- 	return args->e_machine != EM_NONE ? 1 : 0;
- }
- 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 618f29afb160..22be77225bb0 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -499,6 +499,11 @@ uint16_t thread__e_machine(struct thread *thread, struct machine *machine, uint3
- 		return e_machine;
- 	}
- 
-+	if (machine == NULL) {
-+		struct maps *maps = thread__maps(thread);
-+
-+		machine = maps__machine(maps);
-+	}
- 	tid = thread__tid(thread);
- 	pid = thread__pid(thread);
- 	if (pid != tid) {
--- 
-2.53.0.rc1.225.gd81095ad13-goog
+c31040085914f1188720073baa43d1483693c0a3 (perf dwarf-regs: Clean up x86
+dwarf_regnum code)
 
+I'm not sure yet why this is happening, but don't see anything in the
+commit mentioning that -- since there are no code-with-type tests yet,
+maybe an unexpected side effect?
