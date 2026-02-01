@@ -1,121 +1,154 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0808531D399
-	for <linux-perf-users@vger.kernel.org>; Sun,  1 Feb 2026 10:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C50B3EBF07
+	for <linux-perf-users@vger.kernel.org>; Sun,  1 Feb 2026 11:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769942041; cv=none; b=PPzn7uznEADPF50cjG6QktRJm6PvlMljp1MMKGwdmitto57QyC5mhKIMQj5Wv+tuomca+/u5orgEKXGjJyvNlXzH2GpVFk7SdHwEkLi3DEEHMJmG9Fc9ygaW43neJS42hG04XLCkXkAhMlG2EPo97TRYNRnQxU2dj5IBwcpQmOo=
+	t=1769945693; cv=none; b=iqMFKgM3m4PeExlbOd+xghUi3JT9EUd+ehxVRTztbhCXyQ61E1nYu0jUjseReRUCi95Uz3XzX2GmqJvFTsDPHFdUqjWg6wjlP7mZgQlvA94P2cCfXRHqp1ijro8Z8NrQodwgaFLmzZOdEbZaLB+BLbN19XM55qagkd9VnQrAxdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769942041; c=relaxed/simple;
-	bh=LCVi1w9tgKb26P8thxfAdXWHXQkrmDVmsXxXvMJrYv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I4dyiL95YuPLs9wVhLt6K3/yeI5fJ4uaB4czIfxf/Tfoc+LvwENnfT7UcKJkNRo/ktwtg/tYDPMbzTjj+d92rM4Z3apXsl8YqVsEN9nEIIOSZ+toNIjHeRgeZO3INKs9AId++E/E/buXXAn3BG2A+ExZSgbjPD9EkveRvL3TpGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XBsk4L51; arc=none smtp.client-ip=209.85.221.54
+	s=arc-20240116; t=1769945693; c=relaxed/simple;
+	bh=eZXo11M6bHHsqgdDRZ6nyiwm1HQFMosjdqmj0lsDnJ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OCd4QOGAA8aVXlpWv3mNSokjl4xjnLbtUmfOM/Zv6ENrneftR3dzmoAvhiD4v6yDYH+g880IIhxTqexEIdk+xl9uJvn9L1ldpuf23lN5ErKvJkJT2rTdhjP6Q7GD4VoF6YT/l3X451nwcJsemh2fvV6ltpEinMHgxoZFlHDLU/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jqRIX3/N; arc=none smtp.client-ip=209.85.215.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBsk4L51"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-42fb2314eb0so2984317f8f.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 01 Feb 2026 02:33:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqRIX3/N"
+Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-c56188aef06so1702224a12.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 01 Feb 2026 03:34:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769942038; x=1770546838; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ltBgBJWZ9IoIK6qZcKGPuw+QqjYZzBZ31BgEFRyKDhU=;
-        b=XBsk4L51JhJeJx3OxWvnJX8s10/DJfEFoYBszysx9yUmf1wXKTp2DSy3unCozITI4o
-         n80CWqowBGe0x9vDQqV/f1z3+ViruiVRhsPkw/oC2tZef93vIm7ypzWYEjvRdqWljSoK
-         5nqpEIGdNnDcVkivb2e16FWVSDNsBCWwEnb2FLcMMN8ZKfHM99/gdnt+l3cv2DpWSlBB
-         5Vo6rveZ54ZbW8nkANNGJaVIT9QlQ0m5VGg+hdoOJ1EfIlzPRM3nyR9LIjlgmTugcfFe
-         Q0YFxTz7+YYQx3XY+i7cRVCrdI4Iaqm6GBTeZGCBkMoH0fLuxMTYKZiS40TF6DXM2JDt
-         NvQg==
+        d=gmail.com; s=20230601; t=1769945691; x=1770550491; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c2mbN5TpWYvaDU6GwRvqVdLjXhGGLpqs5GSJMcsrbBg=;
+        b=jqRIX3/NaQBKeHeNDcfQ7rBQr4+dASUbZb5ojbYqsFcPga8gyHHg7DMWDcW58HPzTD
+         5DHbEWAjTB7Q2FMKWFc3uS3hgGcbqANrVQEsfQ3jL8s1MqVyQSteqQ97ni4bzRuhOIyS
+         QLR/ePTr4HA7hSnP28pCMlsCH+Dd/9gvXoRbuSUd8enRg4RW/yOSz9nZ+3wcm4GLqOCK
+         xFuJKY8kB+K2FF0Q5R5GX/6p9sd6wf36dG4xKB+V+erDgEGibBM/fM1M/5dRnLiHuQLo
+         n+A2+LT3tYLvnP55nN7QlBgLpDBjOi38eKtncPBriotksgxLXrtKLJknH0EtgJeIeoH/
+         nhkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769942038; x=1770546838;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ltBgBJWZ9IoIK6qZcKGPuw+QqjYZzBZ31BgEFRyKDhU=;
-        b=o6iO1GLuR3LwK0f4phmadXBSHB5+BlMy43qJKEwvxwbMAm8ujiFQxVHs/P18hHcJKX
-         905VoywbYdPONTI/xNYpcEk2u18mK6CWypqQUVfT1+bx7iD/g+WU/yvbYXtPOmzEHc/N
-         Z+mgW5F4GLxNd3WFvnCCBxMaBh3tPxjUb1gYw00x9E+wTTUmreQrOVncqs37H9zk86yG
-         cke17KFCzbdZc7ZuUadRxfU1Z/IIKT/E6GtM/F2KyciZG/01WssELfVo9zP30l1p3gdF
-         FUf/dUmQmorJ7FuKtxDZN6PYE9ewV20ucFIlQcKAHQ4j/IZIve/2YxGSUrQYmjCZErve
-         elhQ==
-X-Gm-Message-State: AOJu0YxXndxJZPlHB4vS1ehPPYBih/+gq1cCWyzk2cuEQ9c0niS4IbZg
-	J1nQysQXk8ABabqTIe8eYE/PKIwLdJDhl9zxRydZw1vuZWuS5tZyp2KG
-X-Gm-Gg: AZuq6aIzGT4LpRuFFZ3U8kbHfuJ2oV9DA7hlThWEnIg8FTwKOsHfQyNE7HE8SfZVawq
-	t4gZjAX3IcKTi5YpwasIlgkMihVZlyIsq5OGuvsL+BgIvgVu6z9IIQm3TknXNSLEQGi6ePQJ6To
-	mor/P4Ce95vnrkwtWwbBeH+PaRLUSmtqssyqEcqjJ/8VHFTOvZs7Ui+BIcZDlma6LI55QmUxNz1
-	wMgfhXEV4EVckJiVPBB/oI9bsRdaYXJ48PAiVvFhpe+W83/xK8cC6hbWEHynwGiEU1rm81h89ja
-	d2EyK1fzPdcs+0NvbVHcWdk41ggnDhozkL6y5XsQI2lBgCJp10XAqYHwz4xn5UU+0Rf3p4e+IQA
-	k8VZ2hKZ5p/TZ+ejG/42/ME0KUbub0g/1RVsDgQ+vDAwYslsrKX+w6HcwSbE+sR79vopVSo48uM
-	6ai+muT8N2uYEiJZASxtOxKoHiELDFkZr9KV5IIvFTP1ukXLleFvvbVqec56HAQJICN6tbiKBYr
-	Y7AYVk=
-X-Received: by 2002:a05:6000:2905:b0:435:a48a:123f with SMTP id ffacd0b85a97d-435f3aac163mr13213480f8f.42.1769942038127;
-        Sun, 01 Feb 2026 02:33:58 -0800 (PST)
-Received: from ddolgov-thinkpadt14sgen1.rmtde.csb (ip-109-40-177-195.web.vodafone.de. [109.40.177.195])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435e1354205sm36022865f8f.41.2026.02.01.02.33.56
+        d=1e100.net; s=20230601; t=1769945691; x=1770550491;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=c2mbN5TpWYvaDU6GwRvqVdLjXhGGLpqs5GSJMcsrbBg=;
+        b=E/lmny9uB0Hu7HYxpACfn4o0D317rKOvvQNmhBqPGJmEg6L1M2IeZDddogOYG3BaRq
+         5EiB9jA5N0uVnYzsZxior/Mu5C81TEF4ur4AeV0t5MbCU+g2MZkDjqddnfGHIc1UnG8j
+         zXwOSMKoks723z+PkhIaCeR/dn+HwB+hGndvgjEkyB5B3zAYzTK+/84e+iK8h2jAyV0a
+         iwdwruA4fb5/0/gRWy5tUqBHaEctdBDSb873/5Hn1zio00Noc4/Mv13QvmMgYfO5hYOS
+         4IpnIjyjj65GtxmjADwmWQP5cdDjxqY/VFqbuEyW1cnElwkXnG9210zxW9XPAf5eQlgo
+         NjZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvgpcQceUv0ov4Pth+kkypP0roid8yHNbvPq7sHQ3GjypFB5oCbFRwr/U7CWhYJcyDx8Db8ZJkvA45R+ltjkFF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8zzkb1HM6O/STODLDSqLZZcvihRDjzw/7cVNU+D7hXX8XUUnt
+	atB2tL0VLzoknoU4vAYO4IYcCbKI0T0WF7lI4i7ewOFN1UWd5ArIf71yucNZJK9unFY=
+X-Gm-Gg: AZuq6aISUONjXR4maDBnNdL2WnmnI63VbWpNpf2gvAgMGSe4Ppv/5FcKom96myrO447
+	Mi4aU0Ie3tNJgv57L5k+DPAyWQHdC3Scr6jXjr5HEE1K/8ldsD+GJIzJdtwWMzWZa+vbkZFbZn3
+	C2okMP6GmXbTJYeHjPwaXIAR0CZZHS40VmFA1Ke9FBReI+tVB5FYrwj+grePMbPaiDtAu7LmxwV
+	AtJTYDi/NI5eabs2jyT41L8PyrSZFXmqEPI9fP4PBAJlkuyST/rh129zEZm5qc1Q9E6ITiM/ln8
+	2gSO6iJHcn1GDqbgIfmP9g+bFuLdJm1U+q/Cf7PtfGcXK1iVXj8WWsUX0ehVQFOQZ3c3O2Ly2F9
+	nuMiqDvIxjxev3R+trL/EkRJTWVAG7zrkp2DaACEvV9UgXdKSVwllhnzu/pZmLiOBJt0Zd4ZA4k
+	5ggyfWwsJOq+3sMPzDIi01hN1Wigak9PtsELE=
+X-Received: by 2002:a05:6a20:43a1:b0:366:14af:9bbb with SMTP id adf61e73a8af0-392e019922amr8124082637.69.1769945691281;
+        Sun, 01 Feb 2026 03:34:51 -0800 (PST)
+Received: from LAPTOP-1HUHJV8R.localdomain ([222.205.46.87])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a88b346de2sm115208875ad.0.2026.02.01.03.34.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Feb 2026 02:33:57 -0800 (PST)
-Date: Sun, 1 Feb 2026 11:33:54 +0100
-From: Dmitry Dolgov <9erthalion6@gmail.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v1] perf tests: Test annotate with data type
- profiling and rust
-Message-ID: <7d3n23li6drroxrdlpxn7ixehdeszkjdftah3zyngjl2qs22ef@yelcjv53v42o>
-References: <20260127083030.5909-1-9erthalion6@gmail.com>
- <aXjvF3N5ZGJlZzFi@x1>
- <2frzr2cebxes2qoxofwqshfkb5k3d7jeq72srqnt4ywrlpkz5r@7pzb7cpbm4yw>
+        Sun, 01 Feb 2026 03:34:50 -0800 (PST)
+From: Haocheng Yu <yuhaocheng035@gmail.com>
+To: acme@kernel.org
+Cc: security@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Subject: [PATCH] perf/core: Fix refcount bug and potential UAF in perf_mmap
+Date: Sun,  1 Feb 2026 19:34:36 +0800
+Message-ID: <20260201113446.4328-1-yuhaocheng035@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <2026020124-flashbulb-stumble-f24a@gregkh>
+References: <2026020124-flashbulb-stumble-f24a@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2frzr2cebxes2qoxofwqshfkb5k3d7jeq72srqnt4ywrlpkz5r@7pzb7cpbm4yw>
+Content-Transfer-Encoding: 8bit
 
-> On Fri, Jan 30, 2026 at 09:44:47AM +0100, Dmitry Dolgov wrote:
-> > I'm not managing to reproduce your results, can you please elaborate
-> > some more?
-> 
-> That's most unexpected for me, the test output I see looks like this:
-> 
->          : 54     for _ in 1..count {
->     0.00 :   5423b8: mov    %ecx,0x7c(%rsp)
->     0.00 :   5423bc: mov    %eax,0x80(%rsp)
->     0.00 :   5423c3: lea    0x7c(%rsp),%rdi
->    12.28 :   5423c8: call   541f00 <core::iter::range::<impl core::iter::traits::iterator::Iterator for core::ops::range::Range<A>>::next>
->     0.00 :   5423cd: mov    %eax,0x20(%rsp)
->    10.21 :   5423d1: jmp    5423d3 <test_rs+0xb3>
->     0.00 :   5423d3: mov    0x20(%rsp),%eax
->     0.00 :   5423d7: mov    %eax,%eax
->     0.00 :   5423d9: test   $0x1,%rax
->     0.29 :   5423df: je     5423f6 <test_rs+0xd6>
->          : 65     b.data1 += 1;
->    13.69 :   5423e1: mov    0x48(%rsp),%rax     # data-type: struct Buf +0x18 (data1)
->     0.00 :   5423e6: add    $0x1,%rax
->     0.00 :   5423ea: mov    %rax,0x18(%rsp)     # data-type: u64 +0
->     0.00 :   5423ef: setb   %al
->    11.17 :   5423f2: jb     54243a <test_rs+0x11a>
->     0.00 :   5423f4: jmp    542426 <test_rs+0x106>
->     0.00 :   5423f6: lea    0x30(%rsp),%rdi
->          : 73     }
-> 
-> Where '# data-type: struct Buf' is as far as I understand a manifestation of
-> data type profiling succeeding. But my environment has slightly different
-> version of rust -- I need to figure out what's going on here, thanks.
+The issue is caused by a race condition between mmap() and event
+teardown. In perf_mmap(), the ring_buffer (rb) is accessed via
+map_range() after the mmap_mutex is released. If another thread
+closes the event or detaches the buffer during this window, the
+reference count of rb can drop to zero, leading to a UAF or
+refcount saturation when map_range() or subsequent logic attempts
+to use it.
 
-I've being testing this in the same way, but without any rust code --
-just on a simple datasym workload. Surprisingly, it seems that
-'data-type: buf' marks are disappearing even in this case starting from:
+Fix this by extending the scope of mmap_mutex to cover the entire
+setup process, including map_range(), ensuring the buffer remains
+valid until the mapping is complete.
 
-c31040085914f1188720073baa43d1483693c0a3 (perf dwarf-regs: Clean up x86
-dwarf_regnum code)
+Signed-off-by: Haocheng Yu <yuhaocheng035@gmail.com>
+---
+ kernel/events/core.c | 42 +++++++++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
-I'm not sure yet why this is happening, but don't see anything in the
-commit mentioning that -- since there are no code-with-type tests yet,
-maybe an unexpected side effect?
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2c35acc2722b..7c93f7d057cb 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7167,28 +7167,28 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 			ret = perf_mmap_aux(vma, event, nr_pages);
+ 		if (ret)
+ 			return ret;
+-	}
+-
+-	/*
+-	 * Since pinned accounting is per vm we cannot allow fork() to copy our
+-	 * vma.
+-	 */
+-	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
+-	vma->vm_ops = &perf_mmap_vmops;
+ 
+-	mapped = get_mapped(event, event_mapped);
+-	if (mapped)
+-		mapped(event, vma->vm_mm);
+-
+-	/*
+-	 * Try to map it into the page table. On fail, invoke
+-	 * perf_mmap_close() to undo the above, as the callsite expects
+-	 * full cleanup in this case and therefore does not invoke
+-	 * vmops::close().
+-	 */
+-	ret = map_range(event->rb, vma);
+-	if (ret)
+-		perf_mmap_close(vma);
++	/*
++	 * Since pinned accounting is per vm we cannot allow fork() to copy our
++	 * vma.
++	 */
++	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
++	vma->vm_ops = &perf_mmap_vmops;
++
++	mapped = get_mapped(event, event_mapped);
++	if (mapped)
++		mapped(event, vma->vm_mm);
++
++	/*
++	 * Try to map it into the page table. On fail, invoke
++	 * perf_mmap_close() to undo the above, as the callsite expects
++	 * full cleanup in this case and therefore does not invoke
++	 * vmops::close().
++	 */
++	ret = map_range(event->rb, vma);
++	if (ret)
++		perf_mmap_close(vma);
++	}
+ 
+ 	return ret;
+ }
+-- 
+2.51.0
+
