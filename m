@@ -1,233 +1,159 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C650714EC73
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Feb 2026 01:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769997357; cv=pass; b=tPBJdF5dbu63bxpXNBI/zzX0gXYwT4KyN2c1YZMGUuaknQo46uM5fMGLfSYM/lA7solzC69x81NYGv+vAQD2vYIWfMh/q+oyMQn401SGml4U1JC2nyUUGwY/HDQIVIelchdSacJ4ZRDJ8XI0Wi6fDjkW3ZOv0WAh5M8CvW7r1l0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769997357; c=relaxed/simple;
-	bh=37KY4Dvwd8SXMXHv7Hvv2vmtD7WX/uUuzGaEqb1gdOc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=smR5nCh/YXM0nkta86QdQ+ML8dzcJHr/w33FgMVpvkEVdnFNL19LXwkWR5wGWs1N1QQNUEOkldvo9Y2CeG8aUYTehbgQSkBrYsGHJygCmjpIPKi3/8gDYgXLNw+3kPI0NYUYrjdIwvokpO54I6hqQlAJVguU11mq5ip6ptofjgA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W1r2ORHz; arc=pass smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63FA2874E9
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Feb 2026 07:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770018689; cv=none; b=Bxlzuzh4o2ttcoyo6DlcSdUOYVREZofytPZxtu7ISEECDNiwPlFEara9q7pDld5aZivzqcObz+k+vTziaKD2TJggc+LBk/WHkvs+f8wav/hUjN/TqgjSvGxUtZqHw2C3oGiziqnFZpzRiaiQ/Pc5+4/MwgSnjBDPZ9QBF5G+LXg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770018689; c=relaxed/simple;
+	bh=9VdcutY/1HtuM0eOblIVyvBoIezSx1Mw/CCfmtVy3Xk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BwQCxE2Wq3bAYwu3a57J9POggSvw75UlMlLVX9GbRLPlQ9/2BohZSGov1NX2XX9z+d2brQRT27oudG/DUF8Zb+qGt6FVG1lj1PKOt3kgX+aDwsgLdLzNK5ZdUG7E/GZ6y328x2NmHJCrvxTChYc+6bc59pTRRhEgjdFwgFw4Yrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdFW3wb2; arc=none smtp.client-ip=209.85.210.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W1r2ORHz"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a76b39587aso109025ad.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 01 Feb 2026 17:55:55 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769997355; cv=none;
-        d=google.com; s=arc-20240605;
-        b=awkc/yQod4MKrMpf4mPeJiQLs22+wIRwbYafg5eFAya4Vn7LAAUSEQMTF5+Ss1wUS9
-         6Ynsc7gNnVhbGnxkdq+6bwzMPYsO+gk8jgZUhSMEU8wEfE6MKZcUjqxv+pBmjnWHsuxs
-         nMl7pgGBxkUeUgsgm89WqHSDA9QOV+2fbXJVQ7lIICkIgqO8ihng0mTWSM9nLlE5KJ+9
-         cS1ALEQmoSOT7akGZw96eseUbaBz2qba6GRRSwLX7IHq8b/6EekJk5vhhRpQkUiD9FH8
-         RH3a/Pti4Wvu+ggLDOX9MpK+YO/LVH5We6PcelGZc9Oxi+5An5hyLrIXCTGBTqS47U9K
-         +wEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=zKMyhwj1CFOlY+qo9L/Ll46UsMAktS3TMkFqPphW4YM=;
-        fh=1ra25f2ND/I7gl64t9rEgTBUU6/meWFH4Yrvf1TEslI=;
-        b=dedhuCslbIXIOS1LDSp0hHEfSHoAwfKc7Bytxt7At14oxcsk0DwwjIHHu5eCtWAmfq
-         l2iiOqkIrrUNdoDUBNYr12GZQdhSBBhOxxVZvdlMMuf8LRDm9ccgvuglAIYIIfe3ajSE
-         z+OZdNIDgLsrTNMfkJ9RpMb7VK10hODDloS9+CXnd54uiXYqoEw81IV9DJMKgoHgq6GJ
-         XYbsqE30+FUS4odQv/afYsKNW0Dejm/qUAuTa4F89qbETzCZ65WQwNrcto/GPqqeQN9K
-         THk4wjz7RmWBaU2t4yrqYY+IU1y4EalJ6FaN8LIgtpabc0Zp5Cy7a/DvvJ9RJ2LTX1eZ
-         lGIQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdFW3wb2"
+Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-82318702afbso3479710b3a.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 01 Feb 2026 23:51:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769997355; x=1770602155; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1770018688; x=1770623488; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zKMyhwj1CFOlY+qo9L/Ll46UsMAktS3TMkFqPphW4YM=;
-        b=W1r2ORHzdOJQQfnMrM+PaqRqQH1WlnSe7v1n9eMbyRK06OW9uKfs+vejUbVcXe/qnF
-         xjLAJKcXrq/IlVNjUX5amuOh2oMJsRCy54nOhgOlHPBsKwFaOA0StwlRg6TY0Hzl7m7G
-         2A3RQrwi44SeTexmKSsL9LSy+JQc2kMYcNkW1tm52KOpnaWe5pXcWgLB004pFJAYEfSL
-         LUGGjHmtHsPPYsEAx5XbJOFEtUaID2OHOqvLHo4Pxs5y2kPYr3DHgoKI00oaibdGj453
-         HvGz1CmY1gm5t7ObM9L+T+YKnW2QuB8hDzZvqgYCpNu82ru8UwV5EfuJN6b8bbBauETg
-         5zTw==
+        bh=oiA8iwxfevRzDtj5meYZoNEt0fOR2pKNa2ks4Nm0b2o=;
+        b=gdFW3wb2F4xYmBr1spYhAOHN+ARLh9s/0AZbF0sGvmUFfDYfY0vrdCGopN+3a8pUph
+         IhKgyzE0EOGU8kQLD405N2S8mSQIg0eXDkyCdEcVuOMrTyavJMu9UgZIDz5pi+UqCkcZ
+         2Ii+vvPxJKgjLkocXyqjwtEA91/lLh+gqLHLj1G6xEvuvWdMe4iMJzf+tY6WkgB7t0at
+         T2ecVzXbEG8W2fuh1OUlFEpGBLu9wzMhxbnfmlE+ZfqHM+ChsNze5bumVrc0RgfXKmWa
+         Ckc5OOF3h1WqOEx+FFGQJNivua6NSbyf0IBX07u1EiZedkUhv3Qmztx8I+4oO765DO+H
+         q18A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769997355; x=1770602155;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20230601; t=1770018688; x=1770623488;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=zKMyhwj1CFOlY+qo9L/Ll46UsMAktS3TMkFqPphW4YM=;
-        b=GDraiHL9/dtjRMDehP3ycZo8nwfQ8ZyQf/NGhw02I0fq0BHfVMfI5hjT1AGu5CEBLF
-         oPCIMwjW/3cf84a13ucrYfluYrZXDGuisyUwxt+BJxNiMls/z6ITEBBRoruFAO6zaqV4
-         Z7vwefvtDUjcK3SU5bqtS9Wfr0lM3zDLhsNUg6e+EqoALb2MgFb0hdMZtp/eBxAbU9O1
-         +/vUg55FNm2Nx2ljHw8nCybyYAAX4ZfSRBOsJClKvpifYyyDb34TsRdMSxSOEri4rgy8
-         ROvbxItiXanmyp8RPxmNxIP6MGjN2eh/TGL+2Qhh6DhGuopLPrOxOB8MocCREmpK3Xhg
-         kaHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXmhIQoEW/3zlQJ+1rAuV3tV7LVfEqnDFNZ0md8qAmklZSbyLwI7wp1jGi1qNt03vocA6/hlAbDWIjxeoORpvW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5UnYkcd0joUPIx56WOAwWNOlGQ1ErcDTDIb10icFjvYrj80HB
-	beFT/55HR3PG16mc4JR45Z+MhTqsueQf/b/zFqvn9tioQkjBpuQvekytqs8S1nS/SMhBPJs7Y/t
-	bXpQB7HbNVj3ROoS0kkd+9eKJcqfmYbQr+pASmm9q
-X-Gm-Gg: AZuq6aKn4xLHPUpD0UxebCRLwCyLXOJ+nTPBGMTdY+OdnMdkFXzzb9JzGdMvFjnQWza
-	N+XwjdITfvgo6MKtDekvOByzcllJdyFmdxT9Et/tRrlqPaeU6wyEevD7Uh0yg1Ygeh/tz43rr1m
-	lYOFtXVC3CltLGC/+WnqiX5ZzN3jY6540QHU9LZM+SsMprnDmnDNV8gzB1kPYLBDoBMOG2pAXsQ
-	NhKjBYkvhboUim35Sk8zeun8EPmR35UA5l5sz+fKmckOt+Fzq+O3kGKeEsd8lmDuhryNb+s4kh9
-	54DgLGbwEjZ/DLlP+GnX9QDjCg==
-X-Received: by 2002:a17:903:1b46:b0:295:3f35:a315 with SMTP id
- d9443c01a7336-2a8f508a028mr1388475ad.5.1769997354552; Sun, 01 Feb 2026
- 17:55:54 -0800 (PST)
+        bh=oiA8iwxfevRzDtj5meYZoNEt0fOR2pKNa2ks4Nm0b2o=;
+        b=mWn98T64Pr2mPNYb/9LTcgtK17ckTERsUxqfJ7C2oQGNre+nBKtayCGwvTtbodv8+s
+         zVPA7pXOqXvnZhA4C3ynkPQpuqaWZlf0U1KVhb0dIYT1ieBblOoeXUq8et4VwCmVA15z
+         BQFa6hiyiYlTiXhX4DnjHL68ixeftShqNQGtb/cLTkzl9bJkYxY3kn7mTjpBdRfo69fi
+         FKjKheuWOkqq1775t/B1zCseZemyK+uJ3dQj8EoNB77d9XOq/+NU8LxoT2ceeM/Lpyxh
+         Fd9tWLg9ydM/toYXqMKdVL+cRx7M92wo1Re/Zez6wErTCOB5S23+DX6kklpZd/RCg92L
+         dB5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXrPekkCSrJHIcv95tMdPb9q0N8tjAdCVQvEFZY/nKUWmsAfrr/ybLXUhyY+x6Ngn3ztxhaXIBVWjdACdZLSET5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXq62Ds5o9b+U/nhXmnN8+IKeEH8tU8aLxaOAxhcJCSv21k2FE
+	2Tzn4I9FjjHQY6AWpIKvsABV3Vo3HZ6BIo8rxI3yVc18lPCXO9OG0Ts6
+X-Gm-Gg: AZuq6aI4u74/nMg/VHVuw2D/ecPi80aCYgqji+vnbHOF1vVmcaDKwwwtn/uO3lS/3Ce
+	jdKInktL4NTECzIGF4omRuhbPjEDYUbT1pfMuNsYl+fvf1YNBGcQ9H2dgJfAVRsk03/iVGo38I7
+	XO17QngSBQ1+5WYIja00hZr4lyjUPrrjFRlTBFv39YKTOXPbPpb+W1d8jTkliBQBn8XhyhOrkkv
+	4CSC+aRcMMHojW6lM690nu8AuCwN67WG5sdqC4HgM9nUc5cZcJJnypqTIZRfgic5CnK9C/9SBEF
+	J0gvkbpA+vk6AdLXdmaatm99DA9XUGlRk2q53jgw8hZr9x4tTpBJs2fDUscPHAUjVe7nr06WzGt
+	SpRe8nY1xqsUqFckME2tZj90Ng4recIKBI6QK0tkc5Xyou/4P1KgyfDfRHtlIAiQhrkoPwbf/mh
+	fpkyecy4toEG43eloF9InjgUIwWJ/cZKQYaLU=
+X-Received: by 2002:a05:6a00:1c88:b0:81c:785e:1216 with SMTP id d2e1a72fcca58-823ab317d52mr10655676b3a.0.1770018687976;
+        Sun, 01 Feb 2026 23:51:27 -0800 (PST)
+Received: from LAPTOP-1HUHJV8R.localdomain ([222.205.46.87])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82379b1d024sm15299686b3a.12.2026.02.01.23.51.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Feb 2026 23:51:27 -0800 (PST)
+From: Haocheng Yu <yuhaocheng035@gmail.com>
+To: acme@kernel.org
+Cc: security@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Subject: [PATCH] perf/core: Fix refcount bug and potential UAF in perf_mmap
+Date: Mon,  2 Feb 2026 15:44:35 +0800
+Message-ID: <20260202075120.4005-1-yuhaocheng035@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <2026020157-crayfish-distract-7da1@gregkh>
+References: <2026020157-crayfish-distract-7da1@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260131200224.1296136-1-irogers@google.com> <20260131200224.1296136-3-irogers@google.com>
- <20260201170459.GA584@debian-dev>
-In-Reply-To: <20260201170459.GA584@debian-dev>
-From: Ian Rogers <irogers@google.com>
-Date: Sun, 1 Feb 2026 17:55:43 -0800
-X-Gm-Features: AZwV_Qhcem8Bk7pzFsCUDa55vlzfQf_z4Xlvnl5l4tr16HwWCArY51n37Nz_Lv8
-Message-ID: <CAP-5=fXedkNLSWXVRJy7SDknx3Mb+BqUHPf7Oo7JSHshgoJ0qQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] perf kvm stat: Remove use of the arch directory
-To: Leo Yan <leo.yan@linux.dev>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	Mike Leach <mike.leach@linaro.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Shimin Guo <shimin.guo@skydio.com>, Yunseong Kim <ysk@kzalloc.com>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Quan Zhou <zhouquan@iscas.ac.cn>, 
-	Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Blake Jones <blakejones@google.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	Anubhav Shelat <ashelat@redhat.com>, Aditya Bodkhe <aditya.b1@linux.ibm.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 1, 2026 at 9:05=E2=80=AFAM Leo Yan <leo.yan@linux.dev> wrote:
->
-> On Sat, Jan 31, 2026 at 12:02:20PM -0800, Ian Rogers wrote:
->
-> [...]
->
-> > @@ -1666,7 +1661,7 @@ kvm_events_record(struct perf_kvm_stat *kvm, int =
-argc, const char **argv)
-> >               return ret;
-> >       }
-> >
-> > -     for (events_tp =3D kvm_events_tp; *events_tp; events_tp++)
-> > +     for (events_tp =3D kvm_events_tp(); *events_tp; events_tp++)
-> >               events_tp_size++;
-> >
-> >       rec_argc =3D ARRAY_SIZE(record_args) + argc + 2 +
-> > @@ -1681,7 +1676,7 @@ kvm_events_record(struct perf_kvm_stat *kvm, int =
-argc, const char **argv)
-> >
-> >       for (j =3D 0; j < events_tp_size; j++) {
-> >               rec_argv[i++] =3D STRDUP_FAIL_EXIT("-e");
-> > -             rec_argv[i++] =3D STRDUP_FAIL_EXIT(kvm_events_tp[j]);
-> > +             rec_argv[i++] =3D STRDUP_FAIL_EXIT(kvm_events_tp()[j]);
-> >       }
->
-> Nitpick: we can assign reuse events_tp throughout the
-> kvm_events_record().  Something like:
->
->   events_tp =3D kvm_events_tp();
->   for (j =3D 0; events_tp[j]; j++)
->        events_tp_size++;
->
->   ...
->
->   for (j =3D 0; j < events_tp_size; j++) {
->        rec_argv[i++] =3D STRDUP_FAIL_EXIT("-e");
->        rec_argv[i++] =3D STRDUP_FAIL_EXIT(events_tp[j]);
->   }
->
-> [...]
->
-> > +int setup_kvm_events_tp(struct perf_kvm_stat *kvm)
-> > +{
-> > +     switch (EM_HOST) {
-> > +     case EM_PPC:
-> > +     case EM_PPC64:
-> > +             return __setup_kvm_events_tp_powerpc(kvm);
-> > +     default:
-> > +             return 0;
-> > +     }
-> > +}
-> > +
-> > +int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid)
-> > +{
-> > +     switch (EM_HOST) {
-> > +     case EM_AARCH64:
-> > +             return __cpu_isa_init_arm64(kvm);
-> > +     case EM_LOONGARCH:
-> > +             return __cpu_isa_init_loongarch(kvm);
-> > +     case EM_PPC:
-> > +     case EM_PPC64:
-> > +             return __cpu_isa_init_powerpc(kvm);
-> > +     case EM_RISCV:
-> > +             return __cpu_isa_init_riscv(kvm);
-> > +     case EM_S390:
-> > +             return __cpu_isa_init_s390(kvm, cpuid);
-> > +     case EM_X86_64:
-> > +     case EM_386:
-> > +             return __cpu_isa_init_x86(kvm, cpuid);
-> > +     default:
-> > +             pr_err("Unsupported kvm-stat host %d\n", EM_HOST);
-> > +             return -1;
-> > +     }
-> > +}
->
-> For a general solution, I'd prefer to use "install" + callback methods
-> rather than the opened code.  E.g., each arch installs a structure
-> with callbacks:
->
->   struct kvm_stat_arch kvm_stat_aarch64 {
->       .setup_events_tp =3D NULL;
->       .cpu_isa_init    =3D __cpu_isa_init_arm64;
->       ...
->   };
->
-> Then at the init phase, we can install arch's structure:
->
->   switch (EM_HOST) {
->   case EM_AARCH64:
->       kvm_stat_arch_init(&kvm_stat_aarch64);
->       break;
->   ...
->   }
->
-> Afterwards, it is no need to check EM_HOST anymore, it can simply
-> invoke the arch's callback:
->
->   int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid)
->   {
->       if (!arch_kvm_stat || !arch_kvm_stat->cpu_isa_init)
->           return -1;
->
->       return arch_kvm_stat->cpu_isa_init(kvm, cpuid);
->   }
->
-> As a result, we can avoid spreading "switch (EM_HOST)" everywhere.
+Syzkaller reported a refcount_t: addition on 0; use-after-free warning
+in perf_mmap.
 
-So the use of switch(EM_HOST) is to just show the equivalence between
-the before and after code. The EM_HOST has become an e_machine read
-from the session/env by the end of the series. I agree there is naming
-clean up, etc. that can be done to the kvm_stat code but I just wanted
-to focus the series on the removal of the arch directory by way of
-switching to using the e_machine value.
+The issue is caused by a race condition between mmap() and event
+teardown. In perf_mmap(), the ring_buffer (rb) is accessed via
+map_range() after the mmap_mutex is released. If another thread
+closes the event or detaches the buffer during this window, the
+reference count of rb can drop to zero, leading to a UAF or
+refcount saturation when map_range() or subsequent logic attempts
+to use it.
 
-Thanks,
-Ian
+Fix this by extending the scope of mmap_mutex to cover the entire
+setup process, including map_range(), ensuring the buffer remains
+valid until the mapping is complete.
 
-> Thanks,
-> Leo
->
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202602020208.m7KIjdzW-lkp@intel.com/
+Signed-off-by: Haocheng Yu <yuhaocheng035@gmail.com>
+---
+ kernel/events/core.c | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2c35acc2722b..abefd1213582 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7167,28 +7167,28 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 			ret = perf_mmap_aux(vma, event, nr_pages);
+ 		if (ret)
+ 			return ret;
+-	}
+ 
+-	/*
+-	 * Since pinned accounting is per vm we cannot allow fork() to copy our
+-	 * vma.
+-	 */
+-	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
+-	vma->vm_ops = &perf_mmap_vmops;
++		/*
++		 * Since pinned accounting is per vm we cannot allow fork() to copy our
++		 * vma.
++		 */
++		vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
++		vma->vm_ops = &perf_mmap_vmops;
+ 
+-	mapped = get_mapped(event, event_mapped);
+-	if (mapped)
+-		mapped(event, vma->vm_mm);
++		mapped = get_mapped(event, event_mapped);
++		if (mapped)
++			mapped(event, vma->vm_mm);
+ 
+-	/*
+-	 * Try to map it into the page table. On fail, invoke
+-	 * perf_mmap_close() to undo the above, as the callsite expects
+-	 * full cleanup in this case and therefore does not invoke
+-	 * vmops::close().
+-	 */
+-	ret = map_range(event->rb, vma);
+-	if (ret)
+-		perf_mmap_close(vma);
++		/*
++		 * Try to map it into the page table. On fail, invoke
++		 * perf_mmap_close() to undo the above, as the callsite expects
++		 * full cleanup in this case and therefore does not invoke
++		 * vmops::close().
++		 */
++		ret = map_range(event->rb, vma);
++		if (ret)
++			perf_mmap_close(vma);
++	}
+ 
+ 	return ret;
+ }
+
+base-commit: 7d0a66e4bb9081d75c82ec4957c50034cb0ea449
+-- 
+2.51.0
+
