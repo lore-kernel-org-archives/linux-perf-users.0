@@ -1,172 +1,152 @@
-Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE4C2798E5
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Feb 2026 16:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFCE1400C;
+	Mon,  2 Feb 2026 16:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770049262; cv=none; b=RTRONUShF4HOrHRuaOxky1okUSHuaz6TOOCSaiEk1mXAxKr6NnB6obMqUuDskt4U4hayybYC/dMLmYQBSpup6mbo/zGhGk9lc625ACMDCkIC/WwtWX7lJ7+IjoYJR1L9kfHgX79j+e5yyYm5zDqT+D5eQ+kq+oolx8lMGFM4A78=
+	t=1770051243; cv=none; b=oOOSYk6o0aBFNB+3LECgo0OSjE0+KLLcI5DldMDbYwPxDnFY1+f3qN9mIZx/P2XKchaSFgbuWBTZ8OWUZF4NjEYY7byuL9hh+uP9MVw5mKRBCI/iGWQxm4/K+nZCWJ/Q54lLljJTBc6sW6mdo02yqeJ7t4JGELOeYv2d66aCaOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770049262; c=relaxed/simple;
-	bh=2+sFTI4Twi70XgQ/Tit5ZeoczWokFQjiFzARk2LlBzg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o7632KET95r93d9doS9WfQ5+z3b2DtyjSAIvjNUPPofbIbv57ca8zF7+m4m3uULm4uS+R5zYSDgOwPvICdui0mKQ/Xd5oXefv6dcPPbbxvSDEppW28ZfnMnur+U6Gy/WD8+CjIxWc1mxF21pXBv7iXoBg1UwcQlKESDX27yCKm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l1pyoAbi; arc=none smtp.client-ip=209.85.210.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1770051243; c=relaxed/simple;
+	bh=ewFJ7lIw0mhiwj4TSfTYPWEKSHxdvWRNCspn7DwLvv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Inps2XK+RH1oR5HRtQY8VEtBDUBYLWJsNrjDqbqWzXA+MqXbk0fdWxLiE1ttxBHyeRBm3aVzJk8l4TjMZYBQE/oBY+JX+2KGwZIzx0/faslfTJwUd+ndcTmzSuXhOZGpiMkdTVqcxLgHUILc1pknHCj/Ml0YcDF5T3/3/SoZ1qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q9U8RKjY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1pyoAbi"
-Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-81f39438187so2648338b3a.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Feb 2026 08:21:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770049261; x=1770654061; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xzWCXgQVP39cSNB7GkVYMYPIhqlyfZ+BI+Aqz0QKBJg=;
-        b=l1pyoAbixoiVq3D6q6JIiPmfzHtHtyw1mXOrT37B5P9ilgu4+CKjugVsFh0h0f8dBx
-         vowAVu59E+LN+P403v2EoloH5mk+QXvF5pxcar4pgmUq5Xus1pOo17UJQ80G7QWsOB/t
-         ftmpI5VJh/x/yo6FUWatMqe+3IeHMxmCATRRM0BEsrWG6EfBSpHXGiQ1IFTVJDcJpbNR
-         wIOzPR1EikgBXAlqd1iSQlQrF02Z2sERBUYSyJuWXhHOied5/l7rg1nFg+oKcEasFiMh
-         1UXGjQbANyNPCd1NeAo8rc2HadPDTx5owBKXaeiQ6dz9KcomBk9Ar00NsuA1NUvTg4b9
-         LJtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770049261; x=1770654061;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=xzWCXgQVP39cSNB7GkVYMYPIhqlyfZ+BI+Aqz0QKBJg=;
-        b=UVsTJYtOK1MvwoG5YlvC/8AssydOL3mTKYZFZ2+HvZ9rlwDwd13gXiRfZ7MgbVzSfC
-         1Us82FPTG32Yd8cfN86yPLiICtcFRUkQPlzIDDoACKcZtvj2hO9yZtlzU+IaoMl3T0yk
-         moa9wFwV+JDOvpv2L1kmbV+KSTHvdofpa4fGoHKyY4atOnC8MiqXowobMbyYCq2DPUG7
-         XPq6f78jTG1S0SQ3DPhElADPZZUEKiiTAoeyWcR7EdyqxVnEOq+NJeGUygrAzhmAZoL3
-         FB0QLYHsPcCPNRs2F+UwDpzkBMfZzN8JvUMo4M45JhRkKTVajOwq8AZKbobQZVIC0rlZ
-         zdzw==
-X-Forwarded-Encrypted: i=1; AJvYcCX/ctPoOqeGOT6RWZ/YZLMsem6SL/+6ligejXjggN8C9i2cUQfoXLZdKPKlF+7sxEC320uHwAkixVLcxNcmdgle@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRY0tZhN4fxMnau1Glur8NG/D7V3ZHHqEd5tapa3c5iXMVqWr2
-	Tevz4eyLzdrkH/U//qyVqArZGIzjHpq8DUsxe4QTmjI8XaxcfaE+YLeKTc+urmdiLUsBTw==
-X-Gm-Gg: AZuq6aJNq2XOElafvHArUidb+XoyaA0pgxnjy5b5JNZWY+eQvBPLRbTxDsN+DQs0ve+
-	ldSrA+aBPmRwwzM4rHda17IF9U8czcMEd7/yVH4o8eZZo5TvnRV8lo04XU8oUseik/6hONXc8X0
-	XHZTUhtFbCi35ltI5NQZRzgCxwhxdJsiT9eQ6n3EagCAgp/8TlW/UPQe5OJ41h/Vx3driaZeYp/
-	cW1xUGuOM4DgjfVUMZyiqwKpR+S4XE4zlywqH+I8YUN3VeEgWqiGA2nTDWPQzJdArMt5sxFNiz7
-	VuMmq4RIqr3/o/IxYYPeaUu7xuoxfW0T+k54QuyMSxtSOk8mxQJnm614mjL1307zVXqufhL/21r
-	rkjTURSZ6SEcXIYFDIqLdmg5BNxMic9ZPuAbotCFgT6fbvSz7kB0aP64reY3QRBZ3HG0y4ILa1K
-	cL5bcKTbxXXAY=
-X-Received: by 2002:a05:6a00:240d:b0:81f:4e0b:324e with SMTP id d2e1a72fcca58-823ab66fb69mr10787422b3a.15.1770049260409;
-        Mon, 02 Feb 2026 08:21:00 -0800 (PST)
-Received: from localhost ([222.205.46.87])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-82379c5293dsm15821644b3a.61.2026.02.02.08.20.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Feb 2026 08:21:00 -0800 (PST)
-From: yuhaocheng035@gmail.com
-To: peterz@infradead.org
-Cc: acme@kernel.org,
-	security@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: [PATCH v2] perf/core: Fix refcount bug and potential UAF in perf_mmap
-Date: Tue,  3 Feb 2026 00:20:56 +0800
-Message-ID: <20260202162057.7237-1-yuhaocheng035@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <CAAoXzSqHuQd7k9rp878YBG5gbChgOaProPQ6XBzKpy81JF5sKg@mail.gmail.com>
-References: <CAAoXzSqHuQd7k9rp878YBG5gbChgOaProPQ6XBzKpy81JF5sKg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q9U8RKjY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37C9FC116C6;
+	Mon,  2 Feb 2026 16:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770051242;
+	bh=ewFJ7lIw0mhiwj4TSfTYPWEKSHxdvWRNCspn7DwLvv8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q9U8RKjYB1tzrvCrgN9afni5xXdEzT5RQ/+pjQUmEOb9zLuvqDCv1Nef3VxzTJ2ms
+	 fyjTvE+F3qjgD3HF1RBId1ZWneCaEIXNsSE7vn0XaWPu62s68DIqx0QwmGVxU7v65i
+	 arO7mNom+PH8kQYPkTWXb8pAg0pP1iIm57i4i+KvJoeF5Hn+6zicjv75Fxy/ACZ25Y
+	 wPNmX7eHGPAsBig5Isf+7S2QHxKYMa/XkWH173jx4y4f1WNRJKD+6bV5o1dBMx/VKG
+	 3e90A92oHAFFWk5klfyM6PuHw1lZZeaJ+7jTFNZyXXPnJl8EncMmD9JIXIEmzpNvGc
+	 3Pl2FVlWutSMQ==
+Date: Mon, 2 Feb 2026 16:53:57 +0000
+From: Will Deacon <will@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Alexandru Elisei <Alexandru.Elisei@arm.com>,
+	Anshuman Khandual <Anshuman.Khandual@arm.com>,
+	Rob Herring <Rob.Herring@arm.com>,
+	Suzuki Poulose <Suzuki.Poulose@arm.com>,
+	Robin Murphy <Robin.Murphy@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: arm_spe: Add barrier before enabling profiling
+ buffer
+Message-ID: <aYDWpc8Jh4SqMcD5@willie-the-truck>
+References: <20260123-james-spe-relaxation-v1-1-4ccb88fa7bc5@linaro.org>
+ <20260130202437.GB3481290@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260130202437.GB3481290@e132581.arm.com>
 
-From: Haocheng Yu <yuhaocheng035@gmail.com>
+On Fri, Jan 30, 2026 at 08:24:37PM +0000, Leo Yan wrote:
+> On Fri, Jan 23, 2026 at 04:03:53PM +0000, James Clark wrote:
+> > The Arm ARM known issues document [1] states that the architecture will
+> > be relaxed so that the profiling buffer must be correctly configured
+> > when ProfilingBufferEnabled() && !SPEProfilingStopped() &&
+> > PMBLIMITR_EL1.FM != DISCARD:
+> > 
+> >   R24557
+> > 
+> >   While the Profiling Buffer is enabled, profiling is not stopped, and
+> >   Discard mode is not enabled, all of the following must be true:
+> > 
+> >   * The current write pointer must be at least one sample record below
+> >     the write limit pointer.
+> > 
+> > The same relaxation also says that writes may be completely ignored:
+> > 
+> >   When the Profiling Buffer is enabled, profiling is not stopped, and
+> >   Discard mode is not enabled, the PE might ignore a direct write to any
+> >   of the following Profiling Buffer registers, other than a direct write
+> >   to PMBLIMITR_EL1 that clears PMBLIMITR_EL1.E from 1 to 0:
+> > 
+> >   * The current write pointer, PMBPTR_EL1.
+> >   * The Limit pointer, PMBLIMITR_EL1.
+> >   * PMBSR_EL1.
 
-Syzkaller reported a refcount_t: addition on 0; use-after-free warning
-in perf_mmap.
+Oh nice, since when was it ok to relax the architecture and break
+existing drivers that were perfectly fine before? The SPE spec's not
+worth the paper it's written on...
 
-The issue is caused by a race condition between a failing mmap() setup
-and a concurrent mmap() on a dependent event (e.g., using output
-redirection).
+Anyway, we're not changing the driver without a comment next to the new
+isb() explaining the backwards incompatible change.
 
-In perf_mmap(), the ring_buffer (rb) is allocated and assigned to
-event->rb with the mmap_mutex held. The mutex is then released to
-perform map_range().
+> > When arm_spe_pmu_start() occurs, SPEProfilingStopped() is false
+> > (PMBSR_EL1.S == 0) meaning that the write to PMBLIMITR_EL1 now becomes
+> > the point where the buffer configuration must be correct by, rather than
+> > the "When profiling becomes enabled" (StatisticalProfilingEnabled())
+> > from the old rule which is much later when PMSCR_EL1 is written.
+> > 
+> > If the writes to PMBLIMITR_EL1 and PMBPTR_EL1 are re-ordered then a
+> > misconfigured state could be observed, resulting in a buffer management
+> > event. Or the write to PMBPTR_EL1 could be ignored.
+> > 
+> > Fix it by adding an isb() after the write to PMBPTR_EL1 to ensure that
+> > this completes before enabling the buffer.
+> 
+> Makes sense.
+> 
+> > To avoid redundant isb()s in the IRQ handler, remove the isb() between
+> > the PMBLIMITR_EL1 write and SYS_PMBSR_EL1 as it doesn't matter which
+> > order these happen in now that all the previous configuration is covered
+> > by the new isb().
+> 
+> The isb() in the interrupt handler is useful and should not be removed.
+> 
+> See the sequence in the interrupt handler:
+> 
+>     arm_spe_perf_aux_output_begin() {
+>         write_sysreg_s(base, SYS_PMBPTR_EL1);
+> 
+>         // Ensure the write pointer is ordered
+>         isb();
+> 
+>         write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
+>     }
+> 
+>     // Ensure the limit pointer is ordered
+>     isb();
+> 
+>     // Profiling is enabled:
+>     //   (PMBLIMITR_EL1.E==1) && (PMBSR_EL1.S==0) && (not discard mode)
+>     write_sysreg_s(0, SYS_PMBSR_EL1);
+> 
+> The first isb() ensures that the write pointer update is ordered.  The
+> second isb() ensures that the limit pointer is visible before profiling
+> is enabled by clearing the PMBSR_EL1.S bit.  When handling a normal
+> maintenance interrupt, PMBSR_EL1.S is set by the SPE to stop tracing,
+> while PMBLIMITR_EL1.E remains set.  Clearing PMBSR_EL1.S therefore
+> effectively re-enables profiling.
+> 
+> Since the second isb() is a synchronization for both the write pointer
+> and the limit pointer before profiling is enabled, it could be argued
+> that the first isb() is redundant in the interrupt handling.  However,
+> the first isb() is crucial for the arm_spe_pmu_start() case, and keeping
+> it in the interrupt handler does no harm and simplifies code maintenance.
+> 
+> In short, if preserves the second isb() instead of removing it, the
+> change looks good to me.
 
-If map_range() fails, perf_mmap_close() is called to clean up.
-However, since the mutex was dropped, another thread attaching to
-this event (via inherited events or output redirection) can acquire
-the mutex, observe the valid event->rb pointer, and attempt to
-increment its reference count. If the cleanup path has already
-dropped the reference count to zero, this results in a
-use-after-free or refcount saturation warning.
+I'm not sure I follow your logic as to why both ISBs are required, but
+I'd have thought that if perf_aux_output_begin() fails when called from
+arm_spe_perf_aux_output_begin() in the irqhandler, we need the ISB
+because we're going to clear pmblimitr_el1 to 0 and that surely has
+to be ordered before clearing pmbsr?
 
-Fix this by extending the scope of mmap_mutex to cover the
-map_range() call. This ensures that the ring buffer initialization
-and mapping (or cleanup on failure) happens atomically effectively,
-preventing other threads from accessing a half-initialized or
-dying ring buffer.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202602020208.m7KIjdzW-lkp@intel.com/
-Signed-off-by: Haocheng Yu <yuhaocheng035@gmail.com>
----
- kernel/events/core.c | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2c35acc2722b..abefd1213582 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7167,28 +7167,28 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
- 			ret = perf_mmap_aux(vma, event, nr_pages);
- 		if (ret)
- 			return ret;
--	}
- 
--	/*
--	 * Since pinned accounting is per vm we cannot allow fork() to copy our
--	 * vma.
--	 */
--	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
--	vma->vm_ops = &perf_mmap_vmops;
-+		/*
-+		 * Since pinned accounting is per vm we cannot allow fork() to copy our
-+		 * vma.
-+		 */
-+		vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
-+		vma->vm_ops = &perf_mmap_vmops;
- 
--	mapped = get_mapped(event, event_mapped);
--	if (mapped)
--		mapped(event, vma->vm_mm);
-+		mapped = get_mapped(event, event_mapped);
-+		if (mapped)
-+			mapped(event, vma->vm_mm);
- 
--	/*
--	 * Try to map it into the page table. On fail, invoke
--	 * perf_mmap_close() to undo the above, as the callsite expects
--	 * full cleanup in this case and therefore does not invoke
--	 * vmops::close().
--	 */
--	ret = map_range(event->rb, vma);
--	if (ret)
--		perf_mmap_close(vma);
-+		/*
-+		 * Try to map it into the page table. On fail, invoke
-+		 * perf_mmap_close() to undo the above, as the callsite expects
-+		 * full cleanup in this case and therefore does not invoke
-+		 * vmops::close().
-+		 */
-+		ret = map_range(event->rb, vma);
-+		if (ret)
-+			perf_mmap_close(vma);
-+	}
- 
- 	return ret;
- }
-
-base-commit: 7d0a66e4bb9081d75c82ec4957c50034cb0ea449
--- 
-2.51.0
-
+Will
