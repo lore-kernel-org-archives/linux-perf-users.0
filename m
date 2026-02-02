@@ -1,124 +1,172 @@
-Received: from mail-qk1-f194.google.com (mail-qk1-f194.google.com [209.85.222.194])
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFE325393B
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Feb 2026 15:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.194
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770047505; cv=pass; b=qPSlbcYOl4wXSSlFJyGeugfx8ov+prVBIQq3jHkE4ACtfIaqsaLwjvtpVlHFGP7Yzkt8DlkKuX3PrZJjUMR9cULgfols2X+f93nJRW1ecYHCveWJ92DBYVFSdAaBtvJ6G7kp8v/PhhD75NIDOuTo7FR7UXcpaypu1zqiyFzH7j4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770047505; c=relaxed/simple;
-	bh=g1GWPxgtuKJF4IiBLJwATd6WJcxMsLhFFc+t5L9Rfi0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uNH60++YS48LcRityMktLzr3xXpTOLPyY8yjkmnIh2bSvjgJmuU3M6EdvIeqoaH87d3B7b+9QLphdx86LCuupLeUyMuhAvias8OwAD/jQorCvtkLRYG0dfRPfnfsN5vAMvXEdAf1KzrAIHsGvEgm6aau3Ob73poq+BL/IkW1Jdk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aeiw776A; arc=pass smtp.client-ip=209.85.222.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE4C2798E5
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Feb 2026 16:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770049262; cv=none; b=RTRONUShF4HOrHRuaOxky1okUSHuaz6TOOCSaiEk1mXAxKr6NnB6obMqUuDskt4U4hayybYC/dMLmYQBSpup6mbo/zGhGk9lc625ACMDCkIC/WwtWX7lJ7+IjoYJR1L9kfHgX79j+e5yyYm5zDqT+D5eQ+kq+oolx8lMGFM4A78=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770049262; c=relaxed/simple;
+	bh=2+sFTI4Twi70XgQ/Tit5ZeoczWokFQjiFzARk2LlBzg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=o7632KET95r93d9doS9WfQ5+z3b2DtyjSAIvjNUPPofbIbv57ca8zF7+m4m3uULm4uS+R5zYSDgOwPvICdui0mKQ/Xd5oXefv6dcPPbbxvSDEppW28ZfnMnur+U6Gy/WD8+CjIxWc1mxF21pXBv7iXoBg1UwcQlKESDX27yCKm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l1pyoAbi; arc=none smtp.client-ip=209.85.210.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aeiw776A"
-Received: by mail-qk1-f194.google.com with SMTP id af79cd13be357-8c07bc2ad13so345782985a.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Feb 2026 07:51:43 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770047502; cv=none;
-        d=google.com; s=arc-20240605;
-        b=YRgtAZHH4RNI7wnoejJ8fBTSg32IaDVcpsZBZF8zeDuwmMN8lLV7rsSJyCiw+1zM3/
-         i4/L3p9O836+jheGFytjysHtMEPbF+wlJUKvM+6Xn+EzrwsloYV7ubDS/At/aE8Qio9y
-         2GHKGBfHFyV4zXoFMvROq+gvfMYNZPM1DcJS+0sECasTM227UmhsMfeCzjG8V430+KwZ
-         O3vEjBFP8h3AGiTwS7wEOpiJM/N4ZVKE1Ci1KHy8fRyZ8+SaJW5WKtptwImTgMnoJDLC
-         Ajs2vn1N00O18W6ii3xoVOb3RqpD2IsnAm10H7K3PwcIzbhi5MW27tcQpSzvc/jdz6JX
-         9wsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=g1GWPxgtuKJF4IiBLJwATd6WJcxMsLhFFc+t5L9Rfi0=;
-        fh=K6GzsIhe1i8oZWL8cpFpfcrv1OD67dycCEaOQ9CJrwo=;
-        b=Gj3VFWygGKVQj67Z3HePsYufKUN4lLqZcBeU7LhhzIAVEbJsPKjug4Bq+m4jQU47CU
-         EWUYyhwu/u4ieWyfPkwO9kq1+09FgBdXwx/MJl4Q0Cgejl5O7TryM5Cr0/BgxYA7R9s7
-         jnXamC6BlDGV07ChWqu9j+NdrSAu7QlHC6VCMVVwW/xxCBM8OIlBGPt5OClVsbOlilpG
-         S+i6ovscaZUUH1+/FS8Hb5Ci4iwnshgDNT20tEqj8xdJyX4xxlkBhXFEqvqC/2JYH6UC
-         ym+xH0kjia/Ka8n54SakTLyoEjMXti+HzimeWDOc+uG3qMMsGqSC2Ujrq+X+GK66Yksc
-         Jq0Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1pyoAbi"
+Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-81f39438187so2648338b3a.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Feb 2026 08:21:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770047502; x=1770652302; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=g1GWPxgtuKJF4IiBLJwATd6WJcxMsLhFFc+t5L9Rfi0=;
-        b=aeiw776AgC/G6ETVlFnutCJQHFnt3IJ1DE0Ri3db13hCB3YW7FBofbYuUgvcoTEMar
-         F/I5eTZYcRUcbmUGI5l8T2W4rHROlXRCeqNWWVYgs1E0o9dr0LBsFrk2np59GdUmVfow
-         6I5CJO65jj9UQAccnCNCvoBWCl58i7YoQWMBUz88VcloVGk9rq0xsgFPEAllFP1EAjAe
-         q1iUOXVb1uxOSP9zOIMFPhfp2eDjQLwU6L4mPdcG/YWPgKRdXi+HIUtbpVpHI11zVnhh
-         BkJGNtbwFs7N44Hm4RCH+clN5/DMoHkd3/P66NxKk6Ww1ooZDMEDheFlzQLQfY3DPjEk
-         R+mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770047502; x=1770652302;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1770049261; x=1770654061; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=g1GWPxgtuKJF4IiBLJwATd6WJcxMsLhFFc+t5L9Rfi0=;
-        b=Q3CIENCvfRPLUqu9lJfsu895CUY+57GhYO2TDi8lsIyLMdrtcw9wJrJUqgJsKrAxEo
-         lB2zZAlZazflbpcSyl9Sb8ciQ/HVH/foV+saxW9W/ZwW7WAwR+SNtNWQ7cE58okZEU6u
-         SEVKzqXOkP3ibGwenWS0dXDKcEeV/0gRTLFlLMrDq/9DV/k9eGhvHC5J5uirAeMyrySn
-         dwyrukYpGFW5kyEtIPakF0Olrv3wwPdbtBbE8mrvLfqG6jl5MdmSZhs9rX5C761mr+gP
-         UegGT3AQkUESUrRqL7eOjhj19unpoS6H51TJUEQg1LfxdzibeNOpylNK22m2OC/PQoek
-         zBzg==
-X-Forwarded-Encrypted: i=1; AJvYcCWheDrTVIAinreCQNjZE/rU5iDE8r41LRgp1Au8S2/p53KdjX+7sZ3zX1q/K9vx0GhRBT2tO44CUH0prrF9IjrR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyeddt79MBV0+W6032dTks7gSJw+cpPejB4PW8CXfEtRmnLswrd
-	D0c/U/B2wmBVNuIhW0IFjYlxqIiW106BhcA5sljrvkLdiLYcWLioujwGZDMuAfDBtlCuzjFa9pa
-	ViNZjUDynYEEq7WD2NFd9WMRyNEukPnE=
-X-Gm-Gg: AZuq6aKGr6CZtYzRNiy04l0mb3kTFTdRCTiNNd2KFXBFDpMHrG/pzFU+b18VfCb2BVb
-	jzCKajmvABLzwcepPw3ZUY/4LG+KUVgQBTNlUsOv2UBdpu309PPxZ2FQECg4PFJluiOepoGjS/K
-	e2xtUxHaV6iO9Jvm9NVofC5EmlZRKsCTVzepS8XZfXi80ka5MtlJVwiFX3SK+GgbIq9V/6CQ0eT
-	hNmBU+30ZJkyAEQF4fnOO55suXCb2af8asdXS+Y51gkWZye/UZh7nG64A9MAkmvBszengrh
-X-Received: by 2002:a05:620a:4687:b0:8b1:1585:225d with SMTP id
- af79cd13be357-8c9eb34f5b6mr1375844785a.82.1770047502282; Mon, 02 Feb 2026
- 07:51:42 -0800 (PST)
+        bh=xzWCXgQVP39cSNB7GkVYMYPIhqlyfZ+BI+Aqz0QKBJg=;
+        b=l1pyoAbixoiVq3D6q6JIiPmfzHtHtyw1mXOrT37B5P9ilgu4+CKjugVsFh0h0f8dBx
+         vowAVu59E+LN+P403v2EoloH5mk+QXvF5pxcar4pgmUq5Xus1pOo17UJQ80G7QWsOB/t
+         ftmpI5VJh/x/yo6FUWatMqe+3IeHMxmCATRRM0BEsrWG6EfBSpHXGiQ1IFTVJDcJpbNR
+         wIOzPR1EikgBXAlqd1iSQlQrF02Z2sERBUYSyJuWXhHOied5/l7rg1nFg+oKcEasFiMh
+         1UXGjQbANyNPCd1NeAo8rc2HadPDTx5owBKXaeiQ6dz9KcomBk9Ar00NsuA1NUvTg4b9
+         LJtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770049261; x=1770654061;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xzWCXgQVP39cSNB7GkVYMYPIhqlyfZ+BI+Aqz0QKBJg=;
+        b=UVsTJYtOK1MvwoG5YlvC/8AssydOL3mTKYZFZ2+HvZ9rlwDwd13gXiRfZ7MgbVzSfC
+         1Us82FPTG32Yd8cfN86yPLiICtcFRUkQPlzIDDoACKcZtvj2hO9yZtlzU+IaoMl3T0yk
+         moa9wFwV+JDOvpv2L1kmbV+KSTHvdofpa4fGoHKyY4atOnC8MiqXowobMbyYCq2DPUG7
+         XPq6f78jTG1S0SQ3DPhElADPZZUEKiiTAoeyWcR7EdyqxVnEOq+NJeGUygrAzhmAZoL3
+         FB0QLYHsPcCPNRs2F+UwDpzkBMfZzN8JvUMo4M45JhRkKTVajOwq8AZKbobQZVIC0rlZ
+         zdzw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/ctPoOqeGOT6RWZ/YZLMsem6SL/+6ligejXjggN8C9i2cUQfoXLZdKPKlF+7sxEC320uHwAkixVLcxNcmdgle@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRY0tZhN4fxMnau1Glur8NG/D7V3ZHHqEd5tapa3c5iXMVqWr2
+	Tevz4eyLzdrkH/U//qyVqArZGIzjHpq8DUsxe4QTmjI8XaxcfaE+YLeKTc+urmdiLUsBTw==
+X-Gm-Gg: AZuq6aJNq2XOElafvHArUidb+XoyaA0pgxnjy5b5JNZWY+eQvBPLRbTxDsN+DQs0ve+
+	ldSrA+aBPmRwwzM4rHda17IF9U8czcMEd7/yVH4o8eZZo5TvnRV8lo04XU8oUseik/6hONXc8X0
+	XHZTUhtFbCi35ltI5NQZRzgCxwhxdJsiT9eQ6n3EagCAgp/8TlW/UPQe5OJ41h/Vx3driaZeYp/
+	cW1xUGuOM4DgjfVUMZyiqwKpR+S4XE4zlywqH+I8YUN3VeEgWqiGA2nTDWPQzJdArMt5sxFNiz7
+	VuMmq4RIqr3/o/IxYYPeaUu7xuoxfW0T+k54QuyMSxtSOk8mxQJnm614mjL1307zVXqufhL/21r
+	rkjTURSZ6SEcXIYFDIqLdmg5BNxMic9ZPuAbotCFgT6fbvSz7kB0aP64reY3QRBZ3HG0y4ILa1K
+	cL5bcKTbxXXAY=
+X-Received: by 2002:a05:6a00:240d:b0:81f:4e0b:324e with SMTP id d2e1a72fcca58-823ab66fb69mr10787422b3a.15.1770049260409;
+        Mon, 02 Feb 2026 08:21:00 -0800 (PST)
+Received: from localhost ([222.205.46.87])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-82379c5293dsm15821644b3a.61.2026.02.02.08.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Feb 2026 08:21:00 -0800 (PST)
+From: yuhaocheng035@gmail.com
+To: peterz@infradead.org
+Cc: acme@kernel.org,
+	security@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Subject: [PATCH v2] perf/core: Fix refcount bug and potential UAF in perf_mmap
+Date: Tue,  3 Feb 2026 00:20:56 +0800
+Message-ID: <20260202162057.7237-1-yuhaocheng035@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <CAAoXzSqHuQd7k9rp878YBG5gbChgOaProPQ6XBzKpy81JF5sKg@mail.gmail.com>
+References: <CAAoXzSqHuQd7k9rp878YBG5gbChgOaProPQ6XBzKpy81JF5sKg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2026020157-crayfish-distract-7da1@gregkh> <20260202075120.4005-1-yuhaocheng035@gmail.com>
- <20260202135859.GH1395266@noisy.programming.kicks-ass.net> <20260202143615.GC1395416@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260202143615.GC1395416@noisy.programming.kicks-ass.net>
-From: =?UTF-8?B?5L2Z5piK6ZOW?= <yuhaocheng035@gmail.com>
-Date: Mon, 2 Feb 2026 23:51:28 +0800
-X-Gm-Features: AZwV_QgJcC37HkR8OHdDPNIaUCrKjsVF_voH0W9NBaNSA9nKYLXWGF6OMDVYCrk
-Message-ID: <CAAoXzSqHuQd7k9rp878YBG5gbChgOaProPQ6XBzKpy81JF5sKg@mail.gmail.com>
-Subject: Re: [PATCH] perf/core: Fix refcount bug and potential UAF in perf_mmap
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: acme@kernel.org, security@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, gregkh@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Peter,
+From: Haocheng Yu <yuhaocheng035@gmail.com>
 
-Thanks for the review. You are right, my previous explanation was
-inaccurate. The actual race condition occurs between a failing
-mmap() on one event and a concurrent mmap() on a second event
-that shares the ring buffer (e.g., via output redirection).
+Syzkaller reported a refcount_t: addition on 0; use-after-free warning
+in perf_mmap.
 
-Detailed scenario is as follows, for example:
-1. Thread A calls mmap(event_A). It allocates the ring buffer, sets
-event_A->rb, and initializes refcount to 1. It then drops mmap_mutex.
-2. Thread A calls map_range(). Suppose this fails. Thread A then
-proceeds to the error path and calls perf_mmap_close().
-3. Thread B concurrently calls mmap(event_B), where event_B is
-configured to share event_A's buffer. Thread B acquires
-event_A->mmap_mutex and sees the valid event_A->rb pointer.
-4. The race triggers here: If Thread A's perf_mmap_close() logic
-decrements the ring buffer's refcount to 0 (releasing it) but the pointer
-event_A->rb is still visible to Thread B (or was read by Thread B before
-it was cleared), Thread B triggers the "refcount_t: addition on 0" warning
-when it attempts to increment the refcount in perf_mmap_rb().
+The issue is caused by a race condition between a failing mmap() setup
+and a concurrent mmap() on a dependent event (e.g., using output
+redirection).
 
-The fix extends the scope of mmap_mutex to cover map_range() and the
-potential error handling path. This ensures that event->rb is only exposed
-to other threads after it is fully successfully mapped, or it is cleaned up
-atomically inside the lock if mapping fails.
+In perf_mmap(), the ring_buffer (rb) is allocated and assigned to
+event->rb with the mmap_mutex held. The mutex is then released to
+perform map_range().
 
-I have updated the commit message accordingly.
+If map_range() fails, perf_mmap_close() is called to clean up.
+However, since the mutex was dropped, another thread attaching to
+this event (via inherited events or output redirection) can acquire
+the mutex, observe the valid event->rb pointer, and attempt to
+increment its reference count. If the cleanup path has already
+dropped the reference count to zero, this results in a
+use-after-free or refcount saturation warning.
 
-Thanks,
-Haocheng
+Fix this by extending the scope of mmap_mutex to cover the
+map_range() call. This ensures that the ring buffer initialization
+and mapping (or cleanup on failure) happens atomically effectively,
+preventing other threads from accessing a half-initialized or
+dying ring buffer.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202602020208.m7KIjdzW-lkp@intel.com/
+Signed-off-by: Haocheng Yu <yuhaocheng035@gmail.com>
+---
+ kernel/events/core.c | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2c35acc2722b..abefd1213582 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7167,28 +7167,28 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 			ret = perf_mmap_aux(vma, event, nr_pages);
+ 		if (ret)
+ 			return ret;
+-	}
+ 
+-	/*
+-	 * Since pinned accounting is per vm we cannot allow fork() to copy our
+-	 * vma.
+-	 */
+-	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
+-	vma->vm_ops = &perf_mmap_vmops;
++		/*
++		 * Since pinned accounting is per vm we cannot allow fork() to copy our
++		 * vma.
++		 */
++		vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
++		vma->vm_ops = &perf_mmap_vmops;
+ 
+-	mapped = get_mapped(event, event_mapped);
+-	if (mapped)
+-		mapped(event, vma->vm_mm);
++		mapped = get_mapped(event, event_mapped);
++		if (mapped)
++			mapped(event, vma->vm_mm);
+ 
+-	/*
+-	 * Try to map it into the page table. On fail, invoke
+-	 * perf_mmap_close() to undo the above, as the callsite expects
+-	 * full cleanup in this case and therefore does not invoke
+-	 * vmops::close().
+-	 */
+-	ret = map_range(event->rb, vma);
+-	if (ret)
+-		perf_mmap_close(vma);
++		/*
++		 * Try to map it into the page table. On fail, invoke
++		 * perf_mmap_close() to undo the above, as the callsite expects
++		 * full cleanup in this case and therefore does not invoke
++		 * vmops::close().
++		 */
++		ret = map_range(event->rb, vma);
++		if (ret)
++			perf_mmap_close(vma);
++	}
+ 
+ 	return ret;
+ }
+
+base-commit: 7d0a66e4bb9081d75c82ec4957c50034cb0ea449
+-- 
+2.51.0
+
