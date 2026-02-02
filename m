@@ -1,101 +1,76 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C741F2F7478;
-	Mon,  2 Feb 2026 19:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A9B2C17A1;
+	Mon,  2 Feb 2026 19:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770059647; cv=none; b=EbClnwnNDTSFc+2B+N1kMy+uLHOuMlwQkEPFhuNP5ZuuScLpIV/xXDVTFQ+eFzRIET8bnJdxMSu9SvTqGyfmHU1tqEJDJD2RtHmprpYvagQP8JMAlgk2Gto9HSzu+yYZds/+9aO4rv0BeH4tNKnGosfb2cQSOTYYv0VYg4Li+1M=
+	t=1770062396; cv=none; b=qF4Y1L8T5TrmAvsFqRqOsVy4J6TcfrXTNXc1faXvdjQuVaIPtl4RcvaVrHGWJiBrMw9jfGSJw+F/LgfJgdr1xpsE35NPh0WTcC+mhgmK/hRIb0HRW8H3+mnOhR1krW1iZ41GYvDNHNOGx55IOSd7G9zbQS4JywXjUmFvqvv66fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770059647; c=relaxed/simple;
-	bh=mT6qNQUHmBfM0LETkPTDCUqw5si+arIq2TELq59b/YM=;
+	s=arc-20240116; t=1770062396; c=relaxed/simple;
+	bh=eEU6X/6L7H/3zpIVEJEiFvuFbR2Tsb/isJ7/+9fxYsk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d1Yc0FH0gnhB6XFC9nLKN+7gv48KRecJmn4TG4nNWv9QeI17HNUNW27x0YueiMw+iBNoEhxGCsBtKYBX0yiAqXI/H4Pp4YMHG+CFXN6RBKRcMeTv/oxT2yb0clQuZeuBqVR0OboUeoKZ3CltrTgGezXWpR2egQ4D6EQozIc4Y+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 972C5339;
-	Mon,  2 Feb 2026 11:13:58 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BFBC3F740;
-	Mon,  2 Feb 2026 11:14:04 -0800 (PST)
-Date: Mon, 2 Feb 2026 19:14:02 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Will Deacon <will@kernel.org>
-Cc: James Clark <james.clark@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Alexandru Elisei <Alexandru.Elisei@arm.com>,
-	Anshuman Khandual <Anshuman.Khandual@arm.com>,
-	Rob Herring <Rob.Herring@arm.com>,
-	Suzuki Poulose <Suzuki.Poulose@arm.com>,
-	Robin Murphy <Robin.Murphy@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: arm_spe: Add barrier before enabling profiling
- buffer
-Message-ID: <20260202191402.GD3481290@e132581.arm.com>
-References: <20260123-james-spe-relaxation-v1-1-4ccb88fa7bc5@linaro.org>
- <20260130202437.GB3481290@e132581.arm.com>
- <aYDWpc8Jh4SqMcD5@willie-the-truck>
- <20260202184234.GC3481290@e132581.arm.com>
- <aYDzh1B9Cnr_expJ@willie-the-truck>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nbfn/GJ4Q5Amhm+W+4RA3011BEOO2yFa4v3U2Mp8QwSmGMXHLj2aWD2kXHjfHukeTPbzMD3hzYCJ4DS//jB896a9DbJYSIClSbkQCBsoLcLQE4oVEi1CK5ZGV2hHMOX+m2OL879hm77V1f8NQynnTkH98vSOp+NFyPWcuizZjIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fzWlhWu2; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fzWlhWu2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Ijkgu82x5tCkNyZgQnmbEBJphoNEGQgRBkZ7m2AwrGY=; b=fzWlhWu2KNOvni03qgbg5X6xt+
+	e64YaRpHvUj5sM2HHZiHgNcfRce/ra3GMnADtB23Kpjc4zG8+Lc94UMoiueScO7YzNheOabtIOibK
+	LFDgeTrNBpeDtQltabGi3K3Tc+JM5Ng6vWU2iYY4gaBCb4W484JEpWhLJu2lE36IpjaaSvFZENLNB
+	hUaEPevouUmJZYvvcDGswZzVy46aONuN1tWgRDeo5kOHS0sxjonxHKSnuClDrpXeE869FjMiGGw2+
+	rSM+NGAUgX6Xd0eZabHVvxDmWEHfjI20xtquzq3gPbEu+unbJbpIvgt06tkSgdEVrv+GlVTVgrnWu
+	/Hi064UQ==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vn05H-0000000Gzcd-2exJ;
+	Mon, 02 Feb 2026 19:59:43 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2A2853008E2; Mon, 02 Feb 2026 20:59:43 +0100 (CET)
+Date: Mon, 2 Feb 2026 20:59:43 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Tao Chen <chen.dylane@linux.dev>, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, song@kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+	haoluo@google.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH bpf-next v8 2/3] perf: Refactor get_perf_callchain
+Message-ID: <20260202195943.GI1282955@noisy.programming.kicks-ass.net>
+References: <20260126074331.815684-1-chen.dylane@linux.dev>
+ <20260126074331.815684-3-chen.dylane@linux.dev>
+ <20260128091033.GG3372621@noisy.programming.kicks-ass.net>
+ <CAEf4BzYpcgC0Pi0f_ScUavJ_Tw74PKULsbPdexKsWmb8RmxLKg@mail.gmail.com>
+ <20260130113150.GB166857@noisy.programming.kicks-ass.net>
+ <CAEf4BzZNOqxhkjuePzeG=ivqBSHXnWzPLPPHJdoC91c+u-WjAg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aYDzh1B9Cnr_expJ@willie-the-truck>
+In-Reply-To: <CAEf4BzZNOqxhkjuePzeG=ivqBSHXnWzPLPPHJdoC91c+u-WjAg@mail.gmail.com>
 
-On Mon, Feb 02, 2026 at 06:57:11PM +0000, Will Deacon wrote:
+On Fri, Jan 30, 2026 at 12:04:45PM -0800, Andrii Nakryiko wrote:
 
-[...]
-
-
-> > > I'm not sure I follow your logic as to why both ISBs are required, but
-> > > I'd have thought that if perf_aux_output_begin() fails when called from
-> > > arm_spe_perf_aux_output_begin() in the irqhandler, we need the ISB
-> > > because we're going to clear pmblimitr_el1 to 0 and that surely has
-> > > to be ordered before clearing pmbsr?
-> > 
-> > I think the ISB after arm_spe_perf_aux_output_begin() in the irq
-> > handler is required for both the failure and success cases.
-> > 
-> > For a normal maintenance interrupt, an ISB is inserted between writing
-> > PMBLIMITR_EL1 and PMBSR_EL1 to ensure that a valid limit write is
-> > visible before tracing restarts.  This ensures that the following
-> > conditions are safely met:
-> > 
-> >   "While the Proﬁling Buﬀer is enabled, proﬁling is not stopped, and
-> >    Discard mode is not enabled, all of the following must be true:
-> > 
-> >    The current write pointer must be at least one sample record below
-> >    the write limit pointer.
-> > 
-> >    PMBPTR_EL1.PTR[63:56] must equal PMBLIMITR_EL1.LIMIT[63:56],
-> >    regardless of the value of the applicable TBI bit."
+> > Also, there appears to be no buildid caching what so ever, surely that
+> > would help some.
 > 
-> Hmm, so let's say we've executed the first ISB. At that point, the
-> Profiling Buffer is disabled (PMBLIMITR_EL1.E = 0) and profiling is
-> stopped (PMBSR_EL1.S = 1).
+> Jiri Olsa proposed caching build id per file or per inode some time
+> back, there was vehement opposition to it. And doing some locked
+> global resizable hash that might need to be used from NMI sounds
+> horrible, tbh. So we have what we have today.
 
-This is not true.  PMBLIMITR_EL1.E is always 1 during interrupt
-handling.
-
-> If we *don't* have the second ISB then either
-> PMBLIMITR_EL1 is written first or PMBSR_EL1 is written first. But the
-> text you quoted will only come into effect once they've both happened,
-> right? In which case, why does the order matter for the success case?
-
-Yes, both PMBLIMITR_EL1.E == 1 and PMBSR_EL1.S == 0 must be true to
-enable tracing.
-
-However, the tricky part is that PMBLIMITR_EL1.E remains 1 throughout
-the sequence.  Writing PMBLIMITR_EL1 effectively only sets the limit,
-while clearing PMBSR_EL1 is the distinct step that enables tracing.
-
-Thanks,
-Leo
+See kernel/module/tree_lookup.c and include/linux/rbtree_latch.h :-)
