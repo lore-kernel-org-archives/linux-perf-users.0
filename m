@@ -1,246 +1,168 @@
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A32333438;
-	Tue,  3 Feb 2026 17:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770140253; cv=none; b=a/CrjAlzXo9bIHe06T/xYj29jrOtc2YUxwC6w5tmRhpYntqcLZZi1gi6FdY/exxU9SYpnl+5H9wY97APjb3MGoGWb3AoyfJebOiXMkmX4cVgjtAvWOMxeu6eYUZvn+4yg76i+QYPS5HcoUhWbPSqqirt7PPulrYYI6vmrJN7jo8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770140253; c=relaxed/simple;
-	bh=3RQPvqWn/UNLC65+JM3Y6F1cyPkbxuuxXPUnJrZWnyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Meym9DZtvLYOUcF2atqJgZiHMbEoggyCCfoZBKRMufRVcWchAo0T3YJplyVAtSOnV9GRv6efmTWvydsMVD5rs1Q3op2udsT7U6yRErsyLu+8olaLtpqH06fp4UUCuo7XjjcBsTsxEUA75teeZPWCQ3Ufzr/Dr15D/C48jcRXi04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anarazel.de; spf=pass smtp.mailfrom=anarazel.de; dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b=CaN8LVIC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Eyfgy4G1; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anarazel.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anarazel.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08F32777FC
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Feb 2026 18:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770142544; cv=pass; b=VEpyimuBInfOzCCy8w2bu9MxV9xLBIcZo4UmesDEj6blnfxINPvlkBHAhfoOIHZGcS2fjxXWZfh2ud5K+2wrQUtzf7lK+JtJufA0zcJBXk9eowCJxdNXsaNVS5jlgdrU/Sv6+tpZf5JKpXz1NL9x+TeZ12wK3qEcjlx8E+ji2Ao=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770142544; c=relaxed/simple;
+	bh=dOiaMeQCvuuFlMcETnxoW2LUri7ZCSp6XqWoH17eweI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rg7+kMgQqTwwDAmz3v4VZ3oWIUbTm7AvfTTYFpwIkb7vx4HNOh0WO7wPo3bzpdNrZnC6VLXD2i01qIg0VtIM+wbSjtnFi0eFmI6gJeh6G1vD4ht2PKOLuf7KxyfgsquWXD7uSLeKjupaWuNS7cTw1HsvNeHUj7YdmHe4XW9drWs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jgAhZLVh; arc=pass smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="CaN8LVIC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Eyfgy4G1"
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 112B41400086;
-	Tue,  3 Feb 2026 12:37:30 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Tue, 03 Feb 2026 12:37:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1770140250; x=1770226650; bh=b5iwaC+1De
-	7jkmuIHPK7iGjU7/QLH9B+i8rdP8lExaU=; b=CaN8LVIC7i7sqObIkXFRmeL5wP
-	JWaXqhyQav+A2Rayvngml/BsVEC4ZUJIacIJZZy+49JelBSqz+bqdNSyxaLPfu5k
-	Cp5aBzVv6z/6weJnJjhd2xf+BxDOu2bU2iQhwJ7LCiZ6i+6L6wgirruyAMXOfaIB
-	LwsFRNn8XY1l2Hz4fhtGJv7oMjHKTePugtzEohNYnx2Vb5syndirjsyF2u8VzosG
-	Rgkl0QplHftFPYsfcFWpIGKqfV28vsICRw2pXniV/wXJjhUUqvs5rM2oY+3WHw3x
-	9w0rYTnE14FmjS01pORDofN1CE0xQXoJtFLOBk+f+Sp1T1cEZ+KjKy6L37Ng==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1770140250; x=1770226650; bh=b5iwaC+1De7jkmuIHPK7iGjU7/QLH9B+i8r
-	dP8lExaU=; b=Eyfgy4G1E0t8Ca/C7bRKaPq/bg69vNduGwChJ0dQMKkefRn6bPO
-	cDuYHsQJ+3FsSKSNvdMgeRq4Br5+vlZO/oj7Ly0tWVn3vZOnevBlm/56tUc9Ecpr
-	WaAV9FK50sCi9rdcf9zQ6u2aU8X5S67FHojnZlPDJOdVHWiUh/EiOSUzj8xJ25OS
-	Mopq/mkMI11ijmS4+WyEt0GLTrqBdxU0UHTJVG02VlZoyhaL4E7OZCko3L+F8A3d
-	Ub5Sp1B+Dxd9FyGy74Jy8yN7AGNIGzUAMGUzfPHfadFfKbm3qqjQs28QBCW+6l1F
-	VnizlkoSuXNK3844UgBF/g8EHfOCJ+tenNQ==
-X-ME-Sender: <xms:WTKCaXRSHWNvpK_NGini-VQt_b7GVKlhX4D0JNX0yoSsrrtCXQeJEg>
-    <xme:WTKCaRjvqMM_CUWunQFA6CkhG84Y44PgG7F_Y5MgUkMZTr4XNqQJ781DEUWfQMLaI
-    uZqZArMMpYzX_qpKX5sY1HJleEOtjBYli7bzEIuU7GNJJUYxylIsQ>
-X-ME-Received: <xmr:WTKCabh8fJpTKKUmhIvni0ve9aJhJeOxpKFncLgycEy0ZRJYAhNldGv5EZry-2oUyvmErQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddukedtieeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggujgesthdtsfdttddtvdenucfhrhhomheptehnughrvghs
-    ucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecuggftrfgrth
-    htvghrnhepfeffgfelvdffgedtveelgfdtgefghfdvkefggeetieevjeekteduleevjefh
-    ueegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hnughrvghssegrnhgrrhgriigvlhdruggvpdhnsggprhgtphhtthhopedujedpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtohepihhrohhgvghrshesghhoohhglhgvrdgtohhmpd
-    hrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohep
-    rggurhhirghnrdhhuhhnthgvrhesihhnthgvlhdrtghomhdprhgtphhtthhopehthhhomh
-    grshdrfhgrlhgtohhnsehinhhtvghlrdgtohhmpdhrtghpthhtoheprggtmhgvsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehjohhlshgrsehkvghrnhgvlhdrohhrghdprhgtph
-    htthhopehnrghmhhihuhhngheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhgrmhgv
-    shdrtghlrghrkheslhhinhgrrhhordhorhhgpdhrtghpthhtohephigrnhhgrdhlvggvse
-    hlihhnuhigrdgrlhhisggrsggrrdgtohhm
-X-ME-Proxy: <xmx:WTKCaZYByYqOirhheTqBMYzANBYuMFMcmQlNqkMCeIxVB9swL2Bp2g>
-    <xmx:WTKCaUUwAdXn_YY9nBve2yMaYoWSnzVdA5CM35auj5zI2S3IH6eCtA>
-    <xmx:WTKCaQhCchyw69PHWLYH3Ykh275huLv-AslsO0R9hGaq8fuDr1Doeg>
-    <xmx:WTKCaflW_6jHonapVNMPl9CZu7QDg_R1h56xJBmW8KLinfvs_mUV9A>
-    <xmx:WjKCaZkfbpZhZ7wDfZoY0ZLqdBSzj7bVrHmiRcV8YdpO_UsHIwJGuXvR>
-Feedback-ID: id4a34324:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 3 Feb 2026 12:37:28 -0500 (EST)
-Date: Tue, 3 Feb 2026 12:37:28 -0500
-From: Andres Freund <andres@anarazel.de>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Yang Li <yang.lee@linux.alibaba.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH v4 07/10] perf tool_pmu: More accurately set the cpus for
- tool events
-Message-ID: <cgja46br2smmznxs7kbeabs6zgv3b4olfqgh2fdp5mxk2yom4v@w6jjgov6hdi6>
-References: <20251113180517.44096-1-irogers@google.com>
- <20251113180517.44096-8-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jgAhZLVh"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2a885af8ee7so3335ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Feb 2026 10:15:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770142542; cv=none;
+        d=google.com; s=arc-20240605;
+        b=N8jIsLDS7cSoBB9ZfyOQx1K5GBrLckAUxSJMblXwwRBIpNcNS6pecg1WTJgQlVHmYK
+         7/96xoi2Ox0vmZVcsD7siqiCpz2Kr7VwfSzCxzZzNHTrjFHW/c2bzL2rLQd/TsUDDgm6
+         lhmgYflmQPSSzZFGBd15xzILVVYLvlWxudVKIYICm2hOXQFzMc12h3myYX0U17EceS5K
+         oqIXSFJ58C2TYp7lO/DHijIeob+3VtLe8ZdZKWTHwau6AkIr5FbCi49PAbTuyFW9XJlQ
+         rJuVj8Y39XjMRTG7z69Hhk4Vrt0Zh1WW012D5KdAY9WzaXUP//sjoJ5JPibYsNKM6lsF
+         ILgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=E7jJtHFhrqqAxMkBMaH0Y3vOzZoAcI5uGhjIjjWQ6gI=;
+        fh=UxP8Yhv+PNDfoK9Vv1AxR5DlVhxkvQz+BbtF9kMKqZY=;
+        b=cRhA/KvIFbmUFU4V4CgHr8buH0nhIWiT5oYBQvT2hnWWnFM8rxUiNAQ3LNExqNOHz+
+         HGWaw+dMtC5slJ36LVgrUvoiPYkr2YcdwNuNSv2p869CfVbZoJN2QKoqEQntCUK57lPs
+         eM9Xonn6WumOlumbbB5YLaFYS5ZeFhJuv3q4ScYFsKU7fJWZMZN8q7AZkQgcft//kjyI
+         4Y++TKgpadX4eVfgvNynEWVOmmC9XMfVqtVNQxIm7x77hXAkzuruiLvGDkXI+d6mHma2
+         lHRwzCeNT4qlpvoyWcA0Xb1b/YxMiSGTuOzCJsOqhFoJZfAjJDhR1kbwS4yIsroRjSbS
+         F7AQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1770142542; x=1770747342; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E7jJtHFhrqqAxMkBMaH0Y3vOzZoAcI5uGhjIjjWQ6gI=;
+        b=jgAhZLVhEZcsHVoozFSXiq6GVGzUtvReR4uiIkpfHfYPiOhIBgP4Urybe/tqxFdlty
+         VYJI+4feh7G5vV/QPXMtbZUGTkeFSRa4sctKN6f8HH4xWfC5DTzYGUTv/H0Pgq9z3ZQ/
+         SqsPktgROLn0cXlgBjijE9r/qZdC01S7HMk9hPMaNb92u2Cr226Ndz7kGpziOTabsrHt
+         7CV+kGhVm1ppdP3UxM5s0xWwfxCqintlP34vRBlKCKV5Va3jzshH/gfgAJc/VQ4XfKPL
+         qeJL1JvhYHa3SokAmJIG6kNN6bfJkovEszd1U7IO0PY9+sRoIJKGvJ9BeBmbwZxfkEPK
+         rRdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770142542; x=1770747342;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=E7jJtHFhrqqAxMkBMaH0Y3vOzZoAcI5uGhjIjjWQ6gI=;
+        b=me3qDqRl6d5sv3Q9pTJC+Mw+Gw56hnBoGJY/8FP64O5cRrDFqt/H2VvloAzES2xqAh
+         93FmmDn0stHXL1twcpXsBehacsHosXkeXbUQ1Q4hwXNkLyRtl88SIsdWhko1bnDwVBDk
+         UB+xEFrj3QK/b6mhjWOHeRiN6rhIiav1ZLDUeeNLIPPoT9qcTHBSEay4SjDIRN5sD76W
+         o3RI4cASZM0q3JlEw9Y9Ln9rL7I8W7O3rn8IpFz2IumNqoZR+DxR+UuX6GShOCmcLP6X
+         19vLsZ9Y6ohUAoRNXhT2h4Z0G3Pg+8PVdhL3TKFoBlzURY+FAdblZ28JxsR3iTW/o+fK
+         BMqw==
+X-Gm-Message-State: AOJu0YwJheG+RyQsgfDoCzWoMPscsU+T9q3n30wRS3Vqu9V3UyXDFfQ7
+	CNnSwUYBgsIF2XY5m7iyPgnPbnMPIlZbrJdaPgFIll+0TE2MwE9WvfG5VmZ6EAgsSaQU4s4s0C7
+	tTclCFW4ds/mXksKb1uISNsPpGBd7+jg5u3aQHePUPLrv3AEkZ3HuzQSxvcI=
+X-Gm-Gg: AZuq6aJ43RY+um0fCDoZ5VyY8fR82NJm8Uak8l5H+gIdfjOVmWYjH38ZbXIA7qniFdF
+	CWhC/1nm/TvSiJEYnSl0Y5j0eOupX9CHr3b35tkzhPBi2gTYV2Zc7LO1MYc3GQFyf6FOXpbOmVS
+	2K1wiWHcgCHHwhg1VMm8G+c+FYHWMTApbNhQGj93Pyb3TcW0qQqv4udwEktfM3IA7hdjk2rSdJ7
+	Pr+9Mp71m0vfoXbvTLDWNZB18NUpgbXriS3YbiRqL3fbBpRGGnfOTL0apV3fBAGsVXOudJjCy69
+	vxWSNCNm+qnq70lqqOM2UXRlRw==
+X-Received: by 2002:a17:902:cf41:b0:295:1351:f63e with SMTP id
+ d9443c01a7336-2a93453683bmr112165ad.10.1770142541945; Tue, 03 Feb 2026
+ 10:15:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251113180517.44096-8-irogers@google.com>
+References: <20260127083030.5909-1-9erthalion6@gmail.com> <aXjvF3N5ZGJlZzFi@x1>
+ <2frzr2cebxes2qoxofwqshfkb5k3d7jeq72srqnt4ywrlpkz5r@7pzb7cpbm4yw>
+ <7d3n23li6drroxrdlpxn7ixehdeszkjdftah3zyngjl2qs22ef@yelcjv53v42o> <aYIKHjxCGFbReY7Y@x1>
+In-Reply-To: <aYIKHjxCGFbReY7Y@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 3 Feb 2026 10:15:30 -0800
+X-Gm-Features: AZwV_QgRAhOO7J9asNM51qO7uG-SX_fZZd2pZuvOT5iu_lJcPGMBtblAD0NpHsY
+Message-ID: <CAP-5=fU-aJYKAcbFeFYcgMfpvt8oY4BTxEgczP_rvUAiJt+U-Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] perf tests: Test annotate with data type profiling
+ and rust
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Dmitry Dolgov <9erthalion6@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Feb 3, 2026 at 6:45=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Sun, Feb 01, 2026 at 11:33:54AM +0100, Dmitry Dolgov wrote:
+> > > On Fri, Jan 30, 2026 at 09:44:47AM +0100, Dmitry Dolgov wrote:
+> > > > I'm not managing to reproduce your results, can you please elaborat=
+e
+> > > > some more?
+> > >
+> > > That's most unexpected for me, the test output I see looks like this:
+> > >
+> > >          : 54     for _ in 1..count {
+> > >     0.00 :   5423b8: mov    %ecx,0x7c(%rsp)
+> > >     0.00 :   5423bc: mov    %eax,0x80(%rsp)
+> > >     0.00 :   5423c3: lea    0x7c(%rsp),%rdi
+> > >    12.28 :   5423c8: call   541f00 <core::iter::range::<impl core::it=
+er::traits::iterator::Iterator for core::ops::range::Range<A>>::next>
+> > >     0.00 :   5423cd: mov    %eax,0x20(%rsp)
+> > >    10.21 :   5423d1: jmp    5423d3 <test_rs+0xb3>
+> > >     0.00 :   5423d3: mov    0x20(%rsp),%eax
+> > >     0.00 :   5423d7: mov    %eax,%eax
+> > >     0.00 :   5423d9: test   $0x1,%rax
+> > >     0.29 :   5423df: je     5423f6 <test_rs+0xd6>
+> > >          : 65     b.data1 +=3D 1;
+> > >    13.69 :   5423e1: mov    0x48(%rsp),%rax     # data-type: struct B=
+uf +0x18 (data1)
+> > >     0.00 :   5423e6: add    $0x1,%rax
+> > >     0.00 :   5423ea: mov    %rax,0x18(%rsp)     # data-type: u64 +0
+> > >     0.00 :   5423ef: setb   %al
+> > >    11.17 :   5423f2: jb     54243a <test_rs+0x11a>
+> > >     0.00 :   5423f4: jmp    542426 <test_rs+0x106>
+> > >     0.00 :   5423f6: lea    0x30(%rsp),%rdi
+> > >          : 73     }
+> > >
+> > > Where '# data-type: struct Buf' is as far as I understand a manifesta=
+tion of
+> > > data type profiling succeeding. But my environment has slightly diffe=
+rent
+> > > version of rust -- I need to figure out what's going on here, thanks.
+> >
+> > I've being testing this in the same way, but without any rust code --
+> > just on a simple datasym workload. Surprisingly, it seems that
+> > 'data-type: buf' marks are disappearing even in this case starting from=
+:
+> >
+> > c31040085914f1188720073baa43d1483693c0a3 (perf dwarf-regs: Clean up x86
+> > dwarf_regnum code)
+>
+> > I'm not sure yet why this is happening, but don't see anything in the
+> > commit mentioning that -- since there are no code-with-type tests yet,
+> > maybe an unexpected side effect?
+>
+> Ian, can you please take a look at this?
 
-On 2025-11-13 10:05:13 -0800, Ian Rogers wrote:
-> The user and system time events can record on different CPUs, but for
-> all other events a single CPU map of just CPU 0 makes sense. In
-> parse-events detect a tool PMU and then pass the perf_event_attr so
-> that the tool_pmu can return CPUs specific for the event. This avoids
-> a CPU map of all online CPUs being used for events like
-> duration_time. Avoiding this avoids the evlist CPUs containing CPUs
-> for which duration_time just gives 0. Minimizing the evlist CPUs can
-> remove unnecessary sched_setaffinity syscalls that delay metric
-> calculations.
+That particular commit is largely adding an i386 to dwarf register
+number mapping table but it also expands the x86-64 mapping table:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/commit/?h=3Dperf-tools-next&id=3Dc31040085914f1188720073baa43d1483693c0a3
+The code to search the table is largely unchanged so my guess would be
+that the new x86-64 entries are causing a dwarf register to be
+returned in cases where previously this was -ENOENT. This may have
+broken the type profiling, but Namhyung would be the expert on that.
 
-I was just testing v6.19-rc* and noticed that
-  perf stat -C $somecpu sleep 1
-segfaults.
+Thanks,
+Ian
 
-I bisected that down to this change (d8d8a0b3603a9a8fa207cf9e4f292e81dc5d1008).
-
-$ git describe
-v6.18-rc1-116-gd8d8a0b3603a9
-
-$ gdb --args perf stat -C11 sleep 1
-(gdb) r
-Starting program: /home/andres/bin/bin/perf stat -C11 sleep 1
-[Thread debugging using libthread_db enabled]
-Using host libthread_db library "/usr/lib/x86_64-linux-gnu/libthread_db.so.1".
-[Detaching after fork from child process 843870]
-
- Performance counter stats for 'CPU(s) 11':
-
-                16      context-switches                 #     16.0 cs/sec  cs_per_second
-          1,001.66 msec cpu-clock
-Program received signal SIGSEGV, Segmentation fault.
-prepare_metric (config=config@entry=0x55555603bd80 <stat_config>, mexp=mexp@entry=0x5555560a40f0, evsel=evsel@entry=0x555556093e20,
-    pctx=pctx@entry=0x5555560a7150, aggr_idx=aggr_idx@entry=0) at util/stat-shadow.c:85
-85			aggr = &ps->aggr[is_tool_time ? tool_aggr_idx : aggr_idx];
-(gdb) bt
-#0  prepare_metric (config=config@entry=0x55555603bd80 <stat_config>, mexp=mexp@entry=0x5555560a40f0, evsel=evsel@entry=0x555556093e20,
-    pctx=pctx@entry=0x5555560a7150, aggr_idx=aggr_idx@entry=0) at util/stat-shadow.c:85
-#1  0x00005555557be0eb in generic_metric (config=<optimized out>, mexp=0x5555560a40f0, evsel=<optimized out>, aggr_idx=<optimized out>, out=0x7fffffff76c0)
-    at util/stat-shadow.c:146
-#2  perf_stat__print_shadow_stats_metricgroup (config=config@entry=0x55555603bd80 <stat_config>, evsel=<optimized out>, aggr_idx=0,
-    num=num@entry=0x7fffffff7604, from=from@entry=0x0, out=0x7fffffff76c0) at util/stat-shadow.c:307
-#3  0x00005555557be4c7 in perf_stat__print_shadow_stats (config=config@entry=0x55555603bd80 <stat_config>, evsel=evsel@entry=0x555556093e20,
-    aggr_idx=aggr_idx@entry=0, out=out@entry=0x7fffffff76c0) at util/stat-shadow.c:325
-#4  0x00005555557c03a3 in printout (config=<optimized out>, os=0x7fffffff78b0, uval=<optimized out>, run=1001660763, ena=<optimized out>,
-    noise=<optimized out>, aggr_idx=0) at util/stat-display.c:874
-#5  0x00005555557c1424 in print_counter_aggrdata (config=0x55555603bd80 <stat_config>, counter=0x555556093e20, aggr_idx=0, os=<optimized out>)
-    at util/stat-display.c:1013
-#6  0x00005555557c3051 in print_counter (config=<optimized out>, counter=<optimized out>, os=<optimized out>) at util/stat-display.c:1127
-#7  print_counter (config=<optimized out>, counter=<optimized out>, os=<optimized out>) at util/stat-display.c:1117
-#8  evlist__print_counters (evlist=<optimized out>, config=config@entry=0x55555603bd80 <stat_config>, _target=_target@entry=0x5555560412e0 <target>,
-    ts=ts@entry=0x0, argc=argc@entry=2, argv=argv@entry=0x7fffffffdb20) at util/stat-display.c:1600
-#9  0x00005555555d0d27 in print_counters (ts=0x0, argc=2, argv=0x7fffffffdb20) at builtin-stat.c:1070
-#10 print_counters (ts=0x0, argc=2, argv=0x7fffffffdb20) at builtin-stat.c:1062
-#11 cmd_stat (argc=2, argv=0x7fffffffdb20) at builtin-stat.c:2949
-#12 0x000055555562fee2 in run_builtin (p=p@entry=0x55555602df48 <commands+360>, argc=argc@entry=4, argv=argv@entry=0x7fffffffdb20) at perf.c:349
-#13 0x00005555556301ce in handle_internal_command (argc=argc@entry=4, argv=argv@entry=0x7fffffffdb20) at perf.c:401
-#14 0x00005555555a8d33 in run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:445
-#15 main (argc=<optimized out>, argv=0x7fffffffdb20) at perf.c:553
-
-
-(gdb) bt full
-#0  prepare_metric (config=config@entry=0x55555603bd80 <stat_config>, mexp=mexp@entry=0x5555560a40f0, evsel=evsel@entry=0x555556093e20, pctx=pctx@entry=0x5555560a7150, aggr_idx=aggr_idx@entry=0) at util/stat-shadow.c:85
-        val = <optimized out>
-        source_count = 0
-        tool_aggr_idx = 0
-        is_tool_time = true
-        ps = 0x0
-        aggr = <optimized out>
-        n = <optimized out>
-        metric_events = <optimized out>
-        metric_refs = 0x0
-        i = 1
-#1  0x00005555557be0eb in generic_metric (config=<optimized out>, mexp=0x5555560a40f0, evsel=<optimized out>, aggr_idx=<optimized out>, out=0x7fffffff76c0) at util/stat-shadow.c:146
-        print_metric = 0x5555557c1b70 <print_metric_std>
-        metric_name = 0x5555560ae550 "CPUs_utilized"
-        metric_expr = 0x555555ea5bb5 "(software@cpu\\-clock\\,name\\=cpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=task\\-clock@) / (duration_time * 1e9)"
-        metric_threshold = 0x0
-        metric_unit = 0x555555ea5c4d "1CPUs"
-        metric_events = 0x5555560ae490
-        runtime = 0
-        pctx = 0x5555560a7150
-        ratio = 15.973479072960373
-        scale = 1
-        threshold = 4.9406564584124654e-324
-        i = <optimized out>
-        ctxp = 0x7fffffff78b0
-        thresh = METRIC_THRESHOLD_UNKNOWN
-#2  perf_stat__print_shadow_stats_metricgroup (config=config@entry=0x55555603bd80 <stat_config>, evsel=<optimized out>, aggr_idx=0, num=num@entry=0x7fffffff7604, from=from@entry=0x0, out=0x7fffffff76c0) at util/stat-shadow.c:307
-        me = 0x5555560877d0
-        mexp = 0x5555560a40f0
-        ctxp = 0x7fffffff78b0
-        header_printed = false
-        name = 0x555555879b28 ""
-        metric_events = <optimized out>
-#3  0x00005555557be4c7 in perf_stat__print_shadow_stats (config=config@entry=0x55555603bd80 <stat_config>, evsel=evsel@entry=0x555556093e20, aggr_idx=aggr_idx@entry=0, out=out@entry=0x7fffffff76c0) at util/stat-shadow.c:325
-        print_metric = 0x5555557c1b70 <print_metric_std>
-        ctxp = 0x7fffffff78b0
-        num = 1
-#4  0x00005555557c03a3 in printout (config=<optimized out>, os=0x7fffffff78b0, uval=<optimized out>, run=1001660763, ena=<optimized out>, noise=<optimized out>, aggr_idx=0) at util/stat-display.c:874
-        out = {ctx = 0x7fffffff78b0, print_metric = 0x5555557c1b70 <print_metric_std>, new_line = 0x5555557be5a0 <new_line_std>, print_metricgroup_header = 0x5555557bea60 <print_metricgroup_header_std>, force_header = false}
-        pm = <optimized out>
-        nl = <optimized out>
-        pmh = <optimized out>
-        ok = <optimized out>
-        counter = 0x555556093e20
-#5  0x00005555557c1424 in print_counter_aggrdata (config=0x55555603bd80 <stat_config>, counter=0x555556093e20, aggr_idx=0, os=<optimized out>) at util/stat-display.c:1013
-        output = 0x7ffff69f24e0 <_IO_2_1_stderr_>
-        ena = 1001660763
-        run = <optimized out>
-        val = <optimized out>
-        uval = <optimized out>
-        ps = <optimized out>
-        aggr = <optimized out>
-        id = {thread_idx = -1, node = -1, socket = -1, die = -1, cluster = -1, cache_lvl = -1, cache = -1, core = -1, cpu = {cpu = 0}}
-        avg = <optimized out>
-        metric_only = false
-...
-
-whereas on
-
-$ git describe
-v6.18-rc1-115-gd702c0f4af6e0
-
-$ perf stat -C11 sleep 1
-
- Performance counter stats for 'CPU(s) 11':
-
-                 8      context-switches                 #      8.0 cs/sec  cs_per_second
-          1,001.48 msec cpu-clock                        #      1.0 CPUs  CPUs_utilized
-                 0      cpu-migrations                   #      0.0 migrations/sec  migrations_per_second
-                 3      page-faults                      #      3.0 faults/sec  page_faults_per_second
-           277,825      branch-misses                    #      0.3 %  branch_miss_rate         (33.11%)
-       102,546,153      branches                         #    102.4 M/sec  branch_frequency     (33.51%)
-     2,501,242,351      cpu-cycles                       #      2.5 GHz  cycles_frequency       (33.55%)
-       317,348,809      instructions                     #      0.1 instructions  insn_per_cycle  (33.55%)
-
-       1.001449562 seconds time elapsed
-
-it works without a problem.
-
-Greetings,
-
-Andres Freund
+> Cheers,
+>
+> - Arnaldo
