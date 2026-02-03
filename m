@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F2731D757;
-	Tue,  3 Feb 2026 02:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D521C5F27;
+	Tue,  3 Feb 2026 02:48:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770086877; cv=none; b=ZK19jpusDl8CAwNMZxzhdbsKAOSGThUuwoRNfAMrOVX/feIK5cwrbWoNoCJ8A4yTJZ5WpuSKhvuf6qC/cJ+SqirpTGSt5iqOvu2rmUZiO+jEjGHwIU03fV3ppqPzdclEXnGBl91Uy9FSnS+BnEFNw8Rckn5gB94xkW+Ej8Nblbc=
+	t=1770086883; cv=none; b=FBh7LZTjQK7EsDd9Ymwa6DGbz88DN8gYqOdalGA1pPuA/73Twt3VEjHEiNiSeVaX3oluiGn4TP5TlvQFmLFsawJIsy1m4+yK/rrvmEkDnvVo63WgkvBSwnXIkUZpfhpPSjtD6qbHc4ZAuO5ku1vNHZpCCKBTsYLVDB+4yVptOSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770086877; c=relaxed/simple;
-	bh=ZFP9ftY8bSrq1v5fwO+CjAOG/yHX4OP7LEXkU9+oNBc=;
+	s=arc-20240116; t=1770086883; c=relaxed/simple;
+	bh=mYFJnn/E2IkfJ4/3A75277NT6QtDqiUGREPprJygmkg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OXauIoKuXY3xE4lb2uKjMeg5U1AxZOP0K4E0NmlDoK/oEEtYTgUMQdoC6T8WCcN5T1W644dCt5FATSEEkLWp8lKZm6PORHtKZEZhz7T7JwU7QWQ75QysPu/uZEaGBt0A3MNhgr5C70v2sAUeEXf5mFOGLt36b/N+8DlHAqdp8vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HeAWeVU7; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=d73pbryguNuLNdzEp8n4ebXAOwWMxiZJw/i3rvITHJ3aL5vbugz7W7r0d4f0PkimyFv5GOFLR/paj4g4EMIyWf+gTzaaMGUOC4QqiNrds3pPnaSJHfZ7nNt54Xm+j9srsnEF69tUHBU0IHYDg4yCGl6mOhy+d9zlj27kfBks31E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CMHs0/hX; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HeAWeVU7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CMHs0/hX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770086876; x=1801622876;
+  t=1770086882; x=1801622882;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZFP9ftY8bSrq1v5fwO+CjAOG/yHX4OP7LEXkU9+oNBc=;
-  b=HeAWeVU7mE68yqXLPx/FTfbEr/MCAuDngHt/SQQJOmGsDp+efF+2/oG8
-   wX9jYbhMlv5EdhafhV0OpSBQIiAntqcEQwNitxAH6JdtfDPT1ZaN82UmR
-   o4101GKT84eTPC/DEeFz3u2uSFmhBhwSDXhpRhV2K9H2mFgQVoK1MeU5H
-   Hx6u+mTevJMJJ01v4w+6jMh/xWRa1e4wFpP90IlbmB5jb2LwGM26h0JML
-   7GE4Sp4SgTfEraOsO7Ahi7iXGpftdYUxZ3HVWg5eYU36mhmjB6Y7WfhLx
-   t4VVHsqbRedLPYigkd6Oxq9UKcZCDtYsc2OF+Y0hh59BPSB65frL5uK6v
-   w==;
-X-CSE-ConnectionGUID: iDxOXt0VTmaXClnMvWCq+Q==
-X-CSE-MsgGUID: 2mKiW9qCTciHvk4FXKdfdA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="71152132"
+  bh=mYFJnn/E2IkfJ4/3A75277NT6QtDqiUGREPprJygmkg=;
+  b=CMHs0/hXB9zQweagibn5MS+97ml2Gxw0P/M0OHPBKmPmCwHs2pnC1agd
+   rIXjAX0AceMnJWJoJtjQUnbJgUzO4sOdkQ4Vbbw1qL/WTYCjBsR1rXvmX
+   LX6qO8CS2QnQ39dELO+NKb8CsX7NgRKkMKA8mG0H8nwHrlpMv1kO743nk
+   txR/233ZrdbUas+wR5Fi5HviGqJ/XIxQXBds/eynCqrU8Ag/9H036Kfpd
+   0wiHor5zanXieEeWBPdIItdjloPgpvJLcuvQbN/Ex0X+A010tTTEN5Doc
+   t14weqIDkBj1w7XDtVhafQGFt6ue/40oNM9HQLvnib7vGVtqfSI4BOaC5
+   g==;
+X-CSE-ConnectionGUID: tf0bYQpWR9evNBrnSpv/nA==
+X-CSE-MsgGUID: 979tAQz/RxullLX8MqUY0g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="71152147"
 X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
-   d="scan'208";a="71152132"
+   d="scan'208";a="71152147"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 18:47:56 -0800
-X-CSE-ConnectionGUID: syzJ3XD/Q5We8vUakIh8vA==
-X-CSE-MsgGUID: 3WNYg+RBRRe8if1tXYjtIA==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 18:48:02 -0800
+X-CSE-ConnectionGUID: JH/eTF6TSiuKXucoPMPEOw==
+X-CSE-MsgGUID: WT3SpuxkSHGiSuTN2JEXrA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
-   d="scan'208";a="208991715"
+   d="scan'208";a="208991734"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa010.jf.intel.com with ESMTP; 02 Feb 2026 18:47:50 -0800
+  by orviesa010.jf.intel.com with ESMTP; 02 Feb 2026 18:47:56 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -70,9 +70,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 1/4] perf regs: Fix abort for "-I" or "--user-regs" options
-Date: Tue,  3 Feb 2026 10:43:53 +0800
-Message-Id: <20260203024356.444942-2-dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 2/4] perf arch: Update arch headers to use relative UAPI paths
+Date: Tue,  3 Feb 2026 10:43:54 +0800
+Message-Id: <20260203024356.444942-3-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260203024356.444942-1-dapeng1.mi@linux.intel.com>
 References: <20260203024356.444942-1-dapeng1.mi@linux.intel.com>
@@ -84,67 +84,148 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix an issue where the `perf` tool aborts unexpectedly when running the
-following command:
+The architectural specific headers perf_regs.h currently rely on the
+host architecture's 'asm/perf_regs.h'. This can lead to compilation
+inconsistencies or failures when including and building perf for a
+target architecture that differs from the host's architecture.
 
-```
-perf record -e cycles -I -- true
+Explicitly point to the UAPI headers within the tools source tree using
+relative paths. This ensures that perf is always built against the
+intended architecture.
 
- Usage: perf record [<options>] [<command>]
-    or: perf record [<options>] -- <command> [<options>]
+No functional changes are intended.
 
-    -I, --intr-regs[=<any register>]
-    sample selected machine registers on interrupt, use '-I?' to list register names
-```
-
-The usage of the `-I` or `--user-regs` options without specifying any
-registers should default to sampling all general-purpose registers.
-However, this currently causes an abnormal termination.
-
-The issue was introduced by commit 3d06db9bad1a ("perf regs: Refactor
- use of arch__sample_reg_masks() to perf_reg_name()"). This patch
-resolves the problem, ensuring that the `-I` or `--user-regs` options
-work as intended without causing an abort.
-
-Fixes: 3d06db9bad1a ("perf regs: Refactor use of arch__sample_reg_masks() to perf_reg_name()")
+Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- tools/perf/util/parse-regs-options.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ tools/perf/arch/arm/include/perf_regs.h       | 2 +-
+ tools/perf/arch/arm64/include/perf_regs.h     | 2 +-
+ tools/perf/arch/csky/include/perf_regs.h      | 2 +-
+ tools/perf/arch/loongarch/include/perf_regs.h | 2 +-
+ tools/perf/arch/mips/include/perf_regs.h      | 2 +-
+ tools/perf/arch/powerpc/include/perf_regs.h   | 2 +-
+ tools/perf/arch/riscv/include/perf_regs.h     | 2 +-
+ tools/perf/arch/s390/include/perf_regs.h      | 2 +-
+ tools/perf/arch/x86/include/perf_regs.h       | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
-index 8dd35f50f644..b44b47d9059f 100644
---- a/tools/perf/util/parse-regs-options.c
-+++ b/tools/perf/util/parse-regs-options.c
-@@ -66,12 +66,14 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 	if (*mode)
- 		return -1;
+diff --git a/tools/perf/arch/arm/include/perf_regs.h b/tools/perf/arch/arm/include/perf_regs.h
+index 75ce1c370114..20c54766e3a0 100644
+--- a/tools/perf/arch/arm/include/perf_regs.h
++++ b/tools/perf/arch/arm/include/perf_regs.h
+@@ -4,7 +4,7 @@
  
--	/* str may be NULL in case no arg is passed to -I */
--	if (!str)
--		return -1;
--
- 	mask = intr ? arch__intr_reg_mask() : arch__user_reg_mask();
+ #include <stdlib.h>
+ #include <linux/types.h>
+-#include <asm/perf_regs.h>
++#include "../../../../arch/arm/include/uapi/asm/perf_regs.h"
  
-+	/* str may be NULL in case no arg is passed to -I */
-+	if (!str) {
-+		*mode = mask;
-+		return 0;
-+	}
-+
- 	/* because str is read-only */
- 	s = os = strdup(str);
- 	if (!s)
-@@ -104,9 +106,6 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 	}
- 	ret = 0;
+ void perf_regs_load(u64 *regs);
  
--	/* default to all possible regs */
--	if (*mode == 0)
--		*mode = mask;
- error:
- 	free(os);
- 	return ret;
+diff --git a/tools/perf/arch/arm64/include/perf_regs.h b/tools/perf/arch/arm64/include/perf_regs.h
+index 58639ee9f7ea..372f2565a9dd 100644
+--- a/tools/perf/arch/arm64/include/perf_regs.h
++++ b/tools/perf/arch/arm64/include/perf_regs.h
+@@ -5,7 +5,7 @@
+ #include <stdlib.h>
+ #include <linux/types.h>
+ #define perf_event_arm_regs perf_event_arm64_regs
+-#include <asm/perf_regs.h>
++#include "../../../../arch/arm64/include/uapi/asm/perf_regs.h"
+ #undef perf_event_arm_regs
+ 
+ void perf_regs_load(u64 *regs);
+diff --git a/tools/perf/arch/csky/include/perf_regs.h b/tools/perf/arch/csky/include/perf_regs.h
+index 076c7746c8a2..0bf7b963909c 100644
+--- a/tools/perf/arch/csky/include/perf_regs.h
++++ b/tools/perf/arch/csky/include/perf_regs.h
+@@ -6,7 +6,7 @@
+ 
+ #include <stdlib.h>
+ #include <linux/types.h>
+-#include <asm/perf_regs.h>
++#include "../../../../arch/csky/include/uapi/asm/perf_regs.h"
+ 
+ #define PERF_REGS_MASK	((1ULL << PERF_REG_CSKY_MAX) - 1)
+ #define PERF_REGS_MAX	PERF_REG_CSKY_MAX
+diff --git a/tools/perf/arch/loongarch/include/perf_regs.h b/tools/perf/arch/loongarch/include/perf_regs.h
+index 45c799fa5330..b86078a55e90 100644
+--- a/tools/perf/arch/loongarch/include/perf_regs.h
++++ b/tools/perf/arch/loongarch/include/perf_regs.h
+@@ -4,7 +4,7 @@
+ 
+ #include <stdlib.h>
+ #include <linux/types.h>
+-#include <asm/perf_regs.h>
++#include "../../../../arch/loongarch/include/uapi/asm/perf_regs.h"
+ 
+ #define PERF_REGS_MAX PERF_REG_LOONGARCH_MAX
+ 
+diff --git a/tools/perf/arch/mips/include/perf_regs.h b/tools/perf/arch/mips/include/perf_regs.h
+index 7082e91e0ed1..66655f0c4fea 100644
+--- a/tools/perf/arch/mips/include/perf_regs.h
++++ b/tools/perf/arch/mips/include/perf_regs.h
+@@ -4,7 +4,7 @@
+ 
+ #include <stdlib.h>
+ #include <linux/types.h>
+-#include <asm/perf_regs.h>
++#include "../../../../arch/mips/include/uapi/asm/perf_regs.h"
+ 
+ #define PERF_REGS_MAX PERF_REG_MIPS_MAX
+ 
+diff --git a/tools/perf/arch/powerpc/include/perf_regs.h b/tools/perf/arch/powerpc/include/perf_regs.h
+index 1c66f6ba6773..22b492a3dd58 100644
+--- a/tools/perf/arch/powerpc/include/perf_regs.h
++++ b/tools/perf/arch/powerpc/include/perf_regs.h
+@@ -4,7 +4,7 @@
+ 
+ #include <stdlib.h>
+ #include <linux/types.h>
+-#include <asm/perf_regs.h>
++#include "../../../../arch/powerpc/include/uapi/asm/perf_regs.h"
+ 
+ void perf_regs_load(u64 *regs);
+ 
+diff --git a/tools/perf/arch/riscv/include/perf_regs.h b/tools/perf/arch/riscv/include/perf_regs.h
+index d482edb413e5..89d5bbb8d2b8 100644
+--- a/tools/perf/arch/riscv/include/perf_regs.h
++++ b/tools/perf/arch/riscv/include/perf_regs.h
+@@ -6,7 +6,7 @@
+ 
+ #include <stdlib.h>
+ #include <linux/types.h>
+-#include <asm/perf_regs.h>
++#include "../../../../arch/riscv/include/uapi/asm/perf_regs.h"
+ 
+ #define PERF_REGS_MASK	((1ULL << PERF_REG_RISCV_MAX) - 1)
+ #define PERF_REGS_MAX	PERF_REG_RISCV_MAX
+diff --git a/tools/perf/arch/s390/include/perf_regs.h b/tools/perf/arch/s390/include/perf_regs.h
+index 130dfad2b96a..9c95589965fe 100644
+--- a/tools/perf/arch/s390/include/perf_regs.h
++++ b/tools/perf/arch/s390/include/perf_regs.h
+@@ -3,7 +3,7 @@
+ 
+ #include <stdlib.h>
+ #include <linux/types.h>
+-#include <asm/perf_regs.h>
++#include "../../../../arch/s390/include/uapi/asm/perf_regs.h"
+ 
+ void perf_regs_load(u64 *regs);
+ 
+diff --git a/tools/perf/arch/x86/include/perf_regs.h b/tools/perf/arch/x86/include/perf_regs.h
+index f209ce2c1dd9..5495e5ca7cdc 100644
+--- a/tools/perf/arch/x86/include/perf_regs.h
++++ b/tools/perf/arch/x86/include/perf_regs.h
+@@ -4,7 +4,7 @@
+ 
+ #include <stdlib.h>
+ #include <linux/types.h>
+-#include <asm/perf_regs.h>
++#include "../../../../arch/x86/include/uapi/asm/perf_regs.h"
+ 
+ void perf_regs_load(u64 *regs);
+ 
 -- 
 2.34.1
 
