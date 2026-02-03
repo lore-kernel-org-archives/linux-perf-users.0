@@ -1,1177 +1,397 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A8031D727;
-	Tue,  3 Feb 2026 02:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CC534B1A5
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Feb 2026 05:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770086897; cv=none; b=N6ncIPgUnwljRNh0/jp9FB5+5r2KPPLBnHdB8tgPzfOx9JF5Oa7f5lDXp/gk+feaeAHW20y9Nkh/G7oC+40vZeI9EHZki9UfPAs6VHc3Cdnr6dXYP5r5g7y/B673/P1UAOcK8dHr+dAsC56IioWpSwGiC7V1bmUjq2IZLBFgxIQ=
+	t=1770095616; cv=none; b=oJCjUK3AcNNMkiCNDLvZwmhtPq3C29yEg7+0kG+LovTgJb9m0O9TWjQPASPfa4mqFbWZd5adw9R7o/ZMKXwSHjw6hCIA5E38BwJ0e4qvyl7VTMkFQKd0FgGRpzpgjmyEdC8E+UwxTVFR6evx6sds7fE3+PMqiFHzTIGkQwW3vQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770086897; c=relaxed/simple;
-	bh=LqmAjsAolhPhrc9OkvOITCGYwjVI7cYXdEZQcqGC+yo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Zl/Gxc2EXy8aq41AWDYkgypHA76VPEfGmTaVGj2VWj1bn2Zwmt8Tl8u7mSYOmkuivXqLUTsJigVvyLcxorzdCHMeKRoMJHvkPef0hVrV7+0XxJCJpUh5SQmp6Kr0unq8MJCt4PjJRgv8LqYkfK3wpa6dMxmVzEqTEyhN7u/M36s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XISg4NQq; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1770095616; c=relaxed/simple;
+	bh=lMbaFoA21Vc96dvITCkkA7pmMFXmXyLSWNYwqdNNuhQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=dktUZzGYZUawQBjd/hjZBpekzx1gjnnlmbqVrDzRBAHqopMd5s7ETyhwQRk7QVEb9JESmZ1zvzCl/OT8jIQpG7OljUySUcDNRUnh/WrHF1DuEky0JuBwiZ/vQc4jfzoBBDE6RbehJ9j5+JCjxYs2EZRkj9NyktX2goz4WHLbnHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jiywiwAi; arc=none smtp.client-ip=74.125.82.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XISg4NQq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770086895; x=1801622895;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LqmAjsAolhPhrc9OkvOITCGYwjVI7cYXdEZQcqGC+yo=;
-  b=XISg4NQq842zt0UlVNQy9aOdOwL65tIDKp11CH+AlWLG7c8tAyQdKdVQ
-   MErn5ZtQ9LUZIaHdz8cCr+FwZH5bAdn8EqgeDYCFggttggSjXvqFo/gi5
-   ylQZ1FssCTnsdaeqnPyPfIXLCDCpfVtHgb/ls/L8lXeMh7U71UVo6Xfxg
-   9rdAV0gp9nrHtN//1pqmz/r4mJCKZv/qBXsh6bvhYc8H5J9hQtELLpjxf
-   pGF3d3H1R5K6dufiqi/7A8b5l22ASM5JdbGvrzxqjC4776IrN31zunuwv
-   zjOVih4lW7G2ddi/Q3GaF/3JU7CeoNO4KzCTkH8IcUvQpFIH63l24EYgy
-   g==;
-X-CSE-ConnectionGUID: vth6PK9zQi6DADz7v63fEw==
-X-CSE-MsgGUID: 9Zc4EyYWTFqVpc37OpKyPw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="71152164"
-X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
-   d="scan'208";a="71152164"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 18:48:14 -0800
-X-CSE-ConnectionGUID: /e5iJF9KRB2lHf8J5SGbfg==
-X-CSE-MsgGUID: 7jRDJdPkSuOiUe2x2NsuNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
-   d="scan'208";a="208991759"
-Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa010.jf.intel.com with ESMTP; 02 Feb 2026 18:48:08 -0800
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Guo Ren <guoren@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 4/4] perf regs: Remove __weak attributive arch_sdt_arg_parse_op() function
-Date: Tue,  3 Feb 2026 10:43:56 +0800
-Message-Id: <20260203024356.444942-5-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260203024356.444942-1-dapeng1.mi@linux.intel.com>
-References: <20260203024356.444942-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jiywiwAi"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b71c5826fbso6050229eec.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Feb 2026 21:13:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1770095612; x=1770700412; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UIWbhRxS7tCZZUUrYU4/X1/DSYHRE7z6ur90/kJkpFg=;
+        b=jiywiwAis4xJ9to4kiCuwEeGL3iU6A0tm1wZeERgIZAeWrpUz7zFgYsdpS9D8gWrya
+         vCKRaWqdq0U+epsN/P0SR6zyQhnSK5kUSI2bUvOQclPMROJ/CfJBbMw+MSxYV1WB1j16
+         fjloCcodM1KJT5763Zvl0R4CzymAzhTArlCZ73v8eu+Eva16/8c+t2c56/pXvKqo+Gfj
+         6auJ1HdBh3lSpIbDv+GEXmOOVKFmobCw0o7Hq3xnM/vlR0X9NuW7QyxGBSXw/+yIAUE8
+         nfE9JFF81U8KlzX6cnJUKEB8MBI5YGkOF1U8lanHBLzbc65wYGkSxDFn5/LODyVRYUfl
+         MYVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770095612; x=1770700412;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UIWbhRxS7tCZZUUrYU4/X1/DSYHRE7z6ur90/kJkpFg=;
+        b=D0V3atH6nIx8b6uAeREyRvWnyk6FcdceHfua8wux3y6TbhsNCT85Wm1JoI/5Xp8pv3
+         acMrD41h8lGp/DpAYs0ljDhz5f5w49M6KnR/plYpFWOpcCGQTmyJE4POpZk+BxPbnML6
+         TpOz3F/hyV5L1GIoM1Sja3NrnMAeM4l9bW2euHhRAMww7msTOCQAC7URu6Kfrju1DeGx
+         sXVLKtT2HbAJn7/1y6red8+EVylWkGqhWlo5qhhj5jlpvnloy8eh9hfAIJpRv7cN7E4y
+         5WqpITcQ8xrGPJpfkEXTZbYUyFKwYFYvNA1IbveFbExRocg5alixuCrxKgpXybpIqPwv
+         MXrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVORpE8MpjDTED06rMBb9H59UXwBtT4Bk/uMTKTJp9t5d2m+pcjyNUNMhF5kao3UrhWgqYSiQ5hc+6BRKLgHos2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIrrvgYvqNAi7qcI7f/A3X/ktsEefjhyNxgn69A/j1acRTHwCd
+	dqiCdkZJxqCRrTaLj7iZJvu+Y6t4xr0HpvxCujpTaVtVO9GQcNrQ+JRIrHLAHT29x6gSCr2PNZN
+	WfwcOe3zjBA==
+X-Received: from dlak24.prod.google.com ([2002:a05:701b:2918:b0:11f:3f33:f0a5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:fa2:b0:123:3461:99a4
+ with SMTP id a92af1059eb24-125c0fad517mr6178129c88.17.1770095612350; Mon, 02
+ Feb 2026 21:13:32 -0800 (PST)
+Date: Mon,  2 Feb 2026 21:13:27 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.rc1.225.gd81095ad13-goog
+Message-ID: <20260203051327.2836070-1-irogers@google.com>
+Subject: [PATCH v1] perf build: Reduce pmu-events related copying and mkdirs
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-In line with the previous patch, the __weak arch_sdt_arg_parse_op()
-function is removed. Architectural-specific implementations in the arch/
-directory are now converted into sub-functions within the
-util/perf-regs-arch/ directory. The perf_sdt_arg_parse_op() function
-will call these sub-functions based on the EM_HOST.
+When building to an output directory the previous code would remove
+files and then copy the source files over. Each source file copy would
+have a rule to make its directory. All json for every architecture was
+considered a source file. This led to unnecessary copying as a file
+would be deleted and then the same file copied again, unnecessary
+directory making, and copying of files not used in the build. A
+side-effect would be a lot of build messages.
 
-This change enables cross-architecture calls to arch_sdt_arg_parse_op().
+This change makes it so that all computed output files are created and
+then compared to all files in the OUTPUT directory. By filtering out
+the files that would be copied, unnecessary files can be determined
+and then deleted - note, this is a phony target which would remake the
+pmu-events.c if always depended upon, and so the dependency is
+conditional on there being files to remove. This has some overhead as
+the $(OUTPUT)/pmu-events is "find" over rather than just "rm -fr", but
+the savings from unnecessary copying, etc. should make up for this new
+make overhead. The copy target just does copying but has a dependency
+on the directory it needs being built, avoiding repetitive mkdirs. The
+source files for copying only consider the JEVENTS_ARCH unless the
+JEVENTS_ARCH is all. The metric json is only generated if appropriate,
+rather than always being generated and jevents.py deciding whether or
+not to use the files. The mypy and pylint targets are fixed as
+variable names had changed but the rules not updated.
 
-No functional changes are intended.
+The line count of a build with "make -C tools/perf O=/tmp/perf clean all"
+prior to this change was 2181 lines, after this change it is 1596
+lines. This is a reduction of 585 lines or about 27%.
 
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+The generated pmu-events.c for JEVENTS_ARCH "x86" and "all" were
+validated as being identical after this change.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/arm64/util/Build              |   1 -
- tools/perf/arch/arm64/util/perf_regs.c        | 105 --------
- tools/perf/arch/powerpc/util/Build            |   1 -
- tools/perf/arch/powerpc/util/perf_regs.c      | 125 ----------
- tools/perf/arch/x86/util/Build                |   1 -
- tools/perf/arch/x86/util/perf_regs.c          | 235 ------------------
- .../util/perf-regs-arch/perf_regs_aarch64.c   |  86 +++++++
- .../util/perf-regs-arch/perf_regs_powerpc.c   | 106 ++++++++
- .../perf/util/perf-regs-arch/perf_regs_x86.c  | 221 ++++++++++++++++
- tools/perf/util/perf_regs.c                   |  25 +-
- tools/perf/util/perf_regs.h                   |   5 +-
- tools/perf/util/probe-file.c                  |   3 +-
- 12 files changed, 441 insertions(+), 473 deletions(-)
- delete mode 100644 tools/perf/arch/arm64/util/perf_regs.c
- delete mode 100644 tools/perf/arch/powerpc/util/perf_regs.c
- delete mode 100644 tools/perf/arch/x86/util/perf_regs.c
+ tools/perf/pmu-events/Build | 212 ++++++++++++++++++++++++------------
+ 1 file changed, 144 insertions(+), 68 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-index 0177af19cc00..bc12c35d06c8 100644
---- a/tools/perf/arch/arm64/util/Build
-+++ b/tools/perf/arch/arm64/util/Build
-@@ -8,6 +8,5 @@ perf-util-y += header.o
- perf-util-y += hisi-ptt.o
- perf-util-y += machine.o
- perf-util-y += mem-events.o
--perf-util-y += perf_regs.o
- perf-util-y += pmu.o
- perf-util-y += tsc.o
-diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
-deleted file mode 100644
-index 47f58eaba032..000000000000
---- a/tools/perf/arch/arm64/util/perf_regs.c
-+++ /dev/null
-@@ -1,105 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <errno.h>
--#include <regex.h>
--#include <string.h>
--#include <sys/auxv.h>
--#include <linux/kernel.h>
--#include <linux/zalloc.h>
--
--#include "perf_regs.h"
--#include "../../../perf-sys.h"
--#include "../../../util/debug.h"
--#include "../../../util/event.h"
--#include "../../../util/perf_regs.h"
--
--#define SMPL_REG_MASK(b) (1ULL << (b))
--
--#ifndef HWCAP_SVE
--#define HWCAP_SVE	(1 << 22)
--#endif
--
--/* %xNUM */
--#define SDT_OP_REGEX1  "^(x[1-2]?[0-9]|3[0-1])$"
--
--/* [sp], [sp, NUM] */
--#define SDT_OP_REGEX2  "^\\[sp(, )?([0-9]+)?\\]$"
--
--static regex_t sdt_op_regex1, sdt_op_regex2;
--
--static int sdt_init_op_regex(void)
--{
--	static int initialized;
--	int ret = 0;
--
--	if (initialized)
--		return 0;
--
--	ret = regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
--	if (ret)
--		goto error;
--
--	ret = regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
--	if (ret)
--		goto free_regex1;
--
--	initialized = 1;
--	return 0;
--
--free_regex1:
--	regfree(&sdt_op_regex1);
--error:
--	pr_debug4("Regex compilation error.\n");
--	return ret;
--}
--
--/*
-- * SDT marker arguments on Arm64 uses %xREG or [sp, NUM], currently
-- * support these two formats.
-- */
--int arch_sdt_arg_parse_op(char *old_op, char **new_op)
--{
--	int ret, new_len;
--	regmatch_t rm[5];
--
--	ret = sdt_init_op_regex();
--	if (ret < 0)
--		return ret;
--
--	if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
--		/* Extract xNUM */
--		new_len = 2;	/* % NULL */
--		new_len += (int)(rm[1].rm_eo - rm[1].rm_so);
--
--		*new_op = zalloc(new_len);
--		if (!*new_op)
--			return -ENOMEM;
--
--		scnprintf(*new_op, new_len, "%%%.*s",
--			(int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1].rm_so);
--	} else if (!regexec(&sdt_op_regex2, old_op, 5, rm, 0)) {
--		/* [sp], [sp, NUM] or [sp,NUM] */
--		new_len = 7;	/* + ( % s p ) NULL */
--
--		/* If the argument is [sp], need to fill offset '0' */
--		if (rm[2].rm_so == -1)
--			new_len += 1;
--		else
--			new_len += (int)(rm[2].rm_eo - rm[2].rm_so);
--
--		*new_op = zalloc(new_len);
--		if (!*new_op)
--			return -ENOMEM;
--
--		if (rm[2].rm_so == -1)
--			scnprintf(*new_op, new_len, "+0(%%sp)");
--		else
--			scnprintf(*new_op, new_len, "+%.*s(%%sp)",
--				  (int)(rm[2].rm_eo - rm[2].rm_so),
--				  old_op + rm[2].rm_so);
--	} else {
--		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
--		return SDT_ARG_SKIP;
--	}
--
--	return SDT_ARG_VALID;
--}
-diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
-index 5fd28ec713a4..43c3e7c450a3 100644
---- a/tools/perf/arch/powerpc/util/Build
-+++ b/tools/perf/arch/powerpc/util/Build
-@@ -1,6 +1,5 @@
- perf-util-y += header.o
- perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
--perf-util-y += perf_regs.o
- perf-util-y += mem-events.o
- perf-util-y += pmu.o
- perf-util-y += sym-handling.o
-diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
-deleted file mode 100644
-index 93f929fc32e3..000000000000
---- a/tools/perf/arch/powerpc/util/perf_regs.c
-+++ /dev/null
-@@ -1,125 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <errno.h>
--#include <string.h>
--#include <regex.h>
--#include <linux/zalloc.h>
--
--#include "perf_regs.h"
--#include "../../../util/perf_regs.h"
--#include "../../../util/debug.h"
--#include "../../../util/event.h"
--#include "../../../util/header.h"
--#include "../../../perf-sys.h"
--#include "utils_header.h"
--
--#include <linux/kernel.h>
--
--#define PVR_POWER9		0x004E
--#define PVR_POWER10		0x0080
--#define PVR_POWER11		0x0082
--
--/* REG or %rREG */
--#define SDT_OP_REGEX1  "^(%r)?([1-2]?[0-9]|3[0-1])$"
--
--/* -NUM(REG) or NUM(REG) or -NUM(%rREG) or NUM(%rREG) */
--#define SDT_OP_REGEX2  "^(\\-)?([0-9]+)\\((%r)?([1-2]?[0-9]|3[0-1])\\)$"
--
--static regex_t sdt_op_regex1, sdt_op_regex2;
--
--static int sdt_init_op_regex(void)
--{
--	static int initialized;
--	int ret = 0;
--
--	if (initialized)
--		return 0;
--
--	ret = regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
--	if (ret)
--		goto error;
--
--	ret = regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
--	if (ret)
--		goto free_regex1;
--
--	initialized = 1;
--	return 0;
--
--free_regex1:
--	regfree(&sdt_op_regex1);
--error:
--	pr_debug4("Regex compilation error.\n");
--	return ret;
--}
--
--/*
-- * Parse OP and convert it into uprobe format, which is, +/-NUM(%gprREG).
-- * Possible variants of OP are:
-- *	Format		Example
-- *	-------------------------
-- *	NUM(REG)	48(18)
-- *	-NUM(REG)	-48(18)
-- *	NUM(%rREG)	48(%r18)
-- *	-NUM(%rREG)	-48(%r18)
-- *	REG		18
-- *	%rREG		%r18
-- *	iNUM		i0
-- *	i-NUM		i-1
-- *
-- * SDT marker arguments on Powerpc uses %rREG form with -mregnames flag
-- * and REG form with -mno-regnames. Here REG is general purpose register,
-- * which is in 0 to 31 range.
-- */
--int arch_sdt_arg_parse_op(char *old_op, char **new_op)
--{
--	int ret, new_len;
--	regmatch_t rm[5];
--	char prefix;
--
--	/* Constant argument. Uprobe does not support it */
--	if (old_op[0] == 'i') {
--		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
--		return SDT_ARG_SKIP;
--	}
--
--	ret = sdt_init_op_regex();
--	if (ret < 0)
--		return ret;
--
--	if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
--		/* REG or %rREG --> %gprREG */
--
--		new_len = 5;	/* % g p r NULL */
--		new_len += (int)(rm[2].rm_eo - rm[2].rm_so);
--
--		*new_op = zalloc(new_len);
--		if (!*new_op)
--			return -ENOMEM;
--
--		scnprintf(*new_op, new_len, "%%gpr%.*s",
--			(int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].rm_so);
--	} else if (!regexec(&sdt_op_regex2, old_op, 5, rm, 0)) {
--		/*
--		 * -NUM(REG) or NUM(REG) or -NUM(%rREG) or NUM(%rREG) -->
--		 *	+/-NUM(%gprREG)
--		 */
--		prefix = (rm[1].rm_so == -1) ? '+' : '-';
--
--		new_len = 8;	/* +/- ( % g p r ) NULL */
--		new_len += (int)(rm[2].rm_eo - rm[2].rm_so);
--		new_len += (int)(rm[4].rm_eo - rm[4].rm_so);
--
--		*new_op = zalloc(new_len);
--		if (!*new_op)
--			return -ENOMEM;
--
--		scnprintf(*new_op, new_len, "%c%.*s(%%gpr%.*s)", prefix,
--			(int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].rm_so,
--			(int)(rm[4].rm_eo - rm[4].rm_so), old_op + rm[4].rm_so);
--	} else {
--		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
--		return SDT_ARG_SKIP;
--	}
--
--	return SDT_ARG_VALID;
--}
-diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
-index 76127eefde8b..9713fe4d8467 100644
---- a/tools/perf/arch/x86/util/Build
-+++ b/tools/perf/arch/x86/util/Build
-@@ -2,7 +2,6 @@ perf-util-y += header.o
- perf-util-y += tsc.o
- perf-util-y += pmu.o
- perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
--perf-util-y += perf_regs.o
- perf-util-y += topdown.o
- perf-util-y += machine.o
- perf-util-y += event.o
-diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
-deleted file mode 100644
-index 41141cebe226..000000000000
---- a/tools/perf/arch/x86/util/perf_regs.c
-+++ /dev/null
-@@ -1,235 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <errno.h>
--#include <string.h>
--#include <regex.h>
--#include <linux/kernel.h>
--#include <linux/zalloc.h>
--
--#include "perf_regs.h"
--#include "../../../perf-sys.h"
--#include "../../../util/perf_regs.h"
--#include "../../../util/debug.h"
--#include "../../../util/event.h"
--#include "../../../util/pmu.h"
--#include "../../../util/pmus.h"
--
--struct sdt_name_reg {
--	const char *sdt_name;
--	const char *uprobe_name;
--};
--#define SDT_NAME_REG(n, m) {.sdt_name = "%" #n, .uprobe_name = "%" #m}
--#define SDT_NAME_REG_END {.sdt_name = NULL, .uprobe_name = NULL}
--
--static const struct sdt_name_reg sdt_reg_tbl[] = {
--	SDT_NAME_REG(eax, ax),
--	SDT_NAME_REG(rax, ax),
--	SDT_NAME_REG(al,  ax),
--	SDT_NAME_REG(ah,  ax),
--	SDT_NAME_REG(ebx, bx),
--	SDT_NAME_REG(rbx, bx),
--	SDT_NAME_REG(bl,  bx),
--	SDT_NAME_REG(bh,  bx),
--	SDT_NAME_REG(ecx, cx),
--	SDT_NAME_REG(rcx, cx),
--	SDT_NAME_REG(cl,  cx),
--	SDT_NAME_REG(ch,  cx),
--	SDT_NAME_REG(edx, dx),
--	SDT_NAME_REG(rdx, dx),
--	SDT_NAME_REG(dl,  dx),
--	SDT_NAME_REG(dh,  dx),
--	SDT_NAME_REG(esi, si),
--	SDT_NAME_REG(rsi, si),
--	SDT_NAME_REG(sil, si),
--	SDT_NAME_REG(edi, di),
--	SDT_NAME_REG(rdi, di),
--	SDT_NAME_REG(dil, di),
--	SDT_NAME_REG(ebp, bp),
--	SDT_NAME_REG(rbp, bp),
--	SDT_NAME_REG(bpl, bp),
--	SDT_NAME_REG(rsp, sp),
--	SDT_NAME_REG(esp, sp),
--	SDT_NAME_REG(spl, sp),
--
--	/* rNN registers */
--	SDT_NAME_REG(r8b,  r8),
--	SDT_NAME_REG(r8w,  r8),
--	SDT_NAME_REG(r8d,  r8),
--	SDT_NAME_REG(r9b,  r9),
--	SDT_NAME_REG(r9w,  r9),
--	SDT_NAME_REG(r9d,  r9),
--	SDT_NAME_REG(r10b, r10),
--	SDT_NAME_REG(r10w, r10),
--	SDT_NAME_REG(r10d, r10),
--	SDT_NAME_REG(r11b, r11),
--	SDT_NAME_REG(r11w, r11),
--	SDT_NAME_REG(r11d, r11),
--	SDT_NAME_REG(r12b, r12),
--	SDT_NAME_REG(r12w, r12),
--	SDT_NAME_REG(r12d, r12),
--	SDT_NAME_REG(r13b, r13),
--	SDT_NAME_REG(r13w, r13),
--	SDT_NAME_REG(r13d, r13),
--	SDT_NAME_REG(r14b, r14),
--	SDT_NAME_REG(r14w, r14),
--	SDT_NAME_REG(r14d, r14),
--	SDT_NAME_REG(r15b, r15),
--	SDT_NAME_REG(r15w, r15),
--	SDT_NAME_REG(r15d, r15),
--	SDT_NAME_REG_END,
--};
--
--/*
-- * Perf only supports OP which is in  +/-NUM(REG)  form.
-- * Here plus-minus sign, NUM and parenthesis are optional,
-- * only REG is mandatory.
-- *
-- * SDT events also supports indirect addressing mode with a
-- * symbol as offset, scaled mode and constants in OP. But
-- * perf does not support them yet. Below are few examples.
-- *
-- * OP with scaled mode:
-- *     (%rax,%rsi,8)
-- *     10(%ras,%rsi,8)
-- *
-- * OP with indirect addressing mode:
-- *     check_action(%rip)
-- *     mp_+52(%rip)
-- *     44+mp_(%rip)
-- *
-- * OP with constant values:
-- *     $0
-- *     $123
-- *     $-1
-- */
--#define SDT_OP_REGEX  "^([+\\-]?)([0-9]*)(\\(?)(%[a-z][a-z0-9]+)(\\)?)$"
--
--static regex_t sdt_op_regex;
--
--static int sdt_init_op_regex(void)
--{
--	static int initialized;
--	int ret = 0;
--
--	if (initialized)
--		return 0;
--
--	ret = regcomp(&sdt_op_regex, SDT_OP_REGEX, REG_EXTENDED);
--	if (ret < 0) {
--		pr_debug4("Regex compilation error.\n");
--		return ret;
--	}
--
--	initialized = 1;
--	return 0;
--}
--
--/*
-- * Max x86 register name length is 5(ex: %r15d). So, 6th char
-- * should always contain NULL. This helps to find register name
-- * length using strlen, instead of maintaining one more variable.
-- */
--#define SDT_REG_NAME_SIZE  6
--
--/*
-- * The uprobe parser does not support all gas register names;
-- * so, we have to replace them (ex. for x86_64: %rax -> %ax).
-- * Note: If register does not require renaming, just copy
-- * paste as it is, but don't leave it empty.
-- */
--static void sdt_rename_register(char *sdt_reg, int sdt_len, char *uprobe_reg)
--{
--	int i = 0;
--
--	for (i = 0; sdt_reg_tbl[i].sdt_name != NULL; i++) {
--		if (!strncmp(sdt_reg_tbl[i].sdt_name, sdt_reg, sdt_len)) {
--			strcpy(uprobe_reg, sdt_reg_tbl[i].uprobe_name);
--			return;
--		}
--	}
--
--	strncpy(uprobe_reg, sdt_reg, sdt_len);
--}
--
--int arch_sdt_arg_parse_op(char *old_op, char **new_op)
--{
--	char new_reg[SDT_REG_NAME_SIZE] = {0};
--	int new_len = 0, ret;
--	/*
--	 * rm[0]:  +/-NUM(REG)
--	 * rm[1]:  +/-
--	 * rm[2]:  NUM
--	 * rm[3]:  (
--	 * rm[4]:  REG
--	 * rm[5]:  )
--	 */
--	regmatch_t rm[6];
--	/*
--	 * Max prefix length is 2 as it may contains sign(+/-)
--	 * and displacement 0 (Both sign and displacement 0 are
--	 * optional so it may be empty). Use one more character
--	 * to hold last NULL so that strlen can be used to find
--	 * prefix length, instead of maintaining one more variable.
--	 */
--	char prefix[3] = {0};
--
--	ret = sdt_init_op_regex();
--	if (ret < 0)
--		return ret;
--
--	/*
--	 * If unsupported OR does not match with regex OR
--	 * register name too long, skip it.
--	 */
--	if (strchr(old_op, ',') || strchr(old_op, '$') ||
--	    regexec(&sdt_op_regex, old_op, 6, rm, 0)   ||
--	    rm[4].rm_eo - rm[4].rm_so > SDT_REG_NAME_SIZE) {
--		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
--		return SDT_ARG_SKIP;
--	}
--
--	/*
--	 * Prepare prefix.
--	 * If SDT OP has parenthesis but does not provide
--	 * displacement, add 0 for displacement.
--	 *     SDT         Uprobe     Prefix
--	 *     -----------------------------
--	 *     +24(%rdi)   +24(%di)   +
--	 *     24(%rdi)    +24(%di)   +
--	 *     %rdi        %di
--	 *     (%rdi)      +0(%di)    +0
--	 *     -80(%rbx)   -80(%bx)   -
--	 */
--	if (rm[3].rm_so != rm[3].rm_eo) {
--		if (rm[1].rm_so != rm[1].rm_eo)
--			prefix[0] = *(old_op + rm[1].rm_so);
--		else if (rm[2].rm_so != rm[2].rm_eo)
--			prefix[0] = '+';
--		else
--			scnprintf(prefix, sizeof(prefix), "+0");
--	}
--
--	/* Rename register */
--	sdt_rename_register(old_op + rm[4].rm_so, rm[4].rm_eo - rm[4].rm_so,
--			    new_reg);
--
--	/* Prepare final OP which should be valid for uprobe_events */
--	new_len = strlen(prefix)              +
--		  (rm[2].rm_eo - rm[2].rm_so) +
--		  (rm[3].rm_eo - rm[3].rm_so) +
--		  strlen(new_reg)             +
--		  (rm[5].rm_eo - rm[5].rm_so) +
--		  1;					/* NULL */
--
--	*new_op = zalloc(new_len);
--	if (!*new_op)
--		return -ENOMEM;
--
--	scnprintf(*new_op, new_len, "%.*s%.*s%.*s%.*s%.*s",
--		  strlen(prefix), prefix,
--		  (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].rm_so,
--		  (int)(rm[3].rm_eo - rm[3].rm_so), old_op + rm[3].rm_so,
--		  strlen(new_reg), new_reg,
--		  (int)(rm[5].rm_eo - rm[5].rm_so), old_op + rm[5].rm_so);
--
--	return SDT_ARG_VALID;
--}
-diff --git a/tools/perf/util/perf-regs-arch/perf_regs_aarch64.c b/tools/perf/util/perf-regs-arch/perf_regs_aarch64.c
-index 666874f625b6..6833d34dcbfd 100644
---- a/tools/perf/util/perf-regs-arch/perf_regs_aarch64.c
-+++ b/tools/perf/util/perf-regs-arch/perf_regs_aarch64.c
-@@ -18,6 +18,92 @@
- #define HWCAP_SVE	(1 << 22)
- #endif
+diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+index ec964ed05974..153ca26c0b74 100644
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -1,63 +1,61 @@
+-pmu-events-y	+= pmu-events.o
+-JSON		=  $(shell find pmu-events/arch -name '*.json' -o -name '*.csv')
+-JSON_DIRS	=  $(shell find pmu-events/arch -type d)
+-JDIR_TEST	=  pmu-events/arch/test
+-JSON_TEST	=  $(shell [ -d $(JDIR_TEST) ] &&			\
+-			find $(JDIR_TEST) -name '*.json')
+-JEVENTS_PY	=  pmu-events/jevents.py
+-METRIC_PY	=  pmu-events/metric.py
+-METRIC_TEST_PY	=  pmu-events/metric_test.py
+ EMPTY_PMU_EVENTS_C = pmu-events/empty-pmu-events.c
++# pmu-events.c will be generated by jevents.py or copied from EMPTY_PMU_EVENTS_C
+ PMU_EVENTS_C	=  $(OUTPUT)pmu-events/pmu-events.c
+-METRIC_TEST_LOG	=  $(OUTPUT)pmu-events/metric_test.log
+-TEST_EMPTY_PMU_EVENTS_C = $(OUTPUT)pmu-events/test-empty-pmu-events.c
+-EMPTY_PMU_EVENTS_TEST_LOG = $(OUTPUT)pmu-events/empty-pmu-events.log
+-LEGACY_CACHE_PY	=  pmu-events/make_legacy_cache.py
+-LEGACY_CACHE_JSON = $(OUTPUT)pmu-events/arch/common/common/legacy-cache.json
++pmu-events-y	+= pmu-events.o
  
-+/* %xNUM */
-+#define SDT_OP_REGEX1  "^(x[1-2]?[0-9]|3[0-1])$"
-+
-+/* [sp], [sp, NUM] */
-+#define SDT_OP_REGEX2  "^\\[sp(, )?([0-9]+)?\\]$"
-+
-+static regex_t sdt_op_regex1, sdt_op_regex2;
-+
-+static int sdt_init_op_regex(void)
-+{
-+	static int initialized;
-+	int ret = 0;
-+
-+	if (initialized)
-+		return 0;
-+
-+	ret = regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
-+	if (ret)
-+		goto error;
-+
-+	ret = regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
-+	if (ret)
-+		goto free_regex1;
-+
-+	initialized = 1;
-+	return 0;
-+
-+free_regex1:
-+	regfree(&sdt_op_regex1);
-+error:
-+	pr_debug4("Regex compilation error.\n");
-+	return ret;
-+}
-+
-+/*
-+ * SDT marker arguments on Arm64 uses %xREG or [sp, NUM], currently
-+ * support these two formats.
-+ */
-+int __perf_sdt_arg_parse_op_arm64(char *old_op, char **new_op)
-+{
-+	int ret, new_len;
-+	regmatch_t rm[5];
-+
-+	ret = sdt_init_op_regex();
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
-+		/* Extract xNUM */
-+		new_len = 2;	/* % NULL */
-+		new_len += (int)(rm[1].rm_eo - rm[1].rm_so);
-+
-+		*new_op = zalloc(new_len);
-+		if (!*new_op)
-+			return -ENOMEM;
-+
-+		scnprintf(*new_op, new_len, "%%%.*s",
-+			(int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1].rm_so);
-+	} else if (!regexec(&sdt_op_regex2, old_op, 5, rm, 0)) {
-+		/* [sp], [sp, NUM] or [sp,NUM] */
-+		new_len = 7;	/* + ( % s p ) NULL */
-+
-+		/* If the argument is [sp], need to fill offset '0' */
-+		if (rm[2].rm_so == -1)
-+			new_len += 1;
-+		else
-+			new_len += (int)(rm[2].rm_eo - rm[2].rm_so);
-+
-+		*new_op = zalloc(new_len);
-+		if (!*new_op)
-+			return -ENOMEM;
-+
-+		if (rm[2].rm_so == -1)
-+			scnprintf(*new_op, new_len, "+0(%%sp)");
-+		else
-+			scnprintf(*new_op, new_len, "+%.*s(%%sp)",
-+				  (int)(rm[2].rm_eo - rm[2].rm_so),
-+				  old_op + rm[2].rm_so);
-+	} else {
-+		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
-+		return SDT_ARG_SKIP;
-+	}
-+
-+	return SDT_ARG_VALID;
-+}
-+
- uint64_t __perf_reg_mask_arm64(bool intr)
- {
- 	struct perf_event_attr attr = {
-diff --git a/tools/perf/util/perf-regs-arch/perf_regs_powerpc.c b/tools/perf/util/perf-regs-arch/perf_regs_powerpc.c
-index f0a547ad809b..217a001ccd2e 100644
---- a/tools/perf/util/perf-regs-arch/perf_regs_powerpc.c
-+++ b/tools/perf/util/perf-regs-arch/perf_regs_powerpc.c
-@@ -19,6 +19,112 @@
- #define PVR_POWER10		0x0080
- #define PVR_POWER11		0x0082
+-ifeq ($(JEVENTS_ARCH),)
+-JEVENTS_ARCH=$(SRCARCH)
+-endif
+-JEVENTS_MODEL ?= all
++# pmu-events.c file is generated in the OUTPUT directory so it needs a
++# separate rule to depend on it properly
++$(OUTPUT)pmu-events/pmu-events.o: $(PMU_EVENTS_C)
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
  
-+/* REG or %rREG */
-+#define SDT_OP_REGEX1  "^(%r)?([1-2]?[0-9]|3[0-1])$"
-+
-+/* -NUM(REG) or NUM(REG) or -NUM(%rREG) or NUM(%rREG) */
-+#define SDT_OP_REGEX2  "^(\\-)?([0-9]+)\\((%r)?([1-2]?[0-9]|3[0-1])\\)$"
-+
-+static regex_t sdt_op_regex1, sdt_op_regex2;
-+
-+static int sdt_init_op_regex(void)
-+{
-+	static int initialized;
-+	int ret = 0;
-+
-+	if (initialized)
-+		return 0;
-+
-+	ret = regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
-+	if (ret)
-+		goto error;
-+
-+	ret = regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
-+	if (ret)
-+		goto free_regex1;
-+
-+	initialized = 1;
-+	return 0;
-+
-+free_regex1:
-+	regfree(&sdt_op_regex1);
-+error:
-+	pr_debug4("Regex compilation error.\n");
-+	return ret;
-+}
-+
-+/*
-+ * Parse OP and convert it into uprobe format, which is, +/-NUM(%gprREG).
-+ * Possible variants of OP are:
-+ *	Format		Example
-+ *	-------------------------
-+ *	NUM(REG)	48(18)
-+ *	-NUM(REG)	-48(18)
-+ *	NUM(%rREG)	48(%r18)
-+ *	-NUM(%rREG)	-48(%r18)
-+ *	REG		18
-+ *	%rREG		%r18
-+ *	iNUM		i0
-+ *	i-NUM		i-1
-+ *
-+ * SDT marker arguments on Powerpc uses %rREG form with -mregnames flag
-+ * and REG form with -mno-regnames. Here REG is general purpose register,
-+ * which is in 0 to 31 range.
-+ */
-+int __perf_sdt_arg_parse_op_powerpc(char *old_op, char **new_op)
-+{
-+	int ret, new_len;
-+	regmatch_t rm[5];
-+	char prefix;
-+
-+	/* Constant argument. Uprobe does not support it */
-+	if (old_op[0] == 'i') {
-+		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
-+		return SDT_ARG_SKIP;
-+	}
-+
-+	ret = sdt_init_op_regex();
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
-+		/* REG or %rREG --> %gprREG */
-+
-+		new_len = 5;	/* % g p r NULL */
-+		new_len += (int)(rm[2].rm_eo - rm[2].rm_so);
-+
-+		*new_op = zalloc(new_len);
-+		if (!*new_op)
-+			return -ENOMEM;
-+
-+		scnprintf(*new_op, new_len, "%%gpr%.*s",
-+			(int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].rm_so);
-+	} else if (!regexec(&sdt_op_regex2, old_op, 5, rm, 0)) {
-+		/*
-+		 * -NUM(REG) or NUM(REG) or -NUM(%rREG) or NUM(%rREG) -->
-+		 *	+/-NUM(%gprREG)
-+		 */
-+		prefix = (rm[1].rm_so == -1) ? '+' : '-';
-+
-+		new_len = 8;	/* +/- ( % g p r ) NULL */
-+		new_len += (int)(rm[2].rm_eo - rm[2].rm_so);
-+		new_len += (int)(rm[4].rm_eo - rm[4].rm_so);
-+
-+		*new_op = zalloc(new_len);
-+		if (!*new_op)
-+			return -ENOMEM;
-+
-+		scnprintf(*new_op, new_len, "%c%.*s(%%gpr%.*s)", prefix,
-+			(int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].rm_so,
-+			(int)(rm[4].rm_eo - rm[4].rm_so), old_op + rm[4].rm_so);
-+	} else {
-+		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
-+		return SDT_ARG_SKIP;
-+	}
-+
-+	return SDT_ARG_VALID;
-+}
-+
- /*
-  * mfspr is a POWERPC specific instruction, ensure it's only
-  * built and called on POWERPC by guarding with __powerpc64__
-diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
-index d573f9a9ca46..b6d20522b4e8 100644
---- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
-+++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
-@@ -14,6 +14,227 @@
- #include "../../perf-sys.h"
- #include "../../arch/x86/include/perf_regs.h"
+-#
+-# Locate/process JSON files in pmu-events/arch/
+-# directory and create tables in pmu-events.c.
+-#
++# Message for $(call echo-cmd,cp), possibly remove the src file from
++# the destination to save space in the build log.
++quiet_cmd_cp   = COPY    $(patsubst %$<,%,$@) <- $<
  
-+struct sdt_name_reg {
-+	const char *sdt_name;
-+	const char *uprobe_name;
-+};
-+#define SDT_NAME_REG(n, m) {.sdt_name = "%" #n, .uprobe_name = "%" #m}
-+#define SDT_NAME_REG_END {.sdt_name = NULL, .uprobe_name = NULL}
-+
-+static const struct sdt_name_reg sdt_reg_tbl[] = {
-+	SDT_NAME_REG(eax, ax),
-+	SDT_NAME_REG(rax, ax),
-+	SDT_NAME_REG(al,  ax),
-+	SDT_NAME_REG(ah,  ax),
-+	SDT_NAME_REG(ebx, bx),
-+	SDT_NAME_REG(rbx, bx),
-+	SDT_NAME_REG(bl,  bx),
-+	SDT_NAME_REG(bh,  bx),
-+	SDT_NAME_REG(ecx, cx),
-+	SDT_NAME_REG(rcx, cx),
-+	SDT_NAME_REG(cl,  cx),
-+	SDT_NAME_REG(ch,  cx),
-+	SDT_NAME_REG(edx, dx),
-+	SDT_NAME_REG(rdx, dx),
-+	SDT_NAME_REG(dl,  dx),
-+	SDT_NAME_REG(dh,  dx),
-+	SDT_NAME_REG(esi, si),
-+	SDT_NAME_REG(rsi, si),
-+	SDT_NAME_REG(sil, si),
-+	SDT_NAME_REG(edi, di),
-+	SDT_NAME_REG(rdi, di),
-+	SDT_NAME_REG(dil, di),
-+	SDT_NAME_REG(ebp, bp),
-+	SDT_NAME_REG(rbp, bp),
-+	SDT_NAME_REG(bpl, bp),
-+	SDT_NAME_REG(rsp, sp),
-+	SDT_NAME_REG(esp, sp),
-+	SDT_NAME_REG(spl, sp),
-+
-+	/* rNN registers */
-+	SDT_NAME_REG(r8b,  r8),
-+	SDT_NAME_REG(r8w,  r8),
-+	SDT_NAME_REG(r8d,  r8),
-+	SDT_NAME_REG(r9b,  r9),
-+	SDT_NAME_REG(r9w,  r9),
-+	SDT_NAME_REG(r9d,  r9),
-+	SDT_NAME_REG(r10b, r10),
-+	SDT_NAME_REG(r10w, r10),
-+	SDT_NAME_REG(r10d, r10),
-+	SDT_NAME_REG(r11b, r11),
-+	SDT_NAME_REG(r11w, r11),
-+	SDT_NAME_REG(r11d, r11),
-+	SDT_NAME_REG(r12b, r12),
-+	SDT_NAME_REG(r12w, r12),
-+	SDT_NAME_REG(r12d, r12),
-+	SDT_NAME_REG(r13b, r13),
-+	SDT_NAME_REG(r13w, r13),
-+	SDT_NAME_REG(r13d, r13),
-+	SDT_NAME_REG(r14b, r14),
-+	SDT_NAME_REG(r14w, r14),
-+	SDT_NAME_REG(r14d, r14),
-+	SDT_NAME_REG(r15b, r15),
-+	SDT_NAME_REG(r15w, r15),
-+	SDT_NAME_REG(r15d, r15),
-+	SDT_NAME_REG_END,
-+};
-+
-+/*
-+ * Perf only supports OP which is in  +/-NUM(REG)  form.
-+ * Here plus-minus sign, NUM and parenthesis are optional,
-+ * only REG is mandatory.
-+ *
-+ * SDT events also supports indirect addressing mode with a
-+ * symbol as offset, scaled mode and constants in OP. But
-+ * perf does not support them yet. Below are few examples.
-+ *
-+ * OP with scaled mode:
-+ *     (%rax,%rsi,8)
-+ *     10(%ras,%rsi,8)
-+ *
-+ * OP with indirect addressing mode:
-+ *     check_action(%rip)
-+ *     mp_+52(%rip)
-+ *     44+mp_(%rip)
-+ *
-+ * OP with constant values:
-+ *     $0
-+ *     $123
-+ *     $-1
-+ */
-+#define SDT_OP_REGEX  "^([+\\-]?)([0-9]*)(\\(?)(%[a-z][a-z0-9]+)(\\)?)$"
-+
-+static regex_t sdt_op_regex;
-+
-+static int sdt_init_op_regex(void)
-+{
-+	static int initialized;
-+	int ret = 0;
-+
-+	if (initialized)
-+		return 0;
-+
-+	ret = regcomp(&sdt_op_regex, SDT_OP_REGEX, REG_EXTENDED);
-+	if (ret < 0) {
-+		pr_debug4("Regex compilation error.\n");
-+		return ret;
-+	}
-+
-+	initialized = 1;
-+	return 0;
-+}
-+
-+/*
-+ * Max x86 register name length is 5(ex: %r15d). So, 6th char
-+ * should always contain NULL. This helps to find register name
-+ * length using strlen, instead of maintaining one more variable.
-+ */
-+#define SDT_REG_NAME_SIZE  6
-+
-+/*
-+ * The uprobe parser does not support all gas register names;
-+ * so, we have to replace them (ex. for x86_64: %rax -> %ax).
-+ * Note: If register does not require renaming, just copy
-+ * paste as it is, but don't leave it empty.
-+ */
-+static void sdt_rename_register(char *sdt_reg, int sdt_len, char *uprobe_reg)
-+{
-+	int i = 0;
-+
-+	for (i = 0; sdt_reg_tbl[i].sdt_name != NULL; i++) {
-+		if (!strncmp(sdt_reg_tbl[i].sdt_name, sdt_reg, sdt_len)) {
-+			strcpy(uprobe_reg, sdt_reg_tbl[i].uprobe_name);
-+			return;
-+		}
-+	}
-+
-+	strncpy(uprobe_reg, sdt_reg, sdt_len);
-+}
-+
-+int __perf_sdt_arg_parse_op_x86(char *old_op, char **new_op)
-+{
-+	char new_reg[SDT_REG_NAME_SIZE] = {0};
-+	int new_len = 0, ret;
-+	/*
-+	 * rm[0]:  +/-NUM(REG)
-+	 * rm[1]:  +/-
-+	 * rm[2]:  NUM
-+	 * rm[3]:  (
-+	 * rm[4]:  REG
-+	 * rm[5]:  )
-+	 */
-+	regmatch_t rm[6];
-+	/*
-+	 * Max prefix length is 2 as it may contains sign(+/-)
-+	 * and displacement 0 (Both sign and displacement 0 are
-+	 * optional so it may be empty). Use one more character
-+	 * to hold last NULL so that strlen can be used to find
-+	 * prefix length, instead of maintaining one more variable.
-+	 */
-+	char prefix[3] = {0};
-+
-+	ret = sdt_init_op_regex();
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * If unsupported OR does not match with regex OR
-+	 * register name too long, skip it.
-+	 */
-+	if (strchr(old_op, ',') || strchr(old_op, '$') ||
-+	    regexec(&sdt_op_regex, old_op, 6, rm, 0)   ||
-+	    rm[4].rm_eo - rm[4].rm_so > SDT_REG_NAME_SIZE) {
-+		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
-+		return SDT_ARG_SKIP;
-+	}
-+
-+	/*
-+	 * Prepare prefix.
-+	 * If SDT OP has parenthesis but does not provide
-+	 * displacement, add 0 for displacement.
-+	 *     SDT         Uprobe     Prefix
-+	 *     -----------------------------
-+	 *     +24(%rdi)   +24(%di)   +
-+	 *     24(%rdi)    +24(%di)   +
-+	 *     %rdi        %di
-+	 *     (%rdi)      +0(%di)    +0
-+	 *     -80(%rbx)   -80(%bx)   -
-+	 */
-+	if (rm[3].rm_so != rm[3].rm_eo) {
-+		if (rm[1].rm_so != rm[1].rm_eo)
-+			prefix[0] = *(old_op + rm[1].rm_so);
-+		else if (rm[2].rm_so != rm[2].rm_eo)
-+			prefix[0] = '+';
-+		else
-+			scnprintf(prefix, sizeof(prefix), "+0");
-+	}
-+
-+	/* Rename register */
-+	sdt_rename_register(old_op + rm[4].rm_so, rm[4].rm_eo - rm[4].rm_so,
-+			    new_reg);
-+
-+	/* Prepare final OP which should be valid for uprobe_events */
-+	new_len = strlen(prefix)              +
-+		  (rm[2].rm_eo - rm[2].rm_so) +
-+		  (rm[3].rm_eo - rm[3].rm_so) +
-+		  strlen(new_reg)             +
-+		  (rm[5].rm_eo - rm[5].rm_so) +
-+		  1;					/* NULL */
-+
-+	*new_op = zalloc(new_len);
-+	if (!*new_op)
-+		return -ENOMEM;
-+
-+	scnprintf(*new_op, new_len, "%.*s%.*s%.*s%.*s%.*s",
-+		  strlen(prefix), prefix,
-+		  (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].rm_so,
-+		  (int)(rm[3].rm_eo - rm[3].rm_so), old_op + rm[3].rm_so,
-+		  strlen(new_reg), new_reg,
-+		  (int)(rm[5].rm_eo - rm[5].rm_so), old_op + rm[5].rm_so);
-+
-+	return SDT_ARG_VALID;
-+}
-+
- uint64_t __perf_reg_mask_x86(bool intr)
- {
- 	struct perf_event_attr attr = {
-diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-index 4d9a286a0e56..5b8f34beb24e 100644
---- a/tools/perf/util/perf_regs.c
-+++ b/tools/perf/util/perf_regs.c
-@@ -7,10 +7,29 @@
- #include "util/sample.h"
- #include "debug.h"
++# --- NO_JEVENTS=1 build ---
+ ifeq ($(NO_JEVENTS),1)
+ $(PMU_EVENTS_C): $(EMPTY_PMU_EVENTS_C)
+ 	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,gen)cp $< $@
++	$(Q)$(call echo-cmd,cp)cp $< $@
+ else
+-# Functions to extract the model from a extra-metrics.json or extra-metricgroups.json path.
+-model_name = $(shell echo $(1)|sed -e 's@.\+/\(.*\)/extra-metric.*\.json@\1@')
+-vendor_name = $(shell echo $(1)|sed -e 's@.\+/\(.*\)/[^/]*/extra-metric.*\.json@\1@')
++# --- Regular build ---
  
--int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
--				 char **new_op __maybe_unused)
-+int perf_sdt_arg_parse_op(uint16_t e_machine, char *old_op, char **new_op)
- {
--	return SDT_ARG_SKIP;
-+	int ret = SDT_ARG_SKIP;
+-# Copy checked-in json to OUTPUT for generation if it's an out of source build
+-ifneq ($(OUTPUT),)
+-# Remove all output directories when any source directory timestamp changes
+-# so there are no stale deleted files
+-JSON_DIRS_ROOT = $(OUTPUT)pmu-events/arch/
+-$(JSON_DIRS_ROOT): $(JSON_DIRS)
+-	$(Q)$(call echo-cmd,gen)rm -rf $@
+-	$(Q)mkdir -p $@
++# Setup the JEVENTS_ARCH and JEVENTS_MODEL
++ifeq ($(JEVENTS_ARCH),)
++JEVENTS_ARCH=$(SRCARCH)
++endif
++JEVENTS_MODEL ?= all
+ 
+-$(OUTPUT)pmu-events/arch/%: pmu-events/arch/% $(JSON_DIRS_ROOT)
+-	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,gen)cp $< $@
++# The input json/csv files
++SRC_DIR		:= pmu-events/arch
++ifeq ($(JEVENTS_ARCH),all)
++SRC_JSON	:= $(shell find $(SRC_DIR) -name '*.json' -o -name '*.csv')
++else
++SRC_JSON	:= $(shell find $(SRC_DIR)/common $(SRC_DIR)/test $(SRC_DIR)/$(JEVENTS_ARCH) -name '*.json' -o -name '*.csv')
+ endif
+ 
+-$(LEGACY_CACHE_JSON): $(LEGACY_CACHE_PY) $(JSON_DIRS_ROOT)
++# Python to build the generic legacy cache events
++LEGACY_CACHE_PY	=  pmu-events/make_legacy_cache.py
++LEGACY_CACHE_JSON = $(OUTPUT)pmu-events/arch/common/common/legacy-cache.json
++GEN_JSON = $(LEGACY_CACHE_JSON)
 +
-+	switch (e_machine) {
-+	case EM_AARCH64:
-+		ret = __perf_sdt_arg_parse_op_arm64(old_op, new_op);
-+		break;
-+	case EM_PPC:
-+	case EM_PPC64:
-+		ret = __perf_sdt_arg_parse_op_powerpc(old_op, new_op);
-+		break;
-+	case EM_386:
-+	case EM_X86_64:
-+		ret = __perf_sdt_arg_parse_op_x86(old_op, new_op);
-+		break;
-+	default:
-+		pr_debug("Unknown ELF machine %d, standard arguments parse will be skipped.\n",
-+			 e_machine);
-+		break;
-+	}
++$(LEGACY_CACHE_JSON): $(LEGACY_CACHE_PY)
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,gen)$(PYTHON) $(LEGACY_CACHE_PY) > $@
+ 
++# Python to generate architectural metrics
+ GEN_METRIC_DEPS := pmu-events/metric.py pmu-events/common_metrics.py
++# Functions to extract the model from an extra-metrics.json or extra-metricgroups.json path.
++model_name = $(shell echo $(1)|sed -e 's@.\+/\(.*\)/extra-metric.*\.json@\1@')
++vendor_name = $(shell echo $(1)|sed -e 's@.\+/\(.*\)/[^/]*/extra-metric.*\.json@\1@')
+ 
++ifeq ($(JEVENTS_ARCH),$(filter $(JEVENTS_ARCH),x86 all))
+ # Generate AMD Json
+ ZENS = $(shell ls -d pmu-events/arch/x86/amdzen*)
+ ZEN_METRICS = $(foreach x,$(ZENS),$(OUTPUT)$(x)/extra-metrics.json)
+ ZEN_METRICGROUPS = $(foreach x,$(ZENS),$(OUTPUT)$(x)/extra-metricgroups.json)
++GEN_JSON += $(ZEN_METRICS) $(ZEN_METRICGROUPS)
+ 
+ $(ZEN_METRICS): pmu-events/amd_metrics.py $(GEN_METRIC_DEPS)
+ 	$(call rule_mkdir)
+@@ -67,10 +65,14 @@ $(ZEN_METRICGROUPS): pmu-events/amd_metrics.py $(GEN_METRIC_DEPS)
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,gen)$(PYTHON) $< -metricgroups $(call model_name,$@) pmu-events/arch > $@
+ 
++endif
 +
-+	return ret;
- }
++ifeq ($(JEVENTS_ARCH),$(filter $(JEVENTS_ARCH),arm64 all))
+ # Generate ARM Json
+ ARMS = $(shell ls -d pmu-events/arch/arm64/arm/*|grep -v cmn)
+ ARM_METRICS = $(foreach x,$(ARMS),$(OUTPUT)$(x)/extra-metrics.json)
+ ARM_METRICGROUPS = $(foreach x,$(ARMS),$(OUTPUT)$(x)/extra-metricgroups.json)
++GEN_JSON += $(ARM_METRICS) $(ARM_METRICGROUPS)
  
- uint64_t perf_intr_reg_mask(uint16_t e_machine)
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index 2b27139acadb..7c04700bf837 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -12,7 +12,7 @@ enum {
- 	SDT_ARG_SKIP,
- };
+ $(ARM_METRICS): pmu-events/arm64_metrics.py $(GEN_METRIC_DEPS)
+ 	$(call rule_mkdir)
+@@ -80,10 +82,14 @@ $(ARM_METRICGROUPS): pmu-events/arm64_metrics.py $(GEN_METRIC_DEPS)
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,gen)$(PYTHON) $< -metricgroups $(call vendor_name,$@) $(call model_name,$@) pmu-events/arch > $@
  
--int arch_sdt_arg_parse_op(char *old_op, char **new_op);
-+int perf_sdt_arg_parse_op(uint16_t e_machine, char *old_op, char **new_op);
- uint64_t perf_intr_reg_mask(uint16_t e_machine);
- uint64_t perf_user_reg_mask(uint16_t e_machine);
++endif
++
++ifeq ($(JEVENTS_ARCH),$(filter $(JEVENTS_ARCH),x86 all))
+ # Generate Intel Json
+ INTELS = $(shell ls -d pmu-events/arch/x86/*|grep -v amdzen|grep -v mapfile.csv)
+ INTEL_METRICS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metrics.json)
+ INTEL_METRICGROUPS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metricgroups.json)
++GEN_JSON += $(INTEL_METRICS) $(INTEL_METRICGROUPS)
  
-@@ -21,6 +21,7 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
- uint64_t perf_arch_reg_ip(uint16_t e_machine);
- uint64_t perf_arch_reg_sp(uint16_t e_machine);
+ $(INTEL_METRICS): pmu-events/intel_metrics.py $(GEN_METRIC_DEPS)
+ 	$(call rule_mkdir)
+@@ -93,18 +99,64 @@ $(INTEL_METRICGROUPS): pmu-events/intel_metrics.py $(GEN_METRIC_DEPS)
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,gen)$(PYTHON) $< -metricgroups $(call model_name,$@) pmu-events/arch > $@
  
-+int __perf_sdt_arg_parse_op_arm64(char *old_op, char **new_op);
- uint64_t __perf_reg_mask_arm64(bool intr);
- const char *__perf_reg_name_arm64(int id);
- uint64_t __perf_reg_ip_arm64(void);
-@@ -46,6 +47,7 @@ const char *__perf_reg_name_mips(int id);
- uint64_t __perf_reg_ip_mips(void);
- uint64_t __perf_reg_sp_mips(void);
+-GEN_JSON = $(patsubst %,$(OUTPUT)%,$(JSON)) \
+-            $(LEGACY_CACHE_JSON) \
+-            $(JSON_DIRS) \
+-            $(ZEN_METRICS) $(ZEN_METRICGROUPS) \
+-            $(ARM_METRICS) $(ARM_METRICGROUPS) \
+-            $(INTEL_METRICS) $(INTEL_METRICGROUPS)
++endif
++
++OUT_DIR		:= $(OUTPUT)pmu-events/arch
++
++ifeq ($(OUTPUT),)
++OUT_JSON	:= $(SRC_JSON)
++ORPHAN_FILES	:=
++else
++# Things that need to be built in the OUTPUT directory. Note, ensure
++# there is a slash after the directory name so that it matches what
++# $(dir) gives in COPY_RULE.
++OUT_JSON	:= $(patsubst $(SRC_DIR)/%,$(OUT_DIR)/%,$(SRC_JSON))
++OUT_DIRS	:= $(sort $(patsubst %/,%,$(dir $(OUT_JSON))))
++
++# Things already in the OUTPUT directory
++CUR_OUT_JSON	:= $(shell [ -d $(OUT_DIR) ] && find $(OUT_DIR) -type f)
++
++# Things in the OUTPUT directory but shouldn't be there as computed by
++# OUT_JSON and GEN_JSON.
++ORPHAN_FILES	:= $(filter-out $(OUT_JSON) $(GEN_JSON),$(CUR_OUT_JSON))
++
++# Message for $(call echo-cmd,mkd). There is already a mkdir message
++# but it assumes $@ is a file to mkdir the directory for.
++quiet_cmd_mkd  = MKDIR   $@
++
++$(OUT_DIRS):
++	$(Q)$(call echo-cmd,mkd)mkdir -p $@
++
++# Explicitly generate rules to copy SRC_JSON files as $(dir) cannot
++# apply to $@ in a dependency.
++define COPY_RULE
++$(2): $(1) | $(3)
++	$$(Q)$$(call echo-cmd,cp)cp $(1) $(2)
++endef
++$(foreach src,$(SRC_JSON), \
++    $(eval dest := $(patsubst $(SRC_DIR)/%,$(OUT_DIR)/%,$(src))) \
++    $(eval ddir := $(patsubst %/,%,$(dir $(dest)))) \
++    $(eval $(call COPY_RULE,$(src),$(dest),$(ddir))) \
++)
++
++endif # ifneq ($(OUTPUT),)
++
++JEVENTS_PY	=  pmu-events/jevents.py
++METRIC_PY	=  pmu-events/metric.py
++
++# Rule to run the metric test.
++METRIC_TEST_PY	=  pmu-events/metric_test.py
++METRIC_TEST_LOG	=  $(OUTPUT)pmu-events/metric_test.log
  
-+int __perf_sdt_arg_parse_op_powerpc(char *old_op, char **new_op);
- uint64_t __perf_reg_mask_powerpc(bool intr);
- const char *__perf_reg_name_powerpc(int id);
- uint64_t __perf_reg_ip_powerpc(void);
-@@ -61,6 +63,7 @@ const char *__perf_reg_name_s390(int id);
- uint64_t __perf_reg_ip_s390(void);
- uint64_t __perf_reg_sp_s390(void);
+ $(METRIC_TEST_LOG): $(METRIC_TEST_PY) $(METRIC_PY)
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,test)$(PYTHON) $< 2> $@ || (cat $@ && false)
  
-+int __perf_sdt_arg_parse_op_x86(char *old_op, char **new_op);
- uint64_t __perf_reg_mask_x86(bool intr);
- const char *__perf_reg_name_x86(int id);
- uint64_t __perf_reg_ip_x86(void);
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index 5069fb61f48c..f78c3bc3d601 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -28,6 +28,7 @@
- #include "session.h"
- #include "perf_regs.h"
- #include "string2.h"
-+#include "dwarf-regs.h"
+-$(TEST_EMPTY_PMU_EVENTS_C): $(GEN_JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG)
++# Rule to create then ensure the empty-pmu-events.c is in sync.
++TEST_EMPTY_PMU_EVENTS_C = $(OUTPUT)pmu-events/test-empty-pmu-events.c
++EMPTY_PMU_EVENTS_TEST_LOG = $(OUTPUT)pmu-events/empty-pmu-events.log
++
++$(TEST_EMPTY_PMU_EVENTS_C): $(OUT_JSON) $(GEN_JSON) $(JEVENTS_PY) $(METRIC_PY)
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) none none $(OUTPUT)pmu-events/arch $@
  
- /* 4096 - 2 ('\n' + '\0') */
- #define MAX_CMDLEN 4094
-@@ -784,7 +785,7 @@ static int synthesize_sdt_probe_arg(struct strbuf *buf, int i, const char *arg)
- 		op = desc;
- 	}
+@@ -112,36 +164,60 @@ $(EMPTY_PMU_EVENTS_TEST_LOG): $(EMPTY_PMU_EVENTS_C) $(TEST_EMPTY_PMU_EVENTS_C)
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,test)diff -u $^ 2> $@ || (cat $@ && false)
  
--	ret = arch_sdt_arg_parse_op(op, &new_op);
-+	ret = perf_sdt_arg_parse_op(EM_HOST, op, &new_op);
++
++# Dependencies for jevents.py
++JEVENTS_DEPS := $(OUT_JSON) $(GEN_JSON) $(JEVENTS_PY) $(METRIC_PY) $(EMPTY_PMU_EVENTS_TEST_LOG) $(METRIC_TEST_LOG)
++
++# Rules to run mypy if enabled.
+ ifdef MYPY
+-  PMU_EVENTS_PY_TESTS := $(wildcard *.py)
+-  PMU_EVENTS_MYPY_TEST_LOGS := $(JEVENTS_PY_TESTS:%=%.mypy_log)
+-else
+-  PMU_EVENTS_MYPY_TEST_LOGS :=
++define MYPY_RULE
++$(2): $(1)
++	$$(Q)$$(call echo-cmd,test)mypy $(1) > $(2) || (cat $(2) && rm $(2) && false)
++endef
++$(foreach src,$(wildcard pmu-events/*.py), \
++    $(eval dest := $(patsubst pmu-events/%,$(OUTPUT)pmu-events/%.mypy_log,$(src))) \
++    $(eval $(call MYPY_RULE,$(src),$(dest))) \
++)
++
++MYPY_INPUTS := $(wildcard pmu-events/*.py)
++MYPY_OUTPUTS := $(patsubst pmu-events/%,$(OUTPUT)pmu-events/%.mypy_log,$(MYPY_INPUTS))
++JEVENTS_DEPS += $(MYPY_OUTPUTS)
+ endif
  
- 	if (ret < 0)
- 		goto error;
+-$(OUTPUT)%.mypy_log: %
+-	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,test)mypy "$<" > $@ || (cat $@ && rm $@ && false)
+-
++# Rules to run pylint if enabled.
+ ifdef PYLINT
+-  PMU_EVENTS_PY_TESTS := $(wildcard *.py)
+-  PMU_EVENTS_PYLINT_TEST_LOGS := $(JEVENTS_PY_TESTS:%=%.pylint_log)
+-else
+-  PMU_EVENTS_PYLINT_TEST_LOGS :=
++define PYLINT_RULE
++$(2): $(1)
++	$$(Q)$$(call echo-cmd,test)pylint $(1) > $(2) || (cat $(2) && rm $(2) && false)
++endef
++$(foreach src,$(wildcard pmu-events/*.py), \
++    $(eval dest := $(patsubst pmu-events/%,$(OUTPUT)pmu-events/%.pylint_log,$(src))) \
++    $(eval $(call PYLINT_RULE,$(src),$(dest))) \
++)
++
++PYLINT_INPUTS := $(wildcard pmu-events/*.py)
++PYLINT_OUTPUTS := $(patsubst pmu-events/%,$(OUTPUT)pmu-events/%.pylint_log,$(PYLINT_INPUTS))
++JEVENTS_DEPS += $(PYLINT_OUTPUTS)
+ endif
+ 
+-$(OUTPUT)%.pylint_log: %
+-	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,test)pylint "$<" > $@ || (cat $@ && rm $@ && false)
++# If there are orphaned files remove them.
++ifneq ($(strip $(ORPHAN_FILES)),)
++.PHONY: prune_orphans
+ 
+-$(PMU_EVENTS_C): $(GEN_JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG) \
+-    $(EMPTY_PMU_EVENTS_TEST_LOG) $(PMU_EVENTS_MYPY_TEST_LOGS) $(PMU_EVENTS_PYLINT_TEST_LOGS)
+-	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) $(OUTPUT)pmu-events/arch $@
++# Message for $(call echo-cmd,rm). Generally cleaning files isn't part
++# of a build step.
++quiet_cmd_rm  = RM      $^
++
++prune_orphans: $(ORPHAN_FILES)
++	$(Q)$(call echo-cmd,rm)rm -f $^
++
++JEVENTS_DEPS += prune_orphans
+ endif
+ 
+-# pmu-events.c file is generated in the OUTPUT directory so it needs a
+-# separate rule to depend on it properly
+-$(OUTPUT)pmu-events/pmu-events.o: $(PMU_EVENTS_C)
++# Finally, the rule to build pmu-events.c using jevents.py. All test
++# and inputs are dependencies.
++$(PMU_EVENTS_C): $(JEVENTS_DEPS)
+ 	$(call rule_mkdir)
+-	$(call if_changed_dep,cc_o_c)
++	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) $(OUT_DIR) $@
++
++endif # ifeq ($(NO_JEVENTS),1)
 -- 
-2.34.1
+2.53.0.rc1.225.gd81095ad13-goog
 
