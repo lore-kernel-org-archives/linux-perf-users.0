@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93428359704
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Feb 2026 18:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A30366833
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Feb 2026 18:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770143234; cv=none; b=jNoVinGoiRYgrC1jw3CtMQK7kcdD5j/ORavORVXZQmK7x/Nt4TxabUI8yGWzBYkFgVRDlUuBwOPbgOzvJ4sWiNPfrdcWzRMlstuuvUCCO37SLrh6j5YebBxQvNLXIGWxUauUstAmq6kzGVrkN/LTzy6FR1CNaVXkhsKMXCYOXsc=
+	t=1770143240; cv=none; b=ODT7cislCSd1hh+CZYs58mNRwcmi+2PB2SDIgSY6Vd4iykUJkBNsmhnCzJwtIWW40fnUknaR0Ir4mbVfaotnSnA8XX9dxsrdHYoe6yKC6dqgBBPf8vNb8Vo4qUYXI5KoBXBENOyetewJosefRPf8zaWFSF3wEbNi2PEUermxYGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770143234; c=relaxed/simple;
-	bh=kHpcTJCZV+aUWok+Qq4YcCfFJIaLag+5P6lM1gxsnP8=;
+	s=arc-20240116; t=1770143240; c=relaxed/simple;
+	bh=a+Y4py5jBynuEDeCwPw/Te+ijF9HqtSNvPZC2XbL9xw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=t5JU0JIxTB5STpQe13uE4PHVAweYJjpIbPOfFXaBGPtf8DnwRGhi+gzGlhjHVQst8WLZVF7tECVBONNunZ3EUBseVISUcCQjFOS6GPZM62WWCrpPmlS/xWwsgweAKMQtgltTp1NZoQOy+C+1xyYTDgRcnngdEl1ZrLqjI83v85Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ifr/xalP; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=E8iZ3TTAkmoWnsKfu3T0JjM2NfmB7CxmHaYYCAWQZOfcStEsLarMr7B8L/UmpsVEUs2Z1zoPlPVLMqhF/RF1KnwIFEmZxVDag/J+JNMSyqdR1jJvQpc/uVChS6yL7wUcfTDwebDQaSG+0StqOi/XN6z1G8M1RtBcem/VMEARdog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DI3/zVfm; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ifr/xalP"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b7eddde359so3667422eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Feb 2026 10:27:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DI3/zVfm"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-124627fc58dso9636407c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Feb 2026 10:27:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770143232; x=1770748032; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770143237; x=1770748037; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=os2xaUwPSOKN1Qn0Q1X9vU6deQDG0YlYowBgBpJaS3I=;
-        b=Ifr/xalPjegwYa0JjjSUjN+i+FPPMFu2agbs/WouLFjBBHQIIzRgCX27zqUEGbwyG8
-         WDWRCLTetkkagc34Y5NeRDFDmwhbAcYMtzkl74wGPf1ehUi2oqcoh1qn0024q6t9k0b1
-         S/39AZLR5YqZKFwkfHSYoDduNtgbEJ+/DtLYNk+dnXimiEfdS8CBtbgwuY77B5WUPdw7
-         qx2hnnoRVtzhYxp3f0iXDuIHTpOaWmOHUQQRf9hJxqzcT0MAq0gAJdIIuCdgp7xnGgtS
-         9msAiEnpHBSqoBsXACNiRbSyyFfbaiVd1d3pfYHwXBlNqehFkw+HuKTJdc2G2j6Oe2Er
-         wD0Q==
+        bh=IQ/mKH6xXSRuds8KmNTYjhBcMp07hv028GEXnHNtdUs=;
+        b=DI3/zVfmSbviv6mPwto5aYGO+TVEVKLY/hhMwI83tqTwiZ2giTvLOOyVn3vz6rQmDn
+         YgV7qNRlFNuHux4aKI/f6XS6OOZFEO+j+DJpGlksTUuFGOMGgHz0fQYWuwEjeKoF47fS
+         hQN5GjJvzbEpVVQPs3e0i3rk1ljbQmQ5xFhdFV9HukEOC1XiRilcLnJIfVV/x6/9fvUg
+         WIwNrnrFIAndlpjm46u3JFu9fqISNKLYvNVcTYGIEGbmjXl54BtCG1l3aTWf8sfOJfBh
+         /W/qNJLivv2zEjjZQBoHtfrDPmmGiF7FKFm1QANElJ2YkxCX72TpecoswQgrJk7Zns8v
+         zN0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770143232; x=1770748032;
+        d=1e100.net; s=20230601; t=1770143237; x=1770748037;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=os2xaUwPSOKN1Qn0Q1X9vU6deQDG0YlYowBgBpJaS3I=;
-        b=b90sbCKxSUYDrUqaedZFDAqtS5FbRJZ4kQTkgUgn7eZIphyphoe6MM4dJH54LLXwB6
-         pEyvBfE6V2j9TUc2APG+yeMLsvFrD/Wv/OWGrN+rGpGt+KNxZa8zM4/iMHVOWfqjJrX9
-         09lm6878vycmkIRN1oFEqjnUHUnjZFFphlOoTMexmeJh7Kb0rikURnlS7ayA842dWZdu
-         RxePqQZZl6YrrWSQ1z3UYZnXIdkRgjsA51VpIsnxlbj5UAMpI3VEETYwQ0nm44eQx+DB
-         N8atYVZnacfZzNSeDUZW3sFhsqi/k7uYzriK7wm4wRGdp4Ja9NGj1sZBXUVChkWftnqu
-         T+SQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7XSm5yb5LYjv58CmhsEpeNk5GDcFdbj0taeWjcWKe3O6kxG7wZaIUtm5Y5Bk4L9QLAjQsR7wLlIdjbdZyskpX@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzNGEAq19drC3kSjh97DWwua6ns1GteWCSkeRgkSHAml7icEIA
-	PRXugi86JblmuoA1w+W9BUlpmpdpH+5DYbw+cAZhDvJm80myYBh7Q1zPrI9q75W/sOXi/hjVrYH
-	N/1f7DxHnEQ==
-X-Received: from dycmq7.prod.google.com ([2002:a05:7301:787:b0:2b6:c3b1:69d4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:ea2:b0:2b7:ff39:30eb
- with SMTP id 5a478bee46e88-2b832722b9fmr162822eec.0.1770143231506; Tue, 03
- Feb 2026 10:27:11 -0800 (PST)
-Date: Tue,  3 Feb 2026 10:26:37 -0800
+        bh=IQ/mKH6xXSRuds8KmNTYjhBcMp07hv028GEXnHNtdUs=;
+        b=m60bFta2OTQChTB9s/p28aV2fBteoWi5EhQuucfYXCbXC5nSmnhtASFTA2A/usRHmh
+         CJkYZZiI3WIki8HLf+UkLyW8+g18i7oxc4s+fJ9G/EvrHgRUyK/LLzjjz1++jwx6ocwE
+         ONtRkfJ87ZFtuhlQasdaQE6pX7yjfxRq6SvFFUlXkSzLLjgP+q9KiVurSeozDB5t/50Z
+         Oe1j+q1N4OfolXNCFAInUrDd6chwFQ5hR7+c21nvqsu86BaiKbXHupl2h2wZlBdZVvJZ
+         POufVwMyGnBq+w0HvQnw2FoLMyCBWN2SzL5tp2LxLpw1NTYulSS8PDdrBPzYXpCsrofQ
+         DJWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEWgkZI87s01Nx4MgyhvIvZ9JSXlpYiVbzrKScLtgze+AYrdgsygv3Flr/fzzpjcVoAdezzfNVUAfmP5lS0nR8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyt6gCVCpbrO3sYg+wzCEMQRRcyLCA9qDUztw9/AdQkyMqAvCCX
+	ul1yUQyNAwiw91QZospoEwHuQ7nOtkRFMsdrl7a38vd2sPl4/43Bch5htZhuRzJ70Ib18cUQW/V
+	feykdkG7p9A==
+X-Received: from dlboy9.prod.google.com ([2002:a05:7022:1289:b0:124:9d31:3581])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:b81:b0:119:e56b:989b
+ with SMTP id a92af1059eb24-126f4780cc5mr128964c88.2.1770143236840; Tue, 03
+ Feb 2026 10:27:16 -0800 (PST)
+Date: Tue,  3 Feb 2026 10:26:38 -0800
 In-Reply-To: <20260203182640.3911987-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <aYIOMWb2sijXzSDm@x1> <20260203182640.3911987-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
-Message-ID: <20260203182640.3911987-3-irogers@google.com>
-Subject: [PATCH v3 2/5] perf kvm: Wire up e_machine
+Message-ID: <20260203182640.3911987-4-irogers@google.com>
+Subject: [PATCH v3 3/5] perf session: Add e_flags to the e_machine helper
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org
 Cc: aditya.b1@linux.ibm.com, adrian.hunter@intel.com, ajones@ventanamicro.com, 
@@ -76,582 +76,267 @@ Cc: aditya.b1@linux.ibm.com, adrian.hunter@intel.com, ajones@ventanamicro.com,
 	will@kernel.org, ysk@kzalloc.com, zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-Pass the e_machine to the kvm functions so that they aren't just wired
-to EM_HOST. In the case of a session move some setup until the session
-is created. As the session isn't fully running the default EM_HOST is
-returned as no e_machine can be found in a running machine. This is,
-however, some marginal progress to cross platform support.
+Allow e_flags as well as e_machine to be computed using the e_machine
+helper. This isn't currently used, the argument is always NULL, but it
+will be used for a new header feature.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-kvm.c                      | 45 ++++++++------
- tools/perf/util/evsel.c                       |  2 +-
- tools/perf/util/evsel.h                       |  1 +
- .../perf/util/kvm-stat-arch/kvm-stat-arm64.c  |  6 +-
- .../util/kvm-stat-arch/kvm-stat-loongarch.c   |  3 +-
- .../perf/util/kvm-stat-arch/kvm-stat-riscv.c  |  6 +-
- tools/perf/util/kvm-stat.c                    | 62 +++++++++----------
- tools/perf/util/kvm-stat.h                    | 23 +++----
- 8 files changed, 80 insertions(+), 68 deletions(-)
+ tools/perf/builtin-kvm.c    |  9 +++++----
+ tools/perf/builtin-report.c |  4 ++--
+ tools/perf/builtin-script.c |  6 ++++--
+ tools/perf/util/evsel.c     |  6 +++---
+ tools/perf/util/evsel.h     |  2 +-
+ tools/perf/util/kvm-stat.c  | 12 ++++++++---
+ tools/perf/util/session.c   | 40 +++++++++++++++++++++++++++----------
+ tools/perf/util/session.h   |  2 +-
+ 8 files changed, 55 insertions(+), 26 deletions(-)
 
 diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index bd9bda32157f..93ba07c58290 100644
+index 93ba07c58290..0c5e6b3aac74 100644
 --- a/tools/perf/builtin-kvm.c
 +++ b/tools/perf/builtin-kvm.c
-@@ -2,6 +2,7 @@
- #include "builtin.h"
- #include "perf.h"
- 
-+#include <dwarf-regs.h>
- #include "util/build-id.h"
- #include "util/evsel.h"
- #include "util/evlist.h"
-@@ -615,11 +616,11 @@ static const char *get_filename_for_perf_kvm(void)
- 
- #if defined(HAVE_LIBTRACEEVENT)
- 
--static bool register_kvm_events_ops(struct perf_kvm_stat *kvm)
-+static bool register_kvm_events_ops(struct perf_kvm_stat *kvm, uint16_t e_machine)
- {
- 	const struct kvm_reg_events_ops *events_ops;
- 
--	for (events_ops = kvm_reg_events_ops(); events_ops->name; events_ops++) {
-+	for (events_ops = kvm_reg_events_ops(e_machine); events_ops->name; events_ops++) {
- 		if (!strcmp(events_ops->name, kvm->report_event)) {
- 			kvm->events_ops = events_ops->ops;
- 			return true;
-@@ -841,11 +842,11 @@ static bool handle_child_event(struct perf_kvm_stat *kvm,
- 	return true;
- }
- 
--static bool skip_event(const char *event)
-+static bool skip_event(uint16_t e_machine, const char *event)
- {
- 	const char * const *skip_events;
- 
--	for (skip_events = kvm_skip_events(); *skip_events; skip_events++)
-+	for (skip_events = kvm_skip_events(e_machine); *skip_events; skip_events++)
- 		if (!strcmp(event, *skip_events))
- 			return true;
- 
-@@ -901,9 +902,10 @@ static bool handle_end_event(struct perf_kvm_stat *kvm,
+@@ -902,7 +902,7 @@ static bool handle_end_event(struct perf_kvm_stat *kvm,
  
  	if (kvm->duration && time_diff > kvm->duration) {
  		char decode[KVM_EVENT_NAME_LEN];
-+		uint16_t e_machine = perf_session__e_machine(kvm->session);
+-		uint16_t e_machine = perf_session__e_machine(kvm->session);
++		uint16_t e_machine = perf_session__e_machine(kvm->session, /*e_flags=*/NULL);
  
  		kvm->events_ops->decode_key(kvm, &event->key, decode);
--		if (!skip_event(decode)) {
-+		if (!skip_event(e_machine, decode)) {
- 			pr_info("%" PRIu64 " VM %d, vcpu %d: %s event took %" PRIu64 "usec\n",
- 				 sample->time, sample->pid, vcpu_record->vcpu_id,
- 				 decode, time_diff / NSEC_PER_USEC);
-@@ -921,6 +923,8 @@ struct vcpu_event_record *per_vcpu_record(struct thread *thread,
- 	/* Only kvm_entry records vcpu id. */
- 	if (!thread__priv(thread) && kvm_entry_event(evsel)) {
- 		struct vcpu_event_record *vcpu_record;
-+		struct machine *machine = maps__machine(thread__maps(thread));
-+		uint16_t e_machine = thread__e_machine(thread, machine, /*e_flags=*/NULL);
- 
- 		vcpu_record = zalloc(sizeof(*vcpu_record));
- 		if (!vcpu_record) {
-@@ -928,7 +932,7 @@ struct vcpu_event_record *per_vcpu_record(struct thread *thread,
- 			return NULL;
- 		}
- 
--		vcpu_record->vcpu_id = evsel__intval(evsel, sample, vcpu_id_str());
-+		vcpu_record->vcpu_id = evsel__intval(evsel, sample, vcpu_id_str(e_machine));
- 		thread__set_priv(thread, vcpu_record);
- 	}
- 
-@@ -1163,6 +1167,7 @@ static int cpu_isa_config(struct perf_kvm_stat *kvm)
- {
- 	char buf[128], *cpuid;
- 	int err;
-+	uint16_t e_machine;
- 
- 	if (kvm->live) {
- 		struct perf_cpu cpu = {-1};
-@@ -1182,7 +1187,8 @@ static int cpu_isa_config(struct perf_kvm_stat *kvm)
+ 		if (!skip_event(e_machine, decode)) {
+@@ -1187,7 +1187,7 @@ static int cpu_isa_config(struct perf_kvm_stat *kvm)
  		return -EINVAL;
  	}
  
--	err = cpu_isa_init(kvm, cpuid);
-+	e_machine = perf_session__e_machine(kvm->session);
-+	err = cpu_isa_init(kvm, e_machine, cpuid);
+-	e_machine = perf_session__e_machine(kvm->session);
++	e_machine = perf_session__e_machine(kvm->session, /*e_flags=*/NULL);
+ 	err = cpu_isa_init(kvm, e_machine, cpuid);
  	if (err == -ENOTSUP)
  		pr_err("CPU %s is not supported.\n", cpuid);
- 
-@@ -1413,7 +1419,7 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
- 
- 	if (!verify_vcpu(kvm->trace_vcpu) ||
- 	    !is_valid_key(kvm) ||
--	    !register_kvm_events_ops(kvm)) {
-+		!register_kvm_events_ops(kvm, EM_HOST)) {
- 		goto out;
- 	}
- 
-@@ -1568,6 +1574,11 @@ static int read_events(struct perf_kvm_stat *kvm)
+@@ -1549,7 +1549,7 @@ static int kvm_live_open_events(struct perf_kvm_stat *kvm)
+ static int read_events(struct perf_kvm_stat *kvm)
+ {
+ 	int ret;
+-
++	uint16_t e_machine;
+ 	struct perf_data file = {
+ 		.path  = kvm->file_name,
+ 		.mode  = PERF_DATA_MODE_READ,
+@@ -1574,7 +1574,8 @@ static int read_events(struct perf_kvm_stat *kvm)
  		goto out_delete;
  	}
  
-+	if (!register_kvm_events_ops(kvm, perf_session__e_machine(kvm->session))) {
-+		ret = -EINVAL;
-+		goto out_delete;
-+	}
-+
- 	/*
- 	 * Do not use 'isa' recorded in kvm_exit tracepoint since it is not
- 	 * traced in the old kernel.
-@@ -1610,9 +1621,6 @@ static int kvm_events_report_vcpu(struct perf_kvm_stat *kvm)
- 	if (!is_valid_key(kvm))
- 		goto exit;
- 
--	if (!register_kvm_events_ops(kvm))
--		goto exit;
--
- 	if (kvm->use_stdio) {
- 		use_browser = 0;
- 		setup_pager();
-@@ -1653,15 +1661,16 @@ kvm_events_record(struct perf_kvm_stat *kvm, int argc, const char **argv)
- 	};
- 	const char * const *events_tp;
- 	int ret;
-+	uint16_t e_machine = EM_HOST;
- 
- 	events_tp_size = 0;
--	ret = setup_kvm_events_tp(kvm);
-+	ret = setup_kvm_events_tp(kvm, e_machine);
- 	if (ret < 0) {
- 		pr_err("Unable to setup the kvm tracepoints\n");
- 		return ret;
+-	if (!register_kvm_events_ops(kvm, perf_session__e_machine(kvm->session))) {
++	e_machine = perf_session__e_machine(kvm->session, /*e_flags=*/NULL);
++	if (!register_kvm_events_ops(kvm, e_machine)) {
+ 		ret = -EINVAL;
+ 		goto out_delete;
+ 	}
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 810ffd66b11c..3b81f4b3dc49 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -448,7 +448,7 @@ static int report__setup_sample_type(struct report *rep)
+ 		}
  	}
  
--	for (events_tp = kvm_events_tp(); *events_tp; events_tp++)
-+	for (events_tp = kvm_events_tp(e_machine); *events_tp; events_tp++)
- 		events_tp_size++;
+-	callchain_param_setup(sample_type, perf_session__e_machine(session));
++	callchain_param_setup(sample_type, perf_session__e_machine(session, /*e_flags=*/NULL));
  
- 	rec_argc = ARRAY_SIZE(record_args) + argc + 2 +
-@@ -1676,7 +1685,7 @@ kvm_events_record(struct perf_kvm_stat *kvm, int argc, const char **argv)
- 
- 	for (j = 0; j < events_tp_size; j++) {
- 		rec_argv[i++] = STRDUP_FAIL_EXIT("-e");
--		rec_argv[i++] = STRDUP_FAIL_EXIT(kvm_events_tp()[j]);
-+		rec_argv[i++] = STRDUP_FAIL_EXIT(kvm_events_tp(e_machine)[j]);
- 	}
- 
- 	rec_argv[i++] = STRDUP_FAIL_EXIT("-o");
-@@ -1770,7 +1779,7 @@ static struct evlist *kvm_live_event_list(void)
- 	if (evlist == NULL)
- 		return NULL;
- 
--	for (events_tp = kvm_events_tp(); *events_tp; events_tp++) {
-+	for (events_tp = kvm_events_tp(EM_HOST); *events_tp; events_tp++) {
- 
- 		tp = strdup(*events_tp);
- 		if (tp == NULL)
-@@ -1895,7 +1904,7 @@ static int kvm_events_live(struct perf_kvm_stat *kvm,
- 	/*
- 	 * generate the event list
+ 	if (rep->stitch_lbr && (callchain_param.record_mode != CALLCHAIN_LBR)) {
+ 		ui__warning("Can't find LBR callchain. Switch off --stitch-lbr.\n"
+@@ -1296,7 +1296,7 @@ static int process_attr(const struct perf_tool *tool __maybe_unused,
  	 */
--	err = setup_kvm_events_tp(kvm);
-+	err = setup_kvm_events_tp(kvm, EM_HOST);
- 	if (err < 0) {
- 		pr_err("Unable to setup the kvm tracepoints\n");
- 		return err;
-@@ -2005,7 +2014,7 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
+ 	sample_type = evlist__combined_sample_type(*pevlist);
+ 	session = (*pevlist)->session;
+-	callchain_param_setup(sample_type, perf_session__e_machine(session));
++	callchain_param_setup(sample_type, perf_session__e_machine(session, /*e_flags=*/NULL));
+ 	return 0;
+ }
  
- 	BUG_ON(i + 2 != rec_argc);
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index c7d5a325b5cb..14c6f6c3c4f2 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2818,6 +2818,7 @@ static int process_attr(const struct perf_tool *tool, union perf_event *event,
+ 	struct perf_script *scr = container_of(tool, struct perf_script, tool);
+ 	struct evlist *evlist;
+ 	struct evsel *evsel, *pos;
++	uint16_t e_machine;
+ 	u64 sample_type;
+ 	int err;
  
--	ret = kvm_add_default_arch_event(&i, rec_argv);
-+	ret = kvm_add_default_arch_event(EM_HOST, &i, rec_argv);
- 	if (ret)
- 		goto EXIT;
+@@ -2859,7 +2860,8 @@ static int process_attr(const struct perf_tool *tool, union perf_event *event,
+ 	 * on events sample_type.
+ 	 */
+ 	sample_type = evlist__combined_sample_type(evlist);
+-	callchain_param_setup(sample_type, perf_session__e_machine(evsel__session(evsel)));
++	e_machine = perf_session__e_machine(evsel__session(evsel), /*e_flags=*/NULL);
++	callchain_param_setup(sample_type, e_machine);
  
-@@ -2092,7 +2101,7 @@ static int __cmd_top(int argc, const char **argv)
+ 	/* Enable fields for callchain entries */
+ 	if (symbol_conf.use_callchain &&
+@@ -3834,7 +3836,7 @@ static void script__setup_sample_type(struct perf_script *script)
+ 	struct perf_session *session = script->session;
+ 	u64 sample_type = evlist__combined_sample_type(session->evlist);
  
- 	BUG_ON(i != argc);
+-	callchain_param_setup(sample_type, perf_session__e_machine(session));
++	callchain_param_setup(sample_type, perf_session__e_machine(session, /*e_flags=*/NULL));
  
--	ret = kvm_add_default_arch_event(&i, rec_argv);
-+	ret = kvm_add_default_arch_event(EM_HOST, &i, rec_argv);
- 	if (ret)
- 		goto EXIT;
- 
+ 	if (script->stitch_lbr && (callchain_param.record_mode != CALLCHAIN_LBR)) {
+ 		pr_warning("Can't find LBR callchain. Switch off --stitch-lbr.\n"
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 5ac1a05601b1..848d0faf6698 100644
+index 848d0faf6698..aff44ffd3ff1 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -1008,7 +1008,7 @@ int evsel__group_desc(struct evsel *evsel, char *buf, size_t size)
+@@ -1008,11 +1008,11 @@ int evsel__group_desc(struct evsel *evsel, char *buf, size_t size)
  	return ret;
  }
  
--static uint16_t evsel__e_machine(struct evsel *evsel)
-+uint16_t evsel__e_machine(struct evsel *evsel)
+-uint16_t evsel__e_machine(struct evsel *evsel)
++uint16_t evsel__e_machine(struct evsel *evsel, uint32_t *e_flags)
  {
  	struct perf_session *session = evsel__session(evsel);
  
+-	return session ? perf_session__e_machine(session) : EM_HOST;
++	return perf_session__e_machine(session, e_flags);
+ }
+ 
+ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *opts,
+@@ -1050,7 +1050,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+ 
+ 	if (param->record_mode == CALLCHAIN_DWARF) {
+ 		if (!function) {
+-			uint16_t e_machine = evsel__e_machine(evsel);
++			uint16_t e_machine = evsel__e_machine(evsel, /*e_flags=*/NULL);
+ 
+ 			evsel__set_sample_bit(evsel, REGS_USER);
+ 			evsel__set_sample_bit(evsel, STACK_USER);
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 95c4bd0f0f2e..eefb5d569971 100644
+index eefb5d569971..a3d754c029a0 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -546,6 +546,7 @@ static inline bool evsel__is_dummy_event(struct evsel *evsel)
+@@ -546,7 +546,7 @@ static inline bool evsel__is_dummy_event(struct evsel *evsel)
  
  struct perf_session *evsel__session(struct evsel *evsel);
  struct perf_env *evsel__env(struct evsel *evsel);
-+uint16_t evsel__e_machine(struct evsel *evsel);
+-uint16_t evsel__e_machine(struct evsel *evsel);
++uint16_t evsel__e_machine(struct evsel *evsel, uint32_t *e_flags);
  
  int evsel__store_ids(struct evsel *evsel, struct evlist *evlist);
  
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-arm64.c b/tools/perf/util/kvm-stat-arch/kvm-stat-arm64.c
-index 8003ff415b1a..c640dcd8af7c 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-arm64.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-arm64.c
-@@ -22,7 +22,7 @@ static void event_get_key(struct evsel *evsel,
- 			  struct event_key *key)
- {
- 	key->info = 0;
--	key->key = evsel__intval(evsel, sample, kvm_exit_reason());
-+	key->key = evsel__intval(evsel, sample, kvm_exit_reason(EM_AARCH64));
- 	key->exit_reasons = arm64_exit_reasons;
- 
- 	/*
-@@ -40,14 +40,14 @@ static bool event_begin(struct evsel *evsel,
- 			struct perf_sample *sample __maybe_unused,
- 			struct event_key *key __maybe_unused)
- {
--	return evsel__name_is(evsel, kvm_entry_trace());
-+	return evsel__name_is(evsel, kvm_entry_trace(EM_AARCH64));
- }
- 
- static bool event_end(struct evsel *evsel,
- 		      struct perf_sample *sample,
- 		      struct event_key *key)
- {
--	if (evsel__name_is(evsel, kvm_exit_trace())) {
-+	if (evsel__name_is(evsel, kvm_exit_trace(EM_AARCH64))) {
- 		event_get_key(evsel, sample, key);
- 		return true;
- 	}
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-loongarch.c b/tools/perf/util/kvm-stat-arch/kvm-stat-loongarch.c
-index a15ce072ac34..b802e516b138 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-loongarch.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-loongarch.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
- #include <memory.h>
-+#include <dwarf-regs.h>
- #include "../kvm-stat.h"
- #include "../parse-events.h"
- #include "../debug.h"
-@@ -70,7 +71,7 @@ static bool event_end(struct evsel *evsel,
- 	 *   kvm:kvm_enter   means returning to vmm and then to guest
- 	 *   kvm:kvm_reenter means returning to guest immediately
- 	 */
--	return evsel__name_is(evsel, kvm_entry_trace()) ||
-+	return evsel__name_is(evsel, kvm_entry_trace(EM_LOONGARCH)) ||
- 	       evsel__name_is(evsel, kvm_reenter_trace);
- }
- 
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c b/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
-index b2c5d3220795..8d4d5d6ce720 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
-@@ -27,7 +27,7 @@ static void event_get_key(struct evsel *evsel,
- 	int xlen = 64; // TODO: 32-bit support.
- 
- 	key->info = 0;
--	key->key = evsel__intval(evsel, sample, kvm_exit_reason()) & ~CAUSE_IRQ_FLAG(xlen);
-+	key->key = evsel__intval(evsel, sample, kvm_exit_reason(EM_RISCV)) & ~CAUSE_IRQ_FLAG(xlen);
- 	key->exit_reasons = riscv_exit_reasons;
- }
- 
-@@ -35,14 +35,14 @@ static bool event_begin(struct evsel *evsel,
- 			struct perf_sample *sample __maybe_unused,
- 			struct event_key *key __maybe_unused)
- {
--	return evsel__name_is(evsel, kvm_entry_trace());
-+	return evsel__name_is(evsel, kvm_entry_trace(EM_RISCV));
- }
- 
- static bool event_end(struct evsel *evsel,
- 		      struct perf_sample *sample,
- 		      struct event_key *key)
- {
--	if (evsel__name_is(evsel, kvm_exit_trace())) {
-+	if (evsel__name_is(evsel, kvm_exit_trace(EM_RISCV))) {
- 		event_get_key(evsel, sample, key);
- 		return true;
- 	}
 diff --git a/tools/perf/util/kvm-stat.c b/tools/perf/util/kvm-stat.c
-index b1affd97917b..858b5dbd39f6 100644
+index 858b5dbd39f6..27f16810498c 100644
 --- a/tools/perf/util/kvm-stat.c
 +++ b/tools/perf/util/kvm-stat.c
-@@ -6,7 +6,7 @@
+@@ -6,15 +6,19 @@
  
  bool kvm_exit_event(struct evsel *evsel)
  {
--	return evsel__name_is(evsel, kvm_exit_trace());
-+	return evsel__name_is(evsel, kvm_exit_trace(evsel__e_machine(evsel)));
+-	return evsel__name_is(evsel, kvm_exit_trace(evsel__e_machine(evsel)));
++	uint16_t e_machine = evsel__e_machine(evsel, /*e_flags=*/NULL);
++
++	return evsel__name_is(evsel, kvm_exit_trace(e_machine));
  }
  
  void exit_event_get_key(struct evsel *evsel,
-@@ -14,7 +14,7 @@ void exit_event_get_key(struct evsel *evsel,
+ 			struct perf_sample *sample,
  			struct event_key *key)
  {
++	uint16_t e_machine = evsel__e_machine(evsel, /*e_flags=*/NULL);
++
  	key->info = 0;
--	key->key  = evsel__intval(evsel, sample, kvm_exit_reason());
-+	key->key  = evsel__intval(evsel, sample, kvm_exit_reason(evsel__e_machine(evsel)));
+-	key->key  = evsel__intval(evsel, sample, kvm_exit_reason(evsel__e_machine(evsel)));
++	key->key  = evsel__intval(evsel, sample, kvm_exit_reason(e_machine));
  }
  
  
-@@ -31,7 +31,7 @@ bool exit_event_begin(struct evsel *evsel,
+@@ -31,7 +35,9 @@ bool exit_event_begin(struct evsel *evsel,
  
  bool kvm_entry_event(struct evsel *evsel)
  {
--	return evsel__name_is(evsel, kvm_entry_trace());
-+	return evsel__name_is(evsel, kvm_entry_trace(evsel__e_machine(evsel)));
+-	return evsel__name_is(evsel, kvm_entry_trace(evsel__e_machine(evsel)));
++	uint16_t e_machine = evsel__e_machine(evsel, /*e_flags=*/NULL);
++
++	return evsel__name_is(evsel, kvm_entry_trace(e_machine));
  }
  
  bool exit_event_end(struct evsel *evsel,
-@@ -66,9 +66,9 @@ void exit_event_decode_key(struct perf_kvm_stat *kvm,
- 	scnprintf(decode, KVM_EVENT_NAME_LEN, "%s", exit_reason);
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index d0053618f540..72e8bb67d740 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -2964,27 +2964,47 @@ struct perf_env *perf_session__env(struct perf_session *session)
+ 	return &session->header.env;
  }
  
--int setup_kvm_events_tp(struct perf_kvm_stat *kvm)
-+int setup_kvm_events_tp(struct perf_kvm_stat *kvm, uint16_t e_machine)
+-static int perf_session__e_machine_cb(struct thread *thread,
+-				      void *arg __maybe_unused)
++struct perf_session__e_machine_cb_args {
++	uint32_t e_flags;
++	uint16_t e_machine;
++	bool need_e_flags;
++};
++
++static int perf_session__e_machine_cb(struct thread *thread, void *_args)
  {
--	switch (EM_HOST) {
-+	switch (e_machine) {
- 	case EM_PPC:
- 	case EM_PPC64:
- 		return __setup_kvm_events_tp_powerpc(kvm);
-@@ -77,9 +77,9 @@ int setup_kvm_events_tp(struct perf_kvm_stat *kvm)
- 	}
+-	uint16_t *result = arg;
++	struct perf_session__e_machine_cb_args *args = _args;
+ 	struct machine *machine = maps__machine(thread__maps(thread));
+ 
+-	*result = thread__e_machine(thread, machine, /*e_flags=*/NULL);
+-	return *result != EM_NONE ? 1 : 0;
++	args->e_machine = thread__e_machine(thread, machine,
++					    args->need_e_flags ? &args->e_flags : NULL);
++	return args->e_machine != EM_NONE ? 1 : 0;
  }
  
--int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid)
-+int cpu_isa_init(struct perf_kvm_stat *kvm, uint16_t e_machine, const char *cpuid)
- {
--	switch (EM_HOST) {
-+	switch (e_machine) {
- 	case EM_AARCH64:
- 		return __cpu_isa_init_arm64(kvm);
- 	case EM_LOONGARCH:
-@@ -95,14 +95,14 @@ int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid)
- 	case EM_386:
- 		return __cpu_isa_init_x86(kvm, cpuid);
- 	default:
--		pr_err("Unsupported kvm-stat host %d\n", EM_HOST);
-+		pr_err("Unsupported kvm-stat host %d\n", e_machine);
- 		return -1;
- 	}
- }
- 
--const char *vcpu_id_str(void)
-+const char *vcpu_id_str(uint16_t e_machine)
- {
--	switch (EM_HOST) {
-+	switch (e_machine) {
- 	case EM_AARCH64:
- 	case EM_RISCV:
- 	case EM_S390:
-@@ -114,14 +114,14 @@ const char *vcpu_id_str(void)
- 	case EM_386:
- 		return "vcpu_id";
- 	default:
--		pr_err("Unsupported kvm-stat host %d\n", EM_HOST);
-+		pr_err("Unsupported kvm-stat host %d\n", e_machine);
- 		return NULL;
- 	}
- }
- 
--const char *kvm_exit_reason(void)
-+const char *kvm_exit_reason(uint16_t e_machine)
- {
--	switch (EM_HOST) {
-+	switch (e_machine) {
- 	case EM_AARCH64:
- 		return "ret";
- 	case EM_LOONGARCH:
-@@ -137,14 +137,14 @@ const char *kvm_exit_reason(void)
- 	case EM_386:
- 		return "exit_reason";
- 	default:
--		pr_err("Unsupported kvm-stat host %d\n", EM_HOST);
-+		pr_err("Unsupported kvm-stat host %d\n", e_machine);
- 		return NULL;
- 	}
- }
- 
--const char *kvm_entry_trace(void)
-+const char *kvm_entry_trace(uint16_t e_machine)
- {
--	switch (EM_HOST) {
-+	switch (e_machine) {
- 	case EM_AARCH64:
- 	case EM_RISCV:
- 	case EM_X86_64:
-@@ -158,14 +158,14 @@ const char *kvm_entry_trace(void)
- 	case EM_S390:
- 		return "kvm:kvm_s390_sie_enter";
- 	default:
--		pr_err("Unsupported kvm-stat host %d\n", EM_HOST);
-+		pr_err("Unsupported kvm-stat host %d\n", e_machine);
- 		return NULL;
- 	}
- }
- 
--const char *kvm_exit_trace(void)
-+const char *kvm_exit_trace(uint16_t e_machine)
- {
--	switch (EM_HOST) {
-+	switch (e_machine) {
- 	case EM_AARCH64:
- 	case EM_LOONGARCH:
- 	case EM_RISCV:
-@@ -178,14 +178,14 @@ const char *kvm_exit_trace(void)
- 	case EM_S390:
- 		return "kvm:kvm_s390_sie_exit";
- 	default:
--		pr_err("Unsupported kvm-stat host %d\n", EM_HOST);
-+		pr_err("Unsupported kvm-stat host %d\n", e_machine);
- 		return NULL;
- 	}
- }
- 
--const char * const *kvm_events_tp(void)
-+const char * const *kvm_events_tp(uint16_t e_machine)
- {
--	switch (EM_HOST) {
-+	switch (e_machine) {
- 	case EM_AARCH64:
- 		return __kvm_events_tp_arm64();
- 	case EM_LOONGARCH:
-@@ -201,14 +201,14 @@ const char * const *kvm_events_tp(void)
- 	case EM_386:
- 		return __kvm_events_tp_x86();
- 	default:
--		pr_err("Unsupported kvm-stat host %d\n", EM_HOST);
-+		pr_err("Unsupported kvm-stat host %d\n", e_machine);
- 		return NULL;
- 	}
- }
- 
--const struct kvm_reg_events_ops *kvm_reg_events_ops(void)
-+const struct kvm_reg_events_ops *kvm_reg_events_ops(uint16_t e_machine)
- {
--	switch (EM_HOST) {
-+	switch (e_machine) {
- 	case EM_AARCH64:
- 		return __kvm_reg_events_ops_arm64();
- 	case EM_LOONGARCH:
-@@ -224,14 +224,14 @@ const struct kvm_reg_events_ops *kvm_reg_events_ops(void)
- 	case EM_386:
- 		return __kvm_reg_events_ops_x86();
- 	default:
--		pr_err("Unsupported kvm-stat host %d\n", EM_HOST);
-+		pr_err("Unsupported kvm-stat host %d\n", e_machine);
- 		return NULL;
- 	}
- }
- 
--const char * const *kvm_skip_events(void)
-+const char * const *kvm_skip_events(uint16_t e_machine)
- {
--	switch (EM_HOST) {
-+	switch (e_machine) {
- 	case EM_AARCH64:
- 		return __kvm_skip_events_arm64();
- 	case EM_LOONGARCH:
-@@ -247,14 +247,14 @@ const char * const *kvm_skip_events(void)
- 	case EM_386:
- 		return __kvm_skip_events_x86();
- 	default:
--		pr_err("Unsupported kvm-stat host %d\n", EM_HOST);
-+		pr_err("Unsupported kvm-stat host %d\n", e_machine);
- 		return NULL;
- 	}
- }
- 
--int kvm_add_default_arch_event(int *argc, const char **argv)
-+int kvm_add_default_arch_event(uint16_t e_machine, int *argc, const char **argv)
- {
--	switch (EM_HOST) {
-+	switch (e_machine) {
- 	case EM_PPC:
- 	case EM_PPC64:
- 		return __kvm_add_default_arch_event_powerpc(argc, argv);
-diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
-index 759079b4294c..4a998aaece5d 100644
---- a/tools/perf/util/kvm-stat.h
-+++ b/tools/perf/util/kvm-stat.h
-@@ -140,10 +140,10 @@ bool kvm_entry_event(struct evsel *evsel);
  /*
-  * arch specific callbacks and data structures
+  * Note, a machine may have mixed 32-bit and 64-bit processes and so mixed
+  * e_machines. Use thread__e_machine when this matters.
   */
--int setup_kvm_events_tp(struct perf_kvm_stat *kvm);
-+int setup_kvm_events_tp(struct perf_kvm_stat *kvm, uint16_t e_machine);
- int __setup_kvm_events_tp_powerpc(struct perf_kvm_stat *kvm);
- 
--int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid);
-+int cpu_isa_init(struct perf_kvm_stat *kvm, uint16_t e_machine, const char *cpuid);
- int __cpu_isa_init_arm64(struct perf_kvm_stat *kvm);
- int __cpu_isa_init_loongarch(struct perf_kvm_stat *kvm);
- int __cpu_isa_init_powerpc(struct perf_kvm_stat *kvm);
-@@ -151,12 +151,12 @@ int __cpu_isa_init_riscv(struct perf_kvm_stat *kvm);
- int __cpu_isa_init_s390(struct perf_kvm_stat *kvm, const char *cpuid);
- int __cpu_isa_init_x86(struct perf_kvm_stat *kvm, const char *cpuid);
- 
--const char *vcpu_id_str(void);
--const char *kvm_exit_reason(void);
--const char *kvm_entry_trace(void);
--const char *kvm_exit_trace(void);
-+const char *vcpu_id_str(uint16_t e_machine);
-+const char *kvm_exit_reason(uint16_t e_machine);
-+const char *kvm_entry_trace(uint16_t e_machine);
-+const char *kvm_exit_trace(uint16_t e_machine);
- 
--const char * const *kvm_events_tp(void);
-+const char * const *kvm_events_tp(uint16_t e_machine);
- const char * const *__kvm_events_tp_arm64(void);
- const char * const *__kvm_events_tp_loongarch(void);
- const char * const *__kvm_events_tp_powerpc(void);
-@@ -164,7 +164,7 @@ const char * const *__kvm_events_tp_riscv(void);
- const char * const *__kvm_events_tp_s390(void);
- const char * const *__kvm_events_tp_x86(void);
- 
--const struct kvm_reg_events_ops *kvm_reg_events_ops(void);
-+const struct kvm_reg_events_ops *kvm_reg_events_ops(uint16_t e_machine);
- const struct kvm_reg_events_ops *__kvm_reg_events_ops_arm64(void);
- const struct kvm_reg_events_ops *__kvm_reg_events_ops_loongarch(void);
- const struct kvm_reg_events_ops *__kvm_reg_events_ops_powerpc(void);
-@@ -172,7 +172,7 @@ const struct kvm_reg_events_ops *__kvm_reg_events_ops_riscv(void);
- const struct kvm_reg_events_ops *__kvm_reg_events_ops_s390(void);
- const struct kvm_reg_events_ops *__kvm_reg_events_ops_x86(void);
- 
--const char * const *kvm_skip_events(void);
-+const char * const *kvm_skip_events(uint16_t e_machine);
- const char * const *__kvm_skip_events_arm64(void);
- const char * const *__kvm_skip_events_loongarch(void);
- const char * const *__kvm_skip_events_powerpc(void);
-@@ -180,13 +180,14 @@ const char * const *__kvm_skip_events_riscv(void);
- const char * const *__kvm_skip_events_s390(void);
- const char * const *__kvm_skip_events_x86(void);
- 
--int kvm_add_default_arch_event(int *argc, const char **argv);
-+int kvm_add_default_arch_event(uint16_t e_machine, int *argc, const char **argv);
- int __kvm_add_default_arch_event_powerpc(int *argc, const char **argv);
- int __kvm_add_default_arch_event_x86(int *argc, const char **argv);
- 
- #else /* !HAVE_LIBTRACEEVENT */
- 
--static inline int kvm_add_default_arch_event(int *argc __maybe_unused,
-+static inline int kvm_add_default_arch_event(uint16_t e_machine __maybe_unused,
-+					     int *argc __maybe_unused,
- 					     const char **argv __maybe_unused)
+-uint16_t perf_session__e_machine(struct perf_session *session)
++uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags)
  {
- 	return 0;
+-	uint16_t e_machine = EM_NONE;
++	struct perf_session__e_machine_cb_args args = {
++		.e_machine = EM_NONE,
++		.need_e_flags = e_flags != NULL,
++	};
++
++	if (!session) {
++		/* Default to assuming a host machine. */
++		if (e_flags)
++			*e_flags = EF_HOST;
++
++		return EM_HOST;
++	}
+ 
+ 	machines__for_each_thread(&session->machines,
+-					 perf_session__e_machine_cb,
+-					 &e_machine);
++				  perf_session__e_machine_cb,
++				  &args);
++
++	if (e_flags)
++		*e_flags = args.e_flags;
+ 
+-	return e_machine == EM_NONE ? EM_HOST : e_machine;
++	return args.e_machine == EM_NONE ? EM_HOST : args.e_machine;
+ }
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index eddc4c630b33..f05f0d4a6c23 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -211,6 +211,6 @@ int perf_event__process_finished_round(const struct perf_tool *tool,
+ 				       struct ordered_events *oe);
+ 
+ struct perf_env *perf_session__env(struct perf_session *session);
+-uint16_t perf_session__e_machine(struct perf_session *session);
++uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags);
+ 
+ #endif /* __PERF_SESSION_H */
 -- 
 2.53.0.rc2.204.g2597b5adb4-goog
 
