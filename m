@@ -1,162 +1,152 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A53143AA1B5;
-	Tue,  3 Feb 2026 14:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8502D46D0;
+	Tue,  3 Feb 2026 14:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770129669; cv=none; b=YEpKDV0BAbLRyCYEwdiOpR0KnFRrK2ugZojM9faYb3dfz1571hys5l/85Izzce812PoHITd+vkAbXSN+3R6Lf/XkMAFmWPLbfk+k8s6mlL32Bzy6pSRCfxyC9AUHtUnp/pRli6N+bQPddiFzkSVUBVGTpdBGbL2EAdlN5e3pmio=
+	t=1770129764; cv=none; b=fA3ovBDPoDkO/Wz5KF/6/Czbdz949wRvzVsBaOgzaK0kLe88CgZLCqeZhmbNlu/p/SVI4BTzYsJ8Iv6ldX0OOMwzGJjlLcGEAshvjDrcqL8W6a0wjKJ5xBOiYcEqaDiDfaRRAGpjY8PQwVF1um3PV3K+JHZUwiRRhu9L43LQ4VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770129669; c=relaxed/simple;
-	bh=K9XYeWANGub/KS9iu16G02JqEfjtpdfOf/pUXSMaTkI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WC11rpC3cOBDtljK/0U8EarlfXlgliBhWZNnr6a8UwwI23jtMJFdH8+KZlUEt8tbGlB7j0h85FMF77KcnfIuGG4H9g/13307oCV4ItaSMPQZUyhp503kACUoU/NqybB5YRcxVwBUGw+NPV2JfQxFSVYNJ3fItrn7jI3bYnJKywM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76258339;
-	Tue,  3 Feb 2026 06:41:00 -0800 (PST)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8DCBF3F740;
-	Tue,  3 Feb 2026 06:41:05 -0800 (PST)
-From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 03 Feb 2026 14:40:43 +0000
-Subject: [PATCH v4] perf: arm_spe: Properly set hw.state on failures
+	s=arc-20240116; t=1770129764; c=relaxed/simple;
+	bh=5ezdefhGyTXcbjuTpqXROio3/fvSXh9q7JAF4cMtYiw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t1wIJNpPKDFvNi5arH9zZnNYPWVxkiHR1DVVjCoO9MmVUpy80dp9jPx/eZ2bvj2wwdpEJatSXhB5z1pgWCHw/DJkRcwzgXikwFkTBB0A5SNxgFMxHl9Gm5Nijv9QOdeSvb3aBADRv4wdd2BvOPVollhZYtufz1iaVx7W+LwiGxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPJ3309d; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPJ3309d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8CC1C116D0;
+	Tue,  3 Feb 2026 14:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770129764;
+	bh=5ezdefhGyTXcbjuTpqXROio3/fvSXh9q7JAF4cMtYiw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PPJ3309dmaWJP+2oPYosTZ8pHHHNaWduhQLA6Y1f2PFNkz5zGqmiRSrPnKMWMNTvl
+	 gQq38H6X9pL2JP83mWhHokUuv0ddj1LEaWfZOXSq5QnqjTMqhzpu5HOHFawV5qWxk2
+	 kGaDsgcA6sRmuP+5wXBw35FvNpAjt8q4DHZZWbQ7bEfEeGTs/G18M1e1rrAxLymKBj
+	 N4ypTDLIO2EuoaW1fiocyST0Hba2gmCqn3AsIVvFsUko88G5fGRqe3+uas/vf3jzON
+	 zWMhPYcWtexyipq7u4afqy1tB2pHnOxFoTRWvh5JN0FruWPJRIs+DBhIpjZ7JYVlz1
+	 bz2en7O0FYuEg==
+Date: Tue, 3 Feb 2026 11:42:41 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Shimin Guo <shimin.guo@skydio.com>, Yunseong Kim <ysk@kzalloc.com>,
+	Athira Rajeev <atrajeev@linux.ibm.com>,
+	Quan Zhou <zhouquan@iscas.ac.cn>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Anup Patel <anup@brainfault.org>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Blake Jones <blakejones@google.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Anubhav Shelat <ashelat@redhat.com>,
+	Aditya Bodkhe <aditya.b1@linux.ibm.com>,
+	Chun-Tse Shao <ctshao@google.com>, Andi Kleen <ak@linux.intel.com>,
+	Dmitry Vyukov <dvyukov@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 0/6] perf Cross platform KVM support
+Message-ID: <aYIJYVp6T4ClBw0M@x1>
+References: <20260131200224.1296136-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260203-arm_spe_fix_truncated_flag-v4-1-1e07df317584@arm.com>
-X-B4-Tracking: v=1; b=H4sIAOoIgmkC/43OTQrCMBAF4KuUrI1kJp22uvIeIiVN0xqwPyQ1K
- KV3NxVE3BSXb+bxzczMG2eNZ8dkZs4E6+3Qx5DuEqavqm8Nt3XMDAUSCCCuXFf60ZSNfZSTu/d
- aTaYum5tqOSiqZIZCSVWxCIzOxNYbP19ivlo/De75vhVgnf7FBuDAichILHSlBJ1iea+Hjq1ow
- C8EIDYh5HGf4SFPxaEgrX8h+YEyAQibkIwfIaR5mjdZUZH4QsuyvADOswUxVAEAAA==
-X-Change-ID: 20251015-arm_spe_fix_truncated_flag-1a5b3620a3ab
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexandru Elisei <alexandru.elisei@arm.com>, 
- James Clark <james.clark@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1770129665; l=4499;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=K9XYeWANGub/KS9iu16G02JqEfjtpdfOf/pUXSMaTkI=;
- b=414Wm7nwF7m5PI5VB9b4+jb8mW6Tn63d0Wrt5rIeZMhTQcVnARbrXXMCjvU2rEnJ5v4nlzEA9
- 3YR9LuLnsFfDlbJI69Z5iAKBUoRFMQiyDrDAx1UbJIo9vrXn3uJFwJV
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260131200224.1296136-1-irogers@google.com>
 
-When arm_spe_pmu_next_off() fails to calculate a valid limit, it returns
-zero to indicate that tracing should not start.  However, the caller
-arm_spe_perf_aux_output_begin() does not propagate this failure by
-updating hwc->state, cause the error to be silently ignored by upper
-layers.
+On Sat, Jan 31, 2026 at 12:02:18PM -0800, Ian Rogers wrote:
+> The existing perf kvm code is using the arch directory, which means a
+> data file can only be processed on the same machine type that it was
+> recorded. Switch to using the ELF machine of the session at runtime to
+> set up the KVM support, making it cross-architectural. So that the ELF
+> machine number is available early in initialization add it to the perf
+> data file header.
+> 
+> v2: Wire up the perf data header to have the e_machine and allow early
+>     initialization of the KVM operations based upon it.
+> v1: https://lore.kernel.org/lkml/20260128074106.788156-1-irogers@google.com/
 
-Because hwc->state remains zero after a failure, arm_spe_pmu_start()
-continues to programs filter registers unnecessarily.  The driver
-still reports success to the perf core, so the core assumes the SPE
-event was enabled and proceeds to enable other events.  This breaks
-event group semantics: SPE is already stopped while other events in the
-same group are enabled.
+Thanks, applied to perf-tools-next,
 
-Fix this by updating arm_spe_perf_aux_output_begin() to return a status
-code indicating success (0) or failure (-EIO).  Both the interrupt
-handler and arm_spe_pmu_start() check the return value and call
-arm_spe_pmu_stop() to set PERF_HES_STOPPED in hwc->state.
-
-In the interrupt handler, the period (e.g., period_left) needs to be
-updated, so PERF_EF_UPDATE is passed to arm_spe_pmu_stop().  When the
-error occurs during event start, the trace unit is not yet enabled, so
-a flag '0' is used to drain buffer and update state only.
-
-Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
-Changes in v4:
-- Updated error number (-EIO) in arm_spe_perf_aux_output_begin (Will).
-- Link to v3: https://lore.kernel.org/r/20260121-arm_spe_fix_truncated_flag-v3-1-214747f68b50@arm.com
-
-Changes in v3:
-- Updated arm_spe_perf_aux_output_begin() for returning error and used
-  arm_spe_pmu_stop() for setting hw_state properly (Will).
-- Link to v2: https://lore.kernel.org/r/20251110-arm_spe_fix_truncated_flag-v2-0-a629740985cc@arm.com
----
- drivers/perf/arm_spe_pmu.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 4801115f2b54052d584b59881f458c2640e974ff..5410fb7428d0e4226a2488f1763bdadf4c995e00 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -106,6 +106,8 @@ struct arm_spe_pmu {
- /* Keep track of our dynamic hotplug state */
- static enum cpuhp_state arm_spe_pmu_online;
+- Arnaldo
  
-+static void arm_spe_pmu_stop(struct perf_event *event, int flags);
-+
- enum arm_spe_pmu_buf_fault_action {
- 	SPE_PMU_BUF_FAULT_ACT_SPURIOUS,
- 	SPE_PMU_BUF_FAULT_ACT_FATAL,
-@@ -607,8 +609,8 @@ static u64 arm_spe_pmu_next_off(struct perf_output_handle *handle)
- 	return limit;
- }
- 
--static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
--					  struct perf_event *event)
-+static int arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
-+					 struct perf_event *event)
- {
- 	u64 base, limit;
- 	struct arm_spe_pmu_buf *buf;
-@@ -622,7 +624,6 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
- 	/* Start a new aux session */
- 	buf = perf_aux_output_begin(handle, event);
- 	if (!buf) {
--		event->hw.state |= PERF_HES_STOPPED;
- 		/*
- 		 * We still need to clear the limit pointer, since the
- 		 * profiler might only be disabled by virtue of a fault.
-@@ -642,6 +643,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
- 
- out_write_limit:
- 	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
-+	return (limit & PMBLIMITR_EL1_E) ? 0 : -EIO;
- }
- 
- static void arm_spe_perf_aux_output_end(struct perf_output_handle *handle)
-@@ -781,7 +783,10 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
- 		 * when we get to it.
- 		 */
- 		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)) {
--			arm_spe_perf_aux_output_begin(handle, event);
-+			if (arm_spe_perf_aux_output_begin(handle, event)) {
-+				arm_spe_pmu_stop(event, PERF_EF_UPDATE);
-+				break;
-+			}
- 			isb();
- 		}
- 		break;
-@@ -880,9 +885,10 @@ static void arm_spe_pmu_start(struct perf_event *event, int flags)
- 	struct perf_output_handle *handle = this_cpu_ptr(spe_pmu->handle);
- 
- 	hwc->state = 0;
--	arm_spe_perf_aux_output_begin(handle, event);
--	if (hwc->state)
-+	if (arm_spe_perf_aux_output_begin(handle, event)) {
-+		arm_spe_pmu_stop(event, 0);
- 		return;
-+	}
- 
- 	reg = arm_spe_event_to_pmsfcr(event);
- 	write_sysreg_s(reg, SYS_PMSFCR_EL1);
-
----
-base-commit: 6bd9ed02871f22beb0e50690b0c3caf457104f7c
-change-id: 20251015-arm_spe_fix_truncated_flag-1a5b3620a3ab
-
-Best regards,
--- 
-Leo Yan <leo.yan@arm.com>
-
+> Ian Rogers (6):
+>   perf test kvm: Add stat live testing
+>   perf kvm stat: Remove use of the arch directory
+>   perf kvm: Wire up e_machine
+>   perf session: Add e_flags to the e_machine helper
+>   perf header: Add e_machine/e_flags to the header
+>   perf thread: Don't require machine to compute the e_machine
+> 
+>  tools/perf/Makefile.config                    |   4 -
+>  tools/perf/arch/arm64/Makefile                |   1 -
+>  tools/perf/arch/arm64/util/Build              |   1 -
+>  tools/perf/arch/loongarch/Makefile            |   1 -
+>  tools/perf/arch/loongarch/util/Build          |   1 -
+>  tools/perf/arch/powerpc/Makefile              |   1 -
+>  tools/perf/arch/powerpc/util/Build            |   1 -
+>  tools/perf/arch/riscv/Makefile                |   1 -
+>  tools/perf/arch/riscv/util/Build              |   2 -
+>  tools/perf/arch/s390/Makefile                 |   1 -
+>  tools/perf/arch/s390/util/Build               |   1 -
+>  tools/perf/arch/x86/Makefile                  |   1 -
+>  tools/perf/arch/x86/util/Build                |   1 -
+>  tools/perf/builtin-kvm.c                      |  73 +++---
+>  tools/perf/builtin-report.c                   |   4 +-
+>  tools/perf/builtin-script.c                   |   6 +-
+>  tools/perf/tests/shell/kvm.sh                 |  30 ++-
+>  tools/perf/util/Build                         |   3 +-
+>  tools/perf/util/env.h                         |   3 +
+>  tools/perf/util/evsel.c                       |   6 +-
+>  tools/perf/util/evsel.h                       |   1 +
+>  tools/perf/util/header.c                      |  33 +++
+>  tools/perf/util/header.h                      |   1 +
+>  tools/perf/util/kvm-stat-arch/Build           |   6 +
+>  .../kvm-stat-arch}/arm64_exception_types.h    |   0
+>  .../kvm-stat-arch}/book3s_hcalls.h            |   0
+>  .../kvm-stat-arch}/book3s_hv_exits.h          |   0
+>  .../kvm-stat-arch/kvm-stat-arm64.c}           |  43 ++--
+>  .../kvm-stat-arch/kvm-stat-loongarch.c}       |  48 ++--
+>  .../kvm-stat-arch/kvm-stat-powerpc.c}         |  61 ++---
+>  .../kvm-stat-arch/kvm-stat-riscv.c}           |  42 ++--
+>  .../kvm-stat-arch/kvm-stat-s390.c}            |  38 ++--
+>  .../kvm-stat-arch/kvm-stat-x86.c}             |  44 ++--
+>  .../kvm-stat-arch}/riscv_trap_types.h         |   2 +-
+>  tools/perf/util/kvm-stat.c                    | 215 +++++++++++++++++-
+>  tools/perf/util/kvm-stat.h                    |  70 ++++--
+>  .../scripting-engines/trace-event-python.c    |   8 +-
+>  tools/perf/util/session.c                     |  62 ++++-
+>  tools/perf/util/session.h                     |   2 +-
+>  tools/perf/util/thread.c                      |   5 +
+>  40 files changed, 606 insertions(+), 217 deletions(-)
+>  create mode 100644 tools/perf/util/kvm-stat-arch/Build
+>  rename tools/perf/{arch/arm64/util => util/kvm-stat-arch}/arm64_exception_types.h (100%)
+>  rename tools/perf/{arch/powerpc/util => util/kvm-stat-arch}/book3s_hcalls.h (100%)
+>  rename tools/perf/{arch/powerpc/util => util/kvm-stat-arch}/book3s_hv_exits.h (100%)
+>  rename tools/perf/{arch/arm64/util/kvm-stat.c => util/kvm-stat-arch/kvm-stat-arm64.c} (62%)
+>  rename tools/perf/{arch/loongarch/util/kvm-stat.c => util/kvm-stat-arch/kvm-stat-loongarch.c} (77%)
+>  rename tools/perf/{arch/powerpc/util/kvm-stat.c => util/kvm-stat-arch/kvm-stat-powerpc.c} (78%)
+>  rename tools/perf/{arch/riscv/util/kvm-stat.c => util/kvm-stat-arch/kvm-stat-riscv.c} (57%)
+>  rename tools/perf/{arch/s390/util/kvm-stat.c => util/kvm-stat-arch/kvm-stat-s390.c} (77%)
+>  rename tools/perf/{arch/x86/util/kvm-stat.c => util/kvm-stat-arch/kvm-stat-x86.c} (88%)
+>  rename tools/perf/{arch/riscv/util => util/kvm-stat-arch}/riscv_trap_types.h (96%)
+> 
+> -- 
+> 2.53.0.rc1.225.gd81095ad13-goog
+> 
