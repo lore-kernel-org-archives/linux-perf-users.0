@@ -1,65 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8502D46D0;
-	Tue,  3 Feb 2026 14:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB32E3A960A;
+	Tue,  3 Feb 2026 14:45:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770129764; cv=none; b=fA3ovBDPoDkO/Wz5KF/6/Czbdz949wRvzVsBaOgzaK0kLe88CgZLCqeZhmbNlu/p/SVI4BTzYsJ8Iv6ldX0OOMwzGJjlLcGEAshvjDrcqL8W6a0wjKJ5xBOiYcEqaDiDfaRRAGpjY8PQwVF1um3PV3K+JHZUwiRRhu9L43LQ4VA=
+	t=1770129953; cv=none; b=s2TIilw/cvDa/gkkS9WrGK2ncJemZ0Z8+4syJbys2FcV7MB3da+EBP1k8B/HXvhcKaEuev6fhaT5i3rxX/KgC6t2BsPpytg2J/4XP00KfZ64s9bnhUJ8a46kNqYUHv8ymUjLMcBzKKUI1BfMY29JhIRcc0rjMGyu6nZFcTDshMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770129764; c=relaxed/simple;
-	bh=5ezdefhGyTXcbjuTpqXROio3/fvSXh9q7JAF4cMtYiw=;
+	s=arc-20240116; t=1770129953; c=relaxed/simple;
+	bh=FYYuxcH6OLwjEn2qd7vwCrKMDV8ggJp80pf9wuewcmg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t1wIJNpPKDFvNi5arH9zZnNYPWVxkiHR1DVVjCoO9MmVUpy80dp9jPx/eZ2bvj2wwdpEJatSXhB5z1pgWCHw/DJkRcwzgXikwFkTBB0A5SNxgFMxHl9Gm5Nijv9QOdeSvb3aBADRv4wdd2BvOPVollhZYtufz1iaVx7W+LwiGxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPJ3309d; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CcPMaJpYMNx1zBU6P2bXF9isPWeM8J/lUklipnaAIlbDAl9Exii6DW1TYmsFITIjluwjlsv2ORQLemJz/xVl3qygDg9pItIgWajFZTrh2csVYrnkD7rUrWwsTXEl4IOzYQSWP20irlTHxktpvC4iErnI+cUDttMBmikTViAY9YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oWvIaDjZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPJ3309d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8CC1C116D0;
-	Tue,  3 Feb 2026 14:42:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oWvIaDjZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF44FC116D0;
+	Tue,  3 Feb 2026 14:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770129764;
-	bh=5ezdefhGyTXcbjuTpqXROio3/fvSXh9q7JAF4cMtYiw=;
+	s=k20201202; t=1770129953;
+	bh=FYYuxcH6OLwjEn2qd7vwCrKMDV8ggJp80pf9wuewcmg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PPJ3309dmaWJP+2oPYosTZ8pHHHNaWduhQLA6Y1f2PFNkz5zGqmiRSrPnKMWMNTvl
-	 gQq38H6X9pL2JP83mWhHokUuv0ddj1LEaWfZOXSq5QnqjTMqhzpu5HOHFawV5qWxk2
-	 kGaDsgcA6sRmuP+5wXBw35FvNpAjt8q4DHZZWbQ7bEfEeGTs/G18M1e1rrAxLymKBj
-	 N4ypTDLIO2EuoaW1fiocyST0Hba2gmCqn3AsIVvFsUko88G5fGRqe3+uas/vf3jzON
-	 zWMhPYcWtexyipq7u4afqy1tB2pHnOxFoTRWvh5JN0FruWPJRIs+DBhIpjZ7JYVlz1
-	 bz2en7O0FYuEg==
-Date: Tue, 3 Feb 2026 11:42:41 -0300
+	b=oWvIaDjZ6yx0vyWJ0OInjXLbExSRNKn7tXueRlddE+sn/ml0+D5KMr1RsAk/P21nM
+	 HjkoWY5ExYSL7oupIpPxpeQelO7L2j+xyARrI4iVWBujoQFiYdH9K5ZwejDGpxlug6
+	 8U46iodKuYdmH54oZ1rB7CJxqJaqQSh1skWP9nqUxywTcoRj+z4YHJVnkpmqOXjOrt
+	 psPJQj6hOmB3yP122tX0HHkIVo13MhNqltQrUz+Yfj107Fji0h49xmJyhNk5DeComt
+	 9fDsI0tA4Rw1trdbbSQaG1gVZAJs2QuzIT9g1zQZhrHmv2JytLVzhUhBeQE/AuUNXS
+	 66Deoc+hpfITg==
+Date: Tue, 3 Feb 2026 11:45:50 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Shimin Guo <shimin.guo@skydio.com>, Yunseong Kim <ysk@kzalloc.com>,
-	Athira Rajeev <atrajeev@linux.ibm.com>,
-	Quan Zhou <zhouquan@iscas.ac.cn>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Anup Patel <anup@brainfault.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Blake Jones <blakejones@google.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Anubhav Shelat <ashelat@redhat.com>,
-	Aditya Bodkhe <aditya.b1@linux.ibm.com>,
-	Chun-Tse Shao <ctshao@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Dmitry Vyukov <dvyukov@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 0/6] perf Cross platform KVM support
-Message-ID: <aYIJYVp6T4ClBw0M@x1>
-References: <20260131200224.1296136-1-irogers@google.com>
+To: Ian Rogers <irogers@google.com>, Dmitry Dolgov <9erthalion6@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v1] perf tests: Test annotate with data type
+ profiling and rust
+Message-ID: <aYIKHjxCGFbReY7Y@x1>
+References: <20260127083030.5909-1-9erthalion6@gmail.com>
+ <aXjvF3N5ZGJlZzFi@x1>
+ <2frzr2cebxes2qoxofwqshfkb5k3d7jeq72srqnt4ywrlpkz5r@7pzb7cpbm4yw>
+ <7d3n23li6drroxrdlpxn7ixehdeszkjdftah3zyngjl2qs22ef@yelcjv53v42o>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,85 +46,53 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260131200224.1296136-1-irogers@google.com>
+In-Reply-To: <7d3n23li6drroxrdlpxn7ixehdeszkjdftah3zyngjl2qs22ef@yelcjv53v42o>
 
-On Sat, Jan 31, 2026 at 12:02:18PM -0800, Ian Rogers wrote:
-> The existing perf kvm code is using the arch directory, which means a
-> data file can only be processed on the same machine type that it was
-> recorded. Switch to using the ELF machine of the session at runtime to
-> set up the KVM support, making it cross-architectural. So that the ELF
-> machine number is available early in initialization add it to the perf
-> data file header.
+On Sun, Feb 01, 2026 at 11:33:54AM +0100, Dmitry Dolgov wrote:
+> > On Fri, Jan 30, 2026 at 09:44:47AM +0100, Dmitry Dolgov wrote:
+> > > I'm not managing to reproduce your results, can you please elaborate
+> > > some more?
+> > 
+> > That's most unexpected for me, the test output I see looks like this:
+> > 
+> >          : 54     for _ in 1..count {
+> >     0.00 :   5423b8: mov    %ecx,0x7c(%rsp)
+> >     0.00 :   5423bc: mov    %eax,0x80(%rsp)
+> >     0.00 :   5423c3: lea    0x7c(%rsp),%rdi
+> >    12.28 :   5423c8: call   541f00 <core::iter::range::<impl core::iter::traits::iterator::Iterator for core::ops::range::Range<A>>::next>
+> >     0.00 :   5423cd: mov    %eax,0x20(%rsp)
+> >    10.21 :   5423d1: jmp    5423d3 <test_rs+0xb3>
+> >     0.00 :   5423d3: mov    0x20(%rsp),%eax
+> >     0.00 :   5423d7: mov    %eax,%eax
+> >     0.00 :   5423d9: test   $0x1,%rax
+> >     0.29 :   5423df: je     5423f6 <test_rs+0xd6>
+> >          : 65     b.data1 += 1;
+> >    13.69 :   5423e1: mov    0x48(%rsp),%rax     # data-type: struct Buf +0x18 (data1)
+> >     0.00 :   5423e6: add    $0x1,%rax
+> >     0.00 :   5423ea: mov    %rax,0x18(%rsp)     # data-type: u64 +0
+> >     0.00 :   5423ef: setb   %al
+> >    11.17 :   5423f2: jb     54243a <test_rs+0x11a>
+> >     0.00 :   5423f4: jmp    542426 <test_rs+0x106>
+> >     0.00 :   5423f6: lea    0x30(%rsp),%rdi
+> >          : 73     }
+> > 
+> > Where '# data-type: struct Buf' is as far as I understand a manifestation of
+> > data type profiling succeeding. But my environment has slightly different
+> > version of rust -- I need to figure out what's going on here, thanks.
 > 
-> v2: Wire up the perf data header to have the e_machine and allow early
->     initialization of the KVM operations based upon it.
-> v1: https://lore.kernel.org/lkml/20260128074106.788156-1-irogers@google.com/
+> I've being testing this in the same way, but without any rust code --
+> just on a simple datasym workload. Surprisingly, it seems that
+> 'data-type: buf' marks are disappearing even in this case starting from:
+> 
+> c31040085914f1188720073baa43d1483693c0a3 (perf dwarf-regs: Clean up x86
+> dwarf_regnum code)
+ 
+> I'm not sure yet why this is happening, but don't see anything in the
+> commit mentioning that -- since there are no code-with-type tests yet,
+> maybe an unexpected side effect?
 
-Thanks, applied to perf-tools-next,
+Ian, can you please take a look at this?
+
+Cheers,
 
 - Arnaldo
- 
-> Ian Rogers (6):
->   perf test kvm: Add stat live testing
->   perf kvm stat: Remove use of the arch directory
->   perf kvm: Wire up e_machine
->   perf session: Add e_flags to the e_machine helper
->   perf header: Add e_machine/e_flags to the header
->   perf thread: Don't require machine to compute the e_machine
-> 
->  tools/perf/Makefile.config                    |   4 -
->  tools/perf/arch/arm64/Makefile                |   1 -
->  tools/perf/arch/arm64/util/Build              |   1 -
->  tools/perf/arch/loongarch/Makefile            |   1 -
->  tools/perf/arch/loongarch/util/Build          |   1 -
->  tools/perf/arch/powerpc/Makefile              |   1 -
->  tools/perf/arch/powerpc/util/Build            |   1 -
->  tools/perf/arch/riscv/Makefile                |   1 -
->  tools/perf/arch/riscv/util/Build              |   2 -
->  tools/perf/arch/s390/Makefile                 |   1 -
->  tools/perf/arch/s390/util/Build               |   1 -
->  tools/perf/arch/x86/Makefile                  |   1 -
->  tools/perf/arch/x86/util/Build                |   1 -
->  tools/perf/builtin-kvm.c                      |  73 +++---
->  tools/perf/builtin-report.c                   |   4 +-
->  tools/perf/builtin-script.c                   |   6 +-
->  tools/perf/tests/shell/kvm.sh                 |  30 ++-
->  tools/perf/util/Build                         |   3 +-
->  tools/perf/util/env.h                         |   3 +
->  tools/perf/util/evsel.c                       |   6 +-
->  tools/perf/util/evsel.h                       |   1 +
->  tools/perf/util/header.c                      |  33 +++
->  tools/perf/util/header.h                      |   1 +
->  tools/perf/util/kvm-stat-arch/Build           |   6 +
->  .../kvm-stat-arch}/arm64_exception_types.h    |   0
->  .../kvm-stat-arch}/book3s_hcalls.h            |   0
->  .../kvm-stat-arch}/book3s_hv_exits.h          |   0
->  .../kvm-stat-arch/kvm-stat-arm64.c}           |  43 ++--
->  .../kvm-stat-arch/kvm-stat-loongarch.c}       |  48 ++--
->  .../kvm-stat-arch/kvm-stat-powerpc.c}         |  61 ++---
->  .../kvm-stat-arch/kvm-stat-riscv.c}           |  42 ++--
->  .../kvm-stat-arch/kvm-stat-s390.c}            |  38 ++--
->  .../kvm-stat-arch/kvm-stat-x86.c}             |  44 ++--
->  .../kvm-stat-arch}/riscv_trap_types.h         |   2 +-
->  tools/perf/util/kvm-stat.c                    | 215 +++++++++++++++++-
->  tools/perf/util/kvm-stat.h                    |  70 ++++--
->  .../scripting-engines/trace-event-python.c    |   8 +-
->  tools/perf/util/session.c                     |  62 ++++-
->  tools/perf/util/session.h                     |   2 +-
->  tools/perf/util/thread.c                      |   5 +
->  40 files changed, 606 insertions(+), 217 deletions(-)
->  create mode 100644 tools/perf/util/kvm-stat-arch/Build
->  rename tools/perf/{arch/arm64/util => util/kvm-stat-arch}/arm64_exception_types.h (100%)
->  rename tools/perf/{arch/powerpc/util => util/kvm-stat-arch}/book3s_hcalls.h (100%)
->  rename tools/perf/{arch/powerpc/util => util/kvm-stat-arch}/book3s_hv_exits.h (100%)
->  rename tools/perf/{arch/arm64/util/kvm-stat.c => util/kvm-stat-arch/kvm-stat-arm64.c} (62%)
->  rename tools/perf/{arch/loongarch/util/kvm-stat.c => util/kvm-stat-arch/kvm-stat-loongarch.c} (77%)
->  rename tools/perf/{arch/powerpc/util/kvm-stat.c => util/kvm-stat-arch/kvm-stat-powerpc.c} (78%)
->  rename tools/perf/{arch/riscv/util/kvm-stat.c => util/kvm-stat-arch/kvm-stat-riscv.c} (57%)
->  rename tools/perf/{arch/s390/util/kvm-stat.c => util/kvm-stat-arch/kvm-stat-s390.c} (77%)
->  rename tools/perf/{arch/x86/util/kvm-stat.c => util/kvm-stat-arch/kvm-stat-x86.c} (88%)
->  rename tools/perf/{arch/riscv/util => util/kvm-stat-arch}/riscv_trap_types.h (96%)
-> 
-> -- 
-> 2.53.0.rc1.225.gd81095ad13-goog
-> 
