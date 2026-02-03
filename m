@@ -1,201 +1,141 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8938156C6A
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Feb 2026 20:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770151577; cv=pass; b=jlZqdFkJuhT6xiE8xHl0ojbtrK0xg7u5v/hK+wohRLZ1lhiTSucnO8fG2g21N4Kc9zDK+xA0vtC6iWZxH+ZJP1FXuDMabAz8tydb3iOHUiot0vqLQhSjuVZqUzGYzy1V2nQ+WBNAWiCejBTZPib7I0O7aN5JtYvJaY3YCDMoCX4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770151577; c=relaxed/simple;
-	bh=Q7OwuwFj7g4WIG1A265nsQSz8PIxVCvFg2hsp1EQeuo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=giXwfVsnHeb0PPFENGf9unOc2atdeze5r+0L9URYKMJipYUT8E4OEEqMhreRTal3i+/hK770JS7UDd9IWJ3LVIcKFslKlv/gQyvIcT+qNg434HPdsdCu07+U8re7Y63tnly2eFqYfO+riB7KVLTwUhggv6taD+3I2wN4aVjYr7Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ooyFdnY1; arc=pass smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02BF35CB9C
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Feb 2026 22:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770159099; cv=none; b=OKDUFh0C6XTDO/EHxv2UhEn8/DBdRtGKAWWW3jfFc8ZCdWcroed7MPU9YPKiMoohMYOnnSGjYUVWZxzIFTYa+o0qDDt6SmImhPoT6ggBWW9QDed1Vam3NtdultsAWCvDqo9cg26degkBFG694qWFcVqhlEYZIeCIV88LxEezAAk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770159099; c=relaxed/simple;
+	bh=h/1vsRHU3S+xdCR+nLYZJVp1yyxzxQCwHkXUJFrO+x0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=LfskFu4Oo9s/lZIhT85j/Uchj8qhjy3KCKacihi0M4JSpn/7ndiQUbYQDcHcdE21nQ01Y0F+sKEpEvBycGpvHadf49JBWXkbeGE/Vnw2Er0GEas/PffHfsCR6a6l1GJdZoZmR1YBrnWKqPABG4nfhF00tEOOFAjHdQamqHABbac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tL1yx3gL; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ooyFdnY1"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-652fe3bf65aso53a12.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Feb 2026 12:46:14 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770151573; cv=none;
-        d=google.com; s=arc-20240605;
-        b=KLeMpp7FJhs2gK/4ovtRLLXTqKpN22pTuoaDhcEujzFwmNNlDpiD0o4rvOSbmP29PU
-         Mff8WvBd8ja6NOh/hravihysyZEDvgfOJY+643MbFNkDbBAg5dIfqKCf0q4NbHFUQypP
-         NhHwPLEhQtxcP0Bscj2enmi3icyOZsumr0IOKsfda6bIR6iWUf+TRpPs9nOlWQcKAe2a
-         k6bjvefv/fyvIsKVU/5lGVsoqVLW3GjTAiKLHYkRBE84Dv0UojbdJYSVnLpRQkP/41Su
-         tKoGqrx/f1QM8XCptC3rRRf5vx1mlPdNIHQ523bzU74tc9VpmDqeGxcjoIMX4y9jRaE8
-         zHrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=UXUxBXB30px7Qxjr7Xjdulu2/5KTCIkLZZ0qQGNc3DI=;
-        fh=d5h2JOTSpINdpOlqoJbzq1n48cQ4hMtIn31UlkDmOTU=;
-        b=LPHVDovNBVikj6nU4RVk0nt/RnTtIcH/mUYHYm6r9yXP5fbg8HkOwEmGoX9ELa1NWS
-         ZCZcZTqh65baiu77c+xjm0KzVD1LFDi+GCfCt7u9lXStSomiYcl9N/y8ZLSCsfKpwosC
-         y7ARXa03icU3aK/i3BES6mgqWDf/TorJ0YUy7MFk/NhFXItQhLyfoLNBy/yKF/Mu5g9Z
-         or/NvV0SUAuiFiZAly5nMHwOzL9m+/BZXuBmP2gSg//XKlAKqkbfoEctthH3WIg0l72M
-         eQEWWnpghDwhSQ+lo/tBuiQH0aMHWFhUecW3BytYT0cSkXWwlTftfYoEZMdnp5hMoCv2
-         4AbQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tL1yx3gL"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b8343aa8a9so262130eec.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Feb 2026 14:51:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770151573; x=1770756373; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UXUxBXB30px7Qxjr7Xjdulu2/5KTCIkLZZ0qQGNc3DI=;
-        b=ooyFdnY1e+9GoqOpIwTgS1gcgtULscsQkBPkOcPLLpS5YifxKIlfBmWMhIGK302E+I
-         LkAjzl9jkZW77eBvlQXd/vmJSj5e4YvMi39XOhmGDaoxKob9gREEpDt1y4Ia+gSHqrmi
-         zaY9ehvEhlhUBcBR5+ifth58C42VEIBfwoibzKHVKSbKlROzmvIN/SiqIOPluz1NYZxn
-         OSkeauiHP7dsQuMnxKG7997Ckldvg1OkmldGaY22zuYT7gKEhjFkeDneI+fAe45URp10
-         dX9IQGDaaNgutQLj1ZBHaalxb4m+Iug4rPoknwa93J/LvwCCQ/sx2wYs9hHW1WBAbxnW
-         iaFw==
+        d=google.com; s=20230601; t=1770159097; x=1770763897; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+EFbiW8bWL0xb8B2HqTNtuWO9Q87rV9NmMjNfPWayjw=;
+        b=tL1yx3gLH2JiVjRB4+LNl5RCMxc/2ZeXty7m10grMkYiOP14LxAGJVbo8+WfwOAnyX
+         jvStU9RKCGpTV2gRcFL+BwIlCalyq42id/ivcZQAX8bMYFx1Sug6aUWbmUDtQ9HAExGw
+         TVEdjoKFqOrND0FRVUPBOXd3zSx1OV6eWhGvmiMlXOM69YozDd/YGcDVi7LmrSrvHtqK
+         GQoe9bK30MzSbVp5aCPbm4DhUgCFefII1zxu1svSoJ/IzGCRExzkAVi6g/wMto8LBq39
+         nPWSN3/ZDz8jtSpEU4cPNBSWv8683XRldboh2a+udI/Pk+nzjboxvyiWHlXkPyCJPz8F
+         r3qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770151573; x=1770756373;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=UXUxBXB30px7Qxjr7Xjdulu2/5KTCIkLZZ0qQGNc3DI=;
-        b=lLnv9/lhTr4AH7tsIqqeCunvMOpO0dLcTV14V+rSzPQoy2NbBlQKx6cJ1kgPu0F8jO
-         tMTnrm7VTEuFDZuYzt7iTdmEUtg1YexcgnVJue3Kk1srqJH5VvVDsZD/ItA1skyOdjj9
-         asd52VpL0jxtX+Y/rLtE2qpfD7DSiPuTS7Tb9OSpsPOL2DJx0wf6HNDsIHZPcb1V11IH
-         uSc4glCqtv1Y2JPYIqSjixp3s43uDPOkQN+R1mXYvklJJTxNnmaw460KdhdN9F75w8yK
-         TlCKWxeepoBemqJufFImWatQjG9UYHiwTCWSivlAjJaK0ysfF+Nmb0LrRsuA7yGUU1E0
-         l39A==
-X-Forwarded-Encrypted: i=1; AJvYcCUpRINdZ6WZTBlboJVY2jxy68EZtsm20RAc7b78ZBg6C9JVRUkXmhFiRQmhH6Cg6OwpMGWn0alReL8hTwGJ3PVj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmZfk/ZBfaikK+UozeNa0ZHGM+8QBco3vLZCWKBEtDuS5hKePr
-	1z+iDjfBe0SNkbKHOI/6i7C0kTjMNFbmHEi+a8jb4ZPq5k/aQx3W455UueE9bAYrGoNYh3b8plA
-	yun9vAEB8pYZ3LtYXN03rwYW1/L9W2/zNrfZB+zyl
-X-Gm-Gg: AZuq6aL8wYpcEFR9psHlyztCrONmYXhGgYGV4+NDEw9+yIk7vle4BgYZ8TeHlCt0epd
-	HQn4qGHAh/i88ftz+wfxrGdYAnL94RLWvHx0NX3DKr/PhmdIC0LtiHrR4de4WcYJ5hS6xAeXqec
-	d/StPLFT/5W+razn1Gee1VSPxZdAFhz1wLRNCSIHfe8H67dP1e3rPBMW9gyACi/PfKkp1TTxtbw
-	FNt7liKDkj7bnhwf7ObhIkXbWz8iQw45+VpUW1StyCKukERFCQaBIOIpY99pHkzoYAyxo4=
-X-Received: by 2002:aa7:c508:0:b0:64b:2faa:d4e8 with SMTP id
- 4fb4d7f45d1cf-6594cc84926mr251a12.1.1770151573037; Tue, 03 Feb 2026 12:46:13
- -0800 (PST)
+        d=1e100.net; s=20230601; t=1770159097; x=1770763897;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+EFbiW8bWL0xb8B2HqTNtuWO9Q87rV9NmMjNfPWayjw=;
+        b=sJPgRoJveq0LwgYugBfSsXY7jpCcFbK3v29Z5ZXANuRcVQSEVhYRBa0HUkuOcjforv
+         rdf38lUMAcEp1YVbaYbiLWqpy1bZjTlMugxPWvOJGM1xnfI6Nq+76YzaqRPQ3UTd6zGx
+         EO/mXkNQXVB3ibhI0qhGQ6vmlW2XyhQDs3e+KikSjrQfS1hvQsxw3tppFruP8Nvi0kBk
+         dQzvQ7qUrwKbVMEd3I6OtYjX52EYwk2wS0p7qZFbq5sxl/zCEEIR3tErPOoEWqPzVEcY
+         NFEyPC12SN9HxLuJHtgXH30HK13s0tO54eHZib/dckQY1SPtULCJO4E/b2h0Rb7qWXQI
+         O44w==
+X-Forwarded-Encrypted: i=1; AJvYcCUDKlmfRn0fJ01qCHEor5tPSbKvvNeDSAstDVennJkE2INcOe7dahI2oGxoZ4hm4xE9NVDOiuKopfEpoTXgkp8/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoKozWmFgdNme3L63uz7lV3N+lhVakDmQQxRMlkE/5V80zDNDS
+	fTea8tTMj5NDbPNjfzF8+7YCmz1QlAhW1sFTRjDSsMCxWTyYvY7huBWscOHXSn/8VmMVc/k6Cqm
+	Baxm36wpgRA==
+X-Received: from dycmg16.prod.google.com ([2002:a05:693c:2510:b0:2b7:f4a6:656d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:df4a:b0:2b7:4118:88aa
+ with SMTP id 5a478bee46e88-2b832a3eed8mr424949eec.35.1770159096961; Tue, 03
+ Feb 2026 14:51:36 -0800 (PST)
+Date: Tue,  3 Feb 2026 14:51:23 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260129232835.3710773-1-jmattson@google.com> <20260129232835.3710773-4-jmattson@google.com>
- <zzgnirkreq5r57favstiuxuc66ep3npassqgcymntrttgttt3c@g4pi4l2bvi6q>
- <CALMp9eS7Za_vFdh8YBzycV2g87gZ9uj_S1MOYrgJ1+ShwVVWZw@mail.gmail.com> <626dbe6541266f61e8b505202cf49c94c4fee12e@linux.dev>
-In-Reply-To: <626dbe6541266f61e8b505202cf49c94c4fee12e@linux.dev>
-From: Jim Mattson <jmattson@google.com>
-Date: Tue, 3 Feb 2026 12:46:00 -0800
-X-Gm-Features: AZwV_QhrunzURc9V5Pq5tiKjnsYeNR99YAZkjlUEbz7G1F7PnzNGzpkU8X6_T6E
-Message-ID: <CALMp9eSZX9UQhu6iv24Jj9zUK+NVuiHAeHxsMDSgjP2skA=QMA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] KVM: x86/pmu: Refresh Host-Only/Guest-Only
- eventsel at nested transitions
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
+Message-ID: <20260203225129.4077140-1-irogers@google.com>
+Subject: [PATCH v7 0/6] perf stat affinity changes
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, mizhang@google.com, sandipan.das@amd.com
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Yang Li <yang.lee@linux.alibaba.com>, 
+	James Clark <james.clark@linaro.org>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Andres Freund <andres@anarazel.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 30, 2026 at 3:41=E2=80=AFPM Yosry Ahmed <yosry.ahmed@linux.dev>=
- wrote:
->
-> January 30, 2026 at 3:30 PM, "Jim Mattson" <jmattson@google.com> wrote:
->
->
-> >
-> > On Fri, Jan 30, 2026 at 7:26 AM Yosry Ahmed <yosry.ahmed@linux.dev> wro=
-te:
-> >
-> > >
-> > > On Thu, Jan 29, 2026 at 03:28:08PM -0800, Jim Mattson wrote:
-> > >  Add amd_pmu_refresh_host_guest_eventsel_hw() to recalculate eventsel=
-_hw for
-> > >  all PMCs based on the current vCPU state. This is needed because Hos=
-t-Only
-> > >  and Guest-Only counters must be enabled/disabled at:
-> > >
-> > >  - SVME changes: When EFER.SVME is modified, counters with Guest-Only=
- bits
-> > >  need their hardware enable state updated.
-> > >
-> > >  - Nested transitions: When entering or leaving guest mode, Host-Only
-> > >  counters should be disabled/enabled and Guest-Only counters should b=
-e
-> > >  enabled/disabled accordingly.
-> > >
-> > >  Introduce svm_enter_guest_mode() and svm_leave_guest_mode() wrappers=
- that
-> > >  call enter_guest_mode()/leave_guest_mode() followed by the PMU refre=
-sh,
-> > >  ensuring the PMU state stays synchronized with guest mode transition=
-s.
-> > >
-> > >  Signed-off-by: Jim Mattson <jmattson@google.com>
-> > >  ---
-> > >  arch/x86/kvm/svm/nested.c | 6 +++---
-> > >  arch/x86/kvm/svm/pmu.c | 12 ++++++++++++
-> > >  arch/x86/kvm/svm/svm.c | 2 ++
-> > >  arch/x86/kvm/svm/svm.h | 17 +++++++++++++++++
-> > >  4 files changed, 34 insertions(+), 3 deletions(-)
-> > >
-> > >  diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> > >  index de90b104a0dd..a7d1901f256b 100644
-> > >  --- a/arch/x86/kvm/svm/nested.c
-> > >  +++ b/arch/x86/kvm/svm/nested.c
-> > >  @@ -757,7 +757,7 @@ static void nested_vmcb02_prepare_control(struct=
- vcpu_svm *svm,
-> > >  nested_svm_transition_tlb_flush(vcpu);
-> > >
-> > >  /* Enter Guest-Mode */
-> > >  - enter_guest_mode(vcpu);
-> > >  + svm_enter_guest_mode(vcpu);
-> > >
-> > >  FWIW, I think this name is a bit confusing because we also have
-> > >  enter_svm_guest_mode(). So we end up with:
-> > >
-> > >  enter_svm_guest_mode() -> nested_vmcb02_prepare_control() ->
-> > >  svm_enter_guest_mode() -> enter_guest_mode()
-> > >
-> > >  I actually have another proposed change [1] that moves
-> > >  enter_guest_mode() directly into enter_svm_guest_mode(), so the sequ=
-ence
-> > >  would end up being:
-> > >
-> > >  enter_svm_guest_mode() -> svm_enter_guest_mode() -> enter_guest_mode=
-()
-> > >
-> > Yes, that is confusing. What if I renamed the existing function to
-> > something like svm_nested_switch_to_vmcb02()?
-> >
-> > Alternatively, I could go back to introducing a new PMU_OP, call it
-> > from {enter,leave}_guest_mode(), and drop the wrappers.
->
-> We could just call amd_pmu_refresh_host_guest_eventsel_hw() every time we=
- call enter_guest_mode() and leave_guest_mode(), which is more error-prone =
-but there's already other things in that category.
->
-> We could also call it from svm_switch_vmcb(), which will add some calls t=
-o extra places but I assume that would be fine?
->
-> I personally prefer the former tbh, as it's otherwise easy to miss.
+Change how affinities work with evlist__for_each_cpu. Move the
+affinity code into the iterator to simplify setting it up. Detect when
+affinities will and won't be profitable, for example a tool event and
+a regular perf event (or read group) may face less delay from a single
+IPI for the event read than from a call to sched_setaffinity. Add a
+ --no-affinity flag to perf stat to allow affinities to be disabled.
 
-I'm not a fan of replicating code sequences. Maybe instead of a new
-PMU_OP, I could introduce a new KVM_X86_OP, which would be
-conceptually more general, even though the current usage would be the
-same.
+v7: Revert "perf tool_pmu: More accurately set the cpus for tool
+    events" that caused issues with user specified CPUs (Andres Freund
+    <andres@anarazel.de>). Fix a null test is prepare_metric so that
+    missing events can't trigger segfaults (Andres Freund). Make the
+    CPU map propagation improve the CPU maps for tool events that only
+    read on index 0, this allows later setting when
+    evlist__create_maps is called with the correct user CPUs. Rebase
+    previous non-merged affinity changes that hadn't been picked up
+    yet.
 
-> >
-> > >
-> > > [1] https://lore.kernel.org/kvm/20260115011312.3675857-9-yosry.ahmed@=
-linux.dev/
-> > >
-> >
+v6: Drop merged tool event change. Move TPEBS fix into its own patch
+    1st.
+https://lore.kernel.org/lkml/20260108212652.768875-1-irogers@google.com/
+
+v5: Drop merged changes. Move tool event reading to first
+    patch. Change --no-affinity flag to --affinity/--no-affinity flag.
+https://lore.kernel.org/lkml/20251118211326.1840989-1-irogers@google.com/
+    On v5 there was discussion with Andi Kleen who points out that
+    affinities will work better with real time priorities but using
+    this requires privileges.
+
+v4: Rebase. Add patch to reduce scope of walltime_nsec_stats now that
+    the legacy metric code is no more. Minor tweak to the ru_stats
+    clean up.
+https://lore.kernel.org/lkml/20251113180517.44096-1-irogers@google.com/
+
+v3: Add affinity clean ups and read tool events last.
+https://lore.kernel.org/lkml/20251106071241.141234-1-irogers@google.com/
+
+v2: Fixed an aggregation index issue:
+https://lore.kernel.org/lkml/20251104234148.3103176-2-irogers@google.com/
+
+v1:
+https://lore.kernel.org/lkml/20251104053449.1208800-1-irogers@google.com/
+
+Ian Rogers (6):
+  Revert "perf tool_pmu: More accurately set the cpus for tool events"
+  perf stat-shadow: In prepare_metric fix guard on reading NULL
+    perf_stat_evsel
+  perf evlist: Special map propagation for tool events that read on 1
+    CPU
+  perf evlist: Missing TPEBS close in evlist__close
+  perf evlist: Reduce affinity use and move into iterator, fix no
+    affinity
+  perf stat: Add no-affinity flag
+
+ tools/lib/perf/evlist.c                 |  36 +++++-
+ tools/lib/perf/include/internal/evsel.h |   2 +
+ tools/perf/Documentation/perf-stat.txt  |   4 +
+ tools/perf/builtin-stat.c               | 114 ++++++++---------
+ tools/perf/util/evlist.c                | 156 +++++++++++++++---------
+ tools/perf/util/evlist.h                |  27 ++--
+ tools/perf/util/parse-events.c          |  10 +-
+ tools/perf/util/pmu.c                   |  23 ++++
+ tools/perf/util/pmu.h                   |   3 +
+ tools/perf/util/stat-shadow.c           |   7 +-
+ tools/perf/util/tool_pmu.c              |  19 ---
+ tools/perf/util/tool_pmu.h              |   1 -
+ 12 files changed, 237 insertions(+), 165 deletions(-)
+
+-- 
+2.53.0.rc2.204.g2597b5adb4-goog
+
