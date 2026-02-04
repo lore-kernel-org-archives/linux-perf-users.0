@@ -1,348 +1,234 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617CA34C981
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Feb 2026 04:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770179204; cv=none; b=aza0eor5rHkYShkIstdKuPU8AxZhE7i0O4QAA2KUzuX1hDORDaKT9h6fvXl5s1PBgpl3xx0FAOgCq/YsNcId2KlwjB2tr1Ks6SioKRTQk7A8JQHYyLZyx06yuKVl5tejqKtHRa4WSj9ekAEgmCE4PCls3rlU7LBc+kEBXXVIKlM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770179204; c=relaxed/simple;
-	bh=azcVgxgY4NYs+Ot90qlOg8G+66v8hTISyc5hmyiQPwc=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=XgNKFjPkeB/bGawhpnZwsLt7q2qj2V9zpV/TK+2G/gAFtBYx0y3Eznc/HWw0fR/O3R8VXDDZALHe0bfmxfDSqKd2PD0rEVXQDqSdwv1pkLCbirIfw0H6LW8CXAps54fsQPZTfkILjR+OpcVpJriibWO2lfY9Gs+NfX0RA7TCIaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3zjHJwv7; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1584A352F80
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Feb 2026 05:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770181741; cv=pass; b=fmahFz9HQHqquxAtW/JCswvYOCCzMJIZ8gMl5bbByGNWYfs5axpgJXE7QY9Om3OqDd8jySs9XmsmikGzjghxR4QWWJcBqF43EpZMYLcSVNsmcv3iMowljFR3A4CqMnOnivKAU5Op/RB1dbO75QNCoXq2vBFj+4EMk1nPWc20poI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770181741; c=relaxed/simple;
+	bh=3WtR/JoslbkDTu8jZFlNNyT9kwORKPJ9Rm5CRxvjTvY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iLyrGPkHB5JXLe7Qi0bK9KjEpouEFa7iQnrEXlKA7tZF5zHNWq8ogCCVFW+HzMi1iXHuJxiWEIy4uhblyW4ICE+Bj6axFfnwGpdnkjAsUPqRtoGHx8hfsNcB38ISSlzwK5NswZ0JzmxzFxHN1jrvQMuDcYA1P4qvoyK6MmkCk1w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wy6UB/WZ; arc=pass smtp.client-ip=74.125.82.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3zjHJwv7"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2b83787af4cso1675671eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Feb 2026 20:26:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wy6UB/WZ"
+Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-124aa03ceb4so2389c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Feb 2026 21:09:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770181740; cv=none;
+        d=google.com; s=arc-20240605;
+        b=QYRyHBEIKQlzp3j6dwmCUlCgMeTX61FOZOPdalnyRh9sC7e4WA+8s9QCd4k9xC0XCf
+         8e0LwvqKxNtcn9ITy28GQmFvRt4JkZWgSmstAJquzV/h+yydfw9qouxbCRHivx1pOJ0w
+         If9Rm1E9awcSALmg4LExoz1WKONBSVKZXOiOlHFb4yqar7qRtvye3Mhdg+AYEy8WY+PM
+         GWGTGpEN5cyU1Zv+X5qbFiai2yVLWsEYO65AWpuJCQNq7Tame6rKlt47T9oUBaFbsvz7
+         DY0TsnDS4ttq3fYNvLjA0EOPaaCqlLoVzRP8Z19oNBHlTtSH+Rado8bFZ7hYR4zAZ3lo
+         rcXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=wmr2v46ieQwzKyMq2KvLQuS/V3QU7SUrqdd2PkLi5/c=;
+        fh=ZJJDmG5Q+ssS5dIfYzuk58JztFl6Ii2EP0Z/HVdOCFI=;
+        b=BfvRc4BG4+o3+NsKZjQnBps4Uy8P5TRMREojugvQJ6DZZ64LFgE1QVv0I8LrJjEu11
+         qY+drU2VjUzVdoDUUObmmQnTuaCI0FyFjZSGSRifhogRWASgaxV9tbjvZ2nmFQqF1Ybr
+         Q2S0vwUjXjAp+m5exaaoMs6H6ladTVfg2K915ZdEJwFiMgLsfm4bjJTE8gMvnSLADgOc
+         l1VGm2p+E0f44QcZkKPXmWoo+3d23E8wYJkxzITZZ0kGzbFwZjdAeLcWWETNUbXf6MfK
+         1QNhGYnVHQylET7NEiIZICl6WXVeBQ3FAMsGYNdKO12s/g6nCmysh/ZHjIzbUBbMzJ3y
+         419A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770179202; x=1770784002; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kT55jtil6v5CyUBqucg6MzXL+/ps9/MbCKBo9xAzepg=;
-        b=3zjHJwv7lZcgmnGjI+a8s9oZoyfId0Po4MQoh9bzfPFwfVknpzMmuEyyMN6C5JlZ9t
-         IFhAd3/zYk7rX3xOZX0FK49w4BR6kcZxF3Pz+DyYEJPquRKSKSTlKW9VggHd0/R4XQGN
-         QeTZ8BvUWwUEqxl707WLodbhEcwd+FTOASt2T4cHcGPt1btzQZL5G60+6foEFHuedkmV
-         rGw1pxIykPkYKdXkwfwOoJq8L8lPeCPLgyirR1B9IWF4Zz6dRrQFyMYZYQZJQHpV3VTN
-         damwcQEwYDyVQiBwk89aZkjMOVbVoQhBOMnOW4MON1CKl35XWG1HABeoRpBAKTdVxlMb
-         QXKg==
+        d=google.com; s=20230601; t=1770181740; x=1770786540; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wmr2v46ieQwzKyMq2KvLQuS/V3QU7SUrqdd2PkLi5/c=;
+        b=wy6UB/WZS9pLOII1IzSR849Kxw+5iQb6JKP1fWIETkgDoYg1w6x+tHht9o17OEn70P
+         XzG6U4ZVHtGrVsJhAXo/NVPpBp5kAMFqm3suILw+xxQjHdn2bzdYSwcJ7/Y9Y91tP3sm
+         3qgR+w+bOLQOHJRa8YJjEUncU8KBUH3l/qk16Wg8Dk95kGZUQJZXGlCYRod2AVJO+2T3
+         8eUAjNr3fPiX5Juz80jOk9UoKoPUbdJGyQNqfAcOJkrKaVqz2dwbZWAyo5GzdoNNMPeF
+         QnIFUYdB/WQrRTBuvKJpyfKc2//7uJ37UHUz+eRTCXkelQEG8z+GD8FDosZvpYdT2RJr
+         ZBEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770179202; x=1770784002;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kT55jtil6v5CyUBqucg6MzXL+/ps9/MbCKBo9xAzepg=;
-        b=KdSnI3872oCLvTcbyvsqE43afaq3oonfpijENfQaBfxGOrUZydDTczw22xwokAm6PE
-         wT5thwy+DRNKtwdTr/f2KWprsSm5alHZY1KrCUU7I3SpxUiBzRE4eQWBbFXmwDJetrhj
-         NWcpLeekjFM6Plg/pnUJxsEiSslj+bnBaP6EVArBynNG6GMhzSDLO8Eyldr91Ne6PqxP
-         C7MmjgFc65zsai8/980oVbjld17lzX5QeRM5wJACZ6QsqiWfIZxug4Od87j4IoaOmRzK
-         eKZzN+riNBWtMcEr2c9WBlLkobiJnl6nri1kSwLwG/WiResOZZLyjI9L+bxydq4h3h5J
-         bCvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXoPy8VyRnIjejik+MAqxDW2fUoXmdtC6zvEXs63zJiv1NtU5v47h0n8redzr0UOU+/UdeAgmT8+Xy2LlM/gLa3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1rpCO0Qvxm6wjJjf6PQ1K/HkCuS3HnbZ6+QYbOheBMtAZ12eO
-	eyoJ5O+ncsGNE8h7sXcWGoGgHhxufcU43fTrvR505/hRwszt/kjhHUvygtjxcyTzSlbQnSRoZIf
-	Y9CTD/3/P+Q==
-X-Received: from dlbdm27.prod.google.com ([2002:a05:7022:6b9b:b0:123:291f:3e5b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:24a5:b0:11e:353:57af
- with SMTP id a92af1059eb24-126f48db9e5mr970721c88.49.1770179202401; Tue, 03
- Feb 2026 20:26:42 -0800 (PST)
-Date: Tue,  3 Feb 2026 20:26:29 -0800
+        d=1e100.net; s=20230601; t=1770181740; x=1770786540;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wmr2v46ieQwzKyMq2KvLQuS/V3QU7SUrqdd2PkLi5/c=;
+        b=OeDmP23GAHlGHmTG1xrFokfaBuS+TbSTKuIIiNhzicFrvFx+4o76LtM3+8vui8SWQI
+         i4sRyVUlOw8f5Z38nEjj3RSPSj87cDwMVbuJlC7UARKY14fK3/X59CjjzIJXdSWwFWNA
+         IsZT3ana0J9ogHGleuFketmah4CA2HmZPkpAzix8k37a42jXSG+oJyZRZdNYGisZtGRE
+         7OXfmh5NKgfiJ6KzrRKVrXkqZRncBQNnRG3O02ox9b1JbbvVNA6qw27hJEUx9bTli7g+
+         HFhwN2bH+2ovvW2uhTkpw16Iaur7To5xccYh1BlubvVOY8j9S1svtjWdQxj0ut89pJAZ
+         Eb5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUuNNi2moCkt6CySiLzl0M6qUbkhg5hQqS7Qe5oRMOn/ax+62zFhWzXcLoiEpxfKxQN6pTcTihWJYAGuLyl2GTZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeCDUm/+elUar49zq5yOpLscb0AxsLPMnxTBW/lgzGNyTuSNj3
+	vesSq0yodD7hzGV6NoLuskqbkqvQYv1bo8OB35tSJpVR37UdrxWuxQJDoS3/YpsYx8zNrnL11ne
+	YQEGnLQ/Lv/KzFj+iL4Ne5twiRlSlCvcn9LxgwFdN
+X-Gm-Gg: AZuq6aJp97EVQj/48GSdNvZRFJ1LA3Vj+KXqdsNB87hjw83FzDMtgvSpHRpJejQq9U/
+	3p5eBQ5nCLnjCzEjBdKj8OIhojAby31OgmEKqLq0+qB+OUrVO4VzE70HSZ2iIJXJibcnJid/VXS
+	p6+vtx7GRCNKF/FVATH/FAzPc8mQhUUJfhrIpXMpcYn0A23WtpqT4Rvb1eT8O42w/FpODo+cr+t
+	gveNkDNODjXNIJRvljHZgC3rNpFfVoVrvv7e25XJkJdEashbI+ZinuM3fJygY5Rg6sXpURW
+X-Received: by 2002:a05:7022:4593:b0:119:e56b:c1d5 with SMTP id
+ a92af1059eb24-126f4dedea1mr83561c88.0.1770181739545; Tue, 03 Feb 2026
+ 21:08:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
-Message-ID: <20260204042629.1376-1-irogers@google.com>
-Subject: [PATCH v1] perf tests: Additional perf stat tests
+MIME-Version: 1.0
+References: <20260203141608.14128-1-qzhao@redhat.com>
+In-Reply-To: <20260203141608.14128-1-qzhao@redhat.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Thomas Richter <tmricht@linux.ibm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andres Freund <andres@anarazel.de>
+Date: Tue, 3 Feb 2026 21:08:47 -0800
+X-Gm-Features: AZwV_QigJUEi_-AiY_Bd-ATJjRDGxwtiIwK5CzrhtamFItGNoB1kixnN_mlCWFk
+Message-ID: <CAP-5=fXNCM=XviuagrAmFKx+VjeoMjck0ZE1Ydw6Wd86Mza2-A@mail.gmail.com>
+Subject: Re: [PATCH v2] perf tests: mmap: skip rdpmc tests when sysfs disabled
+To: Qiao Zhao <qzhao@redhat.com>
+Cc: james.clark@linaro.org, linux-perf-users@vger.kernel.org, 
+	leo.yan@linux.dev, namhyung@kernel.org, mpetlan@redhat.com, acme@kernel.org, 
+	vincent.weaver@maine.edu
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Recently perf stat regressed in per CPU mode [1]. Let's expand test
-coverage to catch the same breakage again as well as to test the
-repeat, pid, detailed and no aggregation options.
+On Tue, Feb 3, 2026 at 6:16=E2=80=AFAM Qiao Zhao <qzhao@redhat.com> wrote:
+>
+> Some architectures control user-space rdpmc access via sysfs or sysctl,
+> for example /proc/sys/kernel/perf_user_access on arm64/riscv or the
+> rdpmc attribute under event_source devices on x86_64.
+>
+> The mmap-based rdpmc tests currently assume rdpmc availability purely
+> based on perf_event configuration, which leads to false failures when
+> the system globally disables rdpmc access.
+>
+> Introduce a helper to detect rdpmc availability via sysfs and skip
+> user space counter reading tests when rdpmc is disabled by the system.
+>
+> The check is only applied to USER_READ_ENABLED tests. User-read disabled
+> tests continue to run unconditionally, as they validate perf_event mmap
+> semantics independent of rdpmc availability.
+>
+> Additionally, tighten the unsupported rdpmc check to require a valid
+> counter index, avoiding false failures when cap_user_rdpmc is set but
+> no counter is assigned.
+>
+> v1->v2
+> - Check rdpmc availability via sysfs before running USER_READ_ENABLED tes=
+ts
+> - Handle both perf_user_access and rdpmc sysfs interfaces
+> - Avoid false failures when cap_user_rdpmc is set but no counter index ex=
+ists
+>
+> Testing:
+> - arm64: rdpmc disabled by perf_user_access (tests correctly skipped)
+> - x86_64: no behavior change compared to v1
+>
+> Signed-off-by: Qiao Zhao <qzhao@redhat.com>
 
-[1] https://lore.kernel.org/linux-perf-users/cgja46br2smmznxs7kbeabs6zgv3b4olfqgh2fdp5mxk2yom4v@w6jjgov6hdi6/
+On x86:
+Tested-by: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/stat.sh | 242 +++++++++++++++++++++++++++++++++
- 1 file changed, 242 insertions(+)
+Thanks,
+Ian
 
-diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-index 792a0b79f6b8..4edb04039036 100755
---- a/tools/perf/tests/shell/stat.sh
-+++ b/tools/perf/tests/shell/stat.sh
-@@ -5,6 +5,21 @@
- set -e
- 
- err=0
-+stat_output=$(mktemp /tmp/perf-stat-test-output.XXXXX)
-+
-+cleanup() {
-+  rm -f "${stat_output}"
-+  trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+  echo "Unexpected signal in ${FUNCNAME[1]}"
-+  cleanup
-+  exit 1
-+}
-+
-+trap trap_cleanup EXIT TERM INT
-+
- test_default_stat() {
-   echo "Basic stat command test"
-   if ! perf stat true 2>&1 | grep -E -q "Performance counter stats for 'true':"
-@@ -248,6 +263,226 @@ test_hybrid() {
-   echo "hybrid test [Success]"
- }
- 
-+test_stat_cpu() {
-+  echo "stat -C <cpu> test"
-+  # Test the full online CPU list (ranges and lists)
-+  online_cpus=$(cat /sys/devices/system/cpu/online)
-+  if ! perf stat -C "$online_cpus" -a true > "${stat_output}" 2>&1
-+  then
-+    echo "stat -C <cpu> test [Failed - command failed for cpus $online_cpus]"
-+    cat "${stat_output}"
-+    err=1
-+    return
-+  fi
-+
-+  if ! grep -E -q "Performance counter stats for" "${stat_output}"
-+  then
-+    echo "stat -C <cpu> test [Failed - missing output for cpus $online_cpus]"
-+    cat "${stat_output}"
-+    err=1
-+    return
-+  fi
-+
-+  # Test each individual online CPU
-+  for cpu_dir in /sys/devices/system/cpu/cpu[0-9]*; do
-+    cpu=${cpu_dir##*/cpu}
-+    # Check if online
-+    if [ -f "$cpu_dir/online" ] && [ "$(cat "$cpu_dir/online")" -eq 0 ]
-+    then
-+      continue
-+    fi
-+
-+    if ! perf stat -C "$cpu" -a true > "${stat_output}" 2>&1
-+    then
-+      echo "stat -C <cpu> test [Failed - command failed for cpu $cpu]"
-+      cat "${stat_output}"
-+      err=1
-+      return
-+    fi
-+    if ! grep -E -q "Performance counter stats for" "${stat_output}"
-+    then
-+      echo "stat -C <cpu> test [Failed - missing output for cpu $cpu]"
-+      cat "${stat_output}"
-+      err=1
-+      return
-+    fi
-+  done
-+
-+  # Test synthetic list and range if cpu0 and cpu1 are online
-+  c0_online=0
-+  c1_online=0
-+  if [ -d "/sys/devices/system/cpu/cpu0" ]
-+  then
-+    if [ ! -f "/sys/devices/system/cpu/cpu0/online" ] || [ "$(cat /sys/devices/system/cpu/cpu0/online)" -eq 1 ]
-+    then
-+      c0_online=1
-+    fi
-+  fi
-+  if [ -d "/sys/devices/system/cpu/cpu1" ]
-+  then
-+    if [ ! -f "/sys/devices/system/cpu/cpu1/online" ] || [ "$(cat /sys/devices/system/cpu/cpu1/online)" -eq 1 ]
-+    then
-+      c1_online=1
-+    fi
-+  fi
-+
-+  if [ $c0_online -eq 1 ] && [ $c1_online -eq 1 ]
-+  then
-+    # Test list "0,1"
-+    if ! perf stat -C "0,1" -a true > "${stat_output}" 2>&1
-+    then
-+      echo "stat -C <cpu> test [Failed - command failed for cpus 0,1]"
-+      cat "${stat_output}"
-+      err=1
-+      return
-+    fi
-+    if ! grep -E -q "Performance counter stats for" "${stat_output}"
-+    then
-+      echo "stat -C <cpu> test [Failed - missing output for cpus 0,1]"
-+      cat "${stat_output}"
-+      err=1
-+      return
-+    fi
-+
-+    # Test range "0-1"
-+    if ! perf stat -C "0-1" -a true > "${stat_output}" 2>&1
-+    then
-+      echo "stat -C <cpu> test [Failed - command failed for cpus 0-1]"
-+      cat "${stat_output}"
-+      err=1
-+      return
-+    fi
-+    if ! grep -E -q "Performance counter stats for" "${stat_output}"
-+    then
-+      echo "stat -C <cpu> test [Failed - missing output for cpus 0-1]"
-+      cat "${stat_output}"
-+      err=1
-+      return
-+    fi
-+  fi
-+
-+  echo "stat -C <cpu> test [Success]"
-+}
-+
-+test_stat_no_aggr() {
-+  echo "stat -A test"
-+  if ! perf stat -A -a true > "${stat_output}" 2>&1
-+  then
-+    echo "stat -A test [Failed - command failed]"
-+    cat "${stat_output}"
-+    err=1
-+    return
-+  fi
-+
-+  if ! grep -E -q "CPU" "${stat_output}"
-+  then
-+    echo "stat -A test [Failed - missing CPU column]"
-+    cat "${stat_output}"
-+    err=1
-+    return
-+  fi
-+  echo "stat -A test [Success]"
-+}
-+
-+test_stat_detailed() {
-+  echo "stat -d test"
-+  if ! perf stat -d true > "${stat_output}" 2>&1
-+  then
-+    echo "stat -d test [Failed - command failed]"
-+    cat "${stat_output}"
-+    err=1
-+    return
-+  fi
-+
-+  if ! grep -E -q "Performance counter stats" "${stat_output}"
-+  then
-+    echo "stat -d test [Failed - missing output]"
-+    cat "${stat_output}"
-+    err=1
-+    return
-+  fi
-+
-+  if ! perf stat -dd true > "${stat_output}" 2>&1
-+  then
-+    echo "stat -dd test [Failed - command failed]"
-+    cat "${stat_output}"
-+    err=1
-+    return
-+  fi
-+
-+  if ! grep -E -q "Performance counter stats" "${stat_output}"
-+  then
-+    echo "stat -dd test [Failed - missing output]"
-+    cat "${stat_output}"
-+    err=1
-+    return
-+  fi
-+
-+  if ! perf stat -ddd true > "${stat_output}" 2>&1
-+  then
-+    echo "stat -ddd test [Failed - command failed]"
-+    cat "${stat_output}"
-+    err=1
-+    return
-+  fi
-+
-+  if ! grep -E -q "Performance counter stats" "${stat_output}"
-+  then
-+    echo "stat -ddd test [Failed - missing output]"
-+    cat "${stat_output}"
-+    err=1
-+    return
-+  fi
-+
-+  echo "stat -d test [Success]"
-+}
-+
-+test_stat_repeat() {
-+  echo "stat -r test"
-+  if ! perf stat -r 2 true > "${stat_output}" 2>&1
-+  then
-+    echo "stat -r test [Failed - command failed]"
-+    cat "${stat_output}"
-+    err=1
-+    return
-+  fi
-+
-+  if ! grep -E -q "\([[:space:]]*\+-.*%[[:space:]]*\)" "${stat_output}"
-+  then
-+    echo "stat -r test [Failed - missing variance]"
-+    cat "${stat_output}"
-+    err=1
-+    return
-+  fi
-+  echo "stat -r test [Success]"
-+}
-+
-+test_stat_pid() {
-+  echo "stat -p test"
-+  sleep 1 &
-+  pid=$!
-+  if ! perf stat -p $pid > "${stat_output}" 2>&1
-+  then
-+    echo "stat -p test [Failed - command failed]"
-+    cat "${stat_output}"
-+    err=1
-+    kill $pid 2>/dev/null || true
-+    wait $pid 2>/dev/null || true
-+    return
-+  fi
-+
-+  if ! grep -E -q "Performance counter stats" "${stat_output}"
-+  then
-+    echo "stat -p test [Failed - missing output]"
-+    cat "${stat_output}"
-+    err=1
-+  else
-+    echo "stat -p test [Success]"
-+  fi
-+  kill $pid 2>/dev/null || true
-+  wait $pid 2>/dev/null || true
-+}
-+
- test_default_stat
- test_null_stat
- test_offline_cpu_stat
-@@ -258,4 +493,11 @@ test_topdown_groups
- test_topdown_weak_groups
- test_cputype
- test_hybrid
-+test_stat_cpu
-+test_stat_no_aggr
-+test_stat_detailed
-+test_stat_repeat
-+test_stat_pid
-+
-+cleanup
- exit $err
--- 
-2.53.0.rc2.204.g2597b5adb4-goog
-
+> ---
+>  tools/perf/tests/mmap-basic.c | 45 +++++++++++++++++++++++++++++++++--
+>  1 file changed, 43 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.=
+c
+> index 3313c236104e..67d6d83dbedb 100644
+> --- a/tools/perf/tests/mmap-basic.c
+> +++ b/tools/perf/tests/mmap-basic.c
+> @@ -220,6 +220,37 @@ static enum user_read_state set_user_read(struct per=
+f_pmu *pmu, enum user_read_s
+>         return old_user_read;
+>  }
+>
+> +static bool rdpmc_sysfs_enabled(struct perf_pmu *pmu)
+> +{
+> +       char buf[8];
+> +       int events_fd, fd;
+> +       ssize_t len;
+> +
+> +       /* ARM/RISC-V style or similar */
+> +       fd =3D open("/proc/sys/kernel/perf_user_access", O_RDONLY);
+> +       if (fd > 0) {
+> +               len =3D read(fd, buf, sizeof(buf));
+> +               close(fd);
+> +               if (len > 0)
+> +                       return buf[0] =3D=3D '1';
+> +       }
+> +
+> +       /* x86_64 style rdpmc file or similar */
+> +       events_fd =3D perf_pmu__event_source_devices_fd();
+> +       if (events_fd >=3D 0) {
+> +               fd =3D perf_pmu__pathname_fd(events_fd, pmu->name, "rdpmc=
+", O_RDONLY);
+> +               close(events_fd);
+> +               if (fd >=3D 0) {
+> +                       len =3D read(fd, buf, sizeof(buf));
+> +                       close(fd);
+> +                       if (len > 0)
+> +                               return buf[0] =3D=3D '1';
+> +               }
+> +       }
+> +
+> +       return false;
+> +}
+> +
+>  static int test_stat_user_read(u64 event, enum user_read_state enabled)
+>  {
+>         struct perf_pmu *pmu =3D NULL;
+> @@ -247,7 +278,7 @@ static int test_stat_user_read(u64 event, enum user_r=
+ead_state enabled)
+>                 struct perf_evsel *evsel =3D NULL;
+>                 int err;
+>                 struct perf_event_mmap_page *pc;
+> -               bool mapped =3D false, opened =3D false, rdpmc_supported;
+> +               bool mapped =3D false, opened =3D false, rdpmc_supported,=
+ sysfs_enabled;
+>                 struct perf_counts_values counts =3D { .val =3D 0 };
+>
+>
+> @@ -300,6 +331,16 @@ static int test_stat_user_read(u64 event, enum user_=
+read_state enabled)
+>                 else
+>                         rdpmc_supported =3D (enabled =3D=3D USER_READ_ENA=
+BLED);
+>
+> +               if (enabled =3D=3D USER_READ_ENABLED) {
+> +                       sysfs_enabled =3D rdpmc_sysfs_enabled(pmu);
+> +                       if (!sysfs_enabled) {
+> +                               pr_debug("User space counter reading for =
+PMU %s [Skip rdpmc disabled by sysfs]\n",
+> +                                       pmu->name);
+> +                               ret =3D TEST_SKIP;
+> +                               goto cleanup;
+> +                       }
+> +               }
+> +
+>                 if (rdpmc_supported && (!pc->cap_user_rdpmc || !pc->index=
+)) {
+>                         pr_err("User space counter reading for PMU %s [Fa=
+iled unexpected supported counter access %d %d]\n",
+>                                 pmu->name, pc->cap_user_rdpmc, pc->index)=
+;
+> @@ -307,7 +348,7 @@ static int test_stat_user_read(u64 event, enum user_r=
+ead_state enabled)
+>                         goto cleanup;
+>                 }
+>
+> -               if (!rdpmc_supported && pc->cap_user_rdpmc) {
+> +               if (!rdpmc_supported && pc->cap_user_rdpmc && pc->index) =
+{
+>                         pr_err("User space counter reading for PMU %s [Fa=
+iled unexpected unsupported counter access %d]\n",
+>                                 pmu->name, pc->cap_user_rdpmc);
+>                         ret =3D TEST_FAIL;
+> --
+> 2.49.0
+>
