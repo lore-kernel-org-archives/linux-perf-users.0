@@ -1,133 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30768283FD6;
-	Wed,  4 Feb 2026 14:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B133426EA3;
+	Wed,  4 Feb 2026 15:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770215192; cv=none; b=bh3DGAXZg65OuHOLB6Q9uW7Vc0LYq7AJLmrTFMXBlJ66UGJMFXNsgoBi5knbKX4/qnE0oitQf7D0KBviCleW0u7fEEt17v/kzWZXvu0Ko+Q3HUQLtWLTwpaPVwiUP9aI1fzYeaCE9xCesJDuw2e+f43sGdjoRAuN0x6m2f77XnE=
+	t=1770218438; cv=none; b=lBdnpEXaOt/kHxsMTMDAHRPqzeQo+wKCByQVP4UaK6uYMYmF4ABJgCXJ7MMeUSxk/CsgfvhOAGc2ZhToTkEYDWHxbdFj0cnu7iBJicdkzBx41w81rDlw38rQXZ5sV9pQ4iwXmwPi161nVnHAgB2+N6i+OATtfxv32+b9ghWYH9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770215192; c=relaxed/simple;
-	bh=w6UbffRzifiC6MpckU5knQqr5nJFUuLLtaP4NpFrZuk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mgET7+0godE8B8JhDBArSPI5a5NKkNZRcdDjG2A++Vd7Z5JIm9fvYTV5A3xFJJdv6XObvrW4hQQlJgmoa3sxf3RFbq5XOz0Lu41oQCFIo+5vjX6ig6VSo7WL6WhV28R/dD2e+9Do+Koo0GWyltN6kKPDDrb12XRvIH3ETweD5hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB9C7339;
-	Wed,  4 Feb 2026 06:26:23 -0800 (PST)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C73A3F632;
-	Wed,  4 Feb 2026 06:26:28 -0800 (PST)
-From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 04 Feb 2026 14:26:15 +0000
-Subject: [PATCH] perf record: Make logs more readable for event open
- failures
+	s=arc-20240116; t=1770218438; c=relaxed/simple;
+	bh=++9lYWzTdMOjgGXRPi1wm/r2DF+ABICab3CW23ZaRaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nNk6u1XN+p4GvsGK9wHxDdd1YeTnoVPlsRMqtAkvzJ6yt5h5C9TkMHeb8lCKA0bQmRJ07w2eUChEKnJ9KYZuRImKKdiFYg8pydaUVcI/PGa1H872PXcJRBoPTOU2pXhQi186ih+deGxQVjDf46pv4n0jXrHvo79li5mG9QykAng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUXGSiyX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUXGSiyX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60A23C116C6;
+	Wed,  4 Feb 2026 15:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770218438;
+	bh=++9lYWzTdMOjgGXRPi1wm/r2DF+ABICab3CW23ZaRaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PUXGSiyX0isPBVHbRTYr/12v4GH9HH7Cqyv3xq1MajCbb/ofN2RFqCHIBuRNEWCX/
+	 iT16LebdEOcYe+hSyVuv8eK72lPrJUwDbs67AoDd0W76PoHBlX2SG984hhlW2DQuI2
+	 uAKqeNoNPqX6Y0unJevlyywBezRmKTpg86qDIiwrdx4cBnUhgmA7GXLSN2zNt+6rl1
+	 cx4bDYiaSWkxYhFBa41IRgWM1+CI070nuJcGadMIFwM7GQpmeWtydHTAyHzb7rGIKd
+	 78oZJpEFUtTe84/lSoaoxrLDQroTqS+DwGKpuhMOa1hdWNJb72t4svbPoyIbeh/rBC
+	 GsUj+a4Zh9nxA==
+Date: Wed, 4 Feb 2026 08:20:34 -0700
+From: Tycho Andersen <tycho@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>
+Subject: Re: [PATCH] perf: fix segfault in `lock contention -b`
+Message-ID: <aYNjwvYkvk0Ul2Jl@tycho.pizza>
+References: <20260109164417.396138-1-tycho@kernel.org>
+ <aWGh_XNyt-hmSamy@google.com>
+ <aWUeOQbFOZ2CVBG2@tycho.pizza>
+ <aWa2vDy_0QGh_a20@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260204-perf_improve_log_for_open_event_failures-v1-1-150245792810@arm.com>
-X-B4-Tracking: v=1; b=H4sIAAZXg2kC/x3NQQrCMBBG4auUWRtIoxT0KiJDbP7UgZqESQ1C6
- d0NLr/NeztVqKDSbdhJ0aRKTh3jaaD55dMCI6GbnHWTdfZiCjSyvIvmBl7zwjEr54LEaEgbRy/
- rR1FNQPBunsbn9Ryo54oiyve/uj+O4weZ3h7begAAAA==
-X-Change-ID: 20260204-perf_improve_log_for_open_event_failures-deda2c61b93d
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1770215188; l=3693;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=w6UbffRzifiC6MpckU5knQqr5nJFUuLLtaP4NpFrZuk=;
- b=GSnIHo6n6xbLWN4mxEjQzII9bmv0l0EgbUVn8YMV+WNjmGEht2BRtvhiAVgayoGENMjbfyaXx
- JkznAPjwIe3Bs6Alsl46n1HCF1mbQKVEieRgjGTWNBOmz6rqGmSkn6v
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aWa2vDy_0QGh_a20@google.com>
 
-Since commit ee27476fa300 ("perf record: Skip don't fail for events that
-don't open"), if a user does not have permission to access a PMU event,
-perf reports:
+On Tue, Jan 13, 2026 at 01:18:52PM -0800, Namhyung Kim wrote:
+> On Mon, Jan 12, 2026 at 09:15:53AM -0700, Tycho Andersen wrote:
+> > On Fri, Jan 09, 2026 at 04:49:01PM -0800, Namhyung Kim wrote:
+> > > That said, can you add a NULL check in the init_numa_data() instead
+> > > and see how far it can go?
+> > 
+> > Looks like not much further, it fails in lock_contention_bpf__load():
+> > 
+> > ./perf lock contention -b
+> > libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
+> > libbpf: failed to find valid kernel BTF
+> > libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
+> > libbpf: failed to find valid kernel BTF
+> > libbpf: Error loading vmlinux BTF: -ESRCH
+> > libbpf: failed to load BPF skeleton 'lock_contention_bpf': -ESRCH
+> > Failed to load lock-contention BPF skeleton
+> > lock contention BPF setup failed
+> 
+> Thanks for checking this.  I think it's ok to fail like this when BTF is
+> not enabled.  Let me see if I can make some changes to run without it
+> later.
 
-  perf record -e cs_etm// -C 3 -- ls
-  Error:
-  Failure to open event 'cs_etm//u' on PMU 'cs_etm' which will be removed.
-  No fallback found for 'cs_etm//u' for error 13
-  Error:
-  Failure to open event 'dummy:u' on PMU 'software' which will be removed.
-  No fallback found for 'dummy:u' for error 13
-  Error:
-  Failure to open any events for recording.
+Gentle ping, I was just reminded of this crash again this morning.
 
-The log is not very helpful, as no clear indication of what "error 13"
-means or how to address the issue.
-
-This commit restores evsel__open_strerror() to generate a readable error
-message and print it out:
-
-  perf record -e cs_etm// -C 3 -- ls
-  Error:
-  Failure to open event 'cs_etm//' on PMU 'cs_etm' which will be removed.
-  Access to performance monitoring and observability operations is limited.
-  Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-  access to performance monitoring and observability operations for processes
-  without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
-  More information can be found at 'Perf events and tool security' document:
-  https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-  perf_event_paranoid setting is 1:
-    -1: Allow use of (almost) all events by all users
-        Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-  >= 0: Disallow raw and ftrace function tracepoint access
-  >= 1: Disallow CPU event access
-  >= 2: Disallow kernel profiling
-  To make the adjusted perf_event_paranoid setting permanent preserve it
-  in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-  Error:
-  Failure to open event 'dummy:u' on PMU 'software' which will be removed.
-  Access to performance monitoring and observability operations is limited.
-  Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-  access to performance monitoring and observability operations for processes
-  without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
-  More information can be found at 'Perf events and tool security' document:
-  https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-  perf_event_paranoid setting is 1:
-    -1: Allow use of (almost) all events by all users
-        Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-  >= 0: Disallow raw and ftrace function tracepoint access
-  >= 1: Disallow CPU event access
-  >= 2: Disallow kernel profiling
-  To make the adjusted perf_event_paranoid setting permanent preserve it
-  in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-  Error:
-  Failure to open any events for recording.
-
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/builtin-record.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 2584d0d8bc820676da60bdf5f59d41371d85a93a..aa8dc3e18190dd7db1ed5e3c7673fde8d5785a26 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1404,6 +1404,7 @@ static int record__open(struct record *rec)
- 			}
- #endif
- 			if (report_error || verbose > 0) {
-+				evsel__open_strerror(pos, &opts->target, errno, msg, sizeof(msg));
- 				ui__error("Failure to open event '%s' on PMU '%s' which will be "
- 					  "removed.\n%s\n",
- 					  evsel__name(pos), evsel__pmu_name(pos), msg);
-
----
-base-commit: 5fd0a1df5d05ad066e5618ccdd3d0fa6cb686c27
-change-id: 20260204-perf_improve_log_for_open_event_failures-deda2c61b93d
-
-Best regards,
--- 
-Leo Yan <leo.yan@arm.com>
-
+Tycho
