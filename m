@@ -1,36 +1,36 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D2F263F34;
-	Wed,  4 Feb 2026 09:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C291330675;
+	Wed,  4 Feb 2026 09:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770196190; cv=none; b=bGXXoo5YsLj7IRVhBV5oblEpfsNy86FMtdLJdQLgdP32+P5XZnlNiCnHZ2pyVAkle0EplgmRfA+UBkWJv6nlNy/eMrnR3pajbHFQvc54XOy9EFEoKTw4X5QwJKCiGFso6o+KQYVfXgz7cJ4jy7niAFgOG0nC6zAG7r8tohw8BU0=
+	t=1770196191; cv=none; b=PzvWXldMQjTqf9BCMo+8ZLmYCUwOnTjpfHS6cG0ktk5z3CEeMgTQedkQp9xFho5kdzi7nDV6todozTwawx791rdCrbfYdCZgef3hIFfD4keUBjOMcgVn6iNNyLYTqTEDUOpEc2j3cp/9Cc3n3yXU8XrksmibUmh8puNCcwm/n+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770196190; c=relaxed/simple;
-	bh=pIk2X89F4crzsJrXqP6CAX+UtHyMm0jFHdU40TXN5/E=;
+	s=arc-20240116; t=1770196191; c=relaxed/simple;
+	bh=ZVLONaiMU024OvA5a6+na3eNc8tNcg264FT/5Lc/fv8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ql+kpVkQ9Qg4/bfgui8hvmglvpnInj9CVA/3Z7eQliBsOGuH0pkG2UZQnAZifTG7EypZhgA9CyOOtm0wpKFerW9gPYSdXtUNb3uCUwemqtEv+jcL1WMZci2lf6xlEGssjLdVw9F4cDZTZyGF4M8strBUnLGXBQUMjQl5ImxJrr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=vgn8Mq0S; arc=none smtp.client-ip=54.207.19.206
+	 MIME-Version; b=LX1o6etY708I5/Mp86ahZDnIq7IE/wndLj9fOxujFWXAEiWj4Q4+PqM35ElzDK/Kxaq7WDoD3fjH2GCFIayMGFtws5kGJy5Dv/01qJJu75bIbAdzaK+/Xu/oTO60hLZnU74BAK2xuPueCO30nbK1ldT30XrVmTyDabUbDIhGNRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=N6fTIRfc; arc=none smtp.client-ip=54.254.200.128
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="vgn8Mq0S"
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="N6fTIRfc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1770196131;
-	bh=vniV4R9laYPbty6apvE3yD0+y8jeoSXd7UsyQ/isW1s=;
+	s=mxsw2412; t=1770196159;
+	bh=erpHfG1a0U1wKXe31VsJ1fGHCHur44BOyeFbxKPgRbM=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=vgn8Mq0S/+43I/DeQkKG5jBED3gHMrthiqqHB4s5mBKNZdAK+FylLhBc9A2Gba7gP
-	 o1LCWC4ZX/yQCJIaJpQ9J/TpYk8rfBT0QL29BMT7+oYbY2vboQqZdvpfnOd7zxqDvh
-	 OJc1QkeJZGX2BraLeSv75mmj3fqMD2ZRgn8McXDQ=
-X-QQ-mid: esmtpsz20t1770196129tdadbc722
-X-QQ-Originating-IP: cyLLraxODx+BbmUBgtRGsM+KjpbyMTBBc9WyBjGdDL0=
+	b=N6fTIRfcpscByIKh8KmH2eFgrppZ0cwQtT/iIHy/aIcSPvdva2ORoCjdXaZbiQ11E
+	 f5UwyNDiqdqYePYs9o88f3w9uwy2kqUMEsUiBvLxzSu9sysowGUjRkzqfvSYP3VIIk
+	 mm7FOfmDAsvOpZblunACYoGoQ/Kez3NAt5Wkbz4U=
+X-QQ-mid: zesmtpsz6t1770196157tc4c53f38
+X-QQ-Originating-IP: mHZUIACGk9YMLEZgm8p0NppNTHzVJmeF8HKgM+3ft8o=
 Received: from SurfaceBook2-B.localdomain ( [101.70.125.34])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 04 Feb 2026 17:08:45 +0800 (CST)
+	id ; Wed, 04 Feb 2026 17:09:14 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 2120045114708979725
+X-BIZMAIL-ID: 12607342643688675040
 EX-QQ-RecipientCnt: 19
 From: Lv Zheng <lv.zheng@linux.spacemit.com>
 To: Tomasz Jeznach <tjeznach@rivosinc.com>,
@@ -52,9 +52,9 @@ Cc: Jingyu Li <joey.li@spacemit.com>,
 	linux-riscv@lists.infradead.org,
 	spacemit@lists.linux.dev,
 	devicetree@vger.kernel.org
-Subject: [PATCH v3 1/8] iommu/riscv: Enable IOMMU DMA mapping support
-Date: Wed,  4 Feb 2026 17:08:39 +0800
-Message-ID: <4AA614655D11897F+a7061670f43ddedffb83b88fab0dbeb9123f2940.1770195980.git.lv.zheng@linux.spacemit.com>
+Subject: [PATCH v3 4/8] dt-bindings: iommu: Add spacemit/t100 features
+Date: Wed,  4 Feb 2026 17:09:12 +0800
+Message-ID: <A0E91F323138E92F+a27d73b00f3324f0d3885128f5596230b3f1370b.1770195980.git.lv.zheng@linux.spacemit.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1770195980.git.lv.zheng@linux.spacemit.com>
 References: <cover.1769562575.git.lv.zheng@spacemit.com> <cover.1770195980.git.lv.zheng@linux.spacemit.com>
@@ -66,55 +66,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
-X-QQ-XMAILINFO: Np0qb5kW85KCr42LSI0RAZZl4p1jeyLFinSdkUjfQ+fqz2h1oEj6u5JU
-	8bXGoM0wjkt89uxvM6JKPWRRRHNv2QFSj9Iy656DfQgyVfPRyZ400oHYGHBqViX7JXkirJg
-	HLF9b87m1cZnWwXPSPiOczDIkP7mzZ86VYBoO2Uo0nTv6H/4MAsgclccLAorl619WAGq1vd
-	0BtPOwnT52MvTGpxa5PnzW+fCnYYulKY/Dchoc9lwwZobZAkBKNJqcSM4l9cqsU5G4PZFYy
-	BdljN4TAOnaTgzKdpytRi2ZG0q62WqAyZKpeVxqVahWyPOwLnkrpDn843FO2xjwAZQ1sOvg
-	NRo5ZQP5qZrANYBXn/c3bm47tmy82hHzlRy2a5DroFPSJ4ZGXabPNiFzOKMrzZ/RrUCKuzf
-	drBE61bDZGQ6qKfoJ5Q/T1chR4tVcAMWVz3zvU5jOFDXELW3JvcwatIm/prbWsTy3Av7Fmc
-	8nxTbktvsp66BGgpqq+8Ua8sG/oZT7bjOg+IsuhekMEcCZHf1kVIr6gkrGBOe80kSbvWfjI
-	dtv9f/19Ysxsj2K/VMv1L4RRV3gWaruYYJu3zbIzCSipG3UVGFpwXLnZrsInGpW8dli0vX6
-	83JaTCyxgs56NLfwYjx0IeEh5tU8VCgecsiFSIZpwfFmO1RVf8Xr++4aB5+eSGu82A4L385
-	wEKug80AZKQ+XBvY7cbNU5m1jQ4xEuBlhcvhgWFwfdptJTpqVq4ZjUoof3PpRcWJrpRgV9L
-	NXrRuilN5N9QPTAs0u33oM/aa9D96V3j1ZfvHZHEit7yXOTOm2EZL2ojJAVTIiKZ8MeVEtI
-	BaP5nRbBpxLb7ifyNIZb89VTsH88RT60foEzp7wEF65JpvnTkOv+YWM40Blj0o3UF/ccMx6
-	s2vU8PaA90NWMDoAdAlDOBa3PJ4PNnMMGMENe99xludGqRp9DSsIESeL8fkPkTbAiG1ziJu
-	bP4OHS9Eg8EsAocnR0TVo/eoZ9QtdCyySoIz93OG5r2OuuYyIQR/zKAlw/M8SNl0qmZIerm
-	ujFqS2Syaef6Go6Ufi
-X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
+Feedback-ID: zesmtpsz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
+X-QQ-XMAILINFO: MyirvGjpKb1jkV4OeiUOuImdzoTdgM0AKY79FgAlHHVObFEWdEY+vd/F
+	waVqBGQeCqMbLkRwOOlD8MOe6Uz4pO+xzDbPa/VLZoLmhpkqY2W1V0hsxBGtlJHGu8CIFLV
+	fvXRFrSFSIX7AZVxoFeNSvOopjWGooIK/+wWNIDMR9utebG62Mp6kCHFk9vw+i89SZO/ghX
+	d5hycLoPmwBT8LQRTdkyQDKJ/E4q/2tZjC78am/By2fD3CNwm5dkZWvntLuhfmXoSccG1m/
+	Juz4AfVhyYTcjpUPUNw4YGZK+FXJu4j5V8eaLpOqnOMVQwj9mZTPk3IYUpBWy8bTB9+kIQ2
+	+HF7h9xJ8LXe2Cgw2hXy6gnQ/BB4ZEmrt5QfqE0N+TU21hlPRgToYgYh27YKu3m2ldV09O+
+	eYxd7pHjCRaEJdPlxvGVIHak+tfgNh6SACtILvABkqjVMnny05jH7IZj7MQ9wNhNy/aIQGJ
+	H03d8lxnS6BWdFkPa9BmceFBWH4jV+pz/yr7h3FBoYwVCw7FsxSeQyxD8KI2eIOj6C3W6ET
+	Ny5qNw1JTFK5mq6qmRqKtj/2+RcHXcbzTb7onCiGB3dcSWAhLDTRgsH9K7kySlozixRwGL4
+	3LUiB8pCEEOZrc1vAh1M5kI1n2Rgx2QJ+YakbMgfi6gph/sALqBzxlV8ULBB0VxPu7TCDmS
+	ajWDHme63Ro6CY+w2DsKELxIYSzpb7btq2sFSOq8oRz3ZPZ6ZNKOqmGtpNSQ2nfplg4QO59
+	BEL31BLnI3/NbWyO1keTQl1vXDyXCUYLq3A6feltphY4TbYl28JnhTY2S2Rd50HX3yTeJfU
+	VZq+wOk1DCywnt578+oWLiZqBqoNMEsrE1MtcizQj3GRIGDkw4k1H0mHrkgsUe2lnRd602Q
+	kO7QDz9hl4CE3TMr58HNLKrY4X+EqgPaDMOES5eMg70iFtivmer6yI8+P+M6Qkxqacr2BfK
+	/zrEWdP764UuKUZpPfRWUxj7BE2RnweyG01U96S+K+nmseQKuoMJ4EG/J0YCCl/3Ds/APiy
+	fR4J7iCTebvVkVdRJ9XZU/jhXA+Mz1yrUKANuhJQ==
+X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
 X-QQ-RECHKSPAM: 0
 
-From: Jingyu Li <joey.li@spacemit.com>
+Adds device tree bindings for SpacemiT T100 specific features by
+introducing spacemit,100 compatible. T100 contains distributed IOATCs,
+each of which exposes pmiv interrupt.
 
-Enables IOMMU DMA mapping support for RISC-V, so that DMACs can be tested
-with translation enabled.
-
-Known Possible Issue:
-1. When CONFIG_IOMMU_DMA is enabled, on the tested Linux, RISC-V IOMMU is
-   lack of PCIe support, causing riscv_iommu_fault:522 in dealing with
-   NVMe PCIe devices.
-
-Signed-off-by: Jingyu Li <joey.li@spacemit.com>
 Signed-off-by: Lv Zheng <lv.zheng@linux.spacemit.com>
+Signed-off-by: Jingyu Li <joey.li@spacemit.com>
 ---
- drivers/iommu/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/iommu/riscv,iommu.yaml           | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index f86262b11416..34d8a792339f 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -151,7 +151,7 @@ config OF_IOMMU
+diff --git a/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+index d4838c3b3741..2da3456e7402 100644
+--- a/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
++++ b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+@@ -32,6 +32,12 @@ properties:
+   # should be specified along with 'reg' property providing MMIO location.
+   compatible:
+     oneOf:
++      - description: SpacemiT distributed IOMMUs
++        items:
++          - enum:
++              - spacemit,t100
++          - const: spacemit,riscv-iommu
++          - const: riscv,iommu
+       - items:
+           - enum:
+               - qemu,riscv-iommu
+@@ -75,6 +81,23 @@ required:
  
- # IOMMU-agnostic DMA-mapping layer
- config IOMMU_DMA
--	def_bool ARM64 || X86 || S390
-+	def_bool ARM64 || X86 || S390 || RISCV
- 	select DMA_OPS_HELPERS
- 	select IOMMU_API
- 	select IOMMU_IOVA
+ additionalProperties: false
+ 
++select: false
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: spacemit,riscv-iommu
++    then:
++      properties:
++        interrupts:
++          maxItems: 68
++          description:
++            SpacemiT distributed IOMMU includes additional interrupts for
++            IOATCs. Each IOATC exposes pmiv wired vector as standalone
++            interrupt and the maximum number of IOATCs can be up to 64.
++
+ examples:
+   - |+
+     /* Example 1 (IOMMU device with wired interrupts) */
+@@ -145,3 +168,17 @@ examples:
+             };
+         };
+     };
++
++  - |+
++    /* Example 5 (SpacemiT distributed IOMMU) */
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    iommu4: iommu@1bccd000 {
++        compatible = "spacemit,t100", "spacemit,riscv-iommu", "riscv,iommu";
++        reg = <0x1bccd000 0x1000>;
++        interrupts = <58 IRQ_TYPE_LEVEL_HIGH>, <58 IRQ_TYPE_LEVEL_HIGH>,
++                     <58 IRQ_TYPE_LEVEL_HIGH>, <58 IRQ_TYPE_LEVEL_HIGH>,
++                     <62 IRQ_TYPE_LEVEL_HIGH>, <63 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-parent = <&saplic>;
++        #iommu-cells = <0x01>;
++    };
 -- 
 2.43.0
 
