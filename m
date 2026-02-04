@@ -1,63 +1,90 @@
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD96261B91;
-	Wed,  4 Feb 2026 09:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154843A1CEF
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Feb 2026 09:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770196238; cv=none; b=GHAhdIyLN8AIIGZzkEgaGRBgwFgDjko5hdUmkFNrK3cDKacv31z5p/GutDG4gvmzGGfEigmoeD9TKDXVU+iikNCmQReWKpHOfElxvYu49RuZi4PwHfrODU7V0DdGEHV8Yep3KTJcom6m3i/DTAu1NqqU46sto765laKBaA7zdPo=
+	t=1770196469; cv=none; b=TloATdzeNsmzEeSYxP9Zw1HHZfovw+nTjPGTyaD6ARA3EnaWCUfKu3Zd2Gmz9U3DltxnnVDAQfg2EEcHaP1PdBwHIUEtUbAad2+3v86kM6WEnI64HnaAvV/SObsSXtsJmAoMPbYQ6uhZADSJM1/hLaMGOcJjkzGQCMb0juJjbbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770196238; c=relaxed/simple;
-	bh=m5P24uh3P60HjC9sCdKoRrJSgUa/ESATqR/OtworwNo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZnBfhpnprZFYs7a7bFkwp1JjqXTIJDPL1XPCJs6n5j/3WiJODo9GlNitD61kMHSlmBUQcHsBlgkoY4ldxnvIx3ra8A5ADCaksMRNxG9S5z3ts9G0doX8iIgZ4w/bv2e0LbZKlwPeZ0UEUFQ8Pox1/+kj84a3FW8wCCpLTjLqkkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=E6E0LMNh; arc=none smtp.client-ip=54.92.39.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
+	s=arc-20240116; t=1770196469; c=relaxed/simple;
+	bh=sc27DwzzgfFQTFrQpnFL01JAH1HWFmGBXG321GfI0hM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MWfh1yeL0Qe2SLFUuj1LJQJPHpdJJweLQtl1JgFckvNYzmqxIiHACnWtY5zGsvRbODFxubVPftoojsni6RkQAtXglmGuQJWtmojTQPSdpRTujkSAr261N+SNkXJVA+fQEfJr64hH5RIqOgCtNyyMIGYZ6tBIlPLA95ARoXnrCkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T3JvLS9p; arc=none smtp.client-ip=209.85.216.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="E6E0LMNh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1770196200;
-	bh=EgJIHnad+b6A2LOWWhy4BtoavbNU0zZtyzPE8zCjc4w=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=E6E0LMNhekirNM3L86GHoYLjSnLPtbUINcLmxzUVR+Ph5DbpPJXAns+yvHxD7gbK9
-	 gOlcx79h3IS+/LNqWuLuMFXwYR2Dk3dvUcNmOQ7GgSLg3ZTTpByTp6+d3MNrez8CCy
-	 PCGGQsV8Vwc3Dv53qQlE456sXH06mU0ZlG8I6cbo=
-X-QQ-mid: zesmtpsz7t1770196198taefc40b6
-X-QQ-Originating-IP: mBozWA9Y+PFCCt1kixiwX9rViDm+vgGOQudZyHgPelI=
-Received: from SurfaceBook2-B.localdomain ( [101.70.125.34])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 04 Feb 2026 17:09:54 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 10106732724009350697
-EX-QQ-RecipientCnt: 19
-From: Lv Zheng <lv.zheng@linux.spacemit.com>
-To: Tomasz Jeznach <tjeznach@rivosinc.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>
-Cc: Jingyu Li <joey.li@spacemit.com>,
-	Lv Zheng <lv.zheng@linux.spacemit.com>,
-	Zhijian Chen <zhijian@spacemit.com>,
-	iommu@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3JvLS9p"
+Received: by mail-pj1-f68.google.com with SMTP id 98e67ed59e1d1-34abc7da414so4106606a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Feb 2026 01:14:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770196468; x=1770801268; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uygNsZst5G+GJw8qWQt/teS7lcnQtwFewRjz4BVhmDU=;
+        b=T3JvLS9pLVDYgvxvWKRNcV1GY4Oo/3v8w5vpkRTM2if7WMdoPZg2Um/rzhhwrEKZB5
+         T/zcONGV4/Ptck+kS2bPqQslHhQmJfwZg3DFHptlFQKOvN3nH/9wxDw0MRiu7ay0dQW4
+         jKcrYqzdJgcvZEbOeF7ik0S8pqOJrqYIdC1jRy05OTNOOZ03FS+rJMIyiINQg88q2iYF
+         hLmhnu/nTIelcdMGdqkaJFgoeW2aRWdFauOzFLeTvZvVILe40xLdpK3F3RsINJllFZVJ
+         klJPcivZIs2rEsdF2ayu6qaZccQu0qSrD3/XSuFjfznGozDFP4STSPLYR31QESAZ2b57
+         Qxhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770196468; x=1770801268;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uygNsZst5G+GJw8qWQt/teS7lcnQtwFewRjz4BVhmDU=;
+        b=tr+xthKEhxzojYIk3/IpOUQZRtlprZ+ICOaZubuyrknxch61Y8kwcnppcPmbmHhHHz
+         nKfb36ezVzXAV2jNVDjZpaB6s5bFLM3KOMI38lZmyWN1sgw4tZFpt9zun/b46cfK5DMC
+         T//KMdXgj6Jwf/pjglU/jNQ8PZry0twfhxc0htFxkm6UYIxX/iwepdR7FEjph6LvLJMQ
+         xw/MD6sVzIPVeJaWMD4Exd5wkQZ/ldMHEwH13lkqNkwnW/Qk+vgOuDgo/Fr+aePBLAL2
+         9ppOUjpCTxdyBndD8gLQKaKbIHqJfWRF9ToYjVnXwJsPt+sHbQjvbJWhFn2uQQkNWMvy
+         sKng==
+X-Forwarded-Encrypted: i=1; AJvYcCXLXi5JNr1oDuTbGYqbz8JfxjV7jU+Xa+9Lic1I9XW6B64CjOPVkIyaZxOxoxlSRhAnFhQgtbGc3KqZrnsLImDS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnqjiWgekyQwXiy+hcS8uMoqHPy1kvcx3CkIMpiO9HV1/k/uYJ
+	w9yf9JTmTmrqarQsXGHCKEobch/tE+0GPHOE/RbhcB1kp5Q2BCIdXICh
+X-Gm-Gg: AZuq6aKfDplUfzBB98cANtdd1KDp6JGc5FDvgJ6yWAjpE8dMppE7lbtVxZ5NKa5duvz
+	Zy3l5BR79Kot6xYD1+ntl+JVsSHYYzh7qfyeWivTbmCJ5+dGt5ebpwzMGPsBitY5wZGxpqjjHAq
+	YYO//CItccILK1uTq1V3Cw6oOeZbC38+0q1JUqAU7RSUxp3XAA4Jr5CuaDDfTwlm9dgeYp7Xroc
+	tyiKbb+mKOD8YNgeyQ/lcjQWFbbWFnNqb6bUIeXchgbV15TaO8774TIlg2rakwCfnIdNGqgIEne
+	DZ1NEHNuztj6l8WHDFQ7H5yF8e5C38+Mm0xVfwyUu3P6mqLrCtOnQUlbhgd5i+rCo3d5Ft446oV
+	rrLq9TVi1pomx8sj0wLglIvNpn00hvO93WFIU83mzNE8fTFnQEZN67sreXtEZq4mcvySkk1c5Xh
+	HQzBtKALMI2LOEgbnIssWyyxUCKUAqp4d1TgFvZQ==
+X-Received: by 2002:a17:90b:548c:b0:343:684c:f8a0 with SMTP id 98e67ed59e1d1-354871a955cmr2463472a91.23.1770196468414;
+        Wed, 04 Feb 2026 01:14:28 -0800 (PST)
+Received: from lima-ubuntu.hz.ali.com ([47.246.98.212])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3548630ed2fsm1996984a91.16.2026.02.04.01.14.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Feb 2026 01:14:27 -0800 (PST)
+From: Qing Wang <wangqing7171@gmail.com>
+To: andrii.nakryiko@gmail.com
+Cc: acme@kernel.org,
+	andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev,
-	devicetree@vger.kernel.org
-Subject: [PATCH v3 8/8] perf vendor events riscv:: Add support for spacemit,riscv-iommu HPM aliasing
-Date: Wed,  4 Feb 2026 17:09:52 +0800
-Message-ID: <5242DDF0A783AF08+e141f1898581018f8dd0723cb5c870c23ec679d6.1770195980.git.lv.zheng@linux.spacemit.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1770195980.git.lv.zheng@linux.spacemit.com>
-References: <cover.1769562575.git.lv.zheng@spacemit.com> <cover.1770195980.git.lv.zheng@linux.spacemit.com>
+	martin.lau@linux.dev,
+	peterz@infradead.org,
+	sdf@fomichev.me,
+	song@kernel.org,
+	syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com,
+	wangqing7171@gmail.com,
+	yonghong.song@linux.dev
+Subject: Re: [PATCH] bpf/perf: Fix suspicious RCU usage in get_callchain_entry()
+Date: Wed,  4 Feb 2026 17:14:19 +0800
+Message-Id: <20260204091419.887114-1-wangqing7171@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <CAEf4BzYN33yQhO-tsF8pUWDMZoiLAXkV+Z1oP6fJkByocYcjpw@mail.gmail.com>
+References: <CAEf4BzYN33yQhO-tsF8pUWDMZoiLAXkV+Z1oP6fJkByocYcjpw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,266 +92,20 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
-X-QQ-XMAILINFO: NVJ0hJNx7N5S7OAqJS8spVOnE/fn5/CyBNG5bfTZdhkiCjkeFEV+k2Qf
-	OIEqjv2b8C6I+V/E+Wr5TZ98OYzGpvDMBQDmBIWcTgSL9yX0sUVFiFLaj4efiiN2Gj3KCxT
-	j/D4bMzORrXlmrKzTdUVaRX+5U6/tmYU0ux5qfWtLUYCFql5Q3Fx9885JJrH/x0bWAxX6j8
-	VMwYgITuseUqiLWOzL9Y75LoV757VwfKBv+tx5pof4ipGd/ua3bqhQjOKG6oDE+kApqfLo0
-	xq9JLL4lhRIBUSeD7ac37NtAPg0TKkzNEyfMyM85XRjGjISJNPSIM8Z3VXt1FAblg1q34Z/
-	9cyiKbnxmb3XrBJGoVwN3s3E9/wXCcRRB8Wbw4k26+/UOzSWriSJSHb74ghdKkOcRXLgZkw
-	dsrR4KaScs9f9VFoQYP0Zv3aqIXIV5fajjpW54zJxfklj061SMOn/hsgMYWdZ2m5srMuTm7
-	18ob+OgkIhYYAsF8dMpGh5lf5+RuOhiOqgtKPoof5NDdwujeHjOs3N6qhHgD/oOI21IFwbw
-	CDTNh7GwVxPuHvWW7Tsuq1FquAVPA7taMsZZjV1ZLB8pWRTCuvzoE4ZpiG4hJDQRSLYU2C4
-	KFFilk6gkcFS/m4oaNMpzgljsYADfxk1eZaJ11U2bJhL+qSw0au1TsHsZzuFYJjn1wat9Ah
-	zFFuflHrWnsewgd4EgDow2gXCmlm/2EZskIFTBXmRqaKi0P5riRbvrQR+JFb9wahXKUzp/W
-	cBMiqIhdXFGCjBKETfY7GCcKoQif0KPA8bcZ/1iQ/dnMQmE1/awu35jnOWi1iOjCv1S5x+H
-	BMRMlnqCWTk2q8MUZ2kBIxrbrjiFQPCdoHAUAhQaoxNSJwVxF74bsF5FDBkrqON50/1ZHGp
-	7rNlaoEjcvI4pv0i9l0n7Ne8ZBhlCY6iz5bECDET6hM7h9MOC6j5CHQ8rzaMhl3p/fjn4tH
-	6TleVyux1c0qO9OyivhpCweH32+dtZK8s2lc5TTRIwfiM6Cj2iNzz2ICC4HTF2pfz3UtUiv
-	ldxwAA5QSBtZSZ9mufeE0f+SvT1WgwAVf5uj22wWM7igIacI7pbMGPCbXSImJe5PHM/svlc
-	g==
-X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
-X-QQ-RECHKSPAM: 0
 
-Add JSON HPM event aliases for SpacemiT distributed IOMMU (T100) which is
-general and compatible for all SpacemiT RISC-V SoCs.
+On Wed, 04 Feb 2026 at 08:04, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> rcu_read_lock/unlock is not called when may_fault == false because in
+> that case BPF program is already running within rcu_read_lock/unlock
+> region. So I'm not sure this patch fixes anything really. And even
+> with trace_in, if we cann rcu_read_lock/unlock one extra time it
+> shouldn't be a problem, no?
 
-Signed-off-by: Lv Zheng <lv.zheng@linux.spacemit.com>
-Signed-off-by: Jingyu Li <joey.li@spacemit.com>
----
- MAINTAINERS                                   |   3 +
- .../arch/riscv/spacemit/iommu/sys/ioatc.json  |  30 ++++
- .../arch/riscv/spacemit/iommu/sys/ioats.json  | 163 ++++++++++++++++++
- 3 files changed, 196 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioatc.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioats.json
+Thanks for your review, I agree with you. My patch is incorrect and there was a patch series [0]
+to fix it.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7c50701b6001..4d91f99aa742 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22459,12 +22459,15 @@ K:	riscv
- 
- RISC-V IOMMU
- M:	Tomasz Jeznach <tjeznach@rivosinc.com>
-+M:	Lv Zheng <lv.zheng@linux.spacemit.com>
-+M:	Jingyu Li <joey.li@spacemit.com>
- L:	iommu@lists.linux.dev
- L:	linux-riscv@lists.infradead.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git
- F:	Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
- F:	drivers/iommu/riscv/
-+F:	tools/perf/pmu-events/arch/riscv/spacemit/iommu/
- 
- RISC-V MICROCHIP SUPPORT
- M:	Conor Dooley <conor.dooley@microchip.com>
-diff --git a/tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioatc.json b/tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioatc.json
-new file mode 100644
-index 000000000000..a16610ba2274
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioatc.json
-@@ -0,0 +1,30 @@
-+[
-+  {
-+    "EventName": "mtlb_lkp",
-+    "EventCode": "0x38",
-+    "BriefDescription": "IOATC main TLB (MTLB) lookups",
-+    "Unit": "spacemit_ioatc_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "mtlb_mis",
-+    "EventCode": "0x39",
-+    "BriefDescription": "IOATC main TLB (MTLB) misses",
-+    "Unit": "spacemit_ioatc_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "utlb_lkp",
-+    "EventCode": "0x3A",
-+    "BriefDescription": "IOATC micro TLB (uTLB) lookups",
-+    "Unit": "spacemit_ioatc_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "utlb_mis",
-+    "EventCode": "0x3B",
-+    "BriefDescription": "IOATC micro TLB (uTLB) misses",
-+    "Unit": "spacemit_ioatc_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  }
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioats.json b/tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioats.json
-new file mode 100644
-index 000000000000..e1fea4e8125c
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioats.json
-@@ -0,0 +1,163 @@
-+[
-+  {
-+    "EventName": "pri_rq",
-+    "EventCode": "0x10",
-+    "BriefDescription": "IOATS PCIe page request interface (PRI) requests",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "ptwc_rq",
-+    "EventCode": "0x11",
-+    "BriefDescription": "IOATS page table walk (PTW) cache requests",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "dtwc_rq",
-+    "EventCode": "0x12",
-+    "BriefDescription": "IOATS directory table walk (DTW) cache requests",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "dtwc_mis",
-+    "EventCode": "0x13",
-+    "BriefDescription": "IOATS directory table walk (DTW) cache misses",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "ptwc_mis",
-+    "EventCode": "0x14",
-+    "BriefDescription": "IOATS page table walk (PTW) cache misses",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "all_trans_rq",
-+    "EventCode": "0x15",
-+    "BriefDescription": "IOATS all translation requests",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "dtwc_lkp",
-+    "EventCode": "0x20",
-+    "BriefDescription": "IOATS directory table walk (DTW) cache lookups",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "s0_ptwc_lkp",
-+    "EventCode": "0x28",
-+    "BriefDescription": "IOATS s-stage level-0 PTW cache lookups",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "s0_ptwc_mis",
-+    "EventCode": "0x29",
-+    "BriefDescription": "IOATS s-stage level-0 PTW cache misses",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "s1_ptwc_lkp",
-+    "EventCode": "0x2A",
-+    "BriefDescription": "IOATS s-stage level-1 PTW cache lookups",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "s1_ptwc_mis",
-+    "EventCode": "0x2B",
-+    "BriefDescription": "IOATS s-stage level-1 PTW cache misses",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "s2_ptwc_lkp",
-+    "EventCode": "0x2C",
-+    "BriefDescription": "IOATS s-stage level-2 PTW cache lookups",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "s2_ptwc_mis",
-+    "EventCode": "0x2D",
-+    "BriefDescription": "IOATS s-stage level-2 PTW cache misses",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "s3_ptwc_lkp",
-+    "EventCode": "0x2E",
-+    "BriefDescription": "IOATS s-stage level-3 PTW cache lookups",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "s3_ptwc_mis",
-+    "EventCode": "0x2F",
-+    "BriefDescription": "IOATS s-stage level-3 PTW cache misses",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "g0_ptwc_lkp",
-+    "EventCode": "0x30",
-+    "BriefDescription": "IOATS g-stage level-0 PTW cache lookups",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "g0_ptwc_mis",
-+    "EventCode": "0x31",
-+    "BriefDescription": "IOATS g-stage level-0 PTW cache misses",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "g1_ptwc_lkp",
-+    "EventCode": "0x32",
-+    "BriefDescription": "IOATS g-stage level-1 PTW cache lookups",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "g1_ptwc_mis",
-+    "EventCode": "0x33",
-+    "BriefDescription": "IOATS g-stage level-1 PTW cache misses",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "g2_ptwc_lkp",
-+    "EventCode": "0x34",
-+    "BriefDescription": "IOATS g-stage level-2 PTW cache lookups",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "g2_ptwc_mis",
-+    "EventCode": "0x35",
-+    "BriefDescription": "IOATS g-stage level-2 PTW cache misses",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "g3_ptwc_lkp",
-+    "EventCode": "0x36",
-+    "BriefDescription": "IOATS g-stage level-3 PTW cache lookups",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  },
-+  {
-+    "EventName": "g3_ptwc_mis",
-+    "EventCode": "0x37",
-+    "BriefDescription": "IOATS g-stage level-3 PTW cache misses",
-+    "Unit": "spacemit_ioats_hpm",
-+    "Compat": "spacemit,riscv-iommu"
-+  }
-+]
--- 
-2.43.0
+    [0] https://lore.kernel.org/bpf/fb745675-e25c-4dcc-be4b-4a4411056755@linux.dev/T/#mc0fc5e0fec2e6456f72f402308fd4e397ba19d09
 
+Let's forget my patch.
+
+Thanks,
+Qing.
