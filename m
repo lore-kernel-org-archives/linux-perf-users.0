@@ -1,178 +1,125 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A93849C
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Feb 2026 00:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182A71B6D08
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Feb 2026 00:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770163465; cv=pass; b=WRuAl5nVu74YeRk52V+OqdVjfCQGLGI21VU353I9xtqDw+LjJQpTiHvz4j5rdeqAShJgGades6vIwhxmLxa0uCnr9Q+Y/7gvPobZWTH6xjeZQi408UgPc8BNaolM2KHEcuFA1Lpf2/fSgnYyv8fPjvH8HGHVXSCezPpqPR848Cs=
+	t=1770164676; cv=pass; b=P0tQUKzKZl+tB9xQLKzYkAhgWAgHS/odaBakg+6TKx60MFXGwtgYmJ9xY7U0uqwqJ2OK7XlnmA/2OTOzI96YY24yLRriMlaZ/CnP9g6kBtbyl3tE/mfT+02/N+YEvlCCen6w33CbNSiYCkFKdmbAiGjIpP6tqnjHGecgm2+6UqI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770163465; c=relaxed/simple;
-	bh=kc1jJFUYanm72nBVwKH4HomeAzrqvPYkmvnRxU+TcFk=;
+	s=arc-20240116; t=1770164676; c=relaxed/simple;
+	bh=0XowqUthzIp6AMwUt0j2ogPOeD4Ty13T4iN8EBzWpVk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K83rt9d7S6sWkV8PFEVNoKk9GE4ftm7/opAsy2sJYvyJEHNrZgWsGaa0CJkmtXrfD5TLfCc6mh0PtVPnIIxMMPiSet1fHttlKvppSgHw7G1ET/rVBfqKqdwsY7i4AFUIHMYfZ800qPRM6xge15PGNch2ioFCSo7uyDftShG+vgg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D2VSMOmA; arc=pass smtp.client-ip=209.85.216.49
+	 To:Cc:Content-Type; b=JxVbkVOwx6PjfEZFjIgsIncM3ESPfvJ51ehX+urxVWezn79p9bmDIFmKuPZF5nV3ShTGZ16JaswamGnSx/8VKFvWS+6qMLo5an8VmuvhRf9omqGi8Fo6Nc5R3xO8k9ajmL9oVCQOKSqsBSB+OMXsCt4iGQiWYbXQCABi5yC21AQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JR8iMIl3; arc=pass smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2VSMOmA"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3532aa9a77eso2890827a91.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Feb 2026 16:04:24 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770163464; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JR8iMIl3"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-352e3d18fa7so117856a91.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Feb 2026 16:24:34 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770164674; cv=none;
         d=google.com; s=arc-20240605;
-        b=DQacz7DJyMUqoKW8EkkG4+HhbJC6EoLf8RV6xiGB27whktxLl5BElaMsyLektkvsMf
-         lRh/LO7PggMVuHPURNBEm3gg96wO5WXyaHLi1S1DkhClGLXSYLcHEgUbN+yolhlBpOmc
-         qGvMCF8+4/NaZLi9TrebLPeM1q6Z40kak5ssDCBkbSX2f6RZ36dZ8k1cm1HX9qKj52CV
-         lS1DMa87Rw14F/XSOQpZldXdopRrSqAkKN6DWvpukuNDz+9iJbqUaclnLeY2QuPjOkBm
-         KuSGoswq3gxcUKtS2I5BhI5ach2n1wFTtZAhdW7MPft+zz6h8vrj4eicq2vZTmr2fKfE
-         JRzw==
+        b=Gcs7L/FW2iRNUIw4Tkz0muART86PWO2vJObxQB2k0GsNCFRENJpfIhr4J3jIilZgLq
+         29qC68qooDH07myhkgYOEHW1q+cXDXCPQSB9WPwEOCIFGF1M5gb8VYXMV8pF1psQ4Dd1
+         IsZpWXYU9Z8Foz7n15Yz3LQ2RM7O+/OW2IVIQ8mtAnpWhE9/yFVd30HsrdmOA0ocweTM
+         pYR/6HBzuYd1iHW5qYs4eH01cj3ry3WyaonUEREl0WcmMuW0cf7pU94zRafQ+ujCf6Rd
+         s7x0Sh9H2MkFiYLHOkmNt472YruUUdj12FkLHlnv/HgzNsMZ2Fw8yCKC9M4jYtBLmrSI
+         Qd0g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=tpXUMfuHceqRwFl5jbM1rv8f5sHVl9+U1rfTT6u6uw4=;
-        fh=y4Gbx/hpFFeP2jEJJzZuqjxoCQ92ZMjldlcvrGh7CqY=;
-        b=IDWUPF7WZbrmOx7vqAYG6rR7r6C9XJhMt07KzG2N9QLY6oJGZ/RshaXVyGqAl/t3wF
-         OHJCkD45ZF91n1q2VN5UoU1zENIK3GDyMh5RZlS7nBfzboWQd3HQ46b1KrvfEf5pNmI9
-         x3Z0R7zwdsb/J/ownndwhbSOuIf3iCFYOcCnxNUS6jcjgkrZSjyzE1s1KArUKR+yL7jU
-         NryTOMLJPgmhobXwC/P3v2k/mY2STf8Vk/d6EY4CmeSNOGmgjjm7od9KZjQQv/brQx9i
-         Ja++LVKvijO5Dm5oUHHSJDgrH1MCCm2RnjOob+bNtZopiggGGs/d0Eh/Xdbvym1gUkn9
-         v4BA==;
+        bh=0XowqUthzIp6AMwUt0j2ogPOeD4Ty13T4iN8EBzWpVk=;
+        fh=71g5FevR/q5sD/G2r8Zhn8Qg69TPGWAsbSPOcuhXwJQ=;
+        b=R/kCdHmXVLKGuGVa/oyTYRIC124XRomCZfGqFCPwngoyRMI5+fbhA3hL5+LOWMtgYX
+         Bcjg2rE5K1zHicua0ezUXX0ib9JYsopYS5KUVL/ZEhqkhyTPn+2plVvdP5e6M48Z1Q7f
+         s7UiCQWHbXPQvdFL3BbG6hoTnlMLKqA8DNdqd+xD+kIajRcuOlrAluby6tCQ2cF0aiBm
+         3/kDtPKem7w/ewSMY6fcrNP5fjYLbVGhWbqoQvWuKRKLGed1p9cpcmb3BGgdiHXSBYsH
+         7zQFpbIyeC9THGhGy0CTqmV3RRkCBCKr+po/K6bJxT4U8N/BIIRPycWDT5DX7XzpMmqJ
+         x9Lw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770163464; x=1770768264; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1770164674; x=1770769474; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tpXUMfuHceqRwFl5jbM1rv8f5sHVl9+U1rfTT6u6uw4=;
-        b=D2VSMOmAsHiahz4DbC3UFCG+y5QoGVop1AXBMbYN56JVPaSHEUsWtT7jvkNNHdf92f
-         h4fij5846cO/FW+kCCjzFeYVgnSz5VAxtelUcl+AHmw6JSlmlyICF1fnB/BJjyeih3dJ
-         L9MaVAiyluGLhjNz7DRBnNO2SlFV+j9sal3DpP2+WK06q1jwVj6l5UPbJIcfjUiczU18
-         9GTgmsUkdoBP7bC/XVPcQZ3dFk5eWrGhnWEInSuFgYaSX43C7cFSBxlt32kgF2CAw9Gp
-         /sRR2x9N/wSAy7Js+li4nTHct31MXLah8LEZRwABgYVNsauWwDmYtGV0VUIPzj9TyRGU
-         g1bA==
+        bh=0XowqUthzIp6AMwUt0j2ogPOeD4Ty13T4iN8EBzWpVk=;
+        b=JR8iMIl3U0QLAJyKUVSI8SE78JZXBqO3ZwkNDMikk42XvdutMrUbtTuqHeQXCgEJpn
+         Yh9qpWPDQcUwow4/yL3O1wz39crY9GYERS2Uq9SdPCpQLalcE0Ok6EsSqSE7Ix5NFI+U
+         lKyzxrAtB+gvfedB7O/Ja8cYPcuHFY3PDXJ/P62ioXTNKwEqvzud2/bxnItdrP5iLQnN
+         fMYa7bSuWAt2lS+HbwrTd8313SK7UUuIlFSaAwOHYNDbzyMFf69wRnJG5s+UUzDqXrrJ
+         02zNzivvAYjujv3X5+8GpGVMKXcKc3IWGnsY23f+FQapZniRBigGo0KfaXF28CsBcwbZ
+         FCmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770163464; x=1770768264;
+        d=1e100.net; s=20230601; t=1770164674; x=1770769474;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=tpXUMfuHceqRwFl5jbM1rv8f5sHVl9+U1rfTT6u6uw4=;
-        b=GkbfNIo6yQl5zeKJsU3QTw4aTE1c5X3XWyLSjyVomMgNbk8mDlVwUNPjwsWQYOjMmn
-         eC//rFrUgniV1a/d8YIB3Uys+/dBJej8M17zGAYirAYtGBQvfavjUd62XibY0ex0Qkmt
-         n7tpGIuAN1FHDtKguUtjCNLg0ss8/mdacSw3shAy5WXdR04C1wvH+/yL0H96HfWXhvI8
-         ZsP8U+a7wdds9GsgiRqQ/ZYgJU9OXlwtTn4pxt6Z3QQ88U9Fj2uOtM3NZIeZC39iJo2j
-         axedc001CQO/jfw6GVLeLNi/O3gYqnUHgauKS13Lxzt8VluMnN++O7T/2NbTg0PM597O
-         gnFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWwaVJVf57vNfWK5UTg5ffnjrhwHWQ4cnSCKaWsJ2ZxAILfVJ8CLtk5Chu3rFA9dvu4J9hPffcy9yK5qcNa3pUX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx38n/dqep0pTQBC0o2noLjA7Lu8ysnoeKF5pPdkiC0yCNIYX5d
-	2H4dSgNM+jhWNsTnLXPXOuoQFYXKgQVJrNBgaG9ii8547x4MONARf9GZWoc/xuO2nYXij/tGQk1
-	unnmeggPTt0uQwEw6clPdPmnNTOV3h7M=
-X-Gm-Gg: AZuq6aJByVFCUOSP89Ia3Nia5sn1vE9ouDUOa+qvNr/uEAphnRTIfHuvJBGp20EDFYP
-	8pXMI0fLNTfYsx0+7JYJE0um1H0Yn2slFmQQoxeRLpG+fzxEX8xJaj9ydyiqc83dtAZuIjRNa5c
-	lPdRczwTbuGZdcftSUTSklCioIoDGhA+Xtmd923gcpGlczAgmDRxMdLyzfmVbY3LaOkxtZpwVgb
-	sGgTyWEu24tndUzYMoebi+9gr7bJbONiIbucsrzAcBALvT2gC9OP/Dls45y7qHMgdWcQ357UOX6
-	IKHZX4tAeaE=
-X-Received: by 2002:a17:90b:3843:b0:340:c60b:f362 with SMTP id
- 98e67ed59e1d1-354870ae597mr1057131a91.6.1770163463573; Tue, 03 Feb 2026
- 16:04:23 -0800 (PST)
+        bh=0XowqUthzIp6AMwUt0j2ogPOeD4Ty13T4iN8EBzWpVk=;
+        b=t7AC94hZfd3mEyq4VmEO06TEsl3y9loK9ot/3zfhWb19ApAZ6wdvd4f2lDPo4XHiis
+         XsvmUVF0M6A1EOAsBWEFOjoDCdcwCiUrexCwYXwejRwWTLZiVR/cFIZfX+ixRIl0RZ9j
+         My53TcsnkKw6+P1DUdgL2i6+QIp13IcS07NuhP9nG7fgyGYhYNqU3rWAdua8irSHgjUZ
+         oMumU3sDFXtqDbLIEqjddQKwbHrG8kR/ALkCnex7AibYsPWBW7k7m6+YQWmpjnaO96Q0
+         DG6Fyiyxix6lcEL7IH515bcoerbD4u++sj/sy2XGuvD7/Q9mRyroAzEIQcrAHcl/s36O
+         ljlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWDLRiaqUrihhXdedZBo1U557bHORFjJx4PGxDAk1Nlfndu5XIKnS0H+1lB9VlYdJA0nPhPd84jhEb1hHjJRzUk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym1EbuN2eqJu13GrytdhRY9ES0ZG+l/dMk0A0q2y6BGJb1VHWH
+	hMwrRElZJtUj98HnBgVsvk1bUoP/g9piJ35nryH7um9mPtQTyovIeYPVw1n1xFBYNlyXkJr55HX
+	cmC+XRF2z4/ufe4KwOUDcO0D8Om/byjc=
+X-Gm-Gg: AZuq6aImoNpUtaWbhMQENHyW6qUBVwnXElc9BXr2+NrzkiMoYVcMvm3NTGS6dCQ7y3s
+	hZn9y0lCdy+Ae6b2hsoXWP6kCaG4BqAk1vSiS0c1F9o18OXUsLn9sjkwd04Vy47yRgLKZFJbNua
+	bGkQyfG2jZs/8zuDi4jSTCOfADj5A8SYBUAP5ubk9gtMnpxTLaaefkKr1yYyIXuanOLEEHZ9vaQ
+	jPcgodBST9F167g1w30PnMPpXBjm98JqlC6xjie7aFrf56R6VA4N3oR6zO6CdQhra5Hl4wcUTf+
+	2CbZlas3Xkw=
+X-Received: by 2002:a17:90b:3f45:b0:33b:dec9:d9aa with SMTP id
+ 98e67ed59e1d1-354871e45d1mr755074a91.25.1770164674418; Tue, 03 Feb 2026
+ 16:24:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260128061753.1857803-1-wangqing7171@gmail.com>
-In-Reply-To: <20260128061753.1857803-1-wangqing7171@gmail.com>
+References: <20260126074331.815684-1-chen.dylane@linux.dev>
+ <20260126074331.815684-3-chen.dylane@linux.dev> <20260128091033.GG3372621@noisy.programming.kicks-ass.net>
+ <CAEf4BzYpcgC0Pi0f_ScUavJ_Tw74PKULsbPdexKsWmb8RmxLKg@mail.gmail.com>
+ <20260130113150.GB166857@noisy.programming.kicks-ass.net> <CAEf4BzZNOqxhkjuePzeG=ivqBSHXnWzPLPPHJdoC91c+u-WjAg@mail.gmail.com>
+ <20260202195943.GI1282955@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260202195943.GI1282955@noisy.programming.kicks-ass.net>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 3 Feb 2026 16:04:11 -0800
-X-Gm-Features: AZwV_QjSU-xHFZaTZk9jkYzsceYdCAUetSnMDf2M6ltGkpGoSojCsn00RQszOxw
-Message-ID: <CAEf4BzYN33yQhO-tsF8pUWDMZoiLAXkV+Z1oP6fJkByocYcjpw@mail.gmail.com>
-Subject: Re: [PATCH] bpf/perf: Fix suspicious RCU usage in get_callchain_entry()
-To: Qing Wang <wangqing7171@gmail.com>
-Cc: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, peterz@infradead.org, acme@kernel.org, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, 
-	syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com
+Date: Tue, 3 Feb 2026 16:24:22 -0800
+X-Gm-Features: AZwV_QjfrlFp12nEWIHj1VnfqarPHZheZpDK4zQAPFm6dulsBZsc44JaGkW4kNM
+Message-ID: <CAEf4BzbTLqzcrbyfLmhB7b9XZHLPno+YfZtcw12ZbcwwaAP6yw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v8 2/3] perf: Refactor get_perf_callchain
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Tao Chen <chen.dylane@linux.dev>, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, song@kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 27, 2026 at 10:18=E2=80=AFPM Qing Wang <wangqing7171@gmail.com>=
- wrote:
+On Mon, Feb 2, 2026 at 11:59=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
 >
-> There is a patch intended to fix suspicious RCU usage in get_callchain_en=
-try(),
-> but it is incorrect. Specifically, rcu_read_lock()/rcu_read_unlock() is n=
-ot
-> called when may_fault =3D=3D false.
+> On Fri, Jan 30, 2026 at 12:04:45PM -0800, Andrii Nakryiko wrote:
+>
+> > > Also, there appears to be no buildid caching what so ever, surely tha=
+t
+> > > would help some.
+> >
+> > Jiri Olsa proposed caching build id per file or per inode some time
+> > back, there was vehement opposition to it. And doing some locked
+> > global resizable hash that might need to be used from NMI sounds
+> > horrible, tbh. So we have what we have today.
+>
+> See kernel/module/tree_lookup.c and include/linux/rbtree_latch.h :-)
 
-rcu_read_lock/unlock is not called when may_fault =3D=3D false because in
-that case BPF program is already running within rcu_read_lock/unlock
-region. So I'm not sure this patch fixes anything really. And even
-with trace_in, if we cann rcu_read_lock/unlock one extra time it
-shouldn't be a problem, no?
-
-pw-bot: cr
-
->
-> Previous discussion:
-> https://lore.kernel.org/all/CAEf4BzaYL9zZN8TZyRHW3_O3vbHc7On+NSunrkDvDQx2=
-=3DwwyRw@mail.gmail.com/#R
->
-> For perf's callchain, rcu_read_lock()/rcu_read_unlock() should be called =
-when
-> trace_in =3D=3D false.
->
-> Fixes: d4dd9775ec24 ("bpf: wire up sleepable bpf_get_stack() and bpf_get_=
-task_stack() helpers")
-> Reported-by: syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=3D72a43cdb78469f7fbad1
-> Tested-by: syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com
-> Signed-off-by: Qing Wang <wangqing7171@gmail.com>
-> ---
->  kernel/bpf/stackmap.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-> index da3d328f5c15..f97d4aa9d038 100644
-> --- a/kernel/bpf/stackmap.c
-> +++ b/kernel/bpf/stackmap.c
-> @@ -460,7 +460,7 @@ static long __bpf_get_stack(struct pt_regs *regs, str=
-uct task_struct *task,
->
->         max_depth =3D stack_map_calculate_max_depth(size, elem_size, flag=
-s);
->
-> -       if (may_fault)
-> +       if (!trace_in)
->                 rcu_read_lock(); /* need RCU for perf's callchain below *=
-/
->
->         if (trace_in) {
-> @@ -474,7 +474,7 @@ static long __bpf_get_stack(struct pt_regs *regs, str=
-uct task_struct *task,
->         }
->
->         if (unlikely(!trace) || trace->nr < skip) {
-> -               if (may_fault)
-> +               if (!trace_in)
->                         rcu_read_unlock();
->                 goto err_fault;
->         }
-> @@ -494,7 +494,7 @@ static long __bpf_get_stack(struct pt_regs *regs, str=
-uct task_struct *task,
->         }
->
->         /* trace/ips should not be dereferenced after this point */
-> -       if (may_fault)
-> +       if (!trace_in)
->                 rcu_read_unlock();
->
->         if (user_build_id)
-> --
-> 2.34.1
->
+Ah, neat idea. Each node is really two parallel nodes for each of the
+latched copies. TIL, good to know and thanks!
