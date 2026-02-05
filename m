@@ -1,177 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A075D34CDD;
-	Thu,  5 Feb 2026 01:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770256229; cv=none; b=Mh1ogF6W7TNX5CTPXQXsbPz4m4pmdX1kPhZcpVuzQGjWHj7EQJQWgepzBFpN8k0lt3S578O7+ifBZKRgMCaMepeDLYzYwjMueCu1km8kLLyfTItCE4BIxd+8hT9q7B10BKN088mCB02kP4XQPAgKI/Z9FS20WznGi90Rlhb3fks=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770256229; c=relaxed/simple;
-	bh=nPRY4vVJAIFccVMk8CH+5lvP9L8860L47h2sDG4AXlU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jr7oJU7yFoEQdzAUyD0Qf3GCMlmFKFXdUI8QaXRWmsDtfT+UemDL/rCNEUtRMAkzklNIx8KQN1k2xLiHFHjdLScl+z0EDMqmsQzqUm1/+bOVzv778Q1zAgi/LrcnTWVwN6v83GMgkqNse6QT+Y4UEiVuF7mf6PGtKK/Ag1c2YLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BCV+BkvT; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2879C265621
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Feb 2026 02:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770257498; cv=pass; b=raijXxPe+T8CRsNlanlg29dxe6Es2Czk6OXr5HK/RBAyLqvTUhDCxLArlVzQCn51M5p+HwduXkDwJ85MEB21hoGE0LA+YfXnvtRGcNE2cpu623Mf9cBKTH61bNiHPK3/lsyoILZRkkGWibW0BZgAwSvQ3FdJUhnkolGdN7MQN+E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770257498; c=relaxed/simple;
+	bh=LzenXCyNDGAV2/s4Mt5xg7gtxO2w2kJ2SKaLgFjq5Hg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ll5t7LvnB2UjvIZK1+bFxaO6ncfo6rw9Wo/EM7Vr7DzBJ4nOTrbtiHshDppVitcDUysssAuWiVVDv6LJ54s2CEMuuN+k+dzHwz8hfbGHlNh1fpwbe3uGnuuXYbQMqP/XgXKGiC8cqA3NLrHHgN+MXg5Dsxm8DMHxnVtshqeS/UQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=VpqndtIB; arc=pass smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BCV+BkvT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770256229; x=1801792229;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nPRY4vVJAIFccVMk8CH+5lvP9L8860L47h2sDG4AXlU=;
-  b=BCV+BkvT4+zh8KdA3jRaKRPp1F9W22R/0nq2T3ZbqCmXA1EAY8+jiE4A
-   FyVI3QaN9/iFqLE1UJn6EXtzF0XPKqV/rGPbktb1Qe/8NihQzBeHA1540
-   Plh5vqgzTy/jxuIWSL5hnHgtXIV4VfT7CUorxVfIg1EEWlalN9nmw8K5p
-   A3HpxeYAGwuXaUxIymmAUrjxxXw4sqctGzqhKXb7v+3/NVQJ07x3+IcwW
-   7PMrL8vTQpHgofwlmQktTXdwNya0CA0rTmnIWQp369hXLltxrHKpsKWhy
-   Qevrd21s6Bw/pmI3xF1s++y3IJie9GVp7YFktg8kFT9VN92WIxg95/tvk
-   g==;
-X-CSE-ConnectionGUID: JTiPRyX3TkWUZ7H7H7a++Q==
-X-CSE-MsgGUID: V74WsJkjTyKP7ASKH+rudQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="82190174"
-X-IronPort-AV: E=Sophos;i="6.21,273,1763452800"; 
-   d="scan'208";a="82190174"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 17:50:28 -0800
-X-CSE-ConnectionGUID: bzN0Ael8TmOEOtG8q/o2qg==
-X-CSE-MsgGUID: FxNw+gg/T9CLnkOK61wowA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,273,1763452800"; 
-   d="scan'208";a="209634401"
-Received: from unknown (HELO [10.238.0.190]) ([10.238.0.190])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 17:50:25 -0800
-Message-ID: <5a8b9593-d458-474d-b084-3c2374b1c039@linux.intel.com>
-Date: Thu, 5 Feb 2026 09:50:23 +0800
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VpqndtIB"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b8871718b05so63951166b.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Feb 2026 18:11:37 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770257496; cv=none;
+        d=google.com; s=arc-20240605;
+        b=TTIaTMGunGmhqjFiViqmBwhCDXrPA+VL0lMg9+BMl4RCDub1U3gxJC+akyCqIbL1oK
+         TbCoY7E7jViZcmulTJLp+IiPIFSesjajxEXacZAGIuAufMRd4ARSCLnosvqyY7/quPtQ
+         Cm8QAZA38RHw+OZBwuoAvomfeROVeSST/sDWyrOYyuEtqfYXmmAvcG+OzceK+8mUhmPm
+         WF0sISEBK7fyM3mkuFnEW5a91G+3NCZ3LoaGAQ8YLLMoa0ghyb2d/+pAdkN7tzcH2OIH
+         rZCv6GE1trGpDk0kiNJnShHpLnJOBs6+LSHGoc0AoN+B52TzscNN/CuFwH7IDX664HW/
+         1l4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=oXfwfxqJ3Ud1a18EjbgGs6RmrKLEcJt2awiaooMVBjk=;
+        fh=8XCDfIYmFHjs7hsNpB0wfXnNXkSsBUUYkkkTCF6/FAA=;
+        b=ZYWeneYqL1qNz6scjZXVaH572g6QG2RCrPNEQSEedy/YxYpvZtBVBoikmSwY6lQvJj
+         GWzQmBKJjT7CXy1D0jzhnVi7lYxNh2GRE3I9G62YXLNhNkOVL4KoHVHUzW4sDnmmq4As
+         t4aNWLWBlw3j7cCqZZ9OJCoPpVzI5VAqHe/6Y7vkpqi+znhOYqtJHk3ofOAH7d4sp+Ye
+         dsnLIh2qsmZmz2h29fDsNT5cKRKrTRc4XOrL+R5nDZsDn1D9TLmlnhHIJvOM+sTVxBUF
+         IVmsY2y3++eSI12vkNGufRIR/m2MMbBKF8z81+0cGW/5KA317ynA4A8BU0V/ihMJjJxP
+         blUw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1770257496; x=1770862296; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oXfwfxqJ3Ud1a18EjbgGs6RmrKLEcJt2awiaooMVBjk=;
+        b=VpqndtIBXgU0SG+aS6q7loT1IUfX1bDa9Y+L0UOEfh/utyPvXZp71jg92Xf4FwFZjr
+         RtvqWzeHTMoqKPKP+cbu06sL263lJSuq06xRjmF+suFgPk+EcBvvCnoPkTrg/S+fKjUO
+         wl8IM1zWj6llTjkyFIJB3rm6Fz1JfupYHuQ5g2emOAiy6RGVSs2sCR3MnUIBzXp5pdIb
+         nMSUCLSjj+6/WzHT/z59OOKUAwjWWe3yoyCj6Nl6gYmDuJMxa+qAjnz4ZlxgoeMB7Tn/
+         0Pes7Fijj1CCTPWiRXA8Cwlq+YvSyfOe04UhHBu6ili5n+mHozeJ/2ADUn6k68QcrWrg
+         5tZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770257496; x=1770862296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=oXfwfxqJ3Ud1a18EjbgGs6RmrKLEcJt2awiaooMVBjk=;
+        b=qAOqyuMJ7CYJ7FSwq597Rmz5Hj3xSCTAEd6OA1cnWta6bcFKYmSeexZuBBSV4a25CR
+         5dJZUtMB8owrpelGcyyqeIbdL1WH/0s733Ie06fC59nUsir7TvAAFD33f18XV5aEl2Gc
+         TxZZutNHnkppaFLSmvH6H9ik/2ZFeONxoRI4g4CT8eoSnOjNJK40vTCcE9LEYii+kZk6
+         mu8v529xxnFDpxXBrCCiaP/M1InI9tRF6oX3u54gg++7VXcWjhNTnPVDyef3LejSvtfF
+         z0k9+ICYH3nS4x7RScX1r+RWLQFR2TGY7la6a/mPc54cE2VCBsRfyLrwW/LPnJ42Tf+T
+         rIwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV061+ZthMRv1NWXn2Nj9W617T2c/DTYPga+0/cJCKpXlz1Jb1ejpX0J1xcesNptuGJ4dOHhBWaKj/i8ptg8irr@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhzNPujIDolsznMliBbX6FfwZI2ZGDTW/z/ks+cv7CjbjeL0+c
+	J0BFPO6JIUyVL88QXGtao3WS7hx7zqLeaz6uASSOBYFyfYbIvPlTnaSAAQ9o3pK2TvydN6+6MwP
+	rLpWwUK2u+fPMHC+R1i7IwRNFO1LES3o8OFE6Xt/9JQ==
+X-Gm-Gg: AZuq6aKoTq0Bwsik+6Tap9G9Y+Nak1bhRM3tx1i91WhjQyXZqEMsuckDuIWoDizEfcR
+	ePhbRAAc5oO4b/ZYcoa5ETfbULvl8qIumWTRWWSKlTbYDbVTk5iz+/ZE/tLq/UGJKOdWtKgDDLN
+	Q/USxRRdNFuH1xW7QDyhuRl5gIPPwsu4w/UauafJUxgHd23Rr7JPHTZmhztnMVH1VZlz1z7Hla4
+	QgbQFhiAM7WmdcUXjADJuyfOOhKzyMFXruQ0y8kcB3lvlKNYi6EyX4PUMxb7lzXpGi2vDCYmg==
+X-Received: by 2002:a17:907:26c9:b0:b87:892:f43b with SMTP id
+ a640c23a62f3a-b8e9f196585mr325916866b.42.1770257496389; Wed, 04 Feb 2026
+ 18:11:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [WARNING] WARNING in x86_pmu_stop() (arch/x86/events/core.c:1624)
- triggered by syzkaller repro
-To: =?UTF-8?B?5piv5Y+C5beu?= <shicenci@gmail.com>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "bp@alien8.de" <bp@alien8.de>, "acme@kernel.org" <acme@kernel.org>
-References: <PS1PPF7E1D7501F6302C4D63E37AB0D5FC5AB98A@PS1PPF7E1D7501F.apcprd02.prod.outlook.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <PS1PPF7E1D7501F6302C4D63E37AB0D5FC5AB98A@PS1PPF7E1D7501F.apcprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1769562575.git.lv.zheng@spacemit.com> <cover.1770195980.git.lv.zheng@linux.spacemit.com>
+ <9C0A2AD4850D179B+524146e74e808db90d5f28fcb6ee791cf1d1bfaa.1770195980.git.lv.zheng@linux.spacemit.com>
+ <p74snip7yykhogvzqld4gyjlygmd2z4kqnat7w3qj63fwebnmm@dlz6tloevgbs>
+In-Reply-To: <p74snip7yykhogvzqld4gyjlygmd2z4kqnat7w3qj63fwebnmm@dlz6tloevgbs>
+From: Zong Li <zong.li@sifive.com>
+Date: Thu, 5 Feb 2026 10:11:26 +0800
+X-Gm-Features: AZwV_QhMZOXglwbGVqgOIj-KY2N0eLcLOg3n2x9z4Uh395TNa1CEOvBa9sxLG3g
+Message-ID: <CANXhq0oi9nE7ffLGsz5j8GnC1UDTD-4bE4cantRjW2fXHYrjHA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/8] iommu/riscv: Add HPM support for performance monitoring
+To: Andrew Jones <andrew.jones@oss.qualcomm.com>
+Cc: Lv Zheng <lv.zheng@linux.spacemit.com>, Tomasz Jeznach <tjeznach@rivosinc.com>, 
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Jingyu Li <joey.li@spacemit.com>, 
+	Zhijian Chen <zhijian@spacemit.com>, iommu@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for reporting this issue. I would look at it later.
+On Thu, Feb 5, 2026 at 2:39=E2=80=AFAM Andrew Jones
+<andrew.jones@oss.qualcomm.com> wrote:
+>
+> How does this relate to
+>
+> https://lore.kernel.org/all/20250115030306.29735-1-zong.li@sifive.com/
+>
+> From a quick skim it looks like there's plenty of overlap.
+>
+> Thanks,
+> drew
+>
 
-On 2/4/2026 9:11 PM, 是参差 wrote:
-> Hi,
-> I’m reporting a reproducible WARNING observed in the x86 perf PMU stop path.
-> The WARNING is triggered by a syzkaller C reproducer that performs multiple perf_event_open() calls with high-frequency sampling settings and then exercises a workload that heavily hits perf/tracepoint paths (e.g., sched tracepoints). The kernel hits a WARN in x86_pmu_stop() while handling perf event throttling/overflow.
-> The WARNING report points to:
-> WARNING: arch/x86/events/core.c:1624 at x86_pmu_stop+0x247/0x260, CPU#0: syz.2.7419/25339
-> Call trace (trimmed to the perf-relevant part):
-> perf_event_throttle.part.0
-> __perf_event_account_interrupt
-> __perf_event_overflow
-> perf_swevent_overflow
-> perf_swevent_event
-> perf_tp_event
-> perf_trace_run_bpf_submit
-> perf_trace_sched_stat_runtime
-> ...
-> This suggests a possible state-machine inconsistency or corner-case interaction between the perf throttling/overflow handling and the x86 PMU stop path (x86_pmu_stop()), potentially triggered by an unusual perf_event_attr combination and high event rate.
-> Reproducer:
-> C reproducer: https://pastebin.com/raw/t9u91hQf
-> console output: https://pastebin.com/raw/XUw5zuQg
-> kernel config: https://pastebin.com/raw/dP93yBLn
-> Kernel:
-> git tree: torvalds/linux
-> kernel version: 6.19.0-rc7 #1 VOLUNTARY (QEMU Ubuntu 24.10)
-> HEAD commit:63804fed149a6750ffd28610c5c1c98cce6bd377
+Hi all,
+
+Thanks Andrew for bringing me here, and sorry for the long delay on
+the IOMMU PMU driver series.
+
+I=E2=80=99m currently working on the next version to incorporate the feedba=
+ck
+from my earlier series. The main goals are to decouple the IOMMU perf
+driver from the IOMMU driver itself, and to make it easier to add
+custom events.
+The implementation is almost done, but I=E2=80=99m still working on binding=
+  a
+name between the PMU driver with the IOMMU driver on PCIe and ACPI
+cases. This part is related to how custom events should be added.
+That said, I=E2=80=99m thinking that I could submit the current implementat=
+ion
+first, and then send a separate patch series later to handle the
+custom event support.
+
+Also, I=E2=80=99d like to mention that Yaxing has a similar implementation.=
+ We
+had some discussion about this last month.
+https://lore.kernel.org/linux-iommu/2ce9d8be-10b3-48dd-b99e-7358347fc171@bo=
+sc.ac.cn/
+
+I think I should be able to submit this next week.
+
+Thanks,
+
+
 >
->
->
-> EXT4-fs (loop2): mounting ext3 file system using the ext4 subsystem
-> EXT4-fs (loop2): 1 truncate cleaned up
-> EXT4-fs (loop2): mounted filesystem 00000000-0000-0000-0000-000000000000 r/w without journal. Quota mode: none.
-> ------------[ cut here ]------------
-> WARNING: arch/x86/events/core.c:1624 at x86_pmu_stop+0x247/0x260 arch/x86/events/core.c:1624, CPU#0: syz.2.7419/25339
-> CPU: 0 UID: 0 PID: 25339 Comm: syz.2.7419 Not tainted 6.19.0-rc7 #1 VOLUNTARY 
-> Hardware name: QEMU Ubuntu 24.10 PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> RIP: 0010:x86_pmu_stop+0x247/0x260 arch/x86/events/core.c:1624
-> Code: 4c 89 ef e8 9b 59 6e 00 e9 48 ff ff ff 4c 89 ef e8 2e 5a 6e 00 eb 85 4c 89 e7 e8 84 59 6e 00 e9 83 fe ff ff e8 6a 99 3e 00 90 <0f> 0b 90 e9 44 ff ff ff 4c 89 e7 e8 69 59 6e 00 eb 96 0f 1f 80 00
-> RSP: 0018:ffff88800bebe868 EFLAGS: 00010012
-> RAX: 000000000000797b RBX: ffff888010488000 RCX: ffffc90000390000
-> RDX: 0000000000080000 RSI: ffff88802e495640 RDI: 0000000000000002
-> RBP: 0000000000000000 R08: ffffffff87073701 R09: ffffffff8120c1a6
-> R10: 0000000000000001 R11: ffffffff86e3a6c7 R12: 0000000000000001
-> R13: ffff8880104881f8 R14: 0000000000000001 R15: 0000000000000000
-> FS:  00007f99e6c976c0(0000) GS:0000000000000000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000200000002000 CR3: 000000005f659000 CR4: 0000000000350ef0
-> DR0: 0000200000000080 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000600
-> Call Trace:
->  <TASK>
->  perf_event_throttle.part.0+0x89/0xf0 kernel/events/core.c:2682
->  perf_event_throttle kernel/events/core.c:2678 [inline]
->  perf_event_throttle_group kernel/events/core.c:2700 [inline]
->  __perf_event_account_interrupt+0x2a6/0x430 kernel/events/core.c:10258
->  __perf_event_overflow+0xb6/0xa00 kernel/events/core.c:10405
->  perf_swevent_overflow+0xac/0x150 kernel/events/core.c:10545
->  perf_swevent_event+0x14d/0x2e0 kernel/events/core.c:10583
->  perf_tp_event+0x3b7/0x810 kernel/events/core.c:11090
->  perf_trace_run_bpf_submit+0xef/0x180 kernel/events/core.c:11014
->  do_perf_trace_sched_stat_runtime include/trace/events/sched.h:553 [inline]
->  perf_trace_sched_stat_runtime+0x360/0x680 include/trace/events/sched.h:553
->  __do_trace_sched_stat_runtime include/trace/events/sched.h:576 [inline]
->  trace_sched_stat_runtime include/trace/events/sched.h:576 [inline]
->  update_se+0x39b/0x480 kernel/sched/fair.c:1159
->  update_curr+0x71/0x450 kernel/sched/fair.c:1209
->  put_prev_entity+0x97/0x1b0 kernel/sched/fair.c:5504
->  pick_next_task_fair+0xf7e/0x17b0 kernel/sched/fair.c:8949
->  __pick_next_task kernel/sched/core.c:5890 [inline]
->  pick_next_task kernel/sched/core.c:6426 [inline]
->  __schedule+0x740/0x1df0 kernel/sched/core.c:6809
->  preempt_schedule_common kernel/sched/core.c:7051 [inline]
->  __cond_resched+0x45/0x70 kernel/sched/core.c:7378
->  mutex_lock+0x75/0xe0 kernel/locking/mutex.c:287
->  ext4_mb_group_or_file fs/ext4/mballoc.c:5886 [inline]
->  ext4_mb_initialize_context+0x85e/0xcf0 fs/ext4/mballoc.c:5930
->  ext4_mb_new_blocks+0x603/0x3fc0 fs/ext4/mballoc.c:6304
->  ext4_alloc_branch fs/ext4/indirect.c:340 [inline]
->  ext4_ind_map_blocks+0x1635/0x20c0 fs/ext4/indirect.c:635
->  ext4_map_create_blocks fs/ext4/inode.c:615 [inline]
->  ext4_map_blocks+0xb51/0x1350 fs/ext4/inode.c:816
->  _ext4_get_block+0x1bb/0x550 fs/ext4/inode.c:916
->  ext4_block_write_begin+0x88a/0x1040 fs/ext4/inode.c:1203
->  ext4_write_begin+0x75f/0x11d0 fs/ext4/inode.c:1364
->  generic_perform_write+0x37d/0x800 mm/filemap.c:4314
->  ext4_buffered_write_iter+0x11a/0x430 fs/ext4/file.c:299
->  ext4_file_write_iter+0x560/0x1790 fs/ext4/file.c:723
->  new_sync_write fs/read_write.c:593 [inline]
->  vfs_write fs/read_write.c:686 [inline]
->  vfs_write+0xa66/0xe30 fs/read_write.c:666
->  ksys_write+0x120/0x240 fs/read_write.c:738
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xa9/0x320 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> RIP: 0033:0x7f99e822ebe9
-> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007f99e6c97038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 00007f99e8465fa0 RCX: 00007f99e822ebe9
-> RDX: 000000000208e24b RSI: 0000200000000340 RDI: 000000000000000a
-> RBP: 00007f99e82b1e19 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 00007f99e8466038 R14: 00007f99e8465fa0 R15: 00007ffc60f336c8
->  </TASK>
-> ---[ end trace 0000000000000000 ]---
->
-> Thanks
+> On Wed, Feb 04, 2026 at 05:09:01PM +0800, Lv Zheng wrote:
+> > From: Jingyu Li <joey.li@spacemit.com>
+> >
+> > Introduces perf-based HPM driver for RISC-V IOMMU, enabling performance
+> > monitoring capabilities.
+> >
+> > Note that the RISC-V IOMMU HPM module uses COUNTER_MAX-1 as a static
+> > counter index of HPMCYCLES, and 0~COUNTER_MAX-2 as the dynamic counter
+> > indexes of other HPMEVENTS in order to correctly index into IOHPMEVT an=
+d
+> > IOHPMCTR registers that have already been defined in the iommu-bits.h.
+> > However the users treat 0 as the index of HPMCYCLES and 1~COUNTER_MAX-1=
+ as
+> > the indexes of other HPMEVENTS, thus care should be taken in dealing wi=
+th
+> > counter indexes between userspace and kernel space.
+> >
+> > Signed-off-by: Jingyu Li <joey.li@spacemit.com>
+> > Signed-off-by: Lv Zheng <lv.zheng@linux.spacemit.com>
+> > Link: https://github.com/riscv-non-isa/riscv-iommu
+> > ---
+> >  drivers/iommu/riscv/Kconfig          |   9 +
+> >  drivers/iommu/riscv/Makefile         |   1 +
+> >  drivers/iommu/riscv/iommu-bits.h     |   6 +
+> >  drivers/iommu/riscv/iommu-hpm.c      | 843 +++++++++++++++++++++++++++
+> >  drivers/iommu/riscv/iommu-pci.c      |  13 +-
+> >  drivers/iommu/riscv/iommu-platform.c |   8 +-
+> >  drivers/iommu/riscv/iommu.h          |  42 ++
+> >  7 files changed, 919 insertions(+), 3 deletions(-)
+> >  create mode 100644 drivers/iommu/riscv/iommu-hpm.c
+> >
