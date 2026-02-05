@@ -1,36 +1,36 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9565C325727;
-	Thu,  5 Feb 2026 09:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434F032BF5D;
+	Thu,  5 Feb 2026 09:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770282678; cv=none; b=mwJRwFObFEWzYFeucBf8Lmn31rioMVjLrx5bBZcnsrocX5Oo28aCtS0aX9sDndq4/bIU9Rd+YjjZiSZQgkLV/ioc77UDDI1sOPLOiADzfyQZg5S4QTom6RTIdjNEFSs4dUkMPlzNw2+FyjamK8M+7DHbHc3Y+OQocovBs51kOho=
+	t=1770282686; cv=none; b=nGndrS5R2C3ARrxSgT1ikILMzdR43xE4Xty8r21uuQnhapBgfgQsegoxqf8XmbWA8B/qVv8rOaKuif+JibCujMrJrwbsykeEhfs8EM9AOrwkO4tytGy1/rYAZEIsEBjnfn2TGIR5pB5sb6vr/9fdsikxvon7phlbbvVMLMOG3A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770282678; c=relaxed/simple;
-	bh=NB0By9FN34hvS0Z5fUPzrGrRRmnQ7gNZuf24dtcutUw=;
+	s=arc-20240116; t=1770282686; c=relaxed/simple;
+	bh=pIk2X89F4crzsJrXqP6CAX+UtHyMm0jFHdU40TXN5/E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bd+uhqJ0xrR+/Ih0sQNlGUmOJgN1cD6tczzAu2/wqZl5JcoRQIu9pdklL7KxFVVgd5aQvL1kLOov/be+DTDpoXmi4u6qTdssffdWn++aWuK8eoY4u9iHGbsLdzuyG2HBAMWlEW9OX5o6cS3BtMj7kYIQ4LT8qrcUlPp6aZisTng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=oxhIMknM; arc=none smtp.client-ip=18.194.254.142
+	 MIME-Version; b=gQUDFqCmQAyzkLs0lOYMNvupcy4R+EW6PVMdm/e42MkBbNxoUXifXl2qNc48nKV5dr2teV9M7+8ZYbP5neOOzzi0c2c9UAX2TYK7Sb9qroxBNXEj99PDy4O0Yh2ap/jxC28ZrY/9ra0tnLeCwsLwZqPSW4JguoEWDO79AHkkIfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=qB4iHXAc; arc=none smtp.client-ip=54.204.34.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="oxhIMknM"
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="qB4iHXAc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1770282621;
-	bh=NolWR8JIBAdYnikugRoTc6MkkN9oNFAhxt9dq5W7BjA=;
+	s=mxsw2412; t=1770282630;
+	bh=vniV4R9laYPbty6apvE3yD0+y8jeoSXd7UsyQ/isW1s=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=oxhIMknMx2YVOm8VzLcA8EnxFmkSkqDFpcnOiQV73cb+zhIXn9QqypsAQLIFsJu0A
-	 6Xp5H/iZhBePU5eqLYh3T2J0aHsjV2GEj1OOIpkKIl/Gdsnn7ARJ/In037OQ/hDhVl
-	 AIAZrUnnD8GIE9wm1IcMGR8VGjKR1JisNqXGJrD0=
-X-QQ-mid: zesmtpgz4t1770282619t1b7f7520
-X-QQ-Originating-IP: 4xlMdgZm/qRXr0DGjUoqk+B9g6ZxuKZ+q/SLOnxKpyg=
+	b=qB4iHXAcLRHqGpSVy2pcnkNcTZ7l4vat0LrgwOXOh+TvOH2BonDsQP8+ifMtnOmxe
+	 Wrt3kGk5xGiLV7BeXL8N6W1PC3l8iIWw2duqFUrWXRpOUZiB3YY8WPngNUb8Kpp+5s
+	 QrAxD3jidtXAtCm8vMbqLYa9l9ImYzxCrCheQ3pg=
+X-QQ-mid: zesmtpgz1t1770282629t83d3aca8
+X-QQ-Originating-IP: 7TYxyNEsAJsJ+hmTN8eItU64xdUiHKZ8ogiEM2n3g4Y=
 Received: from SurfaceBook2-B.localdomain ( [101.70.125.34])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 05 Feb 2026 17:10:16 +0800 (CST)
+	id ; Thu, 05 Feb 2026 17:10:26 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 7761756182653473071
+X-BIZMAIL-ID: 16664678030210134894
 EX-QQ-RecipientCnt: 19
 From: Lv Zheng <lv.zheng@linux.spacemit.com>
 To: Tomasz Jeznach <tjeznach@rivosinc.com>,
@@ -52,12 +52,12 @@ Cc: Jingyu Li <joey.li@spacemit.com>,
 	linux-riscv@lists.infradead.org,
 	spacemit@lists.linux.dev,
 	devicetree@vger.kernel.org
-Subject: [PATCH v4 0/7] iommu/riscv: Add HPM support for RISC-V IOMMU
-Date: Thu,  5 Feb 2026 17:09:59 +0800
-Message-ID: <DACC013F46A47459+cover.1770281596.git.lv.zheng@linux.spacemit.com>
+Subject: [PATCH v4 1/7] iommu/riscv: Enable IOMMU DMA mapping support
+Date: Thu,  5 Feb 2026 17:10:24 +0800
+Message-ID: <F59F70CFAEDA41DE+ae78dbc5590f872a36eb4359bd451b99fc8553ff.1770281596.git.lv.zheng@linux.spacemit.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1769562575.git.lv.zheng@spacemit.com>
-References: <cover.1769562575.git.lv.zheng@spacemit.com>
+In-Reply-To: <cover.1770281596.git.lv.zheng@linux.spacemit.com>
+References: <cover.1769562575.git.lv.zheng@spacemit.com> <cover.1770281596.git.lv.zheng@linux.spacemit.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,111 +67,54 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
-X-QQ-XMAILINFO: OLsBWtCIHsg6jy1vFAM7i3sntcqk6iP6zXXdmx6q2+zK+K23BakH2/7q
-	trRKF2dBKBaGtASr4cqPfLwkI+TuKokgZi+t94tREZMyzZ5UbgeHw4iXamqnf9F8brZ8Ka8
-	a5HOMRY/ySEfXw2sKLoK6pqY/pjzHCEBr8nJtxz9e+OJ7NN3yqr7nu99f6jgcWsgyFUMIw8
-	Dou3HqBtQRXOl5kt6SzSS31qb+A4ne3wvCXqbYMeoHaC5ns0W3GVWWmk4Q/5mrSHTM2iiyX
-	Td13MTaTRaJTPfmE4//OJxTTvVztf6xVmNxKneoxz/VhWymuwWH12XVIcrGMDLHbBHgUlFy
-	7eQHy4OrT0H7kWmUUaITsudMz2CsIsCn3VCn82ffMBaWq7LzYP/kgSy7YXrKgZD+xkVwQUC
-	bRFpa02IhKuIb30iaiXNC6eISJllG47tqu0bJu0uA6JOZ844Rk3jmCdNNtfWIzV787scGMR
-	58vNc5j8KBHXyaMNm5/Ln6u7eDgQkA34fNGlLtDKAhgAsYjHJLS6ctiKnfRXItVjw0B+0je
-	PQwucgToj8R6IauD3aLqvQd+4UEoJuqNWH+tpb1jufKZj+V7Q4ojCWIDXnujz41v8CUqMQs
-	zHp4I6WPRRFRTCTd5YLoW48naEZJbkarSunZYs3ABKtjwhS2yslGzbtGDcTQET2+BYn3MKU
-	sLPpOPRayRfxSorDwmoSAedqhNNWqTrHX2/J8JKt2FZPs/zpDkZ2UM2WVLTppLqjz5uhR0i
-	9HuLRD9wKsEBDs3fJ+hmllYW08DaaCv1KYhMB4wBWsj2ieIDSEdDCmp3NwppZqe3RxaK7ek
-	YVm7bdSsOqRSp4Wh3r1xG074nlBqoSnCma8LsBm+RL6UeA16RxlTeM/0TtXMnWYVtHNUWD4
-	zWCJylBwlTL0jMzZWbYPgCS8m0yhnbXXgh8z8OXnGQV/qq1ZwfUxjL3FJW1hgBEvbPQFgjt
-	6jnYFyGb2ircQzDNkJmmRiUTKC2VZKuxCcZ4yHgQzU8uilcXGnjEJ4s3GU6scyi799LjG2j
-	SO8X0r9dH0kOH1Zykp7ufWtsV1Q1xpQJt2xCbT+dTA5XtQYh4UlpS3UShFrQIWFvjYtNi85
-	g==
-X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
+X-QQ-XMAILINFO: Mko2o32K24t8CiIMJ7u8eHzxs3hYHuHzb+tBM7zd/NHCFylz5qMvvRIL
+	bMHRhO9qIf8CIfOq8/xzmslogvRrvFTjST8L/i7pc2Isxiq2CvY2bciSj2sIRWYIbhpTmQs
+	pJTd8rbrlMFCwC+zwAYC0n2P+KqN8C2w3VH9rQU2yPNjgO8nybUyNzDbZDI3SPQCC8qYklX
+	IjWHnHdsDiuvFa4Qk2eBJknNaIg3G4Q9PdOnZy52zrIJAPXpkmiyGcWcUYGSSMQCbJ3t8/U
+	ICC5NjJbIhqAniajExB5y5usHFuSCQvMS+JKCX9lTXMx+ASxdVNcAqp5OKGEPo2Z8e2kUT5
+	zL863MOYmjvK20m62V8Jul6n+Z3FuxSrtzw61lMdbG4ke9WwoU7fPmTgozpRiS275wgK6P0
+	pRo4n579Bz52dMP3TKXf/EMDAaN3Dg6TVxuP+H0uHKGLvd7BSRt0bsM9l423OMiP6mBAjEH
+	UkbsaECBKCDidkRIalxj3pL5CTHUfq2v6i/fRtbwOI1ZdpL9Jhfi9sdeVNqAiPHGQti0Ntg
+	tl5TvaoIDBAG9YtHkkADbfwhmuIRgCrqddj25E5qgEP4Mq7aovYEjS7n5xL/VM2PpMJaxKo
+	NYsdNFyhT/XY+OSOCHjssRIgm8ke1g7hAn5XOoBS0yDheVZ6klo8UkgSVY2Gsi8KP0fOD6L
+	6JPY7ZMQPitzsFNqrVQocvKEMrj97yPTSGb7ZKyb4QedCb6hD+9zb5w4vvjlr5NZTMQUik7
+	Ujh3WjXf7cjLCgH15kULM+zwml1MzBuRNF87ioAEak/TeU+KIZc1qUn1NKdqJQuwJIC4rtD
+	8M3f9bopFJrtLw+MQjTN5m6lQYeA+QnXTEinaK1J8XEI4DQj5nLgWsXOgl1YPcldVSSyu6A
+	Z92przYSpk7ZS2KAG8/kF59PzBj1JhDMSUJFSOt0WOebzgiPBatwFHZFwux4TiF5hSVp7rW
+	sICo5lDxrDreR0DsKSTHu+MKU+K+ht2xaZ7+lNoGmrlB5RhsVN6Sy5oGukMZR3gMwirQnRW
+	3/0X11YRfat6L7vvvFHma6OT4OCHf+Q7/9aczBmw==
+X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
 X-QQ-RECHKSPAM: 0
 
-Includes HPM support for RISC-V IOMMU. The HPM hardware mechanism can be
-found in the recent announced SpacemiT SoCs (K3, V100), where T100
-(SpacemiT distributed IOMMU) is shipped. 
+From: Jingyu Li <joey.li@spacemit.com>
 
-Revisions:
-v1
- Initial release.
-v2 (sent as v1.1)
- Split and cleanup DT-bindings.
-v3
- 1. Refactor using vendor specific compatible.
- 2. Implement vendor events with a userspace identifier.
-v4
- 1. Drop ICVEC check which is not that usful as WSI device tree can use
-    only 1 vector for IOATS CIV/FIV/PIV/PMIV.
- 2. Solve DT binding check of "interrupts/maxItems" attribute.
- 3. Address Robin's comments for an old revision sent by "Zong Li":
-    https://lore.kernel.org/all/20250115030306.29735-1-zong.li@sifive.com/
- 4. Limit IOATC enumeration by referencing spacemit,riscv-iommu.
+Enables IOMMU DMA mapping support for RISC-V, so that DMACs can be tested
+with translation enabled.
 
-The tested result can be found as follows:
+Known Possible Issue:
+1. When CONFIG_IOMMU_DMA is enabled, on the tested Linux, RISC-V IOMMU is
+   lack of PCIe support, causing riscv_iommu_fault:522 in dealing with
+   NVMe PCIe devices.
 
- root@sdfirm:~# perf stat --timeout 5000 -a -e spacemit_ioats_hpm_00/dd_walk,config1=0x20c0010000000000/ dmatest; sleep 1
- [  145.630224] dmatest: Started 1 threads using dma0chan0
- [  145.644896] dmatest: dma0chan0-copy0: summary 1 tests, 0 failures 123.60 iops 123 KB/s (0)
+Signed-off-by: Jingyu Li <joey.li@spacemit.com>
+Signed-off-by: Lv Zheng <lv.zheng@linux.spacemit.com>
+---
+ drivers/iommu/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  Performance counter stats for 'system wide':
-
-                  3      spacemit_ioats_hpm_00/dd_walk,config1=0x20c0010000000000/                                      
-
-        0.193108000 seconds time elapsed
-
- root@sdfirm:~# echo dma0chan1 > /sys/module/dmatest/parameters/channel 
- [  327.001820] dmatest: Added 1 threads using dma0chan1
- root@sdfirm:~# perf stat --timeout 5000 -a -e spacemit_ioats_hpm_00/s_walk,config1=0x20c0011000000000/ dmatest; sleep 1
- [  484.037180] dmatest: Started 1 threads using dma0chan1
- [  484.048832] dmatest: dma0chan1-copy0: summary 1 tests, 0 failures 172.11 iops 172 KB/s (0)
-
-  Performance counter stats for 'system wide':
-
-                  6      spacemit_ioats_hpm_00/s_walk,config1=0x20c0011000000000/                                      
-
-        0.191970000 seconds time elapsed
-
- root@sdfirm:~# perf stat --timeout 5000 -a -e spacemit_ioatc_hpm_0003/tlb_mis,config1=0x20c0011000000000/ dmatest; sleep 1
- [  546.332494] dmatest: No channels configured, continue with any
- [  546.363062] dmatest: Added 1 threads using dma0chan1
- [  546.377994] dmatest: Started 1 threads using dma0chan1
- [  546.388376] dmatest: dma0chan1-copy0: summary 1 tests, 0 failures 213.94 iops 213 KB/s (0)
-
-  Performance counter stats for 'system wide':
-
-                  3      spacemit_ioatc_hpm_0003/tlb_mis,config1=0x20c0011000000000/                                      
-
-        0.225062000 seconds time elapsed
-
-Jingyu Li (2):
-  iommu/riscv: Enable IOMMU DMA mapping support
-  iommu/riscv: Add HPM support for performance monitoring
-
-Lv Zheng (5):
-  dt-bindings: iommu: Add spacemit/t100 features
-  iommu/riscv: Add vendor event support for RISC-V IOMMU HPM
-  spacemit/t100: Add global filter awareness for RISC-V IOMMU HPM
-  spacemit/t100: Add SpacemiT T100 IOATC HPM support
-  perf vendor events riscv:: Add support for spacemit,riscv-iommu HPM
-    aliasing
-
- .../bindings/iommu/riscv,iommu.yaml           |   53 +-
- MAINTAINERS                                   |    3 +
- drivers/iommu/Kconfig                         |    2 +-
- drivers/iommu/riscv/Kconfig                   |    9 +
- drivers/iommu/riscv/Makefile                  |    1 +
- drivers/iommu/riscv/iommu-bits.h              |   18 +
- drivers/iommu/riscv/iommu-hpm.c               | 1123 +++++++++++++++++
- drivers/iommu/riscv/iommu-pci.c               |   13 +-
- drivers/iommu/riscv/iommu-platform.c          |   12 +-
- drivers/iommu/riscv/iommu.h                   |   46 +-
- .../arch/riscv/spacemit/iommu/sys/ioatc.json  |   30 +
- .../arch/riscv/spacemit/iommu/sys/ioats.json  |  163 +++
- 12 files changed, 1464 insertions(+), 9 deletions(-)
- create mode 100644 drivers/iommu/riscv/iommu-hpm.c
- create mode 100644 tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioatc.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioats.json
-
+diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+index f86262b11416..34d8a792339f 100644
+--- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -151,7 +151,7 @@ config OF_IOMMU
+ 
+ # IOMMU-agnostic DMA-mapping layer
+ config IOMMU_DMA
+-	def_bool ARM64 || X86 || S390
++	def_bool ARM64 || X86 || S390 || RISCV
+ 	select DMA_OPS_HELPERS
+ 	select IOMMU_API
+ 	select IOMMU_IOVA
 -- 
 2.43.0
 
