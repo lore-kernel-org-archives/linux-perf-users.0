@@ -1,287 +1,175 @@
-Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C046298CAB
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Feb 2026 16:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49447423A6C
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Feb 2026 17:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.172
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770310760; cv=pass; b=RYAc4LNQ2IlANikHYvQR/O7BLokl1sGz/qNpN29Up3DdV5Iokn8ncdgZUZz/lHnnRcsrBbIXEkVzgSM+e1F1kFTERTa7dX2KyVozs+PD7hjpNrGzEtzLtBQ9ADkuV0tC3xhcw71UWnu6W/g08whb3TMSW3tLJJjxNaD29V3fHRE=
+	t=1770311269; cv=pass; b=Oz9lm9p3ommCvOGfEo6H21Y5wWtyWPzZrx3WkbJDGDHj0vAG/ehSFLI//V8tWPfZ0K0WtI5xGj2LoPQsXUCUTbG/w3Zi5SM0Zwi290fC7LWCJbuAC6LRuUEy3EVTVVKhmNeXS9UUGyqJz3uJLLdRbo6/ugLT5mEgr2Zhgt49wIQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770310760; c=relaxed/simple;
-	bh=UXt9LVz1kdx0CRTPWN+OX9MpAIzSGiixz98xzQMcuDc=;
+	s=arc-20240116; t=1770311269; c=relaxed/simple;
+	bh=wJUjVosdPoaexMQWFbWzBOvZc65QoaGkPE9wKPHfPAU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iJtKydjLVisQ5X2pJUs1B7fIbqQxTRBh84uztaQ2ANlVbyt0hCZNhDeplPbga0i90tpcSmBNGPx+vlkeXAaIOlaNcbluLXU93f0XhgHGMJHEzKTUjwghvd6m6D5Dah14uIeHiZeOhMVuPuMcRNSM7Qp20Moi/vMmLdFGZSoVssw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rOG0yKIk; arc=pass smtp.client-ip=74.125.82.43
+	 To:Cc:Content-Type; b=Pa2C914Wrj0p9SpYc25qt3rFQBdGnHXN4+CxFOlSR58vGpzQrmMp1zSyE07NRCF8nzkL+tuec+39RuwO4kVKjUGTbtjc6VI8il0pOJ8pguM3SSBaxJT4nzIjubGgPmVdnFVs81835IJfkE654x6gCbb23S5XRRNXqn6udL71ISc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t6o9Qrmk; arc=pass smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rOG0yKIk"
-Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-126ea4e9697so10074c88.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Feb 2026 08:59:20 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770310760; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t6o9Qrmk"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2a885af8ee7so90405ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Feb 2026 09:07:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770311268; cv=none;
         d=google.com; s=arc-20240605;
-        b=BN6iqOUcdAVLMmWuPiVOsDSdpkDdKSkc9EXgtrqoKZeL2oWhmcATepD19Ki0BPbfa+
-         wANM/rLRo/O43FOJD5l4ktF44Puc8siFtZ9y94gl7+UqcF8vmTOoRz9aP6Y6KsySYQ7n
-         V9tbVssgyJWAWv4FPGDKioRyMxr/IQBO5G6C/HMtLxRmSGzsx8oa1/+/l9ipdisozXzl
-         79clbW7fOAKWsTqmH4wZ2u6402B3AJcMEbqw+f1kvJIHovyUllJeI3CNYZpQHLzGvsS2
-         3YDWl0YEGuntlenjtK54a1wtv8mKuDbrMcEBMwkpmAufwRL0gUWAZslX3Np9dGe1gTkw
-         cV3g==
+        b=XXNS5oQTTMNJp61P+Gl9kKPCs70WAexVCcen5P3k939jhUxpAia7qllV8cEVurZJGI
+         Vl0wRqkmpOVqzNxBck3EBAZTxveQ24Gf/2aJPwUNsgu2sbRaKzkt5KrTvyhSaoMAlnME
+         fLhc1Jcl9iB8HiX3v29VhW5+A8i97OFC6DU8sRpvb9rtu9VH71rThnJROHT5hybUpJYo
+         myuyx70fBSKjI+IWPVH0cXPPiEwTPJxDSvCnAZcNcwBf57T5uszIvhgIlIoPRAifFWun
+         ZlslWDxNA3oqyObWPEyY/Oe3siKGVftJOHJBWVdDCg7ExCH9nl4wRw//pJNLcIZRFaDW
+         uTyw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=IH5kLy7d5c+JXGRDTc9qc+tjf9PpwnWEmoP9i/3+TsM=;
-        fh=fbLYvoud5j6yIUcs1XEh9HSeJmBTrpAGlb/xLNc/Ijc=;
-        b=Kr9RQ0lOjwhz9nPVRvm0MpGStpzUn0yssjCLvqqfkwXgzQ7vuNWO4hbs5qWm49mLI0
-         fPDX+BDnYvNpJU1qXLS1qRaUF/2mWvyilSm+/knRfb1CDHEaUUEHcfMyvL09WblFBfcP
-         ZYLdTUWo2WrvDUMuQNbGqDQsrYie0bWW8RgkjGFGcS0YQsoBRB/L3vM3flDjoyR5HdwA
-         0VMVRwPMZLtW8GuJFS47aKQCGkUMey7+10kUMmNiRuWvFAEGvXrqcWya9RDgIpzPmZso
-         1j3igi5kfc3+ZMtd0YgRt+jGbWmZo3LqoUuWRJEvqHmIzE26fhoE7PF89KJ+51VpVooC
-         G0TA==;
+        bh=R5c24g4KP4Wt1/ocPE7u7UxpNOgBwfFwhbdZbQP7sEw=;
+        fh=YhRQtDhdg7obqJeWa8x0cHQ3SkP44RPMS4W/DnKdpx0=;
+        b=iS3oZSEBQr8zeM+1GkkHrE2xSejtK4Q9yfZd3Fw/gNxURYeUMATgQovfNSzL1hwgWJ
+         vclmQSPStWjZTfawFPJGB71Bhnk/anrPUB2rbKx1TyUoMXj58CYPrpdlLeXDAkGqBZmm
+         uwWqMm7GDMySsf7oLT2u3S0CvIoI/vfM44p2eoPkDBsndSoY6e7kYNxOQw1B39AiB7Qi
+         iMqiJFslwGXp+0hx1NPJlQdIgUlWz8pyH1pbGgwFmkT1qK1WotgmjkTfRD5D/SplQsPt
+         SikukJ8RXV6sKcgMR/mhEY7uJytRHKLaSdy954T3rHBw3MB5c0fccbNBOU0KwFhA0TIX
+         Sv5g==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770310760; x=1770915560; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770311268; x=1770916068; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IH5kLy7d5c+JXGRDTc9qc+tjf9PpwnWEmoP9i/3+TsM=;
-        b=rOG0yKIkGP3HzZFVU/ignFkQZO7t7KKOjFTrYphG0654u7kGd52qCESpXyrBtz9/ha
-         rc7XVGtTiantn8I+eDdQhd63oGZK2l07xvVmDWHLZkivhIPyxG61hZ+xbTURVF5h/2W7
-         Nea0LrcqjbucrNWt4WZWEArG3hNewrCFkAR+O7Ws8hL2d4ZBHiZ+VtuUMhl2RabTrqJP
-         MzjWYd90XcOoVzc2S1gSH05qGCNYw8xho46qA1rvRXNz4+WaKeyoPzEotGgJYpV9SuhX
-         xEj+W6NYrfryOo6IrRDI+XmjBsJbaHhEnIO4tENI8XFqsTCCLV0b1IkR0bRfk6HODBgr
-         5VXA==
+        bh=R5c24g4KP4Wt1/ocPE7u7UxpNOgBwfFwhbdZbQP7sEw=;
+        b=t6o9QrmkuCEd4wL23K87+Xm9q8Gs69F7qUcQVKtwzCweMsQjGSpvMSKROg14qX5fV7
+         lzfSYHpKHKV7ESGgGatsnq2oDeX36gkTcbn+qsTVrEpa+LWXnZ5I4u+xiqnwQidxwAn2
+         xyMcTGlpNwfZz5h1wnc48pbUKz0Md4hZWg0E4BPYBmdL/tEcpXFIJU4xiXuFrFsyBUQQ
+         stJGc3vUdJBIsjJgI6ruPOuyhKPnsdhZ78U7gdwgh3YxlI2vT8WTYB6IbPGR47F6cQ/S
+         fxwnxgZRqpi1+EszSCzT0FZaAwEL1u2ZzLyFgs/CKVF4r2DQJjN1Ah1vaj4+n3NApBi3
+         GhLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770310760; x=1770915560;
+        d=1e100.net; s=20230601; t=1770311268; x=1770916068;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=IH5kLy7d5c+JXGRDTc9qc+tjf9PpwnWEmoP9i/3+TsM=;
-        b=L7hA/OGIuN5HkEa/33qEPfh/6jb9h+m5+w/+1FZh1f7F0guP8iZdX8Ynonx/JYCLzF
-         2U2WianfRXAJ93Ei2fSkdZ0cmHRFhV+xX+XH9Nxf+C66v9MH2e808vd5VOVU6bSkQQSR
-         iqPTeXFxYj9FYHe/hiZ3lmd7cYNnFS1kDupehjCyjo8c1b2AvHkmw2r3QJ26Q/aJh/ti
-         H0nhmAOyPXr1P1yzFiQYHqfKMOv+Zc2P7aIKPYnBbUZmvH6lRwunbUlJHXDXwzSP85YK
-         jWRR5Fdj8v2lkmrsoNfCgfM2XJAjeCNE+vCP136UvYE3/rEkIGGQtD7tgzwuA0cnbAVV
-         3mzA==
-X-Forwarded-Encrypted: i=1; AJvYcCWR7TbqQSpdphU9AJHLfAVkZ4TPGyytJ8JcFRFuDGmjPDQEFnVchfT3RWyq4gx7X+Zi9LLpIe65gQdUbiyBTat6@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxMJtf7egY7zhR5s6/BKj4jHHR8+F+qv9FkNJb5w5lLQ++y9PA
-	dB3/P8R7+Zzw0YTke+GJFvjAc1bMM/9zKF6C+sK5JzqePts4hdwk5AspvPZxnXr/C1c9sUOjFHV
-	F9tAPTJxhTs3F+2UytIzmJMk5Zsw9mu7M1iiY6zIW
-X-Gm-Gg: AZuq6aLyy4CEyaS46A+tS20XTgSTWdZHZiyjkwSumzT0PTrx7lJac/GA7g2HaifAfO/
-	a1fKHz9UkpXWtRTEoOh/r6WyFFEI+krsw5lFUcILmwhrTWLxqUVv1wyX8e8Iy/UI3kVDEB0u7B1
-	Z99H16SZU+K6wfauWlFPgEV2mhz02thfm0J2ARnHqd/X9/AqkrcVVQ377bbBca/NN/dvRL5gibm
-	8SSJZrTiOTUpO2IN5eVkbtswCdLkrbDO3qBxzzdKmxLM/0PiBjydiaP9fAOGneSPbcqQXVl/5Q0
-	jxS9vW7QmszzgY492C+9FVO2rNk1WEW4JK63
-X-Received: by 2002:a05:7022:e98e:b0:119:e55a:8084 with SMTP id
- a92af1059eb24-126fd248e83mr139970c88.1.1770310759312; Thu, 05 Feb 2026
- 08:59:19 -0800 (PST)
+        bh=R5c24g4KP4Wt1/ocPE7u7UxpNOgBwfFwhbdZbQP7sEw=;
+        b=wrj2KGooy1iKxU4RmxjVU4H+pNpD3nCjseJEjDxLdUXR52dH0CEEyQgSC4magzlDCh
+         KZf2A3+EnlHrMTkv+OeGAkuKjh9cX6esy7rjNOhWcWMMvhEbA7DIukiemgTO6raMFZ+o
+         KJx1ClgdPLgflW+M9RI+IBmUdsIa+nzV/wJ3MJD/4C1aYq8V4JrIA0qGpmVkh6MKka+L
+         /NtEZmiTJo20QkSCnAl/eSla2/gam9jF7vXXuohjJvgRPyhY9makNhEXdztHV1t4VCC6
+         bIK5yOwa0fqsFacaTkou8BbIHJUVLYhZftLPXYf/HXfRR9HDlG3Jqp5DeTo7VJleoI7Q
+         nmSA==
+X-Forwarded-Encrypted: i=1; AJvYcCXyNNZ1qE68kFL5OVnuUrVMfZOdWckpK9ouLjh9KIAUBqr+LjmlgtEU+v9lER/1Ok7Afyww9yd4TQWWk5/5T16m@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH7vxzlXgmn/dP4IHQlmn62DbKI40PKuZVgLQ3Os9vXYv/exV8
+	kaqcw+Bh/ZoQ94y8IU/Wcl37Giyk1YvOpb/fKlWtyi0YaUnvaMERfzHwfUEDpLHx2H2hELxUwd2
+	tNAoqSQrKcoJ55BZTpucoRBhv7ydAZiwjHNnqvx7yOX1y3wH67bTOnK0trFY=
+X-Gm-Gg: AZuq6aIBHntAjv4EiHcbnkc7GceB4r9YBnKusYjuhl4DWWKcdWBNHvN3UL3FwCqV/n/
+	/TW53ac+9x5wSVzuz21WixBBiUapUj13soBdi8LiCGRIz0dLBtqjmc/lp56Ne2GNA1qCfIbUdDo
+	mZsmYnvNngTozoYs1aVXxFVTKrbJdWQq+08Qsxz1FjvZP97TsnpOY9qNHtN56FzqJVTTe13J8xt
+	8bOIkmdUNmcCbRfIzw3cxGshcyhUmYlb4OJoFmeroxx2c/Ca+Zdbg3vLJMgo7S1pEJz/lScPq9I
+	TW2letsx9s4WovJiJqNkMhkLYA==
+X-Received: by 2002:a17:903:2ac7:b0:2a8:ffed:4663 with SMTP id
+ d9443c01a7336-2a94193ed57mr3591145ad.12.1770311267891; Thu, 05 Feb 2026
+ 09:07:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260205-perf_stat-v1-1-e433b0c918af@debian.org>
-In-Reply-To: <20260205-perf_stat-v1-1-e433b0c918af@debian.org>
+References: <20260204-perf_improve_log_for_open_event_failures-v1-1-150245792810@arm.com>
+ <CAP-5=fUQxuVK+6GObmqVdBmTLzu06FyNaLdLsW6tcgNv5=7gxw@mail.gmail.com> <20260205103036.GF3481290@e132581.arm.com>
+In-Reply-To: <20260205103036.GF3481290@e132581.arm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 5 Feb 2026 08:59:07 -0800
-X-Gm-Features: AZwV_QhoIfrDgqZTO2pTv8Wv4A4FDGqOWW6ME1W658Wh2_ZRGSJpgDMeqKYcLkM
-Message-ID: <CAP-5=fW2iUbaZRX789SaJNGXk1VhGg0igLukb6SAosKiA-f1tA@mail.gmail.com>
-Subject: Re: [PATCH] perf stat: Fix crash on arm64
-To: Breno Leitao <leitao@debian.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+Date: Thu, 5 Feb 2026 09:07:35 -0800
+X-Gm-Features: AZwV_QjD8Yd0BT18ZhnL_wg0tYTGJHiAsM_HZIAx4m0yXzZkE74awCvETKZ0ojw
+Message-ID: <CAP-5=fUwDRxEyEL5A44wAr2RwOhRN6x9ePntpTzWGThyHqFQiw@mail.gmail.com>
+Subject: Re: [PATCH] perf record: Make logs more readable for event open failures
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-team@meta.com, Denis Yaroshevskiy <dyaroshev@meta.com>
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 5, 2026 at 3:46=E2=80=AFAM Breno Leitao <leitao@debian.org> wro=
-te:
+On Thu, Feb 5, 2026 at 2:30=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
 >
-> Perf stat is crashing on arm64 hosts with the following issue:
+> On Wed, Feb 04, 2026 at 09:29:14AM -0800, Ian Rogers wrote:
 >
->         # make -C tools/perf DEBUG=3D1
->         # perf stat sleep 1
->         perf: util/evsel.c:2034: get_group_fd: Assertion `!(!leader->core=
-.fd)' failed.
->         [1]    1220794 IOT instruction (core dumped)  ./perf stat
+> [...]
 >
-> The sorting function introduced by commit a745c0831c15c ("perf stat:
-> Sort default events/metrics") compares events based on their individual
-> properties. This can cause events from different groups to be
-> interleaved, resulting in group members appearing before their leaders
-> in the sorted evlist.
+> > > This commit restores evsel__open_strerror() to generate a readable er=
+ror
+> > > message and print it out:
+>
+> > Lgtm and sorry for making things worse - I believe it was motivated by
+> > trying to avoid spammy warnings.
+> >
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+>
+> Thanks for review, Ian.
+>
+> Just wander if we can go a bit further.  My understanding is that now we =
+only
+> handle the special case of duplicate "cycles" naming on Arm/Arm64, it is
+> not necessarily to tolerate other failure cases.
+>
+> So could we report errors and directly bail out for other PMU event failu=
+re?
+> This somehow reverts to old neat log rather the duplicated error logs for
+> each events.  Something like:
+>
+> ---8<---
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 2584d0d8bc82..ca7d6805840a 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1404,10 +1404,21 @@ static int record__open(struct record *rec)
+>                         }
+>  #endif
+>                         if (report_error || verbose > 0) {
+> +                               evsel__open_strerror(pos, &opts->target, =
+errno, msg, sizeof(msg));
+>                                 ui__error("Failure to open event '%s' on =
+PMU '%s' which will be "
+>                                           "removed.\n%s\n",
+>                                           evsel__name(pos), evsel__pmu_na=
+me(pos), msg);
+> +
+> +                               /*
+> +                                * Only tolerate Arm cycle failures and b=
+ail out
+> +                                * on any other event failures.
+> +                                */
+> +                               if (report_error) {
+> +                                       rc =3D -errno;
+> +                                       goto out;
+> +                               }
+>                         }
+>
+>
+> If this is okay for you, I can send a updated patch.
 
-Hi, sorry for the issue. I can see what you're saying but why is this
-an arm64 issue? The legacy Default metrics are common to all
-architectures:
+My main concern is to not have a code path for ARM that we can't test
+on x86. Currently opening an uncore event with a core event on x86
+exercises same the cycles event problem as on ARM. The logic I worry
+about bit rotting is the evlist clean up, etc:
 https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/pmu-events/arch/common/common/metrics.json?h=3Dperf-tools=
--next
-
-> When the iterator opens events in list order, a group member may be
-> processed before its leader has been opened.
->
-> For example, CPU_CYCLES (idx=3D32) with leader STALL_SLOT_BACKEND (idx=3D=
-37)
-> could be sorted before its leader, causing the crash when CPU_CYCLES
-> tries to get its group fd from the not-yet-opened leader.
-
-Which metric is this?
-
-> Fix this by comparing events based on their leader's attributes instead
-> of their own attributes when the events are in different groups. This
-> ensures all members of a group share the same sort key as their leader,
-> keeping groups together and guaranteeing leaders are opened before their
-> members.
-
-This makes sense but I'm not understanding why this problem wasn't
-seen previously. I'm guessing that in a metric like
-backend_cycles_idle:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/pmu-events/arch/common/common/metrics.json?h=3Dperf-tools=
--next#n63
-```
-        "BriefDescription": "Backend stalls per cycle",
-        "MetricExpr": "stalled\\-cycles\\-backend / cpu\\-cycles",
-        "MetricGroup": "Default",
-        "MetricName": "backend_cycles_idle",
-        "MetricThreshold": "backend_cycles_idle > 0.2",
-        "DefaultShowEvents": "1"
-```
-The PMUs for cpu-cycles and stalled-cycles differ? This may mean we
-also need to be smarting in determining PMUs for legacy events.
-
-It'd be interesting to see what events are coming from the kernel, e.g.:
-```
-$ ls /sys/bus/event_source/devices/*/events
-/sys/bus/event_source/devices/cpu_atom/events:
-branch-instructions  cache-misses      instructions  ref-cycles
-topdown-fe-bound
-branch-misses        cache-references  mem-loads     topdown-bad-spec
-topdown-retiring
-bus-cycles           cpu-cycles        mem-stores    topdown-be-bound
-...
-```
-and the cpuid to match it up with the json.
-```
-$ perf stat -v sleep 1 2>&1 |head -1
-Using CPUID GenuineIntel-6-B7-1
-$ ./tools/perf/pmu-events/models.py x86 GenuineIntel-6-B7-1
-tools/perf/pmu-events/arch/
-alderlake
-```
-this information is in the verbose output too:
-```
-$ perf stat -vv sleep 1
-...
-------------------------------------------------------------
-perf_event_attr:
- type                             1 (PERF_TYPE_SOFTWARE)
- size                             136
- config                           0x2 (PERF_COUNT_SW_PAGE_FAULTS)
- sample_type                      IDENTIFIER
- read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
- disabled                         1
- inherit                          1
- enable_on_exec                   1
-------------------------------------------------------------
-sys_perf_event_open: pid 608809  cpu -1  group_fd -1  flags 0x8 =3D 7
-------------------------------------------------------------
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- size                             136
- config                           0xa00000001
-(cpu_atom/PERF_COUNT_HW_INSTRUCTIONS/)
- sample_type                      IDENTIFIER
- read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
- disabled                         1
- inherit                          1
- enable_on_exec                   1
-------------------------------------------------------------
-sys_perf_event_open: pid 608809  cpu -1  group_fd -1  flags 0x8 =3D 8
-...
-```
+t/tree/tools/perf/builtin-record.c?h=3Dperf-tools-next#n1422
+If your concern is log spam then we could by default make report_error
+true only when no other errors have been reported, but then we may go
+on to do the record and be missing removed events that weren't warned
+about unless you are in verbose mode.
+I think in your patch you'd need to save the errno value to avoid it
+being clobbered.
 
 Thanks,
 Ian
 
-> Reported-by: Denis Yaroshevskiy <dyaroshev@meta.com>
-> Fixes: a745c0831c15c ("perf stat: Sort default events/metrics")
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
-> Cc; linux-arm-kernel@lists.infradead.org
-> ---
->  tools/perf/builtin-stat.c | 26 +++++++++++++++++---------
->  1 file changed, 17 insertions(+), 9 deletions(-)
->
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index ab40d85fb1259..3a423ca31d8d3 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -1938,25 +1938,33 @@ static int default_evlist_evsel_cmp(void *priv __=
-maybe_unused,
->         const struct evsel *lhs =3D container_of(lhs_core, struct evsel, =
-core);
->         const struct perf_evsel *rhs_core =3D container_of(r, struct perf=
-_evsel, node);
->         const struct evsel *rhs =3D container_of(rhs_core, struct evsel, =
-core);
-> +       const struct evsel *lhs_leader =3D evsel__leader(lhs);
-> +       const struct evsel *rhs_leader =3D evsel__leader(rhs);
->
-> -       if (evsel__leader(lhs) =3D=3D evsel__leader(rhs)) {
-> +       if (lhs_leader =3D=3D rhs_leader) {
->                 /* Within the same group, respect the original order. */
->                 return lhs_core->idx - rhs_core->idx;
->         }
->
-> +       /*
-> +        * Compare using leader's attributes so that all members of a gro=
-up
-> +        * stay together. This ensures leaders are opened before their me=
-mbers.
-> +        */
-> +
->         /* Sort default metrics evsels first, and default show events bef=
-ore those. */
-> -       if (lhs->default_metricgroup !=3D rhs->default_metricgroup)
-> -               return lhs->default_metricgroup ? -1 : 1;
-> +       if (lhs_leader->default_metricgroup !=3D rhs_leader->default_metr=
-icgroup)
-> +               return lhs_leader->default_metricgroup ? -1 : 1;
->
-> -       if (lhs->default_show_events !=3D rhs->default_show_events)
-> -               return lhs->default_show_events ? -1 : 1;
-> +       if (lhs_leader->default_show_events !=3D rhs_leader->default_show=
-_events)
-> +               return lhs_leader->default_show_events ? -1 : 1;
->
->         /* Sort by PMU type (prefers legacy types first). */
-> -       if (lhs->pmu !=3D rhs->pmu)
-> -               return lhs->pmu->type - rhs->pmu->type;
-> +       if (lhs_leader->pmu !=3D rhs_leader->pmu)
-> +               return lhs_leader->pmu->type - rhs_leader->pmu->type;
->
-> -       /* Sort by name. */
-> -       return strcmp(evsel__name((struct evsel *)lhs), evsel__name((stru=
-ct evsel *)rhs));
-> +       /* Sort by leader's name. */
-> +       return strcmp(evsel__name((struct evsel *)lhs_leader),
-> +                     evsel__name((struct evsel *)rhs_leader));
->  }
->
->  /*
->
-> ---
-> base-commit: 5fd0a1df5d05ad066e5618ccdd3d0fa6cb686c27
-> change-id: 20260205-perf_stat-a0a2a37e21c5
->
-> Best regards,
-> --
-> Breno Leitao <leitao@debian.org>
->
+> Thanks,
+> Leo
