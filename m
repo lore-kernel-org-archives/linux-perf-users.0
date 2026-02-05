@@ -1,175 +1,213 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49447423A6C
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Feb 2026 17:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0A32F0678
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Feb 2026 17:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.178
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770311269; cv=pass; b=Oz9lm9p3ommCvOGfEo6H21Y5wWtyWPzZrx3WkbJDGDHj0vAG/ehSFLI//V8tWPfZ0K0WtI5xGj2LoPQsXUCUTbG/w3Zi5SM0Zwi290fC7LWCJbuAC6LRuUEy3EVTVVKhmNeXS9UUGyqJz3uJLLdRbo6/ugLT5mEgr2Zhgt49wIQ=
+	t=1770312890; cv=pass; b=MfjE8rDG0Lym/bwcoruAWXBDgs9B07bun9ndYeU3ygZnXjX4fA+5LAvII5z9fFrzlg7RBQAxuFV6ZpMydE3xlUMqdNR8xlJbGlCAeD9hevr2DDCejYd6jCoI3TlAhMrf4MvugAc4jNPYg3B029PQBE8oB5PI5WcrJs5eRKDCI70=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770311269; c=relaxed/simple;
-	bh=wJUjVosdPoaexMQWFbWzBOvZc65QoaGkPE9wKPHfPAU=;
+	s=arc-20240116; t=1770312890; c=relaxed/simple;
+	bh=tiPBdJU8rqA5vz1AM2s+q8CIEl6BnwyA+J7QRWGMVtg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pa2C914Wrj0p9SpYc25qt3rFQBdGnHXN4+CxFOlSR58vGpzQrmMp1zSyE07NRCF8nzkL+tuec+39RuwO4kVKjUGTbtjc6VI8il0pOJ8pguM3SSBaxJT4nzIjubGgPmVdnFVs81835IJfkE654x6gCbb23S5XRRNXqn6udL71ISc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t6o9Qrmk; arc=pass smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=iW6LwZkPBkVgfckkLRjIqZheJN9XJTd2gNjhAhkxJ9OkxITc/hDgAfGA5mU1NygxMJevuOiIlyrkdEgiBh66xM2XoEj7zxJjBxWwOWaSWaDE/GtCwXvYJzIOpDeXQTY8kZQKTJJD1Cv0m0fdytMptTzssdGd6oTNqdzCa3+/SLc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ocg/bHhn; arc=pass smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t6o9Qrmk"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2a885af8ee7so90405ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Feb 2026 09:07:48 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770311268; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ocg/bHhn"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-81f39438187so930700b3a.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Feb 2026 09:34:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770312889; cv=none;
         d=google.com; s=arc-20240605;
-        b=XXNS5oQTTMNJp61P+Gl9kKPCs70WAexVCcen5P3k939jhUxpAia7qllV8cEVurZJGI
-         Vl0wRqkmpOVqzNxBck3EBAZTxveQ24Gf/2aJPwUNsgu2sbRaKzkt5KrTvyhSaoMAlnME
-         fLhc1Jcl9iB8HiX3v29VhW5+A8i97OFC6DU8sRpvb9rtu9VH71rThnJROHT5hybUpJYo
-         myuyx70fBSKjI+IWPVH0cXPPiEwTPJxDSvCnAZcNcwBf57T5uszIvhgIlIoPRAifFWun
-         ZlslWDxNA3oqyObWPEyY/Oe3siKGVftJOHJBWVdDCg7ExCH9nl4wRw//pJNLcIZRFaDW
-         uTyw==
+        b=IqNs4s/eUBpz4MF8vxowcRYKCyMGuoG2dPw306H7Oqvt3iJ1iqcALaX2IiVIzTm7xV
+         jMppIY/6r2oZ4h7Dy4NiXnVJgUAedgN/x6AHqalPpoPmXvdZZINYdimKQ3q15DiVx8Tp
+         PrBQomFcN5/fJpYVLDW5sfDltNcZumq0lva2j+3I2+elsVQUHTzb+WHdXcQCFzujZ84Q
+         S7vEu43oGu6wes6a5NceHyr0JS9cndSUpQ0MnNowte7BHsSkiAIdZa7ZppUI+T9xv1+G
+         CCBZkIMRob3QZT0DybTOIxbWltEqedSnPDT76TK+Kpd8lgdpNdirGiVCZBKYyPsBqd0+
+         2PBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=R5c24g4KP4Wt1/ocPE7u7UxpNOgBwfFwhbdZbQP7sEw=;
-        fh=YhRQtDhdg7obqJeWa8x0cHQ3SkP44RPMS4W/DnKdpx0=;
-        b=iS3oZSEBQr8zeM+1GkkHrE2xSejtK4Q9yfZd3Fw/gNxURYeUMATgQovfNSzL1hwgWJ
-         vclmQSPStWjZTfawFPJGB71Bhnk/anrPUB2rbKx1TyUoMXj58CYPrpdlLeXDAkGqBZmm
-         uwWqMm7GDMySsf7oLT2u3S0CvIoI/vfM44p2eoPkDBsndSoY6e7kYNxOQw1B39AiB7Qi
-         iMqiJFslwGXp+0hx1NPJlQdIgUlWz8pyH1pbGgwFmkT1qK1WotgmjkTfRD5D/SplQsPt
-         SikukJ8RXV6sKcgMR/mhEY7uJytRHKLaSdy954T3rHBw3MB5c0fccbNBOU0KwFhA0TIX
-         Sv5g==;
+        bh=tUGmD83/1M22wWiyFrGsa2SWt3EM/PQmAOxBE61Ssdw=;
+        fh=dAcXKjovvjNNEJA34k8gWhoDNnnUkzvvFxU/gaY7IDw=;
+        b=geSkg3Zs9nXfwEe4aUFI7brC2ZStgBMU1///nPk1X186RbF0jQ4VFfVl4p3qVCTh7j
+         PZeLWh3cUgAiRGHTJ3CQcQoByNBSmc5H3EIRGTjnXLs55ZNNgYVvhHk4/tW9Ze1TJPaR
+         DH/u06bNwfaK+upqTzbHN/VLqnBPqalPwL+0Bh9K8SxTDevdw3GYkaZnCO0+ZVdjNJn+
+         9pDM3fBDFjLPJSN+Ecv09Ld7V0IaGht80OQZtyWP4skcSJ/bleWUG9HQa+Tzoa6VYcnR
+         Ax05VL7fXHTYi/6x5M6cI0VSTa2wQKNYowzF5DneUDxAlSLczh7B5tZuYoRMEdQLCFvB
+         ggBw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770311268; x=1770916068; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1770312889; x=1770917689; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=R5c24g4KP4Wt1/ocPE7u7UxpNOgBwfFwhbdZbQP7sEw=;
-        b=t6o9QrmkuCEd4wL23K87+Xm9q8Gs69F7qUcQVKtwzCweMsQjGSpvMSKROg14qX5fV7
-         lzfSYHpKHKV7ESGgGatsnq2oDeX36gkTcbn+qsTVrEpa+LWXnZ5I4u+xiqnwQidxwAn2
-         xyMcTGlpNwfZz5h1wnc48pbUKz0Md4hZWg0E4BPYBmdL/tEcpXFIJU4xiXuFrFsyBUQQ
-         stJGc3vUdJBIsjJgI6ruPOuyhKPnsdhZ78U7gdwgh3YxlI2vT8WTYB6IbPGR47F6cQ/S
-         fxwnxgZRqpi1+EszSCzT0FZaAwEL1u2ZzLyFgs/CKVF4r2DQJjN1Ah1vaj4+n3NApBi3
-         GhLQ==
+        bh=tUGmD83/1M22wWiyFrGsa2SWt3EM/PQmAOxBE61Ssdw=;
+        b=Ocg/bHhnoKTo4P3gVzeFf69ZOhmtx+AXD3Iwqfsk37JgRt84jBKdelAR9lbysPj6e6
+         ALrneHaD64/fXASv0+DvapeaMEFC5sPDNf7C7O65XqPOJrrSLiBJNaCei1WrdeEFVPyI
+         rQg69M4CJjt8Xd4M57u4p/cGXvh/tAERcBjoiznAWWlqJDWX3PZGH83H/NsG+TuASsd2
+         qsA37caEOvkjmJ+uou9sB73EeSr+GkSap4JY8E8y2CRgEKoYLH2AJl22v5PXcqpIgYip
+         I9gQQkeX6pM8xs+9wStwQo5tPthh9SruPoJrdgGH8jcpe21TyEf0aiTA9VJzgXzgHSXn
+         wK0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770311268; x=1770916068;
+        d=1e100.net; s=20230601; t=1770312889; x=1770917689;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=R5c24g4KP4Wt1/ocPE7u7UxpNOgBwfFwhbdZbQP7sEw=;
-        b=wrj2KGooy1iKxU4RmxjVU4H+pNpD3nCjseJEjDxLdUXR52dH0CEEyQgSC4magzlDCh
-         KZf2A3+EnlHrMTkv+OeGAkuKjh9cX6esy7rjNOhWcWMMvhEbA7DIukiemgTO6raMFZ+o
-         KJx1ClgdPLgflW+M9RI+IBmUdsIa+nzV/wJ3MJD/4C1aYq8V4JrIA0qGpmVkh6MKka+L
-         /NtEZmiTJo20QkSCnAl/eSla2/gam9jF7vXXuohjJvgRPyhY9makNhEXdztHV1t4VCC6
-         bIK5yOwa0fqsFacaTkou8BbIHJUVLYhZftLPXYf/HXfRR9HDlG3Jqp5DeTo7VJleoI7Q
-         nmSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXyNNZ1qE68kFL5OVnuUrVMfZOdWckpK9ouLjh9KIAUBqr+LjmlgtEU+v9lER/1Ok7Afyww9yd4TQWWk5/5T16m@vger.kernel.org
-X-Gm-Message-State: AOJu0YyH7vxzlXgmn/dP4IHQlmn62DbKI40PKuZVgLQ3Os9vXYv/exV8
-	kaqcw+Bh/ZoQ94y8IU/Wcl37Giyk1YvOpb/fKlWtyi0YaUnvaMERfzHwfUEDpLHx2H2hELxUwd2
-	tNAoqSQrKcoJ55BZTpucoRBhv7ydAZiwjHNnqvx7yOX1y3wH67bTOnK0trFY=
-X-Gm-Gg: AZuq6aIBHntAjv4EiHcbnkc7GceB4r9YBnKusYjuhl4DWWKcdWBNHvN3UL3FwCqV/n/
-	/TW53ac+9x5wSVzuz21WixBBiUapUj13soBdi8LiCGRIz0dLBtqjmc/lp56Ne2GNA1qCfIbUdDo
-	mZsmYnvNngTozoYs1aVXxFVTKrbJdWQq+08Qsxz1FjvZP97TsnpOY9qNHtN56FzqJVTTe13J8xt
-	8bOIkmdUNmcCbRfIzw3cxGshcyhUmYlb4OJoFmeroxx2c/Ca+Zdbg3vLJMgo7S1pEJz/lScPq9I
-	TW2letsx9s4WovJiJqNkMhkLYA==
-X-Received: by 2002:a17:903:2ac7:b0:2a8:ffed:4663 with SMTP id
- d9443c01a7336-2a94193ed57mr3591145ad.12.1770311267891; Thu, 05 Feb 2026
- 09:07:47 -0800 (PST)
+        bh=tUGmD83/1M22wWiyFrGsa2SWt3EM/PQmAOxBE61Ssdw=;
+        b=Kij3J48/6yMp2s6oQnHurATwzwmc1zxeu8isOztIxRsKbBCHwjAeUM0h3QRoOBWkcJ
+         hDn/ZFFv6b9trnQHyxuA9tq0ZcJKTPfijQXuAc25WQacvGd2ixsli0ABSPa7SHkieNED
+         jJPl1LKcFnCsCTHR6mT7jAzEWMRXOhIeIgoLePX03NVPZbIsTbMyW1HWyo9tqYCHsOP9
+         aJQtxu2EjT81ucf9RPvLlSNEAfnVCBei4OT/HNFTX/HiDWJOoI2xXYpnIz5fvp3Awvfh
+         WvLy8ciVE7UCTWmOL/hH4bDOAEOOyUQ4RWhpVwwaWhYo16fyQ81okIyQ7v74bs4w3i77
+         Pb4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVc6vyW9yxRa+NFkO6c8zdMj1JAyIqir9EW71Qu9SkDTvaJZMnV86FioNPEzVOzH1MMMRxjXGFuDX1QdN/e2eNw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyp5W6ilUOP6dTzpJKbfs27xSq40h3Q2wBvpds9v6pvg4bVRBYt
+	r3u1MiTNAWUx2/80ZfNgYsclR97DZucFr9D6NS97/o3QyL0cYe6BlNFMdbGLmdHW1uN9Zw5Jr7I
+	GXddVc3/ITfeFLgVF4ttQkY8jYT26M2Q=
+X-Gm-Gg: AZuq6aJbh5A+iG0q5VW9r1yN73WsqhSSwtTZc3WUwGkW8LDHEUHXu9BqcKCAp8dUs2O
+	KW23iq/apuMQcajEyF7wlBHJqE3b2ko4jmqIOCrBxcXDHze2gYjzMiNUc17djgDk1P1X5O4TV1u
+	8BdcrDlYdDIrFYVHeJmDYl2RP1K3X9TF7vRDpSm9ugbP+c2bpOj+Htb4kGl+9jjp+fGjE+oXyiW
+	aH4nbsKpud5alJRwkfRQfU/dY615c6BVM6ke1uTeA1Ptx6SLmrlwuAOhHrLiefcZAcQf6kmWgx/
+	kNTd0wTdgo4=
+X-Received: by 2002:a05:6a20:ce47:b0:366:14af:9bbb with SMTP id
+ adf61e73a8af0-393ad3a3e2cmr116924637.69.1770312889503; Thu, 05 Feb 2026
+ 09:34:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260204-perf_improve_log_for_open_event_failures-v1-1-150245792810@arm.com>
- <CAP-5=fUQxuVK+6GObmqVdBmTLzu06FyNaLdLsW6tcgNv5=7gxw@mail.gmail.com> <20260205103036.GF3481290@e132581.arm.com>
-In-Reply-To: <20260205103036.GF3481290@e132581.arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 5 Feb 2026 09:07:35 -0800
-X-Gm-Features: AZwV_QjD8Yd0BT18ZhnL_wg0tYTGJHiAsM_HZIAx4m0yXzZkE74awCvETKZ0ojw
-Message-ID: <CAP-5=fUwDRxEyEL5A44wAr2RwOhRN6x9ePntpTzWGThyHqFQiw@mail.gmail.com>
-Subject: Re: [PATCH] perf record: Make logs more readable for event open failures
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260126074331.815684-1-chen.dylane@linux.dev>
+ <20260126074331.815684-3-chen.dylane@linux.dev> <CAEf4BzYMJfQN+0SwzBM-DhREHwZ54TwA6GUtFv9=xret9pzXrQ@mail.gmail.com>
+ <bb62bd4f-199e-4907-817f-bc820c9198c9@linux.dev>
+In-Reply-To: <bb62bd4f-199e-4907-817f-bc820c9198c9@linux.dev>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 5 Feb 2026 09:34:35 -0800
+X-Gm-Features: AZwV_Qj3jY8w4GJmu6lbjxat_AMSsnStGDk7UPuuWob8Qge5D8J9zZs3xeUra9A
+Message-ID: <CAEf4BzZun3amXMpYdBPEy=qZwrY3ZjrKf_qc6tG-b4NJ=-AC7w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v8 2/3] perf: Refactor get_perf_callchain
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, song@kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 5, 2026 at 2:30=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+On Wed, Feb 4, 2026 at 10:16=E2=80=AFPM Tao Chen <chen.dylane@linux.dev> wr=
+ote:
 >
-> On Wed, Feb 04, 2026 at 09:29:14AM -0800, Ian Rogers wrote:
->
-> [...]
->
-> > > This commit restores evsel__open_strerror() to generate a readable er=
-ror
-> > > message and print it out:
->
-> > Lgtm and sorry for making things worse - I believe it was motivated by
-> > trying to avoid spammy warnings.
+> =E5=9C=A8 2026/2/4 09:08, Andrii Nakryiko =E5=86=99=E9=81=93:
+> > On Sun, Jan 25, 2026 at 11:45=E2=80=AFPM Tao Chen <chen.dylane@linux.de=
+v> wrote:
+> >>
+> >>  From BPF stack map, we want to ensure that the callchain buffer
+> >> will not be overwritten by other preemptive tasks and we also aim
+> >> to reduce the preempt disable interval, Based on the suggestions from =
+Peter
+> >> and Andrrii, export new API __get_perf_callchain and the usage scenari=
+os
+> >> are as follows from BPF side:
+> >>
+> >> preempt_disable()
+> >> entry =3D get_callchain_entry()
+> >> preempt_enable()
+> >> __get_perf_callchain(entry)
+> >> put_callchain_entry(entry)
+> >>
+> >> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> >> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> >> ---
+> >>   include/linux/perf_event.h |  5 +++++
+> >>   kernel/events/callchain.c  | 34 ++++++++++++++++++++++------------
+> >>   2 files changed, 27 insertions(+), 12 deletions(-)
+> >>
 > >
-> > Reviewed-by: Ian Rogers <irogers@google.com>
+> > Looking at the whole __bpf_get_stack() logic again, why didn't we just
+> > do something like this:
+> >
+> > diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+> > index da3d328f5c15..80364561611c 100644
+> > --- a/kernel/bpf/stackmap.c
+> > +++ b/kernel/bpf/stackmap.c
+> > @@ -460,8 +460,8 @@ static long __bpf_get_stack(struct pt_regs *regs,
+> > struct task_struct *task,
+> >
+> >          max_depth =3D stack_map_calculate_max_depth(size, elem_size, f=
+lags);
+> >
+> > -       if (may_fault)
+> > -               rcu_read_lock(); /* need RCU for perf's callchain below=
+ */
+> > +       if (!trace_in)
+> > +               preempt_disable();
+> >
+> >          if (trace_in) {
+> >                  trace =3D trace_in;
+> > @@ -474,8 +474,8 @@ static long __bpf_get_stack(struct pt_regs *regs,
+> > struct task_struct *task,
+> >          }
+> >
+> >          if (unlikely(!trace) || trace->nr < skip) {
+> > -               if (may_fault)
+> > -                       rcu_read_unlock();
+> > +               if (!trace_in)
+> > +                       preempt_enable();
+> >                  goto err_fault;
+> >          }
+> >
+> > @@ -494,8 +494,8 @@ static long __bpf_get_stack(struct pt_regs *regs,
+> > struct task_struct *task,
+> >          }
+> >
+> >          /* trace/ips should not be dereferenced after this point */
+> > -       if (may_fault)
+> > -               rcu_read_unlock();
+> > +       if (!trace_in)
+> > +               preempt_enable();
+> >
+> >          if (user_build_id)
+> >                  stack_map_get_build_id_offset(buf, trace_nr, user, may=
+_fault);
+> >
+> >
+> > ?
+> >
+> > Build ID parsing is happening after we copied data from perf's
+> > callchain_entry into user-provided memory, so raw callchain retrieval
+> > can be done with preemption disabled, as it's supposed to be brief.
+> > Build ID parsing part which indeed might fault and be much slower will
+> > be done well after that (we even have a comment there saying that
+> > trace/ips should not be touched).
+> >
+> > Am I missing something?
 >
-> Thanks for review, Ian.
+> Yes it looks good for bpf_get_stack, and I also proposed a similar
+> change previously. But Alexei suggested that we should reduce the
+> preemption-disabled section protected in bpf_get_stackid if we do like
+> bpf_get_stack. Maybe we can change it first for bpf_get_stack?
 >
-> Just wander if we can go a bit further.  My understanding is that now we =
-only
-> handle the special case of duplicate "cycles" naming on Arm/Arm64, it is
-> not necessarily to tolerate other failure cases.
->
-> So could we report errors and directly bail out for other PMU event failu=
-re?
-> This somehow reverts to old neat log rather the duplicated error logs for
-> each events.  Something like:
->
-> ---8<---
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 2584d0d8bc82..ca7d6805840a 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1404,10 +1404,21 @@ static int record__open(struct record *rec)
->                         }
->  #endif
->                         if (report_error || verbose > 0) {
-> +                               evsel__open_strerror(pos, &opts->target, =
-errno, msg, sizeof(msg));
->                                 ui__error("Failure to open event '%s' on =
-PMU '%s' which will be "
->                                           "removed.\n%s\n",
->                                           evsel__name(pos), evsel__pmu_na=
-me(pos), msg);
-> +
-> +                               /*
-> +                                * Only tolerate Arm cycle failures and b=
-ail out
-> +                                * on any other event failures.
-> +                                */
-> +                               if (report_error) {
-> +                                       rc =3D -errno;
-> +                                       goto out;
-> +                               }
->                         }
->
->
-> If this is okay for you, I can send a updated patch.
+> https://lore.kernel.org/bpf/20250922075333.1452803-1-chen.dylane@linux.de=
+v/
 
-My main concern is to not have a code path for ARM that we can't test
-on x86. Currently opening an uncore event with a core event on x86
-exercises same the cycles event problem as on ARM. The logic I worry
-about bit rotting is the evlist clean up, etc:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/builtin-record.c?h=3Dperf-tools-next#n1422
-If your concern is log spam then we could by default make report_error
-true only when no other errors have been reported, but then we may go
-on to do the record and be missing removed events that weren't warned
-about unless you are in verbose mode.
-I think in your patch you'd need to save the errno value to avoid it
-being clobbered.
+This is broken because we are still using trace after you re-enabled
+preemption. We need to keep preemption disabled until we copy captured
+stack trace data from ips into our own memory.
 
-Thanks,
-Ian
-
-> Thanks,
-> Leo
+>
+> >
+> > [...]
+>
+>
+> --
+> Best Regards
+> Tao Chen
