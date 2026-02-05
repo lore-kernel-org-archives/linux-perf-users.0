@@ -1,178 +1,306 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2879C265621
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Feb 2026 02:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60AD212554
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Feb 2026 02:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.129.124
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770257498; cv=pass; b=raijXxPe+T8CRsNlanlg29dxe6Es2Czk6OXr5HK/RBAyLqvTUhDCxLArlVzQCn51M5p+HwduXkDwJ85MEB21hoGE0LA+YfXnvtRGcNE2cpu623Mf9cBKTH61bNiHPK3/lsyoILZRkkGWibW0BZgAwSvQ3FdJUhnkolGdN7MQN+E=
+	t=1770257673; cv=pass; b=WGPs4OkCbwpWOvgUFWSKa7Pnut6Hq15EXQLhNdm8AFHaP4ndlLpBmSICvJjvs62JwDP9XjrLxX3wM8+rl5t1sulQGgTbtnMsyc1u7WO6rEaaVJwKbLz0R896vU/ltlKQR+HHikIUNccrZCrg6UqCUhNsfMN7MpGr1mII0ZicHkY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770257498; c=relaxed/simple;
-	bh=LzenXCyNDGAV2/s4Mt5xg7gtxO2w2kJ2SKaLgFjq5Hg=;
+	s=arc-20240116; t=1770257673; c=relaxed/simple;
+	bh=eaakX1+8OcipDdQQXrHzBK7Gy+7JgN/zV2K84QtPL64=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ll5t7LvnB2UjvIZK1+bFxaO6ncfo6rw9Wo/EM7Vr7DzBJ4nOTrbtiHshDppVitcDUysssAuWiVVDv6LJ54s2CEMuuN+k+dzHwz8hfbGHlNh1fpwbe3uGnuuXYbQMqP/XgXKGiC8cqA3NLrHHgN+MXg5Dsxm8DMHxnVtshqeS/UQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=VpqndtIB; arc=pass smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	 To:Cc:Content-Type; b=oZzjZfwhjKfzNsd28/XeKDB3tP0a7fgOT8SSr1SOwCCaAO2p0T3F7u9TO68ew81Rk5WaFeg3UpgIFPWI/kxQSRxjsWRWd4URz5VkeXOTW/FEIGV9p+gINSC51sWJ4Us4TggPsoqSjkYsAe3ptmirlOwfVmJWhyao2zzeLwRVMrw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fLkFF1tN; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=ScJc9dfl; arc=pass smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VpqndtIB"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b8871718b05so63951166b.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Feb 2026 18:11:37 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770257496; cv=none;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fLkFF1tN";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="ScJc9dfl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1770257671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hhr8vWIGYF1FOYr/E/NNfQt7aE42qa44oS7zq9va7TE=;
+	b=fLkFF1tNke+gz2YL1hfuD94kWsjnc9EgD/11Xd/k96QUiWqyXVqwbf4E8MI2W76eXr7ZGG
+	LGjmPx9RF9B/u/+qjzV6MLfR1CLlFDAnlwjA/E+9Jz+aOEDt2D9NSIVfw9btwpXFaX0DtE
+	jtFO6hpVcqboVkI9+fsvt4c0y9qF9uk=
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
+ [209.85.161.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-115-lGY0F6x_PxWodKyA9IeG0g-1; Wed, 04 Feb 2026 21:14:30 -0500
+X-MC-Unique: lGY0F6x_PxWodKyA9IeG0g-1
+X-Mimecast-MFC-AGG-ID: lGY0F6x_PxWodKyA9IeG0g_1770257670
+Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-66308f16ea1so1545643eaf.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Feb 2026 18:14:30 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770257669; cv=none;
         d=google.com; s=arc-20240605;
-        b=TTIaTMGunGmhqjFiViqmBwhCDXrPA+VL0lMg9+BMl4RCDub1U3gxJC+akyCqIbL1oK
-         TbCoY7E7jViZcmulTJLp+IiPIFSesjajxEXacZAGIuAufMRd4ARSCLnosvqyY7/quPtQ
-         Cm8QAZA38RHw+OZBwuoAvomfeROVeSST/sDWyrOYyuEtqfYXmmAvcG+OzceK+8mUhmPm
-         WF0sISEBK7fyM3mkuFnEW5a91G+3NCZ3LoaGAQ8YLLMoa0ghyb2d/+pAdkN7tzcH2OIH
-         rZCv6GE1trGpDk0kiNJnShHpLnJOBs6+LSHGoc0AoN+B52TzscNN/CuFwH7IDX664HW/
-         1l4A==
+        b=S1uASVzgSt9yXF/8yrNhBv/jnELFJa6k2dKIx2ipHaZgkacCYFmyTjaYNV2ZdLBGxm
+         9i9wlE6JrP1l4c9YGU4QcCRmIKfdCXYo2sbcpMjcoqCJ8eohXk1gv1xWexT03H3wAR3u
+         uFYD8kdnx3RSYUZPQImn4OuqKMgV5zk3PG+VYKxNFKyEpjtVb6S4ITghgCFfBBotoMer
+         Vb5+fYaQZfzYJmFXLumgRG7Bu4q4bK0o7+VPBCp1eUxmdnjZDipWeDfcTp7v9WptNXQ1
+         zvvjWeBR4iUkFbTp4qngUSmF0exe6z+FG6lxg5ERVBTumCMNLBJhf/3r8QqFgzqnNOyH
+         +COg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=oXfwfxqJ3Ud1a18EjbgGs6RmrKLEcJt2awiaooMVBjk=;
-        fh=8XCDfIYmFHjs7hsNpB0wfXnNXkSsBUUYkkkTCF6/FAA=;
-        b=ZYWeneYqL1qNz6scjZXVaH572g6QG2RCrPNEQSEedy/YxYpvZtBVBoikmSwY6lQvJj
-         GWzQmBKJjT7CXy1D0jzhnVi7lYxNh2GRE3I9G62YXLNhNkOVL4KoHVHUzW4sDnmmq4As
-         t4aNWLWBlw3j7cCqZZ9OJCoPpVzI5VAqHe/6Y7vkpqi+znhOYqtJHk3ofOAH7d4sp+Ye
-         dsnLIh2qsmZmz2h29fDsNT5cKRKrTRc4XOrL+R5nDZsDn1D9TLmlnhHIJvOM+sTVxBUF
-         IVmsY2y3++eSI12vkNGufRIR/m2MMbBKF8z81+0cGW/5KA317ynA4A8BU0V/ihMJjJxP
-         blUw==;
+        bh=hhr8vWIGYF1FOYr/E/NNfQt7aE42qa44oS7zq9va7TE=;
+        fh=LPRGDr5GRFmxCsOcp9l8FtH+PT8DqEpcIV/eHQGMKYQ=;
+        b=R9HlDPM7ErWBpeu0VG8UGMTDaBupEpFg2x4FmgyK1WTxtNqL8ZHHZvxC35QEKmYySN
+         FYlkXtJROPBK+L3IJXyG1XjyHb8e4EISLLx5rYzcNDPp1d4CxnUMW7qaYeH1tDNCdJVn
+         lOMIoisSOso4b2HK719dV2LH8+yXOLkDjdlb/exZCu1WmGfDj43IRxYkkPGvaxNgaTRh
+         MnKw36u3TR7ccHQFZAFM9Q7o0e7yEEmIQxVSrAbRcu+jCGs1ksiJlO5nW5uBtRoyYBK9
+         d3cemI65kIUvHw7txnq+Dm8HS5ZqSK32OI2vuOz8J9qLQVMvXwzhV0FsaQVXuQcvi0KV
+         asVw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1770257496; x=1770862296; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1770257669; x=1770862469; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oXfwfxqJ3Ud1a18EjbgGs6RmrKLEcJt2awiaooMVBjk=;
-        b=VpqndtIBXgU0SG+aS6q7loT1IUfX1bDa9Y+L0UOEfh/utyPvXZp71jg92Xf4FwFZjr
-         RtvqWzeHTMoqKPKP+cbu06sL263lJSuq06xRjmF+suFgPk+EcBvvCnoPkTrg/S+fKjUO
-         wl8IM1zWj6llTjkyFIJB3rm6Fz1JfupYHuQ5g2emOAiy6RGVSs2sCR3MnUIBzXp5pdIb
-         nMSUCLSjj+6/WzHT/z59OOKUAwjWWe3yoyCj6Nl6gYmDuJMxa+qAjnz4ZlxgoeMB7Tn/
-         0Pes7Fijj1CCTPWiRXA8Cwlq+YvSyfOe04UhHBu6ili5n+mHozeJ/2ADUn6k68QcrWrg
-         5tZg==
+        bh=hhr8vWIGYF1FOYr/E/NNfQt7aE42qa44oS7zq9va7TE=;
+        b=ScJc9dflOuXKPpcYveiAZrXfDZPopUsyUDF2pVeJUq7zk4Q+fDMbnv97752oD/Mr+k
+         kq8N7yyNnXmUXJTgHW2xyltqb22k7Koy+wjcnetfbcoWfgmk8YrgDzCR5dTDU8MPaSuQ
+         WiYSadrm9mOSMUHuI5juSnWiq4uaYSgIOoZYFHoY/JSWeYfiJ1vihZbeZYDFMlNBChw7
+         H+oIOKmzQwadVSkz+cCo8J2yzKR238cvovCg0EUr4O4KPyP5VZTMxfiE31bjvzGsbwDV
+         tOlTYWDIrUU8v91mFUZva+yiFls64DABlDS5D9cOdWltHwGCj/yTmUZJ8E+85JFdEeqN
+         Axrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770257496; x=1770862296;
+        d=1e100.net; s=20230601; t=1770257669; x=1770862469;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=oXfwfxqJ3Ud1a18EjbgGs6RmrKLEcJt2awiaooMVBjk=;
-        b=qAOqyuMJ7CYJ7FSwq597Rmz5Hj3xSCTAEd6OA1cnWta6bcFKYmSeexZuBBSV4a25CR
-         5dJZUtMB8owrpelGcyyqeIbdL1WH/0s733Ie06fC59nUsir7TvAAFD33f18XV5aEl2Gc
-         TxZZutNHnkppaFLSmvH6H9ik/2ZFeONxoRI4g4CT8eoSnOjNJK40vTCcE9LEYii+kZk6
-         mu8v529xxnFDpxXBrCCiaP/M1InI9tRF6oX3u54gg++7VXcWjhNTnPVDyef3LejSvtfF
-         z0k9+ICYH3nS4x7RScX1r+RWLQFR2TGY7la6a/mPc54cE2VCBsRfyLrwW/LPnJ42Tf+T
-         rIwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV061+ZthMRv1NWXn2Nj9W617T2c/DTYPga+0/cJCKpXlz1Jb1ejpX0J1xcesNptuGJ4dOHhBWaKj/i8ptg8irr@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhzNPujIDolsznMliBbX6FfwZI2ZGDTW/z/ks+cv7CjbjeL0+c
-	J0BFPO6JIUyVL88QXGtao3WS7hx7zqLeaz6uASSOBYFyfYbIvPlTnaSAAQ9o3pK2TvydN6+6MwP
-	rLpWwUK2u+fPMHC+R1i7IwRNFO1LES3o8OFE6Xt/9JQ==
-X-Gm-Gg: AZuq6aKoTq0Bwsik+6Tap9G9Y+Nak1bhRM3tx1i91WhjQyXZqEMsuckDuIWoDizEfcR
-	ePhbRAAc5oO4b/ZYcoa5ETfbULvl8qIumWTRWWSKlTbYDbVTk5iz+/ZE/tLq/UGJKOdWtKgDDLN
-	Q/USxRRdNFuH1xW7QDyhuRl5gIPPwsu4w/UauafJUxgHd23Rr7JPHTZmhztnMVH1VZlz1z7Hla4
-	QgbQFhiAM7WmdcUXjADJuyfOOhKzyMFXruQ0y8kcB3lvlKNYi6EyX4PUMxb7lzXpGi2vDCYmg==
-X-Received: by 2002:a17:907:26c9:b0:b87:892:f43b with SMTP id
- a640c23a62f3a-b8e9f196585mr325916866b.42.1770257496389; Wed, 04 Feb 2026
- 18:11:36 -0800 (PST)
+        bh=hhr8vWIGYF1FOYr/E/NNfQt7aE42qa44oS7zq9va7TE=;
+        b=fKABclVSGBgJnAHYkgvZtHpwc+dZif/HCMptfpCbStaoEQ2snPmQXkCVkau6XZNZ3d
+         bbLDDJrg1VygKG7b7xBu8H1XFFEA/dDRnY6F8szJqgh2Vakh8/8yCpg5uoB9xVVm3Rn9
+         q08Ytmqq67eRRrbElMjOSEbR86h1HVIOUlkvv086A6Uqrj5fe8/IfS/Aic/JzVyudUFF
+         06wSwNcYtMoe7g0APBwalDTfcIuE50JgKFzsW3Hx/beVD3xWgoBM+ecwu+Pp/BJkGfo9
+         b2l7kf/56C44fYCq4cOQXtnA0g41fMlmdjGzg3NQO+KwkQZcqa4DtUwutaSMiuaDwMNh
+         Hp+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXIJCg23NlLeBgniYk+ctY+OAwM+/73J7jiPizTmlWqFg3waPYGwZk36/nt8Zm0LwARWZX/qdTLOTJFK+aViAH6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc0uMXsudjOyTPbEdX+jE86CeuUFnb9vEdIMS4jdcTytTdb3vJ
+	K2qlTensBz5exMcx/9U+aUY7Zy3qiGdvXWz3j4I0eSonGYQOGWEZrzyOJ9aissfV//2eefPRJ1W
+	L/Uxn8zN/W/O2Rdk76XVe+661WXGRLMPCDrNsTTI4DO6brwDAdTJaMRbTBpbpApo/Ga6CNWzRiW
+	O87YBAdzmkdb7LUwNWezkaUhnxcC/ph10me7D5nYVDDpjKLQ==
+X-Gm-Gg: AZuq6aLBZS1sArVM3zl321EW5DbNffineYH+WTCHBHpIOkXI6bvR2t21GtZqi7qpUiB
+	U6zihKgqfOg5ME4WBDUETaXSzeZdcn/QPSWFgpBsqCkSaDTqhteahECsm8d9WSBiV2iZYLhmJGi
+	A5YE2JAxR8ugy/s9WX7e/HgcywQBCGPu8W6kzXMr/iXEJZg9Rnr+2bFwyQve1lWQp1kg8=
+X-Received: by 2002:a05:6820:f012:b0:65f:335d:e2ed with SMTP id 006d021491bc7-66a23a0ac81mr2399232eaf.74.1770257669556;
+        Wed, 04 Feb 2026 18:14:29 -0800 (PST)
+X-Received: by 2002:a05:6820:f012:b0:65f:335d:e2ed with SMTP id
+ 006d021491bc7-66a23a0ac81mr2399222eaf.74.1770257669159; Wed, 04 Feb 2026
+ 18:14:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1769562575.git.lv.zheng@spacemit.com> <cover.1770195980.git.lv.zheng@linux.spacemit.com>
- <9C0A2AD4850D179B+524146e74e808db90d5f28fcb6ee791cf1d1bfaa.1770195980.git.lv.zheng@linux.spacemit.com>
- <p74snip7yykhogvzqld4gyjlygmd2z4kqnat7w3qj63fwebnmm@dlz6tloevgbs>
-In-Reply-To: <p74snip7yykhogvzqld4gyjlygmd2z4kqnat7w3qj63fwebnmm@dlz6tloevgbs>
-From: Zong Li <zong.li@sifive.com>
-Date: Thu, 5 Feb 2026 10:11:26 +0800
-X-Gm-Features: AZwV_QhMZOXglwbGVqgOIj-KY2N0eLcLOg3n2x9z4Uh395TNa1CEOvBa9sxLG3g
-Message-ID: <CANXhq0oi9nE7ffLGsz5j8GnC1UDTD-4bE4cantRjW2fXHYrjHA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/8] iommu/riscv: Add HPM support for performance monitoring
-To: Andrew Jones <andrew.jones@oss.qualcomm.com>
-Cc: Lv Zheng <lv.zheng@linux.spacemit.com>, Tomasz Jeznach <tjeznach@rivosinc.com>, 
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Jingyu Li <joey.li@spacemit.com>, 
-	Zhijian Chen <zhijian@spacemit.com>, iommu@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	spacemit@lists.linux.dev, devicetree@vger.kernel.org
+References: <20260203141608.14128-1-qzhao@redhat.com> <9d7eb5cf-e998-4b77-9b8d-7f0ff6b2da36@linaro.org>
+In-Reply-To: <9d7eb5cf-e998-4b77-9b8d-7f0ff6b2da36@linaro.org>
+From: Qiao Zhao <qzhao@redhat.com>
+Date: Thu, 5 Feb 2026 10:14:18 +0800
+X-Gm-Features: AZwV_QiL-D4Skszb4fy8oKYjHx3iM1u38Bn0nltd8KoVcdZ1UGdLSP3e5GeNF0o
+Message-ID: <CAATMXfm88MZ3Fhc0upRQ_5D2Vy+g8CscVAwhfY7nbM9oX93Qvw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf tests: mmap: skip rdpmc tests when sysfs disabled
+To: James Clark <james.clark@linaro.org>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org, leo.yan@linux.dev, 
+	namhyung@kernel.org, mpetlan@redhat.com, acme@kernel.org, 
+	vincent.weaver@maine.edu
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 5, 2026 at 2:39=E2=80=AFAM Andrew Jones
-<andrew.jones@oss.qualcomm.com> wrote:
->
-> How does this relate to
->
-> https://lore.kernel.org/all/20250115030306.29735-1-zong.li@sifive.com/
->
-> From a quick skim it looks like there's plenty of overlap.
->
-> Thanks,
-> drew
->
+Hi James,
 
-Hi all,
+Thanks for the review and the question.
 
-Thanks Andrew for bringing me here, and sorry for the long delay on
-the IOMMU PMU driver series.
+I did try modifying the check according to your suggestion, i.e. changing
+the condition like:
++      if (!rdpmc_supported && (pc->cap_user_rdpmc || pc->index)) {
+However, with this change the tests regress on ARM, the results are:
+--- start ---
+User space counter reading 1
+User space counter reading for PMU armv8_pmuv3_0
+User space counter reading for PMU armv8_pmuv3_0 [Failed unexpected
+unsupported counter access 1]
+---- end ----
+126.4: User space counter disabling instructions                     : FAIL=
+ED!
+--- start ---
+User space counter reading 0
+User space counter reading for PMU armv8_pmuv3_0
+User space counter reading for PMU armv8_pmuv3_0 [Failed unexpected
+unsupported counter access 1]
+---- end ----
+126.5: User space counter disabling cycles                           : FAIL=
+ED!
 
-I=E2=80=99m currently working on the next version to incorporate the feedba=
-ck
-from my earlier series. The main goals are to decouple the IOMMU perf
-driver from the IOMMU driver itself, and to make it easier to add
-custom events.
-The implementation is almost done, but I=E2=80=99m still working on binding=
-  a
-name between the PMU driver with the IOMMU driver on PCIe and ACPI
-cases. This part is related to how custom events should be added.
-That said, I=E2=80=99m thinking that I could submit the current implementat=
-ion
-first, and then send a separate patch series later to handle the
-custom event support.
+On ARM, cap_user_rdpmc represents a PMU capability and may remain
+set even when user rdpmc access is disabled via sysfs/sysctl. In that case
+the mmap page reports: cap_user_rdpmc =3D 1 and index =3D 0, which is an
+expected and valid state when rdpmc is disabled.
+The intention of the existing check: if (!rdpmc_supported &&
+pc->cap_user_rdpmc && pc->index) is only to catch the inconsistent case
+where rdpmc is reported as unsupported, but the mmap page still exposes
+a fully usable rdpmc state (i.e. both capability and a valid PMC index). Th=
+is
+avoids flagging the ARM case above while still detecting real inconsistenci=
+es.
 
-Also, I=E2=80=99d like to mention that Yaxing has a similar implementation.=
- We
-had some discussion about this last month.
-https://lore.kernel.org/linux-iommu/2ce9d8be-10b3-48dd-b99e-7358347fc171@bo=
-sc.ac.cn/
-
-I think I should be able to submit this next week.
+With the current logic, the tests now either pass or are skipped as expecte=
+d
+on ARM, and there is no behavior change observed on x86_64.
 
 Thanks,
+Qiao
 
-
+On Wed, Feb 4, 2026 at 5:40=E2=80=AFPM James Clark <james.clark@linaro.org>=
+ wrote:
 >
-> On Wed, Feb 04, 2026 at 05:09:01PM +0800, Lv Zheng wrote:
-> > From: Jingyu Li <joey.li@spacemit.com>
+>
+>
+> On 03/02/2026 2:16 pm, Qiao Zhao wrote:
+> > Some architectures control user-space rdpmc access via sysfs or sysctl,
+> > for example /proc/sys/kernel/perf_user_access on arm64/riscv or the
+> > rdpmc attribute under event_source devices on x86_64.
 > >
-> > Introduces perf-based HPM driver for RISC-V IOMMU, enabling performance
-> > monitoring capabilities.
+> > The mmap-based rdpmc tests currently assume rdpmc availability purely
+> > based on perf_event configuration, which leads to false failures when
+> > the system globally disables rdpmc access.
 > >
-> > Note that the RISC-V IOMMU HPM module uses COUNTER_MAX-1 as a static
-> > counter index of HPMCYCLES, and 0~COUNTER_MAX-2 as the dynamic counter
-> > indexes of other HPMEVENTS in order to correctly index into IOHPMEVT an=
+> > Introduce a helper to detect rdpmc availability via sysfs and skip
+> > user space counter reading tests when rdpmc is disabled by the system.
+> >
+> > The check is only applied to USER_READ_ENABLED tests. User-read disable=
 d
-> > IOHPMCTR registers that have already been defined in the iommu-bits.h.
-> > However the users treat 0 as the index of HPMCYCLES and 1~COUNTER_MAX-1=
- as
-> > the indexes of other HPMEVENTS, thus care should be taken in dealing wi=
-th
-> > counter indexes between userspace and kernel space.
+> > tests continue to run unconditionally, as they validate perf_event mmap
+> > semantics independent of rdpmc availability.
 > >
-> > Signed-off-by: Jingyu Li <joey.li@spacemit.com>
-> > Signed-off-by: Lv Zheng <lv.zheng@linux.spacemit.com>
-> > Link: https://github.com/riscv-non-isa/riscv-iommu
+> > Additionally, tighten the unsupported rdpmc check to require a valid
+> > counter index, avoiding false failures when cap_user_rdpmc is set but
+> > no counter is assigned.
+> >
+> > v1->v2
+> > - Check rdpmc availability via sysfs before running USER_READ_ENABLED t=
+ests
+> > - Handle both perf_user_access and rdpmc sysfs interfaces
+> > - Avoid false failures when cap_user_rdpmc is set but no counter index =
+exists
+> >
+> > Testing:
+> > - arm64: rdpmc disabled by perf_user_access (tests correctly skipped)
+> > - x86_64: no behavior change compared to v1
+> >
+> > Signed-off-by: Qiao Zhao <qzhao@redhat.com>
 > > ---
-> >  drivers/iommu/riscv/Kconfig          |   9 +
-> >  drivers/iommu/riscv/Makefile         |   1 +
-> >  drivers/iommu/riscv/iommu-bits.h     |   6 +
-> >  drivers/iommu/riscv/iommu-hpm.c      | 843 +++++++++++++++++++++++++++
-> >  drivers/iommu/riscv/iommu-pci.c      |  13 +-
-> >  drivers/iommu/riscv/iommu-platform.c |   8 +-
-> >  drivers/iommu/riscv/iommu.h          |  42 ++
-> >  7 files changed, 919 insertions(+), 3 deletions(-)
-> >  create mode 100644 drivers/iommu/riscv/iommu-hpm.c
+> >   tools/perf/tests/mmap-basic.c | 45 +++++++++++++++++++++++++++++++++-=
+-
+> >   1 file changed, 43 insertions(+), 2 deletions(-)
 > >
+> > diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basi=
+c.c
+> > index 3313c236104e..67d6d83dbedb 100644
+> > --- a/tools/perf/tests/mmap-basic.c
+> > +++ b/tools/perf/tests/mmap-basic.c
+> > @@ -220,6 +220,37 @@ static enum user_read_state set_user_read(struct p=
+erf_pmu *pmu, enum user_read_s
+> >       return old_user_read;
+> >   }
+> >
+> > +static bool rdpmc_sysfs_enabled(struct perf_pmu *pmu)
+> > +{
+> > +     char buf[8];
+> > +     int events_fd, fd;
+> > +     ssize_t len;
+> > +
+> > +     /* ARM/RISC-V style or similar */
+> > +     fd =3D open("/proc/sys/kernel/perf_user_access", O_RDONLY);
+> > +     if (fd > 0) {
+> > +             len =3D read(fd, buf, sizeof(buf));
+> > +             close(fd);
+> > +             if (len > 0)
+> > +                     return buf[0] =3D=3D '1';
+> > +     }
+> > +
+> > +     /* x86_64 style rdpmc file or similar */
+> > +     events_fd =3D perf_pmu__event_source_devices_fd();
+> > +     if (events_fd >=3D 0) {
+> > +             fd =3D perf_pmu__pathname_fd(events_fd, pmu->name, "rdpmc=
+", O_RDONLY);
+> > +             close(events_fd);
+> > +             if (fd >=3D 0) {
+> > +                     len =3D read(fd, buf, sizeof(buf));
+> > +                     close(fd);
+> > +                     if (len > 0)
+> > +                             return buf[0] =3D=3D '1';
+> > +             }
+> > +     }
+> > +
+> > +     return false;
+> > +}
+> > +
+> >   static int test_stat_user_read(u64 event, enum user_read_state enable=
+d)
+> >   {
+> >       struct perf_pmu *pmu =3D NULL;
+> > @@ -247,7 +278,7 @@ static int test_stat_user_read(u64 event, enum user=
+_read_state enabled)
+> >               struct perf_evsel *evsel =3D NULL;
+> >               int err;
+> >               struct perf_event_mmap_page *pc;
+> > -             bool mapped =3D false, opened =3D false, rdpmc_supported;
+> > +             bool mapped =3D false, opened =3D false, rdpmc_supported,=
+ sysfs_enabled;
+> >               struct perf_counts_values counts =3D { .val =3D 0 };
+> >
+> >
+> > @@ -300,6 +331,16 @@ static int test_stat_user_read(u64 event, enum use=
+r_read_state enabled)
+> >               else
+> >                       rdpmc_supported =3D (enabled =3D=3D USER_READ_ENA=
+BLED);
+> >
+> > +             if (enabled =3D=3D USER_READ_ENABLED) {
+> > +                     sysfs_enabled =3D rdpmc_sysfs_enabled(pmu);
+> > +                     if (!sysfs_enabled) {
+> > +                             pr_debug("User space counter reading for =
+PMU %s [Skip rdpmc disabled by sysfs]\n",
+> > +                                     pmu->name);
+> > +                             ret =3D TEST_SKIP;
+> > +                             goto cleanup;
+> > +                     }
+> > +             }
+> > +
+> >               if (rdpmc_supported && (!pc->cap_user_rdpmc || !pc->index=
+)) {
+> >                       pr_err("User space counter reading for PMU %s [Fa=
+iled unexpected supported counter access %d %d]\n",
+> >                               pmu->name, pc->cap_user_rdpmc, pc->index)=
+;
+> > @@ -307,7 +348,7 @@ static int test_stat_user_read(u64 event, enum user=
+_read_state enabled)
+> >                       goto cleanup;
+> >               }
+> >
+> > -             if (!rdpmc_supported && pc->cap_user_rdpmc) {
+> > +             if (!rdpmc_supported && pc->cap_user_rdpmc && pc->index) =
+{
+> >                       pr_err("User space counter reading for PMU %s [Fa=
+iled unexpected unsupported counter access %d]\n",
+> >                               pmu->name, pc->cap_user_rdpmc);
+> >                       ret =3D TEST_FAIL;
+>
+> Not sure I understand this test, shouldn't it be (pc->cap_user_rdpmc ||
+> pc->index)? As in, you don't expect either of them to be set if
+> !rdpmc_supported. But then it's the exact opposite of the one above so I
+> don't think it does anything.
+>
+> Either way the test now passes or skips properly on Arm:
+>
+> Tested-by: James Clark <james.clark@linaro.org>
+>
+>
+
