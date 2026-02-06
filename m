@@ -1,206 +1,262 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0AE623C8AE
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 23:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.172
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770420801; cv=pass; b=FfhyZ78xg1+xpRN7t/MXFZXPW+kIxOPp2y5nX9uxEBxkD0zQEmjFp2Y/hVutFU46Hyxo7Jus0XQkZbHq+tFI8AmqtmFgV81PZ4CaKYv+y7reYF5EeZbf5ujz3YXGDOU7nFoMvOPhL1TnAYJNWpockybN5QiybUtpNOdz8jpxzl0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770420801; c=relaxed/simple;
-	bh=TmwO9WVBvAtBj3ggr8Gvf9xKu8nNomnwF33DRcluMyk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AqKGfp3pPNkFxA2xTTFWBQv1CEMuyhBdhkiRlkXoSeNRM3kFQxIYE5TotFItkDqwT7tsmrD9QtC+7MaYwSa6mhmAFov5yOjxUD3cFRbmdET1JNrZAdEbtAvDKROTOrDXlkxnYuliH0bAJhF9DXOKqusQ8OxY7Fx+3/myn5Il2Ko=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gj0eF/Lk; arc=pass smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979922D7DED;
+	Fri,  6 Feb 2026 23:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770421599; cv=none; b=NbYRLUsZXWJAkznvRJXsyqlSNUl+lIGAI80XCUPu3N/LIbgh54lICVLzFOAZ2k/B6n+D+/zh/wbzg8rPsWQSIiN5MUaY2PiVVHtrrbN5JKemSggnM/1Hsp432B4agoRfl95F0DKqxZR+kljztxvuAAB/lPMs48c0m0vDEW1QxcU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770421599; c=relaxed/simple;
+	bh=WeRn2HP4fJ0nK78lbRaz8SuHLmjJ/mYVu111gT9mvEM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ew0tw3vxYCVksKADGRUhPj7np/HCps1FpeZDZ4zF2Cv6EL2uY3yKtlXylrAWLcQ4dB6dYQpk99PTbJrms0eqwatRoKeNOQH600Rmt2QGW3MaJUn3NKYuDjtb7UEyBnqHBfmNYmP72ae/Pvknw8Zqx43zs9MCN75hle4heNJdYUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TpJ0CjFa; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gj0eF/Lk"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-503347e8715so13863131cf.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 15:33:20 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770420800; cv=none;
-        d=google.com; s=arc-20240605;
-        b=KHgmPwIOZjO0kfClzsmHkiEfbkrmZRktea6ivFP8gmdj4PhYKfJUK6WYFy5C4J9ECl
-         KcX0rQLPPL7VoVcacNGcxaeXIjAacTSE2ZXMwS8tWEm7yw1pJICf1alPUCZiWQwuDwn3
-         /kKSJMdPo+uVTLEPsxn1yysS8iBv9ULx9bNdqebLwzoU+gfveo8fvXGlQujITBh7M5BN
-         F2c92Cb8N9ibx3NmWN8cNNxp5ERi8fUqeYltxWfDOofVizjhMTlMOqAsX6KdbkZO+q3r
-         nC/sKomzWk5O3t4FXs3XvsmzxJ5GoYYe5OtAOwWE2JdHvlHcCGpPmoiC2QF/KGHtvoA0
-         waDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=x9w0JL9mjtNICxg6XzWOOLYYnrjfLt9LULWdIrFxB1E=;
-        fh=WcchYdCT0AFcWjtEafwahWdMK+JTnnt27m3uU5Hh4bs=;
-        b=LVlN5eeHzinw14am+a11DIuRfxwTEvoL585jbAs4u4j/HJzNxOXQAn8flcjCshRABU
-         QVhQ45UZB6554gbLWulVvueqbuQ8Infvrek0+Fz51/aOWRws9D9XFY7Kvu3JDNE5GvCv
-         yrd4058AGWaynz9TmdXgXHPloztEY1b5D/VeKpuQ4NnzL1HEdfw6aH+BP3HxMgvOFOZQ
-         GSnia/saUlEZ6uiR4pQFtJM+Z/j2h/l8kheWbHhfYBiXWTzk6BTs719KF7x6JuKPkoPA
-         4yKvi+WfxshM/aqH6cjL+xF0G+lLIQ43Sgy3k8OCPigqy3CJquS1+26K78N4SZvKcO9X
-         pveA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770420800; x=1771025600; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x9w0JL9mjtNICxg6XzWOOLYYnrjfLt9LULWdIrFxB1E=;
-        b=Gj0eF/Lk1V6z5naB57Hz+H5iEZVGYCCy2KCqYSSGmtwjAwGqAiHBZChVZpSQCbWmR9
-         7iyPAMpJTf55Nkq88Co/2e78JqjL03DM5Ol39KfHApNpeTJI+HaCVVNuBVfVgLPS+pd5
-         Im52E/V1JJjVLo80BfgCDBvKrwQ7gY5FpxmJyEHXdeOyKIoAP9tJ/7BMZODKt54yzyxf
-         3mrEANE6EnUVYooYbUCAMrhFtF1aHXCEFKqBYYwW7lNOp2iT2CDSkoEcSKt1w4IxRQYP
-         gMayyBLxGjsVVekiOI4/863VwyNDhvK/+syI+KoJ78wxmtrZtSzzL5gBWjbGIJxNuTry
-         8OYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770420800; x=1771025600;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=x9w0JL9mjtNICxg6XzWOOLYYnrjfLt9LULWdIrFxB1E=;
-        b=lFZFs/uyudxyS0kJSfbLHh19b3OSXKi+SSBaA2R6GwLTmSmzKqZlxU6wtpPyselmaV
-         ULhzFGBkYgyfk9HprB+RZEuxbakwSc19YIMD5JdxKc9IWeuYnzzfSMmJKhiAgtQaxyrD
-         OCj05gOS7LbE7M6XqQGnDUBuIIuNbnxSCFVYdgDK5VjPZV9xpaJQ6OioE/NR7tCXwdnl
-         pHSK8VKbIFKgSKAoL0VbgSR1dGGfp+m11LQabDIvrMWRKXPGeuWORCWwd2aLLMAlQEc+
-         wXIG9dRe5a+/QxmwXE+TAw9X8uqIFpcGTmWctwUkz0FB/Bg5vFRrGMXAjT0c22EioRTL
-         fmaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVA2V2Snie+RIGuid77wyUWwfYrGlqN/LbCLYT1ClZcEJ2/rsnSEaI7XS+t/pVYMS+qV4lpb1s0JEs9FHOt5Yim@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp7afv4W8t4OaSWmcgk4o//95REP6pmhfgrkX6TP/rfojT+Y5F
-	YN396IyYUA5XRcUMbY9tmPcImqhrBU/iYz4Ie/YG37nCvLGTemvgO/zbhvUFlMNJtCxDWA5Pl7F
-	Z3kJOWO6Vc9/f4UkM/zH/zmq7FV1L4wRO/pG8COVv
-X-Gm-Gg: AZuq6aIdX2eNj6t1j6C3Nn+wYxiBCkFU4IR2OsWme6gd1KuNoIZRLmSNYzstOFQ6+lM
-	0dCbUpXGh4BmE1rbO2fpByQ3zvsKlGlVcDbTMUs4/Yt2PmgLlHvULy9CRzYYpwhGp3WS8p39YmT
-	m12m+zcti72r3eXHHs0Aofgd+1BgEa3AsIyE3TnPPTwwTgCYe4fs9ecMvm/JoqpfJEK3SfR5447
-	WWd9d172yMY1fB10BmpxMB0n//VoQrBy0z9IKvGSx79GJgqE66IHkCrtThPYH0R/44DtQ==
-X-Received: by 2002:a05:622a:54:b0:4f4:d298:b47c with SMTP id
- d75a77b69052e-5063988b974mr59737361cf.28.1770420799567; Fri, 06 Feb 2026
- 15:33:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TpJ0CjFa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770421599; x=1801957599;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WeRn2HP4fJ0nK78lbRaz8SuHLmjJ/mYVu111gT9mvEM=;
+  b=TpJ0CjFakd3hKL8cap++DHU/zpvSJuRBH5mvBpJqmRwEgSnDqJXu2ZTG
+   QnmB7TPYguscMbffdRaAli15PxjEwre7bIs3rIDVAtFocuGKgWftaS2Am
+   UcY/li+hz/+HG4Lcd60qkZ9ucEI0fwETG/zo2zAwIyBVDPlHPsuE5EkWQ
+   1Gn8MUNKv6gTHfoCrapw/EkmD1aTknGdF+eArbL01LAo2vwrX5vBkVJKm
+   DZvdwqv7hWOuUXNIbwNWOaROIHdVWSHCnNMiUaOosM2Dh/WSAEueDwf1e
+   duDfj5r2ZsVosuDRBCOz86UEkBMDvMMfwRf0XLccIrEJkThkzZK0lE8bX
+   Q==;
+X-CSE-ConnectionGUID: rnFUsrPtQdyPivQ1SbJzaQ==
+X-CSE-MsgGUID: fvlN0Ng1QEyRvKBRKSWvLQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11693"; a="71535279"
+X-IronPort-AV: E=Sophos;i="6.21,277,1763452800"; 
+   d="scan'208";a="71535279"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 15:46:38 -0800
+X-CSE-ConnectionGUID: L9bZxQfXQ1SwKlNiKjC0AA==
+X-CSE-MsgGUID: /IVFIaduQnSzR1LQywN1DA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,277,1763452800"; 
+   d="scan'208";a="210299848"
+Received: from soc-cp83kr3.clients.intel.com (HELO [10.241.240.205]) ([10.241.240.205])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 15:46:37 -0800
+Message-ID: <ad625513-70a8-444d-a389-226715d2a86d@intel.com>
+Date: Fri, 6 Feb 2026 15:46:36 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260206231203.11760-1-zide.chen@intel.com>
-In-Reply-To: <20260206231203.11760-1-zide.chen@intel.com>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Fri, 6 Feb 2026 15:33:08 -0800
-X-Gm-Features: AZwV_QgRtJN0JIh6IiE2jkVSxMT-5-8uO05RrsPeCGPbYwpfBVrc1NHVp8FAp_o
-Message-ID: <CAJpZYjUwE1E=2+zTmSFJFViaM9oC+abby+86uVC0hbFaMwc-SQ@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86/intel/uncore: Remove extra double quote mark
-To: Zide Chen <zide.chen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Eranian Stephane <eranian@google.com>, Markus Elfring <Markus.Elfring@web.de>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Xudong Hao <xudong.hao@intel.com>, 
-	Falcon Thomas <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
+ on Emeraldrapids
+To: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, james.clark@linaro.org, ravi.bangoria@amd.com,
+ linux-perf-users@vger.kernel.org
+References: <20260205232220.1980168-1-ctshao@google.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20260205232220.1980168-1-ctshao@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 6, 2026 at 3:19=E2=80=AFPM Zide Chen <zide.chen@intel.com> wrot=
-e:
->
-> The third argument in INTEL_UNCORE_FR_EVENT_DESC() is subject to
-> __stringify(), and the extra double quote marks can result in the
-> expansion "3.814697266e-6" in the sysfs knobs, instead of
-> 3.814697266e-6.
->
-> This is incorrect, though it may still work for perf, e.g.
-> perf stat -e uncore_iio_free_running_0/bw_in_port0/
->
-> Fixes: d8987048f665 ("perf/x86/intel/uncore: Support IIO free-running cou=
-nters on DMR")
-> Reported-by: Chun-Tse Shao <ctshao@google.com>
-> Closes: https://lore.kernel.org/all/20251231224233.113839-1-zide.chen@int=
-el.com/
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
 
-Reviewed-by: Chun-Tse Shao <ctshao@google.com>
 
-Thanks for the fix!
-
--CT
-
+On 2/5/2026 3:21 PM, Chun-Tse Shao wrote:
+> Similar to GNR [1], Emeraldrapids supports sub-NUMA clusters as well.
+> Adjust cpumasks as the logic for GNR in [1].
+> 
+> Tested on Emeraldrapids with SNC2 enabled:
+>   $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a -- sleep 1
+> 
+>    Performance counter stats for 'system wide':
+> 
+>   N0       30        72125876670      UNC_CHA_CLOCKTICKS
+>   N0        4         8815163648      UNC_M_CLOCKTICKS
+>   N1       30        72124958844      UNC_CHA_CLOCKTICKS
+>   N1        4         8815014974      UNC_M_CLOCKTICKS
+>   N2       30        72121049022      UNC_CHA_CLOCKTICKS
+>   N2        4         8814592626      UNC_M_CLOCKTICKS
+>   N3       30        72117133854      UNC_CHA_CLOCKTICKS
+>   N3        4         8814012840      UNC_M_CLOCKTICKS
+> 
+>          1.001574118 seconds time elapsed
+> 
+> [1] lore.kernel.org/20250515181417.491401-1-irogers@google.com
+> 
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 > ---
->  arch/x86/events/intel/uncore_snbep.c | 48 ++++++++++++++--------------
->  1 file changed, 24 insertions(+), 24 deletions(-)
->
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel=
-/uncore_snbep.c
-> index 7ca0429c4004..3b6b4bd4793a 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -6909,34 +6909,34 @@ static struct freerunning_counters dmr_iio_freeru=
-nning[] =3D {
->
->  static struct uncore_event_desc dmr_uncore_iio_freerunning_events[] =3D =
-{
->         /*  ITC Free Running Data BW counter for inbound traffic */
-> -       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port0, 0x10, "3.814697266e-6"=
-),
-> -       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port1, 0x11, "3.814697266e-6"=
-),
-> -       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port2, 0x12, "3.814697266e-6"=
-),
-> -       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port3, 0x13, "3.814697266e-6"=
-),
-> -       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port4, 0x14, "3.814697266e-6"=
-),
-> -       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port5, 0x15, "3.814697266e-6"=
-),
-> -       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port6, 0x16, "3.814697266e-6"=
-),
-> -       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port7, 0x17, "3.814697266e-6"=
-),
-> +       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port0, 0x10, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port1, 0x11, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port2, 0x12, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port3, 0x13, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port4, 0x14, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port5, 0x15, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port6, 0x16, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(inb_data_port7, 0x17, 3.814697266e-6),
->
->         /*  ITC Free Running BW IN counters */
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port4, 0x24, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port5, 0x25, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port6, 0x26, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port7, 0x27, "3.814697266e-6"),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port4, 0x24, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port5, 0x25, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port6, 0x26, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_in_port7, 0x27, 3.814697266e-6),
->
->         /*  ITC Free Running BW OUT counters */
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port0, 0x30, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port1, 0x31, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port2, 0x32, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port3, 0x33, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port4, 0x34, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port5, 0x35, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port6, 0x36, "3.814697266e-6"),
-> -       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port7, 0x37, "3.814697266e-6"),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port0, 0x30, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port1, 0x31, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port2, 0x32, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port3, 0x33, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port4, 0x34, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port5, 0x35, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port6, 0x36, 3.814697266e-6),
-> +       INTEL_UNCORE_FR_EVENT_DESC(bw_out_port7, 0x37, 3.814697266e-6),
->
->         /* Free Running Clock Counter */
->         INTEL_UNCORE_EVENT_DESC(clockticks, "event=3D0xff,umask=3D0x40"),
+> v2:
+>   Split EMR and GNR in the SNC2 IMC cpu map.
+> 
+> v1: lore.kernel.org/20260108184430.1210223-1-ctshao@google.com
+> 
+>  tools/perf/arch/x86/util/pmu.c | 95 ++++++++++++++++++++++------------
+>  1 file changed, 63 insertions(+), 32 deletions(-)
+> 
+> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+> index a3f96221758d..dbe876cd1b08 100644
+> --- a/tools/perf/arch/x86/util/pmu.c
+> +++ b/tools/perf/arch/x86/util/pmu.c
+> @@ -22,20 +22,29 @@
+>  #include "util/env.h"
+>  #include "util/header.h"
+> 
+> -static bool x86__is_intel_graniterapids(void)
+> +static bool x86__is_snc_supported(void)
+>  {
+> -	static bool checked_if_graniterapids;
+> -	static bool is_graniterapids;
+> +	static bool checked_if_snc_supported;
+> +	static bool is_supported;
+> 
+> -	if (!checked_if_graniterapids) {
+> -		const char *graniterapids_cpuid = "GenuineIntel-6-A[DE]";
+> +	if (!checked_if_snc_supported) {
+> +
+> +		/* Emeraldrapids and Graniterapids support SNC configuration. */
+> +		static const char *const supported_cpuids[] = {
+> +			"GenuineIntel-6-CF", /* Emeraldrapids */
+> +			"GenuineIntel-6-A[DE]", /* Graniterapids */
+> +		};
+>  		char *cpuid = get_cpuid_str((struct perf_cpu){0});
+> 
+> -		is_graniterapids = cpuid && strcmp_cpuid_str(graniterapids_cpuid, cpuid) == 0;
+> +		for (size_t i = 0; i < ARRAY_SIZE(supported_cpuids); i++) {
+> +			is_supported = cpuid && strcmp_cpuid_str(supported_cpuids[i], cpuid) == 0;
+> +			if (is_supported)
+> +				break;
+> +		}
+>  		free(cpuid);
+> -		checked_if_graniterapids = true;
+> +		checked_if_snc_supported = true;
+>  	}
+> -	return is_graniterapids;
+> +	return checked_if_snc_supported;
+
+This appears to be a typo, supposed to be is_supported.
+
+>  }
+> 
+>  static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
+> @@ -64,6 +73,7 @@ static int snc_nodes_per_l3_cache(void)
+>  			read_sysfs_cpu_map("devices/system/cpu/cpu0/cache/index3/shared_cpu_list");
+> 
+>  		snc_nodes = perf_cpu_map__nr(cache_cpus) / perf_cpu_map__nr(node_cpus);
+> +
+>  		perf_cpu_map__put(cache_cpus);
+>  		perf_cpu_map__put(node_cpus);
+>  		checked_snc = true;
+> @@ -137,23 +147,42 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
+>  	// Compute the IMC SNC using lookup tables.
+>  	unsigned int imc_num;
+>  	int snc_nodes = snc_nodes_per_l3_cache();
+> -	const u8 snc2_map[] = {1, 1, 0, 0, 1, 1, 0, 0};
+> -	const u8 snc3_map[] = {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
+> -	const u8 *snc_map;
+> -	size_t snc_map_len;
+> -
+> -	switch (snc_nodes) {
+> -	case 2:
+> -		snc_map = snc2_map;
+> -		snc_map_len = ARRAY_SIZE(snc2_map);
+> -		break;
+> -	case 3:
+> -		snc_map = snc3_map;
+> -		snc_map_len = ARRAY_SIZE(snc3_map);
+> -		break;
+> -	default:
+> -		/* Error or no lookup support for SNC with >3 nodes. */
+> -		return 0;
+> +	char *cpuid;
+> +	static const u8 emr_snc2_map[] = { 0, 0, 1, 1 };
+> +	static const u8 gnr_snc2_map[] = { 1, 1, 0, 0 };
+> +	static const u8 snc3_map[] = { 1, 1, 0, 0, 2, 2 };
+> +	static const u8 *snc_map = NULL;
+> +	static size_t snc_map_len;
+> +
+> +	/* snc_map is not inited yet. We only look up once to avoid expensive operations. */
+> +	if (!snc_map) {
+> +		switch (snc_nodes) {
+> +		case 2:
+> +			cpuid = get_cpuid_str((struct perf_cpu){ 0 });
+> +			if (cpuid) {
+> +				if (strcmp_cpuid_str("GenuineIntel-6-CF", cpuid) == 0) {
+> +					snc_map = emr_snc2_map;
+> +					snc_map_len = ARRAY_SIZE(emr_snc2_map);
+> +				} else if (strcmp_cpuid_str("GenuineIntel-6-A[DE]", cpuid) == 0) {
+> +					snc_map = gnr_snc2_map;
+> +					snc_map_len = ARRAY_SIZE(gnr_snc2_map);
+> +				}
+> +				free(cpuid);
+> +			}
+> +			break;
+> +		case 3:
+> +			snc_map = snc3_map;
+> +			snc_map_len = ARRAY_SIZE(snc3_map);
+> +			break;
+> +		default:
+> +			/* Error or no lookup support for SNC with >3 nodes. */
+> +			return 0;
+> +		}
+> +
+> +		if (!snc_map) {
+> +			pr_warning("Unexpected: can not find snc map config");
+> +			return 0;
+> +		}
+>  	}
+> 
+>  	/* Compute SNC for PMU. */
+> @@ -161,11 +190,12 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
+>  		pr_warning("Unexpected: unable to compute IMC number '%s'\n", pmu->name);
+>  		return 0;
+>  	}
+> -	if (imc_num >= snc_map_len) {
+> +	if (imc_num >= snc_map_len * perf_cpu_map__nr(pmu->cpus)) {
+>  		pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_num, snc_nodes);
+>  		return 0;
+>  	}
+> -	return snc_map[imc_num];
+> +
+> +	return snc_map[imc_num % snc_map_len];
+>  }
+> 
+>  static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+> @@ -205,7 +235,7 @@ static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+>  	return cpu_adjust[pmu_snc];
+>  }
+> 
+> -static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
+> +static void uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
+>  {
+>  	// With sub-NUMA clustering (SNC) there is a NUMA node per SNC in the
+>  	// topology. For example, a two socket graniterapids machine may be set
+> @@ -304,11 +334,12 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+>  				pmu->mem_events = perf_mem_events_intel_aux;
+>  			else
+>  				pmu->mem_events = perf_mem_events_intel;
+> -		} else if (x86__is_intel_graniterapids()) {
+> +		} else if (x86__is_snc_supported()) {
+>  			if (starts_with(pmu->name, "uncore_cha_"))
+> -				gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
+> -			else if (starts_with(pmu->name, "uncore_imc_"))
+> -				gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
+> +				uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
+> +			else if (starts_with(pmu->name, "uncore_imc_") &&
+> +				 !starts_with(pmu->name, "uncore_imc_free_running"))
+> +				uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
+>  		}
+>  	}
+>  }
 > --
-> 2.52.0
->
+> 2.53.0.rc2.204.g2597b5adb4-goog
+> 
+> 
+
