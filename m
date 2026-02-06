@@ -1,130 +1,121 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBC83749C;
-	Fri,  6 Feb 2026 10:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD77722301;
+	Fri,  6 Feb 2026 10:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770374752; cv=none; b=XZ7mBMASdyOqseBX7jjyMw02qavqk9Zs/CkPhObpXsP5pH/99sgfXqwSLCC+r7f0Y3qVfXNzfeeJcMznjKY7QokAKYTuZS1nFST7wepQcXjUobLE/9BpqXOZFbeHRs4hg2GkQwJbiRTNFXNC0IX3QB3uKtud8WfHFE4mkZqGrrw=
+	t=1770374772; cv=none; b=L4XkBR80rews93VxnMkoVtGPKzJ88nrMR3HYCnlau0WLNHQCOV+AdphXiLmBsdeCHsgKkEr0Gpl71U7G5mi9T1ocw7unaDWP2hqtacXaBq3cKBUNBum2CHLVRTGJUXFGDrNuglffMK4Ugc5iMzwwY75a5xOLwDet31QLbVh3aWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770374752; c=relaxed/simple;
-	bh=r2qUiVPYIaNhCMthHdhgLfpgGQDgYIogOFC/kQ62kfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gKtQoTj/UTwRAuG9Mc1s27Qd3PjoAi8VeB2eeSywAVrlP9MFHtF/qvm6MhD9XtVPJBeOFL5P7hzzQ4vqvIxe5iM9s1rD/WUFzrgChJHKeuhbxfxAJ/8pp+QkHbVLYQqXdeuKkliqzIMSmpLe5EWQlcvgb2JO3hHhMSUcdjWFUJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51A2E339;
-	Fri,  6 Feb 2026 02:45:39 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CC603F632;
-	Fri,  6 Feb 2026 02:45:45 -0800 (PST)
-Date: Fri, 6 Feb 2026 10:45:43 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] perf metricgroup: Don't early exit if no CPUID
- table exists
-Message-ID: <20260206104543.GE3529712@e132581.arm.com>
-References: <20260205183603.459363-1-irogers@google.com>
- <20260205183603.459363-2-irogers@google.com>
+	s=arc-20240116; t=1770374772; c=relaxed/simple;
+	bh=SgH3PVl9XDWqTOthcj1dd9B7pnDKtSF9D1Mzvlb6naM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sOX2Gd7gqF9bRoBelOKExCNA655mq4GG+XienmPpWupSd4fm9T17TlZJksseI3DzmP/ynSEuAlLQ1/z7smWxUvwfx0eL6tuTXPZ2rtiuIB9zmzL8PpLMW72UVZxqaU23kxwGPe4o7KAq6hoaEWDcDObO91+cV8K0ewC0nEycY9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VDADRuAe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VDADRuAe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D3C9C116C6;
+	Fri,  6 Feb 2026 10:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770374772;
+	bh=SgH3PVl9XDWqTOthcj1dd9B7pnDKtSF9D1Mzvlb6naM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VDADRuAevPHEdEW3GWQ43kfKSftvTf7AR1gxZPVv6oP8X1og6EmSKbbn4h69GQPYD
+	 GfKxebuiyV34DIZ5liyCXRULlULtRB/2rHSxEaCMY717d4HS0RVfE/N4F57tZtg2ci
+	 h2eKgKzxEIlWTVm7IePjtOppaoRbBYLJH6wb50boZnxNTYGunou1G8sFFBJIPVPGeC
+	 rpBXFYGZXV5iGfCIVnTih3GQXPDAQEBSqdWKK/PrZrh/59Nh2LWWhwvMUxvHfwMJX2
+	 ZNF2DH2V1JoV85XUMWmjqXGVkM4syvam4aA4mehrkObV9squ215mMCRrbwsPZnu3Xt
+	 F7ukv50++cP/A==
+Message-ID: <2ca4a5c1-9267-4177-b339-e1ac28812c46@kernel.org>
+Date: Fri, 6 Feb 2026 11:46:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260205183603.459363-2-irogers@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/7] iommu/riscv: Add HPM support for RISC-V IOMMU
+To: Lv Zheng <lv.zheng@linux.spacemit.com>,
+ Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: Jingyu Li <joey.li@spacemit.com>, Zhijian Chen <zhijian@spacemit.com>,
+ iommu@lists.linux.dev, linux-perf-users@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+ devicetree@vger.kernel.org
+References: <cover.1769562575.git.lv.zheng@spacemit.com>
+ <DACC013F46A47459+cover.1770281596.git.lv.zheng@linux.spacemit.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <DACC013F46A47459+cover.1770281596.git.lv.zheng@linux.spacemit.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 05, 2026 at 10:36:03AM -0800, Ian Rogers wrote:
-> The failure to find a table of metrics with a CPUID shouldn't early
-> exit as the metric code will now also consider the default table.
-> When searching for a metric or metric group,
-> pmu_metrics_table__for_each_metric considers all tables and so the
-> caller doesn't need to switch the table to do this.
+On 05/02/2026 10:09, Lv Zheng wrote:
+> Includes HPM support for RISC-V IOMMU. The HPM hardware mechanism can be
+> found in the recent announced SpacemiT SoCs (K3, V100), where T100
+> (SpacemiT distributed IOMMU) is shipped. 
 > 
-> Fixes: c7adeb0974f1 ("perf jevents: Add set of common metrics based on default ones")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/metricgroup.c | 18 +++++-------------
->  1 file changed, 5 insertions(+), 13 deletions(-)
-> 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 40a1e14de418..46bf4dfeebc8 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1562,8 +1562,6 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
->  {
->  	const struct pmu_metrics_table *table = pmu_metrics_table__find();
->  
-> -	if (!table)
-> -		return -EINVAL;
->  	if (hardware_aware_grouping)
->  		pr_debug("Use hardware aware grouping instead of traditional metric grouping method\n");
->  
-> @@ -1601,22 +1599,16 @@ static int metricgroup__has_metric_or_groups_callback(const struct pmu_metric *p
->  
->  bool metricgroup__has_metric_or_groups(const char *pmu, const char *metric_or_groups)
->  {
-> -	const struct pmu_metrics_table *tables[2] = {
-> -		pmu_metrics_table__find(),
-> -		pmu_metrics_table__default(),
-> -	};
-> +	const struct pmu_metrics_table *table = pmu_metrics_table__find();
+> Revisions:
+> v1
+>  Initial release.
+> v2 (sent as v1.1)
+>  Split and cleanup DT-bindings.
+> v3
+>  1. Refactor using vendor specific compatible.
+>  2. Implement vendor events with a userspace identifier.
+> v4
 
-Here should be:
+And now also v4 is in the same thread? This is total mess!
 
-  const struct pmu_metrics_table *table = pmu_metrics_table__default();
+How tools are supposed to handle this?
 
-With this change, the default metrics can work on my side:
-
- Performance counter stats for 'sleep 1':
-
-                 1      context-switches                 #    434.8 cs/sec  cs_per_second     
-                 0      cpu-migrations                   #      0.0 migrations/sec  migrations_per_second
-                70      page-faults                      #  30439.1 faults/sec  page_faults_per_second
-              2.30 msec task-clock                       #      0.0 CPUs  CPUs_utilized       
-             17398      armv8_pmuv3_0/branch-misses/     #      4.3 %  branch_miss_rate       
-            401746      armv8_pmuv3_0/branches/          #    174.7 M/sec  branch_frequency   
-           1778245      armv8_pmuv3_0/cpu-cycles/        #      0.8 GHz  cycles_frequency     
-           2341698      armv8_pmuv3_0/instructions/      #      1.3 instructions  insn_per_cycle
-            680491      armv8_pmuv3_0/stalled-cycles-frontend/ #     0.38 frontend_cycles_idle      
-            380360      armv8_pmuv3_0/stalled-cycles-backend/ #     0.21 backend_cycles_idle       
-            380360      armv8_pmuv3_0/stalled-cycles-backend/ #     0.29 stalled_cycles_per_instruction
-
-With above change:
-
-Tested-by: Leo Yan <leo.yan@arm.com>
-
-
->  	struct metricgroup__has_metric_data data = {
->  		.pmu = pmu,
->  		.metric_or_groups = metric_or_groups,
->  	};
->  
-> -	for (size_t i = 0; i < ARRAY_SIZE(tables); i++) {
-> -		if (pmu_metrics_table__for_each_metric(tables[i],
-> -							metricgroup__has_metric_or_groups_callback,
-> -							&data))
-> -			return true;
-> -	}
-> -	return false;
-> +	return pmu_metrics_table__for_each_metric(table,
-> +						  metricgroup__has_metric_or_groups_callback,
-> +						  &data)
-> +		? true : false;
->  }
->  
->  static int metricgroup__topdown_max_level_callback(const struct pmu_metric *pm,
-> -- 
-> 2.53.0.rc2.204.g2597b5adb4-goog
-> 
-> 
+Best regards,
+Krzysztof
