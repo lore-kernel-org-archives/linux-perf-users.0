@@ -1,177 +1,182 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA39310771
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 09:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F053009F6;
+	Fri,  6 Feb 2026 10:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770371431; cv=none; b=tnFw8llFCQDXC/jsLmXfxVvOua8gQ0haWQSr3QsfeDsrizK8FeCAnVBoeeY5rk59OAAisW7OsJqrdl1qVLtde57hPOYB1TUzIQgzL+nWK/ExrhOPVTY0dhzoCfv/vzvn/6zyBuBI7hQ0Wd48OtE/8KqRD4PnZm7HV04uCPxd3Xs=
+	t=1770373498; cv=none; b=LmnIrIC/ptT0O5g/hcpf4Wjq7PKtnyowwJxgMKgCCI6o9gVMDF18+2AVk0228Q4vU324gIC9aZX+/n2UC5X664zvQgfpECfsnY0YJkgQrTtaM8bmMmXgADdmeq5ItygFTFzwrRBtKMbn1HQfqxTuNraqgrOOY9rTna/fqN0loTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770371431; c=relaxed/simple;
-	bh=KL35tDLUXt+MeQlE0IHaGqWoW/V3SwV1poY6EEFCY2o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LYSq4Sd2wahq9fhf8m3h18AUFl3xHozX2UycV6tasWtTRa9/K1rgZArte7klDK/sDUTAKNB+4XHqOlkfvUimvybiIciLMWRLhs9DB2j9mE6VmZ0tvFz3QmxmWxrd22zVL6gMYzjsaeYorAp2olp1JfkeFLfsVwMMeKN5BYK+L2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f208nwAB; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1770373498; c=relaxed/simple;
+	bh=nSlDqHzMQr152avoDT8llEAGQVSmXKKZSUd4Xq6kY2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=im+n260P8UVmwcpBa7po/JabDZVTkDOOA5Z39fSEy1LU18CtPpSo75CAKbkX4eQWlNIrNyNOk0LssJS29JwBwdnQ5IrSZFsZOYHW1QsmwPT9ApcKu8AVZsw6AYQWAxetFjqbMy9u7FhgHimooyiv9znmrAR7cgNUFqXCVWIM6wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qd6XDHLl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f208nwAB"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4807068eacbso17443405e9.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 01:50:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1770371430; x=1770976230; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Vq4afyB4nOZV3ntLdfaJ1K/gi8ayC5ysivYWyKh2NcY=;
-        b=f208nwABx6D+bsH3Maf8GUtSC703kZokrekAs+oyl8xgPY9xMVnkR0PYLJvy0hkmur
-         DHkKf1m0EIMpMZYQ8MRhwe94MgnMHZ9hVBnPG/9pf5fKDCXaw0oekg8y5Y8COEEQVuv9
-         SrZkKKbofemkULl1N9SY45+WW4DFnUEcJfDrl4wtmtEOOncGX3OdJB5nw0OpG8YM9Y31
-         QKqQ+8GrnUjlyMFaRDxR0WaKo9yZCkWByK/VUelt5ZGgLIfRgPTcBsST5QaweR5vOr/i
-         IPH+25WSZGk25+wyS+SYEcwBD+P5pk0RlbrIn3+uxZRRuhORbTBo2Io+WKD1QgtyLT7l
-         RseA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770371430; x=1770976230;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Vq4afyB4nOZV3ntLdfaJ1K/gi8ayC5ysivYWyKh2NcY=;
-        b=bFBDwSxEunOh7rqW+dLy/6OI4Y3N2nl+zghNaK7GZo1RWRv/48OKCRoZS6RnALtsFE
-         JcYQEF1Vw0a6rp3uCWuuO9jabKAUyW4fa6XuCf6bos1LyE5DqnrlQ0t5KeEfJ81dwB52
-         e1dJ5JoqXADxVSYokJSI1YGLLvA20GqtYVnL3BreHE//haDfTcuFpb2L0gJy9OJVD6Uh
-         95xC2ib4SHLYgG4I5CWktC+fd2n4Pe96AFvoEig0TyZ8UHWToDVMc7NbvkbrnAU4t2ni
-         TZx/eIIawO+kgy2zPbpDahLcI23eAAqs9tpUXbwNn2Ku42/aB0lGFPbWw6ecX7o2kRYO
-         DMAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxD9COwVQ2xfsyO5Vx4QK88G0nMrfd4m8PaCWWuyUcRFFGG17SVfZTIS5qYFJv2T1x5N7jEKjyCl98A7NBnyyM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzr909LFNH3mvGicZG+52vyovZDPMLUtiGkfYxdSAYagW2NsEV6
-	qsPFH4hmEo4TwtFPIt6Sh42omNb58mHXLPqtPk/JC+apLZrGLuaf3dGr+AZWiVCsrCQ=
-X-Gm-Gg: AZuq6aL6EsgZdzgLxAKVRUYmPGBfnvavjDtlMNHbm+9ZfnTEgwZDqlCuzfFZmpxY8HF
-	wPpjXxR9KHZ4chCgwk/m9eCAp+Gx3Shk1wLIx84oJZiE164inHASuSa84kmJjsCrcPCs9rYwFEk
-	iAa7Qnbrlz3CNG9daUYOsr3K5hXqpbZiH7+E0psC6Qtxk7Sv7xQpTO7VT+WKZltozmC830mTWO7
-	AZI/KUU4qIn8pe/RmRB3vSGCZac47NiM4tAumAQwfnEpmxYEH6pFG1R44Y/Ku2zi0co4dD58ETq
-	NfyumNvuCDBVNFAIFmkbuPAxYq1z9soJZLTWF4ycXVvuEEmWUZ3Oi0Md5h4iPHjVVQNUsotC6C6
-	q/yrnEyj4b4tYkyMZ43wE2tNx13z3ZxS+zHsd8UCKk/z3YzuShU1NzArryHwnB4Bv+hwbbmvCZz
-	lXzcaPVZLxboJLDhB0
-X-Received: by 2002:a05:600c:34d1:b0:47a:7fd0:9eea with SMTP id 5b1f17b1804b1-483201dadccmr27868905e9.3.1770371429302;
-        Fri, 06 Feb 2026 01:50:29 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483179dbdcfsm147954785e9.0.2026.02.06.01.50.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Feb 2026 01:50:28 -0800 (PST)
-Message-ID: <e7d53952-59f6-4990-83fb-1182641af29f@linaro.org>
-Date: Fri, 6 Feb 2026 09:50:27 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qd6XDHLl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C47FC116C6;
+	Fri,  6 Feb 2026 10:24:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770373497;
+	bh=nSlDqHzMQr152avoDT8llEAGQVSmXKKZSUd4Xq6kY2M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qd6XDHLl3otd4l7745FgtPHKCh+28ET+4Gh4od6CGkx9KS7Rmrnkuzrnifg94r/rN
+	 OLjfInm8mgJh7ONidOWK8Gh54/rKF5snHY8nmT4Q4rMwo4SMe0HxDvtC4zbTBBC+e4
+	 zsyr/lwEOHpNtwSNo56ArmBaMDE4QvCgrJqonWp4CUmMGXLAeJUaMUe9VxH0u/xiYT
+	 dy/j+hH186tZh0Y5Ys1YxM8w8QfAoSSH3ZITUu59upINGLkB1Aze4mRHoP1RhTTyWL
+	 SP+MmDr0FSVqiQj0GIN3bxtbFhxX7Q2wVHBlvgqfRPoInqSTYpWc1ytvp+bh9ts4Eo
+	 ueh0byIlBA+0A==
+Date: Fri, 6 Feb 2026 10:24:52 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Lv Zheng <lv.zheng@linux.spacemit.com>
+Cc: Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Jingyu Li <joey.li@spacemit.com>, iommu@lists.linux.dev,
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 4/8] dt-bindings: iommu: Add spacemit/t100 features
+Message-ID: <20260206-buffed-scrubbed-36fc49ada496@spud>
+References: <cover.1769562575.git.lv.zheng@spacemit.com>
+ <cover.1770195980.git.lv.zheng@linux.spacemit.com>
+ <A0E91F323138E92F+a27d73b00f3324f0d3885128f5596230b3f1370b.1770195980.git.lv.zheng@linux.spacemit.com>
+ <20260204-primer-wrought-6f64b14bf152@spud>
+ <53171BEB06F43599+7c1f54bc-e72d-4cbd-9d10-194ae6b13744@linux.spacemit.com>
+ <20260205-attitude-customer-129fe2bd5dc7@spud>
+ <B8005DB6301AACB4+374512e1-f561-4d2f-afd6-7a4b51012501@linux.spacemit.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf: arm_spe: Add barrier before enabling profiling
- buffer
-To: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Alexandru Elisei <Alexandru.Elisei@arm.com>,
- Anshuman Khandual <Anshuman.Khandual@arm.com>,
- Rob Herring <Rob.Herring@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>,
- Robin Murphy <Robin.Murphy@arm.com>, Leo Yan <leo.yan@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260123-james-spe-relaxation-v1-1-4ccb88fa7bc5@linaro.org>
- <aYD08d42SewAAQCB@willie-the-truck>
- <aebe99ad-1189-4372-83e3-385f33829bd2@linaro.org>
- <aYHXCkFZcVm1L_25@willie-the-truck>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <aYHXCkFZcVm1L_25@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="8z5ZdYiefbay1YtF"
+Content-Disposition: inline
+In-Reply-To: <B8005DB6301AACB4+374512e1-f561-4d2f-afd6-7a4b51012501@linux.spacemit.com>
 
 
+--8z5ZdYiefbay1YtF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 03/02/2026 11:07 am, Will Deacon wrote:
-> On Tue, Feb 03, 2026 at 10:46:37AM +0000, James Clark wrote:
->>
->>
->> On 02/02/2026 7:03 pm, Will Deacon wrote:
->>> On Fri, Jan 23, 2026 at 04:03:53PM +0000, James Clark wrote:
->>>> The Arm ARM known issues document [1] states that the architecture will
->>>> be relaxed so that the profiling buffer must be correctly configured
->>>> when ProfilingBufferEnabled() && !SPEProfilingStopped() &&
->>>> PMBLIMITR_EL1.FM != DISCARD:
->>>>
->>>>     R24557
->>>>
->>>>     While the Profiling Buffer is enabled, profiling is not stopped, and
->>>>     Discard mode is not enabled, all of the following must be true:
->>>>
->>>>     * The current write pointer must be at least one sample record below
->>>>       the write limit pointer.
->>>>
->>>> The same relaxation also says that writes may be completely ignored:
->>>>
->>>>     When the Profiling Buffer is enabled, profiling is not stopped, and
->>>>     Discard mode is not enabled, the PE might ignore a direct write to any
->>>>     of the following Profiling Buffer registers, other than a direct write
->>>>     to PMBLIMITR_EL1 that clears PMBLIMITR_EL1.E from 1 to 0:
->>>>
->>>>     * The current write pointer, PMBPTR_EL1.
->>>>     * The Limit pointer, PMBLIMITR_EL1.
->>>>     * PMBSR_EL1.
->>>
->>> Thinking about this some more, does that mean that the direct write to
->>> PMBPTR_EL1 performs an indirect read of PMBLIMITR_EL1 so that it can
->>> determine the write-ignore semantics? If so, doesn't that mean that
->>> we'll get order against a subsequent direct write of PMBLIMITR_EL1
->>> without an ISB thanks to table "D24-1 Synchronization requirements"
->>> which says that an indirect read followed by a direct write doesn't
->>> require synchronisation?
->>>
->>> There's also a sentence above the table stating:
->>>
->>> "Direct writes to System registers are not allowed to affect any
->>>    instructions appearing in program order before the direct write."
->>>
->>> so after all that, I'm not really sure why the ISB is required.
->>>
->>> Will
->>
->> We were under the impression that this was required for the SPU as it is
->> treated as a separate entity than the PE.
->>
->> In "D17.9 Synchronization and Statistical Profiling" there is:
->>
->>    INDWCG
->>
->>    A Context Synchronization event guarantees that a direct write to a
->>    System register made by the PE in program order before the Context
->>    synchronization event are observable by indirect reads and indirect
->>    writes of the same System register made by a profiling operation
->>    relating to a sampled operation in program order after the Context
->>    synchronization event.
->>
->> That specifically mentions an indirect read following a direct write, which
->> seems to contradict D24-1. Although I thought this is a special case for
->> SPE.
-> 
-> My reading of the the text above is that it is covering the direct write
-> -> indirect read case, whereas I think the case in the SPE driver that
-> we're considering for your patch is when we have an indirect read
-> followed by a direct write.
-> 
-> Will
+On Fri, Feb 06, 2026 at 09:33:09AM +0800, Lv Zheng wrote:
+> On 2/6/2026 2:24 AM, Conor Dooley wrote:
+> > On Thu, Feb 05, 2026 at 11:11:51AM +0800, Lv Zheng wrote:
+> > > On 2/5/2026 1:37 AM, Conor Dooley wrote:
+> > > > On Wed, Feb 04, 2026 at 05:09:12PM +0800, Lv Zheng wrote:
+> > > > > Adds device tree bindings for SpacemiT T100 specific features by
+> > > > > introducing spacemit,100 compatible. T100 contains distributed IO=
+ATCs,
+> > > > > each of which exposes pmiv interrupt.
+> > > > >=20
+> > > > > Signed-off-by: Lv Zheng <lv.zheng@linux.spacemit.com>
+> > > > > Signed-off-by: Jingyu Li <joey.li@spacemit.com>
+> > > > > ---
+> > > > >    .../bindings/iommu/riscv,iommu.yaml           | 37 +++++++++++=
+++++++++
+> > > > >    1 file changed, 37 insertions(+)
+> > > > >=20
+> > > > > diff --git a/Documentation/devicetree/bindings/iommu/riscv,iommu.=
+yaml b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+> > > > > index d4838c3b3741..2da3456e7402 100644
+> > > > > --- a/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+> > > > > @@ -32,6 +32,12 @@ properties:
+> > > > >      # should be specified along with 'reg' property providing MM=
+IO location.
+> > > > >      compatible:
+> > > > >        oneOf:
+> > > > > +      - description: SpacemiT distributed IOMMUs
+> > > > > +        items:
+> > > > > +          - enum:
+> > > > > +              - spacemit,t100
+> > > > > +          - const: spacemit,riscv-iommu
+> > > >=20
+> > > > What actually is the t100? Is it an SoC or is it the name of the co=
+re
+> > > > complex IP that spacemit is using in multiple SoCs?
+> > >=20
+> > > T100 is the name of the IOMMU IP developed by SpacemiT, announced in =
+RISC-V
+> > > 2024 China Summit:
+> > > https://www.bilibili.com/video/BV1DNtCeiEBk/
+> > > It's world first server SPEC IOMMU in RISC-V, supports IOTLB placed in
+> > > adjacent to the DMA masters and supports PCIe ATS and PRI.
+> > > You can find it shipped in the recent publicly purchasable SoC Spacem=
+iT K3.
+> >=20
+> > Right, then what you need here is something like:
+> >=20
+> > items:
+> >    - enum:
+> >        - spacemit,k3-iommu
+> >    - spacemit,t100-iommu
+> >    - riscv,iommu
+> >=20
+> > Driver can then match on spacemit,t100-iommu - but you need to have
+> > soc-specific compatibles.
+> > I'm not convinced that riscv,iommu is suitable here though, does the
+> > driver work on your platform without the portions of code that are added
+> > by this series and enabled by your new compatible? If not, the I don't
+> > think the riscv,iommu fallback should be here.
+> >=20
+> > Additionally, please stop sending new versions so frequently and in
+> > response to earlier submissions. I have a v4 in my inbox while we are
+> > still discussing v3.
+>=20
+> SpacemiT provides RISC-V IOMMU implementation, T100 is the first
+> generation of the this IP product line, we have plan to develop T200,
+> T300, etc., with more features introduced to be adoptive to new
+> RISC-V IOMMU specifications.
+> Besides, T100 is not only shipped in K3, but also shipped in V100 and
+> the follow-up SoCs, like Kn, Vn00, they will likely use the same
+> synthesis result of T100 RTLs.
+>=20
+> From SpacemiT's point of view, we need a common sense of this IP
+> series for something like IOATCs, that's why spacemit,riscv-iommu
+> (this is same like qemu,riscv-iommu) is introduced. And a common sense
 
-Yeah, and that text also only applies to "profiling operations", not 
-writes to PMBPTR and PMBLIMITR.
+No, it's not the same as qemu,riscv-iommu. That exists to avoid
+riscv,iommu being allowed in isolation and as a "SoC"/integration
+specific compatible. The driver matches against riscv,iommu not
+qemu,riscv-iommu and has no qemu,riscv-iommu specific behaviours.
+It is akin to having spacemit,k3-iommu.
 
-Upon further investigation you are correct about the isb() not being 
-required, even with the new relaxation. Seems like we just accepted that 
-the relaxation required some change to the driver without really 
-thinking about it. But yeah thanks for looking in detail and catching it.
+> of T100 for all SoCs shipped T100 (like global filters, vendor events
+> and etc.,).
+>=20
+> IMO, the current compatible is proper to reflect these concerns.
+> What do you think?
 
-So we can drop this now. Sorry for the noise.
+I pretty much already told you what I think, that you need SoC-specific
+compatibles for SoCs that integrate this IP and that the you should drop
+the spacemit,riscv-iommu compatible. The spacemit,riscv-iommu compatible
+doesn't provide any additional value over spacemit,t100-iommu, and has
+the downside of maybe being confusing in the future if spacemit
+produces a iommu that doesn't have the IOATC behaviour.
 
-James
+Also, I don't see an answer to my question about whether the hardware
+will work without the driver changes this series introduces and enables
+with the new compatible?
 
+Cheers,
+Conor.
+
+--8z5ZdYiefbay1YtF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaYXBcwAKCRB4tDGHoIJi
+0jyPAP9isV7zyFlG71V/A10awaNoOnM6vetdkFyMEwJt5Yj2ZgD/U8AKoodPKvnt
+PY1aMEIn8pr+p3KARKfZhb9DFBcT2w0=
+=XWl+
+-----END PGP SIGNATURE-----
+
+--8z5ZdYiefbay1YtF--
