@@ -1,193 +1,219 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AD9284B25
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 15:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A258F278E5D
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 15:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770390587; cv=none; b=uSc7bgFFaJgIPirLeGgtqyvrEZYVVAPkP41Pehu1JUID1MeoAoX3GQoakUgNjpdsYvUT3yyCYgWEG25dlw9hN/HC8ckqWrSO3UwEZVu4VRAlqjnD5vsi078JKjcRRyZekJJiVy9T+x/Kt/JGdQDbCNC8/8naCFJfD0/17Jars9A=
+	t=1770390729; cv=none; b=Muls/VWBwNS+I7RRuQHgJpRxfAx4ihGOSdUPwYNYLsQNygO6AFyU9mtb0iHVHCYSLRmYbi3iBEA/J6LV3AtwewC0SEnmY6GaRKC1g2AqdZPYhOcjYaZI7Rt2eCCTgDQFAb/I2/vpgrGSWUL6xq/zvtVyZQrlRMCi9x/asQ9KwEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770390587; c=relaxed/simple;
-	bh=rdx3OV+nUN93GHAqETEZwEgh+ENPZq3ETzFi6DimpXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ElXwVpTn9psi8sDQFGvwhU4UQPJ7NZgGhSpnf4GWRdd6ipOtBFF1QIJJestfqkwcpVKnZAw5Vq8xW9s8ZV5KqLMv2/lNdNr8zwTGwbSuePSJmYLWv4dU5PF03YUax2m2HDBEPYcJJDkcy78/MCya71MF5dSIuPtlNmyfYZPWDso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Q6AkNa4t; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=bjotwFKJ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1770390729; c=relaxed/simple;
+	bh=TGeABG+Fxo5bWvm0touv8P9KtgJeqwXStuG1jicNL4Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=azjY1DCykxWqP6CLJvcNjkJUFsKF4jqn02HJasHRdaj9aWod9lXg1G1rinjLfKvLtB3ig1ZH/ZHHBRX/m9NEKT88YkfJ/pJhcTWcFjhyBbAxXJREiNX53InYaVfNa/HDGHCgtVU/FWqAQi/I84odBo9nia9PeouPI4jiLAntvto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mmRvwwBS; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Q6AkNa4t";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="bjotwFKJ"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6167pSCV2490642
-	for <linux-perf-users@vger.kernel.org>; Fri, 6 Feb 2026 15:09:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lcs4pjDWug9NOgYAjE4oCiI3J7ua4/c74IiXacv+yFg=; b=Q6AkNa4tpF7NF+Z9
-	LNSqfgkRZ5EHCySJQM+l+BsFwhdrdsUmh/9hTV1//IYJtkaHrqUvqt9Hk0INRxY9
-	VVybfsKO/IzvtX/wgIGb5XSQkkOqsvBUqcmtSAj2kDDpLlLc3LXPP5L/atB2zd1a
-	285+qX8bbUy7dTqos0lGzWF7wP0L3tWgxtlk4IWXehSX3/ORgD0nf7MREHbhfjln
-	aQHKvb1eHaEcKdlYvpBncBWK1iOwtA/eQoHyjRrgdRP5bXMgvyTjCMsIdmfFqQN5
-	HsjxgQv1b/PuvLQZbdJRTSsgFrrfIrxUrLISjKo1CM2uDDf/c5W9QvS/GVK/YBI6
-	djLgpg==
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c5c9c19se-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 15:09:45 +0000 (GMT)
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-66ad91bd85bso8715663eaf.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 07:09:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mmRvwwBS"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-435a11957f6so1787979f8f.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 07:12:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1770390585; x=1770995385; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lcs4pjDWug9NOgYAjE4oCiI3J7ua4/c74IiXacv+yFg=;
-        b=bjotwFKJB95/ETa0uS0LBRtKFGnGXzYjMrgRSb5sir0VRFBTbAUm4tGVrDR//B68uT
-         d1gAuLmq3PwWWCalmhfGRdfcUC3aU4em+udLWUPzAcUcHlnKhwgIzWV+x505tcchCfdE
-         3J6OpS8hIHSWze120RIJ8vaL4rMkeu8XqFGm092xBr9G9Su6LvKrSaOnhMjyCuesPkqO
-         UvdZYMog/wgGNITbSpf/BOupBlMyEyDVlVXpcAkJEunevfElrKBrbNU7Hfz8ILQDUoeI
-         Fa1X6ghcBDXyzzyiduuK4YT3aHC4gDm/xeDhq6uTlJsEGJ5M7zHifzCDTmUPQ+hr5Uln
-         iakQ==
+        d=linaro.org; s=google; t=1770390727; x=1770995527; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7THg7qGGKH4Oa16ZjhKMQ6LVc9gjkrDpVzn2/FripOk=;
+        b=mmRvwwBSS0yfpAF4raiWR0kYZQlj5Fp32flEW03Dn7gtelW/9HbRL793Awa9AGFdwK
+         grXysbwY5h2RqTWE4m47fHisau6h2M707DgxlzsU7rPBtQf3jNIA40gI5BZ4S47LuEuw
+         IeOPBNk/+VKlNlIqRAIImK1+tlRkMFdlcNaGUEyzfqQ/rUWZOPSM9PUiY2RLzhAKL8t7
+         9VewR3WB6xqF+9uEvNtLfGrwVma9icAYX5RXDeFoD5AW2GImyv621SKwOraZNv/g4MIl
+         2eAGeywCnh/xBjRlKqY/wFg16yqziOP8iErN+NgbRvY+2oE3IzFhWRuSpAwDdmmglFDh
+         xuYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770390585; x=1770995385;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lcs4pjDWug9NOgYAjE4oCiI3J7ua4/c74IiXacv+yFg=;
-        b=bA+nBXKJSZZs5Ls3wxgXRoVJu1rLBlHCiupM7ZBzEpF3poW652HZrq6JHQR+pWRzqd
-         M28Rl26OZ110kFUDdbZDhFHoSrnOZX5mRdCWWj2igZFrdjIGSwEin2WoGL7HvwDCviFd
-         tDLkGqpx7IIu2s6LPmMyhuWG0BPgEdPHvpyQzmzolJsewAkpWXibCr/YW3RNbrV2WW7l
-         fW+6/NLJ2hriLPbmsEETYTY0y6FmKRrDcE/ShlLGeGyAucXN4ZtOp/HYvKJBmHnzFxUo
-         Bd7CtftoPhKZG/O7TNiA7Ns+3f5RipzbPm1kQOe7RMwtWmJXuxn09opXw8ouHbwjs5De
-         acZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVD/ACB9VDNWaiQTeOOQlfO5OBwcG+xnG1qRhIKmIjs1AhffC7TnadkIHu5+5vA261hKwomy8bsu3vRzDAamMtB@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB6ndlMX1BFitXbDAaWua7SgJ3NXwvPfPQ0MP4D4pOIjbh1U5H
-	AhNvedn4o+9g0n35266SOQqoXASkvkVev/voT3gT+7J+pwy0I6fdK0lRKAJsISN2xaEp/Z/P40Z
-	zsz8xKqRZGSyNbG7A5OQY3mn6MEqjbpKyn0PpuAy7Or3NJKQKC5IJnz+SLyeUqVQcqZyaB6yI
-X-Gm-Gg: AZuq6aI98DcjGq5/rokH7Z9W9C96FVEH8vpTXdlTE9YTaVNqwcF4oWtp9RPzW9nCbFk
-	BX/fduQE1UPEg0JOnVipolxDZb2V1knfAYk9KHOAlLkasJEnksq+Y6gUvlJHXZ6LvQfDavCxVPi
-	JyyVeKJut/mA43zLY9Wt9etyRN/THTn3CzMQd95Um17oNsF4eMBfjkG4bKyyEBppPn+3GpBJGai
-	Q6EaoSVKGQJc9W/HDDlFT+b7H2ttN7QepVcsiPrR0tuqS0ViADM+700lElLPm6P+T74eoh3yFOf
-	ygYe4N8olnSpFHN7MVQCSUpqqUIhothG4nNMm383TJga+uEHBNWWIoT4u5DbO1+YcwEet4QVnIS
-	6ROjlDjBbeA9wmQiJlr0=
-X-Received: by 2002:a05:6820:228a:b0:661:ae2:95fb with SMTP id 006d021491bc7-66d0d2faf29mr1460747eaf.75.1770390585140;
-        Fri, 06 Feb 2026 07:09:45 -0800 (PST)
-X-Received: by 2002:a05:6820:228a:b0:661:ae2:95fb with SMTP id 006d021491bc7-66d0d2faf29mr1460723eaf.75.1770390584637;
-        Fri, 06 Feb 2026 07:09:44 -0800 (PST)
-Received: from localhost ([140.82.166.162])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-66d391aeb93sm1202941eaf.8.2026.02.06.07.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Feb 2026 07:09:44 -0800 (PST)
-Date: Fri, 6 Feb 2026 09:09:43 -0600
-From: Andrew Jones <andrew.jones@oss.qualcomm.com>
-To: Lv Zheng <lv.zheng@linux.spacemit.com>
-Cc: Zong Li <zong.li@sifive.com>, Tomasz Jeznach <tjeznach@rivosinc.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Alexandre Ghiti <alex@ghiti.fr>, Jingyu Li <joey.li@spacemit.com>,
-        iommu@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
-        devicetree@vger.kernel.org, Yaxing Guo <guoyaxing@bosc.ac.cn>
-Subject: Re: [PATCH v3 3/8] iommu/riscv: Add HPM support for performance
- monitoring
-Message-ID: <xukccsqgwmagqq5egx7i4op6nfot3t3lusnaso4pfzcq5h6bfz@adsm5nusnocx>
-References: <cover.1769562575.git.lv.zheng@spacemit.com>
- <cover.1770195980.git.lv.zheng@linux.spacemit.com>
- <9C0A2AD4850D179B+524146e74e808db90d5f28fcb6ee791cf1d1bfaa.1770195980.git.lv.zheng@linux.spacemit.com>
- <p74snip7yykhogvzqld4gyjlygmd2z4kqnat7w3qj63fwebnmm@dlz6tloevgbs>
- <4D87481E9AABE2C6+72d18f72-9407-4d68-8195-edc6c171df14@linux.spacemit.com>
- <CANXhq0q8N5eHx9ytabZR97Y7AULKwgS2-uEGhcaOOGp9mvbtRQ@mail.gmail.com>
- <6C65A3873186B07C+29da5dbd-ed27-4ace-a5ca-355b3983d60c@linux.spacemit.com>
- <zzbwkazzgeovgmbvg4qnibipzsldqcjnw4axnxlamhgvcld4hs@4m4cc2ctuuvf>
- <752514AD54FA2A1B+513d6894-b3bf-44f3-bcc1-7d30f2642cc2@linux.spacemit.com>
+        d=1e100.net; s=20230601; t=1770390727; x=1770995527;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7THg7qGGKH4Oa16ZjhKMQ6LVc9gjkrDpVzn2/FripOk=;
+        b=AcFW02aFpiHdWKChZxktZEulP5kQESXaJcsbe7gTRq7rMy5yqHfFrJVyjLr6KwbCrE
+         oEorEB+gjQ1AJCJLi1ycUKw3k0VX8Fbsdp5zIaRS+bJSncJP1VRKh26J/ZC7hSMYTy7e
+         I+/KrnSFqvtLzgpRnbeuDi6kVfU5MQxttokDKuM1mKHbLCJ6uNRahh1W20D4AsWJWDkV
+         2y05cClr44xTzdQ2AovXFeynPDxYxXCzGgzWIxRevr7eGHu2dtAjJL1tFd7YM137s5zz
+         XrP3Ln6UgYxK9rhHGrvTlW6BetYb+TTRveJrXbufAH/V6pPgdyPEm8x5aTntXZuZFrtw
+         m9BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVDM3msAswOEukpyqj44Vplz6JffAuvjrdDMyA02jvV5l6m/Vdir9r1NoXlYZlIKKjVBxxAysS0S+lPVnjusEG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6LoB4Uq0oxx1xCEuJm6rQwiEk4bAd5rucvLpeEMcPOVMIcCEM
+	+G36jniHgXyyoxR/ULLSw2QSZQ6MeMmYk15q7gXKmKg8YqXpPXJZQqJmpxhK+yLYZ7A=
+X-Gm-Gg: AZuq6aI9CF53tFimfQTwO3gNCHWmbEo5g/Acj9L4Sl3pZs0cnth/0AzteIQZu1aVajl
+	McE28qy1BU6+hn0KrhfNwegj9o1UPHqpkaixm0yeChs/rK1Ly0pk8PoZS98ASmtJkBLyMUb5lNc
+	egKUxvQOyzULCP1xg5fI1Qj1z7Pn2LLiCDPdTD0Igg3FduqGkr4O/psupaxlZKvbTV+s9WDvtGC
+	XcTF0L5cgfTHK8St4/m1oGjcNKOVU5uTbmAOXJv0jyoNA3UML2Mfc/iUKE3LNSxhVHeC+ydzipi
+	JJwqkhE1NCLBLYR4qzaT4P1AYl0N0ZMPcaEgE3txn/tR5Kl/W3ROjGiGP6hmRUzXr1QdeLn87UN
+	ZLPc34CeYkrH6TDoFFac1RLJnqPZMQAEiUkaKcxB0+2xWvcS1T1IkYAVmfCzvCGW981GkLLcMGU
+	ve61nbJQU+l0vXomKPBzZdD/m4h1M=
+X-Received: by 2002:a05:6000:240e:b0:436:23a2:5e25 with SMTP id ffacd0b85a97d-4362938fe8dmr4932542f8f.44.1770390726896;
+        Fri, 06 Feb 2026 07:12:06 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-436296b25casm6941427f8f.4.2026.02.06.07.12.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Feb 2026 07:12:06 -0800 (PST)
+Message-ID: <293a4d85-a320-4280-9607-5b9d08ba555b@linaro.org>
+Date: Fri, 6 Feb 2026 15:12:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf tests: mmap: skip rdpmc tests when sysfs disabled
+To: Qiao Zhao <qzhao@redhat.com>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org, leo.yan@linux.dev,
+ namhyung@kernel.org, mpetlan@redhat.com, acme@kernel.org,
+ vincent.weaver@maine.edu
+References: <20260203141608.14128-1-qzhao@redhat.com>
+ <9d7eb5cf-e998-4b77-9b8d-7f0ff6b2da36@linaro.org>
+ <CAATMXfm88MZ3Fhc0upRQ_5D2Vy+g8CscVAwhfY7nbM9oX93Qvw@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAATMXfm88MZ3Fhc0upRQ_5D2Vy+g8CscVAwhfY7nbM9oX93Qvw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <752514AD54FA2A1B+513d6894-b3bf-44f3-bcc1-7d30f2642cc2@linux.spacemit.com>
-X-Authority-Analysis: v=2.4 cv=BbzVE7t2 c=1 sm=1 tr=0 ts=69860439 cx=c_pps
- a=V4L7fE8DliODT/OoDI2WOg==:117 a=cvcws7F5//HeuvjG1O1erQ==:17
- a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22
- a=VwQbUJbxAAAA:8 a=pFyQfRViAAAA:8 a=pGLkceISAAAA:8 a=gObE7mBVTb-_oU6ProoA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=WZGXeFmKUf7gPmL3hEjn:22
- a=oJz5jJLG1JtSoe7EL652:22
-X-Proofpoint-GUID: hMW_UKx7_1mdy8OtL2UxI1vhFYOahwbc
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA2MDEwOSBTYWx0ZWRfX4+FnKh3Qf/+D
- dUZ4DsFFdw2+XfmTaQUcRfdweJ4OtYAM5RDMVQ5/uZvRoFj+EWOdVwBhV1/XOngispWKJ1ZvPsP
- 1+dMAuZ+vA6kIzujy54KgTXskc3Jz7mtKnCLFYmFn+rrZ3fLxrHEiaRblszQwKz0JW0K4fqvLC6
- o+cchCL8USR1ngWYGBodvENC0bGoS5ygWGYXoionJJXTG6prXZNTgu0Mt1Il1LjFsw41bxONhmy
- 0fQMexSAnz+rJ5WyuPAkZ1sVR99MHui/KGYuzzju/EDwEmJTKRVipW8xqGrbdtQvRmafeOpQNln
- WQRru7doDLAxm6x8pDuHIfaiytn1KWqnOmya6rkv7Bf+qa5/amOihGp772wymgIUAnAV1/4+P8K
- Wyr0lLiRsfRZeKZLFl42zK6kwYtJ6hG18AZ7BNSvL6LjoMplKr4ntiuU947MdouQTlnH6jP6vMi
- gb/QpqGBwyn49GRjOrw==
-X-Proofpoint-ORIG-GUID: hMW_UKx7_1mdy8OtL2UxI1vhFYOahwbc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-06_04,2026-02-05_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 bulkscore=0 spamscore=0 suspectscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602060109
 
-On Fri, Feb 06, 2026 at 11:42:39AM +0800, Lv Zheng wrote:
-> On 2/5/2026 11:23 PM, Andrew Jones wrote:
-...
-> > Since Zong Li's patches were already on the list then your serieswould> at
-> least discuss them in the cover letter, explaining why you've opted
-> > not to adopt them. But, most likely some of the patches can be adopted,
-> > so those should be extracted from Zong Li's work (with authorship
-> > preserved) and based upon in order to respect that prior work.
-> > 
-> 
-> You can see we have contacted each other in community, and decided to
-> cooperate in this way to honor his contribution. But final decision is
-> left for the community to decide:
-> 
-> From Zong Li:
-> >> Of course, if the community would prefer to go your version, I’m
-> >> perfectly fine with that as well.
-> 
-> We respect all contributions, We'll add the link in cover letter to the
-> follow-up revisions, let me know if anything else should be done to the
-> new revisions.
 
-Just do all the communication before posting, allowing that communication
-to be summarized in the cover letter and in any appropriate commit
-messages so reviewers know what's going on. Also don't forget to CC
-anybody previously involved to ensure they have a chance to chime in.
 
+On 05/02/2026 2:14 am, Qiao Zhao wrote:
+> Hi James,
 > 
-> --------------------------------------------------------------------
+> Thanks for the review and the question.
 > 
-> And let me describe in details to compare the functionalities and
-> addressed comments between what is provided by Joey and by Zong:
+> I did try modifying the check according to your suggestion, i.e. changing
+> the condition like:
+> +      if (!rdpmc_supported && (pc->cap_user_rdpmc || pc->index)) {
+> However, with this change the tests regress on ARM, the results are:
+> --- start ---
+> User space counter reading 1
+> User space counter reading for PMU armv8_pmuv3_0
+> User space counter reading for PMU armv8_pmuv3_0 [Failed unexpected
+> unsupported counter access 1]
+> ---- end ----
+> 126.4: User space counter disabling instructions                     : FAILED!
+> --- start ---
+> User space counter reading 0
+> User space counter reading for PMU armv8_pmuv3_0
+> User space counter reading for PMU armv8_pmuv3_0 [Failed unexpected
+> unsupported counter access 1]
+> ---- end ----
+> 126.5: User space counter disabling cycles                           : FAILED!
 > 
-> https://lore.kernel.org/all/20250115030306.29735-1-zong.li@sifive.com/
-> 
-> There is no missing functionalities between the two approaches, I also
-> checked the original Robin's comments, let me describe them in details:
+> On ARM, cap_user_rdpmc represents a PMU capability and may remain
+> set even when user rdpmc access is disabled via sysfs/sysctl. In that case
+> the mmap page reports: cap_user_rdpmc = 1 and index = 0, which is an
 
-My concern wasn't whether or not Robin's comments were addressed in this
-posting (that's important, but not what I'm talking about). My concern
-was that Zong Li's work wasn't addressed in any way, so appeared to be
-a chance for duplicated efforts. Indeed his reply [1] indicates exactly
-that and even that there is a third patch series being worked
-independently. Please work out who and what patches are going to be
-the focus going forward and describe that decision in the cover letter
-for the next revision. And please don't forget to CC Zong Li and Yaxing
-Guo.
+That's a slightly annoying difference to x86 then, which makes it a bit 
+harder to test.
 
-[1] https://lore.kernel.org/all/CANXhq0oi9nE7ffLGsz5j8GnC1UDTD-4bE4cantRjW2fXHYrjHA@mail.gmail.com/
+> expected and valid state when rdpmc is disabled.
+> The intention of the existing check: if (!rdpmc_supported &&
+> pc->cap_user_rdpmc && pc->index) is only to catch the inconsistent case
+> where rdpmc is reported as unsupported, but the mmap page still exposes
+> a fully usable rdpmc state (i.e. both capability and a valid PMC index). This
+> avoids flagging the ARM case above while still detecting real inconsistencies.
+> 
+> With the current logic, the tests now either pass or are skipped as expected
+> on ARM, and there is no behavior change observed on x86_64.
+> 
+> Thanks,
+> Qiao
+> 
 
-Thanks,
-drew
+But "rdpmc_supported = pc->cap_user_rdpmc && pc->index" here:
+
+   if (saved_user_read_state == USER_READ_UNKNOWN)
+       rdpmc_supported = pc->cap_user_rdpmc && pc->index;
+
+So I'm still not sure I get checking rdpmc_supported with those exact 
+two things again.
+
+In fact I looked more closely and the test is already setup to write to 
+<pmu>/rdmpc to run the test twice with it both enabled and disabled in
+set_user_read(). We only return USER_READ_UNKNOWN in that function on 
+perf_user_access platforms, but only because that function doesn't know 
+the place to enable it is /proc/sys/kernel/perf_user_access.
+
+So actually we should modify set_user_read() to try enabling in both 
+places, and then the test can test enabled and disabled outcomes on Arm 
+as well as x86. Now that we know there is this other file we can make 
+the original intention of the test work with it, rather that just adding 
+a skip and not testing anything.
+
+> On Wed, Feb 4, 2026 at 5:40 PM James Clark <james.clark@linaro.org> wrote:
+>>
+>>
+>>
+>> On 03/02/2026 2:16 pm, Qiao Zhao wrote:
+>>> Some architectures control user-space rdpmc access via sysfs or sysctl,
+>>> for example /proc/sys/kernel/perf_user_access on arm64/riscv or the
+>>> rdpmc attribute under event_source devices on x86_64.
+>>>
+>>> The mmap-based rdpmc tests currently assume rdpmc availability purely
+>>> based on perf_event configuration, which leads to false failures when
+>>> the system globally disables rdpmc access.
+>>>
+>>> Introduce a helper to detect rdpmc availability via sysfs and skip
+>>> user space counter reading tests when rdpmc is disabled by the system.
+>>>
+>>> The check is only applied to USER_READ_ENABLED tests. User-read disabled
+>>> tests continue to run unconditionally, as they validate perf_event mmap
+>>> semantics independent of rdpmc availability.
+>>>
+>>> Additionally, tighten the unsupported rdpmc check to require a valid
+>>> counter index, avoiding false failures when cap_user_rdpmc is set but
+>>> no counter is assigned.
+>>>
+>>> v1->v2
+>>> - Check rdpmc availability via sysfs before running USER_READ_ENABLED tests
+>>> - Handle both perf_user_access and rdpmc sysfs interfaces
+>>> - Avoid false failures when cap_user_rdpmc is set but no counter index exists
+>>>
+>>> Testing:
+>>> - arm64: rdpmc disabled by perf_user_access (tests correctly skipped)
+>>> - x86_64: no behavior change compared to v1
+>>>
+>>> Signed-off-by: Qiao Zhao <qzhao@redhat.com>
+
+[...]
+
+>>>                if (rdpmc_supported && (!pc->cap_user_rdpmc || !pc->index)) {
+>>>                        pr_err("User space counter reading for PMU %s [Failed unexpected supported counter access %d %d]\n",
+>>>                                pmu->name, pc->cap_user_rdpmc, pc->index);
+>>> @@ -307,7 +348,7 @@ static int test_stat_user_read(u64 event, enum user_read_state enabled)
+>>>                        goto cleanup;
+>>>                }
+>>>
+>>> -             if (!rdpmc_supported && pc->cap_user_rdpmc) {
+>>> +             if (!rdpmc_supported && pc->cap_user_rdpmc && pc->index) {
+
+This weakens the test on x86 though. If they behave differently you 
+might want to just skip it on platforms with 
+/proc/sys/kernel/perf_user_access and add another test for them that 
+pc->index shouldn't be set if it's not supported, but ignore cap_user_rdpmc.
+
+>>>                        pr_err("User space counter reading for PMU %s [Failed unexpected unsupported counter access %d]\n",
+>>>                                pmu->name, pc->cap_user_rdpmc);
+>>>                        ret = TEST_FAIL;
+>>
+>> Not sure I understand this test, shouldn't it be (pc->cap_user_rdpmc ||
+>> pc->index)? As in, you don't expect either of them to be set if
+>> !rdpmc_supported. But then it's the exact opposite of the one above so I
+>> don't think it does anything.
+>>
+>> Either way the test now passes or skips properly on Arm:
+>>
+>> Tested-by: James Clark <james.clark@linaro.org>
+>>
+>>
+> 
+
