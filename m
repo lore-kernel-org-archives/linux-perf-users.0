@@ -1,49 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EA12C2374;
-	Fri,  6 Feb 2026 22:10:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F67303A1A;
+	Fri,  6 Feb 2026 22:13:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770415820; cv=none; b=lEmlrxN1j0fLm4w8T9DBj4rj5GwM3cWACofqhY68tk/FdTYrSfZJl80h5TzhT1V5wpoaBNskgO4MSB+gEJCR1NUKPtpOc1HwSvKwGrGJ+tMj//A2Anskeuw4k/rVqqlkgZSzVz6lsNIwnY6y/8NA7MtSGitg/R8z8W5DGmwsJOA=
+	t=1770416021; cv=none; b=tGQfS8iOTv9usOBwFGY7tMUuP/uo+PoebeSagP6GOSmcudbHGTlGkBofumXTkDvhfWzB19pcXZC5RidGo2uSCwbZJnTgw6V575OicUraQ2Wj/x0o0dCKXCEJdl8A7I9ICVO1rVA/lJxD84M5Ljf4+Onf7IaQLrS81N2ZETk3wXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770415820; c=relaxed/simple;
-	bh=59RiEZducaab4Ut0oK2YX9CJM7vHpLHjETpHtt4QdEk=;
+	s=arc-20240116; t=1770416021; c=relaxed/simple;
+	bh=M19xwhQO/96t1ks9C85jkg/3Lu7l6HsRTkSysNlo29I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FdXBHpeSyuD44kRRCbLiMRUdVqUXdgnKnhHfn6K0P+PmsutbDXFcN+m3OxatAFr1F8sWjtMyEjnYddXgtDJoLY3yuZBshN6wzZLHyyw1Mfgrrv+QDBboDqRrwVj6Fqe0z5C05y/Wk7nr18UdSPsTb/62Ps8ynzUNR3z5an6YFaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uci+cVn9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=irrc4bxhjXJC9CnIIL5KvDCxGZc4LkMP0XvNzfvR8PfMu1XpoIt5bZ9Heil3upUVvTMp8TKeDk5zGYuDsDWyfAMpOtDGSqkZ8aNwgfE6dO5Xym/eLGMdlj2ERBxmqtD9qOz1e3DYXGMhccKFpvKOzqURVibDnjN9I4CmgEwekQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OhCeDE8a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uci+cVn9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9195C116C6;
-	Fri,  6 Feb 2026 22:10:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OhCeDE8a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B0BC116C6;
+	Fri,  6 Feb 2026 22:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770415820;
-	bh=59RiEZducaab4Ut0oK2YX9CJM7vHpLHjETpHtt4QdEk=;
+	s=k20201202; t=1770416021;
+	bh=M19xwhQO/96t1ks9C85jkg/3Lu7l6HsRTkSysNlo29I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Uci+cVn9MF5Klpmoz8hOE3S/b0cBNEKz1d5OAp+mCYgAKthZ3AsTpRv/AdBqBkIsQ
-	 ecwIslLN0yOHMBjajH4GKARhtRBVCwF+jf+/JTRQFL6MWUCarfo2RZzXSCFrh4BaFG
-	 tbZRMHodPs6wuJJmj+9PK1FMl+mSK9noj4TFs5KdAXwHZwm+0dp40Cao1/HZf77A3P
-	 65mp0mCdIsBaxOaWYHUHTjN7gGvN3c+ECUnJ255ZkM0DIkNghwXJ8K01iTGoRtHDpT
-	 MtsreQ4iq+/IZwHuemkAl2U98Qw9u1YlnFuaQtxAGrGjQ/dEbR++GhiEVMJ9bvSp9V
-	 0r6p5uy4WWuzw==
-Date: Fri, 6 Feb 2026 19:10:16 -0300
+	b=OhCeDE8aZL9qQeVpLNwlgRvxG7ozAD2XQFyAhvLs3ynjPFDQ7SzF/5RZAanc9shmt
+	 B4pl02cMIqa6wPJr3Zi9IH7Q3xklXW4gqcnVgFHmogIXDJ0fwOAg6FiuiZs7laBjYG
+	 1YVYXCdCxU5Nba2bPKJsc/04GtVz5XjK5gZqDRIwUzAZVMqdkv+0mW62zyvCSuEGpX
+	 kJ8++Rp78+FQY0d7D/hzSVwKhUigoZxk1Zegcp//p6XADbqcnoELyQvCvr9vWDXaUZ
+	 XrBoli0Cb7GPB72BzGtHpzGG2a1W/5OYwP2tm47VFQpNkm4dpdQ3XmJR2sGdpVz/71
+	 2W/4s9+qb4Zvw==
+Date: Fri, 6 Feb 2026 19:13:37 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Zide Chen <zide.chen@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	thomas.falcon@intel.com, dapeng1.mi@linux.intel.com,
-	xudong.hao@intel.com
-Subject: Re: [PATCH] perf tools: Refactor precise_ip fallback logic
-Message-ID: <aYZmyNz1tJ9u-y5s@x1>
-References: <20251022220802.1335131-1-zide.chen@intel.com>
- <CAP-5=fUKH8Qw9t173G4HP-UzujUKJrLPPmkDSjBs=2YzV=9LHA@mail.gmail.com>
- <aYZl2evOTebsTIxZ@x1>
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andi Kleen <ak@linux.intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Andres Freund <andres@anarazel.de>
+Subject: Re: [PATCH v7 0/6] perf stat affinity changes
+Message-ID: <aYZnkYqWXnKpHd3h@x1>
+References: <20260203225129.4077140-1-irogers@google.com>
+ <aYZeuP5NlZ4gFacx@x1>
+ <CAP-5=fVKn5HSxKPDBrmVXchRu9HAL3Nb7ikKptKejHMOxR-yMg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,92 +57,97 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aYZl2evOTebsTIxZ@x1>
+In-Reply-To: <CAP-5=fVKn5HSxKPDBrmVXchRu9HAL3Nb7ikKptKejHMOxR-yMg@mail.gmail.com>
 
-On Fri, Feb 06, 2026 at 07:06:21PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, Oct 23, 2025 at 09:14:17AM -0700, Ian Rogers wrote:
-> > On Wed, Oct 22, 2025 at 3:14 PM Zide Chen <zide.chen@intel.com> wrote:
+On Fri, Feb 06, 2026 at 02:01:37PM -0800, Ian Rogers wrote:
+> On Fri, Feb 6, 2026 at 1:35 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > On Tue, Feb 03, 2026 at 02:51:23PM -0800, Ian Rogers wrote:
+> > > Change how affinities work with evlist__for_each_cpu. Move the
+> > > affinity code into the iterator to simplify setting it up. Detect when
+> > > affinities will and won't be profitable, for example a tool event and
+> > > a regular perf event (or read group) may face less delay from a single
+> > > IPI for the event read than from a call to sched_setaffinity. Add a
+> > >  --no-affinity flag to perf stat to allow affinities to be disabled.
 > > >
-> > > Commit c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
-> > > unconditionally called the precise_ip fallback and moved it after the
-> > > missing-feature checks so that it could handle EINVAL as well.
-> > >
-> > > However, this introduced an issue: after disabling missing features,
-> > > the event could fail to open, which makes the subsequent precise_ip
-> > > fallback useless since it will always fail.
-> > >
-> > > For example, run the following command on Intel SPR:
-> > >
-> > > $ perf record -e '{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3/PS}' -- ls
-> > >
-> > > Opening the event "cpu/mem-loads,ldlat=3/PS" returns EINVAL when
-> > > precise_ip == 3. It then sets attr.inherit = false, which triggers a
-> > > kernel check failure since it doesn't match the group leader's inherit
-> > > attribute. As a result, it continues to fail even after precise_ip is
-> > > reduced.
-> > >
-> > > By moving the precise_ip fallback earlier, this issue is resolved, as
-> > > well as the kernel test robot report mentioned in commit
-> > > c33aea446bf555ab.
-> > >
-> > > No negative side effects are expected, because the precise_ip level is
-> > > restored by evsel__precise_ip_fallback() if the fallback does not help.
-> > >
-> > > This also aligns with commit 2b70702917337a8d ("perf tools: Remove
-> > > evsel__handle_error_quirks()").
-> > >
-> > > Fixes: af954f76eea56453 ("perf tools: Check fallback error and order")
-> > > Fixes: c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
-> > > Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> > > Signed-off-by: Zide Chen <zide.chen@intel.com>
-> > 
-> > Acked-by: Ian Rogers <irogers@google.com>
+> > > v7: Revert "perf tool_pmu: More accurately set the cpus for tool
+> > >     events" that caused issues with user specified CPUs (Andres Freund
+> > >     <andres@anarazel.de>). Fix a null test is prepare_metric so that
+> > >     missing events can't trigger segfaults (Andres Freund). Make the
+> > >     CPU map propagation improve the CPU maps for tool events that only
+> > >     read on index 0, this allows later setting when
+> > >     evlist__create_maps is called with the correct user CPUs. Rebase
+> > >     previous non-merged affinity changes that hadn't been picked up
+> > >     yet.
+> >
+> > Not applying to tmp.perf-tools-next, can you please check?
 > 
-> Fell thru the cracks... Still applies cleanly.
-> 
-> Thanks, applied to perf-tools-next,
+> Will send a rebase on tmp.perf-tools-next shortly.
 
-So I saw the rest of the thread, removing it...
+Thanks!
+
+> Could I interest you in some second servings of build improvements
+> while you wait? :-)
+> https://lore.kernel.org/lkml/20260203164323.3447826-1-irogers@google.com/
+
+Applied it locally for testing,
 
 - Arnaldo
  
-> - Arnaldo
->  
-> > Any chance you could help with a test case that covers this? The
-> > fallback logic is spread out and easy to introduce subtle bugs into.
-> > Just having a test case that does ` perf record -e
-> > '{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3/PS}' -- ls` and checks the
-> > output for EINVAL when the events are present would be useful, as then
-> > we can make sure this doesn't regress on SPR and later. Something with
-> > more generic events would of course be better :-)
-> > 
-> > Thanks,
-> > Ian
-> > 
-> > > ---
-> > >  tools/perf/util/evsel.c | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> Thanks,
+> Ian
+> 
+> > - Arnaldo
+> >
+> > > v6: Drop merged tool event change. Move TPEBS fix into its own patch
+> > >     1st.
+> > > https://lore.kernel.org/lkml/20260108212652.768875-1-irogers@google.com/
 > > >
-> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > index ca74514c8707..6ce32533a213 100644
-> > > --- a/tools/perf/util/evsel.c
-> > > +++ b/tools/perf/util/evsel.c
-> > > @@ -2714,12 +2714,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
-> > >         if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
-> > >                 goto retry_open;
+> > > v5: Drop merged changes. Move tool event reading to first
+> > >     patch. Change --no-affinity flag to --affinity/--no-affinity flag.
+> > > https://lore.kernel.org/lkml/20251118211326.1840989-1-irogers@google.com/
+> > >     On v5 there was discussion with Andi Kleen who points out that
+> > >     affinities will work better with real time priorities but using
+> > >     this requires privileges.
 > > >
-> > > +       if (evsel__precise_ip_fallback(evsel))
-> > > +               goto retry_open;
-> > > +
-> > >         if (err == -EINVAL && evsel__detect_missing_features(evsel, cpu))
-> > >                 goto fallback_missing_features;
+> > > v4: Rebase. Add patch to reduce scope of walltime_nsec_stats now that
+> > >     the legacy metric code is no more. Minor tweak to the ru_stats
+> > >     clean up.
+> > > https://lore.kernel.org/lkml/20251113180517.44096-1-irogers@google.com/
 > > >
-> > > -       if (evsel__precise_ip_fallback(evsel))
-> > > -               goto retry_open;
-> > > -
-> > >  out_close:
-> > >         if (err)
-> > >                 threads->err_thread = thread;
+> > > v3: Add affinity clean ups and read tool events last.
+> > > https://lore.kernel.org/lkml/20251106071241.141234-1-irogers@google.com/
+> > >
+> > > v2: Fixed an aggregation index issue:
+> > > https://lore.kernel.org/lkml/20251104234148.3103176-2-irogers@google.com/
+> > >
+> > > v1:
+> > > https://lore.kernel.org/lkml/20251104053449.1208800-1-irogers@google.com/
+> > >
+> > > Ian Rogers (6):
+> > >   Revert "perf tool_pmu: More accurately set the cpus for tool events"
+> > >   perf stat-shadow: In prepare_metric fix guard on reading NULL
+> > >     perf_stat_evsel
+> > >   perf evlist: Special map propagation for tool events that read on 1
+> > >     CPU
+> > >   perf evlist: Missing TPEBS close in evlist__close
+> > >   perf evlist: Reduce affinity use and move into iterator, fix no
+> > >     affinity
+> > >   perf stat: Add no-affinity flag
+> > >
+> > >  tools/lib/perf/evlist.c                 |  36 +++++-
+> > >  tools/lib/perf/include/internal/evsel.h |   2 +
+> > >  tools/perf/Documentation/perf-stat.txt  |   4 +
+> > >  tools/perf/builtin-stat.c               | 114 ++++++++---------
+> > >  tools/perf/util/evlist.c                | 156 +++++++++++++++---------
+> > >  tools/perf/util/evlist.h                |  27 ++--
+> > >  tools/perf/util/parse-events.c          |  10 +-
+> > >  tools/perf/util/pmu.c                   |  23 ++++
+> > >  tools/perf/util/pmu.h                   |   3 +
+> > >  tools/perf/util/stat-shadow.c           |   7 +-
+> > >  tools/perf/util/tool_pmu.c              |  19 ---
+> > >  tools/perf/util/tool_pmu.h              |   1 -
+> > >  12 files changed, 237 insertions(+), 165 deletions(-)
+> > >
 > > > --
-> > > 2.51.0
-> > >
+> > > 2.53.0.rc2.204.g2597b5adb4-goog
