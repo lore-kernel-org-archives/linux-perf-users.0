@@ -1,40 +1,45 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3162848A8;
-	Fri,  6 Feb 2026 12:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C6140FDB3;
+	Fri,  6 Feb 2026 14:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770381195; cv=none; b=ui7hbaag/iVKnIe2NZi47Ullq2XxypU0wrU3XetTD2Pghnxn06s53soxsnjKf65pyDky2gGU7/+lxq/c8mQnlrqRK/JriKPumS1je7NGCZA4INepLfWKtoAhH14HESsxGP8CBdK3744VeaR7gLJ1/PPYRsOt0pITXLEGT0UpuCM=
+	t=1770389853; cv=none; b=HLBQLRxaWAfJivCaGgLbJb4gIDrm+jiILkVWsDM35n/cbzEprtMBCcV7h2hmrU/COXcbsWmPIZTw7K9GDZJdijktikz7ZJYN3+CXObfyYPbDzv33jv7AL7pQbdlSUwAKVhEdqmPqgnU5dcGT9AIwJHA+oNwEdsdf4Nr00A6eWjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770381195; c=relaxed/simple;
-	bh=QkkVg8VfqoMTA7JSLDs9urMdyDvtibO3YyE35JA9lLk=;
+	s=arc-20240116; t=1770389853; c=relaxed/simple;
+	bh=L1wCqtqBbXKQ9bunNkuH1wXzXBjn3AtwBsS6rsKAPrc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VRrDocegXs0wwLADLj++TsbRKKr5IXdTLoD/NP3sNPVRq8/nJfpSWIMZvNF/ybtTGIe96r4JFA2BPqC+Vrik08SQ21QPdxbqbOhNxlned1/QEAoqMimeG8lT3Z+VZipo17NRmdAZ8oLPvdfZjOd4R9fCgZk4mxI2hRq+P5vqaqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05792339;
-	Fri,  6 Feb 2026 04:33:07 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E4C803F632;
-	Fri,  6 Feb 2026 04:33:12 -0800 (PST)
-Date: Fri, 6 Feb 2026 12:33:10 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=faO71Qa9wMHfgDCltNeyvitqsH98JQQw4hca8fXIYzlkNyo7uzWtYWcZ5eC0G5Qpi43f1cu+fs2e656GSrFKuM65WeQqkQevB8wbpJRmbGJHBt5bCh3cYw/HNgLRren9KEOHX8AbM9sRQ601oclqx9IwqwJb5NWC849nq6XM+EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcGnxVdc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcGnxVdc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B55C116C6;
+	Fri,  6 Feb 2026 14:57:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770389852;
+	bh=L1wCqtqBbXKQ9bunNkuH1wXzXBjn3AtwBsS6rsKAPrc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tcGnxVdct++Mx57Tfoc6UFdGMfsqGXZTFG1CYTJ9Rnf7WPO0Ih25V7Pdhh+d2whtU
+	 m1ewenJT9GB0BTstLB5gyttCZ5jcfe67scV0CYPKKj3JWapxGLkRMmbb4wY3Hz4L5e
+	 t9/D6w1grNWEsdfwmu53O9kVP1kXqgm9UNQSilQ86rDIrPL+7RQAm8cHvVNLRzP9+b
+	 PV6RUGXLtcY8US1KcyrBCMGMu72UKRM8+O33U5ms8eabWmNvjnURMLVOJxKt0Dpnts
+	 +vkGAdzgBAeDmNg+ZwucUQLnaAzikcrtWe0htJWuYuaR3ljMhhitFsTOi+wlTz15Dz
+	 Myy/5L/nEExMg==
+Date: Fri, 6 Feb 2026 11:57:28 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] perf metricgroup: Don't early exit if no CPUID
- table exists
-Message-ID: <20260206123310.GF3529712@e132581.arm.com>
+Subject: Re: [PATCH v1 1/2] perf tests: build-test coverage for NO_JEVENTS=1
+Message-ID: <aYYBWKc-EOQyGeMi@x1>
 References: <20260205183603.459363-1-irogers@google.com>
- <20260205183603.459363-2-irogers@google.com>
- <20260206104543.GE3529712@e132581.arm.com>
+ <20260206085349.GD3529712@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,51 +48,53 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260206104543.GE3529712@e132581.arm.com>
+In-Reply-To: <20260206085349.GD3529712@e132581.arm.com>
 
-On Fri, Feb 06, 2026 at 10:45:43AM +0000, Leo Yan wrote:
-> On Thu, Feb 05, 2026 at 10:36:03AM -0800, Ian Rogers wrote:
-> > The failure to find a table of metrics with a CPUID shouldn't early
-> > exit as the metric code will now also consider the default table.
-> > When searching for a metric or metric group,
-> > pmu_metrics_table__for_each_metric considers all tables and so the
-> > caller doesn't need to switch the table to do this.
-> > 
-> > Fixes: c7adeb0974f1 ("perf jevents: Add set of common metrics based on default ones")
+On Fri, Feb 06, 2026 at 08:53:49AM +0000, Leo Yan wrote:
+> On Thu, Feb 05, 2026 at 10:36:02AM -0800, Ian Rogers wrote:
+> > Leo reported the NO_JEVENTS=1 build being broken and this highlighted
+> > it being missing from the build-test, add it.
+> 
+> To be clear, I did not say the build is broken.
+> 
+> The issue I reported is that `perf stat` is broken, both with
+> NO_JEVENTS=1 enabled and without that configuration.
+> 
+> With updating the commit log, this patch LGTM:
+> 
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
+
+Thanks, applied to perf-tools-next,
+
+- Arnaldo
+ 
+> > Reported-by: Leo Yan <leo.yan@arm.com>
+> > Closes: https://lore.kernel.org/linux-perf-users/20260205175250.GC3529712@e132581.arm.com/
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/util/metricgroup.c | 18 +++++-------------
-> >  1 file changed, 5 insertions(+), 13 deletions(-)
+> >  tools/perf/tests/make | 2 ++
+> >  1 file changed, 2 insertions(+)
 > > 
-> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> > index 40a1e14de418..46bf4dfeebc8 100644
-> > --- a/tools/perf/util/metricgroup.c
-> > +++ b/tools/perf/util/metricgroup.c
-> > @@ -1562,8 +1562,6 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
-> >  {
-> >  	const struct pmu_metrics_table *table = pmu_metrics_table__find();
-> >  
-> > -	if (!table)
-> > -		return -EINVAL;
-> >  	if (hardware_aware_grouping)
-> >  		pr_debug("Use hardware aware grouping instead of traditional metric grouping method\n");
-> >  
-> > @@ -1601,22 +1599,16 @@ static int metricgroup__has_metric_or_groups_callback(const struct pmu_metric *p
-> >  
-> >  bool metricgroup__has_metric_or_groups(const char *pmu, const char *metric_or_groups)
-> >  {
-> > -	const struct pmu_metrics_table *tables[2] = {
-> > -		pmu_metrics_table__find(),
-> > -		pmu_metrics_table__default(),
-> > -	};
-> > +	const struct pmu_metrics_table *table = pmu_metrics_table__find();
-> 
-> Here should be:
-> 
->   const struct pmu_metrics_table *table = pmu_metrics_table__default();
-
-Or, I think you should not change metricgroup__has_metric_or_groups().
-The change only in metricgroup__parse_groups() can fix my issue.
-
-Thanks,
-Leo
+> > diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+> > index eb41516c0562..6587dc326d1b 100644
+> > --- a/tools/perf/tests/make
+> > +++ b/tools/perf/tests/make
+> > @@ -70,6 +70,7 @@ make_python_perf_so := $(python_perf_so)
+> >  make_debug          := DEBUG=1
+> >  make_nondistro      := BUILD_NONDISTRO=1
+> >  make_extra_tests    := EXTRA_TESTS=1
+> > +make_no_jevents     := NO_JEVENTS=1
+> >  make_jevents_all    := JEVENTS_ARCH=all
+> >  make_no_bpf_skel    := BUILD_BPF_SKEL=0
+> >  make_gen_vmlinux_h  := GEN_VMLINUX_H=1
+> > @@ -144,6 +145,7 @@ ifneq ($(new_libbfd),)
+> >  run += make_nondistro
+> >  endif
+> >  run += make_extra_tests
+> > +run += make_no_jevents
+> >  run += make_jevents_all
+> >  run += make_no_bpf_skel
+> >  run += make_gen_vmlinux_h
+> > -- 
+> > 2.53.0.rc2.204.g2597b5adb4-goog
+> > 
