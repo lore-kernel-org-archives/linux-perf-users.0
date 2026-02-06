@@ -1,161 +1,180 @@
-Received: from mail-oo1-f77.google.com (mail-oo1-f77.google.com [209.85.161.77])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACE23168E1
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 07:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770363393; cv=none; b=qh/6JJBSB5/Ysj5Cj34yR7xAc695Pvp75pagqPsMyq81hdafrjcLs0egAMvPKlylszKVQ8jtjqPQcfRlANQXTTI2KTFyf18nNZt/6mIDw9riaNaVVUhJXRrbRlsfnMav8aM/983K+i/6+kx4WU7zTBSJkFRgiNcTqLNP0yD6qTk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770363393; c=relaxed/simple;
-	bh=9FRWCuPiMkkrQ972rVMHLpsSw40yJDZ9OtQpWKj04rY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Ynq8AC/btcvr+4TEQbnZWgj54eTiS8+GyStNG8n1CpkXXJwlyXVUkgueM8xyVaoMEBbnrPKh+Y9/OeHs/GKbtQIZnJqKHiycn5E1mICOuczDAcaD7PgfHDjw6HexnGc0TGlA+ndq7ch772Q+orLl6bS7q0dcb3qkInsyjYoKSDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f77.google.com with SMTP id 006d021491bc7-66b560fcc42so7611262eaf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Feb 2026 23:36:33 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94533168E1
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 07:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770363450; cv=pass; b=ruQu1Fc77bbQF+R9jxQFFUfvAYdk7/vtsjTAjTUo41An7eMPUD0O7TaoGIRE4zLSSh3S0S+tJQaPYnPHSUAd9AVL6gxBjO0o6wl3HQImjUH+8fX3/llLwmr2X1S0/QAn8khnllm5CelSPuRiJx6aylHzkcs4L7ujWi2iIGFb7Ig=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770363450; c=relaxed/simple;
+	bh=n2mCbtKCVO9PTP/jCP/z7AwOSR9QCQQX+/5YJ5ZXnRw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WKQsfY+lMABqXu7fOQzoVfUBl0nZoDvbfJ3wQ3gmvcjyWhQJwS70ECKEJ+QXAeltswDPhGpF77a9KWhPv6GZ+BWf/r9GS+tnUGE2guDp5bMiIZbbBr/JVXWZwEFwJgJCTdDS2Itd2YFg14dXdOvDNGZeGby9L55KnbfVKOOTV/c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Lx9OKxny; arc=pass smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lx9OKxny"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-59b77f2e43aso3274864e87.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Feb 2026 23:37:29 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770363448; cv=none;
+        d=google.com; s=arc-20240605;
+        b=YDI3yUa9o3o/WMh3Fbh+IS5tZHusDg/mUIdj4zIhNyenwNMtykv9tBUejj12q+IH6t
+         Yc7JPlYrje994I5MR5ESCKQK0rVvq70vBJawwbahTzdhPscRzXvbqdgGJDK/Ty3S+qOP
+         Cewb990KfkkZXyVaYS+EgnHsjgu539jTCq4DhcZ0NsHAgZTvr95RX/BodUtSkTkDhu92
+         TjI78Gqqf1QyjnD4hSG4u4bP0U+hpX4S+H54cv1+Qh49eG5jJXJlyj3QE25OAUz5Cz7e
+         20sc60V1pDZP74sVGaK1eSBSB3us/KlaDNv0wzp56uERwEOPVtuOumiAyx0MMyOVgcdm
+         B9Og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=nTyF5rDQ69ax+lkC0M0G2iPghoopg157dIN7PG+yetM=;
+        fh=MZSIrKQHPJA5MWpBvMVNqoYILwFDma9RwyKx+AlJ1Uk=;
+        b=A0dF47KNTr6H3nvoQih68t5bJy6IjYz2xyeC6HM9Te7p7f7jTUUZqty92nFrXHpvZH
+         E4ZJitRdOKZZ7w3PI4uDV+OR+V9AOUe3V4+wZnbaSALAxwPWhN6fC1OqkgeAD6pWXxQb
+         i0KLvrqTDCPJ/qXij+VNXW7euIzLnymQDa9w/J/bV2lWfH0rTjCU0YWsccyNmG5jz+pQ
+         7GXBS3dFN2ok1ZKzM/GPziMBVZSTPaCd3L+0GlmEahTIh58KxQmeb18YTGGhIVrcBweB
+         bTcFlA0py83bqDjiEF4qQGDbS3dzK6QDvEgJpimwN2d8AHCNKD9h3XR5ppRMWUlWQg81
+         Uc8A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1770363448; x=1770968248; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nTyF5rDQ69ax+lkC0M0G2iPghoopg157dIN7PG+yetM=;
+        b=Lx9OKxnyJTcemgsCr1OjDl58WrCWZBiNLpd/BLDueT5Cn7zODiHu0j+IWceZj8nlGg
+         ERgctKZB66/pyQFvCOteXnnhkS7DRQ59p8k/BaxizNey2fNOViTx2jrDgpGv5BKCuqSj
+         BHc87fQEdWBqUWvl4idagAkF4+munV06C/fsGv/PYSsN/hPp75DMkZ4/j/NDxgeFoUWM
+         g5x//E00GmB6DqEdqqXsJaahu9yV5091lWtNZUJAJtu+K4h8ptE7W+Ydice6IqU3srfw
+         B6vMKz+VVfTw+EiavBr0uvkJ7ro0kAo8O5z420fPAzEIDewczyhVP4kOqdoCZ5C6a49z
+         7B4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770363392; x=1770968192;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rHyQDbOdo3dmXSaHfpXFy2nfDGyjWyiBXjkHRyFU+9w=;
-        b=MkAWx6ssje+hczxqEgwBCN2d/NbQUphnVd4ct7QTHYBt0uIbllkRU8RjHPDjeCoxX1
-         jWNAV+1lEtpSpddCpuhStwCVZzQ+W4gUTMgQ3G5eh44aGZwXnw7fzk+7mhFcyYDU27hS
-         qrkXYVc9j11m6zXHjQXXB8V0AwJumgiGBUSVk8FIw3rs6dDZLVFYoe6edJvQY8sedACi
-         du7Rs4v3ilP4rcOj7kuflkFczQXhtFLLSLzerc+Wyl6AyS2ua/nTcqIIqYIy/mvY5Lc2
-         /VaRxBUppAz8OWPZaT0Hjnuvjk3uF85P+7es49cRSMj6LPa0EcRM++nBQwTYtdqduqao
-         qBcA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTt0fTM6g7Lxwb7Pavwr2sAi8wxTDVaScHuA8uDZFY47PrPdlPRO7zlP9YBtI0Y94ue5aP1IQ4BI3bvYD1+0KI@vger.kernel.org
-X-Gm-Message-State: AOJu0YziZhPEuzBVNSNrCtTamhZeMGFNMfrm870G4s/dz7i/CFIW9e9G
-	RtDalN9jtyws7Rsg7jXrJ/4oxZGCCIxNT+6m+4AbGekb/g4gIMlOpLWNTzbNjXSMg1l4J9q05tF
-	xclD+FY0VB+poEurqdvMeYLaKF+1uVWUvVjG95XM9NFcgzYui/lvimlQHfcY=
+        d=1e100.net; s=20230601; t=1770363448; x=1770968248;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nTyF5rDQ69ax+lkC0M0G2iPghoopg157dIN7PG+yetM=;
+        b=ANwMmOiBlSofNFF0IULbDkh15NThPJMrJS4gvQnkravFCz8+M5reYBoaeQVYL+fZJa
+         tQwSz3kZiJRGx9InEnvtsaAJmuu1peAfT98oowLsxZELmrZbV9wZ5fKlc3ZvnPc9G0AN
+         JGL+O9Q+ozJ8ehmoPTltC57GPJIswK8DU7tczyv48Y1VuzoCtrgtVJodB2H5pguF4ZGf
+         H0JRjRbp9wuLA1FM/l94lrqzO6Eipqvc7ELidHxB7AJMxoUMWVOZYjcN6eOFJV5yz/JW
+         fxnXSyGKFI0727NoCkp84VFYDWJiWOPmsiqw7/7VFXLkSJ/eHt/iupqN17yBdVxehQs9
+         F5Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCVZX/SAyCy+Q2I4mYGGeALu1ua+ez/LMLxT9Ll/Vs0kaEFXz35YFbLrjoKeFoJiWdlb0xeGO+dZR9r+Iz6WYAnt@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvvHX+fPhIZ6CPDVbBZ7BQzEeBOkdJQNeo/Vs1Asia/3ayw7jC
+	/aEIxc1u+PjH+KATWb/Wm2nUE1vrC21Ix3nO4ARXqve68DDcqAHHoWn/QiyD1V/r3RGcAjbnz/c
+	O9TEhkZ4hNHTlNsSexfYc0ZbXRcVS8anzt/nRmXfp
+X-Gm-Gg: AZuq6aIDAFouDm5Yx8nV1/iKkmi46oUu95NfGNvzZiZVTRond3Rv1tvXvxqY1YkoCXK
+	0bc+GxbKsL7tNRZaBnMxRojmlk+2Q5qOLaSSdsFKc2idMpTt3kYkhPW/QZHLdEJakv0C6Tz9xNV
+	QfSta1RQNZYKqTcZPG+Luh42ELaK9q4w/KR8OvKHI1FHjn87+Q5Lio9GApg+M+c4+Fl5+T6KWuU
+	PBb6mZss48t9Uvyo/DyzM/RDqsRTk3nEFnUQ5Kj3hVDPkELGotckv7hfPX0epxqAhI7Y+CXvGvg
+	n8ow2bZ5rSZtGQEVojWxlgOeS/yy
+X-Received: by 2002:a05:6512:3d01:b0:59d:e304:e2b8 with SMTP id
+ 2adb3069b0e04-59e3c74102amr1957223e87.19.1770363447711; Thu, 05 Feb 2026
+ 23:37:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:4610:b0:663:1f2:3e1f with SMTP id
- 006d021491bc7-66d32fdc188mr597246eaf.32.1770363392486; Thu, 05 Feb 2026
- 23:36:32 -0800 (PST)
-Date: Thu, 05 Feb 2026 23:36:32 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <69859a00.a00a0220.34fa92.0028.GAE@google.com>
-Subject: [syzbot] [perf?] KCSAN: data-race in perf_event_set_state / perf_mmap_rb
-From: syzbot <syzbot+5334e6bdc43f6d1dcb7d@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
+References: <69859989.a00a0220.34fa92.0026.GAE@google.com>
+In-Reply-To: <69859989.a00a0220.34fa92.0026.GAE@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Fri, 6 Feb 2026 08:37:14 +0100
+X-Gm-Features: AZwV_QjUlmz-h62nV1noScCu7rIue-hIG5x6f_HkFuDXlb2Ix9QQ75oIGhphfjk
+Message-ID: <CACT4Y+a9+OhtX2NeH9ZOPi=5DH36mqFWqU2cTD7MoUXJEFZjzw@mail.gmail.com>
+Subject: Re: [syzbot] [perf?] KCSAN: data-race in __perf_event_read_value /
+ perf_event_set_state (6)
+To: syzbot <syzbot+6d5529efa784dcc0b926@syzkaller.appspotmail.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, 
 	alexander.shishkin@linux.intel.com, irogers@google.com, 
 	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
 	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+On Fri, 6 Feb 2026 at 08:34, syzbot
+<syzbot+6d5529efa784dcc0b926@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    5dbeeb268b63 Merge tag 'driver-core-6.19-rc7' of git://git..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=169a105a580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6c9e86480ac654d3
+> dashboard link: https://syzkaller.appspot.com/bug?extid=6d5529efa784dcc0b926
+> compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
+>
+> Unfortunately, I don't have any reproducer for this issue yet.
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/8a4a5a3502b5/disk-5dbeeb26.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/65e86e2ad6af/vmlinux-5dbeeb26.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/050ae083081a/bzImage-5dbeeb26.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+6d5529efa784dcc0b926@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KCSAN: data-race in __perf_event_read_value / perf_event_set_state
+>
+> write to 0xffff8881311a8538 of 8 bytes by task 13031 on cpu 1:
+>  __perf_update_times kernel/events/core.c:-1 [inline]
+>  perf_event_update_time kernel/events/core.c:735 [inline]
+>  perf_event_set_state+0x1c4/0x440 kernel/events/core.c:754
+>  event_sched_out+0x2d4/0x4d0 kernel/events/core.c:2391
+>  group_sched_out kernel/events/core.c:2415 [inline]
+>  __pmu_ctx_sched_out+0x3e7/0x530 kernel/events/core.c:3458
+>  ctx_sched_out+0x273/0x2d0 kernel/events/core.c:3539
+>  task_ctx_sched_out+0x4d/0x70 kernel/events/core.c:2859
+>  perf_event_context_sched_out kernel/events/core.c:3746 [inline]
+>  __perf_event_task_sched_out+0x2df/0x3c0 kernel/events/core.c:3846
+>  perf_event_task_sched_out include/linux/perf_event.h:1654 [inline]
+>  prepare_task_switch kernel/sched/core.c:5049 [inline]
+>  context_switch kernel/sched/core.c:5205 [inline]
+>  __schedule+0xbaa/0xc90 kernel/sched/core.c:6867
+>  __schedule_loop kernel/sched/core.c:6949 [inline]
+>  schedule+0x5e/0xd0 kernel/sched/core.c:6964
+>  futex_do_wait kernel/futex/waitwake.c:358 [inline]
+>  __futex_wait+0x121/0x260 kernel/futex/waitwake.c:687
+>  futex_wait+0x9c/0x1d0 kernel/futex/waitwake.c:715
+>  do_futex+0x2bf/0x380 kernel/futex/syscalls.c:130
+>  __do_sys_futex kernel/futex/syscalls.c:207 [inline]
+>  __se_sys_futex+0x2f6/0x370 kernel/futex/syscalls.c:188
+>  __x64_sys_futex+0x78/0x90 kernel/futex/syscalls.c:188
+>  x64_sys_call+0x2bc2/0x3000 arch/x86/include/generated/asm/syscalls_64.h:203
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xc0/0x2a0 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>
+> read to 0xffff8881311a8538 of 8 bytes by task 13182 on cpu 0:
+>  __perf_event_read_value+0xb6/0x1d0 kernel/events/core.c:5894
+>  perf_read_one kernel/events/core.c:6049 [inline]
+>  __perf_read kernel/events/core.c:6102 [inline]
+>  perf_read+0x171/0x4f0 kernel/events/core.c:6119
+>  loop_rw_iter+0x2c6/0x3f0 include/linux/uio.h:-1
+>  io_iter_do_read io_uring/rw.c:836 [inline]
+>  __io_read+0xbf6/0xc50 io_uring/rw.c:950
+>  io_read+0x4a/0x190 io_uring/rw.c:1030
+>  __io_issue_sqe+0xfd/0x2d0 io_uring/io_uring.c:1793
+>  io_issue_sqe+0x56/0xa70 io_uring/io_uring.c:1816
+>  io_wq_submit_work+0x3f7/0x5f0 io_uring/io_uring.c:1928
+>  io_worker_handle_work+0x41e/0x950 io_uring/io-wq.c:650
+>  io_wq_worker+0x22d/0x860 io_uring/io-wq.c:704
+>  ret_from_fork+0x148/0x280 arch/x86/kernel/process.c:158
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:246
+>
+> value changed: 0x000000004a891b66 -> 0x000000004a89847d
+>
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 0 UID: 0 PID: 13182 Comm: iou-wrk-13031 Not tainted syzkaller #0 PREEMPT(voluntary)
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/25/2025
+> ==================================================================
 
-syzbot found the following issue on:
-
-HEAD commit:    c537e12daeec Merge tag 'bpf-fixes' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1133a5fc580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c160236e1ef1e401
-dashboard link: https://syzkaller.appspot.com/bug?extid=5334e6bdc43f6d1dcb7d
-compiler:       Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/036ac5d12a14/disk-c537e12d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/07ddd15f46f8/vmlinux-c537e12d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7866e67b7a58/bzImage-c537e12d.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5334e6bdc43f6d1dcb7d@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in perf_event_set_state / perf_mmap_rb
-
-write to 0xffff88812279f1a0 of 8 bytes by task 12011 on cpu 1:
- perf_event_update_time kernel/events/core.c:737 [inline]
- perf_mmap_rb+0x71c/0x910 kernel/events/core.c:7037
- perf_mmap+0x1ce/0x2f0 kernel/events/core.c:7164
- vfs_mmap include/linux/fs.h:2053 [inline]
- mmap_file mm/internal.h:167 [inline]
- __mmap_new_file_vma mm/vma.c:2421 [inline]
- __mmap_new_vma mm/vma.c:2484 [inline]
- __mmap_region mm/vma.c:2708 [inline]
- mmap_region+0x1045/0x1410 mm/vma.c:2786
- do_mmap+0x9b3/0xbe0 mm/mmap.c:558
- vm_mmap_pgoff+0x17a/0x2e0 mm/util.c:581
- ksys_mmap_pgoff+0x268/0x310 mm/mmap.c:604
- x64_sys_call+0x16bb/0x3000 arch/x86/include/generated/asm/syscalls_64.h:10
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xca/0x2b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff88812279f1a0 of 8 bytes by task 12005 on cpu 0:
- __perf_update_times kernel/events/core.c:720 [inline]
- perf_event_update_time kernel/events/core.c:735 [inline]
- perf_event_set_state+0x153/0x440 kernel/events/core.c:754
- event_sched_out+0x2d4/0x4d0 kernel/events/core.c:2391
- group_sched_out kernel/events/core.c:2415 [inline]
- __pmu_ctx_sched_out+0x3e7/0x530 kernel/events/core.c:3458
- ctx_sched_out+0x273/0x2d0 kernel/events/core.c:3539
- task_ctx_sched_out+0x4d/0x70 kernel/events/core.c:2859
- perf_event_context_sched_out kernel/events/core.c:3746 [inline]
- __perf_event_task_sched_out+0x286/0x370 kernel/events/core.c:3846
- perf_event_task_sched_out include/linux/perf_event.h:1654 [inline]
- prepare_task_switch kernel/sched/core.c:5045 [inline]
- context_switch kernel/sched/core.c:5201 [inline]
- __schedule+0xbf0/0xcd0 kernel/sched/core.c:6863
- __schedule_loop kernel/sched/core.c:6945 [inline]
- schedule+0x5f/0xd0 kernel/sched/core.c:6960
- schedule_preempt_disabled+0x10/0x20 kernel/sched/core.c:7017
- __mutex_lock_common kernel/locking/mutex.c:692 [inline]
- __mutex_lock+0x4ff/0xe20 kernel/locking/mutex.c:776
- __mutex_lock_slowpath+0xa/0x10 kernel/locking/mutex.c:1065
- mutex_lock+0x89/0x90 kernel/locking/mutex.c:290
- perf_poll+0x180/0x1f0 kernel/events/core.c:6150
- vfs_poll include/linux/poll.h:82 [inline]
- select_poll_one fs/select.c:480 [inline]
- do_select+0x8f1/0xf40 fs/select.c:536
- core_sys_select+0x3dc/0x6e0 fs/select.c:677
- do_pselect fs/select.c:759 [inline]
- __do_sys_pselect6 fs/select.c:798 [inline]
- __se_sys_pselect6+0x213/0x280 fs/select.c:789
- __x64_sys_pselect6+0x78/0x90 fs/select.c:789
- x64_sys_call+0x2e98/0x3000 arch/x86/include/generated/asm/syscalls_64.h:271
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xca/0x2b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x000000000038c145 -> 0x00000000003929d3
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 UID: 0 PID: 12005 Comm: syz.4.2772 Tainted: G        W           syzkaller #0 PREEMPT(voluntary) 
-Tainted: [W]=WARN
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/25/2025
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+LLM was concerned about the atomicity of these u64 operations on
+32-bit systems, and thus concluded the race is harmful.
