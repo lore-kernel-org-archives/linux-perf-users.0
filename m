@@ -1,65 +1,66 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7D832E14C
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 09:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA39310771
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 09:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770369640; cv=none; b=PBHRpujcJMr24ClcKIn7hEhCmtLiuUCH9Xipb7CF8kxWD8NpViggI2HkhP97oDpxUYCJ2tLIL1PQAfouFvLU664xGQ4jZVeyOQDvRZPztC4gM0dJAJi53UdvHoMnW0rGoiqjQU1YQlMFOwKZhIs4a0eUGoYPKFkJiBiM+XM8O4c=
+	t=1770371431; cv=none; b=tnFw8llFCQDXC/jsLmXfxVvOua8gQ0haWQSr3QsfeDsrizK8FeCAnVBoeeY5rk59OAAisW7OsJqrdl1qVLtde57hPOYB1TUzIQgzL+nWK/ExrhOPVTY0dhzoCfv/vzvn/6zyBuBI7hQ0Wd48OtE/8KqRD4PnZm7HV04uCPxd3Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770369640; c=relaxed/simple;
-	bh=6WV8h1EC+orIaaE9WRc5xJ7ordXuPKpDaUhfvptIUao=;
+	s=arc-20240116; t=1770371431; c=relaxed/simple;
+	bh=KL35tDLUXt+MeQlE0IHaGqWoW/V3SwV1poY6EEFCY2o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SRWHlm7XFZCnoqEC7VlBe7vKfEX+YlcppeL2Fw9pyBOzOtmiN2CPjPoGJU4uHaEotmr+lXS2SKEi0laV7FyLAAM4TWWUi0RyF8EIihifh3SLNDIY7l1/8iLulVNYQ2zb8ycoy/MmmdvV2WeWPv1G2g5V5Wt9yO5HB+0hIGk2eys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KL94VQDM; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=LYSq4Sd2wahq9fhf8m3h18AUFl3xHozX2UycV6tasWtTRa9/K1rgZArte7klDK/sDUTAKNB+4XHqOlkfvUimvybiIciLMWRLhs9DB2j9mE6VmZ0tvFz3QmxmWxrd22zVL6gMYzjsaeYorAp2olp1JfkeFLfsVwMMeKN5BYK+L2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f208nwAB; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KL94VQDM"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2a79998d35aso15216845ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 01:20:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f208nwAB"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4807068eacbso17443405e9.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 01:50:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770369640; x=1770974440; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=01FSvLOaY79DNMUile96b8YabfxQ/NF12aIBHZ8DH3k=;
-        b=KL94VQDMDde3hRYKdc8vMwHdvKmQQYjqHOUB/GdXNDOQD+4ypzuQaA9GqLTEAmsVcf
-         LsDLPrt/yy+CHpI1qoZpKduNsrbuYT0hMJy9Wv/k4VzaFvd9SXGfkKtuOsCLchtYeumV
-         xB3cwe6PF0pgfIwf29/wSBYeeZ4xkwdG63AQyQER1EHpa2SRk/78NUfUTDc13gBputM6
-         LyxjRlkLS4c9VxDjvSpjaIMmZ9EEi0SzjTQ+LCHBYE5xPiDhSgRIFlwHFesi9SUIE6WG
-         pMaV4nJCEQdxMxKQUQJ9EVEY0zfX/gBHzHmKcAOqFil5691IzqyjzBLmAgkQ5wo3cnRO
-         HClA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770369640; x=1770974440;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
+        d=linaro.org; s=google; t=1770371430; x=1770976230; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=01FSvLOaY79DNMUile96b8YabfxQ/NF12aIBHZ8DH3k=;
-        b=bbKbY6ybDCTk6f4HuoE3LxNy2+xDndv32DHTf+GaXLcEtp+rGNRhQ+Uu6ObjshgVME
-         HPsBZf9IBFZcBkxih/7ddvQddMC6YNBLzfj3iDD1nA3AgQEUhoHGBNi5yylvnCS3oXyC
-         4cw0QZJA3N6rSxo/+whzgXdh9c0B2fhaFivYaC45hiULSlvhEPbBPQzVQCKy0qrkMQOO
-         KQOGG7zLfEDLscH1uwKP6jnG3+jU97RmVtPEXMC1d7VXMF7sTNOanP58Xrbmg+AgfpBK
-         juFQrsOb6es+Drdm9Zd9b6NXQ8O3qW9SkYv0aTvB7UNYLFuldYu04o78SQaSmhOMKQSp
-         0ThQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWV3J5xEEunr9vLF+sHsYLFUDV7Lul40Ef0jj/NMSSego2Zg1COy37BWh9geeoFvjKJimcPEWaP67ALykfTxI0I@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZL//GfnUjNxAS7tAH0H1QU3wMYPToqG0Uorj1hIZlHzuLgPpw
-	bB4ydmfwMfsbn1ih+pVcGXGalXD9CL3zHmMl3gXDZHspIyx6FeER3qDm
-X-Gm-Gg: AZuq6aIDm36HV/SsVD+jT3WRqyuGxMbZXaU5tDJscxxkJiCEQFDf/kEsNCDKhhcd2iB
-	UsUfHBpoZ6KZOeLTzSAJIvx6p7g7Rweh43v6Fq3qavOnxSTF7baXB0eYf4fgyDVsF8AAwKdHR19
-	gMn+ouPodF5OqgdF5D+nedPL7upIoDUJ0/++qLu84vuPyYGBbVqxmcnRtKPMiY2TqioF27hJjID
-	rR1kKHdA6N5R/zG8lknSubb5ZoAqxoipKAP4p4vWIWIdHPP+XPXQk3DN1IB+0mBU0DXnuvpUht9
-	OLAj7CtRDis05ita4Mcb7/n/BYiIGGl8hggrl66iotYjZsYokR3Rcokd2C3psk6NQIw8HOu+Yco
-	/b0vKOuQp3op/agDIqjUHpIZTXOfQ7Gqnm8GT3rG0fzbDuaRiNYl4ZwSwbMvmztKFjisIMPT9L6
-	7OEuAUvB5g
-X-Received: by 2002:a17:902:d58a:b0:2a0:f0e5:3f5c with SMTP id d9443c01a7336-2a9521f3f28mr22006825ad.34.1770369639836;
-        Fri, 06 Feb 2026 01:20:39 -0800 (PST)
-Received: from [0.0.0.0] ([188.253.4.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a951c50206sm17695615ad.19.2026.02.06.01.20.30
+        bh=Vq4afyB4nOZV3ntLdfaJ1K/gi8ayC5ysivYWyKh2NcY=;
+        b=f208nwABx6D+bsH3Maf8GUtSC703kZokrekAs+oyl8xgPY9xMVnkR0PYLJvy0hkmur
+         DHkKf1m0EIMpMZYQ8MRhwe94MgnMHZ9hVBnPG/9pf5fKDCXaw0oekg8y5Y8COEEQVuv9
+         SrZkKKbofemkULl1N9SY45+WW4DFnUEcJfDrl4wtmtEOOncGX3OdJB5nw0OpG8YM9Y31
+         QKqQ+8GrnUjlyMFaRDxR0WaKo9yZCkWByK/VUelt5ZGgLIfRgPTcBsST5QaweR5vOr/i
+         IPH+25WSZGk25+wyS+SYEcwBD+P5pk0RlbrIn3+uxZRRuhORbTBo2Io+WKD1QgtyLT7l
+         RseA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770371430; x=1770976230;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Vq4afyB4nOZV3ntLdfaJ1K/gi8ayC5ysivYWyKh2NcY=;
+        b=bFBDwSxEunOh7rqW+dLy/6OI4Y3N2nl+zghNaK7GZo1RWRv/48OKCRoZS6RnALtsFE
+         JcYQEF1Vw0a6rp3uCWuuO9jabKAUyW4fa6XuCf6bos1LyE5DqnrlQ0t5KeEfJ81dwB52
+         e1dJ5JoqXADxVSYokJSI1YGLLvA20GqtYVnL3BreHE//haDfTcuFpb2L0gJy9OJVD6Uh
+         95xC2ib4SHLYgG4I5CWktC+fd2n4Pe96AFvoEig0TyZ8UHWToDVMc7NbvkbrnAU4t2ni
+         TZx/eIIawO+kgy2zPbpDahLcI23eAAqs9tpUXbwNn2Ku42/aB0lGFPbWw6ecX7o2kRYO
+         DMAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxD9COwVQ2xfsyO5Vx4QK88G0nMrfd4m8PaCWWuyUcRFFGG17SVfZTIS5qYFJv2T1x5N7jEKjyCl98A7NBnyyM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr909LFNH3mvGicZG+52vyovZDPMLUtiGkfYxdSAYagW2NsEV6
+	qsPFH4hmEo4TwtFPIt6Sh42omNb58mHXLPqtPk/JC+apLZrGLuaf3dGr+AZWiVCsrCQ=
+X-Gm-Gg: AZuq6aL6EsgZdzgLxAKVRUYmPGBfnvavjDtlMNHbm+9ZfnTEgwZDqlCuzfFZmpxY8HF
+	wPpjXxR9KHZ4chCgwk/m9eCAp+Gx3Shk1wLIx84oJZiE164inHASuSa84kmJjsCrcPCs9rYwFEk
+	iAa7Qnbrlz3CNG9daUYOsr3K5hXqpbZiH7+E0psC6Qtxk7Sv7xQpTO7VT+WKZltozmC830mTWO7
+	AZI/KUU4qIn8pe/RmRB3vSGCZac47NiM4tAumAQwfnEpmxYEH6pFG1R44Y/Ku2zi0co4dD58ETq
+	NfyumNvuCDBVNFAIFmkbuPAxYq1z9soJZLTWF4ycXVvuEEmWUZ3Oi0Md5h4iPHjVVQNUsotC6C6
+	q/yrnEyj4b4tYkyMZ43wE2tNx13z3ZxS+zHsd8UCKk/z3YzuShU1NzArryHwnB4Bv+hwbbmvCZz
+	lXzcaPVZLxboJLDhB0
+X-Received: by 2002:a05:600c:34d1:b0:47a:7fd0:9eea with SMTP id 5b1f17b1804b1-483201dadccmr27868905e9.3.1770371429302;
+        Fri, 06 Feb 2026 01:50:29 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483179dbdcfsm147954785e9.0.2026.02.06.01.50.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Feb 2026 01:20:39 -0800 (PST)
-Message-ID: <9fd7e5ce-a4ac-4354-93f2-8797bb1fb153@gmail.com>
-Date: Fri, 6 Feb 2026 17:20:28 +0800
+        Fri, 06 Feb 2026 01:50:28 -0800 (PST)
+Message-ID: <e7d53952-59f6-4990-83fb-1182641af29f@linaro.org>
+Date: Fri, 6 Feb 2026 09:50:27 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,141 +68,110 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v8 2/3] perf: Refactor get_perf_callchain
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- Tao Chen <chen.dylane@linux.dev>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, song@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20260126074331.815684-1-chen.dylane@linux.dev>
- <20260126074331.815684-3-chen.dylane@linux.dev>
- <CAEf4BzYMJfQN+0SwzBM-DhREHwZ54TwA6GUtFv9=xret9pzXrQ@mail.gmail.com>
- <bb62bd4f-199e-4907-817f-bc820c9198c9@linux.dev>
- <CAEf4BzZun3amXMpYdBPEy=qZwrY3ZjrKf_qc6tG-b4NJ=-AC7w@mail.gmail.com>
-From: Tao Chen <chen.dylane@gmail.com>
-In-Reply-To: <CAEf4BzZun3amXMpYdBPEy=qZwrY3ZjrKf_qc6tG-b4NJ=-AC7w@mail.gmail.com>
+Subject: Re: [PATCH] perf: arm_spe: Add barrier before enabling profiling
+ buffer
+To: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Alexandru Elisei <Alexandru.Elisei@arm.com>,
+ Anshuman Khandual <Anshuman.Khandual@arm.com>,
+ Rob Herring <Rob.Herring@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+ Robin Murphy <Robin.Murphy@arm.com>, Leo Yan <leo.yan@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260123-james-spe-relaxation-v1-1-4ccb88fa7bc5@linaro.org>
+ <aYD08d42SewAAQCB@willie-the-truck>
+ <aebe99ad-1189-4372-83e3-385f33829bd2@linaro.org>
+ <aYHXCkFZcVm1L_25@willie-the-truck>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <aYHXCkFZcVm1L_25@willie-the-truck>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-在 2026/2/6 01:34, Andrii Nakryiko 写道:
-> On Wed, Feb 4, 2026 at 10:16 PM Tao Chen <chen.dylane@linux.dev> wrote:
+
+
+On 03/02/2026 11:07 am, Will Deacon wrote:
+> On Tue, Feb 03, 2026 at 10:46:37AM +0000, James Clark wrote:
 >>
->> 在 2026/2/4 09:08, Andrii Nakryiko 写道:
->>> On Sun, Jan 25, 2026 at 11:45 PM Tao Chen <chen.dylane@linux.dev> wrote:
->>>>
->>>>   From BPF stack map, we want to ensure that the callchain buffer
->>>> will not be overwritten by other preemptive tasks and we also aim
->>>> to reduce the preempt disable interval, Based on the suggestions from Peter
->>>> and Andrrii, export new API __get_perf_callchain and the usage scenarios
->>>> are as follows from BPF side:
->>>>
->>>> preempt_disable()
->>>> entry = get_callchain_entry()
->>>> preempt_enable()
->>>> __get_perf_callchain(entry)
->>>> put_callchain_entry(entry)
->>>>
->>>> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
->>>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->>>> ---
->>>>    include/linux/perf_event.h |  5 +++++
->>>>    kernel/events/callchain.c  | 34 ++++++++++++++++++++++------------
->>>>    2 files changed, 27 insertions(+), 12 deletions(-)
->>>>
->>>
->>> Looking at the whole __bpf_get_stack() logic again, why didn't we just
->>> do something like this:
->>>
->>> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
->>> index da3d328f5c15..80364561611c 100644
->>> --- a/kernel/bpf/stackmap.c
->>> +++ b/kernel/bpf/stackmap.c
->>> @@ -460,8 +460,8 @@ static long __bpf_get_stack(struct pt_regs *regs,
->>> struct task_struct *task,
->>>
->>>           max_depth = stack_map_calculate_max_depth(size, elem_size, flags);
->>>
->>> -       if (may_fault)
->>> -               rcu_read_lock(); /* need RCU for perf's callchain below */
->>> +       if (!trace_in)
->>> +               preempt_disable();
->>>
->>>           if (trace_in) {
->>>                   trace = trace_in;
->>> @@ -474,8 +474,8 @@ static long __bpf_get_stack(struct pt_regs *regs,
->>> struct task_struct *task,
->>>           }
->>>
->>>           if (unlikely(!trace) || trace->nr < skip) {
->>> -               if (may_fault)
->>> -                       rcu_read_unlock();
->>> +               if (!trace_in)
->>> +                       preempt_enable();
->>>                   goto err_fault;
->>>           }
->>>
->>> @@ -494,8 +494,8 @@ static long __bpf_get_stack(struct pt_regs *regs,
->>> struct task_struct *task,
->>>           }
->>>
->>>           /* trace/ips should not be dereferenced after this point */
->>> -       if (may_fault)
->>> -               rcu_read_unlock();
->>> +       if (!trace_in)
->>> +               preempt_enable();
->>>
->>>           if (user_build_id)
->>>                   stack_map_get_build_id_offset(buf, trace_nr, user, may_fault);
->>>
->>>
->>> ?
->>>
->>> Build ID parsing is happening after we copied data from perf's
->>> callchain_entry into user-provided memory, so raw callchain retrieval
->>> can be done with preemption disabled, as it's supposed to be brief.
->>> Build ID parsing part which indeed might fault and be much slower will
->>> be done well after that (we even have a comment there saying that
->>> trace/ips should not be touched).
->>>
-
-Hi Andrii,
-
-Building upon your work, I have also added preempt_disable() to 
-bpf_get_stackid, and try to reduce the length of preempt section.
-Please review, thanks.
-
-https://lore.kernel.org/bpf/20260206090653.1336687-1-chen.dylane@linux.dev
-
->>> Am I missing something?
 >>
->> Yes it looks good for bpf_get_stack, and I also proposed a similar
->> change previously. But Alexei suggested that we should reduce the
->> preemption-disabled section protected in bpf_get_stackid if we do like
->> bpf_get_stack. Maybe we can change it first for bpf_get_stack?
+>> On 02/02/2026 7:03 pm, Will Deacon wrote:
+>>> On Fri, Jan 23, 2026 at 04:03:53PM +0000, James Clark wrote:
+>>>> The Arm ARM known issues document [1] states that the architecture will
+>>>> be relaxed so that the profiling buffer must be correctly configured
+>>>> when ProfilingBufferEnabled() && !SPEProfilingStopped() &&
+>>>> PMBLIMITR_EL1.FM != DISCARD:
+>>>>
+>>>>     R24557
+>>>>
+>>>>     While the Profiling Buffer is enabled, profiling is not stopped, and
+>>>>     Discard mode is not enabled, all of the following must be true:
+>>>>
+>>>>     * The current write pointer must be at least one sample record below
+>>>>       the write limit pointer.
+>>>>
+>>>> The same relaxation also says that writes may be completely ignored:
+>>>>
+>>>>     When the Profiling Buffer is enabled, profiling is not stopped, and
+>>>>     Discard mode is not enabled, the PE might ignore a direct write to any
+>>>>     of the following Profiling Buffer registers, other than a direct write
+>>>>     to PMBLIMITR_EL1 that clears PMBLIMITR_EL1.E from 1 to 0:
+>>>>
+>>>>     * The current write pointer, PMBPTR_EL1.
+>>>>     * The Limit pointer, PMBLIMITR_EL1.
+>>>>     * PMBSR_EL1.
+>>>
+>>> Thinking about this some more, does that mean that the direct write to
+>>> PMBPTR_EL1 performs an indirect read of PMBLIMITR_EL1 so that it can
+>>> determine the write-ignore semantics? If so, doesn't that mean that
+>>> we'll get order against a subsequent direct write of PMBLIMITR_EL1
+>>> without an ISB thanks to table "D24-1 Synchronization requirements"
+>>> which says that an indirect read followed by a direct write doesn't
+>>> require synchronisation?
+>>>
+>>> There's also a sentence above the table stating:
+>>>
+>>> "Direct writes to System registers are not allowed to affect any
+>>>    instructions appearing in program order before the direct write."
+>>>
+>>> so after all that, I'm not really sure why the ISB is required.
+>>>
+>>> Will
 >>
->> https://lore.kernel.org/bpf/20250922075333.1452803-1-chen.dylane@linux.dev/
+>> We were under the impression that this was required for the SPU as it is
+>> treated as a separate entity than the PE.
+>>
+>> In "D17.9 Synchronization and Statistical Profiling" there is:
+>>
+>>    INDWCG
+>>
+>>    A Context Synchronization event guarantees that a direct write to a
+>>    System register made by the PE in program order before the Context
+>>    synchronization event are observable by indirect reads and indirect
+>>    writes of the same System register made by a profiling operation
+>>    relating to a sampled operation in program order after the Context
+>>    synchronization event.
+>>
+>> That specifically mentions an indirect read following a direct write, which
+>> seems to contradict D24-1. Although I thought this is a special case for
+>> SPE.
 > 
-> This is broken because we are still using trace after you re-enabled
-> preemption. We need to keep preemption disabled until we copy captured
-> stack trace data from ips into our own memory.
+> My reading of the the text above is that it is covering the direct write
+> -> indirect read case, whereas I think the case in the SPE driver that
+> we're considering for your patch is when we have an indirect read
+> followed by a direct write.
 > 
->>
->>>
->>> [...]
->>
->>
->> --
->> Best Regards
->> Tao Chen
-> 
+> Will
 
+Yeah, and that text also only applies to "profiling operations", not 
+writes to PMBPTR and PMBLIMITR.
 
--- 
-Best Regards
-Tao Chen
+Upon further investigation you are correct about the isb() not being 
+required, even with the new relaxation. Seems like we just accepted that 
+the relaxation required some change to the driver without really 
+thinking about it. But yeah thanks for looking in detail and catching it.
+
+So we can drop this now. Sorry for the noise.
+
+James
+
