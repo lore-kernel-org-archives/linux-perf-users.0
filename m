@@ -1,121 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD77722301;
-	Fri,  6 Feb 2026 10:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CBD634C9AB;
+	Fri,  6 Feb 2026 11:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770374772; cv=none; b=L4XkBR80rews93VxnMkoVtGPKzJ88nrMR3HYCnlau0WLNHQCOV+AdphXiLmBsdeCHsgKkEr0Gpl71U7G5mi9T1ocw7unaDWP2hqtacXaBq3cKBUNBum2CHLVRTGJUXFGDrNuglffMK4Ugc5iMzwwY75a5xOLwDet31QLbVh3aWE=
+	t=1770375633; cv=none; b=HpDaO3DP+vzU7pkR9XtQW4XK8rDVmI5V9ulMVT/2qzfVbwDUKzPQebK32TR+oMF0j4nADw7o2/bYvmSmoxD/DlnXQ9tXi4jQY+/TyFi5+LQNis6EJ2Sb0S63MoQukTaaKSqTVMD6wtNhXF4ZI9Do/yuCRgVoMMmXwV/6a12E3rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770374772; c=relaxed/simple;
-	bh=SgH3PVl9XDWqTOthcj1dd9B7pnDKtSF9D1Mzvlb6naM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sOX2Gd7gqF9bRoBelOKExCNA655mq4GG+XienmPpWupSd4fm9T17TlZJksseI3DzmP/ynSEuAlLQ1/z7smWxUvwfx0eL6tuTXPZ2rtiuIB9zmzL8PpLMW72UVZxqaU23kxwGPe4o7KAq6hoaEWDcDObO91+cV8K0ewC0nEycY9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VDADRuAe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VDADRuAe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D3C9C116C6;
-	Fri,  6 Feb 2026 10:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770374772;
-	bh=SgH3PVl9XDWqTOthcj1dd9B7pnDKtSF9D1Mzvlb6naM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VDADRuAevPHEdEW3GWQ43kfKSftvTf7AR1gxZPVv6oP8X1og6EmSKbbn4h69GQPYD
-	 GfKxebuiyV34DIZ5liyCXRULlULtRB/2rHSxEaCMY717d4HS0RVfE/N4F57tZtg2ci
-	 h2eKgKzxEIlWTVm7IePjtOppaoRbBYLJH6wb50boZnxNTYGunou1G8sFFBJIPVPGeC
-	 rpBXFYGZXV5iGfCIVnTih3GQXPDAQEBSqdWKK/PrZrh/59Nh2LWWhwvMUxvHfwMJX2
-	 ZNF2DH2V1JoV85XUMWmjqXGVkM4syvam4aA4mehrkObV9squ215mMCRrbwsPZnu3Xt
-	 F7ukv50++cP/A==
-Message-ID: <2ca4a5c1-9267-4177-b339-e1ac28812c46@kernel.org>
-Date: Fri, 6 Feb 2026 11:46:06 +0100
+	s=arc-20240116; t=1770375633; c=relaxed/simple;
+	bh=RTF/yAh8LqaG2N+p8nvUpFns/BNGuIxSgv5t7yhuUi0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PArvDRNbxc5yKbA13ymsqk1ZQKDUeGbMmjN8mIq3ShkLqgo0+0spwN6+KIJFlf7p2WGm4uSONYq6n/t9+7WTWVY1V0p7hP355UoxASkrKv+R8bsxtNAVMEMCfdJbPp+UnksvuFpNNhMzh9oscCPHak3DAxs6McoKc4D3J0k9MqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A199339;
+	Fri,  6 Feb 2026 03:00:25 -0800 (PST)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 551F53F778;
+	Fri,  6 Feb 2026 03:00:30 -0800 (PST)
+From: Leo Yan <leo.yan@arm.com>
+Date: Fri, 06 Feb 2026 11:00:20 +0000
+Subject: [PATCH] perf kvm stat: Fix build error
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/7] iommu/riscv: Add HPM support for RISC-V IOMMU
-To: Lv Zheng <lv.zheng@linux.spacemit.com>,
- Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: Jingyu Li <joey.li@spacemit.com>, Zhijian Chen <zhijian@spacemit.com>,
- iommu@lists.linux.dev, linux-perf-users@vger.kernel.org,
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
- devicetree@vger.kernel.org
-References: <cover.1769562575.git.lv.zheng@spacemit.com>
- <DACC013F46A47459+cover.1770281596.git.lv.zheng@linux.spacemit.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <DACC013F46A47459+cover.1770281596.git.lv.zheng@linux.spacemit.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260206-perf_fix_kvm_stat_error-v1-1-ad40115876be@arm.com>
+X-B4-Tracking: v=1; b=H4sIAMPJhWkC/x2MWwqAIBAArxL7nWBCSl0lQpbcaokerCFBePekz
+ 4GZeSGSMEXoqxeEEkc+jwJNXcG04rGQ4lAYjDZWG23VRTL7mR+/pd3HG29PIqcodF2LTQjWoYF
+ SX0LF+s/DmPMH4Mw/B2kAAAA=
+X-Change-ID: 20260206-perf_fix_kvm_stat_error-a795a1dd67a2
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1770375630; l=1562;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=RTF/yAh8LqaG2N+p8nvUpFns/BNGuIxSgv5t7yhuUi0=;
+ b=xfevmBsHSfYK1AsgCDDR8uM+fAj2bbGEBspAXY48tLXd3pmY2K238G9SCtaY0nMltSjeJ5vM9
+ U4ZNJ7DhUBABtE+jHYNtbKEnVi7mfZKmcNHwDUEY4+qm/kBlsD7s7s1
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On 05/02/2026 10:09, Lv Zheng wrote:
-> Includes HPM support for RISC-V IOMMU. The HPM hardware mechanism can be
-> found in the recent announced SpacemiT SoCs (K3, V100), where T100
-> (SpacemiT distributed IOMMU) is shipped. 
-> 
-> Revisions:
-> v1
->  Initial release.
-> v2 (sent as v1.1)
->  Split and cleanup DT-bindings.
-> v3
->  1. Refactor using vendor specific compatible.
->  2. Implement vendor events with a userspace identifier.
-> v4
+Since commit ceea279f9376 ("perf kvm stat: Remove use of the arch
+directory"), a native build on Arm64 machine reports:
 
-And now also v4 is in the same thread? This is total mess!
+  util/kvm-stat-arch/kvm-stat-x86.c:7:10: fatal error: asm/svm.h: No such file or directory
+    7 | #include <asm/svm.h>
+      |          ^~~~~~~~~~~
+  compilation terminated.
 
-How tools are supposed to handle this?
+The build fails to find x86's asm headers when building for Arm64.  Fix
+this by including asm headers with relative path instead.
+
+Fixes: ceea279f9376 ("perf kvm stat: Remove use of the arch directory")
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ tools/perf/util/kvm-stat-arch/kvm-stat-x86.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
+index 1cf541385a4bdee4930b67a054906ccade7301fd..43275d25b6cbccc477ba45a901d69c67422847ae 100644
+--- a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
++++ b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
+@@ -4,9 +4,9 @@
+ #include "../kvm-stat.h"
+ #include "../evsel.h"
+ #include "../env.h"
+-#include <asm/svm.h>
+-#include <asm/vmx.h>
+-#include <asm/kvm.h>
++#include "../../arch/x86/include/uapi/asm/svm.h"
++#include "../../arch/x86/include/uapi/asm/vmx.h"
++#include "../../arch/x86/include/uapi/asm/kvm.h"
+ #include <subcmd/parse-options.h>
+ 
+ define_exit_reasons_table(vmx_exit_reasons, VMX_EXIT_REASONS);
+
+---
+base-commit: 84cb36da81413c2dff805150b9f4db1524460269
+change-id: 20260206-perf_fix_kvm_stat_error-a795a1dd67a2
 
 Best regards,
-Krzysztof
+-- 
+Leo Yan <leo.yan@arm.com>
+
