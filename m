@@ -1,75 +1,52 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADA43451D4
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 09:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0BC35B65E;
+	Fri,  6 Feb 2026 09:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770368941; cv=none; b=M+11e6idIDYBrVqOx7rGYHBtBCKwOPDglQ5xYaZ10cy3LD1E6kvgGfw3JI65DXNEbpZmPwawY/YnRyFyFCWuhiCu/s1+nGE6HgYPOWp9GGfSm3BbUxCyydICDO1aaUOI35mPAiirDqy8KoLr+8I5yPIFoQLVw4D8qqLcdNlsbg8=
+	t=1770369394; cv=none; b=G0nSednyBnXZsvIN8kYDu3SW+xim9PmPVWNjYFMRSlQnZXvyLZSfmr7lPD8PfqxEZOPCSzYjgJNFQCOWqlFCEFT0vyVDODLh3o6RiPVi2uCXJWt6RYHiVnWX+s11uKbuXxyQy3p03Jnt0EKTeAAXlzgLgAxFRDedPIFdYQjcH0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770368941; c=relaxed/simple;
-	bh=oMVx4P6c6URC7MBhmYUuUPLSASkPw1nrq3AtFxSRZvQ=;
+	s=arc-20240116; t=1770369394; c=relaxed/simple;
+	bh=HMUfP0kdiac9IvfKwv7iPFX8cSxDTu3B5VXA+3T45bU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HRncq2ymijDIEvV+nb/BQQYNxTXEQRx0IDeFKQuo7qisWeajprunOB5nYa6um0+9V/FpaqhaKsnCEE0DIGBAhSD4jrT3aTbtZCpPgYjyDkmEJNB7tzhoskPV3IfstK1J7nkSxWRr4jFyawAPKDg+4Dtl8TplgaouUSJSukPzjkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3iLDfDM; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jWaISQKnWV9gB71e1xwLMBW5Elz05k9UNSSL2vrAPFrTsEGiktDiN0fGwQBqIGu0/7U+75VGpfOQiUnqYVJ9E4GAuMybNvmrsWtvBXaPtKZi60dip1dF7l540If2fpeErjCH4nX5qCPhUzYCLZuctZ8zGE5aCrXAUhCNV4n5iaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cvLwKu73; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3iLDfDM"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b8870ac4c4eso71977966b.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 01:09:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770368939; x=1770973739; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oMVx4P6c6URC7MBhmYUuUPLSASkPw1nrq3AtFxSRZvQ=;
-        b=E3iLDfDMsBCXWjDvNZLtd+FGuy45iSFMmwLtMi03eb4cktlbptFzYkDe2MAgKvxcrD
-         YXnPYlyiRUuuE6uf4jJ2Q+LNj5iW8+jETMetWtMTxmKRQXJ21Gt45MjOpApwGQ0iNapR
-         E0yPPJSwBSayirTPoeIKnQxqFDKJXwgw2sc2fG9ikC5Zcz0nwfu2gmRSFuPPmSKZggkm
-         bAXQw/Igw//wJLAAYSga4Cdg528FQdg++u8spuwRCT2iyQb2O82JRxUx0VT5naAoKLjy
-         cX3zg9bEhWNfU4w3pv+pPAlhCXct0BtJIIw13Vb41TigrnHadsjRfHzh+9jcyE4s5U5O
-         n6zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770368939; x=1770973739;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oMVx4P6c6URC7MBhmYUuUPLSASkPw1nrq3AtFxSRZvQ=;
-        b=qdnW5KYXBGIi9Bs2vAchwTbmyGkyygFdrzvupRKBDmzbD0e5HtIFZfOg6S/3AquDz8
-         uqNoKBYyLhU+W9fncdU5NjAsg1imrl3zW03Vyr6ImsluhcN0uHIyHtOjfmUfJXU5PHgb
-         d5NomQzUZn88MoppREKsCtuXygShTRpIfjodWqyIRiN4wgPOnN3gbQfZaynO59TtBZZ8
-         NeI13X42lKjBaYqRald+zIewSOVSzfQhKCh0ndYc0QBIfI4SKPAGaqH4YiGpiANP/3Zu
-         B4cUaVm57pHp+lRaezlSrYUNmbGxY23XmIQhplFJs5Nte2g+fKx9VmXUPs3Hnbpx13PN
-         Gb9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUUL9kwRD7bZWIIq+1zo2WByozQ/nUvZZa7RpeLJNq3hyPpWpqgMtlAwL1cK/SqYBpLvSVh/VpehMmv8tO/E2PX@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOYyETb8Nu2BaP9dezr+s0dCHS4qryOXmWxEcOacGRCJMZ4Fc0
-	IFSTMcemyA3WlFd2NeVsse+Efz8But0gT8sfZVmOgruMX9WnkeZR5MLc
-X-Gm-Gg: AZuq6aIl1GhTUFPELIcKsGW0lDspQdC34tZk5mBhb3jM2RDgnu06DmkzUv4htIigDz7
-	6mzrvyKFD0OiGLi9MsjxcIe9Siuh75Q0t2uCVLECyj8+S39IMTHvsiIXm2da7TRyvM/lK22/YGa
-	6FMNDuA+OLps20TjbMh4vFXPOH0/bQFe41mLYAmamoPZM8RhMzBDWvS8KYF9sqMsOfs3enaZCi+
-	/RmxqAPVd65hyAyYLeGmV0mcK8KuiCirOerG9QtYt/+/HE68znQijJdypQ+loiMp5DqPCM2XDo7
-	EdcoMdhitdwiQHa2TsY7rHXW6syWWnNHmsFbIFSJfLPboe9P6Y1+lagO6s5vl5vnXjQa0kt6bZH
-	xmGVafPk1yhIt1N0clf1PvdNS89bY/GvMpxdB72Mc+Vk6pvpf1+M9i3ab41/q0h2vM3WcxwKQSo
-	FJI3QJtGntd+bP62wGw57D0HEOMqqwTS+yo1AWsRUIDB46pMXW2H+2Eme5AY3a8l40djJ3I+1Q1
-	uGJdP91m+JnCvSwsv22y4fhOE7WszjNmJk=
-X-Received: by 2002:a17:907:970b:b0:b87:2780:1b35 with SMTP id a640c23a62f3a-b8edf383b98mr108367766b.45.1770368938713;
-        Fri, 06 Feb 2026 01:08:58 -0800 (PST)
-Received: from ddolgov-thinkpadt14sgen1.rmtde.csb (dslb-002-207-075-089.002.207.pools.vodafone-ip.de. [2.207.75.89])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8eda748aa6sm64632266b.1.2026.02.06.01.08.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Feb 2026 01:08:58 -0800 (PST)
-Date: Fri, 6 Feb 2026 10:08:55 +0100
-From: Dmitry Dolgov <9erthalion6@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Zecheng Li <zli94@ncsu.edu>
-Subject: Re: [PATCH] perf annotate: Fix register usage in data type profiling
-Message-ID: <qncykxscahgsit26ctsja4jox4353uburbfoehfcuneycbgnvg@jvgs3twjn2rq>
-References: <20260206012743.2617945-1-namhyung@kernel.org>
- <CAP-5=fXn2jaPPBHfFLvZy-O2OXZbjOFHatDGdVm4b5q3C8jmnA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cvLwKu73"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=TXK5KGMRGuWHce3AJrzzqe3ZlTeqHV3VIZ8VHYvAwdI=; b=cvLwKu73VC5HPQVu1+fFZBBY3n
+	ePZRtzpalVwOX76urqdmo+hVemk/WcoZdQ6JsWnUKsoiPC4TIB+xUJoIbsdzloj4b4OXJzrQcgYmC
+	3aRKrS33ghn3roc+w7pqyzKStXByJHCa8E9oSLa2DzNibcLQPcfuCZuUhQFvFwLXY8HZ5VlszggrA
+	C5i5AXsQ5F8sJTfIRyCepraHTJOK90X0gZVIkoTVK/Klia+Py3OIryCDbSxloyU0RMKg3Nn+Bljzg
+	1otv9dCQrsprEApOZ5ui71Tk+htZjxfJMMpMJLSdNsvA9RQYsqkgnp5T3KjXtX9FgUU42+zAP5xXB
+	WwNDAWHg==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1voHws-00000003WoY-2Iad;
+	Fri, 06 Feb 2026 09:16:23 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 205B2302DA9; Fri, 06 Feb 2026 10:16:21 +0100 (CET)
+Date: Fri, 6 Feb 2026 10:16:21 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: syzbot <syzbot+6d5529efa784dcc0b926@syzkaller.appspotmail.com>,
+	acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, irogers@google.com,
+	james.clark@linaro.org, jolsa@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [perf?] KCSAN: data-race in __perf_event_read_value /
+ perf_event_set_state (6)
+Message-ID: <20260206091621.GO1395266@noisy.programming.kicks-ass.net>
+References: <69859989.a00a0220.34fa92.0026.GAE@google.com>
+ <CACT4Y+a9+OhtX2NeH9ZOPi=5DH36mqFWqU2cTD7MoUXJEFZjzw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -78,12 +55,97 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXn2jaPPBHfFLvZy-O2OXZbjOFHatDGdVm4b5q3C8jmnA@mail.gmail.com>
+In-Reply-To: <CACT4Y+a9+OhtX2NeH9ZOPi=5DH36mqFWqU2cTD7MoUXJEFZjzw@mail.gmail.com>
 
-> On Thu, Feb 05, 2026 at 09:00:43PM -0800, Ian Rogers wrote:
-> It'd be nice to have a test on this to avoid a regression. Dmitrii's patch:
-> https://lore.kernel.org/linux-perf-users/20260127083030.5909-1-9erthalion6@gmail.com/
-> does that for a Rust struct Buf, but it'd be nice to do something similar for C.
+On Fri, Feb 06, 2026 at 08:37:14AM +0100, Dmitry Vyukov wrote:
+> On Fri, 6 Feb 2026 at 08:34, syzbot
+> <syzbot+6d5529efa784dcc0b926@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following issue on:
+> >
+> > HEAD commit:    5dbeeb268b63 Merge tag 'driver-core-6.19-rc7' of git://git..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=169a105a580000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=6c9e86480ac654d3
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=6d5529efa784dcc0b926
+> > compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
+> >
+> > Unfortunately, I don't have any reproducer for this issue yet.
+> >
+> > Downloadable assets:
+> > disk image: https://storage.googleapis.com/syzbot-assets/8a4a5a3502b5/disk-5dbeeb26.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/65e86e2ad6af/vmlinux-5dbeeb26.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/050ae083081a/bzImage-5dbeeb26.xz
+> >
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+6d5529efa784dcc0b926@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KCSAN: data-race in __perf_event_read_value / perf_event_set_state
+> >
+> > write to 0xffff8881311a8538 of 8 bytes by task 13031 on cpu 1:
+> >  __perf_update_times kernel/events/core.c:-1 [inline]
+> >  perf_event_update_time kernel/events/core.c:735 [inline]
+> >  perf_event_set_state+0x1c4/0x440 kernel/events/core.c:754
+> >  event_sched_out+0x2d4/0x4d0 kernel/events/core.c:2391
+> >  group_sched_out kernel/events/core.c:2415 [inline]
+> >  __pmu_ctx_sched_out+0x3e7/0x530 kernel/events/core.c:3458
+> >  ctx_sched_out+0x273/0x2d0 kernel/events/core.c:3539
+> >  task_ctx_sched_out+0x4d/0x70 kernel/events/core.c:2859
+> >  perf_event_context_sched_out kernel/events/core.c:3746 [inline]
+> >  __perf_event_task_sched_out+0x2df/0x3c0 kernel/events/core.c:3846
 
-Agree, and I was planning to extend the tests in the patch above with a
-C workload as well.
+  acquires ctx->lock
+
+> >  perf_event_task_sched_out include/linux/perf_event.h:1654 [inline]
+> >  prepare_task_switch kernel/sched/core.c:5049 [inline]
+> >  context_switch kernel/sched/core.c:5205 [inline]
+> >  __schedule+0xbaa/0xc90 kernel/sched/core.c:6867
+> >  __schedule_loop kernel/sched/core.c:6949 [inline]
+> >  schedule+0x5e/0xd0 kernel/sched/core.c:6964
+> >  futex_do_wait kernel/futex/waitwake.c:358 [inline]
+> >  __futex_wait+0x121/0x260 kernel/futex/waitwake.c:687
+> >  futex_wait+0x9c/0x1d0 kernel/futex/waitwake.c:715
+> >  do_futex+0x2bf/0x380 kernel/futex/syscalls.c:130
+> >  __do_sys_futex kernel/futex/syscalls.c:207 [inline]
+> >  __se_sys_futex+0x2f6/0x370 kernel/futex/syscalls.c:188
+> >  __x64_sys_futex+0x78/0x90 kernel/futex/syscalls.c:188
+> >  x64_sys_call+0x2bc2/0x3000 arch/x86/include/generated/asm/syscalls_64.h:203
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xc0/0x2a0 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > read to 0xffff8881311a8538 of 8 bytes by task 13182 on cpu 0:
+> >  __perf_event_read_value+0xb6/0x1d0 kernel/events/core.c:5894
+> >  perf_read_one kernel/events/core.c:6049 [inline]
+> >  __perf_read kernel/events/core.c:6102 [inline]
+
+  acquires ctx->lock
+
+> >  perf_read+0x171/0x4f0 kernel/events/core.c:6119
+> >  loop_rw_iter+0x2c6/0x3f0 include/linux/uio.h:-1
+> >  io_iter_do_read io_uring/rw.c:836 [inline]
+> >  __io_read+0xbf6/0xc50 io_uring/rw.c:950
+> >  io_read+0x4a/0x190 io_uring/rw.c:1030
+> >  __io_issue_sqe+0xfd/0x2d0 io_uring/io_uring.c:1793
+> >  io_issue_sqe+0x56/0xa70 io_uring/io_uring.c:1816
+> >  io_wq_submit_work+0x3f7/0x5f0 io_uring/io_uring.c:1928
+> >  io_worker_handle_work+0x41e/0x950 io_uring/io-wq.c:650
+> >  io_wq_worker+0x22d/0x860 io_uring/io-wq.c:704
+> >  ret_from_fork+0x148/0x280 arch/x86/kernel/process.c:158
+> >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:246
+> >
+> > value changed: 0x000000004a891b66 -> 0x000000004a89847d
+> >
+> > Reported by Kernel Concurrency Sanitizer on:
+> > CPU: 0 UID: 0 PID: 13182 Comm: iou-wrk-13031 Not tainted syzkaller #0 PREEMPT(voluntary)
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/25/2025
+> > ==================================================================
+> 
+> LLM was concerned about the atomicity of these u64 operations on
+> 32-bit systems, and thus concluded the race is harmful.
+
+I'm not exactly sure I understand how there is a race, things should be
+serialized on ctx->lock.
