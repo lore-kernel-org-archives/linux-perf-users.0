@@ -1,50 +1,38 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93E4227BB5;
-	Fri,  6 Feb 2026 03:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DD52E6116;
+	Fri,  6 Feb 2026 03:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770347829; cv=none; b=tduu+O9hwKHB5G+Kwg081rWI2AsNocWU9M5aAXZ6LUMBTir9nld5BTrG77rVy3H6grRbsdQipaVEfGDv9tpJ8tTVBm8Xc9pKMu3JZsRP3p8zp8xux7E2hDrqoT9cg7LzpZ4bk17CoLrYekT+fYlJO1yL2f31wtAgJTHZ9oHdIHY=
+	t=1770349430; cv=none; b=fj6bcCNwg2yyhB1SbNZlr1KMf+YgcueWpJr/HlVbFyBwHLL1lOX6U2inZda8S/HOZTBGIPWOt2sSW9UJqGK5XB8Z5tcsUDhps+0hrIWcgPQHFjzOJrcGyf++mkyqSIxMoYOiIdc03pDzdjLI6klRXYBMd4sBn6wvw+YoO+c0Q5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770347829; c=relaxed/simple;
-	bh=5LDZNNyyCnPp71pGFeYTZQfoJdKmcINsxRXYVfN7Gu0=;
+	s=arc-20240116; t=1770349430; c=relaxed/simple;
+	bh=CpYn3Lmhwy+KIIrfqIsv0YXqk9uf6dCLHRdZyrulKPY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ra1iq1ONDWWpepdLIXUMrvMlYN6UKX6L59ii/ZQrqK7N4/vq9uMm/g0eqF9jdBLnLz7WX0w7fICyrCf6padiURguj5HFfVuGtOpSLCQv2QosPB5n4oniB+ItMu+8qWFV2Jy59CD2P5BETmHTCRTbHnF1Ikn4lTDs1eLIHBPncL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QRPWmuUs; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=Ly1aJGiWbJZ87O3XIwFelJAUvye2G1o1ysdm9dE9th1Kaz+Z6MJDzckx1zCVFd1+tS0Pv1kpfcwSgW1dIMEk8c06CNkOj4iNPhB/8yFqW/74+x7VKMEwKWCGd4Nyce6pl1vZO+LxHNv8V3w9jvTfWbOdvzPMTgC7gIP8lnbIU8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=oulkjrot; arc=none smtp.client-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QRPWmuUs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770347828; x=1801883828;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5LDZNNyyCnPp71pGFeYTZQfoJdKmcINsxRXYVfN7Gu0=;
-  b=QRPWmuUsZFxyP37RVoT0BBwKMXUKa9gZDKeJ1vL0wbTZyoeRFBUMjRgC
-   lopU6mM/HZK0/bd6BZbJ9KbT55JdS9loSQRndYy896USsJ041M8MX9FND
-   aHict6wVp8ReY6BB+UAOvs80ItM9dCQwmQNFUQUOPG0nivZbusTiCDnEe
-   SPlngxNSRdG2Dc/ais8AQ0NuebG/vFU3HsGL5XZJyiXzFWZ1g4iz/R9+5
-   qL4qOe26PS4VjK7JaYfhDzu418EvpvnrrsZ9hCAjkf2RhMNq1i+w7n2HD
-   kdoZZQ8dl3Lf6WK+TcNzzgTmnuXFEzsCy9w+cMmWdMEswp2bFXakcY02V
-   w==;
-X-CSE-ConnectionGUID: SogVCVTuSuqN3TWwzMey3A==
-X-CSE-MsgGUID: tG/3y92oQemfuCD605OMvw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11692"; a="82670906"
-X-IronPort-AV: E=Sophos;i="6.21,275,1763452800"; 
-   d="scan'208";a="82670906"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 19:17:08 -0800
-X-CSE-ConnectionGUID: RS9OFwwbQeWq+eS+u/AScw==
-X-CSE-MsgGUID: GI/62QlQRceyRvrQLNKUdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,275,1763452800"; 
-   d="scan'208";a="210130471"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 19:17:06 -0800
-Message-ID: <0ec3cdd7-d845-4377-9b67-d48668fda4a7@linux.intel.com>
-Date: Fri, 6 Feb 2026 11:17:03 +0800
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="oulkjrot"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
+	s=mxsw2412; t=1770349365;
+	bh=dKq7u7TVKmzLjYmab7Qq2COrl18pEr8pQsUYQyol7Bo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=oulkjrote9Q96y0/gmM+/DtP0XAyWj7VrXMUPyw6Gg9uhuo7r0NeM392AX0dVtpnT
+	 KirAuW8TGxaVqUBF1I/4Swwuqxn4EBzLjUyskTetf23vxHYcaiPI6izzd+QkDIDnTK
+	 lSRzTI1hhoUB4vXvCmSUy6ZdyfiiR2/A3gfgD9bM=
+X-QQ-mid: esmtpsz11t1770349363t2f031b48
+X-QQ-Originating-IP: uvLdIVcoRo1MHH/2UymnvA60Oq4oJs+mqA1/5VSDqh8=
+Received: from [10.3.91.191] ( [101.70.125.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 06 Feb 2026 11:42:39 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 5996589195195940344
+Message-ID: <752514AD54FA2A1B+513d6894-b3bf-44f3-bcc1-7d30f2642cc2@linux.spacemit.com>
+Date: Fri, 6 Feb 2026 11:42:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,131 +40,329 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [WARNING] WARNING in x86_pmu_stop() (arch/x86/events/core.c:1624)
- triggered by syzkaller repro
-To: =?UTF-8?B?5piv5Y+C5beu?= <shicenci@gmail.com>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "bp@alien8.de" <bp@alien8.de>, "acme@kernel.org" <acme@kernel.org>
-References: <PS1PPF7E1D7501F6302C4D63E37AB0D5FC5AB98A@PS1PPF7E1D7501F.apcprd02.prod.outlook.com>
+Subject: Re: [PATCH v3 3/8] iommu/riscv: Add HPM support for performance
+ monitoring
+To: Andrew Jones <andrew.jones@oss.qualcomm.com>
+Cc: Zong Li <zong.li@sifive.com>, Tomasz Jeznach <tjeznach@rivosinc.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Jingyu Li <joey.li@spacemit.com>,
+ iommu@lists.linux.dev, linux-perf-users@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+ devicetree@vger.kernel.org
+References: <cover.1769562575.git.lv.zheng@spacemit.com>
+ <cover.1770195980.git.lv.zheng@linux.spacemit.com>
+ <9C0A2AD4850D179B+524146e74e808db90d5f28fcb6ee791cf1d1bfaa.1770195980.git.lv.zheng@linux.spacemit.com>
+ <p74snip7yykhogvzqld4gyjlygmd2z4kqnat7w3qj63fwebnmm@dlz6tloevgbs>
+ <4D87481E9AABE2C6+72d18f72-9407-4d68-8195-edc6c171df14@linux.spacemit.com>
+ <CANXhq0q8N5eHx9ytabZR97Y7AULKwgS2-uEGhcaOOGp9mvbtRQ@mail.gmail.com>
+ <6C65A3873186B07C+29da5dbd-ed27-4ace-a5ca-355b3983d60c@linux.spacemit.com>
+ <zzbwkazzgeovgmbvg4qnibipzsldqcjnw4axnxlamhgvcld4hs@4m4cc2ctuuvf>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <PS1PPF7E1D7501F6302C4D63E37AB0D5FC5AB98A@PS1PPF7E1D7501F.apcprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+From: Lv Zheng <lv.zheng@linux.spacemit.com>
+In-Reply-To: <zzbwkazzgeovgmbvg4qnibipzsldqcjnw4axnxlamhgvcld4hs@4m4cc2ctuuvf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
+X-QQ-XMAILINFO: McJfg7Aee/FZyhhtIPyvEocNxm6JejMTUNCvzP1NZK3H2G1LD0Pp7/Vd
+	3Um6+DiBhA6MIAO41u7NyxwenNjjMscjOkS3xLD+2QqaKpb1oWnsP7fpQqNN2VnjALLA0vd
+	9BfMAWuPGou0j8W/Yeia6bK/hpF+yRe2n2jeSDbxwEpC4/FkQmnbpdohzX+EN3c8uW61azT
+	AMQC1zR5k722Kb2R34A40Bxgfo9EKkHileELw/dfMYMexpydfwwxpd/sWcf8ZzzkEz9vT3Y
+	RZjWZMGyzxhj/8jnl5cWrKCbGbGS2BBB6GUmohOtJgC93aSGtUAtFd1elzXfoX2Avom8E6/
+	LIz89ALwmNAcPISVZu9qCk9gFTuwB5Xx6WmK7OMkIOsZxtuLjECOlUQw98/1xFjGawxyEJG
+	p4amUc6eecTMP3y+gzwi4ZPC9wLyoZfhpUHQX9l6N5OHW3dBFJXc++lAbn3x//OYlYKfBvY
+	+tKHMZ+6pb3pKu1wSA1bpPYd649EXL2rH0W9UQi9TPq3/f/Nfc5ZWI0STjX7maEOaGn4A2c
+	wRsrX3txox0jvHFDtJr6853AIq0gDjBZdOfOpgOTzHnwuJhEziV3TlRBG8v++ncH3YQnvC7
+	QtLOO48SSZL+PHVuaODU8Z5Hd4Bf3crn4xjSjbMm5NM1/LuPLZWA0oi3Hm+CpcOl1insyOp
+	l9EyCDSv19jtQeUO9OUmH7G2l5pYEZXpoCD+I+7dHs3X4dsnCjG2PcKpBaFt9UqW7DY0v78
+	rHYEAjydRoAnmMNp7xqNLiB61Vt/3xRLf0zNqupxYZJWLFJ1nskcxf1ECwX8lQYunxGAU4h
+	C2ou4vsD9z59wjkSRRKtqUNCMnVpgxmle248czo/tFjjKjmdJAhdnn7ib+GZ4oPkgI1BztQ
+	am3MH7YNN/YWZTCjGrbQdMqxlrfXEVzDUs9Tl8PwkqIAp+YZBAwbP0J/9AGZYwYly5V1iq/
+	57D7HmfyaHvBQWHKDH+YZvHze2X2hRXWyYfhDLwnF4HKbtvDw1v2OCvGaxH8wJBeeIj3gqU
+	a0v7F2Ib1ucUNuvEz3W18nheU5W4lxGkcrN103kh0U9Vubi0HM
+X-QQ-XMRINFO: M/715EihBoGS47X28/vv4NpnfpeBLnr4Qg==
+X-QQ-RECHKSPAM: 0
 
-I failed to reproduce this issue with the provided "repro.c" file on Intel
-platforms...
+On 2/5/2026 11:23 PM, Andrew Jones wrote:
+> On Thu, Feb 05, 2026 at 02:11:48PM +0800, Lv Zheng wrote:
+>> On 2/5/2026 11:47 AM, Zong Li wrote:
+>>> On Thu, Feb 5, 2026 at 11:35 AM Lv Zheng <lv.zheng@linux.spacemit.com> wrote:
+>>>>
+>>>> On 2/5/2026 2:39 AM, Andrew Jones wrote:
+>>>>> How does this relate to
+>>>>>
+>>>>> https://lore.kernel.org/all/20250115030306.29735-1-zong.li@sifive.com/
+>>>>>
+>>>>>    From a quick skim it looks like there's plenty of overlap.
+>>>>
+>>>> We developed the driver in 2024 and demonstrated it in China summit. We
+>>>> didn't notice that a patch is on-going now in the community.
+>>>>
+>>>> Now it looks our approach solved more issues, and we'll check and update
+>>>> if there are any community concerns still not addressed in this patchset.
+>>>>
+>>>> We can add Reviewed-by/Tested-by and Signed-off-by of Zong Li to this
+>>>> patch if he wishes.
+>>>>
+>>>> Thanks,
+>>>> Lv
+>>>>
+>>>
+>>> Perhaps I can first post my next revision to the mailing list (hope it
+>>> won't waste the community resource), so that you could have a chance
+>>> to review it and see whether that version is architecturally closer to
+>>> what the community is looking for, while also addressing your issue.
+>>> If you also feel that my next revision meets your needs, perhaps you
+>>> could append your additional implementations on top of it.
+>>>
+>>
+>> It seems we all composed the RISC-V iommu HPM support by referencing
+>> drivers/perf/arm_smmuv3_pmu.
+>>
+>> Robin's comments should all be addressed IMHO.
+>>
+>>> Of course, if the community would prefer to go your version, I’m
+>>> perfectly fine with that as well.
+>>
+>> OK. If we send a next version, we will add your SOB and please help to
+>> review and test.
+> 
+> Zong Li's SOB should only be on the patches he authored. Don't put
+> anybody's SOB on patches they haven't been involved in. See
+> Documentation/process/submitting-patches.rst
+> """
+> The Signed-off-by: tag indicates that the signer was involved in the
+> development of the patch, or that he/she was in the patch's delivery path.
+> """
+> 
+ > Since Zong Li's patches were already on the list then your 
+serieswould> at least discuss them in the cover letter, explaining why 
+you've opted
+> not to adopt them. But, most likely some of the patches can be adopted,
+> so those should be extracted from Zong Li's work (with authorship
+> preserved) and based upon in order to respect that prior work.
+> 
 
-I can't imagine what causes this warning, it looks the behavior is correct
-except there are some race conditions on the cpuc->active_mask bitmap
-setting/clearing.
+You can see we have contacted each other in community, and decided to
+cooperate in this way to honor his contribution. But final decision is
+left for the community to decide:
 
-On 2/4/2026 9:11 PM, 是参差 wrote:
-> Hi,
-> I’m reporting a reproducible WARNING observed in the x86 perf PMU stop path.
-> The WARNING is triggered by a syzkaller C reproducer that performs multiple perf_event_open() calls with high-frequency sampling settings and then exercises a workload that heavily hits perf/tracepoint paths (e.g., sched tracepoints). The kernel hits a WARN in x86_pmu_stop() while handling perf event throttling/overflow.
-> The WARNING report points to:
-> WARNING: arch/x86/events/core.c:1624 at x86_pmu_stop+0x247/0x260, CPU#0: syz.2.7419/25339
-> Call trace (trimmed to the perf-relevant part):
-> perf_event_throttle.part.0
-> __perf_event_account_interrupt
-> __perf_event_overflow
-> perf_swevent_overflow
-> perf_swevent_event
-> perf_tp_event
-> perf_trace_run_bpf_submit
-> perf_trace_sched_stat_runtime
-> ...
-> This suggests a possible state-machine inconsistency or corner-case interaction between the perf throttling/overflow handling and the x86 PMU stop path (x86_pmu_stop()), potentially triggered by an unusual perf_event_attr combination and high event rate.
-> Reproducer:
-> C reproducer: https://pastebin.com/raw/t9u91hQf
-> console output: https://pastebin.com/raw/XUw5zuQg
-> kernel config: https://pastebin.com/raw/dP93yBLn
-> Kernel:
-> git tree: torvalds/linux
-> kernel version: 6.19.0-rc7 #1 VOLUNTARY (QEMU Ubuntu 24.10)
-> HEAD commit:63804fed149a6750ffd28610c5c1c98cce6bd377
->
->
->
-> EXT4-fs (loop2): mounting ext3 file system using the ext4 subsystem
-> EXT4-fs (loop2): 1 truncate cleaned up
-> EXT4-fs (loop2): mounted filesystem 00000000-0000-0000-0000-000000000000 r/w without journal. Quota mode: none.
-> ------------[ cut here ]------------
-> WARNING: arch/x86/events/core.c:1624 at x86_pmu_stop+0x247/0x260 arch/x86/events/core.c:1624, CPU#0: syz.2.7419/25339
-> CPU: 0 UID: 0 PID: 25339 Comm: syz.2.7419 Not tainted 6.19.0-rc7 #1 VOLUNTARY 
-> Hardware name: QEMU Ubuntu 24.10 PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> RIP: 0010:x86_pmu_stop+0x247/0x260 arch/x86/events/core.c:1624
-> Code: 4c 89 ef e8 9b 59 6e 00 e9 48 ff ff ff 4c 89 ef e8 2e 5a 6e 00 eb 85 4c 89 e7 e8 84 59 6e 00 e9 83 fe ff ff e8 6a 99 3e 00 90 <0f> 0b 90 e9 44 ff ff ff 4c 89 e7 e8 69 59 6e 00 eb 96 0f 1f 80 00
-> RSP: 0018:ffff88800bebe868 EFLAGS: 00010012
-> RAX: 000000000000797b RBX: ffff888010488000 RCX: ffffc90000390000
-> RDX: 0000000000080000 RSI: ffff88802e495640 RDI: 0000000000000002
-> RBP: 0000000000000000 R08: ffffffff87073701 R09: ffffffff8120c1a6
-> R10: 0000000000000001 R11: ffffffff86e3a6c7 R12: 0000000000000001
-> R13: ffff8880104881f8 R14: 0000000000000001 R15: 0000000000000000
-> FS:  00007f99e6c976c0(0000) GS:0000000000000000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000200000002000 CR3: 000000005f659000 CR4: 0000000000350ef0
-> DR0: 0000200000000080 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000600
-> Call Trace:
->  <TASK>
->  perf_event_throttle.part.0+0x89/0xf0 kernel/events/core.c:2682
->  perf_event_throttle kernel/events/core.c:2678 [inline]
->  perf_event_throttle_group kernel/events/core.c:2700 [inline]
->  __perf_event_account_interrupt+0x2a6/0x430 kernel/events/core.c:10258
->  __perf_event_overflow+0xb6/0xa00 kernel/events/core.c:10405
->  perf_swevent_overflow+0xac/0x150 kernel/events/core.c:10545
->  perf_swevent_event+0x14d/0x2e0 kernel/events/core.c:10583
->  perf_tp_event+0x3b7/0x810 kernel/events/core.c:11090
->  perf_trace_run_bpf_submit+0xef/0x180 kernel/events/core.c:11014
->  do_perf_trace_sched_stat_runtime include/trace/events/sched.h:553 [inline]
->  perf_trace_sched_stat_runtime+0x360/0x680 include/trace/events/sched.h:553
->  __do_trace_sched_stat_runtime include/trace/events/sched.h:576 [inline]
->  trace_sched_stat_runtime include/trace/events/sched.h:576 [inline]
->  update_se+0x39b/0x480 kernel/sched/fair.c:1159
->  update_curr+0x71/0x450 kernel/sched/fair.c:1209
->  put_prev_entity+0x97/0x1b0 kernel/sched/fair.c:5504
->  pick_next_task_fair+0xf7e/0x17b0 kernel/sched/fair.c:8949
->  __pick_next_task kernel/sched/core.c:5890 [inline]
->  pick_next_task kernel/sched/core.c:6426 [inline]
->  __schedule+0x740/0x1df0 kernel/sched/core.c:6809
->  preempt_schedule_common kernel/sched/core.c:7051 [inline]
->  __cond_resched+0x45/0x70 kernel/sched/core.c:7378
->  mutex_lock+0x75/0xe0 kernel/locking/mutex.c:287
->  ext4_mb_group_or_file fs/ext4/mballoc.c:5886 [inline]
->  ext4_mb_initialize_context+0x85e/0xcf0 fs/ext4/mballoc.c:5930
->  ext4_mb_new_blocks+0x603/0x3fc0 fs/ext4/mballoc.c:6304
->  ext4_alloc_branch fs/ext4/indirect.c:340 [inline]
->  ext4_ind_map_blocks+0x1635/0x20c0 fs/ext4/indirect.c:635
->  ext4_map_create_blocks fs/ext4/inode.c:615 [inline]
->  ext4_map_blocks+0xb51/0x1350 fs/ext4/inode.c:816
->  _ext4_get_block+0x1bb/0x550 fs/ext4/inode.c:916
->  ext4_block_write_begin+0x88a/0x1040 fs/ext4/inode.c:1203
->  ext4_write_begin+0x75f/0x11d0 fs/ext4/inode.c:1364
->  generic_perform_write+0x37d/0x800 mm/filemap.c:4314
->  ext4_buffered_write_iter+0x11a/0x430 fs/ext4/file.c:299
->  ext4_file_write_iter+0x560/0x1790 fs/ext4/file.c:723
->  new_sync_write fs/read_write.c:593 [inline]
->  vfs_write fs/read_write.c:686 [inline]
->  vfs_write+0xa66/0xe30 fs/read_write.c:666
->  ksys_write+0x120/0x240 fs/read_write.c:738
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xa9/0x320 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> RIP: 0033:0x7f99e822ebe9
-> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007f99e6c97038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 00007f99e8465fa0 RCX: 00007f99e822ebe9
-> RDX: 000000000208e24b RSI: 0000200000000340 RDI: 000000000000000a
-> RBP: 00007f99e82b1e19 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 00007f99e8466038 R14: 00007f99e8465fa0 R15: 00007ffc60f336c8
->  </TASK>
-> ---[ end trace 0000000000000000 ]---
->
-> Thanks
+ From Zong Li:
+ >> Of course, if the community would prefer to go your version, I’m
+ >> perfectly fine with that as well.
+
+We respect all contributions, We'll add the link in cover letter to the
+follow-up revisions, let me know if anything else should be done to the
+new revisions.
+
+--------------------------------------------------------------------
+
+And let me describe in details to compare the functionalities and
+addressed comments between what is provided by Joey and by Zong:
+
+https://lore.kernel.org/all/20250115030306.29735-1-zong.li@sifive.com/
+
+There is no missing functionalities between the two approaches, I also
+checked the original Robin's comments, let me describe them in details:
+
+1. The following comments require a split CYCLES implementation:
+
+comment 1:
+ >> Why not use an extra config bit to encode cycles events completely
+ >> independently of the regular eventID space? Or even just use 0 since
+ >> by definition that cannot overlap a valid eventID?
+
+comment 2:
+ >> It's also horribly confusing to use GENMASK for something which is
+ >> not actually a mask at all.
+
+comment 3:
+ >> Hmm, from experience I would expect these variables to be
+ >> number-of-counters related, but I guess there must be some special
+ >> cleverness going on since that number-of-counters looking
+ >> RISCV_IOMMU_HPM_COUNTER_NUM definition is conspicuously not used,
+ >> so it must be significant that these are instead related to the
+ >> number of...
+ >>
+ >> [ goes off to search code... ]
+ >>
+ >> ...event selectors? But with a magic +1 for reasons so obvious they
+ >> clearly don't need explaining.
+
+comment 4:
+ >> One of those conditions is literally impossible, the other should
+ >> already be avoided by construction.
+
+comment 5:
+ >> I don't think you need this - as best I can tell, you never
+ >> initialise a counter without also (re)enabling the interrupt (which
+ >> is logical), so since "value" for the cycle counter should always
+ >> implicitly have OF=0 anyway, it should work to just write it like the
+ >> other counters.
+
+comment 6:
+ >> Is RISCV_IOMMU_IOHPMCTR_COUNTER honestly useful? Or is it actively
+ >> hurting readability by obfuscating that we are in fact just using the
+ >> full 64-bit value in all those places?
+
+comment 7:
+ >> And that's a very creative way to spell "if (idx == 0)".
+
+comment 8:
+ >> (and as above, I think you can make this a no-op for the cycle
+ >> counter)
+
+These comments require a software architecture change to handle CYCLES
+in a neat way. CYCLES is split and handled in the clean way in
+iommu-hpm.
+
+2. The following comments require an uncore non-sampling mechanism:
+
+comment 1:
+ >> You also need a "cpumask" attribute to tell userspace this is a
+ >> system/uncore PMU.
+
+comment 2:
+ >> None of this is relevant or necessary. This is not a CPU PMU, so it
+ >> can't support sampling because it doesn't have a meaningful context
+ >> to sample.
+
+comment 3:
+ >> You first need to validate that the event is for this PMU at all,
+ >> and return -ENOENT if not.
+
+comment 4:
+ >> As above, you can't support sampling events anyway, so you should
+ >> reject them with -EINVAL.
+ >>
+ >> You also need to validate event groups to ensure they don't contain
+ >> more events than could ever be scheduled at once.
+
+comment 5:
+ >> This will never do anything, since even if we could ever get here,
+ >> it would not be at a time when there are any active events.
+ >> Unregistering an in-use PMU does not end well (hence why standalone
+ >> PMU drivers need to use suppress_bind_attrs)...
+
+Here, Joey does check PMU type, does not include sampling event stuffs,
+and cpuhp is handled in a fine grained locking way. And since locking is
+handled correctly, it's safe to keep iommu-hpm as tristate.
+The new approach requires more system software architecture techniques.
+
+3. The following comments require a IRQ handling improvement:
+
+comment 1:
+ >> TBH I'd be inclined to just leave out all the dead cleanup code if
+ >> the  PMU driver is tied to the IOMMU driver and can never
+ >> realistically be removed.
+
+comment 2:
+ >> Surely this should only touch the counter(s) that overflowed and
+ >> have been handled? It might be cleaner to keep that within the IRQ
+ >> handler itself.
+
+comment 3:
+ >> This needs to start all active counters together, not one-by-one.
+
+comment 4:
+ >> This does nothing, since set_event has just implicitly written
+ >> OF=0.
+ >>
+ >> ...unless, that is, the user was mischievous and also set bit 63
+ >> in event->attr.config, since you never sanitised the input ;)
+
+comment 5:
+ >> What do these regs represent? If you look at the perf_event_open
+ >> ABI, you'll see that events can target various combinations of CPU
+ >> and/or pid, but there is no encoding for "whichever CPU takes the
+ >> IOMMU PMU interrupt". Thus whatever you get here is more than likely
+ >> not what the user asked for, and this is why non-CPU PMUs cannot
+ >> reasonably support sampling ;)
+
+comment 6:
+ >> You still need to handle counter rollover for all events, otherwise
+ >> they can start losing counts and rapidly turn to nonsense. Admittedly
+ >> it's largely theoretical with full 64-bit counters, but still...
+
+comment 7:
+ >> Hmm, shared interrupts are tricky for PMUs, since perf requires any
+ >> IRQ handler touching a PMU is running on pmu->cpu, so you have to be
+ >> very careful about maintaining affinity and not letting anyone else
+ >> change it behind your back.
+ >>
+ >> The other thing is that if it really is shared, at this point you
+ >> could now be in riscv_iommu_pmu_handle_irq() dereferencing NULL.
+
+comment 8:
+ >> In general it's not a great idea to register an IRQ handler before
+ >> the data passed to that handler is initialised. What is pointed to by
+ >> (&iommu->pmu)->reg + RISCV_IOMMU_REG_IOCOUNTOVF if the IRQ fires
+ >> right now (and/or if CONFIG_DEBUG_SHIRQ ever gets fixed)? ;)
+ >>
+ >> (OK, it's not *literally* NULL, but hey...)
+
+Here OVF interrupt is handled as a standalone threaded per-cpu shared
+IRQ in iommu-hpm.c and iocountinh register is not used as OVF interrupt
+is always enabled and overflows is stored to software counters. The new
+approach passed testings.
+
+4. Other programming style fixes, they are all not in this patch.
+
+comment 1:
+ >> sysfs_emit()
+
+No such problem here.
+
+comment 2:
+ >> Might be worth leaving a comment just in case anyone does try to
+ >> enable this for 32-bit that the io-64-nonatomic readq() isn't enough
+ >> to work properly here.
+
+Not addressed in v3 and v4. And probably not necessary.
+
+comment 3:
+ >> That's a wonderfully expensive way to spell
+ >> "pmu->events[idx]->hw.config"...
+
+No such problem here, get_event() is used.
+
+comment 4:
+ >> Initially this looks weird - why bother storing constants in memory
+ >> if they're constant? - but I see the spec implies they are not
+ >> necessarily fixed, and we can only actually assume at least one
+ >> counter at least 32 bits wide, so I guess this is really more of
+ >> a placeholder? Is there a well-defined way we're supposed to be able
+ >> to discover these, like some more ID register fields somewhere, or
+ >> writing all 1s to various registers to see what sticks, or is it
+ >> liable to be a mess of just having to know what each implementation
+ >> has by matching DT compatibles and/or PCI IDs?
+
+Here WARL registers are handled in RISC-V programming style.
+
+comment 5:
+ >> The new thing is that you can now set pmu.parent to the IOMMU device
+ >> so their relationship is clear in sysfs, rather than having to play
+ >> tricks with the PMU name.
+
+Not addressed here but addressed in v4.
+
+IMO, the Joey's approach addressed issue 1, 2 and 3, which does require
+more software architecture changes. Her contribution and authorship
+might also be honored.
+
+--------------------------------------------------------------------
+
+Am I missing something in the above list? Robin might help to confirm if
+the new approach has addressed all his comments.
+
+Thanks and best regards,
+Lv
+
+> Thanks,
+> drew
+> 
+
