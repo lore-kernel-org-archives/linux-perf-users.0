@@ -1,322 +1,783 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7352378D7E
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 11:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D3E3A1D14;
+	Fri,  6 Feb 2026 12:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770376883; cv=none; b=cdTP/vD0/wgVIEnkWFYTqKBH27jTaSuHaOOOqDfkIS2X8C7qnLaIZyt6CN/GRs6Z+Z/w9r+ICx7rVBxAoGuzfzL6NYrZQcfts7HQwvulqGE0RyPe5LPDi5dblLoBThLoedBokOI0SiPLqrh0rAg5ZWBYoFt252PTZYQa1nrtYuU=
+	t=1770379313; cv=none; b=fbA2FdpRbcFeA03LRSDPoSUkp6pBpVYTSuap+5zFkZuEMmKT9xH4iCbz3eILXdASp6kHfp3ocMVirIBVz5I9RADa/wuV/MT42YhVG1Ts257nFndZn0Tajsp9MqwPI4e+ouglCPwsrkM1evzX9p/xE06lQwDkPMfhexW/pPfGYJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770376883; c=relaxed/simple;
-	bh=kyjAZ7ptnjDgfiQMtgIyufRrqBRSUlAdt6onQIjHw9A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B3LbJ2RrGfveE1OjCPlZAcU+awaVonb2n0CA0LVgxkiG6R7CdVjAKRfMeyX4vTU2cza0uef+c7VJax9iNrwcsXDLxQrlG8dHJh/Mjgrcio8AdVNT+DUtNoqbVRIzzHx1OCJ/Ib9ufiN0IZ5ejcMalsFin1EE79w+GISW1StmQIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tBZY1x7b; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1770379313; c=relaxed/simple;
+	bh=P5dSQdSgy4uF8f5LF4N4SpKaivTUNjGUROox89C8hbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OHPFAxV89A4I8A3KLQ7VkbD2GxaRn3l+QKsHHYK2PJTaWY0cao3LrgDVOB1PcOKpyKsMcif737qBbslRjo1KWtpoX9BI12T6rnhS5rL/km7Kv54+nsngkS/RDmx7cLhB2BTVefWOQn1SrvYS22S69WhQdepAI5TPHnAxsOIejaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=Epgpm4bA; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tBZY1x7b"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4806dffc64cso17304215e9.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 03:21:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1770376881; x=1770981681; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6uKEaP0lVPUAhKZXv5kiloZrMG9TcJ44mU/KajbPFvI=;
-        b=tBZY1x7bzSV3aXo4c9MAUgSHLUvmQ/zUf4MmcrUNe0q25IwLopSGQ//WPB31VCY+k7
-         SwwUpgPo2gVBzhwKiSl/Wli3XpQC+gG6DL93aba2gAdx7Ej3XvV0oBbFiXokkyhAY5CN
-         FT9j15jmgSlKvotNW/rbfHz7/Rmw4Wh9dHJGXgwsC/VvYJPvnAqxa2WHt4WaO4iOLpgS
-         HRMTeh9ZPNmUyhICFuIXpuoZ9GLhk9kX7QGJiV7WdxIcQ2OgRhKXF09n40V3OOcVNmEV
-         aYAzxs4PIEW9plbVjSlLlbRX6twDHqD1l44yAezF6DHlq88RjVE2Ijn7OubsThxEwzCn
-         etPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770376881; x=1770981681;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6uKEaP0lVPUAhKZXv5kiloZrMG9TcJ44mU/KajbPFvI=;
-        b=OUjSXd4JCz7Ilzdrc7JNjKWnmtMMrNt7ktCNYdyzGHl2+PH6uF2Q2EqumiG8eT/yF/
-         KF2JIA9mOjhQ2kSLWO4KeK5v+bgAA9l/9DifkI4lCNQI/ukPLSjkPqsW3tXSNLwo36TJ
-         ofCMxKIa4HfXfWRttYxrFOIvBBMcegGZGI7U3aPDVsgWofGUGzO7qd63CN2tuEv/n20Y
-         lqg7RSjEjv6eJycijAydGgozsVA/J5XdYpteBsDmuTBrJDDF7QFPc/2Aeo7v3e1sFywu
-         OSx2McsC9q9vWFRqO8OUDQ4uqJOFl9fRazHuoCuLECbu4IwEZycN7BGyjmCnH7k5SGmz
-         Ve6Q==
-X-Gm-Message-State: AOJu0YyxAtNgNiABKgIAKTJq2yGgmakou9iVp54v7nRzKcvuZBVO77Bz
-	klWV7veh7OIT/LHuhk0HXpnEQnuK/WN5yAhrB4hw51HCKEUEqXAvBnCpFEirJqPJ6ds=
-X-Gm-Gg: AZuq6aIhbeP9snZ3QbvjoyBBEkBdU3JdlxHTMVSZ6g/w12Q4xIGjK285CwYqqH0/iv1
-	x+m4zhr8HBYNlOdO5EcMZAT8KTGc05A0uwTD/03FJgiEdRRefb40zR4hjkT80b1aXkJlaNi8hAs
-	yzRC8vWj94EZQkL9ELrAsDlgYCxBUSrJgdXL/Hrn2gqVSruZYjyyd5Ez1LMqPDJZgfp7kTdNw8d
-	hGGSR8Z6UXy8D3GK/TSldAYxOvggMI4mKT2yxH9Vo1bmj3MtQjIULSmZqym/M3aWfwBc6zqHdmI
-	+A38YYCg5/IlT20eVylwEKq+0G27zPGLGxX/Ydvn5hUaksCx4T2Zo9NRKZ6/mxC5GwUuaF5xhwa
-	HGWM0jOXqn2iRD61sIovmeOlJW+YEm+faQyphIie6E3z4cYF4RR/2foAxqq9M87oetta6vE13h4
-	7Oa6uomxhVO34HF28d
-X-Received: by 2002:a05:600c:4f81:b0:480:3a71:92b2 with SMTP id 5b1f17b1804b1-4832097d2famr28132715e9.26.1770376881016;
-        Fri, 06 Feb 2026 03:21:21 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483209e0857sm15464375e9.16.2026.02.06.03.21.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Feb 2026 03:21:20 -0800 (PST)
-Message-ID: <1e6337ec-d4a0-420b-bd7b-0fd2b6fee620@linaro.org>
-Date: Fri, 6 Feb 2026 11:21:19 +0000
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="Epgpm4bA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Reply-To:Content-ID:Content-Description;
+	bh=lCH8chaQf9RRMTpM3+xc/voeuNJjRfJtUu3/kFntkL0=; b=Epgpm4bA5DgZFJAQLNO3Tri2yO
+	vnFIfHaIMxCfzpKAyv8ggKYNwhAxZYjl76poHyvSzlq9D/JQuxdfXyZGB8MyHkc4dkGvsfQXUEKMx
+	EufUt1bmVPHxq3GKY1rEXvmhmz+sIuOLLh7m1vtD3ueCCFSBpRz3OzGIXC0OxQRMnKcsvRxOWnvKY
+	T+qaShyU4eDJAV31w118RQo7SVQuyqKNPn8vxCArIjDRagSjyVHSrDn2HIFF7ksaQ1u6pM2QEFILp
+	3TEujy3xPNLVyQFCqSYFYNSBtS2o5/6hEe5z4Jr1cxeeP+GtxawniERK3pshp1WYvbog/0V50s2/W
+	fkK1k9JA==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1voKWa-0078zT-HM; Fri, 06 Feb 2026 12:01:25 +0000
+Date: Fri, 6 Feb 2026 04:01:19 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com, Denis Yaroshevskiy <dyaroshev@meta.com>
+Subject: Re: [PATCH] perf stat: Fix crash on arm64
+Message-ID: <aYXPZfaO7Sa80iIM@gmail.com>
+References: <20260205-perf_stat-v1-1-e433b0c918af@debian.org>
+ <CAP-5=fW2iUbaZRX789SaJNGXk1VhGg0igLukb6SAosKiA-f1tA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf/core: Fix missing read event generation on task
- exit
-To: Thaumy Cheng <thaumy.love@gmail.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>,
- Suzuki K Poulose <Suzuki.Poulose@arm.com>, Leo Yan <leo.yan@arm.com>,
- Mike Leach <mike.leach@linaro.org>
-References: <20251024170543.11201-1-thaumy.love@gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20251024170543.11201-1-thaumy.love@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fW2iUbaZRX789SaJNGXk1VhGg0igLukb6SAosKiA-f1tA@mail.gmail.com>
+X-Debian-User: leitao
+
+Hello Ian, thanks for the quick reply!
+
+On Thu, Feb 05, 2026 at 08:59:07AM -0800, Ian Rogers wrote:
+> On Thu, Feb 5, 2026 at 3:46 AM Breno Leitao <leitao@debian.org> wrote:
+> >
+> > Perf stat is crashing on arm64 hosts with the following issue:
+> >
+> >         # make -C tools/perf DEBUG=1
+> >         # perf stat sleep 1
+> >         perf: util/evsel.c:2034: get_group_fd: Assertion `!(!leader->core.fd)' failed.
+> >         [1]    1220794 IOT instruction (core dumped)  ./perf stat
+> >
+> > The sorting function introduced by commit a745c0831c15c ("perf stat:
+> > Sort default events/metrics") compares events based on their individual
+> > properties. This can cause events from different groups to be
+> > interleaved, resulting in group members appearing before their leaders
+> > in the sorted evlist.
+> 
+> Hi, sorry for the issue. I can see what you're saying but why is this
+> an arm64 issue?
+
+Sorry, It's not ARM64-specific - the bug is in the generic sort code.
+It just happens to manifest on ARM64.
+
+> The legacy Default metrics are common to all
+> architectures:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/arch/common/common/metrics.json?h=perf-tools-next
+> 
+> > When the iterator opens events in list order, a group member may be
+> > processed before its leader has been opened.
+> >
+> > For example, CPU_CYCLES (idx=32) with leader STALL_SLOT_BACKEND (idx=37)
+> > could be sorted before its leader, causing the crash when CPU_CYCLES
+> > tries to get its group fd from the not-yet-opened leader.
+> 
+> Which metric is this?
+
+These are ARM neoverse metrics, they can be found in
+tools/perf/pmu-events/arch/arm64/arm/neoverse-n*
+
+> > Fix this by comparing events based on their leader's attributes instead
+> > of their own attributes when the events are in different groups. This
+> > ensures all members of a group share the same sort key as their leader,
+> > keeping groups together and guaranteeing leaders are opened before their
+> > members.
+> 
+> This makes sense but I'm not understanding why this problem wasn't
+> seen previously. I'm guessing that in a metric like
+> backend_cycles_idle:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/arch/common/common/metrics.json?h=perf-tools-next#n63
+> ```
+>         "BriefDescription": "Backend stalls per cycle",
+>         "MetricExpr": "stalled\\-cycles\\-backend / cpu\\-cycles",
+>         "MetricGroup": "Default",
+>         "MetricName": "backend_cycles_idle",
+>         "MetricThreshold": "backend_cycles_idle > 0.2",
+>         "DefaultShowEvents": "1"
+> ```
+
+I was able to limit this to the following json:
+
+  [
+      {
+          "ArchStdEvent": "backend_bound",
+          "MetricExpr": "(100 * ((STALL_SLOT_BACKEND / (CPU_CYCLES * #slots)) - ((BR_MIS_PRED * 3) / CPU_CYCLES)))"
+      },
+      {
+          "ArchStdEvent": "frontend_bound",
+          "MetricExpr": "(100 * (((STALL_SLOT_FRONTEND) / (CPU_CYCLES * #slots)) - (BR_MIS_PRED / CPU_CYCLES)))"
+      }
+  ]
+
+and then
+
+	# ./tools/perf/perf stat -v sleep 0.01
+	Using CPUID 0x00000000410fd4f0
+	metric expr 100 * (STALL_SLOT_BACKEND / (CPU_CYCLES * #slots) - BR_MIS_PRED * 3 / CPU_CYCLES) for backend_bound
+	metric expr 100 * (STALL_SLOT_FRONTEND / (CPU_CYCLES * #slots) - BR_MIS_PRED / CPU_CYCLES) for frontend_bound
+	metric expr (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) / (duration_time * 1e9) for CPUs_utilized
+	metric expr stalled\-cycles\-backend / cpu\-cycles for backend_cycles_idle
+	metric expr stalled\-cycles\-backend / cpu\-cycles for backend_cycles_idle
+	metric expr branches / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) for branch_frequency
+	metric expr branch\-misses / branches for branch_miss_rate
+	metric expr branch\-misses / branches for branch_miss_rate
+	metric expr software@context\-switches\,name\=context\-switches@ * 1e9 / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) for cs_per_second
+	metric expr cpu\-cycles / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) for cycles_frequency
+	metric expr stalled\-cycles\-frontend / cpu\-cycles for frontend_cycles_idle
+	metric expr stalled\-cycles\-frontend / cpu\-cycles for frontend_cycles_idle
+	metric expr instructions / cpu\-cycles for insn_per_cycle
+	metric expr instructions / cpu\-cycles for insn_per_cycle
+	metric expr software@cpu\-migrations\,name\=cpu\-migrations@ * 1e9 / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) for migrations_per_second
+	metric expr software@page\-faults\,name\=page\-faults@ * 1e9 / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) for page_faults_per_second
+	metric expr max(stalled\-cycles\-frontend, stalled\-cycles\-backend) / instructions for stalled_cycles_per_instruction
+	hwmon_pmu: failure to open '/sys/class/hwmon/hwmon4/name'
+	hwmon_pmu: failure to open '/sys/class/hwmon/hwmon5/name'
+	hwmon_pmu: failure to open '/sys/class/hwmon/hwmon3/name'
+	found event software@context-switches,name=context-switches@
+	found event duration_time
+	found event software@page-faults,name=page-faults@
+	found event software@task-clock,name=task-clock@
+	found event cpu-cycles
+	found event branches
+	found event software@cpu-migrations,name=cpu-migrations@
+	Parsing metric events 'software/context-switches,name=context-switches,metric-id=software!3context!1switches!0name!2context!1switches!3/,software/page-faults,name=page-faults,metric-id=software!3page!1faults!0name!2page!1faults!3/,software/task-clock,name=task-clock,metric-id=software!3task!1clock!0name!2task!1clock!3/,cpu-cycles/metric-id=cpu!1cycles/,branches/metric-id=branches/,software/cpu-migrations,name=cpu-migrations,metric-id=software!3cpu!1migrations!0name!2cpu!1migrations!3/,duration_time'
+	cpu-cycles -> armv8_pmuv3_0/metric-id=cpu!1cycles,cpu-cycles/
+	branches -> armv8_pmuv3_0/metric-id=branches,branches/
+	duration_time -> tool/duration_time/
+	found event STALL_SLOT_FRONTEND
+	found event duration_time
+	found event BR_MIS_PRED
+	found event CPU_CYCLES
+	Parsing metric events '{STALL_SLOT_FRONTEND/metric-id=STALL_SLOT_FRONTEND/,BR_MIS_PRED/metric-id=BR_MIS_PRED/,CPU_CYCLES/metric-id=CPU_CYCLES/}:W,duration_time'
+	STALL_SLOT_FRONTEND -> armv8_pmuv3_0/metric-id=STALL_SLOT_FRONTEND,STALL_SLOT_FRONTEND/
+	BR_MIS_PRED -> armv8_pmuv3_0/metric-id=BR_MIS_PRED,BR_MIS_PRED/
+	CPU_CYCLES -> armv8_pmuv3_0/metric-id=CPU_CYCLES,CPU_CYCLES/
+	duration_time -> tool/duration_time/
+	Matched metric-id STALL_SLOT_FRONTEND to STALL_SLOT_FRONTEND
+	Matched metric-id BR_MIS_PRED to BR_MIS_PRED
+	Matched metric-id CPU_CYCLES to CPU_CYCLES
+	Matched metric-id duration_time to duration_time
+	found event STALL_SLOT_BACKEND
+	found event duration_time
+	found event BR_MIS_PRED
+	found event CPU_CYCLES
+	Parsing metric events '{STALL_SLOT_BACKEND/metric-id=STALL_SLOT_BACKEND/,BR_MIS_PRED/metric-id=BR_MIS_PRED/,CPU_CYCLES/metric-id=CPU_CYCLES/}:W,duration_time'
+	STALL_SLOT_BACKEND -> armv8_pmuv3_0/metric-id=STALL_SLOT_BACKEND,STALL_SLOT_BACKEND/
+	BR_MIS_PRED -> armv8_pmuv3_0/metric-id=BR_MIS_PRED,BR_MIS_PRED/
+	CPU_CYCLES -> armv8_pmuv3_0/metric-id=CPU_CYCLES,CPU_CYCLES/
+	duration_time -> tool/duration_time/
+	Matched metric-id STALL_SLOT_BACKEND to STALL_SLOT_BACKEND
+	Matched metric-id BR_MIS_PRED to BR_MIS_PRED
+	Matched metric-id CPU_CYCLES to CPU_CYCLES
+	Matched metric-id duration_time to duration_time
+	found event duration_time
+	found event stalled-cycles-backend
+	found event instructions
+	found event stalled-cycles-frontend
+	Parsing metric events '{stalled-cycles-backend/metric-id=stalled!1cycles!1backend/,instructions/metric-id=instructions/,stalled-cycles-frontend/metric-id=stalled!1cycles!1frontend/}:W,duration_time'
+	stalled-cycles-backend -> armv8_pmuv3_0/metric-id=stalled!1cycles!1backend,stalled-cycles-backend/
+	instructions -> armv8_pmuv3_0/metric-id=instructions,instructions/
+	stalled-cycles-frontend -> armv8_pmuv3_0/metric-id=stalled!1cycles!1frontend,stalled-cycles-frontend/
+	duration_time -> tool/duration_time/
+	Matched metric-id stalled-cycles-backend to stalled-cycles-backend
+	Matched metric-id instructions to instructions
+	Matched metric-id stalled-cycles-frontend to stalled-cycles-frontend
+	Matched metric-id duration_time to duration_time
+	Matched metric-id software@page-faults,name=page-faults@ to page-faults
+	Matched metric-id software@task-clock,name=task-clock@ to task-clock
+	Matched metric-id software@task-clock,name=task-clock@ to task-clock
+	Matched metric-id software@cpu-migrations,name=cpu-migrations@ to cpu-migrations
+	found event duration_time
+	found event cpu-cycles
+	found event instructions
+	Parsing metric events '{cpu-cycles/metric-id=cpu!1cycles/,instructions/metric-id=instructions/}:W,duration_time'
+	cpu-cycles -> armv8_pmuv3_0/metric-id=cpu!1cycles,cpu-cycles/
+	instructions -> armv8_pmuv3_0/metric-id=instructions,instructions/
+	duration_time -> tool/duration_time/
+	Matched metric-id cpu-cycles to cpu-cycles
+	Matched metric-id instructions to instructions
+	Matched metric-id duration_time to duration_time
+	found event duration_time
+	found event cpu-cycles
+	found event stalled-cycles-frontend
+	Parsing metric events '{cpu-cycles/metric-id=cpu!1cycles/,stalled-cycles-frontend/metric-id=stalled!1cycles!1frontend/}:W,duration_time'
+	cpu-cycles -> armv8_pmuv3_0/metric-id=cpu!1cycles,cpu-cycles/
+	stalled-cycles-frontend -> armv8_pmuv3_0/metric-id=stalled!1cycles!1frontend,stalled-cycles-frontend/
+	duration_time -> tool/duration_time/
+	Matched metric-id cpu-cycles to cpu-cycles
+	Matched metric-id stalled-cycles-frontend to stalled-cycles-frontend
+	Matched metric-id duration_time to duration_time
+	Matched metric-id software@task-clock,name=task-clock@ to task-clock
+	Matched metric-id cpu-cycles to cpu-cycles
+	Matched metric-id software@context-switches,name=context-switches@ to context-switches
+	Matched metric-id software@task-clock,name=task-clock@ to task-clock
+	found event duration_time
+	found event branch-misses
+	found event branches
+	Parsing metric events '{branch-misses/metric-id=branch!1misses/,branches/metric-id=branches/}:W,duration_time'
+	branch-misses -> armv8_pmuv3_0/metric-id=branch!1misses,branch-misses/
+	branches -> armv8_pmuv3_0/metric-id=branches,branches/
+	duration_time -> tool/duration_time/
+	Matched metric-id branch-misses to branch-misses
+	Matched metric-id branches to branches
+	Matched metric-id duration_time to duration_time
+	Matched metric-id software@task-clock,name=task-clock@ to task-clock
+	Matched metric-id branches to branches
+	found event duration_time
+	found event cpu-cycles
+	found event stalled-cycles-backend
+	Parsing metric events '{cpu-cycles/metric-id=cpu!1cycles/,stalled-cycles-backend/metric-id=stalled!1cycles!1backend/}:W,duration_time'
+	cpu-cycles -> armv8_pmuv3_0/metric-id=cpu!1cycles,cpu-cycles/
+	stalled-cycles-backend -> armv8_pmuv3_0/metric-id=stalled!1cycles!1backend,stalled-cycles-backend/
+	duration_time -> tool/duration_time/
+	Matched metric-id cpu-cycles to cpu-cycles
+	Matched metric-id stalled-cycles-backend to stalled-cycles-backend
+	Matched metric-id duration_time to duration_time
+	Matched metric-id software@task-clock,name=task-clock@ to task-clock
+	Matched metric-id duration_time to duration_time
+	copying metric event for cgroup 'root': context-switches (idx=0)
+	copying metric event for cgroup 'root': page-faults (idx=1)
+	copying metric event for cgroup 'root': task-clock (idx=2)
+	copying metric event for cgroup 'root': cpu-cycles (idx=3)
+	copying metric event for cgroup 'root': branches (idx=4)
+	copying metric event for cgroup 'root': cpu-migrations (idx=5)
+	copying metric event for cgroup 'root': STALL_SLOT_FRONTEND (idx=7)
+	copying metric event for cgroup 'root': stalled-cycles-backend (idx=29)
+	copying metric event for cgroup 'root': STALL_SLOT_BACKEND (idx=11)
+	copying metric event for cgroup 'root': stalled-cycles-backend (idx=15)
+	copying metric event for cgroup 'root': instructions (idx=20)
+	copying metric event for cgroup 'root': stalled-cycles-frontend (idx=23)
+	copying metric event for cgroup 'root': branch-misses (idx=25)
+	copying metric event for cgroup 'root': context-switches (idx=6)
+	copying metric event for cgroup 'root': page-faults (idx=8)
+	copying metric event for cgroup 'root': task-clock (idx=9)
+	copying metric event for cgroup 'root': cpu-cycles (idx=13)
+	copying metric event for cgroup 'root': branches (idx=12)
+	copying metric event for cgroup 'root': cpu-migrations (idx=7)
+	copying metric event for cgroup 'root': STALL_SLOT_FRONTEND (idx=25)
+	copying metric event for cgroup 'root': stalled-cycles-backend (idx=19)
+	copying metric event for cgroup 'root': STALL_SLOT_BACKEND (idx=29)
+	copying metric event for cgroup 'root': stalled-cycles-backend (idx=20)
+	copying metric event for cgroup 'root': instructions (idx=15)
+	copying metric event for cgroup 'root': stalled-cycles-frontend (idx=17)
+	copying metric event for cgroup 'root': branch-misses (idx=10)
+	Control descriptor is not initialized
+	perf: util/evsel.c:2034: get_group_fd: Assertion `!(!leader->core.fd)' failed.
+	[1]    832866 IOT instruction (core dumped)  ./tools/perf/perf stat -v sleep 0.01
 
 
+> The PMUs for cpu-cycles and stalled-cycles differ? This may mean we
+> also need to be smarting in determining PMUs for legacy events.
+> 
+> It'd be interesting to see what events are coming from the kernel, e.g.:
+> ```
+> $ ls /sys/bus/event_source/devices/*/events
 
-On 24/10/2025 6:05 pm, Thaumy Cheng wrote:
-> For events with inherit_stat enabled, a "read" event will be generated
-> to collect per task event counts on task exit.
-> 
-> The call chain is as follows:
-> 
-> do_exit
->    -> perf_event_exit_task
->      -> perf_event_exit_task_context
->        -> perf_event_exit_event
->          -> perf_remove_from_context
->            -> perf_child_detach
->              -> sync_child_event
->                -> perf_event_read_event
-> 
-> However, the child event context detaches the task too early in
-> perf_event_exit_task_context, which causes sync_child_event to never
-> generate the read event in this case, since child_event->ctx->task is
-> always set to TASK_TOMBSTONE. Fix that by moving context lock section
-> backward to ensure ctx->task is not set to TASK_TOMBSTONE before
-> generating the read event.
-> 
-> Because perf_event_free_task calls perf_event_exit_task_context with
-> exit = false to tear down all child events from the context, and the
-> task never lived, accessing the task PID can lead to a use-after-free.
-> 
-> To fix that, let sync_child_event read task from argument and move the
-> call to the only place it should be triggered to avoid the effect of
-> setting ctx->task to TASK_TOMESTONE, and add a task parameter to
-> perf_event_exit_event to trigger the sync_child_event properly when
-> needed.
-> 
-> This bug can be reproduced by running "perf record -s" and attaching to
-> any program that generates perf events in its child tasks. If we check
-> the result with "perf report -T", the last line of the report will leave
-> an empty table like "# PID  TID", which is expected to contain the
-> per-task event counts by design.
-> 
-> Fixes: ef54c1a476ae ("perf: Rework perf_event_exit_event()")
-> Signed-off-by: Thaumy Cheng <thaumy.love@gmail.com>
-> ---
-> Changes in v3:
-> - Fix the bug in a more direct way by moving the call to
->    sync_child_event and bring back the task param to
->    perf_event_exit_event.
->    This approach avoids the event unscheduling issue in v2.
-> 
-> Changes in v2:
-> - Only trigger read event on task exit.
-> - Rename perf_event_exit_event to perf_event_detach_event.
-> - Link to v2: https://lore.kernel.org/all/20250817132742.85154-1-thaumy.love@gmail.com/
-> 
-> Changes in v1:
-> - Set TASK_TOMBSTONE after the read event is tirggered.
-> - Link to v1: https://lore.kernel.org/all/20250720000424.12572-1-thaumy.love@gmail.com/
-> 
->   kernel/events/core.c | 23 ++++++++++++++---------
->   1 file changed, 14 insertions(+), 9 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 177e57c1a362..618e7947c358 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2316,7 +2316,8 @@ static void perf_group_detach(struct perf_event *event)
->   	perf_event__header_size(leader);
->   }
-> 
-> -static void sync_child_event(struct perf_event *child_event);
-> +static void sync_child_event(struct perf_event *child_event,
-> +			     struct task_struct *task);
-> 
->   static void perf_child_detach(struct perf_event *event)
->   {
-> @@ -2336,7 +2337,6 @@ static void perf_child_detach(struct perf_event *event)
->   	lockdep_assert_held(&parent_event->child_mutex);
->   	 */
-> 
-> -	sync_child_event(event);
->   	list_del_init(&event->child_list);
->   }
-> 
-> @@ -4587,6 +4587,7 @@ static void perf_event_enable_on_exec(struct perf_event_context *ctx)
->   static void perf_remove_from_owner(struct perf_event *event);
->   static void perf_event_exit_event(struct perf_event *event,
->   				  struct perf_event_context *ctx,
-> +				  struct task_struct *task,
->   				  bool revoke);
-> 
->   /*
-> @@ -4614,7 +4615,7 @@ static void perf_event_remove_on_exec(struct perf_event_context *ctx)
-> 
->   		modified = true;
-> 
-> -		perf_event_exit_event(event, ctx, false);
-> +		perf_event_exit_event(event, ctx, ctx->task, false);
->   	}
-> 
->   	raw_spin_lock_irqsave(&ctx->lock, flags);
-> @@ -12437,7 +12438,7 @@ static void __pmu_detach_event(struct pmu *pmu, struct perf_event *event,
->   	/*
->   	 * De-schedule the event and mark it REVOKED.
->   	 */
-> -	perf_event_exit_event(event, ctx, true);
-> +	perf_event_exit_event(event, ctx, ctx->task, true);
-> 
->   	/*
->   	 * All _free_event() bits that rely on event->pmu:
-> @@ -13994,14 +13995,13 @@ void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
->   }
->   EXPORT_SYMBOL_GPL(perf_pmu_migrate_context);
-> 
-> -static void sync_child_event(struct perf_event *child_event)
-> +static void sync_child_event(struct perf_event *child_event,
-> +			     struct task_struct *task)
->   {
->   	struct perf_event *parent_event = child_event->parent;
->   	u64 child_val;
-> 
->   	if (child_event->attr.inherit_stat) {
-> -		struct task_struct *task = child_event->ctx->task;
-> -
->   		if (task && task != TASK_TOMBSTONE)
->   			perf_event_read_event(child_event, task);
->   	}
-> @@ -14020,7 +14020,9 @@ static void sync_child_event(struct perf_event *child_event)
-> 
->   static void
->   perf_event_exit_event(struct perf_event *event,
-> -		      struct perf_event_context *ctx, bool revoke)
-> +		      struct perf_event_context *ctx,
-> +		      struct task_struct *task,
-> +		      bool revoke)
->   {
->   	struct perf_event *parent_event = event->parent;
->   	unsigned long detach_flags = DETACH_EXIT;
-> @@ -14043,6 +14045,9 @@ perf_event_exit_event(struct perf_event *event,
->   		mutex_lock(&parent_event->child_mutex);
->   		/* PERF_ATTACH_ITRACE might be set concurrently */
->   		attach_state = READ_ONCE(event->attach_state);
-> +
-> +		if (attach_state & PERF_ATTACH_CHILD)
-> +			sync_child_event(event, task);
+# ls /sys/bus/event_source/devices/*/events
+	/sys/bus/event_source/devices/armv8_pmuv3_0/events:
+	br_mis_pred          cti_trigout7        l1d_tlb_refill      l2d_tlb_refill         mem_access_checked_wr  stall_backend_mem
+	br_mis_pred_retired  dtlb_walk           l1i_cache           l3d_cache              memory_error           stall_frontend
+	br_pred              exc_return          l1i_cache_lmiss     l3d_cache_allocate     op_retired             stall_slot
+	br_retired           exc_taken           l1i_cache_refill    l3d_cache_lmiss_rd     op_spec                stall_slot_backend
+	bus_access           inst_retired        l1i_tlb             l3d_cache_refill       remote_access          stall_slot_frontend
+	bus_cycles           inst_spec           l1i_tlb_refill      ld_align_lat           sample_collision       trb_wrap
+	cid_write_retired    itlb_walk           l2d_cache           ldst_align_lat         sample_feed            trcextout0
+	cnt_cycles           l1d_cache           l2d_cache_allocate  ll_cache_miss_rd       sample_filtrate        trcextout1
+	cpu_cycles           l1d_cache_lmiss_rd  l2d_cache_lmiss_rd  ll_cache_rd            sample_pop             trcextout2
+	cti_trigout4         l1d_cache_refill    l2d_cache_refill    mem_access             st_align_lat           trcextout3
+	cti_trigout5         l1d_cache_wb        l2d_cache_wb        mem_access_checked     stall                  ttbr_write_retired
+	cti_trigout6         l1d_tlb             l2d_tlb             mem_access_checked_rd  stall_backend
 
-Hi Thaumy and Peter,
+	/sys/bus/event_source/devices/cs_etm/events:
+	autofdo
 
-I've been looking into a regression caused by this commit and didn't 
-manage to come up with a fix. But shouldn't this be something more like:
+	/sys/bus/event_source/devices/nvidia_cnvlink_pmu_0/events:
+	cycles        rd_bytes_rem     rd_cum_outs_rem  rd_req_rem       total_bytes_rem  total_req_rem  wr_bytes_rem  wr_req_rem
+	rd_bytes_loc  rd_cum_outs_loc  rd_req_loc       total_bytes_loc  total_req_loc    wr_bytes_loc   wr_req_loc
 
-   if (attach_state & PERF_ATTACH_CHILD && event_filter_match(event))
-       sync_child_event(event, task);
+	/sys/bus/event_source/devices/nvidia_nvlink_c2c0_pmu_0/events:
+	cycles        rd_bytes_rem     rd_cum_outs_rem  rd_req_rem       total_bytes_rem  total_req_rem  wr_bytes_rem  wr_req_rem
+	rd_bytes_loc  rd_cum_outs_loc  rd_req_loc       total_bytes_loc  total_req_loc    wr_bytes_loc   wr_req_loc
 
-As in, you only want to call sync_child_event() and write stuff to the 
-ring buffer for the CPU that is currently running this exit handler? 
-Although this change affects the 'total_time_enabled' tracking as well, 
-but I'm not 100% sure if we're not double counting it anyway.
+	/sys/bus/event_source/devices/nvidia_nvlink_c2c1_pmu_0/events:
+	cycles        rd_bytes_rem     rd_cum_outs_rem  rd_req_rem       total_bytes_rem  total_req_rem  wr_bytes_rem  wr_req_rem
+	rd_bytes_loc  rd_cum_outs_loc  rd_req_loc       total_bytes_loc  total_req_loc    wr_bytes_loc   wr_req_loc
 
- From perf_event_exit_task_context(), perf_event_exit_event() is called 
-on all events, which includes events on other CPUs:
+	/sys/bus/event_source/devices/nvidia_pcie_pmu_0/events:
+	cycles        rd_bytes_rem     rd_cum_outs_rem  rd_req_rem       total_bytes_rem  total_req_rem  wr_bytes_rem  wr_req_rem
+	rd_bytes_loc  rd_cum_outs_loc  rd_req_loc       total_bytes_loc  total_req_loc    wr_bytes_loc   wr_req_loc
 
-   list_for_each_entry_safe(child_event, next, &ctx->event_list, ...)
-     perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
+	/sys/bus/event_source/devices/nvidia_scf_pmu_0/events:
+	bus_cycles           gmem_rd_data                  scf_cache                socket_1_rd_access       socket_2_wb_data
+	cmem_rd_access       gmem_rd_outstanding           scf_cache_allocate       socket_1_rd_data         socket_2_wr_access
+	cmem_rd_data         gmem_wb_access                scf_cache_refill         socket_1_rd_outstanding  socket_2_wr_data
+	cmem_rd_outstanding  gmem_wb_data                  scf_cache_wb             socket_1_wb_access       socket_3_rd_access
+	cmem_wb_access       gmem_wr_access                socket_0_rd_access       socket_1_wb_data         socket_3_rd_data
+	cmem_wb_data         gmem_wr_data                  socket_0_rd_data         socket_1_wr_access       socket_3_rd_outstanding
+	cmem_wr_access       gmem_wr_total_bytes           socket_0_rd_outstanding  socket_1_wr_data         socket_3_wb_access
+	cmem_wr_data         remote_socket_rd_access       socket_0_wb_access       socket_2_rd_access       socket_3_wb_data
+	cmem_wr_total_bytes  remote_socket_rd_data         socket_0_wb_data         socket_2_rd_data         socket_3_wr_access
+	cycles               remote_socket_rd_outstanding  socket_0_wr_access       socket_2_rd_outstanding  socket_3_wr_data
+	gmem_rd_access       remote_socket_wr_total_bytes  socket_0_wr_data         socket_2_wb_access
 
-Then we write into those other CPU's ring buffers, which don't support 
-concurrency.
+	/sys/bus/event_source/devices/smmuv3_pmcg_11002/events:
+	config_cache_miss  config_struct_access  cycles  pcie_ats_trans_rq  tlb_miss  transaction  trans_table_walk_access
 
-The reason I found this is because we have a tracing test that spawns 
-some threads and then looks for PERF_RECORD_AUX events. When there are 
-concurrent writes into the ring buffers, rb->nest tracking gets messed 
-up leaving the count positive even after all nested writers have 
-finished. Then all future writes don't copy the data_head pointer to the 
-user page (because it thinks someone else is writing), so Perf doesn't 
-copy out any data anymore leaving records missing.
+	/sys/bus/event_source/devices/smmuv3_pmcg_11042/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
 
-An easy reproducer is to put a warning that the ring buffer being 
-written to is the correct one:
+	/sys/bus/event_source/devices/smmuv3_pmcg_11062/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
 
-   @@ -41,10 +41,11 @@ static void perf_output_get_handle(struct
-   perf_output_handle *handle)
-   {
-  	struct perf_buffer *rb = handle->rb;
+	/sys/bus/event_source/devices/smmuv3_pmcg_11082/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
 
-  	preempt_disable();
+	/sys/bus/event_source/devices/smmuv3_pmcg_110a2/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
 
-   +	WARN_ON(handle->event->cpu != smp_processor_id());
+	/sys/bus/event_source/devices/smmuv3_pmcg_12002/events:
+	config_cache_miss  config_struct_access  cycles  pcie_ats_trans_rq  tlb_miss  transaction  trans_table_walk_access
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_12042/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_12062/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_12082/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_120a2/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_15002/events:
+	config_cache_miss  config_struct_access  cycles  pcie_ats_trans_rq  tlb_miss  transaction  trans_table_walk_access
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_15042/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_15062/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_15082/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_150a2/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_16002/events:
+	config_cache_miss  config_struct_access  cycles  pcie_ats_trans_rq  tlb_miss  transaction  trans_table_walk_access
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_16042/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_16062/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_5002/events:
+	config_cache_miss  config_struct_access  cycles  pcie_ats_trans_rq  tlb_miss  transaction  trans_table_walk_access
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_5042/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
+
+	/sys/bus/event_source/devices/smmuv3_pmcg_5062/events:
+	cycles  pcie_ats_trans_passed  tlb_miss  transaction
 
 
-And then record:
+> ```
+> and the cpuid to match it up with the json.
+> ```
+> $ perf stat -v sleep 1 2>&1 |head -1
 
-   perf record -s -- stress -c 8 -t 1
+	# perf stat -v sleep 1 2>&1 |head -1
+	Using CPUID 0x00000000410fd4f0
 
-Which results in:
+> this information is in the verbose output too:
+> ```
+> $ perf stat -vv sleep 1
 
-   perf_output_begin+0x320/0x480 (P)
-   perf_event_exit_event+0x178/0x2c0
-   perf_event_exit_task_context+0x214/0x2f0
-   perf_event_exit_task+0xb0/0x3b0
-   do_exit+0x1bc/0x808
-   __arm64_sys_exit+0x28/0x30
-   invoke_syscall+0x4c/0xe8
-   el0_svc_common+0x9c/0xf0
-   do_el0_svc+0x28/0x40
-   el0_svc+0x50/0x240
-   el0t_64_sync_handler+0x78/0x130
-   el0t_64_sync+0x198/0x1a0
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             4294967294 (tool)
+	size                             144
+	config                           0x1 (duration_time)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             4294967294 (tool)
+	size                             144
+	config                           0x1 (duration_time)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             4294967294 (tool)
+	size                             144
+	config                           0x1 (duration_time)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             4294967294 (tool)
+	size                             144
+	config                           0x1 (duration_time)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             4294967294 (tool)
+	size                             144
+	config                           0x1 (duration_time)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             4294967294 (tool)
+	size                             144
+	config                           0x1 (duration_time)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             1 (PERF_TYPE_SOFTWARE)
+	size                             144
+	config                           0x3 (PERF_COUNT_SW_CONTEXT_SWITCHES)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd -1  flags 0x8 = 3
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             1 (PERF_TYPE_SOFTWARE)
+	size                             144
+	config                           0x4 (PERF_COUNT_SW_CPU_MIGRATIONS)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd -1  flags 0x8 = 4
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             1 (PERF_TYPE_SOFTWARE)
+	size                             144
+	config                           0x2 (PERF_COUNT_SW_PAGE_FAULTS)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd -1  flags 0x8 = 5
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             1 (PERF_TYPE_SOFTWARE)
+	size                             144
+	config                           0x1 (PERF_COUNT_SW_TASK_CLOCK)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd -1  flags 0x8 = 7
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0x5 (PERF_COUNT_HW_BRANCH_MISSES)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd -1  flags 0x8 = 8
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0x4 (PERF_COUNT_HW_BRANCH_INSTRUCTIONS)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	inherit                          1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd 8  flags 0x8 = 9
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0x4 (PERF_COUNT_HW_BRANCH_INSTRUCTIONS)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd -1  flags 0x8 = 10
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd -1  flags 0x8 = 11
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd -1  flags 0x8 = 12
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0x1 (PERF_COUNT_HW_INSTRUCTIONS)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	inherit                          1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd 12  flags 0x8 = 13
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd -1  flags 0x8 = 14
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0x7 (PERF_COUNT_HW_STALLED_CYCLES_FRONTEND)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	inherit                          1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd 14  flags 0x8 = 15
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd -1  flags 0x8 = 16
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0x8 (PERF_COUNT_HW_STALLED_CYCLES_BACKEND)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	inherit                          1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd 16  flags 0x8 = 17
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0x8 (PERF_COUNT_HW_STALLED_CYCLES_BACKEND)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd -1  flags 0x8 = 18
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0x1 (PERF_COUNT_HW_INSTRUCTIONS)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	inherit                          1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd 18  flags 0x8 = 19
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             0 (PERF_TYPE_HARDWARE)
+	size                             144
+	config                           0x7 (PERF_COUNT_HW_STALLED_CYCLES_FRONTEND)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	inherit                          1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd 18  flags 0x8 = 20
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             4294967294 (tool)
+	size                             144
+	config                           0x1 (duration_time)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             4294967294 (tool)
+	size                             144
+	config                           0x1 (duration_time)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             4294967294 (tool)
+	size                             144
+	config                           0x1 (duration_time)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             4294967294 (tool)
+	size                             144
+	config                           0x1 (duration_time)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             10 (armv8_pmuv3_0)
+	size                             144
+	config                           0x10 (br_mis_pred)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	disabled                         1
+	inherit                          1
+	enable_on_exec                   1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd -1  flags 0x8 = 21
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             10 (armv8_pmuv3_0)
+	size                             144
+	config                           0x3b (op_spec)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	inherit                          1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd 21  flags 0x8 = 22
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             10 (armv8_pmuv3_0)
+	size                             144
+	config                           0x3f (stall_slot)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	inherit                          1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd 21  flags 0x8 = 23
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             10 (armv8_pmuv3_0)
+	size                             144
+	config                           0x11 (cpu_cycles)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	inherit                          1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd 21  flags 0x8 = 24
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             10 (armv8_pmuv3_0)
+	size                             144
+	config                           0x3a (op_retired)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	inherit                          1
+	------------------------------------------------------------
+	sys_perf_event_open: pid 865887  cpu -1  group_fd 21  flags 0x8 = 25
+	------------------------------------------------------------
+	perf_event_attr:
+	type                             10 (armv8_pmuv3_0)
+	size                             144
+	config                           0x11 (cpu_cycles)
+	sample_type                      IDENTIFIER
+	read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+	inherit                          1
+	------------------------------------------------------------
 
-I suppose there is a chance that this is only an issue when also doing 
-perf_aux_output_begin()/perf_aux_output_end() from start/stop because 
-that's where I saw the real race? Maybe without that, accessing the rb 
-from another CPU is ok because there is some locking, but I think this 
-might be a more general issue.
-
-Thanks
-James
-
-
->   	}
-> 
->   	if (revoke)
-> @@ -14134,7 +14139,7 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
->   		perf_event_task(task, ctx, 0);
-> 
->   	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
-> -		perf_event_exit_event(child_event, ctx, false);
-> +		perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
-> 
->   	mutex_unlock(&ctx->mutex);
-> 
-> --
-> 2.51.0
-> 
-
+Thanks for your help,
+--breno
