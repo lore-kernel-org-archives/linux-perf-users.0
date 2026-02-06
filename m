@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF433793BC;
-	Fri,  6 Feb 2026 10:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D42B347BDC;
+	Fri,  6 Feb 2026 10:44:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770374669; cv=none; b=rSJw0m5igwBbwDhYV2i2ptH3QaT76iB/V+ePPSCaO2MEZsRHQ6bcJ0Xt2gX8A/mUkv8R7D/IpgrHitfMlA6WhMm61HHV9X9MJTulnrPQ4nEdYGtFOYRd2PubjQLgS3M35UW+qpVeu1O7SlBURbK+K6kQx6qLyg6TQqsUS53svZ0=
+	t=1770374695; cv=none; b=ifRMuEIO75/WIpVLg7DgcEmV/ZLNeeLtQLMvRgHX4WCxMeump/rt5TxtSm0mlkRezqyp6bVTynYC40hqsWYGn4mYU9CkyY808Rb81X+FVL2tj7KtoJGHYL/M18Ie+zjkhSMUpAkOC/ETJho4S54i0gBP/Kzq7FpJ8unkNlOTNt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770374669; c=relaxed/simple;
-	bh=xugydUcthMTZyRmenwneIs8e9qCUTdgGq+o8ojDfb3E=;
+	s=arc-20240116; t=1770374695; c=relaxed/simple;
+	bh=WWxkauQz3Xkhe7tgX7qiQ+gnrMgbvUJi1XGb2QE56gs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BcHorkiUjFrOCDnp/g98ZarpU91gESrQ/rnvapbb2u+7kAaVn4YZm7OmjTHOzJmiXzfU8nCtnzlVFt7e068ldhxxGdekLVDP0vi3Ey2MKh1MtT3dAdwAXjQ0EhL45vl2ormjDnosCISI5q3CTQ8rieGBrjOkmb6u8NUc0FX9x6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qOkxMYuL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=TY0j585Dvb2a3OexijavV3mETRe+r0qf2jo8usaaoz4WpaHouJ+RxGlTOoQh38IcC/DonWwuqfetoHu9wj1bWdV0hzlNGsBq87zPWIXGfvXYI2b2mohhM0Wm2QYHLeG3cmsIsye0gLGUDVaTn1HQKBIWOy0Sp3F8B9ZZxCHQ5bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WpkPW/6k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qOkxMYuL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3873EC116C6;
-	Fri,  6 Feb 2026 10:44:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WpkPW/6k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ECA7C116C6;
+	Fri,  6 Feb 2026 10:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770374669;
-	bh=xugydUcthMTZyRmenwneIs8e9qCUTdgGq+o8ojDfb3E=;
+	s=k20201202; t=1770374695;
+	bh=WWxkauQz3Xkhe7tgX7qiQ+gnrMgbvUJi1XGb2QE56gs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qOkxMYuL8xnqwxL5a2cxQ9jCE5UNd9K/TXUy1eMwIuIUBkR5cqoh8GvZN7+aZ1K41
-	 RgGLneKHvCWR2p+fivyW0PeO+JHq9vveNORB2NesqTwtfSDFwDmshnuvuKQQuYJ3EX
-	 wIrHFRLtKU1w5IspSbfGhzXicn/aY2NjnH0GWD8qzHlGnUZ0BDQz+MfDI6hMKxppOx
-	 TiFLEOEpVIXQ1umJcNp+kIflSkUYvNSX7xdau5ulwdk2Jec7F/brYMjfEzPzVy5wNa
-	 ckf7Mu3Y4/QTzavxGuusNWoeCXsua2MIQNI7p3ycrJfEw8jHrgB1J4jXa4hTx+G8s+
-	 KrbuyIgqCbgGg==
-Message-ID: <6c251cb2-4b13-4837-9a06-883726007bd9@kernel.org>
-Date: Fri, 6 Feb 2026 11:44:23 +0100
+	b=WpkPW/6kZfxQ5vKWso8FMNKzNVqN3tURSFC581Z+7kv3V5htKdaTt5txoCnUyLz7U
+	 z8ol5+HmqJwS0KL90OuI67qwId9EHb1gEuuPeHYbyP3e2MwStzHm7p+ilGy8if5+qP
+	 jpdqPsoux5yGol3Vhxq4g2qqFu0NmHYrrp2QcmfYFJzx/mQO4w5oGFagQQBscbmTwM
+	 68S+vWcQWpyYfAULq38pLS0Tnxb/Yq+d08g/kVLnRbXoAM7q9VjxhTsDNqe23VuVoE
+	 7sCIbhwJ9662TwCwZsIYZNJBUHT5btE+n8UITCA538KM1qYv9ecA//+aBDQy14Bda9
+	 9NKWFkKB6K8TQ==
+Message-ID: <a9d9f43a-edf3-419b-bdf7-dbd6bf9e978f@kernel.org>
+Date: Fri, 6 Feb 2026 11:44:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1.1 0/7] iommu/riscv: Add HPM support for RISC-V IOMMU
-To: Lv Zheng <lv.zheng@spacemit.com>, Tomasz Jeznach <tjeznach@rivosinc.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+Subject: Re: [PATCH v3 0/8] iommu/riscv: Add HPM support for RISC-V IOMMU
+To: Lv Zheng <lv.zheng@linux.spacemit.com>,
+ Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
  Alexandre Ghiti <alex@ghiti.fr>
 Cc: Jingyu Li <joey.li@spacemit.com>, Zhijian Chen <zhijian@spacemit.com>,
@@ -48,7 +48,7 @@ Cc: Jingyu Li <joey.li@spacemit.com>, Zhijian Chen <zhijian@spacemit.com>,
  linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
  devicetree@vger.kernel.org
 References: <cover.1769562575.git.lv.zheng@spacemit.com>
- <cover.1769666438.git.lv.zheng@spacemit.com>
+ <F9748E3984D2A6F9+cover.1770195980.git.lv.zheng@linux.spacemit.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -94,19 +94,29 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <cover.1769666438.git.lv.zheng@spacemit.com>
+In-Reply-To: <F9748E3984D2A6F9+cover.1770195980.git.lv.zheng@linux.spacemit.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 29/01/2026 07:08, Lv Zheng wrote:
-> Includes HPM support for RISC-V IOMMU. The HPM hardware mechnism can be
+On 04/02/2026 10:08, Lv Zheng wrote:
+> Includes HPM support for RISC-V IOMMU. The HPM hardware mechanism can be
 > found in the recent announced SpacemiT SoCs (K3, V100), where T100
 > (SpacemiT distributed IOMMU) is shipped. 
 > 
-> The tested result can be found as follows:
+> Revisions:
+> v1
+>  Initial release.
+> v2 (sent as v1.1)
+>  Split and cleanup DT-bindings.
+> v3
+>  Refactor using vendor specific compatible.
+> 
 
-What is v1.1 in this patch? Why aren't you following standard process
-which allows us to make review easier (try yourself with b4 diff)?
+
+Do not attach (thread) your patchsets to some other threads (unrelated
+or older versions). This buries them deep in the mailbox and might
+interfere with applying entire sets. See also:
+https://elixir.bootlin.com/linux/v6.16-rc2/source/Documentation/process/submitting-patches.rst#L830
 
 Best regards,
 Krzysztof
