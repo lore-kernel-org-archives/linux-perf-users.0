@@ -1,38 +1,38 @@
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35401DE8BF;
-	Fri,  6 Feb 2026 01:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB1B2264A8;
+	Fri,  6 Feb 2026 01:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770341649; cv=none; b=iUwMeahVN1TrqBqBW+f/fNfA99PapmFbxWd3eLLLWvF3wO4pvwjX3u/Qi8Ro9etGOLu5ws3KxDwmG6w2/voyxJNBUVk/pInJCZwnBYyZOa8j/1QOw62F8oRWiHtBqTE01UYF3rB2bN97QWXtdk+ipe+tWBvCKepL+hFieHilhVs=
+	t=1770341889; cv=none; b=J7hbrIWhbTG9fYndjvZ/+dR85rAIm4lwSyBURpz5+ECEvWPTLACkx2KEBoeu2uC59IAWttwy6wjqaWK2TQJLRag+sZXPLE07EnasC8X+7lktSbixUFT4m2if1yfH8rCAEl6aItJoGfWLzwgLXOKRon4XYgOt+OhysBWBt+HD8mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770341649; c=relaxed/simple;
-	bh=fFxcGT+L+JV19ydZ/XgG+QQkeU9MT4E1xbVZAmElpX8=;
+	s=arc-20240116; t=1770341889; c=relaxed/simple;
+	bh=fvvrcLmcigdavzznPtYsGheTPDtg54an1PXGs4+TFC0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f3bQObOVAsPshi81d3AU8NzA8QrlQRs8ppTs+aiy19/zofZtyxwVjY03Bu5XOFO/n5TrWn/tu0GicILuTMoXxnkegpessaBSM9rFo6ImN5pEAXAEMZaDgr/wrgPOLsaOSN/2K8hOdNC4U0VWEwm5JTWy187GVAE4w5BqKFMcplM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=QD07RnPO; arc=none smtp.client-ip=54.207.22.56
+	 In-Reply-To:Content-Type; b=kGuno5/5eTfEi+R8RZLIwRzO8yV/1yp0giQwVGBosrH1IchJtfN8rOKLJpjoJTMtqn6nLW+cpAXig80kOZwL/J7Lmkm1eBAaIhjkceHsC5B0mYv5CCPYE1nvx7fNJBzTVCs9up7E1K2Y88CAko4nAhF91oTfZiE6g6IsJ+7kRoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=o7FOpGgv; arc=none smtp.client-ip=54.254.200.128
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="QD07RnPO"
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="o7FOpGgv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1770341599;
-	bh=omyy70O3OuJ3VKPU2PzEKTpT9f6MeOhreIgYvWT0TaY=;
+	s=mxsw2412; t=1770341830;
+	bh=u66lDzn3W+s9lLSBjCrJQz3iX/gWLeceviCCn8xnhQA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=QD07RnPOCILFHz50XHH5mqEvGqH4YyF8vrjecOwWB9+UQtVrpJr7beu84OBiXP2cI
-	 m/IZF0D+KARp95TSv69fwBIkHd3T3sgzCDeNPqDVk3zp+wc5dkp7+9U00mP4wyd4GP
-	 NiyZfimfKhs0dCNNloCHqaFY28tN9qX/gS/MjyeI=
-X-QQ-mid: zesmtpsz2t1770341592t1b2531e8
-X-QQ-Originating-IP: IGc2qSSjBPifceWa0Fo5f41QcQ3coZKZBB3/OIZklF4=
+	b=o7FOpGgvbX0PXyChaED76RZzeiQ+/8zcCtx7IfhWZhp6y77Ilgp4g/zIEItxdwDmU
+	 czrJOl+77F6gCpZQYY1TgYg60PZDfPuteadl32mITjL2sFEtPghYMGtwke7UYMKBNJ
+	 pwX5TOjpZ9Vr3iPxRvZntppt49IB7Nsv4EyietG4=
+X-QQ-mid: zesmtpsz7t1770341822t19d1032a
+X-QQ-Originating-IP: iIAeuwskNV4ojOYuV3Noln3ZDwxd2URhMw6INSSJBQ8=
 Received: from [10.3.91.191] ( [101.70.125.34])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 06 Feb 2026 09:33:09 +0800 (CST)
+	id ; Fri, 06 Feb 2026 09:36:59 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 3718362222748311692
-Message-ID: <B8005DB6301AACB4+374512e1-f561-4d2f-afd6-7a4b51012501@linux.spacemit.com>
-Date: Fri, 6 Feb 2026 09:33:09 +0800
+X-BIZMAIL-ID: 18048956717111257135
+Message-ID: <6139284F36497822+1b579565-0f44-46b8-aa46-00258b40e0e4@linux.spacemit.com>
+Date: Fri, 6 Feb 2026 09:36:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,8 +40,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/8] dt-bindings: iommu: Add spacemit/t100 features
-To: Conor Dooley <conor@kernel.org>
+Subject: Re: [PATCH v3 2/8] iommu/riscv: Fix WSI mode IRQ number handling
+To: Andrew Jones <andrew.jones@oss.qualcomm.com>
 Cc: Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>,
  Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -53,114 +53,101 @@ Cc: Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>,
  devicetree@vger.kernel.org
 References: <cover.1769562575.git.lv.zheng@spacemit.com>
  <cover.1770195980.git.lv.zheng@linux.spacemit.com>
- <A0E91F323138E92F+a27d73b00f3324f0d3885128f5596230b3f1370b.1770195980.git.lv.zheng@linux.spacemit.com>
- <20260204-primer-wrought-6f64b14bf152@spud>
- <53171BEB06F43599+7c1f54bc-e72d-4cbd-9d10-194ae6b13744@linux.spacemit.com>
- <20260205-attitude-customer-129fe2bd5dc7@spud>
+ <F77F878EF7C59BD3+a9078997d97dacd05d1271a5390dfd08a402b325.1770195980.git.lv.zheng@linux.spacemit.com>
+ <2ueryrki7uzpjn6rbqz7scy46sjhw76jjilddz2naslz3eyfdp@ycwf42eaw5yy>
+ <927D288E956D61AD+d1488c72-afff-49d2-bb6b-5ef5ea08b627@linux.spacemit.com>
+ <qlnntgtoaatvdpyvusjhe2y3hickopigwf3sobtnsfwpfhwjiu@zi4auf65eepa>
 Content-Language: en-US
 From: Lv Zheng <lv.zheng@linux.spacemit.com>
-In-Reply-To: <20260205-attitude-customer-129fe2bd5dc7@spud>
+In-Reply-To: <qlnntgtoaatvdpyvusjhe2y3hickopigwf3sobtnsfwpfhwjiu@zi4auf65eepa>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpsz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
-X-QQ-XMAILINFO: NpfbsqbTlzxUCzfq5/Ht/zQVJr3Bf4NUwUOdJ0yKuokkmbVjA4paMjQL
-	4P+y5Sb/x2r4ENt8IPN+u1sNaRtD6J0QQprHOFmsn/aDCg61UG9d/e8vgplO24EYYmzrD1K
-	8LkWC6kRc1rTWVDJIs7IZp9cdyOYkmsxQIzj9qpVLUlySQkio9Epye1AyvWYDx5DN3lvyv7
-	gexLk6MLENDqFrrGFMmwxDruTGzgB54S6dn9Nyb9MLNRaDtFZFCjGh8g1apqmYothR39zN4
-	OARlarPovAHNEYhFw6g9r1aac5Cn/SqpieglMBygIUdmBBQZzCREDp4e/0cNyPssA3Fed8n
-	MELiOn1wvmuNLDe8If8RsHOfPs6638OrIrAOYkSnfhc5tqwBjaBseuImDZl16NaU/ktFqXt
-	pZ5BarfNsWr+z0rSmzah3bUJEH+uqXdMx5hK+wXI2p6NZoy8oeTnp0TzqO8RwlyrB+JQ3LC
-	tzc4fFgJKLFODbWTMqwhj21nq3+08mVZzsyKnlO6L64avZNCqlfATYSkkAOX0M99ADxvcX6
-	mAPgVbvzt5dV1AAsJFRGGQHeVWoNbtc0zqPCy7iDugjqwQi5VkUhjHbXijy/Eg3YmmeRl4R
-	L7MLtzN8w4llS/srGye5InBXNbv0q+urusZJvd9jahfsKGJSlzUSLT37mQjXXMVt6ueGbou
-	kdzg4tj7xX9PO9HwHLWof65dC4Km6ziD+hOVCAYL88QPAwZZvBkcRVWb1KRFdWcxJAoMrWz
-	ghWrlscjUfb5Q8HUhGWUsXhNHDNJUREyDD3/pNf/DbgQhYFcjpUMcwb1DG+dVy9YG0lfnWc
-	Z49zEUvc1j7ZECtJD+F2fyWrs8t2gUromBwZtCD0CuB7z9HCzNxj+btctKZkCgNFEdeAFfe
-	i3fud1EWG3g5qZN94w3KIHl2heZMI826kPInG+0OKlIfpqOy4BRP8qh2Iev2PU9ZcUrsRd8
-	6/LpRAdtAXORLMEfNhghXSHzMdH6HtAhMhjDYPCPv14B65LC57k8QaiFO1HCq52woYqEiZ0
-	GcxksBJfeocoJz+3xw/aprWTNHdYU=
-X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
+X-QQ-XMAILINFO: MFZ9kh0LMtuH0AU9pAK9/PazOypgIKoQg76nLcge23gYkiXS8HdxXEce
+	xTe3LiYcAFT9/BtDhydb42SrASmK84yFYudwg0EftdMHoO1+xfE2+Qd+NwpOysRJzkGUgNK
+	DgrFwkzTC+Z5hnW2yRrA4vNmQ2WRJ4VlmjUUXlatjnOHHkG6ol9Fmlo5yGcRb/vvRxbNH+F
+	nzoCsbbv2lnEvLMDUwr1luDeDmlMThOjBreO6zriEX2cwFaL0OBqsYRMnkB8qvKRnzkN37+
+	FOCYXjeX+8EBYutxLfIl1H7OYOgVM+9nTMzXn6B9Z6QhKO/OfVDvTWbFz2ELqUaTQjJy1XD
+	Ok92U/YCMZLcBMKxBuVgsZWpDOL3O4hEKQKAnHYr0mncz1nqezJ735nMOHiv9odNYM3G6Kg
+	MhxwXqG8XG7mM7sfj8jBzOafce4WkQKhKuqTe2rBi+3hHAD1OAVzdrourSs+u1kVp/aIGjv
+	IReVBIUD575mw3J1zpjePh6i2feHzzhxDJZxnYlJD01X0CXr1VwkMQ17RK3QoL3Zp3bYJvl
+	M9rF0XRAdz3ub/JTb2sHoYyugjGcLqpGF/dkGl49nrFoZyJ39lC9HgREwiDUhDm9bY8fYC4
+	oPVA2d46sHgMTutJkJI06TdOpri6Vztwjz1sflTrYIzGmcphgzyUlZufCo2MEoskXQQRrz4
+	YshVPH3eMvPyXs13PkaTVfYAvIVSO/AFkgWLJAIwQg8d5CcS7CirnnQHFOsS6C36zdZpzEz
+	KevYGs1tgRC5TRbzIheyf1sEitY02OIe08z2cTDzUqHKns3rarqmrbzYsOFvL7XoeeqtgLl
+	u6vl3Tj/yyqwyVGt5iP59rNGU0hExuos43NcclhqrebJhSj9U+8WxKw5gx3o38ufF+UFcR1
+	qBgCdxXzSX/4sFJc5Ci2+we+i+4kNNTtmvm1UBfUtDqUvTB01V0tDFmDpu//JqcI9UsR9v9
+	iIUKvjaJTTkcKRdPu/urRLGoi00jp4xPzg+TTzkvI9mZf6rWTBbqQOF6Qo9CgT379OQUcl6
+	8oq/Utqo9w71/prjkm
+X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
 X-QQ-RECHKSPAM: 0
 
-On 2/6/2026 2:24 AM, Conor Dooley wrote:
-> On Thu, Feb 05, 2026 at 11:11:51AM +0800, Lv Zheng wrote:
->> On 2/5/2026 1:37 AM, Conor Dooley wrote:
->>> On Wed, Feb 04, 2026 at 05:09:12PM +0800, Lv Zheng wrote:
->>>> Adds device tree bindings for SpacemiT T100 specific features by
->>>> introducing spacemit,100 compatible. T100 contains distributed IOATCs,
->>>> each of which exposes pmiv interrupt.
->>>>
->>>> Signed-off-by: Lv Zheng <lv.zheng@linux.spacemit.com>
->>>> Signed-off-by: Jingyu Li <joey.li@spacemit.com>
->>>> ---
->>>>    .../bindings/iommu/riscv,iommu.yaml           | 37 +++++++++++++++++++
->>>>    1 file changed, 37 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
->>>> index d4838c3b3741..2da3456e7402 100644
->>>> --- a/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
->>>> +++ b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
->>>> @@ -32,6 +32,12 @@ properties:
->>>>      # should be specified along with 'reg' property providing MMIO location.
->>>>      compatible:
->>>>        oneOf:
->>>> +      - description: SpacemiT distributed IOMMUs
->>>> +        items:
->>>> +          - enum:
->>>> +              - spacemit,t100
->>>> +          - const: spacemit,riscv-iommu
+On 2/5/2026 11:04 PM, Andrew Jones wrote:
+> On Thu, Feb 05, 2026 at 11:52:57AM +0800, Lv Zheng wrote:
+>> On 2/5/2026 1:20 AM, Andrew Jones wrote:
+>>> On Wed, Feb 04, 2026 at 05:08:52PM +0800, Lv Zheng wrote:
+> ...
+>>>> diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
+>>>> index d9429097a2b5..26630979473b 100644
+>>>> --- a/drivers/iommu/riscv/iommu.c
+>>>> +++ b/drivers/iommu/riscv/iommu.c
+>>>> @@ -1593,11 +1593,26 @@ static int riscv_iommu_init_check(struct riscv_iommu_device *iommu)
+>>>>    		       FIELD_PREP(RISCV_IOMMU_ICVEC_PMIV, 3 % iommu->irqs_count);
+>>>>    	riscv_iommu_writeq(iommu, RISCV_IOMMU_REG_ICVEC, iommu->icvec);
+>>>>    	iommu->icvec = riscv_iommu_readq(iommu, RISCV_IOMMU_REG_ICVEC);
+>>>> -	if (max(max(FIELD_GET(RISCV_IOMMU_ICVEC_CIV, iommu->icvec),
+>>>> -		    FIELD_GET(RISCV_IOMMU_ICVEC_FIV, iommu->icvec)),
+>>>> -		max(FIELD_GET(RISCV_IOMMU_ICVEC_PIV, iommu->icvec),
+>>>> -		    FIELD_GET(RISCV_IOMMU_ICVEC_PMIV, iommu->icvec))) >= iommu->irqs_count)
+>>>> -		return -EINVAL;
+>>>> +	/*
+>>>> +	 * In WSI mode, ICVEC may read as zero. Only validate if using MSI.
+>>>> +	 * Check if FCTL.WSI is set to determine interrupt mode.
+>>>> +	 */
+>>>> +	if (!(iommu->fctl & RISCV_IOMMU_FCTL_WSI)) {
 >>>
->>> What actually is the t100? Is it an SoC or is it the name of the core
->>> complex IP that spacemit is using in multiple SoCs?
+>>> The behavior of ICVEC does not depend on FCTL.WSI
+>>>
+>>>> +		if (max(max(FIELD_GET(RISCV_IOMMU_ICVEC_CIV, iommu->icvec),
+>>>> +			    FIELD_GET(RISCV_IOMMU_ICVEC_FIV, iommu->icvec)),
+>>>> +			max(FIELD_GET(RISCV_IOMMU_ICVEC_PIV, iommu->icvec),
+>>>> +			    FIELD_GET(RISCV_IOMMU_ICVEC_PMIV, iommu->icvec))) >= iommu->irqs_count)
+>>>> +			return -EINVAL;
+>>>> +	} else {
+>>>> +		/*
+>>>> +		 * WSI mode: ICVEC is not used. Set to identity mapping for
+>>>> +		 * riscv_iommu_queue_vec() to work correctly.
+>>>> +		 */
+>>>> +		iommu->icvec = FIELD_PREP(RISCV_IOMMU_ICVEC_CIV, 0) |
+>>>> +			       FIELD_PREP(RISCV_IOMMU_ICVEC_FIV, 1) |
+>>>> +			       FIELD_PREP(RISCV_IOMMU_ICVEC_PIV, 2) |
+>>>> +			       FIELD_PREP(RISCV_IOMMU_ICVEC_PMIV, 3);
+>>>
+>>> It's certainly not correct to set iommu->icvec to anything that can't be
+>>> written to the IOMMU's WARL ICVEC fields and read back again.
 >>
->> T100 is the name of the IOMMU IP developed by SpacemiT, announced in RISC-V
->> 2024 China Summit:
->> https://www.bilibili.com/video/BV1DNtCeiEBk/
->> It's world first server SPEC IOMMU in RISC-V, supports IOTLB placed in
->> adjacent to the DMA masters and supports PCIe ATS and PRI.
->> You can find it shipped in the recent publicly purchasable SoC SpacemiT K3.
+>> Indeed.
+>> It looks I can keep icvec returned for WSI and keeps the write-and-read
+>> check logic only for MSI.
+>>
 > 
-> Right, then what you need here is something like:
+> You shouldn't need to touch this code at all. I don't see anything to fix
+> wrt the spec. As I said, if iommu->irqs_count is known to be greater than
+> one but you're getting zero back from ICVEC even after writing 0xffff to
+> it first, then ICVEC on your IOMMU is broken. Once you've confirmed that,
+> then the best you can do is add some workaround for your specific IOMMU
+> here.
 > 
-> items:
->    - enum:
->        - spacemit,k3-iommu
->    - spacemit,t100-iommu
->    - riscv,iommu
+> Thanks,
+> drew
 > 
-> Driver can then match on spacemit,t100-iommu - but you need to have
-> soc-specific compatibles.
-> I'm not convinced that riscv,iommu is suitable here though, does the
-> driver work on your platform without the portions of code that are added
-> by this series and enabled by your new compatible? If not, the I don't
-> think the riscv,iommu fallback should be here.
-> 
-> Additionally, please stop sending new versions so frequently and in
-> response to earlier submissions. I have a v4 in my inbox while we are
-> still discussing v3.
 
-SpacemiT provides RISC-V IOMMU implementation, T100 is the first
-generation of the this IP product line, we have plan to develop T200,
-T300, etc., with more features introduced to be adoptive to new
-RISC-V IOMMU specifications.
-Besides, T100 is not only shipped in K3, but also shipped in V100 and
-the follow-up SoCs, like Kn, Vn00, they will likely use the same
-synthesis result of T100 RTLs.
+This patch is an approach trying to give PMIV a standalone wired IRQ#
+which is required by pre-silicon spacemit T100 RTLs when it is
+configured to report both MSI/WSI caps. However there is no such real
+product on the market, I just drop it it in the next version.
 
- From SpacemiT's point of view, we need a common sense of this IP
-series for something like IOATCs, that's why spacemit,riscv-iommu
-(this is same like qemu,riscv-iommu) is introduced. And a common sense
-of T100 for all SoCs shipped T100 (like global filters, vendor events
-and etc.,).
-
-IMO, the current compatible is proper to reflect these concerns.
-What do you think?
-
-Cheers,
+Thanks,
 Lv
-
-> 
-> Cheers,
-> Conor.
 
