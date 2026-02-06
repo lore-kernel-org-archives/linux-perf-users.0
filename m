@@ -1,215 +1,124 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D08318B83
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 07:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770363519; cv=pass; b=oRL++bisAVfGqVh0FZtXBt2DNBTlNc0MnLT82KplQqsxw3ClKbT0WeFd7QBuXKo8YZk5K7wYXJDFYkp4hsBr8rXJkHQkaBL+WSV0+nfASOoyBwGY3fmjRChKBb571HC88ZhhlF6nCx7l0adBhfiI07Bqp2cH7TUluTxq/DdnzfM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770363519; c=relaxed/simple;
-	bh=mmg3AM5byBUK9uuu8j6gU+2F7VmpdgECaI9kbuugKxM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k/gukX1poSvQW4f3K3QYxtwin5tw1qLkERz75HQe/2HfoocVhZ0wpr7m4yEBGedVgGc4qAPeNGido/MNxkY4oTgbFUCv4GHKG4GNNTK3V9QS9jdrtKZ+Rzo/9cn3FeFzJNM4+GNMER0VfXiDX4OqcfWdYD5lo2EV6uqrldl9+Ec=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u9R2ETWW; arc=pass smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39ED834BA24
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 08:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770367065; cv=none; b=oxnnmoY1e6M2aCWHq2Qqe3t8QVaZYG5+8LH71jxSwCrhgMf/MRbtQnaGAo5qlIdw4U0EtMV5xxDNhom/LLQkAJwS9YanJgpeq8zWjP3P+JQHxrywoMA9h4pkFMWK1ofZocVGbtBq4mlcpP0MoBmAGjucBlDaEMBvn0dlvaLJbQg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770367065; c=relaxed/simple;
+	bh=7cf3Q4KHmiVi4dSbCQPoMApQCDUBQx8oKPaRX9XDLRQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cryKlP7IroPePzZy6OovxQeT2UoL1e1kYWcibJ2ZHDtRfO89q6NM3UO6Geg3RGwBidIxYmYMZZh7SLw3Fi6YjCz5gbqVhSpSxXEs+IgU7bonvfSUwLGsYKV2MZGIF5lkaFJ6JWdWPII3YHj72E4rQPQ/FJqFxGMAqY8Lessse40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aa+Qw1mt; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u9R2ETWW"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-382fe06aa94so3349991fa.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Feb 2026 23:38:38 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770363517; cv=none;
-        d=google.com; s=arc-20240605;
-        b=DBeoP1e0FQEa9MhAeMTa19QviPycDcWQtEfgXtUSYd/vhR9GFIM5WTtNIVslYDpcpx
-         xzAj0k3oya/WWuKjmlxsLZQNIVXD+RkR2Ag7hwdxwLW1mfFqyLLk4tYBnBh5Ou9Q5N35
-         Kpam8RVH7ogAJQBAO4LByS7/FP3Rj7JqlbiqAUnGAB/fZIRQng2ZBV0+1w9Y+mfM2gBI
-         D2Tbw3sBmPbRezbgasblQ7hpQaq5FbVkWfbdoZf+BYSaHVL3IWwJPP1k8j1SLPOgp/Nx
-         Dseg+SN/G7em6N9Chm5EpgeZb4njj1iQRSvn8dBik+USYiMNLO8xs8W9j3mPiqftpd8o
-         Csrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=ubauWayYPVungVrF1gxcOMjAA2AWE+1QpPnrVDa0hhU=;
-        fh=zuIL+IcDppgvLhIyq04fbaxhaznX1OF0Dh0J0mYphW0=;
-        b=Os3ooVi2rGIlFlHnT8afJKTIiM9xXl7V7Fk7rTtSAZvgJk9sZ3JPwqKm8+lSlQVKw7
-         241j24TMpQ42IBNYdAfBlo7s4ElYia0k3VWrZZu2SphAElg4dNc3GrDc/e/tMiaZZmEo
-         SiRjoniad+9rwBro6q/PHHH+a9nfQyCh3J1CH7ERLz+JyjSra7C86pM9Lm6kbEO7i74c
-         eXKoZxSoNRDPTQMrwMkCJTsG4xDW76xDeRisL3+r+yQ3EQ0TdVZGEJ64ADtvojlKtdZt
-         tHQTBA77vbSvIyhP0aWPN7wJRW6BeuP/zc8QWRGNT9Fl23RPl6pxFqOxUdjABk2em0tC
-         u96w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aa+Qw1mt"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-81f4f4d4822so1050352b3a.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 00:37:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770363517; x=1770968317; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ubauWayYPVungVrF1gxcOMjAA2AWE+1QpPnrVDa0hhU=;
-        b=u9R2ETWWNzbPhS5f7lLmpbSll2sMn0hJ8YNgaFemqVl7Iszon+HuAteAkHvqnC/1oB
-         x5HTpppZ3oLAPtCMEVp390WIeOC/U9k3wHOq45xpvHa19loRnhQzCF1k0bZ5ExHd9d1d
-         4fbvVn3GxcSLLbffV80pn+2yDbdHxSXZVQICfbNj+4BorGZFxyoLEoqDAGLsYESTkaSO
-         FoJbZEdKUKGNjiZ4XUpMTAmSy6Zw4bB+MZbJTWfcJO2xmEOoQra33OT4xuPRUAbro+lk
-         prTq0hbTNfXswjzSCP9QbGu15sWz7oL0pB+KttQyfho6W4OZX5PKlUXaVZIvYRxde41b
-         Sy4Q==
+        d=gmail.com; s=20230601; t=1770367064; x=1770971864; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S7+MBNlta4+CsUo9Y4/iyQi9VZ5Wuh/1sqTFilAIbn0=;
+        b=aa+Qw1mtisTiIvJ68d6My9jCE0ylXL4NgckQ6i5cIuDEBc/6zuqiqSh3bQzrCumhV5
+         yJSZJ1xGb4tEnSSwLsm5wkAFzZq1HJYteDT15DzMtovHZ6b3lgEYKG48UlEMNUfYv6vl
+         HVDg61z0Z5+cB0bIe2UaM3PH/MR46at124UnEv7hw/74OVQ/Ca9mtB6YaWKOsaMw5/ls
+         vc64b/L1IVCAxuoEVnAyhbckfqcvzGuuYjTcM4+Bd5y0iV8bLn7cbKKZl729wW57+KOr
+         6jC/X8VLTidPvRjdFr4fiIbuhrexZXOWUuhX3cZZzjR4HgUD9iZDALT+GDPpeBo50iUi
+         bbQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770363517; x=1770968317;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1770367064; x=1770971864;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ubauWayYPVungVrF1gxcOMjAA2AWE+1QpPnrVDa0hhU=;
-        b=o2B0l6CUz2RDTwDMcl+2R9Xxz53PNnjfbI8usFuEnAf6PAs/KBDXe0hglAI2OmFCYx
-         skW1wfz7xobQpQo+SYmRv5C1RVTdor+PWqknO6ebl+WJwdQKRx9cQvtUrYHN3927ilDk
-         VeMKtb0r7d0K6NueobC4rgJT/mAKAm1oDpINb2ao+hNsxMo7orgKulC+fFaE2qYultbC
-         TtlSLJgX1esTCqwpAwLE3Ca9NJ2cJW42Zyt5o1G27aIyUXLudzBW7Ndeu5jh5L63OGYx
-         w5sE5LiYZYnyLE8ot2Nj9HIAbRPEnCtvOqrZ6ylfN83knczO8ADvudVCjlDTKofR+bGQ
-         6BRw==
-X-Forwarded-Encrypted: i=1; AJvYcCXkBL/FBudbP3Y/JKHwdML1yssGM6P6EtoX1e7q7Zj74PnC2mQD6JjKDYm+X3+9HsgrOXLfyT//DqFCX8LHJSKS@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjGY9OqSRL8/JwSepnzQlXfFUG2YjicINsMl1H3PkZeqswXHgB
-	cenpunIBc1nyvfQy9J14Ipex55/cPQSIazd8olbxD62yZpZLUGKl53NSPNURNFdyg9ZI5aJ3utL
-	96fD02EPIY5E5KFF9H4iec9Urj6jXH/zYAI2IEKjA
-X-Gm-Gg: AZuq6aIAbwjllip7xWNbk7KGa63g1I396DoZBgYpKBpxHub1VSgbEvdlT6BkwrmMJvx
-	teNKaMZNuLIWiUhiK0benlJZxcBJsS5QcJjXzWa5t+zd7CjG6h9TmJEnliX6JoPJ1GcGMPE7DIP
-	fWsgiw6U4qkPODtpgzWtA20WHRgzHNpEgmYy1cjGOS6b9rWlHk9CDudwUvRmXQAmM5cqFzVMTSL
-	xKh6eaKnThH7oGj5UyDRIX/hPxiLk+EeaEcSopoAuKz3y32viFW5nkXe/qlFS1tIoVjuHfFnvHY
-	+R+phZN2m8D7/rdYHdRdbsQe7pGy
-X-Received: by 2002:a2e:bcd2:0:b0:385:ceb0:c34d with SMTP id
- 38308e7fff4ca-386b4e7d858mr6972091fa.4.1770363516679; Thu, 05 Feb 2026
- 23:38:36 -0800 (PST)
+        bh=S7+MBNlta4+CsUo9Y4/iyQi9VZ5Wuh/1sqTFilAIbn0=;
+        b=eJqyFwgUqJQFkKd3D9EJW8XApuXXCcuX9Z/0FQJICpyzmSTGwjwPcha5PJXcwczsCS
+         0pDdsu5CbSMoIYrysWOpNhTZXlupUgY2HB6oskY5DCbTcBYk4jX9Rozb34bh7shzIMu7
+         WXnS/qJ+SQjtiN/AJwcl+XvMcyvrAy73hJX9ZjXrmlf+PdFELjoAd7fsL2RYhVgiGEaM
+         ySGjlVepIrifIo5IlX57NyIDNxEbm8T0ykvNcMUsq/qCshUovQvRP4MiCQw9THPEpUuv
+         Po04x56iGnLDVsljyLAyORRxDppse3Pa8Eva1sSTEIMNiQ/hmyepimDHbPD6aC0AEaaN
+         6Ikg==
+X-Forwarded-Encrypted: i=1; AJvYcCWMTwn5J/uokOQnWVaLiud4okWKJJgFXzlc3itedfsbxvUiUfs1xogc6nEp9SYXjDk5capNnJGqbr5f22hP01qG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAfnk2+YGPdsjExzr9O7x7soU5s0OhTyCp19ep+dE6QHzZjymt
+	rrwO8xBmtdkUPl4OO8f65rGn+ypmALSXjy2hk7TGoUxCq/ku2Cu3jc0i
+X-Gm-Gg: AZuq6aLnvdSkc76GgnUv/CEbS34PXWcL/W8LTz5hk3gLOpz8x/xNBS9wXEsetkmpK2+
+	7WNp67V2tqrb2y838Ttf4x8aHupiUt3ctKDSqeseo59Nt9ilz9WTM7vx0u7KSNrSvhQLTyn6aug
+	4ko17aAE/IP8A4w2XPErwz2csr6B3EsTFZy5pal2yeVr2D9Cjlm/srF5LuAmJlcMbftkl5Zt3wf
+	2b1UHQOhnvbZIh6HzmINMnNAb59ViBbGjInVKmk885sLbI5De0xTlYj4Z44a56yDuVlgMNkD9i1
+	1ofLEUa2mkbnAj+T0nV4BDyMbl/RpqrH6J5AsUfzyBYks1NQzNT5yg0icFt7UH2EIN5o86IErf+
+	UmhHeJp3A2tLDJ3LH6HKGwBFlbN0jWVf1H1FeYLN/FzZyQtv9C21NXTBN5uGWmNeY2GAmcA+WZm
+	6ZZB9SlWUkAheowmU445zaPaszrcBUIPailMQ=
+X-Received: by 2002:a05:6a00:1945:b0:81f:1a4b:bf50 with SMTP id d2e1a72fcca58-824416f72aamr1699730b3a.36.1770367064489;
+        Fri, 06 Feb 2026 00:37:44 -0800 (PST)
+Received: from fedora ([61.74.238.173])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-824418812d2sm1788185b3a.43.2026.02.06.00.37.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Feb 2026 00:37:43 -0800 (PST)
+From: SeungJu Cheon <suunj1331@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	SeungJu Cheon <suunj1331@gmail.com>
+Subject: [PATCH] perf header: Validate build_id filename length to prevent buffer overflow
+Date: Fri,  6 Feb 2026 17:37:21 +0900
+Message-ID: <20260206083721.2277438-1-suunj1331@gmail.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <69859a00.a00a0220.34fa92.0028.GAE@google.com>
-In-Reply-To: <69859a00.a00a0220.34fa92.0028.GAE@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Fri, 6 Feb 2026 08:38:25 +0100
-X-Gm-Features: AZwV_QgzGiToJD87UQAuIcWbC-AcQmrTwsg9x8VZUNuqD_HgPjw2pYE31ohK8fE
-Message-ID: <CACT4Y+axrv7knEVcS_2BHoPgkrqfwKd0VmHVRk7eogjssfZ6jQ@mail.gmail.com>
-Subject: Re: [syzbot] [perf?] KCSAN: data-race in perf_event_set_state / perf_mmap_rb
-To: syzbot <syzbot+5334e6bdc43f6d1dcb7d@syzkaller.appspotmail.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, 
-	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 6 Feb 2026 at 08:36, syzbot
-<syzbot+5334e6bdc43f6d1dcb7d@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    c537e12daeec Merge tag 'bpf-fixes' of git://git.kernel.org..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1133a5fc580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c160236e1ef1e401
-> dashboard link: https://syzkaller.appspot.com/bug?extid=5334e6bdc43f6d1dcb7d
-> compiler:       Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
->
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/036ac5d12a14/disk-c537e12d.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/07ddd15f46f8/vmlinux-c537e12d.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/7866e67b7a58/bzImage-c537e12d.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+5334e6bdc43f6d1dcb7d@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KCSAN: data-race in perf_event_set_state / perf_mmap_rb
->
-> write to 0xffff88812279f1a0 of 8 bytes by task 12011 on cpu 1:
->  perf_event_update_time kernel/events/core.c:737 [inline]
->  perf_mmap_rb+0x71c/0x910 kernel/events/core.c:7037
->  perf_mmap+0x1ce/0x2f0 kernel/events/core.c:7164
->  vfs_mmap include/linux/fs.h:2053 [inline]
->  mmap_file mm/internal.h:167 [inline]
->  __mmap_new_file_vma mm/vma.c:2421 [inline]
->  __mmap_new_vma mm/vma.c:2484 [inline]
->  __mmap_region mm/vma.c:2708 [inline]
->  mmap_region+0x1045/0x1410 mm/vma.c:2786
->  do_mmap+0x9b3/0xbe0 mm/mmap.c:558
->  vm_mmap_pgoff+0x17a/0x2e0 mm/util.c:581
->  ksys_mmap_pgoff+0x268/0x310 mm/mmap.c:604
->  x64_sys_call+0x16bb/0x3000 arch/x86/include/generated/asm/syscalls_64.h:10
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xca/0x2b0 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> read to 0xffff88812279f1a0 of 8 bytes by task 12005 on cpu 0:
->  __perf_update_times kernel/events/core.c:720 [inline]
->  perf_event_update_time kernel/events/core.c:735 [inline]
->  perf_event_set_state+0x153/0x440 kernel/events/core.c:754
->  event_sched_out+0x2d4/0x4d0 kernel/events/core.c:2391
->  group_sched_out kernel/events/core.c:2415 [inline]
->  __pmu_ctx_sched_out+0x3e7/0x530 kernel/events/core.c:3458
->  ctx_sched_out+0x273/0x2d0 kernel/events/core.c:3539
->  task_ctx_sched_out+0x4d/0x70 kernel/events/core.c:2859
->  perf_event_context_sched_out kernel/events/core.c:3746 [inline]
->  __perf_event_task_sched_out+0x286/0x370 kernel/events/core.c:3846
->  perf_event_task_sched_out include/linux/perf_event.h:1654 [inline]
->  prepare_task_switch kernel/sched/core.c:5045 [inline]
->  context_switch kernel/sched/core.c:5201 [inline]
->  __schedule+0xbf0/0xcd0 kernel/sched/core.c:6863
->  __schedule_loop kernel/sched/core.c:6945 [inline]
->  schedule+0x5f/0xd0 kernel/sched/core.c:6960
->  schedule_preempt_disabled+0x10/0x20 kernel/sched/core.c:7017
->  __mutex_lock_common kernel/locking/mutex.c:692 [inline]
->  __mutex_lock+0x4ff/0xe20 kernel/locking/mutex.c:776
->  __mutex_lock_slowpath+0xa/0x10 kernel/locking/mutex.c:1065
->  mutex_lock+0x89/0x90 kernel/locking/mutex.c:290
->  perf_poll+0x180/0x1f0 kernel/events/core.c:6150
->  vfs_poll include/linux/poll.h:82 [inline]
->  select_poll_one fs/select.c:480 [inline]
->  do_select+0x8f1/0xf40 fs/select.c:536
->  core_sys_select+0x3dc/0x6e0 fs/select.c:677
->  do_pselect fs/select.c:759 [inline]
->  __do_sys_pselect6 fs/select.c:798 [inline]
->  __se_sys_pselect6+0x213/0x280 fs/select.c:789
->  __x64_sys_pselect6+0x78/0x90 fs/select.c:789
->  x64_sys_call+0x2e98/0x3000 arch/x86/include/generated/asm/syscalls_64.h:271
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xca/0x2b0 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> value changed: 0x000000000038c145 -> 0x00000000003929d3
->
-> Reported by Kernel Concurrency Sanitizer on:
-> CPU: 0 UID: 0 PID: 12005 Comm: syz.4.2772 Tainted: G        W           syzkaller #0 PREEMPT(voluntary)
-> Tainted: [W]=WARN
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/25/2025
-> ==================================================================
+The build_id parsing functions calculate a filename length from the
+event header size and read directly into a stack buffer of PATH_MAX
+bytes without bounds checking. A malformed perf.data file with a
+crafted header.size can cause the length to be negative or exceed
+PATH_MAX, resulting in a stack buffer overflow.
 
+Add bounds checking for the filename length in both
+perf_header__read_build_ids() and the ABI quirk variant.
 
-LLM concluded this is a harmful race:
+Signed-off-by: SeungJu Cheon <suunj1331@gmail.com>
+---
+ tools/perf/util/header.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-======
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index f5cad377c99e..208ccaa62399 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2335,6 +2335,9 @@ static int perf_header__read_build_ids_abi_quirk(struct perf_header *header,
+ 			perf_event_header__bswap(&old_bev.header);
+ 
+ 		len = old_bev.header.size - sizeof(old_bev);
++		if (len < 0 || len >= PATH_MAX)
++			return -1;
++
+ 		if (readn(input, filename, len) != len)
+ 			return -1;
+ 
+@@ -2377,6 +2380,9 @@ static int perf_header__read_build_ids(struct perf_header *header,
+ 			perf_event_header__bswap(&bev.header);
+ 
+ 		len = bev.header.size - sizeof(bev);
++		if (len < 0 || len >= PATH_MAX)
++			goto out;
++
+ 		if (readn(input, filename, len) != len)
+ 			goto out;
+ 		/*
+-- 
+2.52.0
 
-Because `perf_mmap_rb()` does not hold the `perf_event_context` lock
-(`ctx->lock`), which is the intended protection for these timing
-fields, it races with the `event_sched_out()` path (which does hold
-`ctx->lock`).
-
-The race on `total_time_enabled` and `total_time_running` involves
-non-atomic read-modify-write operations. If both threads read the same
-old value of `total_time_enabled` before either writes back the
-updated value, one of the updates (representing a chunk of time the
-event was enabled) will be lost. Additionally, the race on
-`event->tstamp` can lead to inconsistent state where the timestamp and
-the total time counters are out of sync, causing further errors in
-subsequent time calculations.
-
-### Conclusion
-
-This data race is **harmful**. While it does not lead to an immediate
-kernel crash or memory corruption, it causes permanent inaccuracy in
-the performance counters. For a subsystem dedicated to high-precision
-performance monitoring, lost timing updates constitute a significant
-functional bug. The race is also highly reproducible in scenarios
-where one task maps an event while another task using the same event
-is forced to schedule out (e.g., by blocking on the same
-`mmap_mutex`).
