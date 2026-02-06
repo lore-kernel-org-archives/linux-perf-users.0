@@ -1,180 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467821D5CDE;
-	Fri,  6 Feb 2026 01:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35401DE8BF;
+	Fri,  6 Feb 2026 01:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770341265; cv=none; b=stoJXZQbXsF7sh9gJWtJFA6C8Fg446/zcqI6/EU6cEMr8aNfNSfLCS+rjyYfvFdAHx5ODnn6i/9/y9i3hEIs42uhdRgCm3z/ZP6lyyivB6mv8PEiEmm3t1/oLGvPaQZIanARx40SXO27XNmBp90W2woj6YK//Z6dcXcMAOJ3FiI=
+	t=1770341649; cv=none; b=iUwMeahVN1TrqBqBW+f/fNfA99PapmFbxWd3eLLLWvF3wO4pvwjX3u/Qi8Ro9etGOLu5ws3KxDwmG6w2/voyxJNBUVk/pInJCZwnBYyZOa8j/1QOw62F8oRWiHtBqTE01UYF3rB2bN97QWXtdk+ipe+tWBvCKepL+hFieHilhVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770341265; c=relaxed/simple;
-	bh=ANpJIzR5HNcYo8sicxLeFSQ9MPvJSBTXMXVoccQ4Xts=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DGq1SlGxFM9d0OvJiAjadDQNMvZWI859VtZrG4cZvfsLsqcvIGX5qOBUjfQqkHpOVH6k0/b0/lKGzuwWLSIEG3DsY6Xk2dHmK+w1Nwu1k12BArH4i7Vfo5YM23fKAxMt0y7kz5Y7w3SXDpt8aUUaJzhyZaC8xIOggFVUar0/t2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KjPz31Yu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770341649; c=relaxed/simple;
+	bh=fFxcGT+L+JV19ydZ/XgG+QQkeU9MT4E1xbVZAmElpX8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f3bQObOVAsPshi81d3AU8NzA8QrlQRs8ppTs+aiy19/zofZtyxwVjY03Bu5XOFO/n5TrWn/tu0GicILuTMoXxnkegpessaBSM9rFo6ImN5pEAXAEMZaDgr/wrgPOLsaOSN/2K8hOdNC4U0VWEwm5JTWy187GVAE4w5BqKFMcplM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=QD07RnPO; arc=none smtp.client-ip=54.207.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KjPz31Yu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D4B6C4CEF7;
-	Fri,  6 Feb 2026 01:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770341264;
-	bh=ANpJIzR5HNcYo8sicxLeFSQ9MPvJSBTXMXVoccQ4Xts=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KjPz31YubS5PnM5BM6TyXHjn6+lt+74c7VyGOdGC/8CCYc7VyGGzXDrPZ5oplSwJp
-	 8sL6UMI+uGxVc2pxA0qdLp7al1BcLJQsuiwm+T0E+Sx3Nrbeb7lCQuzYDIH1IoJfaC
-	 DVR4JDoTPoJC8RS2wuThq0CydBB2sfR4WGNk2FFn8Nf/AX0Wm8vCj2RsIOUiMX5+W6
-	 WKvYWhefDqpb1XsK7V9r4ox3OHnsNoXdP3nXJveb8LMYdyZF6KYZkEt/fvBzyoRnjq
-	 B0CwPA8zXcjpui0HJPKNkGZRZYgp+OTOBReyQcnRgKCz76S91VZHR6SeITYdci8V+g
-	 mL78kpY7Tpz0A==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Zecheng Li <zli94@ncsu.edu>,
-	Dmitry Dolgov <9erthalion6@gmail.com>
-Subject: [PATCH] perf annotate: Fix register usage in data type profiling
-Date: Thu,  5 Feb 2026 17:27:43 -0800
-Message-ID: <20260206012743.2617945-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="QD07RnPO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
+	s=mxsw2412; t=1770341599;
+	bh=omyy70O3OuJ3VKPU2PzEKTpT9f6MeOhreIgYvWT0TaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=QD07RnPOCILFHz50XHH5mqEvGqH4YyF8vrjecOwWB9+UQtVrpJr7beu84OBiXP2cI
+	 m/IZF0D+KARp95TSv69fwBIkHd3T3sgzCDeNPqDVk3zp+wc5dkp7+9U00mP4wyd4GP
+	 NiyZfimfKhs0dCNNloCHqaFY28tN9qX/gS/MjyeI=
+X-QQ-mid: zesmtpsz2t1770341592t1b2531e8
+X-QQ-Originating-IP: IGc2qSSjBPifceWa0Fo5f41QcQ3coZKZBB3/OIZklF4=
+Received: from [10.3.91.191] ( [101.70.125.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 06 Feb 2026 09:33:09 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 3718362222748311692
+Message-ID: <B8005DB6301AACB4+374512e1-f561-4d2f-afd6-7a4b51012501@linux.spacemit.com>
+Date: Fri, 6 Feb 2026 09:33:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/8] dt-bindings: iommu: Add spacemit/t100 features
+To: Conor Dooley <conor@kernel.org>
+Cc: Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Jingyu Li <joey.li@spacemit.com>,
+ iommu@lists.linux.dev, linux-perf-users@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+ devicetree@vger.kernel.org
+References: <cover.1769562575.git.lv.zheng@spacemit.com>
+ <cover.1770195980.git.lv.zheng@linux.spacemit.com>
+ <A0E91F323138E92F+a27d73b00f3324f0d3885128f5596230b3f1370b.1770195980.git.lv.zheng@linux.spacemit.com>
+ <20260204-primer-wrought-6f64b14bf152@spud>
+ <53171BEB06F43599+7c1f54bc-e72d-4cbd-9d10-194ae6b13744@linux.spacemit.com>
+ <20260205-attitude-customer-129fe2bd5dc7@spud>
+Content-Language: en-US
+From: Lv Zheng <lv.zheng@linux.spacemit.com>
+In-Reply-To: <20260205-attitude-customer-129fe2bd5dc7@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
+X-QQ-XMAILINFO: NpfbsqbTlzxUCzfq5/Ht/zQVJr3Bf4NUwUOdJ0yKuokkmbVjA4paMjQL
+	4P+y5Sb/x2r4ENt8IPN+u1sNaRtD6J0QQprHOFmsn/aDCg61UG9d/e8vgplO24EYYmzrD1K
+	8LkWC6kRc1rTWVDJIs7IZp9cdyOYkmsxQIzj9qpVLUlySQkio9Epye1AyvWYDx5DN3lvyv7
+	gexLk6MLENDqFrrGFMmwxDruTGzgB54S6dn9Nyb9MLNRaDtFZFCjGh8g1apqmYothR39zN4
+	OARlarPovAHNEYhFw6g9r1aac5Cn/SqpieglMBygIUdmBBQZzCREDp4e/0cNyPssA3Fed8n
+	MELiOn1wvmuNLDe8If8RsHOfPs6638OrIrAOYkSnfhc5tqwBjaBseuImDZl16NaU/ktFqXt
+	pZ5BarfNsWr+z0rSmzah3bUJEH+uqXdMx5hK+wXI2p6NZoy8oeTnp0TzqO8RwlyrB+JQ3LC
+	tzc4fFgJKLFODbWTMqwhj21nq3+08mVZzsyKnlO6L64avZNCqlfATYSkkAOX0M99ADxvcX6
+	mAPgVbvzt5dV1AAsJFRGGQHeVWoNbtc0zqPCy7iDugjqwQi5VkUhjHbXijy/Eg3YmmeRl4R
+	L7MLtzN8w4llS/srGye5InBXNbv0q+urusZJvd9jahfsKGJSlzUSLT37mQjXXMVt6ueGbou
+	kdzg4tj7xX9PO9HwHLWof65dC4Km6ziD+hOVCAYL88QPAwZZvBkcRVWb1KRFdWcxJAoMrWz
+	ghWrlscjUfb5Q8HUhGWUsXhNHDNJUREyDD3/pNf/DbgQhYFcjpUMcwb1DG+dVy9YG0lfnWc
+	Z49zEUvc1j7ZECtJD+F2fyWrs8t2gUromBwZtCD0CuB7z9HCzNxj+btctKZkCgNFEdeAFfe
+	i3fud1EWG3g5qZN94w3KIHl2heZMI826kPInG+0OKlIfpqOy4BRP8qh2Iev2PU9ZcUrsRd8
+	6/LpRAdtAXORLMEfNhghXSHzMdH6HtAhMhjDYPCPv14B65LC57k8QaiFO1HCq52woYqEiZ0
+	GcxksBJfeocoJz+3xw/aprWTNHdYU=
+X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
+X-QQ-RECHKSPAM: 0
 
-On data type profiling, it tried to match register name with a partial
-string.  For example, it allowed to match with "%rbp)" or "%rdi,8)".
-But with recent change in the area, it doesn't match anymore and break
-the data type profiling.
+On 2/6/2026 2:24 AM, Conor Dooley wrote:
+> On Thu, Feb 05, 2026 at 11:11:51AM +0800, Lv Zheng wrote:
+>> On 2/5/2026 1:37 AM, Conor Dooley wrote:
+>>> On Wed, Feb 04, 2026 at 05:09:12PM +0800, Lv Zheng wrote:
+>>>> Adds device tree bindings for SpacemiT T100 specific features by
+>>>> introducing spacemit,100 compatible. T100 contains distributed IOATCs,
+>>>> each of which exposes pmiv interrupt.
+>>>>
+>>>> Signed-off-by: Lv Zheng <lv.zheng@linux.spacemit.com>
+>>>> Signed-off-by: Jingyu Li <joey.li@spacemit.com>
+>>>> ---
+>>>>    .../bindings/iommu/riscv,iommu.yaml           | 37 +++++++++++++++++++
+>>>>    1 file changed, 37 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+>>>> index d4838c3b3741..2da3456e7402 100644
+>>>> --- a/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+>>>> +++ b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+>>>> @@ -32,6 +32,12 @@ properties:
+>>>>      # should be specified along with 'reg' property providing MMIO location.
+>>>>      compatible:
+>>>>        oneOf:
+>>>> +      - description: SpacemiT distributed IOMMUs
+>>>> +        items:
+>>>> +          - enum:
+>>>> +              - spacemit,t100
+>>>> +          - const: spacemit,riscv-iommu
+>>>
+>>> What actually is the t100? Is it an SoC or is it the name of the core
+>>> complex IP that spacemit is using in multiple SoCs?
+>>
+>> T100 is the name of the IOMMU IP developed by SpacemiT, announced in RISC-V
+>> 2024 China Summit:
+>> https://www.bilibili.com/video/BV1DNtCeiEBk/
+>> It's world first server SPEC IOMMU in RISC-V, supports IOTLB placed in
+>> adjacent to the DMA masters and supports PCIe ATS and PRI.
+>> You can find it shipped in the recent publicly purchasable SoC SpacemiT K3.
+> 
+> Right, then what you need here is something like:
+> 
+> items:
+>    - enum:
+>        - spacemit,k3-iommu
+>    - spacemit,t100-iommu
+>    - riscv,iommu
+> 
+> Driver can then match on spacemit,t100-iommu - but you need to have
+> soc-specific compatibles.
+> I'm not convinced that riscv,iommu is suitable here though, does the
+> driver work on your platform without the portions of code that are added
+> by this series and enabled by your new compatible? If not, the I don't
+> think the riscv,iommu fallback should be here.
+> 
+> Additionally, please stop sending new versions so frequently and in
+> response to earlier submissions. I have a v4 in my inbox while we are
+> still discussing v3.
 
-Let's pass the correct register name by removing the unwanted part.  Add
-arch__dwarf_regnum() to handle it in a single place.
+SpacemiT provides RISC-V IOMMU implementation, T100 is the first
+generation of the this IP product line, we have plan to develop T200,
+T300, etc., with more features introduced to be adoptive to new
+RISC-V IOMMU specifications.
+Besides, T100 is not only shipped in K3, but also shipped in V100 and
+the follow-up SoCs, like Kn, Vn00, they will likely use the same
+synthesis result of T100 RTLs.
 
-Reported-by: Dmitry Dolgov <9erthalion6@gmail.com>
-Closes: 7d3n23li6drroxrdlpxn7ixehdeszkjdftah3zyngjl2qs22ef@yelcjv53v42o
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/annotate.c | 61 +++++++++++++++++++-------------------
- 1 file changed, 30 insertions(+), 31 deletions(-)
+ From SpacemiT's point of view, we need a common sense of this IP
+series for something like IOATCs, that's why spacemit,riscv-iommu
+(this is same like qemu,riscv-iommu) is introduced. And a common sense
+of T100 for all SoCs shipped T100 (like global filters, vendor events
+and etc.,).
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 880b1bd300c21e67..2e3522905046c1ec 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2447,6 +2447,29 @@ int annotate_check_args(void)
- 	return 0;
- }
- 
-+static int arch__dwarf_regnum(const struct arch *arch, const char *str)
-+{
-+	const char *p;
-+	char *regname, *q;
-+	int reg;
-+
-+	p = strchr(str, arch->objdump.register_char);
-+	if (p == NULL)
-+		return -1;
-+
-+	regname = strdup(p);
-+	if (regname == NULL)
-+		return -1;
-+
-+	q = strpbrk(regname, ",) ");
-+	if (q)
-+		*q = '\0';
-+
-+	reg = get_dwarf_regnum(regname, arch->id.e_machine, arch->id.e_flags);
-+	free(regname);
-+	return reg;
-+}
-+
- /*
-  * Get register number and access offset from the given instruction.
-  * It assumes AT&T x86 asm format like OFFSET(REG).  Maybe it needs
-@@ -2457,7 +2480,6 @@ static int extract_reg_offset(const struct arch *arch, const char *str,
- 			      struct annotated_op_loc *op_loc)
- {
- 	char *p;
--	char *regname;
- 
- 	if (arch->objdump.register_char == 0)
- 		return -1;
-@@ -2482,31 +2504,14 @@ static int extract_reg_offset(const struct arch *arch, const char *str,
- 	}
- 
- 	op_loc->offset = strtol(str, &p, 0);
--
--	p = strchr(p, arch->objdump.register_char);
--	if (p == NULL)
-+	op_loc->reg1 = arch__dwarf_regnum(arch, p);
-+	if (op_loc->reg1 == -1)
- 		return -1;
- 
--	regname = strdup(p);
--	if (regname == NULL)
--		return -1;
--
--	op_loc->reg1 = get_dwarf_regnum(regname, arch->id.e_machine, arch->id.e_flags);
--	free(regname);
--
- 	/* Get the second register */
--	if (op_loc->multi_regs) {
--		p = strchr(p + 1, arch->objdump.register_char);
--		if (p == NULL)
--			return -1;
--
--		regname = strdup(p);
--		if (regname == NULL)
--			return -1;
-+	if (op_loc->multi_regs)
-+		op_loc->reg2 = arch__dwarf_regnum(arch, p + 1);
- 
--		op_loc->reg2 = get_dwarf_regnum(regname, arch->id.e_machine, arch->id.e_flags);
--		free(regname);
--	}
- 	return 0;
- }
- 
-@@ -2585,7 +2590,8 @@ int annotate_get_insn_location(const struct arch *arch, struct disasm_line *dl,
- 			op_loc->multi_regs = multi_regs;
- 			extract_reg_offset(arch, insn_str, op_loc);
- 		} else {
--			char *s, *p = NULL;
-+			const char *s = insn_str;
-+			char *p = NULL;
- 
- 			if (arch__is_x86(arch)) {
- 				/* FIXME: Handle other segment registers */
-@@ -2599,21 +2605,14 @@ int annotate_get_insn_location(const struct arch *arch, struct disasm_line *dl,
- 				}
- 			}
- 
--			s = strdup(insn_str);
--			if (s == NULL)
--				return -1;
--
- 			if (*s == arch->objdump.register_char) {
--				op_loc->reg1 = get_dwarf_regnum(s,
--								arch->id.e_machine,
--								arch->id.e_flags);
-+				op_loc->reg1 = arch__dwarf_regnum(arch, s);
- 			}
- 			else if (*s == arch->objdump.imm_char) {
- 				op_loc->offset = strtol(s + 1, &p, 0);
- 				if (p && p != s + 1)
- 					op_loc->imm = true;
- 			}
--			free(s);
- 		}
- 	}
- 
--- 
-2.53.0.rc2.204.g2597b5adb4-goog
+IMO, the current compatible is proper to reflect these concerns.
+What do you think?
+
+Cheers,
+Lv
+
+> 
+> Cheers,
+> Conor.
 
