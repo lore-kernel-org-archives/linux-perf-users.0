@@ -1,273 +1,270 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0202D7D59
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 05:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770354057; cv=pass; b=kAvF/3FACnUgk7XQJuDEkLCTbNzKlxVq1KPxTTeABg5gbLqZGenr+bWzRp60wxqWRRYfay5UOjF/lh3m3Em7TG1QeNnIUtTubGwaFHcL93r+YHFhJX/QtYQGESLBQd7GVT0q8ooUUXlSeFoP8LIuxDqSM1f81EkBnNKcgNfF950=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770354057; c=relaxed/simple;
-	bh=8qnqepGyoMFsYnQ8mw1Wk6JuUtP2ANo3I+pbtv9t9OU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oer5BWXGW3qEtqYC+Iarj5c7cmNH47dNgsAFvEQn+AN+3fwyOJGFzroJW34PmHB4aewOH4lqUWK25RRTP3vuZE/DYNb3c0PYzKVgl/iMdNFx7xIjNTlqZRvZQWZk2KJHJ1Zpci8hQbz2UEiOjtvPdA2BKduAzP+kj8Q1iqpE6C8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EkwGkTtu; arc=pass smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986A6298CAB;
+	Fri,  6 Feb 2026 05:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770357095; cv=none; b=Jiwd1FBdULmnKkefGKpfzJTNgU/3pqYKMFFBZzKkwzsJDrcuE+VKOhdh8xUfsRvF2pLCeXqJcpqcj7VtIRZVezc4cWBTD1IvzFgpPgMfC9JeryOwPRXu4NoDRV5YOrgFU4rvhbYQl2Wr1JAPx+NNYbCwcSXIhTGj5t/kwZA9tm0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770357095; c=relaxed/simple;
+	bh=VgBkyAlxd6wcBnPAlpKB9OOD0EzRl5PNJikNmuX/nMw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DsfXFdcjYFre83mvbvj+ED4fl4wi4OVA8cpb6e3CiaVGy6HX5G5JShyjuIsmLn/t0c7C1NpPhczgSQhvokT1AMxpnvBNyPUDLoSj2PNKPYPBMvGy+93ro+ScF/gVSs+d0vJyg+HnUxuudDesV/SIxXH+fSTCnQ4t30bbnxmLOp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n1NVyBDx; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EkwGkTtu"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a76b39587aso32715ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Feb 2026 21:00:57 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770354057; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Vc1KmumIc3jMR6o/H0qXxPk6yxPEQaoh4ZeS0ICyfGo8zZdPKXD1S7hSCkfLjvETRd
-         SQAedLfpw2+jxgssYqF/Cv/7YGIC+Eo0Uywf9slGzyugGvem8OcKplafa+a29oOxe7xv
-         WBub0/0D4BpfYuaHXhWD+Ohq5gngMRNkd1V/ICXRwowXw4MJkbK9Ptz//s6VSktTlUPa
-         gVHtqjsmzoB79pUJ0ASCOqNfQIzKv5iPALf2P4agn3f6jqJNrrRD6TjSW4TDlo3SXFKU
-         u1MXfR4P5PTAq32mx0gaex/SHbtiaH6+iHoKNPCD8JjiZ9rYxSXjZhkxXd3+OXNeUzRE
-         QE/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=jLLeTvQ9a0+cEvpGQZPATnbYzCCv2L22rr9TC7pVu+c=;
-        fh=w6BEaEDBgHcV1FtKGsGAMUev9kS0T2s0mxM4jZk/EpI=;
-        b=LlsjhgW5++YIiKiZlBHqIE6ZP7PNfTy9j3bFXI/tgzbUjL9pHQ/EIzUDTW9byNx7TO
-         2z0Axk3uTqRFA6zfvXmRSYlrVqAxUfQJVtDCSJKQfdW2hGoMKoH63uAwg9nv0Z5ZASFw
-         9Puc3O9JRMuF9+Mil7jPSNP76sWFXVPN9Zdw9Apz7P9ZyN0w0WF9157bgvxMh3Kr2sM2
-         07SSRETuWC3JwBxhAoB5pmGisKPyjoMkl9+HrTLC2Zv5fawuQThhnEaD4L4XoT5RqpPA
-         mc5QcARTlNkziMs7FW5/KHQo6mJB1TMRa1OmHmc8D9wVXDD5MbsJHa/oY2LEfL0RrHPW
-         pMyg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770354057; x=1770958857; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jLLeTvQ9a0+cEvpGQZPATnbYzCCv2L22rr9TC7pVu+c=;
-        b=EkwGkTtuyeKC6oTBRZJpG5Q2nDVm5Br+HscM8PekkXDAI+un8e3DzDYZplbUMoUT6i
-         AH76EoAeT+q1NSqumAgeAaOdcszbv79Z70s18SmMz14SDeX8Ai/1CPC6zkIxfTTLD53y
-         MU3n2iWU5ayRyz2t2DNYkuMN1xu+5MFG6nqljUCG32kmmTyNMmvPdcJEy/7pb3htQOJc
-         J42ITs66873cKiw8M1gxfksVxzsSRgiadSAZUZz1/SSdi03x+Fqi622LWyMxmG2h6rRU
-         u5xghdhSuNY9W+lLmKF3j8ilJm3n03+Ikq4j51wHJ76ufUaiVdFlks2kFS8KRDhY+9xD
-         aQXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770354057; x=1770958857;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jLLeTvQ9a0+cEvpGQZPATnbYzCCv2L22rr9TC7pVu+c=;
-        b=jAEstBGYb9r7hy8MadjQoOh4jUP3PobUdj87AbIF8cHsin0gtSy6Qel9taTugSZjI4
-         TazWzYCBrIXKRK2FG5mUeYbwD9PbKXjCmu+3PRTrazhBT/7B0XXx4ADw+jI67AXzDcqt
-         EQk0s3tw4GFkY+BtGESihRPBQWd1m1e+X2YNXlYQ/IYX04upd8FXeTHTsCis8PlBcg8v
-         eEQyCbm6J9D4+KzE1BCyEkFYq6v5xTsMgAcbGUQ1SHCIyB6c8zIxN0fO6iHyZfJoWvYX
-         3BhSa6HRhxTYrSE6CnXIZKyOwJtVP6ooUOpWddUgmCJ0FXfOvqF6/3ZybdI9UTc8x1lM
-         jYOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXVWSRGgUGbula/Eas+CsG5ONmNYsCvJ/WxKyWdJyQhHaOK1IHza3xCSbQuc7MkJkYS2p36n3a3tbyeMPLyt8d@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG+XZBltQR1GptpdByhNXlJ5bZcqRKlkqHklPCmijvS3WbYA0d
-	JsmGlWlVOs8yOqdbmoOz1Fw6/U+35lkK7No3lhfLCR/WFNJRZLbLXS2SyU7U0AtIt/Cwwn9ZoQ1
-	hHy0+jjYzmA1woHdw6tvuqqXhlyu7BW3kXT/X11ii
-X-Gm-Gg: AZuq6aL596GYylCAhV7EBjL4AK2ezvVLq7DIfPoqNQ1Ji1WZQTv+EHSebQ7Rz1o1MIm
-	11mqkr2Z4v+rHe/ewRTczeiOQtVgAsuFLfDB+Wt93TzzCA+HN6lIDF3+NHMXZKtt0PSkguZy1mq
-	HRDGmUd9F2YzGuuSnesIl6E66Mon0j3DD2zlxNwMCLMX3L5XgYSV7luw9rAbezG42ruLfD5hcWJ
-	E4zEWzKaSk5Wb9U+xTV0nakEDEicYkEULbf3xep4YsyD7auTQ8tNwQwjBAT4P+bmPYlr2aW
-X-Received: by 2002:a17:902:ceca:b0:2a8:ffed:4663 with SMTP id
- d9443c01a7336-2a95232ae6fmr1885525ad.12.1770354056609; Thu, 05 Feb 2026
- 21:00:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n1NVyBDx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770357094; x=1801893094;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VgBkyAlxd6wcBnPAlpKB9OOD0EzRl5PNJikNmuX/nMw=;
+  b=n1NVyBDx+GrloOrhpZMU7GAl5Hm5T8aszK5FEPL7cmFdnk/Gq/LZ7iTQ
+   blN9UaAYS9ljjrKeNDAGIV4P+qNoRhww3zbfBQQl6lIkUP5EUc6sbVI1j
+   RmH3MFWYV5q3RazQxiAdzy3rUd1g+9Dt/MjjrVQsmSyKZrPeM1vZlzkgr
+   a1p6/+fR6S7xpAvZdp+G3fNhpM8tmSXlvbhtPXuaim3oB08c4mnNt2tQS
+   E/Igj65033GWYiJysM/SOJR+4zB0RK9DClJ5YAwK5PFnApJpFFMNfVokd
+   GZmtmcADRxQiswDhNe2PvtDkB7buZKKCoTu0b4pPWE3Yyelq3SujqbrzK
+   Q==;
+X-CSE-ConnectionGUID: VM94VEc4QSasqzYdF4ipSg==
+X-CSE-MsgGUID: v1cZ3gy6TpmW3bDPOH8QDw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11692"; a="70758812"
+X-IronPort-AV: E=Sophos;i="6.21,275,1763452800"; 
+   d="scan'208";a="70758812"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 21:51:34 -0800
+X-CSE-ConnectionGUID: 3jctVAyMRnWXzcLK40XMpA==
+X-CSE-MsgGUID: SUG0gtAmSDqB9fjXJ9Hl6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,275,1763452800"; 
+   d="scan'208";a="209871647"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 21:51:31 -0800
+Message-ID: <74169f95-0e80-4021-b1b0-cf788cc84b37@linux.intel.com>
+Date: Fri, 6 Feb 2026 13:51:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260206012743.2617945-1-namhyung@kernel.org>
-In-Reply-To: <20260206012743.2617945-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 5 Feb 2026 21:00:43 -0800
-X-Gm-Features: AZwV_QgxQWm7zp32HEOVOrRN6gviWXpN8VSMx2Upu3rIXV51wtlMou8scN4LxgE
-Message-ID: <CAP-5=fXn2jaPPBHfFLvZy-O2OXZbjOFHatDGdVm4b5q3C8jmnA@mail.gmail.com>
-Subject: Re: [PATCH] perf annotate: Fix register usage in data type profiling
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Zecheng Li <zli94@ncsu.edu>, Dmitry Dolgov <9erthalion6@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 08/13] perf/x86/intel/uncore: Support IIO free-running
+ counters on DMR
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
+References: <20251231224233.113839-1-zide.chen@intel.com>
+ <20251231224233.113839-9-zide.chen@intel.com>
+ <4f62ecc3-b47c-4c9f-9189-1159e8e9be8a@linux.intel.com>
+ <CAJpZYjWBWFx2ac=jYRJf-GEpenBZ14a6JpAhY6CE1kUXyVUVJw@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAJpZYjWBWFx2ac=jYRJf-GEpenBZ14a6JpAhY6CE1kUXyVUVJw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 5, 2026 at 5:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On data type profiling, it tried to match register name with a partial
-> string.  For example, it allowed to match with "%rbp)" or "%rdi,8)".
-> But with recent change in the area, it doesn't match anymore and break
-> the data type profiling.
 
-Hmm.. the blamed patch was a strcmp before and after, so maybe
-something nearby changed causing this:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/commit/?h=3Dperf-tools-next&id=3Dc31040085914f1188720073baa43d1483693c0a3
-```
-- for (i =3D 0; i < ARRAY_SIZE(x86_regidx_table); i++)
-- if (!strcmp(x86_regidx_table[i].name, name + 1))
-- return x86_regidx_table[i].idx;
-+ name++;
-+ for (size_t i =3D 0; i < num_entries; i++) {
-+ if (!strcmp(entries[i].name, name))
-+ return entries[i].dwarf_regnum;
-```
+On 2/6/2026 8:26 AM, Chun-Tse Shao wrote:
+> On Sat, Jan 3, 2026 at 6:31 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>
+>> On 1/1/2026 6:42 AM, Zide Chen wrote:
+>>> The free-running counters for IIO uncore blocks on Diamond Rapids are
+>>> similar to Sapphire Rapids IMC freecounters, with the following
+>>> differences:
+>>>
+>>> - The counters are MMIO based.
+>>> - Only a subset of IP blocks implement free-running counters:
+>>>   HIOP0 (IP Base Addr: 2E7000h)
+>>>   HIOP1 (IP Base Addr: 2EF000h)
+>>>   HIOP3 (IP Base Addr: 2FF000h)
+>>>   HIOP4 (IP Base Addr: 307000h)
+>>> - IMH2 (Secondary IMH) does not provide free-running counters.
+>>>
+>>> Signed-off-by: Zide Chen <zide.chen@intel.com>
+>>> ---
+>>> V2:
+>>> - Remove pr_warn() from dmr_uncore_freerunning_init_box().
+>>>
+>>>  arch/x86/events/intel/uncore_snbep.c | 118 +++++++++++++++++++++++++--
+>>>  1 file changed, 113 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+>>> index 09a3bdbd188a..28bcccf5cdfe 100644
+>>> --- a/arch/x86/events/intel/uncore_snbep.c
+>>> +++ b/arch/x86/events/intel/uncore_snbep.c
+>>> @@ -472,10 +472,14 @@
+>>>  #define SPR_C0_MSR_PMON_BOX_FILTER0          0x200e
+>>>
+>>>  /* DMR */
+>>> +#define DMR_IMH1_HIOP_MMIO_BASE                      0x1ffff6ae7000
+>>> +#define DMR_HIOP_MMIO_SIZE                   0x8000
+>>>  #define DMR_CXLCM_EVENT_MASK_EXT             0xf
+>>>  #define DMR_HAMVF_EVENT_MASK_EXT             0xffffffff
+>>>  #define DMR_PCIE4_EVENT_MASK_EXT             0xffffff
+>>>
+>>> +#define UNCORE_DMR_ITC                               0x30
+>>> +
+>>>  #define DMR_IMC_PMON_FIXED_CTR                       0x18
+>>>  #define DMR_IMC_PMON_FIXED_CTL                       0x10
+>>>
+>>> @@ -6442,7 +6446,11 @@ static int uncore_type_max_boxes(struct intel_uncore_type **types,
+>>>       for (node = rb_first(type->boxes); node; node = rb_next(node)) {
+>>>               unit = rb_entry(node, struct intel_uncore_discovery_unit, node);
+>>>
+>>> -             if (unit->id > max)
+>>> +             /*
+>>> +              * on DMR IMH2, the unit id starts from 0x8000,
+>>> +              * and we don't need to count it.
+>>> +              */
+>>> +             if ((unit->id > max) && (unit->id < 0x8000))
+>>>                       max = unit->id;
+>>>       }
+>>>       return max + 1;
+>>> @@ -6930,6 +6938,101 @@ int dmr_uncore_cbb_units_ignore[] = {
+>>>       UNCORE_IGNORE_END
+>>>  };
+>>>
+>>> +static unsigned int dmr_iio_freerunning_box_offsets[] = {
+>>> +     0x0, 0x8000, 0x18000, 0x20000
+>>> +};
+>>> +
+>>> +static void dmr_uncore_freerunning_init_box(struct intel_uncore_box *box)
+>>> +{
+>>> +     struct intel_uncore_type *type = box->pmu->type;
+>>> +     u64 mmio_base;
+>>> +
+>>> +     if (box->pmu->pmu_idx >= type->num_boxes)
+>>> +             return;
+>>> +
+>>> +     mmio_base = DMR_IMH1_HIOP_MMIO_BASE;
+>>> +     mmio_base += dmr_iio_freerunning_box_offsets[box->pmu->pmu_idx];
+>>> +
+>>> +     box->io_addr = ioremap(mmio_base, type->mmio_map_size);
+>>> +     if (!box->io_addr)
+>>> +             pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
+>>> +}
+>>> +
+>>> +static struct intel_uncore_ops dmr_uncore_freerunning_ops = {
+>>> +     .init_box       = dmr_uncore_freerunning_init_box,
+>>> +     .exit_box       = uncore_mmio_exit_box,
+>>> +     .read_counter   = uncore_mmio_read_counter,
+>>> +     .hw_config      = uncore_freerunning_hw_config,
+>>> +};
+>>> +
+>>> +enum perf_uncore_dmr_iio_freerunning_type_id {
+>>> +     DMR_ITC_INB_DATA_BW,
+>>> +     DMR_ITC_BW_IN,
+>>> +     DMR_OTC_BW_OUT,
+>>> +     DMR_OTC_CLOCK_TICKS,
+>>> +
+>>> +     DMR_IIO_FREERUNNING_TYPE_MAX,
+>>> +};
+>>> +
+>>> +static struct freerunning_counters dmr_iio_freerunning[] = {
+>>> +     [DMR_ITC_INB_DATA_BW]   = { 0x4d40, 0x8, 0, 8, 48},
+>>> +     [DMR_ITC_BW_IN]         = { 0x6b00, 0x8, 0, 8, 48},
+>>> +     [DMR_OTC_BW_OUT]        = { 0x6b60, 0x8, 0, 8, 48},
+>>> +     [DMR_OTC_CLOCK_TICKS]   = { 0x6bb0, 0x8, 0, 1, 48},
+>>> +};
+>>> +
+>>> +static struct uncore_event_desc dmr_uncore_iio_freerunning_events[] = {
+>>> +     /*  ITC Free Running Data BW counter for inbound traffic */
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port0, 0x10, "3.814697266e-6"),
+> Hi, it is probably a bit late but I think the third argument should be
+> a string. Because the macro already applies __stringify, the resulting
+> expansion is ""3.814697266e-6"", which eventually shows in sysfs
+> knobs. It would cause problems while Perf tries to parse the file.
 
-> Let's pass the correct register name by removing the unwanted part.  Add
-> arch__dwarf_regnum() to handle it in a single place.
->
-> Reported-by: Dmitry Dolgov <9erthalion6@gmail.com>
-> Closes: 7d3n23li6drroxrdlpxn7ixehdeszkjdftah3zyngjl2qs22ef@yelcjv53v42o
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/annotate.c | 61 +++++++++++++++++++-------------------
->  1 file changed, 30 insertions(+), 31 deletions(-)
->
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 880b1bd300c21e67..2e3522905046c1ec 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -2447,6 +2447,29 @@ int annotate_check_args(void)
->         return 0;
->  }
->
-> +static int arch__dwarf_regnum(const struct arch *arch, const char *str)
-> +{
-> +       const char *p;
-> +       char *regname, *q;
-> +       int reg;
-> +
-> +       p =3D strchr(str, arch->objdump.register_char);
-> +       if (p =3D=3D NULL)
-> +               return -1;
-> +
-> +       regname =3D strdup(p);
+Good catch. This needs a fix. Thanks.
 
-nit: Given register names are known to be so short it feels a shame to
-do a full strdup for this.
 
-> +       if (regname =3D=3D NULL)
-> +               return -1;
-> +
-> +       q =3D strpbrk(regname, ",) ");
-> +       if (q)
-> +               *q =3D '\0';
-> +
-> +       reg =3D get_dwarf_regnum(regname, arch->id.e_machine, arch->id.e_=
-flags);
-
-nit: Perhaps pass a regname_len to avoid the strdup.
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-It'd be nice to have a test on this to avoid a regression. Dmitrii's patch:
-https://lore.kernel.org/linux-perf-users/20260127083030.5909-1-9erthalion6@=
-gmail.com/
-does that for a Rust struct Buf, but it'd be nice to do something similar f=
-or C.
-
-Thanks,
-Ian
-
-> +       free(regname);
-> +       return reg;
-> +}
-> +
->  /*
->   * Get register number and access offset from the given instruction.
->   * It assumes AT&T x86 asm format like OFFSET(REG).  Maybe it needs
-> @@ -2457,7 +2480,6 @@ static int extract_reg_offset(const struct arch *ar=
-ch, const char *str,
->                               struct annotated_op_loc *op_loc)
->  {
->         char *p;
-> -       char *regname;
 >
->         if (arch->objdump.register_char =3D=3D 0)
->                 return -1;
-> @@ -2482,31 +2504,14 @@ static int extract_reg_offset(const struct arch *=
-arch, const char *str,
->         }
->
->         op_loc->offset =3D strtol(str, &p, 0);
-> -
-> -       p =3D strchr(p, arch->objdump.register_char);
-> -       if (p =3D=3D NULL)
-> +       op_loc->reg1 =3D arch__dwarf_regnum(arch, p);
-> +       if (op_loc->reg1 =3D=3D -1)
->                 return -1;
->
-> -       regname =3D strdup(p);
-> -       if (regname =3D=3D NULL)
-> -               return -1;
-> -
-> -       op_loc->reg1 =3D get_dwarf_regnum(regname, arch->id.e_machine, ar=
-ch->id.e_flags);
-> -       free(regname);
-> -
->         /* Get the second register */
-> -       if (op_loc->multi_regs) {
-> -               p =3D strchr(p + 1, arch->objdump.register_char);
-> -               if (p =3D=3D NULL)
-> -                       return -1;
-> -
-> -               regname =3D strdup(p);
-> -               if (regname =3D=3D NULL)
-> -                       return -1;
-> +       if (op_loc->multi_regs)
-> +               op_loc->reg2 =3D arch__dwarf_regnum(arch, p + 1);
->
-> -               op_loc->reg2 =3D get_dwarf_regnum(regname, arch->id.e_mac=
-hine, arch->id.e_flags);
-> -               free(regname);
-> -       }
->         return 0;
->  }
->
-> @@ -2585,7 +2590,8 @@ int annotate_get_insn_location(const struct arch *a=
-rch, struct disasm_line *dl,
->                         op_loc->multi_regs =3D multi_regs;
->                         extract_reg_offset(arch, insn_str, op_loc);
->                 } else {
-> -                       char *s, *p =3D NULL;
-> +                       const char *s =3D insn_str;
-> +                       char *p =3D NULL;
->
->                         if (arch__is_x86(arch)) {
->                                 /* FIXME: Handle other segment registers =
-*/
-> @@ -2599,21 +2605,14 @@ int annotate_get_insn_location(const struct arch =
-*arch, struct disasm_line *dl,
->                                 }
->                         }
->
-> -                       s =3D strdup(insn_str);
-> -                       if (s =3D=3D NULL)
-> -                               return -1;
-> -
->                         if (*s =3D=3D arch->objdump.register_char) {
-> -                               op_loc->reg1 =3D get_dwarf_regnum(s,
-> -                                                               arch->id.=
-e_machine,
-> -                                                               arch->id.=
-e_flags);
-> +                               op_loc->reg1 =3D arch__dwarf_regnum(arch,=
- s);
->                         }
->                         else if (*s =3D=3D arch->objdump.imm_char) {
->                                 op_loc->offset =3D strtol(s + 1, &p, 0);
->                                 if (p && p !=3D s + 1)
->                                         op_loc->imm =3D true;
->                         }
-> -                       free(s);
->                 }
->         }
->
-> --
-> 2.53.0.rc2.204.g2597b5adb4-goog
->
+> Thanks,
+> CT
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port1, 0x11, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port2, 0x12, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port3, 0x13, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port4, 0x14, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port5, 0x15, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port6, 0x16, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port7, 0x17, "3.814697266e-6"),
+>>> +
+>>> +     /*  ITC Free Running BW IN counters */
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port4, 0x24, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port5, 0x25, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port6, 0x26, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port7, 0x27, "3.814697266e-6"),
+>>> +
+>>> +     /*  ITC Free Running BW OUT counters */
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port0, 0x30, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port1, 0x31, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port2, 0x32, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port3, 0x33, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port4, 0x34, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port5, 0x35, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port6, 0x36, "3.814697266e-6"),
+>>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port7, 0x37, "3.814697266e-6"),
+>>> +
+>>> +     /* Free Running Clock Counter */
+>>> +     INTEL_UNCORE_EVENT_DESC(clockticks, "event=0xff,umask=0x40"),
+>>> +     { /* end: all zeroes */ },
+>>> +};
+>>> +
+>>> +static struct intel_uncore_type dmr_uncore_iio_free_running = {
+>>> +     .name                   = "iio_free_running",
+>>> +     .num_counters           = 25,
+>>> +     .mmio_map_size          = DMR_HIOP_MMIO_SIZE,
+>>> +     .num_freerunning_types  = DMR_IIO_FREERUNNING_TYPE_MAX,
+>>> +     .freerunning            = dmr_iio_freerunning,
+>>> +     .ops                    = &dmr_uncore_freerunning_ops,
+>>> +     .event_descs            = dmr_uncore_iio_freerunning_events,
+>>> +     .format_group           = &skx_uncore_iio_freerunning_format_group,
+>>> +};
+>>> +
+>>> +#define UNCORE_DMR_MMIO_EXTRA_UNCORES                1
+>>> +static struct intel_uncore_type *dmr_mmio_uncores[UNCORE_DMR_MMIO_EXTRA_UNCORES] = {
+>>> +     &dmr_uncore_iio_free_running,
+>>> +};
+>>> +
+>>>  int dmr_uncore_pci_init(void)
+>>>  {
+>>>       uncore_pci_uncores = uncore_get_uncores(UNCORE_ACCESS_PCI, 0, NULL,
+>>> @@ -6937,11 +7040,16 @@ int dmr_uncore_pci_init(void)
+>>>                                               dmr_uncores);
+>>>       return 0;
+>>>  }
+>>> +
+>>>  void dmr_uncore_mmio_init(void)
+>>>  {
+>>> -     uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO, 0, NULL,
+>>> -                                              UNCORE_DMR_NUM_UNCORE_TYPES,
+>>> -                                              dmr_uncores);
+>>> -}
+>>> +     uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
+>>> +                                             UNCORE_DMR_MMIO_EXTRA_UNCORES,
+>>> +                                             dmr_mmio_uncores,
+>>> +                                             UNCORE_DMR_NUM_UNCORE_TYPES,
+>>> +                                             dmr_uncores);
+>>>
+>>> +     dmr_uncore_iio_free_running.num_boxes =
+>>> +             uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_DMR_ITC);
+>>> +}
+>>>  /* end of DMR uncore support */
+>> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>
+>>
+>>
