@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C6140FDB3;
-	Fri,  6 Feb 2026 14:57:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E40542317D;
+	Fri,  6 Feb 2026 14:59:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770389853; cv=none; b=HLBQLRxaWAfJivCaGgLbJb4gIDrm+jiILkVWsDM35n/cbzEprtMBCcV7h2hmrU/COXcbsWmPIZTw7K9GDZJdijktikz7ZJYN3+CXObfyYPbDzv33jv7AL7pQbdlSUwAKVhEdqmPqgnU5dcGT9AIwJHA+oNwEdsdf4Nr00A6eWjY=
+	t=1770389969; cv=none; b=UFI1+l77+8XHIjj5orEzGmnjUQU91UR2n7t0+DU6qRu7RpnQXc0Ka/mTxhrro1PEfnvHzC7R4QNGN2xlFr11qlAY3yhzVExD0LfpwR6yeS7xxzHVOnuDbRz4cC0IdkNmwsomhBtV0z1AahvbFcH5eEgH2PsRvV5VHGaS1ojNAQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770389853; c=relaxed/simple;
-	bh=L1wCqtqBbXKQ9bunNkuH1wXzXBjn3AtwBsS6rsKAPrc=;
+	s=arc-20240116; t=1770389969; c=relaxed/simple;
+	bh=jLpshtsdacl0AXQWxIwhPJmCfZ+0N/sCeuuWiS4IUjA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=faO71Qa9wMHfgDCltNeyvitqsH98JQQw4hca8fXIYzlkNyo7uzWtYWcZ5eC0G5Qpi43f1cu+fs2e656GSrFKuM65WeQqkQevB8wbpJRmbGJHBt5bCh3cYw/HNgLRren9KEOHX8AbM9sRQ601oclqx9IwqwJb5NWC849nq6XM+EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcGnxVdc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tOUJZedGFydnfZMKO+yAcgAfrmq+YHn6ugZ5GgQHoo/v2HZ7QZUu/VlgBAwcwlaVjYFqG77o1AK6jHj76zYOJnsXQzY3HhxzlTLozwihJR8z/jNlweFkMMg0NaCqyJmJGXQfx/nVYkAnPmhiSKlKTScCwpyz2k8ymgHbvCQyXbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lNFo6WYO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcGnxVdc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B55C116C6;
-	Fri,  6 Feb 2026 14:57:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lNFo6WYO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E712C16AAE;
+	Fri,  6 Feb 2026 14:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770389852;
-	bh=L1wCqtqBbXKQ9bunNkuH1wXzXBjn3AtwBsS6rsKAPrc=;
+	s=k20201202; t=1770389969;
+	bh=jLpshtsdacl0AXQWxIwhPJmCfZ+0N/sCeuuWiS4IUjA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tcGnxVdct++Mx57Tfoc6UFdGMfsqGXZTFG1CYTJ9Rnf7WPO0Ih25V7Pdhh+d2whtU
-	 m1ewenJT9GB0BTstLB5gyttCZ5jcfe67scV0CYPKKj3JWapxGLkRMmbb4wY3Hz4L5e
-	 t9/D6w1grNWEsdfwmu53O9kVP1kXqgm9UNQSilQ86rDIrPL+7RQAm8cHvVNLRzP9+b
-	 PV6RUGXLtcY8US1KcyrBCMGMu72UKRM8+O33U5ms8eabWmNvjnURMLVOJxKt0Dpnts
-	 +vkGAdzgBAeDmNg+ZwucUQLnaAzikcrtWe0htJWuYuaR3ljMhhitFsTOi+wlTz15Dz
-	 Myy/5L/nEExMg==
-Date: Fri, 6 Feb 2026 11:57:28 -0300
+	b=lNFo6WYOlg85M1dwAFVMgOGaTJpkn3cAVK6mh0VUFol4sAdNZTsmdU9GN+0SX5QFb
+	 Rwi+Qr7l1qnn0IKnMJv6lxRjlAkWve07ilTpq/fj/ULkaPOq+IeTvNxyHRjFK0EhZr
+	 aBhghts8sbSiZO6QQjisi1hBdSk2yph1DwjFHQTqJbn5f8VNyhwhuIWA0dIkR4rWoM
+	 JFb/Mcelv1sNjDxLZ4aDR8q/LpNbRSvparzW0m0mlyw61nvup7MCHwMF4UGXR45Iue
+	 nrbgI2dIVLVBje44X4156pPhNVHLgr8e98HQ8JRJQHpBjSb3q8X4oBBAsfw1ap69vL
+	 irQu+nZofVKQA==
+Date: Fri, 6 Feb 2026 11:59:25 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Leo Yan <leo.yan@arm.com>
 Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
@@ -37,7 +37,7 @@ Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
 	James Clark <james.clark@linaro.org>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v1 1/2] perf tests: build-test coverage for NO_JEVENTS=1
-Message-ID: <aYYBWKc-EOQyGeMi@x1>
+Message-ID: <aYYBzYULHaHzMW4n@x1>
 References: <20260205183603.459363-1-irogers@google.com>
  <20260206085349.GD3529712@e132581.arm.com>
 Precedence: bulk
@@ -61,13 +61,13 @@ On Fri, Feb 06, 2026 at 08:53:49AM +0000, Leo Yan wrote:
 > NO_JEVENTS=1 enabled and without that configuration.
 > 
 > With updating the commit log, this patch LGTM:
-> 
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
 
-Thanks, applied to perf-tools-next,
+I did it and will apply the Reviewed-by to patch 2/2 too, ok?
 
 - Arnaldo
  
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
+> 
 > > Reported-by: Leo Yan <leo.yan@arm.com>
 > > Closes: https://lore.kernel.org/linux-perf-users/20260205175250.GC3529712@e132581.arm.com/
 > > Signed-off-by: Ian Rogers <irogers@google.com>
