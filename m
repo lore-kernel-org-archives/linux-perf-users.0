@@ -1,76 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1338526D4CD;
-	Fri,  6 Feb 2026 21:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770415194; cv=none; b=UHIpD8ERoyWd6ROTnHxEk3QqRe8f75wLa0XP6EbYSmgmMJVoKyoyzuQ4SxtqF8O4PmYJSLx3LAu0E8/j2dqCAqVbM+t4LzbUmwINxclLGL1SCYCrI6SfI0b10H6crNBegJkkSnnFUeYnmXIs+Kd+CRvtSKqrM2bO5YjtSPqJChE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770415194; c=relaxed/simple;
-	bh=W0rS3XNNF77VuqmBvw9H4zfSkqrcl2AcjYA6thzt2K8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PyDKAyKSs2lxKKTjO/iZkCtqiMDFf6coFT1r3bUXJ6FQkDbaQRfuKinATRthVaP3SV0u6fFswsEhquC41B5LhcncR2ZUW9BouQwcHQ4HIb+PwJkUSo6MNrIKrCsKGbKIxXXvlYpz30Wk53IeGJO+rGbmtWhoJ8WHXqFcOFJovjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YnpxcHkD; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28B52D0C63
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 22:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770415311; cv=pass; b=Buwg8chdeS3w8CA2FRpdTtftdiY18zUqpamLcuolOpLeBciNrxomq1p9WZm//3vA5zCx/z8GT+Dfhji9uPQcAbXn5FBMvH1iyKEDRnlwbA/oMN/S7YSMOCopm/qLedS1TIQU+yVz79gPo45hSmOCHMbQrsGJ47lpPJTOXBYh2aY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770415311; c=relaxed/simple;
+	bh=riKVq0nCiiXsIaTMP1jt4u1nWldRcaRTJKuJkfVC4Mg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GJJAmyxkFJ5N1QbDl+o3lXWPjrhXee366d6egWITLzs/29GB1Yxgw7xxuuKcT4S5g35eKD8o6e6Wyiw2Hozb3AHUAbhgQU87oj+zkhv63O4MQS7VkjloMLSAy1MHL8iwhZ8tc5OeEG0iYOJrUzKBJmxuewe36/U4wF8Cf6el+yY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sZv8hxhc; arc=pass smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YnpxcHkD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2B82C116C6;
-	Fri,  6 Feb 2026 21:59:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770415193;
-	bh=W0rS3XNNF77VuqmBvw9H4zfSkqrcl2AcjYA6thzt2K8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YnpxcHkDyi0/Ny07ic1NhZBAB1yzlK5Y0pxShU7z8udYIBr9U3q+t3P7X0vphBgL8
-	 uCModrlnc+/r7nBYsu5V0zBNvKQsbD8TaF0px3pt7pCrzVhtuENKmqcSpR0ozOsyV7
-	 S2pEoTP5/NdWHq0Gnek4AlxGqZWzExYxPVdKDOTD9zB3LlG0G6rnaCgom1KMv86or1
-	 eulcJCGJYiDfQS2vrWo8yELi0lTK3Spp2R+ttbKImp2ZKVyqg3A/ttcsBuOQvA6YqO
-	 ettjFXbLd7cBaNWlvuUpTDR9zxCxT34vftyTfULC7Gal7CBPYzuRY8dgFrecYcGbst
-	 cO7AWuz1CwswQ==
-Date: Fri, 6 Feb 2026 18:59:49 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Tycho Andersen <tycho@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: Re: [PATCH v2] perf: fix segfault in `lock contention -b`
-Message-ID: <aYZkVQn_pUzn1CeD@x1>
-References: <20260205163250.1980640-1-tycho@kernel.org>
- <aYUzLjODMw2NqEzq@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sZv8hxhc"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a964077671so675ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 14:01:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770415311; cv=none;
+        d=google.com; s=arc-20240605;
+        b=D8Xz+jSoj2XBGZaXiT+odT4q/+TWF6x7EP1IjEbAlCvySs/Ye7Oevlwpva7strTY0v
+         pQfRN+fj5tFQp4y5xvYzL/Fqi+GtxTxfU6YwMaKrpx1gF9K/IxUzhKy5ImjzaQQUGotS
+         Tx8f+g0rMmJAyeFQfoGvo/fOeXAdfP+ixmbMBXwDZPBXtt+6JLcmO+B39ZAGejV4/tvR
+         cKkcHvMTzmR4ztviqN0q5t96OUDJKa317qgt3oIT5qQxpfVNf57PTGv9OYw5q2YEXNQN
+         Js/fMcghW8VvuVHJRc1iCncfREfoFxWCHK2+cSeJ3srmX5pbg6FXv8EJX1uuIwvEhWi1
+         LY7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=imdPqUf5Brx7T2Iz/sa/rfWQH1OpmIoy6vm1ya4dgwM=;
+        fh=XGEzqHm0MIQw4THR5ziJfh/cZTPVa+bJPu4yatOmE5A=;
+        b=N+6yGSegXJQRRfc8zLgB3+jSQp9Ll5vSakM4tV2F3vURnrVva36wZML5PPAVrFkXl8
+         VRd9N52tZ4hEuhPDxdZpCg/NRfPx8fhCF+d7ztBJl0L6DuO/QQQMuBEYfCnsevM9RX0y
+         F4oVF1Bhn2CIjbSMBhEXJ1qKxypGeV4hYoiCbjgMQameO10R88IBJNZGR2mPj220G/7w
+         geedSzpL/4oibbmu7g4v1EwiiMze0Lz9R29gsoN+p7D+ny4Ir/gIoYsOQlKHm6RpPgS/
+         QVpZLK0JccDqfGWC1GEwgE8JR0msXfFkCxCD4zt1mliptFaD2UouXYR3ICHMUcauLUg0
+         8ZEw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1770415311; x=1771020111; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=imdPqUf5Brx7T2Iz/sa/rfWQH1OpmIoy6vm1ya4dgwM=;
+        b=sZv8hxhcJrJxHMcpjVpePMa4s502MMdD0/w+EE9iiHKbL8S4yKoPCsEkGYJbLrWA2q
+         p6/qJF++bFNxnbrGzaXTSERPUCrv6iYxPHXzSclaWjy7MK5AhrPVICkXo2FDXpBtB/zN
+         3HQgEaPwSKtogRC+AQAa9nCt3BL3mG679NHdHj+k23GvYi0g7NyBMBvRgOQqnI30Lhos
+         YStDXH/iSED6rJWQK6kj+ZCkGuW1uYa5w7rRupK5vDyaDNg+hYQOrJRihKyb1xpiY2sc
+         8yGs/WH7A/EhIcQFO1j+g0+VTOjDSkMbhkYtFJvU2ClQ8fa0xrLqniUuZ6m0ffwmREi4
+         SIpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770415311; x=1771020111;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=imdPqUf5Brx7T2Iz/sa/rfWQH1OpmIoy6vm1ya4dgwM=;
+        b=A74ka2ZqEjlJjrpxfVWm2Zit9q/zuA420n4HjuR5D40P94GfTsDMxOZ2eme2whda3y
+         XOYKc2tuqBBpfuVPjDLaWZ9qU9891jStIoLAQeBfy2p0xfdPZa8s2d1UG1SrbwxrIf0U
+         mppVs5Lq/w8V6Pc+mfp/mDOX8PWMq4prQ5vAoB/NCuIDPPfZmJxdB42/thQSMUUVMDYT
+         6wedpQ+YcS6AhD1y9oPQSl+Y7PEXuCo/aQ6D/X6a7XeSfGmdxWQJKhT0SJ5J797MtGFV
+         N5oFoeBN6d/ZMex5bAfjG+9WYTkf6ktWbw0/RuaL5lddHJXe2o/VwEXJWhbnA7hipt1e
+         Jdeg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmykC6Z+9jzGlMXs0RaarC+1pIz0tpocluZ7beNAtwpNGldUK50E7Yo6BG8lG4dcVAMLxZSlWOQFOlpaEMTPKk@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqqU2h1PyBU90dFpGiioflAPLwCGV+ak0E0mddkyY68249fj/F
+	Qe/dZHeRCCyV7M+pHtI5bEdOEhLHUfhUngC1fweSzvr7yALMumyZ6UJcpMy0/etuZIKYAiuv+2s
+	FzR1kXLsXDDW1wlS4B39qwLylA5H7pdnntjPKRB9Z
+X-Gm-Gg: AZuq6aLpdhTYK5PJRi8XVvMiQwTURNQAMTGrGeipS9hIbeQeDXvjrUCQGJ797DqMCi/
+	cayFOP08xfq9tDYYfGOoH6p7rOK+2relVgu1/fW7ieJVYI02RZQ8yxL5nsZVePvanlJcsmORUQ3
+	WbcGAQuGz5Vp+wW+OvvfEzpjICKeT0Utv2AnkULjr/j2tSQUUTbNDPT58x1RJ+oiDAlzlzfAm+G
+	B1OeuoSR1bVMpv5GpG8KvyXBcrEpG6cjNKUot0cl7+n6l7e6EnTDJxKGEG68tJ192iFppaA
+X-Received: by 2002:a17:903:17c4:b0:299:c368:6b1f with SMTP id
+ d9443c01a7336-2a961ee4d1dmr770025ad.18.1770415310628; Fri, 06 Feb 2026
+ 14:01:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aYUzLjODMw2NqEzq@google.com>
+References: <20260203225129.4077140-1-irogers@google.com> <aYZeuP5NlZ4gFacx@x1>
+In-Reply-To: <aYZeuP5NlZ4gFacx@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 6 Feb 2026 14:01:37 -0800
+X-Gm-Features: AZwV_QjBVApbOuPpRkCdNvvHNhxwdlN8IP4AKyDOdXTneIC47emecjMma3uwThc
+Message-ID: <CAP-5=fVKn5HSxKPDBrmVXchRu9HAL3Nb7ikKptKejHMOxR-yMg@mail.gmail.com>
+Subject: Re: [PATCH v7 0/6] perf stat affinity changes
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Yang Li <yang.lee@linux.alibaba.com>, James Clark <james.clark@linaro.org>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andi Kleen <ak@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Andres Freund <andres@anarazel.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 05, 2026 at 04:17:50PM -0800, Namhyung Kim wrote:
-> On Thu, Feb 05, 2026 at 09:32:50AM -0700, Tycho Andersen wrote:
-> > Check if btf loading failed, and don't do anything with it in
-> > init_numa_data(). This leads to the following error message, instead of
-> > just a crash:
-> >     libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
-> >     libbpf: failed to find valid kernel BTF
-> >     libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
-> >     libbpf: failed to find valid kernel BTF
-> >     libbpf: Error loading vmlinux BTF: -ESRCH
-> >     libbpf: failed to load BPF skeleton 'lock_contention_bpf': -ESRCH
-> >     Failed to load lock-contention BPF skeleton
-> >     lock contention BPF setup failed
+On Fri, Feb 6, 2026 at 1:35=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Tue, Feb 03, 2026 at 02:51:23PM -0800, Ian Rogers wrote:
+> > Change how affinities work with evlist__for_each_cpu. Move the
+> > affinity code into the iterator to simplify setting it up. Detect when
+> > affinities will and won't be profitable, for example a tool event and
+> > a regular perf event (or read group) may face less delay from a single
+> > IPI for the event read than from a call to sched_setaffinity. Add a
+> >  --no-affinity flag to perf stat to allow affinities to be disabled.
+> >
+> > v7: Revert "perf tool_pmu: More accurately set the cpus for tool
+> >     events" that caused issues with user specified CPUs (Andres Freund
+> >     <andres@anarazel.de>). Fix a null test is prepare_metric so that
+> >     missing events can't trigger segfaults (Andres Freund). Make the
+> >     CPU map propagation improve the CPU maps for tool events that only
+> >     read on index 0, this allows later setting when
+> >     evlist__create_maps is called with the correct user CPUs. Rebase
+> >     previous non-merged affinity changes that hadn't been picked up
+> >     yet.
+>
+> Not applying to tmp.perf-tools-next, can you please check?
 
-> > Signed-off-by: Tycho Andersen (AMD) <tycho@kernel.org>
- 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+Will send a rebase on tmp.perf-tools-next shortly. Could I interest
+you in some second servings of build improvements while you wait? :-)
+https://lore.kernel.org/lkml/20260203164323.3447826-1-irogers@google.com/
 
-Thanks, applied to perf-tools-next,
+Thanks,
+Ian
 
-- Arnaldo
+> - Arnaldo
+>
+> > v6: Drop merged tool event change. Move TPEBS fix into its own patch
+> >     1st.
+> > https://lore.kernel.org/lkml/20260108212652.768875-1-irogers@google.com=
+/
+> >
+> > v5: Drop merged changes. Move tool event reading to first
+> >     patch. Change --no-affinity flag to --affinity/--no-affinity flag.
+> > https://lore.kernel.org/lkml/20251118211326.1840989-1-irogers@google.co=
+m/
+> >     On v5 there was discussion with Andi Kleen who points out that
+> >     affinities will work better with real time priorities but using
+> >     this requires privileges.
+> >
+> > v4: Rebase. Add patch to reduce scope of walltime_nsec_stats now that
+> >     the legacy metric code is no more. Minor tweak to the ru_stats
+> >     clean up.
+> > https://lore.kernel.org/lkml/20251113180517.44096-1-irogers@google.com/
+> >
+> > v3: Add affinity clean ups and read tool events last.
+> > https://lore.kernel.org/lkml/20251106071241.141234-1-irogers@google.com=
+/
+> >
+> > v2: Fixed an aggregation index issue:
+> > https://lore.kernel.org/lkml/20251104234148.3103176-2-irogers@google.co=
+m/
+> >
+> > v1:
+> > https://lore.kernel.org/lkml/20251104053449.1208800-1-irogers@google.co=
+m/
+> >
+> > Ian Rogers (6):
+> >   Revert "perf tool_pmu: More accurately set the cpus for tool events"
+> >   perf stat-shadow: In prepare_metric fix guard on reading NULL
+> >     perf_stat_evsel
+> >   perf evlist: Special map propagation for tool events that read on 1
+> >     CPU
+> >   perf evlist: Missing TPEBS close in evlist__close
+> >   perf evlist: Reduce affinity use and move into iterator, fix no
+> >     affinity
+> >   perf stat: Add no-affinity flag
+> >
+> >  tools/lib/perf/evlist.c                 |  36 +++++-
+> >  tools/lib/perf/include/internal/evsel.h |   2 +
+> >  tools/perf/Documentation/perf-stat.txt  |   4 +
+> >  tools/perf/builtin-stat.c               | 114 ++++++++---------
+> >  tools/perf/util/evlist.c                | 156 +++++++++++++++---------
+> >  tools/perf/util/evlist.h                |  27 ++--
+> >  tools/perf/util/parse-events.c          |  10 +-
+> >  tools/perf/util/pmu.c                   |  23 ++++
+> >  tools/perf/util/pmu.h                   |   3 +
+> >  tools/perf/util/stat-shadow.c           |   7 +-
+> >  tools/perf/util/tool_pmu.c              |  19 ---
+> >  tools/perf/util/tool_pmu.h              |   1 -
+> >  12 files changed, 237 insertions(+), 165 deletions(-)
+> >
+> > --
+> > 2.53.0.rc2.204.g2597b5adb4-goog
