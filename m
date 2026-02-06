@@ -1,153 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F67303A1A;
-	Fri,  6 Feb 2026 22:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770416021; cv=none; b=tGQfS8iOTv9usOBwFGY7tMUuP/uo+PoebeSagP6GOSmcudbHGTlGkBofumXTkDvhfWzB19pcXZC5RidGo2uSCwbZJnTgw6V575OicUraQ2Wj/x0o0dCKXCEJdl8A7I9ICVO1rVA/lJxD84M5Ljf4+Onf7IaQLrS81N2ZETk3wXY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770416021; c=relaxed/simple;
-	bh=M19xwhQO/96t1ks9C85jkg/3Lu7l6HsRTkSysNlo29I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=irrc4bxhjXJC9CnIIL5KvDCxGZc4LkMP0XvNzfvR8PfMu1XpoIt5bZ9Heil3upUVvTMp8TKeDk5zGYuDsDWyfAMpOtDGSqkZ8aNwgfE6dO5Xym/eLGMdlj2ERBxmqtD9qOz1e3DYXGMhccKFpvKOzqURVibDnjN9I4CmgEwekQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OhCeDE8a; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046D535975
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 22:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770416199; cv=pass; b=WGCvLxLyvgtp9sxkYYy7X7xeRxdYqesyh+pGgTi7FmnoXDfXkAVv2VHJFZ9S8myTdwu6tKuMbTVIV9tuLTZ9gNLZiLo4WJM8MWz1U5psrhXIjFPbyL17ttZ22iPw+HSYY4FtS8ljq8SRD5pyqApIcMPvBdIcSBN4/r/+1sBCSbM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770416199; c=relaxed/simple;
+	bh=dit5lbshhnO0V+bp8dP+A4RhIQd5hhGTny768pMlP1s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M39I3K/QRcG/9BJ8BQPtwSCvfAz5SpDz2hBncMrlr5zazDYpwRW9of9DGzoFV4eO3O8vbkybh9+znHcU+Sqy1j/krTU6Y59FriHoCteLd6QIKH5UcVPOK8mHoFYNCJn/ay6LwN5rI1EAsG+JdjvlDgNsBWy9rPV7GBZxwbDpOOY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KAR5afLs; arc=pass smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OhCeDE8a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B0BC116C6;
-	Fri,  6 Feb 2026 22:13:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770416021;
-	bh=M19xwhQO/96t1ks9C85jkg/3Lu7l6HsRTkSysNlo29I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OhCeDE8aZL9qQeVpLNwlgRvxG7ozAD2XQFyAhvLs3ynjPFDQ7SzF/5RZAanc9shmt
-	 B4pl02cMIqa6wPJr3Zi9IH7Q3xklXW4gqcnVgFHmogIXDJ0fwOAg6FiuiZs7laBjYG
-	 1YVYXCdCxU5Nba2bPKJsc/04GtVz5XjK5gZqDRIwUzAZVMqdkv+0mW62zyvCSuEGpX
-	 kJ8++Rp78+FQY0d7D/hzSVwKhUigoZxk1Zegcp//p6XADbqcnoELyQvCvr9vWDXaUZ
-	 XrBoli0Cb7GPB72BzGtHpzGG2a1W/5OYwP2tm47VFQpNkm4dpdQ3XmJR2sGdpVz/71
-	 2W/4s9+qb4Zvw==
-Date: Fri, 6 Feb 2026 19:13:37 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andi Kleen <ak@linux.intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Andres Freund <andres@anarazel.de>
-Subject: Re: [PATCH v7 0/6] perf stat affinity changes
-Message-ID: <aYZnkYqWXnKpHd3h@x1>
-References: <20260203225129.4077140-1-irogers@google.com>
- <aYZeuP5NlZ4gFacx@x1>
- <CAP-5=fVKn5HSxKPDBrmVXchRu9HAL3Nb7ikKptKejHMOxR-yMg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KAR5afLs"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2a76b39587aso8505ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 14:16:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770416198; cv=none;
+        d=google.com; s=arc-20240605;
+        b=VLEPzLqnq0yorD48+GPKVJsdCZhZqfW2cgnjxKArCUua14j9X1uhCfnYo1nW156u/0
+         aMRcTW25AXe703LqxEsUZbZjwodIQ76s+fyHue/h8fCzVHiSo7Wxc0m2WAvREO8qkrz3
+         blegM8DM6FuCamW+ylu2lZ2cj/gi6k9bJSDDmMeg/2a+CqsC/VhY7FInLA+2Nwxv4UnS
+         jmJGTSJJvTKJ2HT8trBywcc9zXmy2WmyRiKGpV71jQK56mEJ/f3oQD4hKqXy62w1I2IM
+         DfGKayRG0LmFI4hxzk1+wszhy2EmXkFuBXO3ZhhC+WVfMq9rguUTYduBFX3SGuhcbdLp
+         tdGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=o6oxrZnXZjssrAJLKm4rt1uzzsVCsTNkRCeBxE9yMj0=;
+        fh=PQJZsjMwFBWcVNK4hzffe9SRTXZ/U64FGK41KVMpCWI=;
+        b=RC9x/o5gnhUzr6DHO3B4UQHfcg45EIGO/2ul0m8Movq/WpMQhDFw3BBwTOXRZGiNYF
+         hBP7XekyB5vntyfnAEglcp6aOzYgL12r0DzYiAwacQBtSzeMWzcoGW4Seh71+qiEQ60+
+         ckXinbPzptLYosXciV5CDDs3IVECOmjDe4t8ar8htSCc1C5DU9/Fu6bJRYlN8t99QYZK
+         QyzAzj+ByKfFptCqz/z/1hQ0LDGgdmpy6LJW8+VO9K5LnxD3UPGMc8T5SBf1bNQzbHih
+         VXA+zsKMhmhQfhiY3XvplOrkIrVhtyD5ZJMZ/AScO34uwr06TWZCsvH9osXtTj6hnw2I
+         kkhw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1770416198; x=1771020998; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o6oxrZnXZjssrAJLKm4rt1uzzsVCsTNkRCeBxE9yMj0=;
+        b=KAR5afLs+4sDk/y+2OqWw8lCHsWTzhIHTnUvR0mrIHTBEEBtlt/g0fF3yV5hQXs3Uu
+         7MZfqipeYOEb4wCP7zzpmjqUIz0VAuDbzhNinkMW8EHiWvTxOdMsDTK5c1kXcrBmEuJV
+         boIAG/sL42QBNgwP/pV0kwmK/sUikoVbhEBG+5NnmJALEJngF4p+XwJHAbq4cdAlDEg9
+         Nat64S+Ut0h0EioIfCKvg5n6FW85U2xxc8WWJ1MjFLHdBqGXP4ugW21KX/Kjc3nA0+WV
+         nsz8OWd7c3rjEovlmU2fbLgX7kkzQ1fUKtryhnpX2aqUPbzM9sTyGLEvKYtc02yS/nPS
+         ekBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770416198; x=1771020998;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=o6oxrZnXZjssrAJLKm4rt1uzzsVCsTNkRCeBxE9yMj0=;
+        b=u3GqSJ3lT5ux8nblJ5B1le9dbxeHXC/ll+zPVN97gesgfBSiihbl07o9xI2l/Fqgc6
+         SJpXUojYoTzGwk47DiiE7BuddHGmjJ4OHTN3kZBacOdZgh0XHRI+wpK8K2zNh97eyytG
+         6M15AzIWCxFU9u6lCq9c12KHly4oNgs8SlDc1y/QXYDjlLd0BOMznXaTsbD8bAev8+V7
+         f0t603zneDn542QCHS97n3SMTMf9GNxszJ6F8p5OC+Ca/TGQ8AWIrbkwFysYLp3bZ/3a
+         ECikX+vHEQkpv4IO2BFKxtzfQFX0cA1U0nSQ/yHQmlxFmh+aAkvUAz2nqSi1+uPRpDqj
+         zgPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXAC9nl6kiCqFySCi7csb58dazZRr1KY6/0sOIMOCkJRalteXVql85zUaztP4iIWTzy66Bav2/oPQrx8ffq4xr@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFnbyk5zMEhZpJKlTu9UMP2+rZt+sTb01P5fvEjcqPI87v2tTm
+	YXWn5YQ6MCXkFJuH9IYSN/bsaEXjJcaNeCrA69/e273mcPe2FOcAdWOz1RGsJKITP9BGRrNOxTB
+	gdhCWDkbgu6eS8RKGDoM5QPbXD29Qog+VTrLodCYc
+X-Gm-Gg: AZuq6aKr6MtFHmSP6KW1+4u5gA7VZHy978uPbpCtKOy8ME+43v/uTwVRV3/oEQoYDOV
+	+oqRSWgMjsoip0kv5BPBR8vlu07Qto5h8aHZSKERyQ8dp+gswusSc8bKyTkqE1g++yd1WQcmOKy
+	9IKZFJsufKOpy6AY/AuY6OdnGYgt8UfPpzVd5/XPCNY+XhIC3X9rAbl/O3KwWVgByKk/yvFe8JY
+	vjt5DANqopGcqc4aJF3KgKX0s28XXQ2TZyN7gTdSXkQoKQymTHaoNtQvlCm2aDGhjxKdpPQ
+X-Received: by 2002:a17:903:19ee:b0:2a3:ccfa:c41f with SMTP id
+ d9443c01a7336-2a9630fcab5mr267545ad.1.1770416198038; Fri, 06 Feb 2026
+ 14:16:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVKn5HSxKPDBrmVXchRu9HAL3Nb7ikKptKejHMOxR-yMg@mail.gmail.com>
+References: <20260205183603.459363-1-irogers@google.com> <20260205183603.459363-2-irogers@google.com>
+ <20260206104543.GE3529712@e132581.arm.com> <20260206123310.GF3529712@e132581.arm.com>
+ <CAP-5=fV8ofWn2oYDip3pOX7+Cx0GyKckq_o0Q6qahuoqgydN7w@mail.gmail.com> <20260206215001.GJ3529712@e132581.arm.com>
+In-Reply-To: <20260206215001.GJ3529712@e132581.arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 6 Feb 2026 14:16:26 -0800
+X-Gm-Features: AZwV_Qg0Ixi8RGtRltfX2hC16dDzvAvYr8A4-Q9qIqGJ384GmznELnPvMlOOCiI
+Message-ID: <CAP-5=fXzG6QOvkUqaJABJzvLkWXx4Wgtv5rG59GtvF1tE65e-w@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] perf metricgroup: Don't early exit if no CPUID
+ table exists
+To: Leo Yan <leo.yan@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 06, 2026 at 02:01:37PM -0800, Ian Rogers wrote:
-> On Fri, Feb 6, 2026 at 1:35 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > On Tue, Feb 03, 2026 at 02:51:23PM -0800, Ian Rogers wrote:
-> > > Change how affinities work with evlist__for_each_cpu. Move the
-> > > affinity code into the iterator to simplify setting it up. Detect when
-> > > affinities will and won't be profitable, for example a tool event and
-> > > a regular perf event (or read group) may face less delay from a single
-> > > IPI for the event read than from a call to sched_setaffinity. Add a
-> > >  --no-affinity flag to perf stat to allow affinities to be disabled.
+On Fri, Feb 6, 2026 at 1:50=E2=80=AFPM Leo Yan <leo.yan@arm.com> wrote:
+>
+> On Fri, Feb 06, 2026 at 10:57:54AM -0800, Ian Rogers wrote:
+>
+> [...]
+>
+> > > > >  bool metricgroup__has_metric_or_groups(const char *pmu, const ch=
+ar *metric_or_groups)
+> > > > >  {
+> > > > > -   const struct pmu_metrics_table *tables[2] =3D {
+> > > > > -           pmu_metrics_table__find(),
+> > > > > -           pmu_metrics_table__default(),
+> > > > > -   };
+> > > > > +   const struct pmu_metrics_table *table =3D pmu_metrics_table__=
+find();
+> > > >
+> > > > Here should be:
+> > > >
+> > > >   const struct pmu_metrics_table *table =3D pmu_metrics_table__defa=
+ult();
 > > >
-> > > v7: Revert "perf tool_pmu: More accurately set the cpus for tool
-> > >     events" that caused issues with user specified CPUs (Andres Freund
-> > >     <andres@anarazel.de>). Fix a null test is prepare_metric so that
-> > >     missing events can't trigger segfaults (Andres Freund). Make the
-> > >     CPU map propagation improve the CPU maps for tool events that only
-> > >     read on index 0, this allows later setting when
-> > >     evlist__create_maps is called with the correct user CPUs. Rebase
-> > >     previous non-merged affinity changes that hadn't been picked up
-> > >     yet.
+> > > Or, I think you should not change metricgroup__has_metric_or_groups()=
+.
+> > > The change only in metricgroup__parse_groups() can fix my issue.
 > >
-> > Not applying to tmp.perf-tools-next, can you please check?
-> 
-> Will send a rebase on tmp.perf-tools-next shortly.
+> > This is wrong and the patch I tested I believe to be correct.
+>
+> It is very likely you are not working on the issue same as mine.
+>
+> > The table here is CPUID associated table and all the metric code will
+>
+> As you said, the key point is CPUID.  On my board, as no corresponding
+> json file to support the CPU variant, it fails to find any table based
+> on the CPUID and pmu_metrics_table__find() always returns NULL.
+>
+> The failure flow is:
+>
+>   add_default_events()
+>     if (!metricgroup__has_metric_or_groups(pmu, default_metricgroup_names=
+[i]))
+>         continue;
+>      ^^^
+>      Always return false
+>
+> As a result, metricgroup__parse_groups() has no chance to be invoked
+> and no any events are added to the ev list.
+>
+> This is why I suggested to keep default table in
+> metricgroup__has_metric_or_groups(), it can rallback to find default
+> table when CPUID is not supported.
+>
+> > bottom out in metricgroup__for_each_metric where the CPUID table is
+> > the table parameter (its a parameter because of testing where we force
+> > the machine/model to "testarch"):
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/perf/util/metricgroup.c?h=3Dperf-tools-next#n430
+> > ```
+> > int metricgroup__for_each_metric(const struct pmu_metrics_table
+> > *table, pmu_metric_iter_fn fn, void *data)
+> > {
+> > ...
+> > const struct pmu_metrics_table *tables[2] =3D {
+> >     table,
+> >     pmu_metrics_table__default(),
+> > };
+> >
+> > for (size_t i =3D 0; i < ARRAY_SIZE(tables); i++) {
+> >     int ret;
+> >
+> >     if (!tables[i])
+> >         continue;
+> > ```
+> > If you make the table here the default table then you will process the
+> > default table twice in metricgroup__for_each_metric which will mean
+> > double metric look ups, etc.
+>
+> In my case, it will not have double metric issue, as
+> pmu_metrics_table__find() cannot find any table, a NULL table pointer
+> will be passed to metricgroup__for_each_metric(), then only
+> pmu_metrics_table__default() will be used.
 
-Thanks!
+Which is the table you want to be used to such an extent that you are
+proposing changing this patch to put it twice in the tables array in
+the snippet of code above. Also note that the code skips the NULL,
+failed to look up table, which is why this patch just needs to avoid
+the early return on a missing table to address the problem of the
+default table not being considered.
 
-> Could I interest you in some second servings of build improvements
-> while you wait? :-)
-> https://lore.kernel.org/lkml/20260203164323.3447826-1-irogers@google.com/
+> As a side question, using a single CPUID to look up metrics can be
+> error-prone on asymmetric systems (such as Arm big.LITTLE).  Since only
+> the first CPU ID is used to search the metrics table, could this cause
+> issues for other CPU variants?
 
-Applied it locally for testing,
+There's logic to use the PMU for the cpumask and then to get the CPUID
+for the ARM CPU associated with the CPUs in the cpumask. It is likely
+bitrotten, but the problem has had some work on it in the past. It is
+untested, to my knowledge.
 
-- Arnaldo
- 
+Thanks,
+Ian
+
 > Thanks,
-> Ian
-> 
-> > - Arnaldo
-> >
-> > > v6: Drop merged tool event change. Move TPEBS fix into its own patch
-> > >     1st.
-> > > https://lore.kernel.org/lkml/20260108212652.768875-1-irogers@google.com/
-> > >
-> > > v5: Drop merged changes. Move tool event reading to first
-> > >     patch. Change --no-affinity flag to --affinity/--no-affinity flag.
-> > > https://lore.kernel.org/lkml/20251118211326.1840989-1-irogers@google.com/
-> > >     On v5 there was discussion with Andi Kleen who points out that
-> > >     affinities will work better with real time priorities but using
-> > >     this requires privileges.
-> > >
-> > > v4: Rebase. Add patch to reduce scope of walltime_nsec_stats now that
-> > >     the legacy metric code is no more. Minor tweak to the ru_stats
-> > >     clean up.
-> > > https://lore.kernel.org/lkml/20251113180517.44096-1-irogers@google.com/
-> > >
-> > > v3: Add affinity clean ups and read tool events last.
-> > > https://lore.kernel.org/lkml/20251106071241.141234-1-irogers@google.com/
-> > >
-> > > v2: Fixed an aggregation index issue:
-> > > https://lore.kernel.org/lkml/20251104234148.3103176-2-irogers@google.com/
-> > >
-> > > v1:
-> > > https://lore.kernel.org/lkml/20251104053449.1208800-1-irogers@google.com/
-> > >
-> > > Ian Rogers (6):
-> > >   Revert "perf tool_pmu: More accurately set the cpus for tool events"
-> > >   perf stat-shadow: In prepare_metric fix guard on reading NULL
-> > >     perf_stat_evsel
-> > >   perf evlist: Special map propagation for tool events that read on 1
-> > >     CPU
-> > >   perf evlist: Missing TPEBS close in evlist__close
-> > >   perf evlist: Reduce affinity use and move into iterator, fix no
-> > >     affinity
-> > >   perf stat: Add no-affinity flag
-> > >
-> > >  tools/lib/perf/evlist.c                 |  36 +++++-
-> > >  tools/lib/perf/include/internal/evsel.h |   2 +
-> > >  tools/perf/Documentation/perf-stat.txt  |   4 +
-> > >  tools/perf/builtin-stat.c               | 114 ++++++++---------
-> > >  tools/perf/util/evlist.c                | 156 +++++++++++++++---------
-> > >  tools/perf/util/evlist.h                |  27 ++--
-> > >  tools/perf/util/parse-events.c          |  10 +-
-> > >  tools/perf/util/pmu.c                   |  23 ++++
-> > >  tools/perf/util/pmu.h                   |   3 +
-> > >  tools/perf/util/stat-shadow.c           |   7 +-
-> > >  tools/perf/util/tool_pmu.c              |  19 ---
-> > >  tools/perf/util/tool_pmu.h              |   1 -
-> > >  12 files changed, 237 insertions(+), 165 deletions(-)
-> > >
-> > > --
-> > > 2.53.0.rc2.204.g2597b5adb4-goog
+> Leo
