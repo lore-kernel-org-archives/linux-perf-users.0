@@ -1,47 +1,75 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14E330ACE3;
-	Fri,  6 Feb 2026 09:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADA43451D4
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 09:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770368788; cv=none; b=kVaSwX3nMXQd9+QUyeg0BAlGzANhhjF6YjANKxQxqIySm6dmimcZ6+AJYA9DdkQdABK5C/Pti0xXvZVi6Lt/vjHZJVStM2NoKPw7r3RzXG4Ps9YHZuDtVp49cnK93qFLoM4LgBpBrPUjwPL4M18MGToAlR84EjvjPFoOqfZj6ZU=
+	t=1770368941; cv=none; b=M+11e6idIDYBrVqOx7rGYHBtBCKwOPDglQ5xYaZ10cy3LD1E6kvgGfw3JI65DXNEbpZmPwawY/YnRyFyFCWuhiCu/s1+nGE6HgYPOWp9GGfSm3BbUxCyydICDO1aaUOI35mPAiirDqy8KoLr+8I5yPIFoQLVw4D8qqLcdNlsbg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770368788; c=relaxed/simple;
-	bh=ivr5frnqE2VWAG1KxsVtRBbip0HfA2g9wEpUmDVbGDk=;
+	s=arc-20240116; t=1770368941; c=relaxed/simple;
+	bh=oMVx4P6c6URC7MBhmYUuUPLSASkPw1nrq3AtFxSRZvQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LhdKJPDKZYgMLLNvlP7k1GeE/GqYwXUojQGmL1UNQ2zWKaQCsMJgUN6bIdewUYGJQv9NcFZoWg43jNOadOD3MJTTln7q65bmEbfL8q10IgYY5utYzRZno/w90kKyzD3FPB3B6G+aMFMegcI/tivn6G+DIJTdnsrTvI3ydjkJbPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ec13F7Nm; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=HRncq2ymijDIEvV+nb/BQQYNxTXEQRx0IDeFKQuo7qisWeajprunOB5nYa6um0+9V/FpaqhaKsnCEE0DIGBAhSD4jrT3aTbtZCpPgYjyDkmEJNB7tzhoskPV3IfstK1J7nkSxWRr4jFyawAPKDg+4Dtl8TplgaouUSJSukPzjkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3iLDfDM; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ec13F7Nm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+xD2drg373e07/WL5BzJZ+maQJBVK6ROtA7Y7bxb9lk=; b=Ec13F7NmUGRMj/iqloFuE+x/RX
-	RMl4dPjC1jKo2MU0CJK7+ZGtq7q4ST7uoxESKxX1Vxm+hGK1r3pQWUWiXECod0IOMBS1tiRhP39hF
-	UNCYSuub/KYR61CClK0jWxWz8sQNsFQ5PcCXSwqrOR8fWpgJzQqieWmzPm0/dE1zLcbtL8QR1SiqS
-	Sn2+o5eQEJHiMaxRXLiNQgaQLpHm3aV2ZZeoqPy8byodwIwYaBVgtmYjysbF8UhEbGuaMLpE3Prdx
-	doJS60MJ7PdOAPWeZJjpQwO8dnJPut9giD2w/ZEkQ0y6E9bXqPYNIaOzGXqWkEwl8a1vrRfxiqvk8
-	LiTtlRig==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1voHnE-00000004wGZ-3SWc;
-	Fri, 06 Feb 2026 09:06:25 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2CEAA302DA9; Fri, 06 Feb 2026 10:06:24 +0100 (CET)
-Date: Fri, 6 Feb 2026 10:06:24 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: yuhaocheng035@gmail.com
-Cc: acme@kernel.org, security@kernel.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH v2] perf/core: Fix refcount bug and potential UAF in
- perf_mmap
-Message-ID: <20260206090624.GQ1282955@noisy.programming.kicks-ass.net>
-References: <CAAoXzSqHuQd7k9rp878YBG5gbChgOaProPQ6XBzKpy81JF5sKg@mail.gmail.com>
- <20260202162057.7237-1-yuhaocheng035@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3iLDfDM"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b8870ac4c4eso71977966b.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 01:09:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770368939; x=1770973739; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oMVx4P6c6URC7MBhmYUuUPLSASkPw1nrq3AtFxSRZvQ=;
+        b=E3iLDfDMsBCXWjDvNZLtd+FGuy45iSFMmwLtMi03eb4cktlbptFzYkDe2MAgKvxcrD
+         YXnPYlyiRUuuE6uf4jJ2Q+LNj5iW8+jETMetWtMTxmKRQXJ21Gt45MjOpApwGQ0iNapR
+         E0yPPJSwBSayirTPoeIKnQxqFDKJXwgw2sc2fG9ikC5Zcz0nwfu2gmRSFuPPmSKZggkm
+         bAXQw/Igw//wJLAAYSga4Cdg528FQdg++u8spuwRCT2iyQb2O82JRxUx0VT5naAoKLjy
+         cX3zg9bEhWNfU4w3pv+pPAlhCXct0BtJIIw13Vb41TigrnHadsjRfHzh+9jcyE4s5U5O
+         n6zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770368939; x=1770973739;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oMVx4P6c6URC7MBhmYUuUPLSASkPw1nrq3AtFxSRZvQ=;
+        b=qdnW5KYXBGIi9Bs2vAchwTbmyGkyygFdrzvupRKBDmzbD0e5HtIFZfOg6S/3AquDz8
+         uqNoKBYyLhU+W9fncdU5NjAsg1imrl3zW03Vyr6ImsluhcN0uHIyHtOjfmUfJXU5PHgb
+         d5NomQzUZn88MoppREKsCtuXygShTRpIfjodWqyIRiN4wgPOnN3gbQfZaynO59TtBZZ8
+         NeI13X42lKjBaYqRald+zIewSOVSzfQhKCh0ndYc0QBIfI4SKPAGaqH4YiGpiANP/3Zu
+         B4cUaVm57pHp+lRaezlSrYUNmbGxY23XmIQhplFJs5Nte2g+fKx9VmXUPs3Hnbpx13PN
+         Gb9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUUL9kwRD7bZWIIq+1zo2WByozQ/nUvZZa7RpeLJNq3hyPpWpqgMtlAwL1cK/SqYBpLvSVh/VpehMmv8tO/E2PX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOYyETb8Nu2BaP9dezr+s0dCHS4qryOXmWxEcOacGRCJMZ4Fc0
+	IFSTMcemyA3WlFd2NeVsse+Efz8But0gT8sfZVmOgruMX9WnkeZR5MLc
+X-Gm-Gg: AZuq6aIl1GhTUFPELIcKsGW0lDspQdC34tZk5mBhb3jM2RDgnu06DmkzUv4htIigDz7
+	6mzrvyKFD0OiGLi9MsjxcIe9Siuh75Q0t2uCVLECyj8+S39IMTHvsiIXm2da7TRyvM/lK22/YGa
+	6FMNDuA+OLps20TjbMh4vFXPOH0/bQFe41mLYAmamoPZM8RhMzBDWvS8KYF9sqMsOfs3enaZCi+
+	/RmxqAPVd65hyAyYLeGmV0mcK8KuiCirOerG9QtYt/+/HE68znQijJdypQ+loiMp5DqPCM2XDo7
+	EdcoMdhitdwiQHa2TsY7rHXW6syWWnNHmsFbIFSJfLPboe9P6Y1+lagO6s5vl5vnXjQa0kt6bZH
+	xmGVafPk1yhIt1N0clf1PvdNS89bY/GvMpxdB72Mc+Vk6pvpf1+M9i3ab41/q0h2vM3WcxwKQSo
+	FJI3QJtGntd+bP62wGw57D0HEOMqqwTS+yo1AWsRUIDB46pMXW2H+2Eme5AY3a8l40djJ3I+1Q1
+	uGJdP91m+JnCvSwsv22y4fhOE7WszjNmJk=
+X-Received: by 2002:a17:907:970b:b0:b87:2780:1b35 with SMTP id a640c23a62f3a-b8edf383b98mr108367766b.45.1770368938713;
+        Fri, 06 Feb 2026 01:08:58 -0800 (PST)
+Received: from ddolgov-thinkpadt14sgen1.rmtde.csb (dslb-002-207-075-089.002.207.pools.vodafone-ip.de. [2.207.75.89])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8eda748aa6sm64632266b.1.2026.02.06.01.08.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Feb 2026 01:08:58 -0800 (PST)
+Date: Fri, 6 Feb 2026 10:08:55 +0100
+From: Dmitry Dolgov <9erthalion6@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Zecheng Li <zli94@ncsu.edu>
+Subject: Re: [PATCH] perf annotate: Fix register usage in data type profiling
+Message-ID: <qncykxscahgsit26ctsja4jox4353uburbfoehfcuneycbgnvg@jvgs3twjn2rq>
+References: <20260206012743.2617945-1-namhyung@kernel.org>
+ <CAP-5=fXn2jaPPBHfFLvZy-O2OXZbjOFHatDGdVm4b5q3C8jmnA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,106 +78,12 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260202162057.7237-1-yuhaocheng035@gmail.com>
+In-Reply-To: <CAP-5=fXn2jaPPBHfFLvZy-O2OXZbjOFHatDGdVm4b5q3C8jmnA@mail.gmail.com>
 
-On Tue, Feb 03, 2026 at 12:20:56AM +0800, yuhaocheng035@gmail.com wrote:
-> From: Haocheng Yu <yuhaocheng035@gmail.com>
-> 
-> Syzkaller reported a refcount_t: addition on 0; use-after-free warning
-> in perf_mmap.
-> 
-> The issue is caused by a race condition between a failing mmap() setup
-> and a concurrent mmap() on a dependent event (e.g., using output
-> redirection).
-> 
-> In perf_mmap(), the ring_buffer (rb) is allocated and assigned to
-> event->rb with the mmap_mutex held. The mutex is then released to
-> perform map_range().
-> 
-> If map_range() fails, perf_mmap_close() is called to clean up.
-> However, since the mutex was dropped, another thread attaching to
-> this event (via inherited events or output redirection) can acquire
-> the mutex, observe the valid event->rb pointer, and attempt to
-> increment its reference count. If the cleanup path has already
-> dropped the reference count to zero, this results in a
-> use-after-free or refcount saturation warning.
-> 
-> Fix this by extending the scope of mmap_mutex to cover the
-> map_range() call. This ensures that the ring buffer initialization
-> and mapping (or cleanup on failure) happens atomically effectively,
-> preventing other threads from accessing a half-initialized or
-> dying ring buffer.
+> On Thu, Feb 05, 2026 at 09:00:43PM -0800, Ian Rogers wrote:
+> It'd be nice to have a test on this to avoid a regression. Dmitrii's patch:
+> https://lore.kernel.org/linux-perf-users/20260127083030.5909-1-9erthalion6@gmail.com/
+> does that for a Rust struct Buf, but it'd be nice to do something similar for C.
 
-And you're sure this time? To me it feels bit like talking to an LLM.
-
-I suppose there is nothing wrong with having an LLM process syzkaller
-output and even have it propose patches, but before you send it out an
-actual human should get involved and apply critical thinking skills.
-
-Just throwing stuff at a maintainer and hoping he does the thinking for
-you is not appreciated.
-
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202602020208.m7KIjdzW-lkp@intel.com/
-> Signed-off-by: Haocheng Yu <yuhaocheng035@gmail.com>
-> ---
->  kernel/events/core.c | 38 +++++++++++++++++++-------------------
->  1 file changed, 19 insertions(+), 19 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 2c35acc2722b..abefd1213582 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -7167,28 +7167,28 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
->  			ret = perf_mmap_aux(vma, event, nr_pages);
->  		if (ret)
->  			return ret;
-> -	}
->  
-> -	/*
-> -	 * Since pinned accounting is per vm we cannot allow fork() to copy our
-> -	 * vma.
-> -	 */
-> -	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
-> -	vma->vm_ops = &perf_mmap_vmops;
-> +		/*
-> +		 * Since pinned accounting is per vm we cannot allow fork() to copy our
-> +		 * vma.
-> +		 */
-> +		vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
-> +		vma->vm_ops = &perf_mmap_vmops;
->  
-> -	mapped = get_mapped(event, event_mapped);
-> -	if (mapped)
-> -		mapped(event, vma->vm_mm);
-> +		mapped = get_mapped(event, event_mapped);
-> +		if (mapped)
-> +			mapped(event, vma->vm_mm);
->  
-> -	/*
-> -	 * Try to map it into the page table. On fail, invoke
-> -	 * perf_mmap_close() to undo the above, as the callsite expects
-> -	 * full cleanup in this case and therefore does not invoke
-> -	 * vmops::close().
-> -	 */
-> -	ret = map_range(event->rb, vma);
-> -	if (ret)
-> -		perf_mmap_close(vma);
-> +		/*
-> +		 * Try to map it into the page table. On fail, invoke
-> +		 * perf_mmap_close() to undo the above, as the callsite expects
-> +		 * full cleanup in this case and therefore does not invoke
-> +		 * vmops::close().
-> +		 */
-> +		ret = map_range(event->rb, vma);
-> +		if (ret)
-> +			perf_mmap_close(vma);
-> +	}
->  
->  	return ret;
->  }
-> 
-> base-commit: 7d0a66e4bb9081d75c82ec4957c50034cb0ea449
-> -- 
-> 2.51.0
-> 
+Agree, and I was planning to extend the tests in the patch above with a
+C workload as well.
