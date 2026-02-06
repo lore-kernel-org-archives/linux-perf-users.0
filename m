@@ -1,270 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f78.google.com (mail-oo1-f78.google.com [209.85.161.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986A6298CAB;
-	Fri,  6 Feb 2026 05:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D0F314B6E
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Feb 2026 07:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770357095; cv=none; b=Jiwd1FBdULmnKkefGKpfzJTNgU/3pqYKMFFBZzKkwzsJDrcuE+VKOhdh8xUfsRvF2pLCeXqJcpqcj7VtIRZVezc4cWBTD1IvzFgpPgMfC9JeryOwPRXu4NoDRV5YOrgFU4rvhbYQl2Wr1JAPx+NNYbCwcSXIhTGj5t/kwZA9tm0=
+	t=1770363275; cv=none; b=ZOlGnI0oxTWQ//rvF/QZbuQcnnKjzU/L4Z3O8pMZdmR1M58FbnIplKewPMGux+TstVUR7XLhilhnewbn8gmJGtRFSC24GcvWNlOzi47s86xrHeWPUBh665+Uajv06iqUXoWGEd4n/nI1TWiaCwiSWMhUMGLAM8/vw+1AWgCzg98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770357095; c=relaxed/simple;
-	bh=VgBkyAlxd6wcBnPAlpKB9OOD0EzRl5PNJikNmuX/nMw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DsfXFdcjYFre83mvbvj+ED4fl4wi4OVA8cpb6e3CiaVGy6HX5G5JShyjuIsmLn/t0c7C1NpPhczgSQhvokT1AMxpnvBNyPUDLoSj2PNKPYPBMvGy+93ro+ScF/gVSs+d0vJyg+HnUxuudDesV/SIxXH+fSTCnQ4t30bbnxmLOp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n1NVyBDx; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n1NVyBDx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770357094; x=1801893094;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VgBkyAlxd6wcBnPAlpKB9OOD0EzRl5PNJikNmuX/nMw=;
-  b=n1NVyBDx+GrloOrhpZMU7GAl5Hm5T8aszK5FEPL7cmFdnk/Gq/LZ7iTQ
-   blN9UaAYS9ljjrKeNDAGIV4P+qNoRhww3zbfBQQl6lIkUP5EUc6sbVI1j
-   RmH3MFWYV5q3RazQxiAdzy3rUd1g+9Dt/MjjrVQsmSyKZrPeM1vZlzkgr
-   a1p6/+fR6S7xpAvZdp+G3fNhpM8tmSXlvbhtPXuaim3oB08c4mnNt2tQS
-   E/Igj65033GWYiJysM/SOJR+4zB0RK9DClJ5YAwK5PFnApJpFFMNfVokd
-   GZmtmcADRxQiswDhNe2PvtDkB7buZKKCoTu0b4pPWE3Yyelq3SujqbrzK
-   Q==;
-X-CSE-ConnectionGUID: VM94VEc4QSasqzYdF4ipSg==
-X-CSE-MsgGUID: v1cZ3gy6TpmW3bDPOH8QDw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11692"; a="70758812"
-X-IronPort-AV: E=Sophos;i="6.21,275,1763452800"; 
-   d="scan'208";a="70758812"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 21:51:34 -0800
-X-CSE-ConnectionGUID: 3jctVAyMRnWXzcLK40XMpA==
-X-CSE-MsgGUID: SUG0gtAmSDqB9fjXJ9Hl6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,275,1763452800"; 
-   d="scan'208";a="209871647"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 21:51:31 -0800
-Message-ID: <74169f95-0e80-4021-b1b0-cf788cc84b37@linux.intel.com>
-Date: Fri, 6 Feb 2026 13:51:27 +0800
+	s=arc-20240116; t=1770363275; c=relaxed/simple;
+	bh=Kp4498QLNmfK2CENtyJGX4EnK7PU2z/HA2kg+ZfYHTY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MnFE2e0uS5Eg828zWiV0LA3zMO17QW20qMGXbbFTKBfIYvb4b2kBDUVqEFaS0kZYKL1dBefF3YKMkGVgqW0OIQj2+Xhpwvt8RnIkYWntHPLhoZojq/h7sjJDajFOxyoZw0iKL7MAI7fdTrJyCMls2x3zDlf/UPL+Nrxl6afMT8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oo1-f78.google.com with SMTP id 006d021491bc7-663006e4c3cso6445409eaf.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Feb 2026 23:34:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770363274; x=1770968074;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R3kTvYB9PubGKsbSG4SV7nCcfBTsVFg92MFXjJGgdxA=;
+        b=J3Mv2NbS41GsgBpb1vd1L66aFUOEV97l62IgWCR8LF7pp7P53E2We+zWUNiWXgPln4
+         zBQnVlQ4ZGFZMaPm5n9+EwVhGyjTVhyRtpCYE2ONDKZp7No7BCablh45ctyJekvEWcLw
+         wPIClVANcapV44Cc87R90cnPLruXgCtNs8Fo4ZhZ9c2eibgUFTNJ7FlAzyISyujVsRgy
+         DFntBOj5nW/v+s9fm6utQAWlLNZcF+gJI304O6Ep48Kh7d0rUPUsi93UsCjhwv9Pj4M4
+         j2Gq3DMxWYmccO0r1LSqON1RFj/9HZ3Dt7JMXnsmFtrbqQJqmc1Xyoc1sRH+1qXvd8UO
+         jWsw==
+X-Forwarded-Encrypted: i=1; AJvYcCXC+F3XuigCkrlg9y3oNMaIbY0iQbIO0+xAEt+zOOzBrfZ2pKjcI1UFdc9mItayYRJR02E6/pBU+rN5EGqQNAje@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOA+traRu5RnRiXih02NE0WhXeDZdaLob10m8gAVAgFDs1JZZ9
+	WeONbOC1UOeZSYqJEFm0+xRGytGMtjw9S1Wa974NbOijwSJL3+E3cbs5DynifPByMF9xGgbowoz
+	LxewhZtF+9dB/3y9qIFDWayRWMTjwbkJwjn9f2BqHvwibIlNiIplrwRuzGEE=
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 08/13] perf/x86/intel/uncore: Support IIO free-running
- counters on DMR
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
-References: <20251231224233.113839-1-zide.chen@intel.com>
- <20251231224233.113839-9-zide.chen@intel.com>
- <4f62ecc3-b47c-4c9f-9189-1159e8e9be8a@linux.intel.com>
- <CAJpZYjWBWFx2ac=jYRJf-GEpenBZ14a6JpAhY6CE1kUXyVUVJw@mail.gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAJpZYjWBWFx2ac=jYRJf-GEpenBZ14a6JpAhY6CE1kUXyVUVJw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6820:4dc8:b0:659:9a49:904d with SMTP id
+ 006d021491bc7-66d0a37b727mr970006eaf.24.1770363273798; Thu, 05 Feb 2026
+ 23:34:33 -0800 (PST)
+Date: Thu, 05 Feb 2026 23:34:33 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <69859989.a00a0220.34fa92.0026.GAE@google.com>
+Subject: [syzbot] [perf?] KCSAN: data-race in __perf_event_read_value /
+ perf_event_set_state (6)
+From: syzbot <syzbot+6d5529efa784dcc0b926@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, 
+	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    5dbeeb268b63 Merge tag 'driver-core-6.19-rc7' of git://git..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=169a105a580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6c9e86480ac654d3
+dashboard link: https://syzkaller.appspot.com/bug?extid=6d5529efa784dcc0b926
+compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/8a4a5a3502b5/disk-5dbeeb26.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/65e86e2ad6af/vmlinux-5dbeeb26.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/050ae083081a/bzImage-5dbeeb26.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+6d5529efa784dcc0b926@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in __perf_event_read_value / perf_event_set_state
+
+write to 0xffff8881311a8538 of 8 bytes by task 13031 on cpu 1:
+ __perf_update_times kernel/events/core.c:-1 [inline]
+ perf_event_update_time kernel/events/core.c:735 [inline]
+ perf_event_set_state+0x1c4/0x440 kernel/events/core.c:754
+ event_sched_out+0x2d4/0x4d0 kernel/events/core.c:2391
+ group_sched_out kernel/events/core.c:2415 [inline]
+ __pmu_ctx_sched_out+0x3e7/0x530 kernel/events/core.c:3458
+ ctx_sched_out+0x273/0x2d0 kernel/events/core.c:3539
+ task_ctx_sched_out+0x4d/0x70 kernel/events/core.c:2859
+ perf_event_context_sched_out kernel/events/core.c:3746 [inline]
+ __perf_event_task_sched_out+0x2df/0x3c0 kernel/events/core.c:3846
+ perf_event_task_sched_out include/linux/perf_event.h:1654 [inline]
+ prepare_task_switch kernel/sched/core.c:5049 [inline]
+ context_switch kernel/sched/core.c:5205 [inline]
+ __schedule+0xbaa/0xc90 kernel/sched/core.c:6867
+ __schedule_loop kernel/sched/core.c:6949 [inline]
+ schedule+0x5e/0xd0 kernel/sched/core.c:6964
+ futex_do_wait kernel/futex/waitwake.c:358 [inline]
+ __futex_wait+0x121/0x260 kernel/futex/waitwake.c:687
+ futex_wait+0x9c/0x1d0 kernel/futex/waitwake.c:715
+ do_futex+0x2bf/0x380 kernel/futex/syscalls.c:130
+ __do_sys_futex kernel/futex/syscalls.c:207 [inline]
+ __se_sys_futex+0x2f6/0x370 kernel/futex/syscalls.c:188
+ __x64_sys_futex+0x78/0x90 kernel/futex/syscalls.c:188
+ x64_sys_call+0x2bc2/0x3000 arch/x86/include/generated/asm/syscalls_64.h:203
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xc0/0x2a0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+read to 0xffff8881311a8538 of 8 bytes by task 13182 on cpu 0:
+ __perf_event_read_value+0xb6/0x1d0 kernel/events/core.c:5894
+ perf_read_one kernel/events/core.c:6049 [inline]
+ __perf_read kernel/events/core.c:6102 [inline]
+ perf_read+0x171/0x4f0 kernel/events/core.c:6119
+ loop_rw_iter+0x2c6/0x3f0 include/linux/uio.h:-1
+ io_iter_do_read io_uring/rw.c:836 [inline]
+ __io_read+0xbf6/0xc50 io_uring/rw.c:950
+ io_read+0x4a/0x190 io_uring/rw.c:1030
+ __io_issue_sqe+0xfd/0x2d0 io_uring/io_uring.c:1793
+ io_issue_sqe+0x56/0xa70 io_uring/io_uring.c:1816
+ io_wq_submit_work+0x3f7/0x5f0 io_uring/io_uring.c:1928
+ io_worker_handle_work+0x41e/0x950 io_uring/io-wq.c:650
+ io_wq_worker+0x22d/0x860 io_uring/io-wq.c:704
+ ret_from_fork+0x148/0x280 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:246
+
+value changed: 0x000000004a891b66 -> 0x000000004a89847d
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 UID: 0 PID: 13182 Comm: iou-wrk-13031 Not tainted syzkaller #0 PREEMPT(voluntary) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/25/2025
+==================================================================
 
 
-On 2/6/2026 8:26 AM, Chun-Tse Shao wrote:
-> On Sat, Jan 3, 2026 at 6:31 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
->>
->> On 1/1/2026 6:42 AM, Zide Chen wrote:
->>> The free-running counters for IIO uncore blocks on Diamond Rapids are
->>> similar to Sapphire Rapids IMC freecounters, with the following
->>> differences:
->>>
->>> - The counters are MMIO based.
->>> - Only a subset of IP blocks implement free-running counters:
->>>   HIOP0 (IP Base Addr: 2E7000h)
->>>   HIOP1 (IP Base Addr: 2EF000h)
->>>   HIOP3 (IP Base Addr: 2FF000h)
->>>   HIOP4 (IP Base Addr: 307000h)
->>> - IMH2 (Secondary IMH) does not provide free-running counters.
->>>
->>> Signed-off-by: Zide Chen <zide.chen@intel.com>
->>> ---
->>> V2:
->>> - Remove pr_warn() from dmr_uncore_freerunning_init_box().
->>>
->>>  arch/x86/events/intel/uncore_snbep.c | 118 +++++++++++++++++++++++++--
->>>  1 file changed, 113 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
->>> index 09a3bdbd188a..28bcccf5cdfe 100644
->>> --- a/arch/x86/events/intel/uncore_snbep.c
->>> +++ b/arch/x86/events/intel/uncore_snbep.c
->>> @@ -472,10 +472,14 @@
->>>  #define SPR_C0_MSR_PMON_BOX_FILTER0          0x200e
->>>
->>>  /* DMR */
->>> +#define DMR_IMH1_HIOP_MMIO_BASE                      0x1ffff6ae7000
->>> +#define DMR_HIOP_MMIO_SIZE                   0x8000
->>>  #define DMR_CXLCM_EVENT_MASK_EXT             0xf
->>>  #define DMR_HAMVF_EVENT_MASK_EXT             0xffffffff
->>>  #define DMR_PCIE4_EVENT_MASK_EXT             0xffffff
->>>
->>> +#define UNCORE_DMR_ITC                               0x30
->>> +
->>>  #define DMR_IMC_PMON_FIXED_CTR                       0x18
->>>  #define DMR_IMC_PMON_FIXED_CTL                       0x10
->>>
->>> @@ -6442,7 +6446,11 @@ static int uncore_type_max_boxes(struct intel_uncore_type **types,
->>>       for (node = rb_first(type->boxes); node; node = rb_next(node)) {
->>>               unit = rb_entry(node, struct intel_uncore_discovery_unit, node);
->>>
->>> -             if (unit->id > max)
->>> +             /*
->>> +              * on DMR IMH2, the unit id starts from 0x8000,
->>> +              * and we don't need to count it.
->>> +              */
->>> +             if ((unit->id > max) && (unit->id < 0x8000))
->>>                       max = unit->id;
->>>       }
->>>       return max + 1;
->>> @@ -6930,6 +6938,101 @@ int dmr_uncore_cbb_units_ignore[] = {
->>>       UNCORE_IGNORE_END
->>>  };
->>>
->>> +static unsigned int dmr_iio_freerunning_box_offsets[] = {
->>> +     0x0, 0x8000, 0x18000, 0x20000
->>> +};
->>> +
->>> +static void dmr_uncore_freerunning_init_box(struct intel_uncore_box *box)
->>> +{
->>> +     struct intel_uncore_type *type = box->pmu->type;
->>> +     u64 mmio_base;
->>> +
->>> +     if (box->pmu->pmu_idx >= type->num_boxes)
->>> +             return;
->>> +
->>> +     mmio_base = DMR_IMH1_HIOP_MMIO_BASE;
->>> +     mmio_base += dmr_iio_freerunning_box_offsets[box->pmu->pmu_idx];
->>> +
->>> +     box->io_addr = ioremap(mmio_base, type->mmio_map_size);
->>> +     if (!box->io_addr)
->>> +             pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
->>> +}
->>> +
->>> +static struct intel_uncore_ops dmr_uncore_freerunning_ops = {
->>> +     .init_box       = dmr_uncore_freerunning_init_box,
->>> +     .exit_box       = uncore_mmio_exit_box,
->>> +     .read_counter   = uncore_mmio_read_counter,
->>> +     .hw_config      = uncore_freerunning_hw_config,
->>> +};
->>> +
->>> +enum perf_uncore_dmr_iio_freerunning_type_id {
->>> +     DMR_ITC_INB_DATA_BW,
->>> +     DMR_ITC_BW_IN,
->>> +     DMR_OTC_BW_OUT,
->>> +     DMR_OTC_CLOCK_TICKS,
->>> +
->>> +     DMR_IIO_FREERUNNING_TYPE_MAX,
->>> +};
->>> +
->>> +static struct freerunning_counters dmr_iio_freerunning[] = {
->>> +     [DMR_ITC_INB_DATA_BW]   = { 0x4d40, 0x8, 0, 8, 48},
->>> +     [DMR_ITC_BW_IN]         = { 0x6b00, 0x8, 0, 8, 48},
->>> +     [DMR_OTC_BW_OUT]        = { 0x6b60, 0x8, 0, 8, 48},
->>> +     [DMR_OTC_CLOCK_TICKS]   = { 0x6bb0, 0x8, 0, 1, 48},
->>> +};
->>> +
->>> +static struct uncore_event_desc dmr_uncore_iio_freerunning_events[] = {
->>> +     /*  ITC Free Running Data BW counter for inbound traffic */
->>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port0, 0x10, "3.814697266e-6"),
-> Hi, it is probably a bit late but I think the third argument should be
-> a string. Because the macro already applies __stringify, the resulting
-> expansion is ""3.814697266e-6"", which eventually shows in sysfs
-> knobs. It would cause problems while Perf tries to parse the file.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Good catch. This needs a fix. Thanks.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
->
-> Thanks,
-> CT
->>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port1, 0x11, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port2, 0x12, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port3, 0x13, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port4, 0x14, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port5, 0x15, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port6, 0x16, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(inb_data_port7, 0x17, "3.814697266e-6"),
->>> +
->>> +     /*  ITC Free Running BW IN counters */
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port4, 0x24, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port5, 0x25, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port6, 0x26, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_in_port7, 0x27, "3.814697266e-6"),
->>> +
->>> +     /*  ITC Free Running BW OUT counters */
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port0, 0x30, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port1, 0x31, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port2, 0x32, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port3, 0x33, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port4, 0x34, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port5, 0x35, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port6, 0x36, "3.814697266e-6"),
->>> +     INTEL_UNCORE_FR_EVENT_DESC(bw_out_port7, 0x37, "3.814697266e-6"),
->>> +
->>> +     /* Free Running Clock Counter */
->>> +     INTEL_UNCORE_EVENT_DESC(clockticks, "event=0xff,umask=0x40"),
->>> +     { /* end: all zeroes */ },
->>> +};
->>> +
->>> +static struct intel_uncore_type dmr_uncore_iio_free_running = {
->>> +     .name                   = "iio_free_running",
->>> +     .num_counters           = 25,
->>> +     .mmio_map_size          = DMR_HIOP_MMIO_SIZE,
->>> +     .num_freerunning_types  = DMR_IIO_FREERUNNING_TYPE_MAX,
->>> +     .freerunning            = dmr_iio_freerunning,
->>> +     .ops                    = &dmr_uncore_freerunning_ops,
->>> +     .event_descs            = dmr_uncore_iio_freerunning_events,
->>> +     .format_group           = &skx_uncore_iio_freerunning_format_group,
->>> +};
->>> +
->>> +#define UNCORE_DMR_MMIO_EXTRA_UNCORES                1
->>> +static struct intel_uncore_type *dmr_mmio_uncores[UNCORE_DMR_MMIO_EXTRA_UNCORES] = {
->>> +     &dmr_uncore_iio_free_running,
->>> +};
->>> +
->>>  int dmr_uncore_pci_init(void)
->>>  {
->>>       uncore_pci_uncores = uncore_get_uncores(UNCORE_ACCESS_PCI, 0, NULL,
->>> @@ -6937,11 +7040,16 @@ int dmr_uncore_pci_init(void)
->>>                                               dmr_uncores);
->>>       return 0;
->>>  }
->>> +
->>>  void dmr_uncore_mmio_init(void)
->>>  {
->>> -     uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO, 0, NULL,
->>> -                                              UNCORE_DMR_NUM_UNCORE_TYPES,
->>> -                                              dmr_uncores);
->>> -}
->>> +     uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
->>> +                                             UNCORE_DMR_MMIO_EXTRA_UNCORES,
->>> +                                             dmr_mmio_uncores,
->>> +                                             UNCORE_DMR_NUM_UNCORE_TYPES,
->>> +                                             dmr_uncores);
->>>
->>> +     dmr_uncore_iio_free_running.num_boxes =
->>> +             uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_DMR_ITC);
->>> +}
->>>  /* end of DMR uncore support */
->> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>
->>
->>
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
