@@ -1,42 +1,40 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C082628D8DB;
-	Fri,  6 Feb 2026 21:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203FD28D8DB;
+	Fri,  6 Feb 2026 21:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770414605; cv=none; b=t7t84babHF8gBu3YliwQY4PX/yy9oqJos44Y8Wbnxhb1nl5J/ePg/yORIONBXjurJyVReQcFYv0I8H365Bfk9pT4QjWxaYaZV7vDo7JJnB7w6+81wHGx9R23yQbfwHo6RVmg4ox12xPL4/zf8y7yR89xDewJDnHJ2K8JxqJPr7c=
+	t=1770414663; cv=none; b=ApvCiuNwe7u2Qoov1l/Vs9hwp8x3JRUPSERrxDn68EXTBB2MfTWUmwF9pFfIrL7Q6wVMx1XEpOYOqNPsAdPrdLxu8YitmN3pqGVBYEjGKqDvMHQruB5dtuN22ImlL6tz9QsmrSFbDI0TQmdqGG7M7FKRP10bkdjPvyLobqOiQew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770414605; c=relaxed/simple;
-	bh=7qwdYbVXYjyZ74/Q8mJgP2i47AUDTY9i+bbr2jD0Dxg=;
+	s=arc-20240116; t=1770414663; c=relaxed/simple;
+	bh=o1sr+UYJnVIPirT1EzaiVfjrDMp4E8LMkahNFK48vX4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vl6krBxuDOmIju5qotVUo8DRICLJWf1VgfaQTwhNsCGf5bgjJ35lxdppCmaWWNJ/O7W8xLUWRwFUDPw/BR4GSJRQDMIJlXPbn7lHkaKUvV+d7KQ/dwIOFWf/Qy08+u3SsCsxuArEEF9tRncz5+T74EZPAxZx7KxaSRRLaVqh9UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86108339;
-	Fri,  6 Feb 2026 13:49:57 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 715833F740;
-	Fri,  6 Feb 2026 13:50:03 -0800 (PST)
-Date: Fri, 6 Feb 2026 21:50:01 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=BH7BcsxoMur3KbjN1Dd2EBiEhBQeXqVyf4jrbJUDkNNo5t2pE3Lxe97ttNb2Z2OyCphhGEIw9C2CPb7JFByFbsbC8hlRXI/TqIrugb8v2yIt5c/jnsotslFvJCSBpdamwx5Q3eZYRl+GvS29cEC3F9An5zifiJue40+/4neCxds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSm6DM68; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TSm6DM68"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBB5CC116C6;
+	Fri,  6 Feb 2026 21:51:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770414662;
+	bh=o1sr+UYJnVIPirT1EzaiVfjrDMp4E8LMkahNFK48vX4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TSm6DM685v+znffYKUCFCqiWPkwO/H2/wgVTGK4BsYMiEEAZ/KSYNedZr7lWXhMmL
+	 bh1mEsK7HF2joZHLzgMVivw+OqlxfauLWsXQiv1emJE8g/Yw2SbmFFWfyw4n3ZE7HK
+	 XjnTaN1d1+I3rZEDdyZk9MB6kudr69bpAbeQAJDWhm9kKMTF/+5EMtl9G3V+CbAogL
+	 nEooqweW9BMTmIW3Vq689DbO45xt1jVAuEbch/argZwRHCwedJvwf3IUjE5Rfmk12E
+	 JG6mrn1pPYZLj0SVdryuH3I2E+ZF+ckasNy22qsTjGKkkuVlDdwjkI51ysBB7le/nB
+	 wARAKK1QW7YnQ==
+Date: Fri, 6 Feb 2026 18:50:58 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ricky Ringler <ricky.ringler@proton.me>
+Cc: peterz@infradead.org, namhyung@kernel.org, mingo@redhat.com,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] perf metricgroup: Don't early exit if no CPUID
- table exists
-Message-ID: <20260206215001.GJ3529712@e132581.arm.com>
-References: <20260205183603.459363-1-irogers@google.com>
- <20260205183603.459363-2-irogers@google.com>
- <20260206104543.GE3529712@e132581.arm.com>
- <20260206123310.GF3529712@e132581.arm.com>
- <CAP-5=fV8ofWn2oYDip3pOX7+Cx0GyKckq_o0Q6qahuoqgydN7w@mail.gmail.com>
+Subject: Re: [PATCH] perf utilities: Replace static cacheline size with
+ sysconf cacheline size
+Message-ID: <aYZiQk6Uftzlb_JV@x1>
+References: <20260129004223.26799-1-ricky.ringler@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,85 +43,127 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fV8ofWn2oYDip3pOX7+Cx0GyKckq_o0Q6qahuoqgydN7w@mail.gmail.com>
+In-Reply-To: <20260129004223.26799-1-ricky.ringler@proton.me>
 
-On Fri, Feb 06, 2026 at 10:57:54AM -0800, Ian Rogers wrote:
-
-[...]
-
-> > > >  bool metricgroup__has_metric_or_groups(const char *pmu, const char *metric_or_groups)
-> > > >  {
-> > > > -   const struct pmu_metrics_table *tables[2] = {
-> > > > -           pmu_metrics_table__find(),
-> > > > -           pmu_metrics_table__default(),
-> > > > -   };
-> > > > +   const struct pmu_metrics_table *table = pmu_metrics_table__find();
-> > >
-> > > Here should be:
-> > >
-> > >   const struct pmu_metrics_table *table = pmu_metrics_table__default();
-> >
-> > Or, I think you should not change metricgroup__has_metric_or_groups().
-> > The change only in metricgroup__parse_groups() can fix my issue.
+On Thu, Jan 29, 2026 at 12:42:27AM +0000, Ricky Ringler wrote:
+> Testing:
+> - Built perf
+> - Executed perf mem record and report
 > 
-> This is wrong and the patch I tested I believe to be correct.
-
-It is very likely you are not working on the issue same as mine.
-
-> The table here is CPUID associated table and all the metric code will
-
-As you said, the key point is CPUID.  On my board, as no corresponding
-json file to support the CPU variant, it fails to find any table based
-on the CPUID and pmu_metrics_table__find() always returns NULL.
-
-The failure flow is:
-
-  add_default_events()
-    if (!metricgroup__has_metric_or_groups(pmu, default_metricgroup_names[i]))
-        continue;
-     ^^^
-     Always return false
-
-As a result, metricgroup__parse_groups() has no chance to be invoked
-and no any events are added to the ev list.
-
-This is why I suggested to keep default table in
-metricgroup__has_metric_or_groups(), it can rallback to find default
-table when CPUID is not supported.
-
-> bottom out in metricgroup__for_each_metric where the CPUID table is
-> the table parameter (its a parameter because of testing where we force
-> the machine/model to "testarch"):
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/metricgroup.c?h=perf-tools-next#n430
-> ```
-> int metricgroup__for_each_metric(const struct pmu_metrics_table
-> *table, pmu_metric_iter_fn fn, void *data)
-> {
-> ...
-> const struct pmu_metrics_table *tables[2] = {
->     table,
->     pmu_metrics_table__default(),
-> };
+> Tested-by: Ricky Ringler <ricky.ringler@proton.me>
 > 
-> for (size_t i = 0; i < ARRAY_SIZE(tables); i++) {
->     int ret;
+> Signed-off-by: Ricky Ringler <ricky.ringler@proton.me>
+> ---
+>  tools/perf/util/sort.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
 > 
->     if (!tables[i])
->         continue;
-> ```
-> If you make the table here the default table then you will process the
-> default table twice in metricgroup__for_each_metric which will mean
-> double metric look ups, etc.
+> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> index f3a565b0e230..aa79eb6476dd 100644
+> --- a/tools/perf/util/sort.c
+> +++ b/tools/perf/util/sort.c
+> @@ -2474,8 +2474,7 @@ struct sort_entry sort_type_offset = {
+>  
+>  /* --sort typecln */
+>  
+> -/* TODO: use actual value in the system */
+> -#define TYPE_CACHELINE_SIZE  64
+> +#define DEFAULT_CACHELINE_SIZE 64
 
-In my case, it will not have double metric issue, as
-pmu_metrics_table__find() cannot find any table, a NULL table pointer
-will be passed to metricgroup__for_each_metric(), then only
-pmu_metrics_table__default() will be used.
+I'm applying as this addresses the TODO and for cases where both record
+and report/c2c are performed on the same machine it is an improvement,
+but we need to actually get this from the perf.data header, because we
+can collect in one machine with a cacheline size and then do the
+report/c2c on another, with a different cacheline size.
 
-As a side question, using a single CPUID to look up metrics can be
-error-prone on asymmetric systems (such as Arm big.LITTLE).  Since only
-the first CPU ID is used to search the metrics table, could this cause
-issues for other CPU variants?
+When doing 'perf report --header-only -I' to see cache info we get
+thingsl like:
 
-Thanks,
-Leo
+# CPU cache info:
+#  L1 Data                 48K [0,16]
+#  L1 Instruction          32K [0,16]
+#  L1 Data                 48K [1,17]
+#  L1 Instruction          32K [1,17]
+#  L1 Data                 48K [2,18]
+#  L1 Instruction          32K [2,18]
+#  L1 Data                 48K [3,19]
+#  L1 Instruction          32K [3,19]
+#  L1 Data                 48K [4,20]
+#  L1 Instruction          32K [4,20]
+#  L1 Data                 48K [5,21]
+#  L1 Instruction          32K [5,21]
+#  L1 Data                 48K [6,22]
+#  L1 Instruction          32K [6,22]
+#  L1 Data                 48K [7,23]
+#  L1 Instruction          32K [7,23]
+#  L1 Data                 48K [8,24]
+#  L1 Instruction          32K [8,24]
+#  L1 Data                 48K [9,25]
+#  L1 Instruction          32K [9,25]
+#  L1 Data                 48K [10,26]
+#  L1 Instruction          32K [10,26]
+#  L1 Data                 48K [11,27]
+#  L1 Instruction          32K [11,27]
+#  L1 Data                 48K [12,28]
+#  L1 Instruction          32K [12,28]
+#  L1 Data                 48K [13,29]
+#  L1 Instruction          32K [13,29]
+#  L1 Data                 48K [14,30]
+#  L1 Instruction          32K [14,30]
+#  L1 Data                 48K [15,31]
+#  L1 Instruction          32K [15,31]
+#  L2 Unified            1024K [0,16]
+#  L2 Unified            1024K [1,17]
+#  L2 Unified            1024K [2,18]
+#  L2 Unified            1024K [3,19]
+:
+
+But not the cacheline size :-\
+
+Please consider adding this header info :-)
+
+Applied.
+
+- Arnaldo
+  
+>  static int64_t
+>  sort__typecln_sort(struct hist_entry *left, struct hist_entry *right)
+> @@ -2484,6 +2483,10 @@ sort__typecln_sort(struct hist_entry *left, struct hist_entry *right)
+>  	struct annotated_data_type *right_type = right->mem_type;
+>  	int64_t left_cln, right_cln;
+>  	int64_t ret;
+> +	int cln_size = cacheline_size();
+> +
+> +	if (cln_size == 0)
+> +		cln_size = DEFAULT_CACHELINE_SIZE;
+>  
+>  	if (!left_type) {
+>  		sort__type_init(left);
+> @@ -2499,8 +2502,8 @@ sort__typecln_sort(struct hist_entry *left, struct hist_entry *right)
+>  	if (ret)
+>  		return ret;
+>  
+> -	left_cln = left->mem_type_off / TYPE_CACHELINE_SIZE;
+> -	right_cln = right->mem_type_off / TYPE_CACHELINE_SIZE;
+> +	left_cln = left->mem_type_off / cln_size;
+> +	right_cln = right->mem_type_off / cln_size;
+>  	return left_cln - right_cln;
+>  }
+>  
+> @@ -2508,9 +2511,13 @@ static int hist_entry__typecln_snprintf(struct hist_entry *he, char *bf,
+>  				     size_t size, unsigned int width __maybe_unused)
+>  {
+>  	struct annotated_data_type *he_type = he->mem_type;
+> +	int cln_size = cacheline_size();
+> +
+> +	if (cln_size == 0)
+> +		cln_size = DEFAULT_CACHELINE_SIZE;
+>  
+>  	return repsep_snprintf(bf, size, "%s: cache-line %d", he_type->self.type_name,
+> -			       he->mem_type_off / TYPE_CACHELINE_SIZE);
+> +			       he->mem_type_off / cln_size);
+>  }
+>  
+>  struct sort_entry sort_type_cacheline = {
+> -- 
+> 2.52.0
+> 
