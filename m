@@ -1,54 +1,54 @@
 Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F43308F3D
-	for <linux-perf-users@vger.kernel.org>; Sat,  7 Feb 2026 08:24:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851C730AD10
+	for <linux-perf-users@vger.kernel.org>; Sat,  7 Feb 2026 08:24:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770452687; cv=none; b=ADPYl5cG7323HHY6ZVnTeQjl8rSxIlOyh4Hpndhmb7o8Q8Tu82IzOe9adqMT2ZBViwFZrHDNLXY16STdRn3WsNqjSZi51Zu3MxvY1rS1cNMdX5K8GKwRnzE1GDf+Ylw7X+tItIEttt6uF7hz9G5l+luF6FlRBqkJ9wQtD8utjMM=
+	t=1770452689; cv=none; b=JYxjaLEf9NvxmdPt0JQJmz921bVAT/OrvnXUpX//IlBsiUz0jLAfryOC3kHmBH5A3v54o4QcxGjiKhvV9u2EG069SjLTEIgFzDoE1lsI1nyxVjl2xNdaRL5w5Mcvu0+aAmLND7oUWAlcvdWChrtZBGuL3LY65w+9whn99vPP9yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770452687; c=relaxed/simple;
-	bh=fQNe+C2ykGl+VIgRxAFw4P2gpNTolHEt92EQYWoDGj4=;
+	s=arc-20240116; t=1770452689; c=relaxed/simple;
+	bh=jBXkwhJU0ZdvAAHhKdLYOjGv4tsONXYvOgs5iMwxwUA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=VDEz8Kk3a/pY376XruO1UHjKaqPp0BRsXIJnvp1L1eaVjPlmoNCoWn73PyDEODvQ08t0IeYaOtcFhE7XUYjGE4RJmP8mwEWA8Lwh1bbjYntVdUjvi/XbewryZBBsHa7n1yu4OCGudPSO2/e5l5OjnopIGfbtHag2r2X5yXx+73I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z+HH3+XM; arc=none smtp.client-ip=74.125.82.74
+	 To:Content-Type; b=a/qA8zIRobTBcNOd/lMkGEHBLG3dKXXXELvK5kJvwzW+Kcqq2UQHEQYfjscjKfgjgEDg2yS4Z5sMaaxsewOxTZKjvJI+Pg3Fqu+G0GAWDunSuX/gpNoF7bqaaIBqIde0tF+t95W+4z6PFv2wX3hDtbmfjbAk0PGknvZ3JH5s6Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HNOeoAea; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z+HH3+XM"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-124627fc58dso5171812c88.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 07 Feb 2026 00:24:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HNOeoAea"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1270be4d176so8202980c88.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 07 Feb 2026 00:24:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770452686; x=1771057486; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770452689; x=1771057489; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=HR0mAxChVDTPD1V2GKemhoMM82m58RwfPlVP6zevyfU=;
-        b=Z+HH3+XMdZ2TgXrQaUwMSMmzC6fX6MC1wmGeRBsjZ6uzmNcU9c7NKdW6xRjUhDyRnM
-         0mpAfr1FlP6kYfDetwQ8UAwLUur9QqHjWdZ+LRPUNhsGpnSpI9frI2OcAzwBbh3uw7ef
-         V3BNlnWFhd2D7/05B71hkIMxr15t49Q7m1Pa5eswIci7gWttrhBISMjAwdzBX3LI3nYx
-         /c9vUwvmMMvu3MUKBKWco6mihxkPR5SWiOB1MfnBJpnvVE47nPu4Ho6za63OjuR3FWGv
-         ngLFcjiIQuLl2oO5OC/lrxNEZaP2Ywf6v6kVxrGY5dYPUQazgdhTBhDMQbFGR77nVGYg
-         fhUA==
+        bh=bDQ88E5cIiIk78l45X12qXAsWQanRerQ44tUWmnKJpE=;
+        b=HNOeoAearbLNSXid/WoKzxHviv39RiEOLebfYfUbmdDgtmTWBx40mCNlIQG73ErvKz
+         EUayuq5madJl4ZYtPWr16jLYofKnVj4hDYNdPHiaVCWmVnhdjdFh3pKxYiOjAx5jNALX
+         SishHQx0ctf4oqKXLTFBxQS9kH66Q6uYh2I/5Ymt4Ss1Wp8Ypkhxw7dYmhBpPdix5/UE
+         nkoNAjeDtrt7hvLHrrgaGvfVURo0JWwAI8j3BgFbbF17gf4o01KhG/nU+PMsQTaTJS75
+         g9C91xCppqbE72BOlReUMAXnDumSzzZyFZoyUFJTA2asVn1onGrVYNx4zvD6UKIagg6j
+         XOVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770452686; x=1771057486;
+        d=1e100.net; s=20230601; t=1770452689; x=1771057489;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HR0mAxChVDTPD1V2GKemhoMM82m58RwfPlVP6zevyfU=;
-        b=SUSHu2WQ2jHyt8JVAlaZ+SDfhC48WADyes2fLJrObQh/Z6GMiiTXFCdU7tU/kjjShb
-         KjnX9JnHL+JPHvQk1uK/HYq4brlek22iFIqtJKa9SpMvO9aCXKwtzVFfMx2bPoGGX4fz
-         octhke/9F5dW/JmOgYQplXKdzIayIvEKSNgmmjezEqqFdOitE1+beSh//Gfj+8ICiiyA
-         KJbV1yexp6xnC7zbcWspKyQyXTN3LV05mWoQ5InbVpJYTK84hmeRGujWZ53ZlP1mPUCj
-         s8I2xMtjT7lJB0vEde1k9eEEBBk2zLUOiDM8qyN+m6IzhNpQTfnSgJO27li/C1mxb+OB
-         8yRA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1IQu2l4gWB3xxFASUU7VXlKvomeI0Ym7mhAQmn5tmxtXUKu9Itq/+uAaUlG+CgSFOwyvYS97Qq9rZwJZrIjWl@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywd82AdtlNrfaZHNFUCzp5s/W3tovNruYZLige8mjAXexI/BfOO
-	Bx5juRRJfAiHT8k1yP7TpQSxqe+3v8ZahTOsMcnByyma0DwCpZVn+xavKF6DCy2vNPJknfNbR9Q
-	CvloQ7cnuVg==
-X-Received: from dlii7.prod.google.com ([2002:a05:7022:4187:b0:124:a7b4:135d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:60a7:b0:11b:998d:bded
- with SMTP id a92af1059eb24-12704049b56mr2452401c88.28.1770452686366; Sat, 07
- Feb 2026 00:24:46 -0800 (PST)
-Date: Sat,  7 Feb 2026 00:24:24 -0800
+        bh=bDQ88E5cIiIk78l45X12qXAsWQanRerQ44tUWmnKJpE=;
+        b=LDGaBsUJWGJgnFXB38IyOsnWLXhBmMyFBwk2yNN/GAFPZ8T5mdtcs9RTiId+opIfBK
+         6IRgPR4EnFo4iioh2nd1St2RpEXm77Z22YCBCOE75XOJYYV9VqCYofFwSxukPEOm3a9e
+         4xF4umjWGebYgJJ4Rl2wXElXie34eyKpMuk92Fkwzhn5PCMgcDm7nyqjMXQPfzLhCcKt
+         GR7Rs3Hejn1oGSo6WajwWlJryt06thjubZRKfBIZ8K3KefMhtme+I3PQHMPu39+nu6Ap
+         XpZRGMNTd0MStXqAGTAz86NNMTHQYX8QBAo+kW3MIz1uemQFZQX/ezRYFmm6jHe0GJjW
+         jBVA==
+X-Forwarded-Encrypted: i=1; AJvYcCXnU9BCRQiYiohPWX7IdHENXuxeiCzXWQD0p4yNDdVDDV+L5jc8B6tgY1K3UujKUERpEG/9hwkA+oFSO9xAhb5a@vger.kernel.org
+X-Gm-Message-State: AOJu0YwincNRt38PEChRX/3hNjuklfR586rtCCM/tO153Ax6zGTgeqIt
+	oMcH5t92yVz0/P4tU/TYdFhr7I5ZqHqu9KDQZML7hkN1MeHcWiWNhDvMBjjw2AFWMDn5tejx+Ul
+	x6f6aCi6obg==
+X-Received: from dybpt13.prod.google.com ([2002:a05:7301:408d:b0:2ab:9468:d9cf])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:caca:b0:2a4:3594:d54e
+ with SMTP id 5a478bee46e88-2b8568339e2mr2911177eec.27.1770452688575; Sat, 07
+ Feb 2026 00:24:48 -0800 (PST)
+Date: Sat,  7 Feb 2026 00:24:25 -0800
 In-Reply-To: <20260207082428.1742209-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260207082428.1742209-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
-Message-ID: <20260207082428.1742209-2-irogers@google.com>
-Subject: [PATCH v1 1/5] perf symbol: Reduce scope of elf__needs_adjust_symbols
+Message-ID: <20260207082428.1742209-3-irogers@google.com>
+Subject: [PATCH v1 2/5] perf dump-insn: Remove dump-insn.c
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,60 +71,58 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Function is only used by symsrc__init in symbol-elf.c, make static to
-reduce scope. Switch to not passing the argument by value but as a
-pointer.
+dump_insn and arch_is_uncond_branch are declared in
+intel-pt-insn-decoder.c which is unconditionally part of all perf
+builds. Don't declare weak versions of these symbols that will be unused.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/symbol-elf.c | 8 ++++----
- tools/perf/util/symbol.h     | 1 -
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ tools/perf/util/Build       |  1 -
+ tools/perf/util/dump-insn.c | 23 -----------------------
+ 2 files changed, 24 deletions(-)
+ delete mode 100644 tools/perf/util/dump-insn.c
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 76912c62b6a0..d7582dbf379e 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1054,15 +1054,15 @@ void symsrc__destroy(struct symsrc *ss)
- 	close(ss->fd);
- }
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index bcccad7487a9..89de23dec401 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -149,7 +149,6 @@ endif
+ perf-util-y += cs-etm-base.o
  
--bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
-+static bool elf__needs_adjust_symbols(const GElf_Ehdr *ehdr)
- {
- 	/*
- 	 * Usually vmlinux is an ELF file with type ET_EXEC for most
- 	 * architectures; except Arm64 kernel is linked with option
- 	 * '-share', so need to check type ET_DYN.
- 	 */
--	return ehdr.e_type == ET_EXEC || ehdr.e_type == ET_REL ||
--	       ehdr.e_type == ET_DYN;
-+	return ehdr->e_type == ET_EXEC || ehdr->e_type == ET_REL ||
-+	       ehdr->e_type == ET_DYN;
- }
- 
- static Elf *read_gnu_debugdata(struct dso *dso, Elf *elf, const char *name, int *fd_ret)
-@@ -1235,7 +1235,7 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
- 	if (dso__kernel(dso) == DSO_SPACE__USER)
- 		ss->adjust_symbols = true;
- 	else
--		ss->adjust_symbols = elf__needs_adjust_symbols(ehdr);
-+		ss->adjust_symbols = elf__needs_adjust_symbols(&ehdr);
- 
- 	ss->name   = strdup(name);
- 	if (!ss->name) {
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 3fb5d146d9b1..9aa0016937b7 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -217,7 +217,6 @@ int setup_intlist(struct intlist **list, const char *list_str,
- 		  const char *list_name);
- 
- #ifdef HAVE_LIBELF_SUPPORT
--bool elf__needs_adjust_symbols(GElf_Ehdr ehdr);
- void arch__sym_update(struct symbol *s, GElf_Sym *sym);
- #endif
- 
+ perf-util-y += parse-branch-options.o
+-perf-util-y += dump-insn.o
+ perf-util-y += parse-regs-options.o
+ perf-util-y += parse-sublevel-options.o
+ perf-util-y += term.o
+diff --git a/tools/perf/util/dump-insn.c b/tools/perf/util/dump-insn.c
+deleted file mode 100644
+index c1cc0ade48d0..000000000000
+--- a/tools/perf/util/dump-insn.c
++++ /dev/null
+@@ -1,23 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-#include <linux/compiler.h>
+-#include "dump-insn.h"
+-
+-/* Fallback code */
+-
+-__weak
+-const char *dump_insn(struct perf_insn *x __maybe_unused,
+-		      u64 ip __maybe_unused, u8 *inbuf __maybe_unused,
+-		      int inlen __maybe_unused, int *lenp)
+-{
+-	if (lenp)
+-		*lenp = 0;
+-	return "?";
+-}
+-
+-__weak
+-int arch_is_uncond_branch(const unsigned char *buf __maybe_unused,
+-		   size_t len __maybe_unused,
+-		   int x86_64 __maybe_unused)
+-{
+-	return 0;
+-}
 -- 
 2.53.0.239.g8d8fc8a987-goog
 
