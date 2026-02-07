@@ -1,54 +1,54 @@
 Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851C730AD10
-	for <linux-perf-users@vger.kernel.org>; Sat,  7 Feb 2026 08:24:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABF230C619
+	for <linux-perf-users@vger.kernel.org>; Sat,  7 Feb 2026 08:24:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770452689; cv=none; b=JYxjaLEf9NvxmdPt0JQJmz921bVAT/OrvnXUpX//IlBsiUz0jLAfryOC3kHmBH5A3v54o4QcxGjiKhvV9u2EG069SjLTEIgFzDoE1lsI1nyxVjl2xNdaRL5w5Mcvu0+aAmLND7oUWAlcvdWChrtZBGuL3LY65w+9whn99vPP9yg=
+	t=1770452691; cv=none; b=Ls1fmgeDH/qLema+79OftInY6JS18q5AiiCX/NkLTYM2VcMmxSNeGgmLtn80KYEtnFXFeJHh+Z+9CAo1v573b3hT7+L+vuluE9Gu4Qunfia3pnfsqcR2lrr9gXk836JMJAdtXr+76mwwep18zw/SNmncP7eK3ff2cWtPCuiSlmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770452689; c=relaxed/simple;
-	bh=jBXkwhJU0ZdvAAHhKdLYOjGv4tsONXYvOgs5iMwxwUA=;
+	s=arc-20240116; t=1770452691; c=relaxed/simple;
+	bh=N96xkMpy5lP+7H0aWH6pC7j/S+oT22nm8lNiuaa5llA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=a/qA8zIRobTBcNOd/lMkGEHBLG3dKXXXELvK5kJvwzW+Kcqq2UQHEQYfjscjKfgjgEDg2yS4Z5sMaaxsewOxTZKjvJI+Pg3Fqu+G0GAWDunSuX/gpNoF7bqaaIBqIde0tF+t95W+4z6PFv2wX3hDtbmfjbAk0PGknvZ3JH5s6Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HNOeoAea; arc=none smtp.client-ip=74.125.82.74
+	 To:Content-Type; b=OHedgzQRPIyfGyiEHJ06/d3ove6gx00yYBlG3pkiidc1qwNciUlijNx6GaHPiM5rq9eDuZYfIyQ7phXPFw6V2NtsJPYx17tuzbkbl8m+KecesS1AQxZ9Ed8/dgGgsMjPYbVosYwr+ZELu5MqStzCxYhi/o5Na4gOjjExrTvPaOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V4DZLGgf; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HNOeoAea"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1270be4d176so8202980c88.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 07 Feb 2026 00:24:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V4DZLGgf"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-127133794b6so91311c88.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 07 Feb 2026 00:24:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770452689; x=1771057489; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770452691; x=1771057491; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bDQ88E5cIiIk78l45X12qXAsWQanRerQ44tUWmnKJpE=;
-        b=HNOeoAearbLNSXid/WoKzxHviv39RiEOLebfYfUbmdDgtmTWBx40mCNlIQG73ErvKz
-         EUayuq5madJl4ZYtPWr16jLYofKnVj4hDYNdPHiaVCWmVnhdjdFh3pKxYiOjAx5jNALX
-         SishHQx0ctf4oqKXLTFBxQS9kH66Q6uYh2I/5Ymt4Ss1Wp8Ypkhxw7dYmhBpPdix5/UE
-         nkoNAjeDtrt7hvLHrrgaGvfVURo0JWwAI8j3BgFbbF17gf4o01KhG/nU+PMsQTaTJS75
-         g9C91xCppqbE72BOlReUMAXnDumSzzZyFZoyUFJTA2asVn1onGrVYNx4zvD6UKIagg6j
-         XOVw==
+        bh=73S70KhFl7MAoO9qRsIjn211Skfv7Zjtw2IW8M3qYRk=;
+        b=V4DZLGgfOnwdYAODUs8NQEZVtzb5x1RYT8WITEPDdYaBNRz5uBcVMTYidITua85lKK
+         L/L6zxBhlTs7QAOL2Yqc++Sjzm9Hg+rz+xOOCbUUhsoMbRlc4o+m7A3u703vn4xQu1s/
+         zeUH9ICiAQW2nvDj3U60ielvZaAOsm+iXt5OVFyOQAnkntitiRx6k+SOo9X8zdxRsBKi
+         bGpTarDgM6DOXqoVnKnCxZYTJN5eZ4Z0Y9ixL8+RSnVGO41ukOsl3fdLeOlQpl4jwcSE
+         VmyJD+XUtfLl6vupK1p0oCo8vsdYGXGigzpka3NRkq8P9u/2+c6eLuytDpA6QRlXNgx3
+         Z/9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770452689; x=1771057489;
+        d=1e100.net; s=20230601; t=1770452691; x=1771057491;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bDQ88E5cIiIk78l45X12qXAsWQanRerQ44tUWmnKJpE=;
-        b=LDGaBsUJWGJgnFXB38IyOsnWLXhBmMyFBwk2yNN/GAFPZ8T5mdtcs9RTiId+opIfBK
-         6IRgPR4EnFo4iioh2nd1St2RpEXm77Z22YCBCOE75XOJYYV9VqCYofFwSxukPEOm3a9e
-         4xF4umjWGebYgJJ4Rl2wXElXie34eyKpMuk92Fkwzhn5PCMgcDm7nyqjMXQPfzLhCcKt
-         GR7Rs3Hejn1oGSo6WajwWlJryt06thjubZRKfBIZ8K3KefMhtme+I3PQHMPu39+nu6Ap
-         XpZRGMNTd0MStXqAGTAz86NNMTHQYX8QBAo+kW3MIz1uemQFZQX/ezRYFmm6jHe0GJjW
-         jBVA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnU9BCRQiYiohPWX7IdHENXuxeiCzXWQD0p4yNDdVDDV+L5jc8B6tgY1K3UujKUERpEG/9hwkA+oFSO9xAhb5a@vger.kernel.org
-X-Gm-Message-State: AOJu0YwincNRt38PEChRX/3hNjuklfR586rtCCM/tO153Ax6zGTgeqIt
-	oMcH5t92yVz0/P4tU/TYdFhr7I5ZqHqu9KDQZML7hkN1MeHcWiWNhDvMBjjw2AFWMDn5tejx+Ul
-	x6f6aCi6obg==
-X-Received: from dybpt13.prod.google.com ([2002:a05:7301:408d:b0:2ab:9468:d9cf])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:caca:b0:2a4:3594:d54e
- with SMTP id 5a478bee46e88-2b8568339e2mr2911177eec.27.1770452688575; Sat, 07
- Feb 2026 00:24:48 -0800 (PST)
-Date: Sat,  7 Feb 2026 00:24:25 -0800
+        bh=73S70KhFl7MAoO9qRsIjn211Skfv7Zjtw2IW8M3qYRk=;
+        b=q8uAu/9pQ37xCqwuSXlXMbTQEWuN/2WIo8hWiC+CEr52oUKKf3WNzYdGsE/gfk1bu2
+         lmr8bvUoBMaXle3bce55LSg3l8g9wSgoRv9uPrRVICGiojmBBjpg0Xvn6lVWBJDVfWzW
+         HoiABwhMhKsiwBTTTiAnGtd3/gnilnKCbxo0ZZzKA0NPKB8mUgX7qzdtbZLKV52WKAqE
+         RzyokBUnwcFAk/YLw4lpIUglMYwXyBlVMEtRgJKLwVQsOO6lY5J0vj+ilbGu2Ov9dVZo
+         cQpEzEwMGaZK4AP9pJD6vj+P4Cdw5NtjYzNqel8ocKU7YU8wSn4itraiklAklzFQiHFd
+         vY6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWZKRx84BhxknZC3Cqpl9N5CjHKukbdz9KY7zQreZl7nnJlQ/3Lfk0c6+nvGecXVpmj9PHjeZPZ2KkO30Hv6lea@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5AI+MLV91/wLeaOek3dHoYfLyXt+Cv9t/EWMiQTx800MyE2TT
+	AwVkoK+C+Kyw3isM9HMd31tSbZ2/cT0m//CAdq3DBSrFv65yOZV6bTLTSdzdTytG2dpOItJKlfQ
+	+UU7y4CficA==
+X-Received: from dlbcy24.prod.google.com ([2002:a05:7022:b98:b0:126:faf3:bc29])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4a2:b0:11b:d211:3a64
+ with SMTP id a92af1059eb24-12703e8f4c7mr2884395c88.0.1770452690831; Sat, 07
+ Feb 2026 00:24:50 -0800 (PST)
+Date: Sat,  7 Feb 2026 00:24:26 -0800
 In-Reply-To: <20260207082428.1742209-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260207082428.1742209-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
-Message-ID: <20260207082428.1742209-3-irogers@google.com>
-Subject: [PATCH v1 2/5] perf dump-insn: Remove dump-insn.c
+Message-ID: <20260207082428.1742209-4-irogers@google.com>
+Subject: [PATCH v1 3/5] perf tool: Constify the command and option arrays
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,58 +71,71 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-dump_insn and arch_is_uncond_branch are declared in
-intel-pt-insn-decoder.c which is unconditionally part of all perf
-builds. Don't declare weak versions of these symbols that will be unused.
+Reduce scope and capture immutability.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/Build       |  1 -
- tools/perf/util/dump-insn.c | 23 -----------------------
- 2 files changed, 24 deletions(-)
- delete mode 100644 tools/perf/util/dump-insn.c
+ tools/perf/perf.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index bcccad7487a9..89de23dec401 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -149,7 +149,6 @@ endif
- perf-util-y += cs-etm-base.o
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index f475a8664ffc..1f51e8de6b1b 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -48,7 +48,7 @@ struct cmd_struct {
+ 	int option;
+ };
  
- perf-util-y += parse-branch-options.o
--perf-util-y += dump-insn.o
- perf-util-y += parse-regs-options.o
- perf-util-y += parse-sublevel-options.o
- perf-util-y += term.o
-diff --git a/tools/perf/util/dump-insn.c b/tools/perf/util/dump-insn.c
-deleted file mode 100644
-index c1cc0ade48d0..000000000000
---- a/tools/perf/util/dump-insn.c
-+++ /dev/null
-@@ -1,23 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/compiler.h>
--#include "dump-insn.h"
--
--/* Fallback code */
--
--__weak
--const char *dump_insn(struct perf_insn *x __maybe_unused,
--		      u64 ip __maybe_unused, u8 *inbuf __maybe_unused,
--		      int inlen __maybe_unused, int *lenp)
--{
--	if (lenp)
--		*lenp = 0;
--	return "?";
--}
--
--__weak
--int arch_is_uncond_branch(const unsigned char *buf __maybe_unused,
--		   size_t len __maybe_unused,
--		   int x86_64 __maybe_unused)
--{
--	return 0;
--}
+-static struct cmd_struct commands[] = {
++static const struct cmd_struct commands[] = {
+ 	{ "archive",	NULL,	0 },
+ 	{ "buildid-cache", cmd_buildid_cache, 0 },
+ 	{ "buildid-list", cmd_buildid_list, 0 },
+@@ -178,7 +178,7 @@ static int set_debug_file(const char *path)
+ 	return 0;
+ }
+ 
+-struct option options[] = {
++static const struct option options[] = {
+ 	OPT_ARGUMENT("help", "help"),
+ 	OPT_ARGUMENT("version", "version"),
+ 	OPT_ARGUMENT("exec-path", "exec-path"),
+@@ -280,7 +280,7 @@ static int handle_options(const char ***argv, int *argc, int *envchanged)
+ 			unsigned int i;
+ 
+ 			for (i = 0; i < ARRAY_SIZE(commands); i++) {
+-				struct cmd_struct *p = commands+i;
++				const struct cmd_struct *p = commands + i;
+ 				printf("%s ", p->cmd);
+ 			}
+ 			putchar('\n');
+@@ -289,7 +289,7 @@ static int handle_options(const char ***argv, int *argc, int *envchanged)
+ 			unsigned int i;
+ 
+ 			for (i = 0; i < ARRAY_SIZE(options)-1; i++) {
+-				struct option *p = options+i;
++				const struct option *p = options + i;
+ 				printf("--%s ", p->long_name);
+ 			}
+ 			putchar('\n');
+@@ -331,7 +331,7 @@ static int handle_options(const char ***argv, int *argc, int *envchanged)
+ #define RUN_SETUP	(1<<0)
+ #define USE_PAGER	(1<<1)
+ 
+-static int run_builtin(struct cmd_struct *p, int argc, const char **argv)
++static int run_builtin(const struct cmd_struct *p, int argc, const char **argv)
+ {
+ 	int status;
+ 	struct stat st;
+@@ -390,7 +390,7 @@ static void handle_internal_command(int argc, const char **argv)
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(commands); i++) {
+-		struct cmd_struct *p = commands+i;
++		const struct cmd_struct *p = commands+i;
+ 		if (p->fn == NULL)
+ 			continue;
+ 		if (strcmp(p->cmd, cmd))
 -- 
 2.53.0.239.g8d8fc8a987-goog
 
