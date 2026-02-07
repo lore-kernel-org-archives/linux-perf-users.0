@@ -1,268 +1,309 @@
-Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D3C33554C
-	for <linux-perf-users@vger.kernel.org>; Sat,  7 Feb 2026 15:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A27626FA77
+	for <linux-perf-users@vger.kernel.org>; Sat,  7 Feb 2026 22:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770479660; cv=pass; b=hKWd0cwPgAawfGwiV4vavH7SRYWIo3cUSwFIOEskeJKJ1ho23wTJV9uE6mIrzlxl3nQHIgZAn/lPpV8hAUCqz03yxTULJ1XlhU6Cq0U2aOnwI3+j66rnViE5Ed4go/DhgbuvN5Y+7XOxDf3QNAQdjLpSs7Jp+ewVd4QP8lfmfUY=
+	t=1770502024; cv=pass; b=p0XJDkkN0XZbruJkhqitfjyT3NcUsnR0co0o12uGEIPakuJBmYZMn9T12+SsnJJgWv3+SaE7DQSkDpUvUJAD01/1lKJ8MucOpauxAB/NQ5xGIl1owadIS8r+WQctj+cl//iKwTv24eLv+cNUeefpAMFMSE0/D2TjawB/Li3dcG8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770479660; c=relaxed/simple;
-	bh=tAaTM6bfbbHqfsVRChrzd5HSoUINl19Jouk+neHC0M8=;
+	s=arc-20240116; t=1770502024; c=relaxed/simple;
+	bh=7kTLyrIqEeBYMPXrfcKIpipgbii4dBxT1afSE5hho0M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XyntsxtIKj7S3HpiuyBE8a1sp3AW7oU2J6Y3fd3y2+aTblXiYlZWBZfe/h53N5ipjgXCiA6joazKJkwVl4Fhqn15P5NbHhNdPCjsgpbkUCjXa3XN6beNyZ95+AITCnd1+HVr/2SBNjPiXYFvoDsz5JMXMRqlI9RfHIeX4/ZIrbU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IJnoMeij; arc=pass smtp.client-ip=74.125.82.46
+	 To:Cc:Content-Type; b=pWBMSnsVVH5UatTD5VzsY81qOmC8S3KW8qMUGoYRtzB9EWGVONHxKBLB7CFjBL2W4mk0JE2dcrmhwTpkoL8BXdxPTm562e0CzoZEnTYPSTmSetxzJNO6aSiVLC9mQBDL9rGFvY22BPh+VjObtaUYZXVagFtEXTobM4mZStaVdw0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=02DfaiRy; arc=pass smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IJnoMeij"
-Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-1270f10a774so3280c88.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 07 Feb 2026 07:54:20 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770479660; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="02DfaiRy"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2a885af8ee7so50595ad.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 07 Feb 2026 14:07:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770502023; cv=none;
         d=google.com; s=arc-20240605;
-        b=b7++XOFFIrNhtyq06FgfI6Jrpw0fjNEfcGlvbHsiLdTQtIE62Yd3zNJ27Nvs546cko
-         kCsUf6lLR/z+3ghTAfMliiJve9CukHSOwJwcvVJTTLU7VJMCqr58Heye9yNhxF3p31SC
-         NL9Oiih9X7HOjx1SG9EvoG00mnPG8DlQ7KLBSzC79i0sSXMrzs3gnTeQ9WLByEv80HQE
-         wLUiRsY2NTI9thzmCSombiXIan8umhpjJr5aNt9BJ5p+HYqo0zfuoZdO3Q1/0b1tJxZR
-         Nw32gRdd/4tIKaWDr7nw9qGXmSZAF2Kgqb57hKz/vRUENnVoAJbs6nx1HUEJJ1nEEsQW
-         dFeg==
+        b=N/wOWrnoakZyIfNkTUur4Koj9np9D/fBugjeri2SjdEoFJaDq4ZC9tb+DGZwGiMf+s
+         dsszUURF1ja82p9qIeK3O88Rdy3QyakwIDhUcu93xb9JxoVyD3qCtX+gaMkizNCV3ja2
+         yXVYcKcef/bqFK9TtHTn+raKY6FS4eVu/uTs1kJHX9rCFJW3sYtg1UYPT6bULY7vIgyB
+         UD9hfTjIGp3CFxrZMvaABwfSdjCD15rBu2rEd730kO+LQqagAB4jaNr1QWiBD6gVtvsn
+         Q1i4tHSN1PKGynYes+qhM0AAFZWDPJBdi6QQuYIf8oUD2iZj+7smzv4YxN/oNaHU+ejJ
+         IGhQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=tftdXe0F+vGLtcbMOFFzyxCX8m4gKvOrxoz3HFKENi4=;
-        fh=AiR6EM2lcQvqrc4m8konQ3jbu0EkoM0yqeBX/K02lBg=;
-        b=YXGrWyha7S7E6f/VX9Q5SCawZfWAMh4f2nLk3dQNGPCcPbgyQCXHwa0hTKsFxFjLy/
-         QT7oq4aH1M/kRewga4Et0t4FECYQwSjgLrWYRI7eY5pW5kjCfjfwQyVuPKYunI/TgLeH
-         IboAAerROGEOU2wZhnEtQ1ofiPM02THAR/x2KjoZ3L10Q9PRMI6sEoI5WioXHnpI/Ejk
-         YAI4rlykHBb8sIuzwYPvVYBcClgTD3jJZywKUiFt+ry8oDZKuBVaouhORQ9Rm13g9LcP
-         JWxTYx10rmcQSkfvVe5lOrtIQ/vWUN3sEQrBUDvWsd0X9iv9rqO6WfJNlRxrjRpGRMdm
-         V3Zg==;
+        bh=J3C2hEyl05hEdCU16Qu+GAUyjf5mEA691562VQd1BHo=;
+        fh=JOum5LC+NaM/yvItzjC9TXQ/4uznGmg+VJuARNJrJa4=;
+        b=Ofqzm4k18rM6kUH1JGCOLHbe5jG1PEbuWak3XqM4J+zb5URMpcDIJFhQuh1NH16N28
+         m7h+b+sLxBwOVJw2AjNzs9WAZ1PklI0ED3n2xyFXl0BwAiRBfXE7i/Uz7oLathte2MlT
+         lKTi54MIvWeJKGHaLBRI5XESw1RQNZPEFfqW7/ORqxTgnZZYJ0+f/Wo4OrnS16IOK2OY
+         +1N542J/icnxslHi+FGLKST2zVoYETqc4KAz+TufkRJmuhhaHLtHxP/3eddb0ZntGp2v
+         vewIweNEEaYcTM7RlZ0j2CVDIjNTTzcTG/4svTeZ8kdPmRLaiLhMerou2Wt53e5G6Gmw
+         Qz7w==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770479660; x=1771084460; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770502023; x=1771106823; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tftdXe0F+vGLtcbMOFFzyxCX8m4gKvOrxoz3HFKENi4=;
-        b=IJnoMeij0dBFZJk6wnkeqPPqBbXDFbcFJodTNk9AvNF1oJIADjboBp2Gi6YyQzR/fn
-         /ClI9LvgMhsdF28W+6hmetdnsIHEzLrXmVaC2kJEFUtv6Text+fTp7O7/TtA/nq6Vr4i
-         9qxk7xxMoYslJj2ClMvlFC9cOlkpWufV3IvJHh3DUenvJkR+67OTkSzu6eo51Rvlmvwc
-         OM150D5UAwDosQ/peQucgNxPcy/uZ0iGl5jgBjOVezmjJ9PJ+Q1H/bexJoleEtmTpYEp
-         k6z3A6i2TVRlBb0ncw+YhzJ6SIsFu/OnBZ7r2cVJ8d6IcH9s6zYs6ZRrKN792ab2ehmW
-         8Ebg==
+        bh=J3C2hEyl05hEdCU16Qu+GAUyjf5mEA691562VQd1BHo=;
+        b=02DfaiRyWqh1ZnOVxBQhrO3X1GUpQ1tBQq3VzoszXMpdsTLvIRngrL+1Q7JNdNloNq
+         bjvTVbCyLiBwrUzZMoqv+AbHectrQKifULJCJOgbZKTSmvcf2C0cCE7uNVqxoKFROB3A
+         eo0eiR5tmRbymssjRWtu4M5qtLrP7f1rq9+4HDGJQmKPAxoS5wgrKA1RiWTNJD0Oc65r
+         NTrYMH5pU4N5lHOCHbBKfyYMm5tEDw29dmWDzXDfPhFbWY2kqc7Bm/rbsfPoye7kbk+w
+         clmU5/dZTEQ4OiC1ZLOqD7zBRdJhhDNNcO2ccxO/tYUKK7PHJ0HT8j3a7onXAe8I8K1x
+         dhQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770479660; x=1771084460;
+        d=1e100.net; s=20230601; t=1770502023; x=1771106823;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=tftdXe0F+vGLtcbMOFFzyxCX8m4gKvOrxoz3HFKENi4=;
-        b=mLFXAPTPJONNIIYRMsrtkPKN/3pKzYxZBiFCMSUFkX1V/+p3Wo/mqrVdmXU0DagTqV
-         pOTgti78Z+GB45d4/R/Mic76zplctLGwsIUnaf+159QtFLfF+CqdQ5E9Y3gpdWnmQxqE
-         YN/7u0YOn4bm8k6Lzw4TlPO2vGkYrrxY8gqR1xCSSsFgS8CskC2BZFAn9jBuRac0cQNj
-         58TvF1Gb8QLePkHxKWpSQbu9FgtzRBcihNuQ0OCmDi3Eb/xaNLSsgfZ3HY9zwIKdmbFU
-         H+x2SoqzTyTojypBSPRa/T16OBFE4XIyyOMpKdQCdZZ9brFhiIiDUs8vMhSrWDXu5kR0
-         xUBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMUO8eVveSMBFtUxY5HpG0AzDyhsfOikHWrWOLILTtlfM+sWXMzMHAhoIVTPEXFkXpKdPRugt+y4mcUJCfWU3q@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOqLMutrxRpjCOpEu8Eiqu2ww/D4Sbz8xUjP9ebXv9S0hngVrE
-	e1BwfvQtXaGaZJftgS5vkbYEZFDvaRBORqWcEKgvFAW7FyAq3eVE1owRwkosiW8fPytMQIISOQ5
-	2NMsW+wRnAncYNBIMScfgqImFTbYOdg2gPFVqjnsN
-X-Gm-Gg: AZuq6aIxfqQmDqZ5vnFzx7or2EEPQLAyTLAi0KdU7OQc0xZ6OmrsRkIr0FU67hFEr6X
-	ltRMpfZ826i7xoo3sLu7St7GtmX+AF7+ONPZavcJK1U/D2yC+7/HumoVSyWzhqVc2RMxryX5x8x
-	tTTWK5HBofJbvKtnTA7HVf/1a2ppH5aBK3vZmp0OvbBRb6J4iDi9rBPbmfCxi2ydXb2o4H4OwnL
-	2A0cCbdTr5IoU6zsgCkce2PLUoYWJm4L0SK8wjd9tqEZh5CPuNP6IZlq7MHpK6NKFyjQqyxPz5A
-	MK3zkJEX
-X-Received: by 2002:a05:7022:2398:b0:122:8d:4740 with SMTP id
- a92af1059eb24-1270eb772b5mr98469c88.16.1770479659039; Sat, 07 Feb 2026
- 07:54:19 -0800 (PST)
+        bh=J3C2hEyl05hEdCU16Qu+GAUyjf5mEA691562VQd1BHo=;
+        b=jj9Y5XJBobPNjDL3Ery+vLs7j/bMlmiyXLdrzo+ORr8jh2nJ3Ox1T7+cDR7gZqeBC3
+         3yEuog4BFXv9LtUcqfPVtYi/lV2xF3nsbB/uYcQURFjnLRsQ/Ff+R2CjuqY+yQAzbo9d
+         /CIK1p4pCX40ylcHzuuyDK5vJM2IQFGQA9yAQGeQqVKppvK+FuOtMrcTv3jRD2dzvyJO
+         85A/r3EFSfIfv7etE4ITkdAi2IQgNt6j+4e6DoGIOAp16Erful8Tr/OWuRqfOLw/i9HZ
+         Eo1/jUym8JMG0A6XGo8+CFOkf9U6Ni+xvf4HzNi6iNcZuOkMRnVQieExkVMz1lhAUKMk
+         8KWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVGAKt5TpSK3MPR4K/tpqrhS8nlCmFTLNURm9wekVFJWfiVe5OhvY33pxHaT1XLW0Qi39joKRK6tteu2rMdJfEU@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhbvXTnr4D+1QsbzG3/aq24Ew9DpALUfsZNxxG6i6dsij6+9QB
+	6xxZ77GsI7CjXhz3+PSFQz+bK5EcBQOM/4ElkORJgNCjQV+LpEdAGT4yrfO2lyTJpGGHcVtX9C5
+	Lz2EcqsO3n04ruRI4NMz/mhnUfZ2qjBjlCAcQjHBr
+X-Gm-Gg: AZuq6aLWjff/IrHD7Eiciz/lXSaDVLMy5QzzlyHDxMopf/xhVQCztUiuEYWAbPgbH9O
+	Wrk73vYzbkd0Gjn8xXdSDU7C0h5fbyhDy23t8Qxw0c8fgpIausRbPiSYKaqJOoV0dsxHEJWuwm2
+	/8f+2QZYYD18qhvxSKHpcQ1K0+mCwfcgtVnRC7s5Yymgjd93mxf7yxSu2qgNelzpiHbq1Lc435h
+	7vx74bpe12DmrUhiA/JrnZCJzwPEESD5r8oPe6hd40mcfAXt/KfKgnCS5+ZvfGKDN60c73W
+X-Received: by 2002:a17:903:18e:b0:295:3f35:a315 with SMTP id
+ d9443c01a7336-2a96317bcf8mr1841385ad.5.1770502023030; Sat, 07 Feb 2026
+ 14:07:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aYZnkYqWXnKpHd3h@x1> <20260206222509.982489-1-irogers@google.com>
- <20260206222509.982489-7-irogers@google.com> <aYc1NrEYIMxKzlCF@x1>
-In-Reply-To: <aYc1NrEYIMxKzlCF@x1>
+References: <20251128091139.1309755-1-tmricht@linux.ibm.com> <aYZgGlh3e84ZrUNQ@x1>
+In-Reply-To: <aYZgGlh3e84ZrUNQ@x1>
 From: Ian Rogers <irogers@google.com>
-Date: Sat, 7 Feb 2026 07:54:05 -0800
-X-Gm-Features: AZwV_Qh1rh8c5dw76M0hXZjWJzkg0kYkvWG3WyFBq5YLmSj5pYAsLGEg-AsVPHQ
-Message-ID: <CAP-5=fXOasXgKRSvrA1B+Yx42egfZfLO4h1OKrB4tLCCz_o8Cg@mail.gmail.com>
-Subject: Re: [PATCH v8 6/6] perf stat: Add no-affinity flag
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, namhyung@kernel.org
-Cc: adrian.hunter@intel.com, ak@linux.intel.com, 
-	alexander.shishkin@linux.intel.com, andres@anarazel.de, 
-	dapeng1.mi@linux.intel.com, james.clark@linaro.org, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux@treblig.org, mingo@redhat.com, peterz@infradead.org, 
-	thomas.falcon@intel.com, tmricht@linux.ibm.com, yang.lee@linux.alibaba.com
+Date: Sat, 7 Feb 2026 14:06:51 -0800
+X-Gm-Features: AZwV_Qj4lIuevn1tAZJddgShRS2g2WCpdZDPcsAzuoyzJJJEN9NqPq_JGAkEYIg
+Message-ID: <CAP-5=fXJd+gXWrgRC1vBzueCgsLjGesV+oenq3a9irq0+gLNDw@mail.gmail.com>
+Subject: Re: [PATCH] perf/test: Fix test case Leader sampling on s390.
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	namhyung@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com, 
+	sumanthk@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com, 
+	James Clark <james.clark@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 7, 2026 at 4:51=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+On Fri, Feb 6, 2026 at 1:41=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
 l.org> wrote:
 >
-> On Fri, Feb 06, 2026 at 02:25:09PM -0800, Ian Rogers wrote:
-> > Add flag that disables affinity behavior. Using sched_setaffinity to
-> > place a perf thread on a CPU can avoid certain interprocessor
-> > interrupts but may introduce a delay due to the scheduling,
-> > particularly on loaded machines. Add a command line option to disable
-> > the behavior. This behavior is less present in other tools like `perf
-> > record`, as it uses a ring buffer and doesn't make repeated system
-> > calls.
+> On Fri, Nov 28, 2025 at 10:11:39AM +0100, Thomas Richter wrote:
+> > The subtest 'Leader sampling' some time fails on s390.
+> > - for z/VM guest: Disable the test for z/VM guest. There is no
+> >   CPU Measurement facility to run the test successfully.
+> > - for LPAR: Use correct event names.
 >
-> This is confusing:
+> This one fell thru the cracks, still applies cleanly and the extra logic
+> affects only s390, applying to perf-tools-next,
 >
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ perf stat -h affinity
+> - Arnaldo
 >
->  Usage: perf stat [<options>] [<command>]
->
->         --affinity        don't allow affinity optimizations aimed at red=
-ucing IPIs
->
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$
->
-> The way it is presented in the -h output it looks as if one has to use:
->
->         perf stat --affinity
->
-> To disable affinity setting, when used that way it looks as if the user
-> is asking for affinity to be used.
->
-> We have things like:
->
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ grep -A2 OPT_.*no- tools/perf/bu=
-iltin-record.c
->         OPT_BOOLEAN(0, "no-buffering", &record.opts.no_buffering,
->                     "collect data without buffering"),
->         OPT_BOOLEAN('R', "raw-samples", &record.opts.raw_samples,
-> --
->         OPT_BOOLEAN_SET('i', "no-inherit", &record.opts.no_inherit,
->                         &record.opts.no_inherit_set,
->                         "child tasks do not inherit counters"),
-> --
->         OPT_BOOLEAN(0, "no-bpf-event", &record.opts.no_bpf_event, "do not=
- record bpf events"),
->         OPT_BOOLEAN(0, "strict-freq", &record.opts.strict_freq,
->                     "Fail if the specified frequency can't be used"),
-> --
->         OPT_BOOLEAN('n', "no-samples", &record.opts.no_samples,
->                     "don't sample"),
->         OPT_BOOLEAN_SET('N', "no-buildid-cache", &record.no_buildid_cache=
-,
->                         &record.no_buildid_cache_set,
->                         "do not update the buildid cache"),
->         OPT_BOOLEAN_SET('B', "no-buildid", &record.no_buildid,
->                         &record.no_buildid_set,
->                         "do not collect buildids in perf.data"),
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$
->
-> Probably this needs to be that way?
+> > A detailed analysis follows here:
+> > Now to the debugging and investigation:
+> > 1. With command
+> >        perf record -e '{cycles,cycles}:S' -- ....
+> >    the first cycles event starts sampling.
+> >    On s390 this sets up sampling with a frequency of 4000 Hz.
+> >    This translates to hardware sample rate of 1377000 instructions per
+> >    micro-second to meet a frequency of 4000 HZ.
+> >
+> > 2. With first event cycles now sampling into a hardware buffer, an
+> >    interrupt is triggered each time a sampling buffer gets full.
+> >    The interrupt handler is then invoked and debug output shows the
+> >    processing of samples.  The size of one hardware sample is 32 bytes.
+> >    With an interrupt triggered when the hardware buffer page of 4KB
+> >    gets full, the interrupt handler processes 128 samples.
+> >    (This is taken from s390 specific fast debug data gathering)
+> >    2025-11-07 14:35:51.977248  000003ffe013cbfa \
+> >          perf_event_count_update event->count 0x0 count 0x1502e8
+> >    2025-11-07 14:35:51.977248  000003ffe013cbfa \
+> >          perf_event_count_update event->count 0x1502e8 count 0x1502e8
+> >    2025-11-07 14:35:51.977248  000003ffe013cbfa \
+> >          perf_event_count_update event->count 0x2a05d0 count 0x1502e8
+> >    2025-11-07 14:35:51.977252  000003ffe013cbfa \
+> >          perf_event_count_update event->count 0x3f08b8 count 0x1502e8
+> >    2025-11-07 14:35:51.977252  000003ffe013cbfa \
+> >          perf_event_count_update event->count 0x540ba0 count 0x1502e8
+> >    2025-11-07 14:35:51.977253  000003ffe013cbfa \
+> >          perf_event_count_update event->count 0x690e88 count 0x1502e8
+> >    2025-11-07 14:35:51.977254  000003ffe013cbfa \
+> >          perf_event_count_update event->count 0x7e1170 count 0x1502e8
+> >    2025-11-07 14:35:51.977254  000003ffe013cbfa \
+> >          perf_event_count_update event->count 0x931458 count 0x1502e8
+> >    2025-11-07 14:35:51.977254  000003ffe013cbfa \
+> >          perf_event_count_update event->count 0xa81740 count 0x1502e8
+> >
+> > 3. The value is constantly increasing by the number of instructions
+> >    executed to generate a sample entry.  This is the first line of the
+> >    pairs of lines. count 0x1502e8 --> 1377000
+> >
+> >    # perf script | grep 1377000 | wc -l
+> >    214
+> >    # perf script | wc -l
+> >    428
+> >    #
+> >    That is 428 lines in total, and half of the lines contain value
+> >    1377000.
+> >
+> > 4. The second event cycles is opened against the counting PMU, which
+> >    is an independent PMU and is not interrupt driven.  Once enabled it
+> >    runs in the background and keeps running, incrementing silently
+> >    about 400+ counters. The counter values are read via assembly
+> >    instructions.
+> >
+> >    This second counter PMU's read call back function is called when the
+> >    interrupt handler of the sampling facility processes each sample. Th=
+e
+> >    function call sequence is:
+> >
+> >    perf_event_overflow()
+> >    +--> __perf_event_overflow()
+> >         +--> __perf_event_output()
+> >                +--> perf_output_sample()
+> >                     +--> perf_output_read()
+> >                          +--> perf_output_read_group()
+> >                                 for_each_sibling_event(sub, leader) {
+> >               values[n++] =3D perf_event_count(sub, self);
+> >               printk("%s sub %p values %#lx\n", __func__, sub, values[n=
+-1]);
+> >                                 }
+> >
+> >    The last function perf_event_count() is invoked on the second event
+> >    cylces *on* the counting PMU. An added printk statement shows the
+> >    following lines in the dmesg output:
+> >
+> >    # dmesg|grep perf_output_read_group |head -10
+> >    [  332.368620] perf_output_read_group sub 00000000d80b7c1f values 0x=
+3a80917 (1)
+> >    [  332.368624] perf_output_read_group sub 00000000d80b7c1f values 0x=
+3a86c7f (2)
+> >    [  332.368627] perf_output_read_group sub 00000000d80b7c1f values 0x=
+3a89c15 (3)
+> >    [  332.368629] perf_output_read_group sub 00000000d80b7c1f values 0x=
+3a8c895 (4)
+> >    [  332.368631] perf_output_read_group sub 00000000d80b7c1f values 0x=
+3a8f569 (5)
+> >    [  332.368633] perf_output_read_group sub 00000000d80b7c1f values 0x=
+3a9204b
+> >    [  332.368635] perf_output_read_group sub 00000000d80b7c1f values 0x=
+3a94790
+> >    [  332.368637] perf_output_read_group sub 00000000d80b7c1f values 0x=
+3a9704b
+> >    [  332.368638] perf_output_read_group sub 00000000d80b7c1f values 0x=
+3a99888
+> >    #
+> >
+> >    This correlates with the output of
+> >    # perf report -D | grep 'id 00000000000000'|head -10
+> >    ..... id 0000000000000006, value 00000000001502e8, lost 0
+> >    ..... id 000000000000000e, value 0000000003a80917, lost 0 --> line (=
+1) above
+> >    ..... id 0000000000000006, value 00000000002a05d0, lost 0
+> >    ..... id 000000000000000e, value 0000000003a86c7f, lost 0 --> line (=
+2) above
+> >    ..... id 0000000000000006, value 00000000003f08b8, lost 0
+> >    ..... id 000000000000000e, value 0000000003a89c15, lost 0 --> line (=
+3) above
+> >    ..... id 0000000000000006, value 0000000000540ba0, lost 0
+> >    ..... id 000000000000000e, value 0000000003a8c895, lost 0 --> line (=
+4) above
+> >    ..... id 0000000000000006, value 0000000000690e88, lost 0
+> >    ..... id 000000000000000e, value 0000000003a8f569, lost 0 --> line (=
+5) above
+> >
+> > Summary:
+> > - Above command starts the CPU sampling facility, with runs interrupt
+> >   driven when a 4KB page is full. An interrupt processes the 128 sample=
+s
+> >   and calls eventually perf_output_read_group() for each sample to save=
+ it
+> >   in the event's ring buffer.
+> >
+> > - At that time the CPU counting facility is invoked to read the value o=
+f
+> >   the event cycles. This value is saved as the second value in the
+> >   sample_read structure.
+> >
+> > - The first and odd lines in the perf script output displays the period
+> >   value between 2 samples being created by hardware. It is the number
+> >   of instructions executes before the hardware writes a sample.
+> >
+> > - The second and even lines in the perf script output displays the numb=
+er
+> >   of CPU cycles needed to process each sample and save it in the event'=
+s
+> >   ring buffer.
+> > These 2 different values can never be identical on s390.
+> >
+> > Since event leader sampling is not possible on s390 the perf tool will
+> > return EOPNOTSUPP soon. Perpare the test case for that.
+> >
+> > Suggested-by: James Clark <james.clark@linaro.org>
+> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > Tested-by: Jan Polensky <japo@linux.ibm.com>
+> > Reviewed-by: Jan Polensky <japo@linux.ibm.com>
+> > ---
+> >  tools/perf/tests/shell/record.sh | 16 +++++++++++++++-
+> >  1 file changed, 15 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/=
+record.sh
+> > index 0f5841c479e7..46b96d565680 100755
+> > --- a/tools/perf/tests/shell/record.sh
+> > +++ b/tools/perf/tests/shell/record.sh
+> > @@ -260,7 +260,21 @@ test_uid() {
+> >
+> >  test_leader_sampling() {
+> >    echo "Basic leader sampling test"
+> > -  if ! perf record -o "${perfdata}" -e "{cycles,cycles}:Su" -- \
+> > +  events=3D"{cycles,cycles}:Su"
+> > +  [ $(uname -m) =3D "s390x" ] && {
 
-So it was that way in the v4 patch set but Namhyung asked for it to be
-the other way around:
-https://lore.kernel.org/lkml/aRvcuMfbDRSBU87k@google.com/
-The comment on the option didn't get changed and that's a  mistake.
-Let me know what's preferred and I can send a patch.
+This broke shell check for me:
+```
+In tests/shell/record.sh line 264:
+ [ $(uname -m) =3D "s390x" ] && {
+   ^---------^ SC2046 (warning): Quote this to prevent word splitting.
+
+For more information:
+ https://www.shellcheck.net/wiki/SC2046 -- Quote this to prevent word split=
+t...
+```
+
+I'll mail the fix.
 
 Thanks,
 Ian
 
-> - Arnaldo
->
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/Documentation/perf-stat.txt | 4 ++++
-> >  tools/perf/builtin-stat.c              | 6 ++++++
-> >  tools/perf/util/evlist.c               | 6 +-----
-> >  tools/perf/util/evlist.h               | 1 +
-> >  4 files changed, 12 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Docume=
-ntation/perf-stat.txt
-> > index 1a766d4a2233..1ffb510606af 100644
-> > --- a/tools/perf/Documentation/perf-stat.txt
-> > +++ b/tools/perf/Documentation/perf-stat.txt
-> > @@ -382,6 +382,10 @@ color the metric's computed value.
-> >  Don't print output, warnings or messages. This is useful with perf sta=
-t
-> >  record below to only write data to the perf.data file.
-> >
-> > +--no-affinity::
-> > +Don't change scheduler affinities when iterating over CPUs. Disables
-> > +an optimization aimed at minimizing interprocessor interrupts.
-> > +
-> >  STAT RECORD
-> >  -----------
-> >  Stores stat data into perf data file.
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index c1bb40b99176..8bbdea44c3ba 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -2426,6 +2426,7 @@ static int parse_tpebs_mode(const struct option *=
-opt, const char *str,
-> >  int cmd_stat(int argc, const char **argv)
-> >  {
-> >       struct opt_aggr_mode opt_mode =3D {};
-> > +     bool affinity =3D true, affinity_set =3D false;
-> >       struct option stat_options[] =3D {
-> >               OPT_BOOLEAN('T', "transaction", &transaction_run,
-> >                       "hardware transaction statistics"),
-> > @@ -2554,6 +2555,8 @@ int cmd_stat(int argc, const char **argv)
-> >                       "don't print 'summary' for CSV summary output"),
-> >               OPT_BOOLEAN(0, "quiet", &quiet,
-> >                       "don't print any output, messages or warnings (us=
-eful with record)"),
-> > +             OPT_BOOLEAN_SET(0, "affinity", &affinity, &affinity_set,
-> > +                     "don't allow affinity optimizations aimed at redu=
-cing IPIs"),
-> >               OPT_CALLBACK(0, "cputype", &evsel_list, "hybrid cpu type"=
-,
-> >                       "Only enable events on applying cpu with this typ=
-e "
-> >                       "for hybrid platform (e.g. core or atom)",
-> > @@ -2611,6 +2614,9 @@ int cmd_stat(int argc, const char **argv)
-> >       } else
-> >               stat_config.csv_sep =3D DEFAULT_SEPARATOR;
-> >
-> > +     if (affinity_set)
-> > +             evsel_list->no_affinity =3D !affinity;
-> > +
-> >       if (argc && strlen(argv[0]) > 2 && strstarts("record", argv[0])) =
-{
-> >               argc =3D __cmd_record(stat_options, &opt_mode, argc, argv=
-);
-> >               if (argc < 0)
-> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> > index 45833244daf3..591bdf0b3e2a 100644
-> > --- a/tools/perf/util/evlist.c
-> > +++ b/tools/perf/util/evlist.c
-> > @@ -369,11 +369,7 @@ static bool evlist__use_affinity(struct evlist *ev=
-list)
-> >       struct perf_cpu_map *used_cpus =3D NULL;
-> >       bool ret =3D false;
-> >
-> > -     /*
-> > -      * With perf record core.user_requested_cpus is usually NULL.
-> > -      * Use the old method to handle this for now.
-> > -      */
-> > -     if (!evlist->core.user_requested_cpus ||
-> > +     if (evlist->no_affinity || !evlist->core.user_requested_cpus ||
-> >           cpu_map__is_dummy(evlist->core.user_requested_cpus))
-> >               return false;
-> >
-> > diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> > index 30dff7484d3c..d17c3b57a409 100644
-> > --- a/tools/perf/util/evlist.h
-> > +++ b/tools/perf/util/evlist.h
-> > @@ -59,6 +59,7 @@ struct event_enable_timer;
-> >  struct evlist {
-> >       struct perf_evlist core;
-> >       bool             enabled;
-> > +     bool             no_affinity;
-> >       int              id_pos;
-> >       int              is_pos;
-> >       int              nr_br_cntr;
+> > +    [ ! -d /sys/devices/cpum_sf ] && {
+> > +      echo "No CPUMF [Skipped record]"
+> > +      return
+> > +    }
+> > +    events=3D"{cpum_sf/SF_CYCLES_BASIC/,cycles}:Su"
+> > +    perf record -o "${perfdata}" -e "$events" -- perf test -w brstack =
+2> /dev/null
+> > +    # Perf grouping might be unsupported, depends on version.
+> > +    [ "$?" -ne 0 ] && {
+> > +      echo "Grouping not support [Skipped record]"
+> > +      return
+> > +    }
+> > +  }
+> > +  if ! perf record -o "${perfdata}" -e "$events" -- \
+> >      perf test -w brstack 2> /dev/null
+> >    then
+> >      echo "Leader sampling [Failed record]"
 > > --
-> > 2.53.0.rc2.204.g2597b5adb4-goog
-> >
+> > 2.52.0
+>
