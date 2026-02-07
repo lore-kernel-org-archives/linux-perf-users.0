@@ -1,101 +1,132 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A3082899
-	for <linux-perf-users@vger.kernel.org>; Sat,  7 Feb 2026 00:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705942765DF
+	for <linux-perf-users@vger.kernel.org>; Sat,  7 Feb 2026 01:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770425401; cv=none; b=N6eodzTTeH9bHmGZ8QTxsmEH29ia0Ed9a5Q5yGfC/PWahx5PEl0HllhDnQFiEkJoEJhlUnUyY9jXPx42axGNEMXbPiLKfmnxkP2WH5t9R8IS8au8XdsLAwzRB0iAWgtFFdhlxDuMm24tsLtZHMkpEX0FfMIBXNLBjjQnwnIAbcA=
+	t=1770427434; cv=none; b=SGJJ+EYAjfZRe91FT3iqLechFZZoCS3KBlyFAST5IPHZousvs5nT82y93n8Xav/XxqXpFpr0MiqTKQ93eNHzqc6tLPj0Z6wDzHtf3YDPEmL1oGmMQtE3Ir4h9yV/Qb/x5QAYy2kXL4CHzIUmXpocbRriNS9p3ntWsw1YubaqvoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770425401; c=relaxed/simple;
-	bh=f+runZoEza7jJOLrHjcpbqFLHZsP7k33/O/E7Exxgug=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YDOyNqwk6S5RcNDbPsOou/kdVpM8ya7YLcm3wQRY5c+4BU9CJFWBqiujxl7ioH2PViG4p+MWqOx7Vq1lKWEFBQdtF2ZZrpceKt9X5OqiUYb6pzO9FKnt+/UtbFvzI63P1zqZKgdTBmjSBLxhR1FsoFcUIidCOeuV4gRV8tfG1NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m8Va4H4I; arc=none smtp.client-ip=74.125.82.202
+	s=arc-20240116; t=1770427434; c=relaxed/simple;
+	bh=dbXNLQnXNLyXQ9CT/B6ZGUFhbJ3b6yLRqpkwxAjNO5g=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=CJ3+clnqpYlM486KnTTKwsN9rVVSEVL35bmqJcz3+xdY/XKtejkkyag/GBD9WP91U7k2wWNchceUigg6qpvG3eUuGcRTjICYqvKcM/55byEBNPhyCXzM2lTikMPD8WT6+viSOXrwV2VnCx/HnqcYLQOGowJsgJMy1Cytb/UFNts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SLGclmpL; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m8Va4H4I"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b7eddde359so1688370eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 16:50:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SLGclmpL"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c5291b89733so1560372a12.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Feb 2026 17:23:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770425400; x=1771030200; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FI58l4Db6Gvmd0p9AohQ8uhApAmdK0WUeG1k9fnDSu4=;
-        b=m8Va4H4ImoOf7jWWGrJKnGIdUOgsgo76SaF0JNkRC4Tv+iDPXwRyFM3Mu79XKr+AfN
-         jnUTk2TYJiXTINZDZJcjtiZJdD2npn4SnsihEx+wreGoK1OiDxApPcJ03sgJhNtC5L9J
-         WILaCis9uwz0YjnF9/S5NpEBc845yHWHd2oCN2xYYLP5lclhswdkLvPFtcl27Y55WTg5
-         TmP7M6qXvSsxfJqwcXEtwLsxe2BPjGemOEpc1TF/868PkJmpADwrhZD8ldGGa1oebqIi
-         SaoRw4nIFsBdE6uCaGyf9Ry/iMB6n5mb47g6/kLKJ4WMiSBfSkukQ/dnoIWG1C0BnGcq
-         40KA==
+        d=google.com; s=20230601; t=1770427434; x=1771032234; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zx9cflBOvMN2Fre5G6WHM7bbDYv06YwaCyO7rWPF26U=;
+        b=SLGclmpLSC5f+b2lHOUddrZVZntDo3NmvP7g8ZpcA99lvnk2/5gz252p8Cui8qb0RV
+         GfEYuAgo0K8EwxLGbYja5FywWyGgA04Ghim2Nb66RhtkxQqmIib57ppl5GWglEzd3BSd
+         GIQc7Lg5fnzfaJRd3uVjCiICz8UJjbXfnRGocVWrqfb/DYV+lYF0bcsqW9pg2zeeGUn1
+         +iqNnpMbeO5kRWPr9fBb3yJF0grnkksUgBaU4DsLPWlkmGaU4znahdlMhxYB/nu8QYkv
+         DHiwGnaOr/6YApP1yBoI5+5F9++SBnGbC71YwgSPM4qeBe4eNZUJup863BWlb9vNp0z1
+         StQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770425400; x=1771030200;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FI58l4Db6Gvmd0p9AohQ8uhApAmdK0WUeG1k9fnDSu4=;
-        b=uBN4gMJee8q3Dz+GwEflZ1IfACJV22dfz2BTYu43Dw7jecnzrWbMg1EX30rAadz8hj
-         pFBlRDACoctEPJUfUzGAfQC8W+R+W4M+liS2lf+y6/u+SCOiVCXIsRMbNTCzoJYXWRIl
-         ei4UmlT1OWl69WjjtihUsV9k5C1ciqKnP+51dCPgbdAzoTHgsaKmLxKGzVE2ca0rC2+h
-         STFHXmxY300y/ZLmnt6OlERDK98/HpeB0U1eS7nvyPyNvHsyGyJKJG0Lz6LLx6cV3SO9
-         9z+jLRlBtStgX0CqxH5Z2VL9E2tAVWKrPOzEVZmFtFeVFf0tXPKk4kjW2YoCLI4rZwwb
-         mGjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUw8q3c9klKeXEN1YhQvirthOQ0SoAxEPK5urx2nNjw1gCwLH31sIAOOoPQ8CjbO0J57MpxswLJ6q2BZR/nnn6v@vger.kernel.org
-X-Gm-Message-State: AOJu0YzV7Si6X/9LSp8qellszOaSdrwyMV78XrEa0mPPD6evOh6hK9he
-	wTSSP5IKtE8mdZyoLFFepLZ3Klsl8E3NUWNRY09HBf0xQrj41oDRf2UG8FU8I/907/QZwPu4mOb
-	5dvEoaPWscA==
-X-Received: from dykh9.prod.google.com ([2002:a05:7300:5709:b0:2b7:75b:cf5a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:3105:b0:2b7:da62:a611
- with SMTP id 5a478bee46e88-2b856450035mr2274978eec.6.1770425400463; Fri, 06
- Feb 2026 16:50:00 -0800 (PST)
-Date: Fri,  6 Feb 2026 16:49:56 -0800
-In-Reply-To: <CAP-5=fXPsOuqr+4DZmscoWGr1VHHJci4jRGxbOtJyy_Mp9Oa9w@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1770427434; x=1771032234;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zx9cflBOvMN2Fre5G6WHM7bbDYv06YwaCyO7rWPF26U=;
+        b=mnJ7xVc91NxsfQwkdcjEKzjk7KOuVCMmvjM25SuJosXVVuqE6YevXDqhjuG+0nmsu+
+         EI7rOllMK8C4+s4UO9Lfn03Tw6+5QnnCBR6bHysPZgtsTGmsYWIfeySoqjI6ZRvsGDwQ
+         ZzkjhqQ9xRD8GBa7zPby9mpofwqvwyDQNO+aqkUXj/DuJdLw6jphfuSIkXYSMz2Kskva
+         rV2DlmwwVUgKQF/oC2B3qIDi8MN9I8WuBQ2tynzZasKEnUGe7sq5JoPXtUfiRR0aAE8V
+         dOhEAx6bfz3xKWsJt6YZrPNJlbP/6Z5Riv73QaLBqSEdLbNvkplJBwBVl3wG3oxmt9v2
+         s2pg==
+X-Forwarded-Encrypted: i=1; AJvYcCXlfJ+leDneKxf2OgQzmL81I1BzdFyVVFWB0wdz0Av/9OohF1QqsIIkKk3rfbCYNIJ8tjLJA/yPuHEDL3HCSI1I@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhdlYuFCPgVLQTSghzkw6U3lZrAlTVOsmBVGpgXliy5Hqxwr8P
+	rAp5F/DJHlcStK/b2A/gn1tKG23+JobHdocgQdHMEWwIH0R7kEI79V8QgNgmsKUwRPz8nFgtVPq
+	okGzW2m7amnv6cA==
+X-Received: from pgbdo14.prod.google.com ([2002:a05:6a02:e8e:b0:c62:b045:9c6])
+ (user=jmattson job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:681:b0:38e:c1c3:b1ed with SMTP id adf61e73a8af0-393ad33ab08mr4698774637.44.1770427433658;
+ Fri, 06 Feb 2026 17:23:53 -0800 (PST)
+Date: Fri,  6 Feb 2026 17:23:26 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <CAP-5=fXPsOuqr+4DZmscoWGr1VHHJci4jRGxbOtJyy_Mp9Oa9w@mail.gmail.com>
-X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
-Message-ID: <20260207004956.610458-1-irogers@google.com>
-Subject: [PATCH v1] perf metricgroup: Fix metricgroup__has_metric_or_groups
-From: Ian Rogers <irogers@google.com>
-To: irogers@google.com
-Cc: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, james.clark@linaro.org, jolsa@kernel.org, 
-	leo.yan@arm.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	peterz@infradead.org
+X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
+Message-ID: <20260207012339.2646196-1-jmattson@google.com>
+Subject: [PATCH v3 0/5] KVM: x86/pmu: Add support for AMD Host-Only/Guest-Only bits
+From: Jim Mattson <jmattson@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Yosry Ahmed <yosry.ahmed@linux.dev>, 
+	Mingwei Zhang <mizhang@google.com>, Sandipan Das <sandipan.das@amd.com>
+Cc: Jim Mattson <jmattson@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Use metricgroup__for_each_metric rather than
-pmu_metrics_table__for_each_metric that combines the default metric
-table with, a potentially empty, CPUID table.
+This series adds support for AMD's Host-Only and Guest-Only performance
+counter eventsel bits in KVM's mediated PMU passthrough implementation.
 
-Fixes: cee275edcdb1 ("perf metricgroup: Don't early exit if no CPUID table exists")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/metricgroup.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+These bits allow an nSVM-enabled guest to configure performance counters
+that count only during L1 execution (Host-Only) or only during L2 execution
+(Guest-Only).
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 46bf4dfeebc8..7e39d469111b 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1605,9 +1605,9 @@ bool metricgroup__has_metric_or_groups(const char *pmu, const char *metric_or_gr
- 		.metric_or_groups = metric_or_groups,
- 	};
- 
--	return pmu_metrics_table__for_each_metric(table,
--						  metricgroup__has_metric_or_groups_callback,
--						  &data)
-+	return metricgroup__for_each_metric(table,
-+					    metricgroup__has_metric_or_groups_callback,
-+					    &data)
- 		? true : false;
- }
- 
+KVM updates the hardware event selector ENABLE bit at the following state
+transitions to ensure counters only count in the appropriate mode:
+
+  - EFER.SVME changes: Enable/disable Guest-Only counters
+  - Nested VMRUN: Disable Host-Only, enable Guest-Only counters
+  - Nested VMEXIT: Enable Host-Only, disable Guest-Only counters
+
+v1: https://lore.kernel.org/kvm/20260121225438.3908422-1-jmattson@google.com/
+
+v2: https://lore.kernel.org/kvm/20260129232835.3710773-1-jmattson@google.com/
+
+v2 -> v3:
+     * Dropped the svm_enter_guest_mode() and svm_leave_guest_mode()
+       wrappers introduced in v2 [Yosry]
+     * Introduced a generic nested_transition callback in kvm_x86_ops to
+       avoid confusing SVM-specific wrappers and unnecessary code replication
+     * Fixed a latent bug with L2 stack alignment, which was triggered by
+       a movdqa instruction in l2_guest_code() that referenced the L2 stack.
+       Note that l2_guest_code() expects the stack to be 16-byte misaligned
+       at function entry. It was not.
+
+Jim Mattson (5):
+  KVM: x86/pmu: Introduce amd_pmu_set_eventsel_hw()
+  KVM: x86/pmu: Disable Host-Only/Guest-Only events as appropriate for
+    vCPU state
+  KVM: x86/pmu: Refresh Host-Only/Guest-Only eventsel at nested
+    transitions
+  KVM: x86/pmu: Allow Host-Only/Guest-Only bits with nSVM and mediated
+    PMU
+  KVM: selftests: x86: Add svm_pmu_host_guest_test for
+    Host-Only/Guest-Only bits
+
+ arch/x86/include/asm/kvm-x86-ops.h            |   1 +
+ arch/x86/include/asm/kvm_host.h               |   2 +
+ arch/x86/include/asm/perf_event.h             |   2 +
+ arch/x86/kvm/kvm_cache_regs.h                 |   2 +
+ arch/x86/kvm/svm/pmu.c                        |  42 +++-
+ arch/x86/kvm/svm/svm.c                        |   3 +
+ arch/x86/kvm/svm/svm.h                        |   5 +
+ arch/x86/kvm/x86.c                            |   1 +
+ tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+ tools/testing/selftests/kvm/include/x86/pmu.h |   6 +
+ .../selftests/kvm/include/x86/processor.h     |   2 +
+ .../kvm/x86/svm_pmu_host_guest_test.c         | 199 ++++++++++++++++++
+ 12 files changed, 264 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86/svm_pmu_host_guest_test.c
+
 -- 
-2.53.0.239.g8d8fc8a987-goog
+2.53.0.rc2.204.g2597b5adb4-goog
 
