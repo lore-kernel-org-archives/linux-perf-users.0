@@ -1,38 +1,38 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BA32F49F4;
-	Sat,  7 Feb 2026 03:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1235288AD;
+	Sat,  7 Feb 2026 03:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770435745; cv=none; b=KqGLszk33Tt9IMW+1OtSTcMDs8ZEJHPbOWnQP47WDQlFw0UtaFVeKEMli21KSct/Bg80fF1I51awAqn0UpTwdoqt4xjmXErB6VEgd5LtdLPAyAFJsZfFzHITgzGKmpiLDSpXhhCZstln35TgyiMVbYMK4uiMA/snT7JTlpHz9fA=
+	t=1770436525; cv=none; b=dP9WuhGMBcpWfQ0/huSJEORAdk0nnoKOHDWSc+sDOU0NgQMc26zl0S0F4SCqc+XA/U12oTqwqf7maaJ7d8LhvhzPiT1xt5gdxSVb/9ZvEBgx0maFjtUJcqq48Rwl8aI49TXUu0KvzznP+YoPET4Jh4RQj7c+ttX45mWT8ppEbIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770435745; c=relaxed/simple;
-	bh=VXdlcgSmpo+0XD53VNWiyFRYAZWjRAe0d0crCSg/xKA=;
+	s=arc-20240116; t=1770436525; c=relaxed/simple;
+	bh=FOlIW79m8Z5AYcRAoUTaV83tL8DuIRgwulFm0cS+uww=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VAdQQqqQ4yltxoWt5Thgt4Y4q6LQP68t6SZHDqm4upxetV9AG0mOnPVT5zdH8plai1+nvhFCKn0X0Rnf7Q8cLuVAfGB5ibAbNrIT5fqGvYruOLvXYZcAbTx5fyIo2uYaoHQcCpdtdpQuf7JwJyscnBebFSGuup3VW1z0zii/Y98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=ilx+NB2C; arc=none smtp.client-ip=54.243.244.52
+	 In-Reply-To:Content-Type; b=WNo6bbWMrbdGHBareMsM27bcDO/v4k7YqGfjdC9gkN54HQRrITaTrViaHO/ndi7QTS7TkXDfNtALTFrb+ufIAdLJRKJdPeKHpdbJdHOkebORkahUeVjrGepd3smGFQmqUAkrB4E/0rCc1fAYMxPYr0cKkoKYgiMy8si6f7HlHEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=OC0itHKe; arc=none smtp.client-ip=54.254.200.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="ilx+NB2C"
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="OC0itHKe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1770435672;
-	bh=iGGdXTkXE6iLSkpjLauckmQd6kdrYyp6XyWgqtLiuXo=;
+	s=mxsw2412; t=1770436453;
+	bh=J5ZSE1GIfBN++3YlnIcdmmjUUZ0MWIkwDcWOs6Ub3KE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=ilx+NB2Ctd64IhEkBmabs9vCn7jxR/2yB4dG49Kp0t6l1uHqeWBUDCFEsUg5oND1q
-	 Pt0WX21N4lcaz3eMe9Pn71y9sKbnZwdLv/+2g3jgsstd6pOrInMPCa0BqBD3NlRJlB
-	 fUcB1xbqempE8Bt6XwUixk+Z+aPN8z4M5j1XlI88=
-X-QQ-mid: zesmtpip4t1770435665td6aedc24
-X-QQ-Originating-IP: nptEyNvWLFJDvHVJLzL8/o3VAW+0403HpSPcPAlvcls=
+	b=OC0itHKeB4x9KLeiW7f1wKuggjOlM66yn6HlR2BpJOxaaGbTeLpPsyAxVOirUdMBw
+	 AobJ2/yuh0rwCT2ZzDRVvYsQJNaYF36Y+qIIpTNfFt8Mn4Ubdtgscpajbu9iAfVeFF
+	 /MITwCyF32HQ+A6s3tI1eBzlLZ4JuWMxFwcpcBL4=
+X-QQ-mid: zesmtpip4t1770436447t033e705e
+X-QQ-Originating-IP: InkARYtvTyo7byCMx1GYV0Tt+ZJOew4mqa1Uytomdj4=
 Received: from [IPV6:2409:8a1e:3015:50f0:29fb: ( [localhost])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sat, 07 Feb 2026 11:41:02 +0800 (CST)
+	id ; Sat, 07 Feb 2026 11:54:03 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 3470539334872340848
-Message-ID: <605D8D5AE96AEF8F+31d65ad3-3956-49ae-8d9f-589747a5086c@linux.spacemit.com>
-Date: Sat, 7 Feb 2026 11:41:01 +0800
+X-BIZMAIL-ID: 13533491367221936113
+Message-ID: <30C7AD351DB55276+a8b03dac-c5af-4034-8631-ac1c352a469f@linux.spacemit.com>
+Date: Sat, 7 Feb 2026 11:54:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/8] iommu/riscv: Add HPM support for RISC-V IOMMU
+Subject: Re: [PATCH v4 0/7] iommu/riscv: Add HPM support for RISC-V IOMMU
 To: Krzysztof Kozlowski <krzk@kernel.org>,
  Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>,
  Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
@@ -48,41 +48,40 @@ To: Krzysztof Kozlowski <krzk@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
  Alexandre Ghiti <alex@ghiti.fr>
-Cc: Jingyu Li <joey.li@spacemit.com>, Zhijian Chen <zhijian@spacemit.com>,
- iommu@lists.linux.dev, linux-perf-users@vger.kernel.org,
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
- devicetree@vger.kernel.org
+Cc: Jingyu Li <joey.li@spacemit.com>, iommu@lists.linux.dev,
+ linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+ spacemit@lists.linux.dev, devicetree@vger.kernel.org
 References: <cover.1769562575.git.lv.zheng@spacemit.com>
- <F9748E3984D2A6F9+cover.1770195980.git.lv.zheng@linux.spacemit.com>
- <a9d9f43a-edf3-419b-bdf7-dbd6bf9e978f@kernel.org>
+ <DACC013F46A47459+cover.1770281596.git.lv.zheng@linux.spacemit.com>
+ <2ca4a5c1-9267-4177-b339-e1ac28812c46@kernel.org>
 Content-Language: en-US
 From: Lv Zheng <lv.zheng@linux.spacemit.com>
-In-Reply-To: <a9d9f43a-edf3-419b-bdf7-dbd6bf9e978f@kernel.org>
+In-Reply-To: <2ca4a5c1-9267-4177-b339-e1ac28812c46@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpip:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
-X-QQ-XMAILINFO: NUTz4BkILuKLi/q/CGWmd+WuVu2I1QFgAtIGv0spdb41cjP4s86/8ggY
-	zTzLtoGTtLMbLcCH+vdEe5ym6la2GVy5ayXqbJUVAO0+0nfB358xwXVezNWmyf6ijuvdpax
-	h/mQFwFQuRMgMaFDUQGkTs+t3u0D478M+mLmfF9I4IZH6EdhSEuAsZkk/6Jbw77o35rR10c
-	5ah+JzQvz+6iPI9u7fOXSy1PLtxARJCXbQ96U2ia5kmQgtfdhsAlwqJfwtKodr+GnvY18xK
-	Pq2nrkTMtyLL3DP0VnDaEpUyI9tegZextVD6i1AFYUd7y6kyfQ5L3dlGFfp/EV4rsx93w01
-	y7rR1/gjKYa879PaA+57BfllYl1G4R+TwO2s4UAbD1gD/eCYufkjBoXI92zlSSRtGtgkJhS
-	HSrwwK1XOl2agtGzTrc32LXRdWfiKJBmPAgH77any61Qht9YvneWZ0PwKv8JQcf9msm6Cye
-	WE36J6ShrtcICgyQ850v7cgxwElHREx3lXooIf7fr/oszB3D67+1OPKWWt0l/l4YzKXVQ/8
-	9lomUl81CsXfsmjiT809l+FjNfGPNdxxrsdyNqYA6aKUCmFJEaKiSYj/bbG7cD+gOAthsqj
-	C1C4BSWW+JG11L67D9ZsREYnetl7Z/z+/N4YsnDzdCqV4OnW7kCzp+lPJBf4U/KkiAr1GmH
-	A2JfVhmMP4jg2aP987V2xL/JV6LMFNZNxiPzcQSKD5pTnk8sHLD4M4e7rwvcU0464+95dgY
-	LS8MMPeyEM+9KGsZE3qUe9ji4dsoqqKpTJYJnC2uttzxXMP6H7la6fSrApGLrUd299Xkz0b
-	U0jT0Nvt+2Dn0Yi6hv0i+ye2T1JFgSO+qyIBCKlJpSUC4/6kKZO2a8YGD7Hj+HQPZ4BadyX
-	04VaIGmjQ0eF10s9bYl+KEd6uVER6Rpqu5e9I505RSd4U+nBwYw34JNkt3XBafMs2+7gXv3
-	W0NZssOcpwhwCvq6yisJIcTD1CIHCaJwYcrc2oacyl0wwxp0fRmwS8eLRgfTRjnAocHw60b
-	xx+GxOwoLHkHRkF9/nAT4tiRggS1M1SBBwoiLkiWMB4/LfzwpA
-X-QQ-XMRINFO: M/715EihBoGS47X28/vv4NpnfpeBLnr4Qg==
+X-QQ-XMAILINFO: NYn//GmO2LAjm1xUTRKQcHMV0bFBBVdZlg7LZHW5hdHohI6EkdPMbTXX
+	hrs/7rb6N1cws7pz3N7WCTbVswMygFmf5jOUoGYmbtvJUItYNfTknQerS0N5n21LGc8r5zg
+	GwxdEoYpR+bjkxAFLjDlBhWBY9MMezaE+4IB8SK5PpSRhCbvmFbyTTxA14GBGtIjj2n6sLq
+	GxP5LWDwm3ZvozI2Mgo2QsA5ug2dlGPHxUroMaHj/M2UH1NXelX3XwPv/QyIz0C3+IS7oo5
+	xurOHqArUSOOadwT50jFtomP+MgSie4xe+yLPhdKHMYtbLxYOwrw0y8pjA/uCaXZpJl9STI
+	RXsK5PQnXBcwsFv7/uUJeCQm5nXrEremoiRenZxhtFSTzSUt8Q9R5rXnpY3ybYOM4szl2p+
+	Q6SU9J/u6/vP6jdwLyXuBpF9WOaNish277MtLjVStZqAubkYOwlZn+OL7LVCQtZy9TmOyMk
+	2qJHIch3p0FlfxKZ63Rs+BfF+DIWIM36m1PM60vggWJ+3pnWmNy3EzqXevh2pSCUqREjTUQ
+	pm4I6yvHo1O1lX05lDqsWVrx56oPlSOrL1T4A/QZdEvCT+cAecqtcPrVqwsLPC4AT6HZFDO
+	vUScCtNjvfBbhNbkYJA0oKQeVIVlMPlzbQYQKmOJTG1+GDWynQ4eKscWq4yMxz2ODd8n0u4
+	7FPDpYJYvEBJpc3wWPor/w8x3DvnwXYDU9AzIEptbALG3G5QXqcLFRdgTOsstL1pxTIHmCX
+	co11/0+3Q1DL+jYC2BAi1QBHZvs8cIKuiMJ6JbPxVrS+w412laqEaRha7VkZsLAzKPw0Jj/
+	HnXg3B6Txotux3IL1XlieVnyOl9a/Zk9SJLA/RczLSI5g2jTjUkY7FtmrWCcaYTaN0qDT3X
+	SVjhUKFJogCfvX7kVnuP4Z8lTZXLmgsVZhTEEE1hxAv1NHge1XUO+f2iq0laxX1Gg3tgG7z
+	LKzc2aWudA+gUmqX1/rPdk36CQg5UUFksdrGVJcY916iqW3+vP85WWgtfJaZiD9ih29a2Cx
+	lAVK7JQWC3Ton9gn5+Q/WAZXqOd+3SID9N+00/MJyOZdCmVop7
+X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
 X-QQ-RECHKSPAM: 0
 
-On 2/6/2026 6:44 PM, Krzysztof Kozlowski wrote:
-> On 04/02/2026 10:08, Lv Zheng wrote:
+On 2/6/2026 6:46 PM, Krzysztof Kozlowski wrote:
+> On 05/02/2026 10:09, Lv Zheng wrote:
 >> Includes HPM support for RISC-V IOMMU. The HPM hardware mechanism can be
 >> found in the recent announced SpacemiT SoCs (K3, V100), where T100
 >> (SpacemiT distributed IOMMU) is shipped.
@@ -93,18 +92,42 @@ On 2/6/2026 6:44 PM, Krzysztof Kozlowski wrote:
 >> v2 (sent as v1.1)
 >>   Split and cleanup DT-bindings.
 >> v3
->>   Refactor using vendor specific compatible.
->>
+>>   1. Refactor using vendor specific compatible.
+>>   2. Implement vendor events with a userspace identifier.
+>> v4
 > 
+> And now also v4 is in the same thread? This is total mess!
 > 
-> Do not attach (thread) your patchsets to some other threads (unrelated
-> or older versions). This buries them deep in the mailbox and might
-> interfere with applying entire sets. See also:
-> https://elixir.bootlin.com/linux/v6.16-rc2/source/Documentation/process/submitting-patches.rst#L830
+> How tools are supposed to handle this?
 
-Got it.
-I'm still using an old fashioned upstream way to collect all revisions
-into one thread. Will align to the preferred style.
+I'm using the tools I was using several years ago.
+
+It's able to handle revisions using one single thread if a "msgid" is
+provided via its command line:
+
+# Prepare --in-reply-to argument of git-format-patch
+if [ "x$1" != "x" -a "x$1" != "xnone" ]; then
+         echo "Found Message-Id: <$msgid>."
+         GFPFLAGS="$GFPFLAGS --in-reply-to=$msgid"
+fi
+
+And I have a configuration file in my $HOME collecting all patchsets'
+first msgid:
+
+         if [ "x$require_msgid" = "xno" ]; then
+                 fatal "Invalid Message-Id: $1 shouldn't be specified 
+for v${MAJOR}.${MINOR}."
+         fi
+         msgid=`cat $MSGIDS | grep $1 | cut -f2`
+         if [ "x$msgid" = "x" ]; then
+                 fatal "Invalid Message-Id: cannot find $1 in $MSGIDS."
+         fi
+
+That's the old fashion I was doing upstream related work, as some online
+tools was able to update patchsets automatically if the thread top
+matched and then showed the new revision up in their web portal.
+
+Will stop using such single thread style as what you suggested.
 
 Thanks,
 Lv
@@ -113,5 +136,4 @@ Lv
 > Best regards,
 > Krzysztof
 > 
-
 
