@@ -1,71 +1,75 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEF0215F5C
-	for <linux-perf-users@vger.kernel.org>; Sun,  8 Feb 2026 12:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E9E215F5C
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Feb 2026 12:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770553370; cv=none; b=GpbyFICeiwoD3ZQX5nyxmnX/7Vvv/+42e5yRCRR2JtHyEJS4hQRrSVBS3YN5iycTLsIpxEEfjhSs+JRiY79t85k4RtdZMpGGw6RyfebsBmUr4pPFRY4gM0OflGBBU6fNx2/QQwJqYcEhs/I6dZ+pUtodLFd8Y5LVtcQniIj06uQ=
+	t=1770553375; cv=none; b=IAsLcoWEnyiFWWhikelZndbjvgk+P7UVk/aZaKirCyxBCXENHomXkYHLGYvqwDhkwN1SV6Og2KSvKt9f+GobyBLXFbzHXTIB6kw1uqBec5j6X7ctFsiTODQZks7htkOXTx1umf7hNBVtWGjLRlVzBJXXiiFCXWB3h3H8JJs6F78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770553370; c=relaxed/simple;
-	bh=/m9tesA7qDwNs+gTiVoRyLuuZj/IH/8c7/P/vQCp3E0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AMBGj2DKb9hrf2wFOH0NLotSwKv8qiy33rzBJg8KH0LrrOJGOMFkxIyoFjrnNK86x4rpI+rSMnR9YpuZjJ8lyXDjfSXCNtQEJk8120tyhOuTimXy2TqC6Pnxv3ibJEa4AawBcmJWnRElXyA0b64z23pQ8fda4ENsgxyu8dTuxdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hQ6fN+J4; arc=none smtp.client-ip=209.85.208.44
+	s=arc-20240116; t=1770553375; c=relaxed/simple;
+	bh=OK+PuVd9l77LQCmkyTiKMXsFhn+urBzlKuHVgU2X5Os=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sIkIV/QyEACa50+H7ha25t8JFkbFiizjfdZSUdUHGxWCOcSPI2+Xvzj/tTsNmlwxubmtmTDu7ItWSW782S6Mf8Tu8U34hGBSK94/YgmTW9y1KJ1UuhG/F03jx0gXvTjZbqAntLBQs7QIPzIxhh2dHki8O2BPtZB1n0aBoScCjJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dpcmnYy8; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQ6fN+J4"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-64b9dfc146fso5528759a12.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 08 Feb 2026 04:22:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dpcmnYy8"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b8e9c8ada38so591962566b.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 08 Feb 2026 04:22:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770553369; x=1771158169; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=S2DMo+8YZo7GYuhFe4EugWrXd+pHtT3uV5wQt5vaWuQ=;
-        b=hQ6fN+J47wK/vhNpfxEtxIRrO8F3TebE1t8ZSFjZO1YFUJuVWq5qdJYqZ5I3Wh3kSS
-         VnzjTrQ5eozrpf3H1hu2j+AtZ352uXCjvG9fIJN/408An71oKLxMqmn1l/Ajx7sRCp6x
-         rEdGCMLdCcvB/oLAhSTz4CfXKQX+/hcNplsRs41rHJ7mBjWh6ZGpS3HAUtKmI0MLqekc
-         VVKz+QX+Yd2/exbXYsuZc+nbtMGZnC+W5JvEhE88y3Y0I3Bs3MYCEc43jG9uppwCOtcX
-         xk6AcCjYJmS6EixDjX1km3KdzuqOCVj7FemVR7sycuXWkBY5TKVtXszcrXalVTQVkFBK
-         UXlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770553369; x=1771158169;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1770553373; x=1771158173; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S2DMo+8YZo7GYuhFe4EugWrXd+pHtT3uV5wQt5vaWuQ=;
-        b=B+N7/HxvrqINISJhftw0GTy3KxqrZ/UFDT1wIlj97V5uRO7+1QLtq+DMGBfni0T+vA
-         NwNmvfTwx+TUcgR/gT/qXtGhIEqcdHyE3ZED62a3nhm3O//dDbDloYYzJAZCofubXdSl
-         MOMSVSmMXSJmuXjVQ7/7OnIs3Vkynte9gwubzYrh9IyO3wKNgEbvM4SH9SRbTmLKsSn0
-         yZDoWUVT9DvmQCyCf5dvriJ0VqbF+KCvrkDis+MoJqBI0FxxNpSHD/TdmTdhL4K9P0ue
-         8rU3Vv5pp1KTwgOg0BWd2vLDzMfU69ufUB33NSyTxtOcCud/PkeG+AmsURJlGGeiWDDG
-         iFWg==
-X-Gm-Message-State: AOJu0Yz4JvUh3U0ez66ezwzTyu+nrpT/GQf20vhKWQzh13Bz5VbY3W8C
-	4+dHWS2+lIGMUizuVBoA1DeUhVBOiTefV4mK55UpOlpBI0PoBzaYBwED0991Zg==
-X-Gm-Gg: AZuq6aIsNXSLAJePBtROrec8qVfO5fGoX/fVPo4XgW8oYQOxfK8EibDsV6zDsVyeHJ3
-	luTsM/5r3M4uqCB9emycifPTc7iPIDOlO4keD+eX5SdqS1FEae9JluHmaLYXG24Jqq9NPkOFvvh
-	Q4LNZE5OQojf/CulHdEvyXFNkvm2XF0RH4xjNL+rYKrKDRfOwUtdViQB++u25mvODUG/TuFWxd6
-	ktUdTztVsAxS9yNtQqQT7bossYFgTeYjDCgGKL0DP4I42b+nq9ilhpEo3o6hLZ7kYKUZwchAhiF
-	RHw6PLFPNGr1Sx6nTzBHSR0VpzhAzyQXcXvIsWCSD+nlz1/sRF83nD/QtrgsZLRUKpEBdaVM/4s
-	OvlSMjDqlh2iwxnOQC3SankgumYsx84eT0BECbxpETxgp8QzrQS44BgMU5Tca3YsNha0KulP1Ia
-	wjcdwjUZoQBqgRrlGu6XOlsbs4khRWQnd5umapQzpJVBMNsaWn52zHmVcC8X9mGiPQURptq5eqQ
-	tQvhPK9mIZkWOn4Ouac6XfeGFcjLg==
-X-Received: by 2002:a05:6402:a21c:10b0:658:218b:1bf8 with SMTP id 4fb4d7f45d1cf-65962a57043mr5263640a12.8.1770553368757;
-        Sun, 08 Feb 2026 04:22:48 -0800 (PST)
+        bh=qBpHWwV80aiTtzAL3oJkNrJGKZzlKV+MvXTqCo+Ts3c=;
+        b=dpcmnYy8q9DjWnDBbJBKKzOAWlBfHhFlF4RF0t/JBVblOzIdGEnS3TqMMwy3wYCMtQ
+         HfASx2Qd/i8qQ0u3dmlHkXlZseAbaIa2gn2VElb0zSeKprWEzus+PbZxZCI6bLgmvIKm
+         1+vIg2RdjT4m+Ddl6qCzTJ6yOKWxJf6YEndbX3TZ065nPxxEr0ZxtU4LCtjIKt/jXrGh
+         PVARMNp2il9dy4EX+WtvLH16KbNjMhkEZde2KVHlmJtxhxyE0yqofQcahjUO/e6DO5qC
+         uHwYGAhy122zxGbLiVRzRzwPWuQPrC3vkzcRKgUdhjVwSc2i1QcoprJyuffomZQFBPlf
+         QFVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770553373; x=1771158173;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=qBpHWwV80aiTtzAL3oJkNrJGKZzlKV+MvXTqCo+Ts3c=;
+        b=ZGjuUmG/1qtAara4WiNkD3YH8rohac8FFD2q/rVWGvpY1DZ8hDIhF0yoFMZVzrZuj5
+         UZGhfGu4HFAgVdT3Xn+CupVQDHE3LY3c9u1pNPpYpAqlyM6iQqe1uvcPYCVxSdswM3fh
+         Imj3al9p/1fapwKWRu4VdSdTG2pAyTSGTHsEEehhTKkogkNroliNEJAyW62tSJll8oH6
+         yuDJzjUElpz3FFJ5b8ABcRzp5pFYPv6KBDGwRepf/jE5e3k9eaaiRCkkyoN+4jZwJCdE
+         JYYZazPDQWFZsKDNdCGuerHpnV9kMyZT98Jx01cO1dkzKzEzc8kpGLQF78/cDtO0m6hn
+         d1EQ==
+X-Gm-Message-State: AOJu0Yy+uUKH554YpYNwhNDrGA0nglNfHuJ4s6J3HlmyF+L7005JyPJR
+	fLMv5784kGunitHroE4fyzSYvk/lC59PFtu2Q7ILLD41+EeF5Qb1fGW/Z7b61Q==
+X-Gm-Gg: AZuq6aLJfD0qaezY4iVFhPUyLMR8bN/vcyHXS23sNCPZLN5KeU+yhPMQERAaxfPPtDU
+	x/YiYqHN1hUFOiGHlTpeTB5nMgAAlVFleK1gt3RLrfPk0QspR3IitRDpELgce8QgBtfh8nejlL4
+	xF1Dt+0Ur4mfSIHzBxqwEdXbfzkCrwe6wh6il9ZOdU1V829N2toRZS9INYcqfkjqWcS01ovsdnl
+	cS4JM5fC2sXtWp75G3vmrMw/icjjzQabNsrlePq9xmmWVWeICmi8OKWa+uGBivgV5p0Ml0BaoyK
+	09EULgXBmYy06O2TG1Qi2dwyCp/J7rgkVT+btS2o/eXu7hXyGbYmF+K/BmtV4bUgsJ/kA34Csl+
+	moLJ7a5S6uKweXh+iigWgI6Z+OhNO6/TUgxrPmkX1EINbNHDVUD/fjLV0UuqJ2z+GaqHp7YxZeb
+	YqnmPp1qPEKOQYunX693i5V0D3AJJ5ounpeViNmYtqsOH9yUdkzttJuQjAdsdu7stCf7EFiDCyB
+	nlhUIqrvkHdGYlZTdA=
+X-Received: by 2002:a17:907:96aa:b0:b88:dc6:3967 with SMTP id a640c23a62f3a-b8edf340f9amr529036466b.40.1770553373094;
+        Sun, 08 Feb 2026 04:22:53 -0800 (PST)
 Received: from ddolgov-thinkpadt14sgen1.local (dslb-002-207-075-089.002.207.pools.vodafone-ip.de. [2.207.75.89])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-65984024e11sm2011658a12.32.2026.02.08.04.22.46
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-65984024e11sm2011658a12.32.2026.02.08.04.22.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Feb 2026 04:22:47 -0800 (PST)
+        Sun, 08 Feb 2026 04:22:51 -0800 (PST)
 From: Dmitrii Dolgov <9erthalion6@gmail.com>
 To: linux-perf-users@vger.kernel.org,
 	Namhyung Kim <namhyung@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>
 Cc: Dmitrii Dolgov <9erthalion6@gmail.com>
-Subject: [RFC PATCH v2 0/4] Test annotate with data type profiling
-Date: Sun,  8 Feb 2026 13:22:22 +0100
-Message-ID: <20260208122227.3524-1-9erthalion6@gmail.com>
+Subject: [RFC PATCH v2 1/4] tools/build: Add a feature test for rust compiler
+Date: Sun,  8 Feb 2026 13:22:23 +0100
+Message-ID: <20260208122227.3524-2-9erthalion6@gmail.com>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260208122227.3524-1-9erthalion6@gmail.com>
+References: <20260208122227.3524-1-9erthalion6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -74,47 +78,112 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add shell tests for data type profiling, including C and rust.
+Add a feature test to identify if the rust compiler is available, so
+that perf could build rust based worloads based on that.
 
-To support the rust test, a new workload with rust code was introduced.
-To build it only when rust is actually available, also add a feature
-test for rust compiler and guard everything behind it.
-
-Changes in v2:
-- Switched to use mem record.
-- Fixed the build issue with a custom output.
-- Separated patches for the workload and tests.
-- Added new test for C code.
-- Added a feature test for rust compiler.
-
-Dmitrii Dolgov (4):
-  tools/build: Add a feature test for rust compiler
-  perf test workload: Add code_with_type test workload
-  perf tests: Test annotate with data type profiling and rust
-  perf tests: Test annotate with data type profiling and C
-
- tools/build/Makefile.build                    | 14 ++++
- tools/build/Makefile.feature                  |  6 +-
- tools/build/feature/Makefile                  |  7 ++
- tools/build/feature/test-rust.rs              |  4 +
- tools/perf/Makefile.config                    | 11 +++
- tools/perf/Makefile.perf                      |  2 +-
- tools/perf/builtin-check.c                    |  1 +
- tools/perf/tests/builtin-test.c               |  4 +
- tools/perf/tests/shell/data_type_profiling.sh | 84 +++++++++++++++++++
- tools/perf/tests/tests.h                      |  4 +
- tools/perf/tests/workloads/Build              |  5 ++
- tools/perf/tests/workloads/code_with_type.c   | 46 ++++++++++
- tools/perf/tests/workloads/code_with_type.rs  | 23 +++++
- tools/scripts/Makefile.include                |  2 +
- 14 files changed, 210 insertions(+), 3 deletions(-)
+Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+---
+ tools/build/Makefile.feature     |  6 ++++--
+ tools/build/feature/Makefile     |  7 +++++++
+ tools/build/feature/test-rust.rs |  4 ++++
+ tools/perf/Makefile.config       | 11 +++++++++++
+ tools/perf/builtin-check.c       |  1 +
+ 5 files changed, 27 insertions(+), 2 deletions(-)
  create mode 100644 tools/build/feature/test-rust.rs
- create mode 100755 tools/perf/tests/shell/data_type_profiling.sh
- create mode 100644 tools/perf/tests/workloads/code_with_type.c
- create mode 100644 tools/perf/tests/workloads/code_with_type.rs
 
-
-base-commit: 36a1b0061a584430277861fe5d8bd107aef26137
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 7f119eafc7c..64d21152fc8 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -100,7 +100,8 @@ FEATURE_TESTS_BASIC :=                  \
+         disassembler-four-args		\
+         disassembler-init-styled	\
+         file-handle			\
+-        libopenssl
++        libopenssl			\
++        rust
+ 
+ # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+ # of all feature tests
+@@ -149,7 +150,8 @@ FEATURE_DISPLAY ?=              \
+          bpf			\
+          libaio			\
+          libzstd		\
+-         libopenssl
++         libopenssl		\
++         rust
+ 
+ #
+ # Declare group members of a feature to display the logical OR of the detection
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 5c15572d505..9ae69d85716 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -112,6 +112,9 @@ __BUILD = $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.c,$(@F)) $(
+ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(@F)) $(LDFLAGS)
+   BUILDXX = $(__BUILDXX) > $(@:.bin=.make.output) 2>&1
+ 
++__BUILDRS = $(RUSTC) $(RUSTC_FLAGS) -o $@ $(patsubst %.bin,%.rs,$(@F))
++  BUILDRS = $(__BUILDRS) > $(@:.bin=.make.output) 2>&1
++
+ ###############################
+ 
+ $(OUTPUT)test-all.bin:
+@@ -388,6 +391,10 @@ $(OUTPUT)test-libopenssl.bin:
+ $(OUTPUT)test-bpftool-skeletons.bin:
+ 	$(SYSTEM_BPFTOOL) version | grep '^features:.*skeletons' \
+ 		> $(@:.bin=.make.output) 2>&1
++
++$(OUTPUT)test-rust.bin:
++	$(BUILDRS) > $(@:.bin=.make.output) 2>&1
++
+ ###############################
+ 
+ clean:
+diff --git a/tools/build/feature/test-rust.rs b/tools/build/feature/test-rust.rs
+new file mode 100644
+index 00000000000..f2fc91cc4f6
+--- /dev/null
++++ b/tools/build/feature/test-rust.rs
+@@ -0,0 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
++fn main() {
++    println!("hi")
++}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index b683aab3ab9..94aecfe38b9 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1153,6 +1153,17 @@ ifneq ($(NO_LIBTRACEEVENT),1)
+   endif
+ endif
+ 
++ifndef NO_RUST
++  ifneq ($(feature-rust), 1)
++    $(warning Rust is not found. Test workloads with rust are disabled.)
++    NO_RUST := 1
++  else
++    NO_RUST := 0
++    CFLAGS += -DHAVE_RUST_SUPPORT
++    $(call detected,CONFIG_RUST_SUPPORT)
++  endif
++endif
++
+ # Among the variables below, these:
+ #   perfexecdir
+ #   libbpf_include_dir
+diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+index d19769a8f68..27a41beeadd 100644
+--- a/tools/perf/builtin-check.c
++++ b/tools/perf/builtin-check.c
+@@ -60,6 +60,7 @@ struct feature_status supported_features[] = {
+ 	FEATURE_STATUS("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
+ 	FEATURE_STATUS("zlib", HAVE_ZLIB_SUPPORT),
+ 	FEATURE_STATUS("zstd", HAVE_ZSTD_SUPPORT),
++	FEATURE_STATUS("rust", HAVE_RUST_SUPPORT),
+ 
+ 	/* this should remain at end, to know the array end */
+ 	FEATURE_STATUS(NULL, _)
 -- 
 2.52.0
 
