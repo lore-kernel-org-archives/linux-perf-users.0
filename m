@@ -1,98 +1,160 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01B320010C
-	for <linux-perf-users@vger.kernel.org>; Sat,  7 Feb 2026 23:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770505496; cv=none; b=MnpAV9ChlHLNEm9Iw8htJzy2IvG2QkzR/yFNwLx9ZUYOFSGUddi1mnugUYtcHf8aevWGqioi+04ZbqtQAHh6MbSPYZG2Pf8lZC/Nzk2Zie/Wbf5BUR//f4v0xLhZziJvgNdyFR5QGccTJdc05kdwLFcSoFlAo8TOy4s2rRKu8Pw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770505496; c=relaxed/simple;
-	bh=mELfxSSY6zoOSFfkBSlf0zAGt5+XwtRsgDtuV5x0uRY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=RLVw56w+zSas0EjIRF0OH2LVFnROPitlbF6oj8s+T66W+FSBHb4JfgHq9zcjYChzWcxbWitmNbC7T9Mdsn7GtO7y7d2euwVP5uq8qLniQdMrVj8yygk1AjUN9V5ABX95TBYitoguuzVpHYbHeu5G6QHNi+p5vJfFD2ugh1fQySc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a4IYu4Sl; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E9E156F20
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Feb 2026 01:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770514255; cv=pass; b=CCWR9NF/m/P9GtAwjMah6tOec00E/j/5HBLTCXrwvMD3nwlAJb6DNiASN49dLR0lqpyc77d6oYSnx1KOOJG08bkScHsNE1qzyyJZ4dkHTT98Pn6vMrehB54aVMR/lkV61GMr8jsur/FPd9RKck8JLPzClrOrxh197U3OPlGZ8A8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770514255; c=relaxed/simple;
+	bh=SJznve9q0RFCzEPXWMXNglZ096a+2EbpXbrBMYsoGsc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ib9if7ljd2wbnNgRoDAIu6WnhIUGH4lXewr0FOKRMm8uvfyK64X6LpZxDXI6l5hA98uS536EyQBuWldpSlnIWyYdY9HbDhGgN5UUXozwAoiRH0/dJxK944IyLAaK3/1zxkGx+uvhIvIS+FJIQUA3OhDSOn/DsLsUZ6w6qfHoDtk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eYnR3HPS; arc=pass smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a4IYu4Sl"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-352e195f662so2679651a91.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 07 Feb 2026 15:04:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eYnR3HPS"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2a964077671so51915ad.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 07 Feb 2026 17:30:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770514254; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ijM2YCOFlBbJkRo4LhAO6iM0nfMs2dtfVwhUHX13Pl4Oo0HFLVjgkAQfic8/tlsPVB
+         BOiNHxLI/thYGYmvh9kEYLDY+M65HFWfn3iok473W6jR6CXXruUHev45JvX3KzuZHYyI
+         +cHCz6F+KMz61Jbbq4RLGzAQC5k0jgLHg8yyNiqXx1S2pWbYOrW7tW92OgcnnCqPSvK0
+         JGDqtxC3z4zcr7T/YfM9g8N90IM7rTN0u5Wi+oKQtgDfq9ujnQlcLwKvwYrJFwIosRKA
+         Lv+YROWZJ5/gwAw1vWqbaQtDsZPTHmqTKgDAfL+ni7U9nunrOi8le/73aATKQKNeByOg
+         DchA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=SFTFd+ntCHXWKupR0DlGEpVCJHWA7XjSDK3TIMVORtk=;
+        fh=JYEBXZNthwtnD7OqzhVthfpdTzZbFXpnllj1/S1b0vY=;
+        b=WNQrZQDBzLqqY+HcaxMOCfUUhO7hMuz6qwHHXLOQ7Zll83MGhL/IYTD8ogIsJBlsSL
+         paDlMwjj7PX5FIKKgyifM8runAuLaxjeYnEh34V38YulAoIrLu4BbmP+MrwksAOu/mmG
+         R10s8Tmg2ddn/zT2evqVCMsFLZrkp88fiqEdzfjENFe+KBg6ANOiWnpPMConGosZLzL2
+         suUPk6FogEoeo3WNZYDcLCX7FPa9gVvrQlhc8e20IP1EpYy0dpd1rFupVjGhTSWapjLn
+         Uw8xyuTzd97iPYhtffNXKpzMXNUTs2c831I1yLsJxPgLqpQCSC+vaQLiJwrD4mM+wxh4
+         i3yA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770505496; x=1771110296; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5vcqIEn2vlnoRzJuvmWBvZIAcRO2efq9q7KJIsflUtk=;
-        b=a4IYu4SlfKoCYdRgLUMUqw/t/arK2oN3c35hNvJW2LxGJ+L/2zx9Bvy9QUlP/ESmAQ
-         yj/CcbTsyh/laWRSe+h13sdb5uCnyUHaCl35S3674o0lKTrRyvLctDi9gy1qgT8DtihK
-         qd4YasY9zedpQROV1bFFu8gHh441QzHzAvytevc6s22vxqni3hZwQlJczbrG1eAyt+fI
-         y2Xzc4y+ZDVoaSxp9MLYtayz1JVE1pOUBiKHBJG3l7Mw8+LZ7DB2SzeCBscIVOxbomkg
-         ji/ybHV4MiD/2hTWxcLEovoG+kgoBkphDP5PY+IFrYnNmB5BKuNYEdae2grDlXk4Yy9E
-         s06Q==
+        d=google.com; s=20230601; t=1770514254; x=1771119054; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SFTFd+ntCHXWKupR0DlGEpVCJHWA7XjSDK3TIMVORtk=;
+        b=eYnR3HPSpdvVZHNbMqbFRlAf9/xhpV62mcP9rVY4YfTo9tFC4X01rqE+mrWHJokrv4
+         ZP9z/LSQv7ceyYYhMFqTZqkGNoT0/rP33dHljfElYyWqEo8KDfcDAfZT1KDHSw1uUcaJ
+         eUM9TmB4zXOAfyGOUTrA7IZfmKvj23vsVggZf6LZohbICS/H4N91Xerm7IuWVC+XVcy9
+         rmmq+b0xv0MbFMWcBqsFS8awnOoLIDqga0k8mMqedNroZhtv2ahtChmZVteCJfNkb62O
+         OqsVoSuQhcU3e1Ep64soHKx3sqLZnIZbtBw0gEtcj2I06ukwIyDNvWrI8rHa13zHW74s
+         XQ+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770505496; x=1771110296;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5vcqIEn2vlnoRzJuvmWBvZIAcRO2efq9q7KJIsflUtk=;
-        b=P+zxBpsVFQe+pn5HfGwYxWwrZU63r5c6P4FFHqnwtmT+WHB47offgdCMYFQqPxsIJY
-         mcmnomJY7+aTYCw5KJ51EWD+qPHpTe7i1rWX4brdUMV+jMN1uDrwHYP2lubP5gYZIW54
-         K4+Z3TkAFvH2hOyNE2TIFgTDWoYhC4GhSmal1v1VKB4hAyNt2q7tgh7dvoz6zQfSEwBX
-         c65WMNDr/Sv+z0Vot40fTgwaNKmPq0HtnA4G0Qwp10u7RzSQ9yGhHo+DtFghuMC0MPHM
-         gxaUBeqZ7ZrVnEBIeZ2lZPY7JrDIqGD7DP5mcdGIVZVVTV7e5n2HC20Fb+VW4AHXvqiq
-         noKA==
-X-Forwarded-Encrypted: i=1; AJvYcCWMm3405ljji2qgyxFsfWY9Ky5wX8qctthJBkw5zGFdfgP7wHircDxcyqteH/2mWF2gTOUYF96+UQvYX1q7QRut@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDZBgfynbuVPwOC2B6EO7GWfQnvFxZLuNDC5KYh5eliub6liGu
-	9EukgdGcX8cAdO2AxVaEmQ851cgZbVhAFNBn3T/tdjUc+S+NLdnN4oUJWDRQWnyP3ceuZOKq1Pc
-	WM/X2l4AP7A==
-X-Received: from pjob16.prod.google.com ([2002:a17:90a:8c90:b0:34b:e29d:f74c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2d44:b0:355:35b0:8b83
- with SMTP id 98e67ed59e1d1-35535b08eefmr2578852a91.33.1770505496019; Sat, 07
- Feb 2026 15:04:56 -0800 (PST)
-Date: Sat,  7 Feb 2026 15:04:52 -0800
+        d=1e100.net; s=20230601; t=1770514254; x=1771119054;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=SFTFd+ntCHXWKupR0DlGEpVCJHWA7XjSDK3TIMVORtk=;
+        b=kRxkrGSOGPk9rh0Eqa2KMD7+1XTWc94nO4OjkxRtqGFU/DoPYgyB36j+X6Ssa8w7K9
+         LCSuiHkvlt1xjiBv3Xs9tGMvVhspZBwfcC0FWe2hGzCnrtGIKYEnr6q+NWSr0BgOUgMR
+         wAr42fxfuWLCGhqhO8aJpS7+Oti35kqgI4OifdiYFCYXZ062eOxh78L1CpsZXP8QavXu
+         AqM8DVQo7zv7f/TjS4o3c6nOBd152mITCrU3vKW0fntAs3RrPywv+bMogWw5ttV7q4+I
+         x0Eamqkz0sawryygUL1aXr3ei75Eqey8O+JvkvgiP1L/fsStaeGe7CSSoO27J5v0ol1W
+         52ag==
+X-Forwarded-Encrypted: i=1; AJvYcCWFp6JqUfMjtkaGxAaGCF/tR0YtADU8uP8gSinIefzfzK+EajqomFi5S3W4AnsT+f2JQu22W8Dr6mNUtjm7Syvi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyy+4bp6jcffmhnE/gFYm8espSNL/QXiYeKgFI+lDigAkwDmI7G
+	4fxFtfPoDdcuV96EXlVZtKs7GGu9jJZr8eAAtf/0msC56ktrv+T8ZIOOV5dfWG7UtFRyMdy+eis
+	ZDYwlpfnC3XtNkx2dtVTdyVYY80sMUgmWEIBzE8tT
+X-Gm-Gg: AZuq6aLyTXYQgHd0KGm52eCJ1bnh5DhJh1BgmTjdkPfAMkrfio7CkH29AdIPc9K7EUn
+	gAla7urXbcuLv1az0haMxkmaseFUltLkMzO1C7EKYroLbmCjI031OaAyYruyppbPibwrDlxwNct
+	j0Z+dfbFUJLD6bXglhEwbDLfviUBW71FZFSyvyD9gVPSjtEbas18iE3OEXAQWe96BamCPHOSwNR
+	phPQdzGVCfAu9gE6QQhSbPJrlEr9llrbSB8sCdOxrMt3vKDE0UgFv7PaJwFmebSBM5cmDvz
+X-Received: by 2002:a17:902:f546:b0:2a3:2844:98cd with SMTP id
+ d9443c01a7336-2a961e2ed8bmr2705245ad.8.1770514253794; Sat, 07 Feb 2026
+ 17:30:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
-Message-ID: <20260207230452.1886143-1-irogers@google.com>
-Subject: [PATCH v1] perf test record.sh: Fix shellcheck warning
+MIME-Version: 1.0
+References: <20260203230733.1474840-1-ctshao@google.com> <CAP-5=fXL0Dw5v4VoNJhQ78adCHhvPQLzyjsophXx-j-FXGwuWg@mail.gmail.com>
+ <aYZaT4eZCGHDMAui@x1>
+In-Reply-To: <aYZaT4eZCGHDMAui@x1>
 From: Ian Rogers <irogers@google.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>
+Date: Sat, 7 Feb 2026 17:30:42 -0800
+X-Gm-Features: AZwV_QjH6F6_nEGrp7Ekw-bwsXqqDM10fIECZfLiiGbA2pmXZtwP4n1mhvNdDi8
+Message-ID: <CAP-5=fXH1tP_x22_YXi3F3POjjTxc8216o6=F+19XSYEWGwgOA@mail.gmail.com>
+Subject: Re: [PATCH] perf stat: Ensure metrics are displayed even with failed events
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	james.clark@linaro.org, kan.liang@linux.intel.com, yang.lee@linux.alibaba.com, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add quotes to avoid the following warning:
+On Fri, Feb 6, 2026 at 1:17=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Tue, Feb 03, 2026 at 03:41:30PM -0800, Ian Rogers wrote:
+> > On Tue, Feb 3, 2026 at 3:07=E2=80=AFPM Chun-Tse Shao <ctshao@google.com=
+> wrote:
+>
+> > >   $ ./perf stat -M CPUs_utilized -a --metric-only -j -- sleep 1
+> > >   {"CPUs  CPUs_utilized" : "none"}
+>
+> > > Signed-off-by: ctshao@google.com
+>
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+>
+> Thanks, applied to perf-tools-next,
+
+I've started seeing this test failure following this change:
 ```
-In tests/shell/record.sh line 264:
- [ $(uname -m) = "s390x" ] && {
-   ^---------^ SC2046 (warning): Quote this to prevent word splitting.
-
-For more information:
- https://www.shellcheck.net/wiki/SC2046 -- Quote this to prevent word splitt...
+$ perf test -v 59
+--- start ---
+test child forked, pid 2316256
+metric expr inst_retired.any / cpu_clk_unhalted.thread for IPC
+Using CPUID GenuineIntel-6-8D-1
+found event inst_retired.any
+found event cpu_clk_unhalted.thread
+Parsing metric events
+'{inst_retired.any/metric-id=3Dinst_retired.any/,cpu_clk_unhalted.thread/me=
+tric-id=3Dcpu_clk_unhalted.thread/}:W'
+Matched metric-id inst_retired.any to inst_retired.any
+Matched metric-id cpu_clk_unhalted.thread to cpu_clk_unhalted.thread
+FAILED tests/parse-metric.c:142 IPC failed, wrong ratio
+FAILED tests/parse-metric.c:293 IPC failed
+---- end(-1) ----
+ 59: Parse and process metrics                                       : FAIL=
+ED!
 ```
 
-Fixes: c73a56ed3c97 ("perf test: Fix test case Leader sampling on s390")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/record.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The following fixes it for me:
+```
+diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metri=
+c.c
+index 6bbc209a5c6a..7c7f489a5eb0 100644
+--- a/tools/perf/tests/parse-metric.c
++++ b/tools/perf/tests/parse-metric.c
+@@ -41,6 +41,8 @@ static void load_runtime_stat(struct evlist *evlist,
+struct value *vals)
+               count =3D find_value(evsel->name, vals);
+               evsel->supported =3D true;
+               evsel->stats->aggr->counts.val =3D count;
++               evsel->stats->aggr->counts.ena =3D 1;
++               evsel->stats->aggr->counts.run =3D 1;
+       }
+}
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 46b96d565680..7cb81cf3444a 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -261,7 +261,7 @@ test_uid() {
- test_leader_sampling() {
-   echo "Basic leader sampling test"
-   events="{cycles,cycles}:Su"
--  [ $(uname -m) = "s390x" ] && {
-+  [ "$(uname -m)" = "s390x" ] && {
-     [ ! -d /sys/devices/cpum_sf ] && {
-       echo "No CPUMF [Skipped record]"
-       return
--- 
-2.53.0.239.g8d8fc8a987-goog
+```
+I'll mail it out as a fix.
 
+Thanks,
+Ian
+
+> - Arnaldo
