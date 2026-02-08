@@ -1,185 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F70935B12B;
-	Sun,  8 Feb 2026 14:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770561753; cv=none; b=DxXFoKe17uSaQGWjukVOrSKMox3VXTOL5e6CearcNPd5ykNOFVmRMWdeQkK8hl3Lvb73JTqIYAfjvDl7FGad4Z1kNS+yAgFXm5VSISLgMzGsqOG2kD3hwh8q7RUGnZtTUxN21pyN866Xili1ehfLUtUM2UdkdRc22sx92DpZG6Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770561753; c=relaxed/simple;
-	bh=uCiFynphnzOeeKXtXxh0zZSWufnozY98BnMud2v3tYo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DSzVNhhajHC2SuX4CCYehk5iR/w79u037n69hKGUgx13FjXimVTEdKh2d10jOp0Wgr9o3zi3X2OCE2p/sVyD4ZKJT4S5zMjwRZDh27iVO1ZxnLQcbHf3GM9qwIF+nj9Zi+HlHAD8BT2WctKHh/8uXDfQFUCjAasOXVK6U0nu0Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1T8n7pu; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEA4338599
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Feb 2026 15:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770563789; cv=pass; b=aJcuRmtbtENNLaNNYHMWtpYwgkZtqDHVCaPXz10ONVRS26v+VmUgapmr91szyhu++SDXnfz6VCv5caajSNiULaX4oMZ0AaAOHmg111/wAzQtFtgU52vFZ81gBFJV8C6l3xUX6hBPB6Bb9jKMXO/6dtNe3wN9p93OnZCkOwUrtqg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770563789; c=relaxed/simple;
+	bh=jmAyjtACiSCPQEAmRMGTICjJnLwemPxRTh95jqaPKu0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DQ16gYv5w00nyrJfddPM09P0K51Z3jSU++w8PDS+e4Ee61McOuaPWK1W7xWsJJhymcdQwn17jtxqY9vkn6fUyz48UpWtIdniZ8/1lYHoLV5AqpcDf/O2z3xoiXeXZKCZtrtqRQ1BIePegHA3lCg6YibTbnVk+YBV7yCIrSTFrWM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZKjiXxPR; arc=pass smtp.client-ip=74.125.82.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1T8n7pu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E37D9C2BC86;
-	Sun,  8 Feb 2026 14:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770561752;
-	bh=uCiFynphnzOeeKXtXxh0zZSWufnozY98BnMud2v3tYo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H1T8n7puM2//7aeQGVA9RHUI992W0GAaimYV2AuhKj8FN5YXZ2GjgNP+slPUYkHsN
-	 nubslViC8Y9TRxwHW8/pK3m4yB7wkxHZgCLKtdrzo5izzMqmyBCVBFNTbw0/f1wQHp
-	 3ihXoqTjjOqP4kdfK2HFEuaer/R+vLAm6X9WsP5+wTKBDgMIPJ2O2qo1lfXXAF2yGo
-	 H/OyB+m9Ui6L1J7ptUoLoXw2By5inzVdbI3qinKAk1wCUDcWq4dt8SB0ar6cyLxRX1
-	 PwjxoJ8rBGgY8hafJs6QIVXNL9Xt5a0YlviazmJjafXtwcM+EK6E3I7sDWFJN+kcG2
-	 3itniPXL4j6/w==
-Date: Sun, 8 Feb 2026 11:42:28 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Dmitrii Dolgov <9erthalion6@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, linux-perf-users@vger.kernel.org,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Rust data-type profiling working in perf was: Re: [RFC PATCH v2 0/4]
- Test annotate with data type profiling
-Message-ID: <aYig1O0-5yxy91la@x1>
-References: <20260208122227.3524-1-9erthalion6@gmail.com>
- <aYigHLZtXooznMB7@x1>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZKjiXxPR"
+Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-2ba716126f5so9680eec.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 08 Feb 2026 07:16:28 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770563788; cv=none;
+        d=google.com; s=arc-20240605;
+        b=eis3KnahlydZQruDGU73EDeT5KEib34NwdV+YT8FT06V3bqGlFmy9hpvwQdACTdsnv
+         ChT4ghl7Sfmz3C6nEnE9k4vyIZHXDGcf0HO+0vW0MSVgSrneJW7MyS1VkLNHTQtY/7Nr
+         kRWS4bsqvsnMiCsAuTKvBIX/JMH5jOM3J+soAw+KI7S+J+yrcrAWgE0T7jVgZ9WB6Vat
+         +e2dLMMekxhHE8rarrrDXcgWKhhlZVZgvYNsGxH9GbfooyxD95YbHn904NSOKkO1TSLW
+         rkR3hRrAboFME/YQE18/0pvUQqXUhv4SEorDhEPAUuySqrMfTvH4FdzCjA9JV93NTZhL
+         /eKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=jmAyjtACiSCPQEAmRMGTICjJnLwemPxRTh95jqaPKu0=;
+        fh=2R3oCIwsfQfGOXYWrJ2MRGxUYwPXRlrV94UEQfHq5DM=;
+        b=O4mnKWdvYnWyz9LtCW+8WUXjv8fZ15bDlvHwwnF8+P96kORlnR8zcSG0n9J4jVL8wT
+         ksv6C5PC14yqBJWPkI3eOJlbzmZ1doNx+McYa7Fhn2Pcm0qUwjpSuIRpixGFBVCSs/kJ
+         Lwfh95Nw4Azjd1EboIS+G6MWHzD+MxWq8dEqWggoFe+u0qpLa96lFEcn94cOQsdJ50fx
+         BrvKE1HlHR83wrwF8+7vxj7lKjGyPg/z5KgRckb1V0kisGXcLOg513l2hpq0q2phviZM
+         gPLZ/7Xw3K+nT+icxds3jA/KjdNoTX3bgnAgfCfa0w3+R5kI3iVCe4Tyyj5DSDl2dprf
+         mZxw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770563788; x=1771168588; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jmAyjtACiSCPQEAmRMGTICjJnLwemPxRTh95jqaPKu0=;
+        b=ZKjiXxPRTK7Qry+k5EASRJJSmlK93UmmO8UDsskqVCda/mHV4XYzDWyAHuaqI7+MZA
+         rByAGCMeezqZPq8tddPVUQ/s4WumE3/wGkd4o8U2bLBMhla4qdaYP3NeYaipkbsbIH6h
+         6qLFC9z+rFZAMBXWgV7Wkq8jBO1RimRPh3w8slBBvVjZZHJZjlzUW0v1dXbwWJD3SJkw
+         xLOn1zfjm1lc0hYemZFH5cydTFOu4I1B5psNGanWD2RrZzEocSatvgFKxR1IPGU+CMML
+         Lys3Rl3oi/V3FnnTc4rqUifSwQfgogog+rwlwV+4aiRDXRS2BC/MVlWPu88oOFXU+rYK
+         AXfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770563788; x=1771168588;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=jmAyjtACiSCPQEAmRMGTICjJnLwemPxRTh95jqaPKu0=;
+        b=bndYV3tSlmMz9Y7Oh5jv/KefymDoXc1slEhap7Fy0IJY6khhxCQrhmdyY2zcVBFFvo
+         hFt3bFQiU99UnXnjVUshHpQ6RzrUeG/y8OT60dv43TzcB1QHI41FJNI52ZnrWjE4FN9s
+         eDb5DWRcdokuliY7m4J29x0h3xTvlOJoTEN+TIzMyeSVRPVfCjH7NyWsZ9lzDOt5aup8
+         3EQOQgOeDdCCynS2kt3s5CYH1i40CSouqDmFFKSGY21kms8nuy6cnXWG+SoroTvRSkeW
+         +lFdSR3sbkP/wWJ4uzTPiOP4NLKeagVIvqAcghGKB5o7gj2vWTK/1OwDiBNCsg458G/4
+         cspg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3xEfKptxC1ttQekp7JOHZfmeKGq/npOrECi2ziDrTX0H2t0qn8DXuRcQEV2VXRNBF+87OGUK0GsAfJYkkRVTU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQsse1+/tUL1pChdnYWw5FSQbD2WMrX5lRwEOmoPlD1FSfrQeE
+	EUTWTO2lyqHvP8Li9j7uRnhtixWVxB+YISkugKORurNiUmR1NdCaaf7pLCJhFi0ics9G1bzUgL+
+	HOzHK2gL4luznEaIJHkyMPEh4L6KUg7k=
+X-Gm-Gg: AZuq6aJQ9GDNdFjO6ohxR5a0rTDrvfLmpl9f/UT9UzXT6R9jfJ9qcoTFFXjzMSPJ+6V
+	ZZWhDoGSErbJX2NmcXSF0nhvxAOB90CkoIew7Vj4dhAxkc17gUKgmAqV2RynHWiOf7j7JVBZ14t
+	NZpgBMK9KMfuPJainYfJKRjZiVkUPRA16asYnrlteB+chmfd7Gjuh4Z2pOQFpTSNh6XWcEGkm94
+	lEsaYXscmM7RYrBb+0FSdwQjqZjA/2+Z6SLuBy97Oni6e3ihC0+vRE6Yo+iSdZIGOc2zQN5MM51
+	JQVLRoXkoycIiHRvZ+N5/PJkeocb6K8w7mHkPrg5ZwIrpUJ/4Waymx4KH9aRuXAPZjtgdGZkEXE
+	yYxhsilpuAMDu
+X-Received: by 2002:a05:7300:dc08:b0:2b7:b6ee:b3c6 with SMTP id
+ 5a478bee46e88-2b856520cbbmr2075162eec.7.1770563787994; Sun, 08 Feb 2026
+ 07:16:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aYigHLZtXooznMB7@x1>
+References: <20260208122227.3524-1-9erthalion6@gmail.com> <aYigHLZtXooznMB7@x1>
+ <aYig1O0-5yxy91la@x1>
+In-Reply-To: <aYig1O0-5yxy91la@x1>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 8 Feb 2026 16:16:15 +0100
+X-Gm-Features: AZwV_Qiu4OKbW4xqVSy-rfd4vUd-D73QLQerjhiUTXcbQxRD6AzuaUXsgSc3LgQ
+Message-ID: <CANiq72=URHDPz5=t5jDr1r7whEhRzQiJdMMp+HLyP6fBH2xfZg@mail.gmail.com>
+Subject: Re: Rust data-type profiling working in perf was: Re: [RFC PATCH v2
+ 0/4] Test annotate with data type profiling
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Dmitrii Dolgov <9erthalion6@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, 
+	Ian Rogers <irogers@google.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	rust-for-linux <rust-for-linux@vger.kernel.org>, Boqun Feng <boqun@kernel.org>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 08, 2026 at 11:39:28AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Sun, Feb 08, 2026 at 01:22:22PM +0100, Dmitrii Dolgov wrote:
-> > Add shell tests for data type profiling, including C and rust.
+On Sun, Feb 8, 2026 at 3:42=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> This is an interesting piece of news, so CCing to lkml and Miguel as
+> well, please CC that list in the future.
+>
+> Also please consider adding examples of output of such new features, so
+> that people can quickly see it in action, data-type profiling for Rust
+> seems interesting, right? :-)
 
-> > To support the rust test, a new workload with rust code was introduced.
-> > To build it only when rust is actually available, also add a feature
-> > test for rust compiler and guard everything behind it.
+Thanks Arnaldo for the ping!
 
-> > Changes in v2:
-> > - Switched to use mem record.
-> > - Fixed the build issue with a custom output.
-> > - Separated patches for the workload and tests.
-> > - Added new test for C code.
-> > - Added a feature test for rust compiler.
- 
-> Thanks, tested it, everything working as advertised:
+Cc'ing rust-for-linux as well.
 
-This is an interesting piece of news, so CCing to lkml and Miguel as
-well, please CC that list in the future.
+Thread at https://lore.kernel.org/all/20260208122227.3524-1-9erthalion6@gma=
+il.com/
 
-Also please consider adding examples of output of such new features, so
-that people can quickly see it in action, data-type profiling for Rust
-seems interesting, right? :-)
-
-- Arnaldo
- 
-> ⬢ [acme@toolbx perf-tools-next]$ m
-> make: Entering directory '/home/acme/git/linux/tools/perf'
->   BUILD:   Doing 'make -j32' parallel build
-> Warning: Kernel ABI header differences:
->   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
->   diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
-> 
-> Auto-detecting system features:
-> ...                  libdw: [ on  ]
-> ...                  glibc: [ on  ]
-> ...                 libelf: [ on  ]
-> ...                libnuma: [ on  ]
-> ... numa_num_possible_cpus: [ on  ]
-> ...              libpython: [ on  ]
-> ...            libcapstone: [ on  ]
-> ...              llvm-perf: [ on  ]
-> ...                   zlib: [ on  ]
-> ...                   lzma: [ on  ]
-> ...                    bpf: [ on  ]
-> ...                 libaio: [ on  ]
-> ...                libzstd: [ on  ]
-> ...             libopenssl: [ on  ]
-> ...                   rust: [ on  ] <-------------------------
-> 
->   INSTALL libsubcmd_headers
-> <SNIP>
-> 
-> ⬢ [acme@toolbx perf-tools-next]$ perf record perf test -w code_with_type
-> [ perf record: Woken up 2 times to write data ]
-> [ perf record: Captured and wrote 0.162 MB perf.data (4036 samples) ]
-> ⬢ [acme@toolbx perf-tools-next]$ perf report --stdio --dso perf -s srcfile,srcline | head -20
-> # To display the perf.data header info, please use --header/--header-only options.
-> #
-> #
-> # Total Lost Samples: 0
-> #
-> # Samples: 4K of event 'cpu/cycles/Pu'
-> # Event count (approx.): 5337677712
-> #
-> # Overhead  Source File        Source:Line
-> # ........  .................  ..............................................................
-> #
->     25.53%  cmp.rs             cmp.rs:1903
->     16.66%  code_with_type.rs  code_with_type.rs:15
->     14.48%  ub_checks.rs       ub_checks.rs:68
->     11.16%  range.rs           range.rs:204
->      6.39%  range.rs           range.rs:0
->      4.61%  range.rs           range.rs:849
->      3.78%  code_with_type.rs  code_with_type.rs:13
->      3.51%  code_with_type.rs  code_with_type.rs:21
->      2.89%  range.rs           range.rs:764
-> ⬢ [acme@toolbx perf-tools-next]$ grep -m1 'model name' /proc/cpuinfo
-> model name	: AMD Ryzen 9 9950X3D 16-Core Processor
-> ⬢ [acme@toolbx perf-tools-next]$ uname -a
-> Linux toolbx 6.18.8-200.fc43.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Jan 30 20:23:28 UTC 2026 x86_64 GNU/Linux
-> ⬢ [acme@toolbx perf-tools-next]$
-> 
->   root@number:~# perf test 'perf data type profiling tests'
->    83: perf data type profiling tests                                  : Ok
->   root@number:~# perf test -vv 'perf data type profiling tests'
->    83: perf data type profiling tests:
->   --- start ---
->   test child forked, pid 125028
->   Basic Rust perf annotate test
->   Basic annotate test [Success]
->   Pipe Rust perf annotate test
->   Pipe annotate test [Success]
->   Basic C perf annotate test
->   Basic annotate test [Success]
->   Pipe C perf annotate test
->   Pipe annotate test [Success]
->   ---- end(0) ----
->    83: perf data type profiling tests                                  : Ok
->   root@number:~#
-> 
-> Thanks, applied to perf-tools-next,
-> 
-> - Arnaldo
-
-> > Dmitrii Dolgov (4):
-> >   tools/build: Add a feature test for rust compiler
-> >   perf test workload: Add code_with_type test workload
-> >   perf tests: Test annotate with data type profiling and rust
-> >   perf tests: Test annotate with data type profiling and C
-> > 
-> >  tools/build/Makefile.build                    | 14 ++++
-> >  tools/build/Makefile.feature                  |  6 +-
-> >  tools/build/feature/Makefile                  |  7 ++
-> >  tools/build/feature/test-rust.rs              |  4 +
-> >  tools/perf/Makefile.config                    | 11 +++
-> >  tools/perf/Makefile.perf                      |  2 +-
-> >  tools/perf/builtin-check.c                    |  1 +
-> >  tools/perf/tests/builtin-test.c               |  4 +
-> >  tools/perf/tests/shell/data_type_profiling.sh | 84 +++++++++++++++++++
-> >  tools/perf/tests/tests.h                      |  4 +
-> >  tools/perf/tests/workloads/Build              |  5 ++
-> >  tools/perf/tests/workloads/code_with_type.c   | 46 ++++++++++
-> >  tools/perf/tests/workloads/code_with_type.rs  | 23 +++++
-> >  tools/scripts/Makefile.include                |  2 +
-> >  14 files changed, 210 insertions(+), 3 deletions(-)
-> >  create mode 100644 tools/build/feature/test-rust.rs
-> >  create mode 100755 tools/perf/tests/shell/data_type_profiling.sh
-> >  create mode 100644 tools/perf/tests/workloads/code_with_type.c
-> >  create mode 100644 tools/perf/tests/workloads/code_with_type.rs
-> > 
-> > base-commit: 36a1b0061a584430277861fe5d8bd107aef26137
-> > -- 
-> > 2.52.0
-> > 
+Cheers,
+Miguel
