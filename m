@@ -1,100 +1,165 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dl1-f50.google.com (mail-dl1-f50.google.com [74.125.82.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE2A286417
-	for <linux-perf-users@vger.kernel.org>; Sun,  8 Feb 2026 05:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0545328B44
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Feb 2026 06:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770530099; cv=none; b=tAofrxZjYO1JIwk8XPAaq0bYiK+SaLjCu+Kf7cROj0W5xrt70hENHcSTgLAqqR4oXe5SJaQaO7i43Yu/FIsZyJcBruxVNCIqeIuxi7xWnTEia94tBqjQl5tyUMkZAztC2Mf+Ig+vyzDOkpFHeW2azPeZ2/nQwZwrv6caHeolxZ0=
+	t=1770532737; cv=none; b=CF0MoQuKxUTjuo2m/nIpl3od3t8Gt7eli0vg5gn97CBL+EppU+4HY/kiZeI2+JpmBFZgi9qAoc8gZsK4BHr7tV+pYUwQRRLxRwd59tO/zXGWr7zAgTT3Fnn43aCLWQqt2SP7+ExIyvqW0+VSSmLUFlG9rI/9Tq5scKDWlbJTP2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770530099; c=relaxed/simple;
-	bh=JoY1n+l6pd1BCL502VNFlXuVt8k7uJXlwxHjuh1t/zc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=m4X/YDa23h8WXiwhqkodErSEJ3sRIG+V2YVvdcEsnTF5kP0YtTH3eryP8zOwNGgP6NwpOFc4t/6PJ2Vd50JjidlKTSl0tjuJU07yi7fTNtSN9Uk4+PPR+R++OzdNYqFgsUWpSkXJ66hECY7fAZ4NUyrMNS31C+qfFqy0k/zRMlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JCTP3Fhr; arc=none smtp.client-ip=74.125.82.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1770532737; c=relaxed/simple;
+	bh=lnMMOUMy31nqFoghRVvX8VIe6miKik5AX/BmRvZnkyA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RoyP6tSnggUlgkCCU3FRPFJZn5/XH/fUq59DM7z4GCNhS6lm/bxsCQw1SaVuMtKcfbVFp2DxCEdGC+NNkQ3Jgq8y4uQrs8ATsTSAwoSeJ9X86G9UVFt8PQVjtDTwXUFGqz4OHqouEguGFgWgWltjakd5e+/nuKKtbb1qLD3fvV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Vkh5bhft; arc=none smtp.client-ip=74.125.82.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JCTP3Fhr"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-124aa710af7so13342031c88.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 07 Feb 2026 21:54:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Vkh5bhft"
+Received: by mail-dl1-f50.google.com with SMTP id a92af1059eb24-1248d27f293so8838284c88.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 07 Feb 2026 22:38:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770530098; x=1771134898; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lrW1Cx3/67vRka+SGqomkI3iFHJq9jaTFbD4Hj4rLFY=;
-        b=JCTP3Fhr7Pr5NIbT7BOvLPQ59IbWrf43RoekSxx9qTI8rcLKdBN7BbAqNNYNcD7W91
-         8jwE2bVX+iVxEfX+7MbIJchtiTy6F8Cz2Naupr8Z4PcuOVIonx2N/8Oyh1XRO5tsNVLb
-         seazLhKB7wkF78xBYjmEehcsMBVRe5BMz8JnE0HZAW33togmxoCFxR1gWg64Ydq7t5/m
-         rPT1fvyLWw0jWZMJl/ZFNXJw/Eoaelh2EOnxyH/CU6O4Xiw/Cw1k5X/37gIN6Nn8k0GE
-         LecaxTWUQZDWrZyexkPoSXvXwj82o76GZl37LM9uo0otlGonmJCZTLPu/p6eBz6JjC6M
-         OC8Q==
+        d=sifive.com; s=google; t=1770532737; x=1771137537; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cj7VDyEmyttJ6U7k+eNuSHRKVocJsp9GVC83IsF+hRI=;
+        b=Vkh5bhftUJvnVopn7oj6vXxfx0HiAe6Vs/dTEIjAXN7fmSdnZOBusEER2kzMui2Gv3
+         NhlZNrydadmtExa2rrXP1C5kvkBjUQVCd+bMgyr6kU/SBMYP3hhFrjdgg+JquJpyCneF
+         Bnx/aUVXQFPC09VVLJvg7bdLf/BgeGn3mHN8oS6SN1Kv77SA8oN4mAZNol9lCEJBy6Bh
+         JQuNmfZuA0lQCg0WewS1I4010QwhUstrzG3bCO5pQLcopQVfGDY0rZ8StWxmQMY15UcK
+         6CqVXS6jWsNfZ9v2E7r+mAXTfktRSh60oEQyoTaqrwqhClr7blIAIAfkJSYx/nJ9QWwt
+         CODQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770530098; x=1771134898;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lrW1Cx3/67vRka+SGqomkI3iFHJq9jaTFbD4Hj4rLFY=;
-        b=JqNecqO7h65tpQnX0CRekq4H3ashKn8p4nmNzsl8p6OPeoW8e9knm3fdVTWJXL7shD
-         1Go/pWXUQFDzCR1VNwBGjBy8jPNvCqJiWorq9r8NPF+vRaDh418Etzi4pz4DhtN0LkZ/
-         vmfMinER4LuOibmrRhM2q4XFrFqejf0FBHzJ5b0EzRvrJ2fw+ZAMpLiHBuWkTFFO25qe
-         FiJkU+BUEYmDa2HpOVAB2EIjdKvSmZBGh8kn2L1FB6pxTCLosYmFBv9opD+xr4y/J1co
-         1wwXWFoczMTlxybOaM+NfbeT1ViMUerENiaaZKxC3c5Up1RA2wHoC2Jog7SqKNjf0ppR
-         oc6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ8pRwVCgWu0hQA0ira23tkSlEYcZBNKVXFu0eX/PJPlP6XWzomTmK9BvoI0ZjgNrPlrskmlujvrdt1s2cpbti@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzUvmHcLc4X8SvCci1zcb3Q6JUB/DY+8RBVNsEw6Xflww4JGMZ
-	XFlsgZfEXGA6jEOTIMzmrjfrE1CJyCRpXqQ56ebEbhwVgLQGjXpSgmtgAgrutNNXV7GSuRWRtYs
-	QQyZcg6H5SA==
-X-Received: from dyax22-n1.prod.google.com ([2002:a05:693c:4196:10b0:2b8:1dcd:3af6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:2384:b0:2b7:2bf3:ce01
- with SMTP id 5a478bee46e88-2b85682f7d0mr3957118eec.30.1770530098372; Sat, 07
- Feb 2026 21:54:58 -0800 (PST)
-Date: Sat,  7 Feb 2026 21:54:55 -0800
-In-Reply-To: <CAP-5=fXH1tP_x22_YXi3F3POjjTxc8216o6=F+19XSYEWGwgOA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1770532737; x=1771137537;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cj7VDyEmyttJ6U7k+eNuSHRKVocJsp9GVC83IsF+hRI=;
+        b=bX4vrrcNRWLgXFFNGf9chisVXn2T5rFlFhpRvPxwuPKchBAeuhqkD9jSVHQ6qFlYPJ
+         QXUAKCdSXuC8IYNQBvXT5b/Yns0AaeuiJ5QuB0BzrGGl82A+n73IrMnJBFN0ELrLB1lN
+         W1h/ehz+VxDnqZGTttjaP79wO6qJ2/PtgOiugWFQbGEgBNDKGKsjix86NUhWKDqTKYfj
+         n+1F59EdcdRI0OEHJw3mPO1Qc21F9fj13BbCj6wu5858hu6Ml6Ux0XRfRNudaLPvYnmI
+         K3Hdpx3g2fleq7hgQ8dlnXL4dq6HckMy7/DcvcVOdzA6VDdjy1i2ovPT9wa9IZ0teNMB
+         x80Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXLeKZ6KUH8R88uAVxHi6wbelVbBsbt8IBNzzfs0dsgbhnFb1KVti9qZ97/dV1BBUlLc7odkk8l10GkoOhsG4+X@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6KCjtGk401Y9GIk14waOsdH9RCZKBA7Z2unbxttDDV/PZP17p
+	+5cuMelqAOonxfrOzl9oCNRLl12gxl/Zle80n8/uWgeMwfUBb5ZoOvIw+1tR9N3rV3E=
+X-Gm-Gg: AZuq6aKg+cdhXveY9MUQa3zrAA+nNN3P+qOVULCU9Q1e7xhqSJq9S+xdjQYGkpIwvgL
+	JlzYtn/yEoJX8I3QEfgW/9m4QWUsqGLSO98DrrroZHmEuYnLAreOeqyd1DvjbKgsPlSwFv+NJTy
+	GCiMrjpqvVUL/gWwknZvi25rbRgKMM5kqD8nwlN7y1vi8HIVDDwf8WwF5ZPxtqqltKEfz5MLvzq
+	HqV6ylySv0I5k3KGiLbVB97USsI8X8vqE8tlv8D9HVuPRu3meVHSve02M4OYOLmNehjm/AD97w7
+	A4m4zpcCzcOLOHlwoYe4ZSo1AIJ4DGrqyyEG3WhHhKSFP58BspTSii7L5VKdUQMVe+ePlaeO79Q
+	4I60KapYVoPfSSv0CSCeW4mJOGT/J/+A29myaj9vp3umHlh0AePzlMuCN00e1IEJHCG9F75IIXg
+	pjAS6x+aPx+VLRprj7OL7C/Y4=
+X-Received: by 2002:a05:7022:6894:b0:122:153:d161 with SMTP id a92af1059eb24-12704001972mr4399912c88.17.1770532736689;
+        Sat, 07 Feb 2026 22:38:56 -0800 (PST)
+Received: from sw04.internal.sifive.com ([4.53.31.132])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1270c9ff2bcsm5114647c88.1.2026.02.07.22.38.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Feb 2026 22:38:54 -0800 (PST)
+From: Zong Li <zong.li@sifive.com>
+To: tjeznach@rivosinc.com,
+	joro@8bytes.org,
+	will@kernel.org,
+	robin.murphy@arm.com,
+	robh@kernel.org,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	mark.rutland@arm.com,
+	conor+dt@kernel.org,
+	krzk@kernel.org,
+	guoyaxing@bosc.ac.cn,
+	luxu.kernel@bytedance.com,
+	lv.zheng@linux.spacemit.com,
+	andrew.jones@oss.qualcomm.com,
+	linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-perf-users@vger.kernel.org
+Cc: Zong Li <zong.li@sifive.com>
+Subject: [PATCH v2 0/2] RISC-V IOMMU HPM support
+Date: Sat,  7 Feb 2026 22:38:34 -0800
+Message-ID: <20260208063848.3547817-1-zong.li@sifive.com>
+X-Mailer: git-send-email @GIT_VERSION@
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <CAP-5=fXH1tP_x22_YXi3F3POjjTxc8216o6=F+19XSYEWGwgOA@mail.gmail.com>
-X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
-Message-ID: <20260208055455.2437197-1-irogers@google.com>
-Subject: [PATCH v1] perf test parse-metric: Ensure aggregate counts appear to
- have run
-From: Ian Rogers <irogers@google.com>
-To: irogers@google.com, acme@kernel.org, ctshao@google.com, 
-	namhyung@kernel.org
-Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
-	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
-	yang.lee@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Commit bb5a920b9099 ("perf stat: Ensure metrics are displayed even
-with failed events") made it so that counters which weren't enabled in
-the kernel were handled as NaN in metrics. This cased the "Parse and
-process metrics" test to start failing as it wasn't putting a non-zero
-value in these variables. Add arbitrary values of 1 to fix the test.
+This series implements support for the RISC-V IOMMU hardware performance
+monitor.
 
-Fixes: bb5a920b9099 ("perf stat: Ensure metrics are displayed even with failed events")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/parse-metric.c | 2 ++
- 1 file changed, 2 insertions(+)
+The RISC-V IOMMU PMU driver is implemented as an auxiliary device driver
+created by the parent RISC-V IOMMU driver. The child driver can obtain
+resources and information from the parent device, such as the MMIO base
+address and IRQ number.
 
-diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-index 6bbc209a5c6a..7c7f489a5eb0 100644
---- a/tools/perf/tests/parse-metric.c
-+++ b/tools/perf/tests/parse-metric.c
-@@ -41,6 +41,8 @@ static void load_runtime_stat(struct evlist *evlist, struct value *vals)
- 		count = find_value(evsel->name, vals);
- 		evsel->supported = true;
- 		evsel->stats->aggr->counts.val = count;
-+		evsel->stats->aggr->counts.ena = 1;
-+		evsel->stats->aggr->counts.run = 1;
- 	}
- }
- 
+Custom event support is not included in this series and will be submitted
+as a separate series. The idea is that custom events will be defined
+through the driver data of the auxiliary driver. When the parent IOMMU
+driver creates the auxiliary device, it should pass a vendor-specific
+name as the device name in order to match the corresponding auxiliary
+device ID.
+
+After my initial RFC and the v1 patch series were posted, similar patch
+series also appeared on the mailing list.
+
+One was from Yaxing Guo:
+https://lore.kernel.org/all/20250915020911.1313-1-guoyaxing@bosc.ac.cn/
+
+and another from Lv Zheng:
+https://lore.kernel.org/all/30C7AD351DB55276+a8b03dac-c5af-4034-8631-ac1c352a469f@linux.spacemit.com/
+
+Yaxing has agreed to pause his series, as discussed here:
+https://lore.kernel.org/linux-iommu/2ce9d8be-10b3-48dd-b99e-7358347fc171@bosc.ac.cn/
+
+The motivation for sending this v2 version is not only to address the
+feedback and suggestions from the previous round, but also to introduce
+a major structural change: the PMU driver has been moved under
+drivers/perf/, which has been mentioned repeatedly by several people.
+This results in a different driver structure compared to my earlier
+version and the other two series, and I'd like to gather feedback and
+suggestions from the community on this approach. If the community would
+prefer to go with Lv Zheng’s version instead, I am perfectly fine with
+that as well.
+
+Since I did not follow up closely on the patches from Lv Zheng, Jingyu
+Li, or Yaxing, it is possible that this v2 series may miss some important
+features or fixes from their work. Therefore, I would really appreciate
+it if everyone could help review this v2 series and point out any
+additional fixes or feature support that I may have missed.
+
+Changed in v1:
+- Rebased onto v6.19-rc8
+- Pick all suggestions and feedbacks from v1 series
+- Add cpu hotplug implementation to avoid race enablement
+- Move PMU-related definition from header to c file
+- Change PMU driver to auxiliary device driver
+
+Changed in RFC:
+- Rebase onto v6.13-rc7
+- Clear interrupt pending before handling interrupt
+- Fix the counter value issue caused by OF bit in the cycle counter.
+- Invoke riscv_iommu_hpm_disable() instead of riscv_iommu_pmu_uninit()
+  in riscv_iommu_remove()
+
+Zong Li (2):
+  drivers/perf: riscv-iommu: add risc-v iommu pmu driver
+  iommu/riscv: create a auxiliary device for HPM
+
+ drivers/iommu/riscv/iommu-bits.h |  61 ---
+ drivers/iommu/riscv/iommu.c      |  20 +
+ drivers/perf/Kconfig             |  12 +
+ drivers/perf/Makefile            |   1 +
+ drivers/perf/riscv_iommu_pmu.c   | 661 +++++++++++++++++++++++++++++++
+ 5 files changed, 694 insertions(+), 61 deletions(-)
+ create mode 100644 drivers/perf/riscv_iommu_pmu.c
+
 -- 
-2.53.0.239.g8d8fc8a987-goog
+2.43.7
 
