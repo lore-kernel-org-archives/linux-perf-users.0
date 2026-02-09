@@ -1,125 +1,156 @@
-Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEA4338599
-	for <linux-perf-users@vger.kernel.org>; Sun,  8 Feb 2026 15:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770563789; cv=pass; b=aJcuRmtbtENNLaNNYHMWtpYwgkZtqDHVCaPXz10ONVRS26v+VmUgapmr91szyhu++SDXnfz6VCv5caajSNiULaX4oMZ0AaAOHmg111/wAzQtFtgU52vFZ81gBFJV8C6l3xUX6hBPB6Bb9jKMXO/6dtNe3wN9p93OnZCkOwUrtqg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770563789; c=relaxed/simple;
-	bh=jmAyjtACiSCPQEAmRMGTICjJnLwemPxRTh95jqaPKu0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DQ16gYv5w00nyrJfddPM09P0K51Z3jSU++w8PDS+e4Ee61McOuaPWK1W7xWsJJhymcdQwn17jtxqY9vkn6fUyz48UpWtIdniZ8/1lYHoLV5AqpcDf/O2z3xoiXeXZKCZtrtqRQ1BIePegHA3lCg6YibTbnVk+YBV7yCIrSTFrWM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZKjiXxPR; arc=pass smtp.client-ip=74.125.82.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86D51C861A;
+	Mon,  9 Feb 2026 00:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770597699; cv=none; b=DXeCMIZ9+dDaKO7ngeC2U66OeM2NSo8D5+iPUlk4wZjohNsaEK/IQbMUsMRnErra/AbKrX201XiNlJ41VlmPTk4324HZFeEP63SryJ4PFAuUDWa1kNXVyOwYmjFCr6iQL5qIoy3T+/hxoITG4vYIh/g74yVdjSxkVy9W3vXDsck=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770597699; c=relaxed/simple;
+	bh=uwmBy8IOtLmDViaIZqWFEOwMcI3u+2Y7TPYkfCKwPfE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=swipp13S1n7dsW3aceqhFfe9Bv4ydrz5ikjmK6BPXhrNxtuOskX0NAvXUafqcCbnV0fYE7itlLUi57saXbVBYNNZDlGhxOvV+70xm4yiH3yia+xTHjs9Ot/uz3lugMTJhOiuCQ2n9sy7U1l9/bdFom2agoRIjl4bmgfjEwFpKVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FGLrC64+; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZKjiXxPR"
-Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-2ba716126f5so9680eec.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 08 Feb 2026 07:16:28 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770563788; cv=none;
-        d=google.com; s=arc-20240605;
-        b=eis3KnahlydZQruDGU73EDeT5KEib34NwdV+YT8FT06V3bqGlFmy9hpvwQdACTdsnv
-         ChT4ghl7Sfmz3C6nEnE9k4vyIZHXDGcf0HO+0vW0MSVgSrneJW7MyS1VkLNHTQtY/7Nr
-         kRWS4bsqvsnMiCsAuTKvBIX/JMH5jOM3J+soAw+KI7S+J+yrcrAWgE0T7jVgZ9WB6Vat
-         +e2dLMMekxhHE8rarrrDXcgWKhhlZVZgvYNsGxH9GbfooyxD95YbHn904NSOKkO1TSLW
-         rkR3hRrAboFME/YQE18/0pvUQqXUhv4SEorDhEPAUuySqrMfTvH4FdzCjA9JV93NTZhL
-         /eKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=jmAyjtACiSCPQEAmRMGTICjJnLwemPxRTh95jqaPKu0=;
-        fh=2R3oCIwsfQfGOXYWrJ2MRGxUYwPXRlrV94UEQfHq5DM=;
-        b=O4mnKWdvYnWyz9LtCW+8WUXjv8fZ15bDlvHwwnF8+P96kORlnR8zcSG0n9J4jVL8wT
-         ksv6C5PC14yqBJWPkI3eOJlbzmZ1doNx+McYa7Fhn2Pcm0qUwjpSuIRpixGFBVCSs/kJ
-         Lwfh95Nw4Azjd1EboIS+G6MWHzD+MxWq8dEqWggoFe+u0qpLa96lFEcn94cOQsdJ50fx
-         BrvKE1HlHR83wrwF8+7vxj7lKjGyPg/z5KgRckb1V0kisGXcLOg513l2hpq0q2phviZM
-         gPLZ/7Xw3K+nT+icxds3jA/KjdNoTX3bgnAgfCfa0w3+R5kI3iVCe4Tyyj5DSDl2dprf
-         mZxw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770563788; x=1771168588; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jmAyjtACiSCPQEAmRMGTICjJnLwemPxRTh95jqaPKu0=;
-        b=ZKjiXxPRTK7Qry+k5EASRJJSmlK93UmmO8UDsskqVCda/mHV4XYzDWyAHuaqI7+MZA
-         rByAGCMeezqZPq8tddPVUQ/s4WumE3/wGkd4o8U2bLBMhla4qdaYP3NeYaipkbsbIH6h
-         6qLFC9z+rFZAMBXWgV7Wkq8jBO1RimRPh3w8slBBvVjZZHJZjlzUW0v1dXbwWJD3SJkw
-         xLOn1zfjm1lc0hYemZFH5cydTFOu4I1B5psNGanWD2RrZzEocSatvgFKxR1IPGU+CMML
-         Lys3Rl3oi/V3FnnTc4rqUifSwQfgogog+rwlwV+4aiRDXRS2BC/MVlWPu88oOFXU+rYK
-         AXfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770563788; x=1771168588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jmAyjtACiSCPQEAmRMGTICjJnLwemPxRTh95jqaPKu0=;
-        b=bndYV3tSlmMz9Y7Oh5jv/KefymDoXc1slEhap7Fy0IJY6khhxCQrhmdyY2zcVBFFvo
-         hFt3bFQiU99UnXnjVUshHpQ6RzrUeG/y8OT60dv43TzcB1QHI41FJNI52ZnrWjE4FN9s
-         eDb5DWRcdokuliY7m4J29x0h3xTvlOJoTEN+TIzMyeSVRPVfCjH7NyWsZ9lzDOt5aup8
-         3EQOQgOeDdCCynS2kt3s5CYH1i40CSouqDmFFKSGY21kms8nuy6cnXWG+SoroTvRSkeW
-         +lFdSR3sbkP/wWJ4uzTPiOP4NLKeagVIvqAcghGKB5o7gj2vWTK/1OwDiBNCsg458G/4
-         cspg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3xEfKptxC1ttQekp7JOHZfmeKGq/npOrECi2ziDrTX0H2t0qn8DXuRcQEV2VXRNBF+87OGUK0GsAfJYkkRVTU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQsse1+/tUL1pChdnYWw5FSQbD2WMrX5lRwEOmoPlD1FSfrQeE
-	EUTWTO2lyqHvP8Li9j7uRnhtixWVxB+YISkugKORurNiUmR1NdCaaf7pLCJhFi0ics9G1bzUgL+
-	HOzHK2gL4luznEaIJHkyMPEh4L6KUg7k=
-X-Gm-Gg: AZuq6aJQ9GDNdFjO6ohxR5a0rTDrvfLmpl9f/UT9UzXT6R9jfJ9qcoTFFXjzMSPJ+6V
-	ZZWhDoGSErbJX2NmcXSF0nhvxAOB90CkoIew7Vj4dhAxkc17gUKgmAqV2RynHWiOf7j7JVBZ14t
-	NZpgBMK9KMfuPJainYfJKRjZiVkUPRA16asYnrlteB+chmfd7Gjuh4Z2pOQFpTSNh6XWcEGkm94
-	lEsaYXscmM7RYrBb+0FSdwQjqZjA/2+Z6SLuBy97Oni6e3ihC0+vRE6Yo+iSdZIGOc2zQN5MM51
-	JQVLRoXkoycIiHRvZ+N5/PJkeocb6K8w7mHkPrg5ZwIrpUJ/4Waymx4KH9aRuXAPZjtgdGZkEXE
-	yYxhsilpuAMDu
-X-Received: by 2002:a05:7300:dc08:b0:2b7:b6ee:b3c6 with SMTP id
- 5a478bee46e88-2b856520cbbmr2075162eec.7.1770563787994; Sun, 08 Feb 2026
- 07:16:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FGLrC64+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770597699; x=1802133699;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uwmBy8IOtLmDViaIZqWFEOwMcI3u+2Y7TPYkfCKwPfE=;
+  b=FGLrC64+/E2eHZ9VtDzjxf/sdpUYiNoOXPWlOTvMPhG2YGLNX+xRsflp
+   cB/wWc55gG6AclSbRXGmII0bersrjIF1kTJDrLX9LNCvFq0uS8khIAque
+   nk6pEWUvnx7LPpi7rS5I/I9hbz7i8ZTvCF3OMyE/RZ5Mpf5Jo/djN6ANm
+   AWDCt7NICY7u2wAOVzI3TVEMS2p/lIFcHvl2JgNtlvuev0bjISbFfu3Iw
+   EGTbwDz9zxke5YZS7iG2duL3JgvLJY9zwwZ3z4Jfh3rjQxm2Dy/AE/C+I
+   QAx1m1SxvXXZjmyX1aVMqOf/zJNhJ8JZZvJR8OQ2VCuBhM2TtlZYkta4K
+   A==;
+X-CSE-ConnectionGUID: 9BrpUrwORH+Pey1M+p3vCA==
+X-CSE-MsgGUID: P91C6eFzQASqD7eM1vnOFQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11695"; a="75328316"
+X-IronPort-AV: E=Sophos;i="6.21,281,1763452800"; 
+   d="scan'208";a="75328316"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2026 16:41:39 -0800
+X-CSE-ConnectionGUID: KgN0oLVTQoi3FzfO6xz1NQ==
+X-CSE-MsgGUID: gFpBn04eQDK7sX54+UwjmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,281,1763452800"; 
+   d="scan'208";a="211225158"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2026 16:41:34 -0800
+Message-ID: <1f89dde0-6c81-4127-9dfb-0be1ca685b65@linux.intel.com>
+Date: Mon, 9 Feb 2026 08:41:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260208122227.3524-1-9erthalion6@gmail.com> <aYigHLZtXooznMB7@x1>
- <aYig1O0-5yxy91la@x1>
-In-Reply-To: <aYig1O0-5yxy91la@x1>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 8 Feb 2026 16:16:15 +0100
-X-Gm-Features: AZwV_Qiu4OKbW4xqVSy-rfd4vUd-D73QLQerjhiUTXcbQxRD6AzuaUXsgSc3LgQ
-Message-ID: <CANiq72=URHDPz5=t5jDr1r7whEhRzQiJdMMp+HLyP6fBH2xfZg@mail.gmail.com>
-Subject: Re: Rust data-type profiling working in perf was: Re: [RFC PATCH v2
- 0/4] Test annotate with data type profiling
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Dmitrii Dolgov <9erthalion6@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, 
-	Ian Rogers <irogers@google.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	rust-for-linux <rust-for-linux@vger.kernel.org>, Boqun Feng <boqun@kernel.org>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel/uncore: Remove extra double quote mark
+To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ Markus Elfring <Markus.Elfring@web.de>, Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>
+References: <20260206231203.11760-1-zide.chen@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260206231203.11760-1-zide.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 8, 2026 at 3:42=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
+
+On 2/7/2026 7:12 AM, Zide Chen wrote:
+> The third argument in INTEL_UNCORE_FR_EVENT_DESC() is subject to
+> __stringify(), and the extra double quote marks can result in the
+> expansion "3.814697266e-6" in the sysfs knobs, instead of
+> 3.814697266e-6.
 >
-> This is an interesting piece of news, so CCing to lkml and Miguel as
-> well, please CC that list in the future.
+> This is incorrect, though it may still work for perf, e.g.
+> perf stat -e uncore_iio_free_running_0/bw_in_port0/
 >
-> Also please consider adding examples of output of such new features, so
-> that people can quickly see it in action, data-type profiling for Rust
-> seems interesting, right? :-)
+> Fixes: d8987048f665 ("perf/x86/intel/uncore: Support IIO free-running counters on DMR")
+> Reported-by: Chun-Tse Shao <ctshao@google.com>
+> Closes: https://lore.kernel.org/all/20251231224233.113839-1-zide.chen@intel.com/
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> ---
+>  arch/x86/events/intel/uncore_snbep.c | 48 ++++++++++++++--------------
+>  1 file changed, 24 insertions(+), 24 deletions(-)
+>
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+> index 7ca0429c4004..3b6b4bd4793a 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -6909,34 +6909,34 @@ static struct freerunning_counters dmr_iio_freerunning[] = {
+>  
+>  static struct uncore_event_desc dmr_uncore_iio_freerunning_events[] = {
+>  	/*  ITC Free Running Data BW counter for inbound traffic */
+> -	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port0, 0x10, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port1, 0x11, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port2, 0x12, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port3, 0x13, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port4, 0x14, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port5, 0x15, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port6, 0x16, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port7, 0x17, "3.814697266e-6"),
+> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port0, 0x10, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port1, 0x11, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port2, 0x12, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port3, 0x13, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port4, 0x14, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port5, 0x15, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port6, 0x16, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port7, 0x17, 3.814697266e-6),
+>  
+>  	/*  ITC Free Running BW IN counters */
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port4, 0x24, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port5, 0x25, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port6, 0x26, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port7, 0x27, "3.814697266e-6"),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port4, 0x24, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port5, 0x25, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port6, 0x26, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port7, 0x27, 3.814697266e-6),
+>  
+>  	/*  ITC Free Running BW OUT counters */
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port0, 0x30, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port1, 0x31, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port2, 0x32, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port3, 0x33, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port4, 0x34, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port5, 0x35, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port6, 0x36, "3.814697266e-6"),
+> -	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port7, 0x37, "3.814697266e-6"),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port0, 0x30, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port1, 0x31, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port2, 0x32, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port3, 0x33, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port4, 0x34, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port5, 0x35, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port6, 0x36, 3.814697266e-6),
+> +	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port7, 0x37, 3.814697266e-6),
+>  
+>  	/* Free Running Clock Counter */
+>  	INTEL_UNCORE_EVENT_DESC(clockticks, "event=0xff,umask=0x40"),
 
-Thanks Arnaldo for the ping!
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Cc'ing rust-for-linux as well.
 
-Thread at https://lore.kernel.org/all/20260208122227.3524-1-9erthalion6@gma=
-il.com/
-
-Cheers,
-Miguel
