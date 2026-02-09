@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D3438884A
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 17:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B833A0EAE
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 17:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770658889; cv=none; b=qLx53JPEIvfqI9xpQ6Anl+Zi1yOL20Gu0Sw+CziFC3XlEVDAPRcVxX3uOKiGyiKiHEqUlz6U/nEXhzFP4M4XhFj7TH5oEDGrQXEJdaNbtvmjxhd1OFlYYn3D3PPr7jh/AKRht4cZC7+H+pxyGrsnDJfwwdR3cOBpQW+vl3YVKp8=
+	t=1770658891; cv=none; b=sK65YmZixAxXMfzt1KyLiLEOD/xMZStIOI7E/2SyuEYCEzDUwiKBF0WfsyGgu8riQzOSRl9kdYajODU7Y/QqLG9iGjwY+wUl8QX2yaHTxFsjo/Cu7xphihotZjnIbT4dziP6Wo4lsMRsStnOhmvxW8KGfEH0kNmQBLrDU997chU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770658889; c=relaxed/simple;
-	bh=ocuQx4XZuiRO8GRHqqD7nSksu0emgzMFKlbAu1B4fIQ=;
+	s=arc-20240116; t=1770658891; c=relaxed/simple;
+	bh=aQjq5ZG+K+4IDRdwx3pTY3E+EKQeJ5ckSzEJVafaoCs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=t7qzD4SpFa2pw6lmy0g0yK6Hbh3bJD9OHFtMcW/+KnJ6baY+wmlSbLYtv1CWWayoyHxcArb3h5jJmd6zuixNEwOiv0QfhNKSPYBP7ZgKH91OJclMBoa2UeaeOKj0Wm0kYOGlBQYTmIIfCLwwC0v/tuCSs/USj4nib3oWNH+1XBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pTUZetdO; arc=none smtp.client-ip=74.125.82.73
+	 To:Content-Type; b=igu4N9gqOSiAnNNGVCRv81vPj8iF8XaeDEqbxyaIxy+ZzYsOW3isepw9Jq9FzFmfSp/k/2+hxGeddtkuvVoX6OHv7YwHHax4nw5RBfQ5b0j4rYiGHuLimIrH0TGEnFgC/P0z2Nb9tckr9AWIGVZ4REiscnsEQqNUNIynNCWywjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oDM9tznP; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pTUZetdO"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1270be4d176so2215594c88.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 09:41:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oDM9tznP"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-123349958b2so6579175c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 09:41:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770658889; x=1771263689; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770658891; x=1771263691; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=KaiONckexinVenjREn7UXtQSsVVfjES5HZqD8w+j0WM=;
-        b=pTUZetdO1WtPRHWuKALmlILxkfZiGNfXVmK1ykOWxcCMxMY7W8uL01lLa+Wq07aTJA
-         PyNAlMbB0M/wxTNkIyc4ClDIGkpoRiYFnXUIqcXXUrUhDcwU4/FN8H+Vw6JjMHAVa/+p
-         sU1rq0g3Vh8B21ndVWMc+AqBUREK2NI7I28PsgSk1OKgFHYB4H1Z9b88B6w6p8PTVdq4
-         5aFxImYFxhI4rjQqBRREcfgsqjIjhaRHlIr4hoCprJr9QX4MHVKICCss5oPEL2Vyuqp8
-         ynW4Iwn9xebdymoIBmSq5rigMtmp3afiPIM8+q16pPpWUFq+r+jypNXWqWzAx75g1iaw
-         I4Sw==
+        bh=9nL/SbpUq3FHuKQYwVp11xXVhE63AKGDgQr9UUbNdNg=;
+        b=oDM9tznPRyeYeiq3MefiHe4e2Yv3raEv8/UTNKGOLTXAfTX5Z7BX4+vBeachNpSkv4
+         pn3u8Muv5Pg1nOt1HrO9EOftKOnv4i7EDFD+NE4IISs5V7qcUn/aWXrAYAE4jeTbMKIp
+         nTPrx5pCshUDAL0OlZagISrZbZMJ3OBITgQ3VuCjZ9FM54U+LPAwuAoLwjfkK4+OA5is
+         YVav9iUXqE3ya/z0EWmKXgTUV1mxpsJGB5Pjfyp/DoP3kLKTVx4oACFkynuGcaKZjQBg
+         +UO1TiNigvcI6qj2cU0XdrWlDnPWIvG02ALwpgPzU0aYV//CC7DAz0plLv4+S6DHWREu
+         2TiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770658889; x=1771263689;
+        d=1e100.net; s=20230601; t=1770658891; x=1771263691;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KaiONckexinVenjREn7UXtQSsVVfjES5HZqD8w+j0WM=;
-        b=e2YX5awpHKRfjkX61CIZppF4ePoh5WnzGGYB7DeYsrWlDm0xxoYcMlpglG75mAY7XP
-         NoBhis6rqsctHVvvydINilzFBNOuLvyD60So5q4toOPgTErMxp5POqVte2lOTVuSteU0
-         vYktEzlO2+MJrnJ/4elVZwKusrl9Fr4KfscwKtre+qNbvir35Z9EpooVTUU6Vjpglici
-         VSVCsH+5ltEdvoWZnLOq9Dma0j1BoEMWcprgk+uUMuv5EfTCPqzGS1g67CudbO5R28sC
-         gPN3Q8vhzcfyf1v4obrdZ8rkxqozFnFwPuTGj0aCq9KW1IlbG1hNolV/OFRFm/lSRX3p
-         Nb1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXNgo2vO+HhMKF9JZKIAcgUahshK62EXa0MREwGIm2fTk8vb8ICFbQ/irM4pfttlf1p9rZGq9TW4KnxaFJFpqKs@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywd1Ffv82hZOVrGs6tKLJL1QYM/jJVqLGZzMuE2bGgz9T+9NdTC
-	L8wATe6DgQygohkwhDHpxqVdGrwAtnuVlXZmlFq+uC2wsN74yK5n3jroHB1urXvbmDn6BNoXhBZ
-	SuEmq6rJw+w==
-X-Received: from dlbdx36.prod.google.com ([2002:a05:7022:e24:b0:11f:36a2:78d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:670d:b0:119:e569:f25f
- with SMTP id a92af1059eb24-12703fd961cmr6328080c88.8.1770658888326; Mon, 09
- Feb 2026 09:41:28 -0800 (PST)
-Date: Mon,  9 Feb 2026 09:40:28 -0800
+        bh=9nL/SbpUq3FHuKQYwVp11xXVhE63AKGDgQr9UUbNdNg=;
+        b=wiF0+lm7w4NiyalJKDuGvggr+brD5wHkpWJqLX4qNiJtw/I4ejmxV9XYZh2pc+NgTg
+         drdNGw0kHomS5rNDDG+50qHvbmqJtwYGPAWc34vdqCZ1lncOstKCBTCajrCuZb+hGA9T
+         wbadAdKAuez4ajQEIoQr2LUznVAm9YZ2unCuk1pYzGzzvz1cs6v2WsfHrD8Vt1r5CR5z
+         kx7yKjHXYt9YVM7DjNkLwRNkdxh/YPOl2XJjYbNgmjwyd4xKYxpxYxeY/bzU1U5e+zOB
+         6slGyWxQ5d6uQUhUeb056QWVdIY7KgXt5kUY9p4FppoTZ3XhgOAmnQS2EOntSoTx3dUQ
+         jytA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXU5mIfJb9DqQzXHx8OwphstBT4JtxWS1/YzCwY8vLTO7Ff3lHstyZpneqA4SGOcOuwywinx8vWBm0RwZoIZsu@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEx3GE1Zw+q2/cxnOhgPbosAXq8kk3daBDDf/Fe9P1VhRW5HRs
+	ujxwmhh0GiwZtSvEr6Epi7scADUuwJiPJCCRW1ffEdU0qVBdYtPaZ64/NJlc2Xy6MtIzL0dGGs5
+	fYCUH6+BMXA==
+X-Received: from dlg23.prod.google.com ([2002:a05:7022:797:b0:124:83ee:3e8b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6ba9:b0:11b:ca88:c4f7
+ with SMTP id a92af1059eb24-1270402852amr5010549c88.40.1770658890566; Mon, 09
+ Feb 2026 09:41:30 -0800 (PST)
+Date: Mon,  9 Feb 2026 09:40:29 -0800
 In-Reply-To: <20260209174032.4142096-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260209174032.4142096-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
-Message-ID: <20260209174032.4142096-22-irogers@google.com>
-Subject: [PATCH v1 21/25] perf trace: Don't pass evsel with sample
+Message-ID: <20260209174032.4142096-23-irogers@google.com>
+Subject: [PATCH v1 22/25] perf evlist: Try to avoid computing evsel from sample
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -81,162 +81,112 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The sample contains the evsel and so it is unnecessary to pass the
-evsel as well. In trace__handle_event try to use the evsel from the
-sample to avoid recomputation.
+If the sample has an evsel, don't recompute using the sample.id.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-trace.c | 34 +++++++++++++++++++---------------
- 1 file changed, 19 insertions(+), 15 deletions(-)
+ tools/perf/builtin-inject.c        |  5 +++--
+ tools/perf/builtin-top.c           |  4 +++-
+ tools/perf/tests/mmap-basic.c      |  4 +++-
+ tools/perf/tests/switch-tracking.c |  5 ++++-
+ tools/perf/util/intel-pt.c         | 10 +++++++---
+ 5 files changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index b6e90ee53cbe..ff3c85144038 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2579,7 +2579,7 @@ static struct syscall *trace__find_syscall(struct trace *trace, int e_machine, i
- 	return sc;
- }
- 
--typedef int (*tracepoint_handler)(struct trace *trace, struct evsel *evsel,
-+typedef int (*tracepoint_handler)(struct trace *trace,
- 				  union perf_event *event,
- 				  struct perf_sample *sample);
- 
-@@ -2774,10 +2774,11 @@ static void *syscall__augmented_args(struct syscall *sc, struct perf_sample *sam
- 	return NULL;
- }
- 
--static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
-+static int trace__sys_enter(struct trace *trace,
- 			    union perf_event *event __maybe_unused,
- 			    struct perf_sample *sample)
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 66038d68277e..fd3934a7281e 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -1695,11 +1695,12 @@ static int guest_session__fetch(struct guest_session *gs)
+ static int evlist__append_id_sample(struct evlist *evlist, union perf_event *ev,
+ 				    const struct perf_sample *sample)
  {
+-	struct evsel *evsel;
 +	struct evsel *evsel = sample->evsel;
- 	char *msg;
- 	void *args;
- 	int printed = 0;
-@@ -2920,10 +2921,11 @@ static int trace__fprintf_callchain(struct trace *trace, struct perf_sample *sam
- 	return sample__fprintf_callchain(sample, 38, print_opts, get_tls_callchain_cursor(), symbol_conf.bt_stop_list, trace->output);
- }
+ 	void *array;
+ 	int ret;
  
--static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
-+static int trace__sys_exit(struct trace *trace,
- 			   union perf_event *event __maybe_unused,
- 			   struct perf_sample *sample)
- {
-+	struct evsel *evsel = sample->evsel;
- 	long ret;
- 	u64 duration = 0;
- 	bool duration_calculated = false;
-@@ -3058,7 +3060,7 @@ errno_print: {
- 	return err;
- }
+-	evsel = evlist__id2evsel(evlist, sample->id);
++	if (!evsel)
++		evsel = evlist__id2evsel(evlist, sample->id);
+ 	array = ev;
  
--static int trace__vfs_getname(struct trace *trace, struct evsel *evsel __maybe_unused,
-+static int trace__vfs_getname(struct trace *trace,
- 			      union perf_event *event __maybe_unused,
- 			      struct perf_sample *sample)
- {
-@@ -3119,7 +3121,7 @@ static int trace__vfs_getname(struct trace *trace, struct evsel *evsel __maybe_u
- 	return 0;
- }
- 
--static int trace__sched_stat_runtime(struct trace *trace, struct evsel *evsel,
-+static int trace__sched_stat_runtime(struct trace *trace,
- 				     union perf_event *event __maybe_unused,
- 				     struct perf_sample *sample)
- {
-@@ -3141,7 +3143,7 @@ static int trace__sched_stat_runtime(struct trace *trace, struct evsel *evsel,
- 
- out_dump:
- 	fprintf(trace->output, "%s: comm=%s,pid=%u,runtime=%" PRIu64 ",vruntime=%" PRIu64 ")\n",
--	       evsel->name,
-+	       sample->evsel->name,
- 	       perf_sample__strval(sample, "comm"),
- 	       (pid_t)perf_sample__intval(sample, "pid"),
- 	       runtime,
-@@ -3252,10 +3254,11 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *
- 	return fprintf(trace->output, "%.*s", (int)printed, bf);
- }
- 
--static int trace__event_handler(struct trace *trace, struct evsel *evsel,
-+static int trace__event_handler(struct trace *trace,
- 				union perf_event *event __maybe_unused,
- 				struct perf_sample *sample)
- {
-+	struct evsel *evsel = sample->evsel;
- 	struct thread *thread;
- 	int callchain_ret = 0;
- 
-@@ -3443,7 +3446,6 @@ static int trace__pgfault(struct trace *trace,
- }
- 
- static void trace__set_base_time(struct trace *trace,
--				 struct evsel *evsel,
- 				 struct perf_sample *sample)
- {
- 	/*
-@@ -3455,7 +3457,7 @@ static void trace__set_base_time(struct trace *trace,
- 	 * appears in our event stream (vfs_getname comes to mind).
- 	 */
- 	if (trace->base_time == 0 && !trace->full_time &&
--	    (evsel->core.attr.sample_type & PERF_SAMPLE_TIME))
-+	    (sample->evsel->core.attr.sample_type & PERF_SAMPLE_TIME))
- 		trace->base_time = sample->time;
- }
- 
-@@ -3475,11 +3477,11 @@ static int trace__process_sample(const struct perf_tool *tool,
- 	if (thread && thread__is_filtered(thread))
- 		goto out;
- 
--	trace__set_base_time(trace, evsel, sample);
-+	trace__set_base_time(trace, sample);
- 
- 	if (handler) {
- 		++trace->nr_events;
--		handler(trace, evsel, event, sample);
-+		handler(trace, event, sample);
+ 	if (!evsel) {
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index b89ca48e5d02..faa422e35166 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1163,7 +1163,9 @@ static int deliver_event(struct ordered_events *qe,
+ 		goto next_event;
  	}
- out:
- 	thread__put(thread);
-@@ -3621,14 +3623,16 @@ static void evlist__free_syscall_tp_fields(struct evlist *evlist)
- static void trace__handle_event(struct trace *trace, union perf_event *event, struct perf_sample *sample)
+ 
+-	evsel = evlist__id2evsel(session->evlist, sample.id);
++	evsel = sample.evsel;
++	if (!evsel)
++		evsel = evlist__id2evsel(session->evlist, sample.id);
+ 	assert(evsel != NULL);
+ 
+ 	if (event->header.type == PERF_RECORD_SAMPLE) {
+diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+index 3313c236104e..a18d84d858aa 100644
+--- a/tools/perf/tests/mmap-basic.c
++++ b/tools/perf/tests/mmap-basic.c
+@@ -142,7 +142,9 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
+ 		}
+ 
+ 		err = -1;
+-		evsel = evlist__id2evsel(evlist, sample.id);
++		evsel = sample.evsel;
++		if (!evsel)
++			evsel = evlist__id2evsel(evlist, sample.id);
+ 		perf_sample__exit(&sample);
+ 		if (evsel == NULL) {
+ 			pr_debug("event with id %" PRIu64
+diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
+index a7ea4b7874be..ed17c3be71c4 100644
+--- a/tools/perf/tests/switch-tracking.c
++++ b/tools/perf/tests/switch-tracking.c
+@@ -138,7 +138,10 @@ static int process_sample_event(struct evlist *evlist,
+ 		goto out;
+ 	}
+ 
+-	evsel = evlist__id2evsel(evlist, sample.id);
++	evsel = sample.evsel;
++	if (!evsel)
++		evsel = evlist__id2evsel(evlist, sample.id);
++
+ 	if (evsel == switch_tracking->switch_evsel) {
+ 		next_tid = perf_sample__intval(&sample, "next_pid");
+ 		prev_tid = perf_sample__intval(&sample, "prev_pid");
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index dab23a96b1d8..3d759546a7c0 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -3421,7 +3421,10 @@ static int intel_pt_process_switch(struct intel_pt *pt,
  {
- 	const u32 type = event->header.type;
+ 	pid_t tid;
+ 	int cpu, ret;
+-	struct evsel *evsel = evlist__id2evsel(pt->session->evlist, sample->id);
++	struct evsel *evsel = sample->evsel;
++
++	if (!evsel)
++		evsel = evlist__id2evsel(pt->session->evlist, sample->id);
+ 
+ 	if (evsel != pt->switch_evsel)
+ 		return 0;
+@@ -3611,10 +3614,11 @@ static int intel_pt_process_aux_output_hw_id(struct intel_pt *pt,
+ 	u64 hw_id = event->aux_output_hw_id.hw_id;
+ 	struct auxtrace_queue *queue;
+ 	struct intel_pt_queue *ptq;
 -	struct evsel *evsel;
 +	struct evsel *evsel = sample->evsel;
  
- 	if (type != PERF_RECORD_SAMPLE) {
- 		trace__process_event(trace, trace->host, event, sample);
- 		return;
- 	}
- 
--	evsel = evlist__id2evsel(trace->evlist, sample->id);
-+	if (evsel == NULL)
-+		evsel = evlist__id2evsel(trace->evlist, sample->id);
-+
- 	if (evsel == NULL) {
- 		fprintf(trace->output, "Unknown tp ID %" PRIu64 ", skipping...\n", sample->id);
- 		return;
-@@ -3637,7 +3641,7 @@ static void trace__handle_event(struct trace *trace, union perf_event *event, st
- 	if (evswitch__discard(&trace->evswitch, evsel))
- 		return;
- 
--	trace__set_base_time(trace, evsel, sample);
-+	trace__set_base_time(trace, sample);
- 
- 	if (evsel->core.attr.type == PERF_TYPE_TRACEPOINT &&
- 	    sample->raw_data == NULL) {
-@@ -3646,7 +3650,7 @@ static void trace__handle_event(struct trace *trace, union perf_event *event, st
- 		       sample->cpu, sample->raw_size);
- 	} else {
- 		tracepoint_handler handler = evsel->handler;
--		handler(trace, evsel, event, sample);
-+		handler(trace, event, sample);
- 	}
- 
- 	if (trace->nr_events_printed >= trace->max_events && trace->max_events != ULONG_MAX)
+ 	queue = auxtrace_queues__sample_queue(&pt->queues, sample, pt->session);
+-	evsel = evlist__id2evsel_strict(pt->session->evlist, sample->id);
++	if (!evsel)
++		evsel = evlist__id2evsel_strict(pt->session->evlist, sample->id);
+ 	if (!queue || !queue->priv || !evsel || hw_id > INTEL_PT_MAX_PEBS) {
+ 		pr_err("Bad AUX output hardware ID\n");
+ 		return -EINVAL;
 -- 
 2.53.0.239.g8d8fc8a987-goog
 
