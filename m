@@ -1,348 +1,191 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA1C261B80
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 17:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770658433; cv=pass; b=LjQN6b/pWY7l1YjJCJngwCZpL2OW4Kwrzawi4woBaogYPZv8JylGddS8X5a0bGeczQrE8QBIaiYCgN4VZVdyMIn6+Hqn4VJfQ4ia6kZTiPDKry8rNRa8PPvmzOsYDCRXxxueoimPq35ylWwHhFPkf9iLut8zquwOE4PS/l9hGuw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770658433; c=relaxed/simple;
-	bh=DU/Jbil+tlOIDxYNeOFiIotIAxgZu7WTnpd+ohH7amw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TTwQYwVV0CP47V/RX59n6ZL0W9rnPeKxASBr/uhl8f5jnAh710TetrOgvawcgYb7kWg/XZfkLz+O4IkIZ7O0/nymrEPlymoiL0rWWxx3VE8PVCIzXpFm1dcdS4veOMbNvir6EC4LPXwnErXkwhs9eQXwRBG9t35uWUmoM8MkXhk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WXhIvUts; arc=pass smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BFE3806BA
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 17:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770658844; cv=none; b=Z7epqtV2qIZZ2OeIN51E71hCNHq2AcolYgKIprOZy3/mfagZd1WHbaNXHciadTnvec57vwlOyIbQWR98D5E3wMbjTzEfDc0jZbztEhSVrfLEBES/DnTqwsWbxG//5LjtOTEFvtBd69awD0BFiTCu67V66SozLdnkp7yZ79Iubho=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770658844; c=relaxed/simple;
+	bh=HStb8CzEiG6KF3csF4FgP3dJvCn5lmnwKQ5LTpkjVt8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=bGLsHojSYJNwDde3Xc+G//85uZzi2CJLBD3HCEy4g1TdlE0zwDBytpImjsB3uCME+RcZ74iHKMwRzY3L2ZqlyYx4ZpbuXqPO5yyfHJ0x/Ttkk5hSVv97RyBbhzrgurg4JR6OpIh3YLt9dr2zvfmnGLqKlASuBJ3aedcLLEkW3eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yvkkLhRp; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WXhIvUts"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2a964077671so455ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 09:33:53 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770658433; cv=none;
-        d=google.com; s=arc-20240605;
-        b=I4gEbTknOo3Ze+zGXIxE1OuIqAzmj7HtuEVlONlZyFVPwOw892fQ8PEF+1n7omCK8x
-         gn8rQAcJzabx3Gk0S+GqwdpEshbGyQce+1To2MAkTJJA8LtXC6b+IJfdpTYtZStPNSvB
-         MdukpVnlq308FFETv0ocGl6xulE/a5oRPHkWU7cQ8ekQBNy7n/o4d+5RkQSRz0tiLb2f
-         nLba5Kt8t1mTOS7IGYDWH+od2IdQJ6XW20DgIdeJd2zYSnMdGaWNUwKGymfSZHyDuJOW
-         tlGZjE+3wF37404dNDYSVScm8Pvb7Pqsk0nB33uRyVpZemwEE0lALe7G3pxUZMPkoCs6
-         ndJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=jA7LY5Yq9yHeII7mgZdzp5PTUygUlmDygkUNlKAI0tY=;
-        fh=ypyVJdIx8hHyvr3Z9ijn2Td1aaigxlzW/tYlGZVp/vo=;
-        b=CnoEEs/BE5H9s6pfcQegk4/BUfEFRvpEEOZauk7uXxFME4bhq5mRMDDMMS1j9eCLP3
-         FvoHM1YkB66bcHA/Ua3gH5Q1EiGhhzi+k8zpOCH2Rk+4LwmG1g4jPVcVlb6m7TVXIiTG
-         mc/y6aO5LSabsP8T8ml7iujDNOi+eLdsVOcIJxLklqnA3SMflrWD6osG4TzKuGoNNKrW
-         Wew2RdMszxiw76WO+W5DLTavNfcaGTYrNh3qF1/03r8zJG/XEPhQLnVUAnCRh70Lf4N0
-         2Fy8cX9rKMolQkl/QSdnm31ETjRSUgqo2KcQXswrLoNRc4cDJPB9HC00PpGzfgZocR9w
-         aBHA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yvkkLhRp"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1270e3704d6so16717251c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 09:40:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770658433; x=1771263233; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jA7LY5Yq9yHeII7mgZdzp5PTUygUlmDygkUNlKAI0tY=;
-        b=WXhIvUtsdFxW+tHRYaB8FXs2oNfJeVmWHbyGTTtSeTEm8Lnirt1w3daZgDFJ87Kc/H
-         YzqNY13BjaW56YgTHf6YMSmsrzrGCynWmMnNLyaNmyrS7hajLjbhZkoaID4nC+ZhV3BQ
-         lxBeO6Yymu8rHY40+bq6a1kT43XyF2XoVVRJ/jNBwlL82pwyXxil8k0sLyYxmyfLe494
-         udz1eWDa2Emit3SP0QUXBfDxg3EwH1wZr9eu1wEOe5+8DdYZHKgQ30vaTvdyeshDahab
-         GqAuVAZnf2z4WzWoAi3aeZ963fy0lZ6oBPCuLY995yEtPQ+xNf6zceGhHW7TQ/u3E0oU
-         nAFQ==
+        d=google.com; s=20230601; t=1770658843; x=1771263643; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=px+jbGk9mufZ7xR9xTlfIbqAwV0BmMqXnKds79vYQKg=;
+        b=yvkkLhRp2PG/bQm3phG98olfrz0Ptp4X2s+Suk+jpAsFyDRJqWNpB7t3ByzclCjwVK
+         o1Ma7mFtw13xtPgKVPQTVwo8vZZobuNlKUw+fLnL1FNc+EaY9WXG6lQyZ0ZbH35PUUBQ
+         t54ogIXQb8L7l4jhqQL7Q5FmT+yfs2bPIPfTMYy62FMhtJOoxYK8kjWOjUOKvi37F0FE
+         9dZCzpSgxJGh/R8fDV+Y46GwS1+dnQ6nB36JF+O89Or7tg2JEDijm6t05Im/myLYgfQE
+         2Pe5vvy6eHJRbSpZfHk49eTepBNja+r5SozqXBqKIDJ/myZ93zME845k/Lwe10Uye99k
+         Hk5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770658433; x=1771263233;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jA7LY5Yq9yHeII7mgZdzp5PTUygUlmDygkUNlKAI0tY=;
-        b=lpfkOTN4M2txuG2PRR6BtoGPC4idvzcKn9WJ5EHHkuJJjFPTIL5FBCV84aSH2KuZQB
-         hxxI1uJWT3B3fXtIH87fM54omrDNy6BJsBZ6+Xk3pIIuxBUJehxjKqy+AF2uK55ksKex
-         tmC5i41Fpp2IKeys9cbGbbmGfPB4D3lxSopbF1GbbaIDVzV4GVD69kve8KPWqCwZo2+x
-         HGIWwVAYH8jWyaq/JxDAvQqYb6xazsAMHF2CV4qe7PND6J3JVhCb2Nv8NVyJikfIkoQz
-         RaZIazzaWPkn6tU5R9onVrKvcGfpc6ei8b+/td/5G0B2MtGHo1LmijnO/ck3sCcsABBn
-         0P1Q==
-X-Gm-Message-State: AOJu0YzqHFK02VeWcoJc6CcIRPTSH8bbJtrpQcUKL6iQNGRrYWvwpGDq
-	cZRUaWGoyEdIuYZqFvg0sphx/c0Uhn9aM1Zj2hGLuQHtchk6Lk56oCjt9ER8m4ftD95/JMzilHA
-	Vrz0uAsglhdIC8htoU0Bi3h97g+Hhj3rxLnvBRfS+
-X-Gm-Gg: AZuq6aK4Rq1kqCkoDl94jURyLQ1nhBLElADJt7vyLq5ayTHPR8lOadndzvtV8+rmYSm
-	zuvJNyaMAGcB4fWsl3KXPMzoRcc2j3H1G9ISMjU+Q1hCs/MNwFqtwUxRDodZK3iN9s32c0CI02P
-	fDJ/Djml2vfN1HJ2ryo2VJBkcZwIs9iEvGrkwOD7s4UN5LjMyb6kj1Qfb5vLgAjXTygxvIS5C4q
-	V7PMquqci8qLTuAk3m3xGwzijrID90yxn+XbWkJj4vtYxNZ0WCoE6nnSEO0B/D8FdQlMPRvX5w6
-	kgt+IRt1clgZPs8OTh/7k4X6
-X-Received: by 2002:a17:902:cec4:b0:2a3:cd98:f07 with SMTP id
- d9443c01a7336-2a963102e38mr5904475ad.3.1770658432328; Mon, 09 Feb 2026
- 09:33:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1770658843; x=1771263643;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=px+jbGk9mufZ7xR9xTlfIbqAwV0BmMqXnKds79vYQKg=;
+        b=GY/O2WjY19UPWCVetrXASWtmfxyJlZxrCH0wt6rJjqYfH3CfW7I0Rjgs09HLhjhRhQ
+         JAtvhM4VXC7W9BUY5wzuG1tOprpJi6XvpxLPbeQ5RalgfZfh9KOYrJEcXIF3DPawxFMe
+         GDMegLj91wDOdkk2bwT1/7QuQFu/TnCqzn7oyC9EwOqYa3fS/3HcNfbXZ9E/aPzwURpc
+         VdjvmYrqYMhLG/NxvfLzcz0FMFW7n9rCRzt2SL6Bl7plf/uJSCz76aHrkoeao8DBkWlw
+         8BWFQ5luPvh8C+q2pfik5bWLD4RqTCKjzMVAYinqx2zm1IvZKTlNKTnnQXtuEOhcrVkQ
+         /5/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXh77tnhQpIjTE0BsY8XEnuLH4igYGQaJLbs1qEt9gKTDpHvm+tn/JYn9rMshFPJ0nGezUfInvxrPu/wOma2n3Y@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG1B+FH4jd7nJoEz1fBsdsYr2lb2f1PUZAg7O/ORueYSbKtzcR
+	ThCMiaKZIHIOMBth2UG26EZCMHFidZi3g56+xg0zxmX+cWjtng0FvIRFVhCVe9WK9DXwvnzhFxz
+	7RNnKg+s/Fg==
+X-Received: from dlbcq22.prod.google.com ([2002:a05:7022:2496:b0:119:49ca:6bae])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:523:b0:11e:70d8:5dbb
+ with SMTP id a92af1059eb24-1270411bf9emr4864310c88.7.1770658842917; Mon, 09
+ Feb 2026 09:40:42 -0800 (PST)
+Date: Mon,  9 Feb 2026 09:40:07 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260208122227.3524-1-9erthalion6@gmail.com> <20260208122227.3524-3-9erthalion6@gmail.com>
-In-Reply-To: <20260208122227.3524-3-9erthalion6@gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
+Message-ID: <20260209174032.4142096-1-irogers@google.com>
+Subject: [PATCH v1 00/25] perf tool: Add evsel to perf_sample
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Feb 2026 09:33:41 -0800
-X-Gm-Features: AZwV_QiweSYKOKSnWezmCE2H7Aq6aIMfKFRZdAZGWNHzOJPdATEIdOBda_tBmxs
-Message-ID: <CAP-5=fV8GOLeHc8ZN_ddUPdWTCP2hykeApLZ80N9AwNzR+=LMw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/4] perf test workload: Add code_with_type test workload
-To: Dmitrii Dolgov <9erthalion6@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Leo Yan <leo.yan@arm.com>, Tianyou Li <tianyou.li@intel.com>, 
+	Athira Rajeev <atrajeev@linux.ibm.com>, Derek Foreman <derek.foreman@collabora.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Howard Chu <howardchu95@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, tanze <tanze@kylinos.cn>, 
+	Hrishikesh Suresh <hrishikesh123s@gmail.com>, Quan Zhou <zhouquan@iscas.ac.cn>, 
+	Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
+	Chen Ni <nichen@iscas.ac.cn>, Blake Jones <blakejones@google.com>, 
+	Yujie Liu <yujie.liu@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 8, 2026 at 4:22=E2=80=AFAM Dmitrii Dolgov <9erthalion6@gmail.co=
-m> wrote:
->
-> The purpose of the workload is to gather samples of rust runtime. To
-> achiever that it has a dummy rust library linked with it. Per
-> recommendations for such scenarios [1], the rust library is statically
-> linked.
->
-> An example:
->
-> $ perf record perf test -w code_with_type
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.160 MB perf.data (4074 samples) ]
->
-> $ perf report --stdio --dso perf -s srcfile,srcline
->     45.16%  ub_checks.rs       ub_checks.rs:72
->      6.72%  code_with_type.rs  code_with_type.rs:15
->      6.64%  range.rs           range.rs:767
->      4.26%  code_with_type.rs  code_with_type.rs:21
->      4.23%  range.rs           range.rs:0
->      3.99%  code_with_type.rs  code_with_type.rs:16
->     [...]
->
-> [1]: https://doc.rust-lang.org/reference/linkage.html#mixed-rust-and-fore=
-ign-codebases
->
-> Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
-> ---
->  tools/build/Makefile.build                   | 14 ++++++
->  tools/perf/Makefile.perf                     |  2 +-
->  tools/perf/tests/builtin-test.c              |  4 ++
->  tools/perf/tests/tests.h                     |  4 ++
->  tools/perf/tests/workloads/Build             |  5 +++
->  tools/perf/tests/workloads/code_with_type.c  | 46 ++++++++++++++++++++
->  tools/perf/tests/workloads/code_with_type.rs | 23 ++++++++++
->  tools/scripts/Makefile.include               |  2 +
->  8 files changed, 99 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/tests/workloads/code_with_type.c
->  create mode 100644 tools/perf/tests/workloads/code_with_type.rs
->
-> diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
-> index 3584ff30860..60e65870eae 100644
-> --- a/tools/build/Makefile.build
-> +++ b/tools/build/Makefile.build
-> @@ -76,6 +76,14 @@ quiet_cmd_host_ld_multi =3D HOSTLD  $@
->        cmd_host_ld_multi =3D $(if $(strip $(obj-y)),\
->                            $(HOSTLD) -r -o $@  $(filter $(obj-y),$^),rm -=
-f $@; $(HOSTAR) rcs $@)
->
-> +rust_common_cmd =3D \
-> +       $(RUSTC) $(rust_flags) \
-> +       --crate-type staticlib -L $(objtree)/rust/ \
-> +       --emit=3Ddep-info=3D$(depfile),link
-> +
-> +quiet_cmd_rustc_a_rs =3D $(RUSTC) $(quiet_modtag) $@
-> +      cmd_rustc_a_rs =3D $(rust_common_cmd) -o $@ -g $< $(cmd_objtool)
-> +
->  ifneq ($(filter $(obj),$(hostprogs)),)
->    host =3D host_
->  endif
-> @@ -105,6 +113,12 @@ $(OUTPUT)%.s: %.c FORCE
->         $(call rule_mkdir)
->         $(call if_changed_dep,cc_s_c)
->
-> +# it's recommended to build a static rust library, when a foreight (to r=
-ust)
-> +# linker is used.
-> +$(OUTPUT)%.a: %.rs FORCE
-> +       $(call rule_mkdir)
-> +       $(call if_changed_dep,rustc_a_rs)
-> +
->  # bison and flex files are generated in the OUTPUT directory
->  # so it needs a separate rule to depend on them properly
->  $(OUTPUT)%-bison.o: $(OUTPUT)%-bison.c FORCE
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 2a7e5814b15..a6d8ca3e923 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -271,7 +271,7 @@ ifeq ($(PYLINT),1)
->    PYLINT :=3D $(shell which pylint 2> /dev/null)
->  endif
->
-> -export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
-> +export srctree OUTPUT RM CC CXX RUSTC LD AR CFLAGS CXXFLAGS V BISON FLEX=
- AWK
->  export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK MYPY PYLINT
->
->  include $(srctree)/tools/build/Makefile.include
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> index e2490652f03..06507066213 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -154,6 +154,10 @@ static struct test_workload *workloads[] =3D {
->         &workload__landlock,
->         &workload__traploop,
->         &workload__inlineloop,
-> +
-> +#ifdef HAVE_RUST_SUPPORT
-> +       &workload__code_with_type,
-> +#endif
->  };
->
->  #define workloads__for_each(workload) \
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index 1f0f8b267fb..f5f1238d1f7 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -242,6 +242,10 @@ DECLARE_WORKLOAD(landlock);
->  DECLARE_WORKLOAD(traploop);
->  DECLARE_WORKLOAD(inlineloop);
->
-> +#ifdef HAVE_RUST_SUPPORT
-> +DECLARE_WORKLOAD(code_with_type);
-> +#endif
-> +
->  extern const char *dso_to_test;
->  extern const char *test_objdump_path;
->
-> diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workload=
-s/Build
-> index 866a00bd14a..2ef97f7affc 100644
-> --- a/tools/perf/tests/workloads/Build
-> +++ b/tools/perf/tests/workloads/Build
-> @@ -10,6 +10,11 @@ perf-test-y +=3D landlock.o
->  perf-test-y +=3D traploop.o
->  perf-test-y +=3D inlineloop.o
->
-> +ifeq ($(CONFIG_RUST_SUPPORT),y)
-> +    perf-test-y +=3D code_with_type.o
-> +    perf-test-y +=3D code_with_type.a
+Nearly all perf code ends up passing an evsel with the perf_sample,
+which is problematic if you want to rewrite the evsel such as with
+off-CPU processing - all uses of the evsel need fixing up. Previously
+I'd mailed this patch as an RFC with everything combined:
+https://lore.kernel.org/lkml/20260126071822.447368-1-irogers@google.com/
+and there was a request to break it up.
 
-nit: It'd be more normal to write this as:
-perf-test-$(CONFIG_RUST_SUPPORT) +=3D code_with_type.o
-perf-test-$(CONFIG_RUST_SUPPORT) +=3D code_with_type.a
+I've started the series by adding documentation to struct
+perf_sample. Next I fixed missing perf_sample__init/exit largely from
+the recent perf inject callchain rewriting work. The 3rd patch adds
+the evsel to struct perf_sample and ensures it is correctly
+initialized. The next 22 patches avoid passing the evsel along with
+sample for different parts of the perf tool, along with some minor
+tweaks like constification and not determining the evsel if it is
+present in the sample.
 
-I did an update this morning but found I needed to install rustc to
-get the build working. I'm not sure things work without rustc
-installed as advertised.
+Ian Rogers (25):
+  perf sample: Document struct perf_sample
+  perf sample: Make sure perf_sample__init/exit are used
+  perf sample: Add evsel to struct perf_sample
+  perf tool: Remove evsel from tool APIs that pass the sample
+  perf kvm: Don't pass evsel with sample
+  perf evsel: Refactor evsel__intval to perf_sample__intval
+  perf trace: Don't pass evsel with sample
+  perf callchain: Don't pass evsel and sample
+  perf lock: Only pass sample to handlers
+  perf lock: Constify trace_lock_handler variables
+  perf hist: Remove evsel parameter from inc samples functions
+  perf db-export: Remove evsel from struct export_sample
+  perf hist: Remove evsel from struct hist_entry_iter
+  perf report: Directly use sample->evsel to avoid computing from
+    sample->id
+  perf annotate: Don't pass evsel to add_sample
+  perf inject: Don't pass evsel with sample
+  perf kmem: Don't pass evsel with sample
+  perf kwork: Don't pass evsel with sample
+  perf sched: Don't pass evsel with sample
+  perf timechart: Don't pass evsel with sample
+  perf trace: Don't pass evsel with sample
+  perf evlist: Try to avoid computing evsel from sample
+  perf script: Don't pass evsel with sample
+  perf s390-sample-raw: Don't pass evsel with sample
+  perf evsel: Don't pass evsel with sample
 
-Thanks,
-Ian
+ tools/perf/builtin-annotate.c                 |  28 ++-
+ tools/perf/builtin-c2c.c                      |   6 +-
+ tools/perf/builtin-diff.c                     |   5 +-
+ tools/perf/builtin-inject.c                   |  81 ++++----
+ tools/perf/builtin-kmem.c                     |  58 +++---
+ tools/perf/builtin-kvm.c                      |  22 +--
+ tools/perf/builtin-kwork.c                    | 104 ++++------
+ tools/perf/builtin-lock.c                     | 117 +++++------
+ tools/perf/builtin-mem.c                      |   1 -
+ tools/perf/builtin-record.c                   |   3 +-
+ tools/perf/builtin-report.c                   |  38 ++--
+ tools/perf/builtin-sched.c                    | 183 ++++++++----------
+ tools/perf/builtin-script.c                   |  26 ++-
+ tools/perf/builtin-timechart.c                |  76 +++-----
+ tools/perf/builtin-top.c                      |  19 +-
+ tools/perf/builtin-trace.c                    | 103 +++++-----
+ tools/perf/tests/hists_cumulate.c             |   3 +-
+ tools/perf/tests/hists_filter.c               |   2 +-
+ tools/perf/tests/hists_output.c               |   3 +-
+ tools/perf/tests/mmap-basic.c                 |   4 +-
+ tools/perf/tests/openat-syscall-tp-fields.c   |   2 +-
+ tools/perf/tests/switch-tracking.c            |   9 +-
+ tools/perf/util/annotate.c                    |  19 +-
+ tools/perf/util/annotate.h                    |   6 +-
+ tools/perf/util/build-id.c                    |   3 +-
+ tools/perf/util/build-id.h                    |   7 +-
+ tools/perf/util/callchain.c                   |   8 +-
+ tools/perf/util/callchain.h                   |   5 +-
+ tools/perf/util/data-convert-bt.c             |   2 +-
+ tools/perf/util/data-convert-json.c           |   5 +-
+ tools/perf/util/db-export.c                   |  13 +-
+ tools/perf/util/db-export.h                   |   3 +-
+ tools/perf/util/evsel.c                       |  60 +++---
+ tools/perf/util/evsel.h                       |  12 +-
+ tools/perf/util/hist.c                        |  26 +--
+ tools/perf/util/hist.h                        |   3 +-
+ tools/perf/util/intel-pt.c                    |  12 +-
+ tools/perf/util/intel-tpebs.c                 |   3 +-
+ tools/perf/util/jitdump.c                     |   2 +-
+ .../perf/util/kvm-stat-arch/kvm-stat-arm64.c  |  19 +-
+ .../util/kvm-stat-arch/kvm-stat-loongarch.c   |  17 +-
+ .../util/kvm-stat-arch/kvm-stat-powerpc.c     |  17 +-
+ .../perf/util/kvm-stat-arch/kvm-stat-riscv.c  |  17 +-
+ tools/perf/util/kvm-stat-arch/kvm-stat-s390.c |  20 +-
+ tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  |  70 +++----
+ tools/perf/util/kvm-stat.c                    |  19 +-
+ tools/perf/util/kvm-stat.h                    |  18 +-
+ tools/perf/util/kwork.h                       |   9 +-
+ tools/perf/util/machine.c                     |  14 +-
+ tools/perf/util/machine.h                     |   3 -
+ tools/perf/util/s390-sample-raw.c             |  15 +-
+ tools/perf/util/sample.c                      |   8 +-
+ tools/perf/util/sample.h                      |  93 ++++++++-
+ .../util/scripting-engines/trace-event-perl.c |  23 +--
+ .../scripting-engines/trace-event-python.c    |  47 ++---
+ tools/perf/util/session.c                     |  74 ++++---
+ tools/perf/util/synthetic-events.c            |   9 +-
+ tools/perf/util/synthetic-events.h            |   2 -
+ tools/perf/util/tool.c                        |   4 +-
+ tools/perf/util/tool.h                        |   4 +-
+ tools/perf/util/trace-event-scripting.c       |   5 +-
+ tools/perf/util/trace-event.h                 |   3 -
+ 62 files changed, 769 insertions(+), 823 deletions(-)
 
-> +endif
-> +
->  CFLAGS_sqrtloop.o         =3D -g -O0 -fno-inline -U_FORTIFY_SOURCE
->  CFLAGS_leafloop.o         =3D -g -O0 -fno-inline -fno-omit-frame-pointer=
- -U_FORTIFY_SOURCE
->  CFLAGS_brstack.o          =3D -g -O0 -fno-inline -U_FORTIFY_SOURCE
-> diff --git a/tools/perf/tests/workloads/code_with_type.c b/tools/perf/tes=
-ts/workloads/code_with_type.c
-> new file mode 100644
-> index 00000000000..65d7be7dac2
-> --- /dev/null
-> +++ b/tools/perf/tests/workloads/code_with_type.c
-> @@ -0,0 +1,46 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <pthread.h>
-> +#include <stdlib.h>
-> +#include <signal.h>
-> +#include <unistd.h>
-> +#include <linux/compiler.h>
-> +#include "../tests.h"
-> +
-> +extern void test_rs(uint count);
-> +
-> +static volatile sig_atomic_t done;
-> +
-> +static void sighandler(int sig __maybe_unused)
-> +{
-> +       done =3D 1;
-> +}
-> +
-> +static int code_with_type(int argc, const char **argv)
-> +{
-> +       int sec =3D 1, num_loops =3D 100;
-> +
-> +       pthread_setname_np(pthread_self(), "perf-code-with-type");
-> +       if (argc > 0)
-> +               sec =3D atoi(argv[0]);
-> +
-> +       if (argc > 1)
-> +               num_loops =3D atoi(argv[1]);
-> +
-> +       signal(SIGINT, sighandler);
-> +       signal(SIGALRM, sighandler);
-> +       alarm(sec);
-> +
-> +       /*
-> +        * Rust doesn't have signal management in the standard library. T=
-o
-> +        * not deal with any external crates, offload signal handling to =
-the
-> +        * outside code.
-> +        */
-> +       while (!done) {
-> +               test_rs(num_loops);
-> +               continue;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +DEFINE_WORKLOAD(code_with_type);
-> diff --git a/tools/perf/tests/workloads/code_with_type.rs b/tools/perf/te=
-sts/workloads/code_with_type.rs
-> new file mode 100644
-> index 00000000000..3b91e51919d
-> --- /dev/null
-> +++ b/tools/perf/tests/workloads/code_with_type.rs
-> @@ -0,0 +1,23 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +// We're going to look for this structure in the data type profiling rep=
-ort
-> +#[allow(dead_code)]
-> +struct Buf {
-> +    data1: u64,
-> +    data2: String,
-> +    data3: u64,
-> +}
-> +
-> +#[no_mangle]
-> +pub extern "C" fn test_rs(count: u32) {
-> +    let mut b =3D  Buf { data1: 0, data2: String::from("data"), data3: 0=
-};
-> +
-> +    for _ in 1..count {
-> +        b.data1 +=3D 1;
-> +        if b.data1 =3D=3D 123 {
-> +            b.data1 +=3D 1;
-> +        }
-> +
-> +        b.data3 +=3D b.data1;
-> +    }
-> +}
-> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.incl=
-ude
-> index ded48263dd5..b5ecf137feb 100644
-> --- a/tools/scripts/Makefile.include
-> +++ b/tools/scripts/Makefile.include
-> @@ -94,6 +94,8 @@ LLVM_STRIP    ?=3D llvm-strip
->  # Some tools require bpftool
->  SYSTEM_BPFTOOL ?=3D bpftool
->
-> +RUSTC          ?=3D rustc
-> +
->  ifeq ($(CC_NO_CLANG), 1)
->  EXTRA_WARNINGS +=3D -Wstrict-aliasing=3D3
->
-> --
-> 2.52.0
->
+-- 
+2.53.0.239.g8d8fc8a987-goog
+
