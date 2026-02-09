@@ -1,95 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAE0423A94
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 19:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D5A33372A
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 20:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770665955; cv=none; b=oUOqHv/e0eM9l7wy53jIA7hHyvz/ijDtr1iFoIImYpS8hw/9uDTj45pSXIBl+1QjdbruE7C0LQGK+upDNLzEPXtTlCbG9UVZYv3J9VxlKC1ruRoPSAnDVkUgS1WkrzSYbd5AkOhmP+R12UljnOT5p54HRlC6wNwRiYt7xOvj2cQ=
+	t=1770668533; cv=none; b=XbzY+WjKj/ZtZrMbDxDgkqdE/+0+XZmSm4EDICnSU7Jl3fQzyAUd44JRkALPLdIYkki1uDwdhAwAwy2Qm0pcV/cXI28+hwXwb0q9GUvm8d+Z4oreptv4DD9qWYGBd0ILEWQSze6BNErCwfe9bCQ8mc2oj5kc5xQMH2fOpV72yQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770665955; c=relaxed/simple;
-	bh=Dt/Vi7azwYTvedr8KcPR6YplVzxvmHPXQyw9syBzzsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LOPw+pNrpnXvEb/B8QlasqNfjlKhlS5m8Q4peOxJVx3QG4D6h4J/i8sHzHW53waM9+siQGoBq/a5pz2x8Gv/9gH+MDyyrLAMShyfmRxk886Omq1tPcPWdmCVPCQYFC/+IxDksfPGWk3sCED+Mm/7+US2pSZM/v9CFaRsslTl9uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kn+/yNjS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770668533; c=relaxed/simple;
+	bh=cZ4R1RRMz/RGeS24uRyCUuWWDbgfEPrua3rFxDMUfRw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Fy+6gP3CFky1A4re6/W+WypV05vLqud9lqAnzE0a2srNIpwqNZ6et5RX1AJTKqnmVOHX/TCJr5//TrFPO6q1wYbb3Hfdi9CWgIi9kCI0e3GEgNmte1T1jNgCU7soJFHZk42TL15EkPnJcJkR1O0Nx01Dpx/83uUDKWG07CJ+3RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WbJWTXMS; arc=none smtp.client-ip=74.125.82.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kn+/yNjS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FE84C116C6;
-	Mon,  9 Feb 2026 19:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770665954;
-	bh=Dt/Vi7azwYTvedr8KcPR6YplVzxvmHPXQyw9syBzzsk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kn+/yNjSFgwhQv6aIvD+0cLiA+3GboMDG+Bt34T2O6kJqQ1gYYEee7nSqPYlJbhzq
-	 aLKmgE0PGQC1wcM+UcgKNZmTCjYFCbO973juEYzyef9lXTsENVe5zWPUytU3MbsBwm
-	 xt7560VxL+3fxijk/7R7ICTSumC8Ic7hAtdc2UEAhly46dNumNjjTQrOI5fjnWPYIJ
-	 HUiRPbWkBfmwbsb1d4gJAHZukH0rCo4w8dW1MBVKzkkzn18yPw7SkFkob3/fXx6n14
-	 Xqt1HAywjeEigVZWv1NagkywlzW52ZnTEpoOteu6UZv3/SRsHUbDdWH+/eqZscMt9y
-	 Gufu8vanV4p0Q==
-Date: Mon, 9 Feb 2026 16:39:11 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Noel Grandin <noelgrandin@gmail.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>
-Subject: Re: why is 'perf record --call-graph' using addr2line?
-Message-ID: <aYo334TnekI8UgpY@x1>
-References: <CAFYHVnXddP=V-q=0Z3Na1FOBaQRT3RA55ruDY=O0pNpbaSc4jg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WbJWTXMS"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ba7e98178fso427065eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 12:22:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1770668531; x=1771273331; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5kHAmUd5wDChCVptXVY2hlsH2Ml6OzZFZZHE7/38CLE=;
+        b=WbJWTXMS4pVT2B7cQhL8b3LMVGOwsuJpwE6LyWxEywyJTJzzFpU5qi+Swz43sVj/Re
+         E3A8/Ji4QJwBkWoMxgrh6N5Vu4aDTrKyQNuTuAXy2anOMFCaxOo5kI0FW2mxJNdDreRQ
+         3wiX8AoVRsCaYKJIV855iztEl2nV0bkxRgzvJS3rfrQ+DLS4Zzy+tO1EFqNDFMyp6fsv
+         l3beSBUbeSOkqGzAHSJy223TkOTIOD0ExoFPEbZ0iuHW0pr+FW0V3NkVVt8CVDE6de0o
+         bhucGHLXlO4HdaNcuCQ18fvHQWgm47zXvhSPIaMOURm9Ke30F1I91Q198meLuOl+1ekU
+         mWEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770668531; x=1771273331;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5kHAmUd5wDChCVptXVY2hlsH2Ml6OzZFZZHE7/38CLE=;
+        b=YEXHtTL7uHL4GbmPJJt2wrpwtQaOiklM0Ypz9nhsM+teKpE8QnbLR1mIj7j4dQ1K8X
+         muXIjgPmR+pCad8+tpOL0yT0FFlk9exxlBYtJoLIv6D+vT+sXsv2bzH+rbOq+swtBJBZ
+         Jo8wMRIYj936eVU7Zpkgt7tIHpNYV+Pyo+fFp34wu+q1T1KMv3qWZ/oaacnYnxjsDHkY
+         r3nGmSKkDjC0bIQQcNBb39UxdmKatxKd1sVFV9kgE6K5sUemHplI8tR5jtUb4wDVOdNz
+         uBTYD30YOTk+fMP7WE819+YLQyk0rR0+/sWv/2tWETVPUkl8zobMsFU23AQOUoHld3IE
+         XAag==
+X-Forwarded-Encrypted: i=1; AJvYcCUC2r68JE0QSMnSsoqBFTD97rv2zfmSuVAmW9SwI34oyIcNrwXMkRKFYReDw8p8cTS5uQB+K4AyatqvDBBBDwh1@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDQ/0yvAPJ/VDPtrk5Oiq0uZC1rbT/h79/aGWGQUL1Zc6ugd5b
+	hX/xbcgE6YKavtWIJJx/ifx5GTglmvVVEVfWWuGfRJJgGhLzsK8LDPlaiia0ATLz8KfdXjsLMMt
+	X/ONA0AAoIQ==
+X-Received: from dyhd2.prod.google.com ([2002:a05:7300:8282:b0:2ba:6d74:ea4a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e80a:b0:2ab:ca55:89ab
+ with SMTP id 5a478bee46e88-2b856b55787mr5633858eec.42.1770668531244; Mon, 09
+ Feb 2026 12:22:11 -0800 (PST)
+Date: Mon,  9 Feb 2026 12:22:05 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFYHVnXddP=V-q=0Z3Na1FOBaQRT3RA55ruDY=O0pNpbaSc4jg@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
+Message-ID: <20260209202208.2027001-1-irogers@google.com>
+Subject: [PATCH v1 0/3] perf script engine testing
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Sandipan Das <sandipan.das@amd.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 09, 2026 at 09:24:47PM +0200, Noel Grandin wrote:
-> Hi
-> 
-> I am running
-> 
-> $ perf record --call-graph=dwarf,32000 my_program.bin
-> 
-> quite a lot.
-> 
-> Until a couple of days ago, I would do this, hit ctrl-C, it would
-> finish writing stuff to disk in a few seconds, and then I would
-> proceed with using KDAB hotspot to analyse the data.
-> 
-> Then I did a routine 'apt update' of my ubuntu box, and now....
- 
-> Now, it takes 30+ minutes before perf exits, and it is spending all of
-> that time running addr2line.
+Add tests for generating a script and that the basic APIs work. I'd
+grown concerned that refactoring patches may inadvertently break perf
+script engine support, particularly for perl, and this does something
+to prevent this.
 
-Are you sure? addr2line can be used when using '-s srcline' or '-s
-srcfile', but then in 'perf report', not on record.
+Ian Rogers (3):
+  perf script: Allow the generated script to be a path
+  perf test script: Add perl script testing support
+  perf test script: Add python script testing support
 
-Doing some systemwide recording here I don't see such calls to
-addr2line, be it the function inside perf or the addr2line utility:
+ tools/perf/Documentation/perf-script.txt |   6 +-
+ tools/perf/builtin-script.c              |  24 ++++-
+ tools/perf/tests/shell/script_perl.sh    | 102 ++++++++++++++++++++
+ tools/perf/tests/shell/script_python.sh  | 113 +++++++++++++++++++++++
+ 4 files changed, 239 insertions(+), 6 deletions(-)
+ create mode 100755 tools/perf/tests/shell/script_perl.sh
+ create mode 100755 tools/perf/tests/shell/script_python.sh
 
-root@number:/# perf probe -x ~/bin/perf addr2line
-Added new event:
-  probe_perf:addr2line (on addr2line in /home/acme/bin/perf)
+-- 
+2.53.0.rc2.204.g2597b5adb4-goog
 
-You can now use it in all perf tools, such as:
-
-	perf record -e probe_perf:addr2line -aR sleep 1
-
-root@number:/# perf trace -e execve,probe_perf:addr2line perf record --call-graph=dwarf,32000
-         ? (         ): perf/1708890  ... [continued]: execve())                                           = 0
-^C[ perf record: Woken up 302 times to write data ]
-root@number:/# ls -[ perf record: Captured and wrote 89.499 MB perf.data (5420 samples) ]
-la perf.data
--rw-------. 1 root root 93924024 Feb  9 16:37 perf.data
-root@number:/# ls -lah perf.data
--rw-------. 1 root root 90M Feb  9 16:37 perf.data
-root@number:/# perf evlist -v
-cpu/cycles/P: type: 0 (PERF_TYPE_HARDWARE), size: 144, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CALLCHAIN|CPU|PERIOD|REGS_USER|STACK_USER|IDENTIFIER, read_format: ID|LOST, disabled: 1, freq: 1, precise_ip: 2, sample_id_all: 1, exclude_callchain_user: 1, sample_regs_user: 0xff0fff, sample_stack_user: 32000
-dummy:u: type: 1 (PERF_TYPE_SOFTWARE), size: 144, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|CPU|IDENTIFIER, read_format: ID|LOST, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, mmap_data: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, build_id: 1
-root@number:/#
- 
-> Any ideas?
-
-Can you give more details? Do you have anything in ~/.perfconfig, etc?
- 
-> Thanks, Noel Grandin
