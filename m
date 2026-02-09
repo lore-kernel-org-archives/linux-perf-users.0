@@ -1,54 +1,54 @@
-Received: from mail-ot1-f74.google.com (mail-ot1-f74.google.com [209.85.210.74])
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D613C329C48
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 22:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4540F32AAD0
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 22:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770676868; cv=none; b=CVIbquF6IehXmJvvUMhYxYa98Go50hI+5+3wBYH8wmoWXSYisdUp5FB9N10LfhlHK9w4ERcz2xrl93b70o1Zk+YIn9L/fhdkbdLk2oDaB8zElNk9ImKdQcC5HbNTlpwbsGEHba7n3A7KekDA1NSktE/Hnmc2fSLUPRPe4NbE6nM=
+	t=1770676869; cv=none; b=NIo6Y00fx8f5EnvZmxREl5z2k6FupKI5CBcyq9DofCoxuCPjJKRovXp6frA6QWNdL2AiUqbJhIUyK6SQKNmFKw44L+ll/qFBJ/JxNEJ5vxyL3J7k7kNv8vYKD/sXj+QRKMrIg6hupYFgLVsRSyT4f2DPVtwhDswcnEX/9yGcxrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770676868; c=relaxed/simple;
-	bh=IGbjYf4aDEdJzYqyHxQ48Lwc7zrh6q6MUfA91xc3mH0=;
+	s=arc-20240116; t=1770676869; c=relaxed/simple;
+	bh=H04nlaZglKH5c2S6TSbb16Bnz8/pDkIa7tY4/oH6tUA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Sf4oeom1UY2uCB82NvjtkTALvjoKjltxGg2o8fqhI/oSNTwJiH57sbgnBhObl92FuKKv7gux3xROPgmMVZIhRFRFgUQkvxnB5usiqiKNVqeRPxZBrMXel/3/bn6TyLbpHW7ZMKw4OZdW1+9rnnG6r4TlCE0Ywro4WEVI8zu97Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FCnRNsjs; arc=none smtp.client-ip=209.85.210.74
+	 To:Cc:Content-Type; b=tw1FjRVlZDdFIQWO6TOTYJ/hEQYiE05tDRO3M5yu3TDYOoGHjgGj3Qcnic6RG1KUf0hdCtE/SQcv89/NqSO/hVqD3YAp1iJDTPdrZ3WytuvJXg5cbCjYzQGii7e9QCLqiF/FuzE6J8rH+QKb0sEfZnpn02ft5lvvs5IgjjqGdOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f5cTlFOw; arc=none smtp.client-ip=209.85.160.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FCnRNsjs"
-Received: by mail-ot1-f74.google.com with SMTP id 46e09a7af769-7d194b631d6so1312517a34.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 14:41:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f5cTlFOw"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-40418f60513so16027360fac.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 14:41:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770676862; x=1771281662; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770676864; x=1771281664; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=I8vsvPCwrm4qK2tJSRhYymVMX8OUXdkNYkDGMZ9conM=;
-        b=FCnRNsjsHKpi4R/Z7BA/JIekd/KAfoQtmFDSrv8v5si1BWF6MMUVNBl2FzT/GImE/M
-         LgJJiXquTh4TlPkpWeLD66dJtESVNQHV4Gj5Qyz5lqcfPbi/tJNYq0XrSYttmzg3IqXA
-         IV4eByYjAhn2icP6a2aPmoj4AuF22iTPl6B0DI5o8lOhILYmcDsWaNKHc5HVuej1F2qz
-         hbflSOwydlkvf3j5Ip2XCVnN5oFbbVshcy62O7vZXYySJY8OuhUHrDBM6NaIesAEhEFU
-         9jCF002ElO1Tu079fNDi/fHk+H/tDw0A7TmuXfp8TpdGSLLssme/FNhxSTfUiTuuv6TB
-         qDNg==
+        bh=2S8QK1DUpnxCvBG6dnxfgC3sjGb7yD/nYkqrFgFEa7w=;
+        b=f5cTlFOwPJ4YJKThIn27IVUjeeTfH1jEfF4msDA/ayFtawEWe7IyjCHYb9/ljFt0PB
+         rF3we89/ORL9R+WSGhxtPJLEKMtSKj+Iw4gZsxJGGVkPu9vb2sf36I142veSMrtOpoE0
+         DJMGMsfEvidC/07NyxHR220HNwKMo6Hy9UQrnt5wMmHALe1TUwl/ql7ufF/HcaRFgvVT
+         /ntp4htKprmEcWF8gl6CmRE7LJDe1VTrfy/Z2VaCHZovDyXItQF9Ahd8Azv9VDNA2oJl
+         rVhyRFCm++ujnk6Kl/fuyI0CsBPSEyVThO42v4N3Ol3c2zxZQvzUmW06qkdidDBBb4P6
+         r0VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770676862; x=1771281662;
+        d=1e100.net; s=20230601; t=1770676864; x=1771281664;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I8vsvPCwrm4qK2tJSRhYymVMX8OUXdkNYkDGMZ9conM=;
-        b=Igv7LmoWVcuEPHcRvzcSKyfg+hCuvHYB1ecolma8aS3itZWpJAyHX9JFub5BTeaVWW
-         hG2RI7alex4gtJZa5Q1yzJPzkEAdQ0RhlJBTWgD28z7UORfuU0poBhe5uunIeJKSS0Y1
-         VIaYJUq2AcAuQDokEdBcUGBt7wC0+QKTsXw81Fvwo4DCiD0QJukREj9RfDAY1iiwcnmN
-         TC7EQvAVbxO3B2RztOiYBsfADFoEDS7TNxus6ah+CFaRpdPMPnsJPlxJwez69zHGWYEx
-         zKlZJ3CEPx+tYjxLqQFNOQbB+b+EAx1KaPLNf880eTD6PO5S55gwAFxzGDMuVI9FdCu6
-         VJoA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6c4r2S9FR1NDjZlH4r9vvjpiwTMGb8QTHKynRdNogCvzVGVg2hm2474CrMPouWeUITv/OgtEa7e2d6mzM25Th@vger.kernel.org
-X-Gm-Message-State: AOJu0YwA/vPL82f4Qr6+L10VP4/9IqA0fGQJZ+6CZDzvjXB0PQl4vsDv
-	H1ll+7+CrdFtzrkxA4jvMmT2E/69n5q01tVcqvhGEcANlGejcf5hcIOmYZLYmJd8EnWDUIEAYZM
-	PQ1PEpFg4Qeaicr/cV9R/zsi25A==
-X-Received: from iomv22.prod.google.com ([2002:a5e:d716:0:b0:957:5d25:584])
+        bh=2S8QK1DUpnxCvBG6dnxfgC3sjGb7yD/nYkqrFgFEa7w=;
+        b=EYj+30VVyQx0oxAz2HrV4aogSgZ+bMdFDJ+TDzUpQJUMJ5wEqt85+5jNqV+II+7ncd
+         tXQDtYDAfDAydePn9+WCCTfNlJJWymDTobz3wuFEEra+oFJKzu0DehS1Me+SWW5uJGhy
+         9c2dIUqxemU2nh7Pj4BCYuSZWJ6alGVGD85oyOeoXTuQYyQ6KQw2A/iLUKNjinknJ0Ul
+         hoOk9vxU8FbBeh7s+JaRwpS0rc9aDGIRNAeVxTrF05Ppe3FR26MEA1BbcXb9pVLfUVO7
+         ECa9eooQz814ALuFbOAUxg1fUTtpmO8Ci6o77wgLCBIS8swo0Rk7SZKoSrSvU3ZmFRnm
+         CKgA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzOKRUzqVrmzZpRPLuX7J2Olz90uU7kSvP9Dyw7klCA9fk5J66uR4uEWRFbfmsIe/MV0pTKuOE2CvKsHkCQanl@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjCaTtRPFCFRPrIQ2wG8ZEW81v8DMwdpeqhIQ59QAk7cG+cmu2
+	AYm4S6KXXBcRIzAy7GP0neejoXkrpGWKFjscFhaWtf4CwH6jBR0lCkBaG50pN+8aq8XewJtgec/
+	N59mu68QqvN3NKTcD7AupIEcOYw==
+X-Received: from oapz39.prod.google.com ([2002:a05:6870:d6a7:b0:409:b837:9227])
  (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6820:1622:b0:662:f8f6:e8d1 with SMTP id 006d021491bc7-66d09ac24cdmr6817429eaf.6.1770676861761;
- Mon, 09 Feb 2026 14:41:01 -0800 (PST)
-Date: Mon,  9 Feb 2026 22:14:11 +0000
+ 2002:a05:6871:d083:b0:404:3635:c885 with SMTP id 586e51a60fabf-40a96fccba3mr6975342fac.32.1770676864078;
+ Mon, 09 Feb 2026 14:41:04 -0800 (PST)
+Date: Mon,  9 Feb 2026 22:14:13 +0000
 In-Reply-To: <20260209221414.2169465-1-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260209221414.2169465-1-coltonlewis@google.com>
 X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
-Message-ID: <20260209221414.2169465-17-coltonlewis@google.com>
-Subject: [PATCH v6 16/19] KVM: arm64: Add vCPU device attr to partition the PMU
+Message-ID: <20260209221414.2169465-19-coltonlewis@google.com>
+Subject: [PATCH v6 18/19] KVM: arm64: selftests: Add test case for partitioned PMU
 From: Colton Lewis <coltonlewis@google.com>
 To: kvm@vger.kernel.org
 Cc: Alexandru Elisei <alexandru.elisei@arm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
@@ -75,162 +75,227 @@ Cc: Alexandru Elisei <alexandru.elisei@arm.com>, Paolo Bonzini <pbonzini@redhat.
 	Colton Lewis <coltonlewis@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a new PMU device attr to enable the partitioned PMU for a given
-VM. This capability can be set when the PMU is initially configured
-before the vCPU starts running and is allowed where PMUv3 and VHE are
-supported and the host driver was configured with
-arm_pmuv3.reserved_host_counters.
+Rerun all tests for a partitioned PMU in vpmu_counter_access.
 
-The enabled capability is tracked by the new flag
-KVM_ARCH_FLAG_PARTITIONED_PMU_ENABLED.
+Create an enum specifying whether we are testing the emulated or
+partitioned PMU and all the test functions are modified to take the
+implementation as an argument and make the difference in setup
+appropriately.
 
 Signed-off-by: Colton Lewis <coltonlewis@google.com>
 ---
- arch/arm64/include/asm/kvm_host.h |  2 ++
- arch/arm64/include/uapi/asm/kvm.h |  2 ++
- arch/arm64/kvm/pmu-direct.c       | 35 ++++++++++++++++++++++++++++---
- arch/arm64/kvm/pmu.c              | 14 +++++++++++++
- include/kvm/arm_pmu.h             |  9 ++++++++
- 5 files changed, 59 insertions(+), 3 deletions(-)
+ .../selftests/kvm/arm64/vpmu_counter_access.c | 94 ++++++++++++++-----
+ 1 file changed, 73 insertions(+), 21 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 41577ede0254f..f0b0a5edc7252 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -353,6 +353,8 @@ struct kvm_arch {
- #define KVM_ARCH_FLAG_WRITABLE_IMP_ID_REGS		10
- 	/* Unhandled SEAs are taken to userspace */
- #define KVM_ARCH_FLAG_EXIT_SEA				11
-+	/* Partitioned PMU Enabled */
-+#define KVM_ARCH_FLAG_PARTITION_PMU_ENABLED		12
- 	unsigned long flags;
+diff --git a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
+index ae36325c022fb..9702f1d43b832 100644
+--- a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
++++ b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
+@@ -25,9 +25,20 @@
+ /* The cycle counter bit position that's common among the PMU registers */
+ #define ARMV8_PMU_CYCLE_IDX		31
  
- 	/* VM-wide vCPU feature set */
-diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
-index a792a599b9d68..3e0b7619f781d 100644
---- a/arch/arm64/include/uapi/asm/kvm.h
-+++ b/arch/arm64/include/uapi/asm/kvm.h
-@@ -436,6 +436,8 @@ enum {
- #define   KVM_ARM_VCPU_PMU_V3_FILTER		2
- #define   KVM_ARM_VCPU_PMU_V3_SET_PMU		3
- #define   KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS	4
-+#define   KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION	5
++enum pmu_impl {
++	EMULATED,
++	PARTITIONED
++};
 +
- #define KVM_ARM_VCPU_TIMER_CTRL		1
- #define   KVM_ARM_VCPU_TIMER_IRQ_VTIMER		0
- #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
-diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
-index 6ebb59d2aa0e7..1dbf50b8891f6 100644
---- a/arch/arm64/kvm/pmu-direct.c
-+++ b/arch/arm64/kvm/pmu-direct.c
-@@ -44,8 +44,8 @@ bool kvm_pmu_is_partitioned(struct arm_pmu *pmu)
++const char *pmu_impl_str[] = {
++	"Emulated",
++	"Partitioned"
++};
++
+ struct vpmu_vm {
+ 	struct kvm_vm *vm;
+ 	struct kvm_vcpu *vcpu;
++	bool pmu_partitioned;
+ };
+ 
+ static struct vpmu_vm vpmu_vm;
+@@ -399,7 +410,7 @@ static void guest_code(uint64_t expected_pmcr_n)
  }
  
- /**
-- * kvm_vcpu_pmu_is_partitioned() - Determine if given VCPU has a partitioned PMU
-- * @vcpu: Pointer to kvm_vcpu struct
-+ * kvm_pmu_is_partitioned() - Determine if given VCPU has a partitioned PMU
-+ * @kvm: Pointer to kvm_vcpu struct
-  *
-  * Determine if given VCPU has a partitioned PMU by extracting that
-  * field and passing it to :c:func:`kvm_pmu_is_partitioned`
-@@ -55,7 +55,36 @@ bool kvm_pmu_is_partitioned(struct arm_pmu *pmu)
- bool kvm_vcpu_pmu_is_partitioned(struct kvm_vcpu *vcpu)
+ /* Create a VM that has one vCPU with PMUv3 configured. */
+-static void create_vpmu_vm(void *guest_code)
++static void create_vpmu_vm(void *guest_code, enum pmu_impl impl)
  {
- 	return kvm_pmu_is_partitioned(vcpu->kvm->arch.arm_pmu) &&
--		false;
-+		test_bit(KVM_ARCH_FLAG_PARTITION_PMU_ENABLED, &vcpu->kvm->arch.flags);
-+}
+ 	struct kvm_vcpu_init init;
+ 	uint8_t pmuver, ec;
+@@ -409,6 +420,13 @@ static void create_vpmu_vm(void *guest_code)
+ 		.attr = KVM_ARM_VCPU_PMU_V3_IRQ,
+ 		.addr = (uint64_t)&irq,
+ 	};
++	bool partition = (impl == PARTITIONED);
++	struct kvm_device_attr part_attr = {
++		.group = KVM_ARM_VCPU_PMU_V3_CTRL,
++		.attr = KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION,
++		.addr = (uint64_t)&partition
++	};
++	int ret;
+ 
+ 	/* The test creates the vpmu_vm multiple times. Ensure a clean state */
+ 	memset(&vpmu_vm, 0, sizeof(vpmu_vm));
+@@ -436,6 +454,15 @@ static void create_vpmu_vm(void *guest_code)
+ 		    "Unexpected PMUVER (0x%x) on the vCPU with PMUv3", pmuver);
+ 
+ 	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &irq_attr);
 +
-+/**
-+ * has_kvm_pmu_partition_support() - If we can enable/disable partition
-+ *
-+ * Return: true if allowed, false otherwise.
-+ */
-+bool has_kvm_pmu_partition_support(void)
-+{
-+	return has_host_pmu_partition_support() &&
-+		kvm_supports_guest_pmuv3() &&
-+		armv8pmu_max_guest_counters > -1;
-+}
++	ret = __vcpu_has_device_attr(
++		vpmu_vm.vcpu, KVM_ARM_VCPU_PMU_V3_CTRL, KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION);
++	if (!ret) {
++		vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &part_attr);
++		vpmu_vm.pmu_partitioned = partition;
++		pr_debug("Set PMU partitioning: %d\n", partition);
++	}
 +
-+/**
-+ * kvm_pmu_partition_enable() - Enable/disable partition flag
-+ * @kvm: Pointer to vcpu
-+ * @enable: Whether to enable or disable
-+ *
-+ * If we want to enable the partition, the guest is free to grab
-+ * hardware by accessing PMU registers. Otherwise, the host maintains
-+ * control.
-+ */
-+void kvm_pmu_partition_enable(struct kvm *kvm, bool enable)
-+{
-+	if (enable)
-+		set_bit(KVM_ARCH_FLAG_PARTITION_PMU_ENABLED, &kvm->arch.flags);
-+	else
-+		clear_bit(KVM_ARCH_FLAG_PARTITION_PMU_ENABLED, &kvm->arch.flags);
  }
  
- /**
-diff --git a/arch/arm64/kvm/pmu.c b/arch/arm64/kvm/pmu.c
-index 72d5b7cb3d93e..cdf51f24fdaf3 100644
---- a/arch/arm64/kvm/pmu.c
-+++ b/arch/arm64/kvm/pmu.c
-@@ -759,6 +759,19 @@ int kvm_arm_pmu_v3_set_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
- 
- 		return kvm_arm_pmu_v3_set_nr_counters(vcpu, n);
+ static void destroy_vpmu_vm(void)
+@@ -461,13 +488,14 @@ static void run_vcpu(struct kvm_vcpu *vcpu, uint64_t pmcr_n)
  	}
-+	case KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION: {
-+		unsigned int __user *uaddr = (unsigned int __user *)(long)attr->addr;
-+		bool enable;
-+
-+		if (get_user(enable, uaddr))
-+			return -EFAULT;
-+
-+		if (!has_kvm_pmu_partition_support())
-+			return -EPERM;
-+
-+		kvm_pmu_partition_enable(kvm, enable);
-+		return 0;
-+	}
- 	case KVM_ARM_VCPU_PMU_V3_INIT:
- 		return kvm_arm_pmu_v3_init(vcpu);
- 	}
-@@ -798,6 +811,7 @@ int kvm_arm_pmu_v3_has_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
- 	case KVM_ARM_VCPU_PMU_V3_FILTER:
- 	case KVM_ARM_VCPU_PMU_V3_SET_PMU:
- 	case KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS:
-+	case KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION:
- 		if (kvm_vcpu_has_pmu(vcpu))
- 			return 0;
- 	}
-diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
-index 93586691a2790..ff898370fa63f 100644
---- a/include/kvm/arm_pmu.h
-+++ b/include/kvm/arm_pmu.h
-@@ -109,6 +109,8 @@ void kvm_pmu_load(struct kvm_vcpu *vcpu);
- void kvm_pmu_put(struct kvm_vcpu *vcpu);
+ }
  
- void kvm_pmu_set_physical_access(struct kvm_vcpu *vcpu);
-+bool has_kvm_pmu_partition_support(void);
-+void kvm_pmu_partition_enable(struct kvm *kvm, bool enable);
+-static void test_create_vpmu_vm_with_nr_counters(unsigned int nr_counters, bool expect_fail)
++static void test_create_vpmu_vm_with_nr_counters(
++	unsigned int nr_counters, enum pmu_impl impl, bool expect_fail)
+ {
+ 	struct kvm_vcpu *vcpu;
+ 	unsigned int prev;
+ 	int ret;
  
- #if !defined(__KVM_NVHE_HYPERVISOR__)
- bool kvm_vcpu_pmu_is_partitioned(struct kvm_vcpu *vcpu);
-@@ -311,6 +313,13 @@ static inline void kvm_pmu_host_counters_enable(void) {}
- static inline void kvm_pmu_host_counters_disable(void) {}
- static inline void kvm_pmu_handle_guest_irq(struct arm_pmu *pmu, u64 pmovsr) {}
+-	create_vpmu_vm(guest_code);
++	create_vpmu_vm(guest_code, impl);
+ 	vcpu = vpmu_vm.vcpu;
  
-+static inline bool has_kvm_pmu_partition_support(void)
+ 	prev = get_pmcr_n(vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0)));
+@@ -489,7 +517,7 @@ static void test_create_vpmu_vm_with_nr_counters(unsigned int nr_counters, bool
+  * Create a guest with one vCPU, set the PMCR_EL0.N for the vCPU to @pmcr_n,
+  * and run the test.
+  */
+-static void run_access_test(uint64_t pmcr_n)
++static void run_access_test(uint64_t pmcr_n, enum pmu_impl impl)
+ {
+ 	uint64_t sp;
+ 	struct kvm_vcpu *vcpu;
+@@ -497,7 +525,7 @@ static void run_access_test(uint64_t pmcr_n)
+ 
+ 	pr_debug("Test with pmcr_n %lu\n", pmcr_n);
+ 
+-	test_create_vpmu_vm_with_nr_counters(pmcr_n, false);
++	test_create_vpmu_vm_with_nr_counters(pmcr_n, impl, false);
+ 	vcpu = vpmu_vm.vcpu;
+ 
+ 	/* Save the initial sp to restore them later to run the guest again */
+@@ -531,14 +559,14 @@ static struct pmreg_sets validity_check_reg_sets[] = {
+  * Create a VM, and check if KVM handles the userspace accesses of
+  * the PMU register sets in @validity_check_reg_sets[] correctly.
+  */
+-static void run_pmregs_validity_test(uint64_t pmcr_n)
++static void run_pmregs_validity_test(uint64_t pmcr_n, enum pmu_impl impl)
+ {
+ 	int i;
+ 	struct kvm_vcpu *vcpu;
+ 	uint64_t set_reg_id, clr_reg_id, reg_val;
+ 	uint64_t valid_counters_mask, max_counters_mask;
+ 
+-	test_create_vpmu_vm_with_nr_counters(pmcr_n, false);
++	test_create_vpmu_vm_with_nr_counters(pmcr_n, impl, false);
+ 	vcpu = vpmu_vm.vcpu;
+ 
+ 	valid_counters_mask = get_counters_mask(pmcr_n);
+@@ -588,11 +616,11 @@ static void run_pmregs_validity_test(uint64_t pmcr_n)
+  * the vCPU to @pmcr_n, which is larger than the host value.
+  * The attempt should fail as @pmcr_n is too big to set for the vCPU.
+  */
+-static void run_error_test(uint64_t pmcr_n)
++static void run_error_test(uint64_t pmcr_n, enum pmu_impl impl)
+ {
+-	pr_debug("Error test with pmcr_n %lu (larger than the host)\n", pmcr_n);
++	pr_debug("Error test with pmcr_n %lu (larger than the host allows)\n", pmcr_n);
+ 
+-	test_create_vpmu_vm_with_nr_counters(pmcr_n, true);
++	test_create_vpmu_vm_with_nr_counters(pmcr_n, impl, true);
+ 	destroy_vpmu_vm();
+ }
+ 
+@@ -600,11 +628,11 @@ static void run_error_test(uint64_t pmcr_n)
+  * Return the default number of implemented PMU event counters excluding
+  * the cycle counter (i.e. PMCR_EL0.N value) for the guest.
+  */
+-static uint64_t get_pmcr_n_limit(void)
++static uint64_t get_pmcr_n_limit(enum pmu_impl impl)
+ {
+ 	uint64_t pmcr;
+ 
+-	create_vpmu_vm(guest_code);
++	create_vpmu_vm(guest_code, impl);
+ 	pmcr = vcpu_get_reg(vpmu_vm.vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0));
+ 	destroy_vpmu_vm();
+ 	return get_pmcr_n(pmcr);
+@@ -614,7 +642,7 @@ static bool kvm_supports_nr_counters_attr(void)
+ {
+ 	bool supported;
+ 
+-	create_vpmu_vm(NULL);
++	create_vpmu_vm(NULL, EMULATED);
+ 	supported = !__vcpu_has_device_attr(vpmu_vm.vcpu, KVM_ARM_VCPU_PMU_V3_CTRL,
+ 					    KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS);
+ 	destroy_vpmu_vm();
+@@ -622,22 +650,46 @@ static bool kvm_supports_nr_counters_attr(void)
+ 	return supported;
+ }
+ 
+-int main(void)
++static bool kvm_supports_partition_attr(void)
 +{
-+	return false;
++	bool supported;
++
++	create_vpmu_vm(NULL, EMULATED);
++	supported = !__vcpu_has_device_attr(vpmu_vm.vcpu, KVM_ARM_VCPU_PMU_V3_CTRL,
++					    KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION);
++	destroy_vpmu_vm();
++
++	return supported;
 +}
 +
-+static inline void kvm_pmu_partition_enable(struct kvm *kvm, bool enable) {}
-+
- #endif
++void test_pmu(enum pmu_impl impl)
+ {
+ 	uint64_t i, pmcr_n;
  
- #endif
+-	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
+-	TEST_REQUIRE(kvm_supports_vgic_v3());
+-	TEST_REQUIRE(kvm_supports_nr_counters_attr());
++	pr_info("Testing PMU: Implementation = %s\n", pmu_impl_str[impl]);
++
++	pmcr_n = get_pmcr_n_limit(impl);
++	pr_debug("PMCR_EL0.N: Limit = %lu\n", pmcr_n);
+ 
+-	pmcr_n = get_pmcr_n_limit();
+ 	for (i = 0; i <= pmcr_n; i++) {
+-		run_access_test(i);
+-		run_pmregs_validity_test(i);
++		run_access_test(i, impl);
++		run_pmregs_validity_test(i, impl);
+ 	}
+ 
+ 	for (i = pmcr_n + 1; i < ARMV8_PMU_MAX_COUNTERS; i++)
+-		run_error_test(i);
++		run_error_test(i, impl);
++}
++
++int main(void)
++{
++	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
++	TEST_REQUIRE(kvm_supports_vgic_v3());
++	TEST_REQUIRE(kvm_supports_nr_counters_attr());
++
++	test_pmu(EMULATED);
++
++	if (kvm_supports_partition_attr())
++		test_pmu(PARTITIONED);
+ 
+ 	return 0;
+ }
 -- 
 2.53.0.rc2.204.g2597b5adb4-goog
 
