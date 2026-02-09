@@ -1,295 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F009318144;
-	Mon,  9 Feb 2026 08:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E533242D7
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 08:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770626361; cv=none; b=dHM0sF9WQvszNM5ALsmWHl4htshYVN53nKBOxLoeJvHS9t4o8d0eoyANVInwVqLl5ft7nUbM2Aum4JtAWey3C1IKezP/l3IQkjecM0SKTE589k5ktRSswirAXEknm6Ys6k8nBt4KjwsTHZWTOl2RN2WHBMxfcEWtnUNnGkttSXY=
+	t=1770626737; cv=none; b=FOOgYIQJIwDy+AGnZjaSD7bHHkaeXYeafRyHBoe2A4gocBGMpPnwVf4GheSW4YLwWs4Z9rrTvilYHj4ReFeOcj/U+sqN255ug/u9GBcL8gPNX/4Xct8gI2JNFeSk4JkUuEK7FnzkHQ3ziOeY8GBYOMEnka9j+Rlcpo3/0xLYEvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770626361; c=relaxed/simple;
-	bh=E9saGuhJGOU9+I6Yjce+ud/XgxCtUAe4jefhxgreW1c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nad/FYhIeQpfch/CLQ+G4rNgcCJsEk6aglk/0ZJ7vBMtQSCy8sr072tH6rI0JeB9+bSC0gwLK5RmlIvqLyh2k3YC8u4/2QrBzWviSGaWwSke5q1mw9z6hgWBnPefe3fJZ9prKlZ00z55WdKp7V/RHjzG+odRO+bt5jLKtfm+1BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=biTJAkH0; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1770626737; c=relaxed/simple;
+	bh=8J4uovh6LVzVO2JBajUxlGf7AdBtM9vIR9LvmKMVaWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rYU6TFDjoNxeea2lctOJXrjW+zGXR0nNclOvgL/DgMa+unzpLWjqVxka1xIQt2L0N7dsZb8orGCzzdnLfuQwS2W3LHDpTsxywxAlCoIIJUURBhlBIZ0kOpkBZ76os7pHqauIzgx+hQuJFGLjpUqJnhP+eYbD49IbrKXsELZiIys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=US0IfsTJ; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="biTJAkH0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770626362; x=1802162362;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=E9saGuhJGOU9+I6Yjce+ud/XgxCtUAe4jefhxgreW1c=;
-  b=biTJAkH0l37AQiKQ9FJblFJ+UHWGY2cD77SovSFsVxQRK1MEwbNes4Ae
-   XUNEyhzSQ3dOPqhdO5OUZMq46ik44B63FGFHNOfRhUC6xjWPFZlTXbfqs
-   d+khOgGXB83HhJdv+ocxr5VLHxBZgPxSg7Bs+BOqZrpGPHXiwdCZCKlqg
-   PwyaNAQ0QfAuxK9kV1Urwi9ZD4FMDv2S2S+93Y3fTkHJdNYc40uri7cQW
-   JrIpynOA3Xy/Gjyxn+fm/XkAH2Ji0/bu+UElQQIIuoIS4Q8fkbmjp7Syy
-   cmkL2EKhN2+A+HSEoQ7eZSAbSpIRTd8FtZd/yJCjdM3I4De13ePrn8wCK
-   A==;
-X-CSE-ConnectionGUID: uVIygSjhQFGU0y5v0py1NA==
-X-CSE-MsgGUID: AJknPYOGSzyyuwIV0a4yfA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11695"; a="75580733"
-X-IronPort-AV: E=Sophos;i="6.21,281,1763452800"; 
-   d="scan'208";a="75580733"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 00:39:21 -0800
-X-CSE-ConnectionGUID: S25R2+EyQWaYUkSqdxWUrg==
-X-CSE-MsgGUID: l2aZxljuQMeIqE6bWMGOew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,281,1763452800"; 
-   d="scan'208";a="211582346"
-Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa007.jf.intel.com with ESMTP; 09 Feb 2026 00:39:18 -0800
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v6 4/4] perf regs: Enable dumping of SIMD registers
-Date: Mon,  9 Feb 2026 16:35:14 +0800
-Message-Id: <20260209083514.2225115-5-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260209083514.2225115-1-dapeng1.mi@linux.intel.com>
-References: <20260209083514.2225115-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="US0IfsTJ"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b8eafb515aeso483646166b.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 00:45:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770626736; x=1771231536; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8J4uovh6LVzVO2JBajUxlGf7AdBtM9vIR9LvmKMVaWQ=;
+        b=US0IfsTJWHAT1BeyfF2bmL+6FxGDwGaLrjUq99Ep3cAvao5CVJujE9k1aaynEDXgKX
+         AYs/+54FhfSGvAdizDJE09yEUInjzxGOF0thziP1xd+KnuzhpmDEi5F31/poyPAo803g
+         kotqI6J4lfvMX9Y0M+KQouYw1Nsum7FgGnnygrjXtTY/Dx28SznkpNuA5nbp20GAB9Vt
+         ZFy31eG/su0a//2mCI8TVVLW+3R84JoUzajCYes4uICro6HMZmDQd6gxZafhyi29hhSi
+         juuiqMYZ6ynXiLSfPm70WaUNsIzik8cNVJfSjqCEySeELmv01hnQRHkHHAAn4XQeBrFw
+         XB9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770626736; x=1771231536;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8J4uovh6LVzVO2JBajUxlGf7AdBtM9vIR9LvmKMVaWQ=;
+        b=NMzPTLzkIiXwcuriOKQAGnyaKosuB9aPhh6LjMHUASxarekBMtBmCqaXjtD9izDd2i
+         OQOuMOfWRWShi6VjoBSaVq0pZ6LTItnbuLvxZvhNNsgnmOfqMNMf3cKR/qlfG/55dNKl
+         im/iZmuSwCND+wEcIaHdVaXrTsh73TOMPMaW4cGfO4I2ekyJcYGQgFHMwrwRHkMYUJIL
+         ZyC9VJpWGz+QKAcbP5h+CcxJn5zw5T+VYbCscGgYwAR2IRoMxAP6n7lxx5cNkQB1fZ3B
+         /pLIYG4kQrjpvdMyyCUHJpQWpwdf2ApNPxKfwBg2EN+AiDzwkVBXEuY4uCGiUlQQ2hzW
+         8b8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV5R+qAlalbu0LxNPrYiO5QiTdk6Ex7SVYSrrVVkwFJn1CM1BtveY9/8IGHEln37QU/7jUCYyf0eK0mn85qXpTC@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzxUW2sjYxyTkIcbLLE/9M/kXGddX1WaTiLMAOu8s1M3iuSv6k
+	vrM/hYPeKcBvHpvOOQlwi/SLIsCOtoAGOhrO9NIzVDwk+qq/BZzc/3iw
+X-Gm-Gg: AZuq6aLrNlPGovFDp98zcCF58BUIXbWLgroZxgKLkcVIbBXL+XiYytducKxitGt5vVw
+	n7+xZekCT04uGTe15HHCByHzxXBJyL/UHySdYRmn5rFwmEzkSgfzPTAsQpY0mhgKPaLDvmLYI/y
+	rfE2v7AindyDXEyu1qXh/DCVg7Oc7TDyapqxJgDAUjc5ibcRrqj370uz6HnWi0pIxskAvr64Jaq
+	RhnJsg8CZiHvIZcgvRa6KOTMpbrSenYtU8hJSqEGlnDtIfw4WzYCxUoRp7DFADYpRIfyPnxUOZM
+	7i2bK4wqPvL7E2ws9ZJrhGHvFgS3s450zVk21GoZrKZUdDt/cUqJuMjL9okRXenaXTjZ44Cz0KB
+	BkpzeYw+EFcNYB3v8JOxA5SbQ9u7SkfCR3WfyaVgVjzf0WpPLEmPPV3VXUW1WYs4/x1kdWBuMrA
+	ubivv+O+naTZ4Hm4kP1sU4kfg4DdKvKOlfWgNYaqncekHcIfZaSHsC31sDV9Tik8MdScq3Ldvju
+	VRtqNBUfOvXzXE1nbpAsTAz
+X-Received: by 2002:a17:907:7202:b0:b88:6309:c300 with SMTP id a640c23a62f3a-b8edf34b334mr622337066b.39.1770626735269;
+        Mon, 09 Feb 2026 00:45:35 -0800 (PST)
+Received: from ddolgov-thinkpadt14sgen1.rmtde.csb (dslb-002-207-075-089.002.207.pools.vodafone-ip.de. [2.207.75.89])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8edacb387esm361482066b.37.2026.02.09.00.45.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Feb 2026 00:45:34 -0800 (PST)
+Date: Mon, 9 Feb 2026 09:45:32 +0100
+From: Dmitry Dolgov <9erthalion6@gmail.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, linux-perf-users@vger.kernel.org, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Rust data-type profiling working in perf was: Re: [RFC PATCH v2
+ 0/4] Test annotate with data type profiling
+Message-ID: <6i5osof4lst2rjnta232tvntpbufrpzihp6jicsysob36pj6ss@6acco3e7r4ym>
+References: <20260208122227.3524-1-9erthalion6@gmail.com>
+ <aYigHLZtXooznMB7@x1>
+ <aYig1O0-5yxy91la@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aYig1O0-5yxy91la@x1>
 
-From: Kan Liang <kan.liang@linux.intel.com>
+> On Sun, Feb 08, 2026 at 11:42:28AM -0300, Arnaldo Carvalho de Melo wrote:
+>
+> Also please consider adding examples of output of such new features, so
+> that people can quickly see it in action, data-type profiling for Rust
+> seems interesting, right? :-)
 
-This patch adds support for dumping SIMD registers using the new
-PERF_SAMPLE_REGS_ABI_SIMD ABI.
-
-Currently, the XMM, YMM, ZMM, OPMASK, eGPRs, and SSP registers on x86
-platforms are supported with the PERF_SAMPLE_REGS_ABI_SIMD ABI.
-
-An example of the output is displayed below.
-
-Example:
-
- $perf record -e cycles:p -IXMM,YMM,OPMASK,SSP ./test
- $perf report -D
- ... ...
- 237538985992962 0x454d0 [0x480]: PERF_RECORD_SAMPLE(IP, 0x1):
- 179370/179370: 0xffffffff969627fc period: 124999 addr: 0
- ... intr regs: mask 0x20000000000 ABI 64-bit
- .... SSP   0x0000000000000000
- ... SIMD ABI nr_vectors 32 vector_qwords 4 nr_pred 8 pred_qwords 1
- .... YMM  [0] 0x0000000000004000
- .... YMM  [0] 0x000055e828695270
- .... YMM  [0] 0x0000000000000000
- .... YMM  [0] 0x0000000000000000
- .... YMM  [1] 0x000055e8286990e0
- .... YMM  [1] 0x000055e828698dd0
- .... YMM  [1] 0x0000000000000000
- .... YMM  [1] 0x0000000000000000
- ... ...
- .... YMM  [31] 0x0000000000000000
- .... YMM  [31] 0x0000000000000000
- .... YMM  [31] 0x0000000000000000
- .... YMM  [31] 0x0000000000000000
- .... OPMASK[0] 0x0000000000100221
- .... OPMASK[1] 0x0000000000000020
- .... OPMASK[2] 0x000000007fffffff
- .... OPMASK[3] 0x0000000000000000
- .... OPMASK[4] 0x0000000000000000
- .... OPMASK[5] 0x0000000000000000
- .... OPMASK[6] 0x0000000000000000
- .... OPMASK[7] 0x0000000000000000
- ... ...
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- tools/perf/util/evsel.c   | 20 ++++++++++
- tools/perf/util/sample.h  | 10 +++++
- tools/perf/util/session.c | 77 +++++++++++++++++++++++++++++++++++----
- 3 files changed, 99 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a86d2434a4ad..2e1d50a72762 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3514,6 +3514,16 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 			regs->mask = mask;
- 			regs->regs = (u64 *)array;
- 			array = (void *)array + sz;
-+
-+			if (regs->abi & PERF_SAMPLE_REGS_ABI_SIMD) {
-+				regs->config = *(u64 *)array;
-+				array = (void *)array + sizeof(u64);
-+				regs->data = (u64 *)array;
-+				sz = (regs->nr_vectors * regs->vector_qwords +
-+				      regs->nr_pred * regs->pred_qwords) * sizeof(u64);
-+				OVERFLOW_CHECK(array, sz, max_size);
-+				array = (void *)array + sz;
-+			}
- 		}
- 	}
- 
-@@ -3571,6 +3581,16 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 			regs->mask = mask;
- 			regs->regs = (u64 *)array;
- 			array = (void *)array + sz;
-+
-+			if (regs->abi & PERF_SAMPLE_REGS_ABI_SIMD) {
-+				regs->config = *(u64 *)array;
-+				array = (void *)array + sizeof(u64);
-+				regs->data = (u64 *)array;
-+				sz = (regs->nr_vectors * regs->vector_qwords +
-+				      regs->nr_pred * regs->pred_qwords) * sizeof(u64);
-+				OVERFLOW_CHECK(array, sz, max_size);
-+				array = (void *)array + sz;
-+			}
- 		}
- 	}
- 
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 3cce8dd202aa..b98bc58d365e 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -15,6 +15,16 @@ struct regs_dump {
- 	u64 abi;
- 	u64 mask;
- 	u64 *regs;
-+	union {
-+		u64 config;
-+		struct {
-+			u16 nr_vectors;
-+			u16 vector_qwords;
-+			u16 nr_pred;
-+			u16 pred_qwords;
-+		};
-+	};
-+	u64 *data;
- 
- 	/* Cached values/mask filled by first register access. */
- 	u64 cache_regs[PERF_SAMPLE_REGS_CACHE_SIZE];
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 7cf7bf86205d..fba8ef52f0a1 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -972,18 +972,77 @@ static void regs_dump__printf(u64 mask, struct regs_dump *regs,
- 	}
- }
- 
--static const char *regs_abi[] = {
--	[PERF_SAMPLE_REGS_ABI_NONE] = "none",
--	[PERF_SAMPLE_REGS_ABI_32] = "32-bit",
--	[PERF_SAMPLE_REGS_ABI_64] = "64-bit",
--};
-+static void simd_regs_dump__printf(struct regs_dump *regs, bool intr)
-+{
-+	const char *name = "unknown";
-+	int i, idx = 0;
-+	uint16_t qwords;
-+	int reg_c;
-+
-+	if (!(regs->abi & PERF_SAMPLE_REGS_ABI_SIMD))
-+		return;
-+
-+	printf("... SIMD ABI nr_vectors %d vector_qwords %d nr_pred %d pred_qwords %d\n",
-+	       regs->nr_vectors, regs->vector_qwords,
-+	       regs->nr_pred, regs->pred_qwords);
-+
-+	for (reg_c = 0; reg_c < 64; reg_c++) {
-+		if (intr) {
-+			perf_intr_simd_reg_class_bitmap_qwords(EM_HOST, reg_c,
-+							       &qwords, /*pred=*/false);
-+		} else {
-+			perf_user_simd_reg_class_bitmap_qwords(EM_HOST, reg_c,
-+							       &qwords, /*pred=*/false);
-+		}
-+		if (regs->vector_qwords == qwords) {
-+			name = perf_simd_reg_class_name(EM_HOST, reg_c, /*pred=*/false);
-+			break;
-+		}
-+	}
-+
-+	for (i = 0; i < regs->nr_vectors; i++) {
-+		printf(".... %-5s[%d] 0x%016" PRIx64 "\n", name, i, regs->data[idx++]);
-+		printf(".... %-5s[%d] 0x%016" PRIx64 "\n", name, i, regs->data[idx++]);
-+		if (regs->vector_qwords > 2) {
-+			printf(".... %-5s[%d] 0x%016" PRIx64 "\n", name, i, regs->data[idx++]);
-+			printf(".... %-5s[%d] 0x%016" PRIx64 "\n", name, i, regs->data[idx++]);
-+		}
-+		if (regs->vector_qwords > 4) {
-+			printf(".... %-5s[%d] 0x%016" PRIx64 "\n", name, i, regs->data[idx++]);
-+			printf(".... %-5s[%d] 0x%016" PRIx64 "\n", name, i, regs->data[idx++]);
-+			printf(".... %-5s[%d] 0x%016" PRIx64 "\n", name, i, regs->data[idx++]);
-+			printf(".... %-5s[%d] 0x%016" PRIx64 "\n", name, i, regs->data[idx++]);
-+		}
-+	}
-+
-+	name = "unknown";
-+	for (reg_c = 0; reg_c < 64; reg_c++) {
-+		if (intr) {
-+			perf_intr_simd_reg_class_bitmap_qwords(EM_HOST, reg_c,
-+							       &qwords, /*pred=*/true);
-+		} else {
-+			perf_user_simd_reg_class_bitmap_qwords(EM_HOST, reg_c,
-+							       &qwords, /*pred=*/true);
-+		}
-+		if (regs->pred_qwords == qwords) {
-+			name = perf_simd_reg_class_name(EM_HOST, reg_c, /*pred=*/true);
-+			break;
-+		}
-+	}
-+	for (i = 0; i < regs->nr_pred; i++)
-+		printf(".... %-5s[%d] 0x%016" PRIx64 "\n", name, i, regs->data[idx++]);
-+}
- 
- static inline const char *regs_dump_abi(struct regs_dump *d)
- {
--	if (d->abi > PERF_SAMPLE_REGS_ABI_64)
--		return "unknown";
-+	if (!d->abi)
-+		return "none";
-+	if (d->abi & PERF_SAMPLE_REGS_ABI_32)
-+		return "32-bit";
-+	else if (d->abi & PERF_SAMPLE_REGS_ABI_64)
-+		return "64-bit";
- 
--	return regs_abi[d->abi];
-+	return "unknown";
- }
- 
- static void regs__printf(const char *type, struct regs_dump *regs,
-@@ -1010,6 +1069,7 @@ static void regs_user__printf(struct perf_sample *sample, uint16_t e_machine, ui
- 
- 	if (user_regs->regs)
- 		regs__printf("user", user_regs, e_machine, e_flags);
-+	simd_regs_dump__printf(user_regs, /*intr=*/false);
- }
- 
- static void regs_intr__printf(struct perf_sample *sample, uint16_t e_machine, uint32_t e_flags)
-@@ -1023,6 +1083,7 @@ static void regs_intr__printf(struct perf_sample *sample, uint16_t e_machine, ui
- 
- 	if (intr_regs->regs)
- 		regs__printf("intr", intr_regs, e_machine, e_flags);
-+	simd_regs_dump__printf(intr_regs, /*intr=*/true);
- }
- 
- static void stack_user__printf(struct stack_dump *dump)
--- 
-2.34.1
-
+Agree :) What would be the right place to put such examples, somewhere
+in the documentation?
