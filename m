@@ -1,187 +1,224 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB5137F8C6;
-	Mon,  9 Feb 2026 15:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A8136F425
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 16:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770651197; cv=none; b=e8zlen4CMJlGdYihIG1G0h3u8pw9f41E06aZQipNpxypRdcMcXGPyCwGcxomdd/2Ox7BDNdkcltwUqndH9MIMQ0vMgOhJVX6mc72YVyU3wEEca6rEwQ8dSfr7wztCC9NWyDn6erqcv9tynQCwz5ir1++rgagSTD66pPGfxDYXxk=
+	t=1770653563; cv=none; b=ksugu/+AfcZRHbFVXF1GP5Rda3OMPhLXu5TGUx3IFD1BdrlY1GiJMP50+PtLZ2KT7betpRSIPKRSXX1Og7vIIiu/tuYixQff0bSe2+MnNwJJeRsFN+iFME01cMfM7fgaZoZYXq139qOjoNkh6AQRc2jNwMWPPATyLxAgIgT8O2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770651197; c=relaxed/simple;
-	bh=CmPuQBpQF8fa4MEOF/RUrhZWPWN2Y3Qx12OPXF8w5uc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IfNd7osM+C6AWQAI1/RtIb1qTD7EENi2eMEl6wRGAxHIdKzT+lfbF43azu0Sgpv8W18g8XApSs8Li6SzWfhvjrJQ8BVQ3BnLI4N9SUnwscVw0hed5pw2yRVKfyD5HPrKY7Z/oRj+NMFZ3X9uTbGQKkNslbhyIwj6TiJG//HL55A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AMWoS0Bg; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1770653563; c=relaxed/simple;
+	bh=7PZqfJGgR6T/VkpTeUyvTVaInvQKPOQ4hiVFib0k9E8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TLMw/SD2gZ1EjHoei37x+mi9gPIaPpknEwo+j7Jl+O4qaB0UJMM9wmeSquISaKX5kTdDkrYDfGifb0GXWUof5+vttxbgdohogG3mfyoRuTM8hNnU2AxbZmracMO6XqloWDzMs+htbdA2hv53whGYz3hR+Toahgr51c/WSBkFd2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pVzwAn5/; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AMWoS0Bg"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 619F9UaU198637;
-	Mon, 9 Feb 2026 15:33:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=ARyn3B9i4SUdiU7TjeJlfIBtSQ5yQZQ36laaiLpX1
-	rY=; b=AMWoS0BgaMA2Otak6DR1l+SIuUtGu1BxwohnAtxrjAiCXbk2AKE6yOJrM
-	+Xjh/GWVJj1e56NhtqUd3lkEqOLrFgAWR7j7OqX5jRzRwPeKsm13966q7uLN3Vwk
-	XL3mDKnYRLR5ZbkxZ0KPDBTEHTtyhsHp3wYqQByRRfQIPwsGEcMz7tqqbUowEu3G
-	ynDZdGuCcQdwbnweZFKrx7/bNadukzkd4Vdkt1rS3ODQAV2WNkC7bu4wAjVD5Psl
-	m3TISCXakAXm7cEBuzqchT5rWdnfBx2trRz+oMFgzSEfb5WdpllPu5fM4pEtJDSZ
-	oITFHEvCY/DyLcNaCsts/lV+jdlWA==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4c696u7uc7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Feb 2026 15:33:13 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 619CUnB2008883;
-	Mon, 9 Feb 2026 15:33:12 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4c6g3y5t4d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Feb 2026 15:33:11 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 619FX7OR46268768
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 9 Feb 2026 15:33:07 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ADCEE20043;
-	Mon,  9 Feb 2026 15:33:07 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 78E3E20040;
-	Mon,  9 Feb 2026 15:33:07 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  9 Feb 2026 15:33:07 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        irogers@google.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH linux-next] perf test: Fix test case perftool-testsuite_report for s390
-Date: Mon,  9 Feb 2026 16:32:56 +0100
-Message-ID: <20260209153256.601599-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pVzwAn5/"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-4359249bbacso3217110f8f.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 08:12:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1770653561; x=1771258361; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U6vGUIfOMPLQOWxD28cEZmBTRpAwCIFraiBSmkF3Rq0=;
+        b=pVzwAn5/OLwyiDf0iwnwHAZsboPHrjeCch7pntyhoXIGcoKVcz42ijZ/DYw+/H12sY
+         gRcON8jVqJ//a49jRsBbwqyUc5/6E4XB1GPjyJCZqIOOQrmfFCNFdjRAv2y0dwZ8vE7L
+         t2wKZVjhHrZu7UWXaOFNv2lT2Xf8JI9RKEJMOHO3TX1Wv9V6b7rlWvvbRk3bTmyqvnzS
+         kImnD/DxKdYTFt/T3Ym1q3sonIzmHy0+w9E8jWShNkms0XgNjc17uUGQsgjcTw1T70jz
+         SK8gjk/UiSoVQ3+sats/YAMn/GpwptANtILnumCS/Qi22T5K78nyD2cPtIDOWLV015Zv
+         8JXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770653561; x=1771258361;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U6vGUIfOMPLQOWxD28cEZmBTRpAwCIFraiBSmkF3Rq0=;
+        b=o97KZZdqG1yzHjUgvfFA3mtlRA52z0UzUcGrONapteEu/G6Yr65ZHUGVAUVwGB74E7
+         chW+7oDZgnZu2qVUq/JTJiXt2TeFIqIVkXE7HON2gFRWA0/+7NBCGUjs45D911jHKnzq
+         h3nJb70Sdn53EExNOLHS6OGHwfenVc+eoMTz0PyT7EboBthK52MdarSA6U9v6own/EzF
+         mQHaywNBCkShaxE9i6y1boohpZ0SSNm0lve1oaBxQKJcYfK1xBVzaM3A0WiAlt+ZpJpW
+         PnkFei9TNPkwSp+/QnYVKwJqIr6E5m1dL1ft576EdlNMwf9ITXRRkRusyMfkYU7Vd542
+         cA2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUYujhPPMznchi1FWriP/PG4KCERVOBkOQurqQ7NNC50ZHySliW6vuoB+cZWaJmiQseytE6IObQ66yrbo4vrcLa@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywuzs8wfY6+5C/DkL/1V2aZYOt4jP2F20q4ZKAW4utltKoA+uqc
+	p3rTlS6YPwSMZObodwcliT/gLHzlaMLk7jMO5AuPmK3+sod+NfY5sElClnkEM1p2rdQ=
+X-Gm-Gg: AZuq6aIPtQ1Ve69055DhFAnwLwnX+niegn8sLwzH6xOxRwUjcb280RWeBC87YxGLM6H
+	f9iM3GrNpyrEEbuZ3ZsDTKekTLP6Opx7svNz0owR/cBIihs3MR/HEMQk0HtAaTbISNNBJQQZ9Z3
+	0DqebwZ7YH5oEMhAdxSJFszGC3rBenJsfuJVDIv8BUx3zBLjsTA83dA5Hwer/Rg2ZM3kN6YyfuD
+	GA9HlwXQM254AX0TgzOE8gQGMYTBtMQ0eHNwLyyJZKilxmsAWE15MAZiQp9n6Ommu7nQNZgY9fK
+	se9MQDXd8B8XJjKP+qzBf7PLnBUxcONEsGKJb47tQkFMsmVNXLSYrZCFl2GNfNkszGaDTNlS8GW
+	sgMP081ZhfcgUiyZsk6UwkrQinql9i7KtaYsCytQIEoioexeCrmHYNmxYZprc2SoeEMj1SuLlBa
+	58pCJZNVrAUy8fSRbk
+X-Received: by 2002:a05:6000:613:b0:437:7010:1cfd with SMTP id ffacd0b85a97d-43770101ec3mr5121628f8f.4.1770653561339;
+        Mon, 09 Feb 2026 08:12:41 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4362972fc26sm25708937f8f.22.2026.02.09.08.12.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Feb 2026 08:12:40 -0800 (PST)
+Message-ID: <61e544ab-d9b9-454e-9dd7-65625d9be126@linaro.org>
+Date: Mon, 9 Feb 2026 16:12:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=KZnfcAYD c=1 sm=1 tr=0 ts=6989fe39 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
- a=GgsMoib0sEa3-_RKJdDe:22 a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8
- a=_79wvyOUd3vZcLf8ia0A:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA5MDEyOCBTYWx0ZWRfX7b5Ndm2qHwHF
- PyyWIceLhlZD/oeZC7U0v9bhBUlWaIERGZ3okJVcGOI9tRJpV56PpM0q/dXwdzUpz5nM0jGDYk3
- 8CMawW3SA2FS4SiU2Qvpb0M5SMBMdmAJ/W3ZSlBm7BGcJzMqWZmsse2HKn9ShkE/Y2EXeez1u2L
- RguAZ7MrSiLhUwMuxq/68LLZ72Erf7KOuedvmtBtucJbh/NxP4aAcC83HhRuzaWH7TQ6JGjmcVg
- RqAoP56CjBFc6rDT6vYa1VLGujjuIGrNeXtBdJyUkzfHpGk+hUhEqaCpRgCDTizm+jVkjSgh1wX
- Rmu8qzidJLOQ80JpqaEFPgVh74aCdlpeGI659Xo7cNOhjCJnq5JaZ0piEpAl5cm4mjr+qaHANtT
- tgPbO6YF59hqLchLNsCTUGqMcgi2kJ+pkXB0x1q1Ae1CmmU9uKVlr00prP8NV7wFzwjl+6pIJXb
- U1qRtxT0BmDGCgmWsMw==
-X-Proofpoint-ORIG-GUID: BuGQbWZji_0V9zhCh5EQxvsOXd9rbC3C
-X-Proofpoint-GUID: etUubJAOtcZcaNO8eGgDmZDXeXpTdINp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-09_01,2026-02-09_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501 adultscore=0
- clxscore=1015 suspectscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602090128
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] perf/core: Fix missing read event generation on task
+ exit
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Thaumy Cheng <thaumy.love@gmail.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Suzuki K Poulose <Suzuki.Poulose@arm.com>, Leo Yan <leo.yan@arm.com>,
+ Mike Leach <mike.leach@linaro.org>
+References: <20251024170543.11201-1-thaumy.love@gmail.com>
+ <1e6337ec-d4a0-420b-bd7b-0fd2b6fee620@linaro.org>
+ <20260206152907.GQ1395266@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260206152907.GQ1395266@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Test case perftool-testsuite_report fails on s390 for some time
-now. Root cause is a time out which is too tight for large s390 machines.
-The time out value addr2line_timeout_ms is per default set to 1 second.
-This is the maximum time the function read_addr2line_record() waits
-for a reply from the forked off tool addr2line, which is started as a
-child in interactive mode. It reads stdin (an address in hexadecimal)
-and replies on stdout with function name, file name and line
-number. This might take more than one second.
 
-However one second is not always enough and the reply from addr2line
-tool is not received. Function read_addr2line_record() fails and emits
-a warning, which is not expected by the test case. It fails.
 
-Output before:
- # perf test -F 133
- -- [ PASS ] -- perf_report :: setup :: prepare the perf.data file
- ==================
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.087 MB \
-	/tmp/perftool-testsuite_report.FHz/perf_report/perf.data.1 \
-	(207 samples) ]
- ==================
- -- [ PASS ] -- perf_report :: setup :: prepare the perf.data.1 file
- ## [ PASS ] ## perf_report :: setup SUMMARY
- -- [ SKIP ] -- perf_report :: test_basic :: help message :: testcase skipped
- Line did not match any pattern: "cmd__addr2line /usr/lib/debug/lib/modules/
- 	6.19.0-20260205.rc8.git366.9845cf73f7db.300.fc43.s390x+next/
-	vmlinux: could not read first record"
- Line did not match any pattern: "cmd__addr2line /usr/lib/debug/lib/modules/
-	6.19.0-20260205.rc8.git366.9845cf73f7db.300.fc43.s390x+next/
-	vmlinux: could not read first record"
- -- [ FAIL ] -- perf_report :: test_basic :: basic execution
-	(output regexp parsing)
- ....
- 133: perftool-testsuite_report      : FAILED!
+On 06/02/2026 3:29 pm, Peter Zijlstra wrote:
+> On Fri, Feb 06, 2026 at 11:21:19AM +0000, James Clark wrote:
+> 
+>> I've been looking into a regression caused by this commit and didn't manage
+>> to come up with a fix. But shouldn't this be something more like:
+>>
+>>    if (attach_state & PERF_ATTACH_CHILD && event_filter_match(event))
+>>        sync_child_event(event, task);
+>>
+>> As in, you only want to call sync_child_event() and write stuff to the ring
+>> buffer for the CPU that is currently running this exit handler? Although
+>> this change affects the 'total_time_enabled' tracking as well, but I'm not
+>> 100% sure if we're not double counting it anyway.
+>>
+>>  From perf_event_exit_task_context(), perf_event_exit_event() is called on
+>> all events, which includes events on other CPUs:
+>>
+>>    list_for_each_entry_safe(child_event, next, &ctx->event_list, ...)
+>>      perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
+>>
+>> Then we write into those other CPU's ring buffers, which don't support
+>> concurrency.
+>>
+>> The reason I found this is because we have a tracing test that spawns some
+>> threads and then looks for PERF_RECORD_AUX events. When there are concurrent
+>> writes into the ring buffers, rb->nest tracking gets messed up leaving the
+>> count positive even after all nested writers have finished. Then all future
+>> writes don't copy the data_head pointer to the user page (because it thinks
+>> someone else is writing), so Perf doesn't copy out any data anymore leaving
+>> records missing.
+>>
+>> An easy reproducer is to put a warning that the ring buffer being written to
+>> is the correct one:
+>>
+>>    @@ -41,10 +41,11 @@ static void perf_output_get_handle(struct
+>>    perf_output_handle *handle)
+>>    {
+>>   	struct perf_buffer *rb = handle->rb;
+>>
+>>   	preempt_disable();
+>>
+>>    +	WARN_ON(handle->event->cpu != smp_processor_id());
+>>
+>>
+>> And then record:
+>>
+>>    perf record -s -- stress -c 8 -t 1
+>>
+>> Which results in:
+>>
+>>    perf_output_begin+0x320/0x480 (P)
+>>    perf_event_exit_event+0x178/0x2c0
+>>    perf_event_exit_task_context+0x214/0x2f0
+>>    perf_event_exit_task+0xb0/0x3b0
+>>    do_exit+0x1bc/0x808
+>>    __arm64_sys_exit+0x28/0x30
+>>    invoke_syscall+0x4c/0xe8
+>>    el0_svc_common+0x9c/0xf0
+>>    do_el0_svc+0x28/0x40
+>>    el0_svc+0x50/0x240
+>>    el0t_64_sync_handler+0x78/0x130
+>>    el0t_64_sync+0x198/0x1a0
+>>
+>> I suppose there is a chance that this is only an issue when also doing
+>> perf_aux_output_begin()/perf_aux_output_end() from start/stop because that's
+>> where I saw the real race? Maybe without that, accessing the rb from another
+>> CPU is ok because there is some locking, but I think this might be a more
+>> general issue.
+> 
+> I *think* something like so.
+> 
+> Before the patch in question this would never happen, because of calling
+> things too late and always hitting that TASK_TOMBSTONE.
+> 
+> But irrespective of emitting that event, we do want to propagate the
+> count and runtime numbers.
+> 
+> 
+> ---
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 5b5cb620499e..f566ad55b4fb 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -14086,7 +14086,7 @@ static void sync_child_event(struct perf_event *child_event,
+>   	u64 child_val;
+>   
+>   	if (child_event->attr.inherit_stat) {
+> -		if (task && task != TASK_TOMBSTONE)
+> +		if (task && task != TASK_TOMBSTONE && event_filter_match(child_event))
+>   			perf_event_read_event(child_event, task);
+>   	}
+>   
 
-Output after:
- # ./perf test -F 133
- -- [ PASS ] -- perf_report :: setup :: prepare the perf.data file
- ==================
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.087 MB \
-	 /tmp/perftool-testsuite_report.Mlp/perf_report/perf.data.1
-	 (188 samples) ]
- ==================
- -- [ PASS ] -- perf_report :: setup :: prepare the perf.data.1 file
- ## [ PASS ] ## perf_report :: setup SUMMARY
- -- [ SKIP ] -- perf_report :: test_basic :: help message :: testcase skipped
- -- [ PASS ] -- perf_report :: test_basic :: basic execution
- -- [ PASS ] -- perf_report :: test_basic :: number of samples
- -- [ PASS ] -- perf_report :: test_basic :: header
- -- [ PASS ] -- perf_report :: test_basic :: header timestamp
- -- [ PASS ] -- perf_report :: test_basic :: show CPU utilization
- -- [ PASS ] -- perf_report :: test_basic :: pid
- -- [ PASS ] -- perf_report :: test_basic :: non-existing symbol
- -- [ PASS ] -- perf_report :: test_basic :: symbol filter
- -- [ PASS ] -- perf_report :: test_basic :: latency header
- -- [ PASS ] -- perf_report :: test_basic :: default report for latency profile
- -- [ PASS ] -- perf_report :: test_basic :: latency report for latency profile
- -- [ PASS ] -- perf_report :: test_basic :: parallelism histogram
- ## [ PASS ] ## perf_report :: test_basic SUMMARY
- 133: perftool-testsuite_report      : Ok
- #
+Turns out I tested this before with "child_event->cpu == 
+raw_smp_processor_id()" rather than using event_filter_match() so I 
+missed that the loop over all the events needs to be wrapped with 
+preempt_disable(). But that can't be done because 
+perf_event_exit_event() takes a mutex.
 
-Fixes: 257046a36750a ("perf srcline: Fallback between addr2line implementations")
-Cc: Ian Rogers <irogers@google.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Jan Polensky <japo@linux.ibm.com>
----
- tools/perf/util/addr2line.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I don't think the preempt_disable() can be on any smaller region than 
+outside the entire loop otherwise you can get rescheduled between 
+event_filter_match() checks and end up failing them all and not writing 
+any event out at all.
 
-diff --git a/tools/perf/util/addr2line.c b/tools/perf/util/addr2line.c
-index 0f1499350d47..31c0391fffa3 100644
---- a/tools/perf/util/addr2line.c
-+++ b/tools/perf/util/addr2line.c
-@@ -18,8 +18,8 @@
- 
- #define MAX_INLINE_NEST 1024
- 
--/* If addr2line doesn't return data for 1 second then timeout. */
--int addr2line_timeout_ms = 1 * 1000;
-+/* If addr2line doesn't return data for 5 seconds then timeout. */
-+int addr2line_timeout_ms = 5 * 1000;
- 
- static int filename_split(char *filename, unsigned int *line_nr)
- {
--- 
-2.53.0
+While debugging I also noticed another issue with these per-thread count 
+records. perf_event_exit_event() only does anything if the event has a 
+parent. But the context switch optimization means that sometimes threads 
+re-use the original event which has no parent. So randomly you get 
+threads that are missing from the output.
+
+There is a comment that mentions this under the parent check:
+
+   if (parent_event) {
+     /*
+      * Do not destroy the 'original' grouping; because of the
+      * context switch optimization the original events could've
+      * ended up in a random child task.
+
+But I'm not sure if that was supposed to be worked around some other way 
+and it's now broken, or it was a known limitation of the implementation 
+from the beginning? But right now it randomly misses one of the threads 
+and includes the main thread counts, or includes all the threads and 
+doesn't include the main thread counts if no context switch optimisation 
+was done.
+
+The perf record docs don't say anything that you wouldn't expect all 
+threads to be there:
+
+     -s, --stat            per thread counts
 
