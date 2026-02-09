@@ -1,140 +1,133 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEFE38886A
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 17:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770658054; cv=pass; b=G1zVwylukHFMdmxbL7MjcpHmOcWXGWns0thZmd6VyMBmjCJU3obnVp6pz5C6HxVIHbyv7oWYLizbgTlImU9E68xp6TAUYMcsUvjsJrA208l7JbKlHGXvh1vs8gRNnLJRs8F2vt2bfwYWwK0Kc7Uhrc9hw3bZWbrwCS46qz6mwrI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770658054; c=relaxed/simple;
-	bh=Z8II5FQDxkEoQwArhWEdkJIAdy/R1I/x1OaDxTdrQDY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IWiiN+zEK9/jnR11Mcs895kzOxCpOV4bveNBiHutT6HypDXV76yNLFg9nXvfD4OvjsgnR67pHty82OjVTsSd9yvj2uuFUTIYNsufgKEGzNWfaojZR8WuqzVojw4lO3LIaLTCun7JBhitctab4MfMmRcYWDAn/0RNkU8GKTe6ddk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zt6LBfyL; arc=pass smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEA738885B;
+	Mon,  9 Feb 2026 17:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770658068; cv=none; b=ifKnKla5HjSvunFSh9Q00Esz/nzdLiPJ9hmQLLV8kPP2+JujT/QzYdbU07gPi/PQQSttS92yLbEMMe5XNJpw3qYpHTLdt+sUdTefFPEzjpB08SzrLRpzoFqqJ5IUp2tSm4FPLWlKmyg9z0cL/oPhCuljIcDjppd7Yz3yAt/HQ3s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770658068; c=relaxed/simple;
+	bh=pwMAAfFbeaAQQa4FoFtSXgK4zrb8LBy95FgN34t3aJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mYCA9Nh2kfA27pZXN5BwyoJoLvtTIRq26hRHRJD21VVDzRlNW/vdFBWTckECi2aOxLcrUosgBLdLq2aZ8QT2pt01xfvdyQgY5lBKC+hADOeEcMMm9jhphK6Z4g902I2uoPU5RuUqzYgCvUwwUVqpqpP6Ulro+J60ti+ED0hP6fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JqII8Q7t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zt6LBfyL"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2a964077671so156085ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 09:27:34 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770658054; cv=none;
-        d=google.com; s=arc-20240605;
-        b=cuvucJWEKIV6wva7aOnxfn7/y7ajfYc2X8aSo7hyhFw4czvUn8cz3BjjEqWc6BN3ih
-         oqEzEp9NHNpDQy0hvYcLvh3dZbngfZQBwtQ0SySAjnL39Y47KCw3vBHoFZkKy9ApLRDN
-         oZDiDXVfVM7uVfB6g+7SS8lacGMAK9bBr0vzVsv/LW4CINGoEti8VCyYmQZAvKFnyW+B
-         BeGU1ygjAGKiCaM3tUsTC+g4VFQOCKPtGjjTWoCP49iYjY5z1iJZF9IGA9/R87rHhNdR
-         HNifYcbL4Wulz+eTQsN7U9SSwfjp7XQzaNfxjUVbapJ9RixoLIa35fAIXv2Kl3uuFXQK
-         U4bQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=irtjkcjnW9qm0qn0VHGILyirTG2jAO2P/L2vAokTtBE=;
-        fh=YAdKxfVIM8EeTizDItOFqmBcA21rBzUQCYljb55kxLE=;
-        b=EdAOPCBpjVYfpFDQ5Yze2Yduij4UkDGm9SutfhyUsjLSVM5AkFSQjBlAdt0Sh3/wWV
-         C9DVfcRxKSZmhXL3I4lecCBOWRkKMksClTzq/Yg3eSbskpTAbVYTzsayEDxtKN81nBl3
-         oC5G8vuuRHEQ0N68NnIkSbLT/l+V2S4P4WoEQhYHFB4xPNipkCCSJn5d5huYTXIBoTv7
-         W14cBR0q8q8mWLhW962WUGo+BAN22XRJEijcppKtFjJRRet7c0Y4TcXYkvJj4ZWtywaj
-         gYRHkn2AwTk3FjkC+DIx/QNK2eT+0p+ic2RyLcPDUVkzjrxdqITe/soFlcuOnm9bQiOx
-         AUQQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770658054; x=1771262854; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=irtjkcjnW9qm0qn0VHGILyirTG2jAO2P/L2vAokTtBE=;
-        b=zt6LBfyL/6bmpYkZBAl4h5YO11tbGnPVpJUZGwm32WfAEaXnfhKJ84lsHzKT7oEY5i
-         qv56NYY1lyS/lzY3loV/ud5gln/dw6BJQr3I6U3P2kzWGnBvVva4q6VqlNV9ewDF0QOU
-         8a01raiWpC+Dr4KjckWGESizklFc5Dahb6RGS1GyBH6x3p63xNuYWnOOcOAMG74kPVr5
-         y/X2C5N4sVHRz3UiOnkGrneany0dvQLxk37ljmxX4kJfEDpXnVrzLZJAmhtR0w4LrIF4
-         VlhAE9ZcB4MuWaXsHQK7bFNXtTaMHYSWFSHDmwdI2As4YUj75vCmMXLpgvxVrMn0DmLL
-         xqSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770658054; x=1771262854;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=irtjkcjnW9qm0qn0VHGILyirTG2jAO2P/L2vAokTtBE=;
-        b=q7YTQMR51SRfC/enUMSRxgHv+yDmpynuMikUrHGg03Xdu0KF0TdTKkA+XAwWd4U97e
-         lptu7rU580fAZIj3XjWul7Sa/RuZd50GEU9sXtFISY9RQOmz/LAbN/OVPV+ErRPfLgRp
-         p4jylgbY+8A5CLQ7MBMpbr5Bnsf7jjW1S5r8duhwKDFURVVe8vcWQxwIkLRRsTNRzhyn
-         g/d1xjsFUq3kzFRjfp374YUlSFqtsHz3u96i3yvIyUA8qOFEqDuaxIIUb+3phq0YzG9V
-         fkHT2TS0aCB4vf+qwI5+dcCVoibszOyGhmS7Bag8VmwRDdTweGf2NTezEf83omLQKAUE
-         0Y2A==
-X-Gm-Message-State: AOJu0YwWbGCaCoWO9kI+KhD9dA+Gr07zsP2hu63TuF2JiMBUaSZldd4s
-	4LsgzRnE6DXeanEjxRpF1WYM/4KGtdxjNeLirk3b+ekaMNliNFQK6sQK/ntUAfNb1IgShnLQI1d
-	aLAjPVs+I23G5a36wsou0I4gzcBVgC08LoQ0OpqFD
-X-Gm-Gg: AZuq6aKXjd4W0LLfN/j0UT90jiNryvTkr6vjCnJfqwn1Oey7wptXYZfKxmRoLczDBGX
-	YhYH5sTf9G+rlfI4ojUbant6DmWu2IzBWVai5/6j7o+2J15bYj8QrWWBf30Ly/kQ4hfV+3FzNnK
-	bmDnwTX2CGZINdKCn2t4EHPyc5WVGe6ehPaTAaO3orD2EK1OX2TcmNNMC6GoerZDKiAHTTAa8Og
-	GH6JkoZgu3RRHELNHmB+2WcW52lOlgAmG+rK/z+y+AoV2XGj3OlYs6eZPsGPGkuTxThNxjM6lEW
-	llH3LSi2QLNMKkcqmhcm5U89
-X-Received: by 2002:a17:903:22c6:b0:271:9873:80d9 with SMTP id
- d9443c01a7336-2a963182948mr5563615ad.7.1770658053707; Mon, 09 Feb 2026
- 09:27:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JqII8Q7t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14324C116C6;
+	Mon,  9 Feb 2026 17:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770658067;
+	bh=pwMAAfFbeaAQQa4FoFtSXgK4zrb8LBy95FgN34t3aJE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=JqII8Q7ttJp4Ox5yXsC8crNSU9oaWruzQe9zWV+ldbsc4JQcuEg1bCkqU0j4U34wI
+	 Dd38//0TPi0xvG8Rf9P7kKn17HSTk2KyIklXU/NwJgTjmqcLzfWMJWjK4jLSLWf5uO
+	 OXC0zfr7GsCdLxuZjXP52yEhuLn5w2CoafmVTKQ/yin/pnzjZgG7RVcBRF3asrJmkM
+	 XLWbKR64iIrJgtjh5q2b1QE1No+EZo7uZjcXoRSbcKOeCjsTw9CBvIXR/e/wmUtuYw
+	 4/qPUefcue0fQo2v/76TQiIof2KqZxWh1i8OEjZJsG08QNrpPGvsiv3iD1UvDXTwIu
+	 cV8AKMgM1pejg==
+Date: Mon, 9 Feb 2026 14:27:43 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Dmitrii Dolgov <9erthalion6@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] tools build: Fix rust feature detection
+Message-ID: <aYoZD1onJLsnlrV3@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260209140533.194251-1-9erthalion6@gmail.com>
-In-Reply-To: <20260209140533.194251-1-9erthalion6@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Feb 2026 09:27:22 -0800
-X-Gm-Features: AZwV_QhS4VGOdDtZcYLXKHaSS0213gefkMcjZOrHAk-UhvX4kw-dyOBR1PJ7dzU
-Message-ID: <CAP-5=fWJdM8wkSDWcShMt-i1OVxTV0rzdovqsCychb_NEj5Ogw@mail.gmail.com>
-Subject: Re: [PATCH v1] perf tests workload: Formatting for code_with_type.rs
-To: Dmitrii Dolgov <9erthalion6@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Feb 9, 2026 at 6:05=E2=80=AFAM Dmitrii Dolgov <9erthalion6@gmail.co=
-m> wrote:
->
-> One part of the rust code for code_with_type workload wasn't properly
-> formatted. Pass it through rustfmt to fix that.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202602091357.oyRv6hgQ-lkp@i=
-ntel.com/
-> Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+Features in FEATURE_TESTS_BASIC will be set as being available if
+test-all.c builds, so since the rust test isn't included in test-all.c,
+we can't have 'rust' in there, remove it from FEATURE_TESTS_BASIC and
+use feature-check so that it tries to build test-rust.bin, doing the
+actual feature detection.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+On a system lacking a rust compiler:
 
-Thanks,
-Ian
+  Makefile.config:1158: Rust is not found. Test workloads with rust are disabled.
 
-> ---
->  tools/perf/tests/workloads/code_with_type.rs | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/workloads/code_with_type.rs b/tools/perf/te=
-sts/workloads/code_with_type.rs
-> index 3b91e51919d..3dab39b22dd 100644
-> --- a/tools/perf/tests/workloads/code_with_type.rs
-> +++ b/tools/perf/tests/workloads/code_with_type.rs
-> @@ -10,7 +10,11 @@ struct Buf {
->
->  #[no_mangle]
->  pub extern "C" fn test_rs(count: u32) {
-> -    let mut b =3D  Buf { data1: 0, data2: String::from("data"), data3: 0=
-};
-> +    let mut b =3D Buf {
-> +        data1: 0,
-> +        data2: String::from("data"),
-> +        data3: 0,
-> +    };
->
->      for _ in 1..count {
->          b.data1 +=3D 1;
->
-> base-commit: 335047109d7d488bf5ad32a4076e1a011994cd0e
-> --
-> 2.52.0
->
+  Auto-detecting system features:
+  ...                                   libdw: [ on  ]
+  ...                                   glibc: [ on  ]
+  ...                                  libelf: [ on  ]
+  ...                                 libnuma: [ on  ]
+  ...                  numa_num_possible_cpus: [ on  ]
+  ...                               libpython: [ on  ]
+  ...                             libcapstone: [ on  ]
+  ...                               llvm-perf: [ on  ]
+  ...                                    zlib: [ on  ]
+  ...                                    lzma: [ on  ]
+  ...                                     bpf: [ on  ]
+  ...                                  libaio: [ on  ]
+  ...                                 libzstd: [ on  ]
+  ...                              libopenssl: [ on  ]
+  ...                                    rust: [ OFF ]
+
+  $ cat /tmp/build/perf-tools-next/feature/test-rust.make.output
+  /bin/sh: line 1: rustc: command not found
+  $ file /tmp/build/perf-tools-next/feature/test-rust.bin
+  /tmp/build/perf-tools-next/feature/test-rust.bin: cannot open `/tmp/build/perf-tools-next/feature/test-rust.bin' (No such file or directory)
+  $
+  $ perf -vv | grep RUST
+                  rust: [ OFF ]  # HAVE_RUST_SUPPORT
+  $
+
+And after installing it:
+
+  ...                                    rust: [ on  ]
+
+  $ cat /tmp/build/perf-tools-next/feature/test-rust.make.output
+  $ file /tmp/build/perf-tools-next/feature/test-rust.bin
+/tmp/build/perf-tools-next/feature/test-rust.bin: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=9c416edf673ee3705b97bae893a99a6fcf1ee258, for GNU/Linux 3.2.0, with debug_info, not stripped
+  $
+  $ perf -vv | grep RUST
+                  rust: [ on  ]  # HAVE_RUST_SUPPORT
+  $
+
+Fixes: 6a32fa5ccd33da5d ("tools build: Add a feature test for rust compiler")
+Cc: Dmitrii Dolgov <9erthalion6@gmail.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/build/Makefile.feature | 3 +--
+ tools/perf/Makefile.config   | 1 +
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 64d21152fc81aad6..0b7a7c38cb88a7d0 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -100,8 +100,7 @@ FEATURE_TESTS_BASIC :=                  \
+         disassembler-four-args		\
+         disassembler-init-styled	\
+         file-handle			\
+-        libopenssl			\
+-        rust
++        libopenssl
+ 
+ # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+ # of all feature tests
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 94aecfe38b95f716..a8dc72cfe48eec52 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1154,6 +1154,7 @@ ifneq ($(NO_LIBTRACEEVENT),1)
+ endif
+ 
+ ifndef NO_RUST
++  $(call feature_check,rust)
+   ifneq ($(feature-rust), 1)
+     $(warning Rust is not found. Test workloads with rust are disabled.)
+     NO_RUST := 1
+-- 
+2.53.0
+
