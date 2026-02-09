@@ -1,90 +1,357 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E533242D7
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 08:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E56242D91;
+	Mon,  9 Feb 2026 08:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770626737; cv=none; b=FOOgYIQJIwDy+AGnZjaSD7bHHkaeXYeafRyHBoe2A4gocBGMpPnwVf4GheSW4YLwWs4Z9rrTvilYHj4ReFeOcj/U+sqN255ug/u9GBcL8gPNX/4Xct8gI2JNFeSk4JkUuEK7FnzkHQ3ziOeY8GBYOMEnka9j+Rlcpo3/0xLYEvs=
+	t=1770626888; cv=none; b=my0oDa0ULYA+iVYj8P0T0068yrPDgpk4kP71Hc49p9sFGv7kMPxpXofnd/ho5j3b4UxTAaRDycBqjdxd05bxif0lc86JLOea9PdxrN2+mtLasYuGoezl+2JJNhlD2Dh+QafdmlTo30+mJe7GduwZwDhTt/5rALRVUbxKJYs3aIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770626737; c=relaxed/simple;
-	bh=8J4uovh6LVzVO2JBajUxlGf7AdBtM9vIR9LvmKMVaWQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rYU6TFDjoNxeea2lctOJXrjW+zGXR0nNclOvgL/DgMa+unzpLWjqVxka1xIQt2L0N7dsZb8orGCzzdnLfuQwS2W3LHDpTsxywxAlCoIIJUURBhlBIZ0kOpkBZ76os7pHqauIzgx+hQuJFGLjpUqJnhP+eYbD49IbrKXsELZiIys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=US0IfsTJ; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1770626888; c=relaxed/simple;
+	bh=9D5MndTTEJuCZBxdYZIXTO3AcrZfp1Zc3gGObRNxHZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EvOwcs/dI87qhMLbpne+tQNeSWLcPYHELtXjy3KepukMB1rNsX2pc8fzZHxwiI6pjB/IcVQV8mMhMoUWpiQ9JG4SSkp1LbuBZNYs193E1t9hH7XxDlkNJwC31NtVw0eNrmtcQHc4lRijYHGewcVhgDKzrd3tTpaqDpq6tP0cZAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RqK8fumb; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="US0IfsTJ"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b8eafb515aeso483646166b.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 00:45:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770626736; x=1771231536; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8J4uovh6LVzVO2JBajUxlGf7AdBtM9vIR9LvmKMVaWQ=;
-        b=US0IfsTJWHAT1BeyfF2bmL+6FxGDwGaLrjUq99Ep3cAvao5CVJujE9k1aaynEDXgKX
-         AYs/+54FhfSGvAdizDJE09yEUInjzxGOF0thziP1xd+KnuzhpmDEi5F31/poyPAo803g
-         kotqI6J4lfvMX9Y0M+KQouYw1Nsum7FgGnnygrjXtTY/Dx28SznkpNuA5nbp20GAB9Vt
-         ZFy31eG/su0a//2mCI8TVVLW+3R84JoUzajCYes4uICro6HMZmDQd6gxZafhyi29hhSi
-         juuiqMYZ6ynXiLSfPm70WaUNsIzik8cNVJfSjqCEySeELmv01hnQRHkHHAAn4XQeBrFw
-         XB9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770626736; x=1771231536;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8J4uovh6LVzVO2JBajUxlGf7AdBtM9vIR9LvmKMVaWQ=;
-        b=NMzPTLzkIiXwcuriOKQAGnyaKosuB9aPhh6LjMHUASxarekBMtBmCqaXjtD9izDd2i
-         OQOuMOfWRWShi6VjoBSaVq0pZ6LTItnbuLvxZvhNNsgnmOfqMNMf3cKR/qlfG/55dNKl
-         im/iZmuSwCND+wEcIaHdVaXrTsh73TOMPMaW4cGfO4I2ekyJcYGQgFHMwrwRHkMYUJIL
-         ZyC9VJpWGz+QKAcbP5h+CcxJn5zw5T+VYbCscGgYwAR2IRoMxAP6n7lxx5cNkQB1fZ3B
-         /pLIYG4kQrjpvdMyyCUHJpQWpwdf2ApNPxKfwBg2EN+AiDzwkVBXEuY4uCGiUlQQ2hzW
-         8b8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV5R+qAlalbu0LxNPrYiO5QiTdk6Ex7SVYSrrVVkwFJn1CM1BtveY9/8IGHEln37QU/7jUCYyf0eK0mn85qXpTC@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzxUW2sjYxyTkIcbLLE/9M/kXGddX1WaTiLMAOu8s1M3iuSv6k
-	vrM/hYPeKcBvHpvOOQlwi/SLIsCOtoAGOhrO9NIzVDwk+qq/BZzc/3iw
-X-Gm-Gg: AZuq6aLrNlPGovFDp98zcCF58BUIXbWLgroZxgKLkcVIbBXL+XiYytducKxitGt5vVw
-	n7+xZekCT04uGTe15HHCByHzxXBJyL/UHySdYRmn5rFwmEzkSgfzPTAsQpY0mhgKPaLDvmLYI/y
-	rfE2v7AindyDXEyu1qXh/DCVg7Oc7TDyapqxJgDAUjc5ibcRrqj370uz6HnWi0pIxskAvr64Jaq
-	RhnJsg8CZiHvIZcgvRa6KOTMpbrSenYtU8hJSqEGlnDtIfw4WzYCxUoRp7DFADYpRIfyPnxUOZM
-	7i2bK4wqPvL7E2ws9ZJrhGHvFgS3s450zVk21GoZrKZUdDt/cUqJuMjL9okRXenaXTjZ44Cz0KB
-	BkpzeYw+EFcNYB3v8JOxA5SbQ9u7SkfCR3WfyaVgVjzf0WpPLEmPPV3VXUW1WYs4/x1kdWBuMrA
-	ubivv+O+naTZ4Hm4kP1sU4kfg4DdKvKOlfWgNYaqncekHcIfZaSHsC31sDV9Tik8MdScq3Ldvju
-	VRtqNBUfOvXzXE1nbpAsTAz
-X-Received: by 2002:a17:907:7202:b0:b88:6309:c300 with SMTP id a640c23a62f3a-b8edf34b334mr622337066b.39.1770626735269;
-        Mon, 09 Feb 2026 00:45:35 -0800 (PST)
-Received: from ddolgov-thinkpadt14sgen1.rmtde.csb (dslb-002-207-075-089.002.207.pools.vodafone-ip.de. [2.207.75.89])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8edacb387esm361482066b.37.2026.02.09.00.45.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Feb 2026 00:45:34 -0800 (PST)
-Date: Mon, 9 Feb 2026 09:45:32 +0100
-From: Dmitry Dolgov <9erthalion6@gmail.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, linux-perf-users@vger.kernel.org, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Rust data-type profiling working in perf was: Re: [RFC PATCH v2
- 0/4] Test annotate with data type profiling
-Message-ID: <6i5osof4lst2rjnta232tvntpbufrpzihp6jicsysob36pj6ss@6acco3e7r4ym>
-References: <20260208122227.3524-1-9erthalion6@gmail.com>
- <aYigHLZtXooznMB7@x1>
- <aYig1O0-5yxy91la@x1>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RqK8fumb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770626889; x=1802162889;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9D5MndTTEJuCZBxdYZIXTO3AcrZfp1Zc3gGObRNxHZI=;
+  b=RqK8fumbtd43oYJYf0lNQ1FHWUHtkbNl/uytIIcSkrVHZfruYAMRZvwA
+   6GQ9egml7QofpWOK6Z6ytCJ2bfLPMtTAwTZNxChXmCMw7g7waKQS5gd5O
+   NoYlZu1zRGzurVMRUOQ59PbyPf9TigDbWE1AW17xE6eg6cog5HKhLXeLm
+   H5cwwrAaZw12mXLGke7agARN8jgTvZcTRumDuwMYMOznuBTqmT/nq++3j
+   YjYgkOvs7Z6MtKoVoIay2zQzr17dzhm9IqKaq3joZF8B8ThhK6lpUaIsB
+   lvjCL28KBU5vRoyVdHfx5AEkDL9hBXU4drlpW2p5Lk9i2UNmNR0t1cLC5
+   Q==;
+X-CSE-ConnectionGUID: sKQqHnvxQTKc/jpXhI/4jw==
+X-CSE-MsgGUID: Z40yyoXTT9WQb/p90ZCq4A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11695"; a="71835762"
+X-IronPort-AV: E=Sophos;i="6.21,281,1763452800"; 
+   d="scan'208";a="71835762"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 00:48:08 -0800
+X-CSE-ConnectionGUID: Uc1FojS9QK2kg681EYr3/Q==
+X-CSE-MsgGUID: UPmECSALSSiHSekn++RJXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,281,1763452800"; 
+   d="scan'208";a="234461079"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 00:48:03 -0800
+Message-ID: <cfe2a7de-b155-447b-bde7-a1f374d69fba@linux.intel.com>
+Date: Mon, 9 Feb 2026 16:48:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aYig1O0-5yxy91la@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v6 00/22] Support SIMD/eGPRs/SSP registers sampling for
+ perf
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>
+References: <20260209072047.2180332-1-dapeng1.mi@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260209072047.2180332-1-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> On Sun, Feb 08, 2026 at 11:42:28AM -0300, Arnaldo Carvalho de Melo wrote:
+
+On 2/9/2026 3:20 PM, Dapeng Mi wrote:
+> Changes since V5:
+> - Introduce 3 commits to fix newly found PEBS issues (Patch 01~03/19)
+> - Address Peter comments, including,
+>   * Fully support user-regs sampling of the SIMD/eGPRs/SSP registers
+>   * Adjust newly added fields in perf_event_attr to avoid holes
+>   * Fix the endian issue introduced by for_each_set_bit() in
+>     event/core.c
+>   * Remove some unnecessary macros from UAPI header perf_regs.h
+>   * Enhance b2b NMI detection for all PEBS handlers to ensure identical
+>     behaviors of all PEBS handlers
+> - Split perf-tools patches which would be posted in a separate patchset
+>   later
+
+The corresponding perf-tools patch-set:
+https://lore.kernel.org/all/20260209083514.2225115-1-dapeng1.mi@linux.intel.com/
+
+Thanks.
+
+
 >
-> Also please consider adding examples of output of such new features, so
-> that people can quickly see it in action, data-type profiling for Rust
-> seems interesting, right? :-)
-
-Agree :) What would be the right place to put such examples, somewhere
-in the documentation?
+> Changes since V4:
+> - Rewrite some functions comments and commit messages (Dave)
+> - Add arch-PEBS based SIMD/eGPRs/SSP sampling support (Patch 15/19)
+> - Fix "suspecious NMI" warnning observed on PTL/NVL P-core and DMR by
+>   activating back-to-back NMI detection mechanism (Patch 16/19)
+> - Fix some minor issues on perf-tool patches (Patch 18/19)
+>
+> Changes since V3:
+> - Drop the SIMD registers if an NMI hits kernel mode for REGS_USER.
+> - Only dump the available regs, rather than zero and dump the
+>   unavailable regs. It's possible that the dumped registers are a subset
+>   of the requested registers.
+> - Some minor updates to address Dapeng's comments in V3.
+>
+> Changes since V2:
+> - Use the FPU format for the x86_pmu.ext_regs_mask as well
+> - Add a check before invoking xsaves_nmi()
+> - Add perf_simd_reg_check() to retrieve the number of available
+>   registers. If the kernel fails to get the requested registers, e.g.,
+>   XSAVES fails, nothing dumps to the userspace (the V2 dumps all 0s).
+> - Add POC perf tool patches
+>
+> Changes since V1:
+> - Apply the new interfaces to configure and dump the SIMD registers
+> - Utilize the existing FPU functions, e.g., xstate_calculate_size,
+>   get_xsave_addr().
+>
+> Starting from Intel Ice Lake, XMM registers can be collected in a PEBS
+> record. Future Architecture PEBS will include additional registers such
+> as YMM, ZMM, OPMASK, SSP and APX eGPRs, contingent on hardware support.
+>
+> This patch set introduces a software solution to mitigate the hardware
+> requirement by utilizing the XSAVES command to retrieve the requested
+> registers in the overflow handler. This feature is no longer limited to
+> PEBS events or specific platforms. While the hardware solution remains
+> preferable due to its lower overhead and higher accuracy, this software
+> approach provides a viable alternative.
+>
+> The solution is theoretically compatible with all x86 platforms but is
+> currently enabled on newer platforms, including Sapphire Rapids and
+> later P-core server platforms, Sierra Forest and later E-core server
+> platforms and recent Client platforms, like Arrow Lake, Panther Lake and
+> Nova Lake.
+>
+> Newly supported registers include YMM, ZMM, OPMASK, SSP, and APX eGPRs.
+> Due to space constraints in sample_regs_user/intr, new fields have been 
+> introduced in the perf_event_attr structure to accommodate these
+> registers.
+>
+> After a long discussion in V1,
+> https://lore.kernel.org/lkml/3f1c9a9e-cb63-47ff-a5e9-06555fa6cc9a@linux.intel.com/
+> The below new fields are introduced.
+>
+> @@ -547,6 +549,25 @@ struct perf_event_attr {
+>
+>         __u64   config3; /* extension of config2 */
+>         __u64   config4; /* extension of config3 */
+> +
+> +       /*
+> +        * Defines set of SIMD registers to dump on samples.
+> +        * The sample_simd_regs_enabled !=0 implies the
+> +        * set of SIMD registers is used to config all SIMD registers.
+> +        * If !sample_simd_regs_enabled, sample_regs_XXX may be used to
+> +        * config some SIMD registers on X86.
+> +        */
+> +       union {
+> +               __u16 sample_simd_regs_enabled;
+> +               __u16 sample_simd_pred_reg_qwords;
+> +       };
+> +       __u16   sample_simd_vec_reg_qwords;
+> +       __u32   __reserved_4;
+> +
+> +       __u32   sample_simd_pred_reg_intr;
+> +       __u32   sample_simd_pred_reg_user;
+> +       __u64   sample_simd_vec_reg_intr;
+> +       __u64   sample_simd_vec_reg_user;
+>  };
+>
+>  /*
+> @@ -1020,7 +1041,15 @@ enum perf_event_type {
+>          *      } && PERF_SAMPLE_BRANCH_STACK
+>          *
+>          *      { u64                   abi; # enum perf_sample_regs_abi
+> -        *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
+> +        *        u64                   regs[weight(mask)];
+> +        *        struct {
+> +        *              u16 nr_vectors;         # 0 ... weight(sample_simd_vec_reg_user)
+> +        *              u16 vector_qwords;      # 0 ... sample_simd_vec_reg_qwords
+> +        *              u16 nr_pred;            # 0 ... weight(sample_simd_pred_reg_user)
+> +        *              u16 pred_qwords;        # 0 ... sample_simd_pred_reg_qwords
+> +        *              u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
+> +        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
+> +        *      } && PERF_SAMPLE_REGS_USER
+>          *
+>          *      { u64                   size;
+>          *        char                  data[size];
+> @@ -1047,7 +1076,15 @@ enum perf_event_type {
+>          *      { u64                   data_src; } && PERF_SAMPLE_DATA_SRC
+>          *      { u64                   transaction; } && PERF_SAMPLE_TRANSACTION
+>          *      { u64                   abi; # enum perf_sample_regs_abi
+> -        *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_INTR
+> +        *        u64                   regs[weight(mask)];
+> +        *        struct {
+> +        *              u16 nr_vectors;         # 0 ... weight(sample_simd_vec_reg_intr)
+> +        *              u16 vector_qwords;      # 0 ... sample_simd_vec_reg_qwords
+> +        *              u16 nr_pred;            # 0 ... weight(sample_simd_pred_reg_intr)
+> +        *              u16 pred_qwords;        # 0 ... sample_simd_pred_reg_qwords
+> +        *              u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
+> +        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
+> +        *      } && PERF_SAMPLE_REGS_INTR
+>          *      { u64                   phys_addr;} && PERF_SAMPLE_PHYS_ADDR
+>          *      { u64                   cgroup;} && PERF_SAMPLE_CGROUP
+>          *      { u64                   data_page_size;} && PERF_SAMPLE_DATA_PAGE_SIZE
+>
+>
+> To maintain simplicity, a single field, sample_{simd|pred}_vec_reg_qwords,
+> is introduced to indicate register width. For example:
+> - sample_simd_vec_reg_qwords = 2 for XMM registers (128 bits) on x86
+> - sample_simd_vec_reg_qwords = 4 for YMM registers (256 bits) on x86
+>
+> Four additional fields, sample_{simd|pred}_vec_reg_{intr|user}, represent
+> the bitmap of sampling registers. For instance, the bitmap for x86
+> XMM registers is 0xffff (16 XMM registers). Although users can
+> theoretically sample a subset of registers, the current perf-tool
+> implementation supports sampling all registers of each type to avoid
+> complexity.
+>
+> A new ABI, PERF_SAMPLE_REGS_ABI_SIMD, is introduced to signal user space 
+> tools about the presence of SIMD registers in sampling records. When this
+> flag is detected, tools should recognize that extra SIMD register data
+> follows the general register data. The layout of the extra SIMD register
+> data is displayed as follow.
+>
+>    u16 nr_vectors;
+>    u16 vector_qwords;
+>    u16 nr_pred;
+>    u16 pred_qwords;
+>    u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
+>
+> With this patch set, sampling for the aforementioned registers is
+> supported on the Intel Nova Lake platform.
+>
+> Examples:
+>  $perf record -I?
+>  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
+>  R11 R12 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 R23 R24 R25 R26 R27 R28
+>  R29 R30 R31 SSP XMM0-15 YMM0-15 ZMM0-31 OPMASK0-7
+>
+>  $perf record --user-regs=?
+>  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
+>  R11 R12 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 R23 R24 R25 R26 R27 R28
+>  R29 R30 R31 SSP XMM0-15 YMM0-15 ZMM0-31 OPMASK0-7
+>
+>  $perf record -e branches:p -Iax,bx,r8,r16,r31,ssp,xmm,ymm,zmm,opmask -c 100000 ./test
+>  $perf report -D
+>
+>  ... ...
+>  14027761992115 0xcf30 [0x8a8]: PERF_RECORD_SAMPLE(IP, 0x1): 29964/29964:
+>  0xffffffff9f085e24 period: 100000 addr: 0
+>  ... intr regs: mask 0x18001010003 ABI 64-bit
+>  .... AX    0xdffffc0000000000
+>  .... BX    0xffff8882297685e8
+>  .... R8    0x0000000000000000
+>  .... R16   0x0000000000000000
+>  .... R31   0x0000000000000000
+>  .... SSP   0x0000000000000000
+>  ... SIMD ABI nr_vectors 32 vector_qwords 8 nr_pred 8 pred_qwords 1
+>  .... ZMM  [0] 0xffffffffffffffff
+>  .... ZMM  [0] 0x0000000000000001
+>  .... ZMM  [0] 0x0000000000000000
+>  .... ZMM  [0] 0x0000000000000000
+>  .... ZMM  [0] 0x0000000000000000
+>  .... ZMM  [0] 0x0000000000000000
+>  .... ZMM  [0] 0x0000000000000000
+>  .... ZMM  [0] 0x0000000000000000
+>  .... ZMM  [1] 0x003a6b6165506d56
+>  ... ...
+>  .... ZMM  [31] 0x0000000000000000
+>  .... ZMM  [31] 0x0000000000000000
+>  .... ZMM  [31] 0x0000000000000000
+>  .... ZMM  [31] 0x0000000000000000
+>  .... ZMM  [31] 0x0000000000000000
+>  .... ZMM  [31] 0x0000000000000000
+>  .... ZMM  [31] 0x0000000000000000
+>  .... ZMM  [31] 0x0000000000000000
+>  .... OPMASK[0] 0x00000000fffffe00
+>  .... OPMASK[1] 0x0000000000ffffff
+>  .... OPMASK[2] 0x000000000000007f
+>  .... OPMASK[3] 0x0000000000000000
+>  .... OPMASK[4] 0x0000000000010080
+>  .... OPMASK[5] 0x0000000000000000
+>  .... OPMASK[6] 0x0000400004000000
+>  .... OPMASK[7] 0x0000000000000000
+>  ... ...
+>
+>
+> History:
+>   v5: https://lore.kernel.org/all/20251203065500.2597594-1-dapeng1.mi@linux.intel.com/
+>   v4: https://lore.kernel.org/all/20250925061213.178796-1-dapeng1.mi@linux.intel.com/
+>   v3: https://lore.kernel.org/lkml/20250815213435.1702022-1-kan.liang@linux.intel.com/
+>   v2: https://lore.kernel.org/lkml/20250626195610.405379-1-kan.liang@linux.intel.com/
+>   v1: https://lore.kernel.org/lkml/20250613134943.3186517-1-kan.liang@linux.intel.com/
+>
+>
+> Dapeng Mi (10):
+>   perf/x86/intel: Restrict PEBS_ENABLE writes to PEBS-capable counters
+>   perf/x86/intel: Enable large PEBS sampling for XMMs
+>   perf/x86/intel: Convert x86_perf_regs to per-cpu variables
+>   perf: Eliminate duplicate arch-specific functions definations
+>   x86/fpu: Ensure TIF_NEED_FPU_LOAD is set after saving FPU state
+>   perf/x86: Enable XMM Register Sampling for Non-PEBS Events
+>   perf/x86: Enable XMM register sampling for REGS_USER case
+>   perf: Enhance perf_reg_validate() with simd_enabled argument
+>   perf/x86/intel: Enable arch-PEBS based SIMD/eGPRs/SSP sampling
+>   perf/x86: Activate back-to-back NMI detection for arch-PEBS induced
+>     NMIs
+>
+> Kan Liang (12):
+>   perf/x86: Use x86_perf_regs in the x86 nmi handler
+>   perf/x86: Introduce x86-specific x86_pmu_setup_regs_data()
+>   x86/fpu/xstate: Add xsaves_nmi() helper
+>   perf: Move and rename has_extended_regs() for ARCH-specific use
+>   perf: Add sampling support for SIMD registers
+>   perf/x86: Enable XMM sampling using sample_simd_vec_reg_* fields
+>   perf/x86: Enable YMM sampling using sample_simd_vec_reg_* fields
+>   perf/x86: Enable ZMM sampling using sample_simd_vec_reg_* fields
+>   perf/x86: Enable OPMASK sampling using sample_simd_pred_reg_* fields
+>   perf/x86: Enable eGPRs sampling using sample_regs_* fields
+>   perf/x86: Enable SSP sampling using sample_regs_* fields
+>   perf/x86/intel: Enable PERF_PMU_CAP_SIMD_REGS capability
+>
+>  arch/arm/kernel/perf_regs.c           |   8 +-
+>  arch/arm64/kernel/perf_regs.c         |   8 +-
+>  arch/csky/kernel/perf_regs.c          |   8 +-
+>  arch/loongarch/kernel/perf_regs.c     |   8 +-
+>  arch/mips/kernel/perf_regs.c          |   8 +-
+>  arch/parisc/kernel/perf_regs.c        |   8 +-
+>  arch/powerpc/perf/perf_regs.c         |   2 +-
+>  arch/riscv/kernel/perf_regs.c         |   8 +-
+>  arch/s390/kernel/perf_regs.c          |   2 +-
+>  arch/x86/events/core.c                | 387 +++++++++++++++++++++++++-
+>  arch/x86/events/intel/core.c          | 131 ++++++++-
+>  arch/x86/events/intel/ds.c            | 164 ++++++++---
+>  arch/x86/events/perf_event.h          |  85 +++++-
+>  arch/x86/include/asm/fpu/sched.h      |   2 +-
+>  arch/x86/include/asm/fpu/xstate.h     |   3 +
+>  arch/x86/include/asm/msr-index.h      |   7 +
+>  arch/x86/include/asm/perf_event.h     |  38 ++-
+>  arch/x86/include/uapi/asm/perf_regs.h |  49 ++++
+>  arch/x86/kernel/fpu/core.c            |  12 +-
+>  arch/x86/kernel/fpu/xstate.c          |  25 +-
+>  arch/x86/kernel/perf_regs.c           | 134 +++++++--
+>  include/linux/perf_event.h            |  16 ++
+>  include/linux/perf_regs.h             |  36 +--
+>  include/uapi/linux/perf_event.h       |  45 ++-
+>  kernel/events/core.c                  | 132 ++++++++-
+>  25 files changed, 1144 insertions(+), 182 deletions(-)
+>
+>
+> base-commit: 7db06e329af30dcb170a6782c1714217ad65033d
