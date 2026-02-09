@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6F53382D6
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 20:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3297C337B9D
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Feb 2026 20:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770668535; cv=none; b=cni92aEjT9ioL569ahGHj7dwC0PYYzdonLguscs0XDLLTmUK9jYNdi5aFrXtvGNJOVVwYd+yvno4Pgx7FA/owye0qCzYjHXILfP/flExKUxrtS+a3NMNyHkMt1G46i4ivagEEsQkilOS8rJASM1wNFkl2t+bxqfrCmtwm+Bzluc=
+	t=1770668538; cv=none; b=kNmOiZ1U0BIBJzR7dHaBpGn4Vr8e+s4GSGHWanEtBr2dbCFTZ3bQQL3RTMqrJdHWMLID0++mo+er57bBrOoOQ4+v3g//KlRkityLeWcrmGQrYuyBSqdCw8dNPd8X7Rv96Xp9uzXR5WRK+xzruNd3kS+r3fO7hRjhkzBnLvQGcnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770668535; c=relaxed/simple;
-	bh=Ui/SugiVmcRAov8tt7/adCmjGYW1ScNgh0Y3uPIDkF4=;
+	s=arc-20240116; t=1770668538; c=relaxed/simple;
+	bh=99vpJ8GhF7eNAqDOXeu+Fr9toiJJdQEGZfjkLvia1ng=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=ZRbgfGtixIY3Hia9+oouDplrV3Mf6W7IqMlN2u8DkYwMSpI1sKNAgudfyYhkLKIDSZRruyziNxvyzh8kaa4flXzzcNqquiJWwOTg85pYCE8NIaD4W6VUnhe3agDBKS6Mkw02E/uqBEsGX9DNugfyhM+9h2k5Fj6ps61cqvlnS2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RIHqp01x; arc=none smtp.client-ip=74.125.82.73
+	 To:Content-Type; b=oICfYkqEHyxJyzRnGKiMxSezb5h+xFOm6yNPQur5fnNYA9hcjvAU7TFDx+72UmfiqfK0ryGSjxFea1aWZc482UsTlm6lYIDpHtlEvLVBhIDP9pxPhIculC2RvAZxf8TbRiBx9XEz+UEL3NmjzU/8zMI+qqlG7NtoyuhixADg0BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kDDua+kR; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RIHqp01x"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-126e8ee6227so83392c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 12:22:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kDDua+kR"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ba6e8ac125so442687eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 12:22:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770668533; x=1771273333; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770668535; x=1771273335; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=K0daziDUtL2ibgI5WtkZQDKzcSzE6a5XxpXzSEtLh90=;
-        b=RIHqp01xMw0CKXnUwhwekkv+fvTer6yLvlaE91cU+3sMApi2wa8oKtZAN4RI7DhAZy
-         sv+Myh8ZEA5s1DuoSHXK1SPG8drknmHizTCIA96pjXm+Ht4/Jbo+fclvGKJBwPp1Phr4
-         X6bkgHmW+NKZyapK6ohbY06YmpeF1l/8rGAhfa4GDnBwBUSfx0hO8S8hdkfYGLuNt+xt
-         5h0iLwDLnx1IRNIf/nT3kjIcwXYBQexZ95WbXcXIL2aa9zUIKiHn3diaYUKm+fOzaO4H
-         K4YXRB66rIjzO61bSmf2xwiW624+xlkB70iuCpTLp1lFN/k1/ggp/FBiEDQPy9cs05tm
-         BU5Q==
+        bh=7betNIsJE10/NnsmMe+hD7nf/zhUEKUN9SyRdUo6KrU=;
+        b=kDDua+kRerBxBeAb7/yZP6iAcjtRzVVuEbD3DqYYHwu7SJLLbDxryvaySnLxXNM14D
+         ed2bXiPexGD198UGOm7UgEMaJOrPVosC1eQwS7i1Pz6pW6+znnzsD5luvLbUXr81fp1g
+         e4pybYwMhAEjvLnJ3+nZDrKrPZ4pHH9EzhfhRGGmrF7UarBidBoSodsPcYewo03MFdUi
+         +VdrFi5pInyIuFXncANWFGW+ehS/QmPsJbolFGKKfzdoguTuHWG5tGxRwXDYjHQveovt
+         RIg/XoDyaY6+J6+i/uT2jffz5xzu2l4AYmhFycaxcN3OCaXsSK27pjyjppVh31odRG/l
+         nBSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770668533; x=1771273333;
+        d=1e100.net; s=20230601; t=1770668535; x=1771273335;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K0daziDUtL2ibgI5WtkZQDKzcSzE6a5XxpXzSEtLh90=;
-        b=YpFnz8ZQQRtMvH9BMhdCa1z2jhp+pJK5nTQyciY0LbJ1YvEmdj3K24Boysi7hHbjJy
-         jwSWRFZpt6xzSeVRqjGv8+bMmePzgn6gWz2rZaGIagHj2B3gJzvHEc2CN6EVH4kQJg8m
-         jh1gdXvtEk7gRMHkLi2glXZAoZTU87X0T0RnFoXqimnThiv8KREUyE0noKWJq6lFr11A
-         YND6sa2bgjOwEC/pNbXxD197KhrW1zkQNn5FbGOMStLV6CpcuLuoPBuOM9m9p3Ls31sv
-         sngm3DjxdHZSa34DzMbnpx2KuDYweGyUsRRur6m0MFNbRtlineMh+59VgdKIKuQsyWs8
-         ZicA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqIjoQP+qlNCHLzm9fi6HaZzg0nS+nkQVUfInlHq6JXQUdKzy5FM1ylj1lrMJ3HF7MyhtqRA0l9cIUTN2SK8YZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5udiNMb10pWGryobkxc28uNpYPvfN/jjszndouu15/qEdQoxp
-	rc6/fiZ88MZnjZ2xa5tV0QkqNg8Q3BlE1UPHSw3omCqp881xUfn8pLWqOJPJp7pn0HvVlNqBW0o
-	dKKobrbWM9Q==
-X-Received: from dll39.prod.google.com ([2002:a05:7022:227:b0:123:2708:9404])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e22:b0:11b:8b4b:bff7
- with SMTP id a92af1059eb24-1270409535emr5362949c88.39.1770668533318; Mon, 09
- Feb 2026 12:22:13 -0800 (PST)
-Date: Mon,  9 Feb 2026 12:22:06 -0800
+        bh=7betNIsJE10/NnsmMe+hD7nf/zhUEKUN9SyRdUo6KrU=;
+        b=RA2Qr7O8n+0P9yr6Jjc+/iYPJGL4J7N521MOSYtPyeWtoJq7UuBs0AzdMGGsBL7HPU
+         Ubhw4UVHZy0R1bRqk333a0WNvpdKv1sIjuiW+z/bVqLSUJ+lwF8sJlJ98fwVBolvm4xg
+         2phDpl8rswCqiXshPt1+CncISuUH1Yh4178/df5miJNVSD1UEYDxWADhIvKYNRD/sUw7
+         kOLy9RPR9zrgv99rUpFv49S7bcupauE2JzvZHULMqcxnxUivTVXOvmbxfQxk8nbmzuTY
+         0tNwb7N/O6Sxei/qHGCamJKNtkye34nPEu4R6l10ZHkqVytuFLWmJm+GvnIDW+gfnFzN
+         3VHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzIB2GSim/6eUIVG4WDApuYI1XrsrPa1X55yXlGs/aPXV+Z6S+61eWhKTyFIky4XPSYBwIS6J3zBd7ijeLi+3r@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkb+aqyOw9oKEkgGaP1g4uKh+Qgjnc75re5FDILIXaCQQuDK4P
+	yWdstRGguppZ9FrGggFZ67JDq7kKC7KkYpGszf/nK/5FdgxGYxZ6IEWB1jnOU9pnXAN2PhWYnrB
+	RA2RnKUN9GQ==
+X-Received: from dybhk9.prod.google.com ([2002:a05:7301:2889:b0:2b6:bc40:5234])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:2288:b0:2a4:3594:72ed
+ with SMTP id 5a478bee46e88-2b8564ecb2cmr4777348eec.28.1770668535306; Mon, 09
+ Feb 2026 12:22:15 -0800 (PST)
+Date: Mon,  9 Feb 2026 12:22:07 -0800
 In-Reply-To: <20260209202208.2027001-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260209202208.2027001-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
-Message-ID: <20260209202208.2027001-2-irogers@google.com>
-Subject: [PATCH v1 1/3] perf script: Allow the generated script to be a path
+Message-ID: <20260209202208.2027001-3-irogers@google.com>
+Subject: [PATCH v1 2/3] perf test script: Add perl script testing support
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -70,83 +70,123 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Allow the script generated by "perf script -g <language>" to be a file
-path and the language determined by the file extension. This is useful
-in testing so that the generated script file can be written to a test
-directory.
+Basic coverage of perl script support from `perf script`. This is
+disabled by default and so the test will most normally skip.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/perf-script.txt |  6 ++++--
- tools/perf/builtin-script.c              | 24 ++++++++++++++++++++----
- 2 files changed, 24 insertions(+), 6 deletions(-)
+ tools/perf/tests/shell/script_perl.sh | 102 ++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
+ create mode 100755 tools/perf/tests/shell/script_perl.sh
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 03d112960632..ddf92f9c7821 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -98,8 +98,10 @@ OPTIONS
- 
- -g::
- --gen-script=::
--        Generate perf-script.[ext] starter script for given language,
--        using current perf.data.
-+	Generate a starter script. If a language is given then the
-+        script is named perf-script.[ext] according to the
-+        language. If a file path is given then python is used for
-+        files ending '.py' and perl used for files ending '.pl'.
- 
- --dlfilter=<file>::
- 	Filter sample events using the given shared object file.
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 14c6f6c3c4f2..7c743a303507 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -4489,6 +4489,7 @@ int cmd_script(int argc, const char **argv)
- 	if (generate_script_lang) {
- 		struct stat perf_stat;
- 		int input;
-+		char *filename = strdup("perf-script");
- 
- 		if (output_set_by_user()) {
- 			fprintf(stderr,
-@@ -4516,17 +4517,32 @@ int cmd_script(int argc, const char **argv)
- 		}
- 
- 		scripting_ops = script_spec__lookup(generate_script_lang);
-+		if (!scripting_ops && ends_with(generate_script_lang, ".py")) {
-+			scripting_ops = script_spec__lookup("python");
-+			free(filename);
-+			filename = strdup(generate_script_lang);
-+			filename[strlen(filename) - 3] = '\0';
-+		} else if (!scripting_ops && ends_with(generate_script_lang, ".pl")) {
-+			scripting_ops = script_spec__lookup("perl");
-+			free(filename);
-+			filename = strdup(generate_script_lang);
-+			filename[strlen(filename) - 3] = '\0';
-+		}
- 		if (!scripting_ops) {
--			fprintf(stderr, "invalid language specifier");
-+			fprintf(stderr, "invalid language specifier '%s'\n", generate_script_lang);
- 			err = -ENOENT;
- 			goto out_delete;
- 		}
-+		if (!filename) {
-+			err = -ENOMEM;
-+			goto out_delete;
-+		}
- #ifdef HAVE_LIBTRACEEVENT
--		err = scripting_ops->generate_script(session->tevent.pevent,
--						     "perf-script");
-+		err = scripting_ops->generate_script(session->tevent.pevent, filename);
- #else
--		err = scripting_ops->generate_script(NULL, "perf-script");
-+		err = scripting_ops->generate_script(NULL, filename);
- #endif
-+		free(filename);
- 		goto out_delete;
- 	}
- 
+diff --git a/tools/perf/tests/shell/script_perl.sh b/tools/perf/tests/shell/script_perl.sh
+new file mode 100755
+index 000000000000..b6d65b6fbda1
+--- /dev/null
++++ b/tools/perf/tests/shell/script_perl.sh
+@@ -0,0 +1,102 @@
++#!/bin/bash
++# perf script perl tests
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++# set PERF_EXEC_PATH to find scripts in the source directory
++perfdir=$(dirname "$0")/../..
++if [ -e "$perfdir/scripts/perl/Perf-Trace-Util" ]; then
++  export PERF_EXEC_PATH=$perfdir
++fi
++
++
++perfdata=$(mktemp /tmp/__perf_test_script_perl.perf.data.XXXXX)
++generated_script=$(mktemp /tmp/__perf_test_script.XXXXX.pl)
++
++cleanup() {
++  rm -f "${perfdata}"
++  rm -f "${generated_script}"
++  trap - EXIT TERM INT
++}
++
++trap_cleanup() {
++  echo "Unexpected signal in ${FUNCNAME[1]}"
++  cleanup
++  exit 1
++}
++trap trap_cleanup TERM INT
++trap cleanup EXIT
++
++check_perl_support() {
++	if perf check feature -q libperl; then
++		return 0
++	fi
++	echo "perf script perl test [Skipped: no libperl support]"
++	return 2
++}
++
++test_script() {
++	local event_name=$1
++	local expected_output=$2
++	local record_opts=$3
++
++	echo "Testing event: $event_name"
++
++	# Try to record. If this fails, it might be permissions or lack of support.
++	# We return 2 to indicate "skip this event" rather than "fail test".
++	if ! perf record -o "${perfdata}" -e "$event_name" $record_opts -- perf test -w thloop > /dev/null 2>&1; then
++		echo "perf script perl test [Skipped: failed to record $event_name]"
++		return 2
++	fi
++
++	echo "Generating perl script..."
++	if ! perf script -i "${perfdata}" -g "${generated_script}"; then
++		echo "perf script perl test [Failed: script generation for $event_name]"
++		return 1
++	fi
++
++	if [ ! -f "${generated_script}" ]; then
++		echo "perf script perl test [Failed: script not generated for $event_name]"
++		return 1
++	fi
++
++	echo "Executing perl script..."
++	output=$(perf script -i "${perfdata}" -s "${generated_script}" 2>&1)
++
++	if echo "$output" | grep -q "$expected_output"; then
++		echo "perf script perl test [Success: $event_name triggered $expected_output]"
++		return 0
++	else
++		echo "perf script perl test [Failed: $event_name did not trigger $expected_output]"
++		echo "Output was:"
++		echo "$output" | head -n 20
++		return 1
++	fi
++}
++
++check_perl_support || exit 2
++
++# Try tracepoint first
++test_script "sched:sched_switch" "sched::sched_switch" "-c 1" && res=0 || res=$?
++
++if [ $res -eq 0 ]; then
++	exit 0
++elif [ $res -eq 1 ]; then
++	exit 1
++fi
++
++# If tracepoint skipped (res=2), try task-clock
++# For generic events like task-clock, the generated script uses process_event()
++# which dumps data using Data::Dumper. We check for "$VAR1" which is standard Dumper output.
++test_script "task-clock" "\$VAR1" "-c 100" && res=0 || res=$?
++
++if [ $res -eq 0 ]; then
++	exit 0
++elif [ $res -eq 1 ]; then
++	exit 1
++fi
++
++# If both skipped
++echo "perf script perl test [Skipped: Could not record tracepoint or task-clock]"
++exit 2
 -- 
 2.53.0.rc2.204.g2597b5adb4-goog
 
