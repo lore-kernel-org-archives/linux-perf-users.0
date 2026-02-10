@@ -1,49 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28A63EBF1A;
-	Tue, 10 Feb 2026 01:18:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588037262A;
+	Tue, 10 Feb 2026 01:24:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770686288; cv=none; b=NJC6UQOktDVsmd81zrrGS9clZa6vKfFERP+g+5n+FIOTSbjFX3xZfnv7SgKEmbuQAfwjRTxWk4cqCqST57y2sgSmRpF3uv16eaRIPbS+Omj6xVTutjuyYV8AwIAb2sxF/iRhAsNy+gd0u4tQ+0lPPNN4AkwRVoZ8cn+9snfD5cA=
+	t=1770686645; cv=none; b=uYzzJu/rxHogP+eG5+Elt0c1n+YS+W2KRluYusMog44iLtlcG9tWLjyqSIt+Lg6Gz6vku0wbPeuk7gTXYflRxplgfwfVfZefsiXIZGK1sYlnKEfoGXsnyn5+l4lKrsN65H7lL25qoZqs16oLS0swcIn+o0MlIuMs6XSs7x+A7w8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770686288; c=relaxed/simple;
-	bh=kgevp4Vfh69dFy2iaiyqDXN56ya/OPL65CeQtlz7eOM=;
+	s=arc-20240116; t=1770686645; c=relaxed/simple;
+	bh=RKizkRBGdj7J2DBOmUW7/xw+ZJPCDspJfhVCZ0TbyzA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NcXluKKr8eMm55j7IXVHhC8qA9ISnUx24Np2HX1zc/v50d26SePhqxcAPvyXON8WDd1fpDHqH+vsMp8eFXlcUXoOYGOTutrsZW/uQoDpf4r/Jd0WFhWR1Nc85zqJvqoPurIpM+SgtD/UHiTgjr2TcKJUDClgI6xje1UmL4ImWz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCE0nuv2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pKH2bCkmXKh42NwyCfsLX8Ku+JI8Ny6310+cg3Ei2rZBVbgNO59GCI9uRs39TMpxzXBA7MwK2rXcTru8Xl1+nUohi/66W/MHC6oluKI0F6s4/IACbPSIpIPf/6FEBUl38IW3gSEdzHSbsM3elKT1e3EEsF7FeF+4qvkzcxS2exM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYqIke8o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCE0nuv2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6161C116C6;
-	Tue, 10 Feb 2026 01:18:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYqIke8o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 868C4C116C6;
+	Tue, 10 Feb 2026 01:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770686287;
-	bh=kgevp4Vfh69dFy2iaiyqDXN56ya/OPL65CeQtlz7eOM=;
+	s=k20201202; t=1770686644;
+	bh=RKizkRBGdj7J2DBOmUW7/xw+ZJPCDspJfhVCZ0TbyzA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BCE0nuv26ERIquCeBkvV9J9LKWiQoa1XjS9opKKgPb/CWdMIwHBke1RsMShvjUulA
-	 z6adhyFc71XqmMdOONp03vOZZype24IkqVFfhCIQabajx4B1TCNvO/iI632G7mxxqD
-	 l+QmSkGyrZoEFSqxFegZJx/JiMfmJOMsl0wZt5to9jucbSfoNkgovRVtaWEYOU+qHA
-	 IbIjB1u+WpKB17aFLA7GPGrYJ45WVOtUPtiGzBZ0vpeIE/Hsjn2dz6nitjPuSD0WDS
-	 DizlTMDfnfeg18shPLhGNJ2a76z08CNBx0lxvNieLsfyM+C9NvMisPpkasDWv8K/D5
-	 KUmzd4pzMZXhw==
-Date: Mon, 9 Feb 2026 17:18:05 -0800
+	b=hYqIke8oHmBX1tMVlzZSQvKNU8UQ3+1twZFM+HboQnHDm25r9AV+R0BmosdN7rcJH
+	 DxUmSmhMCW2oh+LBQWYMNP1Q3BGTAyag1HMSpZw8fuqDS8CxcDvaTogzkDP56rbAZL
+	 D92999osRYGDweAW20envokd5YJ5/XA6VrdgU3ZYrJsaspqSFq6D8z1lh5osJkCMTK
+	 Prbt9ndyNVFy2U1zV33aJRM5AUyks7IwukLFzgqoAqW+7U6LJNxDfcuiYedKvYQgX9
+	 CzBK1RzMtD9UBZZgkFCienhN1CRptPQ88Mx7ubsgN8XX3i5FhsVIUrhy3O0lUEIe9M
+	 1zUITynyFzWyw==
+Date: Mon, 9 Feb 2026 17:24:03 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, adrian.hunter@intel.com,
-	ak@linux.intel.com, alexander.shishkin@linux.intel.com,
-	andres@anarazel.de, dapeng1.mi@linux.intel.com,
-	james.clark@linaro.org, jolsa@kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux@treblig.org, mingo@redhat.com, peterz@infradead.org,
-	thomas.falcon@intel.com, tmricht@linux.ibm.com,
-	yang.lee@linux.alibaba.com
-Subject: Re: [PATCH v8 6/6] perf stat: Add no-affinity flag
-Message-ID: <aYqHTfCoW1bGmJF4@google.com>
-References: <aYZnkYqWXnKpHd3h@x1>
- <20260206222509.982489-1-irogers@google.com>
- <20260206222509.982489-7-irogers@google.com>
- <aYc1NrEYIMxKzlCF@x1>
- <CAP-5=fXOasXgKRSvrA1B+Yx42egfZfLO4h1OKrB4tLCCz_o8Cg@mail.gmail.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Dmitrii Dolgov <9erthalion6@gmail.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf test code_with_type.sh: Skip test if rust
+ wasn't available at build time
+Message-ID: <aYqIs-eJeyItVUOm@google.com>
+References: <aYor-0BmwjNvKs1N@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,74 +47,52 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXOasXgKRSvrA1B+Yx42egfZfLO4h1OKrB4tLCCz_o8Cg@mail.gmail.com>
+In-Reply-To: <aYor-0BmwjNvKs1N@x1>
 
-On Sat, Feb 07, 2026 at 07:54:05AM -0800, Ian Rogers wrote:
-> On Sat, Feb 7, 2026 at 4:51 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > On Fri, Feb 06, 2026 at 02:25:09PM -0800, Ian Rogers wrote:
-> > > Add flag that disables affinity behavior. Using sched_setaffinity to
-> > > place a perf thread on a CPU can avoid certain interprocessor
-> > > interrupts but may introduce a delay due to the scheduling,
-> > > particularly on loaded machines. Add a command line option to disable
-> > > the behavior. This behavior is less present in other tools like `perf
-> > > record`, as it uses a ring buffer and doesn't make repeated system
-> > > calls.
-> >
-> > This is confusing:
-> >
-> > ⬢ [acme@toolbx perf-tools-next]$ perf stat -h affinity
-> >
-> >  Usage: perf stat [<options>] [<command>]
-> >
-> >         --affinity        don't allow affinity optimizations aimed at reducing IPIs
-> >
-> > ⬢ [acme@toolbx perf-tools-next]$
-> >
-> > The way it is presented in the -h output it looks as if one has to use:
-> >
-> >         perf stat --affinity
-> >
-> > To disable affinity setting, when used that way it looks as if the user
-> > is asking for affinity to be used.
-> >
-> > We have things like:
-> >
-> > ⬢ [acme@toolbx perf-tools-next]$ grep -A2 OPT_.*no- tools/perf/builtin-record.c
-> >         OPT_BOOLEAN(0, "no-buffering", &record.opts.no_buffering,
-> >                     "collect data without buffering"),
-> >         OPT_BOOLEAN('R', "raw-samples", &record.opts.raw_samples,
-> > --
-> >         OPT_BOOLEAN_SET('i', "no-inherit", &record.opts.no_inherit,
-> >                         &record.opts.no_inherit_set,
-> >                         "child tasks do not inherit counters"),
-> > --
-> >         OPT_BOOLEAN(0, "no-bpf-event", &record.opts.no_bpf_event, "do not record bpf events"),
-> >         OPT_BOOLEAN(0, "strict-freq", &record.opts.strict_freq,
-> >                     "Fail if the specified frequency can't be used"),
-> > --
-> >         OPT_BOOLEAN('n', "no-samples", &record.opts.no_samples,
-> >                     "don't sample"),
-> >         OPT_BOOLEAN_SET('N', "no-buildid-cache", &record.no_buildid_cache,
-> >                         &record.no_buildid_cache_set,
-> >                         "do not update the buildid cache"),
-> >         OPT_BOOLEAN_SET('B', "no-buildid", &record.no_buildid,
-> >                         &record.no_buildid_set,
-> >                         "do not collect buildids in perf.data"),
-> > ⬢ [acme@toolbx perf-tools-next]$
-> >
-> > Probably this needs to be that way?
+On Mon, Feb 09, 2026 at 03:48:27PM -0300, Arnaldo Carvalho de Melo wrote:
+>   $ perf test 'perf data type profiling tests'
+>    83: perf data type profiling tests                         : Skip
+>   $ perf test -vv 'perf data type profiling tests'
+>    83: perf data type profiling tests:
+>   --- start ---
+>   test child forked, pid 977213
+>   Skip: code_with_type workload not built in 'perf test'
+>   ---- end(-2) ----
+>    83: perf data type profiling tests                         : Skip
+>   $
 > 
-> So it was that way in the v4 patch set but Namhyung asked for it to be
-> the other way around:
-> https://lore.kernel.org/lkml/aRvcuMfbDRSBU87k@google.com/
-> The comment on the option didn't get changed and that's a  mistake.
-> Let me know what's preferred and I can send a patch.
+> Cc: Dmitrii Dolgov <9erthalion6@gmail.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/tests/shell/data_type_profiling.sh | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/tools/perf/tests/shell/data_type_profiling.sh b/tools/perf/tests/shell/data_type_profiling.sh
+> index a230f5d4c42c3e6a..3ef72a10850d0734 100755
+> --- a/tools/perf/tests/shell/data_type_profiling.sh
+> +++ b/tools/perf/tests/shell/data_type_profiling.sh
+> @@ -4,6 +4,11 @@
+>  
+>  set -e
+>  
+> +if ! perf test --list-workloads | grep -qw code_with_type ; then
 
-Right, I still prefer positive option names so that "--no-" prefix can
-be added.
+It could be 'perf check feature -q rust'.
+
+But IIUC this test also covers C code.  We may want to skip Rust parts
+only.
 
 Thanks,
 Namhyung
 
+
+> +	echo "Skip: code_with_type workload not built in 'perf test'"
+> +	exit 2
+> +fi
+> +
+>  # The logic below follows the same line as the annotate test, but looks for a
+>  # data type profiling manifestation
+>  
+> -- 
+> 2.53.0
+> 
