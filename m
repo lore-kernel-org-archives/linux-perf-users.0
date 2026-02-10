@@ -1,248 +1,339 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6D630C60D;
-	Tue, 10 Feb 2026 16:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA8E31B114
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 17:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770742381; cv=fail; b=oQgLuOjNnjpzBe7RutA8VJc+7G7RZ1h6YSL7E4dWmPGyZ+n0aIsbAxRpVO6Tf+C4LI0aXfBlTFRd3eH1yEkwI80AFJrXZfC2lTQHH5LpZO352OIwNp+IC2rzSqZqCDCVFoStwuxUY/VpJe5gVvlm6NfXotDCc7J6i5FzgsF7HDI=
+	t=1770742997; cv=pass; b=AVRVh4VMI33UCh5CGvYy8hwrxT8H9F/F/fF40Kzdyc3vfI2KRFLgcVZlxB4ASpd1iH5MvQ+Js/kO3IUg6QCAN/v6r4qQX3z+BXLR7zaatOVR3sDjE0RWdnmRjn8TGGmHDcWwO2g1nzoPRZyzuwJzQ81+B/XV23PRQuiwTPMxvmk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770742381; c=relaxed/simple;
-	bh=yCJ2rjCp15HpZox8WWhvLW+fl6RVU4+oDlrKFChZqZM=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Yru9b1gzy+5Gh9oLwHDHK39nNx1i8q4L+8jtAapHwWRHfstxhMO7Kq+iQodwsDH22+a45CC0Fq7Qk73O7/gi+x8dT+h8XKCiYdgv4PY+lOeAZI1kcXQsPe1IBZMAlPf3CrC5umluQ0nIYN1+mjnrq5R9Rhz/Zxi3wAcYTTDmzQY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GNKhJZoQ; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770742997; c=relaxed/simple;
+	bh=xX17c7pO2QWQCIyie+PAEYFQwX4s+glBOxKiA0vXI0c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N5Q6mlCrxEChROlZDc5EtZUFNv1jhBUTPMjJ1ALoFz4BsjRzq2rb7KnKLd5XRIww17adsVZmmEryGqsxID9Z8WgOplBNsinbnvbxRSJyHHqxbA5E3k0Io9k3tc6XLDgz+FpVdi9ovwOEzWFs0kKR+cBGnldAl1c+31R/yFY7LJA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NhvkUAG6; arc=pass smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GNKhJZoQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770742380; x=1802278380;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=yCJ2rjCp15HpZox8WWhvLW+fl6RVU4+oDlrKFChZqZM=;
-  b=GNKhJZoQS25yEn5iHEbFNrhrNrMgT+k1mnehPbQS2CJsYCJr03VUcn2s
-   eN4AKNQ4XwmW5M8HK4SIZDjVDvbUslE/iVk97T4C/IQ+O7eGdxnx3fKxL
-   SDzha1a+l4ABw3y0YEYOlWoEoekrdTjm6CyDmeMdosHam14GsfQVKZhlH
-   /PIJieFqZpqFhvrQOW0oiNA/u1sGZQS8WvQ6+kzYso1gS6iJlVNUzHGHk
-   0HHHoMuVJei1h5eM4P3qUKi+2CheomMeScoKQBcR2TKB2NvPHixZyAXJP
-   H4XCOnVxwUTzfGwKk+pXKPGSXPGKVVYn4vVI2xPboCsuX8P9f+lU0h713
-   A==;
-X-CSE-ConnectionGUID: 9c09jn6ITeiqnFmN5WT8kA==
-X-CSE-MsgGUID: AxjeATxNSkKdkU2Ono7zrg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11697"; a="71978838"
-X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
-   d="scan'208";a="71978838"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2026 08:53:00 -0800
-X-CSE-ConnectionGUID: 1bLxSIoDR1O/WB1vpq2mgA==
-X-CSE-MsgGUID: wVzndM7vT3iSauaxIGOFog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
-   d="scan'208";a="241905795"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2026 08:52:59 -0800
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Tue, 10 Feb 2026 08:52:59 -0800
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35 via Frontend Transport; Tue, 10 Feb 2026 08:52:59 -0800
-Received: from PH7PR06CU001.outbound.protection.outlook.com (52.101.201.57) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Tue, 10 Feb 2026 08:52:59 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EhMQJ+C1fxJ94rz0asN41281Gtfht2rmsOKsqno9k9zvIe02smNSnkEJ2rDzlVEDg+SE+Qi6PXniO5+2JMNJYo0OntiCYmsm0zn2D1tplIvaI9J9EvqQdAKiGs9clPZhK4TgHKGLbISk9x1GxTOAClRCpl6oxSfdijIkmQJlGxBZ4TAwhHwqdQuHU/rr2d8gpSmSLorSn88ArACb3twZLI3IEuDM8HtTlkx/QnJWAgCYMzRb9TLlT+2pEIlB0fZR5VO3B4Ko62wD0AHj6AyzbLVQLXukKJCg/utn32QY6VL/F7LbmpdNnlYpx2qlb2FS/Ro02N2sFmmlWssDkropCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=avLu17t4YkshSbCFcckNcnvQ5Uf8+CPMK3zOK5ChRqQ=;
- b=BTblL5EY7oQDpCGJATzinQFBhOiycIKYjQxPYOUJ+wA6ucLb9PPUA9DdoU10FtijvR7s785leuOJxX9BJgNvUs3O9uxScg6ZXRLmCwhqlJbyq2v33QT/HHGO7rCFY9Vb8ZvyxnhapwpsfJHRGFcyOiSuMeXfDHelTz4kmClmL8FoF9Zz5Fysoj9H1MSuWm944+FaTWfOOLHLwAWcH1DIxysi1kHg5miIl/UBWsHVQV1RrjIFUL0tE0nbZNgMV2zlnCRF3kHFapTZNSzuCyvuJhHTOHP1KeRfeLWZErzD6RX7ywNrRng5902g6sciK7cotRDwqn+2LxPRxCAV4Jbe6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by PH0PR11MB4933.namprd11.prod.outlook.com (2603:10b6:510:33::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.8; Tue, 10 Feb
- 2026 16:52:54 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::bfe:4ce1:556:4a9d]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::bfe:4ce1:556:4a9d%6]) with mapi id 15.20.9587.017; Tue, 10 Feb 2026
- 16:52:54 +0000
-Message-ID: <f235df30-7b88-4ae7-88f8-399437e85461@intel.com>
-Date: Tue, 10 Feb 2026 08:52:51 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel/uncore: Add per-scheduler IMC CAS count
- events
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, "Adrian
- Hunter" <adrian.hunter@intel.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, Babu Moger <babu.moger@amd.com>, "Tony
- luck" <tony.luck@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<stable@vger.kernel.org>
-References: <20260210005225.20311-1-zide.chen@intel.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260210005225.20311-1-zide.chen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0272.namprd03.prod.outlook.com
- (2603:10b6:303:b5::7) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NhvkUAG6"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2a885af8ee7so80465ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 09:03:16 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770742996; cv=none;
+        d=google.com; s=arc-20240605;
+        b=KfCRnpl405MPkapvTA3IQqMUyFXU+MraXls5c0BxB2Nv+/0GJ6+DDQ5wignG6Qpxt8
+         MxGqxWr4+j1IhwRwSSYT2nXSsFDpvo73OjM7fsyY6uN2sm0/l3aJKEwH0zbgX/PF3Jqw
+         gK6qmVVbvtXdrCDJt/EhybprD7/AnrTMDFJ98q4lgEdjNKPvEoXLz8uvaZDrK9ADe8AC
+         Zf4MG+abFTEB83WRWnNnT7SatqlTJvGlgZcZ/DP5Tsty0pWDHhAJYn5H3UtBGDjuEL1Q
+         gPLF6P3TnyFtUkrp9e22ijjcsB5YROzzdEFfu/X65AEhPgCO+DMqHDaJf6k7vcwbF3Nq
+         dadw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=6kPtpzIrtJsRYDGV7q+AhACafD6ZWazPAZQJP3uRSXA=;
+        fh=VJEVfPPI+jiA2J3wKOgyS6Oc++ihrEPRwGmPCP9j5Og=;
+        b=jyLaNm0qvCui1JZu6OoT9re5Isat1AmcBFVGq31Nvt99topRn8q4l72kRifZYASGu1
+         b8VOI7s5wprJw/2NiJOiqsWqbmYKCA4KS3HEdkqwy6eFukX8RmEggQiQ5KUr/y+GkAxx
+         pyxJliVbFeN/ouuIboEY2LkcUx3QoyaEM86tY7n/L2EltCaht4je3e3+29GOw2WVBzdU
+         b+J5omHMNJESSwVqQh6nZCmFbce+jxgXkpv8NNGdWqRBehw73fuVIher4kjiJJrcOiCT
+         ZSDhs6MxAMear8ICi6yAR+9eAjudbOuOg7TQFrRBFFGsADOn3l0QZf+4MK1BG6bt3iWh
+         l5bw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1770742996; x=1771347796; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6kPtpzIrtJsRYDGV7q+AhACafD6ZWazPAZQJP3uRSXA=;
+        b=NhvkUAG6KnkMmqiq+AbJz5MSBABTACY2kgqgq3JMOlUPAn1kWhR6ir0dF81ClNDRZF
+         ZBVrG3CNlkj7biFfLCKifDiMpjsuVhZEk+rXGhKi26Whuxneub7BKv7eMEVkta9Eh6gx
+         KmVH6TZ5yBw5tyuFo+fsltQdNo9AVAGB1L41ymKya1dyr+z0spqmPE/6hHR5HVmx6Cwe
+         NfYta97dkTtLv38mnnZb/cNv5x//JayoUX5+QthJS9R4V7KFlVccMZz3OfaBQsKhXfSK
+         5AnPNNsm+a++mfDmh3UdKxUNuMoQ70PdfzgWGdrAWAieWdQci3ejFNhDDVbW7pqlp5YW
+         169w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770742996; x=1771347796;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=6kPtpzIrtJsRYDGV7q+AhACafD6ZWazPAZQJP3uRSXA=;
+        b=rcbZ9s82Xwj2BM3DKchDGkejf4cs+70bsJ20iVSse1GMlSANCRxXjB9GCah83gLc15
+         4S9nYIM4VUrgPezwMGR8f1F/Gmbbvfq2UhBkYkk47B6dDaidoe0Pma428pYTrdHuDYgx
+         bmY5zwYVlXhrWXNthjH0itP+BRxZ5RBPWZMDsxf+Ny7MKhW/UhhVGuwMr9bnlt7LjgBJ
+         XcJhFR98etP/3nhGmyjdbOTKQAtxDEX9B8Oww2IqROBJyWSeYS2KS/rKM5xCH63KkXNc
+         xYcUWRRd5kpyAfRsacRg7HVwkZ+Nbfbk7sKi6lyoadPBWczDPHz7xntEB6SEQAXlusSG
+         f/hg==
+X-Forwarded-Encrypted: i=1; AJvYcCVyJ4Dct3ota3ydm5mJwEWkqJ3TpV80RD2AJaSO8sd/4IGcG9FxoL6WHU2S1bAf744im+PsTuiXpEPp7+db0bUC@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGm2HTcKN/yhLY67BM/M0oaTDcW4qhCuTDo1vTX0xG/ez4XCxR
+	h50fxe0Awr3JDPIpbyaqbUd50z/5kGmcvk/MJrf8T8DqKHaXGvnn3nrl7o+aakeA7AYk5BbalyW
+	RlYRUtNbB5jsStQVfBI1aPnmjs4/v7uEn4SUv43dd
+X-Gm-Gg: AZuq6aJK7qFRQb4VjLP0ENRgwXstluMri5jlJxyI2+wPhLEbjT6GIpmHQBf/90NMS5R
+	IYb0TFbbABaZBohUTzndZfXF+2vtAG5rcSfiaE1LTXjoTU7xBMcEQTKm/sISu850Zrte7oeMAi5
+	Vb3KFh3wBSbNvfnMMcNv7E24y/mWBwzhy/geybRbLLFo0+ZwWwuaZWfBaQO6kICX0C2vpsqck4j
+	vkVH90MrYEZIykFmZ9MdQZHvYXtw+25b5x+W7Yls6THCpImyygg4t0f0awoDhHBm2t6khB4P4Gq
+	yrbnt78HMT5K0pyqAJutQJRglA66eShSAd0v
+X-Received: by 2002:a17:903:298c:b0:2a7:640c:834b with SMTP id
+ d9443c01a7336-2ab0dfb9250mr3606035ad.0.1770742995401; Tue, 10 Feb 2026
+ 09:03:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH0PR11MB4933:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6b97280b-1e1c-4b41-ef34-08de68c4d5af
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?NE9FMTdmcGErbFNVVUhvVDVJNlByczh1T3prd0VwNGROOGxPSzRwM2JVaXNB?=
- =?utf-8?B?ZnB3MkRJTFF1c1lQMWd6NWFNVStTdk9mZ2ZEMk5Ob2VGYmFwQ2V0SlRkK0JN?=
- =?utf-8?B?MndaN3gvMXVhTFRmNlhiaFRHMmhwZ1pHZ09wVm9xTE0yWmJzNmlCYjBzZnV5?=
- =?utf-8?B?cVNJZ0NPNkRQSDl2R1lNUzY3Smd4TUVDM0pPczJUbWxJVzFJcVNwaXlkWVZt?=
- =?utf-8?B?MDFNV20rblN4RVVXWWo4SnJabHBEczlLdkI1c2VRckVyNERHY3lTeGtMekZ5?=
- =?utf-8?B?OVh1WHRydnFJdFJaUXdUcXJyM1RyMFZiRHVSR3JnK3EwV3Q2dVJSWkg1dEFT?=
- =?utf-8?B?WDN4SFRrUFJsUmhJVFBvcVJ6S2xuVEI0VStnais1Wmd5cjYxQ0Q2ZjlzRDAv?=
- =?utf-8?B?Rjd4UXk0MU1teVowNFQxVGUyYmNjeGc4U01NTkNOQ3l6b2lpUjB6aHdWeUxp?=
- =?utf-8?B?a3BFdXdTYklCeDBMemk4bnRCNjhGM1pSLzRoMWNuUk45MGlVSEVDNUE0c2E0?=
- =?utf-8?B?WVhBM09VSFpkdHZwTnZYcFF4NkZxdUJYS1RxVmxyNTdtZm9Ob3pkN2orUVU4?=
- =?utf-8?B?d2huVjk3blFEbHpqWkVEMVZYVk4ydTR5anZld0JtR1hCcFlkYVZWR2E5SlNG?=
- =?utf-8?B?US9jdVhzZWIxVXlTdzV6UmlTc1lJOHRET3UyUHBUYW5wZldFTnc5ZmV1cnJJ?=
- =?utf-8?B?QTRqNFFWTzlCRzU2V1hpWlhDODVBUHNIVlpaUDNLU0J6cmpWV2JEcWhYcFlO?=
- =?utf-8?B?bjJKS1RmV0dRTzh6SGdxNG05RXJHSGVSeHlnNnBFSi9rUzdZWWZVRURXaHVH?=
- =?utf-8?B?T0hBQW02V1hjWkthU3JPUUorYkpnVThCc1BBVk1OUDZ0REMrd0czZGttdnNl?=
- =?utf-8?B?WlNTL1hsd21CdXNPM3RTZDBDNFNmVkNTWHRUYkkzamZNc1ZyVXgvejZLb3RR?=
- =?utf-8?B?ZW9RdDRXMTZYL25Fd0FlVXY3dkVheC8xblN5RG1hRWZvMUZKdkJ0d0NTUGpV?=
- =?utf-8?B?MVFnYnpycktoSCsxN2NESUNTTjZUblZ2NE5ieWZGMC9iWHZnNDJvZVJONXZM?=
- =?utf-8?B?TzhPU3JRS0c4eVFwUk5ZTWE1eFc0RE9RMGFyWlNRQjFUMjgzSzJxbk13TTZW?=
- =?utf-8?B?bkVDM3pUK3FOajN4Y0JWWHF6NWJmZDdQVzVTbmZLOXpzdVYydzhMbWtRVzUv?=
- =?utf-8?B?c2FOSzNoMjhRd1JzbnR2NjYzYUJ6aHA3R2U4WTZZQXpSRXJIT2c5RDJXY2ZD?=
- =?utf-8?B?eHVxU0hSbzZ5Uit3SzNSTFREMEQrS1plaStYb0lDTFBiaHNtaUxhZ3RvQ1Z2?=
- =?utf-8?B?Nlk5V3BnZFZGcTl2VVVKNmRzZFRnOFlYaUFZV2JLSTM0UGVrSUV0TUExM0d5?=
- =?utf-8?B?R3FNblNLY3RhbmxEa2ROY1dYc2lxV1M0czNvaXpsQ1B5cGZ0ZklqM0NuR25O?=
- =?utf-8?B?cHhUZ3l3YitTSDdhWi9UQkp4RG1aVDhIWWRDNFZuNEpJZEJmRGZVMjd0Qkdn?=
- =?utf-8?B?VG1Wd3hxRUlsV0FQNUNjYStHNVdwSTM3Wjh6SHJpRitCYzl5WEtwV2w3NmJh?=
- =?utf-8?B?dnM4dVVCR211ZjU2ZUd0T2lCUHV1bG5nNHk1REVVeFp5QkNGelBVcDBwbGtn?=
- =?utf-8?B?VDFRSXVLbm90d3F4eG95YzJ0VXp3L1NYTHVrRXd5Y0RKSUs0azZ2WENwQnJw?=
- =?utf-8?B?cENlMUR6RWRScElneHQ0VjFHVUYwQ1M1S0pBZmlPOGZEbXRMUXhqSzZ2Vndz?=
- =?utf-8?B?L0lhRzZ6ODB4V3lLWEtBTUR3Y2hrVzNNSk0rM2ZickVZeDJqU095WWJiWHE5?=
- =?utf-8?B?b2dJcWg2eng1dzlxeDFEdERHK3N5ekJ4K0hJOWtyMGVoMWNMNE9CRWtzRmd2?=
- =?utf-8?B?WDNzb0pxc20vQnlKMWViNGFYbFdDbnQ3d2U3NXJMS0xseG83WElGUWdGTWpK?=
- =?utf-8?B?WHVEemh5Qk1ZV2FaWFhURVdEQXczV0ZvSk5FSElLVHk4ZUhlTDdLTkx4ZjJp?=
- =?utf-8?B?VkFibVJhQ2h6YnY0VnpJSm1zMFQvcWk2dUZPalhhZkRBY2dTZzB5MFlYZmdz?=
- =?utf-8?B?cXFkTnp5VmVnMU5TMWNtNy9BQ2VySkwzNE43WjVQSWJWWTg4VUZhajRQQmxF?=
- =?utf-8?B?dXhncUZyVDJaS041V2lEd1lBQlArL2xzWXRPUFNnMlowYnBSanF2Qm1OU3Ex?=
- =?utf-8?Q?oVwxo/1cQECh9sdfHSnPBFo=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eE50SXRoNXVTSTlNZHNPRjJ0NGhCOVpkSmJmWGl5M2ZVZ1UvYTJOcnBwZGQr?=
- =?utf-8?B?TU5YZlkrbjVPMXFpbllLN1IwQlNxSkFqOGIyVFVZUmh0S1Ixd00wbC93MWx1?=
- =?utf-8?B?c1FhSkRkMVNwejVVYS80ZVgwbG5jSnFvNDltT3BaUHJZelZHTExzLzFPcXdE?=
- =?utf-8?B?WThkallMVGYxQXhUWmFXVHpFekxsTXNOZ0ZBdGtDTXBVT3gxWUhUcXppODlz?=
- =?utf-8?B?NHlqMU9ZSVRHZlJzNTExeHNiZ2k5OFdFbWlPL3UxcVVncVp0YnhoK1EyS2hi?=
- =?utf-8?B?MFhPKzJhYXdXM3Qxb090TlhXa002aVMvNHpmQmtZamd1WEdaRDVnUWJaeVZ0?=
- =?utf-8?B?ejkzdE1acWhsRXo2STN0cDdZMHMwZkJyOGdaTGhMTTZpZ1h0NVNtY1h6T1RX?=
- =?utf-8?B?dXp6ZGpsRnQxZE1wb0FuWTRKL3k1NEJ6cmNxbHVZRkZhME5Ca0lNOUYrYXo5?=
- =?utf-8?B?VFQvaTVDZmNPWTQ4SUtmOVBsdEY2UlU4OFZxVHF4UHBXUHE5UzhsYUlWeGtB?=
- =?utf-8?B?ZUhBQmlvYVU1SUxFMlZtRGcra0dyNGdOQVJZM1UxUys0U3IxMDB3SCtTSjVW?=
- =?utf-8?B?YUZXTVRINUlKMjRNc0dEMjJlb21LbE5DLy9YcjdKY2lXTHNUOVp1NGpsT2NG?=
- =?utf-8?B?RUgvbG5KT3hOd3ZuQlJIUEo1cUp2MlY1ak9raGh5OEFHMVFGWGJRV0FzZTVq?=
- =?utf-8?B?emltRUFTajVrYmZnTFpDSi9ORTlVNUhHZkdJV2JYSFNPQWViYkRNMmh4Wi9o?=
- =?utf-8?B?R3lwNlR0a2tIUk9NQmJja3V2OW9uSGkvYXNxUzhPTGFYR25hUnpOblp2VUwr?=
- =?utf-8?B?c3ZpZGpBczlZYmk3T0t0RlcxbGxoUXhMQ1YwVERmeDFvQTdVdEFLSVpMSGli?=
- =?utf-8?B?N3ZMbnc2djFSNWpBVlkrWnNlM0lZVnJjMFJSL255c21udWpjR0ZYTEhVU3hh?=
- =?utf-8?B?Q3NMdGtzWkxBeitKN1cveTFVSGFoRm8zb281dVVXT0dUZnd3d2xFeEszdXl6?=
- =?utf-8?B?Q0c4c3JOeUVNWnRhZDQ1RjExUTk4Z05OQmdEeklKN2tTNVduMzhvUXpQMGUx?=
- =?utf-8?B?V1c2YTVIUEJSMFBLQU5LSHVPSk9UVHlkNUdHM2Z1dXMzZ3ZZMTJYMThETzFN?=
- =?utf-8?B?aGJpQm8vSzh2NzdBVFAxdUdxMmYveWJZZUhBZDNyRWN2ZTc1THhDOVFDTFpP?=
- =?utf-8?B?N0gxa0VRQ0Q0cm5NaTdkSy9aU2NLR0pkVy9pY2tNRWt4WTNxTlVVb0NhM3RR?=
- =?utf-8?B?ajUraldWOFhMZVdHRC9yejBOTVZOTkpEYSs0bGdVdndBTU8rV3JPZU03MXpr?=
- =?utf-8?B?djdoR3RxdTN5SFVCTkoxdElqMDdQcGJnSlJQdWZnWXppYjJYRUZBT0J0UnRa?=
- =?utf-8?B?aDZHejdYZWhKUFIramE2Yk5oWGlhWFowMmR5SGFMdGNWT1dURDFzSU9sSEs4?=
- =?utf-8?B?cThyYXYzd3JVTmE3aVg2UlZMcG5sNlRORXNwVmplN28xTXloMmwyOXV4NVp3?=
- =?utf-8?B?aDNaKzI1V0pHdGp3dloxVUx3VFpXdjVCaVR2b3ovUnRBYStJeFdzTkZXbmxz?=
- =?utf-8?B?c0dTYU1zcTBCRU1aa1BITzllK3dXUWQ5QzJ3OHVMYlIycXdQUHA4UVRLMUl4?=
- =?utf-8?B?cGJoSUNpb3NPQis5aXc4Zjg4MllSeFE1R0pJN2hzT3J5Rk51U2ZSVUZZY2VH?=
- =?utf-8?B?U21DRE9KOVFFK2lCc2RDdXZKSmxtMlM3WW5TdVdqbllMM0poVTVsaCt5WFF3?=
- =?utf-8?B?cGtweHFYNC9GR3NodDA3L0lIam5xUTA1Q0tObmk0U3EybTloV1B6NGNpblRW?=
- =?utf-8?B?b1dHc2tyOGpUSTBaYXdGVjVJOEZjQ2QwU1V3bEphOWJVeDhudFRsa0kxMlFk?=
- =?utf-8?B?d010TXBWaThMMTZJSUcwSFkyY3ppbm1XYWlpRDE1MnAyOEYrZ0hxdjlqUU5L?=
- =?utf-8?B?NnArMHhwSStsb1A1WmtYb0dxbE1qL2drclhVaUNvY1hGWEJQL0FFbjQ1eXRV?=
- =?utf-8?B?UDZzWVpYckp5ZzhJSGtNNjV0a3NSNmY4dDV3eWZueVhtTGRjMUhZVkRtV3lF?=
- =?utf-8?B?OFZZT1JJOVp6bmhDaHU1ZFdZZ2svcXhxNmRyaE1GZzFWd1hWK05LdFRwRGdT?=
- =?utf-8?B?clp0eXB3OFE0ZnluVk9hSkpGNVNNbTNDTlpRQkIwSDk3Ri9BcXQwbHRIcFlX?=
- =?utf-8?B?aVNCeW9GRGUxWDlGSVBkcjFDbFdkUjRjZG5Bc3FlSENNRkRiSnlrTW9GVUVK?=
- =?utf-8?B?dzRYN01WU29ya2hMQVNnNXBpOGtuUi8wSlJsRmZpVE1DNThuM3hQZ2VRSEhP?=
- =?utf-8?B?MkZ1VXkzaW52WG1vMUU2TVJRaHlZOU1FMGxkNkNtZEFucWdJQnN3Qms4a2M1?=
- =?utf-8?Q?/jtmGIL4fTVj3riI=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b97280b-1e1c-4b41-ef34-08de68c4d5af
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2026 16:52:54.2330
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kSKJL5J5cbnvuAgE9GuSWlO/8aUCMPWp8Dy9vujihAg28zTc9cCGNw2JwPFbFxkxENOe824J1s5J8pebXkZuntQa3DHL7Hq04czbQXnHx1E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4933
-X-OriginatorOrg: intel.com
+References: <20260203141608.14128-1-qzhao@redhat.com> <9d7eb5cf-e998-4b77-9b8d-7f0ff6b2da36@linaro.org>
+ <CAATMXfm88MZ3Fhc0upRQ_5D2Vy+g8CscVAwhfY7nbM9oX93Qvw@mail.gmail.com>
+ <293a4d85-a320-4280-9607-5b9d08ba555b@linaro.org> <CAATMXf=HOq8XzfkqCs=GAmvbSBzSBSnvKUert+ggxSS3SOuc0g@mail.gmail.com>
+In-Reply-To: <CAATMXf=HOq8XzfkqCs=GAmvbSBzSBSnvKUert+ggxSS3SOuc0g@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 10 Feb 2026 09:03:01 -0800
+X-Gm-Features: AZwV_QiFG-90x0_dBhKLqwR4o13TyE6z_cT62tSbyPrvNcp_NKTntU8OX7a5Zy8
+Message-ID: <CAP-5=fX_Pvy_SGYZhiKj=-bJ-tHQ8wc_U15Z8g7nhmenOvQJjw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf tests: mmap: skip rdpmc tests when sysfs disabled
+To: Qiao Zhao <qzhao@redhat.com>
+Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	leo.yan@linux.dev, namhyung@kernel.org, mpetlan@redhat.com, acme@kernel.org, 
+	vincent.weaver@maine.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Feb 10, 2026 at 1:40=E2=80=AFAM Qiao Zhao <qzhao@redhat.com> wrote:
+>
+> On Fri, Feb 6, 2026 at 11:12=E2=80=AFPM James Clark <james.clark@linaro.o=
+rg> wrote:
+> >
+> >
+> >
+> > On 05/02/2026 2:14 am, Qiao Zhao wrote:
+> > > Hi James,
+> > >
+> > > Thanks for the review and the question.
+> > >
+> > > I did try modifying the check according to your suggestion, i.e. chan=
+ging
+> > > the condition like:
+> > > +      if (!rdpmc_supported && (pc->cap_user_rdpmc || pc->index)) {
+> > > However, with this change the tests regress on ARM, the results are:
+> > > --- start ---
+> > > User space counter reading 1
+> > > User space counter reading for PMU armv8_pmuv3_0
+> > > User space counter reading for PMU armv8_pmuv3_0 [Failed unexpected
+> > > unsupported counter access 1]
+> > > ---- end ----
+> > > 126.4: User space counter disabling instructions                     =
+: FAILED!
+> > > --- start ---
+> > > User space counter reading 0
+> > > User space counter reading for PMU armv8_pmuv3_0
+> > > User space counter reading for PMU armv8_pmuv3_0 [Failed unexpected
+> > > unsupported counter access 1]
+> > > ---- end ----
+> > > 126.5: User space counter disabling cycles                           =
+: FAILED!
+> > >
+> > > On ARM, cap_user_rdpmc represents a PMU capability and may remain
+> > > set even when user rdpmc access is disabled via sysfs/sysctl. In that=
+ case
+> > > the mmap page reports: cap_user_rdpmc =3D 1 and index =3D 0, which is=
+ an
+> >
+> > That's a slightly annoying difference to x86 then, which makes it a bit
+> > harder to test.
+> >
+> > > expected and valid state when rdpmc is disabled.
+> > > The intention of the existing check: if (!rdpmc_supported &&
+> > > pc->cap_user_rdpmc && pc->index) is only to catch the inconsistent ca=
+se
+> > > where rdpmc is reported as unsupported, but the mmap page still expos=
+es
+> > > a fully usable rdpmc state (i.e. both capability and a valid PMC inde=
+x). This
+> > > avoids flagging the ARM case above while still detecting real inconsi=
+stencies.
+> > >
+> > > With the current logic, the tests now either pass or are skipped as e=
+xpected
+> > > on ARM, and there is no behavior change observed on x86_64.
+> > >
+> > > Thanks,
+> > > Qiao
+> > >
+> >
+> > But "rdpmc_supported =3D pc->cap_user_rdpmc && pc->index" here:
+> >
+> >    if (saved_user_read_state =3D=3D USER_READ_UNKNOWN)
+> >        rdpmc_supported =3D pc->cap_user_rdpmc && pc->index;
+> >
+> > So I'm still not sure I get checking rdpmc_supported with those exact
+> > two things again.
+> >
+> > In fact I looked more closely and the test is already setup to write to
+> > <pmu>/rdmpc to run the test twice with it both enabled and disabled in
+> > set_user_read(). We only return USER_READ_UNKNOWN in that function on
+> > perf_user_access platforms, but only because that function doesn't know
+> > the place to enable it is /proc/sys/kernel/perf_user_access.
+> >
+> > So actually we should modify set_user_read() to try enabling in both
+> > places, and then the test can test enabled and disabled outcomes on Arm
+> > as well as x86. Now that we know there is this other file we can make
+> > the original intention of the test work with it, rather that just addin=
+g
+> > a skip and not testing anything.
+>
+> Thanks for suggesting to modify set_user_read() so that it can try
+> enabling rdpmc
+> both locations (PMU <pmu>/rdpmc and sysfs file
+> /proc/sys/kernel/perf_user_access).
+>
+> Before preparing the next version, I would like to confirm the
+> expected direction.
+>
+> My current understanding is that the intended behavior of the mmap rdpmc =
+test
+> is to actively toggle the user-space counter access (enable/disable)
+> and verify both
+> outcomes, rather than skipping the test when rdpmc is unavailable.
+> Based on this,
+> the next step would be to update set_user_read() so that it attempts
+> to control rdpmc
+> through <pmu>/rdpmc first and falls back to
+> /proc/sys/kernel/perf_user_access when
+> the PMU interface is not present.
+>
+> Hi Ian,
+> Could you please confirm if this is the preferred approach for the
+> next revision, or if we
+> should instead keep the current skip logic for platforms where neither
+> interface can be
+> modified?
+>
+> Thanks for the guidance.
+
+Hi Qiao,
+
+I'm not the gate keeper on how things should look but my goal in
+having the test, and extending its coverage, was that the
+implementation should match the description in perf_event.h:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/include/uapi/linux/perf_event.h#n601
+this doesn't cover the sysfs/procfs files but the man page does at
+least for sysfs. None of these sources cover the affinity/rseq issues
+with using rdpmc that if not handled lead to SIGILLs on x86 unless we
+land this kernel patch:
+https://lore.kernel.org/linux-perf-users/20250618084522.GE1613376@noisy.pro=
+gramming.kicks-ass.net/
+I'm not sure of the state of this on ARM where there is much greater
+consistency between performance counters, we may be pessimizing ARM
+code to work around this on x86.
+
+My suggestion would be to make the test work, James happy, etc. and
+then send out updates to perf_event.h commands and the man page. Most
+likely the perf_event.h comments will receive good review and we can
+iterate from there, for example, the /proc/sys/kernel/perf_user_access
+slipped under my radar. My understanding from working in this area is
+that perf_event.h is supposed to describe how users use the rdpmc API
+and given the Linux syscall exception on the file, users can freely
+reimplement it (as the point of having a kernel API is people use it).
+The point of the test is to make sure the perf_event.h comment is
+honest. The man page has more space for more detail. As the man page
+doesn't cover /proc/sys/kernel/perf_user_access and perf_event.h
+covers neither the sysfs or procfs files, as well as not mentioning
+the SIGILL issue, I think there's quite a bit of work to do.
+
+Thanks,
+Ian
 
 
-
-On 2/9/26 4:52 PM, Zide Chen wrote:
-> IMC on SPR and EMR does not support sub-channels.  In contrast, CPUs
-> that use gnr_uncores[] (e.g. Granite Rapids and Sierra Forest)
-> implement two command schedulers (SCH0/SCH1) per memory channel,
-> providing logically independent command and data paths.
-> 
-> Do not reuse the spr_uncore_imc[] configuration for these CPUs.
-> Instead, introduce a dedicated gnr_uncore_imc[] with per-scheduler
-> events, so userspace can monitor SCH0 and SCH1 independently.
-> 
-> On these CPUs, replace cas_count_{read,write} with
-> cas_count_{read,write}_sch{0,1}.  This may break existing userspace
-> that relies on cas_count_{read,write}, prompting it to switch to the
-> per-scheduler events, as the legacy event reports only partial
-> traffic (SCH0).
-> 
-> Reported-by: Reinette Chatre <reinette.chatre@intel.com>
-> Fixes: 632c4bf6d007 ("perf/x86/intel/uncore: Support Granite Rapids")
-> Fixes: cb4a6ccf3583 ("perf/x86/intel/uncore: Support Sierra Forest and Grand Ridge")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
-> ---
-
-The resctrl selftests compare the read memory bandwidth reported by
-iMC PMUs against resctrl's memory bandwidth monitoring (MBM) numbers. These
-tests are failing on Granite Rapids and Sierra Forest because the tests use
-the event/umask obtained from 
-  /sys/bus/event_source/devices/uncore_imc_N/events/cas_count_read
-that only measures about half the bandwidth reported by MBM.
-
-When using this patch and adapting [1] the resctrl selftests to use the new
-interface to learn about the additional events it is possible to get the
-accurate iMC PMU memory bandwidth measurements that match values reported by MBM.
-
-Thank you very much!
-
-Tested-by: Reinette Chatre <reinette.chatre@intel.com>
-
-Reinette
-
-[1] https://lore.kernel.org/lkml/cover.1770406608.git.reinette.chatre@intel.com/
+> - Qiao
+>
+> >
+> > > On Wed, Feb 4, 2026 at 5:40=E2=80=AFPM James Clark <james.clark@linar=
+o.org> wrote:
+> > >>
+> > >>
+> > >>
+> > >> On 03/02/2026 2:16 pm, Qiao Zhao wrote:
+> > >>> Some architectures control user-space rdpmc access via sysfs or sys=
+ctl,
+> > >>> for example /proc/sys/kernel/perf_user_access on arm64/riscv or the
+> > >>> rdpmc attribute under event_source devices on x86_64.
+> > >>>
+> > >>> The mmap-based rdpmc tests currently assume rdpmc availability pure=
+ly
+> > >>> based on perf_event configuration, which leads to false failures wh=
+en
+> > >>> the system globally disables rdpmc access.
+> > >>>
+> > >>> Introduce a helper to detect rdpmc availability via sysfs and skip
+> > >>> user space counter reading tests when rdpmc is disabled by the syst=
+em.
+> > >>>
+> > >>> The check is only applied to USER_READ_ENABLED tests. User-read dis=
+abled
+> > >>> tests continue to run unconditionally, as they validate perf_event =
+mmap
+> > >>> semantics independent of rdpmc availability.
+> > >>>
+> > >>> Additionally, tighten the unsupported rdpmc check to require a vali=
+d
+> > >>> counter index, avoiding false failures when cap_user_rdpmc is set b=
+ut
+> > >>> no counter is assigned.
+> > >>>
+> > >>> v1->v2
+> > >>> - Check rdpmc availability via sysfs before running USER_READ_ENABL=
+ED tests
+> > >>> - Handle both perf_user_access and rdpmc sysfs interfaces
+> > >>> - Avoid false failures when cap_user_rdpmc is set but no counter in=
+dex exists
+> > >>>
+> > >>> Testing:
+> > >>> - arm64: rdpmc disabled by perf_user_access (tests correctly skippe=
+d)
+> > >>> - x86_64: no behavior change compared to v1
+> > >>>
+> > >>> Signed-off-by: Qiao Zhao <qzhao@redhat.com>
+> >
+> > [...]
+> >
+> > >>>                if (rdpmc_supported && (!pc->cap_user_rdpmc || !pc->=
+index)) {
+> > >>>                        pr_err("User space counter reading for PMU %=
+s [Failed unexpected supported counter access %d %d]\n",
+> > >>>                                pmu->name, pc->cap_user_rdpmc, pc->i=
+ndex);
+> > >>> @@ -307,7 +348,7 @@ static int test_stat_user_read(u64 event, enum =
+user_read_state enabled)
+> > >>>                        goto cleanup;
+> > >>>                }
+> > >>>
+> > >>> -             if (!rdpmc_supported && pc->cap_user_rdpmc) {
+> > >>> +             if (!rdpmc_supported && pc->cap_user_rdpmc && pc->ind=
+ex) {
+> >
+> > This weakens the test on x86 though. If they behave differently you
+> > might want to just skip it on platforms with
+> > /proc/sys/kernel/perf_user_access and add another test for them that
+> > pc->index shouldn't be set if it's not supported, but ignore cap_user_r=
+dpmc.
+> >
+> > >>>                        pr_err("User space counter reading for PMU %=
+s [Failed unexpected unsupported counter access %d]\n",
+> > >>>                                pmu->name, pc->cap_user_rdpmc);
+> > >>>                        ret =3D TEST_FAIL;
+> > >>
+> > >> Not sure I understand this test, shouldn't it be (pc->cap_user_rdpmc=
+ ||
+> > >> pc->index)? As in, you don't expect either of them to be set if
+> > >> !rdpmc_supported. But then it's the exact opposite of the one above =
+so I
+> > >> don't think it does anything.
+> > >>
+> > >> Either way the test now passes or skips properly on Arm:
+> > >>
+> > >> Tested-by: James Clark <james.clark@linaro.org>
+> > >>
+> > >>
+> > >
+> >
+>
