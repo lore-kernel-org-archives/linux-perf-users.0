@@ -1,118 +1,63 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659C03396E8
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 21:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C9D165F16;
+	Tue, 10 Feb 2026 22:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770757660; cv=none; b=czgGx+nbld0ICDWR7hyxuDcABCCSUqSX+Nttl9sKRyLcAS7f1Ybrp7/kEyZy1BRIGuFwsiQI05R6c/ERWONEWUNeM8QwNI9dRqnjmP129/LoFwLC178JRHTeaHwg/0bbOOacfMBWZAfXmkQt4b6P9MrYCFktv8vdTFBA581FOoo=
+	t=1770761086; cv=none; b=KXROZBEWPhkFy7KAQHqTU8NQgfGeUnrRElYNEgiv7wPc3UoohPgD00oKN2UUqPCll+wHafdrMu2to74ppljiQvJKicDEAXE3zpkG32njrnBUPVhtc8UKNQ5t5EL+dDz0RT+07ewBf3EjuLggI+cgGFKQPtnXJBEnebpweag4p6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770757660; c=relaxed/simple;
-	bh=nicH+cz+qel+mG7mk4DNjJSkk/E7eb9IN/J/+6es7k8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ftg+RIkRdtvUxY13xrqgGgJUfdpRnq/BAwThXqhphDybPkpRujwgR2q5TazUoyqZi48KZYO3p5Yd1aq0+8TYHNFSzMMTNjXRU6V8/TXe2qCKv5nz4ZtuY7b1ZO5ubt096sS+HyD5fscdB2AxkRr3qkFFMr7JdNgIC7kqg8xER7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NIsTWqbW; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1770761086; c=relaxed/simple;
+	bh=egOx0qWPEhOKt2E6KwtBEkU0vo1lfyKcwcJ7B1WW5uY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=r2fLSuNblKlNOsAZkfJ5YHPRyIIZ9h+nVHet3SRWKadt0cBu3ZqxoxmcxZfKnRhF4Nzm7J2TlFiK6B34nThnuKadlXM2xZFkOL2EO7eC9oDQuCMxwsDXp6Hu+r7N9/QpmvWy0fHxY12JCmK/5WoA/d6deATGXgOFH/7rSPqxx6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKS5oQrT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NIsTWqbW"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-65a11e565a9so1130270a12.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 13:07:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770757658; x=1771362458; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=G2HZ6llbVBtsrcPbZIVsd3zEmL4ig9UnGtxiwMh4BLQ=;
-        b=NIsTWqbWkyzhj0krYwvBizIh0f3jOQ5fmdbMnPUPUXsvWtiMcDU9qzNswpKKhp4W8z
-         me1k9gyngIX1GoRIut7JTUldXD8HRLcaxkRdrgngZu8PDrsvdcva4MF4RZNxO9J58FA4
-         RDSxe7KCFiSWZOgYO38+wmYm1SdNAzp7rLIQqQNIv3Kdcu5qJgbiUQU6/Lf/hgEMoAbR
-         fG/nRNjzVXu/kupY+pPPC6cTqytQhPOzXG4bx+lMe+bVazrctFLeVynABjfFoLDQyxLB
-         hbtLqfa4l8LvWiuDDwiDePIec6y4C646foHCRXByxb/kpmq5RUvoZeGfiJCTO6bjjAvd
-         u/Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770757658; x=1771362458;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G2HZ6llbVBtsrcPbZIVsd3zEmL4ig9UnGtxiwMh4BLQ=;
-        b=BBkxMTNKgtuL3HkPgR6Sicy3tSqvgsD4mU8OF9SByjVjBFAocnppePF7HVsoJgnCIG
-         ZkVnm2M5kK9FLZThYWzOuVU2zuFjwV75DnsRBH+1dE2HDzpmCTwH3WrsOw1bOHMhfYdl
-         CVeYLRvWKhGNS4fY3/PtLfJuLJBn2QPo6Q3p0OJoC8WsXjIKhlxgm2scV6xg62ZbjBNL
-         uWMFpku0+rt6fKj+98fUN9SnoObxBOiSCd4mdwSw0YEzRf9ECa0UxjBod3I0NySQtvU3
-         LngrGpwZ+kl/TjtnPzYpCb8fn2bEG1vRiU1otxIGBQUTgXCfDTm4jckZqJ4IL7W3/2Wj
-         8V7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVqBl5URv8G/EYyJuY0pKzMJ7FXJ2hGpTGtFLtG4R9JerFULcrq38/0BYlnhJpJRI6At/NoJ4bLKCaRCYfGEkmS@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1LTR0bBaQxmQhW94jv2lYPLJJmrmEG6GuTlBxGqCcRy0URv79
-	yUZuX5O03qmhm2m22LfvhKPmGIcBG1OUe0SfMYEuSMZSIJSc9NTw/efr
-X-Gm-Gg: AZuq6aJFI+FFbQGxG8F4eBLTQ3/8RUglcnXvqMns/znBmJe1YBHdVyOOPESndJ9fWcY
-	I1ag5oedptUEuxmtPUCDllf4kwnluNuzbO0CUlmSAcpm0v2dyxFHGy8ng2V/8eqI/QahVnFiJzh
-	sDw2znS7NOSjk/UqT3Iuj6hnKsH91pPqfM5gycn9mgMhrnHOUgg8UDNNyfgouK9VltP6jABCRim
-	Ya67IEUHBx6EW3rg6Jy5rF623gxKZDfkWNRcR88hxF1/IT6LJI1T5NuPVR06Zf4ned+Ldhkblnd
-	5/xJlBHjOmJshc4c/cat5WDhaNaPvG9bP1gxLd0L5vY1HTAMV5sZres78Z/TPkn5s4caeQH0ML/
-	5QjqrBXBEKorlOpQInItgIBa0rEY03/nJpRPnYyum4kp6jKnxjwvwtWxJgoZZVek+c8joIww8Yy
-	/ArslNTSV5RgSlXstQowgNxnV2yxGVpf18HTyIuHkhjIO58Dgm8xxTMYmDjoikORI+loYU3jVql
-	D72jOTrRvkn20qwxuKukU8KHTbwspBnSDFbZ16u0s2JuWM=
-X-Received: by 2002:a17:907:c23:b0:b88:5e4c:f842 with SMTP id a640c23a62f3a-b8edf39a1a2mr976832866b.47.1770757657524;
-        Tue, 10 Feb 2026 13:07:37 -0800 (PST)
-Received: from ddolgov-thinkpadt14sgen1.rmtde.csb (dslb-002-207-075-089.002.207.pools.vodafone-ip.de. [2.207.75.89])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8f6e950070sm101766b.6.2026.02.10.13.07.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Feb 2026 13:07:35 -0800 (PST)
-Date: Tue, 10 Feb 2026 22:07:33 +0100
-From: Dmitry Dolgov <9erthalion6@gmail.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, 
-	Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1] tools build: Fix rust feature detection
-Message-ID: <r6fr6d2oqbj3km4nuvdgyjubzzae7gmqvh2u2igijxpc32mi5x@74p5kjnlygf2>
-References: <aYoZD1onJLsnlrV3@x1>
- <sc2w3tcjcle4zhz72b2jdnyfnhzl6atiecium2dwcmrlvn6syb@n573cdtyldne>
- <aYsj7vV2Lh8wV-ZR@x1>
- <hox364wgs57bv7hvscvvtbkl5yerur55iz7un3gsu3ozpbnba5@haqvngx6jy4n>
- <aYubAAZ10CfYsmZx@x1>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKS5oQrT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B4DC116C6;
+	Tue, 10 Feb 2026 22:04:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770761086;
+	bh=egOx0qWPEhOKt2E6KwtBEkU0vo1lfyKcwcJ7B1WW5uY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=oKS5oQrTSXpJpEAu23o2pwSbOh2WtMf2QrG+rGy+adJu5z4d0wI6YsPL9nuXRvlwY
+	 oDO5KbEPP/9PgCFvglRu0+CHq3Wt+LwrTMpMrhLJ8cA9kO7TtRkz+0Qjt/hrbCF20C
+	 m4rkstV97FVww+0xR3x8PqDhwQX7ikCKwowWsVdzlq5iLXmdaYAhjxj0KZL/UXFIGB
+	 0/tu5Y4vkenRimzxEGtMPciFNpSIfC/cQ73JnT7XwjUUwNPIM3J2oXTSZTdMDei9lX
+	 bzxWh6rtH3/60N6ODc1USbYiB3LABX8GwrYgbbH0OjWjL7PMkkoc627a8CjGcw6MVs
+	 XzzMnBObb5jTw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 8545539E3B79;
+	Tue, 10 Feb 2026 22:04:42 +0000 (UTC)
+Subject: Re: [GIT PULL] Performance events changes for v7.0
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <aYmF-cST9h4MhX3I@gmail.com>
+References: <aYmF-cST9h4MhX3I@gmail.com>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <aYmF-cST9h4MhX3I@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2026-02-09
+X-PR-Tracked-Commit-Id: 7db06e329af30dcb170a6782c1714217ad65033d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4d84667627c4ff70826b349c449bbaf63b9af4e5
+Message-Id: <177076108123.3702729.5750450426278896315.pr-tracker-bot@kernel.org>
+Date: Tue, 10 Feb 2026 22:04:41 +0000
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, Sean Christopherson <seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aYubAAZ10CfYsmZx@x1>
 
-> On Tue, Feb 10, 2026 at 05:54:24PM -0300, Arnaldo Carvalho de Melo wrote:
-> >
-> > To fix that I've tried to add an extra dependency on the rust binary on top of
-> > that after the compilation is finished. While hacky, it worked just fine, and
-> > perf catched it when rust was removed. Haven't faced any issues after few
-> > rounds of installing/removing rust either. If this approach sound fine, I can
-> > post the patch tomorrow.
-> 
-> Looks hacky, can't we just try to run:
-> 
-> ⬢ [acme@toolbx linux]$ HAVE_RUST=$(rustc --version > /dev/null ; echo $?)
-> ⬢ [acme@toolbx linux]$ echo $HAVE_RUST
-> 0
-> ⬢ [acme@toolbx linux]$ HAVE_RUST=$(arustc --version > /dev/null ; echo $?)
-> bash: arustc: command not found
-> ⬢ [acme@toolbx linux]$ echo $HAVE_RUST
-> 127
-> ⬢ [acme@toolbx linux]$
+The pull request you sent on Mon, 9 Feb 2026 08:00:09 +0100:
 
-Do you mean replacing the whole feature check with this, instead of
-compiling a dummy code?
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2026-02-09
 
-> How would your dep on the rust binary work? where would you expect it to
-> be? It may be installed on some different path, etc.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4d84667627c4ff70826b349c449bbaf63b9af4e5
 
-It has to be in the PATH, so the actual binary could be picked up with
-"which" (it seems to be used in one other place there as well).
+Thank you!
 
-> Perhaps there is precedent with some other component...
-
-I haven't found anything similar among the other features, but I can
-check out other components as well.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
