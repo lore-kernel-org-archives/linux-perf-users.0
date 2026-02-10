@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63321E1DEC
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 06:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AD52AD0C
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 06:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770703427; cv=none; b=nxtYMXLlSU+M648YiDWNarNFxeo5PIbVcBeRPIgKzCaoFhF75kE3Gwve6Kf7+mt5hRDyegVKlOSex0+uifRFAZ9LRdx9eoFy0tTuTCP7mOhrPocqNo1DvhfYWWhycwzx0O9W5yPcKEic+Dc2TrNRfZOAX3+odeH1tENgq8qnjmo=
+	t=1770703445; cv=none; b=ns2899z6DzEtZWytNNOazmVBNMKcdTN7QTX+X7T4LMX9Uv4toQCNNXMYPoo60YHzgp9javLqg95lI8qzwnutWDIQldaBMEy/lB2QB21zMieAw0uzE/cR/YgLBrEq0r7RVdvbo9FeaCzkRlP/YQREBC3oSUOfXNBW/C9932CKQaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770703427; c=relaxed/simple;
+	s=arc-20240116; t=1770703445; c=relaxed/simple;
 	bh=Zfybov18wp+XKF9zfziT3A7XQ8Rz6pik8UZSDbDPmuE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eyB7duBdLidb7YfAkeJFPA5A4nKQBBs//wv4fBu5V1HImYP1zAIBhrNH7eBHBuwJk9aT11QoXo9vEsCwVqwpxEIktyHnO/xMRltOF0l2RLfe24HvEWsuB4NrvLega2GdWW6lOd9N7VIaOaZJwS5Xeg1cj/3Aw9HanlKPPIw4nmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eLIm8aI7; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=CCwkEemAsVFmIM/xy7+rHm1VIbfKv/iPJs1eL7j5Y0dBm46/T3lH+lbeYQSOdQPdytbZ/r2ffYigwq9ZhTT+2wQhucSDIl74diABLJ5J0Vu5EmmorZ+jAkmKQeL0S1sxMgsP+vVU6loh5u6+Q5OgzSXESBx8n2lJ4etVNrJ8qC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pWNw8eDs; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eLIm8aI7"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ba7e98178fso657856eec.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 22:03:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pWNw8eDs"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1233b81a92dso5535278c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 22:04:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770703425; x=1771308225; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770703444; x=1771308244; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
         bh=V+3dGOJiTRqCZMxIxulRVBleFQcYgURizALb+zOiPC8=;
-        b=eLIm8aI7ijpTDrCbCG5AunASFG0QfAgezNIcHabBmZCdor070GLr5zQV9KwSNuDyq0
-         LT9ZKNKdol6M6KEXpbPXUfiQgcucIocxfT5C6tz7STfAAKAx+OcD/1uux94MQDaq9I8o
-         4gfnBAplGlqwk+n3FuIqUgEdKkVNLWzbF1ifHSCJHHgxrIhXPL7AVQF+WyDG74qJfKxZ
-         kXBjJ1uO7QqO9MRDWPxAPFMS8TZ95rLBph71e/I4tH1LspPd0YOs/uQRhWiu+MX0e1SA
-         9oD50AeEfln4S1J9PGWNRHzdiBSi7Kf+esTYE/aXOoQSKvkfh12Xdm6ElnldsqNYA64e
-         3Hog==
+        b=pWNw8eDsuTlTliALWNl2REPeb4SOEF7BKvFhs9tKom9IArChzr6sJKju4cI/VAuss+
+         zPUnSxzrRl50X4xgNEvM29qYid9RJgXPxv2Kjpgn/5lIGCQx7jaxgv8/V2VPpH3cn+Ts
+         76AIKeYA+1trrP4TmEGxiOAHovLiGIh7PFA0gyl3i0j4KFlTkPH75XDrlSf+/HeMoQmW
+         BDKRsgckTfVEW1joo9NSvgmJ2N4SMUAjUTthQbywvik1xULnNw/z3O2rvvn4ZAzNDc98
+         2qTrbNtTpqogmEw+VyhWXVJx1yMyLW/y/YwIxhPgsTbaAwbrN/TH1B/OeQDiKB5XixFO
+         w62w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770703425; x=1771308225;
+        d=1e100.net; s=20230601; t=1770703444; x=1771308244;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
         bh=V+3dGOJiTRqCZMxIxulRVBleFQcYgURizALb+zOiPC8=;
-        b=Vp8TPiApvpBX4W+m1d6AdHQcmp9eWt6NUgBZpf+8JaXpO0vhtT+xkZuqPXzo00fRY1
-         oQz4cnDsEGJdA/QDUyoIrnJNnJMIg/NHSYTPp4LkuJP5/m913JymWNy37CPW3dRm36h4
-         3NGlRM7RqztR+j+CgO4ybJYrh04WOCPphe8Mq1kF001FxTc6x5ADasSGML5HWSzo6nqt
-         XV047UPEciZff5l68Up8SzdoLx8mMBRoUL+9WhH3acbne6nniMjWfOoRbuuWl63noVVh
-         nD1tThaHsWhwG7htUt9GNIRWXA7dZ2w+3rsYnee6tPoRZs7kMv1Sx1nf8VV4shOXTvm6
-         mCSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpr82x/VAauy7VmlrjpDN7liPC4uAgCwJWDGNWj1VmjZJDtQnAsVQ9Zj1s8F80K+WqebONNAeJBM5SfiVcAW5+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yypz27ecx7bhJvX/1gdRnh/hBE4gkkRtT8W8Go3T9e6jJyRYKDX
-	+SjrpQ6lGSDU01h+G7y2KUXzuClADDURoYordvtwLdPWYVB6oLcSIdVBG6Fqa3ApbL8SyoqPB5a
-	dj7Y0wmR2Tg==
-X-Received: from dys18.prod.google.com ([2002:a05:693c:8012:b0:2ba:702b:a4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e426:b0:2b4:5514:38fd
- with SMTP id 5a478bee46e88-2b8567240camr6093868eec.20.1770703424823; Mon, 09
- Feb 2026 22:03:44 -0800 (PST)
-Date: Mon,  9 Feb 2026 22:03:25 -0800
+        b=S4xE/6emqNnwPIklQBj/cviSYu9e/xer0aoAz2Hr8vqpFgx6J6CN/0kG43XO2GRVe5
+         CMutJPWLtD2SDnn4RX7EVieX9CdckpBz1uUxhhEsG8L4Cqrtli7AfhrbkLAmWFl5ujUG
+         fADWEl0nzAlFYCY2gAuIFW9pzpFkRjdgGlvzKLXdG0guFOLTvO4JElNg+VR8Td7lHddZ
+         OQfo1+hXk3HDcUbUro1tz5viE6PUArwJ3zqCamgIzsHm/+QRio25H2CbI6llKFMdrDlg
+         LnXFKi9iL7znaBslYCsQNHGBKOckkqTO/YvkLTXObmZw2ooF/P+qR4FovM9YJjSdCGRa
+         rHrg==
+X-Forwarded-Encrypted: i=1; AJvYcCWAp3csfWuS9QyH96T1qFYDFVOWNPmtrS+Sy8ZC8r0eGj8dscIxVSG13xiWUXv7H/8ZxcYWURhckPmZxEut6One@vger.kernel.org
+X-Gm-Message-State: AOJu0Yysi/UNKzoub8yzU8Us7CJxm0tKKkt5wMYkV7jB5K64vz0fMF6F
+	QZ6xDBUZeKF/1LFSIOJrTmuGODY9qF3y4VNbz5Hs/o+7WgnLs0B8I1LyCw0aib6UalqOEyvDGj9
+	3aVpuej1xQw==
+X-Received: from dlcip7.prod.google.com ([2002:a05:7023:c087:b0:124:9d31:3581])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2521:b0:119:e569:f865
+ with SMTP id a92af1059eb24-127240d1f38mr430946c88.2.1770703443677; Mon, 09
+ Feb 2026 22:04:03 -0800 (PST)
+Date: Mon,  9 Feb 2026 22:03:53 -0800
 In-Reply-To: <aYqHTfCoW1bGmJF4@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,11 +58,11 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <aYqHTfCoW1bGmJF4@google.com>
 X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
-Message-ID: <20260210060331.2233216-1-irogers@google.com>
+Message-ID: <20260210060359.2233425-1-irogers@google.com>
 Subject: [PATCH v9 0/6] perf stat affinity changes
 From: Ian Rogers <irogers@google.com>
-To: namhyung@kernel.org
-Cc: acme@kernel.org, adrian.hunter@intel.com, ak@linux.intel.com, 
+To: namhyung@kernel.org, acme@kernel.org
+Cc: adrian.hunter@intel.com, ak@linux.intel.com, 
 	alexander.shishkin@linux.intel.com, andres@anarazel.de, 
 	dapeng1.mi@linux.intel.com, irogers@google.com, james.clark@linaro.org, 
 	jolsa@kernel.org, linux-kernel@vger.kernel.org, 
