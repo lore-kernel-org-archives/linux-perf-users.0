@@ -1,67 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A455221F15;
-	Tue, 10 Feb 2026 01:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FEE25F78F;
+	Tue, 10 Feb 2026 04:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770686797; cv=none; b=cESiJZTqvqjOOaMhNU7rXQksV6etJiSjzGgh5YrpgRWb0NMIFVQedr3KjYbvORH4/ieNBa+m5gkLZtv3E2G5vHpDjVuOlkTSRSHrkGE/uoZvzeIyhhgy7tup1tAk6Y3LPmjCIRGhzlWgsNxcZKkvpO8W9tkqBSAtcP8lquPAECk=
+	t=1770697889; cv=none; b=GJkVpaGHN5DJ512Sq8fpa2iCcMPHttghNcVcFg0OwK4UmEbqGOLAZh8XMzblxc5lBbT9a34g2nTj7Oerx4qcAwOb9xtJYqfffU3jhiM1cVTthu88rk+9eB1YnJ7St7ItBsRlUIgFlTcvXH1s/2jmNdzbrqI+WIYYMUA8XroXOX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770686797; c=relaxed/simple;
-	bh=/JL/NBJ3mmRn8+KkYwBL+HgZXwf7DY85OyQZwefolqo=;
+	s=arc-20240116; t=1770697889; c=relaxed/simple;
+	bh=DW5KiIguPY0xR9hCzywIYFuXhTS2MXhhTtWRg5PD0YA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BCQe1wTHaIj55ytiIDwCH4pSA0tearSIr0fbQybesdgBM1cfuCiBbEr/opSGfghuQM3kUhxeRHjFIEtrAp4l5/RWr9SF5g4Jgh9dm+WKWViWLjgcv2X4vbl5XAhIMf/U554uR2f5465+hHxgMZPVTLlWmyzgaajKPjASn3zkmRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/23l/2V; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BKLdAvZeO2jRnN5rCHwPx9HAIQ86W4dDc15RdX7Ofovv6k0ZCnlTuSRs1HSx471qDzIwD7fpFL1KqVPlN4d4o7B/jVdKm2WviOvmm9QkJ2k3L1f6nv7WYLzYOxc/1hRO6J5IngTMqF5dzAu+01VTQ3eQiHEkDFz3yRTdhcw50sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ffn+gHJT; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/23l/2V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 748D0C116C6;
-	Tue, 10 Feb 2026 01:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770686796;
-	bh=/JL/NBJ3mmRn8+KkYwBL+HgZXwf7DY85OyQZwefolqo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p/23l/2VkTzTKj1a1VUE2iUQFLWGIhYtxuddqKo8pTmWblqQIpAy+zZHVRl/ZDthM
-	 h9CN7bbNygfHyIfoG2B4AKA51gb1Fc4TYi+QfJBYx1XYpxH0/DM9WTfOgWYCSn8Hwi
-	 o1QNG9UzrTkBMW7g3EiXD1HF3BQO9e8HrajICxWfS+nlQP/3arZ9n4CvD7uq0gM1rE
-	 MEYMYM53yVkMxrIVSQVad6vxU7MrJEFbjLhipsFGHo05xDXGfGatuLgDN/kxbhf81t
-	 RTGwnN2LbpJguD53NEDgY9x+B0ItPhNNuqAOxBVBl7hCdjq2PlxuzOdmnb+xazSv4k
-	 CqwIWQQ7pEzgA==
-Date: Mon, 9 Feb 2026 17:26:35 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Dolgov <9erthalion6@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>, linux-perf-users@vger.kernel.org,
-	Ian Rogers <irogers@google.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Rust data-type profiling working in perf was: Re: [RFC PATCH v2
- 0/4] Test annotate with data type profiling
-Message-ID: <aYqJSyTgG0oCUClS@google.com>
-References: <20260208122227.3524-1-9erthalion6@gmail.com>
- <aYigHLZtXooznMB7@x1>
- <aYig1O0-5yxy91la@x1>
- <6i5osof4lst2rjnta232tvntpbufrpzihp6jicsysob36pj6ss@6acco3e7r4ym>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ffn+gHJT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770697887; x=1802233887;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DW5KiIguPY0xR9hCzywIYFuXhTS2MXhhTtWRg5PD0YA=;
+  b=ffn+gHJTOdzAOSrDO4VN3aBITK+NkIXQVuOmaxD4nQMGhbI7ElzrAs3q
+   /DmxTBadk19E+h7NeEqDoFZ2PcLNybdiosXkpEiAM/PWeqmqLF6q7h/Bs
+   0IKp1df/oUcF9toSTXdLOnRDoJcksVoC+8c1A6rrX4V/nVqc0fdrTSbWz
+   +QGR2Ur/RjGb8hKvv01tafwaKUv62L8OGlbxk9lLNIiLIeTLDIkNXKalg
+   ms7N+5c2bnPyliZm+PSHrPtOE1em3RtmWsDrqKEzsSpSKHqvURxAMkjfC
+   UDm1FDL1+/Q2EpfBX6XdHlAgQeoUbk9+IuzBS2mo5qv3xnJZ53Y528Bhe
+   Q==;
+X-CSE-ConnectionGUID: QtwRSE1JSXexZzlzVXbt/g==
+X-CSE-MsgGUID: paMQ9/dPTf6MfknnFXlIZg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11696"; a="75666129"
+X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
+   d="scan'208";a="75666129"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 20:31:26 -0800
+X-CSE-ConnectionGUID: 3kprSobOTIeVB41nvr3pzQ==
+X-CSE-MsgGUID: y2eYKf7tTjaiRjbwSrEsGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
+   d="scan'208";a="211872575"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 09 Feb 2026 20:31:21 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vpfPC-00000000odm-0uNs;
+	Tue, 10 Feb 2026 04:31:18 +0000
+Date: Tue, 10 Feb 2026 12:30:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Colton Lewis <coltonlewis@google.com>
+Subject: Re: [PATCH v6 08/19] KVM: arm64: Define access helpers for PMUSERENR
+ and PMSELR
+Message-ID: <202602101245.8Hv4avst-lkp@intel.com>
+References: <20260209221414.2169465-9-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6i5osof4lst2rjnta232tvntpbufrpzihp6jicsysob36pj6ss@6acco3e7r4ym>
+In-Reply-To: <20260209221414.2169465-9-coltonlewis@google.com>
 
-On Mon, Feb 09, 2026 at 09:45:32AM +0100, Dmitry Dolgov wrote:
-> > On Sun, Feb 08, 2026 at 11:42:28AM -0300, Arnaldo Carvalho de Melo wrote:
-> >
-> > Also please consider adding examples of output of such new features, so
-> > that people can quickly see it in action, data-type profiling for Rust
-> > seems interesting, right? :-)
-> 
-> Agree :) What would be the right place to put such examples, somewhere
-> in the documentation?
+Hi Colton,
 
-Yep, please add it to the documentation.
+kernel test robot noticed the following build warnings:
 
-Thanks,
-Namhyung
+[auto build test WARNING on 63804fed149a6750ffd28610c5c1c98cce6bd377]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Colton-Lewis/arm64-cpufeature-Add-cpucap-for-HPMN0/20260210-064939
+base:   63804fed149a6750ffd28610c5c1c98cce6bd377
+patch link:    https://lore.kernel.org/r/20260209221414.2169465-9-coltonlewis%40google.com
+patch subject: [PATCH v6 08/19] KVM: arm64: Define access helpers for PMUSERENR and PMSELR
+config: arm64-allnoconfig (https://download.01.org/0day-ci/archive/20260210/202602101245.8Hv4avst-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260210/202602101245.8Hv4avst-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602101245.8Hv4avst-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from arch/arm64/include/asm/kvm_host.h:38,
+                    from include/linux/kvm_host.h:45,
+                    from arch/arm64/kernel/asm-offsets.c:16:
+>> include/kvm/arm_pmu.h:260:12: warning: 'kvm_vcpu_read_pmuserenr' defined but not used [-Wunused-function]
+     260 | static u64 kvm_vcpu_read_pmuserenr(struct kvm_vcpu *vcpu)
+         |            ^~~~~~~~~~~~~~~~~~~~~~~
+--
+   In file included from arch/arm64/include/asm/kvm_host.h:38,
+                    from include/linux/kvm_host.h:45,
+                    from arch/arm64/kernel/asm-offsets.c:16:
+>> include/kvm/arm_pmu.h:260:12: warning: 'kvm_vcpu_read_pmuserenr' defined but not used [-Wunused-function]
+     260 | static u64 kvm_vcpu_read_pmuserenr(struct kvm_vcpu *vcpu)
+         |            ^~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/kvm_vcpu_read_pmuserenr +260 include/kvm/arm_pmu.h
+
+   259	
+ > 260	static u64 kvm_vcpu_read_pmuserenr(struct kvm_vcpu *vcpu)
+   261	{
+   262		return 0;
+   263	}
+   264	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
