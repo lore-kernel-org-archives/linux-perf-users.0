@@ -1,240 +1,154 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com [209.85.167.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BA2257851
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 05:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E652848AD
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 05:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.65
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770701963; cv=pass; b=RuhKUc0bR6u+/gzJiWrNGHPnYmjj82EQT2opvootFrfCD+5ldtp4JaZ0hrgioZnGoC5xEMFJr8PNcOVBrk9zjpdcGpKhx4tpLDGDHeA6owU2gUbtR4WovRXUkJko4Q5c1vlbsWqVmQwACNpTs1QLeqLgaYz/aYWDSpbcWZ/Wfd0=
+	t=1770702905; cv=pass; b=NUZ7Wx7LiazUsImoQsoYOBIZGhfnPtbSKd6aMxc305ssZKkPreRGGvCDYm4yVhQbgzWXsKPUdrL1Qhmc0jxTDoGwx8p/v8ETgNchj56lvNPTee69uW6qaXRu2Oxi6POQc3g2iXIOoK5jOMwnID0bLJGr9MIHgkuXEpA67fppYag=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770701963; c=relaxed/simple;
-	bh=OgTKhQgSD3PyNtrlWFDywPIhmzw7AzWOAu5tE5fJ1wg=;
+	s=arc-20240116; t=1770702905; c=relaxed/simple;
+	bh=MdV0x/eJTWzdX3ow0XOAbt4C2upZXdS42Vyfx2mWZvg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T6EQ3XumiIkddSvD+LVLQBrAJwF346PUwFht9TYBJ87Z58lx1/mZkiBbDIrmgnI3NIVtnIenwsin9AvVt41mEUI7FvNxOlAg4qppLg9qf4JiS+jN68ItDKgLqqXNs6h7t/RAtPEgboPoc7ErBx+2HsHk/38D2MCDV6/kyOVcRP4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zf7O7chU; arc=pass smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=XwQXhZEGa5KDs0urq8Xio1TfL1hMQiATJTQ75zOSAWeiQNuURPcCLfCNvm7o179FPuoXDPo3lpU1hlS4EIlEAl6hlc9SfvOY3Rtr1SIEIUosSTgoxUd0FJ94+RVYpmSlEWBxCK40gUngEPt94bYOo21xgp5VmFDhfAlEkbexVE0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UCjxaBlQ; arc=pass smtp.client-ip=209.85.167.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zf7O7chU"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2aad8123335so35925ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 21:39:22 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770701962; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCjxaBlQ"
+Received: by mail-lf1-f65.google.com with SMTP id 2adb3069b0e04-59e4993dff5so3049511e87.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 21:55:03 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770702901; cv=none;
         d=google.com; s=arc-20240605;
-        b=FY6NGZXCtyGg2ZhpY1FT52ktTLbifu2iowfup4eokDLRdlu4KkMEaOE3l8GYbxK9xS
-         +0yJtrVCbuYAFiBkK92JJbcz1VbedoHPAUfXzblrQNohOAx/a3mTAIuWtGW6cNLneMFU
-         UsOkjjr2d8iIbT8CjWuuBAWpFAlMaSxZKydKCSecrFvIJTIkD/Q0UiXd2xA0F2LVV1a7
-         y5WuDDw06a+LSdtncJk9NdyJMRq/DruZsEanQwdRxlcxEOuCOpgx2Gh1yJUGYh9cgYrl
-         1HJHOIJWiUxPpbQB2RE0RNZpUIb2buqx8juPzAVcON+WoEYw+T4ugi+V7eKQd/FWHQP7
-         vUmQ==
+        b=No00OsU47uyXno0hnniaNAASukGqTBaCIR9cX3d1Kg9mmByfXwqAwjvy2kUm5QrLkr
+         c16xoFxYpyKYdxAI3VcxQEdH/7oa1jepVXkRMBi0yoP5zzLaDY8dvnqyoW/sVE8dVXgO
+         23KhiEhn+0WcABaPDPOIfrBkwdzFYrrPOKuktTxrvIc22oEK8laU2yDNveKeL+swOIa4
+         d1rx2pX/G0I10UjYEmA+Hge3ASyOoE57jG3n66/mUcqm0p/U9iRzJDAduhXHnP+N+q/i
+         bupf4Z9bDsRGfa6VjQXjjqFesy2ti7iZLfdTzaof10N+yZ8XuL12Y/kFAkJWs5OrHXc6
+         lJYg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=5RHHtOTmlUvwj3Tr7J1rW8KuUoWA8Sx0xYuhOSgDhPw=;
-        fh=ypyVJdIx8hHyvr3Z9ijn2Td1aaigxlzW/tYlGZVp/vo=;
-        b=LG7z8g1N9p0O9qTu43MBfXSsfPjQ6aFP+xFRHl7V2wky1DZcnAwo828eb4Ez5W43QP
-         P9qjnlUOMAoDOv7OG/HgScv0UWwysSYS4ZtSVbUhXqhIgxfGdKX6yy4dNoboyM7O/Elk
-         qkbdTo5s33d6d1kLpX2B7EPEYRZe37IlshSxVpyFw1wDz+sJ1ibS17mp4YahoyeWQBq8
-         k4QBvS9/WlX0w3oYt8YEnVsJU1OyUuiZlRFeaURT+3tEgvzeLookwnXRbsEDgrir4Izc
-         Hn99ik25ohRI1o5tLnzMwKmWfxND5JQrrQDjYMFsuvArp8tmiU+Dsa151cWMdb1v0TiH
-         LBnQ==;
+        bh=l6qnAPvCXNqWlSbf+oOQ9VYTRnILyLNuodKY/j+4HmE=;
+        fh=x2HPG3Ti2OSC34wJyDU1xrb3S2o6aBhCa9FlQ5I2FzM=;
+        b=FZ28szvxQi6tvsVLW0dXyyAcTerBfWXTEBwN4feRgOnwhjpoLA5p7kHtE+r1ddJN7c
+         JCCrJIsGsvoIEHKzoFQ5ZNnCT5vAB9oI5PGdUG5No82gd3Xiu6rBAmd87q2rcZrecUfp
+         giu8OHXN1Ws7kDPsHMmJrGMvJhweehIz+2/BKWzv79gpEXdyqoRa472VvZRj+yDo3bTT
+         UqHUATqCX8kUhDN7i7oqUsP8FjvKA+K1REJApx03ylEviHm90ZgjDwSxZ1wLMvYSxjJq
+         cu8nya7EMCJpFVZ6i7i0pjdafcbeGRYWR2dBqo25ib6+IFCS7e0XWbya+uIsnkYeoz0p
+         lwgw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770701962; x=1771306762; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1770702901; x=1771307701; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5RHHtOTmlUvwj3Tr7J1rW8KuUoWA8Sx0xYuhOSgDhPw=;
-        b=Zf7O7chUQkitRO0Q1nclVNdvZoZOkolp3LgANkddYC2/TbdPtmgN0yEgHKQoRH1Wib
-         4t3/Mw8u2RVVL/gD4gtXTZrklBvp7IwM/ZqlFanhGCTOrKkvF8lDWEEApDUqn3DuAn7e
-         ZZRsG/CwnNafXiHK0Py92v3or0ozH4DmP+UnEtx9mZ08vlLpZe1VYPXQ/ZiG1WJ6Z/hq
-         WEPkMOGHNMQ/CeSblHb7feqhK4K436N4HJMuCcWEVRoMb2aCp0H/izxhp4eu7iunTVm+
-         z9Kavvze5VZmMt6RfjI5eymyWE0uhvpJDFL5yzfuk0jAqkm6ITe2HQpgGxoC/RyP0LQW
-         SgCw==
+        bh=l6qnAPvCXNqWlSbf+oOQ9VYTRnILyLNuodKY/j+4HmE=;
+        b=UCjxaBlQlz76VQUhWNYjG3FpaVByapPcTXqM6VdZ9OcCTiK+LTR3cOsD2wK/kijPmA
+         oxZWanADqSikyUamJg8X4QODBd0jQXZdNdzZsNcpLZ0AYy9wdUGo57V5QlcwKic1NcEE
+         hf2GKeVFC6enMnBbHHj+Ky9VdMW3dE6mJApkKqaso06qgrzoEdHFC/rfL21FQZV8YnyE
+         5Z1dHK8zeV9gAIOWLE3PVOOIV9cWVs5Sba1AgD0Nb8JqNFXFlwsZJlmVgq9zMSgAN0VC
+         1bJDiD9/GlRjDEmeEMmDHFqIgm7av8mEJllssiiAT68FEG4sBpbvkXOYdZaVd1BAlNWg
+         23Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770701962; x=1771306762;
+        d=1e100.net; s=20230601; t=1770702901; x=1771307701;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=5RHHtOTmlUvwj3Tr7J1rW8KuUoWA8Sx0xYuhOSgDhPw=;
-        b=G8FfPGPvNeglRYnHRH6y9qTCQYGGdHg+GUKmRhrju/+g2WI6rTbCxSKWNYjxZbKqW0
-         xjtm9FxDVnZp+xgRuXQX2flUnDiI9jDQdr6oNLciqyiKvN5O9q9g+RyqgBaF3nRKzwZ8
-         cDFvsKwld5mKrTp8USeywlhUspcbmypxZaEgxro3d6OFuXI0rdCwbh+6MUEP0paIlk1Z
-         y6eaFGnxgTk2phGcdm6cL7sNRnFpJCk9lwuRFoFTAVESCiRcPLdHeLmff4zPkuckM5Ao
-         +mAo1bg0HS+hxzv/8iXpSwNvUiW8iwI5aw0Wo/2GZKvq4diNd6QBIRPW59LBPaCTXFg5
-         FyYQ==
-X-Gm-Message-State: AOJu0YzwVvuMHTYrfU1qooIHBbLEH/cKDeaxFE6NWmreF9beryn6JZFA
-	L6bIMpxORiZEM50wlIgem96FXCu7Xt+JMz/tv+ssvDYV4WE5aGAB4ghEDx3g7pac49lSNpLCReh
-	xVHjZcQSWJ8E/RsocGj+0MpltSU6zwQdX622y4Gow
-X-Gm-Gg: AZuq6aJfiNzxInnzLWh9FYyq33+wD96cH9Zlck3PizxbsV+JPf6ied5zwwKywcV32c0
-	A2lEb9LtI5DH8IZoQ7szp8EV3calCrO+qlpYN8ZWNVxIzk+WxCX/2sq0rOaQWXrBFgX0oqIWqvo
-	erNH8Yyn4i2S/9dsGmGE5yxq0wdbECpQt8RgtJUXqRzPq4Ma4Plm1JeMlSdoj1365XBIjJvRzSU
-	mfbNES66eKNErs+8JIHvBZNfUFwpme2CC2hKSHDBuLV4tJq8w2ixKWmHDd9oJKY8OhMXKd6Y1L9
-	/xAFZvDHOP9x3ao5ck4=
-X-Received: by 2002:a17:902:f545:b0:29d:7b9e:6df8 with SMTP id
- d9443c01a7336-2ab0e56d414mr2185125ad.2.1770701961135; Mon, 09 Feb 2026
- 21:39:21 -0800 (PST)
+        bh=l6qnAPvCXNqWlSbf+oOQ9VYTRnILyLNuodKY/j+4HmE=;
+        b=UXH2OMujVrh19480xcAYERTr9+iZb0DCcTfONBMWJCK5/0g3ggghfleQ1L8MmlTI6H
+         ATfZ/S3xCe4jf9mEcGgs/YYukYg6jHWCx4Bh5hVHHlJ2e1aqLV7CcCAjmlbPNZnztGdg
+         dZ71VuEjdgv6YZqFOAj09Q4gcH32x+6NvzCpv2K/9UJRHbD0QCEDlaLJX8V0QekS8RjB
+         45mZ+ddorLULFfqDelSNCPAKNRbjphesny7C+Baal//a9Vdwgb1sX+Ah/GywYz7C3X05
+         gvRSIlXqYPNBA+fAIb7jjy2fa548CCyLPLUvcMZrYno9P9atzqMajgcS1jFFRM6G1FGN
+         xL0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWC0d8yc4satAJD71BRK3k8gsgwU5THCuHK9xOPdw4FgRpyFGJ/jbDR14qKIexd4Rf5RKqeSlvDm2lUG39pFbzf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF8tpCxrIsXTQbzeMqjVZ1+oJllGXLIaHjiO2vbYHQ8bZ1qj3/
+	d3OgGoJ+q7mMKXUFYML0Ri+BpPEPwjcF3kR8VeyoHvfXMzKG8Zv0SDhmz0mRJ1jDprF/Mcpn0UL
+	n3SlpIYoCIMGldegIs8A2ldqUgZjOhFc=
+X-Gm-Gg: AZuq6aIqOBVc7v26OysM0WfB/nwDYUX0xDsE3pmjJru028HjsYmbP7+0iR/YBsbA5I+
+	Q9c4qpZpHXmbWFNdmUWC0eo7ZyhSuc/LJlWCT9R83Zi7SKfHzQDHjcP7lWiEBfFi2mHhv+bE4Xm
+	6XB5PloUtvLUCeopXmTwi2fD5pv7GuwF4iD+wW0R1IiL0H4XjBkbfrfzrcD1z+y0SaZiPE0q/Qr
+	0seYjoCF+t91ZXajJbiunkKVIQmpTzaQ0COOfmPfYJ5pHeB6s9a/dArmN3EAQEwKy7iCl9zbgNv
+	9GTxa/k+
+X-Received: by 2002:a05:6512:1326:b0:59d:f69e:16c2 with SMTP id
+ 2adb3069b0e04-59e55b8abbfmr263238e87.12.1770702901183; Mon, 09 Feb 2026
+ 21:55:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260208122227.3524-1-9erthalion6@gmail.com> <20260208122227.3524-5-9erthalion6@gmail.com>
-In-Reply-To: <20260208122227.3524-5-9erthalion6@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Feb 2026 21:39:09 -0800
-X-Gm-Features: AZwV_QjoLhrxooPeszhA_5rcvLJSXudWcVYOjF8r9-gtSVbBK34DzlUV9iiScoA
-Message-ID: <CAP-5=fXzUOhVku6=R1d=kq6JAo-ow18VQ+qt819_VHL4drkBsw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 4/4] perf tests: Test annotate with data type
- profiling and C
-To: Dmitrii Dolgov <9erthalion6@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <20251223084337.3789-1-hupu.gm@gmail.com> <20251223084337.3789-2-hupu.gm@gmail.com>
+ <aUrdUjqVEjJW9VBl@google.com>
+In-Reply-To: <aUrdUjqVEjJW9VBl@google.com>
+From: hupu <hupu.gm@gmail.com>
+Date: Tue, 10 Feb 2026 13:54:49 +0800
+X-Gm-Features: AZwV_QgvqbPoQHPhDibGtKcqXz19kRj7bz78kM8jjqTHIlCRKHK4Rf3x_mpslFg
+Message-ID: <CADHxFxRprUvRzorxe00HmwG0o73VQJNf=yzM40fkiWjjqu7PZQ@mail.gmail.com>
+Subject: Re: [RFC 1/2] perf build: Allow passing extra Clang flags via EXTRA_BPF_FLAGS
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, 
+	nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com, 
+	justinstitt@google.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 8, 2026 at 4:23=E2=80=AFAM Dmitrii Dolgov <9erthalion6@gmail.co=
-m> wrote:
+On Wed, Dec 24, 2025 at 2:20=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> Exercise the annotate command with data type profiling feature with C. Fo=
-r that
-> extend the existing data type profiling shell test to profile the datasym
-> workload, then annotate the result expecting to see some data structures =
-from
-> the C code.
+> Hello,
 >
-> Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
-> ---
->  tools/perf/tests/shell/data_type_profiling.sh | 31 ++++++++++++++-----
->  1 file changed, 23 insertions(+), 8 deletions(-)
+> On Tue, Dec 23, 2025 at 04:43:34PM +0800, hupu wrote:
+> > Add support for EXTRA_BPF_FLAGS in the eBPF skeleton build, allowing
+> > users to pass additional Clang options such as --sysroot or custom
+> > include paths when cross-compiling perf.
+> >
+> > This is primarily intended for cross-build scenarios where the default
+> > host include paths do not match the target kernel version.
+> >
+> > Example usage:
+> >     make perf ARCH=3D"arm64" EXTRA_BPF_FLAGS=3D"--sysroot=3D..."
+> >
+> > Change history:
+> >   v5:
+> >     - Update commit message
+> >   v4:
+> >     - Apply EXTRA_BPF_FLAGS directly to BPF skeleton build command
+> >       instead of modifying CLANG_OPTIONS
+> >   v3:
+> >     - Move the variable description comment to the top of Makefile.perf
+> >     - Update commit message
+> >   v2:
+> >     - Rename EXTRA_CLANG_FLAGS to EXTRA_BPF_FLAGS
+> >     - Update commit message
+> >   v1:
+> >     - Introduce EXTRA_CLANG_FLAGS to allow passing extra Clang options
+> >
+> > Signed-off-by: hupu <hupu.gm@gmail.com>
 >
-> diff --git a/tools/perf/tests/shell/data_type_profiling.sh b/tools/perf/t=
-ests/shell/data_type_profiling.sh
-> index cdc9adb7d70..a230f5d4c42 100755
-> --- a/tools/perf/tests/shell/data_type_profiling.sh
-> +++ b/tools/perf/tests/shell/data_type_profiling.sh
-> @@ -6,12 +6,14 @@ set -e
+> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 >
->  # The logic below follows the same line as the annotate test, but looks =
-for a
->  # data type profiling manifestation
-> -testtype=3D"# data-type: struct Buf"
-> +
-> +# Values in testtypes and testprogs should match
-> +testtypes=3D("# data-type: struct Buf" "# data-type: struct _buf")
+> Thanks,
+> Namhyung
+>
 
-So in the datasym workload the struct _buf is a typedef and the value
-declared to be of the type of the typedef:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/workloads/datasym.c?h=3Dperf-tools-next#n14
-```
-typedef struct _buf {
-char data1;
-char reserved[55];
-char data2;
-} buf __attribute__((aligned(64)));
+Hi Namhyung,
 
-/* volatile to try to avoid the compiler seeing reserved as unused. */
-static volatile buf workload_datasym_buf1 =3D {
-/* to have this in the data section */
-.reserved[0] =3D 1,
-};
-```
-This test is failing for me as I see "data-type: buf" rather than
-"data-type: struct _buf" (ie the typedef rather than the struct):
-```
-    0.00 :   201290:        movzbl  0xbb5869(%rip), %eax  # 0xdb6b00
-<workload_datasym_buf1>               # data-type: buf +0 (data1)
-    0.00 :   201297:        addl    $0x1, %eax
-   47.66 :   20129a:        movb    %al, 0xbb5860(%rip)  # 0xdb6b00
-<workload_datasym_buf1>                # data-type: buf +0 (data1)
-    0.00 :   2012a0:        movzbl  0xbb5859(%rip), %eax  # 0xdb6b00
-<workload_datasym_buf1>               # data-type: buf +0 (data1)
-    0.00 :   2012a7:        cmpb    $0x7b, %al
-    0.00 :   2012a9:        jne     0x2012bb <datasym+0x9c>
-    0.00 :   2012ab:        movzbl  0xbb584e(%rip), %eax  # 0xdb6b00
-<workload_datasym_buf1>               # data-type: buf +0 (data1)
-    0.00 :   2012b2:        addl    $0x1, %eax
-    0.25 :   2012b5:        movb    %al, 0xbb5845(%rip)  # 0xdb6b00
-<workload_datasym_buf1>                # data-type: buf +0 (data1)
-    0.00 :   2012bb:        movzbl  0xbb583e(%rip), %eax  # 0xdb6b00
-<workload_datasym_buf1>               # data-type: buf +0 (data1)
-    0.00 :   2012c2:        movzbl  0xbb586f(%rip), %edx  # 0xdb6b38
-<workload_datasym_buf1+0x38>                  # data-type: buf +0x38
-(data2)
-    0.00 :   2012c9:        addl    %edx, %eax
-   52.10 :   2012cb:        movb    %al, 0xbb5867(%rip)  # 0xdb6b38
-<workload_datasym_buf1+0x38>                   # data-type: buf +0x38
-(data2)
-    0.00 :   2012d1:        movl    0xbc7861(%rip), %eax  # 0xdc8b38
-<done>             # data-type: sig_atomic_t +0
-```
-It seems the typedef is a more accurate type name, so I think the test
-is wrong here.
+Sorry to bother you.
 
-Thanks,
-Ian
+I noticed that the patch adding support for EXTRA_BPF_FLAGS, which was
+previously reviewed by you, does not seem to be included in the latest
+released version. I just wanted to follow up and check on the current
+status of this patch, in case it was missed or delayed for some
+reason.
 
-> +testprogs=3D("perf test -w code_with_type" "perf test -w datasym")
->
->  err=3D0
->  perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->  perfout=3D$(mktemp /tmp/__perf_test.perf.out.XXXXX)
-> -testprog=3D"perf test -w code_with_type"
->
->  cleanup() {
->    rm -rf "${perfdata}" "${perfout}"
-> @@ -29,12 +31,23 @@ trap trap_cleanup EXIT TERM INT
->
->  test_basic_annotate() {
->    mode=3D$1
-> -  echo "${mode} perf annotate test"
-> +  runtime=3D$2
-> +
-> +  echo "${mode} ${runtime} perf annotate test"
-> +
-> +  case "x${runtime}" in
-> +    "xRust")
-> +    index=3D0 ;;
-> +
-> +    "xC")
-> +    index=3D1 ;;
-> +  esac
-> +
->    if [ "x${mode}" =3D=3D "xBasic" ]
->    then
-> -    perf mem record -o "${perfdata}" ${testprog} 2> /dev/null
-> +    perf mem record -o "${perfdata}" ${testprogs[$index]} 2> /dev/null
->    else
-> -    perf mem record -o - ${testprog} 2> /dev/null > "${perfdata}"
-> +    perf mem record -o - ${testprogs[$index]} 2> /dev/null > "${perfdata=
-}"
->    fi
->    if [ "x$?" !=3D "x0" ]
->    then
-> @@ -52,7 +65,7 @@ test_basic_annotate() {
->    fi
->
->    # check if it has the target data type
-> -  if ! grep -q "${testtype}" "${perfout}"
-> +  if ! grep -q "${testtypes[$index]}" "${perfout}"
->    then
->      echo "${mode} annotate [Failed: missing target data type]"
->      cat "${perfout}"
-> @@ -62,8 +75,10 @@ test_basic_annotate() {
->    echo "${mode} annotate test [Success]"
->  }
->
-> -test_basic_annotate Basic
-> -test_basic_annotate Pipe
-> +test_basic_annotate Basic Rust
-> +test_basic_annotate Pipe Rust
-> +test_basic_annotate Basic C
-> +test_basic_annotate Pipe C
->
->  cleanup
->  exit $err
-> --
-> 2.52.0
->
+Thanks a lot for your time and review.
+
+Thanks
+hupu
