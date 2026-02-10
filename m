@@ -1,46 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F351C32ED2A;
-	Tue, 10 Feb 2026 20:54:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0373346B8;
+	Tue, 10 Feb 2026 20:58:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770756869; cv=none; b=J6lj9XfPT1rNYMfxRM7XK8HFxgXM/93g5jxnaKFhVtiOKHEzfakRxX6MOuYmXrsScEOMCaOMu98MNRa740iJaRJVx/FttiSS8K9nOICsWjonZegMrLczvDVk2MOeDL9813VLSPdCAfLcvRh5LwJE1fadRSuT3HTjgvc7Y/wpBqI=
+	t=1770757139; cv=none; b=s5vEFWf1+Ua32PftRObS2aCAT6cnP55xdWIiNWp9fxNelhX+AuHhiputkQsO0HAEiPL78j58tppjLI5tIffzDw/W3SLSXaWQ/MPOPhtKLti2FBAkUj4Rj9Br9cU5URd3T5qPbDEUuiC3RoS01MCltYr9Cs6hKB3r2z8XI637HS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770756869; c=relaxed/simple;
-	bh=cZGYzYiX5yAx8IYvzjug2a4f+UhquAJMTud2WCa/g/Q=;
+	s=arc-20240116; t=1770757139; c=relaxed/simple;
+	bh=zkiIluwdFBgJBVBieVMh0iO/NRT3+xJrUDtKDho8zz0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rLKAu5yiJFotC/qyrANXylhA1p8JJcWdmXWPcIEYbLRpi7aMaTBIngwLG3YrqbMpYgwAoL/KSMoDpcD1ls9OJelO/igCZ3TCPbyipSX4+Ny54mzVuOfTpvQsv/deae2LQgqFLmWAPxVRWqtkACFPy4CFWlgs7EtznSCVhJer1SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3xIF5v8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ju3qzHXOquG8rkbFEiQua+RfrFd8z4d2BpwvG9UuGF/ReKaPda+YAeF2P9VK/hvwWH7A0aj4bkrV7g22K6sJCs+rRWw/EIaGf0e+5wQXzKOXDDCe3NyPTvzUyfk9eKLtgbiFzi0LYrezFaI6Rqjs3Q+MMbt/PsKA+MhPfBfDgCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kqy1IBex; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3xIF5v8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02A1CC116C6;
-	Tue, 10 Feb 2026 20:54:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kqy1IBex"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B5A8C116C6;
+	Tue, 10 Feb 2026 20:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770756868;
-	bh=cZGYzYiX5yAx8IYvzjug2a4f+UhquAJMTud2WCa/g/Q=;
+	s=k20201202; t=1770757138;
+	bh=zkiIluwdFBgJBVBieVMh0iO/NRT3+xJrUDtKDho8zz0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s3xIF5v8bFFHhlBFb2UP4QRAHUK/T66XQ2hyRhO/OMkD9r+5/8PLJhFiv/ZA4GFR5
-	 QZGQN1UAgkblB5xvTk5GDNPZPzYO/o3fHATir3eMdRmtvoZ5bhaD2nkYxdVt3e/+3+
-	 zmCW3OeqIdRDM/oMDaV4jqbwIZrQWAowNHR7KWOvWYpQyN2MKURsHtmMPkMos3qbBS
-	 4r0SN51ylUjLU9qX5teDpHD7B7XZNNFmbJ7NP42f09+vkGxxKWzR8kznwhRQwmfqJr
-	 05lgKL9S0lPCofKCIEu8XQ1BR+dxh6Eyv/tHT0wyK31AjUNy78oKJrznsm2ibNrHS5
-	 M2/bpya11GRWg==
-Date: Tue, 10 Feb 2026 17:54:24 -0300
+	b=kqy1IBexCME7PY33CnUAxg9gaADI4kZpuYGinSR83P4Ux2voM4g/FolnXbvrpWlje
+	 ckGcIIvFzcH9oRaDevb3tzJAkRHRBHWVVYiJbfRyrLufcEZZeUGyeMlshW9uT7YYdp
+	 KwrfutQTZ60OhrUngmwL6pn6WBI36QpLo+Qkw3XVQ6+iOb6//ZtHB9FIb5T57MfMBr
+	 nRhRqRbB6G6B086UHO8IZM685gDIL7JYbwtQhh1B5HMJMpXNFoMnJ3huCfyIoIpQXn
+	 BT0VL5XAfyzVpQ77hqMHZiIAS/157V/8yx/nJXOLFfmJtdWtKWRixNrKiAXe5QVTav
+	 Ps8Aiy1jckxWg==
+Date: Tue, 10 Feb 2026 17:58:54 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Dmitry Dolgov <9erthalion6@gmail.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Dmitrii Dolgov <9erthalion6@gmail.com>, Mark Brown <broonie@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1] tools build: Fix rust feature detection
-Message-ID: <aYubAAZ10CfYsmZx@x1>
-References: <aYoZD1onJLsnlrV3@x1>
- <sc2w3tcjcle4zhz72b2jdnyfnhzl6atiecium2dwcmrlvn6syb@n573cdtyldne>
- <aYsj7vV2Lh8wV-ZR@x1>
- <hox364wgs57bv7hvscvvtbkl5yerur55iz7un3gsu3ozpbnba5@haqvngx6jy4n>
+	kernel test robot <lkp@intel.com>,
+	Linux-Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: [PATCH v1] perf tests workload: Formatting for code_with_type.rs
+Message-ID: <aYucDuJDvxUBj79O@x1>
+References: <20260209140533.194251-1-9erthalion6@gmail.com>
+ <CANiq72mW=hcvUGt=WENRiYVeVbb2bnYzizE00Eo-MW3b_MwRrg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,48 +49,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <hox364wgs57bv7hvscvvtbkl5yerur55iz7un3gsu3ozpbnba5@haqvngx6jy4n>
+In-Reply-To: <CANiq72mW=hcvUGt=WENRiYVeVbb2bnYzizE00Eo-MW3b_MwRrg@mail.gmail.com>
 
-On Tue, Feb 10, 2026 at 09:16:18PM +0100, Dmitry Dolgov wrote:
-> > On Tue, Feb 10, 2026 at 09:26:22AM -0300, Arnaldo Carvalho de Melo wrote:
-> > I tried here building it with rust installed, it detected, ok, then I
-> > removed and tried to rebuild, it still thinks rust is there:
+On Tue, Feb 10, 2026 at 09:56:36AM +0100, Miguel Ojeda wrote:
+> On Mon, Feb 9, 2026 at 3:05 PM Dmitrii Dolgov <9erthalion6@gmail.com> wrote:
+> >
+> > One part of the rust code for code_with_type workload wasn't properly
+> > formatted. Pass it through rustfmt to fix that.
+> >
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202602091357.oyRv6hgQ-lkp@intel.com/
+> > Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+> 
+> Could this please be applied (or fixed in-place)?
 
-> > [...]
-
-> > I.e. it doesn't rebuild perf and thus doesn't notice that it doesn't
-> > have what is needed, if I touch some other file and thus it triggers a
-> > rebuild, it still manages to build it...
-
-> Yeah, looks like the problem is due to rust not adding any actual depedencies
-> into the dep-info file, when compiling the feature test file:
-
-> 	/perf/feature/test-rust.d: test-rust.rs
-
-> 	/perf/feature/test-rust.bin: test-rust.rs
-
-> 	test-rust.rs:
-
-> To fix that I've tried to add an extra dependency on the rust binary on top of
-> that after the compilation is finished. While hacky, it worked just fine, and
-> perf catched it when rust was removed. Haven't faced any issues after few
-> rounds of installing/removing rust either. If this approach sound fine, I can
-> post the patch tomorrow.
-
-Looks hacky, can't we just try to run:
-
-⬢ [acme@toolbx linux]$ HAVE_RUST=$(rustc --version > /dev/null ; echo $?)
-⬢ [acme@toolbx linux]$ echo $HAVE_RUST
-0
-⬢ [acme@toolbx linux]$ HAVE_RUST=$(arustc --version > /dev/null ; echo $?)
-bash: arustc: command not found
-⬢ [acme@toolbx linux]$ echo $HAVE_RUST
-127
-⬢ [acme@toolbx linux]$
-
-How would your dep on the rust binary work? where would you expect it to
-be? It may be installed on some different path, etc.
-
-Perhaps there is precedent with some other component...
+Its merged and pushed out, should be clean now,
 
 - Arnaldo
+ 
+> It is now in next-20260209, and we check this in different CIs. It
+> also makes LKP give spurious reports, e.g.:
+> 
+>   https://lore.kernel.org/all/202602100751.ldfRitCJ-lkp@intel.com/
+> 
+> Thanks!
+> 
+> Fixes: 2e05bb52a12d ("perf test workload: Add code_with_type test workload")
+> 
+> Cc'ing Mark since I think the plan is to check in linux-next.
+> 
+> Cheers,
+> Miguel
