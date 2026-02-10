@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8164302750
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 06:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CAC32BF41
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 06:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770703448; cv=none; b=jho3H0UoiPLL3ldJvEfrzU7m8tqqic/EnFaOo9T9hKo1PN84rZtJ+yIS/MxvcZE2TxajVIjv1BPLyi8kOrEDcjp/H4ASgKMHTXTnLDPHLMnRnknrIRlvrrP/CIzujob3MOE6g5Ca7tOZIC8R5niP6oAJ6mPE0lfJcGwRU7r7lHc=
+	t=1770703450; cv=none; b=K/0O5pOjsEEoWZzHquho+Bc4qRcCpzXPPYIq5FQ1U0IZIkipjUesnzDXgqXe2I3WQT8r7n3kNcTCbVcyTo+b01UvOJRzQy/e/dOfoybL7PyCaVcVDHZOlzVJ/Movj9kFpRQFnsYEfZ/+jBiU8UB3rWXwf8bLf4/G2c41zRhMM0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770703448; c=relaxed/simple;
-	bh=Lszd0UdRB8GQidhdx5Z+Lj/C2pK9X74pxC+as6fOUOI=;
+	s=arc-20240116; t=1770703450; c=relaxed/simple;
+	bh=TzweULhbFyvVOxzKvm6ziGllewjhlCuvpRxGmN/BS4Q=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UvZpB9/KWf9KNDYbepuLC6S9ekIV+yBAe9xlB9mUBHtqTJbzjp/Jrd/PVo9K0w53lkB4qFjdiPGdpEcPnnXW1stBtES4+REKgPMNn9E61xf+iD2WfBjLx2tGAARuLixgEQ5gT87SiIdnk4T3T5rJ0rWNVNJdkHU6V3RWa59rnJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KXY3/PT5; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=cxsUjy2kyWUXbVlKKboHTQ/3tOjZW3PdEtY2sMLIw2s6L49+VI99pX03lpTN7JWLQNYMi+VGpzb2j+PJKxZrgL1WXWwjPPbuc2HEtNGToYarV3Z06Spot8LNBALiFsquQkv+dsHwn/4OgaBwoyMEnYD3kMHEkw9oLddNKgeTy90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KVCX5bhK; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KXY3/PT5"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-126e8ee6227so469521c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 22:04:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KVCX5bhK"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b6b9c1249fso4256427eec.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 22:04:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770703447; x=1771308247; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770703449; x=1771308249; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=trHHoM5lxs3R3c1XXOrfjjzTr20GXbuQCFUGYGyaPS8=;
-        b=KXY3/PT5r7h0+AMXAo41op15xBxpWRPat2LMnkAuZpYPGOG+xjV9I0JPvH6v+Ff8Um
-         LbwICjcLw2MIwIPBOobihM9sh8BrLnxHPsmuR0ssxBpkLh1K7m0i4NWO3MDOmWQt/0yK
-         6iRHm2T9sySDtpF1krwYPdk+6RecFuQ3nEjfX26SfPAkFruopy9GT32UInaU2j+P9qkN
-         Ng7oZO4IWh8c6zN5JNUDACkEdIgoAjvVkpNuoMaarZEFy0a5bjboql3uFukXwrxkUFzQ
-         gkbQrdPkuGJu0/hDUcsXl2WZkRkohabyEmLOCx9rsISJHe+B6oND0pX+O6ygQ2ZchZxE
-         zc5A==
+        bh=yDLKVG3tEtlD42Ak1LCzl04+zbbwATgaIYJmxnnK6Qc=;
+        b=KVCX5bhKlAY40YdEPKionSJwytrqQFJUktQclUSB/IF2GIMtewnB0/wGDl5/lP3XZd
+         i0EqfoRjhjO2RxziLfkMW5M30pB+HaOqAsFRKd7Vz7jinxSHCrzzcYUTF5r/mYL2DX+Y
+         Hl2c4GraXtB6kUByf1KUoQtlyYtsJ+QYcjVvnFlqvdTLVBvyuPkhQqew1ReoxtIhmQnR
+         u7O529VK4giirpD0gS6QKn5greFveBI/W3c0iSpM4UfKBErnkdwF5dbYODxncYrfy8dN
+         2PkqBZrF7WxJdhnSxoXbDZ0TDaBklCrevZmLmUn4jfsaepB4eEyGbiOuvo8bvjBOWvUu
+         f2tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770703447; x=1771308247;
+        d=1e100.net; s=20230601; t=1770703449; x=1771308249;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=trHHoM5lxs3R3c1XXOrfjjzTr20GXbuQCFUGYGyaPS8=;
-        b=fBCBlZnJ+GPNde0+E0/zSLXazz3G+lraDnkMw0eifd3jzX+e7P6O2wnRS2yKl/jSOR
-         ei/U+JiR7RjSEGa5g/NvxCfhaXRSlM2BVjblhP04NUmpjYrw1/ueZCF9mVC6xkAh2Sll
-         RAG5J4pXP0BW0eCFjlUcIiSbidTAPJfU2Lybt1flO2XSt3d70eessnUyfNahJLAXXSL9
-         Yy7r5xBXpjfhIkvvYTsfF3bcSx1DhrEF7R5JexoCs0Wsk5n9TwV/XJHVOoybrhfloY+y
-         6yDrLin42zl5zZF+iTUSHfDPSOwLp4y5uklQ4kf78JVX0va6BKqllfjfI1GUD/5ZOmOo
-         rC3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXhDhVgjyj9Q6vfnWHU7YQ8cgKUbo3whj3M4K20llz+kqof86RlKaSbNqHFCDVBkEaPc7pQAuA+Id6uz3Z4yMfM@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK/OXT2f0lOCqd2hGworB/goWziwLgfoMRLHp7OEV6Z6T+gUHo
-	KJZlzHVQC6z1ID4tZeyqm3eW+SqTCuG1NnUYlRZ73zWNaStThPa1ZIfMCFoDuCgh+WL3TF3nGeK
-	fAhjtyukAjg==
-X-Received: from dlbqq7.prod.google.com ([2002:a05:7022:ed07:b0:127:177b:bd24])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:404:b0:11b:9e5e:1a40
- with SMTP id a92af1059eb24-127040196f5mr4582022c88.15.1770703446829; Mon, 09
- Feb 2026 22:04:06 -0800 (PST)
-Date: Mon,  9 Feb 2026 22:03:54 -0800
+        bh=yDLKVG3tEtlD42Ak1LCzl04+zbbwATgaIYJmxnnK6Qc=;
+        b=uaZH/Rz36zEft0p94A40gpoZ4LjTFtUaIbgiROkdG9pTUwCT/hAuQkCK5uv95rDeng
+         uh/d8jGgT3p4t96xIwsrfnLSRPKI6yOaSfwFoB3uccL/+I27w9flxsKxyvC4bm/+UZMu
+         vXnHi8cQ8wE9G1XJwYjmnNyIh6iVIRIpxGmi2ywF/HYCvbvCO9j5ATFW0Fw+kcnazTic
+         JovYvudt05nixXYXCWtR+Zb046y8QAMjtTHGq0g5R958feEJew5Np2iYI5k5la9DtE1p
+         EZ0ytIDMbYYFR0pVhgviSZ7UfLK/guNUBp+cC9OrnZ7CMSImZNbMVfMd93gk9H7Vu7jT
+         kTMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXxbJ3XiMFSkeBet5bQEqWQqA75BBnf4hRknXGxEy6P0TJfdFZTLlhxSQzm2ubJEDaBBpYRksgnHVjyKTrtKRrH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6txc1WO+bq49PfJ81CsgyPXYLYsfY4mHSDZVDGPCtxGpDuyfA
+	IJGycnWozSSSRnMsbgMgpHSCZpbXWPSldi9Dp5RiKHjy3oexaMB6FMEfT4lRnPQ2f154sgoxtBx
+	nfyakRZtezw==
+X-Received: from dlbdd35.prod.google.com ([2002:a05:7022:aa3:b0:127:1887:64c9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:a86:b0:123:330b:398
+ with SMTP id a92af1059eb24-12703f51b55mr5734557c88.19.1770703448533; Mon, 09
+ Feb 2026 22:04:08 -0800 (PST)
+Date: Mon,  9 Feb 2026 22:03:55 -0800
 In-Reply-To: <20260210060359.2233425-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <aYqHTfCoW1bGmJF4@google.com> <20260210060359.2233425-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
-Message-ID: <20260210060359.2233425-2-irogers@google.com>
-Subject: [PATCH v9 1/6] Revert "perf tool_pmu: More accurately set the cpus
- for tool events"
+Message-ID: <20260210060359.2233425-3-irogers@google.com>
+Subject: [PATCH v9 2/6] perf stat-shadow: In prepare_metric fix guard on
+ reading NULL perf_stat_evsel
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org, acme@kernel.org
 Cc: adrian.hunter@intel.com, ak@linux.intel.com, 
@@ -72,105 +72,66 @@ Cc: adrian.hunter@intel.com, ak@linux.intel.com,
 	yang.lee@linux.alibaba.com
 Content-Type: text/plain; charset="UTF-8"
 
-This reverts commit d8d8a0b3603a9a8fa207cf9e4f292e81dc5d1008.
-
-The setting of a user CPU map can cause an empty intersection when
-combined with CPU 0 and the event removed. This later triggers a segv
-in the stat-shadow logic. Let's put back a full online CPU map for now
-by reverting this patch.
+The aggr value is setup to always be non-null creating a redundant
+guard for reading from it. Switch to using the perf_stat_evsel (ps)
+and narrow the scope of aggr so that it is known valid when used.
 
 Reported-by: Andres Freund <andres@anarazel.de>
-Closes: https://lore.kernel.org/linux-perf-users/cgja46br2smmznxs7kbeabs6zgv3b4olfqgh2fdp5mxk2yom4v@w6jjgov6hdi6/
+Fixes: 3d65f6445fd9 ("perf stat-shadow: Read tool events directly")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c |  9 ++-------
- tools/perf/util/tool_pmu.c     | 19 -------------------
- tools/perf/util/tool_pmu.h     |  1 -
- 3 files changed, 2 insertions(+), 27 deletions(-)
+ tools/perf/util/stat-shadow.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index d4647ded340f..f631bf7a919f 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -30,7 +30,6 @@
- #include "util/event.h"
- #include "util/bpf-filter.h"
- #include "util/stat.h"
--#include "util/tool_pmu.h"
- #include "util/util.h"
- #include "tracepoint.h"
- #include <api/fs/tracing_path.h>
-@@ -230,12 +229,8 @@ __add_event(struct list_head *list, int *idx,
- 	if (pmu) {
- 		is_pmu_core = pmu->is_core;
- 		pmu_cpus = perf_cpu_map__get(pmu->cpus);
--		if (perf_cpu_map__is_empty(pmu_cpus)) {
--			if (perf_pmu__is_tool(pmu))
--				pmu_cpus = tool_pmu__cpus(attr);
--			else
--				pmu_cpus = cpu_map__online();
--		}
-+		if (perf_cpu_map__is_empty(pmu_cpus))
-+			pmu_cpus = cpu_map__online();
- 	} else {
- 		is_pmu_core = (attr->type == PERF_TYPE_HARDWARE ||
- 			       attr->type == PERF_TYPE_HW_CACHE);
-diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
-index 37c4eae0bef1..6a9df3dc0e07 100644
---- a/tools/perf/util/tool_pmu.c
-+++ b/tools/perf/util/tool_pmu.c
-@@ -2,7 +2,6 @@
- #include "cgroup.h"
- #include "counts.h"
- #include "cputopo.h"
--#include "debug.h"
- #include "evsel.h"
- #include "pmu.h"
- #include "print-events.h"
-@@ -14,7 +13,6 @@
- #include <api/fs/fs.h>
- #include <api/io.h>
- #include <internal/threadmap.h>
--#include <perf/cpumap.h>
- #include <perf/threadmap.h>
- #include <fcntl.h>
- #include <strings.h>
-@@ -111,23 +109,6 @@ const char *evsel__tool_pmu_event_name(const struct evsel *evsel)
- 	return tool_pmu__event_to_str(evsel->core.attr.config);
- }
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 5d8d09e0e6ae..59d2cd4f2188 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -57,7 +57,6 @@ static int prepare_metric(struct perf_stat_config *config,
+ 		bool is_tool_time =
+ 			tool_pmu__is_time_event(config, metric_events[i], &tool_aggr_idx);
+ 		struct perf_stat_evsel *ps = metric_events[i]->stats;
+-		struct perf_stat_aggr *aggr;
+ 		char *n;
+ 		double val;
  
--struct perf_cpu_map *tool_pmu__cpus(struct perf_event_attr *attr)
--{
--	static struct perf_cpu_map *cpu0_map;
--	enum tool_pmu_event event = (enum tool_pmu_event)attr->config;
--
--	if (event <= TOOL_PMU__EVENT_NONE || event >= TOOL_PMU__EVENT_MAX) {
--		pr_err("Invalid tool PMU event config %llx\n", attr->config);
--		return NULL;
--	}
--	if (event == TOOL_PMU__EVENT_USER_TIME || event == TOOL_PMU__EVENT_SYSTEM_TIME)
--		return cpu_map__online();
--
--	if (!cpu0_map)
--		cpu0_map = perf_cpu_map__new_int(0);
--	return perf_cpu_map__get(cpu0_map);
--}
--
- static bool read_until_char(struct io *io, char e)
- {
- 	int c;
-diff --git a/tools/perf/util/tool_pmu.h b/tools/perf/util/tool_pmu.h
-index ea343d1983d3..f1714001bc1d 100644
---- a/tools/perf/util/tool_pmu.h
-+++ b/tools/perf/util/tool_pmu.h
-@@ -46,7 +46,6 @@ bool tool_pmu__read_event(enum tool_pmu_event ev,
- u64 tool_pmu__cpu_slots_per_cycle(void);
- 
- bool perf_pmu__is_tool(const struct perf_pmu *pmu);
--struct perf_cpu_map *tool_pmu__cpus(struct perf_event_attr *attr);
- 
- bool evsel__is_tool(const struct evsel *evsel);
- enum tool_pmu_event evsel__tool_event(const struct evsel *evsel);
+@@ -82,8 +81,7 @@ static int prepare_metric(struct perf_stat_config *config,
+ 			}
+ 		}
+ 		/* Time events are always on CPU0, the first aggregation index. */
+-		aggr = &ps->aggr[is_tool_time ? tool_aggr_idx : aggr_idx];
+-		if (!aggr || !metric_events[i]->supported || aggr->counts.run == 0) {
++		if (!ps || !metric_events[i]->supported) {
+ 			/*
+ 			 * Not supported events will have a count of 0, which
+ 			 * can be confusing in a metric. Explicitly set the
+@@ -93,11 +91,21 @@ static int prepare_metric(struct perf_stat_config *config,
+ 			val = NAN;
+ 			source_count = 0;
+ 		} else {
+-			val = aggr->counts.val;
+-			if (is_tool_time)
+-				val *= 1e-9; /* Convert time event nanoseconds to seconds. */
+-			if (!source_count)
+-				source_count = evsel__source_count(metric_events[i]);
++			struct perf_stat_aggr *aggr =
++				&ps->aggr[is_tool_time ? tool_aggr_idx : aggr_idx];
++
++			if (aggr->counts.run == 0) {
++				val = NAN;
++				source_count = 0;
++			} else {
++				val = aggr->counts.val;
++				if (is_tool_time) {
++					/* Convert time event nanoseconds to seconds. */
++					val *= 1e-9;
++				}
++				if (!source_count)
++					source_count = evsel__source_count(metric_events[i]);
++			}
+ 		}
+ 		n = strdup(evsel__metric_id(metric_events[i]));
+ 		if (!n)
 -- 
 2.53.0.rc2.204.g2597b5adb4-goog
 
