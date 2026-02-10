@@ -1,147 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DACC24468B;
-	Tue, 10 Feb 2026 01:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28A63EBF1A;
+	Tue, 10 Feb 2026 01:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770685203; cv=none; b=f4YJTzz68Rrib0ACD2gCZ+qbOBhQVlZ9dqM5KccTHOOkEww9m+wFAYQLQam6RjwT5wqku7fDIQIoVqtsuO7O5nLkV5yf9NaUcDqGbjyOhZ1TISInxuOikp5WbGr67bjWlqn5uu+hc+7wr4s1eLqcwoyM04k6IVleFDZz/Loh2ZU=
+	t=1770686288; cv=none; b=NJC6UQOktDVsmd81zrrGS9clZa6vKfFERP+g+5n+FIOTSbjFX3xZfnv7SgKEmbuQAfwjRTxWk4cqCqST57y2sgSmRpF3uv16eaRIPbS+Omj6xVTutjuyYV8AwIAb2sxF/iRhAsNy+gd0u4tQ+0lPPNN4AkwRVoZ8cn+9snfD5cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770685203; c=relaxed/simple;
-	bh=f7KaVYORxj9M7EdJPJflrezD2xBqdlhlpP8CvhFo0To=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N7b8RITG024jmZUlebSK2hmi9ulT4xylt6snL7W9Tp7ioGrbHnEhOBi3O+ogsAe/zHsqyr2NGXrdnTZGoi8OUXz8q2QDLtGemvFtOR+M0kWMQ4IVCnuKtU+V6tInEp+qxC08KXn1JdX8T8glhsOpUY6xXi/aeCJwIIaIYV8KKbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K6szORnG; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770686288; c=relaxed/simple;
+	bh=kgevp4Vfh69dFy2iaiyqDXN56ya/OPL65CeQtlz7eOM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NcXluKKr8eMm55j7IXVHhC8qA9ISnUx24Np2HX1zc/v50d26SePhqxcAPvyXON8WDd1fpDHqH+vsMp8eFXlcUXoOYGOTutrsZW/uQoDpf4r/Jd0WFhWR1Nc85zqJvqoPurIpM+SgtD/UHiTgjr2TcKJUDClgI6xje1UmL4ImWz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCE0nuv2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K6szORnG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770685202; x=1802221202;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=f7KaVYORxj9M7EdJPJflrezD2xBqdlhlpP8CvhFo0To=;
-  b=K6szORnGFxC89kiECjgMsOCMXhEUoRabGjeWLptBk0/f1W80xlXMbs7Y
-   lYCAz7Pwcvr9zTx8lUVMmTzzqCGaXOB876k3Vwqx3qWDP9+sn9CWWRj2T
-   gbQ7hpYib2cMo1d/zqjtJFsSXl+z1/JSc/4fBhPQzUnCm9yWd6kYPYHc/
-   v+GQ8tsJFsE8szdIQY+tn6adMx8GJq2FEfTEi9NiZL+KuBiXuOVdlAEhs
-   7JMFCi0huGinr2kSB2GChxhFqAHCbSVPJk+j/iFaUR44jT7kmYQAklb5N
-   L3exMdzT1N3C3+yue+jZKlYYk7tlpnzrJPkAptXZqDEj9rpqFJ289/l5Z
-   g==;
-X-CSE-ConnectionGUID: a/NfNcEXTVeWvC0FZAwkSg==
-X-CSE-MsgGUID: Kd/Z8k5xRq6b3I5g2zSkHw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11696"; a="71907363"
-X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
-   d="scan'208";a="71907363"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 17:00:01 -0800
-X-CSE-ConnectionGUID: kw5CcZapS+acpGVAbbA9Jg==
-X-CSE-MsgGUID: vGVT8iykS2CbjOpGd5JHpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
-   d="scan'208";a="211773536"
-Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.43])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 17:00:01 -0800
-From: Zide Chen <zide.chen@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Tony luck <tony.luck@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	stable@vger.kernel.org,
-	Zide Chen <zide.chen@intel.com>
-Subject: [PATCH] perf/x86/intel/uncore: Add per-scheduler IMC CAS count events
-Date: Mon,  9 Feb 2026 16:52:25 -0800
-Message-ID: <20260210005225.20311-1-zide.chen@intel.com>
-X-Mailer: git-send-email 2.52.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCE0nuv2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6161C116C6;
+	Tue, 10 Feb 2026 01:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770686287;
+	bh=kgevp4Vfh69dFy2iaiyqDXN56ya/OPL65CeQtlz7eOM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BCE0nuv26ERIquCeBkvV9J9LKWiQoa1XjS9opKKgPb/CWdMIwHBke1RsMShvjUulA
+	 z6adhyFc71XqmMdOONp03vOZZype24IkqVFfhCIQabajx4B1TCNvO/iI632G7mxxqD
+	 l+QmSkGyrZoEFSqxFegZJx/JiMfmJOMsl0wZt5to9jucbSfoNkgovRVtaWEYOU+qHA
+	 IbIjB1u+WpKB17aFLA7GPGrYJ45WVOtUPtiGzBZ0vpeIE/Hsjn2dz6nitjPuSD0WDS
+	 DizlTMDfnfeg18shPLhGNJ2a76z08CNBx0lxvNieLsfyM+C9NvMisPpkasDWv8K/D5
+	 KUmzd4pzMZXhw==
+Date: Mon, 9 Feb 2026 17:18:05 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, adrian.hunter@intel.com,
+	ak@linux.intel.com, alexander.shishkin@linux.intel.com,
+	andres@anarazel.de, dapeng1.mi@linux.intel.com,
+	james.clark@linaro.org, jolsa@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux@treblig.org, mingo@redhat.com, peterz@infradead.org,
+	thomas.falcon@intel.com, tmricht@linux.ibm.com,
+	yang.lee@linux.alibaba.com
+Subject: Re: [PATCH v8 6/6] perf stat: Add no-affinity flag
+Message-ID: <aYqHTfCoW1bGmJF4@google.com>
+References: <aYZnkYqWXnKpHd3h@x1>
+ <20260206222509.982489-1-irogers@google.com>
+ <20260206222509.982489-7-irogers@google.com>
+ <aYc1NrEYIMxKzlCF@x1>
+ <CAP-5=fXOasXgKRSvrA1B+Yx42egfZfLO4h1OKrB4tLCCz_o8Cg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXOasXgKRSvrA1B+Yx42egfZfLO4h1OKrB4tLCCz_o8Cg@mail.gmail.com>
 
-IMC on SPR and EMR does not support sub-channels.  In contrast, CPUs
-that use gnr_uncores[] (e.g. Granite Rapids and Sierra Forest)
-implement two command schedulers (SCH0/SCH1) per memory channel,
-providing logically independent command and data paths.
+On Sat, Feb 07, 2026 at 07:54:05AM -0800, Ian Rogers wrote:
+> On Sat, Feb 7, 2026 at 4:51 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > On Fri, Feb 06, 2026 at 02:25:09PM -0800, Ian Rogers wrote:
+> > > Add flag that disables affinity behavior. Using sched_setaffinity to
+> > > place a perf thread on a CPU can avoid certain interprocessor
+> > > interrupts but may introduce a delay due to the scheduling,
+> > > particularly on loaded machines. Add a command line option to disable
+> > > the behavior. This behavior is less present in other tools like `perf
+> > > record`, as it uses a ring buffer and doesn't make repeated system
+> > > calls.
+> >
+> > This is confusing:
+> >
+> > ⬢ [acme@toolbx perf-tools-next]$ perf stat -h affinity
+> >
+> >  Usage: perf stat [<options>] [<command>]
+> >
+> >         --affinity        don't allow affinity optimizations aimed at reducing IPIs
+> >
+> > ⬢ [acme@toolbx perf-tools-next]$
+> >
+> > The way it is presented in the -h output it looks as if one has to use:
+> >
+> >         perf stat --affinity
+> >
+> > To disable affinity setting, when used that way it looks as if the user
+> > is asking for affinity to be used.
+> >
+> > We have things like:
+> >
+> > ⬢ [acme@toolbx perf-tools-next]$ grep -A2 OPT_.*no- tools/perf/builtin-record.c
+> >         OPT_BOOLEAN(0, "no-buffering", &record.opts.no_buffering,
+> >                     "collect data without buffering"),
+> >         OPT_BOOLEAN('R', "raw-samples", &record.opts.raw_samples,
+> > --
+> >         OPT_BOOLEAN_SET('i', "no-inherit", &record.opts.no_inherit,
+> >                         &record.opts.no_inherit_set,
+> >                         "child tasks do not inherit counters"),
+> > --
+> >         OPT_BOOLEAN(0, "no-bpf-event", &record.opts.no_bpf_event, "do not record bpf events"),
+> >         OPT_BOOLEAN(0, "strict-freq", &record.opts.strict_freq,
+> >                     "Fail if the specified frequency can't be used"),
+> > --
+> >         OPT_BOOLEAN('n', "no-samples", &record.opts.no_samples,
+> >                     "don't sample"),
+> >         OPT_BOOLEAN_SET('N', "no-buildid-cache", &record.no_buildid_cache,
+> >                         &record.no_buildid_cache_set,
+> >                         "do not update the buildid cache"),
+> >         OPT_BOOLEAN_SET('B', "no-buildid", &record.no_buildid,
+> >                         &record.no_buildid_set,
+> >                         "do not collect buildids in perf.data"),
+> > ⬢ [acme@toolbx perf-tools-next]$
+> >
+> > Probably this needs to be that way?
+> 
+> So it was that way in the v4 patch set but Namhyung asked for it to be
+> the other way around:
+> https://lore.kernel.org/lkml/aRvcuMfbDRSBU87k@google.com/
+> The comment on the option didn't get changed and that's a  mistake.
+> Let me know what's preferred and I can send a patch.
 
-Do not reuse the spr_uncore_imc[] configuration for these CPUs.
-Instead, introduce a dedicated gnr_uncore_imc[] with per-scheduler
-events, so userspace can monitor SCH0 and SCH1 independently.
+Right, I still prefer positive option names so that "--no-" prefix can
+be added.
 
-On these CPUs, replace cas_count_{read,write} with
-cas_count_{read,write}_sch{0,1}.  This may break existing userspace
-that relies on cas_count_{read,write}, prompting it to switch to the
-per-scheduler events, as the legacy event reports only partial
-traffic (SCH0).
-
-Reported-by: Reinette Chatre <reinette.chatre@intel.com>
-Fixes: 632c4bf6d007 ("perf/x86/intel/uncore: Support Granite Rapids")
-Fixes: cb4a6ccf3583 ("perf/x86/intel/uncore: Support Sierra Forest and Grand Ridge")
-Cc: stable@vger.kernel.org
-Signed-off-by: Zide Chen <zide.chen@intel.com>
----
- arch/x86/events/intel/uncore_snbep.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index e513056f4562..b78a1782fc39 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -6640,6 +6640,32 @@ static struct intel_uncore_type gnr_uncore_ubox = {
- 	.attr_update		= uncore_alias_groups,
- };
- 
-+static struct uncore_event_desc gnr_uncore_imc_events[] = {
-+	INTEL_UNCORE_EVENT_DESC(clockticks,      "event=0x01,umask=0x00"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_read_sch0,  "event=0x05,umask=0xcf"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_read_sch0.scale, "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_read_sch0.unit, "MiB"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_read_sch1,  "event=0x06,umask=0xcf"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_read_sch1.scale, "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_read_sch1.unit, "MiB"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_write_sch0, "event=0x05,umask=0xf0"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_write_sch0.scale, "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_write_sch0.unit, "MiB"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_write_sch1, "event=0x06,umask=0xf0"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_write_sch1.scale, "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_write_sch1.unit, "MiB"),
-+	{ /* end: all zeroes */ },
-+};
-+
-+static struct intel_uncore_type gnr_uncore_imc = {
-+	SPR_UNCORE_MMIO_COMMON_FORMAT(),
-+	.name			= "imc",
-+	.fixed_ctr_bits		= 48,
-+	.fixed_ctr		= SNR_IMC_MMIO_PMON_FIXED_CTR,
-+	.fixed_ctl		= SNR_IMC_MMIO_PMON_FIXED_CTL,
-+	.event_descs		= gnr_uncore_imc_events,
-+};
-+
- static struct intel_uncore_type gnr_uncore_pciex8 = {
- 	SPR_UNCORE_PCI_COMMON_FORMAT(),
- 	.name			= "pciex8",
-@@ -6687,7 +6713,7 @@ static struct intel_uncore_type *gnr_uncores[UNCORE_GNR_NUM_UNCORE_TYPES] = {
- 	NULL,
- 	&spr_uncore_pcu,
- 	&gnr_uncore_ubox,
--	&spr_uncore_imc,
-+	&gnr_uncore_imc,
- 	NULL,
- 	&gnr_uncore_upi,
- 	NULL,
--- 
-2.52.0
+Thanks,
+Namhyung
 
