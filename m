@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CAC32BF41
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 06:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65ADE32D0F5
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 06:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770703450; cv=none; b=K/0O5pOjsEEoWZzHquho+Bc4qRcCpzXPPYIq5FQ1U0IZIkipjUesnzDXgqXe2I3WQT8r7n3kNcTCbVcyTo+b01UvOJRzQy/e/dOfoybL7PyCaVcVDHZOlzVJ/Movj9kFpRQFnsYEfZ/+jBiU8UB3rWXwf8bLf4/G2c41zRhMM0I=
+	t=1770703452; cv=none; b=eTvktBUPzh0/dTEP1KdO17X2Wz/thFjimHmVBRPFj342bO+YTHwM04LKE/ZNtfQjxpAi6EosnMTO+ug7x60sYymXTJLGiMpX/Xe4Uo3w26/9fXv3tYhMAbQvEh2j6ykuSySUExZ2Zz+w9KnwqCC078P7MV6fS+rGPH95bbfM0fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770703450; c=relaxed/simple;
-	bh=TzweULhbFyvVOxzKvm6ziGllewjhlCuvpRxGmN/BS4Q=;
+	s=arc-20240116; t=1770703452; c=relaxed/simple;
+	bh=m6NLJ4Vb0UEPbPzi83NUsogmV6qs5B+5r17ynjkDPV0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cxsUjy2kyWUXbVlKKboHTQ/3tOjZW3PdEtY2sMLIw2s6L49+VI99pX03lpTN7JWLQNYMi+VGpzb2j+PJKxZrgL1WXWwjPPbuc2HEtNGToYarV3Z06Spot8LNBALiFsquQkv+dsHwn/4OgaBwoyMEnYD3kMHEkw9oLddNKgeTy90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KVCX5bhK; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=PPUBmfH0psyDYoR411xJps6e5wb+lR14w2AcGli7qqMcFrwHaRMWvRPGuYh4CiFyEfdH9OnlanWP+DOJHPJlU4DCglh/RvnoOKUcROOd3mvrZw3CJr6ZtxLN/tfQBvGkp/YnDNylOwLPwK2vpBEeX+w+ZxNiAT3jxEF76R7nyEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FqrcSOFd; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KVCX5bhK"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b6b9c1249fso4256427eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 22:04:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FqrcSOFd"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-124a95b6f61so3017735c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 22:04:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770703449; x=1771308249; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770703450; x=1771308250; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yDLKVG3tEtlD42Ak1LCzl04+zbbwATgaIYJmxnnK6Qc=;
-        b=KVCX5bhKlAY40YdEPKionSJwytrqQFJUktQclUSB/IF2GIMtewnB0/wGDl5/lP3XZd
-         i0EqfoRjhjO2RxziLfkMW5M30pB+HaOqAsFRKd7Vz7jinxSHCrzzcYUTF5r/mYL2DX+Y
-         Hl2c4GraXtB6kUByf1KUoQtlyYtsJ+QYcjVvnFlqvdTLVBvyuPkhQqew1ReoxtIhmQnR
-         u7O529VK4giirpD0gS6QKn5greFveBI/W3c0iSpM4UfKBErnkdwF5dbYODxncYrfy8dN
-         2PkqBZrF7WxJdhnSxoXbDZ0TDaBklCrevZmLmUn4jfsaepB4eEyGbiOuvo8bvjBOWvUu
-         f2tA==
+        bh=sOJSg9cHyId65pfgpXUFicdk0Bjz5b4dGSwLC1Zzl3E=;
+        b=FqrcSOFdByniHRDVVhL6jzIYgr2ExYpJeLe5tZvpOpG8+pR1/XATNV/3R7YaTloiPn
+         zyzzGSU71422ZevKn17i8y0wAUrYa2oBHfgoBsdllgoeOXT8lZkA10m2EwVVBiWSmfR7
+         Amd94gZjO/0wbg/FpsK/fVp6gG2sj3ggPUkRDBAdBL2H8499GDfqWr/zK0riuX77YQhM
+         W2CUd6DfKnQOikn/98YyAfs+7r5Y33mTEAruJeyTuRTAeGyKhsimXik2KXfeMA7M6SPy
+         XWGW68RszIuhaux51lI/XTaaDhipZzif1Ha6l1J+rKsenhya/SHOj5hC2SzkIebvEA/s
+         hEig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770703449; x=1771308249;
+        d=1e100.net; s=20230601; t=1770703450; x=1771308250;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yDLKVG3tEtlD42Ak1LCzl04+zbbwATgaIYJmxnnK6Qc=;
-        b=uaZH/Rz36zEft0p94A40gpoZ4LjTFtUaIbgiROkdG9pTUwCT/hAuQkCK5uv95rDeng
-         uh/d8jGgT3p4t96xIwsrfnLSRPKI6yOaSfwFoB3uccL/+I27w9flxsKxyvC4bm/+UZMu
-         vXnHi8cQ8wE9G1XJwYjmnNyIh6iVIRIpxGmi2ywF/HYCvbvCO9j5ATFW0Fw+kcnazTic
-         JovYvudt05nixXYXCWtR+Zb046y8QAMjtTHGq0g5R958feEJew5Np2iYI5k5la9DtE1p
-         EZ0ytIDMbYYFR0pVhgviSZ7UfLK/guNUBp+cC9OrnZ7CMSImZNbMVfMd93gk9H7Vu7jT
-         kTMA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxbJ3XiMFSkeBet5bQEqWQqA75BBnf4hRknXGxEy6P0TJfdFZTLlhxSQzm2ubJEDaBBpYRksgnHVjyKTrtKRrH@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6txc1WO+bq49PfJ81CsgyPXYLYsfY4mHSDZVDGPCtxGpDuyfA
-	IJGycnWozSSSRnMsbgMgpHSCZpbXWPSldi9Dp5RiKHjy3oexaMB6FMEfT4lRnPQ2f154sgoxtBx
-	nfyakRZtezw==
-X-Received: from dlbdd35.prod.google.com ([2002:a05:7022:aa3:b0:127:1887:64c9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:a86:b0:123:330b:398
- with SMTP id a92af1059eb24-12703f51b55mr5734557c88.19.1770703448533; Mon, 09
- Feb 2026 22:04:08 -0800 (PST)
-Date: Mon,  9 Feb 2026 22:03:55 -0800
+        bh=sOJSg9cHyId65pfgpXUFicdk0Bjz5b4dGSwLC1Zzl3E=;
+        b=a8p6tS/AID/l4DYSIetOsh4GNBlFbq5IXZgFiPWOSW7ZFUjNweGaiooULtNNtiv5XQ
+         J9hVZ7Wwjx3FIr64DMs1CU2d53PXLXLd13O9Z1YHRreEIq09c4y/SBn40/eLnxPpQNsQ
+         tpB4EwcWBT3OK70bKkhuSW03rk66T/nNOI12JgWhWzHbZkoAZhIzHZvqc6VrHxfgj27W
+         fypAUGJQhEbGoog4+hZXaFH38xAmNtsMNvjS0it8IuKhdfgeA+DHKFcMymzBfVXtHNYA
+         aJ1PRk9w7ee6t5yEAq7kQXMn6T8tPhWmDiJ84mGkSIHhukqfQxBWYDLqg1vRnzpsE5Pf
+         1cdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/r8m4Ae6CbhBD8BugWbhN4lopxalLRZmILnRmnZpyTfUH4OUGOwogsq0ktOoKqhVxM1nchypuk845nbOc9UDE@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDkZ7I7rb1Ojbuo0ZiXKm7b5RkfsZFKR0rP1yNnnNQkExDX8LO
+	/rsCvZUBgx3neUNPmv0SmNcSfgWZIzuqB5Pc32Uz/S9KeemyzWucEypVwDVD4sgTBcNUCBEDGqk
+	eJkCQ/NDtvw==
+X-Received: from dlb29.prod.google.com ([2002:a05:7022:61d:b0:127:1508:19ae])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:419c:b0:124:9dea:188d
+ with SMTP id a92af1059eb24-1270405a026mr5730471c88.30.1770703450210; Mon, 09
+ Feb 2026 22:04:10 -0800 (PST)
+Date: Mon,  9 Feb 2026 22:03:56 -0800
 In-Reply-To: <20260210060359.2233425-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <aYqHTfCoW1bGmJF4@google.com> <20260210060359.2233425-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
-Message-ID: <20260210060359.2233425-3-irogers@google.com>
-Subject: [PATCH v9 2/6] perf stat-shadow: In prepare_metric fix guard on
- reading NULL perf_stat_evsel
+Message-ID: <20260210060359.2233425-4-irogers@google.com>
+Subject: [PATCH v9 3/6] perf evlist: Special map propagation for tool events
+ that read on 1 CPU
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org, acme@kernel.org
 Cc: adrian.hunter@intel.com, ak@linux.intel.com, 
@@ -72,66 +72,140 @@ Cc: adrian.hunter@intel.com, ak@linux.intel.com,
 	yang.lee@linux.alibaba.com
 Content-Type: text/plain; charset="UTF-8"
 
-The aggr value is setup to always be non-null creating a redundant
-guard for reading from it. Switch to using the perf_stat_evsel (ps)
-and narrow the scope of aggr so that it is known valid when used.
+Tool events like duration_time don't need a perf_cpu_map that contains
+all online CPUs. Having such a perf_cpu_map causes overheads when
+iterating between events for CPU affinity. During parsing mark events
+that just read on a single CPU map index as such, then during map
+propagation set up the evsel's CPUs and thereby the evlists
+accordingly. The setting cannot be done early in parsing as user CPUs
+are only fully known when evlist__create_maps is called.
 
-Reported-by: Andres Freund <andres@anarazel.de>
-Fixes: 3d65f6445fd9 ("perf stat-shadow: Read tool events directly")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-shadow.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ tools/lib/perf/evlist.c                 | 36 ++++++++++++++++++++++---
+ tools/lib/perf/include/internal/evsel.h |  2 ++
+ tools/perf/util/parse-events.c          |  1 +
+ tools/perf/util/pmu.c                   | 11 ++++++++
+ tools/perf/util/pmu.h                   |  2 ++
+ 5 files changed, 48 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 5d8d09e0e6ae..59d2cd4f2188 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -57,7 +57,6 @@ static int prepare_metric(struct perf_stat_config *config,
- 		bool is_tool_time =
- 			tool_pmu__is_time_event(config, metric_events[i], &tool_aggr_idx);
- 		struct perf_stat_evsel *ps = metric_events[i]->stats;
--		struct perf_stat_aggr *aggr;
- 		char *n;
- 		double val;
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index 3ed023f4b190..1f210dadd666 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -101,6 +101,28 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+ 		evsel->cpus = perf_cpu_map__get(evlist->user_requested_cpus);
+ 	}
  
-@@ -82,8 +81,7 @@ static int prepare_metric(struct perf_stat_config *config,
- 			}
- 		}
- 		/* Time events are always on CPU0, the first aggregation index. */
--		aggr = &ps->aggr[is_tool_time ? tool_aggr_idx : aggr_idx];
--		if (!aggr || !metric_events[i]->supported || aggr->counts.run == 0) {
-+		if (!ps || !metric_events[i]->supported) {
- 			/*
- 			 * Not supported events will have a count of 0, which
- 			 * can be confusing in a metric. Explicitly set the
-@@ -93,11 +91,21 @@ static int prepare_metric(struct perf_stat_config *config,
- 			val = NAN;
- 			source_count = 0;
- 		} else {
--			val = aggr->counts.val;
--			if (is_tool_time)
--				val *= 1e-9; /* Convert time event nanoseconds to seconds. */
--			if (!source_count)
--				source_count = evsel__source_count(metric_events[i]);
-+			struct perf_stat_aggr *aggr =
-+				&ps->aggr[is_tool_time ? tool_aggr_idx : aggr_idx];
++	/*
++	 * Tool events may only read on the first CPU index to avoid double
++	 * counting things like duration_time. Make the evsel->cpus contain just
++	 * that single entry otherwise we may spend time changing affinity to
++	 * CPUs that just have tool events, etc.
++	 */
++	if (evsel->reads_only_on_cpu_idx0 && perf_cpu_map__nr(evsel->cpus) > 0) {
++		struct perf_cpu_map *srcs[3] = {
++			evlist->all_cpus,
++			evlist->user_requested_cpus,
++			evsel->pmu_cpus,
++		};
++		for (size_t i = 0; i < ARRAY_SIZE(srcs); i++) {
++			if (!srcs[i])
++				continue;
 +
-+			if (aggr->counts.run == 0) {
-+				val = NAN;
-+				source_count = 0;
-+			} else {
-+				val = aggr->counts.val;
-+				if (is_tool_time) {
-+					/* Convert time event nanoseconds to seconds. */
-+					val *= 1e-9;
-+				}
-+				if (!source_count)
-+					source_count = evsel__source_count(metric_events[i]);
-+			}
- 		}
- 		n = strdup(evsel__metric_id(metric_events[i]));
- 		if (!n)
++			perf_cpu_map__put(evsel->cpus);
++			evsel->cpus = perf_cpu_map__new_int(perf_cpu_map__cpu(srcs[i], 0).cpu);
++			break;
++		}
++	}
++
+ 	/* Sanity check assert before the evsel is potentially removed. */
+ 	assert(!evsel->requires_cpu || !perf_cpu_map__has_any_cpu(evsel->cpus));
+ 
+@@ -133,16 +155,22 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+ 
+ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
+ {
+-	struct perf_evsel *evsel, *n;
+-
+ 	evlist->needs_map_propagation = true;
+ 
+ 	/* Clear the all_cpus set which will be merged into during propagation. */
+ 	perf_cpu_map__put(evlist->all_cpus);
+ 	evlist->all_cpus = NULL;
+ 
+-	list_for_each_entry_safe(evsel, n, &evlist->entries, node)
+-		__perf_evlist__propagate_maps(evlist, evsel);
++	/* 2 rounds so that reads_only_on_cpu_idx0 benefit from knowing the other CPU maps. */
++	for (int round = 0; round < 2; round++) {
++		struct perf_evsel *evsel, *n;
++
++		list_for_each_entry_safe(evsel, n, &evlist->entries, node) {
++			if ((!evsel->reads_only_on_cpu_idx0 && round == 0) ||
++			    (evsel->reads_only_on_cpu_idx0 && round == 1))
++				__perf_evlist__propagate_maps(evlist, evsel);
++		}
++	}
+ }
+ 
+ void perf_evlist__add(struct perf_evlist *evlist,
+diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/include/internal/evsel.h
+index fefe64ba5e26..b988034f1371 100644
+--- a/tools/lib/perf/include/internal/evsel.h
++++ b/tools/lib/perf/include/internal/evsel.h
+@@ -128,6 +128,8 @@ struct perf_evsel {
+ 	bool			 requires_cpu;
+ 	/** Is the PMU for the event a core one? Effects the handling of own_cpus. */
+ 	bool			 is_pmu_core;
++	/** Does the evsel on read on the first CPU index such as tool time events? */
++	bool			 reads_only_on_cpu_idx0;
+ 	int			 idx;
+ };
+ 
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index f631bf7a919f..b9efb296bba5 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -269,6 +269,7 @@ __add_event(struct list_head *list, int *idx,
+ 	evsel->core.pmu_cpus = pmu_cpus;
+ 	evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
+ 	evsel->core.is_pmu_core = is_pmu_core;
++	evsel->core.reads_only_on_cpu_idx0 = perf_pmu__reads_only_on_cpu_idx0(attr);
+ 	evsel->pmu = pmu;
+ 	evsel->alternate_hw_config = alternate_hw_config;
+ 	evsel->first_wildcard_match = first_wildcard_match;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index bb399a47d2b4..81ab74681c9b 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -2718,3 +2718,14 @@ const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)
+ 	}
+ 	return NULL;
+ }
++
++bool perf_pmu__reads_only_on_cpu_idx0(const struct perf_event_attr *attr)
++{
++	enum tool_pmu_event event;
++
++	if (attr->type != PERF_PMU_TYPE_TOOL)
++		return false;
++
++	event = (enum tool_pmu_event)attr->config;
++	return event != TOOL_PMU__EVENT_USER_TIME && event != TOOL_PMU__EVENT_SYSTEM_TIME;
++}
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 7ef90b54a149..41c21389f393 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -350,6 +350,8 @@ void perf_pmu__delete(struct perf_pmu *pmu);
+ const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config);
+ bool perf_pmu__is_fake(const struct perf_pmu *pmu);
+ 
++bool perf_pmu__reads_only_on_cpu_idx0(const struct perf_event_attr *attr);
++
+ static inline enum pmu_kind perf_pmu__kind(const struct perf_pmu *pmu)
+ {
+ 	__u32 type;
 -- 
 2.53.0.rc2.204.g2597b5adb4-goog
 
