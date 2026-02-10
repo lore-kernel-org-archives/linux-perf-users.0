@@ -1,65 +1,66 @@
 Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AD52AD0C
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 06:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8164302750
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 06:04:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770703445; cv=none; b=ns2899z6DzEtZWytNNOazmVBNMKcdTN7QTX+X7T4LMX9Uv4toQCNNXMYPoo60YHzgp9javLqg95lI8qzwnutWDIQldaBMEy/lB2QB21zMieAw0uzE/cR/YgLBrEq0r7RVdvbo9FeaCzkRlP/YQREBC3oSUOfXNBW/C9932CKQaM=
+	t=1770703448; cv=none; b=jho3H0UoiPLL3ldJvEfrzU7m8tqqic/EnFaOo9T9hKo1PN84rZtJ+yIS/MxvcZE2TxajVIjv1BPLyi8kOrEDcjp/H4ASgKMHTXTnLDPHLMnRnknrIRlvrrP/CIzujob3MOE6g5Ca7tOZIC8R5niP6oAJ6mPE0lfJcGwRU7r7lHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770703445; c=relaxed/simple;
-	bh=Zfybov18wp+XKF9zfziT3A7XQ8Rz6pik8UZSDbDPmuE=;
+	s=arc-20240116; t=1770703448; c=relaxed/simple;
+	bh=Lszd0UdRB8GQidhdx5Z+Lj/C2pK9X74pxC+as6fOUOI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CCwkEemAsVFmIM/xy7+rHm1VIbfKv/iPJs1eL7j5Y0dBm46/T3lH+lbeYQSOdQPdytbZ/r2ffYigwq9ZhTT+2wQhucSDIl74diABLJ5J0Vu5EmmorZ+jAkmKQeL0S1sxMgsP+vVU6loh5u6+Q5OgzSXESBx8n2lJ4etVNrJ8qC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pWNw8eDs; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=UvZpB9/KWf9KNDYbepuLC6S9ekIV+yBAe9xlB9mUBHtqTJbzjp/Jrd/PVo9K0w53lkB4qFjdiPGdpEcPnnXW1stBtES4+REKgPMNn9E61xf+iD2WfBjLx2tGAARuLixgEQ5gT87SiIdnk4T3T5rJ0rWNVNJdkHU6V3RWa59rnJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KXY3/PT5; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pWNw8eDs"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1233b81a92dso5535278c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 22:04:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KXY3/PT5"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-126e8ee6227so469521c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Feb 2026 22:04:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770703444; x=1771308244; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770703447; x=1771308247; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=V+3dGOJiTRqCZMxIxulRVBleFQcYgURizALb+zOiPC8=;
-        b=pWNw8eDsuTlTliALWNl2REPeb4SOEF7BKvFhs9tKom9IArChzr6sJKju4cI/VAuss+
-         zPUnSxzrRl50X4xgNEvM29qYid9RJgXPxv2Kjpgn/5lIGCQx7jaxgv8/V2VPpH3cn+Ts
-         76AIKeYA+1trrP4TmEGxiOAHovLiGIh7PFA0gyl3i0j4KFlTkPH75XDrlSf+/HeMoQmW
-         BDKRsgckTfVEW1joo9NSvgmJ2N4SMUAjUTthQbywvik1xULnNw/z3O2rvvn4ZAzNDc98
-         2qTrbNtTpqogmEw+VyhWXVJx1yMyLW/y/YwIxhPgsTbaAwbrN/TH1B/OeQDiKB5XixFO
-         w62w==
+        bh=trHHoM5lxs3R3c1XXOrfjjzTr20GXbuQCFUGYGyaPS8=;
+        b=KXY3/PT5r7h0+AMXAo41op15xBxpWRPat2LMnkAuZpYPGOG+xjV9I0JPvH6v+Ff8Um
+         LbwICjcLw2MIwIPBOobihM9sh8BrLnxHPsmuR0ssxBpkLh1K7m0i4NWO3MDOmWQt/0yK
+         6iRHm2T9sySDtpF1krwYPdk+6RecFuQ3nEjfX26SfPAkFruopy9GT32UInaU2j+P9qkN
+         Ng7oZO4IWh8c6zN5JNUDACkEdIgoAjvVkpNuoMaarZEFy0a5bjboql3uFukXwrxkUFzQ
+         gkbQrdPkuGJu0/hDUcsXl2WZkRkohabyEmLOCx9rsISJHe+B6oND0pX+O6ygQ2ZchZxE
+         zc5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770703444; x=1771308244;
+        d=1e100.net; s=20230601; t=1770703447; x=1771308247;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V+3dGOJiTRqCZMxIxulRVBleFQcYgURizALb+zOiPC8=;
-        b=S4xE/6emqNnwPIklQBj/cviSYu9e/xer0aoAz2Hr8vqpFgx6J6CN/0kG43XO2GRVe5
-         CMutJPWLtD2SDnn4RX7EVieX9CdckpBz1uUxhhEsG8L4Cqrtli7AfhrbkLAmWFl5ujUG
-         fADWEl0nzAlFYCY2gAuIFW9pzpFkRjdgGlvzKLXdG0guFOLTvO4JElNg+VR8Td7lHddZ
-         OQfo1+hXk3HDcUbUro1tz5viE6PUArwJ3zqCamgIzsHm/+QRio25H2CbI6llKFMdrDlg
-         LnXFKi9iL7znaBslYCsQNHGBKOckkqTO/YvkLTXObmZw2ooF/P+qR4FovM9YJjSdCGRa
-         rHrg==
-X-Forwarded-Encrypted: i=1; AJvYcCWAp3csfWuS9QyH96T1qFYDFVOWNPmtrS+Sy8ZC8r0eGj8dscIxVSG13xiWUXv7H/8ZxcYWURhckPmZxEut6One@vger.kernel.org
-X-Gm-Message-State: AOJu0Yysi/UNKzoub8yzU8Us7CJxm0tKKkt5wMYkV7jB5K64vz0fMF6F
-	QZ6xDBUZeKF/1LFSIOJrTmuGODY9qF3y4VNbz5Hs/o+7WgnLs0B8I1LyCw0aib6UalqOEyvDGj9
-	3aVpuej1xQw==
-X-Received: from dlcip7.prod.google.com ([2002:a05:7023:c087:b0:124:9d31:3581])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2521:b0:119:e569:f865
- with SMTP id a92af1059eb24-127240d1f38mr430946c88.2.1770703443677; Mon, 09
- Feb 2026 22:04:03 -0800 (PST)
-Date: Mon,  9 Feb 2026 22:03:53 -0800
-In-Reply-To: <aYqHTfCoW1bGmJF4@google.com>
+        bh=trHHoM5lxs3R3c1XXOrfjjzTr20GXbuQCFUGYGyaPS8=;
+        b=fBCBlZnJ+GPNde0+E0/zSLXazz3G+lraDnkMw0eifd3jzX+e7P6O2wnRS2yKl/jSOR
+         ei/U+JiR7RjSEGa5g/NvxCfhaXRSlM2BVjblhP04NUmpjYrw1/ueZCF9mVC6xkAh2Sll
+         RAG5J4pXP0BW0eCFjlUcIiSbidTAPJfU2Lybt1flO2XSt3d70eessnUyfNahJLAXXSL9
+         Yy7r5xBXpjfhIkvvYTsfF3bcSx1DhrEF7R5JexoCs0Wsk5n9TwV/XJHVOoybrhfloY+y
+         6yDrLin42zl5zZF+iTUSHfDPSOwLp4y5uklQ4kf78JVX0va6BKqllfjfI1GUD/5ZOmOo
+         rC3g==
+X-Forwarded-Encrypted: i=1; AJvYcCXhDhVgjyj9Q6vfnWHU7YQ8cgKUbo3whj3M4K20llz+kqof86RlKaSbNqHFCDVBkEaPc7pQAuA+Id6uz3Z4yMfM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK/OXT2f0lOCqd2hGworB/goWziwLgfoMRLHp7OEV6Z6T+gUHo
+	KJZlzHVQC6z1ID4tZeyqm3eW+SqTCuG1NnUYlRZ73zWNaStThPa1ZIfMCFoDuCgh+WL3TF3nGeK
+	fAhjtyukAjg==
+X-Received: from dlbqq7.prod.google.com ([2002:a05:7022:ed07:b0:127:177b:bd24])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:404:b0:11b:9e5e:1a40
+ with SMTP id a92af1059eb24-127040196f5mr4582022c88.15.1770703446829; Mon, 09
+ Feb 2026 22:04:06 -0800 (PST)
+Date: Mon,  9 Feb 2026 22:03:54 -0800
+In-Reply-To: <20260210060359.2233425-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <aYqHTfCoW1bGmJF4@google.com>
+References: <aYqHTfCoW1bGmJF4@google.com> <20260210060359.2233425-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
-Message-ID: <20260210060359.2233425-1-irogers@google.com>
-Subject: [PATCH v9 0/6] perf stat affinity changes
+Message-ID: <20260210060359.2233425-2-irogers@google.com>
+Subject: [PATCH v9 1/6] Revert "perf tool_pmu: More accurately set the cpus
+ for tool events"
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org, acme@kernel.org
 Cc: adrian.hunter@intel.com, ak@linux.intel.com, 
@@ -71,80 +72,105 @@ Cc: adrian.hunter@intel.com, ak@linux.intel.com,
 	yang.lee@linux.alibaba.com
 Content-Type: text/plain; charset="UTF-8"
 
-Change how affinities work with evlist__for_each_cpu. Move the
-affinity code into the iterator to simplify setting it up. Detect when
-affinities will and won't be profitable, for example a tool event and
-a regular perf event (or read group) may face less delay from a single
-IPI for the event read than from a call to sched_setaffinity. Add a
- --no-affinity flag to perf stat to allow affinities to be disabled.
+This reverts commit d8d8a0b3603a9a8fa207cf9e4f292e81dc5d1008.
 
-v9: Fix command line comment for --affinity (Arnaldo, Namhyung)
+The setting of a user CPU map can cause an empty intersection when
+combined with CPU 0 and the event removed. This later triggers a segv
+in the stat-shadow logic. Let's put back a full online CPU map for now
+by reverting this patch.
 
-v8: Rebase, due to minor conflict with:
-https://lore.kernel.org/lkml/20260203230733.1474840-1-ctshao@google.com/
-https://lore.kernel.org/lkml/20260206222509.982489-1-irogers@google.com/
+Reported-by: Andres Freund <andres@anarazel.de>
+Closes: https://lore.kernel.org/linux-perf-users/cgja46br2smmznxs7kbeabs6zgv3b4olfqgh2fdp5mxk2yom4v@w6jjgov6hdi6/
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/parse-events.c |  9 ++-------
+ tools/perf/util/tool_pmu.c     | 19 -------------------
+ tools/perf/util/tool_pmu.h     |  1 -
+ 3 files changed, 2 insertions(+), 27 deletions(-)
 
-v7: Revert "perf tool_pmu: More accurately set the cpus for tool
-    events" that caused issues with user specified CPUs (Andres Freund
-    <andres@anarazel.de>). Fix a null test is prepare_metric so that
-    missing events can't trigger segfaults (Andres Freund). Make the
-    CPU map propagation improve the CPU maps for tool events that only
-    read on index 0, this allows later setting when
-    evlist__create_maps is called with the correct user CPUs. Rebase
-    previous non-merged affinity changes that hadn't been picked up
-    yet.
-https://lore.kernel.org/lkml/20260203225129.4077140-1-irogers@google.com/
-
-v6: Drop merged tool event change. Move TPEBS fix into its own patch
-    1st.
-https://lore.kernel.org/lkml/20260108212652.768875-1-irogers@google.com/
-
-v5: Drop merged changes. Move tool event reading to first
-    patch. Change --no-affinity flag to --affinity/--no-affinity flag.
-https://lore.kernel.org/lkml/20251118211326.1840989-1-irogers@google.com/
-    On v5 there was discussion with Andi Kleen who points out that
-    affinities will work better with real time priorities but using
-    this requires privileges.
-
-v4: Rebase. Add patch to reduce scope of walltime_nsec_stats now that
-    the legacy metric code is no more. Minor tweak to the ru_stats
-    clean up.
-https://lore.kernel.org/lkml/20251113180517.44096-1-irogers@google.com/
-
-v3: Add affinity clean ups and read tool events last.
-https://lore.kernel.org/lkml/20251106071241.141234-1-irogers@google.com/
-
-v2: Fixed an aggregation index issue:
-https://lore.kernel.org/lkml/20251104234148.3103176-2-irogers@google.com/
-
-v1:
-https://lore.kernel.org/lkml/20251104053449.1208800-1-irogers@google.com/
-
-Ian Rogers (6):
-  Revert "perf tool_pmu: More accurately set the cpus for tool events"
-  perf stat-shadow: In prepare_metric fix guard on reading NULL
-    perf_stat_evsel
-  perf evlist: Special map propagation for tool events that read on 1
-    CPU
-  perf evlist: Missing TPEBS close in evlist__close
-  perf evlist: Reduce affinity use and move into iterator, fix no
-    affinity
-  perf stat: Add no-affinity flag
-
- tools/lib/perf/evlist.c                 |  36 +++++-
- tools/lib/perf/include/internal/evsel.h |   2 +
- tools/perf/Documentation/perf-stat.txt  |   5 +
- tools/perf/builtin-stat.c               | 114 ++++++++---------
- tools/perf/util/evlist.c                | 156 +++++++++++++++---------
- tools/perf/util/evlist.h                |  27 ++--
- tools/perf/util/parse-events.c          |  10 +-
- tools/perf/util/pmu.c                   |  23 ++++
- tools/perf/util/pmu.h                   |   3 +
- tools/perf/util/stat-shadow.c           |  24 ++--
- tools/perf/util/tool_pmu.c              |  19 ---
- tools/perf/util/tool_pmu.h              |   1 -
- 12 files changed, 250 insertions(+), 170 deletions(-)
-
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index d4647ded340f..f631bf7a919f 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -30,7 +30,6 @@
+ #include "util/event.h"
+ #include "util/bpf-filter.h"
+ #include "util/stat.h"
+-#include "util/tool_pmu.h"
+ #include "util/util.h"
+ #include "tracepoint.h"
+ #include <api/fs/tracing_path.h>
+@@ -230,12 +229,8 @@ __add_event(struct list_head *list, int *idx,
+ 	if (pmu) {
+ 		is_pmu_core = pmu->is_core;
+ 		pmu_cpus = perf_cpu_map__get(pmu->cpus);
+-		if (perf_cpu_map__is_empty(pmu_cpus)) {
+-			if (perf_pmu__is_tool(pmu))
+-				pmu_cpus = tool_pmu__cpus(attr);
+-			else
+-				pmu_cpus = cpu_map__online();
+-		}
++		if (perf_cpu_map__is_empty(pmu_cpus))
++			pmu_cpus = cpu_map__online();
+ 	} else {
+ 		is_pmu_core = (attr->type == PERF_TYPE_HARDWARE ||
+ 			       attr->type == PERF_TYPE_HW_CACHE);
+diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+index 37c4eae0bef1..6a9df3dc0e07 100644
+--- a/tools/perf/util/tool_pmu.c
++++ b/tools/perf/util/tool_pmu.c
+@@ -2,7 +2,6 @@
+ #include "cgroup.h"
+ #include "counts.h"
+ #include "cputopo.h"
+-#include "debug.h"
+ #include "evsel.h"
+ #include "pmu.h"
+ #include "print-events.h"
+@@ -14,7 +13,6 @@
+ #include <api/fs/fs.h>
+ #include <api/io.h>
+ #include <internal/threadmap.h>
+-#include <perf/cpumap.h>
+ #include <perf/threadmap.h>
+ #include <fcntl.h>
+ #include <strings.h>
+@@ -111,23 +109,6 @@ const char *evsel__tool_pmu_event_name(const struct evsel *evsel)
+ 	return tool_pmu__event_to_str(evsel->core.attr.config);
+ }
+ 
+-struct perf_cpu_map *tool_pmu__cpus(struct perf_event_attr *attr)
+-{
+-	static struct perf_cpu_map *cpu0_map;
+-	enum tool_pmu_event event = (enum tool_pmu_event)attr->config;
+-
+-	if (event <= TOOL_PMU__EVENT_NONE || event >= TOOL_PMU__EVENT_MAX) {
+-		pr_err("Invalid tool PMU event config %llx\n", attr->config);
+-		return NULL;
+-	}
+-	if (event == TOOL_PMU__EVENT_USER_TIME || event == TOOL_PMU__EVENT_SYSTEM_TIME)
+-		return cpu_map__online();
+-
+-	if (!cpu0_map)
+-		cpu0_map = perf_cpu_map__new_int(0);
+-	return perf_cpu_map__get(cpu0_map);
+-}
+-
+ static bool read_until_char(struct io *io, char e)
+ {
+ 	int c;
+diff --git a/tools/perf/util/tool_pmu.h b/tools/perf/util/tool_pmu.h
+index ea343d1983d3..f1714001bc1d 100644
+--- a/tools/perf/util/tool_pmu.h
++++ b/tools/perf/util/tool_pmu.h
+@@ -46,7 +46,6 @@ bool tool_pmu__read_event(enum tool_pmu_event ev,
+ u64 tool_pmu__cpu_slots_per_cycle(void);
+ 
+ bool perf_pmu__is_tool(const struct perf_pmu *pmu);
+-struct perf_cpu_map *tool_pmu__cpus(struct perf_event_attr *attr);
+ 
+ bool evsel__is_tool(const struct evsel *evsel);
+ enum tool_pmu_event evsel__tool_event(const struct evsel *evsel);
 -- 
 2.53.0.rc2.204.g2597b5adb4-goog
 
