@@ -1,130 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A131C3F0C;
-	Wed, 11 Feb 2026 12:54:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C179F2D948A;
+	Wed, 11 Feb 2026 16:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770814498; cv=none; b=Cbxj/HEItKYUD4bPwuf2KUqo0/tGzEYI0agZUro9LSby5DDyOJRXkkPDEAOld4exjrRWc9+XOm5r3vkt8UjsHxtnKajnfPu31m+1ryULjeFZGE6MApJGZHFuahXHUikoOhGNR9IBibWsDOU0VJQVO1zK1zoWDS1VJ5XeDckhzBs=
+	t=1770827228; cv=none; b=PLnTxNc22yKoMm52K0U4a/CoMhtk06jX1hWSlWLS4IVV31YrX/zHinr1w1GMDoekXd0Q7ye54mOknHZJWLdqfEUbQup5uZq2NVLgp00syzzcVK2WjFrb+h2a9vnaOuBeQ91m5cnKuGrjQo4c4uLgcsA507sC1PrBCNdK0s+rBTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770814498; c=relaxed/simple;
-	bh=gsrzadTq43js7WZY4x/JF5C3E8yJWOGekiXLNXSS0m0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=s/sz4KIBbN5Qe2iurSnjhdQ9fQytcAtf37sNPt5KUH320xLjV+kELusrxZBNSDe3QweVwXRktBKLmK+lqalNXnZv+KyP3PryPf8VsG3BQCdIhEtmGgMekx44iCc/meggerdROhbznFhTQ2lqzNa1uSFtU7Kur2b+PWwdVOazG9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XqSB6AQ/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770827228; c=relaxed/simple;
+	bh=/LJesoTfbflYsC1m2Ri9NVppFK7ho7Sqst64TMCsb3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bYITRt8pd8aAmUAYqVt+ika8KqMt+rsAriAt6+DmJfBQRG5Ept1rPWQU/LrRdSgxkxWx61OrJqZ1c7Ynfe3AZJpr1FBIkkTCqoKVZbtUTZghMrzaFpLkWE0F2Sa5+syUszOgS53Ak7vFrWIhXT209FguSbzBHDaV8b522UsSY6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGfulyQ7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XqSB6AQ/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73B51C19421;
-	Wed, 11 Feb 2026 12:54:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGfulyQ7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 788FCC4CEF7;
+	Wed, 11 Feb 2026 16:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770814498;
-	bh=gsrzadTq43js7WZY4x/JF5C3E8yJWOGekiXLNXSS0m0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=XqSB6AQ/HpGvV8sVQK05y+C8opjcw0JFRwpv8JAzA7zN8TiPdqYJ5VF740ryXMLk1
-	 FZvv6/Rs2jIK4G2wlkYO+PGgufkP4LyiOY5eW1Hq8fal8usB4jOeHGt+KNxGtrQkdc
-	 459isaBdjnyXbCmRdI3Va+0thIcxd5DWa2FgtYCCZjIdK7KSyuOSSn6bNpQhswEXay
-	 OZk7SYR54vXdJ/SvBtBt7YUgrcPg9VZENI1pwtpaiZWsUBX8u3HfSMJyVioFqkNxmD
-	 9KYZrXU/hR2fyzJFiiuUZBxNZ8Z6SLmV/AmE85I/CNHyxdioISujZtyk2fSf2nw4Ku
-	 19OCDwxkD+OUg==
-Date: Wed, 11 Feb 2026 09:54:52 -0300
+	s=k20201202; t=1770827228;
+	bh=/LJesoTfbflYsC1m2Ri9NVppFK7ho7Sqst64TMCsb3A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TGfulyQ7OVGwAZeRggKnJFtQRRuKxd63s4kPfvcTrX1rU04/YgzUvaf4wy0w7noED
+	 I3enVVE1dLzLHc8nzaQeKTWPkjji2DWqf8AafRkM9qP9wcYDeUepYmL4heKBjlKhbn
+	 tsVh6Lscj/7Sw9Ao72Z7AcFvkNABnnIrejfuQQWq/5v/n6/6VIUL4TBtnw/6exflAG
+	 MTQwg7kQ5v5DxOfY/LoRotFO0XDX6AEDEG2xavCH7tXjyxC+wHFypqZq+FgfwjRyF8
+	 mkR2adt4Naf/l/YAARWr0ncBxmafaaSttFIRKtqdNmLwt/wX1a3ZyEgzQgSYpuLxNd
+	 vGe0GN8lRQF6g==
+Date: Wed, 11 Feb 2026 13:27:04 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Dmitrii Dolgov <9erthalion6@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] perf test data_type_profiling.sh: Skip just the Rust
- tests if code_with_type workload is missing
-Message-ID: <aYx8HIerWMAQguUs@x1>
+To: hupu <hupu.gm@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
+	morbo@google.com, justinstitt@google.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [RFC 1/2] perf build: Allow passing extra Clang flags via
+ EXTRA_BPF_FLAGS
+Message-ID: <aYyt2KD3pPu4alvT@x1>
+References: <20251223084337.3789-1-hupu.gm@gmail.com>
+ <20251223084337.3789-2-hupu.gm@gmail.com>
+ <aUrdUjqVEjJW9VBl@google.com>
+ <CADHxFxRprUvRzorxe00HmwG0o73VQJNf=yzM40fkiWjjqu7PZQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADHxFxRprUvRzorxe00HmwG0o73VQJNf=yzM40fkiWjjqu7PZQ@mail.gmail.com>
 
-Namhyung suggested skipping only the rust tests when the code_with_type
-'perf test' workload is not built into perf, do it so that we can
-continue to test the C based workloads:
+On Tue, Feb 10, 2026 at 01:54:49PM +0800, hupu wrote:
+> On Wed, Dec 24, 2025 at 2:20 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > On Tue, Dec 23, 2025 at 04:43:34PM +0800, hupu wrote:
+> > > Add support for EXTRA_BPF_FLAGS in the eBPF skeleton build, allowing
+> > > users to pass additional Clang options such as --sysroot or custom
+> > > include paths when cross-compiling perf.
+> > >
+> > > This is primarily intended for cross-build scenarios where the default
+> > > host include paths do not match the target kernel version.
+> > >
+> > > Example usage:
+> > >     make perf ARCH="arm64" EXTRA_BPF_FLAGS="--sysroot=..."
+> > >
+> > > Change history:
+> > >   v5:
+> > >     - Update commit message
+> > >   v4:
+> > >     - Apply EXTRA_BPF_FLAGS directly to BPF skeleton build command
+> > >       instead of modifying CLANG_OPTIONS
+> > >   v3:
+> > >     - Move the variable description comment to the top of Makefile.perf
+> > >     - Update commit message
+> > >   v2:
+> > >     - Rename EXTRA_CLANG_FLAGS to EXTRA_BPF_FLAGS
+> > >     - Update commit message
+> > >   v1:
+> > >     - Introduce EXTRA_CLANG_FLAGS to allow passing extra Clang options
+> > >
+> > > Signed-off-by: hupu <hupu.gm@gmail.com>
+> >
+> > Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+> >
+> 
+> Hi Namhyung,
+> 
+> Sorry to bother you.
+> 
+> I noticed that the patch adding support for EXTRA_BPF_FLAGS, which was
+> previously reviewed by you, does not seem to be included in the latest
+> released version. I just wanted to follow up and check on the current
+> status of this patch, in case it was missed or delayed for some
+> reason.
+> 
+> Thanks a lot for your time and review.
 
-With rust:
+Applied this one,
 
-  root@number:/# perf test -vv "data type"
-   83: perf data type profiling tests:
-  --- start ---
-  test child forked, pid 2645245
-  Basic Rust perf annotate test
-  Basic annotate test [Success]
-  Pipe Rust perf annotate test
-  Pipe annotate test [Success]
-  Basic C perf annotate test
-  Basic annotate test [Success]
-  Pipe C perf annotate test
-  Pipe annotate test [Success]
-  ---- end(0) ----
-   83: perf data type profiling tests                                  : Ok
-  root@number:/#
-
-Without:
-
-  root@number:/# perf test "data type"
-   83: perf data type profiling tests                                  : Ok
-  root@number:/# perf test -vv "data type"
-   83: perf data type profiling tests:
-  --- start ---
-  test child forked, pid 2634759
-  Basic Rust perf annotate test
-  Skip: code_with_type workload not built in 'perf test'
-  Pipe Rust perf annotate test
-  Skip: code_with_type workload not built in 'perf test'
-  Basic C perf annotate test
-  Basic annotate test [Success]
-  Pipe C perf annotate test
-  Pipe annotate test [Success]
-  ---- end(0) ----
-   83: perf data type profiling tests                                  : Ok
-  root@number:/#
-
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Dmitrii Dolgov <9erthalion6@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/shell/data_type_profiling.sh | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/tests/shell/data_type_profiling.sh b/tools/perf/tests/shell/data_type_profiling.sh
-index 3ef72a10850d0734..2a7f8f7c42d094a2 100755
---- a/tools/perf/tests/shell/data_type_profiling.sh
-+++ b/tools/perf/tests/shell/data_type_profiling.sh
-@@ -4,11 +4,6 @@
- 
- set -e
- 
--if ! perf test --list-workloads | grep -qw code_with_type ; then
--	echo "Skip: code_with_type workload not built in 'perf test'"
--	exit 2
--fi
--
- # The logic below follows the same line as the annotate test, but looks for a
- # data type profiling manifestation
- 
-@@ -42,6 +37,11 @@ test_basic_annotate() {
- 
-   case "x${runtime}" in
-     "xRust")
-+    if ! perf check feature -q rust
-+    then
-+      echo "Skip: code_with_type workload not built in 'perf test'"
-+      return
-+    fi
-     index=0 ;;
- 
-     "xC")
--- 
-2.53.0
-
+- Arnaldo
