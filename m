@@ -1,193 +1,197 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0CA2D6E5C
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 01:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856BB1A9F90;
+	Wed, 11 Feb 2026 02:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770774780; cv=none; b=kcwEDSJJVwPa2Hpu47j34UcZ8SIeVJPPE/ecy5aigzVa6VZZbuNsy4tLuWJfyCO5+CgxA7A2rELHh6a6ZVSsEoVieYp6KlMx5KVloEMUnfjsWEzbXKtVXy5ifGN47JlWeCjAUA6dHpjzPDb+JjM+weq3yh6U2ENUGe+R59ktYa8=
+	t=1770775734; cv=none; b=aCzak/RNyFpGs+/Raemjox5ojoLwz69RLIoFTL5U4R63LzpKgeU+NyKYJUyd4gb0Bgpi4WiHgdtMqlZHo2wtbORCHYnH9yU8rYLEj3aY0GB7SvCAiAa/gFTQAeqTWgafDHZg/WSqBc/iaAD/1X5NjEKBHRSmILgNNXuLedcfFiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770774780; c=relaxed/simple;
-	bh=tQHrkngzVLUEqGsMf/7XWZpqU1lbr91is2l0EGQbIBI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Wo6iezXsCbER9bB5YdUpMqOVrITWcv5IYT6DmMWp/1rxlKeVq8CH17/8Y8LvE+yizJskZlAGEfEajgtKIuI4K+lRixXxvPUehH8gUPqe68mWlG1GkPbBjRCc31U06tIV8aU5tWgou1P1CRWcpzfXTk02xVzsxX1e+zZUMtLtkts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X+dUx1/k; arc=none smtp.client-ip=74.125.82.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1770775734; c=relaxed/simple;
+	bh=RR8qvWTUK+IEh93Ob8siU/qNIbwfviNUpkv/XDvmZF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=enG0PPEy+vtELbeNgJ2aFfu4zu5tzjcf5gmF8IDtMhdDcupt29OcUKnKWK5oOxSKwIBMCUVRUCP14OMbCUqogyQg5d6+DNfvpIqm0IAgK95NSGGGahticiG2/oVo2mBxMc6jd3KpbGSUhLETrANtBTWauyCdqMOCY1C5P9Zrk1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IYusGBMJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X+dUx1/k"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ba9a744f7dso466561eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 17:52:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770774778; x=1771379578; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z/GTs5A9yek4he0BUlqIoIsxHRmHOoQilOIUJRqh028=;
-        b=X+dUx1/ku5ehRavVOUt0AZynPHHNl8iFUuUVzloC2yPNiyIEHMDljQ/vjrCa+9BJn5
-         Uim4Wc5uHjX1sCWJYyQUOOj+cVc8SDkmpeUiLXENeeyQQUwy8oSML1g/4DahWrDlH4GF
-         x99/zFFs02mOZw2ur/u/IUDJ2mxh526I87TsOwNQg6yZ0/zKgdhpaGoxij48ZGyzTCQv
-         8ChBipy+mQMy4qzPAtV/FlezuW64ELL3VAeXUw9PSMrjUGrQsTUUfLkA1q1Tpn6em2yt
-         hEXJA0MEMtpZzzm87BRH07TL8JFGLgNrIjIuB/eNcjfYBwgC3fogy8+3ltDFiy1NK7sC
-         91LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770774778; x=1771379578;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z/GTs5A9yek4he0BUlqIoIsxHRmHOoQilOIUJRqh028=;
-        b=LP3COOrlIMEd2WPIM83syHJ+v0wKO//F+54mN/mVec8WwZwurCHgvFK/qOfypAVb95
-         ktiBVhy2JNkBLcNAO46QbToEswhzwOU6YCHRBtN0tBOMqJst80ee1fl6i5zSoa9t1Vs0
-         RIikkXBzMdi05aXPYDnkD9QBZh1VKwQ8w4ab6hPFpiHU6Vh3zBVQ847KKCUI6l9I7v9I
-         FYskgPhRwbHohj1k7PRjVSmm5JTSKj73HsenJYBxTFTREZ7yYkxekf0/sCigdLZWi6NG
-         b4bewCZi4LH1WTTX/NPPLQz1+L+h3FDGxO5RZw8xlOFZNtEAcfcb4xKtrLSXt8KINLic
-         14rg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJCKZqXyY4UPAIBjNWIYHP5hRxFmgtgTmblw+Jn8vzo6M+z54MAm8MRRDRmf2qrBZDZUoWXfMe5NW4nDRc3bI6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4uWzyIjIcz/79k1dztocwsBERRO9PzuBt1YhwvCw5UgsW4RJB
-	1JLS6zejGcNKA7YsJ9rlXRwZc/TqkXr1pSSnkxMm8VrtbI6r2SBDLDzwlJjFB4eau8Et7LF0dOX
-	bp6+SKIr91A==
-X-Received: from dybhf8.prod.google.com ([2002:a05:7301:2a08:b0:2ac:3025:bdaa])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:2f99:b0:2b7:2664:ae9f
- with SMTP id 5a478bee46e88-2ba9e01564emr134737eec.1.1770774778056; Tue, 10
- Feb 2026 17:52:58 -0800 (PST)
-Date: Tue, 10 Feb 2026 17:52:42 -0800
-In-Reply-To: <20260211015242.2700218-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYusGBMJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7E65C116C6;
+	Wed, 11 Feb 2026 02:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770775734;
+	bh=RR8qvWTUK+IEh93Ob8siU/qNIbwfviNUpkv/XDvmZF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IYusGBMJWFqWVZm5s/UA9xBLwQuWXrordMfJG+3sicf0ewk1g4ncxRo9oxiT1o3iK
+	 ftxFPxy/ngw4L5i3CkI6f9QvEogprbiVm0sExKl914a2oaffG54urMcndqwBrsgGrR
+	 aYvD5XKtlrSV6AvDg0/AeiOnOM/wWNAT6orghIFineLudIIVg2dA5UtF2G6h7SvWFU
+	 yOz9Glo3ShkBzJMz1wtOIGEux9C4DvDzV21YuiA/oFHDn00Y73WeCno9wi9VDB6PiF
+	 hucixr9ODiumlI/dPxxEVN6HcFvsBPPfWxuV3FXv/qKSJHlS3gcqhOTYGaNp5Bpvco
+	 W8SYsevZk71OA==
+Date: Tue, 10 Feb 2026 18:08:52 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Zecheng Li <zli94@ncsu.edu>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, xliuprof@google.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Zecheng Li <zecheng@google.com>
+Subject: Re: [PATCH v1 01/11] perf dwarf-aux: Skip check_variable for
+ die_find_variable_by_reg
+Message-ID: <aYvktEITO1uudkGH@google.com>
+References: <20260127020617.2804780-1-zli94@ncsu.edu>
+ <20260127020617.2804780-2-zli94@ncsu.edu>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260211015242.2700218-1-irogers@google.com>
-X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
-Message-ID: <20260211015242.2700218-6-irogers@google.com>
-Subject: [PATCH v1 5/5] perf test: perf data --to-ctf testing
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Derek Foreman <derek.foreman@collabora.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260127020617.2804780-2-zli94@ncsu.edu>
 
-If babeltrace is detected check that --to-ctf functions with a data
-file and in pipe mode.
+Hello,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../shell/test_perf_data_converter_ctf.sh     | 104 ++++++++++++++++++
- 1 file changed, 104 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_perf_data_converter_ctf.sh
+On Mon, Jan 26, 2026 at 09:04:54PM -0500, Zecheng Li wrote:
+> From: Zecheng Li <zecheng@google.com>
+> 
+> In die_find_variable_by_reg, match_var_offset already performs
+> sufficient checking and type matching. The additional check_variable
+> call is redundant, and its need_pointer logic is only a heuristic. Since
+> DWARF encodes accurate type information, which match_var_offset
+> verifies, skipping check_variable improves both coverage and accuracy.
 
-diff --git a/tools/perf/tests/shell/test_perf_data_converter_ctf.sh b/tools/perf/tests/shell/test_perf_data_converter_ctf.sh
-new file mode 100755
-index 000000000000..334eebc9945e
---- /dev/null
-+++ b/tools/perf/tests/shell/test_perf_data_converter_ctf.sh
-@@ -0,0 +1,104 @@
-+#!/bin/bash
-+# 'perf data convert --to-ctf' command test
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+err=0
-+
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+ctf_dir=$(mktemp -d /tmp/__perf_test.ctf.XXXXX)
-+
-+cleanup()
-+{
-+	rm -f "${perfdata}"
-+	rm -rf "${ctf_dir}"
-+	trap - exit term int
-+}
-+
-+trap_cleanup()
-+{
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
-+	cleanup
-+	exit ${err}
-+}
-+trap trap_cleanup exit term int
-+
-+check_babeltrace_support()
-+{
-+	if ! perf check feature libbabeltrace
-+	then
-+		echo "perf not linked with libbabeltrace, skipping test"
-+		exit 2
-+	fi
-+}
-+
-+test_ctf_converter_file()
-+{
-+	echo "Testing Perf Data Conversion Command to CTF (File input)"
-+	# Record some data
-+	if ! perf record -o "$perfdata" -F 99 -g -- perf test -w noploop
-+	then
-+		echo "Failed to record perf data"
-+		err=1
-+		return
-+	fi
-+
-+	# Cleanup previous ctf dir
-+	rm -rf "${ctf_dir}"
-+
-+	# Convert
-+	if ! perf data convert --to-ctf "$ctf_dir" --force -i "$perfdata"
-+	then
-+		echo "Perf Data Converter Command to CTF (File input) [FAILED]"
-+		err=1
-+		return
-+	fi
-+
-+	if [ -d "${ctf_dir}" ] && [ "$(ls -A "${ctf_dir}")" ]
-+	then
-+		echo "Perf Data Converter Command to CTF (File input) [SUCCESS]"
-+	else
-+		echo "Perf Data Converter Command to CTF (File input) [FAILED]"
-+		echo "    Output directory empty or missing"
-+		err=1
-+	fi
-+}
-+
-+test_ctf_converter_pipe()
-+{
-+	echo "Testing Perf Data Conversion Command to CTF (Pipe mode)"
-+
-+	# Cleanup previous ctf dir
-+	rm -rf "${ctf_dir}"
-+
-+	# Record to stdout and pipe to $perfdata file
-+	if ! perf record -o - -F 99 -g -- perf test -w noploop > "$perfdata"
-+	then
-+		echo "Failed to record perf data"
-+		err=1
-+		return
-+	fi
-+
-+	if ! perf data convert --to-ctf "$ctf_dir" --force -i "$perfdata"
-+	then
-+		echo "Perf Data Converter Command to CTF (Pipe mode) [FAILED]"
-+		err=1
-+		return
-+	fi
-+
-+	if [ -d "${ctf_dir}" ] && [ "$(ls -A "${ctf_dir}")" ]
-+	then
-+		echo "Perf Data Converter Command to CTF (Pipe mode) [SUCCESS]"
-+	else
-+		echo "Perf Data Converter Command to CTF (Pipe mode) [FAILED]"
-+		echo "    Output directory empty or missing"
-+		err=1
-+	fi
-+}
-+
-+check_babeltrace_support
-+test_ctf_converter_file
-+test_ctf_converter_pipe
-+
-+exit ${err}
--- 
-2.53.0.239.g8d8fc8a987-goog
+In that case, I think you also skip it for die_find_variable_by_addr
+as it calls match_var_offset() too.
 
+> 
+> Return type from die_find_variable_by_reg via a new `type` field in
+> find_var_data.
+> 
+> Signed-off-by: Zecheng Li <zecheng@google.com>
+> Signed-off-by: Zecheng Li <zli94@ncsu.edu>
+> ---
+>  tools/perf/util/annotate-data.c |  8 +++++---
+>  tools/perf/util/dwarf-aux.c     | 18 +++++++++++-------
+>  tools/perf/util/dwarf-aux.h     |  2 +-
+>  3 files changed, 17 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index 07cf9c334be0..99ffc6d70565 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -1603,19 +1603,21 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+>  			if (!die_find_variable_by_addr(&scopes[i], dloc->var_addr,
+>  						       &var_die, &type_offset))
+>  				continue;
+> +			/* Found a variable, see if it's correct */
+> +			result = check_variable(dloc, &var_die, &mem_die, reg,
+> +						type_offset, is_fbreg);
+>  		} else {
+>  			/* Look up variables/parameters in this scope */
+>  			if (!die_find_variable_by_reg(&scopes[i], pc, reg,
+> -						      &type_offset, is_fbreg, &var_die))
+> +						      &mem_die, &type_offset, is_fbreg, &var_die))
+>  				continue;
+> +			result = PERF_TMR_OK;
+>  		}
+>  
+>  		pr_debug_dtp("found \"%s\" (die: %#lx) in scope=%d/%d (die: %#lx) ",
+>  			     dwarf_diename(&var_die), (long)dwarf_dieoffset(&var_die),
+>  			     i+1, nr_scopes, (long)dwarf_dieoffset(&scopes[i]));
+>  
+> -		/* Found a variable, see if it's correct */
+> -		result = check_variable(dloc, &var_die, &mem_die, reg, type_offset, is_fbreg);
+>  		if (result == PERF_TMR_OK) {
+
+Then maybe we can just get rid of this check.
+
+Thanks,
+Namhyung
+
+
+>  			if (reg == DWARF_REG_PC) {
+>  				pr_debug_dtp("addr=%#"PRIx64" type_offset=%#x\n",
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 9267af204c7d..b57cdc8860f0 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -1378,6 +1378,8 @@ struct find_var_data {
+>  	Dwarf_Addr addr;
+>  	/* Target register */
+>  	unsigned reg;
+> +	/* Access data type */
+> +	Dwarf_Die type;
+>  	/* Access offset, set for global data */
+>  	int offset;
+>  	/* True if the current register is the frame base */
+> @@ -1390,7 +1392,6 @@ struct find_var_data {
+>  static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
+>  			     s64 addr_offset, s64 addr_type, bool is_pointer)
+>  {
+> -	Dwarf_Die type_die;
+>  	Dwarf_Word size;
+>  	s64 offset = addr_offset - addr_type;
+>  
+> @@ -1403,16 +1404,16 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
+>  	if (offset < 0)
+>  		return false;
+>  
+> -	if (die_get_real_type(die_mem, &type_die) == NULL)
+> +	if (die_get_real_type(die_mem, &data->type) == NULL)
+>  		return false;
+>  
+> -	if (is_pointer && dwarf_tag(&type_die) == DW_TAG_pointer_type) {
+> +	if (is_pointer && dwarf_tag(&data->type) == DW_TAG_pointer_type) {
+>  		/* Get the target type of the pointer */
+> -		if (die_get_real_type(&type_die, &type_die) == NULL)
+> +		if (die_get_real_type(&data->type, &data->type) == NULL)
+>  			return false;
+>  	}
+>  
+> -	if (dwarf_aggregate_size(&type_die, &size) < 0)
+> +	if (dwarf_aggregate_size(&data->type, &size) < 0)
+>  		return false;
+>  
+>  	if ((u64)offset >= size)
+> @@ -1529,7 +1530,7 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+>   * when the variable is in the stack.
+>   */
+>  Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
+> -				    int *poffset, bool is_fbreg,
+> +				    Dwarf_Die *type_die, int *poffset, bool is_fbreg,
+>  				    Dwarf_Die *die_mem)
+>  {
+>  	struct find_var_data data = {
+> @@ -1541,8 +1542,11 @@ Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
+>  	Dwarf_Die *result;
+>  
+>  	result = die_find_child(sc_die, __die_find_var_reg_cb, &data, die_mem);
+> -	if (result)
+> +	if (result) {
+>  		*poffset = data.offset;
+> +		*type_die = data.type;
+> +	}
+> +
+>  	return result;
+>  }
+>  
+> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+> index cd481ec9c5a1..b3ee5df0b6be 100644
+> --- a/tools/perf/util/dwarf-aux.h
+> +++ b/tools/perf/util/dwarf-aux.h
+> @@ -163,7 +163,7 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf);
+>  
+>  /* Find a variable saved in the 'reg' at given address */
+>  Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
+> -				    int *poffset, bool is_fbreg,
+> +				    Dwarf_Die *type_die, int *poffset, bool is_fbreg,
+>  				    Dwarf_Die *die_mem);
+>  
+>  /* Find a (global) variable located in the 'addr' */
+> -- 
+> 2.52.0
+> 
