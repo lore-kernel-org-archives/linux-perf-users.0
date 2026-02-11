@@ -1,73 +1,44 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6D336BCC9
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 10:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7372318BA7;
+	Wed, 11 Feb 2026 12:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770807470; cv=none; b=SOgjh7E+A2gt0oHlCVmil/Njq2XQSzZvyh1oFAhEOg/PDgGfJBBgjIij/agekKHSY+Vrf1D9G3Rn4m7Br15ryiAKIDTCHy20pakKu02N8nOl09haMOc6voUbxiYuvWP3912BFfD69nfHMCK7kJOECJJhsVtOVoqzV9P+bEJ7w+o=
+	t=1770811310; cv=none; b=qd9wPJK3xMVHnN7Luas/LX/0Kqqkp2IFOb0/eFGzLhsuRA5grNu/eBbRl/DvpZKQ8OaQCZLAfSwL30GlKjOQvnUr0J1TmFHAaCfhu+rZSqLeLXfSNamZ9P+cwdHSUY+41TY7kskg+6CrRFU6HsNGIQKzMaF3oL7SfcwPBoxuork=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770807470; c=relaxed/simple;
-	bh=DAjhfkqLaPEqPW3hbP1w2267sQzvp4ocO7opOaTvG70=;
+	s=arc-20240116; t=1770811310; c=relaxed/simple;
+	bh=McuLMSlGddF2uo8OP2j+Uw1HsJkJDUqgLzWOqo6zZ1M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hSg8T9cCSdrw+8stmcX2zBRwOC5GXNcfATkKFE+3dzdLlDB+ipB1ljri3G2z7dYU56vi50H1ZzCCxnV58d778nV43vYRnXZ9luceQJEWwh8B26oqQTC+y+4kJywiGrDqa36iSgVQnmljOqIFpJV2XirYd0bMk2wWOOUfomRwCsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sa26KSnc; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=a/6gX5Bb4teBpevLNGHeRm/EkCO84449WzaL+iPJtNuf4cvi7Wega6a7z9FW2sNI5XVJTZ7JbEIC2Eg3X+1vtEEUyO+i1gKOfsZSgMcTtbXvIIJfBj40yvAb5SWXkaj3xXxNdi715eYM0zraot1km8xx2cXo036UZhaXirAYSCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjJpjlIm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sa26KSnc"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b88593aa4dcso907073566b.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 02:57:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770807468; x=1771412268; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UkRPDajcyvvrx6SNpkt2bpLqSarE1C9b9sZiA9ajbeE=;
-        b=Sa26KSncVXGIjDqt8nSCwrLtrbVX1NCha0pkHIcb1elKE63KLYW8xxAmqYogI9CIXe
-         uv7OangJfhdFcdDscnjQUP8qqhqWE8xLPb00OF+Amv866xDx/70oiohqwf6uIjr/KDFS
-         0NHl8XFLOMjpF5uYbP1gTEft1df1LdsC6s999STJIKTCpwDqrqdxo1XPYthfGaWcRxv+
-         bFTOt0MV6f6SehGm/VLyUJ6bcP7ThQc7r/mpNILhzrQMv26aDjmiYcl2HgEpxCLyLqNq
-         VEalZfM25YzDAGQ7hEDrw97MPgbNBiqnakgnhceis3WYFif8MZzWA3HLjJ+90fuCsfqk
-         zoqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770807468; x=1771412268;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UkRPDajcyvvrx6SNpkt2bpLqSarE1C9b9sZiA9ajbeE=;
-        b=Pw2CQFR2fLamL7I3/x//n9KX7AOom8EtuMcqMUZ0iHHoOYaDV+oVczuEaeZz+dtaOU
-         meHXJgYFJkKqmAyK/XkWSX9oImHA2qcC2TaQb9nUsgLqtddEUhPtitK9K/69E7DijqkR
-         Xlm/B+p121BRcnYhNjRgxF3e3x/DV/XBUyV5ZEMx8JaUcTW8xQWtQEsHgbBOroBOygI5
-         0YfjGwzAnLrCU0lL2NkSJ9FDEIvTdPCOs7AU93ZdG0yExJjeUgv9v+y0x/gtsNziNwCJ
-         +yWeCYUqaF06qgR8hiyYhRYNurqnoPY7DVAmClhs5ZXYRS7Tc23qK+44t7ET0THlLWeI
-         yvqg==
-X-Gm-Message-State: AOJu0Yzvl7e6x6V8NO96Yl3kLKlAHHtFyDJj8qKQeqdEKq1aQt9YdTBa
-	PUN7s7mMZHlnOlKKMJG4YGpoRgtxMQR5dZQUKEpvKO4U4PADFv+5V3ovS2LJoQ==
-X-Gm-Gg: AZuq6aJEgsnOmpJqhWKO7y7FxSQPLyaGT8eKGwKogzj7+jFhXGDJKg5xhS92pNOsEzt
-	bQTy0cvLZoq/6Le2E5FjrXDldRMsjrjzuqewCS21/Z/QwGEdFoKkMTMHkucBtGUsgrjXIFTt0K9
-	az3wcHNWkd7w7TUdZeFsyL/SovKiFzANz/xeyawOXjkJb1jXkwtFkEfLwxNiEvcmhERIMUWqbXp
-	LivQQmdTcJ5ZGrd9Q4+KyBaUt2BXVTzGw6DJi/hyqn2Sy5tIQ4peweCbKEE51pKz37FO1CE9h2a
-	RyWxfq8MYviC6+aQJjrIDL1TsrTIa4RzCYws6sbJw2mtsZ9nS2qK8xuRogsH3fhY7SEhcgTO4Ce
-	KWojzJDveE6M+04/YvsRSH2HoqP0quWRi55KhfxU088SVikOjhhX0nXS0QxzYSUHVB6dvDT9OhA
-	/viyfuPlDvjwJNAykzOGTC7sewGkpr9Ng6WB1kxaC+qYW+Er7aQ0XQ2CbGHPRzg40bfzfGo86Al
-	4FBbC35Ez/GjVRs8eWQpJTzxaKZkb/BGb6+
-X-Received: by 2002:a17:907:2da8:b0:b73:6f8c:6127 with SMTP id a640c23a62f3a-b8f5438dd35mr334547466b.12.1770807467779;
-        Wed, 11 Feb 2026 02:57:47 -0800 (PST)
-Received: from ddolgov-thinkpadt14sgen1.rmtde.csb (dslb-002-207-075-089.002.207.pools.vodafone-ip.de. [2.207.75.89])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8f708e25dasm43503166b.4.2026.02.11.02.57.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Feb 2026 02:57:47 -0800 (PST)
-Date: Wed, 11 Feb 2026 11:57:45 +0100
-From: Dmitry Dolgov <9erthalion6@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjJpjlIm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB1DEC4CEF7;
+	Wed, 11 Feb 2026 12:01:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770811310;
+	bh=McuLMSlGddF2uo8OP2j+Uw1HsJkJDUqgLzWOqo6zZ1M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gjJpjlImbTKLf4lhZrWaFb3qqV/nAa4idmDzZxcWjgz1CHw66GQLwH4557pnUAw75
+	 g2wYe2Q2mE8MdvlOA6PRLAV1ZraOXsZm6OXRDzN0IaP4Pa0RVc0f67cZkjS1d/861/
+	 Q8p29KUzepyGnzN6rY2fkbPVT8je7ZgzmySuRFJsYxZc0RqbAKKY39ehkW14A/MSy+
+	 2DFZph/hIXuTCD5wdAQvNCZrPFjhbaysXE96rx7ElrfML1AI2QVR38kePwzqTJoYIB
+	 gGYoNRNn2+0l1hJ/igGlJEpJwkuAUIAZWRGMQKbUhA7xTpSzK2dQ091DZoLNkO+235
+	 PRCy+uuZ+WuGw==
+Date: Wed, 11 Feb 2026 09:01:46 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [RFC PATCH v2 2/4] perf test workload: Add code_with_type test
- workload
-Message-ID: <btd2b5dqebgxnqh25fvh4i5dzl47lscfgv4x5k6h3hgx3hsp6j@u7hlt6n4cfyy>
-References: <20260208122227.3524-1-9erthalion6@gmail.com>
- <20260208122227.3524-3-9erthalion6@gmail.com>
- <CAP-5=fXYKSfefdZ6SdjcDmw8bjobGenR9U7ePPx10a0rGpx2KQ@mail.gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf libunwind: Fix calls to thread__e_machine
+Message-ID: <aYxvqoTR5NGYy1uj@x1>
+References: <20260211053827.140534-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -76,20 +47,45 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXYKSfefdZ6SdjcDmw8bjobGenR9U7ePPx10a0rGpx2KQ@mail.gmail.com>
+In-Reply-To: <20260211053827.140534-1-irogers@google.com>
 
-> On Mon, Feb 09, 2026 at 09:29:49AM -0800, Ian Rogers wrote:
->
-> > +rust_common_cmd = \
-> > +       $(RUSTC) $(rust_flags) \
-> > +       --crate-type staticlib -L $(objtree)/rust/ \
-> > +       --emit=dep-info=$(depfile),link
+On Tue, Feb 10, 2026 at 09:38:27PM -0800, Ian Rogers wrote:
+> Add the missing e_flags option to fix the build.
 > 
-> Does this need to be cross compilation aware? I worry that we can
-> detect local Rust support but not have cross compilation support and
-> then perf tool cross compilation builds are broken.
+> Fixes: 4e66527f8859 ("perf thread: Add optional e_flags output argument to thread__e_machine")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Good point. It's supposed to be cross compilation aware, because
-rust_flags must contain the --target argument. But after checking it
-out, looks like this variable is not passed from Makefile.perf . I'll
-need to fix it, it should be handled similarly to CFLAGS/CXXFLAGS.
+Thanks, applied to perf-tools-next,
+
+- Arnaldo
+> ---
+>  tools/perf/util/unwind-libunwind-local.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+> index ecf0c01fe51f..5b39ce21e333 100644
+> --- a/tools/perf/util/unwind-libunwind-local.c
+> +++ b/tools/perf/util/unwind-libunwind-local.c
+> @@ -584,7 +584,9 @@ static int access_mem(unw_addr_space_t __maybe_unused as,
+>  	}
+>  
+>  	ret = perf_reg_value(&start, perf_sample__user_regs(ui->sample),
+> -			     perf_arch_reg_sp(thread__e_machine(ui->thread, ui->machine)));
+> +			     perf_arch_reg_sp(thread__e_machine(ui->thread,
+> +								ui->machine,
+> +								/*e_flags=*/NULL)));
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -733,7 +735,7 @@ static void _unwind__finish_access(struct maps *maps)
+>  static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
+>  		       void *arg, int max_stack)
+>  {
+> -	uint16_t e_machine = thread__e_machine(ui->thread, ui->machine);
+> +	uint16_t e_machine = thread__e_machine(ui->thread, ui->machine, /*e_flags=*/NULL);
+>  	u64 val;
+>  	unw_word_t ips[max_stack];
+>  	unw_addr_space_t addr_space;
+> -- 
+> 2.53.0.239.g8d8fc8a987-goog
+> 
