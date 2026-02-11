@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B65E285CBA;
-	Wed, 11 Feb 2026 02:37:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77149285CBA;
+	Wed, 11 Feb 2026 02:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770777432; cv=none; b=hF+uVmtpw+kr05PqTh3fOQ1RrtmsqKviLgxRUc92D+sTnFXagbOczwBBbDsesiMWPlyN8P1t83iAUmJJqdulacVCQzHSsoo0y0gYqXO+7zglQ/UI/xI/teehHjSQr1ZXkn4c+9EbOMffmVugC28g/lqy6V/iOo/MS5vPE72FTPg=
+	t=1770777533; cv=none; b=izJ+jhA3bB7FYfzq9KNxb8A1Qke6DZd+Hy95UDVKQXf+rzZcSiEqmCC6YlEW5MzPap3GvlxLBWGdcS3m3kmh1+RGd0GHojlFAELS1jpv2j67JHN6wabJ451jVrwchHHpDj0HZdUklOc+XBc9lzfikej5/SBKi3Ycdkyo8n/Wkug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770777432; c=relaxed/simple;
-	bh=VoQ28d/aoYcNpkhFRYOqsTuaXnWxIm+nz2Hkln1N8D8=;
+	s=arc-20240116; t=1770777533; c=relaxed/simple;
+	bh=PHLJDNEQFO5vcpi6AmfsHxM3tQvzp7JIkMxGC0mzxyA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=br1BDcipFnHRqO4/n4/mFlUrFa2hTtIZTUye37oe76eBJyArgQ1kdnak5ffMy4YrMQRJ+xJH9uwcyyJQ1J53qZCpiH/JD1IzOMMdo4UYtisX9MCI1S1KBnSw4rNcVv/6hkjhvIyH232Pr3q5kExpCrc1vSgP0YCXXxn+Lf1ehCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TxiFfFp5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uXinzYNwt+eD93zvdb9Blvh6pa0sAQoNvN52/CMG//DgByDkhaqTIKoRWvgdldhgjD/3FjqwYYifTyc0ezqTd419LhJpM3iD3oam8YTS++9ZsxzO2Jilc7/rrTtsF2tRkmhaxxNTu+U7GFhcWMvY13adcjIEb7i6npnV4o+vQyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8evlw95; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TxiFfFp5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41E6CC116C6;
-	Wed, 11 Feb 2026 02:37:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8evlw95"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82AD4C116C6;
+	Wed, 11 Feb 2026 02:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770777431;
-	bh=VoQ28d/aoYcNpkhFRYOqsTuaXnWxIm+nz2Hkln1N8D8=;
+	s=k20201202; t=1770777533;
+	bh=PHLJDNEQFO5vcpi6AmfsHxM3tQvzp7JIkMxGC0mzxyA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TxiFfFp58GOa/IlZiAv0VLu8ipsIwPCqlTaXfzxD2QjnqhXgBl/8mFDXPygPV+vBC
-	 paFnjVbo2a44XbCS3xoIzoftck+8boeif3dHo9PHHV45G4C8mz0mm0wsnMCzyl3BJd
-	 HTyTuqQopJNcptpL05AaOGKihwXNvfUMo+2uT/jBg5K83vCUlVfOQBkm/F7jzQhBNR
-	 nmAEdYBMaj7OsvbZWEHrqSHDCfpCXxo83k5csVncY195r+v5zKJrx2nrq1RI+BHu/P
-	 /TqXKcbZBgar6GJHB1CvuFV3lS6yj5jsoiOZex6iCyKNJ6S6sXBs081zTXGlEJx+Jq
-	 2WiWJdj8hKY0g==
-Date: Tue, 10 Feb 2026 18:37:09 -0800
+	b=Y8evlw95i5huU3069zQgoaHrnFZQex56Q3xZ4tcrQ1nMLR0gXdPqRuwNE894ix0fq
+	 wc1mJ31b5MWdxeYAzZMncJSj1As/DGaDE5+dr6WVJ3HaCDiYj8QmPBzVLLKQX2hFBC
+	 RtZ9Ww6ZZ638ZnaPO+BAHi3LTYkTmi+y7Wfx4XAK1JaQi+ELsHER+nX5VViJcolBmu
+	 tTnuyoPkfCIcRMVuylYqIB4rcRiPAcQipjXZsbP+XWvjsQK2A1qvRnMO/qiK6y4gTj
+	 jGO3hmL9GHzICjgeVYaJSFbid14sdfzqS/GgmtFEJ5SdaYTv+FWHHYw4jBeGwIpeKd
+	 3MZvXu+TtJySw==
+Date: Tue, 10 Feb 2026 18:38:51 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Zecheng Li <zli94@ncsu.edu>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -37,11 +37,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>, xliuprof@google.com,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 07/11] perf annotate-data: Handle global variable
- access with const register
-Message-ID: <aYvrVUTEr53gtkV9@google.com>
+Subject: Re: [PATCH v1 08/11] perf annotate-data: Add invalidate_reg_state()
+ helper for x86
+Message-ID: <aYvruzvtA5lVam24@google.com>
 References: <20260127020617.2804780-1-zli94@ncsu.edu>
- <20260127020617.2804780-8-zli94@ncsu.edu>
+ <20260127020617.2804780-9-zli94@ncsu.edu>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,29 +50,25 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260127020617.2804780-8-zli94@ncsu.edu>
+In-Reply-To: <20260127020617.2804780-9-zli94@ncsu.edu>
 
-On Mon, Jan 26, 2026 at 09:05:00PM -0500, Zecheng Li wrote:
-> When a register holds a constant value (TSR_KIND_CONST) and is used with
-> a negative offset, treat it as a potential global variable access
-> instead of falling through to CFA (frame) handling.
+On Mon, Jan 26, 2026 at 09:05:01PM -0500, Zecheng Li wrote:
+> Add a helper function to consistently invalidate register state instead
+> of field assignments. This ensures kind, ok, and copied_from are all
+> properly cleared when a register becomes invalid.
 > 
-> This fixes cases like array indexing with computed offsets:
+> The helper sets:
+> - kind = TSR_KIND_INVALID
+> - ok = false
+> - copied_from = -1
 > 
->     movzbl -0x7d72725a(%rax), %eax   # array[%rax]
-> 
-> Where %rax contains a computed index and the negative offset points to a
-> global array. Previously this fell through to the CFA path which doesn't
-> handle global variables, resulting in "no type information".
-> 
-> The fix redirects such accesses to check_kernel which calls
-> get_global_var_type() to resolve the type from the global variable
-> cache. We could also treat registers with integer types to the global
-> variable path, but this requires more changes.
+> Replace all invalidation patterns with calls to this helper. No
+> functional change and this removes some incorrect annotations that were
+> caused by incomplete invalidation (e.g. a obsolete copied_from from an
+> invalidated register).
 
-I'm thinking of how we can support user binaries with this code pattern.
-For now, I think it's ok for the kernel, but at least we need to check
-if dso__kernel(map__dso(dloc->ms->map)) is not zero (DSO_SPACE__USER).
+It doesn't apply cleanly from here.  Please rebase onto the current
+perf-tools-next.  Maybe we want to wait for v7.0-rc1.
 
 Thanks,
 Namhyung
@@ -80,24 +76,119 @@ Namhyung
 > 
 > Signed-off-by: Zecheng Li <zli94@ncsu.edu>
 > ---
->  tools/perf/util/annotate-data.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  tools/perf/arch/x86/annotate/instructions.c | 29 ++++++++++++---------
+>  1 file changed, 17 insertions(+), 12 deletions(-)
 > 
-> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> index 970238bc81b7..177aa6634504 100644
-> --- a/tools/perf/util/annotate-data.c
-> +++ b/tools/perf/util/annotate-data.c
-> @@ -1230,6 +1230,10 @@ static enum type_match_result check_matching_type(struct type_state *state,
->  		return PERF_TMR_BAIL_OUT;
->  	}
+> diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
+> index 803f9351a3fb..e033abb0667b 100644
+> --- a/tools/perf/arch/x86/annotate/instructions.c
+> +++ b/tools/perf/arch/x86/annotate/instructions.c
+> @@ -209,6 +209,13 @@ static int x86__annotate_init(struct arch *arch, char *cpuid)
+>  }
 >  
-> +	if (state->regs[reg].kind == TSR_KIND_CONST) {
-> +		if (dloc->op->offset < 0 && reg != state->stack_reg && reg != dloc->fbreg)
-> +			goto check_kernel;
-> +	}
->  check_non_register:
->  	if (reg == dloc->fbreg || reg == state->stack_reg) {
->  		struct type_state_stack *stack;
+>  #ifdef HAVE_LIBDW_SUPPORT
+> +static void invalidate_reg_state(struct type_state_reg *reg)
+> +{
+> +	reg->kind = TSR_KIND_INVALID;
+> +	reg->ok = false;
+> +	reg->copied_from = -1;
+> +}
+> +
+>  static void update_insn_state_x86(struct type_state *state,
+>  				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
+>  				  struct disasm_line *dl)
+> @@ -240,7 +247,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  		/* Otherwise invalidate caller-saved registers after call */
+>  		for (unsigned i = 0; i < ARRAY_SIZE(state->regs); i++) {
+>  			if (state->regs[i].caller_saved)
+> -				state->regs[i].ok = false;
+> +				invalidate_reg_state(&state->regs[i]);
+>  		}
+>  
+>  		/* Update register with the return type (if any) */
+> @@ -369,8 +376,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  		src_tsr = state->regs[sreg];
+>  		tsr = &state->regs[dst->reg1];
+>  
+> -		tsr->copied_from = -1;
+> -		tsr->ok = false;
+> +		invalidate_reg_state(tsr);
+>  
+>  		/* Case 1: Based on stack pointer or frame pointer */
+>  		if (sreg == fbreg || sreg == state->stack_reg) {
+> @@ -438,8 +444,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  		    !strncmp(dl->ins.name, "inc", 3)  || !strncmp(dl->ins.name, "dec", 3)) {
+>  			pr_debug_dtp("%s [%x] invalidate reg%d\n",
+>  						dl->ins.name, insn_offset, dst->reg1);
+> -			state->regs[dst->reg1].ok = false;
+> -			state->regs[dst->reg1].copied_from = -1;
+> +			invalidate_reg_state(&state->regs[dst->reg1]);
+>  			return;
+>  		}
+>  
+> @@ -501,7 +506,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  			if (!get_global_var_type(cu_die, dloc, ip, var_addr,
+>  						 &offset, &type_die) ||
+>  			    !die_get_member_type(&type_die, offset, &type_die)) {
+> -				tsr->ok = false;
+> +				invalidate_reg_state(tsr);
+>  				return;
+>  			}
+>  
+> @@ -529,7 +534,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  
+>  		if (!has_reg_type(state, src->reg1) ||
+>  		    !state->regs[src->reg1].ok) {
+> -			tsr->ok = false;
+> +			invalidate_reg_state(tsr);
+>  			return;
+>  		}
+>  
+> @@ -565,7 +570,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  
+>  			stack = find_stack_state(state, offset);
+>  			if (stack == NULL) {
+> -				tsr->ok = false;
+> +				invalidate_reg_state(tsr);
+>  				return;
+>  			} else if (!stack->compound) {
+>  				tsr->type = stack->type;
+> @@ -580,7 +585,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  				tsr->offset = 0;
+>  				tsr->ok = true;
+>  			} else {
+> -				tsr->ok = false;
+> +				invalidate_reg_state(tsr);
+>  				return;
+>  			}
+>  
+> @@ -633,7 +638,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  			if (!get_global_var_type(cu_die, dloc, ip, addr, &offset,
+>  						 &type_die) ||
+>  			    !die_get_member_type(&type_die, offset, &type_die)) {
+> -				tsr->ok = false;
+> +				invalidate_reg_state(tsr);
+>  				return;
+>  			}
+>  
+> @@ -684,7 +689,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  				}
+>  				pr_debug_type_name(&tsr->type, tsr->kind);
+>  			} else {
+> -				tsr->ok = false;
+> +				invalidate_reg_state(tsr);
+>  			}
+>  		}
+>  		/* And then dereference the calculated pointer if it has one */
+> @@ -726,7 +731,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  				}
+>  			}
+>  
+> -			tsr->ok = false;
+> +			invalidate_reg_state(tsr);
+>  		}
+>  	}
+>  	/* Case 3. register to memory transfers */
 > -- 
 > 2.52.0
 > 
