@@ -1,232 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950A7258EE0;
-	Wed, 11 Feb 2026 06:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DFB35028E
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 09:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770792980; cv=none; b=gIlfvPHaJ7NLWU9IAM17v0fZ/6mpzA4sDguShBb7lbyTw4O2naXREeUlyxXBAEYwW7KsOTCX/Mv6f9PXQpi6Xtibajb+iT0Iwk2YOjVLIVEtMqiYyZu6jA+wbF2mFz2IY3rf/LMf/ReXXAHeIK82EvYhJ93QEtU9bo5A/N5ITi8=
+	t=1770803903; cv=none; b=uPhFZuxMe72Hy/06mRbcdIS/8ioxGKrWQCDPd85VmCnDqqODge+ZPVFKL9yngSdR9ZPrksWCGZUJICsK6QWKgj5qdpqPy11WZRHquejJjIAqJKXZmDDwA7VAK0Q0iDV4DJx97R+PEPUFoIVyvPbIbld/sfCr+nmXwM3R7iKRW6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770792980; c=relaxed/simple;
-	bh=bb8Q9KwW7ltxBD+3Y8E+uYuQBevxV8lv0+kes4WD5XY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nw+RzdcTBew0BzWw9uTSkNWBIAbIegZRIy6aezd+9tS7s0+Ftre+dJCz1IHRWRrIW68pgPnx83l8JyVvK4EQHLeHMlBsLT4gxtrLK4p+dseKX6iCKO8tzDxP0ROG9rO5+39T08miGVVHGugrRU0PbTippalko5HDzePh2aA8oh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JgyjepNG; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1770803903; c=relaxed/simple;
+	bh=/jY88c8DfenVP33BGf4ZmBKcEhRGxzA1gRHO1efpgkQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hErX9Tv99J80ukoedmEZQpzgZomtODa9vdNKlrsj0zCuK6FqQelnYb5qvoREYCx8VZEVL/+lqJXa9bG0YIw/q0O1O1GpwaSw729UzTPjwUzr3McoNDIcNq+aJShm9Q2FBMSQs80BK+Zj9S0dEsOGwxazJAJRKZardlJ44PQ7Jd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AL4ytrNB; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JgyjepNG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770792980; x=1802328980;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bb8Q9KwW7ltxBD+3Y8E+uYuQBevxV8lv0+kes4WD5XY=;
-  b=JgyjepNGFPGxIBBtW8zt46BoEr4ZSlGCiYQA4HzOkoTfZYZ5DC/xhsC5
-   Mv6g6L9K/y0DxP6Hqm8xg4Pg/vp/hvn5hh+nqLHBR3lF2qNSCqWHVaFsw
-   nDGjzZfHEPQRd+Y58vcqtgDd4aNnzr+St4O18nNI8NkK82f8GuwjUFUEj
-   po3tfO4JbVShknydYW6m/ctIHOrTdSb/FxnT40Y30iE0alb8fQZb0Itw7
-   CMWdeQIFJKEp8rsCESd6vZNgj+pOtWmKvLwGEdN5+bTn/V8tpGl9ch91M
-   0Wackz5hi/VfXbMOzJ7d3f8ko+EQkAgyUmzgTf12YHads0rH81DDlepgF
-   Q==;
-X-CSE-ConnectionGUID: m+JyYtekQ7CBOhER/KcD6w==
-X-CSE-MsgGUID: i6l+MyxdSVqhhVQbPHkxGw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11697"; a="71835511"
-X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
-   d="scan'208";a="71835511"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2026 22:56:19 -0800
-X-CSE-ConnectionGUID: nc+h6cePR5azpU0nzVS5uQ==
-X-CSE-MsgGUID: QQKAGFoSQFS+GAfzmhAjlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
-   d="scan'208";a="249796347"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2026 22:56:14 -0800
-Message-ID: <05159761-274e-4a6b-97d9-a1251d6cac7b@linux.intel.com>
-Date: Wed, 11 Feb 2026 14:56:11 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AL4ytrNB"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b8876d1a39bso714097966b.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 01:58:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770803900; x=1771408700; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oDkN2CtNrqc+uj+094uU1VeIMVKx6CU8wHpEzkmJ2Gw=;
+        b=AL4ytrNBdKG8sJcHehKTN2i/94sW7Gy4AnSaTjRdUSU2qhB+lg+ArscKO42LTzdNJo
+         pV7y7yj10l+WrPwzZiqtz0wj0dBFYsc0PXX17gHLIZ/twDCoFNHc8FdIMevRdICTapf2
+         UM6WN5wxbjdBfB9MDuBU+DPC2u7rt6pw/81bWRv2hEngZjxkxmwxyu1ZQyKA4ZbGSuu/
+         Nx0h8LD9xRG/8NscdigtgaO7kqkrGypGp9oe5dkxlhq2SyaKdQhnZ07vhDWd3JJQZh2W
+         lJ6tCBf+LTbjjMotEJ+63aL+POLEJHfhVjYMDiB6Yla9F3LLxQxyeWp5GIKh7aa04q50
+         6s8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770803900; x=1771408700;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oDkN2CtNrqc+uj+094uU1VeIMVKx6CU8wHpEzkmJ2Gw=;
+        b=NI1LUharobVpU9XBMlIqyoQYMQKbEijXwdNpsC7x9K1uaUL5pqe71AQfjp7kFXLfNj
+         d+77NF6pD4ObFna146J7Y+8m0MdgkuzQX9wzv8tiMkXwp7ZekkxhJ5Ua4PDnQZTZxZr/
+         6UqfbtGo839cVcxmBiLmZolvo7Ya2fcwIzzRg3ef6oXjX5ILgpM5Yadze7Tf0Xq9EIrR
+         OgM7NmK0kYDs0KrL5M7rCwpWd1lVtcOqWjjJEh4fQ/p1snYj+UF3y5SBr/wVxWyuZOsC
+         acsbZXoOn6SwTW5ww0aqD72KVbxqHQ2X9PQTBbF+5s4ejbWSStlgymMcd5IFGB9mCzzc
+         7fCw==
+X-Gm-Message-State: AOJu0Yx39L8J5IeKEIY2Cu8PDCl4OcYa9fcYPJj+i3L2xmys846ZdDtC
+	R0qFdq9WBrxfi5nFBBDlD89xK4S9v1tg/2gYhV8fZA1Go+PYQ+ueHUhyepd8Ug==
+X-Gm-Gg: AZuq6aKkSrMWxXCNFQAhumxh7Fc+nYMoO9lofR3epRbRONr/OdkFVIicCGuorRYwH3H
+	JLtw1R5rDo3ZPevHFzZvT/zJTYDa6EQ74yQCNJgh727Rb4HJBseojscsoYjvDOAhnO7X6aTcYGT
+	dLnATYpmHPQMqXX+tg/85oe5BnWsTQd0eN9dXoD97CBXgQVON5Cx5W+gzDVelsgQ8FASITqDTZ5
+	rd5IPauODg6Pams58xlvdzwSK5MOUGWi8UJ1Zd4rNJTyEo0lhO9/6uJ5H/gs5sDoY0ptUQz2s8G
+	1PXNQgiR/W4KhpNeq/J+5tWnoJINvio4JTrBmDF6WQv3vY3Kub//6JJ/gBezj/uh7o0k2mqn0my
+	eh42D86umDvf5sqy+tgtJo92DKXLnGk7on76TdO8wJlfJLhu6+h0yPxnJg6dQ3KFXT57BeLCRHq
+	3aK+tMStspY0jO2GSX7kAHnIf+a/N1BQCNrxe29Pw29nKsSrOasOm8FVSo13FdnXsGHdWMZhugC
+	fLoIDIbND9XZHP5ErCwcEVIVwdpFCI=
+X-Received: by 2002:a17:907:1c1a:b0:b8d:cbb5:c068 with SMTP id a640c23a62f3a-b8f6aed4feemr144170966b.58.1770803899007;
+        Wed, 11 Feb 2026 01:58:19 -0800 (PST)
+Received: from ddolgov-thinkpadt14sgen1.local (dslb-002-207-075-089.002.207.pools.vodafone-ip.de. [2.207.75.89])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8f6e9e98ecsm43829466b.30.2026.02.11.01.58.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Feb 2026 01:58:18 -0800 (PST)
+From: Dmitrii Dolgov <9erthalion6@gmail.com>
+To: linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Dmitrii Dolgov <9erthalion6@gmail.com>
+Subject: [PATCH v1] tools build: Fix feature test for rust compiler
+Date: Wed, 11 Feb 2026 10:58:01 +0100
+Message-ID: <20260211095807.132855-1-9erthalion6@gmail.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v6 12/22] perf: Add sampling support for SIMD registers
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- Xudong Hao <xudong.hao@intel.com>, Kan Liang <kan.liang@linux.intel.com>
-References: <20260209072047.2180332-1-dapeng1.mi@linux.intel.com>
- <20260209072047.2180332-13-dapeng1.mi@linux.intel.com>
- <20260210200407.GQ2995752@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260210200407.GQ2995752@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Currently a dummy rust code is compiled to detect if the rust feature
+could be enabled. It turns out that in this case rust emits a dependency
+file without any external references:
 
-On 2/11/2026 4:04 AM, Peter Zijlstra wrote:
-> On Mon, Feb 09, 2026 at 03:20:37PM +0800, Dapeng Mi wrote:
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index d487c55a4f3e..5742126f50cc 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -7761,6 +7761,50 @@ perf_output_sample_regs(struct perf_output_handle *handle,
->>  	}
->>  }
->>  
->> +static void
->> +perf_output_sample_simd_regs(struct perf_output_handle *handle,
->> +			     struct perf_event *event,
->> +			     struct pt_regs *regs,
->> +			     u64 mask, u32 pred_mask)
->> +{
->> +	u16 pred_qwords = event->attr.sample_simd_pred_reg_qwords;
->> +	u16 vec_qwords = event->attr.sample_simd_vec_reg_qwords;
->> +	u16 nr_vectors;
->> +	u16 nr_pred;
->> +	int bit;
->> +	u64 val;
->> +	u16 i;
->> +
->> +	nr_vectors = hweight64(mask);
->> +	nr_pred = hweight32(pred_mask);
->> +
->> +	perf_output_put(handle, nr_vectors);
->> +	perf_output_put(handle, vec_qwords);
->> +	perf_output_put(handle, nr_pred);
->> +	perf_output_put(handle, pred_qwords);
->> +
->> +	if (nr_vectors) {
->> +		for (bit = 0; bit < sizeof(mask) * BITS_PER_BYTE; bit++) {
->> +			if (!(BIT_ULL(bit) & mask))
->> +				continue;
->> +			for (i = 0; i < vec_qwords; i++) {
->> +				val = perf_simd_reg_value(regs, bit, i, false);
->> +				perf_output_put(handle, val);
->> +			}
->> +		}
->> +	}
->> +	if (nr_pred) {
->> +		for (bit = 0; bit < sizeof(pred_mask) * BITS_PER_BYTE; bit++) {
->> +			if (!(BIT(bit) & pred_mask))
->> +				continue;
->> +			for (i = 0; i < pred_qwords; i++) {
->> +				val = perf_simd_reg_value(regs, bit, i, true);
->> +				perf_output_put(handle, val);
->> +			}
->> +		}
->> +	}
->> +}
-> Yeah, that works, but it does make me sad. The existing
-> perf_output_sample_regs() has yet another solution.
->
-> Wondering how hard it could possibly be to write a for_each_set_bit()
-> variant that works on a given word (instead of an array), I did the
-> below.
->
-> It works (at least, the assembly looks about right); but I'm not sure
-> its all I had hoped for either :-(
+    /perf/feature/test-rust.d: test-rust.rs
 
-Pretty code! It looks I still haven't gotten used to writing such kind of
-macros.
+    /perf/feature/test-rust.bin: test-rust.rs
 
-The code looks good to me, I would test it later. Thanks.
+    test-rust.rs:
 
+This can lead to a situation, when rustc was removed after a successful build,
+but the build process still thinks it's there and the feature is enabled on
+subsequent runs.
 
->
-> ---
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -7754,18 +7754,27 @@ void __weak perf_get_regs_user(struct pe
->  	regs_user->abi = perf_reg_abi(current);
->  }
->  
-> +/* Until GCC-14+/clang-19+, which have __builtin_ctzg() */
-> +#define __ctzg(val, def) \
-> +	(val) ? _Generic((val), \
-> +			 unsigned int: __builtin_ctz(val), \
-> +			 unsigned long: __builtin_ctzl(val), \
-> +			 unsigned long long: __builtin_ctzll(val)) : (def)
-> +
-> +#define __next_bit(val, bit) \
-> +	({ auto __v = (val); \
-> +	   __v &= GENMASK(sizeof(__v) * BITS_PER_BYTE - 1, bit); \
-> +	   __ctzg(__v, -1); })
-> +
-> +#define word_for_each_set_bit(bit, val) \
-> +	for (int bit = 0; bit = __next_bit(val, bit), bit >= 0; bit++)
-> +
->  static void
->  perf_output_sample_regs(struct perf_output_handle *handle,
->  			struct pt_regs *regs, u64 mask)
->  {
-> -	int bit;
-> -	DECLARE_BITMAP(_mask, 64);
-> -
-> -	bitmap_from_u64(_mask, mask);
-> -	for_each_set_bit(bit, _mask, sizeof(mask) * BITS_PER_BYTE) {
-> -		u64 val;
-> -
-> -		val = perf_reg_value(regs, bit);
-> +	word_for_each_set_bit(bit, mask) {
-> +		u64 val = perf_reg_value(regs, bit);
->  		perf_output_put(handle, val);
->  	}
->  }
-> @@ -7778,14 +7787,8 @@ perf_output_sample_simd_regs(struct perf
->  {
->  	u16 pred_qwords = event->attr.sample_simd_pred_reg_qwords;
->  	u16 vec_qwords = event->attr.sample_simd_vec_reg_qwords;
-> -	u16 nr_vectors;
-> -	u16 nr_pred;
-> -	int bit;
-> -	u64 val;
-> -	u16 i;
-> -
-> -	nr_vectors = hweight64(mask);
-> -	nr_pred = hweight32(pred_mask);
-> +	u16 nr_vectors = hweight64(mask);
-> +	u16 nr_pred = hweight32(pred_mask);
->  
->  	perf_output_put(handle, nr_vectors);
->  	perf_output_put(handle, vec_qwords);
-> @@ -7793,21 +7796,17 @@ perf_output_sample_simd_regs(struct perf
->  	perf_output_put(handle, pred_qwords);
->  
->  	if (nr_vectors) {
-> -		for (bit = 0; bit < sizeof(mask) * BITS_PER_BYTE; bit++) {
-> -			if (!(BIT_ULL(bit) & mask))
-> -				continue;
-> -			for (i = 0; i < vec_qwords; i++) {
-> -				val = perf_simd_reg_value(regs, bit, i, false);
-> +		word_for_each_set_bit(bit, mask) {
-> +			for (int i = 0; i < vec_qwords; i++) {
-> +				u64 val = perf_simd_reg_value(regs, bit, i, false);
->  				perf_output_put(handle, val);
->  			}
->  		}
->  	}
->  	if (nr_pred) {
-> -		for (bit = 0; bit < sizeof(pred_mask) * BITS_PER_BYTE; bit++) {
-> -			if (!(BIT(bit) & pred_mask))
-> -				continue;
-> -			for (i = 0; i < pred_qwords; i++) {
-> -				val = perf_simd_reg_value(regs, bit, i, true);
-> +		word_for_each_set_bit(bit, pred_mask) {
-> +			for (int i = 0; i < pred_qwords; i++) {
-> +				u64 val = perf_simd_reg_value(regs, bit, i, true);
->  				perf_output_put(handle, val);
->  			}
->  		}
+Instead simply check the compiler presence to detect the feature, as
+suggested by Arnaldo Carvalho de Melo. This way no actual test-rust.bin
+will be created, meaning the feature check will not be cached and always
+performed. That's exactly what we want, and the overhead of doing this
+every time is minimal.
+
+Tested with multiple rounds of install/remove of the rust package.
+
+Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+---
+ tools/build/feature/Makefile     | 10 ++++++----
+ tools/build/feature/test-rust.rs |  4 ----
+ 2 files changed, 6 insertions(+), 8 deletions(-)
+ delete mode 100644 tools/build/feature/test-rust.rs
+
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index e959caa7f1c..698e89da015 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -113,9 +113,6 @@ __BUILD = $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.c,$(@F)) $(
+ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(@F)) $(LDFLAGS)
+   BUILDXX = $(__BUILDXX) > $(@:.bin=.make.output) 2>&1
+ 
+-__BUILDRS = $(RUSTC) $(RUSTC_FLAGS) --emit=dep-info=$(patsubst %.bin,%.d,$(@F)),link -o $@ $(patsubst %.bin,%.rs,$(@F))
+-  BUILDRS = $(__BUILDRS) > $(@:.bin=.make.output) 2>&1
+-
+ ###############################
+ 
+ $(OUTPUT)test-all.bin:
+@@ -393,8 +390,13 @@ $(OUTPUT)test-bpftool-skeletons.bin:
+ 	$(SYSTEM_BPFTOOL) version | grep '^features:.*skeletons' \
+ 		> $(@:.bin=.make.output) 2>&1
+ 
++# Testing Rust is special: we don't compile anything, it's enough to check the
++# compiler presence. Compiling a test code for this purposes is problematic,
++# because Rust will emit a depedency file without any external references,
++# meaning that if rustc will be removed the build process will still think it's
++# there.
+ $(OUTPUT)test-rust.bin:
+-	$(BUILDRS) > $(@:.bin=.make.output) 2>&1
++	$(RUSTC) --version > /dev/null 2>&1
+ 
+ ###############################
+ 
+diff --git a/tools/build/feature/test-rust.rs b/tools/build/feature/test-rust.rs
+deleted file mode 100644
+index f2fc91cc4f6..00000000000
+--- a/tools/build/feature/test-rust.rs
++++ /dev/null
+@@ -1,4 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-fn main() {
+-    println!("hi")
+-}
+
+base-commit: 5d1ab659fb93eed85d6d8b2937013360157032f4
+-- 
+2.52.0
+
