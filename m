@@ -1,194 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77149285CBA;
-	Wed, 11 Feb 2026 02:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554F426059D
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 05:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770777533; cv=none; b=izJ+jhA3bB7FYfzq9KNxb8A1Qke6DZd+Hy95UDVKQXf+rzZcSiEqmCC6YlEW5MzPap3GvlxLBWGdcS3m3kmh1+RGd0GHojlFAELS1jpv2j67JHN6wabJ451jVrwchHHpDj0HZdUklOc+XBc9lzfikej5/SBKi3Ycdkyo8n/Wkug=
+	t=1770788312; cv=none; b=aDxwl6VCE6dTMDJNWXIuqcqVMunb957oY+R0NUOedbcKPhJC9HH86206puyINW/e9O7sMVBqvdukA7wNrEAhbtFq3TucaS3pyH3ku6tQN3xAzD07G2MDIOH4CByxpLbs1/io3LxyDB1MDdJOqoZpiftjHguEA3ILnrzxJ0f/9ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770777533; c=relaxed/simple;
-	bh=PHLJDNEQFO5vcpi6AmfsHxM3tQvzp7JIkMxGC0mzxyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uXinzYNwt+eD93zvdb9Blvh6pa0sAQoNvN52/CMG//DgByDkhaqTIKoRWvgdldhgjD/3FjqwYYifTyc0ezqTd419LhJpM3iD3oam8YTS++9ZsxzO2Jilc7/rrTtsF2tRkmhaxxNTu+U7GFhcWMvY13adcjIEb7i6npnV4o+vQyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8evlw95; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770788312; c=relaxed/simple;
+	bh=asmP0qeugLU/V1JRT6RRfUReFv9YHoje1JUYz2LfwqU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=ucWHtNNgvN0V/c8bQx9tvo2A5R8NAaUfGVrJNtC5uqURuiWQyBeYNjD7QS5AppmN5K0Nze7smnRKBRgQaz/uv0/u9CEXH0h9b9E6oP2cFi8euGocSQurWt2vztI8iVL/qjIGXXL/c9qeOhncTIzqsFMD1ySG/GNxmFiGBdQgl3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lu+7Xk3x; arc=none smtp.client-ip=74.125.82.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8evlw95"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82AD4C116C6;
-	Wed, 11 Feb 2026 02:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770777533;
-	bh=PHLJDNEQFO5vcpi6AmfsHxM3tQvzp7JIkMxGC0mzxyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y8evlw95i5huU3069zQgoaHrnFZQex56Q3xZ4tcrQ1nMLR0gXdPqRuwNE894ix0fq
-	 wc1mJ31b5MWdxeYAzZMncJSj1As/DGaDE5+dr6WVJ3HaCDiYj8QmPBzVLLKQX2hFBC
-	 RtZ9Ww6ZZ638ZnaPO+BAHi3LTYkTmi+y7Wfx4XAK1JaQi+ELsHER+nX5VViJcolBmu
-	 tTnuyoPkfCIcRMVuylYqIB4rcRiPAcQipjXZsbP+XWvjsQK2A1qvRnMO/qiK6y4gTj
-	 jGO3hmL9GHzICjgeVYaJSFbid14sdfzqS/GgmtFEJ5SdaYTv+FWHHYw4jBeGwIpeKd
-	 3MZvXu+TtJySw==
-Date: Tue, 10 Feb 2026 18:38:51 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Zecheng Li <zli94@ncsu.edu>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, xliuprof@google.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 08/11] perf annotate-data: Add invalidate_reg_state()
- helper for x86
-Message-ID: <aYvruzvtA5lVam24@google.com>
-References: <20260127020617.2804780-1-zli94@ncsu.edu>
- <20260127020617.2804780-9-zli94@ncsu.edu>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lu+7Xk3x"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ba728aa1f9so9688455eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 21:38:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1770788310; x=1771393110; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=beRb2TTWipjbQS+uGdF7qNhcs02FsUxfsSX1I2AUdlY=;
+        b=lu+7Xk3xmQfUD3Bb9hPhTmXwbv6ZSk5dlkvYBsUlPVdXz9lyY8xuYZZLefZTHz478d
+         OR0aY74fErY+mhmLf4++Un1XvoIHqV4sUaKYwW/x8w7DQRbxJWa0HKI7tOa7VUNmhm/g
+         tWlKFptXna5jwQKYAwQmFsV3ODoewZWBykU7/ViW8LzVJtYW3T8PV7Y6g9aCP+mlI62p
+         uKFBUsGfS+1uKbp91RZiZJwqC3N6630vTbyZLEu4cSN/W/W8i4VLs515cUAf60jTUVu8
+         Lvs7qOVKxyye5GhUfrNSaW+x2KHWTe7HJRRb7Nt2MKE0Jxdv68WB+trvPEMCERXyNxL3
+         XMng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770788310; x=1771393110;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=beRb2TTWipjbQS+uGdF7qNhcs02FsUxfsSX1I2AUdlY=;
+        b=Qeig3AO0plRC0seJHCRfEfkR7ZJr/EUR3jrPUlgZQHyJVLWQm1P5vgvNvuApdJ31kw
+         uSIMKeyNJaQBbRZIYuEzEz3GyPjgjybMp/ria4edJrwiaMFoO8sMxIqf6KvsKaSx7mIC
+         QBfNLB5B8adMsrs183ne4LXBC8KT+HEk0eTwOoSt9BgR6sIsUufSwDVI8pTEBTl4PAfQ
+         /l5bbOJOG6TcvaLnVjvTSVbF8sAr5mEWI1l1Ab9wQfRIenUZQ35+C0v19envFwCZD8EB
+         JW18Eaaf6Qr7Bfufh/tPKwkBissBhhbQjYvVwPmeYP11GyLsvNMGpQ5mUKqt0i+zV4Kz
+         I/+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXDMO7TNyT/n61qLK/CJeygH3hKMPqz8pji+AUGH0VDxcnguT5CFC8t5cOH73OvOssuAYeIfnpP9y3tOyQng70U@vger.kernel.org
+X-Gm-Message-State: AOJu0YyysaU9sD+nre8tkvzfSNKkV6XatEsxfhbGpeiDamy+s1/3yx8U
+	X08iQ1sfHgv4rWBnSWulrahRGYBJTWilvoYTOti2yqRl5scH/5ouSXXLzrkYWoHCpnjAOUcoapx
+	GD6XBSQ0How==
+X-Received: from dycpq7.prod.google.com ([2002:a05:7301:fd07:b0:2ba:66cc:afc1])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:a189:b0:2b8:30b8:58cf
+ with SMTP id 5a478bee46e88-2ba9b437263mr614633eec.8.1770788310286; Tue, 10
+ Feb 2026 21:38:30 -0800 (PST)
+Date: Tue, 10 Feb 2026 21:38:27 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260127020617.2804780-9-zli94@ncsu.edu>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
+Message-ID: <20260211053827.140534-1-irogers@google.com>
+Subject: [PATCH v1] perf libunwind: Fix calls to thread__e_machine
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jan 26, 2026 at 09:05:01PM -0500, Zecheng Li wrote:
-> Add a helper function to consistently invalidate register state instead
-> of field assignments. This ensures kind, ok, and copied_from are all
-> properly cleared when a register becomes invalid.
-> 
-> The helper sets:
-> - kind = TSR_KIND_INVALID
-> - ok = false
-> - copied_from = -1
-> 
-> Replace all invalidation patterns with calls to this helper. No
-> functional change and this removes some incorrect annotations that were
-> caused by incomplete invalidation (e.g. a obsolete copied_from from an
-> invalidated register).
+Add the missing e_flags option to fix the build.
 
-It doesn't apply cleanly from here.  Please rebase onto the current
-perf-tools-next.  Maybe we want to wait for v7.0-rc1.
+Fixes: 4e66527f8859 ("perf thread: Add optional e_flags output argument to thread__e_machine")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/unwind-libunwind-local.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Thanks,
-Namhyung
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index ecf0c01fe51f..5b39ce21e333 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -584,7 +584,9 @@ static int access_mem(unw_addr_space_t __maybe_unused as,
+ 	}
+ 
+ 	ret = perf_reg_value(&start, perf_sample__user_regs(ui->sample),
+-			     perf_arch_reg_sp(thread__e_machine(ui->thread, ui->machine)));
++			     perf_arch_reg_sp(thread__e_machine(ui->thread,
++								ui->machine,
++								/*e_flags=*/NULL)));
+ 	if (ret)
+ 		return ret;
+ 
+@@ -733,7 +735,7 @@ static void _unwind__finish_access(struct maps *maps)
+ static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
+ 		       void *arg, int max_stack)
+ {
+-	uint16_t e_machine = thread__e_machine(ui->thread, ui->machine);
++	uint16_t e_machine = thread__e_machine(ui->thread, ui->machine, /*e_flags=*/NULL);
+ 	u64 val;
+ 	unw_word_t ips[max_stack];
+ 	unw_addr_space_t addr_space;
+-- 
+2.53.0.239.g8d8fc8a987-goog
 
-> 
-> Signed-off-by: Zecheng Li <zli94@ncsu.edu>
-> ---
->  tools/perf/arch/x86/annotate/instructions.c | 29 ++++++++++++---------
->  1 file changed, 17 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
-> index 803f9351a3fb..e033abb0667b 100644
-> --- a/tools/perf/arch/x86/annotate/instructions.c
-> +++ b/tools/perf/arch/x86/annotate/instructions.c
-> @@ -209,6 +209,13 @@ static int x86__annotate_init(struct arch *arch, char *cpuid)
->  }
->  
->  #ifdef HAVE_LIBDW_SUPPORT
-> +static void invalidate_reg_state(struct type_state_reg *reg)
-> +{
-> +	reg->kind = TSR_KIND_INVALID;
-> +	reg->ok = false;
-> +	reg->copied_from = -1;
-> +}
-> +
->  static void update_insn_state_x86(struct type_state *state,
->  				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
->  				  struct disasm_line *dl)
-> @@ -240,7 +247,7 @@ static void update_insn_state_x86(struct type_state *state,
->  		/* Otherwise invalidate caller-saved registers after call */
->  		for (unsigned i = 0; i < ARRAY_SIZE(state->regs); i++) {
->  			if (state->regs[i].caller_saved)
-> -				state->regs[i].ok = false;
-> +				invalidate_reg_state(&state->regs[i]);
->  		}
->  
->  		/* Update register with the return type (if any) */
-> @@ -369,8 +376,7 @@ static void update_insn_state_x86(struct type_state *state,
->  		src_tsr = state->regs[sreg];
->  		tsr = &state->regs[dst->reg1];
->  
-> -		tsr->copied_from = -1;
-> -		tsr->ok = false;
-> +		invalidate_reg_state(tsr);
->  
->  		/* Case 1: Based on stack pointer or frame pointer */
->  		if (sreg == fbreg || sreg == state->stack_reg) {
-> @@ -438,8 +444,7 @@ static void update_insn_state_x86(struct type_state *state,
->  		    !strncmp(dl->ins.name, "inc", 3)  || !strncmp(dl->ins.name, "dec", 3)) {
->  			pr_debug_dtp("%s [%x] invalidate reg%d\n",
->  						dl->ins.name, insn_offset, dst->reg1);
-> -			state->regs[dst->reg1].ok = false;
-> -			state->regs[dst->reg1].copied_from = -1;
-> +			invalidate_reg_state(&state->regs[dst->reg1]);
->  			return;
->  		}
->  
-> @@ -501,7 +506,7 @@ static void update_insn_state_x86(struct type_state *state,
->  			if (!get_global_var_type(cu_die, dloc, ip, var_addr,
->  						 &offset, &type_die) ||
->  			    !die_get_member_type(&type_die, offset, &type_die)) {
-> -				tsr->ok = false;
-> +				invalidate_reg_state(tsr);
->  				return;
->  			}
->  
-> @@ -529,7 +534,7 @@ static void update_insn_state_x86(struct type_state *state,
->  
->  		if (!has_reg_type(state, src->reg1) ||
->  		    !state->regs[src->reg1].ok) {
-> -			tsr->ok = false;
-> +			invalidate_reg_state(tsr);
->  			return;
->  		}
->  
-> @@ -565,7 +570,7 @@ static void update_insn_state_x86(struct type_state *state,
->  
->  			stack = find_stack_state(state, offset);
->  			if (stack == NULL) {
-> -				tsr->ok = false;
-> +				invalidate_reg_state(tsr);
->  				return;
->  			} else if (!stack->compound) {
->  				tsr->type = stack->type;
-> @@ -580,7 +585,7 @@ static void update_insn_state_x86(struct type_state *state,
->  				tsr->offset = 0;
->  				tsr->ok = true;
->  			} else {
-> -				tsr->ok = false;
-> +				invalidate_reg_state(tsr);
->  				return;
->  			}
->  
-> @@ -633,7 +638,7 @@ static void update_insn_state_x86(struct type_state *state,
->  			if (!get_global_var_type(cu_die, dloc, ip, addr, &offset,
->  						 &type_die) ||
->  			    !die_get_member_type(&type_die, offset, &type_die)) {
-> -				tsr->ok = false;
-> +				invalidate_reg_state(tsr);
->  				return;
->  			}
->  
-> @@ -684,7 +689,7 @@ static void update_insn_state_x86(struct type_state *state,
->  				}
->  				pr_debug_type_name(&tsr->type, tsr->kind);
->  			} else {
-> -				tsr->ok = false;
-> +				invalidate_reg_state(tsr);
->  			}
->  		}
->  		/* And then dereference the calculated pointer if it has one */
-> @@ -726,7 +731,7 @@ static void update_insn_state_x86(struct type_state *state,
->  				}
->  			}
->  
-> -			tsr->ok = false;
-> +			invalidate_reg_state(tsr);
->  		}
->  	}
->  	/* Case 3. register to memory transfers */
-> -- 
-> 2.52.0
-> 
