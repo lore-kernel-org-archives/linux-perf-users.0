@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856BB1A9F90;
-	Wed, 11 Feb 2026 02:08:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1770A12F585;
+	Wed, 11 Feb 2026 02:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770775734; cv=none; b=aCzak/RNyFpGs+/Raemjox5ojoLwz69RLIoFTL5U4R63LzpKgeU+NyKYJUyd4gb0Bgpi4WiHgdtMqlZHo2wtbORCHYnH9yU8rYLEj3aY0GB7SvCAiAa/gFTQAeqTWgafDHZg/WSqBc/iaAD/1X5NjEKBHRSmILgNNXuLedcfFiI=
+	t=1770776255; cv=none; b=d2KT8aSTXw1DebrKL0wwFQwZpirrsrwowgpN86ZuumapeeEhCG3+kOQV+UZYin5qxsEDAo3M0iVHkEn6S83eqA/P3xWyOO35FBmpktwCFA1NszILfg5LaUpIZ9hsIQOH4rwriq/zRxegZ1qDgF+noZd9aJGOPJgVqDOW2vae8t8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770775734; c=relaxed/simple;
-	bh=RR8qvWTUK+IEh93Ob8siU/qNIbwfviNUpkv/XDvmZF8=;
+	s=arc-20240116; t=1770776255; c=relaxed/simple;
+	bh=MX/rpXOAtEjZuAQXXD3gYEvKZJnfY3ZANy3baFvEn/w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=enG0PPEy+vtELbeNgJ2aFfu4zu5tzjcf5gmF8IDtMhdDcupt29OcUKnKWK5oOxSKwIBMCUVRUCP14OMbCUqogyQg5d6+DNfvpIqm0IAgK95NSGGGahticiG2/oVo2mBxMc6jd3KpbGSUhLETrANtBTWauyCdqMOCY1C5P9Zrk1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IYusGBMJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qI3re5uvQ6RfDxUnTq1QyhZ8AMi02qfmieOfTP7q48oGkFqnYEFDg7CYJk/QxlM7gsuQsl/tuFXpSnWd7/tncntC0Y2sYiqTa4aoa3GVii4nI1DeZT46ah4lYFlgUNq1YkuOWMD1XU2uhRPPchE1PwqBsp8HfrhddErnlKD/e7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egE1E5gl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYusGBMJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7E65C116C6;
-	Wed, 11 Feb 2026 02:08:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egE1E5gl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 333DAC116C6;
+	Wed, 11 Feb 2026 02:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770775734;
-	bh=RR8qvWTUK+IEh93Ob8siU/qNIbwfviNUpkv/XDvmZF8=;
+	s=k20201202; t=1770776254;
+	bh=MX/rpXOAtEjZuAQXXD3gYEvKZJnfY3ZANy3baFvEn/w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IYusGBMJWFqWVZm5s/UA9xBLwQuWXrordMfJG+3sicf0ewk1g4ncxRo9oxiT1o3iK
-	 ftxFPxy/ngw4L5i3CkI6f9QvEogprbiVm0sExKl914a2oaffG54urMcndqwBrsgGrR
-	 aYvD5XKtlrSV6AvDg0/AeiOnOM/wWNAT6orghIFineLudIIVg2dA5UtF2G6h7SvWFU
-	 yOz9Glo3ShkBzJMz1wtOIGEux9C4DvDzV21YuiA/oFHDn00Y73WeCno9wi9VDB6PiF
-	 hucixr9ODiumlI/dPxxEVN6HcFvsBPPfWxuV3FXv/qKSJHlS3gcqhOTYGaNp5Bpvco
-	 W8SYsevZk71OA==
-Date: Tue, 10 Feb 2026 18:08:52 -0800
+	b=egE1E5glVHw7VY6OMEbU7Uyd9KhEOXkdRGH2YPxiFrZy7SKCw7rLBCzgtFDxCSdVV
+	 raFVa0Ew8oYbNNc17k01D7CGbOAiFrSIC6ximHpZhnpv27YaO+rRVc4vyhtTs25EjI
+	 9lHOEKpHNM9WIJKghJ4Pds1HDDY7QOIF+rFUqsW0+O6lmqhPpClCLLof42J1ja7AG+
+	 Mb+F5O6l+AVX8/JXyo+RIdHVNn7yR6GI8rgMzsziUQrZHfgmnTS8ZfIRamSBd5tP5l
+	 dMtYgLbne3ZM6lGnfWPoB6nBcXb50waidoDHQrQPfaArTeppZY3DcasUaCCctsZOiv
+	 4UQ/jZJCnPI0Q==
+Date: Tue, 10 Feb 2026 18:17:32 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Zecheng Li <zli94@ncsu.edu>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -36,13 +36,12 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>, xliuprof@google.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Zecheng Li <zecheng@google.com>
-Subject: Re: [PATCH v1 01/11] perf dwarf-aux: Skip check_variable for
- die_find_variable_by_reg
-Message-ID: <aYvktEITO1uudkGH@google.com>
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 02/11] perf dwarf-aux: Add die_get_pointer_type to get
+ pointer types
+Message-ID: <aYvmvNUcoXpNOBW0@google.com>
 References: <20260127020617.2804780-1-zli94@ncsu.edu>
- <20260127020617.2804780-2-zli94@ncsu.edu>
+ <20260127020617.2804780-3-zli94@ncsu.edu>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,147 +50,188 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260127020617.2804780-2-zli94@ncsu.edu>
+In-Reply-To: <20260127020617.2804780-3-zli94@ncsu.edu>
 
-Hello,
-
-On Mon, Jan 26, 2026 at 09:04:54PM -0500, Zecheng Li wrote:
-> From: Zecheng Li <zecheng@google.com>
+On Mon, Jan 26, 2026 at 09:04:55PM -0500, Zecheng Li wrote:
+> When a variable type is wrapped in typedef/qualifiers, callers may need
+> to first resolve it to the underlying DW_TAG_pointer_type or
+> DW_TAG_array_type. A simple tag check is not enough and directly calling
+> __die_get_real_type() can stop at the pointer type (e.g. typedef ->
+> pointer) instead of the pointee type.
 > 
-> In die_find_variable_by_reg, match_var_offset already performs
-> sufficient checking and type matching. The additional check_variable
-> call is redundant, and its need_pointer logic is only a heuristic. Since
-> DWARF encodes accurate type information, which match_var_offset
-> verifies, skipping check_variable improves both coverage and accuracy.
-
-In that case, I think you also skip it for die_find_variable_by_addr
-as it calls match_var_offset() too.
-
+> Add die_get_pointer_type() helper that follows typedef/qualifier chains
+> and returns the underlying pointer DIE. Use it in annotate-data.c so
+> pointer checks and dereference work correctly for typedef'd pointers.
 > 
-> Return type from die_find_variable_by_reg via a new `type` field in
-> find_var_data.
-> 
-> Signed-off-by: Zecheng Li <zecheng@google.com>
 > Signed-off-by: Zecheng Li <zli94@ncsu.edu>
-> ---
->  tools/perf/util/annotate-data.c |  8 +++++---
->  tools/perf/util/dwarf-aux.c     | 18 +++++++++++-------
->  tools/perf/util/dwarf-aux.h     |  2 +-
->  3 files changed, 17 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> index 07cf9c334be0..99ffc6d70565 100644
-> --- a/tools/perf/util/annotate-data.c
-> +++ b/tools/perf/util/annotate-data.c
-> @@ -1603,19 +1603,21 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
->  			if (!die_find_variable_by_addr(&scopes[i], dloc->var_addr,
->  						       &var_die, &type_offset))
->  				continue;
-> +			/* Found a variable, see if it's correct */
-> +			result = check_variable(dloc, &var_die, &mem_die, reg,
-> +						type_offset, is_fbreg);
->  		} else {
->  			/* Look up variables/parameters in this scope */
->  			if (!die_find_variable_by_reg(&scopes[i], pc, reg,
-> -						      &type_offset, is_fbreg, &var_die))
-> +						      &mem_die, &type_offset, is_fbreg, &var_die))
->  				continue;
-> +			result = PERF_TMR_OK;
->  		}
->  
->  		pr_debug_dtp("found \"%s\" (die: %#lx) in scope=%d/%d (die: %#lx) ",
->  			     dwarf_diename(&var_die), (long)dwarf_dieoffset(&var_die),
->  			     i+1, nr_scopes, (long)dwarf_dieoffset(&scopes[i]));
->  
-> -		/* Found a variable, see if it's correct */
-> -		result = check_variable(dloc, &var_die, &mem_die, reg, type_offset, is_fbreg);
->  		if (result == PERF_TMR_OK) {
 
-Then maybe we can just get rid of this check.
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-
->  			if (reg == DWARF_REG_PC) {
->  				pr_debug_dtp("addr=%#"PRIx64" type_offset=%#x\n",
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index 9267af204c7d..b57cdc8860f0 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -1378,6 +1378,8 @@ struct find_var_data {
->  	Dwarf_Addr addr;
->  	/* Target register */
->  	unsigned reg;
-> +	/* Access data type */
-> +	Dwarf_Die type;
->  	/* Access offset, set for global data */
->  	int offset;
->  	/* True if the current register is the frame base */
-> @@ -1390,7 +1392,6 @@ struct find_var_data {
->  static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
->  			     s64 addr_offset, s64 addr_type, bool is_pointer)
->  {
-> -	Dwarf_Die type_die;
->  	Dwarf_Word size;
->  	s64 offset = addr_offset - addr_type;
->  
-> @@ -1403,16 +1404,16 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
->  	if (offset < 0)
->  		return false;
->  
-> -	if (die_get_real_type(die_mem, &type_die) == NULL)
-> +	if (die_get_real_type(die_mem, &data->type) == NULL)
->  		return false;
->  
-> -	if (is_pointer && dwarf_tag(&type_die) == DW_TAG_pointer_type) {
-> +	if (is_pointer && dwarf_tag(&data->type) == DW_TAG_pointer_type) {
->  		/* Get the target type of the pointer */
-> -		if (die_get_real_type(&type_die, &type_die) == NULL)
-> +		if (die_get_real_type(&data->type, &data->type) == NULL)
->  			return false;
+> ---
+>  tools/perf/util/annotate-data.c | 39 +++++++++++++++++++--------------
+>  tools/perf/util/dwarf-aux.c     | 27 +++++++++++++++++++++++
+>  tools/perf/util/dwarf-aux.h     |  2 ++
+>  3 files changed, 51 insertions(+), 17 deletions(-)
+> 
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index 99ffc6d70565..8ff1972981b7 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -455,13 +455,6 @@ static const char *match_result_str(enum type_match_result tmr)
 >  	}
->  
-> -	if (dwarf_aggregate_size(&type_die, &size) < 0)
-> +	if (dwarf_aggregate_size(&data->type, &size) < 0)
->  		return false;
->  
->  	if ((u64)offset >= size)
-> @@ -1529,7 +1530,7 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
->   * when the variable is in the stack.
->   */
->  Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
-> -				    int *poffset, bool is_fbreg,
-> +				    Dwarf_Die *type_die, int *poffset, bool is_fbreg,
->  				    Dwarf_Die *die_mem)
->  {
->  	struct find_var_data data = {
-> @@ -1541,8 +1542,11 @@ Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
->  	Dwarf_Die *result;
->  
->  	result = die_find_child(sc_die, __die_find_var_reg_cb, &data, die_mem);
-> -	if (result)
-> +	if (result) {
->  		*poffset = data.offset;
-> +		*type_die = data.type;
-> +	}
-> +
->  	return result;
 >  }
 >  
+> -static bool is_pointer_type(Dwarf_Die *type_die)
+> -{
+> -	int tag = dwarf_tag(type_die);
+> -
+> -	return tag == DW_TAG_pointer_type || tag == DW_TAG_array_type;
+> -}
+> -
+>  static bool is_compound_type(Dwarf_Die *type_die)
+>  {
+>  	int tag = dwarf_tag(type_die);
+> @@ -474,19 +467,24 @@ static bool is_better_type(Dwarf_Die *type_a, Dwarf_Die *type_b)
+>  {
+>  	Dwarf_Word size_a, size_b;
+>  	Dwarf_Die die_a, die_b;
+> +	Dwarf_Die ptr_a, ptr_b;
+> +	Dwarf_Die *ptr_type_a, *ptr_type_b;
+> +
+> +	ptr_type_a = die_get_pointer_type(type_a, &ptr_a);
+> +	ptr_type_b = die_get_pointer_type(type_b, &ptr_b);
+>  
+>  	/* pointer type is preferred */
+> -	if (is_pointer_type(type_a) != is_pointer_type(type_b))
+> -		return is_pointer_type(type_b);
+> +	if ((ptr_type_a != NULL) != (ptr_type_b != NULL))
+> +		return ptr_type_b != NULL;
+>  
+> -	if (is_pointer_type(type_b)) {
+> +	if (ptr_type_b) {
+>  		/*
+>  		 * We want to compare the target type, but 'void *' can fail to
+>  		 * get the target type.
+>  		 */
+> -		if (die_get_real_type(type_a, &die_a) == NULL)
+> +		if (die_get_real_type(ptr_type_a, &die_a) == NULL)
+>  			return true;
+> -		if (die_get_real_type(type_b, &die_b) == NULL)
+> +		if (die_get_real_type(ptr_type_b, &die_b) == NULL)
+>  			return false;
+>  
+>  		type_a = &die_a;
+> @@ -539,7 +537,7 @@ static enum type_match_result check_variable(struct data_loc_info *dloc,
+>  	 * and local variables are accessed directly without a pointer.
+>  	 */
+>  	if (needs_pointer) {
+> -		if (!is_pointer_type(type_die) ||
+> +		if (die_get_pointer_type(type_die, type_die) == NULL ||
+>  		    __die_get_real_type(type_die, type_die) == NULL)
+>  			return PERF_TMR_NO_POINTER;
+>  	}
+> @@ -880,12 +878,16 @@ static void update_var_state(struct type_state *state, struct data_loc_info *dlo
+>  			continue;
+>  
+>  		if (var->reg == DWARF_REG_FB || var->reg == fbreg || var->reg == state->stack_reg) {
+> +			Dwarf_Die ptr_die;
+> +			Dwarf_Die *ptr_type;
+>  			int offset = var->offset;
+>  			struct type_state_stack *stack;
+>  
+> +			ptr_type = die_get_pointer_type(&mem_die, &ptr_die);
+> +
+>  			/* If the reg location holds the pointer value, dereference the type */
+> -			if (!var->is_reg_var_addr && is_pointer_type(&mem_die) &&
+> -				__die_get_real_type(&mem_die, &mem_die) == NULL)
+> +			if (!var->is_reg_var_addr && ptr_type &&
+> +			    __die_get_real_type(ptr_type, &mem_die) == NULL)
+>  				continue;
+>  
+>  			if (var->reg != DWARF_REG_FB)
+> @@ -1110,7 +1112,9 @@ static enum type_match_result check_matching_type(struct type_state *state,
+>  		goto check_non_register;
+>  
+>  	if (state->regs[reg].kind == TSR_KIND_TYPE) {
+> +		Dwarf_Die ptr_die;
+>  		Dwarf_Die sized_type;
+> +		Dwarf_Die *ptr_type;
+>  		struct strbuf sb;
+>  
+>  		strbuf_init(&sb, 32);
+> @@ -1122,7 +1126,8 @@ static enum type_match_result check_matching_type(struct type_state *state,
+>  		 * Normal registers should hold a pointer (or array) to
+>  		 * dereference a memory location.
+>  		 */
+> -		if (!is_pointer_type(&state->regs[reg].type)) {
+> +		ptr_type = die_get_pointer_type(&state->regs[reg].type, &ptr_die);
+> +		if (!ptr_type) {
+>  			if (dloc->op->offset < 0 && reg != state->stack_reg)
+>  				goto check_kernel;
+>  
+> @@ -1130,7 +1135,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+>  		}
+>  
+>  		/* Remove the pointer and get the target type */
+> -		if (__die_get_real_type(&state->regs[reg].type, type_die) == NULL)
+> +		if (__die_get_real_type(ptr_type, type_die) == NULL)
+>  			return PERF_TMR_NO_POINTER;
+>  
+>  		dloc->type_offset = dloc->op->offset + state->regs[reg].offset;
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index b57cdc8860f0..96cfcbd40c45 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -303,6 +303,33 @@ Dwarf_Die *die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+>  	return vr_die;
+>  }
+>  
+> +/**
+> + * die_get_pointer_type - Get a pointer/array type die
+> + * @type_die: a DIE of a type
+> + * @die_mem: where to store a type DIE
+> + *
+> + * Get a pointer/array type DIE from @type_die. If the type is a typedef or
+> + * qualifier (const, volatile, etc.), follow the chain to find the underlying
+> + * pointer type.
+> + */
+> +Dwarf_Die *die_get_pointer_type(Dwarf_Die *type_die, Dwarf_Die *die_mem)
+> +{
+> +	int tag;
+> +
+> +	do {
+> +		tag = dwarf_tag(type_die);
+> +		if (tag == DW_TAG_pointer_type || tag == DW_TAG_array_type)
+> +			return type_die;
+> +		if (tag != DW_TAG_typedef && tag != DW_TAG_const_type &&
+> +		    tag != DW_TAG_restrict_type && tag != DW_TAG_volatile_type &&
+> +		    tag != DW_TAG_shared_type)
+> +			return NULL;
+> +		type_die = die_get_type(type_die, die_mem);
+> +	} while (type_die);
+> +
+> +	return NULL;
+> +}
+> +
+>  /* Get attribute and translate it as a udata */
+>  static int die_get_attr_udata(Dwarf_Die *tp_die, unsigned int attr_name,
+>  			      Dwarf_Word *result)
 > diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-> index cd481ec9c5a1..b3ee5df0b6be 100644
+> index b3ee5df0b6be..8045281f219c 100644
 > --- a/tools/perf/util/dwarf-aux.h
 > +++ b/tools/perf/util/dwarf-aux.h
-> @@ -163,7 +163,7 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf);
+> @@ -60,6 +60,8 @@ Dwarf_Die *die_get_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
+>  Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
+>  /* Get a type die, but skip qualifiers and typedef */
+>  Dwarf_Die *die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
+> +/* Get a pointer/array type, following typedefs/qualifiers */
+> +Dwarf_Die *die_get_pointer_type(Dwarf_Die *type_die, Dwarf_Die *die_mem);
 >  
->  /* Find a variable saved in the 'reg' at given address */
->  Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
-> -				    int *poffset, bool is_fbreg,
-> +				    Dwarf_Die *type_die, int *poffset, bool is_fbreg,
->  				    Dwarf_Die *die_mem);
->  
->  /* Find a (global) variable located in the 'addr' */
+>  /* Check whether the DIE is signed or not */
+>  bool die_is_signed_type(Dwarf_Die *tp_die);
 > -- 
 > 2.52.0
 > 
