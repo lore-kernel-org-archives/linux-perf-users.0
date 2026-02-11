@@ -1,91 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7372318BA7;
-	Wed, 11 Feb 2026 12:01:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FF53358B8;
+	Wed, 11 Feb 2026 12:11:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770811310; cv=none; b=qd9wPJK3xMVHnN7Luas/LX/0Kqqkp2IFOb0/eFGzLhsuRA5grNu/eBbRl/DvpZKQ8OaQCZLAfSwL30GlKjOQvnUr0J1TmFHAaCfhu+rZSqLeLXfSNamZ9P+cwdHSUY+41TY7kskg+6CrRFU6HsNGIQKzMaF3oL7SfcwPBoxuork=
+	t=1770811920; cv=none; b=PRHTEOzuyYzAvbV9xlmDh38h78uY4ZYl/CLZuBuT/VUTlNRcPqza6KlpeHzsnBa100XQnIndgv1OASRjoN0kfTza8Q1dczbgO08Cx8bGpQepERXkQEMXrTzBRXUCELOwOP+sNflmfG4SiZ3dOLDTpoeUHq5mldyk8JkDl0GP9GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770811310; c=relaxed/simple;
-	bh=McuLMSlGddF2uo8OP2j+Uw1HsJkJDUqgLzWOqo6zZ1M=;
+	s=arc-20240116; t=1770811920; c=relaxed/simple;
+	bh=RwLK5y3Skh5p3fRZnWmIlHH1BHA4Od56ZDdBS0vCTgY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a/6gX5Bb4teBpevLNGHeRm/EkCO84449WzaL+iPJtNuf4cvi7Wega6a7z9FW2sNI5XVJTZ7JbEIC2Eg3X+1vtEEUyO+i1gKOfsZSgMcTtbXvIIJfBj40yvAb5SWXkaj3xXxNdi715eYM0zraot1km8xx2cXo036UZhaXirAYSCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjJpjlIm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gilDcQjzGN2TX0mO1t3AdZCzVPf74TKjxRoDuDxuV60yXMzhe2A3ciTgyyJqF9NwWxPCGkhyEb/8QZp+3zZIv/jFmf3S5jRt9qXghZyjFksdiYK4m8pW73o1M5jOVG7rJcTq8ztYjQutfZlCc2hjnX9rR072LCrI7/uKWrEET9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I+waG3NT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjJpjlIm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB1DEC4CEF7;
-	Wed, 11 Feb 2026 12:01:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I+waG3NT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B15C4CEF7;
+	Wed, 11 Feb 2026 12:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770811310;
-	bh=McuLMSlGddF2uo8OP2j+Uw1HsJkJDUqgLzWOqo6zZ1M=;
+	s=k20201202; t=1770811919;
+	bh=RwLK5y3Skh5p3fRZnWmIlHH1BHA4Od56ZDdBS0vCTgY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gjJpjlImbTKLf4lhZrWaFb3qqV/nAa4idmDzZxcWjgz1CHw66GQLwH4557pnUAw75
-	 g2wYe2Q2mE8MdvlOA6PRLAV1ZraOXsZm6OXRDzN0IaP4Pa0RVc0f67cZkjS1d/861/
-	 Q8p29KUzepyGnzN6rY2fkbPVT8je7ZgzmySuRFJsYxZc0RqbAKKY39ehkW14A/MSy+
-	 2DFZph/hIXuTCD5wdAQvNCZrPFjhbaysXE96rx7ElrfML1AI2QVR38kePwzqTJoYIB
-	 gGYoNRNn2+0l1hJ/igGlJEpJwkuAUIAZWRGMQKbUhA7xTpSzK2dQ091DZoLNkO+235
-	 PRCy+uuZ+WuGw==
-Date: Wed, 11 Feb 2026 09:01:46 -0300
+	b=I+waG3NTFD3zNMo4kAnHXWgk0Ry1K4epb4o4XgIU63pqdFbpMV6kWMAqgmMMFj+vF
+	 /AIb3HyZNEtGv3sFA7pvqZB3AxtPukqS9JIbIRc0TSt2GD1/+0Q3MXUy6kF13+zUKM
+	 Bg08+h7ibn7DHQNvcAo8RAq+qDdvNRczwWEcbflqMeu0AFuskX5fG0O7rXMWCRuvHu
+	 ie7VDNwDCtmKCqfPeM6jrMa5Ph250vkt8YJehlkGSE2+EgoQVRKa8mmQWrtBvyJTxL
+	 x46ukoypQfsWf97f7XwcwrxTW5GyhynGiiemHYtiGC3QPUEUyaJZJn90al/Q477dLV
+	 F782zC/Y9WULQ==
+Date: Wed, 11 Feb 2026 09:11:55 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf libunwind: Fix calls to thread__e_machine
-Message-ID: <aYxvqoTR5NGYy1uj@x1>
-References: <20260211053827.140534-1-irogers@google.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Dmitrii Dolgov <9erthalion6@gmail.com>,
+	linux-perf-users@vger.kernel.org,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+	rust-for-linux <rust-for-linux@vger.kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>
+Subject: Re: [PATCH v1] tools build: Fix feature test for rust compiler
+Message-ID: <aYxyCypnmSuXSYYD@x1>
+References: <20260211095807.132855-1-9erthalion6@gmail.com>
+ <CANiq72mFBaFm9QVotxeDB0TanKxQRko7ZFhuF-RHq-8WCemCTQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260211053827.140534-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72mFBaFm9QVotxeDB0TanKxQRko7ZFhuF-RHq-8WCemCTQ@mail.gmail.com>
 
-On Tue, Feb 10, 2026 at 09:38:27PM -0800, Ian Rogers wrote:
-> Add the missing e_flags option to fix the build.
-> 
-> Fixes: 4e66527f8859 ("perf thread: Add optional e_flags output argument to thread__e_machine")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Wed, Feb 11, 2026 at 11:41:06AM +0100, Miguel Ojeda wrote:
+> On Wed, Feb 11, 2026 at 10:58 AM Dmitrii Dolgov <9erthalion6@gmail.com> wrote:
+> > Currently a dummy rust code is compiled to detect if the rust feature
+> > could be enabled. It turns out that in this case rust emits a dependency
+> > file without any external references:
 
-Thanks, applied to perf-tools-next,
+> >     /perf/feature/test-rust.d: test-rust.rs
+
+> >     /perf/feature/test-rust.bin: test-rust.rs
+
+> >     test-rust.rs:
+
+> > This can lead to a situation, when rustc was removed after a successful build,
+> > but the build process still thinks it's there and the feature is enabled on
+> > subsequent runs.
+
+> > Instead simply check the compiler presence to detect the feature, as
+> > suggested by Arnaldo Carvalho de Melo. This way no actual test-rust.bin
+> > will be created, meaning the feature check will not be cached and always
+> > performed. That's exactly what we want, and the overhead of doing this
+> > every time is minimal.
+
+> > Tested with multiple rounds of install/remove of the rust package.
+
+> > Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+ 
+> Not sure if Kbuild covers this given it is `tools/`, but just in case
+> given the `MAINTAINERS` file, Cc'ing them, as well as rust-for-linux
+> since we try to use it as an index of Rust-related things there within
+> the kernel.
+
+Right, this started with Dmitrii wanting to help with data-type
+profiling in Rust, as Namhyung mentioned in his LPC talk that there was
+work to be done to support other languages.
+
+Since he had tested it and it seemed to work, I suggested he turned his
+recent experience into a 'perf test' for data-type profiling on a Rust
+workload and this series came out of that.
+
+This has even caught a regression already, namely:
+
+  64ea7a4620008652 ("perf annotate: Fix register usage in data type profiling")
+
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=64ea7a4620008652
+
+Now it is the first, AFAIK, experience with rust in tools/, as this
+shows:
+
+⬢ [acme@toolbx linux]$ find tools -name "*.rs"
+tools/build/feature/test-rust.rs
+tools/perf/tests/workloads/code_with_type.rs
+⬢ [acme@toolbx linux]$
+
+With the above patch we'll be left with just
+tools/perf/tests/workloads/code_with_type.rs, that is linked into perf,
+if rust is available, and we need to figure out to reduce the impact in
+the size of perf, which is noticeable, but as it is not a strict
+requirement, we can have this addressed in later work.
+
+Hopefully this helps pave the way for more Rust tooling to flourish in
+tools/.
 
 - Arnaldo
-> ---
->  tools/perf/util/unwind-libunwind-local.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-> index ecf0c01fe51f..5b39ce21e333 100644
-> --- a/tools/perf/util/unwind-libunwind-local.c
-> +++ b/tools/perf/util/unwind-libunwind-local.c
-> @@ -584,7 +584,9 @@ static int access_mem(unw_addr_space_t __maybe_unused as,
->  	}
->  
->  	ret = perf_reg_value(&start, perf_sample__user_regs(ui->sample),
-> -			     perf_arch_reg_sp(thread__e_machine(ui->thread, ui->machine)));
-> +			     perf_arch_reg_sp(thread__e_machine(ui->thread,
-> +								ui->machine,
-> +								/*e_flags=*/NULL)));
->  	if (ret)
->  		return ret;
->  
-> @@ -733,7 +735,7 @@ static void _unwind__finish_access(struct maps *maps)
->  static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
->  		       void *arg, int max_stack)
->  {
-> -	uint16_t e_machine = thread__e_machine(ui->thread, ui->machine);
-> +	uint16_t e_machine = thread__e_machine(ui->thread, ui->machine, /*e_flags=*/NULL);
->  	u64 val;
->  	unw_word_t ips[max_stack];
->  	unw_addr_space_t addr_space;
-> -- 
-> 2.53.0.239.g8d8fc8a987-goog
-> 
