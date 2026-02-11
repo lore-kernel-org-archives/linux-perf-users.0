@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F239A2C11E1
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 01:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0CA2D6E5C
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 01:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770774779; cv=none; b=LZ2aBgam6ygp9wTypi7/ePBQ+5kWn2CZ7DJjbNfDILoQyRIcMyjD97pJDVBf9pe8mUKAmcWfGkaVra7XL0qWSzkhdNq+/nYiL/w26Fi16mPExoix5AI6zgRlmFGxhWcm9ao/5nBDEwijV+r60qdNk/KA15jaitd1BjPlW8Ys8Bk=
+	t=1770774780; cv=none; b=kcwEDSJJVwPa2Hpu47j34UcZ8SIeVJPPE/ecy5aigzVa6VZZbuNsy4tLuWJfyCO5+CgxA7A2rELHh6a6ZVSsEoVieYp6KlMx5KVloEMUnfjsWEzbXKtVXy5ifGN47JlWeCjAUA6dHpjzPDb+JjM+weq3yh6U2ENUGe+R59ktYa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770774779; c=relaxed/simple;
-	bh=Q8lcCWydMDVujK6/wN03/oysJCuCldnfOF+1TNRE1EE=;
+	s=arc-20240116; t=1770774780; c=relaxed/simple;
+	bh=tQHrkngzVLUEqGsMf/7XWZpqU1lbr91is2l0EGQbIBI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=QNZQeAYg35BJNXCENiOgkbtUGLohiSw8pKYKcdpJsEF4ZVIWXtf4zdK3JE5Wsd18ps360zGs+FdS6fJaeeIWlYhiChKDD570rdCHgJ5RgvuZruUMc006l83YzRf98lLOB9BCefPD4R1tyXqYDbOmnzKj04O54EhE5bG8AZ++iNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2jZGSOgi; arc=none smtp.client-ip=74.125.82.202
+	 To:Content-Type; b=Wo6iezXsCbER9bB5YdUpMqOVrITWcv5IYT6DmMWp/1rxlKeVq8CH17/8Y8LvE+yizJskZlAGEfEajgtKIuI4K+lRixXxvPUehH8gUPqe68mWlG1GkPbBjRCc31U06tIV8aU5tWgou1P1CRWcpzfXTk02xVzsxX1e+zZUMtLtkts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X+dUx1/k; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2jZGSOgi"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2b7ef896edcso23271335eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 17:52:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X+dUx1/k"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ba9a744f7dso466561eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 17:52:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770774774; x=1771379574; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770774778; x=1771379578; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=UiHopQidaKUSI5zxqKq6dP/VKpRLeTJcWrFTpufmmAw=;
-        b=2jZGSOgiQPDh0XMddEIvUbepsnz3+BnHPd9N+rdNvkNlh8GP9iOtNjdBvgFOP85mNX
-         RNNoRQT1ORvS0Uq3HbfSNKZWXUJylY3ukQjkDC86NrTI0LluyPtjMfqMdKvd51+fcWt3
-         p3QQpemkHUroBC0WmMHaVu7QT8D2SBJ7xGQK8rohxkC3/bO06wNpFSdF6z+4nBzV45m6
-         7cB8uyE7dbAq+nu1m/JjoNyYdHNVtmRpx1U3J1fKzp32SoChi7HLpw9KbMYvJDxS1QuS
-         W1lwwqrDJ2BFdgg49rDAyfnD37cbVtSddWrQS1VhClmoRZoKuYRAyMNZlLGkQK55xzif
-         P5ZA==
+        bh=z/GTs5A9yek4he0BUlqIoIsxHRmHOoQilOIUJRqh028=;
+        b=X+dUx1/ku5ehRavVOUt0AZynPHHNl8iFUuUVzloC2yPNiyIEHMDljQ/vjrCa+9BJn5
+         Uim4Wc5uHjX1sCWJYyQUOOj+cVc8SDkmpeUiLXENeeyQQUwy8oSML1g/4DahWrDlH4GF
+         x99/zFFs02mOZw2ur/u/IUDJ2mxh526I87TsOwNQg6yZ0/zKgdhpaGoxij48ZGyzTCQv
+         8ChBipy+mQMy4qzPAtV/FlezuW64ELL3VAeXUw9PSMrjUGrQsTUUfLkA1q1Tpn6em2yt
+         hEXJA0MEMtpZzzm87BRH07TL8JFGLgNrIjIuB/eNcjfYBwgC3fogy8+3ltDFiy1NK7sC
+         91LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770774774; x=1771379574;
+        d=1e100.net; s=20230601; t=1770774778; x=1771379578;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UiHopQidaKUSI5zxqKq6dP/VKpRLeTJcWrFTpufmmAw=;
-        b=sXxVkhV/y4qtp7vYmR0zHDVjznip6/EIL04NjEXTfkIQLtBAQJd229SH55ycXf3vts
-         CZZ0sL9QkQH1tQOd+gRPJVV0Ybq802MKZ78wf93E2LH6P+pSX3i+t2JwWCX+YshtBcsU
-         4ONqDnpk7BG/NzmYwd7VmYx8jf316+Pfg9bbZrT4DGciQMkthRyq3C77SPJZrpj+vd/W
-         d6eJLqq9fQnDfFaCGCcNyYWJUEi0TH9ZoP99/B9sgFV9vHiZYrSG1+lsI8VQM418LtoB
-         B25ESdhvmX1fHlez8454cJfqRlI7oeErxkosJfa+v5T9IZTnwoUwUZ8EPMS+lvE7v5vZ
-         e5mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0gaoVxbiLM0ct0IAq96AySuwDRypREpIkGS4CpkxCqKC/7pjwE42+eW9W8AcMH5LwDRSa6xkDo+3cT/m7xeLO@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmYfwtfcbHDEB7KowsyFpn4dc2cEyjmkWIuCloVKDU1tKy/m7H
-	4ODmbIzBPtx8HdDGO9+7Imyv5X7+XkyzbWjSBioN7Q1MVAiMoyIddL+Jls+GJVIVHKqonknx1wQ
-	UKXp6B4DmLw==
-X-Received: from dybgj26.prod.google.com ([2002:a05:7301:11a:b0:2b7:d91:b4a2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:fd07:b0:2ba:7b0b:e20a
- with SMTP id 5a478bee46e88-2ba9e16832bmr96757eec.37.1770774774552; Tue, 10
- Feb 2026 17:52:54 -0800 (PST)
-Date: Tue, 10 Feb 2026 17:52:40 -0800
+        bh=z/GTs5A9yek4he0BUlqIoIsxHRmHOoQilOIUJRqh028=;
+        b=LP3COOrlIMEd2WPIM83syHJ+v0wKO//F+54mN/mVec8WwZwurCHgvFK/qOfypAVb95
+         ktiBVhy2JNkBLcNAO46QbToEswhzwOU6YCHRBtN0tBOMqJst80ee1fl6i5zSoa9t1Vs0
+         RIikkXBzMdi05aXPYDnkD9QBZh1VKwQ8w4ab6hPFpiHU6Vh3zBVQ847KKCUI6l9I7v9I
+         FYskgPhRwbHohj1k7PRjVSmm5JTSKj73HsenJYBxTFTREZ7yYkxekf0/sCigdLZWi6NG
+         b4bewCZi4LH1WTTX/NPPLQz1+L+h3FDGxO5RZw8xlOFZNtEAcfcb4xKtrLSXt8KINLic
+         14rg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJCKZqXyY4UPAIBjNWIYHP5hRxFmgtgTmblw+Jn8vzo6M+z54MAm8MRRDRmf2qrBZDZUoWXfMe5NW4nDRc3bI6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4uWzyIjIcz/79k1dztocwsBERRO9PzuBt1YhwvCw5UgsW4RJB
+	1JLS6zejGcNKA7YsJ9rlXRwZc/TqkXr1pSSnkxMm8VrtbI6r2SBDLDzwlJjFB4eau8Et7LF0dOX
+	bp6+SKIr91A==
+X-Received: from dybhf8.prod.google.com ([2002:a05:7301:2a08:b0:2ac:3025:bdaa])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:2f99:b0:2b7:2664:ae9f
+ with SMTP id 5a478bee46e88-2ba9e01564emr134737eec.1.1770774778056; Tue, 10
+ Feb 2026 17:52:58 -0800 (PST)
+Date: Tue, 10 Feb 2026 17:52:42 -0800
 In-Reply-To: <20260211015242.2700218-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260211015242.2700218-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
-Message-ID: <20260211015242.2700218-4-irogers@google.com>
-Subject: [PATCH v1 3/5] perf json: Pipe mode --to-ctf support
+Message-ID: <20260211015242.2700218-6-irogers@google.com>
+Subject: [PATCH v1 5/5] perf test: perf data --to-ctf testing
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -69,108 +69,125 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-In pipe mode the environment may not be fully initialized so be robust
-to fields being NULL. Add default handling of attr events, use the
-feature events to populate the ctf writer environment.
+If babeltrace is detected check that --to-ctf functions with a data
+file and in pipe mode.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/data-convert-bt.c | 54 +++++++++++++++++++++++++++++--
- 1 file changed, 52 insertions(+), 2 deletions(-)
+ .../shell/test_perf_data_converter_ctf.sh     | 104 ++++++++++++++++++
+ 1 file changed, 104 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_perf_data_converter_ctf.sh
 
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index a22e9049ff30..ba1c8e48d495 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -35,6 +35,7 @@
- #include "clockid.h"
- #include "util/sample.h"
- #include "util/time-utils.h"
-+#include "header.h"
- 
- #ifdef HAVE_LIBTRACEEVENT
- #include <event-parse.h>
-@@ -1338,7 +1339,8 @@ static void cleanup_events(struct perf_session *session)
- 		struct evsel_priv *priv;
- 
- 		priv = evsel->priv;
--		bt_ctf_event_class_put(priv->event_class);
-+		if (priv)
-+			bt_ctf_event_class_put(priv->event_class);
- 		zfree(&evsel->priv);
- 	}
- 
-@@ -1387,7 +1389,7 @@ static int ctf_writer__setup_env(struct ctf_writer *cw,
- 
- #define ADD(__n, __v)							\
- do {									\
--	if (bt_ctf_writer_add_environment_field(writer, __n, __v))	\
-+	if (__v && bt_ctf_writer_add_environment_field(writer, __n, __v))	\
- 		return -1;						\
- } while (0)
- 
-@@ -1403,6 +1405,52 @@ do {									\
- 	return 0;
- }
- 
-+static int process_feature_event(const struct perf_tool *tool,
-+				 struct perf_session *session,
-+				 union perf_event *event)
+diff --git a/tools/perf/tests/shell/test_perf_data_converter_ctf.sh b/tools/perf/tests/shell/test_perf_data_converter_ctf.sh
+new file mode 100755
+index 000000000000..334eebc9945e
+--- /dev/null
++++ b/tools/perf/tests/shell/test_perf_data_converter_ctf.sh
+@@ -0,0 +1,104 @@
++#!/bin/bash
++# 'perf data convert --to-ctf' command test
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++err=0
++
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++ctf_dir=$(mktemp -d /tmp/__perf_test.ctf.XXXXX)
++
++cleanup()
 +{
-+	struct convert *c = container_of(tool, struct convert, tool);
-+	struct ctf_writer *cw = &c->writer;
-+	struct perf_record_header_feature *fe = &event->feat;
-+
-+	if (event->feat.feat_id < HEADER_LAST_FEATURE) {
-+		int ret = perf_event__process_feature(session, event);
-+
-+		if (ret)
-+			return ret;
-+	}
-+
-+	switch (fe->feat_id) {
-+	case HEADER_HOSTNAME:
-+		if (session->header.env.hostname) {
-+			return bt_ctf_writer_add_environment_field(cw->writer, "host",
-+								   session->header.env.hostname);
-+		}
-+		break;
-+	case HEADER_OSRELEASE:
-+		if (session->header.env.os_release) {
-+			return bt_ctf_writer_add_environment_field(cw->writer, "release",
-+								   session->header.env.os_release);
-+		}
-+		break;
-+	case HEADER_VERSION:
-+		if (session->header.env.version) {
-+			return bt_ctf_writer_add_environment_field(cw->writer, "version",
-+								   session->header.env.version);
-+		}
-+		break;
-+	case HEADER_ARCH:
-+		if (session->header.env.arch) {
-+			return bt_ctf_writer_add_environment_field(cw->writer, "machine",
-+								   session->header.env.arch);
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+	return 0;
++	rm -f "${perfdata}"
++	rm -rf "${ctf_dir}"
++	trap - exit term int
 +}
 +
- static int ctf_writer__setup_clock(struct ctf_writer *cw,
- 				   struct perf_session *session,
- 				   bool tod)
-@@ -1635,6 +1683,8 @@ int bt_convert__perf2ctf(const char *input, const char *path,
- 	c.tool.tracing_data    = perf_event__process_tracing_data;
- 	c.tool.build_id        = perf_event__process_build_id;
- 	c.tool.namespaces      = perf_event__process_namespaces;
-+	c.tool.attr            = perf_event__process_attr;
-+	c.tool.feature         = process_feature_event;
- 	c.tool.ordering_requires_timestamps = true;
- 
- 	if (opts->all) {
++trap_cleanup()
++{
++	echo "Unexpected signal in ${FUNCNAME[1]}"
++	cleanup
++	exit ${err}
++}
++trap trap_cleanup exit term int
++
++check_babeltrace_support()
++{
++	if ! perf check feature libbabeltrace
++	then
++		echo "perf not linked with libbabeltrace, skipping test"
++		exit 2
++	fi
++}
++
++test_ctf_converter_file()
++{
++	echo "Testing Perf Data Conversion Command to CTF (File input)"
++	# Record some data
++	if ! perf record -o "$perfdata" -F 99 -g -- perf test -w noploop
++	then
++		echo "Failed to record perf data"
++		err=1
++		return
++	fi
++
++	# Cleanup previous ctf dir
++	rm -rf "${ctf_dir}"
++
++	# Convert
++	if ! perf data convert --to-ctf "$ctf_dir" --force -i "$perfdata"
++	then
++		echo "Perf Data Converter Command to CTF (File input) [FAILED]"
++		err=1
++		return
++	fi
++
++	if [ -d "${ctf_dir}" ] && [ "$(ls -A "${ctf_dir}")" ]
++	then
++		echo "Perf Data Converter Command to CTF (File input) [SUCCESS]"
++	else
++		echo "Perf Data Converter Command to CTF (File input) [FAILED]"
++		echo "    Output directory empty or missing"
++		err=1
++	fi
++}
++
++test_ctf_converter_pipe()
++{
++	echo "Testing Perf Data Conversion Command to CTF (Pipe mode)"
++
++	# Cleanup previous ctf dir
++	rm -rf "${ctf_dir}"
++
++	# Record to stdout and pipe to $perfdata file
++	if ! perf record -o - -F 99 -g -- perf test -w noploop > "$perfdata"
++	then
++		echo "Failed to record perf data"
++		err=1
++		return
++	fi
++
++	if ! perf data convert --to-ctf "$ctf_dir" --force -i "$perfdata"
++	then
++		echo "Perf Data Converter Command to CTF (Pipe mode) [FAILED]"
++		err=1
++		return
++	fi
++
++	if [ -d "${ctf_dir}" ] && [ "$(ls -A "${ctf_dir}")" ]
++	then
++		echo "Perf Data Converter Command to CTF (Pipe mode) [SUCCESS]"
++	else
++		echo "Perf Data Converter Command to CTF (Pipe mode) [FAILED]"
++		echo "    Output directory empty or missing"
++		err=1
++	fi
++}
++
++check_babeltrace_support
++test_ctf_converter_file
++test_ctf_converter_pipe
++
++exit ${err}
 -- 
 2.53.0.239.g8d8fc8a987-goog
 
