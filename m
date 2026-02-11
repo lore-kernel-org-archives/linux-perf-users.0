@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0401D2C15BB
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 01:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950DC2C15B5
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 01:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770774778; cv=none; b=TUoI8A3Tu001zhODL7kU66eL94qrHsCaQhqZbyKy5E8rGTil0mBFUbDlI01YN1pLU7njgjyJNo2pm36KNQUAhvSOJilX/usy+gAPvte3TO3nqhTM7ZRoMQJWI5U/QDSutlPhKVcx8j7soWuQ1IBH7NAhU5LJfrrgeD3Gfy85XfM=
+	t=1770774778; cv=none; b=jQz1puBhc9ovOtTs9owA/0T8fi/IynENd6azw3Kor0/3HDOaOBQMu2RwIS5Lm97yO3jltoCARVWs6uzMg6QJ9VSNb91e3XEl0bn11SACI+fvba3F0iGCaVzDa238CqFmgqrGEpnqUMYbvlkrGM0Kbc3tIVGVzIrTlNyNGCgtVNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770774778; c=relaxed/simple;
-	bh=DTG0wCe4l1QOCzgg/LUvHjey36vrzgciu/XJHppJvVg=;
+	bh=GtzZQe4Cyczg2thV7yGZJSLtC9TeQUSKesXkt8zVUEA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=jbEh3iFWgyCKLFKmeHjnG80E4McfD0HdqOLQfybC9GiguFB/ga/+/VeC1wFQL18CBtVU7fzEjuUZfMm7hV6kVqBUapSfBgO0OoOpDnS2yo10bjl8I72m8AytyGgjaEXL7QwHrwLwpv+SKtSPxkJKM5/9HwoBn6LkYo+DPzG9vCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EPT4UQg4; arc=none smtp.client-ip=74.125.82.201
+	 To:Content-Type; b=X9xxhNmtsO9/whuRhCk0r3id9i75RMJ5/7jBBiIYigIWckmsIM6xpOZyK/ttYVjM9WuJ+E1EV4tv4igd8qvSAsopRQBkONIqkxepvivlqwakNoEps4CCjpMwMmfHwDNipPKn93WLIJ896EOKA8b/Y3pAncgflTDoxc6K4RIDQ/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=btr48qNI; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EPT4UQg4"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2b7ef896edcso23271443eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 17:52:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="btr48qNI"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-124aa710af7so28038802c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Feb 2026 17:52:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770774776; x=1771379576; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1770774773; x=1771379573; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=wopudxpZqJa8+pPTelgcXkgtvWVCN6h00NLP/d6pFt0=;
-        b=EPT4UQg4wGMjKEr6fw/SZpIem8oUJTSWpL1LBvmu1UmNmLbo8USfntb+oD1GUtstI4
-         azGm0+zRf8aQrCXLkszSKmJdgA/EeWORur/qc0dhfaowUvyh/rrJ4GR2rem04BYNROqK
-         XxLNIwAIxc41Gmp5FjmcHlKxEpyJu2KX3I+VnyldeKMjb6c9ZpYGcAqcEgMWaqCQupMN
-         mOOHytKOCjyq1ozZiX5PbdKvPH0/YN+HvhFGI/13JhbPdzoGLqVId75NpxOWkAiU69It
-         74k0oLcl8qHrxYHsyiXSJjLt/5TdA2nejbfHWEo6EZSi1GsgHJVbkY7lgZYfy8ReL9qt
-         MCVg==
+        bh=3/qLzlsqfHs+dLny8bu5w2UvyZ2sO7c+56V79RBEKH0=;
+        b=btr48qNIUCx57yBoIEB8H5cRgXMvr/pGAh4IzBphPReW2/wgAahkcw6mcelaCDN4Pk
+         Wf/Td8dS6A6VJDXvxUdmNtGuBUfwR+pBHyP6FHy31HtYiiQIM6bm3z61olD49RY48w8e
+         bFCDwnACKwfyMp4TpQ5BysAqKROjBidhUIR6QC2p0azUJ3UHsqlbTdLqpJImXngwsmBe
+         aTHyQQ9VH2ANa05Bht2XiZTRgUU5MnU8fA2FUz8l7LsfpJx6MMSwDKCfkkB515oJf50L
+         smQ2h5u/pgfaLboBSu1hebpqPF9of0F9G1LL4hj3QQ8TStOfiGFpwUllyw+McTWN5AXF
+         oGNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770774776; x=1771379576;
+        d=1e100.net; s=20230601; t=1770774773; x=1771379573;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wopudxpZqJa8+pPTelgcXkgtvWVCN6h00NLP/d6pFt0=;
-        b=HbCNMdFYxRkp/gnhbPVyeSEyyBLSaokeZw5yA+xIaQ0oomhm5r1/8CfTUJ62+egIh9
-         F7EcNk5t6mefFfgcDjOQDwTzp9OqTi1i9AhNEFWXkLeIA8/zELN+cVrO11J5nVPfGLeN
-         5n8zsvwj8CoTnyg1yir1+GVBaxJ7KRVQGRFOj+7PyqM3zjo7MPfEyvVDVcbb/2NfeBvg
-         3i3AnTW6PiJp/eIykshIH//rXrFuH/nEwCHqNSnDY2gpDIff934sVbzPvP+iuGxsi0iw
-         fxhQDRttLVl/fuuEmSq2MEJ7hy3tyBiLdYEgQ8uhef8IYKB2bvDAarFXizozSEzYQFrD
-         WbQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUz8zlwrflvaRZ9yqu3MjvN3a6lKbM1ukmw/LfSdaWWQ1D5L/6Hw+w2psOhjv0vqG9kq95oh0fQclK++9UJD8BW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk0JTiX8SB1s+zS/DcVdpu80cD2BZpKd5Wjqcibbnrfi+j9z4+
-	408IwfuGdslasp11N78ZvxifNGEfDKKF+XmVAcQp2L5j3713/z7/vjC1EM5v4n3R0pJe6xEVjxc
-	9i6iIRr+GtA==
-X-Received: from dycnr4-n2.prod.google.com ([2002:a05:7300:e9c4:20b0:2ba:895a:ddb2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:dc05:b0:2ba:8f47:fe4f
- with SMTP id 5a478bee46e88-2ba9e080163mr116493eec.18.1770774776135; Tue, 10
- Feb 2026 17:52:56 -0800 (PST)
-Date: Tue, 10 Feb 2026 17:52:41 -0800
+        bh=3/qLzlsqfHs+dLny8bu5w2UvyZ2sO7c+56V79RBEKH0=;
+        b=hx3vlitbcSwBGikp+X6y+/SVz8909FRr4Pik61coNqIX9HSvKOP03kRSa5kbT0uQeW
+         KYcXTN8pGnIxgBFTkk6+eQCsbs3WHo0PlbHYGng9UmWAASMsIkxE5r0zkEi9baFZexmr
+         CpuyKMjugyRCA7+yFYwP/Uls00JNMpEJ0MuIHZaA+m33jAZiF1qOpxBYpZaPojGg0aBG
+         P0KossC+8S10p1oY+L5sOW9X0HeG7ua4WwSHHvkMPppSxWxz+hA3JTi7YedhraomccJY
+         OocfJcDNOMQrGf6IGRbEZSHtLnHNy3gQKPoY7xmpBy+f6Omzz43XjT8c1idHnA8Ydz7t
+         VtkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvd4J8txZ1KfQY4bnZlqJukdfUK1xvyTb81sMHnnoPwieAKFe8NldVP8lQ1XvAHduWEuU+Jd9vWfqPlIayH+yo@vger.kernel.org
+X-Gm-Message-State: AOJu0YxylAjOkztRRyxiOkpc2Sn5mGk+oKSyjSldJcwGT5j1AWpkljOm
+	JCGJ5m8/wBFIDbvmuJCz8D+ps1UuksbsZhtUZG6yRAFqw4lc2pO5tlQQJiCEzwzB0W5CYBEXS2L
+	PS9bVRnFZvA==
+X-Received: from dlbdd17.prod.google.com ([2002:a05:7022:a91:b0:127:cec:12cd])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:102:b0:123:34e8:ae96
+ with SMTP id a92af1059eb24-1272437e6fdmr2166858c88.37.1770774772750; Tue, 10
+ Feb 2026 17:52:52 -0800 (PST)
+Date: Tue, 10 Feb 2026 17:52:39 -0800
 In-Reply-To: <20260211015242.2700218-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260211015242.2700218-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
-Message-ID: <20260211015242.2700218-5-irogers@google.com>
-Subject: [PATCH v1 4/5] perf test: Test pipe mode with data conversion --to-json
+Message-ID: <20260211015242.2700218-3-irogers@google.com>
+Subject: [PATCH v1 2/5] perf json: Pipe mode --to-json support
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -69,89 +69,62 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add pipe mode test for json data conversion. Tidy up exit and cleanup
-code.
+In pipe mode the environment may not be fully initialized so be robust
+to fields being NULL. Add default handling of feature and attr events.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../shell/test_perf_data_converter_json.sh    | 33 ++++++++++++++-----
- 1 file changed, 24 insertions(+), 9 deletions(-)
+ tools/perf/util/data-convert-json.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/tools/perf/tests/shell/test_perf_data_converter_json.sh b/tools/perf/tests/shell/test_perf_data_converter_json.sh
-index c4f1b59d116f..35d81e39a26c 100755
---- a/tools/perf/tests/shell/test_perf_data_converter_json.sh
-+++ b/tools/perf/tests/shell/test_perf_data_converter_json.sh
-@@ -15,29 +15,42 @@ result=$(mktemp /tmp/__perf_test.output.json.XXXXX)
- 
- cleanup()
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index eefa3a94c813..6a626322476a 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -48,6 +48,9 @@ struct convert_json {
+ static void output_json_string(FILE *out, const char *s)
  {
--	rm -f "${perfdata}"
-+	rm -f "${perfdata}*"
- 	rm -f "${result}"
- 	trap - exit term int
+ 	fputc('"', out);
++	if (!s)
++		goto out;
++
+ 	while (*s) {
+ 		switch (*s) {
+ 
+@@ -71,6 +74,7 @@ static void output_json_string(FILE *out, const char *s)
+ 
+ 		++s;
+ 	}
++out:
+ 	fputc('"', out);
  }
  
- trap_cleanup()
- {
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
- 	cleanup
--	exit ${err}
-+	exit 1
+@@ -322,6 +326,16 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
+ 	output_json_format(out, false, 2, "]");
  }
- trap trap_cleanup exit term int
  
- test_json_converter_command()
- {
--	echo "Testing Perf Data Convertion Command to JSON"
--	perf record -o "$perfdata" -F 99 -g -- perf test -w noploop > /dev/null 2>&1
--	perf data convert --to-json "$result" --force -i "$perfdata" >/dev/null 2>&1
-+	echo "Testing Perf Data Conversion Command to JSON"
-+	perf record -o "$perfdata" -F 99 -g -- perf test -w noploop
-+	perf data convert --to-json "$result" --force -i "$perfdata"
- 	if [ "$(cat ${result} | wc -l)" -gt "0" ] ; then
- 		echo "Perf Data Converter Command to JSON [SUCCESS]"
- 	else
- 		echo "Perf Data Converter Command to JSON [FAILED]"
- 		err=1
--		exit
-+	fi
++static int process_feature_event(const struct perf_tool *tool __maybe_unused,
++				 struct perf_session *session,
++				 union perf_event *event)
++{
++	if (event->feat.feat_id < HEADER_LAST_FEATURE)
++		return perf_event__process_feature(session, event);
++
++	return 0;
 +}
 +
-+test_json_converter_pipe()
-+{
-+	echo "Testing Perf Data Conversion Command to JSON (Pipe mode)"
-+	perf record -o - -F 99 -g -- perf test -w noploop > "$perfdata"
-+	cat "$perfdata" | perf data convert --to-json "$result" --force -i -
-+	if [ "$(cat ${result} | wc -l)" -gt "0" ] ; then
-+		echo "Perf Data Converter Command to JSON (Pipe mode) [SUCCESS]"
-+	else
-+		echo "Perf Data Converter Command to JSON (Pipe mode) [FAILED]"
-+		err=1
- 	fi
- }
+ int bt_convert__perf2json(const char *input_name, const char *output_name,
+ 		struct perf_data_convert_opts *opts __maybe_unused)
+ {
+@@ -360,6 +374,8 @@ int bt_convert__perf2json(const char *input_name, const char *output_name,
+ 	c.tool.auxtrace_info  = perf_event__process_auxtrace_info;
+ 	c.tool.auxtrace       = perf_event__process_auxtrace;
+ 	c.tool.event_update   = perf_event__process_event_update;
++	c.tool.attr           = perf_event__process_attr;
++	c.tool.feature        = process_feature_event;
+ 	c.tool.ordering_requires_timestamps = true;
  
-@@ -50,16 +63,18 @@ validate_json_format()
- 		else
- 			echo "The file does not contain valid JSON format [FAILED]"
- 			err=1
--			exit
- 		fi
- 	else
- 		echo "File not found [FAILED]"
--		err=2
--		exit
-+		err=1
- 	fi
- }
- 
- test_json_converter_command
- validate_json_format
- 
-+test_json_converter_pipe
-+validate_json_format
-+
-+cleanup
- exit ${err}
+ 	if (opts->all) {
 -- 
 2.53.0.239.g8d8fc8a987-goog
 
