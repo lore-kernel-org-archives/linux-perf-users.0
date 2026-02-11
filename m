@@ -1,138 +1,95 @@
-Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D362236922B
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 10:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.172
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770806481; cv=pass; b=Tu7BnpweMUwB7LMeBUprZGnD78LluXB7lWoX7IbfZ9Eq7O3lvWidlTBhi5mKXH7VU957O8XSCVeGlW+UulUc62W5BJ2GLqOROgn+F/YQSDYHLB/6Mu3IV0xKDVU0CcvEGeQcuMSkf0OJCK9DchDn59UepKhcch7pgryWkNMp/oQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770806481; c=relaxed/simple;
-	bh=ygS/KJIrgTEQGYtzJb6sDuaxRuXu9QCFvwwEJ6ybjPI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OMCxScTGiAJmIy6lNuFOjJv9E8seo0lC9Wny7vuqLALEV6jSt0L1vVu5aNOi+jZfpm87w5zwmJpZ3r9Uiw/oRtdjb+a5Nn2sGOW5GtYI2fBfS6H+sVJu65T7BEq+u4zEdSfZTSFMZ+ivo+L+UWZ1/Jzne8y7cytKEnKTOV1mMhM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=niAB0vv5; arc=pass smtp.client-ip=74.125.82.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6D336BCC9
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 10:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770807470; cv=none; b=SOgjh7E+A2gt0oHlCVmil/Njq2XQSzZvyh1oFAhEOg/PDgGfJBBgjIij/agekKHSY+Vrf1D9G3Rn4m7Br15ryiAKIDTCHy20pakKu02N8nOl09haMOc6voUbxiYuvWP3912BFfD69nfHMCK7kJOECJJhsVtOVoqzV9P+bEJ7w+o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770807470; c=relaxed/simple;
+	bh=DAjhfkqLaPEqPW3hbP1w2267sQzvp4ocO7opOaTvG70=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hSg8T9cCSdrw+8stmcX2zBRwOC5GXNcfATkKFE+3dzdLlDB+ipB1ljri3G2z7dYU56vi50H1ZzCCxnV58d778nV43vYRnXZ9luceQJEWwh8B26oqQTC+y+4kJywiGrDqa36iSgVQnmljOqIFpJV2XirYd0bMk2wWOOUfomRwCsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sa26KSnc; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="niAB0vv5"
-Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-2ba85f77203so215477eec.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 02:41:20 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770806480; cv=none;
-        d=google.com; s=arc-20240605;
-        b=SxVLll2rUOAjo1Vo55qkUr3y2c7VZQ4LxaLVbqk6IrOnRXXhworSW07LWhG1elNLjN
-         ehjlKObu9tbbyTZyZ0JKZ8u5vE6XlU1vpMaPHUf1TfkCKs+HS+PMDFcNClQeCHCUMH65
-         c5lRMsIg+q+hIq3AmvJFCykfYufJldXmmLXUmvtBc3leKsqy1db/I3MmKokSxlP+CKVD
-         UkSh3yucvoLg5+s/tiNQqShLi9htbKnQ9A6nZG3QlKgoJyBIvev4tpl/vblcA5Dl0TKi
-         qFpBDbpG2Nr+au/EkLG8S8fAjWuHm+hEri0lnHlb8cQb9KEVJ/TW1txnHp+9HVs5Rp13
-         pK4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=bXHp7S/iyLvY9ql3/OnccpMG4H/yun2WlS91VGZ5/Lg=;
-        fh=m4rdyaoamtIc7BdF92XW8Q4KMLRkWc6EocAUGTsMMoQ=;
-        b=Gv4veJVrDnp0r0arvemm1TvFtM1kq/XZPW11M82OyYGsjWHaV/RoZAFjaosgVx7pC2
-         RUJ9qr/WWyn1+MOS71IiAFa9rB5lvxMQaQogBpbrR4a8FQjIejscDZIkVBLWGFL7alap
-         /5v9hS9QCp14jDqc5edd5EhLzxbV/ptSq95hWBddoCxOLGe3rXd8VXzOtszAeTjbe6jc
-         8q8ZQR6GRk8RSTX6/aITv0ULziGy0MkAal9wAHe4hUgNJkhFDxYcmnDq0BCCl7L5Dhne
-         mFzkJfi7t8tZYGb98LKBjgF23xADW0TAPpaVqMwD4GwG4W6YT9pClekGFP2p+aa9b/ox
-         x4dQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sa26KSnc"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b88593aa4dcso907073566b.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Feb 2026 02:57:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770806480; x=1771411280; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bXHp7S/iyLvY9ql3/OnccpMG4H/yun2WlS91VGZ5/Lg=;
-        b=niAB0vv5fkMVHGGctevdm0M+COomci0y6ApcLBPj+mIzBzFDpOFWkOOOX5Bw3WRhwc
-         k2x2JVEBFObuMj6fw9o0LDIrUt2OAMVLYHc/XrI6mYwS2S3/EpSqacL78sshaaPK31gP
-         4+sdH8nS2XIsLjxwstJCCO6W/nSR1w7YYpa5XPNn2Zk9SOweALh9HBPyxWXEcbV09e+K
-         30cQ14dZJtMea+4TKM9+c1CypjsCumBABwp22pl7/camZcuqejsIZ2l9lS5crMEFk3YF
-         R1gWNgg24r54yu9on1ntrTfOOBTf4XIxuhnCnff+hW/8Iqtc0OjlMEzxcfhtFyg5L7XP
-         shaQ==
+        d=gmail.com; s=20230601; t=1770807468; x=1771412268; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UkRPDajcyvvrx6SNpkt2bpLqSarE1C9b9sZiA9ajbeE=;
+        b=Sa26KSncVXGIjDqt8nSCwrLtrbVX1NCha0pkHIcb1elKE63KLYW8xxAmqYogI9CIXe
+         uv7OangJfhdFcdDscnjQUP8qqhqWE8xLPb00OF+Amv866xDx/70oiohqwf6uIjr/KDFS
+         0NHl8XFLOMjpF5uYbP1gTEft1df1LdsC6s999STJIKTCpwDqrqdxo1XPYthfGaWcRxv+
+         bFTOt0MV6f6SehGm/VLyUJ6bcP7ThQc7r/mpNILhzrQMv26aDjmiYcl2HgEpxCLyLqNq
+         VEalZfM25YzDAGQ7hEDrw97MPgbNBiqnakgnhceis3WYFif8MZzWA3HLjJ+90fuCsfqk
+         zoqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770806480; x=1771411280;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bXHp7S/iyLvY9ql3/OnccpMG4H/yun2WlS91VGZ5/Lg=;
-        b=IVqqbf8dImGf55RTjWcp8H66T/73pXv3ptddzp0FlCGlGKCLyG8oQCeZ468VC0Bc04
-         e8r6LesFd3VjdopJ799gQy1EEDs25+2vfMqxTE9SETscTe9oTHP67v0bb3DSlu7sK9xC
-         DPmS3GwUbMjaaNfZeU7/CZG8xUR6K6Q3Yc4zwtNbKUr7I6pPz2UXMBiIGkoi8a/bs7nO
-         ltDe6P6pDTn+g1fdrKdb/Xb78RNBn6resui/SU+w2wZRAj6gnM72dYUZJ1yeu3E6slXy
-         XUp+JkwH+byO42gVAIGQ7zS4ExTWn3oCpK2NNiIt8O3qVBWGVAxKWi41sk3HdeCZZ+u0
-         hKgw==
-X-Gm-Message-State: AOJu0YziIz94jmStH3BMYaM9BadOm4JQUaCipfyCgvuby/FixAatH4VD
-	Sgv84M4n03ECdewBk2pJYXr1RpzFs8tfm4z+TaPMf/6uOkGF6S9CS0g+7TqZ5Ae5BTmF02Qa7Ro
-	W0Rztc0hTX/H43I3H6YGn/ZxtLQ8PsAM=
-X-Gm-Gg: AZuq6aJNqjrxcMc1v00+qewsdQibHMzBQxiOQVEi3vSFJO94SJGiDq/0V7WQewIcKjC
-	hKK1vnhgqzIAVYX6ZIwBOybud+e5hKzyRCQXZ3IeOQqB0cqexDAu+zaYr9py8U+nfmr+KsQnLXs
-	p1EKXgfjc9HOxlgFAlNAS0D+EudJktdWemrQqiPo900KjnPJKs1qoRei/acae8nKAvU2yvXCuir
-	bFwPUgkWDnisFduDNVKCKHqxqBfFntAbbdV1iwTjrihBKap2vq0rfEE3XbSxqXzbbl/DINXIxvV
-	IM8ykzYEVrZ6u0mhHDXfz27W7mjSUssrdcpKVsv/Qx01sQJZpA33DIe2lia9qidTuGEdcQGhSUc
-	zRaXGKgc03vYilChS3sgXeHv1dp16pBuuAZM=
-X-Received: by 2002:a05:693c:40dc:b0:2b7:ff3a:af82 with SMTP id
- 5a478bee46e88-2ba9e05a837mr206329eec.1.1770806479793; Wed, 11 Feb 2026
- 02:41:19 -0800 (PST)
+        d=1e100.net; s=20230601; t=1770807468; x=1771412268;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UkRPDajcyvvrx6SNpkt2bpLqSarE1C9b9sZiA9ajbeE=;
+        b=Pw2CQFR2fLamL7I3/x//n9KX7AOom8EtuMcqMUZ0iHHoOYaDV+oVczuEaeZz+dtaOU
+         meHXJgYFJkKqmAyK/XkWSX9oImHA2qcC2TaQb9nUsgLqtddEUhPtitK9K/69E7DijqkR
+         Xlm/B+p121BRcnYhNjRgxF3e3x/DV/XBUyV5ZEMx8JaUcTW8xQWtQEsHgbBOroBOygI5
+         0YfjGwzAnLrCU0lL2NkSJ9FDEIvTdPCOs7AU93ZdG0yExJjeUgv9v+y0x/gtsNziNwCJ
+         +yWeCYUqaF06qgR8hiyYhRYNurqnoPY7DVAmClhs5ZXYRS7Tc23qK+44t7ET0THlLWeI
+         yvqg==
+X-Gm-Message-State: AOJu0Yzvl7e6x6V8NO96Yl3kLKlAHHtFyDJj8qKQeqdEKq1aQt9YdTBa
+	PUN7s7mMZHlnOlKKMJG4YGpoRgtxMQR5dZQUKEpvKO4U4PADFv+5V3ovS2LJoQ==
+X-Gm-Gg: AZuq6aJEgsnOmpJqhWKO7y7FxSQPLyaGT8eKGwKogzj7+jFhXGDJKg5xhS92pNOsEzt
+	bQTy0cvLZoq/6Le2E5FjrXDldRMsjrjzuqewCS21/Z/QwGEdFoKkMTMHkucBtGUsgrjXIFTt0K9
+	az3wcHNWkd7w7TUdZeFsyL/SovKiFzANz/xeyawOXjkJb1jXkwtFkEfLwxNiEvcmhERIMUWqbXp
+	LivQQmdTcJ5ZGrd9Q4+KyBaUt2BXVTzGw6DJi/hyqn2Sy5tIQ4peweCbKEE51pKz37FO1CE9h2a
+	RyWxfq8MYviC6+aQJjrIDL1TsrTIa4RzCYws6sbJw2mtsZ9nS2qK8xuRogsH3fhY7SEhcgTO4Ce
+	KWojzJDveE6M+04/YvsRSH2HoqP0quWRi55KhfxU088SVikOjhhX0nXS0QxzYSUHVB6dvDT9OhA
+	/viyfuPlDvjwJNAykzOGTC7sewGkpr9Ng6WB1kxaC+qYW+Er7aQ0XQ2CbGHPRzg40bfzfGo86Al
+	4FBbC35Ez/GjVRs8eWQpJTzxaKZkb/BGb6+
+X-Received: by 2002:a17:907:2da8:b0:b73:6f8c:6127 with SMTP id a640c23a62f3a-b8f5438dd35mr334547466b.12.1770807467779;
+        Wed, 11 Feb 2026 02:57:47 -0800 (PST)
+Received: from ddolgov-thinkpadt14sgen1.rmtde.csb (dslb-002-207-075-089.002.207.pools.vodafone-ip.de. [2.207.75.89])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8f708e25dasm43503166b.4.2026.02.11.02.57.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Feb 2026 02:57:47 -0800 (PST)
+Date: Wed, 11 Feb 2026 11:57:45 +0100
+From: Dmitry Dolgov <9erthalion6@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [RFC PATCH v2 2/4] perf test workload: Add code_with_type test
+ workload
+Message-ID: <btd2b5dqebgxnqh25fvh4i5dzl47lscfgv4x5k6h3hgx3hsp6j@u7hlt6n4cfyy>
+References: <20260208122227.3524-1-9erthalion6@gmail.com>
+ <20260208122227.3524-3-9erthalion6@gmail.com>
+ <CAP-5=fXYKSfefdZ6SdjcDmw8bjobGenR9U7ePPx10a0rGpx2KQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260211095807.132855-1-9erthalion6@gmail.com>
-In-Reply-To: <20260211095807.132855-1-9erthalion6@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 11 Feb 2026 11:41:06 +0100
-X-Gm-Features: AZwV_Qi8-0s8a064H_jd0KP3XaMxJ_Cg3S2G28D_5OStfj3L5c7hvaHWqbAT4yI
-Message-ID: <CANiq72mFBaFm9QVotxeDB0TanKxQRko7ZFhuF-RHq-8WCemCTQ@mail.gmail.com>
-Subject: Re: [PATCH v1] tools build: Fix feature test for rust compiler
-To: Dmitrii Dolgov <9erthalion6@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
-	rust-for-linux <rust-for-linux@vger.kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXYKSfefdZ6SdjcDmw8bjobGenR9U7ePPx10a0rGpx2KQ@mail.gmail.com>
 
-On Wed, Feb 11, 2026 at 10:58=E2=80=AFAM Dmitrii Dolgov <9erthalion6@gmail.=
-com> wrote:
+> On Mon, Feb 09, 2026 at 09:29:49AM -0800, Ian Rogers wrote:
 >
-> Currently a dummy rust code is compiled to detect if the rust feature
-> could be enabled. It turns out that in this case rust emits a dependency
-> file without any external references:
->
->     /perf/feature/test-rust.d: test-rust.rs
->
->     /perf/feature/test-rust.bin: test-rust.rs
->
->     test-rust.rs:
->
-> This can lead to a situation, when rustc was removed after a successful b=
-uild,
-> but the build process still thinks it's there and the feature is enabled =
-on
-> subsequent runs.
->
-> Instead simply check the compiler presence to detect the feature, as
-> suggested by Arnaldo Carvalho de Melo. This way no actual test-rust.bin
-> will be created, meaning the feature check will not be cached and always
-> performed. That's exactly what we want, and the overhead of doing this
-> every time is minimal.
->
-> Tested with multiple rounds of install/remove of the rust package.
->
-> Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+> > +rust_common_cmd = \
+> > +       $(RUSTC) $(rust_flags) \
+> > +       --crate-type staticlib -L $(objtree)/rust/ \
+> > +       --emit=dep-info=$(depfile),link
+> 
+> Does this need to be cross compilation aware? I worry that we can
+> detect local Rust support but not have cross compilation support and
+> then perf tool cross compilation builds are broken.
 
-Not sure if Kbuild covers this given it is `tools/`, but just in case
-given the `MAINTAINERS` file, Cc'ing them, as well as rust-for-linux
-since we try to use it as an index of Rust-related things there within
-the kernel.
-
-I hope that helps.
-
-Cheers,
-Miguel
+Good point. It's supposed to be cross compilation aware, because
+rust_flags must contain the --target argument. But after checking it
+out, looks like this variable is not passed from Makefile.perf . I'll
+need to fix it, it should be handled similarly to CFLAGS/CXXFLAGS.
