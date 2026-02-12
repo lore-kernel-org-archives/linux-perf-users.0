@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7734C6FC5;
-	Thu, 12 Feb 2026 01:10:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4369D19F12A;
+	Thu, 12 Feb 2026 01:10:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770858606; cv=none; b=dFWuX4mhBhnqRKrS/L5sZ5vp8RDRXlnQq4oUhSEJZXyPFfZ1rUgTt2YO85HtzQTOZRK8/QdR2PZlZCg0iArufx+RsOELAUo/VHtWmnCd3pm04oOjnV0ERzYhWiH2+dnXXkXFsesD0+G/ykVuKflMP/3WHemo/78qTS91s+GnvcY=
+	t=1770858614; cv=none; b=WCkaZ96qxDHrC2K/6NKAhnBLu/C0fkoVTPYK+jEtH3B1A68O2WIy3saSl0wY++5gphQQn0fw5HDK5LTWkotRbUi8xwYfYwLSXevRjD0hfKWahtErdcPILWI/llx1ZMfWekSlr8Cwxz2SCaXf6FhEcJR4ADaThsQSPCsKxIunndQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770858606; c=relaxed/simple;
-	bh=QLT6RgMv62ZraNUSIuAaLzoSfVVBylat0rii7v3ZbAE=;
+	s=arc-20240116; t=1770858614; c=relaxed/simple;
+	bh=aC9VuZzl3E0a8Sb4VzMp8Q9ljH2mVfamJHx5wdxBqRU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AiDpH3i2kS7NeT9MLxT/9Gu2I9ZsIQqK22sZ1vgb7Mmp/tKunVITYGEaQ4xvlBZG+cvaCegdQ68ppQ1yFM0TzTr/a/khtE2H7jYb1iUrADxNx/0PUCy1uKBPsjYLfvjidVlNT0H8HkU6VP8hYhrPUhDoKn6eGU3Ab7dmMJ48cOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZ7rtkod; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iBwLHYScFMsXoLTTKFF+3oGoYeCzO+oWCU8lg06GyPEoHR0AJhMLiBTJEoRXUXDXA16ibsxwc8dPQRNKl4H6kSdovCkM23YFnvEPevFoueMLsYfD3M2zQ9nm8wfquNwXzQ+DUkIOV9ZLkrWmDsCipyKt8s0LyLQYNnF95Y1Zt7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B1VPU6Yd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZ7rtkod"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C630BC16AAE;
-	Thu, 12 Feb 2026 01:10:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B1VPU6Yd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4F43C4CEF7;
+	Thu, 12 Feb 2026 01:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770858606;
-	bh=QLT6RgMv62ZraNUSIuAaLzoSfVVBylat0rii7v3ZbAE=;
+	s=k20201202; t=1770858614;
+	bh=aC9VuZzl3E0a8Sb4VzMp8Q9ljH2mVfamJHx5wdxBqRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AZ7rtkodGRuelBOiMFjH2YiuMDMUpbumFMKltfirFnp1gtKEq6IdISruIBCDh3mk4
-	 AzRL2ldqrVxZCcmKyR9x8EhRVyAQC1npn4/kC6DWuCBEgTb9/v0PvESXyAAmtIx8cb
-	 Ji7fc6HNIRiR69Vk9bP6QqxQtlYUyy/jMZNP1Q5dKBYcQT4JULRxm2YCq0m20yNJqa
-	 8DMeWS3neHMmnVRjHvpRMbEZdoHRnCliPgVTO8pc8yUJMugUXNKwySOrlbGbsyZQRr
-	 tTg3ziZhibPIKoi1X8jkzZeylLtX9IjAljTpfDYNtgpg7dI/C1W0bvbJyKS+T936HV
-	 ZPGnQ3zbDGecQ==
+	b=B1VPU6YdK/Aq5h96Z5iPfCMdapR0Hgiajs0rJVtFdG+8MzlJcnze5hGkNz9qLdU6x
+	 2+nFtbxeTK5GccG2OL4sn00+QB7uiOfS8NzxDhgbcyhlYyCXgbIkdkrAAdngIrPyY5
+	 PMgGL4IX8HmzftZdDybYvH74sc0OtWOjkNVRX7a6kbgBr0V20KzhN4xAKb5lhx1eQn
+	 BYuYybw8ZKZb/VESt8+XMKg/+1hRShwWJmnlZF3qeDLVPMvX3A4mRHPt9se/LNl8X+
+	 TzHKMJ3Hq77vWrVlDDCEc0iiVRcJTlXDU1vIAW77CvVsXoWkI0EQ7qZcO+qztBRmSY
+	 cBm9/Fw9YxFow==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -38,9 +38,9 @@ Cc: Martin Schiller <ms@dev.tdt.de>,
 	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.19-6.12] perf/x86/msr: Add Airmont NP
-Date: Wed, 11 Feb 2026 20:09:28 -0500
-Message-ID: <20260212010955.3480391-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.19-6.18] perf/x86/intel: Add Airmont NP
+Date: Wed, 11 Feb 2026 20:09:33 -0500
+Message-ID: <20260212010955.3480391-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260212010955.3480391-1-sashal@kernel.org>
 References: <20260212010955.3480391-1-sashal@kernel.org>
@@ -57,156 +57,170 @@ Content-Transfer-Encoding: 8bit
 
 From: Martin Schiller <ms@dev.tdt.de>
 
-[ Upstream commit 63dbadcafc1f4d1da796a8e2c0aea1e561f79ece ]
+[ Upstream commit a08340fd291671c54d379d285b2325490ce90ddd ]
 
-Like Airmont, the Airmont NP (aka Intel / MaxLinear Lightning Mountain)
-supports SMI_COUNT MSR.
+The Intel / MaxLinear Airmont NP (aka Lightning Mountain) supports the
+same architectual and non-architecural events as Airmont.
 
 Signed-off-by: Martin Schiller <ms@dev.tdt.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Link: https://patch.msgid.link/20251124074846.9653-2-ms@dev.tdt.de
+Link: https://patch.msgid.link/20251124074846.9653-3-ms@dev.tdt.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
 LLM Generated explanations, may be completely bogus:
 
-Here is my complete analysis:
+This confirms the commit under review only touches `core.c`, and other
+files in the perf events subsystem also lack Airmont NP support (which
+may be handled by other patches in the series, but this commit is
+standalone).
 
 ---
 
-## Analysis: perf/x86/msr: Add Airmont NP
+## Comprehensive Analysis
 
-### 1. Commit Message Analysis
+### 1. COMMIT MESSAGE ANALYSIS
 
-The commit adds support for the Intel Airmont NP (aka Lightning Mountain
-/ MaxLinear Lightning Mountain) CPU to the MSR perf driver. The commit
-message explicitly states that "Like Airmont, the Airmont NP supports
-SMI_COUNT MSR." This is a simple CPU model ID addition to an existing
-driver/feature.
+**Subject:** `perf/x86/intel: Add Airmont NP`
 
-The commit was:
-- Authored by Martin Schiller (ms@dev.tdt.de), who maintains patches for
-  the Lightning Mountain SoC
-- Signed off by Peter Zijlstra (Intel), the perf subsystem maintainer
-- Reviewed by Dapeng Mi (Intel), an x86 perf developer
+The commit adds the `INTEL_ATOM_AIRMONT_NP` (Lightning Mountain SoC, CPU
+model 0x75) case label to the Silvermont/Airmont PMU initialization
+block in `intel_pmu_init()`. The commit message states this CPU supports
+the same architectural and non-architectural events as Airmont, so it
+should share the same event tables.
 
-### 2. Code Change Analysis
+The commit was reviewed by `Dapeng Mi <dapeng1.mi@linux.intel.com>` (an
+Intel PMU engineer) and merged by Peter Zijlstra. The patch link
+`20251124074846.9653-3-ms@dev.tdt.de` indicates this is patch 3 of a
+series, but the change itself is self-contained.
 
-The change is exactly **1 line** in a single file
-(`arch/x86/events/msr.c`). It adds:
+### 2. CODE CHANGE ANALYSIS
 
-```c
-case INTEL_ATOM_AIRMONT_NP:
+The diff shows a **single-line addition**:
+
+```7407:7408:arch/x86/events/intel/core.c
+        case INTEL_ATOM_AIRMONT:
+        case INTEL_ATOM_AIRMONT_NP:
 ```
 
-right after the existing `case INTEL_ATOM_AIRMONT:` line in the
-`test_intel()` function. This is a switch-case fall-through that enables
-the `PERF_MSR_SMI` counter (which reads `MSR_SMI_COUNT`) for the Airmont
-NP CPU model.
+This adds `case INTEL_ATOM_AIRMONT_NP:` to an existing `switch
+(boot_cpu_data.x86_vfm)` case block that groups Silvermont and Airmont
+CPUs together. The block configures:
+- Cache event IDs (`slm_hw_cache_event_ids`)
+- Cache extra regs (`slm_hw_cache_extra_regs`)
+- LBR initialization (`intel_pmu_lbr_init_slm()`)
+- Event constraints (`intel_slm_event_constraints`)
+- PEBS constraints (`intel_slm_pebs_event_constraints`)
+- Extra registers (`intel_slm_extra_regs`)
+- TopDown and format attributes
 
-Without this patch, on Airmont NP systems:
-- `test_intel()` returns `false` for `PERF_MSR_SMI`
-- `perf_msr_probe()` skips the SMI counter
-- The SMI perf counter is unavailable even though the hardware supports
-  it
-- Users cannot monitor SMI (System Management Interrupt) counts via perf
-  on this CPU
+**Without this patch:** On Airmont NP (Lightning Mountain) systems,
+`intel_pmu_init()` falls through to the `default:` case, which only
+provides generic architectural perfmon support (using the version-based
+sub-switch). Users would get:
+- No Silvermont-specific hardware cache event support
+- No LBR (Last Branch Record) support
+- Generic event constraints instead of Silvermont-tuned ones
+- No PEBS (Processor Event-Based Sampling) support appropriate for the
+  microarchitecture
+- No TopDown or extra format attributes
 
-### 3. Classification: CPU Model ID Addition
+This significantly degrades perf monitoring capability on real hardware.
 
-This falls squarely into the **"NEW DEVICE IDs"** exception category for
-stable backports:
-- It adds a CPU model ID to an **existing driver** (the MSR perf PMU)
-- The driver already exists in all stable trees
-- Only the CPU ID is new in the context of this driver
-- The `INTEL_ATOM_AIRMONT_NP` / `INTEL_FAM6_ATOM_AIRMONT_NP` define has
-  existed since kernel v5.4 (added September 2019 in commit
-  `855fa1f362ca`)
-- The CPU is already recognized in numerous other kernel subsystems
-  (`common.c`, `intel.c`, `tsc_msr.c`, `intel_tcc.c`)
+### 3. CLASSIFICATION
 
-### 4. Scope and Risk Assessment
+This is a **device ID addition to an existing driver**, which is one of
+the explicitly enumerated exceptions allowed in stable:
 
-- **Lines changed**: 1 (absolute minimum)
-- **Files touched**: 1
-- **Complexity**: Trivially simple - adding a case label to an existing
-  switch fall-through group
-- **Risk of regression**: Essentially zero. The change only affects
-  systems running on the Airmont NP CPU (model 0x75). For all other
-  CPUs, behavior is completely unchanged. The added case falls through
-  to the same `if (idx == PERF_MSR_SMI) return true;` that all other
-  Atom variants in that group use.
-- **Subsystem maturity**: The perf MSR driver is mature and stable; this
-  same pattern of adding CPU model IDs has been repeated over a dozen
-  times in the file's history.
+> "NEW DEVICE IDs (Very Common): Adding PCI IDs, USB IDs, ACPI IDs, etc.
+to existing drivers. These are trivial one-line additions that enable
+hardware support. Rule: The driver must already exist in stable; only
+the ID is new."
 
-### 5. User Impact
+The `INTEL_ATOM_AIRMONT_NP` define (model `IFM(6, 0x75)`) has existed in
+`arch/x86/include/asm/intel-family.h` since kernel v5.4 (commit
+`855fa1f362ca`, September 2019). This means it is available in **all
+currently maintained stable trees** (5.4, 5.10, 5.15, 6.1, 6.6, 6.12).
+The Silvermont/Airmont event tables and LBR code all predate v5.4 as
+well.
 
-The Intel Airmont NP (Lightning Mountain) is a real SoC used in embedded
-networking equipment (routers, CPE devices). Martin Schiller works for
-TDT, which produces networking hardware using this SoC. Without this
-patch, users of Lightning Mountain-based systems cannot use `perf` to
-monitor SMI counts, which is useful for diagnosing system latency and
-firmware issues.
+The CPU model is already handled in multiple other subsystems:
+- `arch/x86/kernel/cpu/common.c` - vulnerability whitelist
+- `arch/x86/kernel/cpu/intel.c` - TSC features
+- `arch/x86/kernel/tsc_msr.c` - TSC frequency
+- `drivers/thermal/intel/intel_tcc.c` - thermal management
 
-The impact is:
-- **Who**: Users of Intel Lightning Mountain / Airmont NP embedded
-  systems
-- **Severity**: Functionality gap - a hardware capability is not exposed
-- **Real-world**: The patch author works with the hardware and submitted
-  this based on actual need
+The perf events subsystem was simply missed when the CPU ID was first
+added.
 
-### 6. Backport Feasibility
+### 4. SCOPE AND RISK ASSESSMENT
 
-- **v6.12 and later**: Patch applies cleanly as-is (uses
-  `INTEL_ATOM_AIRMONT_NP` and `x86_vfm`)
-- **v6.6, v6.1, v5.15**: Requires trivial name adaptation
-  (`INTEL_FAM6_ATOM_AIRMONT_NP` instead of `INTEL_ATOM_AIRMONT_NP`, and
-  `x86_model` switch). The `INTEL_FAM6_ATOM_AIRMONT_NP` define exists in
-  all these trees.
-- **Dependencies**: None. This is a completely standalone one-line
-  addition.
+- **Lines changed:** 1 (single `case` label addition)
+- **Files touched:** 1 (`arch/x86/events/intel/core.c`)
+- **Risk:** Extremely low - this is a fall-through case label addition
+  to an existing switch block. It only affects systems with CPUID family
+  6 model 0x75. No other CPU model is affected.
+- **Dependencies:** None. `INTEL_ATOM_AIRMONT_NP` is already defined in
+  `intel-family.h` in all stable trees. The Silvermont event tables all
+  exist in stable.
 
-### 7. Precedent
+### 5. USER IMPACT
 
-The `arch/x86/events/msr.c` file has a long history of similar CPU model
-ID additions (Tremont, Tiger Lake, Ice Lake, Comet Lake, Rocket Lake,
-Alder Lake, Raptor Lake, Sapphire Rapids, Emerald Rapids, Meteor Lake,
-Granite Rapids), all following the exact same pattern. These additions
-are the textbook example of the "device ID addition" exception to stable
-kernel rules.
+The Lightning Mountain (Airmont NP) SoC is used in Intel/MaxLinear
+network gateway devices. The author Martin Schiller is from TDT GmbH, a
+networking equipment company, and has several commits related to
+Lantiq/Intel LGM networking platforms. This is a real embedded platform
+with real users who need proper perf support.
+
+Without this patch, `perf stat`, `perf record`, and other perf tools
+provide only basic generic counter support, missing the Silvermont-
+specific events, PEBS, LBR, and proper event constraints.
+
+### 6. STABILITY INDICATORS
+
+- **Reviewed-by:** Dapeng Mi (Intel PMU engineer)
+- **Merged by:** Peter Zijlstra (perf subsystem maintainer)
+- **Pattern:** This is a well-established pattern - the switch statement
+  in `intel_pmu_init()` has dozens of similar case additions over the
+  years
+- **No possible regression:** Only affects one specific CPU model
+
+### 7. DEPENDENCY CHECK
+
+The commit is fully self-contained. The `INTEL_ATOM_AIRMONT_NP` macro
+exists in all stable trees since v5.4. The Silvermont event tables and
+LBR code it hooks into have existed since well before v5.4. No other
+patches from the series are required for this change to be correct and
+useful.
 
 ### Conclusion
 
-This is a textbook example of a CPU model ID addition to an existing
-driver - one of the explicitly allowed exception categories for stable
-backports. The change is:
-- 1 line, 1 file
-- Zero risk of regression to any other hardware
-- Enables existing functionality on real hardware that real users depend
-  on
-- Completely standalone with no dependencies
-- The required CPU ID defines exist in all active stable trees
-- Following an established pattern seen many times in this exact file
+This is a textbook example of a device ID addition to an existing driver
+- a single `case` label adding CPU model support to the perf PMU
+initialization switch statement. The CPU model define has existed in the
+kernel since v5.4. The change is trivially correct (confirmed by Intel
+PMU engineer review), zero-risk (only affects one specific CPU model),
+and enables proper perf monitoring on real embedded hardware. It matches
+the explicit stable exception for device ID additions perfectly.
 
 **YES**
 
- arch/x86/events/msr.c | 1 +
+ arch/x86/events/intel/core.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
-index 7f5007a4752a1..8052596b85036 100644
---- a/arch/x86/events/msr.c
-+++ b/arch/x86/events/msr.c
-@@ -78,6 +78,7 @@ static bool test_intel(int idx, void *data)
- 	case INTEL_ATOM_SILVERMONT:
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index bdf3f0d0fe216..d85df652334fb 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -7405,6 +7405,7 @@ __init int intel_pmu_init(void)
  	case INTEL_ATOM_SILVERMONT_D:
+ 	case INTEL_ATOM_SILVERMONT_MID:
  	case INTEL_ATOM_AIRMONT:
 +	case INTEL_ATOM_AIRMONT_NP:
- 
- 	case INTEL_ATOM_GOLDMONT:
- 	case INTEL_ATOM_GOLDMONT_D:
+ 	case INTEL_ATOM_SILVERMONT_MID2:
+ 		memcpy(hw_cache_event_ids, slm_hw_cache_event_ids,
+ 			sizeof(hw_cache_event_ids));
 -- 
 2.51.0
 
