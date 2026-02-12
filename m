@@ -1,194 +1,256 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558AE31984E
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Feb 2026 21:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.175
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770931648; cv=pass; b=Nj6cSjyeI8F01OkzXK9MIStDDS1+m20rjh6sXXxl2J+5twMSXdy+POfsAV5qVrMXvhthKChJpKRq//Wx2t91Cb/UAo7Ek0PPKjvM+BbPCP+6TTf/jWKpkcGf9bE2Mu3yzgORX7r6tt8f9DbcL8mQYw2QY5dUpg4Z8kPfGpcaNmA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770931648; c=relaxed/simple;
-	bh=RqZDoM+KzCRMfPAL4J7lghDMSrM3SEh/2f36107mJWc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nbuPhF3zyLBRhbTIcQtf0M2+R1WO7oQu95OpzohcUd1sk3ZDYTvZ4EitYKcAXlRq3d4QvbBV0RLcDPGa9mGjHC7ClYr+wt4papDWx71xJ62TEr+ypI6yLlS6HLjuhBVf3XJxzAbVUP3fJQARqGUSwB1iCiUD3bv05nepQRNO0qI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Feayby4h; arc=pass smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99756279329
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Feb 2026 22:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770935994; cv=none; b=FapMb1VQG3z19exKDO1nqUbmvTsuugY/SQq2uQX7yqeWakuOcfTkGtfL9QYNGNqz++w0fV0kbEOmVh88yBevO3TFn14DQE8CBUx3GW/xm0gaSNdLTABDXf0OAt1um4RjouQZCHG8GhXzakhmq4k2Qo1aXejCBklQmR07sobvjFw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770935994; c=relaxed/simple;
+	bh=ecjzz6I4Lw0BCMwuQuFVqd7e/escSG5SYaB6KlqF0sg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=niPY02lV37JqQuUDbBwTvIyyPPN6zpe9SuRUr/barTtdSVQw3IDIEpfTg1VR1ol3wiMnyKOWIvlUD3bLGtuWnpSviYDaudSDc1zSKy9XIyS6HMzQOz/99TOinP8QUEX3e+uXQ7UovWF6mHnS/SYOUrBy+JSYpZT5Z70YLwuYfyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JcDQrOSa; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Feayby4h"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2a964077671so7215ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Feb 2026 13:27:27 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770931647; cv=none;
-        d=google.com; s=arc-20240605;
-        b=IPlthTedHtazlsrTbrsABExmTMKiyNQfYVNnhG7eXoVQYjT3s8ecv/3V1qJ1P8PyFY
-         QtS/98JgycOaE+olhx7R/uQ79mDBFn8VImpMIOBCsLaSUClvU/UVYruXFB0Z6FB6qq+S
-         QmTxLN98Z3kVGgIP9AuHvZ4ylO07ZMs71OMAHIEhCbrLuH2Bzww8ub+tLYtl7ZI03/AR
-         7qZxj47yG2FhG3GZcldWWgXN/GC2ZIJdpQ9ONYdSlM0P+5MiLjEcFT2BHoVYicwumgvz
-         fm2lSnMi6YXEE/vllnzP4MuRlgsMmlBBXFIcIx6ZrtxMS4GM3Lw7Su8KHXX59FV2oS/b
-         E0Bg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=i4Q2Gu/UFguxA8Fq4hwUfyO7IJPks+KO3F0TUWVH/9A=;
-        fh=MCVjNX+9RqH9j57SqrfBcQIsC+Hp3PV0H7zv7y7Afoc=;
-        b=H5ovgGw3YHVL1CIZPzbdBh8u3X/6qCzbPmxZOH5N/kM0u05bLIKhmgdneGxfoC0JoO
-         ulK0TX/zB5kXq1Z+Xh79HaY30OXd2uOltk2vWT810csntz3oIn6D1Yf2/Z3x2QBItQTy
-         MhkmwLx2jTKRwqKq8Ic6kyP7VckI9VRrI5zf1T0fCtb4puKXtmylvkWRyq7210ikqyq0
-         m89NyvxfnpfVN0f4B5j2tCb3pbPUqi6GNG/hrqgwnjMIycRVwcFEAg89gyL5OQa5rNBb
-         NFbidVGV7Yxwuw+3tDswiYz4CoZxBetKiVgylJmJ9y7M9YZ8cUi+/4moSuoINIsw7ln/
-         0x7Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JcDQrOSa"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-127133794b6so718263c88.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Feb 2026 14:39:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770931647; x=1771536447; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i4Q2Gu/UFguxA8Fq4hwUfyO7IJPks+KO3F0TUWVH/9A=;
-        b=Feayby4hns75w3knNoPvK0jWh+nTW3Mtz9YWgMEAm3N+ezBb+yx2Q8BIWl8AT54LN+
-         AyIEscIO5m0lUBZbhmSszThM+ua1vJ4JLth2oJVbNcaTO1a3xa5/PwB5ijX0P9lDJI0A
-         ok3jhSiEZpMPyGUNLqPOklWaeZHad8wQ8XXLqNXeBY7FlN/udTQLFjRkXpU9556trStc
-         1/NgZCDmRoW2kBdzlkJ1LaQYxHxb6WJWjia6Gv0xJWm8dwU/hHi5K5104ze7aws1J1q5
-         u//vmAzGFfRJ6Tfj25BjgpyT5PkfLnMCmtJs7Ps7pvN+qpGJ3yYYiODKsGrIwQs1ohYk
-         p27Q==
+        d=google.com; s=20230601; t=1770935993; x=1771540793; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Am93rCJpDM1uJWRf7agg50jsTOV712AErQ8IQoLENlY=;
+        b=JcDQrOSa7jArMoXqq/l2Yi1PVFnHhzrkEzlrBRjODZLFO1cnk4aUb04wscQd9kqfrW
+         P09ze2vr9boE6xIs5/9AQQGm2IjTBv2LAqpniG0sQVg1LVJ5+ehVtZd/QJWU1HyoM6Hy
+         CdEylpHbV7rCfF0W/5h9y2vS0GYkh5GGGHCCNGAFb5Fvv357Sd973HWKKEC0yBEzA6aa
+         OJtqGjm/ZLu4TaT1EvZuA/td1sIgxeBxq9/LbAX3sgXR/YcpkdJ9NJ7cFG9kLq2c7oq3
+         RxcQP+fgY6RsyP1h86Vzi+CmL11bXrHqPivRGLu+pIlXemO1DHgt3acIu/kg96fspUsS
+         tZ8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770931647; x=1771536447;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=i4Q2Gu/UFguxA8Fq4hwUfyO7IJPks+KO3F0TUWVH/9A=;
-        b=p5D4TUHzepN2aBo7svOrCUqlC/zvJ6/eMnt0YArzY97jMy1HluOnv6am8bLNo47GoY
-         MdVIXtzgG9sdG2oafChhHgb7V/65GdvrJMWRUMiSjwVvD5Inabg+bKhlpPgXw+lQuxpU
-         cug1BeGgJ4OvAAIWfVm36kERRfWCjD94I9w5JqdP+XVy0sT+r1fMlfpSdMGgk42aQRO1
-         82duYSMxvwK71NZC2VqV7f2VmCpkMHVUudOX12b4l+GCPeqFYJJmndgj7zVNDU7AEvS1
-         VhBK6DJyBo/tHhvwb6asME9f5jJEu7zyL0pK7aidrm52ubECYVP5Piwy3Mra/RwP6Y9b
-         z6ZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjyVdO7BW1Sbi+InNQBU4s8ktMQ+hdsDUADO6lsndBfki9CV8GW/fXGHEnODVj/PzHKzGxiGqQswu//kjeqFej@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTIHdX1PYEvi6chq+FJrDlOFTh1IH499y6rdHc96jU1zbDwhrV
-	09EkYzoQP0vTf0QSs9OkuHowpk7m+1Qc2qOxB1LDTISXcveolR3sw2G3gS4hq/H9rPP6dH5ZCsC
-	qdgiXZa4RnVa0NeMqVPxsIqcROX2goWN2Gfe1voou
-X-Gm-Gg: AZuq6aK+GqhMPC9pT4StTEdrRlQT21YkE34rPXjWZguI6UUUzicTNo9RDMfVbPY2oxM
-	T4iFgTqRym7pAT4/EOWiPbhKrYiDRc3hWn2fBWbUPDfPBzmci9CDpQn3jkPhLP24W2o7wS3x+TL
-	aW7n+qwYWYtMly4xI8kFeVcYFW03lUJEVvQNujrFWsAhF3yf5BhuXACHmsR6JlfYMIiya5pNXQa
-	85ZggNSLpqXeHjyaDBG+lXjgt132jO0qS+Q3pHsbJKqaGaKi4pFB14YLS80ySVhGYfFHa31anZC
-	kcessz427mK+akfJkznRJ7lDwoWrV8Cytl+X
-X-Received: by 2002:a17:902:ce8c:b0:2a0:867c:60e2 with SMTP id
- d9443c01a7336-2ab4e010779mr140235ad.19.1770931645453; Thu, 12 Feb 2026
- 13:27:25 -0800 (PST)
+        d=1e100.net; s=20230601; t=1770935993; x=1771540793;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Am93rCJpDM1uJWRf7agg50jsTOV712AErQ8IQoLENlY=;
+        b=SCD/bUtd1y5EwH50/yux78deXSkip9U148/FDWnxt5bdo00FRCL5Snk9w++djiyVPW
+         UjEoYir8GVHimJgcT3bO4TGwHDkVLDM9NuH9B4hM5O1xUu/aYFGghNbYhyvV9jwcm/L1
+         GB4/8uqKUvGtsh+xCaH6PpNvMaLkgNK/AvQhJiCr2GsAbBqVLxxTcYnW/H2rLs3NX8ia
+         pz73uob2KvxmpdsVrUZ4PRWVXIbaYge6UMBttPIdNiJ7FYxYpBlG2ND2yqDrWLOXWANJ
+         MeboBRcz9OEK24dm2yaynpdD6lELZu6LQGgErDKObnOZJ5K5kNZjlyUxjSqUrZxhYL0I
+         HmyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVt6JTS+druObWzAyAovLi1BkKp1ooAhNSMRwIR80q4ETTQr9My9stOfjPYilHGxxxJHYcYq196nyv9e1O1C0A6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/v0Gyed73W3V2FF4WlxieEbVScpComVDGgjS8XSFwzMmbyQzD
+	5Jnm2unVdn01qg2iXWB8jD0J86Ca5igAjEraqmvo9KycuRApKu4UQF12fjNn/61iJHDSASUlWiI
+	EQAbZWA==
+X-Received: from dlbvg26.prod.google.com ([2002:a05:7022:7f1a:b0:119:78ff:fe10])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4596:b0:124:65f7:2c2e
+ with SMTP id a92af1059eb24-127398443b8mr191569c88.43.1770935992463; Thu, 12
+ Feb 2026 14:39:52 -0800 (PST)
+Date: Thu, 12 Feb 2026 14:39:19 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <aYx8HIerWMAQguUs@x1>
-In-Reply-To: <aYx8HIerWMAQguUs@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 12 Feb 2026 13:27:13 -0800
-X-Gm-Features: AZwV_QjmnxqmF6xqgDP1cjBY56aTed-EUiRMRpQQAJ_6qqWy4-Ihq56txrQ5NZQ
-Message-ID: <CAP-5=fWzqvY3FZENqM8hw6kLxsajfu7vKOZnNaGR9k3sACS79Q@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf test data_type_profiling.sh: Skip just the Rust
- tests if code_with_type workload is missing
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.273.g2a3d683680-goog
+Message-ID: <20260212223942.3832857-1-ctshao@google.com>
+Subject: [PATCH v3] perf pmu intel: Adjust cpumaks for sub-NUMA clusters on Emeraldrapids
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, james.clark@linaro.org, ravi.bangoria@amd.com, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 11, 2026 at 4:54=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Namhyung suggested skipping only the rust tests when the code_with_type
-> 'perf test' workload is not built into perf, do it so that we can
-> continue to test the C based workloads:
->
-> With rust:
->
->   root@number:/# perf test -vv "data type"
->    83: perf data type profiling tests:
->   --- start ---
->   test child forked, pid 2645245
->   Basic Rust perf annotate test
->   Basic annotate test [Success]
->   Pipe Rust perf annotate test
->   Pipe annotate test [Success]
->   Basic C perf annotate test
->   Basic annotate test [Success]
->   Pipe C perf annotate test
->   Pipe annotate test [Success]
->   ---- end(0) ----
->    83: perf data type profiling tests                                  : =
-Ok
->   root@number:/#
->
-> Without:
->
->   root@number:/# perf test "data type"
->    83: perf data type profiling tests                                  : =
-Ok
->   root@number:/# perf test -vv "data type"
->    83: perf data type profiling tests:
->   --- start ---
->   test child forked, pid 2634759
->   Basic Rust perf annotate test
->   Skip: code_with_type workload not built in 'perf test'
->   Pipe Rust perf annotate test
->   Skip: code_with_type workload not built in 'perf test'
->   Basic C perf annotate test
->   Basic annotate test [Success]
->   Pipe C perf annotate test
->   Pipe annotate test [Success]
->   ---- end(0) ----
->    83: perf data type profiling tests                                  : =
-Ok
->   root@number:/#
->
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> Cc: Dmitrii Dolgov <9erthalion6@gmail.com>
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Similar to GNR [1], Emeraldrapids supports sub-NUMA clusters as well.
+Adjust cpumasks as the logic for GNR in [1].
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Tested on Emeraldrapids with SNC2 enabled:
+  $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a -- sleep 1
 
-Thanks,
-Ian
+   Performance counter stats for 'system wide':
 
-> ---
->  tools/perf/tests/shell/data_type_profiling.sh | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/data_type_profiling.sh b/tools/perf/t=
-ests/shell/data_type_profiling.sh
-> index 3ef72a10850d0734..2a7f8f7c42d094a2 100755
-> --- a/tools/perf/tests/shell/data_type_profiling.sh
-> +++ b/tools/perf/tests/shell/data_type_profiling.sh
-> @@ -4,11 +4,6 @@
->
->  set -e
->
-> -if ! perf test --list-workloads | grep -qw code_with_type ; then
-> -       echo "Skip: code_with_type workload not built in 'perf test'"
-> -       exit 2
-> -fi
-> -
->  # The logic below follows the same line as the annotate test, but looks =
-for a
->  # data type profiling manifestation
->
-> @@ -42,6 +37,11 @@ test_basic_annotate() {
->
->    case "x${runtime}" in
->      "xRust")
-> +    if ! perf check feature -q rust
-> +    then
-> +      echo "Skip: code_with_type workload not built in 'perf test'"
-> +      return
-> +    fi
->      index=3D0 ;;
->
->      "xC")
-> --
-> 2.53.0
->
+  N0       30        72125876670      UNC_CHA_CLOCKTICKS
+  N0        4         8815163648      UNC_M_CLOCKTICKS
+  N1       30        72124958844      UNC_CHA_CLOCKTICKS
+  N1        4         8815014974      UNC_M_CLOCKTICKS
+  N2       30        72121049022      UNC_CHA_CLOCKTICKS
+  N2        4         8814592626      UNC_M_CLOCKTICKS
+  N3       30        72117133854      UNC_CHA_CLOCKTICKS
+  N3        4         8814012840      UNC_M_CLOCKTICKS
+
+         1.001574118 seconds time elapsed
+
+[1] lore.kernel.org/20250515181417.491401-1-irogers@google.com
+
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+v3:
+  Fix a typo.
+
+v2: lore.kernel.org/20260205232220.1980168-1-ctshao@google.com
+  Split EMR and GNR in the SNC2 IMC cpu map.
+
+v1: lore.kernel.org/20260108184430.1210223-1-ctshao@google.com
+
+ tools/perf/arch/x86/util/pmu.c | 95 ++++++++++++++++++++++------------
+ 1 file changed, 63 insertions(+), 32 deletions(-)
+
+diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+index a3f96221758d..2215984349f5 100644
+--- a/tools/perf/arch/x86/util/pmu.c
++++ b/tools/perf/arch/x86/util/pmu.c
+@@ -22,20 +22,29 @@
+ #include "util/env.h"
+ #include "util/header.h"
+
+-static bool x86__is_intel_graniterapids(void)
++static bool x86__is_snc_supported(void)
+ {
+-	static bool checked_if_graniterapids;
+-	static bool is_graniterapids;
++	static bool checked_if_snc_supported;
++	static bool is_supported;
+
+-	if (!checked_if_graniterapids) {
+-		const char *graniterapids_cpuid = "GenuineIntel-6-A[DE]";
++	if (!checked_if_snc_supported) {
++
++		/* Emeraldrapids and Graniterapids support SNC configuration. */
++		static const char *const supported_cpuids[] = {
++			"GenuineIntel-6-CF", /* Emeraldrapids */
++			"GenuineIntel-6-A[DE]", /* Graniterapids */
++		};
+ 		char *cpuid = get_cpuid_str((struct perf_cpu){0});
+
+-		is_graniterapids = cpuid && strcmp_cpuid_str(graniterapids_cpuid, cpuid) == 0;
++		for (size_t i = 0; i < ARRAY_SIZE(supported_cpuids); i++) {
++			is_supported = cpuid && strcmp_cpuid_str(supported_cpuids[i], cpuid) == 0;
++			if (is_supported)
++				break;
++		}
+ 		free(cpuid);
+-		checked_if_graniterapids = true;
++		checked_if_snc_supported = true;
+ 	}
+-	return is_graniterapids;
++	return is_supported;
+ }
+
+ static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
+@@ -64,6 +73,7 @@ static int snc_nodes_per_l3_cache(void)
+ 			read_sysfs_cpu_map("devices/system/cpu/cpu0/cache/index3/shared_cpu_list");
+
+ 		snc_nodes = perf_cpu_map__nr(cache_cpus) / perf_cpu_map__nr(node_cpus);
++
+ 		perf_cpu_map__put(cache_cpus);
+ 		perf_cpu_map__put(node_cpus);
+ 		checked_snc = true;
+@@ -137,23 +147,42 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
+ 	// Compute the IMC SNC using lookup tables.
+ 	unsigned int imc_num;
+ 	int snc_nodes = snc_nodes_per_l3_cache();
+-	const u8 snc2_map[] = {1, 1, 0, 0, 1, 1, 0, 0};
+-	const u8 snc3_map[] = {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
+-	const u8 *snc_map;
+-	size_t snc_map_len;
+-
+-	switch (snc_nodes) {
+-	case 2:
+-		snc_map = snc2_map;
+-		snc_map_len = ARRAY_SIZE(snc2_map);
+-		break;
+-	case 3:
+-		snc_map = snc3_map;
+-		snc_map_len = ARRAY_SIZE(snc3_map);
+-		break;
+-	default:
+-		/* Error or no lookup support for SNC with >3 nodes. */
+-		return 0;
++	char *cpuid;
++	static const u8 emr_snc2_map[] = { 0, 0, 1, 1 };
++	static const u8 gnr_snc2_map[] = { 1, 1, 0, 0 };
++	static const u8 snc3_map[] = { 1, 1, 0, 0, 2, 2 };
++	static const u8 *snc_map;
++	static size_t snc_map_len;
++
++	/* snc_map is not inited yet. We only look up once to avoid expensive operations. */
++	if (!snc_map) {
++		switch (snc_nodes) {
++		case 2:
++			cpuid = get_cpuid_str((struct perf_cpu){ 0 });
++			if (cpuid) {
++				if (strcmp_cpuid_str("GenuineIntel-6-CF", cpuid) == 0) {
++					snc_map = emr_snc2_map;
++					snc_map_len = ARRAY_SIZE(emr_snc2_map);
++				} else if (strcmp_cpuid_str("GenuineIntel-6-A[DE]", cpuid) == 0) {
++					snc_map = gnr_snc2_map;
++					snc_map_len = ARRAY_SIZE(gnr_snc2_map);
++				}
++				free(cpuid);
++			}
++			break;
++		case 3:
++			snc_map = snc3_map;
++			snc_map_len = ARRAY_SIZE(snc3_map);
++			break;
++		default:
++			/* Error or no lookup support for SNC with >3 nodes. */
++			return 0;
++		}
++
++		if (!snc_map) {
++			pr_warning("Unexpected: can not find snc map config");
++			return 0;
++		}
+ 	}
+
+ 	/* Compute SNC for PMU. */
+@@ -161,11 +190,12 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
+ 		pr_warning("Unexpected: unable to compute IMC number '%s'\n", pmu->name);
+ 		return 0;
+ 	}
+-	if (imc_num >= snc_map_len) {
++	if (imc_num >= snc_map_len * perf_cpu_map__nr(pmu->cpus)) {
+ 		pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_num, snc_nodes);
+ 		return 0;
+ 	}
+-	return snc_map[imc_num];
++
++	return snc_map[imc_num % snc_map_len];
+ }
+
+ static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+@@ -205,7 +235,7 @@ static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+ 	return cpu_adjust[pmu_snc];
+ }
+
+-static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
++static void uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
+ {
+ 	// With sub-NUMA clustering (SNC) there is a NUMA node per SNC in the
+ 	// topology. For example, a two socket graniterapids machine may be set
+@@ -304,11 +334,12 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+ 				pmu->mem_events = perf_mem_events_intel_aux;
+ 			else
+ 				pmu->mem_events = perf_mem_events_intel;
+-		} else if (x86__is_intel_graniterapids()) {
++		} else if (x86__is_snc_supported()) {
+ 			if (starts_with(pmu->name, "uncore_cha_"))
+-				gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
+-			else if (starts_with(pmu->name, "uncore_imc_"))
+-				gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
++				uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
++			else if (starts_with(pmu->name, "uncore_imc_") &&
++				 !starts_with(pmu->name, "uncore_imc_free_running"))
++				uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
+ 		}
+ 	}
+ }
+--
+2.53.0.273.g2a3d683680-goog
+
