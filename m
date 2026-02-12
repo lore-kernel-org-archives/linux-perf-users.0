@@ -1,175 +1,119 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCD1178372
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Feb 2026 18:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770922698; cv=none; b=IKtFhicwNOlorlWVXf/Yw665cpWIX7mNPStabQnVIbOqxi60XWwaacPEZvYWcuYRpYeakVCu0MQRews+lyF7AOua4NiCwYNin+aD9K7mHKKoW1WZMx5JYSuno22tQPbre0Q7PJmCx4tBFxRa8y+0sN8cbBEJ4GdEeNAR6lOhRNs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770922698; c=relaxed/simple;
-	bh=jaCplkj9P/whtB6A5OAwLdYg/wLmlg32rjwvrTXxAjE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FUWusETkM7Ox4RL3tYvySgjTnahxzzAk+1St0ZmIM+dNTVlcEv62Nuv04oeZhIiw89WPI8KjKtcUjMPqVE13gKjbQWyKX5QeOXOTCMQcTlUH3dL3O4AtppfENFPjggKVX/SgXqqULvFVummfmG4J8sEUFAdygMu1AJXw0ttkHhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kFwFomJd; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594BC29993E
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Feb 2026 19:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770923622; cv=pass; b=MR7h7cVZlVRfKYbeH1kRxratE9I5Ha00hDnWkJbfX7+02hokRQNDBxu0JLykOwurnFhXUApjTTEIvYEF1hYlxm27fwiMcUtnJEdgmro40+6pj16NfR+rSV2+UQttYjpXXp0kWTvxco03UTE4D6kwWQJ8JASkyFfiqIoXX+S3r7U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770923622; c=relaxed/simple;
+	bh=WrAU5zrjcCn1BNqI30iviL/tAjy/fZDO2FGkV8Y+Dv4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g7ir3UYgPxxzj9szYRR9+sHTm94+GXje120fh4GSAYnRT8AmAreioJWIYJsIBSkcRcoYstKPATpsinMMc+FS3yT+Hu2uS4jc71xlPYA8Il9Ldz9zZpJgBvfFXIlsPymDOHtyx7MY+hhbcCuISBiY+fY9tQv6ZQMC5HuZzk7lB1A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WHjKdxuT; arc=pass smtp.client-ip=74.125.82.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kFwFomJd"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b88593aa4dcso9409766b.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Feb 2026 10:58:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WHjKdxuT"
+Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-124713e4244so6045c88.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Feb 2026 11:13:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770923620; cv=none;
+        d=google.com; s=arc-20240605;
+        b=W1yQKxV7v4vOjqjyj5m2fjsL0i+g0iARU+q6WJl+HAO7vrSyWpZDL+LrFg6yojpIT0
+         SIcM+OEG6sgf1rXaRPTuBsmQFal8WALr/wvnqp6TDmx/nIBmS/ex+J+Hy+f973cntfus
+         nvEhmB7Z4lbFubA0D3TaoYexuxMuBz7O/8Tren0hGXPPhhMsJ2+ufa+AvlmJUWNY3ije
+         PIF+mVwMkJWSA1McKviknMtO9D7+imrpB5Yw8CLtsb24JcyftBceCt0etXq/oB0OtDSH
+         J/vx1WYLL3qxMLMECL7wqyqsb1KPoBeRmK3n3dJ8Evcu9L1lWzY4XoHArchArkBjnsmo
+         4vcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=WrAU5zrjcCn1BNqI30iviL/tAjy/fZDO2FGkV8Y+Dv4=;
+        fh=n5TOB7WmJBcHj89NSHZKtMqkTitm0QxoXin2iEoq98w=;
+        b=TETFGCtaMZSysDGONalYWYwLQMtUGgpIWm29nQIwMB5RqyWeUOKTpmJFmtYUzSB0F0
+         a4wpPaUgruKON7X1ZcUblVWuC6PQPAOhjx1A2KFG5Qhlet0ySzrH8gzX3fci/CzzA7LS
+         qNwYzYr16lnoLVEcaQYBNGMGPRY/JzUqsPoToscYnIbI8RBPwmDzsiJSu6uoDUbE5BgA
+         FS1AAzIfbawUDN/5SBxyZiLX13McAomesOUWEK4vINfedJSHrhon+FNHCPqiS46KzkW8
+         rwHvRYk5Efk8nPky1SVlf/dxiij5XAE1vgInuxAcm92LTpnjspEk0SKLLkMS9DoZ0klK
+         48wg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770922695; x=1771527495; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w7koUxEnJ8qJTQm6zEGAuSnrRJGm+RijWpLIoq7B1u4=;
-        b=kFwFomJdQFbOhNL04C/JzKM4sep4pnI45bobC3v8VecblR9i33nYPGAstx0h701tok
-         Pl3Qsho7jqnrs0DrKaqQCglSEc+ev6jC1+7lOlHga6vP2SSmjgMKT8589Z8nVsTzUcTV
-         pbTbtqFeu0b7wOJvmVU1P0cTZdNgnH6mpt1zu2sB7+Gk6hGOndBr8EqyETOOLufmwSjw
-         Xx/gxQbPONqzLUfv8iaVxxEVobCK/HbIkn0qpa7n1/0f0YhycgtRCKpQk3hBFyVjG56h
-         7Maievo1A8o5M+MAJ/P4YVPstRKCZ9ap4v4o4Gd9H1GFLVKzLZoSojahGgtgkY89m7wN
-         jROw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770922695; x=1771527495;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1770923620; x=1771528420; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=w7koUxEnJ8qJTQm6zEGAuSnrRJGm+RijWpLIoq7B1u4=;
-        b=lhGDMMeHEbiNQiCyRpIwJ/Zq9/6ftQnyOcyZ6pZa2JRpYYgzXMtEWOpiuPcrJ8Lpkp
-         yucrpAZNQdShKo0s41dtmEFtiYmk16vPXtxJxTRSnc76NSRQpLIttHcP43KY4+VIpFY2
-         /lS1kdzXrqhCaHKk9iu6gD0sWtzeQ1OPI3LT/tbcq+XsewvyqadtbKTOlmCqKNYiRoi6
-         VoIV+MetHCFW0g3g/2CfiftxZT7CEr5V6KHPUXx0uhlXV+oousrtw+gKZ7kGc5Aj7MHD
-         RsZlTERS3td10bMHoaFX7go3xNthxO0VbzCmcy7DBZ5aSo+Rmit8hlOKzALjIAPjtnCp
-         3Ifw==
-X-Gm-Message-State: AOJu0Yz+3DDr4wAwgKPsdB7GxWrvh4F0OL3KVV0a62gJRNwidNPdM6VX
-	lJJ+Qy3Ak66pYuFeXIItsBnWhOetX8PntozGHrSTfCwureWWYZbZIDgfWiidrQ==
-X-Gm-Gg: AZuq6aLlQUUGy4mZSp+MzS4v8GYPvwtW2Vj0u8aSSRsAlkeuSXrk/mvzMQinVedtqI/
-	hxaaB0QiUHtJwIDMcYJshvxRsl54lxGvXvRPJXcWk0RtHxNNGE8gybtL3bEpJhpN22PK+UDAzdB
-	hr/E3HJpvGibUoT49sqnBMW7alz50EdMRe+4c8pJhKuhePVJUK2ulZMRMwxnrhGcMVu3VxmqECS
-	2CGBh/OOfb0VNUZHgf1lZdc74kYRATDRdYDHNSkRQvDHFlWpkkcf5OKWOZteeNeAP7U/68/MhQt
-	LfV46LO2fPFcE1BBO2uVdieunk5aU7mfFQ+N52CDrbDRyqpHIJ+Drs2DnV3t3YWTaaKNuLmpvKQ
-	9HvEPTv9RqhiD1s6IdricWeimz/0SXp7aMSpOjXjM13iifieVa3pkzkJjvIbZ5rHswbCn44jZtQ
-	Hof6HnlG3DwZyQAUTXFdX9LgEGbj6Eo9ReOOnAnltKiUuivYBUl6yRAVLUCqcrRnZ7kMJ5xGeXL
-	CMFNYCFGXT112erRPAAIYhqezktwAk=
-X-Received: by 2002:a17:907:db02:b0:b8f:1c:e815 with SMTP id a640c23a62f3a-b8face16a1cmr1899266b.48.1770922695262;
-        Thu, 12 Feb 2026 10:58:15 -0800 (PST)
-Received: from ddolgov-thinkpadt14sgen1.local (dslb-002-207-075-089.002.207.pools.vodafone-ip.de. [2.207.75.89])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8f7a48890esm161664466b.65.2026.02.12.10.58.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Feb 2026 10:58:14 -0800 (PST)
-From: Dmitrii Dolgov <9erthalion6@gmail.com>
-To: linux-perf-users@vger.kernel.org,
-	Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Dmitrii Dolgov <9erthalion6@gmail.com>
-Subject: [PATCH v1] tools build: Fix rust cross compilation
-Date: Thu, 12 Feb 2026 19:57:14 +0100
-Message-ID: <20260212185810.648364-1-9erthalion6@gmail.com>
-X-Mailer: git-send-email 2.52.0
+        bh=WrAU5zrjcCn1BNqI30iviL/tAjy/fZDO2FGkV8Y+Dv4=;
+        b=WHjKdxuTIk+Mm/qHn62GlcK5S1Svf7wfP7HBiD4rh3I87DPvGWnPathsSn9FNolcl/
+         ezvVnu/H1fLxN3uhUNTAoGCs0AvZCPwQsJZ/s73HujLrC6UXAOKPgOAkTlucSPs3BMcK
+         Nn9Xfo83/ccAQ3zWYt/4vAzDfDqc9lYVe8eZ+wcct6MN0WasjX3m07oG+n9B9ap3Myha
+         AB3HV8Q9XavAtDD3TOOkIYvUFpIBrbmPMClYTL5t6l/B22T+0y/bQDDoAApheFPJ6hLi
+         5V/joKBMLt8BAk1YnEhTqctern32QJn+VrEIHX0pm+e6LGFFpUSS8NFUcq0liKYVwTzo
+         eEPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770923620; x=1771528420;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=WrAU5zrjcCn1BNqI30iviL/tAjy/fZDO2FGkV8Y+Dv4=;
+        b=fhTFsMGDSH7PkZHJFHZjIu/jeG6efBEy1Tt59qez7J+BVxj3v9Kh8UI8+oQBZ4iuNw
+         ODmlWlDwEhHBXudPjScVPYn350xL25J9aZKXSFXghkvlJTaViH/BZ27ZpCNZZstA224v
+         Z1sEddOrIy2JNNzk0sxr2H8ZMD1TqH2xWlGBJcifuoCRM5mbQBinj9kblP8tO8lHN36X
+         AbVtad6EBv8F3/giz3AhaRMs0CgBQ+CYRWLjFYqwiGwinteua5/cheSupmAeg3hTtkrI
+         XEQS/P85GqfMmxXWmT4tPKYjTiVszQdBc2TYbBs1hnwnRyqeoHrGWZQWb4ouXviH6yDH
+         cbYg==
+X-Gm-Message-State: AOJu0Yxis4e9HBrVZLhSk/4e5ZoO4uox68toMcvChjChqNXFaqoPuihP
+	bRPZTjBw/aD+JyKNHqPL7Rq87hQq+OcTw9fSamffZ0ddoK4wp7iX+nGME3K85mEH6r4k6FJ/pI8
+	nY7ElUmagBEHPXd/33W8k3wih3aDlMb0=
+X-Gm-Gg: AZuq6aKwTbG0Kldwd5tqzeO2w7rINiL2by0Jms/3kPU68174Boa3grHkQfLsMNy2Xns
+	aIPQIOzzjUy4kCDFcxWEUHFSom2w70RNaqz/2a5otZklRqKI7Xpl7KQQxYsKLUlWTrNo9ZQb2NY
+	rvh9YeOSEjVIlofEB6D2UB5BwS0rU4OYyfGkLfoKgck74G2/aWTPGrrSYMPMEbeeuqCVoM33U2V
+	JJDxVMFYhv0Xl04tuA4v65PbR3ZJ3N3904CtqiCnrGSDbXm8lKBntoIviQ3K6G06yPfkWFSWdmc
+	xD5U7XCQ5xe8lyJsNZqdi3ytqaDOccHMN8C1qG09BycNjf+PgyZ1hD2v2ewmt5Zqe39pPJdNA5o
+	Lvi3Tsa6mnHIsbgADLrLfG04i
+X-Received: by 2002:a05:7301:1299:b0:2ba:6978:2b0 with SMTP id
+ 5a478bee46e88-2bab861518amr148339eec.4.1770923620251; Thu, 12 Feb 2026
+ 11:13:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260212185810.648364-1-9erthalion6@gmail.com>
+In-Reply-To: <20260212185810.648364-1-9erthalion6@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 12 Feb 2026 20:13:25 +0100
+X-Gm-Features: AZwV_QhZnAoZ1Pw8ot2wsf-1EvRj4OOkK0rQDza5R2-O6LTu3qN5n9BNcMnTarY
+Message-ID: <CANiq72nmzYkHpLTwWxn71TKKTPxWprjPHxBau7Yat32P0zE3pA@mail.gmail.com>
+Subject: Re: [PATCH v1] tools build: Fix rust cross compilation
+To: Dmitrii Dolgov <9erthalion6@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nsc@kernel.org>, rust-for-linux <rust-for-linux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently no target is specified to compile rust code when needed, which
-breaks cross compilation. Detect required target and pass it via
-rust_flags to the compiler.
+On Thu, Feb 12, 2026 at 7:58=E2=80=AFPM Dmitrii Dolgov <9erthalion6@gmail.c=
+om> wrote:
+>
+> Note that CROSS_COMPILE might be different from what rust compiler
+> expects, since it may omit the target vendor value, e.g.
+> "aarch64-linux-gnu" instead of "aarch64-unknown-linux-gnu". Thus provide
+> an explicit RUST_TARGET_ARCH, and if not specified, try to match
+> the CROSS_COMPILE value.
 
-Note that CROSS_COMPILE might be different from what rust compiler
-expects, since it may omit the target vendor value, e.g.
-"aarch64-linux-gnu" instead of "aarch64-unknown-linux-gnu". Thus provide
-an explicit RUST_TARGET_ARCH, and if not specified, try to match
-the CROSS_COMPILE value.
+I would suggest explicitly doing the mapping automatically, rather
+than guessing or requesting users to provide one more variable, like
+we do for the non-tools side.
 
-Tested using arm64 cross-compilation example from [1].
+Perhaps using a "table" like we do for LLVM and `bindgen` -- see for
+instance `scripts/Makefile.clang`.
 
-[1]: https://perfwiki.github.io/main/arm64-cross-compilation-dockerfile/
+Cc'ing Kbuild and rust-for-linux.
 
-Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
----
- tools/build/Build.include  |  9 +++++++++
- tools/perf/Makefile.config | 18 ++++++++++++++++++
- tools/perf/Makefile.perf   |  4 +++-
- 3 files changed, 30 insertions(+), 1 deletion(-)
-
-diff --git a/tools/build/Build.include b/tools/build/Build.include
-index e45b2eb0d24..cd0baa7a168 100644
---- a/tools/build/Build.include
-+++ b/tools/build/Build.include
-@@ -98,6 +98,15 @@ c_flags_2 = $(filter-out $(CFLAGS_REMOVE_$(basetarget).o), $(c_flags_1))
- c_flags   = $(filter-out $(CFLAGS_REMOVE_$(obj)), $(c_flags_2))
- cxx_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(CXXFLAGS) -D"BUILD_STR(s)=\#s" $(CXXFLAGS_$(basetarget).o) $(CXXFLAGS_$(obj))
- 
-+###
-+# Rust flags to be used on rule definition, includes:
-+# - global $(RUST_FLAGS)
-+# - per target Rust flags
-+# - per object Rust flags
-+rust_flags_1 = $(RUST_FLAGS) $(RUST_FLAGS_$(basetarget).o) $(RUST_FLAGS_$(obj))
-+rust_flags_2 = $(filter-out $(RUST_FLAGS_REMOVE_$(basetarget).o), $(rust_flags_1))
-+rust_flags   = $(filter-out $(RUST_FLAGS_REMOVE_$(obj)), $(rust_flags_2))
-+
- ###
- ## HOSTCC C flags
- 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a8dc72cfe48..9b164b442da 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1163,6 +1163,24 @@ ifndef NO_RUST
-     CFLAGS += -DHAVE_RUST_SUPPORT
-     $(call detected,CONFIG_RUST_SUPPORT)
-   endif
-+
-+  ifneq ($(CROSS_COMPILE),)
-+    ifneq ($(RUST_TARGET_ARCH),)
-+      RUST_FLAGS += --target=$(RUST_TARGET_ARCH)
-+    else
-+      # CROSS_COMPILE specifies the target triple, which may not match what
-+      # Rust expects, e.g. it can omit the target vendor if C toolchain is
-+      # used. For example the value can be aarch64-linux-gnu, where Rust uses
-+      # aarch64-unknown-linux-gnu. Try to match that and insert an "unknown"
-+      # vendor if omitted.
-+      TRIPLE := $(subst -, ,$(CROSS_COMPILE:%-=%))
-+      ifeq ($(words $(TRIPLE)),3)
-+        RUST_FLAGS += --target=$(word 1,$(TRIPLE))-unknown-$(word 2,$(TRIPLE))-$(word 3,$(TRIPLE))
-+      else
-+        RUST_FLAGS += --target=$(CROSS_COMPILE:%-=%)
-+      endif
-+    endif
-+  endif
- endif
- 
- # Among the variables below, these:
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index a6d8ca3e923..621800e1716 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -17,6 +17,8 @@ include ../scripts/utilities.mak
- #
- # Define CROSS_COMPILE as prefix name of compiler if you want cross-builds.
- #
-+# Define RUST_TARGET_ARCH as rust target arch if you want cross-builds.
-+#
- # Define LIBPERL to enable perl script extension.
- #
- # Define NO_LIBPYTHON to disable python script extension.
-@@ -271,7 +273,7 @@ ifeq ($(PYLINT),1)
-   PYLINT := $(shell which pylint 2> /dev/null)
- endif
- 
--export srctree OUTPUT RM CC CXX RUSTC LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
-+export srctree OUTPUT RM CC CXX RUSTC LD AR CFLAGS CXXFLAGS RUST_FLAGS V BISON FLEX AWK
- export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK MYPY PYLINT
- 
- include $(srctree)/tools/build/Makefile.include
-
-base-commit: 5d1ab659fb93eed85d6d8b2937013360157032f4
--- 
-2.52.0
-
+Cheers,
+Miguel
