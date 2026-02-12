@@ -1,168 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B31F2EDD62;
-	Wed, 11 Feb 2026 19:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7734C6FC5;
+	Thu, 12 Feb 2026 01:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770839714; cv=none; b=Wkh2MoCwIBvA4Zh/iUiV7+woPGFe8wuwo0E0AO/Y12Hj+g+NrtcS+ggBk72usPLDRiXM1d2oAqQCQxTlWMptQeqieKNXHtTGla5wDJQ1jg3TtJzyGfKQrpMnqz6tibccdTml0M0TJykI01mDXaiy6KFl7k3FtLH0IHUKdYaep4E=
+	t=1770858606; cv=none; b=dFWuX4mhBhnqRKrS/L5sZ5vp8RDRXlnQq4oUhSEJZXyPFfZ1rUgTt2YO85HtzQTOZRK8/QdR2PZlZCg0iArufx+RsOELAUo/VHtWmnCd3pm04oOjnV0ERzYhWiH2+dnXXkXFsesD0+G/ykVuKflMP/3WHemo/78qTS91s+GnvcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770839714; c=relaxed/simple;
-	bh=rqkOnkwO7nF9rwwtnG/Yac7661b25axRHpG4qIERxjk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r7KOOlw311F3H1kARFEiWdNuK6cVlUQ14p+RE+C8Y1uVQGEiZfU9xhV7RiAWBp6SCy6pyoRKX/jkuimnoYF3dhmcHLjDVDr4yDMd62Lm5r5qbyMtayTTlcYHX93Rgo8hANpT5HiauvGc8Y88Egtwk19i7w/aRe65TWb/koPo3BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jU8tpBvt; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770858606; c=relaxed/simple;
+	bh=QLT6RgMv62ZraNUSIuAaLzoSfVVBylat0rii7v3ZbAE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AiDpH3i2kS7NeT9MLxT/9Gu2I9ZsIQqK22sZ1vgb7Mmp/tKunVITYGEaQ4xvlBZG+cvaCegdQ68ppQ1yFM0TzTr/a/khtE2H7jYb1iUrADxNx/0PUCy1uKBPsjYLfvjidVlNT0H8HkU6VP8hYhrPUhDoKn6eGU3Ab7dmMJ48cOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZ7rtkod; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jU8tpBvt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770839712; x=1802375712;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=rqkOnkwO7nF9rwwtnG/Yac7661b25axRHpG4qIERxjk=;
-  b=jU8tpBvtvdrCUrPRSodJPygNbJJPkpkVjxwwKqKpiMIzDs+F0WhHwnaw
-   rufL3LClfiCqzuzdEvUCjEnjouAbaUFRb88NSBUjXMHl5vi/t30t2AsDL
-   W0lROfET2Pbh6+J8SGsO5twYTM+jjfxmweqbVe6i8fRF6tPabdDLYCekj
-   HUWexIxwkcQj+13/y7ohmLGq0nRtmpv58AuKz8wx96C/XRC408JO20eIv
-   j/MZGSoB0AwaC3r3T0CkeJcLl1E5p7oS7ESlZPJJMuMgvuxj2Xq+wUDB4
-   5vAOa2NmSSxVlGRK4fyohAEdX51Ksikdz8rQLVeYmOMGAoMXBQBtXu75Z
-   A==;
-X-CSE-ConnectionGUID: UMtlibnXQ3mbaQ9WzaMXrg==
-X-CSE-MsgGUID: tm8xZj0PR1mjieyTBEhhvg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11698"; a="72043738"
-X-IronPort-AV: E=Sophos;i="6.21,285,1763452800"; 
-   d="scan'208";a="72043738"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2026 11:55:11 -0800
-X-CSE-ConnectionGUID: CUT0HU6rQ7avvaSVs4BWiQ==
-X-CSE-MsgGUID: LWNhKJMmQreRSPIpra6zJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,285,1763452800"; 
-   d="scan'208";a="250011836"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.108.146]) ([10.125.108.146])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2026 11:55:10 -0800
-Message-ID: <960918ce-f42f-464f-a887-c36d8d9e2937@intel.com>
-Date: Wed, 11 Feb 2026 11:55:10 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZ7rtkod"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C630BC16AAE;
+	Thu, 12 Feb 2026 01:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770858606;
+	bh=QLT6RgMv62ZraNUSIuAaLzoSfVVBylat0rii7v3ZbAE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AZ7rtkodGRuelBOiMFjH2YiuMDMUpbumFMKltfirFnp1gtKEq6IdISruIBCDh3mk4
+	 AzRL2ldqrVxZCcmKyR9x8EhRVyAQC1npn4/kC6DWuCBEgTb9/v0PvESXyAAmtIx8cb
+	 Ji7fc6HNIRiR69Vk9bP6QqxQtlYUyy/jMZNP1Q5dKBYcQT4JULRxm2YCq0m20yNJqa
+	 8DMeWS3neHMmnVRjHvpRMbEZdoHRnCliPgVTO8pc8yUJMugUXNKwySOrlbGbsyZQRr
+	 tTg3ziZhibPIKoi1X8jkzZeylLtX9IjAljTpfDYNtgpg7dI/C1W0bvbJyKS+T936HV
+	 ZPGnQ3zbDGecQ==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Martin Schiller <ms@dev.tdt.de>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.19-6.12] perf/x86/msr: Add Airmont NP
+Date: Wed, 11 Feb 2026 20:09:28 -0500
+Message-ID: <20260212010955.3480391-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260212010955.3480391-1-sashal@kernel.org>
+References: <20260212010955.3480391-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v6 08/22] x86/fpu: Ensure TIF_NEED_FPU_LOAD is set after
- saving FPU state
-To: "Chang S. Bae" <chang.seok.bae@intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- Xudong Hao <xudong.hao@intel.com>
-References: <20260209072047.2180332-1-dapeng1.mi@linux.intel.com>
- <20260209072047.2180332-9-dapeng1.mi@linux.intel.com>
- <5c3ea318-4543-42a4-9b81-7a1da0b8bed1@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <5c3ea318-4543-42a4-9b81-7a1da0b8bed1@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.19
+Content-Transfer-Encoding: 8bit
 
-On 2/11/26 11:39, Chang S. Bae wrote:
-> But the changelog doesn't look clear enough to explain the reason to me.
+From: Martin Schiller <ms@dev.tdt.de>
 
-Yeah, the changelog could use some improvement.
+[ Upstream commit 63dbadcafc1f4d1da796a8e2c0aea1e561f79ece ]
 
-This also leaves the code rather fragile. Right now, all of the:
+Like Airmont, the Airmont NP (aka Intel / MaxLinear Lightning Mountain)
+supports SMI_COUNT MSR.
 
-	save_fpregs_to_fpstate(fpu);
-	set_thread_flag(TIF_NEED_FPU_LOAD);
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Link: https://patch.msgid.link/20251124074846.9653-2-ms@dev.tdt.de
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
 
-pairs are open-coded. There's precisely nothing stopping someone from
-coming in tomorrow and reversing the order at these or other call sites.
-There's also zero comments left in the code to tell folks not to do this.
+LLM Generated explanations, may be completely bogus:
 
-Are there enough of these to have a helper that does:
+Here is my complete analysis:
 
-	save_fpregs_to_fpstate_before_invalidation(fpu);
+---
 
-which could do the save and set TIF_NEED_FPU_LOAD? (that name is awful
-btw, please don't use it).
+## Analysis: perf/x86/msr: Add Airmont NP
 
-This:
+### 1. Commit Message Analysis
 
->  	/* Swap fpstate */
->  	if (enter_guest) {
-> -		fpu->__task_fpstate = cur_fps;
-> +		WRITE_ONCE(fpu->__task_fpstate, cur_fps);
-> +		barrier();
->  		fpu->fpstate = guest_fps;
->  		guest_fps->in_use = true;
->  	} else {
->  		guest_fps->in_use = false;
->  		fpu->fpstate = fpu->__task_fpstate;
-> -		fpu->__task_fpstate = NULL;
-> +		barrier();
-> +		WRITE_ONCE(fpu->__task_fpstate, NULL);
->  	}
+The commit adds support for the Intel Airmont NP (aka Lightning Mountain
+/ MaxLinear Lightning Mountain) CPU to the MSR perf driver. The commit
+message explicitly states that "Like Airmont, the Airmont NP supports
+SMI_COUNT MSR." This is a simple CPU model ID addition to an existing
+driver/feature.
 
-also urgently needs comments.
+The commit was:
+- Authored by Martin Schiller (ms@dev.tdt.de), who maintains patches for
+  the Lightning Mountain SoC
+- Signed off by Peter Zijlstra (Intel), the perf subsystem maintainer
+- Reviewed by Dapeng Mi (Intel), an x86 perf developer
 
-I also can't help but think that there might be a nicer way to do that
-without the barrier(). I _think_ two correctly-ordered WRITE_ONCE()'s
-would make the compiler do the same thing as the barrier().
+### 2. Code Change Analysis
 
-But I'm not fully understanding what the barrier() is doing anyway, so
-take that with a grain of salt.
+The change is exactly **1 line** in a single file
+(`arch/x86/events/msr.c`). It adds:
+
+```c
+case INTEL_ATOM_AIRMONT_NP:
+```
+
+right after the existing `case INTEL_ATOM_AIRMONT:` line in the
+`test_intel()` function. This is a switch-case fall-through that enables
+the `PERF_MSR_SMI` counter (which reads `MSR_SMI_COUNT`) for the Airmont
+NP CPU model.
+
+Without this patch, on Airmont NP systems:
+- `test_intel()` returns `false` for `PERF_MSR_SMI`
+- `perf_msr_probe()` skips the SMI counter
+- The SMI perf counter is unavailable even though the hardware supports
+  it
+- Users cannot monitor SMI (System Management Interrupt) counts via perf
+  on this CPU
+
+### 3. Classification: CPU Model ID Addition
+
+This falls squarely into the **"NEW DEVICE IDs"** exception category for
+stable backports:
+- It adds a CPU model ID to an **existing driver** (the MSR perf PMU)
+- The driver already exists in all stable trees
+- Only the CPU ID is new in the context of this driver
+- The `INTEL_ATOM_AIRMONT_NP` / `INTEL_FAM6_ATOM_AIRMONT_NP` define has
+  existed since kernel v5.4 (added September 2019 in commit
+  `855fa1f362ca`)
+- The CPU is already recognized in numerous other kernel subsystems
+  (`common.c`, `intel.c`, `tsc_msr.c`, `intel_tcc.c`)
+
+### 4. Scope and Risk Assessment
+
+- **Lines changed**: 1 (absolute minimum)
+- **Files touched**: 1
+- **Complexity**: Trivially simple - adding a case label to an existing
+  switch fall-through group
+- **Risk of regression**: Essentially zero. The change only affects
+  systems running on the Airmont NP CPU (model 0x75). For all other
+  CPUs, behavior is completely unchanged. The added case falls through
+  to the same `if (idx == PERF_MSR_SMI) return true;` that all other
+  Atom variants in that group use.
+- **Subsystem maturity**: The perf MSR driver is mature and stable; this
+  same pattern of adding CPU model IDs has been repeated over a dozen
+  times in the file's history.
+
+### 5. User Impact
+
+The Intel Airmont NP (Lightning Mountain) is a real SoC used in embedded
+networking equipment (routers, CPE devices). Martin Schiller works for
+TDT, which produces networking hardware using this SoC. Without this
+patch, users of Lightning Mountain-based systems cannot use `perf` to
+monitor SMI counts, which is useful for diagnosing system latency and
+firmware issues.
+
+The impact is:
+- **Who**: Users of Intel Lightning Mountain / Airmont NP embedded
+  systems
+- **Severity**: Functionality gap - a hardware capability is not exposed
+- **Real-world**: The patch author works with the hardware and submitted
+  this based on actual need
+
+### 6. Backport Feasibility
+
+- **v6.12 and later**: Patch applies cleanly as-is (uses
+  `INTEL_ATOM_AIRMONT_NP` and `x86_vfm`)
+- **v6.6, v6.1, v5.15**: Requires trivial name adaptation
+  (`INTEL_FAM6_ATOM_AIRMONT_NP` instead of `INTEL_ATOM_AIRMONT_NP`, and
+  `x86_model` switch). The `INTEL_FAM6_ATOM_AIRMONT_NP` define exists in
+  all these trees.
+- **Dependencies**: None. This is a completely standalone one-line
+  addition.
+
+### 7. Precedent
+
+The `arch/x86/events/msr.c` file has a long history of similar CPU model
+ID additions (Tremont, Tiger Lake, Ice Lake, Comet Lake, Rocket Lake,
+Alder Lake, Raptor Lake, Sapphire Rapids, Emerald Rapids, Meteor Lake,
+Granite Rapids), all following the exact same pattern. These additions
+are the textbook example of the "device ID addition" exception to stable
+kernel rules.
+
+### Conclusion
+
+This is a textbook example of a CPU model ID addition to an existing
+driver - one of the explicitly allowed exception categories for stable
+backports. The change is:
+- 1 line, 1 file
+- Zero risk of regression to any other hardware
+- Enables existing functionality on real hardware that real users depend
+  on
+- Completely standalone with no dependencies
+- The required CPU ID defines exist in all active stable trees
+- Following an established pattern seen many times in this exact file
+
+**YES**
+
+ arch/x86/events/msr.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
+index 7f5007a4752a1..8052596b85036 100644
+--- a/arch/x86/events/msr.c
++++ b/arch/x86/events/msr.c
+@@ -78,6 +78,7 @@ static bool test_intel(int idx, void *data)
+ 	case INTEL_ATOM_SILVERMONT:
+ 	case INTEL_ATOM_SILVERMONT_D:
+ 	case INTEL_ATOM_AIRMONT:
++	case INTEL_ATOM_AIRMONT_NP:
+ 
+ 	case INTEL_ATOM_GOLDMONT:
+ 	case INTEL_ATOM_GOLDMONT_D:
+-- 
+2.51.0
+
