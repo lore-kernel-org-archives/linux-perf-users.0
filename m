@@ -1,129 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDFD31985C;
-	Fri, 13 Feb 2026 08:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E4B757EA;
+	Fri, 13 Feb 2026 09:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770970265; cv=none; b=OF9FY//o9/KonTZND/D1drg9WqADM7l4dRl/Jw2mE0W6UV5cy28EdAVyb36T2X2CmTLnFOENuY5kqOJGUAyZevV3/OPobmhOxqEb8q8CrgYItQWOPoEQjgH0E5mRuBoXDaIKy/B3n2gPHGVXr1+YD7vh5y2tZQBrTt0PhuQ7jUU=
+	t=1770975316; cv=none; b=qz3GMfDD/HYI37koJTSjITLVR2R/QKdM4hSyT6WdYAWVcdZHlhmRLcECeZf7CVUlKZSl+4L30AZoL7U81Q7wsouBqdLYxuWb046U8G7WR0lJe5tNKfcY0jQxTuh6nXEvrEchb+uiEMZFzi9jA3/0dkspC3uJjAavSTe4fXCOhpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770970265; c=relaxed/simple;
-	bh=ordfYWUZ3NZZnUjwMBrx0IEFVahF4xoRepQLRc515+I=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I9Z17Nfhdhwesao/k/IfWJHX4hHLcEmvFTdg+ptfOxap9WBJU2zOugjirElU+H25bXvAeF5ol+EGxAhj8JjpMIODNFmvDzzejUsCcydwvOIBEKVSa/IcFCetCTHNeLbJwO+JtRShFlRl1AeaPfdGj/nBm6X5Ow8bFisFfGkFJsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZxlezzd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770975316; c=relaxed/simple;
+	bh=i0Ng+SbrWeasep0IQMM6CzezEM3YdWRf5Mij1pC7QjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WdK5KDcIq/zNhwMKfoVuBrLlWR7CUXhnB7YMAsG6y6o44bM4MlrlWqXquI12CrDedUhcucKbZXyWcVwWtGpMMODDaq4hM5edjeg+O23dNnXnqbMHN6TuUX6R0wC7/L9vLEbQHsJVUi5MoLqA5f6+zI3Uk+IPoGykkb8E6fU3GK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=JWE3tfiz; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZxlezzd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D42CC116C6;
-	Fri, 13 Feb 2026 08:11:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770970264;
-	bh=ordfYWUZ3NZZnUjwMBrx0IEFVahF4xoRepQLRc515+I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mZxlezzdNvjH1qxidU7XggLUEDoM/yxCPjvXxNzaIOeH0KjIQE/5lW4YU3ROt4Iep
-	 coZp9FKOS18HwqhltmhVnR/I9UZGq1d1JCklRjWG06sINuOo78HbXvpKBTOmfQKaRj
-	 eIjDXQ2oJhyMZqdJptSC4Y4u9YyBca084S3ZSzWFrtTdMxfR2B/qDhC1uuA2dXVQ9n
-	 n9DLmrIZW7SATj6MK/Oj8VFIrKD22ri1SXZY/se7YJNxuLAxjEQQFX8PHB4uB4VLpy
-	 REMfeXCdKsJx3Sf/DIgeJpUqz7/QsoFghkMcT6hpqqo7Yo1Eo8LmCodQxNDlQGH+rq
-	 pTf2EpwxVJD6g==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1vqoGT-0000000Ap2s-3Twx;
-	Fri, 13 Feb 2026 08:11:01 +0000
-Date: Fri, 13 Feb 2026 08:11:01 +0000
-Message-ID: <86h5rlawru.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org,
-	alexandru.elisei@arm.com,
-	pbonzini@redhat.com,
-	corbet@lwn.net,
-	linux@armlinux.org.uk,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	oliver.upton@linux.dev,
-	mizhang@google.com,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	mark.rutland@arm.com,
-	shuah@kernel.org,
-	gankulkarni@os.amperecomputing.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 00/19] ARM64 PMU Partitioning
-In-Reply-To: <gsnt8qcxhdpn.fsf@coltonlewis-kvm.c.googlers.com>
-References: <86v7g5asp4.wl-maz@kernel.org>
-	<gsnt8qcxhdpn.fsf@coltonlewis-kvm.c.googlers.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="JWE3tfiz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=KtHVQz5g9cI/EfmzjSC8+uHBUlUdIvfIpOSkcCQKRvc=;
+	b=JWE3tfizzVfElNWskr+9GhVwLoklLksGLYDfoPmrNm70gWfPCRfJh15vNh4ASE
+	t2l1MFdSEnFLU033GpPKytoXTH+jfSOwLuRhqNv8CLNnZUh95mV+8gWJLej2riIZ
+	EpRmyQ94O2U/+N3tDHT8cCg9ZNlzWsQLFXTYFppWDUnsQ=
+Received: from localhost (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgD3uvYU8I5pgKVEPA--.17197S2;
+	Fri, 13 Feb 2026 17:34:14 +0800 (CST)
+Date: Fri, 13 Feb 2026 17:34:12 +0800
+From: Chingbin Li <liqb365@163.com>
+To: Ian Rogers <irogers@google.com>
+Cc: james.clark@linaro.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] libperf cpumap: Fix argument x range [] exceeds maximum
+ object size
+Message-ID: <xz46vvcv5u5hpxbvwhvxsnkmgqgadyhoqyponmrs673sklkmap@7voxutqxozy2>
+References: <20260212025127.841090-1-liqb365@163.com>
+ <CAP-5=fWqP43QH0=+Cx+s=GM0uwJ9Lzt9Zw2Xw-NxOP-tXkoOJQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: coltonlewis@google.com, kvm@vger.kernel.org, alexandru.elisei@arm.com, pbonzini@redhat.com, corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, mizhang@google.com, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org, gankulkarni@os.amperecomputing.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWqP43QH0=+Cx+s=GM0uwJ9Lzt9Zw2Xw-NxOP-tXkoOJQ@mail.gmail.com>
+X-CM-TRANSID:PigvCgD3uvYU8I5pgKVEPA--.17197S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxuF13GF4kJr1UWw1xtF1xuFg_yoWrZw4kpF
+	43Cw17Gr95Jr1rG34UJr18tr1jqr12q3yjv34rK3yrAr1DAa4kJF40yF18Kry7urWv9F1U
+	trsrtFn8JFy7Aw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UYiihUUUUU=
+X-CM-SenderInfo: xoltujiwv6il2tof0z/xtbC5RY-r2mO8BZxZgAA31
 
-On Thu, 12 Feb 2026 21:08:36 +0000,
-Colton Lewis <coltonlewis@google.com> wrote:
-> 
-> Hey Marc, thanks for the review.
-> 
-> Marc Zyngier <maz@kernel.org> writes:
-> 
-> > On Mon, 09 Feb 2026 22:13:55 +0000,
-> > Colton Lewis <coltonlewis@google.com> wrote:
-> 
-> >> This series creates a new PMU scheme on ARM, a partitioned PMU that
-> >> allows reserving a subset of counters for more direct guest access,
-> >> significantly reducing overhead. More details, including performance
-> >> benchmarks, can be read in the v1 cover letter linked below.
-> 
-> >> An overview of what this series accomplishes was presented at KVM
-> >> Forum 2025. Slides [1] and video [2] are linked below.
-> 
-> >> IMPORTANT: This iteration does not yet implement the dynamic counter
-> >> reservation approach suggested by Will Deacon in January [3]. I am
-> >> working on it, but wanted to send this version first to keep momentum
-> >> going and ensure I've addressed all issues besides that.
-> 
-> > [...]
-> 
-> > As I have asked before, this is missing an example of how userspace is
-> > going to use this. Without it, it is impossible to correctly review
-> > this series.
-> 
-> > Please consider this as a blocker.
-> 
-> Understood. I remember you asking for a QEMU patch specifically.
+Hi, Ian:
 
-No. *any* VMM. QEMU, kvmtool, crosvm, firecrackpoter, whichever you want.
+-------------------------------------------------------------------------------------
+About whether this issue is unique to the RISC-V architecture, my test result is:
 
-> I had hoped that the use in the selftest was sufficient to show how to
-> use the uAPI.
+Machine / OS / Whether it occurred
+AMD9950x / Ubuntu 24.04 / No
+qemu-system-x86_64 / Ubuntu 24.04 / No
+qemu-system-riscv64 / Ubuntu 24.04 / Yes
 
-The selftests are absolutely pointless, like 99% of all selftests.
-They don't demonstrate how the userspace API works, now how
-configuring the PMU is ordered with the rest of the save/restore flow.
+So I haven't observed the same issue on computers other than riscv64 yet.
 
-> If not, I can send out an example QEMU patch to the QEMU ARM mailing
-> list.
+-------------------------------------------------------------------------------------
+I think there are several ways to fix this issue.
 
-Please do.
+a. Add the volatile qualifier to the tmp_len variable.
+b. Use #pragma to ignore the warning.
+c. Change the type of the tmp_len variable to size_t.
+   However, After trying it out, changing the type alone does not fix this issue;
+   a numerical range check also needs to be added.
 
-	M.
+These methods seem to have some shortcomings.
 
--- 
-Without deviation from the norm, progress is not possible.
+My current thought is that adding a numerical range check seems to be a more appropriate solution.
+It can effectively resolve the issue even without changing the type of tmp_len.
+
+diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+index 4160e7d2e120f..e0407796fcd9d 100644
+--- a/tools/lib/perf/cpumap.c
+@@ -413,6 +413,8 @@ int perf_cpu_map__merge(struct perf_cpu_map **orig, struct p
++++ b/tools/lib/perf/cpumap.c
+@@ -413,6 +413,8 @@ int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
+        int tmp_len;
+        int i, j, k;
+        struct perf_cpu_map *merged;
++       int orig_nr = __perf_cpu_map__nr(*orig);
++       int other_nr = __perf_cpu_map__nr(other);
+ 
+        if (perf_cpu_map__is_subset(*orig, other))
+                return 0;
+@@ -422,7 +424,11 @@ int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
+                return 0;
+        }
+ 
+-       tmp_len = __perf_cpu_map__nr(*orig) + __perf_cpu_map__nr(other);
++       if (orig_nr < 0 || other_nr < 0 || orig_nr + other_nr > INT_MAX) {
++               return -EINVAL;
++       }
++       tmp_len = orig_nr + other_nr;
+        tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
+        if (!tmp_cpus)
+                return -ENOMEM;
+
+This method has good compatibility while keeping `tmp_len` and other variables used for comparison the same type.
+If you agree with this idea, I will submit it as a v2 patch.
+
+-------------------------------------------------------------------------------------
+I agree that the nr field type should be changed to size_t.
+I tried making the modification. It seems that after this modification,
+there will be comparisons between `int` and `size_t` variables,
+which will require some type casting.
+
+Thanks,
+Chingbin
+
+On Thu, Feb 12, 2026 at 10:24:12AM -0800, Ian Rogers wrote:
+> On Wed, Feb 11, 2026 at 6:54 PM Chingbin Li <liqb365@163.com> wrote:
+> >
+> > On RISC-V 64-bit Ubuntu 24.04 Server (Running on QEMU), the following error might occur when compiling perf:
+> >
+> > cpumap.c: In function ‘perf_cpu_map__merge’:
+> > cpumap.c:429:20: error: argument 1 range [18446744069414584320, 18446744073709551614] exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
+> >   429 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
+> >       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > In file included from cpumap.c:4:
+> > /usr/include/stdlib.h:672:14: note: in a call to allocation function ‘malloc’ declared here
+> >   672 | extern void *malloc (size_t __size) __THROW __attribute_malloc__
+> >       |              ^~~~~~
+> > cc1: all warnings being treated as errors
+> >
+> > We use the volatile qualifier to prevent unnecessary errors caused by the compiler's constant propagation.
+> 
+> This shouldn't be a RISC-V specific problem.Does changing tmp_len to a
+> size_t fix it? __perf_cpu_map__nr and  perf_cpu_map__nr should
+> probably both return a size_t too, and the type of nr in struct
+> perf_cpu_map should not be signed.
+> 
+> Thanks,
+> Ian
+> 
+> > ---
+> >  tools/lib/perf/cpumap.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> > index 4160e7d2e120..ccf473994111 100644
+> > --- a/tools/lib/perf/cpumap.c
+> > +++ b/tools/lib/perf/cpumap.c
+> > @@ -410,7 +410,7 @@ bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu
+> >  int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
+> >  {
+> >         struct perf_cpu *tmp_cpus;
+> > -       int tmp_len;
+> > +       volatile int tmp_len;
+> >         int i, j, k;
+> >         struct perf_cpu_map *merged;
+> >
+> > --
+> > 2.43.0
+> >
+
