@@ -1,56 +1,56 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABB828DB49
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Feb 2026 01:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F1629DB64
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Feb 2026 01:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771032440; cv=none; b=WKmtd6eBQKYN4YQVynYJsKpvfdY/tdDxRA83gzLrBuS0oDALYtDe2iQ4wM/LpFVs9Dp00JMYOQOEDBloO1pDoibo4fUGw3VWl54egkhVB8zCCGKUNnotH7TzRxdol1DMXtomKVKNYaiPJyQhuKtTUZ8VRp2k3gLwZH6IsapHeho=
+	t=1771032441; cv=none; b=K0yA7wc11bs4qF+Yzc9ue+p0L62VHv0x/5vK9iqOS6IaNJD+MV+7M6joaA3PbyBt1TacCCD/xchZId+pLB2GfZI89RUUY83sfkv2Po1Oa7zll4rWUemMv7/FYUu4Tr6vGoVUDipuheA6IsUiy+CQd62KerzOtm74BEtDWtYsN9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771032440; c=relaxed/simple;
-	bh=kfZ1Zz3kqt0Lijh2yW8pjFnNAWPf0J1gDLwcJsJYrSU=;
+	s=arc-20240116; t=1771032441; c=relaxed/simple;
+	bh=f74NX1koICdcmf3x7Z0AXOlx6psRB/2lx2ODBYt41oE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jQp2zAdAnWUv3HJsePs7+n264oYZilNmg4faHpLp7sZ5nXEuqOsA78ETRAvRTHNG326MGS6dnnUQROPdeSyJaprj/zJUzeBQmuLIcTarMnr94zOWMfbgwBSulGYU/kT7RfdnGVVgoiVA2EjiSL2cxtgXJXV1GEf8P6kmAl2FHd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dt1vt/HZ; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=pUIy1DfyyvSOsJu7e78qHQ//vxBdN4m7CFC5hSeRmLmLwtqBsd39ds2HDkVSrsNNJ8pgHHMyKXdknbgQtfRnozLPT+41TZHWUGMHg3lotXX1DDosPbVzdXt8dSoBgUhA5mKrR9KoeuZ+9CzT/WtjBWW4c6Ye4eMId4Cxvn1yYVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3Jy/U5PC; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dt1vt/HZ"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-354c65f69edso1752821a91.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Feb 2026 17:27:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3Jy/U5PC"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-35464d7c539so1393600a91.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Feb 2026 17:27:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771032438; x=1771637238; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1771032433; x=1771637233; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=g0hBl26w79lKn400XYX8NYrJRLqwtNFM7RMEsJBIMT0=;
-        b=Dt1vt/HZiSNqdOpZWvHv5ibJ5IFAnUhAUzO58NQINehJzOl6o4MQ360JM7U/a5w9Di
-         4Dm5Zs6N8hJ28cZE4q77wFASLNdLSOVV34c8y6+wDzrbKHcDsDVPkZ2i+8oe9FBofkKg
-         6KxUvp6tkK3zLcNSOVK1d0033JXfuSbflB6r5qEre8m7rKvzqDGykWJE3w9ubf39fi7z
-         3mHMw4JCehAIQa9fsDyFUjhcQLkr4MGZ0a1VXOfyK5tMMD04RMDIDdSf+9XEbNIDHamN
-         ZYm6pXSxM8XPvXmunEvOXLJdalFWLUbdizDHEPbomTM4dKlbxyNKpI0r5Ii58MCKPq17
-         NTMg==
+        bh=qVKdMdext7pNokZXu6Az08qOVw2l9S4d2dq/07UMlK8=;
+        b=3Jy/U5PChy8jWuexnNCBmzdUfI2jdqIkBveDClMa9s0jaiZuZPT6PNrInYtzrY2Tto
+         e+wuupOJGra2XYb1lsYBIJdDYQpX6N4JzDQB6q3iHlHWoBJGNmSzNWMoPnX4HKhi7v0B
+         SCiM2SaH/WMYEWY/oTfDgT9V4b1EUbXH5NoCbDolvFS97psJ3BrGL6mjGVFdNtIX8eH+
+         P+g1Pop/DEAFtaRO87VFxMNoeyK24U2q6sDQI0f6JUXHaaKtrd0ocOO0/Sj+MOkje8Ks
+         unTm6tax7IGawx54oqPf1vH+HUm5/C06n0VQttcAkS9cRs6/iM2Lqi6pJtxzfo6txjPi
+         j5Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771032438; x=1771637238;
+        d=1e100.net; s=20230601; t=1771032433; x=1771637233;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=g0hBl26w79lKn400XYX8NYrJRLqwtNFM7RMEsJBIMT0=;
-        b=gVoQGcJ/K8ccWQ+EeewGo0qk1+z1yziIGoVoZTzzdH/NJqQuBb1X8WcwUUlwept2PA
-         kbjXfsc3DwhYGT5xb2bhsi1tURzEttpi+VbInKH8How17VkmlcAFuVu4BgRhjvDXjz/5
-         rzX0whHOZIYX6FRUe/yWnLom0g7mKAYfVI+mr1bIDVHZZlZyRarLcEAa1ar3UEdsy3YQ
-         gKu8uvofrTz8PijKFZ4TO1fZkCCRc1izKUEoq53bFypp1R3VqNjPr9pf6RuRsICyu0Uu
-         jdNik5/R5t5w4mG67+asxH8yp5/ohtLopOfUF+KeZcdBq/SHN9jeW2VIReafef0igMLt
-         fhMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0APzhMbRKQgNt9o2tiSrc+kRbIL+tRQMRnA+1fL9RTRrd58SslhqDSFNlJbYvCmfNXpXj1Rhv3qIHdCURtGgl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8XGpUzEZVx3bi9uanHyEv45XsJd2o3U3ZlP0Dy8i4Zwkm5Me0
-	5IGfJ5bA8rCSPlaV8sb2xF6ElkOTGR8hO7rNTo/51Xf3BkXOc7Yf8UPBvY8Tc2Zm4R5qiMv7mB5
-	o8RNMjA==
-X-Received: from pjbpx8.prod.google.com ([2002:a17:90b:2708:b0:356:a274:747f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2784:b0:343:684c:f8a0
- with SMTP id 98e67ed59e1d1-356aad5f32fmr3636333a91.23.1771032438229; Fri, 13
- Feb 2026 17:27:18 -0800 (PST)
+        bh=qVKdMdext7pNokZXu6Az08qOVw2l9S4d2dq/07UMlK8=;
+        b=tfUf5O6uuL5bziF1FgztU9G1AAl50qzwPtUegRtyHm8dzcIolRTnpPAki7MvTOqIj4
+         0FqJjUS7/uawEKJ8f2Q9sfiQnYsPWXG2lOXx/yDo22YgvKMSnK/A8IfHbuzB7lVm+2oo
+         5uUnugZMH34VqDo0GZMzvnor2Yn+5I5Psix0gDKr2YJCrta93flNMbZqill39X88QKOl
+         d+bteGg9JRmkk+iHEF/MOXoTyqpf2OtJVvrxfFP8oInjrb3EZmo1iCfSQ8TRvgXSVvMW
+         g2L+SxldAjJ+SfsQxWtnfIIHb+GcGiWQERlUAkCItDCtLKUTWYKJWXaI28biEwdkyot/
+         1XjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkG0/LQ12/ToRgQqzQJbKjkc4znSpcJBSEPtkybvqWCQKvT1ZLOweBgqgVXLpggXoQxrAmdKam3NKefa9EWLFb@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQi3McuN+zIH4vXtXsL4SOLmBjQ2m9phkcodLnEXlgRhYe9QlK
+	zT5JdORpwtbuGjiZ8/jtowbzvmnUXPKJisUYgAg3Xg8X49I0s+UNjG9u/oDV/r2L9lVDSFmcEAb
+	nNT7tsQ==
+X-Received: from pjbgi4.prod.google.com ([2002:a17:90b:1104:b0:356:216c:ed75])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5282:b0:34c:635f:f855
+ with SMTP id 98e67ed59e1d1-3584481e367mr1194611a91.7.1771032433065; Fri, 13
+ Feb 2026 17:27:13 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 13 Feb 2026 17:26:53 -0800
+Date: Fri, 13 Feb 2026 17:26:50 -0800
 In-Reply-To: <20260214012702.2368778-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260214012702.2368778-1-seanjc@google.com>
 X-Mailer: git-send-email 2.53.0.310.g728cabbaf7-goog
-Message-ID: <20260214012702.2368778-8-seanjc@google.com>
-Subject: [PATCH v3 07/16] KVM: SVM: Move core EFER.SVME enablement to kernel
+Message-ID: <20260214012702.2368778-5-seanjc@google.com>
+Subject: [PATCH v3 04/16] KVM: VMX: Unconditionally allocate root VMCSes
+ during boot CPU bringup
 From: Sean Christopherson <seanjc@google.com>
 To: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -74,178 +75,271 @@ Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
 	Dan Williams <dan.j.williams@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Move the innermost EFER.SVME logic out of KVM and into to core x86 to land
-the SVM support alongside VMX support.  This will allow providing a more
-unified API from the kernel to KVM, and will allow moving the bulk of the
-emergency disabling insanity out of KVM without having a weird split
-between kernel and KVM for SVM vs. VMX.
+Allocate the root VMCS (misleading called "vmxarea" and "kvm_area" in KVM)
+for each possible CPU during early boot CPU bringup, before early TDX
+initialization, so that TDX can eventually do VMXON on-demand (to make
+SEAMCALLs) without needing to load kvm-intel.ko.  Allocate the pages early
+on, e.g. instead of trying to do so on-demand, to avoid having to juggle
+allocation failures at runtime.
 
-No functional change intended.
+Opportunistically rename the per-CPU pointers to better reflect the role
+of the VMCS.  Use Intel's "root VMCS" terminology, e.g. from various VMCS
+patents[1][2] and older SDMs, not the more opaque "VMXON region" used in
+recent versions of the SDM.  While it's possible the VMCS passed to VMXON
+no longer serves as _the_ root VMCS on modern CPUs, it is still in effect
+a "root mode VMCS", as described in the patents.
 
+Link: https://patentimages.storage.googleapis.com/c7/e4/32/d7a7def5580667/WO2013101191A1.pdf [1]
+Link: https://patentimages.storage.googleapis.com/13/f6/8d/1361fab8c33373/US20080163205A1.pdf [2]
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/include/asm/virt.h |  6 +++++
- arch/x86/kvm/svm/svm.c      | 33 +++++------------------
- arch/x86/virt/hw.c          | 53 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 65 insertions(+), 27 deletions(-)
+ arch/x86/include/asm/virt.h  | 13 ++++++-
+ arch/x86/kernel/cpu/common.c |  2 +
+ arch/x86/kvm/vmx/vmx.c       | 58 ++---------------------------
+ arch/x86/virt/hw.c           | 71 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 89 insertions(+), 55 deletions(-)
 
 diff --git a/arch/x86/include/asm/virt.h b/arch/x86/include/asm/virt.h
-index cca0210a5c16..9a0753eaa20c 100644
+index 131b9bf9ef3c..0da6db4f5b0c 100644
 --- a/arch/x86/include/asm/virt.h
 +++ b/arch/x86/include/asm/virt.h
-@@ -15,6 +15,12 @@ int x86_vmx_disable_virtualization_cpu(void);
- void x86_vmx_emergency_disable_virtualization_cpu(void);
- #endif
+@@ -2,10 +2,21 @@
+ #ifndef _ASM_X86_VIRT_H
+ #define _ASM_X86_VIRT_H
  
-+#if IS_ENABLED(CONFIG_KVM_AMD)
-+int x86_svm_enable_virtualization_cpu(void);
-+int x86_svm_disable_virtualization_cpu(void);
-+void x86_svm_emergency_disable_virtualization_cpu(void);
+-#include <linux/types.h>
++#include <linux/percpu-defs.h>
++
++#include <asm/reboot.h>
+ 
+ #if IS_ENABLED(CONFIG_KVM_X86)
+ extern bool virt_rebooting;
++
++void __init x86_virt_init(void);
++
++#if IS_ENABLED(CONFIG_KVM_INTEL)
++DECLARE_PER_CPU(struct vmcs *, root_vmcs);
 +#endif
 +
- #else
- static __always_inline void x86_virt_init(void) {}
++#else
++static __always_inline void x86_virt_init(void) {}
  #endif
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 0ae66c770ebc..5f033bf3ba83 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -478,27 +478,9 @@ static __always_inline struct sev_es_save_area *sev_es_host_save_area(struct svm
- 	return &sd->save_area->host_sev_es_save;
+ 
+ #endif /* _ASM_X86_VIRT_H */
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index e7ab22fce3b5..dda9e41292db 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -71,6 +71,7 @@
+ #include <asm/traps.h>
+ #include <asm/sev.h>
+ #include <asm/tdx.h>
++#include <asm/virt.h>
+ #include <asm/posted_intr.h>
+ #include <asm/runtime-const.h>
+ 
+@@ -2143,6 +2144,7 @@ static __init void identify_boot_cpu(void)
+ 	cpu_detect_tlb(&boot_cpu_data);
+ 	setup_cr_pinning();
+ 
++	x86_virt_init();
+ 	tsx_init();
+ 	tdx_init();
+ 	lkgs_init();
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index fc6e3b620866..abd4830f71d8 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -580,7 +580,6 @@ noinline void invept_error(unsigned long ext, u64 eptp)
+ 	vmx_insn_failed("invept failed: ext=0x%lx eptp=%llx\n", ext, eptp);
  }
  
--static inline void kvm_cpu_svm_disable(void)
+-static DEFINE_PER_CPU(struct vmcs *, vmxarea);
+ DEFINE_PER_CPU(struct vmcs *, current_vmcs);
+ /*
+  * We maintain a per-CPU linked-list of VMCS loaded on that CPU. This is needed
+@@ -2934,6 +2933,9 @@ static bool __kvm_is_vmx_supported(void)
+ 		return false;
+ 	}
+ 
++	if (!per_cpu(root_vmcs, cpu))
++		return false;
++
+ 	return true;
+ }
+ 
+@@ -3008,7 +3010,7 @@ static int kvm_cpu_vmxon(u64 vmxon_pointer)
+ int vmx_enable_virtualization_cpu(void)
+ {
+ 	int cpu = raw_smp_processor_id();
+-	u64 phys_addr = __pa(per_cpu(vmxarea, cpu));
++	u64 phys_addr = __pa(per_cpu(root_vmcs, cpu));
+ 	int r;
+ 
+ 	if (cr4_read_shadow() & X86_CR4_VMXE)
+@@ -3129,47 +3131,6 @@ int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
+ 	return -ENOMEM;
+ }
+ 
+-static void free_kvm_area(void)
 -{
--	uint64_t efer;
+-	int cpu;
 -
--	wrmsrq(MSR_VM_HSAVE_PA, 0);
--	rdmsrq(MSR_EFER, efer);
--	if (efer & EFER_SVME) {
--		/*
--		 * Force GIF=1 prior to disabling SVM, e.g. to ensure INIT and
--		 * NMI aren't blocked.
--		 */
--		stgi();
--		wrmsrq(MSR_EFER, efer & ~EFER_SVME);
+-	for_each_possible_cpu(cpu) {
+-		free_vmcs(per_cpu(vmxarea, cpu));
+-		per_cpu(vmxarea, cpu) = NULL;
 -	}
 -}
 -
- static void svm_emergency_disable_virtualization_cpu(void)
- {
--	virt_rebooting = true;
+-static __init int alloc_kvm_area(void)
+-{
+-	int cpu;
 -
--	kvm_cpu_svm_disable();
-+	wrmsrq(MSR_VM_HSAVE_PA, 0);
+-	for_each_possible_cpu(cpu) {
+-		struct vmcs *vmcs;
+-
+-		vmcs = alloc_vmcs_cpu(false, cpu, GFP_KERNEL);
+-		if (!vmcs) {
+-			free_kvm_area();
+-			return -ENOMEM;
+-		}
+-
+-		/*
+-		 * When eVMCS is enabled, alloc_vmcs_cpu() sets
+-		 * vmcs->revision_id to KVM_EVMCS_VERSION instead of
+-		 * revision_id reported by MSR_IA32_VMX_BASIC.
+-		 *
+-		 * However, even though not explicitly documented by
+-		 * TLFS, VMXArea passed as VMXON argument should
+-		 * still be marked with revision_id reported by
+-		 * physical CPU.
+-		 */
+-		if (kvm_is_using_evmcs())
+-			vmcs->hdr.revision_id = vmx_basic_vmcs_revision_id(vmcs_config.basic);
+-
+-		per_cpu(vmxarea, cpu) = vmcs;
+-	}
+-	return 0;
+-}
+-
+ static void fix_pmode_seg(struct kvm_vcpu *vcpu, int seg,
+ 		struct kvm_segment *save)
+ {
+@@ -8566,8 +8527,6 @@ void vmx_hardware_unsetup(void)
+ 
+ 	if (nested)
+ 		nested_vmx_hardware_unsetup();
+-
+-	free_kvm_area();
  }
  
- static void svm_disable_virtualization_cpu(void)
-@@ -507,7 +489,7 @@ static void svm_disable_virtualization_cpu(void)
- 	if (tsc_scaling)
- 		__svm_write_tsc_multiplier(SVM_TSC_RATIO_DEFAULT);
- 
--	kvm_cpu_svm_disable();
-+	x86_svm_disable_virtualization_cpu();
- 
- 	amd_pmu_disable_virt();
- }
-@@ -516,12 +498,12 @@ static int svm_enable_virtualization_cpu(void)
- {
- 
- 	struct svm_cpu_data *sd;
--	uint64_t efer;
- 	int me = raw_smp_processor_id();
-+	int r;
- 
--	rdmsrq(MSR_EFER, efer);
--	if (efer & EFER_SVME)
--		return -EBUSY;
-+	r = x86_svm_enable_virtualization_cpu();
-+	if (r)
-+		return r;
- 
- 	sd = per_cpu_ptr(&svm_data, me);
- 	sd->asid_generation = 1;
-@@ -529,8 +511,6 @@ static int svm_enable_virtualization_cpu(void)
- 	sd->next_asid = sd->max_asid + 1;
- 	sd->min_asid = max_sev_asid + 1;
- 
--	wrmsrq(MSR_EFER, efer | EFER_SVME);
--
- 	wrmsrq(MSR_VM_HSAVE_PA, sd->save_area_pa);
- 
- 	if (static_cpu_has(X86_FEATURE_TSCRATEMSR)) {
-@@ -541,7 +521,6 @@ static int svm_enable_virtualization_cpu(void)
- 		__svm_write_tsc_multiplier(SVM_TSC_RATIO_DEFAULT);
+ void vmx_vm_destroy(struct kvm *kvm)
+@@ -8870,10 +8829,6 @@ __init int vmx_hardware_setup(void)
+ 			return r;
  	}
  
+-	r = alloc_kvm_area();
+-	if (r)
+-		goto err_kvm_area;
 -
+ 	kvm_set_posted_intr_wakeup_handler(pi_wakeup_handler);
+ 
  	/*
- 	 * Get OSVW bits.
- 	 *
+@@ -8900,11 +8855,6 @@ __init int vmx_hardware_setup(void)
+ 	kvm_caps.inapplicable_quirks &= ~KVM_X86_QUIRK_IGNORE_GUEST_PAT;
+ 
+ 	return 0;
+-
+-err_kvm_area:
+-	if (nested)
+-		nested_vmx_hardware_unsetup();
+-	return r;
+ }
+ 
+ void vmx_exit(void)
 diff --git a/arch/x86/virt/hw.c b/arch/x86/virt/hw.c
-index dc426c2bc24a..014e9dfab805 100644
+index df3dc18d19b4..56972f594d90 100644
 --- a/arch/x86/virt/hw.c
 +++ b/arch/x86/virt/hw.c
-@@ -163,6 +163,59 @@ static __init int x86_vmx_init(void)
- static __init int x86_vmx_init(void) { return -EOPNOTSUPP; }
- #endif
+@@ -1,7 +1,78 @@
+ // SPDX-License-Identifier: GPL-2.0-only
++#include <linux/cpu.h>
++#include <linux/cpumask.h>
++#include <linux/errno.h>
+ #include <linux/kvm_types.h>
++#include <linux/list.h>
++#include <linux/percpu.h>
  
-+#if IS_ENABLED(CONFIG_KVM_AMD)
-+int x86_svm_enable_virtualization_cpu(void)
-+{
-+	u64 efer;
++#include <asm/perf_event.h>
++#include <asm/processor.h>
+ #include <asm/virt.h>
++#include <asm/vmx.h>
+ 
+ __visible bool virt_rebooting;
+ EXPORT_SYMBOL_FOR_KVM(virt_rebooting);
 +
-+	if (!cpu_feature_enabled(X86_FEATURE_SVM))
++#if IS_ENABLED(CONFIG_KVM_INTEL)
++DEFINE_PER_CPU(struct vmcs *, root_vmcs);
++EXPORT_PER_CPU_SYMBOL(root_vmcs);
++
++static __init void x86_vmx_exit(void)
++{
++	int cpu;
++
++	for_each_possible_cpu(cpu) {
++		free_page((unsigned long)per_cpu(root_vmcs, cpu));
++		per_cpu(root_vmcs, cpu) = NULL;
++	}
++}
++
++static __init int x86_vmx_init(void)
++{
++	u64 basic_msr;
++	u32 rev_id;
++	int cpu;
++
++	if (!cpu_feature_enabled(X86_FEATURE_VMX))
 +		return -EOPNOTSUPP;
 +
-+	rdmsrq(MSR_EFER, efer);
-+	if (efer & EFER_SVME)
-+		return -EBUSY;
++	rdmsrq(MSR_IA32_VMX_BASIC, basic_msr);
 +
-+	wrmsrq(MSR_EFER, efer | EFER_SVME);
-+	return 0;
-+}
-+EXPORT_SYMBOL_FOR_KVM(x86_svm_enable_virtualization_cpu);
-+
-+int x86_svm_disable_virtualization_cpu(void)
-+{
-+	int r = -EIO;
-+	u64 efer;
++	/* IA-32 SDM Vol 3B: VMCS size is never greater than 4kB. */
++	if (WARN_ON_ONCE(vmx_basic_vmcs_size(basic_msr) > PAGE_SIZE))
++		return -EIO;
 +
 +	/*
-+	 * Force GIF=1 prior to disabling SVM, e.g. to ensure INIT and
-+	 * NMI aren't blocked.
++	 * Even if eVMCS is enabled (or will be enabled?), and even though not
++	 * explicitly documented by TLFS, the root VMCS  passed to VMXON should
++	 * still be marked with the revision_id reported by the physical CPU.
 +	 */
-+	asm goto("1: stgi\n\t"
-+		 _ASM_EXTABLE(1b, %l[fault])
-+		 ::: "memory" : fault);
-+	r = 0;
++	rev_id = vmx_basic_vmcs_revision_id(basic_msr);
 +
-+fault:
-+	rdmsrq(MSR_EFER, efer);
-+	wrmsrq(MSR_EFER, efer & ~EFER_SVME);
-+	return r;
++	for_each_possible_cpu(cpu) {
++		int node = cpu_to_node(cpu);
++		struct page *page;
++		struct vmcs *vmcs;
++
++		page = __alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, 0);
++		if (!page) {
++			x86_vmx_exit();
++			return -ENOMEM;
++		}
++
++		vmcs = page_address(page);
++		vmcs->hdr.revision_id = rev_id;
++		per_cpu(root_vmcs, cpu) = vmcs;
++	}
++
++	return 0;
 +}
-+EXPORT_SYMBOL_FOR_KVM(x86_svm_disable_virtualization_cpu);
-+
-+void x86_svm_emergency_disable_virtualization_cpu(void)
-+{
-+	u64 efer;
-+
-+	virt_rebooting = true;
-+
-+	rdmsrq(MSR_EFER, efer);
-+	if (!(efer & EFER_SVME))
-+		return;
-+
-+	x86_svm_disable_virtualization_cpu();
-+}
-+EXPORT_SYMBOL_FOR_KVM(x86_svm_emergency_disable_virtualization_cpu);
++#else
++static __init int x86_vmx_init(void) { return -EOPNOTSUPP; }
 +#endif
 +
- void __init x86_virt_init(void)
- {
- 	x86_vmx_init();
++void __init x86_virt_init(void)
++{
++	x86_vmx_init();
++}
 -- 
 2.53.0.310.g728cabbaf7-goog
 
