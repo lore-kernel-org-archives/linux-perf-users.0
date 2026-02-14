@@ -1,56 +1,56 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E31299A90
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Feb 2026 01:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7012F2BCF6C
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Feb 2026 01:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771032433; cv=none; b=ZTlt/A4PEgsB4nbDNqRUHeWgvUbgqG0tYDgPk/BF9FIep6p90jFLYLhJr/JWip1eBv9GLIEodacOLEipi/IxxJ9HG6POc1NYSJ93n5h4rhKFewHAQmTk0hqWrUrTH1G4CuqkIjSI5wEXqlxlmhnSk60LrbZoI5RQ8ekMnG0ijXQ=
+	t=1771032438; cv=none; b=mxkZHUtpaz4d/d9SCBO7e69z8RoAcCWXRJVLmfwJbJ341MiAVLGaf0XXstlnuujMTBzwf7Qla11DbLRvUrD3g9lZZyGMch2jDA5k2XXgHZE/wSvk8TdWXpz/XF7qqxrw9YR8SsQeMM0vr+Vmen3yDVXBtCtD2EUbtkkYxR7+7x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771032433; c=relaxed/simple;
-	bh=gnRLsQcZywazDuEdGGXGGq+fa2JWlZCKtOcI/j1sQ60=;
+	s=arc-20240116; t=1771032438; c=relaxed/simple;
+	bh=KxQaeOFTUwNddWWAwysEkVI+6gLN8UxXhcnpjxklb+A=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ejoU758SM/nkgb66OBmYX0hMw+eDwC+nUqdrIHpb3qVVCJufM/5YhGQWDdcua55Zw8EKEqiIlqZdWUBR4v69ET7mUvkus+g/CYdBN3y6hY+bGb50eIua19gXAFZEayVHp3UV7NQo7K/TVffaUjwaQgptfwDvqRzAatk+pYfzwFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vHeMcmhb; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=Nz7d95uWDh2bHugdT0k8/CPwThUVeQmiAw02fNwHhK0GhrxotqFA/JlxghYLm9Cnw407cLkjhWjNvoR8jD7FOBaQwH1NVuu145XUzmXSPy3oVd03FlKfQorsgwn699CcQVuXenHxyFOcgR2Ooy0eC+j9NQ3EyFohI2eKAC/D1Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XJ/dSDIR; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vHeMcmhb"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-824b2f0d404so3663499b3a.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Feb 2026 17:27:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XJ/dSDIR"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-354c0eb08ceso6018722a91.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Feb 2026 17:27:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771032431; x=1771637231; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1771032435; x=1771637235; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=LlribCFdngaQSRseMvArVzR7Ue2wpxs9f06/EhF3nRU=;
-        b=vHeMcmhbQyG4zdBO/z9AEYaEFKIN4P87I9An6Ii9awX7yFFAi9Z0skbcusdMkICY5M
-         DBF4H0UhTRqiyyzbCbHC4+OfJdMVq9P77FdsHyNGXCG+MTzLZk04isiNCLPtBgoGbyI9
-         7YCiofmaPVDImyxm0+ZeB8dDwOafRu6C5H4vrI95YKbndKZsn1iunI6rUGPw6gU21gRz
-         bwMmR8UvyTjtPbMFQUZda5MPGisMWQa2Zwq4LBvkt3187xdRROZl+SIa0adxV2HpbrpW
-         VO8yLb0pHnnp2s2l3uIpu6s5A+L2ZJ/vTWHqU668WIRL9X8sC7vPVmHTei3Z9Zop2AKf
-         1ixA==
+        bh=ncRTKT34NsAmZ158dpqAeNu/HepDjS+oL5Xbl/IP/0E=;
+        b=XJ/dSDIRMgLOoGcIeQSSlYDnhpgjRACXRnBQt7SUi8al2r6NZ1t/zPFQRmMPO0VZ5I
+         1729pOs24HGlcDrvT820muwdBAXj+ia9yAcXg85xR97KCNYzHpLhtSVFK8+BTS/Q0ocZ
+         g+NSpKHhjD7LDS7OU4GXmBgBRW10KxWhRS8N/KHmI2Y77fzD9EyFbM/J4y1K/NuI4usq
+         GZg0rurbbY4e8D7D01WrbQNXrqGwyzDEyeuGocOPxQ9KtycIDptP/927gCwE1FfRDKk0
+         gtA4f3PNFx37kMmSq9IZ3kUfR373ObgH9U9nRKSGomq6G8KO48PZjq4/eY5d2ybBddm5
+         tuYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771032431; x=1771637231;
+        d=1e100.net; s=20230601; t=1771032435; x=1771637235;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LlribCFdngaQSRseMvArVzR7Ue2wpxs9f06/EhF3nRU=;
-        b=wXC8R+dz03nBO9ezukPfqUxB5J+bvxvEKotcy6XVy7p9VO65WmD5TCKuQlRp1i45bP
-         0MbnGswSvZdbo/qMpPEtRe3vYXnlLdlUVhE6aqR3y0zDYMuVsolaHuOv9Ywa/aBJ8efm
-         HK8+ARdV2sxvyuvVZaXVyB8MtGSl1v+wBcljSa6nWDrp/AJONHfCXMyxrSWGr9OuDHe9
-         2opMDWs2ml6SYk2ZlTMCovLpdlY0dtT81M0YvSERrFc5mf1jbmGrq777zB5dAG/ej4jt
-         3Lx34nVoHhco2RwTfUWUdzgYMV9k6A/OPfBlqprouTkkgACTm+4zJWjvwI6Ybpq2bPww
-         MZEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXnvaklzr+W65e/cvEkTjYFA0kpN21hgpjgjkGkZ7b4tJ3TaA3nEfKrqm2xToglSPFpKkm6pM1qGRkQqHUBypE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdGoap/ZcgeGCQPgVEQ62sWYmBTdXy/bGLKsNhZUZNOMxrV/AJ
-	0veXmITaoop4Az7jon+psfktZOzW98ho3WILwkVG90ZKo7/ux69GtXios9n1xlU/3SgfA5wfJ5C
-	xJlNIOQ==
-X-Received: from pfbem2.prod.google.com ([2002:a05:6a00:3742:b0:823:c4bd:60eb])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4b10:b0:81c:785e:1216
- with SMTP id d2e1a72fcca58-824d932e621mr967760b3a.0.1771032431208; Fri, 13
- Feb 2026 17:27:11 -0800 (PST)
+        bh=ncRTKT34NsAmZ158dpqAeNu/HepDjS+oL5Xbl/IP/0E=;
+        b=qwTpHHLV3HAfNdtzIwNea4fMdO+snfMww56eSAoeZWKtPXrVWAjzyKJ59CSHq+ZCAl
+         4ythddtydCbg6pnDngzGHSAKbeLbsp8Jy1oQ+l7sl5QiRjBCoYcRrJ4CL2Ms0Ny5xhUQ
+         DqieK6oXSAS9OqL2rlVb98wv2vYIb3ClC8PmNOAtVhgFcaJ/johrRCe6ORUZbRoK6eSf
+         5BfFZRcNFCSl00Gd6AzksAbJIIsh6PlCyZWxM5b5PTLGKMIPZxFOYJWSgVnG+9SAq/Xw
+         a9g5p3rXHHYIwGdbueV0xpLwYSy6o0JbU+Lssfnjcj3AUHK56pWbWkDLDTpYz8m8K9FN
+         oNfA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ4Lcoxl8AyTa7Rzx1Cl37pUniLEXAI1T8g9EGJmK7dlskwDIr11YIkQylkhHRf8/KMQCdZF4Djgp18qeF4AZB@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSWMxxpvDp1RXKLqn/fI5dn1IDD1wd2D4B3HnV/al5k9IdQbUW
+	kkd72QT57o2D8oixKq3tuZ2pX745gkB5IOunRkY4Ccrxcq9rHxqvTzJVS/C9rdCFXDQiGdewwyU
+	lADtupQ==
+X-Received: from pjl16.prod.google.com ([2002:a17:90b:2f90:b0:353:28:3531])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5105:b0:33b:be31:8194
+ with SMTP id 98e67ed59e1d1-356aad80906mr3557884a91.34.1771032434676; Fri, 13
+ Feb 2026 17:27:14 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 13 Feb 2026 17:26:49 -0800
+Date: Fri, 13 Feb 2026 17:26:51 -0800
 In-Reply-To: <20260214012702.2368778-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260214012702.2368778-1-seanjc@google.com>
 X-Mailer: git-send-email 2.53.0.310.g728cabbaf7-goog
-Message-ID: <20260214012702.2368778-4-seanjc@google.com>
-Subject: [PATCH v3 03/16] KVM: x86: Move "kvm_rebooting" to kernel as "virt_rebooting"
+Message-ID: <20260214012702.2368778-6-seanjc@google.com>
+Subject: [PATCH v3 05/16] x86/virt: Force-clear X86_FEATURE_VMX if configuring
+ root VMCS fails
 From: Sean Christopherson <seanjc@google.com>
 To: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -74,262 +75,85 @@ Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
 	Dan Williams <dan.j.williams@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Move "kvm_rebooting" to the kernel, exported for KVM, as one of many steps
-towards extracting the innermost VMXON and EFER.SVME management logic out
-of KVM and into to core x86.
+If allocating and configuring a root VMCS fails, clear X86_FEATURE_VMX in
+all CPUs so that KVM doesn't need to manually check root_vmcs.  As added
+bonuses, clearing VMX will reflect that VMX is unusable in /proc/cpuinfo,
+and will avoid a futile auto-probe of kvm-intel.ko.
 
-For lack of a better name, call the new file "hw.c", to yield "virt
-hardware" when combined with its parent directory.
-
-No functional change intended.
+WARN if allocating a root VMCS page fails, e.g. to help users figure out
+why VMX is broken in the unlikely scenario something goes sideways during
+boot (and because the allocation should succeed unless there's a kernel
+bug).  Tweak KVM's error message to suggest checking kernel logs if VMX is
+unsupported (in addition to checking BIOS).
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/include/asm/virt.h | 11 +++++++++++
- arch/x86/kvm/svm/svm.c      |  3 ++-
- arch/x86/kvm/svm/vmenter.S  | 10 +++++-----
- arch/x86/kvm/vmx/tdx.c      |  3 ++-
- arch/x86/kvm/vmx/vmenter.S  |  2 +-
- arch/x86/kvm/vmx/vmx.c      |  5 +++--
- arch/x86/kvm/x86.c          | 17 ++++++++---------
- arch/x86/kvm/x86.h          |  1 -
- arch/x86/virt/Makefile      |  2 ++
- arch/x86/virt/hw.c          |  7 +++++++
- 10 files changed, 41 insertions(+), 20 deletions(-)
- create mode 100644 arch/x86/include/asm/virt.h
- create mode 100644 arch/x86/virt/hw.c
+ arch/x86/kvm/vmx/vmx.c |  7 ++++---
+ arch/x86/virt/hw.c     | 14 ++++++++++++--
+ 2 files changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/virt.h b/arch/x86/include/asm/virt.h
-new file mode 100644
-index 000000000000..131b9bf9ef3c
---- /dev/null
-+++ b/arch/x86/include/asm/virt.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _ASM_X86_VIRT_H
-+#define _ASM_X86_VIRT_H
-+
-+#include <linux/types.h>
-+
-+#if IS_ENABLED(CONFIG_KVM_X86)
-+extern bool virt_rebooting;
-+#endif
-+
-+#endif /* _ASM_X86_VIRT_H */
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 8f8bc863e214..0ae66c770ebc 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -44,6 +44,7 @@
- #include <asm/traps.h>
- #include <asm/reboot.h>
- #include <asm/fpu/api.h>
-+#include <asm/virt.h>
- 
- #include <trace/events/ipi.h>
- 
-@@ -495,7 +496,7 @@ static inline void kvm_cpu_svm_disable(void)
- 
- static void svm_emergency_disable_virtualization_cpu(void)
- {
--	kvm_rebooting = true;
-+	virt_rebooting = true;
- 
- 	kvm_cpu_svm_disable();
- }
-diff --git a/arch/x86/kvm/svm/vmenter.S b/arch/x86/kvm/svm/vmenter.S
-index 3392bcadfb89..d47c5c93c991 100644
---- a/arch/x86/kvm/svm/vmenter.S
-+++ b/arch/x86/kvm/svm/vmenter.S
-@@ -298,16 +298,16 @@ SYM_FUNC_START(__svm_vcpu_run)
- 	RESTORE_GUEST_SPEC_CTRL_BODY
- 	RESTORE_HOST_SPEC_CTRL_BODY (%_ASM_SP)
- 
--10:	cmpb $0, _ASM_RIP(kvm_rebooting)
-+10:	cmpb $0, _ASM_RIP(virt_rebooting)
- 	jne 2b
- 	ud2
--30:	cmpb $0, _ASM_RIP(kvm_rebooting)
-+30:	cmpb $0, _ASM_RIP(virt_rebooting)
- 	jne 4b
- 	ud2
--50:	cmpb $0, _ASM_RIP(kvm_rebooting)
-+50:	cmpb $0, _ASM_RIP(virt_rebooting)
- 	jne 6b
- 	ud2
--70:	cmpb $0, _ASM_RIP(kvm_rebooting)
-+70:	cmpb $0, _ASM_RIP(virt_rebooting)
- 	jne 8b
- 	ud2
- 
-@@ -394,7 +394,7 @@ SYM_FUNC_START(__svm_sev_es_vcpu_run)
- 	RESTORE_GUEST_SPEC_CTRL_BODY
- 	RESTORE_HOST_SPEC_CTRL_BODY %sil
- 
--3:	cmpb $0, kvm_rebooting(%rip)
-+3:	cmpb $0, virt_rebooting(%rip)
- 	jne 2b
- 	ud2
- 
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 5df9d32d2058..0c790eb0bfa6 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -6,6 +6,7 @@
- #include <linux/misc_cgroup.h>
- #include <linux/mmu_context.h>
- #include <asm/tdx.h>
-+#include <asm/virt.h>
- #include "capabilities.h"
- #include "mmu.h"
- #include "x86_ops.h"
-@@ -1994,7 +1995,7 @@ int tdx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t fastpath)
- 	 * TDX_SEAMCALL_VMFAILINVALID.
- 	 */
- 	if (unlikely((vp_enter_ret & TDX_SW_ERROR) == TDX_SW_ERROR)) {
--		KVM_BUG_ON(!kvm_rebooting, vcpu->kvm);
-+		KVM_BUG_ON(!virt_rebooting, vcpu->kvm);
- 		goto unhandled_exit;
- 	}
- 
-diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
-index 4426d34811fc..8a481dae9cae 100644
---- a/arch/x86/kvm/vmx/vmenter.S
-+++ b/arch/x86/kvm/vmx/vmenter.S
-@@ -310,7 +310,7 @@ SYM_INNER_LABEL_ALIGN(vmx_vmexit, SYM_L_GLOBAL)
- 	RET
- 
- .Lfixup:
--	cmpb $0, _ASM_RIP(kvm_rebooting)
-+	cmpb $0, _ASM_RIP(virt_rebooting)
- 	jne .Lvmfail
- 	ud2
- .Lvmfail:
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 967b58a8ab9d..fc6e3b620866 100644
+index abd4830f71d8..e767835a4f3a 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -48,6 +48,7 @@
- #include <asm/msr.h>
- #include <asm/mwait.h>
- #include <asm/spec-ctrl.h>
-+#include <asm/virt.h>
- #include <asm/vmx.h>
+@@ -2927,14 +2927,15 @@ static bool __kvm_is_vmx_supported(void)
+ 		return false;
+ 	}
  
- #include <trace/events/ipi.h>
-@@ -814,13 +815,13 @@ void vmx_emergency_disable_virtualization_cpu(void)
- 	int cpu = raw_smp_processor_id();
- 	struct loaded_vmcs *v;
+-	if (!this_cpu_has(X86_FEATURE_MSR_IA32_FEAT_CTL) ||
+-	    !this_cpu_has(X86_FEATURE_VMX)) {
++	if (!this_cpu_has(X86_FEATURE_MSR_IA32_FEAT_CTL)) {
+ 		pr_err("VMX not enabled (by BIOS) in MSR_IA32_FEAT_CTL on CPU %d\n", cpu);
+ 		return false;
+ 	}
  
--	kvm_rebooting = true;
-+	virt_rebooting = true;
+-	if (!per_cpu(root_vmcs, cpu))
++	if (!this_cpu_has(X86_FEATURE_VMX)) {
++		pr_err("VMX not fully enabled on CPU %d.  Check kernel logs and/or BIOS\n", cpu);
+ 		return false;
++	}
  
- 	/*
- 	 * Note, CR4.VMXE can be _cleared_ in NMI context, but it can only be
- 	 * set in task context.  If this races with VMX is disabled by an NMI,
- 	 * VMCLEAR and VMXOFF may #UD, but KVM will eat those faults due to
--	 * kvm_rebooting set.
-+	 * virt_rebooting set.
- 	 */
- 	if (!(__read_cr4() & X86_CR4_VMXE))
- 		return;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 77edc24f8309..69937d14f5e1 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -83,6 +83,8 @@
- #include <asm/intel_pt.h>
- #include <asm/emulate_prefix.h>
- #include <asm/sgx.h>
-+#include <asm/virt.h>
-+
- #include <clocksource/hyperv_timer.h>
- 
- #define CREATE_TRACE_POINTS
-@@ -700,9 +702,6 @@ static void drop_user_return_notifiers(void)
- 		kvm_on_user_return(&msrs->urn);
+ 	return true;
  }
- 
--__visible bool kvm_rebooting;
--EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_rebooting);
--
- /*
-  * Handle a fault on a hardware virtualization (VMX or SVM) instruction.
-  *
-@@ -713,7 +712,7 @@ EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_rebooting);
- noinstr void kvm_spurious_fault(void)
- {
- 	/* Fault while not rebooting.  We want the trace. */
--	BUG_ON(!kvm_rebooting);
-+	BUG_ON(!virt_rebooting);
- }
- EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_spurious_fault);
- 
-@@ -13184,16 +13183,16 @@ int kvm_arch_enable_virtualization_cpu(void)
- void kvm_arch_shutdown(void)
- {
- 	/*
--	 * Set kvm_rebooting to indicate that KVM has asynchronously disabled
-+	 * Set virt_rebooting to indicate that KVM has asynchronously disabled
- 	 * hardware virtualization, i.e. that errors and/or exceptions on SVM
- 	 * and VMX instructions are expected and should be ignored.
- 	 */
--	kvm_rebooting = true;
-+	virt_rebooting = true;
- 
- 	/*
--	 * Ensure kvm_rebooting is visible before IPIs are sent to other CPUs
-+	 * Ensure virt_rebooting is visible before IPIs are sent to other CPUs
- 	 * to disable virtualization.  Effectively pairs with the reception of
--	 * the IPI (kvm_rebooting is read in task/exception context, but only
-+	 * the IPI (virt_rebooting is read in task/exception context, but only
- 	 * _needs_ to be read as %true after the IPI function callback disables
- 	 * virtualization).
- 	 */
-@@ -13214,7 +13213,7 @@ void kvm_arch_disable_virtualization_cpu(void)
- 	 * disable virtualization arrives.  Handle the extreme edge case here
- 	 * instead of trying to account for it in the normal flows.
- 	 */
--	if (in_task() || WARN_ON_ONCE(!kvm_rebooting))
-+	if (in_task() || WARN_ON_ONCE(!virt_rebooting))
- 		drop_user_return_notifiers();
- 	else
- 		__module_get(THIS_MODULE);
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index b314649e5c02..94d4f07aaaa0 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -54,7 +54,6 @@ struct kvm_host_values {
- 	u64 arch_capabilities;
- };
- 
--extern bool kvm_rebooting;
- void kvm_spurious_fault(void);
- 
- #define SIZE_OF_MEMSLOTS_HASHTABLE \
-diff --git a/arch/x86/virt/Makefile b/arch/x86/virt/Makefile
-index ea343fc392dc..6e485751650c 100644
---- a/arch/x86/virt/Makefile
-+++ b/arch/x86/virt/Makefile
-@@ -1,2 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-y	+= svm/ vmx/
-+
-+obj-$(subst m,y,$(CONFIG_KVM_X86)) += hw.o
-\ No newline at end of file
 diff --git a/arch/x86/virt/hw.c b/arch/x86/virt/hw.c
-new file mode 100644
-index 000000000000..df3dc18d19b4
---- /dev/null
+index 56972f594d90..40495872fdfb 100644
+--- a/arch/x86/virt/hw.c
 +++ b/arch/x86/virt/hw.c
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/kvm_types.h>
+@@ -28,7 +28,7 @@ static __init void x86_vmx_exit(void)
+ 	}
+ }
+ 
+-static __init int x86_vmx_init(void)
++static __init int __x86_vmx_init(void)
+ {
+ 	u64 basic_msr;
+ 	u32 rev_id;
+@@ -56,7 +56,7 @@ static __init int x86_vmx_init(void)
+ 		struct vmcs *vmcs;
+ 
+ 		page = __alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, 0);
+-		if (!page) {
++		if (WARN_ON_ONCE(!page)) {
+ 			x86_vmx_exit();
+ 			return -ENOMEM;
+ 		}
+@@ -68,6 +68,16 @@ static __init int x86_vmx_init(void)
+ 
+ 	return 0;
+ }
 +
-+#include <asm/virt.h>
++static __init int x86_vmx_init(void)
++{
++	int r;
 +
-+__visible bool virt_rebooting;
-+EXPORT_SYMBOL_FOR_KVM(virt_rebooting);
++	r = __x86_vmx_init();
++	if (r)
++		setup_clear_cpu_cap(X86_FEATURE_VMX);
++	return r;
++}
+ #else
+ static __init int x86_vmx_init(void) { return -EOPNOTSUPP; }
+ #endif
 -- 
 2.53.0.310.g728cabbaf7-goog
 
