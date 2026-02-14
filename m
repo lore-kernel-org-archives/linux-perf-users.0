@@ -1,56 +1,56 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F1629DB64
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Feb 2026 01:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B02285050
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Feb 2026 01:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771032441; cv=none; b=K0yA7wc11bs4qF+Yzc9ue+p0L62VHv0x/5vK9iqOS6IaNJD+MV+7M6joaA3PbyBt1TacCCD/xchZId+pLB2GfZI89RUUY83sfkv2Po1Oa7zll4rWUemMv7/FYUu4Tr6vGoVUDipuheA6IsUiy+CQd62KerzOtm74BEtDWtYsN9M=
+	t=1771032445; cv=none; b=TXNekDHB/6mgIiXRL2eoQOocZswrQsTzImleKngLYgTHKp8McwqWvpFE6NPHFrMVY6Vy4woxNHXO4XEICRUozB2ZvYeXqETrwfRI8loFWBjifLjP218Qr++GLylOjMvqQ9np3eFJca2HXUzy0HvghMeE0Lf9NsJDS+EM5sXtth8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771032441; c=relaxed/simple;
-	bh=f74NX1koICdcmf3x7Z0AXOlx6psRB/2lx2ODBYt41oE=;
+	s=arc-20240116; t=1771032445; c=relaxed/simple;
+	bh=SFe9wm1PDAKjnrht0sUarAMichPsYfPk0uBQoi5Ozw8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pUIy1DfyyvSOsJu7e78qHQ//vxBdN4m7CFC5hSeRmLmLwtqBsd39ds2HDkVSrsNNJ8pgHHMyKXdknbgQtfRnozLPT+41TZHWUGMHg3lotXX1DDosPbVzdXt8dSoBgUhA5mKrR9KoeuZ+9CzT/WtjBWW4c6Ye4eMId4Cxvn1yYVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3Jy/U5PC; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=PqBaXiASD9TNplD4tsBY22mX1Yh3Cyw1unn3/mwcniO/jbrMbrCJ2xE3Rzc6y44yRRe8RL93eicdLMRVkuyAHM3pvD90/sLikR3vKrL5vAhYXJkLqMnndL4ONyHLSQmauV2Ae29s0xYjcWk44Zv9T+Blztsb7T2Vun96WQ+8s3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TsohMgjg; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3Jy/U5PC"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-35464d7c539so1393600a91.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Feb 2026 17:27:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TsohMgjg"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c6e1d32a128so976377a12.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Feb 2026 17:27:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771032433; x=1771637233; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1771032440; x=1771637240; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=qVKdMdext7pNokZXu6Az08qOVw2l9S4d2dq/07UMlK8=;
-        b=3Jy/U5PChy8jWuexnNCBmzdUfI2jdqIkBveDClMa9s0jaiZuZPT6PNrInYtzrY2Tto
-         e+wuupOJGra2XYb1lsYBIJdDYQpX6N4JzDQB6q3iHlHWoBJGNmSzNWMoPnX4HKhi7v0B
-         SCiM2SaH/WMYEWY/oTfDgT9V4b1EUbXH5NoCbDolvFS97psJ3BrGL6mjGVFdNtIX8eH+
-         P+g1Pop/DEAFtaRO87VFxMNoeyK24U2q6sDQI0f6JUXHaaKtrd0ocOO0/Sj+MOkje8Ks
-         unTm6tax7IGawx54oqPf1vH+HUm5/C06n0VQttcAkS9cRs6/iM2Lqi6pJtxzfo6txjPi
-         j5Qg==
+        bh=fTHOLr69ZvJgSZJU6aztcC4yMSqOUAaHLuJiMpybd6M=;
+        b=TsohMgjg/irXT9teRZy5VoNBF85tgLXek+PiI0IYA/gtky3LWIBOoJs7qSZnM5xXVF
+         +EzqZaNwbnQkgktOgSqttSCGomMVPmnEjl/QUc0TcVdgKTk0QnbYsnwEr5wMyB5GiPOu
+         6f9KMSzp2pUUJapyb8hB9LQKfD9zZEMCIjwEfpsLbCyKOMuSouS2EP+e93NK6QK1SqUS
+         58f+kofO3ThNJqH6ProNKMdCw8PyWxyRHmdeqHrYOFQfVAA4rQwqSWsrWHcxU4fxGSA+
+         5WzmjuHUZ4WmCLYijc6V4xBEKKy8O5qAI/cp85n/Hss/ir+A0y9u3OmKu9NE8ZSLJimA
+         rQcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771032433; x=1771637233;
+        d=1e100.net; s=20230601; t=1771032440; x=1771637240;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qVKdMdext7pNokZXu6Az08qOVw2l9S4d2dq/07UMlK8=;
-        b=tfUf5O6uuL5bziF1FgztU9G1AAl50qzwPtUegRtyHm8dzcIolRTnpPAki7MvTOqIj4
-         0FqJjUS7/uawEKJ8f2Q9sfiQnYsPWXG2lOXx/yDo22YgvKMSnK/A8IfHbuzB7lVm+2oo
-         5uUnugZMH34VqDo0GZMzvnor2Yn+5I5Psix0gDKr2YJCrta93flNMbZqill39X88QKOl
-         d+bteGg9JRmkk+iHEF/MOXoTyqpf2OtJVvrxfFP8oInjrb3EZmo1iCfSQ8TRvgXSVvMW
-         g2L+SxldAjJ+SfsQxWtnfIIHb+GcGiWQERlUAkCItDCtLKUTWYKJWXaI28biEwdkyot/
-         1XjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkG0/LQ12/ToRgQqzQJbKjkc4znSpcJBSEPtkybvqWCQKvT1ZLOweBgqgVXLpggXoQxrAmdKam3NKefa9EWLFb@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQi3McuN+zIH4vXtXsL4SOLmBjQ2m9phkcodLnEXlgRhYe9QlK
-	zT5JdORpwtbuGjiZ8/jtowbzvmnUXPKJisUYgAg3Xg8X49I0s+UNjG9u/oDV/r2L9lVDSFmcEAb
-	nNT7tsQ==
-X-Received: from pjbgi4.prod.google.com ([2002:a17:90b:1104:b0:356:216c:ed75])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5282:b0:34c:635f:f855
- with SMTP id 98e67ed59e1d1-3584481e367mr1194611a91.7.1771032433065; Fri, 13
- Feb 2026 17:27:13 -0800 (PST)
+        bh=fTHOLr69ZvJgSZJU6aztcC4yMSqOUAaHLuJiMpybd6M=;
+        b=hnqWK3XIqNJBzPO25cuj6fRMWQyCj+aPcYKJ6QpH/O1wB3CIssd5bgFmHiUd0GP8qj
+         ffOYmCA1lophXOGPBOHnt5wb+fgQzBJi6JyYlGpHicaOzNUP4+U4iDwGpMu/9RO1BJ+Y
+         NDJe2JmJF8YlV1D3RKJDEA19TLbVvk63wQyPYa7WIBKbhGP4zsl7SHUIACqcgSxaogG0
+         xwwr3PhKTmRZ8QvgAamOZtIdH/oKSlJ3mi0Q8wYz5fSdY42aexBYUorboN2fwvKuikhq
+         cdYJfc7Hszb+TCbmdLdKbX5J6BZuWoI6u3uD8x/wx12QyuEphWmUxGzZrowO9fJFxIoU
+         v/WA==
+X-Forwarded-Encrypted: i=1; AJvYcCXr3QYKA4ZI0uf/syAlYEkQcbQU2xOYdpLb1KM13qw1j6qDQK+QeKjw2SsK9AmxQOUmJliKtSq/HXSw12ZTgIK5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcEgmFuU8x4G+Ng1P8d3q77CnARcur/u7x6GJitCpAA6WFEpMb
+	9ofa9/1Yk5qoXADuYdlaRSb/1Ja8LSEtb9JvC+BR87QCQQLPt6GSgv4Ru/WihmnpFvxLH2hgk+S
+	UePkn/w==
+X-Received: from pgcb65.prod.google.com ([2002:a63:6744:0:b0:c6e:260e:bff2])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6009:b0:366:581e:19f6
+ with SMTP id adf61e73a8af0-3946c812d7emr3447834637.23.1771032439905; Fri, 13
+ Feb 2026 17:27:19 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 13 Feb 2026 17:26:50 -0800
+Date: Fri, 13 Feb 2026 17:26:54 -0800
 In-Reply-To: <20260214012702.2368778-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260214012702.2368778-1-seanjc@google.com>
 X-Mailer: git-send-email 2.53.0.310.g728cabbaf7-goog
-Message-ID: <20260214012702.2368778-5-seanjc@google.com>
-Subject: [PATCH v3 04/16] KVM: VMX: Unconditionally allocate root VMCSes
- during boot CPU bringup
+Message-ID: <20260214012702.2368778-9-seanjc@google.com>
+Subject: [PATCH v3 08/16] KVM: x86: Move bulk of emergency virtualizaton logic
+ to virt subsystem
 From: Sean Christopherson <seanjc@google.com>
 To: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -75,271 +75,519 @@ Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
 	Dan Williams <dan.j.williams@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Allocate the root VMCS (misleading called "vmxarea" and "kvm_area" in KVM)
-for each possible CPU during early boot CPU bringup, before early TDX
-initialization, so that TDX can eventually do VMXON on-demand (to make
-SEAMCALLs) without needing to load kvm-intel.ko.  Allocate the pages early
-on, e.g. instead of trying to do so on-demand, to avoid having to juggle
-allocation failures at runtime.
+Move the majority of the code related to disabling hardware virtualization
+in emergency from KVM into the virt subsystem so that virt can take full
+ownership of the state of SVM/VMX.  This will allow refcounting usage of
+SVM/VMX so that KVM and the TDX subsystem can enable VMX without stomping
+on each other.
 
-Opportunistically rename the per-CPU pointers to better reflect the role
-of the VMCS.  Use Intel's "root VMCS" terminology, e.g. from various VMCS
-patents[1][2] and older SDMs, not the more opaque "VMXON region" used in
-recent versions of the SDM.  While it's possible the VMCS passed to VMXON
-no longer serves as _the_ root VMCS on modern CPUs, it is still in effect
-a "root mode VMCS", as described in the patents.
+To route the emergency callback to the "right" vendor code, add to avoid
+mixing vendor and generic code, implement a x86_virt_ops structure to
+track the emergency callback, along with the SVM vs. VMX (vs. "none")
+feature that is active.
 
-Link: https://patentimages.storage.googleapis.com/c7/e4/32/d7a7def5580667/WO2013101191A1.pdf [1]
-Link: https://patentimages.storage.googleapis.com/13/f6/8d/1361fab8c33373/US20080163205A1.pdf [2]
+To avoid having to choose between SVM and VMX, simply refuse to enable
+either if both are somehow supported.  No known CPU supports both SVM and
+VMX, and it's comically unlikely such a CPU will ever exist.
+
+Leave KVM's clearing of loaded VMCSes and MSR_VM_HSAVE_PA in KVM, via a
+callback explicitly scoped to KVM.  Loading VMCSes and saving/restoring
+host state are firmly tied to running VMs, and thus are (a) KVM's
+responsibility and (b) operations that are still exclusively reserved for
+KVM (as far as in-tree code is concerned).  I.e. the contract being
+established is that non-KVM subsystems can utilize virtualization, but for
+all intents and purposes cannot act as full-blown hypervisors.
+
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/include/asm/virt.h  | 13 ++++++-
- arch/x86/kernel/cpu/common.c |  2 +
- arch/x86/kvm/vmx/vmx.c       | 58 ++---------------------------
- arch/x86/virt/hw.c           | 71 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 89 insertions(+), 55 deletions(-)
+ arch/x86/include/asm/kvm_host.h |   3 +-
+ arch/x86/include/asm/reboot.h   |  11 ---
+ arch/x86/include/asm/virt.h     |   9 ++-
+ arch/x86/kernel/crash.c         |   3 +-
+ arch/x86/kernel/reboot.c        |  63 ++--------------
+ arch/x86/kernel/smp.c           |   5 +-
+ arch/x86/kvm/vmx/vmx.c          |  11 ---
+ arch/x86/kvm/x86.c              |   4 +-
+ arch/x86/virt/hw.c              | 123 +++++++++++++++++++++++++++++---
+ 9 files changed, 138 insertions(+), 94 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index ff07c45e3c73..0bda52fbcae5 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -40,7 +40,8 @@
+ #include <asm/irq_remapping.h>
+ #include <asm/kvm_page_track.h>
+ #include <asm/kvm_vcpu_regs.h>
+-#include <asm/reboot.h>
++#include <asm/virt.h>
++
+ #include <hyperv/hvhdk.h>
+ 
+ #define __KVM_HAVE_ARCH_VCPU_DEBUGFS
+diff --git a/arch/x86/include/asm/reboot.h b/arch/x86/include/asm/reboot.h
+index ecd58ea9a837..a671a1145906 100644
+--- a/arch/x86/include/asm/reboot.h
++++ b/arch/x86/include/asm/reboot.h
+@@ -25,17 +25,6 @@ void __noreturn machine_real_restart(unsigned int type);
+ #define MRR_BIOS	0
+ #define MRR_APM		1
+ 
+-typedef void (cpu_emergency_virt_cb)(void);
+-#if IS_ENABLED(CONFIG_KVM_X86)
+-void cpu_emergency_register_virt_callback(cpu_emergency_virt_cb *callback);
+-void cpu_emergency_unregister_virt_callback(cpu_emergency_virt_cb *callback);
+-void cpu_emergency_disable_virtualization(void);
+-#else
+-static inline void cpu_emergency_register_virt_callback(cpu_emergency_virt_cb *callback) {}
+-static inline void cpu_emergency_unregister_virt_callback(cpu_emergency_virt_cb *callback) {}
+-static inline void cpu_emergency_disable_virtualization(void) {}
+-#endif /* CONFIG_KVM_X86 */
+-
+ typedef void (*nmi_shootdown_cb)(int, struct pt_regs*);
+ void nmi_shootdown_cpus(nmi_shootdown_cb callback);
+ void run_crash_ipi_callback(struct pt_regs *regs);
 diff --git a/arch/x86/include/asm/virt.h b/arch/x86/include/asm/virt.h
-index 131b9bf9ef3c..0da6db4f5b0c 100644
+index 9a0753eaa20c..2c35534437e0 100644
 --- a/arch/x86/include/asm/virt.h
 +++ b/arch/x86/include/asm/virt.h
-@@ -2,10 +2,21 @@
- #ifndef _ASM_X86_VIRT_H
- #define _ASM_X86_VIRT_H
+@@ -4,6 +4,8 @@
  
--#include <linux/types.h>
-+#include <linux/percpu-defs.h>
+ #include <asm/reboot.h>
+ 
++typedef void (cpu_emergency_virt_cb)(void);
 +
-+#include <asm/reboot.h>
- 
  #if IS_ENABLED(CONFIG_KVM_X86)
  extern bool virt_rebooting;
+ 
+@@ -12,17 +14,20 @@ void __init x86_virt_init(void);
+ #if IS_ENABLED(CONFIG_KVM_INTEL)
+ int x86_vmx_enable_virtualization_cpu(void);
+ int x86_vmx_disable_virtualization_cpu(void);
+-void x86_vmx_emergency_disable_virtualization_cpu(void);
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_KVM_AMD)
+ int x86_svm_enable_virtualization_cpu(void);
+ int x86_svm_disable_virtualization_cpu(void);
+-void x86_svm_emergency_disable_virtualization_cpu(void);
+ #endif
+ 
++int x86_virt_emergency_disable_virtualization_cpu(void);
 +
-+void __init x86_virt_init(void);
-+
-+#if IS_ENABLED(CONFIG_KVM_INTEL)
-+DECLARE_PER_CPU(struct vmcs *, root_vmcs);
-+#endif
-+
-+#else
-+static __always_inline void x86_virt_init(void) {}
++void x86_virt_register_emergency_callback(cpu_emergency_virt_cb *callback);
++void x86_virt_unregister_emergency_callback(cpu_emergency_virt_cb *callback);
+ #else
+ static __always_inline void x86_virt_init(void) {}
++static inline int x86_virt_emergency_disable_virtualization_cpu(void) { return -ENOENT; }
  #endif
  
  #endif /* _ASM_X86_VIRT_H */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index e7ab22fce3b5..dda9e41292db 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -71,6 +71,7 @@
- #include <asm/traps.h>
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 335fd2ee9766..cd796818d94d 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -42,6 +42,7 @@
+ #include <asm/crash.h>
+ #include <asm/cmdline.h>
  #include <asm/sev.h>
- #include <asm/tdx.h>
 +#include <asm/virt.h>
- #include <asm/posted_intr.h>
- #include <asm/runtime-const.h>
  
-@@ -2143,6 +2144,7 @@ static __init void identify_boot_cpu(void)
- 	cpu_detect_tlb(&boot_cpu_data);
- 	setup_cr_pinning();
+ /* Used while preparing memory map entries for second kernel */
+ struct crash_memmap_data {
+@@ -111,7 +112,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
  
-+	x86_virt_init();
- 	tsx_init();
- 	tdx_init();
- 	lkgs_init();
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index fc6e3b620866..abd4830f71d8 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -580,7 +580,6 @@ noinline void invept_error(unsigned long ext, u64 eptp)
- 	vmx_insn_failed("invept failed: ext=0x%lx eptp=%llx\n", ext, eptp);
- }
+ 	crash_smp_send_stop();
  
--static DEFINE_PER_CPU(struct vmcs *, vmxarea);
- DEFINE_PER_CPU(struct vmcs *, current_vmcs);
- /*
-  * We maintain a per-CPU linked-list of VMCS loaded on that CPU. This is needed
-@@ -2934,6 +2933,9 @@ static bool __kvm_is_vmx_supported(void)
- 		return false;
- 	}
- 
-+	if (!per_cpu(root_vmcs, cpu))
-+		return false;
-+
- 	return true;
- }
- 
-@@ -3008,7 +3010,7 @@ static int kvm_cpu_vmxon(u64 vmxon_pointer)
- int vmx_enable_virtualization_cpu(void)
- {
- 	int cpu = raw_smp_processor_id();
--	u64 phys_addr = __pa(per_cpu(vmxarea, cpu));
-+	u64 phys_addr = __pa(per_cpu(root_vmcs, cpu));
- 	int r;
- 
- 	if (cr4_read_shadow() & X86_CR4_VMXE)
-@@ -3129,47 +3131,6 @@ int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
- 	return -ENOMEM;
- }
- 
--static void free_kvm_area(void)
--{
--	int cpu;
--
--	for_each_possible_cpu(cpu) {
--		free_vmcs(per_cpu(vmxarea, cpu));
--		per_cpu(vmxarea, cpu) = NULL;
--	}
--}
--
--static __init int alloc_kvm_area(void)
--{
--	int cpu;
--
--	for_each_possible_cpu(cpu) {
--		struct vmcs *vmcs;
--
--		vmcs = alloc_vmcs_cpu(false, cpu, GFP_KERNEL);
--		if (!vmcs) {
--			free_kvm_area();
--			return -ENOMEM;
--		}
--
--		/*
--		 * When eVMCS is enabled, alloc_vmcs_cpu() sets
--		 * vmcs->revision_id to KVM_EVMCS_VERSION instead of
--		 * revision_id reported by MSR_IA32_VMX_BASIC.
--		 *
--		 * However, even though not explicitly documented by
--		 * TLFS, VMXArea passed as VMXON argument should
--		 * still be marked with revision_id reported by
--		 * physical CPU.
--		 */
--		if (kvm_is_using_evmcs())
--			vmcs->hdr.revision_id = vmx_basic_vmcs_revision_id(vmcs_config.basic);
--
--		per_cpu(vmxarea, cpu) = vmcs;
--	}
--	return 0;
--}
--
- static void fix_pmode_seg(struct kvm_vcpu *vcpu, int seg,
- 		struct kvm_segment *save)
- {
-@@ -8566,8 +8527,6 @@ void vmx_hardware_unsetup(void)
- 
- 	if (nested)
- 		nested_vmx_hardware_unsetup();
--
--	free_kvm_area();
- }
- 
- void vmx_vm_destroy(struct kvm *kvm)
-@@ -8870,10 +8829,6 @@ __init int vmx_hardware_setup(void)
- 			return r;
- 	}
- 
--	r = alloc_kvm_area();
--	if (r)
--		goto err_kvm_area;
--
- 	kvm_set_posted_intr_wakeup_handler(pi_wakeup_handler);
+-	cpu_emergency_disable_virtualization();
++	x86_virt_emergency_disable_virtualization_cpu();
  
  	/*
-@@ -8900,11 +8855,6 @@ __init int vmx_hardware_setup(void)
- 	kvm_caps.inapplicable_quirks &= ~KVM_X86_QUIRK_IGNORE_GUEST_PAT;
+ 	 * Disable Intel PT to stop its logging
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 6032fa9ec753..0bab8863375a 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -27,6 +27,7 @@
+ #include <asm/cpu.h>
+ #include <asm/nmi.h>
+ #include <asm/smp.h>
++#include <asm/virt.h>
  
- 	return 0;
+ #include <linux/ctype.h>
+ #include <linux/mc146818rtc.h>
+@@ -532,51 +533,6 @@ static inline void kb_wait(void)
+ static inline void nmi_shootdown_cpus_on_restart(void);
+ 
+ #if IS_ENABLED(CONFIG_KVM_X86)
+-/* RCU-protected callback to disable virtualization prior to reboot. */
+-static cpu_emergency_virt_cb __rcu *cpu_emergency_virt_callback;
 -
--err_kvm_area:
--	if (nested)
--		nested_vmx_hardware_unsetup();
--	return r;
+-void cpu_emergency_register_virt_callback(cpu_emergency_virt_cb *callback)
+-{
+-	if (WARN_ON_ONCE(rcu_access_pointer(cpu_emergency_virt_callback)))
+-		return;
+-
+-	rcu_assign_pointer(cpu_emergency_virt_callback, callback);
+-}
+-EXPORT_SYMBOL_FOR_KVM(cpu_emergency_register_virt_callback);
+-
+-void cpu_emergency_unregister_virt_callback(cpu_emergency_virt_cb *callback)
+-{
+-	if (WARN_ON_ONCE(rcu_access_pointer(cpu_emergency_virt_callback) != callback))
+-		return;
+-
+-	rcu_assign_pointer(cpu_emergency_virt_callback, NULL);
+-	synchronize_rcu();
+-}
+-EXPORT_SYMBOL_FOR_KVM(cpu_emergency_unregister_virt_callback);
+-
+-/*
+- * Disable virtualization, i.e. VMX or SVM, to ensure INIT is recognized during
+- * reboot.  VMX blocks INIT if the CPU is post-VMXON, and SVM blocks INIT if
+- * GIF=0, i.e. if the crash occurred between CLGI and STGI.
+- */
+-void cpu_emergency_disable_virtualization(void)
+-{
+-	cpu_emergency_virt_cb *callback;
+-
+-	/*
+-	 * IRQs must be disabled as KVM enables virtualization in hardware via
+-	 * function call IPIs, i.e. IRQs need to be disabled to guarantee
+-	 * virtualization stays disabled.
+-	 */
+-	lockdep_assert_irqs_disabled();
+-
+-	rcu_read_lock();
+-	callback = rcu_dereference(cpu_emergency_virt_callback);
+-	if (callback)
+-		callback();
+-	rcu_read_unlock();
+-}
+-
+ static void emergency_reboot_disable_virtualization(void)
+ {
+ 	local_irq_disable();
+@@ -588,16 +544,11 @@ static void emergency_reboot_disable_virtualization(void)
+ 	 * We can't take any locks and we may be on an inconsistent state, so
+ 	 * use NMIs as IPIs to tell the other CPUs to disable VMX/SVM and halt.
+ 	 *
+-	 * Do the NMI shootdown even if virtualization is off on _this_ CPU, as
+-	 * other CPUs may have virtualization enabled.
++	 * Safely force _this_ CPU out of VMX/SVM operation, and if necessary,
++	 * blast NMIs to force other CPUs out of VMX/SVM as well.k
+ 	 */
+-	if (rcu_access_pointer(cpu_emergency_virt_callback)) {
+-		/* Safely force _this_ CPU out of VMX/SVM operation. */
+-		cpu_emergency_disable_virtualization();
+-
+-		/* Disable VMX/SVM and halt on other CPUs. */
++	if (!x86_virt_emergency_disable_virtualization_cpu())
+ 		nmi_shootdown_cpus_on_restart();
+-	}
+ }
+ #else
+ static void emergency_reboot_disable_virtualization(void) { }
+@@ -875,10 +826,10 @@ static int crash_nmi_callback(unsigned int val, struct pt_regs *regs)
+ 		shootdown_callback(cpu, regs);
+ 
+ 	/*
+-	 * Prepare the CPU for reboot _after_ invoking the callback so that the
+-	 * callback can safely use virtualization instructions, e.g. VMCLEAR.
++	 * Disable virtualization, as both VMX and SVM can block INIT and thus
++	 * prevent AP bringup, e.g. in a kdump kernel or in firmware.
+ 	 */
+-	cpu_emergency_disable_virtualization();
++	x86_virt_emergency_disable_virtualization_cpu();
+ 
+ 	atomic_dec(&waiting_for_crash_ipi);
+ 
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index b014e6d229f9..cbf95fe2b207 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -35,6 +35,7 @@
+ #include <asm/trace/irq_vectors.h>
+ #include <asm/kexec.h>
+ #include <asm/reboot.h>
++#include <asm/virt.h>
+ 
+ /*
+  *	Some notes on x86 processor bugs affecting SMP operation:
+@@ -124,7 +125,7 @@ static int smp_stop_nmi_callback(unsigned int val, struct pt_regs *regs)
+ 	if (raw_smp_processor_id() == atomic_read(&stopping_cpu))
+ 		return NMI_HANDLED;
+ 
+-	cpu_emergency_disable_virtualization();
++	x86_virt_emergency_disable_virtualization_cpu();
+ 	stop_this_cpu(NULL);
+ 
+ 	return NMI_HANDLED;
+@@ -136,7 +137,7 @@ static int smp_stop_nmi_callback(unsigned int val, struct pt_regs *regs)
+ DEFINE_IDTENTRY_SYSVEC(sysvec_reboot)
+ {
+ 	apic_eoi();
+-	cpu_emergency_disable_virtualization();
++	x86_virt_emergency_disable_virtualization_cpu();
+ 	stop_this_cpu(NULL);
  }
  
- void vmx_exit(void)
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 36238cc694fd..c02fd7e91809 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -791,23 +791,12 @@ void vmx_emergency_disable_virtualization_cpu(void)
+ 	int cpu = raw_smp_processor_id();
+ 	struct loaded_vmcs *v;
+ 
+-	/*
+-	 * Note, CR4.VMXE can be _cleared_ in NMI context, but it can only be
+-	 * set in task context.  If this races with _another_ emergency call
+-	 * from NMI context, VMCLEAR may #UD, but KVM will eat those faults due
+-	 * to virt_rebooting being set by the interrupting NMI callback.
+-	 */
+-	if (!(__read_cr4() & X86_CR4_VMXE))
+-		return;
+-
+ 	list_for_each_entry(v, &per_cpu(loaded_vmcss_on_cpu, cpu),
+ 			    loaded_vmcss_on_cpu_link) {
+ 		vmcs_clear(v->vmcs);
+ 		if (v->shadow_vmcs)
+ 			vmcs_clear(v->shadow_vmcs);
+ 	}
+-
+-	x86_vmx_emergency_disable_virtualization_cpu();
+ }
+ 
+ static void __loaded_vmcs_clear(void *arg)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 69937d14f5e1..4f30acd639f3 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -13076,12 +13076,12 @@ EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_vcpu_deliver_sipi_vector);
+ 
+ void kvm_arch_enable_virtualization(void)
+ {
+-	cpu_emergency_register_virt_callback(kvm_x86_ops.emergency_disable_virtualization_cpu);
++	x86_virt_register_emergency_callback(kvm_x86_ops.emergency_disable_virtualization_cpu);
+ }
+ 
+ void kvm_arch_disable_virtualization(void)
+ {
+-	cpu_emergency_unregister_virt_callback(kvm_x86_ops.emergency_disable_virtualization_cpu);
++	x86_virt_unregister_emergency_callback(kvm_x86_ops.emergency_disable_virtualization_cpu);
+ }
+ 
+ int kvm_arch_enable_virtualization_cpu(void)
 diff --git a/arch/x86/virt/hw.c b/arch/x86/virt/hw.c
-index df3dc18d19b4..56972f594d90 100644
+index 014e9dfab805..73c8309ba3fb 100644
 --- a/arch/x86/virt/hw.c
 +++ b/arch/x86/virt/hw.c
-@@ -1,7 +1,78 @@
- // SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/cpu.h>
-+#include <linux/cpumask.h>
-+#include <linux/errno.h>
- #include <linux/kvm_types.h>
-+#include <linux/list.h>
-+#include <linux/percpu.h>
- 
-+#include <asm/perf_event.h>
-+#include <asm/processor.h>
+@@ -11,9 +11,45 @@
  #include <asm/virt.h>
-+#include <asm/vmx.h>
+ #include <asm/vmx.h>
  
++struct x86_virt_ops {
++	int feature;
++	void (*emergency_disable_virtualization_cpu)(void);
++};
++static struct x86_virt_ops virt_ops __ro_after_init;
++
  __visible bool virt_rebooting;
  EXPORT_SYMBOL_FOR_KVM(virt_rebooting);
+ 
++static cpu_emergency_virt_cb __rcu *kvm_emergency_callback;
 +
-+#if IS_ENABLED(CONFIG_KVM_INTEL)
-+DEFINE_PER_CPU(struct vmcs *, root_vmcs);
-+EXPORT_PER_CPU_SYMBOL(root_vmcs);
-+
-+static __init void x86_vmx_exit(void)
++void x86_virt_register_emergency_callback(cpu_emergency_virt_cb *callback)
 +{
-+	int cpu;
++	if (WARN_ON_ONCE(rcu_access_pointer(kvm_emergency_callback)))
++		return;
 +
-+	for_each_possible_cpu(cpu) {
-+		free_page((unsigned long)per_cpu(root_vmcs, cpu));
-+		per_cpu(root_vmcs, cpu) = NULL;
-+	}
++	rcu_assign_pointer(kvm_emergency_callback, callback);
++}
++EXPORT_SYMBOL_FOR_KVM(x86_virt_register_emergency_callback);
++
++void x86_virt_unregister_emergency_callback(cpu_emergency_virt_cb *callback)
++{
++	if (WARN_ON_ONCE(rcu_access_pointer(kvm_emergency_callback) != callback))
++		return;
++
++	rcu_assign_pointer(kvm_emergency_callback, NULL);
++	synchronize_rcu();
++}
++EXPORT_SYMBOL_FOR_KVM(x86_virt_unregister_emergency_callback);
++
++static void x86_virt_invoke_kvm_emergency_callback(void)
++{
++	cpu_emergency_virt_cb *kvm_callback;
++
++	kvm_callback = rcu_dereference(kvm_emergency_callback);
++	if (kvm_callback)
++		kvm_callback();
 +}
 +
-+static __init int x86_vmx_init(void)
-+{
-+	u64 basic_msr;
-+	u32 rev_id;
-+	int cpu;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_VMX))
+ #if IS_ENABLED(CONFIG_KVM_INTEL)
+ static DEFINE_PER_CPU(struct vmcs *, root_vmcs);
+ 
+@@ -42,6 +78,9 @@ int x86_vmx_enable_virtualization_cpu(void)
+ {
+ 	int r;
+ 
++	if (virt_ops.feature != X86_FEATURE_VMX)
 +		return -EOPNOTSUPP;
 +
-+	rdmsrq(MSR_IA32_VMX_BASIC, basic_msr);
+ 	if (cr4_read_shadow() & X86_CR4_VMXE)
+ 		return -EBUSY;
+ 
+@@ -82,22 +121,24 @@ int x86_vmx_disable_virtualization_cpu(void)
+ }
+ EXPORT_SYMBOL_FOR_KVM(x86_vmx_disable_virtualization_cpu);
+ 
+-void x86_vmx_emergency_disable_virtualization_cpu(void)
++static void x86_vmx_emergency_disable_virtualization_cpu(void)
+ {
+ 	virt_rebooting = true;
+ 
+ 	/*
+ 	 * Note, CR4.VMXE can be _cleared_ in NMI context, but it can only be
+ 	 * set in task context.  If this races with _another_ emergency call
+-	 * from NMI context, VMXOFF may #UD, but kernel will eat those faults
+-	 * due to virt_rebooting being set by the interrupting NMI callback.
++	 * from NMI context, VMCLEAR (in KVM) and VMXOFF may #UD, but KVM and
++	 * the kernel will eat those faults due to virt_rebooting being set by
++	 * the interrupting NMI callback.
+ 	 */
+ 	if (!(__read_cr4() & X86_CR4_VMXE))
+ 		return;
+ 
++	x86_virt_invoke_kvm_emergency_callback();
 +
-+	/* IA-32 SDM Vol 3B: VMCS size is never greater than 4kB. */
-+	if (WARN_ON_ONCE(vmx_basic_vmcs_size(basic_msr) > PAGE_SIZE))
-+		return -EIO;
+ 	x86_vmx_disable_virtualization_cpu();
+ }
+-EXPORT_SYMBOL_FOR_KVM(x86_vmx_emergency_disable_virtualization_cpu);
+ 
+ static __init void x86_vmx_exit(void)
+ {
+@@ -111,6 +152,11 @@ static __init void x86_vmx_exit(void)
+ 
+ static __init int __x86_vmx_init(void)
+ {
++	const struct x86_virt_ops vmx_ops = {
++		.feature = X86_FEATURE_VMX,
++		.emergency_disable_virtualization_cpu = x86_vmx_emergency_disable_virtualization_cpu,
++	};
 +
-+	/*
-+	 * Even if eVMCS is enabled (or will be enabled?), and even though not
-+	 * explicitly documented by TLFS, the root VMCS  passed to VMXON should
-+	 * still be marked with the revision_id reported by the physical CPU.
-+	 */
-+	rev_id = vmx_basic_vmcs_revision_id(basic_msr);
+ 	u64 basic_msr;
+ 	u32 rev_id;
+ 	int cpu;
+@@ -147,6 +193,7 @@ static __init int __x86_vmx_init(void)
+ 		per_cpu(root_vmcs, cpu) = vmcs;
+ 	}
+ 
++	memcpy(&virt_ops, &vmx_ops, sizeof(virt_ops));
+ 	return 0;
+ }
+ 
+@@ -161,6 +208,7 @@ static __init int x86_vmx_init(void)
+ }
+ #else
+ static __init int x86_vmx_init(void) { return -EOPNOTSUPP; }
++static __init void x86_vmx_exit(void) { }
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_KVM_AMD)
+@@ -168,7 +216,7 @@ int x86_svm_enable_virtualization_cpu(void)
+ {
+ 	u64 efer;
+ 
+-	if (!cpu_feature_enabled(X86_FEATURE_SVM))
++	if (virt_ops.feature != X86_FEATURE_SVM)
+ 		return -EOPNOTSUPP;
+ 
+ 	rdmsrq(MSR_EFER, efer);
+@@ -201,7 +249,7 @@ int x86_svm_disable_virtualization_cpu(void)
+ }
+ EXPORT_SYMBOL_FOR_KVM(x86_svm_disable_virtualization_cpu);
+ 
+-void x86_svm_emergency_disable_virtualization_cpu(void)
++static void x86_svm_emergency_disable_virtualization_cpu(void)
+ {
+ 	u64 efer;
+ 
+@@ -211,12 +259,71 @@ void x86_svm_emergency_disable_virtualization_cpu(void)
+ 	if (!(efer & EFER_SVME))
+ 		return;
+ 
++	x86_virt_invoke_kvm_emergency_callback();
 +
-+	for_each_possible_cpu(cpu) {
-+		int node = cpu_to_node(cpu);
-+		struct page *page;
-+		struct vmcs *vmcs;
+ 	x86_svm_disable_virtualization_cpu();
+ }
+-EXPORT_SYMBOL_FOR_KVM(x86_svm_emergency_disable_virtualization_cpu);
 +
-+		page = __alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, 0);
-+		if (!page) {
-+			x86_vmx_exit();
-+			return -ENOMEM;
-+		}
++static __init int x86_svm_init(void)
++{
++	const struct x86_virt_ops svm_ops = {
++		.feature = X86_FEATURE_SVM,
++		.emergency_disable_virtualization_cpu = x86_svm_emergency_disable_virtualization_cpu,
++	};
 +
-+		vmcs = page_address(page);
-+		vmcs->hdr.revision_id = rev_id;
-+		per_cpu(root_vmcs, cpu) = vmcs;
-+	}
++	if (!cpu_feature_enabled(X86_FEATURE_SVM))
++		return -EOPNOTSUPP;
 +
++	memcpy(&virt_ops, &svm_ops, sizeof(virt_ops));
 +	return 0;
 +}
 +#else
-+static __init int x86_vmx_init(void) { return -EOPNOTSUPP; }
-+#endif
-+
-+void __init x86_virt_init(void)
++static __init int x86_svm_init(void) { return -EOPNOTSUPP; }
+ #endif
+ 
++/*
++ * Disable virtualization, i.e. VMX or SVM, to ensure INIT is recognized during
++ * reboot.  VMX blocks INIT if the CPU is post-VMXON, and SVM blocks INIT if
++ * GIF=0, i.e. if the crash occurred between CLGI and STGI.
++ */
++int x86_virt_emergency_disable_virtualization_cpu(void)
 +{
-+	x86_vmx_init();
++	/* Ensure the !feature check can't get false positives. */
++	BUILD_BUG_ON(!X86_FEATURE_SVM || !X86_FEATURE_VMX);
++
++	if (!virt_ops.feature)
++		return -EOPNOTSUPP;
++
++	/*
++	 * IRQs must be disabled as virtualization is enabled in hardware via
++	 * function call IPIs, i.e. IRQs need to be disabled to guarantee
++	 * virtualization stays disabled.
++	 */
++	lockdep_assert_irqs_disabled();
++
++	/*
++	 * Do the NMI shootdown even if virtualization is off on _this_ CPU, as
++	 * other CPUs may have virtualization enabled.
++	 *
++	 * TODO: Track whether or not virtualization might be enabled on other
++	 *	 CPUs?  May not be worth avoiding the NMI shootdown...
++	 */
++	virt_ops.emergency_disable_virtualization_cpu();
++	return 0;
 +}
++
+ void __init x86_virt_init(void)
+ {
+-	x86_vmx_init();
++	/*
++	 * Attempt to initialize both SVM and VMX, and simply use whichever one
++	 * is present.  Rsefuse to enable/use SVM or VMX if both are somehow
++	 * supported.  No known CPU supports both SVM and VMX.
++	 */
++	bool has_vmx = !x86_vmx_init();
++	bool has_svm = !x86_svm_init();
++
++	if (WARN_ON_ONCE(has_vmx && has_svm)) {
++		x86_vmx_exit();
++		memset(&virt_ops, 0, sizeof(virt_ops));
++	}
+ }
 -- 
 2.53.0.310.g728cabbaf7-goog
 
