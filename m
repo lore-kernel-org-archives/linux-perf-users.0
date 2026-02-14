@@ -1,259 +1,83 @@
-Received: from mail-43100.protonmail.ch (mail-43100.protonmail.ch [185.70.43.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324B01FE44A
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Feb 2026 04:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6812821CC71
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Feb 2026 09:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771042062; cv=none; b=NR/9YoqbnfBDM8XV8m3eOllhW6M55cNHUBMhFF+lEUNT8xGDAdL7M3kRo9fBc6NGtjFJm0irY0MQnA88XcGOvOIgXUcFb3gdlhZjTygbSXL/x0s/2ue83BRFGaa8aJuAaAnRijsfph8G9I67gfNLhvieIeeIYAj7SczB3d64Zqo=
+	t=1771060045; cv=none; b=bArm7mbmh3MZYtInuKb1/YFkILq/0oJ0B/fo3/RC2sjCouXOqtPM0JZQjqQ2kKnY15jnHd4do18UAOkfxsyhfnIkcsl2ANoDyvCI2h8DImsLbeOD9poaggVQt1jNTXOR1BlpOdwsFC6Z2G1qV+mFwTvSBrfteaqjmW7eGWkwTI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771042062; c=relaxed/simple;
-	bh=6IZKTJrJvzbsm/ibVEY4n+vwPVOWltwlcO2dNwTkOHg=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hsa612rQ/rrzszEKzZBgb6oW2/iShNl4bz/dBXMKPS0p+fnJaIS7rwUmPHsHor8OAwgpgS01vFQ+s9LsdZPH8eHs6izxYJMCT0p74fXteyIOg3BRP37XHqcWbpHS6l6QQYzM9nFofHgezIx9Ry2N72tYz/pJNDt0gvAwQTYbawI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=C6dA2tpe; arc=none smtp.client-ip=185.70.43.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="C6dA2tpe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1771042051; x=1771301251;
-	bh=qcE3fSZShVbS69qvE8kAwinPp1Bs0spVc3DiuJqZBTQ=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=C6dA2tpeExx//M1AjCWdbhHBojYj2IHZ2YiWCXJHY1CSRDXTYY9/EJQpashB1vo3g
-	 rYplkApni/XRQAbfHf2KfqTvFVN76iN/xqak2ypmWB3yVqdL2YLYsHQyS4rCESMgLL
-	 kIYmJhDLZz4vKeoR3vkHifmtiXFWUM33OAQcp9cmpQhVkN/UHuG+8JET8x/r3Rj2ac
-	 IK/gGpaqpNMHMPEpEIFmvzAExI9dbHiMJoJnFVhu8vAiCunz9/H9R+aNKgui7Hyu5F
-	 YzwmdPjTTQS73SJvKYHhV2jqpuuQHzHEeraPXM7yIgDOxYrny/FBz0nnaO0kQjNTUV
-	 voPre4ftuZKlw==
-Date: Sat, 14 Feb 2026 04:07:25 +0000
-To: acme@kernel.org
-From: Ricky Ringler <ricky.ringler@proton.me>
-Cc: namhyung@kernel.org, peterz@infradead.org, mingo@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ricky Ringler <ricky.ringler@proton.me>
-Subject: [PATCH] perf utilities: cln_size header
-Message-ID: <20260214040659.168769-2-ricky.ringler@proton.me>
-Feedback-ID: 171348601:user:proton
-X-Pm-Message-ID: 941f9eedd102450162fcff7107aefb73ec3b4644
+	s=arc-20240116; t=1771060045; c=relaxed/simple;
+	bh=adRK8IhfPtG5aJFHduV189HEXBVN5V3ufqSkVPZopsQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=jKmcIuMZPElEOWo5rDD8s9NeqC0F8PAc0YpFd6dXH0DFCGto6vMDatZtrzkIoTTQOi715hwdVXOK+J7sLN+Kw+I/Z2AP1ch70fsXtLaXKzIt9o/zAfbGQV1Z2Y9WzZVby+PGmhcjmrrTRIVkFVwQWq3xFoZH2oiatQv3lm5WdWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-66308f16ea0so16488044eaf.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 14 Feb 2026 01:07:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771060043; x=1771664843;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JLhjQGi4WOupdxl5bZ6JWEwgqnR37s/zZdrsiH9ebu4=;
+        b=S7ar2XzMa21QVTejis2ZoDRJ/x+IbSsvTxBJDH55yRoAFz4e1ZkKZGIp2JemxUCBRh
+         QvX/P/2mUJPRQyp63ol07gQF105Z4zpArWyAtzFWmbCCOyKY/iG4AZ7zGt0w/6BACa+5
+         lhb+ks46t2NjLO7ZRS0mUNWCVb2LrgU+N12ZTqoedTcQJhUFZSOeaSD5Cgm7Ov1CYWYa
+         zp+k6Yz0QJxMh4oqTGlTrzWXUMW1bLuC1GD4YuPjIIlZSPy7j3urWeX3Of7Myv1kaHXM
+         njNAlV3Rl32rXs+Ys9i3+vfDpNKPYL50JVflOBL70PjvFseaLjp/raChxvuxFXMTEDBY
+         hKEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdueUzbinOdR7Qi+rx9lJG3dQ98NFlpPBYji4qVillDlyl83v9V6R3wFgGa8cqm0o1pU9bG8dS3jUk2sZI9zGM@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqzXf7h2RVVfgnp3NdgZruiMC/zFFqIKI7uJZ51NouRnmAmBHi
+	4mFLqIQp8AmL60jfa9krrNRHXrY6MaER4ms3nXUsOHpDbGV+Ir9LRdDn673ZJT0sHU6UthxnV9Y
+	gPGrZoEr9z7P9JfJOLnVO3GtKCkZC0A8Qy2guQreejekrOiZRTS0SY7OTvCg=
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a05:6820:2d42:b0:672:9d81:a779 with SMTP id
+ 006d021491bc7-67723423200mr2542563eaf.75.1771060043482; Sat, 14 Feb 2026
+ 01:07:23 -0800 (PST)
+Date: Sat, 14 Feb 2026 01:07:23 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <69903b4b.050a0220.3a4a67.00da.GAE@google.com>
+Subject: [syzbot] Monthly perf report (Feb 2026)
+From: syzbot <syzbot+listdc591738f3c289a91ae5@syzkaller.appspotmail.com>
+To: acme@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, namhyung@kernel.org, 
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Store cacheline size during perf record in header, so
-that cacheline size can be used for other features, like
-sort.
+Hello perf maintainers/developers,
 
-Follow-up patch from message ID "aYZiQk6Uftzlb_JV@x1"
+This is a 31-day syzbot report for the perf subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/perf
 
- Testing:
-- Built perf
-- Ran record + report with feat enabled
-- Ran record + report with feat disabled
+During the period, 2 new issues were detected and 0 were fixed.
+In total, 7 issues are still open and 27 have already been fixed.
 
-Tested-by: Ricky Ringler <ricky.ringler@proton.me>
-Signed-off-by: Ricky Ringler <ricky.ringler@proton.me>
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 114     Yes   WARNING in __perf_event_overflow (2)
+                  https://syzkaller.appspot.com/bug?extid=2524754f17993441bf66
+<2> 11      Yes   WARNING in perf_event_throttle_group
+                  https://syzkaller.appspot.com/bug?extid=a945e9d15c8a49a7a7f0
+<3> 3       No    KCSAN: data-race in __perf_event_overflow / __perf_event_set_bpf_prog
+                  https://syzkaller.appspot.com/bug?extid=2a077cb788749964cf68
+
 ---
- tools/perf/builtin-inject.c |  1 +
- tools/perf/util/env.h       |  1 +
- tools/perf/util/header.c    | 29 +++++++++++++++++++++++++++++
- tools/perf/util/header.h    |  1 +
- tools/perf/util/sort.c      | 37 ++++++++++++++++++++++++++-----------
- 5 files changed, 58 insertions(+), 11 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index aa7be4fb5838..9639154459d9 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -2047,6 +2047,7 @@ static bool keep_feat(int feat)
- =09case HEADER_CLOCK_DATA:
- =09case HEADER_HYBRID_TOPOLOGY:
- =09case HEADER_PMU_CAPS:
-+=09case HEADER_CLN_SIZE:
- =09=09return true;
- =09/* Information that can be updated */
- =09case HEADER_BUILD_ID:
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 9977b85523a8..04580c64847b 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -93,6 +93,7 @@ struct perf_env {
- =09struct cpu_topology_map=09*cpu;
- =09struct cpu_cache_level=09*caches;
- =09int=09=09=09 caches_cnt;
-+=09unsigned int=09=09cln_size;
- =09u32=09=09=09comp_ratio;
- =09u32=09=09=09comp_ver;
- =09u32=09=09=09comp_type;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index f5cad377c99e..ad15829acc69 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -54,6 +54,7 @@
- #include "bpf-event.h"
- #include "bpf-utils.h"
- #include "clockid.h"
-+#include "cacheline.h"
-=20
- #include <linux/ctype.h>
- #include <internal/lib.h>
-@@ -1288,6 +1289,18 @@ static int write_cache(struct feat_fd *ff,
- =09return ret;
- }
-=20
-+static int write_cln_size(struct feat_fd *ff,
-+=09=09       struct evlist *evlist __maybe_unused)
-+{
-+=09int cln_size =3D cacheline_size();
-+
-+=09if (!cln_size)
-+=09=09cln_size =3D 0;
-+=09ff->ph->env.cln_size =3D cln_size;
-+
-+=09return do_write(ff, &cln_size, sizeof(cln_size));
-+}
-+
- static int write_stat(struct feat_fd *ff __maybe_unused,
- =09=09      struct evlist *evlist __maybe_unused)
- {
-@@ -2084,6 +2097,11 @@ static void print_cache(struct feat_fd *ff, FILE *fp=
- __maybe_unused)
- =09}
- }
-=20
-+static void print_cln_size(struct feat_fd *ff, FILE *fp __maybe_unused)
-+{
-+=09fprintf(fp, "# cacheline size: %u\n", ff->ph->env.cln_size);
-+}
-+
- static void print_compressed(struct feat_fd *ff, FILE *fp)
- {
- =09fprintf(fp, "# compressed : %s, level =3D %d, ratio =3D %d\n",
-@@ -2933,6 +2951,16 @@ static int process_cache(struct feat_fd *ff, void *d=
-ata __maybe_unused)
- =09return -1;
- }
-=20
-+static int process_cln_size(struct feat_fd *ff, void *data __maybe_unused)
-+{
-+=09struct perf_env *env =3D &ff->ph->env;
-+
-+=09if (do_read_u32(ff, &env->cln_size))
-+=09=09return -1;
-+
-+=09return 0;
-+}
-+
- static int process_sample_time(struct feat_fd *ff, void *data __maybe_unus=
-ed)
- {
- =09struct perf_session *session;
-@@ -3453,6 +3481,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_=
-LAST_FEATURE] =3D {
- =09FEAT_OPR(CLOCK_DATA,=09clock_data,=09false),
- =09FEAT_OPN(HYBRID_TOPOLOGY,=09hybrid_topology,=09true),
- =09FEAT_OPR(PMU_CAPS,=09pmu_caps,=09false),
-+=09FEAT_OPR(CLN_SIZE,=09cln_size,=09false),
- };
-=20
- struct header_print_data {
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index c058021c3150..04394331630f 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -53,6 +53,7 @@ enum {
- =09HEADER_CLOCK_DATA,
- =09HEADER_HYBRID_TOPOLOGY,
- =09HEADER_PMU_CAPS,
-+=09HEADER_CLN_SIZE,
- =09HEADER_LAST_FEATURE,
- =09HEADER_FEAT_BITS=09=3D 256,
- };
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index aa79eb6476dd..e636b9f88e5c 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -30,6 +30,7 @@
- #include "time-utils.h"
- #include "cgroup.h"
- #include "machine.h"
-+#include "session.h"
- #include "trace-event.h"
- #include <linux/kernel.h>
- #include <linux/string.h>
-@@ -2474,7 +2475,26 @@ struct sort_entry sort_type_offset =3D {
-=20
- /* --sort typecln */
-=20
--#define DEFAULT_CACHELINE_SIZE 64
-+static int
-+hist_entry__cln_size(struct hist_entry *he)
-+{
-+=09int ret =3D 0;
-+
-+=09if (he && he->hists) {
-+=09=09struct evsel *evsel =3D hists_to_evsel(he->hists);
-+
-+=09=09if (evsel && evsel->evlist->session && evsel->evlist->session)
-+=09=09=09ret =3D evsel->evlist->session->header.env.cln_size;
-+=09}
-+
-+=09if (!ret || ret < 1) {
-+=09=09int default_cacheline_size =3D 64; // avoid div/0 later
-+
-+=09=09ret =3D default_cacheline_size;
-+=09}
-+
-+=09return ret;
-+}
-=20
- static int64_t
- sort__typecln_sort(struct hist_entry *left, struct hist_entry *right)
-@@ -2482,11 +2502,9 @@ sort__typecln_sort(struct hist_entry *left, struct h=
-ist_entry *right)
- =09struct annotated_data_type *left_type =3D left->mem_type;
- =09struct annotated_data_type *right_type =3D right->mem_type;
- =09int64_t left_cln, right_cln;
-+=09int64_t cln_size_left =3D hist_entry__cln_size(left);
-+=09int64_t cln_size_right =3D hist_entry__cln_size(right);
- =09int64_t ret;
--=09int cln_size =3D cacheline_size();
--
--=09if (cln_size =3D=3D 0)
--=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
-=20
- =09if (!left_type) {
- =09=09sort__type_init(left);
-@@ -2502,8 +2520,8 @@ sort__typecln_sort(struct hist_entry *left, struct hi=
-st_entry *right)
- =09if (ret)
- =09=09return ret;
-=20
--=09left_cln =3D left->mem_type_off / cln_size;
--=09right_cln =3D right->mem_type_off / cln_size;
-+=09left_cln =3D left->mem_type_off / cln_size_left;
-+=09right_cln =3D right->mem_type_off / cln_size_right;
- =09return left_cln - right_cln;
- }
-=20
-@@ -2511,10 +2529,7 @@ static int hist_entry__typecln_snprintf(struct hist_=
-entry *he, char *bf,
- =09=09=09=09     size_t size, unsigned int width __maybe_unused)
- {
- =09struct annotated_data_type *he_type =3D he->mem_type;
--=09int cln_size =3D cacheline_size();
--
--=09if (cln_size =3D=3D 0)
--=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
-+=09int cln_size =3D hist_entry__cln_size(he);
-=20
- =09return repsep_snprintf(bf, size, "%s: cache-line %d", he_type->self.typ=
-e_name,
- =09=09=09       he->mem_type_off / cln_size);
---=20
-2.53.0
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
 
+You may send multiple commands in a single email message.
