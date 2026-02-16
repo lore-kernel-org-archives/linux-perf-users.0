@@ -1,46 +1,46 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011042.outbound.protection.outlook.com [52.101.62.42])
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010012.outbound.protection.outlook.com [52.101.85.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9F32C0F81;
-	Mon, 16 Feb 2026 04:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715CF29D269;
+	Mon, 16 Feb 2026 04:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771215976; cv=fail; b=W78WNin2M7YVyfuScuMbckxD4UKBFsNa2WvrNfVUSSjHpJRGBz0RKoqF0JPh4ofjzdBx4cUpLqfEPBSWSLWSqftDP+Eh1pYbsxgtfitWDtzwe3X73gVYhN6ak4UUlPOHacKb5z9XsV+9/AAfl5EW9C2Wjhb2CQHn3JDGqXIKKRE=
+	t=1771215977; cv=fail; b=MamKYMYOFVs/npT423yEkJj0LD/tNj3u4vL8LYRscpQCDcjUZpfl+1qsrOsfRid40VJOKpE+KkZ3ujC68mMIzglj5ZQFasjopTnBHROcJCSU/x9jm5sycQFQToMjvTSkk+dXId8e42sIfMMMzkbBdJVGNdGtvPQLfUCpWSopFRM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771215976; c=relaxed/simple;
-	bh=QKSlLfMLKLBg6o3gnF6FRtCVpP2p7ofOdi7SCC7ONc4=;
+	s=arc-20240116; t=1771215977; c=relaxed/simple;
+	bh=V4MehkVbqu+Wdgxr1VMhVMD+ONITBtE0Qd5LN+km7SY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e7VK1AZYo2wMGa/TemvTYS7Yp1nwRhbPmSb414WMy6y95FzKtu4mSZSZLWR+jQF2cUxRXz5QldBXztFTdBMHU2DQE27U17D7gVw3+u1op6ClFGRv/JlExxTkvIp2d3OGxY9M5AAyKmIjk7GqaDTcjt5Rx4lqw2KAr2ax8W0QdfM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gXKsJ4NL; arc=fail smtp.client-ip=52.101.62.42
+	 MIME-Version:Content-Type; b=sw5WVZSU2xS07awERaerApfYOUZUxzCxBFUDu6MONehXCxtkcNtsrLP3xMYEEd5qq6i7rfdbRfAMX/M7AQzYx4UaBivGiYHL/P8g5S4HAee68c6q7Yo1nKQ3/CKBDXwZuw4rIbhCWWQYe2rJFV1EfREfWNG949PKQO5e5SF15fU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=esb0NJFO; arc=fail smtp.client-ip=52.101.85.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gXKsJ4NL"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="esb0NJFO"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PtnMCpIYLb5aUd94yOtTiTGo1VvAWgsKY+b5zgZ6WlefNR7UkHqgLNRgAu1lu4MIJiA0jqSl9IXiQA0cfe4YsMC/hlal/+AWY/SHGWKum3FuJmFsQPVX5BYjSDqIR4rfoJO7OSnIjP7/3gDcsDnzzcbxdEeTDA+ASy/Kc3xGXiskK5BEG6uTFn6ScQzPwlXGHCpz5F1aIusnmMrEHPDxYq7HdCnGDa1Z8z07Ni08/YmGXi+d8PlrbE/o0Ia7gjjRcNNcGwhTcJbIcxQLtgkOYdkHlRvMXSVDza8lHqd7fxkdx2K/mAFMqjrszg7x+jKTU3Y6XxkDYKlmOD5dq6nAoQ==
+ b=VinYaspmMQgUoOl3OLdKisbhCpeXcXuCvs8TMbVtd1FXt9JBI9K5alGiLctwaBXlsC18j2N//NYRrh229jIMu/i0jt341MKWc6X57P9q+pjrwDF5jc/BS8hyJbDeFV0cGEMm4S3lFowJZ9wTR9Vd8wnMS32Uty5uTT23ALm6qwI5l0jWQb37YPgLJ5zfqLBewrzOHfpqRotKB9th3CnOAWAY7FBHZW580QiWfORyn8+WusFasAyczgxx+t3nqfXyXOyQX380c1ghfi4//mkxNqFwxhHzLYXAu5Ra5CUNb0s+l2IEtbYKTPpge0rdtpcP2vzwti6gyLCOVauYdZ54OQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WrFKlechOeMOH5jfG0d8D2bSD/LY9aSNOX3Sf5ShgUA=;
- b=qvIJg6cebAj0jGVqxm3kgQoFbPWDbNdtklI76sV/RzmEj1WAAJFMP90vmWpBWsyy452DeIQnVVAwViP3m5Gbq7U0VJoQbc68y/klyj6gdcXOCD1Wygy5dJ9Owov8vi13IR31eycCZW46lkNgUT/xpeg18K3DBOLEVGZQQtpWUl9PRsE/2vyJUl2ZG2DuOPEL3d1T6wCun85HfTLGgrO5jK/GtVH3hLHSwhnpR0M7/aJhud4RbxsnF04Vzui75/VaC0GIhA8n6loZPxWiE5wl80Trl0L4wKdzaXF6kRbYhF7n5ab+m1TbBD85PGCEgR7ALEP4dlg6boQo4Ntxqpe0+A==
+ bh=3XZCuSaKxSVMJ5lR5N7suBFVshPbHzueK5WLAieyKmQ=;
+ b=ct5OfKhSTZp7vrSlr3RVq4F1fIr8hZcYyy5Y8mWRd+9dT/LrUeMDPnaQvgKJaNf3jVAzUfEbrkHZJsshWmCJIS2m9lgXMvmddN2O5YEbLoex/VYJn2uznKVjUZHSLY3BtB4YhlO7P4vG012UNfvBEx1xr1Gxd+JuF00VkSyR4cxeTKQmtnO4psknT6QEIdShJi+c12gedepgfNuYed7b1T0MqSOfCG0J1RsZ+UikKLZOwVobA1okvzltePOAe2jpmfHMuKNk7A/GndaqoGrQAiQImMjVKlqBPz1OsEyXYujhYLRJOGPoQKLcGygaqtY8XOeUS2mNhqje97q/SjXwCA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WrFKlechOeMOH5jfG0d8D2bSD/LY9aSNOX3Sf5ShgUA=;
- b=gXKsJ4NLcvvTCdKXQ1t6tw2rW3/sHOMvoZWRi0F1LGsSBLjqWap26AbvUUakIEndS8T2LIjiGBeLmX5EhBfuYxo5drUdBoPinlw4RHPHJgTjCChXGdCmKJKuSkus4EgbZKzzajP30ZIUfmaZTVz5SslfUKHKLDfmAMQs74QK7qY=
-Received: from PH7P221CA0085.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:328::19)
- by LV8PR12MB9418.namprd12.prod.outlook.com (2603:10b6:408:202::15) with
+ bh=3XZCuSaKxSVMJ5lR5N7suBFVshPbHzueK5WLAieyKmQ=;
+ b=esb0NJFOUqURx1+Gx8ynYeehv8iEMQazbkbIAiUKK3vyzq62D7G4h5oOtqG26mvYJSFVM7DzKmxdgmkJ0HpNr0WLZtyW5CMc1xDx4Kr2GqGCrQ+Nr/3zh2aH8y0J9+vYxeqNuSPyUkZCKnEtyv7T/cEd+klULASbTvprpFh3SfU=
+Received: from SA0PR11CA0127.namprd11.prod.outlook.com (2603:10b6:806:131::12)
+ by IA0PR12MB8088.namprd12.prod.outlook.com (2603:10b6:208:409::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.16; Mon, 16 Feb
- 2026 04:26:07 +0000
-Received: from SN1PEPF000397B0.namprd05.prod.outlook.com
- (2603:10b6:510:328:cafe::12) by PH7P221CA0085.outlook.office365.com
- (2603:10b6:510:328::19) with Microsoft SMTP Server (version=TLS1_3,
+ 2026 04:26:11 +0000
+Received: from SN1PEPF000397B1.namprd05.prod.outlook.com
+ (2603:10b6:806:131:cafe::28) by SA0PR11CA0127.outlook.office365.com
+ (2603:10b6:806:131::12) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9611.16 via Frontend Transport; Mon,
- 16 Feb 2026 04:26:07 +0000
+ 16 Feb 2026 04:25:56 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- SN1PEPF000397B0.mail.protection.outlook.com (10.167.248.54) with Microsoft
+ SN1PEPF000397B1.mail.protection.outlook.com (10.167.248.55) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Mon, 16 Feb 2026 04:26:06 +0000
+ 15.20.9632.12 via Frontend Transport; Mon, 16 Feb 2026 04:26:11 +0000
 Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sun, 15 Feb
- 2026 22:26:02 -0600
+ 2026 22:26:06 -0600
 From: Ravi Bangoria <ravi.bangoria@amd.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
 CC: Ravi Bangoria <ravi.bangoria@amd.com>, Arnaldo Carvalho de Melo
@@ -65,9 +65,9 @@ CC: Ravi Bangoria <ravi.bangoria@amd.com>, Arnaldo Carvalho de Melo
 	<linux-kernel@vger.kernel.org>, Manali Shukla <manali.shukla@amd.com>,
 	Santosh Shukla <santosh.shukla@amd.com>, Ananth Narayan
 	<ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH v2 4/7] perf/amd/ibs: Enable fetch latency filtering
-Date: Mon, 16 Feb 2026 04:25:27 +0000
-Message-ID: <20260216042530.1546-5-ravi.bangoria@amd.com>
+Subject: [PATCH v2 5/7] perf/amd/ibs: Enable RIP bit63 hardware filtering
+Date: Mon, 16 Feb 2026 04:25:28 +0000
+Message-ID: <20260216042530.1546-6-ravi.bangoria@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260216042530.1546-1-ravi.bangoria@amd.com>
 References: <20260216042530.1546-1-ravi.bangoria@amd.com>
@@ -83,219 +83,163 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397B0:EE_|LV8PR12MB9418:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7760aba2-748b-499c-3b4b-08de6d1380e7
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B1:EE_|IA0PR12MB8088:EE_
+X-MS-Office365-Filtering-Correlation-Id: a67190b5-8788-4f57-0e4e-08de6d138393
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|7416014|376014;
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7416014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?V5SuSuXretiiIdZL2dpxkhIyt43jDolvz3GTxfAR13SNusUUWawS/14WTt1I?=
- =?us-ascii?Q?VphGFHLclVt4eF68VSXYd3LnYZvyUBbau31zTa2ivr/ZLVXgevkJKKPBIkzW?=
- =?us-ascii?Q?MaYXG0L7f7OUGZ7U3taWkdt4T5+gwj9KHgVD8HlLOZcb4PnruYG8XvYIRElL?=
- =?us-ascii?Q?EHquj3IB9hM6JKCiu/TC04OQmDBBCn6kzA28ZOweGkS3p7ljIpgW0YJY4VnQ?=
- =?us-ascii?Q?UortGvBGH+N/fANp63xr7WmbLbRyZTF69WDU/gFG0iNOZSlAOZany8G45vVN?=
- =?us-ascii?Q?nmv0cT2cufytiDby1aGCBuwbvRjhlC42VU5YZSiRp+M8+PtQFidVJoqnC8a0?=
- =?us-ascii?Q?Lbd+Zo/etUY0RHa2neqGEitFFoa6QjBIGTKEPg0doL7uBJ2a8WX3lge9ElOZ?=
- =?us-ascii?Q?n3qxmlZlIY3cQ78Eb3ficsgfMaW5yErn3Tl4LmXWbA0yvW8XgwMaILPqIN2Y?=
- =?us-ascii?Q?TWWLJF6tR2OyjLj+XRjEWB5df5RF030XblQDv3xTiXUW5hA3fILQ8fHvtL6y?=
- =?us-ascii?Q?0ZqQC3UxOkOmhLsn9cuwYB8olGPh+uK6JswysR4AplLrJcMLJmYzvFVRKIw8?=
- =?us-ascii?Q?MZhYwqOX8UeOHMrcKdcsD4F34zH64ip12QcPsA9AnnYuRgQkgVRlf90jAcH2?=
- =?us-ascii?Q?umG6KIdEWKVXqKAzdqq6PsDp+sP0E3nEtR1g9PVD4L78EXsFKUJFhKtNdyJw?=
- =?us-ascii?Q?iLiR9J84/FpOqUSlo0x+UBmoacZpZ5b+0rMf/GPk6eFrDDAk+yIOXRprrj+k?=
- =?us-ascii?Q?MyWKUNgn/8UEd8ydRlBl/qJVrYeP1Hf27Z8fbxDgOEedkdemjky4XEMf7BgZ?=
- =?us-ascii?Q?n3hdR+fO7cGZLr89A/x7pzR7ZZEnAUeKf4jlpRbB5trfz9VIG1v2gDxxM7pJ?=
- =?us-ascii?Q?LekYeNj32+sbVm32FDbYNY19QoggAV8ebQ/Jmv0fCxd/qj1tjV17SPsHy4Ee?=
- =?us-ascii?Q?v/sqlP+5WojhPEjKF9Q7F43XX5LWZhZIIYw6MeA9PPTW3Ci5zNQ2OzHxK9la?=
- =?us-ascii?Q?t1BtgJ531rgUL1iUuxfBExX7PCFZNQ8+noU5NvIbwGvWenzlDUO4VzcRsZWQ?=
- =?us-ascii?Q?uQesKIxZOZgmX1MF0CK4J6jLuUCMlevpTP2AnkFjpjgwkUvzIL+frJhMvj3p?=
- =?us-ascii?Q?H6Em2EDbWHySQaCWt5HRsGzJnB1Sof+h9Vo+wuTkNwiyc6LM7o9bBasF7emY?=
- =?us-ascii?Q?Tg028tVmC1jHDq6b8Fn9Yi6tcHIFo2TZ3wHqL5Trm5/XtLVMysn56u9bGThc?=
- =?us-ascii?Q?3uo8SBF/UyL9nguNuCD0NvQfl4CtsWVBad21bNJdspQMwKsQya4sMbvQesUy?=
- =?us-ascii?Q?cqP5C3IbtAk99nHZ+qmHD2G8Uv8ev4iSlvQ3AcpSvW+yGPJvEmZaFPTUFtNV?=
- =?us-ascii?Q?EN/n2kknvL0stKgiufSZJ4F6vG0u2Vtwg5zVk/Ils6VqSU4m4mcJWonG/QWh?=
- =?us-ascii?Q?j3UO6DwTImLdFS9EFON6iRKh1mZsTVO+F513z6wBlTHqmYeFftYVRCEHyxvv?=
- =?us-ascii?Q?S7WLZ/teuWUSr9ZSNBIw9vkTftxhqdRnhDp81+QYznhIJEQNeVzPS1ryfeH2?=
- =?us-ascii?Q?1dLrwJloj5ZGWCt8/CwAXRKXsGPgxk2QwloXrQzlJa7AhxBf02IN/YUCK/po?=
- =?us-ascii?Q?v4hZ6iSGE9+BTPjz6NyhjU274Bu+UnXdPBBJ9pyHa0LnYrLXDdZeSCSwrL23?=
- =?us-ascii?Q?ugvEyA=3D=3D?=
+	=?us-ascii?Q?CxS1eXibTfs3baqQAuzozMp94ZrKZcSsfprJl5EnkGxMSUESR5auTy8mtl8b?=
+ =?us-ascii?Q?ZTrNCBRnJ9fHPcZIVz89qLsPNx2jXe0FvXqVqD/TdX3cZ4RR1DEzOX+r/EJs?=
+ =?us-ascii?Q?xUdaTYt+cLuFJfAuetMrEdnlBhX1HUzEDAIE2feRQHdaSV5GcyqwRv/KtsHH?=
+ =?us-ascii?Q?fdi4A3QJ6Oc5Lxl0vV6PZt7zzB8Xi0fqdUesBrQNIQuS6SXfTdJ66Gl4MUMY?=
+ =?us-ascii?Q?zP7cG23AiGkSD5O442OT8TO9X0nUMnKZ78EuZqBbqf6XzO6DcfNnJdWy/f/6?=
+ =?us-ascii?Q?+m/5mE/P4GZUprWJjFxTg7NrdQtvZ4pg64Ll1YcUSclAUeWmXzNwo89Fq7xi?=
+ =?us-ascii?Q?TYUkQ1X24v9iIyzghdifXUWeeFsdJwnlZmIbEfhKP5LNLNMw/+Jvh5/mpW/g?=
+ =?us-ascii?Q?pngJugIgzlHRiGJB+7DiyQ+f2cmTbE4Q1La3SB6T6pNsZndcW0+3NyfJcsC1?=
+ =?us-ascii?Q?qR+OH1EHOdRalLeTtY7RWK7IKdHGZeZlVO7HPZWhfK3hJzjLVpcA8PCFq7z9?=
+ =?us-ascii?Q?9SUFdWk6MOr5+6hlaM00ogG2ryHseehc74LEHLrJDaIxsAW/RlE0R4Gd4GS3?=
+ =?us-ascii?Q?js2/STDkyEgiAlF2G/fbj79GPt98LMv7eDZktZ6vRkNee0aa2LQRSedHbAIO?=
+ =?us-ascii?Q?6xRjZN6OwHoEUFY2FTJHSn1wQKdsTwhRtrX5aRUjVBdjcFfyE/fjJ4JUp82c?=
+ =?us-ascii?Q?CnnAHmtUHYf0+3Yv2lN0xpgj1ibpF5MgNrGRA9vVIURvcpJXit3OxrzR7tqH?=
+ =?us-ascii?Q?EnXf7wBPsteH3U86B606r5VGOGajYka3DiDIed9O6A2fINyTb33JWq/yaXz9?=
+ =?us-ascii?Q?JDa5mdZTV7NX2mqVGqdOlUQ/5TIlgDENoqAUY2EZbyHvc2F9jHJaiYbw7G9x?=
+ =?us-ascii?Q?iwdOLe4T4Bv1d4WOmJTu8W3G0W8udo5KvRcZuzKJKWfvCGEhzb+M0ngz0jGY?=
+ =?us-ascii?Q?DcuCnTNJhnAAwkNYmB0RWuwI89yegzqpgps9z5MIuuymdR3nHTcQFZuQQasp?=
+ =?us-ascii?Q?2xZdAyOwIOSolA88bSDsMP02TN8MEwv02lFb+p2SaHTsacU1K6W+oWTIig25?=
+ =?us-ascii?Q?75ZOL2WTmeofwuxR7O1v0N3SL56XpHPal96G99zVrD+exl7YOD8Cm5PoMcWC?=
+ =?us-ascii?Q?vr2eskfYu9/Iqt9omu4xD07QOeAAJLi8Jt25WOunDjdxp8JQx7mu0Y2Jj3bl?=
+ =?us-ascii?Q?Kpf6msavWyHUTis8ZsX4Ijo9WATwmHXJ/zrdzAKbnz+umezTkbqDoEQ+yEu8?=
+ =?us-ascii?Q?ReAZUZXoc6ztrvZbRbo/yLKfy6ZqhJGjxPtLRbqCvyZZlFG8OlDOmjjwgoqa?=
+ =?us-ascii?Q?yhXaeDxMJO+ZhDynu/wmvPPOCscvQPRTOvV3hoF949o9M4Pg8HiWh+CnGZki?=
+ =?us-ascii?Q?0A6/mdSNDEkgOLIBEsHTYBZ44dm6c3wbe4kH7gbSSCZno38gzPMOzH82ELEn?=
+ =?us-ascii?Q?N9QB267yx9Ri6pUa2Fb9XqwVzcCtaXVp12HQ+LhDN/JA0yOr56Tehc+YjQfW?=
+ =?us-ascii?Q?JgLFPU1BV+OUfyWqp+jyXSMJEt85Zj9GOqdzK5IVZfCgvfEpQvK6K9O7jUw/?=
+ =?us-ascii?Q?D8zPyPFZnJxZzT/eemHtdPKViEeXwA6XI8eWMR1VM9G11B7gOS6cI2idiEvO?=
+ =?us-ascii?Q?26WWpkWnkQKAIiTzK2exLq3/HPbIDOdZoV8wRXkrBlhyyoFyMJOBN7m32cW/?=
+ =?us-ascii?Q?0LKGdA=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	0JINwvMhKmyEjH6EumYFLFoDus+6tdnBxonT6yRfojaAD8LizO8ZvkkDvIKXlhWQdbXlLaNv5pvclZagvTqydafu6Yz+pFepkyMYb2dLs9r9oOVA8IJN29HuFJ2kA4k3SLYN60WwqRYjZ0eP74vhryR3oougmmoQLqqir5c0nf+I7IWOuEiDZHuksihbl1f++D6IpnfP/Dav5ScIImfljKESQSFcTuVk1C/+FvvxxD5/lYOTiJGE1PiQEQamEzyfNoKGbYJcedwzY77tVzVg41iCTUQ793NQ/XNrBDLGcaCKMOkXktLfBNrVmDSy+IDwFG3+T6IYx62wFjxrCZnDoGvpUZNWSryePAnlh9Xg+DaoP9bwMfOulojYZ7Re8cVEecMg+bZoAsR2bAtzjiinLtdF+Eceg/zsWUwCtrnclY31pOb/pZdci6WACK9NnFRp
+	SaDkNZe3l6nec6WsNINMjBzs9bkroaFCFg2LsyO7xZlgTi8gUbUKaUowQlEM/w27JebeJdI0u0R1djFJVNJthuZ29lZ2UHquxD7KvH6xjbzT1glmBex+rVw0sQTELGzX/2Kdub8WT1YYf4dsm0gr1IGdZEWRX0W/81dPFEPRGhZ3mX4siVHRrFzWWAG3dfNAzwsOTjprTys7DPmQvElp75BUKd73Y/tYFDYMaefvj/Z84A/YiHpC25sM0Bk0TQxc7jNjznsLGdUpjX3MZseHNPNJ9MGSlLJ39HEOgxnznN5m8+Xu75A7v2M21zMm5QkQQG0Sc0eoK4QwtotxE5GlrpaQU95Vs2rn3y5aah6hOBKemPfNy2UQ9IEUZdtSqJ+azQRWeE8QFqxzhXDMjdt1kgVtJvPsLWZ6Qgj2iqFikeSpsHZRr9bPjPvqz2KOaaYe
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2026 04:26:06.7009
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2026 04:26:11.1784
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7760aba2-748b-499c-3b4b-08de6d1380e7
+X-MS-Exchange-CrossTenant-Network-Message-Id: a67190b5-8788-4f57-0e4e-08de6d138393
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000397B0.namprd05.prod.outlook.com
+	SN1PEPF000397B1.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9418
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8088
 
-IBS Fetch on future hardware adds fetch latency filtering which
-generates interrupt only when FetchLat value exceeds a programmable
-threshold.
+IBS on future hardware adds the ability to filter IBS events by examining
+RIP bit 63. Because Linux kernel addresses always have bit 63 set while
+user-space addresses never do, this capability can be used as a privilege
+filter.
 
-Hardware allows threshold in 128-cycle increment (i.e. 128, 256, 384
-etc.) from 128 to 1920 cycles. Like the existing IBS filters, samples
-that fail the latency test are dropped and IBS restarts internally.
+So far, IBS supports privilege filtering in software (swfilt=1), where
+samples are dropped in the NMI handler. The RIP bit63 hardware filter
+enables IBS to be usable by unprivileged users without passing swfilt
+flag. So, swfilt flag will silently be ignored when the hardware
+filtering capability is present.
 
-Since hardware supports threshold in multiple of 128, add a software
-filter on top to support latency threshold with the granularity of 1
-cycle in between [128-1920].
-
-Example:
-  # perf record -e ibs_fetch/fetchlat=128/ -c 10000 -a -- sleep 5
+Example (non-root user):
+  $ perf record -e ibs_op//u -- <workload>
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
- arch/x86/events/amd/ibs.c | 66 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 65 insertions(+), 1 deletion(-)
+ arch/x86/events/amd/ibs.c | 46 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 38 insertions(+), 8 deletions(-)
 
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index b7f0aad9356c..cb3ae4e4744c 100644
+index cb3ae4e4744c..13ecc8d92b23 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
-@@ -35,6 +35,8 @@ static u32 ibs_caps;
- /* attr.config1 */
- #define IBS_OP_CONFIG1_LDLAT_MASK		(0xFFFULL <<  0)
+@@ -321,11 +321,6 @@ static int perf_ibs_init(struct perf_event *event)
+ 	    event->attr.exclude_idle)
+ 		return -EINVAL;
  
-+#define IBS_FETCH_CONFIG1_FETCHLAT_MASK		(0x7FFULL <<  0)
-+
- /*
-  * IBS states:
-  *
-@@ -282,6 +284,14 @@ static bool perf_ibs_ldlat_event(struct perf_ibs *perf_ibs,
- 	       (event->attr.config1 & IBS_OP_CONFIG1_LDLAT_MASK);
- }
- 
-+static bool perf_ibs_fetch_lat_event(struct perf_ibs *perf_ibs,
-+				     struct perf_event *event)
-+{
-+	return perf_ibs == &perf_ibs_fetch &&
-+	       (ibs_caps & IBS_CAPS_FETCHLAT) &&
-+	       (event->attr.config1 & IBS_FETCH_CONFIG1_FETCHLAT_MASK);
-+}
-+
- static int perf_ibs_init(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
-@@ -377,6 +387,17 @@ static int perf_ibs_init(struct perf_event *event)
- 			config |= IBS_OP_L3MISSONLY;
+-	if (!(event->attr.config2 & IBS_SW_FILTER_MASK) &&
+-	    (event->attr.exclude_kernel || event->attr.exclude_user ||
+-	     event->attr.exclude_hv))
+-		return -EINVAL;
+-
+ 	ret = validate_group(event);
+ 	if (ret)
+ 		return ret;
+@@ -338,6 +333,32 @@ static int perf_ibs_init(struct perf_event *event)
+ 		hwc->extra_reg.reg = perf_ibs->msr2;
  	}
  
-+	if (perf_ibs_fetch_lat_event(perf_ibs, event)) {
-+		u64 fetchlat = event->attr.config1 & IBS_FETCH_CONFIG1_FETCHLAT_MASK;
-+
-+		if (fetchlat < 128 || fetchlat > 1920)
-+			return -EINVAL;
-+		fetchlat >>= 7;
-+
-+		hwc->extra_reg.reg = perf_ibs->msr2;
-+		hwc->extra_reg.config |= fetchlat << IBS_FETCH_2_FETCHLAT_FILTER_SHIFT;
-+	}
-+
- 	/*
- 	 * If we modify hwc->sample_period, we also need to update
- 	 * hwc->last_period and hwc->period_left.
-@@ -665,6 +686,8 @@ PMU_EVENT_ATTR_STRING(ldlat, ibs_op_ldlat_format, "config1:0-11");
- PMU_EVENT_ATTR_STRING(zen4_ibs_extensions, zen4_ibs_extensions, "1");
- PMU_EVENT_ATTR_STRING(ldlat, ibs_op_ldlat_cap, "1");
- PMU_EVENT_ATTR_STRING(dtlb_pgsize, ibs_op_dtlb_pgsize_cap, "1");
-+PMU_EVENT_ATTR_STRING(fetchlat, ibs_fetch_lat_format, "config1:0-10");
-+PMU_EVENT_ATTR_STRING(fetchlat, ibs_fetch_lat_cap, "1");
- 
- static umode_t
- zen4_ibs_extensions_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-@@ -672,6 +695,12 @@ zen4_ibs_extensions_is_visible(struct kobject *kobj, struct attribute *attr, int
- 	return ibs_caps & IBS_CAPS_ZEN4 ? attr->mode : 0;
- }
- 
-+static umode_t
-+ibs_fetch_lat_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-+{
-+	return ibs_caps & IBS_CAPS_FETCHLAT ? attr->mode : 0;
-+}
-+
- static umode_t
- ibs_op_ldlat_is_visible(struct kobject *kobj, struct attribute *attr, int i)
- {
-@@ -700,6 +729,16 @@ static struct attribute *zen4_ibs_extensions_attrs[] = {
- 	NULL,
- };
- 
-+static struct attribute *ibs_fetch_lat_format_attrs[] = {
-+	&ibs_fetch_lat_format.attr.attr,
-+	NULL,
-+};
-+
-+static struct attribute *ibs_fetch_lat_cap_attrs[] = {
-+	&ibs_fetch_lat_cap.attr.attr,
-+	NULL,
-+};
-+
- static struct attribute *ibs_op_ldlat_cap_attrs[] = {
- 	&ibs_op_ldlat_cap.attr.attr,
- 	NULL,
-@@ -727,6 +766,18 @@ static struct attribute_group group_zen4_ibs_extensions = {
- 	.is_visible = zen4_ibs_extensions_is_visible,
- };
- 
-+static struct attribute_group group_ibs_fetch_lat_cap = {
-+	.name = "caps",
-+	.attrs = ibs_fetch_lat_cap_attrs,
-+	.is_visible = ibs_fetch_lat_is_visible,
-+};
-+
-+static struct attribute_group group_ibs_fetch_lat_format = {
-+	.name = "format",
-+	.attrs = ibs_fetch_lat_format_attrs,
-+	.is_visible = ibs_fetch_lat_is_visible,
-+};
-+
- static struct attribute_group group_ibs_op_ldlat_cap = {
- 	.name = "caps",
- 	.attrs = ibs_op_ldlat_cap_attrs,
-@@ -748,6 +799,8 @@ static const struct attribute_group *fetch_attr_groups[] = {
- static const struct attribute_group *fetch_attr_update[] = {
- 	&group_fetch_l3missonly,
- 	&group_zen4_ibs_extensions,
-+	&group_ibs_fetch_lat_cap,
-+	&group_ibs_fetch_lat_format,
- 	NULL,
- };
- 
-@@ -1191,7 +1244,8 @@ static int perf_ibs_get_offset_max(struct perf_ibs *perf_ibs,
- {
- 	if (event->attr.sample_type & PERF_SAMPLE_RAW ||
- 	    perf_ibs_is_mem_sample_type(perf_ibs, event) ||
--	    perf_ibs_ldlat_event(perf_ibs, event))
-+	    perf_ibs_ldlat_event(perf_ibs, event) ||
-+	    perf_ibs_fetch_lat_event(perf_ibs, event))
- 		return perf_ibs->offset_max;
- 	else if (check_rip)
- 		return 3;
-@@ -1333,6 +1387,16 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 		}
- 	}
- 
-+	if (perf_ibs_fetch_lat_event(perf_ibs, event)) {
-+		union ibs_fetch_ctl fetch_ctl;
-+
-+		fetch_ctl.val = ibs_data.regs[ibs_fetch_msr_idx(MSR_AMD64_IBSFETCHCTL)];
-+		if (fetch_ctl.fetch_lat < (event->attr.config1 & IBS_FETCH_CONFIG1_FETCHLAT_MASK)) {
-+			throttle = perf_event_account_interrupt(event);
-+			goto out;
++	if (ibs_caps & IBS_CAPS_BIT63_FILTER) {
++		if (perf_ibs == &perf_ibs_fetch) {
++			if (event->attr.exclude_kernel) {
++				hwc->extra_reg.config |= IBS_FETCH_2_EXCL_RIP_63_EQ_1;
++				hwc->extra_reg.reg = perf_ibs->msr2;
++			}
++			if (event->attr.exclude_user) {
++				hwc->extra_reg.config |= IBS_FETCH_2_EXCL_RIP_63_EQ_0;
++				hwc->extra_reg.reg = perf_ibs->msr2;
++			}
++		} else {
++			if (event->attr.exclude_kernel) {
++				hwc->extra_reg.config |= IBS_OP_2_EXCL_RIP_63_EQ_1;
++				hwc->extra_reg.reg = perf_ibs->msr2;
++			}
++			if (event->attr.exclude_user) {
++				hwc->extra_reg.config |= IBS_OP_2_EXCL_RIP_63_EQ_0;
++				hwc->extra_reg.reg = perf_ibs->msr2;
++			}
 +		}
++	} else if (!(event->attr.config2 & IBS_SW_FILTER_MASK) &&
++		   (event->attr.exclude_kernel || event->attr.exclude_user ||
++		    event->attr.exclude_hv)) {
++		return -EINVAL;
 +	}
 +
- 	/*
- 	 * Read IbsBrTarget, IbsOpData4, and IbsExtdCtl separately
- 	 * depending on their availability.
+ 	if (hwc->sample_period) {
+ 		if (config & perf_ibs->cnt_mask)
+ 			/* raw max_cnt may not be set */
+@@ -1280,7 +1301,7 @@ static bool perf_ibs_is_kernel_br_target(struct perf_event *event,
+ 			op_data.op_brn_ret && kernel_ip(br_target));
+ }
+ 
+-static bool perf_ibs_swfilt_discard(struct perf_ibs *perf_ibs, struct perf_event *event,
++static bool perf_ibs_discard_sample(struct perf_ibs *perf_ibs, struct perf_event *event,
+ 				    struct pt_regs *regs, struct perf_ibs_data *ibs_data,
+ 				    int br_target_idx)
+ {
+@@ -1435,8 +1456,9 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ 		regs.flags |= PERF_EFLAGS_EXACT;
+ 	}
+ 
+-	if ((event->attr.config2 & IBS_SW_FILTER_MASK) &&
+-	    perf_ibs_swfilt_discard(perf_ibs, event, &regs, &ibs_data, br_target_idx)) {
++	if (((ibs_caps & IBS_CAPS_BIT63_FILTER) ||
++	     (event->attr.config2 & IBS_SW_FILTER_MASK)) &&
++	    perf_ibs_discard_sample(perf_ibs, event, &regs, &ibs_data, br_target_idx)) {
+ 		throttle = perf_event_account_interrupt(event);
+ 		goto out;
+ 	}
+@@ -1899,6 +1921,14 @@ static __init int amd_ibs_init(void)
+ 
+ 	perf_ibs_pm_init();
+ 
++#ifdef CONFIG_X86_32
++	/*
++	 * IBS_CAPS_BIT63_FILTER is used for exclude_kernel/user filtering,
++	 * which obviously won't work for 32 bit kernel.
++	 */
++	caps &= ~IBS_CAPS_BIT63_FILTER;
++#endif
++
+ 	ibs_caps = caps;
+ 	/* make ibs_caps visible to other cpus: */
+ 	smp_mb();
 -- 
 2.43.0
 
