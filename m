@@ -1,223 +1,261 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011006.outbound.protection.outlook.com [52.101.52.6])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA842C11DF;
-	Mon, 16 Feb 2026 04:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.6
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771215986; cv=fail; b=cWbl+wua8vx1+yIxQkFdjlJepgV0fgLVHOrf+9b5eTTy4yuD4MW+bIv4caZd90DsBnHNq0/7rmkw9N1GEPTRHuK93EAMpjKAtrjgYvroSilEaHY/WrFujLxey9RG4xsASTgxGqLYVAKMS99NDmNEPJWOMLQzFcM6n1vmozBMaqM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771215986; c=relaxed/simple;
-	bh=0fGOVCIVaZgiNmB7eHHJd+JWKkv1wJfRKEC4JbHeE8c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UtzikboWcmfF8vZoKkeaVxSM317j0MYBzoB5s3WMxdY0Rs6DF+Okvpd2wrlgGqia7PSlG9x34tdn8sbasMF+VRRDytS01zDYVoguoDNWYq3w5aB2p+Rp/8OUMIx1/3mCqZlLeYZ2BkqhYac7ziSZEvpAVT2L8zi8eCKu6X7gS5E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vBJoqOuO; arc=fail smtp.client-ip=52.101.52.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A9D2957B6;
+	Mon, 16 Feb 2026 10:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771236290; cv=none; b=ouXtXa/fWTyUOuJXkYNryE3LtoUAshfKjvExLdvOx07XvlalDGykZqaCqL1LWJa+rAlP7NCFUxrkq9MdYT8HZpKsWUVi1N+IGssGizccPCYrZWIvxCqfaoayhPZAczinpu2baJRulbokcHdbeztLLjcUsaLnZTltnGrl3YwFzL8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771236290; c=relaxed/simple;
+	bh=5KZu16JjtFzRmhVOxkUpbiDIoVXKRpeq9siIB4AjDwU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Grd2yX/elC9iwOYrF3XCsx/eoCFkRxEABEomDxXgVGo23axh4d8/QgrVCIlNzxrlBn1EswlPUgj6F42//jE5jORzKDsmDJ5EnJP0vuPtZKtDV3DXl4xs8E5V6ZIz9c4JtXTFzqKvCrazcP7c3oYZvHX9CpmXeB8eghuVBX3uT/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jSyqz02l; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vBJoqOuO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wrIA1xV2KzNFoVCccN3+qLeYawfc5fXRAfNc+fXvr0qOwnYYP8RtsHsMPJUIXTmT9o7MYTEjgpnbgvwGmES2v0hHOQiQmZGM5bcYvJwPzeufAcBJvOx4SHm0TEsRF74dP/LYhyj6coygxsWNcNTSj9hZDt955D9WO/oI7AnQ7j+4Qr/bhX9u9JpJzxXOooYmmWbyHLeR1vmEmvtU7GcVjCV5s0OrgqyOv9zmMYhNh2VkXu3aXMd+9QLC601OC/uXbm5+Dogz4Y/7BeNLD3jIyEf1v0p7HCRitU/8Bf+FtgXOt49sKffBHuH5JksCnfoZXS2ahyiW5APCUpnXMapMOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j0NWyBQbn5NBfol5hsHp0p+SQC9kjSU5WQN52+hIpSI=;
- b=W/1rtKmV2fzZhDWdkN+u5oNwXbcilOoFxAyW3jnHKty1QGJ5hP3erHtE8UY49AsPP8cjRVqMiF/9SxorwDwbd7DSwLjKZ3YY/jMYk5Osv5yCEi/BHfcHqKN4QkrQv8TfbAX1n5bnZP8zE1B+SjjBcHKEjgA1LJrk+kV2o2UGk1YJD2iRn8e2qqXTCgwVJdI7vXJgx2GkkPfVHrd3j/0OjK9fDP+kuBfM76r5GjCw800l9X2f64dt+1qRkpusnWR1/d5KKFsg17XvjI36GS4G3KPYT1Y8lFUJxsJHMdCf2jxg+gdws7TbEg480T7mf8O7EqrF1Mw4m5BOGKX0aq//gg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j0NWyBQbn5NBfol5hsHp0p+SQC9kjSU5WQN52+hIpSI=;
- b=vBJoqOuOCpBNAucwEU6ax1a+4pR/y82fPHY+uq4vBpOqcBXnlZCXteia7pTtgRA+Ce5+Mq7mJmj2/Av+r3kIpyJX36v81AB5V0SglqA2mf82lc/5GSpWCwj69V2KUqshYklPMzUg5covC7YkJymB8hhCV2bpZlJOAa0O6H2ra8M=
-Received: from PH7P220CA0154.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:33b::35)
- by IA1PR12MB8237.namprd12.prod.outlook.com (2603:10b6:208:3f3::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.16; Mon, 16 Feb
- 2026 04:26:20 +0000
-Received: from SN1PEPF000397B4.namprd05.prod.outlook.com
- (2603:10b6:510:33b:cafe::59) by PH7P220CA0154.outlook.office365.com
- (2603:10b6:510:33b::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9611.16 via Frontend Transport; Mon,
- 16 Feb 2026 04:26:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SN1PEPF000397B4.mail.protection.outlook.com (10.167.248.58) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Mon, 16 Feb 2026 04:26:20 +0000
-Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sun, 15 Feb
- 2026 22:26:15 -0600
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
-CC: Ravi Bangoria <ravi.bangoria@amd.com>, Arnaldo Carvalho de Melo
-	<acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
-	<irogers@google.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, James Clark
-	<james.clark@linaro.org>, Sadasivan Shaiju <sadasivan.shaiju2@amd.com>,
-	<x86@kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Manali Shukla <manali.shukla@amd.com>,
-	Santosh Shukla <santosh.shukla@amd.com>, Ananth Narayan
-	<ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH v2 7/7] perf/amd/ibs: Advertise remote socket capability
-Date: Mon, 16 Feb 2026 04:25:30 +0000
-Message-ID: <20260216042530.1546-8-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260216042530.1546-1-ravi.bangoria@amd.com>
-References: <20260216042530.1546-1-ravi.bangoria@amd.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jSyqz02l"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61FNHZAK3694814;
+	Mon, 16 Feb 2026 10:04:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=SFUyBf
+	k5MJbOhOtewPB2vYDEFuGUdBaLWZjpK55C88c=; b=jSyqz02lg/2hA8lwdKWlIu
+	DMshcqgtRXxB/ZegzEyaY6DVdvNlRzwigvFu2W1orjWKqOAhtB6oCz6DkQm+obeO
+	rgENn+R/oZdrCHbpPTFNTDx9oz1EwpzMmvDvihZ6sxss33abCAUbTAF5Ao6oSmvi
+	/rv9WATmGYu6Kl0k5/vpigCUakcXhMQcN3dSmJ18pAOcsrftVvrvLl96HmkziHIc
+	kXmUnxnRxO9N2SCM9Eh9rA+5fjsd1U/9VJz9p7VB/t7z3EdkqGmaTbaex0958Dgp
+	Na80km1SCyS+NCgsi/2KucXrluziI/nLsRl6uW8/VmHwAwUBt/ljR86M1K96YVmg
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4caj4k6p3p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Feb 2026 10:04:44 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61G7aiiI002849;
+	Mon, 16 Feb 2026 10:04:43 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cb5kj4q0c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Feb 2026 10:04:43 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61GA4eo530671560
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 16 Feb 2026 10:04:40 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E32402005A;
+	Mon, 16 Feb 2026 10:04:39 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A24002004F;
+	Mon, 16 Feb 2026 10:04:39 +0000 (GMT)
+Received: from [9.52.199.37] (unknown [9.52.199.37])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 16 Feb 2026 10:04:39 +0000 (GMT)
+Message-ID: <30f598eb-4c9e-49da-a643-118b462b8b77@linux.ibm.com>
+Date: Mon, 16 Feb 2026 11:04:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH linux-next] perf parse-events: Fix big-endian 'overwrite'
+ by writing correct union member
+To: Ian Rogers <irogers@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        james.clark@linaro.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
+        sumanthk@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com
+References: <20260212125315.777356-1-tmricht@linux.ibm.com>
+ <CAP-5=fWxHfGZaLyrvzuQF83K1g=LaFC4uRvg3HjM0=W9ts_yxQ@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <CAP-5=fWxHfGZaLyrvzuQF83K1g=LaFC4uRvg3HjM0=W9ts_yxQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397B4:EE_|IA1PR12MB8237:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1282a08f-a8bc-4c22-d47c-08de6d1388d6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Mwzjlrl+u7jFSYpidHL7es9Rei7+IatfR7d7ctnLkMrw4w0trvF0pKw9pad1?=
- =?us-ascii?Q?QFVvYUt61K2Skldw2GVMf1/OJ2sVLNfxRCTB9l1f1lmc+R2SZJQcI3gqNAeT?=
- =?us-ascii?Q?lnLDb9eIK5Pw+kwbPJg3CZDlcNDjctCH2H5VY3OSaKB0ZQ9z9QZF5YQ6Y+Op?=
- =?us-ascii?Q?HyCCDmHzurXw0QLrbbzBEEriGaBBeFHP9M1qkMEdb+JpjBc6J5l9Qf6xOCTO?=
- =?us-ascii?Q?A2pMvDI8GDvxDGA8z7xKwKvdDEqBRgO39LCBnsCpoqxd8X3aGLlNX+X0Turv?=
- =?us-ascii?Q?PWbvRiPZveMYGTFTzJRBnKiU91HTuU5E1/hYz14BINovt3k9gq6mrNtXXyBi?=
- =?us-ascii?Q?SePz0UtAdg8M2e6ALi1fBdARdQYypWl4Ol6TrahH3VRXJTuBvW9UfJvFQV7M?=
- =?us-ascii?Q?z0SELR8JqOmBYkJOrnnsJgdKEQ8suhrAsggP15QHG2zULCSTj+c7ZpKbkbf1?=
- =?us-ascii?Q?XB8k3w/ZOD0IxmV2qnsaeC3WkuFLXaUL5uTn3z17dlDQPEqLPfYQUT3cRv7O?=
- =?us-ascii?Q?N0D35fYJApG9W0/JTMLL38c2JLOP3ByxB0x6D3B4Y6ZUEzigGcnbHaYVQU2x?=
- =?us-ascii?Q?mlyYzj1PKkuCFiqoSiUmCsFcLKVC985zztj+e4OZm05MSQOAh7Ms+YSw8Bz0?=
- =?us-ascii?Q?kIXnQ+unJJqLHX13TRByzdlsZFigZJ2s7A3S15IVWxBfjiW4z4WZ3T8zspU7?=
- =?us-ascii?Q?GSH5mjw1UtmpMPbnGdq+ymhGL36V6fDI5qk8U2pcQpDa7U5vr0stEGThy0S6?=
- =?us-ascii?Q?YPRH1AUPI7iC4jJAhjQJV6OrbQP+7aw6i5PpKdf3XwqwBfv1F+Xr0n3QdGfD?=
- =?us-ascii?Q?CHx3Qn0p0mTZIqApR01/oW99CwNk6ovLxMYUHXogGP4Ulk0JfF2RTMasIb7W?=
- =?us-ascii?Q?kLcaaxu/IL55BpMp6cwF3kKnuDJXq9xrH4Ae8u+koqGWGFRMltVkuSvHc07Z?=
- =?us-ascii?Q?n+AmSnQ0UokCdgYcVttN+O3nKhiq8A0x8/ToZUaebJ5WizEsouLAC4r+hGcu?=
- =?us-ascii?Q?IgyfzKm3R+N0Dy9GvZ3PpkMlM2VJSLcbIuTK8wf9hfoZ33PcKKTQWW0WS3Rm?=
- =?us-ascii?Q?reDua8lVgeVEk6CMfXo2JIxFsS6dRHZIKp4660s8UU5363GHkHVyhUHzlI+E?=
- =?us-ascii?Q?Kh4Cq5isvT9CjNtgqilwWTXzBS+3+gBsYK0xiOK0YSnL3eLg9GHTtKF0TUGH?=
- =?us-ascii?Q?4G8Q5OSbunzIcs8xtZw4fZt5lJ0HljhVvk9XJj7ghKzx3LYkjPgCpnxL5Ver?=
- =?us-ascii?Q?MnzNSQ2LLQGEOH5oA1jP6qqtzHibpK/EOx5RvtOw72fBOhw1Wxm80kL/knoT?=
- =?us-ascii?Q?svw3j+WHEhfrS/fuSDgaWU9gymsrVylgvQWoU4Vj0DB2Oxo08Nl2XLiiFzyL?=
- =?us-ascii?Q?lmC5m29g3Dzn1yPFszn0mXzoxMxvoPym4dYbk/l4a+ETCHfWPYNpppXCtBvH?=
- =?us-ascii?Q?B+5nHtLlmGYJDF2pb6th1wQVnUPMJXw1uZ/bXw5YGe5Q4eDG3baAzHG+MK+w?=
- =?us-ascii?Q?Bmqu4aSUInzXuXQHr8sA5fGzYgBv58UjQ4F0/ZFj0z2UyI2Q7vJef0c/5CZj?=
- =?us-ascii?Q?TdWHpxM8Qzj1Z3y6S3It4l6fYqc0q5QZ6OQzeyY2ENqacOSDViekEiofmN1I?=
- =?us-ascii?Q?SQcKkAW0RDLhDF/70hWIpKR5Cd62dVRegYkKElqFUknlBJHN9lbut81Os5LZ?=
- =?us-ascii?Q?75YF8w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	WjLs9kMFg4x4bo1ds6IUjQNyqHohqRMBbNFNboKKWwOLhjZCrbxItTLnpVogaFbLCtJrdbbLJX2xm+4uWAJRV8F27raAkwOmGQvOdbnTlSIZ4+UaikcK2uVhcDN45ld6aQHScU0oCAxA5ZdYe9hRRb5i+8iZ/KWbBwcaTEJh/mOIH8q2IBIK9vxK48C6Mxq3VevA45e4wXeLm3o8WGdDZ1nbD+ReOzUsfLTZxWUdNdnDWWWhBxILUxDipxrZ/6DkGXMyA74zAW+GOsmVUEkABoiKSbIaqErPHiqC/fbPro+G/tCoLvSXtAuuBnX1Mhr68Q7KCQx1jkwsv8zzWMclTqaLdSY6Ctf2pfByPgfKNZD8P2UOBnf2RL95XV3WHoCXkWIdZ78DOqXKwke7++KyJY8DJgewmYsIcSrjvEfSxw5CizVTEPOqnYO/e1l3VQZw
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2026 04:26:20.0418
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1282a08f-a8bc-4c22-d47c-08de6d1388d6
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000397B4.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8237
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE2MDA4MCBTYWx0ZWRfX59iQCskLhAT/
+ AwTHv7shDb2Nqv3N6XFD46WAXu6v6ced2N0zdPWCTZWKz53cjgQF+wJVRylo/oHyFNyD3OkuTau
+ RSmT18yj7Dcu4b0Na+9TTVghdW6SFvO0QrS31ZKFwUaDNG/WwI0eT/EDxActSfmyVyv26GpNDGY
+ tZf0lJace0lnPYtCEn3KeZl6WzHsclcDlgpD8RV3IUlFcx9ZbfpePTbD5kXiFR2nXcSNqsg9ltx
+ U8Bbe/v6FICZCdDtGesuV1VxFKZJcLA7lC8l4PX0kb+1TpfXfdgE4kwa7sLC2QeQ8E43ECSoKrM
+ bHMoZvu/gpAM8fqxs9/zhpA2exZBj2+UjR0/yWLA4eJvKMjQa0ywvEk1dgIzbaBLV4PePhfpMRJ
+ dpJ96O9kTOJMiaTfP7QJkAzwE69l3cnHfzzqwzenxh/QLKmVnYtsj/e+oMxhhUmkbX/4cp92chm
+ 6JQMHhpFl4ucRng/jOQ==
+X-Proofpoint-ORIG-GUID: iztKq3XxX8NzP4OGmF2wTgYy3rP5hON-
+X-Proofpoint-GUID: i0iHC08cPVNwkih3ggKOmoPU4r8PdCQl
+X-Authority-Analysis: v=2.4 cv=M7hA6iws c=1 sm=1 tr=0 ts=6992ebbd cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VnNF1IyMAAAA:8
+ a=KKAkSRfTAAAA:8 a=1XWaLZrsAAAA:8 a=xZbbY9QGpBwAEkLlNRwA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-16_03,2026-02-16_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015 phishscore=0
+ impostorscore=0 suspectscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602160080
 
-IBS OP on future hardware can indicate data source from remote socket
-as well. Advertise this capability to userspace so that userspace tools
-can decode IBS data accordingly.
+On 2/12/26 19:17, Ian Rogers wrote:
+> On Thu, Feb 12, 2026 at 4:53 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>>
+>> The "Read backward ring buffer" test crashes on big-endian (e.g. s390x)
+>> due to a NULL dereference when the backward mmap path isn't enabled.
+>>
+>> Reproducer:
+>>   # ./perf test -F 'Read backward ring buffer'
+>>   Segmentation fault (core dumped)
+>>   # uname -m
+>>   s390x
+>>   #
+>>
+>> Root cause:
+>> get_config_terms() stores into evsel_config_term::val.val (u64) while later
+>> code reads boolean fields such as evsel_config_term::val.overwrite.
+>> On big-endian the 1-byte boolean is left-aligned, so writing
+>> evsel_config_term::val.val = 1 is read back as
+>> evsel_config_term::val.overwrite = 0,
+>> leaving backward mmap disabled and a NULL map being used.
+>>
+>> Store values in the union member that matches the term type, e.g.:
+>>   /* for OVERWRITE */
+>>   new_term->val.overwrite = 1;  /* not new_term->val.val = 1 */
+>> to fix this.
+>>
+>> Impact:
+>> Enables backward mmap on big-endian and prevents the crash.
+>> No change on little-endian.
+>>
+>> Output after:
+>>  # ./perf test -Fv 44
+>>  --- start ---
+>>  Using CPUID IBM,9175,705,ME1,3.8,002f
+>>  mmap size 1052672B
+>>  mmap size 8192B
+>>  ---- end ----
+>>  44: Read backward ring buffer                         : Ok
+>>  #
+>>
+>> Fixes: 159ca97cd97c ("perf parse-events: Refactor get_config_terms() to remove macros")
+>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>> Reviewed-by: Jan Polensky <japo@linux.ibm.com>
+>> Cc: James Clark <james.clark@linaro.org>
+>> Cc: Ian Rogers <irogers@google.com>
+>> ---
+>>  tools/perf/util/parse-events.c | 49 +++++++++++++++++++++++++++++++++-
+>>  1 file changed, 48 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+>> index d4647ded340f..12fe5392c832 100644
+>> --- a/tools/perf/util/parse-events.c
+>> +++ b/tools/perf/util/parse-events.c
+>> @@ -1250,7 +1250,54 @@ static int get_config_terms(const struct parse_events_terms *head_config,
+>>                         }
+>>                         new_term->free_str = true;
+>>                 } else {
+>> -                       new_term->val.val = val;
+>> +                       switch (new_type) {
+>> +                       case EVSEL__CONFIG_TERM_PERIOD:
+>> +                               new_term->val.period = val;
+>> +                               break;
+> 
+> Thanks Thomas and sorry big endian got broken! I'm a little confused
+> here as period is a u64 so I think this one can be a default case.
+> 
+>> +                       case EVSEL__CONFIG_TERM_FREQ:
+>> +                               new_term->val.freq = val;
+>> +                               break;
+> 
+> Also a u64.
+> 
+>> +                       case EVSEL__CONFIG_TERM_TIME:
+>> +                               new_term->val.time = val;
+>> +                               break;
+>> +                       case EVSEL__CONFIG_TERM_STACK_USER:
+>> +                               new_term->val.stack_user = val;
+>> +                               break;
+> 
+> Also a u64.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
- arch/x86/events/amd/ibs.c      | 19 +++++++++++++++++++
- arch/x86/include/asm/amd/ibs.h |  3 ++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+Agreed, I really don't mind. However should that type be changed (yep extremely unlikely)
+we run into the same issue again.
+> 
+>> +                       case EVSEL__CONFIG_TERM_INHERIT:
+>> +                               new_term->val.inherit = val;
+>> +                               break;
+>> +                       case EVSEL__CONFIG_TERM_OVERWRITE:
+>> +                               new_term->val.overwrite = val;
+>> +                               break;
+>> +                       case EVSEL__CONFIG_TERM_MAX_STACK:
+>> +                               new_term->val.max_stack = val;
+>> +                               break;
+>> +                       case EVSEL__CONFIG_TERM_MAX_EVENTS:
+>> +                               new_term->val.max_events = val;
+>> +                               break;
+>> +                       case EVSEL__CONFIG_TERM_PERCORE:
+>> +                               new_term->val.percore = val;
+>> +                               break;
+>> +                       case EVSEL__CONFIG_TERM_AUX_OUTPUT:
+>> +                               new_term->val.aux_output = val;
+>> +                               break;
+>> +                       case EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE:
+>> +                               new_term->val.aux_sample_size = val;
+>> +                               break;
+>> +                       case EVSEL__CONFIG_TERM_CALLGRAPH:
+>> +                       case EVSEL__CONFIG_TERM_DRV_CFG:
+>> +                       case EVSEL__CONFIG_TERM_BRANCH:
+>> +                       case EVSEL__CONFIG_TERM_AUX_ACTION:
+>> +                       case EVSEL__CONFIG_TERM_USR_CHG_CONFIG:
+>> +                       case EVSEL__CONFIG_TERM_USR_CHG_CONFIG1:
+>> +                       case EVSEL__CONFIG_TERM_USR_CHG_CONFIG2:
+>> +                       case EVSEL__CONFIG_TERM_USR_CHG_CONFIG3:
+>> +                       case EVSEL__CONFIG_TERM_USR_CHG_CONFIG4:
+>> +                       case EVSEL__CONFIG_TERM_RATIO_TO_PREV:
+> 
+> I think these cases are all assigning a str so would using str rather
+> than val be cleaner?
+> 
+> The change looks good but it is a little inconsistent that the default
+> copying is done for str values but not for u64. It would kind of be
+> nice to remove the default copying so that if a new config term is
+> added the switch will fail to compile due to a missing case statement.
+> Then we can do the right copy for big endian. Given we've broken
+> big-endian here we should probably add a comment.
+> 
+> Thanks,
+> Ian
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 0a8313ea6331..eeb607b84dda 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -730,6 +730,7 @@ PMU_EVENT_ATTR_STRING(fetchlat, ibs_fetch_lat_format, "config1:0-10");
- PMU_EVENT_ATTR_STRING(fetchlat, ibs_fetch_lat_cap, "1");
- PMU_EVENT_ATTR_STRING(strmst, ibs_op_strmst_format, "config1:12");
- PMU_EVENT_ATTR_STRING(strmst, ibs_op_strmst_cap, "1");
-+PMU_EVENT_ATTR_STRING(rmtsocket, ibs_op_rmtsocket_cap, "1");
- 
- static umode_t
- zen4_ibs_extensions_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-@@ -749,6 +750,12 @@ ibs_op_strmst_is_visible(struct kobject *kobj, struct attribute *attr, int i)
- 	return ibs_caps & IBS_CAPS_STRMST_RMTSOCKET ? attr->mode : 0;
- }
- 
-+static umode_t
-+ibs_op_rmtsocket_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-+{
-+	return ibs_caps & IBS_CAPS_STRMST_RMTSOCKET ? attr->mode : 0;
-+}
-+
- static umode_t
- ibs_op_ldlat_is_visible(struct kobject *kobj, struct attribute *attr, int i)
- {
-@@ -802,6 +809,11 @@ static struct attribute *ibs_op_strmst_cap_attrs[] = {
- 	NULL,
- };
- 
-+static struct attribute *ibs_op_rmtsocket_cap_attrs[] = {
-+	&ibs_op_rmtsocket_cap.attr.attr,
-+	NULL,
-+};
-+
- static struct attribute_group group_fetch_formats = {
- 	.name = "format",
- 	.attrs = fetch_attrs,
-@@ -849,6 +861,12 @@ static struct attribute_group group_ibs_op_strmst_cap = {
- 	.is_visible = ibs_op_strmst_is_visible,
- };
- 
-+static struct attribute_group group_ibs_op_rmtsocket_cap = {
-+	.name = "caps",
-+	.attrs = ibs_op_rmtsocket_cap_attrs,
-+	.is_visible = ibs_op_rmtsocket_is_visible,
-+};
-+
- static const struct attribute_group *fetch_attr_groups[] = {
- 	&group_fetch_formats,
- 	&empty_caps_group,
-@@ -938,6 +956,7 @@ static const struct attribute_group *op_attr_update[] = {
- 	&group_ibs_op_dtlb_pgsize_cap,
- 	&group_ibs_op_strmst_cap,
- 	&group_ibs_op_strmst_format,
-+	&group_ibs_op_rmtsocket_cap,
- 	NULL,
- };
- 
-diff --git a/arch/x86/include/asm/amd/ibs.h b/arch/x86/include/asm/amd/ibs.h
-index 020916eb7b4e..4eac36c42db6 100644
---- a/arch/x86/include/asm/amd/ibs.h
-+++ b/arch/x86/include/asm/amd/ibs.h
-@@ -100,7 +100,8 @@ union ibs_op_data2 {
- 			cache_hit_st:1,	/* 5: cache hit state */
- 			data_src_hi:2,	/* 6-7: data source high */
- 			strm_st:1,	/* 8: streaming store */
--			reserved1:55;	/* 9-63: reserved */
-+			rmt_socket:1,   /* 9: remote socket */
-+			reserved1:54;   /* 10-63: reserved */
- 	};
- };
- 
+Yep I will send v2 later today and hopefully address your remarks completely.
+
+> 
+> I> +                       default:
+>> +                               new_term->val.val = val;
+>> +                               break;
+>> +                       }
+>>                 }
+>>         }
+>>         return 0;
+>> --
+>> 2.53.0
+>>
+
+Thanks 
+
 -- 
-2.43.0
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
