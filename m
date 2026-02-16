@@ -1,46 +1,46 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011067.outbound.protection.outlook.com [52.101.62.67])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011042.outbound.protection.outlook.com [52.101.62.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A382C11FD;
-	Mon, 16 Feb 2026 04:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9F32C0F81;
+	Mon, 16 Feb 2026 04:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.42
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771215968; cv=fail; b=qW+w+kBNyDqviABjpS9gjonJZX8XvPo1DekhZHdkT0XISShx9fHd7ZPZFj+jdOPSnfpXdqdIHleDAW6ajmeqnFSSmIg6yBVyuylGdUJ32EAcCu7ngqQLbWzLklXyoG2ybvcCMwLIrt8LSEbCZ+t8xu+7nkKbr1ji2YLMl0/j0Yw=
+	t=1771215976; cv=fail; b=W78WNin2M7YVyfuScuMbckxD4UKBFsNa2WvrNfVUSSjHpJRGBz0RKoqF0JPh4ofjzdBx4cUpLqfEPBSWSLWSqftDP+Eh1pYbsxgtfitWDtzwe3X73gVYhN6ak4UUlPOHacKb5z9XsV+9/AAfl5EW9C2Wjhb2CQHn3JDGqXIKKRE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771215968; c=relaxed/simple;
-	bh=akv00L/auYrXyX1vIWTcfVk62/WLRX5xPZoJWG3+R+I=;
+	s=arc-20240116; t=1771215976; c=relaxed/simple;
+	bh=QKSlLfMLKLBg6o3gnF6FRtCVpP2p7ofOdi7SCC7ONc4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JeQO83IU6ucDtiPJ+WCEWcPNj7ernJABNgOtnH9VnmaRzci73R393nggRW1c5fO/23zxcEnFKSBK0wODNfQbD8kp3Ijz30BHimpi3kORm85SkR9IuIG10dcG7xa80L1owpeBr4xdw3W73N/7vwFeMy+acrJpdquAtT164SYorpo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5k8+hc7B; arc=fail smtp.client-ip=52.101.62.67
+	 MIME-Version:Content-Type; b=e7VK1AZYo2wMGa/TemvTYS7Yp1nwRhbPmSb414WMy6y95FzKtu4mSZSZLWR+jQF2cUxRXz5QldBXztFTdBMHU2DQE27U17D7gVw3+u1op6ClFGRv/JlExxTkvIp2d3OGxY9M5AAyKmIjk7GqaDTcjt5Rx4lqw2KAr2ax8W0QdfM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gXKsJ4NL; arc=fail smtp.client-ip=52.101.62.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5k8+hc7B"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gXKsJ4NL"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q/ZcfDP3hUr4W41BYNSXRv480MPuw4o+aj2wOlgLh9O5cIPsP1dEF19jhQZYmBwF9fv0JS4uilUKWe/NV3ewMkXfoUaTo1ChQSzzAYkDBU5OSdED05ucK66cFZBjmg6cl2hn6ZHze0W13n2SFT9Ei30e7qq3QzO1ivpy+pxXz4SXSwKN31QRebxOmUjXAJwWszVDGAencCV4j/XjaXT9pP7tP3p3z8UKcM/Q7Ofdi+ZiqNJ8+jsWwD3NtlJNji3bdtPFd5VmDVOyVSKmfK1TKt8tpbCI+F6jTVHHoL9RZ/FBeXC567h9Mn2lC5iQpm5eWexWwdXA69zAiZ1qx89ZfA==
+ b=PtnMCpIYLb5aUd94yOtTiTGo1VvAWgsKY+b5zgZ6WlefNR7UkHqgLNRgAu1lu4MIJiA0jqSl9IXiQA0cfe4YsMC/hlal/+AWY/SHGWKum3FuJmFsQPVX5BYjSDqIR4rfoJO7OSnIjP7/3gDcsDnzzcbxdEeTDA+ASy/Kc3xGXiskK5BEG6uTFn6ScQzPwlXGHCpz5F1aIusnmMrEHPDxYq7HdCnGDa1Z8z07Ni08/YmGXi+d8PlrbE/o0Ia7gjjRcNNcGwhTcJbIcxQLtgkOYdkHlRvMXSVDza8lHqd7fxkdx2K/mAFMqjrszg7x+jKTU3Y6XxkDYKlmOD5dq6nAoQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GeIa79FvF4gJMXua7dvpmga6o1XxFUU7AdFrqkq4mTg=;
- b=TdhvZwl9ydVHN/vV3m70CzrfzqI42Ln3grItzw+bJMY30XUH7rrJixVqT/AjxLZ5Urb7jxukVfSm6ANNE3wR7XxgiEz01/B7WkXlw4tDKdgxngBQIfooClJcdBBQC/G5RMjcvIGW1t9fuSVP/CjY59AEdlN88dEZpcG/mWw/xvGZaJpuOiFMpESvjeJzd8SwZquo7AdEYGisWVMnWKWqu87z73T0yCABCPBRvWZ1bCrrvNEoV7E3Ov5T2g3z4wE8tE8+1otd2eFjKrKecDtT3QpAgh4wRpNXeoV0TLIZ/vd6B4Xs1yRB7JgeSvbeYD54/nIJjnJbCX/0BnAr0zBWHw==
+ bh=WrFKlechOeMOH5jfG0d8D2bSD/LY9aSNOX3Sf5ShgUA=;
+ b=qvIJg6cebAj0jGVqxm3kgQoFbPWDbNdtklI76sV/RzmEj1WAAJFMP90vmWpBWsyy452DeIQnVVAwViP3m5Gbq7U0VJoQbc68y/klyj6gdcXOCD1Wygy5dJ9Owov8vi13IR31eycCZW46lkNgUT/xpeg18K3DBOLEVGZQQtpWUl9PRsE/2vyJUl2ZG2DuOPEL3d1T6wCun85HfTLGgrO5jK/GtVH3hLHSwhnpR0M7/aJhud4RbxsnF04Vzui75/VaC0GIhA8n6loZPxWiE5wl80Trl0L4wKdzaXF6kRbYhF7n5ab+m1TbBD85PGCEgR7ALEP4dlg6boQo4Ntxqpe0+A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GeIa79FvF4gJMXua7dvpmga6o1XxFUU7AdFrqkq4mTg=;
- b=5k8+hc7BQjnghlqTqR6lYWZDmZAT96OQl+qilFyDKr9afRyOIBbPZFXrB9U5Xau98jW2BvThQwqpqG0sVGi9A02WmdKIMHHUfu54EHbN1ks2gN3zzJntawIhE7MzXC38ThyHjUmVhLZytAN8ln13RiGa4hRpoTkokAZEeHPOzb0=
-Received: from SA0PR11CA0144.namprd11.prod.outlook.com (2603:10b6:806:131::29)
- by SJ1PR12MB6123.namprd12.prod.outlook.com (2603:10b6:a03:45a::5) with
+ bh=WrFKlechOeMOH5jfG0d8D2bSD/LY9aSNOX3Sf5ShgUA=;
+ b=gXKsJ4NLcvvTCdKXQ1t6tw2rW3/sHOMvoZWRi0F1LGsSBLjqWap26AbvUUakIEndS8T2LIjiGBeLmX5EhBfuYxo5drUdBoPinlw4RHPHJgTjCChXGdCmKJKuSkus4EgbZKzzajP30ZIUfmaZTVz5SslfUKHKLDfmAMQs74QK7qY=
+Received: from PH7P221CA0085.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:328::19)
+ by LV8PR12MB9418.namprd12.prod.outlook.com (2603:10b6:408:202::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.16; Mon, 16 Feb
- 2026 04:26:03 +0000
-Received: from SN1PEPF000397B1.namprd05.prod.outlook.com
- (2603:10b6:806:131:cafe::ea) by SA0PR11CA0144.outlook.office365.com
- (2603:10b6:806:131::29) with Microsoft SMTP Server (version=TLS1_3,
+ 2026 04:26:07 +0000
+Received: from SN1PEPF000397B0.namprd05.prod.outlook.com
+ (2603:10b6:510:328:cafe::12) by PH7P221CA0085.outlook.office365.com
+ (2603:10b6:510:328::19) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9611.16 via Frontend Transport; Mon,
- 16 Feb 2026 04:25:29 +0000
+ 16 Feb 2026 04:26:07 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- SN1PEPF000397B1.mail.protection.outlook.com (10.167.248.55) with Microsoft
+ SN1PEPF000397B0.mail.protection.outlook.com (10.167.248.54) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Mon, 16 Feb 2026 04:26:02 +0000
+ 15.20.9632.12 via Frontend Transport; Mon, 16 Feb 2026 04:26:06 +0000
 Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sun, 15 Feb
- 2026 22:25:57 -0600
+ 2026 22:26:02 -0600
 From: Ravi Bangoria <ravi.bangoria@amd.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
 CC: Ravi Bangoria <ravi.bangoria@amd.com>, Arnaldo Carvalho de Melo
@@ -65,9 +65,9 @@ CC: Ravi Bangoria <ravi.bangoria@amd.com>, Arnaldo Carvalho de Melo
 	<linux-kernel@vger.kernel.org>, Manali Shukla <manali.shukla@amd.com>,
 	Santosh Shukla <santosh.shukla@amd.com>, Ananth Narayan
 	<ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH v2 3/7] perf/amd/ibs: Support IBS_{FETCH|OP}_CTL2[Dis] to eliminate RMW race
-Date: Mon, 16 Feb 2026 04:25:26 +0000
-Message-ID: <20260216042530.1546-4-ravi.bangoria@amd.com>
+Subject: [PATCH v2 4/7] perf/amd/ibs: Enable fetch latency filtering
+Date: Mon, 16 Feb 2026 04:25:27 +0000
+Message-ID: <20260216042530.1546-5-ravi.bangoria@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260216042530.1546-1-ravi.bangoria@amd.com>
 References: <20260216042530.1546-1-ravi.bangoria@amd.com>
@@ -83,214 +83,219 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397B1:EE_|SJ1PR12MB6123:EE_
-X-MS-Office365-Filtering-Correlation-Id: cd58641f-5496-42d2-da73-08de6d137e39
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B0:EE_|LV8PR12MB9418:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7760aba2-748b-499c-3b4b-08de6d1380e7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|36860700013|82310400026;
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lBT795D9FZUZqfxyhxHkUViuXa09iQ+ZyJTN9umRDmkt6COmHsW7ERg5DByo?=
- =?us-ascii?Q?CzfU8PTwT/lPSQJidBqFArFRuogTA71eKyyAcIvpPQDkiVTPq/atEy4hwF+v?=
- =?us-ascii?Q?4NdMi5qPGoXbLQyQ0k3qof5t6UWwf0oRStSEQ2hnWuauS5YCcMs6b27SW6ed?=
- =?us-ascii?Q?btoO7971MCnlCZmhnW4OFz/pubzbZH7xH4btN/unHBfZpF5Fgfs8VGru//qQ?=
- =?us-ascii?Q?tBpzYRj5lXVNHz0ORkwOepTau63DdDpSBZ+lLvE7MHt/XoW6+IItPqTKOwrc?=
- =?us-ascii?Q?2QrylcpaRT+O+C+M6HUoSfeRpJDHEdioKEHNyuCpEHEN7YvXjKBaOtSQ/aQ0?=
- =?us-ascii?Q?ef9JHZX6/KjDHW7IBA2tVyGURWJ1SDVr0Y75guu0Sbgd1O2L8bLkTwDPNy67?=
- =?us-ascii?Q?iOOzluj6QPYsyOuL6QxcRH0RRY3BpjE0nQStvj0OyuC0HQkeZumU3Q5pOSR/?=
- =?us-ascii?Q?Of/dJZ1k3I20xjn9RcqCkVNaTxHGoCjUtuKluhh5kYHb/Vzy5givjvyPJCr4?=
- =?us-ascii?Q?Qx0auy5FXD/2lrQNhiC7XP87OHYmOo+yP1n7bGfhKXjHy94xWJjFS20atfSe?=
- =?us-ascii?Q?7HMklVzW4fKdqWVuL4GxsshTauk3rYUMAbnsRUQKKtaSxEXki9+AQi9OCr8g?=
- =?us-ascii?Q?PH+4GjXeyRIZE9MbLDUw2Bitj9ufQmb75UFOqWgUkK8NyAhLayI+ETijej27?=
- =?us-ascii?Q?F45yU+VDMxJ0xsEZEZ4GMcRedaP4q99uP/w6L77qrLOmAn9exoWX87uckCwE?=
- =?us-ascii?Q?0zI/gXHAh3XcGU7iPesaDJhxCZxTINfmoRZnCI7v7aU22teWIlWy5g3marqJ?=
- =?us-ascii?Q?7NFD5i3xJJMH32RShAMZasVB2PFHIlFN/7Y3B7tbyOFaeEjxDkfZ12f+vomq?=
- =?us-ascii?Q?XJqrHpfZ4vOh9hAfIaCcKLz7x22F9pEqN6qgIaW5krGm5PQxRDI4ZZVgNXKp?=
- =?us-ascii?Q?NamuboIzKfflZOZHxFzEvfN5jq9hQhnna2PZVU8dxVT4wFwPqX9VwEujbM35?=
- =?us-ascii?Q?8ikYgtNrsUOckiXltPzjvhxKrCXTaVR0JE4WMjeyQC0Q7pUPpSPdTdaWHpJU?=
- =?us-ascii?Q?auY8M3aashyt57RDPA2Mr4annA/sPSYP7fhvORqKrG4ZfJRwXZ+izvBsncWO?=
- =?us-ascii?Q?2u0G8BPB36aWdpbl05/e0MpZGNS1Zxu+y6I6PyqBppXQyioPXmckUJQpluJi?=
- =?us-ascii?Q?hO2BUib0R2sdGiOPe1sQjsQ9cuK3l6CIr0vcM9I24tsJpsztptTqN5qDlghI?=
- =?us-ascii?Q?KNw+wrU5decUBCZU3hG7+VQWuyqTUmgbCD99XoFF9/9IUy5ptJabRcWnXJ+3?=
- =?us-ascii?Q?ooNzatbygLjULbV/qmETYMc/4MLCHeyA+7v77qHsPImehfbTdT4l3FMsQBHi?=
- =?us-ascii?Q?1BgoLIU2qCou9ek+pm4gJcGBKiJ2OgT7/pMM/nZ/taUli4yHFJ31PU5a4/j/?=
- =?us-ascii?Q?ITf0Dz3ynp3xQlaZsuHGIN+CuVmLP0RgFAjSiCx+mv0N6Cy/78AmF6IliIOd?=
- =?us-ascii?Q?ClLb1eii/5fNV6ASDTnuJ/XPivnQj5wIQEwPovWT2huz2B2VFrK7WrKudUaz?=
- =?us-ascii?Q?tp7XYY56XNvGXBYYP2IfaeVMjKwptVHMeFi2Y/e1MvuAAwzEE9MnqtrdTv7F?=
- =?us-ascii?Q?/oAfvO23S7ROMgdLSUdVYC1/lRr4nUqOwHc2LMzUMu2T1f/z0FDE9B5KOV0n?=
- =?us-ascii?Q?BdUy3Q=3D=3D?=
+	=?us-ascii?Q?V5SuSuXretiiIdZL2dpxkhIyt43jDolvz3GTxfAR13SNusUUWawS/14WTt1I?=
+ =?us-ascii?Q?VphGFHLclVt4eF68VSXYd3LnYZvyUBbau31zTa2ivr/ZLVXgevkJKKPBIkzW?=
+ =?us-ascii?Q?MaYXG0L7f7OUGZ7U3taWkdt4T5+gwj9KHgVD8HlLOZcb4PnruYG8XvYIRElL?=
+ =?us-ascii?Q?EHquj3IB9hM6JKCiu/TC04OQmDBBCn6kzA28ZOweGkS3p7ljIpgW0YJY4VnQ?=
+ =?us-ascii?Q?UortGvBGH+N/fANp63xr7WmbLbRyZTF69WDU/gFG0iNOZSlAOZany8G45vVN?=
+ =?us-ascii?Q?nmv0cT2cufytiDby1aGCBuwbvRjhlC42VU5YZSiRp+M8+PtQFidVJoqnC8a0?=
+ =?us-ascii?Q?Lbd+Zo/etUY0RHa2neqGEitFFoa6QjBIGTKEPg0doL7uBJ2a8WX3lge9ElOZ?=
+ =?us-ascii?Q?n3qxmlZlIY3cQ78Eb3ficsgfMaW5yErn3Tl4LmXWbA0yvW8XgwMaILPqIN2Y?=
+ =?us-ascii?Q?TWWLJF6tR2OyjLj+XRjEWB5df5RF030XblQDv3xTiXUW5hA3fILQ8fHvtL6y?=
+ =?us-ascii?Q?0ZqQC3UxOkOmhLsn9cuwYB8olGPh+uK6JswysR4AplLrJcMLJmYzvFVRKIw8?=
+ =?us-ascii?Q?MZhYwqOX8UeOHMrcKdcsD4F34zH64ip12QcPsA9AnnYuRgQkgVRlf90jAcH2?=
+ =?us-ascii?Q?umG6KIdEWKVXqKAzdqq6PsDp+sP0E3nEtR1g9PVD4L78EXsFKUJFhKtNdyJw?=
+ =?us-ascii?Q?iLiR9J84/FpOqUSlo0x+UBmoacZpZ5b+0rMf/GPk6eFrDDAk+yIOXRprrj+k?=
+ =?us-ascii?Q?MyWKUNgn/8UEd8ydRlBl/qJVrYeP1Hf27Z8fbxDgOEedkdemjky4XEMf7BgZ?=
+ =?us-ascii?Q?n3hdR+fO7cGZLr89A/x7pzR7ZZEnAUeKf4jlpRbB5trfz9VIG1v2gDxxM7pJ?=
+ =?us-ascii?Q?LekYeNj32+sbVm32FDbYNY19QoggAV8ebQ/Jmv0fCxd/qj1tjV17SPsHy4Ee?=
+ =?us-ascii?Q?v/sqlP+5WojhPEjKF9Q7F43XX5LWZhZIIYw6MeA9PPTW3Ci5zNQ2OzHxK9la?=
+ =?us-ascii?Q?t1BtgJ531rgUL1iUuxfBExX7PCFZNQ8+noU5NvIbwGvWenzlDUO4VzcRsZWQ?=
+ =?us-ascii?Q?uQesKIxZOZgmX1MF0CK4J6jLuUCMlevpTP2AnkFjpjgwkUvzIL+frJhMvj3p?=
+ =?us-ascii?Q?H6Em2EDbWHySQaCWt5HRsGzJnB1Sof+h9Vo+wuTkNwiyc6LM7o9bBasF7emY?=
+ =?us-ascii?Q?Tg028tVmC1jHDq6b8Fn9Yi6tcHIFo2TZ3wHqL5Trm5/XtLVMysn56u9bGThc?=
+ =?us-ascii?Q?3uo8SBF/UyL9nguNuCD0NvQfl4CtsWVBad21bNJdspQMwKsQya4sMbvQesUy?=
+ =?us-ascii?Q?cqP5C3IbtAk99nHZ+qmHD2G8Uv8ev4iSlvQ3AcpSvW+yGPJvEmZaFPTUFtNV?=
+ =?us-ascii?Q?EN/n2kknvL0stKgiufSZJ4F6vG0u2Vtwg5zVk/Ils6VqSU4m4mcJWonG/QWh?=
+ =?us-ascii?Q?j3UO6DwTImLdFS9EFON6iRKh1mZsTVO+F513z6wBlTHqmYeFftYVRCEHyxvv?=
+ =?us-ascii?Q?S7WLZ/teuWUSr9ZSNBIw9vkTftxhqdRnhDp81+QYznhIJEQNeVzPS1ryfeH2?=
+ =?us-ascii?Q?1dLrwJloj5ZGWCt8/CwAXRKXsGPgxk2QwloXrQzlJa7AhxBf02IN/YUCK/po?=
+ =?us-ascii?Q?v4hZ6iSGE9+BTPjz6NyhjU274Bu+UnXdPBBJ9pyHa0LnYrLXDdZeSCSwrL23?=
+ =?us-ascii?Q?ugvEyA=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(7416014)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	KPuNfrVEfO4Q8H2Yx53nu9GY5PsvlROoLWeh+X9hjaA4UsUZWH60s07ThLdsRRli5ZxUjR9sYQ6L+Dg/NHf/Dhn5SBtHVjswHDWxs9jpb0L3eTz5/rnits69OJtPG2pFxaC6i12lvCf26GFX6t/TbUalc/kaMlTJFqpu297HNwsRopa3A8tZvwBV9ssmJBf6hP528ULccSBo8F7hbcklb7HoSZ1y0vc0o9MxIKgvH8y1nqEl3rBqQbcwgLQ3KOfTId7hMZGekzbDVH60pdJf+GAS04z9Mji/ycSvJzRMpbeSzvKUedFG+iwC+fiQC528ASeTH/MX/Bzti8JZetzLiJuOcooE0ilqkNYzlYp1VoJS23G/Yv+TUnZ8OlxPM7SwZ2Fr+TfNrjzh5lsn14uYMl3bYbqfWlVPOIvReScn7ZjHXfX/1UCpR8w9/yW/yJFv
+	0JINwvMhKmyEjH6EumYFLFoDus+6tdnBxonT6yRfojaAD8LizO8ZvkkDvIKXlhWQdbXlLaNv5pvclZagvTqydafu6Yz+pFepkyMYb2dLs9r9oOVA8IJN29HuFJ2kA4k3SLYN60WwqRYjZ0eP74vhryR3oougmmoQLqqir5c0nf+I7IWOuEiDZHuksihbl1f++D6IpnfP/Dav5ScIImfljKESQSFcTuVk1C/+FvvxxD5/lYOTiJGE1PiQEQamEzyfNoKGbYJcedwzY77tVzVg41iCTUQ793NQ/XNrBDLGcaCKMOkXktLfBNrVmDSy+IDwFG3+T6IYx62wFjxrCZnDoGvpUZNWSryePAnlh9Xg+DaoP9bwMfOulojYZ7Re8cVEecMg+bZoAsR2bAtzjiinLtdF+Eceg/zsWUwCtrnclY31pOb/pZdci6WACK9NnFRp
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2026 04:26:02.2356
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2026 04:26:06.7009
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd58641f-5496-42d2-da73-08de6d137e39
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7760aba2-748b-499c-3b4b-08de6d1380e7
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000397B1.namprd05.prod.outlook.com
+	SN1PEPF000397B0.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6123
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9418
 
-The existing IBS_{FETCH|OP}_CTL MSRs combine control and status bits
-which leads to RMW race between HW and SW:
+IBS Fetch on future hardware adds fetch latency filtering which
+generates interrupt only when FetchLat value exceeds a programmable
+threshold.
 
-  HW                               SW
-  ------------------------         ------------------------------
-                                   config = rdmsr(IBS_OP_CTL);
-                                   config &= ~EN;
-  Set IBS_OP_CTL[Val] to 1
-  trigger NMI
-                                   wrmsr(IBS_OP_CTL, config);
-                                   // Val is accidentally cleared
+Hardware allows threshold in 128-cycle increment (i.e. 128, 256, 384
+etc.) from 128 to 1920 cycles. Like the existing IBS filters, samples
+that fail the latency test are dropped and IBS restarts internally.
 
-Future hardware adds a control-only MSR, IBS_{FETCH|OP}_CTL2, which
-provides a second-level "disable" bit (Dis). IBS is now:
+Since hardware supports threshold in multiple of 128, add a software
+filter on top to support latency threshold with the granularity of 1
+cycle in between [128-1920].
 
-  Enabled:  IBS_{FETCH|OP}_CTL[En] = 1 && IBS_{FETCH|OP}_CTL2[Dis] = 0
-  Disabled: IBS_{FETCH|OP}_CTL[En] = 0 || IBS_{FETCH|OP}_CTL2[Dis] = 1
-
-The separate "Dis" bit lets software disable IBS without touching any
-status fields, eliminating the hardware/software race.
+Example:
+  # perf record -e ibs_fetch/fetchlat=128/ -c 10000 -a -- sleep 5
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
- arch/x86/events/amd/ibs.c | 45 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ arch/x86/events/amd/ibs.c | 66 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 65 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 2e8fb0615226..b7f0aad9356c 100644
+index b7f0aad9356c..cb3ae4e4744c 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
-@@ -86,9 +86,11 @@ struct cpu_perf_ibs {
- struct perf_ibs {
- 	struct pmu			pmu;
- 	unsigned int			msr;
-+	unsigned int			msr2;
- 	u64				config_mask;
- 	u64				cnt_mask;
- 	u64				enable_mask;
-+	u64				disable_mask;
- 	u64				valid_mask;
- 	u16				min_period;
- 	u64				max_period;
-@@ -292,6 +294,8 @@ static int perf_ibs_init(struct perf_event *event)
- 		return -ENOENT;
+@@ -35,6 +35,8 @@ static u32 ibs_caps;
+ /* attr.config1 */
+ #define IBS_OP_CONFIG1_LDLAT_MASK		(0xFFFULL <<  0)
  
- 	config = event->attr.config;
-+	hwc->extra_reg.config = 0;
-+	hwc->extra_reg.reg = 0;
- 
- 	if (event->pmu != &perf_ibs->pmu)
- 		return -ENOENT;
-@@ -319,6 +323,11 @@ static int perf_ibs_init(struct perf_event *event)
- 	if (perf_allow_kernel())
- 		hwc->flags |= PERF_X86_EVENT_UNPRIVILEGED;
- 
-+	if (ibs_caps & IBS_CAPS_DIS) {
-+		hwc->extra_reg.config &= ~perf_ibs->disable_mask;
-+		hwc->extra_reg.reg = perf_ibs->msr2;
-+	}
++#define IBS_FETCH_CONFIG1_FETCHLAT_MASK		(0x7FFULL <<  0)
 +
- 	if (hwc->sample_period) {
- 		if (config & perf_ibs->cnt_mask)
- 			/* raw max_cnt may not be set */
-@@ -448,6 +457,9 @@ static inline void perf_ibs_enable_event(struct perf_ibs *perf_ibs,
- 		wrmsrq(hwc->config_base, tmp & ~perf_ibs->enable_mask);
- 
- 	wrmsrq(hwc->config_base, tmp | perf_ibs->enable_mask);
-+
-+	if (hwc->extra_reg.reg)
-+		wrmsrq(hwc->extra_reg.reg, hwc->extra_reg.config);
- }
- 
  /*
-@@ -460,6 +472,11 @@ static inline void perf_ibs_enable_event(struct perf_ibs *perf_ibs,
- static inline void perf_ibs_disable_event(struct perf_ibs *perf_ibs,
- 					  struct hw_perf_event *hwc, u64 config)
- {
-+	if (ibs_caps & IBS_CAPS_DIS) {
-+		wrmsrq(hwc->extra_reg.reg, perf_ibs->disable_mask);
-+		return;
-+	}
-+
- 	config &= ~perf_ibs->cnt_mask;
- 	if (boot_cpu_data.x86 == 0x10)
- 		wrmsrq(hwc->config_base, config);
-@@ -812,6 +829,7 @@ static struct perf_ibs perf_ibs_fetch = {
- 		.check_period	= perf_ibs_check_period,
- 	},
- 	.msr			= MSR_AMD64_IBSFETCHCTL,
-+	.msr2			= MSR_AMD64_IBSFETCHCTL2,
- 	.config_mask		= IBS_FETCH_MAX_CNT | IBS_FETCH_RAND_EN,
- 	.cnt_mask		= IBS_FETCH_MAX_CNT,
- 	.enable_mask		= IBS_FETCH_ENABLE,
-@@ -837,6 +855,7 @@ static struct perf_ibs perf_ibs_op = {
- 		.check_period	= perf_ibs_check_period,
- 	},
- 	.msr			= MSR_AMD64_IBSOPCTL,
-+	.msr2			= MSR_AMD64_IBSOPCTL2,
- 	.config_mask		= IBS_OP_MAX_CNT,
- 	.cnt_mask		= IBS_OP_MAX_CNT | IBS_OP_CUR_CNT |
- 				  IBS_OP_CUR_CNT_RAND,
-@@ -1394,6 +1413,9 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 
- out:
- 	if (!throttle) {
-+		if (ibs_caps & IBS_CAPS_DIS)
-+			wrmsrq(hwc->extra_reg.reg, perf_ibs->disable_mask);
-+
- 		if (perf_ibs == &perf_ibs_op) {
- 			if (ibs_caps & IBS_CAPS_OPCNTEXT) {
- 				new_config = period & IBS_OP_MAX_CNT_EXT_MASK;
-@@ -1465,6 +1487,9 @@ static __init int perf_ibs_fetch_init(void)
- 	if (ibs_caps & IBS_CAPS_ZEN4)
- 		perf_ibs_fetch.config_mask |= IBS_FETCH_L3MISSONLY;
- 
-+	if (ibs_caps & IBS_CAPS_DIS)
-+		perf_ibs_fetch.disable_mask = IBS_FETCH_2_DIS;
-+
- 	perf_ibs_fetch.pmu.attr_groups = fetch_attr_groups;
- 	perf_ibs_fetch.pmu.attr_update = fetch_attr_update;
- 
-@@ -1486,6 +1511,9 @@ static __init int perf_ibs_op_init(void)
- 	if (ibs_caps & IBS_CAPS_ZEN4)
- 		perf_ibs_op.config_mask |= IBS_OP_L3MISSONLY;
- 
-+	if (ibs_caps & IBS_CAPS_DIS)
-+		perf_ibs_op.disable_mask = IBS_OP_2_DIS;
-+
- 	perf_ibs_op.pmu.attr_groups = op_attr_groups;
- 	perf_ibs_op.pmu.attr_update = op_attr_update;
- 
-@@ -1732,6 +1760,23 @@ static void clear_APIC_ibs(void)
- static int x86_pmu_amd_ibs_starting_cpu(unsigned int cpu)
- {
- 	setup_APIC_ibs();
-+
-+	if (ibs_caps & IBS_CAPS_DIS) {
-+		/*
-+		 * IBS enable sequence:
-+		 *   CTL[En] = 1;
-+		 *   CTL2[Dis] = 0;
-+		 *
-+		 * IBS disable sequence:
-+		 *   CTL2[Dis] = 1;
-+		 *
-+		 * Set CTL2[Dis] when CPU comes up. This is needed to make
-+		 * enable sequence effective.
-+		 */
-+		wrmsrq(MSR_AMD64_IBSFETCHCTL2, IBS_FETCH_2_DIS);
-+		wrmsrq(MSR_AMD64_IBSOPCTL2, IBS_OP_2_DIS);
-+	}
-+
- 	return 0;
+  * IBS states:
+  *
+@@ -282,6 +284,14 @@ static bool perf_ibs_ldlat_event(struct perf_ibs *perf_ibs,
+ 	       (event->attr.config1 & IBS_OP_CONFIG1_LDLAT_MASK);
  }
  
++static bool perf_ibs_fetch_lat_event(struct perf_ibs *perf_ibs,
++				     struct perf_event *event)
++{
++	return perf_ibs == &perf_ibs_fetch &&
++	       (ibs_caps & IBS_CAPS_FETCHLAT) &&
++	       (event->attr.config1 & IBS_FETCH_CONFIG1_FETCHLAT_MASK);
++}
++
+ static int perf_ibs_init(struct perf_event *event)
+ {
+ 	struct hw_perf_event *hwc = &event->hw;
+@@ -377,6 +387,17 @@ static int perf_ibs_init(struct perf_event *event)
+ 			config |= IBS_OP_L3MISSONLY;
+ 	}
+ 
++	if (perf_ibs_fetch_lat_event(perf_ibs, event)) {
++		u64 fetchlat = event->attr.config1 & IBS_FETCH_CONFIG1_FETCHLAT_MASK;
++
++		if (fetchlat < 128 || fetchlat > 1920)
++			return -EINVAL;
++		fetchlat >>= 7;
++
++		hwc->extra_reg.reg = perf_ibs->msr2;
++		hwc->extra_reg.config |= fetchlat << IBS_FETCH_2_FETCHLAT_FILTER_SHIFT;
++	}
++
+ 	/*
+ 	 * If we modify hwc->sample_period, we also need to update
+ 	 * hwc->last_period and hwc->period_left.
+@@ -665,6 +686,8 @@ PMU_EVENT_ATTR_STRING(ldlat, ibs_op_ldlat_format, "config1:0-11");
+ PMU_EVENT_ATTR_STRING(zen4_ibs_extensions, zen4_ibs_extensions, "1");
+ PMU_EVENT_ATTR_STRING(ldlat, ibs_op_ldlat_cap, "1");
+ PMU_EVENT_ATTR_STRING(dtlb_pgsize, ibs_op_dtlb_pgsize_cap, "1");
++PMU_EVENT_ATTR_STRING(fetchlat, ibs_fetch_lat_format, "config1:0-10");
++PMU_EVENT_ATTR_STRING(fetchlat, ibs_fetch_lat_cap, "1");
+ 
+ static umode_t
+ zen4_ibs_extensions_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+@@ -672,6 +695,12 @@ zen4_ibs_extensions_is_visible(struct kobject *kobj, struct attribute *attr, int
+ 	return ibs_caps & IBS_CAPS_ZEN4 ? attr->mode : 0;
+ }
+ 
++static umode_t
++ibs_fetch_lat_is_visible(struct kobject *kobj, struct attribute *attr, int i)
++{
++	return ibs_caps & IBS_CAPS_FETCHLAT ? attr->mode : 0;
++}
++
+ static umode_t
+ ibs_op_ldlat_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ {
+@@ -700,6 +729,16 @@ static struct attribute *zen4_ibs_extensions_attrs[] = {
+ 	NULL,
+ };
+ 
++static struct attribute *ibs_fetch_lat_format_attrs[] = {
++	&ibs_fetch_lat_format.attr.attr,
++	NULL,
++};
++
++static struct attribute *ibs_fetch_lat_cap_attrs[] = {
++	&ibs_fetch_lat_cap.attr.attr,
++	NULL,
++};
++
+ static struct attribute *ibs_op_ldlat_cap_attrs[] = {
+ 	&ibs_op_ldlat_cap.attr.attr,
+ 	NULL,
+@@ -727,6 +766,18 @@ static struct attribute_group group_zen4_ibs_extensions = {
+ 	.is_visible = zen4_ibs_extensions_is_visible,
+ };
+ 
++static struct attribute_group group_ibs_fetch_lat_cap = {
++	.name = "caps",
++	.attrs = ibs_fetch_lat_cap_attrs,
++	.is_visible = ibs_fetch_lat_is_visible,
++};
++
++static struct attribute_group group_ibs_fetch_lat_format = {
++	.name = "format",
++	.attrs = ibs_fetch_lat_format_attrs,
++	.is_visible = ibs_fetch_lat_is_visible,
++};
++
+ static struct attribute_group group_ibs_op_ldlat_cap = {
+ 	.name = "caps",
+ 	.attrs = ibs_op_ldlat_cap_attrs,
+@@ -748,6 +799,8 @@ static const struct attribute_group *fetch_attr_groups[] = {
+ static const struct attribute_group *fetch_attr_update[] = {
+ 	&group_fetch_l3missonly,
+ 	&group_zen4_ibs_extensions,
++	&group_ibs_fetch_lat_cap,
++	&group_ibs_fetch_lat_format,
+ 	NULL,
+ };
+ 
+@@ -1191,7 +1244,8 @@ static int perf_ibs_get_offset_max(struct perf_ibs *perf_ibs,
+ {
+ 	if (event->attr.sample_type & PERF_SAMPLE_RAW ||
+ 	    perf_ibs_is_mem_sample_type(perf_ibs, event) ||
+-	    perf_ibs_ldlat_event(perf_ibs, event))
++	    perf_ibs_ldlat_event(perf_ibs, event) ||
++	    perf_ibs_fetch_lat_event(perf_ibs, event))
+ 		return perf_ibs->offset_max;
+ 	else if (check_rip)
+ 		return 3;
+@@ -1333,6 +1387,16 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ 		}
+ 	}
+ 
++	if (perf_ibs_fetch_lat_event(perf_ibs, event)) {
++		union ibs_fetch_ctl fetch_ctl;
++
++		fetch_ctl.val = ibs_data.regs[ibs_fetch_msr_idx(MSR_AMD64_IBSFETCHCTL)];
++		if (fetch_ctl.fetch_lat < (event->attr.config1 & IBS_FETCH_CONFIG1_FETCHLAT_MASK)) {
++			throttle = perf_event_account_interrupt(event);
++			goto out;
++		}
++	}
++
+ 	/*
+ 	 * Read IbsBrTarget, IbsOpData4, and IbsExtdCtl separately
+ 	 * depending on their availability.
 -- 
 2.43.0
 
