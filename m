@@ -1,269 +1,148 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54D82BB13
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Feb 2026 14:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2849283FFB
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Feb 2026 15:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771337399; cv=none; b=Iob9G6Ct+m094TZNMoqqHuC+XLqdBm9Fqwj8cvQkx9+gnvrepmN91nCzNRXXpQo7oH+YAkrDJBonLBI5FbYk5xhvnvp9T3Xy0MyhBDP9LrjJlTRrwMn1rpM8pp0YhWq2zZ/QgCQN9Y6aj9WS/DDZPzaHvXDHPhFMl4HUPm05g/A=
+	t=1771341909; cv=none; b=pFolYvqBe9j5iuhlm/NwcUKWXem8Nzs3q0J4BCx6rynfwk943HN3n++GZf7EueEBJdjueNb7FnH+dWeUReF3f9rGnrYl8tGMhAnbezP4qvb3JYjK4Bryr/livmLPAFEHcXyH5RhEsUb/hvp9nfaP0xdIqIaxcS89lYP3r8R96Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771337399; c=relaxed/simple;
-	bh=/jyvLfP/QBMizw9HkoY82Vlo6F/zdu08l7YEVLT9TK8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M4lGYhJEl7MnbaIA1D1VQv7iENiu7E13ZYTc7LgvOqSiF4p7u94DxyisQFW7BRWXf3ZCNdCTJAwiEw3AOM/WIzIpyCCIy+uR/9diIKfE5ib65XQzDwPUrccNNRsBYuSiiOkY3gJFq45U8THJuHzOPQXTpnN8FIl0V3C6bV2xMao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yqo/n1+t; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1771341909; c=relaxed/simple;
+	bh=hZGLZbsUH8EmvpSV7H/wOq9sFZLgXoLqGx+9AUKwexA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=j5EQmlkd20mJZu+oj5k/+WqTV4uix8v8f0Q5TEyyotXspJhLKa24p2RCS5anOivCeGvhIe6YUbLKLF+wDlleW8zI4ISC6tXgQ7jxKAd/sXo3jvNftp4FvipeF9Y83HZ2AGlO+7Q3pA9ZyOqPO+RWDiHjf+akyaRGDpXlGydY/1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZsGZtrzG; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yqo/n1+t"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-65c0e2cbde1so1496228a12.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Feb 2026 06:09:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZsGZtrzG"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c6e78c4aa50so963462a12.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Feb 2026 07:25:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1771337396; x=1771942196; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ev0baLIks11CklQ1arlG40s9hBdfba5EjCldYEhDhHc=;
-        b=yqo/n1+tdHsNpJhtkZz8EviYOVCUFUMoI1egstfQl2qaoIQglcQq1+JKyNEs5bxIPA
-         +fs3iiqa1FhVyVcCt0TXsx7BQBshoM5Oaq4CC4BXT4s9+BQk+QRx785G+YHU2dKet8qW
-         aNoyaN0DD4lBQHfTuhpTfdUsT28PU5GtHloqbv8LJsb0qVdkmTai4m5NgcRrUBVWLw3z
-         /HO7tXDv/szBm5iaEfgaoSlG3+8SotEaWzd201GGzqaLzBMVTHhNeHuvUJXKexNESfHA
-         BqAeuis5R2P0uY0lCK2VZq8SwOdCobzgEGdco665D0NJJOnx9dvI7bd+akNrd4i0JMcn
-         slyQ==
+        d=google.com; s=20230601; t=1771341908; x=1771946708; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2a2DsZQIpKH+b2cksg0NQajbqrk+yeWf7k9R9erIIoo=;
+        b=ZsGZtrzGuzeBgdczZTRIurJI5mVUmvciD0a0XQ3pZG8LoiC77yrXrt9kDnULZWdm9w
+         rI1oIDX01tJr41lTN+EjkV54gUyQ0duCr292tL7DiYf5S2KTSFA6BGqxs6vZjpRmgeaF
+         DF16WGUR+Jt+5fGlxTbejzALLe60ekL4ygSsi6ZamqMhA4RZol3wj1mA5srTf4mutNj4
+         lrwdRJwsqIudkycNWsefrtI963vOY+SeZDnFB5/s9/nW57yt3ZmpF3jA5tzb1s0Kuvcf
+         6OL+IRama4rNCMT0z5U5RX6KIB+cWcNxvbYx6Ys0Yf9PoQEx8EdFtOhImAx6q24SVBE/
+         wEmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771337396; x=1771942196;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ev0baLIks11CklQ1arlG40s9hBdfba5EjCldYEhDhHc=;
-        b=DYwDNkGF8RIq7mO1Xv5BJemn6961PkYmyG+fICP7d3PYHnFQyeq8nd83SxusZ9Pc08
-         1Cjlf4AeHAniCgXw+fAr76/j+sYoUvwWwONan3ruvG/ktmytxtPUylDC1MAexCkWMcz0
-         75NJEOee8BrA5P6Z6Hv1+9oqrjCs+BpoI1APmAiPamaSIUNw+SRtJhDKNHZ0Zc81joAP
-         DPei0FtYdu4+4PO4DtFg4/rYA0he/qrqesQpt3BofR0TwmxRyD9RsbPA8/Qfd8XHye/D
-         +S1vYsM+edzKIKQ847qloFmAMRTjP7BlM/QR+JvZGDCL4/h1SwxeGj+OH3tuyaavOegf
-         BHhw==
-X-Forwarded-Encrypted: i=1; AJvYcCXBkVGvXr0f+ISyMFiJ1xXEJQ7Kw/usvXJIkDVSaYLDuNZ0JGDjm+5I/0ON8Hu4rC+4LVGNIFrEp8otiboxpL7r@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP9hDzF0FtwHC//n66oo8CAwAf4RjWEvLPbNVu68b7cm8QPgi6
-	vLmtip0uJx2ySY346Hd4xGnzOsQjQ8il4897aV7JLUbaU81ShQeimdFWz0j+R7qwVm0=
-X-Gm-Gg: AZuq6aJDZh5F6zNSkglSOl4KIC41hY0d0ITMF4IbUaidxy6zH7+3ulSvBI+tiG0yeQo
-	+wF4oVKxxc+pRcQuoaDInBklMXU6ON1K5tVMej4gbwzmPO1oUzEz5uOfYSKgq6EiuHZQSnPo32x
-	xUWz4sikK09uHqBNL+MJr7nNkx1MPGZl8UzyuP/jSlRFWK2Q00OVYQ2CSQei5e7lzZBSjfYwg8D
-	VSzOPbcEU3f9f0cG8h22VlA0nWMeG++o1RUlt5LF83ldRE8VFSHG4eSkfWMaLLs4LqIxRWJMjF4
-	cmSwcCB7OvDwz6LFcIDTG+il68NT7OgBLKeHANrEzjyg2OYPJbY+CAsVRxGLaEEN81Llcho1scG
-	Fl8wxp68e6KqNzvMh9qp4mzjEgO0Go/BqLdOF0+AqO51hzRAPbyd3nvFil81Jc7yN50wtIoLac2
-	+fcnqdk3YF5K4Swd2jpZ682fDQ/C0YwePo+L7BbCA=
-X-Received: by 2002:a17:907:7fa5:b0:b87:1d71:f44d with SMTP id a640c23a62f3a-b8facca14bemr830289966b.11.1771337395929;
-        Tue, 17 Feb 2026 06:09:55 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-65bad3e39ebsm2421950a12.18.2026.02.17.06.09.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Feb 2026 06:09:55 -0800 (PST)
-Message-ID: <9a16463e-c2d9-4ab9-bd1a-a9c6e7981412@linaro.org>
-Date: Tue, 17 Feb 2026 14:09:53 +0000
+        d=1e100.net; s=20230601; t=1771341908; x=1771946708;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2a2DsZQIpKH+b2cksg0NQajbqrk+yeWf7k9R9erIIoo=;
+        b=ul+JzFSYqdcqmiYNndcMywHXbEq9rsEhgyUKa3alwomz30l7zD6g9bAaTBVwD3A4cU
+         3gDs1gf9jDp5PXUf9Sof9t5NdXzeji3waGxLEYD6TMx+bzSmSj8LHzWuqFj1bfaYnqs6
+         g1oeMLFMzhGrnpynNY/NufeLvnCDev2QOKa6j7YqOR35tBJzcOPUqtvKBaVpKrfj9fG4
+         6YYoiqYjtoY3Cth78o51P1gufr+gqZNVUj83cL2uE1G6GA8Xcif/KxoAGAFP2Go+LCNq
+         zb+/n8jHHnN4PEwHM5d3HVY9hZHTzbFNeJbzwz1LPI2icdUr5ED7ID1yMm6oos3P68bm
+         jfHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvS0I9ZPBcvdw0gw6lZWpikoZQdAb78dn5qfyFEaMbdAF7es9pi+kDebi5m9CXqmYKan00R8j/ynkl0qTHAvi5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4ZGfjM+dBmx2aUrzrdsEHmAuKIoMyy7xixmwZCcyIqEt2pXrF
+	p0n7NtBv2tcnptL42QAi3jcdYvin02j3twi7lGZYcY7/gGbD2FXjvQCaUQD3+fpmyWRAmmn9Dvq
+	0JCl/9w==
+X-Received: from pgvh6.prod.google.com ([2002:a65:6386:0:b0:c52:a841:c79d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:2f98:b0:366:14af:9bd2
+ with SMTP id adf61e73a8af0-3946c8f9745mr14478361637.72.1771341907789; Tue, 17
+ Feb 2026 07:25:07 -0800 (PST)
+Date: Tue, 17 Feb 2026 07:25:04 -0800
+In-Reply-To: <4317ad31f4ef883daee264f72f032974c044c0cc.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 linux-next] perf parse-events: Fix big-endian
- 'overwrite' by writing correct union member
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
- hca@linux.ibm.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
- acme@kernel.org, namhyung@kernel.org, irogers@google.com
-References: <20260217131456.4085419-1-tmricht@linux.ibm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260217131456.4085419-1-tmricht@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20260214012702.2368778-1-seanjc@google.com> <20260214012702.2368778-11-seanjc@google.com>
+ <4317ad31f4ef883daee264f72f032974c044c0cc.camel@intel.com>
+Message-ID: <aZSIUJ_NXAMLVWJM@google.com>
+Subject: Re: [PATCH v3 10/16] x86/virt/tdx: Drop the outdated requirement that
+ TDX be enabled in IRQ context
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "kas@kernel.org" <kas@kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "x86@kernel.org" <x86@kernel.org>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, "tglx@kernel.org" <tglx@kernel.org>, 
+	"namhyung@kernel.org" <namhyung@kernel.org>, "acme@kernel.org" <acme@kernel.org>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "yilun.xu@linux.intel.com" <yilun.xu@linux.intel.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, Dan J Williams <dan.j.williams@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Chao Gao <chao.gao@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
+On Tue, Feb 17, 2026, Kai Huang wrote:
+> On Fri, 2026-02-13 at 17:26 -0800, Sean Christopherson wrote:
+> > Remove TDX's outdated requirement that per-CPU enabling be done via IPI
+> > function call, which was a stale artifact leftover from early versions of
+> > the TDX enablement series.  The requirement that IRQs be disabled should
+> > have been dropped as part of the revamped series that relied on a the KVM
+> > rework to enable VMX at module load.
+> > 
+> > In other words, the kernel's "requirement" was never a requirement at all,
+> > but instead a reflection of how KVM enabled VMX (via IPI callback) when
+> > the TDX subsystem code was merged.
+> > 
+> > Note, accessing per-CPU information is safe even without disabling IRQs,
+> > as tdx_online_cpu() is invoked via a cpuhp callback, i.e. from a per-CPU
+> > thread.
+> > 
+> > Link: https://lore.kernel.org/all/ZyJOiPQnBz31qLZ7@google.com
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > 
+> 
+> Hi Sean,
+> 
+> The first call of tdx_cpu_enable() will also call into
+> try_init_module_global() (in order to do TDH_SYS_INIT), which also has a
+> lockdep_assert_irqs_disabled() + a raw spinlock to make sure TDH_SYS_INIT is
+> only called once when tdx_cpu_enable() are called from IRQ disabled context.
+> 
+> This patch only changes tdx_cpu_enable() but doesn't change
+> try_init_module_global(), thus the first call of tdx_cpu_enable() will still
+> trigger the lockdep_assert_irqs_disabled() failure warning.
+> 
+> I've tried this series on my local and I did see such WARNING during
+> boot[*].  We need to fix that too.
+> 
+> But hmm, Chao's "Runtime TDX module update" series actually needs to call
+> tdx_cpu_enable() when IRQ disabled, IIUC, since it is called via
+> stop_machine_cpuslocked():
+> 
+> https://lore.kernel.org/kvm/20260212143606.534586-18-chao.gao@intel.com/
+> 
+> Maybe we can just keep tdx_cpu_enabled() as-is?
 
+Can't we simply delete the lockdep assert there as well?  It should be totally
+fine to have a function that can be called from task or IRQ context, so long as
+the function is prepared for that possibility.  I.e. just because it _can_ be
+called from IRQ context doesn't mean it _must_ be called from IRQ context.
 
-On 17/02/2026 1:14 pm, Thomas Richter wrote:
-> v1 -> v2: Add comments from James Clark and Ian Rogers
-> v2 -> v3: Improve switch statement in add_config_term()
-> v3 -> v4: Fix clang warnings
-> 
-> The "Read backward ring buffer" test crashes on big-endian (e.g. s390x)
-> due to a NULL dereference when the backward mmap path isn't enabled.
-> 
-> Reproducer:
->    # ./perf test -F 'Read backward ring buffer'
->    Segmentation fault (core dumped)
->    # uname -m
->    s390x
->    #
-> 
-> Root cause:
-> get_config_terms() stores into evsel_config_term::val.val (u64) while later
-> code reads boolean fields such as evsel_config_term::val.overwrite.
-> On big-endian the 1-byte boolean is left-aligned, so writing
-> evsel_config_term::val.val = 1 is read back as
-> evsel_config_term::val.overwrite = 0,
-> leaving backward mmap disabled and a NULL map being used.
-> 
-> Store values in the union member that matches the term type, e.g.:
->    /* for OVERWRITE */
->    new_term->val.overwrite = 1;  /* not new_term->val.val = 1 */
-> to fix this. Improve add_config_term() and add two more parameters for
-> string and value. Function add_config_term() now creates a complete node
-> element of type evsel_config_term and handles all evsel_config_term::val
-> union members.
-> 
-> Impact:
-> Enables backward mmap on big-endian and prevents the crash.
-> No change on little-endian.
-> 
-> Output after:
->   # ./perf test -Fv 44
->   --- start ---
->   Using CPUID IBM,9175,705,ME1,3.8,002f
->   mmap size 1052672B
->   mmap size 8192B
->   ---- end ----
->   44: Read backward ring buffer                         : Ok
->   #
-> 
-> Fixes: 159ca97cd97c ("perf parse-events: Refactor get_config_terms() to remove macros")
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Reviewed-by: Jan Polensky <japo@linux.ibm.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/util/parse-events.c | 82 +++++++++++++++++++++++++++-------
->   1 file changed, 65 insertions(+), 17 deletions(-)
-> 
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index b9efb296bba5..7b4629625b1e 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -1117,7 +1117,7 @@ static int config_attr(struct perf_event_attr *attr,
->   
->   static struct evsel_config_term *add_config_term(enum evsel_term_type type,
->   						 struct list_head *head_terms,
-> -						 bool weak)
-> +						 bool weak, char *str, u64 val)
->   {
->   	struct evsel_config_term *t;
->   
-> @@ -1128,8 +1128,62 @@ static struct evsel_config_term *add_config_term(enum evsel_term_type type,
->   	INIT_LIST_HEAD(&t->list);
->   	t->type = type;
->   	t->weak	= weak;
-> +
-> +	switch (type) {
-> +	case EVSEL__CONFIG_TERM_PERIOD:
-> +	case EVSEL__CONFIG_TERM_FREQ:
-> +	case EVSEL__CONFIG_TERM_STACK_USER:
-> +	case EVSEL__CONFIG_TERM_USR_CHG_CONFIG:
-> +	case EVSEL__CONFIG_TERM_USR_CHG_CONFIG1:
-> +	case EVSEL__CONFIG_TERM_USR_CHG_CONFIG2:
-> +	case EVSEL__CONFIG_TERM_USR_CHG_CONFIG3:
-> +	case EVSEL__CONFIG_TERM_USR_CHG_CONFIG4:
-> +		t->val.val = val;
-> +		break;
-> +	case EVSEL__CONFIG_TERM_TIME:
-> +		t->val.time = val;
-> +		break;
-> +	case EVSEL__CONFIG_TERM_INHERIT:
-> +		t->val.inherit = val;
-> +		break;
-> +	case EVSEL__CONFIG_TERM_OVERWRITE:
-> +		t->val.overwrite = val;
-> +		break;
-> +	case EVSEL__CONFIG_TERM_MAX_STACK:
-> +		t->val.max_stack = val;
-> +		break;
-> +	case EVSEL__CONFIG_TERM_MAX_EVENTS:
-> +		t->val.max_events = val;
-> +		break;
-> +	case EVSEL__CONFIG_TERM_PERCORE:
-> +		t->val.percore = val;
-> +		break;
-> +	case EVSEL__CONFIG_TERM_AUX_OUTPUT:
-> +		t->val.aux_output = val;
-> +		break;
-> +	case EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE:
-> +		t->val.aux_sample_size = val;
-> +		break;
-> +	case EVSEL__CONFIG_TERM_CALLGRAPH:
-> +	case EVSEL__CONFIG_TERM_BRANCH:
-> +	case EVSEL__CONFIG_TERM_DRV_CFG:
-> +	case EVSEL__CONFIG_TERM_RATIO_TO_PREV:
-> +	case EVSEL__CONFIG_TERM_AUX_ACTION:
-> +		if (str) {
-> +			t->val.str = strdup(str);
-> +			if (!t->val.str) {
-> +				zfree(&t);
-> +				return NULL;
-> +			}
-> +			t->free_str = true;
-> +		}
-> +		break;
-> +	default:
-> +		t->val.val = val;
-> +		break;
-> +	}
-> +
->   	list_add_tail(&t->list, head_terms);
-> -
->   	return t;
->   }
->   
-> @@ -1142,7 +1196,7 @@ static int get_config_terms(const struct parse_events_terms *head_config,
->   		struct evsel_config_term *new_term;
->   		enum evsel_term_type new_type;
->   		bool str_type = false;
-> -		u64 val;
-> +		u64 val = 0;
->   
->   		switch (term->type_term) {
->   		case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
-> @@ -1234,20 +1288,15 @@ static int get_config_terms(const struct parse_events_terms *head_config,
->   			continue;
->   		}
->   
-> -		new_term = add_config_term(new_type, head_terms, term->weak);
-> +		/*
-> +		 * Note: Members evsel_config_term::val and
-> +		 * parse_events_term::val are unions and endianness needs
-> +		 * to be taken into account when changing such union members.
-> +		 */
-> +		new_term = add_config_term(new_type, head_terms, term->weak,
-> +					   str_type ? term->val.str : NULL, val);
->   		if (!new_term)
->   			return -ENOMEM;
-> -
-> -		if (str_type) {
-> -			new_term->val.str = strdup(term->val.str);
-> -			if (!new_term->val.str) {
-> -				zfree(&new_term);
-> -				return -ENOMEM;
-> -			}
-> -			new_term->free_str = true;
-> -		} else {
-> -			new_term->val.val = val;
-> -		}
->   	}
->   	return 0;
->   }
-> @@ -1277,10 +1326,9 @@ static int add_cfg_chg(const struct perf_pmu *pmu,
->   	if (bits) {
->   		struct evsel_config_term *new_term;
->   
-> -		new_term = add_config_term(new_term_type, head_terms, false);
-> +		new_term = add_config_term(new_term_type, head_terms, false, NULL, bits);
->   		if (!new_term)
->   			return -ENOMEM;
-> -		new_term->val.cfg_chg = bits;
->   	}
->   
->   	return 0;
+E.g. as a fixup
 
-Reviewed-by: James Clark <james.clark@linaro.org>
-
+diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+index bdee937b84d4..f8f5e046159b 100644
+--- a/arch/x86/virt/vmx/tdx/tdx.c
++++ b/arch/x86/virt/vmx/tdx/tdx.c
+@@ -106,8 +106,7 @@ static __always_inline int sc_retry_prerr(sc_func_t func,
+ 
+ /*
+  * Do the module global initialization once and return its result.
+- * It can be done on any cpu.  It's always called with interrupts
+- * disabled.
++ * It can be done on any cpu, and from task or IRQ context.
+  */
+ static int try_init_module_global(void)
+ {
+@@ -116,8 +115,6 @@ static int try_init_module_global(void)
+        static bool sysinit_done;
+        static int sysinit_ret;
+ 
+-       lockdep_assert_irqs_disabled();
+-
+        raw_spin_lock(&sysinit_lock);
+ 
+        if (sysinit_done)
