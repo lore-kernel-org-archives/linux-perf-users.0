@@ -1,110 +1,211 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C76023BD06;
-	Thu, 19 Feb 2026 11:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8416C8E6
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Feb 2026 12:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771502134; cv=none; b=d4JGEZ8l5mGUicSSobaX3g9e5XAxc7XRFL6/X/4Uuk6cT5PP4dmNP7Fm4nWtmlgentGcraf/HDEeT9Od6Au6DbTw05pR427wrclatRXrjgLFFCdWqacIZbLWsqCtb6KThapu7pFQO5IXiHgrkkXIMrZV48n52jaY8hBm0k6B33E=
+	t=1771502913; cv=none; b=IAapY43QT+DAr6TBmLaju5exqIDbN0KGAJg/bU/2kvpmcaIhAwr+kKAfnWeNPErHnS2Gaon/wWitUBIpqukLrgGKXwPgekMLAk69+08NNUCY8SJ3newkZ0tMaGLnVM34hpZ4/HvRfAF/8EWCWBvtXiI7WEcfcV0TQwVBzeJOtVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771502134; c=relaxed/simple;
-	bh=j+I1U3fntMSXpUmmSstBGlvki0YvrZd+5uSTcXlnlKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qe+nA3BXp2d9Iv/NSYcqjLx4BUexjR8WZqm48Rk/YLUaVWqDO39KggWhwmOwee2IcDMEPooSTCt+jiP6AXBy4znZhhNF0eW3n0dkQGLKJYekpVsXgg3dTq6oSAjb6b2GCnl3ofGtPwa00YsEbpxFEXU9FBJ41ta3YG8WvS/p/5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=G0I/rJVt; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1771502913; c=relaxed/simple;
+	bh=hm/zLnnlT9cXL0HTYCjSKtblSbCt+VgBaM08yvZq9Hs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=B/877rP+An7xABYuJECATOKJlLivphlvdFJDuw6B0f95gu9Xm9sWaQgOggCO+lMYuD87j84/plenB6nPufZeXBi0pF56f8m7I90tnNn2BmLyrw26jwuBVv7/1XOoYboFpBXoURLuFX33DgJnozLY/e9IVRakcVyqwFsmyVktd+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pA3QPrzI; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="G0I/rJVt"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61J9Adc91371206;
-	Thu, 19 Feb 2026 11:55:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=j+I1U3fntMSXpUmmSstBGlvki0YvrZ
-	d+5uSTcXlnlKs=; b=G0I/rJVtZDfJ0XkoLEk4f8vcwS2IB+y/hJXsk+6EofMlek
-	xKVoDmyNw0mnWn17G5FY1mUU+LXmspeVpB/u03pINOfm8spQpcqJyNVnLG8Q4i8k
-	hXMKgI/doJ7t0HjiqzPfz83KUmyLb+oRUgGW0T0X1K/i67F86FxSAzpEFTSA4hKL
-	O5p3pDewkmR1zd/RQ/8ConviNYFLosCRrnB827fvLThxNPG+byQlPz7tdznUJQK8
-	EGH0sFXT/sf/6BejNQwfauPc4yNpOJi8KBIgHwLQaOlIcm2OcWgdIWN3I21qkv5p
-	WEmz61QllqkkHw/wwJ3O0Wp8HzBhbQ+MSCflNNvw==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cajcjmnrt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Feb 2026 11:55:30 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61J8c2BR001883;
-	Thu, 19 Feb 2026 11:55:29 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ccb2bm0cb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Feb 2026 11:55:29 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61JBtPjf6685028
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Feb 2026 11:55:25 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CFE0320043;
-	Thu, 19 Feb 2026 11:55:25 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9DE5720040;
-	Thu, 19 Feb 2026 11:55:25 +0000 (GMT)
-Received: from li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com (unknown [9.52.197.53])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 19 Feb 2026 11:55:25 +0000 (GMT)
-Date: Thu, 19 Feb 2026 12:55:24 +0100
-From: Jan Polensky <japo@linux.ibm.com>
-To: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, namhyung@kernel.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com
-Subject: Re: [PATCH v2] perf symbol: Remove psw_idle() from list of idle
- symbols
-Message-ID: <aZb6LDcE_xlinY1U@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
-References: <20260219113850.354271-1-tmricht@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pA3QPrzI"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4836d4c26d3so8118795e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Feb 2026 04:08:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1771502910; x=1772107710; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=19hUzouawp/aRIR5i7245sqjFiNHPs9y+KpLGEqgsP0=;
+        b=pA3QPrzIsxzOJmAeHVE38koqJF9jrjJOYZtPnDUX//0QkpVDO5K4HD8QJHd/k7x1uc
+         xbcOZK75BBzrAb/nThrIrtZzJvl11FcrZ07btY05DavXnGABehRLe+y1Y9cF5AEaTHba
+         GCKyBxYNdKqLarJCvGWopr4M/AZk57pMzumWwP8eEcdDH+/y/XuIeNOLBZ/4PQgPNZLV
+         WupsgW7pLqtQ5kx6cvx3eVMv7hwIogAqv2KUKd5tr2qFud370PeM1MFjTjBzT2L+28L3
+         5ce4LiHKPcWgi/2454Ki6p8h5wBlnc/n+PTKFuymQLBtK8QlLZSZXH+8OsDEYzXlZKhN
+         uRag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771502910; x=1772107710;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=19hUzouawp/aRIR5i7245sqjFiNHPs9y+KpLGEqgsP0=;
+        b=fm/wljH06ZSh/BC7xtXxuDJXq6BDG81iLFh3hbjuKTyxsTzIBV76sUV7zF0+lAShTX
+         FGZpNyJL/vj9vNefZ1C1njhnQu2Z0+0n5/c1A99Wh3dvlPHriBsEGO4crIfCh2aMmz3z
+         5k/H9iZsrPk4UvtKTZHbp4Tpuf2cE29R1LtmWwzCZgINp8xDxs/+dVvt942NLTtxHO22
+         8ELDoaB2XXlJetHfEmtHhXgWj0ZyXpq4IiC/vupaflbOI3K41OeS3/kFqgMTwEva7+us
+         JVLkfXCz0z8Fo3Aesw/AFtTGMLX07y+Lyzcym3Su8nDEewCFluzuAnySl7WkGIq3esU5
+         UMbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXyh3rDbnBHUZhxzHr+mLQb4LsHp5XBDMi4ViaC1szfMtaYlejQQ18i4FtsCEv/zjTqHLoAnWXiwt5tWoe8u4Y+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLYPnk4FdmWjFa91vG1LGdI8a0ODfO+VhcvnkILN21IHQfgbdC
+	rVMxysL+CXYByB8ymUxaN18PtmPQAaDlAb7Kf6w/ArD2Gucqyj5VLtIFlb2LIXpit3I=
+X-Gm-Gg: AZuq6aI0VquP9EJ6vRUv5BMbs5wIDY+pfPNblhvhd8ZV5jj9Pqlgs/UPwndIyuILOeN
+	g14k1GfOyFIowM1CknBD8qPdYsUly+QivjofaUevcXADX7PILa5sjqH7swZxyfBLFrLdLnYGB6+
+	GBeDaMgMBcIi4yDcwjlzRuj6RKxAG6/11ysaGkedRoKYwNeDemRIBd4kMBFVVEC0PFStGaDFef9
+	PAffokR2gGn0N0FxPWMKh8dNK/io0jCPiPlDdz5rcTRCqvmCFwR/b91ee/HE7P9RNR1sKYiinBm
+	xxqgNgJVSgPnjAmypbmcNEAV3rMaePQr+8EHmhxmapx375B/xOm8UgZkSu7CqhHyfnhJhf2Q0XD
+	zHRem6o4X47v1mnATWQe3hZ10EenRah+07R4Ne9VWD2Cf3JxgQQJ7vwDSvDKwZTs19zcI5u6H8d
+	kI6JWjminv3Y5/KXnATjmogs2Z4ndv
+X-Received: by 2002:a05:600c:4745:b0:47e:e20e:bbbe with SMTP id 5b1f17b1804b1-48373a4e7dfmr348245485e9.25.1771502909985;
+        Thu, 19 Feb 2026 04:08:29 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4839f9648cbsm20304135e9.8.2026.02.19.04.08.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Feb 2026 04:08:29 -0800 (PST)
+Message-ID: <705acb39-2eef-4e61-aec1-b9503e788299@linaro.org>
+Date: Thu, 19 Feb 2026 12:08:27 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260219113850.354271-1-tmricht@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: rzwVppszj8iVYPlOyTOFnJEnSGEBt4h2
-X-Authority-Analysis: v=2.4 cv=Md9hep/f c=1 sm=1 tr=0 ts=6996fa32 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=kj9zAlcOel0A:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VnNF1IyMAAAA:8
- a=G4jJH_jHd3thOZ3YYNoA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE5MDEwNiBTYWx0ZWRfX8mlZ9t+fjSio
- xufMsVYQ3dqg4kLT7yW+MtCKEEd21oC2aGjxMWtrYrPd2RhLE4fK7WZImvzc14eo7awSlkVyBHh
- N7I9NW+0qzP7Qlj+h4HVdkrb46A+Y5UkxUHLW35kb5PAV+1SEurJMZ4GGommmdnqvfaCd5qFJgG
- IzGSquwn03ToitrX523jUdLanyr8t1efNPDx04wK7vUUw3WycKLfMQwPpBncKuuBgVTwgX4/u6B
- fUmox0k8XKnYhhIoLt7N8352vHL52MbtZ+zVOYCxoc0Rz8JFWUEs60KL0JtwiwoKRSFEhfejJIs
- You/YPU/s3VawlQ8h9FPraHGAzCRnGpzeOpJOgqHnsL5g4dSR7uxL28Utvm+MyCa1NGcu3CQj3R
- t6L1fap7A992iFzvjJWSsetwF/pOl0rY8X3fLuSITB0AHVJBsP1fZujUYhjqFY4uLJ7kqRBJjVe
- DIuxgga+Vo3KS3OQEWw==
-X-Proofpoint-GUID: rzwVppszj8iVYPlOyTOFnJEnSGEBt4h2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-19_03,2026-02-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 impostorscore=0 lowpriorityscore=0 spamscore=0 adultscore=0
- priorityscore=1501 suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602190106
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf: arm_spe: Add barrier before enabling profiling
+ buffer
+From: James Clark <james.clark@linaro.org>
+To: Will Deacon <will@kernel.org>, Michael Williams
+ <Michael.Williams@arm.com>, Alexandru Elisei <Alexandru.Elisei@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Anshuman Khandual <Anshuman.Khandual@arm.com>,
+ Rob Herring <Rob.Herring@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+ Robin Murphy <Robin.Murphy@arm.com>, Leo Yan <leo.yan@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260123-james-spe-relaxation-v1-1-4ccb88fa7bc5@linaro.org>
+ <aYD08d42SewAAQCB@willie-the-truck>
+ <aebe99ad-1189-4372-83e3-385f33829bd2@linaro.org>
+ <aYHXCkFZcVm1L_25@willie-the-truck>
+ <e7d53952-59f6-4990-83fb-1182641af29f@linaro.org>
+Content-Language: en-US
+In-Reply-To: <e7d53952-59f6-4990-83fb-1182641af29f@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 19, 2026 at 12:38:50PM +0100, Thomas Richter wrote:
-> Commit fa2ae4a377c0 ("s390/idle: Rewrite psw_idle() in C")
->
-> removes symbols psw_idle() and psw_idle_exit() from the linux
-> kernel for s390. Remove them in perf tool's list of idle
-> functions. They can not be detected anymore.
->
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Suggested-by: Heiko Carstens <hca@linux.ibm.com>
-Reviewed-by: Jan Polensky <japo@linux.ibm.com>
+
+
+On 06/02/2026 9:50 am, James Clark wrote:
+> 
+> 
+> On 03/02/2026 11:07 am, Will Deacon wrote:
+>> On Tue, Feb 03, 2026 at 10:46:37AM +0000, James Clark wrote:
+>>>
+>>>
+>>> On 02/02/2026 7:03 pm, Will Deacon wrote:
+>>>> On Fri, Jan 23, 2026 at 04:03:53PM +0000, James Clark wrote:
+>>>>> The Arm ARM known issues document [1] states that the architecture 
+>>>>> will
+>>>>> be relaxed so that the profiling buffer must be correctly configured
+>>>>> when ProfilingBufferEnabled() && !SPEProfilingStopped() &&
+>>>>> PMBLIMITR_EL1.FM != DISCARD:
+>>>>>
+>>>>>     R24557
+>>>>>
+>>>>>     While the Profiling Buffer is enabled, profiling is not 
+>>>>> stopped, and
+>>>>>     Discard mode is not enabled, all of the following must be true:
+>>>>>
+>>>>>     * The current write pointer must be at least one sample record 
+>>>>> below
+>>>>>       the write limit pointer.
+>>>>>
+>>>>> The same relaxation also says that writes may be completely ignored:
+>>>>>
+>>>>>     When the Profiling Buffer is enabled, profiling is not stopped, 
+>>>>> and
+>>>>>     Discard mode is not enabled, the PE might ignore a direct write 
+>>>>> to any
+>>>>>     of the following Profiling Buffer registers, other than a 
+>>>>> direct write
+>>>>>     to PMBLIMITR_EL1 that clears PMBLIMITR_EL1.E from 1 to 0:
+>>>>>
+>>>>>     * The current write pointer, PMBPTR_EL1.
+>>>>>     * The Limit pointer, PMBLIMITR_EL1.
+>>>>>     * PMBSR_EL1.
+>>>>
+>>>> Thinking about this some more, does that mean that the direct write to
+>>>> PMBPTR_EL1 performs an indirect read of PMBLIMITR_EL1 so that it can
+>>>> determine the write-ignore semantics? If so, doesn't that mean that
+>>>> we'll get order against a subsequent direct write of PMBLIMITR_EL1
+>>>> without an ISB thanks to table "D24-1 Synchronization requirements"
+>>>> which says that an indirect read followed by a direct write doesn't
+>>>> require synchronisation?
+>>>>
+>>>> There's also a sentence above the table stating:
+>>>>
+>>>> "Direct writes to System registers are not allowed to affect any
+>>>>    instructions appearing in program order before the direct write."
+>>>>
+>>>> so after all that, I'm not really sure why the ISB is required.
+>>>>
+>>>> Will
+>>>
+>>> We were under the impression that this was required for the SPU as it is
+>>> treated as a separate entity than the PE.
+>>>
+>>> In "D17.9 Synchronization and Statistical Profiling" there is:
+>>>
+>>>    INDWCG
+>>>
+>>>    A Context Synchronization event guarantees that a direct write to a
+>>>    System register made by the PE in program order before the Context
+>>>    synchronization event are observable by indirect reads and indirect
+>>>    writes of the same System register made by a profiling operation
+>>>    relating to a sampled operation in program order after the Context
+>>>    synchronization event.
+>>>
+>>> That specifically mentions an indirect read following a direct write, 
+>>> which
+>>> seems to contradict D24-1. Although I thought this is a special case for
+>>> SPE.
+>>
+>> My reading of the the text above is that it is covering the direct write
+>> -> indirect read case, whereas I think the case in the SPE driver that
+>> we're considering for your patch is when we have an indirect read
+>> followed by a direct write.
+>>
+>> Will
+> 
+> Yeah, and that text also only applies to "profiling operations", not 
+> writes to PMBPTR and PMBLIMITR.
+> 
+> Upon further investigation you are correct about the isb() not being 
+> required, even with the new relaxation. Seems like we just accepted that 
+> the relaxation required some change to the driver without really 
+> thinking about it. But yeah thanks for looking in detail and catching it.
+> 
+> So we can drop this now. Sorry for the noise.
+> 
+> James
+> 
+
+Hi Will,
+
+I'm back to drag this up again. So I think all of the above discussion 
+relies on the ordering given by the indirect read needed for the "might 
+ignore a direct write..." part. But it's _might_ ignore a direct write, 
+it's possible for an implementation to not do that, so there are two 
+possible implementations:
+
+#1 Where there is an indirect read to give the write ignore outcome
+#2 Where there is no write ignore outcome so it doesn't require an
+    indirect read
+
+For #2 there's nothing to force the ordering. We're writing to two 
+different registers (PMBPTR_EL1 and PMBLIMITR_EL1) and we have to have 
+the PMBLIMITR_EL1 write come second for the buffer to be considered 
+configured correctly. For example if the old value of PMBPTR_EL1 is 
+higher than the new PMBLIMITR_EL1 and the write to PMBLIMITR_EL1 happens 
+first then it's misconfigured. That's why we think we need the isb() here.
+
+Thanks
+James
+
 
