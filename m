@@ -1,357 +1,122 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084103093A8
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Feb 2026 10:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FA12EAD1C;
+	Thu, 19 Feb 2026 11:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771497792; cv=none; b=J/r/lbPWMuxAO9dYYchwY2dmc/l+cecNeg9LDe1cS0yH8mywjeNKr3Qeblc5TGOBB3SpATr8CiKSXAqw0JYD/EfCDr8kZp12pVZlEKeYeg+tQu+ezGCXQRerSDg6Eabv15wZ1fM8DmFxVJ7y17Wg99E5WFC32LQkMOTOYXH7X2g=
+	t=1771501145; cv=none; b=Buhu1+D0GxmjzSSjDlq0nEfBJy7BsenvtFz3MozmM+KGWUu8BH6a7Z9OTqnZmA3s7ImW9ncVJa1A4uyxlIaqLUkYKFB3hpCgoYklWNRMaADRHKt4GWdbZQR9+j1Jv/yVRYwHn+jwu5WF10554vfKF+SyNTMYK7Ht7gl3OuomH2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771497792; c=relaxed/simple;
-	bh=jIDl2aUFSTNM4e0HIAkwwoqLD+t+1ahm4trFh/HXOzU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Em4GAcQFHf+t/soyIMXOELZkxwQM4WbnCUDJBsZoViNXOmM0n+ytyjda1h1c8+ndqoZ75THcad4TBkvChgklA1f8s33U3fEN+JBNUxOrbWq42YNK/I6MM/ZFKDnQlQskBeXElRfwt61uXO1rIBA2MMuUZzc7TVFBuioUqdJe3eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zL3JSWjR; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1771501145; c=relaxed/simple;
+	bh=5z1w0XTVZWDpfG5y4IdNGsgYbQwszn225RRPIzE81lo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hJftGBDrIhtYPjP28XPGRJtZlnLgQvi61kzNxj9xFdwboFVXb4Z1wjNIPWOeStKggpQhQRNCnCfKJaCtj5D1GGcLiRyr27qF/KtDpUFNb2Q62ddojOw05RQW6Lyw0oagG+idN2f4TVUiK2RdgbszA/Jh9ZIL4+RW0FjDYKJ4uQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=d0a3aBbq; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zL3JSWjR"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-48372efa020so6079835e9.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Feb 2026 02:43:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1771497789; x=1772102589; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FaFPVUJQnAWvUj3Wv50cn/Nz/uP6wEpNDusbLeuclUY=;
-        b=zL3JSWjRNRZ8IH8FVM4sxdPQi88QdaYziqU/qqwGWy/kcW8Bp1haq/MxuZ8LC3uPbd
-         BtvSE0+m0MqAotRaEy92XOPwJUS+3FzFS3ayxZ4WhQNKlsxzozTyRfpc5h3SPuQYdC3x
-         kM65pXFMs1pOCasJp1BRSys/AMSDplDfZ4UlL8WiDrHhIwgeVIiqTZSZ6701/lf+2+6W
-         BD4z74Nt+TNsvz1SnaZzdwLAGpEGFc+Qq6Mtrcz4NI4X3TJFKDy7IUic6YvPFH5jYwkA
-         NiLqWAuabTUWluKBVUP7NZbUHXwB9IjytIzdds2bjx4m6sDiJLigb4ayk5+/BnhJX4SZ
-         G8iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771497789; x=1772102589;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FaFPVUJQnAWvUj3Wv50cn/Nz/uP6wEpNDusbLeuclUY=;
-        b=THRqksh9yFtYgRzochbvrkWczYzDWuIJGuHV5j8vM9uH/iDs8W7Yi9Z+acc+0bVAGM
-         M5aHhs6RrRX+ejFgYVKZOHrjdmekO8KQ9odPjl6amcO6IRFNdi4QqOtOvewFW7aHE76S
-         ObZbS++c07N+TVxVjONpEBn7v9P1YWAPGxleU1UBLPf0G9Zf5j/tskphQYGxfDrLiryo
-         OPgAGJghNXDNp2xCvtspiff7njvJyfYcEmAQT73vo+YbhZ3bFscDJoQDHp8vfPL5KVzf
-         vZad0H2nn4k++cDF0tVwnzgLducTZk6VWsrgKxeumyjQ5UMH9lAzyRQ620gSxreEecJe
-         r9GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXNYw54Xw3tqGfiG2GHuUhpZK4tU7rP5i1Pa0sKFy3c9MDY7xJ/rQTiZFHPj9egnfnTRdDD5gmX00fsk1gpR8KC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9prGMcfPuFdi7zargY2JhT7I16wZe80Zz+kQWQh1DVQ9wNgnc
-	+BT2SV25jokFWMNapmB1WqQiWXMEASxL1GL6NOvXXNM4t2S3XB2FFjh91UHgJzOOLmc=
-X-Gm-Gg: AZuq6aL7F+dXpdmmHJnnNAzLx5nF+I7LnrQa7z9cVuyuwjPB0MnETr6Z71j5XHrSIz1
-	IaWzt8gYdK4Sfvmb2J68Yz4MjeSsFt99cpTSDzRhBVPZI3zoo9g96gWJYnVoYShRw/9zXlikyMM
-	ulsQkqSIFax9VKEqgWXF1H4KlSf5F1ygpo0FSlvY3Fl7wVYK3rSAehaCRT1PyGgbGCsbAOtklDU
-	FEA7Ff8pd3ksjMLTrSZYttCJQbCV+SkNVkAOiHlr3lcyC05+h7pFa5mO3+WaWAX/mAEnycR4Qw4
-	NBzEhARtgWDKUFH+I4bcK00v7uuRCDbmD158fDKMjZDu7GrzVR40jSC+HN7UIO3kmHqz9L80EuN
-	G1LX4OTvnDpM27zebUjZDj2HYUAxyhZv6AhcwAo+J1IU7OZQM2c1Lxjd9rTL9cVTu99OjXoDNqP
-	heQajlAe2MhwtW6+bMAOjZ3q6T8v16
-X-Received: by 2002:a05:600c:8b84:b0:483:4bbc:89ea with SMTP id 5b1f17b1804b1-48379c42db1mr290735695e9.37.1771497789133;
-        Thu, 19 Feb 2026 02:43:09 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4839f986118sm16023575e9.21.2026.02.19.02.43.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Feb 2026 02:43:08 -0800 (PST)
-Message-ID: <d50a0446-7029-4234-8399-b8f643d44c62@linaro.org>
-Date: Thu, 19 Feb 2026 10:43:07 +0000
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="d0a3aBbq"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61J9A8CJ1369990;
+	Thu, 19 Feb 2026 11:38:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=TNnSnses5Z3Yjgq/WYDGhn3P8WlDDBv7QCy5eRiEs
+	Oc=; b=d0a3aBbq6yE+EuxVgWwg0R8wWDP6YGzHT5icPzqkcacrrpn7rw953vAFx
+	d9u+LE3nLXANAjK568gJQVzJePCsM9/XyO5WqBQHnxUaQutPgmCt67YY/zgXei2q
+	7jn2SP0P4QnIaAo/HZZGsn32wsuPozcrxNqevB+UaUQ8kdhiJMM5+lBh2D7Q+yHW
+	hL0FI05T2lc8R3TkUHARjKBlcPpNEmAx8d3a8vZqkEU6VEQkR0CXTDpGuN6rspTC
+	F34uf8bpKjPITT9G++tskC5mzZKFk3ocBd0qdJpvr9grT4DjhJYeW/flW+0mP5/4
+	1Vi3ETtj86NbdCa0uKm5z7GK554oA==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cajcjmm5v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Feb 2026 11:38:59 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61J7vGmQ012024;
+	Thu, 19 Feb 2026 11:38:58 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ccb2741qb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Feb 2026 11:38:58 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61JBcsaD19530036
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 19 Feb 2026 11:38:54 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A9FEB20040;
+	Thu, 19 Feb 2026 11:38:54 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 723012004B;
+	Thu, 19 Feb 2026 11:38:54 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 19 Feb 2026 11:38:54 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v2] perf symbol: Remove psw_idle() from list of idle symbols
+Date: Thu, 19 Feb 2026 12:38:50 +0100
+Message-ID: <20260219113850.354271-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] perf bench: Add -t/--threads option to perf bench
- mem mmap
-To: Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- Ankur Arora <ankur.a.arora@oracle.com>
-References: <20260219004417.188434-1-namhyung@kernel.org>
- <20260219004417.188434-2-namhyung@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260219004417.188434-2-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 6JahrWOM-vwb8iEvBWxGeYV7fh5lGUrh
+X-Authority-Analysis: v=2.4 cv=Md9hep/f c=1 sm=1 tr=0 ts=6996f653 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
+ a=GgsMoib0sEa3-_RKJdDe:22 a=VnNF1IyMAAAA:8 a=keipoBE3hED_wQI-0boA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE5MDEwNiBTYWx0ZWRfX8u71k/CYI9+N
+ 5CM3cl1ypjr7bvolUOHWHcnPuMkghGolroYJeDUAbY6dxqL7ZGLx+ASq1MzW4037aZ3faCgq0nh
+ ge8vd5c8Nr3c0pmqqbGwbvr/owZAVJ8vEpYR+mR8dZGl7BpP+1Pu+V6NReGdINv4BgaXQHXXLBj
+ mwoIlHNzb9X0oE4fUYh1AbOL44+eTD2mUcTunQ+ItV4zF4Lr+m2zLelzo6WVNE0FT6a8W7vXy1l
+ cfUSunr1zkVcvIeCdQ3OWvHAEt0FN4bb3z2A7fORiZCWZlVLQxUQnCen4DCVfZp9plgzl7jrYU/
+ iuDeCpRFOeUC1r/4JSnUnXSO46NXrgRnq9++iS+/EEBXTDPI3sQizOdW9mlsUsqQ3HwgNNpnitc
+ MFxll/0EXd1DD796/+4RnHH/wB1Sc6ciUzBc6/yhx53sxUFp7TYZManc0mHv0mJSHN5VC8tZ4l0
+ W0a3OLSpZXARTUkyvuQ==
+X-Proofpoint-GUID: 6JahrWOM-vwb8iEvBWxGeYV7fh5lGUrh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-19_03,2026-02-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 impostorscore=0 lowpriorityscore=0 spamscore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602190106
 
+Commit fa2ae4a377c0 ("s390/idle: Rewrite psw_idle() in C")
 
+removes symbols psw_idle() and psw_idle_exit() from the linux
+kernel for s390. Remove them in perf tool's list of idle
+functions. They can not be detected anymore.
 
-On 19/02/2026 12:44 am, Namhyung Kim wrote:
-> So that it can measure overhead of mmap_lock and/or per-VMA lock
-> contention.
-> 
->    $ perf bench mem mmap -f demand -l 1000 -t 1
->    # Running 'mem/mmap' benchmark:
->    # function 'demand' (Demand loaded mmap())
->    # Copying 1MB bytes ...
-> 
->           2.786858 GB/sec
-> 
->    $ perf bench mem mmap -f demand -l 1000 -t 2
->    # Running 'mem/mmap' benchmark:
->    # function 'demand' (Demand loaded mmap())
->    # Copying 1MB bytes ...
-> 
->           1.624468 GB/sec/thread   ( +-   0.30% )
-> 
->    $ perf bench mem mmap -f demand -l 1000 -t 3
->    # Running 'mem/mmap' benchmark:
->    # function 'demand' (Demand loaded mmap())
->    # Copying 1MB bytes ...
-> 
->           1.493068 GB/sec/thread   ( +-   0.15% )
-> 
->    $ perf bench mem mmap -f demand -l 1000 -t 4
->    # Running 'mem/mmap' benchmark:
->    # function 'demand' (Demand loaded mmap())
->    # Copying 1MB bytes ...
-> 
->           1.006087 GB/sec/thread   ( +-   0.41% )
-> 
-> Cc: Ankur Arora <ankur.a.arora@oracle.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
-> v2)
->   * correct timeval2double calculation
->   * add "/thread" notation when -t > 1  (James)
->   * add stddev when -t > 1  (Ankur)
-> 
->   tools/perf/Documentation/perf-bench.txt |   4 +
->   tools/perf/bench/mem-functions.c        | 109 +++++++++++++++++++-----
->   2 files changed, 92 insertions(+), 21 deletions(-)
-> 
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Suggested-by: Heiko Carstens <hca@linux.ibm.com>
+---
+ tools/perf/util/symbol.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Reviewed-by: James Clark <james.clark@linaro.org>
-
-> diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
-> index 1160224cb718392d..c5913cf59c988421 100644
-> --- a/tools/perf/Documentation/perf-bench.txt
-> +++ b/tools/perf/Documentation/perf-bench.txt
-> @@ -274,6 +274,10 @@ Repeat mmap() invocation this number of times.
->   --cycles::
->   Use perf's cpu-cycles event instead of gettimeofday syscall.
->   
-> +-t::
-> +--threads=<NUM>::
-> +Create multiple threads to call mmap/munmap concurrently.
-> +
->   SUITES FOR 'numa'
->   ~~~~~~~~~~~~~~~~~
->   *mem*::
-> diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
-> index 676c8d18f4c2e259..8e04ae69f8a85c5e 100644
-> --- a/tools/perf/bench/mem-functions.c
-> +++ b/tools/perf/bench/mem-functions.c
-> @@ -7,13 +7,14 @@
->    * Written by Hitoshi Mitake <mitake@dcl.info.waseda.ac.jp>
->    */
->   
-> -#include "debug.h"
-> +#include "bench.h"
->   #include "../perf-sys.h"
->   #include <subcmd/parse-options.h>
-> -#include "../util/header.h"
-> -#include "../util/cloexec.h"
-> -#include "../util/string2.h"
-> -#include "bench.h"
-> +#include "util/cloexec.h"
-> +#include "util/debug.h"
-> +#include "util/header.h"
-> +#include "util/stat.h"
-> +#include "util/string2.h"
->   #include "mem-memcpy-arch.h"
->   #include "mem-memset-arch.h"
->   
-> @@ -26,6 +27,7 @@
->   #include <errno.h>
->   #include <linux/time64.h>
->   #include <linux/log2.h>
-> +#include <pthread.h>
->   
->   #define K 1024
->   
-> @@ -41,6 +43,7 @@ static unsigned int	nr_loops	= 1;
->   static bool		use_cycles;
->   static int		cycles_fd;
->   static unsigned int	seed;
-> +static unsigned int	nr_threads	= 1;
->   
->   static const struct option bench_common_options[] = {
->   	OPT_STRING('s', "size", &size_str, "1MB",
-> @@ -121,6 +124,8 @@ static struct perf_event_attr cycle_attr = {
->   	.config		= PERF_COUNT_HW_CPU_CYCLES
->   };
->   
-> +static struct stats stats;
-> +
->   static int init_cycles(void)
->   {
->   	cycles_fd = sys_perf_event_open(&cycle_attr, getpid(), -1, -1, perf_event_open_cloexec_flag());
-> @@ -174,18 +179,18 @@ static void clock_accum(union bench_clock *a, union bench_clock *b)
->   
->   static double timeval2double(struct timeval *ts)
->   {
-> -	return (double)ts->tv_sec + (double)ts->tv_usec / (double)USEC_PER_SEC;
-> +	return ((double)ts->tv_sec + (double)ts->tv_usec / (double)USEC_PER_SEC) / nr_threads;
->   }
->   
->   #define print_bps(x) do {						\
->   		if (x < K)						\
-> -			printf(" %14lf bytes/sec\n", x);		\
-> +			printf(" %14lf bytes/sec", x);			\
->   		else if (x < K * K)					\
-> -			printf(" %14lfd KB/sec\n", x / K);		\
-> +			printf(" %14lfd KB/sec", x / K);		\
->   		else if (x < K * K * K)					\
-> -			printf(" %14lf MB/sec\n", x / K / K);		\
-> +			printf(" %14lf MB/sec", x / K / K);		\
->   		else							\
-> -			printf(" %14lf GB/sec\n", x / K / K / K);	\
-> +			printf(" %14lf GB/sec", x / K / K / K);	\
->   	} while (0)
->   
->   static void __bench_mem_function(struct bench_mem_info *info, struct bench_params *p,
-> @@ -197,6 +202,7 @@ static void __bench_mem_function(struct bench_mem_info *info, struct bench_param
->   	void *src = NULL, *dst = NULL;
->   
->   	memset(&rt, 0, sizeof(rt));
-> +	init_stats(&stats);
->   	printf("# function '%s' (%s)\n", r->name, r->desc);
->   
->   	if (r->fn.init && r->fn.init(info, p, &src, &dst))
-> @@ -211,11 +217,16 @@ static void __bench_mem_function(struct bench_mem_info *info, struct bench_param
->   	switch (bench_format) {
->   	case BENCH_FORMAT_DEFAULT:
->   		if (use_cycles) {
-> -			printf(" %14lf cycles/byte\n", (double)rt.cycles/(double)p->size_total);
-> +			printf(" %14lf cycles/byte", (double)rt.cycles/(double)p->size_total);
->   		} else {
->   			result_bps = (double)p->size_total/timeval2double(&rt.tv);
->   			print_bps(result_bps);
->   		}
-> +		if (nr_threads > 1) {
-> +			printf("/thread\t( +- %6.2f%% )",
-> +			       rel_stddev_stats(stddev_stats(&stats), avg_stats(&stats)));
-> +		}
-> +		printf("\n");
->   		break;
->   
->   	case BENCH_FORMAT_SIMPLE:
-> @@ -495,16 +506,27 @@ static void mmap_page_touch(void *dst, size_t size, unsigned int page_shift, boo
->   	}
->   }
->   
-> -static int do_mmap(const struct function *r, struct bench_params *p,
-> -		  void *src __maybe_unused, void *dst __maybe_unused,
-> -		  union bench_clock *accum)
-> +struct mmap_data {
-> +	pthread_t id;
-> +	const struct function *func;
-> +	struct bench_params *params;
-> +	union bench_clock result;
-> +	unsigned int seed;
-> +	int error;
-> +};
-> +
-> +static void *do_mmap_thread(void *arg)
->   {
-> +	struct mmap_data *data = arg;
-> +	const struct function *r = data->func;
-> +	struct bench_params *p = data->params;
->   	union bench_clock start, end, diff;
->   	mmap_op_t fn = r->fn.mmap_op;
->   	bool populate = strcmp(r->name, "populate") == 0;
-> +	void *dst;
->   
-> -	if (p->seed)
-> -		srand(p->seed);
-> +	if (data->seed)
-> +		srand(data->seed);
->   
->   	for (unsigned int i = 0; i < p->nr_loops; i++) {
->   		clock_get(&start);
-> @@ -515,16 +537,59 @@ static int do_mmap(const struct function *r, struct bench_params *p,
->   		fn(dst, p->size, p->page_shift, p->seed);
->   		clock_get(&end);
->   		diff = clock_diff(&start, &end);
-> -		clock_accum(accum, &diff);
-> +		clock_accum(&data->result, &diff);
->   
->   		bench_munmap(dst, p->size);
->   	}
->   
-> -	return 0;
-> +	return data;
->   out:
-> -	printf("# Memory allocation failed - maybe size (%s) %s?\n", size_str,
-> -			p->page_shift != PAGE_SHIFT_4KB ? "has insufficient hugepages" : "is too large");
-> -	return -1;
-> +	data->error = -ENOMEM;
-> +	return NULL;
-> +}
-> +
-> +static int do_mmap(const struct function *r, struct bench_params *p,
-> +		  void *src __maybe_unused, void *dst __maybe_unused,
-> +		  union bench_clock *accum)
-> +{
-> +	struct mmap_data *data;
-> +	int error = 0;
-> +
-> +	data = calloc(nr_threads, sizeof(*data));
-> +	if (!data) {
-> +		printf("# Failed to allocate thread resources\n");
-> +		return -1;
-> +	}
-> +
-> +	for (unsigned int i = 0; i < nr_threads; i++) {
-> +		data[i].func = r;
-> +		data[i].params = p;
-> +		if (p->seed)
-> +			data[i].seed = p->seed + i;
-> +
-> +		if (pthread_create(&data[i].id, NULL, do_mmap_thread, &data[i]) < 0)
-> +			data[i].error = -errno;
-> +	}
-> +
-> +	for (unsigned int i = 0; i < nr_threads; i++) {
-> +		union bench_clock *t = &data[i].result;
-> +
-> +		pthread_join(data[i].id, NULL);
-> +
-> +		clock_accum(accum, t);
-> +		if (use_cycles)
-> +			update_stats(&stats, t->cycles);
-> +		else
-> +			update_stats(&stats, t->tv.tv_sec * 1e6 + t->tv.tv_usec);
-> +		error |= data[i].error;
-> +	}
-> +	free(data);
-> +
-> +	if (error) {
-> +		printf("# Memory allocation failed - maybe size (%s) %s?\n", size_str,
-> +		       p->page_shift != PAGE_SHIFT_4KB ? "has insufficient hugepages" : "is too large");
-> +	}
-> +	return error ? -1 : 0;
->   }
->   
->   static const char * const bench_mem_mmap_usage[] = {
-> @@ -549,6 +614,8 @@ int bench_mem_mmap(int argc, const char **argv)
->   	static const struct option bench_mmap_options[] = {
->   		OPT_UINTEGER('r', "randomize", &seed,
->   			    "Seed to randomize page access offset."),
-> +		OPT_UINTEGER('t', "threads", &nr_threads,
-> +			    "Number of threads to run concurrently (default: 1)."),
->   		OPT_PARENT(bench_common_options),
->   		OPT_END()
->   	};
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 814f960fa8f8..575951d98b1b 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -752,8 +752,6 @@ static bool symbol__is_idle(const char *name)
+ 		"poll_idle",
+ 		"ppc64_runlatch_off",
+ 		"pseries_dedicated_idle_sleep",
+-		"psw_idle",
+-		"psw_idle_exit",
+ 		NULL
+ 	};
+ 	int i;
+-- 
+2.53.0
 
