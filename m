@@ -1,169 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1855A34AAEA;
-	Mon, 23 Feb 2026 08:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D830D365A12
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Feb 2026 12:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771834127; cv=none; b=YJNFo2wQrj/7T/L1e24n33J6k+WaMmHyJhKRXxpME/YIZII6jLXocnL5R/qeruo1rCWsRuJwyPWi6CPfu+XT99QsAZDMkywumKkkYFuxidApiXqugYdMQZi2D5s41V+u77Rmh2BT1ZCnIjcNNy6cw3Fl/BL0dRuwfsEIgBTGsEA=
+	t=1771849543; cv=none; b=DgxLQ4ms/g7vZYAfckedzb62EQ3b7laGgFlvp8AMF36+CZhiefE4+oA+7odv+b4GA0E5he3CfpxudYHTVOKpm7TefzejBY2xMuWTI8k2oGBb6mDeEw0AjZk8D/wWQ1nSfu6N/nao8qoPvUaHhHUVxefUfZneEWl0LM4mhdnYbsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771834127; c=relaxed/simple;
-	bh=C0LVkrERSBDXQ6ejDtm+umP0yicPpm2CRhoJWRWE03w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=flfFvtN7u08JSCtzYsGpfU4PIzf7SoNHDjHPsEdVD1vL0sCcWjC/qfcr3DTF2DVxcX+9SBxapU2kYDA3BXOAaSQP5dDTGyiBv5sv8P0UXD/DJ+74ZLiu529DeE7QO7vhPPQfsgenLU+putdsLoCv1Q0nmAXvYF5dcFwMHkiCuV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=np2MV9DU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771849543; c=relaxed/simple;
+	bh=bhrLQQJp2WQsx6938rZMvGl+P0gSUC705eDDZ+boG5I=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=O/mtqU5jokwYSNDarGAfWdiHEvDGH46mzVrJLAsCUhoEuMlNwE/R+g/NZS2MEci6Tbr33QaR2N1bL1cJjgVa6w2USovm+Z822fXRoDs1usnqZkootQLOjmZTz5eqeY/R46breLsaSWN0knsd6L5F6qCzPx6kI72kXETRjqTa6V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TfAgS1Lk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="np2MV9DU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A34C116C6;
-	Mon, 23 Feb 2026 08:08:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771834126;
-	bh=C0LVkrERSBDXQ6ejDtm+umP0yicPpm2CRhoJWRWE03w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=np2MV9DUO+iActLJHksc9npBnrHu1EqRZMU3Z09S3skooyf15ZzLXA67f+43IjVmZ
-	 3OaI+dzW/DV1b52C0vZpSz/KBBJcj78JrMXHN5xGNc+nPW5enV0zx9nxBPQtmMdM5X
-	 o5gTYDLYLJv7Z0+6Mm8wkqwNe3vyv7ien7W8LIP6ypiI8SOqSTt/fe8V5Ujj7A4OVc
-	 J93XB5OF8pe0xnZCiMhlxe9oaYlWfx9ivj+3TPHqrtMc8G9GLpKrd/u9X/wc6uamG1
-	 mK/41ghiYV7fe9Lpbyqp2bEf4Wd36UftYPeot6M2p2oWaSLSFTfQWhFkEShVeeYaYI
-	 nWGTbBD0fN54A==
-Date: Mon, 23 Feb 2026 00:08:44 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: SeongJae Park <sj@kernel.org>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, damon@lists.linux.dev,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH 0/4] mm/damon: introduce perf event based access check
-Message-ID: <aZwLDAxf9eP0lPdD@z2>
-References: <20260124023917.78649-1-sj@kernel.org>
- <20260124024804.78869-1-sj@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TfAgS1Lk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1771849541;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x5FQ6M7OFu5xYX66DzT3ohEMtpWo7tpNCXWHYTmCBVA=;
+	b=TfAgS1LksGFbmbdwt/HYPHh46Y9KpSIY0GwFSN5iL1+hAVzc0V+1JltZEICy7jMyHeyDUS
+	ZMSeVRZ0EqpXMdghawaZ3qZbAVeQubwvgG8HlAEeiQr48/9cIMZBONVQt8NaiI3DcKZZYG
+	x1NC7XUPZUbVDMS7xgCxDoE1EVNNmug=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-689-7zdBn13qPH2QtNK7Q8G8Vg-1; Mon,
+ 23 Feb 2026 07:25:35 -0500
+X-MC-Unique: 7zdBn13qPH2QtNK7Q8G8Vg-1
+X-Mimecast-MFC-AGG-ID: 7zdBn13qPH2QtNK7Q8G8Vg_1771849533
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 262B71956094;
+	Mon, 23 Feb 2026 12:25:33 +0000 (UTC)
+Received: from Carbon (unknown [10.44.22.3])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0116830001BE;
+	Mon, 23 Feb 2026 12:25:26 +0000 (UTC)
+Date: Mon, 23 Feb 2026 13:25:23 +0100 (CET)
+From: Michael Petlan <mpetlan@redhat.com>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+    Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+    James Clark <james.clark@linaro.org>, 
+    Sadasivan Shaiju <sadasivan.shaiju2@amd.com>, x86@kernel.org, 
+    linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    Manali Shukla <manali.shukla@amd.com>, 
+    Santosh Shukla <santosh.shukla@amd.com>, 
+    Ananth Narayan <ananth.narayan@amd.com>, 
+    Sandipan Das <sandipan.das@amd.com>
+Subject: Re: [PATCH v2 1/5] perf/amd/ibs: Account interrupt for discarded
+ samples
+In-Reply-To: <20260216042216.1440-2-ravi.bangoria@amd.com>
+Message-ID: <79e0c820-e934-47a1-abd-3612e82b310@redhat.com>
+References: <20260216042216.1440-1-ravi.bangoria@amd.com> <20260216042216.1440-2-ravi.bangoria@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260124024804.78869-1-sj@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hello,
+Hi Ravi,
 
-On Fri, Jan 23, 2026 at 06:48:03PM -0800, SeongJae Park wrote:
-> Cc-ing linux-perf-users@ for any comment from perf people, about the use of
-> perf event from DAMON.
-
-Sorry for the long delay.
-
+On Mon, 16 Feb 2026, Ravi Bangoria wrote:
+> Add interrupt throttling accounting for below cases:
 > 
-> On Fri, 23 Jan 2026 18:39:20 SeongJae Park <sj@kernel.org> wrote:
+>   o IBS Op PMU: A software filter (in addition to the hardware filter)
+>     drops samples whose load latency is below the user-specified
+>     threshold.
 > 
-> > On Fri, 23 Jan 2026 11:10:10 +0900 Akinobu Mita <akinobu.mita@gmail.com> wrote:
-> > 
-> > > DAMON currently only provides PTE accessed-bit based access check, this
-> > > patch series adds a new perf event based access check.
-> > 
-> > Very interesting patch series.  Thank you for sharing this Akinobu!
-> > 
-> > I only took a glance on the patches, but my understanding is that this series
-> > modifies DAMON to be able to enable perf events of PERF_SAMPLE_ADDR type, and
-> > utilize the sampled perf events in the perf events buffer as the source of
-> > DAMON's access checks.  In more detail, I understand enabling PERF_SAMPLE_ADDR
-> > type perf events makes the perf events buffer filled with memory access event
-> > information with the access destination address.  The event will be sampled
-> > based on time (e.g., one access event per X milliseconds).  And probably that
-> > sample data could include more information includign the CPU and the process
-> > that executing the sampled access?  Please correct me if I'm wrong and add more
-> > details I'm missing, as my understanding of perf event is very poor.
+>   o IBS Fetch PMU: Samples discarded due to the zero-RIP erratum (#1197).
+> 
+> Although these samples are discarded, the NMI cost is still incurred, so
+> they should be counted for interrupt throttling.
+> 
 
-I'm afraid you need to deal with PMU hardware details.  For example
-PERF_SAMPLE_ADDR may not be available depends on events or sometimes it
-may not have valid values in some samples like on AMD IBS.  Also hybrid
-CPUs may not have same events on both CPUs.
+Maybe worth tagging
 
-Maybe it's better to fix which event you want to use on each CPU
-architecture.
+Fixes: 26db2e0c51fe83e1dd852c1321407835b481806e ("perf/x86/amd/ibs: Work around erratum #1197")
+Fixes: d20610c19b4a22bc69085b7eb7a02741d51de30e ("perf/amd/ibs: Add support for OP Load Latency Filtering")
 
-> > 
-> > And one quick question.  Can this work on virtual machines?  I'm asking this
-> > question the for following reason.  I'm actuaally working on a similar project
-> > that extends DAMON for page fault based access events sampling [1].  The
-> > project aims to use page fault event rather than other h/w features such as AMD
-> > IBS or Intel PEBS, because my understanding is that such h/w features are not
-> > available on virtual machines.
+?
 
-KVM supports PMU virtualization.  But the existing vPMU support has a
-lot of overhead.  Recently mediated vPMU patchset was added so you can
-try that instead.  You'll need to pass appropriate options to qemu.
+Cheers,
+Michael
 
-https://lore.kernel.org/lkml/20251206001720.468579-1-seanjc@google.com/
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+>  arch/x86/events/amd/ibs.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+> index aca89f23d2e0..705ef43325be 100644
+> --- a/arch/x86/events/amd/ibs.c
+> +++ b/arch/x86/events/amd/ibs.c
+> @@ -1293,8 +1293,10 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+>  		 * within [128, 2048] range.
+>  		 */
+>  		if (!op_data3.ld_op || !op_data3.dc_miss ||
+> -		    op_data3.dc_miss_lat <= (event->attr.config1 & 0xFFF))
+> +		    op_data3.dc_miss_lat <= (event->attr.config1 & 0xFFF)) {
+> +			throttle = perf_event_account_interrupt(event);
+>  			goto out;
+> +		}
+>  	}
+>  
+>  	/*
+> @@ -1326,8 +1328,10 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+>  		regs.flags &= ~PERF_EFLAGS_EXACT;
+>  	} else {
+>  		/* Workaround for erratum #1197 */
+> -		if (perf_ibs->fetch_ignore_if_zero_rip && !(ibs_data.regs[1]))
+> +		if (perf_ibs->fetch_ignore_if_zero_rip && !(ibs_data.regs[1])) {
+> +			throttle = perf_event_account_interrupt(event);
+>  			goto out;
+> +		}
+>  
+>  		set_linear_ip(&regs, ibs_data.regs[1]);
+>  		regs.flags |= PERF_EFLAGS_EXACT;
+> -- 
+> 2.43.0
+> 
+> 
+> 
 
-Thanks,
-Namhyung
-
-> > 
-> > > 
-> > > Since perf event-based access checks do not require modifying the PTE
-> > > accessed-bit for pages representing each damon region, this patch series
-> > > also includes a feature that allows you to set upper and lower limits on
-> > > the damon region size to enable access checks with finer granularity.
-> > 
-> > I was also thinking about extending DAMON with AMD IBS or Intel PEBS like h/w
-> > features for this kind of sub-page granularity access monitoring.  So this
-> > makes sense to me, and sounds useful!
-> > 
-> > > 
-> > > Using these features also requires modifications to damo, but these are
-> > > not included in this patch series and are currently under development in
-> > > the following branch:
-> > > 
-> > > https://github.com/mita/damo/tree/damo-perf-for-v3.1.0
-> > > 
-> > > Any feedback or advice on the patch set would be greatly appreciated.
-> > > 
-> > > Akinobu Mita (4):
-> > >   mm/damon/core: add common code for perf event based access check
-> > >   mm/damon/vaddr: support perf event based access check
-> > >   mm/damon/paddr: support perf event based access check
-> > 
-> > I find your patches are introducing new infra code for this extension.  It
-> > seems bit specialized for perf event only, though.  I'm concerned if future
-> > extension for another access check primitives cannot reuse the infra.
-> > 
-> > My DAMON extension project [1] is for page fault based access monitoring, but
-> > it also introduces a framework for general multiple access sampling primitives.
-> > I'm wondering if perf event based extension can be implemented using the
-> > general acces ssampling primitives infra code, and if you already considered
-> > that but found it is not feasible.
-> > 
-> > >   mm/damon: allow user to set min and max size of region
-> > 
-> > The min size setup makes sense.  I understand the max size is for disabling the
-> > regions adjustment (merge/split) mechanism.  IOW, for fixed granularity
-> > monitoring.  Users can do that by setting min_nr_regions and max_nr_regions
-> > same [2], though.  So, max size setting seems not really needed.
-> > 
-> > Again, great RFC patch series, thank you for sharing!  I'm looking forward to
-> > your answers to above high level questions and comments.
-> > 
-> > > 
-> > >  .../ABI/testing/sysfs-kernel-mm-damon         |  11 +
-> > >  include/linux/damon.h                         |  42 +-
-> > >  mm/damon/core.c                               | 202 ++++-
-> > >  mm/damon/ops-common.h                         |  39 +
-> > >  mm/damon/paddr.c                              | 106 ++-
-> > >  mm/damon/sysfs.c                              | 402 +++++++++-
-> > >  mm/damon/tests/core-kunit.h                   |   2 +-
-> > >  mm/damon/tests/sysfs-kunit.h                  |   2 +
-> > >  mm/damon/tests/vaddr-kunit.h                  |   7 +-
-> > >  mm/damon/vaddr.c                              | 690 ++++++++++++++++--
-> > >  10 files changed, 1425 insertions(+), 78 deletions(-)
-> > > 
-> > > -- 
-> > > 2.43.0
-> > 
-> > [1] https://lore.kernel.org/damon/20251208062943.68824-1-sj@kernel.org/
-> > [2] https://origin.kernel.org/doc/html/latest/mm/damon/faq.html#can-i-simply-monitor-page-granularity
-> > 
-> > 
-> > Thanks,
-> > SJ
-> > 
