@@ -1,71 +1,88 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D44366DD9;
-	Tue, 24 Feb 2026 08:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9382B376484
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Feb 2026 10:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771922899; cv=none; b=lv8cqscuf0u+JMxDGgY4znPNRjS7PdHFHB1v8YQlJN+gcExd45bpxZhM0isVsX9UB4PSx3dW2jdAbSvh1w6CJ42JqYTT58mDlnCsyZIREeKRw3b/4GizAbQu8wHRsTOq8xtcemOR9DZjpG7N5udGVlAPVMvaCkWAQwtYYMfFVpY=
+	t=1771927682; cv=none; b=oHXbvNlnFDzMuCieqCV4omjoeY2WBuxvKo2fPX425XbvxCh3dcanxs+JGM+9WEj6vuZGnkut0gS9PM7AYcgB+zlY1yzmQvAoEP0WFQCSgLVNLjRwR6pJXsQiSiht75ZGqOhPaD4/TxPcH/kqjwfVyXAeXeSEGGTQxFFPyugYyJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771922899; c=relaxed/simple;
-	bh=OPwMTZWQmzw+6Xa3CNcGXsn5offzw2jIHRKSeIEW9o8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AcxzP9GpCFsKrRas+0ocg3wm66pa/b0BPCsO8URW57ww433f0cIcMYBm3TSx5xLg7pD5EF8Ld/cMQZdS8xpDZ2k3BVJSrnXpvUzeiSvmwuivCqYvUlRjQeGsKTbyq23SsJGV5Uhjf89XV8Y+IKqABGBUlbCk8UmhUy0XHSVxIAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jtAfpbVT; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jtAfpbVT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=OPwMTZWQmzw+6Xa3CNcGXsn5offzw2jIHRKSeIEW9o8=; b=jtAfpbVToV5pGfAUIriftlmEtd
-	grhIHAD2SR3tLyqTldmXkDaSTrIl4xvbwgOceVOAFcqLDFtpLzDbV0tkUhmy2SL6zZDc+dX3fkfTO
-	nlSz5M6CUcfD1q6LTSX6P76TUpfzB1fR/Cc0eX/Jbl8CS9/KACpkB/hVfTxB0fJRs8UNQqIGbSmuv
-	wZUtZ4V3PgZJ/Yzjyt0c67S9ovhN1ovWwe8cLzxk/lygrx2usidPXqsTma9wMSABdUbL9Ri1xIMd+
-	59ehPIuFVTtRwyvuZJArnuKZjDSZ5ZLKh2o6K4PS0RxAY9EKhtRVJGxObSv+aNjgWy9J6qmK1jg65
-	cz7+U6PQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuo5N-00000006hUZ-3Wje;
-	Tue, 24 Feb 2026 08:48:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 48CEF30095A; Tue, 24 Feb 2026 09:48:04 +0100 (CET)
-Date: Tue, 24 Feb 2026 09:48:04 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Linu Cherian <linu.cherian@arm.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC V1 04/16] perf/events: Replace READ_ONCE() with standard
- pgtable accessors
-Message-ID: <20260224084804.GU1282955@noisy.programming.kicks-ass.net>
-References: <20260224051153.3150613-1-anshuman.khandual@arm.com>
- <20260224051153.3150613-5-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1771927682; c=relaxed/simple;
+	bh=mR6HqRVWWpOs34CJA2DnC7eeEeBQcBTcuRFhy3FpjS0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AemgjsRgzCyKCWSLMab3cM/XQNxTjRdVVd0JHd+PKwVLC5FNmOduT3vxBk7nPhf6w2jySsoq5cL1w4mvSkKDQz8ZXu1YEJXHwnrwsgwo5SDGOxwOc0zvh/jDdykzG/3eHYVl2BTO2P4vT2dGT3dYbZshnm+35cIBeTa2E1NXYlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F776339;
+	Tue, 24 Feb 2026 02:07:53 -0800 (PST)
+Received: from [10.1.196.46] (e134344.arm.com [10.1.196.46])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 628B03F62B;
+	Tue, 24 Feb 2026 02:07:58 -0800 (PST)
+Message-ID: <10f10659-448c-404e-87cd-0c110f895b11@arm.com>
+Date: Tue, 24 Feb 2026 10:07:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260224051153.3150613-5-anshuman.khandual@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/arm-cmn: Stop claiming entire iomem region
+To: Robin Murphy <robin.murphy@arm.com>, will@kernel.org
+Cc: mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, ilkka@os.amperecomputing.com,
+ James Morse <james.morse@arm.com>
+References: <b6275655818f5af7e5fb07a9e18d1451b08b7e05.1771522073.git.robin.murphy@arm.com>
+From: Ben Horgan <ben.horgan@arm.com>
+Content-Language: en-US
+In-Reply-To: <b6275655818f5af7e5fb07a9e18d1451b08b7e05.1771522073.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 24, 2026 at 10:41:41AM +0530, Anshuman Khandual wrote:
-> Replace READ_ONCE() with standard page table accessors i.e pxdp_get() which
-> anyways default into READ_ONCE() in cases where platform do not override.
+Hi Robin,
 
-This is a bit silly, no? All of them should always be READ_ONCE(), with
-the exception of pte_get() on PAE like scenarios.
+On 2/19/26 17:27, Robin Murphy wrote:
+> So far, the PMU has been the only thing of interest in the vast mass
+> of CMN registers, so we've gotten away with simply claiming the entire
+> iomem region. However, now that we can support other features like MPAM
+> controllers for the system caches, the PMU driver needs to stop being
+> selfish and learn to share. Similarly to arm-ni, requesting just the
+> DTC node(s) should suffice for staking our exclusive claim to the PMU>
+features, as requesting hundreds of tiny regions for all the individual
+> pmu_event_sel registers is definitely not worth the considerable bother.
+> 
+> As a consequence, we can also streamline the annoying CMN-600 special
+> cases even more. The ACPI binding has in fact always specified a strict
+> order for all resources, so we can reasonably drop the ancient pretence
+> of swapping base and cfg, which IIRC was more just a moment of doubt on
+> my part than anything else.
+> 
+> Cc: James Morse <james.morse@arm.com>
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+
+Without this patch applied and with mpam enabled cmn fails to probe:
+dmesg | grep cmn
+[   17.409588] arm-cmn ARMHC700:00: error -EBUSY: can't request region
+for resource [mem 0x140000000-0x17fffffff]
+[   17.409601] arm-cmn ARMHC700:00: probe with driver arm-cmn failed
+with error -16
+
+With the patch I don't see any cmn errors and it probes.
+
+$ tree -L 1 /sys/devices/platform/ARMHC700\:00/
+/sys/devices/platform/ARMHC700:00/
+├── arm_cmn_0
+├── driver -> ../../../bus/platform/drivers/arm-cmn
+├── driver_override
+├── firmware_node -> ../../LNXSYSTM:00/LNXSYBUS:00/ARMHC700:00
+├── modalias
+├── power
+├── subsystem -> ../../../bus/platform
+└── uevent
+
+Tested-by: Ben Horgan <ben.horgan@arm.com>
+
+Thanks,
+
+Ben
+
