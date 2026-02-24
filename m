@@ -1,101 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 753AE203710;
-	Tue, 24 Feb 2026 05:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB6B70810;
+	Tue, 24 Feb 2026 05:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771909967; cv=none; b=a1t2T6czuxg5p+YsVB8GZAqyewysfqTJc/n793OViH8hYHCp05SdW2dj0v9orA7Dl1+fBv5UgmQEOx9gAGKJgexjysn2Uq7TchP2fuDqmUJPHvLVWWKlH5vQIoSVU2YEt9QO//8KUdsV8DWwPtiHTml6FSVcjd5FqTschap0SNA=
+	t=1771911344; cv=none; b=ipyZ4+xKykg90o/lL0mRWVkL5tKYIQzEh6aXGGQQ37Ky8dynqlc3/oySDqC/ZbSlG410i6G9KvmhuU02VlNkLSsdNetbxRDV4qzyjoc1NHBC6x+L+05etUuXH1rusYfOJrTXxTAXw0OML6RieKjEGO4uDFFsUWDHpZl1mRxfLCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771909967; c=relaxed/simple;
-	bh=Er8zMgmKU3694HnC0jKaQjKFf8SIa37aK6uoxd9JPGo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dp1L+5YSl3LkM9SVe5zEeXDgJH8WrqnI+i4WhXNncN6v6hAoc1bd7IR7ICZXqwxuv12nqZOoKLaasvfYdNtKAjbeDkXP7awxYuNPVdROgw5MDwUpnctBMs0cJwG+5Jo2Z52GuPRg8G0QebzJGXrBmYilSOef3DmkP/pSSGi7ET0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA859339;
-	Mon, 23 Feb 2026 21:12:39 -0800 (PST)
-Received: from a085714.blr.arm.com (a085714.arm.com [10.164.18.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 63A333F7BD;
-	Mon, 23 Feb 2026 21:12:40 -0800 (PST)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Linu Cherian <linu.cherian@arm.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [RFC V1 04/16] perf/events: Replace READ_ONCE() with standard pgtable accessors
-Date: Tue, 24 Feb 2026 10:41:41 +0530
-Message-ID: <20260224051153.3150613-5-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260224051153.3150613-1-anshuman.khandual@arm.com>
-References: <20260224051153.3150613-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1771911344; c=relaxed/simple;
+	bh=g58Cs0tEHUwUKfVfpBkuVJ52B7lsuw2ux59otioXIOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fgXZFMH2ucLlWbWDyWPk21auutaYGyqtAxwWuFvlirAqvpV60u8IuOJLuGpBHEGcELR7Wb5y6jQGZVXToxPEoUOeCgEpw86I8+KXYitR2CocR62LbFPaRqfWNq91NruIRmb/9FNU1g0FuVh5Li9tF4zwJRq5KUGvDqx62XT1wTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lWP7Z2F6; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lWP7Z2F6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771911342; x=1803447342;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=g58Cs0tEHUwUKfVfpBkuVJ52B7lsuw2ux59otioXIOQ=;
+  b=lWP7Z2F6axXfKcWoEVA+3CW/nAFD3R3uRxnfjETMa7PA8yTTd8Jgx8ll
+   7R7bYIkAPEa4+Saf9CHwHU2TQHbzE7YHFbgjOn7TuM3FhJqfx4OrNd6aQ
+   Pwxk+pseTmuGZWh73DJ5FKase9YznxOeasd8GPXRpd8YF48HjLW5dXz6R
+   hgYDyIFJULIfyrS2KnZoVZpvpWhWpigzW7IJY5TytfwtLL0i0EGQfxdme
+   hJGnbXWSaRusqbpnqtWDUGgGtPJdTIOJfYT5xNoXQdUc1bz4vkZ5+rd4W
+   L3k/hvqM7zRdnVrBGkvx2OQAX6bTj4RCrs1jPKmtcDwGGd69QJkdc/A0a
+   w==;
+X-CSE-ConnectionGUID: JZInCojpThqxJK0SQjC5cA==
+X-CSE-MsgGUID: mjHgUojsTxy3qTcLIMFM0Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="73099888"
+X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
+   d="scan'208";a="73099888"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 21:35:42 -0800
+X-CSE-ConnectionGUID: vYfL/gFaTMe4wXu/Dv4GLw==
+X-CSE-MsgGUID: yFR68jGiRoKr5K2JOseIxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
+   d="scan'208";a="246382552"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 21:35:36 -0800
+Message-ID: <57ef5e60-505e-4ae8-944d-fd630e168af1@linux.intel.com>
+Date: Tue, 24 Feb 2026 13:35:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v6 08/22] x86/fpu: Ensure TIF_NEED_FPU_LOAD is set after
+ saving FPU state
+To: "Chang S. Bae" <chang.seok.bae@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>
+References: <20260209072047.2180332-1-dapeng1.mi@linux.intel.com>
+ <20260209072047.2180332-9-dapeng1.mi@linux.intel.com>
+ <5c3ea318-4543-42a4-9b81-7a1da0b8bed1@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <5c3ea318-4543-42a4-9b81-7a1da0b8bed1@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Replace READ_ONCE() with standard page table accessors i.e pxdp_get() which
-anyways default into READ_ONCE() in cases where platform do not override.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- kernel/events/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On 2/12/2026 3:39 AM, Chang S. Bae wrote:
+> On 2/8/2026 11:20 PM, Dapeng Mi wrote:
+>> Ensure that the TIF_NEED_FPU_LOAD flag is always set after saving the
+>> FPU state. This guarantees that the user space FPU state has been saved
+>> whenever the TIF_NEED_FPU_LOAD flag is set.
+>>
+>> A subsequent patch will verify if the user space FPU state can be
+>> retrieved from the saved task FPU state in the NMI context by checking
+>> the TIF_NEED_FPU_LOAD flag.
+>>
+>> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+>> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+> I could check some previous discussions there:
+> https://lore.kernel.org/all/20251204151735.GO2528459@noisy.programming.kicks-ass.net/
+>
+> With that, I think I can get the context of this change -- tightening 
+> the flag up with the buffer against *NMIs*.
+>
+> But the changelog doesn't look clear enough to explain the reason to me.
+>
+> At least, I guess Links to the past discussions provides better context 
+> to readers.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index ac70d68217b6..4ee151cd2c6d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8422,7 +8422,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
- 	pte_t *ptep, pte;
- 
- 	pgdp = pgd_offset(mm, addr);
--	pgd = READ_ONCE(*pgdp);
-+	pgd = pgdp_get(pgdp);
- 	if (pgd_none(pgd))
- 		return 0;
- 
-@@ -8430,7 +8430,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
- 		return pgd_leaf_size(pgd);
- 
- 	p4dp = p4d_offset_lockless(pgdp, pgd, addr);
--	p4d = READ_ONCE(*p4dp);
-+	p4d = p4dp_get(p4dp);
- 	if (!p4d_present(p4d))
- 		return 0;
- 
-@@ -8438,7 +8438,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
- 		return p4d_leaf_size(p4d);
- 
- 	pudp = pud_offset_lockless(p4dp, p4d, addr);
--	pud = READ_ONCE(*pudp);
-+	pud = pudp_get(pudp);
- 	if (!pud_present(pud))
- 		return 0;
- 
--- 
-2.43.0
+Thanks for the reminding. I would add a "Closes" tag here.
+
 
