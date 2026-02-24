@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDB41DE4FB;
-	Tue, 24 Feb 2026 06:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BA51DE8BE;
+	Tue, 24 Feb 2026 07:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771915843; cv=none; b=R5TRU6uGG5W0mDYBQzewLFbo1ru3WNWBwwQasFogpDj6rYAcwZxx6y93wQk3Z6FriC8brJSUORfhWYTC0P42vteqkB/oeicDin+mr8VZ1QHPXz6vneHOio79UuirS+p5nCqwQ9W2VFHUdi3XEKIFW9z+8oKR46SZ/GY3U8T9XQI=
+	t=1771917070; cv=none; b=gfLSnS9IrALuFWZoXJAm/mS5cBt7Rz1S2x4aypKQKqC6NkV1M6OSaVKZ8mgaW+YiMtYne1m7+OoNgFCyPzQgq3AKt8EClaIkAtoRzNoKBfLnjLRPWrYHoa8PXkdbigWRPV3apI7/R6bKF+j8ukifp+umf+K4Cl1v8UsrS75BB+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771915843; c=relaxed/simple;
-	bh=kFrNHVd139VPdn3z8GrLUZw/MVznmik0fxjs92u2VgA=;
+	s=arc-20240116; t=1771917070; c=relaxed/simple;
+	bh=yhXONs2vzMRFL0TLV4LX9AS8omaatGcAbAurOoz/I7E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TPYL4avY0nY+X/jwxnx7hHTfk9z7iU/AZCMiZ2tJknGwaKP5JpgmPHfHmAxvWAAbkXzibJnytf4jUgRN/QdimOjSRwftIvLV/jf2c8BkL+GqX1lCnC73+vRgvK+KTUbupfGKGXws5AFKRHrK7/K+X2rNMt7WeRKJztV3GjMHG3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ME3EM3wW; arc=none smtp.client-ip=198.175.65.12
+	 In-Reply-To:Content-Type; b=qWgVoNCUmP5BZSMR3EZ8B/qSvQW3YQGK//qpT5Z6Z0rd+4uj5qFK7iBpAROPhqfrfX38soZb8NktzNZKJVleXGIpcowQKj5X1YIyj3bcWVT15Bby1FyD59NQyrNJCzK652ml4WgjcUgfEsBd45oZc2HWVF3+/LuFUJm63JfBDxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EPfwSFgs; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ME3EM3wW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EPfwSFgs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771915842; x=1803451842;
+  t=1771917070; x=1803453070;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=kFrNHVd139VPdn3z8GrLUZw/MVznmik0fxjs92u2VgA=;
-  b=ME3EM3wWNCiofdZZuR6NVaZBitpYpJBEBeJjkXLiVSq/wIlE9E1q8J5o
-   JvuOZ4/sexO7DCWVuhthH0tqrlDyHyIuoJulwozaUxk7NdQKtZhp7yOTK
-   3Ta9J0K7TDlnVJOZfzRqjip/6CNPMThA8clQQ1ClH2T2GwFK597cHnVLB
-   CVdGoqhUNQa3GLGZQ4Hy6BTVzgIume4lAAsIOA/38X3zABWksQriTyN/P
-   PCk1K9KggOAcmxlx2+9wCmwzIU/iRlNubiiFPKtU2equyk0spO3irPVk9
-   +tEZENHoxo/qSDclDYHwB83CS7sI+zcF+bH5rqdIFae8TAqUGVd5XmXvA
-   w==;
-X-CSE-ConnectionGUID: AU1dTg83TGWYy9OoNQyH0A==
-X-CSE-MsgGUID: g6P2mLpqQo2blRkrV8Y2Tg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="84379336"
+  bh=yhXONs2vzMRFL0TLV4LX9AS8omaatGcAbAurOoz/I7E=;
+  b=EPfwSFgs8HhT/2bJ3oDN08ixcoC4CQ9hoo7ZtAmS0/o3DLif+hQoIeSf
+   B6yiOlNKKQTeWhd31S92AsuSC55wuZrg23rc3py/vcAbBOjZyI1aUk0ot
+   4lWRP4c5dTRSHkY4WQD8CVAPEf85VT636ppDBYH4+bFEs/wPQA6sdjrhe
+   bHuROF32dRx6eiwWexDTpT+B/Q8lJT4zipnTPBtqNaHGGv0WA4wA3LQXe
+   7P8WdPcnzxd6AWcoySUgxn/avMzPqwFCdgVfIZDA25Mg1VXAoVXHFwyXA
+   NXOrTr8M1eJH+46bIfkYQ/RoFAwh9ppjWChpEjTOJJyRCWcK2zKrrlT6O
+   g==;
+X-CSE-ConnectionGUID: ylJoSiQ3SUCIHrqz+9HIAw==
+X-CSE-MsgGUID: 3MFweAVTStepzf1SjmoHXw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="75532888"
 X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
-   d="scan'208";a="84379336"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 22:50:41 -0800
-X-CSE-ConnectionGUID: B2gZdwKXQZaI61OpHwNM7A==
-X-CSE-MsgGUID: NkuQ1YnCQXSquT8eHNrDDQ==
+   d="scan'208";a="75532888"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 23:11:09 -0800
+X-CSE-ConnectionGUID: NPdF8pXZQC6l5p88gZ4ZBw==
+X-CSE-MsgGUID: STw0hfGVTNeAJf9gTdQ1iw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
-   d="scan'208";a="215831093"
+   d="scan'208";a="214077897"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 22:50:36 -0800
-Message-ID: <a0bc418d-c167-4ccf-8f50-eba9396d2112@linux.intel.com>
-Date: Tue, 24 Feb 2026 14:50:33 +0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 23:11:04 -0800
+Message-ID: <e57a249b-ce70-4f5a-86f5-cd86bc477546@linux.intel.com>
+Date: Tue, 24 Feb 2026 15:11:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,10 +52,9 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v6 08/22] x86/fpu: Ensure TIF_NEED_FPU_LOAD is set after
- saving FPU state
-To: Dave Hansen <dave.hansen@intel.com>,
- "Chang S. Bae" <chang.seok.bae@intel.com>,
+Subject: Re: [Patch v6 10/22] perf/x86: Enable XMM Register Sampling for
+ Non-PEBS Events
+To: "Chang S. Bae" <chang.seok.bae@intel.com>,
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
@@ -67,85 +66,83 @@ Cc: Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
  Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
  Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- Xudong Hao <xudong.hao@intel.com>
+ Xudong Hao <xudong.hao@intel.com>, Kan Liang <kan.liang@linux.intel.com>
 References: <20260209072047.2180332-1-dapeng1.mi@linux.intel.com>
- <20260209072047.2180332-9-dapeng1.mi@linux.intel.com>
- <5c3ea318-4543-42a4-9b81-7a1da0b8bed1@intel.com>
- <960918ce-f42f-464f-a887-c36d8d9e2937@intel.com>
+ <20260209072047.2180332-11-dapeng1.mi@linux.intel.com>
+ <c287e7fb-d504-46fe-b6dc-af28c3532be6@intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <960918ce-f42f-464f-a887-c36d8d9e2937@intel.com>
+In-Reply-To: <c287e7fb-d504-46fe-b6dc-af28c3532be6@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 2/12/2026 3:55 AM, Dave Hansen wrote:
-> On 2/11/26 11:39, Chang S. Bae wrote:
->> But the changelog doesn't look clear enough to explain the reason to me.
-> Yeah, the changelog could use some improvement.
->
-> This also leaves the code rather fragile. Right now, all of the:
->
-> 	save_fpregs_to_fpstate(fpu);
-> 	set_thread_flag(TIF_NEED_FPU_LOAD);
->
-> pairs are open-coded. There's precisely nothing stopping someone from
-> coming in tomorrow and reversing the order at these or other call sites.
-> There's also zero comments left in the code to tell folks not to do this.
->
-> Are there enough of these to have a helper that does:
->
-> 	save_fpregs_to_fpstate_before_invalidation(fpu);
->
-> which could do the save and set TIF_NEED_FPU_LOAD? (that name is awful
-> btw, please don't use it).
+On 2/16/2026 7:58 AM, Chang S. Bae wrote:
+> On 2/8/2026 11:20 PM, Dapeng Mi wrote:
+>> This patch supports XMM sampling for non-PEBS events in the `REGS_INTR`
+> Please avoid "This patch".
 
-Sure. Would introduce an inline function and add comments. Thanks.
+Sure.
 
 
 >
-> This:
+> ...
 >
->>  	/* Swap fpstate */
->>  	if (enter_guest) {
->> -		fpu->__task_fpstate = cur_fps;
->> +		WRITE_ONCE(fpu->__task_fpstate, cur_fps);
->> +		barrier();
->>  		fpu->fpstate = guest_fps;
->>  		guest_fps->in_use = true;
->>  	} else {
->>  		guest_fps->in_use = false;
->>  		fpu->fpstate = fpu->__task_fpstate;
->> -		fpu->__task_fpstate = NULL;
->> +		barrier();
->> +		WRITE_ONCE(fpu->__task_fpstate, NULL);
->>  	}
-> also urgently needs comments.
+>> +static inline void __x86_pmu_sample_ext_regs(u64 mask)
+>> +{
+>> +	struct xregs_state *xsave = per_cpu(ext_regs_buf, smp_processor_id());
+>> +
+>> +	if (WARN_ON_ONCE(!xsave))
+>> +		return;
+>> +
+>> +	xsaves_nmi(xsave, mask);
+>> +}
+>> +
+>> +static inline void x86_pmu_update_ext_regs(struct x86_perf_regs *perf_regs,
+>> +					   struct xregs_state *xsave, u64 bitmap)
+>> +{
+>> +	u64 mask;
+>> +
+>> +	if (!xsave)
+>> +		return;
+>> +
+>> +	/* Filtered by what XSAVE really gives */
+>> +	mask = bitmap & xsave->header.xfeatures;
+>> +
+>> +	if (mask & XFEATURE_MASK_SSE)
+>> +		perf_regs->xmm_space = xsave->i387.xmm_space;
+>> +}
+>> +
+>> +static void x86_pmu_sample_extended_regs(struct perf_event *event,
+>> +					 struct perf_sample_data *data,
+>> +					 struct pt_regs *regs,
+>> +					 u64 ignore_mask)
+>> +{
+> ...
 >
-> I also can't help but think that there might be a nicer way to do that
-> without the barrier(). I _think_ two correctly-ordered WRITE_ONCE()'s
-> would make the compiler do the same thing as the barrier().
+>> +
+>> +	if (intr_mask) {
+>> +		__x86_pmu_sample_ext_regs(intr_mask);
+>> +		xsave = per_cpu(ext_regs_buf, smp_processor_id());
+>> +		x86_pmu_update_ext_regs(perf_regs, xsave, intr_mask);
+> These three lines appear to just update xcomponent's _pointers_ to an 
+> xsave storage:
 >
-> But I'm not fully understanding what the barrier() is doing anyway, so
-> take that with a grain of salt.
+>    * Retrieve a per-cpu XSAVE buffer if valid
+>    * Ensure the component's presence against XSTATE_BV
+>    * Then, update pointers in pref_regs.
+>
+> which could be done in a function with more descriptive name. Given 
+> that, I don't think__x86_pmu_sample_ext_regs() has any point. I don't 
+> understand x86_pmu_sample_extended_regs() naming, either.
 
-IMO, barrier() seems a safer way for this situation. I'm not quite sure if
-two WRITE_ONCE()'s would block the reordering from compiler, so I asked
-Gemini, and here is its answer.
-
-"
-
-WRITE_ONCE() provides a certain level of protection, but it isn't a full
-barrier.
-
-WRITE_ONCE(): Prevents the compiler from optimizing the store away or
-splitting it into multiple instructions.
-
-Two WRITE_ONCE() calls: The compiler is generally discouraged from
-reordering two volatile-style accesses (which WRITE_ONCE uses), but the C
-standard doesn't strictly guarantee it in all cases.
-
-"
+Hmm, partially agree, __x86_pmu_sample_ext_regs() can be dropped. The
+intent of this whole function is to sample the required SIMD and APX eGPRs
+registers by leveraging xsaves instruction in a NMI handler context. All
+the SIMD and eGPRs registers are collectively called "extended registers"
+here. Not sure if the "extended registers" is a good word, please suggest
+if there is a better one.
 
 Thanks.
+
 
