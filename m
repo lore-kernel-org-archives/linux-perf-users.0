@@ -1,242 +1,127 @@
-Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC2A2BD00C;
-	Wed, 25 Feb 2026 03:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BAD199FD3;
+	Wed, 25 Feb 2026 06:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771990910; cv=none; b=rRTByk+MABUuuuknQzD0JtJO7rtfQdOZOYo7Kjf3FRFIoawQFfBGebNY/PwnPZL9IE8sUTdJX57UgJhkFB11PKF6ogRXZsEIEndX/rPJCt0+DwTuFFXkTmkCZIAQROo0OYGsvT6RpkUNoT/u3ROgamDXCtkavYxZHs+500IvsjM=
+	t=1772000030; cv=none; b=bULIC37CMtCt4v7lVijZYS6ZPtAKUEETjFea/zjFvbf+QQMhC4u0Wes8qz9Ipg0MM7xpyjYPaBWbQ3mgUVm+fzpx0B7MXlqoGV9I+mA48aSE5bJxN8obpEzDeqmo+hBjjv69DoR6r9ge9+CtPIt3FU81QsQWMABWRkLRwL+OMUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771990910; c=relaxed/simple;
-	bh=5zSaQyLXwT7eATBFRVc0k/0DwLA0C4p4Y/lQU6cryi8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e6wl56rQYaOnGI66/f9stV3pkywqjTymJjaj3VIcnZp8DLrnGHSIgDjGozklGqIUW3ZRVf+Rq/hEYIgyPobtxx3yxvUbk6X9zrryCmhdhOcBvjiaLhxx/65o79b2AogGUIEnRo9L4n5Aad9hKNpSuJf3HwSsjSMywmVlAR49YDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=0iOWW+UT; arc=none smtp.client-ip=113.46.200.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1772000030; c=relaxed/simple;
+	bh=6lNLmkrePdvo8Q+vip9KDyQsl3HNUYsRE0otpP81T1Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LGLJ3Tp/ZqkQxRqmQh/3gR1tMBmUZi1WCDIVOIT/9JJOWhj7FItOVHshuInDk48R07Hte4BOY5yocpE70y0bco6/dKbsD1vfZppCJVCnjPlpFWYR71bO5KcSmD+piIlxIokejCzxMGLzO0WiTk3RnVqtmsPU//zNXDknS1UWwU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j+wC8U8b; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="0iOWW+UT"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=QTaK3J797ooLPfafRPzsW3EQZPBnbFtb290pFr12fBI=;
-	b=0iOWW+UTLgimZ3VB44933YkASy9VdH5jNosc1SVixiMoR4Slwptt2p1vxerJppqrnMuEULFJX
-	eRYW4MGEqMXz45eghxw4bnoH4b4b0pOTsDyAnyY5gBjgHWFwL9FnFQPT2CPy2BDqEIKWIwUhQUO
-	6cENKPdifBryWENj6NetjrM=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4fLKyH4QPtzcZyP;
-	Wed, 25 Feb 2026 11:36:39 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0383920168;
-	Wed, 25 Feb 2026 11:41:40 +0800 (CST)
-Received: from localhost.huawei.com (10.90.31.46) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 25 Feb 2026 11:41:39 +0800
-From: Qinxin Xia <xiaqinxin@huawei.com>
-To: <irogers@google.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<acme@kernel.org>, <namhyung@kernel.org>, <wangyushan12@huawei.com>,
-	<hejunhao3@h-partners.com>, <jonathan.cameron@huawei.com>,
-	<xiaqinxin@huawei.com>
-CC: <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<adrian.hunter@intel.com>,
-	<"james.clark@linaro.org.linuxarm"@huawei.com>
-Subject: [PATCH 1/1] perf: Add --pmu-filter option for filtering PMUs
-Date: Wed, 25 Feb 2026 11:41:25 +0800
-Message-ID: <20260225034125.2157622-2-xiaqinxin@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20260225034125.2157622-1-xiaqinxin@huawei.com>
-References: <20260225034125.2157622-1-xiaqinxin@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j+wC8U8b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772000029; x=1803536029;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6lNLmkrePdvo8Q+vip9KDyQsl3HNUYsRE0otpP81T1Q=;
+  b=j+wC8U8b+kBCkFmhDaP0gAgvrcxzTGlyWi8ZizR58YRf7azj0hngllxP
+   IL16s3x685jpy+b9MRknAiBRIxAjajHPaz4DQAO9Bqdm1aPgY66OHMCsU
+   AYdbpWYjDkQJmlG4tbpyU5CmqNBAGyepwvHtSerGrhcOKFPsjHP/D4VT+
+   xs6PrqWtangL5eMrzensYN1jBljz0wAmz2eGNu20SSdvfRwX3ed9bL5t1
+   D2pNylbiOHJLWmJb94JlaQves2/84pby4c+1SQUohrBQKKfOPFe3C9Q1v
+   agqdrvYN22O4TldLpdgZaISLTT1IFhO4U+sPLeHWOGC6K7ooSkXGr4AG3
+   w==;
+X-CSE-ConnectionGUID: Wojuhc0QQ4aNpAe3lNyHZw==
+X-CSE-MsgGUID: FmGiRcyGTHm52ndYgtlnkw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11711"; a="73004115"
+X-IronPort-AV: E=Sophos;i="6.21,310,1763452800"; 
+   d="scan'208";a="73004115"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 22:13:49 -0800
+X-CSE-ConnectionGUID: jha4cBhkRz+hcAE1GaOVAg==
+X-CSE-MsgGUID: SuCiQJ/TRDGmCin15v3wGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,310,1763452800"; 
+   d="scan'208";a="246695310"
+Received: from unknown (HELO [10.238.2.129]) ([10.238.2.129])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 22:13:43 -0800
+Message-ID: <b61ded40-648b-4e9f-9d6a-88b7656760f9@linux.intel.com>
+Date: Wed, 25 Feb 2026 14:13:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemj200003.china.huawei.com (7.202.194.15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v6 10/22] perf/x86: Enable XMM Register Sampling for
+ Non-PEBS Events
+To: "Chang S. Bae" <chang.seok.bae@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>, Kan Liang <kan.liang@linux.intel.com>
+References: <20260209072047.2180332-1-dapeng1.mi@linux.intel.com>
+ <20260209072047.2180332-11-dapeng1.mi@linux.intel.com>
+ <c287e7fb-d504-46fe-b6dc-af28c3532be6@intel.com>
+ <e57a249b-ce70-4f5a-86f5-cd86bc477546@linux.intel.com>
+ <f48500c5-dfaf-4ca2-9f9d-3d3b1e9f2299@intel.com>
+ <a8a35490-994c-498a-acab-478795c868b0@linux.intel.com>
+ <e1e05b38-6a7e-4e09-8044-b71e4f6ffb86@intel.com>
+ <7f88834b-4ebf-491b-9219-4c1170c15fe4@linux.intel.com>
+ <5fed09bf-d20f-41b7-a280-06e4f32ba524@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <5fed09bf-d20f-41b7-a280-06e4f32ba524@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patch adds a new --pmu-filter option to perf-stat command to allow
-filtering events on specific PMUs. This is useful when there are
-multiple PMUs with same type (e.g. hisi_sicl2_cpa0 and hisi_sicl0_cpa0).
 
-perf event:
-[root@localhost tmp]# perf stat -e cpa_cycles
- Performance counter stats for 'system wide':
+On 2/25/2026 11:14 AM, Chang S. Bae wrote:
+> On 2/24/2026 5:36 PM, Mi, Dapeng wrote:
+>> E.g., there is the generic x86 event enabling function
+>> x86_pmu_enable_event() 
+> Again that's in the header file, which looks okay to me.
+>
+> Now looking at the file, core.c
+>
+>     get_possible_counter_mask()
+>     reserve_pmc_hardware()
+>     release_pmc_hardware()
+>     set_ext_hw_attr()
+>     precise_br_compat()
+>     add_nr_metric_event()
+>     collect_event()
+>     ...
+>
+> Then all of them violate that naming convention?
+>
+> There is also another pattern assigning x86_pmu_xxx() to function 
+> pointers in struct pmu. Certainly this xsaving function itself isn't the 
+> case.
 
-     3,005,509,659      hisi_sicl0_cpa0/cpa_cycles/
-     3,005,502,319      hisi_sicl2_cpa0/cpa_cycles/
+IMO, the functions mentioned above serve as auxiliary functions and are not
+directly tied to the core PMU functionalities such as event enabling,
+disabling, counting, and sampling... It would be fine to not add the prefix.
 
-       3.005460970 seconds time elapsed
+Currently, there are no strict naming conventions for functions in perf, so
+I can't say which one must be right or better. But at least from my side, I
+believe the function x86_pmu_sample_extended_regs() does more than just
+wrap a xsaves instruction. It performs the complete sampling process for
+extended registers, including parsing the extended register mask, executing
+the xsaves instruction, and updating the perf_regs pointers based on the
+data obtained from xsaves. Thus, it is not a simple auxiliary function.
+Additionally, x86_pmu_sample_xregs() is already concise, and further
+shortening seems unnecessary. Thanks.
 
-[root@localhost tmp]# perf stat --pmu-filter hisi_sicl0_cpa0 -e cpa_cycles
- Performance counter stats for 'system wide':
 
-     3,003,899,571      cpa_cycles
-
-       3.003864470 seconds time elapsed
-
-perf metric:
-[root@localhost tmp]# perf stat -M cpa_p0_avg_bw
- Performance counter stats for 'system wide':
-
-    19,417,779,115      hisi_sicl0_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
-                 0      hisi_sicl0_cpa0/cpa_p0_wr_dat/
-                 0      hisi_sicl0_cpa0/cpa_p0_rd_dat_64b/
-                 0      hisi_sicl0_cpa0/cpa_p0_rd_dat_32b/
-    19,417,751,103      hisi_sicl10_cpa0/cpa_cycles/     #     0.00 cpa_p0_avg_bw
-                 0      hisi_sicl10_cpa0/cpa_p0_wr_dat/
-                 0      hisi_sicl10_cpa0/cpa_p0_rd_dat_64b/
-                 0      hisi_sicl10_cpa0/cpa_p0_rd_dat_32b/
-    19,417,730,679      hisi_sicl2_cpa0/cpa_cycles/      #     0.31 cpa_p0_avg_bw
-        75,635,749      hisi_sicl2_cpa0/cpa_p0_wr_dat/
-        18,520,640      hisi_sicl2_cpa0/cpa_p0_rd_dat_64b/
-                 0      hisi_sicl2_cpa0/cpa_p0_rd_dat_32b/
-    19,417,674,227      hisi_sicl8_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
-                 0      hisi_sicl8_cpa0/cpa_p0_wr_dat/
-                 0      hisi_sicl8_cpa0/cpa_p0_rd_dat_64b/
-                 0      hisi_sicl8_cpa0/cpa_p0_rd_dat_32b/
-
-      19.417734480 seconds time elapsed
-
-[root@localhost tmp]# perf stat --pmu-filter hisi_sicl2_cpa0 -M cpa_p0_avg_bw
- Performance counter stats for 'system wide':
-
-     6,234,093,559      cpa_cycles                       #     0.60 cpa_p0_avg_bw
-        50,548,465      cpa_p0_wr_dat
-         7,552,182      cpa_p0_rd_dat_64b
-                 0      cpa_p0_rd_dat_32b
-
-       6.234139320 seconds time elapsed
-
-Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
----
- tools/perf/Documentation/perf-stat.txt |  4 ++++
- tools/perf/builtin-stat.c              | 26 ++++++++++++++++++++++++++
- tools/perf/util/metricgroup.c          | 18 +++++++++++++-----
- 3 files changed, 43 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 7cccc3a847d1..b72a29c9223c 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -578,6 +578,10 @@ $ perf config stat.no-csv-summary=true
- Only enable events on applying cpu with this type for hybrid platform
- (e.g. core or atom)"
- 
-+--pmu-filter::
-+Only enable events on applying pmu with specified for multiple
-+pmus with same type (e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)
-+
- EXAMPLES
- --------
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 73c2ba7e3076..67fb91816c0b 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1214,6 +1214,28 @@ static int parse_cputype(const struct option *opt,
- 	return 0;
- }
- 
-+static int parse_pmu_filter(const struct option *opt,
-+			   const char *str,
-+			   int unset __maybe_unused)
-+{
-+	const struct perf_pmu *pmu;
-+	struct evlist *evlist = *(struct evlist **)opt->value;
-+
-+	if (!list_empty(&evlist->core.entries)) {
-+		fprintf(stderr, "Must define pmu-filter before events/metrics\n");
-+		return -1;
-+	}
-+
-+	pmu = perf_pmus__pmu_for_pmu_filter(str);
-+	if (!pmu) {
-+		fprintf(stderr, "--pmu-filter %s is not supported!\n", str);
-+		return -1;
-+	}
-+	parse_events_option_args.pmu_filter = pmu->name;
-+
-+	return 0;
-+}
-+
- static int parse_cache_level(const struct option *opt,
- 			     const char *str,
- 			     int unset __maybe_unused)
-@@ -2561,6 +2583,10 @@ int cmd_stat(int argc, const char **argv)
- 			"Only enable events on applying cpu with this type "
- 			"for hybrid platform (e.g. core or atom)",
- 			parse_cputype),
-+		OPT_CALLBACK(0, "pmu-filter", &evsel_list, "pmu",
-+			"Only enable events on applying pmu with specified "
-+			"for multiple pmus with same type(e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)",
-+			parse_pmu_filter),
- #ifdef HAVE_LIBPFM
- 		OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
- 			"libpfm4 event selector. use 'perf list' to list available events",
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 46bf4dfeebc8..89b83ca38483 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -387,8 +387,13 @@ static bool match_pm_metric_or_groups(const struct pmu_metric *pm, const char *p
- 				      const char *metric_or_groups)
- {
- 	const char *pm_pmu = pm->pmu ?: "cpu";
-+	struct perf_pmu *perf_pmu = NULL;
- 
--	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu))
-+	if (pm->pmu)
-+		perf_pmu = perf_pmus__find(pm->pmu);
-+
-+	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu) &&
-+	   (perf_pmu && !perf_pmu__name_wildcard_match(perf_pmu, pmu)))
- 		return false;
- 
- 	return match_metric_or_groups(pm->metric_group, metric_or_groups) ||
-@@ -1259,7 +1264,8 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
- static int parse_ids(bool metric_no_merge, bool fake_pmu,
- 		     struct expr_parse_ctx *ids, const char *modifier,
- 		     bool group_events, const bool tool_events[TOOL_PMU__EVENT_MAX],
--		     struct evlist **out_evlist)
-+		     struct evlist **out_evlist,
-+		     const char *filter_pmu)
- {
- 	struct parse_events_error parse_error;
- 	struct evlist *parsed_evlist;
-@@ -1313,7 +1319,7 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
- 	}
- 	pr_debug("Parsing metric events '%s'\n", events.buf);
- 	parse_events_error__init(&parse_error);
--	ret = __parse_events(parsed_evlist, events.buf, /*pmu_filter=*/NULL,
-+	ret = __parse_events(parsed_evlist, events.buf, filter_pmu,
- 			     &parse_error, fake_pmu, /*warn_if_reordered=*/false,
- 			     /*fake_tp=*/false);
- 	if (ret) {
-@@ -1416,7 +1422,8 @@ static int parse_groups(struct evlist *perf_evlist,
- 					/*modifier=*/NULL,
- 					/*group_events=*/false,
- 					tool_events,
--					&combined_evlist);
-+					&combined_evlist,
-+					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
- 		}
- 		if (combined)
- 			expr__ctx_free(combined);
-@@ -1471,7 +1478,8 @@ static int parse_groups(struct evlist *perf_evlist,
- 		}
- 		if (!metric_evlist) {
- 			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
--					m->group_events, tool_events, &m->evlist);
-+					m->group_events, tool_events, &m->evlist,
-+					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
- 			if (ret)
- 				goto out;
- 
--- 
-2.33.0
-
+>
+>
+>
+>
