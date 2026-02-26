@@ -1,112 +1,108 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38583783AC
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 01:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF25633C513;
+	Thu, 26 Feb 2026 01:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772069754; cv=none; b=W1Tj8OzwWOYg3cehtteEIhdxy5QAf1Kkgwe6YOpZKN5pMOHnrGVTTsb+B4afRzKi0u4B7jDdYBwzv47GXQbT3QyxV1ude+mAdnd5FEaccYpi5LGzCZ7e9I2DWSJRR0Ys+IoKUwRF317yTpKH5rWlA02Mw3d9Finqv4RvKuJDLGs=
+	t=1772070598; cv=none; b=oAVuxPCj3MhqBJQLlETb3UhgABRdlV50wsfQaWm9H8NendDF/kM8sopVeuGutcj9t4/BR6ZHYRBhGxEpqTVt9b6SPQGDFxJeg+grP4yynGhoe41UezjrMZGICGqDwUfny9EFJxzA5cR8Jc7yFLFXec4zevNVoCYDw44KYgHAwSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772069754; c=relaxed/simple;
-	bh=VUaPixiKYJ7ij/ivoa1XUmUMzaq9D4k53FRF1c4oKq8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=g2t4YmicxzZJmSqagQpjnV8PR/c1ES4JMjprQjpBgkLD15AAuvB3mutWoXcu2Rd76NfU/PTpRWJNt9c3rbWSy9uID1GXh5sHGZ1uMZmN0gPRDq5R5upatRc4ibv1s6L4hS9F5LLDS9rbIBzclqWpvtiToS4m/SkTV15l0pDHMJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K/pGZFmt; arc=none smtp.client-ip=74.125.82.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1772070598; c=relaxed/simple;
+	bh=090HP7e2pVEeHOHgtSokHePn6/kBbzFR3kfoeGd59q8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KTEsvt1FKhg6neDe8lBl2eHN/Snoz104NBe+gATl73heILCyME1o/CoMYZyjeOSU9XqdOCklwzxQNbIOrPGSoHGRe6sjgGT1MJk/E2zAjo0cc/yLTQ9un7Nti0hyuMbsdJV1YDzuZOwrWIs9+IVHD8ucCLB4fCgwlKnsK/yKtCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qFk8tyeR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K/pGZFmt"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1276e71652fso588765c88.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Feb 2026 17:35:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772069750; x=1772674550; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1ci9RsZZzUOkXZUiVAS/DAziwtxPXHN+N0KfwxSaTa4=;
-        b=K/pGZFmtgQtm01+vcJZmLER3iX9h+N9KPmO1ZrRS3YU7WVUBgNUdhbptwB/U6aOdEI
-         yTKYX+cCViPWLbs/V53yJlxS8YB5e4fNiRxkbi7FQVuJICM7Cl43nCB7ouS5PjOVz0fk
-         mpZg1HK3JcZU/mTRsYTaTNK+ye2xHbwCO9z75QEpLUlxsI5dIm7Gm41FcpG21rsmGd5J
-         1WxSzB8UufURkADWKd8l0e0zLAMfDjBYDHQKMMkizA1zCvjXkKrIb56L3OaImOg/J0oV
-         Fum5+A/s3iASBeVT0P2uNvPQBMRAppElhIYfFRD9SOKj2KJ3zFF52Z3U8r0J/BE7Xbn2
-         b89w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772069750; x=1772674550;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ci9RsZZzUOkXZUiVAS/DAziwtxPXHN+N0KfwxSaTa4=;
-        b=CdJvcLEbGBYjau8IbWRZ6yPNgAznwn5uZ8z7pvSiKlpRScXBmkrOf+9sVYY8MsQLO2
-         p3XXHU1kZyXQZZyfUF/l0ytvdoBPqz7Hi1boDW3V576DKX+NgyiOH5dApg67r0KbS7S/
-         RP5HkSVg1aXlX+hen1G3r9eh5xNWreqhuv7Vk0KNfyQz4c7DSljGEBEQQFqLxCML0nNP
-         +bgJBoSqCWKhaTs+ANPwY8TkKjgWWNEl/+bdoY13iKVkrtLk/SJz/P8MjJ1055cuZIuf
-         y8WcsLoQkbdSrsy0TYRp7JniMYwv3CBuVuTH0JL3e2VI3X8MqEDhWZ1RrZfQEo5ajkel
-         ghmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVs7Hv+2vQ9lZtUbdr26Nti1hhcRN2b/Jk3yh2/QyX0XvkCjFz6c27i4GsMammHZ/yp383Lirfdu6epRXm8/07I@vger.kernel.org
-X-Gm-Message-State: AOJu0YygQq8vbkcSvUiQerm8fmzxAeFM6WedKq5zyqP2r1TgPcSJPNjw
-	naZKiDZBmhPwYJgYOM2IwmLFp9BasAnsZBXsZC/Yr5FBE7+M3NJ+/paVoEwIlJfrTDIoVEnL9MG
-	WUlYSqLvvmg==
-X-Received: from dll4.prod.google.com ([2002:a05:7022:204:b0:127:3728:b606])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:322:b0:11b:65e:f35
- with SMTP id a92af1059eb24-1278693dd14mr978081c88.7.1772069749820; Wed, 25
- Feb 2026 17:35:49 -0800 (PST)
-Date: Wed, 25 Feb 2026 17:35:34 -0800
-In-Reply-To: <20260226013534.2028272-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qFk8tyeR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3679C116D0;
+	Thu, 26 Feb 2026 01:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772070597;
+	bh=090HP7e2pVEeHOHgtSokHePn6/kBbzFR3kfoeGd59q8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qFk8tyeRn0mRx90MVGlvqfGpkOsGZgn3SB9DGHhTZAxNYPEUsMpAX8Ns6uNWl2KUe
+	 G0a5MQBcwC1/ec/THpDjRxF1AWE6vrYrwl6/ewEFBmZa6PJ0cXgeuVHjPnrk0V7AVG
+	 FQ1npifmM3w7HW7ABdjcI9fRy+Q88iL+lwziPHJ2WbmtMVerF/uRcOnqfkV+m/Wq2E
+	 Gfruu08II4Enk9fmtxWUwF9bl5NtzmDsmX4amd3FLCNKuMkCO11QQUnVxqNJ6xI0TA
+	 MylIGhN4t3RnzdZFCB2fpTObchaW2Clq8UWeje9ixyOWyCiDDrsyQQQKNg63caBA+f
+	 qX2+aYXlpr3Bg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH] perf trace: Handle task exit in BPF syscall summary
+Date: Wed, 25 Feb 2026 17:49:55 -0800
+Message-ID: <20260226014955.801293-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.53.0.414.gf7e9f6c205-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260226013534.2028272-1-irogers@google.com>
-X-Mailer: git-send-email 2.53.0.414.gf7e9f6c205-goog
-Message-ID: <20260226013534.2028272-6-irogers@google.com>
-Subject: [PATCH v1 5/5] perf evsel: Make unknown event names more unique
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Derek Foreman <derek.foreman@collabora.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	Swapnil Sapkal <swapnil.sapkal@amd.com>, Anubhav Shelat <ashelat@redhat.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Hrishikesh Suresh <hrishikesh123s@gmail.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-In situations like the perf data converter the evsel__name will be
-used to create babeltrace events. If the events have the same name
-then creation can fail. Avoid these failures by including more
-information into the unknown event names.
+Some system calls never return because it'd terminate the calling
+thread.  Let's hook the task exit path and update the duration of the
+last syscall.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Before:
+  $ sudo perf trace -as --bpf-summary -- true |& grep exit
+  (nothing)
+
+After:
+  $ sudo perf trace -as --bpf-summary -- true |& grep exit
+     exit_group             1      0     0.004     0.004     0.004     0.004      0.00%
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/evsel.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/perf/util/bpf_skel/syscall_summary.bpf.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index f59228c1a39e..fdc67df0e739 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -926,7 +926,8 @@ const char *evsel__name(struct evsel *evsel)
- 		break;
+diff --git a/tools/perf/util/bpf_skel/syscall_summary.bpf.c b/tools/perf/util/bpf_skel/syscall_summary.bpf.c
+index 1bcd066a5199a476..4172f3c9fc483955 100644
+--- a/tools/perf/util/bpf_skel/syscall_summary.bpf.c
++++ b/tools/perf/util/bpf_skel/syscall_summary.bpf.c
+@@ -118,13 +118,11 @@ int sys_enter(u64 *ctx)
+ 	return 0;
+ }
  
- 	case PERF_TYPE_TRACEPOINT:
--		scnprintf(bf, sizeof(bf), "%s", "unknown tracepoint");
-+		scnprintf(bf, sizeof(bf), "unknown tracepoint id=%#"PRId64,
-+			  evsel->core.attr.config);
- 		break;
+-SEC("tp_btf/sys_exit")
+-int sys_exit(u64 *ctx)
++static int do_exit(long ret)
+ {
+ 	int tid;
+ 	int key = 0;
+ 	u64 cgroup = 0;
+-	long ret = ctx[1]; /* return value of the syscall */
+ 	struct syscall_trace *st;
+ 	s64 delta;
  
- 	case PERF_TYPE_BREAKPOINT:
-@@ -938,8 +939,8 @@ const char *evsel__name(struct evsel *evsel)
- 		break;
+@@ -150,4 +148,18 @@ int sys_exit(u64 *ctx)
+ 	return 0;
+ }
  
- 	default:
--		scnprintf(bf, sizeof(bf), "unknown attr type: %d",
--			  evsel->core.attr.type);
-+		scnprintf(bf, sizeof(bf), "unknown event PMU=%d config=%#"PRIx64,
-+			  evsel->core.attr.type, evsel->core.attr.config);
- 		break;
- 	}
- 
++SEC("tp_btf/sys_exit")
++int sys_exit(u64 *ctx)
++{
++	long ret = ctx[1]; /* return value of the syscall */
++
++	return do_exit(ret);
++}
++
++SEC("tp_btf/sched_process_exit")
++int process_exit(u64 *ctx)
++{
++	return do_exit(0);
++}
++
+ char _license[] SEC("license") = "GPL";
 -- 
 2.53.0.414.gf7e9f6c205-goog
 
