@@ -1,170 +1,78 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31F533ADBA
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 11:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772103971; cv=pass; b=Jk7Ra53yFGHgeZ9E7MosdmqQQ2SU3Gd12cKtyZ1E6iDxrpS3Sd3LTKQlmJrg6Qm6Evt9ufIyxmY7HuRSOnAvA0J6+FZhVy32FLiGXOMIAHZW64jbAqQN1Vhm1/7Lah7wZMeFiLe0R2tJv96Y/J/+khaqfdy+cp+lML6AQyfsX2E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772103971; c=relaxed/simple;
-	bh=6WpNNjK2wqWyQpnk+n7CrxCBJhZGPYFEKrEcrvO+EsM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fluPRHHkrpBzGOeudH8duQJMTvRSAP/kzlZzjUhdn+Jo66IJO3yB8CosO/5PqgJro7ihwkV0fKvolhYg0qLBx9I+Z4GMjirpinJN+FTGWGgFF0Xj3vVNPzcFY8iKh1wBIAXaS6TcxHf88/Y71RERdXZAlXgwKAjKaZGlRC7E9fc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KlQeZD74; arc=pass smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlQeZD74"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-506c02ec1b3so8618641cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 03:06:04 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772103964; cv=none;
-        d=google.com; s=arc-20240605;
-        b=KEveA9dWf9hbgmpXImBaObm4uv+Vv/LbuOdCAQ0l459hdG4pSSXJ3zU6ZBzSIJWldK
-         yHxTV4FDImPV4bztN0fSx6Kjry1s78PRsTpiVRBO6q+93/emJTnirRqR+/QYzUvBySdt
-         3VbA185ezOeL+HdKXZDicUpIqTkkt5C9Gf+yQvtGwKxBNaQKFaua6ox+TjGvNyawLLJ1
-         JYhYa6wCSAum45kIC2yiSymbCLu7+5HmVsLJKljf2v367c+O9nlUQmlbi5BVdp0PWVTP
-         H0SFn69VUHMxnWBD5TqORoorEqai8KpfJB8d5UEbto+sm/mVuS/jlYu00SoFCHyuV08M
-         qaDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=NURSY+vSVQNVeF4d5BbXCG8ma5CR4tyBQmhsMvF3gGY=;
-        fh=kNkUvejyTtbhXd3VanE07Eu0EO2HfVlTSUmWU0E0Fqw=;
-        b=jM88kbi6Y5LAByNl8lk2+I+hbmD2uBP2baUh5Gad7fY3qZz33D2QfIH/JQ4Kw2f7p7
-         Cdik994VS7dhtYwQaBYNF7D9vDQeS2vUVrQwtg3ZM5WHpflzzwSCFi9qWnd2OFXNG8bo
-         iLsOZke7H6GNln0euZNNtUNeFOcJZId4t6vo2RDZ3TPOiFR77DMul1lcjEztqAYfnuyA
-         JwJPWfPpBHPle/i5Y6JrkYubJBoTmONsEErwC2Td4z5fU87/8YROLPlrx9w8f0xGwgme
-         IcYMWL/d1Ot+dhZCdWLk3Z1suG0Rwot7smF4sz0vL1cVbTAmhaM5H57tOSbDuPhGJyiz
-         EGwg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772103964; x=1772708764; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NURSY+vSVQNVeF4d5BbXCG8ma5CR4tyBQmhsMvF3gGY=;
-        b=KlQeZD74g9Z7u4Me9QeF1EFVfZhlAN6mtCOjslTaA96z8b3WGDT3PlB6aJGsi9FFf2
-         CK4XMJwiau2fOK7CQ+hphjscpiApfP1LQbtO7CGYfgg0dRAZPZ/aAu9MoXgmY93u2oij
-         pWaIDjNgfW/+cHq3QcPsxIYYt97MXuIPZn1thnjDmo5SrS7EOt2N//dwvipgwgLKjTrR
-         2iN/SvZ0jk4Na8+16FiJUqthCvFHa372KzfcMReJK4FDhIYGVtjck07vryfTcjGT18GX
-         8KFsJ2p3JElS732WUsmcUhkKOiZ5SomP+N0/N8IOny4EoU749DUkKNDVt7iS4mQ/UJbr
-         fcYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772103964; x=1772708764;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NURSY+vSVQNVeF4d5BbXCG8ma5CR4tyBQmhsMvF3gGY=;
-        b=pWcDfNE7nRGid1ZNEe7p9zmvaNv/HSAEm4RpUG1sWtl9uGUyIyEWRMdSMs9NRPgt3K
-         9uJx+13Hm1p30rssXY5zJN4LGBS+CUwLlyhDioaRpOIrhjsuQK7p6bbdetgnvTkoBMsI
-         NI0bWOAL/ZSG8/6zl9PPaZzny28aiMXGNUKOYG2mqPWDIAGOIgC6iDmP+Trz5CxzVxgd
-         uhMdKfFJqV1J45vBn3WREzyOmrxZ0sAAiP1dpLcrX1eZrddClHS0LrXHSWcC9zrBfDoQ
-         pPhbg4EjN+jXhV4PVee+MrhvLTViZkEPsoHoLdTlOw/VicZu5MtDuKLM04zwrDo02V5r
-         3kdA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeoQMVK6JMWF+n1fmm3m//kMZojl0c2s9veh4DKjt54tvoIsvVgd16Gj8qzlkKOPMsptT0HJALQFBjklgSOqnR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcFnNh8OlV0MzOz5kTaCo4Ev0I+W6xu1bph3UYRYI390y9/SeJ
-	LFRxrRIh/y331SKzANJNjXhmU/iZIVwV4y5K8KyVwB0AmYvbIlr4IfbIoY13o3r37FuPywsvvD3
-	sNjnYMkCXfQn/IDhchvzAMJTx3qTwVRs=
-X-Gm-Gg: ATEYQzxho5X5evi+xOsfC0KeAkwaBiWmuZCfjXErR1QRSy88wubIlK07c47EpZ8j44V
-	kccDkoa8jNtrhRd5xeNNa23aSIVf8r2qbhEjwhVRM/Y/6Vp7Uiufr5r4sVgyiCQ7BCjvcRZpHTH
-	yHTCWJRtYOEBTR1PaA54KBWN4Zv3JLPC1TVyTkOwO+EQ0lvVvUfZyHDPEUzA6DZI1zADlH1u2R7
-	98sZdNDhUzn8sYLaI0NGjpLfDjABrQO9CbLA9XFPKZCl89dAbsS5H+DnTlKw60oBW/SfFUugiG3
-	L6MA1Q==
-X-Received: by 2002:ac8:7f02:0:b0:501:7d6c:2d4e with SMTP id
- d75a77b69052e-5074447d2d5mr28594091cf.42.1772103963786; Thu, 26 Feb 2026
- 03:06:03 -0800 (PST)
+Received: from mailgw2.hygon.cn (unknown [101.204.27.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4BD927FB35;
+	Thu, 26 Feb 2026 12:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772108573; cv=none; b=acCil1mJ7j7VV0vaksS7LFxjAQHT17HpT858yM+T5tPyVTdpIoicivoHjYKmXzB2OVMLByuEoe1xKW3H6Lf3vyMxR+XANGxWZChXv2i+LgIIeKek5EB7ru6maGzSDn+rYyO8+MJVXt3OwEZsTPQs6P9nYtoLSUfKOU5JOJDEF4s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772108573; c=relaxed/simple;
+	bh=leFjjgyHJQwcIa/rNmsjm+SdUgbnyXj0TY2/3hcmhHs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lA6/F8Z85vjsfBygVwwxXV1SlIIiyWku/wecZtRDIwbAgousLyU4/uZv00zZLqRjtZx5yRhOoohBz1p47Bmz+A89zevKTMsdAK45JUxjOaIdtmoI14zZ7otCQqDT2/ecLaPaJ5xb81jX9U3sWFLYoTggv2SwqKcS83r/skJQ/3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
+	by mailgw2.hygon.cn (Postfix) with ESMTP id 4fM9ZZ3GGbz1YHN2w;
+	Thu, 26 Feb 2026 20:22:30 +0800 (CST)
+Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
+	by mailgw2.hygon.cn (Postfix) with ESMTP id 4fM9ZW3HPKz1YHN2w;
+	Thu, 26 Feb 2026 20:22:27 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp2.hygon.cn (Postfix) with ESMTPS id AEBC230A6425;
+	Thu, 26 Feb 2026 20:21:28 +0800 (CST)
+Received: from BJ-HV00147.Hygon.cn (172.18.22.73) by cncheex04.Hygon.cn
+ (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 26 Feb
+ 2026 20:22:24 +0800
+From: <wangguangju@hygon.cn>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <james.clark@linaro.org>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	wangguangju <wangguangju@hygon.cn>
+Subject: [PATCH] perf trace: Fix IS_ERR() vs NULL check bug
+Date: Thu, 26 Feb 2026 20:22:08 +0800
+Message-ID: <20260226122208.162765-1-wangguangju@hygon.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260226014955.801293-1-namhyung@kernel.org>
-In-Reply-To: <20260226014955.801293-1-namhyung@kernel.org>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Thu, 26 Feb 2026 03:05:53 -0800
-X-Gm-Features: AaiRm52fnBcujtAM1zG3_WpAd8AF7JSJg6Hkti5piuUnaJFH4-HvM99c6lXuDT0
-Message-ID: <CAH0uvohd=WE1wsQqDQQc6uqTX+NboEG=Jcs5crYxerLVNYBFOA@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Handle task exit in BPF syscall summary
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: cncheex06.Hygon.cn (172.23.18.116) To cncheex04.Hygon.cn
+ (172.23.18.114)
 
-Hi Namhyung,
+From: wangguangju <wangguangju@hygon.cn>
 
-On Wed, Feb 25, 2026 at 5:49=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Some system calls never return because it'd terminate the calling
-> thread.  Let's hook the task exit path and update the duration of the
-> last syscall.
->
-> Before:
->   $ sudo perf trace -as --bpf-summary -- true |& grep exit
->   (nothing)
->
-> After:
->   $ sudo perf trace -as --bpf-summary -- true |& grep exit
->      exit_group             1      0     0.004     0.004     0.004     0.=
-004      0.00%
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+The alloc_syscall_stats() function always returns an error pointer
+(ERR_PTR) on failure.
 
-Acked-by: Howard Chu <howardchu95@gmail.com>
+So replace NULL check with IS_ERR() check after calling
+delete_syscall_stats() function.
 
-Thanks,
-Howard
+Signed-off-by: wangguangju <wangguangju@hygon.cn>
+---
+ tools/perf/builtin-trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  tools/perf/util/bpf_skel/syscall_summary.bpf.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/util/bpf_skel/syscall_summary.bpf.c b/tools/perf/=
-util/bpf_skel/syscall_summary.bpf.c
-> index 1bcd066a5199a476..4172f3c9fc483955 100644
-> --- a/tools/perf/util/bpf_skel/syscall_summary.bpf.c
-> +++ b/tools/perf/util/bpf_skel/syscall_summary.bpf.c
-> @@ -118,13 +118,11 @@ int sys_enter(u64 *ctx)
->         return 0;
->  }
->
-> -SEC("tp_btf/sys_exit")
-> -int sys_exit(u64 *ctx)
-> +static int do_exit(long ret)
->  {
->         int tid;
->         int key =3D 0;
->         u64 cgroup =3D 0;
-> -       long ret =3D ctx[1]; /* return value of the syscall */
->         struct syscall_trace *st;
->         s64 delta;
->
-> @@ -150,4 +148,18 @@ int sys_exit(u64 *ctx)
->         return 0;
->  }
->
-> +SEC("tp_btf/sys_exit")
-> +int sys_exit(u64 *ctx)
-> +{
-> +       long ret =3D ctx[1]; /* return value of the syscall */
-> +
-> +       return do_exit(ret);
-> +}
-> +
-> +SEC("tp_btf/sched_process_exit")
-> +int process_exit(u64 *ctx)
-> +{
-> +       return do_exit(0);
-> +}
-> +
->  char _license[] SEC("license") =3D "GPL";
-> --
-> 2.53.0.414.gf7e9f6c205-goog
->
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 311d9da9896a..295b272c6c29 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1573,7 +1573,7 @@ static void delete_syscall_stats(struct hashmap *syscall_stats)
+ 	struct hashmap_entry *pos;
+ 	size_t bkt;
+ 
+-	if (syscall_stats == NULL)
++	if (IS_ERR(syscall_stats))
+ 		return;
+ 
+ 	hashmap__for_each_entry(syscall_stats, pos, bkt)
+-- 
+2.43.0
+
+
