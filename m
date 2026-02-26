@@ -1,394 +1,213 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945CC38F954;
-	Thu, 26 Feb 2026 07:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772090430; cv=none; b=pLuwGIO9YJJvlVt6i5xaKIQxp1g5b6Csiax+2Apgtq5EX/VfEgawGGdnnssJb6nu8lltbmDjB2Azocd3vKAdvHYNp+98SS2q/QMxchap7YT7MHZ/0jecwVFShsG27kC1Rj6y9Sr048Dksm7EtDxh988JkPI74Wy1XacCOutm4ZE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772090430; c=relaxed/simple;
-	bh=tDr1730A/DrFy+JHRefGsmFg7lJjL+tJRJhPR7ZqTSI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=EOMKFin7/O1DZZ1HOpz7MBMVA7U6gqgp26DBFV9Hip+K5bg1E7veYkAGwWxiVrQfE0Rg8gakMc0KpAJR/9RSU4QwVxq/7mmx5pOIP3y26kZiuLMgTdIz4xiUgaoUDFQKyDMG1AaoiMv28L6wWY7MmQlj4XR4X3+6lkHEF0clsUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IGmUoHVz; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99B238B7BB;
+	Thu, 26 Feb 2026 07:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772091672; cv=fail; b=PP62+Lh8qTrshmUY/mctmzLYm6g0NH6ATdz39CPrnuMzSW72AFfayBocWIxsmF6Gtw2hX3JjE9VN1C2XhzQrJk0E/Lc2qfh/0eGl1EPUKpoqmcM0FSdwSlUinRVA+sABGg1Ffd54qkhNLdoZq8GckU/UwzJ6NRCrxRqmR/l0zkY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772091672; c=relaxed/simple;
+	bh=4Z2PZzeEHRwAWF7Iex0v9EmdYMcpI3glM6EBwsU5q0Y=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=hT3pC6WE3VTXYztmDnizrLQzRzYdZ3y73QfiCYcZZeAxDt0epbDvkRUK4W/EoxiWAz1LZyLH/+d9wzVKfVOXAe0UwBHWPYtOET84evdZWnJxrgOfbIYJTRYFPiDZawPCxf97PKvDxGMxN9AN/H//iWXg2ydOowfRwcYc0mMqGIc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W3okHnyr; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IGmUoHVz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W3okHnyr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772090429; x=1803626429;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=tDr1730A/DrFy+JHRefGsmFg7lJjL+tJRJhPR7ZqTSI=;
-  b=IGmUoHVzX3BZqU7LWtrRY4v5xfK3+GCA0CodNOatxdUU4vR4VuG3uWXn
-   7F3tlXptSgZqkjljdAT2N1HdBE7m1cN3WgItzeRM8vmkU9QZgSNuXM1PQ
-   y80z07rt1NUHXfdZdCMjp9kgwujIpntuE2FlaIUFFNyIZxKpYu2w2Ck2f
-   rtel7l++oZpukQ/lyaaidKhrsIh0mq1wCxzKKicviwo6feXFtP+XB+FRo
-   rsXBCqGH+4V9t2tlEE8r/VZIYev7zBMF2WQmD1UArMat7+c7ocxUQb8+2
-   rZOfWoGrhTcwU383o1pvn2DmkSLNvPFhhiEDAMLzJUvvoYRrZskVqMB7z
+  t=1772091671; x=1803627671;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=4Z2PZzeEHRwAWF7Iex0v9EmdYMcpI3glM6EBwsU5q0Y=;
+  b=W3okHnyrR0/VPFekyQNJnLpR+ni9VILdR8pl3WvfhkVO9jciyVwCItP1
+   n88Of3Dh4CkfYjCkJINFD0p1dbTMtJwDnWx01fhPCsyzOvVuZb5HyVze8
+   oezCPqbqDGhDoMlsgKitaG66VN7BvBoAth8S192/hhA3e7/mHjhhLUGUU
+   8UBsbp9wP7pR4bcKxuskPljLWCKa01SwcCyi5XPfpJ4+3dHApcBKZU+p+
+   NTgvULkYLUUfjNB4ozKiKu3a+No9CyZ1TE8AQ+RznjK44mBaCKmyEY0lz
+   NGAsCTbSPXxkgotZIgtLZ00uY4F/Wl6WKOjY1eJJ4uhZk+5wdRToqFDaz
    w==;
-X-CSE-ConnectionGUID: A9l0Ai9VSiW4RTZrayJBsg==
-X-CSE-MsgGUID: 6FfYPXAjQ5KjPN42HRjZ1g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11712"; a="98615493"
+X-CSE-ConnectionGUID: D7P071eeR32Sq9GYSljYtQ==
+X-CSE-MsgGUID: +40gJ66wS/WP8iWEYSZp5Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11712"; a="83776238"
 X-IronPort-AV: E=Sophos;i="6.21,311,1763452800"; 
-   d="scan'208";a="98615493"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 23:20:27 -0800
-X-CSE-ConnectionGUID: bBkjfjIWS2CQWyLh2ByqVA==
-X-CSE-MsgGUID: KhMYPWouR5qFHDgF4581kQ==
+   d="scan'208";a="83776238"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 23:41:11 -0800
+X-CSE-ConnectionGUID: Jps/SFTeTSeFFsnu9M36fg==
+X-CSE-MsgGUID: /g1Xn82TR76sKMCZ5a6cVw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,311,1763452800"; 
-   d="scan'208";a="215591493"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 23:20:23 -0800
-Message-ID: <fd7649cf-d436-47ab-a7b9-eb5e915fce05@linux.intel.com>
-Date: Thu, 26 Feb 2026 15:20:20 +0800
+   d="scan'208";a="214066851"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 23:41:11 -0800
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 25 Feb 2026 23:41:10 -0800
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Wed, 25 Feb 2026 23:41:10 -0800
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (40.93.194.32)
+ by edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Wed, 25 Feb 2026 23:41:10 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bAsQWVh8NRKB8kAWFTIvxKwX1AEW8KGRUJ6rMoJHlisWv3HRQmgPR0CwWWUTVowQw++BPobqjGGwFSEn6NhEzSNx1UO0sWH7yjnFlbmkZmWWZgHywH/m67kEAYVEhEGdSI+pdobfA/xwxFEhS1tmIWUJ2+TRkq0WVr2i6DcCrreHkhhxbb98693HJ2gmwXEuE0mZMAur8p2EC7S5a+K6Zk+NC0SEz37pLg1t+Q3l/hguXuZuxAurLjsTe1K5mL4cwn2vMYNRy0xcFAe34J+r6MkC44A28H93/Uf29z5z6ECo2pvAekQzHQvpB/eue9JUz/SVs8YdKZs4QfrKQ+5otQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SiEWjH+c3YjZilh9h0T+bKF34fZq2jM1wFhQF4vLX3s=;
+ b=L04iZU9hJtJz0WGH7bORRGNtVHhLprouCbf7rhXiPUaSSNrUNoamTajuvVDnDz+aLT1RLVVUgpMcfDKd3VllOIewzeu9soemvz953a7czs2zyBwNoP/vUZrBZBxtTavRiswWnzWL7gIX9/Lxk6PbhgDwBzMtMpA/fJKirANtbfSlM7hAQHU3F5H6AYQAbNBQoLBhFgh0+j93wroGrf91hG7IpNcuHcR0KZQv9cWvrehnXv10bAqX3WjydEdLIkcFFW/Hr/VC2d2HBXF9igEwwjx3imgDj14A6BtrCsLsOI3mYW6aiv7QRZc0Ldo22IkaHXaerJHV8i0m8AyZRRY5Kg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
+ by SA0PR11MB4623.namprd11.prod.outlook.com (2603:10b6:806:95::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.14; Thu, 26 Feb
+ 2026 07:41:08 +0000
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::fdc2:40ba:101d:40bf]) by CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::fdc2:40ba:101d:40bf%6]) with mapi id 15.20.9654.007; Thu, 26 Feb 2026
+ 07:41:07 +0000
+Date: Thu, 26 Feb 2026 15:40:56 +0800
+From: Chao Gao <chao.gao@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, Kiryl Shutsemau <kas@kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, "Namhyung
+ Kim" <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+	<linux-kernel@vger.kernel.org>, <linux-coco@lists.linux.dev>,
+	<kvm@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, Xu Yilun
+	<yilun.xu@linux.intel.com>, Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v3 07/16] KVM: SVM: Move core EFER.SVME enablement to
+ kernel
+Message-ID: <aZ/5CDmCa8O5vrFZ@intel.com>
+References: <20260214012702.2368778-1-seanjc@google.com>
+ <20260214012702.2368778-8-seanjc@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260214012702.2368778-8-seanjc@google.com>
+X-ClientProxiedBy: SI2PR01CA0012.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::8) To CH3PR11MB8660.namprd11.prod.outlook.com
+ (2603:10b6:610:1ce::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 07/10] perf vendor events intel: Update lunarlake
- events from 1.18 to 1.20
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?=
- <afaerber@suse.de>, Manivannan Sadhasivam <mani@kernel.org>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20260226045301.459948-1-irogers@google.com>
- <20260226045301.459948-7-irogers@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260226045301.459948-7-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|SA0PR11MB4623:EE_
+X-MS-Office365-Filtering-Correlation-Id: 806cb050-332c-485d-dad5-08de750a675b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: gix/oqStzVATKAxSLoKmQocg99dJ7v0MhrAUK3j73W69wWKz2Q5SZGZAi1iz0xSokY6sjEt+nF6J82X15WERjR+HD1AyQxI8/kh+E8k7c8wtlmZgqBQpx680MEB/PUlxjUgkjsKkF8sTtYMrmTHLalVFJI+dv5lHU/c+OwIfJ3XgfosSaXr7Y53BSVAYOLjRvtC+iXyrIlA9Ri0JxIh++kYCfTijEbqCqT+KSZ0RMIOVB6nzxeDcHthETL8Ski8C8UIDLn7exsW8X5n1yYKW7mPvYdkq+BOOXA/UyWjIrQsULsU6OrrJB8RWeF1Ag2oWjTXiyxImOHyieawdOw/TQhDWjsMwT1lO1YaUvkaLylY6QaFmdJ52nDSnwFUt3C65+nF57flv6ZVxA693NNTi5LUd+BQQ0TQwSo1+7WEG+Hox7xfyyymTWiiH9zf5q3XjhbkwTDS29SLu6Ha+0/pEMOih6EPtWeLKlinrjmW3x76082TQBX5bV5NBjNNPujCh4QVm5r+KwaMlPqjdmR3ulRzrGKw0fSd4ZiHV5WVrUAw3SSDz4IXY4jzCWzvFxWnwzP58ZWaGyWgE14zy90vmkepUNozVFfvCBzBxy4BxjMCbFLwhRIfmIyC2zjbH6oj+luk26dbQJPKXDDHHAvvPLs2sPJLrrdUPIq4wYt8jm6QuXI6bmSvAaxNtVW5xUdN4FBiNPtksMaVasnfCUEE6r6rjEJHU1lT7KkJzCd7xt6s=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kLjFIQjMZk7qiffKEKkNi3VXaRwDjsbXw1WUAcYQv9VM8urdRZmYzxkxvMv/?=
+ =?us-ascii?Q?5LkWQWgkC8iHQZsxvi7TSV+xFkRaNyZJl3UAuWKem7TIN3cpA98EgAFS8inw?=
+ =?us-ascii?Q?dYQhwnMedubGJdApj+tSLIe6ri2fHJPtC0wBcFdhq8/qUdORNT6hULaLgklF?=
+ =?us-ascii?Q?jyLcA+EolzwfC3Vbxm6HmyhvasifWghMGTymDW56mL2yq4mJKXDvpHJmLQRv?=
+ =?us-ascii?Q?yp3znQppHYlBqKpg/6VbO+Djy7QGfBYVWH9qNfv/uy2Lfd6Ul66wdU4zxEYg?=
+ =?us-ascii?Q?b8n4zjiMca8foqn4ooAEnDd+lb0JAtTgLH1LY/54mXMzYEW0dKL7E3gI4kHp?=
+ =?us-ascii?Q?dX5p6UMWdMkayrFcz+X4ubFC5BEDBeq5yLNpb3e9i68e3nTk0tpAt+vspMou?=
+ =?us-ascii?Q?A8u0W/ZVsaLhfIfH2LB0+5xS7lbZQwxAFaWOizRWj86vHYn8rCdWIdXmgKbC?=
+ =?us-ascii?Q?4IzA3T4p2mltFycI4WfMW+VZCA5gLbhlY7KBhsHIDLgWv0f94HgSKhtIUk8p?=
+ =?us-ascii?Q?B41ElYwFkUcCiF1GWqBXLS/OCPmRi08rAhYkrZGCWk/F86DX7jDbCTC5ZRnf?=
+ =?us-ascii?Q?a/Eo5nfXXI1idC11Kb0Oa/GLETTW+OlNCPit/6j1RMD6SOGSlDWYWSzSPv68?=
+ =?us-ascii?Q?QUyrI4a35LYm3Dw63/VbewOpOw/DJeODKC3ZfbihHRMtwYkh38X0KK5ZWJrX?=
+ =?us-ascii?Q?4qnZ1VtoVkAk58ckJTyVZKxSoNPg4yTe7psYv/xHQqHF3uu9fURAwX7WSAYm?=
+ =?us-ascii?Q?vRgfq/sNYKfffCQ2/UWc+zJi6xSaY7zOYEscAVrBSVh9hWFzWAeHziNZrSBj?=
+ =?us-ascii?Q?BO9b82iCHpEqIGo19nnfDgVruE3EBJny/0241Z5zKeJgQWHmfDtOzpX/Db4b?=
+ =?us-ascii?Q?k1N0Vn0javZXwv1o37jtu9lMrdpuWjqT9gMioVDDOsQZeb5xbzV8oSUElRcn?=
+ =?us-ascii?Q?xfA/YOfYnJU2H1/VJXkHDQPXk/XoRjogz1hhmxwjnaLToN9EFwJ7oDYyFytJ?=
+ =?us-ascii?Q?kZ4I1HkLqHc4bZPWKmLkkWqoWcJl6HQ4NdoCAi+2HXt8evUJGK6iesLghN6J?=
+ =?us-ascii?Q?tCYuUKBPnMUUuseoCCzuqe79/NCyt8P0ql6PKSddy1fBeVmmr3Rq+BAcpUTr?=
+ =?us-ascii?Q?ESm+mBxjN4PxkH3ItXDmA/PbLjIb4RvqM7eyrZo40zfwnzPFJcywq8/jQxCF?=
+ =?us-ascii?Q?oGik1PAoEjUjPn9AliInXmcg9gdsZZQDCvC4ur9Cd4Xh2REaYACXydCly50M?=
+ =?us-ascii?Q?C2rQCZ19ZXaejIehso4WxIU5TMDQljt9aHXCRbKsXeEneks4CsW5fblP8Tei?=
+ =?us-ascii?Q?vbfUGnAgI0FOhbBNZiV5/ttqhCAIZfdwCGajb2lFmSHV0kJQuOqkV8SHK5KA?=
+ =?us-ascii?Q?viWnVPwh+xxzY99v84pilwwUXytGti63AVJPyQs+xUmuxDr6rF63JPnrD/Wt?=
+ =?us-ascii?Q?bib7MqV7khY0JyS/ug00Zv2sYkMs62jYJvzKmnfx9QG+bOA44aHHoPk5XBov?=
+ =?us-ascii?Q?H+1iVppkKLeuKzx1PitPrlZjaGKTHKuIObW2upQ4TlPUARVFQEeKvB+e+ugz?=
+ =?us-ascii?Q?KPzmoIB8oLzx73zzp2dVQRdyn6oLgZWasig8xQp6VES0MNDkkeGvXssNsiZg?=
+ =?us-ascii?Q?fr1RURsfa92j4STA6bZ23Q2nx08h8S9Y3RrSKOZJv2KPCPdcqmQ51D/fj3b6?=
+ =?us-ascii?Q?cSRs9L8nUMWQvSFepExyzLJQC4qcBtjdJ9a2h/BJrq+Vd/aG1WStTNeT5nwZ?=
+ =?us-ascii?Q?jrWnio/9PA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 806cb050-332c-485d-dad5-08de750a675b
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2026 07:41:07.8765
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mhCUajxtbxeF/+3zQWopiyM2n+Adm8evnQ4biUtEfzlODE/LhNqoAlf5j3HoCP1mPcNTUzVfmn7CrloYKPwklw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4623
+X-OriginatorOrg: intel.com
 
-It seems a typo in the shortlog, it should be meteorlake instead of
-lunarlake. :)
+>-static inline void kvm_cpu_svm_disable(void)
+>-{
+>-	uint64_t efer;
+>-
+>-	wrmsrq(MSR_VM_HSAVE_PA, 0);
+>-	rdmsrq(MSR_EFER, efer);
+>-	if (efer & EFER_SVME) {
+>-		/*
+>-		 * Force GIF=1 prior to disabling SVM, e.g. to ensure INIT and
+>-		 * NMI aren't blocked.
+>-		 */
+>-		stgi();
+>-		wrmsrq(MSR_EFER, efer & ~EFER_SVME);
+>-	}
+>-}
+>-
+> static void svm_emergency_disable_virtualization_cpu(void)
+> {
+>-	virt_rebooting = true;
+>-
+>-	kvm_cpu_svm_disable();
+>+	wrmsrq(MSR_VM_HSAVE_PA, 0);
+> }
+> 
+> static void svm_disable_virtualization_cpu(void)
+>@@ -507,7 +489,7 @@ static void svm_disable_virtualization_cpu(void)
+> 	if (tsc_scaling)
+> 		__svm_write_tsc_multiplier(SVM_TSC_RATIO_DEFAULT);
+> 
+>-	kvm_cpu_svm_disable();
+>+	x86_svm_disable_virtualization_cpu();
 
-On 2/26/2026 12:52 PM, Ian Rogers wrote:
-> The updated events were published in:
-> https://github.com/intel/perfmon/commit/2eebd8e2612a0655e82b88e1d2fab960315c025b
-> https://github.com/intel/perfmon/commit/81c4ce2c16f05b839d2c40e8cf183ed110357b73
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
->  .../pmu-events/arch/x86/meteorlake/cache.json | 67 ++++++++++++++++---
->  .../arch/x86/meteorlake/frontend.json         | 18 +++++
->  .../arch/x86/meteorlake/pipeline.json         | 46 +++++++++++--
->  4 files changed, 116 insertions(+), 17 deletions(-)
->
-> diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> index a2dde3faad5e..8d8fd8b08166 100644
-> --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-> +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> @@ -23,7 +23,7 @@ GenuineIntel-6-3E,v24,ivytown,core
->  GenuineIntel-6-2D,v24,jaketown,core
->  GenuineIntel-6-(57|85),v16,knightslanding,core
->  GenuineIntel-6-BD,v1.21,lunarlake,core
-> -GenuineIntel-6-(AA|AC|B5),v1.18,meteorlake,core
-> +GenuineIntel-6-(AA|AC|B5),v1.20,meteorlake,core
->  GenuineIntel-6-1[AEF],v4,nehalemep,core
->  GenuineIntel-6-2E,v4,nehalemex,core
->  GenuineIntel-6-CC,v1.02,pantherlake,core
-> diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/cache.json b/tools/perf/pmu-events/arch/x86/meteorlake/cache.json
-> index d3fc04b2ffbd..4c1220c19456 100644
-> --- a/tools/perf/pmu-events/arch/x86/meteorlake/cache.json
-> +++ b/tools/perf/pmu-events/arch/x86/meteorlake/cache.json
-> @@ -513,6 +513,15 @@
->          "UMask": "0x6",
->          "Unit": "cpu_atom"
->      },
-> +    {
-> +        "BriefDescription": "Counts the number of unhalted cycles when the core is stalled due to an ICACHE or ITLB miss which hit in the LLC, no snoop was required. LLC provides the data. If the core has access to an L3 cache, an LLC hit refers to an L3 cache hit, otherwise it counts zeros.",
-> +        "Counter": "0,1,2,3,4,5,6,7",
-> +        "EventCode": "0x35",
-> +        "EventName": "MEM_BOUND_STALLS_IFETCH.LLC_HIT_NOSNOOP",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x2",
-> +        "Unit": "cpu_atom"
-> +    },
->      {
->          "BriefDescription": "Counts the number of unhalted cycles when the core is stalled due to an ICACHE or ITLB miss which missed all the caches. If the core has access to an L3 cache, an LLC miss refers to an L3 cache miss, otherwise it is an L2 cache miss.",
->          "Counter": "0,1,2,3,4,5,6,7",
-> @@ -522,6 +531,15 @@
->          "UMask": "0x78",
->          "Unit": "cpu_atom"
->      },
-> +    {
-> +        "BriefDescription": "Counts the number of unhalted cycles when the core is stalled due to an ICACHE or ITLB miss which missed all the caches. DRAM, MMIO or other LOCAL memory type provides the data. If the core has access to an L3 cache, an LLC miss refers to an L3 cache miss, otherwise it is an L2 cache miss.",
-> +        "Counter": "0,1,2,3,4,5,6,7",
-> +        "EventCode": "0x35",
-> +        "EventName": "MEM_BOUND_STALLS_IFETCH.LLC_MISS_LOCALMEM",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x50",
-> +        "Unit": "cpu_atom"
-> +    },
->      {
->          "BriefDescription": "Counts the number of unhalted cycles when the core is stalled due to an L1 demand load miss.",
->          "Counter": "0,1,2,3,4,5,6,7",
-> @@ -559,6 +577,24 @@
->          "UMask": "0x6",
->          "Unit": "cpu_atom"
->      },
-> +    {
-> +        "BriefDescription": "Counts the number of unhalted cycles when the core is stalled due to a demand load miss which hit in the LLC, no snoop was required. LLC provides the data. If the core has access to an L3 cache, an LLC hit refers to an L3 cache hit, otherwise it counts zeros.",
-> +        "Counter": "0,1,2,3,4,5,6,7",
-> +        "EventCode": "0x34",
-> +        "EventName": "MEM_BOUND_STALLS_LOAD.LLC_HIT_NOSNOOP",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x2",
-> +        "Unit": "cpu_atom"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of unhalted cycles when the core is stalled due to a demand load miss which hit in the LLC, a snoop was required, the snoop misses or the snoop hits but NO_FWD. LLC provides the data. If the core has access to an L3 cache, an LLC hit refers to an L3 cache hit, otherwise it counts zeros.",
-> +        "Counter": "0,1,2,3,4,5,6,7",
-> +        "EventCode": "0x34",
-> +        "EventName": "MEM_BOUND_STALLS_LOAD.LLC_HIT_SNOOP",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x4",
-> +        "Unit": "cpu_atom"
-> +    },
->      {
->          "BriefDescription": "Counts the number of unhalted cycles when the core is stalled due to a demand load miss which missed all the local caches. If the core has access to an L3 cache, an LLC miss refers to an L3 cache miss, otherwise it is an L2 cache miss.",
->          "Counter": "0,1,2,3,4,5,6,7",
-> @@ -568,6 +604,15 @@
->          "UMask": "0x78",
->          "Unit": "cpu_atom"
->      },
-> +    {
-> +        "BriefDescription": "Counts the number of unhalted cycles when the core is stalled to a demand load miss and the data was provided from an unknown source. If the core has access to an L3 cache, an LLC miss refers to an L3 cache miss, otherwise it is an L2 cache miss.",
-> +        "Counter": "0,1,2,3,4,5,6,7",
-> +        "EventCode": "0x34",
-> +        "EventName": "MEM_BOUND_STALLS_LOAD.LLC_MISS_LOCALMEM",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x50",
-> +        "Unit": "cpu_atom"
-> +    },
->      {
->          "BriefDescription": "Counts the number of unhalted cycles when the core is stalled to a store buffer full condition",
->          "Counter": "0,1,2,3,4,5,6,7",
-> @@ -969,7 +1014,7 @@
->          "Unit": "cpu_atom"
->      },
->      {
-> -        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 1024. Only counts with PEBS enabled.",
->          "Counter": "0,1",
->          "Data_LA": "1",
->          "EventCode": "0xd0",
-> @@ -981,7 +1026,7 @@
->          "Unit": "cpu_atom"
->      },
->      {
-> -        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 128. Only counts with PEBS enabled.",
->          "Counter": "0,1",
->          "Data_LA": "1",
->          "EventCode": "0xd0",
-> @@ -993,7 +1038,7 @@
->          "Unit": "cpu_atom"
->      },
->      {
-> -        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 16. Only counts with PEBS enabled.",
->          "Counter": "0,1",
->          "Data_LA": "1",
->          "EventCode": "0xd0",
-> @@ -1005,7 +1050,7 @@
->          "Unit": "cpu_atom"
->      },
->      {
-> -        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 2048. Only counts with PEBS enabled.",
->          "Counter": "0,1",
->          "Data_LA": "1",
->          "EventCode": "0xd0",
-> @@ -1017,7 +1062,7 @@
->          "Unit": "cpu_atom"
->      },
->      {
-> -        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 256. Only counts with PEBS enabled.",
->          "Counter": "0,1",
->          "Data_LA": "1",
->          "EventCode": "0xd0",
-> @@ -1029,7 +1074,7 @@
->          "Unit": "cpu_atom"
->      },
->      {
-> -        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 32. Only counts with PEBS enabled.",
->          "Counter": "0,1",
->          "Data_LA": "1",
->          "EventCode": "0xd0",
-> @@ -1041,7 +1086,7 @@
->          "Unit": "cpu_atom"
->      },
->      {
-> -        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 4. Only counts with PEBS enabled.",
->          "Counter": "0,1",
->          "Data_LA": "1",
->          "EventCode": "0xd0",
-> @@ -1053,7 +1098,7 @@
->          "Unit": "cpu_atom"
->      },
->      {
-> -        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 512. Only counts with PEBS enabled.",
->          "Counter": "0,1",
->          "Data_LA": "1",
->          "EventCode": "0xd0",
-> @@ -1065,7 +1110,7 @@
->          "Unit": "cpu_atom"
->      },
->      {
-> -        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 64. Only counts with PEBS enabled.",
->          "Counter": "0,1",
->          "Data_LA": "1",
->          "EventCode": "0xd0",
-> @@ -1077,7 +1122,7 @@
->          "Unit": "cpu_atom"
->      },
->      {
-> -        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 8. Only counts with PEBS enabled.",
->          "Counter": "0,1",
->          "Data_LA": "1",
->          "EventCode": "0xd0",
-> @@ -1159,7 +1204,7 @@
->          "Unit": "cpu_atom"
->      },
->      {
-> -        "BriefDescription": "Counts the number of  stores uops retired same as MEM_UOPS_RETIRED.ALL_STORES",
-> +        "BriefDescription": "Counts the number of stores uops retired.",
->          "Counter": "0,1,2,3,4,5,6,7",
->          "Data_LA": "1",
->          "EventCode": "0xd0",
-> diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json b/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json
-> index 6484834b1127..dcf8c8e720f3 100644
-> --- a/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json
-> +++ b/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json
-> @@ -430,6 +430,24 @@
->          "UMask": "0x4",
->          "Unit": "cpu_core"
->      },
-> +    {
-> +        "BriefDescription": "ICACHE_TAG.STALLS_INUSE",
-> +        "Counter": "0,1,2,3",
-> +        "EventCode": "0x83",
-> +        "EventName": "ICACHE_TAG.STALLS_INUSE",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x10",
-> +        "Unit": "cpu_core"
-> +    },
-> +    {
-> +        "BriefDescription": "ICACHE_TAG.STALLS_ISB",
-> +        "Counter": "0,1,2,3",
-> +        "EventCode": "0x83",
-> +        "EventName": "ICACHE_TAG.STALLS_ISB",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x8",
-> +        "Unit": "cpu_core"
-> +    },
->      {
->          "BriefDescription": "Cycles Decode Stream Buffer (DSB) is delivering any Uop",
->          "Counter": "0,1,2,3",
-> diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json b/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json
-> index bfdaabe9377d..7662846745bd 100644
-> --- a/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json
-> +++ b/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json
-> @@ -517,7 +517,7 @@
->          "Unit": "cpu_core"
->      },
->      {
-> -        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles",
-> +        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.THREAD]",
->          "Counter": "Fixed counter 1",
->          "EventName": "CPU_CLK_UNHALTED.CORE",
->          "SampleAfterValue": "2000003",
-> @@ -583,7 +583,7 @@
->          "Unit": "cpu_core"
->      },
->      {
-> -        "BriefDescription": "Fixed Counter: Counts the number of unhalted reference clock cycles",
-> +        "BriefDescription": "Fixed Counter: Counts the number of unhalted reference clock cycles.",
->          "Counter": "Fixed counter 2",
->          "EventName": "CPU_CLK_UNHALTED.REF_TSC",
->          "SampleAfterValue": "2000003",
-> @@ -620,7 +620,7 @@
->          "Unit": "cpu_core"
->      },
->      {
-> -        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles",
-> +        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.CORE]",
->          "Counter": "Fixed counter 1",
->          "EventName": "CPU_CLK_UNHALTED.THREAD",
->          "SampleAfterValue": "2000003",
-> @@ -804,10 +804,10 @@
->          "Unit": "cpu_core"
->      },
->      {
-> -        "BriefDescription": "Fixed Counter: Counts the number of instructions retired",
-> +        "BriefDescription": "Fixed Counter: Counts the number of instructions retired.",
->          "Counter": "Fixed counter 0",
->          "EventName": "INST_RETIRED.ANY",
-> -        "PublicDescription": "Fixed Counter: Counts the number of instructions retired Available PDIST counters: 32",
-> +        "PublicDescription": "Fixed Counter: Counts the number of instructions retired. Available PDIST counters: 32",
->          "SampleAfterValue": "2000003",
->          "UMask": "0x1",
->          "Unit": "cpu_atom"
-> @@ -1207,6 +1207,42 @@
->          "UMask": "0x20",
->          "Unit": "cpu_core"
->      },
-> +    {
-> +        "BriefDescription": "Counts the number of CLFLUSH, CLWB, and CLDEMOTE instructions retired.",
-> +        "Counter": "0,1,2,3,4,5,6,7",
-> +        "EventCode": "0xe0",
-> +        "EventName": "MISC_RETIRED1.CL_INST",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0xff",
-> +        "Unit": "cpu_atom"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of LFENCE instructions retired.",
-> +        "Counter": "0,1,2,3,4,5,6,7",
-> +        "EventCode": "0xe0",
-> +        "EventName": "MISC_RETIRED1.LFENCE",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x2",
-> +        "Unit": "cpu_atom"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of accesses to KeyLocker cache.",
-> +        "Counter": "0,1,2,3,4,5,6,7",
-> +        "EventCode": "0xe1",
-> +        "EventName": "MISC_RETIRED2.KEYLOCKER_ACCESS",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x10",
-> +        "Unit": "cpu_atom"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of misses to KeyLocker cache.",
-> +        "Counter": "0,1,2,3,4,5,6,7",
-> +        "EventCode": "0xe1",
-> +        "EventName": "MISC_RETIRED2.KEYLOCKER_MISS",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x11",
-> +        "Unit": "cpu_atom"
-> +    },
->      {
->          "BriefDescription": "Cycles stalled due to no store buffers available. (not including draining form sync).",
->          "Counter": "0,1,2,3,4,5,6,7",
+There's a functional change here. The new x86_svm_disable_virtualization_cpu()
+doesn't reset MSR_VM_HSAVE_PA, but the old kvm_cpu_svm_disable() does.
+
+
+>+int x86_svm_disable_virtualization_cpu(void)
+>+{
+>+	int r = -EIO;
+>+	u64 efer;
+>+
+>+	/*
+>+	 * Force GIF=1 prior to disabling SVM, e.g. to ensure INIT and
+>+	 * NMI aren't blocked.
+>+	 */
+>+	asm goto("1: stgi\n\t"
+>+		 _ASM_EXTABLE(1b, %l[fault])
+>+		 ::: "memory" : fault);
+>+	r = 0;
+>+
+>+fault:
+>+	rdmsrq(MSR_EFER, efer);
+>+	wrmsrq(MSR_EFER, efer & ~EFER_SVME);
+>+	return r;
+>+}
+>+EXPORT_SYMBOL_FOR_KVM(x86_svm_disable_virtualization_cpu);
