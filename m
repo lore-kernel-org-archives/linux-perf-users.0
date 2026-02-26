@@ -1,215 +1,251 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F78336895A;
-	Thu, 26 Feb 2026 17:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772125318; cv=none; b=mn9OCKLDX1H2wp+3lW6QvXL4Z59gt0c2E3vnvWxUYcnLBPt45rrIIqqB0RhTA9Mz2JuxeNLgJq2Mn7/LmiG0JlVRgCsbVfTM37n7uH98d+DTy/eDPYkLj2QnXwYWdDxeygAcgedCfPzh8qTr/Eg9VIVFhuCblKrvVbbG5+0l6Cs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772125318; c=relaxed/simple;
-	bh=/QmItQ6z1ymV5XtAi2g/Dw5o5IqkDFW1zO5h6zottN4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AHOHLKxDawmGRssB/13nXKRGj/2GH2u+2MxZJWS5KctgRsXyU5wPpNp7JxdvVARdz80U1aHDqTul7cTLw7RFWEvOzFYtdKjHSXm7DicRfMe6mTac9ueKHLX2DPzNValGahsvSYYbUalxbnaKy2krUMpNJr7d4qL0dCxciywOkoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVUHwL4n; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00628368977
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 17:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772125841; cv=pass; b=bMZr1R2tY55PVVKiV6F/RAIUCSO1s9WKLgvPv3b/tg90DNGUjS4KSdE8zLjW3kySjyEoYk0TvarOVg8szTiVQ4Wwmj4XKz7k2Yqcoko1hNFbGwYzkst2/agmyRmemWXoca0Rtcf+8CKfndsUwqYVcE/5PAaqj+GR2h8mnMC+nis=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772125841; c=relaxed/simple;
+	bh=xmziTarInCIRwtxSSmje+LWoF/k0lGuKsOpoP5h8De4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=krzZ+HTdNS+J4BIoQ7RUsj7XXQqYQycOAjFmbAQ4BS4erby+s0kMzZNg6N8oAiTufyIpHeYRDYoKLJdLKVBzXe/CQeVvY9EGcmSdshUB8BlWJPvLzzSMURVY2pCOaOCkoX2XVlKj9qUHgNPsNG124IyXx8mtkv7KqQeuYqgihYs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=00I/jxEE; arc=pass smtp.client-ip=74.125.82.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVUHwL4n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 276F7C19424;
-	Thu, 26 Feb 2026 17:01:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772125317;
-	bh=/QmItQ6z1ymV5XtAi2g/Dw5o5IqkDFW1zO5h6zottN4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=rVUHwL4neSjulGzFN8BMg9pKoDHwp+Xwjt8pk4Dq976Yi206M6fYhg3+WieL+MRW4
-	 gvEYeLd4d0OrxGKSyMS7lmJtR19iZofD0P+t90t6LNfHeq6XzW6OQASj4UUhHO5fCd
-	 Jt8xHWi5aSMJPSiNEI9iRQh8NC5Dch7xrdXuGdJKTx0aJjs5j6cKM9Gkvh3cIFtK2O
-	 sFUZj/AjXkRLJQmkUXZbGx0heTelso0a9SoyRim4Ku5V4qzU2utzORGAmy3wFg6DDs
-	 Ch7D5AWOMdEKvdHUcpKrRe2Jd7F1IAFx5wgWR1LreDYTyyqYBb0eiRGxIh6ia26Q45
-	 Bviw8G4tAPjkA==
-Message-ID: <5826915dea6b149707f68847f0f3330a25615eae.camel@kernel.org>
-Subject: Re: [PATCH 00/61] vfs: change inode->i_ino from unsigned long to u64
-From: Jeff Layton <jlayton@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt	
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Dan Williams
- <dan.j.williams@intel.com>, Eric Biggers	 <ebiggers@kernel.org>, "Theodore
- Y. Ts'o" <tytso@mit.edu>, Muchun Song	 <muchun.song@linux.dev>, Oscar
- Salvador <osalvador@suse.de>, David Hildenbrand	 <david@kernel.org>, David
- Howells <dhowells@redhat.com>, Paulo Alcantara	 <pc@manguebit.org>, Andreas
- Dilger <adilger.kernel@dilger.ca>, Jan Kara	 <jack@suse.com>, Jaegeuk Kim
- <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,  Trond Myklebust
- <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck Lever
- <chuck.lever@oracle.com>,  NeilBrown <neil@brown.name>, Olga Kornievskaia
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,  Tom Talpey
- <tom@talpey.com>, Steve French <sfrench@samba.org>, Ronnie Sahlberg
- <ronniesahlberg@gmail.com>,  Shyam Prasad N <sprasad@microsoft.com>,
- Bharath SM <bharathsm@microsoft.com>, Alexander Aring	
- <alex.aring@gmail.com>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
- Viacheslav Dubeyko	 <slava@dubeyko.com>, Eric Van Hensbergen
- <ericvh@kernel.org>, Latchesar Ionkov	 <lucho@ionkov.net>, Dominique
- Martinet <asmadeus@codewreck.org>, Christian Schoenebeck
- <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, Marc Dionne	
- <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>, Luis de
- Bethencourt	 <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>,
- "Tigran A. Aivazian"	 <aivazian.tigran@gmail.com>, Ilya Dryomov
- <idryomov@gmail.com>, Alex Markuze	 <amarkuze@redhat.com>, Jan Harkes
- <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,  Nicolas Pitre <nico@fluxnic.net>,
- Tyler Hicks <code@tyhicks.com>, Amir Goldstein <amir73il@gmail.com>, 
- Christoph Hellwig	 <hch@infradead.org>, John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>,  Yangtao Li <frank.li@vivo.com>, Mikulas
- Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse	
- <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Dave Kleikamp	
- <shaggy@kernel.org>, Konstantin Komarov	
- <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, 
- Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
- Mike Marshall	 <hubcap@omnibond.com>, Martin Brandenburg
- <martin@omnibond.com>, Miklos Szeredi	 <miklos@szeredi.hu>, Anders Larsen
- <al@alarsen.net>, Zhihao Cheng	 <chengzhihao1@huawei.com>, Damien Le Moal
- <dlemoal@kernel.org>, Naohiro Aota	 <naohiro.aota@wdc.com>, Johannes
- Thumshirn <jth@kernel.org>, John Johansen	 <john.johansen@canonical.com>,
- Paul Moore <paul@paul-moore.com>, James Morris	 <jmorris@namei.org>, "Serge
- E. Hallyn" <serge@hallyn.com>, Mimi Zohar	 <zohar@linux.ibm.com>, Roberto
- Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, Fan
- Wu	 <wufan@kernel.org>, Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler
- <casey@schaufler-ca.com>, Alex Deucher	 <alexander.deucher@amd.com>,
- Christian =?ISO-8859-1?Q?K=F6nig?=	 <christian.koenig@amd.com>, David
- Airlie <airlied@gmail.com>, Simona Vetter	 <simona@ffwll.ch>, Sumit Semwal
- <sumit.semwal@linaro.org>, Eric Dumazet	 <edumazet@google.com>, Kuniyuki
- Iwashima <kuniyu@google.com>, Paolo Abeni	 <pabeni@redhat.com>, Willem de
- Bruijn <willemb@google.com>, "David S. Miller"	 <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman	 <horms@kernel.org>, Oleg
- Nesterov <oleg@redhat.com>, Peter Zijlstra	 <peterz@infradead.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland	 <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>,  James Clark <james.clark@linaro.org>, "Darrick
- J. Wong" <djwong@kernel.org>, Martin Schiller <ms@dev.tdt.de>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev, 
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org, 
-	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
- autofs@vger.kernel.org, 	ceph-devel@vger.kernel.org,
- codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net, 
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
- devel@lists.orangefs.org, 	linux-unionfs@vger.kernel.org,
- apparmor@lists.ubuntu.com, 	linux-security-module@vger.kernel.org,
- linux-integrity@vger.kernel.org, 	selinux@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, 	dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, 	linaro-mm-sig@lists.linaro.org,
- netdev@vger.kernel.org, 	linux-perf-users@vger.kernel.org,
- linux-fscrypt@vger.kernel.org, 	linux-xfs@vger.kernel.org,
- linux-hams@vger.kernel.org, linux-x25@vger.kernel.org
-Date: Thu, 26 Feb 2026 12:01:42 -0500
-In-Reply-To: <aaB5lgKd8FOIizPg@casper.infradead.org>
-References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
-	 <aaB5lgKd8FOIizPg@casper.infradead.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
- n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
- egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
- T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
- 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
- YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
- VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
- cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
- CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
- LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
- MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
- gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
- 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
- R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
- rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
- ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
- Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
- lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
- iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
- QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
- YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
- wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
- LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
- 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
- c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
- LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
- TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
- 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
- xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
- +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
- Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
- BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
- N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
- naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
- RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
- FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
- 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
- P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
- aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
- T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
- dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
- 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
- kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
- uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
- AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
- FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
- 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
- sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
- qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
- sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
- IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
- UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
- dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
- EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
- apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
- M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
- dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
- 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
- jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
- flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
- BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
- AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
- 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
- HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
- 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
- uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
- DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
- CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
- Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
- AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
- aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
- f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="00I/jxEE"
+Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-124a60cc9a1so12884c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 09:10:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772125839; cv=none;
+        d=google.com; s=arc-20240605;
+        b=PEPlDpyV/BCoeNVrlBWTY6E2KVPJ3VyuO1Qw7fOtfOBnPCIOFe58ukj7kQNs5OwK/2
+         dl379Ng24hWvg4uaRNEHW30h93RyDSIPBGKhhBfAyxK4H2Jzor6+qtvSJqb6146bCv91
+         zCVoLFO29lMeo/eJnZx1YZpVA+bk7hAZbT2pRdhj4F5eOLSi0BJ8mcnMq/gYKE8UCiq/
+         0mQaGDcrgVM7hIQHf7z0aIDWfvqBdfgCVt5YlJJzVDt/kd+6xh7+/Sf6vztsbgmvig6Q
+         fhZ+S/KgnkiNs0K7xcaL+JikEO02yeUZk1cWrcCCyB1aJuGS3znw4GVo82PwR90gwAXV
+         iBoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Tkedhw7TgiRSyuuriQLlHDY6QGJT0+ZpOxRxRI4lhlk=;
+        fh=0GySQAcmjERnn5lfkQjah8ALybDk2nQcMLUuPHqGAk0=;
+        b=Q+cPbBNHU3KDrT17KVioXvSAjMc36326oYQRjhRag7te8XkpkGHbxNebBZt+CFjCHw
+         /8wmokMznN2TgP2mOKHMp2QUOhJI4pJDrU721pbY9n9K4Zx3VnhmqwCPVLScfY1uBKH6
+         5+k0Rprh8tTG3b9R4CfwxlWCp21zQwtvh5LzxjJOD2iABvcs+StElF/InZmuHtwrvetj
+         V9k8ScAV+SWYPioDGL1Gh5ME3JRZSNLX5jo5xtBXtlBCWMHguDxTjIEBhOrze/9ltA0v
+         44/39v660UPrPrDFjp5bAVV78taAUJSpJYrn60U/AQIoa1HvCuUH9cfLVUIMGSxzfC9l
+         aprw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772125839; x=1772730639; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tkedhw7TgiRSyuuriQLlHDY6QGJT0+ZpOxRxRI4lhlk=;
+        b=00I/jxEEX0ocSikq83u12s7JnDH2wQX63akZIbg45lfLE/rqmltpx8EJ0wfi6LR4Xw
+         140FeFbZmvIkfbyV8ftuwPqrjAIPH/DKavch1it44hzHOE7TL62myC3Vb8tMQiIOg3h5
+         A/DZIsB3OFE4hU9LxifUXHZaf9sonLAgeT0Mdi0WwwBrvFvh7sGaDV0ClTeS3soUi9e1
+         lTLbJUAt4DtrRlXeYxe5DEEUgdmr8znQUlDbGQ7qlnKS6l4xLaTlenfnyTHkuQsXpgIc
+         W2y544hwwm0gvG1PTlvViUoKEfDsYLaZqbkUZ6c/5ElZZ4/KHy1gQKmpYWYHElo2Tnzf
+         hozw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772125839; x=1772730639;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Tkedhw7TgiRSyuuriQLlHDY6QGJT0+ZpOxRxRI4lhlk=;
+        b=O02xSjtKXyAVDCAMcMvpX9cB3AsXbFAW3B6MwPR0u4qDKxavjzgPdcvKrvSRXIDi9F
+         25+Wi3QUU5cZZNjTH7gq8hX2u2IddVVRVHLFWe3e2zX7oRyIK/5rzZ3FcMyhXsAqbjeS
+         GIKHfL0zT3Htd1+ZkJJyfZ0vRhvSwp+If8oE07SRblXSuGwdYZLP+9YSxoizwoNczQ/r
+         KiednRoeCxyd5Br1pgBT5ipOOjZetKBvYu/ruc0GL0PDz8Z5cos+AseHh/b+qq8ESsxe
+         iCLOSmZNU4ItuSmlvnKlVSNJzLJSa4XaqwHWanMxvF2bdIO3EU5o+2+13Gxn6bAOF7tq
+         tBGA==
+X-Gm-Message-State: AOJu0Ywao5KbvI0jhadnWuyHydE6nPVoQEhMCcEIKQQwhXhnqkjJRFYR
+	tqc/XeDq1VQ8kegbA6iM3LPGDs/3wE0XTCY0PoCKqlv6DYYdW8fmwQUR2L/tppgOskO7Vo2wgK5
+	Q0p0J8hrLDLD22qYeO6t2DKtgzn9OIl4tjVO5QR5k
+X-Gm-Gg: ATEYQzxk9Mqgbbv1tyO6j0fQnKCvnHnwMIJtyPV5EbuMup6d9PRHB2F9iX8udPaVj0D
+	4Hkqr03476jTOqGVRKBCooF8LWY9vl2hQQjPyajuMHnhdlEdaF1NFeiE96XjwmkwgkZCQkHghTo
+	Vak9BjSWw4EcIxiMed6AzO3wU04JVSdGIlC5dr2frdoJXxM3P5WGLOYzN9NJYiPff+qqVp/uMdZ
+	89B8ZwiQEjgCnQ4IZ0u+vh6uKvHZb46g8X2zyphPiSdOSTmhGi4RsX3g4Pt6+UMGt+HECuVhhdk
+	1lAuQppRrr1os06lcBt2NUv+2Kpo4q0YjKv9
+X-Received: by 2002:a05:7022:12b:b0:120:5719:624e with SMTP id
+ a92af1059eb24-127899a14cfmr234350c88.21.1772125838341; Thu, 26 Feb 2026
+ 09:10:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260226170025.517743-1-9erthalion6@gmail.com>
+In-Reply-To: <20260226170025.517743-1-9erthalion6@gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 26 Feb 2026 09:10:24 -0800
+X-Gm-Features: AaiRm510Cs64l5p7kN6EkkvMZnr3dIa5eUS-klcq5Z9h7367sJ9AsV5d4VjRgVE
+Message-ID: <CAP-5=fV7OuWN9K-wnsS7zza+s0FQRSR_JCcJi5tvpgQAbh=Nnw@mail.gmail.com>
+Subject: Re: [PATCH v5] tools build: Fix rust cross compilation
+To: Dmitrii Dolgov <9erthalion6@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Levi Zim <i@kxxt.dev>, 
+	Namhyung Kim <namhyung@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
+	rust-for-linux <rust-for-linux@vger.kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nsc@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2026-02-26 at 16:49 +0000, Matthew Wilcox wrote:
-> On Thu, Feb 26, 2026 at 10:55:02AM -0500, Jeff Layton wrote:
-> > The bulk of the changes are to format strings and tracepoints, since th=
-e
-> > kernel itself doesn't care that much about the i_ino field. The first
-> > patch changes some vfs function arguments, so check that one out
-> > carefully.
->=20
-> Why are the format strings all done as separate patches?  Don't we get
-> bisection hazards by splitting it apart this way?
+On Thu, Feb 26, 2026 at 9:00=E2=80=AFAM Dmitrii Dolgov <9erthalion6@gmail.c=
+om> wrote:
+>
+> Currently no target is specified to compile rust code when needed, which
+> breaks cross compilation. E.g. for arm64:
+>
+>       LD      /tmp/build/tests/workloads/perf-test-in.o
+>     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(cod=
+e_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in g=
+eneric ELF (EM: 62)
+>     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(cod=
+e_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in g=
+eneric ELF (EM: 62)
+>     [...repeated...]
+>     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(cod=
+e_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in g=
+eneric ELF (EM: 62)
+>     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(cod=
+e_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in g=
+eneric ELF (EM: 62)
+>     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a: er=
+ror adding symbols: file in wrong format
+>     make[5]: *** [/perf/tools/build/Makefile.build:162: /tmp/build/tests/=
+workloads/perf-test-in.o] Error 1
+>     make[4]: *** [/perf/tools/build/Makefile.build:156: workloads] Error =
+2
+>     make[3]: *** [/perf/tools/build/Makefile.build:156: tests] Error 2
+>     make[2]: *** [Makefile.perf:785: /tmp/build/perf-test-in.o] Error 2
+>     make[2]: *** Waiting for unfinished jobs....
+>     make[1]: *** [Makefile.perf:289: sub-make] Error 2
+>     make: *** [Makefile:76: all] Error 2
+>
+> Detect required target and pass it via rust_flags to the compiler.
+>
+> Note that CROSS_COMPILE might be different from what rust compiler
+> expects, since it may omit the target vendor value, e.g.
+> "aarch64-linux-gnu" instead of "aarch64-unknown-linux-gnu". Thus
+> explicitly map supported CROSS_COMPILE values to corresponding Rust
+> versions, as suggested by Miguel Ojeda.
+>
+> Tested using arm64 cross-compilation example from [1].
+>
+> Fixes: 2e05bb52a12 ("perf test workload: Add code_with_type test workload=
+")
+> Link: https://perfwiki.github.io/main/arm64-cross-compilation-dockerfile/=
+ [1]
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
 
-One big patch would be Yuuuuge. We could certainly do it that way, but
-it'll be nightmare if we ever do have to revert part of it. What do you
-suggest?
+Not a cross-compilation problem, but is there a way to pass-through
+extra flags to the rust compiler? For CFLAGS we have EXTRA_CFLAGS as a
+make variable, but I don't see an EXTRA_RUSTFLAGS. I was looking for
+this because I was trying to make a build passing "-m32" to CFLAGS to
+create a 32-bit perf binary. The link against the rust workload was
+failing due to the different object types.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Thanks,
+Ian
+
+> ---
+> Changes in v5
+> - Error out if the target arch is not covered
+>
+> Changes in v4
+> - Fixed incorrect target name for riscv
+>
+> Changes in v3
+> - Improved commit message, add an example of the compilation failure
+>
+> Changes in v2:
+> - Map supported CROSS_COMPILE values to corresponding Rust targets
+>
+>  tools/build/Build.include  |  9 +++++++++
+>  tools/perf/Makefile.config | 18 ++++++++++++++++++
+>  tools/perf/Makefile.perf   |  2 +-
+>  3 files changed, 28 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/build/Build.include b/tools/build/Build.include
+> index e45b2eb0d24..cd0baa7a168 100644
+> --- a/tools/build/Build.include
+> +++ b/tools/build/Build.include
+> @@ -98,6 +98,15 @@ c_flags_2 =3D $(filter-out $(CFLAGS_REMOVE_$(basetarge=
+t).o), $(c_flags_1))
+>  c_flags   =3D $(filter-out $(CFLAGS_REMOVE_$(obj)), $(c_flags_2))
+>  cxx_flags =3D -Wp,-MD,$(depfile) -Wp,-MT,$@ $(CXXFLAGS) -D"BUILD_STR(s)=
+=3D\#s" $(CXXFLAGS_$(basetarget).o) $(CXXFLAGS_$(obj))
+>
+> +###
+> +# Rust flags to be used on rule definition, includes:
+> +# - global $(RUST_FLAGS)
+> +# - per target Rust flags
+> +# - per object Rust flags
+> +rust_flags_1 =3D $(RUST_FLAGS) $(RUST_FLAGS_$(basetarget).o) $(RUST_FLAG=
+S_$(obj))
+> +rust_flags_2 =3D $(filter-out $(RUST_FLAGS_REMOVE_$(basetarget).o), $(ru=
+st_flags_1))
+> +rust_flags   =3D $(filter-out $(RUST_FLAGS_REMOVE_$(obj)), $(rust_flags_=
+2))
+> +
+>  ###
+>  ## HOSTCC C flags
+>
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index a8dc72cfe48..15fbba9f4ca 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -1163,6 +1163,24 @@ ifndef NO_RUST
+>      CFLAGS +=3D -DHAVE_RUST_SUPPORT
+>      $(call detected,CONFIG_RUST_SUPPORT)
+>    endif
+> +
+> +  ifneq ($(CROSS_COMPILE),)
+> +    RUST_TARGET_FLAGS_arm      :=3D arm-unknown-linux-gnueabi
+> +    RUST_TARGET_FLAGS_arm64    :=3D aarch64-unknown-linux-gnu
+> +    RUST_TARGET_FLAGS_m68k     :=3D m68k-unknown-linux-gnu
+> +    RUST_TARGET_FLAGS_mips     :=3D mipsel-unknown-linux-gnu
+> +    RUST_TARGET_FLAGS_powerpc  :=3D powerpc64le-unknown-linux-gnu
+> +    RUST_TARGET_FLAGS_riscv    :=3D riscv64gc-unknown-linux-gnu
+> +    RUST_TARGET_FLAGS_s390     :=3D s390x-unknown-linux-gnu
+> +    RUST_TARGET_FLAGS_x86      :=3D x86_64-unknown-linux-gnu
+> +    RUST_TARGET_FLAGS_x86_64   :=3D x86_64-unknown-linux-gnu
+> +
+> +    ifeq ($(RUST_TARGET_FLAGS_$(ARCH)),)
+> +      $(error Unknown rust cross compilation architecture $(ARCH))
+> +    endif
+> +
+> +    RUST_FLAGS +=3D --target=3D$(RUST_TARGET_FLAGS_$(ARCH))
+> +  endif
+>  endif
+>
+>  # Among the variables below, these:
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 11b63bafdb2..f7b936deeaa 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -274,7 +274,7 @@ ifeq ($(PYLINT),1)
+>    PYLINT :=3D $(shell which pylint 2> /dev/null)
+>  endif
+>
+> -export srctree OUTPUT RM CC CXX RUSTC LD AR CFLAGS CXXFLAGS V BISON FLEX=
+ AWK
+> +export srctree OUTPUT RM CC CXX RUSTC LD AR CFLAGS CXXFLAGS RUST_FLAGS V=
+ BISON FLEX AWK
+>  export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK MYPY PYLINT
+>
+>  include $(srctree)/tools/build/Makefile.include
+>
+> base-commit: c5a244bf17caf2de22f9e100832b75f72b31d3e6
+> --
+> 2.52.0
+>
