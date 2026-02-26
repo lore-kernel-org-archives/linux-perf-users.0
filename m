@@ -1,113 +1,170 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C22EC3A0B1C;
-	Thu, 26 Feb 2026 09:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772099581; cv=none; b=WMKmc8Gmg6bAPm0n8BSsXn1HeIYLldlPkXJFJ6WdC9AAMz427NpE/x4OA/d5nO9eAxId4kpThiVvIEZEBrisVDQEvvptcFhapYOEonfBwMLgtv8zS6RtzVprU7wJugPZaFpfOsWghZen9/Shk1uU17ISY9UQz0JMQOG9WJyhUsY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772099581; c=relaxed/simple;
-	bh=3NTbYflzIfff8v8pNcJLvVi7zioF4YCkw7CoH3YSHWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RoizStPbmS8pWlKbxcw46WG6hNOEbU0O1juX0QClmlCSaiFhDPgUX3jr0jn0YdxUeAfdW3TC9asbaJDSVwVatfGrtlfwkPxTB5hyzeFms0dFY9XZvTvepYpk5mZ9GvchmnXJpFrIaj5UJYik8JI5PGf6A/t9z/EaHoG0O/Wnld0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FCD21516;
-	Thu, 26 Feb 2026 01:52:51 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AED43F62B;
-	Thu, 26 Feb 2026 01:52:57 -0800 (PST)
-Date: Thu, 26 Feb 2026 09:52:55 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf kvm stat: Fix build error
-Message-ID: <20260226095255.GF4184494@e132581.arm.com>
-References: <20260206-perf_fix_kvm_stat_error-v1-1-ad40115876be@arm.com>
- <aZ-oYb-FDLVT5MGq@google.com>
- <CAP-5=fVCdQZ584s_24wQc_+03xL2Npj2qDbqGSjE=Ms1-y8raQ@mail.gmail.com>
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31F533ADBA
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 11:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.169
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772103971; cv=pass; b=Jk7Ra53yFGHgeZ9E7MosdmqQQ2SU3Gd12cKtyZ1E6iDxrpS3Sd3LTKQlmJrg6Qm6Evt9ufIyxmY7HuRSOnAvA0J6+FZhVy32FLiGXOMIAHZW64jbAqQN1Vhm1/7Lah7wZMeFiLe0R2tJv96Y/J/+khaqfdy+cp+lML6AQyfsX2E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772103971; c=relaxed/simple;
+	bh=6WpNNjK2wqWyQpnk+n7CrxCBJhZGPYFEKrEcrvO+EsM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fluPRHHkrpBzGOeudH8duQJMTvRSAP/kzlZzjUhdn+Jo66IJO3yB8CosO/5PqgJro7ihwkV0fKvolhYg0qLBx9I+Z4GMjirpinJN+FTGWGgFF0Xj3vVNPzcFY8iKh1wBIAXaS6TcxHf88/Y71RERdXZAlXgwKAjKaZGlRC7E9fc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KlQeZD74; arc=pass smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlQeZD74"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-506c02ec1b3so8618641cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 03:06:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772103964; cv=none;
+        d=google.com; s=arc-20240605;
+        b=KEveA9dWf9hbgmpXImBaObm4uv+Vv/LbuOdCAQ0l459hdG4pSSXJ3zU6ZBzSIJWldK
+         yHxTV4FDImPV4bztN0fSx6Kjry1s78PRsTpiVRBO6q+93/emJTnirRqR+/QYzUvBySdt
+         3VbA185ezOeL+HdKXZDicUpIqTkkt5C9Gf+yQvtGwKxBNaQKFaua6ox+TjGvNyawLLJ1
+         JYhYa6wCSAum45kIC2yiSymbCLu7+5HmVsLJKljf2v367c+O9nlUQmlbi5BVdp0PWVTP
+         H0SFn69VUHMxnWBD5TqORoorEqai8KpfJB8d5UEbto+sm/mVuS/jlYu00SoFCHyuV08M
+         qaDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=NURSY+vSVQNVeF4d5BbXCG8ma5CR4tyBQmhsMvF3gGY=;
+        fh=kNkUvejyTtbhXd3VanE07Eu0EO2HfVlTSUmWU0E0Fqw=;
+        b=jM88kbi6Y5LAByNl8lk2+I+hbmD2uBP2baUh5Gad7fY3qZz33D2QfIH/JQ4Kw2f7p7
+         Cdik994VS7dhtYwQaBYNF7D9vDQeS2vUVrQwtg3ZM5WHpflzzwSCFi9qWnd2OFXNG8bo
+         iLsOZke7H6GNln0euZNNtUNeFOcJZId4t6vo2RDZ3TPOiFR77DMul1lcjEztqAYfnuyA
+         JwJPWfPpBHPle/i5Y6JrkYubJBoTmONsEErwC2Td4z5fU87/8YROLPlrx9w8f0xGwgme
+         IcYMWL/d1Ot+dhZCdWLk3Z1suG0Rwot7smF4sz0vL1cVbTAmhaM5H57tOSbDuPhGJyiz
+         EGwg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772103964; x=1772708764; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NURSY+vSVQNVeF4d5BbXCG8ma5CR4tyBQmhsMvF3gGY=;
+        b=KlQeZD74g9Z7u4Me9QeF1EFVfZhlAN6mtCOjslTaA96z8b3WGDT3PlB6aJGsi9FFf2
+         CK4XMJwiau2fOK7CQ+hphjscpiApfP1LQbtO7CGYfgg0dRAZPZ/aAu9MoXgmY93u2oij
+         pWaIDjNgfW/+cHq3QcPsxIYYt97MXuIPZn1thnjDmo5SrS7EOt2N//dwvipgwgLKjTrR
+         2iN/SvZ0jk4Na8+16FiJUqthCvFHa372KzfcMReJK4FDhIYGVtjck07vryfTcjGT18GX
+         8KFsJ2p3JElS732WUsmcUhkKOiZ5SomP+N0/N8IOny4EoU749DUkKNDVt7iS4mQ/UJbr
+         fcYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772103964; x=1772708764;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=NURSY+vSVQNVeF4d5BbXCG8ma5CR4tyBQmhsMvF3gGY=;
+        b=pWcDfNE7nRGid1ZNEe7p9zmvaNv/HSAEm4RpUG1sWtl9uGUyIyEWRMdSMs9NRPgt3K
+         9uJx+13Hm1p30rssXY5zJN4LGBS+CUwLlyhDioaRpOIrhjsuQK7p6bbdetgnvTkoBMsI
+         NI0bWOAL/ZSG8/6zl9PPaZzny28aiMXGNUKOYG2mqPWDIAGOIgC6iDmP+Trz5CxzVxgd
+         uhMdKfFJqV1J45vBn3WREzyOmrxZ0sAAiP1dpLcrX1eZrddClHS0LrXHSWcC9zrBfDoQ
+         pPhbg4EjN+jXhV4PVee+MrhvLTViZkEPsoHoLdTlOw/VicZu5MtDuKLM04zwrDo02V5r
+         3kdA==
+X-Forwarded-Encrypted: i=1; AJvYcCWeoQMVK6JMWF+n1fmm3m//kMZojl0c2s9veh4DKjt54tvoIsvVgd16Gj8qzlkKOPMsptT0HJALQFBjklgSOqnR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcFnNh8OlV0MzOz5kTaCo4Ev0I+W6xu1bph3UYRYI390y9/SeJ
+	LFRxrRIh/y331SKzANJNjXhmU/iZIVwV4y5K8KyVwB0AmYvbIlr4IfbIoY13o3r37FuPywsvvD3
+	sNjnYMkCXfQn/IDhchvzAMJTx3qTwVRs=
+X-Gm-Gg: ATEYQzxho5X5evi+xOsfC0KeAkwaBiWmuZCfjXErR1QRSy88wubIlK07c47EpZ8j44V
+	kccDkoa8jNtrhRd5xeNNa23aSIVf8r2qbhEjwhVRM/Y/6Vp7Uiufr5r4sVgyiCQ7BCjvcRZpHTH
+	yHTCWJRtYOEBTR1PaA54KBWN4Zv3JLPC1TVyTkOwO+EQ0lvVvUfZyHDPEUzA6DZI1zADlH1u2R7
+	98sZdNDhUzn8sYLaI0NGjpLfDjABrQO9CbLA9XFPKZCl89dAbsS5H+DnTlKw60oBW/SfFUugiG3
+	L6MA1Q==
+X-Received: by 2002:ac8:7f02:0:b0:501:7d6c:2d4e with SMTP id
+ d75a77b69052e-5074447d2d5mr28594091cf.42.1772103963786; Thu, 26 Feb 2026
+ 03:06:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fVCdQZ584s_24wQc_+03xL2Npj2qDbqGSjE=Ms1-y8raQ@mail.gmail.com>
+References: <20260226014955.801293-1-namhyung@kernel.org>
+In-Reply-To: <20260226014955.801293-1-namhyung@kernel.org>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 26 Feb 2026 03:05:53 -0800
+X-Gm-Features: AaiRm52fnBcujtAM1zG3_WpAd8AF7JSJg6Hkti5piuUnaJFH4-HvM99c6lXuDT0
+Message-ID: <CAH0uvohd=WE1wsQqDQQc6uqTX+NboEG=Jcs5crYxerLVNYBFOA@mail.gmail.com>
+Subject: Re: [PATCH] perf trace: Handle task exit in BPF syscall summary
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 25, 2026 at 10:36:26PM -0800, Ian Rogers wrote:
+Hi Namhyung,
 
-[...]
+On Wed, Feb 25, 2026 at 5:49=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Some system calls never return because it'd terminate the calling
+> thread.  Let's hook the task exit path and update the duration of the
+> last syscall.
+>
+> Before:
+>   $ sudo perf trace -as --bpf-summary -- true |& grep exit
+>   (nothing)
+>
+> After:
+>   $ sudo perf trace -as --bpf-summary -- true |& grep exit
+>      exit_group             1      0     0.004     0.004     0.004     0.=
+004      0.00%
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-> Hmm.. it looks like something has gone screwy with the include paths.
-> The header you've gotten is:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/include/uapi/asm/svm.h#n137
-> rather than:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/arch/x86/include/uapi/asm/svm.h#n137
-> where the value differs between -1ull and -1.
-> 
-> In Leo's change he has the include path as:
->   #include "../../arch/x86/include/uapi/asm/svm.h"
-> 
-> but I think that is off by one and should be:
->   #include "../../../arch/x86/include/uapi/asm/svm.h"
-
-Sorry I did not check the header path carefully.  A bit thoughts:
-
-The perf build will not include headers in relative paths as we
-expected.
-
-It tries to find headers with appending search paths.  As Ian said,
-I saw .kvm-stat-x86.o.cmd that includes kernel headers:
-
-  /home/niayan01/Work/linux/tools/include/../../arch/x86/include/uapi/asm/svm.h \
-  /home/niayan01/Work/linux/tools/include/../../arch/x86/include/uapi/asm/vmx.h \
-  /home/niayan01/Work/linux/tools/include/../../arch/x86/include/uapi/asm/kvm.h \
-
-I'd suggest a fix in Makefile as below.  The idea is to give priority to
-the lower level folders under perf, so that headers in the deeper perf
-directories are searched first.  This avoids searching any kernel headers.
-
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a8dc72cfe48e..47359f672b6a 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -388,8 +388,10 @@ ifeq ($(DEBUG),0)
-   endif
- endif
-
--INC_FLAGS += -I$(src-perf)/util/include
- INC_FLAGS += -I$(src-perf)/arch/$(SRCARCH)/include
-+INC_FLAGS += -I$(src-perf)/util/include
-+INC_FLAGS += -I$(src-perf)/util
-+INC_FLAGS += -I$(src-perf)
- INC_FLAGS += -I$(srctree)/tools/include/
- INC_FLAGS += -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi
- INC_FLAGS += -I$(srctree)/tools/include/uapi
-@@ -403,9 +405,6 @@ INC_FLAGS += -I$(obj-perf)/util
- INC_FLAGS += -I$(obj-perf)
- endif
-
--INC_FLAGS += -I$(src-perf)/util
--INC_FLAGS += -I$(src-perf)
--
- CORE_CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_
-
-As a result, I can get the search paths in .kvm-stat-x86.o.cmd:
-
-  /home/niayan01/Work/linux/tools/perf/util/../../arch/x86/include/uapi/asm/svm.h \
-  /home/niayan01/Work/linux/tools/perf/util/../../arch/x86/include/uapi/asm/vmx.h \
-  /home/niayan01/Work/linux/tools/perf/util/../../arch/x86/include/uapi/asm/kvm.h \
-
-Please let me know if this makes sense.
+Acked-by: Howard Chu <howardchu95@gmail.com>
 
 Thanks,
-Leo
+Howard
+
+> ---
+>  tools/perf/util/bpf_skel/syscall_summary.bpf.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/bpf_skel/syscall_summary.bpf.c b/tools/perf/=
+util/bpf_skel/syscall_summary.bpf.c
+> index 1bcd066a5199a476..4172f3c9fc483955 100644
+> --- a/tools/perf/util/bpf_skel/syscall_summary.bpf.c
+> +++ b/tools/perf/util/bpf_skel/syscall_summary.bpf.c
+> @@ -118,13 +118,11 @@ int sys_enter(u64 *ctx)
+>         return 0;
+>  }
+>
+> -SEC("tp_btf/sys_exit")
+> -int sys_exit(u64 *ctx)
+> +static int do_exit(long ret)
+>  {
+>         int tid;
+>         int key =3D 0;
+>         u64 cgroup =3D 0;
+> -       long ret =3D ctx[1]; /* return value of the syscall */
+>         struct syscall_trace *st;
+>         s64 delta;
+>
+> @@ -150,4 +148,18 @@ int sys_exit(u64 *ctx)
+>         return 0;
+>  }
+>
+> +SEC("tp_btf/sys_exit")
+> +int sys_exit(u64 *ctx)
+> +{
+> +       long ret =3D ctx[1]; /* return value of the syscall */
+> +
+> +       return do_exit(ret);
+> +}
+> +
+> +SEC("tp_btf/sched_process_exit")
+> +int process_exit(u64 *ctx)
+> +{
+> +       return do_exit(0);
+> +}
+> +
+>  char _license[] SEC("license") =3D "GPL";
+> --
+> 2.53.0.414.gf7e9f6c205-goog
+>
