@@ -1,251 +1,266 @@
-Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00628368977
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 17:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772125841; cv=pass; b=bMZr1R2tY55PVVKiV6F/RAIUCSO1s9WKLgvPv3b/tg90DNGUjS4KSdE8zLjW3kySjyEoYk0TvarOVg8szTiVQ4Wwmj4XKz7k2Yqcoko1hNFbGwYzkst2/agmyRmemWXoca0Rtcf+8CKfndsUwqYVcE/5PAaqj+GR2h8mnMC+nis=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772125841; c=relaxed/simple;
-	bh=xmziTarInCIRwtxSSmje+LWoF/k0lGuKsOpoP5h8De4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=krzZ+HTdNS+J4BIoQ7RUsj7XXQqYQycOAjFmbAQ4BS4erby+s0kMzZNg6N8oAiTufyIpHeYRDYoKLJdLKVBzXe/CQeVvY9EGcmSdshUB8BlWJPvLzzSMURVY2pCOaOCkoX2XVlKj9qUHgNPsNG124IyXx8mtkv7KqQeuYqgihYs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=00I/jxEE; arc=pass smtp.client-ip=74.125.82.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2CF368970
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 17:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772125881; cv=none; b=FCfiCy60QFTXCmursfsWD6Hy4Hfctu7P/okM6bfVNf6qS83HTX1gAcTTnhmiXiWTba20hVv+4rtGT89DLZXCD/RceJuzhZNAf2bdJ7dygLEwsCwBioggVxreSq/SUbao7Z7iGUyPfUoiUfZS+oNGwqkv9DDd00Ec4Yjc18PN8B0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772125881; c=relaxed/simple;
+	bh=CDghsPB6/sIjrXYUi+ciZReY0s4aGxjWu8w6lO8Tt5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OidRvJx4/QoDkPvPK7lzoqcrLkztAxuOVl2EoPaisZ8OH7s9PqP5OvPdSXltaOAnpYmdwLSgLsUrpwOxvQraky3sa0DiUmWETxZ/X0t9Q/UYkji7b25/IDU95dEGknQfEXEUTtju3MBuEItKKY6QCH7TNRVBrQbLsn2JYVMc5rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bLq8scXn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AUyzYfQ9; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bLq8scXn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AUyzYfQ9; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="00I/jxEE"
-Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-124a60cc9a1so12884c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 09:10:39 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772125839; cv=none;
-        d=google.com; s=arc-20240605;
-        b=PEPlDpyV/BCoeNVrlBWTY6E2KVPJ3VyuO1Qw7fOtfOBnPCIOFe58ukj7kQNs5OwK/2
-         dl379Ng24hWvg4uaRNEHW30h93RyDSIPBGKhhBfAyxK4H2Jzor6+qtvSJqb6146bCv91
-         zCVoLFO29lMeo/eJnZx1YZpVA+bk7hAZbT2pRdhj4F5eOLSi0BJ8mcnMq/gYKE8UCiq/
-         0mQaGDcrgVM7hIQHf7z0aIDWfvqBdfgCVt5YlJJzVDt/kd+6xh7+/Sf6vztsbgmvig6Q
-         fhZ+S/KgnkiNs0K7xcaL+JikEO02yeUZk1cWrcCCyB1aJuGS3znw4GVo82PwR90gwAXV
-         iBoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Tkedhw7TgiRSyuuriQLlHDY6QGJT0+ZpOxRxRI4lhlk=;
-        fh=0GySQAcmjERnn5lfkQjah8ALybDk2nQcMLUuPHqGAk0=;
-        b=Q+cPbBNHU3KDrT17KVioXvSAjMc36326oYQRjhRag7te8XkpkGHbxNebBZt+CFjCHw
-         /8wmokMznN2TgP2mOKHMp2QUOhJI4pJDrU721pbY9n9K4Zx3VnhmqwCPVLScfY1uBKH6
-         5+k0Rprh8tTG3b9R4CfwxlWCp21zQwtvh5LzxjJOD2iABvcs+StElF/InZmuHtwrvetj
-         V9k8ScAV+SWYPioDGL1Gh5ME3JRZSNLX5jo5xtBXtlBCWMHguDxTjIEBhOrze/9ltA0v
-         44/39v660UPrPrDFjp5bAVV78taAUJSpJYrn60U/AQIoa1HvCuUH9cfLVUIMGSxzfC9l
-         aprw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772125839; x=1772730639; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tkedhw7TgiRSyuuriQLlHDY6QGJT0+ZpOxRxRI4lhlk=;
-        b=00I/jxEEX0ocSikq83u12s7JnDH2wQX63akZIbg45lfLE/rqmltpx8EJ0wfi6LR4Xw
-         140FeFbZmvIkfbyV8ftuwPqrjAIPH/DKavch1it44hzHOE7TL62myC3Vb8tMQiIOg3h5
-         A/DZIsB3OFE4hU9LxifUXHZaf9sonLAgeT0Mdi0WwwBrvFvh7sGaDV0ClTeS3soUi9e1
-         lTLbJUAt4DtrRlXeYxe5DEEUgdmr8znQUlDbGQ7qlnKS6l4xLaTlenfnyTHkuQsXpgIc
-         W2y544hwwm0gvG1PTlvViUoKEfDsYLaZqbkUZ6c/5ElZZ4/KHy1gQKmpYWYHElo2Tnzf
-         hozw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772125839; x=1772730639;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Tkedhw7TgiRSyuuriQLlHDY6QGJT0+ZpOxRxRI4lhlk=;
-        b=O02xSjtKXyAVDCAMcMvpX9cB3AsXbFAW3B6MwPR0u4qDKxavjzgPdcvKrvSRXIDi9F
-         25+Wi3QUU5cZZNjTH7gq8hX2u2IddVVRVHLFWe3e2zX7oRyIK/5rzZ3FcMyhXsAqbjeS
-         GIKHfL0zT3Htd1+ZkJJyfZ0vRhvSwp+If8oE07SRblXSuGwdYZLP+9YSxoizwoNczQ/r
-         KiednRoeCxyd5Br1pgBT5ipOOjZetKBvYu/ruc0GL0PDz8Z5cos+AseHh/b+qq8ESsxe
-         iCLOSmZNU4ItuSmlvnKlVSNJzLJSa4XaqwHWanMxvF2bdIO3EU5o+2+13Gxn6bAOF7tq
-         tBGA==
-X-Gm-Message-State: AOJu0Ywao5KbvI0jhadnWuyHydE6nPVoQEhMCcEIKQQwhXhnqkjJRFYR
-	tqc/XeDq1VQ8kegbA6iM3LPGDs/3wE0XTCY0PoCKqlv6DYYdW8fmwQUR2L/tppgOskO7Vo2wgK5
-	Q0p0J8hrLDLD22qYeO6t2DKtgzn9OIl4tjVO5QR5k
-X-Gm-Gg: ATEYQzxk9Mqgbbv1tyO6j0fQnKCvnHnwMIJtyPV5EbuMup6d9PRHB2F9iX8udPaVj0D
-	4Hkqr03476jTOqGVRKBCooF8LWY9vl2hQQjPyajuMHnhdlEdaF1NFeiE96XjwmkwgkZCQkHghTo
-	Vak9BjSWw4EcIxiMed6AzO3wU04JVSdGIlC5dr2frdoJXxM3P5WGLOYzN9NJYiPff+qqVp/uMdZ
-	89B8ZwiQEjgCnQ4IZ0u+vh6uKvHZb46g8X2zyphPiSdOSTmhGi4RsX3g4Pt6+UMGt+HECuVhhdk
-	1lAuQppRrr1os06lcBt2NUv+2Kpo4q0YjKv9
-X-Received: by 2002:a05:7022:12b:b0:120:5719:624e with SMTP id
- a92af1059eb24-127899a14cfmr234350c88.21.1772125838341; Thu, 26 Feb 2026
- 09:10:38 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bLq8scXn";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AUyzYfQ9";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bLq8scXn";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AUyzYfQ9"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DE1A03F797;
+	Thu, 26 Feb 2026 17:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1772125874; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M8csZr2EQgc5N3LRaH5ivagOwuXzf8UvC8RjMLY1sRU=;
+	b=bLq8scXnwXC0vwEJ5ilKWXpiGzWGXINIRxQGuAPYznnzF8dJ7yEAGsRN1FXFSCo0wMOtEw
+	R1r7iRQfHNM8PtehEoACNOxGhhYttQpUUfNxxp1s2Wvc9j05A7FUEFY5faSoAqQhjduxby
+	hGwdqMrN8ovxNjwcyfxmNJZvL2UdNBA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1772125874;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M8csZr2EQgc5N3LRaH5ivagOwuXzf8UvC8RjMLY1sRU=;
+	b=AUyzYfQ90XcSZmOs/v84BZ0D0IAVBm4VSfgx0h3wTW4vNmvkFtLxsrW/okGqwdCnF/6uEc
+	+rRoz6E13pCoehCw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=bLq8scXn;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=AUyzYfQ9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1772125874; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M8csZr2EQgc5N3LRaH5ivagOwuXzf8UvC8RjMLY1sRU=;
+	b=bLq8scXnwXC0vwEJ5ilKWXpiGzWGXINIRxQGuAPYznnzF8dJ7yEAGsRN1FXFSCo0wMOtEw
+	R1r7iRQfHNM8PtehEoACNOxGhhYttQpUUfNxxp1s2Wvc9j05A7FUEFY5faSoAqQhjduxby
+	hGwdqMrN8ovxNjwcyfxmNJZvL2UdNBA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1772125874;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M8csZr2EQgc5N3LRaH5ivagOwuXzf8UvC8RjMLY1sRU=;
+	b=AUyzYfQ90XcSZmOs/v84BZ0D0IAVBm4VSfgx0h3wTW4vNmvkFtLxsrW/okGqwdCnF/6uEc
+	+rRoz6E13pCoehCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C19EF3EA6A;
+	Thu, 26 Feb 2026 17:11:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id rXt0LrJ+oGlFRwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 26 Feb 2026 17:11:14 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 1EDF2A0A27; Thu, 26 Feb 2026 18:11:06 +0100 (CET)
+Date: Thu, 26 Feb 2026 18:11:06 +0100
+From: Jan Kara <jack@suse.cz>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox <willy@infradead.org>, 
+	Eric Biggers <ebiggers@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	David Hildenbrand <david@kernel.org>, David Howells <dhowells@redhat.com>, 
+	Paulo Alcantara <pc@manguebit.org>, Andreas Dilger <adilger.kernel@dilger.ca>, 
+	Jan Kara <jack@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Steve French <sfrench@samba.org>, Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+	Shyam Prasad N <sprasad@microsoft.com>, Bharath SM <bharathsm@microsoft.com>, 
+	Alexander Aring <alex.aring@gmail.com>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
+	Viacheslav Dubeyko <slava@dubeyko.com>, Eric Van Hensbergen <ericvh@kernel.org>, 
+	Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Christian Schoenebeck <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, 
+	Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>, 
+	Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, 
+	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>, Ilya Dryomov <idryomov@gmail.com>, 
+	Alex Markuze <amarkuze@redhat.com>, Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, 
+	Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>, 
+	Amir Goldstein <amir73il@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Yangtao Li <frank.li@vivo.com>, 
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse <dwmw2@infradead.org>, 
+	Richard Weinberger <richard@nod.at>, Dave Kleikamp <shaggy@kernel.org>, 
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
+	Joseph Qi <joseph.qi@linux.alibaba.com>, Mike Marshall <hubcap@omnibond.com>, 
+	Martin Brandenburg <martin@omnibond.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Anders Larsen <al@alarsen.net>, Zhihao Cheng <chengzhihao1@huawei.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>, 
+	Johannes Thumshirn <jth@kernel.org>, John Johansen <john.johansen@canonical.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Simon Horman <horms@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	"Darrick J. Wong" <djwong@kernel.org>, Martin Schiller <ms@dev.tdt.de>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev, 
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+	linux-nilfs@vger.kernel.org, v9fs@lists.linux.dev, linux-afs@lists.infradead.org, 
+	autofs@vger.kernel.org, ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu, 
+	ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, 
+	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, selinux@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+	linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org, 
+	linux-x25@vger.kernel.org
+Subject: Re: [PATCH 03/61] trace: update VFS-layer trace events for u64 i_ino
+Message-ID: <6exhq5gjvef5obfsqwkxfcpl2sjqmlv7klrzolodzpcjolgrmd@ds42ulhod7pw>
+References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
+ <20260226-iino-u64-v1-3-ccceff366db9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260226170025.517743-1-9erthalion6@gmail.com>
-In-Reply-To: <20260226170025.517743-1-9erthalion6@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 26 Feb 2026 09:10:24 -0800
-X-Gm-Features: AaiRm510Cs64l5p7kN6EkkvMZnr3dIa5eUS-klcq5Z9h7367sJ9AsV5d4VjRgVE
-Message-ID: <CAP-5=fV7OuWN9K-wnsS7zza+s0FQRSR_JCcJi5tvpgQAbh=Nnw@mail.gmail.com>
-Subject: Re: [PATCH v5] tools build: Fix rust cross compilation
-To: Dmitrii Dolgov <9erthalion6@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Levi Zim <i@kxxt.dev>, 
-	Namhyung Kim <namhyung@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
-	rust-for-linux <rust-for-linux@vger.kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260226-iino-u64-v1-3-ccceff366db9@kernel.org>
+X-Spamd-Bar: /
+X-Rspamd-Queue-Id: DE1A03F797
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -0.51
+X-Spam-Level: 
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-0.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	FORGED_RECIPIENTS(2.00)[m:jlayton@kernel.org,m:brauner@kernel.org,m:rostedt@goodmis.org,m:mhiramat@kernel.org,m:mathieu.desnoyers@efficios.com,m:dan.j.williams@intel.com,m:willy@infradead.org,m:ebiggers@kernel.org,m:tytso@mit.edu,m:muchun.song@linux.dev,m:david@kernel.org,m:pc@manguebit.org,m:adilger.kernel@dilger.ca,m:jaegeuk@kernel.org,m:chao@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:neil@brown.name,m:ronniesahlberg@gmail.com,m:sprasad@microsoft.com,m:bharathsm@microsoft.com,m:alex.aring@gmail.com,m:konishi.ryusuke@gmail.com,m:slava@dubeyko.com,m:ericvh@kernel.org,m:lucho@ionkov.net,m:asmadeus@codewreck.org,m:linux_oss@crudebyte.com,m:marc.dionne@auristor.com,m:luisbg@kernel.org,m:salah.triki@gmail.com,m:aivazian.tigran@gmail.com,m:idryomov@gmail.com,m:jaharkes@cs.cmu.edu,m:coda@cs.cmu.edu,m:nico@fluxnic.net,m:amir73il@gmail.com,m:hch@infradead.org,m:mikulas@artax.karlin.mff.cuni.cz,m:dwmw2@infradead.org,m:richard@nod.at,m:shaggy@kernel.org,m:mark@fasheh.com,m:jlbec@evil
+ plan.org,m:joseph.qi@linux.alibaba.com,m:hubcap@omnibond.com,m:martin@omnibond.com,m:al@alarsen.net,m:chengzhihao1@huawei.com,m:dlemoal@kernel.org,m:jth@kernel.org,m:john.johansen@canonical.com,m:jmorris@namei.org,m:serge@hallyn.com,m:zohar@linux.ibm.com,m:roberto.sassu@huawei.com,m:dmitry.kasatkin@gmail.com,m:wufan@kernel.org,m:stephen.smalley.work@gmail.com,m:alexander.deucher@amd.com,m:christian.koenig@amd.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:sumit.semwal@linaro.org,m:edumazet@google.com,m:kuniyu@google.com,m:willemb@google.com,m:davem@davemloft.net,m:kuba@kernel.org,m:horms@kernel.org,m:peterz@infradead.org,m:acme@kernel.org,m:namhyung@kernel.org,s:autofs@vger.kernel.org,s:ceph-devel@vger.kernel.org,s:ecryptfs@vger.kernel.org,s:linux-cifs@vger.kernel.org,s:linux-ext4@vger.kernel.org,s:linux-fscrypt@vger.kernel.org,s:linux-fsdevel@vger.kernel.org,s:linux-hams@vger.kernel.org,s:linux-integrity@vger.kernel.org,s:linux-kernel@vger.kernel.org,s:linux-media@vger.kernel.org,s:li
+ nux-nfs@vger.kernel.org,s:linux-nilfs@vger.kernel.org,s:linux-perf-users@vger.kernel.org,s:linux-security-module@vger.kernel.org,s:linux-trace-kernel@vger.kernel.org,s:linux-unionfs@vger.kernel.org,s:linux-x25@vger.kernel.org,s:linux-xfs@vger.kernel.org,s:netdev@vger.kernel.org,s:selinux@vger.kernel.org];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,goodmis.org,efficios.com,intel.com,infradead.org,mit.edu,linux.dev,suse.de,redhat.com,manguebit.org,dilger.ca,suse.com,oracle.com,brown.name,talpey.com,samba.org,gmail.com,microsoft.com,dubeyko.com,ionkov.net,codewreck.org,crudebyte.com,auristor.com,themaw.net,cs.cmu.edu,fluxnic.net,tyhicks.com,physik.fu-berlin.de,vivo.com,artax.karlin.mff.cuni.cz,nod.at,paragon-software.com,fasheh.com,evilplan.org,linux.alibaba.com,omnibond.com,szeredi.hu,alarsen.net,huawei.com,wdc.com,canonical.com,paul-moore.com,namei.org,hallyn.com,linux.ibm.com,schaufler-ca.com,amd.com,ffwll.ch,linaro.org,google.com,davemloft.net,arm.com,linux.intel.com,dev.tdt.de,vger.kernel.org,lists.linux.dev,kvack.org,lists.sourceforge.net,lists.samba.org,lists.infradead.org,coda.cs.cmu.edu,lists.orangefs.org,lists.ubuntu.com,lists.freedesktop.org,lists.linaro.org];
+	RCPT_COUNT_GT_50(0.00)[146];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	R_RATELIMIT(0.00)[to_ip_from(RL1tdxdnzamrc1mh8hiehyra9r)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim]
 
-On Thu, Feb 26, 2026 at 9:00=E2=80=AFAM Dmitrii Dolgov <9erthalion6@gmail.c=
-om> wrote:
->
-> Currently no target is specified to compile rust code when needed, which
-> breaks cross compilation. E.g. for arm64:
->
->       LD      /tmp/build/tests/workloads/perf-test-in.o
->     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(cod=
-e_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in g=
-eneric ELF (EM: 62)
->     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(cod=
-e_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in g=
-eneric ELF (EM: 62)
->     [...repeated...]
->     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(cod=
-e_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in g=
-eneric ELF (EM: 62)
->     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(cod=
-e_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in g=
-eneric ELF (EM: 62)
->     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a: er=
-ror adding symbols: file in wrong format
->     make[5]: *** [/perf/tools/build/Makefile.build:162: /tmp/build/tests/=
-workloads/perf-test-in.o] Error 1
->     make[4]: *** [/perf/tools/build/Makefile.build:156: workloads] Error =
-2
->     make[3]: *** [/perf/tools/build/Makefile.build:156: tests] Error 2
->     make[2]: *** [Makefile.perf:785: /tmp/build/perf-test-in.o] Error 2
->     make[2]: *** Waiting for unfinished jobs....
->     make[1]: *** [Makefile.perf:289: sub-make] Error 2
->     make: *** [Makefile:76: all] Error 2
->
-> Detect required target and pass it via rust_flags to the compiler.
->
-> Note that CROSS_COMPILE might be different from what rust compiler
-> expects, since it may omit the target vendor value, e.g.
-> "aarch64-linux-gnu" instead of "aarch64-unknown-linux-gnu". Thus
-> explicitly map supported CROSS_COMPILE values to corresponding Rust
-> versions, as suggested by Miguel Ojeda.
->
-> Tested using arm64 cross-compilation example from [1].
->
-> Fixes: 2e05bb52a12 ("perf test workload: Add code_with_type test workload=
-")
-> Link: https://perfwiki.github.io/main/arm64-cross-compilation-dockerfile/=
- [1]
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+On Thu 26-02-26 10:55:05, Jeff Layton wrote:
+> Update trace event definitions in VFS-layer trace headers to use u64
+> instead of ino_t/unsigned long for inode number fields, and change
+> format strings from %lu/%lx to %llu/%llx to match.
+> 
+> This is needed because i_ino is now u64. Changing trace event field
+> types changes the binary trace format, but the self-describing format
+> metadata handles this transparently for modern trace-cmd and perf.
+> 
+> Files updated:
+>   - cachefiles.h, filelock.h, filemap.h, fs_dax.h, fsverity.h,
+>     hugetlbfs.h, netfs.h, readahead.h, timestamp.h, writeback.h
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Not a cross-compilation problem, but is there a way to pass-through
-extra flags to the rust compiler? For CFLAGS we have EXTRA_CFLAGS as a
-make variable, but I don't see an EXTRA_RUSTFLAGS. I was looking for
-this because I was trying to make a build passing "-m32" to CFLAGS to
-create a 32-bit perf binary. The link against the rust workload was
-failing due to the different object types.
+...
 
-Thanks,
-Ian
+> diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+> index 4d3d8c8f3a1bc3e5ef10fc96e3c6dbbd0cf00c98..cc7651749eb3ce1123cb3ea9496f0803a0f4c1a0 100644
+> --- a/include/trace/events/writeback.h
+> +++ b/include/trace/events/writeback.h
+> @@ -67,7 +67,7 @@ DECLARE_EVENT_CLASS(writeback_folio_template,
+>  
+>  	TP_STRUCT__entry (
+>  		__array(char, name, 32)
+> -		__field(ino_t, ino)
+> +		__field(u64, ino)
+>  		__field(pgoff_t, index)
+>  	),
+>  
+> @@ -79,9 +79,9 @@ DECLARE_EVENT_CLASS(writeback_folio_template,
+>  		__entry->index = folio->index;
+>  	),
+>  
+> -	TP_printk("bdi %s: ino=%lu index=%lu",
+> +	TP_printk("bdi %s: ino=%llu index=%lu",
+>  		__entry->name,
+> -		(unsigned long)__entry->ino,
+> +		(unsigned long long)__entry->ino,
 
-> ---
-> Changes in v5
-> - Error out if the target arch is not covered
->
-> Changes in v4
-> - Fixed incorrect target name for riscv
->
-> Changes in v3
-> - Improved commit message, add an example of the compilation failure
->
-> Changes in v2:
-> - Map supported CROSS_COMPILE values to corresponding Rust targets
->
->  tools/build/Build.include  |  9 +++++++++
->  tools/perf/Makefile.config | 18 ++++++++++++++++++
->  tools/perf/Makefile.perf   |  2 +-
->  3 files changed, 28 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/build/Build.include b/tools/build/Build.include
-> index e45b2eb0d24..cd0baa7a168 100644
-> --- a/tools/build/Build.include
-> +++ b/tools/build/Build.include
-> @@ -98,6 +98,15 @@ c_flags_2 =3D $(filter-out $(CFLAGS_REMOVE_$(basetarge=
-t).o), $(c_flags_1))
->  c_flags   =3D $(filter-out $(CFLAGS_REMOVE_$(obj)), $(c_flags_2))
->  cxx_flags =3D -Wp,-MD,$(depfile) -Wp,-MT,$@ $(CXXFLAGS) -D"BUILD_STR(s)=
-=3D\#s" $(CXXFLAGS_$(basetarget).o) $(CXXFLAGS_$(obj))
->
-> +###
-> +# Rust flags to be used on rule definition, includes:
-> +# - global $(RUST_FLAGS)
-> +# - per target Rust flags
-> +# - per object Rust flags
-> +rust_flags_1 =3D $(RUST_FLAGS) $(RUST_FLAGS_$(basetarget).o) $(RUST_FLAG=
-S_$(obj))
-> +rust_flags_2 =3D $(filter-out $(RUST_FLAGS_REMOVE_$(basetarget).o), $(ru=
-st_flags_1))
-> +rust_flags   =3D $(filter-out $(RUST_FLAGS_REMOVE_$(obj)), $(rust_flags_=
-2))
-> +
->  ###
->  ## HOSTCC C flags
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index a8dc72cfe48..15fbba9f4ca 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -1163,6 +1163,24 @@ ifndef NO_RUST
->      CFLAGS +=3D -DHAVE_RUST_SUPPORT
->      $(call detected,CONFIG_RUST_SUPPORT)
->    endif
-> +
-> +  ifneq ($(CROSS_COMPILE),)
-> +    RUST_TARGET_FLAGS_arm      :=3D arm-unknown-linux-gnueabi
-> +    RUST_TARGET_FLAGS_arm64    :=3D aarch64-unknown-linux-gnu
-> +    RUST_TARGET_FLAGS_m68k     :=3D m68k-unknown-linux-gnu
-> +    RUST_TARGET_FLAGS_mips     :=3D mipsel-unknown-linux-gnu
-> +    RUST_TARGET_FLAGS_powerpc  :=3D powerpc64le-unknown-linux-gnu
-> +    RUST_TARGET_FLAGS_riscv    :=3D riscv64gc-unknown-linux-gnu
-> +    RUST_TARGET_FLAGS_s390     :=3D s390x-unknown-linux-gnu
-> +    RUST_TARGET_FLAGS_x86      :=3D x86_64-unknown-linux-gnu
-> +    RUST_TARGET_FLAGS_x86_64   :=3D x86_64-unknown-linux-gnu
-> +
-> +    ifeq ($(RUST_TARGET_FLAGS_$(ARCH)),)
-> +      $(error Unknown rust cross compilation architecture $(ARCH))
-> +    endif
-> +
-> +    RUST_FLAGS +=3D --target=3D$(RUST_TARGET_FLAGS_$(ARCH))
-> +  endif
->  endif
->
->  # Among the variables below, these:
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 11b63bafdb2..f7b936deeaa 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -274,7 +274,7 @@ ifeq ($(PYLINT),1)
->    PYLINT :=3D $(shell which pylint 2> /dev/null)
->  endif
->
-> -export srctree OUTPUT RM CC CXX RUSTC LD AR CFLAGS CXXFLAGS V BISON FLEX=
- AWK
-> +export srctree OUTPUT RM CC CXX RUSTC LD AR CFLAGS CXXFLAGS RUST_FLAGS V=
- BISON FLEX AWK
->  export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK MYPY PYLINT
->
->  include $(srctree)/tools/build/Makefile.include
->
-> base-commit: c5a244bf17caf2de22f9e100832b75f72b31d3e6
-> --
-> 2.52.0
->
+No need for explicit typing to ULL?
+
+>  		__entry->index
+>  	)
+>  );
+> @@ -108,7 +108,7 @@ DECLARE_EVENT_CLASS(writeback_dirty_inode_template,
+>  
+>  	TP_STRUCT__entry (
+>  		__array(char, name, 32)
+> -		__field(ino_t, ino)
+> +		__field(u64, ino)
+>  		__field(unsigned long, state)
+>  		__field(unsigned long, flags)
+>  	),
+> @@ -123,9 +123,9 @@ DECLARE_EVENT_CLASS(writeback_dirty_inode_template,
+>  		__entry->flags		= flags;
+>  	),
+>  
+> -	TP_printk("bdi %s: ino=%lu state=%s flags=%s",
+> +	TP_printk("bdi %s: ino=%llu state=%s flags=%s",
+>  		__entry->name,
+> -		(unsigned long)__entry->ino,
+> +		(unsigned long long)__entry->ino,
+
+And here as well? And many times below as well...
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
