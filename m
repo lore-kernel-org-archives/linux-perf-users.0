@@ -1,164 +1,153 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DB742981A;
-	Thu, 26 Feb 2026 16:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772124640; cv=none; b=k22X1UO5rcdFfKOHJBOEKrHSSd3Mn/FSOFqmEdVrkV0vMJ8c21Rtq5U9arVDqNspUt7uYEvPxqYAQkyCUmRqakYJMD/70RhIVaHTzGO5+bNJnxehXa3rQ7FzfZx/DND1YwRlS/+tHwaW7zKXDAp93qrheNySa3uJeyGxbtn/QS8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772124640; c=relaxed/simple;
-	bh=cq6Nm6jIvz2GgOQAzgr160sJtMTpHmP9eXn4PnTCrIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IImLn46Zo+WvAj1I36CkdNUjd/Af1suEEbrj5qI+TreILCl2XAikum0kPsU7jNhd1V+DbqJOjYSlcJBvhwTNViMlxSovDYjKz3J0NFqSUHw+QJIEeQvydUO8GDcn4p+cbbZqSNyV3wQ8qnKZCSddlu3rWGtA7jhRos3Quy8HMFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qdlbu5M+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906BB83A14
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 16:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772124816; cv=pass; b=VkIA42SKTxJUSQNCaqyCMTwOQWFHKv/2ttQ07DCwijwd6gPltr3rAkqtpC/iOhM6PfkuX2Jmp+FsvyFkogKmtWKssZ4YGqXGBkLF6rYOSw+0Lbv2FZdJRVNAUstxjAAv65Ar1cz5D2EV7ZOlDt8ahyc1VDw2wT3luKTCb4oBkmA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772124816; c=relaxed/simple;
+	bh=8mYCaDVCRmtdLuxEzHWHWG29fzqsfYQ4bUxiBPX3ZcM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l22ZUbm+gnNt6Qx1xevg/J60ZsXAZWgBb4nUC+4jReCoo4+U1XnUrSUgq9TwkGBRrlcvdpckF987M9GZYMr6MzyKbEFeh9plXwYPK7U/WNP4O64lKVYZws5XIlVUnAKkiB9Y84qPW9sMhZafW2SUcAo9qWS9mPz0O5aay+SCwDw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NvbSzRqD; arc=pass smtp.client-ip=74.125.82.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qdlbu5M+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JYOuv3Wk70T6Ktfro7eZgRq5FR8cgwXHcAYF//Gcaxo=; b=qdlbu5M+P6Pxrph9XhplsceUnf
-	By70JOxs9V7ehBqewoNTBtJyp3ozeST6lRBCTS7BcJkjUsXpWVNdIcj+v185wnLwPWCaLhNWzAoqo
-	REd7S0IP98IzzAdEUaVcZ927qwAeGdsZABPpeKrkpMjY2T9PFxTUBhlfxm4AheId3dHNsbEbN7e1f
-	xrm/+WlKszDxZnFfIixHQGgK1TJd5Pk+YcSrSmRLqE8DIXQoqxHdPhWqnHLTlmz8pOB/CQLVzgL/i
-	Z3cJnjjLD5VAtw9cA+rW3ijYHu6xMMZdJvbn/fZNJGFrzBaph/MUmddmRCDoRXXHGr4v4tTcThIId
-	1TG5iysg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vveYJ-000000037bs-0hID;
-	Thu, 26 Feb 2026 16:49:27 +0000
-Date: Thu, 26 Feb 2026 16:49:26 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	"Theodore Y. Ts'o" <tytso@mit.edu>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Steve French <sfrench@samba.org>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Bharath SM <bharathsm@microsoft.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	David Sterba <dsterba@suse.com>,
-	Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>,
-	Luis de Bethencourt <luisbg@kernel.org>,
-	Salah Triki <salah.triki@gmail.com>,
-	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Alex Markuze <amarkuze@redhat.com>,
-	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-	Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Yangtao Li <frank.li@vivo.com>,
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Dave Kleikamp <shaggy@kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Johannes Thumshirn <jth@kernel.org>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Willem de Bruijn <willemb@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Martin Schiller <ms@dev.tdt.de>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, fsverity@lists.linux.dev,
-	linux-mm@kvack.org, netfs@lists.linux.dev,
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
-	autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-	linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-hams@vger.kernel.org, linux-x25@vger.kernel.org
-Subject: Re: [PATCH 00/61] vfs: change inode->i_ino from unsigned long to u64
-Message-ID: <aaB5lgKd8FOIizPg@casper.infradead.org>
-References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NvbSzRqD"
+Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-124a60cc9a1so12607c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 08:53:35 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772124815; cv=none;
+        d=google.com; s=arc-20240605;
+        b=CU/uglovaKkF3aWNCUOaujIkEg0RaoWAoIueuwWRBMOQxP+yJdgyCBnOTwzSNJH0Y0
+         ZO59Xy/ByeHp8y04J6uLWLfIGVbFh9eCKEzeVPo0s3YnD4GVIuLANL9BmdAEWNgwaHv0
+         +qEhwIO4fwoSYh2EfYawRyKFu0zXimiSSL61MVN2b5Bm4cs+R8fe4rIMaoUUmTsOvZ/v
+         CNoIzkq3jdCYgcq0rcUjyjSRM4wh02+gfnTwPADboMYvap6o3i2zCS7xe+psrqJ4bu0q
+         9cEyBMs9y7iNp7VNBc0b8TZ259cWsidmvUiz6cv9eDA8/K1SfsJx0u6chBjyHTbnuubM
+         53bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=PKsVpuOP/YKx2XmBc74MJ/i4TybDbkVfVTyDucBBmPA=;
+        fh=y8bBk0J44kmTASTql/JO/4hj8BMNHZH2yQZbFofvO28=;
+        b=fArek46PZdfjOB8e3NouTClbDZne6keBSGbVK9cynCCe6LNO5P0orrF1QCcFPSSN8n
+         yGW7ur01W3/xL6K50bzu29Y+gee4+DKUwVYVm11kM8mPQ1Fehu/pxqob+HU1JxMOvz2D
+         eXyegkJThZN7xzHetDm83uUd7JjYEq+V1dwGUDoFn498Wf2IivjC8aRCOl7oWyphxFck
+         8PNIobPOFkdqZ1f6n4QrCXzYsSyJKJeThphorFJF8vSRLAuwBNuVBoL6AimN1p+KVQUC
+         2BgpNIQbGb8OGD7zmdh846B41WhGllb4uBli07/mnEvmgPFuw1C8wT3F46oDQNK3+/tx
+         lBSg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772124815; x=1772729615; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PKsVpuOP/YKx2XmBc74MJ/i4TybDbkVfVTyDucBBmPA=;
+        b=NvbSzRqDx34gRRDuEJDvt+PqG1UchArw4WYAApX2n4c/5ZYwWdgaoFHH5Uq8zCLUN6
+         9+XZ6D5iAWGTZ+Bwq8X6A4rcQNOxUw+UY4xdGunez1nnrHBe+oUCKETOe98FL9hyNLtO
+         nHhiQ9e038Ggp0XFx85dtQ3xPNxaCgy2y1BVI41EoFlwn/bxpW+v1u1uSq8yUU9SqUMq
+         ZTmVbGJrHy/cECJAIMd2kGvyaTgoP8wPeAne+GVnKvc0hX6HGSdMCLex2Dfv53jjbgyo
+         KGBw8hTie7LIgMcZk6fikkElxQ19D2YN/uuLCmfxcd4C1+BlO6rv97cr8QG3OMEdMDfD
+         w0Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772124815; x=1772729615;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=PKsVpuOP/YKx2XmBc74MJ/i4TybDbkVfVTyDucBBmPA=;
+        b=aj8Rh2VmwnY78bYCcyQf5hEXmRfzcT+1JX8USzRmdxHk+mHCnSdsPKY5WHjMZUJfur
+         4n4efGnwbh/7CbFlDhkCW0smK/tKfv15oc21yyhqZuGjOgcXuszZwLqoOScJo/2TeAbr
+         hw0f6qnCrIB+W/W37dEOHbDIFOjwQpR/h7vKaoUvRS4x1NcPmr/uCGawQfow6HDTBjLc
+         y1lgL5dhcjI1kBSAhGSUjDExusfZEOJuLlCu33OCcwJ9OEnOE6KuBM9WG2NAOBw4G+yw
+         4VCUmE/bEykfclwLv/NLiKGTMk4JbUoiM28N627xSfPPsmvAXSr09UZsS80L0dWhm26U
+         OOeg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7gLQlicRfkAg1SYgV9N1FEgLjuGkK4lrcDSoSTgCCOYO6KsNah+jJ5IAt+XhJnBXXYedcbXvyQtCnOi9bGiGs@vger.kernel.org
+X-Gm-Message-State: AOJu0YyL2Jcd3jc+cOx3wbJnUux9mBq+pnDve/YKy/Xkqec4b2CeTGnZ
+	ZlHLawjtqzPrTj8yofuBrnP1mnMc3ExtzgEQypGZUJyi8OMbJVi6vBR8kq0BZx+0sak2C0cfQ+D
+	Rk0QKiSngql+7GXXFQcZ3FiqW2zqOr7f72RfXl1b8
+X-Gm-Gg: ATEYQzy5Nx4+Sjn4qnG8oNW2qRXgt3COug53V38RYLPqZHLtVjiEWVUwLbDs4tJBdKs
+	p2fsecD5n5xTJZFvQHuJs0HzXq3BXO43qB+0Uds+56pcY5g51z+U1EFuITmVPolJcHiiiu1E2ZX
+	qZom1W0JoBg9iTscWxgHMm5O31UPL6P5vReCxWYdglXnJgUjRdjZPNQi/db5ddoKVqPAG+2BtWD
+	8QQBaRyXyUs/ml0npWh9Flwq68DY8ZrvLx32n1dLKK68KTI8QdSMGNvkEYHqiuYnr91l30+RhiW
+	k7izUhYpqlU/lX6c3x3LHgmSj0+QlJ4CbLHQ
+X-Received: by 2002:a05:7022:e01:b0:11a:2c18:9e70 with SMTP id
+ a92af1059eb24-127899996damr181762c88.11.1772124814159; Thu, 26 Feb 2026
+ 08:53:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
+References: <20260216042530.1546-1-ravi.bangoria@amd.com> <20260216042530.1546-6-ravi.bangoria@amd.com>
+ <CAP-5=fV_cJskvLRZhQQXMGAcPUb_Rg_b30PDJNXzxL49JK4B5g@mail.gmail.com> <8b99652d-155a-444e-8395-d461714bf4b8@amd.com>
+In-Reply-To: <8b99652d-155a-444e-8395-d461714bf4b8@amd.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 26 Feb 2026 08:53:22 -0800
+X-Gm-Features: AaiRm50lV5MxPOqbszA6pSz3JXPp80Lne4KOF3F5_GEzX1kRN8xd8rV3BdseV3A
+Message-ID: <CAP-5=fWP75UJ9C8kjBzhZS26rHD3Teq+ECg8Vb6goAA2bmZKEw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] perf/amd/ibs: Enable RIP bit63 hardware filtering
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Sadasivan Shaiju <sadasivan.shaiju2@amd.com>, x86@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Manali Shukla <manali.shukla@amd.com>, Santosh Shukla <santosh.shukla@amd.com>, 
+	Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 26, 2026 at 10:55:02AM -0500, Jeff Layton wrote:
-> The bulk of the changes are to format strings and tracepoints, since the
-> kernel itself doesn't care that much about the i_ino field. The first
-> patch changes some vfs function arguments, so check that one out
-> carefully.
+On Thu, Feb 26, 2026 at 1:20=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.co=
+m> wrote:
+>
+> Hi Ian,
+>
+> >> IBS on future hardware adds the ability to filter IBS events by examin=
+ing
+> >> RIP bit 63. Because Linux kernel addresses always have bit 63 set whil=
+e
+> >> user-space addresses never do, this capability can be used as a privil=
+ege
+> >> filter.
+> >
+> > Since x86's top-byte-ignore/linear-address-masking leaves bit 63 could
+> > this break in the future if the kernel later ignores all bits,
+> > including bit 63, and user space wants to use bit 63 of the pointer
+> > for metadata?
+>
+> The AMD equivalent feature is called Upper Address Ignore (UAI).
+>
+> o Identifying whether an address is in kernel or user space by examining
+>   bit 63 is so fundamental in Linux that the UAI design was revisited in
+>   UAIv2 to restore bit 63 as canonical:
+>   https://lore.kernel.org/lkml/6a5076ad-405e-4e5e-af55-fe2a6b01467d@www.f=
+astmail.com
 
-Why are the format strings all done as separate patches?  Don't we get
-bisection hazards by splitting it apart this way?
+Fwiw, throwing in my 2 cents. IIRC bit 63 wasn't canonical in the
+original ARM64 top byte ignore work, it seemed like a legacy thing
+added to keep older x86 drivers working. Imo, this feels crufty like
+passing the number of float registers used for varargs in '%al' and
+the lack of non-GPR callee saves on x86. Given APX means we'll be
+recompiling all x86 binaries for the extra registers, it would be nice
+to have made these issues history, given runtimes an extra bit (2x the
+encoding space for metadata), etc.
+
+Thanks,
+Ian
+
+> o UAI applies only to data addresses; instruction addresses must remain
+>   canonical.
+>
+> So I assume this should not be an issue, at least for now.
+>
+> > Does the bit 63 assumption hold for guest operating systems?
+>
+> Yes, this seems to be an issue, even with current swfilt approach. Let
+> me inspect the code and get back.
+>
+> Thanks for the review,
+> Ravi
