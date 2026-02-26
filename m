@@ -1,108 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF25633C513;
-	Thu, 26 Feb 2026 01:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16D67A13A;
+	Thu, 26 Feb 2026 01:56:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772070598; cv=none; b=oAVuxPCj3MhqBJQLlETb3UhgABRdlV50wsfQaWm9H8NendDF/kM8sopVeuGutcj9t4/BR6ZHYRBhGxEpqTVt9b6SPQGDFxJeg+grP4yynGhoe41UezjrMZGICGqDwUfny9EFJxzA5cR8Jc7yFLFXec4zevNVoCYDw44KYgHAwSg=
+	t=1772071011; cv=none; b=Np9yaqxmKcZayUEEhvc46GYd3tDwfTMKQYiqiEharsKAXPTSfmqGXEJ5sukrerhip8BVzE18ONE7hqAnpZA8ATwa/3kjnQFFslVPyhVzGC7tCOlXWV6dH5dosws7m0Fonpq4HKoDHZDnO5JGMT3/nu8uJfpqMdULZLv7nkcffyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772070598; c=relaxed/simple;
-	bh=090HP7e2pVEeHOHgtSokHePn6/kBbzFR3kfoeGd59q8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KTEsvt1FKhg6neDe8lBl2eHN/Snoz104NBe+gATl73heILCyME1o/CoMYZyjeOSU9XqdOCklwzxQNbIOrPGSoHGRe6sjgGT1MJk/E2zAjo0cc/yLTQ9un7Nti0hyuMbsdJV1YDzuZOwrWIs9+IVHD8ucCLB4fCgwlKnsK/yKtCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qFk8tyeR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772071011; c=relaxed/simple;
+	bh=nzJdK8tcr7sxGJXxcQC78ZGCyn4nQDH3Y027oeH32Lw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MB+mgZiCFXDkw5JZIbteKWfG8RDZIcNFrxlm3qblAzNAI+p8Yzdg6+/dVPo3PPMQV0vBQRhyNOf3Vsi+h5ns6dgOunqluvQfR+PXz0bTaxoZHMBh8I84mlpqs2fkkP0urwl8ke6a2+gQLRO5K+ogLP6BthNQcNhr5cqqnaR8OoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T80Q5xAK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qFk8tyeR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3679C116D0;
-	Thu, 26 Feb 2026 01:49:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T80Q5xAK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC993C116D0;
+	Thu, 26 Feb 2026 01:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772070597;
-	bh=090HP7e2pVEeHOHgtSokHePn6/kBbzFR3kfoeGd59q8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qFk8tyeRn0mRx90MVGlvqfGpkOsGZgn3SB9DGHhTZAxNYPEUsMpAX8Ns6uNWl2KUe
-	 G0a5MQBcwC1/ec/THpDjRxF1AWE6vrYrwl6/ewEFBmZa6PJ0cXgeuVHjPnrk0V7AVG
-	 FQ1npifmM3w7HW7ABdjcI9fRy+Q88iL+lwziPHJ2WbmtMVerF/uRcOnqfkV+m/Wq2E
-	 Gfruu08II4Enk9fmtxWUwF9bl5NtzmDsmX4amd3FLCNKuMkCO11QQUnVxqNJ6xI0TA
-	 MylIGhN4t3RnzdZFCB2fpTObchaW2Clq8UWeje9ixyOWyCiDDrsyQQQKNg63caBA+f
-	 qX2+aYXlpr3Bg==
+	s=k20201202; t=1772071011;
+	bh=nzJdK8tcr7sxGJXxcQC78ZGCyn4nQDH3Y027oeH32Lw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T80Q5xAKA6Bft46H6GctxaadW/7SuRMdgZerUvw1C8dW/iE5DRtpxCdgRZZFwd2KI
+	 Fnbetrbyu69qKQoiFAR/6el82OGqi7eATojIEahUC172IDeAvoA6XUIn+yGVcbbU/N
+	 zes4S/EHe4ErRNNCEQEmhACWsNHg/nHddP3LZpGMfGEL4hnW9TXYlle7LpO6vzz8wr
+	 qBSQ0Qdxso0PmSGGqAbhcnObIIxIvIbxfitmOKjwjanyFxDRJjSyQNqMI36iRqPQqV
+	 or71AUZAYgLqAg/Qu9tfMJOVgS601c5dL/5WaH5ubVehURJFWWGmGKOXtXdmVpaSII
+	 dwP2TSILYMwcA==
+Date: Wed, 25 Feb 2026 17:56:49 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH] perf trace: Handle task exit in BPF syscall summary
-Date: Wed, 25 Feb 2026 17:49:55 -0800
-Message-ID: <20260226014955.801293-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.53.0.414.gf7e9f6c205-goog
+	James Clark <james.clark@linaro.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf kvm stat: Fix build error
+Message-ID: <aZ-oYb-FDLVT5MGq@google.com>
+References: <20260206-perf_fix_kvm_stat_error-v1-1-ad40115876be@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260206-perf_fix_kvm_stat_error-v1-1-ad40115876be@arm.com>
 
-Some system calls never return because it'd terminate the calling
-thread.  Let's hook the task exit path and update the duration of the
-last syscall.
+Hi Ian,
 
-Before:
-  $ sudo perf trace -as --bpf-summary -- true |& grep exit
-  (nothing)
+On Fri, Feb 06, 2026 at 11:00:20AM +0000, Leo Yan wrote:
+> Since commit ceea279f9376 ("perf kvm stat: Remove use of the arch
+> directory"), a native build on Arm64 machine reports:
+> 
+>   util/kvm-stat-arch/kvm-stat-x86.c:7:10: fatal error: asm/svm.h: No such file or directory
+>     7 | #include <asm/svm.h>
+>       |          ^~~~~~~~~~~
+>   compilation terminated.
+> 
+> The build fails to find x86's asm headers when building for Arm64.  Fix
+> this by including asm headers with relative path instead.
+> 
+> Fixes: ceea279f9376 ("perf kvm stat: Remove use of the arch directory")
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-After:
-  $ sudo perf trace -as --bpf-summary -- true |& grep exit
-     exit_group             1      0     0.004     0.004     0.004     0.004      0.00%
+Probably not from this patch, but this change seems to introduce this
+error on my i386.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf_skel/syscall_summary.bpf.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+  In file included from util/kvm-stat-arch/kvm-stat-x86.c:4:                      
+  /linux/tools/include/../../arch/x86/include/uapi/asm/svm.h:137:32: error: conversion from 'long long unsigned int' to 'long unsigned int' changes value from '18446744073709551615' to '4294967295' [-Werror=overflow]
+    137 | #define SVM_EXIT_ERR           -1ull                                    
+        |                                ^                                        
+  util/kvm-stat-arch/kvm-stat-x86.c:13:1: note: in expansion of macro 'define_exit_reasons_table'
+     13 | define_exit_reasons_table(svm_exit_reasons, SVM_EXIT_REASONS);          
+        | ^~~~~~~~~~~~~~~~~~~~~~~~~                                               
+  /linux/tools/include/../../arch/x86/include/uapi/asm/svm.h:249:11: note: in expansion of macro 'SVM_EXIT_ERR'
+    249 |         { SVM_EXIT_ERR,         "invalid_guest_state" }                 
+        |           ^~~~~~~~~~~~                                                  
+  util/kvm-stat-arch/kvm-stat-x86.c:13:45: note: in expansion of macro 'SVM_EXIT_REASONS'
+     13 | define_exit_reasons_table(svm_exit_reasons, SVM_EXIT_REASONS);          
+        |                                             ^~~~~~~~~~~~~~~~     
 
-diff --git a/tools/perf/util/bpf_skel/syscall_summary.bpf.c b/tools/perf/util/bpf_skel/syscall_summary.bpf.c
-index 1bcd066a5199a476..4172f3c9fc483955 100644
---- a/tools/perf/util/bpf_skel/syscall_summary.bpf.c
-+++ b/tools/perf/util/bpf_skel/syscall_summary.bpf.c
-@@ -118,13 +118,11 @@ int sys_enter(u64 *ctx)
- 	return 0;
- }
- 
--SEC("tp_btf/sys_exit")
--int sys_exit(u64 *ctx)
-+static int do_exit(long ret)
- {
- 	int tid;
- 	int key = 0;
- 	u64 cgroup = 0;
--	long ret = ctx[1]; /* return value of the syscall */
- 	struct syscall_trace *st;
- 	s64 delta;
- 
-@@ -150,4 +148,18 @@ int sys_exit(u64 *ctx)
- 	return 0;
- }
- 
-+SEC("tp_btf/sys_exit")
-+int sys_exit(u64 *ctx)
-+{
-+	long ret = ctx[1]; /* return value of the syscall */
-+
-+	return do_exit(ret);
-+}
-+
-+SEC("tp_btf/sched_process_exit")
-+int process_exit(u64 *ctx)
-+{
-+	return do_exit(0);
-+}
-+
- char _license[] SEC("license") = "GPL";
--- 
-2.53.0.414.gf7e9f6c205-goog
+Thanks,
+Namhyung
 
+> ---
+>  tools/perf/util/kvm-stat-arch/kvm-stat-x86.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
+> index 1cf541385a4bdee4930b67a054906ccade7301fd..43275d25b6cbccc477ba45a901d69c67422847ae 100644
+> --- a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
+> +++ b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
+> @@ -4,9 +4,9 @@
+>  #include "../kvm-stat.h"
+>  #include "../evsel.h"
+>  #include "../env.h"
+> -#include <asm/svm.h>
+> -#include <asm/vmx.h>
+> -#include <asm/kvm.h>
+> +#include "../../arch/x86/include/uapi/asm/svm.h"
+> +#include "../../arch/x86/include/uapi/asm/vmx.h"
+> +#include "../../arch/x86/include/uapi/asm/kvm.h"
+>  #include <subcmd/parse-options.h>
+>  
+>  define_exit_reasons_table(vmx_exit_reasons, VMX_EXIT_REASONS);
+> 
+> ---
+> base-commit: 84cb36da81413c2dff805150b9f4db1524460269
+> change-id: 20260206-perf_fix_kvm_stat_error-a795a1dd67a2
+> 
+> Best regards,
+> -- 
+> Leo Yan <leo.yan@arm.com>
+> 
