@@ -1,153 +1,154 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B7731197C
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Feb 2026 21:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C50D1A08AF
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 01:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772053744; cv=none; b=Z6acFDzo+C1fCOpMQvIj/o0w4mh2VZYa/hpsxSOekWxsafZ88iVcxaJVaxbUqlCd+wWFe4z7GVKXpu7SRat/9Mz6LD4x7VmNtIKi4fexLolB/eOTTE/n8sw1qga3kq8uIHA4M/Zu/iNyUC9/+2QqQC21Wz7BbgvsOyIk5+K7Gb4=
+	t=1772067917; cv=none; b=FNXEtB2n/aZ1ykvCNiuiKHoxhyGXL83pjxEPtUPpzSlEZbLjyQLUnduZqE/2RKnQM5swdb77ZZd2t3fNX7CbMjswvVdxaGTGBO+oZm+tkXmS8DsWw4Q8NneFz0YAzQeK0cMJvH2mSqpq32A6qeDgZhQD6SrG+N6he1U3JGMFMWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772053744; c=relaxed/simple;
-	bh=7S67oRMclfJREt5gae/g8weoq6cbrehCfSKxGhXJZx4=;
+	s=arc-20240116; t=1772067917; c=relaxed/simple;
+	bh=2jCY5Aff47NorBDq1SiSlgbyb2jMkIUA21wECQnAsk0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p1vaKEPcF2cvaRY1E3WUCEwd0LrpE0ZnGn/YsabxO63k7KD56PA/H0te3Y6b/aK6JQW6h3ZSIhCZQmAaxzheZtu3zAz08+mh+3MPZm3zo9oYBPRZVMDvTQOcOCfqFXsUJ8BnFfLSRJoIwF/9kTI43EIaLYpNsfb/bfryr5/RZMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aPLRKa94; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=S4phJ6sN; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jm1mg14rP/worDTy6DvEBUj4rFyaypYzRBW493lb+AlVaf5W7+jMojcTxWH24C/RCTn26ZJ3Rnp+Q3W3chHiczzG+9lcvsmsnt9sY1wVqHasQxCXLvkTHy1FkVWrwU3SDs9xZ7qebt4MRQnvPICUkeTBjGCgd9gm4t333CNKS2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFANIyqB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aPLRKa94";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="S4phJ6sN"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61PKJ9Cv789059
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Feb 2026 21:08:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=VBmnl9PJw1wesdKZ2FfBJpI0
-	enm3lW3EvYf0jk7sk7w=; b=aPLRKa94YDUOW/qMnOjRcpCcH8aILpYCYua+iSRW
-	oAz+0avS3bsLqu+Or7sIXixWe1zdVa3PvO0vshaSlXLCKro7vtqWlirNpNkmWZrH
-	GmgxwyIkc2ADY0hO5A8AGSPA5S+v6s9XuGkeDAFa4yPVzkqE7TCxZnnLVxgUHFT1
-	3BfDm1X2MPQzsPdvIFj+fbuJU61j/J2lduCDZ0m2nVzvW1QEe8F9mVnPc7ASwZRc
-	kDtUrRXDnkKY27sa4HaxdUdVKg6GFM4EUX+Kp959gwvrkRk1qkp+FC9cxJZYoC9J
-	vFkU6d2moA9Ruqp5l1HKEe2pG2U5DIQIIyBpk+zbAxLHxA==
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4chyv9htdr-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Feb 2026 21:08:58 +0000 (GMT)
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-2bdc5078895so2069860eec.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Feb 2026 13:08:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1772053738; x=1772658538; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VBmnl9PJw1wesdKZ2FfBJpI0enm3lW3EvYf0jk7sk7w=;
-        b=S4phJ6sNnU/oUGSa/emzc6IZcn6wICxMlAjSgsLW+GKSdwSYFlNjx6bdBYgGMVFkB3
-         5yq4qmZDFrTiXyo3FyuoAyrhlyptYxW8/7SdwW+6tJaQBVf0r1waAD1LGk27HbisTnr7
-         7S/+3usM/qICThJvUx7R33CUZ48pTUivsmNFDD3Pw7YaAVDY1wzlp/NRJ0qZTILVIJCv
-         9z3zIKAEX6TcpM645UZSJWBVhClzyz2fHFdvGZWYr2uf7yRiuqzyDC17M+vN05d4OHFu
-         Sxq4wOqeZQAsGWlTcmIsG2R7lXxqKupPUgbxUcIjq9bi7ZTWSU5HFrfacn5SY30JUhRf
-         /q4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772053738; x=1772658538;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VBmnl9PJw1wesdKZ2FfBJpI0enm3lW3EvYf0jk7sk7w=;
-        b=sH3rtOrslbvvqLWkUfzqxB70LB+j1mbFAqptQrsmX67X/TbwE/YgyWCgM62Qab2ryY
-         0AntiDvb5XZjuXDeIqFOx6dUrVZCrBcwy9BFmaiZ+mZ6GIiY1THiYh/fLzMqldaZ+rBS
-         VN1cVc/dh9YOVIER2qnUEKoYnBSqmou/KQ1VSwE2Wl4KuRg1J4K37LEiw6kgXPg5zdd5
-         M7monCSDg0GCkcnvvtaXtDUJSy7v5mF57KJMximkA1XGDOAJgV+Y5f3uyFMwXABGtdBF
-         1J206/x57B/zJkWRZbm0/zcoQ6Q29c8z5otHhYXLu34iJLi2Co9bjd1fiaHixQjUhHjK
-         +Lww==
-X-Forwarded-Encrypted: i=1; AJvYcCXKbosBBnT+gBiQfXuBBI64s5u6jHH3kw0CyobOs5dgLtVa6VcCfLw6USNov807lJdD7IZMOUNJ2dBrfgheJsOU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCHjPVdkOe26kCRyflYSKCvyJNrHOsjSbljqBbB+pcJAMH3Lyw
-	3NKmTutvI5BFotdvKwlk0llNnzTrv2xjRKrN8yC3I8JmwuLK7H6c5hrie2eKxPHEZdjKZQhwVgi
-	rVNwQMrQvb0JljH5oS07wdzPPwNWJwT9hTibyHbKPRrv1Sdf/ykR+7zBf5yeG6mOxaxndLnEu
-X-Gm-Gg: ATEYQzzu9xeE4qMFb6DdxaZf2fTVqcR8fGkAPbtaiNYZmf0yQ42mSHopI7GF3WcbLDG
-	L+zrPYE2iHnHHvV3Seb1m9O+q+4OolrCM0VlQNU7u29jQG/oW1CBdxCqrG3YdYaqZeqh9+o7HFP
-	YTkGKdtWp1en+bJkB3xMq3tAgDcwieIvs9EL2meGuBbCN/Do/Cx1E1HC1cCF2KbDoSu70lJVMhu
-	qHdi3gX6WWlm0q5u0G51S/UmgfYJTZG436+fBBWQiOmwxJuq3QFkGrx6TF+V1aMKwb0vqqRodxT
-	/beiQHSe6WoMLzsTVbZL09yGVcbwd9Snr2IapFkY1ACmiv3WGOPsxdugqkD6VLe05mmRilWwUhE
-	h86rMSgpw3WoOJ9m4br057fu1LzvOOLri
-X-Received: by 2002:a05:7301:678a:b0:2b8:5159:eca5 with SMTP id 5a478bee46e88-2bdcbf7ebf5mr946964eec.14.1772053737573;
-        Wed, 25 Feb 2026 13:08:57 -0800 (PST)
-X-Received: by 2002:a05:7301:678a:b0:2b8:5159:eca5 with SMTP id 5a478bee46e88-2bdcbf7ebf5mr946947eec.14.1772053736987;
-        Wed, 25 Feb 2026 13:08:56 -0800 (PST)
-Received: from localhost ([138.199.100.237])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2bdd1df6b0asm188889eec.12.2026.02.25.13.08.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Feb 2026 13:08:56 -0800 (PST)
-Date: Wed, 25 Feb 2026 15:08:54 -0600
-From: Andrew Jones <andrew.jones@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFANIyqB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD863C116D0;
+	Thu, 26 Feb 2026 01:05:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772067916;
+	bh=2jCY5Aff47NorBDq1SiSlgbyb2jMkIUA21wECQnAsk0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RFANIyqBI6HEnUhkOg3lG2r9OWEj1w+Avw+oAEOfTjfdnz6U9F4duYROxfKZG0Qw+
+	 XAH1hhfGSVj88J6WEwJ8ry66HQNxx0fBy3b79AiDB17KwpE5Jb90AjktIYb3wVsQuH
+	 eNmlK2RPvOlb5uV35INzjAnutuCkk+Dhi2xn9U1/SBNxkHXWbO4kJ1VcOgJqf+T4Ix
+	 aIqTNatuQ53jX9lqSXbD4/+r44wNzka2ATWz3Y/vUFk4TEg8BMr/OnqoI4hph6sNCH
+	 x2hglA6ZsmvZvexX948/uBuKONmhQXvXfsUfRlTN8b9zkvLgR6F5xoxFd8mg+ScbOh
+	 OO+S0Q/+XPFSg==
+Date: Wed, 25 Feb 2026 17:05:15 -0800
+From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@linaro.org>,
-        John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-        Leo Yan <leo.yan@linux.dev>, Paul Walmsley <pjw@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Blake Jones <blakejones@google.com>, Tomas Glozar <tglozar@redhat.com>,
-        Yuzhuo Jing <yuzhuo@google.com>,
-        Dapeng Mi <dapeng1.mi@linux.intel.com>,
-        Shimin Guo <shimin.guo@skydio.com>,
-        Athira Rajeev <atrajeev@linux.ibm.com>,
-        Chun-Tse Shao <ctshao@google.com>, Howard Chu <howardchu95@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
-        Thomas Richter <tmricht@linux.ibm.com>, libunwind-devel@nongnu.org
-Subject: Re: [RFC PATCH v1 7/7] perf unwind-libunwind: Add RISC-V libunwind
- support
-Message-ID: <q3oys2ukvylrd7xfn7267bh3wpumyxbbxpk2udhps375cmk64p@l7sjnlxll6c7>
-References: <20260224142938.26088-1-irogers@google.com>
- <20260224142938.26088-8-irogers@google.com>
+Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf, script: Fix brcntr output with --xed
+Message-ID: <aZ-cS_Tkh6Vko701@google.com>
+References: <20260218014056.3454977-1-andi@firstfloor.org>
+ <CAP-5=fWUr2QC0RRhjp11Cdci_QY3yHSfFU6=6OPgSEUFf_p-NA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260224142938.26088-8-irogers@google.com>
-X-Proofpoint-ORIG-GUID: wq0FT6xtV2meevXzrq7zaXAQEjZmUrn6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjI1MDIwMiBTYWx0ZWRfX+ad2pOyZHRE0
- w8cgV/MOvYnOg+bu7i7X1A0NLyzPh/Rd4h8HycnVZKEIdweDE9sSg6f1mmNImjVrgSPXemlyZ2s
- 90m+eH/dYTrja9ftJl6bPaDBJDyJje9l4EhXKFOGRhnlsLOushjvUSPeqUMXWwGQCdGXnLR4fx+
- baDnZwsUdWMHz57W79q9KmMQwBsf8o747WQ7r9XMW4rxH7wAteo4LPbdYtkk7LoTjWoBI+8xLHD
- aqnXdwqDRcsxEWxpisGmAnovUqhzLqmPDQ+06GPSyPOFOsth3ZISqah7dOFfzqrXqNYmjRmOL5k
- ZvOgKaoTJScu34PdOJ/XIe3qTM0p1GexfZtP3fMPTw5ykL6DYUYtemQSGRRL2CajK6cGX5PBPYw
- 9tXMmwXfs6tD9qPPFapI6eyOvCrR4YThbRKtDr7Pj91R40RqS9oRSdtg/+SOdlB0LybcydjC0hT
- 7IrZZrQmAAqD6FDIOAw==
-X-Authority-Analysis: v=2.4 cv=GZwaXAXL c=1 sm=1 tr=0 ts=699f64ea cx=c_pps
- a=wEP8DlPgTf/vqF+yE6f9lg==:117 a=OC80/TC5XWgnnCQ5Z9xtWg==:17
- a=kj9zAlcOel0A:10 a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
- a=8mPsIthyXUsASUFpomQA:9 a=CjuIK1q_8ugA:10 a=bBxd6f-gb0O0v-kibOvt:22
-X-Proofpoint-GUID: wq0FT6xtV2meevXzrq7zaXAQEjZmUrn6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-25_03,2026-02-25_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 bulkscore=0 impostorscore=0 lowpriorityscore=0
- malwarescore=0 phishscore=0 suspectscore=0 adultscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2602250202
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWUr2QC0RRhjp11Cdci_QY3yHSfFU6=6OPgSEUFf_p-NA@mail.gmail.com>
 
-On Tue, Feb 24, 2026 at 06:29:37AM -0800, Ian Rogers wrote:
-...
-> +struct unwind_info *__libunwind_arch_unwind_info__new_riscv(struct thread *thread __maybe_unused,
-> +							     struct perf_sample *sample  __maybe_unused,
-> +							     int max_stack __maybe_unused,
-> +							     bool best_effort  __maybe_unused,
-> +							     uint64_t first_ip  __maybe_unused)
-> +{
-> +#ifdef HAVE_LIBUNWIND_RISCV_SUPPORT
-> +	struct x86_64_unwind_info {
-               ^ copy+paste issue?
+Hello,
+
+On Wed, Feb 25, 2026 at 09:28:23AM -0800, Ian Rogers wrote:
+> On Tue, Feb 17, 2026 at 5:48 PM Andi Kleen <andi@firstfloor.org> wrote:
+> >
+> > brcntr in perf script brstack insn currently outputs
+> >
+> > $ perf record -j any,counter ...
+> > $ perf script -F +brcntr,+brstackinsn
+> > ...
+> >             BC1s 3450809 5665912.127194:     100127
+> > cpu_core/cycles/:      7f0475d6cc89 handle_intel.constprop.0+0x2b
+> > (/usr/lib64/ld-linux-
+> > x86-64.so.2)
+> >         intel_check_word.constprop.0+224:
+> >         00007f0475d6ca7e        insn: 00 4b db                  br_cntr: # PRED 21 cycles [21]
+> > ...
+> >
+> > This has two issues:
+> > - The description says no event is a single dash, but that is not what is printed.
+> > - The b in brcntr is ambigious with the hex numbers in insns, which
+> >   breaks with --xed. It parses the b as another instruction byte and
+> > merges the instruction with a missing b and no space:
+> >
+> > $ perf script -F +brstackinsn,+brcntr --xed
+> > ...
+> >         00005618c6d683b5                        jnz 0x5618c6d683bdr_cntr:       # PRED 5 cycles [1396] 8.60 IPC
+> >
+> > This patches fixes these two problems. It moves the brcntr output into
+> > the "#" comment which also looks nicer and also fixes the no event case.
+> >
+> > $ perf script -F +brstackinsn,+brcntr --xed
+> > ...
+> >         00005618c6d6624f                        jnz 0x5618c6d65fb7 # br_cntr: -  MISPRED 1 cycles [1398] 3.00 IPC
+> >
+> > Since the old broken format has shipped for a few releases there is a
+> > risk of breaking some existing parser, but since this is a obscure
+> > feature I hope they're not too common and can adapt.
+
+:)
+
+> >
+> > Signed-off-by: Andi Kleen <andi@firstfloor.org>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> Thanks.
+> Ian
+> 
+> > ---
+> >  tools/perf/builtin-script.c | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> > index 62e43d3c5ad7..ac361aa51094 100644
+> > --- a/tools/perf/builtin-script.c
+> > +++ b/tools/perf/builtin-script.c
+> > @@ -1264,11 +1264,11 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
+> >
+> >         if (PRINT_FIELD(BRCNTR)) {
+> >                 struct evsel *pos = evsel__leader(evsel);
+> > -               unsigned int i = 0, j, num, mask, width;
+> > +               unsigned int i = 0, j, num, mask, width, numprinted = 0;
+> >
+> >                 perf_env__find_br_cntr_info(evsel__env(evsel), NULL, &width);
+> >                 mask = (1L << width) - 1;
+> > -               printed += fprintf(fp, "br_cntr: ");
+> > +               printed += fprintf(fp, "\t# br_cntr: ");
+> >                 evlist__for_each_entry_from(evsel->evlist, pos) {
+> >                         if (!(pos->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS))
+> >                                 continue;
+> > @@ -1276,16 +1276,20 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
+> >                                 break;
+> >
+> >                         num = (br_cntr >> (i++ * width)) & mask;
+> > +                       numprinted += num;
+> >                         if (!verbose) {
+> >                                 for (j = 0; j < num; j++)
+> >                                         printed += fprintf(fp, "%s", pos->abbr_name);
+> >                         } else
+> >                                 printed += fprintf(fp, "%s %d ", pos->name, num);
+> >                 }
+> > -               printed += fprintf(fp, "\t");
+> > +               if (numprinted == 0 && !verbose)
+> > +                       fprintf(fp, "-");
+
+I think it should be:       printed += fprintf(fp, "-");
+
+Anyway, it's a nitpick.  I can update it locally.
 
 Thanks,
-drew
+Namhyung
+
+
+> > +               printed += fprintf(fp, " ");
+> >         }
+> >
+> > -       printed += fprintf(fp, "#%s%s%s%s",
+> > +       printed += fprintf(fp, "%s%s%s%s%s",
+> > +                             !PRINT_FIELD(BRCNTR) ? "#" : "",
+> >                               en->flags.predicted ? " PRED" : "",
+> >                               en->flags.mispred ? " MISPRED" : "",
+> >                               en->flags.in_tx ? " INTX" : "",
+> > --
+> > 2.52.0
+> >
+> >
