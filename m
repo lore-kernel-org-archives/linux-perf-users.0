@@ -1,129 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F096430E852;
-	Thu, 26 Feb 2026 01:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772069099; cv=none; b=K5by9ftacGyKwGbiWXGjTE/E6+RSi+zLfkybxg0EhbnHP3d5Z1C2xA+B9sFrVH+/DFtht9TMak6h6y9QCukW/2ayed9xk4PhZtL/KSInTCLaWb89hsZAXt8y/ec18xmYLmNfczwoxVCHaUo2gjmk5oCCZ5RSB/aUxgtYUTWiaaQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772069099; c=relaxed/simple;
-	bh=I/ziFTbAMjCXneuhtUTgdJvlfrUR6VbT53M4P1ydAH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C5g932fRYJJtm1hJX164hA1uyQJTQ+cUF2mhrV3m2VFUuJKbzUMDMSJfTi44yAHbnz49E2jPfqKY0WeGi/hYT22+idnvgbjRYR8pfP6d9bmSKK6Gz2GPMwYkwj+s364U6x4219VKKorD+WwfKfClUg3hlZ1+AhMvm4SCOBxp0UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfiMrcJA; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B9136F42C
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 01:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772069672; cv=pass; b=brywgieUOcS8c3ZMZVCFXDUftannH0Kwa2KMmYxm4lYVamVuL8KJTV6ClnR3RaU/vicR2rtXzC+XguYm+PQvrhCZqCpmHuVdzhnDaLeWTDwDF6JPM0foX/ujM3uXe7LzFAyXmW4DSaGGlvYq6CTUPW+ayXm1wIEyj4OpBMTTI8U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772069672; c=relaxed/simple;
+	bh=2lfNOdwp7Hs9olEfUgKwim/PUZCEuG6TXfOiJzzfu0Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XEkjFYZEkQ5TjSmzblhZtPT8XVn/Oy0qL3jIiARZbjPYLw6PcObgS0+is6I793MSqdLBjs8vjGd5ESVvfIobdrUhgpBXYrC1VOZpEo2MtboJGm8qcUVHq55hXae0CPAww6OLbte1TZ88jdS8F9RgkBllCnGpXKVwo/fQdp5j9/U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a6BjN5Wh; arc=pass smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfiMrcJA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 687CBC116D0;
-	Thu, 26 Feb 2026 01:24:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772069098;
-	bh=I/ziFTbAMjCXneuhtUTgdJvlfrUR6VbT53M4P1ydAH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mfiMrcJAkE0GMMVdMf8NsWhZoIOBJoPn/8XvipCoHWSKE1sS7Kem3yZ0ta/GTafb4
-	 bsVTtATQnWJBc0bJu4kkdI1lluax+qIGT1BZT0Ppu2TADFOb/7jBYGOubu1oi894yv
-	 SEeCsxuwhbEJ7xSppFyYgBihYro2ZatmpJly2YdU2D3Rwu91TKM9ux0/uBSEA+NEG8
-	 8J+gjiYargeHqxAlJRNlA4lT3k2OzLmEBpOtFlcK5T22dTwKMLiikiPgwl1xa6emaC
-	 Iyl9vM0KCGC+wZcwsxv4Vi5GrjKPGQseXad3D4x+oY2s5WLKSqcuKNDZosvrUsoZPD
-	 7jD8C4iidImog==
-Date: Wed, 25 Feb 2026 17:24:56 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>, damon@lists.linux.dev,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH 0/4] mm/damon: introduce perf event based access check
-Message-ID: <aZ-g6AfzY5xhtR6U@google.com>
-References: <20260124023917.78649-1-sj@kernel.org>
- <20260124024804.78869-1-sj@kernel.org>
- <aZwLDAxf9eP0lPdD@z2>
- <CAC5umygJNCxbDwbTPc3FFRAO+sfHyxx=QSXXF9g2TSiQ4Bvw=Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a6BjN5Wh"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2adb1c1f9d4so45835ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Feb 2026 17:34:30 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772069670; cv=none;
+        d=google.com; s=arc-20240605;
+        b=UPMza8QUI0+aVniGZ4ZWRx+KNy377W5u7rBcz1WH4iJ02nINFNUzqP99pT38txF43Y
+         CA8BwJ+j07ejjs9zLN5di8TPXm9fkoVIlACTRXpkVLEi0rxJrS6PRRODtWxuPV86l3kP
+         y0KqwMXK1+wyEDaLvMnLl/E5Xp6IsaV4ySKNppMyZyc3uBX1XlhB0fytyflNz/pPCrkR
+         KbcJIPu6iu+k6MT+j9ThUI2csQG4hyYgkLCXIWDgh0Tv64GccEXnd2lVpWT1eVd9MXV4
+         P9JbTDOiEwRHc7dMifennGF2TC4wSny5BHt/X+RNJSUjrP72PuACtpIaDE5mbhfX3UP4
+         XsDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=wjQ53JZFB5yfDU+VhP3J0dlwnX2GHMinS2bwduWJ8k0=;
+        fh=K4oqgZefKrxkzgAh2XLQ0onft6ZHyUsnn/SddsGkmH0=;
+        b=BBnMsgtHzMJ2yCAY7u2es75gAaiZ7GNqDJvc/gaBmA2J6LWv0dPgyxfR6TWV80Hft3
+         0HXT/eFKg7dGqRnz3oIcKMTGX2SAo6/MCAwQJ2i5SvhhOw3XYe3rAzu4h50cZJlek73V
+         48V5ArUYYYPXBtREAVywHk2vmMLtRjEYd6hNLsKTzhIFUIYdvNpogHay0Aljf6uhSk13
+         QwUZ/coWGkKywYiJz7hGH3kxSAQyFMTe1kdC00pP7DaInVuAieE3GBuMsr2ARr5x5HuT
+         PbykT1Ql8G5N7gQDeG7+uwSELDVCl5fSFgf95t0h+42MyjV2U+yWMJmYKjG+To8p0Hp+
+         aPtw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772069670; x=1772674470; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wjQ53JZFB5yfDU+VhP3J0dlwnX2GHMinS2bwduWJ8k0=;
+        b=a6BjN5WhxNPYlE/9Xzv/pnqVAaYDUH35ugq+li56Yi1OmcWO4Q3jopdxpCEh6RdCiV
+         EuWrb+Vn73pcxwcS0vHWc0+6uhZqP31r77VyZ8KZfFSSNbgU7vwT7fpk8OivQqEq+BZB
+         z8eo+wasWdytKE7VS036K4hGQFO5ML+3+HqO/a5lL6fVVmIN+pkMv34rPQ9Bilr1lysg
+         xDPcCht31MqodCYJ2b6BezFregTeXrjsO/4qItobSbiofVQWb5WR/dYRELu4/fQArJOc
+         yTnHiM+o0jy50ElzwkRJiN9sYMDp6L0ivOezr/BSQ64Qb9BpTbPL3etQcYy/vbPg0c/m
+         Xb+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772069670; x=1772674470;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wjQ53JZFB5yfDU+VhP3J0dlwnX2GHMinS2bwduWJ8k0=;
+        b=bQ+vNEluy4TsLLQXLwKEToJ4T6PU9iGnGXQlFBMu3wTtFz2j18mlmHj4th+4J672YB
+         kOpt3MeBIUS1yFL4rUy5v0r6q5v/SjZ64hIrYZHIxOTf+vvCG/wBU0zW6uU3+M5Z8ZkI
+         dCpVLZsdUyfeUOa+A0SaDc1AwkSmVG7jmP/gM0CW7y4qDv8BnmVY67Dp0JqOAqvIYAqp
+         ZlHg31PVxIipnUBjXLHdcIHAtNVL1xKQZfDiaphOmSXJG+RmdSbgIzbM/WPpsFtcVxQ0
+         haBpegbE3AeIR3209hIq8goeWUPK9inNklHHkjbvWpU7zZtnZl6htlXRNvG1fIe9MwCx
+         DObQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWbnTLVNzqpU/omwIXZRbTNUQZAaCFF5EWhEQUmMx1e9usk+KplDGXF036V0WBvIrh27LX+xAV0l2o75ZoWQTZ3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD8PRLc2XmC5TuO/BEluAng5N3xTylRWAiwCPr7VCNmLl6jKNx
+	WhU7sNOej4CiyPW2+d3s0dnKcp0ZJNC/y/X6kt5pDfgRoK072RvEOtwDG3KdWFVTZwhAXaL0Pm1
+	Iz/ExlTrdY24QaRI9opMDC3dC7kaZTjX0TtEhklKC
+X-Gm-Gg: ATEYQzzWyAhhZ17AQSCQFs2aQgWjiio0wO1zuL/xYjVL9SZrmTh+ntKr+ZJC/pjlA04
+	ieS37ll1Ci/WSRkuZjwQBavHX6k8Qx1naJHCnJHkzg7yIdlv8Sqi8UpG/hxABIb+mIaqyXeTMVm
+	pxJ3QGCSnGsLJQzgO/EB+nlORlPsXRzjv/ZqF4l62dRAG3pKYp2kJz3XdsHnG0mNRDmXrGFrMWq
+	/l0kItQrGGiURTZcSf4OqvqpDVV0ZWTiLK6VfZgvuOUjvP4Lt2gT0JnFk6iTb3Xqbquzxo1EfUs
+	obkrQ33B0WJR0xs8OSnzBw3Zu7duuc+wJ3L+dw==
+X-Received: by 2002:a17:903:40cb:b0:2ad:6f9b:7819 with SMTP id
+ d9443c01a7336-2adf77de594mr1447145ad.24.1772069669550; Wed, 25 Feb 2026
+ 17:34:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAC5umygJNCxbDwbTPc3FFRAO+sfHyxx=QSXXF9g2TSiQ4Bvw=Q@mail.gmail.com>
+References: <20260224142938.26088-1-irogers@google.com> <20260224142938.26088-8-irogers@google.com>
+ <q3oys2ukvylrd7xfn7267bh3wpumyxbbxpk2udhps375cmk64p@l7sjnlxll6c7>
+In-Reply-To: <q3oys2ukvylrd7xfn7267bh3wpumyxbbxpk2udhps375cmk64p@l7sjnlxll6c7>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 25 Feb 2026 17:34:18 -0800
+X-Gm-Features: AaiRm53aNAb6Tlux87h_8UOmv876w-RjbJJ3ZYy7jl1sfvFunMT13zrT8xA0lxo
+Message-ID: <CAP-5=fWVU3ktkGAnZQrjQJf+Z5AtQo73BVUhj-nr3H95GdcEJQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 7/7] perf unwind-libunwind: Add RISC-V libunwind support
+To: Andrew Jones <andrew.jones@oss.qualcomm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
+	Blake Jones <blakejones@google.com>, Tomas Glozar <tglozar@redhat.com>, 
+	Yuzhuo Jing <yuzhuo@google.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Shimin Guo <shimin.guo@skydio.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, Thomas Richter <tmricht@linux.ibm.com>, 
+	libunwind-devel@nongnu.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 25, 2026 at 03:48:29PM +0900, Akinobu Mita wrote:
-> 2026年2月23日(月) 17:08 Namhyung Kim <namhyung@kernel.org>:
-> >
-> > Hello,
-> >
-> > On Fri, Jan 23, 2026 at 06:48:03PM -0800, SeongJae Park wrote:
-> > > Cc-ing linux-perf-users@ for any comment from perf people, about the use of
-> > > perf event from DAMON.
-> >
-> > Sorry for the long delay.
-> >
-> > >
-> > > On Fri, 23 Jan 2026 18:39:20 SeongJae Park <sj@kernel.org> wrote:
-> > >
-> > > > On Fri, 23 Jan 2026 11:10:10 +0900 Akinobu Mita <akinobu.mita@gmail.com> wrote:
-> > > >
-> > > > > DAMON currently only provides PTE accessed-bit based access check, this
-> > > > > patch series adds a new perf event based access check.
-> > > >
-> > > > Very interesting patch series.  Thank you for sharing this Akinobu!
-> > > >
-> > > > I only took a glance on the patches, but my understanding is that this series
-> > > > modifies DAMON to be able to enable perf events of PERF_SAMPLE_ADDR type, and
-> > > > utilize the sampled perf events in the perf events buffer as the source of
-> > > > DAMON's access checks.  In more detail, I understand enabling PERF_SAMPLE_ADDR
-> > > > type perf events makes the perf events buffer filled with memory access event
-> > > > information with the access destination address.  The event will be sampled
-> > > > based on time (e.g., one access event per X milliseconds).  And probably that
-> > > > sample data could include more information includign the CPU and the process
-> > > > that executing the sampled access?  Please correct me if I'm wrong and add more
-> > > > details I'm missing, as my understanding of perf event is very poor.
-> >
-> > I'm afraid you need to deal with PMU hardware details.  For example
-> > PERF_SAMPLE_ADDR may not be available depends on events or sometimes it
-> > may not have valid values in some samples like on AMD IBS.  Also hybrid
-> > CPUs may not have same events on both CPUs.
-> >
-> > Maybe it's better to fix which event you want to use on each CPU
-> > architecture.
-> 
-> Thank you for your advice.
-> 
-> Is it possible to get a list of PMUs that have the ability to get addresses
-> (PERF_SAMPLE_ADDR or PERF_SAMPLE_PHYS_ADDR) from the kernel at runtime?
+On Wed, Feb 25, 2026 at 1:08=E2=80=AFPM Andrew Jones
+<andrew.jones@oss.qualcomm.com> wrote:
+>
+> On Tue, Feb 24, 2026 at 06:29:37AM -0800, Ian Rogers wrote:
+> ...
+> > +struct unwind_info *__libunwind_arch_unwind_info__new_riscv(struct thr=
+ead *thread __maybe_unused,
+> > +                                                          struct perf_=
+sample *sample  __maybe_unused,
+> > +                                                          int max_stac=
+k __maybe_unused,
+> > +                                                          bool best_ef=
+fort  __maybe_unused,
+> > +                                                          uint64_t fir=
+st_ip  __maybe_unused)
+> > +{
+> > +#ifdef HAVE_LIBUNWIND_RISCV_SUPPORT
+> > +     struct x86_64_unwind_info {
+>                ^ copy+paste issue?
 
-You can lookup 'mem-loads' events on Intel CPUs.  It should be 'cpu',
-'cpu_core' and/or 'cpu_atom'.  On AMD, you can use 'ibs_op'.
-
-  $ grep -l . /sys/bus/event_source/devices/*/events/mem-loads
-  /sys/bus/event_source/devices/cpu/events/mem-loads
-
-> 
-> Or is it possible to detect that a perf_event initialized with a certain
-> perf_event_attr does not have the ability to obtain the address?
-
-I don't think so.  IIRC it will just have address of 0 if not supported.
-
-> 
-> > > > And one quick question.  Can this work on virtual machines?  I'm asking this
-> > > > question the for following reason.  I'm actuaally working on a similar project
-> > > > that extends DAMON for page fault based access events sampling [1].  The
-> > > > project aims to use page fault event rather than other h/w features such as AMD
-> > > > IBS or Intel PEBS, because my understanding is that such h/w features are not
-> > > > available on virtual machines.
-> >
-> > KVM supports PMU virtualization.  But the existing vPMU support has a
-> > lot of overhead.  Recently mediated vPMU patchset was added so you can
-> > try that instead.  You'll need to pass appropriate options to qemu.
-> >
-> > https://lore.kernel.org/lkml/20251206001720.468579-1-seanjc@google.com/
-> 
-> Thank you for the important information.
-
-No problem!  You may go with the existing vPMU if you just plan to use a
-couple of events only.
+Seems very likely :-) Will fix in v2. I'm still after a way to
+generate a compile of libunwind from its github with all the remote
+headers built and not just the one for the host I'm on. It seems there
+is an Android solution for this, but I was hoping for something more
+upstream. At this point it is looking to me that libunwind is a dead
+project and we may be better just deleting the associated code.
 
 Thanks,
-Namhyung
+Ian
 
+> Thanks,
+> drew
