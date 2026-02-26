@@ -1,287 +1,248 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b1-smtp.messagingengine.com (flow-b1-smtp.messagingengine.com [202.12.124.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91A238A70D
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 18:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC24364950;
+	Thu, 26 Feb 2026 18:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772128804; cv=none; b=tO29OtzeeaGAocEOMzXPBP2DNCimnuY1S5lbOB0rPZbV8UMaD1mpK4oJqZZ3h+eLNs6FW06Rg3R13OqSUOi1VpBz0/hp6HDZIFo9+d4ZFJ40+ykecuH2HxiLuMWxIa2pxVOMva8RjsLoMPnkFOzHiJL9EuVEquDUwipBfankBSU=
+	t=1772130118; cv=none; b=R3SEEpU8eVCdnvtP2ysz54FIhVUYG0OqlrRtPwJhwVe/HSj916NxQIuN0AfI1QUjnQiEd7XfWxICHeb+oqfEVl43KzrJXfd6OUAGCYzxzclCkJeVmcqNzeI1nieVjGWxUoWRZcrp/6NfPVKeS4vTivbDh6kGnazeAQh6eRBs6vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772128804; c=relaxed/simple;
-	bh=lOsoOFRZMW24Cb+H50A5yAie0d8ezxNyThtruTIS1WA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=t0dIh6mfLARCmrw1z4h/Zf+bo5YhijU6qxhgTz7m9OkRm7MA0iA68rufHHnmK1vIDVjx+DVc2s1DVoHk7CoG3NaNqJn2BZHEHEBAFLYqXMrP5lnLJ4CDjnSMo4/CvXzi3xy7AjkpbpYx6deeVFz/0YjJLUmZC/TxelndSU2R/c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4g9GBFNA; arc=none smtp.client-ip=74.125.82.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1772130118; c=relaxed/simple;
+	bh=WYe3g2LXyQ9AhVTfCdVIzpcKu075UTs90Kcf7CbKq1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RGEVCFQ6mquadGYbxTeFFJKRc+7e1wyjbp/ACDQr4wTyRdnYCaKi0w2YrqZBaSRRbzrSzSgnGT5j9Wwz8Uda08m46wE/PD8qUK1Ol8aMqMBGap3kzAXw+nsSPmmTf1K+G53v9R0dfXN96KAyti5Xy3ELm6BEQvu8oA64PyYUpSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tyhicks.com; spf=pass smtp.mailfrom=tyhicks.com; dkim=pass (2048-bit key) header.d=tyhicks.com header.i=@tyhicks.com header.b=mY7eiJft; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Wbr6CQoQ; arc=none smtp.client-ip=202.12.124.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tyhicks.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tyhicks.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4g9GBFNA"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2bdc42265a2so1055583eec.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 10:00:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772128802; x=1772733602; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JebxhsuRXpmS99sqoEAcdewBCf+xeG1RAop12duRn7Q=;
-        b=4g9GBFNAUTEtK9hxX3lmJiLXqCec0kuTdkZWZYLsTdJNYkYqnx1Xdqx/JdLdqAIgRw
-         Ck8HutWqhAdX3i5rRk74E5RUHR81e+U53/FNqRlOg+VpmiGM9u5olybAAIY6jCV3/IGG
-         Tjm2cO4nJkTMeJVhTeJ56JO2gpdtjCoyoR3F4ELAe4SpqX3ICEcNqT+JuAf+OBOC7pvI
-         cLEVsmrl/uAmo0qjsF/o1y2u7o9GAHkGDdLsV3aucK2Mzfd6wKodH1aak+29bf9x4f5c
-         cUFOxyTqpb+qrqYDfcHn8eGn2KWAJMpQx0Mq5uvg4pB7ItYVbH79iGzo4bmi64kwblNg
-         MXXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772128802; x=1772733602;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JebxhsuRXpmS99sqoEAcdewBCf+xeG1RAop12duRn7Q=;
-        b=hVOzqqPDaEM7fueCGPjIGKcCLTHXrMZeuWHBK2iNpI3OPgs5SHJpbTaaP3qI8Vgsdk
-         Kt7mFOBYAsUc+zoOPZHXaA7SQaO3D8yaCWnkp9EqFslaW7hoX67+YtG9qGTmeXIlZuxr
-         eSuxgw3p8xZtI5Prxr4cnTgdTPes0lkQvzxiraS8RgHZ7bcUJWb0A8fSC0lg9E17bFuH
-         eE+sIFiqIaYcGgVBooS06Peb4VxbWzg4fxXBS1Gg03yINKExT2F3Wsl59c752fg8ahdy
-         d5GpB2178QjBjPFgTjjfldxrFUyaRI7NgH60admy2YsgJpQAhAencwJhFDxn6ernpeof
-         KEeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXskvdmkZjAv95QZL39O1ZoRd/d1iggCfnOjEwZngziOCNfOh+BFEurIUSw+M5wHj3sxatGqHGM8yxQA4jLZUCa@vger.kernel.org
-X-Gm-Message-State: AOJu0YweoO7pUAPOLHGeBq4gpdR1LSNBKISexPcePJwK5w1ZpYaT/CwZ
-	6rtw0tZ37N22hUgMG0YfM2H687jQIouNeukyVWiyC4Vg0QJOntepoMSCtJhXctgHTq2oh1G2xVu
-	jWZqHExvS1Q==
-X-Received: from dlw4.prod.google.com ([2002:a05:7022:44:b0:124:9d31:3581])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:45a8:b0:11b:82b8:40ae
- with SMTP id a92af1059eb24-1276acc4a5cmr9814942c88.18.1772128801157; Thu, 26
- Feb 2026 10:00:01 -0800 (PST)
-Date: Thu, 26 Feb 2026 09:59:36 -0800
-In-Reply-To: <20260226175936.593159-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=tyhicks.com header.i=@tyhicks.com header.b="mY7eiJft";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Wbr6CQoQ"
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailflow.stl.internal (Postfix) with ESMTP id 743B91300D33;
+	Thu, 26 Feb 2026 13:21:48 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Thu, 26 Feb 2026 13:21:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tyhicks.com; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1772130108; x=1772137308; bh=Sb7TIp4SU4
+	BPQBIvJrSXRMea2RP/1RRExQbDg2XxtlI=; b=mY7eiJfttavlrkoyTDwNdr3mxW
+	Yya+Iw3UKA4pbqGLZDUfmlhGyawYCSUPSi+nDDwafb7FT9h6EPhkxS7vBUT895gL
+	CnDmfTUJfgc1oaVWjG3Y1iau6+oI+/JO27lXnzxzEYRhz4YfNoox8740SEVZ++4s
+	BBTZTkPZOp6HQ9AJfG5KwlTBpXiDSLAB3cve5cgBUIaFbLdz5uyQXSTiIahSPotH
+	m1N2lXzy8Iihxh74XQQXYRnr/Dwi8vB0M0bhR+h5i6uX0KteqwydeufZ3dU4SftV
+	SzNqqk6Em9aj+vgVUl6JrqNPESwI3T+GdW42gdEHfAduc4Ok2Dp3hiDxwYFA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1772130108; x=1772137308; bh=Sb7TIp4SU4BPQBIvJrSXRMea2RP/1RRExQb
+	Dg2XxtlI=; b=Wbr6CQoQTXhnL6un9p2QFSFiL0/WjAPgN3Hqu5CGgGnwO4FxUJa
+	OmvY30abalkecNj7B20MZ1bpuJh+TEmGBZXYxqyJBkz3A4BfqsOu+C7rioY1Oizq
+	Zd2fddNNaIjiw0VbTKEdT9In9NdBg15SPjbI57hQH+5YxYbOH79Eol9nG56xFPk1
+	eiKeasIRabf/jG3UfgdumG0CyMN461bE3X6VsQJiOYaNYLPiKx2aS2bwVBQ9AEPA
+	IAaqkD2V3JIkfoU0YEHqQLNSdvaJg641+JWTYSnTaSpqnNns0x7Gw5Y6xRmo3qP/
+	n4w0XGk8yMxS7HR7c9eOuMmrQsuoDk98T6Q==
+X-ME-Sender: <xms:N4-gaUgmHgN8QUT5uqZyoAILKIllC9CSpHs_aa5ApMJdy4TRUZaqng>
+    <xme:N4-gaavxRR5FxKAhShwOptBTutlMZMQyOs7VM80awROwu53qi0gUMWnPhMfDsNHbW
+    wOQnAjHtKRdhR389hAuinaNTgyNuKGoXkHHRO-W1GYDHnN4n7xWmWg>
+X-ME-Received: <xmr:N4-gadynJhJmTysctuxAEb_rcwrEQCCAUTRr_O7lniLd8LGwb0bZ3JQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvgeeijeehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfihlhgvrhcu
+    jfhitghkshcuoegtohguvgesthihhhhitghkshdrtghomheqnecuggftrfgrthhtvghrnh
+    epvdehvddttdfhfefhtdfgleehfeeggfdujeeuveekudevkedvgeejtddtfefgleeinecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghouggvse
+    hthihhihgtkhhsrdgtohhmpdhnsggprhgtphhtthhopedugeehpdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepsghr
+    rghunhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhgrtghksehsuhhsvgdrtg
+    iipdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdrohhrghdprhgtphhtthho
+    pehmhhhirhgrmhgrtheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrthhhihgvuh
+    druggvshhnohihvghrshesvghffhhitghiohhsrdgtohhmpdhrtghpthhtohepuggrnhdr
+    jhdrfihilhhlihgrmhhssehinhhtvghlrdgtohhmpdhrtghpthhtohepfihilhhlhiesih
+    hnfhhrrgguvggrugdrohhrgh
+X-ME-Proxy: <xmx:N4-gaUiDHufb7QDBXtv8zwbIb83B1pheshVwg5ywjfQJEiEhKoV6BA>
+    <xmx:N4-gaTYOst36ecB1dZaU-vU3382-pFYnRZALOnlpLPnbipXYkF9QHQ>
+    <xmx:N4-gaRZQeIr-umcwUpLlYQH9oqvsne-oBW6cY0EOLVeaTmU3aOAHdA>
+    <xmx:N4-gaXWU9S8BXIqIGWB3xu1aNy8XbCWoZVjyGjttFvAIRGT1xRapxw>
+    <xmx:PI-gaZ752oPELps33je3r6u6yggqAG8mNBxGDV8jZFYtOdWW7-_mYAVV>
+Feedback-ID: i78e14604:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 26 Feb 2026 13:21:33 -0500 (EST)
+Date: Thu, 26 Feb 2026 12:21:22 -0600
+From: Tyler Hicks <code@tyhicks.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,	Eric Biggers <ebiggers@kernel.org>,
+	"Theodore Y. Ts'o" <tytso@mit.edu>,	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,	David Hildenbrand <david@kernel.org>,
+	David Howells <dhowells@redhat.com>,	Paulo Alcantara <pc@manguebit.org>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
+	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,	Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>,	Steve French <sfrench@samba.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	David Sterba <dsterba@suse.com>,	Marc Dionne <marc.dionne@auristor.com>,
+ Ian Kent <raven@themaw.net>,	Luis de Bethencourt <luisbg@kernel.org>,
+	Salah Triki <salah.triki@gmail.com>,
+	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+	Ilya Dryomov <idryomov@gmail.com>,	Alex Markuze <amarkuze@redhat.com>,
+	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+	Nicolas Pitre <nico@fluxnic.net>,	Amir Goldstein <amir73il@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Yangtao Li <frank.li@vivo.com>,
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Richard Weinberger <richard@nod.at>,	Dave Kleikamp <shaggy@kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	Damien Le Moal <dlemoal@kernel.org>,	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,	Martin Schiller <ms@dev.tdt.de>,
+ linux-fsdevel@vger.kernel.org,	linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,	nvdimm@lists.linux.dev,
+ fsverity@lists.linux.dev,	linux-mm@kvack.org, netfs@lists.linux.dev,
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
+	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+	autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
+	codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-hams@vger.kernel.org, linux-x25@vger.kernel.org
+Subject: Re: [PATCH 28/61] ecryptfs: update format strings for u64 i_ino
+Message-ID: <aaCO9CdY1AP8SM2K@yaupon>
+References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
+ <20260226-iino-u64-v1-28-ccceff366db9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260226175936.593159-1-irogers@google.com>
-X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <20260226175936.593159-10-irogers@google.com>
-Subject: [PATCH v2 10/10] perf vendor events intel: Update sierraforest events
- from 1.13 to 1.15
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260226-iino-u64-v1-28-ccceff366db9@kernel.org>
 
-The updated events were published in:
-https://github.com/intel/perfmon/commit/996bacad8f144e675b32f0096b9fe6813380695c
-https://github.com/intel/perfmon/commit/93b6ef08ca9b01788458e8f5a0e7cbb716715b7c
+On 2026-02-26 10:55:30, Jeff Layton wrote:
+> Update format strings and local variable types in ecryptfs for the
+> i_ino type change from unsigned long to u64.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- .../arch/x86/sierraforest/cache.json          | 22 +++++-----
- .../arch/x86/sierraforest/pipeline.json       | 42 ++++++++++++++++---
- 3 files changed, 49 insertions(+), 17 deletions(-)
+Acked-by: Tyler Hicks <code@tyhicks.com>
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index 8ef03af9f150..8a9e1735e21e 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -30,7 +30,7 @@ GenuineIntel-6-CC,v1.04,pantherlake,core
- GenuineIntel-6-A7,v1.04,rocketlake,core
- GenuineIntel-6-2A,v19,sandybridge,core
- GenuineIntel-6-8F,v1.36,sapphirerapids,core
--GenuineIntel-6-AF,v1.13,sierraforest,core
-+GenuineIntel-6-AF,v1.15,sierraforest,core
- GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
- GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v59,skylake,core
- GenuineIntel-6-55-[01234],v1.37,skylakex,core
-diff --git a/tools/perf/pmu-events/arch/x86/sierraforest/cache.json b/tools/perf/pmu-events/arch/x86/sierraforest/cache.json
-index de0e7661a52d..168f43557a0e 100644
---- a/tools/perf/pmu-events/arch/x86/sierraforest/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/sierraforest/cache.json
-@@ -326,7 +326,7 @@
-         "UMask": "0x82"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 1024. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -337,7 +337,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 128. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -348,7 +348,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 16. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -359,7 +359,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 2048. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -370,7 +370,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 256. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -381,7 +381,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 32. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -392,7 +392,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 4. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -403,7 +403,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 512. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -414,7 +414,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 64. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -425,7 +425,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 8. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -499,7 +499,7 @@
-         "UMask": "0x12"
-     },
-     {
--        "BriefDescription": "Counts the number of  stores uops retired same as MEM_UOPS_RETIRED.ALL_STORES",
-+        "BriefDescription": "Counts the number of stores uops retired.",
-         "Counter": "0,1,2,3,4,5,6,7",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-diff --git a/tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json b/tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json
-index 70af13143024..cf67ff6135e0 100644
---- a/tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json
-@@ -186,7 +186,7 @@
-         "UMask": "0xf7"
-     },
-     {
--        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles",
-+        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.THREAD]",
-         "Counter": "Fixed counter 1",
-         "EventName": "CPU_CLK_UNHALTED.CORE",
-         "SampleAfterValue": "2000003",
-@@ -200,7 +200,7 @@
-         "SampleAfterValue": "2000003"
-     },
-     {
--        "BriefDescription": "Fixed Counter: Counts the number of unhalted reference clock cycles",
-+        "BriefDescription": "Fixed Counter: Counts the number of unhalted reference clock cycles.",
-         "Counter": "Fixed counter 2",
-         "EventName": "CPU_CLK_UNHALTED.REF_TSC",
-         "SampleAfterValue": "2000003",
-@@ -216,7 +216,7 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles",
-+        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.CORE]",
-         "Counter": "Fixed counter 1",
-         "EventName": "CPU_CLK_UNHALTED.THREAD",
-         "SampleAfterValue": "2000003",
-@@ -230,10 +230,10 @@
-         "SampleAfterValue": "2000003"
-     },
-     {
--        "BriefDescription": "Fixed Counter: Counts the number of instructions retired",
-+        "BriefDescription": "Fixed Counter: Counts the number of instructions retired.",
-         "Counter": "Fixed counter 0",
-         "EventName": "INST_RETIRED.ANY",
--        "PublicDescription": "Fixed Counter: Counts the number of instructions retired Available PDIST counters: 32",
-+        "PublicDescription": "Fixed Counter: Counts the number of instructions retired. Available PDIST counters: 32",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-@@ -309,6 +309,38 @@
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts the number of CLFLUSH, CLWB, and CLDEMOTE instructions retired.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xe0",
-+        "EventName": "MISC_RETIRED1.CL_INST",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0xff"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of LFENCE instructions retired.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xe0",
-+        "EventName": "MISC_RETIRED1.LFENCE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of accesses to KeyLocker cache.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xe1",
-+        "EventName": "MISC_RETIRED2.KEYLOCKER_ACCESS",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x10"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of misses to KeyLocker cache.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xe1",
-+        "EventName": "MISC_RETIRED2.KEYLOCKER_MISS",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x11"
-+    },
-     {
-         "BriefDescription": "Counts the number of issue slots in a UMWAIT or TPAUSE instruction where no uop issues due to the instruction putting the CPU into the C0.1 activity state.",
-         "Counter": "0,1,2,3,4,5,6,7",
--- 
-2.53.0.414.gf7e9f6c205-goog
+Tyler
 
+> ---
+>  fs/ecryptfs/crypto.c | 6 +++---
+>  fs/ecryptfs/file.c   | 2 +-
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
+> index 3b59346d68c594fcd7e27bae87849d3e19eff56e..f25c9a49e251a591695a143f64d1a81c5211ec18 100644
+> --- a/fs/ecryptfs/crypto.c
+> +++ b/fs/ecryptfs/crypto.c
+> @@ -1313,7 +1313,7 @@ int ecryptfs_read_metadata(struct dentry *ecryptfs_dentry)
+>  		rc = ecryptfs_read_xattr_region(page_virt, ecryptfs_inode);
+>  		if (rc) {
+>  			printk(KERN_DEBUG "Valid eCryptfs headers not found in "
+> -			       "file header region or xattr region, inode %lu\n",
+> +			       "file header region or xattr region, inode %llu\n",
+>  				ecryptfs_inode->i_ino);
+>  			rc = -EINVAL;
+>  			goto out;
+> @@ -1323,7 +1323,7 @@ int ecryptfs_read_metadata(struct dentry *ecryptfs_dentry)
+>  						ECRYPTFS_DONT_VALIDATE_HEADER_SIZE);
+>  		if (rc) {
+>  			printk(KERN_DEBUG "Valid eCryptfs headers not found in "
+> -			       "file xattr region either, inode %lu\n",
+> +			       "file xattr region either, inode %llu\n",
+>  				ecryptfs_inode->i_ino);
+>  			rc = -EINVAL;
+>  		}
+> @@ -1335,7 +1335,7 @@ int ecryptfs_read_metadata(struct dentry *ecryptfs_dentry)
+>  			       "crypto metadata only in the extended attribute "
+>  			       "region, but eCryptfs was mounted without "
+>  			       "xattr support enabled. eCryptfs will not treat "
+> -			       "this like an encrypted file, inode %lu\n",
+> +			       "this like an encrypted file, inode %llu\n",
+>  				ecryptfs_inode->i_ino);
+>  			rc = -EINVAL;
+>  		}
+> diff --git a/fs/ecryptfs/file.c b/fs/ecryptfs/file.c
+> index 7929411837cf5b2e98e1d4288791d2e07c44a4eb..49b0fbe0428a2d202434ce4b5fd7d82d2a63cf58 100644
+> --- a/fs/ecryptfs/file.c
+> +++ b/fs/ecryptfs/file.c
+> @@ -253,7 +253,7 @@ static int ecryptfs_open(struct inode *inode, struct file *file)
+>  	if (rc)
+>  		goto out_put;
+>  	ecryptfs_printk(KERN_DEBUG, "inode w/ addr = [0x%p], i_ino = "
+> -			"[0x%.16lx] size: [0x%.16llx]\n", inode, inode->i_ino,
+> +			"[0x%.16llx] size: [0x%.16llx]\n", inode, inode->i_ino,
+>  			(unsigned long long)i_size_read(inode));
+>  	goto out;
+>  out_put:
+> 
+> -- 
+> 2.53.0
+> 
