@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213261B424F
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 01:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D29372B4D
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 01:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772069744; cv=none; b=gpoyNxoFTKh1rLpgayWMxcRviKXVbRkfVq44M7kGZ4X136LlwTClSRCV/NisG8559eyrtR2ZCb+0KedExBK4CAN3DYDHVVXTOgRadWaKRzLwg5r0PB1PB0ckqP97kbh3v0VcAOkaOb3t855uPTdhB5xMk3jZ7IwP7ebjKMUqYrk=
+	t=1772069746; cv=none; b=oog/MQkxO2qZ31zOcSxUwiLpY+VR56QTc8HBreZQM7t03r4DjPTNUgo7sG8GJ1PryOWJYcf+b+OA8QgYYUA5LAtzUMWSyPnI2+UsBtjlw4GI9rXbnwelICWlpR5/hpUl1T39cGADGD1SKKCVsfB6ehIxijIoeoSVo1BqAslAs84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772069744; c=relaxed/simple;
-	bh=fFQHaIikBJyovgPGOeGhVTXIPkPFPK5i6n37FVjI1fc=;
+	s=arc-20240116; t=1772069746; c=relaxed/simple;
+	bh=eeNwYpEzpgEXFZ0Jhoxog60AAtz/Jn9ONeyPQyjQ79c=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=rvXdBnGFMS4nUcDjql8z1WdHZ0yLDOZFtquWgoUaTmRI1NM2zosVKZcVscHDFukyVhvfk8YM2Mt4Puq0B5kpiRmK6q47u3f2SCI0o9k9Yc60hUeVqL/AU1feKC/grRrre1uxuc35155j/myCX3dZNd63v4lx+blz3jmkLVVyD2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zhlwBeIF; arc=none smtp.client-ip=74.125.82.74
+	 To:Content-Type; b=hT1fme9MfLhPDVbHifwwiLLGcBfFLR0jAbJiNFyL1BgRO8nEKPP+y457HdUYJAHzoxd2WjTAz0OJ45gMrpTHACo4jpzAbWvc8+wI7/4nH2pCdEAvPAhY7tMcO4+gUQlpgq2yGZJmOubQnG6Zd5jubiz0XZSbPRlZc4CPx+8ZVVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KC6ullVG; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zhlwBeIF"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-127133794b6so465918c88.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Feb 2026 17:35:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KC6ullVG"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1270dcd11c1so456025c88.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Feb 2026 17:35:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772069742; x=1772674542; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1772069744; x=1772674544; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=RGUY7F3cp7tvyDfn/CEjTzbckjduIBZzlL3vEOWkjFQ=;
-        b=zhlwBeIFPGYBjABu9OqlcRLe5WxED13vX8QXUZVfORWfZzBrriY2BouzuwaOGQHAdN
-         C1FtL77hDYlUhAxMjLqlCXwrDqsD3BFn87CzVrEy1TmT93TBuhEwYIPk7j9qjqElitnH
-         5S+fboU2PBM9/5BZGpcBUqNnJ87IbKyw3H9lF31EBh/IeG/72MJqCZN7h8DmG5rgsuNE
-         mST+j/DoSB+PAcW4i+AwGwuamxV+V5JrJOzY42vkQi4IPe+RqKqyfbyZ87fpkiQcFXFs
-         7RKOXci7T1Ys7+ShNInUPDewO/MphZS7Ydr/CXVvrGqWN17vIb5Qcnn/44Z2iEy+xkmF
-         Y1oQ==
+        bh=8Gmm98xZ4+RrHvD1WFWJ4a3sf0CYZy8dqlD7KsFsh0w=;
+        b=KC6ullVG6/b+EvmbJIGD8XpihMrSDAFnly4fNIOo0bJaTIEV5wydhzYKJLjMY8AB6b
+         P0iQ/8MGrWwg45lDx+KHSooEmzn+jFXTyaANpMFpOtKFMR9rZjCRpNH03+o5o5+zHPrp
+         wdSuSMDutmOA82flV2Evy3Pnv6TQYHxVvONV7ttqd7a84inEs9sDSf6y8oqZLm7fIo4c
+         B07W/WFVUFmgyXGZEHvs7y8KznD8CXof6nWWKNxiGIWfZ1aXAzwbD2InDOksRoSKqN1a
+         OVLFjfLs2aK7R9y9OC+nkDAZMxBOqFEQog30rQiL7GIUle6G7mpIA5MSW99+dwl9QwJf
+         fXKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772069742; x=1772674542;
+        d=1e100.net; s=20230601; t=1772069744; x=1772674544;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RGUY7F3cp7tvyDfn/CEjTzbckjduIBZzlL3vEOWkjFQ=;
-        b=NhOrz4ClBtc0gpQf0adVjMy5RskikdXrAW5oDtPIl02uz/Eyhui0LnZITNXFLVZbut
-         R9BtLmFgq5PDWeVvGcIAU7KV7ejp/Q5Dypsu/Ir696aHv7yJ2o3TOLW+qTtHMhEKm++p
-         tM9W4ElEA5XdnOrY/gYffHGea46NrBCSmUfFJnU0H84T8gbHLBnlP+uDmFm2oD7iFoT+
-         4d9rATEBvquNvMiczaTk/w3aNuEWbq/ane4ic+E2SAPqKme+DaKZuToB+rvZwWwfNSj/
-         ruaDlgtDX8z+nS76bmviZraGmK7q0oGpF+2alqgoGPq9L+7o0WbSVxhDyj1ieoIcAmE7
-         BpAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUb7qyIEqeZpclP+lBCRgmoqTuQ8jy2g6Td10AUWQWY9pN5FKm3fzfFEL00LCuFI0CGHTY6mtQnmEnumau6VU4A@vger.kernel.org
-X-Gm-Message-State: AOJu0YznmnrzY97fel8c13ynkBQagcgI0FIa16GK1jq5e6cA4W0YMYPl
-	ObeXL4L78fITCQ28ydG0T1KeDtltQlmNjNfdc4eM97DN88oBjK9sNKu1G5VrMQPDPmT0hr5hvXL
-	VpJR/zs3ChQ==
-X-Received: from dlbbz13.prod.google.com ([2002:a05:7022:238d:b0:127:dec:f86])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:68a5:b0:11f:2c69:31
- with SMTP id a92af1059eb24-1276ad6a75fmr7633930c88.46.1772069741988; Wed, 25
- Feb 2026 17:35:41 -0800 (PST)
-Date: Wed, 25 Feb 2026 17:35:30 -0800
+        bh=8Gmm98xZ4+RrHvD1WFWJ4a3sf0CYZy8dqlD7KsFsh0w=;
+        b=K7eCZV1og8q+6ixqjmeGyWrX+BW2Lscjzj5++uw1b/D759E18YbYR8FYkIcZh7b55e
+         IztKbYzBVHEPGgmMiujjZ7tiacJT7MwJm63MGhLNSn5+2U2xdWzoIHLbgVG4sTcCaPBv
+         7Y44qRkWwSbxjctE9VZCwo5zefMf53UnarwVjovYjZ4xIfW99zHs1saohsuVcIk/nLiV
+         LK9/c4k4pDIUlKoROv96Znayy3XQxYF8LEk1ddGBXAD4jiWCTWMxvT4fP5R2H0+W6hC2
+         DpDMbrU7/Zh/ko8Hjy4z728lBVx0ZEvuEdArSO3oPjvL2Hy9RGLM1DQc4HmMrBMAnpdY
+         CVgw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlLRpoYRCTK/yJRfqRxaI7LbEmiO2rhFxucQh9KkPTlM5Cj9hKfBVCe5uRi+20o01huBZs1TWYSnfUwsd4U+1o@vger.kernel.org
+X-Gm-Message-State: AOJu0YzleWt2QAsGwG3U+3jSn0Gsf0WgTXFenfeAMLl98fxi5rJ3BwHd
+	DG4FaW6vnWlyv/9uOuEbkXKhnmB3XXkIb1RCiSxx21lW2XurdtFK7HOUEfUyK3/5BlV/MzaQ8OI
+	70Fn7GpR0jw==
+X-Received: from dlam6-n1.prod.google.com ([2002:a05:701b:2086:10b0:11b:bcda:45a9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:660e:b0:127:148b:3fcc
+ with SMTP id a92af1059eb24-12789c55ba8mr281096c88.8.1772069743977; Wed, 25
+ Feb 2026 17:35:43 -0800 (PST)
+Date: Wed, 25 Feb 2026 17:35:31 -0800
 In-Reply-To: <20260226013534.2028272-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260226013534.2028272-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.414.gf7e9f6c205-goog
-Message-ID: <20260226013534.2028272-2-irogers@google.com>
-Subject: [PATCH v1 1/5] perf clockid: Add missing include
+Message-ID: <20260226013534.2028272-3-irogers@google.com>
+Subject: [PATCH v1 2/5] perf header: Add utility to convert feature number to
+ a string
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,30 +73,47 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-clockid_t is declared in time.h but the include is missing. Reordering
-header files may result in build breakages. Add the include to avoid
-this.
+For logging and debug messages it can be convenient to convert a
+feature number to a name. Add header_feat__name for this and reuse the
+data already within the feat_ops struct.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/clockid.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/header.c | 7 +++++++
+ tools/perf/util/header.h | 2 ++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/tools/perf/util/clockid.h b/tools/perf/util/clockid.h
-index 9b49b4711c76..33dbd8673c1c 100644
---- a/tools/perf/util/clockid.h
-+++ b/tools/perf/util/clockid.h
-@@ -1,8 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--
- #ifndef __PERF_CLOCKID_H
- #define __PERF_CLOCKID_H
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 9142a8ba4019..fe5d21dde04f 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3770,6 +3770,13 @@ struct header_print_data {
+ 	bool full; /* extended list of headers */
+ };
  
-+#include <time.h>
++const char *header_feat__name(unsigned int id)
++{
++	if (id < HEADER_LAST_FEATURE)
++		return feat_ops[id].name;
++	return "INVALID";
++}
 +
- struct option;
- int parse_clockid(const struct option *opt, const char *str, int unset);
+ static int perf_file_section__fprintf_info(struct perf_file_section *section,
+ 					   struct perf_header *ph,
+ 					   int feat, int fd, void *data)
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index cc40ac796f52..ca22030a1434 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -132,6 +132,8 @@ struct perf_header_feature_ops {
  
+ extern const char perf_version_string[];
+ 
++const char *header_feat__name(unsigned int id);
++
+ int perf_session__read_header(struct perf_session *session);
+ int perf_session__write_header(struct perf_session *session,
+ 			       struct evlist *evlist,
 -- 
 2.53.0.414.gf7e9f6c205-goog
 
