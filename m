@@ -1,56 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186A23624B7
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 17:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E0B364927
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 17:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772128792; cv=none; b=IwTji4var6BknfiVjJsIXBdPa/rW7h4eMaDl8FryCGcCw4A3Ts86coYIaxGb5g6CIV6ALNJTB9faOUr34YMxiwPeJsiuNuH+L7TTQE62IjSri5ZBL6k+3/YX12BfRMYRJeSok9tOk5YK+EzCU45YyszWGza/ppyz+zZalWJapWQ=
+	t=1772128793; cv=none; b=h1yTkV6fU1PEJSokJt5FiylROlyjfPfW8+KCohd2vti3cSH8Y7dVhvoKCNZP108EJf5vmg+kdWZfuB+nSJ8SUfVwb0qOT5vu9he3ljY58L2LyUyKL7EGV1/rGLkrCF7PBNbYAAK2XP+MkBT0zBHQ/CUWpR91ajYFZKJhQvHsvJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772128792; c=relaxed/simple;
-	bh=V812KtRxICnIqr5kjTFeDYAuOKsz/nR3zKd8fXnsoy4=;
+	s=arc-20240116; t=1772128793; c=relaxed/simple;
+	bh=qhtkRfykDtcvbjL2tFT/LAEUxAWj+xeJm0UCf0J7oHs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=k62Yyk3IMIzTscKXhhckkw0W1M9gkx73/k6PYjJDWqcnCsII7ux2dbSi1pbuEfDP+WeMfpRxUOj4xWmMQ7ZNqudKbBvei0vaP+y8orA5mxaD3/x7I80siLT5CZk8kdNeaLvt/re4iUQ2ivyq8EJA9MsgWCobkgifEPxBs/G/MvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CkTxxHsj; arc=none smtp.client-ip=74.125.82.73
+	 To:Content-Type; b=u7Ao2EUlzsgZeVQZLc554YaZ2SgGVUC26oQ9MnNeMw2ig0gqP0G/HQxQfQQg8ZUSIkSgqNQ9qzAA3GEv0dkaWGEHcJV1TedDbLF0YHx0XhJNL8phPMus+NUgQeMGqZqfAyi7VyClRnOU1kHpeGaj5YNmy37uRAJlcbLnUkuX2po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qXE/pGaL; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CkTxxHsj"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12733e595e5so1695505c88.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 09:59:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qXE/pGaL"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2bdc5078895so24249251eec.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 09:59:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772128789; x=1772733589; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p0sd+ZwPNif80S6gNRMMBCY+IhDOwA5QIZbdK/H8ojY=;
-        b=CkTxxHsjFIGUDgLcKTwbiXajsc/c1WXLnKaDQvAx8N8g98Xe+4jgwovbr+iz/TmCRq
-         HiZj9lBVQrZy4t6lQBMg0f0wUMqzSGC/b3D5yBK+wiPcg0QwP0ic0gnLsQ5GBub897U6
-         tS7APALGw5/N2bL7KPvTSdEkOXziu4H/LpRq1aYYcMj/b5Vl4xK+HLk/MU2O4eQHlQQ3
-         RHP/OOsVD5XeF1WUd/B1jo0K0UVNUW3KAWdKwGe7RBA8CHBTFtGu+FXgwWhrQkiZPQP/
-         mlneZrMrKxeXlK/uw4utA1g7e3N5NhYhfkpHJMDIm5ce0vSh8mcwaL/kHmThumKMz2H5
-         7CNA==
+        d=google.com; s=20230601; t=1772128791; x=1772733591; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ThXHpIwX96Kri+Lw+1W21ZJXtSkm2MpZVgq630ABzrY=;
+        b=qXE/pGaLvMnG5DqNlNJTo0DxtdW78qG6/MFK1O8b0E2FwLYThO1RXUj9pRKhdJzlxj
+         jS9XWkZj8VgR4HLO/fp5pAX2YvJcoxWS1Y04aCfbUEFBfnSGR66ootFQKRv4Wa/xGaIj
+         LBzXxtoJ1uCtF7d6+SPMqbPXN+Bjd4heo/OT5RmZ0bme2QAcOUTOrY5Ww6XtVfqxcVNC
+         WO3iYRFYB96z8kMEArE+QHRWsxLQmdIACAoc84ysjEdrG5RJVkamMRG6/cMK/GOEDQBg
+         VDZCiTSEsJO3JtwmDTQB+5yrC0yQqXJApXj2khv2pvQbaLcjhr4Qhj2m1ohIBLfjLt1e
+         Plqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772128789; x=1772733589;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=p0sd+ZwPNif80S6gNRMMBCY+IhDOwA5QIZbdK/H8ojY=;
-        b=cyUzpZqEfBzoEQKVUNnrQi5MTtLriyyFB+PqxQ827lDASTuBKJR6NSY/eA6rZbsxUe
-         GAZvzUhPaECZ4Tw43PNm25Kr3u3kh+kXrjV0XNbNG9tpaEUKhzBoY15zHMdbW8gH1jKD
-         0YFtYfwOTtbefSZ4EUj0eSrxY8mCro+ZKTDUqxLEEctEGGTHoRh1iTnMn/RGMYgkGhUs
-         qzJ5C3NCFuhJb8R2TOHhrRl5BxwLJNBAlGV6EWFJGYD9tI2dbDlehj+wJd7GH2NkzvRh
-         jx2puKRMFxqXJdz9buAGqfxah49HpC2cxp34SzPSyIpQjVfnOrOx6WNH9T63WSVCIksB
-         7oCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbWDaQbzR9Kt5DSXhg0PE5eejcNULhT7Eq7fdYp7MyvpyasjB/fF31ji6MAEYigbVGkBcq58NYpZ5QbwuRd3Ob@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhLwnDs6SAlg4Jwg7pSXraYSSAXaO2wI8SlAooMdWCRsd+t0Gb
-	zKRlLdFJDRccylHLlEE1aTDRV0mal4pEr0bqZ05J4vEQ3zRuH/HGIctatM+cNZmjaLFUNIFVbjG
-	tD4KLHpXNzQ==
-X-Received: from dlbbs39.prod.google.com ([2002:a05:7022:927:b0:124:a5f5:ced])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:61a9:b0:11b:9386:8256
- with SMTP id a92af1059eb24-127869d8d7dmr1648777c88.43.1772128788770; Thu, 26
- Feb 2026 09:59:48 -0800 (PST)
-Date: Thu, 26 Feb 2026 09:59:31 -0800
+        d=1e100.net; s=20230601; t=1772128791; x=1772733591;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ThXHpIwX96Kri+Lw+1W21ZJXtSkm2MpZVgq630ABzrY=;
+        b=j2c53IupoIh31lDp3XHIUA3abGKoGK8cp1BTvk16KKkSOOLesmvUk0UD2jQgHa57li
+         Uc8uZEiMP8469GblDXOAfQsUGiSO0tpU6gnnOyfxRno8z5OncEIdXucAQO0BoZ0232Ks
+         73RmFGkcabA+FuK+gYU88LA9zWkd12VjRrptPFgH+I7ubPVgiLYuA0WFyaPq2SecQZfj
+         iQrvYB8eOeHCarMY+gBHZh+TPUABJu4Gy1xvULT18sxb/lYu8SN8wHV7sq+uFJyPZHL6
+         5hslPLnbahm/XUmmmKZOJHyD2PoeALjGr3IEY2F1un6cekdgEL2p3mLz8lwoo7iBSV9v
+         6elw==
+X-Forwarded-Encrypted: i=1; AJvYcCXMt67XHlVNqt7CJVuf1kHHOEo+G35yxZsnF4Ub8SkQgC4RD5GNuZvL7NKkT6776ydJDGlYZxl/dC7tPndfVgsB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3phRmVU6Sg4oeTATvF5HqO8Is8qgsgsxcqCJBVjQtgLiU77y4
+	qDXAgJGOnAPSqZWCfH0yGm4uI74t3WbN1cNR6CjJR1WpgMjW+upgh/goHGC9kx08lbh9jhPvj6M
+	B7mcyhu/oWg==
+X-Received: from dybfe10.prod.google.com ([2002:a05:7300:bf8a:b0:2ba:a7a3:e4eb])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:7492:b0:2b8:6abf:5ebf
+ with SMTP id 5a478bee46e88-2bdcbf7c168mr2321626eec.12.1772128791306; Thu, 26
+ Feb 2026 09:59:51 -0800 (PST)
+Date: Thu, 26 Feb 2026 09:59:32 -0800
 In-Reply-To: <20260226175936.593159-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260226175936.593159-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <20260226175936.593159-5-irogers@google.com>
-Subject: [PATCH v2 05/10] perf vendor events intel: Update graniterapids
- events from 1.16 to 1.17
+Message-ID: <20260226175936.593159-6-irogers@google.com>
+Subject: [PATCH v2 06/10] perf vendor events intel: Update lunarlake events
+ from 1.19 to 1.21
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,141 +71,231 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
 The updated events were published in:
-https://github.com/intel/perfmon/commit/c9ebc3ff9c3d408a888fbfbe73d386ef86c=
-7306f
-
-With new IO and SNC metrics in:
-https://github.com/intel/perfmon/commit/04cf5e1e804afd775401167870d48cd2586=
-4be7b
-https://github.com/intel/perfmon/commit/98b2602d83de6625bae1e6fcaab3a39b0a3=
-41255
+https://github.com/intel/perfmon/commit/d6755a30419d02930889497741552309343bdb1e
+https://github.com/intel/perfmon/commit/6c9f684ae1de6229511fd56d1196fdc2db242a41
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/graniterapids/frontend.json      | 16 +++++++++++
- .../arch/x86/graniterapids/gnr-metrics.json   | 27 +++++++++++++++++++
+ .../pmu-events/arch/x86/lunarlake/cache.json  | 36 ++++++++++++++-----
+ .../arch/x86/lunarlake/frontend.json          | 27 ++++++++++++++
+ .../arch/x86/lunarlake/pipeline.json          | 10 +++---
  tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- 3 files changed, 44 insertions(+), 1 deletion(-)
+ 4 files changed, 61 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/graniterapids/frontend.json b/t=
-ools/perf/pmu-events/arch/x86/graniterapids/frontend.json
-index d580d305c926..1fdeaebb739f 100644
---- a/tools/perf/pmu-events/arch/x86/graniterapids/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/graniterapids/frontend.json
-@@ -325,6 +325,22 @@
-         "SampleAfterValue": "200003",
-         "UMask": "0x4"
+diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/cache.json b/tools/perf/pmu-events/arch/x86/lunarlake/cache.json
+index 3d2616be8ec1..2db3e8a51fbd 100644
+--- a/tools/perf/pmu-events/arch/x86/lunarlake/cache.json
++++ b/tools/perf/pmu-events/arch/x86/lunarlake/cache.json
+@@ -550,6 +550,24 @@
+         "UMask": "0x7e",
+         "Unit": "cpu_atom"
      },
 +    {
-+        "BriefDescription": "ICACHE_TAG.STALLS_INUSE",
-+        "Counter": "0,1,2,3",
++        "BriefDescription": "Counts the number of unhalted cycles when the core is stalled due to an icache or itlb miss which missed all the caches.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x35",
++        "EventName": "MEM_BOUND_STALLS_IFETCH.LLC_MISS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x78",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of unhalted cycles when the core is stalled due to an icache or itlb miss which missed all the caches. Local DRAM, MMIO or other local memory type provides the data.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x35",
++        "EventName": "MEM_BOUND_STALLS_IFETCH.LLC_MISS_LOCALMEM",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x50",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of unhalted cycles when the core is stalled due to an L1 demand load miss.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -1088,7 +1106,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled",
++        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 128.",
+         "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+@@ -1100,7 +1118,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled",
++        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 16.",
+         "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+@@ -1112,7 +1130,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled",
++        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 256.",
+         "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+@@ -1124,7 +1142,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled",
++        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 32.",
+         "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+@@ -1136,7 +1154,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled",
++        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 4.",
+         "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+@@ -1148,7 +1166,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled",
++        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 512.",
+         "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+@@ -1160,7 +1178,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled",
++        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 64.",
+         "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+@@ -1172,7 +1190,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled",
++        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 8.",
+         "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+@@ -1274,7 +1292,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of  stores uops retired same as MEM_UOPS_RETIRED.ALL_STORES",
++        "BriefDescription": "Counts the number of stores uops retired.",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/frontend.json b/tools/perf/pmu-events/arch/x86/lunarlake/frontend.json
+index b21d602e9f1a..798eebf77436 100644
+--- a/tools/perf/pmu-events/arch/x86/lunarlake/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/lunarlake/frontend.json
+@@ -424,6 +424,15 @@
+         "UMask": "0x1",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the number of instructions retired that were tagged because empty issue slots were seen before the uop due to Instruction L1 cache miss, that missed in the L2 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc9",
++        "EventName": "FRONTEND_RETIRED_SOURCE.ICACHE_L2_MISS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0xe",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of instructions retired that were tagged because empty issue slots were seen before the uop due to ITLB miss that hit in the second level TLB.",
+         "Counter": "0,1,2,3,4,5,6,7",
+@@ -500,6 +509,24 @@
+         "UMask": "0x4",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Cycles where a code fetch is stalled due to L1 instruction cache In use-full",
++        "Counter": "0,1,2,3,4,5,6,7,8,9",
 +        "EventCode": "0x83",
 +        "EventName": "ICACHE_TAG.STALLS_INUSE",
 +        "SampleAfterValue": "200003",
-+        "UMask": "0x10"
++        "UMask": "0x10",
++        "Unit": "cpu_core"
 +    },
 +    {
-+        "BriefDescription": "ICACHE_TAG.STALLS_ISB",
-+        "Counter": "0,1,2,3",
++        "BriefDescription": "Cycles where a code fetch is stalled due to L1 instruction cache ISB-full",
++        "Counter": "0,1,2,3,4,5,6,7,8,9",
 +        "EventCode": "0x83",
 +        "EventName": "ICACHE_TAG.STALLS_ISB",
 +        "SampleAfterValue": "200003",
-+        "UMask": "0x8"
++        "UMask": "0x8",
++        "Unit": "cpu_core"
 +    },
      {
-         "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
-ng any Uop",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/graniterapids/gnr-metrics.json =
-b/tools/perf/pmu-events/arch/x86/graniterapids/gnr-metrics.json
-index cc3c834ca286..299631fb8d53 100644
---- a/tools/perf/pmu-events/arch/x86/graniterapids/gnr-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/graniterapids/gnr-metrics.json
-@@ -143,6 +143,12 @@
-         "MetricName": "io_full_write_l3_miss",
-         "ScaleUnit": "100%"
+         "BriefDescription": "Cycles Decode Stream Buffer (DSB) is delivering any Uop",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
+diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json b/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+index 97797f7b072e..d98723b3cd78 100644
+--- a/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+@@ -634,7 +634,7 @@
+         "Unit": "cpu_core"
      },
-+    {
-+        "BriefDescription": "The number of times per second that ownership=
- of a cacheline was stolen from the integrated IO controller before it was =
-able to write back the modified line",
-+        "MetricExpr": "(UNC_I_MISC1.LOST_FWD + UNC_I_MISC1.SEC_RCVD_INVLD)=
- / duration_time",
-+        "MetricName": "io_lost_fwd",
-+        "ScaleUnit": "1per_sec"
-+    },
      {
-         "BriefDescription": "Message Signaled Interrupts (MSI) per second =
-sent by the integrated I/O traffic controller (IIO) to System Configuration=
- Controller (Ubox)",
-         "MetricExpr": "UNC_IIO_NUM_REQ_OF_CPU_BY_TGT.UBOX_POSTED / duratio=
-n_time",
-@@ -294,6 +300,27 @@
-         "MetricName": "memory_bandwidth_write",
-         "ScaleUnit": "1MB/s"
+-        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles.",
++        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.THREAD]",
+         "Counter": "Fixed counter 1",
+         "EventName": "CPU_CLK_UNHALTED.CORE",
+         "SampleAfterValue": "2000003",
+@@ -725,7 +725,7 @@
+         "Unit": "cpu_core"
      },
-+    {
-+        "BriefDescription": "All reads to the local sub-numa cluster cache=
- as a percentage of total memory read accesses",
-+        "MetricExpr": "(L2_LINES_IN.ALL - (OCR.READS_TO_CORE.SNC_CACHE.HIT=
-M + OCR.READS_TO_CORE.SNC_CACHE.HIT_WITH_FWD + OCR.READS_TO_CORE.REMOTE_CAC=
-HE.SNOOP_FWD + OCR.READS_TO_CORE.REMOTE_MEMORY + OCR.READS_TO_CORE.L3_MISS_=
-LOCAL)) / L2_LINES_IN.ALL",
-+        "MetricName": "numa_percent_all_reads_to_local_cluster_cache",
-+        "PublicDescription": "All reads to the local sub-numa cluster cach=
-e as a percentage of total memory read accesses. Includes demand and prefet=
-ch requests for data reads, code reads, read for ownerships (RFO), does not=
- include LLC prefetches",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "BriefDescription": "All reads to the local sub-numa cluster memor=
-y as a percentage of total memory read accesses",
-+        "MetricExpr": "OCR.READS_TO_CORE.L3_MISS_LOCAL / L2_LINES_IN.ALL",
-+        "MetricName": "numa_percent_all_reads_to_local_cluster_memory",
-+        "PublicDescription": "All reads to the local sub-numa cluster memo=
-ry as a percentage of total memory read accesses. Includes demand and prefe=
-tch requests for data reads, code reads, read for ownerships (RFO), does no=
-t include LLC prefetches",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "BriefDescription": "All reads to a remote sub-numa cluster cache =
-as a percentage of total memory read accesses",
-+        "MetricExpr": "(OCR.READS_TO_CORE.SNC_CACHE.HIT_WITH_FWD + OCR.REA=
-DS_TO_CORE.SNC_CACHE.HITM) / L2_LINES_IN.ALL",
-+        "MetricName": "numa_percent_all_reads_to_remote_cluster_cache",
-+        "PublicDescription": "All reads to a remote sub-numa cluster cache=
- as a percentage of total memory read accesses. Includes demand and prefetc=
-h requests for data reads, code reads, read for ownerships (RFO), does not =
-include LLC prefetches",
-+        "ScaleUnit": "100%"
-+    },
      {
-         "BriefDescription": "Memory read that miss the last level cache (L=
-LC) addressed to local DRAM as a percentage of total memory read accesses, =
-does not include LLC prefetches",
-         "MetricExpr": "(UNC_CHA_TOR_INSERTS.IA_MISS_DRD_LOCAL + UNC_CHA_TO=
-R_INSERTS.IA_MISS_DRD_PREF_LOCAL) / (UNC_CHA_TOR_INSERTS.IA_MISS_DRD_LOCAL =
-+ UNC_CHA_TOR_INSERTS.IA_MISS_DRD_PREF_LOCAL + UNC_CHA_TOR_INSERTS.IA_MISS_=
-DRD_REMOTE + UNC_CHA_TOR_INSERTS.IA_MISS_DRD_PREF_REMOTE)",
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index b84035dc5b4f..96580ffda7bf 100644
+-        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles.",
++        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.CORE]",
+         "Counter": "Fixed counter 1",
+         "EventName": "CPU_CLK_UNHALTED.THREAD",
+         "SampleAfterValue": "2000003",
+@@ -1530,8 +1530,9 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of accesses to KeyLocker cache.",
++        "BriefDescription": "This event is deprecated.",
+         "Counter": "0,1,2,3,4,5,6,7",
++        "Deprecated": "1",
+         "EventCode": "0xe1",
+         "EventName": "MISC_RETIRED2.KEYLOCKER_ACCESS",
+         "SampleAfterValue": "1000003",
+@@ -1539,8 +1540,9 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of misses to KeyLocker cache.",
++        "BriefDescription": "This event is deprecated.",
+         "Counter": "0,1,2,3,4,5,6,7",
++        "Deprecated": "1",
+         "EventCode": "0xe1",
+         "EventName": "MISC_RETIRED2.KEYLOCKER_MISS",
+         "SampleAfterValue": "1000003",
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index 96580ffda7bf..a2dde3faad5e 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -13,7 +13,7 @@ GenuineIntel-6-CF,v1.21,emeraldrapids,core
- GenuineIntel-6-5[CF],v13,goldmont,core
- GenuineIntel-6-7A,v1.01,goldmontplus,core
- GenuineIntel-6-B6,v1.11,grandridge,core
--GenuineIntel-6-A[DE],v1.16,graniterapids,core
-+GenuineIntel-6-A[DE],v1.17,graniterapids,core
- GenuineIntel-6-(3C|45|46),v36,haswell,core
- GenuineIntel-6-3F,v29,haswellx,core
- GenuineIntel-6-7[DE],v1.24,icelake,core
---=20
+@@ -22,7 +22,7 @@ GenuineIntel-6-3A,v24,ivybridge,core
+ GenuineIntel-6-3E,v24,ivytown,core
+ GenuineIntel-6-2D,v24,jaketown,core
+ GenuineIntel-6-(57|85),v16,knightslanding,core
+-GenuineIntel-6-BD,v1.19,lunarlake,core
++GenuineIntel-6-BD,v1.21,lunarlake,core
+ GenuineIntel-6-(AA|AC|B5),v1.18,meteorlake,core
+ GenuineIntel-6-1[AEF],v4,nehalemep,core
+ GenuineIntel-6-2E,v4,nehalemex,core
+-- 
 2.53.0.414.gf7e9f6c205-goog
 
