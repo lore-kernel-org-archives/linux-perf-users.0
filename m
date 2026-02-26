@@ -1,211 +1,252 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9BC3D4103
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 16:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772124305; cv=pass; b=YJYM/aaRW/aHocUhqhhLnyi9MXujq06U3FMRxOgkqrtA5c/61X6SqV5EBaefJEIPhg1KwpdFChirBfMxPsz70Y+k/ar1LtCQfroFmyPJZDhVEeVcKo3vqsOFC1iHYEsb9l51G7Pp7s90K+XpiWD+4UqQFbVTuUxqmoW6Lt7569I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772124305; c=relaxed/simple;
-	bh=udkhAo8CRupuCv0msl/Z3RH85ijHMm/A2AoMS5Wt1gM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AYFbosGU903FaIgDCcd0SgRpaxlQ+LccMSk67vDSb8EbTZvBxJYg71R5+rJ50Z6L5DgPHAF4brbM1/7SYA8qYg2pnF6zfJy88uaPHhElpP6GfRyPZO8Soc+Lia1I29ECd7CpD7pekCih95WpfNJf+ve/scFfQSTs8+wuk8r7mZ0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Lid9CbSe; arc=pass smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4864042848B
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 16:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772124566; cv=none; b=XxPMY+1VkiBDCKTzmVESVaSis8T/ZEHCW59I9gOUXkU32Z/6Q5vQhya2LJRg35T2wdjEyuzay8R2QpPQwF8Oj21A5aVtl0Myss0BzUEijgSvqe07zVsyAIvwnHlD5XiEIKaiyxpLb+pfd9ninpz5cS5bgQhg5DGZhlO8WllZdUg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772124566; c=relaxed/simple;
+	bh=VqGVgXxY2G6zwg2uiSi6OSBwSy2bKCiV2e1rsbEF/QA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KgTubVOrvD6k/20MyKbHMIOQoK96oot3k/y448OHslNMMn7TKT+VRdV6vatOLcRcT1HbHR8daRv53myAozo645qgeFqW7rp7PFQpBg6YxQn1hBGAM/4THu24lCsT3gdGmgw9vzoIdazQZ6+frEkrDtCTATMwLs74U+2MyAzMnWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hAYgA2jp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zCgOS19u; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hAYgA2jp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zCgOS19u; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lid9CbSe"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2ada9e4ea32so101805ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 08:45:04 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772124304; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Twz+/w9rM92h85e8RLvhPBoHvLa3OD027EDQKb7ZI3bnXfq0XXoWXvMx7P0yz2Iuf4
-         6Wm6K3OZOU9YldQ2GuIjD8/iX2OU4SWGkq9ufHhFloiw6axiL6NfYkKJA8uOUkB1aTvP
-         9VIn5+9aTX44dPFyqMx5D0WlCEibkULXLz2pqDlkalLXI+PZazmfm29NGx378fAwDjGe
-         Ja+GVEdvezVr1lbGqO9Q8Aku8zKx5VCK955rpgefw9aGioBuxhLMKmQlKHuGlMhx5ShQ
-         O7dYKxO7fRxcWAeZrVzwLVu9JPhT951c6VBhKmJV6ODOCGx7wKmgPwXe/XFTNwHZIg21
-         BU3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=0VKoywbTOA4sWUXs9zGAAqsU0xPN4EhGa3jw9NuqR9w=;
-        fh=if/OqwS9dH3XjTfQS6sczVJzlAR1063NxcsrZOYL6UU=;
-        b=fcLzzvyVHkI1c9TCUjjHuZDEUDE355lDYGLukmZw0j948anXgcM+brKCmP6atqDl0v
-         3EmaM7yHx6xaf2ninQmLvu89X+kUciYzjwsXe9h1cpZ/qxUkOSOYTfZ/hDnTm0jL0ijz
-         kC0eMlkTpB0KsJ8XN8jZzq/i/u24cmUhwEp7nWtNrbBYZF0xkVns6AbvQKEbdjeinR9f
-         9Fke1X9mfDhSfle+pv65g4qJvFlQGpWSnN46cSFHJXPftH9sbDqb9eBXpklZmS9oxraY
-         FR/dy6SCpB6qMP7pWwr9kWbEuNRfDjfsV8muCyzYfkHzVyeBXOGt1qJbZy9eGxLf0RxP
-         SzFQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772124304; x=1772729104; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0VKoywbTOA4sWUXs9zGAAqsU0xPN4EhGa3jw9NuqR9w=;
-        b=Lid9CbSejo3GHX8SXd13tScep27yGCunwsD3GHhC0VyUiSK/MlVSyqOq7yIQh8GnGU
-         sd1HFJFyCtJ4izGlVt8ZJOF8NTeT6CKvY8q0BRjFvH+sYE0URGp9gRvr+degPiUYqap6
-         6xE5UxemW2eIsxOS00HWqtTSnlDNY85RTe6avkKWhGo094+vEkZ2Ef+9Sm8RaBVJ19cT
-         +eQ1cwXx9pHdNjJt8APAwxTzZL0mFGdd87t6PF92/o+GOYNka5AReX/pwudhBNjMj2W+
-         nSo8JYyjwdo8y2S4UzOhnqViIWSL9VxlaofiY6e60tn4lOmXZMqWPHIitel6PKj1nPg0
-         Htig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772124304; x=1772729104;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0VKoywbTOA4sWUXs9zGAAqsU0xPN4EhGa3jw9NuqR9w=;
-        b=hu2MvtTf0U9eGthLlVE/msraceaVcOqBGZGB5LS8OsW+blYcA2z3s7klgqh2saIoMy
-         233dYFr5AwLKppSVccnr+S5rF8bODnB+0gCIjniRW3M8hq9q6yhEyBhOsHLhn0q4TBdI
-         pmMwhl1Xfps9hMRz6oYA6WaQnlVmbMFU34cIoojU4mBUpwuKG97SmwN1/wRUoZwreGYo
-         rtET9r63RMYZFpUMQN6XQy1sJYXT/GhT5VBN5G5b3w/4vtIJY+ZymmogdPGGcwWos3jw
-         Ct9u6+mWeoJqoBOctZL3Kgng6AJJ5ItYX/HQr9xgya0dbjVoSfLE4ItmLsOWFj2hkUcJ
-         kXmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHocXuGrm6ysbHPvsid4QFJeidnWXUC7UpdVpfnXnWVSy7kGQkxq9wFwy3FGx78dwIGHhz50oaMlZY2cLEYCBz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3SR2ohLn5pjk/NGCpeRUua7gqBuvsigvzLKR2g53bx5nPkPYh
-	18ZqtJN8+huMr+rSv4PD5QJfmRorhdHCh5SVpOwgtzMoHVf1Q+tqjJmgAJR78p7lZnvURosFSSh
-	sahVw/A9K6mqcp7sxrXlKe89ck3jwCvo6VxUQ7c/o
-X-Gm-Gg: ATEYQzwF+QwWQHFE7ODoKLJA4WZeiW78mAd8eA3ilmXc5b5+ohOw+n32ieucW2RcT6W
-	h1ey3sNh6gLzhqQ5RHGqOY3F5w103Ux/OGaB9ItbxlNd0oXAAJxhVO/RLF7FYW/zuJeL1c+67Sz
-	wzDf2Pm6WW5zq+Ix1PoFaL1ZX3fUx40lZ2hpk6qLrIaSNE18XuiHUo/e0xtzsGo7Zxga6AB2a6G
-	jLZhhqpM6rcjPa0FqTSWk69e7bKM0JoKReMv3X97UZfERkbHvF6MTlGdQSL8xlkU9A4QxgYDRxe
-	rxKlfpQnep85HgeuhjI/BEfMAIlYEE8wmxz5
-X-Received: by 2002:a17:902:e805:b0:2ad:6f9b:7818 with SMTP id
- d9443c01a7336-2adff727bb2mr2400435ad.23.1772124303022; Thu, 26 Feb 2026
- 08:45:03 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hAYgA2jp";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zCgOS19u";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hAYgA2jp";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zCgOS19u"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CD87E4D4CA;
+	Thu, 26 Feb 2026 16:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1772124560;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BNwEAWIsld/a3bTo0jTTEGruuvEsAoMftAo147KwrkY=;
+	b=hAYgA2jpZa4xi0xhqaRwMEM4MmatY7e7kOD/E1qjGdJ66bF2R3siOjYy5Y6Yg9dDfzUDD4
+	aeuOtKCnl8v1QoxCgsTX8W1RjLx4+PdWc/SXCUL+OLAvf+woDLtaeDL8YsARBgnzpciH/g
+	IVXCKBa3wKZd2silyKmBo19Po0OpWAk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1772124560;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BNwEAWIsld/a3bTo0jTTEGruuvEsAoMftAo147KwrkY=;
+	b=zCgOS19u4C6rF6D6cMRbA7dGGq7ArZv1u0GnIvuUsaX35ZbUbgb8M1Ez+SVwqYgh9euqH2
+	kmxPCc+6nDwXgTAQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=hAYgA2jp;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=zCgOS19u
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1772124560;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BNwEAWIsld/a3bTo0jTTEGruuvEsAoMftAo147KwrkY=;
+	b=hAYgA2jpZa4xi0xhqaRwMEM4MmatY7e7kOD/E1qjGdJ66bF2R3siOjYy5Y6Yg9dDfzUDD4
+	aeuOtKCnl8v1QoxCgsTX8W1RjLx4+PdWc/SXCUL+OLAvf+woDLtaeDL8YsARBgnzpciH/g
+	IVXCKBa3wKZd2silyKmBo19Po0OpWAk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1772124560;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BNwEAWIsld/a3bTo0jTTEGruuvEsAoMftAo147KwrkY=;
+	b=zCgOS19u4C6rF6D6cMRbA7dGGq7ArZv1u0GnIvuUsaX35ZbUbgb8M1Ez+SVwqYgh9euqH2
+	kmxPCc+6nDwXgTAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3626B3EA62;
+	Thu, 26 Feb 2026 16:49:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id GqJ+DJB5oGkrMQAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Thu, 26 Feb 2026 16:49:20 +0000
+Date: Thu, 26 Feb 2026 17:49:15 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Eric Biggers <ebiggers@kernel.org>,
+	"Theodore Y. Ts'o" <tytso@mit.edu>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
+	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Steve French <sfrench@samba.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	David Sterba <dsterba@suse.com>,
+	Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>,
+	Luis de Bethencourt <luisbg@kernel.org>,
+	Salah Triki <salah.triki@gmail.com>,
+	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Alex Markuze <amarkuze@redhat.com>,
+	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+	Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Yangtao Li <frank.li@vivo.com>,
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Martin Schiller <ms@dev.tdt.de>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, fsverity@lists.linux.dev,
+	linux-mm@kvack.org, netfs@lists.linux.dev,
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
+	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+	autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
+	codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-hams@vger.kernel.org, linux-x25@vger.kernel.org
+Subject: Re: [PATCH 19/61] affs: update format strings for u64 i_ino
+Message-ID: <20260226164914.GG26902@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
+ <20260226-iino-u64-v1-19-ccceff366db9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260206-perf_fix_kvm_stat_error-v1-1-ad40115876be@arm.com>
- <aZ-oYb-FDLVT5MGq@google.com> <CAP-5=fVCdQZ584s_24wQc_+03xL2Npj2qDbqGSjE=Ms1-y8raQ@mail.gmail.com>
- <20260226095255.GF4184494@e132581.arm.com>
-In-Reply-To: <20260226095255.GF4184494@e132581.arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 26 Feb 2026 08:44:51 -0800
-X-Gm-Features: AaiRm53xXqyLEa4GYOz2WbGuVYACoA3pTI3nxwQFEyqukqzmfX0C6Fud7CNp6Zg
-Message-ID: <CAP-5=fUAK=vzeZWDXuun+wptSeBwUMhZuVqdh4zwLoXoV32VPA@mail.gmail.com>
-Subject: Re: [PATCH] perf kvm stat: Fix build error
-To: Leo Yan <leo.yan@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260226-iino-u64-v1-19-ccceff366db9@kernel.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spamd-Bar: /
+X-Rspamd-Queue-Id: CD87E4D4CA
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -0.71
+X-Spam-Level: 
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-0.71 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	FORGED_RECIPIENTS(2.00)[m:jlayton@kernel.org,m:brauner@kernel.org,m:rostedt@goodmis.org,m:mhiramat@kernel.org,m:mathieu.desnoyers@efficios.com,m:dan.j.williams@intel.com,m:willy@infradead.org,m:ebiggers@kernel.org,m:tytso@mit.edu,m:muchun.song@linux.dev,m:david@kernel.org,m:pc@manguebit.org,m:adilger.kernel@dilger.ca,m:jaegeuk@kernel.org,m:chao@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:neil@brown.name,m:ronniesahlberg@gmail.com,m:sprasad@microsoft.com,m:bharathsm@microsoft.com,m:alex.aring@gmail.com,m:konishi.ryusuke@gmail.com,m:slava@dubeyko.com,m:ericvh@kernel.org,m:lucho@ionkov.net,m:asmadeus@codewreck.org,m:linux_oss@crudebyte.com,m:marc.dionne@auristor.com,m:luisbg@kernel.org,m:salah.triki@gmail.com,m:aivazian.tigran@gmail.com,m:idryomov@gmail.com,m:jaharkes@cs.cmu.edu,m:coda@cs.cmu.edu,m:nico@fluxnic.net,m:amir73il@gmail.com,m:hch@infradead.org,m:mikulas@artax.karlin.mff.cuni.cz,m:dwmw2@infradead.org,m:richard@nod.at,m:shaggy@kernel.org,m:mark@fasheh.com,m:jlbec@evil
+ plan.org,m:joseph.qi@linux.alibaba.com,m:hubcap@omnibond.com,m:martin@omnibond.com,m:al@alarsen.net,m:chengzhihao1@huawei.com,m:dlemoal@kernel.org,m:jth@kernel.org,m:john.johansen@canonical.com,m:jmorris@namei.org,m:serge@hallyn.com,m:zohar@linux.ibm.com,m:roberto.sassu@huawei.com,m:dmitry.kasatkin@gmail.com,m:wufan@kernel.org,m:stephen.smalley.work@gmail.com,m:alexander.deucher@amd.com,m:christian.koenig@amd.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:sumit.semwal@linaro.org,m:edumazet@google.com,m:kuniyu@google.com,m:willemb@google.com,m:davem@davemloft.net,m:kuba@kernel.org,m:horms@kernel.org,m:peterz@infradead.org,m:acme@kernel.org,m:namhyung@kernel.org,s:autofs@vger.kernel.org,s:ceph-devel@vger.kernel.org,s:ecryptfs@vger.kernel.org,s:linux-cifs@vger.kernel.org,s:linux-ext4@vger.kernel.org,s:linux-fscrypt@vger.kernel.org,s:linux-fsdevel@vger.kernel.org,s:linux-hams@vger.kernel.org,s:linux-integrity@vger.kernel.org,s:linux-kernel@vger.kernel.org,s:linux-media@vger.kernel.org,s:li
+ nux-nfs@vger.kernel.org,s:linux-nilfs@vger.kernel.org,s:linux-perf-users@vger.kernel.org,s:linux-security-module@vger.kernel.org,s:linux-trace-kernel@vger.kernel.org,s:linux-unionfs@vger.kernel.org,s:linux-x25@vger.kernel.org,s:linux-xfs@vger.kernel.org,s:netdev@vger.kernel.org,s:selinux@vger.kernel.org];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,goodmis.org,efficios.com,intel.com,infradead.org,mit.edu,linux.dev,suse.de,redhat.com,manguebit.org,dilger.ca,suse.com,oracle.com,brown.name,talpey.com,samba.org,gmail.com,microsoft.com,dubeyko.com,ionkov.net,codewreck.org,crudebyte.com,auristor.com,themaw.net,cs.cmu.edu,fluxnic.net,tyhicks.com,physik.fu-berlin.de,vivo.com,artax.karlin.mff.cuni.cz,nod.at,paragon-software.com,fasheh.com,evilplan.org,linux.alibaba.com,omnibond.com,szeredi.hu,alarsen.net,huawei.com,wdc.com,canonical.com,paul-moore.com,namei.org,hallyn.com,linux.ibm.com,schaufler-ca.com,amd.com,ffwll.ch,linaro.org,google.com,davemloft.net,arm.com,linux.intel.com,dev.tdt.de,vger.kernel.org,lists.linux.dev,kvack.org,lists.sourceforge.net,lists.samba.org,lists.infradead.org,coda.cs.cmu.edu,lists.orangefs.org,lists.ubuntu.com,lists.freedesktop.org,lists.linaro.org];
+	RCPT_COUNT_GT_50(0.00)[146];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	R_RATELIMIT(0.00)[to_ip_from(RL4z7ik3mu4s1tb3i49rs8q359)];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
 
-On Thu, Feb 26, 2026 at 1:52=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
->
-> On Wed, Feb 25, 2026 at 10:36:26PM -0800, Ian Rogers wrote:
->
-> [...]
->
-> > Hmm.. it looks like something has gone screwy with the include paths.
-> > The header you've gotten is:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/arch/x86/include/uapi/asm/svm.h#n137
-> > rather than:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/arch/x86/include/uapi/asm/svm.h#n137
-> > where the value differs between -1ull and -1.
-> >
-> > In Leo's change he has the include path as:
-> >   #include "../../arch/x86/include/uapi/asm/svm.h"
-> >
-> > but I think that is off by one and should be:
-> >   #include "../../../arch/x86/include/uapi/asm/svm.h"
->
-> Sorry I did not check the header path carefully.  A bit thoughts:
->
-> The perf build will not include headers in relative paths as we
-> expected.
->
-> It tries to find headers with appending search paths.  As Ian said,
-> I saw .kvm-stat-x86.o.cmd that includes kernel headers:
->
->   /home/niayan01/Work/linux/tools/include/../../arch/x86/include/uapi/asm=
-/svm.h \
->   /home/niayan01/Work/linux/tools/include/../../arch/x86/include/uapi/asm=
-/vmx.h \
->   /home/niayan01/Work/linux/tools/include/../../arch/x86/include/uapi/asm=
-/kvm.h \
->
-> I'd suggest a fix in Makefile as below.  The idea is to give priority to
-> the lower level folders under perf, so that headers in the deeper perf
-> directories are searched first.  This avoids searching any kernel headers=
-.
+On Thu, Feb 26, 2026 at 10:55:21AM -0500, Jeff Layton wrote:
+> Update format strings and local variable types in affs for the
+> i_ino type change from unsigned long to u64.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-I'm not opposed to the change but I still think we should make the
-relative include be to the correct files. Some other thoughts below.
-
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index a8dc72cfe48e..47359f672b6a 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -388,8 +388,10 @@ ifeq ($(DEBUG),0)
->    endif
->  endif
->
-> -INC_FLAGS +=3D -I$(src-perf)/util/include
-
-Not clear to me why we need a util/include on top of everything else.
-It seems somewhat random what is in util/include rather than just in
-util.
-
->  INC_FLAGS +=3D -I$(src-perf)/arch/$(SRCARCH)/include
-
-Hopefully with the removal of the arch directory (and fixing of
-cross-platform profiling) in slow chunks by changes like:
-https://lore.kernel.org/lkml/20260224142938.26088-1-irogers@google.com/
-we can get rid of this one.
-
-> +INC_FLAGS +=3D -I$(src-perf)/util/include
-> +INC_FLAGS +=3D -I$(src-perf)/util
-> +INC_FLAGS +=3D -I$(src-perf)
-
-This:
-
->  INC_FLAGS +=3D -I$(srctree)/tools/include/
->  INC_FLAGS +=3D -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi
->  INC_FLAGS +=3D -I$(srctree)/tools/include/uapi
-
-to here means that we prefer linux headers over uapi headers, which I
-think is the opposite of what a user-land process would expect. I
-think we should move these headers into two libraries, build them with
-an `install_headers` rule, and make the include path pick up the
-headers from where they are installed. As the linux and uapi headers
-are licensed differently, this would clarify the dependencies and
-licensing implications.
-
-There's another can of worms regarding whether libperf is something
-useful, outside of declarations in event.h.
-
-Thanks,
-Ian
-
-> @@ -403,9 +405,6 @@ INC_FLAGS +=3D -I$(obj-perf)/util
->  INC_FLAGS +=3D -I$(obj-perf)
->  endif
->
-> -INC_FLAGS +=3D -I$(src-perf)/util
-> -INC_FLAGS +=3D -I$(src-perf)
-> -
->  CORE_CFLAGS +=3D -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=3D64 -D_GNU_
->
-> As a result, I can get the search paths in .kvm-stat-x86.o.cmd:
->
->   /home/niayan01/Work/linux/tools/perf/util/../../arch/x86/include/uapi/a=
-sm/svm.h \
->   /home/niayan01/Work/linux/tools/perf/util/../../arch/x86/include/uapi/a=
-sm/vmx.h \
->   /home/niayan01/Work/linux/tools/perf/util/../../arch/x86/include/uapi/a=
-sm/kvm.h \
->
-> Please let me know if this makes sense.
->
-> Thanks,
-> Leo
+Acked-by: David Sterba <dsterba@suse.com>
