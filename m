@@ -1,91 +1,66 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AED3859CF
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 18:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB34935A383
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 18:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772131245; cv=none; b=Dzwko9dzzivR9fxDsCbypg1J0oafa8mJNDHDhgDL4gBduE7XCKqFpdwRZUjZcvwcDmwLyXr5wMX6X06CD010SSjPP3rtuI6wVlra62gzcXQPbQKMa29Fbu8WBzb9vuGGEAB/2T2XYhioG30ATnqAeLsfTtnhKXwI8H/+jJc5X3c=
+	t=1772131262; cv=none; b=IrNdDqtVZXkTfhIMBaCw4k1hjngXVIBlR3M4ymDbj1occWTT5W2R52SJeUMID+CHHI+n6oDvMAHBrexQpVA8Y1AqMCf0vP9kGN60KoyI4cQCwyQ+JEY+Mt8y6gb3NDLPO9Ek4y6T5h3SH29HCVvBKOMAQGTPdrQLW1oW9qni5YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772131245; c=relaxed/simple;
-	bh=5ty71ZP/kn9UYFYi5Gf8attnjAgfMP8XR0y3mMnTX88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BXB83sScKimDubpggPOm68r6KXGUx9l2mHflol37EeYhe/YWf2HhfRZv3dqO9gjU6uAWcx8l2TzaZUIxQ9hN4tR8BkAO/FeQ3i8f7osYq9bPGk94i7XUep466ZEsUjzv4Gs2Br7LAMlU5Ahr7J2Hfb4VYB8iDCHWMilcTgTdbEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RtEut1M1; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1772131262; c=relaxed/simple;
+	bh=1Vkzlkf8iyjAcWMHzA8YdXmTGe/S+Y2ah5UMLvIjvEs=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TuR5OQCzTgVpnciljawwvknxW/FdwLGmkqjF09+A7tua1mH5niw1+xv7hqlJVcC2tloFEwIZyRFhtywZb52dyZpSl6S2eQHhfGs4aGnBBikTTjxn17K4Ft6sb9X0hkcv4G6UIX89qDxY8P5CEqIYogqjuB2g0yUJgqRqspMkAfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LroLluYp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RtEut1M1"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-65f8c8c3a4aso2503416a12.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 10:40:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772131243; x=1772736043; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5ty71ZP/kn9UYFYi5Gf8attnjAgfMP8XR0y3mMnTX88=;
-        b=RtEut1M1Hf7ppzqlx6DFODu+jXyhzXeyJ4Fgkv9Kq0aWDsxSq491Bs0kaIapAgANAm
-         aTceN1nrdYtBVzb9tnge7sDTs5tGLEhoIc5Dpgtq4y1rIUI5cULRGr5ahkz0wrI2S7Qz
-         oCOkNmo68x/7Xv3jza925NTcvh67rk/IaHwDzLTrx+DAXVnZjTIdi1ESpqNxxAD83wID
-         S6zul0ykh8Y/521rRsjfJjCEEARESf/4E2yZOJhIDBJvtZz7VUmyybVzkzlyCiQunUhG
-         UpXuE93mRXJZLmJMcr6NmDHgDdKWOM024cHZuBmfIqYotDXfJ9uCh30Xn1521aQThXAh
-         UBeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772131243; x=1772736043;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5ty71ZP/kn9UYFYi5Gf8attnjAgfMP8XR0y3mMnTX88=;
-        b=OEygfcKp0zIZishPIMd9X4SJZXS8b0stjp3CnOTSRjkihMZAcVOKJVZaSjj/CuXMqA
-         gYM0MQmJKKH+o6KojJwu6vZPqCdNTtctgUNTW8SJn/ZjVXbfWQh4shHYjY1b9y4Lbofx
-         /OZ7dxq7TdPVj6R2J2qelvt+m6Q+nxb+S/rWSYLhydEQL+D/5NbONXuYKe+x/9HJf5uo
-         c+gYJvl5s/qAxWJpsKSSXTdYfb0PFqALddwZ7yE/udKZpBnS+FvjqQsnK62zDF+s8+gA
-         PeOcWQUnC+zl0aXO5mpGuLwtv3fK7VgTf7y7b7mQUE2/brbAgkWnAhH6mXYdkTaH9BsX
-         lWSQ==
-X-Gm-Message-State: AOJu0YzzkqXvG4RyuC5ba0LcJEfXkLM+rfdm5zVgpU1bPgTSUY6kuaha
-	6WayJ5Rhznr/vhgBRxZ3lZlqY8bjjZy6K5o3aOvSX3LxFYxh2Z+VadsK
-X-Gm-Gg: ATEYQzyOTmDWfQapuiCmDm0L2azfFhuENGl41VffUKW2VC+jtNsESXNgV38ApGIEIvA
-	Q9n5rUSnL+UvWXG1C0kkZ8uYTxJvliH1BtaWb1amuzTLSe+XeW3T+U/c/J+FrijL0pW7lANdn88
-	vMBHZIqZFfoe2LpChLCiyEtwUt8yeU+grFHj/98vezXI+Acxrih/Q+/Z0S3/SXscPXiLOIpBvqN
-	ikzYWfS3QfuHB0UekSsIDijO01zk1N+kGstysh3USNeaVRxGzKlcbCImYQuC4+557eGvEKO+cMS
-	vJ5dbdvHuR9WZbgfrKsR1eyCAfqE8NangJ/at+2dDS+6MJaiWpZ+L/hYNmlzZe4diP4jJ0gIhD1
-	9lPpVWJur20WorW5rHpb31/+Mr0SuwyfQwhK3t1JksShzh6x7aOIIo12Ad7QhIY1p0RigFnWH8D
-	F54V2kUCrXixDY3mTwRslxsdwlz14PaRGHa7hwV7/wO9QB14Lw1YmYJe6HYDPKzLBLKuZMn3Fkl
-	2a4ChupA2rz+XJdiRAN1HQOe2+tifREloDZu88fZ54BmpI=
-X-Received: by 2002:a05:6402:1467:b0:65f:9c21:e69b with SMTP id 4fb4d7f45d1cf-65fdd6e2ee8mr211415a12.10.1772131242711;
-        Thu, 26 Feb 2026 10:40:42 -0800 (PST)
-Received: from ddolgov-thinkpadt14sgen1.rmtde.csb (dslb-002-207-075-089.002.207.pools.vodafone-ip.de. [2.207.75.89])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-65fabd36219sm669054a12.3.2026.02.26.10.40.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Feb 2026 10:40:41 -0800 (PST)
-Date: Thu, 26 Feb 2026 19:40:38 +0100
-From: Dmitry Dolgov <9erthalion6@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Levi Zim <i@kxxt.dev>, 
-	Namhyung Kim <namhyung@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, rust-for-linux <rust-for-linux@vger.kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>
-Subject: Re: [PATCH v5] tools build: Fix rust cross compilation
-Message-ID: <mnakvrusyjmuq2zwdjataxq5wc3m4bhyynbwdku2s3kdvtsi5f@2n7t65aqbupy>
-References: <20260226170025.517743-1-9erthalion6@gmail.com>
- <CAP-5=fV7OuWN9K-wnsS7zza+s0FQRSR_JCcJi5tvpgQAbh=Nnw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LroLluYp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CFE9C19423;
+	Thu, 26 Feb 2026 18:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772131262;
+	bh=1Vkzlkf8iyjAcWMHzA8YdXmTGe/S+Y2ah5UMLvIjvEs=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=LroLluYp8bsnmt5iPt3W7T549znoUA1eUXwvAeFJ0JK/YKM6ASBD7Dp139G6bYY1Z
+	 0jc6OFwiydgmf3F7fvUQJJlbPH24GuIP7XGReON2pPaoZcmxwgrDj0ShhRyzlAyQll
+	 ePypdAR0XpaHGTJIxSA3UAuY+bCqFYTAa7C9eXBtaaPKYiCidTJcGLnqaSHwR3CqET
+	 R2Xmr/gYj/TBSW2meybJqaxMV2KShEyO/CWcppGZPwp7xCLg9MrHxQoCuuRk5OfG/L
+	 Yu2HWJDnQJB8q9N1OXX2N0zmUHGeKeLWetZx0sQW5kf5PM/OUxy4vMC1KB/IjtAr6e
+	 oy57iS5Oc7k9A==
+From: Namhyung Kim <namhyung@kernel.org>
+To: linux-perf-users@vger.kernel.org, Andi Kleen <andi@firstfloor.org>
+In-Reply-To: <20260218014056.3454977-1-andi@firstfloor.org>
+References: <20260218014056.3454977-1-andi@firstfloor.org>
+Subject: Re: [PATCH] perf, script: Fix brcntr output with --xed
+Message-Id: <177213126259.3706963.10933531077902636278.b4-ty@kernel.org>
+Date: Thu, 26 Feb 2026 10:41:02 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fV7OuWN9K-wnsS7zza+s0FQRSR_JCcJi5tvpgQAbh=Nnw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-> On Thu, Feb 26, 2026 at 09:10:24AM -0800, Ian Rogers wrote:
-> Not a cross-compilation problem, but is there a way to pass-through
-> extra flags to the rust compiler? For CFLAGS we have EXTRA_CFLAGS as a
-> make variable, but I don't see an EXTRA_RUSTFLAGS. I was looking for
-> this because I was trying to make a build passing "-m32" to CFLAGS to
-> create a 32-bit perf binary. The link against the rust workload was
-> failing due to the different object types.
+On Tue, 17 Feb 2026 17:40:56 -0800, Andi Kleen wrote:
+> brcntr in perf script brstack insn currently outputs
+> 
+> $ perf record -j any,counter ...
+> $ perf script -F +brcntr,+brstackinsn
+> ...
+>             BC1s 3450809 5665912.127194:     100127
+> cpu_core/cycles/:      7f0475d6cc89 handle_intel.constprop.0+0x2b
+> (/usr/lib64/ld-linux-
+> x86-64.so.2)
+>         intel_check_word.constprop.0+224:
+>         00007f0475d6ca7e        insn: 00 4b db                  br_cntr: # PRED 21 cycles [21]
+> ...
+> 
+> [...]
+Applied to perf-tools-next, thanks!
 
-Nope, not yet, currently one can only set global RUST_FLAGS or per build
-target. But sure, I'll add this in a separate patch.
+Best regards,
+Namhyung
+
+
