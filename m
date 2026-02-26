@@ -1,287 +1,203 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F6738A71C
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 04:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772081610; cv=none; b=MB+eWcGEPtCrjyHzdNPg1TGVMYth8at0lMZ2mL0NWG6BmmW+0jsGquR30krifckG1vyA1BGkwqfv+w0hUEJ2148zFJkfiV+IM3wpnE8rIV5ILZ1bPhA6CmzI3MdobIClrApkHntK9Mo8ozwePkJfx/RK4sXLs9436DUg4RcPdrg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772081610; c=relaxed/simple;
-	bh=lOsoOFRZMW24Cb+H50A5yAie0d8ezxNyThtruTIS1WA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=UW2JzGxB6X+WouExRMeh85vIej3WY7b7Fs+PFltZA27XFgJ8DxymZSPz7fTRWyiedj+Q37xD2svRubelo7XvpOS64aeAQix/pT2LsybfCXc97oFPMtaB9uYj8azUGeCdh6HBxiSphm52rxkn6UIY/T8szDFYdNahE/AmmiHzW0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EbqDd/J8; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D74428643C
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 06:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772087800; cv=pass; b=nWTzW9lkE/orId+PB/40nO6ypXTSDPWo9Xc2OfHCbbfQm9Apgzw0ugdpRctXiIjo/DAjJ2sbL68aTPpAUgFSVWBm0K1y0OupREJ+fN50depm7+44f+aS3DYk5Xt6OgSOZWw8OG7ITebyF4HiN2C4SUx0C2mvq4Wr5V4bXUxtqHo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772087800; c=relaxed/simple;
+	bh=yt5IIGsEWrfvUvn/rqHDDVc6/F1dJ8dUZ1tyqFuOBSo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S8DAd8kAXDJgjo2GNT8gX4yk1t/nkBiD1LQ/akfc59WVOaiyYUwhAkrWJg/0Ub03d5ZlFgKtO5g7Yn9+QFGt38xq3+IUsLLqrpbkUQKqo8IEpQCw/XMBdBQdioXm5TBJByVQWP3d5TK17iYGlL8jPlk76qpTb9Z2s0VTRci9q0g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OyGrmHI9; arc=pass smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EbqDd/J8"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2bdb58f18f0so5291272eec.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Feb 2026 20:53:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OyGrmHI9"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2a964077671so64705ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Feb 2026 22:36:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772087799; cv=none;
+        d=google.com; s=arc-20240605;
+        b=WjgJOaGVLZSHU+EaBTfUYRh17qtodTWpZs5F3W5cdO8t69kcyqDfstGvwqMY+9rcNu
+         OPeOkxYLFn4YeGIvLq49R3/5lNIyvEhTMqms5FBVLlA/sLdO49slHY+Xm1WNNUs/sl58
+         XzSmkwkG10EMtOhJc3xI/S6jpqcDMWbRFTI+bL7MIMf8yuCcEFBofJtppRxFRQ6FJeJH
+         N3Kd4PNXtIUB1ybERyxpFL5oG8kNhFY9PK3s1vA6IqtO6ZZf4nHeDYmS/lrs0Jzp4GCP
+         7ZvLZ2zkMTnx0dVl6yjnVYpPWKAfVEP9MnlkqicTiOx93Mpu4nnBETnszCJvsxdV0F3B
+         zZWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+x1O6ZpoXMSX/kmIcAH91E2am3q9attAKrhaQ1uWm4I=;
+        fh=qgzjUWFzLPKdAAPeLQ6dkp9Dg48k9DwCn0Sgl7VJmBY=;
+        b=fSTa5fjLIozTWcNwcmgKfCoQPKpiWkklNqj6F3xpaeSXdMgIPURzg48o7c9pB9SYLw
+         KvA5kXc9U6hCnIcDhbq+ZEceIHuc4LOFBPU6M7WLBQrRaT3Heo15jlHTenqyPcT+4N8S
+         bkYVFwy9WKJXGUkZJ+EtRB0rmIpCMxyufadLEKys1Td+n4E0ovUDbJhTe7KJBS44wkpE
+         dQ2QX0Ps2LwRqRuGKlQcqepfIEYbwPw+Prp6KeSxcm42FSKdT1DZHuVWFBhbLVId0195
+         CLEtvmn4GjQwsj+7mHXraysG4Sq8P4hZaJLe8H9jKfgD/Ljv9DQNWScv8d3NvkZ+Hem1
+         A2NA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772081607; x=1772686407; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JebxhsuRXpmS99sqoEAcdewBCf+xeG1RAop12duRn7Q=;
-        b=EbqDd/J8dqGYd8uorALVm+VRjx//zK7l/AKjYt6kJu0Gp6Rl0nAHdREzfP2BdwpQju
-         8YG4p5mhrPg2zOZ6oDU7m2o3FwIT0ympLAafNfnXqxoCjINuCHJz5301FdkViaFb0pQl
-         +FSYri+jFdINSLxyZG/sklRorF3gua785cK4vWB6uYdIgATeFRscXXdE6a1T4gyB8Ckq
-         PSQACh92TxEkptWrOZbxVdZm19azICdf9cJMzqa74MP5+cL5KY9ScQ/GjXZBEwfID0QK
-         UFqVH7ftWicujRTAT9MgIj+iOd5fwRrOBjwMWnCy2jbliHRZjWYY3EwqEz+XSTPZ9Ntk
-         0ueQ==
+        d=google.com; s=20230601; t=1772087799; x=1772692599; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+x1O6ZpoXMSX/kmIcAH91E2am3q9attAKrhaQ1uWm4I=;
+        b=OyGrmHI9ezn2MxBtrszoBDjy2YLrZJXnp7qf4ZAainN4kKLu7eiEIsmSvBPLkEHZLV
+         AFi7fQW891dPj71B1pl0ocVnwFytEg7Xm81DHvdZXpsKilufhQDPjUCK1Uyr8BDjqstS
+         eO0mYaOkP14up2vcNAtdIKjLQLkwW8pPt01xLS2glDsbmURcvBeojo51gNNpbcuTRsGd
+         WgWX0IHsGcd0dWLm0fli9Kcovz+yug+Olw/pO32s0XB3e2Ff5JxX5V07qN0g65jNmnSx
+         5PVDpYpnNBxZW4LulFJQnqdcNoyG3mwPxffVCwmRJVy9RQz52HwBOfkj5a4JHgpXjQV8
+         QX6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772081607; x=1772686407;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JebxhsuRXpmS99sqoEAcdewBCf+xeG1RAop12duRn7Q=;
-        b=qOV3wT0+jzoQSizQEwMnCdEh7BRfQ8rMhShJh461hezpoKsWuQDuW5tv8Dfxlm0fa+
-         qup1k01Z59PLD8jVTpXw42Z12jNJhlCbMp0ADQpd8GIxuumt3a9QV2rYU0OQ+mWs815N
-         coNJpmwK15VVwBK4RdQWqV6jZIjohzc1N2R9OhxHOGWQZrFDWyxkrvfEo49Z3bSVj1zc
-         DCFcid5sksXVPj154/v4w7/mXdePUR/CPhnlKoCqSvdDG101g5KdZJkqGSpI4apVJwTR
-         0ZLVDgE3daXRNQu+2Y/5NihbQriZhmHElYjk1EkMdN+Kw7ZOKL0EzfxGu32aiRceNP/U
-         o0Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCVid8AKwBen0j7GMANrTxMjEUGKIpxO41uiIl/q8wlgNbMHaG+26DotMQHlpL7ovFng95KkSvWFOwtvsSES5w6q@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSg3mA5v3fyff1Y359vBNbf1Uv6OZgVqYNBVw00vrSYlIg86oh
-	xnCKcMBQVhsvzUOH4tiYFu7hB3zA9i8E3VtKj3FRUeT929wHcyfzWAbYGSsTQ//gR2Qq9meY1iK
-	ZcEOxwyunrg==
-X-Received: from dyw4.prod.google.com ([2002:a05:7300:8804:b0:2ba:9d01:ecf2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:cd97:b0:2b7:f522:995c
- with SMTP id 5a478bee46e88-2bdd3063fabmr400582eec.38.1772081606919; Wed, 25
- Feb 2026 20:53:26 -0800 (PST)
-Date: Wed, 25 Feb 2026 20:53:01 -0800
-In-Reply-To: <20260226045301.459948-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1772087799; x=1772692599;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+x1O6ZpoXMSX/kmIcAH91E2am3q9attAKrhaQ1uWm4I=;
+        b=v20GBsZ3HrfIm0K6jrkFGM6YxHkQI3Vhvrh6QPpbUXfRdKhoK77PztaxYUze4JzMXj
+         BgG2iQHbzCM+tBGM8kESMqjcUU1311Jp9koOkKZ7nh+LZAOO3HiiuQErxTmphFNTB10x
+         nN2JuCaa0w1e1J6pOeOMLvEcdhybi2csLtlzWnlolkAEYU3/irioIYkgxdSUrUTPToAm
+         iwjqLv4kdJg5YT6ACVvu3/Ly5mkvflpjisS1eDwzT8I+ayTeYQW9KoNlDtDVTP7hXkLo
+         FYsc2kh+NxaWITWpx7wtxci526GEtLDcAHlMmRXLeizEJiWk5S8u4mB6a+tgq9/PEgwl
+         FzKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUydT0iartr1qwDILsQapt6FIJtU2Bn0A/Bbq8XIp8EIyMI3geae3AsspMUEPZK1kU6YvmgL7FqaJOkj2sP8oL4@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlDzi8g3Izqpz6DjCTXcEZ907IcWWgR4NCMOuZgQwtvOH+WprD
+	IZyafChROVV5aUU/bFwfCecXfkKT0v1o5dy9N/lG717GULBqcnk0e00xgW0yhYVnty3r72pGPmI
+	YVrJMFAmRBZkCrExvh9hwQNSA3CdYYWXhw1TDhkVJ
+X-Gm-Gg: ATEYQzwfQyqVi/XpMf4VXrnTIqJO3ALkPsaYwcgLk0Zq1lqtOczcRWYpXnRXNvLklkS
+	fj6jNcyHY4o0jYQDO0WpbIljcCV+EuuYqGH0fVLx+UKcRY9elYDixsBL5tuexBxrgL4z3zlfHvA
+	S1Xa8+mJKyV3cNHFBiZil665QSPXiKXkj1LcMmSXX6Bq9bKBnp5TYmjUUkK4AuAh/Yroyg6AgdR
+	J7zwEoDBTxlVZHHW7Kz6xbLhFufHeKhf+l0x+e7x2cR8C45mQAsAtPnmDyuE8B95cS3mHLxoaj+
+	lHxJsmUM
+X-Received: by 2002:a17:902:d591:b0:2a7:6c4e:5924 with SMTP id
+ d9443c01a7336-2adf771234emr1671865ad.12.1772087798246; Wed, 25 Feb 2026
+ 22:36:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260226045301.459948-1-irogers@google.com>
-X-Mailer: git-send-email 2.53.0.414.gf7e9f6c205-goog
-Message-ID: <20260226045301.459948-10-irogers@google.com>
-Subject: [PATCH v1 10/10] perf vendor events intel: Update sierraforest events
- from 1.13 to 1.15
+MIME-Version: 1.0
+References: <20260206-perf_fix_kvm_stat_error-v1-1-ad40115876be@arm.com> <aZ-oYb-FDLVT5MGq@google.com>
+In-Reply-To: <aZ-oYb-FDLVT5MGq@google.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date: Wed, 25 Feb 2026 22:36:26 -0800
+X-Gm-Features: AaiRm53BIUOQJwW49ggxSdOSGRY3N8Io5TeDCIeKAsDG4OotV6tMybLboEgFU4s
+Message-ID: <CAP-5=fVCdQZ584s_24wQc_+03xL2Npj2qDbqGSjE=Ms1-y8raQ@mail.gmail.com>
+Subject: Re: [PATCH] perf kvm stat: Fix build error
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The updated events were published in:
-https://github.com/intel/perfmon/commit/996bacad8f144e675b32f0096b9fe6813380695c
-https://github.com/intel/perfmon/commit/93b6ef08ca9b01788458e8f5a0e7cbb716715b7c
+On Wed, Feb 25, 2026 at 5:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hi Ian,
+>
+> On Fri, Feb 06, 2026 at 11:00:20AM +0000, Leo Yan wrote:
+> > Since commit ceea279f9376 ("perf kvm stat: Remove use of the arch
+> > directory"), a native build on Arm64 machine reports:
+> >
+> >   util/kvm-stat-arch/kvm-stat-x86.c:7:10: fatal error: asm/svm.h: No su=
+ch file or directory
+> >     7 | #include <asm/svm.h>
+> >       |          ^~~~~~~~~~~
+> >   compilation terminated.
+> >
+> > The build fails to find x86's asm headers when building for Arm64.  Fix
+> > this by including asm headers with relative path instead.
+> >
+> > Fixes: ceea279f9376 ("perf kvm stat: Remove use of the arch directory")
+> > Signed-off-by: Leo Yan <leo.yan@arm.com>
+>
+> Probably not from this patch, but this change seems to introduce this
+> error on my i386.
+>
+>   In file included from util/kvm-stat-arch/kvm-stat-x86.c:4:
+>   /linux/tools/include/../../arch/x86/include/uapi/asm/svm.h:137:32: erro=
+r: conversion from 'long long unsigned int' to 'long unsigned int' changes =
+value from '18446744073709551615' to '4294967295' [-Werror=3Doverflow]
+>     137 | #define SVM_EXIT_ERR           -1ull
+>         |                                ^
+>   util/kvm-stat-arch/kvm-stat-x86.c:13:1: note: in expansion of macro 'de=
+fine_exit_reasons_table'
+>      13 | define_exit_reasons_table(svm_exit_reasons, SVM_EXIT_REASONS);
+>         | ^~~~~~~~~~~~~~~~~~~~~~~~~
+>   /linux/tools/include/../../arch/x86/include/uapi/asm/svm.h:249:11: note=
+: in expansion of macro 'SVM_EXIT_ERR'
+>     249 |         { SVM_EXIT_ERR,         "invalid_guest_state" }
+>         |           ^~~~~~~~~~~~
+>   util/kvm-stat-arch/kvm-stat-x86.c:13:45: note: in expansion of macro 'S=
+VM_EXIT_REASONS'
+>      13 | define_exit_reasons_table(svm_exit_reasons, SVM_EXIT_REASONS);
+>         |                                             ^~~~~~~~~~~~~~~~
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- .../arch/x86/sierraforest/cache.json          | 22 +++++-----
- .../arch/x86/sierraforest/pipeline.json       | 42 ++++++++++++++++---
- 3 files changed, 49 insertions(+), 17 deletions(-)
+Hmm.. it looks like something has gone screwy with the include paths.
+The header you've gotten is:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/arch/x86/include/uapi/asm/svm.h#n137
+rather than:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/arch/x86/include/uapi/asm/svm.h#n137
+where the value differs between -1ull and -1.
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index 8ef03af9f150..8a9e1735e21e 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -30,7 +30,7 @@ GenuineIntel-6-CC,v1.04,pantherlake,core
- GenuineIntel-6-A7,v1.04,rocketlake,core
- GenuineIntel-6-2A,v19,sandybridge,core
- GenuineIntel-6-8F,v1.36,sapphirerapids,core
--GenuineIntel-6-AF,v1.13,sierraforest,core
-+GenuineIntel-6-AF,v1.15,sierraforest,core
- GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
- GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v59,skylake,core
- GenuineIntel-6-55-[01234],v1.37,skylakex,core
-diff --git a/tools/perf/pmu-events/arch/x86/sierraforest/cache.json b/tools/perf/pmu-events/arch/x86/sierraforest/cache.json
-index de0e7661a52d..168f43557a0e 100644
---- a/tools/perf/pmu-events/arch/x86/sierraforest/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/sierraforest/cache.json
-@@ -326,7 +326,7 @@
-         "UMask": "0x82"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 1024. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -337,7 +337,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 128. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -348,7 +348,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 16. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -359,7 +359,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 2048. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -370,7 +370,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 256. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -381,7 +381,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 32. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -392,7 +392,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 4. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -403,7 +403,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 512. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -414,7 +414,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 64. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -425,7 +425,7 @@
-         "UMask": "0x5"
-     },
-     {
--        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD - Only counts with PEBS enabled.",
-+        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 8. Only counts with PEBS enabled.",
-         "Counter": "0,1",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-@@ -499,7 +499,7 @@
-         "UMask": "0x12"
-     },
-     {
--        "BriefDescription": "Counts the number of  stores uops retired same as MEM_UOPS_RETIRED.ALL_STORES",
-+        "BriefDescription": "Counts the number of stores uops retired.",
-         "Counter": "0,1,2,3,4,5,6,7",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-diff --git a/tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json b/tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json
-index 70af13143024..cf67ff6135e0 100644
---- a/tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json
-@@ -186,7 +186,7 @@
-         "UMask": "0xf7"
-     },
-     {
--        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles",
-+        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.THREAD]",
-         "Counter": "Fixed counter 1",
-         "EventName": "CPU_CLK_UNHALTED.CORE",
-         "SampleAfterValue": "2000003",
-@@ -200,7 +200,7 @@
-         "SampleAfterValue": "2000003"
-     },
-     {
--        "BriefDescription": "Fixed Counter: Counts the number of unhalted reference clock cycles",
-+        "BriefDescription": "Fixed Counter: Counts the number of unhalted reference clock cycles.",
-         "Counter": "Fixed counter 2",
-         "EventName": "CPU_CLK_UNHALTED.REF_TSC",
-         "SampleAfterValue": "2000003",
-@@ -216,7 +216,7 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles",
-+        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.CORE]",
-         "Counter": "Fixed counter 1",
-         "EventName": "CPU_CLK_UNHALTED.THREAD",
-         "SampleAfterValue": "2000003",
-@@ -230,10 +230,10 @@
-         "SampleAfterValue": "2000003"
-     },
-     {
--        "BriefDescription": "Fixed Counter: Counts the number of instructions retired",
-+        "BriefDescription": "Fixed Counter: Counts the number of instructions retired.",
-         "Counter": "Fixed counter 0",
-         "EventName": "INST_RETIRED.ANY",
--        "PublicDescription": "Fixed Counter: Counts the number of instructions retired Available PDIST counters: 32",
-+        "PublicDescription": "Fixed Counter: Counts the number of instructions retired. Available PDIST counters: 32",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-@@ -309,6 +309,38 @@
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts the number of CLFLUSH, CLWB, and CLDEMOTE instructions retired.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xe0",
-+        "EventName": "MISC_RETIRED1.CL_INST",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0xff"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of LFENCE instructions retired.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xe0",
-+        "EventName": "MISC_RETIRED1.LFENCE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of accesses to KeyLocker cache.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xe1",
-+        "EventName": "MISC_RETIRED2.KEYLOCKER_ACCESS",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x10"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of misses to KeyLocker cache.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xe1",
-+        "EventName": "MISC_RETIRED2.KEYLOCKER_MISS",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x11"
-+    },
-     {
-         "BriefDescription": "Counts the number of issue slots in a UMWAIT or TPAUSE instruction where no uop issues due to the instruction putting the CPU into the C0.1 activity state.",
-         "Counter": "0,1,2,3,4,5,6,7",
--- 
-2.53.0.414.gf7e9f6c205-goog
+In Leo's change he has the include path as:
+  #include "../../arch/x86/include/uapi/asm/svm.h"
 
+but I think that is off by one and should be:
+  #include "../../../arch/x86/include/uapi/asm/svm.h"
+
+Making the include path this should prioritize finding the tool's
+version of the file over using the include paths. Could you try adding
+the missing "../" to the paths, I wasn't able to reproduce locally
+building with -m32.
+
+Longer term maybe a macro like UINT64_C should be used to avoid these
+kinds of long long vs long problems.
+
+Thanks,
+Ian
+
+
+> Thanks,
+> Namhyung
+>
+> > ---
+> >  tools/perf/util/kvm-stat-arch/kvm-stat-x86.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c b/tools/perf/=
+util/kvm-stat-arch/kvm-stat-x86.c
+> > index 1cf541385a4bdee4930b67a054906ccade7301fd..43275d25b6cbccc477ba45a=
+901d69c67422847ae 100644
+> > --- a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
+> > +++ b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
+> > @@ -4,9 +4,9 @@
+> >  #include "../kvm-stat.h"
+> >  #include "../evsel.h"
+> >  #include "../env.h"
+> > -#include <asm/svm.h>
+> > -#include <asm/vmx.h>
+> > -#include <asm/kvm.h>
+> > +#include "../../arch/x86/include/uapi/asm/svm.h"
+> > +#include "../../arch/x86/include/uapi/asm/vmx.h"
+> > +#include "../../arch/x86/include/uapi/asm/kvm.h"
+> >  #include <subcmd/parse-options.h>
+> >
+> >  define_exit_reasons_table(vmx_exit_reasons, VMX_EXIT_REASONS);
+> >
+> > ---
+> > base-commit: 84cb36da81413c2dff805150b9f4db1524460269
+> > change-id: 20260206-perf_fix_kvm_stat_error-a795a1dd67a2
+> >
+> > Best regards,
+> > --
+> > Leo Yan <leo.yan@arm.com>
+> >
