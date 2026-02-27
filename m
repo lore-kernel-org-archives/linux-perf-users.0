@@ -1,255 +1,268 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from YT5PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11021110.outbound.protection.outlook.com [40.107.192.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ACA42E007
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2026 17:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D863126B2;
+	Fri, 27 Feb 2026 19:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.192.110
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772213470; cv=pass; b=etIVJuzmhbd+SYzFzo9VgNIZ2ENccAdfxuwtTCpI7dpntfVQtYhMnHnPgvitBBcE6fDQZXRTOtpFHcnac3F3o8YCgKoYpvBq1CijVG+q6lMyUKWw+WLSxF/OpbpvEmCVB9RLJe15K27dg8YxORDVT4eckpH3TUa+z9eBsYzmj5k=
+	t=1772218904; cv=fail; b=oFK1Pe6iUlXbff75Uwg5IXjwMg56gKSxpA6rHa15XbUHgoMJieHWyK6zsNpavyX20xoAlIxfpmoITgRj7zmubW0UliE8pNtmkVKZs1DfzjN7e0IF0C1ij8grrBFRpSPw/3EMu655iCMQbazSrhCeG5Vw3MXduEmbuZoXVO2Epqg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772213470; c=relaxed/simple;
-	bh=oGvbYERDzpf+ud1yN5pymK09PqOVXfjAhmXrla93aTo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rfLZD21w44lAKckDDwrCAdLM4GGF7x/WiZMzpjrzIN5KvFHBVpA/kxAWkarXcXnU+GvJdjJjaaLUmIlCnPkenTn40yLIc0ZwPsaNPjUKZD7PYPcBBpmt3WhHEotrJsEG0Xz52L0TIJVQ8fN3jaNBc3dl6sKMVud0lqgcDJMEXJM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wcYF5tBE; arc=pass smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1772218904; c=relaxed/simple;
+	bh=/OXFOBa4PFNYA4GIPEC7OULulL8MkO2V973X9Fo+xsE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IA7rNqHBIIezu8MndIKtCqhm4z2XREmtFDUdc6H6jLJJwXkp9Iqof6ogNXB2WAL8MbVoNXJN6ShLDS2CzmQoqcHvi8gZI/tU+vS+bOgmUwFliLTPTikBskhQl2J9wCbpuM3jmzRPr7RcF3b/qe884PvEtJRjtrjP1fIyOzfy0KM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=RE5ahWBW; arc=fail smtp.client-ip=40.107.192.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wcYF5tBE"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a964077671so385ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2026 09:31:09 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772213469; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Vgf6V71S1Lw3AEY4pdmdN6qBA/WnCptGQiGboxFeKkjwOqpbIOIua5kkgZr6J38BuH
-         x6kkYLNbtSsLE5BBcCMfnoX7QaknHAOro2NxKoVcK3BUuOXw/dwm66UKrHLGlL6EiEad
-         1vrNylUvgWEHPa1wsH9ARL0ywqI/5lyp63Wac/cB0lqZCyahMjIPrHPeIv5iTzz9QlKH
-         3EPlFVvTGWTvksm/k5GlKt1O267jr4faV+CzFF/rypm5SH6nnffegRgLrKIAKFnSaqDZ
-         KAwDjovcQyzJoaikeWYIAkiCQqCOWErInda5w2efmWuJK+TFdIkdTW0mJ/+LDLl0AN4/
-         VzXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=5tHFTaeSsWRCh6JuXEcpq/ukmfs/lMgU64J/6um6Dlc=;
-        fh=bQ1wcTKDAGeqXss2B+UzytDIce0qXFMMtX799veZkBc=;
-        b=BvGvAbPynTBsZ2ey3TdtumkrGifASNq9D/NC0WoIXPv4t+d7QDZ5zBmarP1qV+bL1t
-         PMSrvDE5gMLKzdVPOQKID3SsHkX5qfm6GDUhxk72l42VbS0K4iDIWCCuCV9seqD905/C
-         tCybRHNX4K9QdINhVLD4xb8LeTCscloH5KUNUGVIMT0OVHQlSz70Z03127N9XO98xqd0
-         cj7o2N0pJshZGhQYnN/UqetB/bafpdpIJNBK8kNOQrv8cKe+dY6v2WV14k6nScvv82jq
-         4a0tgPkawqD7uAOSlv0MfKlst8uatbE6LST4ZrYGPiOpymVJ+JBcOmWI6bd5KXB1Skd3
-         uIVQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772213469; x=1772818269; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5tHFTaeSsWRCh6JuXEcpq/ukmfs/lMgU64J/6um6Dlc=;
-        b=wcYF5tBEO2bm0jRjgRyYEzrlH65squomGOirGrn87JdQzJoHy6NQOYUIF2XZmVnMfA
-         24U6VLsZ7e2+HWuBEHob9hdbyGn+gXJcboxxElplSS4VkyKT6tlum6GQDtHeOSqpsCrX
-         bHslEhdde9hj7QlgbQPo962roaqux90TJ3rg0WsnwnrNSX3N/Qp4myR8qRptc3q/iJN1
-         An64kEXq/7fvtltpc/5itIo4KKIWCoCHmjP2V+TAsqbBZEe0R9DCRaO9F20yiU3Pqd60
-         IiQdDm2o23CVmQZy1OUd6I2d6Gi56NLUGltRBsJOETwTY9fyXXyZLNVnQcBIpoMMWHyw
-         Ba5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772213469; x=1772818269;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5tHFTaeSsWRCh6JuXEcpq/ukmfs/lMgU64J/6um6Dlc=;
-        b=QsH1XRcKXXI+mgYKl/rtdMaCywwHMtF89eMMRaxT/q3vLi2ayOgivL1jD7j3jtpoeF
-         iz8TlAAauiRd0ufj3Dhxn6D/2CVCfbA4VrkiTpgPysiI4wATP834E1BNYmDhPS+T/R5c
-         vmi78gnpO95HGpDZ4uG5AJgpUWoCGMSa3RNVwHCza+ThLy+96F1xfqcDZOYYylmEoqQi
-         ei0w+iUDsfx32N3Ds+95uegwIOqiTv+lI7eqJE2iFoSJ4TCIubCXSgK5KQJnPljCBnNv
-         uJ4S2r4WMVj+1qkzZOmdI4AEJ4N81olVXwj+RYtPEzlvKKgBkY+rkz0qkJjgNo0odXkd
-         wKkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/kWEORdlH7cvUw8+aQB12AGEmQsZu+Y9h6zhJe61VOYgx6nuLpRx5wqJbYZln/gpCNiGHNQM7Rz9BJ96+gDCs@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZSzF2V9TnK81WWclYhCYPtzsHf05aPgKvN2O/TWdxveKgZyK+
-	X4NtzPWEgWC2RkcefPNxE8WwLaT+R0NMOd4XODwFCBHYkHLdIIB2+YC/uwwgjISeOkqDTKKZWiH
-	/FS69QtMJDCoiywgMKhaROkXctyjo6epOOUJH53F+
-X-Gm-Gg: ATEYQzzkT8oUnlnxEah7PH8oxcKLDwaWhvq2osAvKBLWoUZEkUwv3tnj6mOZ2MBhW4A
-	9KvNkTidXB9Q1IkAsr4SPooEt9l9ezCQ2J+EhBvB/iOJ8u+bVqtxUwgknop+N27WYAXlrMp/IaR
-	kOhlt9jWCWLZW3N2d0PmmsJj4eCm9ayK61HT3b5nwSs02ySBNSWiRgQExTeEenSnGtUlWa9VkE9
-	hki74nEP+HzM0qg39sYRNB39OSMVNBznX/4JlOji8uH+lv9PFyEvbtGDvmJNrY0PDWlp/u0jB9W
-	fYdcsirB
-X-Received: by 2002:a17:902:ebc6:b0:2a0:7fac:c031 with SMTP id
- d9443c01a7336-2adf7782c07mr6002605ad.14.1772213468208; Fri, 27 Feb 2026
- 09:31:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="RE5ahWBW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YyWwHYXaVOptQRjpaDCuF4hX/enC3EN1ccyldunU2wcevIBwMn9BnOGxGD2tx6mNv2iDEfk53Wkb+mXDN6Wy1RRTfBXh05wOgeNkmYt3e+eOWyUhal8NMrjmlic+zvb9MjpNgRN6zV2ix8G3mGzzkKp9UIE3S8+g5ZOTeIUlnwdhSnjTZh0OpOo+HF45xYcoJ08qgzDL8K8x07DVajgNSAUGcGl83azMyTH2jMTbtcPaeWpW9LFyU/rFSzWixvxi0sdePJRrTFKDEPGkrJybWd9BQEUJdMXTYcQupc6NcTNKlhsb8aFscFJ4g7suzdjyHzXvi1epNRTS46558UCwpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dk29SJfpJGFgRzCY4PLuyyiHP3wfz8v8GzH3ejR7jAg=;
+ b=T/5vtpzi65/kGBQeFBOb1FizZ5xT99Epgu0mbyUUbqjynBQknAe1BiYJ1tIT0APElGf/6Qz2Tlu05gkDD3WHqUBMFfW7OmX1V4rMzQKSvykSY9dlQ2Nw23aR8bDSpLJje0huzK4J4iMVlvk7P6Jdoi1SiUFCCIkOThQwG1FVGs21u9DCLttv7j5sXbuklzS+wsIGTD4ZcEVIWbnj9bJ3DfMoAvP6+E3o5uVfIJS4OTPVUDbVdMn8zu2k9zQwBIMf1rDn4/rVRVCej+upBRGxFTuruchoLY5AU2+RKBKGnseXTaqMhhD8d4WK9OHld9/TFl3BcRLeqsQaKMEgdaxIWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
+ dkim=pass header.d=efficios.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dk29SJfpJGFgRzCY4PLuyyiHP3wfz8v8GzH3ejR7jAg=;
+ b=RE5ahWBWyrGgAr1sG7157mWsSYBEmmBEnr7QZWJmeZoxo07+7Wmsur2peObaGSX2ionx0Os9kpbDaookJJtmUDDy2fzm+/kNnTT+f/sqpNrUWdNEZXJJL9Jsymke28jJ4T9AFgOo6v0bW94a5FL3D8qALq2+Fcpk3s/nsUZ1ndql+tEcOrOGxuMwjm2bjbybwp3NiS18loGQQr1D0Ntikr/JBB20P1mLVqoNIMR5dT+ABqPDsYrLSmVDcvhuazN9ruHa078fP/fMaK368bO3o+4pGmy6eQ9x0nmNOEiqdjoJieszjoSJbQmXQRuZ8tzAAurF5kCVbC+/0AjVZ7gpbg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=efficios.com;
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
+ by YQ1PR01MB11446.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:c1::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.16; Fri, 27 Feb
+ 2026 19:01:37 +0000
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::6004:a862:d45d:90c1]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::6004:a862:d45d:90c1%3]) with mapi id 15.20.9654.015; Fri, 27 Feb 2026
+ 19:01:36 +0000
+Message-ID: <b808e186-3eeb-46ed-9826-b0ae6cdcdb8b@efficios.com>
+Date: Fri, 27 Feb 2026 14:01:25 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/61] vfs: change inode->i_ino from unsigned long to u64
+To: Jeff Layton <jlayton@kernel.org>, Matthew Wilcox <willy@infradead.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+ Eric Biggers <ebiggers@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ David Hildenbrand <david@kernel.org>, David Howells <dhowells@redhat.com>,
+ Paulo Alcantara <pc@manguebit.org>, Andreas Dilger
+ <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, Steve French <sfrench@samba.org>,
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+ Shyam Prasad N <sprasad@microsoft.com>, Bharath SM
+ <bharathsm@microsoft.com>, Alexander Aring <alex.aring@gmail.com>,
+ Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+ Viacheslav Dubeyko <slava@dubeyko.com>,
+ Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov
+ <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>,
+ Christian Schoenebeck <linux_oss@crudebyte.com>,
+ David Sterba <dsterba@suse.com>, Marc Dionne <marc.dionne@auristor.com>,
+ Ian Kent <raven@themaw.net>, Luis de Bethencourt <luisbg@kernel.org>,
+ Salah Triki <salah.triki@gmail.com>,
+ "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+ Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>,
+ Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+ Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>,
+ Amir Goldstein <amir73il@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Yangtao Li <frank.li@vivo.com>,
+ Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+ David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>,
+ Dave Kleikamp <shaggy@kernel.org>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+ Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, Mike Marshall
+ <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>,
+ Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>,
+ Zhihao Cheng <chengzhihao1@huawei.com>, Damien Le Moal <dlemoal@kernel.org>,
+ Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>,
+ John Johansen <john.johansen@canonical.com>, Paul Moore
+ <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>,
+ Roberto Sassu <roberto.sassu@huawei.com>,
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+ Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>,
+ Casey Schaufler <casey@schaufler-ca.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>, Eric Dumazet <edumazet@google.com>,
+ Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Willem de Bruijn <willemb@google.com>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, "Darrick J. Wong" <djwong@kernel.org>,
+ Martin Schiller <ms@dev.tdt.de>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ nvdimm@lists.linux.dev, fsverity@lists.linux.dev, linux-mm@kvack.org,
+ netfs@lists.linux.dev, linux-ext4@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-nilfs@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-afs@lists.infradead.org, autofs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
+ ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+ jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev,
+ ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
+ linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org,
+ selinux@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org,
+ linux-x25@vger.kernel.org
+References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
+ <aaB5lgKd8FOIizPg@casper.infradead.org>
+ <4a462d40899698586c110add96ce3fab6ddac30b.camel@kernel.org>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <4a462d40899698586c110add96ce3fab6ddac30b.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT4PR01CA0096.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:ff::13) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:be::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260206-perf_fix_kvm_stat_error-v1-1-ad40115876be@arm.com>
- <aZ-oYb-FDLVT5MGq@google.com> <CAP-5=fVCdQZ584s_24wQc_+03xL2Npj2qDbqGSjE=Ms1-y8raQ@mail.gmail.com>
- <20260226095255.GF4184494@e132581.arm.com> <CAP-5=fUAK=vzeZWDXuun+wptSeBwUMhZuVqdh4zwLoXoV32VPA@mail.gmail.com>
- <aaFIgR29wGYvHnVp@google.com>
-In-Reply-To: <aaFIgR29wGYvHnVp@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 27 Feb 2026 09:30:56 -0800
-X-Gm-Features: AaiRm52fkMNibtcFZspq25GKe0DGSaSGrK3KmHwv551WsbO8r9P3VSv8eF7LXXA
-Message-ID: <CAP-5=fWGpmk6w+SUv5PnhEXxyYe87ostV4sNZa0tZVPWhh+GjA@mail.gmail.com>
-Subject: Re: [PATCH] perf kvm stat: Fix build error
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YQ1PR01MB11446:EE_
+X-MS-Office365-Filtering-Correlation-Id: d47bfdf5-e3c5-40d3-8017-08de7632a081
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	EY5Md8YGJJIuzUva9Rf1G3srlPfJ5z4HLDU6C28LTRbhf3S6k+BFTAgq/Uj3DeAKWxjHXSRUJ3gWvR9+H8pmPkJM+6uucug3fgz6+OSzVebBsXgFLIEdolRXYlAJa/tfXD0GDY6CPY00XUEby3BNWa3oEYAvKV6x1O+HT39G3mfrOeFNbIsisjN6kW1FDRI37V9NxrGtMS6ym/l5L0OuMDlQdeofrJksRx2JGYHieHYV6tstWrSpduIm4wJU55wk8eG4Y5gLGYkTeVVTXI7fxkW/Qm4+BO/o+eSAdyo5f6HXZtAUxCYqHFwWqcH83Ds7ek0iedsiYntL1PyL/q7ogdDfnHRANarXn8RwmRXSub0BC7XfsSN4xJWSa98OHzdiLHIJJucQFYYm2dM2KoPVPf+02lUhjUllo9S0nu+tKlgr1cykR3yatmYz4Tc6+N5SsWXdY+4ZKhIDmaGzvL+lJ4o8l3T7sPuHxKexmgIIDCDUr4ncdJSKp4T7v386CeuGWnbZRN9Ni9Razm7gj1TN9n7YulxgaC9Y70JJNwFaP+NxaPz9NezUrvwST3ExKfGEshqKR3Gk0WoJQncvCrdNFJrc7bTXhFCxkM043XpimNHjrcJwuHBVOhHY6vH3pbNFYF//dn6hsV3mxzb47wcvsDRk4++7MFAj7Fi7EO7E8SEnWmxVEgxU/J1UgxKQtJQr
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dTNML0R3RmJSb2FhSmRmUlF1aC9FelFaU2ppWFBTN3ZUOTQrRFpoLytyM05q?=
+ =?utf-8?B?T242Vlg5MUpZMnZpYVVjMGFsU0Z1SVhrWStxKzJwRVFyWlpYT3VEYzk2RGN4?=
+ =?utf-8?B?eUMrSDlaeHJNRUNLb1pBbzFxbitUNVUwOHIvc3UyQzFpWk5KYlBveDdSTFBU?=
+ =?utf-8?B?Y21YMnc0eHl2Wi8xZXNZYnR1VDc5UG9WU0I5YnBYd295ZHBBM3BzQTk4M202?=
+ =?utf-8?B?cnk2QjRCM2oyWmpmK24wMjFIWUp1TTNCeW9EbmFuL3U4bUNQbTVEZ0tVYlk4?=
+ =?utf-8?B?Q0hEZUNmK3dGMEsvamdQTmdXekpnN2xyMGw0azNIcDI2ditWQml5dkJzZDhl?=
+ =?utf-8?B?emQ3cW1jY3ZFS1dQNThwdTJ6bExURk1pd0FjQ1FrSzdIdjhTeG85K2JkdWhK?=
+ =?utf-8?B?bFFDUXFNVVdibG1PY0hCNVZQVVZDaVBRUSszZ210TzhEdWg2b0NLOUZObGZs?=
+ =?utf-8?B?aEo1d0p4NG1aaDB0YTRVSG03VFpXL05UZ0VQWWU4NUpSblNNQUw4OXdsZUhZ?=
+ =?utf-8?B?Szl5elZnZDBTdWxtUnFmQW9GUkFyTnNsS0xUR3o5cGw3ekwyZU5NSFVUN2pE?=
+ =?utf-8?B?aGdLaEVaclcxQUpVam1TaC9BRXRBOElzRDJvK3hhTithSTByeWVvNSs2SVk0?=
+ =?utf-8?B?UVdkcTJ4Uzdrb1dtSFFZMHV6aUVBb25wRnVYMTRiNHQzQzZVVS91Y0MvcnZH?=
+ =?utf-8?B?Um05L2tTZlBaUXdTVkZJUW52UmtaV3ZweGZyZ3lwTGNuZmF4d2U5cEp1aHBT?=
+ =?utf-8?B?QzY0OU5nazBSN3JNdGpiMEtYU3MyYmZ6TEg3R0c5WHdCMXhGVkdyYkFGMlUz?=
+ =?utf-8?B?OGVCRXNwN1R4ZTJyRjVwZ1JxR1V1clJSeVNtdFhIM295d2tUaGVLZTdIc05o?=
+ =?utf-8?B?aVd1TTVPR1FnTWtuS1EwbkI5Q0RmTHgxZDJzU1NwdFVHcTY2TG1OamM5a09D?=
+ =?utf-8?B?RWJtSDlPbEpXVm1wRmxTUVFRT0lFMk1FNm1acjBxajFrQjRXVVFuTUh3dHZu?=
+ =?utf-8?B?d1N3NDBKOFBWYUtkbHdSbWEvTjQ4TFVtV1VjWitQa2xWelU2VmZtMkluVngx?=
+ =?utf-8?B?R0tZRGoxQzJ4SjljMHE3UTBQY1JCM2ZaSWNlRHB2TEo1OHFBRWg4ajdVdFJ0?=
+ =?utf-8?B?UUJudzZEMHJXM1RaWFJsTnpXdis0YU50MWhMdDFXQ2JWbmQzMC9sY3JmSnVT?=
+ =?utf-8?B?MUwrRDRLcU93NEpXMFBESUE5T2ttMzB4QjhTTHF1UFVWa01IWEJaSDV2UWRH?=
+ =?utf-8?B?MGtFaEloTlpZRkY1di9Jb1Z1Y2cxWHhEbnRyNGtMdURrVkFBQ2FDV01sS1lY?=
+ =?utf-8?B?TEF2YUsrTXJ1eVNPVlBBYmczc3VrK3o2ZDJ0aFpqSlZMOHJMck9Hb2hsMWVE?=
+ =?utf-8?B?RGxBWnNUQ1M0SlQxZWJqNVBLRTFVeXJYYmw4QlR5RzNqRGxHTFB2a21xU2Fj?=
+ =?utf-8?B?RzQrakhPTXlGcVVUSGZSL0U5Nm1DUDlUVTQ0dDRIcStxaU9kbnVRcUxUb2Fp?=
+ =?utf-8?B?S0dDRHI5K1BrU3FoOGRkQUJ5ZG1uNEhiandXbjlsNzVDSlQ1TVk3WVo3YnBW?=
+ =?utf-8?B?UzJ0bStQV1NsQnVjSXJscURubG95M1VGYmVlRDB5V2dXVVh6Y0ZUZUVrd0hz?=
+ =?utf-8?B?QUN4cGwxdTUwdjl5R3lDRUNSaHlibzdCVzlQMXp3MEQzVE5jbjJmSmNONkRm?=
+ =?utf-8?B?cjJ4QmZxSHhrWUxBRThYYjIyNWpwejl2SUN5QVp2dGIxTzZ5dW1TZzBBOXhj?=
+ =?utf-8?B?NW5PMGtqZ24weUs0QTJjdFNrLzJrd1VETFNlUHlGY2ZwQ0ZzZW5wVWhaVFkw?=
+ =?utf-8?B?d2p1S3Y2dnNKYlF0SXNab2tOTy91OUNaYnlIZWVUVjBvME9iU1FIc3ZuYmJT?=
+ =?utf-8?B?NDF2Z2EyZkpnUVd2T09OYld1cjAzQmNjTHFIaHl4MkIwL1FhMGx1b1liUm5F?=
+ =?utf-8?B?VStJcFVQbVB6ais2UjlCZ2tnSVZsd3RKWjhlUU8va1RDcGF4cDA3Wjd5a25U?=
+ =?utf-8?B?c3hhcUpvY0t0bXZBbVdvQm51ckRpTVcyUk14T3NBdnRUNHowVzNPNHlhdmJO?=
+ =?utf-8?B?SEZYL3NTM1ZyZGlzYVUzR1BkNmtOVkhoNzNQTU1VbDd4MGZVWlFwTGtOK1pw?=
+ =?utf-8?B?NWtrL3NNcVVnUGVCQldkcGl1Sm1mSTFLMTdkWFdkRkZBS3g3QTAyK0Qydit3?=
+ =?utf-8?B?MVpTWWFLSHRXRDZoUXBqNC9aK1hZTm5JMk4rbEVNR0ljZ3N0cm50TmNyb1NU?=
+ =?utf-8?B?N3g5SCswVUUvcnhobzdVYllrQlhqR2JvUjJBTzRTQzN6NlExSkp3cjM4RjNC?=
+ =?utf-8?B?Zk9zQWY5anI1ZkVqR1M2b1F0dE9POEpLay9jakFKR3UwZlVCVlh2UHNiKzZR?=
+ =?utf-8?Q?lCpXuAN1+w3tLwc4=3D?=
+X-OriginatorOrg: efficios.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d47bfdf5-e3c5-40d3-8017-08de7632a081
+X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2026 19:01:35.6014
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4N2/gZXBOwu3d4VpitFMRZidRWQIRoSaCdC/f2/Xt4bR8UjH6GueZon/NbacX7XPHqlUxfYPoxzUF4l4veiYQEGXWzrhYaUYiwshNafmDIQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQ1PR01MB11446
 
-On Thu, Feb 26, 2026 at 11:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Thu, Feb 26, 2026 at 08:44:51AM -0800, Ian Rogers wrote:
-> > On Thu, Feb 26, 2026 at 1:52=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote=
-:
-> > >
-> > > On Wed, Feb 25, 2026 at 10:36:26PM -0800, Ian Rogers wrote:
-> > >
-> > > [...]
-> > >
-> > > > Hmm.. it looks like something has gone screwy with the include path=
-s.
-> > > > The header you've gotten is:
-> > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools=
--next.git/tree/arch/x86/include/uapi/asm/svm.h#n137
-> > > > rather than:
-> > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools=
--next.git/tree/tools/arch/x86/include/uapi/asm/svm.h#n137
-> > > > where the value differs between -1ull and -1.
-> > > >
-> > > > In Leo's change he has the include path as:
-> > > >   #include "../../arch/x86/include/uapi/asm/svm.h"
-> > > >
-> > > > but I think that is off by one and should be:
-> > > >   #include "../../../arch/x86/include/uapi/asm/svm.h"
-> > >
-> > > Sorry I did not check the header path carefully.  A bit thoughts:
-> > >
-> > > The perf build will not include headers in relative paths as we
-> > > expected.
-> > >
-> > > It tries to find headers with appending search paths.  As Ian said,
-> > > I saw .kvm-stat-x86.o.cmd that includes kernel headers:
-> > >
-> > >   /home/niayan01/Work/linux/tools/include/../../arch/x86/include/uapi=
-/asm/svm.h \
-> > >   /home/niayan01/Work/linux/tools/include/../../arch/x86/include/uapi=
-/asm/vmx.h \
-> > >   /home/niayan01/Work/linux/tools/include/../../arch/x86/include/uapi=
-/asm/kvm.h \
-> > >
-> > > I'd suggest a fix in Makefile as below.  The idea is to give priority=
- to
-> > > the lower level folders under perf, so that headers in the deeper per=
-f
-> > > directories are searched first.  This avoids searching any kernel hea=
-ders.
->
-> It fixes the problem, thanks!
->
-> Tested-by: Namhyung Kim <namhyung@kernel.org>
+On 2026-02-27 12:19, Jeff Layton wrote:
+> On Thu, 2026-02-26 at 16:49 +0000, Matthew Wilcox wrote:
+>> On Thu, Feb 26, 2026 at 10:55:02AM -0500, Jeff Layton wrote:
+>>> The bulk of the changes are to format strings and tracepoints, since the
+>>> kernel itself doesn't care that much about the i_ino field. The first
+>>> patch changes some vfs function arguments, so check that one out
+>>> carefully.
+>>
+>> Why are the format strings all done as separate patches?  Don't we get
+>> bisection hazards by splitting it apart this way?
+> 
+> Circling back to this...
+> 
+> I have a v2 series (~107 patches) that I'm testing now that does this
+> more bisectably with the typedef and macro scaffolding that Mathieu
+> suggested. I'll probably send it early next week.
+> 
+> I had done it this way originally since I figured it was best to break
+> this up by subsystem. Should I continue with this series as a set of
+> patches broken up this way, or is it preferable to combine the pile of
+> format changes into fewer patches?
 
-So it is still the wrong fix. The relative include paths is the real
-issue, just add the missing "../". I'm not a fan of changing the
-include order as it has the potential to break things due to the
-subtle way that includes are picked up, tools/include isn't hermetic,
-etc. While it may fix one build failure we are likely creating build
-failures for others - well me, with bazel, for sure.
+Here is the approach I would recommend to maximize signal over noise
+for the follow up email thread discussions:
+
+Now that your series is bisectable, you could post a [RFC PATCH v2]
+series with the following:
+
+- Patch 00 introduces the series, points to your git branch implementing
+   the whole series,
+- The first few patches introduce the new type (kino_t) and macro to
+   do the format string transition. Initially kino_t would typedef to
+   unsigned long (no changes).
+- Followed by patches implementing the type + format string changes for
+   a few key subsystems.
+- The final patch would change kino_t and the format string macro to
+   64-bit integers.
+
+Once everyone agree on those core changes, you could proceed to post
+patches that change additional subsystems in a subsequent round.
+
+One more comment: have you tried using Coccinelle to do this kind of
+semantic code change ?
 
 Thanks,
-Ian
 
+Mathieu
 
-> More comments below.
->
-> >
-> > I'm not opposed to the change but I still think we should make the
-> > relative include be to the correct files. Some other thoughts below.
-> >
-> > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > > index a8dc72cfe48e..47359f672b6a 100644
-> > > --- a/tools/perf/Makefile.config
-> > > +++ b/tools/perf/Makefile.config
-> > > @@ -388,8 +388,10 @@ ifeq ($(DEBUG),0)
-> > >    endif
-> > >  endif
-> > >
-> > > -INC_FLAGS +=3D -I$(src-perf)/util/include
-> >
-> > Not clear to me why we need a util/include on top of everything else.
-> > It seems somewhat random what is in util/include rather than just in
-> > util.
->
-> It seems it tries to override some kernel headers but I'm curious we can
-> move the files to the tools/include and get rid of the directory.
->
-> >
-> > >  INC_FLAGS +=3D -I$(src-perf)/arch/$(SRCARCH)/include
-> >
-> > Hopefully with the removal of the arch directory (and fixing of
-> > cross-platform profiling) in slow chunks by changes like:
-> > https://lore.kernel.org/lkml/20260224142938.26088-1-irogers@google.com/
-> > we can get rid of this one.
-> >
-> > > +INC_FLAGS +=3D -I$(src-perf)/util/include
-> > > +INC_FLAGS +=3D -I$(src-perf)/util
->
-> I also hope to remove $(src-perf)/util too and use path relative to
-> $(src-perf) always for perf-specific headers.  But this is a separate
-> topic.
->
->
-> > > +INC_FLAGS +=3D -I$(src-perf)
-> >
-> > This:
-> >
-> > >  INC_FLAGS +=3D -I$(srctree)/tools/include/
-> > >  INC_FLAGS +=3D -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi
-> > >  INC_FLAGS +=3D -I$(srctree)/tools/include/uapi
-> >
-> > to here means that we prefer linux headers over uapi headers, which I
-> > think is the opposite of what a user-land process would expect. I
-> > think we should move these headers into two libraries, build them with
-> > an `install_headers` rule, and make the include path pick up the
-> > headers from where they are installed. As the linux and uapi headers
-> > are licensed differently, this would clarify the dependencies and
-> > licensing implications.
->
-> Sounds good.
->
-> Thanks,
-> Namhyung
->
-> >
-> > There's another can of worms regarding whether libperf is something
-> > useful, outside of declarations in event.h.
-> >
-> > Thanks,
-> > Ian
-> >
-> > > @@ -403,9 +405,6 @@ INC_FLAGS +=3D -I$(obj-perf)/util
-> > >  INC_FLAGS +=3D -I$(obj-perf)
-> > >  endif
-> > >
-> > > -INC_FLAGS +=3D -I$(src-perf)/util
-> > > -INC_FLAGS +=3D -I$(src-perf)
-> > > -
-> > >  CORE_CFLAGS +=3D -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=3D64 -D_G=
-NU_
-> > >
-> > > As a result, I can get the search paths in .kvm-stat-x86.o.cmd:
-> > >
-> > >   /home/niayan01/Work/linux/tools/perf/util/../../arch/x86/include/ua=
-pi/asm/svm.h \
-> > >   /home/niayan01/Work/linux/tools/perf/util/../../arch/x86/include/ua=
-pi/asm/vmx.h \
-> > >   /home/niayan01/Work/linux/tools/perf/util/../../arch/x86/include/ua=
-pi/asm/kvm.h \
-> > >
-> > > Please let me know if this makes sense.
-> > >
-> > > Thanks,
-> > > Leo
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
