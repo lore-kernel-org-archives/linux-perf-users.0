@@ -1,272 +1,262 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B85627FD52;
-	Fri, 27 Feb 2026 19:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A14436353;
+	Fri, 27 Feb 2026 20:09:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772220922; cv=none; b=TedUPTIdcqLNhVU18j6tfV1H5MIuHHcx0IflHyrdQEl/SzSzzxXRG74fP+J5G/8H3Kwh3snpVTzxoZr+ird6+tg14QBHe+2VKnBREL61e8Qx+GOMagx7tThtUEUa7BeAHRxqPyQkCnr+C1WroSX/2xFq0o4zfy+YDbd8FZzutAY=
+	t=1772222948; cv=none; b=pGFzacWEc6Amj8LiGF2pGv9z3bjLTIcq89KY0uozbm7dbsLydNEU3tESFagTIjfNLDmpynYe/CI+90bP8scKgU50VoxgDR5ADITw045zlHnQMpY+BPH2Q4Mhw0WQCrBfXrURpElJ6rAJaBCkaejgj6tn186H6mqBni1ozbwQiQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772220922; c=relaxed/simple;
-	bh=x8aY1qdgt0C9tMQnJs5wAf8ATVjxdYsE22ORECBTQj8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Y6JohbC+Jcboc0hd9EiJao3H7icj/jxS/zbR8SbQo1BAUrYrZ6tM+FMWjC6pvfFgnyKx8WMeg0uxJ3lmBqjCxdZ+jcWisXGjkSUd36KnRzY1yU3YoN6e8XrZkmAMqHpz5uPgbv9pqiIF8rvq8srPd4n1cyWgXyrOn/pguZZHb/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HAkmYX5x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772222948; c=relaxed/simple;
+	bh=uHYxem2rcFuwlV7scbCWwSyUtQMuMwhNJjysCrEHJOo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YbvCO6JDGqgYiEjuhsslSKBkQEZUt3dExi+/dAlLm73KS0EsMiorQHiTgkrXS/AaBod4VmCYvyf7A9yGbsQZ35cPugS+p0V0SXyxeCo/P0eOlFX1uz63KtVzN4UxmU+yv7nRFo5n5t+RpMZHGBuVgjNsdjGjPUN4KRa0evH3dHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P+U9FbqK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HAkmYX5x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA034C116C6;
-	Fri, 27 Feb 2026 19:35:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P+U9FbqK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E88C116C6;
+	Fri, 27 Feb 2026 20:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772220921;
-	bh=x8aY1qdgt0C9tMQnJs5wAf8ATVjxdYsE22ORECBTQj8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HAkmYX5xTgBJmIGTCpFCAMumPV3f8DHhz01MTU4lrlW/PYE/DFJ+TEip9CuHfwFXg
-	 wnHRz8ZTqfNRIPcBsUq9VTxyJWqdA9nlRsXGMvIckPT60T4/pSY8VCbkQMz+sjJhK+
-	 mWfZVqS3uf9mDqmTL7J0s+SnfU2wnKlWt403NJJww5ajMnIEf3ZfUnrEEWVuZszNa0
-	 rG/7QKHn/vcdJlevA3dXj9ATPEG3uYHz4fBjrOh4zYSYsTphR2iVHIcDM/v7NujRPN
-	 TIXwMfR/DPbY7XmlodpNk5WbW8qaLWuk8MmV9nxkf+H4qvlNLD1pukmeB+4AMz907b
-	 WqDtYisysW8PA==
-Message-ID: <1b38afe8ff4ba5880835d919c42e094d77a9d5ce.camel@kernel.org>
-Subject: Re: [PATCH 00/61] vfs: change inode->i_ino from unsigned long to u64
-From: Jeff Layton <jlayton@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Matthew Wilcox
-	 <willy@infradead.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt	
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Dan Williams
-	 <dan.j.williams@intel.com>, Eric Biggers <ebiggers@kernel.org>, "Theodore
- Y. Ts'o" <tytso@mit.edu>, Muchun Song <muchun.song@linux.dev>, Oscar
- Salvador <osalvador@suse.de>,  David Hildenbrand	 <david@kernel.org>, David
- Howells <dhowells@redhat.com>, Paulo Alcantara	 <pc@manguebit.org>, Andreas
- Dilger <adilger.kernel@dilger.ca>, Jan Kara	 <jack@suse.com>, Jaegeuk Kim
- <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,  Trond Myklebust
- <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck Lever
- <chuck.lever@oracle.com>,  NeilBrown <neil@brown.name>, Olga Kornievskaia
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,  Tom Talpey
- <tom@talpey.com>, Steve French <sfrench@samba.org>, Ronnie Sahlberg
- <ronniesahlberg@gmail.com>,  Shyam Prasad N <sprasad@microsoft.com>,
- Bharath SM <bharathsm@microsoft.com>, Alexander Aring	
- <alex.aring@gmail.com>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
- Viacheslav Dubeyko	 <slava@dubeyko.com>, Eric Van Hensbergen
- <ericvh@kernel.org>, Latchesar Ionkov	 <lucho@ionkov.net>, Dominique
- Martinet <asmadeus@codewreck.org>, Christian Schoenebeck
- <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, Marc Dionne	
- <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>, Luis de
- Bethencourt	 <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>,
- "Tigran A. Aivazian"	 <aivazian.tigran@gmail.com>, Ilya Dryomov
- <idryomov@gmail.com>, Alex Markuze	 <amarkuze@redhat.com>, Jan Harkes
- <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,  Nicolas Pitre <nico@fluxnic.net>,
- Tyler Hicks <code@tyhicks.com>, Amir Goldstein <amir73il@gmail.com>, 
- Christoph Hellwig	 <hch@infradead.org>, John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>,  Yangtao Li <frank.li@vivo.com>, Mikulas
- Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse	
- <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Dave Kleikamp	
- <shaggy@kernel.org>, Konstantin Komarov	
- <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, 
- Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
- Mike Marshall	 <hubcap@omnibond.com>, Martin Brandenburg
- <martin@omnibond.com>, Miklos Szeredi	 <miklos@szeredi.hu>, Anders Larsen
- <al@alarsen.net>, Zhihao Cheng	 <chengzhihao1@huawei.com>, Damien Le Moal
- <dlemoal@kernel.org>, Naohiro Aota	 <naohiro.aota@wdc.com>, Johannes
- Thumshirn <jth@kernel.org>, John Johansen	 <john.johansen@canonical.com>,
- Paul Moore <paul@paul-moore.com>, James Morris	 <jmorris@namei.org>, "Serge
- E. Hallyn" <serge@hallyn.com>, Mimi Zohar	 <zohar@linux.ibm.com>, Roberto
- Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, Fan
- Wu	 <wufan@kernel.org>, Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler
- <casey@schaufler-ca.com>, Alex Deucher	 <alexander.deucher@amd.com>,
- Christian =?ISO-8859-1?Q?K=F6nig?=	 <christian.koenig@amd.com>, David
- Airlie <airlied@gmail.com>, Simona Vetter	 <simona@ffwll.ch>, Sumit Semwal
- <sumit.semwal@linaro.org>, Eric Dumazet	 <edumazet@google.com>, Kuniyuki
- Iwashima <kuniyu@google.com>, Paolo Abeni	 <pabeni@redhat.com>, Willem de
- Bruijn <willemb@google.com>, "David S. Miller"	 <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman	 <horms@kernel.org>, Oleg
- Nesterov <oleg@redhat.com>, Peter Zijlstra	 <peterz@infradead.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland	 <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>,  James Clark <james.clark@linaro.org>, "Darrick
- J. Wong" <djwong@kernel.org>, Martin Schiller <ms@dev.tdt.de>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev, 
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org, 
-	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
- autofs@vger.kernel.org, 	ceph-devel@vger.kernel.org,
- codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net, 
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
- devel@lists.orangefs.org, 	linux-unionfs@vger.kernel.org,
- apparmor@lists.ubuntu.com, 	linux-security-module@vger.kernel.org,
- linux-integrity@vger.kernel.org, 	selinux@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, 	dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, 	linaro-mm-sig@lists.linaro.org,
- netdev@vger.kernel.org, 	linux-perf-users@vger.kernel.org,
- linux-fscrypt@vger.kernel.org, 	linux-xfs@vger.kernel.org,
- linux-hams@vger.kernel.org, linux-x25@vger.kernel.org
-Date: Fri, 27 Feb 2026 14:35:07 -0500
-In-Reply-To: <b808e186-3eeb-46ed-9826-b0ae6cdcdb8b@efficios.com>
-References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
-	 <aaB5lgKd8FOIizPg@casper.infradead.org>
-	 <4a462d40899698586c110add96ce3fab6ddac30b.camel@kernel.org>
-	 <b808e186-3eeb-46ed-9826-b0ae6cdcdb8b@efficios.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=k20201202; t=1772222948;
+	bh=uHYxem2rcFuwlV7scbCWwSyUtQMuMwhNJjysCrEHJOo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=P+U9FbqKF3CgiBsEPqPexZzZ93XmAcCqzSbUwaOX1Y8siePI12ijG2mxzI5YIf0mL
+	 /ms5mDjzZ41zbR+y1lyjSjd5si16Ajj3yoCRxi8QeNf7VJlp5WbLWxR/Cm1nnjaTYO
+	 IOJj8irdOEN+aJhdaLJh+fKK7+dKb7KlCCDxdNslqcoGrctiSrHy1YeE9LnRXJRhDK
+	 ivNZRpe0JCZ8M0dux5O/xFyufs7KMwSQdWCOqjqmQAjFgGIXu0NS+l21cUs4WBsHt5
+	 gFLiipJYdZxphu1iU6VvsVMrLyOefgdnpc25102oxNzG5Kz3JMlEpdrlW7fczulnx6
+	 d9eorSp6XyA4Q==
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: "linux-mm @ kvack . org" <linux-mm@kvack.org>,
+	"David Hildenbrand (Arm)" <david@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	David Rientjes <rientjes@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Carlos Llamas <cmllamas@google.com>,
+	Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	linux-sgx@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-rdma@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v1 00/16] mm: cleanups around unmapping / zapping
+Date: Fri, 27 Feb 2026 21:08:31 +0100
+Message-ID: <20260227200848.114019-1-david@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2026-02-27 at 14:01 -0500, Mathieu Desnoyers wrote:
-> On 2026-02-27 12:19, Jeff Layton wrote:
-> > On Thu, 2026-02-26 at 16:49 +0000, Matthew Wilcox wrote:
-> > > On Thu, Feb 26, 2026 at 10:55:02AM -0500, Jeff Layton wrote:
-> > > > The bulk of the changes are to format strings and tracepoints, sinc=
-e the
-> > > > kernel itself doesn't care that much about the i_ino field. The fir=
-st
-> > > > patch changes some vfs function arguments, so check that one out
-> > > > carefully.
-> > >=20
-> > > Why are the format strings all done as separate patches?  Don't we ge=
-t
-> > > bisection hazards by splitting it apart this way?
-> >=20
-> > Circling back to this...
-> >=20
-> > I have a v2 series (~107 patches) that I'm testing now that does this
-> > more bisectably with the typedef and macro scaffolding that Mathieu
-> > suggested. I'll probably send it early next week.
-> >=20
-> > I had done it this way originally since I figured it was best to break
-> > this up by subsystem. Should I continue with this series as a set of
-> > patches broken up this way, or is it preferable to combine the pile of
-> > format changes into fewer patches?
->=20
-> Here is the approach I would recommend to maximize signal over noise
-> for the follow up email thread discussions:
->=20
-> Now that your series is bisectable, you could post a [RFC PATCH v2]
-> series with the following:
->=20
-> - Patch 00 introduces the series, points to your git branch implementing
->    the whole series,
-> - The first few patches introduce the new type (kino_t) and macro to
->    do the format string transition. Initially kino_t would typedef to
->    unsigned long (no changes).
-> - Followed by patches implementing the type + format string changes for
->    a few key subsystems.
-> - The final patch would change kino_t and the format string macro to
->    64-bit integers.
->=20
+A bunch of cleanups around unmapping and zapping. Mostly simplifications,
+code movements, documentation and renaming of zapping functions.
 
-That's pretty much the approach the set I have takes. The current set
-is here:
+With this series, we'll have the following high-level zap/unmap functions
+(excluding high-level folio zapping):
+* unmap_vmas() for actual unmapping (vmas will go away)
+* zap_vma(): zap all page table entries in a vma
+* zap_vma_for_reaping(): zap_vma() that must not block
+* zap_vma_range(): zap a range of page table entries
+* zap_vma_range_batched(): zap_vma_range() with more options and batching
+* zap_special_vma_range(): limited zap_vma_range() for modules
+* __zap_vma_range(): internal helper
 
-    https://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git/log/?=
-h=3Diino-u64
+Patch #1 is not about unmapping/zapping, but I stumbled over it while
+verifying MADV_DONTNEED range handling.
 
-My question was more about whether I should batch some of the changes
-together. My inclination is that doing it in small, incremental patches
-is a good thing, but I figured I'd ask before I spam everyone with a
-100+ patch series.
+Patch #16 is related to [1], but makes sense even independent of that.
 
-> Once everyone agree on those core changes, you could proceed to post
-> patches that change additional subsystems in a subsequent round.
->=20
-> One more comment: have you tried using Coccinelle to do this kind of
-> semantic code change ?
+[1] https://lore.kernel.org/r/aYSKyr7StGpGKNqW@google.com
 
-I've use coccinelle before for this sort of change, but my skills with
-it are pretty primitive. The problem I saw with using it here is that
-the main set of changes involved format strings, and that didn't look
-straightforward to do with coccinelle. The LLM seems to have sorted it
-out with no trouble though.
+The CC list is already long enough. As these are simple changes to
+drivers/arch code, I'm only CCing maintainers of all changes but only
+reviewers of the MM bits.
 
-On a related note, has anyone has taught an LLM how to use Coccinelle.
-I wonder if it might give it a better tool for its toolbox, since
-Claude at least seems to mostly use bash, perl or python to make
-changes across the tree.
---=20
-Jeff Layton <jlayton@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Vlastimil Babka <vbabka@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Pedro Falcato <pfalcato@suse.de>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Alice Ryhl <aliceryhl@google.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Janosch Frank <frankja@linux.ibm.com>
+Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Thomas Gleixner <tglx@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Arve Hjønnevåg" <arve@android.com>
+Cc: Todd Kjos <tkjos@android.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Carlos Llamas <cmllamas@google.com>
+Cc: Alice Ryhl <aliceryhl@google.com>
+Cc: Ian Abbott <abbotti@mev.co.uk>
+Cc: H Hartley Sweeten <hsweeten@visionengravers.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Tvrtko Ursulin <tursulin@ursulin.net>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Simona Vetter <simona@ffwll.ch>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Neal Cardwell <ncardwell@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: David Ahern <dsahern@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>
+
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: kvm@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sgx@vger.kernel.org
+Cc: intel-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-rdma@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: rust-for-linux@vger.kernel.org
+Cc: x86@kernel.org
+
+
+David Hildenbrand (Arm) (16):
+  mm/madvise: drop range checks in madvise_free_single_vma()
+  mm/memory: remove "zap_details" parameter from zap_page_range_single()
+  mm/memory: inline unmap_mapping_range_vma() into
+    unmap_mapping_range_tree()
+  mm/memory: simplify calculation in unmap_mapping_range_tree()
+  mm/oom_kill: use MMU_NOTIFY_CLEAR in __oom_reap_task_mm()
+  mm/oom_kill: factor out zapping of VMA into zap_vma_for_reaping()
+  mm/memory: rename unmap_single_vma() to __zap_vma_range()
+  mm/memory: move adjusting of address range to unmap_vmas()
+  mm/memory: convert details->even_cows into details->skip_cows
+  mm/memory: use __zap_vma_range() in zap_vma_for_reaping()
+  mm/memory: inline unmap_page_range() into __zap_vma_range()
+  mm: rename zap_vma_pages() to zap_vma()
+  mm: rename zap_page_range_single_batched() to zap_vma_range_batched()
+  mm: rename zap_page_range_single() to zap_vma_range()
+  mm: rename zap_vma_ptes() to zap_special_vma_range()
+  mm/memory: support VM_MIXEDMAP in zap_special_vma_range()
+
+ arch/powerpc/platforms/book3s/vas-api.c |   2 +-
+ arch/powerpc/platforms/pseries/vas.c    |   2 +-
+ arch/s390/mm/gmap_helpers.c             |   2 +-
+ arch/x86/kernel/cpu/sgx/encl.c          |   2 +-
+ drivers/android/binder/page_range.rs    |   4 +-
+ drivers/android/binder_alloc.c          |   2 +-
+ drivers/comedi/comedi_fops.c            |   2 +-
+ drivers/gpu/drm/i915/i915_mm.c          |   4 +-
+ drivers/infiniband/core/uverbs_main.c   |   6 +-
+ drivers/misc/sgi-gru/grumain.c          |   2 +-
+ include/linux/mm.h                      |  23 ++-
+ kernel/bpf/arena.c                      |   3 +-
+ kernel/events/core.c                    |   2 +-
+ lib/vdso/datastore.c                    |   2 +-
+ mm/internal.h                           |   7 +-
+ mm/interval_tree.c                      |   5 -
+ mm/madvise.c                            |  24 +--
+ mm/memory.c                             | 217 ++++++++++++------------
+ mm/oom_kill.c                           |  15 +-
+ mm/page-writeback.c                     |   2 +-
+ net/ipv4/tcp.c                          |   7 +-
+ rust/kernel/mm/virt.rs                  |   4 +-
+ 22 files changed, 162 insertions(+), 177 deletions(-)
+
+
+base-commit: df9c51269a5e2a6fbca2884a756a4011a5e78748
+-- 
+2.43.0
+
