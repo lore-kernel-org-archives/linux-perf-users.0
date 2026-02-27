@@ -1,167 +1,426 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D3836BCC5;
-	Fri, 27 Feb 2026 12:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772194379; cv=none; b=PhhSbFBCoXgWYUVaP5ZSjyQF5fcJpY6gjbccPPx8lbJ/PBTRQQaaoE7EZ5VC6AcVgghap9bOXWD7NQtVsvQ4uE8npvY5+qMdFQAoelquJY1CVDcbylTC4fB2biklHay6lt94PdCvwsSXOlnGMnfVFIaPuPfj4NwolfHr80GWYfU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772194379; c=relaxed/simple;
-	bh=1b12QwrTFuaFMK65iudi0TD6xfpVQk6e2QGzUgCaomE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=OLSaWuEY1twHaBruyY6ltLZUDuupNIElBklRfbzLKCMwbPRJZqW6cn/Pm2JQ8L09OamRLJB4qmwRgiNQTZKp3gr0JYf8M34ehwP89meGuQDYRM01Eybf86fWkkV/05Tx7q6uKAFCzVE1I6Irw6t2/u021Ajcv/3UFrzzdvdU93E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g82clZ8n; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0103446B5
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2026 16:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.125.188.123
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772210845; cv=pass; b=an4jlVTCFUP6hzwk1oFeHEStrIwe6bPS5Wxfwmu2OHhH0SlAFmgkrPnmhi0bVzGYN8DLGyrfl8nfwxHmACiJ0iaDtcIwf4uJgDQWcgO2Q7tBO8VVywWXdaX5h0m6OLyd4NL1aQOVk6E8ulQzLDRRIA0Vkg5k3uHjHelRr0Pc8GU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772210845; c=relaxed/simple;
+	bh=EtniMrkccfrrFst83snpcJ9FJYzCqUqT1Eux3rWxpmo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sb0qO1hp7U7OqOHvbXuwVP2NlGVcSPjS+Ig6smm4Sx9Np4IV3mlP3DNkX5bjY43q+TNR3+NuDEQoC454bcB82m4XzYxZMRf2iou9RtV0nEPFhdynAA3f0RA62F4yGe5XgK78FYYyXFLmyQpdj3IKxPSGxVGPTgeVOPRcwmmfE9k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=AsZRArcr; arc=pass smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g82clZ8n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE181C19423;
-	Fri, 27 Feb 2026 12:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772194378;
-	bh=1b12QwrTFuaFMK65iudi0TD6xfpVQk6e2QGzUgCaomE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=g82clZ8nyW8ZBS18pbN4mtMtEuS8gjhpPmlc3CZyGDxu+3JmFUF6Ii3cR5kyPP1za
-	 1WOhZReBWLgZsYrNowPt8XsjxpN0KdJbCXjszLy/KlNMMnuPiuI3RJYRXi3M3rYU5o
-	 enhxRv8CoYQ01L4JGrpxS3FOiVwbIQWRPSbe0sRuSlWMBmoJlQMkICzfP3Y89PbACk
-	 0KxxK5XmIq4A9TacnMA6XaDrnskcDy8spYsPZ7UaFYBLITyrCdfpvRiSz0im6hWsFK
-	 v0livD5qqBMRlaLQWXD5P1V+SLxLx5NhJU6YQUOirQjheYwc+dzn24KD9LNaS77ZL4
-	 y6e7rMorEerTQ==
-Date: Fri, 27 Feb 2026 09:12:54 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Deepak Gupta <debug@rivosinc.com>, Paul Walmsley <pjw@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1 fyi] tools headers: Sync uapi/linux/prctl.h with the
- kernel source
-Message-ID: <aaGKRtZzQxXJ6ltD@x1>
+	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="AsZRArcr"
+Received: from mail-yx1-f70.google.com (mail-yx1-f70.google.com [74.125.224.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 14C253FBBD
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2026 16:47:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20251003; t=1772210832;
+	bh=BKQzT9t7ZI3mb+6EDIKBTxaX0DX68JkIAcPYLBp08+M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=AsZRArcr+IHOjGSBnonu/oj477dSluZfbYqix5/Y3zCBdoV1+uw6mYYHWwc4sPEzW
+	 HjFcFZE09FnavTkEnrKbxmF0r3YbTQPiFMojDWqkufdWKDMCZW9OPxWmPLHGl8VYyP
+	 aEEDR142r/egN11v+6BUwh9UCjnO7iqcqVKNlvjuimRs6gHHfWgooiT0xYazkycZV9
+	 iGaNpfepDa56QYdI4I7j3O9bAMZ5DH4c2WTlkXndqNrhlLiQOUUvwizjaREzzR+RaW
+	 G6qhyP2mK34/AwEY8BsSjxU/P2yJBLCVcFF0FazsuIIhPpIJJoppDe/KKLv377XKJO
+	 ckRoiSwBJ3h5NMgLM0yT68s2FLDl6gyLkP/lRN3fVuLZu1yxgjda/ENN1odqNnDS9i
+	 cUltWCZdejwVb0iOVt7w8SJ+e7iURRxp5NxrVK346lnXyAMDOroqzltJLwTrKWTFrE
+	 AN4ruGpriTmmvQ9GwGNvr1LpOw6mwnclV+8SKwiXFM2kWGMs7WC4UqqVSYW/5oxS+O
+	 xoiqh6Acy+TYgniHFTAsDU75wpJzuZLSiIVgwW31LUadIpejlNvpg5EcfEaBbQmLVj
+	 NgnJJyPdPSKozzmB9LKkQNdrUwMQftfhfgs3hHlvFhllpGK5m8UgazcxDHxIY0+WhT
+	 Efp718XcrpREHjvzQoHFxdjs=
+Received: by mail-yx1-f70.google.com with SMTP id 956f58d0204a3-64ca2fce827so5119567d50.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2026 08:47:11 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772210831; cv=none;
+        d=google.com; s=arc-20240605;
+        b=NjKDEGYZSwMnFw0pTp5ApK02Ti8sDxhu29zj8JbPhcYt+OdCxwogEJzcmhHepLcrLO
+         moToSD+mYOy7tJkpn7qDovLLP4fquK056hJitwErFNZ2ntFESXAIvbR98SxdVtXHegil
+         9Eq7CnXEe80433Gme3KZ1osZn5wEHTY3y0Ov6geF6VZQ6o1rqD+FjpPaQOZXgo9CWZrp
+         VVMurEkfdNsse4k5KZvUed0ee04DP8kgLko+z24rDxIQAHoypsTgqJkGc4ks7Kh/lPDC
+         5wo5P0+hqlqf6R43Fsr9w6pTsni0nx86htPj5XL68mv1vukc2+AgZSDSvZn186eMXvRk
+         wVNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=BKQzT9t7ZI3mb+6EDIKBTxaX0DX68JkIAcPYLBp08+M=;
+        fh=Bhx0ZK62aZmLH/9JaepFU0sCw+bs5I+pm+mb0bDdUeY=;
+        b=I4bUKf0Vqwu8++6U9XuowjcCe34KOjT0P6j31f4Th9YvCYrrJyXpGoUZiZqHVVsn//
+         0cxYbzwOJN1CXAP1k3n4u7GmEw/j41ecKWEBciBfwKltCllqj+D91wB1XWL/bQADrfk7
+         w1jMyfuLv3EpheuswaVqj6M03MZzVSck5TE+lDTPC19WPqHvcva0h/wnr4oa+i2QEFrb
+         qX0SBrRAxdJnOnblPpY1Qsr1NbKwkPaq78xVBLA3XPUzNBLSMgZW2CXqIVK48Ae5zJMc
+         PytMB3cjbDenjdMLrGXJJqwKOfx/I6jcndqdXn35Mf2jJMJwHXE1R6TnenLYt1DdbkaN
+         ohWQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772210831; x=1772815631;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=BKQzT9t7ZI3mb+6EDIKBTxaX0DX68JkIAcPYLBp08+M=;
+        b=NfHRaR7adXSpX1ZsSeb8qeLkJ0OynbqYAqA1psvCsPPMiaLrveHI1cLdnJpoA+7MIX
+         iZQzhI9CVYsa2sKM1bLzw2NRK6hcsE9MB3DWiLjBQxpQl0Y3wowD5Op+QyH1DEXt+m15
+         u+51HPA1mGNadGopjt7TJ6AYseV+Ur2IQyakBmfvNp4zgLZZs9+x149FTSlnxXwa5VDg
+         ubVMh4CUEEGKIKGu9YD69e4v2bhiKzpIcVuCYDpOHxGUUfl5wTncoo+NhsCPJ5Uw16o3
+         2lly5wpB/rYDpjpp84RM8CfKS2eo3cuzKFa1BHIVgnM2I7cn2iD59huDRe8WJhAEHPlt
+         CrBg==
+X-Forwarded-Encrypted: i=1; AJvYcCV75XBnZ9n55ExjWM/WQ4KZm1jasRUIY//MjjBZIZQa1AfLBGfY3N5maO+5ar8O1MzPjI9UP85IS+T8zSH6K1mO@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmfGksntcyMq8SXDOXEG+8XG90GWi8ootPJWdI4DZ4ZC5EWrfD
+	aeo8D9YzBaI9LRt0DN7q8M5UOiHKd6f5G8C+UjmTdESs4x1TFpWKY6UR2suUFEqKwWzVmyhpNLH
+	ts+MB88gPQPikupQSIXVxPTtTjibOAe3j4iV1sUIbCUOHvmKN+D19V32cpOdOYs8wDfPG80CTmg
+	2Ve/vctTyyCj++hceXxWaFKp8VFOY5v/D/pxthQ+GxeKhomMd49fcZFuzks3RuSA==
+X-Gm-Gg: ATEYQzwm4zkkJsQ+i3SkVeSYPbrbaFnYiDc1T4aTpNbcN4knfvTAe2b1G5QakRkEU23
+	RN0YdC4P5iisDMCBcLJubxZNlxsRW3TPXQrqfVK84wln+oLVQQHncd47nC6qGzWVB0OFgLnJTCa
+	/wtrMOlSDo9kNRmCNzVwY6ybN93AphVsP2/hyS+pDr2gDQvpJRb4+mLD7u9aT1KC4lWASXU12fu
+	tLNQoYEXhkp0j7ELfgVimMcoeK31/SHzV5+915tq+50omtx/8f5CUgY0y/stFsD9dI=
+X-Received: by 2002:a53:b743:0:b0:64c:9b84:92ee with SMTP id 956f58d0204a3-64cb6f438a9mr3821271d50.31.1772210830775;
+        Fri, 27 Feb 2026 08:47:10 -0800 (PST)
+X-Received: by 2002:a53:b743:0:b0:64c:9b84:92ee with SMTP id
+ 956f58d0204a3-64cb6f438a9mr3821130d50.31.1772210830102; Fri, 27 Feb 2026
+ 08:47:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org> <20260226-iino-u64-v1-51-ccceff366db9@kernel.org>
+In-Reply-To: <20260226-iino-u64-v1-51-ccceff366db9@kernel.org>
+From: Ryan Lee <ryan.lee@canonical.com>
+Date: Fri, 27 Feb 2026 08:46:58 -0800
+X-Gm-Features: AaiRm50sr0j0-BwzNnmwGRvH8jyB1wNkHgZo3vdp3K_4YIT1mBOH-BzuS2c5S3A
+Message-ID: <CAKCV-6ujQK3yj8sB2eHafaw4pvrJUeK18Hu4vzvNSjH48RVgYg@mail.gmail.com>
+Subject: Re: [PATCH 51/61] security: update audit format strings for u64 i_ino
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Eric Biggers <ebiggers@kernel.org>, 
+	"Theodore Y. Ts'o" <tytso@mit.edu>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>, 
+	David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.org>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, 
+	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Steve French <sfrench@samba.org>, Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+	Shyam Prasad N <sprasad@microsoft.com>, Bharath SM <bharathsm@microsoft.com>, 
+	Alexander Aring <alex.aring@gmail.com>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
+	Viacheslav Dubeyko <slava@dubeyko.com>, Eric Van Hensbergen <ericvh@kernel.org>, 
+	Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Christian Schoenebeck <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, 
+	Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>, 
+	Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, 
+	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>, Ilya Dryomov <idryomov@gmail.com>, 
+	Alex Markuze <amarkuze@redhat.com>, Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, 
+	Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>, Amir Goldstein <amir73il@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Yangtao Li <frank.li@vivo.com>, 
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse <dwmw2@infradead.org>, 
+	Richard Weinberger <richard@nod.at>, Dave Kleikamp <shaggy@kernel.org>, 
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, 
+	Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
+	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>, 
+	Zhihao Cheng <chengzhihao1@huawei.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, 
+	John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Eric Dumazet <edumazet@google.com>, 
+	Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, "Darrick J. Wong" <djwong@kernel.org>, 
+	Martin Schiller <ms@dev.tdt.de>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev, 
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
+	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org, 
+	v9fs@lists.linux.dev, linux-afs@lists.infradead.org, autofs@vger.kernel.org, 
+	ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu, 
+	ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev, 
+	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org, 
+	linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, 
+	selinux@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+	linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-fscrypt@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org, 
+	linux-x25@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tldr; Just FYI, I'm carrying this on the perf tools tree.
+On Thu, Feb 26, 2026 at 9:13=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> Update %lu/%ld to %llu/%lld in security audit logging functions that
+> print inode->i_ino, since i_ino is now u64.
+>
+> Files updated: apparmor/apparmorfs.c, integrity/integrity_audit.c,
+> ipe/audit.c, lsm_audit.c.
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  security/apparmor/apparmorfs.c       |  4 ++--
+>  security/integrity/integrity_audit.c |  2 +-
+>  security/ipe/audit.c                 |  2 +-
+>  security/lsm_audit.c                 | 10 +++++-----
+>  security/selinux/hooks.c             |  4 ++--
+>  security/smack/smack_lsm.c           | 12 ++++++------
+>  6 files changed, 17 insertions(+), 17 deletions(-)
+>
+> diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorf=
+s.c
+> index 2f84bd23edb69e7e69cb097e554091df0132816d..7b645f40e71c956f216fa6a7d=
+69c3ecd4e2a5ff4 100644
+> --- a/security/apparmor/apparmorfs.c
+> +++ b/security/apparmor/apparmorfs.c
+> @@ -149,7 +149,7 @@ static int aafs_count;
+>
+>  static int aafs_show_path(struct seq_file *seq, struct dentry *dentry)
+>  {
+> -       seq_printf(seq, "%s:[%lu]", AAFS_NAME, d_inode(dentry)->i_ino);
+> +       seq_printf(seq, "%s:[%llu]", AAFS_NAME, d_inode(dentry)->i_ino);
+>         return 0;
+>  }
+>
+> @@ -2644,7 +2644,7 @@ static int policy_readlink(struct dentry *dentry, c=
+har __user *buffer,
+>         char name[32];
 
-Full explanation:
+I have confirmed that the buffer is still big enough for a 64-bit inode num=
+ber.
 
-There used to be no copies, with tools/ code using kernel headers
-directly. From time to time tools/perf/ broke due to legitimate kernel
-hacking. At some point Linus complained about such direct usage. Then we
-adopted the current model.
+>         int res;
+>
+> -       res =3D snprintf(name, sizeof(name), "%s:[%lu]", AAFS_NAME,
+> +       res =3D snprintf(name, sizeof(name), "%s:[%llu]", AAFS_NAME,
+>                        d_inode(dentry)->i_ino);
+>         if (res > 0 && res < sizeof(name))
+>                 res =3D readlink_copy(buffer, buflen, name, strlen(name))=
+;
 
-See further details at:
+For the AppArmor portion:
 
- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
+Reviewed-By: Ryan Lee <ryan.lee@canonical.com>
 
-To pick up the changes in these csets:
-
-  5ca243f6e3c30b97 ("prctl: add arch-agnostic prctl()s for indirect branch tracking")
-  28621ec2d46c6adf ("rseq: Add prctl() to enable time slice extensions")
-
-That don't introduced these new prctls:
-
-  $ tools/perf/trace/beauty/prctl_option.sh > before.txt
-  $ cp include/uapi/linux/prctl.h tools/perf/trace/beauty/include/uapi/linux/prctl.h
-  $ tools/perf/trace/beauty/prctl_option.sh > after.txt
-  $ diff -u before.txt after.txt
-  --- before.txt	2026-02-27 09:07:16.435611457 -0300
-  +++ after.txt	2026-02-27 09:07:28.189816531 -0300
-  @@ -73,6 +73,10 @@
-   	[76] = "LOCK_SHADOW_STACK_STATUS",
-   	[77] = "TIMER_CREATE_RESTORE_IDS",
-   	[78] = "FUTEX_HASH",
-  +	[79] = "RSEQ_SLICE_EXTENSION",
-  +	[80] = "GET_INDIR_BR_LP_STATUS",
-  +	[81] = "SET_INDIR_BR_LP_STATUS",
-  +	[82] = "LOCK_INDIR_BR_LP_STATUS",
-   };
-   static const char *prctl_set_mm_options[] = {
-   	[1] = "START_CODE",
-  $
-
-That now will be used to decode the syscall option and also to compose
-filters, for instance:
-
-  [root@five ~]# perf trace -e syscalls:sys_enter_prctl --filter option==SET_NAME
-       0.000 Isolated Servi/3474327 syscalls:sys_enter_prctl(option: SET_NAME, arg2: 0x7f23f13b7aee)
-       0.032 DOM Worker/3474327 syscalls:sys_enter_prctl(option: SET_NAME, arg2: 0x7f23deb25670)
-       7.920 :3474328/3474328 syscalls:sys_enter_prctl(option: SET_NAME, arg2: 0x7f23e24fbb10)
-       7.935 StreamT~s #374/3474328 syscalls:sys_enter_prctl(option: SET_NAME, arg2: 0x7f23e24fb970)
-       8.400 Isolated Servi/3474329 syscalls:sys_enter_prctl(option: SET_NAME, arg2: 0x7f23e24bab10)
-       8.418 StreamT~s #374/3474329 syscalls:sys_enter_prctl(option: SET_NAME, arg2: 0x7f23e24ba970)
-  ^C[root@five ~]#
-
-This addresses these perf build warnings:
-
-  Warning: Kernel ABI header differences:
-    diff -u tools/perf/trace/beauty/include/uapi/linux/prctl.h include/uapi/linux/prctl.h
-
-Please see tools/include/uapi/README for further details.
-
-Cc: Deepak Gupta <debug@rivosinc.com>
-Cc: Paul Walmsley <pjw@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- .../trace/beauty/include/uapi/linux/prctl.h   | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/tools/perf/trace/beauty/include/uapi/linux/prctl.h b/tools/perf/trace/beauty/include/uapi/linux/prctl.h
-index 51c4e8c82b1e9889..55b0446fff9d95ab 100644
---- a/tools/perf/trace/beauty/include/uapi/linux/prctl.h
-+++ b/tools/perf/trace/beauty/include/uapi/linux/prctl.h
-@@ -386,4 +386,41 @@ struct prctl_mm_map {
- # define PR_FUTEX_HASH_SET_SLOTS	1
- # define PR_FUTEX_HASH_GET_SLOTS	2
- 
-+/* RSEQ time slice extensions */
-+#define PR_RSEQ_SLICE_EXTENSION			79
-+# define PR_RSEQ_SLICE_EXTENSION_GET		1
-+# define PR_RSEQ_SLICE_EXTENSION_SET		2
-+/*
-+ * Bits for RSEQ_SLICE_EXTENSION_GET/SET
-+ * PR_RSEQ_SLICE_EXT_ENABLE:	Enable
-+ */
-+# define PR_RSEQ_SLICE_EXT_ENABLE		0x01
-+
-+/*
-+ * Get the current indirect branch tracking configuration for the current
-+ * thread, this will be the value configured via PR_SET_INDIR_BR_LP_STATUS.
-+ */
-+#define PR_GET_INDIR_BR_LP_STATUS      80
-+
-+/*
-+ * Set the indirect branch tracking configuration. PR_INDIR_BR_LP_ENABLE will
-+ * enable cpu feature for user thread, to track all indirect branches and ensure
-+ * they land on arch defined landing pad instruction.
-+ * x86 - If enabled, an indirect branch must land on an ENDBRANCH instruction.
-+ * arch64 - If enabled, an indirect branch must land on a BTI instruction.
-+ * riscv - If enabled, an indirect branch must land on an lpad instruction.
-+ * PR_INDIR_BR_LP_DISABLE will disable feature for user thread and indirect
-+ * branches will no more be tracked by cpu to land on arch defined landing pad
-+ * instruction.
-+ */
-+#define PR_SET_INDIR_BR_LP_STATUS      81
-+# define PR_INDIR_BR_LP_ENABLE		   (1UL << 0)
-+
-+/*
-+ * Prevent further changes to the specified indirect branch tracking
-+ * configuration.  All bits may be locked via this call, including
-+ * undefined bits.
-+ */
-+#define PR_LOCK_INDIR_BR_LP_STATUS      82
-+
- #endif /* _LINUX_PRCTL_H */
--- 
-2.53.0
-
+> diff --git a/security/integrity/integrity_audit.c b/security/integrity/in=
+tegrity_audit.c
+> index 0ec5e4c22cb2a1066c2b897776ead6d3db72635c..d8d9e5ff1cd22b091f462d1e8=
+3d28d2d6bd983e9 100644
+> --- a/security/integrity/integrity_audit.c
+> +++ b/security/integrity/integrity_audit.c
+> @@ -62,7 +62,7 @@ void integrity_audit_message(int audit_msgno, struct in=
+ode *inode,
+>         if (inode) {
+>                 audit_log_format(ab, " dev=3D");
+>                 audit_log_untrustedstring(ab, inode->i_sb->s_id);
+> -               audit_log_format(ab, " ino=3D%lu", inode->i_ino);
+> +               audit_log_format(ab, " ino=3D%llu", inode->i_ino);
+>         }
+>         audit_log_format(ab, " res=3D%d errno=3D%d", !result, errno);
+>         audit_log_end(ab);
+> diff --git a/security/ipe/audit.c b/security/ipe/audit.c
+> index 3f0deeb54912730d9acf5e021a4a0cb29a34e982..93fb59fbddd60b56c0b22be2a=
+38b809ef9e18b76 100644
+> --- a/security/ipe/audit.c
+> +++ b/security/ipe/audit.c
+> @@ -153,7 +153,7 @@ void ipe_audit_match(const struct ipe_eval_ctx *const=
+ ctx,
+>                 if (inode) {
+>                         audit_log_format(ab, " dev=3D");
+>                         audit_log_untrustedstring(ab, inode->i_sb->s_id);
+> -                       audit_log_format(ab, " ino=3D%lu", inode->i_ino);
+> +                       audit_log_format(ab, " ino=3D%llu", inode->i_ino)=
+;
+>                 } else {
+>                         audit_log_format(ab, " dev=3D? ino=3D?");
+>                 }
+> diff --git a/security/lsm_audit.c b/security/lsm_audit.c
+> index 7d623b00495c14b079e10e963c21a9f949c11f07..737f5a263a8f79416133315ed=
+f363ece3d79c722 100644
+> --- a/security/lsm_audit.c
+> +++ b/security/lsm_audit.c
+> @@ -202,7 +202,7 @@ void audit_log_lsm_data(struct audit_buffer *ab,
+>                 if (inode) {
+>                         audit_log_format(ab, " dev=3D");
+>                         audit_log_untrustedstring(ab, inode->i_sb->s_id);
+> -                       audit_log_format(ab, " ino=3D%lu", inode->i_ino);
+> +                       audit_log_format(ab, " ino=3D%llu", inode->i_ino)=
+;
+>                 }
+>                 break;
+>         }
+> @@ -215,7 +215,7 @@ void audit_log_lsm_data(struct audit_buffer *ab,
+>                 if (inode) {
+>                         audit_log_format(ab, " dev=3D");
+>                         audit_log_untrustedstring(ab, inode->i_sb->s_id);
+> -                       audit_log_format(ab, " ino=3D%lu", inode->i_ino);
+> +                       audit_log_format(ab, " ino=3D%llu", inode->i_ino)=
+;
+>                 }
+>                 break;
+>         }
+> @@ -228,7 +228,7 @@ void audit_log_lsm_data(struct audit_buffer *ab,
+>                 if (inode) {
+>                         audit_log_format(ab, " dev=3D");
+>                         audit_log_untrustedstring(ab, inode->i_sb->s_id);
+> -                       audit_log_format(ab, " ino=3D%lu", inode->i_ino);
+> +                       audit_log_format(ab, " ino=3D%llu", inode->i_ino)=
+;
+>                 }
+>
+>                 audit_log_format(ab, " ioctlcmd=3D0x%hx", a->u.op->cmd);
+> @@ -246,7 +246,7 @@ void audit_log_lsm_data(struct audit_buffer *ab,
+>                 if (inode) {
+>                         audit_log_format(ab, " dev=3D");
+>                         audit_log_untrustedstring(ab, inode->i_sb->s_id);
+> -                       audit_log_format(ab, " ino=3D%lu", inode->i_ino);
+> +                       audit_log_format(ab, " ino=3D%llu", inode->i_ino)=
+;
+>                 }
+>                 break;
+>         }
+> @@ -265,7 +265,7 @@ void audit_log_lsm_data(struct audit_buffer *ab,
+>                 }
+>                 audit_log_format(ab, " dev=3D");
+>                 audit_log_untrustedstring(ab, inode->i_sb->s_id);
+> -               audit_log_format(ab, " ino=3D%lu", inode->i_ino);
+> +               audit_log_format(ab, " ino=3D%llu", inode->i_ino);
+>                 rcu_read_unlock();
+>                 break;
+>         }
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index d8224ea113d1ac273aac1fb52324f00b3301ae75..150ea86ebc1f7c7f8391af410=
+9a3da82b12d00d2 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -1400,7 +1400,7 @@ static int inode_doinit_use_xattr(struct inode *ino=
+de, struct dentry *dentry,
+>         if (rc < 0) {
+>                 kfree(context);
+>                 if (rc !=3D -ENODATA) {
+> -                       pr_warn("SELinux: %s:  getxattr returned %d for d=
+ev=3D%s ino=3D%ld\n",
+> +                       pr_warn("SELinux: %s:  getxattr returned %d for d=
+ev=3D%s ino=3D%lld\n",
+>                                 __func__, -rc, inode->i_sb->s_id, inode->=
+i_ino);
+>                         return rc;
+>                 }
+> @@ -3477,7 +3477,7 @@ static void selinux_inode_post_setxattr(struct dent=
+ry *dentry, const char *name,
+>                                            &newsid);
+>         if (rc) {
+>                 pr_err("SELinux:  unable to map context to SID"
+> -                      "for (%s, %lu), rc=3D%d\n",
+> +                      "for (%s, %llu), rc=3D%d\n",
+>                        inode->i_sb->s_id, inode->i_ino, -rc);
+>                 return;
+>         }
+> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+> index 98af9d7b943469d0ddd344fc78c0b87ca40c16c4..7e2f54c17a5d5c70740bbfa92=
+ba4d4f1aca2cf22 100644
+> --- a/security/smack/smack_lsm.c
+> +++ b/security/smack/smack_lsm.c
+> @@ -182,7 +182,7 @@ static int smk_bu_inode(struct inode *inode, int mode=
+, int rc)
+>         char acc[SMK_NUM_ACCESS_TYPE + 1];
+>
+>         if (isp->smk_flags & SMK_INODE_IMPURE)
+> -               pr_info("Smack Unconfined Corruption: inode=3D(%s %ld) %s=
+\n",
+> +               pr_info("Smack Unconfined Corruption: inode=3D(%s %lld) %=
+s\n",
+>                         inode->i_sb->s_id, inode->i_ino, current->comm);
+>
+>         if (rc <=3D 0)
+> @@ -195,7 +195,7 @@ static int smk_bu_inode(struct inode *inode, int mode=
+, int rc)
+>
+>         smk_bu_mode(mode, acc);
+>
+> -       pr_info("Smack %s: (%s %s %s) inode=3D(%s %ld) %s\n", smk_bu_mess=
+[rc],
+> +       pr_info("Smack %s: (%s %s %s) inode=3D(%s %lld) %s\n", smk_bu_mes=
+s[rc],
+>                 tsp->smk_task->smk_known, isp->smk_inode->smk_known, acc,
+>                 inode->i_sb->s_id, inode->i_ino, current->comm);
+>         return 0;
+> @@ -214,7 +214,7 @@ static int smk_bu_file(struct file *file, int mode, i=
+nt rc)
+>         char acc[SMK_NUM_ACCESS_TYPE + 1];
+>
+>         if (isp->smk_flags & SMK_INODE_IMPURE)
+> -               pr_info("Smack Unconfined Corruption: inode=3D(%s %ld) %s=
+\n",
+> +               pr_info("Smack Unconfined Corruption: inode=3D(%s %lld) %=
+s\n",
+>                         inode->i_sb->s_id, inode->i_ino, current->comm);
+>
+>         if (rc <=3D 0)
+> @@ -223,7 +223,7 @@ static int smk_bu_file(struct file *file, int mode, i=
+nt rc)
+>                 rc =3D 0;
+>
+>         smk_bu_mode(mode, acc);
+> -       pr_info("Smack %s: (%s %s %s) file=3D(%s %ld %pD) %s\n", smk_bu_m=
+ess[rc],
+> +       pr_info("Smack %s: (%s %s %s) file=3D(%s %lld %pD) %s\n", smk_bu_=
+mess[rc],
+>                 sskp->smk_known, smk_of_inode(inode)->smk_known, acc,
+>                 inode->i_sb->s_id, inode->i_ino, file,
+>                 current->comm);
+> @@ -244,7 +244,7 @@ static int smk_bu_credfile(const struct cred *cred, s=
+truct file *file,
+>         char acc[SMK_NUM_ACCESS_TYPE + 1];
+>
+>         if (isp->smk_flags & SMK_INODE_IMPURE)
+> -               pr_info("Smack Unconfined Corruption: inode=3D(%s %ld) %s=
+\n",
+> +               pr_info("Smack Unconfined Corruption: inode=3D(%s %lld) %=
+s\n",
+>                         inode->i_sb->s_id, inode->i_ino, current->comm);
+>
+>         if (rc <=3D 0)
+> @@ -253,7 +253,7 @@ static int smk_bu_credfile(const struct cred *cred, s=
+truct file *file,
+>                 rc =3D 0;
+>
+>         smk_bu_mode(mode, acc);
+> -       pr_info("Smack %s: (%s %s %s) file=3D(%s %ld %pD) %s\n", smk_bu_m=
+ess[rc],
+> +       pr_info("Smack %s: (%s %s %s) file=3D(%s %lld %pD) %s\n", smk_bu_=
+mess[rc],
+>                 sskp->smk_known, smk_of_inode(inode)->smk_known, acc,
+>                 inode->i_sb->s_id, inode->i_ino, file,
+>                 current->comm);
+>
+> --
+> 2.53.0
+>
+>
