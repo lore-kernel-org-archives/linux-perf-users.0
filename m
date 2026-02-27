@@ -1,135 +1,650 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954F4332EB4
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 23:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD7C27B50F;
+	Fri, 27 Feb 2026 00:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772149390; cv=none; b=McufD+okVA1PQ3QyzsMsHaXBFK+yjK5DUNk6twDWXNJoD8SZSWTVZrKPMcxmnMByAfnehE7OLy/+/+LMykuRdE4vVSPuMIbq9aBD5zWxwLJ3zIM0wB53v9olUxTz616/MSsSYCfCtOVkM41qywHumO9WPqWV4qMCm/oPFURPnV4=
+	t=1772153510; cv=none; b=mNlq6kpQ/p1m+LAXfgcGQ1H50z7USxlyHgdulis1HBfixMWhoY6XqPq5FuajxKoQuCgNZFD2iXyPVVRHlirAx6pF1RLBCW/dUATzhn2t5JDQKHsHlbNjRpmvAyzonr2seEjB/yqoFz2wEULHkXtQaJPnfenTL2J2nEuaqh1mDoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772149390; c=relaxed/simple;
-	bh=nYT1y/hhQW/86aS4ZN4OJ957tRCJesbnqHhi2ZZK9B8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ck6ftlMDHEgDe7ydPx/XJfBON0G+/w0VQgZBY0Upw0uigZEuXznHgRguXYHeRwsQI2YqfObBqFgcf4adPyiLW02GSBB9NVnrLmA1AJc8Itiqe0ta0FUcf1lOVwxzV7QfweoF6A+8iRFU7Wdxti6H3g8wRx955QJwnIgmCehxavI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qCYTTfVl; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1772153510; c=relaxed/simple;
+	bh=TL6MSvdW1ZjSt5kNmBZzsCS5fHHor4X8yrtubaFUSdQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=GX6B97k27lt5NqqSuorOiUau6L2FSd8o0xeXJulwH/0k7IatzxqfgTrvJRa3+S/CEGs+XHWoJV5YPswX8aDRz9+OjJkOKvpybaZJYAVDO9XpIhFvVu6KeYhC86ZhymyF8n7fFRAdkYMKmuHQIRgz2lBHgMTORvCg3ySORodj+u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dNY/N39S; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qCYTTfVl"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3595485abbbso720571a91.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Feb 2026 15:43:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772149385; x=1772754185; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5xV9Fp9Mp3wKt/HL2xKn2gAO+TqSS/NXayrdSUMZqB8=;
-        b=qCYTTfVlC5qn1oHz+Yt5dDM0Wbprkq41lljrj9akTAHgLb6cwitfub0zVDC9L3kQzd
-         j9cOt6j5Pcei1A3/pxH+yCYN1BUJSPH5/dradmt+e4N/exOmCCftjKWWzCE7S7s8ZlmC
-         ZS7hGiFTDwARJeczyDmkq58s/+FetZDp8wQQtYQbClPrtyHJjmZaXJl96OOnTh4GDH2H
-         X7daTeVOqlUpdv8wPsAg/NFhq3ocM46yHsRuUJGjmE6ziIGZTfBEZw9ZMj77TaDZ2td1
-         oOW8GGpbOdc+F2tA3lvrb2YjybB5aVCYfS4ok8pBvF14W1rpsXpUQ908VyAQ2VTea7QG
-         7X5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772149385; x=1772754185;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5xV9Fp9Mp3wKt/HL2xKn2gAO+TqSS/NXayrdSUMZqB8=;
-        b=wQORxCFsV31XIb8Ik91eX+7EmUn6Ka38A0vMRB0VEQggF3A9LQU7Rb/RaOo3K+aUxk
-         ZUf/8ELnjLAoWSAEbKZhms/ouVP/cFWCnVO3ut9Vxovmnh6Y55fF0IAqH6DntK/ijPW4
-         6hg+LbGUiZjbH4z58YkZsOvbN043inQb1f3+G06OXn6XBwz17w5+47TcUPikmCVQA9JN
-         8fAIvsxbpxsMThHEi21+C8nwco9+/mllfnKXz0wnp+/0WmtwdQuePn3RJMok40OPc24I
-         PvbEgUv8XbTKuNEGoa3+r1LtjY3yqX47U3KKMiuyaabDmvto/HxeYApxKUmnpjuS5j7+
-         ywbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUG8Vlmhk+TNPHqcbi5twG5NYr/KWDrZulOB9FiSYKFLH0onjWxq8ToCxW0N9ubay104cS5SHDTUYCEsr1vqX7w@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHiKHo0wtrFpgeUnZOmTpEjlM3e4hpr9z1CumvWMl8oQSf+lde
-	a0YPFwFVQcJZpu/Ma/MfAfubUJezNiOwuBXfXmQW0d72tFcYJvUf6M95CoGovdQCuQpEsEe0vCy
-	PPZNBmw==
-X-Received: from pjwo21.prod.google.com ([2002:a17:90a:d255:b0:356:213e:d56e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5710:b0:356:23be:7ecb
- with SMTP id 98e67ed59e1d1-35965c34bc7mr627146a91.12.1772149384979; Thu, 26
- Feb 2026 15:43:04 -0800 (PST)
-Date: Thu, 26 Feb 2026 15:43:03 -0800
-In-Reply-To: <aZ/5CDmCa8O5vrFZ@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dNY/N39S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772153508; x=1803689508;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=TL6MSvdW1ZjSt5kNmBZzsCS5fHHor4X8yrtubaFUSdQ=;
+  b=dNY/N39Sl/Hje0dP5rpGhkVUul1KJDwwBe6685MMg7ICDfiB/ASZPaR7
+   7FPViY1+nBnEp+9xnwFXt/nFOGwiOrlAZArepX9Z9a3Rg9gFsgbD0wN9t
+   YNommE+PSB64/IsctSJrO20A/FRIjHkj6zrucwbL31G8F4SccH7T0rnrv
+   4Vy+S2REssfB/KyATCWzbDPmuBPVPaM7UEyCqeNh1ANAdAE+DZ+RjoyuM
+   UeLVvPqbfDezXAuQWiLDTNpuClDFvr8tIS9Z/jmB6p+jlxcRqTQMfwEjl
+   jSuU8NoqvGQoppK9Vdzy9zy7Kdjz+QmakTqelgvrSWClquH1woF8KlskE
+   w==;
+X-CSE-ConnectionGUID: Nvw2+p8RSo6bV0Q9kIafOw==
+X-CSE-MsgGUID: +612t36ESyihnvUqj0lEjA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11713"; a="77067105"
+X-IronPort-AV: E=Sophos;i="6.21,313,1763452800"; 
+   d="scan'208";a="77067105"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2026 16:51:47 -0800
+X-CSE-ConnectionGUID: whHZ2Z2STH6tdsp/oySNOA==
+X-CSE-MsgGUID: +noUpSXGRrSeXcmuEEKzfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,313,1763452800"; 
+   d="scan'208";a="221361516"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2026 16:51:42 -0800
+Message-ID: <d74c3f6e-c89d-49fc-b3b7-ce7399be2282@linux.intel.com>
+Date: Fri, 27 Feb 2026 08:51:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260214012702.2368778-1-seanjc@google.com> <20260214012702.2368778-8-seanjc@google.com>
- <aZ/5CDmCa8O5vrFZ@intel.com>
-Message-ID: <aaDah8QSFqWpNvqY@google.com>
-Subject: Re: [PATCH v3 07/16] KVM: SVM: Move core EFER.SVME enablement to kernel
-From: Sean Christopherson <seanjc@google.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Kiryl Shutsemau <kas@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-coco@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Xu Yilun <yilun.xu@linux.intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/10] perf vendor events intel: Update alderlake
+ events from 1.35 to 1.37
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?=
+ <afaerber@suse.de>, Manivannan Sadhasivam <mani@kernel.org>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20260226175936.593159-1-irogers@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260226175936.593159-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 26, 2026, Chao Gao wrote:
-> >-static inline void kvm_cpu_svm_disable(void)
-> >-{
-> >-	uint64_t efer;
-> >-
-> >-	wrmsrq(MSR_VM_HSAVE_PA, 0);
-> >-	rdmsrq(MSR_EFER, efer);
-> >-	if (efer & EFER_SVME) {
-> >-		/*
-> >-		 * Force GIF=1 prior to disabling SVM, e.g. to ensure INIT and
-> >-		 * NMI aren't blocked.
-> >-		 */
-> >-		stgi();
-> >-		wrmsrq(MSR_EFER, efer & ~EFER_SVME);
-> >-	}
-> >-}
-> >-
-> > static void svm_emergency_disable_virtualization_cpu(void)
-> > {
-> >-	virt_rebooting = true;
-> >-
-> >-	kvm_cpu_svm_disable();
-> >+	wrmsrq(MSR_VM_HSAVE_PA, 0);
-> > }
-> > 
-> > static void svm_disable_virtualization_cpu(void)
-> >@@ -507,7 +489,7 @@ static void svm_disable_virtualization_cpu(void)
-> > 	if (tsc_scaling)
-> > 		__svm_write_tsc_multiplier(SVM_TSC_RATIO_DEFAULT);
-> > 
-> >-	kvm_cpu_svm_disable();
-> >+	x86_svm_disable_virtualization_cpu();
-> 
-> There's a functional change here. The new x86_svm_disable_virtualization_cpu()
-> doesn't reset MSR_VM_HSAVE_PA, but the old kvm_cpu_svm_disable() does.
+The whole patchset looks good to me. Thanks.
 
-Doh.  I'll squash this as fixup, assuming there are no other goofs:
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 5f033bf3ba83..fc08450cb4b7 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -490,6 +490,7 @@ static void svm_disable_virtualization_cpu(void)
-                __svm_write_tsc_multiplier(SVM_TSC_RATIO_DEFAULT);
- 
-        x86_svm_disable_virtualization_cpu();
-+       wrmsrq(MSR_VM_HSAVE_PA, 0);
- 
-        amd_pmu_disable_virt();
- }
-
-Very nice catch!
-
-P.S. This reminded me that there's a lurking wart with __sev_snp_init_locked()
-where it forces MSR_VM_HSAVE_PA to '0' on all CPUs.  That's firmly a "hypervisor"
-thing so it doesn't really fit here (and code wise it's also kludgy), just thought
-I'd mention it in case someone has a brilliant idea and/or runs into problems with
-it.  IIRC, we ran into a problem where __sev_snp_init_locked() clobbered KVM's
-value, but I think the underlying problem was effectively fixed by commit
-6f1d5a3513c2 ("KVM: SVM: Add support to initialize SEV/SNP functionality in KVM").
-
+On 2/27/2026 1:59 AM, Ian Rogers wrote:
+> The updated events were published in:
+> https://github.com/intel/perfmon/commit/632936400cfc5978c7b4519c865c137de523bfdd
+> https://github.com/intel/perfmon/commit/a96d6bf4b50d6ce31e2ffd0be8d13022d07ae319
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  .../pmu-events/arch/x86/alderlake/cache.json  | 27 +++-----
+>  .../arch/x86/alderlake/frontend.json          | 18 +++++
+>  .../arch/x86/alderlake/pipeline.json          | 66 +++++++++++++++++--
+>  .../pmu-events/arch/x86/alderlaken/cache.json | 27 +++-----
+>  .../arch/x86/alderlaken/pipeline.json         | 60 +++++++++++++++--
+>  tools/perf/pmu-events/arch/x86/mapfile.csv    |  4 +-
+>  6 files changed, 152 insertions(+), 50 deletions(-)
+>
+> diff --git a/tools/perf/pmu-events/arch/x86/alderlake/cache.json b/tools/perf/pmu-events/arch/x86/alderlake/cache.json
+> index be15a7f83717..5d0d824f3e7e 100644
+> --- a/tools/perf/pmu-events/arch/x86/alderlake/cache.json
+> +++ b/tools/perf/pmu-events/arch/x86/alderlake/cache.json
+> @@ -876,105 +876,97 @@
+>          "Unit": "cpu_atom"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 128 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 128. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x80",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 128 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5",
+>          "Unit": "cpu_atom"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 16 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 16. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x10",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 16 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5",
+>          "Unit": "cpu_atom"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 256 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 256. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x100",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 256 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5",
+>          "Unit": "cpu_atom"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 32 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 32. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x20",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 32 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5",
+>          "Unit": "cpu_atom"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 4 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 4. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x4",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 4 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5",
+>          "Unit": "cpu_atom"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 512 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 512. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x200",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 512 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5",
+>          "Unit": "cpu_atom"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 64 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 64. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x40",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 64 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5",
+>          "Unit": "cpu_atom"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 8 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 8. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x8",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 8 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5",
+>          "Unit": "cpu_atom"
+> @@ -1030,12 +1022,11 @@
+>          "Unit": "cpu_atom"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of stores uops retired. Counts with or without PEBS enabled.",
+> +        "BriefDescription": "Counts the number of stores uops retired.",
+>          "Counter": "0,1,2,3,4,5",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
+> -        "PublicDescription": "Counts the number of stores uops retired. Counts with or without PEBS enabled. If PEBS is enabled and a PEBS record is generated, will populate PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x6",
+>          "Unit": "cpu_atom"
+> diff --git a/tools/perf/pmu-events/arch/x86/alderlake/frontend.json b/tools/perf/pmu-events/arch/x86/alderlake/frontend.json
+> index ff3b30c2619a..11fc853f2d0b 100644
+> --- a/tools/perf/pmu-events/arch/x86/alderlake/frontend.json
+> +++ b/tools/perf/pmu-events/arch/x86/alderlake/frontend.json
+> @@ -327,6 +327,24 @@
+>          "UMask": "0x4",
+>          "Unit": "cpu_core"
+>      },
+> +    {
+> +        "BriefDescription": "ICACHE_TAG.STALLS_INUSE",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x83",
+> +        "EventName": "ICACHE_TAG.STALLS_INUSE",
+> +        "SampleAfterValue": "200003",
+> +        "UMask": "0x10",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "ICACHE_TAG.STALLS_ISB",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x83",
+> +        "EventName": "ICACHE_TAG.STALLS_ISB",
+> +        "SampleAfterValue": "200003",
+> +        "UMask": "0x8",
+> +        "Unit": "cpu_core"
+> +    },
+>      {
+>          "BriefDescription": "Cycles Decode Stream Buffer (DSB) is delivering any Uop",
+>          "Counter": "0,1,2,3",
+> diff --git a/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json b/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
+> index 57a8c78cdc49..80cad3c49d20 100644
+> --- a/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
+> +++ b/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
+> @@ -244,6 +244,15 @@
+>          "UMask": "0xfb",
+>          "Unit": "cpu_atom"
+>      },
+> +    {
+> +        "BriefDescription": "Counts the number of near indirect JMP branch instructions retired.",
+> +        "Counter": "0,1,2,3,4,5",
+> +        "EventCode": "0xc4",
+> +        "EventName": "BR_INST_RETIRED.INDIRECT_JMP",
+> +        "SampleAfterValue": "200003",
+> +        "UMask": "0xef",
+> +        "Unit": "cpu_atom"
+> +    },
+>      {
+>          "BriefDescription": "This event is deprecated. Refer to new event BR_INST_RETIRED.INDIRECT_CALL",
+>          "Counter": "0,1,2,3,4,5",
+> @@ -464,6 +473,15 @@
+>          "UMask": "0x2",
+>          "Unit": "cpu_core"
+>      },
+> +    {
+> +        "BriefDescription": "Counts the number of mispredicted near indirect JMP branch instructions retired.",
+> +        "Counter": "0,1,2,3,4,5",
+> +        "EventCode": "0xc5",
+> +        "EventName": "BR_MISP_RETIRED.INDIRECT_JMP",
+> +        "SampleAfterValue": "200003",
+> +        "UMask": "0xef",
+> +        "Unit": "cpu_atom"
+> +    },
+>      {
+>          "BriefDescription": "This event is deprecated. Refer to new event BR_MISP_RETIRED.INDIRECT_CALL",
+>          "Counter": "0,1,2,3,4,5",
+> @@ -573,7 +591,7 @@
+>          "Unit": "cpu_core"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of unhalted core clock cycles. (Fixed event)",
+> +        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.THREAD]",
+>          "Counter": "Fixed counter 1",
+>          "EventName": "CPU_CLK_UNHALTED.CORE",
+>          "PublicDescription": "Counts the number of core cycles while the core is not in a halt state. The core enters the halt state when it is running the HLT instruction. The core frequency may change from time to time. For this reason this event may have a changing ratio with regards to time. This event uses fixed counter 1.",
+> @@ -582,7 +600,7 @@
+>          "Unit": "cpu_atom"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of unhalted core clock cycles.",
+> +        "BriefDescription": "Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.THREAD_P]",
+>          "Counter": "0,1,2,3,4,5",
+>          "EventCode": "0x3c",
+>          "EventName": "CPU_CLK_UNHALTED.CORE_P",
+> @@ -651,7 +669,7 @@
+>          "Unit": "cpu_core"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of unhalted reference clock cycles at TSC frequency. (Fixed event)",
+> +        "BriefDescription": "Fixed Counter: Counts the number of unhalted reference clock cycles at TSC frequency.",
+>          "Counter": "Fixed counter 2",
+>          "EventName": "CPU_CLK_UNHALTED.REF_TSC",
+>          "PublicDescription": "Counts the number of reference cycles that the core is not in a halt state. The core enters the halt state when it is running the HLT instruction. This event is not affected by core frequency changes and increments at a fixed frequency that is also used for the Time Stamp Counter (TSC). This event uses fixed counter 2.",
+> @@ -689,7 +707,7 @@
+>          "Unit": "cpu_core"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of unhalted core clock cycles. (Fixed event)",
+> +        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.CORE]",
+>          "Counter": "Fixed counter 1",
+>          "EventName": "CPU_CLK_UNHALTED.THREAD",
+>          "PublicDescription": "Counts the number of core cycles while the core is not in a halt state.  The core enters the halt state when it is running the HLT instruction. The core frequency may change from time to time. For this reason this event may have a changing ratio with regards to time.  This event uses fixed counter 1.",
+> @@ -707,7 +725,7 @@
+>          "Unit": "cpu_core"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of unhalted core clock cycles.",
+> +        "BriefDescription": "Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.CORE_P]",
+>          "Counter": "0,1,2,3,4,5",
+>          "EventCode": "0x3c",
+>          "EventName": "CPU_CLK_UNHALTED.THREAD_P",
+> @@ -875,7 +893,7 @@
+>          "Unit": "cpu_core"
+>      },
+>      {
+> -        "BriefDescription": "Counts the total number of instructions retired. (Fixed event)",
+> +        "BriefDescription": "Fixed Counter: Counts the total number of instructions retired.",
+>          "Counter": "Fixed counter 0",
+>          "EventName": "INST_RETIRED.ANY",
+>          "PublicDescription": "Counts the total number of instructions that retired. For instructions that consist of multiple uops, this event counts the retirement of the last uop of the instruction. This event continues counting during hardware interrupts, traps, and inside interrupt handlers. This event uses fixed counter 0. Available PDIST counters: 32",
+> @@ -1273,6 +1291,42 @@
+>          "UMask": "0x20",
+>          "Unit": "cpu_core"
+>      },
+> +    {
+> +        "BriefDescription": "Counts the number of CLFLUSH, CLWB, and CLDEMOTE instructions retired.",
+> +        "Counter": "0,1,2,3,4,5",
+> +        "EventCode": "0xe0",
+> +        "EventName": "MISC_RETIRED1.CL_INST",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0xff",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of LFENCE instructions retired.",
+> +        "Counter": "0,1,2,3,4,5",
+> +        "EventCode": "0xe0",
+> +        "EventName": "MISC_RETIRED1.LFENCE",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x2",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of accesses to KeyLocker cache.",
+> +        "Counter": "0,1,2,3,4,5",
+> +        "EventCode": "0xe1",
+> +        "EventName": "MISC_RETIRED2.KEYLOCKER_ACCESS",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x10",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of misses to KeyLocker cache.",
+> +        "Counter": "0,1,2,3,4,5",
+> +        "EventCode": "0xe1",
+> +        "EventName": "MISC_RETIRED2.KEYLOCKER_MISS",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x11",
+> +        "Unit": "cpu_atom"
+> +    },
+>      {
+>          "BriefDescription": "Cycles stalled due to no store buffers available. (not including draining form sync).",
+>          "Counter": "0,1,2,3,4,5,6,7",
+> diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json b/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
+> index 76a841675337..1f97a4dc6fb1 100644
+> --- a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
+> +++ b/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
+> @@ -246,98 +246,90 @@
+>          "UMask": "0x82"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 128 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 128. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x80",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 128 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 16 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 16. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x10",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 16 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 256 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 256. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x100",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 256 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 32 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 32. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x20",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 32 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 4 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 4. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x4",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 4 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 512 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 512. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x200",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 512 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 64 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 64. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x40",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 64 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 8 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
+> +        "BriefDescription": "Counts the number of tagged load uops retired that exceed the latency threshold of 8. Only counts with PEBS enabled.",
+>          "Counter": "0,1",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
+>          "MSRIndex": "0x3F6",
+>          "MSRValue": "0x8",
+> -        "PublicDescription": "Counts the number of tagged loads with an instruction latency that exceeds or equals the threshold of 8 cycles as defined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. If a PEBS record is generated, will populate the PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x5"
+>      },
+> @@ -387,12 +379,11 @@
+>          "UMask": "0x12"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of stores uops retired. Counts with or without PEBS enabled.",
+> +        "BriefDescription": "Counts the number of stores uops retired.",
+>          "Counter": "0,1,2,3,4,5",
+>          "Data_LA": "1",
+>          "EventCode": "0xd0",
+>          "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
+> -        "PublicDescription": "Counts the number of stores uops retired. Counts with or without PEBS enabled. If PEBS is enabled and a PEBS record is generated, will populate PEBS Latency and PEBS Data Source fields accordingly.",
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x6"
+>      },
+> diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json b/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
+> index d650cbd48c1f..a13851071624 100644
+> --- a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
+> +++ b/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
+> @@ -108,6 +108,14 @@
+>          "SampleAfterValue": "200003",
+>          "UMask": "0xfb"
+>      },
+> +    {
+> +        "BriefDescription": "Counts the number of near indirect JMP branch instructions retired.",
+> +        "Counter": "0,1,2,3,4,5",
+> +        "EventCode": "0xc4",
+> +        "EventName": "BR_INST_RETIRED.INDIRECT_JMP",
+> +        "SampleAfterValue": "200003",
+> +        "UMask": "0xef"
+> +    },
+>      {
+>          "BriefDescription": "This event is deprecated. Refer to new event BR_INST_RETIRED.INDIRECT_CALL",
+>          "Counter": "0,1,2,3,4,5",
+> @@ -225,6 +233,14 @@
+>          "SampleAfterValue": "200003",
+>          "UMask": "0xfb"
+>      },
+> +    {
+> +        "BriefDescription": "Counts the number of mispredicted near indirect JMP branch instructions retired.",
+> +        "Counter": "0,1,2,3,4,5",
+> +        "EventCode": "0xc5",
+> +        "EventName": "BR_MISP_RETIRED.INDIRECT_JMP",
+> +        "SampleAfterValue": "200003",
+> +        "UMask": "0xef"
+> +    },
+>      {
+>          "BriefDescription": "This event is deprecated. Refer to new event BR_MISP_RETIRED.INDIRECT_CALL",
+>          "Counter": "0,1,2,3,4,5",
+> @@ -278,7 +294,7 @@
+>          "UMask": "0xfe"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of unhalted core clock cycles. (Fixed event)",
+> +        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.THREAD]",
+>          "Counter": "Fixed counter 1",
+>          "EventName": "CPU_CLK_UNHALTED.CORE",
+>          "PublicDescription": "Counts the number of core cycles while the core is not in a halt state. The core enters the halt state when it is running the HLT instruction. The core frequency may change from time to time. For this reason this event may have a changing ratio with regards to time. This event uses fixed counter 1.",
+> @@ -286,7 +302,7 @@
+>          "UMask": "0x2"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of unhalted core clock cycles.",
+> +        "BriefDescription": "Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.THREAD_P]",
+>          "Counter": "0,1,2,3,4,5",
+>          "EventCode": "0x3c",
+>          "EventName": "CPU_CLK_UNHALTED.CORE_P",
+> @@ -303,7 +319,7 @@
+>          "UMask": "0x1"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of unhalted reference clock cycles at TSC frequency. (Fixed event)",
+> +        "BriefDescription": "Fixed Counter: Counts the number of unhalted reference clock cycles at TSC frequency.",
+>          "Counter": "Fixed counter 2",
+>          "EventName": "CPU_CLK_UNHALTED.REF_TSC",
+>          "PublicDescription": "Counts the number of reference cycles that the core is not in a halt state. The core enters the halt state when it is running the HLT instruction. This event is not affected by core frequency changes and increments at a fixed frequency that is also used for the Time Stamp Counter (TSC). This event uses fixed counter 2.",
+> @@ -320,7 +336,7 @@
+>          "UMask": "0x1"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of unhalted core clock cycles. (Fixed event)",
+> +        "BriefDescription": "Fixed Counter: Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.CORE]",
+>          "Counter": "Fixed counter 1",
+>          "EventName": "CPU_CLK_UNHALTED.THREAD",
+>          "PublicDescription": "Counts the number of core cycles while the core is not in a halt state.  The core enters the halt state when it is running the HLT instruction. The core frequency may change from time to time. For this reason this event may have a changing ratio with regards to time.  This event uses fixed counter 1.",
+> @@ -328,7 +344,7 @@
+>          "UMask": "0x2"
+>      },
+>      {
+> -        "BriefDescription": "Counts the number of unhalted core clock cycles.",
+> +        "BriefDescription": "Counts the number of unhalted core clock cycles. [This event is alias to CPU_CLK_UNHALTED.CORE_P]",
+>          "Counter": "0,1,2,3,4,5",
+>          "EventCode": "0x3c",
+>          "EventName": "CPU_CLK_UNHALTED.THREAD_P",
+> @@ -336,7 +352,7 @@
+>          "SampleAfterValue": "2000003"
+>      },
+>      {
+> -        "BriefDescription": "Counts the total number of instructions retired. (Fixed event)",
+> +        "BriefDescription": "Fixed Counter: Counts the total number of instructions retired.",
+>          "Counter": "Fixed counter 0",
+>          "EventName": "INST_RETIRED.ANY",
+>          "PublicDescription": "Counts the total number of instructions that retired. For instructions that consist of multiple uops, this event counts the retirement of the last uop of the instruction. This event continues counting during hardware interrupts, traps, and inside interrupt handlers. This event uses fixed counter 0. Available PDIST counters: 32",
+> @@ -426,6 +442,38 @@
+>          "SampleAfterValue": "1000003",
+>          "UMask": "0x1"
+>      },
+> +    {
+> +        "BriefDescription": "Counts the number of CLFLUSH, CLWB, and CLDEMOTE instructions retired.",
+> +        "Counter": "0,1,2,3,4,5",
+> +        "EventCode": "0xe0",
+> +        "EventName": "MISC_RETIRED1.CL_INST",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0xff"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of LFENCE instructions retired.",
+> +        "Counter": "0,1,2,3,4,5",
+> +        "EventCode": "0xe0",
+> +        "EventName": "MISC_RETIRED1.LFENCE",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x2"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of accesses to KeyLocker cache.",
+> +        "Counter": "0,1,2,3,4,5",
+> +        "EventCode": "0xe1",
+> +        "EventName": "MISC_RETIRED2.KEYLOCKER_ACCESS",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x10"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of misses to KeyLocker cache.",
+> +        "Counter": "0,1,2,3,4,5",
+> +        "EventCode": "0xe1",
+> +        "EventName": "MISC_RETIRED2.KEYLOCKER_MISS",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x11"
+> +    },
+>      {
+>          "BriefDescription": "Counts the number of issue slots in a UMWAIT or TPAUSE instruction where no uop issues due to the instruction putting the CPU into the C0.1 activity state. For Tremont, UMWAIT and TPAUSE will only put the CPU into C0.1 activity state (not C0.2 activity state)",
+>          "Counter": "0,1,2,3,4,5",
+> diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> index 149bbe7abaf5..9370722dc564 100644
+> --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
+> +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> @@ -1,6 +1,6 @@
+>  Family-model,Version,Filename,EventType
+> -GenuineIntel-6-(97|9A|B7|BA|BF),v1.35,alderlake,core
+> -GenuineIntel-6-BE,v1.35,alderlaken,core
+> +GenuineIntel-6-(97|9A|B7|BA|BF),v1.37,alderlake,core
+> +GenuineIntel-6-BE,v1.37,alderlaken,core
+>  GenuineIntel-6-C[56],v1.14,arrowlake,core
+>  GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
+>  GenuineIntel-6-(3D|47),v30,broadwell,core
