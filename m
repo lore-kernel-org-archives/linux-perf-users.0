@@ -1,513 +1,169 @@
-Received: from canpmsgout10.his.huawei.com (canpmsgout10.his.huawei.com [113.46.200.225])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9204D2FFFB7;
-	Fri, 27 Feb 2026 02:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B732B3DA7DC;
+	Fri, 27 Feb 2026 05:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772161140; cv=none; b=E3YHYiGl5TRuMA5pop6NR3v1CY2G5ga06AGlMW0G+URSg+aZI6oEBAIxydgK/Lw8t+7ccd3FslKE1aLPh7EGckXLpir/WQPgi4AT5GHGHoMgmYOpZhyN1fhW0HsN+RO7AJ2vNHUgjMBSXMhcXvfiUzMA5KOXn+YrKJAe2xJZVVo=
+	t=1772171763; cv=none; b=FJZX+Qs6fZ4ztLX0kd+RRYp7y7eBdFi87S8xyMHp33nEAktp0qeLLmdIIBCFHAtt72BPJJVlxn8Ixx8/Ci6YP9YKycb95WjKan2XU3N0BFD4lIeMXEtYcjUU2sgPHSk2G1c+1YyFxFhL70ZxjChc6Ra3EuEjzpjQkXMJjyssAhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772161140; c=relaxed/simple;
-	bh=1AE1oNBcxtGZFgPnjTirTLuvuB1ZNYC5qLZyvnk6AX0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XEqhQAQRza7Bl7JlOmds5IQI5E+81BaXeZIZMkxxmxq7WM/4Qlx7NXLw/MZM4K3GbK6aY7BqG1bqhuRwcxqF+U7JzMHc3uqKA02UKzncVDzzPffl7DznVXYdu3KrpSqKRP/aMLaT4OXrKdppfx7nQAmryzO6GRr82fdjJTk8o3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=HNmVjLZo; arc=none smtp.client-ip=113.46.200.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1772171763; c=relaxed/simple;
+	bh=yeOIPJbgUrc1uxWwrVvE6mQkO5mRvokavu1J3DxbPKI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rpk3at7d2PoEBJGMeHJQtd1lU7L3STdm8Zt4UecK3MOmlW+SVVZG1WoJFBaj2//7lqg4I6mugwx7x5P/Rr1UK3bRWRGHTDpu0AOv3Z+J8J4xUQKSrijv9HRVHrenxBDxnfy7hUu0UQDTXFiCn0RULqDBwoTF1NSQgJb/VIZCq8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=LZYHo7AS; arc=none smtp.client-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="HNmVjLZo"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=aX/Dd/Tcmhp0SrNFBS9hGktyCv+DL6hd+Wd/RorFEGg=;
-	b=HNmVjLZoLGkK43X6/QDg6/jC1RbrThHEjXWZ/QcGei6J7OR1ZKvhrypy8feCy12E/Eiix6ac4
-	0Id0yU5uD7ewWwbzdoZNFzz3g5xFG+H0VbJwyzxcgkTZzLH99H29Fv1d96vA4crxtaDiIhUCoMp
-	HQxj4scqt0eYxS7fc7XCjVw=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4fMXwJ2GK9z1K98w;
-	Fri, 27 Feb 2026 10:54:08 +0800 (CST)
-Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id E24444048B;
-	Fri, 27 Feb 2026 10:58:53 +0800 (CST)
-Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
- dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 27 Feb 2026 10:58:53 +0800
-Received: from 78cdaf434391.CHINA.huawei.com (10.113.189.214) by
- kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 27 Feb 2026 10:58:52 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
- Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "James
- Clark" <james.clark@linaro.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH] perf: Add match_mode support for --symfs option
-Date: Fri, 27 Feb 2026 11:13:40 +0000
-Message-ID: <20260227111340.1019144-1-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="LZYHo7AS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
+	s=mxsw2412; t=1772171658;
+	bh=BYVcnLRn5v+cUDho0LUkPdukvb67I+Jv1XckyKd0gtY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=LZYHo7ASIxLEbyCRB4psngQDbysF1j8g+7HaUij4HMWkkjljEGTM+DBswss03lA71
+	 pt68imgi4astxjjG2FZOLgP2fb5miUl0jYKVpBZP/ah+Wknk4shLexVSe14jK20wxt
+	 gcwyVn+w3JID0Dzo1CE+3SRC+s35sF2XSPCkEVc0=
+X-QQ-mid: esmtpgz10t1772171655t42f02dc3
+X-QQ-Originating-IP: pBeg9DsutXave9qSV7etrk0iKgAsjpTita/phqPQrdA=
+Received: from [10.3.91.191] ( [101.70.127.119])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 27 Feb 2026 13:54:12 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 13968557730430242067
+Message-ID: <E0900342298E5A5F+1e5c6ddb-3049-4488-9af5-ff3f1eb1544b@linux.spacemit.com>
+Date: Fri, 27 Feb 2026 13:54:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] RISC-V IOMMU HPM support
+To: yaxing guo <guoyaxing@bosc.ac.cn>, Zong Li <zong.li@sifive.com>,
+ tjeznach@rivosinc.com, joro@8bytes.org, will@kernel.org,
+ robin.murphy@arm.com, robh@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr, mark.rutland@arm.com,
+ conor+dt@kernel.org, krzk@kernel.org, luxu.kernel@bytedance.com,
+ andrew.jones@oss.qualcomm.com, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org
+References: <20260208063848.3547817-1-zong.li@sifive.com>
+ <D8C71AE40393A6FD+89365591-f896-4609-8b0f-8dffe85b5828@linux.spacemit.com>
+ <1e2b448f-3a2a-4b1f-872d-a34f7bd53696@bosc.ac.cn>
+Content-Language: en-US
+From: Lv Zheng <lv.zheng@linux.spacemit.com>
+In-Reply-To: <1e2b448f-3a2a-4b1f-872d-a34f7bd53696@bosc.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemq200002.china.huawei.com (7.202.195.90)
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
+X-QQ-XMAILINFO: MkzizgG39dTmeNimumP83xEw97EsKF3YZlPUgL5vYgddkC2Mwl3brOlN
+	BekazWD46ExloUKyLtx8axETI9oGxwFryU3Hkv8UY/NQl+2rYGqojW8tKmmzCc/BpE/plj9
+	A4ZGDD24sueNJI9ae5Pg8WWT2nQpnYdnPWbgwmHExfoJxLmbiBwc9F+XPgyyWzBLht5xwpL
+	9lrfhwIgw2FI5zMh8FMrgvoUKFE/+8saqYqYbH8fHUbgsfNdhMo9gVsurRIqgnpUovw8Gna
+	R+37RqMcf+hML019nnBeiSg62lRGW7jX8khQns+IPqGqDtSbs9jIO0LN2JeWNPm5FqxlF14
+	0IeWPqYQBbjhf7sTZB6ddnDuFvNsdjQFIzzWYNzY01zYdQwYoX+G3GjOt3C79RmF75b6lp0
+	EgZMEP9ndXl2krnXcOahM5Av7xbBojIq5qP9e0AFR1eiBYt9Jms+FIkPg4zB/Elfy3l++nI
+	ifi3DQZ5u0Jh9hRyhWMW/JxrbVNt4WntTvHQdxUm0/3e5DlUqnQdOtlXHQV+Rnr/aVQKCJP
+	5/71zSbcJKc4eN0GSqtxk2PeGSjhoYAr0Iz+PWpAmpV9kVeGYrFlmM3K2fXzJdvNQrN0iaM
+	orPWfm5P0taVG8L1/Y6//WQwsU3oFS17R7JjzYCU9hdb31XSACkyia9WEtVsilDo2WRiHi4
+	9S31c/3znSuWHvYJIxaduRrDxg50Oa2+QnXYZ+j2s5CdcXcVgOBucfwRGw0/EriwuQe57A/
+	wdhH90hD07T58ZxQjn2FhJjqM9u5axnfGtlCnl/cd9x+vq9hJrNYkZaeEboAlgjRgwXicBg
+	9GJar0QNUPyer4eUr1frxAivhGcVFJNwmqNi1nASS/WlRE+UUERzLF4gfF6vHvWj23/xrOW
+	SBjVhDTdedgUMTtJIGJg2kr2WV26wzE+xhifrmkAB7PJTdU4WYInInlBv5Xrfw6SrNDNAu0
+	b35GiHycYn2rEvFTWrSQhwcbcyJ4skFHiocUQFPWq2wjy8SeFTUMwPXk2+qV5K0nL2VyHTV
+	3vtg0UacxM2me+5ZA4gUeDnldzLjp3NbzG+je1Eg==
+X-QQ-XMRINFO: NI4Ajvh11aEjTGfg3rCZA0snif+LPcv00g==
+X-QQ-RECHKSPAM: 0
 
-Add support for parsing an optional match_mode parameter in the --symfs
-command line option. The format is:
+On 2/9/2026 11:21 AM, yaxing guo wrote:
+> 
+> 
+> 在 2026/2/9 9:40, Lv Zheng 写道:
+>> On 2/8/2026 2:38 PM, Zong Li wrote:
+>>> This series implements support for the RISC-V IOMMU hardware performance
+>>> monitor.
+>>>
+>>> The RISC-V IOMMU PMU driver is implemented as an auxiliary device driver
+>>> created by the parent RISC-V IOMMU driver. The child driver can obtain
+>>> resources and information from the parent device, such as the MMIO base
+>>> address and IRQ number.
+>>>
+>>> Custom event support is not included in this series and will be 
+>>> submitted
+>>> as a separate series. The idea is that custom events will be defined
+>>> through the driver data of the auxiliary driver. When the parent IOMMU
+>>> driver creates the auxiliary device, it should pass a vendor-specific
+>>> name as the device name in order to match the corresponding auxiliary
+>>> device ID.
+>>>
+>>> After my initial RFC and the v1 patch series were posted, similar patch
+>>> series also appeared on the mailing list.
+>>>
+>>> One was from Yaxing Guo:
+>>> https://lore.kernel.org/all/20250915020911.1313-1-guoyaxing@bosc.ac.cn/
+>>>
+>>> and another from Lv Zheng:
+>>> https://lore.kernel.org/all/30C7AD351DB55276+a8b03dac-c5af-4034-8631- 
+>>> ac1c352a469f@linux.spacemit.com/
+>>
+>> Please do not forget to Cc:
+>> Jingyu Li <joey.li@spacemit.com>
+>> I only provided T100 specific support in the posted series, and the
+>> new approach of the HPM driver in the same series is composed by her.
+>>
+>>>
+>>> Yaxing has agreed to pause his series, as discussed here:
+>>> https://lore.kernel.org/linux-iommu/2ce9d8be-10b3-48dd- 
+>>> b99e-7358347fc171@bosc.ac.cn/
+>>>
+>>> The motivation for sending this v2 version is not only to address the
+>>> feedback and suggestions from the previous round, but also to introduce
+>>> a major structural change: the PMU driver has been moved under
+>>> drivers/perf/, which has been mentioned repeatedly by several people.
+>>> This results in a different driver structure compared to my earlier
+>>> version and the other two series, and I'd like to gather feedback and
+>>> suggestions from the community on this approach. If the community would
+>>> prefer to go with Lv Zheng’s version instead, I am perfectly fine with
+>>> that as well.
+>>
+>> We'd like to know if there's any comments related to putting IOMMU HPM
+>> driver into drivers/perf folder and want to know if this is necessary.
+>> We also hesitated if riscv iommu hpm should be put into drivers/perf,
+>> and according to the followings, we finally decided to keep it in
+>> drivers/iommu:
+>> 1. drivers/iommu has already a folder maintaining all IOMMU stuffs.
+>> 2. drivers/iommu has already defined HPM related registers.
+>> 3. Unlike PMCG of SMMU which is located in a separate namespace, RISC-V
+>>     IOMMU only defines 5 registers in the same address space as its
+>>     translation schemes.
+>> 4. For HPM schemes that is not a standalone device, Intel has put its
+>>     perf driver under drivers/iommu/intel/perfmon.c.
+>>
+> 
+> When I previously submitted my RISC-V IOMMU PMU series, Will（Will 
+> Deacon<will@kernel.org>） suggested placing the RISC-V IOMMU PMU driver 
+> under drivers/perf/, similar to the ARM implementation. He also 
+> commented: "I'm sure Robin had fun dealing with shared MMIO regions 
+> before" — referring to the discussion here:
+>   https://patchwork.kernel.org/project/linux-riscv/ 
+> patch/20250915020911.1313-1-guoyaxing@bosc.ac.cn/
 
-  --symfs <directory[,match_mode]>
+Thanks for the information.
+We will also follow this suggestion.
 
-Where match_mode can be:
-  - 'path': matches full path (default)
-  - 'basename': only matches base name
+Thanks and best regards
+Lv
 
-When debugging symbol files from a copy of the filesystem (e.g., from a
-container or remote machine), the debug files are often stored in a
-flat directory structure with only filenames, not the full original
-paths. In this case, using 'basename' mode allows perf to find debug
-symbols by matching only the filename rather than the full path.
+> 
+>> Cheers,
+>> Lv
+>>
+> 
+> Best regards,
+> Guo Yaxing
+> 
 
-For example, given a binary path like:
-  /build/output/lib/foo.so
-
-With
-$ perf report --symfs /debug/files,basename
-
-perf will look for:
-  /debug/files/foo.so
-
-Instead of:
-  /debug/files/build/output/lib/foo.so
-
-This is particularly useful when:
-- Extracting debug files from containers with different directory layouts
-- Using pre-processed debug file collections (e.g., debugfgs)
-- Working with build systems that flatten directory structures
-
-Changes:
-- Add symfs_match_basename field to symbol_conf struct.
-- Parse optional match_mode in symbol__config_symfs().
-- Modify __symbol__join_symfs() to use basename() when match_mode
-  is 'basename'.
-- Update documentation in Documentation/ folder.
-
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/Documentation/perf-annotate.txt  |  7 +++--
- tools/perf/Documentation/perf-diff.txt      |  7 +++--
- tools/perf/Documentation/perf-kwork.txt     |  7 +++--
- tools/perf/Documentation/perf-probe.txt     |  6 ++++
- tools/perf/Documentation/perf-report.txt    |  7 +++--
- tools/perf/Documentation/perf-sched.txt     |  7 +++--
- tools/perf/Documentation/perf-script.txt    |  7 +++--
- tools/perf/Documentation/perf-timechart.txt |  7 +++--
- tools/perf/Documentation/tips.txt           |  3 +-
- tools/perf/builtin-annotate.c               |  3 +-
- tools/perf/builtin-diff.c                   |  3 +-
- tools/perf/builtin-kwork.c                  |  4 +--
- tools/perf/builtin-probe.c                  |  4 +--
- tools/perf/builtin-report.c                 |  3 +-
- tools/perf/builtin-sched.c                  |  4 +--
- tools/perf/builtin-script.c                 |  3 +-
- tools/perf/builtin-timechart.c              |  3 +-
- tools/perf/util/symbol.c                    | 34 ++++++++++++++++++---
- tools/perf/util/symbol.h                    | 18 +++++++++++
- tools/perf/util/symbol_conf.h               |  1 +
- 20 files changed, 103 insertions(+), 35 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-index 547f1a268018..f064cab431db 100644
---- a/tools/perf/Documentation/perf-annotate.txt
-+++ b/tools/perf/Documentation/perf-annotate.txt
-@@ -110,8 +110,11 @@ include::itrace.txt[]
- 	Interleave source code with assembly code. Enabled by default,
- 	disable with --no-source.
- 
----symfs=<directory>::
--        Look for files with symbols relative to this directory.
-+--symfs=<directory[,match_mode]>::
-+        Look for files with symbols relative to this directory. The optional
-+        match_mode can be 'path' (default, matches full path) or 'basename'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- 
- -M::
- --disassembler-style=:: Set disassembler style for objdump.
-diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
-index 58efab72d2e5..5a46f97e2688 100644
---- a/tools/perf/Documentation/perf-diff.txt
-+++ b/tools/perf/Documentation/perf-diff.txt
-@@ -81,8 +81,11 @@ OPTIONS
- --force::
-         Don't do ownership validation.
- 
----symfs=<directory>::
--        Look for files with symbols relative to this directory.
-+--symfs=<directory[,match_mode]>::
-+        Look for files with symbols relative to this directory. The optional
-+        match_mode can be 'path' (default, matches full path) or 'basename'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- 
- -b::
- --baseline-only::
-diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
-index 21e607669d78..3b7a8adf4b74 100644
---- a/tools/perf/Documentation/perf-kwork.txt
-+++ b/tools/perf/Documentation/perf-kwork.txt
-@@ -169,8 +169,11 @@ OPTIONS for 'perf kwork timehist'
- --max-stack::
- 	Maximum number of functions to display in backtrace, default 5.
- 
----symfs=<directory>::
--    Look for files with symbols relative to this directory.
-+--symfs=<directory[,match_mode]>::
-+        Look for files with symbols relative to this directory. The optional
-+        match_mode can be 'path' (default, matches full path) or 'basename'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- 
- --time::
- 	Only analyze samples within given time window: <start>,<stop>. Times
-diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
-index 5c43a6edc0e5..1d754c2a5736 100644
---- a/tools/perf/Documentation/perf-probe.txt
-+++ b/tools/perf/Documentation/perf-probe.txt
-@@ -50,6 +50,12 @@ OPTIONS
- --source=PATH::
- 	Specify path to kernel source.
- 
-+--symfs=<directory[,match_mode]>::
-+	Look for files with symbols relative to this directory. The optional
-+	match_mode can be 'path' (default, matches full path) or 'basename'
-+	(only matches base name). This is useful when debug files are stored
-+	in a flat directory structure.
-+
- -v::
- --verbose::
-         Be more verbose (show parsed arguments, etc).
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index acef3ff4178e..ff5ec9a15040 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -368,8 +368,11 @@ OPTIONS
- --force::
-         Don't do ownership validation.
- 
----symfs=<directory>::
--        Look for files with symbols relative to this directory.
-+--symfs=<directory[,match_mode]}::
-+        Look for files with symbols relative to this directory. The optional
-+        match_mode can be 'path' (default, matches full path) or 'basename'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- 
- -C::
- --cpu:: Only report samples for the list of CPUs provided. Multiple CPUs can
-diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-index 4d9981609c04..5c17bc11556e 100644
---- a/tools/perf/Documentation/perf-sched.txt
-+++ b/tools/perf/Documentation/perf-sched.txt
-@@ -437,8 +437,11 @@ OPTIONS for 'perf sched timehist'
-     Show all scheduling events followed by a summary by thread with min,
-     max, and average run times (in sec) and relative stddev.
- 
----symfs=<directory>::
--    Look for files with symbols relative to this directory.
-+--symfs=<directory[,match_mode]>::
-+        Look for files with symbols relative to this directory. The optional
-+        match_mode can be 'path' (default, matches full path) or 'basename'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- 
- -V::
- --cpu-visual::
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index ddf92f9c7821..be5b1835330f 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -307,8 +307,11 @@ OPTIONS
- --kallsyms=<file>::
-         kallsyms pathname
- 
----symfs=<directory>::
--        Look for files with symbols relative to this directory.
-+--symfs=<directory[,match_mode]>::
-+        Look for files with symbols relative to this directory. The optional
-+        match_mode can be 'path' (default, matches full path) or 'basename'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- 
- -G::
- --hide-call-graph::
-diff --git a/tools/perf/Documentation/perf-timechart.txt b/tools/perf/Documentation/perf-timechart.txt
-index ef2281c56743..bb1e9325638e 100644
---- a/tools/perf/Documentation/perf-timechart.txt
-+++ b/tools/perf/Documentation/perf-timechart.txt
-@@ -53,8 +53,11 @@ TIMECHART OPTIONS
- -f::
- --force::
- 	Don't complain, do it.
----symfs=<directory>::
--        Look for files with symbols relative to this directory.
-+--symfs=<directory[,match_mode]>::
-+        Look for files with symbols relative to this directory. The optional
-+        match_mode can be 'path' (default, matches full path) or 'basename'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- -n::
- --proc-num::
-         Print task info for at least given number of tasks.
-diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
-index 3fee9b2a88ea..268316596ba0 100644
---- a/tools/perf/Documentation/tips.txt
-+++ b/tools/perf/Documentation/tips.txt
-@@ -11,7 +11,8 @@ Search options using a keyword: perf report -h <keyword>
- Use parent filter to see specific call path: perf report -p <regex>
- List events using substring match: perf list <keyword>
- To see list of saved events and attributes: perf evlist -v
--Use --symfs <dir> if your symbol files are in non-standard locations
-+Use --symfs <dir>[,basename] if your symbol files are in non-standard locations.
-+ Use ',basename' when debug files are in a flat directory structure.
- To see callchains in a more compact form: perf report -g folded
- To see call chains by final symbol taking CPU time (bottom up) use perf report -G
- Show individual samples with: perf script
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 9c27bb30b708..f4ce70998423 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -744,8 +744,7 @@ int cmd_annotate(int argc, const char **argv)
- 			&annotate.group_set,
- 			"Show event group information together"),
- 	OPT_STRING('C', "cpu", &annotate.cpu_list, "cpu", "list of cpus to profile"),
--	OPT_CALLBACK(0, "symfs", NULL, "directory",
--		     "Look for files with symbols relative to this directory",
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,match_mode]", SYMFS_HELP,
- 		     symbol__config_symfs),
- 	OPT_BOOLEAN(0, "source", &annotate_opts.annotate_src,
- 		    "Interleave source code with assembly code (default)"),
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 59bf1f72d12e..7b7cc3c80dfd 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -1280,8 +1280,7 @@ static const struct option options[] = {
- 	OPT_STRING_NOEMPTY('t', "field-separator", &symbol_conf.field_sep, "separator",
- 		   "separator for columns, no spaces will be added between "
- 		   "columns '.' is reserved."),
--	OPT_CALLBACK(0, "symfs", NULL, "directory",
--		     "Look for files with symbols relative to this directory",
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,match_mode]", SYMFS_HELP,
- 		     symbol__config_symfs),
- 	OPT_UINTEGER('o', "order", &sort_compute, "Specify compute sorting."),
- 	OPT_CALLBACK(0, "percentage", NULL, "relative|absolute",
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index 7f3068264568..838471edb9e5 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -2423,8 +2423,8 @@ int cmd_kwork(int argc, const char **argv)
- 		    "Display call chains if present"),
- 	OPT_UINTEGER(0, "max-stack", &kwork.max_stack,
- 		   "Maximum number of functions to display backtrace."),
--	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
--		    "Look for files with symbols relative to this directory"),
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,match_mode]", SYMFS_HELP,
-+		     symbol__config_symfs),
- 	OPT_STRING(0, "time", &kwork.time_str, "str",
- 		   "Time span for analysis (start,stop)"),
- 	OPT_STRING('C', "cpu", &kwork.cpu_list, "cpu",
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 1b4ba85ee019..e2912217153a 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -597,8 +597,8 @@ __cmd_probe(int argc, const char **argv)
- 	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
- 		    "Enable kernel symbol demangling"),
- 	OPT_BOOLEAN(0, "cache", &probe_conf.cache, "Manipulate probe cache"),
--	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
--		   "Look for files with symbols relative to this directory"),
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,match_mode]", SYMFS_HELP,
-+		     symbol__config_symfs),
- 	OPT_CALLBACK(0, "target-ns", NULL, "pid",
- 		     "target pid for namespace contexts", opt_set_target_ns),
- 	OPT_BOOLEAN(0, "bootconfig", &probe_conf.bootconfig,
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 3b81f4b3dc49..e0d81a8cc3bb 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1416,8 +1416,7 @@ int cmd_report(int argc, const char **argv)
- 		   "columns '.' is reserved."),
- 	OPT_BOOLEAN('U', "hide-unresolved", &symbol_conf.hide_unresolved,
- 		    "Only display entries resolved to a symbol"),
--	OPT_CALLBACK(0, "symfs", NULL, "directory",
--		     "Look for files with symbols relative to this directory",
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,match_mode]", SYMFS_HELP,
- 		     symbol__config_symfs),
- 	OPT_STRING('C', "cpu", &report.cpu_list, "cpu",
- 		   "list of cpus to profile"),
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 3f509cfdd58c..741e9894490c 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -4879,8 +4879,8 @@ int cmd_sched(int argc, const char **argv)
- 		    "Display call chains if present (default on)"),
- 	OPT_UINTEGER(0, "max-stack", &sched.max_stack,
- 		   "Maximum number of functions to display backtrace."),
--	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
--		    "Look for files with symbols relative to this directory"),
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,match_mode]", SYMFS_HELP,
-+		     symbol__config_symfs),
- 	OPT_BOOLEAN('s', "summary", &sched.summary_only,
- 		    "Show only syscall summary with statistics"),
- 	OPT_BOOLEAN('S', "with-summary", &sched.summary,
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 7c743a303507..4fe79971c97f 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -4074,8 +4074,7 @@ int cmd_script(int argc, const char **argv)
- 		   "file", "kallsyms pathname"),
- 	OPT_BOOLEAN('G', "hide-call-graph", &no_callchain,
- 		    "When printing symbols do not display call chain"),
--	OPT_CALLBACK(0, "symfs", NULL, "directory",
--		     "Look for files with symbols relative to this directory",
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,match_mode]", SYMFS_HELP,
- 		     symbol__config_symfs),
- 	OPT_CALLBACK('F', "fields", NULL, "str",
- 		     "comma separated output fields prepend with 'type:'. "
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index f8b49d69e9a5..b071c66b8dc4 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -1951,8 +1951,7 @@ int cmd_timechart(int argc, const char **argv)
- 	OPT_CALLBACK('p', "process", NULL, "process",
- 		      "process selector. Pass a pid or process name.",
- 		       parse_process),
--	OPT_CALLBACK(0, "symfs", NULL, "directory",
--		     "Look for files with symbols relative to this directory",
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,match_mode]", SYMFS_HELP,
- 		     symbol__config_symfs),
- 	OPT_INTEGER('n', "proc-num", &tchart.proc_num,
- 		    "min. number of tasks to print"),
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 8662001e1e25..0cafa6e630e8 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -66,6 +66,7 @@ struct symbol_conf symbol_conf = {
- 	.time_quantum		= 100 * NSEC_PER_MSEC, /* 100ms */
- 	.show_hist_headers	= true,
- 	.symfs			= "",
-+	.symfs_match_basename	= false,
- 	.event_group		= true,
- 	.inline_name		= true,
- 	.res_sample		= 0,
-@@ -2491,16 +2492,41 @@ int symbol__config_symfs(const struct option *opt __maybe_unused,
- 			 const char *dir, int unset __maybe_unused)
- {
- 	char *bf = NULL;
-+	char *match_mode_str;
- 	int ret;
- 
--	symbol_conf.symfs = strdup(dir);
--	if (symbol_conf.symfs == NULL)
--		return -ENOMEM;
-+	match_mode_str = strchr(dir, ',');
-+	if (match_mode_str) {
-+		size_t dir_len = match_mode_str - dir;
-+		char *dir_copy = strndup(dir, dir_len);
-+
-+		if (dir_copy == NULL)
-+			return -ENOMEM;
-+
-+		symbol_conf.symfs = dir_copy;
-+
-+		match_mode_str++;
-+		if (!strcmp(match_mode_str, "basename"))
-+			symbol_conf.symfs_match_basename = true;
-+		else if (!strcmp(match_mode_str, "path"))
-+			symbol_conf.symfs_match_basename = false;
-+		else {
-+			pr_err("Invalid match_mode: '%s', use 'path' or 'basename'\n",
-+			       match_mode_str);
-+			free(dir_copy);
-+			return -EINVAL;
-+		}
-+	} else {
-+		symbol_conf.symfs = strdup(dir);
-+		if (symbol_conf.symfs == NULL)
-+			return -ENOMEM;
-+		symbol_conf.symfs_match_basename = false;
-+	}
- 
- 	/* skip the locally configured cache if a symfs is given, and
- 	 * config buildid dir to symfs/.debug
- 	 */
--	ret = asprintf(&bf, "%s/%s", dir, ".debug");
-+	ret = asprintf(&bf, "%s/%s", symbol_conf.symfs, ".debug");
- 	if (ret < 0)
- 		return -ENOMEM;
- 
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 3fb5d146d9b1..5afac63d5e06 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -9,6 +9,7 @@
- #include <linux/list.h>
- #include <linux/rbtree.h>
- #include <stdio.h>
-+#include <errno.h>
- #include "addr_location.h"
- #include "path.h"
- #include "symbol_conf.h"
-@@ -96,6 +97,18 @@ struct intlist;
- 
- static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
- {
-+	if (symbol_conf.symfs_match_basename) {
-+		char *path_copy = strdup(path);
-+		char *base;
-+		int ret;
-+
-+		if (!path_copy)
-+			return -ENOMEM;
-+		base = basename(path_copy);
-+		ret = path__join(bf, size, symbol_conf.symfs, base);
-+		free(path_copy);
-+		return ret;
-+	}
- 	return path__join(bf, size, symbol_conf.symfs, path);
- }
- 
-@@ -169,6 +182,11 @@ size_t symbol__fprintf_symname(const struct symbol *sym, FILE *fp);
- size_t symbol__fprintf(struct symbol *sym, FILE *fp);
- bool symbol__restricted_filename(const char *filename,
- 				 const char *restricted_filename);
-+
-+#define SYMFS_HELP "setup root directory which contains debug files:\n" \
-+	"\t\t\t\t" "directory:\tLook for files with symbols relative to this directory.\n" \
-+	"\t\t\t\t" "match_mode:\tMode to match files, 'path' matches full path (default), 'basename' only matches base name.\n"
-+
- int symbol__config_symfs(const struct option *opt __maybe_unused,
- 			 const char *dir, int unset __maybe_unused);
- 
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index 71bb17372a6c..39c4425d51ea 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -93,6 +93,7 @@ struct symbol_conf {
- 			*tid_list,
- 			*addr_list;
- 	const char	*symfs;
-+	bool		symfs_match_basename;
- 	int		res_sample;
- 	int		pad_output_len_dso;
- 	int		group_sort_idx;
--- 
-2.43.0
 
