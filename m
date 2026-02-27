@@ -1,93 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011000.outbound.protection.outlook.com [40.93.194.0])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A18B322C77;
-	Fri, 27 Feb 2026 08:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F7738A702;
+	Fri, 27 Feb 2026 09:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.0
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772181793; cv=fail; b=MPLSWC9uISEo+FC6ZkvG8UXlXz7VJg9/HrXFH8prMoj+Z2ec96FIrecmVKuPCZZVgy1B5alsuBT7aSMv7jAkif1sFRvcEEKvXZjsR5AIsevUUXpn5+ZfPwRYuirQrdyDbUyQpaYJtCiZWnfx8QoWKJYWua8pGfVHp/EN4ZXzCsI=
+	t=1772184724; cv=fail; b=sgT4PUDWD+k2ZSCB0R6tNdoL85Jd3AaD958fGfzOydl+NUlRYXmZNE2APRQ6K/VZEclaN2v8n/pjxjQ+CLSvg+eSmwqz+LSBL/15GC2y5uA0CfKZUvK2yWWH0YlbCzbH8OKMYvcZ4T+K/zAzUklDL8JLqpjlvKJrLjz1/vpIxVg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772181793; c=relaxed/simple;
-	bh=x7agPRHMvrum/XaEKyL3HKdxRGn1N1khWa+hj2M04aA=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=BmD5GcxjaAX2XoRkdp03GvwQwtngg7+fWwFA49ZkzVGxlGKWArkBnUGt+wQbbYmWVR+xmXsrXuspStwEZSAj8/+G1CpWYCOoTJ9aHXUmlD0PrJR+ZhCDkaw8HRBmb195IpfpQzumWjKP5NSQmLuWiaBcTsodsPodYcTJx11h1fM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H1fQAfyd; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1772184724; c=relaxed/simple;
+	bh=JwqgT0K9m90SpEwj2lh+BM3Hefh9zmxXWVNti2arIvE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=OWNVGY1MDw4s6egyqwuNPSIkZJYMEhgqza9+qJAOHWc7ZfLIBtsb53aH1XjpN3Xlc9wfL3Y2UyHf8qnIEYBprj8SDpiSejBZ6ZQ0MXsdpJ4ZQidhkDOyILj+m6rE5YG6Q3GtUZGEhMDIOLPt655WCu6jUtw3Eup1YhhwLkAs3gU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KkIQ0NNs; arc=fail smtp.client-ip=40.93.194.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H1fQAfyd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772181791; x=1803717791;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=x7agPRHMvrum/XaEKyL3HKdxRGn1N1khWa+hj2M04aA=;
-  b=H1fQAfyd0neASl2RaUuzYwPPY0BAsA5q3p2JYxalA57o0a+t9KSGPpn0
-   8e/HryLJSmI9R4lf12+hoMjJZsV0hLk0IHB/xcAKQDSxVDd/mp1H7ab9I
-   Ty8ny5/Z/oCYcyxoc0WHvhlEZNZfbGyUdz1vaWiQrnddOh9BWhCov46t5
-   nJdl18CXKze5VqnMBJoKAlPqsw3+CZ99LPIIRRRBhiIRNu1XDUf9fXUis
-   nmt6nME0lLtv3Opucr8XZi7xGH3+K+/6rhgyyPzv7cWoA7RzCh9czJpK5
-   O+GGCF3Jgu0W1wxgJ4jgTeQ6mkZ/yQgLg4s8Ue88E5mRiNnIz6ovRjSzX
-   A==;
-X-CSE-ConnectionGUID: stl0cGS3QwCB6GXQYWUHpQ==
-X-CSE-MsgGUID: hkW/ZTAKSKSJ8/RafC7Orw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11713"; a="72963876"
-X-IronPort-AV: E=Sophos;i="6.21,313,1763452800"; 
-   d="scan'208";a="72963876"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2026 00:43:10 -0800
-X-CSE-ConnectionGUID: APkohNjTTxawEiXasWG/IQ==
-X-CSE-MsgGUID: bsCFIgJjThqcNodOsMGWrw==
-X-ExtLoop1: 1
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2026 00:43:10 -0800
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Fri, 27 Feb 2026 00:43:09 -0800
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Fri, 27 Feb 2026 00:43:09 -0800
-Received: from PH8PR06CU001.outbound.protection.outlook.com (40.107.209.54) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Fri, 27 Feb 2026 00:43:09 -0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KkIQ0NNs"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jnFCUhzIz0Vv2JLVGINXFTVXIzei5+4OUrmeq542Mt/MfEgaRBtJ9nr5I1naVFKA52MNhJEKHOyZyjaq6Wi2BMf06E93rDZSuoT6940SfnVjuy8j1SchJ68dPnfSuLUiNADtIF2PZsw1I0e6QggXTLQEmoSrtUj3mP/WsF9dgqRpBbh9I80JixrUkEEpxjNu/AY+I89MpaH4GO0Wgmuw6k/QmmbPdSXzVdNFb8UDHyxQs6ACrLipeYzIlGvF+sAfO7YpV14wEBEi91uIkw1u3O8ni+x+Qvv3fkuIIp7jLcyOWxNbfFJHUZQ5hLYgL+xvEOtIdrdnJ7q1546ACcuxOA==
+ b=KCHSDbCvmVhmcdnKEad9Km5M9MzASu7TyWnhLDs9zZsxDd1MPicDCU/qXgA8Z9D12C6BINenyWOrYAhuMtQecMyCos+/FLxa1xAr9EY3JU5oFsCb04mp7FQRex6YmMrTpgE77qNkyJKIvYCHqzut9YxFdFt9DVH0y/uxWWXWFaohOsxjB9s0gZ9aptLlUNAxxLDQeZz+UjFFeetZ7kYlje25LyOXXT8AmEV5JSgW2lHPlEi5TCG3b1T2HML7W8HE/lJNGgDKEjJy7/NqNeA3q9ZN7k3QxZ1yKacI7mHTJbZoYkZpZcQSAItjwBHo8pI4GxC3exIrVOeOHTy7PzV/Hw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8+DOiIhfgRVlAWBxJyyxvtwo+bU6Kr38HT8dN/SXUDo=;
- b=SgH7YwFgv2t5ylLxscLYQOg09naVCYn62Cf3QXiUnnM2gIWvaUhgfLdfB5lCoeyyHnuiNctZxIinFQ6engH6X2s5Fqxz0SYl98n87XYVWbX5BQEsI37i8dSPHDZo9j3/s1UKpa+f/1DbUIKlBzqhIagDuyRyHaEsRdfTuNP2d6zcX/ilLfnVwcpl4i6pvLy+rALMj/mKXeeixVNzPn0GfBFaGoWtJvuTRl/Dgezu17u5VuMAxPRERVyz0PQr7ryMeVTFGDXrMUmPJi4XINNUhePqV1DMSN3Yv3hWBD9PzP48Psn6iD0kEr3Maq462zKKrCsA1wJHFAoSurk5PF2Z1A==
+ bh=eEmRWOKcewE9O68wF5PY6k+l1fLJQ37vG0E4uqPWjpE=;
+ b=nkK3nWwFFkJfEhqly6eGTbEf+5DHjcAZdeVv30dJVp0dWup6vDCBFPFCi5UB0l9JkWpcWpFSlTlpgjBrSUyWYHUlgHSnZz2hqy+s2W6Y2HybHgbJVlZwwRZwckHFry+UJoVtjnxg5P+YYcjl8tnyG4+l4/A9d6mHtffI20K7vIcrwJhsyJLw8WBTUTVroir1IdUBW04PzSNqezzgJcwZNv0cpIGoXwW9TVWD5jvkoMJ+fyAra4VqEef97ZRhLe0niyl4+hfTpHZ5pTt7BiR6lQqjnOalPkHdaD+slgL/hYDPmjvGUwQSx86nxmrmqLmBnfepPM6W9Vtm++iGpCRyHw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eEmRWOKcewE9O68wF5PY6k+l1fLJQ37vG0E4uqPWjpE=;
+ b=KkIQ0NNs/MMmHMR5Ayj3D8KW9gdGwjs6CX2302H6SjJhkidf+JOt4k6Q7CrS8UOE+emO2qzCjFskTtfniboJSJXZlWt1HNo2Uv0lrP7xic7ppcdfYmA7mK8OiRGtZ6NInKfsHoVuhgGPlJrK1JLdIwrbXvdwTJVWVLSq6v7u0LY=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by BN9PR11MB5260.namprd11.prod.outlook.com (2603:10b6:408:135::9) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by CH8PR12MB9837.namprd12.prod.outlook.com (2603:10b6:610:2b4::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.16; Fri, 27 Feb
- 2026 08:43:06 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::e4de:b1d:5557:7257]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::e4de:b1d:5557:7257%5]) with mapi id 15.20.9654.014; Fri, 27 Feb 2026
- 08:43:06 +0000
-Date: Fri, 27 Feb 2026 16:42:59 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Namhyung Kim <namhyung@kernel.org>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Pablo Galindo <pablogsal@gmail.com>, <linux-perf-users@vger.kernel.org>,
-	<oliver.sang@intel.com>
-Subject: [linus:master] [perf test]  c9cd0c7e52:
- perf-sanity-tests.python_profiling_with_jitdump.fail
-Message-ID: <202602270932.50ed0a9f-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-User-Agent: s-nail v14.9.25
-X-ClientProxiedBy: TP0P295CA0014.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:910:2::11) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+ 2026 09:31:52 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::ce69:cfae:774d:a65c]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::ce69:cfae:774d:a65c%5]) with mapi id 15.20.9632.017; Fri, 27 Feb 2026
+ 09:31:52 +0000
+Message-ID: <b4f32cab-2b34-4002-83d1-3ae038a4bb38@amd.com>
+Date: Fri, 27 Feb 2026 10:30:57 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/61] vfs: change inode->i_ino from unsigned long to u64
+To: Jeff Layton <jlayton@kernel.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+ Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
+ <willy@infradead.org>, Eric Biggers <ebiggers@kernel.org>,
+ "Theodore Y. Ts'o" <tytso@mit.edu>, Muchun Song <muchun.song@linux.dev>,
+ Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>,
+ David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.org>,
+ Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, Steve French <sfrench@samba.org>,
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+ Shyam Prasad N <sprasad@microsoft.com>, Bharath SM
+ <bharathsm@microsoft.com>, Alexander Aring <alex.aring@gmail.com>,
+ Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+ Viacheslav Dubeyko <slava@dubeyko.com>,
+ Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov
+ <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>,
+ Christian Schoenebeck <linux_oss@crudebyte.com>,
+ David Sterba <dsterba@suse.com>, Marc Dionne <marc.dionne@auristor.com>,
+ Ian Kent <raven@themaw.net>, Luis de Bethencourt <luisbg@kernel.org>,
+ Salah Triki <salah.triki@gmail.com>,
+ "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+ Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>,
+ Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+ Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>,
+ Amir Goldstein <amir73il@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Yangtao Li <frank.li@vivo.com>,
+ Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+ David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>,
+ Dave Kleikamp <shaggy@kernel.org>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+ Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, Mike Marshall
+ <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>,
+ Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>,
+ Zhihao Cheng <chengzhihao1@huawei.com>, Damien Le Moal <dlemoal@kernel.org>,
+ Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>,
+ John Johansen <john.johansen@canonical.com>, Paul Moore
+ <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>,
+ Roberto Sassu <roberto.sassu@huawei.com>,
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+ Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>,
+ Casey Schaufler <casey@schaufler-ca.com>,
+ Alex Deucher <alexander.deucher@amd.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, "Darrick J. Wong" <djwong@kernel.org>,
+ Martin Schiller <ms@dev.tdt.de>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
+ linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+ samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
+ v9fs@lists.linux.dev, linux-afs@lists.infradead.org, autofs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
+ ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+ jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev,
+ ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
+ linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org,
+ selinux@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org,
+ linux-x25@vger.kernel.org
+References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT4PR01CA0488.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10c::18) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -95,255 +147,371 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|BN9PR11MB5260:EE_
-X-MS-Office365-Filtering-Correlation-Id: 28143f4d-cd87-42b9-39f0-08de75dc3a07
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CH8PR12MB9837:EE_
+X-MS-Office365-Filtering-Correlation-Id: 75791efb-22e9-4b6e-715e-08de75e309e5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: pH+/nAoonypKROhqsXjKXBm1tWV3KccNa84057sHMaDDcG5vZLJroZyn7FOV6qt28QSEHblbwC7igHv9Z4jQO0TAQOdS8dobnfN6iiQ8aHsEx5flbwr80nIvToYG3cnqR+7hlvFX1iFX9Mm8qkxpWCKPmD2mjn6TawGWfUhayF2wMCunrTjE6AE+OGWvYujEMG7/n/ZA+lCyNg4PnohWh1TM/C4Fy22Ol2WYof/1+AjWqCbA8eerWCOxY3idRFoREt3eBHPbNXohcJH8EGZe8xfGyrelA0PuviQIOcBtOqGZmRHsjn8wM167SYUWENrXHaUhlEgomODqzPIcN6j01SMPpWBSQE3NYCEVYNlHy5n1mPrLIP9Q/ZCmxGt75JpfPI9njqst23LH+TdzSAKlsxtmT9NxvIfHflKpswgglST0k0LNL+7g/Kqxh6qKxnr3ptztCsSiNtFUfaHZ5EhX81AQ/T+VoPAwCfXImgIT41zE1f5ZWup3oTaCRIYRXA9ShPlmfG4I9z+STZwbD8M982Q9oWe8OHO/Q/htNAGgPFcSW/NZqBqcYM6mjjij/uALy5x81qwglOFhx8zdP+BkVLbCo4krV0Q3o5lbcgAYlBo/IiW+IM9Je9olgKXHzQrG60wTTHF0LE+rM7zyQbGSI4UUShkWCWjDQjwR2w6W7H6rlnL+CnWMphJcr/nciQ8A
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|921020|7142099003|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	SBQRiOcLfgIuBcEj7FLBvnDEPMqiq1zuqsMYQeUB/hbJYaNtACQRnKA7V1oc9e9aHsj8H4kvGGSfXqUFZ4F18XJtCYhUWGLYHO4DN7iCnwDwA4LrOxNNouGdFf9Kd3gXyxPhZAWshyckxrDqY1XBX9sEim6w3JEcm3IaOBLFYFMuWmCJ5GeAkszIgzDLE/XoagdbepDqITXFEWMzOwUTcH59vFiyMhVRK4J0oA+dY+Y4GJUo/FNM+45ZsXJbR9v7f/kpHpVllz/IFC0KNudRpbniiU4Wm23RZbtgaQmlG9s7VPHdrO/kFCpCyfpQK2Tyyi7Kc1/jlesg+jr/qanhGOg4yK9+uDuoa9f1aLT/VbII41AqjrA8GN9EsiwdPioW/91hJJqnN/Pg62YHw+bAPedUQKGroX+YqB6UnbHhDytaNH4/5msOKug/BGWyWgAbpSXdK0jmezKai7Cbh+iPOQLt0zhbEk82DhybeQl2xLMzzdc43C58HWUfFUATJodI1/N4NwLnJ/a1dsG66BM/2eFKKOOHv0i4AJM6e6qYx1Nh1HXaYz4Q+j6hRgdZaYFSfIbFiAb604wGdLQz/u7LjtlpEeqfXAbnTFyh+AxbSgvAzTFokA1wZc5ZQoZmE6c8cpda2JwiORYNgisIL3mNS5IF29tv+6fkNf1W0oU54iybNmzexNebVK0z0HAKOD64FdwVLx7MScJOXe9wge1xJZCpgKf9x5v6K7R7C+zSKZY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(921020)(7142099003)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?oB0f7/DfqMEi6yD49aPFlurPTN/1ZhftyrZajK8R6YPQ3buNZ6ya80DqJJD0?=
- =?us-ascii?Q?qIdTUMiyHsrXC+NeAu3f/2lg8YA3dWtMlyt3wt95wSrtYOlkisdBBgkORlva?=
- =?us-ascii?Q?4K829eLSU8RyCOdYKXmRcbde4TIp25MuLVPzor5HlhWWQB/q4hPPM1CmhV2h?=
- =?us-ascii?Q?JPljdRJeNWYS0MIYWTYjuc/g6PLKAJUlltTvHThh8vBOj1i3wvCDXMDvBvr1?=
- =?us-ascii?Q?wXGAcHGA1EyA7Fyr0WZrW8r0MnSfh2WdqqxwlX3I41SmPqQElI9Dj1h390T8?=
- =?us-ascii?Q?1BUKEv640YQZtcINnVFDja3EJYSCUniDKeq5/MxV7Vow0cBXDeUDguVRZDYv?=
- =?us-ascii?Q?Z93gquAT4QbiY/ijEnMWtpjRVZXm4yrmy/bbds7XzITZIohj7SIVAM3LrEFh?=
- =?us-ascii?Q?4zekLqRdXjxUw4C9TdCfOXPa8G8WDoV+ULPVHUUFpiugnWFROWzNCIHyL0kd?=
- =?us-ascii?Q?cTW2gqYcdw4tKm7dBsXKNR7dQHyFD1reGVHWjjiJf7chojf7rkS9pPbUvMmN?=
- =?us-ascii?Q?/iLRde0oFW5cDsHXsmFVncMK/Izzdy2Z/nSoPOPRLpPxme1SRZNP+tKaSW+r?=
- =?us-ascii?Q?yP9H4kiV52/lngButuy7EC7DZ3O5rtmX9ZbAmZgG48GYLYP045ALwA9BxlhM?=
- =?us-ascii?Q?lr8cRLsqEWeMitaIzIsI2u8doxZW1kOFWZNPEFE3m8KtJj8L617JtuWSPHrK?=
- =?us-ascii?Q?/iKK0Mcw4Kwqtrv/ctkAPUJikV2U19wDBeTGhq7c6XnNiua2Vue/u2FSSJwO?=
- =?us-ascii?Q?y7I9HgBqxIvh904+r/ECmzC6Enc3h9n5vGx4+3efPVm+Zh6VS8icU/h/e+qd?=
- =?us-ascii?Q?LuSZU1tgHH02QujKgX+6DEkP5VYymo/dgjPepH4H2uOqW3bhA9E2UMIMNq1y?=
- =?us-ascii?Q?Ck+SSuEx7MnTb54jfnVtd8jf/BxP4FTWzsetg+5IFxMZHweK1zGzytqscMpw?=
- =?us-ascii?Q?bH1mpY7Xm8t2xQEvVcTqMJ4YqedABTndQ3ZgFFvUCacGsXIzPB51N8L+RU2v?=
- =?us-ascii?Q?DSG4YLusU55BbY9jgnWv5dcX7/WqJjVLeMtVnCQK7ngn4Dqli5WHn8hXTtrj?=
- =?us-ascii?Q?7VlMRq8jNj4ARsR6ZJB3MwIrpAF3I2zYCLPhuM3gIx0CvFce5lrXUiD4eBYk?=
- =?us-ascii?Q?jQWK+IM5y97LJCtuzq5P590tn0fLoBKVN/DWwHsaNGZT9iWdRGIxt/RcUSe3?=
- =?us-ascii?Q?OBQYCpkJSOQv0C9k5B5gZFwehGEsm1ZZAFOZyDBflub12om310pvom2gW5bO?=
- =?us-ascii?Q?2YxVA7rrOutiillBLNb3qKeWZa13aT242QnWTzGNrUoHPa5siUiVGcriF7pL?=
- =?us-ascii?Q?W2fzfnZVdw/cc+3YXb1SELl0OkOYQhYl0P9RAgCvvVOLNQJZ29J4rSEy6OEB?=
- =?us-ascii?Q?6Jp40EDKJXgXwMGGbNot2EHmNylCOXtvvwOcGrnslxJgu3YT55SVuQe56V7o?=
- =?us-ascii?Q?xJcGZ6wwVfiiFLoOT39yKPzP6IvQiUUUJZacILf5GM51JIIGGchhyjq/S53t?=
- =?us-ascii?Q?GpRhUkHDoi4qC1oKerHefBLUDOfjsTs8mscxH0F+RR3eHr2NWfLm4raa4iHi?=
- =?us-ascii?Q?KkJy0tSWGaBL4Lw8+iHe+mlCi6QMuK+1xymZF8BNx1cG/iZ/zY6N0hD+xGaZ?=
- =?us-ascii?Q?K40NRm+6SVy5ypjJ70unX4iOiLCcUaLz5Yk+Zyk2RKIDGsG13dxuB/DAT5LA?=
- =?us-ascii?Q?mV7DTRu2nDs6XtxJnbYzyqLgOKG5BtKNDs7m4WFownr6l3a2ulUng0+4iPnr?=
- =?us-ascii?Q?SeTime8RXA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28143f4d-cd87-42b9-39f0-08de75dc3a07
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N2dSNWRuWVVTUjNYdnRvazFaVEo1bEhYQWRZdzB5YWtVWEVMbGl1TVFoYzFN?=
+ =?utf-8?B?WVdZUDlXL2VDTDBzOGo5M1d3aGJUTTFEcUZyeml0ejFUY1RnaWRSUzlkcE04?=
+ =?utf-8?B?YzVmcmVIYjNYd3lNdDRUWTFCcTA5TEkydnRvVGlDcmtOSjR3enVUTWU5SWpF?=
+ =?utf-8?B?ZzZiMHN2ZUNkUmxMdWFXR01HVlB0Z2FrclZ4R2h1WkRCYmZRdHVzaDcrWVVW?=
+ =?utf-8?B?aU1VdkYzaUNDYkF3aTRTT2cvWlFMckE1eVF1ZWsvQUdKeWdWR1BMZGdiTkYz?=
+ =?utf-8?B?NnhvVXpnc2tscnhFUUpxZG50UE9lOThsbjJreHdXZ25JUG1xWUo2SllkaW1T?=
+ =?utf-8?B?VlZIUEZ0OG5oeStsdnVqaFZOVmFvL2FXU3BWeDdEeUFTcTF2RXJZdlp3S1By?=
+ =?utf-8?B?VkMwUmd0UDlDVDl3ZGtFRUEweUgzWkQvVTFPN294Y3l3YnRJY09VdVZvRnlN?=
+ =?utf-8?B?aXJxaE95dG9MSUlxTXRtZzl0KytOZkFVMmIyTG82amhxUEQzRit1Q2wrSjVD?=
+ =?utf-8?B?TUJoNXJCYlQ3SHRqZ3ViZklJak4rK283SmZCVkJnRUpuL21zZ1ppQkI4c3NK?=
+ =?utf-8?B?T2RQRUdsc0pGUW4vaHI2cTB4WDkwdVcvdXg0akxVdjV0M2R3RmxCcjlON0xR?=
+ =?utf-8?B?MkZvbFRwSEZwQ2VSNUR3WnFuS1pIR0ZlQVhoUEdPektSR1hiMnpjNmRtVXBm?=
+ =?utf-8?B?alNJZnRZWFFiblFXZVdOMFc5YWJsMHdMbXljSk9QemJMemIveW1kaEE0VVFQ?=
+ =?utf-8?B?TE0zSHo4NWk3aitUeVhPYllFRUxRdmdSMUF4UkVWS0NYRFdwbThXbTRMczNh?=
+ =?utf-8?B?Y3RKTVh3NFdUekNPdDFFU2hqU0NwSGN1QzdBK0plQlVEcFFGQVlGR2ZHcjF6?=
+ =?utf-8?B?ZlFkczJZbjI1V0hEekNiTnZsdloyT1hDOFlhaVhRV0RMUE5Jb1ZCMWRSR3Nj?=
+ =?utf-8?B?S2NVZVhxUThWR2JwM1JwS3VFY0tDN2FyYk51WXlTRUFHUHc3aC9MV0RyZkd1?=
+ =?utf-8?B?MXE2Z3VxWmI4UWJQaUVHMUdqZWVWTXBHM2gxNk0yL2FmSlhCdXRieW1RdGpY?=
+ =?utf-8?B?RytTOUZvNHJ2ZWE1SThuL2NPZy9kSk14WlIxd2Z1Y1lMQStNK010M0dYNHlk?=
+ =?utf-8?B?YkdyQkRIUVhYcjcvSFdnNUtuNWJtaHQvOUF0Zm5DT0lxNEFpZnpVT1NKRGZz?=
+ =?utf-8?B?bWhGU2ZPVmZSemdOclJ0cVpDNjJHVmQ3NXBXdTBHamJ6VEFKK05IMW9qRENi?=
+ =?utf-8?B?cFptemJ6M1pmWHl5SHJjblhqWlN2NFlZZ0VpUHpCODQ5MkRMUkpzTFFIdXpp?=
+ =?utf-8?B?Q3lzWnVzVmI3QzU4M3BEMDlCejQ0eXAvQ1Y3RW1FeWxOWitzM1pNRWU4VW15?=
+ =?utf-8?B?TjZDZWFsVUJMNmd2aTZPclpxT3hIRHMzTWtEVU9YRkNBQk1NUjVzRjlKUlo5?=
+ =?utf-8?B?R0FiNjJQd1EzQmVVaDhxMFBCS01LYlJHWlBxdWF4OURmcUZJSmlLM3NFRzFR?=
+ =?utf-8?B?STNXbng4SytIWlRQMnc2M1Y1TWpqa212K2luQy95VU9YVTZJbHdidVJQY2VV?=
+ =?utf-8?B?ZWlPN2I1c0gxV0J2eEtMRG92R25DN0QxNTdTSWc5cHpMR09nVG12cTYzNGk5?=
+ =?utf-8?B?RWJhT0MvNWRsQWNGUWdMSDlvRnFJY1hlM0YzWFRuY0lwSjFSTjFxU05PS09j?=
+ =?utf-8?B?OWtVZ0RCUGJDd2dEV0x3dTFoekR6SzhSb0NwTTFuSk8wVWtEZ01saEF5M1Z0?=
+ =?utf-8?B?dDZNNVhwWWdDd3RKNWJSMDhZRGoxT0J1cGJTWHpoRUIzR0s2YTU5MnoyRmU3?=
+ =?utf-8?B?cHFWdmp2MW8zVkgwY3BUaHhFY09tZmNiWERJMG1uTWpLSWJOeXR2QUlOWTYz?=
+ =?utf-8?B?aHlaR2lkQ3Y2QWc4dmVUZm54bjBuRWlpZ0F0NmJaeERCa3Bjc2trWUpuQi83?=
+ =?utf-8?B?Q0lnYTN5UDROdVgxN3BocWtZMVlUN2dXVmVxdkVBQWtZWEdqa0tiT1NkOVRq?=
+ =?utf-8?B?bHJ2TlFnS3dRS0MyYmZmZDlnQ0pkTTdRVzA3dElmVkV3LzQvdXQ3OWxGOVo0?=
+ =?utf-8?B?QytQRkE3Nys5VWlDTStVbC81K3J5TmFhYzNGNExnUG1DUFdEekl5NFRYQ0N5?=
+ =?utf-8?B?UWxqK2k5V2xabnNOamFEZnYrNTRFamE5TEhrczFmRk1tWFVobm1yWTFvczNz?=
+ =?utf-8?B?Y1lQMDR3LzZ0RzEydVQ2RGpSa1hYVkllcFVsUm1wcEJLcVRiQ1RCczJWOFlG?=
+ =?utf-8?B?RzNVdnFJQU5hMStNUUlOcFZkRE5Idk9kTXRWSkU5bGRKajZjd0Q2N2YvWWZx?=
+ =?utf-8?B?VS9kbENVSDBLR0Q4Ym5RNkpuMFlsaVNDT0FXajR3K3h5QUdUUUo2dz09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75791efb-22e9-4b6e-715e-08de75e309e5
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2026 08:43:06.0995
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2026 09:31:51.9536
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +Q8noP+u5iKZIibnId3fJD+3CDhdYWDyf0qbPXi6v5/O9lS5/WZtFWMneD2zOAPHq0ey32fPRN22YhoHP2GPww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5260
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: ekhXUm7RcN9mv9PnAfZUR+UlJPVQlZi28PCtX7junTDh9P3BaNW8SEPUARZxaEhJ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR12MB9837
 
+On 2/26/26 16:55, Jeff Layton wrote:
+> Christian said [1] to "just do it" when I proposed this, so here we are!
+> 
+> For historical reasons, the inode->i_ino field is an unsigned long,
+> which means that it's 32 bits on 32 bit architectures. This has caused a
+> number of filesystems to implement hacks to hash a 64-bit identifier
+> into a 32-bit field, and deprives us of a universal identifier field for
+> an inode.
+> 
+> This patchset changes the inode->i_ino field from an unsigned long to a
+> u64. This shouldn't make any material difference on 64-bit hosts, but
+> 32-bit hosts will see struct inode grow by at least 4 bytes. This could
+> have effects on slabcache sizes and field alignment.
+> 
+> The bulk of the changes are to format strings and tracepoints, since the
+> kernel itself doesn't care that much about the i_ino field. The first
+> patch changes some vfs function arguments, so check that one out
+> carefully.
+> 
+> With this change, we may be able to shrink some inode structures. For
+> instance, struct nfs_inode has a fileid field that holds the 64-bit
+> inode number. With this set of changes, that field could be eliminated.
+> I'd rather leave that sort of cleanups for later just to keep this
+> simple.
+> 
+> Much of this set was generated by LLM, but I attributed it to myself
+> since I consider this to be in the "menial tasks" category of LLM usage.
 
+Sounds reasonable to me, should get_next_ino() also be changed to return an 64bit ino?
 
-Hello,
+Currently it is always only 32bit and we have workarounds for that in DMA-buf for example.
 
+Thanks,
+Christian.
 
-we failed to run this new added test. not sure if we miss any dependencies?
-
-
-below is full report FYI.
-
-
-kernel test robot noticed "perf-sanity-tests.python_profiling_with_jitdump.fail" on:
-
-commit: c9cd0c7e529e80e9be79867d2ebb874f67dbc35e ("perf test: Add python JIT dump test")
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-
-in testcase: perf-sanity-tests
-version: 
-with following parameters:
-
-	perf_compiler: clang
-	group: group-02
-
-
-config: x86_64-rhel-9.4-bpf
-compiler: gcc-14
-test machine: 16 threads Intel(R) Core(TM) i7-13620H (Raptor Lake) with 32G memory
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202602270932.50ed0a9f-lkp@intel.com
-
-
-2026-01-26 15:25:04 sudo ASAN_OPTIONS=fast_unwind_on_malloc=0 /usr/src/linux-perf-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf test 84 -v
- 84: python profiling with jitdump                                   : Running (1 active)
---- start ---
-test child forked, pid 12390
-Run python with -Xperf_jit
-[ perf record: Woken up 5 times to write data ]
-=================================================================
-==12400==ERROR: AddressSanitizer: heap-use-after-free on address 0x50200002ba30 at pc 0x55c306993987 bp 0x7ffd98998720 sp 0x7ffd98998718
-READ of size 8 at 0x50200002ba30 thread T0
-    #0 0x55c306993986 in map__start util/map.h:54
-    #1 0x55c306993cd0 in map__dso_map_ip util/map.h:110
-    #2 0x55c3069b1ecb in unwind_entry util/machine.c:2950
-    #3 0x55c306e4197b in unwind__get_entries util/unwind-libdw.c:321
-    #4 0x55c3069b2398 in thread__resolve_callchain_unwind util/machine.c:2976
-    #5 0x55c3069b24ec in __thread__resolve_callchain util/machine.c:3003
-    #6 0x55c306987e78 in sample__for_each_callchain_node util/callchain.c:1808
-    #7 0x55c3067d4ece in build_id__mark_dso_hit util/build-id.c:77
-    #8 0x55c3062f7004 in process_sample_event /usr/src/perf_selftests-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin-record.c:1504
-    #9 0x55c3069dbec3 in evlist__deliver_sample util/session.c:1259
-    #10 0x55c3069dc425 in machines__deliver_event util/session.c:1299
-    #11 0x55c3069de009 in perf_session__deliver_event util/session.c:1386
-    #12 0x55c3069cb296 in ordered_events__deliver_event util/session.c:134
-    #13 0x55c306a06aac in do_flush util/ordered-events.c:245
-    #14 0x55c306a07951 in __ordered_events__flush util/ordered-events.c:324
-    #15 0x55c306a07e62 in ordered_events__flush util/ordered-events.c:342
-    #16 0x55c3069d6863 in perf_event__process_finished_round util/session.c:786
-    #17 0x55c3069deb7e in perf_session__process_user_event util/session.c:1446
-    #18 0x55c3069e190e in perf_session__process_event util/session.c:1668
-    #19 0x55c3069e9198 in process_simple util/session.c:2259
-    #20 0x55c3069e8158 in reader__read_event util/session.c:2188
-    #21 0x55c3069e8afe in reader__process_events util/session.c:2237
-    #22 0x55c3069e9987 in __perf_session__process_events util/session.c:2282
-    #23 0x55c3069eca43 in perf_session__process_events util/session.c:2446
-    #24 0x55c3062f7328 in process_buildids /usr/src/perf_selftests-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin-record.c:1534
-    #25 0x55c3062fbdf0 in record__finish_output /usr/src/perf_selftests-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin-record.c:1858
-    #26 0x55c306309ebf in __cmd_record /usr/src/perf_selftests-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin-record.c:2930
-    #27 0x55c306317a8f in cmd_record /usr/src/perf_selftests-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin-record.c:4417
-    #28 0x55c30652bf7b in run_builtin /usr/src/perf_selftests-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf.c:349
-    #29 0x55c30652c86c in handle_internal_command /usr/src/perf_selftests-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf.c:401
-    #30 0x55c30652cdc2 in run_argv /usr/src/perf_selftests-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf.c:445
-    #31 0x55c30652d569 in main /usr/src/perf_selftests-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf.c:553
-    #32 0x7f026b873ca7  (/lib/x86_64-linux-gnu/libc.so.6+0x29ca7) (BuildId: def5460e3cee00bfee25b429c97bcc4853e5b3a8)
-    #33 0x7f026b873d64 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x29d64) (BuildId: def5460e3cee00bfee25b429c97bcc4853e5b3a8)
-    #34 0x55c306293210 in _start (/usr/src/perf_selftests-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf+0x1023210) (BuildId: 47c1eede4a6cf8e0c379d2104e8b035638daa1b4)
-
-0x50200002ba30 is located 0 bytes inside of 8-byte region [0x50200002ba30,0x50200002ba38)
-freed by thread T0 here:
-    #0 0x7f0275b3d8f8 in free ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:52
-    #1 0x55c3069ba258 in map__put util/map.c:312
-    #2 0x55c30679b7f8 in __map__zput util/map.h:198
-    #3 0x55c30679c0df in addr_location__exit util/addr_location.c:31
-    #4 0x55c306e3f7fe in entry util/unwind-libdw.c:147
-    #5 0x55c306e40b1b in frame_callback util/unwind-libdw.c:259
-    #6 0x7f02758daae2 in dwfl_thread_getframes (/lib/x86_64-linux-gnu/libdw.so.1+0x78ae2) (BuildId: bafe9cb5bbbe6cee778d0d137730ea5c223d553e)
-    #7 0x7f02758dae53 in dwfl_getthread_frames (/lib/x86_64-linux-gnu/libdw.so.1+0x78e53) (BuildId: bafe9cb5bbbe6cee778d0d137730ea5c223d553e)
-    #8 0x55c306e414af in unwind__get_entries util/unwind-libdw.c:307
-    #9 0x55c3069b2398 in thread__resolve_callchain_unwind util/machine.c:2976
-    #10 0x55c3069b24ec in __thread__resolve_callchain util/machine.c:3003
-    #11 0x55c306987e78 in sample__for_each_callchain_node util/callchain.c:1808
-    #12 0x55c3067d4ece in build_id__mark_dso_hit util/build-id.c:77
-    #13 0x55c3062f7004 in process_sample_event /usr/src/perf_selftests-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin-record.c:1504
-    #14 0x55c3069dbec3 in evlist__deliver_sample util/session.c:1259
-    #15 0x55c3069dc425 in machines__deliver_event util/session.c:1299
-    #16 0x55c3069de009 in perf_session__deliver_event util/session.c:1386
-    #17 0x55c3069cb296 in ordered_events__deliver_event util/session.c:134
-    #18 0x55c306a06aac in do_flush util/ordered-events.c:245
-    #19 0x55c306a07951 in __ordered_events__flush util/ordered-events.c:324
-    #20 0x55c306a07e62 in ordered_events__flush util/ordered-events.c:342
-    #21 0x55c3069d6863 in perf_event__process_finished_round util/session.c:786
-    #22 0x55c3069deb7e in perf_session__process_user_event util/session.c:1446
-    #23 0x55c3069e190e in perf_session__process_event util/session.c:1668
-    #24 0x55c3069e9198 in process_simple util/session.c:2259
-    #25 0x55c3069e8158 in reader__read_event util/session.c:2188
-    #26 0x55c3069e8afe in reader__process_events util/session.c:2237
-    #27 0x55c3069e9987 in __perf_session__process_events util/session.c:2282
-
-previously allocated by thread T0 here:
-    #0 0x7f0275b3ec57 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
-    #1 0x55c3069bd747 in map__get util/map.h:188
-    #2 0x55c3069c72c4 in maps__find util/maps.c:1112
-    #3 0x55c30683b979 in thread__find_map util/event.c:687
-    #4 0x55c30683be37 in thread__find_symbol util/event.c:723
-    #5 0x55c306e3e7c3 in __report_module util/unwind-libdw.c:54
-    #6 0x55c306e3f428 in entry util/unwind-libdw.c:133
-    #7 0x55c306e40b1b in frame_callback util/unwind-libdw.c:259
-    #8 0x7f02758daae2 in dwfl_thread_getframes (/lib/x86_64-linux-gnu/libdw.so.1+0x78ae2) (BuildId: bafe9cb5bbbe6cee778d0d137730ea5c223d553e)
-    #9 0x7f02758dae53 in dwfl_getthread_frames (/lib/x86_64-linux-gnu/libdw.so.1+0x78e53) (BuildId: bafe9cb5bbbe6cee778d0d137730ea5c223d553e)
-    #10 0x55c306e414af in unwind__get_entries util/unwind-libdw.c:307
-    #11 0x55c3069b2398 in thread__resolve_callchain_unwind util/machine.c:2976
-    #12 0x55c3069b24ec in __thread__resolve_callchain util/machine.c:3003
-    #13 0x55c306987e78 in sample__for_each_callchain_node util/callchain.c:1808
-    #14 0x55c3067d4ece in build_id__mark_dso_hit util/build-id.c:77
-    #15 0x55c3062f7004 in process_sample_event /usr/src/perf_selftests-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin-record.c:1504
-    #16 0x55c3069dbec3 in evlist__deliver_sample util/session.c:1259
-    #17 0x55c3069dc425 in machines__deliver_event util/session.c:1299
-    #18 0x55c3069de009 in perf_session__deliver_event util/session.c:1386
-    #19 0x55c3069cb296 in ordered_events__deliver_event util/session.c:134
-    #20 0x55c306a06aac in do_flush util/ordered-events.c:245
-    #21 0x55c306a07951 in __ordered_events__flush util/ordered-events.c:324
-    #22 0x55c306a07e62 in ordered_events__flush util/ordered-events.c:342
-    #23 0x55c3069d6863 in perf_event__process_finished_round util/session.c:786
-    #24 0x55c3069deb7e in perf_session__process_user_event util/session.c:1446
-    #25 0x55c3069e190e in perf_session__process_event util/session.c:1668
-    #26 0x55c3069e9198 in process_simple util/session.c:2259
-    #27 0x55c3069e8158 in reader__read_event util/session.c:2188
-
-SUMMARY: AddressSanitizer: heap-use-after-free util/map.h:54 in map__start
-Shadow bytes around the buggy address:
-  0x50200002b780: fa fa fd fa fa fa fd fd fa fa 00 06 fa fa 00 fa
-  0x50200002b800: fa fa 00 fa fa fa fd fa fa fa 00 fa fa fa 00 fa
-  0x50200002b880: fa fa 00 fa fa fa fd fa fa fa fd fa fa fa fd fa
-  0x50200002b900: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
-  0x50200002b980: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
-=>0x50200002ba00: fa fa fd fa fa fa[fd]fa fa fa fd fa fa fa fd fa
-  0x50200002ba80: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
-  0x50200002bb00: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
-  0x50200002bb80: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
-  0x50200002bc00: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
-  0x50200002bc80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07 
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-==12400==ABORTING
-Error:
-failed to process sample
-Generate JIT-ed DSOs using perf inject
-WARNING: The /tmp/__perf_test.perf.data.W1jHYt file's data size field is 0 which is unexpected.
-Was the 'perf record' command properly terminated?
-Add JIT-ed DSOs to the build-ID cache
-Couldn't add /tmp/jitted--*.so: No such file or directory
-Check the symbol containing the function/module name
-zero-sized data (/tmp/__perf_test.perf.data.W1jHYt.jit), nothing to do!
-Found 0 matching lines
-Remove JIT-ed DSOs from the build-ID cache
-Cleaning up files...
----- end(-1) ----
- 84: python profiling with jitdump                                   : FAILED!
-
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20260227/202602270932.50ed0a9f-lkp@intel.com
-
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> [1]: https://lore.kernel.org/linux-fsdevel/20260219-portrait-winkt-959070cee42f@brauner/
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> Jeff Layton (61):
+>       vfs: widen inode hash/lookup functions to u64
+>       vfs: change i_ino from unsigned long to u64
+>       trace: update VFS-layer trace events for u64 i_ino
+>       ext4: update for u64 i_ino
+>       jbd2: update format strings for u64 i_ino
+>       f2fs: update for u64 i_ino
+>       lockd: update format strings for u64 i_ino
+>       nfs: update for u64 i_ino
+>       nfs: remove nfs_fattr_to_ino_t() and nfs_fileid_to_ino_t()
+>       nfs: remove nfs_compat_user_ino64()
+>       nfs: remove enable_ino64 module parameter
+>       nfsd: update format strings for u64 i_ino
+>       smb: store full 64-bit uniqueid in i_ino
+>       smb: remove cifs_uniqueid_to_ino_t()
+>       locks: update /proc/locks format for u64 i_ino
+>       proc: update /proc/PID/maps for u64 i_ino
+>       nilfs2: update for u64 i_ino
+>       9p: update format strings for u64 i_ino
+>       affs: update format strings for u64 i_ino
+>       afs: update format strings for u64 i_ino
+>       autofs: update format strings for u64 i_ino
+>       befs: update format strings for u64 i_ino
+>       bfs: update format strings for u64 i_ino
+>       cachefiles: update format strings for u64 i_ino
+>       ceph: update format strings for u64 i_ino
+>       coda: update format strings for u64 i_ino
+>       cramfs: update format strings for u64 i_ino
+>       ecryptfs: update format strings for u64 i_ino
+>       efs: update format strings for u64 i_ino
+>       exportfs: update format strings for u64 i_ino
+>       ext2: update format strings for u64 i_ino
+>       freevxfs: update format strings for u64 i_ino
+>       hfs: update format strings for u64 i_ino
+>       hfsplus: update format strings for u64 i_ino
+>       hpfs: update format strings for u64 i_ino
+>       isofs: update format strings for u64 i_ino
+>       jffs2: update format strings for u64 i_ino
+>       jfs: update format strings for u64 i_ino
+>       minix: update format strings for u64 i_ino
+>       nsfs: update format strings for u64 i_ino
+>       ntfs3: update format strings for u64 i_ino
+>       ocfs2: update format strings for u64 i_ino
+>       orangefs: update format strings for u64 i_ino
+>       overlayfs: update format strings for u64 i_ino
+>       qnx4: update format strings for u64 i_ino
+>       qnx6: update format strings for u64 i_ino
+>       ubifs: update format strings for u64 i_ino
+>       udf: update format strings for u64 i_ino
+>       ufs: update format strings for u64 i_ino
+>       zonefs: update format strings for u64 i_ino
+>       security: update audit format strings for u64 i_ino
+>       drm/amdgpu: update for u64 i_ino
+>       fsnotify: update fdinfo format strings for u64 i_ino
+>       net: update socket dname format for u64 i_ino
+>       uprobes: update format strings for u64 i_ino
+>       dma-buf: update format string for u64 i_ino
+>       fscrypt: update format strings for u64 i_ino
+>       fsverity: update format string for u64 i_ino
+>       iomap: update format string for u64 i_ino
+>       net: update legacy protocol format strings for u64 i_ino
+>       vfs: update core format strings for u64 i_ino
+> 
+>  drivers/dma-buf/dma-buf.c                  |   2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_object.c |   4 +-
+>  fs/9p/vfs_addr.c                           |   4 +-
+>  fs/9p/vfs_inode.c                          |   6 +-
+>  fs/9p/vfs_inode_dotl.c                     |   6 +-
+>  fs/affs/amigaffs.c                         |   8 +-
+>  fs/affs/bitmap.c                           |   2 +-
+>  fs/affs/dir.c                              |   2 +-
+>  fs/affs/file.c                             |  20 +-
+>  fs/affs/inode.c                            |  12 +-
+>  fs/affs/namei.c                            |  14 +-
+>  fs/affs/symlink.c                          |   2 +-
+>  fs/afs/dir.c                               |  10 +-
+>  fs/afs/dir_search.c                        |   2 +-
+>  fs/afs/dynroot.c                           |   2 +-
+>  fs/afs/inode.c                             |   2 +-
+>  fs/autofs/inode.c                          |   2 +-
+>  fs/befs/linuxvfs.c                         |  28 +-
+>  fs/bfs/dir.c                               |   4 +-
+>  fs/cachefiles/io.c                         |   6 +-
+>  fs/cachefiles/namei.c                      |  12 +-
+>  fs/cachefiles/xattr.c                      |   2 +-
+>  fs/ceph/crypto.c                           |   4 +-
+>  fs/coda/dir.c                              |   2 +-
+>  fs/coda/inode.c                            |   2 +-
+>  fs/cramfs/inode.c                          |   2 +-
+>  fs/crypto/crypto.c                         |   2 +-
+>  fs/crypto/hooks.c                          |   2 +-
+>  fs/crypto/keysetup.c                       |   2 +-
+>  fs/dcache.c                                |   4 +-
+>  fs/ecryptfs/crypto.c                       |   6 +-
+>  fs/ecryptfs/file.c                         |   2 +-
+>  fs/efs/inode.c                             |   6 +-
+>  fs/eventpoll.c                             |   2 +-
+>  fs/exportfs/expfs.c                        |   4 +-
+>  fs/ext2/dir.c                              |  10 +-
+>  fs/ext2/ialloc.c                           |   9 +-
+>  fs/ext2/inode.c                            |   2 +-
+>  fs/ext2/xattr.c                            |  14 +-
+>  fs/ext4/dir.c                              |   2 +-
+>  fs/ext4/ext4.h                             |   4 +-
+>  fs/ext4/extents.c                          |   8 +-
+>  fs/ext4/extents_status.c                   |  28 +-
+>  fs/ext4/fast_commit.c                      |   8 +-
+>  fs/ext4/ialloc.c                           |  10 +-
+>  fs/ext4/indirect.c                         |   2 +-
+>  fs/ext4/inline.c                           |  14 +-
+>  fs/ext4/inode.c                            |  22 +-
+>  fs/ext4/ioctl.c                            |   4 +-
+>  fs/ext4/mballoc.c                          |   6 +-
+>  fs/ext4/migrate.c                          |   2 +-
+>  fs/ext4/move_extent.c                      |  20 +-
+>  fs/ext4/namei.c                            |  10 +-
+>  fs/ext4/orphan.c                           |  16 +-
+>  fs/ext4/page-io.c                          |  10 +-
+>  fs/ext4/super.c                            |  22 +-
+>  fs/ext4/xattr.c                            |  10 +-
+>  fs/f2fs/compress.c                         |   4 +-
+>  fs/f2fs/dir.c                              |   2 +-
+>  fs/f2fs/extent_cache.c                     |   8 +-
+>  fs/f2fs/f2fs.h                             |   6 +-
+>  fs/f2fs/file.c                             |  12 +-
+>  fs/f2fs/gc.c                               |   2 +-
+>  fs/f2fs/inline.c                           |   4 +-
+>  fs/f2fs/inode.c                            |  48 ++--
+>  fs/f2fs/namei.c                            |   8 +-
+>  fs/f2fs/node.c                             |  12 +-
+>  fs/f2fs/recovery.c                         |  10 +-
+>  fs/f2fs/xattr.c                            |  10 +-
+>  fs/freevxfs/vxfs_bmap.c                    |   4 +-
+>  fs/fserror.c                               |   2 +-
+>  fs/hfs/catalog.c                           |   2 +-
+>  fs/hfs/extent.c                            |   4 +-
+>  fs/hfs/inode.c                             |   4 +-
+>  fs/hfsplus/attributes.c                    |  10 +-
+>  fs/hfsplus/catalog.c                       |   2 +-
+>  fs/hfsplus/dir.c                           |   6 +-
+>  fs/hfsplus/extents.c                       |   6 +-
+>  fs/hfsplus/inode.c                         |   8 +-
+>  fs/hfsplus/super.c                         |   6 +-
+>  fs/hfsplus/xattr.c                         |  10 +-
+>  fs/hpfs/dir.c                              |   4 +-
+>  fs/hpfs/dnode.c                            |   4 +-
+>  fs/hpfs/ea.c                               |   4 +-
+>  fs/hpfs/inode.c                            |   4 +-
+>  fs/inode.c                                 |  46 ++--
+>  fs/iomap/ioend.c                           |   2 +-
+>  fs/isofs/compress.c                        |   2 +-
+>  fs/isofs/dir.c                             |   2 +-
+>  fs/isofs/inode.c                           |   6 +-
+>  fs/isofs/namei.c                           |   2 +-
+>  fs/jbd2/journal.c                          |   4 +-
+>  fs/jbd2/transaction.c                      |   2 +-
+>  fs/jffs2/dir.c                             |   4 +-
+>  fs/jffs2/file.c                            |   4 +-
+>  fs/jffs2/fs.c                              |  18 +-
+>  fs/jfs/inode.c                             |   2 +-
+>  fs/jfs/jfs_imap.c                          |   2 +-
+>  fs/jfs/jfs_metapage.c                      |   2 +-
+>  fs/lockd/svclock.c                         |   8 +-
+>  fs/lockd/svcsubs.c                         |   2 +-
+>  fs/locks.c                                 |   6 +-
+>  fs/minix/inode.c                           |  10 +-
+>  fs/nfs/dir.c                               |  22 +-
+>  fs/nfs/file.c                              |   8 +-
+>  fs/nfs/filelayout/filelayout.c             |   8 +-
+>  fs/nfs/flexfilelayout/flexfilelayout.c     |   8 +-
+>  fs/nfs/inode.c                             |  54 +---
+>  fs/nfs/nfs4proc.c                          |   4 +-
+>  fs/nfs/pnfs.c                              |  12 +-
+>  fs/nfsd/export.c                           |   2 +-
+>  fs/nfsd/nfs4state.c                        |   4 +-
+>  fs/nfsd/nfsfh.c                            |   4 +-
+>  fs/nfsd/vfs.c                              |   2 +-
+>  fs/nilfs2/alloc.c                          |  10 +-
+>  fs/nilfs2/bmap.c                           |   2 +-
+>  fs/nilfs2/btnode.c                         |   2 +-
+>  fs/nilfs2/btree.c                          |  12 +-
+>  fs/nilfs2/dir.c                            |  12 +-
+>  fs/nilfs2/direct.c                         |   4 +-
+>  fs/nilfs2/gcinode.c                        |   2 +-
+>  fs/nilfs2/inode.c                          |   8 +-
+>  fs/nilfs2/mdt.c                            |   2 +-
+>  fs/nilfs2/namei.c                          |   2 +-
+>  fs/nilfs2/segment.c                        |   2 +-
+>  fs/notify/fdinfo.c                         |   4 +-
+>  fs/nsfs.c                                  |   4 +-
+>  fs/ntfs3/super.c                           |   2 +-
+>  fs/ocfs2/alloc.c                           |   2 +-
+>  fs/ocfs2/aops.c                            |   4 +-
+>  fs/ocfs2/dir.c                             |   8 +-
+>  fs/ocfs2/dlmfs/dlmfs.c                     |  10 +-
+>  fs/ocfs2/extent_map.c                      |  12 +-
+>  fs/ocfs2/inode.c                           |   2 +-
+>  fs/ocfs2/quota_local.c                     |   2 +-
+>  fs/ocfs2/refcounttree.c                    |  10 +-
+>  fs/ocfs2/xattr.c                           |   4 +-
+>  fs/orangefs/inode.c                        |   2 +-
+>  fs/overlayfs/export.c                      |   2 +-
+>  fs/overlayfs/namei.c                       |   4 +-
+>  fs/overlayfs/util.c                        |   2 +-
+>  fs/pipe.c                                  |   2 +-
+>  fs/proc/fd.c                               |   2 +-
+>  fs/proc/task_mmu.c                         |   4 +-
+>  fs/qnx4/inode.c                            |   4 +-
+>  fs/qnx6/inode.c                            |   2 +-
+>  fs/smb/client/cifsfs.h                     |  17 --
+>  fs/smb/client/inode.c                      |   6 +-
+>  fs/smb/client/readdir.c                    |   2 +-
+>  fs/ubifs/debug.c                           |   8 +-
+>  fs/ubifs/dir.c                             |  28 +-
+>  fs/ubifs/file.c                            |  28 +-
+>  fs/ubifs/journal.c                         |   6 +-
+>  fs/ubifs/super.c                           |  16 +-
+>  fs/ubifs/tnc.c                             |   4 +-
+>  fs/ubifs/xattr.c                           |  14 +-
+>  fs/udf/directory.c                         |  18 +-
+>  fs/udf/file.c                              |   2 +-
+>  fs/udf/inode.c                             |  12 +-
+>  fs/udf/namei.c                             |   8 +-
+>  fs/udf/super.c                             |   2 +-
+>  fs/ufs/balloc.c                            |   6 +-
+>  fs/ufs/dir.c                               |  10 +-
+>  fs/ufs/ialloc.c                            |   6 +-
+>  fs/ufs/inode.c                             |  18 +-
+>  fs/ufs/ufs_fs.h                            |   6 +-
+>  fs/ufs/util.c                              |   2 +-
+>  fs/verity/init.c                           |   2 +-
+>  fs/zonefs/super.c                          |   8 +-
+>  include/linux/fs.h                         |  28 +-
+>  include/linux/nfs_fs.h                     |  10 -
+>  include/trace/events/cachefiles.h          |  18 +-
+>  include/trace/events/ext4.h                | 427 +++++++++++++++--------------
+>  include/trace/events/f2fs.h                | 172 ++++++------
+>  include/trace/events/filelock.h            |  16 +-
+>  include/trace/events/filemap.h             |  20 +-
+>  include/trace/events/fs_dax.h              |  20 +-
+>  include/trace/events/fsverity.h            |  30 +-
+>  include/trace/events/hugetlbfs.h           |  28 +-
+>  include/trace/events/netfs.h               |   4 +-
+>  include/trace/events/nilfs2.h              |  12 +-
+>  include/trace/events/readahead.h           |  12 +-
+>  include/trace/events/timestamp.h           |  12 +-
+>  include/trace/events/writeback.h           | 148 +++++-----
+>  kernel/events/uprobes.c                    |   4 +-
+>  net/netrom/af_netrom.c                     |   4 +-
+>  net/rose/af_rose.c                         |   4 +-
+>  net/socket.c                               |   2 +-
+>  net/x25/x25_proc.c                         |   4 +-
+>  security/apparmor/apparmorfs.c             |   4 +-
+>  security/integrity/integrity_audit.c       |   2 +-
+>  security/ipe/audit.c                       |   2 +-
+>  security/lsm_audit.c                       |  10 +-
+>  security/selinux/hooks.c                   |   4 +-
+>  security/smack/smack_lsm.c                 |  12 +-
+>  195 files changed, 1101 insertions(+), 1166 deletions(-)
+> ---
+> base-commit: 2bf35e96cf6c6c3a290b69b777d34be15888e364
+> change-id: 20260224-iino-u64-b44a3a72543c
+> 
+> Best regards,
 
