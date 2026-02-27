@@ -1,110 +1,181 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A40B21D5151;
-	Fri, 27 Feb 2026 06:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E2E229B18;
+	Fri, 27 Feb 2026 07:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772173675; cv=none; b=MjLo7DcXjEvr8kTJdkOZmitaofRbBoVGgeLeUs5vmJC6nRuJHojfaNfbPnnmZ0GNi9ol4cC2crpjVWN0/0Z0+/7ylaySShU2r2t824pEjy0XvfzKoy8VCB+YOc6Nr/TTk7u5dnHyDyRcEK1mIZgZWWBhqKiYMFWscZiNglPsDZg=
+	t=1772177539; cv=none; b=c9+2OkscDglDC6I1WznOPpmo/p/O+MK2cssvrH/LOZvbh+ggDT0Ll17ciptIImShaXvu+1vtw5FmZZIb7bBb4H7fkfolKWtdW0c8Ujd7y4qWVpDdxILh7IDhP2zDSN8qH4eVT1KjYAOENsejnrhmgvxpuxS4CA4DbDcA9aXLkws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772173675; c=relaxed/simple;
-	bh=IACqxOFO3lhuib14dLvwo7JFKKgTQadtKl4NuJjBe4I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OI+9g54jpkYPL9emmTP7EtaNxkvqyWicB8vWRTpkT1wCm5+1J+S003vmaupf0mjvFihfgedg380QnsWujXysuvuWF5Ohxpj5XOwxBSlyaJ/pZBD4yz2f0DNlbkAs+6a2BiWBgVRQp1k6bEgnJHJRKYXX2Bx3aAPB30gfrBOsmM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A57B214BF;
-	Thu, 26 Feb 2026 22:27:46 -0800 (PST)
-Received: from ergosum.cambridge.arm.com (ergosum.cambridge.arm.com [10.1.196.45])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 39CA23F7BD;
-	Thu, 26 Feb 2026 22:27:51 -0800 (PST)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-mm@kvack.org
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf/events: Replace READ_ONCE() with standard pgtable accessors
-Date: Fri, 27 Feb 2026 06:27:44 +0000
-Message-Id: <20260227062744.2215491-1-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1772177539; c=relaxed/simple;
+	bh=kh/mTB9tq5QP25ttsXgdxceuKo/iLS8e1SOkP72u6Ek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D4JK8+vzSQejtsiDx8tqs6I+iozSI3Sl7mTUAt5I6ZrlADI96aMZ4vmB7vm8qIuXohZHqM5pQh7xevV6VxMcI/I1NyyjeFdJM4iTtS9wfzTKGDqGC+lEqiGJiVxok0V0sjH9ydER9dP8MYnwubROfP8+hZA+cChmLt1micbhb7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XjoCo/hX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XjoCo/hX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 961BFC116C6;
+	Fri, 27 Feb 2026 07:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772177539;
+	bh=kh/mTB9tq5QP25ttsXgdxceuKo/iLS8e1SOkP72u6Ek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XjoCo/hX/eOIISKvKr13/j0jFspSjcGiQlp4VQP8vG9NAanzBiCs0IhLMNetuCAI+
+	 k6dX1u0NgaB9VUSdubW5ldY/xT1cgJUqeCXzNalOhb/w1ou5orMPj5V6AWoV0tjly5
+	 Mgaz20gMbYu0J9RO/YaCO5PpPP1mifHuMAO9w8I3g8DHIKSRR+H75vrHHMm0HCX/+2
+	 iOr66/Dwq7ORZrnc8xgtFjG39FsbZjTZhacD/5laH5S5i0teRWNr8WaMZkqYHky6qK
+	 6Hycve4Dfn1vy25WmE6J3UmuBHnFGYxaZ4bv9Jz6lmoIICu0dfyWMHMfRwi3WmWEeD
+	 FSspim/43L8cg==
+Date: Thu, 26 Feb 2026 23:32:17 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf kvm stat: Fix build error
+Message-ID: <aaFIgR29wGYvHnVp@google.com>
+References: <20260206-perf_fix_kvm_stat_error-v1-1-ad40115876be@arm.com>
+ <aZ-oYb-FDLVT5MGq@google.com>
+ <CAP-5=fVCdQZ584s_24wQc_+03xL2Npj2qDbqGSjE=Ms1-y8raQ@mail.gmail.com>
+ <20260226095255.GF4184494@e132581.arm.com>
+ <CAP-5=fUAK=vzeZWDXuun+wptSeBwUMhZuVqdh4zwLoXoV32VPA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUAK=vzeZWDXuun+wptSeBwUMhZuVqdh4zwLoXoV32VPA@mail.gmail.com>
 
-Replace raw READ_ONCE() dereferences of pgtable entries with corresponding
-standard page table accessors pxdp_get() in perf_get_pgtable_size(). These
-accessors default to READ_ONCE() on platforms that don't override them. So
-there is no functional change on such platforms.
+On Thu, Feb 26, 2026 at 08:44:51AM -0800, Ian Rogers wrote:
+> On Thu, Feb 26, 2026 at 1:52 AM Leo Yan <leo.yan@arm.com> wrote:
+> >
+> > On Wed, Feb 25, 2026 at 10:36:26PM -0800, Ian Rogers wrote:
+> >
+> > [...]
+> >
+> > > Hmm.. it looks like something has gone screwy with the include paths.
+> > > The header you've gotten is:
+> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/include/uapi/asm/svm.h#n137
+> > > rather than:
+> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/arch/x86/include/uapi/asm/svm.h#n137
+> > > where the value differs between -1ull and -1.
+> > >
+> > > In Leo's change he has the include path as:
+> > >   #include "../../arch/x86/include/uapi/asm/svm.h"
+> > >
+> > > but I think that is off by one and should be:
+> > >   #include "../../../arch/x86/include/uapi/asm/svm.h"
+> >
+> > Sorry I did not check the header path carefully.  A bit thoughts:
+> >
+> > The perf build will not include headers in relative paths as we
+> > expected.
+> >
+> > It tries to find headers with appending search paths.  As Ian said,
+> > I saw .kvm-stat-x86.o.cmd that includes kernel headers:
+> >
+> >   /home/niayan01/Work/linux/tools/include/../../arch/x86/include/uapi/asm/svm.h \
+> >   /home/niayan01/Work/linux/tools/include/../../arch/x86/include/uapi/asm/vmx.h \
+> >   /home/niayan01/Work/linux/tools/include/../../arch/x86/include/uapi/asm/kvm.h \
+> >
+> > I'd suggest a fix in Makefile as below.  The idea is to give priority to
+> > the lower level folders under perf, so that headers in the deeper perf
+> > directories are searched first.  This avoids searching any kernel headers.
 
-However arm64 platform is being extended to support 128 bit page tables via
-a new architecture feature i.e FEAT_D128 in which case READ_ONCE() will not
-provide required single copy atomic access for 128 bit page table entries.
-Although pxdp_get() accessors can later be overridden on arm64 platform to
-extend required single copy atomicity support on 128 bit entries.
+It fixes the problem, thanks!
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-This patch applies both on v7.0-rc1 and mm-unstable.
+Tested-by: Namhyung Kim <namhyung@kernel.org>
 
-Part of the D128 series but independent. Hence could be considered on its own.
+More comments below.
 
-https://lore.kernel.org/all/20260224051153.3150613-5-anshuman.khandual@arm.com/
+> 
+> I'm not opposed to the change but I still think we should make the
+> relative include be to the correct files. Some other thoughts below.
+> 
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index a8dc72cfe48e..47359f672b6a 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -388,8 +388,10 @@ ifeq ($(DEBUG),0)
+> >    endif
+> >  endif
+> >
+> > -INC_FLAGS += -I$(src-perf)/util/include
+> 
+> Not clear to me why we need a util/include on top of everything else.
+> It seems somewhat random what is in util/include rather than just in
+> util.
 
-Collected Peter's tag from an off list conversation.
+It seems it tries to override some kernel headers but I'm curious we can
+move the files to the tools/include and get rid of the directory.
 
- kernel/events/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> >  INC_FLAGS += -I$(src-perf)/arch/$(SRCARCH)/include
+> 
+> Hopefully with the removal of the arch directory (and fixing of
+> cross-platform profiling) in slow chunks by changes like:
+> https://lore.kernel.org/lkml/20260224142938.26088-1-irogers@google.com/
+> we can get rid of this one.
+> 
+> > +INC_FLAGS += -I$(src-perf)/util/include
+> > +INC_FLAGS += -I$(src-perf)/util
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index ac70d68217b6..4ee151cd2c6d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8422,7 +8422,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
- 	pte_t *ptep, pte;
- 
- 	pgdp = pgd_offset(mm, addr);
--	pgd = READ_ONCE(*pgdp);
-+	pgd = pgdp_get(pgdp);
- 	if (pgd_none(pgd))
- 		return 0;
- 
-@@ -8430,7 +8430,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
- 		return pgd_leaf_size(pgd);
- 
- 	p4dp = p4d_offset_lockless(pgdp, pgd, addr);
--	p4d = READ_ONCE(*p4dp);
-+	p4d = p4dp_get(p4dp);
- 	if (!p4d_present(p4d))
- 		return 0;
- 
-@@ -8438,7 +8438,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
- 		return p4d_leaf_size(p4d);
- 
- 	pudp = pud_offset_lockless(p4dp, p4d, addr);
--	pud = READ_ONCE(*pudp);
-+	pud = pudp_get(pudp);
- 	if (!pud_present(pud))
- 		return 0;
- 
--- 
-2.30.2
+I also hope to remove $(src-perf)/util too and use path relative to
+$(src-perf) always for perf-specific headers.  But this is a separate
+topic.
 
+
+> > +INC_FLAGS += -I$(src-perf)
+> 
+> This:
+> 
+> >  INC_FLAGS += -I$(srctree)/tools/include/
+> >  INC_FLAGS += -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi
+> >  INC_FLAGS += -I$(srctree)/tools/include/uapi
+> 
+> to here means that we prefer linux headers over uapi headers, which I
+> think is the opposite of what a user-land process would expect. I
+> think we should move these headers into two libraries, build them with
+> an `install_headers` rule, and make the include path pick up the
+> headers from where they are installed. As the linux and uapi headers
+> are licensed differently, this would clarify the dependencies and
+> licensing implications.
+
+Sounds good.
+
+Thanks,
+Namhyung
+
+> 
+> There's another can of worms regarding whether libperf is something
+> useful, outside of declarations in event.h.
+> 
+> Thanks,
+> Ian
+> 
+> > @@ -403,9 +405,6 @@ INC_FLAGS += -I$(obj-perf)/util
+> >  INC_FLAGS += -I$(obj-perf)
+> >  endif
+> >
+> > -INC_FLAGS += -I$(src-perf)/util
+> > -INC_FLAGS += -I$(src-perf)
+> > -
+> >  CORE_CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_
+> >
+> > As a result, I can get the search paths in .kvm-stat-x86.o.cmd:
+> >
+> >   /home/niayan01/Work/linux/tools/perf/util/../../arch/x86/include/uapi/asm/svm.h \
+> >   /home/niayan01/Work/linux/tools/perf/util/../../arch/x86/include/uapi/asm/vmx.h \
+> >   /home/niayan01/Work/linux/tools/perf/util/../../arch/x86/include/uapi/asm/kvm.h \
+> >
+> > Please let me know if this makes sense.
+> >
+> > Thanks,
+> > Leo
