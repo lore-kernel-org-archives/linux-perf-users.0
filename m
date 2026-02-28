@@ -1,54 +1,54 @@
 Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1994347BA7
-	for <linux-perf-users@vger.kernel.org>; Sat, 28 Feb 2026 07:00:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8AB346E67
+	for <linux-perf-users@vger.kernel.org>; Sat, 28 Feb 2026 07:00:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772262012; cv=none; b=khVQV9DLI1Ir6IMzorUuYZzDHN5X4GHL8IGfZbbx+thINikw9dH+/KnsfffGiCf42pR/hrf7FPVdUhvzbs35lnvTrXuRaE4HNNuRyW0CnNNUmMXKhsZsgIfKki5xwErzTQqwSdptkWqwZ//RvPVpg0juPgSzXSXqWvjYqNyzroU=
+	t=1772262014; cv=none; b=bxnHA3+x0LLKwa/f2RY3Ya14uSc65Lwz/SVcpuYLrk+byPZ7TuWPJplcbity/Tg1KxMURkIDbuXsA6c4TVuAvza1V83lawFWfJsQ7gUW3Tcc7+pYx9x9EKX0q4ZvOKC59wTNlNWN8DNwTG7te6F2lGSJJ1Ct49+R8TfWtAjsFfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772262012; c=relaxed/simple;
-	bh=eU/gTxR9aSiFByEc70zxEk30SpfND7ax0/+8yquZ05U=;
+	s=arc-20240116; t=1772262014; c=relaxed/simple;
+	bh=7sIjHudW7FWHJUUA2b7c4SCeJtZgcleFZwQLO504uPM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=aX5pAgW3onlcqtfofvo4w4XyghcGFp9AJy+eABz4G2M3vkw7sE4HeS2vKB4f89jth+iG/WpijFOhEIqEOXXnxOeYkZfB1pxYHeFiRcHeAqw+HbqXFCHtDJZtIBw5czDbhG60gmkVQQG9K+FLl3TtWx/+8omZ9cexuDJ6iqcxQQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hygOgsNh; arc=none smtp.client-ip=74.125.82.202
+	 To:Content-Type; b=p62m6vlyXfMXnUzO0ezTLTGoxMW/gxqyHtYtqp/o8Ka+WEJv9QcnTg9q7uO3PBJ7mwtR7OLskKW1ius8RuBbSb2WJSNJY/9fMtKsZCKpZ5AvWvvZnWjog1iFk+ohpTE9ChqOTJ3hid6eFzQwv4rJ7eUlgpabeKdWV3NfhChEcMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E1FhEh73; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hygOgsNh"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2bddd304622so2146092eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2026 23:00:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E1FhEh73"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ba8013a9e3so2700916eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2026 23:00:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772262011; x=1772866811; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1772262013; x=1772866813; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=TGBdrZFEQdY6Z2dr6uO7x199Kzk4HiW1yI8iaR5EMOw=;
-        b=hygOgsNhY7F0c0HoB70vB+yeBLROR2ClJAh8/BSwoWEwJc+9liTweCtve7bvJd3jVw
-         VGc7pHVlqYNf6jy7svC3YwL85FYYzdV7KX4KtzxahUljuEQVhM4uJbVgPkb/q5vFeLGl
-         XF+55+/U4xWZOUJ7spyvncKHnDtxq9DsH3A7G0U6Es/Q52wUQWDdaQTWeC3KUyFLDeze
-         8366X2UwhDD6dtNWwLP9TeJVWlrdQAHezxmzrCD4SpbbZdubyRcoRI5Kw5vu3dkuzsZH
-         o4tk4E5aWpoKE459ctoJlJb35S9BFTUkJBJ4EzXd3KP8z4LwT8THGAitiROVAo6+LJ88
-         cfwA==
+        bh=Z/wg1/ueOUJ8UkhVCAoXWbqideDmQLzWl9fomGjlxiM=;
+        b=E1FhEh73jKnvXiQCH6d4Z3nS3wvJ6mFtONt9VS1FF1LVuKOoeFyCmOXe+WiiteW9VN
+         pNdBCOtf9y2AhpGMgViSryH3D/ATt2c8qhtPeU7pvE1xL70Juq4bK7oaSQGmAt9I8gWI
+         x4qrb9HiOQ+cOYfpKSzcdfR/TmHRvIKj95kaFPiWXABMJeRMIk/biLFZTPn2qDQvdjeK
+         2oWi60r+9YBcxBJ4oW+nTKqHojtwXfAdFVapJZCG+HWC2mPqSqeppyy4TZ8L6RCR4TOY
+         T5h6U8HtlQVU9R0Be/yLqcyfhFXinhK049iRKZjIvExPUsRP66qfuSq4acCpDklHhGAT
+         goMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772262011; x=1772866811;
+        d=1e100.net; s=20230601; t=1772262013; x=1772866813;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TGBdrZFEQdY6Z2dr6uO7x199Kzk4HiW1yI8iaR5EMOw=;
-        b=NlUjUDTnxrXsbzFV7xgr5ZMKdSGe9Wkr1sqME5LMmtTFXPAhbjxCwepyb5BnM1HEtF
-         Mw3YkyKLbNO5y1YwOLifCp0ulT8hXpCR0PXA/ir4zooOWnF395A2Jo/hu2uLkg2r3loU
-         QNg5ZbVic6SbkraKAclswoY/RKgW6ebFCI00s9NRd6Yf4+GuOINfiE6stoU4Q2wVfHy9
-         bVTkRwxHweBPfp57YSSeC9AaFyigkn1bs1g07QheVviwMgeDTeH+HoHuUjrahsSzZ9Tr
-         qVypphU28R3TVE1HRgvDROYlcCmbSyc+tIyBb4P2lcpl3vkEbIf1nhUsfCvec3GRC9oy
-         CBhw==
-X-Forwarded-Encrypted: i=1; AJvYcCWOWBj+BvPFRvTcYBmRBk0Ou81QLDmfdQMRPjxXkDQGC+SzZZXtCATyKAiq+hh5a0jd5dJdC14m95F02zumCq0R@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBQyRa/VoQSY/WhiD/VrPdDLRO3RbFwaAUzriQgEiz5KQVBbNV
-	rFKtqzP6t3z6WJG2w9birx8HYRvg23UGE6yECOtQ/73x2oKpkmCPcA5oMYpBdEa4gVCqqdUQ9X+
-	N04IGviIAyw==
-X-Received: from dybox14.prod.google.com ([2002:a05:7300:ec8e:b0:2ba:acf0:ab76])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:169a:b0:2ba:14a6:c96f
- with SMTP id 5a478bee46e88-2bde1e6622emr1984573eec.36.1772262010453; Fri, 27
- Feb 2026 23:00:10 -0800 (PST)
-Date: Fri, 27 Feb 2026 22:59:48 -0800
+        bh=Z/wg1/ueOUJ8UkhVCAoXWbqideDmQLzWl9fomGjlxiM=;
+        b=QNaPMiVYBUFWe/1dojuNIF1hQApmyuUI19Dl1GQPaUjWr7HJreemRKr3yvdRw7ahqt
+         sRZ7PsKTUNZMcaH+tj8NBr/v52tMMj6uV5vl7xF+KaylvTn3PI4d5Nf8ztukuUpGbIAE
+         MQ/dO+f/L9AZk3bqyj1NKwJKmkGqNJezeDhiXfVxBYHfs3EFQBzEEu08KyE+VkE09Z1F
+         pi+PX6yxW+ssK7xpBDGQc4PbNsyjAHGY5LAhg/5ITkV1VjSmolltGq73/tmCqxVMuRm6
+         8xveyDMdrOuZFBeeKnCi4vIE06QDBs9KMgXHdHqvFUE+T7h1snp6nDnlMFz/7S2pIHup
+         WpwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0eYyzgeQ36QEFDWsKd/GE/UHJLD5Q9wGC6yCI/EV/yfkLCuVIaSGgwJ8mrBvIrVO4GXGGE7dQkcVgHsz7Y358@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvuLKKgJifvTx3ERgMHtjQQ1cM2pmBZY9d//kYLtgJI26gJgP3
+	4scXXj7/Kk7jFZZZdLSQejIq+aYdokOiH7ZSmEA9RfuGIzr6xuyX2hZPv1CSmNra8UC0sHVOJH+
+	1/meuZ8B/Ag==
+X-Received: from dyblc5.prod.google.com ([2002:a05:7301:1305:b0:2ba:ad3a:9ab0])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:a146:b0:2b7:f0a0:c195
+ with SMTP id 5a478bee46e88-2bde1f9c667mr2195942eec.31.1772262012517; Fri, 27
+ Feb 2026 23:00:12 -0800 (PST)
+Date: Fri, 27 Feb 2026 22:59:49 -0800
 In-Reply-To: <20260228065953.3226283-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260228065953.3226283-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <20260228065953.3226283-3-irogers@google.com>
-Subject: [PATCH v2 2/7] perf header: Add utility to convert feature number to
- a string
+Message-ID: <20260228065953.3226283-4-irogers@google.com>
+Subject: [PATCH v2 3/7] perf session: Extra logging for failed to process events
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,47 +72,84 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-For logging and debug messages it can be convenient to convert a
-feature number to a name. Add header_feat__name for this and reuse the
-data already within the feat_ops struct.
+Print log information in ordered event processing so that the cause of
+finished round failing is clearer. Print the event name along with its
+number when an event isn't processed. Add extra detail about where the
+failure happened.
+
+The following log lines come from running `perf data convert`. Before:
+  0xa250 [0x10]: failed to process type: 80
+
+After:
+  0xa250 [0x10]: piped event processing failed for event of type: FEATURE (80)
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/header.c | 7 +++++++
- tools/perf/util/header.h | 2 ++
- 2 files changed, 9 insertions(+)
+ tools/perf/util/session.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 9142a8ba4019..fe5d21dde04f 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3770,6 +3770,13 @@ struct header_print_data {
- 	bool full; /* extended list of headers */
- };
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 4b465abfa36c..492515789d3d 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -131,10 +131,17 @@ static int ordered_events__deliver_event(struct ordered_events *oe,
+ {
+ 	struct perf_session *session = container_of(oe, struct perf_session,
+ 						    ordered_events);
++	int ret =  perf_session__deliver_event(session, event->event,
++					       session->tool, event->file_offset,
++					       event->file_path);
  
-+const char *header_feat__name(unsigned int id)
-+{
-+	if (id < HEADER_LAST_FEATURE)
-+		return feat_ops[id].name;
-+	return "INVALID";
-+}
-+
- static int perf_file_section__fprintf_info(struct perf_file_section *section,
- 					   struct perf_header *ph,
- 					   int feat, int fd, void *data)
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index cc40ac796f52..ca22030a1434 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -132,6 +132,8 @@ struct perf_header_feature_ops {
+-	return perf_session__deliver_event(session, event->event,
+-					   session->tool, event->file_offset,
+-					   event->file_path);
++	if (ret) {
++		pr_err("%#" PRIx64 " [%#x]: ordered event processing failed (%d) for event of type: %s (%d)\n",
++			event->file_offset, event->event->header.size, ret,
++			perf_event__name(event->event->header.type),
++			event->event->header.type);
++	}
++	return ret;
+ }
  
- extern const char perf_version_string[];
+ struct perf_session *__perf_session__new(struct perf_data *data,
+@@ -2110,8 +2117,10 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
+ 	}
  
-+const char *header_feat__name(unsigned int id);
-+
- int perf_session__read_header(struct perf_session *session);
- int perf_session__write_header(struct perf_session *session,
- 			       struct evlist *evlist,
+ 	if ((skip = perf_session__process_event(session, event, head, "pipe")) < 0) {
+-		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+-		       head, event->header.size, event->header.type);
++		pr_err("%#" PRIx64 " [%#x]: piped event processing failed for event of type: %s (%d)\n",
++			head, event->header.size,
++			perf_event__name(event->header.type),
++			event->header.type);
+ 		err = -EINVAL;
+ 		goto out_err;
+ 	}
+@@ -2225,8 +2234,10 @@ static int __perf_session__process_decomp_events(struct perf_session *session)
+ 		if (size < sizeof(struct perf_event_header) ||
+ 		    (skip = perf_session__process_event(session, event, decomp->file_pos,
+ 							decomp->file_path)) < 0) {
+-			pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+-				decomp->file_pos + decomp->head, event->header.size, event->header.type);
++			pr_err("%#" PRIx64 " [%#x]: decompress event processing failed for event of type: %s (%d)\n",
++				decomp->file_pos + decomp->head, event->header.size,
++				perf_event__name(event->header.type),
++				event->header.type);
+ 			return -EINVAL;
+ 		}
+ 
+@@ -2382,8 +2393,9 @@ reader__read_event(struct reader *rd, struct perf_session *session,
+ 	if (size < sizeof(struct perf_event_header) ||
+ 	    (skip = rd->process(session, event, rd->file_pos, rd->path)) < 0) {
+ 		errno = -skip;
+-		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%m]\n",
++		pr_err("%#" PRIx64 " [%#x]: processing failed for event of type: %s (%d) [%m]\n",
+ 		       rd->file_offset + rd->head, event->header.size,
++		       perf_event__name(event->header.type),
+ 		       event->header.type);
+ 		err = skip;
+ 		goto out;
 -- 
 2.53.0.473.g4a7958ca14-goog
 
