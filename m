@@ -1,36 +1,36 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC75429825;
-	Sat, 28 Feb 2026 14:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCABB43D4F1;
+	Sat, 28 Feb 2026 14:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772290032; cv=none; b=nMvdvIbEfqzLLf3+NzIbt0CfFSGVE3SOYiI9VcWSlVD4AmfeC413+NZkoi3aMnB9h0VayuQS4IIb7kjzZvgU/1Ef1u8yjrIA2iodfjzwTaWOZONQTQxZ8AJeZId1Z2frbZm2Iftg7tcMx6pS5YFRVV74vRajZVrDSZAajpmnJsE=
+	t=1772290034; cv=none; b=t6ijC2WMQebMBt4Q5zMtBRhK2l654VYXN3i5NaESl8Y5KoBixNzh2IYMbRx7G1q2Z//s4oPQNhhZiFmsAsVgU8c36ewEpXT0J4I/8MTAvBgC8qZ9GdzzimLoAUGgywWYkV4ZwBlrQjkLI4+DQGCi+7zmEnJbe8sbFh4laNqWRRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772290032; c=relaxed/simple;
-	bh=GGZI38/TL2DKZssx9oEiE7bFkv/gUwD+7OAwHv/qHr4=;
+	s=arc-20240116; t=1772290034; c=relaxed/simple;
+	bh=BjN/cx+kqElxA6omTzsyPmotz9uuclCSEdzjCPYSUdg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GbkU0PVhNxXryo5vPBb6YoBykT3RRuVItCUXCvGFif3d58+YsT3wYs0G1H44nlEDXjKoOFdy4FB979CjM1Ket8ywWYl48FRRnT7pfsZAH6tTUSPh1eSyT0aMm3xD/RhKvda7g1wguE7p21SvmGXp+7qFIXyjH2kCRonBqoED7o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=Z0LAxNWw; arc=none smtp.client-ip=54.254.200.92
+	 MIME-Version; b=FWvAfuSM3njzj/dGJQBSfkJ2HpQIG2BVz+UGTa0pHqOxrTcbSEVXXVVukc2M5UuPwsL52g6XwF1D7E+JdSl/i1z5CLHq+MjMJBXiEixLvoqjwPAXIdMR/ZgPmbNmuvCHsbLNhy7vOmn1/6oC6IvCgScREVKE7AIwXDSkGZa8GvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=fKjI4ptb; arc=none smtp.client-ip=52.59.177.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="Z0LAxNWw"
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="fKjI4ptb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1772289897;
-	bh=x+69HgmJtGInfh6Jk10mSryW8pzN/q5dwWeyhKTKJ1o=;
+	s=mxsw2412; t=1772289940;
+	bh=XGJl3Ebpwjc8XqP0Erp8n5QI4s+vHuY4PwAQnqw3qYc=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=Z0LAxNWwlRC48jAXZN+BmElY9q+MuNEpg3INtEYsk5A0UJFviwHypE/9B6b9i80PC
-	 3XOFikBnIYaQZySd4pizn02KE0IRZqvyyqFg/S+lKhg1w/QA4p8S5LromFCnVw3qEq
-	 LF6bgj2FkY/f0h88DoyFkVYgDmEb6XHsBcVXp4gM=
-X-QQ-mid: zesmtpgz5t1772289896t989197b7
-X-QQ-Originating-IP: 8IVMek64InocOnU+Iu9yuEWvOFpdbTi9/W00pIgtkKk=
+	b=fKjI4ptbqtzYkOyJk63gqDvBMOKrlerjFF/WAvDfGrBv/O5bepM/9mSLaDG66DP3x
+	 gLHzrKhkBSbvc6AEHOz80IyQow9DCEz3LK/oy+BQEZb3Z0pKgwkQyNij4ZMGWohhxG
+	 cI/rvTscCI2ti4HxuCfnpRVsreipcQ7vBDkHrJKE=
+X-QQ-mid: esmtpgz10t1772289938t9eeb1592
+X-QQ-Originating-IP: BFePjrheh1QVANmHt8QhCMjcQXaVFA659BV4XTzO8KE=
 Received: from SurfaceBook2-B.localdomain ( [183.193.112.19])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sat, 28 Feb 2026 22:44:51 +0800 (CST)
+	id ; Sat, 28 Feb 2026 22:45:34 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 4239884396105137772
+X-BIZMAIL-ID: 5797566648988719530
 EX-QQ-RecipientCnt: 33
 From: Lv Zheng <lv.zheng@linux.spacemit.com>
 To: Tomasz Jeznach <tjeznach@rivosinc.com>,
@@ -66,9 +66,9 @@ Cc: Jingyu Li <joey.li@spacemit.com>,
 	spacemit@lists.linux.dev,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/8] dt-bindings: iommu: Add spacemit/t100 features
-Date: Sat, 28 Feb 2026 22:44:49 +0800
-Message-ID: <D8CE6E5B1001D797+a6f36da0272ac18fff2a992976b1defc3bb01af6.1772289741.git.lv.zheng@linux.spacemit.com>
+Subject: [PATCH v5 8/8] perf vendor events riscv: Add SpacemiT T100 HPM event aliases
+Date: Sat, 28 Feb 2026 22:45:32 +0800
+Message-ID: <893875E9335710EF+ccc7125fae0d5d494464c3635004aede679bc4ef.1772289741.git.lv.zheng@linux.spacemit.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1772289741.git.lv.zheng@linux.spacemit.com>
 References: <cover.1772289741.git.lv.zheng@linux.spacemit.com>
@@ -80,129 +80,267 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
-X-QQ-XMAILINFO: MSZecc01IPj5+ai+1g2rOwY/XJcOEIWsPPLkF5gCk6BUfgvbVJQnN56s
-	q8j0vjfCxqxiyT0aWkJjgiajEd/nmxiDjNM/hT3h8dTENOUU3qu0bMx/QSLGWrzK2oaNp6+
-	8vmYG5keQYdtfHuLWanXkjgw35oFZnXVVNE7wCMXkGQ+VfatBe9AYqNkOuRA8B0WDPMXiE4
-	v96TDuutuTm+0MyNw41IqdASWlv6pV3TS9vt4uXsA04pTxIwH/V8er/QVKWN3eoOu88E5Ia
-	3bqsmBsijtVzN7c4ujhat/U+ceTarKPiZSR0aLlbSixPFr8KGzYtIMnLb/JnljUArb7mnTh
-	9lCDQkNNhTOR6PCZchP+7g/mP1PsiYgMsDFmmz15Re9laNf3lm6vws1jXA9AL6y/PdAKuvY
-	At59MakAKaX769XCvez5BQZfa1pkXLT1NxiPlBtlzkw7EkRBD312x+dZwqC3+jS/iN3dXBh
-	VkhE43/3dstpizFdeBqP/zQyzcEdFgDexA7ps9uaHZ0/n1c+lhKt0M0YV0c18VSuMLEpUci
-	s2OkTfJ0FEVA2Wjie7roY+8fNt0Rj7IIC6fTO+Jp4c4+iEzchbZM5/lKDMJzxx70uxmzKWv
-	2Mq9E+JnL4kKxpJXiFg5J+3UQ4V2nZ7dbQ17YeHfMjTlmilpJ5bMsfnf8tL4ciToU5c8HLP
-	V6ls3xCnWp8qTRgoBsltAysNXTRvN296IFNN8pz3r9gInIaFh32lQOVPpvhJCQ6N6gFN4vv
-	E3vnmtvm82PjAbI6exnDJowHqMnYBijL+3sg8QV3LPu98cevlZ3JmmH7tpnXvipdzeW1+RP
-	dxrblTyhOZoCCKCzEHAXyVGLn6cdf3zvIHzj/rv1XcRwJkoIZlVOD00qhKIcJWNNMhM5a2q
-	x11doY7wtPVxHSF2A/Whb7Z4zR4AS1GRrP41ZVxsGh7jZ2WG48DHFe/eqYp1fYUcalg1Pu3
-	44ihEd3TpuxguycaV6F3eGqYym/zk5EtXfWCtWUHE+MJVvknmfZboXvR2am2SFDIqPLTTOQ
-	ZGeLdRD5hpN14VyXcDw2GMAKMZN24H9cLa/dueDT/jWqXOO3aIbRQ1lko9h/foKNnGHr1e/
-	TxELYrzTNQ9
-X-QQ-XMRINFO: M/715EihBoGS47X28/vv4NpnfpeBLnr4Qg==
+Feedback-ID: esmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
+X-QQ-XMAILINFO: MUcSNKJIkQ7c5RrhWlfKmtjak3ryOn//OxV2SIED/Nb7n4pj37mp7tWH
+	oBaFwrFA1w3zjUl5vzF2Bt9tp49lL9QXDqz8xMIvpJyXSyxQcfyn6UO1gGeB3KjQsnQ5EEr
+	bibVar10Msg+bhaf4bSXAk3OHemTRNf/lHUICdUM6ChiURqfsHBqFvS8v2P62EimwvG5Qxn
+	RqeK+KbjBiUGfDT/tNPsH7VxWgTLsq+AW859K3j7dQfNP06ehbQjV/m0wZ2ZB5ex8lYrzJB
+	YJmLoRWpYsIph9YSYyYJgrpcYPXEmJ/JTJ6cL3mzdjPZhyPVouXVt2N7tf//0QZ5MBamC4Z
+	2u6Uk+sXHXZLFDmDc7zvS9XjMVr+rQyOv2Vuc234V0fKdxr+2sxLggUBB69xvIVOYzrwNvV
+	lCjJ/LbboeoXpxxeIj8hUaC1/n47/1S76dYjPW7KMDkGKxh2eBPBlYTElR3tlKy1Ze7chYh
+	krBqojzZk2Wi6McSxGOMnb0UJbizk9eIcDhJ0yQKhcdLgOixtJvzor+uiodZsXWmGOpLHNU
+	dMpeQBaIZqwincqOsfGwNzvGMI/8em8W/IC8c6Ga5jEu+vvWf+462U00TilgI2BvExul7kv
+	ONkfRNnued84jZGI0XQ3u9KMkffRf6mr2D6Tl0vVG81ptgn5+n0xVTlUkno/eg0qNRHCNlK
+	1jNrihpzHaCZnnmWzydwjIWyqSn4ytjPwilyQiunq3QIQQlD0jE+UEqdtajyQPbGLaWZtvd
+	8owlEpKjYvEy1us+kCpzrU25Vdiou9GQNvXqPr0MkrRvti4ZAVzMq/BgAZIlmlSkOEuaIun
+	lNtILH/qEkW9CZI1bIKQTtmvBRKv6CqV+SC1GGnvO6UgXDE5FJQ9ocrUtEwFsUBLrNCg3lb
+	AEtebUcOQo3c2Rn+GnQanC0aCq4/xgBC8tolBwN7Krt1ZER8lF+YE07QgsO2r1u82HqGA2L
+	YTLEZHPJ4evobncDvo69dFxSHD0m5NNkYR11PiPm4s4CRf/eFkYk3eVUwJfHWjCPLQwIj8T
+	NZoJfE2ljYmKQEGWSFxT0sSYt1T+BS6+vxjWRUUCuvWRqKl8V2wT7QNaAZLUQJ/uFXvwf0q
+	vogsOhkMXZmm4J+2u/Srak=
+X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
 X-QQ-RECHKSPAM: 0
 
-Adds device tree bindings for SpacemiT T100 specific features by
-introducing spacemit,t100 compatible. T100 contains distributed IOATCs,
-each of which exposes pmiv interrupt.
+Add JSON HPM event aliases for SpacemiT distributed IOMMU (T100) which is
+general and compatible for all SpacemiT RISC-V SoCs.
 
 Signed-off-by: Lv Zheng <lv.zheng@linux.spacemit.com>
 Signed-off-by: Jingyu Li <joey.li@spacemit.com>
 ---
- .../bindings/iommu/riscv,iommu.yaml           | 58 ++++++++++++++++++-
- 1 file changed, 56 insertions(+), 2 deletions(-)
+ MAINTAINERS                                   |   5 +
+ .../arch/riscv/spacemit/iommu/sys/ioatc.json  |  30 ++++
+ .../arch/riscv/spacemit/iommu/sys/ioats.json  | 163 ++++++++++++++++++
+ 3 files changed, 198 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioatc.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioats.json
 
-diff --git a/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
-index d4838c3b3741..6b775ebf7f42 100644
---- a/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
-@@ -30,8 +30,19 @@ properties:
-   # Since PCI provides built-in identification methods, compatible is not
-   # actually required. For non-PCIe hardware implementations 'riscv,iommu'
-   # should be specified along with 'reg' property providing MMIO location.
-+  # SpacemiT T100 (distributed IOMMU with split IOATCs placed in adjacent
-+  # to the DMA masters) can be seen in SpacemiT SoCs. It is integerated in
-+  # V100 (server SoC) with coherent page table walk supported and in K3
-+  # (client SoC) without coherent page table walk supported.
-   compatible:
-     oneOf:
-+      - description: SpacemiT distributed IOMMUs
-+        items:
-+          - enum:
-+              - spacemit,k3-t100
-+              - spacemit,v100-t100
-+          - const: spacemit,t100
-+          - const: riscv,iommu
-       - items:
-           - enum:
-               - qemu,riscv-iommu
-@@ -57,11 +68,21 @@ properties:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7c50701b6001..8b6458c1f63a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22459,12 +22459,17 @@ K:	riscv
  
-   interrupts:
-     minItems: 1
--    maxItems: 4
-+    maxItems: 68
-     description:
-       Wired interrupt vectors available for RISC-V IOMMU to notify the
-       RISC-V HARTS. The cause to interrupt vector is software defined
--      using IVEC IOMMU register.
-+      using ICVEC IOMMU register. For WSI only mode, the number of the
-+      interrupt vectors should be 1 while for MSI possible mode, the
-+      maximum of the interrupt vectors should be 4 with the cause indexed
-+      as "CIV=0, FIV=1, PIV=2, PMIV=3".
-+      SpacemiT distributed IOMMU includes additional interrupts for
-+      IOATCs. Each IOATC exposes PMIV wired vector as standalone
-+      interrupt and the maximum number of IOATCs can be up to 64. Thus for
-+      WSI only mode, the maximum number of the interrupt vectors should be
-+      65 while for MSI possible mode, the maximum number of the interrupt
-+      vectors should be 68 with the cause indexed as "IOATS CIV=0,
-+      IOATS FIV=1, IOATS PIV=2, IOATS PMIV=3, IOATC0..n PMIV=4..4+n".
+ RISC-V IOMMU
+ M:	Tomasz Jeznach <tjeznach@rivosinc.com>
++M:	Lv Zheng <lv.zheng@linux.spacemit.com>
++M:	Jingyu Li <joey.li@spacemit.com>
+ L:	iommu@lists.linux.dev
+ L:	linux-riscv@lists.infradead.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git
+ F:	Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+ F:	drivers/iommu/riscv/
++F:	drivers/perf/riscv_iommu_hpm.c
++F:	include/linux/riscv_iommu.h
++F:	tools/perf/pmu-events/arch/riscv/spacemit/iommu/
  
-   msi-parent: true
- 
-@@ -75,6 +96,18 @@ required:
- 
- additionalProperties: false
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          not:
-+            contains:
-+              const: spacemit,t100
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 4
-+
- examples:
-   - |+
-     /* Example 1 (IOMMU device with wired interrupts) */
-@@ -145,3 +178,24 @@ examples:
-             };
-         };
-     };
-+
-+  - |+
-+    /* Example 5 (SpacemiT distributed IOMMU) */
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    iommu4: iommu@1bccd000 {
-+        compatible = "spacemit,k3-t100", "spacemit,t100", "riscv,iommu";
-+        reg = <0x1bccd000 0x1000>;
-+        interrupts = <58 IRQ_TYPE_LEVEL_HIGH>,
-+                     <62 IRQ_TYPE_LEVEL_HIGH>, <63 IRQ_TYPE_LEVEL_HIGH>,
-+                     <62 IRQ_TYPE_LEVEL_HIGH>, <63 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-parent = <&saplic>;
-+        #iommu-cells = <0x01>;
-+    };
-+
-+    /* Device with four IOMMU device IDs */
-+    master2 {
-+        #iommu-cells = <1>;
-+        iommus = <&iommu4 0xc0010>, <&iommu4 0xc0011>,
-+                 <&iommu4 0xc0012>, <&iommu4 0xc0013>;
-+    };
+ RISC-V MICROCHIP SUPPORT
+ M:	Conor Dooley <conor.dooley@microchip.com>
+diff --git a/tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioatc.json b/tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioatc.json
+new file mode 100644
+index 000000000000..eb2e6fe24c62
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioatc.json
+@@ -0,0 +1,30 @@
++[
++  {
++    "EventName": "mtlb_lkp",
++    "EventCode": "0x38",
++    "BriefDescription": "IOATC main TLB (MTLB) lookups",
++    "Unit": "spacemit_ioatc_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "mtlb_mis",
++    "EventCode": "0x39",
++    "BriefDescription": "IOATC main TLB (MTLB) misses",
++    "Unit": "spacemit_ioatc_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "utlb_lkp",
++    "EventCode": "0x3A",
++    "BriefDescription": "IOATC micro TLB (uTLB) lookups",
++    "Unit": "spacemit_ioatc_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "utlb_mis",
++    "EventCode": "0x3B",
++    "BriefDescription": "IOATC micro TLB (uTLB) misses",
++    "Unit": "spacemit_ioatc_hpm",
++    "Compat": "spacemit,t100"
++  }
++]
+diff --git a/tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioats.json b/tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioats.json
+new file mode 100644
+index 000000000000..709c0a9d2a8e
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioats.json
+@@ -0,0 +1,163 @@
++[
++  {
++    "EventName": "pri_rq",
++    "EventCode": "0x10",
++    "BriefDescription": "IOATS PCIe page request interface (PRI) requests",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "ptwc_rq",
++    "EventCode": "0x11",
++    "BriefDescription": "IOATS page table walk (PTW) cache requests",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "dtwc_rq",
++    "EventCode": "0x12",
++    "BriefDescription": "IOATS directory table walk (DTW) cache requests",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "dtwc_mis",
++    "EventCode": "0x13",
++    "BriefDescription": "IOATS directory table walk (DTW) cache misses",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "ptwc_mis",
++    "EventCode": "0x14",
++    "BriefDescription": "IOATS page table walk (PTW) cache misses",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "all_trans_rq",
++    "EventCode": "0x15",
++    "BriefDescription": "IOATS all translation requests",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "dtwc_lkp",
++    "EventCode": "0x20",
++    "BriefDescription": "IOATS directory table walk (DTW) cache lookups",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "s0_ptwc_lkp",
++    "EventCode": "0x28",
++    "BriefDescription": "IOATS s-stage level-0 PTW cache lookups",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "s0_ptwc_mis",
++    "EventCode": "0x29",
++    "BriefDescription": "IOATS s-stage level-0 PTW cache misses",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "s1_ptwc_lkp",
++    "EventCode": "0x2A",
++    "BriefDescription": "IOATS s-stage level-1 PTW cache lookups",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "s1_ptwc_mis",
++    "EventCode": "0x2B",
++    "BriefDescription": "IOATS s-stage level-1 PTW cache misses",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "s2_ptwc_lkp",
++    "EventCode": "0x2C",
++    "BriefDescription": "IOATS s-stage level-2 PTW cache lookups",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "s2_ptwc_mis",
++    "EventCode": "0x2D",
++    "BriefDescription": "IOATS s-stage level-2 PTW cache misses",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "s3_ptwc_lkp",
++    "EventCode": "0x2E",
++    "BriefDescription": "IOATS s-stage level-3 PTW cache lookups",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "s3_ptwc_mis",
++    "EventCode": "0x2F",
++    "BriefDescription": "IOATS s-stage level-3 PTW cache misses",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "g0_ptwc_lkp",
++    "EventCode": "0x30",
++    "BriefDescription": "IOATS g-stage level-0 PTW cache lookups",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "g0_ptwc_mis",
++    "EventCode": "0x31",
++    "BriefDescription": "IOATS g-stage level-0 PTW cache misses",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "g1_ptwc_lkp",
++    "EventCode": "0x32",
++    "BriefDescription": "IOATS g-stage level-1 PTW cache lookups",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "g1_ptwc_mis",
++    "EventCode": "0x33",
++    "BriefDescription": "IOATS g-stage level-1 PTW cache misses",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "g2_ptwc_lkp",
++    "EventCode": "0x34",
++    "BriefDescription": "IOATS g-stage level-2 PTW cache lookups",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "g2_ptwc_mis",
++    "EventCode": "0x35",
++    "BriefDescription": "IOATS g-stage level-2 PTW cache misses",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "g3_ptwc_lkp",
++    "EventCode": "0x36",
++    "BriefDescription": "IOATS g-stage level-3 PTW cache lookups",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  },
++  {
++    "EventName": "g3_ptwc_mis",
++    "EventCode": "0x37",
++    "BriefDescription": "IOATS g-stage level-3 PTW cache misses",
++    "Unit": "spacemit_ioats_hpm",
++    "Compat": "spacemit,t100"
++  }
++]
 -- 
 2.43.0
 
