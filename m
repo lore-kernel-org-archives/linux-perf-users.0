@@ -1,327 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D313815F3;
-	Fri, 27 Feb 2026 21:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AD9244675;
+	Sat, 28 Feb 2026 05:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772228537; cv=none; b=H4wAACHhCH+v+lKnUaqVRDjVuPrKD56u9Jx6wTHZCw9gza5IXZL/1OJrRiE5EOiQaPvEv9I76H6S9v58Z7zwzgwR+2QfnNQm8DPHLbkNmo3grRFwxUnKz4oeKJ1Xs54JPPTZuUsOnm/o/kZOX2kLaJwrCzgQdA+oRgFJkl/zwe4=
+	t=1772257040; cv=none; b=mhb87GlQUyIMhWP2PnmuwcWeppISEsQsMc8IjsTQaDDPUtfmYoaqXeyLoU9T8GiPPAzpncSqcnrXHpIz+DcAWqHN0WM/x43CKPBCqHD8V+HvtAQ9cQFTVr4+U0Ys1uxNZnAkagZyknP038JsvQylOtYq1uy4ebcMia49R2Xvq+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772228537; c=relaxed/simple;
-	bh=htm8Ul3HdBAQvqmgpsM8GhNBSsPjuR+g7PDVptqL8Rc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ifli11sz61dnsxjgV8Q91xC0QcgIDfDoVcz5EDPImcvCbNhGupy0fcVbnWXOy0buFSA/0MIIH1vYTWIQiDunxhY/S/uXNU2k+pc8aWAJBlj3uUuUS1DlGWtauP8pyUVh5rDQI5nf0U1ZuIZ9dAOSbWyARDXVFpk3HIddUgj2IXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P+SJGtqs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772257040; c=relaxed/simple;
+	bh=0pgX2X13LxqLggF8X/tXBFrts0q0SfC9K/zEUHi5xkE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lHmaWkfLYOo1DwOGE1UO5RJA9VxjAGgqF6rkV1BPiXjGdEiU8q3+UGy83z+qQ3lkI4brYi1VNxmzb1uAfFiztsmO6CTLOKSZGOt/ZbgEDubOTKjHGmH3ZIDig+tqVgIZ4wNER3BaB9g8I+ptsdpZ+rSf6L40ALrgnzl13LTfMcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=huvgxL6t; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P+SJGtqs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B327DC116C6;
-	Fri, 27 Feb 2026 21:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772228537;
-	bh=htm8Ul3HdBAQvqmgpsM8GhNBSsPjuR+g7PDVptqL8Rc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P+SJGtqsb6amvAD5Jubi+IYUFbOTVRFtTTlSjIrHEBDelXKwSSWRz+YCnV2XmRMUO
-	 0C2WJqAVDg7unv66C9zBy/KEO80EGfOds5LuCfnuRpDKw7SUifDSzOf1sU27DVd6xQ
-	 XhExwXlRIsfW6byg3z/WSaN3P0l6rQVsbaq/7JeQDCMFPlK173V/H0ugsYN9eRJ377
-	 F4koKbHPc+S4deKUiOIosa5hxySzyqKQ4nKO2Bu1DEENT2AA4QWmP2UpFfRVB0r6vq
-	 tawMfjvT9d70mh9k1aYhsI5ag8wV7SXcqWFjK89cdnJUeQSd9bAp8f07KPMbdIXRjK
-	 8AZd2HtN6jxxQ==
-Date: Fri, 27 Feb 2026 13:42:15 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="huvgxL6t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772257040; x=1803793040;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0pgX2X13LxqLggF8X/tXBFrts0q0SfC9K/zEUHi5xkE=;
+  b=huvgxL6tC/0IknjjzwBgr7WJe9O/1j7EIUukNEzXIQkl1KRlJ9X+trya
+   66fF2AdzqPHFC4lDhGeFzcbxmQYmEbJZmRf+QFEGquTxSGTHy8W+dmRhe
+   rKPAP0ktgL0QZ3Q1F3O8QJPC0im3dzrqnxiBvkQvzBp3o4sgJMfqj+pL5
+   yvJwaw9km2CWNYHR/+p/N7+ArJ3CmbHOZdFyVizcNowcMymF+Ql0wTaci
+   vfIN9xR7DoYhAJ81qElahKAgq3wbAXCrp8TYCgF0WncHrmeOTu48mW8J2
+   HmqqBZjDIXegauGi2m+lXBfapqx9LxjapKbkoPelpwBnrjjeItL72xdlR
+   g==;
+X-CSE-ConnectionGUID: Smy46VMEQw22quVVa8TJpw==
+X-CSE-MsgGUID: ++mwalI+QZyQ8TcvJghtVw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11714"; a="73307697"
+X-IronPort-AV: E=Sophos;i="6.21,315,1763452800"; 
+   d="scan'208";a="73307697"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2026 21:37:19 -0800
+X-CSE-ConnectionGUID: jIenbP8RQ4CvpynUYOdTtw==
+X-CSE-MsgGUID: QtykkrndTBOa4vbySi7hwQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,315,1763452800"; 
+   d="scan'208";a="254921371"
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by orviesa001.jf.intel.com with ESMTP; 27 Feb 2026 21:37:16 -0800
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Ankur Arora <ankur.a.arora@oracle.com>
-Subject: Re: [PATCH v2 2/2] perf bench: Add -t/--threads option to perf bench
- mem mmap
-Message-ID: <aaIPt_dUCmpKPN7B@google.com>
-References: <20260219004417.188434-1-namhyung@kernel.org>
- <20260219004417.188434-2-namhyung@kernel.org>
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [RESEND Patch 1/2] perf/x86/intel: Only check GP counters for PEBS constraints validation
+Date: Sat, 28 Feb 2026 13:33:19 +0800
+Message-Id: <20260228053320.140406-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260219004417.188434-2-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 18, 2026 at 04:44:17PM -0800, Namhyung Kim wrote:
-> So that it can measure overhead of mmap_lock and/or per-VMA lock
-> contention.
-> 
->   $ perf bench mem mmap -f demand -l 1000 -t 1
->   # Running 'mem/mmap' benchmark:
->   # function 'demand' (Demand loaded mmap())
->   # Copying 1MB bytes ...
-> 
->          2.786858 GB/sec
-> 
->   $ perf bench mem mmap -f demand -l 1000 -t 2
->   # Running 'mem/mmap' benchmark:
->   # function 'demand' (Demand loaded mmap())
->   # Copying 1MB bytes ...
-> 
->          1.624468 GB/sec/thread   ( +-   0.30% )
-> 
->   $ perf bench mem mmap -f demand -l 1000 -t 3
->   # Running 'mem/mmap' benchmark:
->   # function 'demand' (Demand loaded mmap())
->   # Copying 1MB bytes ...
-> 
->          1.493068 GB/sec/thread   ( +-   0.15% )
-> 
->   $ perf bench mem mmap -f demand -l 1000 -t 4
->   # Running 'mem/mmap' benchmark:
->   # function 'demand' (Demand loaded mmap())
->   # Copying 1MB bytes ...
-> 
->          1.006087 GB/sec/thread   ( +-   0.41% )
-> 
-> Cc: Ankur Arora <ankur.a.arora@oracle.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+It's good enough to only check GP counters for PEBS constraints
+validation since constraints overlap can only happen on GP counters.
 
-Applied only this patch to perf-tools-next.
+Besides opportunistically refine the code style and use pr_warn() to
+replace pr_info() as the message itself is a warning message.
 
-Thanks,
-Namhyung
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ arch/x86/events/intel/core.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-> ---
-> v2)
->  * correct timeval2double calculation
->  * add "/thread" notation when -t > 1  (James)
->  * add stddev when -t > 1  (Ankur)
-> 
->  tools/perf/Documentation/perf-bench.txt |   4 +
->  tools/perf/bench/mem-functions.c        | 109 +++++++++++++++++++-----
->  2 files changed, 92 insertions(+), 21 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
-> index 1160224cb718392d..c5913cf59c988421 100644
-> --- a/tools/perf/Documentation/perf-bench.txt
-> +++ b/tools/perf/Documentation/perf-bench.txt
-> @@ -274,6 +274,10 @@ Repeat mmap() invocation this number of times.
->  --cycles::
->  Use perf's cpu-cycles event instead of gettimeofday syscall.
->  
-> +-t::
-> +--threads=<NUM>::
-> +Create multiple threads to call mmap/munmap concurrently.
-> +
->  SUITES FOR 'numa'
->  ~~~~~~~~~~~~~~~~~
->  *mem*::
-> diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
-> index 676c8d18f4c2e259..8e04ae69f8a85c5e 100644
-> --- a/tools/perf/bench/mem-functions.c
-> +++ b/tools/perf/bench/mem-functions.c
-> @@ -7,13 +7,14 @@
->   * Written by Hitoshi Mitake <mitake@dcl.info.waseda.ac.jp>
->   */
->  
-> -#include "debug.h"
-> +#include "bench.h"
->  #include "../perf-sys.h"
->  #include <subcmd/parse-options.h>
-> -#include "../util/header.h"
-> -#include "../util/cloexec.h"
-> -#include "../util/string2.h"
-> -#include "bench.h"
-> +#include "util/cloexec.h"
-> +#include "util/debug.h"
-> +#include "util/header.h"
-> +#include "util/stat.h"
-> +#include "util/string2.h"
->  #include "mem-memcpy-arch.h"
->  #include "mem-memset-arch.h"
->  
-> @@ -26,6 +27,7 @@
->  #include <errno.h>
->  #include <linux/time64.h>
->  #include <linux/log2.h>
-> +#include <pthread.h>
->  
->  #define K 1024
->  
-> @@ -41,6 +43,7 @@ static unsigned int	nr_loops	= 1;
->  static bool		use_cycles;
->  static int		cycles_fd;
->  static unsigned int	seed;
-> +static unsigned int	nr_threads	= 1;
->  
->  static const struct option bench_common_options[] = {
->  	OPT_STRING('s', "size", &size_str, "1MB",
-> @@ -121,6 +124,8 @@ static struct perf_event_attr cycle_attr = {
->  	.config		= PERF_COUNT_HW_CPU_CYCLES
->  };
->  
-> +static struct stats stats;
-> +
->  static int init_cycles(void)
->  {
->  	cycles_fd = sys_perf_event_open(&cycle_attr, getpid(), -1, -1, perf_event_open_cloexec_flag());
-> @@ -174,18 +179,18 @@ static void clock_accum(union bench_clock *a, union bench_clock *b)
->  
->  static double timeval2double(struct timeval *ts)
->  {
-> -	return (double)ts->tv_sec + (double)ts->tv_usec / (double)USEC_PER_SEC;
-> +	return ((double)ts->tv_sec + (double)ts->tv_usec / (double)USEC_PER_SEC) / nr_threads;
->  }
->  
->  #define print_bps(x) do {						\
->  		if (x < K)						\
-> -			printf(" %14lf bytes/sec\n", x);		\
-> +			printf(" %14lf bytes/sec", x);			\
->  		else if (x < K * K)					\
-> -			printf(" %14lfd KB/sec\n", x / K);		\
-> +			printf(" %14lfd KB/sec", x / K);		\
->  		else if (x < K * K * K)					\
-> -			printf(" %14lf MB/sec\n", x / K / K);		\
-> +			printf(" %14lf MB/sec", x / K / K);		\
->  		else							\
-> -			printf(" %14lf GB/sec\n", x / K / K / K);	\
-> +			printf(" %14lf GB/sec", x / K / K / K);	\
->  	} while (0)
->  
->  static void __bench_mem_function(struct bench_mem_info *info, struct bench_params *p,
-> @@ -197,6 +202,7 @@ static void __bench_mem_function(struct bench_mem_info *info, struct bench_param
->  	void *src = NULL, *dst = NULL;
->  
->  	memset(&rt, 0, sizeof(rt));
-> +	init_stats(&stats);
->  	printf("# function '%s' (%s)\n", r->name, r->desc);
->  
->  	if (r->fn.init && r->fn.init(info, p, &src, &dst))
-> @@ -211,11 +217,16 @@ static void __bench_mem_function(struct bench_mem_info *info, struct bench_param
->  	switch (bench_format) {
->  	case BENCH_FORMAT_DEFAULT:
->  		if (use_cycles) {
-> -			printf(" %14lf cycles/byte\n", (double)rt.cycles/(double)p->size_total);
-> +			printf(" %14lf cycles/byte", (double)rt.cycles/(double)p->size_total);
->  		} else {
->  			result_bps = (double)p->size_total/timeval2double(&rt.tv);
->  			print_bps(result_bps);
->  		}
-> +		if (nr_threads > 1) {
-> +			printf("/thread\t( +- %6.2f%% )",
-> +			       rel_stddev_stats(stddev_stats(&stats), avg_stats(&stats)));
-> +		}
-> +		printf("\n");
->  		break;
->  
->  	case BENCH_FORMAT_SIMPLE:
-> @@ -495,16 +506,27 @@ static void mmap_page_touch(void *dst, size_t size, unsigned int page_shift, boo
->  	}
->  }
->  
-> -static int do_mmap(const struct function *r, struct bench_params *p,
-> -		  void *src __maybe_unused, void *dst __maybe_unused,
-> -		  union bench_clock *accum)
-> +struct mmap_data {
-> +	pthread_t id;
-> +	const struct function *func;
-> +	struct bench_params *params;
-> +	union bench_clock result;
-> +	unsigned int seed;
-> +	int error;
-> +};
-> +
-> +static void *do_mmap_thread(void *arg)
->  {
-> +	struct mmap_data *data = arg;
-> +	const struct function *r = data->func;
-> +	struct bench_params *p = data->params;
->  	union bench_clock start, end, diff;
->  	mmap_op_t fn = r->fn.mmap_op;
->  	bool populate = strcmp(r->name, "populate") == 0;
-> +	void *dst;
->  
-> -	if (p->seed)
-> -		srand(p->seed);
-> +	if (data->seed)
-> +		srand(data->seed);
->  
->  	for (unsigned int i = 0; i < p->nr_loops; i++) {
->  		clock_get(&start);
-> @@ -515,16 +537,59 @@ static int do_mmap(const struct function *r, struct bench_params *p,
->  		fn(dst, p->size, p->page_shift, p->seed);
->  		clock_get(&end);
->  		diff = clock_diff(&start, &end);
-> -		clock_accum(accum, &diff);
-> +		clock_accum(&data->result, &diff);
->  
->  		bench_munmap(dst, p->size);
->  	}
->  
-> -	return 0;
-> +	return data;
->  out:
-> -	printf("# Memory allocation failed - maybe size (%s) %s?\n", size_str,
-> -			p->page_shift != PAGE_SHIFT_4KB ? "has insufficient hugepages" : "is too large");
-> -	return -1;
-> +	data->error = -ENOMEM;
-> +	return NULL;
-> +}
-> +
-> +static int do_mmap(const struct function *r, struct bench_params *p,
-> +		  void *src __maybe_unused, void *dst __maybe_unused,
-> +		  union bench_clock *accum)
-> +{
-> +	struct mmap_data *data;
-> +	int error = 0;
-> +
-> +	data = calloc(nr_threads, sizeof(*data));
-> +	if (!data) {
-> +		printf("# Failed to allocate thread resources\n");
-> +		return -1;
-> +	}
-> +
-> +	for (unsigned int i = 0; i < nr_threads; i++) {
-> +		data[i].func = r;
-> +		data[i].params = p;
-> +		if (p->seed)
-> +			data[i].seed = p->seed + i;
-> +
-> +		if (pthread_create(&data[i].id, NULL, do_mmap_thread, &data[i]) < 0)
-> +			data[i].error = -errno;
-> +	}
-> +
-> +	for (unsigned int i = 0; i < nr_threads; i++) {
-> +		union bench_clock *t = &data[i].result;
-> +
-> +		pthread_join(data[i].id, NULL);
-> +
-> +		clock_accum(accum, t);
-> +		if (use_cycles)
-> +			update_stats(&stats, t->cycles);
-> +		else
-> +			update_stats(&stats, t->tv.tv_sec * 1e6 + t->tv.tv_usec);
-> +		error |= data[i].error;
-> +	}
-> +	free(data);
-> +
-> +	if (error) {
-> +		printf("# Memory allocation failed - maybe size (%s) %s?\n", size_str,
-> +		       p->page_shift != PAGE_SHIFT_4KB ? "has insufficient hugepages" : "is too large");
-> +	}
-> +	return error ? -1 : 0;
->  }
->  
->  static const char * const bench_mem_mmap_usage[] = {
-> @@ -549,6 +614,8 @@ int bench_mem_mmap(int argc, const char **argv)
->  	static const struct option bench_mmap_options[] = {
->  		OPT_UINTEGER('r', "randomize", &seed,
->  			    "Seed to randomize page access offset."),
-> +		OPT_UINTEGER('t', "threads", &nr_threads,
-> +			    "Number of threads to run concurrently (default: 1)."),
->  		OPT_PARENT(bench_common_options),
->  		OPT_END()
->  	};
-> -- 
-> 2.53.0.335.g19a08e0c02-goog
-> 
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index cf3a4fe06ff2..4768236c054b 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -5770,7 +5770,7 @@ static void __intel_pmu_check_dyn_constr(struct event_constraint *constr,
+ 			}
+ 
+ 			if (check_fail) {
+-				pr_info("The two events 0x%llx and 0x%llx may not be "
++				pr_warn("The two events 0x%llx and 0x%llx may not be "
+ 					"fully scheduled under some circumstances as "
+ 					"%s.\n",
+ 					c1->code, c2->code, dyn_constr_type_name[type]);
+@@ -5783,6 +5783,7 @@ static void intel_pmu_check_dyn_constr(struct pmu *pmu,
+ 				       struct event_constraint *constr,
+ 				       u64 cntr_mask)
+ {
++	u64 gp_mask = GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
+ 	enum dyn_constr_type i;
+ 	u64 mask;
+ 
+@@ -5797,20 +5798,25 @@ static void intel_pmu_check_dyn_constr(struct pmu *pmu,
+ 				mask = x86_pmu.lbr_counters;
+ 			break;
+ 		case DYN_CONSTR_ACR_CNTR:
+-			mask = hybrid(pmu, acr_cntr_mask64) & GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
++			mask = hybrid(pmu, acr_cntr_mask64) & gp_mask;
+ 			break;
+ 		case DYN_CONSTR_ACR_CAUSE:
+-			if (hybrid(pmu, acr_cntr_mask64) == hybrid(pmu, acr_cause_mask64))
++			if (hybrid(pmu, acr_cntr_mask64) ==
++					hybrid(pmu, acr_cause_mask64))
+ 				continue;
+-			mask = hybrid(pmu, acr_cause_mask64) & GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
++			mask = hybrid(pmu, acr_cause_mask64) & gp_mask;
+ 			break;
+ 		case DYN_CONSTR_PEBS:
+-			if (x86_pmu.arch_pebs)
+-				mask = hybrid(pmu, arch_pebs_cap).counters;
++			if (x86_pmu.arch_pebs) {
++				mask = hybrid(pmu, arch_pebs_cap).counters &
++				       gp_mask;
++			}
+ 			break;
+ 		case DYN_CONSTR_PDIST:
+-			if (x86_pmu.arch_pebs)
+-				mask = hybrid(pmu, arch_pebs_cap).pdists;
++			if (x86_pmu.arch_pebs) {
++				mask = hybrid(pmu, arch_pebs_cap).pdists &
++				       gp_mask;
++			}
+ 			break;
+ 		default:
+ 			pr_warn("Unsupported dynamic constraint type %d\n", i);
+
+base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
+-- 
+2.34.1
+
