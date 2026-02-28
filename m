@@ -1,36 +1,36 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE81C43E4A7;
-	Sat, 28 Feb 2026 14:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E526043E9DD;
+	Sat, 28 Feb 2026 14:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772290053; cv=none; b=JaVCN9rA0WMjjvSKcZyGMEnl1cBXAeBLpFofP+8Nhy71N6OLiIxV5jVEqlcL4XHXdA3cahqruFDi8GGZX4IPdbe4YK3yHilu7EG0F59941EtcxcKWZFRuPH5t/+PIU8y1hCMhC56KmDViYOqH7nuxVs15aqtzwhYYdbTuksLv/Y=
+	t=1772290060; cv=none; b=CSrM443NcvKWddCkIIvFaSqti/NCideKOZtfQEpUZKQdd4zNDJljER5DDlstB7/sNI8i05T/+3ohPV+QocpGA6OhdPfTYbiX9z0zz+DNrO7o1dZfVbv9e1FOFtH3b1Le9mRUFPaQLB5L0E5g6hrhqDqT/Gd+s1cYMHxapYQ4Nsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772290053; c=relaxed/simple;
-	bh=E8TwrjCSIHHV++I88yp17nnNCbzb2aXg33aD22fPueE=;
+	s=arc-20240116; t=1772290060; c=relaxed/simple;
+	bh=vlXlLWO3IPvifSjPneb5CC5I6x2ugNAIngROHoYGLzE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VAThFlhFEvlT3DLaAfRHRx28fN+5Z37s9q/CQOMk0Iot7Tgq3ap4A/wI+fLzBO9MuqQTi01ymWOfAi95N6jembQWqMT4RM0G4wXryQ6HAYTarqWIn8TQWBVVkw5+hoozfxSFnP2EfLvJq67QrLHyLGvQyc/LaBTRO5QHB9YG22c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=aw9fQC60; arc=none smtp.client-ip=54.254.200.128
+	 MIME-Version; b=K8pY6ZQronzmO3lLb9+3qd2RCM2l3ogV5gYkiNLfJnk6PGwRt7bW1RcqBzPpHH9aEWI0rLSwQSRnKxMuiJp6lm75YSzeNq5ac082E2zcaacH4+aizgnurT4u/xKoxR3LVCc0NH9PPjK2m19o2NQeq1ircC1OrV8kHJx9qdJK6XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=awtGiuKS; arc=none smtp.client-ip=54.92.39.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="aw9fQC60"
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="awtGiuKS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1772289868;
-	bh=ZTc/n5ab9N9UFVgI6hT5/C+s+rP7drTHuNOBqqfhQGM=;
+	s=mxsw2412; t=1772289887;
+	bh=wEy7J0j9by1Uk46kdJ99A6fyUn66FWCSQQCIsY3GkZc=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=aw9fQC60GpN5je38nhl5HmBhaKDqlndi+wsPesNqbh4qDFYeOCii0w2pLDjwv+hkD
-	 +CTiONZm7VPiHltv4F6f7JnpEdnQcKW5VHoS9OVF5UjXuPj7z1B0go18WE0f/wTCIw
-	 sGz9weuzx6xxa6BCcQP2AL34gLZ/BkYWt2x+yHUc=
-X-QQ-mid: zesmtpgz1t1772289863t7d4037ae
-X-QQ-Originating-IP: skU+G2wfQkuL5RXnlGkMHnDK79YrWmLshwy4PnZu56k=
+	b=awtGiuKS/c3OKum7Af4tze7ky5RweNO2lHvrzMXbHYV2asAOsLfXY0lfuWh5vfTPt
+	 P6BwAdEL/ozG8wbAwe+1x3AccdVL6UpaQBhzCzgLCncUug8hpkVB4Moobd338aet6j
+	 eXmLKXxhBhtemGB6AiK5Orr73odOst0OsXeBgd6U=
+X-QQ-mid: esmtpgz12t1772289885tc38d5745
+X-QQ-Originating-IP: WU9RQdHfUejK7Q2+rXPrsqsg35uJyZzr9jLuG+PWDSM=
 Received: from SurfaceBook2-B.localdomain ( [183.193.112.19])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sat, 28 Feb 2026 22:44:18 +0800 (CST)
+	id ; Sat, 28 Feb 2026 22:44:40 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 18284969003832345071
+X-BIZMAIL-ID: 10822611860866131696
 EX-QQ-RecipientCnt: 33
 From: Lv Zheng <lv.zheng@linux.spacemit.com>
 To: Tomasz Jeznach <tjeznach@rivosinc.com>,
@@ -66,9 +66,9 @@ Cc: Jingyu Li <joey.li@spacemit.com>,
 	spacemit@lists.linux.dev,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/8] iommu/riscv: Add auxiliary bus framework and HPM device support
-Date: Sat, 28 Feb 2026 22:44:14 +0800
-Message-ID: <BB440D6C2FBCE62A+298a7429e6a3c395d2d2c53449e38a47465e12b0.1772289741.git.lv.zheng@linux.spacemit.com>
+Subject: [PATCH v5 3/8] iommu/riscv: Add HPM support for performance monitoring
+Date: Sat, 28 Feb 2026 22:44:36 +0800
+Message-ID: <4D73745E04DD230F+b30efdd39bde1e618d9f4bc22b672bde05984aee.1772289741.git.lv.zheng@linux.spacemit.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1772289741.git.lv.zheng@linux.spacemit.com>
 References: <cover.1772289741.git.lv.zheng@linux.spacemit.com>
@@ -80,35 +80,39 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
-X-QQ-XMAILINFO: OLsBWtCIHsg6VNrwUi8/mc4jmBZisZKwByOferWTD3/GLqwmjD6ZWf2g
-	lWkH3WP/Tr6u0g880nUX3nAa2lAZITULXqFbt5oC+z84Dgo1MNvwVZOP7iQCSrDuKf9RReV
-	p0MxUbtJ9jhN6GbLx15e0o48CtECxwmqIkcJMeuofP4L/8not03VbpywjAcw1Z7WegO5I5K
-	/MDpJgxGhVnc1N3XdX6vJO4yYB+RWgwDYi/0BId8aJMw4vqasVBlC3iBOiXqML8SOhq8jdQ
-	TKJ+Ql4sEuGJFMTPGeEyDWAuC3vMiYGNrb0L6OMyb/QuqoFpVLJdvWKVJMASDqaSC/p09Y5
-	/X1WQRD3gA85RyFrkSRDQpyuji3D2IEiFVYA6QD/wesADpPAYD6IcFHmLMP84dlzYEbeaSN
-	mmN23VqzUcvC1nsU+HiBWoHcslGIzjVRWGns8ZQHN2tt4dhAWOMnK76RnF082EnnoM9J7PH
-	RDq7TXPBdMzVOuEamwupO4ailCWlp5CqVcKf6/NEVO0Nl5L226dfj0w6wCC1rLamgOx5rUF
-	sUWNVxw1by8y+3CE2TNSQvfVvbt+cEyWZWEQVvZ64cCulPPtY948IzHeX1s2vynMuALInBC
-	4CKFt8t+SkbqrRcapyUIDw4eKfpuBqRuZA4AoUL/Xzst/pyhdDAku8XEoZGFqQ3zT0hxgU4
-	gKTysewD39QmDufmFcNlB7O8HxeJRJXnxUR0nX6ZM7yvLxqIRSNYG7mcLzoTND+6mYnMgMS
-	RYjBsSyZqmsAzWR9VluQDiZZ+eLUrZsHW3v5gr6B7sx3XwkNe386HBfCyd5z9cd/ugVPDCI
-	CU6HY2LSXYVq0rxD1wuzPPO1BW/sfdFEED6N/daqDrUbAk+9C/U3S2I7iUU7BwiXPrvsDwy
-	j/6zZarrRneGzQj2dQCXj+0l+LgEWXHsxrKQlSCfm1TUovBwfgyQBZpFHnHOBz+FVZIqIWg
-	lvNRKUXfZUS3ezIKLH4QAudrbqDmPEhCRvtEggpr8rYSb2Vscscychjf2e9B0ktexu1wj5v
-	KvbgNoNt3RTVAxfeqDUOANVKlR58fz2A30Wbzv6Y5RUd5iIm4h5RKSi02DwG+gEaEajpqzc
+Feedback-ID: esmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
+X-QQ-XMAILINFO: NImvdRhE6fHpLxeczENEQ22l5IAYjNjnamKHcr+50QVmZSmt9rBxYYcg
+	RoUDxxKqYoNnkODQRG48eWFErR0gOEYvQPItSUZ1ozTSMcEOrHFoFAlkTkrM2hStpI1+xuy
+	O7UPqw057AlQClRzYN6oNZ9u7CReUDOdzFpttW/4rMtqbiVEMLTgXhdlH4Tv56/lNqa3w+3
+	9McJzK6Ygl5q35H176N1WG4NAyvDIZUqEILhELwGM6lzdKL8YGRawI5XVQM6gGbgEOqbG8B
+	IvRpnJIPCbfHLKziB+3JC8boYTznNp9IflIibWWEi06oGzbg+ENtBE1TdrILXLazPOF8TI/
+	dg4hqdym7iFUwv0a8qf7/5czqv6gOA+MbRS8U9Q0BuCUHwXxFTwuapJOb2xe275gVfFewfo
+	tmhgKKjp1gikxcQp3zOk7sy8UD8xIrBZwREELiMwfLmNHmqwLJiEvk8JugPZO95iY9nnDHk
+	HbGyJ6yQeqOMlq1V41Wo78CPssx8+WAYRFxCeDgwefdj9X5fwr8aOnVzZxhTYhF6TXytYlv
+	uFWTq8YcMOQIBa3hUDBOI/fhO/OuQIthlSgdD1tGHND3a53zujOIj+nAfE+E/jNepFy2KwE
+	uTGTt2jRxLuEWTvzjH9ZkQJNS8MrqjUa665+zjFfcmkI0V7LgV9+QJMiucdg7Tv2QRWt00A
+	mJypF1P6BhGukDk/YQMgmWkK1NeZFjTkEP0DsZm2ZCFA08vNahNgkn1XJeWwMuehEP8hIxL
+	MViOha0jEOnK7iOGq68vZO2cpbWXFz7xeIDPUCze9sMasVoFOypcrouRS2ODOuBeUrGp477
+	F/5Wtjbpa7nrYRNW1gdq2rQSit7758aC0MJPg59vJCrKud0LSTu7WH93j/VlZqSHej/EKiz
+	04se5GkX4j1M2RJ+7zeQ3aN0W5I9PoicveszpfluQe1nuYTUxWpB6VRy0gJbyfzUtVtCS/V
+	ZBWyC1Vi8mc2NLVP9GuLnxNCPyFjF+a/ui8BsafK1Jgp0/aubCFmjtkR0O+HmCp/kalI8q5
+	f8mSr91m+iY/E2EpaYeR3RpfG3Ry6jrJ/obXNRO1vNASntRu2uoA4pDjttZd+vRuOSUt3+R
 	g==
-X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
+X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
 X-QQ-RECHKSPAM: 0
 
 From: Jingyu Li <joey.li@spacemit.com>
 
-Introduces auxiliary bus support for RISC-V IOMMU to enable modular
-extension of IOMMU capabilities. The framework allows creating auxiliary
-devices that can be bound to separate drivers.
+Introduces perf-based HPM driver for RISC-V IOMMU, enabling performance
+monitoring capabilities.
 
-The IOMMU HPM featured PMU device ("iommu.riscv_iommu_hpm.0") is created
-and registered as RISC-V IOMMU auxiliary device.
+Note that the RISC-V IOMMU HPM module uses COUNTER_MAX-1 as a static
+counter index of HPMCYCLES, and 0~COUNTER_MAX-2 as the dynamic counter
+indexes of other HPMEVENTS in order to correctly index into IOHPMEVT and
+IOHPMCTR registers that have already been defined in the iommu-bits.h.
+However the users treat 0 as the index of HPMCYCLES and 1~COUNTER_MAX-1 as
+the indexes of other HPMEVENTS, thus care should be taken in dealing with
+counter indexes between userspace and kernel space.
 
 Signed-off-by: Jingyu Li <joey.li@spacemit.com>
 Signed-off-by: Lv Zheng <lv.zheng@linux.spacemit.com>
@@ -116,423 +120,909 @@ Link: https://github.com/riscv-non-isa/riscv-iommu
 Cc: Zong Li <zong.li@sifive.com>
 Cc: Yaxing Guo <guoyaxing@bosc.ac.cn>
 ---
- drivers/iommu/riscv/Kconfig          |   1 +
- drivers/iommu/riscv/iommu-pci.c      |   8 +-
- drivers/iommu/riscv/iommu-platform.c |   3 +
- drivers/iommu/riscv/iommu.c          | 169 +++++++++++++++++++++++++++
- drivers/iommu/riscv/iommu.h          |  21 ++++
- include/linux/riscv_iommu.h          |  75 ++++++++++++
- 6 files changed, 276 insertions(+), 1 deletion(-)
- create mode 100644 include/linux/riscv_iommu.h
+ drivers/perf/Kconfig           |   9 +
+ drivers/perf/Makefile          |   1 +
+ drivers/perf/riscv_iommu_hpm.c | 864 +++++++++++++++++++++++++++++++++
+ 3 files changed, 874 insertions(+)
+ create mode 100644 drivers/perf/riscv_iommu_hpm.c
 
-diff --git a/drivers/iommu/riscv/Kconfig b/drivers/iommu/riscv/Kconfig
-index c071816f59a6..26122a3a73d2 100644
---- a/drivers/iommu/riscv/Kconfig
-+++ b/drivers/iommu/riscv/Kconfig
-@@ -6,6 +6,7 @@ config RISCV_IOMMU
- 	depends on RISCV && 64BIT
- 	default y
- 	select IOMMU_API
-+	select AUXILIARY_BUS
- 	help
- 	  Support for implementations of the RISC-V IOMMU architecture that
- 	  complements the RISC-V MMU capabilities, providing similar address
-diff --git a/drivers/iommu/riscv/iommu-pci.c b/drivers/iommu/riscv/iommu-pci.c
-index d82d2b00904c..478e72e9a285 100644
---- a/drivers/iommu/riscv/iommu-pci.c
-+++ b/drivers/iommu/riscv/iommu-pci.c
-@@ -34,6 +34,8 @@ static int riscv_iommu_pci_probe(struct pci_dev *pdev, const struct pci_device_i
- {
- 	struct device *dev = &pdev->dev;
- 	struct riscv_iommu_device *iommu;
-+	phys_addr_t reg_phys;
-+	resource_size_t reg_size;
- 	int rc, vec;
+diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+index 638321fc9800..1edf66d8ae41 100644
+--- a/drivers/perf/Kconfig
++++ b/drivers/perf/Kconfig
+@@ -311,4 +311,13 @@ config MARVELL_PEM_PMU
+ 	  Enable support for PCIe Interface performance monitoring
+ 	  on Marvell platform.
  
- 	rc = pcim_enable_device(pdev);
-@@ -43,7 +45,9 @@ static int riscv_iommu_pci_probe(struct pci_dev *pdev, const struct pci_device_i
- 	if (!(pci_resource_flags(pdev, 0) & IORESOURCE_MEM))
- 		return -ENODEV;
- 
--	if (pci_resource_len(pdev, 0) < RISCV_IOMMU_REG_SIZE)
-+	reg_phys = pci_resource_start(pdev, 0);
-+	reg_size = pci_resource_len(pdev, 0);
-+	if (reg_size < RISCV_IOMMU_REG_SIZE)
- 		return -ENODEV;
- 
- 	rc = pcim_iomap_regions(pdev, BIT(0), pci_name(pdev));
-@@ -56,6 +60,8 @@ static int riscv_iommu_pci_probe(struct pci_dev *pdev, const struct pci_device_i
- 
- 	iommu->dev = dev;
- 	iommu->reg = pcim_iomap_table(pdev)[0];
-+	iommu->reg_phys = reg_phys;
-+	iommu->reg_size = reg_size;
- 
- 	pci_set_master(pdev);
- 	dev_set_drvdata(dev, iommu);
-diff --git a/drivers/iommu/riscv/iommu-platform.c b/drivers/iommu/riscv/iommu-platform.c
-index 83a28c83f991..e8e52bca8856 100644
---- a/drivers/iommu/riscv/iommu-platform.c
-+++ b/drivers/iommu/riscv/iommu-platform.c
-@@ -62,6 +62,9 @@ static int riscv_iommu_platform_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(iommu->reg),
- 				     "could not map register region\n");
- 
-+	iommu->reg_phys = res->start;
-+	iommu->reg_size = resource_size(res);
++config RISCV_IOMMU_HPM
++        tristate "RISC-V IOMMU HPM support"
++        depends on RISCV_IOMMU && PERF_EVENTS
++        help
++          Support for the Hardware Performance Monitor (HPM) in RISC-V IOMMU,
++          which provides monitoring of transactions passing through the
++          IOMMU and allows the resulting information to be filtered based
++          on the device/process ID of the corresponding master.
 +
- 	dev_set_drvdata(dev, iommu);
- 
- 	/* Check device reported capabilities / features. */
-diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
-index d9429097a2b5..1aa942486e3a 100644
---- a/drivers/iommu/riscv/iommu.c
-+++ b/drivers/iommu/riscv/iommu.c
-@@ -16,6 +16,7 @@
- #include <linux/acpi_rimt.h>
- #include <linux/compiler.h>
- #include <linux/crash_dump.h>
-+#include <linux/idr.h>
- #include <linux/init.h>
- #include <linux/iommu.h>
- #include <linux/iopoll.h>
-@@ -47,11 +48,28 @@
- static DEFINE_IDA(riscv_iommu_pscids);
- #define RISCV_IOMMU_MAX_PSCID		(BIT(20) - 1)
- 
-+static DEFINE_IDA(riscv_iommu_subdev_ida);
-+
- /* Device resource-managed allocations */
- struct riscv_iommu_devres {
- 	void *addr;
- };
- 
-+bool riscv_iommu_pmip_status(struct riscv_iommu_subdev *subdev)
-+{
-+	u32 ipsr = riscv_iommu_readl(subdev->iommu, RISCV_IOMMU_REG_IPSR);
-+
-+	return !!(ipsr & RISCV_IOMMU_IPSR_PMIP);
-+}
-+EXPORT_SYMBOL_GPL(riscv_iommu_pmip_status);
-+
-+void riscv_iommu_clear_pmip(struct riscv_iommu_subdev *subdev)
-+{
-+	riscv_iommu_writel(subdev->iommu, RISCV_IOMMU_REG_IPSR,
-+			   RISCV_IOMMU_IPSR_PMIP);
-+}
-+EXPORT_SYMBOL_GPL(riscv_iommu_clear_pmip);
-+
- static void riscv_iommu_devres_pages_release(struct device *dev, void *res)
- {
- 	struct riscv_iommu_devres *devres = res;
-@@ -1602,10 +1620,154 @@ static int riscv_iommu_init_check(struct riscv_iommu_device *iommu)
- 	return 0;
- }
- 
-+static void riscv_iommu_subdev_release(struct device *dev)
-+{
-+	struct riscv_iommu_subdev *subdev = riscv_iommu_get_subdev(dev);
-+
-+	ida_free(&riscv_iommu_subdev_ida, subdev->auxdev.id);
-+	kfree(subdev->info);
-+	kfree(subdev);
-+}
-+
-+static int riscv_iommu_subdev_add(struct riscv_iommu_device *iommu,
-+				  const struct riscv_iommu_subdev_params *params)
-+{
-+	struct riscv_iommu_subdev *subdev;
-+	struct auxiliary_device *auxdev;
-+	int id, ret;
-+
-+	if (!params->info)
-+		return -EINVAL;
-+
-+	id = ida_alloc(&riscv_iommu_subdev_ida, GFP_KERNEL);
-+	if (id < 0)
-+		return id;
-+
-+	subdev = kzalloc(sizeof(*subdev), GFP_KERNEL);
-+	if (!subdev) {
-+		ret = -ENOMEM;
-+		goto err_free;
-+	}
-+
-+	subdev->base = params->base;
-+	subdev->iommu = iommu;
-+	subdev->info = params->info;
-+
-+	auxdev = &subdev->auxdev;
-+	auxdev->name = params->name;
-+	auxdev->id = id;
-+	auxdev->dev.parent = iommu->dev;
-+	auxdev->dev.release = riscv_iommu_subdev_release;
-+
-+	ret = auxiliary_device_init(auxdev);
-+	if (ret) {
-+		dev_err(iommu->dev, "Failed to init %s auxiliary device: %d\n",
-+			params->name, ret);
-+		goto err_free;
-+	}
-+
-+	ret = auxiliary_device_add(auxdev);
-+	if (ret) {
-+		dev_err(iommu->dev, "Failed to add %s auxiliary device: %d\n",
-+			params->name, ret);
-+		goto err_uninit;
-+	}
-+
-+	spin_lock(&iommu->subdev_lock);
-+	list_add_tail(&subdev->link, &iommu->subdev_list);
-+	spin_unlock(&iommu->subdev_lock);
-+	dev_info(iommu->dev, "%s auxiliary device created\n", params->name);
-+	return 0;
-+
-+err_uninit:
-+	auxiliary_device_uninit(auxdev);
-+	return ret;
-+
-+err_free:
-+	kfree(subdev);
-+	ida_free(&riscv_iommu_subdev_ida, id);
-+	return ret;
-+}
-+
-+static void riscv_iommu_enumerate_hpm(struct riscv_iommu_device *iommu)
-+{
-+	struct riscv_iommu_hpm_info *hpm_info;
-+	struct riscv_iommu_subdev_params params;
-+	int irq;
-+	int ret;
-+
-+	if (!(iommu->caps & RISCV_IOMMU_CAPABILITIES_HPM))
-+		return;
-+
-+	irq = iommu->irqs[riscv_iommu_queue_vec(iommu, RISCV_IOMMU_INTR_PM)];
-+	if (irq <= 0) {
-+		dev_err(iommu->dev, "HPM: No IRQ available\n");
-+		return;
-+	}
-+
-+	hpm_info = kzalloc(sizeof(*hpm_info), GFP_KERNEL);
-+	if (!hpm_info)
-+		return;
-+
-+	hpm_info->irq = irq;
-+
-+	params = (struct riscv_iommu_subdev_params) {
-+		.name = "riscv_iommu_hpm",
-+		.info = hpm_info,
-+		.base = iommu->reg + RISCV_IOMMU_REG_IOCOUNTOVF,
-+	};
-+
-+	ret = riscv_iommu_subdev_add(iommu, &params);
-+	if (ret) {
-+		kfree(hpm_info);
-+		dev_warn(iommu->dev,
-+			 "Failed to enumerate HPM auxiliary device: %d\n",
-+			 ret);
-+	}
-+}
-+
-+/**
-+ * riscv_iommu_subdev_setup - Enumerate auxiliary bus subdevices
-+ *
-+ * @iommu: RISC-V IOMMU device
-+ *
-+ * Enumerates HPM, or other extended subdevices via the auxiliary bus. To
-+ * add new extended device types, implement an enumerate function and call
-+ * it from here.
-+ */
-+void riscv_iommu_subdev_setup(struct riscv_iommu_device *iommu)
-+{
-+	riscv_iommu_enumerate_hpm(iommu);
-+}
-+
-+/**
-+ * riscv_iommu_subdev_cleanup - Remove all auxiliary bus subdevices
-+ *
-+ * @iommu: RISC-V IOMMU device
-+ *
-+ * Iterates over the subdev_list in reverse order, deletes each auxiliary
-+ * device from the bus and uninitializes it.
-+ */
-+void riscv_iommu_subdev_cleanup(struct riscv_iommu_device *iommu)
-+{
-+	struct riscv_iommu_subdev *subdev, *next;
-+
-+	spin_lock(&iommu->subdev_lock);
-+	list_for_each_entry_safe_reverse(subdev, next, &iommu->subdev_list, link) {
-+		list_del_init(&subdev->link);
-+		spin_unlock(&iommu->subdev_lock);
-+		auxiliary_device_delete(&subdev->auxdev);
-+		auxiliary_device_uninit(&subdev->auxdev);
-+		spin_lock(&iommu->subdev_lock);
-+	}
-+	spin_unlock(&iommu->subdev_lock);
-+}
-+
- void riscv_iommu_remove(struct riscv_iommu_device *iommu)
- {
- 	iommu_device_unregister(&iommu->iommu);
- 	iommu_device_sysfs_remove(&iommu->iommu);
-+	riscv_iommu_subdev_cleanup(iommu);
- 	riscv_iommu_iodir_set_mode(iommu, RISCV_IOMMU_DDTP_IOMMU_MODE_OFF);
- 	riscv_iommu_queue_disable(&iommu->cmdq);
- 	riscv_iommu_queue_disable(&iommu->fltq);
-@@ -1615,6 +1777,8 @@ int riscv_iommu_init(struct riscv_iommu_device *iommu)
- {
- 	int rc;
- 
-+	spin_lock_init(&iommu->subdev_lock);
-+	INIT_LIST_HEAD(&iommu->subdev_list);
- 	RISCV_IOMMU_QUEUE_INIT(&iommu->cmdq, CQ);
- 	RISCV_IOMMU_QUEUE_INIT(&iommu->fltq, FQ);
- 
-@@ -1669,6 +1833,11 @@ int riscv_iommu_init(struct riscv_iommu_device *iommu)
- 		goto err_remove_sysfs;
- 	}
- 
-+	/* Initialize auxiliary devices for extended features. These are not
-+	 * critical to IOMMU operation, so failures are non-fatal.
-+	 */
-+	riscv_iommu_subdev_setup(iommu);
-+
- 	return 0;
- 
- err_remove_sysfs:
-diff --git a/drivers/iommu/riscv/iommu.h b/drivers/iommu/riscv/iommu.h
-index 46df79dd5495..1296625488ef 100644
---- a/drivers/iommu/riscv/iommu.h
-+++ b/drivers/iommu/riscv/iommu.h
-@@ -14,6 +14,7 @@
- #include <linux/iommu.h>
- #include <linux/types.h>
- #include <linux/iopoll.h>
-+#include <linux/riscv_iommu.h>
- 
- #include "iommu-bits.h"
- 
-@@ -42,6 +43,8 @@ struct riscv_iommu_device {
- 
- 	/* hardware control register space */
- 	void __iomem *reg;
-+	phys_addr_t reg_phys;
-+	resource_size_t reg_size;
- 
- 	/* supported and enabled hardware capabilities */
- 	u64 caps;
-@@ -60,11 +63,29 @@ struct riscv_iommu_device {
- 	unsigned int ddt_mode;
- 	dma_addr_t ddt_phys;
- 	u64 *ddt_root;
-+
-+	/* auxiliary subdevices */
-+	spinlock_t subdev_lock;
-+	struct list_head subdev_list;
-+};
-+
-+/**
-+ * struct riscv_iommu_subdev_params - params for adding auxiliary subdevice
-+ * @name: auxiliary device name
-+ * @info: device-specific info, freed in release
-+ * @base: PMU register base
-+ */
-+struct riscv_iommu_subdev_params {
-+	const char *name;
-+	void *info;
-+	void __iomem *base;
- };
- 
- int riscv_iommu_init(struct riscv_iommu_device *iommu);
- void riscv_iommu_remove(struct riscv_iommu_device *iommu);
- void riscv_iommu_disable(struct riscv_iommu_device *iommu);
-+void riscv_iommu_subdev_setup(struct riscv_iommu_device *iommu);
-+void riscv_iommu_subdev_cleanup(struct riscv_iommu_device *iommu);
- 
- #define riscv_iommu_readl(iommu, addr) \
- 	readl_relaxed((iommu)->reg + (addr))
-diff --git a/include/linux/riscv_iommu.h b/include/linux/riscv_iommu.h
+ endmenu
+diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
+index ea52711a87e3..89a347232c29 100644
+--- a/drivers/perf/Makefile
++++ b/drivers/perf/Makefile
+@@ -35,3 +35,4 @@ obj-$(CONFIG_DWC_PCIE_PMU) += dwc_pcie_pmu.o
+ obj-$(CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += arm_cspmu/
+ obj-$(CONFIG_MESON_DDR_PMU) += amlogic/
+ obj-$(CONFIG_CXL_PMU) += cxl_pmu.o
++obj-$(CONFIG_RISCV_IOMMU_HPM) += riscv_iommu_hpm.o
+diff --git a/drivers/perf/riscv_iommu_hpm.c b/drivers/perf/riscv_iommu_hpm.c
 new file mode 100644
-index 000000000000..0447bc4d1fab
+index 000000000000..4d5ce0f380e7
 --- /dev/null
-+++ b/include/linux/riscv_iommu.h
-@@ -0,0 +1,75 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
++++ b/drivers/perf/riscv_iommu_hpm.c
+@@ -0,0 +1,864 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * RISC-V IOMMU Common Interface
++ * RISC-V IOMMU Hardware Performance Monitor driver
 + *
-+ * This header provides a common interface for sharing resources between
-+ * the RISC-V IOMMU driver and its auxiliary bus child drivers.
++ * This driver provides perf-based performance monitoring for RISC-V IOMMU
++ * devices via the auxiliary bus framework.
 + *
 + * Copyright (C) 2026 SpacemiT Technologies Inc.
-+ *   Author: 2026 Jingyu Li <joey.li@spacemit.com>
-+ *                Lv Zheng <lv.zheng@spacemit.com>
++ *    Author: 2026 Jingyu Li <joey.li@spacemit.com>
++ *                 Lv Zheng <lv.zheng@spacemit.com>
 + */
 +
-+#ifndef _LINUX_RISCV_IOMMU_H_
-+#define _LINUX_RISCV_IOMMU_H_
++#include <linux/bitfield.h>
++#include <linux/perf_event.h>
++#include <linux/riscv_iommu.h>
 +
-+#include <linux/auxiliary_bus.h>
++/* Performance monitoring registers */
++#define RISCV_IOMMU_REG_IOCOUNTOVF	0x0000
++#define RISCV_IOMMU_IOCOUNTOVF_CY	BIT(0)
++#define RISCV_IOMMU_IOCOUNTOVF_HPM	GENMASK_ULL(31, 1)
 +
-+struct riscv_iommu_device;
++#define RISCV_IOMMU_REG_IOCOUNTINH	0x0004
++#define RISCV_IOMMU_IOCOUNTINH_CY	BIT(0)
++#define RISCV_IOMMU_IOCOUNTINH_HPM	GENMASK(31, 1)
 +
-+/**
-+ * struct riscv_iommu_subdev - RISC-V IOMMU auxiliary bus subdevice
-+ * @link: list node for iommu->subdev_list
-+ * @auxdev: auxiliary bus device ((use auxdev.id for unique id)
-+ * @base: PMU register base
-+ * @iommu: parent IOMMU (opaque)
-+ * @info: subdevice-specific info, freed in release
-+ */
-+struct riscv_iommu_subdev {
-+	struct list_head link;
-+	struct auxiliary_device auxdev;
++#define RISCV_IOMMU_REG_IOHPMCYCLES	0x0008
++#define RISCV_IOMMU_IOHPMCYCLES_COUNTER	GENMASK_ULL(62, 0)
++#define RISCV_IOMMU_IOHPMCYCLES_OF	BIT_ULL(63)
++
++#define RISCV_IOMMU_REG_IOHPMCTR_BASE	0x0010
++#define RISCV_IOMMU_REG_IOHPMCTR(_n)	(RISCV_IOMMU_REG_IOHPMCTR_BASE + ((_n) * 0x8))
++#define RISCV_IOMMU_IOHPMEVENT_COUNTER	GENMASK_ULL(63, 0)
++
++#define RISCV_IOMMU_REG_IOHPMEVT_BASE	0x0108
++#define RISCV_IOMMU_REG_IOHPMEVT(_n)	(RISCV_IOMMU_REG_IOHPMEVT_BASE + ((_n) * 0x8))
++#define RISCV_IOMMU_IOHPMEVT_EVENTID	GENMASK_ULL(14, 0)
++#define RISCV_IOMMU_IOHPMEVT_DMASK	BIT_ULL(15)
++#define RISCV_IOMMU_IOHPMEVT_PID_PSCID	GENMASK_ULL(35, 16)
++#define RISCV_IOMMU_IOHPMEVT_DID_GSCID	GENMASK_ULL(59, 36)
++#define RISCV_IOMMU_IOHPMEVT_PV_PSCV	BIT_ULL(60)
++#define RISCV_IOMMU_IOHPMEVT_DV_GSCV	BIT_ULL(61)
++#define RISCV_IOMMU_IOHPMEVT_IDT	BIT_ULL(62)
++#define RISCV_IOMMU_IOHPMEVT_OF		BIT_ULL(63)
++
++/* HPM counter definitions */
++#define RISCV_IOMMU_IOHPMEVT_CNT	31
++#define RISCV_IOMMU_HPMCOUNTER_CYCLES	RISCV_IOMMU_IOHPMEVT_CNT
++#define RISCV_IOMMU_HPMCOUNTER_MAX	(RISCV_IOMMU_IOHPMEVT_CNT + 1)
++
++/* HPM event IDs */
++enum riscv_iommu_hpmevent_id {
++	RISCV_IOMMU_HPMEVENT_INVALID    = 0,
++	RISCV_IOMMU_HPMEVENT_URQ        = 1,
++	RISCV_IOMMU_HPMEVENT_TRQ        = 2,
++	RISCV_IOMMU_HPMEVENT_ATS_RQ     = 3,
++	RISCV_IOMMU_HPMEVENT_TLB_MISS   = 4,
++	RISCV_IOMMU_HPMEVENT_DD_WALK    = 5,
++	RISCV_IOMMU_HPMEVENT_PD_WALK    = 6,
++	RISCV_IOMMU_HPMEVENT_S_VS_WALKS = 7,
++	RISCV_IOMMU_HPMEVENT_G_WALKS    = 8,
++	RISCV_IOMMU_HPMEVENT_MAX        = 128
++};
++
++#define RISCV_IOMMU_HPMEVENT_CYCLES	RISCV_IOMMU_HPMEVENT_INVALID
++#define RISCV_IOMMU_HPMEVENT_MAX	128
++
++#define to_iommu_hpm(p) (container_of(p, struct riscv_iommu_hpm, pmu))
++
++#define RISCV_IOMMU_HPM_EVENT_EXTRACTOR(_n, _c, _s, _e)		\
++	static inline u32 get_##_n(struct perf_event *event)	\
++	{							\
++		return FIELD_GET(GENMASK_ULL(_e, _s),		\
++				 event->attr._c);		\
++	}
++
++RISCV_IOMMU_HPM_EVENT_EXTRACTOR(event, config, 0, 14);
++RISCV_IOMMU_HPM_EVENT_EXTRACTOR(filter_dmask, config1, 15, 15);
++RISCV_IOMMU_HPM_EVENT_EXTRACTOR(filter_pid_pscid, config1, 16, 35);
++RISCV_IOMMU_HPM_EVENT_EXTRACTOR(filter_did_gscid, config1, 36, 59);
++RISCV_IOMMU_HPM_EVENT_EXTRACTOR(filter_pv_pscv, config1, 60, 60);
++RISCV_IOMMU_HPM_EVENT_EXTRACTOR(filter_dv_gscv, config1, 61, 61);
++RISCV_IOMMU_HPM_EVENT_EXTRACTOR(filter_idt, config1, 62, 62);
++
++struct riscv_iommu_hpm {
++	struct pmu pmu;
++	struct riscv_iommu_subdev *subdev;
 +	void __iomem *base;
-+	struct riscv_iommu_device *iommu;
-+	void *info;
-+};
-+
-+/**
-+ * struct riscv_iommu_hpm_info - HPM info for IOATS (main IOMMU HPM)
-+ * @irq: interrupt number
-+ */
-+struct riscv_iommu_hpm_info {
 +	unsigned int irq;
++	unsigned int on_cpu;
++	struct hlist_node node;
++	/*
++	 * Layout of events:
++	 * 0       -> HPMCYCLES
++	 * 1...n-1 -> HPMEVENTS
++	 */
++	struct perf_event *events[RISCV_IOMMU_HPMCOUNTER_MAX];
++	DECLARE_BITMAP(supported_events, RISCV_IOMMU_HPMEVENT_MAX);
++	DECLARE_BITMAP(used_counters, RISCV_IOMMU_HPMCOUNTER_MAX);
++	unsigned int num_counters;
 +};
 +
-+/**
-+ * riscv_iommu_get_subdev - get riscv_iommu_subdev from device
-+ *
-+ * @dev: &device of the auxiliary device (auxdev->dev)
-+ *
-+ * Returns the riscv_iommu_subdev pointer, or NULL if @dev is NULL.
-+ */
-+static inline struct riscv_iommu_subdev *riscv_iommu_get_subdev(struct device *dev)
++static DEFINE_MUTEX(riscv_iommu_hpm_lock);
++static int cpuhp_state_num = -1;
++
++static inline void riscv_iommu_hpm_writel(struct riscv_iommu_hpm *hpm, u32 reg,
++					  u32 val)
 +{
-+	if (!dev)
-+		return NULL;
-+	return container_of(container_of(dev, struct auxiliary_device, dev),
-+			    struct riscv_iommu_subdev, auxdev);
++	writel_relaxed(val, hpm->base + reg);
++}
++
++static inline u32 riscv_iommu_hpm_readl(struct riscv_iommu_hpm *hpm, u32 reg)
++{
++	return readl_relaxed(hpm->base + reg);
++}
++
++static inline void riscv_iommu_hpm_writeq(struct riscv_iommu_hpm *hpm, u32 reg,
++					  u64 val)
++{
++	writeq_relaxed(val, hpm->base + reg);
++}
++
++static inline u64 riscv_iommu_hpm_readq(struct riscv_iommu_hpm *hpm, u32 reg)
++{
++	return readq_relaxed(hpm->base + reg);
++}
++
++/* All iohpmcycles and iohpmctr registers are 64-bit wide and WARL. If a
++ * 32-bit counter width should be supported according to a newer revision
++ * of the standard or a vendor specific implementation, the following
++ * functions should be extended.
++ */
++static inline void riscv_iommu_hpm_cycles_set_value(struct riscv_iommu_hpm *hpm,
++						    u64 value)
++{
++	riscv_iommu_hpm_writeq(hpm, RISCV_IOMMU_REG_IOHPMCYCLES,
++			       value & RISCV_IOMMU_IOHPMCYCLES_COUNTER);
++}
++
++static inline u64 riscv_iommu_hpm_cycles_get_value(struct riscv_iommu_hpm *hpm)
++{
++	return riscv_iommu_hpm_readq(hpm, RISCV_IOMMU_REG_IOHPMCYCLES) &
++	       RISCV_IOMMU_IOHPMCYCLES_COUNTER;
++}
++
++static inline void riscv_iommu_hpm_counter_set_value(struct riscv_iommu_hpm *hpm,
++						     u32 idx, u64 value)
++{
++	riscv_iommu_hpm_writeq(hpm, RISCV_IOMMU_REG_IOHPMCTR(idx), value);
++}
++
++static inline u64 riscv_iommu_hpm_counter_get_value(struct riscv_iommu_hpm *hpm,
++						    u32 idx)
++{
++	return riscv_iommu_hpm_readq(hpm, RISCV_IOMMU_REG_IOHPMCTR(idx));
++}
++
++static inline void riscv_iommu_hpm_cycles_enable(struct riscv_iommu_hpm *hpm)
++{
++	u32 val = riscv_iommu_hpm_readl(hpm, RISCV_IOMMU_REG_IOCOUNTINH);
++
++	val &= ~RISCV_IOMMU_IOCOUNTINH_CY;
++	riscv_iommu_hpm_writel(hpm, RISCV_IOMMU_REG_IOCOUNTINH, val);
++}
++
++static inline void riscv_iommu_hpm_cycles_disable(struct riscv_iommu_hpm *hpm)
++{
++	u32 val = riscv_iommu_hpm_readl(hpm, RISCV_IOMMU_REG_IOCOUNTINH);
++
++	val |= RISCV_IOMMU_IOCOUNTINH_CY;
++	riscv_iommu_hpm_writel(hpm, RISCV_IOMMU_REG_IOCOUNTINH, val);
++}
++
++static inline void riscv_iommu_hpm_counter_enable(struct riscv_iommu_hpm *hpm,
++						  u32 idx)
++{
++	u32 val = riscv_iommu_hpm_readl(hpm, RISCV_IOMMU_REG_IOCOUNTINH);
++
++	val &= ~BIT(idx + 1);
++	riscv_iommu_hpm_writel(hpm, RISCV_IOMMU_REG_IOCOUNTINH, val);
++}
++
++static inline void riscv_iommu_hpm_counter_disable(struct riscv_iommu_hpm *hpm,
++						   u32 idx)
++{
++	u32 val = riscv_iommu_hpm_readl(hpm, RISCV_IOMMU_REG_IOCOUNTINH);
++
++	val |= BIT(idx + 1);
++	riscv_iommu_hpm_writel(hpm, RISCV_IOMMU_REG_IOCOUNTINH, val);
++}
++
++static inline void riscv_iommu_hpm_cycles_clear_ovf(struct riscv_iommu_hpm *hpm)
++{
++	u64 val = riscv_iommu_hpm_readq(hpm, RISCV_IOMMU_REG_IOHPMCYCLES);
++
++	val &= ~RISCV_IOMMU_IOHPMCYCLES_OF;
++	riscv_iommu_hpm_writeq(hpm, RISCV_IOMMU_REG_IOHPMCYCLES, val);
++}
++
++static inline void riscv_iommu_hpm_counter_clear_ovf(struct riscv_iommu_hpm *hpm,
++						     u32 idx)
++{
++	u64 val = riscv_iommu_hpm_readq(hpm, RISCV_IOMMU_REG_IOHPMEVT(idx));
++
++	val &= ~RISCV_IOMMU_IOHPMEVT_OF;
++	riscv_iommu_hpm_writeq(hpm, RISCV_IOMMU_REG_IOHPMEVT(idx), val);
++}
++
++static inline void riscv_iommu_hpm_interrupt_clear(struct riscv_iommu_hpm *hpm)
++{
++	riscv_iommu_clear_pmip(hpm->subdev);
 +}
 +
 +/**
-+ * riscv_iommu_pmip_status - test if PM interrupt is pending
++ * riscv_iommu_hpm_event_update() - Update and return RISC-V IOMMU HPM
++ *                                  event counters
 + *
-+ * @subdev: subdevice with iommu
++ * @event: IOMMU performance event
 + *
-+ * Returns true if PM interrupt pending, false otherwise.
++ * This function can be used to implement the .read() interface of pmu.
 + */
-+bool riscv_iommu_pmip_status(struct riscv_iommu_subdev *subdev);
++static void riscv_iommu_hpm_event_update(struct perf_event *event)
++{
++	struct hw_perf_event *hwc = &event->hw;
++	struct riscv_iommu_hpm *hpm = to_iommu_hpm(event->pmu);
++	u64 delta, prev, now;
++	u32 idx = hwc->idx;
++
++	do {
++		prev = local64_read(&hwc->prev_count);
++		if (idx == RISCV_IOMMU_HPMCOUNTER_CYCLES)
++			now = riscv_iommu_hpm_cycles_get_value(hpm);
++		else
++			now = riscv_iommu_hpm_counter_get_value(hpm, idx);
++	} while (local64_cmpxchg(&hwc->prev_count, prev, now) != prev);
++
++	delta = now - prev;
++	if (idx == RISCV_IOMMU_HPMCOUNTER_CYCLES)
++		delta &= RISCV_IOMMU_IOHPMCYCLES_COUNTER;
++	else
++		delta &= RISCV_IOMMU_IOHPMEVENT_COUNTER;
++
++	local64_add(delta, &event->count);
++}
++
++static void riscv_iommu_hpm_set_period(struct riscv_iommu_hpm *hpm,
++				       struct hw_perf_event *hwc)
++{
++	u32 idx = hwc->idx;
++	u64 new, max_period;
++
++	if (idx == RISCV_IOMMU_HPMCOUNTER_CYCLES)
++		max_period = RISCV_IOMMU_IOHPMCYCLES_COUNTER;
++	else
++		max_period = RISCV_IOMMU_IOHPMEVENT_COUNTER;
++
++	/* Start at half the counter range */
++	new = max_period >> 1;
++
++	if (idx == RISCV_IOMMU_HPMCOUNTER_CYCLES)
++		riscv_iommu_hpm_cycles_set_value(hpm, new);
++	else
++		riscv_iommu_hpm_counter_set_value(hpm, idx, new);
++
++	local64_set(&hwc->prev_count, new);
++}
 +
 +/**
-+ * riscv_iommu_clear_pmip - clear PMIP bit in IPSR to ack PMU interrupt
++ * riscv_iommu_hpm_event_start() - Start RISC-V IOMMU HPM event
 + *
-+ * @subdev: subdevice with iommu
++ * @event: IOMMU performance event
++ * @flags: Performance event flags
++ *
++ * This function can be used to implement the .start() interface of pmu.
 + */
-+void riscv_iommu_clear_pmip(struct riscv_iommu_subdev *subdev);
++static void riscv_iommu_hpm_event_start(struct perf_event *event, int flags)
++{
++	struct riscv_iommu_hpm *hpm = to_iommu_hpm(event->pmu);
++	struct hw_perf_event *hwc = &event->hw;
++	u32 idx = hwc->idx;
 +
-+#endif /* _LINUX_RISCV_IOMMU_H_ */
++	hwc->state = 0;
++	riscv_iommu_hpm_set_period(hpm, hwc);
++
++	if (idx == RISCV_IOMMU_HPMCOUNTER_CYCLES)
++		riscv_iommu_hpm_cycles_enable(hpm);
++	else
++		riscv_iommu_hpm_counter_enable(hpm, idx);
++}
++
++/**
++ * riscv_iommu_hpm_event_stop() - Stop RISC-V IOMMU HPM event
++ *
++ * @event: IOMMU performance event
++ * @flags: Performance event flags
++ *
++ * This function can be used to implement the .stop() interface of pmu.
++ */
++static void riscv_iommu_hpm_event_stop(struct perf_event *event, int flags)
++{
++	struct riscv_iommu_hpm *hpm = to_iommu_hpm(event->pmu);
++	struct hw_perf_event *hwc = &event->hw;
++	u32 idx = hwc->idx;
++
++	if (hwc->state & PERF_HES_STOPPED)
++		return;
++
++	if (idx == RISCV_IOMMU_HPMCOUNTER_CYCLES)
++		riscv_iommu_hpm_cycles_disable(hpm);
++	else
++		riscv_iommu_hpm_counter_disable(hpm, idx);
++
++	if (flags & PERF_EF_UPDATE)
++		riscv_iommu_hpm_event_update(event);
++	hwc->state |= PERF_HES_STOPPED | PERF_HES_UPTODATE;
++}
++
++static void riscv_iommu_hpm_set_event_filter(struct perf_event *event, int idx,
++					     u32 pid_pscid, u32 did_gscid,
++					     u32 pv_pscv,
++					     u32 dv_gscv, u32 idt, u32 dmask)
++{
++	struct riscv_iommu_hpm *hpm = to_iommu_hpm(event->pmu);
++	u64 event_cfg;
++
++	/* Start with event ID */
++	event_cfg = get_event(event);
++	/* Set ID fields - values of 0 are valid */
++	event_cfg |= FIELD_PREP(RISCV_IOMMU_IOHPMEVT_PID_PSCID,
++				pid_pscid & 0xFFFFF);
++	event_cfg |= FIELD_PREP(RISCV_IOMMU_IOHPMEVT_DID_GSCID,
++				did_gscid & 0xFFFFFF);
++	/* Set control flags - 0 means disabled, 1 means enabled */
++	if (pv_pscv)
++		event_cfg |= RISCV_IOMMU_IOHPMEVT_PV_PSCV;
++	if (dv_gscv)
++		event_cfg |= RISCV_IOMMU_IOHPMEVT_DV_GSCV;
++	if (idt)
++		event_cfg |= RISCV_IOMMU_IOHPMEVT_IDT;
++	if (dmask)
++		event_cfg |= RISCV_IOMMU_IOHPMEVT_DMASK;
++
++	/* Write to the specific event register for this counter */
++	riscv_iommu_hpm_writeq(hpm,
++			       RISCV_IOMMU_REG_IOHPMEVT(idx), event_cfg);
++}
++
++static void riscv_iommu_hpm_apply_event_filter(struct riscv_iommu_hpm *hpm,
++					       struct perf_event *event, int idx)
++{
++	u32 pid_pscid, did_gscid, pv_pscv, dv_gscv, idt, dmask;
++
++	pid_pscid = get_filter_pid_pscid(event);
++	did_gscid = get_filter_did_gscid(event);
++	pv_pscv = get_filter_pv_pscv(event);
++	dv_gscv = get_filter_dv_gscv(event);
++	idt = get_filter_idt(event);
++	dmask = get_filter_dmask(event);
++
++	riscv_iommu_hpm_set_event_filter(event, idx, pid_pscid, did_gscid,
++					 pv_pscv, dv_gscv, idt, dmask);
++}
++
++static int riscv_iommu_hpm_get_event_idx(struct riscv_iommu_hpm *hpm,
++					 struct perf_event *event)
++{
++	int idx;
++	unsigned int num_ctrs = hpm->num_counters;
++	u16 event_id = get_event(event);
++
++	/* Handle cycles event specially */
++	if (event_id == RISCV_IOMMU_HPMEVENT_CYCLES) {
++		/* Check if cycles counter is already in use */
++		if (test_and_set_bit(RISCV_IOMMU_HPMCOUNTER_CYCLES,
++				     hpm->used_counters)) {
++			dev_dbg(hpm->pmu.dev,
++				"Cycles counter already in use\n");
++			return -EAGAIN;
++		}
++		return RISCV_IOMMU_HPMCOUNTER_CYCLES;
++	}
++
++	idx = find_first_zero_bit(hpm->used_counters, num_ctrs - 1);
++	if (idx == num_ctrs - 1) {
++		dev_dbg(hpm->pmu.dev, "All counters already in use\n");
++		return -EAGAIN;
++	}
++
++	riscv_iommu_hpm_apply_event_filter(hpm, event, idx);
++	set_bit(idx, hpm->used_counters);
++
++	return idx;
++}
++
++/**
++ * riscv_iommu_hpm_event_add() - Add a RISC-V IOMMU HPM event
++ *
++ * @event - IOMMU performance event
++ * @flags - Performance event flags
++ *
++ * This function can be used to implement the .add() interface of pmu.
++ */
++static int riscv_iommu_hpm_event_add(struct perf_event *event, int flags)
++{
++	struct riscv_iommu_hpm *hpm = to_iommu_hpm(event->pmu);
++	struct hw_perf_event *hwc = &event->hw;
++	int idx;
++
++	idx = riscv_iommu_hpm_get_event_idx(hpm, event);
++	if (idx < 0)
++		return idx;
++
++	hwc->idx = idx;
++	if (idx == RISCV_IOMMU_HPMCOUNTER_CYCLES)
++		hpm->events[0] = event;
++	else
++		hpm->events[idx + 1] = event;
++
++	hwc->state = PERF_HES_UPTODATE | PERF_HES_STOPPED;
++	if (flags & PERF_EF_START)
++		riscv_iommu_hpm_event_start(event, flags);
++	perf_event_update_userpage(event);
++
++	return 0;
++}
++
++/**
++ * riscv_iommu_hpm_event_del() - Delete a RISC-V IOMMU HPM event
++ *
++ * @event: IOMMU performance event
++ * @flags: Performance event flags
++ *
++ * This function can be used to implement the .del() interface of pmu.
++ */
++static void riscv_iommu_hpm_event_del(struct perf_event *event, int flags)
++{
++	struct riscv_iommu_hpm *hpm = to_iommu_hpm(event->pmu);
++	struct hw_perf_event *hwc = &event->hw;
++	u32 idx = hwc->idx;
++
++	riscv_iommu_hpm_event_stop(event, flags | PERF_EF_UPDATE);
++
++	/* Clear the used counter bit and event array entry */
++	if (idx == RISCV_IOMMU_HPMCOUNTER_CYCLES) {
++		clear_bit(RISCV_IOMMU_HPMCOUNTER_CYCLES,
++			  hpm->used_counters);
++		hpm->events[0] = NULL;
++	} else {
++		clear_bit(idx, hpm->used_counters);
++		hpm->events[idx + 1] = NULL;
++	}
++
++	perf_event_update_userpage(event);
++}
++
++/**
++ * riscv_iommu_hpm_event_init() - Initialize HPM event attributes
++ *
++ * @event: IOMMU performance event
++ *
++ * This function can be used to implement the .event_init() interface of
++ * pmu.
++ */
++static int riscv_iommu_hpm_event_init(struct perf_event *event)
++{
++	struct riscv_iommu_hpm *hpm = to_iommu_hpm(event->pmu);
++	struct hw_perf_event *hwc = &event->hw;
++	struct perf_event *sibling;
++	int group_num_events = 1;
++	u16 event_id;
++
++	if (event->attr.type != event->pmu->type)
++		return -ENOENT;
++	if (hwc->sample_period)
++		return -EINVAL;
++	if (event->cpu < 0)
++		return -EINVAL;
++
++	event_id = get_event(event);
++	if (event_id >= RISCV_IOMMU_HPMEVENT_MAX ||
++	    !test_bit(event_id, hpm->supported_events)) {
++		dev_dbg(hpm->pmu.dev, "Invalid event %d for this HPM\n",
++			event_id);
++		return -EINVAL;
++	}
++
++	if (!is_software_event(event->group_leader)) {
++		if (++group_num_events > hpm->num_counters)
++			return -EINVAL;
++	}
++
++	for_each_sibling_event(sibling, event->group_leader) {
++		if (is_software_event(sibling))
++			continue;
++		if (++group_num_events > hpm->num_counters)
++			return -EINVAL;
++	}
++
++	event->cpu = hpm->on_cpu;
++	hwc->idx = -1;
++
++	return 0;
++}
++
++static ssize_t riscv_iommu_hpm_cpumask_show(struct device *dev,
++					    struct device_attribute *attr,
++					    char *buf)
++{
++	struct riscv_iommu_hpm *hpm = dev_get_drvdata(dev);
++
++	return cpumap_print_to_pagebuf(true, buf, cpumask_of(hpm->on_cpu));
++}
++
++static struct device_attribute riscv_iommu_hpm_cpumask_attr =
++	__ATTR(cpumask, 0444, riscv_iommu_hpm_cpumask_show, NULL);
++
++static struct attribute *riscv_iommu_hpm_cpumask_attrs[] = {
++	&riscv_iommu_hpm_cpumask_attr.attr,
++	NULL
++};
++
++static const struct attribute_group riscv_iommu_hpm_cpumask_group = {
++	.attrs = riscv_iommu_hpm_cpumask_attrs,
++};
++
++#define IOMMU_HPM_EVENT_ATTR(name, config)		\
++	PMU_EVENT_ATTR_ID(name, riscv_iommu_hpm_event_show, config)
++
++static ssize_t riscv_iommu_hpm_event_show(struct device *dev,
++					  struct device_attribute *attr,
++					  char *page)
++{
++	struct perf_pmu_events_attr *hpm_attr;
++
++	hpm_attr = container_of(attr, struct perf_pmu_events_attr, attr);
++	return sysfs_emit(page, "event=0x%02llx\n", hpm_attr->id);
++}
++
++static struct attribute *riscv_iommu_hpm_events[] = {
++	IOMMU_HPM_EVENT_ATTR(cycles, RISCV_IOMMU_HPMEVENT_CYCLES),
++	IOMMU_HPM_EVENT_ATTR(untrans_rq, RISCV_IOMMU_HPMEVENT_URQ),
++	IOMMU_HPM_EVENT_ATTR(trans_rq, RISCV_IOMMU_HPMEVENT_TRQ),
++	IOMMU_HPM_EVENT_ATTR(ats_rq, RISCV_IOMMU_HPMEVENT_ATS_RQ),
++	IOMMU_HPM_EVENT_ATTR(tlb_mis, RISCV_IOMMU_HPMEVENT_TLB_MISS),
++	IOMMU_HPM_EVENT_ATTR(dd_walk, RISCV_IOMMU_HPMEVENT_DD_WALK),
++	IOMMU_HPM_EVENT_ATTR(pd_walk, RISCV_IOMMU_HPMEVENT_PD_WALK),
++	IOMMU_HPM_EVENT_ATTR(s_walk, RISCV_IOMMU_HPMEVENT_S_VS_WALKS),
++	IOMMU_HPM_EVENT_ATTR(g_walk, RISCV_IOMMU_HPMEVENT_G_WALKS),
++	NULL
++};
++
++static umode_t riscv_iommu_hpm_event_is_visible(struct kobject *kobj,
++						struct attribute *attr,
++						int unused)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct riscv_iommu_hpm *hpm = dev_get_drvdata(dev);
++	struct perf_pmu_events_attr *hpm_attr;
++
++	hpm_attr = container_of(attr, struct perf_pmu_events_attr, attr.attr);
++	if (test_bit(hpm_attr->id, hpm->supported_events))
++		return attr->mode;
++
++	return 0;
++}
++
++static const struct attribute_group riscv_iommu_hpm_events_group = {
++	.name = "events",
++	.attrs = riscv_iommu_hpm_events,
++	.is_visible = riscv_iommu_hpm_event_is_visible,
++};
++
++PMU_FORMAT_ATTR(event, "config:0-14");
++PMU_FORMAT_ATTR(filter_pid_pscid, "config1:16-35");
++PMU_FORMAT_ATTR(filter_did_gscid, "config1:36-59");
++PMU_FORMAT_ATTR(filter_pv_pscv, "config1:60");
++PMU_FORMAT_ATTR(filter_dv_gscv, "config1:61");
++PMU_FORMAT_ATTR(filter_idt, "config1:62");
++PMU_FORMAT_ATTR(filter_dmask, "config1:15");
++
++static struct attribute *riscv_iommu_hpm_formats[] = {
++	&format_attr_event.attr,
++	&format_attr_filter_pid_pscid.attr,
++	&format_attr_filter_did_gscid.attr,
++	&format_attr_filter_pv_pscv.attr,
++	&format_attr_filter_dv_gscv.attr,
++	&format_attr_filter_idt.attr,
++	&format_attr_filter_dmask.attr,
++	NULL
++};
++
++static const struct attribute_group riscv_iommu_hpm_format_group = {
++	.name = "format",
++	.attrs = riscv_iommu_hpm_formats,
++};
++
++static const struct attribute_group *riscv_iommu_hpm_attr_grps[] = {
++	&riscv_iommu_hpm_cpumask_group,
++	&riscv_iommu_hpm_events_group,
++	&riscv_iommu_hpm_format_group,
++	NULL
++};
++
++static irqreturn_t riscv_iommu_hpm_handle_irq(int irq_num, void *data)
++{
++	struct riscv_iommu_hpm *hpm = data;
++	struct perf_event *event;
++	int idx;
++	u32 ovf;
++	DECLARE_BITMAP(ovs, 32);
++
++	if (!riscv_iommu_pmip_status(hpm->subdev))
++		return IRQ_NONE;
++
++	ovf = riscv_iommu_hpm_readl(hpm, RISCV_IOMMU_REG_IOCOUNTOVF);
++	if (!ovf)
++		return IRQ_HANDLED;
++
++	/* Handle cycles counter overflow (always stored at index 0) */
++	if (ovf & RISCV_IOMMU_IOCOUNTOVF_CY) {
++		event = hpm->events[0];
++		if (event && event->hw.idx == RISCV_IOMMU_HPMCOUNTER_CYCLES) {
++			riscv_iommu_hpm_cycles_clear_ovf(hpm);
++			riscv_iommu_hpm_event_update(event);
++			riscv_iommu_hpm_set_period(hpm, &event->hw);
++		}
++	}
++
++	/*
++	 * Handle regular HPM counter overflows.
++	 * IOCOUNTOVF bit mapping:
++	 *   bit 0: cycles (already handled above)
++	 *   bit 1: counter 0 -> events[1]
++	 *   bit 2: counter 1 -> events[2]
++	 *   ...
++	 *   bit N: counter N-1 -> events[N]
++	 * We need to check bits [1..num_counters] and skip bit 0.
++	 */
++	bitmap_from_u64(ovs, ovf);
++	for_each_set_bit(idx, ovs, hpm->num_counters) {
++		/* Skip bit 0 (cycles counter, already handled) */
++		if (idx == 0)
++			continue;
++
++		/* IOCOUNTOVF bit N corresponds to counter N-1, stored in
++		 * events[N]
++		 */
++		event = hpm->events[idx];
++		if (WARN_ON_ONCE(!event))
++			continue;
++
++		dev_dbg(&hpm->subdev->auxdev.dev, "counter overflow: hw_idx=%d, counter=%d\n",
++			idx, idx - 1);
++		riscv_iommu_hpm_counter_clear_ovf(hpm, idx - 1);
++		riscv_iommu_hpm_event_update(event);
++		riscv_iommu_hpm_set_period(hpm, &event->hw);
++	}
++
++	riscv_iommu_hpm_interrupt_clear(hpm);
++
++	return IRQ_HANDLED;
++}
++
++static int riscv_iommu_hpm_offline_cpu(unsigned int cpu,
++				       struct hlist_node *node)
++{
++	struct riscv_iommu_hpm *hpm;
++	unsigned int target;
++
++	hpm = hlist_entry_safe(node, struct riscv_iommu_hpm, node);
++	if (cpu != hpm->on_cpu)
++		return 0;
++
++	if (!hpm->irq)
++		return 0;
++
++	target = cpumask_any_but(cpu_online_mask, cpu);
++	if (target >= nr_cpu_ids)
++		return 0;
++
++	perf_pmu_migrate_context(&hpm->pmu, cpu, target);
++	hpm->on_cpu = target;
++	if (hpm->irq > 0)
++		WARN_ON(irq_set_affinity(hpm->irq, cpumask_of(target)));
++
++	return 0;
++}
++
++/* Protected by riscv_iommu_hpm_lock. This block is self-contained; any
++ * modifications to cpuhp handling must preserve mutex serialization around
++ * cpuhp_state_num and the cpuhp_state_*() calls.
++ */
++static int riscv_iommu_hpm_cpuhp_add(struct hlist_node *node)
++{
++	int err = 0;
++
++	mutex_lock(&riscv_iommu_hpm_lock);
++	if (cpuhp_state_num < 0) {
++		cpuhp_state_num = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
++							  "perf/riscv/iommu:online",
++							  NULL,
++							  riscv_iommu_hpm_offline_cpu);
++		if (cpuhp_state_num < 0) {
++			err = -EINVAL;
++			goto unlock;
++		}
++	}
++	err = cpuhp_state_add_instance_nocalls(cpuhp_state_num, node);
++unlock:
++	mutex_unlock(&riscv_iommu_hpm_lock);
++	return err;
++}
++
++static void riscv_iommu_hpm_cpuhp_remove(struct hlist_node *node)
++{
++	mutex_lock(&riscv_iommu_hpm_lock);
++	if (cpuhp_state_num >= 0)
++		cpuhp_state_remove_instance_nocalls(cpuhp_state_num, node);
++	mutex_unlock(&riscv_iommu_hpm_lock);
++}
++
++static void riscv_iommu_hpm_reset(struct riscv_iommu_hpm *hpm)
++{
++	u64 counter_present_mask = (1ULL << hpm->num_counters) - 1;
++
++	/* Disable all counters */
++	riscv_iommu_hpm_writel(hpm, RISCV_IOMMU_REG_IOCOUNTINH,
++			       counter_present_mask);
++	/* Clear interrupt pending status */
++	riscv_iommu_hpm_interrupt_clear(hpm);
++}
++
++static void riscv_iommu_hpm_set_standard_events(struct riscv_iommu_hpm *hpm)
++{
++	/* Cycles counter is always supported */
++	set_bit(RISCV_IOMMU_HPMEVENT_CYCLES, hpm->supported_events);
++
++	/* Standard RISC-V IOMMU HPM events */
++	set_bit(RISCV_IOMMU_HPMEVENT_URQ, hpm->supported_events);
++	set_bit(RISCV_IOMMU_HPMEVENT_TRQ, hpm->supported_events);
++	set_bit(RISCV_IOMMU_HPMEVENT_ATS_RQ, hpm->supported_events);
++	set_bit(RISCV_IOMMU_HPMEVENT_TLB_MISS, hpm->supported_events);
++	set_bit(RISCV_IOMMU_HPMEVENT_DD_WALK, hpm->supported_events);
++	set_bit(RISCV_IOMMU_HPMEVENT_PD_WALK, hpm->supported_events);
++	set_bit(RISCV_IOMMU_HPMEVENT_S_VS_WALKS, hpm->supported_events);
++	set_bit(RISCV_IOMMU_HPMEVENT_G_WALKS, hpm->supported_events);
++}
++
++static int riscv_iommu_hpm_probe(struct auxiliary_device *auxdev,
++				 const struct auxiliary_device_id *id)
++{
++	struct riscv_iommu_subdev *subdev;
++	struct riscv_iommu_hpm *hpm;
++	struct device *dev = &auxdev->dev;
++	struct riscv_iommu_hpm_info *info;
++	const char *hpm_name;
++	u32 val;
++	int err;
++
++	subdev = riscv_iommu_get_subdev(dev);
++	if (!subdev) {
++		dev_err(dev, "No auxiliary device data\n");
++		return -ENODEV;
++	}
++
++	info = subdev->info;
++	if (!info || info->irq <= 0) {
++		dev_err(dev, "HPM: No IRQ available\n");
++		return -EINVAL;
++	}
++
++	hpm = devm_kzalloc(dev, sizeof(*hpm), GFP_KERNEL);
++	if (!hpm)
++		return -ENOMEM;
++
++	hpm->subdev = subdev;
++	hpm->base = subdev->base;
++	hpm->on_cpu = raw_smp_processor_id();
++	hpm->irq = info->irq;
++
++	bitmap_zero(hpm->used_counters, RISCV_IOMMU_HPMCOUNTER_MAX);
++	bitmap_zero(hpm->supported_events, RISCV_IOMMU_HPMEVENT_MAX);
++
++	riscv_iommu_hpm_writel(hpm, RISCV_IOMMU_REG_IOCOUNTINH, 0xFFFFFFFF);
++	val = riscv_iommu_hpm_readl(hpm, RISCV_IOMMU_REG_IOCOUNTINH);
++	hpm->num_counters = hweight32(val & RISCV_IOMMU_IOCOUNTINH_HPM);
++	if (!hpm->num_counters)
++		return -ENODEV;
++
++	riscv_iommu_hpm_reset(hpm);
++	riscv_iommu_hpm_set_standard_events(hpm);
++
++	hpm_name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
++	if (!hpm_name)
++		return -ENOMEM;
++
++	err = devm_request_threaded_irq(dev, hpm->irq, NULL,
++					riscv_iommu_hpm_handle_irq,
++					IRQF_SHARED | IRQF_ONESHOT,
++					hpm_name, hpm);
++	if (err)
++		return err;
++	WARN_ON(irq_set_affinity(hpm->irq, cpumask_of(hpm->on_cpu)));
++
++	hpm->pmu = (struct pmu) {
++		.name = hpm_name,
++		.module = THIS_MODULE,
++		.task_ctx_nr = perf_invalid_context,
++		.event_init = riscv_iommu_hpm_event_init,
++		.add = riscv_iommu_hpm_event_add,
++		.del = riscv_iommu_hpm_event_del,
++		.start = riscv_iommu_hpm_event_start,
++		.stop = riscv_iommu_hpm_event_stop,
++		.read = riscv_iommu_hpm_event_update,
++		.attr_groups = riscv_iommu_hpm_attr_grps,
++		.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
++	};
++
++	err = perf_pmu_register(&hpm->pmu, hpm_name, -1);
++	if (err) {
++		dev_err(dev, "HPM: Failed to register PMU\n");
++		return err;
++	}
++
++	dev_set_drvdata(dev, hpm);
++
++	err = riscv_iommu_hpm_cpuhp_add(&hpm->node);
++	if (err) {
++		perf_pmu_unregister(&hpm->pmu);
++		return err;
++	}
++
++	auxiliary_set_drvdata(auxdev, hpm);
++
++	dev_info(dev, "HPM: Registered %s (%d counters, IRQ %d)\n",
++		 hpm_name, hpm->num_counters, hpm->irq);
++
++	return 0;
++}
++
++static void riscv_iommu_hpm_remove(struct auxiliary_device *auxdev)
++{
++	struct riscv_iommu_hpm *hpm = auxiliary_get_drvdata(auxdev);
++
++	riscv_iommu_hpm_cpuhp_remove(&hpm->node);
++	perf_pmu_unregister(&hpm->pmu);
++}
++
++static const struct auxiliary_device_id riscv_iommu_hpm_ids[] = {
++	{ .name = "iommu.riscv_iommu_hpm" },
++	{}
++};
++MODULE_DEVICE_TABLE(auxiliary, riscv_iommu_hpm_ids);
++
++static struct auxiliary_driver riscv_iommu_hpm_driver = {
++	.name = "riscv_iommu_hpm",
++	.id_table = riscv_iommu_hpm_ids,
++	.probe = riscv_iommu_hpm_probe,
++	.remove = riscv_iommu_hpm_remove,
++};
++
++module_auxiliary_driver(riscv_iommu_hpm_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("RISC-V IOMMU Hardware Performance Monitor");
 -- 
 2.43.0
 
