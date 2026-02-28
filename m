@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8AB346E67
-	for <linux-perf-users@vger.kernel.org>; Sat, 28 Feb 2026 07:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3428346E67
+	for <linux-perf-users@vger.kernel.org>; Sat, 28 Feb 2026 07:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772262014; cv=none; b=bxnHA3+x0LLKwa/f2RY3Ya14uSc65Lwz/SVcpuYLrk+byPZ7TuWPJplcbity/Tg1KxMURkIDbuXsA6c4TVuAvza1V83lawFWfJsQ7gUW3Tcc7+pYx9x9EKX0q4ZvOKC59wTNlNWN8DNwTG7te6F2lGSJJ1Ct49+R8TfWtAjsFfw=
+	t=1772262017; cv=none; b=WkYuweKhb1UEZ2Q5Ts/j8256Jc2fvMr0OjesDdvaKApFzOBkf1ZhkomSbVRW0K+tonjCwwN2mHgnoRLtcWv/obhrQGKGowtLhRTBArx2xsbIskqh81/xHMGGDKR+YgiIPwEsg1snr1vAtWWG8Q/hGrTflekTAZNBFb/2mYzXHsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772262014; c=relaxed/simple;
-	bh=7sIjHudW7FWHJUUA2b7c4SCeJtZgcleFZwQLO504uPM=;
+	s=arc-20240116; t=1772262017; c=relaxed/simple;
+	bh=Kax/myIMGExs7wxnaLH23BK2SiUucjfK/qLnlcckqHU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=p62m6vlyXfMXnUzO0ezTLTGoxMW/gxqyHtYtqp/o8Ka+WEJv9QcnTg9q7uO3PBJ7mwtR7OLskKW1ius8RuBbSb2WJSNJY/9fMtKsZCKpZ5AvWvvZnWjog1iFk+ohpTE9ChqOTJ3hid6eFzQwv4rJ7eUlgpabeKdWV3NfhChEcMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E1FhEh73; arc=none smtp.client-ip=74.125.82.202
+	 To:Content-Type; b=jRxdw78wwDBx1RIFUtQgnFdZ8rBAvmWKgl0fS//fLbEeij7HAqYf5tT9Ndh1V4Xxk1w7wjhz9RTzg0oW1cxkji2aShdgd9xHbr/2r45OejHMlOOaEi+cBS+byPnIh4DMHjL8ij9/uxxzSiUqaAk2hiLqLol2CViTZivU0UkiMOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0zQZQpcs; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E1FhEh73"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ba8013a9e3so2700916eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2026 23:00:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0zQZQpcs"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-126e8ee6227so5249054c88.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2026 23:00:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772262013; x=1772866813; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1772262015; x=1772866815; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z/wg1/ueOUJ8UkhVCAoXWbqideDmQLzWl9fomGjlxiM=;
-        b=E1FhEh73jKnvXiQCH6d4Z3nS3wvJ6mFtONt9VS1FF1LVuKOoeFyCmOXe+WiiteW9VN
-         pNdBCOtf9y2AhpGMgViSryH3D/ATt2c8qhtPeU7pvE1xL70Juq4bK7oaSQGmAt9I8gWI
-         x4qrb9HiOQ+cOYfpKSzcdfR/TmHRvIKj95kaFPiWXABMJeRMIk/biLFZTPn2qDQvdjeK
-         2oWi60r+9YBcxBJ4oW+nTKqHojtwXfAdFVapJZCG+HWC2mPqSqeppyy4TZ8L6RCR4TOY
-         T5h6U8HtlQVU9R0Be/yLqcyfhFXinhK049iRKZjIvExPUsRP66qfuSq4acCpDklHhGAT
-         goMw==
+        bh=MytKBoIqsrm5Um7QBXIJNdgw1mWcSqMwS6R0Qqoo6pU=;
+        b=0zQZQpcsTTpZzEU5k9K7BT0FCejQADweEGcq1ZKVduNZevcMwhzBKgqwe/YE4E1JUY
+         OOVjk+kv4p/5+/gxaCNiM/Va2Pz0DLWpe2DqoBAHYVB2AG8VYc5iXYbkpnomXXWnm0Qd
+         xouWEFN6S6D/Xo/0+sEYKSvvljMDbqRp9wYixyJTofdeDYrzNH+4zntJbUzSG0HVi15F
+         bqeJDFFCR8zvoPIqPA9F+Su9EXcsTR9VSHcVTmLexFISoV78MwUZc2a5XryhItbt35DL
+         whRwdRkO0FZDQKxJ7LjVjEqrYbqrDo+dtvHDkMwTysR0y8iCVYji+ZMIdjNB7E+wMHGP
+         gggA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772262013; x=1772866813;
+        d=1e100.net; s=20230601; t=1772262015; x=1772866815;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z/wg1/ueOUJ8UkhVCAoXWbqideDmQLzWl9fomGjlxiM=;
-        b=QNaPMiVYBUFWe/1dojuNIF1hQApmyuUI19Dl1GQPaUjWr7HJreemRKr3yvdRw7ahqt
-         sRZ7PsKTUNZMcaH+tj8NBr/v52tMMj6uV5vl7xF+KaylvTn3PI4d5Nf8ztukuUpGbIAE
-         MQ/dO+f/L9AZk3bqyj1NKwJKmkGqNJezeDhiXfVxBYHfs3EFQBzEEu08KyE+VkE09Z1F
-         pi+PX6yxW+ssK7xpBDGQc4PbNsyjAHGY5LAhg/5ITkV1VjSmolltGq73/tmCqxVMuRm6
-         8xveyDMdrOuZFBeeKnCi4vIE06QDBs9KMgXHdHqvFUE+T7h1snp6nDnlMFz/7S2pIHup
-         WpwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0eYyzgeQ36QEFDWsKd/GE/UHJLD5Q9wGC6yCI/EV/yfkLCuVIaSGgwJ8mrBvIrVO4GXGGE7dQkcVgHsz7Y358@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvuLKKgJifvTx3ERgMHtjQQ1cM2pmBZY9d//kYLtgJI26gJgP3
-	4scXXj7/Kk7jFZZZdLSQejIq+aYdokOiH7ZSmEA9RfuGIzr6xuyX2hZPv1CSmNra8UC0sHVOJH+
-	1/meuZ8B/Ag==
-X-Received: from dyblc5.prod.google.com ([2002:a05:7301:1305:b0:2ba:ad3a:9ab0])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:a146:b0:2b7:f0a0:c195
- with SMTP id 5a478bee46e88-2bde1f9c667mr2195942eec.31.1772262012517; Fri, 27
- Feb 2026 23:00:12 -0800 (PST)
-Date: Fri, 27 Feb 2026 22:59:49 -0800
+        bh=MytKBoIqsrm5Um7QBXIJNdgw1mWcSqMwS6R0Qqoo6pU=;
+        b=a7UWnB0FrAxAoTHXOeq4ilbv25hgAYWluqaU3XkFeXtWy30aNqEl+JcLWmJsoRrCCl
+         klGonebMJRunAiKJ4JXiO6ackiUbl4gr6mS7oTRtM1o1DCbhPs2rtb6vqoCyybp7ApTE
+         CVDIUrA3OlgAuP8f7wEE1+PB4U5MABXnlLsLmjmuxoZlKNepB6Sax9T7hLqYpJUpdGqQ
+         UX3/XBcOfGxNvtkBnspWl1gnEe0UvhQY8IHz090U9dzfeRHSnNvGbr0jtyzC3t+rNiYw
+         /gGOGBd5V/FAAO+FDKWAGFuT2q2Cf606Kyvj8RXLbuk3fHQ/Vly3V1e0SLeexiUO9dv8
+         cfiA==
+X-Forwarded-Encrypted: i=1; AJvYcCUixDZZ4n8ZfcYXuwdwiBoFT48wstRZcuQAGUqzarN4zbkKXoeh/1cR2dykOT/KPNtAVLCuNktRfdKiz/IvK6jx@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoeWuJfwK+G3N8DhvibwSzLNZzZtQf592nSwL1B1YfpO90BYxr
+	7yKms+sO7+28pIFxGOVa5D2h0HE1l3/wT1EBsIxQnGxPEZUKcKvZANTgaF5TnsLtcRTdnJ1zH5V
+	B/XpEXQNB0A==
+X-Received: from dlg18.prod.google.com ([2002:a05:7022:792:b0:127:93b2:e6d4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1a81:b0:127:387f:bae5
+ with SMTP id a92af1059eb24-1278fc93088mr1799027c88.45.1772262014661; Fri, 27
+ Feb 2026 23:00:14 -0800 (PST)
+Date: Fri, 27 Feb 2026 22:59:50 -0800
 In-Reply-To: <20260228065953.3226283-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260228065953.3226283-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <20260228065953.3226283-4-irogers@google.com>
-Subject: [PATCH v2 3/7] perf session: Extra logging for failed to process events
+Message-ID: <20260228065953.3226283-5-irogers@google.com>
+Subject: [PATCH v2 4/7] perf header: Refactor pipe mode end marker handling
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,84 +72,374 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Print log information in ordered event processing so that the cause of
-finished round failing is clearer. Print the event name along with its
-number when an event isn't processed. Add extra detail about where the
-failure happened.
+In non-pipe/data mode the header has a 256-bit bitmap representing
+whether a feature is enabled or not. In pipe mode features are written
+out in perf_event__synthesize_features as PERF_RECORD_HEADER_FEATURE
+events with a special zero sized marker for the last feature. If a new
+feature is added the last feature marker event appears as that feature
+from old pipe mode perf data. As the event is zero sized it will fail
+to be processed and generally terminate perf.
 
-The following log lines come from running `perf data convert`. Before:
-  0xa250 [0x10]: failed to process type: 80
+Add a last_feat variable to the header that in non-pipe/data mode is
+just HEADER_LAST_FEATURE. In pipe mode compute the last_feat by
+handling zero sized feature events, assuming they are the marker and
+updating last_feat accordingly. Potentially a feature event could be
+zero sized and so still process the feature event, just ignore the
+error if it fails.
 
-After:
-  0xa250 [0x10]: piped event processing failed for event of type: FEATURE (80)
+As perf_event__process_feature can properly handle pipe mode data,
+migrate users to it except for report that still wants to group events
+and stop header printing with the last feature marker. Make
+perf_event__process_feature non-fatal in the case of a newer feature
+than this version of perf's HEADER_LAST_FEATURE, which was the
+behavior all users wanted.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/session.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ tools/perf/builtin-annotate.c       | 11 +-----
+ tools/perf/builtin-report.c         | 27 ++++++-------
+ tools/perf/builtin-script.c         | 11 +-----
+ tools/perf/util/data-convert-bt.c   |  9 ++---
+ tools/perf/util/data-convert-json.c | 12 +-----
+ tools/perf/util/header.c            | 59 ++++++++++++++++++++++-------
+ tools/perf/util/header.h            |  4 +-
+ tools/perf/util/intel-tpebs.c       | 11 +-----
+ 8 files changed, 67 insertions(+), 77 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 4b465abfa36c..492515789d3d 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -131,10 +131,17 @@ static int ordered_events__deliver_event(struct ordered_events *oe,
- {
- 	struct perf_session *session = container_of(oe, struct perf_session,
- 						    ordered_events);
-+	int ret =  perf_session__deliver_event(session, event->event,
-+					       session->tool, event->file_offset,
-+					       event->file_path);
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 9c27bb30b708..cf2d2011e148 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -313,15 +313,6 @@ static int process_sample_event(const struct perf_tool *tool,
+ 	return ret;
+ }
  
--	return perf_session__deliver_event(session, event->event,
--					   session->tool, event->file_offset,
--					   event->file_path);
-+	if (ret) {
-+		pr_err("%#" PRIx64 " [%#x]: ordered event processing failed (%d) for event of type: %s (%d)\n",
-+			event->file_offset, event->event->header.size, ret,
-+			perf_event__name(event->event->header.type),
-+			event->event->header.type);
-+	}
+-static int process_feature_event(const struct perf_tool *tool __maybe_unused,
+-				 struct perf_session *session,
+-				 union perf_event *event)
+-{
+-	if (event->feat.feat_id < HEADER_LAST_FEATURE)
+-		return perf_event__process_feature(session, event);
+-	return 0;
+-}
+-
+ static int hist_entry__stdio_annotate(struct hist_entry *he,
+ 				    struct evsel *evsel,
+ 				    struct perf_annotate *ann)
+@@ -876,7 +867,7 @@ int cmd_annotate(int argc, const char **argv)
+ 	annotate.tool.id_index	= perf_event__process_id_index;
+ 	annotate.tool.auxtrace_info	= perf_event__process_auxtrace_info;
+ 	annotate.tool.auxtrace	= perf_event__process_auxtrace;
+-	annotate.tool.feature	= process_feature_event;
++	annotate.tool.feature	= perf_event__process_feature;
+ 	annotate.tool.ordering_requires_timestamps = true;
+ 
+ 	annotate.session = perf_session__new(&data, &annotate.tool);
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 3b81f4b3dc49..0b9dc66723f2 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -245,25 +245,20 @@ static int process_feature_event(const struct perf_tool *tool,
+ 				 union perf_event *event)
+ {
+ 	struct report *rep = container_of(tool, struct report, tool);
++	int ret = perf_event__process_feature(tool, session, event);
+ 
+-	if (event->feat.feat_id < HEADER_LAST_FEATURE)
+-		return perf_event__process_feature(session, event);
++	if (ret == 0 && event->header.size == sizeof(struct perf_record_header_feature) &&
++	    (int)event->feat.feat_id == session->header.last_feat) {
++		/*
++		 * (feat_id = HEADER_LAST_FEATURE) is the end marker which means
++		 * all features are received.
++		 */
++		if (rep->header_only)
++			session_done = 1;
+ 
+-	if (event->feat.feat_id != HEADER_LAST_FEATURE) {
+-		pr_err("failed: wrong feature ID: %" PRI_lu64 "\n",
+-		       event->feat.feat_id);
+-		return -1;
+-	} else if (rep->header_only) {
+-		session_done = 1;
++		setup_forced_leader(rep, session->evlist);
+ 	}
+-
+-	/*
+-	 * (feat_id = HEADER_LAST_FEATURE) is the end marker which
+-	 * means all features are received, now we can force the
+-	 * group if needed.
+-	 */
+-	setup_forced_leader(rep, session->evlist);
+-	return 0;
 +	return ret;
  }
  
- struct perf_session *__perf_session__new(struct perf_data *data,
-@@ -2110,8 +2117,10 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
+ static int process_sample_event(const struct perf_tool *tool,
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 9f8b0fd27a0a..53f016156d7a 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3943,15 +3943,6 @@ int process_cpu_map_event(const struct perf_tool *tool,
+ 	return set_maps(script);
+ }
+ 
+-static int process_feature_event(const struct perf_tool *tool __maybe_unused,
+-				 struct perf_session *session,
+-				 union perf_event *event)
+-{
+-	if (event->feat.feat_id < HEADER_LAST_FEATURE)
+-		return perf_event__process_feature(session, event);
+-	return 0;
+-}
+-
+ static int perf_script__process_auxtrace_info(const struct perf_tool *tool,
+ 					      struct perf_session *session,
+ 					      union perf_event *event)
+@@ -4427,7 +4418,7 @@ int cmd_script(int argc, const char **argv)
+ #ifdef HAVE_LIBTRACEEVENT
+ 	script.tool.tracing_data	 = perf_event__process_tracing_data;
+ #endif
+-	script.tool.feature		 = process_feature_event;
++	script.tool.feature		 = perf_event__process_feature;
+ 	script.tool.build_id		 = perf_event__process_build_id;
+ 	script.tool.id_index		 = perf_event__process_id_index;
+ 	script.tool.auxtrace_info	 = perf_script__process_auxtrace_info;
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index ba1c8e48d495..665bf8eea24b 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -1412,13 +1412,10 @@ static int process_feature_event(const struct perf_tool *tool,
+ 	struct convert *c = container_of(tool, struct convert, tool);
+ 	struct ctf_writer *cw = &c->writer;
+ 	struct perf_record_header_feature *fe = &event->feat;
++	int ret = perf_event__process_feature(tool, session, event);
+ 
+-	if (event->feat.feat_id < HEADER_LAST_FEATURE) {
+-		int ret = perf_event__process_feature(session, event);
+-
+-		if (ret)
+-			return ret;
+-	}
++	if (ret)
++		return ret;
+ 
+ 	switch (fe->feat_id) {
+ 	case HEADER_HOSTNAME:
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index 6a626322476a..4b1b2f7bed25 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -326,16 +326,6 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
+ 	output_json_format(out, false, 2, "]");
+ }
+ 
+-static int process_feature_event(const struct perf_tool *tool __maybe_unused,
+-				 struct perf_session *session,
+-				 union perf_event *event)
+-{
+-	if (event->feat.feat_id < HEADER_LAST_FEATURE)
+-		return perf_event__process_feature(session, event);
+-
+-	return 0;
+-}
+-
+ int bt_convert__perf2json(const char *input_name, const char *output_name,
+ 		struct perf_data_convert_opts *opts __maybe_unused)
+ {
+@@ -375,7 +365,7 @@ int bt_convert__perf2json(const char *input_name, const char *output_name,
+ 	c.tool.auxtrace       = perf_event__process_auxtrace;
+ 	c.tool.event_update   = perf_event__process_event_update;
+ 	c.tool.attr           = perf_event__process_attr;
+-	c.tool.feature        = process_feature_event;
++	c.tool.feature        = perf_event__process_feature;
+ 	c.tool.ordering_requires_timestamps = true;
+ 
+ 	if (opts->all) {
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index fe5d21dde04f..af4b6e3e4e1f 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3785,11 +3785,11 @@ static int perf_file_section__fprintf_info(struct perf_file_section *section,
+ 	struct feat_fd ff;
+ 
+ 	if (lseek(fd, section->offset, SEEK_SET) == (off_t)-1) {
+-		pr_debug("Failed to lseek to %" PRIu64 " offset for feature "
+-				"%d, continuing...\n", section->offset, feat);
++		pr_debug("Failed to lseek to %" PRIu64 " offset for feature %s (%d), continuing...\n",
++			 section->offset, header_feat__name(feat), feat);
+ 		return 0;
+ 	}
+-	if (feat >= HEADER_LAST_FEATURE) {
++	if (feat >= ph->last_feat) {
+ 		pr_warning("unknown feature %d\n", feat);
+ 		return 0;
+ 	}
+@@ -3841,7 +3841,7 @@ int perf_header__fprintf_info(struct perf_session *session, FILE *fp, bool full)
+ 		return 0;
+ 
+ 	fprintf(fp, "# missing features: ");
+-	for_each_clear_bit(bit, header->adds_features, HEADER_LAST_FEATURE) {
++	for_each_clear_bit(bit, header->adds_features, header->last_feat) {
+ 		if (bit)
+ 			fprintf(fp, "%s ", feat_ops[bit].name);
+ 	}
+@@ -4171,7 +4171,7 @@ int perf_header__process_sections(struct perf_header *header, int fd,
+ 	if (err < 0)
+ 		goto out_free;
+ 
+-	for_each_set_bit(feat, header->adds_features, HEADER_LAST_FEATURE) {
++	for_each_set_bit(feat, header->adds_features, header->last_feat) {
+ 		err = process(sec++, header, feat, fd, data);
+ 		if (err < 0)
+ 			goto out_free;
+@@ -4386,6 +4386,7 @@ int perf_file_header__read(struct perf_file_header *header,
+ 	ph->data_offset  = header->data.offset;
+ 	ph->data_size	 = header->data.size;
+ 	ph->feat_offset  = header->data.offset + header->data.size;
++	ph->last_feat	 = HEADER_LAST_FEATURE;
+ 	return 0;
+ }
+ 
+@@ -4401,8 +4402,8 @@ static int perf_file_section__process(struct perf_file_section *section,
+ 	};
+ 
+ 	if (lseek(fd, section->offset, SEEK_SET) == (off_t)-1) {
+-		pr_debug("Failed to lseek to %" PRIu64 " offset for feature "
+-			  "%d, continuing...\n", section->offset, feat);
++		pr_debug("Failed to lseek to %" PRIu64 " offset for feature %s (%d), continuing...\n",
++			 section->offset, header_feat__name(feat), feat);
+ 		return 0;
  	}
  
- 	if ((skip = perf_session__process_event(session, event, head, "pipe")) < 0) {
--		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
--		       head, event->header.size, event->header.type);
-+		pr_err("%#" PRIx64 " [%#x]: piped event processing failed for event of type: %s (%d)\n",
-+			head, event->header.size,
-+			perf_event__name(event->header.type),
-+			event->header.type);
- 		err = -EINVAL;
- 		goto out_err;
- 	}
-@@ -2225,8 +2234,10 @@ static int __perf_session__process_decomp_events(struct perf_session *session)
- 		if (size < sizeof(struct perf_event_header) ||
- 		    (skip = perf_session__process_event(session, event, decomp->file_pos,
- 							decomp->file_path)) < 0) {
--			pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
--				decomp->file_pos + decomp->head, event->header.size, event->header.type);
-+			pr_err("%#" PRIx64 " [%#x]: decompress event processing failed for event of type: %s (%d)\n",
-+				decomp->file_pos + decomp->head, event->header.size,
-+				perf_event__name(event->header.type),
-+				event->header.type);
- 			return -EINVAL;
- 		}
+@@ -4435,6 +4436,8 @@ static int perf_file_header__read_pipe(struct perf_pipe_file_header *header,
+ 	if (ph->needs_swap)
+ 		header->size = bswap_64(header->size);
  
-@@ -2382,8 +2393,9 @@ reader__read_event(struct reader *rd, struct perf_session *session,
- 	if (size < sizeof(struct perf_event_header) ||
- 	    (skip = rd->process(session, event, rd->file_pos, rd->path)) < 0) {
- 		errno = -skip;
--		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%m]\n",
-+		pr_err("%#" PRIx64 " [%#x]: processing failed for event of type: %s (%d) [%m]\n",
- 		       rd->file_offset + rd->head, event->header.size,
-+		       perf_event__name(event->header.type),
- 		       event->header.type);
- 		err = skip;
++	/* The last feature is written out as a 0 sized event and will update this value. */
++	ph->last_feat = 0;
+ 	return 0;
+ }
+ 
+@@ -4667,31 +4670,61 @@ int perf_session__read_header(struct perf_session *session)
+ 	return -ENOMEM;
+ }
+ 
+-int perf_event__process_feature(struct perf_session *session,
++int perf_event__process_feature(const struct perf_tool *tool __maybe_unused,
++				struct perf_session *session,
+ 				union perf_event *event)
+ {
+ 	struct feat_fd ff = { .fd = 0 };
+ 	struct perf_record_header_feature *fe = (struct perf_record_header_feature *)event;
++	struct perf_header *header = &session->header;
+ 	int type = fe->header.type;
+-	u64 feat = fe->feat_id;
++	int feat = (int)fe->feat_id;
+ 	int ret = 0;
+ 	bool print = dump_trace;
++	bool last_feature_mark = false;
+ 
+ 	if (type < 0 || type >= PERF_RECORD_HEADER_MAX) {
+ 		pr_warning("invalid record type %d in pipe-mode\n", type);
+ 		return 0;
+ 	}
+-	if (feat == HEADER_RESERVED || feat >= HEADER_LAST_FEATURE) {
+-		pr_warning("invalid record type %d in pipe-mode\n", type);
++	if (feat == HEADER_RESERVED) {
++		pr_warning("invalid reserved record type in pipe-mode\n");
+ 		return -1;
+ 	}
++	if (feat >= header->last_feat) {
++		if (event->header.size == sizeof(*fe)) {
++			/*
++			 * Either an unexpected zero size feature or the
++			 * HEADER_LAST_FEATURE mark.
++			 */
++			if (feat > header->last_feat)
++				header->last_feat = min(feat, HEADER_LAST_FEATURE);
++			last_feature_mark = true;
++		} else {
++			/*
++			 * A feature but beyond what is known as in
++			 * bounds. Assume the last feature is 1 beyond this
++			 * feature.
++			 */
++			session->header.last_feat = min(feat + 1, HEADER_LAST_FEATURE);
++		}
++	}
++	if (feat >= HEADER_LAST_FEATURE) {
++		if (!last_feature_mark) {
++			pr_warning("unknown feature %d for data file version (%s) in this version of perf (%s)\n",
++				   feat, header->env.version, perf_version_string);
++		}
++		return 0;
++	}
+ 
+ 	ff.buf  = (void *)fe->data;
+ 	ff.size = event->header.size - sizeof(*fe);
+-	ff.ph = &session->header;
++	ff.ph = header;
+ 
+ 	if (feat_ops[feat].process && feat_ops[feat].process(&ff, NULL)) {
+-		ret = -1;
++		// Processing failed, ignore when this is the last feature mark.
++		if (!last_feature_mark)
++			ret = -1;
  		goto out;
+ 	}
+ 
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index ca22030a1434..41ce663d93ff 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -109,6 +109,7 @@ struct perf_header {
+ 	u64				data_size;
+ 	u64				feat_offset;
+ 	DECLARE_BITMAP(adds_features, HEADER_FEAT_BITS);
++	int				last_feat;
+ 	struct perf_env 	env;
+ };
+ 
+@@ -172,7 +173,8 @@ int perf_header__process_sections(struct perf_header *header, int fd,
+ 
+ int perf_header__fprintf_info(struct perf_session *s, FILE *fp, bool full);
+ 
+-int perf_event__process_feature(struct perf_session *session,
++int perf_event__process_feature(const struct perf_tool *tool,
++				struct perf_session *session,
+ 				union perf_event *event);
+ int perf_event__process_attr(const struct perf_tool *tool, union perf_event *event,
+ 			     struct evlist **pevlist);
+diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+index 3c958d738ca6..f57ea6db02a0 100644
+--- a/tools/perf/util/intel-tpebs.c
++++ b/tools/perf/util/intel-tpebs.c
+@@ -217,15 +217,6 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 	return 0;
+ }
+ 
+-static int process_feature_event(const struct perf_tool *tool __maybe_unused,
+-				 struct perf_session *session,
+-				 union perf_event *event)
+-{
+-	if (event->feat.feat_id < HEADER_LAST_FEATURE)
+-		return perf_event__process_feature(session, event);
+-	return 0;
+-}
+-
+ static void *__sample_reader(void *arg __maybe_unused)
+ {
+ 	struct perf_session *session;
+@@ -238,7 +229,7 @@ static void *__sample_reader(void *arg __maybe_unused)
+ 
+ 	perf_tool__init(&tool, /*ordered_events=*/false);
+ 	tool.sample = process_sample_event;
+-	tool.feature = process_feature_event;
++	tool.feature = perf_event__process_feature;
+ 	tool.attr = perf_event__process_attr;
+ 
+ 	session = perf_session__new(&data, &tool);
 -- 
 2.53.0.473.g4a7958ca14-goog
 
