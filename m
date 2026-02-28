@@ -1,513 +1,127 @@
-Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440F33ED13D;
-	Sat, 28 Feb 2026 10:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF3E3D667F
+	for <linux-perf-users@vger.kernel.org>; Sat, 28 Feb 2026 12:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772273329; cv=none; b=H8X7RhQFvuHIBP8Psbt2vC0KZm7Xc8FrzsslJQuG1KJNl52IUATXWPwKIJd4Il/XkNy4PTV9sso/VL7aGNVqtqFRtjIJPeMK6LkdaQhnLnM4oQ+5wRnWGexLW0/mtx4bhTbMb/bboCTrZgQ0+C4J4mJrAbMJNAIHUANxqQJXSPA=
+	t=1772282333; cv=none; b=euViuSRvnkaG6Ev8whqwRD9WLlZfgQ0V2q2hucnx0t6utTa7GuqLr7FGTYBWNW/zdhNehi/2esD2QoFaH/h2Oge6xB57vKyvv62J2qFsEiJ9ukpkMNRS6HgGOPhJEs+Ae1Per33wkP/sbzjFLtlrZ+DLm0fvaaUJOOTM9UginXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772273329; c=relaxed/simple;
-	bh=Z1s10p2Wl4u7NXb3LJJhmSUh9lSE6+nwPMZVql8m+Qw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pANNscrBvMI8Vv4GN6/Gshq7Wn1CVV3gyYzFKEgT+R3FRSXSTrh5ovnPyQPPOqgTdFcI5uRsRZnr9AaGMERWaCI9cFtnQcu4eQd7VM0coO1h8xooXVY2UOWS4PuboxIqbMU2pjN0ZZnnYlCdexR6VW4KStI9zBg+AtQTLnktIp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=MCBaGKp7; arc=none smtp.client-ip=113.46.200.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1772282333; c=relaxed/simple;
+	bh=PEA8vWjT5ovfF14s1Tw4RTm8694oQcfI75jIBt+A4lE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uUFAQrMbznzquWfBXmUV4QaTCInnF2qcv0nJ6dnk11jYGFx7astD1BBJczG3kj8y43rK73NS0GwNSn1550Bk0gb/wWD8WPaTHqF2ApI9+KM2Tb5vbDIjC4RMK8pSd8673aUemne1x29g03zOvfcG37lECCWb19JxeVVjSIqcR/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mx+suYO4; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="MCBaGKp7"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=ONhf4YtlYoC3UzoCmGKNpv3yajP0a/CcXFtaagzfbE0=;
-	b=MCBaGKp7nbMJ6uyB6FGiP1C/rll5MnYgbm1PgoMFYgTKrCKIjxAWYdK6c/vaI1BZ4Hl4/Ce5o
-	uv/N96hUwIcw3hCiL1hQV0tbA61Cb6UXpj6CBp1ORBD2eKZryMeuouE4G1K2bdVevN+E5aVTwRx
-	hDUjT3LM7QJfkE5XUpNU6G8=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4fNLPl3SZbzRhqk;
-	Sat, 28 Feb 2026 18:03:55 +0800 (CST)
-Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 798E440363;
-	Sat, 28 Feb 2026 18:08:43 +0800 (CST)
-Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
- dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 28 Feb 2026 18:08:40 +0800
-Received: from 78cdaf434391.CHINA.huawei.com (10.113.189.214) by
- kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 28 Feb 2026 18:08:39 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
- Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "James
- Clark" <james.clark@linaro.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH v2] perf: Add layout support for --symfs option
-Date: Sat, 28 Feb 2026 18:23:25 +0000
-Message-ID: <20260228182325.1043424-1-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mx+suYO4"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-48372facfedso26100625e9.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 28 Feb 2026 04:38:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772282330; x=1772887130; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mOaqhQImVlbU+bIaPkzVliN+MSpqLdHsMK4C5p4HbTE=;
+        b=Mx+suYO4WAm6Esi84MZAoAmYsEg+faHqpOo9+bFiEOnlJdfwT+vS7ye5q++/MXA6g4
+         mTIXqomnM6dz7b4tpK1KbP9UZmW5hzlb/wweLxY7zC8AbdZzTDy3F/KaN2VMw1wXsB66
+         IAC4aSt0G9xxuaODA2KLVyEhRLb0dYJmfeWOOZXWzZ3Tj7iGwN4DH5r8OirXx5emK83X
+         hFC6Ge2zWg/fc7qE1q3VrENHESF+g8ifwk+SOkHMggXufiEcnyLhtXrm+uV2F1gK9IJW
+         /vh/E8zN7TllRgrU9JQ7pdZHtwYv695+yKsE8ye6vRoR2MHRk0HW1MoBXpi7GyXxLEJ7
+         t7nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772282330; x=1772887130;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mOaqhQImVlbU+bIaPkzVliN+MSpqLdHsMK4C5p4HbTE=;
+        b=IuRyA2NUIYF5dKCe8D2SPzzEk8obrlHHEBpYLID5e5qT8cj+BJ+DM/MAQoeocbokid
+         QwwQqynR7zm2DyuPt6hzj9fABUk0ZOnME+VRXsB79pIG1uOf7itO+2LMEhE9dAdMoYUz
+         I39kNRR9xVzdjUe9CsfOkVothLhlpe8kNf5IAFSFYNsdZSXyCrlUjuoIcW6InLha2qnd
+         CpZfdS2uaEIvM/AxFrDcHDc3blnl+91NABlbpKoY+k0hJxVkYO2CizA52oGXATyqa80z
+         MvAByl83rOgOQ/t0duPxCSbrMAQedlF+Dlyst6t2OeyXjqHxdjdQ5Gw3a4OvNrApkvTY
+         Pppw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0WLOCmX0VwEWJfDD50+3Y/7PdDBm2hBD84Xw9iSr9tcamqAX8kI4cR0NacI6SiadqBLiz9mCK/LdUsFo7lPug@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVDn2FgG836tCUOqybhevT+eHqkqg8z591NXW+HYzuOOGcI6Pl
+	IJr8LGR2UgJV2rH7ynP9fOUvqaaJDRJZK3y/UNP4KAmvn68T1AQmpC2ri0CkM61NOfDIbSoaSGJ
+	YK3eTWF7zeoDz6Zf8ug==
+X-Received: from wmby19.prod.google.com ([2002:a05:600c:c053:b0:480:690c:88de])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:8b5b:b0:481:a662:b3f3 with SMTP id 5b1f17b1804b1-483c990c263mr116931775e9.7.1772282329804;
+ Sat, 28 Feb 2026 04:38:49 -0800 (PST)
+Date: Sat, 28 Feb 2026 12:38:48 +0000
+In-Reply-To: <20260227200848.114019-3-david@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemq200002.china.huawei.com (7.202.195.90)
+Mime-Version: 1.0
+References: <20260227200848.114019-1-david@kernel.org> <20260227200848.114019-3-david@kernel.org>
+Message-ID: <aaLh2BxSgC9Jl5iS@google.com>
+Subject: Re: [PATCH v1 02/16] mm/memory: remove "zap_details" parameter from zap_page_range_single()
+From: Alice Ryhl <aliceryhl@google.com>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-kernel@vger.kernel.org, 
+	"linux-mm @ kvack . org" <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, David Rientjes <rientjes@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, 
+	Christian Brauner <brauner@kernel.org>, Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
+	Dimitri Sivanich <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Eric Dumazet <edumazet@google.com>, 
+	Neal Cardwell <ncardwell@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-Add support for parsing an optional layout parameter in the --symfs
-command line option. The format is:
+On Fri, Feb 27, 2026 at 09:08:33PM +0100, David Hildenbrand (Arm) wrote:
+> Nobody except memory.c should really set that parameter to non-NULL. So
+> let's just drop it and make unmap_mapping_range_vma() use
+> zap_page_range_single_batched() instead.
+> 
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-  --symfs <directory[,layout]>
+> diff --git a/rust/kernel/mm/virt.rs b/rust/kernel/mm/virt.rs
+> index da21d65ccd20..b8e59e4420f3 100644
+> --- a/rust/kernel/mm/virt.rs
+> +++ b/rust/kernel/mm/virt.rs
+> @@ -124,7 +124,7 @@ pub fn zap_page_range_single(&self, address: usize, size: usize) {
+>          // sufficient for this method call. This method has no requirements on the vma flags. The
+>          // address range is checked to be within the vma.
+>          unsafe {
+> -            bindings::zap_page_range_single(self.as_ptr(), address, size, core::ptr::null_mut())
+> +            bindings::zap_page_range_single(self.as_ptr(), address, size)
+>          };
 
-Where layout can be:
-  - 'hierarchy': matches full path (default)
-  - 'flat': only matches base name
+Please run rustfmt on Rust changes. Here, rustfmt leads to this being
+formatted on a single line:
 
-When debugging symbol files from a copy of the filesystem (e.g., from a
-container or remote machine), the debug files are often stored in a
-flat directory structure with only filenames, not the full original
-paths. In this case, using 'flat' layout allows perf to find debug
-symbols by matching only the filename rather than the full path.
+unsafe { bindings::zap_page_range_single(self.as_ptr(), address, size) };
 
-For example, given a binary path like:
-  /build/output/lib/foo.so
+with the above changed:
 
-With 'perf report --symfs /debug/files,flat', perf will look for:
-  /debug/files/foo.so
+Acked-by: Alice Ryhl <aliceryhl@google.com> # Rust and Binder
 
-Instead of:
-  /debug/files/build/output/lib/foo.so
-
-This is particularly useful when:
-- Extracting debug files from containers with different directory layouts
-- Working with build systems that flatten directory structures
-
-Changes:
-- Add symfs_layout_flat field to symbol_conf struct.
-- Parse optional layout in symbol__config_symfs().
-- Modify __symbol__join_symfs() to use basename() when layout
-  is 'flat'.
-- Update documentation in Documentation/ folder.
-
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
-
----
-v2:
-  Renaming the new option from 'match_mode' to 'layout', as it better
-  aligns with the conventions of technical terminology.
----
- tools/perf/Documentation/perf-annotate.txt  |  7 +++--
- tools/perf/Documentation/perf-diff.txt      |  7 +++--
- tools/perf/Documentation/perf-kwork.txt     |  7 +++--
- tools/perf/Documentation/perf-probe.txt     |  6 ++++
- tools/perf/Documentation/perf-report.txt    |  7 +++--
- tools/perf/Documentation/perf-sched.txt     |  7 +++--
- tools/perf/Documentation/perf-script.txt    |  7 +++--
- tools/perf/Documentation/perf-timechart.txt |  7 +++--
- tools/perf/Documentation/tips.txt           |  2 +-
- tools/perf/builtin-annotate.c               |  3 +-
- tools/perf/builtin-diff.c                   |  3 +-
- tools/perf/builtin-kwork.c                  |  4 +--
- tools/perf/builtin-probe.c                  |  4 +--
- tools/perf/builtin-report.c                 |  3 +-
- tools/perf/builtin-sched.c                  |  4 +--
- tools/perf/builtin-script.c                 |  3 +-
- tools/perf/builtin-timechart.c              |  3 +-
- tools/perf/util/symbol.c                    | 34 ++++++++++++++++++---
- tools/perf/util/symbol.h                    | 18 +++++++++++
- tools/perf/util/symbol_conf.h               |  1 +
- 20 files changed, 102 insertions(+), 35 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-index 547f1a268018..a688738809c4 100644
---- a/tools/perf/Documentation/perf-annotate.txt
-+++ b/tools/perf/Documentation/perf-annotate.txt
-@@ -110,8 +110,11 @@ include::itrace.txt[]
- 	Interleave source code with assembly code. Enabled by default,
- 	disable with --no-source.
- 
----symfs=<directory>::
--        Look for files with symbols relative to this directory.
-+--symfs=<directory[,layout]>::
-+        Look for files with symbols relative to this directory. The optional
-+        layout can be 'hierarchy' (default, matches full path) or 'flat'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- 
- -M::
- --disassembler-style=:: Set disassembler style for objdump.
-diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
-index 58efab72d2e5..8e4a3f093135 100644
---- a/tools/perf/Documentation/perf-diff.txt
-+++ b/tools/perf/Documentation/perf-diff.txt
-@@ -81,8 +81,11 @@ OPTIONS
- --force::
-         Don't do ownership validation.
- 
----symfs=<directory>::
--        Look for files with symbols relative to this directory.
-+--symfs=<directory[,layout]>::
-+        Look for files with symbols relative to this directory. The optional
-+        layout can be 'hierarchy' (default, matches full path) or 'flat'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- 
- -b::
- --baseline-only::
-diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
-index 21e607669d78..5c33a1fb2ffe 100644
---- a/tools/perf/Documentation/perf-kwork.txt
-+++ b/tools/perf/Documentation/perf-kwork.txt
-@@ -169,8 +169,11 @@ OPTIONS for 'perf kwork timehist'
- --max-stack::
- 	Maximum number of functions to display in backtrace, default 5.
- 
----symfs=<directory>::
--    Look for files with symbols relative to this directory.
-+--symfs=<directory[,layout]>::
-+        Look for files with symbols relative to this directory. The optional
-+        layout can be 'hierarchy' (default, matches full path) or 'flat'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- 
- --time::
- 	Only analyze samples within given time window: <start>,<stop>. Times
-diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
-index 5c43a6edc0e5..2e5790325430 100644
---- a/tools/perf/Documentation/perf-probe.txt
-+++ b/tools/perf/Documentation/perf-probe.txt
-@@ -50,6 +50,12 @@ OPTIONS
- --source=PATH::
- 	Specify path to kernel source.
- 
-+--symfs=<directory[,layout]>::
-+	Look for files with symbols relative to this directory. The optional
-+	layout can be 'hierarchy' (default, matches full path) or 'flat'
-+	(only matches base name). This is useful when debug files are stored
-+	in a flat directory structure.
-+
- -v::
- --verbose::
-         Be more verbose (show parsed arguments, etc).
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index acef3ff4178e..802f931ae64d 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -368,8 +368,11 @@ OPTIONS
- --force::
-         Don't do ownership validation.
- 
----symfs=<directory>::
--        Look for files with symbols relative to this directory.
-+--symfs=<directory[,layout]>::
-+        Look for files with symbols relative to this directory. The optional
-+        layout can be 'hierarchy' (default, matches full path) or 'flat'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- 
- -C::
- --cpu:: Only report samples for the list of CPUs provided. Multiple CPUs can
-diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-index 4d9981609c04..a4221398e5e0 100644
---- a/tools/perf/Documentation/perf-sched.txt
-+++ b/tools/perf/Documentation/perf-sched.txt
-@@ -437,8 +437,11 @@ OPTIONS for 'perf sched timehist'
-     Show all scheduling events followed by a summary by thread with min,
-     max, and average run times (in sec) and relative stddev.
- 
----symfs=<directory>::
--    Look for files with symbols relative to this directory.
-+--symfs=<directory[,layout]>::
-+        Look for files with symbols relative to this directory. The optional
-+        layout can be 'hierarchy' (default, matches full path) or 'flat'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- 
- -V::
- --cpu-visual::
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index ddf92f9c7821..200ea25891d8 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -307,8 +307,11 @@ OPTIONS
- --kallsyms=<file>::
-         kallsyms pathname
- 
----symfs=<directory>::
--        Look for files with symbols relative to this directory.
-+--symfs=<directory[,layout]>::
-+        Look for files with symbols relative to this directory. The optional
-+        layout can be 'hierarchy' (default, matches full path) or 'flat'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- 
- -G::
- --hide-call-graph::
-diff --git a/tools/perf/Documentation/perf-timechart.txt b/tools/perf/Documentation/perf-timechart.txt
-index ef2281c56743..bacc5df3c400 100644
---- a/tools/perf/Documentation/perf-timechart.txt
-+++ b/tools/perf/Documentation/perf-timechart.txt
-@@ -53,8 +53,11 @@ TIMECHART OPTIONS
- -f::
- --force::
- 	Don't complain, do it.
----symfs=<directory>::
--        Look for files with symbols relative to this directory.
-+--symfs=<directory[,layout]>::
-+        Look for files with symbols relative to this directory. The optional
-+        layout can be 'hierarchy' (default, matches full path) or 'flat'
-+        (only matches base name). This is useful when debug files are stored
-+        in a flat directory structure.
- -n::
- --proc-num::
-         Print task info for at least given number of tasks.
-diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
-index 3fee9b2a88ea..ebf12a8c5db5 100644
---- a/tools/perf/Documentation/tips.txt
-+++ b/tools/perf/Documentation/tips.txt
-@@ -11,7 +11,7 @@ Search options using a keyword: perf report -h <keyword>
- Use parent filter to see specific call path: perf report -p <regex>
- List events using substring match: perf list <keyword>
- To see list of saved events and attributes: perf evlist -v
--Use --symfs <dir> if your symbol files are in non-standard locations
-+Use --symfs <dir>[,layout] if your symbol files are in non-standard locations.
- To see callchains in a more compact form: perf report -g folded
- To see call chains by final symbol taking CPU time (bottom up) use perf report -G
- Show individual samples with: perf script
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 9c27bb30b708..686ad08561d6 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -744,8 +744,7 @@ int cmd_annotate(int argc, const char **argv)
- 			&annotate.group_set,
- 			"Show event group information together"),
- 	OPT_STRING('C', "cpu", &annotate.cpu_list, "cpu", "list of cpus to profile"),
--	OPT_CALLBACK(0, "symfs", NULL, "directory",
--		     "Look for files with symbols relative to this directory",
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
- 		     symbol__config_symfs),
- 	OPT_BOOLEAN(0, "source", &annotate_opts.annotate_src,
- 		    "Interleave source code with assembly code (default)"),
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 59bf1f72d12e..69069926dd0b 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -1280,8 +1280,7 @@ static const struct option options[] = {
- 	OPT_STRING_NOEMPTY('t', "field-separator", &symbol_conf.field_sep, "separator",
- 		   "separator for columns, no spaces will be added between "
- 		   "columns '.' is reserved."),
--	OPT_CALLBACK(0, "symfs", NULL, "directory",
--		     "Look for files with symbols relative to this directory",
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
- 		     symbol__config_symfs),
- 	OPT_UINTEGER('o', "order", &sort_compute, "Specify compute sorting."),
- 	OPT_CALLBACK(0, "percentage", NULL, "relative|absolute",
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index 7f3068264568..6f94a8f45f60 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -2423,8 +2423,8 @@ int cmd_kwork(int argc, const char **argv)
- 		    "Display call chains if present"),
- 	OPT_UINTEGER(0, "max-stack", &kwork.max_stack,
- 		   "Maximum number of functions to display backtrace."),
--	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
--		    "Look for files with symbols relative to this directory"),
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
-+		     symbol__config_symfs),
- 	OPT_STRING(0, "time", &kwork.time_str, "str",
- 		   "Time span for analysis (start,stop)"),
- 	OPT_STRING('C', "cpu", &kwork.cpu_list, "cpu",
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 1b4ba85ee019..a67b565278ae 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -597,8 +597,8 @@ __cmd_probe(int argc, const char **argv)
- 	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
- 		    "Enable kernel symbol demangling"),
- 	OPT_BOOLEAN(0, "cache", &probe_conf.cache, "Manipulate probe cache"),
--	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
--		   "Look for files with symbols relative to this directory"),
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
-+		     symbol__config_symfs),
- 	OPT_CALLBACK(0, "target-ns", NULL, "pid",
- 		     "target pid for namespace contexts", opt_set_target_ns),
- 	OPT_BOOLEAN(0, "bootconfig", &probe_conf.bootconfig,
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 3b81f4b3dc49..343c0ada5ea1 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1416,8 +1416,7 @@ int cmd_report(int argc, const char **argv)
- 		   "columns '.' is reserved."),
- 	OPT_BOOLEAN('U', "hide-unresolved", &symbol_conf.hide_unresolved,
- 		    "Only display entries resolved to a symbol"),
--	OPT_CALLBACK(0, "symfs", NULL, "directory",
--		     "Look for files with symbols relative to this directory",
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
- 		     symbol__config_symfs),
- 	OPT_STRING('C', "cpu", &report.cpu_list, "cpu",
- 		   "list of cpus to profile"),
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 3f509cfdd58c..d083e2bb7703 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -4879,8 +4879,8 @@ int cmd_sched(int argc, const char **argv)
- 		    "Display call chains if present (default on)"),
- 	OPT_UINTEGER(0, "max-stack", &sched.max_stack,
- 		   "Maximum number of functions to display backtrace."),
--	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
--		    "Look for files with symbols relative to this directory"),
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
-+		     symbol__config_symfs),
- 	OPT_BOOLEAN('s', "summary", &sched.summary_only,
- 		    "Show only syscall summary with statistics"),
- 	OPT_BOOLEAN('S', "with-summary", &sched.summary,
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 7c743a303507..9912199d22da 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -4074,8 +4074,7 @@ int cmd_script(int argc, const char **argv)
- 		   "file", "kallsyms pathname"),
- 	OPT_BOOLEAN('G', "hide-call-graph", &no_callchain,
- 		    "When printing symbols do not display call chain"),
--	OPT_CALLBACK(0, "symfs", NULL, "directory",
--		     "Look for files with symbols relative to this directory",
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
- 		     symbol__config_symfs),
- 	OPT_CALLBACK('F', "fields", NULL, "str",
- 		     "comma separated output fields prepend with 'type:'. "
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index f8b49d69e9a5..28f33e39895d 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -1951,8 +1951,7 @@ int cmd_timechart(int argc, const char **argv)
- 	OPT_CALLBACK('p', "process", NULL, "process",
- 		      "process selector. Pass a pid or process name.",
- 		       parse_process),
--	OPT_CALLBACK(0, "symfs", NULL, "directory",
--		     "Look for files with symbols relative to this directory",
-+	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
- 		     symbol__config_symfs),
- 	OPT_INTEGER('n', "proc-num", &tchart.proc_num,
- 		    "min. number of tasks to print"),
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 8662001e1e25..82ce9b6f5ccb 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -66,6 +66,7 @@ struct symbol_conf symbol_conf = {
- 	.time_quantum		= 100 * NSEC_PER_MSEC, /* 100ms */
- 	.show_hist_headers	= true,
- 	.symfs			= "",
-+	.symfs_layout_flat	= false,
- 	.event_group		= true,
- 	.inline_name		= true,
- 	.res_sample		= 0,
-@@ -2491,16 +2492,41 @@ int symbol__config_symfs(const struct option *opt __maybe_unused,
- 			 const char *dir, int unset __maybe_unused)
- {
- 	char *bf = NULL;
-+	char *layout_str;
- 	int ret;
- 
--	symbol_conf.symfs = strdup(dir);
--	if (symbol_conf.symfs == NULL)
--		return -ENOMEM;
-+	layout_str = strchr(dir, ',');
-+	if (layout_str) {
-+		size_t dir_len = layout_str - dir;
-+		char *dir_copy = strndup(dir, dir_len);
-+
-+		if (dir_copy == NULL)
-+			return -ENOMEM;
-+
-+		symbol_conf.symfs = dir_copy;
-+
-+		layout_str++;
-+		if (!strcmp(layout_str, "flat"))
-+			symbol_conf.symfs_layout_flat = true;
-+		else if (!strcmp(layout_str, "hierarchy"))
-+			symbol_conf.symfs_layout_flat = false;
-+		else {
-+			pr_err("Invalid layout: '%s', use 'hierarchy' or 'flat'\n",
-+			       layout_str);
-+			free(dir_copy);
-+			return -EINVAL;
-+		}
-+	} else {
-+		symbol_conf.symfs = strdup(dir);
-+		if (symbol_conf.symfs == NULL)
-+			return -ENOMEM;
-+		symbol_conf.symfs_layout_flat = false;
-+	}
- 
- 	/* skip the locally configured cache if a symfs is given, and
- 	 * config buildid dir to symfs/.debug
- 	 */
--	ret = asprintf(&bf, "%s/%s", dir, ".debug");
-+	ret = asprintf(&bf, "%s/%s", symbol_conf.symfs, ".debug");
- 	if (ret < 0)
- 		return -ENOMEM;
- 
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 3fb5d146d9b1..4f1dbd1ebd99 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -9,6 +9,7 @@
- #include <linux/list.h>
- #include <linux/rbtree.h>
- #include <stdio.h>
-+#include <errno.h>
- #include "addr_location.h"
- #include "path.h"
- #include "symbol_conf.h"
-@@ -96,6 +97,18 @@ struct intlist;
- 
- static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
- {
-+	if (symbol_conf.symfs_layout_flat) {
-+		char *path_copy = strdup(path);
-+		char *base;
-+		int ret;
-+
-+		if (!path_copy)
-+			return -ENOMEM;
-+		base = basename(path_copy);
-+		ret = path__join(bf, size, symbol_conf.symfs, base);
-+		free(path_copy);
-+		return ret;
-+	}
- 	return path__join(bf, size, symbol_conf.symfs, path);
- }
- 
-@@ -169,6 +182,11 @@ size_t symbol__fprintf_symname(const struct symbol *sym, FILE *fp);
- size_t symbol__fprintf(struct symbol *sym, FILE *fp);
- bool symbol__restricted_filename(const char *filename,
- 				 const char *restricted_filename);
-+
-+#define SYMFS_HELP "setup root directory which contains debug files:\n" \
-+	"\t\t\t\t" "directory:\tLook for files with symbols relative to this directory.\n" \
-+	"\t\t\t\t" "layout:   \tLayout of files, 'hierarchy' matches full path (default), 'flat' only matches base name.\n"
-+
- int symbol__config_symfs(const struct option *opt __maybe_unused,
- 			 const char *dir, int unset __maybe_unused);
- 
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index 71bb17372a6c..ac1b444a8fd8 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -93,6 +93,7 @@ struct symbol_conf {
- 			*tid_list,
- 			*addr_list;
- 	const char	*symfs;
-+	bool		symfs_layout_flat;
- 	int		res_sample;
- 	int		pad_output_len_dso;
- 	int		group_sort_idx;
--- 
-2.43.0
-
+Alice
