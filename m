@@ -1,151 +1,119 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A530C329361
-	for <linux-perf-users@vger.kernel.org>; Sat, 28 Feb 2026 06:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772260813; cv=pass; b=mLBVsB3YRV7nUBp3pVPQTKWNnOrMAhmUGMAjDCStCx3idMZCdQ0DseT8lN3o+pYc3YS1mOlAixIpLmtX7lzggaK61qbbb46I48RYD7Pc532SgTjkblul631JrBnEB6W43F0o6Hdc66F5vaHZqiEYqSPMnnBEeXpnPaoil2H5Kpc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772260813; c=relaxed/simple;
-	bh=GCgtjPDV1FRTC+iBUt4U+e1Kjkved8C7aB/V+1Smtxk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cuZODejzuNflTvii/UVK9M9sgZRiWkrye94YoMCwAiGRMqWL/5xzvr9+GigCyRCTDkUoFV3uZmfu/E3JS0n9R75IOSl0SxalCsEjxfuWCpkltdG1hBtHeW0YHqAEbfH3qvY163bxKhWBNys/pDScxltJDffOrRuwT1swG3NkTIA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aZhVZ8tt; arc=pass smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30CB332637
+	for <linux-perf-users@vger.kernel.org>; Sat, 28 Feb 2026 07:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772262010; cv=none; b=Iw4joRHiNq//om+XzUjohZE4bNxr4m9k7sXYdynwHFBbqRJk29owf5ujDdwZuyUegv+s8+b4HwT7g5gN5F9+XI24vMmHaP4vZ+MJUQlbltSqU15s4ZWIGQdVfeX/GMPHCIkpTopt+6x+fNRG50VSe/b+NO0Am5nAr3aqH7m2dT8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772262010; c=relaxed/simple;
+	bh=Wb4HW2pf4s1Y1bSeLdR3jhykalyGXfsHznDoVntSTq0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=HbHG3MH/Rft80V0voDZZEasQgDFLu86zkpxQiG1pPhqFZZybQMzYwRf2MOb5SY1mje9nmVImEBiq1FP+aco162+lBodoccVY2kis0q6tJNQBBBB/i7+QfXcoQ8jVEsHASXwU6nQtYcovul/0/eM6x0VAj4aEv96tlZZYCAzLmfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lihcKSfk; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aZhVZ8tt"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2ae3f822163so7675ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2026 22:40:12 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772260812; cv=none;
-        d=google.com; s=arc-20240605;
-        b=HPQvnnee+kKI2/dKHKzoMfKBFE9urfx2mJjdy8xx9YuZzvrr3Rg2AzsjLwn8CiBbL5
-         KW/29ypjrw5KDtcPWvQND88lRjdtHcsftJSrdSr7Vc7VhB4KyDMWPmW/e7a0ijSto0/w
-         S6VFlf2qUVd5DV7ODSl7pG0Z47788dovMfjtNWQLCni76jy8E5jgVbTibRFSL8AD+ZHp
-         BUDZjiM/nuQYo/Xwf8EHTtRTOmGcNO/mY63H91N6KBOsvY8irrd4PtUNBcCPGC5cJ1rB
-         GkdLi+d3pKVpsNjYH9Pn8AjhRd9kbcR9P1MSbsIINCDbXrbYd79njjh7uwtNl9PmpROA
-         HSoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Y1SGkCngI5GvsQqU0a9kGo4JXYTF/HfVjBSLW9M8+Nk=;
-        fh=O4M0oSYkl9CbCrvGq24CEuU8qB/2RmG3r2tIxnLZJQw=;
-        b=VQXszXPJ8VS48WoyMw2g0RVGFd4YoTxC/hkQjJjUJCwAymEMxoR8zfVpN5ynvk4tcN
-         WBXxUkJNoLNf6gPy7G9AADTmkiPd/3csH2r7J/bM0AhA1+DU+4nXp6nFOK6S85J20LV9
-         Uqi7aaQtHCocDlOTjBop8+2HmVytma9OpvC3bRIZ3CckmfNX7NVhZNt5TXGDWj8xUssF
-         MK1X1umoEPQHK++1yrcovVl5Cblofu7uq1k+dOSyIUdEM2f3o7d7At5FvuurR6VSCwU3
-         regVVWMFL6zyUWi6eLC4wbYhkUMhuycseBwM4TjizrZ2LnIMqLkr6PXCnkxuIBcOSTb7
-         hPCA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lihcKSfk"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12776bebeb3so17148091c88.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2026 23:00:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772260812; x=1772865612; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y1SGkCngI5GvsQqU0a9kGo4JXYTF/HfVjBSLW9M8+Nk=;
-        b=aZhVZ8ttzJ/vhZSo1d2KjILZ7hYvZ1rljFoJMyyRm4XjgOdXB9Ys+eOtqS5rkZnOhE
-         QjOaCbYFDxWtm9sAoDWOxwXJnia52UOzohioes+lwwgJrAQZK7Su7zCJmKOU6f/rh3l1
-         7ZdPzYQvlLDZnGUt251smLiGj1dT898hdIIz75y7rl1iA5yGmg19ZCNjbV45xV6LE6lS
-         34TffnhbqNrmII9tenar3LgVGLyRBk2UTea5eE4ei98Y79Gy5lWkzgV94n0K+HMiINKK
-         D5YdsAhVTaEiTSYX3jOnfjJ9oiTOvjLTXZY2cCmbn67++mMNNNbHi7xJ+4vhZWAtTbQy
-         FKhA==
+        d=google.com; s=20230601; t=1772262007; x=1772866807; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KVVEJNk7/yr3HWxyL/m+52oFpjzk+cJmsHSX45K8J+0=;
+        b=lihcKSfkOLhYGavC72dh0luxFrpC8gVRF2gfxL9DKuSYyi4vMQYGSNNqlfqUH0Z0tP
+         GgvVO6KmJOLtSTmXclrMHaMTAWg9hCq4K9rZZmokPUz8IU2PGdQ4DzkLy+AGb1aO+4zI
+         Hc/57iUeWs+4tWQeo15w8ypQqt/ja6ejeZAqc2WwfWLohmGjPzh1vndbvVbMReXkdVMm
+         5vqRDPjmbj4593QX7Mf/3wQJjZX0RWW6YeJAPfI0I5dvG/Hv2wLhTOuRQ+01SorvagSC
+         1uzGl9W3lvp1vq3WFEpajloy2+vfwbyEQpUJ9s1D4DejFgy40J156yGyKfnWeIjRYw+I
+         kSdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772260812; x=1772865612;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Y1SGkCngI5GvsQqU0a9kGo4JXYTF/HfVjBSLW9M8+Nk=;
-        b=qQci5tyvyE4cjOAbAgno0lWA8Ei64cl8qe/Km6gvmdxX0cXDpf+k5J5gYLI7l2hxTw
-         mkjIrs7Vzo1qA3qEqM2Scby3MtXSuhmMyJD1FCmM9jYEjOJGuZLZg4yJuCsV2RjONS2f
-         mkDADGcEHuAqQ6YB0v/Bfr8lfvW6S8ITbjDCaMI8EfVJNEbru8AgTbFvzP343i4BM7/S
-         TqV6WcnQO18ELtizMXEG5BhZNgoECYQ3tnSTIHPx5PTnb+WF8x3+8gjOdZzcbCYBGt++
-         p5P1JYPVFrcF/XxTkkqLOgOS3pPBbHWGxUOA3Tv8IE/OO2I5DeGD19tMlBkDXAeW49JU
-         3Bxw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmYLFEfXTzkHs+5bQqAMWAuaAKXGGWIhJkbaMtdXU9/kTtt3dV69xEgOQQaen9DPFjOhRgsqukteMb2KHvAtAv@vger.kernel.org
-X-Gm-Message-State: AOJu0YylMGc4lTBhazYKswu2iBTjS+MZ9h84Pb0P103CHoljh6wUInz5
-	olDSB5Dm+Rdcpi7J8mNLYoDpNTjEalfAruTXYOeLA95931KlWWYBS8fl5UD119LZ2kIBmnV+bNc
-	wzhDDhCT1dKvVRhh9DiRZG1iVguo0vzpGijQyrRIM
-X-Gm-Gg: ATEYQzwC6rvidfs1Z7S9k5NMiPGLYbXLbMz+EYzzt9/1SaC/K/uaLmGCJbWOHLmTz72
-	w4hC5N86aoVmGIHcwjOHtlMSoQ9AAso+uHeX6y6lA+jFE1SrPzNxFsFHpl+Zm1HxOfNVftyq/aW
-	tgrytu6b7n6pULuxhz7Jz3nb1anQEpHiCFe6mVBG4TwdbKu9EQPCflmvl2pTjG6LOvQ6eD6jsnS
-	MF4bSK5/ilCloAaHQnJoFWxhdy3TGw+D+/79lKB5QpqJQVF9HyDgJV7lT2MMq8U7/9GJl0qQPZk
-	+sgRX6Qn
-X-Received: by 2002:a17:902:d50e:b0:2a7:640c:834b with SMTP id
- d9443c01a7336-2ae39492c95mr1453345ad.0.1772260811132; Fri, 27 Feb 2026
- 22:40:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1772262007; x=1772866807;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KVVEJNk7/yr3HWxyL/m+52oFpjzk+cJmsHSX45K8J+0=;
+        b=R/4pnjebO3mmwdnp7ELdQCqmV9YavF84RTR4tMSlzlcFbQElSjTBNMWjbyI51VR8dH
+         IoqHvE5C+tckN33YabkcEusyiS1Jdr36CTQYs6qixOrqEOUkp+Dcdlc6A/mUGTG1RObm
+         /0PfOweEhPxzmBNtzt8tkNJSdfZwrA1vJUmOLPLVMKJ6J5wGqugInzQpy4m0xxx4aZ/G
+         W/OMr1G6xzjk+ozcc4SbFOAELCxOXHX476+ZisEUQU4idcrE5SU7xE2dhrbKakH+ZCNo
+         R15IVt3JfQds+1j9TE4D0bacjo07Ol4fC5ihXaDpq5bWjSz+CDAmgOuN83rtB9L41Roa
+         gQVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ9bCV7hqNTHixHU1w+ob72CmUYljenqJtksbTNJU9u34RzuqdMwA63mRMoFrjROLRbNw+fD+n5GnJZEWF1gVf@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVV3m+z899OpRUckahrGYfmRjNpal+j1kSljdlexW/Yucnpe6l
+	X7+ItZ0UVJaynTz8LCQ3CkMp4XwTfh/dL9KbBldhFejJQkOLzzM9OX4f8f53hdh/UkApd5tdV6b
+	25O9wDQhU+Q==
+X-Received: from dlbro3.prod.google.com ([2002:a05:7022:1583:b0:126:faf3:bc29])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:611:b0:11b:9386:a3c2
+ with SMTP id a92af1059eb24-1278fd58445mr2164359c88.45.1772262006664; Fri, 27
+ Feb 2026 23:00:06 -0800 (PST)
+Date: Fri, 27 Feb 2026 22:59:46 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260226122208.162765-1-wangguangju@hygon.cn> <177222796929.277001.11130004024791436706.b4-ty@kernel.org>
-In-Reply-To: <177222796929.277001.11130004024791436706.b4-ty@kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
+Message-ID: <20260228065953.3226283-1-irogers@google.com>
+Subject: [PATCH v2 0/7] perf data/pipe handling improvements
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 27 Feb 2026 22:40:00 -0800
-X-Gm-Features: AaiRm51vV-A7vG76vsDhWMPaaAGxVulpGIL2fYozxanfuAdQwhVtGvBS02w1ZWc
-Message-ID: <CAP-5=fXep0Frpoxq=G5KJOMzmEXyrj134XsaO=p9N-61Hp99dw@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Fix IS_ERR() vs NULL check bug
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, james.clark@linaro.org, wangguangju@hygon.cn, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Derek Foreman <derek.foreman@collabora.com>, 
+	Howard Chu <howardchu95@gmail.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Swapnil Sapkal <swapnil.sapkal@amd.com>, Anubhav Shelat <ashelat@redhat.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Hrishikesh Suresh <hrishikesh123s@gmail.com>, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 27, 2026 at 1:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Thu, 26 Feb 2026 20:22:08 +0800, wangguangju@hygon.cn wrote:
-> > The alloc_syscall_stats() function always returns an error pointer
-> > (ERR_PTR) on failure.
-> >
-> > So replace NULL check with IS_ERR() check after calling
-> > delete_syscall_stats() function.
-> >
-> >
-> > [...]
-> Applied to perf-tools-next, thanks!
+I'm looking at improving the perf data converter with files generated
+in pipe mode. In pipe mode I found the feature handling for the last
+feature marker was problematic. If a new feature was added then the
+old marker looks like the new feature. These changes do some minor
+logging and build fixes, but they also change the last feature
+handling in pipe mode so that the marker is treated as a marker and
+not a feature that is broken.
 
-This broke the "perf trace summary" test for me (run `perf test -v`).
-The failing command under gdb shows:
-```
-$ gdb --args perf trace -s -- true
-...
-(gdb) r
-...
-Program received signal SIGSEGV, Segmentation fault.
-0x0000555555672210 in delete_syscall_stats (syscall_stats=3D0x0) at
-builtin-trace.c:1579
-1579            hashmap__for_each_entry(syscall_stats, pos, bkt)
-(gdb) l
-1574            size_t bkt;
-1575
-1576            if (IS_ERR(syscall_stats))
-1577                    return;
-1578
-1579            hashmap__for_each_entry(syscall_stats, pos, bkt)
-1580                    zfree(&pos->pvalue);
-1581            hashmap__free(syscall_stats);
-1582    }
-```
+Two additional fixes are added in v2. The first is making ordered
+events handle positive process event return values in a consistent
+manner with the reader that ignores positive values. Not handling this
+properly breaks with tracing data events in pipe mode. The second set
+of fixes are to the perf data converter --to-ctf output where
+generating the CTF events is deferred until the event desc feature or
+tracing data events occur in pipe mode.
 
-As NULL is false for IS_ERR I think the correct change is:
-```
-if (syscall_stats =3D=3D NULL || IS_ERR(syscall_stats))
-```
+v2: Two additional fixes, bring back --header-only early exit
+    (Namhyung) and some comment/whitespace nits.
 
-We seem to be routinely breaking tests, which may indicate a lot of
-noise in the test output. I see many failures in the type profiling
-test due to the typedef vs struct issue.
+v1: https://lore.kernel.org/lkml/20260226013534.2028272-1-irogers@google.com/
 
-Thanks,
-Ian
+Ian Rogers (7):
+  perf clockid: Add missing include
+  perf header: Add utility to convert feature number to a string
+  perf session: Extra logging for failed to process events
+  perf header: Refactor pipe mode end marker handling
+  perf ordered-events: Event processing consistency with the regular
+    reader
+  perf evsel: Make unknown event names more unique
+  perf data convert ctf: Pipe mode improvements
 
-> Best regards,
-> Namhyung
->
->
+ tools/perf/builtin-annotate.c       | 11 +----
+ tools/perf/builtin-report.c         | 27 +++++-------
+ tools/perf/builtin-script.c         | 11 +----
+ tools/perf/util/clockid.h           |  3 +-
+ tools/perf/util/data-convert-bt.c   | 63 +++++++++++++++++++++++----
+ tools/perf/util/data-convert-json.c | 12 +-----
+ tools/perf/util/evsel.c             |  7 +--
+ tools/perf/util/header.c            | 66 +++++++++++++++++++++++------
+ tools/perf/util/header.h            |  6 ++-
+ tools/perf/util/intel-tpebs.c       | 11 +----
+ tools/perf/util/ordered-events.c    |  2 +-
+ tools/perf/util/session.c           | 28 ++++++++----
+ 12 files changed, 154 insertions(+), 93 deletions(-)
+
+-- 
+2.53.0.473.g4a7958ca14-goog
+
