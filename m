@@ -1,215 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2325A33ADB3;
-	Sat, 28 Feb 2026 05:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772257044; cv=none; b=gsa+tTQTdDWa0IwF7jnYZKbXsw8CoQTkzZL5ZFAYA+3QO0PTMR8vhcRCHfBkGHo2ML0sq0Nn2v5szj+aI4XasJ7fDNFqi++/1ePQJQZ75aaQMljrkz4eZhh0WdpDPdCMpqvczkLJOsZUNDXp1DgRkh0QvFrx6zU7IjAst5mu+vA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772257044; c=relaxed/simple;
-	bh=Zf0G2TS1hZnEP/ac16XpA+MoRMoz8XBDzG7g7Kivs3c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A+bh4ay7kOkTXdYYylL07TKS2pLfacUdhiRe4szf3oYrau385mLqS9vMK/6WxX8jSQUvCgXWalltPAq57IHXhW1LpVuxoCPa0UMbzqtHMjZAmohU+izJ1IML0xVO162EK7WhcrKbQ4pH7q9uEpZIznWKYsVhpyuzmZSa9s4rnmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MXQXUtp1; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A530C329361
+	for <linux-perf-users@vger.kernel.org>; Sat, 28 Feb 2026 06:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.169
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772260813; cv=pass; b=mLBVsB3YRV7nUBp3pVPQTKWNnOrMAhmUGMAjDCStCx3idMZCdQ0DseT8lN3o+pYc3YS1mOlAixIpLmtX7lzggaK61qbbb46I48RYD7Pc532SgTjkblul631JrBnEB6W43F0o6Hdc66F5vaHZqiEYqSPMnnBEeXpnPaoil2H5Kpc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772260813; c=relaxed/simple;
+	bh=GCgtjPDV1FRTC+iBUt4U+e1Kjkved8C7aB/V+1Smtxk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cuZODejzuNflTvii/UVK9M9sgZRiWkrye94YoMCwAiGRMqWL/5xzvr9+GigCyRCTDkUoFV3uZmfu/E3JS0n9R75IOSl0SxalCsEjxfuWCpkltdG1hBtHeW0YHqAEbfH3qvY163bxKhWBNys/pDScxltJDffOrRuwT1swG3NkTIA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aZhVZ8tt; arc=pass smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MXQXUtp1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772257044; x=1803793044;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Zf0G2TS1hZnEP/ac16XpA+MoRMoz8XBDzG7g7Kivs3c=;
-  b=MXQXUtp1kSig9LIbLMAjyej/bjfFg20/V2w6FQWdhxyg+3pWd3ImOW9Q
-   5QZ4tnwxLT0XvLUy49GDHlRGBbW7CFLh7uATK5xRDSkP1e20oeV7JYtoG
-   OBcW40GufNZDDXs/HM7lmDKSpWG4wKL26WfbZRGGRUu1Wjc5oJ13zklFY
-   P9aS5vc2zkpNlA5op8uNtlyE9MIM0qJ/heQIcGH7blfotL7qtH2ER61iu
-   ToiK5mXqBA373jkDQlXhHlr00oHqH5IT/PONCITqqAuiPlmsQfETAKvct
-   0OMiBY4Tn65QPEdRF3/iYTBag8Taf1Qf54Za+mykVnfnnU5Q4og4sy4oG
-   g==;
-X-CSE-ConnectionGUID: G47dTFk8QNifeCK7sVW1Hg==
-X-CSE-MsgGUID: CpwGISLbSrKOdco/dzR/qw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11714"; a="73307700"
-X-IronPort-AV: E=Sophos;i="6.21,315,1763452800"; 
-   d="scan'208";a="73307700"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2026 21:37:23 -0800
-X-CSE-ConnectionGUID: nJmVYBD+QI+Ak0nV+geRsQ==
-X-CSE-MsgGUID: 8dfOtU85RtCbBglGxXtD1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,315,1763452800"; 
-   d="scan'208";a="254921382"
-Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa001.jf.intel.com with ESMTP; 27 Feb 2026 21:37:19 -0800
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	stable@vger.kernel.org
-Subject: [RESEND Patch 2/2] perf/x86/intel: Add missing branch counters constraint apply
-Date: Sat, 28 Feb 2026 13:33:20 +0800
-Message-Id: <20260228053320.140406-2-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260228053320.140406-1-dapeng1.mi@linux.intel.com>
-References: <20260228053320.140406-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aZhVZ8tt"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2ae3f822163so7675ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2026 22:40:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772260812; cv=none;
+        d=google.com; s=arc-20240605;
+        b=HPQvnnee+kKI2/dKHKzoMfKBFE9urfx2mJjdy8xx9YuZzvrr3Rg2AzsjLwn8CiBbL5
+         KW/29ypjrw5KDtcPWvQND88lRjdtHcsftJSrdSr7Vc7VhB4KyDMWPmW/e7a0ijSto0/w
+         S6VFlf2qUVd5DV7ODSl7pG0Z47788dovMfjtNWQLCni76jy8E5jgVbTibRFSL8AD+ZHp
+         BUDZjiM/nuQYo/Xwf8EHTtRTOmGcNO/mY63H91N6KBOsvY8irrd4PtUNBcCPGC5cJ1rB
+         GkdLi+d3pKVpsNjYH9Pn8AjhRd9kbcR9P1MSbsIINCDbXrbYd79njjh7uwtNl9PmpROA
+         HSoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Y1SGkCngI5GvsQqU0a9kGo4JXYTF/HfVjBSLW9M8+Nk=;
+        fh=O4M0oSYkl9CbCrvGq24CEuU8qB/2RmG3r2tIxnLZJQw=;
+        b=VQXszXPJ8VS48WoyMw2g0RVGFd4YoTxC/hkQjJjUJCwAymEMxoR8zfVpN5ynvk4tcN
+         WBXxUkJNoLNf6gPy7G9AADTmkiPd/3csH2r7J/bM0AhA1+DU+4nXp6nFOK6S85J20LV9
+         Uqi7aaQtHCocDlOTjBop8+2HmVytma9OpvC3bRIZ3CckmfNX7NVhZNt5TXGDWj8xUssF
+         MK1X1umoEPQHK++1yrcovVl5Cblofu7uq1k+dOSyIUdEM2f3o7d7At5FvuurR6VSCwU3
+         regVVWMFL6zyUWi6eLC4wbYhkUMhuycseBwM4TjizrZ2LnIMqLkr6PXCnkxuIBcOSTb7
+         hPCA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772260812; x=1772865612; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y1SGkCngI5GvsQqU0a9kGo4JXYTF/HfVjBSLW9M8+Nk=;
+        b=aZhVZ8ttzJ/vhZSo1d2KjILZ7hYvZ1rljFoJMyyRm4XjgOdXB9Ys+eOtqS5rkZnOhE
+         QjOaCbYFDxWtm9sAoDWOxwXJnia52UOzohioes+lwwgJrAQZK7Su7zCJmKOU6f/rh3l1
+         7ZdPzYQvlLDZnGUt251smLiGj1dT898hdIIz75y7rl1iA5yGmg19ZCNjbV45xV6LE6lS
+         34TffnhbqNrmII9tenar3LgVGLyRBk2UTea5eE4ei98Y79Gy5lWkzgV94n0K+HMiINKK
+         D5YdsAhVTaEiTSYX3jOnfjJ9oiTOvjLTXZY2cCmbn67++mMNNNbHi7xJ+4vhZWAtTbQy
+         FKhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772260812; x=1772865612;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Y1SGkCngI5GvsQqU0a9kGo4JXYTF/HfVjBSLW9M8+Nk=;
+        b=qQci5tyvyE4cjOAbAgno0lWA8Ei64cl8qe/Km6gvmdxX0cXDpf+k5J5gYLI7l2hxTw
+         mkjIrs7Vzo1qA3qEqM2Scby3MtXSuhmMyJD1FCmM9jYEjOJGuZLZg4yJuCsV2RjONS2f
+         mkDADGcEHuAqQ6YB0v/Bfr8lfvW6S8ITbjDCaMI8EfVJNEbru8AgTbFvzP343i4BM7/S
+         TqV6WcnQO18ELtizMXEG5BhZNgoECYQ3tnSTIHPx5PTnb+WF8x3+8gjOdZzcbCYBGt++
+         p5P1JYPVFrcF/XxTkkqLOgOS3pPBbHWGxUOA3Tv8IE/OO2I5DeGD19tMlBkDXAeW49JU
+         3Bxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmYLFEfXTzkHs+5bQqAMWAuaAKXGGWIhJkbaMtdXU9/kTtt3dV69xEgOQQaen9DPFjOhRgsqukteMb2KHvAtAv@vger.kernel.org
+X-Gm-Message-State: AOJu0YylMGc4lTBhazYKswu2iBTjS+MZ9h84Pb0P103CHoljh6wUInz5
+	olDSB5Dm+Rdcpi7J8mNLYoDpNTjEalfAruTXYOeLA95931KlWWYBS8fl5UD119LZ2kIBmnV+bNc
+	wzhDDhCT1dKvVRhh9DiRZG1iVguo0vzpGijQyrRIM
+X-Gm-Gg: ATEYQzwC6rvidfs1Z7S9k5NMiPGLYbXLbMz+EYzzt9/1SaC/K/uaLmGCJbWOHLmTz72
+	w4hC5N86aoVmGIHcwjOHtlMSoQ9AAso+uHeX6y6lA+jFE1SrPzNxFsFHpl+Zm1HxOfNVftyq/aW
+	tgrytu6b7n6pULuxhz7Jz3nb1anQEpHiCFe6mVBG4TwdbKu9EQPCflmvl2pTjG6LOvQ6eD6jsnS
+	MF4bSK5/ilCloAaHQnJoFWxhdy3TGw+D+/79lKB5QpqJQVF9HyDgJV7lT2MMq8U7/9GJl0qQPZk
+	+sgRX6Qn
+X-Received: by 2002:a17:902:d50e:b0:2a7:640c:834b with SMTP id
+ d9443c01a7336-2ae39492c95mr1453345ad.0.1772260811132; Fri, 27 Feb 2026
+ 22:40:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260226122208.162765-1-wangguangju@hygon.cn> <177222796929.277001.11130004024791436706.b4-ty@kernel.org>
+In-Reply-To: <177222796929.277001.11130004024791436706.b4-ty@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 27 Feb 2026 22:40:00 -0800
+X-Gm-Features: AaiRm51vV-A7vG76vsDhWMPaaAGxVulpGIL2fYozxanfuAdQwhVtGvBS02w1ZWc
+Message-ID: <CAP-5=fXep0Frpoxq=G5KJOMzmEXyrj134XsaO=p9N-61Hp99dw@mail.gmail.com>
+Subject: Re: [PATCH] perf trace: Fix IS_ERR() vs NULL check bug
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, james.clark@linaro.org, wangguangju@hygon.cn, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When running the command:
-'perf record -e "{instructions,instructions:p}" -j any,counter sleep 1',
-a "shift-out-of-bounds" warning is reported on CWF.
+On Fri, Feb 27, 2026 at 1:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Thu, 26 Feb 2026 20:22:08 +0800, wangguangju@hygon.cn wrote:
+> > The alloc_syscall_stats() function always returns an error pointer
+> > (ERR_PTR) on failure.
+> >
+> > So replace NULL check with IS_ERR() check after calling
+> > delete_syscall_stats() function.
+> >
+> >
+> > [...]
+> Applied to perf-tools-next, thanks!
 
-[ 5231.981423][   C17] UBSAN: shift-out-of-bounds in /kbuild/src/consumer/arch/x86/events/intel/lbr.c:970:15
-[ 5231.981428][   C17] shift exponent 64 is too large for 64-bit type 'long long unsigned int'
-[ 5231.981436][   C17] CPU: 17 UID: 0 PID: 211871 Comm: sleep Tainted: G S      W           6.18.0-2025-12-09-intel-next-48166-g6cf574943ba3 #1 PREEMPT(none)
-[ 5231.981445][   C17] Tainted: [S]=CPU_OUT_OF_SPEC, [W]=WARN
-[ 5231.981447][   C17] Hardware name: Intel Corporation AvenueCity/AvenueCity, BIOS BHSDCRB1.IPC.3544.P98.2508260307 08/26/2025
-[ 5231.981449][   C17] Call Trace:
-[ 5231.981453][   C17]  <NMI>
-[ 5231.981455][   C17]  dump_stack_lvl+0x4b/0x70
-[ 5231.981463][   C17]  ubsan_epilogue+0x5/0x2b
-[ 5231.981468][   C17]  __ubsan_handle_shift_out_of_bounds.cold+0x61/0xe6
-[ 5231.981472][   C17]  ? __entry_text_end+0x158b/0x102259
-[ 5231.981475][   C17]  intel_pmu_lbr_counters_reorder.isra.0.cold+0x2a/0xa7
-[ 5231.981480][   C17]  ? __task_pid_nr_ns+0x134/0x2a0
-[ 5231.981483][   C17]  ? __pfx_intel_pmu_lbr_counters_reorder.isra.0+0x10/0x10
-[ 5231.981486][   C17]  ? __pfx_perf_output_sample+0x10/0x10
-[ 5231.981489][   C17]  ? arch_perf_update_userpage+0x293/0x310
-[ 5231.981491][   C17]  ? __pfx_arch_perf_update_userpage+0x10/0x10
-[ 5231.981494][   C17]  ? local_clock_noinstr+0xd/0x100
-[ 5231.981498][   C17]  ? calc_timer_values+0x2cb/0x860
-[ 5231.981501][   C17]  ? perf_event_update_userpage+0x399/0x5b0
-[ 5231.981505][   C17]  ? __pfx_perf_event_update_userpage+0x10/0x10
-[ 5231.981508][   C17]  ? local_clock_noinstr+0xd/0x100
-[ 5231.981511][   C17]  ? __perf_event_account_interrupt+0x11c/0x540
-[ 5231.981514][   C17]  intel_pmu_lbr_save_brstack+0xc0/0x4c0
-[ 5231.981518][   C17]  setup_arch_pebs_sample_data+0x114b/0x2400
-[ 5231.981522][   C17]  ? __pfx_x86_perf_event_set_period+0x10/0x10
-[ 5231.981526][   C17]  intel_pmu_drain_arch_pebs+0x64d/0xcc0
-[ 5231.981530][   C17]  ? __pfx_intel_pmu_drain_arch_pebs+0x10/0x10
-[ 5231.981534][   C17]  ? unwind_next_frame+0x11c5/0x1df0
-[ 5231.981541][   C17]  ? intel_pmu_drain_bts_buffer+0xbf/0x6e0
-[ 5231.981545][   C17]  ? __pfx_intel_pmu_drain_bts_buffer+0x10/0x10
-[ 5231.981550][   C17]  handle_pmi_common+0x5c5/0xcb0
-[ 5231.981553][   C17]  ? __pfx_handle_pmi_common+0x10/0x10
-[ 5231.981556][   C17]  ? intel_idle+0x64/0xb0
-[ 5231.981560][   C17]  ? intel_bts_interrupt+0xe5/0x4c0
-[ 5231.981562][   C17]  ? __pfx_intel_bts_interrupt+0x10/0x10
-[ 5231.981565][   C17]  ? intel_pmu_lbr_filter+0x27f/0x910
-[ 5231.981568][   C17]  intel_pmu_handle_irq+0x2ed/0x600
-[ 5231.981571][   C17]  perf_event_nmi_handler+0x219/0x280
-[ 5231.981575][   C17]  ? __pfx_perf_event_nmi_handler+0x10/0x10
-[ 5231.981579][   C17]  ? unwind_next_frame+0x11c5/0x1df0
-[ 5231.981582][   C17]  nmi_handle.part.0+0x11b/0x3a0
-[ 5231.981585][   C17]  ? unwind_next_frame+0x11c5/0x1df0
-[ 5231.981588][   C17]  default_do_nmi+0x6b/0x180
-[ 5231.981591][   C17]  fred_exc_nmi+0x3e/0x80
-[ 5231.981594][   C17]  asm_fred_entrypoint_kernel+0x41/0x60
-[ 5231.981596][   C17] RIP: 0010:unwind_next_frame+0x11c5/0x1df0
-......
+This broke the "perf trace summary" test for me (run `perf test -v`).
+The failing command under gdb shows:
+```
+$ gdb --args perf trace -s -- true
+...
+(gdb) r
+...
+Program received signal SIGSEGV, Segmentation fault.
+0x0000555555672210 in delete_syscall_stats (syscall_stats=3D0x0) at
+builtin-trace.c:1579
+1579            hashmap__for_each_entry(syscall_stats, pos, bkt)
+(gdb) l
+1574            size_t bkt;
+1575
+1576            if (IS_ERR(syscall_stats))
+1577                    return;
+1578
+1579            hashmap__for_each_entry(syscall_stats, pos, bkt)
+1580                    zfree(&pos->pvalue);
+1581            hashmap__free(syscall_stats);
+1582    }
+```
 
-The warning occurs because the second "instructions:p" event, which
-involves branch counters sampling, is incorrectly programmed to fixed
-counter 0 instead of the general-purpose (GP) counters 0-3 that support
-branch counters sampling. Currently only GP counters 0~3 support branch
-counters sampling on CWF, any event involving branch counters sampling
-should be programed on GP counters 0~3. Since the counter index of fixed
-counter 0 is 32, it leads to the "src" value in below code is right
-shifted 64 bits and trigger the "shift-out-of-bounds" warning.
+As NULL is false for IS_ERR I think the correct change is:
+```
+if (syscall_stats =3D=3D NULL || IS_ERR(syscall_stats))
+```
 
-cnt = (src >> (order[j] * LBR_INFO_BR_CNTR_BITS)) & LBR_INFO_BR_CNTR_MASK;
+We seem to be routinely breaking tests, which may indicate a lot of
+noise in the test output. I see many failures in the type profiling
+test due to the typedef vs struct issue.
 
-The root cause is the loss of the branch counters constraint for the
-last event in the branch counters sampling event group. This results in
-the second "instructions:p" event being programmed on fixed counter 0
-incorrectly instead of the appropriate GP counters 0~3.
+Thanks,
+Ian
 
-To address this, we apply the missing branch counters constraint for
-the last event in the group. Additionally, we introduce a new function,
-`intel_set_branch_counter_constr()`, to apply the branch counters
-constraint and avoid code duplication.
-
-Cc: stable@vger.kernel.org
-Reported-by: Xudong Hao <xudong.hao@intel.com>
-Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/events/intel/core.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 4768236c054b..4b042d71104f 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4628,6 +4628,19 @@ static inline void intel_pmu_set_acr_caused_constr(struct perf_event *event,
- 		event->hw.dyn_constraint &= hybrid(event->pmu, acr_cause_mask64);
- }
- 
-+static inline int intel_set_branch_counter_constr(struct perf_event *event,
-+						  int *num)
-+{
-+	if (branch_sample_call_stack(event))
-+		return -EINVAL;
-+	if (branch_sample_counters(event)) {
-+		(*num)++;
-+		event->hw.dyn_constraint &= x86_pmu.lbr_counters;
-+	}
-+
-+	return 0;
-+}
-+
- static int intel_pmu_hw_config(struct perf_event *event)
- {
- 	int ret = x86_pmu_hw_config(event);
-@@ -4698,21 +4711,18 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		 * group, which requires the extra space to store the counters.
- 		 */
- 		leader = event->group_leader;
--		if (branch_sample_call_stack(leader))
-+		if (intel_set_branch_counter_constr(leader, &num))
- 			return -EINVAL;
--		if (branch_sample_counters(leader)) {
--			num++;
--			leader->hw.dyn_constraint &= x86_pmu.lbr_counters;
--		}
- 		leader->hw.flags |= PERF_X86_EVENT_BRANCH_COUNTERS;
- 
- 		for_each_sibling_event(sibling, leader) {
--			if (branch_sample_call_stack(sibling))
-+			if (intel_set_branch_counter_constr(sibling, &num))
-+				return -EINVAL;
-+		}
-+
-+		if (event != leader) {
-+			if (intel_set_branch_counter_constr(event, &num))
- 				return -EINVAL;
--			if (branch_sample_counters(sibling)) {
--				num++;
--				sibling->hw.dyn_constraint &= x86_pmu.lbr_counters;
--			}
- 		}
- 
- 		if (num > fls(x86_pmu.lbr_counters))
--- 
-2.34.1
-
+> Best regards,
+> Namhyung
+>
+>
