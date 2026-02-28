@@ -1,36 +1,35 @@
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9C743E9CC;
-	Sat, 28 Feb 2026 14:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5952143E9DF;
+	Sat, 28 Feb 2026 14:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772290036; cv=none; b=NE19FcgOf+L0Mkx9jFwVtBGxS9tVpaFbcp17jDID5PtD0MMiFNYI+KzIIHAPuOmI4UeM3Ay3jEYFf/ckitVkoIK0AE3aXhgwKC96Lu0O6XicX4P4NfcNnZficUCwr8NWazGgIKoMhAud3566UGjFfiUcJr7oxJCGTz59Nzp1xsw=
+	t=1772290044; cv=none; b=Yzm06WTpWi/19U3myQ67C0GmKe2Ypn3bfut+3hflbz4dyyLugHJx3beGaBpXy48c+uSYGOsPN0GLFf3rOTLUvAS2/eBckuRCSogNO5FjVMsWgNzMg/GO00+7k0Edp5BGGrL3L7VRi8b4PJnaVenPT4kGpaS4kA7L2W3aOXC3NQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772290036; c=relaxed/simple;
-	bh=fXa1lkiUZ/QL0botgKsdNtPqBfZ3NrLi1gXFYHiWXyc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OnXTCQzRr55cQRcorNeST7u5gW+dL+lCdzuuVjV/dKFrUPGbVoAKynnaUfRAdgB9/W+1o3w8H/GSbnctlrjlqSR3YWpGzeNg8V1oOjGLpu0LsfvZSHFnaoz7ZVqD4rvQ1tScHFVKPWpW3OVkQ3/TEWWaTza8xPQXaFQp5GK07Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=QB2R3PjW; arc=none smtp.client-ip=54.204.34.129
+	s=arc-20240116; t=1772290044; c=relaxed/simple;
+	bh=AsKvI+ijqHjQa3sgDY1PPryHZxIup6q2dSFasj6EQXI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G7p/fzXeRMtZKqrg3r3pLYWIyaLl6QIZBfg78fmTGtGCeJJAoON7wcJPFfq18VuJscsu2tvkN61M+QfOi+PvJr3WF9gf0oNzhBXFRDrT5GrRaYnudvO5TVtJXAD9lZ6GuGdfuB+Xsl9I6bIgIpXOH9/Hf0wXTzrsvCfWYUDHO+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=cdUhVrAn; arc=none smtp.client-ip=54.207.22.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="QB2R3PjW"
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="cdUhVrAn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1772289912;
-	bh=9Rddjh34nxVG+T9ZP2MtutmhQmrdK8gCR5+Qv674HF8=;
+	s=mxsw2412; t=1772289841;
+	bh=VFpZj6jKARnaID1I10ixu24mzXdyy5SN61+au0Q3ZPc=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=QB2R3PjW44GYFJHJ9bvKy1LFrpCj7gdSzJmMorkTLlxbP1tAdWkIHUgUv1JAK7ANX
-	 DDPJCkRBp8HaEk4BoSDLcdeG/DwEnvAT7C9rH19O19EIK2yfQRH7fyukwn7THabWPJ
-	 33P6SLDaHnFRoskklX+ESA6p03dYjGvtGvB8fmhs=
-X-QQ-mid: zesmtpgz5t1772289906t83a7a01f
-X-QQ-Originating-IP: 1WCF6GkPzDS7btEb31Vfq+QwqZVOwt20SD8/fLmXg9E=
+	b=cdUhVrAnVOsRvbB2eYzrKAnB/tna4valCaKOwSU3723n/f9Z3LaOK2hkRHthFr7G2
+	 m8/LKDODnIeHfcQq+/lWH70XKFuH6we3HHbboG3dtEBDwqhXC20xILcCepsow2D7Qv
+	 1kgzcewL/SUKNm3jYn0/nxIUzOxrj58QsMOXNOUM=
+X-QQ-mid: zesmtpsz3t1772289839t48d62097
+X-QQ-Originating-IP: +vVQa2LLG+FVJ/e80s+itn7Z14UcwpwT8kcqAcUN2/M=
 Received: from SurfaceBook2-B.localdomain ( [183.193.112.19])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sat, 28 Feb 2026 22:45:01 +0800 (CST)
+	id ; Sat, 28 Feb 2026 22:43:54 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 5539244136546253988
+X-BIZMAIL-ID: 10233903411919513478
 EX-QQ-RecipientCnt: 33
 From: Lv Zheng <lv.zheng@linux.spacemit.com>
 To: Tomasz Jeznach <tjeznach@rivosinc.com>,
@@ -66,12 +65,10 @@ Cc: Jingyu Li <joey.li@spacemit.com>,
 	spacemit@lists.linux.dev,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 5/8] spacemit/t100: Add global filter awareness for RISC-V IOMMU HPM
-Date: Sat, 28 Feb 2026 22:44:59 +0800
-Message-ID: <E8CA8C0C8D600441+344b42b8c982867a1b51324b252a4315aaa54f89.1772289741.git.lv.zheng@linux.spacemit.com>
+Subject: [PATCH v5 0/8] iommu/riscv: Add HPM support for RISC-V IOMMU
+Date: Sat, 28 Feb 2026 22:43:38 +0800
+Message-ID: <0CA1C3965143B3A7+cover.1772289741.git.lv.zheng@linux.spacemit.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1772289741.git.lv.zheng@linux.spacemit.com>
-References: <cover.1772289741.git.lv.zheng@linux.spacemit.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,260 +77,147 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
-X-QQ-XMAILINFO: MKRFeTdpYQoNtPE/J6vyUX9BItjFAnSVyy5uvWZGBUc9CVm47J5UkbIY
-	MhavoejMUyHjl+a7UMV++yxIW53msrRBq+yblY5cdW1JUvRqiV4LEsagpD+j+YL2GDOkNDv
-	Rf0YH4D2Xd1AXaH+o2wSgq3rMkEEMmgGLHYDNVojZT4d9Dmw2hhpHhX6l4nnRc5xbSQPa/f
-	TXmBpUrraBJPfnVpuWQOslqEliPQ4b4Z/8aqT7ggrUlVJM89YFIRg0BDUNs63HPtng/Gc4Z
-	LNXXvE6HFBnDbHuHYqLnNZaGXXyhiPbwmhLR6NKna5y/dCGA8qj/Q16bsmmZFAxS4HUJMjv
-	KLrAqbYFASLl253kgfNGAtts+mt9WBY8qz2jrvj/PTHp/8a2jNO/c2F91xdP4F2I0Ao6mEQ
-	0B5cINtWaACx4QEqy3CoY4qIieBNsGej61iwf5OKFLLvUEAAByOaaKguE2eGNDlSpqoeMLF
-	u5+IgxoJWgI7R3Ye0374it629X3GM3cAyi6AAgFmmAPTvEnRy44HqLWxFnVtGlaWWfXSiU9
-	5SMaILxTEoQzqPv7plPoYuZCz5Wszk+tmDxBC+Y43QNsKC7LpAC4HgQ4f2EJSXIJ7Av+HUJ
-	ZNN0IuHdgKfFsp7cNSev6GQGRVI6oe1eE8rLEjmltcjsevYfVwi42Nf2/jK4t+RONiHaFwv
-	MJeBWimCdxYmERXYWjRBid47X8cz01Bs/WTh27P60zFSvf/rntyVIFuKJvgVGzw72eWfsZ1
-	LjXBBzkrE6jOFKgecdDuMB3jydrQV82cvGPDmBaLNMQtWaquP3NBxpp7w3Xq4vQMK9a47Rn
-	nhyjvGifRE7As0sHF3UlHP13BccrOfeuDqxkpFliVp7sKnzbNTaHYckUw53CC9DzTXuumfY
-	jkXgh3QGoTJuqekRyReVLOQTNPdmApfgBQrfd51DmFvFrA5D6VdM3mQ8bbMx4MKBPsevLzo
-	Qk72gwhLisLtXX37Fv2iL2uU/2dFmLlXn0uFwFygmPC59Nc42gAzreq2nR8+y3QeJJbsKyW
-	nQcXkaXRyXxPkMDD376Qsp/TsHJuMBfigK6bk68jPZBywrbABztyQmxz/CAC94zeLaF3wyr
-	elpeq4JnTR6jsGVcY+FZI2Jj/Urj8gW13IBPplyU5M9
+Feedback-ID: zesmtpsz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz5b-1
+X-QQ-XMAILINFO: MSZecc01IPj5diyjRvIOeQg2lFZZ003e583DDRseQoWTiEz7vBEAgPMa
+	noYsdDxSZUPD3IL+brT+9sNb90GW/OpWvOsDs+wGGZ/TPvf6+igYfwXB4Kegqbu9ajzlR7S
+	tjb2jXOUPxDJptG8lb1jIqrJPzFMMgPF/l+JGpeHWAQkAe6AqrU08FmJ0xim2GfqwuEBvtt
+	Zsh9WjeTV9m7f53sU4JgMPg0suHsIGbW/+yR3ltOFZg/bj6QR/eDHyMhSbgIS8X4RucXugZ
+	/MgqVNPmALUqsZ4Eld/ACd+dZLva9CoOaLHxjgfPr4xu7sSWIflrUErPYhS7sCs5jt+d4dd
+	CgUlo4Sl+8erx8vj7G1QWC6gd4jsphwmv0OeUxhYRZhQ57cCoOR1Y33RNKt/xdIUxQjcjmF
+	EOQL/XGo+YNheCz7fMzaCF59PiL+QgZ/uagWD6k3lkEWjuckdHZeP4FdkxMSMVWb5/KmlgT
+	QI5IFishcGXozF54/G2PurI128vQebvTEk0u4qkY1WJFH4HUwoids+5h0XSJpXQAuJ5qc5m
+	6IKHb8PIvxgwE1UHFUopRICPA/qYSM3bCcSMvsZ0fwfAiakqdfF8JEUy08gEvci6FPWwi/L
+	14UQRsHdvzTsqdkovmFKd40kfi6N9RKmIXi6H228dEHh3yK3fiTRmceaI0HYMLDSokKdM4c
+	+DrsO38KmiGkkgZPox+YZWrPrprAUvmIG3yWjUEQtSLtm8RgvwEKslLLoNwxHSPp6c2T0wJ
+	WXt8aHfV8fRsuo105LAh/6Dh1yqMlBRzReZa6VSiqx/lbgK12Ox1ryV+MJvNaapUIccMQw7
+	njXtnZSqJjBVJjtb1woNipOX+PP5vwiwifXfy+D0lLDsTcANvndIjDh1irGdlZs5yItXu73
+	xKdhdr4QRdXriJdG5Q1vJqrvczlaS4Ap6pGDtzM51i6Z8wlDA9dJ1UotCc7nW75cF24qMP2
+	y6adiLIEulIWFWpBs9Oq5ZI7gu6cNqRzfWZIi3EXAeV3j7vi09Ghyr9j0pLw0cfZTudgzi2
+	7gBIhFCFFvnwMLggx5ZXf1HVfEPkELJJbOLJGgfQTXSef1tVTqkB7CubBFjhFn7JJ4fFr0H
+	nra7bdb2udXyF1/iE8KxGOx0Bz4E2kYiJSOJ6g5oSb0
 X-QQ-XMRINFO: NyFYKkN4Ny6FuXrnB5Ye7Aabb3ujjtK+gg==
 X-QQ-RECHKSPAM: 0
 
-Adds global filter support for RISC-V IOMMU HPM. The global filter can be
-seen in SpacemiT T100 which only supports single filter to be applied to
-all event counters.
+Includes HPM support for RISC-V IOMMU. The HPM hardware mechanism can be
+found in the recent announced SpacemiT SoCs (K3, V100), where T100
+(SpacemiT distributed IOMMU) is shipped. 
 
-Drivers can program filters in each iohpmevt registers as normal in such a
-silicon design, however the underlying hardware filters are wired together
-as a global filter applying to all iohpmevt(s). Since the mechanism is
-compatible with standard iohpmevt in programming interface, only adds
-sanity checks to allow it to be configured with "global" awareness to
-inform users a filter incompatiblity.
+The RISC-V IOMMU specification defines optional HPM registers (IOHPMEVT,
+IOHPMCTR, etc.) for performance monitoring of transactions through the
+IOMMU. SpacemiT T100 implements this specification with a distributed
+architecture: the main IOMMU (IOATS) is complemented by up to 64 IOATC
+units that cache IOTLBs adjacent to DMA masters. Each IOATC has its own
+HPM counters and PMIV interrupt.
 
-Signed-off-by: Lv Zheng <lv.zheng@linux.spacemit.com>
-Signed-off-by: Jingyu Li <joey.li@spacemit.com>
----
- drivers/iommu/riscv/iommu.c    |  5 ++
- drivers/perf/riscv_iommu_hpm.c | 94 ++++++++++++++++++++++++++++++++--
- include/linux/riscv_iommu.h    |  2 +
- 3 files changed, 96 insertions(+), 5 deletions(-)
+This series introduces an auxiliary bus framework to allow the HPM
+functionality to be implemented as a separate perf driver, keeping the
+IOMMU core focused on translation. Vendor-specific extensions (SpacemiT
+T100) are layered on top of the generic HPM infrastructure.
 
-diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
-index 1aa942486e3a..21ff7e50d115 100644
---- a/drivers/iommu/riscv/iommu.c
-+++ b/drivers/iommu/riscv/iommu.c
-@@ -1717,6 +1717,11 @@ static void riscv_iommu_enumerate_hpm(struct riscv_iommu_device *iommu)
- 		.base = iommu->reg + RISCV_IOMMU_REG_IOCOUNTOVF,
- 	};
+History:
+The first revision of this series is posted without the awareness of
+other on-going discussions. There are other postings providing same
+functionality as [PATCH 2-3] in this thread:
+1. Zong Li:
+   https://lore.kernel.org/all/20250115030306.29735-1-zong.li@sifive.com/
+   We aligned with Zong in the community here:
+   https://lore.kernel.org/all/CANXhq0q8N5eHx9ytabZR97Y7AULKwgS2-uEGhcaOOGp9mvbtRQ@mail.gmail.com/
+   >> Perhaps I can first post my next revision to the mailing list (hope
+   >> it won't waste the community resource), so that you could have a
+   >> chance to review it and see whether that version is architecturally
+   >> closer to what the community is looking for, while also addressing
+   >> your issue. If you also feel that my next revision meets your needs,
+   >> perhaps you could append your additional implementations on top of
+   >> it.
+   >> Of course, if the community would prefer to go your version, I'm
+   >> perfectly fine with that as well.
+   His newest version can be found here:
+   https://lore.kernel.org/all/20260208063848.3547817-1-zong.li@sifive.com/
+2. Yaxing Guo:
+   https://lore.kernel.org/all/20250915020911.1313-1-guoyaxing@bosc.ac.cn/
+   Yaxing and Zong aligned each other in the community here:
+   https://lore.kernel.org/linux-iommu/2ce9d8be-10b3-48dd-b99e-7358347fc171@bosc.ac.cn/
+   >> Hi Zong Li,
+   >> Of course yes, absolutely - I wasn't aware of your earlier
+   >> submission. Please go ahead with your version.
+This is the newest revision of this patchset, and [PATCH 2-3] is the one
+that is competing with other contributions.
+
+Revisions:
+v1
+ Initial release.
+v2 (sent as v1.1)
+ Split and cleanup DT-bindings.
+v3
+ 1. Refactor using vendor specific compatible.
+ 2. Implement vendor events with a userspace identifier.
+v4
+ 1. Drop ICVEC check which is not that usful as WSI device tree can use
+    only 1 vector for IOATS CIV/FIV/PIV/PMIV.
+ 2. Solve DT binding check of "interrupts/maxItems" attribute.
+ 3. Address Robin's comments for an old revision sent by "Zong Li".
+ 4. Limit IOATC enumeration by referencing spacemit,riscv-iommu.
+v5:
+ 1. Use correct style SoC/IP specific compatible.
+ 2. Address all on-going comments in other threads.
+ 3. Split compatible into SoC specific and IP specific.
+ 4. Switch to use auxiliary device framework.
+
+The tested result can be found as follows:
+
+ root@sdfirm:# perf stat --timeout 5000 -a -e spacemit_ioats_hpm_0/dd_walk,config1=0x20c0010000000000/ dmatest; sleep 1
+ [  453.426404] dmatest: Started 1 threads using dma0chan0
+ [  453.437152] dmatest: dma0chan0-copy0: summary 1 tests, 0 failures 212.04 iops 212 KB/s (0)
  
-+	if (of_device_is_compatible(iommu->dev->of_node, "spacemit,t100")) {
-+		hpm_info->global_filter = true;
-+		params.name = "spacemit_ioats_hpm";
-+	}
-+
- 	ret = riscv_iommu_subdev_add(iommu, &params);
- 	if (ret) {
- 		kfree(hpm_info);
-diff --git a/drivers/perf/riscv_iommu_hpm.c b/drivers/perf/riscv_iommu_hpm.c
-index 4d5ce0f380e7..efa65caef0dc 100644
---- a/drivers/perf/riscv_iommu_hpm.c
-+++ b/drivers/perf/riscv_iommu_hpm.c
-@@ -87,6 +87,7 @@ struct riscv_iommu_hpm {
- 	void __iomem *base;
- 	unsigned int irq;
- 	unsigned int on_cpu;
-+	bool global_filter;
- 	struct hlist_node node;
- 	/*
- 	 * Layout of events:
-@@ -210,6 +211,33 @@ static inline void riscv_iommu_hpm_interrupt_clear(struct riscv_iommu_hpm *hpm)
- 	riscv_iommu_clear_pmip(hpm->subdev);
- }
+  Performance counter stats for 'system wide':
  
-+static bool riscv_iommu_hpm_check_global_filter(struct perf_event *curr,
-+						struct perf_event *new)
-+{
-+	return get_filter_pid_pscid(curr) == get_filter_pid_pscid(new) &&
-+	       get_filter_did_gscid(curr) == get_filter_did_gscid(new) &&
-+	       get_filter_pv_pscv(curr) == get_filter_pv_pscv(new) &&
-+	       get_filter_dv_gscv(curr) == get_filter_dv_gscv(new) &&
-+	       get_filter_idt(curr) == get_filter_idt(new) &&
-+	       get_filter_dmask(curr) == get_filter_dmask(new);
-+}
-+
-+static bool riscv_iommu_hpm_events_compatible(struct perf_event *curr,
-+					      struct perf_event *new)
-+{
-+	struct riscv_iommu_hpm *hpm;
-+
-+	if (new->pmu != curr->pmu)
-+		return false;
-+
-+	hpm = to_iommu_hpm(new->pmu);
-+	if (hpm->global_filter &&
-+	    !riscv_iommu_hpm_check_global_filter(curr, new))
-+		return false;
-+
-+	return true;
-+}
-+
- /**
-  * riscv_iommu_hpm_event_update() - Update and return RISC-V IOMMU HPM
-  *                                  event counters
-@@ -344,9 +372,10 @@ static void riscv_iommu_hpm_set_event_filter(struct perf_event *event, int idx,
- 			       RISCV_IOMMU_REG_IOHPMEVT(idx), event_cfg);
- }
+                  3      spacemit_ioats_hpm_0/dd_walk,config1=0x20c0010000000000/                                      
  
--static void riscv_iommu_hpm_apply_event_filter(struct riscv_iommu_hpm *hpm,
--					       struct perf_event *event, int idx)
-+static int riscv_iommu_hpm_apply_event_filter(struct riscv_iommu_hpm *hpm,
-+					      struct perf_event *event, int idx)
- {
-+	unsigned int cur_idx, num_ctrs = hpm->num_counters;
- 	u32 pid_pscid, did_gscid, pv_pscv, dv_gscv, idt, dmask;
+        0.190412000 seconds time elapsed
  
- 	pid_pscid = get_filter_pid_pscid(event);
-@@ -356,8 +385,32 @@ static void riscv_iommu_hpm_apply_event_filter(struct riscv_iommu_hpm *hpm,
- 	idt = get_filter_idt(event);
- 	dmask = get_filter_dmask(event);
+ root@sdfirm:~# perf stat --timeout 5000 -a -e spacemit_ioatc_hpm_1/tlb_mis,config1=0x20c0010000000000/ dmatest; sleep 1
+ [  117.599620] dmatest: Started 1 threads using dma0chan0
+ [  117.610698] dmatest: dma0chan0-copy0: summary 1 tests, 0 failures 186.07 iops 186 KB/s (0)
  
-+	if (hpm->global_filter) {
-+		cur_idx = find_first_bit(hpm->used_counters, num_ctrs - 1);
-+		if (cur_idx == num_ctrs - 1) {
-+			/* First event, set the global filter at iohpmevt0 */
-+			riscv_iommu_hpm_set_event_filter(event, 0, pid_pscid,
-+							 did_gscid,
-+							 pv_pscv, dv_gscv, idt, dmask);
-+		} else {
-+			/* Check if the new event's filter matches the global filter */
-+			if (!riscv_iommu_hpm_check_global_filter(hpm->events[cur_idx + 1],
-+								 event)) {
-+				dev_dbg(hpm->pmu.dev,
-+					"HPM: Filter incompatible with global filter\n");
-+				return -EAGAIN;
-+			}
-+			/* Program event at this counter; filter is shared by hardware */
-+			riscv_iommu_hpm_set_event_filter(event, idx, pid_pscid,
-+							 did_gscid,
-+							 pv_pscv, dv_gscv, idt, dmask);
-+		}
-+		return 0;
-+	}
-+
- 	riscv_iommu_hpm_set_event_filter(event, idx, pid_pscid, did_gscid,
- 					 pv_pscv, dv_gscv, idt, dmask);
-+	return 0;
- }
+  Performance counter stats for 'system wide':
  
- static int riscv_iommu_hpm_get_event_idx(struct riscv_iommu_hpm *hpm,
-@@ -385,7 +438,8 @@ static int riscv_iommu_hpm_get_event_idx(struct riscv_iommu_hpm *hpm,
- 		return -EAGAIN;
- 	}
+                  7      spacemit_ioatc_hpm_1/tlb_mis,config1=0x20c0010000000000/                                      
  
--	riscv_iommu_hpm_apply_event_filter(hpm, event, idx);
-+	if (riscv_iommu_hpm_apply_event_filter(hpm, event, idx))
-+		return -EAGAIN;
- 	set_bit(idx, hpm->used_counters);
- 
- 	return idx;
-@@ -484,6 +538,8 @@ static int riscv_iommu_hpm_event_init(struct perf_event *event)
- 	}
- 
- 	if (!is_software_event(event->group_leader)) {
-+		if (!riscv_iommu_hpm_events_compatible(event->group_leader, event))
-+			return -EINVAL;
- 		if (++group_num_events > hpm->num_counters)
- 			return -EINVAL;
- 	}
-@@ -491,6 +547,8 @@ static int riscv_iommu_hpm_event_init(struct perf_event *event)
- 	for_each_sibling_event(sibling, event->group_leader) {
- 		if (is_software_event(sibling))
- 			continue;
-+		if (!riscv_iommu_hpm_events_compatible(sibling, event))
-+			return -EINVAL;
- 		if (++group_num_events > hpm->num_counters)
- 			return -EINVAL;
- 	}
-@@ -593,10 +651,33 @@ static const struct attribute_group riscv_iommu_hpm_format_group = {
- 	.attrs = riscv_iommu_hpm_formats,
- };
- 
-+static ssize_t riscv_iommu_hpm_global_filter_show(struct device *dev,
-+						  struct device_attribute *attr,
-+						  char *buf)
-+{
-+	struct riscv_iommu_hpm *hpm = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%s\n",
-+			  hpm->global_filter ? "true" : "false");
-+}
-+
-+static struct device_attribute riscv_iommu_hpm_global_filter_attr =
-+	__ATTR(global_filter, 0444, riscv_iommu_hpm_global_filter_show, NULL);
-+
-+static struct attribute *riscv_iommu_hpm_vendor_attrs[] = {
-+	&riscv_iommu_hpm_global_filter_attr.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group riscv_iommu_hpm_vendor_group = {
-+	.attrs = riscv_iommu_hpm_vendor_attrs,
-+};
-+
- static const struct attribute_group *riscv_iommu_hpm_attr_grps[] = {
- 	&riscv_iommu_hpm_cpumask_group,
- 	&riscv_iommu_hpm_events_group,
- 	&riscv_iommu_hpm_format_group,
-+	&riscv_iommu_hpm_vendor_group,
- 	NULL
- };
- 
-@@ -776,6 +857,7 @@ static int riscv_iommu_hpm_probe(struct auxiliary_device *auxdev,
- 	hpm->base = subdev->base;
- 	hpm->on_cpu = raw_smp_processor_id();
- 	hpm->irq = info->irq;
-+	hpm->global_filter = info->global_filter;
- 
- 	bitmap_zero(hpm->used_counters, RISCV_IOMMU_HPMCOUNTER_MAX);
- 	bitmap_zero(hpm->supported_events, RISCV_IOMMU_HPMEVENT_MAX);
-@@ -831,8 +913,9 @@ static int riscv_iommu_hpm_probe(struct auxiliary_device *auxdev,
- 
- 	auxiliary_set_drvdata(auxdev, hpm);
- 
--	dev_info(dev, "HPM: Registered %s (%d counters, IRQ %d)\n",
--		 hpm_name, hpm->num_counters, hpm->irq);
-+	dev_info(dev, "HPM: Registered %s (%d counters, IRQ %d, %s filter)\n",
-+		 hpm_name, hpm->num_counters, hpm->irq,
-+		 hpm->global_filter ? "global" : "per-counter");
- 
- 	return 0;
- }
-@@ -847,6 +930,7 @@ static void riscv_iommu_hpm_remove(struct auxiliary_device *auxdev)
- 
- static const struct auxiliary_device_id riscv_iommu_hpm_ids[] = {
- 	{ .name = "iommu.riscv_iommu_hpm" },
-+	{ .name = "iommu.spacemit_ioats_hpm" },
- 	{}
- };
- MODULE_DEVICE_TABLE(auxiliary, riscv_iommu_hpm_ids);
-diff --git a/include/linux/riscv_iommu.h b/include/linux/riscv_iommu.h
-index 0447bc4d1fab..6af592dfaa00 100644
---- a/include/linux/riscv_iommu.h
-+++ b/include/linux/riscv_iommu.h
-@@ -36,9 +36,11 @@ struct riscv_iommu_subdev {
- /**
-  * struct riscv_iommu_hpm_info - HPM info for IOATS (main IOMMU HPM)
-  * @irq: interrupt number
-+ * @global_filter: true if single global filter
-  */
- struct riscv_iommu_hpm_info {
- 	unsigned int irq;
-+	bool global_filter;
- };
- 
- /**
+        0.196982000 seconds time elapsed
+
+Jingyu Li (3):
+  iommu/riscv: Enable IOMMU DMA mapping support
+  iommu/riscv: Add auxiliary bus framework and HPM device support
+  iommu/riscv: Add HPM support for performance monitoring
+
+Lv Zheng (5):
+  dt-bindings: iommu: Add spacemit/t100 features
+  spacemit/t100: Add global filter awareness for RISC-V IOMMU HPM
+  iommu/riscv: Add SpacemiT T100 IOATC HPM support
+  iommu/riscv: Add vendor event support for RISC-V IOMMU HPM
+  perf vendor events riscv: Add SpacemiT T100 HPM event aliases
+
+ .../bindings/iommu/riscv,iommu.yaml           |   58 +-
+ MAINTAINERS                                   |    5 +
+ drivers/iommu/Kconfig                         |    2 +-
+ drivers/iommu/riscv/Kconfig                   |    1 +
+ drivers/iommu/riscv/iommu-bits.h              |   12 +
+ drivers/iommu/riscv/iommu-pci.c               |    8 +-
+ drivers/iommu/riscv/iommu-platform.c          |    7 +-
+ drivers/iommu/riscv/iommu.c                   |  306 +++++
+ drivers/iommu/riscv/iommu.h                   |   25 +-
+ drivers/perf/Kconfig                          |    9 +
+ drivers/perf/Makefile                         |    1 +
+ drivers/perf/riscv_iommu_hpm.c                | 1012 +++++++++++++++++
+ include/linux/riscv_iommu.h                   |   83 ++
+ .../arch/riscv/spacemit/iommu/sys/ioatc.json  |   30 +
+ .../arch/riscv/spacemit/iommu/sys/ioats.json  |  163 +++
+ 15 files changed, 1715 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/perf/riscv_iommu_hpm.c
+ create mode 100644 include/linux/riscv_iommu.h
+ create mode 100644 tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioatc.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/spacemit/iommu/sys/ioats.json
+
 -- 
 2.43.0
 
