@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C216238171;
-	Sun,  1 Mar 2026 01:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10892BD0B;
+	Sun,  1 Mar 2026 01:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772327739; cv=none; b=NNutZdibdAjnX5qkHfPm37ww4ltg3WpI9kcG/Iu8eEQWL7/2A2yDwjNlcvOdGtoIMqtgtMnB4a7HSZNhgpYI6dCdmm4QPiaH2jT4CRFlUBwCSdRxDTkSiqmlioPuRg29R91qs9QcnjrkASjpRJLNVm8SZjnkUU6MX4IetW6rSBM=
+	t=1772328108; cv=none; b=XCs0zpxHN8v6qDqpufIrVGUzNHy2tfEr9kRSv8T0njudUgCgZsgbWHXOvqXPVhHyyg44LWkeNWz1KGcZBVQIu+aa58KmQLg3nwGMb745iEcP0ScTEvvGV6PtkIfFF0DcuYaMKMn9LasmDjpk8nDdcQok0FGZpGQ+pgXhp2Oizcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772327739; c=relaxed/simple;
-	bh=n2ilVx3zQIHHEV3Hrse3BGNLYFpgudbb8bxVOcRWsuM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hr8CsMyR6N9Q/EOmgEPthSu2cvhJvKX4VW9YtGCpBGJvT/bgs6A6Z5Mo9xWbvCLFYDAhQMAOa5lOwWQAs5/4SK/JruUO4e+QpxFkdkgnVsbprFDKdfn7P00FlWOjjVKo5YvgufJTmtOmeGgz0JEW6hdFw6FWgbz5Jg6ZrAI9zL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bs64U1uV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772328108; c=relaxed/simple;
+	bh=PrCYCpTZlK6/1zHTl+y9vk61BxCjcJ+Md91qJypSL14=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dD7ov+B65OSfn88jaoDD1MumiMinLXzDWWyJcfvGisowhkBR/DQFafcFrQNx1ZMTEdT+ijMXEXGrMSEObe4C6JjLbvY6Mf4uw9ZvXcGpW6JwwPKe1KiQJ4m26YzYgvNR+BNqjQPRu+rc2dfXLDkEsme8VzeSceYaFgHsGofYpkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nmIuxP13; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bs64U1uV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F54BC19421;
-	Sun,  1 Mar 2026 01:15:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nmIuxP13"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2465CC19421;
+	Sun,  1 Mar 2026 01:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772327739;
-	bh=n2ilVx3zQIHHEV3Hrse3BGNLYFpgudbb8bxVOcRWsuM=;
+	s=k20201202; t=1772328107;
+	bh=PrCYCpTZlK6/1zHTl+y9vk61BxCjcJ+Md91qJypSL14=;
 	h=From:To:Cc:Subject:Date:From;
-	b=bs64U1uVt7Wrs5Fw59/9PEeiIvYXQ06rCc64n6KR8i64yPNJWWCPtS4f89bYxM+qy
-	 uXeKpQfTGdDVHjzM3J5HyQPrGV0YJozhBuDk41htyyYXjz5EjlA3e+omP344JfmoB4
-	 CwF6yTFxQ56vqVLzXpOPUFU79ZKt7lTYkhM+2L1qrfVAmvT1saFUwC0VTTwOlrbnHr
-	 BRKvIn/NuiKIO78RGdeqGkEKL8spNV3aO3V3K0Gc1GLDEep8fNgbsJo2VkICxiZBGs
-	 UEmMKvSWK9VA8pAVEXCJMPtSMwtZydGlJ+pOXnPQO1zRjcD0KvXBBZ1i2sTBVlPwpN
-	 QncB54FUIjo6w==
+	b=nmIuxP13t7kPhD8qvTFTT7qP4Xje37/RtxvxIsbbsjzYbLtLMNm7CvyX57Et5dFaZ
+	 g4Cmw2SUtVG710z6ewYh4h3c5mH8EzIQgQaYd2qTCQlIF6zCG5J8T7Ch0ym6Js/C7f
+	 jFnfSeYVbddYEvnT2l0b5cPWcGitfqtAQzPXurVnnFaRRPX2GUDuzFZh2TK6rdsc9/
+	 YPUmofiHCFiqQep5IygP1iVYFwebRcgBEFDmDMzP+gqFcpdyklWO7DlYEaE+yG7K0e
+	 wY/Jpncsu/ciXQji2eEQMh65j7bqJL6u9ereU4c5TRkxdKnap20qbOna6y1xYRcECU
+	 IqPwgZMat8YCA==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	oleg@redhat.com
@@ -32,9 +32,9 @@ Cc: Paulo Andrade <pandrade@redhat.com>,
 	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: FAILED: Patch "x86/uprobes: Fix XOL allocation failure for 32-bit tasks" failed to apply to 6.18-stable tree
-Date: Sat, 28 Feb 2026 20:15:37 -0500
-Message-ID: <20260301011537.1669125-1-sashal@kernel.org>
+Subject: FAILED: Patch "x86/uprobes: Fix XOL allocation failure for 32-bit tasks" failed to apply to 6.12-stable tree
+Date: Sat, 28 Feb 2026 20:21:45 -0500
+Message-ID: <20260301012146.1677811-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -46,7 +46,7 @@ X-Patchwork-Hint: ignore
 X-stable: review
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the 6.18-stable tree.
+The patch below does not apply to the 6.12-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
