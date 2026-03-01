@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10892BD0B;
-	Sun,  1 Mar 2026 01:21:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91D6274B42;
+	Sun,  1 Mar 2026 01:25:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772328108; cv=none; b=XCs0zpxHN8v6qDqpufIrVGUzNHy2tfEr9kRSv8T0njudUgCgZsgbWHXOvqXPVhHyyg44LWkeNWz1KGcZBVQIu+aa58KmQLg3nwGMb745iEcP0ScTEvvGV6PtkIfFF0DcuYaMKMn9LasmDjpk8nDdcQok0FGZpGQ+pgXhp2Oizcw=
+	t=1772328312; cv=none; b=ig0AeiqyIc1XJ8FRANFhrOBry267mtz3N2/LB9AqlgvEFDCB178trRHfmzPaxZcRg2rwrdbXRKz+0mzSrdbNYbdXT8SiTWwURbfuFnSafvaQAgDszbgY944kvMSk+pvZNfi8uJVejTpKEkKgOR/PRebTeGQh1JdLBYI1K7JapDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772328108; c=relaxed/simple;
-	bh=PrCYCpTZlK6/1zHTl+y9vk61BxCjcJ+Md91qJypSL14=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dD7ov+B65OSfn88jaoDD1MumiMinLXzDWWyJcfvGisowhkBR/DQFafcFrQNx1ZMTEdT+ijMXEXGrMSEObe4C6JjLbvY6Mf4uw9ZvXcGpW6JwwPKe1KiQJ4m26YzYgvNR+BNqjQPRu+rc2dfXLDkEsme8VzeSceYaFgHsGofYpkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nmIuxP13; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772328312; c=relaxed/simple;
+	bh=/s/gefyzZLKHFfruEbLzqn0cvHKqDCWeFmV76HoXI6g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dlH0LPmC7AO+pG9ykCwvlmNVOAc2whdGTRgO+99kvUupx6lcmN+3h4TKodnljX6P0tixBEMBsA1qRkWxMmEtt/96cVw5LY9Z4M93JZUhkTbzdNkud12llqkt6RTY0aokDn9skmhgtM/NWDZUe1BjOFL7CyOvl/weBgZcNBKYHZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+C+6E5S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nmIuxP13"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2465CC19421;
-	Sun,  1 Mar 2026 01:21:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+C+6E5S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C44C5C2BC86;
+	Sun,  1 Mar 2026 01:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772328107;
-	bh=PrCYCpTZlK6/1zHTl+y9vk61BxCjcJ+Md91qJypSL14=;
+	s=k20201202; t=1772328312;
+	bh=/s/gefyzZLKHFfruEbLzqn0cvHKqDCWeFmV76HoXI6g=;
 	h=From:To:Cc:Subject:Date:From;
-	b=nmIuxP13t7kPhD8qvTFTT7qP4Xje37/RtxvxIsbbsjzYbLtLMNm7CvyX57Et5dFaZ
-	 g4Cmw2SUtVG710z6ewYh4h3c5mH8EzIQgQaYd2qTCQlIF6zCG5J8T7Ch0ym6Js/C7f
-	 jFnfSeYVbddYEvnT2l0b5cPWcGitfqtAQzPXurVnnFaRRPX2GUDuzFZh2TK6rdsc9/
-	 YPUmofiHCFiqQep5IygP1iVYFwebRcgBEFDmDMzP+gqFcpdyklWO7DlYEaE+yG7K0e
-	 wY/Jpncsu/ciXQji2eEQMh65j7bqJL6u9ereU4c5TRkxdKnap20qbOna6y1xYRcECU
-	 IqPwgZMat8YCA==
+	b=p+C+6E5SddsvVwuoyOnlpsoin9qOrPnl0tjUGkMQ0plfjPAWP3KmK6eaD25FrX5Ut
+	 R6K9GAtQuDuvV+3PfEZu8VA7F67Go4TP76weZEKZvg7vRc9aa53T1BJlhC+Yy4xudk
+	 vQXS9/MT7lN0CS97IOcR65EY3p5RN185IxQBb7R7iBqhNmFwBTsvBIYGJdFKibY1jO
+	 YE9fWFyIofPomMge+utGWuLmOJGQNtEnovsVhZPR1qWOSQmKGcS1CFvolCCfxVTdN4
+	 NMcrl9gJtHjmvJWWfhFTM8K0e5kQy5cyyx5fYWP2fUgAEWbZxQPFvkTaNMGjR3T15T
+	 s+PlvZGjH65FQ==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	oleg@redhat.com
-Cc: Paulo Andrade <pandrade@redhat.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: FAILED: Patch "x86/uprobes: Fix XOL allocation failure for 32-bit tasks" failed to apply to 6.12-stable tree
-Date: Sat, 28 Feb 2026 20:21:45 -0500
-Message-ID: <20260301012146.1677811-1-sashal@kernel.org>
+	leitao@debian.org
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: FAILED: Patch "uprobes: Fix incorrect lockdep condition in filter_chain()" failed to apply to 6.12-stable tree
+Date: Sat, 28 Feb 2026 20:25:10 -0500
+Message-ID: <20260301012510.1682217-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -56,133 +58,52 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From d55c571e4333fac71826e8db3b9753fadfbead6a Mon Sep 17 00:00:00 2001
-From: Oleg Nesterov <oleg@redhat.com>
-Date: Sun, 11 Jan 2026 16:00:37 +0100
-Subject: [PATCH] x86/uprobes: Fix XOL allocation failure for 32-bit tasks
+From a56a38fd9196fc89401e498d70b7aa9c9679fa6e Mon Sep 17 00:00:00 2001
+From: Breno Leitao <leitao@debian.org>
+Date: Wed, 28 Jan 2026 10:16:11 -0800
+Subject: [PATCH] uprobes: Fix incorrect lockdep condition in filter_chain()
 
-This script
+The list_for_each_entry_rcu() in filter_chain() uses
+rcu_read_lock_trace_held() as the lockdep condition, but the function
+holds consumer_rwsem, not the RCU trace lock.
 
-	#!/usr/bin/bash
+This gives me the following output when running with some locking debug
+option enabled:
 
-	echo 0 > /proc/sys/kernel/randomize_va_space
+  kernel/events/uprobes.c:1141 RCU-list traversed in non-reader section!!
+    filter_chain
+    register_for_each_vma
+    uprobe_unregister_nosync
+    __probe_event_disable
 
-	echo 'void main(void) {}' > TEST.c
+Remove the incorrect lockdep condition since the rwsem provides
+sufficient protection for the list traversal.
 
-	# -fcf-protection to ensure that the 1st endbr32 insn can't be emulated
-	gcc -m32 -fcf-protection=branch TEST.c -o test
-
-	bpftrace -e 'uprobe:./test:main {}' -c ./test
-
-"hangs", the probed ./test task enters an endless loop.
-
-The problem is that with randomize_va_space == 0
-get_unmapped_area(TASK_SIZE - PAGE_SIZE) called by xol_add_vma() can not
-just return the "addr == TASK_SIZE - PAGE_SIZE" hint, this addr is used
-by the stack vma.
-
-arch_get_unmapped_area_topdown() doesn't take TIF_ADDR32 into account and
-in_32bit_syscall() is false, this leads to info.high_limit > TASK_SIZE.
-vm_unmapped_area() happily returns the high address > TASK_SIZE and then
-get_unmapped_area() returns -ENOMEM after the "if (addr > TASK_SIZE - len)"
-check.
-
-handle_swbp() doesn't report this failure (probably it should) and silently
-restarts the probed insn. Endless loop.
-
-I think that the right fix should change the x86 get_unmapped_area() paths
-to rely on TIF_ADDR32 rather than in_32bit_syscall(). Note also that if
-CONFIG_X86_X32_ABI=y, in_x32_syscall() falsely returns true in this case
-because ->orig_ax = -1.
-
-But we need a simple fix for -stable, so this patch just sets TS_COMPAT if
-the probed task is 32-bit to make in_ia32_syscall() true.
-
-Fixes: 1b028f784e8c ("x86/mm: Introduce mmap_compat_base() for 32-bit mmap()")
-Reported-by: Paulo Andrade <pandrade@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Fixes: cc01bd044e6a ("uprobes: travers uprobe's consumer list locklessly under SRCU protection")
+Signed-off-by: Breno Leitao <leitao@debian.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/all/aV5uldEvV7pb4RA8@redhat.com/
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Cc: stable@vger.kernel.org
-Link: https://patch.msgid.link/aWO7Fdxn39piQnxu@redhat.com
+Link: https://patch.msgid.link/20260128-uprobe_rcu-v2-1-994ea6d32730@debian.org
 ---
- arch/x86/kernel/uprobes.c | 24 ++++++++++++++++++++++++
- include/linux/uprobes.h   |  1 +
- kernel/events/uprobes.c   | 10 +++++++---
- 3 files changed, 32 insertions(+), 3 deletions(-)
+ kernel/events/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 7be8e361ca55b..619dddf54424e 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1823,3 +1823,27 @@ bool is_uprobe_at_func_entry(struct pt_regs *regs)
- 
- 	return false;
- }
-+
-+#ifdef CONFIG_IA32_EMULATION
-+unsigned long arch_uprobe_get_xol_area(void)
-+{
-+	struct thread_info *ti = current_thread_info();
-+	unsigned long vaddr;
-+
-+	/*
-+	 * HACK: we are not in a syscall, but x86 get_unmapped_area() paths
-+	 * ignore TIF_ADDR32 and rely on in_32bit_syscall() to calculate
-+	 * vm_unmapped_area_info.high_limit.
-+	 *
-+	 * The #ifdef above doesn't cover the CONFIG_X86_X32_ABI=y case,
-+	 * but in this case in_32bit_syscall() -> in_x32_syscall() always
-+	 * (falsely) returns true because ->orig_ax == -1.
-+	 */
-+	if (test_thread_flag(TIF_ADDR32))
-+		ti->status |= TS_COMPAT;
-+	vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+	ti->status &= ~TS_COMPAT;
-+
-+	return vaddr;
-+}
-+#endif
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index ee3d36eda45dd..f548fea2adec8 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -242,6 +242,7 @@ extern void arch_uprobe_clear_state(struct mm_struct *mm);
- extern void arch_uprobe_init_state(struct mm_struct *mm);
- extern void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr);
- extern void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr);
-+extern unsigned long arch_uprobe_get_xol_area(void);
- #else /* !CONFIG_UPROBES */
- struct uprobes_state {
- };
 diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index a7d7d83ca1d78..dfbce021fb027 100644
+index dfbce021fb027..424ef2235b07e 100644
 --- a/kernel/events/uprobes.c
 +++ b/kernel/events/uprobes.c
-@@ -1694,6 +1694,12 @@ static const struct vm_special_mapping xol_mapping = {
- 	.mremap = xol_mremap,
- };
+@@ -1138,7 +1138,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
+ 	bool ret = false;
  
-+unsigned long __weak arch_uprobe_get_xol_area(void)
-+{
-+	/* Try to map as high as possible, this is only a hint. */
-+	return get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+}
-+
- /* Slot allocation for XOL */
- static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- {
-@@ -1709,9 +1715,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- 	}
- 
- 	if (!area->vaddr) {
--		/* Try to map as high as possible, this is only a hint. */
--		area->vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE,
--						PAGE_SIZE, 0, 0);
-+		area->vaddr = arch_uprobe_get_xol_area();
- 		if (IS_ERR_VALUE(area->vaddr)) {
- 			ret = area->vaddr;
- 			goto fail;
+ 	down_read(&uprobe->consumer_rwsem);
+-	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
++	list_for_each_entry(uc, &uprobe->consumers, cons_node) {
+ 		ret = consumer_filter(uc, mm);
+ 		if (ret)
+ 			break;
 -- 
 2.51.0
 
