@@ -1,269 +1,510 @@
-Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A259B20E702;
-	Sun,  1 Mar 2026 11:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4999418C02E;
+	Sun,  1 Mar 2026 11:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772363217; cv=none; b=XQPbp6ulcuvaoKvtYB0jmFxKWVg5E2KagCOrZ6LgyL5rXaNafzgKDnUrz7WgtSSySjfDDK1Jx9eE3+WCbTj6elc05+yGPIuY250V+3c3hNLvBZ4L7KfTqTC7LnXKy04X5/m7gPYlzOoiTkm8CN5V0JDoeFpktl4dFmWwHzL+eiE=
+	t=1772363427; cv=none; b=gu+XWqrMpP8doG5dh/DlhQhRJiQFxm2Owzy1lSlvGbRrynVnNMeue0GYDkdMEG/2ZM7DspG2KdNej1XFaS63gq/Xts1V++lP6d9Kcr/Hn1mcssHNEmyeeVhDhYVPMd/cyV58iB002xV6iu3pm+dy4l5abApWyM+//D/l2k/YfmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772363217; c=relaxed/simple;
-	bh=0efhN+Yg5Fh4qKmq+T76BkkZplv9pyxXHULPCypHgH4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Fx297Jg+IoSmD2omXg/IoXUrKbycX2lCGB8gFqYAC/Orl68pZ3szq6Q9oRx3LxgS2zto5W3wb5DiVVj66XosY5dkFoOCYhFAdTPr+qGJWPT0bIg8hUWEzPv18Pv1wgvHL71Tt0C8c1jNIcBRpHiUwLzyrdftirJYRr/cGUvl99U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=5/qPq5ok; arc=none smtp.client-ip=113.46.200.223
+	s=arc-20240116; t=1772363427; c=relaxed/simple;
+	bh=C73YDC44KhMBKfUKfygrtywkDoaMJhI80iP7x/Op970=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ajsS52Z6CeUJnmfoK5aB0yKTEGrA4OiptTfrYGC0wg+nhe1ZwGsOBPqOwxlA3Tu7R84SyMm8cfPzhL5b2E5NVzcFsPuBo6iDg41d2fGRw5znAYpaj6S0il/GCn2RtJ7l7PJFJEgMGByXcW7ejFiXPRVjHGks++kcKkpzlCepceA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=qMvO2Ho/; arc=none smtp.client-ip=113.46.200.226
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="5/qPq5ok"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="qMvO2Ho/"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=0efhN+Yg5Fh4qKmq+T76BkkZplv9pyxXHULPCypHgH4=;
-	b=5/qPq5ok1broWj5VtypqAEgr3sZJzX7V/B1450riWsrqX0SioZJeczKBBF+bydWLcMElvKHi5
-	KIJjUKFeWxMql/lNCbzHyzQH87q3cw9XBTKOJwGrRGgqFTPuJv+l22J8gUoJZw6G7LwO+8vKXtf
-	x8/CrbG/KlR7tkJtk5spTi8=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4fNzf96pRZzmV6t;
-	Sun,  1 Mar 2026 19:01:53 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id 38E6040563;
-	Sun,  1 Mar 2026 19:06:44 +0800 (CST)
+	bh=+2rBXHvD458/y13UWNbM9UkHoW3Fof7QIC+GXERR5Ho=;
+	b=qMvO2Ho/cHgoHAuhLzzwyBywokAZmScpBHzY/PhDZwZHDhY5hGoXKlwTAeN5wP6av7SLmFjd8
+	XTOzAfSHtJsnYcD3z8KY3CJ3cquKLJBv0+HTE2pVdwslojDfrcCbOqOFP3LcF3i9XuAR44Cpswo
+	AZfVutiZPgFWkl94NIlCR2Q=
+Received: from mail.maildlp.com (unknown [172.19.163.214])
+	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4fNzkG6CjHzKm4J;
+	Sun,  1 Mar 2026 19:05:26 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id CC8CF40561;
+	Sun,  1 Mar 2026 19:10:16 +0800 (CST)
 Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sun, 1 Mar 2026 19:06:44 +0800
-Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
+ 15.2.1544.11; Sun, 1 Mar 2026 19:10:16 +0800
+Received: from 78cdaf434391.CHINA.huawei.com (10.113.189.214) by
  kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sun, 1 Mar 2026 19:06:43 +0800
-Received: from kwepemq200002.china.huawei.com ([7.202.195.90]) by
- kwepemq200002.china.huawei.com ([7.202.195.90]) with mapi id 15.02.1544.011;
- Sun, 1 Mar 2026 19:06:43 +0800
-From: duchangbin <changbin.du@huawei.com>
-To: Ian Rogers <irogers@google.com>
-CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
- Melo" <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Adrian
- Hunter" <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf: Add match_mode support for --symfs option
-Thread-Topic: [PATCH] perf: Add match_mode support for --symfs option
-Thread-Index: AQHcp5UB4VigsOCGbUCfClYqcxZborWYbscA///w7ACAASgDAA==
-Date: Sun, 1 Mar 2026 11:06:43 +0000
-Message-ID: <babef420cf5e4af7bcfec28e2c8d23e8@huawei.com>
-References: <20260227111340.1019144-1-changbin.du@huawei.com>
- <4d226c6fdba8420a87fa27ea5e6520b5@huawei.com>
- <CAP-5=fUr7V7=5CPyW2qm+m6B3NNYqvJ46pKvqQpn4kwWgMzOZQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fUr7V7=5CPyW2qm+m6B3NNYqvJ46pKvqQpn4kwWgMzOZQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-imapappendstamp: kwepemq200002.china.huawei.com (15.02.1544.011)
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C287BCEF9D23A0478CF63E336ED7BECF@huawei.com>
-Content-Transfer-Encoding: base64
+ 15.2.1544.11; Sun, 1 Mar 2026 19:10:15 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
+ Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "James
+ Clark" <james.clark@linaro.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH v3] perf: Add layout support for --symfs option
+Date: Sun, 1 Mar 2026 19:24:55 +0000
+Message-ID: <20260301192455.1053900-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemq200002.china.huawei.com (7.202.195.90)
 
-T24gU2F0LCBGZWIgMjgsIDIwMjYgYXQgMDU6MjY6NTRQTSAtMDgwMCwgSWFuIFJvZ2VycyB3cm90
-ZToNCj4gT24gU2F0LCBGZWIgMjgsIDIwMjYgYXQgMjowNuKAr0FNIGR1Y2hhbmdiaW4gPGNoYW5n
-YmluLmR1QGh1YXdlaS5jb20+IHdyb3RlOg0KPiA+DQo+ID4gQWZ0ZXIgY2FyZWZ1bCBjb25zaWRl
-cmF0aW9uLCBuYW1pbmcgdGhlIG5ldyBvcHRpb24gYXMgJ2xheW91dCcgaXMgbW9yZQ0KPiA+IGFw
-cHJvcHJpYXRlIHRoYW4gJ21hdGNoX21vZGUnLCBhcyBpdCBiZXR0ZXIgYWxpZ25zIHdpdGggdGhl
-IGNvbnZlbnRpb25zDQo+ID4gb2YgdGVjaG5pY2FsIHRlcm1pbm9sb2d5Lg0KPiA+DQo+ID4gSSds
-bCBzZW5kIHBhdGNoIFYyIGZvciB0aGlzIGNoYW5nZS4NCj4gDQo+IFNndG0sIHNvbWUgbml0cyBi
-ZWxvdy4NCj4NCltzbmlwXQ0KPiA+IE9uIEZyaSwgRmViIDI3LCAyMDI2IGF0IDExOjEzOjQwQU0g
-KzAwMDAsIENoYW5nYmluIER1IHdyb3RlOg0KPiA+ID4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYv
-RG9jdW1lbnRhdGlvbi90aXBzLnR4dCBiL3Rvb2xzL3BlcmYvRG9jdW1lbnRhdGlvbi90aXBzLnR4
-dA0KPiA+ID4gaW5kZXggM2ZlZTliMmE4OGVhLi4yNjgzMTY1OTZiYTAgMTAwNjQ0DQo+ID4gPiAt
-LS0gYS90b29scy9wZXJmL0RvY3VtZW50YXRpb24vdGlwcy50eHQNCj4gPiA+ICsrKyBiL3Rvb2xz
-L3BlcmYvRG9jdW1lbnRhdGlvbi90aXBzLnR4dA0KPiA+ID4gQEAgLTExLDcgKzExLDggQEAgU2Vh
-cmNoIG9wdGlvbnMgdXNpbmcgYSBrZXl3b3JkOiBwZXJmIHJlcG9ydCAtaCA8a2V5d29yZD4NCj4g
-PiA+ICBVc2UgcGFyZW50IGZpbHRlciB0byBzZWUgc3BlY2lmaWMgY2FsbCBwYXRoOiBwZXJmIHJl
-cG9ydCAtcCA8cmVnZXg+DQo+ID4gPiAgTGlzdCBldmVudHMgdXNpbmcgc3Vic3RyaW5nIG1hdGNo
-OiBwZXJmIGxpc3QgPGtleXdvcmQ+DQo+ID4gPiAgVG8gc2VlIGxpc3Qgb2Ygc2F2ZWQgZXZlbnRz
-IGFuZCBhdHRyaWJ1dGVzOiBwZXJmIGV2bGlzdCAtdg0KPiA+ID4gLVVzZSAtLXN5bWZzIDxkaXI+
-IGlmIHlvdXIgc3ltYm9sIGZpbGVzIGFyZSBpbiBub24tc3RhbmRhcmQgbG9jYXRpb25zDQo+ID4g
-PiArVXNlIC0tc3ltZnMgPGRpcj5bLGJhc2VuYW1lXSBpZiB5b3VyIHN5bWJvbCBmaWxlcyBhcmUg
-aW4gbm9uLXN0YW5kYXJkIGxvY2F0aW9ucy4NCj4gPiA+ICsgVXNlICcsYmFzZW5hbWUnIHdoZW4g
-ZGVidWcgZmlsZXMgYXJlIGluIGEgZmxhdCBkaXJlY3Rvcnkgc3RydWN0dXJlLg0KPiANCj4gU2hv
-dWxkIHRoZSBkb2N1bWVudGF0aW9uIGFsc28gbWVudGlvbiAiLHBhdGgiID8NCj4NCkkgY2hhbmdl
-ZCBpdCB0byAtLXN5bWZzIDxkaXI+WyxsYXlvdXRdIGFzIGJlbG93IGluIHBhdGNoIFYyLg0KDQot
-VXNlIC0tc3ltZnMgPGRpcj4gaWYgeW91ciBzeW1ib2wgZmlsZXMgYXJlIGluIG5vbi1zdGFuZGFy
-ZCBsb2NhdGlvbnMNCitVc2UgLS1zeW1mcyA8ZGlyPlssbGF5b3V0XSBpZiB5b3VyIHN5bWJvbCBm
-aWxlcyBhcmUgaW4gbm9uLXN0YW5kYXJkIGxvY2F0aW9ucy4NCg0KPiA+ID4gIFRvIHNlZSBjYWxs
-Y2hhaW5zIGluIGEgbW9yZSBjb21wYWN0IGZvcm06IHBlcmYgcmVwb3J0IC1nIGZvbGRlZA0KPiA+
-ID4gIFRvIHNlZSBjYWxsIGNoYWlucyBieSBmaW5hbCBzeW1ib2wgdGFraW5nIENQVSB0aW1lIChi
-b3R0b20gdXApIHVzZSBwZXJmIHJlcG9ydCAtRw0KPiA+ID4gIFNob3cgaW5kaXZpZHVhbCBzYW1w
-bGVzIHdpdGg6IHBlcmYgc2NyaXB0DQo+ID4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi9idWls
-dGluLWFubm90YXRlLmMgYi90b29scy9wZXJmL2J1aWx0aW4tYW5ub3RhdGUuYw0KPiA+ID4gaW5k
-ZXggOWMyN2JiMzBiNzA4Li5mNGNlNzA5OTg0MjMgMTAwNjQ0DQo+ID4gPiAtLS0gYS90b29scy9w
-ZXJmL2J1aWx0aW4tYW5ub3RhdGUuYw0KPiA+ID4gKysrIGIvdG9vbHMvcGVyZi9idWlsdGluLWFu
-bm90YXRlLmMNCj4gPiA+IEBAIC03NDQsOCArNzQ0LDcgQEAgaW50IGNtZF9hbm5vdGF0ZShpbnQg
-YXJnYywgY29uc3QgY2hhciAqKmFyZ3YpDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgJmFu
-bm90YXRlLmdyb3VwX3NldCwNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAiU2hvdyBldmVu
-dCBncm91cCBpbmZvcm1hdGlvbiB0b2dldGhlciIpLA0KPiA+ID4gICAgICAgT1BUX1NUUklORygn
-QycsICJjcHUiLCAmYW5ub3RhdGUuY3B1X2xpc3QsICJjcHUiLCAibGlzdCBvZiBjcHVzIHRvIHBy
-b2ZpbGUiKSwNCj4gPiA+IC0gICAgIE9QVF9DQUxMQkFDSygwLCAic3ltZnMiLCBOVUxMLCAiZGly
-ZWN0b3J5IiwNCj4gPiA+IC0gICAgICAgICAgICAgICAgICAiTG9vayBmb3IgZmlsZXMgd2l0aCBz
-eW1ib2xzIHJlbGF0aXZlIHRvIHRoaXMgZGlyZWN0b3J5IiwNCj4gPiA+ICsgICAgIE9QVF9DQUxM
-QkFDSygwLCAic3ltZnMiLCBOVUxMLCAiZGlyZWN0b3J5WyxtYXRjaF9tb2RlXSIsIFNZTUZTX0hF
-TFAsDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgc3ltYm9sX19jb25maWdfc3ltZnMpLA0KPiA+
-ID4gICAgICAgT1BUX0JPT0xFQU4oMCwgInNvdXJjZSIsICZhbm5vdGF0ZV9vcHRzLmFubm90YXRl
-X3NyYywNCj4gPiA+ICAgICAgICAgICAgICAgICAgICJJbnRlcmxlYXZlIHNvdXJjZSBjb2RlIHdp
-dGggYXNzZW1ibHkgY29kZSAoZGVmYXVsdCkiKSwNCj4gPiA+IGRpZmYgLS1naXQgYS90b29scy9w
-ZXJmL2J1aWx0aW4tZGlmZi5jIGIvdG9vbHMvcGVyZi9idWlsdGluLWRpZmYuYw0KPiA+ID4gaW5k
-ZXggNTliZjFmNzJkMTJlLi43YjdjYzNjODBkZmQgMTAwNjQ0DQo+ID4gPiAtLS0gYS90b29scy9w
-ZXJmL2J1aWx0aW4tZGlmZi5jDQo+ID4gPiArKysgYi90b29scy9wZXJmL2J1aWx0aW4tZGlmZi5j
-DQo+ID4gPiBAQCAtMTI4MCw4ICsxMjgwLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvcHRpb24g
-b3B0aW9uc1tdID0gew0KPiA+ID4gICAgICAgT1BUX1NUUklOR19OT0VNUFRZKCd0JywgImZpZWxk
-LXNlcGFyYXRvciIsICZzeW1ib2xfY29uZi5maWVsZF9zZXAsICJzZXBhcmF0b3IiLA0KPiA+ID4g
-ICAgICAgICAgICAgICAgICAic2VwYXJhdG9yIGZvciBjb2x1bW5zLCBubyBzcGFjZXMgd2lsbCBi
-ZSBhZGRlZCBiZXR3ZWVuICINCj4gPiA+ICAgICAgICAgICAgICAgICAgImNvbHVtbnMgJy4nIGlz
-IHJlc2VydmVkLiIpLA0KPiA+ID4gLSAgICAgT1BUX0NBTExCQUNLKDAsICJzeW1mcyIsIE5VTEws
-ICJkaXJlY3RvcnkiLA0KPiA+ID4gLSAgICAgICAgICAgICAgICAgICJMb29rIGZvciBmaWxlcyB3
-aXRoIHN5bWJvbHMgcmVsYXRpdmUgdG8gdGhpcyBkaXJlY3RvcnkiLA0KPiA+ID4gKyAgICAgT1BU
-X0NBTExCQUNLKDAsICJzeW1mcyIsIE5VTEwsICJkaXJlY3RvcnlbLG1hdGNoX21vZGVdIiwgU1lN
-RlNfSEVMUCwNCj4gPiA+ICAgICAgICAgICAgICAgICAgICBzeW1ib2xfX2NvbmZpZ19zeW1mcyks
-DQo+ID4gPiAgICAgICBPUFRfVUlOVEVHRVIoJ28nLCAib3JkZXIiLCAmc29ydF9jb21wdXRlLCAi
-U3BlY2lmeSBjb21wdXRlIHNvcnRpbmcuIiksDQo+ID4gPiAgICAgICBPUFRfQ0FMTEJBQ0soMCwg
-InBlcmNlbnRhZ2UiLCBOVUxMLCAicmVsYXRpdmV8YWJzb2x1dGUiLA0KPiA+ID4gZGlmZiAtLWdp
-dCBhL3Rvb2xzL3BlcmYvYnVpbHRpbi1rd29yay5jIGIvdG9vbHMvcGVyZi9idWlsdGluLWt3b3Jr
-LmMNCj4gPiA+IGluZGV4IDdmMzA2ODI2NDU2OC4uODM4NDcxZWRiOWU1IDEwMDY0NA0KPiA+ID4g
-LS0tIGEvdG9vbHMvcGVyZi9idWlsdGluLWt3b3JrLmMNCj4gPiA+ICsrKyBiL3Rvb2xzL3BlcmYv
-YnVpbHRpbi1rd29yay5jDQo+ID4gPiBAQCAtMjQyMyw4ICsyNDIzLDggQEAgaW50IGNtZF9rd29y
-ayhpbnQgYXJnYywgY29uc3QgY2hhciAqKmFyZ3YpDQo+ID4gPiAgICAgICAgICAgICAgICAgICAi
-RGlzcGxheSBjYWxsIGNoYWlucyBpZiBwcmVzZW50IiksDQo+ID4gPiAgICAgICBPUFRfVUlOVEVH
-RVIoMCwgIm1heC1zdGFjayIsICZrd29yay5tYXhfc3RhY2ssDQo+ID4gPiAgICAgICAgICAgICAg
-ICAgICJNYXhpbXVtIG51bWJlciBvZiBmdW5jdGlvbnMgdG8gZGlzcGxheSBiYWNrdHJhY2UuIiks
-DQo+ID4gPiAtICAgICBPUFRfU1RSSU5HKDAsICJzeW1mcyIsICZzeW1ib2xfY29uZi5zeW1mcywg
-ImRpcmVjdG9yeSIsDQo+ID4gPiAtICAgICAgICAgICAgICAgICAiTG9vayBmb3IgZmlsZXMgd2l0
-aCBzeW1ib2xzIHJlbGF0aXZlIHRvIHRoaXMgZGlyZWN0b3J5IiksDQo+ID4gPiArICAgICBPUFRf
-Q0FMTEJBQ0soMCwgInN5bWZzIiwgTlVMTCwgImRpcmVjdG9yeVssbWF0Y2hfbW9kZV0iLCBTWU1G
-U19IRUxQLA0KPiA+ID4gKyAgICAgICAgICAgICAgICAgIHN5bWJvbF9fY29uZmlnX3N5bWZzKSwN
-Cj4gPiA+ICAgICAgIE9QVF9TVFJJTkcoMCwgInRpbWUiLCAma3dvcmsudGltZV9zdHIsICJzdHIi
-LA0KPiA+ID4gICAgICAgICAgICAgICAgICAiVGltZSBzcGFuIGZvciBhbmFseXNpcyAoc3RhcnQs
-c3RvcCkiKSwNCj4gPiA+ICAgICAgIE9QVF9TVFJJTkcoJ0MnLCAiY3B1IiwgJmt3b3JrLmNwdV9s
-aXN0LCAiY3B1IiwNCj4gPiA+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL2J1aWx0aW4tcHJvYmUu
-YyBiL3Rvb2xzL3BlcmYvYnVpbHRpbi1wcm9iZS5jDQo+ID4gPiBpbmRleCAxYjRiYTg1ZWUwMTku
-LmUyOTEyMjE3MTUzYSAxMDA2NDQNCj4gPiA+IC0tLSBhL3Rvb2xzL3BlcmYvYnVpbHRpbi1wcm9i
-ZS5jDQo+ID4gPiArKysgYi90b29scy9wZXJmL2J1aWx0aW4tcHJvYmUuYw0KPiA+ID4gQEAgLTU5
-Nyw4ICs1OTcsOCBAQCBfX2NtZF9wcm9iZShpbnQgYXJnYywgY29uc3QgY2hhciAqKmFyZ3YpDQo+
-ID4gPiAgICAgICBPUFRfQk9PTEVBTigwLCAiZGVtYW5nbGUta2VybmVsIiwgJnN5bWJvbF9jb25m
-LmRlbWFuZ2xlX2tlcm5lbCwNCj4gPiA+ICAgICAgICAgICAgICAgICAgICJFbmFibGUga2VybmVs
-IHN5bWJvbCBkZW1hbmdsaW5nIiksDQo+ID4gPiAgICAgICBPUFRfQk9PTEVBTigwLCAiY2FjaGUi
-LCAmcHJvYmVfY29uZi5jYWNoZSwgIk1hbmlwdWxhdGUgcHJvYmUgY2FjaGUiKSwNCj4gPiA+IC0g
-ICAgIE9QVF9TVFJJTkcoMCwgInN5bWZzIiwgJnN5bWJvbF9jb25mLnN5bWZzLCAiZGlyZWN0b3J5
-IiwNCj4gPiA+IC0gICAgICAgICAgICAgICAgIkxvb2sgZm9yIGZpbGVzIHdpdGggc3ltYm9scyBy
-ZWxhdGl2ZSB0byB0aGlzIGRpcmVjdG9yeSIpLA0KPiA+ID4gKyAgICAgT1BUX0NBTExCQUNLKDAs
-ICJzeW1mcyIsIE5VTEwsICJkaXJlY3RvcnlbLG1hdGNoX21vZGVdIiwgU1lNRlNfSEVMUCwNCj4g
-PiA+ICsgICAgICAgICAgICAgICAgICBzeW1ib2xfX2NvbmZpZ19zeW1mcyksDQo+ID4gPiAgICAg
-ICBPUFRfQ0FMTEJBQ0soMCwgInRhcmdldC1ucyIsIE5VTEwsICJwaWQiLA0KPiA+ID4gICAgICAg
-ICAgICAgICAgICAgICJ0YXJnZXQgcGlkIGZvciBuYW1lc3BhY2UgY29udGV4dHMiLCBvcHRfc2V0
-X3RhcmdldF9ucyksDQo+ID4gPiAgICAgICBPUFRfQk9PTEVBTigwLCAiYm9vdGNvbmZpZyIsICZw
-cm9iZV9jb25mLmJvb3Rjb25maWcsDQo+ID4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi9idWls
-dGluLXJlcG9ydC5jIGIvdG9vbHMvcGVyZi9idWlsdGluLXJlcG9ydC5jDQo+ID4gPiBpbmRleCAz
-YjgxZjRiM2RjNDkuLmUwZDgxYThjYzNiYiAxMDA2NDQNCj4gPiA+IC0tLSBhL3Rvb2xzL3BlcmYv
-YnVpbHRpbi1yZXBvcnQuYw0KPiA+ID4gKysrIGIvdG9vbHMvcGVyZi9idWlsdGluLXJlcG9ydC5j
-DQo+ID4gPiBAQCAtMTQxNiw4ICsxNDE2LDcgQEAgaW50IGNtZF9yZXBvcnQoaW50IGFyZ2MsIGNv
-bnN0IGNoYXIgKiphcmd2KQ0KPiA+ID4gICAgICAgICAgICAgICAgICAiY29sdW1ucyAnLicgaXMg
-cmVzZXJ2ZWQuIiksDQo+ID4gPiAgICAgICBPUFRfQk9PTEVBTignVScsICJoaWRlLXVucmVzb2x2
-ZWQiLCAmc3ltYm9sX2NvbmYuaGlkZV91bnJlc29sdmVkLA0KPiA+ID4gICAgICAgICAgICAgICAg
-ICAgIk9ubHkgZGlzcGxheSBlbnRyaWVzIHJlc29sdmVkIHRvIGEgc3ltYm9sIiksDQo+ID4gPiAt
-ICAgICBPUFRfQ0FMTEJBQ0soMCwgInN5bWZzIiwgTlVMTCwgImRpcmVjdG9yeSIsDQo+ID4gPiAt
-ICAgICAgICAgICAgICAgICAgIkxvb2sgZm9yIGZpbGVzIHdpdGggc3ltYm9scyByZWxhdGl2ZSB0
-byB0aGlzIGRpcmVjdG9yeSIsDQo+ID4gPiArICAgICBPUFRfQ0FMTEJBQ0soMCwgInN5bWZzIiwg
-TlVMTCwgImRpcmVjdG9yeVssbWF0Y2hfbW9kZV0iLCBTWU1GU19IRUxQLA0KPiA+ID4gICAgICAg
-ICAgICAgICAgICAgIHN5bWJvbF9fY29uZmlnX3N5bWZzKSwNCj4gPiA+ICAgICAgIE9QVF9TVFJJ
-TkcoJ0MnLCAiY3B1IiwgJnJlcG9ydC5jcHVfbGlzdCwgImNwdSIsDQo+ID4gPiAgICAgICAgICAg
-ICAgICAgICJsaXN0IG9mIGNwdXMgdG8gcHJvZmlsZSIpLA0KPiA+ID4gZGlmZiAtLWdpdCBhL3Rv
-b2xzL3BlcmYvYnVpbHRpbi1zY2hlZC5jIGIvdG9vbHMvcGVyZi9idWlsdGluLXNjaGVkLmMNCj4g
-PiA+IGluZGV4IDNmNTA5Y2ZkZDU4Yy4uNzQxZTk4OTQ0OTBjIDEwMDY0NA0KPiA+ID4gLS0tIGEv
-dG9vbHMvcGVyZi9idWlsdGluLXNjaGVkLmMNCj4gPiA+ICsrKyBiL3Rvb2xzL3BlcmYvYnVpbHRp
-bi1zY2hlZC5jDQo+ID4gPiBAQCAtNDg3OSw4ICs0ODc5LDggQEAgaW50IGNtZF9zY2hlZChpbnQg
-YXJnYywgY29uc3QgY2hhciAqKmFyZ3YpDQo+ID4gPiAgICAgICAgICAgICAgICAgICAiRGlzcGxh
-eSBjYWxsIGNoYWlucyBpZiBwcmVzZW50IChkZWZhdWx0IG9uKSIpLA0KPiA+ID4gICAgICAgT1BU
-X1VJTlRFR0VSKDAsICJtYXgtc3RhY2siLCAmc2NoZWQubWF4X3N0YWNrLA0KPiA+ID4gICAgICAg
-ICAgICAgICAgICAiTWF4aW11bSBudW1iZXIgb2YgZnVuY3Rpb25zIHRvIGRpc3BsYXkgYmFja3Ry
-YWNlLiIpLA0KPiA+ID4gLSAgICAgT1BUX1NUUklORygwLCAic3ltZnMiLCAmc3ltYm9sX2NvbmYu
-c3ltZnMsICJkaXJlY3RvcnkiLA0KPiA+ID4gLSAgICAgICAgICAgICAgICAgIkxvb2sgZm9yIGZp
-bGVzIHdpdGggc3ltYm9scyByZWxhdGl2ZSB0byB0aGlzIGRpcmVjdG9yeSIpLA0KPiA+ID4gKyAg
-ICAgT1BUX0NBTExCQUNLKDAsICJzeW1mcyIsIE5VTEwsICJkaXJlY3RvcnlbLG1hdGNoX21vZGVd
-IiwgU1lNRlNfSEVMUCwNCj4gPiA+ICsgICAgICAgICAgICAgICAgICBzeW1ib2xfX2NvbmZpZ19z
-eW1mcyksDQo+ID4gPiAgICAgICBPUFRfQk9PTEVBTigncycsICJzdW1tYXJ5IiwgJnNjaGVkLnN1
-bW1hcnlfb25seSwNCj4gPiA+ICAgICAgICAgICAgICAgICAgICJTaG93IG9ubHkgc3lzY2FsbCBz
-dW1tYXJ5IHdpdGggc3RhdGlzdGljcyIpLA0KPiA+ID4gICAgICAgT1BUX0JPT0xFQU4oJ1MnLCAi
-d2l0aC1zdW1tYXJ5IiwgJnNjaGVkLnN1bW1hcnksDQo+ID4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMv
-cGVyZi9idWlsdGluLXNjcmlwdC5jIGIvdG9vbHMvcGVyZi9idWlsdGluLXNjcmlwdC5jDQo+ID4g
-PiBpbmRleCA3Yzc0M2EzMDM1MDcuLjRmZTc5OTcxYzk3ZiAxMDA2NDQNCj4gPiA+IC0tLSBhL3Rv
-b2xzL3BlcmYvYnVpbHRpbi1zY3JpcHQuYw0KPiA+ID4gKysrIGIvdG9vbHMvcGVyZi9idWlsdGlu
-LXNjcmlwdC5jDQo+ID4gPiBAQCAtNDA3NCw4ICs0MDc0LDcgQEAgaW50IGNtZF9zY3JpcHQoaW50
-IGFyZ2MsIGNvbnN0IGNoYXIgKiphcmd2KQ0KPiA+ID4gICAgICAgICAgICAgICAgICAiZmlsZSIs
-ICJrYWxsc3ltcyBwYXRobmFtZSIpLA0KPiA+ID4gICAgICAgT1BUX0JPT0xFQU4oJ0cnLCAiaGlk
-ZS1jYWxsLWdyYXBoIiwgJm5vX2NhbGxjaGFpbiwNCj4gPiA+ICAgICAgICAgICAgICAgICAgICJX
-aGVuIHByaW50aW5nIHN5bWJvbHMgZG8gbm90IGRpc3BsYXkgY2FsbCBjaGFpbiIpLA0KPiA+ID4g
-LSAgICAgT1BUX0NBTExCQUNLKDAsICJzeW1mcyIsIE5VTEwsICJkaXJlY3RvcnkiLA0KPiA+ID4g
-LSAgICAgICAgICAgICAgICAgICJMb29rIGZvciBmaWxlcyB3aXRoIHN5bWJvbHMgcmVsYXRpdmUg
-dG8gdGhpcyBkaXJlY3RvcnkiLA0KPiA+ID4gKyAgICAgT1BUX0NBTExCQUNLKDAsICJzeW1mcyIs
-IE5VTEwsICJkaXJlY3RvcnlbLG1hdGNoX21vZGVdIiwgU1lNRlNfSEVMUCwNCj4gPiA+ICAgICAg
-ICAgICAgICAgICAgICBzeW1ib2xfX2NvbmZpZ19zeW1mcyksDQo+ID4gPiAgICAgICBPUFRfQ0FM
-TEJBQ0soJ0YnLCAiZmllbGRzIiwgTlVMTCwgInN0ciIsDQo+ID4gPiAgICAgICAgICAgICAgICAg
-ICAgImNvbW1hIHNlcGFyYXRlZCBvdXRwdXQgZmllbGRzIHByZXBlbmQgd2l0aCAndHlwZTonLiAi
-DQo+ID4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi9idWlsdGluLXRpbWVjaGFydC5jIGIvdG9v
-bHMvcGVyZi9idWlsdGluLXRpbWVjaGFydC5jDQo+ID4gPiBpbmRleCBmOGI0OWQ2OWU5YTUuLmIw
-NzFjNjZiOGRjNCAxMDA2NDQNCj4gPiA+IC0tLSBhL3Rvb2xzL3BlcmYvYnVpbHRpbi10aW1lY2hh
-cnQuYw0KPiA+ID4gKysrIGIvdG9vbHMvcGVyZi9idWlsdGluLXRpbWVjaGFydC5jDQo+ID4gPiBA
-QCAtMTk1MSw4ICsxOTUxLDcgQEAgaW50IGNtZF90aW1lY2hhcnQoaW50IGFyZ2MsIGNvbnN0IGNo
-YXIgKiphcmd2KQ0KPiA+ID4gICAgICAgT1BUX0NBTExCQUNLKCdwJywgInByb2Nlc3MiLCBOVUxM
-LCAicHJvY2VzcyIsDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICJwcm9jZXNzIHNlbGVjdG9y
-LiBQYXNzIGEgcGlkIG9yIHByb2Nlc3MgbmFtZS4iLA0KPiA+ID4gICAgICAgICAgICAgICAgICAg
-ICAgcGFyc2VfcHJvY2VzcyksDQo+ID4gPiAtICAgICBPUFRfQ0FMTEJBQ0soMCwgInN5bWZzIiwg
-TlVMTCwgImRpcmVjdG9yeSIsDQo+ID4gPiAtICAgICAgICAgICAgICAgICAgIkxvb2sgZm9yIGZp
-bGVzIHdpdGggc3ltYm9scyByZWxhdGl2ZSB0byB0aGlzIGRpcmVjdG9yeSIsDQo+ID4gPiArICAg
-ICBPUFRfQ0FMTEJBQ0soMCwgInN5bWZzIiwgTlVMTCwgImRpcmVjdG9yeVssbWF0Y2hfbW9kZV0i
-LCBTWU1GU19IRUxQLA0KPiA+ID4gICAgICAgICAgICAgICAgICAgIHN5bWJvbF9fY29uZmlnX3N5
-bWZzKSwNCj4gPiA+ICAgICAgIE9QVF9JTlRFR0VSKCduJywgInByb2MtbnVtIiwgJnRjaGFydC5w
-cm9jX251bSwNCj4gPiA+ICAgICAgICAgICAgICAgICAgICJtaW4uIG51bWJlciBvZiB0YXNrcyB0
-byBwcmludCIpLA0KPiA+ID4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvdXRpbC9zeW1ib2wuYyBi
-L3Rvb2xzL3BlcmYvdXRpbC9zeW1ib2wuYw0KPiA+ID4gaW5kZXggODY2MjAwMWUxZTI1Li4wY2Fm
-YTZlNjMwZTggMTAwNjQ0DQo+ID4gPiAtLS0gYS90b29scy9wZXJmL3V0aWwvc3ltYm9sLmMNCj4g
-PiA+ICsrKyBiL3Rvb2xzL3BlcmYvdXRpbC9zeW1ib2wuYw0KPiA+ID4gQEAgLTY2LDYgKzY2LDcg
-QEAgc3RydWN0IHN5bWJvbF9jb25mIHN5bWJvbF9jb25mID0gew0KPiA+ID4gICAgICAgLnRpbWVf
-cXVhbnR1bSAgICAgICAgICAgPSAxMDAgKiBOU0VDX1BFUl9NU0VDLCAvKiAxMDBtcyAqLw0KPiA+
-ID4gICAgICAgLnNob3dfaGlzdF9oZWFkZXJzICAgICAgPSB0cnVlLA0KPiA+ID4gICAgICAgLnN5
-bWZzICAgICAgICAgICAgICAgICAgPSAiIiwNCj4gPiA+ICsgICAgIC5zeW1mc19tYXRjaF9iYXNl
-bmFtZSAgID0gZmFsc2UsDQo+ID4gPiAgICAgICAuZXZlbnRfZ3JvdXAgICAgICAgICAgICA9IHRy
-dWUsDQo+ID4gPiAgICAgICAuaW5saW5lX25hbWUgICAgICAgICAgICA9IHRydWUsDQo+ID4gPiAg
-ICAgICAucmVzX3NhbXBsZSAgICAgICAgICAgICA9IDAsDQo+ID4gPiBAQCAtMjQ5MSwxNiArMjQ5
-Miw0MSBAQCBpbnQgc3ltYm9sX19jb25maWdfc3ltZnMoY29uc3Qgc3RydWN0IG9wdGlvbiAqb3B0
-IF9fbWF5YmVfdW51c2VkLA0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBjaGFy
-ICpkaXIsIGludCB1bnNldCBfX21heWJlX3VudXNlZCkNCj4gPiA+ICB7DQo+ID4gPiAgICAgICBj
-aGFyICpiZiA9IE5VTEw7DQo+ID4gPiArICAgICBjaGFyICptYXRjaF9tb2RlX3N0cjsNCj4gPiA+
-ICAgICAgIGludCByZXQ7DQo+ID4gPg0KPiA+ID4gLSAgICAgc3ltYm9sX2NvbmYuc3ltZnMgPSBz
-dHJkdXAoZGlyKTsNCj4gPiA+IC0gICAgIGlmIChzeW1ib2xfY29uZi5zeW1mcyA9PSBOVUxMKQ0K
-PiA+ID4gLSAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4gPiA+ICsgICAgIG1hdGNoX21v
-ZGVfc3RyID0gc3RyY2hyKGRpciwgJywnKTsNCj4gDQo+IEkgd29uZGVyIGlmIHVzaW5nIGBzdHJz
-dHJgIG9yIGBlbmRzX3dpdGhgIGZvciAiLGJhc2VuYW1lIiBhbmQgIixwYXRoIg0KPiB3b3VsZCB3
-b3JrIGJldHRlciB0aGFuIGBzdHJjaHJgIGZvciAnLCcuIFRoYXQgd2F5IGlmIGEgcGF0aCBjb250
-YWlucyBhDQo+IGNvbW1hICh3aGljaCBpcyB2ZXJ5IHVudXN1YWwpLCB0aGUgb2xkIGJlaGF2aW9y
-IHdpbGwgaGFwcGVuLg0KPg0KDQpJIGZpeGVkIGJ5Og0KMS4gVXNpbmcgc3RycmNocigpIHRvIGZp
-bmQgdGhlIGxhc3QgY29tbWEgaW5zdGVhZCBvZiBmaXJzdA0KMi4gT25seSB0cmVhdGluZyBpdCBh
-cyBhIGxheW91dCBzcGVjaWZpZXIgaWYgc3VmZml4IGlzICJmbGF0IiBvciAiaGllcmFyY2h5Ig0K
-DQpUaGlzIGhhbmRsZXMgYWxsIGNhc2VzIGNvcnJlY3RseToNCi0gL3BhdGgsZmxhdCDihpIgc3Vm
-Zml4IGlzICJmbGF0IiDihpIgc3BsaXQg4oaSIHN5bWZzPS9wYXRoLCBsYXlvdXQ9ZmxhdA0KLSAv
-cGF0aCxoaWVyYXJjaHkg4oaSIHN1ZmZpeCBpcyAiaGllcmFyY2h5IiDihpIgc3BsaXQg4oaSIHN5
-bWZzPS9wYXRoLCBsYXlvdXQ9aGllcmFyY2h5DQotIC4vbXksc3ltZnMvIOKGkiBzdWZmaXggaXMg
-InN5bWZzLyIgKG5vdCB2YWxpZCkg4oaSIGZ1bGwgcGF0aCBhcyBzeW1mcw0KLSAvc29tZSxwYXRo
-L2ZpbGUg4oaSIHN1ZmZpeCBpcyAiZmlsZSIgKG5vdCB2YWxpZCkg4oaSIGZ1bGwgcGF0aCBhcyBz
-eW1mcw0KDQo+IFRoYW5rcywNCj4gSWFuDQo+IA0KDQotLSANCkNoZWVycywNCkNoYW5nYmluIER1
-DQo=
+Add support for parsing an optional layout parameter in the --symfs
+command line option. The format is:
+
+  --symfs <directory[,layout]>
+
+Where layout can be:
+  - 'hierarchy': matches full path (default)
+  - 'flat': only matches base name
+
+When debugging symbol files from a copy of the filesystem (e.g., from a
+container or remote machine), the debug files are often stored in a
+flat directory structure with only filenames, not the full original
+paths. In this case, using 'flat' layout allows perf to find debug
+symbols by matching only the filename rather than the full path.
+
+For example, given a binary path like:
+  /build/output/lib/foo.so
+
+With 'perf report --symfs /debug/files,flat', perf will look for:
+  /debug/files/foo.so
+
+Instead of:
+  /debug/files/build/output/lib/foo.so
+
+This is particularly useful when:
+- Extracting debug files from containers with different directory layouts
+- Working with build systems that flatten directory structures
+
+Changes:
+- Add symfs_layout_flat field to symbol_conf struct.
+- Parse optional layout in symbol__config_symfs().
+- Modify __symbol__join_symfs() to use basename() when layout
+  is 'flat'.
+- Update documentation in Documentation/ folder.
+
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+
+---
+v3:
+  Handle paths containing commas in symbol__config_symfs().
+v2:
+  Renaming the new option from 'match_mode' to 'layout', as it better
+  aligns with the conventions of technical terminology.
+---
+ tools/perf/Documentation/perf-annotate.txt  |  7 +++--
+ tools/perf/Documentation/perf-diff.txt      |  7 +++--
+ tools/perf/Documentation/perf-kwork.txt     |  7 +++--
+ tools/perf/Documentation/perf-probe.txt     |  6 +++++
+ tools/perf/Documentation/perf-report.txt    |  7 +++--
+ tools/perf/Documentation/perf-sched.txt     |  7 +++--
+ tools/perf/Documentation/perf-script.txt    |  7 +++--
+ tools/perf/Documentation/perf-timechart.txt |  7 +++--
+ tools/perf/Documentation/tips.txt           |  2 +-
+ tools/perf/builtin-annotate.c               |  3 +--
+ tools/perf/builtin-diff.c                   |  3 +--
+ tools/perf/builtin-kwork.c                  |  4 +--
+ tools/perf/builtin-probe.c                  |  4 +--
+ tools/perf/builtin-report.c                 |  3 +--
+ tools/perf/builtin-sched.c                  |  4 +--
+ tools/perf/builtin-script.c                 |  3 +--
+ tools/perf/builtin-timechart.c              |  3 +--
+ tools/perf/util/symbol.c                    | 29 ++++++++++++++++++---
+ tools/perf/util/symbol.h                    | 18 +++++++++++++
+ tools/perf/util/symbol_conf.h               |  1 +
+ 20 files changed, 97 insertions(+), 35 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
+index 547f1a268018..a688738809c4 100644
+--- a/tools/perf/Documentation/perf-annotate.txt
++++ b/tools/perf/Documentation/perf-annotate.txt
+@@ -110,8 +110,11 @@ include::itrace.txt[]
+ 	Interleave source code with assembly code. Enabled by default,
+ 	disable with --no-source.
+ 
+---symfs=<directory>::
+-        Look for files with symbols relative to this directory.
++--symfs=<directory[,layout]>::
++        Look for files with symbols relative to this directory. The optional
++        layout can be 'hierarchy' (default, matches full path) or 'flat'
++        (only matches base name). This is useful when debug files are stored
++        in a flat directory structure.
+ 
+ -M::
+ --disassembler-style=:: Set disassembler style for objdump.
+diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
+index 58efab72d2e5..8e4a3f093135 100644
+--- a/tools/perf/Documentation/perf-diff.txt
++++ b/tools/perf/Documentation/perf-diff.txt
+@@ -81,8 +81,11 @@ OPTIONS
+ --force::
+         Don't do ownership validation.
+ 
+---symfs=<directory>::
+-        Look for files with symbols relative to this directory.
++--symfs=<directory[,layout]>::
++        Look for files with symbols relative to this directory. The optional
++        layout can be 'hierarchy' (default, matches full path) or 'flat'
++        (only matches base name). This is useful when debug files are stored
++        in a flat directory structure.
+ 
+ -b::
+ --baseline-only::
+diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
+index 21e607669d78..5c33a1fb2ffe 100644
+--- a/tools/perf/Documentation/perf-kwork.txt
++++ b/tools/perf/Documentation/perf-kwork.txt
+@@ -169,8 +169,11 @@ OPTIONS for 'perf kwork timehist'
+ --max-stack::
+ 	Maximum number of functions to display in backtrace, default 5.
+ 
+---symfs=<directory>::
+-    Look for files with symbols relative to this directory.
++--symfs=<directory[,layout]>::
++        Look for files with symbols relative to this directory. The optional
++        layout can be 'hierarchy' (default, matches full path) or 'flat'
++        (only matches base name). This is useful when debug files are stored
++        in a flat directory structure.
+ 
+ --time::
+ 	Only analyze samples within given time window: <start>,<stop>. Times
+diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
+index 5c43a6edc0e5..2e5790325430 100644
+--- a/tools/perf/Documentation/perf-probe.txt
++++ b/tools/perf/Documentation/perf-probe.txt
+@@ -50,6 +50,12 @@ OPTIONS
+ --source=PATH::
+ 	Specify path to kernel source.
+ 
++--symfs=<directory[,layout]>::
++	Look for files with symbols relative to this directory. The optional
++	layout can be 'hierarchy' (default, matches full path) or 'flat'
++	(only matches base name). This is useful when debug files are stored
++	in a flat directory structure.
++
+ -v::
+ --verbose::
+         Be more verbose (show parsed arguments, etc).
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index acef3ff4178e..802f931ae64d 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -368,8 +368,11 @@ OPTIONS
+ --force::
+         Don't do ownership validation.
+ 
+---symfs=<directory>::
+-        Look for files with symbols relative to this directory.
++--symfs=<directory[,layout]>::
++        Look for files with symbols relative to this directory. The optional
++        layout can be 'hierarchy' (default, matches full path) or 'flat'
++        (only matches base name). This is useful when debug files are stored
++        in a flat directory structure.
+ 
+ -C::
+ --cpu:: Only report samples for the list of CPUs provided. Multiple CPUs can
+diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+index 4d9981609c04..a4221398e5e0 100644
+--- a/tools/perf/Documentation/perf-sched.txt
++++ b/tools/perf/Documentation/perf-sched.txt
+@@ -437,8 +437,11 @@ OPTIONS for 'perf sched timehist'
+     Show all scheduling events followed by a summary by thread with min,
+     max, and average run times (in sec) and relative stddev.
+ 
+---symfs=<directory>::
+-    Look for files with symbols relative to this directory.
++--symfs=<directory[,layout]>::
++        Look for files with symbols relative to this directory. The optional
++        layout can be 'hierarchy' (default, matches full path) or 'flat'
++        (only matches base name). This is useful when debug files are stored
++        in a flat directory structure.
+ 
+ -V::
+ --cpu-visual::
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index ddf92f9c7821..200ea25891d8 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -307,8 +307,11 @@ OPTIONS
+ --kallsyms=<file>::
+         kallsyms pathname
+ 
+---symfs=<directory>::
+-        Look for files with symbols relative to this directory.
++--symfs=<directory[,layout]>::
++        Look for files with symbols relative to this directory. The optional
++        layout can be 'hierarchy' (default, matches full path) or 'flat'
++        (only matches base name). This is useful when debug files are stored
++        in a flat directory structure.
+ 
+ -G::
+ --hide-call-graph::
+diff --git a/tools/perf/Documentation/perf-timechart.txt b/tools/perf/Documentation/perf-timechart.txt
+index ef2281c56743..bacc5df3c400 100644
+--- a/tools/perf/Documentation/perf-timechart.txt
++++ b/tools/perf/Documentation/perf-timechart.txt
+@@ -53,8 +53,11 @@ TIMECHART OPTIONS
+ -f::
+ --force::
+ 	Don't complain, do it.
+---symfs=<directory>::
+-        Look for files with symbols relative to this directory.
++--symfs=<directory[,layout]>::
++        Look for files with symbols relative to this directory. The optional
++        layout can be 'hierarchy' (default, matches full path) or 'flat'
++        (only matches base name). This is useful when debug files are stored
++        in a flat directory structure.
+ -n::
+ --proc-num::
+         Print task info for at least given number of tasks.
+diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
+index 3fee9b2a88ea..ebf12a8c5db5 100644
+--- a/tools/perf/Documentation/tips.txt
++++ b/tools/perf/Documentation/tips.txt
+@@ -11,7 +11,7 @@ Search options using a keyword: perf report -h <keyword>
+ Use parent filter to see specific call path: perf report -p <regex>
+ List events using substring match: perf list <keyword>
+ To see list of saved events and attributes: perf evlist -v
+-Use --symfs <dir> if your symbol files are in non-standard locations
++Use --symfs <dir>[,layout] if your symbol files are in non-standard locations.
+ To see callchains in a more compact form: perf report -g folded
+ To see call chains by final symbol taking CPU time (bottom up) use perf report -G
+ Show individual samples with: perf script
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 9c27bb30b708..686ad08561d6 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -744,8 +744,7 @@ int cmd_annotate(int argc, const char **argv)
+ 			&annotate.group_set,
+ 			"Show event group information together"),
+ 	OPT_STRING('C', "cpu", &annotate.cpu_list, "cpu", "list of cpus to profile"),
+-	OPT_CALLBACK(0, "symfs", NULL, "directory",
+-		     "Look for files with symbols relative to this directory",
++	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+ 		     symbol__config_symfs),
+ 	OPT_BOOLEAN(0, "source", &annotate_opts.annotate_src,
+ 		    "Interleave source code with assembly code (default)"),
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 59bf1f72d12e..69069926dd0b 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -1280,8 +1280,7 @@ static const struct option options[] = {
+ 	OPT_STRING_NOEMPTY('t', "field-separator", &symbol_conf.field_sep, "separator",
+ 		   "separator for columns, no spaces will be added between "
+ 		   "columns '.' is reserved."),
+-	OPT_CALLBACK(0, "symfs", NULL, "directory",
+-		     "Look for files with symbols relative to this directory",
++	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+ 		     symbol__config_symfs),
+ 	OPT_UINTEGER('o', "order", &sort_compute, "Specify compute sorting."),
+ 	OPT_CALLBACK(0, "percentage", NULL, "relative|absolute",
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 7f3068264568..6f94a8f45f60 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -2423,8 +2423,8 @@ int cmd_kwork(int argc, const char **argv)
+ 		    "Display call chains if present"),
+ 	OPT_UINTEGER(0, "max-stack", &kwork.max_stack,
+ 		   "Maximum number of functions to display backtrace."),
+-	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
+-		    "Look for files with symbols relative to this directory"),
++	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
++		     symbol__config_symfs),
+ 	OPT_STRING(0, "time", &kwork.time_str, "str",
+ 		   "Time span for analysis (start,stop)"),
+ 	OPT_STRING('C', "cpu", &kwork.cpu_list, "cpu",
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 1b4ba85ee019..a67b565278ae 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -597,8 +597,8 @@ __cmd_probe(int argc, const char **argv)
+ 	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
+ 		    "Enable kernel symbol demangling"),
+ 	OPT_BOOLEAN(0, "cache", &probe_conf.cache, "Manipulate probe cache"),
+-	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
+-		   "Look for files with symbols relative to this directory"),
++	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
++		     symbol__config_symfs),
+ 	OPT_CALLBACK(0, "target-ns", NULL, "pid",
+ 		     "target pid for namespace contexts", opt_set_target_ns),
+ 	OPT_BOOLEAN(0, "bootconfig", &probe_conf.bootconfig,
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 3b81f4b3dc49..343c0ada5ea1 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1416,8 +1416,7 @@ int cmd_report(int argc, const char **argv)
+ 		   "columns '.' is reserved."),
+ 	OPT_BOOLEAN('U', "hide-unresolved", &symbol_conf.hide_unresolved,
+ 		    "Only display entries resolved to a symbol"),
+-	OPT_CALLBACK(0, "symfs", NULL, "directory",
+-		     "Look for files with symbols relative to this directory",
++	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+ 		     symbol__config_symfs),
+ 	OPT_STRING('C', "cpu", &report.cpu_list, "cpu",
+ 		   "list of cpus to profile"),
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 3f509cfdd58c..d083e2bb7703 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -4879,8 +4879,8 @@ int cmd_sched(int argc, const char **argv)
+ 		    "Display call chains if present (default on)"),
+ 	OPT_UINTEGER(0, "max-stack", &sched.max_stack,
+ 		   "Maximum number of functions to display backtrace."),
+-	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
+-		    "Look for files with symbols relative to this directory"),
++	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
++		     symbol__config_symfs),
+ 	OPT_BOOLEAN('s', "summary", &sched.summary_only,
+ 		    "Show only syscall summary with statistics"),
+ 	OPT_BOOLEAN('S', "with-summary", &sched.summary,
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 7c743a303507..9912199d22da 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -4074,8 +4074,7 @@ int cmd_script(int argc, const char **argv)
+ 		   "file", "kallsyms pathname"),
+ 	OPT_BOOLEAN('G', "hide-call-graph", &no_callchain,
+ 		    "When printing symbols do not display call chain"),
+-	OPT_CALLBACK(0, "symfs", NULL, "directory",
+-		     "Look for files with symbols relative to this directory",
++	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+ 		     symbol__config_symfs),
+ 	OPT_CALLBACK('F', "fields", NULL, "str",
+ 		     "comma separated output fields prepend with 'type:'. "
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index f8b49d69e9a5..28f33e39895d 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -1951,8 +1951,7 @@ int cmd_timechart(int argc, const char **argv)
+ 	OPT_CALLBACK('p', "process", NULL, "process",
+ 		      "process selector. Pass a pid or process name.",
+ 		       parse_process),
+-	OPT_CALLBACK(0, "symfs", NULL, "directory",
+-		     "Look for files with symbols relative to this directory",
++	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+ 		     symbol__config_symfs),
+ 	OPT_INTEGER('n', "proc-num", &tchart.proc_num,
+ 		    "min. number of tasks to print"),
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 8662001e1e25..6247d73c32a7 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -66,6 +66,7 @@ struct symbol_conf symbol_conf = {
+ 	.time_quantum		= 100 * NSEC_PER_MSEC, /* 100ms */
+ 	.show_hist_headers	= true,
+ 	.symfs			= "",
++	.symfs_layout_flat	= false,
+ 	.event_group		= true,
+ 	.inline_name		= true,
+ 	.res_sample		= 0,
+@@ -2491,16 +2492,36 @@ int symbol__config_symfs(const struct option *opt __maybe_unused,
+ 			 const char *dir, int unset __maybe_unused)
+ {
+ 	char *bf = NULL;
++	char *layout_str;
+ 	int ret;
+ 
+-	symbol_conf.symfs = strdup(dir);
+-	if (symbol_conf.symfs == NULL)
+-		return -ENOMEM;
++	layout_str = strrchr(dir, ',');
++	if (layout_str &&
++	    (!strcmp(layout_str + 1, "flat") || !strcmp(layout_str + 1, "hierarchy"))) {
++		size_t dir_len = layout_str - dir;
++		char *dir_copy = strndup(dir, dir_len);
++
++		if (dir_copy == NULL)
++			return -ENOMEM;
++
++		symbol_conf.symfs = dir_copy;
++
++		layout_str++;
++		if (!strcmp(layout_str, "flat"))
++			symbol_conf.symfs_layout_flat = true;
++		else
++			symbol_conf.symfs_layout_flat = false;
++	} else {
++		symbol_conf.symfs = strdup(dir);
++		if (symbol_conf.symfs == NULL)
++			return -ENOMEM;
++		symbol_conf.symfs_layout_flat = false;
++	}
+ 
+ 	/* skip the locally configured cache if a symfs is given, and
+ 	 * config buildid dir to symfs/.debug
+ 	 */
+-	ret = asprintf(&bf, "%s/%s", dir, ".debug");
++	ret = asprintf(&bf, "%s/%s", symbol_conf.symfs, ".debug");
+ 	if (ret < 0)
+ 		return -ENOMEM;
+ 
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 3fb5d146d9b1..4f1dbd1ebd99 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -9,6 +9,7 @@
+ #include <linux/list.h>
+ #include <linux/rbtree.h>
+ #include <stdio.h>
++#include <errno.h>
+ #include "addr_location.h"
+ #include "path.h"
+ #include "symbol_conf.h"
+@@ -96,6 +97,18 @@ struct intlist;
+ 
+ static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
+ {
++	if (symbol_conf.symfs_layout_flat) {
++		char *path_copy = strdup(path);
++		char *base;
++		int ret;
++
++		if (!path_copy)
++			return -ENOMEM;
++		base = basename(path_copy);
++		ret = path__join(bf, size, symbol_conf.symfs, base);
++		free(path_copy);
++		return ret;
++	}
+ 	return path__join(bf, size, symbol_conf.symfs, path);
+ }
+ 
+@@ -169,6 +182,11 @@ size_t symbol__fprintf_symname(const struct symbol *sym, FILE *fp);
+ size_t symbol__fprintf(struct symbol *sym, FILE *fp);
+ bool symbol__restricted_filename(const char *filename,
+ 				 const char *restricted_filename);
++
++#define SYMFS_HELP "setup root directory which contains debug files:\n" \
++	"\t\t\t\t" "directory:\tLook for files with symbols relative to this directory.\n" \
++	"\t\t\t\t" "layout:   \tLayout of files, 'hierarchy' matches full path (default), 'flat' only matches base name.\n"
++
+ int symbol__config_symfs(const struct option *opt __maybe_unused,
+ 			 const char *dir, int unset __maybe_unused);
+ 
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index 71bb17372a6c..ac1b444a8fd8 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -93,6 +93,7 @@ struct symbol_conf {
+ 			*tid_list,
+ 			*addr_list;
+ 	const char	*symfs;
++	bool		symfs_layout_flat;
+ 	int		res_sample;
+ 	int		pad_output_len_dso;
+ 	int		group_sort_idx;
+-- 
+2.43.0
+
