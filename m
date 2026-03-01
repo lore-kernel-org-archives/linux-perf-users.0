@@ -1,72 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23B7430BB3;
-	Sat, 28 Feb 2026 21:59:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C216238171;
+	Sun,  1 Mar 2026 01:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772315940; cv=none; b=YGhY6SmZP+90Jvd5gEJM7nozqKtMiZubCSl9DcMEihp1oXg8BnxEKubv1Q+cXNbelFen4Qc77e24OskmzM5yr6oHD7zXKhxGiSDl8PUk0MmmftYx7CBGraB62sRUtLPZHeqT95Sw8EN2nqSXaY6Pf2wpeLyuq6zjr7m5U7js1c0=
+	t=1772327739; cv=none; b=NNutZdibdAjnX5qkHfPm37ww4ltg3WpI9kcG/Iu8eEQWL7/2A2yDwjNlcvOdGtoIMqtgtMnB4a7HSZNhgpYI6dCdmm4QPiaH2jT4CRFlUBwCSdRxDTkSiqmlioPuRg29R91qs9QcnjrkASjpRJLNVm8SZjnkUU6MX4IetW6rSBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772315940; c=relaxed/simple;
-	bh=Ld+pngW8u/Nqx5EZqVABXM1oYnBqteIpU/N21OGAmNo=;
-	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=dLsdPeNmj3uh3pHdCTR3jxXy8e0Yvjuh13MQe1uhDBfnj/C4jeq8OGvVOXlHCAXDkWTO8A7M69c9EdIYOdgvXafpfRxdjro3KAFN6PpNkPsSG3WQBI+88vI93bnDpATC+5xN+pi4k/Jr8S9nYDFtD6bD5GXWVRvJi3Itlv7gvbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3E9CC116D0;
-	Sat, 28 Feb 2026 21:58:54 +0000 (UTC)
+	s=arc-20240116; t=1772327739; c=relaxed/simple;
+	bh=n2ilVx3zQIHHEV3Hrse3BGNLYFpgudbb8bxVOcRWsuM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hr8CsMyR6N9Q/EOmgEPthSu2cvhJvKX4VW9YtGCpBGJvT/bgs6A6Z5Mo9xWbvCLFYDAhQMAOa5lOwWQAs5/4SK/JruUO4e+QpxFkdkgnVsbprFDKdfn7P00FlWOjjVKo5YvgufJTmtOmeGgz0JEW6hdFw6FWgbz5Jg6ZrAI9zL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bs64U1uV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bs64U1uV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F54BC19421;
+	Sun,  1 Mar 2026 01:15:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772327739;
+	bh=n2ilVx3zQIHHEV3Hrse3BGNLYFpgudbb8bxVOcRWsuM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bs64U1uVt7Wrs5Fw59/9PEeiIvYXQ06rCc64n6KR8i64yPNJWWCPtS4f89bYxM+qy
+	 uXeKpQfTGdDVHjzM3J5HyQPrGV0YJozhBuDk41htyyYXjz5EjlA3e+omP344JfmoB4
+	 CwF6yTFxQ56vqVLzXpOPUFU79ZKt7lTYkhM+2L1qrfVAmvT1saFUwC0VTTwOlrbnHr
+	 BRKvIn/NuiKIO78RGdeqGkEKL8spNV3aO3V3K0Gc1GLDEep8fNgbsJo2VkICxiZBGs
+	 UEmMKvSWK9VA8pAVEXCJMPtSMwtZydGlJ+pOXnPQO1zRjcD0KvXBBZ1i2sTBVlPwpN
+	 QncB54FUIjo6w==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	oleg@redhat.com
+Cc: Paulo Andrade <pandrade@redhat.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: FAILED: Patch "x86/uprobes: Fix XOL allocation failure for 32-bit tasks" failed to apply to 6.18-stable tree
+Date: Sat, 28 Feb 2026 20:15:37 -0500
+Message-ID: <20260301011537.1669125-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v5 4/8] dt-bindings: iommu: Add spacemit/t100 features
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Lv Zheng <lv.zheng@linux.spacemit.com>
-Cc: Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>, 
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Yixun Lan <dlan@kernel.org>, 
- Jingyu Li <joey.li@spacemit.com>, Zong Li <zong.li@sifive.com>, 
- Yaxing Guo <guoyaxing@bosc.ac.cn>, Zhijian Chen <zhijian@spacemit.com>, 
- iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <D8CE6E5B1001D797+a6f36da0272ac18fff2a992976b1defc3bb01af6.1772289741.git.lv.zheng@linux.spacemit.com>
-References: <cover.1772289741.git.lv.zheng@linux.spacemit.com>
- <D8CE6E5B1001D797+a6f36da0272ac18fff2a992976b1defc3bb01af6.1772289741.git.lv.zheng@linux.spacemit.com>
-Date: Sat, 28 Feb 2026 21:58:42 +0000
-Message-Id: <177231592262.848068.18080490567217057666@spud>
-X-Mailer: b4 0.15-dev-38bf1
+X-Patchwork-Hint: ignore
+X-stable: review
+Content-Transfer-Encoding: 8bit
 
-On Sat, 28 Feb 2026 22:44:49 +0800, Lv Zheng <lv.zheng@linux.spacemit.com> wrote:
-> Adds device tree bindings for SpacemiT T100 specific features by
-> introducing spacemit,t100 compatible. T100 contains distributed IOATCs,
-> each of which exposes pmiv interrupt.
-> 
-> Signed-off-by: Lv Zheng <lv.zheng@linux.spacemit.com>
-> Signed-off-by: Jingyu Li <joey.li@spacemit.com>
+The patch below does not apply to the 6.18-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-Patch content here is fine, but the signoff chain on this patch is not
-right. What did Jingyu do? You're author and submitter so either Jingyu
-did nothing and should be removed, or is a co-developer which requires
-attribution via the co-developed-by tag. If the latter, their signoff
-should be before yours (the submitter is always last).
+Thanks,
+Sasha
 
-pw-bot: changes-requested
+------------------ original commit in Linus's tree ------------------
 
-Cheers,
-Conor.
+From d55c571e4333fac71826e8db3b9753fadfbead6a Mon Sep 17 00:00:00 2001
+From: Oleg Nesterov <oleg@redhat.com>
+Date: Sun, 11 Jan 2026 16:00:37 +0100
+Subject: [PATCH] x86/uprobes: Fix XOL allocation failure for 32-bit tasks
 
+This script
+
+	#!/usr/bin/bash
+
+	echo 0 > /proc/sys/kernel/randomize_va_space
+
+	echo 'void main(void) {}' > TEST.c
+
+	# -fcf-protection to ensure that the 1st endbr32 insn can't be emulated
+	gcc -m32 -fcf-protection=branch TEST.c -o test
+
+	bpftrace -e 'uprobe:./test:main {}' -c ./test
+
+"hangs", the probed ./test task enters an endless loop.
+
+The problem is that with randomize_va_space == 0
+get_unmapped_area(TASK_SIZE - PAGE_SIZE) called by xol_add_vma() can not
+just return the "addr == TASK_SIZE - PAGE_SIZE" hint, this addr is used
+by the stack vma.
+
+arch_get_unmapped_area_topdown() doesn't take TIF_ADDR32 into account and
+in_32bit_syscall() is false, this leads to info.high_limit > TASK_SIZE.
+vm_unmapped_area() happily returns the high address > TASK_SIZE and then
+get_unmapped_area() returns -ENOMEM after the "if (addr > TASK_SIZE - len)"
+check.
+
+handle_swbp() doesn't report this failure (probably it should) and silently
+restarts the probed insn. Endless loop.
+
+I think that the right fix should change the x86 get_unmapped_area() paths
+to rely on TIF_ADDR32 rather than in_32bit_syscall(). Note also that if
+CONFIG_X86_X32_ABI=y, in_x32_syscall() falsely returns true in this case
+because ->orig_ax = -1.
+
+But we need a simple fix for -stable, so this patch just sets TS_COMPAT if
+the probed task is 32-bit to make in_ia32_syscall() true.
+
+Fixes: 1b028f784e8c ("x86/mm: Introduce mmap_compat_base() for 32-bit mmap()")
+Reported-by: Paulo Andrade <pandrade@redhat.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/all/aV5uldEvV7pb4RA8@redhat.com/
+Cc: stable@vger.kernel.org
+Link: https://patch.msgid.link/aWO7Fdxn39piQnxu@redhat.com
+---
+ arch/x86/kernel/uprobes.c | 24 ++++++++++++++++++++++++
+ include/linux/uprobes.h   |  1 +
+ kernel/events/uprobes.c   | 10 +++++++---
+ 3 files changed, 32 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 7be8e361ca55b..619dddf54424e 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -1823,3 +1823,27 @@ bool is_uprobe_at_func_entry(struct pt_regs *regs)
+ 
+ 	return false;
+ }
++
++#ifdef CONFIG_IA32_EMULATION
++unsigned long arch_uprobe_get_xol_area(void)
++{
++	struct thread_info *ti = current_thread_info();
++	unsigned long vaddr;
++
++	/*
++	 * HACK: we are not in a syscall, but x86 get_unmapped_area() paths
++	 * ignore TIF_ADDR32 and rely on in_32bit_syscall() to calculate
++	 * vm_unmapped_area_info.high_limit.
++	 *
++	 * The #ifdef above doesn't cover the CONFIG_X86_X32_ABI=y case,
++	 * but in this case in_32bit_syscall() -> in_x32_syscall() always
++	 * (falsely) returns true because ->orig_ax == -1.
++	 */
++	if (test_thread_flag(TIF_ADDR32))
++		ti->status |= TS_COMPAT;
++	vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
++	ti->status &= ~TS_COMPAT;
++
++	return vaddr;
++}
++#endif
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index ee3d36eda45dd..f548fea2adec8 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -242,6 +242,7 @@ extern void arch_uprobe_clear_state(struct mm_struct *mm);
+ extern void arch_uprobe_init_state(struct mm_struct *mm);
+ extern void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr);
+ extern void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr);
++extern unsigned long arch_uprobe_get_xol_area(void);
+ #else /* !CONFIG_UPROBES */
+ struct uprobes_state {
+ };
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index a7d7d83ca1d78..dfbce021fb027 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1694,6 +1694,12 @@ static const struct vm_special_mapping xol_mapping = {
+ 	.mremap = xol_mremap,
+ };
+ 
++unsigned long __weak arch_uprobe_get_xol_area(void)
++{
++	/* Try to map as high as possible, this is only a hint. */
++	return get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
++}
++
+ /* Slot allocation for XOL */
+ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+ {
+@@ -1709,9 +1715,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+ 	}
+ 
+ 	if (!area->vaddr) {
+-		/* Try to map as high as possible, this is only a hint. */
+-		area->vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE,
+-						PAGE_SIZE, 0, 0);
++		area->vaddr = arch_uprobe_get_xol_area();
+ 		if (IS_ERR_VALUE(area->vaddr)) {
+ 			ret = area->vaddr;
+ 			goto fail;
 -- 
-Conor Dooley <conor.dooley@microchip.com>
+2.51.0
+
+
+
+
