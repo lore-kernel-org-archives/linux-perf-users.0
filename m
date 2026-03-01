@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0821EDA0F;
-	Sun,  1 Mar 2026 01:42:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC9A2E36F8;
+	Sun,  1 Mar 2026 01:45:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772329331; cv=none; b=VAjl8Gk9SvW0cHw6DMOVPv/lAfdGHkR4wcGPWF4PB6uACvUtPHLTV2mdbNzK120A4gq0Yn0IFm9KeCUiJb5yLxF6sFveo7DtmQh69DLls6N6uDG3Ot6t9rsydDQfWGshPSaj18PmuFC/0JeLdm/9T4qXSDGAqnvB+FM68i8M2zQ=
+	t=1772329502; cv=none; b=Gx+UK4n7fUh5rAleoOAik1taJfCxevAo/MKVZNOGR0V1DzApyhNQ4r6hd7YdmkEBuJhL/hZ2VPX19fx0cifJ/Owt7/xYHBhXzDbFRopoXIHFHuMHK/3Dn6nOqp1Fr/vvqOxkq7cDpeNhRZ62vGIBUjeNwB0zAJFZbq3Ap11E/ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772329331; c=relaxed/simple;
-	bh=fLzM30E74D7MGmnjca8Gm90YSXJPlYYuJQ8NvOfiE7I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sZatmO2d3TGdToxUnZJfHdPwA4GPEO7oANOMm6eWI2ZMtOcDjbVTHuS+fFjVqgDHufo3f2QwyYiZ60dG/bPmMOf/9v39YJWVqQz+AXrulbSnQOclTy86CvqPWaFbGxgRA9OS2D2AV4wksHX2uaQVW/HTU/2AKxavN3rysdoiEek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mL1Yl+XN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772329502; c=relaxed/simple;
+	bh=zsA1yqcXUfbZ5VevAccsE1T2z6pA2uUkD9SZfyB6KQk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=izWztYi5AnaFW7RwUV+XaJR6GL0F9kBFtce4eBw0YE9TvL223MBkPqSUq43uBq1ebwsvF7S+lGy8h5qd8g7j5ZMhbv5Mw4eZRXERwLtJmzUrzRLWHE7Zu0pXAugpBtQUte6Eipvt2BC6DdanJjhK+ciM2fWpbEN20PCLrxwAS+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uB62cOKv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mL1Yl+XN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28572C19421;
-	Sun,  1 Mar 2026 01:42:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uB62cOKv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A56CDC19421;
+	Sun,  1 Mar 2026 01:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772329330;
-	bh=fLzM30E74D7MGmnjca8Gm90YSXJPlYYuJQ8NvOfiE7I=;
+	s=k20201202; t=1772329502;
+	bh=zsA1yqcXUfbZ5VevAccsE1T2z6pA2uUkD9SZfyB6KQk=;
 	h=From:To:Cc:Subject:Date:From;
-	b=mL1Yl+XNpThYGI/iGwnmVY7FtntYPIY5M/7K2uuEpGPVG7jfs9ElReFoh9+ZrkOpX
-	 wnaEmFqFCfV8VOHqvqvmY1V4LuY7YMNAWW3rBPp+7hMqys9FivVgpBYtqqfmWgU3f+
-	 +sXSqOw8c9MPpXea9p0HiQX39jXm9BYTxUCVg3XnMeVCssWUtT2y6flm7LPhTZFb2g
-	 85KxxG1D1v3wvgZKjYxE2zEC16W4podNGcn1W4hVsAbql2Y7Xdp4u/XTEUIXo+KuIe
-	 xoAs/Z19L/+douKyhMYEDUXKPN8E83fMQss5qGgOCBSr5bI2z/MQpIhWTVhDVNWRAl
-	 Pzg7fZQMCSfOA==
+	b=uB62cOKvPGbOK8sm47G31E/5H94PLxFpMO5xSpRNkwFB/rKJskd4/qVYkEROCOLVa
+	 1QzB+n6z1SD8gjqCYxXOLh2f8qOSM8e63snff6jzFI+Zs0gfT62F4mgVPfz0HIjdPX
+	 D0kkoBsyUIGlAYA8rVntU1hzIU25MLtsImIL1UUQs6+KBpH7l6Rn11Z880DQXoorQY
+	 QJePvYorZQpNWfAL39yEBwD0VcW7cJZu6h9KnQ4WEavVGzG4NpeLCPgXT4N+jZc4fW
+	 RvvvxAJrv7b+1YmZ0U9Gdkh2gZTGAdsvHq0iLBIMEbqAsWQR5sdpIKTgCY5mg+051S
+	 GfdkdK4ZdsR3w==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	oleg@redhat.com
-Cc: Paulo Andrade <pandrade@redhat.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	linux-trace-kernel@vger.kernel.org,
+	robin.murphy@arm.com
+Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org
-Subject: FAILED: Patch "x86/uprobes: Fix XOL allocation failure for 32-bit tasks" failed to apply to 6.1-stable tree
-Date: Sat, 28 Feb 2026 20:42:08 -0500
-Message-ID: <20260301014209.1703943-1-sashal@kernel.org>
+Subject: FAILED: Patch "perf/arm-cmn: Reject unsupported hardware configurations" failed to apply to 6.1-stable tree
+Date: Sat, 28 Feb 2026 20:45:00 -0500
+Message-ID: <20260301014500.1707496-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -56,133 +56,73 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From d55c571e4333fac71826e8db3b9753fadfbead6a Mon Sep 17 00:00:00 2001
-From: Oleg Nesterov <oleg@redhat.com>
-Date: Sun, 11 Jan 2026 16:00:37 +0100
-Subject: [PATCH] x86/uprobes: Fix XOL allocation failure for 32-bit tasks
+From 36c0de02575ce59dfd879eb4ef63d53a68bbf9ce Mon Sep 17 00:00:00 2001
+From: Robin Murphy <robin.murphy@arm.com>
+Date: Tue, 3 Feb 2026 14:07:29 +0000
+Subject: [PATCH] perf/arm-cmn: Reject unsupported hardware configurations
 
-This script
+So far we've been fairly lax about accepting both unknown CMN models
+(at least with a warning), and unknown revisions of those which we
+do know, as although things do frequently change between releases,
+typically enough remains the same to be somewhat useful for at least
+some basic bringup checks. However, we also make assumptions of the
+maximum supported sizes and numbers of things in various places, and
+there's no guarantee that something new might not be bigger and lead
+to nasty array overflows. Make sure we only try to run on things that
+actually match our assumptions and so will not risk memory corruption.
 
-	#!/usr/bin/bash
+We have at least always failed on completely unknown node types, so
+update that error message for clarity and consistency too.
 
-	echo 0 > /proc/sys/kernel/randomize_va_space
-
-	echo 'void main(void) {}' > TEST.c
-
-	# -fcf-protection to ensure that the 1st endbr32 insn can't be emulated
-	gcc -m32 -fcf-protection=branch TEST.c -o test
-
-	bpftrace -e 'uprobe:./test:main {}' -c ./test
-
-"hangs", the probed ./test task enters an endless loop.
-
-The problem is that with randomize_va_space == 0
-get_unmapped_area(TASK_SIZE - PAGE_SIZE) called by xol_add_vma() can not
-just return the "addr == TASK_SIZE - PAGE_SIZE" hint, this addr is used
-by the stack vma.
-
-arch_get_unmapped_area_topdown() doesn't take TIF_ADDR32 into account and
-in_32bit_syscall() is false, this leads to info.high_limit > TASK_SIZE.
-vm_unmapped_area() happily returns the high address > TASK_SIZE and then
-get_unmapped_area() returns -ENOMEM after the "if (addr > TASK_SIZE - len)"
-check.
-
-handle_swbp() doesn't report this failure (probably it should) and silently
-restarts the probed insn. Endless loop.
-
-I think that the right fix should change the x86 get_unmapped_area() paths
-to rely on TIF_ADDR32 rather than in_32bit_syscall(). Note also that if
-CONFIG_X86_X32_ABI=y, in_x32_syscall() falsely returns true in this case
-because ->orig_ax = -1.
-
-But we need a simple fix for -stable, so this patch just sets TS_COMPAT if
-the probed task is 32-bit to make in_ia32_syscall() true.
-
-Fixes: 1b028f784e8c ("x86/mm: Introduce mmap_compat_base() for 32-bit mmap()")
-Reported-by: Paulo Andrade <pandrade@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/all/aV5uldEvV7pb4RA8@redhat.com/
 Cc: stable@vger.kernel.org
-Link: https://patch.msgid.link/aWO7Fdxn39piQnxu@redhat.com
+Fixes: 7819e05a0dce ("perf/arm-cmn: Revamp model detection")
+Reviewed-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 ---
- arch/x86/kernel/uprobes.c | 24 ++++++++++++++++++++++++
- include/linux/uprobes.h   |  1 +
- kernel/events/uprobes.c   | 10 +++++++---
- 3 files changed, 32 insertions(+), 3 deletions(-)
+ drivers/perf/arm-cmn.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 7be8e361ca55b..619dddf54424e 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1823,3 +1823,27 @@ bool is_uprobe_at_func_entry(struct pt_regs *regs)
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index 651edd73bfcb1..4fbafc4b79843 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -2422,6 +2422,15 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 			arm_cmn_init_node_info(cmn, reg & CMN_CHILD_NODE_ADDR, dn);
+ 			dn->portid_bits = xp->portid_bits;
+ 			dn->deviceid_bits = xp->deviceid_bits;
++			/*
++			 * Logical IDs are assigned from 0 per node type, so as
++			 * soon as we see one bigger than expected, we can assume
++			 * there are more than we can cope with.
++			 */
++			if (dn->logid > CMN_MAX_NODES_PER_EVENT) {
++				dev_err(cmn->dev, "Node ID invalid for supported CMN versions: %d\n", dn->logid);
++				return -ENODEV;
++			}
  
- 	return false;
- }
-+
-+#ifdef CONFIG_IA32_EMULATION
-+unsigned long arch_uprobe_get_xol_area(void)
-+{
-+	struct thread_info *ti = current_thread_info();
-+	unsigned long vaddr;
-+
-+	/*
-+	 * HACK: we are not in a syscall, but x86 get_unmapped_area() paths
-+	 * ignore TIF_ADDR32 and rely on in_32bit_syscall() to calculate
-+	 * vm_unmapped_area_info.high_limit.
-+	 *
-+	 * The #ifdef above doesn't cover the CONFIG_X86_X32_ABI=y case,
-+	 * but in this case in_32bit_syscall() -> in_x32_syscall() always
-+	 * (falsely) returns true because ->orig_ax == -1.
-+	 */
-+	if (test_thread_flag(TIF_ADDR32))
-+		ti->status |= TS_COMPAT;
-+	vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+	ti->status &= ~TS_COMPAT;
-+
-+	return vaddr;
-+}
-+#endif
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index ee3d36eda45dd..f548fea2adec8 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -242,6 +242,7 @@ extern void arch_uprobe_clear_state(struct mm_struct *mm);
- extern void arch_uprobe_init_state(struct mm_struct *mm);
- extern void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr);
- extern void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr);
-+extern unsigned long arch_uprobe_get_xol_area(void);
- #else /* !CONFIG_UPROBES */
- struct uprobes_state {
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index a7d7d83ca1d78..dfbce021fb027 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1694,6 +1694,12 @@ static const struct vm_special_mapping xol_mapping = {
- 	.mremap = xol_mremap,
- };
+ 			switch (dn->type) {
+ 			case CMN_TYPE_DTC:
+@@ -2471,7 +2480,7 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 				break;
+ 			/* Something has gone horribly wrong */
+ 			default:
+-				dev_err(cmn->dev, "invalid device node type: 0x%x\n", dn->type);
++				dev_err(cmn->dev, "Device node type invalid for supported CMN versions: 0x%x\n", dn->type);
+ 				return -ENODEV;
+ 			}
+ 		}
+@@ -2499,6 +2508,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 		cmn->mesh_x = cmn->num_xps;
+ 	cmn->mesh_y = cmn->num_xps / cmn->mesh_x;
  
-+unsigned long __weak arch_uprobe_get_xol_area(void)
-+{
-+	/* Try to map as high as possible, this is only a hint. */
-+	return get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+}
-+
- /* Slot allocation for XOL */
- static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- {
-@@ -1709,9 +1715,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- 	}
- 
- 	if (!area->vaddr) {
--		/* Try to map as high as possible, this is only a hint. */
--		area->vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE,
--						PAGE_SIZE, 0, 0);
-+		area->vaddr = arch_uprobe_get_xol_area();
- 		if (IS_ERR_VALUE(area->vaddr)) {
- 			ret = area->vaddr;
- 			goto fail;
++	if (max(cmn->mesh_x, cmn->mesh_y) > CMN_MAX_DIMENSION) {
++		dev_err(cmn->dev, "Mesh size invalid for supported CMN versions: %dx%d\n", cmn->mesh_x, cmn->mesh_y);
++		return -ENODEV;
++	}
+ 	/* 1x1 config plays havoc with XP event encodings */
+ 	if (cmn->num_xps == 1)
+ 		dev_warn(cmn->dev, "1x1 config not fully supported, translate XP events manually\n");
 -- 
 2.51.0
 
