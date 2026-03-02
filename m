@@ -1,376 +1,433 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8EC3ED5CC;
-	Mon,  2 Mar 2026 20:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772484683; cv=none; b=ZBQYgJfmQm2Ex0y9W9iHnPitWVDRpqg1XqZBpI98P5mK02Q965luWfjW2EcB0+LCpLelAdDNw3pEz0La0ZdoOW2sMHOoopjSRN/H4LNq5sTLIQaK/TYjW8mFC7H0/IUfQwGRrq6WH8EtZ+XsvE0l+wwqvLWUXFSLBNZREFwjiGg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772484683; c=relaxed/simple;
-	bh=/sz7TWb/8/hX0LciA1x/Z08Sx95qZ79eor/fKNv831c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SdlFMm0k8JwjdazHKdpzxVs1xZuj3l789QCQARTKLxKNYIVLpTDrE9wVYzzr+xR1Nc84lCcaAlJlAoeuN3A1JHqt2JtDzfCNl+1iZz02HTznYDbnJz0l/dfNPJC/fpvpFUd8pfqlOU9nDUnfL8p0tYu34KouVoinxQJt+ndH7yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7M2jA0E; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA95311975
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Mar 2026 22:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772489305; cv=pass; b=KgZGk9ECtwG/0VigE5HsLd9kCRHGCRx8MSV74XPw3beq7ycW2Vp1HSZkY3R2zSRM4+xb/0Jh+BDwOuqfoYfFwq1H+qEJes29sJc3QA0ABql8q3zfJ8LsJvfUFhhv1hgn8YL+IeviMAQw95o9rV9vYrgMjqVRF7Q4DUerRW8tg38=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772489305; c=relaxed/simple;
+	bh=r2O5jCx9eFUMIeIyiCPXu4OyaJgtFSzs3phokLGOyv4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Uz9BuDOMWYkjWMHr7HUbrA7gm1o+lFqVBwwbPHu/BjsLWIwsaCQ0Ff2LV5mKdYwr489AdlLK4sD7EDQyVrgbfsrK0Uw1U6TX385esC7KnjObDYmnN0mfHkVolnZe0llZPeXIf6tEv5AHMyjDudujN+F/rsw9Nf7AcrXxJebh5QU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LZ9qOwGz; arc=pass smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7M2jA0E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC98CC2BCAF;
-	Mon,  2 Mar 2026 20:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772484682;
-	bh=/sz7TWb/8/hX0LciA1x/Z08Sx95qZ79eor/fKNv831c=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=T7M2jA0E+nOiFu6g0V2eB4Fpg250FkkborXQ68QoO89fQRYaKtke1mCmqo5Vuf7+r
-	 wiGdNgQVLprPk5IB7mkheRRMyC+FRKyQz6ka9nPwO+kJgHBHZ43Md2Dkd9VD0/Of83
-	 ZUNAObaZI0EzCRK+rvOI+NopDu28S8zgq5QgcDyiMewHIqmRZf306wVK3dRX1tBBlm
-	 VErLvddEWB8MSYgMw/Tz8REN4YQ1FxmYNeki4O77thoNIvmMcSZ/Thb9ssZkIaaIfz
-	 KZV2FrOeEqwnH4Do1nBzSwg2vKuYdXhsUVCS3pZV7L6ke8IgQelYklF9NzLOeqoxtq
-	 8b/TRYKwQNuoQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 02 Mar 2026 15:25:34 -0500
-Subject: [PATCH v2 110/110] vfs: remove kino_t typedef and PRIino format
- macro
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LZ9qOwGz"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2ae4b40999bso3115ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Mar 2026 14:08:22 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772489302; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ZFQkwrY2yD/jkvDRrLBPFjNgjpH+7hex+8n6Jg2TFfJoLLBD99dX0vcS4Y0K3WtZt0
+         3waok3WZanZmZWowyGSj6BFrzpDV7yPnJUujfZziyoGGSJuoccjMZkQeNVChGcpB/KYU
+         PDhfC5abRnm4dpLY1LVM17uSrSJfwuDcfaXqF8B53ZcEhMmzGbDwZbpg9fIXXuQ7E0gF
+         f/DoDVoc269LUBkewNLEwOtT+al3dAWcwmcoMl/VSm4QKaL1YrilzWfyE8XgyD0R5Dvn
+         g5JlGe+G4fmOqYbRJcUxXBcP+44Eo8gmY/VAAvTvHkCTfGoUM8fvZLoWam6C9qd2ENKo
+         W++w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=tqnejW2JMKRaRHVT6dQuDV+K1VSCbcKRUv0hLv8LpqY=;
+        fh=2OI3lp/E9kzPGzO5LsV47Jd1AzfqIDLyrqEBzm6glZ0=;
+        b=YeLUR+ZJeV2EdRiIPu509tZsVU7nSllvSD4gf1DyMatzsidn7RftFh9RLvDX661WGj
+         kDiL3LNnyq5O6zB+K81FArcy7ecaxDkQmMSX6sElOFZ8Ejc93zVmba8xbirsVZpHHE+/
+         oiLyC6pHcT8w8mIWhwZSrnrJT8xVXZvf9M0vx5kSg5jj8iqXsyPRu9BW56V+9b4ymZ5/
+         QdHtvh5bSoejc1kqI36V69TeloOETCBWhRWdU0XcyKgClzqFOuk5NFTK24yglVRjW3NW
+         6YOoOxwaE3vYZolUPhMM/8v8g2v7sT4aGlwoo5BnrEQ77PqWQHRorhuX+TPHdbJpknng
+         0pSw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772489302; x=1773094102; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tqnejW2JMKRaRHVT6dQuDV+K1VSCbcKRUv0hLv8LpqY=;
+        b=LZ9qOwGztNXAdP1VHX9sNiBBkiW+t8K8+NfDgDWGlWKvRF/bM4b71n270v0fq6r/TO
+         /5WmTGScKea1zvx2L93CM1aGqLJ84yZX4nJ+1nVq1DROJmamR1NSLqwwMriqtO1aN39j
+         /UUgwgAdU5f5mW2+Ao6Ezj5CNKNBkzDjEJTKZbQEgS41gwgup5PRHAu9yh2vvIza01+q
+         6K1Q+fhh0mb3yClgm/bNagpodHDDhu616MecY5G0waDviIMzLQcLHAVp61uQI9tRMCgc
+         ZiICLHR9w2nhVEz08sVBweMFfL6pMuaBpcku9EHTTWf863FZ5EiofNnqbPW3AlzReEZ+
+         xuwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772489302; x=1773094102;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tqnejW2JMKRaRHVT6dQuDV+K1VSCbcKRUv0hLv8LpqY=;
+        b=tJpsLgC4mRfi8UkH4sM5fd86f/keIZ5fsIt32tT6/7yFjsFjwL/6BYmfy9yZtezxHO
+         Q6TFodDIJZ1ILY7dsRJ6DcSyvj2XuqoB/IERlLsIPvpTG14ocS72bzq9YtF1tfxTrYHu
+         5vO2SdQ/t+hoGxNRU2B095x9P0Q1A36WNstizVhGZPJpbvEpyBjtJkE2nV5I4lqqp9FP
+         agH6OCPmrRvyOD4l5qXApc+b0u32mZwzuXMrZ9v15WsPFQpLMWO3pOVhpb53dtI5I8Me
+         E95qh2MQQ7nHZmcsYd89g0Y7DDjb81BDte2DlfGgqnCPLOon9kHOPqbl+YjjnD70GTB8
+         VxcA==
+X-Forwarded-Encrypted: i=1; AJvYcCWoN5hYIVnI/bW3K0k9tXrzRovqH46h0vDRft2srSXkEtBY5OIBbctL9yxXl9WhwxRs0oJBZwsk/Vexd64XkBV1@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa6z2mttq3CjJah02ZFAr9q3lIoYqcWAm8xvjYj5YgD3a7nfcp
+	XAiaIib28fq8/FXB3wyIcX0U3V+VQeFnx0nCbANN8CbaDoSY79BcKODSfEnUD58EwKf2DkUShIL
+	liedR7jzbopMKfvtS94tIbx6Jiw0ATOmeXEX4LqUeM4mx4Ss35TWzckhL1Zo=
+X-Gm-Gg: ATEYQzy4/EjrnlXF/72RKsbjYc5IkViasfRY/WPUSj2gr+WT00FRRbpKle2mNM6Tm8R
+	eHdwORswVBMVGRpPTH6fh3TmLAzbv2gY65QZjYtiBUIdD91DFLMkckDkrVcUaUUkX+K5L3QDACq
+	Oc8knCcPF4y7D4bDmQQpXTICJtM1xhkGIbHeE/kpMMXtuNQlxkIDY981Tw9/G8hLsXAEdbrTAyf
+	U8oKiESSVSVFmxWUES16GBbeYAAtjDphtdTJnnkFprELyjWA4pzySILIvRx6EFvJeAAwthCwzIp
+	gxpypPkoTNT148ItFVdl+5BTsS6HJXT52fI/
+X-Received: by 2002:a17:902:d50e:b0:2a7:640c:834b with SMTP id
+ d9443c01a7336-2ae39492c95mr5939835ad.0.1772489301431; Mon, 02 Mar 2026
+ 14:08:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260302-iino-u64-v2-110-e5388800dae0@kernel.org>
-References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
-In-Reply-To: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Dan Williams <dan.j.williams@intel.com>, 
- Matthew Wilcox <willy@infradead.org>, Eric Biggers <ebiggers@kernel.org>, 
- "Theodore Y. Ts'o" <tytso@mit.edu>, Muchun Song <muchun.song@linux.dev>, 
- Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>, 
- David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.org>, 
- Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, 
- Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Steve French <sfrench@samba.org>, 
- Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
- Shyam Prasad N <sprasad@microsoft.com>, 
- Bharath SM <bharathsm@microsoft.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
- Viacheslav Dubeyko <slava@dubeyko.com>, 
- Eric Van Hensbergen <ericvh@kernel.org>, 
- Latchesar Ionkov <lucho@ionkov.net>, 
- Dominique Martinet <asmadeus@codewreck.org>, 
- Christian Schoenebeck <linux_oss@crudebyte.com>, 
- David Sterba <dsterba@suse.com>, Marc Dionne <marc.dionne@auristor.com>, 
- Ian Kent <raven@themaw.net>, Luis de Bethencourt <luisbg@kernel.org>, 
- Salah Triki <salah.triki@gmail.com>, 
- "Tigran A. Aivazian" <aivazian.tigran@gmail.com>, 
- Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, 
- Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, 
- Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>, 
- Amir Goldstein <amir73il@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- Yangtao Li <frank.li@vivo.com>, 
- Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, 
- David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, 
- Dave Kleikamp <shaggy@kernel.org>, 
- Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
- Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
- Joseph Qi <joseph.qi@linux.alibaba.com>, 
- Mike Marshall <hubcap@omnibond.com>, 
- Martin Brandenburg <martin@omnibond.com>, 
- Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>, 
- Zhihao Cheng <chengzhihao1@huawei.com>, Damien Le Moal <dlemoal@kernel.org>, 
- Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, 
- John Johansen <john.johansen@canonical.com>, 
- Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
- "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
- Roberto Sassu <roberto.sassu@huawei.com>, 
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
- Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
- Stephen Smalley <stephen.smalley.work@gmail.com>, 
- Ondrej Mosnacek <omosnace@redhat.com>, 
- Casey Schaufler <casey@schaufler-ca.com>, 
- Alex Deucher <alexander.deucher@amd.com>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Sumit Semwal <sumit.semwal@linaro.org>, Eric Dumazet <edumazet@google.com>, 
- Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, 
- Willem de Bruijn <willemb@google.com>, 
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
- Simon Horman <horms@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, "Darrick J. Wong" <djwong@kernel.org>, 
- Martin Schiller <ms@dev.tdt.de>, Eric Paris <eparis@redhat.com>, 
- Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>, 
- Johan Hedberg <johan.hedberg@gmail.com>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- Oliver Hartkopp <socketcan@hartkopp.net>, 
- Marc Kleine-Budde <mkl@pengutronix.de>, David Ahern <dsahern@kernel.org>, 
- Neal Cardwell <ncardwell@google.com>, 
- Steffen Klassert <steffen.klassert@secunet.com>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- Remi Denis-Courmont <courmisch@gmail.com>, 
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
- Xin Long <lucien.xin@gmail.com>, 
- Magnus Karlsson <magnus.karlsson@intel.com>, 
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>, 
- Stanislav Fomichev <sdf@fomichev.me>, Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- Jesper Dangaard Brouer <hawk@kernel.org>, 
- John Fastabend <john.fastabend@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
- fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev, 
- linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
- samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org, 
- v9fs@lists.linux.dev, linux-afs@lists.infradead.org, autofs@vger.kernel.org, 
- ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu, 
- ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org, 
- jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev, 
- ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org, 
- linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
- linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, 
- selinux@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
- linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-fscrypt@vger.kernel.org, 
- linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org, 
- linux-x25@vger.kernel.org, audit@vger.kernel.org, 
- linux-bluetooth@vger.kernel.org, linux-can@vger.kernel.org, 
- linux-sctp@vger.kernel.org, bpf@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7864; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=/sz7TWb/8/hX0LciA1x/Z08Sx95qZ79eor/fKNv831c=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBppfIOWw4VpZ1f0esD0l2eblcdOGEvFuzW5qecf
- cTPMYYfwB+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaaXyDgAKCRAADmhBGVaC
- FSiGEADKoZsC6JwFSXz5Q8tPMZ6t8//Y5SGA/vaBUiD5D0C+kZUFc/J5USU5TJAKaXk0BTDmAT/
- 2kbSCQNocpoPv3+wT1fnN67/FnoxtqnhKqtCXlvPPR9RqXVCoIxxjy81hmMGvj5OueJeojBhBrE
- EPeNMIFty+gCEGi2dWknNkaFTtNxVknqICbKKlus5egvNmB/P/wcCwA75eyzT9Cqf8HgCQ2UWH6
- E+1UZg/P3Utcs5RWUN4LdyqwfM+nEl51pMv3R4lNJeMv6VLFYo0VBxIBSMwMwLYGA8ONx6GabD8
- h7hmuJLNcF4apD7rmibApIK+IR8kjVt7xg3Z1R/kF7WyEW+ipWCA+d5pPv4ATJrviTJ5swUDr+e
- 0fR52ir06HftVbBViJXC+/+JeBB5ygEQwwixuJf+EHIPh8Nw+eAOeSMTJT6/5J9boBSM4t53R2U
- 1uE4EroXow0SM75te/gScXwcjFowrQz/+gRU3pxfj31chpErmp6yk2ql36oF4XCRuFtyNVG3v2y
- fwmpsbHx68WQUTJbKUJrw9HuC4vvVoFx2K26sNk8Mvnxfxb/Menyn7MMrfXHs4wZ/DdlCIHP9J6
- K4FPkJfGrBW5QSCsdyluxgAY1+ed66E9Oz4M67wxOod8vTaTchUlxDXS5wJQNAd38COtoq/jHe9
- EYgFPWN/4XZNcUQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+References: <202602270932.50ed0a9f-lkp@intel.com> <aaIPHGMxrxkYsD0b@google.com>
+In-Reply-To: <aaIPHGMxrxkYsD0b@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 2 Mar 2026 14:08:09 -0800
+X-Gm-Features: AaiRm51x1Z09AdwKLz2yin7Q-sMW37OJ_vW2Yapp7tnWhkvDXpph6IHrTV37vDo
+Message-ID: <CAP-5=fXpFrNOBR7XmVcD0fdZ20sDMmczCvpo=St0eaPBtwdk_g@mail.gmail.com>
+Subject: Re: [linus:master] [perf test] c9cd0c7e52: perf-sanity-tests.python_profiling_with_jitdump.fail
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
+	linux-kernel@vger.kernel.org, Pablo Galindo <pablogsal@gmail.com>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now that i_ino has been widened to u64, replace the kino_t typedef with
-u64 and the PRIino format macro with the concrete format strings.
+On Fri, Feb 27, 2026 at 1:39=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Fri, Feb 27, 2026 at 04:42:59PM +0800, kernel test robot wrote:
+> >
+> >
+> > Hello,
+> >
+> >
+> > we failed to run this new added test. not sure if we miss any dependenc=
+ies?
+> >
+> >
+> > below is full report FYI.
+> >
+> >
+> > kernel test robot noticed "perf-sanity-tests.python_profiling_with_jitd=
+ump.fail" on:
+> >
+> > commit: c9cd0c7e529e80e9be79867d2ebb874f67dbc35e ("perf test: Add pytho=
+n JIT dump test")
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> >
+> > in testcase: perf-sanity-tests
+> > version:
+> > with following parameters:
+> >
+> >       perf_compiler: clang
+> >       group: group-02
+> >
+> >
+> > config: x86_64-rhel-9.4-bpf
+> > compiler: gcc-14
+> > test machine: 16 threads Intel(R) Core(TM) i7-13620H (Raptor Lake) with=
+ 32G memory
+> >
+> > (please refer to attached dmesg/kmsg for entire log/backtrace)
+> >
+> >
+> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
+rsion of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <oliver.sang@intel.com>
+> > | Closes: https://lore.kernel.org/oe-lkp/202602270932.50ed0a9f-lkp@inte=
+l.com
+>
+> Looks like a reference leak to map during libdw unwinding.
+>
+> Ian, can you please take a look?
+>
+> Thanks,
+> Namhyung
+>
+> >
+> >
+> > 2026-01-26 15:25:04 sudo ASAN_OPTIONS=3Dfast_unwind_on_malloc=3D0 /usr/=
+src/linux-perf-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e=
+/tools/perf/perf test 84 -v
+> >  84: python profiling with jitdump                                   : =
+Running (1 active)
+> > --- start ---
+> > test child forked, pid 12390
+> > Run python with -Xperf_jit
+> > [ perf record: Woken up 5 times to write data ]
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > =3D=3D12400=3D=3DERROR: AddressSanitizer: heap-use-after-free on addres=
+s 0x50200002ba30 at pc 0x55c306993987 bp 0x7ffd98998720 sp 0x7ffd98998718
+> > READ of size 8 at 0x50200002ba30 thread T0
+> >     #0 0x55c306993986 in map__start util/map.h:54
+> >     #1 0x55c306993cd0 in map__dso_map_ip util/map.h:110
+> >     #2 0x55c3069b1ecb in unwind_entry util/machine.c:2950
+> >     #3 0x55c306e4197b in unwind__get_entries util/unwind-libdw.c:321
+> >     #4 0x55c3069b2398 in thread__resolve_callchain_unwind util/machine.=
+c:2976
+> >     #5 0x55c3069b24ec in __thread__resolve_callchain util/machine.c:300=
+3
+> >     #6 0x55c306987e78 in sample__for_each_callchain_node util/callchain=
+.c:1808
+> >     #7 0x55c3067d4ece in build_id__mark_dso_hit util/build-id.c:77
+> >     #8 0x55c3062f7004 in process_sample_event /usr/src/perf_selftests-x=
+86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/buil=
+tin-record.c:1504
+> >     #9 0x55c3069dbec3 in evlist__deliver_sample util/session.c:1259
+> >     #10 0x55c3069dc425 in machines__deliver_event util/session.c:1299
+> >     #11 0x55c3069de009 in perf_session__deliver_event util/session.c:13=
+86
+> >     #12 0x55c3069cb296 in ordered_events__deliver_event util/session.c:=
+134
+> >     #13 0x55c306a06aac in do_flush util/ordered-events.c:245
+> >     #14 0x55c306a07951 in __ordered_events__flush util/ordered-events.c=
+:324
+> >     #15 0x55c306a07e62 in ordered_events__flush util/ordered-events.c:3=
+42
+> >     #16 0x55c3069d6863 in perf_event__process_finished_round util/sessi=
+on.c:786
+> >     #17 0x55c3069deb7e in perf_session__process_user_event util/session=
+.c:1446
+> >     #18 0x55c3069e190e in perf_session__process_event util/session.c:16=
+68
+> >     #19 0x55c3069e9198 in process_simple util/session.c:2259
+> >     #20 0x55c3069e8158 in reader__read_event util/session.c:2188
+> >     #21 0x55c3069e8afe in reader__process_events util/session.c:2237
+> >     #22 0x55c3069e9987 in __perf_session__process_events util/session.c=
+:2282
+> >     #23 0x55c3069eca43 in perf_session__process_events util/session.c:2=
+446
+> >     #24 0x55c3062f7328 in process_buildids /usr/src/perf_selftests-x86_=
+64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin=
+-record.c:1534
+> >     #25 0x55c3062fbdf0 in record__finish_output /usr/src/perf_selftests=
+-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/bu=
+iltin-record.c:1858
+> >     #26 0x55c306309ebf in __cmd_record /usr/src/perf_selftests-x86_64-r=
+hel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin-rec=
+ord.c:2930
+> >     #27 0x55c306317a8f in cmd_record /usr/src/perf_selftests-x86_64-rhe=
+l-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin-recor=
+d.c:4417
+> >     #28 0x55c30652bf7b in run_builtin /usr/src/perf_selftests-x86_64-rh=
+el-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf.c:349
+> >     #29 0x55c30652c86c in handle_internal_command /usr/src/perf_selftes=
+ts-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/=
+perf.c:401
+> >     #30 0x55c30652cdc2 in run_argv /usr/src/perf_selftests-x86_64-rhel-=
+9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf.c:445
+> >     #31 0x55c30652d569 in main /usr/src/perf_selftests-x86_64-rhel-9.4-=
+bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf.c:553
+> >     #32 0x7f026b873ca7  (/lib/x86_64-linux-gnu/libc.so.6+0x29ca7) (Buil=
+dId: def5460e3cee00bfee25b429c97bcc4853e5b3a8)
+> >     #33 0x7f026b873d64 in __libc_start_main (/lib/x86_64-linux-gnu/libc=
+.so.6+0x29d64) (BuildId: def5460e3cee00bfee25b429c97bcc4853e5b3a8)
+> >     #34 0x55c306293210 in _start (/usr/src/perf_selftests-x86_64-rhel-9=
+.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf+0x1023210) =
+(BuildId: 47c1eede4a6cf8e0c379d2104e8b035638daa1b4)
+> >
+> > 0x50200002ba30 is located 0 bytes inside of 8-byte region [0x50200002ba=
+30,0x50200002ba38)
+> > freed by thread T0 here:
+> >     #0 0x7f0275b3d8f8 in free ../../../../src/libsanitizer/asan/asan_ma=
+lloc_linux.cpp:52
+> >     #1 0x55c3069ba258 in map__put util/map.c:312
+> >     #2 0x55c30679b7f8 in __map__zput util/map.h:198
+> >     #3 0x55c30679c0df in addr_location__exit util/addr_location.c:31
+> >     #4 0x55c306e3f7fe in entry util/unwind-libdw.c:147
 
-Replace the remaining PRIino uses throughout the tree, and remove the
-typedef and #define from include/linux/fs.h. Change the i_ino field in
-struct inode from kino_t to u64.
+This free is happening here (note I've set the commit to be that in
+the report here):
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/unwind-libdw.c?h=3Dperf-tools-next&id=3Dc9cd0c7e529e=
+80e9be79867d2ebb874f67dbc35e#n147
+```
+static int entry(u64 ip, struct unwind_info *ui)
+{
+struct unwind_entry *e =3D &ui->entries[ui->idx++];
+struct addr_location al;
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/dcache.c        |  4 ++--
- fs/eventpoll.c     |  2 +-
- fs/fserror.c       |  2 +-
- fs/inode.c         | 10 +++++-----
- fs/locks.c         |  6 +++---
- fs/nsfs.c          |  4 ++--
- fs/pipe.c          |  2 +-
- include/linux/fs.h |  5 +----
- 8 files changed, 16 insertions(+), 19 deletions(-)
+addr_location__init(&al);
+if (__report_module(&al, ip, ui)) {
+addr_location__exit(&al);
+return -1;
+}
 
-diff --git a/fs/dcache.c b/fs/dcache.c
-index 13fb3e89cba7442c9bed74c41ca18be5e43e28c9..9ceab142896f6631017067890fd1079240448e13 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -1637,11 +1637,11 @@ static enum d_walk_ret umount_check(void *_data, struct dentry *dentry)
- 	if (dentry == _data && dentry->d_lockref.count == 1)
- 		return D_WALK_CONTINUE;
- 
--	WARN(1, "BUG: Dentry %p{i=%" PRIino "x,n=%pd} "
-+	WARN(1, "BUG: Dentry %p{i=%llx,n=%pd} "
- 			" still in use (%d) [unmount of %s %s]\n",
- 		       dentry,
- 		       dentry->d_inode ?
--		       dentry->d_inode->i_ino : (kino_t)0,
-+		       dentry->d_inode->i_ino : (u64)0,
- 		       dentry,
- 		       dentry->d_lockref.count,
- 		       dentry->d_sb->s_type->name,
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 90fd92425492221d13bd0cf067d47579bb407a01..4ccd4d2e31adf571f939d2e777123e40302e565f 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1080,7 +1080,7 @@ static void ep_show_fdinfo(struct seq_file *m, struct file *f)
- 		struct inode *inode = file_inode(epi->ffd.file);
- 
- 		seq_printf(m, "tfd: %8d events: %8x data: %16llx "
--			   " pos:%lli ino:%" PRIino "x sdev:%x\n",
-+			   " pos:%lli ino:%llx sdev:%x\n",
- 			   epi->ffd.fd, epi->event.events,
- 			   (long long)epi->event.data,
- 			   (long long)epi->ffd.file->f_pos,
-diff --git a/fs/fserror.c b/fs/fserror.c
-index b685b329b5956a639c41b25c42cfff16e6e5ab6e..1e4d11fd9562fd158a23b64ca60e9b7e01719cb8 100644
---- a/fs/fserror.c
-+++ b/fs/fserror.c
-@@ -176,7 +176,7 @@ void fserror_report(struct super_block *sb, struct inode *inode,
- lost:
- 	if (inode)
- 		pr_err_ratelimited(
-- "%s: lost file I/O error report for ino %" PRIino "u type %u pos 0x%llx len 0x%llx error %d",
-+ "%s: lost file I/O error report for ino %llu type %u pos 0x%llx len 0x%llx error %d",
- 		       sb->s_id, inode->i_ino, type, pos, len, error);
- 	else
- 		pr_err_ratelimited(
-diff --git a/fs/inode.c b/fs/inode.c
-index 24ab9fa10baf7c885244f23bfccd731efe4a14cc..5ad169d51728c260aeaabb810e59eb3ec1d1ce52 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -726,7 +726,7 @@ void dump_mapping(const struct address_space *mapping)
- 	struct dentry *dentry_ptr;
- 	struct dentry dentry;
- 	char fname[64] = {};
--	kino_t ino;
-+	u64 ino;
- 
- 	/*
- 	 * If mapping is an invalid pointer, we don't want to crash
-@@ -750,14 +750,14 @@ void dump_mapping(const struct address_space *mapping)
- 	}
- 
- 	if (!dentry_first) {
--		pr_warn("aops:%ps ino:%" PRIino "x\n", a_ops, ino);
-+		pr_warn("aops:%ps ino:%llx\n", a_ops, ino);
- 		return;
- 	}
- 
- 	dentry_ptr = container_of(dentry_first, struct dentry, d_u.d_alias);
- 	if (get_kernel_nofault(dentry, dentry_ptr) ||
- 	    !dentry.d_parent || !dentry.d_name.name) {
--		pr_warn("aops:%ps ino:%" PRIino "x invalid dentry:%px\n",
-+		pr_warn("aops:%ps ino:%llx invalid dentry:%px\n",
- 				a_ops, ino, dentry_ptr);
- 		return;
- 	}
-@@ -768,7 +768,7 @@ void dump_mapping(const struct address_space *mapping)
- 	 * Even if strncpy_from_kernel_nofault() succeeded,
- 	 * the fname could be unreliable
- 	 */
--	pr_warn("aops:%ps ino:%" PRIino "x dentry name(?):\"%s\"\n",
-+	pr_warn("aops:%ps ino:%llx dentry name(?):\"%s\"\n",
- 		a_ops, ino, fname);
- }
- 
-@@ -2641,7 +2641,7 @@ void init_special_inode(struct inode *inode, umode_t mode, dev_t rdev)
- 		/* leave it no_open_fops */
- 		break;
- 	default:
--		pr_debug("init_special_inode: bogus i_mode (%o) for inode %s:%" PRIino "u\n",
-+		pr_debug("init_special_inode: bogus i_mode (%o) for inode %s:%llu\n",
- 			 mode, inode->i_sb->s_id, inode->i_ino);
- 		break;
- 	}
-diff --git a/fs/locks.c b/fs/locks.c
-index 9c5aa23f09b6e061dc94c81cd802bb65dd0053c1..d8b066fb42108971f6b3c7449dbc9b5f8df16b13 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -234,7 +234,7 @@ locks_check_ctx_lists(struct inode *inode)
- 	if (unlikely(!list_empty(&ctx->flc_flock) ||
- 		     !list_empty(&ctx->flc_posix) ||
- 		     !list_empty(&ctx->flc_lease))) {
--		pr_warn("Leaked locks on dev=0x%x:0x%x ino=0x%" PRIino "x:\n",
-+		pr_warn("Leaked locks on dev=0x%x:0x%x ino=0x%llx:\n",
- 			MAJOR(inode->i_sb->s_dev), MINOR(inode->i_sb->s_dev),
- 			inode->i_ino);
- 		locks_dump_ctx_list(&ctx->flc_flock, "FLOCK");
-@@ -251,7 +251,7 @@ locks_check_ctx_file_list(struct file *filp, struct list_head *list, char *list_
- 
- 	list_for_each_entry(flc, list, flc_list)
- 		if (flc->flc_file == filp)
--			pr_warn("Leaked %s lock on dev=0x%x:0x%x ino=0x%" PRIino "x "
-+			pr_warn("Leaked %s lock on dev=0x%x:0x%x ino=0x%llx "
- 				" fl_owner=%p fl_flags=0x%x fl_type=0x%x fl_pid=%u\n",
- 				list_type, MAJOR(inode->i_sb->s_dev),
- 				MINOR(inode->i_sb->s_dev), inode->i_ino,
-@@ -2896,7 +2896,7 @@ static void lock_get_status(struct seq_file *f, struct file_lock_core *flc,
- 			     (type == F_RDLCK) ? "READ" : "UNLCK");
- 	if (inode) {
- 		/* userspace relies on this representation of dev_t */
--		seq_printf(f, "%d %02x:%02x:%" PRIino "u ", pid,
-+		seq_printf(f, "%d %02x:%02x:%llu ", pid,
- 				MAJOR(inode->i_sb->s_dev),
- 				MINOR(inode->i_sb->s_dev), inode->i_ino);
- 	} else {
-diff --git a/fs/nsfs.c b/fs/nsfs.c
-index 0e099ee2121f8831645c3a25d759793ef2ff9ce6..eac326b85314ac8080248347154d599c953969c7 100644
---- a/fs/nsfs.c
-+++ b/fs/nsfs.c
-@@ -46,7 +46,7 @@ static char *ns_dname(struct dentry *dentry, char *buffer, int buflen)
- 	struct ns_common *ns = inode->i_private;
- 	const struct proc_ns_operations *ns_ops = ns->ops;
- 
--	return dynamic_dname(buffer, buflen, "%s:[%" PRIino "u]",
-+	return dynamic_dname(buffer, buflen, "%s:[%llu]",
- 		ns_ops->name, inode->i_ino);
- }
- 
-@@ -394,7 +394,7 @@ static int nsfs_show_path(struct seq_file *seq, struct dentry *dentry)
- 	const struct ns_common *ns = inode->i_private;
- 	const struct proc_ns_operations *ns_ops = ns->ops;
- 
--	seq_printf(seq, "%s:[%" PRIino "u]", ns_ops->name, inode->i_ino);
-+	seq_printf(seq, "%s:[%llu]", ns_ops->name, inode->i_ino);
- 	return 0;
- }
- 
-diff --git a/fs/pipe.c b/fs/pipe.c
-index 311928e8713989747605fd79f653e36d27ce8c0e..9841648c9cf3e8e569cf6ba5c792624fe92396f5 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -873,7 +873,7 @@ static struct vfsmount *pipe_mnt __ro_after_init;
-  */
- static char *pipefs_dname(struct dentry *dentry, char *buffer, int buflen)
- {
--	return dynamic_dname(buffer, buflen, "pipe:[%" PRIino "u]",
-+	return dynamic_dname(buffer, buflen, "pipe:[%llu]",
- 				d_inode(dentry)->i_ino);
- }
- 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 4193817e02e8bf94f29514ca43379af21f37ac61..097443bf12e289c347651e5f3da5b67eb6b53121 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -758,9 +758,6 @@ struct inode_state_flags {
- 	enum inode_state_flags_enum __state;
- };
- 
--typedef u64		kino_t;
--#define PRIino		"ll"
--
- /*
-  * Keep mostly read-only and often accessed (especially for
-  * the RCU path lookup and 'stat' data) fields at the beginning
-@@ -786,7 +783,7 @@ struct inode {
- #endif
- 
- 	/* Stat data, not accessed from path walking */
--	kino_t			i_ino;
-+	u64			i_ino;
- 	/*
- 	 * Filesystems may only read i_nlink directly.  They shall use the
- 	 * following functions for modification:
+e->ip   =3D ip;
+e->ms.maps =3D al.maps;
+e->ms.map =3D al.map;
+e->ms.sym =3D al.sym;
 
--- 
-2.53.0
+pr_debug("unwind: %s:ip =3D 0x%" PRIx64 " (0x%" PRIx64 ")\n",
+al.sym ? al.sym->name : "''",
+ip,
+al.map ? map__map_ip(al.map, ip) : (u64) 0);
+addr_location__exit(&al);  // <-- free happens here
+return 0;
+}
+```
 
+This was fixed by the first of my unwind-libdw changes:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/commit/tools/perf/util/unwind-libdw.c?h=3Dperf-tools-next&id=3Df815fc0c66=
+e777c727689666cfb46b8d461c2f99
+
+That is the new test exposed a latent bug, which we've already fixed,
+with a "fixes" tag for backports.
+
+Thanks,
+Ian
+
+> >     #5 0x55c306e40b1b in frame_callback util/unwind-libdw.c:259
+> >     #6 0x7f02758daae2 in dwfl_thread_getframes (/lib/x86_64-linux-gnu/l=
+ibdw.so.1+0x78ae2) (BuildId: bafe9cb5bbbe6cee778d0d137730ea5c223d553e)
+> >     #7 0x7f02758dae53 in dwfl_getthread_frames (/lib/x86_64-linux-gnu/l=
+ibdw.so.1+0x78e53) (BuildId: bafe9cb5bbbe6cee778d0d137730ea5c223d553e)
+> >     #8 0x55c306e414af in unwind__get_entries util/unwind-libdw.c:307
+> >     #9 0x55c3069b2398 in thread__resolve_callchain_unwind util/machine.=
+c:2976
+> >     #10 0x55c3069b24ec in __thread__resolve_callchain util/machine.c:30=
+03
+> >     #11 0x55c306987e78 in sample__for_each_callchain_node util/callchai=
+n.c:1808
+> >     #12 0x55c3067d4ece in build_id__mark_dso_hit util/build-id.c:77
+> >     #13 0x55c3062f7004 in process_sample_event /usr/src/perf_selftests-=
+x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/bui=
+ltin-record.c:1504
+> >     #14 0x55c3069dbec3 in evlist__deliver_sample util/session.c:1259
+> >     #15 0x55c3069dc425 in machines__deliver_event util/session.c:1299
+> >     #16 0x55c3069de009 in perf_session__deliver_event util/session.c:13=
+86
+> >     #17 0x55c3069cb296 in ordered_events__deliver_event util/session.c:=
+134
+> >     #18 0x55c306a06aac in do_flush util/ordered-events.c:245
+> >     #19 0x55c306a07951 in __ordered_events__flush util/ordered-events.c=
+:324
+> >     #20 0x55c306a07e62 in ordered_events__flush util/ordered-events.c:3=
+42
+> >     #21 0x55c3069d6863 in perf_event__process_finished_round util/sessi=
+on.c:786
+> >     #22 0x55c3069deb7e in perf_session__process_user_event util/session=
+.c:1446
+> >     #23 0x55c3069e190e in perf_session__process_event util/session.c:16=
+68
+> >     #24 0x55c3069e9198 in process_simple util/session.c:2259
+> >     #25 0x55c3069e8158 in reader__read_event util/session.c:2188
+> >     #26 0x55c3069e8afe in reader__process_events util/session.c:2237
+> >     #27 0x55c3069e9987 in __perf_session__process_events util/session.c=
+:2282
+> >
+> > previously allocated by thread T0 here:
+> >     #0 0x7f0275b3ec57 in malloc ../../../../src/libsanitizer/asan/asan_=
+malloc_linux.cpp:69
+> >     #1 0x55c3069bd747 in map__get util/map.h:188
+> >     #2 0x55c3069c72c4 in maps__find util/maps.c:1112
+> >     #3 0x55c30683b979 in thread__find_map util/event.c:687
+> >     #4 0x55c30683be37 in thread__find_symbol util/event.c:723
+> >     #5 0x55c306e3e7c3 in __report_module util/unwind-libdw.c:54
+> >     #6 0x55c306e3f428 in entry util/unwind-libdw.c:133
+> >     #7 0x55c306e40b1b in frame_callback util/unwind-libdw.c:259
+> >     #8 0x7f02758daae2 in dwfl_thread_getframes (/lib/x86_64-linux-gnu/l=
+ibdw.so.1+0x78ae2) (BuildId: bafe9cb5bbbe6cee778d0d137730ea5c223d553e)
+> >     #9 0x7f02758dae53 in dwfl_getthread_frames (/lib/x86_64-linux-gnu/l=
+ibdw.so.1+0x78e53) (BuildId: bafe9cb5bbbe6cee778d0d137730ea5c223d553e)
+> >     #10 0x55c306e414af in unwind__get_entries util/unwind-libdw.c:307
+> >     #11 0x55c3069b2398 in thread__resolve_callchain_unwind util/machine=
+.c:2976
+> >     #12 0x55c3069b24ec in __thread__resolve_callchain util/machine.c:30=
+03
+> >     #13 0x55c306987e78 in sample__for_each_callchain_node util/callchai=
+n.c:1808
+> >     #14 0x55c3067d4ece in build_id__mark_dso_hit util/build-id.c:77
+> >     #15 0x55c3062f7004 in process_sample_event /usr/src/perf_selftests-=
+x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/bui=
+ltin-record.c:1504
+> >     #16 0x55c3069dbec3 in evlist__deliver_sample util/session.c:1259
+> >     #17 0x55c3069dc425 in machines__deliver_event util/session.c:1299
+> >     #18 0x55c3069de009 in perf_session__deliver_event util/session.c:13=
+86
+> >     #19 0x55c3069cb296 in ordered_events__deliver_event util/session.c:=
+134
+> >     #20 0x55c306a06aac in do_flush util/ordered-events.c:245
+> >     #21 0x55c306a07951 in __ordered_events__flush util/ordered-events.c=
+:324
+> >     #22 0x55c306a07e62 in ordered_events__flush util/ordered-events.c:3=
+42
+> >     #23 0x55c3069d6863 in perf_event__process_finished_round util/sessi=
+on.c:786
+> >     #24 0x55c3069deb7e in perf_session__process_user_event util/session=
+.c:1446
+> >     #25 0x55c3069e190e in perf_session__process_event util/session.c:16=
+68
+> >     #26 0x55c3069e9198 in process_simple util/session.c:2259
+> >     #27 0x55c3069e8158 in reader__read_event util/session.c:2188
+> >
+> > SUMMARY: AddressSanitizer: heap-use-after-free util/map.h:54 in map__st=
+art
+> > Shadow bytes around the buggy address:
+> >   0x50200002b780: fa fa fd fa fa fa fd fd fa fa 00 06 fa fa 00 fa
+> >   0x50200002b800: fa fa 00 fa fa fa fd fa fa fa 00 fa fa fa 00 fa
+> >   0x50200002b880: fa fa 00 fa fa fa fd fa fa fa fd fa fa fa fd fa
+> >   0x50200002b900: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+> >   0x50200002b980: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+> > =3D>0x50200002ba00: fa fa fd fa fa fa[fd]fa fa fa fd fa fa fa fd fa
+> >   0x50200002ba80: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+> >   0x50200002bb00: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+> >   0x50200002bb80: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+> >   0x50200002bc00: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+> >   0x50200002bc80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+> > Shadow byte legend (one shadow byte represents 8 application bytes):
+> >   Addressable:           00
+> >   Partially addressable: 01 02 03 04 05 06 07
+> >   Heap left redzone:       fa
+> >   Freed heap region:       fd
+> >   Stack left redzone:      f1
+> >   Stack mid redzone:       f2
+> >   Stack right redzone:     f3
+> >   Stack after return:      f5
+> >   Stack use after scope:   f8
+> >   Global redzone:          f9
+> >   Global init order:       f6
+> >   Poisoned by user:        f7
+> >   Container overflow:      fc
+> >   Array cookie:            ac
+> >   Intra object redzone:    bb
+> >   ASan internal:           fe
+> >   Left alloca redzone:     ca
+> >   Right alloca redzone:    cb
+> > =3D=3D12400=3D=3DABORTING
+> > Error:
+> > failed to process sample
+> > Generate JIT-ed DSOs using perf inject
+> > WARNING: The /tmp/__perf_test.perf.data.W1jHYt file's data size field i=
+s 0 which is unexpected.
+> > Was the 'perf record' command properly terminated?
+> > Add JIT-ed DSOs to the build-ID cache
+> > Couldn't add /tmp/jitted--*.so: No such file or directory
+> > Check the symbol containing the function/module name
+> > zero-sized data (/tmp/__perf_test.perf.data.W1jHYt.jit), nothing to do!
+> > Found 0 matching lines
+> > Remove JIT-ed DSOs from the build-ID cache
+> > Cleaning up files...
+> > ---- end(-1) ----
+> >  84: python profiling with jitdump                                   : =
+FAILED!
+> >
+> >
+> >
+> > The kernel config and materials to reproduce are available at:
+> > https://download.01.org/0day-ci/archive/20260227/202602270932.50ed0a9f-=
+lkp@intel.com
+> >
+> >
+> >
+> > --
+> > 0-DAY CI Kernel Test Service
+> > https://github.com/intel/lkp-tests/wiki
+> >
