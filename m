@@ -1,433 +1,420 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA95311975
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Mar 2026 22:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E6B1A6801;
+	Mon,  2 Mar 2026 22:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.156.1
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772489305; cv=pass; b=KgZGk9ECtwG/0VigE5HsLd9kCRHGCRx8MSV74XPw3beq7ycW2Vp1HSZkY3R2zSRM4+xb/0Jh+BDwOuqfoYfFwq1H+qEJes29sJc3QA0ABql8q3zfJ8LsJvfUFhhv1hgn8YL+IeviMAQw95o9rV9vYrgMjqVRF7Q4DUerRW8tg38=
+	t=1772490333; cv=fail; b=pOuktsXFKFTYAe59BfYsizax1A2jYshtGeuQHur6CavVIpnDPiJ63U0BWp+mXQsJO+cR00uc8dCF+p/Spmms5UUzY772GCJa6ugJEzb/tzC6bjKNidH2szq2skWKVVNneQonJTkJMu7VsWNqw8FDQy0J6ujTrA2wsusQ5xRzlcQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772489305; c=relaxed/simple;
-	bh=r2O5jCx9eFUMIeIyiCPXu4OyaJgtFSzs3phokLGOyv4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Uz9BuDOMWYkjWMHr7HUbrA7gm1o+lFqVBwwbPHu/BjsLWIwsaCQ0Ff2LV5mKdYwr489AdlLK4sD7EDQyVrgbfsrK0Uw1U6TX385esC7KnjObDYmnN0mfHkVolnZe0llZPeXIf6tEv5AHMyjDudujN+F/rsw9Nf7AcrXxJebh5QU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LZ9qOwGz; arc=pass smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1772490333; c=relaxed/simple;
+	bh=l0dcDC+O7W0aDklkK2cKVSi+A0+5Z+JWwv4GBK6THQA=;
+	h=From:To:CC:Date:Message-ID:References:In-Reply-To:Content-Type:
+	 MIME-Version:Subject; b=Swmkius5GzwBtqZsatIRDaMpwDmM4GkjHaZI0ciCaFViOHxYJ1HGmipbL46VoLLsLI9Sp6axyFd1Zr9El8nCsdv8ul9m0X57aBQpi9tVJJCo7LPW9F1RgNA0GeXxYxTRLOHOuQbQO4dHqCeD2xYYHuuHKrAchWpayvkcRkKZjh0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com; spf=pass smtp.mailfrom=ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ewGud6kx; arc=fail smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LZ9qOwGz"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2ae4b40999bso3115ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Mar 2026 14:08:22 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772489302; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ZFQkwrY2yD/jkvDRrLBPFjNgjpH+7hex+8n6Jg2TFfJoLLBD99dX0vcS4Y0K3WtZt0
-         3waok3WZanZmZWowyGSj6BFrzpDV7yPnJUujfZziyoGGSJuoccjMZkQeNVChGcpB/KYU
-         PDhfC5abRnm4dpLY1LVM17uSrSJfwuDcfaXqF8B53ZcEhMmzGbDwZbpg9fIXXuQ7E0gF
-         f/DoDVoc269LUBkewNLEwOtT+al3dAWcwmcoMl/VSm4QKaL1YrilzWfyE8XgyD0R5Dvn
-         g5JlGe+G4fmOqYbRJcUxXBcP+44Eo8gmY/VAAvTvHkCTfGoUM8fvZLoWam6C9qd2ENKo
-         W++w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=tqnejW2JMKRaRHVT6dQuDV+K1VSCbcKRUv0hLv8LpqY=;
-        fh=2OI3lp/E9kzPGzO5LsV47Jd1AzfqIDLyrqEBzm6glZ0=;
-        b=YeLUR+ZJeV2EdRiIPu509tZsVU7nSllvSD4gf1DyMatzsidn7RftFh9RLvDX661WGj
-         kDiL3LNnyq5O6zB+K81FArcy7ecaxDkQmMSX6sElOFZ8Ejc93zVmba8xbirsVZpHHE+/
-         oiLyC6pHcT8w8mIWhwZSrnrJT8xVXZvf9M0vx5kSg5jj8iqXsyPRu9BW56V+9b4ymZ5/
-         QdHtvh5bSoejc1kqI36V69TeloOETCBWhRWdU0XcyKgClzqFOuk5NFTK24yglVRjW3NW
-         6YOoOxwaE3vYZolUPhMM/8v8g2v7sT4aGlwoo5BnrEQ77PqWQHRorhuX+TPHdbJpknng
-         0pSw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772489302; x=1773094102; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tqnejW2JMKRaRHVT6dQuDV+K1VSCbcKRUv0hLv8LpqY=;
-        b=LZ9qOwGztNXAdP1VHX9sNiBBkiW+t8K8+NfDgDWGlWKvRF/bM4b71n270v0fq6r/TO
-         /5WmTGScKea1zvx2L93CM1aGqLJ84yZX4nJ+1nVq1DROJmamR1NSLqwwMriqtO1aN39j
-         /UUgwgAdU5f5mW2+Ao6Ezj5CNKNBkzDjEJTKZbQEgS41gwgup5PRHAu9yh2vvIza01+q
-         6K1Q+fhh0mb3yClgm/bNagpodHDDhu616MecY5G0waDviIMzLQcLHAVp61uQI9tRMCgc
-         ZiICLHR9w2nhVEz08sVBweMFfL6pMuaBpcku9EHTTWf863FZ5EiofNnqbPW3AlzReEZ+
-         xuwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772489302; x=1773094102;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tqnejW2JMKRaRHVT6dQuDV+K1VSCbcKRUv0hLv8LpqY=;
-        b=tJpsLgC4mRfi8UkH4sM5fd86f/keIZ5fsIt32tT6/7yFjsFjwL/6BYmfy9yZtezxHO
-         Q6TFodDIJZ1ILY7dsRJ6DcSyvj2XuqoB/IERlLsIPvpTG14ocS72bzq9YtF1tfxTrYHu
-         5vO2SdQ/t+hoGxNRU2B095x9P0Q1A36WNstizVhGZPJpbvEpyBjtJkE2nV5I4lqqp9FP
-         agH6OCPmrRvyOD4l5qXApc+b0u32mZwzuXMrZ9v15WsPFQpLMWO3pOVhpb53dtI5I8Me
-         E95qh2MQQ7nHZmcsYd89g0Y7DDjb81BDte2DlfGgqnCPLOon9kHOPqbl+YjjnD70GTB8
-         VxcA==
-X-Forwarded-Encrypted: i=1; AJvYcCWoN5hYIVnI/bW3K0k9tXrzRovqH46h0vDRft2srSXkEtBY5OIBbctL9yxXl9WhwxRs0oJBZwsk/Vexd64XkBV1@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywa6z2mttq3CjJah02ZFAr9q3lIoYqcWAm8xvjYj5YgD3a7nfcp
-	XAiaIib28fq8/FXB3wyIcX0U3V+VQeFnx0nCbANN8CbaDoSY79BcKODSfEnUD58EwKf2DkUShIL
-	liedR7jzbopMKfvtS94tIbx6Jiw0ATOmeXEX4LqUeM4mx4Ss35TWzckhL1Zo=
-X-Gm-Gg: ATEYQzy4/EjrnlXF/72RKsbjYc5IkViasfRY/WPUSj2gr+WT00FRRbpKle2mNM6Tm8R
-	eHdwORswVBMVGRpPTH6fh3TmLAzbv2gY65QZjYtiBUIdD91DFLMkckDkrVcUaUUkX+K5L3QDACq
-	Oc8knCcPF4y7D4bDmQQpXTICJtM1xhkGIbHeE/kpMMXtuNQlxkIDY981Tw9/G8hLsXAEdbrTAyf
-	U8oKiESSVSVFmxWUES16GBbeYAAtjDphtdTJnnkFprELyjWA4pzySILIvRx6EFvJeAAwthCwzIp
-	gxpypPkoTNT148ItFVdl+5BTsS6HJXT52fI/
-X-Received: by 2002:a17:902:d50e:b0:2a7:640c:834b with SMTP id
- d9443c01a7336-2ae39492c95mr5939835ad.0.1772489301431; Mon, 02 Mar 2026
- 14:08:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ewGud6kx"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 622FP1gm2104794;
+	Mon, 2 Mar 2026 22:24:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-id:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	pp1; bh=l0dcDC+O7W0aDklkK2cKVSi+A0+5Z+JWwv4GBK6THQA=; b=ewGud6kx
+	0aArwU38lEu1ddfv0FNTb3PfvSNJVdNKkIp/x0uLTqQjJrHWSmUfw0hcl3baTqjp
+	AWAfXs+7iPA55faatm1OGR8RlPyrSRGprjmYu7NoqktBwMqVfARgM2v40Nj40gJ7
+	KSnx47ak7C0SccKgfjMGWuAar9TU4sjVpylE6bFtnHoTHqAGR4rcq2oajCCJBqQs
+	erF5BNeWjSjBceeLt9dys0wATXqs5Cu1ET2GgQfCG0OV1c2jCaIQUSlG9ZNCz14D
+	9+3eWDbPqSdbe+KVF24W00GUQ16MusdB6D/gzkpHZ5LIRKZe4q+HF6qca1XinkpE
+	HQCp40u9JQJ9wA==
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazon11011053.outbound.protection.outlook.com [52.101.52.53])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cksjd8prg-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 02 Mar 2026 22:24:48 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=T1CDRonlGTPJIPiIz3yA/iGJ0jITt7cOCIW4EgR3QhW7Yp7pNWpcWBRqJQMntR3ulxW7kGRxA7L9lqqQcmGhxdKvoaRk2eRUVVZRU6JYN8wJ/TlcFf/6/lOBMvZBg7cLpCgxufi1AKnQpbHnLoiY2gY/PwkuAn9LoCpp32Jo5ToD1MVYDN/ZPmanjGOIhXRkVz+lmKMsE7mI8lzKh5lFhPkRkdMKPFG02PmuezCRKmetBDEWP7D9Qf8sBa1GPbNX9VPN7Ggl3v4DQn7SmZfHYfMrJgYcrUYx3+5v7QxuOXuuueo6JAH+LRqqg4ajbU27pwRVFL/y79puheAfUXvcQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=l0dcDC+O7W0aDklkK2cKVSi+A0+5Z+JWwv4GBK6THQA=;
+ b=vZR88VwgS2HhAp2V8HTyweVQ039gzhWhv6iEoGH3rzY7Qkc1Eu3gV8TKJ+axUUzJL0XgaQ/xDFLfxgNb2VL9ciY5rQlaYIf1enJiICTnXwQR83ww8uXzGQ5fhVCDVQOzw5MglnFXZ70apG9UuT4vab2hMTKqeE1z4UpMpdbXn2euKmAdxvJ0jk37pdpdXqkUcdT2aRUWZ9I4u/wR1ulg59Y+Fxuc8FFVezlnFEfj+Ae76LuWKBwdJrmlkg03jK1/CkztGnzPABiPuRhDAkNAENwiLBPMfQrcf1NCUSXvT2iB/ul+MC8VZ90A0aInmLeCan7r+ST5bqlO74b776t1Pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ibm.com; dmarc=pass action=none header.from=ibm.com; dkim=pass
+ header.d=ibm.com; arc=none
+Received: from SA1PR15MB5819.namprd15.prod.outlook.com (2603:10b6:806:338::8)
+ by SJ0PR15MB4423.namprd15.prod.outlook.com (2603:10b6:a03:374::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.18; Mon, 2 Mar
+ 2026 22:24:36 +0000
+Received: from SA1PR15MB5819.namprd15.prod.outlook.com
+ ([fe80::920c:d2ba:5432:b539]) by SA1PR15MB5819.namprd15.prod.outlook.com
+ ([fe80::920c:d2ba:5432:b539%7]) with mapi id 15.20.9632.017; Mon, 2 Mar 2026
+ 22:24:36 +0000
+From: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
+To: "socketcan@hartkopp.net" <socketcan@hartkopp.net>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "jreuter@yaina.de" <jreuter@yaina.de>,
+        "Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>,
+        Ondrej Mosnacek
+	<omosnace@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "dlemoal@kernel.org" <dlemoal@kernel.org>,
+        "trondmy@kernel.org"
+	<trondmy@kernel.org>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "almaz.alexandrovich@paragon-software.com"
+	<almaz.alexandrovich@paragon-software.com>,
+        "miklos@szeredi.hu"
+	<miklos@szeredi.hu>,
+        "john.johansen@canonical.com"
+	<john.johansen@canonical.com>,
+        "stephen.smalley.work@gmail.com"
+	<stephen.smalley.work@gmail.com>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "maciej.fijalkowski@intel.com" <maciej.fijalkowski@intel.com>,
+        Olga
+ Kornievskaia <okorniev@redhat.com>,
+        "amir73il@gmail.com"
+	<amir73il@gmail.com>,
+        "tom@talpey.com" <tom@talpey.com>,
+        "joseph.qi@linux.alibaba.com" <joseph.qi@linux.alibaba.com>,
+        "paul@paul-moore.com" <paul@paul-moore.com>,
+        "asmadeus@codewreck.org"
+	<asmadeus@codewreck.org>,
+        "alexander.shishkin@linux.intel.com"
+	<alexander.shishkin@linux.intel.com>,
+        "mark@fasheh.com" <mark@fasheh.com>,
+        "linux_oss@crudebyte.com" <linux_oss@crudebyte.com>,
+        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "willy@infradead.org"
+	<willy@infradead.org>,
+        "ebiggers@kernel.org" <ebiggers@kernel.org>,
+        "lucien.xin@gmail.com" <lucien.xin@gmail.com>,
+        "bharathsm@microsoft.com"
+	<bharathsm@microsoft.com>,
+        "marcel@holtmann.org" <marcel@holtmann.org>,
+        "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+        Eric Paris
+	<eparis@redhat.com>,
+        "djwong@kernel.org" <djwong@kernel.org>,
+        "simona@ffwll.ch" <simona@ffwll.ch>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "james.clark@linaro.org"
+	<james.clark@linaro.org>,
+        "john.fastabend@gmail.com"
+	<john.fastabend@gmail.com>,
+        "dsterba@suse.com" <dsterba@suse.com>,
+        "kuniyu@google.com" <kuniyu@google.com>,
+        "hch@infradead.org"
+	<hch@infradead.org>,
+        "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "dwmw2@infradead.org"
+	<dwmw2@infradead.org>,
+        "ncardwell@google.com" <ncardwell@google.com>,
+        "sprasad@microsoft.com" <sprasad@microsoft.com>,
+        "marcelo.leitner@gmail.com"
+	<marcelo.leitner@gmail.com>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "jack@suse.com" <jack@suse.com>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "frank.li@vivo.com"
+	<frank.li@vivo.com>,
+        "alex.aring@gmail.com" <alex.aring@gmail.com>,
+        "luisbg@kernel.org" <luisbg@kernel.org>,
+        "ms@dev.tdt.de" <ms@dev.tdt.de>, "jth@kernel.org" <jth@kernel.org>,
+        "jlbec@evilplan.org" <jlbec@evilplan.org>,
+        "aivazian.tigran@gmail.com" <aivazian.tigran@gmail.com>,
+        "anna@kernel.org"
+	<anna@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "tytso@mit.edu" <tytso@mit.edu>,
+        "willemb@google.com" <willemb@google.com>,
+        "eric.snowberg@oracle.com" <eric.snowberg@oracle.com>,
+        "johan.hedberg@gmail.com" <johan.hedberg@gmail.com>,
+        "acme@kernel.org"
+	<acme@kernel.org>,
+        "ronniesahlberg@gmail.com" <ronniesahlberg@gmail.com>,
+        "jaharkes@cs.cmu.edu" <jaharkes@cs.cmu.edu>,
+        David Howells
+	<dhowells@redhat.com>,
+        "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
+        "courmisch@gmail.com" <courmisch@gmail.com>,
+        "martin@omnibond.com"
+	<martin@omnibond.com>,
+        "christian.koenig@amd.com" <christian.koenig@amd.com>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "adilger.kernel@dilger.ca"
+	<adilger.kernel@dilger.ca>,
+        "idryomov@gmail.com" <idryomov@gmail.com>,
+        "brauner@kernel.org" <brauner@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "glaubitz@physik.fu-berlin.de" <glaubitz@physik.fu-berlin.de>,
+        "magnus.karlsson@intel.com" <magnus.karlsson@intel.com>,
+        "airlied@gmail.com"
+	<airlied@gmail.com>,
+        "coda@cs.cmu.edu" <coda@cs.cmu.edu>,
+        "casey@schaufler-ca.com" <casey@schaufler-ca.com>,
+        "raven@themaw.net"
+	<raven@themaw.net>,
+        "horms@kernel.org" <horms@kernel.org>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "kuba@kernel.org"
+	<kuba@kernel.org>,
+        "muchun.song@linux.dev" <muchun.song@linux.dev>,
+        "chao@kernel.org" <chao@kernel.org>,
+        "mathieu.desnoyers@efficios.com"
+	<mathieu.desnoyers@efficios.com>,
+        "hubcap@omnibond.com"
+	<hubcap@omnibond.com>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "sdf@fomichev.me" <sdf@fomichev.me>,
+        "roberto.sassu@huawei.com"
+	<roberto.sassu@huawei.com>,
+        Alex Markuze <amarkuze@redhat.com>,
+        "chengzhihao1@huawei.com" <chengzhihao1@huawei.com>,
+        "mikulas@artax.karlin.mff.cuni.cz" <mikulas@artax.karlin.mff.cuni.cz>,
+        "ericvh@kernel.org" <ericvh@kernel.org>,
+        "salah.triki@gmail.com"
+	<salah.triki@gmail.com>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        "dmitry.kasatkin@gmail.com" <dmitry.kasatkin@gmail.com>,
+        "sfrench@samba.org"
+	<sfrench@samba.org>,
+        "serge@hallyn.com" <serge@hallyn.com>,
+        "wufan@kernel.org" <wufan@kernel.org>,
+        "al@alarsen.net" <al@alarsen.net>,
+        "pc@manguebit.org" <pc@manguebit.org>,
+        "ast@kernel.org" <ast@kernel.org>, "oleg@redhat.com" <oleg@redhat.com>,
+        "slava@dubeyko.com" <slava@dubeyko.com>,
+        "konishi.ryusuke@gmail.com" <konishi.ryusuke@gmail.com>,
+        "lucho@ionkov.net"
+	<lucho@ionkov.net>,
+        "dsahern@kernel.org" <dsahern@kernel.org>,
+        "shaggy@kernel.org" <shaggy@kernel.org>,
+        "richard@nod.at" <richard@nod.at>,
+        "marc.dionne@auristor.com" <marc.dionne@auristor.com>,
+        "neil@brown.name"
+	<neil@brown.name>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mkl@pengutronix.de" <mkl@pengutronix.de>,
+        "david@kernel.org"
+	<david@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        "jack@suse.cz"
+	<jack@suse.cz>, "code@tyhicks.com" <code@tyhicks.com>,
+        "steffen.klassert@secunet.com" <steffen.klassert@secunet.com>,
+        "naohiro.aota@wdc.com" <naohiro.aota@wdc.com>,
+        "zohar@linux.ibm.com"
+	<zohar@linux.ibm.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "irogers@google.com" <irogers@google.com>
+CC: "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "ecryptfs@vger.kernel.org" <ecryptfs@vger.kernel.org>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        "apparmor@lists.ubuntu.com" <apparmor@lists.ubuntu.com>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "autofs@vger.kernel.org" <autofs@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "fsverity@lists.linux.dev" <fsverity@lists.linux.dev>,
+        "ntfs3@lists.linux.dev" <ntfs3@lists.linux.dev>,
+        "ocfs2-devel@lists.linux.dev" <ocfs2-devel@lists.linux.dev>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
+        "linux-nilfs@vger.kernel.org" <linux-nilfs@vger.kernel.org>,
+        "audit@vger.kernel.org" <audit@vger.kernel.org>,
+        "selinux@vger.kernel.org"
+	<selinux@vger.kernel.org>,
+        "linaro-mm-sig@lists.linaro.org"
+	<linaro-mm-sig@lists.linaro.org>,
+        "linux-trace-kernel@vger.kernel.org"
+	<linux-trace-kernel@vger.kernel.org>,
+        "v9fs@lists.linux.dev"
+	<v9fs@lists.linux.dev>,
+        "linux-xfs@vger.kernel.org"
+	<linux-xfs@vger.kernel.org>,
+        "linux-x25@vger.kernel.org"
+	<linux-x25@vger.kernel.org>,
+        "linux-f2fs-devel@lists.sourceforge.net"
+	<linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-bluetooth@vger.kernel.org"
+	<linux-bluetooth@vger.kernel.org>,
+        "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>,
+        "ceph-devel@vger.kernel.org"
+	<ceph-devel@vger.kernel.org>,
+        "jfs-discussion@lists.sourceforge.net"
+	<jfs-discussion@lists.sourceforge.net>,
+        "linux-mtd@lists.infradead.org"
+	<linux-mtd@lists.infradead.org>,
+        "devel@lists.orangefs.org"
+	<devel@lists.orangefs.org>,
+        "linux-afs@lists.infradead.org"
+	<linux-afs@lists.infradead.org>,
+        "linux-fscrypt@vger.kernel.org"
+	<linux-fscrypt@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org"
+	<linux-security-module@vger.kernel.org>,
+        "linux-cifs@vger.kernel.org"
+	<linux-cifs@vger.kernel.org>,
+        "linux-hams@vger.kernel.org"
+	<linux-hams@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "codalist@coda.cs.cmu.edu" <codalist@coda.cs.cmu.edu>,
+        "linux-mm@kvack.org"
+	<linux-mm@kvack.org>,
+        "netfs@lists.linux.dev" <netfs@lists.linux.dev>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Thread-Topic: [EXTERNAL] [PATCH v2 023/110] ceph: use PRIino format for i_ino
+Thread-Index: AQHcqoXKM4Zi3kyuqUK+uAhoRZrmrLWb0aUA
+Date: Mon, 2 Mar 2026 22:24:35 +0000
+Message-ID: <da18663467d93a61e99cd4dfeadca88d25df739b.camel@ibm.com>
+References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
+	 <20260302-iino-u64-v2-23-e5388800dae0@kernel.org>
+In-Reply-To: <20260302-iino-u64-v2-23-e5388800dae0@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR15MB5819:EE_|SJ0PR15MB4423:EE_
+x-ms-office365-filtering-correlation-id: 28eda2af-4d03-402d-f7e4-08de78aa7c59
+x-ld-processed: fcf67057-50c9-4ad4-98f3-ffca64add9e9,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|10070799003|376014|7416014|38070700021|921020;
+x-microsoft-antispam-message-info:
+ MKmYxQnBkoDWsH9ac9qJ4KWzrYFzARTQvLQUqhVW/TOnH1N2seZ2NCni3Kp9pJvkfcU9YagaiYK850PBRrArS1QpF0Gadeo/DxEq0J3Mufs5cFBOzKQ2qboBImlYOVWvJCSm1CbLs0TEQxpijVRaIhPPD3FxDBbJFMLCFA8+saVLMKzDjQkbSNoBvH1xd7Ne8XOY7xOVxiTHBWUVUcwpgDn0TUaZa89W2HTZGMcfNd0lRp6m5Wn9g4aNVjmEPYoMmwTfAJM/aUfuWtvLKVLAuwbSY3E3XUb0LEKOFGxxAJI2t6H/5sm3G4CeRoBfxdl2RmW4Db634dgROLQz5UpCfIDF5muEv25+h1QzwhuTj+y1H4U5KVFjBPHz3G1Bqf0uBa6HOXkX3RBFf7ox9tToScqgWnHMhWX9EY1Tkn912mrc1ytmWq6x5H7shbUUW+xqUM3eB7/iTwI/DmQv3x+ssweEIZr3Orhrdld0oPb+0uMaCjvvlTYMwFewYxnDklOAy1A1vBH0iqnb4DkRehNEMmkZST5bMdrDNW/YgYdXp9n9FTDlKbDSXNBLdnRI19czAkkMDotJIarOecYAYxDKxWFFDG8X6gONvpe3ZEMMWD7rA0DRMhbFihviIRdaCkL9s/T2rIgYdc6oUTSCTK1JTTgKWZbcivSVyIaHVpu2LP+4Q/uoWlbV8Lkotlq5i33XmSA7M5d6Z1W0AKwz42uK42yPEmBDat4CB8K5BoAEwg+7JeWKAE6WadpaTnX/ntxVAg+kWbdVLQK6nCR9H43Q7AOqKZRYlpHRewyS51HhbuiET499oQ/eL/NowB/e0iD2
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR15MB5819.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(376014)(7416014)(38070700021)(921020);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Zm1CT25ySGt5YWxyekNRVCt5R0txQXpzUmpiZS9ITkYrN1RSOEk5VUhncUhN?=
+ =?utf-8?B?YTRJUWlsZmt4RTBMR0N5TzQvaTZNazVMUDNPY3JXL0RiWS9Bb2dNbGlFcC9B?=
+ =?utf-8?B?cC96OUQrTUFjOWhmR0hObFNxUGdBTnZwbzVYRkdJZWNoaG9iNnFGNkRYdmh5?=
+ =?utf-8?B?NFF2dUxyYjNZVXVpZjJTTjVrL0N1MmpZN2FZTk4zcnAzUzhQUlk5ZExYK1do?=
+ =?utf-8?B?WXp5R3R5Q3RSWFNQWVBpcUNEK01rZWppWVJRTXVuVGF5VzdXclhtK2tKU2JQ?=
+ =?utf-8?B?bUZnMGkycUE5cjloOUhpdTAvWjh4bVJFdnFsSlhLQ2Q1c0VkOW16SjhycnpD?=
+ =?utf-8?B?RWZzQ1ltYWhTUk9YY2tzemh4U0w5YkxZZUtNNk82em9MWEp6MVpRMy8xK05t?=
+ =?utf-8?B?YlFrbUppbUd5YlhsK0VUV29hMVJQRkdNbkY0OC9ydWo2aEtkY2paY3dFNzda?=
+ =?utf-8?B?a3BMaTU1VmNxK1lJVFJ4SDV6eW5rZDVJU1QwRzB6dHQzSkFqbkF0cEROZFFo?=
+ =?utf-8?B?YlI3QXdVMXc1Z1ZFUmNkT0pmaHF3Yk5rTHoxb1o4Sm8rMEl4UFpCMVorbU84?=
+ =?utf-8?B?NkFJYk5GYlV4bzNmZEhsZE53OTJkMWYrNnhLbGFDYTNZS2V3OEZUbWlwU0FY?=
+ =?utf-8?B?bitlZ1dYaE1kV21DWVdrRkJNUVFIZmtQcXJFcjIrSDRaSXcwZXczbVE3a1hJ?=
+ =?utf-8?B?OU9Lb0hqc2FacWFvUzRGRjk5ODJtOFZKWGtETGRma2NNQ2QvVnVLL0svbit5?=
+ =?utf-8?B?SW04QzRvVWFFaURybDlDVWwzSlBsZSs3Y3BIbmE3WjFUc1ZwMlVRdm5SODRY?=
+ =?utf-8?B?b21ERTVzM1lyVEZzQW9RSStyNjllR0VBZS9jemNqRk1VOExvVlFmQktMLzA1?=
+ =?utf-8?B?VU9YUGN5R1lvR0VNL1VxWlZLM3grcVhXWHRsNUVnblB6VWZpNjFrWmpaaVRi?=
+ =?utf-8?B?MlN4K0FqZW9rNlM2bW16TkVVdDZKNHA4ZkNyQUZVZUpNc3c5T0dXaTdKZWZ4?=
+ =?utf-8?B?MWEvL2Q5cEZhMW9FYUlPaWVzMmlEckRScnlId3Zocm5qMXY1bXpBeHVESGR4?=
+ =?utf-8?B?N21tTXp2bEJwWEkwdFVLRUhEekdrOXR5T3gyZGRkQWNGaU1kTmluN05iaG5p?=
+ =?utf-8?B?MkRCK2tDT1JYeDNqaFhOckd5elV6TnZCd0h2QVNUaVg5SENIcVI2dzMvaWdq?=
+ =?utf-8?B?Q0VMbkRaUWJUTWhxNzYyMmkwZmlYLzZiUFdMdCtjT2V4RktNdDg2ZktscTY2?=
+ =?utf-8?B?OUxWNnlRclFoaWpLb0N5S2RrNG1WR2M3WlIzRHpiMlN4SStMa3dTVDY1TWxT?=
+ =?utf-8?B?K3FQUnQyVEJyWTY3cys4aHNIZFdmYlJqRWViSTBWektnZGN5aE1oN2dMVlN0?=
+ =?utf-8?B?d3BRaHhqYnMvRVJBWU83cEFuenRCWjhzZDlDbWZ6ajZhbmUvVjBmUWtJWDJ2?=
+ =?utf-8?B?THBvdERYbUxVTVMwbVR0VHR3SkowZ29Ia0xOdHRxTzRsTm90eWM3M2NRa24y?=
+ =?utf-8?B?MHlEcUxDTDFnL1RUclVMR0FQN1pmMTNjczUvYldyREV0UWlvL0FiVUhqdFFl?=
+ =?utf-8?B?ay8vd09LNFl4VGd6TVdHUXN3dldZSFNNc1NYNk0xOEx0ZVRES1FPUTlFZGwy?=
+ =?utf-8?B?bnhETkNFUFplL1VHWDdWT1dPU1pYZEpQZ2NiZGt2WDN5L1VHT2lFZkNDc1My?=
+ =?utf-8?B?NUtoWmNXWEpLeU84VkdkVVJIMXE1UkwxT0g3SkpXdG9wK3VweFhZQ05yRTdI?=
+ =?utf-8?B?ZnRVK01JakhrT0tHZEg0d2hIS2lWbG82azhPNUJ0K1VHaG9pKzF1cmdsMXJM?=
+ =?utf-8?B?T2RMcXRqVzJPRnhUbUJDUHA4UjRRQTJnWk9ud0dFcXRFdUQydis2d0hxdWNZ?=
+ =?utf-8?B?UGIzSjI3ZDI5angvMmdhK3Y5ZG0xUENYbm9BQlF0RHlmcXBpTUJXNHdwN2Zv?=
+ =?utf-8?B?VHExZDZDSld3eGZDTHVBWW9UTlErMGgwZWNSQXJONE9iTDZSa2F0bHFMU2ls?=
+ =?utf-8?B?TmlJeE5kK3lqYkdTWC9TREc0dTFXaDJ3ejZCVlpmdGQwS3kvbDl3Q2dPQUV6?=
+ =?utf-8?B?Tkd1RWgyU1Y2ZTJqcEd1UWtDZjV6ODRTMzY5SDhiVXpGMzlDdGtWTGlKNTJT?=
+ =?utf-8?B?OG52aDFkTUVkS0pHa01ZUXpQNjYyNFlId2RybXp4UVJRaW0zSkFjRytJd3hl?=
+ =?utf-8?B?OFFodFNBMlIzdWxYajZ1V0V2Z2haTUxBemJLWVlqQnlDUytpcWZtRDlmdHBD?=
+ =?utf-8?B?ZjhySXNKVVVvWHlmaFRIRUptTHQ4THpQSjkwNXFQUGx0RmVUNkk2bkN2V2kv?=
+ =?utf-8?B?QkxhQy9ZcGtjeHBoWWVoUWhaVVl5bjJWYnJ5eXpLOWlGTkFRV25ycFNWY3Fk?=
+ =?utf-8?Q?/vRuxHvx6GTIaaSFBVZKVJygB7ZnW2+3AqFFm?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <11372946878A2A48B4EADE11ED050B63@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202602270932.50ed0a9f-lkp@intel.com> <aaIPHGMxrxkYsD0b@google.com>
-In-Reply-To: <aaIPHGMxrxkYsD0b@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 2 Mar 2026 14:08:09 -0800
-X-Gm-Features: AaiRm51x1Z09AdwKLz2yin7Q-sMW37OJ_vW2Yapp7tnWhkvDXpph6IHrTV37vDo
-Message-ID: <CAP-5=fXpFrNOBR7XmVcD0fdZ20sDMmczCvpo=St0eaPBtwdk_g@mail.gmail.com>
-Subject: Re: [linus:master] [perf test] c9cd0c7e52: perf-sanity-tests.python_profiling_with_jitdump.fail
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
-	linux-kernel@vger.kernel.org, Pablo Galindo <pablogsal@gmail.com>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: ibm.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR15MB5819.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28eda2af-4d03-402d-f7e4-08de78aa7c59
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2026 22:24:35.8976
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: fcf67057-50c9-4ad4-98f3-ffca64add9e9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qtcwvbh0BCd4YX5vIFR6um9LwUmyDlAt3ml/bIW1nWwu6/FHq7rKz5lBez9AnjDWaRGeT+bn4krqG3w/KfIuSg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR15MB4423
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=M9BA6iws c=1 sm=1 tr=0 ts=69a60e31 cx=c_pps
+ a=H9d2Io+6O/etw3jU54J+0Q==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=zr94bLkQGwJZMLBWZqwA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: PFWSAsnw0brlXo9EnpYfqsEcTE9Rpahr
+X-Proofpoint-GUID: BiQSWPEWufxgDqkR8Ie9RStlAR2IAwUE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzAyMDE2NCBTYWx0ZWRfXzeNSYIxFouRI
+ iCJZJ6d4LU7s6ixWPqhKMK3FLnjZcXXOYlZb9NpKKjEWeFQ61W1q1h6OUh622kFoEeo/6ReJh+i
+ r6TabuSA4sMPRoYDA+Sydf/Jzc7aiQ3ei23ohABu8228FtN3VtMynWB++gCOyUVF03KEG6EKwNY
+ oI0jrGLmvwWW9YoZU189ievBzOo9TqcXX8a1xTV66mh4F5mOaJabejZ+HYzG6+gcm2R8HPx4Akl
+ /BA+d4guT4ulkae58tCq3fHXF3M6D9SrIbhR+DGqS+79Yjw6wLezIxoO51p53rTkNlirJ5bjH6y
+ bqqQDEQrm31YkOZkj4RF0Cs3GTMuZvZ0a13PkVMKtcsi4OuxUmQXSwA8igMAqpzgcU8MQyYEzul
+ JaX9pqGwaSNDXOHEvfHmtichL6KmKfLRJRVL6Om81laCf91R+dwsFVjCBy9KnLLikHDnBkyzJ80
+ sO3V7fMzLSzNsnOlEpQ==
+Subject: Re:  [PATCH v2 023/110] ceph: use PRIino format for i_ino
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-02_05,2026-03-02_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 priorityscore=1501 spamscore=0 adultscore=0 malwarescore=0
+ bulkscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603020164
 
-On Fri, Feb 27, 2026 at 1:39=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Fri, Feb 27, 2026 at 04:42:59PM +0800, kernel test robot wrote:
-> >
-> >
-> > Hello,
-> >
-> >
-> > we failed to run this new added test. not sure if we miss any dependenc=
-ies?
-> >
-> >
-> > below is full report FYI.
-> >
-> >
-> > kernel test robot noticed "perf-sanity-tests.python_profiling_with_jitd=
-ump.fail" on:
-> >
-> > commit: c9cd0c7e529e80e9be79867d2ebb874f67dbc35e ("perf test: Add pytho=
-n JIT dump test")
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> >
-> > in testcase: perf-sanity-tests
-> > version:
-> > with following parameters:
-> >
-> >       perf_compiler: clang
-> >       group: group-02
-> >
-> >
-> > config: x86_64-rhel-9.4-bpf
-> > compiler: gcc-14
-> > test machine: 16 threads Intel(R) Core(TM) i7-13620H (Raptor Lake) with=
- 32G memory
-> >
-> > (please refer to attached dmesg/kmsg for entire log/backtrace)
-> >
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
-rsion of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <oliver.sang@intel.com>
-> > | Closes: https://lore.kernel.org/oe-lkp/202602270932.50ed0a9f-lkp@inte=
-l.com
->
-> Looks like a reference leak to map during libdw unwinding.
->
-> Ian, can you please take a look?
->
-> Thanks,
-> Namhyung
->
-> >
-> >
-> > 2026-01-26 15:25:04 sudo ASAN_OPTIONS=3Dfast_unwind_on_malloc=3D0 /usr/=
-src/linux-perf-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e=
-/tools/perf/perf test 84 -v
-> >  84: python profiling with jitdump                                   : =
-Running (1 active)
-> > --- start ---
-> > test child forked, pid 12390
-> > Run python with -Xperf_jit
-> > [ perf record: Woken up 5 times to write data ]
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > =3D=3D12400=3D=3DERROR: AddressSanitizer: heap-use-after-free on addres=
-s 0x50200002ba30 at pc 0x55c306993987 bp 0x7ffd98998720 sp 0x7ffd98998718
-> > READ of size 8 at 0x50200002ba30 thread T0
-> >     #0 0x55c306993986 in map__start util/map.h:54
-> >     #1 0x55c306993cd0 in map__dso_map_ip util/map.h:110
-> >     #2 0x55c3069b1ecb in unwind_entry util/machine.c:2950
-> >     #3 0x55c306e4197b in unwind__get_entries util/unwind-libdw.c:321
-> >     #4 0x55c3069b2398 in thread__resolve_callchain_unwind util/machine.=
-c:2976
-> >     #5 0x55c3069b24ec in __thread__resolve_callchain util/machine.c:300=
-3
-> >     #6 0x55c306987e78 in sample__for_each_callchain_node util/callchain=
-.c:1808
-> >     #7 0x55c3067d4ece in build_id__mark_dso_hit util/build-id.c:77
-> >     #8 0x55c3062f7004 in process_sample_event /usr/src/perf_selftests-x=
-86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/buil=
-tin-record.c:1504
-> >     #9 0x55c3069dbec3 in evlist__deliver_sample util/session.c:1259
-> >     #10 0x55c3069dc425 in machines__deliver_event util/session.c:1299
-> >     #11 0x55c3069de009 in perf_session__deliver_event util/session.c:13=
-86
-> >     #12 0x55c3069cb296 in ordered_events__deliver_event util/session.c:=
-134
-> >     #13 0x55c306a06aac in do_flush util/ordered-events.c:245
-> >     #14 0x55c306a07951 in __ordered_events__flush util/ordered-events.c=
-:324
-> >     #15 0x55c306a07e62 in ordered_events__flush util/ordered-events.c:3=
-42
-> >     #16 0x55c3069d6863 in perf_event__process_finished_round util/sessi=
-on.c:786
-> >     #17 0x55c3069deb7e in perf_session__process_user_event util/session=
-.c:1446
-> >     #18 0x55c3069e190e in perf_session__process_event util/session.c:16=
-68
-> >     #19 0x55c3069e9198 in process_simple util/session.c:2259
-> >     #20 0x55c3069e8158 in reader__read_event util/session.c:2188
-> >     #21 0x55c3069e8afe in reader__process_events util/session.c:2237
-> >     #22 0x55c3069e9987 in __perf_session__process_events util/session.c=
-:2282
-> >     #23 0x55c3069eca43 in perf_session__process_events util/session.c:2=
-446
-> >     #24 0x55c3062f7328 in process_buildids /usr/src/perf_selftests-x86_=
-64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin=
--record.c:1534
-> >     #25 0x55c3062fbdf0 in record__finish_output /usr/src/perf_selftests=
--x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/bu=
-iltin-record.c:1858
-> >     #26 0x55c306309ebf in __cmd_record /usr/src/perf_selftests-x86_64-r=
-hel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin-rec=
-ord.c:2930
-> >     #27 0x55c306317a8f in cmd_record /usr/src/perf_selftests-x86_64-rhe=
-l-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/builtin-recor=
-d.c:4417
-> >     #28 0x55c30652bf7b in run_builtin /usr/src/perf_selftests-x86_64-rh=
-el-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf.c:349
-> >     #29 0x55c30652c86c in handle_internal_command /usr/src/perf_selftes=
-ts-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/=
-perf.c:401
-> >     #30 0x55c30652cdc2 in run_argv /usr/src/perf_selftests-x86_64-rhel-=
-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf.c:445
-> >     #31 0x55c30652d569 in main /usr/src/perf_selftests-x86_64-rhel-9.4-=
-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf.c:553
-> >     #32 0x7f026b873ca7  (/lib/x86_64-linux-gnu/libc.so.6+0x29ca7) (Buil=
-dId: def5460e3cee00bfee25b429c97bcc4853e5b3a8)
-> >     #33 0x7f026b873d64 in __libc_start_main (/lib/x86_64-linux-gnu/libc=
-.so.6+0x29d64) (BuildId: def5460e3cee00bfee25b429c97bcc4853e5b3a8)
-> >     #34 0x55c306293210 in _start (/usr/src/perf_selftests-x86_64-rhel-9=
-.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/perf+0x1023210) =
-(BuildId: 47c1eede4a6cf8e0c379d2104e8b035638daa1b4)
-> >
-> > 0x50200002ba30 is located 0 bytes inside of 8-byte region [0x50200002ba=
-30,0x50200002ba38)
-> > freed by thread T0 here:
-> >     #0 0x7f0275b3d8f8 in free ../../../../src/libsanitizer/asan/asan_ma=
-lloc_linux.cpp:52
-> >     #1 0x55c3069ba258 in map__put util/map.c:312
-> >     #2 0x55c30679b7f8 in __map__zput util/map.h:198
-> >     #3 0x55c30679c0df in addr_location__exit util/addr_location.c:31
-> >     #4 0x55c306e3f7fe in entry util/unwind-libdw.c:147
-
-This free is happening here (note I've set the commit to be that in
-the report here):
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/unwind-libdw.c?h=3Dperf-tools-next&id=3Dc9cd0c7e529e=
-80e9be79867d2ebb874f67dbc35e#n147
-```
-static int entry(u64 ip, struct unwind_info *ui)
-{
-struct unwind_entry *e =3D &ui->entries[ui->idx++];
-struct addr_location al;
-
-addr_location__init(&al);
-if (__report_module(&al, ip, ui)) {
-addr_location__exit(&al);
-return -1;
-}
-
-e->ip   =3D ip;
-e->ms.maps =3D al.maps;
-e->ms.map =3D al.map;
-e->ms.sym =3D al.sym;
-
-pr_debug("unwind: %s:ip =3D 0x%" PRIx64 " (0x%" PRIx64 ")\n",
-al.sym ? al.sym->name : "''",
-ip,
-al.map ? map__map_ip(al.map, ip) : (u64) 0);
-addr_location__exit(&al);  // <-- free happens here
-return 0;
-}
-```
-
-This was fixed by the first of my unwind-libdw changes:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/commit/tools/perf/util/unwind-libdw.c?h=3Dperf-tools-next&id=3Df815fc0c66=
-e777c727689666cfb46b8d461c2f99
-
-That is the new test exposed a latent bug, which we've already fixed,
-with a "fixes" tag for backports.
-
-Thanks,
-Ian
-
-> >     #5 0x55c306e40b1b in frame_callback util/unwind-libdw.c:259
-> >     #6 0x7f02758daae2 in dwfl_thread_getframes (/lib/x86_64-linux-gnu/l=
-ibdw.so.1+0x78ae2) (BuildId: bafe9cb5bbbe6cee778d0d137730ea5c223d553e)
-> >     #7 0x7f02758dae53 in dwfl_getthread_frames (/lib/x86_64-linux-gnu/l=
-ibdw.so.1+0x78e53) (BuildId: bafe9cb5bbbe6cee778d0d137730ea5c223d553e)
-> >     #8 0x55c306e414af in unwind__get_entries util/unwind-libdw.c:307
-> >     #9 0x55c3069b2398 in thread__resolve_callchain_unwind util/machine.=
-c:2976
-> >     #10 0x55c3069b24ec in __thread__resolve_callchain util/machine.c:30=
-03
-> >     #11 0x55c306987e78 in sample__for_each_callchain_node util/callchai=
-n.c:1808
-> >     #12 0x55c3067d4ece in build_id__mark_dso_hit util/build-id.c:77
-> >     #13 0x55c3062f7004 in process_sample_event /usr/src/perf_selftests-=
-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/bui=
-ltin-record.c:1504
-> >     #14 0x55c3069dbec3 in evlist__deliver_sample util/session.c:1259
-> >     #15 0x55c3069dc425 in machines__deliver_event util/session.c:1299
-> >     #16 0x55c3069de009 in perf_session__deliver_event util/session.c:13=
-86
-> >     #17 0x55c3069cb296 in ordered_events__deliver_event util/session.c:=
-134
-> >     #18 0x55c306a06aac in do_flush util/ordered-events.c:245
-> >     #19 0x55c306a07951 in __ordered_events__flush util/ordered-events.c=
-:324
-> >     #20 0x55c306a07e62 in ordered_events__flush util/ordered-events.c:3=
-42
-> >     #21 0x55c3069d6863 in perf_event__process_finished_round util/sessi=
-on.c:786
-> >     #22 0x55c3069deb7e in perf_session__process_user_event util/session=
-.c:1446
-> >     #23 0x55c3069e190e in perf_session__process_event util/session.c:16=
-68
-> >     #24 0x55c3069e9198 in process_simple util/session.c:2259
-> >     #25 0x55c3069e8158 in reader__read_event util/session.c:2188
-> >     #26 0x55c3069e8afe in reader__process_events util/session.c:2237
-> >     #27 0x55c3069e9987 in __perf_session__process_events util/session.c=
-:2282
-> >
-> > previously allocated by thread T0 here:
-> >     #0 0x7f0275b3ec57 in malloc ../../../../src/libsanitizer/asan/asan_=
-malloc_linux.cpp:69
-> >     #1 0x55c3069bd747 in map__get util/map.h:188
-> >     #2 0x55c3069c72c4 in maps__find util/maps.c:1112
-> >     #3 0x55c30683b979 in thread__find_map util/event.c:687
-> >     #4 0x55c30683be37 in thread__find_symbol util/event.c:723
-> >     #5 0x55c306e3e7c3 in __report_module util/unwind-libdw.c:54
-> >     #6 0x55c306e3f428 in entry util/unwind-libdw.c:133
-> >     #7 0x55c306e40b1b in frame_callback util/unwind-libdw.c:259
-> >     #8 0x7f02758daae2 in dwfl_thread_getframes (/lib/x86_64-linux-gnu/l=
-ibdw.so.1+0x78ae2) (BuildId: bafe9cb5bbbe6cee778d0d137730ea5c223d553e)
-> >     #9 0x7f02758dae53 in dwfl_getthread_frames (/lib/x86_64-linux-gnu/l=
-ibdw.so.1+0x78e53) (BuildId: bafe9cb5bbbe6cee778d0d137730ea5c223d553e)
-> >     #10 0x55c306e414af in unwind__get_entries util/unwind-libdw.c:307
-> >     #11 0x55c3069b2398 in thread__resolve_callchain_unwind util/machine=
-.c:2976
-> >     #12 0x55c3069b24ec in __thread__resolve_callchain util/machine.c:30=
-03
-> >     #13 0x55c306987e78 in sample__for_each_callchain_node util/callchai=
-n.c:1808
-> >     #14 0x55c3067d4ece in build_id__mark_dso_hit util/build-id.c:77
-> >     #15 0x55c3062f7004 in process_sample_event /usr/src/perf_selftests-=
-x86_64-rhel-9.4-bpf-c9cd0c7e529e80e9be79867d2ebb874f67dbc35e/tools/perf/bui=
-ltin-record.c:1504
-> >     #16 0x55c3069dbec3 in evlist__deliver_sample util/session.c:1259
-> >     #17 0x55c3069dc425 in machines__deliver_event util/session.c:1299
-> >     #18 0x55c3069de009 in perf_session__deliver_event util/session.c:13=
-86
-> >     #19 0x55c3069cb296 in ordered_events__deliver_event util/session.c:=
-134
-> >     #20 0x55c306a06aac in do_flush util/ordered-events.c:245
-> >     #21 0x55c306a07951 in __ordered_events__flush util/ordered-events.c=
-:324
-> >     #22 0x55c306a07e62 in ordered_events__flush util/ordered-events.c:3=
-42
-> >     #23 0x55c3069d6863 in perf_event__process_finished_round util/sessi=
-on.c:786
-> >     #24 0x55c3069deb7e in perf_session__process_user_event util/session=
-.c:1446
-> >     #25 0x55c3069e190e in perf_session__process_event util/session.c:16=
-68
-> >     #26 0x55c3069e9198 in process_simple util/session.c:2259
-> >     #27 0x55c3069e8158 in reader__read_event util/session.c:2188
-> >
-> > SUMMARY: AddressSanitizer: heap-use-after-free util/map.h:54 in map__st=
-art
-> > Shadow bytes around the buggy address:
-> >   0x50200002b780: fa fa fd fa fa fa fd fd fa fa 00 06 fa fa 00 fa
-> >   0x50200002b800: fa fa 00 fa fa fa fd fa fa fa 00 fa fa fa 00 fa
-> >   0x50200002b880: fa fa 00 fa fa fa fd fa fa fa fd fa fa fa fd fa
-> >   0x50200002b900: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
-> >   0x50200002b980: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
-> > =3D>0x50200002ba00: fa fa fd fa fa fa[fd]fa fa fa fd fa fa fa fd fa
-> >   0x50200002ba80: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
-> >   0x50200002bb00: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
-> >   0x50200002bb80: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
-> >   0x50200002bc00: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
-> >   0x50200002bc80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-> > Shadow byte legend (one shadow byte represents 8 application bytes):
-> >   Addressable:           00
-> >   Partially addressable: 01 02 03 04 05 06 07
-> >   Heap left redzone:       fa
-> >   Freed heap region:       fd
-> >   Stack left redzone:      f1
-> >   Stack mid redzone:       f2
-> >   Stack right redzone:     f3
-> >   Stack after return:      f5
-> >   Stack use after scope:   f8
-> >   Global redzone:          f9
-> >   Global init order:       f6
-> >   Poisoned by user:        f7
-> >   Container overflow:      fc
-> >   Array cookie:            ac
-> >   Intra object redzone:    bb
-> >   ASan internal:           fe
-> >   Left alloca redzone:     ca
-> >   Right alloca redzone:    cb
-> > =3D=3D12400=3D=3DABORTING
-> > Error:
-> > failed to process sample
-> > Generate JIT-ed DSOs using perf inject
-> > WARNING: The /tmp/__perf_test.perf.data.W1jHYt file's data size field i=
-s 0 which is unexpected.
-> > Was the 'perf record' command properly terminated?
-> > Add JIT-ed DSOs to the build-ID cache
-> > Couldn't add /tmp/jitted--*.so: No such file or directory
-> > Check the symbol containing the function/module name
-> > zero-sized data (/tmp/__perf_test.perf.data.W1jHYt.jit), nothing to do!
-> > Found 0 matching lines
-> > Remove JIT-ed DSOs from the build-ID cache
-> > Cleaning up files...
-> > ---- end(-1) ----
-> >  84: python profiling with jitdump                                   : =
-FAILED!
-> >
-> >
-> >
-> > The kernel config and materials to reproduce are available at:
-> > https://download.01.org/0day-ci/archive/20260227/202602270932.50ed0a9f-=
-lkp@intel.com
-> >
-> >
-> >
-> > --
-> > 0-DAY CI Kernel Test Service
-> > https://github.com/intel/lkp-tests/wiki
-> >
+T24gTW9uLCAyMDI2LTAzLTAyIGF0IDE1OjI0IC0wNTAwLCBKZWZmIExheXRvbiB3cm90ZToNCj4g
+Q29udmVydCBjZXBoIGlfaW5vIGZvcm1hdCBzdHJpbmdzIHRvIHVzZSB0aGUgUFJJaW5vIGZvcm1h
+dA0KPiBtYWNybyBpbiBwcmVwYXJhdGlvbiBmb3IgdGhlIHdpZGVuaW5nIG9mIGlfaW5vIHZpYSBr
+aW5vX3QuDQo+IA0KPiBBbHNvIGNvcnJlY3Qgc2lnbmVkIGZvcm1hdCBzcGVjaWZpZXJzIHRvIHVu
+c2lnbmVkLCBzaW5jZSBpbm9kZQ0KPiBudW1iZXJzIGFyZSB1bnNpZ25lZCB2YWx1ZXMuDQo+IA0K
+PiBTaWduZWQtb2ZmLWJ5OiBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPg0KPiAtLS0N
+Cj4gIGZzL2NlcGgvY3J5cHRvLmMgfCA0ICsrLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2Vy
+dGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZnMvY2VwaC9jcnlw
+dG8uYyBiL2ZzL2NlcGgvY3J5cHRvLmMNCj4gaW5kZXggZjNkZTQzY2NiNDcwZGRiZDc5NDU0MjZk
+NzlmOTAyNGFlNjE1YzEyNy4uNzE4YzE5NGJhNWQ4Y2UyMmM2YTVkMWRkNjg3ZWMzNzYxMjYzZTdl
+MSAxMDA2NDQNCj4gLS0tIGEvZnMvY2VwaC9jcnlwdG8uYw0KPiArKysgYi9mcy9jZXBoL2NyeXB0
+by5jDQo+IEBAIC0yNzIsNyArMjcyLDcgQEAgaW50IGNlcGhfZW5jb2RlX2VuY3J5cHRlZF9kbmFt
+ZShzdHJ1Y3QgaW5vZGUgKnBhcmVudCwgY2hhciAqYnVmLCBpbnQgZWxlbikNCj4gIAkvKiBUbyB1
+bmRlcnN0YW5kIHRoZSAyNDAgbGltaXQsIHNlZSBDRVBIX05PSEFTSF9OQU1FX01BWCBjb21tZW50
+cyAqLw0KPiAgCVdBUk5fT04oZWxlbiA+IDI0MCk7DQo+ICAJaWYgKGRpciAhPSBwYXJlbnQpIC8v
+IGxlYWRpbmcgXyBpcyBhbHJlYWR5IHRoZXJlOyBhcHBlbmQgXzxpbnVtPg0KPiAtCQllbGVuICs9
+IDEgKyBzcHJpbnRmKHAgKyBlbGVuLCAiXyVsZCIsIGRpci0+aV9pbm8pOw0KPiArCQllbGVuICs9
+IDEgKyBzcHJpbnRmKHAgKyBlbGVuLCAiXyUiIFBSSWlubyAidSIsIGRpci0+aV9pbm8pOw0KPiAg
+DQo+ICBvdXQ6DQo+ICAJa2ZyZWUoY3J5cHRidWYpOw0KPiBAQCAtMzc3LDcgKzM3Nyw3IEBAIGlu
+dCBjZXBoX2ZuYW1lX3RvX3Vzcihjb25zdCBzdHJ1Y3QgY2VwaF9mbmFtZSAqZm5hbWUsIHN0cnVj
+dCBmc2NyeXB0X3N0ciAqdG5hbWUsDQo+ICAJaWYgKCFyZXQgJiYgKGRpciAhPSBmbmFtZS0+ZGly
+KSkgew0KPiAgCQljaGFyIHRtcF9idWZbQkFTRTY0X0NIQVJTKE5BTUVfTUFYKV07DQo+ICANCj4g
+LQkJbmFtZV9sZW4gPSBzbnByaW50Zih0bXBfYnVmLCBzaXplb2YodG1wX2J1ZiksICJfJS4qc18l
+bGQiLA0KPiArCQluYW1lX2xlbiA9IHNucHJpbnRmKHRtcF9idWYsIHNpemVvZih0bXBfYnVmKSwg
+Il8lLipzXyUiIFBSSWlubyAidSIsDQo+ICAJCQkJICAgIG9uYW1lLT5sZW4sIG9uYW1lLT5uYW1l
+LCBkaXItPmlfaW5vKTsNCj4gIAkJbWVtY3B5KG9uYW1lLT5uYW1lLCB0bXBfYnVmLCBuYW1lX2xl
+bik7DQo+ICAJCW9uYW1lLT5sZW4gPSBuYW1lX2xlbjsNCg0KTG9va3MgZ29vZC4NCg0KUmV2aWV3
+ZWQtYnk6IFZpYWNoZXNsYXYgRHViZXlrbyA8U2xhdmEuRHViZXlrb0BpYm0uY29tPg0KDQpUaGFu
+a3MsDQpTbGF2YS4NCg==
