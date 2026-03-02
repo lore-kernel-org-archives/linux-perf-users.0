@@ -1,123 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CDF421F11
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Mar 2026 16:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3A142882C;
+	Mon,  2 Mar 2026 17:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772469205; cv=none; b=GQDE2OjYD4hemYUPGVzck8nn1eaX6aelrUyYbsSpa3AFp8a1AiUcenmvqXYECU//XV3ZXFuTjMmX9b+LTqe/8iHDO2Gp9AN/J+xswj+yTAHIzVcnwLWfgirVUPTEAv/LkDuKTzOh0C3EYf+ZHC9NrRj5jusmA8Gme9t0YuL/vlQ=
+	t=1772472961; cv=none; b=NiNtflJq2vzr3BLB6OOdDgpS3FLkYXmCRYUFlTB3j0zwi9DUNVeplTnmUEbFNh4/0uVAgb306U1dRTi5BT02tns5D5aOk0cUbls1U8YD830qRJLWBqdjsyWx/fToKKiHWOpA1JCepFfOB2wj8G3YrjA0C2+p+yf/5/17mI6QXsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772469205; c=relaxed/simple;
-	bh=lSjpmgyCnhu+Pq2SAbgg8Jf8/7/JBFUufvH9c6aVBUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YIhY+biFthh3mF6MvczSwMQfsAZ+sKLGv2cBdzXOi4FvtZuqYzQXMjyad7Pm3N/tl9nHT3Ll4QWIdYXrrn4jYiOPSfj7VU8sa6tqCuCY+oojktC8YCiHa/ifYumREosl0DB8lxrRiiHBZxd9qJsH0fVDqYgvujVexBUuzxjNfwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V/iV5LNL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1772472961; c=relaxed/simple;
+	bh=P/dTd64FXc2fB0WRood7NnEhtvEbC0Mx6CLUu3EWJDs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mKWOzyTIMglJ2V0TqwXFGMpJTkFDlCjnspgwU6RVG6e2qiKCyJzChNAa8vkCu2bLoFKTOSE+viKpZ8LVfWl9Gc0dacm0k6FYDAZGXNQWMnQqEpvnaMK2hrkWE0tftilqD6M2wnYpX9tmNEx9CtLqnXWe3Igz01g2qEMX8L07Brw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lVLyVu/u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V/iV5LNL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772469203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qhyPpNHT+7FAPWparjtNDEXTVS3lZcX8CHma9Mj4ghs=;
-	b=V/iV5LNLWN2795zkuvEG7oK32UkSIvcYsy7SEnhjPpyiaI5PjZswzf78k3ztAZvdCNEMCf
-	FqGbVu73WIQbYO4HCgoS7bn1mDQJ0if0vc69t9NOSZRaDNWBN5gY1ldBsHSFLDsbuJsVsb
-	xNp+zRgwhvQPdaZa4zOoPPXrh7UN8nY=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-237-jeHT-FfnNsmFsuaxdFbFAw-1; Mon,
- 02 Mar 2026 11:33:19 -0500
-X-MC-Unique: jeHT-FfnNsmFsuaxdFbFAw-1
-X-Mimecast-MFC-AGG-ID: jeHT-FfnNsmFsuaxdFbFAw_1772469197
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D41851800352;
-	Mon,  2 Mar 2026 16:33:16 +0000 (UTC)
-Received: from jbrnak-thinkpadx1carbongen9.tpbc.csb (unknown [10.43.17.6])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 835DB19560A3;
-	Mon,  2 Mar 2026 16:33:10 +0000 (UTC)
-Date: Mon, 2 Mar 2026 17:33:07 +0100
-From: Jakub Brnak <jbrnak@redhat.com>
-To: James Clark <james.clark@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	broonie@kernel.org, acme@kernel.org,
-	Andrew Kilroy <andrew.kilroy@arm.com>,
-	Vince Weaver <vincent.weaver@maine.edu>,
-	Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	kristina.martsenko@arm.com
-Subject: Re: [PATCH v2 1/1] perf arm64: Send pointer auth masks to ring buffer
-Message-ID: <aaW7s-ISz1QGpmqB@jbrnak-thinkpadx1carbongen9.tpbc.csb>
-References: <20221020101921.1219533-1-james.clark@arm.com>
- <20221020101921.1219533-2-james.clark@arm.com>
- <Y1F8DUWaWhlh/phL@hirez.programming.kicks-ass.net>
- <4e50b890-0588-1551-fb7c-6cd8191d1054@arm.com>
- <Y1q914IVy6XgE1xq@hirez.programming.kicks-ass.net>
- <133c2f4b-1ca5-2d0c-f4f4-e01ff5e028c8@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lVLyVu/u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1FF3C19425;
+	Mon,  2 Mar 2026 17:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772472961;
+	bh=P/dTd64FXc2fB0WRood7NnEhtvEbC0Mx6CLUu3EWJDs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lVLyVu/ukjS8SHtacd/14F+WHpFwwp+8ER4+KonLH6We+Ql4g2OZ0pwZMoKMFfNwq
+	 R+bFB3yyu6caigSvQRxjYf47Ev4olHeXsT31a4QepCFp6+E72GooTDS9fdva+Y9tni
+	 vnZ0PLFFi+5ozcF5Rtkn4UT5oMvNkcbDam+5DYOhRYvOmkf6lokA79faXXhV5AsPdb
+	 OLKNvmrAyDJkwBUv86he+dIvOuhLxUiyaQkucYetnxESjqTc4oC3MbekO2S7PJ91V9
+	 m4lAVejDJaEGZkbV5BbiWHUfd+5TXRH0n/XFBnwgdoeehq9lBe3s4Iq1n1rTdUJ3QO
+	 lzfyLOACyiUsw==
+From: Sasha Levin <sashal@kernel.org>
+To: Zw Tang <shicenci@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Sasha Levin <sashal@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>
+Subject: Re: [BUG] kprobes: WARNING in __arm_kprobe_ftrace when kprobe-ftrace arming fails with -ENOMEM under fault injection
+Date: Mon,  2 Mar 2026 12:35:49 -0500
+Message-ID: <20260302173551.2555701-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <CAPHJ_V+J6YDb_wX2nhXU6kh466Dt_nyDSas-1i_Y8s7tqY-Mzw@mail.gmail.com>
+References: <CAPHJ_V+J6YDb_wX2nhXU6kh466Dt_nyDSas-1i_Y8s7tqY-Mzw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <133c2f4b-1ca5-2d0c-f4f4-e01ff5e028c8@arm.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 31, 2022 at 01:48:56PM +0000, James Clark wrote:
-> 
-> 
-> On 27/10/2022 18:20, Peter Zijlstra wrote:
-> > On Tue, Oct 25, 2022 at 04:28:12PM +0100, James Clark wrote:
-> > 
-> >>> Why do we want the same mask repeated over and over with each sample;
-> >>> should this not be part of the address space (side-band) data?
-> >>
-> >> You are probably right that it could be done that way. The reason that
-> >> we did it this way was to be consistent with ptrace feature [1] where it
-> >> is delivered to userspace on a per-process basis. And there is also a
-> >> prctl for the enabled key types [2] which can be changed dynamically.
-> >> Particularly for the last reason is why it was done per sample.
-> >>
-> >> Having said that, the enabled keys field is not used by perf, only the
-> >> mask is used, so I can drop the per sample data until enabled keys is
-> >> needed, which may be never.
-> >>
-> >> I'm going to assume that perf shouldn't use ptrace because of
-> >> permissions and conflicts with debuggers, so I could put the mask
-> >> somewhere like PERF_RECORD_FORK instead of per sample.
-> > 
-> > Yeah, or create an new RECORD type which you can also send around at
-> > prctl() time.
-> > 
-> > The only thing that's needed on top of that is exposing the mask
-> > somewhere in /proc for existing tasks; which is what perf also uses to
-> > syntesize RECORD_MMAP events on startup etc..
-> > 
-> 
-> Hmm ok, in that case I can just add the /proc interface for now because
-> the mask won't change and we can add the new record type at the point
-> it's needed in the future.
-> 
-> Thanks for the feedback.
+https://lore.kernel.org/all/CAPHJ_V+J6YDb_wX2nhXU6kh466Dt_nyDSas-1i_Y8s7tqY-Mzw@mail.gmail.com/
 
-Hi all,
+## 1. Bug Summary
 
-Does anyone know how this issue was eventually resolved? 
-Specifically, is the mask for the pointer authentication bits 
-currently exposed and stored somewhere in perf.data so it can be 
-used when running perf report?
+A WARNING is triggered in `__arm_kprobe_ftrace()` at `kernel/kprobes.c:1147` when fault injection causes `ftrace_set_filter_ip()` to return `-ENOMEM` during kprobe arming via `perf_event_open()`. This is a false-positive warning — the error path itself is correct and the error propagates cleanly to userspace, but the `WARN_ONCE()` macro fires a kernel warning splat that is inappropriate for a recoverable allocation failure. The affected subsystem is kprobes/ftrace. Severity: warning only (no crash, hang, or data corruption).
 
-Thanks,
-Jakub
+## 2. Stack Trace Analysis
+
+```
+WARNING: kernel/kprobes.c:1147 at arm_kprobe+0x563/0x620, CPU#0
+Call Trace:
+ <TASK>
+ enable_kprobe+0x1fc/0x2c0
+ enable_trace_kprobe+0x227/0x4b0
+ kprobe_register+0x84/0xc0
+ perf_trace_event_init+0x527/0xa20
+ perf_kprobe_init+0x156/0x200
+ perf_kprobe_event_init+0x101/0x1c0
+ perf_try_init_event+0x145/0xa10
+ perf_event_alloc+0x1f91/0x5390
+ __do_sys_perf_event_open+0x557/0x2d50
+ do_syscall_64+0x129/0x1160
+ entry_SYSCALL_64_after_hwframe+0x4b/0x53
+ </TASK>
+```
+
+The crash point is `__arm_kprobe_ftrace()` at `kernel/kprobes.c:1147`, inlined into `arm_kprobe()`. The calling chain is process context: `perf_event_open()` syscall -> `perf_kprobe_event_init()` -> `enable_trace_kprobe()` -> `enable_kprobe()` -> `arm_kprobe()` -> `__arm_kprobe_ftrace()`. R12 holds `0xfffffff4` which is `-12` (`-ENOMEM`), confirming the allocation failure injected by fault injection.
+
+## 3. Root Cause Analysis
+
+The root cause is an overly aggressive `WARN_ONCE()` in `__arm_kprobe_ftrace()` at `kernel/kprobes.c:1147`:
+
+```c
+ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 0, 0);
+if (WARN_ONCE(ret < 0, "Failed to arm kprobe-ftrace at %pS (error %d)\n", p->addr, ret))
+    return ret;
+```
+
+Prior to commit 9c89bb8e3272 ("kprobes: treewide: Cleanup the error messages for kprobes"), this was a simple `pr_debug()`. That commit promoted it to `WARN_ONCE()` as part of a treewide message cleanup, under the rationale that failures here indicate unexpected conditions. However, `ftrace_set_filter_ip()` calls into memory allocation paths (e.g., `ftrace_hash_move_and_update_ops()` -> `__ftrace_hash_update_ipmodify()` or `ftrace_hash` allocation), and those allocations can legitimately fail under memory pressure or fault injection.
+
+The error handling is actually correct — the `-ENOMEM` propagates back through `arm_kprobe()` -> `enable_kprobe()` and ultimately causes the `perf_event_open()` syscall to return an error to userspace. The only problem is the spurious `WARN_ONCE()` which triggers a kernel warning splat and stack trace for what is a recoverable, non-buggy situation.
+
+The same issue also applies to the `WARN()` on line 1152 for `register_ftrace_function()`, which can also fail with `-ENOMEM`.
+
+## 4. Affected Versions
+
+This issue was introduced by commit 9c89bb8e3272 ("kprobes: treewide: Cleanup the error messages for kprobes"), which first appeared in v5.16-rc1. All kernel versions from v5.16 onward are affected, including the reporter's v7.0.0-rc1.
+
+This is a regression from v5.15, where the same failure path used `pr_debug()` and did not emit any warning.
+
+## 5. Relevant Commits and Fixes
+
+Introducing commit:
+  9c89bb8e3272 ("kprobes: treewide: Cleanup the error messages for kprobes")
+  Author: Masami Hiramatsu <mhiramat@kernel.org>
+  Merged in v5.16-rc1
+
+This commit changed `pr_debug()` to `WARN_ONCE()` in `__arm_kprobe_ftrace()` for the `ftrace_set_filter_ip()` failure path, and changed a `pr_debug()` to `WARN()` for the `register_ftrace_function()` failure path.
+
+No fix for this issue exists in mainline or stable as of the reporter's kernel version.
+
+The suggested fix is to downgrade both `WARN_ONCE()` (line 1147) and `WARN()` (line 1152) in `__arm_kprobe_ftrace()` back to `pr_warn_once()` / `pr_warn()` respectively. This preserves the improved error messages from 9c89bb8e3272 while avoiding spurious warning splats on recoverable failures. The error code is already propagated correctly to the caller.
+
+## 6. Prior Discussions
+
+No prior reports of this specific issue were found on lore.kernel.org. No related mailing list discussions or proposed patches addressing the WARN severity in `__arm_kprobe_ftrace()` were found.
+
+## 7. Suggested Actions
+
+1. The fix is to downgrade the WARN_ONCE/WARN in __arm_kprobe_ftrace()
+   (kernel/kprobes.c lines 1147 and 1152) to pr_warn_once/pr_warn.
+   Specifically:
+
+   - Line 1147: Change WARN_ONCE(ret < 0, ...) to a simple
+     if (ret < 0) { pr_warn_once(...); return ret; }
+
+   - Line 1152: Change WARN(ret < 0, ...) to a simple
+     if (ret < 0) { pr_warn(...); goto err_ftrace; }
+
+2. This is a low-severity issue that only manifests with fault injection
+   enabled. No data corruption or crash occurs — the error is correctly
+   propagated to userspace. The warning is cosmetic but noisy and can
+   cause false-positive syzbot/syzkaller reports.
 
