@@ -1,195 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE80383C73
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Mar 2026 09:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D5839449C
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Mar 2026 10:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772444779; cv=none; b=P+/DdytENgUjnuYVoIZg5h/2V3/YDJTVVH8J2DD7IeTXsJ4hL9TZNtu0EgthMua5jyqNTEpj81S2SHg8QJ8tGMIfxvnyp4XVVHqiyhlDxCqWEswd1prKNAqbrwlI+hE7wpyL1l1nrkQFoUQBpP3Ild9Jgiiq0aRdXEVujMyutek=
+	t=1772445675; cv=none; b=q/04hN25uhXd99pKyjkQl3xha1+2iXufNhbkYe/bCCOMd4dBxWcTK6Qhfdatg+5kExC55LQZmpdkGa8PbT/I8onvvhIlaIAld2Uufxa5BaANiOBbjAdtjTVKqbNX5WPAIwh485Wxtgx3+wLxNWkLxsX5+ZYTQf+z1MMm1eB6GYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772444779; c=relaxed/simple;
-	bh=AdN5BIKqvaD/m+CfD/B1gdDrBp6A2Pyn3P3Wg3pT75A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TYSiTLsR1PozxVJ+d29moTNSxgrwmbSniedjYCY5QFUaaoxOIWlh5ceQOKTF8hvMwAy/l42AZDHTdrj0JwNvZtjnF8/PKWMwbV4D66jipkcthACQm1FdaJZmfkBmIRVEEgzDajfGMQB4T/FrRoLV+bphVXSL6D88j4McGDuMQYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Clyiott6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1772445675; c=relaxed/simple;
+	bh=XcDBiF+tm+FToq8gICWmU+m/nRh9Ny7buWewqeSSE5s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=sUNRtkBRF7quAylRkJDJsCWMenZDNMjP3voZh/dljqtafnC7dTSbqMxexQlu6DlhMj1UAOmU3VYZjFRt1pN2DSmBP6cYSWguMuZ9mf9Yu4xlgV666Kh5Hc26moT7GpjGhN/Gwg8SCvSm+Ker/r7SkKb1lbbdHvZSbSru362p5GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pKcMeK5z; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Clyiott6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772444777;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BBWL7AkeE2fO9iOHWP24JjF/LvZ0Uocj4yyy3v7eU9Y=;
-	b=Clyiott6J1dehIQgWHJnZ4VqCkOPwpduCuUnK98i24bpOVpMANjo0LZ/4WcCDSi06jhtxR
-	8wYQ0kB/sY0D1LQRv2/zub+BOmipJdVEJ7ShdwZgeZasyvbqFN3viC8YuLeYPFJd4caOzu
-	wnZekN4AADkT2vOhk/we3BmR4UwFZ8E=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-561-L1Lm3fTLPG-he5WeyQJvPg-1; Mon,
- 02 Mar 2026 04:46:08 -0500
-X-MC-Unique: L1Lm3fTLPG-he5WeyQJvPg-1
-X-Mimecast-MFC-AGG-ID: L1Lm3fTLPG-he5WeyQJvPg_1772444767
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 567BE1956095;
-	Mon,  2 Mar 2026 09:46:07 +0000 (UTC)
-Received: from fedora (unknown [10.45.224.37])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0131A1956053;
-	Mon,  2 Mar 2026 09:46:04 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  2 Mar 2026 10:46:06 +0100 (CET)
-Date: Mon, 2 Mar 2026 10:45:57 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sasha Levin <sashal@kernel.org>
-Cc: stable@vger.kernel.org, Paulo Andrade <pandrade@redhat.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 6.18.y] x86/uprobes: Fix XOL allocation failure for 32-bit
- tasks
-Message-ID: <aaVcVXcLsEJ5gRhv@redhat.com>
-References: <20260301011537.1669125-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pKcMeK5z"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4836b7c302fso43406005e9.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Mar 2026 02:01:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772445672; x=1773050472; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tjS8FX592qmj/rFkafjn+lojx6cnlsSGWxK3ppaLTGU=;
+        b=pKcMeK5zFCeuyEDqN9uC2KaA70X8zgbgjnqAslsyyaFYEXtkS9V6COy+BZIyCzxSmQ
+         pOEovWK8dwfeI8hGnwiaqcOR0b2SAyvlou6AEigYeorhF6m2bin/+hJiFLV9gNI5yJ9X
+         5VbDb+pbUiHmxG/B6jxauf6w66cmYQoGlfDcBBhNz9g73G6Xfxxfk2cqgDlaiRQTKaSH
+         2TMAEi4ATjIBTiC2y3HnwO5ZQIREWjEyEayiTutzK8+3fCDcwXrIjy29bqj+MgfJewS+
+         TQdyTuXurfVHvukuPqLt4qL+/V7ElyQD1yki55tyknaGoKa4sg5MjKF7WPiUKOM217sF
+         9gCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772445672; x=1773050472;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tjS8FX592qmj/rFkafjn+lojx6cnlsSGWxK3ppaLTGU=;
+        b=rVcMYZPZx5swYJkb/+JKcsvTbrPaptare2kG7ehBf9k8u1XTzXbGXnpVKzRY0ZCQN6
+         BK+UZbDQtdjRyKj7iFo7DUrMxLYFI6Tn5a6TTe0ySXT81WUp9z0mupTuudz742uVW986
+         8ErfZMzesFFZtHV+7svOpvm+G42mopH17FMYtxQ9cQmTxWVrzFAWK7E15hh4F30IpWBo
+         LvTZGxopfaoMoZfmuyo5h9CfcqGTe1uND2QMS1sfqITgu1BZNmLFZlwoKQj48fzKRGRr
+         bVdZiURpVfMPbYv1od/nEn9dGkDe4e+VJ4PMhBmpXXaZ7yBUW8eFNNf6oI6MhGueFI9R
+         W/fw==
+X-Forwarded-Encrypted: i=1; AJvYcCXKuzImGWyv8tKGiR1Uj5sDgfMq1hN8slH2+RNrt4crKfDVd84g/rr1IgpeMS43vSoxoT3PU1N/xS+kag1d4gIa@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYUFI+Ftv2etbizByyKaj5CB0r8z6D7JOAmxqenZ2eTzkNBnL3
+	NllUONJvftvzkYFn1HGZnMBmllxz4HTFgyfdNDm3n4MVjXDXGrIibcBKC3SAYe4g70a1ST3XOeY
+	Qad60aQKpCujTO4pRdw==
+X-Received: from wmbg9.prod.google.com ([2002:a05:600c:a409:b0:483:7827:ade4])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3110:b0:480:2521:4d92 with SMTP id 5b1f17b1804b1-483c9c23ffbmr196674855e9.24.1772445671732;
+ Mon, 02 Mar 2026 02:01:11 -0800 (PST)
+Date: Mon, 2 Mar 2026 10:01:10 +0000
+In-Reply-To: <8a27e9ac-2025-4724-a46d-0a7c90894ba7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260301011537.1669125-1-sashal@kernel.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Mime-Version: 1.0
+References: <20260227200848.114019-1-david@kernel.org> <20260227200848.114019-3-david@kernel.org>
+ <aaLh2BxSgC9Jl5iS@google.com> <8a27e9ac-2025-4724-a46d-0a7c90894ba7@kernel.org>
+Message-ID: <aaVf5gv4XjV6Ddt-@google.com>
+Subject: Re: [PATCH v1 02/16] mm/memory: remove "zap_details" parameter from zap_page_range_single()
+From: Alice Ryhl <aliceryhl@google.com>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-kernel@vger.kernel.org, 
+	"linux-mm @ kvack . org" <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, David Rientjes <rientjes@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, 
+	Christian Brauner <brauner@kernel.org>, Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
+	Dimitri Sivanich <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Eric Dumazet <edumazet@google.com>, 
+	Neal Cardwell <ncardwell@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-[ Upstream commit d55c571e4333fac71826e8db3b9753fadfbead6a ]
+On Mon, Mar 02, 2026 at 09:18:45AM +0100, David Hildenbrand (Arm) wrote:
+> On 2/28/26 13:38, Alice Ryhl wrote:
+> > On Fri, Feb 27, 2026 at 09:08:33PM +0100, David Hildenbrand (Arm) wrote:
+> >> Nobody except memory.c should really set that parameter to non-NULL. So
+> >> let's just drop it and make unmap_mapping_range_vma() use
+> >> zap_page_range_single_batched() instead.
+> >>
+> >> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> > 
+> >> diff --git a/rust/kernel/mm/virt.rs b/rust/kernel/mm/virt.rs
+> >> index da21d65ccd20..b8e59e4420f3 100644
+> >> --- a/rust/kernel/mm/virt.rs
+> >> +++ b/rust/kernel/mm/virt.rs
+> >> @@ -124,7 +124,7 @@ pub fn zap_page_range_single(&self, address: usize, size: usize) {
+> >>          // sufficient for this method call. This method has no requirements on the vma flags. The
+> >>          // address range is checked to be within the vma.
+> >>          unsafe {
+> >> -            bindings::zap_page_range_single(self.as_ptr(), address, size, core::ptr::null_mut())
+> >> +            bindings::zap_page_range_single(self.as_ptr(), address, size)
+> >>          };
+> > 
+> > Please run rustfmt on Rust changes. Here, rustfmt leads to this being
+> > formatted on a single line:
+> 
+> Having to run tooling I don't even have installed when removing a single
+> function parameter; did not expect that :)
 
-This script
+Well, rustfmt comes with the compiler, and it would be ideal to build
+test changes before sending them :)
 
-	#!/usr/bin/bash
+But no worries, I took care of testing it. Thanks for taking the time to
+update the Rust code as well.
 
-	echo 0 > /proc/sys/kernel/randomize_va_space
+Documentation/rust/quick-start.rst has details for most distros.
 
-	echo 'void main(void) {}' > TEST.c
-
-	# -fcf-protection to ensure that the 1st endbr32 insn can't be emulated
-	gcc -m32 -fcf-protection=branch TEST.c -o test
-
-	bpftrace -e 'uprobe:./test:main {}' -c ./test
-
-"hangs", the probed ./test task enters an endless loop.
-
-The problem is that with randomize_va_space == 0
-get_unmapped_area(TASK_SIZE - PAGE_SIZE) called by xol_add_vma() can not
-just return the "addr == TASK_SIZE - PAGE_SIZE" hint, this addr is used
-by the stack vma.
-
-arch_get_unmapped_area_topdown() doesn't take TIF_ADDR32 into account and
-in_32bit_syscall() is false, this leads to info.high_limit > TASK_SIZE.
-vm_unmapped_area() happily returns the high address > TASK_SIZE and then
-get_unmapped_area() returns -ENOMEM after the "if (addr > TASK_SIZE - len)"
-check.
-
-handle_swbp() doesn't report this failure (probably it should) and silently
-restarts the probed insn. Endless loop.
-
-I think that the right fix should change the x86 get_unmapped_area() paths
-to rely on TIF_ADDR32 rather than in_32bit_syscall(). Note also that if
-CONFIG_X86_X32_ABI=y, in_x32_syscall() falsely returns true in this case
-because ->orig_ax = -1.
-
-But we need a simple fix for -stable, so this patch just sets TS_COMPAT if
-the probed task is 32-bit to make in_ia32_syscall() true.
-
-Fixes: 1b028f784e8c ("x86/mm: Introduce mmap_compat_base() for 32-bit mmap()")
-Reported-by: Paulo Andrade <pandrade@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/all/aV5uldEvV7pb4RA8@redhat.com/
-Cc: stable@vger.kernel.org
-Link: https://patch.msgid.link/aWO7Fdxn39piQnxu@redhat.com
----
- arch/x86/kernel/uprobes.c | 24 ++++++++++++++++++++++++
- include/linux/uprobes.h   |  1 +
- kernel/events/uprobes.c   | 10 +++++++---
- 3 files changed, 32 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 845aeaf36b8d..73be14736062 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1819,3 +1819,27 @@ bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check ctx,
- 	else
- 		return regs->sp <= ret->stack;
- }
-+
-+#ifdef CONFIG_IA32_EMULATION
-+unsigned long arch_uprobe_get_xol_area(void)
-+{
-+	struct thread_info *ti = current_thread_info();
-+	unsigned long vaddr;
-+
-+	/*
-+	 * HACK: we are not in a syscall, but x86 get_unmapped_area() paths
-+	 * ignore TIF_ADDR32 and rely on in_32bit_syscall() to calculate
-+	 * vm_unmapped_area_info.high_limit.
-+	 *
-+	 * The #ifdef above doesn't cover the CONFIG_X86_X32_ABI=y case,
-+	 * but in this case in_32bit_syscall() -> in_x32_syscall() always
-+	 * (falsely) returns true because ->orig_ax == -1.
-+	 */
-+	if (test_thread_flag(TIF_ADDR32))
-+		ti->status |= TS_COMPAT;
-+	vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+	ti->status &= ~TS_COMPAT;
-+
-+	return vaddr;
-+}
-+#endif
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index ee3d36eda45d..f548fea2adec 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -242,6 +242,7 @@ extern void arch_uprobe_clear_state(struct mm_struct *mm);
- extern void arch_uprobe_init_state(struct mm_struct *mm);
- extern void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr);
- extern void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr);
-+extern unsigned long arch_uprobe_get_xol_area(void);
- #else /* !CONFIG_UPROBES */
- struct uprobes_state {
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index f11ceb8be8c4..4e45236064dc 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1694,6 +1694,12 @@ static const struct vm_special_mapping xol_mapping = {
- 	.mremap = xol_mremap,
- };
- 
-+unsigned long __weak arch_uprobe_get_xol_area(void)
-+{
-+	/* Try to map as high as possible, this is only a hint. */
-+	return get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+}
-+
- /* Slot allocation for XOL */
- static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- {
-@@ -1709,9 +1715,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- 	}
- 
- 	if (!area->vaddr) {
--		/* Try to map as high as possible, this is only a hint. */
--		area->vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE,
--						PAGE_SIZE, 0, 0);
-+		area->vaddr = arch_uprobe_get_xol_area();
- 		if (IS_ERR_VALUE(area->vaddr)) {
- 			ret = area->vaddr;
- 			goto fail;
--- 
-2.52.0
-
-
+Alice
