@@ -1,59 +1,59 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA0024634F
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Mar 2026 15:29:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC68D40FDA8
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Mar 2026 15:36:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772465377; cv=none; b=EwuPn6bDAAe+Ed4J3ii8q5lQwhe9NeJvVqxNUxGjanruT+/AVZGi5F0zMUq8a8AGgz4IR62z1yD6vvocGmKOBEXkVES2riy6UKOQytdZLeyEP5SvgawIAaWGMs847EwJZGWa9n5lNoUARPcNUeLHZvhYnJ5J+Y4jbGD84g2d/cU=
+	t=1772465781; cv=none; b=JNsLpfW0nI8gla8xCuz88EdgOSDnVNVOl9YSSBCtThWrU3cl/2xYlW/ZTLCdOqnHfQJ64t0WUzjad8rx0Ts2X3B264/08ggtxyrKKIx6K0S7PyxlPoESmQjQxPF8IaMUaidzGXnEg5nDbuh9mRR0TbvrQIX0rJc7t3cVpaV8PJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772465377; c=relaxed/simple;
-	bh=LJJKy7Fe/PT3Yuhs1o1SBj6leRNoU6IWfw41Sd5dA6A=;
+	s=arc-20240116; t=1772465781; c=relaxed/simple;
+	bh=QsOmegr1exj8gocVt7MCYu4wNdIYfgmvxlJTtY/jTFM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fgBHZIISVmNMQqMBgSgakznbGrHQpMcWAss5/f+nT2xz7+aHfEgWyWgirY/CXrO7HEQsqmFiTPdqNTADZ1tdC4lzgDvqMcgbWql7o9j7A5xcEByg24bwR8OmZxQRUqimwxg985kdgpxNaHVl2VUGrGnqVJ3JuKXTZNgRkbu3vyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OSd2xZ5f; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=sdyxXBYy15sPkBtDg8MPVjcA6Lj1z1eqIC8PuB8kZz6QvrNG+TxfogigKkDrSvaE8dvfwAjWfzcZeQECgY6xMpRdSGkGge66fwKfEGkIGthCLoZQHK5lLAU+hcQS1whHEirUGDOJLzwT51q1iEwPcvGghfshSNCHaM3pb/DC7I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GLFvxrfr; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OSd2xZ5f"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GLFvxrfr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772465374;
+	s=mimecast20190719; t=1772465778;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ARSXNjyFHvD1TNKISCOmgpXRH3q80QbXv48i66yWf9Y=;
-	b=OSd2xZ5fl98Op13xg88C7OnE9bivUeuoSBFtTSlfmlG60F4w2j7YfJPYL8avvdjf3HUUYf
-	zdSRt0C2lfTupk0a68nb2Yo8M4uI/gOHhnVnwN/oQJ8Q20G6NmZNuVpx3VazPLM7mw0zXv
-	wdYzNtavhEznPxsLuWtL0JUb3asWDHk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=hP8rQipa51QU2TmyV/CqnDux47AYfnDYwbp18IzpAX0=;
+	b=GLFvxrfrE9ckdMi+9+dMNVGQDtUXhfNQiXAAcfrDCDN/I9uZLez0eie2bYYc0CL5CxWs+/
+	lMRfdc0lQUe64AJKnRCeuH7T6Vot4SXGLma0mRYsitajejeGdTv4T0rjADxhgDtlNRQJ1Z
+	R4SvC+9iNNqNQpSsm5gV+XM4TWO3CGQ=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-626-u4FtJRc3Oh2jNWVLjRouyQ-1; Mon,
- 02 Mar 2026 10:29:33 -0500
-X-MC-Unique: u4FtJRc3Oh2jNWVLjRouyQ-1
-X-Mimecast-MFC-AGG-ID: u4FtJRc3Oh2jNWVLjRouyQ_1772465372
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-252-JU8v3U9uOM-07qwXru6F2Q-1; Mon,
+ 02 Mar 2026 10:36:17 -0500
+X-MC-Unique: JU8v3U9uOM-07qwXru6F2Q-1
+X-Mimecast-MFC-AGG-ID: JU8v3U9uOM-07qwXru6F2Q_1772465776
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0DD1019560B7;
-	Mon,  2 Mar 2026 15:29:32 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6AA481800259;
+	Mon,  2 Mar 2026 15:36:16 +0000 (UTC)
 Received: from fedora (unknown [10.45.224.37])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 003AD1800297;
-	Mon,  2 Mar 2026 15:29:28 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0F51D1955F22;
+	Mon,  2 Mar 2026 15:36:13 +0000 (UTC)
 Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  2 Mar 2026 16:29:31 +0100 (CET)
-Date: Mon, 2 Mar 2026 16:29:27 +0100
+	oleg@redhat.com; Mon,  2 Mar 2026 16:36:15 +0100 (CET)
+Date: Mon, 2 Mar 2026 16:36:12 +0100
 From: Oleg Nesterov <oleg@redhat.com>
 To: Sasha Levin <sashal@kernel.org>
 Cc: stable@vger.kernel.org, Paulo Andrade <pandrade@redhat.com>,
 	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 6.6.y] x86/uprobes: Fix XOL allocation failure for 32-bit
+Subject: [PATCH 6.1.y] x86/uprobes: Fix XOL allocation failure for 32-bit
  tasks
-Message-ID: <aaWs1z8mExRodXo6@redhat.com>
-References: <20260301013253.1692011-1-sashal@kernel.org>
+Message-ID: <aaWubGOJwB8CsLVy@redhat.com>
+References: <20260301014209.1703943-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,8 +62,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260301013253.1692011-1-sashal@kernel.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <20260301014209.1703943-1-sashal@kernel.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
 [ Upstream commit d55c571e4333fac71826e8db3b9753fadfbead6a ]
 
@@ -118,10 +118,10 @@ Link: https://patch.msgid.link/aWO7Fdxn39piQnxu@redhat.com
  3 files changed, 32 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 6402fb3089d2..aac2a2c5c6c5 100644
+index 6c07f6daaa22..6b431589305b 100644
 --- a/arch/x86/kernel/uprobes.c
 +++ b/arch/x86/kernel/uprobes.c
-@@ -1102,3 +1102,27 @@ bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check ctx,
+@@ -1097,3 +1097,27 @@ bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check ctx,
  	else
  		return regs->sp <= ret->stack;
  }
@@ -162,10 +162,10 @@ index d91e32aff5a1..a5ec2b024a22 100644
  struct uprobes_state {
  };
 diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 6304238293ae..3b96952bd6ec 100644
+index 29c0e7c6a6d2..692c0fae8ce1 100644
 --- a/kernel/events/uprobes.c
 +++ b/kernel/events/uprobes.c
-@@ -1449,6 +1449,12 @@ void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned lon
+@@ -1441,6 +1441,12 @@ void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned lon
  		set_bit(MMF_RECALC_UPROBES, &vma->vm_mm->flags);
  }
  
@@ -178,7 +178,7 @@ index 6304238293ae..3b96952bd6ec 100644
  /* Slot allocation for XOL */
  static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
  {
-@@ -1464,9 +1470,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+@@ -1456,9 +1462,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
  	}
  
  	if (!area->vaddr) {
