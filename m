@@ -1,138 +1,121 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1AC4346AC1
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Mar 2026 23:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C8C359A98
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Mar 2026 23:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772495124; cv=none; b=jfWJom92ujT0USiMwDKMdYa27Jp30zQuRYzbLn+Z1m5wTj1UgRAU4CnYl82grXcLsACseJvc55mOMOQTiUwUtnN7xeeWosxbI/gb13SDQJzxbzpgN0lZwMHUOT7cAwthbbYZOA8cQfKeGdHcuW3wY3vwXn1uRmDz4hWF7n9KenU=
+	t=1772495909; cv=none; b=UkJtjFkT3fAUyw6c65MwDXHkdv5bSVtx6gvBKgflQsNkfz5sZtDCBi3yS2vTjho29mb2iSDAhx9A7SAwQu8x5iDrUmxKQupK6y2L9bjdTtPDTCUnVLQI3SgvL0h6P4Kvsj60cVvik9ryeaCMat3/PutZsKSqiuha/bWv0gaN16g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772495124; c=relaxed/simple;
-	bh=Ryw42QOZYCD6ImijtfIf1UyVQ5xoh3C3sfE6+2YHB54=;
+	s=arc-20240116; t=1772495909; c=relaxed/simple;
+	bh=dLPS21rhotZsClGCyEhOGzY3/6PtbWLrIcPK+TMyZh0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FVaXA6tc0GYjOv3N3n2PrqO5z69MsF4tXvtt+sf7+8YfhLJgszCHksbxJKvgxwh18XGI0mdY6rWSltJ44NSc2n2aIkN8MkAR08SYv2iIS7+QRgexa9VKYAVNoqhgYwAZaIRD6abBbjEj35jY2Sg/rDSKKAev+cMV5ov/zmSlQPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=280KPrP6; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=qBWqIGDpmZZY4NMT8OVPcRzr4tE8+ahtpXkjdEDmsZwHzhTOpHWu9uJOrnMzqtCLOn5tta07ICGPyaFv4Sbq8/apEnXYqkXGv4yO6t37qh1VfkhGTMSa96iuSu280d8x/XGZl09EqiXuogJsARrokjnj4kM+shcBftJShAD+Bl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QhNzglLG; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="280KPrP6"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ba9a744f7dso5570511eec.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Mar 2026 15:45:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QhNzglLG"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1270dcd11c1so6679854c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Mar 2026 15:58:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772495121; x=1773099921; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1772495906; x=1773100706; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XApOxNLqALRPqrd9a4JI8RQyzwyIkRhsoF996QzzUnM=;
-        b=280KPrP6ejRpeiFpgpBtUxPUA28o6DT5hi1LtZTjxihTMCYvgvG1lpF8rQ/9ZwY1CU
-         QtBwaie/5a7f3tttT6BrpRN36J3OBKbtA1fW/RHHMx6l1fWetFh2CulPtcNtTFrO0Nss
-         +MMHLCUuXi7cBxmktOZkKjPmdNmYyfP97hkFvGZtyCsSTO+uiOIB4bKlbWUXpxF0BVsV
-         e84OxNJ8bdN+CVNp2xD80FxplvUJBozX1ppNqb+04OkZzJ3EIU6zNQR8MK/nmD8MIdoP
-         FpVYqIvYNF/ywsnRbgxyx/+gIqYIaROg5vq4FJxlLjRbCcYldyvIatggWiq3fcdpc2fn
-         +hwA==
+        bh=yfIfOmIXwQ7nZr2XqRPaUJWDnxnqMi80a3YRLRf5U3w=;
+        b=QhNzglLG8N60Fit6Qbu7DEmzIYgsHfDkldWCk07ORnHsZhu2OLw8hpS5gS37A4WWfb
+         MqEivFIQoGvRMxDRM8nrtRxYK52Y0p5FU+L7zcgiwnpXg4/jErtMIxKUuAyoNmLL6W9A
+         D7b4ysC7N/L7ZKIOKzt/GgKAkIBwbEesnIu3O98L0zSIIJp6MHt0nDTlylVSZzv7m7DA
+         rzYhlS4LNfxg2uyiO1/aNkHLr+InnndcXLeqMTO+EBKKPF43LLJZAe7WycJDQMTrfVNl
+         YA818u5TdxLevhHkLuaWpYG4I3u4SUgO+bYGuDAWChAxhFLjHoRWXJ26skdYAIwAv2zM
+         8Y9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772495121; x=1773099921;
+        d=1e100.net; s=20230601; t=1772495906; x=1773100706;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XApOxNLqALRPqrd9a4JI8RQyzwyIkRhsoF996QzzUnM=;
-        b=rVtmWLRCmG2NG5uuKAKay3NDL8bVWAkwTR8KUpyHS5iSlbg7IRAhGmriYJuPAJjz2b
-         2APsyiifiIiL3v1WtybKzHNYunSXIAmtsmyK6ZV6/rDb2QIge3X7Qw/QqIdWF/hU8qfd
-         emyWSSWYytMqdckjupZrQNffGb+o9HcFFTNdxroH1tHEf/O2/DSoKsKeyziYkztp3vrR
-         wOsFZe3RlBwlgXmN44IzQmeHQ0j3ktuGpSa4eOM+rH0G76GrL7UZktXVasfWhsqMTuY7
-         +aS+RL7h5PwxH0DPGM8f4QFhATsFKb1O/gQjSca2h7qFFm8cW2lrn/6xQ0EUns1M31yN
-         mUcw==
-X-Forwarded-Encrypted: i=1; AJvYcCXPzTuVjoDtj0nMiEKRS1LohdSbZmjBCWJOrK42S4TkKRRcUH5fvSBdDvUo7+jpImkbDqjouKPnHZHqe0vvIX87@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGK2rgDlbQlJjw1mnvV32cc7AHW5h0rv8R27BVYd8p2XETSEtt
-	9naZQ9ApYeo3yRllnpqMrifjAn9Spkps/M9dyS2NBh0iUff4P/Ilgp12+jEKvXfB+OIzMEKmXTk
-	UosgyhyicLA==
-X-Received: from dybhr7.prod.google.com ([2002:a05:7300:e2c7:b0:2be:1a3c:a2e8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:4181:b0:2be:1365:b6db
- with SMTP id 5a478bee46e88-2be1365dd7fmr1835551eec.17.1772495120836; Mon, 02
- Mar 2026 15:45:20 -0800 (PST)
-Date: Mon,  2 Mar 2026 15:45:15 -0800
-In-Reply-To: <CAH0uvohLdUS6ODLZSKUA4FvjwGeqi3=9H-fJ94ybkzZPuGJ3Kg@mail.gmail.com>
+        bh=yfIfOmIXwQ7nZr2XqRPaUJWDnxnqMi80a3YRLRf5U3w=;
+        b=I6Wtf5iG8t6+b4rr502nzwrc3KHkiFfdf2GaYiKe+HCm3FI0cYdVTwvzE4QBtOqZnK
+         hM+iZ5V+YEo3gYMNJ5Bh81Nh1xkbR3KX7i96Ud/S0mn1dB97yd2vIvElpUOXItPvCncH
+         eDPKi5xKpFLFA9nZLi+CPebfLte9ySxSIcuYuZtj/YlRFPg/tXZ0acSoK06PDKCqJhLp
+         FU5QRGn10zxFG07tkixJTEeb4qL8wtspqPIesOg7AmX/k12BYJ3EhBUXz1GewynnoOys
+         VKs02Juf6OiuZqQRNTfwgp45fSOA6JVBYC47ru8E+bQVcrqVLNahgWVX7uH6Bo2+2bdG
+         eXuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVvu/8M207OCqxNXS3EjnL5bWEb+zFTkr0sdvupTockjvsWKHB2eqJCviqc+i9DCJo5F5V+U7wq0CP3k4atgc7g@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHEq9RjRF6GisWucNdfMZmEE3ybuHR0PFKIh72NVQTKA+n8Ocm
+	zChlaVcrtyXpm3yAqJLYcd8FO4voJZTo+TfsuFSEiqd6WZi4MOC5tKTJg45Rqr0KZmzw/YITqI4
+	UPspZRjx6AA==
+X-Received: from dlbsj2-n2.prod.google.com ([2002:a05:7022:f902:20b0:11d:cd2a:4c1b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:128f:b0:124:9acd:328e
+ with SMTP id a92af1059eb24-1278fcb60bdmr5859046c88.27.1772495905544; Mon, 02
+ Mar 2026 15:58:25 -0800 (PST)
+Date: Mon,  2 Mar 2026 15:58:21 -0800
+In-Reply-To: <jiwt5mjma2puv7kjbgploxx2l5tankjm4zu2tsa75qkckwnwjk@f7mz5vlvzpjz>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <CAH0uvohLdUS6ODLZSKUA4FvjwGeqi3=9H-fJ94ybkzZPuGJ3Kg@mail.gmail.com>
+References: <jiwt5mjma2puv7kjbgploxx2l5tankjm4zu2tsa75qkckwnwjk@f7mz5vlvzpjz>
 X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <20260302234515.565623-1-irogers@google.com>
-Subject: [PATCH v1] perf trace: Avoid an ERR_PTR in syscall_stats
+Message-ID: <20260302235821.588686-1-irogers@google.com>
+Subject: [PATCH v1] perf test type profiling: Remote typedef on struct
 From: Ian Rogers <irogers@google.com>
-To: howardchu95@gmail.com
-Cc: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, 
-	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	namhyung@kernel.org, peterz@infradead.org, wangguangju@hygon.cn
+To: 9erthalion6@gmail.com
+Cc: miguel.ojeda.sandonis@gmail.com, a.hindborg@kernel.org, acme@kernel.org, 
+	aliceryhl@google.com, bjorn3_gh@protonmail.com, boqun@kernel.org, 
+	dakr@kernel.org, gary@garyguo.net, irogers@google.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	lossin@kernel.org, namhyung@kernel.org, ojeda@kernel.org, 
+	rust-for-linux@vger.kernel.org, tmgross@umich.edu
 Content-Type: text/plain; charset="UTF-8"
 
-hashmap__new may return an ERR_PTR and previously this would be
-assigned to syscall_stats meaning all use of syscall_stats needs to
-test for NULL (uninitialized) or an ERR_PTR. Given the only reason
-hashmap__new can fail is ENOMEM, just use NULL to indicate the
-allocation failure and avoid the code having to test for NULL and
-IS_ERR.
+The typedef creates an issue where the struct or the typedef may
+appear in the output and cause the "perf data type profiling tests" to
+fail. Let's remove the typedef to keep the test passing.
 
-Fixes: 96f202eab813 (perf trace: Fix IS_ERR() vs NULL check bug)
+Fixes: 335047109d7d ("perf tests: Test annotate with data type profiling and C")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-trace.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ tools/perf/tests/shell/data_type_profiling.sh | 2 +-
+ tools/perf/tests/workloads/datasym.c          | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 295b272c6c29..7ff85fa90d98 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1565,7 +1565,9 @@ static bool syscall_id_equal(long key1, long key2, void *ctx __maybe_unused)
+diff --git a/tools/perf/tests/shell/data_type_profiling.sh b/tools/perf/tests/shell/data_type_profiling.sh
+index 2a7f8f7c42d0..fb47b7213b33 100755
+--- a/tools/perf/tests/shell/data_type_profiling.sh
++++ b/tools/perf/tests/shell/data_type_profiling.sh
+@@ -8,7 +8,7 @@ set -e
+ # data type profiling manifestation
  
- static struct hashmap *alloc_syscall_stats(void)
- {
--	return hashmap__new(syscall_id_hash, syscall_id_equal, NULL);
-+	struct hashmap *result = hashmap__new(syscall_id_hash, syscall_id_equal, NULL);
-+
-+	return IS_ERR(result) ? NULL : result;
- }
+ # Values in testtypes and testprogs should match
+-testtypes=("# data-type: struct Buf" "# data-type: struct _buf")
++testtypes=("# data-type: struct Buf" "# data-type: struct buf")
+ testprogs=("perf test -w code_with_type" "perf test -w datasym")
  
- static void delete_syscall_stats(struct hashmap *syscall_stats)
-@@ -1573,7 +1575,7 @@ static void delete_syscall_stats(struct hashmap *syscall_stats)
- 	struct hashmap_entry *pos;
- 	size_t bkt;
+ err=0
+diff --git a/tools/perf/tests/workloads/datasym.c b/tools/perf/tests/workloads/datasym.c
+index 1d0b7d64e1ba..19242c7255c0 100644
+--- a/tools/perf/tests/workloads/datasym.c
++++ b/tools/perf/tests/workloads/datasym.c
+@@ -4,14 +4,14 @@
+ #include <linux/compiler.h>
+ #include "../tests.h"
  
--	if (IS_ERR(syscall_stats))
-+	if (!syscall_stats)
- 		return;
+-typedef struct _buf {
++struct buf {
+ 	char data1;
+ 	char reserved[55];
+ 	char data2;
+-} buf __attribute__((aligned(64)));
++} __attribute__((aligned(64)));
  
- 	hashmap__for_each_entry(syscall_stats, pos, bkt)
-@@ -1589,7 +1591,7 @@ static struct thread_trace *thread_trace__new(struct trace *trace)
- 		ttrace->files.max = -1;
- 		if (trace->summary) {
- 			ttrace->syscall_stats = alloc_syscall_stats();
--			if (IS_ERR(ttrace->syscall_stats))
-+			if (!ttrace->syscall_stats)
- 				zfree(&ttrace);
- 		}
- 	}
-@@ -4464,7 +4466,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 
- 	if (trace->summary_mode == SUMMARY__BY_TOTAL && !trace->summary_bpf) {
- 		trace->syscall_stats = alloc_syscall_stats();
--		if (IS_ERR(trace->syscall_stats))
-+		if (!trace->syscall_stats)
- 			goto out_delete_evlist;
- 	}
- 
-@@ -4771,7 +4773,7 @@ static int trace__replay(struct trace *trace)
- 
- 	if (trace->summary_mode == SUMMARY__BY_TOTAL) {
- 		trace->syscall_stats = alloc_syscall_stats();
--		if (IS_ERR(trace->syscall_stats))
-+		if (!trace->syscall_stats)
- 			goto out;
- 	}
- 
+ /* volatile to try to avoid the compiler seeing reserved as unused. */
+-static volatile buf workload_datasym_buf1 = {
++static volatile struct buf workload_datasym_buf1 = {
+ 	/* to have this in the data section */
+ 	.reserved[0] = 1,
+ };
 -- 
 2.53.0.473.g4a7958ca14-goog
 
