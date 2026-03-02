@@ -1,205 +1,138 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E33342510
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Mar 2026 23:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772495108; cv=pass; b=dOFfjZ2BpiYdtomn1BwXBjBaJmGzGcxPL66/Qsjsw6k8X8OSkaj1TXNLiYMqc1uDJiB2tCWyv+ukxuAdIebYCNyTY3JwSCKIXHKbg7EP9md0jjw+uyCLj9ttYT2hY5Ob8df19R5re0WJ3fLIgIKVMNVmopD0n0Ju6YVkJkzmwUI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772495108; c=relaxed/simple;
-	bh=gI6mzU+h6MF7rNPJ4817XIF1lxMBARF2p+anpiUg0wA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ElYJNC7rfMvNllK/OJSMGdFb2VQ9HHY6DApAdXPcYhwfaL9BJDuhwEJvLNd0CauWuMFWbdcDeZs1KcIrzqdGmhaGr2NgF+YuGJqPjFyW6bqSrpbDFbYPzK6WDDsgHuqhYeWxhZaGfGB8Lyc8RmCF4qzYM9mQsNYfLHKXasoswVo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Jlohau7m; arc=pass smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1AC4346AC1
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Mar 2026 23:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772495124; cv=none; b=jfWJom92ujT0USiMwDKMdYa27Jp30zQuRYzbLn+Z1m5wTj1UgRAU4CnYl82grXcLsACseJvc55mOMOQTiUwUtnN7xeeWosxbI/gb13SDQJzxbzpgN0lZwMHUOT7cAwthbbYZOA8cQfKeGdHcuW3wY3vwXn1uRmDz4hWF7n9KenU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772495124; c=relaxed/simple;
+	bh=Ryw42QOZYCD6ImijtfIf1UyVQ5xoh3C3sfE6+2YHB54=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FVaXA6tc0GYjOv3N3n2PrqO5z69MsF4tXvtt+sf7+8YfhLJgszCHksbxJKvgxwh18XGI0mdY6rWSltJ44NSc2n2aIkN8MkAR08SYv2iIS7+QRgexa9VKYAVNoqhgYwAZaIRD6abBbjEj35jY2Sg/rDSKKAev+cMV5ov/zmSlQPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=280KPrP6; arc=none smtp.client-ip=74.125.82.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Jlohau7m"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3590042fa8eso2934306a91.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Mar 2026 15:45:03 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772495103; cv=none;
-        d=google.com; s=arc-20240605;
-        b=GzGgxmrk2dYBw0GK+UleVmxRBAT0klYVdkDhajdOTLbpij9AAS2NspKHrgnNJZUw8V
-         yAdcVjxcd9BWLkKRLhtsCNCDgTSPWV+LJ9QkwOdjCtGiGhHPgEB1bs5MMDNuy5guwxkw
-         jFi6pZEUBzvMT/qsMtZMQzoU/dEWOqaCR6pIvrFEFMIzq8y81JioLUYsqJAKbTWdw4Up
-         aNIkVyVloBVCC68iItNdUUuazGiQEWHzYI3GEHUAJkjy7o8eX8tbqEc+T3qq1sX+qGpr
-         WrmicRDpiYhIwH/QPxbbQmfP1wkIojVRBsCXis1QqirZlRt5zJ3OkqGbgyfmq4qQb63P
-         3X7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=u082M2vpZx7MrZkmV/F7ZdAH+CJQSjxHglDjea1+awA=;
-        fh=ve/QrnvuRagYoYBnoSRkfsyu3MiZQe/WHzBVAXooKgg=;
-        b=ixT4VIoxDUg6CfRNcEmxTx2HrKjQLfImu0BDdtejMmfG/QHdLWV3gyHFZko4LdSSrn
-         q9r4tzV3CK+V84aInVIsdBRUibrENnBEcZHeffs39SVuoyriXj3GjAJCTTw6KIus/NVZ
-         YWlTV7XQfXa1UawrHGM+TIsPkzBMNwKrP4pwRQqFXMtd0YGJt7CjgVBHPWEI+gmEklXc
-         jRgbBmK5zi6yUlQpvYVdjM55+c0+wsz5Bdgq91y2gaqBYHKusJNyn79ZzIH1vk627F9V
-         vKMf9yhBUP4Vup4QLkNCxyvqig8yO+BnX2fqs4z2r3ZRAMmYMSBO2XGB9S+d5wCu7V1S
-         VXNw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="280KPrP6"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ba9a744f7dso5570511eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Mar 2026 15:45:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1772495103; x=1773099903; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u082M2vpZx7MrZkmV/F7ZdAH+CJQSjxHglDjea1+awA=;
-        b=Jlohau7m2sNM8GDzyvqU0a0nTQuf+qu3cuCrmzz+AyGIWXH4qCokGvv5cpbrkijbZ8
-         WRwHFHj16LfTWXlm4WMp2oskushe2aU51Uf7iEueAYb6Sf/iKTWkVDV0yWPIhOTx5azz
-         wqKhHTD6zu6NK3iV9QENRuadm6NkylGySmoWALotgY0ISXxjFj3wo67dI2BlvAkRV5XI
-         ZG+JJTzsKRSqI6u414/leBczUk5iRfk5XanaLpsPgJXqPgS32lVIvQ1ORDilRKNbPL56
-         zMkNc4huJ1L0FnaFxSjIE56/MA83Mo4T1IgNkG8jcxE29WJVn/oMGzZv9kp5nJLzeDQi
-         pIvw==
+        d=google.com; s=20230601; t=1772495121; x=1773099921; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XApOxNLqALRPqrd9a4JI8RQyzwyIkRhsoF996QzzUnM=;
+        b=280KPrP6ejRpeiFpgpBtUxPUA28o6DT5hi1LtZTjxihTMCYvgvG1lpF8rQ/9ZwY1CU
+         QtBwaie/5a7f3tttT6BrpRN36J3OBKbtA1fW/RHHMx6l1fWetFh2CulPtcNtTFrO0Nss
+         +MMHLCUuXi7cBxmktOZkKjPmdNmYyfP97hkFvGZtyCsSTO+uiOIB4bKlbWUXpxF0BVsV
+         e84OxNJ8bdN+CVNp2xD80FxplvUJBozX1ppNqb+04OkZzJ3EIU6zNQR8MK/nmD8MIdoP
+         FpVYqIvYNF/ywsnRbgxyx/+gIqYIaROg5vq4FJxlLjRbCcYldyvIatggWiq3fcdpc2fn
+         +hwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772495103; x=1773099903;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=u082M2vpZx7MrZkmV/F7ZdAH+CJQSjxHglDjea1+awA=;
-        b=CyD6whhccZ9E//5y/FZMfWVAS//t3HKlTxTG+zXsLrV+DhfOwI3RUpP8YfrVEkPKFj
-         kz7quWhvQlF7qaYVApJFolVzmUDSJXzqwxOMCwBokNK4jSkpH41QtF/hZgDqQAu3Q//s
-         YrRpA/MozVBUJiNnWubjaTyL5D+mhPQ/g7uNJt9QDAuDHUnRe07CfELQgXQfPkQ11nVc
-         z5XWUAhM2s8D9fNKjRYzhrcsi1u+zQonXLuyZf9yFGlJg9QODxNHnUb9iAMJHA3CFOAu
-         MvyirG1AKvWDtl2KujtOQLqkyff0Zx7bGL5T6uoO5OB+D9BFypvFf4bXEsi7Ju6Z8IVp
-         qGXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXbiAHM7FZ8C8XQEIRC0F15CsHhOACsfkr8nyQDS2ASWub4Mq3/MA8VYhS61uZjjyNdYt5v4dyXsNh9ubsE1N5R@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7z6RRSl09ClQQmTnNjUh7szBrYNzw7m5f9om6GNkixHM1iQxJ
-	bYC5jUlxQ1gne8+nlCG5SLKZJ2jeNQMWXN8rNwpJE75zGHLee9mSVQUqU3if4V/wTNeAj/HPJDX
-	41G12hPuHm8oQZj1Q3S60ns45z1ReonMaKpqk7034
-X-Gm-Gg: ATEYQzwbmUROcF7CMhuw1Q/gD8y1ue0UvGyeE5ZtXAwxremleFa1vmq+GELd/C2HAJI
-	WUQutyRoFNwU0wXwP2bKRXn+lo58y25/LHdgRDG0TA9/UfYVJnCEO91eY6jX8KvmZN3J90blfvK
-	opwXP0MoUvlFbQGas76iH7kQOyIi0fcgN2rtJebdRxqKTY9ehoDXD1UF5zrxizAt1BNmYLVsKL+
-	xCjBguM3UqVxi093ltLmLetD7Y3DCSYTdJ8HDfj1Z1kYi3UIcJnIQd0MX9lrqZ2g+pAjGZ8Xz1X
-	OSH8+KY=
-X-Received: by 2002:a17:90b:578e:b0:356:2eff:df05 with SMTP id
- 98e67ed59e1d1-35965c9d15dmr12730172a91.16.1772495102745; Mon, 02 Mar 2026
- 15:45:02 -0800 (PST)
+        d=1e100.net; s=20230601; t=1772495121; x=1773099921;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XApOxNLqALRPqrd9a4JI8RQyzwyIkRhsoF996QzzUnM=;
+        b=rVtmWLRCmG2NG5uuKAKay3NDL8bVWAkwTR8KUpyHS5iSlbg7IRAhGmriYJuPAJjz2b
+         2APsyiifiIiL3v1WtybKzHNYunSXIAmtsmyK6ZV6/rDb2QIge3X7Qw/QqIdWF/hU8qfd
+         emyWSSWYytMqdckjupZrQNffGb+o9HcFFTNdxroH1tHEf/O2/DSoKsKeyziYkztp3vrR
+         wOsFZe3RlBwlgXmN44IzQmeHQ0j3ktuGpSa4eOM+rH0G76GrL7UZktXVasfWhsqMTuY7
+         +aS+RL7h5PwxH0DPGM8f4QFhATsFKb1O/gQjSca2h7qFFm8cW2lrn/6xQ0EUns1M31yN
+         mUcw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPzTuVjoDtj0nMiEKRS1LohdSbZmjBCWJOrK42S4TkKRRcUH5fvSBdDvUo7+jpImkbDqjouKPnHZHqe0vvIX87@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGK2rgDlbQlJjw1mnvV32cc7AHW5h0rv8R27BVYd8p2XETSEtt
+	9naZQ9ApYeo3yRllnpqMrifjAn9Spkps/M9dyS2NBh0iUff4P/Ilgp12+jEKvXfB+OIzMEKmXTk
+	UosgyhyicLA==
+X-Received: from dybhr7.prod.google.com ([2002:a05:7300:e2c7:b0:2be:1a3c:a2e8])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:4181:b0:2be:1365:b6db
+ with SMTP id 5a478bee46e88-2be1365dd7fmr1835551eec.17.1772495120836; Mon, 02
+ Mar 2026 15:45:20 -0800 (PST)
+Date: Mon,  2 Mar 2026 15:45:15 -0800
+In-Reply-To: <CAH0uvohLdUS6ODLZSKUA4FvjwGeqi3=9H-fJ94ybkzZPuGJ3Kg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org> <20260302-iino-u64-v2-3-e5388800dae0@kernel.org>
-In-Reply-To: <20260302-iino-u64-v2-3-e5388800dae0@kernel.org>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 2 Mar 2026 18:44:51 -0500
-X-Gm-Features: AaiRm51Sffi2V1GbWbKQK3xjBHaGrjaqO3h4_HvI_INFaL56ZEFyr07E1_3tePs
-Message-ID: <CAHC9VhRnmBuXEKkUPQhJ_LDzcksjoAJL-ne6mFoJdR1hnDdzsg@mail.gmail.com>
-Subject: Re: [PATCH v2 003/110] audit: widen ino fields to u64
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Eric Biggers <ebiggers@kernel.org>, 
-	"Theodore Y. Ts'o" <tytso@mit.edu>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>, 
-	David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.org>, 
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	Steve French <sfrench@samba.org>, Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
-	Shyam Prasad N <sprasad@microsoft.com>, Bharath SM <bharathsm@microsoft.com>, 
-	Alexander Aring <alex.aring@gmail.com>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
-	Viacheslav Dubeyko <slava@dubeyko.com>, Eric Van Hensbergen <ericvh@kernel.org>, 
-	Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Christian Schoenebeck <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, 
-	Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>, 
-	Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, 
-	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Alex Markuze <amarkuze@redhat.com>, Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, 
-	Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>, Amir Goldstein <amir73il@gmail.com>, 
-	Christoph Hellwig <hch@infradead.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Yangtao Li <frank.li@vivo.com>, 
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse <dwmw2@infradead.org>, 
-	Richard Weinberger <richard@nod.at>, Dave Kleikamp <shaggy@kernel.org>, 
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, 
-	Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>, 
-	Zhihao Cheng <chengzhihao1@huawei.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, 
-	John Johansen <john.johansen@canonical.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, Eric Dumazet <edumazet@google.com>, 
-	Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, "Darrick J. Wong" <djwong@kernel.org>, 
-	Martin Schiller <ms@dev.tdt.de>, Eric Paris <eparis@redhat.com>, Joerg Reuter <jreuter@yaina.de>, 
-	Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Oliver Hartkopp <socketcan@hartkopp.net>, 
-	Marc Kleine-Budde <mkl@pengutronix.de>, David Ahern <dsahern@kernel.org>, 
-	Neal Cardwell <ncardwell@google.com>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Remi Denis-Courmont <courmisch@gmail.com>, 
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, 
-	Magnus Karlsson <magnus.karlsson@intel.com>, 
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Stanislav Fomichev <sdf@fomichev.me>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev, 
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org, 
-	v9fs@lists.linux.dev, linux-afs@lists.infradead.org, autofs@vger.kernel.org, 
-	ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu, 
-	ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev, 
-	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org, 
-	linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, 
-	selinux@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
-	linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-fscrypt@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org, 
-	linux-x25@vger.kernel.org, audit@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-can@vger.kernel.org, 
-	linux-sctp@vger.kernel.org, bpf@vger.kernel.org
+Mime-Version: 1.0
+References: <CAH0uvohLdUS6ODLZSKUA4FvjwGeqi3=9H-fJ94ybkzZPuGJ3Kg@mail.gmail.com>
+X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
+Message-ID: <20260302234515.565623-1-irogers@google.com>
+Subject: [PATCH v1] perf trace: Avoid an ERR_PTR in syscall_stats
+From: Ian Rogers <irogers@google.com>
+To: howardchu95@gmail.com
+Cc: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, 
+	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	namhyung@kernel.org, peterz@infradead.org, wangguangju@hygon.cn
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 2, 2026 at 3:25=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wro=
-te:
->
-> inode->i_ino is being widened from unsigned long to u64. The audit
-> subsystem uses unsigned long ino in struct fields, function parameters,
-> and local variables that store inode numbers from arbitrary filesystems.
-> On 32-bit platforms this truncates inode numbers that exceed 32 bits,
-> which will cause incorrect audit log entries and broken watch/mark
-> comparisons.
->
-> Widen all audit ino fields, parameters, and locals to u64, and update
-> the inode format string from %lu to %llu to match.
->
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  include/linux/audit.h   | 2 +-
->  kernel/audit.h          | 9 ++++-----
->  kernel/audit_fsnotify.c | 4 ++--
->  kernel/audit_watch.c    | 8 ++++----
->  kernel/auditsc.c        | 2 +-
->  5 files changed, 12 insertions(+), 13 deletions(-)
+hashmap__new may return an ERR_PTR and previously this would be
+assigned to syscall_stats meaning all use of syscall_stats needs to
+test for NULL (uninitialized) or an ERR_PTR. Given the only reason
+hashmap__new can fail is ENOMEM, just use NULL to indicate the
+allocation failure and avoid the code having to test for NULL and
+IS_ERR.
 
-We should also update audit_hash_ino() in kernel/audit.h.  It is a
-*very* basic hash function, so I think leaving the function as-is and
-just changing the inode parameter from u32 to u64 should be fine.
+Fixes: 96f202eab813 (perf trace: Fix IS_ERR() vs NULL check bug)
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-trace.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---=20
-paul-moore.com
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 295b272c6c29..7ff85fa90d98 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1565,7 +1565,9 @@ static bool syscall_id_equal(long key1, long key2, void *ctx __maybe_unused)
+ 
+ static struct hashmap *alloc_syscall_stats(void)
+ {
+-	return hashmap__new(syscall_id_hash, syscall_id_equal, NULL);
++	struct hashmap *result = hashmap__new(syscall_id_hash, syscall_id_equal, NULL);
++
++	return IS_ERR(result) ? NULL : result;
+ }
+ 
+ static void delete_syscall_stats(struct hashmap *syscall_stats)
+@@ -1573,7 +1575,7 @@ static void delete_syscall_stats(struct hashmap *syscall_stats)
+ 	struct hashmap_entry *pos;
+ 	size_t bkt;
+ 
+-	if (IS_ERR(syscall_stats))
++	if (!syscall_stats)
+ 		return;
+ 
+ 	hashmap__for_each_entry(syscall_stats, pos, bkt)
+@@ -1589,7 +1591,7 @@ static struct thread_trace *thread_trace__new(struct trace *trace)
+ 		ttrace->files.max = -1;
+ 		if (trace->summary) {
+ 			ttrace->syscall_stats = alloc_syscall_stats();
+-			if (IS_ERR(ttrace->syscall_stats))
++			if (!ttrace->syscall_stats)
+ 				zfree(&ttrace);
+ 		}
+ 	}
+@@ -4464,7 +4466,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 
+ 	if (trace->summary_mode == SUMMARY__BY_TOTAL && !trace->summary_bpf) {
+ 		trace->syscall_stats = alloc_syscall_stats();
+-		if (IS_ERR(trace->syscall_stats))
++		if (!trace->syscall_stats)
+ 			goto out_delete_evlist;
+ 	}
+ 
+@@ -4771,7 +4773,7 @@ static int trace__replay(struct trace *trace)
+ 
+ 	if (trace->summary_mode == SUMMARY__BY_TOTAL) {
+ 		trace->syscall_stats = alloc_syscall_stats();
+-		if (IS_ERR(trace->syscall_stats))
++		if (!trace->syscall_stats)
+ 			goto out;
+ 	}
+ 
+-- 
+2.53.0.473.g4a7958ca14-goog
+
