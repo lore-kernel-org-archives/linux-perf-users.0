@@ -1,170 +1,183 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54835368287;
-	Mon,  2 Mar 2026 13:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F8A430B97;
+	Mon,  2 Mar 2026 15:02:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772458583; cv=none; b=okR9s18Td/X4htnDbVL/EmoBw10922L/VdGcYl5ihgsH8oGzcuL7oTxj68BvocPZyL5GOS0zhDsttxifjTD6XiGjRlIpuMMS0cog8uHXFHTNRRe7kxNlHVl5JRxG+bSnH7iAaZZ2wicoKSY0AIAld4334mNXYCih/aIZ8LYprTQ=
+	t=1772463722; cv=none; b=sL6BIbtlhIFq7vqwg4sfdHuhLoCVnotPMlTx/FuReKdbNtCu8YTrm6nt9sINCj7IVLMIl/t02dE3Qn+HWYVypyEEgSRrkdP5ZsTMDGBL/ahiHxlHJhWBas2zVsUrRCBWz5VbCa1A42aJ4Ai3JeUwPv3wQE8vCzIkJ7vi9pR3yos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772458583; c=relaxed/simple;
-	bh=fMRdF3okAKkyyQekwpy5I+dvZnlkqm7yHgTMP8F6O2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LsgzL5U/feHZG66L5ezMsGevJ9g+VqNTNu3zcZwooyvIJuqd9B7MQbQMxKLSB3jbYdju1BSCT9FYDFEJbwA5yyne3HI2r9mEQ+ewB2wOb4V2iEj6FkloHtmtD9wjM5vQnDwJhC316FfCIPnXPqlFxXj2dKf7us6jCgnoygGfAsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lyS1fVNX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772463722; c=relaxed/simple;
+	bh=uVJ5W8RDb0Q88US960LmNDSuXSSlf4Uim4+IPeDSNK0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q2LjCWlJKKQqswSh11CESdWOXoqOtGnq1u2ywDZGmcvwnfo0OObuhIf5ekBVUfT+VhLmel6OHAnrS0slNrWWGKNsHkCV3zcuQTyD3BqhoPeNHvUywutCDe0TBIi9uOf7Gwt5D1zkozr4KI/5aCbx1/n2GYPyk+UVM3bgHFLJ8hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWobLmgR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lyS1fVNX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E7AAC19423;
-	Mon,  2 Mar 2026 13:36:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWobLmgR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07EBCC2BC86;
+	Mon,  2 Mar 2026 15:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772458582;
-	bh=fMRdF3okAKkyyQekwpy5I+dvZnlkqm7yHgTMP8F6O2A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lyS1fVNXhbsXt2BOxYUCBDAufPEWO+b7WrP8Nv5lokqe7KrWrvDugsZZvAIVDK7BY
-	 ho4AC7+IITRbUweff1PUwu0+nPADk1yMfXfiuIaDgiOlo8daIrVXqBTs+WEFISxnmr
-	 KBBBqd+I/fQA6a00dlS85FqgT5N5kOkYkvN04SLon8+BB2SGKmBrSQo9CA3iAvemSA
-	 L8k4bsUCyPLzAXtGVb9JypTIPUQppVE0oz23zVYkFquP2aCjY5ULvOKFyI/EoIIoEK
-	 tBnrOpZmeojNTmfdfAD991F0ZolDlN3ORvPid478VlIJrZ9WWpQDV51kQxBIfN0GdH
-	 o/Rd0WG4DYXXw==
-From: Sasha Levin <sashal@kernel.org>
-To: Zw Tang <shicenci@gmail.com>,
-	paulmck@kernel.org,
-	peterz@infradead.org,
-	mhiramat@kernel.org
-Cc: Sasha Levin <sashal@kernel.org>,
-	jiangshanlai@gmail.com,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	rcu@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com,
-	josh@joshtriplett.org,
-	bigeasy@linutronix.de,
-	ast@kernel.org,
-	boqun.feng@gmail.com,
-	mark.rutland@arm.com
-Subject: Re: [BUG] RCU stall / hung rcu_gp: process_srcu blocked in synchronize_rcu_normal triggered by perf trace teardown on 7.0.0-rc1
-Date: Mon,  2 Mar 2026 08:36:13 -0500
-Message-ID: <20260302133615.2304836-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <CAPHJ_VLUpgBO7VfF4ih2oy2HDCxvxkHRkryFUjHAm8QTNdF6Sg@mail.gmail.com>
-References: <CAPHJ_VLUpgBO7VfF4ih2oy2HDCxvxkHRkryFUjHAm8QTNdF6Sg@mail.gmail.com>
+	s=k20201202; t=1772463722;
+	bh=uVJ5W8RDb0Q88US960LmNDSuXSSlf4Uim4+IPeDSNK0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lWobLmgREDwCa6QJLQmI5nIpISCGpMz7a96V/QGuOD82cePN323mHvFoxTP1HMQXE
+	 TEaW5klupi0q9iOOyV3zX0p+vJPBLURsBza5jkwf8oHWEiS+DmrV90MsaZJvyIAWXA
+	 LmJUzzTz9OeLqMT8490VjGBPuNCuBi0cOHGtUDPW5mA5DUM4g5gYhCAjJgHjclfQQf
+	 Wyh6s4c/gljdfNCRpBViW0sUIvwawSGQ0A0NjL+baYteKTP/noHei+HmgPZ2rtoz4v
+	 16jo5mwPvKK0NVOkHwqcyW/lppDuIFNh/+BCNXyFZc2ZcygDWLUOa4LNBq8ExGNTvh
+	 HavSfwlo4KjgA==
+Message-ID: <5f8dcb7f-9e4f-4484-b160-3a9ce541d63c@kernel.org>
+Date: Mon, 2 Mar 2026 16:01:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 02/16] mm/memory: remove "zap_details" parameter from
+ zap_page_range_single()
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: linux-kernel@vger.kernel.org, "linux-mm @ kvack . org"
+ <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ David Rientjes <rientjes@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+ Todd Kjos <tkjos@android.com>, Christian Brauner <brauner@kernel.org>,
+ Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>,
+ H Hartley Sweeten <hsweeten@visionengravers.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Leon Romanovsky <leon@kernel.org>,
+ Dimitri Sivanich <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Eric Dumazet <edumazet@google.com>, Neal Cardwell <ncardwell@google.com>,
+ "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+ kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
+References: <20260227200848.114019-1-david@kernel.org>
+ <20260227200848.114019-3-david@kernel.org> <aaLh2BxSgC9Jl5iS@google.com>
+ <8a27e9ac-2025-4724-a46d-0a7c90894ba7@kernel.org>
+ <aaVf5gv4XjV6Ddt-@google.com>
+ <f2f3a8a1-3dbf-4ef9-a89a-a6ec20791d1c@kernel.org>
+ <aaVnifbdxKhBddQp@google.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <aaVnifbdxKhBddQp@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-This response was AI-generated by bug-bot. The analysis may contain errors — please verify independently.
+On 3/2/26 11:33, Alice Ryhl wrote:
+> On Mon, Mar 02, 2026 at 11:27:40AM +0100, David Hildenbrand (Arm) wrote:
+>> On 3/2/26 11:01, Alice Ryhl wrote:
+>>>
+>>> Well, rustfmt comes with the compiler, and it would be ideal to build
+>>> test changes before sending them :)
+>>
+>> At least on Ubuntu on my notebook where I do most of the coding+patch
+>> submissions it's a separate package?
+>>
+>> I do all my builds on a different (more powerful) machine where the
+>> whole rust machinery's in place. Further, build bots that run on my
+>> private branches did not report any issues.
+> 
+> There are some build bots that check for rustfmt, though not all of
+> them.
+> 
+>>> But no worries, I took care of testing it. Thanks for taking the time to
+>>> update the Rust code as well.
+>>
+>> I just did an allyesconfig and it does not report any warnings.
+>>
+>> So apparently, rustfmt problems not result in the compiler complaining?
+>>
+>> Or something else is off here that rust/kernel/mm/virt.rs won't get
+>> compiled on my machine, even with allyesconfig. I can definitely see
+>> some RUSTC stuff happening in the logs, like
+>>
+>> 	RUSTC L rust/kernel.o
+>>
+>> Thanks for the review and for pointing out rustfmt!
+> 
+> Similar to kerneldoc and other similar targets, formatting isn't checked
+> in the normal build, but make can be invoked on the rustfmtcheck target
+> to check it.
 
-## Bug Summary
+Thanks adding that to my cross-compile chain.
 
-This is an RCU stall and hung task deadlock on 7.0.0-rc1, triggered by perf trace teardown under perf interrupt storm conditions. The perf subsystem's tracepoint unregistration path now blocks on SRCU (tracepoint_srcu), which in turn blocks on RCU grace period completion, creating a cascading stall when RCU progress is delayed by perf NMI interrupt storms. Severity: system hang (multiple tasks blocked >143s, eventual complete stall).
+-- 
+Cheers,
 
-## Stack Trace Analysis
-
-The bug involves three interacting blocked entities. Here are the decoded stack traces:
-
-**1. repro2 (pid 4086) - blocked in perf trace teardown (close()):**
-```
-__x64_sys_close
-  fput_close_sync
-    __fput
-      perf_release
-        perf_event_release_kernel
-          put_event
-            __free_event
-              perf_trace_destroy
-                perf_trace_event_unreg         [kernel/trace/trace_event_perf.c:154]
-                  tracepoint_synchronize_unregister [include/linux/tracepoint.h:116]
-                    synchronize_srcu(&tracepoint_srcu)
-                      __synchronize_srcu
-                        wait_for_completion    ← BLOCKED
-```
-
-**2. kworker/0:0 (pid 9) and kworker/0:1 (pid 11) - SRCU grace period workers:**
-```
-Workqueue: rcu_gp process_srcu
-process_srcu                                   [kernel/rcu/srcutree.c:1304]
-  srcu_advance_state                           [kernel/rcu/srcutree.c:1161]
-    try_check_zero                             [kernel/rcu/srcutree.c:1171]
-      srcu_readers_active_idx_check            [kernel/rcu/srcutree.c:544]
-        synchronize_rcu()                      ← SRCU-fast path, line 569
-          synchronize_rcu_normal
-            wait_for_completion                ← BLOCKED
-```
-
-**3. repro2 (pid 4093) - RCU stall source:**
-```
-rcu: Tasks blocked on level-0 rcu_node (CPUs 0-1): P4093
-task:repro2   state:R  running task
-  (running in futex_wake syscall, interrupted by timer IRQ)
-  asm_sysvec_apic_timer_interrupt
-    irqentry_exit → preempt_schedule_irq → __schedule
-      finish_task_switch
-```
-
-The trace shows process context for the hung tasks and interrupt context (timer IRQ) for the RCU stall detection. The kworkers are in D (uninterruptible sleep) state, blocked in wait_for_completion() within the SRCU grace period state machine.
-
-## Root Cause Analysis
-
-This is a regression introduced by commit a46023d5616ed ("tracing: Guard __DECLARE_TRACE() use of __DO_TRACE_CALL() with SRCU-fast"), which switched tracepoint read-side protection from preempt_disable()+RCU to SRCU-fast via DEFINE_SRCU_FAST(tracepoint_srcu).
-
-The root cause is a new coupling between SRCU grace period processing and RCU grace period completion that did not exist before. The deadlock chain is:
-
-1. The reproducer creates perf events using tracepoints, then closes them while generating heavy perf interrupt load. The perf NMI interrupt storms ("perf: interrupt took too long" messages escalating from 69ms to 336ms) consume most CPU time, starving RCU quiescent state detection.
-
-2. When the perf fd is closed, perf_trace_event_unreg() (kernel/trace/trace_event_perf.c:154) calls tracepoint_synchronize_unregister() (include/linux/tracepoint.h:116), which now calls synchronize_srcu(&tracepoint_srcu) instead of synchronize_rcu().
-
-3. The SRCU grace period for tracepoint_srcu is processed by process_srcu() running in the rcu_gp workqueue. Because tracepoint_srcu is DEFINE_SRCU_FAST, its srcu_reader_flavor includes SRCU_READ_FLAVOR_FAST, which is part of SRCU_READ_FLAVOR_SLOWGP.
-
-4. In srcu_readers_active_idx_check() (kernel/rcu/srcutree.c:544), when SRCU_READ_FLAVOR_SLOWGP is detected, the function calls synchronize_rcu() (line 569) instead of smp_mb() (line 301 in non-fast path). This is the key design tradeoff of SRCU-fast: faster readers (no smp_mb() on read side) at the cost of slower grace periods (synchronize_rcu() on update side).
-
-5. synchronize_rcu() → synchronize_rcu_normal() → wait_for_completion(), waiting for an RCU grace period to complete. But the RCU grace period is stalled because the perf interrupt storms are preventing CPUs from passing through quiescent states quickly enough.
-
-6. Since process_srcu is blocked waiting for synchronize_rcu(), the tracepoint_srcu SRCU grace period cannot advance, so synchronize_srcu(&tracepoint_srcu) in the perf teardown path also blocks indefinitely.
-
-The pre-existing condition (perf NMI storms causing RCU stalls) was previously tolerable because the perf teardown path used synchronize_rcu() directly (via the old tracepoint_synchronize_unregister()), which would eventually complete once the RCU stall resolved. Now, with SRCU-fast, there is an additional layer of indirection: perf teardown waits on SRCU, SRCU processing waits on RCU, and both the SRCU workqueue threads and the perf teardown task are stuck.
-
-## Affected Versions
-
-This is a regression in v7.0-rc1. The bug was introduced by commit a46023d5616ed ("tracing: Guard __DECLARE_TRACE() use of __DO_TRACE_CALL() with SRCU-fast"), which was merged via the trace-v7.0 merge (3c6e577d5ae70). The underlying SRCU-fast infrastructure was added by commit c4020620528e4 ("srcu: Add SRCU-fast readers") and 4d86b1e7e1e98 ("srcu: Add SRCU_READ_FLAVOR_SLOWGP to flag need for synchronize_rcu()"), but the regression became triggerable only when a46023d5616ed applied SRCU-fast to the tracepoint_srcu used in the perf event teardown path.
-
-Kernels before v7.0-rc1 (i.e., v6.x and earlier) are not affected, as they used preempt_disable()+RCU for tracepoint protection, and tracepoint_synchronize_unregister() called synchronize_rcu() directly without SRCU involvement.
-
-## Relevant Commits and Fixes
-
-Key commits in the causal chain:
-
-- a46023d5616ed ("tracing: Guard __DECLARE_TRACE() use of __DO_TRACE_CALL() with SRCU-fast") - the commit that introduced the regression by switching tracepoints to SRCU-fast
-- a77cb6a867667 ("srcu: Fix warning to permit SRCU-fast readers in NMI handlers") - immediate predecessor fix
-- c4020620528e4 ("srcu: Add SRCU-fast readers") - added the SRCU-fast reader API
-- 4d86b1e7e1e98 ("srcu: Add SRCU_READ_FLAVOR_SLOWGP to flag need for synchronize_rcu()") - added the synchronize_rcu()-instead-of-smp_mb() logic in SRCU grace period processing
-- 16718274ee75d ("tracing: perf: Have perf tracepoint callbacks always disable preemption") - preparatory commit for the SRCU-fast switch
-
-No fix for this specific issue was found in mainline or in any -next branches as of today.
-
-## Prior Discussions
-
-No prior reports of this specific RCU stall / SRCU deadlock triggered via perf trace teardown with SRCU-fast were found on lore.kernel.org. The original SRCU-fast tracepoint series was posted at https://lore.kernel.org/all/20260126231256.499701982@kernel.org/ (linked from the commit message), motivated by enabling preemptible BPF on tracepoints for RT systems (https://lore.kernel.org/all/20250613152218.1924093-1-bigeasy@linutronix.de/). No discussion of the synchronize_rcu()-from-workqueue stall scenario appears to have taken place in those threads.
-
-## Suggested Actions
-
-1. Confirm the regression by testing with the parent commit a77cb6a867667 (immediately before a46023d5616ed). If the issue disappears, this confirms the SRCU-fast tracepoint switch as the cause.
-
-2. As a quick workaround, reverting a46023d5616ed (and its preparatory commits a77cb6a867667, f7d327654b886, 16718274ee75d if needed) should eliminate the deadlock, at the cost of losing preemptible BPF tracepoint support.
-
-3. The fundamental issue is that process_srcu() for SRCU-fast structures calls synchronize_rcu() synchronously from workqueue context. Possible fixes include:
-   - Using an asynchronous mechanism (e.g., call_rcu() with a callback to resume SRCU GP processing) instead of blocking synchronize_rcu() within the SRCU state machine.
-   - Having srcu_readers_active_idx_check() use poll_state_synchronize_rcu() and defer retrying instead of blocking.
-   - Bounding the perf interrupt rate escalation to prevent the RCU stall in the first place (though this would only mask the underlying SRCU↔RCU coupling issue).
-
-4. If you can reproduce reliably, adding the following debug options would provide more information: CONFIG_RCU_TRACE=y, CONFIG_PROVE_RCU=y, and booting with rcutree.rcu_kick_kthreads=1 to see if kicking the RCU threads helps break the stall.
-
+David
