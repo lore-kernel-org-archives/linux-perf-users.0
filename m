@@ -1,195 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B8A41C0A1
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Mar 2026 15:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4E62E7657;
+	Mon,  2 Mar 2026 16:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772466685; cv=none; b=ZCFDONGG4gvndHxyZZY09XoZwHmlCtv4vh1MGg0m2J+D7++M+bBErzkAcAnyQZCtsJSt42m8d/Ja7MkZZjvblzSgi9jd3xNQRsWb31cMhNRMWU7d4ZQe0ZVXkESDrcmvugAcFC2c4gNrP8Eog1/jKH7lWADmgMcMBvsPlgp/p2w=
+	t=1772468722; cv=none; b=goGUUbOHdc0ErP1fd6WgfrSzY1jH3zpyeF7YiSO9/M7uzT2K0axdu8X9NLjMZlrUYXEHw0ny/nGEtglC0olPjnDQIcK9pDQkS7eGWfaAkKGqD1AlFoG+O2asPQjVoQGIhJoqX4Jfo5bgTHW8iA0ryRIMrqqeNrPLpgxgLh1lBM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772466685; c=relaxed/simple;
-	bh=qD/0K0KIHkoyvSZL2Bcy5abPhianC/oTyoi8g+a0rc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tYjMHeX1VZxA5xWoup624d4smuqncLOW0m9FiX+Uf5B2V9chp5C8bfCN2kmQ69TTUV92xp4ccC96n7wAiD38Y/MFgcv1PVpBtYoX37EXNXDlqHcwxXPsqS6N0LJVBx1Q2mOX8AR+2T+1xo0Pl3aDbma4bqrLX27TPTRn+wCC2wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TASq1vB/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TASq1vB/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772466682;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aoOQh5MyAu6nlDX9uknAUDa5fq51/hpe1dchrut35pc=;
-	b=TASq1vB/eJ2fJNL47LsTeRo0W54paY19PcB1R/c+J6ZagCgI9xXoSWe7sqLs/1zAz63kBR
-	784K6MJJvV8n0Iirxx2tq+eNvNEX/T/vkE720ovI4miQcONaKG6hq1Jkc7AtMv38D55/3k
-	KrH2XhKxFss4Np/NYLj73OpFEvYuePk=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-438-bChCRA5HOGmgEsuoa4ORPQ-1; Mon,
- 02 Mar 2026 10:51:17 -0500
-X-MC-Unique: bChCRA5HOGmgEsuoa4ORPQ-1
-X-Mimecast-MFC-AGG-ID: bChCRA5HOGmgEsuoa4ORPQ_1772466676
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 50FCA19560A7;
-	Mon,  2 Mar 2026 15:51:16 +0000 (UTC)
-Received: from fedora (unknown [10.45.224.37])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id F0DAD1800348;
-	Mon,  2 Mar 2026 15:51:13 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  2 Mar 2026 16:51:15 +0100 (CET)
-Date: Mon, 2 Mar 2026 16:51:12 +0100
-From: Oleg Nesterov <oleg@redhat.com>
+	s=arc-20240116; t=1772468722; c=relaxed/simple;
+	bh=INCh/bpXbRd4qHR3Fkdtyzr6JZ3/Fj5/uDWogmM5+4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mqLb+8Ff91PtGcNbgD8YGEQHEeeaKi765bVRpS7lJLu2aFYC6RXeUMNXLNbBLCJnuosj0x6UfmFTvkMcRFv+gaXU4Qgq96Lz423DdYvYR5UOiL5Vcpqe3rRumVEE0qqX33aQb8vM7TmgTMU0o/wB6EPVpSNC/+KOjiyXNmgwnHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id C44B81A01FF;
+	Mon,  2 Mar 2026 16:25:17 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id EE4ED2F;
+	Mon,  2 Mar 2026 16:25:13 +0000 (UTC)
+Date: Mon, 2 Mar 2026 11:25:45 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
 To: Sasha Levin <sashal@kernel.org>
-Cc: stable@vger.kernel.org, Paulo Andrade <pandrade@redhat.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 5.10.y] x86/uprobes: Fix XOL allocation failure for 32-bit
- tasks
-Message-ID: <aaWx8NWZ3Jm-5Z7g@redhat.com>
-References: <20260301020027.1726538-1-sashal@kernel.org>
+Cc: Zw Tang <shicenci@gmail.com>, paulmck@kernel.org, peterz@infradead.org,
+ mhiramat@kernel.org, jiangshanlai@gmail.com, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, rcu@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ josh@joshtriplett.org, bigeasy@linutronix.de, ast@kernel.org,
+ boqun.feng@gmail.com, mark.rutland@arm.com
+Subject: Re: [BUG] RCU stall / hung rcu_gp: process_srcu blocked in
+ synchronize_rcu_normal triggered by perf trace teardown on 7.0.0-rc1
+Message-ID: <20260302112545.51f7e100@gandalf.local.home>
+In-Reply-To: <20260302133615.2304836-1-sashal@kernel.org>
+References: <CAPHJ_VLUpgBO7VfF4ih2oy2HDCxvxkHRkryFUjHAm8QTNdF6Sg@mail.gmail.com>
+	<20260302133615.2304836-1-sashal@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260301020027.1726538-1-sashal@kernel.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: EE4ED2F
+X-Stat-Signature: c9h734z43d18tq3d6taneqa6ehjqt9dn
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+MwzVD54+qlDxdCKOsmvKSIKQh6hT27Ek=
+X-HE-Tag: 1772468713-1784
+X-HE-Meta: U2FsdGVkX1+y5RqaJa5rhFrfyPhu9I6mT8F4SaXsALwimCrOZNItotAb4Pk3fIyUtI8PM4ued8qKJ9hXjpJv3O8roX/GUIfbSyEatVQz5FXClPe29PSbft0GVrnRQMtjmSMjNd/Kj7jXY1hSIpDUWFvAxoAjqVi2mW1FTC5c6BULPmmbpVO1HUMDHA1IhVzIE2bdv2Y8HC6tYlmSxw0s/7Sbn4n3IJ20XcGp4at+6YAtL7sCamLyj2VNwJF7YxTis2oNtLETIkHImz8dc47wgWfXM2SWhqS72IhotnIhUxGR268bc4jZ2Kyc7gZM8CCK2hiH5echU5aq4/9qLmZWWuwXMqLoQJkI
 
-[ Upstream commit d55c571e4333fac71826e8db3b9753fadfbead6a ]
+On Mon,  2 Mar 2026 08:36:13 -0500
+Sasha Levin <sashal@kernel.org> wrote:
 
-This script
+> This response was AI-generated by bug-bot. The analysis may contain error=
+s =E2=80=94 please verify independently.
+>=20
+> ## Bug Summary
+>=20
+> This is an RCU stall and hung task deadlock on 7.0.0-rc1, triggered by pe=
+rf trace teardown under perf interrupt storm conditions. The perf subsystem=
+'s tracepoint unregistration path now blocks on SRCU (tracepoint_srcu), whi=
+ch in turn blocks on RCU grace period completion, creating a cascading stal=
+l when RCU progress is delayed by perf NMI interrupt storms. Severity: syst=
+em hang (multiple tasks blocked >143s, eventual complete stall).
 
-	#!/usr/bin/bash
+Hmm, this analysis corresponds nicely to what I was thinking when looking
+at the stack dumps, but it gives a bit more details than I would have.
 
-	echo 0 > /proc/sys/kernel/randomize_va_space
+> ## Root Cause Analysis
+>=20
+> This is a regression introduced by commit a46023d5616ed ("tracing: Guard =
+__DECLARE_TRACE() use of __DO_TRACE_CALL() with SRCU-fast"), which switched=
+ tracepoint read-side protection from preempt_disable()+RCU to SRCU-fast vi=
+a DEFINE_SRCU_FAST(tracepoint_srcu).
 
-	echo 'void main(void) {}' > TEST.c
+Yes, as soon as I saw the report, I knew it had to do with this commit.
 
-	# -fcf-protection to ensure that the 1st endbr32 insn can't be emulated
-	gcc -m32 -fcf-protection=branch TEST.c -o test
+>=20
+> The root cause is a new coupling between SRCU grace period processing and=
+ RCU grace period completion that did not exist before. The deadlock chain =
+is:
+>=20
+> 1. The reproducer creates perf events using tracepoints, then closes them=
+ while generating heavy perf interrupt load. The perf NMI interrupt storms =
+("perf: interrupt took too long" messages escalating from 69ms to 336ms) co=
+nsume most CPU time, starving RCU quiescent state detection.
 
-	bpftrace -e 'uprobe:./test:main {}' -c ./test
-
-"hangs", the probed ./test task enters an endless loop.
-
-The problem is that with randomize_va_space == 0
-get_unmapped_area(TASK_SIZE - PAGE_SIZE) called by xol_add_vma() can not
-just return the "addr == TASK_SIZE - PAGE_SIZE" hint, this addr is used
-by the stack vma.
-
-arch_get_unmapped_area_topdown() doesn't take TIF_ADDR32 into account and
-in_32bit_syscall() is false, this leads to info.high_limit > TASK_SIZE.
-vm_unmapped_area() happily returns the high address > TASK_SIZE and then
-get_unmapped_area() returns -ENOMEM after the "if (addr > TASK_SIZE - len)"
-check.
-
-handle_swbp() doesn't report this failure (probably it should) and silently
-restarts the probed insn. Endless loop.
-
-I think that the right fix should change the x86 get_unmapped_area() paths
-to rely on TIF_ADDR32 rather than in_32bit_syscall(). Note also that if
-CONFIG_X86_X32_ABI=y, in_x32_syscall() falsely returns true in this case
-because ->orig_ax = -1.
-
-But we need a simple fix for -stable, so this patch just sets TS_COMPAT if
-the probed task is 32-bit to make in_ia32_syscall() true.
-
-Fixes: 1b028f784e8c ("x86/mm: Introduce mmap_compat_base() for 32-bit mmap()")
-Reported-by: Paulo Andrade <pandrade@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/all/aV5uldEvV7pb4RA8@redhat.com/
-Cc: stable@vger.kernel.org
-Link: https://patch.msgid.link/aWO7Fdxn39piQnxu@redhat.com
----
- arch/x86/kernel/uprobes.c | 24 ++++++++++++++++++++++++
- include/linux/uprobes.h   |  1 +
- kernel/events/uprobes.c   | 10 +++++++---
- 3 files changed, 32 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 9f948b2d26f6..099ca674e3de 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1095,3 +1095,27 @@ bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check ctx,
- 	else
- 		return regs->sp <= ret->stack;
- }
-+
-+#ifdef CONFIG_IA32_EMULATION
-+unsigned long arch_uprobe_get_xol_area(void)
-+{
-+	struct thread_info *ti = current_thread_info();
-+	unsigned long vaddr;
-+
-+	/*
-+	 * HACK: we are not in a syscall, but x86 get_unmapped_area() paths
-+	 * ignore TIF_ADDR32 and rely on in_32bit_syscall() to calculate
-+	 * vm_unmapped_area_info.high_limit.
-+	 *
-+	 * The #ifdef above doesn't cover the CONFIG_X86_X32_ABI=y case,
-+	 * but in this case in_32bit_syscall() -> in_x32_syscall() always
-+	 * (falsely) returns true because ->orig_ax == -1.
-+	 */
-+	if (test_thread_flag(TIF_ADDR32))
-+		ti->status |= TS_COMPAT;
-+	vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+	ti->status &= ~TS_COMPAT;
-+
-+	return vaddr;
-+}
-+#endif
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index f46e0ca0169c..3461199c4ec0 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -138,6 +138,7 @@ extern bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check c
- extern bool arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs *regs);
- extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
- 					 void *src, unsigned long len);
-+extern unsigned long arch_uprobe_get_xol_area(void);
- #else /* !CONFIG_UPROBES */
- struct uprobes_state {
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 4f2a9fab8ae8..f3bc64c4fa78 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1438,6 +1438,12 @@ void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned lon
- 		set_bit(MMF_RECALC_UPROBES, &vma->vm_mm->flags);
- }
- 
-+unsigned long __weak arch_uprobe_get_xol_area(void)
-+{
-+	/* Try to map as high as possible, this is only a hint. */
-+	return get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+}
-+
- /* Slot allocation for XOL */
- static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- {
-@@ -1453,9 +1459,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- 	}
- 
- 	if (!area->vaddr) {
--		/* Try to map as high as possible, this is only a hint. */
--		area->vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE,
--						PAGE_SIZE, 0, 0);
-+		area->vaddr = arch_uprobe_get_xol_area();
- 		if (IS_ERR_VALUE(area->vaddr)) {
- 			ret = area->vaddr;
- 			goto fail;
--- 
-2.52.0
+The real bug is the NMI interrupt storms. The commit above only makes it
+more of an issue, but that commit itself is not the bug.
 
 
+> ## Suggested Actions
+>=20
+> 1. Confirm the regression by testing with the parent commit a77cb6a867667=
+ (immediately before a46023d5616ed). If the issue disappears, this confirms=
+ the SRCU-fast tracepoint switch as the cause.
+>=20
+> 2. As a quick workaround, reverting a46023d5616ed (and its preparatory co=
+mmits a77cb6a867667, f7d327654b886, 16718274ee75d if needed) should elimina=
+te the deadlock, at the cost of losing preemptible BPF tracepoint support.
+
+That is not the answer, as the above only made the current bug (interrupt
+storms) visible.
+
+>=20
+> 3. The fundamental issue is that process_srcu() for SRCU-fast structures =
+calls synchronize_rcu() synchronously from workqueue context. Possible fixe=
+s include:
+>    - Using an asynchronous mechanism (e.g., call_rcu() with a callback to=
+ resume SRCU GP processing) instead of blocking synchronize_rcu() within th=
+e SRCU state machine.
+>    - Having srcu_readers_active_idx_check() use poll_state_synchronize_rc=
+u() and defer retrying instead of blocking.
+>    - Bounding the perf interrupt rate escalation to prevent the RCU stall=
+ in the first place (though this would only mask the underlying SRCU=E2=86=
+=94RCU coupling issue).
+>=20
+> 4. If you can reproduce reliably, adding the following debug options woul=
+d provide more information: CONFIG_RCU_TRACE=3Dy, CONFIG_PROVE_RCU=3Dy, and=
+ booting with rcutree.rcu_kick_kthreads=3D1 to see if kicking the RCU threa=
+ds helps break the stall.
+
+
+The real fix is to find a way to disable the perf interrupt storms *before*
+unregistering the tracepoint.
+
+-- Steve
