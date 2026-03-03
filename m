@@ -1,147 +1,140 @@
-Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
+Received: from mail-pg1-f225.google.com (mail-pg1-f225.google.com [209.85.215.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374383264F0
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Mar 2026 20:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.170
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772570962; cv=pass; b=o5Dr/+kJ3DsnliAQaCBmVGD/UofRAKcnPw6NOdsGm3C3/l1AlN6AD5Hrz6iKtNSrfmXfb8X60Ejt2YVvF0Q1Hp7zDKVcyhgMTlLqTPMI6lVaR2/2e9aX3ovm4+uw8Dh5WHXbcIxkluuL6qkVd7WwaHkI9t5cumfHAVFEUrBRga8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772570962; c=relaxed/simple;
-	bh=z5K9TC0MkEO8By22h3GqX8xxcKLeF0UtxgZ/D1gjfh8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NiIuPw3zUoke6J3Xl7J/AoLZozKk0IyKbnnhBmEPflj0o/2Yv4zbTLguPXYI4oV9qZYcg++17E2Kgr73MjN5ZDlzk/ghQvm4yPIqkeIVfaTTT6exXMKFAQ5fTtNZz9PFsLmVdw3WeB/h+5J3ED9H8G6gSMxn3C2U/nKAFab9uQk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MC/6UvpH; arc=pass smtp.client-ip=74.125.82.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3BB3BED7C
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Mar 2026 21:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.225
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772572579; cv=none; b=jkZcGmghwUfUr1NFMNjwjBBrtilhJEhk9Nh4xDmIJxpJV5Fs1PMqtbF5xy4BgYr8YKT78K4g1WAMq5AupDPkdm6ZgJO3HAMkn/O0XoVgQwZ0NDQAmfJ7m+4ao2dccJoIfZPLznbt0Ro/SIx4P8jwTX7jD1//J0vKRxz3dG4AsDI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772572579; c=relaxed/simple;
+	bh=DSuMj7aNeROIC/Y2sruEF45fO0e6aVW8aYCE8MzOhPU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FQhXLubu0P8hcGmuxwsLcMipJD7LfypQp1t/e6ucbgQ7Rr5jLnZsgEpICWCaPOVah+N0JgG9rfRft4EMPFEzQe28/xJzjzCLgQ8QcduD8gO4mCn1rXc8deAmg2IQ7bCgeYkkYXonqWZCLfjDICRjzjFrUw3H5hHIHBy81PWHkYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=hRiupHX6; arc=none smtp.client-ip=209.85.215.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MC/6UvpH"
-Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-2bdff6c15a5so165079eec.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Mar 2026 12:49:21 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772570960; cv=none;
-        d=google.com; s=arc-20240605;
-        b=TtEO+d1gmuLV+IIErNMwviNyQGclQqYkyK9+yeYwO2NudKGHHZ4gTWZBP7LYrddBpw
-         RnrEWsU4prSJvSQCzI5ybojZS0q7p3GSse8pVni0P/B/YpBQ4A8uNDhrzygQe1VWkEIo
-         ohJHQUGt5PsfuPx48xmcY5rdX5clULM9yl2jLL/JgL85VI2NYFVGmu1503StZZJBacUk
-         E+tikqGNjZaLqJFBMrfSJhHVm9W/NwhePJKkAJnEnFGuz+PyzqrF2EmeyHtpO3olRC4y
-         FT2Ta/lx4XoD2IDtGRxS7BCEqFOVUNL2g6WnRaz6Ulo8lAmle6jjnJu3yPLFYRYoom9T
-         eAvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=z5K9TC0MkEO8By22h3GqX8xxcKLeF0UtxgZ/D1gjfh8=;
-        fh=8qBnttxlbS0qXW5EiVlgy28Tc8uQINes8Dv9MYab1qw=;
-        b=dZpT4HdACzjYM0mguo4L0qlTgFjMF+6esbh/NtAQfbpWp7NDWu5rtqofbbQUf8jPJS
-         Gh9tk08rUbiLeWuUmUc0w5BIZoAwIkffngsBKtO0jEn6X8W/N8P119eflOAmcQFfD1vz
-         mKkFAzWtKSiiry2R1eryz74d3KoIHmE6mumIIKgqzljEhJuQWxglRiM+qX3Z8lK9NeB3
-         R9HFvxcbd3Dl/zecCyGQ3VxBDMSnpA2gN4XZQ8zpUTp1IOzES7kgej95WpmKS5eLoXKn
-         40KymzwtuQfbPRriRyLT/o3wktCpyYP2u3yC/n4nbRljXNIMZs0QDHF9/VOWlIaR0eIr
-         YMpw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772570960; x=1773175760; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z5K9TC0MkEO8By22h3GqX8xxcKLeF0UtxgZ/D1gjfh8=;
-        b=MC/6UvpHT4SEnjb/NMu4nCD7Y/CgFLGhB10BzWPvEDjKvZA2lZ9okaGCUCGB3IbeLy
-         cGgqGyj71FN7/CioLy93vdYXiKOMJe3vR+j+biXyjvWiP1VvwY0SpZuEnET7WI0E0PLq
-         BBf1WqOSwDjAumUHPBfJGMcqZXc4B6Yuz6rp/ed69z6jmhyN3Yhj3DTtzwNIYZQmx/SF
-         jhT5DwBvS3xmxNKPvfei0LpqgbJOmZuKLyUK2wYyCE/Tg1IJjSJ0URjLr+TYYhp768vW
-         OGrdSbrtyYfSf/xo+vB+w4pxsweRRJyYX/6uv1dcXSw8p0Wob8DVrGmxbm0/OVwZigJr
-         6Z+w==
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hRiupHX6"
+Received: by mail-pg1-f225.google.com with SMTP id 41be03b00d2f7-c70ece855e2so2539499a12.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Mar 2026 13:16:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772570960; x=1773175760;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=z5K9TC0MkEO8By22h3GqX8xxcKLeF0UtxgZ/D1gjfh8=;
-        b=C8VXxxa2yC0aqf3yELpJ7yl5kK2N/EdR3uAF/kQssDnYCcVF2Qycn3z1baftib7ePQ
-         hxh+1XUzVajeREPun9hJuS47PnFZJTorbwyKF5fpV4WHgOPuAncAF7WJlWdlmjHjLcd2
-         EHrR0A0SgYlgNKW24vH6Q/oQBlQESqfArWgJWxq1Sy/bIjBleqs5Pv+9D1EUE8tEoyjB
-         j3QVZPZvx0vjmXRj6VXLxd0/HKx3c7c9+UdHH8/bmIj2gpel+XQR8ONqZx/ZT5gIuHTS
-         Znfged9efk0KYngUSfbgjmdGR6zZ+pByZzNb01Z7jUlMaQ0ubHYqb7z98e0F4qKiXnNx
-         bMFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU87hwWGeDJtTNFWdoQBFSFrUWYG8EBBUtSKXNnMttF9H7ml+a4yZU11x7hunslCjM2H15A5D48/XCnWiqym63I@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6cQZLijI30/A/JB3l83O1c409dr93hyeqot42s/UTHPUZa+wi
-	HLzAVYo7zo4EDsGWK140PmKYMAwu+sZpvhktkI38+7SVDlpce/xLMHjkcV9Elz0fKhoJ6LfZWuH
-	QeKZkEDj+J5mB4z7VojQGxpQnsb3deXU=
-X-Gm-Gg: ATEYQzzLQuM9xZGu83ME25APs73haf5Au6CddvEQAWg3xUPxtn/9wuSsV3U2OQdlw0H
-	w5oUmzXnOGk9dBY1fy06RVA4TYo+vnqa8qMJXIHroXPY6MWmGEihOQ1O7bNuE/udK3bJ9gJ5q+t
-	7vLv6MgGYYgYU9y8XHS3Lhcs6W1jUsYxngRp+H5c5a8vcUK28qVwDoxWV88XQ2UhBC46k9/l6AJ
-	wEDVE/6FcEUwpmAOdD0IWyV9DSTj9XTLa3XuvC0WVozjQQuBs1oBUhhMrYDIodArLZxqlqRFZmM
-	bNsm0duN1oK6xT6tFSsts5IpBd+tXaM+CWzffJ7HMsWVcFdBsTw9FQj2ZYQTJ5tz015QfGRygN+
-	npORq63XS96964AFX32v8KUgC
-X-Received: by 2002:a05:7300:231e:b0:2b7:103a:7697 with SMTP id
- 5a478bee46e88-2bde1d4bc79mr3350396eec.5.1772570960234; Tue, 03 Mar 2026
- 12:49:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1772572577; x=1773177377;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:dkim-signature:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=59O5+vKo+jtbcjGinkLiiwlOeS+dXB3u9zs9mLWdeDE=;
+        b=g1O9kK11gIfbYweSKAN23mvLyrd0Q4lEuLCZwGmpIDrVl/I4CRyM04pAmrAk16TWWA
+         hvI7A2n3B2/dvo97/9nE3mjIl1c1B+NCkBTKY0/v8XJKIenauK3xTZ8AJOUCnllFozeB
+         6zUHNgQZ+ixjPgwsYza1bE+evwuhwHM9SMDbOq4s/ZddGshZrwSshIxdhntggIjTI9oR
+         yAUKaVO1FVrQ7DYyQzmyCKzU5F8isPeBamWBlkdYiyo13d2WbeWifwM/RRJQHIm3ytYQ
+         /BQnRineDXSLI1mkaZW3hcWM2yIFG3KNOsCASVoftoPnDJp19ByjGX7wuCxA5lOvQ5EE
+         Xt0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWm49WMOmHkQ+q4gN4qksI3htrA2dyxoliGk2MrWYVqlADAZZSiKg0zO4TeP9hLIqkhccq8CFHzMr2cWC3k+1HY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzlw0ruY5f3Wz7hPz3otDlc/NFCpUsGa6TN2BPmkDxt1RoXCGQU
+	TgkYnWhCRhtipVtm92+5uT4XvJFkejg5w3trpoGrPPcPvHJQH9fhOpG1JQYW22u8XXGlWyoED6z
+	h4+ZxZgOl063VhO7e1XVXo0VM/4YCe/IqbbKusp2FXEp3hDNzZKjv2Boedt+IvQ5V20lBI/ecHf
+	2Z8L4T/+OMoWo2LE/WKpUJazktMA0IaHfwoUjtdt2DZaylWkG1HxgCNHtaiSJtbZmaeaoY1bsfw
+	FJ9W9/TGVaCykgO/7jfJrlkkpc=
+X-Gm-Gg: ATEYQzy+c9yUHqDBJAm/oDd0I3ccnwi3bCRY8Y4LINPxDr8Lb+yViNWXSx+Rg55VWy7
+	hfYqKbvL1JBmRh1OeZgbk4o/VGjRcI3YrTfEb62YXaq+ih4MAoysygBiN4q/QSnRbx9Tj5nF/uo
+	1HwMLYXmLelKjGX+ApcBWucgEki1BEhQrolKtwNH8LbzpWUGKRefYoHF7+iGNQx5dkj3Spl/oQT
+	JizwtG6yjnls5LGXtMZjunh/jkUUZKmNKoJwntkS0vCDTMRGmlAf/1jfTjdJcsDhefD4n4JLjCE
+	K/uA23UljDw8XxIHtNAuRCKEj5QFie6DzcrIDlgkmE0pxXleVYIa1/FLteVbigfLNQvT78Bik0G
+	vZv8DPPZyAP+kcUVt4is3TExj5fHdBwT3ke8KnmqKVuSi/r+JO1M6hf+17UUwxk2aVE9WuMItfh
+	nwi21GOUoUFUfIjVRm1hXLkhGLRn8RJ9kV3RRmFMhcMEMcwS/aTtqlrXCKL74=
+X-Received: by 2002:a17:902:ce84:b0:2ae:5435:1940 with SMTP id d9443c01a7336-2ae60d37320mr32112125ad.20.1772572577161;
+        Tue, 03 Mar 2026 13:16:17 -0800 (PST)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-118.dlp.protect.broadcom.com. [144.49.247.118])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-2adf8f4a2b0sm22951635ad.0.2026.03.03.13.16.16
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Mar 2026 13:16:17 -0800 (PST)
+X-Relaying-Domain: broadcom.com
+X-CFilter-Loop: Reflected
+Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-127876be621so3630136c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Mar 2026 13:16:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1772572575; x=1773177375; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=59O5+vKo+jtbcjGinkLiiwlOeS+dXB3u9zs9mLWdeDE=;
+        b=hRiupHX6mnRM6vZzj7+kZ5cArln9rkw1Sf050FK9z5b9boVB72BGlfbtR1zi+Flltz
+         9+bcU5QolpC8FVQgSiHPe2I+mrnCHqDsh1JdsHQfW4p6SyAF7JXzjXw8qHKli4FfDT+Q
+         +skW7LFdcAlDf3fC0Uk59ENrdrowOngGRalPk=
+X-Forwarded-Encrypted: i=1; AJvYcCWTS1ZNlUsPzEo4OXQfdMRWw87acLHA/+nVAEkh6ZrG6x5ixQcG57sDcRagJLYk81G5EPgCCif0Anx3xveZqad5@vger.kernel.org
+X-Received: by 2002:a05:7022:4a7:b0:11d:fbf1:1e27 with SMTP id a92af1059eb24-128b0de1b3bmr1349314c88.19.1772572575432;
+        Tue, 03 Mar 2026 13:16:15 -0800 (PST)
+X-Received: by 2002:a05:7022:4a7:b0:11d:fbf1:1e27 with SMTP id a92af1059eb24-128b0de1b3bmr1349292c88.19.1772572574749;
+        Tue, 03 Mar 2026 13:16:14 -0800 (PST)
+Received: from lbrmn-mmayer.ric.broadcom.net ([192.19.161.248])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12789a5312dsm17452405c88.16.2026.03.03.13.16.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2026 13:16:14 -0800 (PST)
+Received: by lbrmn-mmayer.ric.broadcom.net (Postfix, from userid 1000)
+	id D6810F04; Tue,  3 Mar 2026 13:16:12 -0800 (PST)
+From: Markus Mayer <mmayer@broadcom.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Markus Mayer <mmayer@broadcom.com>,
+	Perf Mailing List <linux-perf-users@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH] perf build: prevent "argument list too long" error
+Date: Tue,  3 Mar 2026 13:15:01 -0800
+Message-ID: <20260303211503.165337-1-mmayer@broadcom.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260227200848.114019-1-david@kernel.org> <20260227200848.114019-3-david@kernel.org>
- <aaLh2BxSgC9Jl5iS@google.com> <8a27e9ac-2025-4724-a46d-0a7c90894ba7@kernel.org>
- <aaVf5gv4XjV6Ddt-@google.com> <f2f3a8a1-3dbf-4ef9-a89a-a6ec20791d1c@kernel.org>
- <aaVnifbdxKhBddQp@google.com> <5f8dcb7f-9e4f-4484-b160-3a9ce541d63c@kernel.org>
- <aaWvtn48X8UizaaN@google.com>
-In-Reply-To: <aaWvtn48X8UizaaN@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 3 Mar 2026 21:49:06 +0100
-X-Gm-Features: AaiRm50lUTXkxHRxiLsKpWNGF1HIgeoo2SkrDpQfQSxM22wzlSiellk8rvn7q80
-Message-ID: <CANiq72nK8P1rUYw=y3fMzWZR3f_mW2v0_LSLWR1i0dQTtOqu2w@mail.gmail.com>
-Subject: Re: [PATCH v1 02/16] mm/memory: remove "zap_details" parameter from zap_page_range_single()
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, linux-kernel@vger.kernel.org, 
-	"linux-mm @ kvack . org" <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
-	Pedro Falcato <pfalcato@suse.de>, David Rientjes <rientjes@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-	Dimitri Sivanich <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Eric Dumazet <edumazet@google.com>, 
-	Neal Cardwell <ncardwell@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
 
-On Mon, Mar 2, 2026 at 4:41=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> wr=
-ote:
->
-> It's not relevant in this patch, but another thing that may be useful is
-> to add CLIPPY=3D1 to the make invocation when building normally. This
-> causes additional warnings to be checked using a tool called clippy.
+Due to a recent change, building perf may result in a build error when
+it is trying to "prune orphans". The file list passed to "rm" may exceed
+what the shell can handle. The build will then abort with an error like
+this:
 
-Yes, please do use `CLIPPY=3D1` -- the build should be Clippy clean
-modulo exceptional cases that may slip through (and soon linux-next
-will probably start reporting those warnings too).
+  TEST    [...]/arm64/build/linux-custom/tools/perf/pmu-events/metric_test.log
+make[5]: /bin/sh: Argument list too long
+make[5]: *** [pmu-events/Build:217: prune_orphans] Error 127
+make[5]: *** Waiting for unfinished jobs....
+make[4]: *** [Makefile.perf:773: [...]/tools/perf/pmu-events/pmu-events-in.o] Error 2
+make[4]: *** Waiting for unfinished jobs....
+make[3]: *** [Makefile.perf:289: sub-make] Error 2
 
-Thanks!
+Processing the arguments via "xargs", instead of passing the list of
+files directly to "rm" via the shell, prevents this issue.
 
-Cheers,
-Miguel
+Fixes: 36a1b0061a5 (perf build: Reduce pmu-events related copying and mkdirs)
+Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+---
+ tools/perf/pmu-events/Build | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+index 63c65788d442..dc5f94862a3b 100644
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -214,7 +214,8 @@ ifneq ($(strip $(ORPHAN_FILES)),)
+ quiet_cmd_rm  = RM      $^
+ 
+ prune_orphans: $(ORPHAN_FILES)
+-	$(Q)$(call echo-cmd,rm)rm -f $^
++	# The list of files can be long. Use xargs to prevent issues.
++	$(Q)$(call echo-cmd,rm)echo "$^" | xargs rm -f
+ 
+ JEVENTS_DEPS += prune_orphans
+ endif
+-- 
+2.52.0
+
