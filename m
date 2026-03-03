@@ -1,58 +1,181 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC43335BDBA;
-	Tue,  3 Mar 2026 14:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9AA13A8732;
+	Tue,  3 Mar 2026 14:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772548205; cv=none; b=qg77hhxVdjOcbbZ4pMFWyFP+2Z1tm/CUPxNgfTaJK+icDNip8BzXp46Ipxv5Z0fqmg8ZF3MffxcI/tFvDZ6k4I6/FdgzSGXMeEAcFbafK0yi96ohlSN3CcSpuyNBP7MOHKLBuBRABGJU6eZNSZR4NzlfxXBtnCVmdxoDsLnltKQ=
+	t=1772548296; cv=none; b=E0ek4jLYU/iIi5uCypyUahJUslsed2dyqRCLzBnXTAunniI1BL58zGs0eEJmGHlByh/rmwp2x1hYUv4fZKp7zTjWxreWqbDj2kB8DBQXPT7Tz4hBsny8J4oAwtzIJvJE72zOfUPDgnxyWL/al2qLQbBIBGZlZfN9rEPI6UDb7Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772548205; c=relaxed/simple;
-	bh=gCutPHsHvUkxriX2aNEY2zePNtw387iRYruiSJMfjpk=;
+	s=arc-20240116; t=1772548296; c=relaxed/simple;
+	bh=Fz5KSEt2JdUDAxYeRXF2qsARCi47vI+UkFanERJHSIo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dySJNP302RIFXJKBG9uUYMwc40itC6vgUGpSf1dggSCJj3Doy/rJSGDO/t1dh4HHuvOld73C6+n8rtoLvqAJharcQoI53X7BbNoZIAEgVBKndsvD2EG5Dmf7MUgIEqNl3hYQXIw4n04LefG5/T72RpZuHUDnKVo1eRZr9eLzo44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FicXxmCq; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=BLwtDsPTTn46+qh4nFN8B7HHfToqpvfV0aFplotltKnVXHapUCbRBDt6BgTo8jqfxrGVBzreA6og7wvu0/3Ld+HKaE13Du3I70U2o3GZT9zh0THFwYKshXUE7fHwTZ+rIYJlnQGQJM0VZd9wq4G8jhl1rMmWIV+vemUB1+MbLOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Lcd6Fno+; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FicXxmCq"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lcd6Fno+"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BgY3fdJc1qTAZG1Kas+8+5sIweermnTqJFE2LQZWNXA=; b=FicXxmCqpSiJMIMqxvtTWC/Y0Q
-	RYF1zAIME9TrXj+YWbgqs3SJXtIWo3p6xAMukJylR167VkFVoFq2Gy65Ozublm6YDDVcIqEDU9DCd
-	LDUp9VVs9AeYe0SDoXISfWr+BkYHA1UPZ9v7KkSkGLNe/qHmBP3OeQssd2T41pRQfc/Z0q9FgkyuC
-	caJk42VudK4wDXoXhdAghQC9GK68jp/1ssb90rrppfnEBDnxTKzo7U1qxcIQPa/pyKgvdRvAYkZzZ
-	/KEMLs9DIlrQVivYW7ZAmGimrytZqcRyf06lvCF7X3q9RFJv+A1PBN1RYC4yl5s7k8X2SNLpJuFaE
-	054Q6hsg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vxQkw-00000002dgk-0Z2Z;
-	Tue, 03 Mar 2026 14:29:50 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 14199300666; Tue, 03 Mar 2026 15:29:49 +0100 (CET)
-Date: Tue, 3 Mar 2026 15:29:48 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Thaumy Cheng <thaumy.love@gmail.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	bh=FVGHEap2/y4lqrOlTw4I1PUuJRk8gJ1LY6chx54er5w=; b=Lcd6Fno+d5UFOYRjzgSXS/STDW
+	OnOCNUozkxsQY4gAaLcG3UD8bgmPzX/hQhnp+XRh93wE//HqWrx6I2tY3mKjuf2IaREQRwDMg25PG
+	3rHjoEyH4eWTjWo2to2N4q8xFIulCCjw+wnruiylvrdWjofeIWtF3V0P9I2qdnWzQ6TL3ZQvvH61Z
+	rPO9WUDLhEIV5cHVRy7B8ebSHdIsWTUbMNRXqGGAPCL3AhrpvrHgan/jOnhq5S2sES5qYdDusKr5g
+	aSpySF1dCrXtiFPjIQCZRSsvuPR6BM2kGpXN99BQqvFof3+8ottSE9BRZ+7Avp/LETtYrw8IHT+HY
+	hmdbkK9g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vxQlS-0000000FKdJ-46fW;
+	Tue, 03 Mar 2026 14:30:23 +0000
+Date: Tue, 3 Mar 2026 06:30:22 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	"Darrick J. Wong" <djwong@kernel.org>, Theodore Tso <tytso@mit.edu>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
+	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Steve French <sfrench@samba.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	David Sterba <dsterba@suse.com>,
+	Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>,
+	Luis de Bethencourt <luisbg@kernel.org>,
+	Salah Triki <salah.triki@gmail.com>,
+	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Alex Markuze <amarkuze@redhat.com>,
+	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+	Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Yangtao Li <frank.li@vivo.com>,
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Leo Yan <leo.yan@arm.com>, Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH v3] perf/core: Fix missing read event generation on task
- exit
-Message-ID: <20260303142948.GA3698720@noisy.programming.kicks-ass.net>
-References: <20251024170543.11201-1-thaumy.love@gmail.com>
- <1e6337ec-d4a0-420b-bd7b-0fd2b6fee620@linaro.org>
- <20260206152907.GQ1395266@noisy.programming.kicks-ass.net>
- <61e544ab-d9b9-454e-9dd7-65625d9be126@linaro.org>
+	James Clark <james.clark@linaro.org>,
+	Martin Schiller <ms@dev.tdt.de>, Eric Paris <eparis@redhat.com>,
+	Joerg Reuter <jreuter@yaina.de>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Oliver Hartkopp <socketcan@hartkopp.net>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	David Ahern <dsahern@kernel.org>,
+	Neal Cardwell <ncardwell@google.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Magnus Karlsson <magnus.karlsson@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
+	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+	autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
+	codalist@telemann.coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-hams@vger.kernel.org, linux-x25@vger.kernel.org,
+	audit@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-can@vger.kernel.org, linux-sctp@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2 001/110] vfs: introduce kino_t typedef and PRIino
+ format macro
+Message-ID: <aabwflLfe2HcGv7X@infradead.org>
+References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
+ <20260302-iino-u64-v2-1-e5388800dae0@kernel.org>
+ <20260303012556.GA6520@macsyma-wired.lan>
+ <20260303042546.GF13868@frogsfrogsfrogs>
+ <33228005140684201de2ca0c157441d3b6a06413.camel@kernel.org>
+ <aabkBadGzo7IZpSU@infradead.org>
+ <19e4e79a59dcfc4c61c8cf263af345d0d7026fc8.camel@kernel.org>
+ <aabpPQxCTweoTp8Z@infradead.org>
+ <1310fc5c09cce52ec00344b936275fe584c88dea.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,289 +184,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <61e544ab-d9b9-454e-9dd7-65625d9be126@linaro.org>
+In-Reply-To: <1310fc5c09cce52ec00344b936275fe584c88dea.camel@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-
-Sorry, things got lost again :-(
-
-On Mon, Feb 09, 2026 at 04:12:39PM +0000, James Clark wrote:
-
-> > >    @@ -41,10 +41,11 @@ static void perf_output_get_handle(struct
-> > >    perf_output_handle *handle)
-> > >    {
-> > >   	struct perf_buffer *rb = handle->rb;
+On Tue, Mar 03, 2026 at 09:19:42AM -0500, Jeff Layton wrote:
+> On Tue, 2026-03-03 at 05:59 -0800, Christoph Hellwig wrote:
+> > On Tue, Mar 03, 2026 at 08:43:15AM -0500, Jeff Layton wrote:
+> > > On Tue, 2026-03-03 at 05:37 -0800, Christoph Hellwig wrote:
+> > > > On Tue, Mar 03, 2026 at 05:53:39AM -0500, Jeff Layton wrote:
+> > > > > Like I said to Ted, this is just temporary scaffolding for the change.
+> > > > > The PRIino macro is removed in the end. Given that, perhaps you can
+> > > > > overlook the bikeshed's color in this instance?
+> > > > 
+> > > > So why add it in the first place?  
 > > > 
-> > >   	preempt_disable();
-> > > 
-> > >    +	WARN_ON(handle->event->cpu != smp_processor_id());
-> > > 
-
-> > ---
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 5b5cb620499e..f566ad55b4fb 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -14086,7 +14086,7 @@ static void sync_child_event(struct perf_event *child_event,
-> >   	u64 child_val;
-> >   	if (child_event->attr.inherit_stat) {
-> > -		if (task && task != TASK_TOMBSTONE)
-> > +		if (task && task != TASK_TOMBSTONE && event_filter_match(child_event))
-> >   			perf_event_read_event(child_event, task);
-> >   	}
+> > > Bisectability. The first version I did of this would have broken the
+> > > ability to bisect properly across these changes. I don't love the
+> > > "churn" here either, but this should be cleanly bisectable.
+> > 
+> > What do you need to bisect in format string changes?  Splitting
+> > every variable type change outside of the main i_ino out - sure.
+> > But bisecting that "change to u64 in ext4" really broke ext4 and
+> > not "change to u64" is not very useful.  Commits should do one
+> > well defined thing.  Adding a weird transition layer for a format
+> > thing that just gets dropped is not one well defined thing.
 > 
-> Turns out I tested this before with "child_event->cpu ==
-> raw_smp_processor_id()" rather than using event_filter_match() so I missed
-> that the loop over all the events needs to be wrapped with
-> preempt_disable(). But that can't be done because perf_event_exit_event()
-> takes a mutex.
+> In the middle stages of the series, you will get warnings or errors on
+> 32-bit hosts when i_ino's type doesn't match what the format string
+> expects.
 > 
-> I don't think the preempt_disable() can be on any smaller region than
-> outside the entire loop otherwise you can get rescheduled between
-> event_filter_match() checks and end up failing them all and not writing any
-> event out at all.
-
-Ooh, cute. That's annoying. This is specific to using per-task-per-cpu
-buffers afaict, nevertheless those ought to work.
-
-Also, I suspect your WARN would trigger before c418d8b4d7a4 as well, if
-it wouldn't have been for that TOMBSTONE thing.
-
-How to fix this mess... perhaps something like this, except now I worry
-about the revoke and remove_on_exec cases; do they want something?
-
-
----
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 03ced7aad309..d0aae76cabf4 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4727,7 +4727,6 @@ static void perf_event_enable_on_exec(struct perf_event_context *ctx)
- static void perf_remove_from_owner(struct perf_event *event);
- static void perf_event_exit_event(struct perf_event *event,
- 				  struct perf_event_context *ctx,
--				  struct task_struct *task,
- 				  bool revoke);
- 
- /*
-@@ -4755,7 +4754,7 @@ static void perf_event_remove_on_exec(struct perf_event_context *ctx)
- 
- 		modified = true;
- 
--		perf_event_exit_event(event, ctx, ctx->task, false);
-+		perf_event_exit_event(event, ctx, false);
- 	}
- 
- 	raw_spin_lock_irqsave(&ctx->lock, flags);
-@@ -12863,7 +12862,7 @@ static void __pmu_detach_event(struct pmu *pmu, struct perf_event *event,
- 	/*
- 	 * De-schedule the event and mark it REVOKED.
- 	 */
--	perf_event_exit_event(event, ctx, ctx->task, true);
-+	perf_event_exit_event(event, ctx, true);
- 
- 	/*
- 	 * All _free_event() bits that rely on event->pmu:
-@@ -14424,17 +14423,11 @@ void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
- }
- EXPORT_SYMBOL_GPL(perf_pmu_migrate_context);
- 
--static void sync_child_event(struct perf_event *child_event,
--			     struct task_struct *task)
-+static void sync_child_event(struct perf_event *child_event)
- {
- 	struct perf_event *parent_event = child_event->parent;
- 	u64 child_val;
- 
--	if (child_event->attr.inherit_stat) {
--		if (task && task != TASK_TOMBSTONE)
--			perf_event_read_event(child_event, task);
--	}
--
- 	child_val = perf_event_count(child_event, false);
- 
- 	/*
-@@ -14450,7 +14443,6 @@ static void sync_child_event(struct perf_event *child_event,
- static void
- perf_event_exit_event(struct perf_event *event,
- 		      struct perf_event_context *ctx,
--		      struct task_struct *task,
- 		      bool revoke)
- {
- 	struct perf_event *parent_event = event->parent;
-@@ -14476,7 +14468,7 @@ perf_event_exit_event(struct perf_event *event,
- 		attach_state = READ_ONCE(event->attach_state);
- 
- 		if (attach_state & PERF_ATTACH_CHILD)
--			sync_child_event(event, task);
-+			sync_child_event(event);
- 	}
- 
- 	if (revoke)
-@@ -14517,7 +14509,7 @@ perf_event_exit_event(struct perf_event *event,
- static void perf_event_exit_task_context(struct task_struct *task, bool exit)
- {
- 	struct perf_event_context *ctx, *clone_ctx = NULL;
--	struct perf_event *child_event, *next;
-+	struct perf_event *event, *next;
- 
- 	ctx = perf_pin_task_context(task);
- 	if (!ctx)
-@@ -14564,11 +14556,21 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
- 	 * won't get any samples after PERF_RECORD_EXIT. We can however still
- 	 * get a few PERF_RECORD_READ events.
- 	 */
--	if (exit)
-+	if (exit) {
- 		perf_event_task(task, ctx, 0);
- 
--	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
--		perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
-+		guard(raw_spinlock_irq)(&ctx->lock);
-+		list_for_each_entry(event, &ctx->event_list, event_entry) {
-+			if (event->attr.inherit_stat) {
-+				if (task && task != TASK_TOMBSTONE &&
-+				    event_filter_match(event))
-+					perf_event_read_event(event, task);
-+			}
-+		}
-+	}
-+
-+	list_for_each_entry_safe(event, next, &ctx->event_list, event_entry)
-+		perf_event_exit_event(event, ctx, false);
- 
- 	mutex_unlock(&ctx->mutex);
- 
-
-> While debugging I also noticed another issue with these per-thread count
-> records. perf_event_exit_event() only does anything if the event has a
-> parent. But the context switch optimization means that sometimes threads
-> re-use the original event which has no parent. So randomly you get threads
-> that are missing from the output.
+> There are really only three options here:
 > 
-> There is a comment that mentions this under the parent check:
+> 1/ Do (almost) all of the changes in one giant patch
 > 
->   if (parent_event) {
->     /*
->      * Do not destroy the 'original' grouping; because of the
->      * context switch optimization the original events could've
->      * ended up in a random child task.
+> 2/ Accept that the build may break during the interim stages
 > 
-> But I'm not sure if that was supposed to be worked around some other way and
-> it's now broken, or it was a known limitation of the implementation from the
-> beginning? But right now it randomly misses one of the threads and includes
-> the main thread counts, or includes all the threads and doesn't include the
-> main thread counts if no context switch optimisation was done.
+> 3/ This series: using a typedef and macro to work around the breakage
+> until the type can be changed, at the expense of some extra churn in
+> the codebase
 > 
-> The perf record docs don't say anything that you wouldn't expect all threads
-> to be there:
-> 
->     -s, --stat            per thread counts
+> 3 seems like the lesser evil.
 
-Ha! So commit bfbd3381e63a ("perf_counter: Implement more accurate per
-task statistics") actually mentions that issue and tries to mitigate,
-but I think I indeed missed a case.
+No, 1 is by far the least evil.  Note that it's not really almost all,
+as all the local variables can easily and sanely be split out.  It's
+all of the format strings, and that makes sense.  The only "regressions"
+there are incorrect format strings which have good warnings and can
+be fixed easily.
 
-I suppose the easiest fix is this, but urgh...
-
----
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 03ced7aad309..c38acf1e2f43 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3664,6 +3664,9 @@ static int context_equiv(struct perf_event_context *ctx1,
- 	if (ctx1->pin_count || ctx2->pin_count)
- 		return 0;
- 
-+	if (ctx1->nr_stat || ctx2->nr_stat)
-+		return 0;
-+
- 	/* If ctx1 is the parent of ctx2 */
- 	if (ctx1 == ctx2->parent_ctx && ctx1->generation == ctx2->parent_gen)
- 		return 1;
-@@ -3677,76 +3680,13 @@ static int context_equiv(struct perf_event_context *ctx1,
- 	 * hierarchy, see perf_event_init_context().
- 	 */
- 	if (ctx1->parent_ctx && ctx1->parent_ctx == ctx2->parent_ctx &&
--			ctx1->parent_gen == ctx2->parent_gen)
-+	    ctx1->parent_gen == ctx2->parent_gen)
- 		return 1;
- 
- 	/* Unmatched */
- 	return 0;
- }
- 
--static void __perf_event_sync_stat(struct perf_event *event,
--				     struct perf_event *next_event)
--{
--	u64 value;
--
--	if (!event->attr.inherit_stat)
--		return;
--
--	/*
--	 * Update the event value, we cannot use perf_event_read()
--	 * because we're in the middle of a context switch and have IRQs
--	 * disabled, which upsets smp_call_function_single(), however
--	 * we know the event must be on the current CPU, therefore we
--	 * don't need to use it.
--	 */
--	perf_pmu_read(event);
--
--	perf_event_update_time(event);
--
--	/*
--	 * In order to keep per-task stats reliable we need to flip the event
--	 * values when we flip the contexts.
--	 */
--	value = local64_read(&next_event->count);
--	value = local64_xchg(&event->count, value);
--	local64_set(&next_event->count, value);
--
--	swap(event->total_time_enabled, next_event->total_time_enabled);
--	swap(event->total_time_running, next_event->total_time_running);
--
--	/*
--	 * Since we swizzled the values, update the user visible data too.
--	 */
--	perf_event_update_userpage(event);
--	perf_event_update_userpage(next_event);
--}
--
--static void perf_event_sync_stat(struct perf_event_context *ctx,
--				   struct perf_event_context *next_ctx)
--{
--	struct perf_event *event, *next_event;
--
--	if (!ctx->nr_stat)
--		return;
--
--	update_context_time(ctx);
--
--	event = list_first_entry(&ctx->event_list,
--				   struct perf_event, event_entry);
--
--	next_event = list_first_entry(&next_ctx->event_list,
--					struct perf_event, event_entry);
--
--	while (&event->event_entry != &ctx->event_list &&
--	       &next_event->event_entry != &next_ctx->event_list) {
--
--		__perf_event_sync_stat(event, next_event);
--
--		event = list_next_entry(event, event_entry);
--		next_event = list_next_entry(next_event, event_entry);
--	}
--}
--
- static void perf_ctx_sched_task_cb(struct perf_event_context *ctx,
- 				   struct task_struct *task, bool sched_in)
- {
-@@ -3835,8 +3775,6 @@ perf_event_context_sched_out(struct task_struct *task, struct task_struct *next)
- 			RCU_INIT_POINTER(next->perf_event_ctxp, ctx);
- 
- 			do_switch = 0;
--
--			perf_event_sync_stat(ctx, next_ctx);
- 		}
- 		raw_spin_unlock(&next_ctx->lock);
- 		raw_spin_unlock(&ctx->lock);
