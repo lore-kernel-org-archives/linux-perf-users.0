@@ -1,49 +1,72 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB3F3B5821;
-	Tue,  3 Mar 2026 14:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A9C35E948;
+	Tue,  3 Mar 2026 14:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772548517; cv=none; b=afvAhK/6nRAly0I8tnxTX9/BT+HB3V8griuQPMB2kz4YYtvGpR4p2WZeR9gUWoS/mdTdmFBnPtTTJkJfVTUaEO0LE6l3j37ECbffuovwEKsYbf27aw0nOsHFX+tw34Kbo+6md4pDdHX6uJNs9H/woqbYVP2o9d9upQZGuJd+l/4=
+	t=1772549982; cv=none; b=lw/4HJbDomOgrE1TFYxaECuEHrVtoumkzt1nHqywduhb9qSRe8XO5zmhTTqrn0JryGV6eEkWuWMVp+/nWIxKDWHWp3DNHMJXC5Kk7E6XAfFQWycNybhDmy6d65WoKZaESE6EV5Ucc7ZIbTwrLmgjeANVWDse1+CO3oR8fotaMrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772548517; c=relaxed/simple;
-	bh=yMxEEW7c1Q6pS5+Td8dMJB1IBtwEK2Szzq+cXsPpN4o=;
+	s=arc-20240116; t=1772549982; c=relaxed/simple;
+	bh=rhh1YA9sgaouHH6eIPRuYmu2YhRyWymcydmYPUBfsoA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pKup6myUOz6v6UGJIpY6Kw0yUwUEBhEfH1yVnbVxUAffxTOUYgOOFW9wg2wQByUj7Tf/ZErEkBk0GR1XIQYymwBXE9sVQ/8iRk4y03dNJSA7ZXJCMpD0xWFLS3KIldxDm6u44qMu6VX0Wrws5QwKccuJqhVT1DjERHHn+kCA7do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XdXdbdXe; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=mjxJxnzBglvDYT4v8SvO6lHb0xuMLMEzA577weVcMgya4wKeWoXK8frxbiHGkcobj1JHlBGCrJJJf2lBHkPjVS/UNP+3C4TyK57mM550LjZQ+6nmoBILTDtM5EfeB9u2izGUNaF//JaplD+1lW5YmE+vRY23utK/oCSM9DomBG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GVyV580I; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XdXdbdXe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=mUHH7TGmqfSf4cD93nXWR9+jVFPtqYvk8wVFeKNEiSk=; b=XdXdbdXeewlXzHAEBT02jZZG5a
-	Kl2u8QNtHiGOEk+5a5LSDtSXqDQzN1Iy4kQbnOdESOorf9VYAdg9u3Y3w0DUOHpFYvEP93PP1VfQy
-	okYWe6ENMhCBiCEBJHgNrGCl6PxDTVwvAKFEhj+YuNFd2+PZd/e4o/1kV8sNdOsymorsN+ue01opo
-	kLFnUuV4ZXizkLUxWmihUXnEwx+3NLaaA99zuu/d5gwJplgGvFbb5T64Oo0ls1of7aDaNdkvf26vs
-	HYJW1qLBMRvvq/PgzSpy2Wy+tbMKcan5bWpknsrB6OrqlMmKgqx9fMwHH5tcq8s5MIpXveylM3lkg
-	eb4SCSrQ==;
-Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vxQq5-0000000BeQt-2K4P;
-	Tue, 03 Mar 2026 14:35:09 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0F6D2300462; Tue, 03 Mar 2026 15:35:08 +0100 (CET)
-Date: Tue, 3 Mar 2026 15:35:07 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Zw Tang <shicenci@gmail.com>
-Cc: mingo@redhat.com, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [BUG] WARNING in __perf_event_account_interrupt
- (kernel/events/core.c:2797)
-Message-ID: <20260303143507.GB3698720@noisy.programming.kicks-ass.net>
-References: <CAPHJ_VLapzvWHz_ot4uvxSJ_Z3ubtCCp=_ZVReh7KAwjxu5uFQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GVyV580I"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62318Jtl1528090;
+	Tue, 3 Mar 2026 14:58:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=L3ODhxKhXKAZO7Qt/XBU+6JDWqfCEU
+	C3cU3LlDcofqQ=; b=GVyV580IL1plO6OVvHgFBibi2SYBUYbLHRKt/PW6RAKIX8
+	ZNxSHFUAPTjcGor8439GSbAcRWABCzrCl4KWVYgeidJiqhTKKRLYmrlxZ/lC112r
+	BhE7GClvSJqH1EwCTMxKxAjiDt0HT//j7di0r2UsuUYk9yYkWYKNyyY+NVKq3iGs
+	WnkSNQ5k0FGQw5D7PKikzwzZneAwwbpxQgshIz15CJKYT3yyOQIcE9hVGcPVqABv
+	TqZQfevDM4KizvZ1IuJ93bbdUYIdWo7VJtyQV0wFNB9akdl1wFLorEfFm6mp6qMk
+	SJd1PI85FGQmFATC/AgjpzE0b5y33gtB25fVeGdg==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ckssmk87x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Mar 2026 14:58:35 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 623DdaQK003266;
+	Tue, 3 Mar 2026 14:58:35 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cmb2y2wmu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Mar 2026 14:58:35 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 623EwUwZ10420604
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 3 Mar 2026 14:58:31 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E206720043;
+	Tue,  3 Mar 2026 14:58:30 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E8EED20040;
+	Tue,  3 Mar 2026 14:58:27 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.39.17.34])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  3 Mar 2026 14:58:27 +0000 (GMT)
+Date: Tue, 3 Mar 2026 20:28:25 +0530
+From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+To: Viktor Malik <vmalik@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Joe Perches <joe@perches.com>, Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        atrajeev@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] powerpc, perf: Check that current->mm is alive before
+ getting user callchain
+Message-ID: <aab3EW1LfDcjSzzy@linux.ibm.com>
+References: <20260227082502.1882395-1-vmalik@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,22 +75,110 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPHJ_VLapzvWHz_ot4uvxSJ_Z3ubtCCp=_ZVReh7KAwjxu5uFQ@mail.gmail.com>
+In-Reply-To: <20260227082502.1882395-1-vmalik@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzAzMDExNiBTYWx0ZWRfX7Dd5Z/y41l1k
+ /SANOxAC4+lXSdqZ/hRQjt/rCdE0vlzSV9k5GEwsQytQqj9Xb3FfO1ozUNbIevCPZIYOCzZx9r9
+ SXg5H1so7/1H/rVedql1FhxwaWehZlodp2DZDdLSYLzJnpR12H3+k7sHSB4va77oCbzQcWyjjrz
+ yGmu+19DwOhl8hvpyehjq5rqvi46pn9S2OiMQsIRCxrQF2boFqTyiuS0crXgniwwEFsHBjzCMtl
+ dcBmaV+nQrgBslGy8lWfs+21Gu6ZIpeTLL2lACDe1cK75+7oG3W/5bIlFUuCXmf5yyfc3sgg4C/
+ b3WG/OGZ7IUVtUtkWw1f59K6maaROmy6t2pcCUi62O2UfNVy73v+8KTHykxcHoIp2qeL2kx6M+m
+ INmC7RiOl73qOqZc5mf16/VK3SAwyJ4RWc+bj4BezxVf8+8FE5jOLLJyTlPkwUHRgux+FMpr6TX
+ uSC+upSrXyOdQ63nSDg==
+X-Proofpoint-ORIG-GUID: UxO3AEXIgiJCB3nAkpq02ep1r8COpOQz
+X-Proofpoint-GUID: fEH3ii7yaMN7S0fzhhWOkdXCFhxb0nm0
+X-Authority-Analysis: v=2.4 cv=AobjHe9P c=1 sm=1 tr=0 ts=69a6f71c cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=kj9zAlcOel0A:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8
+ a=20KFwNOVAAAA:8 a=e-EAHXkKvpEb-08ajsIA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-02_05,2026-03-03_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 bulkscore=0 impostorscore=0 malwarescore=0
+ spamscore=0 clxscore=1011 suspectscore=0 adultscore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603030116
 
-On Tue, Mar 03, 2026 at 08:37:54PM +0800, Zw Tang wrote:
-> Hi,
+On Fri, Feb 27, 2026 at 09:25:02AM +0100, Viktor Malik wrote:
+> It may happen that mm is already released, which leads to kernel panic.
+> This adds the NULL check for current->mm, similarly to 20afc60f892d
+> ("x86, perf: Check that current->mm is alive before getting user
+> callchain").
 > 
-> I am reporting a WARNING triggered by a syzkaller reproducer on Linux 7.0.0-rc1.
+> I was getting this panic when running a profiling BPF program
+> (profile.py from bcc-tools):
 > 
-> The kernel hits a WARN in perf events interrupt accounting:
+>     [26215.051935] Kernel attempted to read user page (588) - exploit attempt? (uid: 0)
+>     [26215.051950] BUG: Kernel NULL pointer dereference on read at 0x00000588
+>     [26215.051952] Faulting instruction address: 0xc00000000020fac0
+>     [26215.051957] Oops: Kernel access of bad area, sig: 11 [#1]
+>     [...]
+>     [26215.052049] Call Trace:
+>     [26215.052050] [c000000061da6d30] [c00000000020fc10] perf_callchain_user_64+0x2d0/0x490 (unreliable)
+>     [26215.052054] [c000000061da6dc0] [c00000000020f92c] perf_callchain_user+0x1c/0x30
+>     [26215.052057] [c000000061da6de0] [c0000000005ab2a0] get_perf_callchain+0x100/0x360
+>     [26215.052063] [c000000061da6e70] [c000000000573bc8] bpf_get_stackid+0x88/0xf0
+>     [26215.052067] [c000000061da6ea0] [c008000000042258] bpf_prog_16d4ab9ab662f669_do_perf_event+0xf8/0x274
+>     [...]
 > 
-> WARNING: kernel/events/core.c:2797 at __perf_event_account_interrupt+0x485/0x530
+> Fixes: 20002ded4d93 ("perf_counter: powerpc: Add callchain support")
+> Signed-off-by: Viktor Malik <vmalik@redhat.com>
+> ---
+>  arch/powerpc/perf/callchain_32.c | 3 +++
+>  arch/powerpc/perf/callchain_64.c | 3 +++
+>  2 files changed, 6 insertions(+)
 > 
-> It is triggered from the perf overflow path while closing a perf_event
-> fd created for a tracepoint (PERF_TYPE_TRACEPOINT). The call trace
+> diff --git a/arch/powerpc/perf/callchain_32.c b/arch/powerpc/perf/callchain_32.c
+> index ddcc2d8aa64a..b46e21679566 100644
+> --- a/arch/powerpc/perf/callchain_32.c
+> +++ b/arch/powerpc/perf/callchain_32.c
+> @@ -144,6 +144,9 @@ void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+>  	sp = regs->gpr[1];
+>  	perf_callchain_store(entry, next_ip);
+>  
+> +	if (!current->mm)
+> +		return;
+> +
+>  	while (entry->nr < entry->max_stack) {
+>  		fp = (unsigned int __user *) (unsigned long) sp;
+>  		if (invalid_user_sp(sp) || read_user_stack_32(fp, &next_sp))
+> diff --git a/arch/powerpc/perf/callchain_64.c b/arch/powerpc/perf/callchain_64.c
+> index 115d1c105e8a..eaaadd6fa81b 100644
+> --- a/arch/powerpc/perf/callchain_64.c
+> +++ b/arch/powerpc/perf/callchain_64.c
+> @@ -79,6 +79,9 @@ void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+>  	sp = regs->gpr[1];
+>  	perf_callchain_store(entry, next_ip);
+>  
+> +	if (!current->mm)
+> +		return;
+> +
+>  	while (entry->nr < entry->max_stack) {
+>  		fp = (unsigned long __user *) sp;
+>  		if (invalid_user_sp(sp) || read_user_stack_64(fp, &next_sp))
+> -- 
+> 2.53.0
+> 
+Sorry, I missed adding cc list for the last conversation so adding this for reference:
 
-Could you try -rc2, I suspect that commit:
+> Wouldn't be good if we check this in perf_callchain_user() as it will
+> cover both cases.
 
-  c9bc1753b3cc ("perf: Fix __perf_event_overflow() vs perf_remove_from_context() race")
+to which Viktor replied:
+I considered it but in that case, we'd also miss the top-level stack
+frame (the perf_callchain_store call above). Other arches include it so
+I followed the behavior for powerpc.
 
-will have also fixed this.
+Viktor, agreed with your first point. I have another concern:
+
+I was hitting this issue with stacktrace_build_id_nmi in bpf and
+applied this patch https://lore.kernel.org/bpf/20260126074331.815684-1-chen.dylane@linux.dev/T/#mf901967ebe77506f1bd6e3d876c2a85824d9519d
+
+Wondering if the above generic fix is working do we need to add this
+check in powerpc specific code?
+
+Thanks,
+Saket
