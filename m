@@ -1,64 +1,95 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E55C388385
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Mar 2026 23:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772578862; cv=none; b=StpwxlqrgoC/+ftPBsSjrKiee0Lg1aDGApqu5ec5jrYp7q/aSzSp5X6bIU4rDxPP+3nb793IqjB+nMAk5pC4DtoNX6nhbE1XBE/FqfTX2dAddhglTLVEi6uPw2umMgcM6GGNfaL7IP7Fw2ReM9IG/BDQfdPZZgJdxrI36vmrE8M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772578862; c=relaxed/simple;
-	bh=r3BG0oLSPYciMGICd395vK2SFV+sVdRwiimHYrJFvRc=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=WMNius/DK0m5F8MYavEB6HkMET5R2fMsc9qHwhnpTS26QZTiAqD7YK/iy5R+YGcC2hk4s1k4o0X1keRSNqbMR0AFbshid+od95GaohMmx74jFjzAPmJccaOKiJ27ItR7/u24R/hIdsYFiPkacxYuVN1KqgBW5KGfvGLUB3VsESE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pcc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Trlmj3Js; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CFA349B00
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Mar 2026 23:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772580560; cv=pass; b=XTRMNqNc2oXU81HJ0njXdj4to5XwZwLNvnauSAbhPm4PBjTCxInEPE4S+LzkkO6N30Q3NWecvgrOHemmmHN49+LC58tczO9lenwE1iHVj1voH9xj4TQyCmoczLqNBr+hVwTeNsUAkpyUduc26+1nfQbtozqfo58eAjQVcFs38Is=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772580560; c=relaxed/simple;
+	bh=H4/0f0Vkf3bAK0NHlAPK9oM/fReivGRtPyF0jOwe00I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dbE+BWNXcDlsM7zoM6Qwpb0/tIlZ+EgANG/DJNfQaOYy/f7TmOUk83ABxiBV/AAttV+EmpGRsISDojYyy9iMNuLsN/9KyHrnQVPS82rAVX2HM4n1tZvkPJzUmXuW8vxO2EK8wvcj2zXFWL5L6T4IL5jmaRyoQYlskNOBR87v+3M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S2UFmI7J; arc=pass smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pcc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Trlmj3Js"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2bdd4ce8dc3so27564493eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Mar 2026 15:01:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S2UFmI7J"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2ae523d54d2so126935ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Mar 2026 15:29:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772580558; cv=none;
+        d=google.com; s=arc-20240605;
+        b=VTSNI/WocIpgPrnH5+xJsd57sgg5VsIb4nkhvysvwUlkalKcBcawmgKKeHl+NmuX1b
+         5KTE8cV4JhQrliRUuhiBDXyejN3d6GDbcSqP0OyS1s8HJAji2grKmkxA4K2yMKrmHkNi
+         dDlRXFB1mVUb8RHixfTvGHs6oqef3z+Y5uLjiJ1yputEZoArbE8ovh7yRlVWdNYJdqI/
+         txBDhlgSfDPKfq3+1dVOuv4wPKbxMTAad1BtaLthDrebW+T3Dd9E0AFML52Y+tJA7Iz8
+         2g7L0eKr0V5QIUYdBq8JqAhM1/Ft6P38aVKCpsRVkRLE1BA7CvYZfyAF8fahIt9ksUcl
+         gv8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=FiE7foD495KYiSbYPuQi/APgrwKk9G8yzIGB/jUm9ik=;
+        fh=UjESp5dXVQZ+BLVB3g/KKPkPWXYnuU9aL4VAFWtFuQg=;
+        b=QFmb07w01CsoCVycGutzi3HgcoTMlHTQ1N9+bhR8gcfYlhCqRyjjnI8IRa6VLnQfNT
+         ou6pQS3Qo/vUgJF8nrebwQ9CUV4fTgqr7srkP1pUhRXP7nTGwgO+H1GqMT+2HnExR1jp
+         ZLJ2fokV0a08cBPTDFygeIW7tNGk9dW8hGGV48Ijendw328s8+KE+FduIAu7VFZ3vM51
+         UiudFNO1uef6W4beMUDAgeLpCeiQ7KqaYKQOL1GU+jS6dqnLBgqNP+KNEKAjtLkLfVNk
+         GsdmblheejIiOWA2xvU1L3ao2+ZvredxV1ifPHpoDW1i78CsSmBY03V9mM1j2PYPTB16
+         OtGQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772578859; x=1773183659; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JiZo9yNC/DMiqxyM/R63ivjQXmVcbfTK9Za74i9Ki3w=;
-        b=Trlmj3JscJsVCuCNRYRZON+eeOl6nfQEQgKL/v6nxaWTxCmVpQUPE5PivWY7fJk1fd
-         cHGFaNPB07dOL/E8E+WJOsrfIUFk7JZZTqYEaw1QlJANWbLG/AKwa7NnRlus8H8Q29Vu
-         gTo1Aje6DMF5M4f2YJV5cj6TDkwuYxtDLhY/9Bva2SkepZ6GSXjHd2AEqazWh329INzy
-         CF569qOfUTNhPJKCgXvEnvomYdHDQP4lrUptDUA9jHnAP6HAQKYR13iuPsDb/XZpIvTe
-         SvrArrfVIRo7hM22sR4sbAZ43jainFA702t5PCptTysezrHgUYk1mJK+Ozfp0WMDpG6x
-         ISnQ==
+        d=google.com; s=20230601; t=1772580558; x=1773185358; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FiE7foD495KYiSbYPuQi/APgrwKk9G8yzIGB/jUm9ik=;
+        b=S2UFmI7JjI34xHqNorJgRY6AYD7dLuzfrz1U+7t06aIIb/FFyClJDEw4a/saoNQLcT
+         KwrHU8sVRT1uSCAj+xm9TfTiJ2DAfDOG2r/gYhkYwN7Jl6umnopEm6WFctd13MEG0Yyp
+         t0yQIJ40Rtj/MOWfwO8kF0fQ0TBV0i52crxwYq844+tsmAB97DZxkMWDpeeqr+JIVS1s
+         YU1HsT+hIC12DDlpfBkHwqWmR5QM7/yaiYByqMohq89bCifc0lCgI0KD2If9K3Jyx/U8
+         bQkq17kw+B8GA2wipGbH8RmyQ2PYBnqYiArcVgNmmTFXtvkqH6z3uxz9TG07JECOyrle
+         /0LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772578859; x=1773183659;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JiZo9yNC/DMiqxyM/R63ivjQXmVcbfTK9Za74i9Ki3w=;
-        b=nlDHS2nxjkbIRjt9gLqFOat157+V16Krza9DOUqr0adofDNjkYpRcxDrZuJKRB5U+A
-         HFFrykV81i0dOsxlucnt5+y1jydw0jfrcUc9sZLgyBBLcSpXzUmEKfIDpuDzEuW1dKAQ
-         lxJgti+7p/OmSyY3ool7hKqcVySw4gzaO+rJ3nkZ1zzucwu/2CtZqBnxiUnP+15FTApi
-         By2b4syGQuGkUFPdT8iR8QOxI5pp2wGf+mC1MP0Qjz+fx3mQ4vauMhVpLogPlXxGc5FN
-         BIGKDsI7OlspGeSMgVbnatTgxMEXqWQZ3POn3KHF6rutYNxT0gmPeXA4QS9GjMxYwxJj
-         PceA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzwg6JOHgoPCWkvFcP8DoyqHBM+X1Ztpedl+F+DkNNuiGc7zRSNg/f852tcv4RnOkPeJYUndxeLLVmklRsCrB6@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNkEEgh9+w/m+doxBR1KPcVwDh6oC0d0pdDGE7LhoITXASWOgV
-	YuCtWAI5qz3XeJkHmjjbKiA5ehcrysmSrLwFPDiGO6ZOr5EX+yGEr+S54F7z+Slyfqfxig==
-X-Received: from dybrc12.prod.google.com ([2002:a05:7300:d80c:b0:2be:1e24:487d])
- (user=pcc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:5b88:b0:2be:522:2edf
- with SMTP id 5a478bee46e88-2be0522336bmr4393185eec.39.1772578858899; Tue, 03
- Mar 2026 15:00:58 -0800 (PST)
-Date: Tue,  3 Mar 2026 15:00:54 -0800
+        d=1e100.net; s=20230601; t=1772580558; x=1773185358;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=FiE7foD495KYiSbYPuQi/APgrwKk9G8yzIGB/jUm9ik=;
+        b=w2TN1avQvmJMSKHJL+GbRd7O0cNI7s2It5Rg6B9iju6M6q9n2uIznVrEu4pruAmZxi
+         +Gjk+Qc2zRWKNB6afH7d9zZWJrva+tOATIRfIxLxvCSeUmxiXCfRmF/8fxOh6gR7DQCA
+         jZhXU33i1BC6rjmU+gSoh6OA5Lu7NKF98G7ZQ5TxAuEpoo237UUuaRbprBTYkBS1OZ+t
+         P5nxfgJi5q6pykrpzAblj6D5WFoFkQmv4h/jeXdxleziK2PjYj53JQwnbRbsR9Ctb7wt
+         xb0j/cjecJu1mIj8Eu3die2BvWVP63gZlRF5B0HMgPIotI9/PFJNraalCtPjGCEe1fHf
+         wmBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3TsPv3BL0c2qsL4pLx9sWqwlicNdjfFegajrunx0agJW/dnhd9rC8cJu99pZEEBd35NsQ9mJErXQWcLDKluQp@vger.kernel.org
+X-Gm-Message-State: AOJu0YymMyZXvvZO4v0pOtPcykf3HcDVCdtUNr7XMc0b3VT4DOsIvE0V
+	/EBaJYsh0U1eiS+MenOnd86WRon4Flx3MMhasIGA84A0KLjWIDVeh8634CVR3G1B0eTY+raFyY8
+	fKgNJoFVgh2smTnARGI08cm51iU+Cnyoss3eiJ2lO
+X-Gm-Gg: ATEYQzxaV2mtbpj+R/47MZZrWZuHCg4UxcxWGOt/gnQagOliCnWq2cLB71+cCS6/M8q
+	OJ1dGb7pvn4KJ0tvJwEb5PbFsDSQ/STVwzaa6D7helfn+xb56tz410rfQP5n8iyzO9Q28R+k5pf
+	yub9JizXj+3nwc13a3kjoeSwMJYw1jyyS+4mlGvU6DFFSmCnyQix4/XNR0rdrz8I3gIAP5p+USn
+	g/zssZg4gbm8LEtUyhqUJAT4fJQkyYCZlX+K39Q9nDW2dnBboezr0iXf97AYC6AAQcUeKEqLB9d
+	IG9M8mPdiW/lokUnQd3uU4qbO5gKsK8D+iFx4g==
+X-Received: by 2002:a17:902:e54b:b0:2ad:e574:7a7 with SMTP id
+ d9443c01a7336-2ae3b5138b9mr7707075ad.11.1772580557297; Tue, 03 Mar 2026
+ 15:29:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <20260303230056.2074898-1-pcc@google.com>
-Subject: [PATCH] perf llvm: Specify features="+all" for aarch64
-From: Peter Collingbourne <pcc@google.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Collingbourne <pcc@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+MIME-Version: 1.0
+References: <20260303230043.2074593-1-pcc@google.com>
+In-Reply-To: <20260303230043.2074593-1-pcc@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 3 Mar 2026 15:29:03 -0800
+X-Gm-Features: AaiRm51WL95oMqDVkWli8eBGOixYK0T7oHldhYsC3oIhV7q_LwP7pOQfUinyzQo
+Message-ID: <CAP-5=fWL0jKGQuqBzP0xMWVkzu48c6JzgwWQ1+NkAxgbpSPpcg@mail.gmail.com>
+Subject: Re: [PATCH] perf llvm: Clean up after a failed disassembly
+To: Peter Collingbourne <pcc@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
@@ -68,43 +99,52 @@ Cc: Peter Collingbourne <pcc@google.com>, Peter Zijlstra <peterz@infradead.org>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is consistent with what llvm-objdump does (see [1]) and allows
-the LLVM disassembler to disassemble instructions not in the base
-instruction set.
+On Tue, Mar 3, 2026 at 3:00=E2=80=AFPM Peter Collingbourne <pcc@google.com>=
+ wrote:
+>
+> An error returned from a failed backend will cause perf to call the next
+> backend. If the error happens mid-function, e.g. due to an unrecognized
+> instruction, we will end up with duplicated instructions in the output
+> unless the backend that failed deletes any instructions that it created
+> before failing. The capstone backend was already doing this but the LLVM
+> backend was not; fix it.
+>
+> Link: https://linux-review.googlesource.com/id/I377eef3cd662ab98fbcd69e50=
+04a259fa3d7aa06
+> Signed-off-by: Peter Collingbourne <pcc@google.com>
 
-[1] https://reviews.llvm.org/D127741
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Link: https://linux-review.googlesource.com/id/I52e4fef18d2e12b45f875231fa9d3efff2538fd4
-Signed-off-by: Peter Collingbourne <pcc@google.com>
----
- tools/perf/util/llvm.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Thanks,
+Ian
 
-diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
-index 87fceae8488a7..44eff99970fe2 100644
---- a/tools/perf/util/llvm.c
-+++ b/tools/perf/util/llvm.c
-@@ -153,11 +153,17 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
- 					  /*get_op_info=*/NULL, symbol_lookup_callback);
- 	} else {
- 		char triplet[64];
-+		const char *features = NULL;
- 
- 		scnprintf(triplet, sizeof(triplet), "%s-linux-gnu",
- 			  args->arch->name);
--		disasm = LLVMCreateDisasm(triplet, &storage, /*tag_type=*/0,
--					  /*get_op_info=*/NULL, symbol_lookup_callback);
-+		if (args->arch->id.e_machine == EM_AARCH64)
-+			features = "+all";
-+		disasm = LLVMCreateDisasmCPUFeatures(triplet, /*cpu=*/"",
-+						     features, &storage,
-+						     /*tag_type=*/0,
-+						     /*get_op_info=*/NULL,
-+						     symbol_lookup_callback);
- 	}
- 
- 	if (disasm == NULL)
--- 
-2.53.0.473.g4a7958ca14-goog
-
+> ---
+>  tools/perf/util/llvm.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
+> index 0d126d233c019..87fceae8488a7 100644
+> --- a/tools/perf/util/llvm.c
+> +++ b/tools/perf/util/llvm.c
+> @@ -261,6 +261,15 @@ int symbol__disassemble_llvm(const char *filename, s=
+truct symbol *sym,
+>         ret =3D 0;
+>
+>  err:
+> +       if (ret !=3D 0) {
+> +               struct disasm_line *tmp;
+> +
+> +               list_for_each_entry_safe(dl, tmp, &notes->src->source,
+> +                                        al.node) {
+> +                       list_del(&dl->al.node);
+> +                       disasm_line__free(dl);
+> +               }
+> +       }
+>         LLVMDisasmDispose(disasm);
+>         free(code_buf);
+>         free(line_storage);
+> --
+> 2.53.0.473.g4a7958ca14-goog
+>
