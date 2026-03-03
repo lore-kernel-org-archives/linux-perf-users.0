@@ -1,168 +1,161 @@
-Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1AF33FE06;
-	Tue,  3 Mar 2026 12:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.189.157.229
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772540097; cv=none; b=pbGopzdmEdcMLJlHZZvt7h0kzV00ZUROfvIsqb1ehrxwGUnNztT4mNADf0GTemAC/H1Apsg0UkyCwPrDU4rIGD8xe5CYbHynKeqjqdQgjiQjYfD3fSabLbaZ8K5mlnFaH5g4kX/QBz3UpjXa1V6gqTlEfwYrsI7QYBK9ku70A7c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772540097; c=relaxed/simple;
-	bh=Py8Zp69P5/J1BlQCksfycmAarkSiVopSUaC0+sAz+Yc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fc2KqkoCld3v9f+4/QuviZs+j7pLDwkOgGYxrBw3iv7pGnhecygJgIJ0ugBZ0D62BRrCblDEfUsrO+tgSCc0yI6JivG5v749wZgQUWDSMiU7TOIee8iJmCk1mNZIpQATSV30yTWm7YYAVnaIYeZm3KgDQzx41MUCrGZOSljYGPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com; spf=pass smtp.mailfrom=crudebyte.com; dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b=b45/xuqs; arc=none smtp.client-ip=5.189.157.229
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crudebyte.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCA21A6801
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Mar 2026 12:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772541485; cv=pass; b=AIjlnrhLPZlsWKyBHPTqA3lfDW1Fr4HMoBiWlTR8gFwg2sdQpS1GrdzNU3DZTLbI+r52efVCWCA106wwsqXzSl7imtnPS98a/iMaBCThKCcngO4Ig6bufH0Dju8ivtOkt2QtbH8AOTbxdrmmvHvsBsLTKSZSuRYVoamKKzYR6rY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772541485; c=relaxed/simple;
+	bh=SE8OsuOearTbpLewa/D9O40p1Vtj0EdgohxwdO4h3qg=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mAMPrLs6Y6bWW3N5yUNiGES6H/EzfPEK4+JU6R4HrDI0gv2w2hptWvNlyA3aicjZN+5xok+FvFdkPJf7D+8vETUuk/Wlbp0ugETXXKE5auE6N6DmIkrrzDFVwz46rB9ANNdzirVnmzCUhQKCxHXKqx1BTabLdHb5P7wR7TvDDB8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nIv2vAIm; arc=pass smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="b45/xuqs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Content-ID:Content-Description;
-	bh=sEoIOy08sNDPM7R5rm77ylqbd67+xSmbEywB7fDE1l0=; b=b45/xuqsDe3UOPQGaSOC3QVfXK
-	OUdoPRzyNDl+yB4fHKVaFWk8VF87HMtM4PYj4R2Fj4RpvcBDUY2ZRib9drn+oqZiRxQCtGar4RuAz
-	RYpsEbooDPugVAlnLrqpLhL+RChtlDNEybUZnd2yTo6Y9uqRr+1WKo0xl+84dQj8eWwrm7umz7n0w
-	S0EXkqOXa2C/JE8ObWOt92H0I3bqxVdgJ9TfYidSDZtw7bmGYFyYek8qwJZQAKn3MZmmf/FUVClZB
-	QWCtVuugHhF8BNOyUJFLJSfWPIXAHjH3TLcWIb8OST54dg+7vIizA1SPKkby0pw/QTg0kPbnj4Wj9
-	VeB+nqiUcTgosudQMsEBFy4QC+CVa0DVQMYM3UhAhXRVcGAw2OrwsIYL9SNJioU6URY8vyDA6TwfM
-	CFYsOZ3h1lK3cnDA5o2cflFeZC32omihqCAVM51Ge0wTTskASCR9w0ENeA5eVA/akwkz+TZ5d3AsE
-	7f82uN5RuzZACblKcmQqEKYQjiNJSERv0YAwUBb/EiPVB4IwaXQdg3R2xm5FyvBpIz+8+5sqHHPrp
-	714s96tE/7YqJbu0kX52r+TMH8FczKREFdRsqPG+YK+I8GIlGaziiB8fLP6RTgOHSdf3lUuYeXzdb
-	ttbE75RJ/SInwkaKpg3BOdQZ8WJQK3Z8q+sKFDgvs=;
-From: Christian Schoenebeck <linux_oss@crudebyte.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Matthew Wilcox <willy@infradead.org>, Eric Biggers <ebiggers@kernel.org>,
- "Theodore Y. Ts'o" <tytso@mit.edu>, Muchun Song <muchun.song@linux.dev>,
- Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>,
- David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.org>,
- Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
- Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, Steve French <sfrench@samba.org>,
- Ronnie Sahlberg <ronniesahlberg@gmail.com>,
- Shyam Prasad N <sprasad@microsoft.com>, Bharath SM <bharathsm@microsoft.com>,
- Alexander Aring <alex.aring@gmail.com>,
- Ryusuke Konishi <konishi.ryusuke@gmail.com>,
- Viacheslav Dubeyko <slava@dubeyko.com>,
- Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>,
- Dominique Martinet <asmadeus@codewreck.org>, David Sterba <dsterba@suse.com>,
- Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>,
- Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>,
- "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
- Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>,
- Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
- Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>,
- Amir Goldstein <amir73il@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Yangtao Li <frank.li@vivo.com>,
- Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
- David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>,
- Dave Kleikamp <shaggy@kernel.org>,
- Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
- Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
- Joseph Qi <joseph.qi@linux.alibaba.com>, Mike Marshall <hubcap@omnibond.com>,
- Martin Brandenburg <martin@omnibond.com>, Miklos Szeredi <miklos@szeredi.hu>,
- Anders Larsen <al@alarsen.net>, Zhihao Cheng <chengzhihao1@huawei.com>,
- Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>,
- Johannes Thumshirn <jth@kernel.org>,
- John Johansen <john.johansen@canonical.com>,
- Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
- "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>,
- Roberto Sassu <roberto.sassu@huawei.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
- Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>,
- Casey Schaufler <casey@schaufler-ca.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>, Eric Dumazet <edumazet@google.com>,
- Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Willem de Bruijn <willemb@google.com>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>, "Darrick J. Wong" <djwong@kernel.org>,
- Martin Schiller <ms@dev.tdt.de>, Eric Paris <eparis@redhat.com>,
- Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Oliver Hartkopp <socketcan@hartkopp.net>,
- Marc Kleine-Budde <mkl@pengutronix.de>, David Ahern <dsahern@kernel.org>,
- Neal Cardwell <ncardwell@google.com>,
- Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Remi Denis-Courmont <courmisch@gmail.com>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Xin Long <lucien.xin@gmail.com>, Magnus Karlsson <magnus.karlsson@intel.com>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Stanislav Fomichev <sdf@fomichev.me>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, Jeff Layton <jlayton@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
- linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
- v9fs@lists.linux.dev, linux-afs@lists.infradead.org, autofs@vger.kernel.org,
- ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
- ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org,
- jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev,
- ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
- linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com,
- linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org,
- selinux@vger.kernel.org, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fscrypt@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org,
- linux-x25@vger.kernel.org, audit@vger.kernel.org,
- linux-bluetooth@vger.kernel.org, linux-can@vger.kernel.org,
- linux-sctp@vger.kernel.org, bpf@vger.kernel.org,
- Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH v2 016/110] 9p: use PRIino format for i_ino
-Date: Tue, 03 Mar 2026 12:52:39 +0100
-Message-ID: <12847641.O9o76ZdvQC@weasel>
-In-Reply-To: <20260302-iino-u64-v2-16-e5388800dae0@kernel.org>
-References:
- <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
- <20260302-iino-u64-v2-16-e5388800dae0@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nIv2vAIm"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-35984cd0335so1037551a91.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Mar 2026 04:38:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772541484; cv=none;
+        d=google.com; s=arc-20240605;
+        b=D0l+1496u5x/HDIlleCQSUDSrjiPCjQ/9+jgtV74ODGFzOgvn0VGTS03JlUMxrRmEl
+         8P+MgvlnQNLi8u79YEp3eb6B9CNNccU6blnuW2BGG9mfG+7IvtoBRyGba/+rWdAxBg11
+         lcEYE6Vr9hXMxzIw3F9MBSPPdJ39JSHNVS41wMKq4Xyys7s5Bw1wHVfZVw7vP6cG0RUA
+         vwFIUrOdMUP4EFuR+hDlouTowgVhSg3JE7WvmKLZBshGadiRmHyDL1sChxELFsp8ht4a
+         FaZThlrZLqCJFWifqgTzpBH3WpOGYgHYUFR6hjyGofce1IdvUge9XB/5RhGFkBmY/GH+
+         F3BQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=3Od8VmsAkxkDfornZBSHD3NThhpuDKPeufz3L6FQsdo=;
+        fh=NmBQp949CYc6hbwlIH4N4dXA03Ec05+S7oZYrruDNF0=;
+        b=gvcR8K/h/VNrW5sZiKG6rOLgYhAmMwYdU8I9Glq9PV9tF+1BDpT4mgS+LwmAGHEig7
+         4aJ3mDVoT2M088SpgX7zERkBUx+ZIljB9REJstNXTfebuwv2jZ57i2Ci6wfX0/1jLJo/
+         mu1mFSwKAkg0MQpdLtEtslXcZgw1JF0roXZGMxGQGF+WOnkWpx4WPG6kxi+1nIAaSvqC
+         6RLpBzjdLknlCIwcIROdWX/VEvvgOOgouR2bjHU9XDp1M9iXknjFn4YDjZrU8VPp9Jqp
+         +1465v+r4o/u0MTZtlMo7uDiLySUuWnC1CFeoCIMVVA0qhZSrfs40e1EiIJVZF20KZHi
+         bABw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772541484; x=1773146284; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3Od8VmsAkxkDfornZBSHD3NThhpuDKPeufz3L6FQsdo=;
+        b=nIv2vAImkNUX82TjIXd8M5ckaTLMaN9l9A3H6eponq9/VEMByLn53QW9aMHi85+9Se
+         JTa8gXKYlAXe7r8TBsOTMx7FfbusxJTrSKzKoSfzDXPCWQQOLg/b5VSyI6aYSrhx/3Xb
+         r5OL4ImrsGtiiYfXMvDc4r68e9iuVnAWcmvBluHPraE3pHcUCXNpMBm6Wr1kIzgfUb3f
+         pRq5QK4Y07kR3K7Mc3hp/FWmBDx1BXoYQvTb2F7cjV5EvRuAmBPce1gm07+Kl9ka/tNZ
+         FvxCDth/Jish/Dzjxn4K3qBTNZtCG54BqT7oCyMn29XXVJzLsdGdRmP7uHHDC25xy54X
+         7SEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772541484; x=1773146284;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Od8VmsAkxkDfornZBSHD3NThhpuDKPeufz3L6FQsdo=;
+        b=ORT/gyEDqpAETmxZCnryGGl4wsCZ8rD/KP2K/ztwXQa+IXqT82gMPRGxXCOh5/ztdf
+         NE9nvN0fwBMlI2BgGyR7UPdl6Srksygtm2UumC4KQfmvEdS1+VcEtV6x6qWla2VtmCQd
+         8HxrJbThJewT2hEN++uop4huMcxvpaBdME2qtUF4jnnOeyFixmUhWNAh0DHqDzXgvZsh
+         AiygD0EGi9963xFzNhoxGs0ZsJNFPwcRiCEujGGAKMvnCEFQMREru8fy+Qw29EvIzhjh
+         c2Sgdu3gY5oMusAeqFrHl3jyQNhzR5xGdGeX24N/udoTGgF8SFl6nt74Ysxdtghho2ZJ
+         gyow==
+X-Gm-Message-State: AOJu0Yzl/wPfVglZblRmDaKwz1HHI5oIoBMJuHFiCy5i8i57Lqykk3Zv
+	D6iB9bkNqxn/OpxicyPIhpHTIUt/BtSQOQrUJbpKsfYHtkHHBaNM4WwScvEiAO8wIaSRxHzD97K
+	wDT+9e/mIHjeuj+oGebZ22+Rpb5Nc1FI=
+X-Gm-Gg: ATEYQzzdFc4eYvRvIT3TO44q9+837nN3HzxbN5++HlB4PRLLslvglrKJUVw43p25I1Z
+	GUQcQpQZaE6+Ylb1r66Q397L1JEfuI+UyNWeUcmYkoApBlaGiNpdmO41xvJDF5kWc3++jeW/Arz
+	Kl4hffxIxUvR7QwR4ot3ihcy2AawRyUI4GlGvKdrUXqDEdgyo45t+lKFI1XnnHKGoe6omXrHnxO
+	UFyM8Gp+/i3k3mJ/sStpS3WQ+o/0fXb5RVPLkqQCg7JWSxfR1eWTUCrUWhGerMt71ym4MIDapZk
+	x2FMQKY=
+X-Received: by 2002:a17:90b:5289:b0:359:806c:7aa1 with SMTP id
+ 98e67ed59e1d1-3599ce03d7emr2037572a91.2.1772541484045; Tue, 03 Mar 2026
+ 04:38:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+From: Zw Tang <shicenci@gmail.com>
+Date: Tue, 3 Mar 2026 20:37:54 +0800
+X-Gm-Features: AaiRm535xsaj4VoSKoOw9tJiv_BU8fScEnpA3N2KgqFZaXGTc84pg3falQ7tcTI
+Message-ID: <CAPHJ_VLapzvWHz_ot4uvxSJ_Z3ubtCCp=_ZVReh7KAwjxu5uFQ@mail.gmail.com>
+Subject: [BUG] WARNING in __perf_event_account_interrupt (kernel/events/core.c:2797)
+To: peterz@infradead.org, mingo@redhat.com, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Monday, 2 March 2026 21:24:00 CET Jeff Layton wrote:
-> Convert 9p i_ino format strings to use the PRIino format
-> macro in preparation for the widening of i_ino via kino_t.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/9p/vfs_addr.c       | 4 ++--
->  fs/9p/vfs_inode.c      | 6 +++---
->  fs/9p/vfs_inode_dotl.c | 6 +++---
->  3 files changed, 8 insertions(+), 8 deletions(-)
+Hi,
 
-Reviewed-by: Christian Schoenebeck <linux_oss@crudebyte.com>
+I am reporting a WARNING triggered by a syzkaller reproducer on Linux 7.0.0-rc1.
+
+The kernel hits a WARN in perf events interrupt accounting:
+
+WARNING: kernel/events/core.c:2797 at __perf_event_account_interrupt+0x485/0x530
+
+It is triggered from the perf overflow path while closing a perf_event
+fd created for a tracepoint (PERF_TYPE_TRACEPOINT). The call trace
+shows:
+
+__perf_event_overflow()
+perf_tp_event()
+...
+__x64_sys_close()
+
+This looks like a potential state inconsistency / reentrancy issue
+between tracepoint-perf event handling (overflow/accounting) and event
+close/teardown paths, causing __perf_event_account_interrupt() to hit
+a WARN_ON.
+
+log:
+
+[  109.197980] Call Trace:
+[  109.198578]  <TASK>
+[  109.199163]  __perf_event_overflow+0xb6/0xa00
+[  109.200270]  ? perf_tp_event+0x703/0xcd0
+[  109.201256]  perf_swevent_overflow+0xac/0x150
+[  109.202321]  perf_swevent_event+0x14d/0x2e0
+[  109.203372]  perf_tp_event+0x3d8/0xcd0
+[  109.204320]  ? __perf_tp_event_target_task+0x540/0x540
+[  109.205578]  ? __lock_acquire+0x55a/0x1ef0
+[  109.206595]  ? lock_acquire+0x199/0x2f0
+[  109.207556]  ? find_held_lock+0x2b/0x80
+[  109.208512]  ? __sanitizer_cov_trace_pc+0x1d/0x50
+[  109.209655]  ? _perf_event_period+0x1b2/0x240
+[  109.210714]  ? perf_event_refresh+0x100/0x100
+[  109.211984]  ? __might_fault+0x151/0x190
+[  109.212905]  ? __sanitizer_cov_trace_pc+0x1d/0x50
+[  109.214104]  ? __sanitizer_cov_trace_pc+0x1d/0x50
+[  109.215238]  ? _perf_ioctl+0x147/0x1d40
+[  109.216203]  ? perf_trace_run_bpf_submit+0xef/0x180
+[  109.217378]  perf_trace_run_bpf_submit+0xef/0x180
+[  109.218542]  perf_trace_lock_acquire+0x385/0x590
+[  109.219684]  ? lock_release+0xc9/0x2b0
+[  109.220824]  ? perf_trace_lock+0x510/0x510
+[  109.221820]  ? __mutex_unlock_slowpath+0x157/0x760
+[  109.223132]  ? _mutex_trylock_nest_lock+0x370/0x370
+[  109.224302]  ? perf_event_ctx_lock_nested+0x89/0x4d0
+[  109.225533]  lock_acquire+0xdf/0x2f0
+[  109.226428]  ? file_close_fd+0x4d/0x80
+[  109.227390]  ? __sanitizer_cov_trace_pc+0x1d/0x50
+[  109.228570]  _raw_spin_lock+0x2b/0x40
+[  109.229517]  ? file_close_fd+0x4d/0x80
+[  109.230481]  file_close_fd+0x4d/0x80
+[  109.231386]  __x64_sys_close+0x38/0x120
+[  109.232343]  do_syscall_64+0x115/0x650
+[  109.233305]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
 
 
+Reproducer:
+C reproducer: https://pastebin.com/raw/GJtNs8JE
+console output: https://pastebin.com/raw/zGwk1RhB
+kernel config: https://pastebin.com/raw/g6ZhXQ79
 
+Kernel:
+git tree: torvalds/linux
+commit: 4d349ee5c7782f8b27f6cb550f112c5e26fff38d
+kernel version: 7.0.0-rc1
+hardware: QEMU Ubuntu 24.10
