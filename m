@@ -1,201 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6584F2FE044;
-	Tue,  3 Mar 2026 01:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F163F1A6810
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Mar 2026 01:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772500510; cv=none; b=dpBsrn1YyiMeefG3wQm21JGPRaBBibeJYNwpvQSdTGuoZMtEitQAOuugqVyubmAhIHLyDVitEc62zAW5M+odnfKTUsioWJfGngpoJQbvujSWx4zP5ePrO21+WzFqmy47VRzjvKH249bmh1MnLcc7LgKA855A5HApAfDcPKVD7EA=
+	t=1772501184; cv=none; b=PSJrCu2ScKkM4AbOtW2ZZpUGjHycxTLYWXcNnDqn5BzZk6lz0Qgl+ivSiyco+fmXkA/l9EF2b/TOlclc63L7mSJzduoAJfVXCBPqh5X0ZBFY3zeJa04VWQx0Nkft7DcQ32SKwvghxANSOJj1CuNQtcd3m6cBf9kSdamXxVjJJNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772500510; c=relaxed/simple;
-	bh=QUqGmwefJChNRywdpwU6AAbGz0KFFI2XWCs8ymPBxsc=;
+	s=arc-20240116; t=1772501184; c=relaxed/simple;
+	bh=g+VdGlVLVkH1poZKLQaU9Z6Cz1tsg2GNZN6MfKpgxB4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pa1MyWZ7NA8CCTzWpfy5EBHk9t1sb5vCzYiy1ij7C+nT78lEMO1OvOI/FByzOFMXHgq0aoa4GS6jkw2rfAmlfj+vRx6JgA5lM8kJA66K0LnByRdUoMCoYlD5UdEWWTQNo9uIItlC+cCV6+tdHxYx90g+2wqaHWqStMkJqoNwKsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwVbp8xs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NtwjkIy+7TVaqcy6cG2X/kGscL6qv8cZHVDPCsFDnlkHi4aeRafT4TmMIzOLIlIJJtveoAI3nPhHjFhdcdTFSiasotvBepXu/iyriN5Etf6maopbnBlloH/rCcRONRzA67albyjkruA1IJK0NKqRgK/iBNZyG3fltKSRxGZrGjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=Wc4TKdAE; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwVbp8xs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B20C19423;
-	Tue,  3 Mar 2026 01:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772500510;
-	bh=QUqGmwefJChNRywdpwU6AAbGz0KFFI2XWCs8ymPBxsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gwVbp8xsyglCRRr9UJBQP4x+QVw0v41N6Hy4iUk+8ZYFyy/lyg2XvXQsOTjSrX0C5
-	 RUu+JRt2FCEF65SHv1JFpYZeHgkyM8BzIAfX91PTZ1bQGPgEQeMPqrax8IcIZ9Y4QW
-	 gsPsK+faaUFWJ54XQXoP31VXt1DsmzY4PrKGJ3yBmFFGUrcrwyOfjiSHLmUFbvpgJK
-	 mDq+nZfpea7cfUZLpT643GLQ1v4Ur6m1EQknQcME0KQ9Aapbg6MmEMRAjOEkT9APxp
-	 HWQIaowe/mCzIo2W5m7XwcEoWzhu4vQdxt7Dst6yQs6zO7TOv3JJV3MfKv5WH4BVqH
-	 33Pyz2m/X/AiQ==
-Date: Mon, 2 Mar 2026 17:15:07 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Leo Yan <leo.yan@arm.com>, Tianyou Li <tianyou.li@intel.com>,
-	Athira Rajeev <atrajeev@linux.ibm.com>,
-	Derek Foreman <derek.foreman@collabora.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	tanze <tanze@kylinos.cn>,
-	Hrishikesh Suresh <hrishikesh123s@gmail.com>,
-	Quan Zhou <zhouquan@iscas.ac.cn>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Anup Patel <anup@brainfault.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Chen Ni <nichen@iscas.ac.cn>, Blake Jones <blakejones@google.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 00/25] perf tool: Add evsel to perf_sample
-Message-ID: <aaY2GwW04E5WjVgy@google.com>
-References: <20260209174032.4142096-1-irogers@google.com>
- <CAP-5=fVaEfuM0_YXwX4tgFfiPTX1i_BkTKhYvGqnpZ2d_Cb6+w@mail.gmail.com>
- <CAP-5=fXebrVQoGyToo20cuAoFXi65NinbqJhhSdu9EUU0V3ETQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="Wc4TKdAE"
+Received: from macsyma.thunk.org (pool-173-48-102-84.bstnma.fios.verizon.net [173.48.102.84])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 6231Pu3R026610
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 2 Mar 2026 20:25:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1772501160; bh=/4PzqDjQa596+Pxv5nyCAFN8lvFTxej9AhTZolOU+To=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=Wc4TKdAEZiew43ZUa9oyK9BzvbQO3OJloJSKo3pd6MKCTHI4a2teHHPqzw1FRDL2y
+	 +yu6xwBU02gN3nI0t8y5UIoSUv5mdCVHfMEIdSd/UzmQ8n8XljJLn8WdsWZlzyvKGT
+	 rAz3wh7Iki5RyLotCb/Z/VDWmYDbAE0BsYdyvuoQ8F38jRx/zf/TpFP5KA5Lqp0Cw+
+	 Ng03SymNceY21qntaXusQUmsrvhvWlmHGa8roce7/UvpNA6pe9TJunmAktEO3gj4vh
+	 AMgTW7BxiT//fgI8Xnd0Mi0ldl+zhjAuEvp4QGZN3wtROS2Wpi13Sob+oCVUSW/6ZX
+	 sKXZK8+2UchSg==
+Received: by macsyma.thunk.org (Postfix, from userid 15806)
+	id 33A7D5AC5A1E; Mon,  2 Mar 2026 20:25:56 -0500 (EST)
+Date: Mon, 2 Mar 2026 20:25:56 -0500
+From: "Theodore Tso" <tytso@mit.edu>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Paulo Alcantara <pc@manguebit.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>, Steve French <sfrench@samba.org>,
+        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Bharath SM <bharathsm@microsoft.com>,
+        Alexander Aring <alex.aring@gmail.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Viacheslav Dubeyko <slava@dubeyko.com>,
+        Eric Van Hensbergen <ericvh@kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        David Sterba <dsterba@suse.com>,
+        Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Salah Triki <salah.triki@gmail.com>,
+        "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+        Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Yangtao Li <frank.li@vivo.com>,
+        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Richard Weinberger <richard@nod.at>, Dave Kleikamp <shaggy@kernel.org>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>,
+        Zhihao Cheng <chengzhihao1@huawei.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        John Johansen <john.johansen@canonical.com>,
+        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@linaro.org>,
+        "Darrick J. Wong" <djwong@kernel.org>, Martin Schiller <ms@dev.tdt.de>,
+        Eric Paris <eparis@redhat.com>, Joerg Reuter <jreuter@yaina.de>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Remi Denis-Courmont <courmisch@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+        fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
+        v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+        autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        codalist@telemann.coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+        devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
+        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-x25@vger.kernel.org,
+        audit@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-can@vger.kernel.org, linux-sctp@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v2 001/110] vfs: introduce kino_t typedef and PRIino
+ format macro
+Message-ID: <20260303012556.GA6520@macsyma-wired.lan>
+References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
+ <20260302-iino-u64-v2-1-e5388800dae0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXebrVQoGyToo20cuAoFXi65NinbqJhhSdu9EUU0V3ETQ@mail.gmail.com>
+In-Reply-To: <20260302-iino-u64-v2-1-e5388800dae0@kernel.org>
 
-On Mon, Mar 02, 2026 at 09:56:54AM -0800, Ian Rogers wrote:
-> On Mon, Feb 23, 2026 at 11:15 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Mon, Feb 9, 2026 at 9:40 AM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > Nearly all perf code ends up passing an evsel with the perf_sample,
-> > > which is problematic if you want to rewrite the evsel such as with
-> > > off-CPU processing - all uses of the evsel need fixing up. Previously
-> > > I'd mailed this patch as an RFC with everything combined:
-> > > https://lore.kernel.org/lkml/20260126071822.447368-1-irogers@google.com/
-> > > and there was a request to break it up.
-> > >
-> > > I've started the series by adding documentation to struct
-> > > perf_sample. Next I fixed missing perf_sample__init/exit largely from
-> > > the recent perf inject callchain rewriting work. The 3rd patch adds
-> > > the evsel to struct perf_sample and ensures it is correctly
-> > > initialized. The next 22 patches avoid passing the evsel along with
-> > > sample for different parts of the perf tool, along with some minor
-> > > tweaks like constification and not determining the evsel if it is
-> > > present in the sample.
-> >
-> > Ping.
-> 
-> Ping.
- 
-Sorry for the delay.  I'll take a look this week.
+On Mon, Mar 02, 2026 at 03:23:45PM -0500, Jeff Layton wrote:
+> The PRIino macro is a length modifier, not a complete format specifier.
+> It is used as: "%" PRIino "u" for decimal, "%" PRIino "x" for hex, etc.
+> This follows the pattern used by userspace PRIu64/PRIx64 macros.
 
-Thanks,
-Namhyung
+For the record, I really hate the inttypes.h format specifiers, but I
+agree that we should forward the example of the C99 spec, for better
+or for worse.
 
+That being said, the userspace PRIu64, et. al macros are complete
+format specifiers, not just a length modifier.  And I think this
+results in less ugly format specifiers in our kernel code.
 
-> > > Ian Rogers (25):
-> > >   perf sample: Document struct perf_sample
-> > >   perf sample: Make sure perf_sample__init/exit are used
-> > >   perf sample: Add evsel to struct perf_sample
-> > >   perf tool: Remove evsel from tool APIs that pass the sample
-> > >   perf kvm: Don't pass evsel with sample
-> > >   perf evsel: Refactor evsel__intval to perf_sample__intval
-> > >   perf trace: Don't pass evsel with sample
-> > >   perf callchain: Don't pass evsel and sample
-> > >   perf lock: Only pass sample to handlers
-> > >   perf lock: Constify trace_lock_handler variables
-> > >   perf hist: Remove evsel parameter from inc samples functions
-> > >   perf db-export: Remove evsel from struct export_sample
-> > >   perf hist: Remove evsel from struct hist_entry_iter
-> > >   perf report: Directly use sample->evsel to avoid computing from
-> > >     sample->id
-> > >   perf annotate: Don't pass evsel to add_sample
-> > >   perf inject: Don't pass evsel with sample
-> > >   perf kmem: Don't pass evsel with sample
-> > >   perf kwork: Don't pass evsel with sample
-> > >   perf sched: Don't pass evsel with sample
-> > >   perf timechart: Don't pass evsel with sample
-> > >   perf trace: Don't pass evsel with sample
-> > >   perf evlist: Try to avoid computing evsel from sample
-> > >   perf script: Don't pass evsel with sample
-> > >   perf s390-sample-raw: Don't pass evsel with sample
-> > >   perf evsel: Don't pass evsel with sample
-> > >
-> > >  tools/perf/builtin-annotate.c                 |  28 ++-
-> > >  tools/perf/builtin-c2c.c                      |   6 +-
-> > >  tools/perf/builtin-diff.c                     |   5 +-
-> > >  tools/perf/builtin-inject.c                   |  81 ++++----
-> > >  tools/perf/builtin-kmem.c                     |  58 +++---
-> > >  tools/perf/builtin-kvm.c                      |  22 +--
-> > >  tools/perf/builtin-kwork.c                    | 104 ++++------
-> > >  tools/perf/builtin-lock.c                     | 117 +++++------
-> > >  tools/perf/builtin-mem.c                      |   1 -
-> > >  tools/perf/builtin-record.c                   |   3 +-
-> > >  tools/perf/builtin-report.c                   |  38 ++--
-> > >  tools/perf/builtin-sched.c                    | 183 ++++++++----------
-> > >  tools/perf/builtin-script.c                   |  26 ++-
-> > >  tools/perf/builtin-timechart.c                |  76 +++-----
-> > >  tools/perf/builtin-top.c                      |  19 +-
-> > >  tools/perf/builtin-trace.c                    | 103 +++++-----
-> > >  tools/perf/tests/hists_cumulate.c             |   3 +-
-> > >  tools/perf/tests/hists_filter.c               |   2 +-
-> > >  tools/perf/tests/hists_output.c               |   3 +-
-> > >  tools/perf/tests/mmap-basic.c                 |   4 +-
-> > >  tools/perf/tests/openat-syscall-tp-fields.c   |   2 +-
-> > >  tools/perf/tests/switch-tracking.c            |   9 +-
-> > >  tools/perf/util/annotate.c                    |  19 +-
-> > >  tools/perf/util/annotate.h                    |   6 +-
-> > >  tools/perf/util/build-id.c                    |   3 +-
-> > >  tools/perf/util/build-id.h                    |   7 +-
-> > >  tools/perf/util/callchain.c                   |   8 +-
-> > >  tools/perf/util/callchain.h                   |   5 +-
-> > >  tools/perf/util/data-convert-bt.c             |   2 +-
-> > >  tools/perf/util/data-convert-json.c           |   5 +-
-> > >  tools/perf/util/db-export.c                   |  13 +-
-> > >  tools/perf/util/db-export.h                   |   3 +-
-> > >  tools/perf/util/evsel.c                       |  60 +++---
-> > >  tools/perf/util/evsel.h                       |  12 +-
-> > >  tools/perf/util/hist.c                        |  26 +--
-> > >  tools/perf/util/hist.h                        |   3 +-
-> > >  tools/perf/util/intel-pt.c                    |  12 +-
-> > >  tools/perf/util/intel-tpebs.c                 |   3 +-
-> > >  tools/perf/util/jitdump.c                     |   2 +-
-> > >  .../perf/util/kvm-stat-arch/kvm-stat-arm64.c  |  19 +-
-> > >  .../util/kvm-stat-arch/kvm-stat-loongarch.c   |  17 +-
-> > >  .../util/kvm-stat-arch/kvm-stat-powerpc.c     |  17 +-
-> > >  .../perf/util/kvm-stat-arch/kvm-stat-riscv.c  |  17 +-
-> > >  tools/perf/util/kvm-stat-arch/kvm-stat-s390.c |  20 +-
-> > >  tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  |  70 +++----
-> > >  tools/perf/util/kvm-stat.c                    |  19 +-
-> > >  tools/perf/util/kvm-stat.h                    |  18 +-
-> > >  tools/perf/util/kwork.h                       |   9 +-
-> > >  tools/perf/util/machine.c                     |  14 +-
-> > >  tools/perf/util/machine.h                     |   3 -
-> > >  tools/perf/util/s390-sample-raw.c             |  15 +-
-> > >  tools/perf/util/sample.c                      |   8 +-
-> > >  tools/perf/util/sample.h                      |  93 ++++++++-
-> > >  .../util/scripting-engines/trace-event-perl.c |  23 +--
-> > >  .../scripting-engines/trace-event-python.c    |  47 ++---
-> > >  tools/perf/util/session.c                     |  74 ++++---
-> > >  tools/perf/util/synthetic-events.c            |   9 +-
-> > >  tools/perf/util/synthetic-events.h            |   2 -
-> > >  tools/perf/util/tool.c                        |   4 +-
-> > >  tools/perf/util/tool.h                        |   4 +-
-> > >  tools/perf/util/trace-event-scripting.c       |   5 +-
-> > >  tools/perf/util/trace-event.h                 |   3 -
-> > >  62 files changed, 769 insertions(+), 823 deletions(-)
-> > >
-> > > --
-> > > 2.53.0.239.g8d8fc8a987-goog
-> > >
+---- cut here ---
+#!/bin/sh
+cat <<EOF > /tmp/blah.c
+#include <inttypes.h>
+#include <stdio.h>
+
+int main(int arg, char **argv)
+{
+        printf("PRIu64 is %s\n", PRIu64);
+        printf("PRId64 is %s\n", PRId64);
+        printf("PRIx64 is %s\n", PRIx64);
+        return 0;
+}
+EOF
+
+clang -m32 -o /tmp/blah /tmp/blah.c
+/tmp/blah
+---- cut here ---
+
+% /tmp/blah.sh
+PRIu64 is llu
+PRId64 is lld
+PRIx64 is llx
+
+Thanks!
+
+						- Ted
