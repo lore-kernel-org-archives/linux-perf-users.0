@@ -1,248 +1,194 @@
-Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
+Received: from mxout5.mail.janestreet.com (mxout5.mail.janestreet.com [64.215.233.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E557A37FF61;
-	Wed,  4 Mar 2026 06:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772605679; cv=none; b=J+6lWQVeiOeom71q4u9g+OYBMoV2pDjpl0v1Ks1FxvqOP4Z6hAOL4gdS0QJzItwxf7BdEZpx9harDXba05CE/N4HVAJjtxkiO8lP+7kdKjpqY/cA8HrpPJ+xVNoTxuiz5zI2LZMC8wtyynO6iagrvTAdIv7/MtgrjG0oTs1Fmxc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772605679; c=relaxed/simple;
-	bh=r4qocZurAwsI94u1up+Vdusek7Vi5253Hd7N48BDko4=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=NNcPsvT/SXIPEaC4J9rxwf12NuytDrrqcJuzg+LZ+EV2yxDekV6ziDVjvYXWowAQF8SqD+7qLzzJ/BAw8ueSFGo+K6WT7nvMfgrKZ85JQBCtU9xj2ApDC1Qg6vvI94D5PcYufVWh/z9O8wGRzgIMp42t9t7ZSMDwNFIBcvt9LN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=QGqGuB1H; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oyBs4Cid; arc=none smtp.client-ip=103.168.172.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922EF389112
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Mar 2026 08:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=64.215.233.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772611295; cv=fail; b=qsA1klfX2hXpHS0MSFDB+tOQl0fYjq5HXV/+e863O+SOQ1BgO2QCPtMJ11Rs9qawuC5CjK5855VMTMGrd8o3ZBRgIEsPhXHShj70QgzMbF689QM2l5HZrQMdDqobDLp+wHIv4b3bY3CgRzcAUl9MjqiIXvGAChL6pPAR1f6mxrA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772611295; c=relaxed/simple;
+	bh=9itR/h9LeCqMo+Yp3nTb5IWUh3sAivJNbefaQGffF04=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=fDgxBrMQLHSb25hs6bXJKG9n46E4redH5p8lAzIux+Gwj6/xjAmAl1tJolByRY9ZgzZ6lFSDYplCUskoXzc+pGx05ffbf6xdzki53MBw5BPs6XRB56XYpS+irKh58IxwdLlKfu5t/J2X1DkfqKrc+roJc2loUY6o/wJ+J9J75q8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com; spf=pass smtp.mailfrom=janestreet.com; dkim=pass (1024-bit key) header.d=janestreet.com header.i=@janestreet.com header.b=xZlCUmdj; dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b=j7GuXhdl; arc=fail smtp.client-ip=64.215.233.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=janestreet.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="QGqGuB1H";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oyBs4Cid"
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailflow.phl.internal (Postfix) with ESMTP id C99AF1380E87;
-	Wed,  4 Mar 2026 01:27:55 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Wed, 04 Mar 2026 01:27:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1772605675; x=1772612875; bh=5+RTgashw6751XVNDWQdZH+Q/6MhJxiaQle
-	0ycbNIPA=; b=QGqGuB1HfRnACei6sx6c+uNgMwLaYwouTEpFj2VP0mlDfEqPtRY
-	hq1PRy4CBOv70+oVSYpqqZpM0oM/LMhJunekgV3eBzmsgcDG0OI2C4tzloWCpVvl
-	4i3VE4LhXttp25s0ZK9pW3oyxGl321uWgHvjWqgL414piiUtcU8j/RBBg3lpxTfz
-	hyOETJnm1GZ3Vny7khF6LstdjtjpNA05Sn0+69teOfVwM8bTgFFfpYoCWjZ2d4gj
-	zJQVyFRZl/QUmgQAY8aclFxSMlCDdqzk+ns1JfsxU4GqHtILyAxxV1rlJifkZ7nV
-	XCXCXCRkAeoUwFwEPnGvyan/ZZjUaQt5PAA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1772605675; x=
-	1772612875; bh=5+RTgashw6751XVNDWQdZH+Q/6MhJxiaQle0ycbNIPA=; b=o
-	yBs4Cidn0fowkiQNkfBBbpvMteFnmb6KK9N9BnOLF7DAXMw7rLEfq8O8XkeXs0++
-	AItJEKwgOy6+J2k0jKmt5y/gjZkZygq6/z20y552PqK0SvgaS8EPmsW6WcRrV1pP
-	Cka6lApHFX3ajwbAqxHOCPa0WJuwpyjOxVf4rBBc72uzD/6CW2235GcM//0i19W8
-	7L5pQzsL0OaBqS4U5vUHJiQNiyzDfXHteA0Tj9OpC2tpQ91dxDiKNGlVpY+sXR+u
-	F/1B+M7f+72ADS4w6cTGLYwsrCBQ9Ty53UNfXLWsSJmwJfMdphzrO6855O9pzOSm
-	tL559XeFSYE02Ng/iW/iA==
-X-ME-Sender: <xms:4tCnaSNbDrQ_gxgn-FDSHw2lZNLRjN-bQWFxNuyRrlsjf6GtgESQmg>
-    <xme:4tCnacDbxasyEcYHsybPZFFbKL0qOs4hHCyDZ8PnwLz-6RsB4wLBwEgkGnXcsPOlZ
-    vDBEl8eoy7hp-6BzaC204ogbJpjXhIDJYl7RZzbFer_2uIshg>
-X-ME-Received: <xmr:4tCnaYoX3ksWGbwPjYXqqxsqc0TduUwk20wMvX7c0reLYwrKoLdGz80eJTir0A1PtkE58RYexQ3nSkgmperFT043a9PjJpOJNYr5279CEe3n>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddviedvjeehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepudejuddpmhhouggvpehsmhht
-    phhouhhtpdhrtghpthhtohepvhhirhhoseiivghnihhvrdhlihhnuhigrdhorhhgrdhukh
-    dprhgtphhtthhopehjrhgvuhhtvghrseihrghinhgrrdguvgdprhgtphhtthhopehnrgho
-    hhhirhhordgrohhtrgesfigutgdrtghomhdprhgtphhtthhopehfrhgrnhhkrdhlihesvh
-    hivhhordgtohhmpdhrtghpthhtohepshgvlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtoheplhhinhhugidqgidvheesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:4tCnaVnhO8CafOSbZVc9pJUxfys9OoZeY1Z5ndlwHjH7CSajOCGlDw>
-    <xmx:4tCnafRh4kpYARpWLK-yCUUMUT7nS6ebAyXQDsGD0JLDF2Tv3K7JJQ>
-    <xmx:4tCnac5DU4GRJRJMC10qjpWx3MESrDXeWNEaJqiwQejNUX5p7MDMMw>
-    <xmx:4tCnaZg3__L3okNus_55Ab1m3xjLlY3uKakknX-vQwxPKM6XDQv_Ng>
-    <xmx:69CnafTUulKHVEiWHbvsFlAmyCSQisz6ZPFKNRFf-ai8k8007x9TdQYK>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 4 Mar 2026 01:27:03 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (1024-bit key) header.d=janestreet.com header.i=@janestreet.com header.b="xZlCUmdj";
+	dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b="j7GuXhdl"
+Received: from mail-ot1-f70.google.com ([209.85.210.70])
+ 	by mxgoog2.mail.janestreet.com with esmtps (TLS1.3:TLS_AES_128_GCM_SHA256:128)
+ 	(Exim 4.99.1)
+ 	id 1vxhAe-00000009Kys-20Ly
+ 	for linux-perf-users@vger.kernel.org;
+ 	Wed, 04 Mar 2026 03:01:28 -0500
+Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-7d4be1dee67so70019563a34.1
+         for <linux-perf-users@vger.kernel.org>; Wed, 04 Mar 2026 00:01:28 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772611288; cv=none;
+         d=google.com; s=arc-20240605;
+         b=TyCvbemU/Ple5nRyxpHZDLV7wcS8ag0hFgehP1WoMqsUkdJFdIYvn9idKbDAEih30i
+          PoQ2thvUGyMZpweDplJZytPTqcJJISXSgOTgQzh6FVRJrAPBUNMe5y/jeOZzosb+mSjf
+          uhYBGsXpsOaaAe1XTHm4tScwcmDnogF+bEJu2yQY9/5/4vvw5zlRmSkJuVionxViUiRv
+          uPcT/85fR4liPJIxQqZdtaJo5JUYIgxj9geJnehhl87RMTgILVxCW9f9rFrLb7JNFHM9
+          L0TxDWP2Y8fWBOOMV1xaeJc29grJr6Fz60RPH0Du89k60n1QnBzTX6ISzxT+DgukkXNN
+          Lrvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+         h=to:subject:message-id:date:from:mime-version:dkim-signature;
+         bh=R7fTZkGqmZ29igJIUPte3TlFfsuKL269eIfACaoWgAk=;
+         fh=gIcXGLotfzO2ZmnEhSjFNq+ft2UaQ90WGwRr7ybmEa4=;
+         b=N9ODzU/6nO8ayPy0vNYoFGhIR47wQfubq4eGMIY1cGvOn5IGu+fxCT2OaCSrdDWcEi
+          ZMWNyKtuE5LZ8Sys/ev2aXUJyrplfMlleoWeV3Xacb/+o3LTty6sjjVltRJY3e14DEC+
+          pGfuAMKXxYsUUHpiko80OU1zk8pGns2786ISRnMmp0OFjYiAJmJIHeTE+impuhpz10V8
+          h2jOPG9F8aeR+4jbzTPOlYHMbdIAeSgVAHayn+EfRpFeh6ohtBtQyd5VT4Qh7tga3/wY
+          SRnF1kmC+JcmHmjhyVZqFn+omxonrcCP/fuxfkDIWIs1QL1O1wynYjUkhz7rfzIFdMZY
+          YcbA==;
+         darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+         d=janestreet.com; s=google; t=1772611288; x=1773216088; darn=vger.kernel.org;
+         h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+          :date:message-id:reply-to;
+         bh=R7fTZkGqmZ29igJIUPte3TlFfsuKL269eIfACaoWgAk=;
+         b=xZlCUmdjOKmg4F6cXYkBBOfYq1hFraqk4dH+umE+jDG630DAJT187WkymQJ94ezUA6
+          W5BVIPYgLefA+l0g59KWDuKRZ8mxBl+mHhqK0AZ4zkR3MU9okzkLy8LUWBoIl3QVi6ez
+          expo7JqE0xDZalfyOMpDB3Wn8p6bXoyZncNYU=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=janestreet.com;
+  s=waixah; t=1772611288;
+  bh=R7fTZkGqmZ29igJIUPte3TlFfsuKL269eIfACaoWgAk=;
+  h=From:Date:Subject:To;
+  b=j7GuXhdlDMQ8JqrJfIQEF8To7zM2trzc5mKuTr0Zie198bDzrZCxwLZogd5TTwgip
+  TKlhzXz+oxAfJdDauBQwVF+V8IDoiYZx6JTZY2XgYyEACuhkBHztyLrrIGPnQ3KQG9
+  1ZWvEI+Zbmfn+jOVOF7hXMo3ehpjy0oa7P7bpvV4rl2LlBeFaqwCQmy9DcfNWXBKQE
+  fyAkQQpt9fQBTEfLULwprLpPQqnp5vqPtVf6ycl8k+8lkTFEbu9DaDSD5S2BJTtjMP
+  7DPvp7zs9e1m6IqOCsX15ycq/PBO2N4y8UbL/hv9NUYwmB3tvTC9ccQScibcNLmCvK
+  rtddPemOgGYMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+         d=1e100.net; s=20230601; t=1772611288; x=1773216088;
+         h=to:subject:message-id:date:from:mime-version:x-gm-gg
+          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+         bh=R7fTZkGqmZ29igJIUPte3TlFfsuKL269eIfACaoWgAk=;
+         b=BGaLrlstG0voMAFrkNvrgPzSMijjBNr6uSFdVYW36C7iMT4H8i8TV4axUwJ0z2df/4
+          wSrdLYbAuYFFdSkeXLMO5LLq3zcxTCR59gCn587PDtdqqRveIznwv4fyRV0UaC92LcUX
+          RQvWDVdzKR0xK6evO2BKgEz4/JESaGbi/yKsiX/kgA14LOBgpYSTjUHOREGQhQCKeC4g
+          Nr/iH3FymXcy9XZLX4wz+I/9xUjweZrFcsOdSASGdEJTgRfq4iVuMPrBEtVyU57b3HnR
+          fW4S4VzMnPg3OPRhkQ/nnSz5An9WTZ11r1VP//5niGp+SEmnmijcBq9A5OC2oIb1PGgD
+          pcIw==
+X-Gm-Message-State: AOJu0YxxMJFpeKPQQ1tU9EdNqThQKNNsUOPqbJlTEyREZSoYXkWMaafr
+ 	GMM638xtX2wzH7yt7hoSHxBqZvfLGgii42LccUPsAIm7ysRdiRMcPeUOcjh97deE9k8i6yE+iSe
+ 	BOdMcs1GjZdkaY5sd4fCj9XVuwc+5l5d/Be2eyczj5+/4EcUKDWgmtA+0NfhPnQRQWzOvUcVgaN
+ 	Bw/0JGX1ZocEj4QRfoau9KRrd0764R+l5WopLbq//Ey77HYlT1QP6UgARFCA==
+X-Gm-Gg: ATEYQzzT28GAKyS2quj5g2Zb+YC6nAVpe0QSOaR+DRCKJZs8UWXFke15VpDFNoJinRf
+ 	nycRm+frFEagtOlL8UwrbOq3GQRZ12DVXDf2FuecC/DhAaKXC66DpjnKoUYwkr8GU1xQoaeTn4j
+ 	DHwwvhCsK+QIUsHxQWGQOS5rpzKxBNnZhXTvbeGDrS7ByX8P9sGi1iK2R3bxypkCbMaBFijf/yZ
+ 	Rdn
+X-Received: by 2002:a05:6820:160f:b0:66a:1886:e4d8 with SMTP id 006d021491bc7-67b177676bdmr800975eaf.56.1772611287630;
+         Wed, 04 Mar 2026 00:01:27 -0800 (PST)
+X-Received: by 2002:a05:6820:160f:b0:66a:1886:e4d8 with SMTP id
+  006d021491bc7-67b177676bdmr800972eaf.56.1772611287264; Wed, 04 Mar 2026
+  00:01:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "David Howells" <dhowells@redhat.com>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Dan Williams" <dan.j.williams@intel.com>,
- "Matthew Wilcox" <willy@infradead.org>,
- "Eric Biggers" <ebiggers@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>,
- "Muchun Song" <muchun.song@linux.dev>,
- "Oscar Salvador" <osalvador@suse.de>,
- "David Hildenbrand" <david@kernel.org>,
- "Paulo Alcantara" <pc@manguebit.org>,
- "Andreas Dilger" <adilger.kernel@dilger.ca>, "Jan Kara" <jack@suse.com>,
- "Jaegeuk Kim" <jaegeuk@kernel.org>, "Chao Yu" <chao@kernel.org>,
- "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Steve French" <sfrench@samba.org>,
- "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
- "Shyam Prasad N" <sprasad@microsoft.com>,
- "Bharath SM" <bharathsm@microsoft.com>,
- "Alexander Aring" <alex.aring@gmail.com>,
- "Ryusuke Konishi" <konishi.ryusuke@gmail.com>,
- "Viacheslav Dubeyko" <slava@dubeyko.com>,
- "Eric Van Hensbergen" <ericvh@kernel.org>,
- "Latchesar Ionkov" <lucho@ionkov.net>,
- "Dominique Martinet" <asmadeus@codewreck.org>,
- "Christian Schoenebeck" <linux_oss@crudebyte.com>,
- "David Sterba" <dsterba@suse.com>,
- "Marc Dionne" <marc.dionne@auristor.com>, "Ian Kent" <raven@themaw.net>,
- "Luis de Bethencourt" <luisbg@kernel.org>,
- "Salah Triki" <salah.triki@gmail.com>,
- "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
- "Ilya Dryomov" <idryomov@gmail.com>,
- "Alex Markuze" <amarkuze@redhat.com>, "Jan Harkes" <jaharkes@cs.cmu.edu>,
- coda@cs.cmu.edu, "Nicolas Pitre" <nico@fluxnic.net>,
- "Tyler Hicks" <code@tyhicks.com>, "Amir Goldstein" <amir73il@gmail.com>,
- "Christoph Hellwig" <hch@infradead.org>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
- "Yangtao Li" <frank.li@vivo.com>,
- "Mikulas Patocka" <mikulas@artax.karlin.mff.cuni.cz>,
- "David Woodhouse" <dwmw2@infradead.org>,
- "Richard Weinberger" <richard@nod.at>,
- "Dave Kleikamp" <shaggy@kernel.org>,
- "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
- "Mark Fasheh" <mark@fasheh.com>, "Joel Becker" <jlbec@evilplan.org>,
- "Joseph Qi" <joseph.qi@linux.alibaba.com>,
- "Mike Marshall" <hubcap@omnibond.com>,
- "Martin Brandenburg" <martin@omnibond.com>,
- "Miklos Szeredi" <miklos@szeredi.hu>, "Anders Larsen" <al@alarsen.net>,
- "Zhihao Cheng" <chengzhihao1@huawei.com>,
- "Damien Le Moal" <dlemoal@kernel.org>,
- "Naohiro Aota" <naohiro.aota@wdc.com>,
- "Johannes Thumshirn" <jth@kernel.org>,
- "John Johansen" <john.johansen@canonical.com>,
- "Paul Moore" <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
- "Serge E. Hallyn" <serge@hallyn.com>, "Mimi Zohar" <zohar@linux.ibm.com>,
- "Roberto Sassu" <roberto.sassu@huawei.com>,
- "Dmitry Kasatkin" <dmitry.kasatkin@gmail.com>,
- "Eric Snowberg" <eric.snowberg@oracle.com>, "Fan Wu" <wufan@kernel.org>,
- "Stephen Smalley" <stephen.smalley.work@gmail.com>,
- "Ondrej Mosnacek" <omosnace@redhat.com>,
- "Casey Schaufler" <casey@schaufler-ca.com>,
- "Alex Deucher" <alexander.deucher@amd.com>,
- Christian =?utf-8?q?K=C3=B6nig?= <christian.koenig@amd.com>,
- "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
- "Sumit Semwal" <sumit.semwal@linaro.org>,
- "Eric Dumazet" <edumazet@google.com>,
- "Kuniyuki Iwashima" <kuniyu@google.com>,
- "Paolo Abeni" <pabeni@redhat.com>,
- "Willem de Bruijn" <willemb@google.com>,
- "David S. Miller" <davem@davemloft.net>,
- "Jakub Kicinski" <kuba@kernel.org>, "Simon Horman" <horms@kernel.org>,
- "Oleg Nesterov" <oleg@redhat.com>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Ingo Molnar" <mingo@redhat.com>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Namhyung Kim" <namhyung@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>,
- "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>,
- "Adrian Hunter" <adrian.hunter@intel.com>,
- "James Clark" <james.clark@linaro.org>,
- "Darrick J. Wong" <djwong@kernel.org>, "Martin Schiller" <ms@dev.tdt.de>,
- "Eric Paris" <eparis@redhat.com>, "Joerg Reuter" <jreuter@yaina.de>,
- "Marcel Holtmann" <marcel@holtmann.org>,
- "Johan Hedberg" <johan.hedberg@gmail.com>,
- "Luiz Augusto von Dentz" <luiz.dentz@gmail.com>,
- "Oliver Hartkopp" <socketcan@hartkopp.net>,
- "Marc Kleine-Budde" <mkl@pengutronix.de>,
- "David Ahern" <dsahern@kernel.org>,
- "Neal Cardwell" <ncardwell@google.com>,
- "Steffen Klassert" <steffen.klassert@secunet.com>,
- "Herbert Xu" <herbert@gondor.apana.org.au>,
- "Remi Denis-Courmont" <courmisch@gmail.com>,
- "Marcelo Ricardo Leitner" <marcelo.leitner@gmail.com>,
- "Xin Long" <lucien.xin@gmail.com>,
- "Magnus Karlsson" <magnus.karlsson@intel.com>,
- "Maciej Fijalkowski" <maciej.fijalkowski@intel.com>,
- "Stanislav Fomichev" <sdf@fomichev.me>,
- "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>,
- "Jesper Dangaard Brouer" <hawk@kernel.org>,
- "John Fastabend" <john.fastabend@gmail.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
- linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
- v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
- autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
- codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
- linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
- ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
- devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
- apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
- linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-hams@vger.kernel.org, linux-x25@vger.kernel.org,
- audit@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-can@vger.kernel.org, linux-sctp@vger.kernel.org,
- bpf@vger.kernel.org
-Subject:
- Re: [PATCH v2 000/110] vfs: change inode->i_ino from unsigned long to u64
-In-reply-to: <1c28e34c7167acf4e20c3e201476504135aa44e8.camel@kernel.org>
-References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>,
- <1787281.1772535332@warthog.procyon.org.uk>,
- <1c28e34c7167acf4e20c3e201476504135aa44e8.camel@kernel.org>
-Date: Wed, 04 Mar 2026 17:26:59 +1100
-Message-id: <177260561903.7472.14075475865748618717@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+From: Andrew Hunter <ahunter@janestreet.com>
+Date: Wed, 4 Mar 2026 16:01:16 +0800
+X-Gm-Features: AaiRm51NeD5hlLETLdOkqQWw2ROxgwle6a_MUGl93EkQJ1pueuOSpRtfTQfZ7aE
+Message-ID: <CAOS8N5C+gSubTGww4Fcom9_+OTFTyBPnoBkt-YnG+Nti6F4GmA@mail.gmail.com>
+Subject: potential bug -- ignoring frequency for Intel hardware events?
+To: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 03 Mar 2026, Jeff Layton wrote:
-> On Tue, 2026-03-03 at 10:55 +0000, David Howells wrote:
-> > Jeff Layton <jlayton@kernel.org> wrote:
-> > 
-> > > This version splits the change up to be more bisectable. It first adds a
-> > > new kino_t typedef and a new "PRIino" macro to hold the width specifier
-> > > for format strings. The conversion is done, and then everything is
-> > > changed to remove the new macro and typedef.
-> > 
-> > Why remove the typedef?  It might be better to keep it.
-> > 
-> 
-> Why? After this change, internel kernel inodes will be u64's -- full
-> stop. I don't see what the macro or typedef will buy us at that point.
+Hi all --
 
-Implicit documentation?
-ktime_t is (now) always s64, but we still keep the typedef;
+I believe that there's a bug in the logic for initializing sample
+rates for Intel hardware events, and I'm hoping someone can confirm,
+or explain why this is intentional if I'm wrong.  I did these
+experiments with perf 6.12; it's logistically difficult for me
+currently to validate HEAD but I don't think this logic has changed
+much; I can look into replicating it if someone thinks this is a known
+issue. I did most of my experimenting on a Sapphire Rapids machine but
+the basic problem replicates on all the Intel hardware I have access
+to.
 
-It would be cool if we could teach vsprintf to understand some new
-specifier to mean "kinode_t" or "ktime_t" etc.  But that would trigger
-gcc warnings.
+In particular: I noticed that the sampling rate for
+[br_misp_retired.all_branches] was quite low; attempting to pass [-F
+2000] did not seem to affect it, nor did using
+[br_misp_retired.all_branches/freq=2000/].  In particular, using
+strace, with either of those settings, I saw [perf_event_open] called
+with freq=0 and sample_period=400009.
 
-NeilBrown
+[perf record -vv -F 2000 /bin/ls] shows:
+
+Using CPUID GenuineIntel-6-8F-8
+Attempt to add: cpu/br_inst_retired.all_branches/
+..after resolving event: cpu/event=0xc4,period=0x61a89/
+(and a perf_event_attr that matches what I saw in strace.)
+
+I'm not an expert in how perf initializes events, but poking in the
+code I think what happens is here:
+
+https://github.com/torvalds/linux/blob/master/tools/perf/util/evsel.c#L1189
+
+
+case EVSEL__CONFIG_TERM_PERIOD:
+if (!(term->weak && opts->user_interval != ULLONG_MAX)) {
+attr->sample_period = term->val.period;
+attr->freq = 0;
+
+We're picking up the hard-coded default period from the compiled-in
+event definitions.  We check that the user didn't pass -c (and leave
+it be if so) but we stomp on the user's `-F`.   (Passing [perf record
+-c 1000 -e br_misp_retired.all_branches] does appear to sample at the
+high rate I expect.)
+
+I suspect this (and the similar TERM_FREQ below) should check both
+user_interval and user_freq.
+
+The other surprising thing I noticed is that the same logic appears to
+stomp on modifiers passed directly to the event.  For example if I
+run:
+
+$  perf record -vv  -e br_inst_retired.all_branches/period=2000/
+/bin/ls  2>&1 | head -n 100
+Using CPUID GenuineIntel-6-8F-8
+Attempt to add: cpu/period=0x7d0,br_inst_retired.all_branches/
+..after resolving event: cpu/period=0x7d0,event=0xc4,period=0x61a89/
+br_inst_retired.all_branches -> cpu/period=0x7d0,br_inst_retired.all_branches/
+DEBUGINFOD_URLS=
+Lowering default frequency rate from 4000 to 2000.
+Please consider tweaking /proc/sys/kernel/perf_event_max_sample_rate.
+nr_cblocks: 0
+affinity: SYS
+mmap flush: 1
+comp level: 0
+------------------------------------------------------------
+perf_event_attr:
+  type                             4 (cpu)
+  size                             136
+  config                           0xc4 (branch-instructions)
+  { sample_period, sample_freq }   400009
+
+This I'm less confident of the fix for, but thought I'd mention.  My
+best guess is from this line:
+
+> ..after resolving event: cpu/period=0x7d0,event=0xc4,period=0x61a89/
+
+which suggests that the event definition appended a period, and the
+later one is stomping on the former one.
+
+My questions for perf maintainers / people who know this better:
+
+- should the EVSEL__CONFIG_TERM_{PERIOD,FREQ} terms check for both
+user_interval and user_freq, or am I missing a reason that this is
+intentional?
+
+- should on-event modifiers be respected here? Would fixing that be as
+simple as prepending what we pick up from the JSON?
+
+- is the behavior I'm seeing (ignoring -F) a bug or is there some
+reason that the overall behavior is intended?
+
+Thanks!
+Andrew
