@@ -1,149 +1,123 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C71317155
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Mar 2026 02:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A38E3537C7
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Mar 2026 02:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772592169; cv=none; b=cemNlkbcVJk0wEl7QKI1LnA6NDwuJfZBSJuPGO2KNvOwaUyKigNTRKCwppZ0XF7S0WovbpJrvgAggR9ah340dRUTDz/O5lQEYQdyh9ONCrtXG5uoy/YG9LrK/kqDVuyLJHhX1WQYpZ6YFtonZWYlM8QddNNDYkJ53YSErHJ2FTg=
+	t=1772592581; cv=none; b=Gra4xa6ghpCh4unTJSL61Lg/Qg1MHzKTscebCzKM0hibgdW1KZu7z2L2Gj+hHj1VxXIClgI4kbizxbDR2A9A6717YbZbejvKWzShI8oDPYjMXaBr6eRtSpm6+Ypf2qPNeuOnDxCirlPy5w5674AVzgveT1cM8586va2kRLUnL7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772592169; c=relaxed/simple;
-	bh=/XWSBClgiVO9Y8DcC9EFb3ReAwqS4B91iVSCE58gCGI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EFgWXejhRUPVtTic+UaI2RIeutxNZg68uFbxiK7HtqnSlmVj5qDJ+6nTJFPMFgK+D0Qa1qio4mcKbSFs3+Cs98B/EJkjqclj/NUmUOBjprMUhUSAgzoGc+jneov3annsABFCGDfKAB5YHIxQyqYG6WAv+B26LpGw61oRz9kdzx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=IPhOHuwC; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1772592581; c=relaxed/simple;
+	bh=Yh8dBMe3ibg8tK09EirKlKZM1uMUm94vien5uMRloZQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=rAKknsjBmrZs/9mnBzZmZbf1DYyP43D5G54hvzMxS1qYEFjiq9CHKa57OcmLQSQpWnk/MzBmCSaLSY/dg1d98YfpXi5Oygzu9Pp9sSi0c/vWps8jjLxYauUVbL1Xka3TJ6VsZhZxRG6PsoBDTI5Lawr4OVZa86vAGiKUUYJ4OVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YaMguHx/; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="IPhOHuwC"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7d4c12ff3d5so6592662a34.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Mar 2026 18:42:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YaMguHx/"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2adef9d486bso57001165ad.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Mar 2026 18:49:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1772592167; x=1773196967; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W7dycZCW1i0wVXbu5i6p68JSQ3h2ubeTDMrk86ISU5M=;
-        b=IPhOHuwCkLxyO4EpVYKpsls/Zk3bTYDr5gDNc4xJLUJDrnHiuJvGo0QgTRDd2+azUI
-         pBX7Ba63Ei2YcOW2FGUGqlAj8LqqRwSa//bkEQLtCRavpeOADrrPKjCBZNutxytn4MZ5
-         OZEpxGLp1B6KtkZNUZgXw8tl5CEfC5T8MQ7w+9SpgfhFxpzLj3eoi8hJc1EkkoeFRy0L
-         2ezE9sDKG9Hh/wv3ayonBYBOaDXBydfLvmECeCULO8nl3pjIka6h2HJdWvpcyBtlmr4X
-         mtMWK8GukJd0X04q7jCU4Zap+hsdXVcvrtEXCg3weUaV9cy6+EK1O5kAbAwQ5Nk2xVkc
-         c6RA==
+        d=google.com; s=20230601; t=1772592579; x=1773197379; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wlfxAiLCYE9X+ss6Nds/jzCWOjzdQvgrRAY6r5Hx7j0=;
+        b=YaMguHx/XyM/m07PCeyY2cFDDiFrJoBZh1suL3phGhiwuPU4HbaF8dBI7/oxnBA7EQ
+         DP7Uv40OpLjWf67rl3FYeDuBGzuzu3K8mPH36k88+FoOIw/eNpGlw9DLpXmHl/kST5iI
+         5GdcB8chw+KKsvLBepAG9aIOJpB/r6MzOwQMb2RR3SkjcnxRXl5A+rcCqqZVFMIMh8f6
+         yik1vOKuE8ds9o/b39IEEwp9qy+D9fT7paehWj88CD4NyMydT2588hg9LzvF1e3mioqm
+         wh3+F0X2NcOY6wv6BPmWMbMXV/0b04RrN4gHnDhhMEJp/4WnMoILUruTShr7KDOebZWI
+         JyVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772592167; x=1773196967;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W7dycZCW1i0wVXbu5i6p68JSQ3h2ubeTDMrk86ISU5M=;
-        b=IvsM4Wa4xCtwWUNdgKXMlprNTnAUysdmQXHZNkP9mp6fdIVF7/far6Z+gSxC8Zg0Nt
-         QMTO/8cj9bcbYbnbFffmNwqSK5lrLR4qivJ7VBvG28hE4VN0ViPhEqKpewlv3OeG9FF7
-         bDomIrkngEM0INtKq8o3NHvCdAScufdG88lAV8hi3MDluhWvbXKGr/9EmnCu/2xSgZ3I
-         ULQ6vWfrayDuN78ffTp6JSXZipw95eNxKV/ZEmeoY4B3hV9e/oy0mZvWiktA767Hng8K
-         9E6xZZOkn8OSJxCb5eFQwVL9G/dQEA3GOupNw1SeGu55ufpqU8EI/TjS0XXL9eLnzkpB
-         3eKg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6T3QjJwzaQDDPVUtP5+aXjQeQWqOfQ0Ltox2b+yln+OIHP8Zv5EFMmhKMfyFAmmYK5B6bZz1XbyHFAHHoX9It@vger.kernel.org
-X-Gm-Message-State: AOJu0YwS3XINrsoi8Ay+wiJP+RbpLNIaJKiEYcBzF5vMsfY7BrQ7MVSf
-	TC7ZRCJs9/5Eg2ADbucF897TOjTblOPeyNq7Dvdb746yvkWAl0G9HCG0Kj6LBpKImmA=
-X-Gm-Gg: ATEYQzyjwn5lSfCcQNTGkD9ol4wBJbyKTkwHHiWUpY5iBX1+pRr2BVc4sXEbICbPdwy
-	IkrF62y5utE2mHkJ5on9XzeyU4YiZAAR0uWWeb2gyqDc7ja2MR5xePsYWBi6qfl3Zs6DanuTsNd
-	JeOtPylz8aZTzRmgpyU4Gu35GPuIHSAN6SgfufAImji31HMXwh4IksZyPqWfVWgswt90L1WV/Vp
-	FBkUf3sVxI4wnlcJSQ1BzJVEFgQj9YJH/gSNGuhupx4/mb4HKjtoQIPbKBUIMGGuCbD0Oh6ky1D
-	1QWxeVC4Ht69dE+YAicmM5GF7mTmT/FOersAXtFFp/6B+SJ5UtGSi0Nuj/NZ/x0IaZAMYcitZqr
-	VXZ274zqOGg4qEbJ09tkL0jB4HKAF2qVHC8o8KadTDp2BnYWvjzhm4Xn2Z4k/r1tLs7eEraFf8k
-	AagO712LdCTfxQ/YsVFEtpFwF3Inib+4cFMUephrA4eSY6m66i+8QEaB0IZ61ANSTzhnVHRMZg8
-	JgHdHIytw==
-X-Received: by 2002:a05:6820:4a8e:b0:66a:1886:e4bf with SMTP id 006d021491bc7-67b17703546mr346906eaf.22.1772592166871;
-        Tue, 03 Mar 2026 18:42:46 -0800 (PST)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-679f2bfee3csm12574800eaf.7.2026.03.03.18.42.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2026 18:42:45 -0800 (PST)
-Message-ID: <f8d86743-6231-414d-a5e8-65e867123fea@kernel.dk>
-Date: Tue, 3 Mar 2026 19:42:40 -0700
+        d=1e100.net; s=20230601; t=1772592579; x=1773197379;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wlfxAiLCYE9X+ss6Nds/jzCWOjzdQvgrRAY6r5Hx7j0=;
+        b=BUqsi9so8A5TJQWZo3asSuctrDltzmfiNLYsQK3HX0YUPEsrQw25ZAIAoxN8RBpLXl
+         jfLmu4fhfga+CA/eO4RCpm6DwwlPHysSFRcccPo/CrWHXkm64RAQE+zjMeVZ2wXxVLd8
+         8qUn4HyihpED7OACOi1FlR9C9ySV711SdYf+s8k5u4tSI2/8hDos2rmxLAwn9SxHBUQF
+         ss0tyNHUOoZHTM1qjYOrRR5nNDn7wtkIgGJM8o6RSgCTiysA6JZbLwfpD0qDfVJi26zQ
+         DGjyAWoMKC3l2XxdBLM+zmVshV2JRkePT23KZ0/NFe6VI6N9DAZpzpHRrep5P44mo1ZD
+         oE+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXj9Wh3PA4DpCLbmx+cd24o82Y8SVw9czLaEDSOVV2EHmk/oei1W1BZNKERHNk8ALrcsmhSXpJvSvh50Q+Iqtsc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzi8l31nQpbE94b747iJ0OIuuMOEospixhv/w2u4ZOuE2Oqq1ac
+	crY0jjHnf82KLsNbotDddTuWlKaaJ2NXBk533ZJX5lcvQzG3BuKw0ri1ScK6VrCy4ltvLHDBvrY
+	imLMWbQ==
+X-Received: from plzv9.prod.google.com ([2002:a17:902:b7c9:b0:2ae:6338:73ca])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2446:b0:2ae:483f:b239
+ with SMTP id d9443c01a7336-2ae6aaf9469mr6114485ad.30.1772592577810; Tue, 03
+ Mar 2026 18:49:37 -0800 (PST)
+Date: Tue, 3 Mar 2026 18:49:36 -0800
+In-Reply-To: <f8d86743-6231-414d-a5e8-65e867123fea@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+Mime-Version: 1.0
+References: <20260304012717.201797-1-ynorov@nvidia.com> <20260303182845.250bb2de@kernel.org>
+ <f8d86743-6231-414d-a5e8-65e867123fea@kernel.dk>
+Message-ID: <aaedwFwXh9QXS3Ju@google.com>
 Subject: Re: [PATCH 0/8] mm: globalize rest_of_page() macro
-To: Jakub Kicinski <kuba@kernel.org>, Yury Norov <ynorov@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- "David S. Miller" <davem@davemloft.net>, "Michael S. Tsirkin"
- <mst@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexander Duyck <alexanderduyck@fb.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Alexandra Winter <wintera@linux.ibm.com>,
- Andreas Dilger <adilger.kernel@dilger.ca>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Anna Schumaker <anna@kernel.org>,
- Anton Yakovlev <anton.yakovlev@opensynergy.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Aswin Karuvally <aswin@linux.ibm.com>, Borislav Petkov <bp@alien8.de>,
- Carlos Maiolino <cem@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Chao Yu <chao@kernel.org>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Christian Brauner <brauner@kernel.org>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, David Airlie <airlied@gmail.com>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Dongsheng Yang <dongsheng.yang@linux.dev>, Eric Dumazet
- <edumazet@google.com>, Eric Van Hensbergen <ericvh@kernel.org>,
- Heiko Carstens <hca@linux.ibm.com>, Herbert Xu
- <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@redhat.com>,
- Jaegeuk Kim <jaegeuk@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>,
- Janosch Frank <frankja@linux.ibm.com>, Jaroslav Kysela <perex@perex.cz>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Latchesar Ionkov <lucho@ionkov.net>, Linus Walleij <linusw@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>, Miklos Szeredi <miklos@szeredi.hu>,
- Namhyung Kim <namhyung@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Paolo Abeni <pabeni@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Paul Walmsley <pjw@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Sean Christopherson <seanjc@google.com>, Simona Vetter <simona@ffwll.ch>,
- Takashi Iwai <tiwai@suse.com>, Thomas Gleixner <tglx@kernel.org>,
- Trond Myklebust <trondmy@kernel.org>, Tvrtko Ursulin <tursulin@ursulin.net>,
- Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
- Yury Norov <yury.norov@gmail.com>, Zheng Gu <cengku@gmail.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- dm-devel@lists.linux.dev, netdev@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mm@kvack.org,
- linux-perf-users@vger.kernel.org, v9fs@lists.linux.dev,
- virtualization@lists.linux.dev, linux-sound@vger.kernel.org
-References: <20260304012717.201797-1-ynorov@nvidia.com>
- <20260303182845.250bb2de@kernel.org>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20260303182845.250bb2de@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Sean Christopherson <seanjc@google.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Jakub Kicinski <kuba@kernel.org>, Yury Norov <ynorov@nvidia.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, "Theodore Ts'o" <tytso@mit.edu>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexander Duyck <alexanderduyck@fb.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Alexandra Winter <wintera@linux.ibm.com>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	Anna Schumaker <anna@kernel.org>, Anton Yakovlev <anton.yakovlev@opensynergy.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Aswin Karuvally <aswin@linux.ibm.com>, Borislav Petkov <bp@alien8.de>, 
+	Carlos Maiolino <cem@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Chao Yu <chao@kernel.org>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Christian Brauner <brauner@kernel.org>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	David Airlie <airlied@gmail.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Dongsheng Yang <dongsheng.yang@linux.dev>, Eric Dumazet <edumazet@google.com>, 
+	Eric Van Hensbergen <ericvh@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@redhat.com>, 
+	Jaegeuk Kim <jaegeuk@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Janosch Frank <frankja@linux.ibm.com>, Jaroslav Kysela <perex@perex.cz>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Latchesar Ionkov <lucho@ionkov.net>, 
+	Linus Walleij <linusw@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Namhyung Kim <namhyung@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <pjw@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Simona Vetter <simona@ffwll.ch>, Takashi Iwai <tiwai@suse.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Trond Myklebust <trondmy@kernel.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>, Yury Norov <yury.norov@gmail.com>, 
+	Zheng Gu <cengku@gmail.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-block@vger.kernel.org, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	dm-devel@lists.linux.dev, netdev@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mm@kvack.org, 
+	linux-perf-users@vger.kernel.org, v9fs@lists.linux.dev, 
+	virtualization@lists.linux.dev, linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On 3/3/26 7:28 PM, Jakub Kicinski wrote:
-> On Tue,  3 Mar 2026 20:27:08 -0500 Yury Norov wrote:
->> The net/9p networking driver has a handy macro to calculate the
->> amount of bytes from a given pointer to the end of page. Move it
->> to core/mm, and apply tree-wide. No functional changes intended.
->>
->> This series was originally introduced as a single patch #07/12 in:
->>
->> https://lore.kernel.org/all/20260219181407.290201-1-ynorov@nvidia.com/
->>
->> Split it for better granularity and submit separately.
+On Tue, Mar 03, 2026, Jens Axboe wrote:
+> On 3/3/26 7:28 PM, Jakub Kicinski wrote:
+> > On Tue,  3 Mar 2026 20:27:08 -0500 Yury Norov wrote:
+> >> The net/9p networking driver has a handy macro to calculate the
+> >> amount of bytes from a given pointer to the end of page. Move it
+> >> to core/mm, and apply tree-wide. No functional changes intended.
+> >>
+> >> This series was originally introduced as a single patch #07/12 in:
+> >>
+> >> https://lore.kernel.org/all/20260219181407.290201-1-ynorov@nvidia.com/
+> >>
+> >> Split it for better granularity and submit separately.
+> > 
+> > I don't get what the motivation is here. Another helper developers
+> > and readers of the code will need to know about just to replace 
+> > obvious and easy to comprehend math.
 > 
-> I don't get what the motivation is here. Another helper developers
-> and readers of the code will need to know about just to replace 
-> obvious and easy to comprehend math.
+> I fully agree, I had the same thought reading this.
 
-I fully agree, I had the same thought reading this.
-
--- 
-Jens Axboe
++1 from KVM-land.
