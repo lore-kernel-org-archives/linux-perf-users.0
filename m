@@ -1,93 +1,140 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5A33A5E88
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Mar 2026 10:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C143A4F25;
+	Wed,  4 Mar 2026 11:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772621064; cv=none; b=Qn62bbZFkLZaav22PvFJWQ7w2zG1kxZfIsatsNg/2dUOYUt5VBMy15F1lJjNkjLjn3Awcky3O/Lpt8arzUMEDVH8YPwH+zOpnQpuvztGZD3qDbXk4VNuqK3lYulmPC9PU4GjNNNLJ8uSnulRSH9xv1f6FgpNsbtkQheqGn3Esms=
+	t=1772622631; cv=none; b=aZtHzLQpweEt+kh840pINpvzSE+nKnyhcJoOhxo+6R1N7Yw31nPRCynTzOGkPzNmmZJZRYKnQIgwHQsOfoZhbxhnjQv+KKhyj4y/jh6dN9In27WClQl1bg1Awldy4VcrF1MHVjT7ozDtmmCBbM9Y/+sJ3o7kDLmOcFQ97kz4LrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772621064; c=relaxed/simple;
-	bh=7xHYTN8vEq3eQBZDedfY7A54wczhUz+xR6ttxUFtPyk=;
+	s=arc-20240116; t=1772622631; c=relaxed/simple;
+	bh=NqNfQqjBGfmbAJo/aZtHMPo7003kq0HNHUa3oLLM9rE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lcsL3daG3uLwJYPXGGErtnG/KCAQooXzKAQ1febCoajNfdMn2CXGN6yCtd69+/X9KzUx9I4JowehANg8dy7ASkYYpK8LbekfLhFd+lwZ9OKzNZHJJPXZ/m5oFia7dmN/8nf2MsFGAatFGVVas5PQKu+n27v8wCzuU5C4L37CtJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PE3rf2jA; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mOwlADegZNWRm0dv1I4xMg8DdkrRZbC46fUuw/aLiMnSDMLdPP8/cLmuhRe9Vw96PeB0QSAmg+sms6aFjjxTSOFAZjwpi9F7k594FFvGPhAoOOuNfBGe+Fx1beGv1+HxaEnI950JuPzQtAN/CqdL+7qCjmLB4Lo2GwEd3jnJrWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtxESzLT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PE3rf2jA"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b9359c0ec47so723528366b.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Mar 2026 02:44:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772621059; x=1773225859; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7xHYTN8vEq3eQBZDedfY7A54wczhUz+xR6ttxUFtPyk=;
-        b=PE3rf2jA+hI/dYht8j/cUAUe7BLdbzMkmDWWXGVkl4PBdHBYIE/OJXekfzgfhB9jzT
-         RIhUijwpUGoe0ydRKAxweOvx0FzTBBw1vRryC2UtTvVyAjvO+EagkTAKXYrKSkmVlDfF
-         8/XzG1ikxao32L6kbBWLyi6XLfvzxu+kPpsLhPujuSFrdInPjfB7Q7AC7E9h4CZfoEmi
-         4K+ohQvijZnYnI2jX7VUpMIBBZbGexQKwD6rIKMNX9T8SjeaZ7ZfYf/0eJAbwlZUiD+Z
-         pLeSW1bCayNvDSb9QZJINvFkddfDbMALSpZXvjgtXauCx2mAWk+eapjstbs8DU2NsdDP
-         pc0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772621059; x=1773225859;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7xHYTN8vEq3eQBZDedfY7A54wczhUz+xR6ttxUFtPyk=;
-        b=nbCw7eQbrN2TJFAZXBlbdrbUTLILYvVRWBigeO+qzyVFrwVSUjEmL7iFxdZq4Be3hL
-         5wxM1p/V6B7y7GE2C0eVOsBumXae2vB277PR5o0sn+pY+4deds78lw8IrErixf35zldr
-         TLooNEY+rBESFrA/Gdcuy9rfgR5AUr0TCy5R3oj+72tQkhIofrgjmHbgqEP1PcDMr2ON
-         PDaBUhuing+alYbXYyADpYuz7/M5Ud6MRFVjBBmsSJHaqQXnTNn6GCXDBjy5kIsk5J8U
-         C3Vb7vEg36G7N78M3Jc/7laX8vva/uj8NzI9T7zD+QAKelI2evIbqjmH4EVWnSWrAUh+
-         /Egg==
-X-Forwarded-Encrypted: i=1; AJvYcCXb8GXiIYX5rj3yykAQkmzwTiSYvVPIl1uAiTy2YPHzC+DajVV+Rm1AlWT4tTD3BR4qGM1UNG/58z/zfw+u2biP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0cxdc799wSlm4OYyY1mGMr5WAMTEQp+O/VgDvhS2aDeW5LAM1
-	hKR+ChYPIjen3lML+9k9eMPg/D89Pk+8ue8MzObxjwjrNHK2JZMMgTzR
-X-Gm-Gg: ATEYQzxaHCJTcHk/C3JJk0/WQev133aVz/q2hJ91M1SIFrgBx2QC2QH7Qne7INWk2bt
-	MPG93xAhW3tCTWJpfzP2oVvjskQAnWj5rk5+aQP+KK+DS+aIQSSXUB4uYLGYiY241koQsSFfcOT
-	wfoZqwz9+18ti2GrafXo5O95ddEK3d55PHvl2ncEoo6lV0mGXNsPF9sIdJkEAhUx/m9Yy6gH9cm
-	gk6j4uhdyB1JvhVAlXYUjfR+oWpKP0z+CxrfIxKyNZQAZSzjPXpMeZIFzoIr/TYdrknPLr9TOlb
-	TXSTQoHtvpkr5FifJ/cD7SQ1p+wk6fTpNxDJT8Jimbq39xkBuHuOozTWGjX5KoAI/OgVPyr7QC+
-	tSBZPD4yn/eQN21bAMmzpyaOZd1UEJfmq5/turQZuOAV0aZi6SC867hOSsVWyKidHLjz9Yh2eSj
-	EtHl0WIEinyyJ+ZOnJS6B+WSONgyKxsQVirr08+qItQXNhheLzu6ubb6R6CQ==
-X-Received: by 2002:a17:907:930d:b0:b8f:a0e6:b261 with SMTP id a640c23a62f3a-b93f13db7c7mr73070366b.39.1772621059193;
-        Wed, 04 Mar 2026 02:44:19 -0800 (PST)
-Received: from ddolgov-thinkpadt14sgen1.rmtde.csb ([2a00:20:635b:6c1d:750c:5b7b:26c6:b5b9])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b935aead96bsm725884966b.51.2026.03.04.02.44.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2026 02:44:18 -0800 (PST)
-Date: Wed, 4 Mar 2026 11:44:16 +0100
-From: Dmitry Dolgov <9erthalion6@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: miguel.ojeda.sandonis@gmail.com, a.hindborg@kernel.org, 
-	acme@kernel.org, aliceryhl@google.com, bjorn3_gh@protonmail.com, boqun@kernel.org, 
-	dakr@kernel.org, gary@garyguo.net, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, lossin@kernel.org, namhyung@kernel.org, ojeda@kernel.org, 
-	rust-for-linux@vger.kernel.org, tmgross@umich.edu
-Subject: Re: [PATCH v1] perf test type profiling: Remote typedef on struct
-Message-ID: <gfdliffsgy4j6q2vrilr6kapy3hczh4udszy4wcba6aal3ado4@hfeqa2eizu5y>
-References: <jiwt5mjma2puv7kjbgploxx2l5tankjm4zu2tsa75qkckwnwjk@f7mz5vlvzpjz>
- <20260302235821.588686-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtxESzLT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64839C19423;
+	Wed,  4 Mar 2026 11:10:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772622630;
+	bh=NqNfQqjBGfmbAJo/aZtHMPo7003kq0HNHUa3oLLM9rE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KtxESzLTRevMkC0RMT3EArDVMk2FhTkCghz7l84S/Sl/uRFMKbvYjBO6WKTPLXZG2
+	 hDd+jtXTkQDCPlsNqrRNNBIS69FSEG3kyCqhhWldcKaA7lgmXmclpmibkTkxFDGx05
+	 L1mWc9QOtddQl0a6TEhhiss3l8edtqg3iz0dJiofY0wVH+4yeCbYY1MzoD2oPWrjdR
+	 EnDw2NjEjLAGM8p4Zym2vHqMmJuBYJNQQtn7Ix1yH9YiSler1bu8kJQI/BP/hsAWKP
+	 HCA4EbtIlLqW3pzKVaXGzu0CeEXA+pozdgRHL7CTE7jTeamnzsicmpnlaw5LC2gU+C
+	 eQD2mqeeLI41g==
+Date: Wed, 4 Mar 2026 11:10:13 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Yury Norov <ynorov@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Theodore Ts'o <tytso@mit.edu>, Albert Ou <aou@eecs.berkeley.edu>,
+	Alexander Duyck <alexanderduyck@fb.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Alexandra Winter <wintera@linux.ibm.com>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Anna Schumaker <anna@kernel.org>,
+	Anton Yakovlev <anton.yakovlev@opensynergy.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Aswin Karuvally <aswin@linux.ibm.com>,
+	Borislav Petkov <bp@alien8.de>, Carlos Maiolino <cem@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Chao Yu <chao@kernel.org>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Dongsheng Yang <dongsheng.yang@linux.dev>,
+	Eric Dumazet <edumazet@google.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Ingo Molnar <mingo@redhat.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Jaroslav Kysela <perex@perex.cz>, Jens Axboe <axboe@kernel.dk>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Linus Walleij <linusw@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <pjw@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Simona Vetter <simona@ffwll.ch>, Takashi Iwai <tiwai@suse.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, Zheng Gu <cengku@gmail.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	dm-devel@lists.linux.dev, netdev@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+	v9fs@lists.linux.dev, virtualization@lists.linux.dev,
+	linux-sound@vger.kernel.org
+Subject: Re: [PATCH 5/8] spi: use rest_of_page() macro where appropriate
+Message-ID: <e731e101-bf06-44d7-ac91-0756c5b8bbc8@sirena.org.uk>
+References: <20260304012717.201797-1-ynorov@nvidia.com>
+ <20260304012717.201797-6-ynorov@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MuL6cN1k4g/DbVd2"
+Content-Disposition: inline
+In-Reply-To: <20260304012717.201797-6-ynorov@nvidia.com>
+X-Cookie: Take it easy, we're in a hurry.
+
+
+--MuL6cN1k4g/DbVd2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260302235821.588686-1-irogers@google.com>
+Content-Transfer-Encoding: quoted-printable
 
-> On Mon, Mar 02, 2026 at 03:58:21PM -0800, Ian Rogers wrote:
-> The typedef creates an issue where the struct or the typedef may
-> appear in the output and cause the "perf data type profiling tests" to
-> fail. Let's remove the typedef to keep the test passing.
+On Tue, Mar 03, 2026 at 08:27:13PM -0500, Yury Norov wrote:
+> Switch SPI code to using the macro. No functional changes intended.
+>=20
 
-Yes, makes sense to me, thanks. As mentioned in the previous message, it
-sounds fishy to me that perf record and perf mem record capture
-different data type -- I'll try to get to the bottom of it (I was sort
-of hoping to finish the cross compilation topic first, but since it's
-not moving that fast, why not do some debugging here).
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Reviewed-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+--MuL6cN1k4g/DbVd2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmmoExQACgkQJNaLcl1U
+h9CfwQf+I/XcN+BTYZLFcHPKTZ6Gt21+q3GLOzdkgChqzxOybf6b2qD+OHDN55Te
+HvnosWIFzWzrD0ZP4eNe1TE0j1djIs+y2hdX6fElOOuJijsn21UWvVZXuuGdENdA
+tPZDWrSzxJ8sU12FFYyBJDxsnWysekc1llPy00e37sfeetOZOLaYg/1jnttOl6oU
+a3i0DGlMSVCN0pIYah+1R5Vbe35l4DlrcyOoswdwqqqEAzPLr0ysycWbbVmelm0M
+U/y3gvpx6ZZBlMMio/3WWZfu3pM/Kwc8nzHkdzsstdqSIsRHEWru1MF5W4E+IcwO
+Id51vK66wgwDVauWcfBpUUDez8/oEA==
+=1DSJ
+-----END PGP SIGNATURE-----
+
+--MuL6cN1k4g/DbVd2--
