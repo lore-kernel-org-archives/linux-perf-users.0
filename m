@@ -1,191 +1,186 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037702772D;
-	Wed,  4 Mar 2026 01:02:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7DBBA21;
+	Wed,  4 Mar 2026 01:12:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772586152; cv=none; b=CF/MQXM6AQqA7smb/urPQ58wJLfU/iyjUoiO//XCs581X9Olt2WbPEooYUQ+R55W7CHf2/EvLDbh7Maeh1IeCbt8gXKfXn2w/7iZQc7g1UvKjT6T4KedHOPnCcdkfy998DZRs3CVcjeYGKoo1795rU4wYisMZS2IKRaCIWo5S60=
+	t=1772586771; cv=none; b=FJ5oxib+iMUZMn/h0EDI9NwfHXLTVP98P6ekCJ2e2R4xLh95kZoZXdOVEBv2xUlsoiMcF6eVeiaNeEDL09eiQHlDGKtjKTiVpXW2mxvh202a2juJ3IrwJ0D0GAK97O69Zcld6YtyfegExB7f2Cyy1QuNRuT71boqhOmIsqNNgCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772586152; c=relaxed/simple;
-	bh=S0/MROHs4eSfHAG9l74chqY/q6dMxkoeRazUMS1wZAI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cAW5W9/lsNHgmhzZR2/GrPiHbIsg9eAgZtz+SY6dmTY3gJzxicGFynV+WDWRQF0iQKnNzfyaMuca6osgRaVqm6mN43VUiAOqZ1VrHDo/T64HOA3lic3dsZGDYi+v4YDuPp6GME2SdFi4pE7WshVBTPR4BlUrjhp2K6Y12a58Y3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ychh549u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772586771; c=relaxed/simple;
+	bh=GFMrZQJwS7/We+LO7SGzzxn2lFIugPuzG0DMG56Js2Y=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=FOveOG2TCR43Cu4l15Xs8uudLCORKU0jvm/lNs67JB2g1Fdnguzid5cc01D5H0mSBvka/MVmFAv8+QrpbcUddkzceXJC4YSoZu7zw/H13wA7FQ034GDwrjUEgYm0Iw+/wS3gKkpRk6a4JfJTJW0NEDSdC5RKTeYVNU6ziQ6/zYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgCKlAsk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ychh549u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 464BFC116C6;
-	Wed,  4 Mar 2026 01:02:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgCKlAsk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC630C116C6;
+	Wed,  4 Mar 2026 01:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772586151;
-	bh=S0/MROHs4eSfHAG9l74chqY/q6dMxkoeRazUMS1wZAI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ychh549uKWl81snT8NVTaaP1M4WxXElawhJLho4SUzPqbLlADv9ElpdETuI88x5nc
-	 SChJRbnyT/bT7SWwKDIlJOd/YgtfNLg9753g6+R1QY45upQj+65ElQDOHKznfOjIas
-	 aoTxsDqXoICTNTfh0HgP54j42Y6HTsgddYpO4//4q8jdHqHU1mkUoL/QHcifZF0YK5
-	 iBmJ/Yofz/ZuU76RJchGuv+6rCnLqD2Lzh3d0RFivnFZ6Y8mdkEglmNr731aGKJpB0
-	 xJQp11wgtIJuwC0gcbk63LIBKnergJT22/+zLt+NTUWXUUP9+yovCwRH0Oc5jPSiBS
-	 zENfrqW0eUhoA==
-Date: Tue, 3 Mar 2026 17:02:28 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Leo Yan <leo.yan@arm.com>, Tianyou Li <tianyou.li@intel.com>,
-	Athira Rajeev <atrajeev@linux.ibm.com>,
-	Derek Foreman <derek.foreman@collabora.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	tanze <tanze@kylinos.cn>,
-	Hrishikesh Suresh <hrishikesh123s@gmail.com>,
-	Quan Zhou <zhouquan@iscas.ac.cn>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Anup Patel <anup@brainfault.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Chen Ni <nichen@iscas.ac.cn>, Blake Jones <blakejones@google.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 00/25] perf tool: Add evsel to perf_sample
-Message-ID: <aaeEpB9OTFGVIsr4@google.com>
-References: <20260209174032.4142096-1-irogers@google.com>
+	s=k20201202; t=1772586770;
+	bh=GFMrZQJwS7/We+LO7SGzzxn2lFIugPuzG0DMG56Js2Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WgCKlAsk3bXb+r/1s8b+OdlG4mX+icJAS45Uq+KKMNYvC49iKTzsvQ1tAfDcKjOHO
+	 pKVaQRChw5HLqCsmNleVgIcsLZe/mxOdeaALYcjfevERMGUkXjesPWWweCyhou7fQl
+	 VQ4Mb37EKNYYDJ4P3igTTUB/rwlUKWDzyHL6MaEPUYg4GKRNARAdOpQi37TER+bijy
+	 ujXwk/T7EtjhMi3TyZMPQ0jsSUIHCkGDCCDxAdqRqWs1EQh9//lrZ/RlcnBRfnGFFQ
+	 Jo6qgWMK/+GUePLR79A6WJNPJzwq2R2bZgMbaePiL9CPpPo5lJ+0GFE54ESH67v3gD
+	 aYrfgbEpOhAMQ==
+Date: Wed, 4 Mar 2026 10:12:29 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt
+ <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
+ <willy@infradead.org>, Eric Biggers <ebiggers@kernel.org>,
+ "Theodore Y. Ts'o" <tytso@mit.edu>, Muchun Song <muchun.song@linux.dev>,
+ Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>,
+ David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.org>,
+ Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>, Trond
+ Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck
+ Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, Steve French <sfrench@samba.org>, Ronnie Sahlberg
+ <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Bharath
+ SM <bharathsm@microsoft.com>, Alexander Aring <alex.aring@gmail.com>,
+ Ryusuke Konishi <konishi.ryusuke@gmail.com>, Viacheslav Dubeyko
+ <slava@dubeyko.com>, Eric Van Hensbergen <ericvh@kernel.org>, Latchesar
+ Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>,
+ Christian Schoenebeck <linux_oss@crudebyte.com>, David Sterba
+ <dsterba@suse.com>, Marc Dionne <marc.dionne@auristor.com>, Ian Kent
+ <raven@themaw.net>, Luis de Bethencourt <luisbg@kernel.org>, Salah Triki
+ <salah.triki@gmail.com>, "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+ Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, Jan
+ Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Nicolas Pitre
+ <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>, Amir Goldstein
+ <amir73il@gmail.com>, Christoph Hellwig <hch@infradead.org>, John Paul
+ Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Yangtao Li
+ <frank.li@vivo.com>, Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+ David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>,
+ Dave Kleikamp <shaggy@kernel.org>, Konstantin Komarov
+ <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>,
+ Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg
+ <martin@omnibond.com>, Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen
+ <al@alarsen.net>, Zhihao Cheng <chengzhihao1@huawei.com>, Damien Le Moal
+ <dlemoal@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>, Johannes
+ Thumshirn <jth@kernel.org>, John Johansen <john.johansen@canonical.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>,
+ Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin
+ <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, Fan
+ Wu <wufan@kernel.org>, Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler
+ <casey@schaufler-ca.com>, Alex Deucher <alexander.deucher@amd.com>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Eric Dumazet <edumazet@google.com>, Kuniyuki
+ Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, Willem de
+ Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, Jakub
+ Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, Oleg Nesterov
+ <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>,
+ "Darrick J. Wong" <djwong@kernel.org>, Martin Schiller <ms@dev.tdt.de>,
+ Eric Paris <eparis@redhat.com>, Joerg Reuter <jreuter@yaina.de>, Marcel
+ Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Oliver Hartkopp
+ <socketcan@hartkopp.net>, Marc Kleine-Budde <mkl@pengutronix.de>, David
+ Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>, Steffen
+ Klassert <steffen.klassert@secunet.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Remi Denis-Courmont <courmisch@gmail.com>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long
+ <lucien.xin@gmail.com>, Magnus Karlsson <magnus.karlsson@intel.com>, Maciej
+ Fijalkowski <maciej.fijalkowski@intel.com>, Stanislav Fomichev
+ <sdf@fomichev.me>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
+ Fastabend <john.fastabend@gmail.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ nvdimm@lists.linux.dev, fsverity@lists.linux.dev, linux-mm@kvack.org,
+ netfs@lists.linux.dev, linux-ext4@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-nilfs@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-afs@lists.infradead.org, autofs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
+ ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+ jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev,
+ ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
+ linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org,
+ selinux@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org,
+ linux-x25@vger.kernel.org, audit@vger.kernel.org,
+ linux-bluetooth@vger.kernel.org, linux-can@vger.kernel.org,
+ linux-sctp@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 053/110] uprobes: use PRIino format for i_ino
+Message-Id: <20260304101229.bc9fba5fcb816b7325fdf57d@kernel.org>
+In-Reply-To: <20260302-iino-u64-v2-53-e5388800dae0@kernel.org>
+References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
+	<20260302-iino-u64-v2-53-e5388800dae0@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260209174032.4142096-1-irogers@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 09, 2026 at 09:40:07AM -0800, Ian Rogers wrote:
-> Nearly all perf code ends up passing an evsel with the perf_sample,
-> which is problematic if you want to rewrite the evsel such as with
-> off-CPU processing - all uses of the evsel need fixing up. Previously
-> I'd mailed this patch as an RFC with everything combined:
-> https://lore.kernel.org/lkml/20260126071822.447368-1-irogers@google.com/
-> and there was a request to break it up.
+On Mon, 02 Mar 2026 15:24:37 -0500
+Jeff Layton <jlayton@kernel.org> wrote:
+
+> Convert uprobes i_ino format strings to use the PRIino format
+> macro in preparation for the widening of i_ino via kino_t.
 > 
-> I've started the series by adding documentation to struct
-> perf_sample. Next I fixed missing perf_sample__init/exit largely from
-> the recent perf inject callchain rewriting work. The 3rd patch adds
-> the evsel to struct perf_sample and ensures it is correctly
-> initialized. The next 22 patches avoid passing the evsel along with
-> sample for different parts of the perf tool, along with some minor
-> tweaks like constification and not determining the evsel if it is
-> present in the sample.
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Do you have a patch for off-CPU on top of this change?  I'd like to see
-what you expect before applying massive changes.
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 Thanks,
-Namhyung
 
+> ---
+>  kernel/events/uprobes.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Ian Rogers (25):
->   perf sample: Document struct perf_sample
->   perf sample: Make sure perf_sample__init/exit are used
->   perf sample: Add evsel to struct perf_sample
->   perf tool: Remove evsel from tool APIs that pass the sample
->   perf kvm: Don't pass evsel with sample
->   perf evsel: Refactor evsel__intval to perf_sample__intval
->   perf trace: Don't pass evsel with sample
->   perf callchain: Don't pass evsel and sample
->   perf lock: Only pass sample to handlers
->   perf lock: Constify trace_lock_handler variables
->   perf hist: Remove evsel parameter from inc samples functions
->   perf db-export: Remove evsel from struct export_sample
->   perf hist: Remove evsel from struct hist_entry_iter
->   perf report: Directly use sample->evsel to avoid computing from
->     sample->id
->   perf annotate: Don't pass evsel to add_sample
->   perf inject: Don't pass evsel with sample
->   perf kmem: Don't pass evsel with sample
->   perf kwork: Don't pass evsel with sample
->   perf sched: Don't pass evsel with sample
->   perf timechart: Don't pass evsel with sample
->   perf trace: Don't pass evsel with sample
->   perf evlist: Try to avoid computing evsel from sample
->   perf script: Don't pass evsel with sample
->   perf s390-sample-raw: Don't pass evsel with sample
->   perf evsel: Don't pass evsel with sample
-> 
->  tools/perf/builtin-annotate.c                 |  28 ++-
->  tools/perf/builtin-c2c.c                      |   6 +-
->  tools/perf/builtin-diff.c                     |   5 +-
->  tools/perf/builtin-inject.c                   |  81 ++++----
->  tools/perf/builtin-kmem.c                     |  58 +++---
->  tools/perf/builtin-kvm.c                      |  22 +--
->  tools/perf/builtin-kwork.c                    | 104 ++++------
->  tools/perf/builtin-lock.c                     | 117 +++++------
->  tools/perf/builtin-mem.c                      |   1 -
->  tools/perf/builtin-record.c                   |   3 +-
->  tools/perf/builtin-report.c                   |  38 ++--
->  tools/perf/builtin-sched.c                    | 183 ++++++++----------
->  tools/perf/builtin-script.c                   |  26 ++-
->  tools/perf/builtin-timechart.c                |  76 +++-----
->  tools/perf/builtin-top.c                      |  19 +-
->  tools/perf/builtin-trace.c                    | 103 +++++-----
->  tools/perf/tests/hists_cumulate.c             |   3 +-
->  tools/perf/tests/hists_filter.c               |   2 +-
->  tools/perf/tests/hists_output.c               |   3 +-
->  tools/perf/tests/mmap-basic.c                 |   4 +-
->  tools/perf/tests/openat-syscall-tp-fields.c   |   2 +-
->  tools/perf/tests/switch-tracking.c            |   9 +-
->  tools/perf/util/annotate.c                    |  19 +-
->  tools/perf/util/annotate.h                    |   6 +-
->  tools/perf/util/build-id.c                    |   3 +-
->  tools/perf/util/build-id.h                    |   7 +-
->  tools/perf/util/callchain.c                   |   8 +-
->  tools/perf/util/callchain.h                   |   5 +-
->  tools/perf/util/data-convert-bt.c             |   2 +-
->  tools/perf/util/data-convert-json.c           |   5 +-
->  tools/perf/util/db-export.c                   |  13 +-
->  tools/perf/util/db-export.h                   |   3 +-
->  tools/perf/util/evsel.c                       |  60 +++---
->  tools/perf/util/evsel.h                       |  12 +-
->  tools/perf/util/hist.c                        |  26 +--
->  tools/perf/util/hist.h                        |   3 +-
->  tools/perf/util/intel-pt.c                    |  12 +-
->  tools/perf/util/intel-tpebs.c                 |   3 +-
->  tools/perf/util/jitdump.c                     |   2 +-
->  .../perf/util/kvm-stat-arch/kvm-stat-arm64.c  |  19 +-
->  .../util/kvm-stat-arch/kvm-stat-loongarch.c   |  17 +-
->  .../util/kvm-stat-arch/kvm-stat-powerpc.c     |  17 +-
->  .../perf/util/kvm-stat-arch/kvm-stat-riscv.c  |  17 +-
->  tools/perf/util/kvm-stat-arch/kvm-stat-s390.c |  20 +-
->  tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  |  70 +++----
->  tools/perf/util/kvm-stat.c                    |  19 +-
->  tools/perf/util/kvm-stat.h                    |  18 +-
->  tools/perf/util/kwork.h                       |   9 +-
->  tools/perf/util/machine.c                     |  14 +-
->  tools/perf/util/machine.h                     |   3 -
->  tools/perf/util/s390-sample-raw.c             |  15 +-
->  tools/perf/util/sample.c                      |   8 +-
->  tools/perf/util/sample.h                      |  93 ++++++++-
->  .../util/scripting-engines/trace-event-perl.c |  23 +--
->  .../scripting-engines/trace-event-python.c    |  47 ++---
->  tools/perf/util/session.c                     |  74 ++++---
->  tools/perf/util/synthetic-events.c            |   9 +-
->  tools/perf/util/synthetic-events.h            |   2 -
->  tools/perf/util/tool.c                        |   4 +-
->  tools/perf/util/tool.h                        |   4 +-
->  tools/perf/util/trace-event-scripting.c       |   5 +-
->  tools/perf/util/trace-event.h                 |   3 -
->  62 files changed, 769 insertions(+), 823 deletions(-)
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 923b24b321cc0fbdecaf016645cdac0457a74463..d5bf51565851223730c63b50436c493c0c05eafd 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -344,7 +344,7 @@ __update_ref_ctr(struct mm_struct *mm, unsigned long vaddr, short d)
+>  static void update_ref_ctr_warn(struct uprobe *uprobe,
+>  				struct mm_struct *mm, short d)
+>  {
+> -	pr_warn("ref_ctr %s failed for inode: 0x%lx offset: "
+> +	pr_warn("ref_ctr %s failed for inode: 0x%" PRIino "x offset: "
+>  		"0x%llx ref_ctr_offset: 0x%llx of mm: 0x%p\n",
+>  		d > 0 ? "increment" : "decrement", uprobe->inode->i_ino,
+>  		(unsigned long long) uprobe->offset,
+> @@ -982,7 +982,7 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+>  static void
+>  ref_ctr_mismatch_warn(struct uprobe *cur_uprobe, struct uprobe *uprobe)
+>  {
+> -	pr_warn("ref_ctr_offset mismatch. inode: 0x%lx offset: 0x%llx "
+> +	pr_warn("ref_ctr_offset mismatch. inode: 0x%" PRIino "x offset: 0x%llx "
+>  		"ref_ctr_offset(old): 0x%llx ref_ctr_offset(new): 0x%llx\n",
+>  		uprobe->inode->i_ino, (unsigned long long) uprobe->offset,
+>  		(unsigned long long) cur_uprobe->ref_ctr_offset,
 > 
 > -- 
-> 2.53.0.239.g8d8fc8a987-goog
+> 2.53.0
 > 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
