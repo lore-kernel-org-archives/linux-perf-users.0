@@ -1,60 +1,98 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC513D3B3;
-	Wed,  4 Mar 2026 15:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C27C33065C;
+	Wed,  4 Mar 2026 15:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772637809; cv=none; b=A8V+vHkQ++7qkcths/WWLwC7Ge9kwfHuTaKIAVM/ti+eS+qP46XS5gT1C3/hqpDD1YJz3fA+3NOYohekBwiS4KRLTQJKyEW7bufYtusJrvssPRd3PxkSVtK36530X78B5uNLJ17m8KlsppDaBFnF1ih4zTx93YRG/Jvxf1pX2x0=
+	t=1772638016; cv=none; b=PPXjOqqGUwfTVxvsDxLIXbpXuFkCuSk1zCfIJRMTlVJTT5JlKjExWTa4dhpOPgDG3fGv1RiCILqkzCV1W1laR0C+C32rF0EHEbeOmkP9KcWqq1mVi5QPskXgPS9mvLxkAdy62wbGgG1IrXctq9DFcRgKbCTHHgjwMpJt/VSh+As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772637809; c=relaxed/simple;
-	bh=rcjc/DA9gZY+Ogl3TohfVN9fersicpZ7aCs8n2GZi48=;
+	s=arc-20240116; t=1772638016; c=relaxed/simple;
+	bh=NSxpkcBTxGbZfTOBI1Osn6FZchKIMqEBt4E59vgg9yo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aoAroLiBHLV3Ygm9qVioqlJAzXO10hJT0iqw3qArnDv1c9byFR4fLUnwZRNwxDMlIsoMC2xa3I7Ht5O73TmHgv05JAeuVxLfIdgSOe+UScdeoI2x8s1/1n7o+PVBfk1rXsUFXSD2yHJvnXJ7qhl1Rg/1RJU8Mft+jMeQ6jiqQT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eFxzQUT2; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=m8vweCD+IQlcQ5+JLpsgYr/KFgkoOCqsm01o/G7GNAUHaPM+OQwrKAUUEYOYQuhjAYc2sG2idveLoGntyhVZeDAMi/J0lsRTf4dMmJiLxPVGuGQCqRiY4DsdoYWvHKgC7Iv8rNgV2RbQJ5uYbAjDEJ2uTaokaWBqHiuDZiKypgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNr/i9Ed; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eFxzQUT2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=rBmkKRMNxTQxuyqVoa4xSqzsld5mG9Xsk1fSIhA25UI=; b=eFxzQUT2exJ2k6tOjjObiTVqAH
-	xJN7Jj3DyfxAmk6SXAFeo1KyeLcCGDfWDtURHnA/kL7UmDI8jphHayTzyI/jNukh0fIoSlm8ctToc
-	D1pPsmzw6ed2X6SedrFc1+s2/ENIjyuVRLfxbJMiZCndzmmWjh0BZ0nClNEw43v+daBiqRCZdkKE8
-	i7I2wqpBXnkqOV85Ntaxk2LKgfzc5oQ3/QRrQM0KbccQsEaegUkTeaYuismzKnZxT64QwRZvDgIFE
-	5Z3A91MWYw3gMcgse7FWY+i8eh9vvNnYeShbVcW/AE5+yztBJF+JbZ+arG2ExvW1MMnE4eOoW2MeG
-	ZYGLlZPg==;
-Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vxo4E-00000004vOB-0h2g;
-	Wed, 04 Mar 2026 15:23:18 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A7344300666; Wed, 04 Mar 2026 16:23:16 +0100 (CET)
-Date: Wed, 4 Mar 2026 16:23:16 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Thaumy Cheng <thaumy.love@gmail.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNr/i9Ed"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FA02C4CEF7;
+	Wed,  4 Mar 2026 15:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772638015;
+	bh=NSxpkcBTxGbZfTOBI1Osn6FZchKIMqEBt4E59vgg9yo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JNr/i9Ed94o5FrVUAIdDA9j6qVGLnE5GzfbP/S1eQuij66w5wYafVkKmJfNrjW6BU
+	 A1qHbzpoX84W2Y3/DU8fCgtDh/bFbsR95IXw4bDa1YKfx2KDTn+9gvVk47D5GtsPhr
+	 S6XIEflAmCZI+kFJOhLUSAKMC159kKQKecuwzKR8DT3B4C+eY5YaSizaIDmG+RQ/bO
+	 OTFLtGzokmtE74YQuVHwoAjC3QCWckhfGWfFxU5RuztAn9pH5xH57mKx5+7NOyf21j
+	 vJcutnbWGpl00AJ4jYiuegaQaPdEVO7qzspdvmLlAaHDXjEVctpre1LGEdez5nx/iK
+	 AUByHkfctYKUQ==
+Date: Wed, 4 Mar 2026 17:26:52 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	"linux-mm @ kvack . org" <linux-mm@kvack.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	David Rientjes <rientjes@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Leo Yan <leo.yan@arm.com>, Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH v3] perf/core: Fix missing read event generation on task
- exit
-Message-ID: <20260304152316.GO1395266@noisy.programming.kicks-ass.net>
-References: <20251024170543.11201-1-thaumy.love@gmail.com>
- <1e6337ec-d4a0-420b-bd7b-0fd2b6fee620@linaro.org>
- <20260206152907.GQ1395266@noisy.programming.kicks-ass.net>
- <61e544ab-d9b9-454e-9dd7-65625d9be126@linaro.org>
- <20260303142948.GA3698720@noisy.programming.kicks-ass.net>
- <f0a5192a-7b6a-4c51-87e9-fc1dbf4d37df@linaro.org>
+	Andy Lutomirski <luto@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v1 15/16] mm: rename zap_vma_ptes() to
+ zap_special_vma_range()
+Message-ID: <20260304152652.GF12611@unreal>
+References: <20260227200848.114019-1-david@kernel.org>
+ <20260227200848.114019-16-david@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,40 +101,32 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f0a5192a-7b6a-4c51-87e9-fc1dbf4d37df@linaro.org>
+In-Reply-To: <20260227200848.114019-16-david@kernel.org>
 
-On Wed, Mar 04, 2026 at 11:26:10AM +0000, James Clark wrote:
-
-> > @@ -14564,11 +14556,21 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
-> >   	 * won't get any samples after PERF_RECORD_EXIT. We can however still
-> >   	 * get a few PERF_RECORD_READ events.
-> >   	 */
-> > -	if (exit)
-> > +	if (exit) {
-> >   		perf_event_task(task, ctx, 0);
-> > -	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
-> > -		perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
-> > +		guard(raw_spinlock_irq)(&ctx->lock);
-> > +		list_for_each_entry(event, &ctx->event_list, event_entry) {
-> > +			if (event->attr.inherit_stat) {
-> > +				if (task && task != TASK_TOMBSTONE &&
-> > +				    event_filter_match(event))
-> > +					perf_event_read_event(event, task);
+On Fri, Feb 27, 2026 at 09:08:46PM +0100, David Hildenbrand (Arm) wrote:
+> zap_vma_ptes() is the only zapping function we export to modules.
 > 
-> Doesn't this only work if you happened to have an event opened on every CPU?
-> Otherwise you could get rescheduled onto a core without an event and the
-> event_filter_match() will fail and you'd drop the sample read for that exit.
+> It's essentially a wrapper around zap_vma_range(), however, with some
+> safety checks:
+> * That the passed range fits fully into the VMA
+> * That it's only used for VM_PFNMAP
+> 
+> We might want to support VM_MIXEDMAP soon as well, so use the
+> more-generic term "special vma", although "special" is a bit overloaded.
+> Maybe we'll later just support any VM_SPECIAL flag.
+> 
+> While at it, improve the kerneldoc.
+> 
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
+>  arch/x86/kernel/cpu/sgx/encl.c        |  2 +-
+>  drivers/comedi/comedi_fops.c          |  2 +-
+>  drivers/gpu/drm/i915/i915_mm.c        |  4 ++--
+>  drivers/infiniband/core/uverbs_main.c |  6 +++---
+>  drivers/misc/sgi-gru/grumain.c        |  2 +-
+>  include/linux/mm.h                    |  2 +-
+>  mm/memory.c                           | 16 +++++++---------
+>  7 files changed, 16 insertions(+), 18 deletions(-)
 
-Yes, absolutely. But that is more or less what you get.
-
-So perf has per-task buffers and per-cpu buffers. For a simple per-task
-profile, the per-task buffer works fine. However, if you want inherited
-tasks, they can't all emit to the same buffer -- this would be a
-scalability nightmake. So in that scenario you have to have
-per-task-per-cpu events and make sure everybody emits to the local
-buffer.
-
-If you 'forget' to create an event/buffer for a particular CPU the
-task(s) can run on, you loose events the moment they end up there.
-
-There just isn't much you can do about that.
+Thanks,
+Acked-by: Leon Romanovsky <leon@kernel.org> # drivers/infiniband
