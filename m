@@ -1,47 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD393074A1;
-	Wed,  4 Mar 2026 14:34:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE6F3AE194;
+	Wed,  4 Mar 2026 14:39:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772634879; cv=none; b=oWapT9rY9VKde5aFrBlBUq4RzzllWRzOrVR+k2Kwt4TEjOkaHSojZ5TQOIVyRuX34wB7wz9j7KlkWD0mUNmlHfKMgDZfD6lPEbI9K3LlLeszoT7f3L7Vfp3AtYlZ5m94o1WcGgm7TiyMzTPvXjPSie7uPnruzc8fqDp5mJ4lH3U=
+	t=1772635158; cv=none; b=mvi7m0ZuNCk9ainnlvfHlkc6WbDkB/u6TUxd7JChMvBtdQzOD3kpFBMwm6CIXM0SwHBkkHs6xeOf4QAB7r3HLN9DC3UJP75QRkBZEZPMv/aZ0Lju4BlJAx4MRriI8Z6Peq+EyVyPRcv7b6hSV7bK9xzobKavDUiiILhRUc8bcU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772634879; c=relaxed/simple;
-	bh=VYjfd90z/T/hT7lKXvnRTkt7wyLpbBb620pFx1oQ7kk=;
+	s=arc-20240116; t=1772635158; c=relaxed/simple;
+	bh=jpHbkjBSvqWn6OcfIJDrEntNWYvpRmD8DXYmBcL7tLY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pRaJYSO5fWaYCgcRQXMa+G6s+wXLl7wCIpHiTNNagtE0Dav0KDTGsKccCuuwM3wvYpxZa3O/G72b/Grek0DRyUmomOXYc6jote3euDz6P6NJEFlntoY9uYKVMjx3afDqhK2Kzzq0i3exEyyfr4tMT5Bkr0mREm6rolcS25Wub4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WT0oorqd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IBSbAInUQAxVC+1rCeDk9wttyyFz66+6tqzjoqjSlOUlrhaC3jDUu4qOxuT/WaVBBT6vCWS1cN6bAoCSC/6qXzGi/WbggCdDGOtSBkyxDnJyY8geudd4B4aZKEfum3r1HWf4KYRSHRT7luzhxozlcYM9a+77Q73XMF8MYy2TMOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqYh3mbC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WT0oorqd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AF35C4CEF7;
-	Wed,  4 Mar 2026 14:34:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqYh3mbC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3438AC4CEF7;
+	Wed,  4 Mar 2026 14:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772634878;
-	bh=VYjfd90z/T/hT7lKXvnRTkt7wyLpbBb620pFx1oQ7kk=;
+	s=k20201202; t=1772635157;
+	bh=jpHbkjBSvqWn6OcfIJDrEntNWYvpRmD8DXYmBcL7tLY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WT0oorqdI2GMDRnMODTl02YsKk4/Xw3K7BNAkvt0hoOcVkYLdzS/r+L5m20F1aN/z
-	 S2InAuIbkZDwT21/V7gROFNhkl9t97qpdOnMwn4dgthucRl7ZEZfwL/qArGf65Om08
-	 7sPOniFAvz6jdpb+KWglcHMwQPpir2zgDE/GaK+/DYuMpQ23kY+YqaUNSs6B8EM0Wz
-	 Xblz+d+CQgH4THTuXPv+qIXUOYbQ29qWZEu5z6WOOLO5orjs/YKfVRXH785C/qUfW+
-	 leGyZnDQfG/QtJa1dEspJqwKOtE0xye71hCPSvm9ihkyrPY8HBOHW2tBzeXdRWIDsx
-	 2LIXh3NY8Co3Q==
-Date: Wed, 4 Mar 2026 11:34:35 -0300
+	b=oqYh3mbC6G+LZqZcA349+DHmgVGJez+uBJZFvNa/vvofVcpmLVlfolAwovLD1kpSr
+	 wqFBelLyJhq49roMuFGDnAoU8Kmr/N3htigXB42qH4Z8tKRe8F6f8yelEAuAKKKS91
+	 ZblkvtoBp/REJT6AFsI1bCjYhRG1cHkKEMcC9nHOOwjaaPNVrWZYWUVkdqHHzu5ky9
+	 MXEqQ6fTT3evFo1axez4UodBTySB5pJ6qzg0mcofU4oMP7DoUJal/l5hF/YSkWZYjj
+	 /oXFTEF+y8aOk858fCKQPlx0d2+Q4KbkDK86cBr99e0UuMtbjCjnUb+yXPSrE45y7x
+	 qJ99426pRHing==
+Date: Wed, 4 Mar 2026 11:39:14 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, agordeev@linux.ibm.com,
-	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com,
-	japo@linux.ibm.com
-Subject: Re: [PATCH v2] perf symbol: Remove psw_idle() from list of idle
- symbols
-Message-ID: <aahC-zp56irr5e2k@x1>
-References: <20260219113850.354271-1-tmricht@linux.ibm.com>
- <aZzKrRB0__RahFJV@google.com>
- <aaXaX676sTLCX_LG@x1>
- <CAP-5=fUjyOUi9J6WfXf0HkbiD6Y=vAfT2gSMo0e-L7LOOtPW=A@mail.gmail.com>
+Cc: Dmitrii Dolgov <9erthalion6@gmail.com>,
+	linux-perf-users@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+	Levi Zim <i@kxxt.dev>, Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+	rust-for-linux <rust-for-linux@vger.kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>
+Subject: Re: [PATCH v4] tools build: Fix rust cross compilation
+Message-ID: <aahEEkHP5g-T_tFg@x1>
+References: <20260218154800.367720-1-9erthalion6@gmail.com>
+ <CAP-5=fXLNybYv08dDfAqAsDBzbOPzQY4EZQvdY0WZsfrMu9Yyg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,66 +50,112 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUjyOUi9J6WfXf0HkbiD6Y=vAfT2gSMo0e-L7LOOtPW=A@mail.gmail.com>
+In-Reply-To: <CAP-5=fXLNybYv08dDfAqAsDBzbOPzQY4EZQvdY0WZsfrMu9Yyg@mail.gmail.com>
 
-On Mon, Mar 02, 2026 at 11:44:19AM -0800, Ian Rogers wrote:
-> On Mon, Mar 2, 2026 at 10:43 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
+On Tue, Feb 24, 2026 at 08:41:57AM -0800, Ian Rogers wrote:
+> On Wed, Feb 18, 2026 at 7:48 AM Dmitrii Dolgov <9erthalion6@gmail.com> wrote:
 > >
-> > On Mon, Feb 23, 2026 at 01:46:21PM -0800, Namhyung Kim wrote:
-> > > On Thu, Feb 19, 2026 at 12:38:50PM +0100, Thomas Richter wrote:
-> > > > Commit fa2ae4a377c0 ("s390/idle: Rewrite psw_idle() in C")
-> > > >
-> > > > removes symbols psw_idle() and psw_idle_exit() from the linux
-> > > > kernel for s390. Remove them in perf tool's list of idle
-> > > > functions. They can not be detected anymore.
-> > >
-> > > But I think old kernels may still run somewhere.  It seems the above
-> > > commit was merged to v6.10.  Maybe we should wait some more time before
-> > > removing it in the tool.
+> > Currently no target is specified to compile rust code when needed, which
+> > breaks cross compilation. E.g. for arm64:
 > >
-> > Agreed, using a new perf tool, say built from the tarballs made
-> > available at:
+> >       LD      /tmp/build/tests/workloads/perf-test-in.o
+> >     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(code_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in generic ELF (EM: 62)
+> >     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(code_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in generic ELF (EM: 62)
+> >     [...repeated...]
+> >     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(code_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in generic ELF (EM: 62)
+> >     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(code_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in generic ELF (EM: 62)
+> >     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a: error adding symbols: file in wrong format
+> >     make[5]: *** [/perf/tools/build/Makefile.build:162: /tmp/build/tests/workloads/perf-test-in.o] Error 1
+> >     make[4]: *** [/perf/tools/build/Makefile.build:156: workloads] Error 2
+> >     make[3]: *** [/perf/tools/build/Makefile.build:156: tests] Error 2
+> >     make[2]: *** [Makefile.perf:785: /tmp/build/perf-test-in.o] Error 2
+> >     make[2]: *** Waiting for unfinished jobs....
+> >     make[1]: *** [Makefile.perf:289: sub-make] Error 2
+> >     make: *** [Makefile:76: all] Error 2
 > >
-> > https://www.kernel.org/pub/linux/kernel/tools/perf/v7.0.0/perf-7.0.0-rc1.tar.xz
+> > Detect required target and pass it via rust_flags to the compiler.
 > >
-> > (I will not make a rc2 available since there are no changes to the
-> > tools/perf codebase in this rc).
+> > Note that CROSS_COMPILE might be different from what rust compiler
+> > expects, since it may omit the target vendor value, e.g.
+> > "aarch64-linux-gnu" instead of "aarch64-unknown-linux-gnu". Thus
+> > explicitly map supported CROSS_COMPILE values to corresponding Rust
+> > versions, as suggested by Miguel Ojeda.
 > >
-> > On older kernels should still ignore those functions.
+> > Tested using arm64 cross-compilation example from [1].
 > >
-> > A suggestion for work in this area instead is to get those samples into
-> > a special bucket, the "idle" one, and show it at some place in the
-> > screen.
+> > Fixes: 2e05bb52a12 ("perf test workload: Add code_with_type test workload")
+> > Link: https://perfwiki.github.io/main/arm64-cross-compilation-dockerfile/ [1]
+> > Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+> > ---
+> > Changes in v4
+> > - Fixed incorrect target name for riscv
+> >
+> > Changes in v3
+> > - Improved commit message, add an example of the compilation failure
+> >
+> > Changes in v2:
+> > - Map supported CROSS_COMPILE values to corresponding Rust targets
+> >
+> >
+> >  tools/build/Build.include  |  9 +++++++++
+> >  tools/perf/Makefile.config | 14 ++++++++++++++
+> >  tools/perf/Makefile.perf   |  2 +-
+> >  3 files changed, 24 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/build/Build.include b/tools/build/Build.include
+> > index e45b2eb0d24..cd0baa7a168 100644
+> > --- a/tools/build/Build.include
+> > +++ b/tools/build/Build.include
+> > @@ -98,6 +98,15 @@ c_flags_2 = $(filter-out $(CFLAGS_REMOVE_$(basetarget).o), $(c_flags_1))
+> >  c_flags   = $(filter-out $(CFLAGS_REMOVE_$(obj)), $(c_flags_2))
+> >  cxx_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(CXXFLAGS) -D"BUILD_STR(s)=\#s" $(CXXFLAGS_$(basetarget).o) $(CXXFLAGS_$(obj))
+> >
+> > +###
+> > +# Rust flags to be used on rule definition, includes:
+> > +# - global $(RUST_FLAGS)
+> > +# - per target Rust flags
+> > +# - per object Rust flags
+> > +rust_flags_1 = $(RUST_FLAGS) $(RUST_FLAGS_$(basetarget).o) $(RUST_FLAGS_$(obj))
+> > +rust_flags_2 = $(filter-out $(RUST_FLAGS_REMOVE_$(basetarget).o), $(rust_flags_1))
+> > +rust_flags   = $(filter-out $(RUST_FLAGS_REMOVE_$(obj)), $(rust_flags_2))
+> > +
+> >  ###
+> >  ## HOSTCC C flags
+> >
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index a8dc72cfe48..214d8f6d9b8 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -1163,6 +1163,20 @@ ifndef NO_RUST
+> >      CFLAGS += -DHAVE_RUST_SUPPORT
+> >      $(call detected,CONFIG_RUST_SUPPORT)
+> >    endif
+> > +
+> > +  ifneq ($(CROSS_COMPILE),)
+> > +    RUST_TARGET_FLAGS_arm      := arm-unknown-linux-gnueabi
+> > +    RUST_TARGET_FLAGS_arm64    := aarch64-unknown-linux-gnu
+> > +    RUST_TARGET_FLAGS_m68k     := m68k-unknown-linux-gnu
+> > +    RUST_TARGET_FLAGS_mips     := mipsel-unknown-linux-gnu
+> > +    RUST_TARGET_FLAGS_powerpc  := powerpc64le-unknown-linux-gnu
+> > +    RUST_TARGET_FLAGS_riscv    := riscv64gc-unknown-linux-gnu
+> > +    RUST_TARGET_FLAGS_s390     := s390x-unknown-linux-gnu
+> > +    RUST_TARGET_FLAGS_x86      := x86_64-unknown-linux-gnu
+> > +    RUST_TARGET_FLAGS_x86_64   := x86_64-unknown-linux-gnu
+> > +
+> > +    RUST_FLAGS += --target=$(RUST_TARGET_FLAGS_$(ARCH))
 > 
-> Would it also be sensible to pass the perf_env:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/env.h?h=perf-tools-next#n74
-> into symbol__is_idle? The contents of the perf_env are shown by `perf
-> report --header`:
-> ```
-> # ========
-> # captured on    : Mon Mar  2 11:34:47 2026
-> # header version : 1
-> # data offset    : 904
-> # data size      : 4268216
-> # feat offset    : 4269120
-> # hostname : google.com
-> # os release : 6.17.13-1rodete1-amd64
-> # perf version : 7.0.rc1.g982b63f6380b
-> # arch : x86_64
-> # nrcpus online : 28
-> # nrcpus avail : 28
-> # cpudesc : Intel(R) Core(TM) i7-14700
-> # cpuid : GenuineIntel,6,183,1
-> ...
-> # e_machine : 62
-> #   e_flags : 0
-> ...
-> ```
-> The kernel version is in the release and the e_machine/arch captures
-> the CPU type.
+> I'm wondering about lesser tested platforms like loongarch, csky,
+> xtensa but I don't know how to concoct a triple for these. I wonder if
+> there should be a test for a missing string like:
+> 
+>   ifeq($(RUST_TARGET_FLAGS_$(ARCH)),)
+>     $(error Unknown rust cross compilation architecture $(ARCH))
+>   endif
+> 
+> other than this:
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Yeah, I think it is a good improvement, I think you mean that we should
-have per-arch idle symbol lists? 
+Thanks, applied to perf-tools, for v7.0.
 
 - Arnaldo
