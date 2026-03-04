@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3270A26E6F3;
-	Wed,  4 Mar 2026 21:48:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B76381B04;
+	Wed,  4 Mar 2026 21:48:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772660934; cv=none; b=GbsU1e1n9srB5IsfAII7plTpuYKj9g9MSqZXGJgyiz/VJLHg7KdObs2Q0bF7kiQZ7iDLYy86Y78TN7foZ8xmskRx+EhAkh2o42bCT37u3jrMMpV70mk9m8XS8kXkaW7vj1wPis+Q7f5MSr07jGnOiZtb0X1OAy7FkY7zKIpXRng=
+	t=1772660934; cv=none; b=ci3q3+xaSaHiAXMbzGjDU8y8uUVBF3Vecmluig1zh2wJe53ckZ2X0hOo/I6yW0w1TVvlC74gN8TN+e0iFF6xqOhbVcGKy63OlZwttQ+oCP8Kby2HwrhKAxFVC61Yl1uHmv/RYNIbRuLqoNlhEiY4kRsw1o+FUA3j3oDMD+mYn+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1772660934; c=relaxed/simple;
-	bh=vEJ7VUmLpt7i8idbC2tr4DLSU9hXU00TncSKznlyEIY=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=e39WyhzNoMdVMluIqhuNXtuRllrpK8IxujIQ8eFuuL8b08CiiotqGc2hSnCJYUvAuhxEnkEsVLmzNgy9s2Pdo9eYaIbPzuNxHMk6L0ECsJt7tw7t/aJ3UhzayrR7k0eqzZq/aq1TIGSCeRcDo6NKC5uy2S26Xz/r1bjTNO8dg1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DG1Imk6A; arc=none smtp.client-ip=10.30.226.201
+	bh=w7d3HYxOn+xhxuEK9OxeTGVbMlKaT/ikC0ZJ5c7XL+Q=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=WEWQQoL7JpbIolOObuSsMBEuDPHSDek3FvK+uffZTfp8bxCPyJOLFSSc/28qNrRIKlQ16ej8uW3Vepn7wBo1OZV6AQEb9gGO391JDc5eY/lvGx4jogQjbXo97Uc7UWDdjJeBXOwmoMizuOtbVzwUKZdVV8ljq9nps5rEnEEf3EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZMSH6H5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DG1Imk6A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43ADBC4CEF7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZMSH6H5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB8E0C19425;
 	Wed,  4 Mar 2026 21:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772660933;
-	bh=vEJ7VUmLpt7i8idbC2tr4DLSU9hXU00TncSKznlyEIY=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=DG1Imk6AAGJ/ibtF0iF4WVgklqlpdAcudHeK3BilPhTwDV1s1sM8yQq1tG5LqnoGy
-	 7QjhRSrtlDB227Ty81Ua4gMLkn0goYaiOsMm28f4nIhv/JN89GlE2UqdkjhCM3eKLq
-	 P5meHm4QEeHKAmsOkdZ+fyhAwquVPt9q7YDgU7IO1zz4bPgImeOb3sjaSk2Ig8GEsT
-	 Q2heQ/PZ+PqYiQ5b3GXxXIHxa3xXaofB1H5CF59zZn6WSdSw9qnrklb+NKJiNt0zD8
-	 rWPrgY/F4F5LVHvf1IGp2vEPGWIHdD3wa52utjhpTMMj08Cp4lWMx0Nh/9K+zrpl1I
-	 hYT3h1Zu1Kz3w==
+	s=k20201202; t=1772660934;
+	bh=w7d3HYxOn+xhxuEK9OxeTGVbMlKaT/ikC0ZJ5c7XL+Q=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=eZMSH6H5gaf8L8g4ujE4wIyhFbL2UniEJ71Yvz1CsDSYW1+dVONA3+beOKEEUFxtU
+	 r0WzCLjMWlleQR4WNzrZ83e/6AMkvnLjPOS1JGw4X5vNkD33TaXIbi57+wTBUcYgHK
+	 3uLuy8poFhcyGi15ZxdFMUtpTYKlvsVP4v6/m+h0DPPfPEzjQhR9gSDCdraJGr8tjF
+	 7PGK1N/HEpf6gjm4M1ospP1YPE5TDpMomYZzmXR2ycW1IMxlhiXMSiiArw+1juBIN/
+	 DZovQONVV7K2lVG3R03VYwClgSdbdDywX87Lhe69om7liAphdnhLKMO52yCrsNGNf3
+	 PgfVeEBMn7JCQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>, 
- GuoHan Zhao <zhaoguohan@kylinos.cn>, 
- Colin Ian King <colin.i.king@gmail.com>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
-In-Reply-To: <20260303185216.897944-1-irogers@google.com>
-References: <20260303185216.897944-1-irogers@google.com>
-Subject: Re: [PATCH v1] perf pmu: Replace starts_with with strstarts
-Message-Id: <177266093321.3626597.9849967840468280676.b4-ty@kernel.org>
+To: 9erthalion6@gmail.com, Ian Rogers <irogers@google.com>
+Cc: a.hindborg@kernel.org, acme@kernel.org, aliceryhl@google.com, 
+ bjorn3_gh@protonmail.com, boqun@kernel.org, dakr@kernel.org, 
+ gary@garyguo.net, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, lossin@kernel.org, ojeda@kernel.org, 
+ rust-for-linux@vger.kernel.org, tmgross@umich.edu, 
+ Miguel Ojeda <ojeda@kernel.org>
+In-Reply-To: <20260302235821.588686-1-irogers@google.com>
+References: <jiwt5mjma2puv7kjbgploxx2l5tankjm4zu2tsa75qkckwnwjk@f7mz5vlvzpjz>
+ <20260302235821.588686-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf test type profiling: Remote typedef on struct
+Message-Id: <177266093391.3626597.10862709116758155175.b4-ty@kernel.org>
 Date: Wed, 04 Mar 2026 13:48:53 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -50,10 +50,10 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Tue, 03 Mar 2026 10:52:16 -0800, Ian Rogers wrote:
-> linux/string.h provides strstarts that matches the starts_with
-> function. For style and consistency reasons remove the starts_with
-> functions and use strstarts.
+On Mon, 02 Mar 2026 15:58:21 -0800, Ian Rogers wrote:
+> The typedef creates an issue where the struct or the typedef may
+> appear in the output and cause the "perf data type profiling tests" to
+> fail. Let's remove the typedef to keep the test passing.
 > 
 > 
 Applied to perf-tools-next, thanks!
