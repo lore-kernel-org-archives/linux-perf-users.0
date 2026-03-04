@@ -1,135 +1,191 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E796C481B1
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Mar 2026 00:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772582804; cv=pass; b=MLgjKrPV+kOTTk/atb8uLCz2g4AxLyKMY+GInKBfNuUqp3/q9PjaOr8CsilE7tojOYu4PWEDK7tHqqAiH0mg7q6PPaSFKBPMy7eKW3640OE8eFHMwMKAHpxUxfvEAaIAVWU76PpTdmwC8F3vEuKkF4VOG2PcgpWZ2cQVFWe3x5c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772582804; c=relaxed/simple;
-	bh=SE0iuTKzP7Mva7jgcYokHYOcLSARQ9ahmEoA1aPrACI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pg4gUsHaZOBy5X5Z1R54NoAE6VKA7Ws9KwN//Y9ciiA+d6DpRvkTTV1EU4QGt1zofqOlykyrLzqSjK7r36bKSZgvIb5yU3AIdDsIkIgtLeOBU5Bd0vbwfW13ttgrIz01b0xd6YtNEhf4PQKkupllWiBeMSQT93vf4kAtwh2k0q4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eb6O1noC; arc=pass smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037702772D;
+	Wed,  4 Mar 2026 01:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772586152; cv=none; b=CF/MQXM6AQqA7smb/urPQ58wJLfU/iyjUoiO//XCs581X9Olt2WbPEooYUQ+R55W7CHf2/EvLDbh7Maeh1IeCbt8gXKfXn2w/7iZQc7g1UvKjT6T4KedHOPnCcdkfy998DZRs3CVcjeYGKoo1795rU4wYisMZS2IKRaCIWo5S60=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772586152; c=relaxed/simple;
+	bh=S0/MROHs4eSfHAG9l74chqY/q6dMxkoeRazUMS1wZAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cAW5W9/lsNHgmhzZR2/GrPiHbIsg9eAgZtz+SY6dmTY3gJzxicGFynV+WDWRQF0iQKnNzfyaMuca6osgRaVqm6mN43VUiAOqZ1VrHDo/T64HOA3lic3dsZGDYi+v4YDuPp6GME2SdFi4pE7WshVBTPR4BlUrjhp2K6Y12a58Y3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ychh549u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eb6O1noC"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-505d3baf1a7so739441cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Mar 2026 16:06:40 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772582799; cv=none;
-        d=google.com; s=arc-20240605;
-        b=DX9Oy+TXpn4a2cxS0OWuApmaZBpuvgZjLMwICr3+oztuGNWZLXrl6xABBznbCBkZwN
-         P+s8RRBlf9zBmXoQQQEPpWiRBIgwdlh543QJcM6s4/QeUz2dQu8XqtslLBmQOWzVRJau
-         6mGoRZuojZN4ITNWeF/D1SeW9JPWSjiKUEZVVjIWXoRw6Ggesu4VJlwkQQnEFHha4WCB
-         Q/EMzkmv/mvVb/wSaaUxrXwMc+TdYVwxDXV+/SnpXyYs5nUWNmTXvYdme+1hjDJWQVcB
-         Pzku3byxHR7cVcy7SanDFfAf4yt4w2nuG6cwNtegX5Ci9w6b3rJdbQiJ1WJ+DFMiU+5V
-         9gfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=y/PStokD6IlhvxuuSo1FJomzpaCmyss/AOhqDAfuiyc=;
-        fh=8ZV8CDfwpyrdz6pQVsr9Gzk7QwMux/bKblgP9D1GWGw=;
-        b=eYACYXb6LQp3ILDkyFtbEUVjkksyDGjI3PjEUgPKAiE1aCMt5d/IWEVMspxzazw9lO
-         1e051EYjXnnxnQ7cVbAUuSW9KkoV187gDmS8HPUqG/fVaDq9Nbr/fuOpmXp87JPOD57M
-         p+X1hjMI/En1Icwo9drVeRZYabwopypO5H4vWLSwZjFraynaLkgIR+iDGke7vEJNs2ib
-         r+hhzOxwr5zT8reJ+faE2cu30Y4WNVbxoqA3pCYFgnvflESDpKy7yYugP56Azdd6ZSAG
-         VUPiTPVqV0rLORrzxkTQ2GGooElmBhF1ZSHJNO61VQB6MHxzQhjmX0ZPqGGHL1L8oodL
-         woSw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772582799; x=1773187599; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y/PStokD6IlhvxuuSo1FJomzpaCmyss/AOhqDAfuiyc=;
-        b=eb6O1noCx81b6pSPf1xwCFVVycirntcp1MZfhIT9qqx2THKksct7AG1tzu5WYfX+c5
-         NicSzAf+12eGfu3aYACPbg0TcdS6ALuNV4npKcWM+5hoGD5zl7rL0GSFkTmLKhZofAvu
-         FFTAZzHKI+An/48bYpxuJ6JzuEdC2G3tr/NM3aXr/AI/PdakqnnWm3Aw/jzvVTLshvJn
-         3UhEEPYIVNtqHbR9N8lpw2OsUUehRmTvy7Vbbb5yw/wH8ltRo4Myx2jstDLYiiSBIWNN
-         IaR9Cipv7yOaXNb1po7fqfNegjQq/RIsJrOPntPq6THSvggbzj6n0neCrRQImIwf/Ncx
-         n3lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772582799; x=1773187599;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=y/PStokD6IlhvxuuSo1FJomzpaCmyss/AOhqDAfuiyc=;
-        b=LvYH4WPWa7D5P3lezN0d9ncllBBPCllSHyhk/XVJujeyAgRqliz+1f/ZhHuP1yDPQi
-         A6sGrJyhgkjjFaadfe94AOarILBpScOCRtlLGDLr1uQ3/GLRVOk/IDGudQYRENZDqFqu
-         2QZTYIWvO9QPWupDO4Ymq1YaqmTbgh59PdWIp5aMCjx2yzHPrSlvGe5CY++b3rapyL9x
-         kaNuXTllMp7dSw8HwaiGT8yYugfjPP5p1U3IO5mmXdaY7ZXr8LIRsg/dyldANCykUEj9
-         jzqQ8bITyhK3Rx6YUJWbE5sQVEkrpkNv7p55xmcqwKHS+jCRwNpymgN88qrbseXxflQy
-         3c4g==
-X-Forwarded-Encrypted: i=1; AJvYcCX3QnSUD7WgJp/kYVjqYWEDsuiZpuu9qY1cf4Uib64cbcoj+rwxF52hOh7oAmVTSusSWXFARGG/pmCBq5/Bzh18@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2qxxVsThtcuRYB6B38r4V71m3u3xifmVH3JA7K+IoOg8KCoQQ
-	xv20gN9X7CceUtSG/jnMvr14dvj3HwSjWoS1b/Sk9ugn0HKba1rkqqeTigQDZ1YVR35g1svgPoC
-	OpWwZU0yq2aCPskQH1yh0QOK/oystl9eI2jvLS2ub
-X-Gm-Gg: ATEYQzw1Iswp0ZgQ/xg7zIKIZy/R4d4/gbI9i6sE4upiVccKmcTOZAQ9Td9WsV7Jrh6
-	E9CV0eazaMgA5zJHJD3fXlU80GRIovMAGFY49wHfmm636M8Os1tra13+g1K2Y2eRYMMw/raQrNu
-	DXKC1bHJVyN7Ck5M1c6U6Zb1ESjIWvAbLR9PKlq3b/HrmsFPsvf8JUF0Y9rGKUMmCGDtF9eyYlM
-	JORtlkV74nRDcpj7m0t+yr/RIWR8JDbo/W4FHN0hyVhMlSTfD7KIYIObY6uymiSdiNFyCbeNtWH
-	2DUJG4gPrP2wjw+4c2D8MEUYkxkVWa7ELtZcWrDj
-X-Received: by 2002:ac8:7f07:0:b0:503:4bc:c925 with SMTP id
- d75a77b69052e-5076186631dmr41314681cf.13.1772582799147; Tue, 03 Mar 2026
- 16:06:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ychh549u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 464BFC116C6;
+	Wed,  4 Mar 2026 01:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772586151;
+	bh=S0/MROHs4eSfHAG9l74chqY/q6dMxkoeRazUMS1wZAI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ychh549uKWl81snT8NVTaaP1M4WxXElawhJLho4SUzPqbLlADv9ElpdETuI88x5nc
+	 SChJRbnyT/bT7SWwKDIlJOd/YgtfNLg9753g6+R1QY45upQj+65ElQDOHKznfOjIas
+	 aoTxsDqXoICTNTfh0HgP54j42Y6HTsgddYpO4//4q8jdHqHU1mkUoL/QHcifZF0YK5
+	 iBmJ/Yofz/ZuU76RJchGuv+6rCnLqD2Lzh3d0RFivnFZ6Y8mdkEglmNr731aGKJpB0
+	 xJQp11wgtIJuwC0gcbk63LIBKnergJT22/+zLt+NTUWXUUP9+yovCwRH0Oc5jPSiBS
+	 zENfrqW0eUhoA==
+Date: Tue, 3 Mar 2026 17:02:28 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Leo Yan <leo.yan@arm.com>, Tianyou Li <tianyou.li@intel.com>,
+	Athira Rajeev <atrajeev@linux.ibm.com>,
+	Derek Foreman <derek.foreman@collabora.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
+	tanze <tanze@kylinos.cn>,
+	Hrishikesh Suresh <hrishikesh123s@gmail.com>,
+	Quan Zhou <zhouquan@iscas.ac.cn>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Anup Patel <anup@brainfault.org>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>,
+	Chen Ni <nichen@iscas.ac.cn>, Blake Jones <blakejones@google.com>,
+	Yujie Liu <yujie.liu@intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 00/25] perf tool: Add evsel to perf_sample
+Message-ID: <aaeEpB9OTFGVIsr4@google.com>
+References: <20260209174032.4142096-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260214012702.2368778-1-seanjc@google.com> <CAAhR5DF5BAcFO2tj0H63ZoRCcdpDS4Jw9XzqC=L2xWMW0M=0QQ@mail.gmail.com>
-In-Reply-To: <CAAhR5DF5BAcFO2tj0H63ZoRCcdpDS4Jw9XzqC=L2xWMW0M=0QQ@mail.gmail.com>
-From: Sagi Shahar <sagis@google.com>
-Date: Tue, 3 Mar 2026 18:06:27 -0600
-X-Gm-Features: AaiRm51ACYQne9diQMSqsETp8etVEqCczz3Uj5tSioGxwFV-IALILtfuhbSZAbg
-Message-ID: <CAAhR5DFVmu5dViPBuwd_nSu_Z4=jL5W83q=sRkNP2bOqW-5_NA@mail.gmail.com>
-Subject: Re: [PATCH v3 00/16] KVM: x86/tdx: Have TDX handle VMXON during bringup
-To: Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Kiryl Shutsemau <kas@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-coco@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Chao Gao <chao.gao@intel.com>, 
-	Xu Yilun <yilun.xu@linux.intel.com>, Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260209174032.4142096-1-irogers@google.com>
 
-On Tue, Mar 3, 2026 at 3:39=E2=80=AFPM Sagi Shahar <sagis@google.com> wrote=
-:
->
-> On Fri, Feb 13, 2026 at 7:27=E2=80=AFPM Sean Christopherson <seanjc@googl=
-e.com> wrote:
-> >
-> > Assuming I didn't break anything between v2 and v3, I think this is rea=
-dy to
-> > rip.  Given the scope of the KVM changes, and that they extend outside =
-of x86,
-> > my preference is to take this through the KVM tree.  But a stable topic=
- branch
-> > in tip would work too, though I think we'd want it sooner than later so=
- that
-> > it can be used as a base.
-> >
-> > Chao, I deliberately omitted your Tested-by, as I shuffled things aroun=
-d enough
-> > while splitting up the main patch that I'm not 100% positive I didn't r=
-egress
-> > anything relative to v2.
->
-> Tested running TDs and TDX module update using "Runtime TDX Module
-> update support" patches [1]
-> Tested-by: Sagi Shahar <sagishah@gmail.com>
->
-> [1] https://lore.kernel.org/lkml/20260123145645.90444-1-chao.gao@intel.co=
-m/
+On Mon, Feb 09, 2026 at 09:40:07AM -0800, Ian Rogers wrote:
+> Nearly all perf code ends up passing an evsel with the perf_sample,
+> which is problematic if you want to rewrite the evsel such as with
+> off-CPU processing - all uses of the evsel need fixing up. Previously
+> I'd mailed this patch as an RFC with everything combined:
+> https://lore.kernel.org/lkml/20260126071822.447368-1-irogers@google.com/
+> and there was a request to break it up.
+> 
+> I've started the series by adding documentation to struct
+> perf_sample. Next I fixed missing perf_sample__init/exit largely from
+> the recent perf inject callchain rewriting work. The 3rd patch adds
+> the evsel to struct perf_sample and ensures it is correctly
+> initialized. The next 22 patches avoid passing the evsel along with
+> sample for different parts of the perf tool, along with some minor
+> tweaks like constification and not determining the evsel if it is
+> present in the sample.
 
-Actually, looking at the "Runtime TDX Module update support" patches I
-don't think I ran those with this version of the patches since the
-"tdx_module_status" changes are incompatible. So it was just the
-patches in this patchset.
+Do you have a patch for off-CPU on top of this change?  I'd like to see
+what you expect before applying massive changes.
+
+Thanks,
+Namhyung
+
+> 
+> Ian Rogers (25):
+>   perf sample: Document struct perf_sample
+>   perf sample: Make sure perf_sample__init/exit are used
+>   perf sample: Add evsel to struct perf_sample
+>   perf tool: Remove evsel from tool APIs that pass the sample
+>   perf kvm: Don't pass evsel with sample
+>   perf evsel: Refactor evsel__intval to perf_sample__intval
+>   perf trace: Don't pass evsel with sample
+>   perf callchain: Don't pass evsel and sample
+>   perf lock: Only pass sample to handlers
+>   perf lock: Constify trace_lock_handler variables
+>   perf hist: Remove evsel parameter from inc samples functions
+>   perf db-export: Remove evsel from struct export_sample
+>   perf hist: Remove evsel from struct hist_entry_iter
+>   perf report: Directly use sample->evsel to avoid computing from
+>     sample->id
+>   perf annotate: Don't pass evsel to add_sample
+>   perf inject: Don't pass evsel with sample
+>   perf kmem: Don't pass evsel with sample
+>   perf kwork: Don't pass evsel with sample
+>   perf sched: Don't pass evsel with sample
+>   perf timechart: Don't pass evsel with sample
+>   perf trace: Don't pass evsel with sample
+>   perf evlist: Try to avoid computing evsel from sample
+>   perf script: Don't pass evsel with sample
+>   perf s390-sample-raw: Don't pass evsel with sample
+>   perf evsel: Don't pass evsel with sample
+> 
+>  tools/perf/builtin-annotate.c                 |  28 ++-
+>  tools/perf/builtin-c2c.c                      |   6 +-
+>  tools/perf/builtin-diff.c                     |   5 +-
+>  tools/perf/builtin-inject.c                   |  81 ++++----
+>  tools/perf/builtin-kmem.c                     |  58 +++---
+>  tools/perf/builtin-kvm.c                      |  22 +--
+>  tools/perf/builtin-kwork.c                    | 104 ++++------
+>  tools/perf/builtin-lock.c                     | 117 +++++------
+>  tools/perf/builtin-mem.c                      |   1 -
+>  tools/perf/builtin-record.c                   |   3 +-
+>  tools/perf/builtin-report.c                   |  38 ++--
+>  tools/perf/builtin-sched.c                    | 183 ++++++++----------
+>  tools/perf/builtin-script.c                   |  26 ++-
+>  tools/perf/builtin-timechart.c                |  76 +++-----
+>  tools/perf/builtin-top.c                      |  19 +-
+>  tools/perf/builtin-trace.c                    | 103 +++++-----
+>  tools/perf/tests/hists_cumulate.c             |   3 +-
+>  tools/perf/tests/hists_filter.c               |   2 +-
+>  tools/perf/tests/hists_output.c               |   3 +-
+>  tools/perf/tests/mmap-basic.c                 |   4 +-
+>  tools/perf/tests/openat-syscall-tp-fields.c   |   2 +-
+>  tools/perf/tests/switch-tracking.c            |   9 +-
+>  tools/perf/util/annotate.c                    |  19 +-
+>  tools/perf/util/annotate.h                    |   6 +-
+>  tools/perf/util/build-id.c                    |   3 +-
+>  tools/perf/util/build-id.h                    |   7 +-
+>  tools/perf/util/callchain.c                   |   8 +-
+>  tools/perf/util/callchain.h                   |   5 +-
+>  tools/perf/util/data-convert-bt.c             |   2 +-
+>  tools/perf/util/data-convert-json.c           |   5 +-
+>  tools/perf/util/db-export.c                   |  13 +-
+>  tools/perf/util/db-export.h                   |   3 +-
+>  tools/perf/util/evsel.c                       |  60 +++---
+>  tools/perf/util/evsel.h                       |  12 +-
+>  tools/perf/util/hist.c                        |  26 +--
+>  tools/perf/util/hist.h                        |   3 +-
+>  tools/perf/util/intel-pt.c                    |  12 +-
+>  tools/perf/util/intel-tpebs.c                 |   3 +-
+>  tools/perf/util/jitdump.c                     |   2 +-
+>  .../perf/util/kvm-stat-arch/kvm-stat-arm64.c  |  19 +-
+>  .../util/kvm-stat-arch/kvm-stat-loongarch.c   |  17 +-
+>  .../util/kvm-stat-arch/kvm-stat-powerpc.c     |  17 +-
+>  .../perf/util/kvm-stat-arch/kvm-stat-riscv.c  |  17 +-
+>  tools/perf/util/kvm-stat-arch/kvm-stat-s390.c |  20 +-
+>  tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  |  70 +++----
+>  tools/perf/util/kvm-stat.c                    |  19 +-
+>  tools/perf/util/kvm-stat.h                    |  18 +-
+>  tools/perf/util/kwork.h                       |   9 +-
+>  tools/perf/util/machine.c                     |  14 +-
+>  tools/perf/util/machine.h                     |   3 -
+>  tools/perf/util/s390-sample-raw.c             |  15 +-
+>  tools/perf/util/sample.c                      |   8 +-
+>  tools/perf/util/sample.h                      |  93 ++++++++-
+>  .../util/scripting-engines/trace-event-perl.c |  23 +--
+>  .../scripting-engines/trace-event-python.c    |  47 ++---
+>  tools/perf/util/session.c                     |  74 ++++---
+>  tools/perf/util/synthetic-events.c            |   9 +-
+>  tools/perf/util/synthetic-events.h            |   2 -
+>  tools/perf/util/tool.c                        |   4 +-
+>  tools/perf/util/tool.h                        |   4 +-
+>  tools/perf/util/trace-event-scripting.c       |   5 +-
+>  tools/perf/util/trace-event.h                 |   3 -
+>  62 files changed, 769 insertions(+), 823 deletions(-)
+> 
+> -- 
+> 2.53.0.239.g8d8fc8a987-goog
+> 
