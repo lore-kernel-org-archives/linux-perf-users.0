@@ -1,191 +1,139 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D78A37F8D2
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Mar 2026 09:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F973988F5
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Mar 2026 09:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772615408; cv=none; b=Edlz4ln/BQs2V7L18moLeLmfn8aVhXchxvcW7wNdr/WJxV3jvQYrheqLNYPyeFcUKDxpI/sqIO9ZVKG0WhKLIL2ML589XBkrmiOaComrFLG0CNbKyFjzSUUU9LVv8Yt6vz3qr/c7TQNEmGwM+lsFE9aT3lgQcvNbBDrhYY2fdlE=
+	t=1772616642; cv=none; b=lib2bsSHlCzKjsoiRgFG3qd6Zbz0NANzO1RDPcYbdasTa6ucNge681PlVk4DFP/WdIbmPAFkecA7AG2uIaRwONUOPAfUHzrz3x3kBMc6PyQDLDjEJLhfZ3wSxLFnV6wkJkw9T+OuXps8YVYl8fMfRqP3tVbez5Hq6/rztbX+vME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772615408; c=relaxed/simple;
-	bh=xTHcZR9Y6fW3DtqZPI/YYZUQPXkPFsw7XdARufuD4qs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VLdtVwUtxdkiR0wUKaIR4067gPnBLh4CCr1d6I6oef8vlQBskamgBMG2xhVPGwr+w0gtZEcMQYczFPdjHs6e5AgPB/SOsFN5LtyO4DF7WfIAqPrMVbv9YObZfSYQSsyROGr69LZyf2vsVTXA0kEgge+vqsq76wqUNfzOqnYKLpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=frZOQien; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1772616642; c=relaxed/simple;
+	bh=qyvL/iXE6+TakoKVVxVCaopqm1BpX+f7Q05dx5gBHDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hd29anKsxZuWushZ9MjIhPrS5v/YSQAvKeGBKPKHZur9KGveU/Kg/L8QNtaRfHLuhbOQ5mR8uxy3wL9IV8ZBB8f9CU8XetAdRsnbBCKynQoCGnFYC4Jsqqa6UlP7NNi2gqYVQwPwS3HQoJGAPdkYwlJpSrfRRCdf4RFXZau/N7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b9sIRKFF; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="frZOQien"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-439b78b638eso3174965f8f.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Mar 2026 01:10:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b9sIRKFF"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-48371bb515eso99247685e9.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Mar 2026 01:30:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1772615406; x=1773220206; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4CAhwn0L/es+Z/kiWXoW/P41mLkYQ6qC5q4Cz2nXIOA=;
-        b=frZOQienvsalSRQ4kPRQbAjCpJNcvFVPQEWT58XYCOHUIruAIVk0S/mHxkRyxpIvGH
-         YCUSzTeh62D4wWbexS+TgI/VHYZX4pzLCnsHuPGxE3J9i6kdeY5uXPlUHUqp3ei+tQrr
-         jK5Kte3vSGX/Ld0q3/ZzBLVl7OCrCbShLveI40v1xqMGfRNM8BQQRRFeLy57xpFvsgSu
-         sQuv2Zy6QaERTHP1bzl+AraCuxdB0UDdeNew0mdxkfEKF8EQMokxEGsCmLqgMUMUq21E
-         Fg/9LGTRM529Nr0O6QGiRuBREHaJlU3vTcK0+vbDJjqYI4ACeTCLYDFKwQMivp+qhN9R
-         oQOw==
+        d=gmail.com; s=20230601; t=1772616636; x=1773221436; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BUzQoESoh9/PqMSFbMpuw4Pmh5IPXiGP/qvOjxX4wwo=;
+        b=b9sIRKFFaokgkSrgeWrbA/ViOpJjWP1ViLK9R1Hc1//m2coegBzgKtpFqwevCmiACZ
+         C7afbaacWCHtjdaHICcRaatb9x6ZEJn6NhG6Zj9DIWESFWJ1Wfs22M1hBHSvsJT6ov0y
+         u+gbatvToXFWw4Ws1z6B810aDtF2H+NtjWSzWUXjnH2Uagh4gEk5+S1nkLp8lVzxzopS
+         A1lgIkzEEAlqX7ANlEMButL3162rmrsjjiFCTqL06qEr4gqfcdGAwI6S5Z1yvtqPS7rR
+         QeMeyyLIZ4ZsiMHZmsjBPBW/Gjz82S/2K6mHxq88plnIdodtUPQPjzOSR2cd/SZiIcXY
+         bgtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772615406; x=1773220206;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4CAhwn0L/es+Z/kiWXoW/P41mLkYQ6qC5q4Cz2nXIOA=;
-        b=v1PE9tpTVwxSmSaFDQ0qdWaSb/uHJpAaGepr9K/UQYs1GC9VqfZ+3nQxjr5wlroSXf
-         bNpGQTYyPw+GkRjWiuJtD7T4ecSBxWtL7+VyYNWNBi3ihd9eSiW45yiSkxCK7Ew5gVnB
-         851yW4AEwnS14In9y1KRWOLztasbHSoU4/lDms7RBxCobxMTnhHUGvPi5UH2C1n/kgcC
-         HJ6NhVK8Q0O45LTiAUmVNu2QwhhJwPqgseclcG/sNiUdPAQGtWJv3TZwY55Dbh1mEV3Z
-         sA2AygtOTQl1nlS2hBG/rduAUVWK0wNwwhunfPCml3uMPELAGX3k3MrnoHLz9GoMIzCf
-         bG2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVbsT/CtK28uSiK7nzU4K0T/4TZKWKlaSMhbhgKL5qYWSv2zQYyfP2MozB2qOdUL5+CuwH+wciFUbBUujau8AsG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqSJ8ROTSRmNWTGsiBlwxFv9OQnz9se2/nGa77dR4blgMKuOty
-	VfBvnI+VbvF0dtVTC/HyiQIgsy9Y4SuBQRGWRteGL7INZEHHaTbiXjsi8BGtd03xL0Q=
-X-Gm-Gg: ATEYQzzFySgm5DAAONemCEajxSQpcwMUpAf1NNWmuk7yjSktmKpwf8Ihk2x1+UJ33PX
-	RDxAi+D71gkNvmLClfhAifrrHcPPUNiSfbKWj6N3XXvZ6gzr+T/ztw3yM2RGKQMpAy6bMXUFK1e
-	O2C1GHAN+ot/i2NACVPWYQb9Il4rLkz/lQEZFl14KrMc3NJR4s5aS0per7rYSrO0911haq/Hk9+
-	X6lKxQgAAT7OwucaB2SrhhJM+BtubzFB4hfVOYWYMZpUKFMnKXgC22gdU7ttGEnNj/qAiPL9l2h
-	LQOy/T2Iw1pBCKbz/mGWeidaScOG54xzZth+Xek/DgZZbukjwfc437XYETW3IA9Xahyie7ADNl2
-	qAYlzd9ydC19V70dqhuvtV1od/s4JARw2xXgliFm4YU5B3MAzKfrRfChBTC0yM+hxsCf4uZNvox
-	/YuR0KobwomM+LtVdaeV1SHOnn8zr1
-X-Received: by 2002:a05:6000:604:b0:439:b744:c5fe with SMTP id ffacd0b85a97d-439c7ffcb6emr2262601f8f.52.1772615405678;
-        Wed, 04 Mar 2026 01:10:05 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439ba2a5970sm17858078f8f.33.2026.03.04.01.10.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2026 01:10:05 -0800 (PST)
-Message-ID: <7b008bb8-47de-450b-823f-29d28b2366f0@linaro.org>
-Date: Wed, 4 Mar 2026 09:10:03 +0000
+        d=1e100.net; s=20230601; t=1772616636; x=1773221436;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=BUzQoESoh9/PqMSFbMpuw4Pmh5IPXiGP/qvOjxX4wwo=;
+        b=GHs3e1dm4XSk+52DzCjSA2x2VrFmrupI16kZpinPu++XZ8k+qRM3OTV+8TId+ZeRwi
+         lZaIxiSfGywGtjqe4oxHuB7Q2XECR5+nwaRzrcAkN69wmLVbbpD6XawFKv/F9PhraLWO
+         4rUxKjiEaPIHdPO66GEOAS2FbnxnnsXprxZBIhFo9BHBLpfVngGBnRM3k99VORsYNbSG
+         wYFQDO8ca57A6gBVQa49n1ye8A8ESaJwEMh9ucIou/GwYxD41pgqUgiIhGxoEKS3dBXL
+         QdrBDYQ3i32qLi53DupMij4VaAr88MqKiFYsQoioO34lZTYQLbYGdTWa4PrDiuRDQ2QA
+         SegQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXewsbDP+wzFWk4VANah9V7SmFXVGDkyyS2ygRhXBTz986EJPhnV3yVHFe/wPj4D6P2wpLoBYB5cN6kPrrHKE5A@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdpaRuRh3HkYsE1JC8QCUb4mrAGow2WwBP45GArY5BHednwF2A
+	Iry2ld8RUd2e415m33t1MUIQUdN4P9W8LMI1xLHbWeNWAr2lKbP8LMmq
+X-Gm-Gg: ATEYQzwxooHnpEklSM1xjjkFIRcCYcL5tggt1QWWrVCM0psT3ugbUGNK5EgyzFHnr1b
+	O8jHHKWuNKmEvQYMHcZIdakDrorsWv6tcvrkitpoQSkqkgCkb95/Nvsqgf5I2lG4EGatiZcgWd+
+	43ER+tiJlFJLs7vFZ/2P+nRthHl09xocjVs8g3XH8OwMRXaA+mc0bn2CYmoiTwFp6zf/wv4lhg8
+	xLBj7vU7RtK594mJQH4EZvDfNPqTfxtG7H3OrytwPdKzWy/5N0odhy8KEkgHM4g5XKUpYRneoGQ
+	p9/zt2KMlGkWPtFh8izhD1eWiW8dRbfyBAT+3aMJf56V8TpT3i/EW2Qnb9awpqnC7e8Wb5GTPAS
+	fke3Vzsi5eAXRDK37YeooK0uRaNqgS/v9PcIY9FIRV29TS6KNEpdyckoeQJcS11vkAm8bevs2qp
+	P8paJ2FO22lJIUzJQS0qxlfz7JrusVoxheYFStYNRn+GR7ILvqnB880jRJ/XaG/Nz4
+X-Received: by 2002:a05:600c:8b53:b0:483:498f:7963 with SMTP id 5b1f17b1804b1-4851989024emr19550785e9.26.1772616636117;
+        Wed, 04 Mar 2026 01:30:36 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4851884225asm38972555e9.6.2026.03.04.01.30.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2026 01:30:35 -0800 (PST)
+Date: Wed, 4 Mar 2026 09:30:33 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: NeilBrown <neilb@ownmail.net>
+Cc: "Jeff Layton" <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ nvdimm@lists.linux.dev, fsverity@lists.linux.dev, linux-mm@kvack.org,
+ netfs@lists.linux.dev, linux-ext4@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-nilfs@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-afs@lists.infradead.org, autofs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
+ ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+ jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev,
+ ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
+ linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org,
+ selinux@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org,
+ linux-x25@vger.kernel.org, audit@vger.kernel.org,
+ linux-bluetooth@vger.kernel.org, linux-can@vger.kernel.org,
+ linux-sctp@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 000/110] vfs: change inode->i_ino from unsigned long
+ to u64
+Message-ID: <20260304092559.554ac9a9@pumpkin>
+In-Reply-To: <177260561903.7472.14075475865748618717@noble.neil.brown.name>
+References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
+	<1787281.1772535332@warthog.procyon.org.uk>
+	<1c28e34c7167acf4e20c3e201476504135aa44e8.camel@kernel.org>
+	<177260561903.7472.14075475865748618717@noble.neil.brown.name>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] perf arm64: Send pointer auth masks to ring buffer
-To: Jakub Brnak <jbrnak@redhat.com>
-Cc: James Clark <james.clark@arm.com>, Leo Yan <leo.yan@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- broonie@kernel.org, acme@kernel.org, Andrew Kilroy <andrew.kilroy@arm.com>,
- Vince Weaver <vincent.weaver@maine.edu>, Mark Rutland
- <mark.rutland@arm.com>, Ingo Molnar <mingo@redhat.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- kristina.martsenko@arm.com
-References: <20221020101921.1219533-1-james.clark@arm.com>
- <20221020101921.1219533-2-james.clark@arm.com>
- <Y1F8DUWaWhlh/phL@hirez.programming.kicks-ass.net>
- <4e50b890-0588-1551-fb7c-6cd8191d1054@arm.com>
- <Y1q914IVy6XgE1xq@hirez.programming.kicks-ass.net>
- <133c2f4b-1ca5-2d0c-f4f4-e01ff5e028c8@arm.com>
- <aaW7s-ISz1QGpmqB@jbrnak-thinkpadx1carbongen9.tpbc.csb>
- <197f3d1e-5d1e-4b2d-a12b-782287eecc43@linaro.org>
- <aab9ioyUSAZ7n8Gw@jbrnak-thinkpadx1carbongen9.tpbc.csb>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <aab9ioyUSAZ7n8Gw@jbrnak-thinkpadx1carbongen9.tpbc.csb>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Wed, 04 Mar 2026 17:26:59 +1100
+NeilBrown <neilb@ownmail.net> wrote:
 
+> On Tue, 03 Mar 2026, Jeff Layton wrote:
+> > On Tue, 2026-03-03 at 10:55 +0000, David Howells wrote:  
+> > > Jeff Layton <jlayton@kernel.org> wrote:
+> > >   
+> > > > This version splits the change up to be more bisectable. It first adds a
+> > > > new kino_t typedef and a new "PRIino" macro to hold the width specifier
+> > > > for format strings. The conversion is done, and then everything is
+> > > > changed to remove the new macro and typedef.  
+> > > 
+> > > Why remove the typedef?  It might be better to keep it.
+> > >   
+> > 
+> > Why? After this change, internel kernel inodes will be u64's -- full
+> > stop. I don't see what the macro or typedef will buy us at that point.  
+> 
+> Implicit documentation?
+> ktime_t is (now) always s64, but we still keep the typedef;
+> 
+> It would be cool if we could teach vsprintf to understand some new
+> specifier to mean "kinode_t" or "ktime_t" etc.  But that would trigger
+> gcc warnings.
 
-On 03/03/2026 3:26 pm, Jakub Brnak wrote:
-> On Tue, Mar 03, 2026 at 10:38:23AM +0000, James Clark wrote:
->>
->>
->> On 02/03/2026 4:33 pm, Jakub Brnak wrote:
->>> On Mon, Oct 31, 2022 at 01:48:56PM +0000, James Clark wrote:
->>>>
->>>>
->>>> On 27/10/2022 18:20, Peter Zijlstra wrote:
->>>>> On Tue, Oct 25, 2022 at 04:28:12PM +0100, James Clark wrote:
->>>>>
->>>>>>> Why do we want the same mask repeated over and over with each sample;
->>>>>>> should this not be part of the address space (side-band) data?
->>>>>>
->>>>>> You are probably right that it could be done that way. The reason that
->>>>>> we did it this way was to be consistent with ptrace feature [1] where it
->>>>>> is delivered to userspace on a per-process basis. And there is also a
->>>>>> prctl for the enabled key types [2] which can be changed dynamically.
->>>>>> Particularly for the last reason is why it was done per sample.
->>>>>>
->>>>>> Having said that, the enabled keys field is not used by perf, only the
->>>>>> mask is used, so I can drop the per sample data until enabled keys is
->>>>>> needed, which may be never.
->>>>>>
->>>>>> I'm going to assume that perf shouldn't use ptrace because of
->>>>>> permissions and conflicts with debuggers, so I could put the mask
->>>>>> somewhere like PERF_RECORD_FORK instead of per sample.
->>>>>
->>>>> Yeah, or create an new RECORD type which you can also send around at
->>>>> prctl() time.
->>>>>
->>>>> The only thing that's needed on top of that is exposing the mask
->>>>> somewhere in /proc for existing tasks; which is what perf also uses to
->>>>> syntesize RECORD_MMAP events on startup etc..
->>>>>
->>>>
->>>> Hmm ok, in that case I can just add the /proc interface for now because
->>>> the mask won't change and we can add the new record type at the point
->>>> it's needed in the future.
->>>>
->>>> Thanks for the feedback.
->>>
->>> Hi all,
->>>
->>> Does anyone know how this issue was eventually resolved?
->>> Specifically, is the mask for the pointer authentication bits
->>> currently exposed and stored somewhere in perf.data so it can be
->>> used when running perf report?
->>>
->>> Thanks,
->>> Jakub
->>>
->>>
->>
->> Hi Jakub,
->>
->> No we never finished this, you're actually the first person to mention it.
->> Can you give a bit more detail about your use case? Maybe we can dig out the
->> old branches and work on it again.
->>
->> For a summary of the current status, frame pointer unwinds in the kernel are
->> working with pointer auth because the kernel strips them.
->>
->> We patched libunwind for support on commit f67ef2867bc5 ("Unwind with
->> pointer authentication on arm64"). And libdw on commit 0af6c7289c22
->> (libdwfl, aarch64: Demangle return addresses using a PAC mask). These two
->> were to support dwarf unwinding, but the kernel changes to expose the mask
->> and Perf changes to pass it to the unwinders were never finished.
->>
->> Thanks
->> James
->>
-> 
-> Hi James,
-> 
-> Thanks for the answer. I was investigating a failure in one of the perf tests on
-> AArch64 RHEL-10 that verifies stack unwinding using DWARF, and it was consistently
-> failing. I dug a bit deeper and discovered that DWARF unwinding in perf report does
-> not work correctly at all, and addresses polluted by PAC bits are likely the cause.
-> I stepped through the program and observed that in libdw the code path responsible for
-> masking these bits is executed, but the mask is always set to 0 and therefore has no effect.
-> During the unwinding process, there is a structure that is supposed to store the
-> mask and use it later. However, since perf constructs the unwinding context offline from samples
-> and currently does not store the mask anywhere in perf.data, there is likely a no way to propagate
-> it into that structure. It would be nice if we could push this forward.
-> 
-> Thanks,
-> Jakub
-> 
+A more interesting one would be something that made gcc re-write the
+format with the correct 'length modifier' for the parameter.
 
-Sure, I can put it back on the todo list.
+That would save a lot of effort!
+
+	David
+
+> 
+> NeilBrown
+> 
 
