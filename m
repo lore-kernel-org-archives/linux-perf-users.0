@@ -1,44 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325B7347C7;
-	Wed,  4 Mar 2026 01:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516872628D;
+	Wed,  4 Mar 2026 01:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772587190; cv=none; b=P1CsBmgTPALcIilR8UkCPMQEj86qnoKr2hpXcYCD2NGhueXDSeAf9tQ//GrLUrOVfuC6QeC6ozPqj87MhAwwlfcfNwtPpFJDl+dd570dZIn4nr6h0gBgq85z1YTA/IsKmAbbTh0e6xtTtXbV8VPhQ/+rN7fggt2a/zLomfiBY9U=
+	t=1772587526; cv=none; b=UaamAv99EERHTcmh1KlYBQltwZyBfWI0sqCtEWvJvNrLisxwRhnqsr1XwctNU7SeaDUbvhPka/rqiEtXmqSWq+qgo3n3WkUjJwjCQ3Dvb+5Y8xCFb9UHAOZ4CawV5CveZGaS/n4xC+lm1C6AJk4ih4yHdySElJ0J/243HAKN+VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772587190; c=relaxed/simple;
-	bh=wnyB+br3PBMoZEiDpOGjCShHEknV/w34s5/8riIDiz0=;
+	s=arc-20240116; t=1772587526; c=relaxed/simple;
+	bh=BtL5MdUhSoH83DNKaYf/rfXosmFsYzlmvSICrhIy78s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l2b78mR3AZdLeqcLsxUh+2BzpGP+2uT8cpPHqUZtLKZGBXWQqIugw/z8NUdCZBu6bEELv3gZvBHfDDxu982poeGolgrXbzb8ixubcvCpTUM6b6dGaTqjQ+tW0ktncg3949KPo/wt4Ju3b7XG2N9PrNHFMekk8E+XW6GUoigC7d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=teMo0CLv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=T0tbuqh3b/HkX8DTz9lAj+NpMfYG2gQP2BzyBXdV7LPSpjAiwb869vVhcfgmHlotf4DtIWGZBaEH+Qh77jKNs5+8tyNVn18kUkNOGJEjEJGaVW1LbZOvY92HQStW1apowG8+hWbypdFhQiOO9VKg5NO8q3u5kom+/t9/ckaXTr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BM0DbHbf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teMo0CLv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F58FC116C6;
-	Wed,  4 Mar 2026 01:19:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BM0DbHbf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 902B5C116C6;
+	Wed,  4 Mar 2026 01:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772587190;
-	bh=wnyB+br3PBMoZEiDpOGjCShHEknV/w34s5/8riIDiz0=;
+	s=k20201202; t=1772587525;
+	bh=BtL5MdUhSoH83DNKaYf/rfXosmFsYzlmvSICrhIy78s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=teMo0CLvUcjiKIrNBTgs6aA1rLt83qQYbfi6QQ9fLJQN0BsaTzvWx1XZr9RvWZ8/3
-	 ELnD1em6pFsGUSbqhuQ1BbJeBOuxmkH1J4s5TOjji9bX3vwkbDdGcY1sjGrrQXec3E
-	 r3f03LOxYkJ3mmLDpYSIxaD/bVDYMUhS09250pKXdxNKdQ93Z6uNeXhBpWeDVlZXEW
-	 TwjGawMi2BjB74znw981r098hUpJBRRQZvQ9SIvPjBWpOYmkKJfUEjEGBduS6w4lHF
-	 8VXM3DeaA5XkMaLyURV46FJ0JPeRRcYaKoh65zYy/piBX5eUHrP1cNOvba9LOJp85W
-	 WhtedUnxfYBFg==
-Date: Tue, 3 Mar 2026 17:19:48 -0800
+	b=BM0DbHbfTDAK+wSeShWjakQk95czx78iTT25GqEpBe3zX/8e72aPk2dG1J+sCkV15
+	 WEGdBmW+uredD7/vO0m12lZiuxUgTx3kkU2pbr6b89qNze/PQi0jwMQbKkDVlvi6Li
+	 R0NZRguKPlqbjDVCcVfU6yauh4FCKUPcVqD7M2BGtnH9OFT+v6wFs8DLbwaFXCvBwz
+	 6yRcZO1ESoyhnbAY5zsUxfUv+3Lw13/v8saw9PBU/xBPKKkv/JjSH4ez6R6rCCjYrP
+	 wivz+ZKeHhWkXl/zPsfR/MDVfm4wB48ZuYHCkdb+jaJ3gI6IL5SO1GQM0yG8kNqhgB
+	 En7nQccRhOsJw==
+Date: Tue, 3 Mar 2026 17:25:24 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Qinxin Xia <xiaqinxin@huawei.com>
-Cc: irogers@google.com, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, wangyushan12@huawei.com, hejunhao3@h-partners.com,
-	jonathan.cameron@huawei.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com
-Subject: Re: [PATCH 1/1] perf: Add --pmu-filter option for filtering PMUs
-Message-ID: <aaeItD2RYk0DZU0x@google.com>
-References: <20260225034125.2157622-1-xiaqinxin@huawei.com>
- <20260225034125.2157622-2-xiaqinxin@huawei.com>
+To: Ricky Ringler <ricky.ringler@proton.me>
+Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf utilities: cln_size header
+Message-ID: <aaeKBOolC3AyHAFa@google.com>
+References: <20260214040659.168769-2-ricky.ringler@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,196 +42,221 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260225034125.2157622-2-xiaqinxin@huawei.com>
+In-Reply-To: <20260214040659.168769-2-ricky.ringler@proton.me>
 
-On Wed, Feb 25, 2026 at 11:41:25AM +0800, Qinxin Xia wrote:
-> This patch adds a new --pmu-filter option to perf-stat command to allow
-> filtering events on specific PMUs. This is useful when there are
-> multiple PMUs with same type (e.g. hisi_sicl2_cpa0 and hisi_sicl0_cpa0).
-> 
-> perf event:
-> [root@localhost tmp]# perf stat -e cpa_cycles
->  Performance counter stats for 'system wide':
-> 
->      3,005,509,659      hisi_sicl0_cpa0/cpa_cycles/
->      3,005,502,319      hisi_sicl2_cpa0/cpa_cycles/
-> 
->        3.005460970 seconds time elapsed
-> 
-> [root@localhost tmp]# perf stat --pmu-filter hisi_sicl0_cpa0 -e cpa_cycles
->  Performance counter stats for 'system wide':
-> 
->      3,003,899,571      cpa_cycles
-> 
->        3.003864470 seconds time elapsed
+Hello,
 
-In this case, you can just use -e /hisi_sicl0_cpa0/cpa_cycles/.
+On Sat, Feb 14, 2026 at 04:07:25AM +0000, Ricky Ringler wrote:
+> Store cacheline size during perf record in header, so
+> that cacheline size can be used for other features, like
+> sort.
+> 
+> Follow-up patch from message ID "aYZiQk6Uftzlb_JV@x1"
+> 
+>  Testing:
+> - Built perf
+> - Ran record + report with feat enabled
+> - Ran record + report with feat disabled
 
-> 
-> perf metric:
-> [root@localhost tmp]# perf stat -M cpa_p0_avg_bw
->  Performance counter stats for 'system wide':
-> 
->     19,417,779,115      hisi_sicl0_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
->                  0      hisi_sicl0_cpa0/cpa_p0_wr_dat/
->                  0      hisi_sicl0_cpa0/cpa_p0_rd_dat_64b/
->                  0      hisi_sicl0_cpa0/cpa_p0_rd_dat_32b/
->     19,417,751,103      hisi_sicl10_cpa0/cpa_cycles/     #     0.00 cpa_p0_avg_bw
->                  0      hisi_sicl10_cpa0/cpa_p0_wr_dat/
->                  0      hisi_sicl10_cpa0/cpa_p0_rd_dat_64b/
->                  0      hisi_sicl10_cpa0/cpa_p0_rd_dat_32b/
->     19,417,730,679      hisi_sicl2_cpa0/cpa_cycles/      #     0.31 cpa_p0_avg_bw
->         75,635,749      hisi_sicl2_cpa0/cpa_p0_wr_dat/
->         18,520,640      hisi_sicl2_cpa0/cpa_p0_rd_dat_64b/
->                  0      hisi_sicl2_cpa0/cpa_p0_rd_dat_32b/
->     19,417,674,227      hisi_sicl8_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
->                  0      hisi_sicl8_cpa0/cpa_p0_wr_dat/
->                  0      hisi_sicl8_cpa0/cpa_p0_rd_dat_64b/
->                  0      hisi_sicl8_cpa0/cpa_p0_rd_dat_32b/
-> 
->       19.417734480 seconds time elapsed
-> 
-> [root@localhost tmp]# perf stat --pmu-filter hisi_sicl2_cpa0 -M cpa_p0_avg_bw
->  Performance counter stats for 'system wide':
-> 
->      6,234,093,559      cpa_cycles                       #     0.60 cpa_p0_avg_bw
->         50,548,465      cpa_p0_wr_dat
->          7,552,182      cpa_p0_rd_dat_64b
->                  0      cpa_p0_rd_dat_32b
-> 
->        6.234139320 seconds time elapsed
-
-But right, metrics seem to need this.  Does this support wildcard match
-for multiple PMUs?
+Sorry for the delay.  Can you please rebase this on top of the current
+perf-tools-next?  We added a couple more header features recently.
 
 Thanks,
 Namhyung
 
 > 
-> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+> Tested-by: Ricky Ringler <ricky.ringler@proton.me>
+> Signed-off-by: Ricky Ringler <ricky.ringler@proton.me>
 > ---
->  tools/perf/Documentation/perf-stat.txt |  4 ++++
->  tools/perf/builtin-stat.c              | 26 ++++++++++++++++++++++++++
->  tools/perf/util/metricgroup.c          | 18 +++++++++++++-----
->  3 files changed, 43 insertions(+), 5 deletions(-)
+>  tools/perf/builtin-inject.c |  1 +
+>  tools/perf/util/env.h       |  1 +
+>  tools/perf/util/header.c    | 29 +++++++++++++++++++++++++++++
+>  tools/perf/util/header.h    |  1 +
+>  tools/perf/util/sort.c      | 37 ++++++++++++++++++++++++++-----------
+>  5 files changed, 58 insertions(+), 11 deletions(-)
 > 
-> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-> index 7cccc3a847d1..b72a29c9223c 100644
-> --- a/tools/perf/Documentation/perf-stat.txt
-> +++ b/tools/perf/Documentation/perf-stat.txt
-> @@ -578,6 +578,10 @@ $ perf config stat.no-csv-summary=true
->  Only enable events on applying cpu with this type for hybrid platform
->  (e.g. core or atom)"
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index aa7be4fb5838..9639154459d9 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -2047,6 +2047,7 @@ static bool keep_feat(int feat)
+>  	case HEADER_CLOCK_DATA:
+>  	case HEADER_HYBRID_TOPOLOGY:
+>  	case HEADER_PMU_CAPS:
+> +	case HEADER_CLN_SIZE:
+>  		return true;
+>  	/* Information that can be updated */
+>  	case HEADER_BUILD_ID:
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index 9977b85523a8..04580c64847b 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
+> @@ -93,6 +93,7 @@ struct perf_env {
+>  	struct cpu_topology_map	*cpu;
+>  	struct cpu_cache_level	*caches;
+>  	int			 caches_cnt;
+> +	unsigned int		cln_size;
+>  	u32			comp_ratio;
+>  	u32			comp_ver;
+>  	u32			comp_type;
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index f5cad377c99e..ad15829acc69 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -54,6 +54,7 @@
+>  #include "bpf-event.h"
+>  #include "bpf-utils.h"
+>  #include "clockid.h"
+> +#include "cacheline.h"
 >  
-> +--pmu-filter::
-> +Only enable events on applying pmu with specified for multiple
-> +pmus with same type (e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)
-> +
->  EXAMPLES
->  --------
->  
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 73c2ba7e3076..67fb91816c0b 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -1214,6 +1214,28 @@ static int parse_cputype(const struct option *opt,
->  	return 0;
+>  #include <linux/ctype.h>
+>  #include <internal/lib.h>
+> @@ -1288,6 +1289,18 @@ static int write_cache(struct feat_fd *ff,
+>  	return ret;
 >  }
 >  
-> +static int parse_pmu_filter(const struct option *opt,
-> +			   const char *str,
-> +			   int unset __maybe_unused)
+> +static int write_cln_size(struct feat_fd *ff,
+> +		       struct evlist *evlist __maybe_unused)
 > +{
-> +	const struct perf_pmu *pmu;
-> +	struct evlist *evlist = *(struct evlist **)opt->value;
+> +	int cln_size = cacheline_size();
 > +
-> +	if (!list_empty(&evlist->core.entries)) {
-> +		fprintf(stderr, "Must define pmu-filter before events/metrics\n");
-> +		return -1;
-> +	}
+> +	if (!cln_size)
+> +		cln_size = 0;
+> +	ff->ph->env.cln_size = cln_size;
 > +
-> +	pmu = perf_pmus__pmu_for_pmu_filter(str);
-> +	if (!pmu) {
-> +		fprintf(stderr, "--pmu-filter %s is not supported!\n", str);
+> +	return do_write(ff, &cln_size, sizeof(cln_size));
+> +}
+> +
+>  static int write_stat(struct feat_fd *ff __maybe_unused,
+>  		      struct evlist *evlist __maybe_unused)
+>  {
+> @@ -2084,6 +2097,11 @@ static void print_cache(struct feat_fd *ff, FILE *fp __maybe_unused)
+>  	}
+>  }
+>  
+> +static void print_cln_size(struct feat_fd *ff, FILE *fp __maybe_unused)
+> +{
+> +	fprintf(fp, "# cacheline size: %u\n", ff->ph->env.cln_size);
+> +}
+> +
+>  static void print_compressed(struct feat_fd *ff, FILE *fp)
+>  {
+>  	fprintf(fp, "# compressed : %s, level = %d, ratio = %d\n",
+> @@ -2933,6 +2951,16 @@ static int process_cache(struct feat_fd *ff, void *data __maybe_unused)
+>  	return -1;
+>  }
+>  
+> +static int process_cln_size(struct feat_fd *ff, void *data __maybe_unused)
+> +{
+> +	struct perf_env *env = &ff->ph->env;
+> +
+> +	if (do_read_u32(ff, &env->cln_size))
 > +		return -1;
-> +	}
-> +	parse_events_option_args.pmu_filter = pmu->name;
 > +
 > +	return 0;
 > +}
 > +
->  static int parse_cache_level(const struct option *opt,
->  			     const char *str,
->  			     int unset __maybe_unused)
-> @@ -2561,6 +2583,10 @@ int cmd_stat(int argc, const char **argv)
->  			"Only enable events on applying cpu with this type "
->  			"for hybrid platform (e.g. core or atom)",
->  			parse_cputype),
-> +		OPT_CALLBACK(0, "pmu-filter", &evsel_list, "pmu",
-> +			"Only enable events on applying pmu with specified "
-> +			"for multiple pmus with same type(e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)",
-> +			parse_pmu_filter),
->  #ifdef HAVE_LIBPFM
->  		OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
->  			"libpfm4 event selector. use 'perf list' to list available events",
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 46bf4dfeebc8..89b83ca38483 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -387,8 +387,13 @@ static bool match_pm_metric_or_groups(const struct pmu_metric *pm, const char *p
->  				      const char *metric_or_groups)
+>  static int process_sample_time(struct feat_fd *ff, void *data __maybe_unused)
 >  {
->  	const char *pm_pmu = pm->pmu ?: "cpu";
-> +	struct perf_pmu *perf_pmu = NULL;
+>  	struct perf_session *session;
+> @@ -3453,6 +3481,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+>  	FEAT_OPR(CLOCK_DATA,	clock_data,	false),
+>  	FEAT_OPN(HYBRID_TOPOLOGY,	hybrid_topology,	true),
+>  	FEAT_OPR(PMU_CAPS,	pmu_caps,	false),
+> +	FEAT_OPR(CLN_SIZE,	cln_size,	false),
+>  };
 >  
-> -	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu))
-> +	if (pm->pmu)
-> +		perf_pmu = perf_pmus__find(pm->pmu);
+>  struct header_print_data {
+> diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+> index c058021c3150..04394331630f 100644
+> --- a/tools/perf/util/header.h
+> +++ b/tools/perf/util/header.h
+> @@ -53,6 +53,7 @@ enum {
+>  	HEADER_CLOCK_DATA,
+>  	HEADER_HYBRID_TOPOLOGY,
+>  	HEADER_PMU_CAPS,
+> +	HEADER_CLN_SIZE,
+>  	HEADER_LAST_FEATURE,
+>  	HEADER_FEAT_BITS	= 256,
+>  };
+> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> index aa79eb6476dd..e636b9f88e5c 100644
+> --- a/tools/perf/util/sort.c
+> +++ b/tools/perf/util/sort.c
+> @@ -30,6 +30,7 @@
+>  #include "time-utils.h"
+>  #include "cgroup.h"
+>  #include "machine.h"
+> +#include "session.h"
+>  #include "trace-event.h"
+>  #include <linux/kernel.h>
+>  #include <linux/string.h>
+> @@ -2474,7 +2475,26 @@ struct sort_entry sort_type_offset = {
+>  
+>  /* --sort typecln */
+>  
+> -#define DEFAULT_CACHELINE_SIZE 64
+> +static int
+> +hist_entry__cln_size(struct hist_entry *he)
+> +{
+> +	int ret = 0;
 > +
-> +	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu) &&
-> +	   (perf_pmu && !perf_pmu__name_wildcard_match(perf_pmu, pmu)))
->  		return false;
+> +	if (he && he->hists) {
+> +		struct evsel *evsel = hists_to_evsel(he->hists);
+> +
+> +		if (evsel && evsel->evlist->session && evsel->evlist->session)
+> +			ret = evsel->evlist->session->header.env.cln_size;
+> +	}
+> +
+> +	if (!ret || ret < 1) {
+> +		int default_cacheline_size = 64; // avoid div/0 later
+> +
+> +		ret = default_cacheline_size;
+> +	}
+> +
+> +	return ret;
+> +}
 >  
->  	return match_metric_or_groups(pm->metric_group, metric_or_groups) ||
-> @@ -1259,7 +1264,8 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
->  static int parse_ids(bool metric_no_merge, bool fake_pmu,
->  		     struct expr_parse_ctx *ids, const char *modifier,
->  		     bool group_events, const bool tool_events[TOOL_PMU__EVENT_MAX],
-> -		     struct evlist **out_evlist)
-> +		     struct evlist **out_evlist,
-> +		     const char *filter_pmu)
+>  static int64_t
+>  sort__typecln_sort(struct hist_entry *left, struct hist_entry *right)
+> @@ -2482,11 +2502,9 @@ sort__typecln_sort(struct hist_entry *left, struct hist_entry *right)
+>  	struct annotated_data_type *left_type = left->mem_type;
+>  	struct annotated_data_type *right_type = right->mem_type;
+>  	int64_t left_cln, right_cln;
+> +	int64_t cln_size_left = hist_entry__cln_size(left);
+> +	int64_t cln_size_right = hist_entry__cln_size(right);
+>  	int64_t ret;
+> -	int cln_size = cacheline_size();
+> -
+> -	if (cln_size == 0)
+> -		cln_size = DEFAULT_CACHELINE_SIZE;
+>  
+>  	if (!left_type) {
+>  		sort__type_init(left);
+> @@ -2502,8 +2520,8 @@ sort__typecln_sort(struct hist_entry *left, struct hist_entry *right)
+>  	if (ret)
+>  		return ret;
+>  
+> -	left_cln = left->mem_type_off / cln_size;
+> -	right_cln = right->mem_type_off / cln_size;
+> +	left_cln = left->mem_type_off / cln_size_left;
+> +	right_cln = right->mem_type_off / cln_size_right;
+>  	return left_cln - right_cln;
+>  }
+>  
+> @@ -2511,10 +2529,7 @@ static int hist_entry__typecln_snprintf(struct hist_entry *he, char *bf,
+>  				     size_t size, unsigned int width __maybe_unused)
 >  {
->  	struct parse_events_error parse_error;
->  	struct evlist *parsed_evlist;
-> @@ -1313,7 +1319,7 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
->  	}
->  	pr_debug("Parsing metric events '%s'\n", events.buf);
->  	parse_events_error__init(&parse_error);
-> -	ret = __parse_events(parsed_evlist, events.buf, /*pmu_filter=*/NULL,
-> +	ret = __parse_events(parsed_evlist, events.buf, filter_pmu,
->  			     &parse_error, fake_pmu, /*warn_if_reordered=*/false,
->  			     /*fake_tp=*/false);
->  	if (ret) {
-> @@ -1416,7 +1422,8 @@ static int parse_groups(struct evlist *perf_evlist,
->  					/*modifier=*/NULL,
->  					/*group_events=*/false,
->  					tool_events,
-> -					&combined_evlist);
-> +					&combined_evlist,
-> +					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
->  		}
->  		if (combined)
->  			expr__ctx_free(combined);
-> @@ -1471,7 +1478,8 @@ static int parse_groups(struct evlist *perf_evlist,
->  		}
->  		if (!metric_evlist) {
->  			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
-> -					m->group_events, tool_events, &m->evlist);
-> +					m->group_events, tool_events, &m->evlist,
-> +					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
->  			if (ret)
->  				goto out;
+>  	struct annotated_data_type *he_type = he->mem_type;
+> -	int cln_size = cacheline_size();
+> -
+> -	if (cln_size == 0)
+> -		cln_size = DEFAULT_CACHELINE_SIZE;
+> +	int cln_size = hist_entry__cln_size(he);
 >  
+>  	return repsep_snprintf(bf, size, "%s: cache-line %d", he_type->self.type_name,
+>  			       he->mem_type_off / cln_size);
 > -- 
-> 2.33.0
+> 2.53.0
+> 
 > 
