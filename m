@@ -1,161 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE6F3AE194;
-	Wed,  4 Mar 2026 14:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC513D3B3;
+	Wed,  4 Mar 2026 15:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772635158; cv=none; b=mvi7m0ZuNCk9ainnlvfHlkc6WbDkB/u6TUxd7JChMvBtdQzOD3kpFBMwm6CIXM0SwHBkkHs6xeOf4QAB7r3HLN9DC3UJP75QRkBZEZPMv/aZ0Lju4BlJAx4MRriI8Z6Peq+EyVyPRcv7b6hSV7bK9xzobKavDUiiILhRUc8bcU4=
+	t=1772637809; cv=none; b=A8V+vHkQ++7qkcths/WWLwC7Ge9kwfHuTaKIAVM/ti+eS+qP46XS5gT1C3/hqpDD1YJz3fA+3NOYohekBwiS4KRLTQJKyEW7bufYtusJrvssPRd3PxkSVtK36530X78B5uNLJ17m8KlsppDaBFnF1ih4zTx93YRG/Jvxf1pX2x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772635158; c=relaxed/simple;
-	bh=jpHbkjBSvqWn6OcfIJDrEntNWYvpRmD8DXYmBcL7tLY=;
+	s=arc-20240116; t=1772637809; c=relaxed/simple;
+	bh=rcjc/DA9gZY+Ogl3TohfVN9fersicpZ7aCs8n2GZi48=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IBSbAInUQAxVC+1rCeDk9wttyyFz66+6tqzjoqjSlOUlrhaC3jDUu4qOxuT/WaVBBT6vCWS1cN6bAoCSC/6qXzGi/WbggCdDGOtSBkyxDnJyY8geudd4B4aZKEfum3r1HWf4KYRSHRT7luzhxozlcYM9a+77Q73XMF8MYy2TMOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqYh3mbC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aoAroLiBHLV3Ygm9qVioqlJAzXO10hJT0iqw3qArnDv1c9byFR4fLUnwZRNwxDMlIsoMC2xa3I7Ht5O73TmHgv05JAeuVxLfIdgSOe+UScdeoI2x8s1/1n7o+PVBfk1rXsUFXSD2yHJvnXJ7qhl1Rg/1RJU8Mft+jMeQ6jiqQT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eFxzQUT2; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqYh3mbC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3438AC4CEF7;
-	Wed,  4 Mar 2026 14:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772635157;
-	bh=jpHbkjBSvqWn6OcfIJDrEntNWYvpRmD8DXYmBcL7tLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oqYh3mbC6G+LZqZcA349+DHmgVGJez+uBJZFvNa/vvofVcpmLVlfolAwovLD1kpSr
-	 wqFBelLyJhq49roMuFGDnAoU8Kmr/N3htigXB42qH4Z8tKRe8F6f8yelEAuAKKKS91
-	 ZblkvtoBp/REJT6AFsI1bCjYhRG1cHkKEMcC9nHOOwjaaPNVrWZYWUVkdqHHzu5ky9
-	 MXEqQ6fTT3evFo1axez4UodBTySB5pJ6qzg0mcofU4oMP7DoUJal/l5hF/YSkWZYjj
-	 /oXFTEF+y8aOk858fCKQPlx0d2+Q4KbkDK86cBr99e0UuMtbjCjnUb+yXPSrE45y7x
-	 qJ99426pRHing==
-Date: Wed, 4 Mar 2026 11:39:14 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Dmitrii Dolgov <9erthalion6@gmail.com>,
-	linux-perf-users@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-	Levi Zim <i@kxxt.dev>, Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-	rust-for-linux <rust-for-linux@vger.kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>
-Subject: Re: [PATCH v4] tools build: Fix rust cross compilation
-Message-ID: <aahEEkHP5g-T_tFg@x1>
-References: <20260218154800.367720-1-9erthalion6@gmail.com>
- <CAP-5=fXLNybYv08dDfAqAsDBzbOPzQY4EZQvdY0WZsfrMu9Yyg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eFxzQUT2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=rBmkKRMNxTQxuyqVoa4xSqzsld5mG9Xsk1fSIhA25UI=; b=eFxzQUT2exJ2k6tOjjObiTVqAH
+	xJN7Jj3DyfxAmk6SXAFeo1KyeLcCGDfWDtURHnA/kL7UmDI8jphHayTzyI/jNukh0fIoSlm8ctToc
+	D1pPsmzw6ed2X6SedrFc1+s2/ENIjyuVRLfxbJMiZCndzmmWjh0BZ0nClNEw43v+daBiqRCZdkKE8
+	i7I2wqpBXnkqOV85Ntaxk2LKgfzc5oQ3/QRrQM0KbccQsEaegUkTeaYuismzKnZxT64QwRZvDgIFE
+	5Z3A91MWYw3gMcgse7FWY+i8eh9vvNnYeShbVcW/AE5+yztBJF+JbZ+arG2ExvW1MMnE4eOoW2MeG
+	ZYGLlZPg==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vxo4E-00000004vOB-0h2g;
+	Wed, 04 Mar 2026 15:23:18 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A7344300666; Wed, 04 Mar 2026 16:23:16 +0100 (CET)
+Date: Wed, 4 Mar 2026 16:23:16 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Thaumy Cheng <thaumy.love@gmail.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Leo Yan <leo.yan@arm.com>, Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH v3] perf/core: Fix missing read event generation on task
+ exit
+Message-ID: <20260304152316.GO1395266@noisy.programming.kicks-ass.net>
+References: <20251024170543.11201-1-thaumy.love@gmail.com>
+ <1e6337ec-d4a0-420b-bd7b-0fd2b6fee620@linaro.org>
+ <20260206152907.GQ1395266@noisy.programming.kicks-ass.net>
+ <61e544ab-d9b9-454e-9dd7-65625d9be126@linaro.org>
+ <20260303142948.GA3698720@noisy.programming.kicks-ass.net>
+ <f0a5192a-7b6a-4c51-87e9-fc1dbf4d37df@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXLNybYv08dDfAqAsDBzbOPzQY4EZQvdY0WZsfrMu9Yyg@mail.gmail.com>
+In-Reply-To: <f0a5192a-7b6a-4c51-87e9-fc1dbf4d37df@linaro.org>
 
-On Tue, Feb 24, 2026 at 08:41:57AM -0800, Ian Rogers wrote:
-> On Wed, Feb 18, 2026 at 7:48 AM Dmitrii Dolgov <9erthalion6@gmail.com> wrote:
-> >
-> > Currently no target is specified to compile rust code when needed, which
-> > breaks cross compilation. E.g. for arm64:
-> >
-> >       LD      /tmp/build/tests/workloads/perf-test-in.o
-> >     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(code_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in generic ELF (EM: 62)
-> >     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(code_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in generic ELF (EM: 62)
-> >     [...repeated...]
-> >     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(code_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in generic ELF (EM: 62)
-> >     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a(code_with_type.code_with_type.d12f4324cb53c560-cgu.0.rcgu.o): Relocations in generic ELF (EM: 62)
-> >     aarch64-linux-gnu-ld: /tmp/build/tests/workloads/code_with_type.a: error adding symbols: file in wrong format
-> >     make[5]: *** [/perf/tools/build/Makefile.build:162: /tmp/build/tests/workloads/perf-test-in.o] Error 1
-> >     make[4]: *** [/perf/tools/build/Makefile.build:156: workloads] Error 2
-> >     make[3]: *** [/perf/tools/build/Makefile.build:156: tests] Error 2
-> >     make[2]: *** [Makefile.perf:785: /tmp/build/perf-test-in.o] Error 2
-> >     make[2]: *** Waiting for unfinished jobs....
-> >     make[1]: *** [Makefile.perf:289: sub-make] Error 2
-> >     make: *** [Makefile:76: all] Error 2
-> >
-> > Detect required target and pass it via rust_flags to the compiler.
-> >
-> > Note that CROSS_COMPILE might be different from what rust compiler
-> > expects, since it may omit the target vendor value, e.g.
-> > "aarch64-linux-gnu" instead of "aarch64-unknown-linux-gnu". Thus
-> > explicitly map supported CROSS_COMPILE values to corresponding Rust
-> > versions, as suggested by Miguel Ojeda.
-> >
-> > Tested using arm64 cross-compilation example from [1].
-> >
-> > Fixes: 2e05bb52a12 ("perf test workload: Add code_with_type test workload")
-> > Link: https://perfwiki.github.io/main/arm64-cross-compilation-dockerfile/ [1]
-> > Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
-> > ---
-> > Changes in v4
-> > - Fixed incorrect target name for riscv
-> >
-> > Changes in v3
-> > - Improved commit message, add an example of the compilation failure
-> >
-> > Changes in v2:
-> > - Map supported CROSS_COMPILE values to corresponding Rust targets
-> >
-> >
-> >  tools/build/Build.include  |  9 +++++++++
-> >  tools/perf/Makefile.config | 14 ++++++++++++++
-> >  tools/perf/Makefile.perf   |  2 +-
-> >  3 files changed, 24 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/build/Build.include b/tools/build/Build.include
-> > index e45b2eb0d24..cd0baa7a168 100644
-> > --- a/tools/build/Build.include
-> > +++ b/tools/build/Build.include
-> > @@ -98,6 +98,15 @@ c_flags_2 = $(filter-out $(CFLAGS_REMOVE_$(basetarget).o), $(c_flags_1))
-> >  c_flags   = $(filter-out $(CFLAGS_REMOVE_$(obj)), $(c_flags_2))
-> >  cxx_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(CXXFLAGS) -D"BUILD_STR(s)=\#s" $(CXXFLAGS_$(basetarget).o) $(CXXFLAGS_$(obj))
-> >
-> > +###
-> > +# Rust flags to be used on rule definition, includes:
-> > +# - global $(RUST_FLAGS)
-> > +# - per target Rust flags
-> > +# - per object Rust flags
-> > +rust_flags_1 = $(RUST_FLAGS) $(RUST_FLAGS_$(basetarget).o) $(RUST_FLAGS_$(obj))
-> > +rust_flags_2 = $(filter-out $(RUST_FLAGS_REMOVE_$(basetarget).o), $(rust_flags_1))
-> > +rust_flags   = $(filter-out $(RUST_FLAGS_REMOVE_$(obj)), $(rust_flags_2))
-> > +
-> >  ###
-> >  ## HOSTCC C flags
-> >
-> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > index a8dc72cfe48..214d8f6d9b8 100644
-> > --- a/tools/perf/Makefile.config
-> > +++ b/tools/perf/Makefile.config
-> > @@ -1163,6 +1163,20 @@ ifndef NO_RUST
-> >      CFLAGS += -DHAVE_RUST_SUPPORT
-> >      $(call detected,CONFIG_RUST_SUPPORT)
-> >    endif
-> > +
-> > +  ifneq ($(CROSS_COMPILE),)
-> > +    RUST_TARGET_FLAGS_arm      := arm-unknown-linux-gnueabi
-> > +    RUST_TARGET_FLAGS_arm64    := aarch64-unknown-linux-gnu
-> > +    RUST_TARGET_FLAGS_m68k     := m68k-unknown-linux-gnu
-> > +    RUST_TARGET_FLAGS_mips     := mipsel-unknown-linux-gnu
-> > +    RUST_TARGET_FLAGS_powerpc  := powerpc64le-unknown-linux-gnu
-> > +    RUST_TARGET_FLAGS_riscv    := riscv64gc-unknown-linux-gnu
-> > +    RUST_TARGET_FLAGS_s390     := s390x-unknown-linux-gnu
-> > +    RUST_TARGET_FLAGS_x86      := x86_64-unknown-linux-gnu
-> > +    RUST_TARGET_FLAGS_x86_64   := x86_64-unknown-linux-gnu
-> > +
-> > +    RUST_FLAGS += --target=$(RUST_TARGET_FLAGS_$(ARCH))
-> 
-> I'm wondering about lesser tested platforms like loongarch, csky,
-> xtensa but I don't know how to concoct a triple for these. I wonder if
-> there should be a test for a missing string like:
-> 
->   ifeq($(RUST_TARGET_FLAGS_$(ARCH)),)
->     $(error Unknown rust cross compilation architecture $(ARCH))
->   endif
-> 
-> other than this:
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+On Wed, Mar 04, 2026 at 11:26:10AM +0000, James Clark wrote:
 
-Thanks, applied to perf-tools, for v7.0.
+> > @@ -14564,11 +14556,21 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+> >   	 * won't get any samples after PERF_RECORD_EXIT. We can however still
+> >   	 * get a few PERF_RECORD_READ events.
+> >   	 */
+> > -	if (exit)
+> > +	if (exit) {
+> >   		perf_event_task(task, ctx, 0);
+> > -	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
+> > -		perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
+> > +		guard(raw_spinlock_irq)(&ctx->lock);
+> > +		list_for_each_entry(event, &ctx->event_list, event_entry) {
+> > +			if (event->attr.inherit_stat) {
+> > +				if (task && task != TASK_TOMBSTONE &&
+> > +				    event_filter_match(event))
+> > +					perf_event_read_event(event, task);
+> 
+> Doesn't this only work if you happened to have an event opened on every CPU?
+> Otherwise you could get rescheduled onto a core without an event and the
+> event_filter_match() will fail and you'd drop the sample read for that exit.
 
-- Arnaldo
+Yes, absolutely. But that is more or less what you get.
+
+So perf has per-task buffers and per-cpu buffers. For a simple per-task
+profile, the per-task buffer works fine. However, if you want inherited
+tasks, they can't all emit to the same buffer -- this would be a
+scalability nightmake. So in that scenario you have to have
+per-task-per-cpu events and make sure everybody emits to the local
+buffer.
+
+If you 'forget' to create an event/buffer for a particular CPU the
+task(s) can run on, you loose events the moment they end up there.
+
+There just isn't much you can do about that.
