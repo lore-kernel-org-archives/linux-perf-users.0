@@ -1,66 +1,85 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0F337EFFF
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Mar 2026 10:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F27336888
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Mar 2026 12:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772705802; cv=none; b=uZHGxuRb4j1EPJtMMerB9dSrPy6yZW36Uk5pjVNuYJbzhLLhrXrQqZVNnckjrV5iitgNafIa/ucRbzbAIgR59wME4p3dSIwEF/wsJnfOAvH/4yiy25pLszRzdu3M5u9ZpDajSzkCPJp7rV/AJGy256BkC82hfd9h4T1JyYCCTpw=
+	t=1772714751; cv=none; b=qit10xqPnyc+/P0qybzhxKTsFdUgvMgoBm/LkeHozKm9ePFhk3+ZqaIgWaZgHPAIWsh9UQ4j/IUiGTGC8OJf2ffpIRKEld46MemL9MwA+PKe/lUsWhRUJAsEyXb0vW5CDEFCsI/IkhIRO6ZODiUawa3I7ZwreDPLfr0dFFiEg1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772705802; c=relaxed/simple;
-	bh=P87hIUV2fu1mRR2HVk5KqWJ4gFQmCz73788pz19G1A0=;
+	s=arc-20240116; t=1772714751; c=relaxed/simple;
+	bh=edIqlo7BDG6ryHe7lI82URkSb6Ls8kMYck1YU1J8E1g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W6FPqYJF6FVDubztXOMcV9UTOOulvgI2pfCgkk/lUjoaMje9ggan2yjdBiMC/oR1T1Jsmiw8EzWXFn8uSPV3eGZCmm9SN2APy/Ds3tcxfoJmm2hZrBIK9JdE3nMcEz9Gk7YkfJhx2toWdTSbzAHGoiNXxfG1CP/sEIzfmnDCx7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YiYWd2in; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=aIpY+kpqANfgfktdbscg8SrP93DbdrGjcdWZfA3chJc+Pwi+krquy1pgzMlGJ7cNHiY9LhGswStjshFv7MTLkTtgJgV2TqzXdgx1OHrek3l14i2ffxa6ymNi3vdxha78SQQv5BrTiTuR7QCxZ4AZenibgIi5OB+1KAamWsdR9Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SOWBUKRc; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=qlpK8CE+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YiYWd2in"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b904e1cd038so1055641666b.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Mar 2026 02:16:38 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SOWBUKRc";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="qlpK8CE+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772714749;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8lkxI+3lOCvkC886PGfDKxPOQ08Kegpy+JUcXJYkgXA=;
+	b=SOWBUKRce6kIWv1MyUgZleDb4nVRyNebl8d3hG5ea+s4k2w4j36aUaAgLYRQJgrFfFUf+4
+	JFjeglKehjjD+8ZyOyqMZv3s/tEqsJ4Xs/y7PYgRXFytWXXJ0kZZdknK7BervQD/6k0Es0
+	1qPbCHkl0dasRNoWyWITkzRohQUd6Nc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-99-B-Jb-C15M2CJ0X3dfAWJZA-1; Thu, 05 Mar 2026 07:45:48 -0500
+X-MC-Unique: B-Jb-C15M2CJ0X3dfAWJZA-1
+X-Mimecast-MFC-AGG-ID: B-Jb-C15M2CJ0X3dfAWJZA_1772714747
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-48379489438so78378185e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Mar 2026 04:45:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1772705797; x=1773310597; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
+        d=redhat.com; s=google; t=1772714747; x=1773319547; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=e5rwWGFQhdrZCpbbLr/E+X4NwG6E0LyDnEZBwSFjBRo=;
-        b=YiYWd2in7H6wCbyeCXignc2cZLBALZSRWU9sABm7x2xZXDjllyKYz0sEr9C1mDQGCP
-         2vUfR81+WvXuo4BOm8H05lSUUo5VXZH6I06fxaT3S17pjxjmmDmhzpAk7w9w1OFUCHQm
-         RuKs6Bz0gcD23RIzF3ztVbW1esoGq6QUBpFP8mm3i/n1kqfB2KzGBzdXvoIwRTLDjhVf
-         Z1+sBxOhR/4MYjfBGuTcGmJPdyQebxwBjcftqlEbLZX77Qnlv0ZPjIOrBnaSmyT+Qfaw
-         jTH6D+Uy1FweFlw483NLi6sEWovGzotzADj0Uf+2QC2FD4GByDbu4NcMctlszAs0TCeo
-         dxAA==
+        bh=8lkxI+3lOCvkC886PGfDKxPOQ08Kegpy+JUcXJYkgXA=;
+        b=qlpK8CE+z6SiPusVJ42z3qIS5SRAuM5Wb8j/bU+mVXE+llq+wKv9b/ZFD4tNQxUCSR
+         TotHwnHRW+UsY5K7yJplslDOQcDOhdBBSuA5g/Li9ify6I/QBrDQ3IzVFrVBoU/gf+zT
+         lt6HJsmTUPnvz93r96lD2mTeG1IhLmpkMrnOlNcl0LtTSnjgJlNSp6+qjixHplc4JQ0z
+         ZvIrRLrRmHZSuEOCivuegOqIApYUbLvvuJBdulY8qbj11J09gB3KV+zFuphHFXpcoIWl
+         hYoWAOupr2TLt3QZpOq9ZI67nnJ8LM/bE31yuVa5ejTbexkPHNulWA6EmPwNG2yVI+xq
+         Bwkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772705797; x=1773310597;
-        h=content-transfer-encoding:in-reply-to:from:content-language
+        d=1e100.net; s=20230601; t=1772714747; x=1773319547;
+        h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=e5rwWGFQhdrZCpbbLr/E+X4NwG6E0LyDnEZBwSFjBRo=;
-        b=YDRteGatF9NjHDRRCzlK+M73yCD77e/9JA1Tunw1Byc25kbL7bycTGZo8my1CPYbj+
-         lzQCEQugLQE6p39X36/6ZVbjzAJMIydJ5raGXY1tUkpXKYOvSDqPzur7br4DXHrnp8/8
-         nxpMLn0a+KIp7gHDL190LQU9IDrSZUAIkgjvJnQf09noXNEMQyjGpJo60b+Mn6On2MnT
-         Ano3JEfaMyxSvakBRvflxSaesV0sYEm8uiQtMkD9tW1WerT8gblg5dTXdqcsQ3mpZIb1
-         dxE9yEC3SxhVXGLT19yE1odHAMCTUpX8sj/Pd6UFeo7pFtR2HohicTVetv67nqtIemyy
-         EZtw==
-X-Forwarded-Encrypted: i=1; AJvYcCWl5T41FjRb++zLVOw3H3urWs1nmJw5SAxoVPq4FT4LVz8B0q1llJK7pQtA4KjtP8bgAuFSVE8NCO/7IJ4RGRu3@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSUjLhXGsoMBemV1z6AEsYshB0l/uFMnjC2V19/as1A1znZjMz
-	0iNVjoDE7rVK30s5pH16+g7CiStalAK3EERffnfoCJmfQ6f+Euz9iXGPSHD49vQd7v4=
-X-Gm-Gg: ATEYQzwiPsh8bVfi22J6eRAEa6HUDN+6vlFxPLIQg69uMSXeLGI+jjFGULhZi+SwdQm
-	tJ3j2b+fMGdH/sXHYUYuWlPL3i7iqkcRUGSslkYym89lpmA0n26tXg76HnneeQviffIcpYAvL4E
-	7fbWUhBjgTfmac4/jARDLF+fAgMACtIxZEMl03w9rApyrCs04cctIVysFO7WSWPkLqeGsbCx/Z/
-	TQr8P5RDBMl7hVDD037+29M77ek50cB99T07/83O/jGsyQYIzIEK44FW+SK5iBt79FGt+63q6P8
-	79kcAU0vPBUqxsNXt/aFhczw/goxp/9h9UmPpTB7v4VpitLiEGitTdeKyayOTy+xivKZp8etXHC
-	gw5YW8Hh8ybbyvdYqlt4fG/lBforEOJn2CO6CPscSzmS3nKG0d9TcJRjfbhajsv+PnSF69IZTjM
-	RBIIuU7Zw6y9HgO078bMFWw06ZCG24
-X-Received: by 2002:a17:907:7b98:b0:b73:544d:b963 with SMTP id a640c23a62f3a-b93f11530ddmr332218266b.13.1772705796619;
-        Thu, 05 Mar 2026 02:16:36 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b935ac7371esm883072366b.24.2026.03.05.02.16.35
+        bh=8lkxI+3lOCvkC886PGfDKxPOQ08Kegpy+JUcXJYkgXA=;
+        b=c3qLpmbYJ26vA1ockL23ox0v5weYVV0uMYce9M4t7zrC3/1iVbSheNQH4FSf1KPbGN
+         HzY3hG8EWHSFCj3TeD53T+q0A/ocnNnmP2uV32Tsbm27mgX5YZOK36zhecszt3uVxQol
+         aiNbnFLQux2RU7LgM6IrQTuMdrYBsdRWwwSV0ZDiRuymLq0iw8W+t9lTcu79QwIBTXUN
+         hGDfLFyfdeRZiCgdGWmTT0xsRDz0qPmLGKDiwflP4zjdTmedeB5Vy9wm/Qct7ur7Bm2s
+         /2/8pZgcJCkQVvlYGzETTfpAGTGLp38K7WdWWIAdcKDiS8h3FIcmPxQFbP+LndYJxeod
+         Xyjw==
+X-Forwarded-Encrypted: i=1; AJvYcCWq18N7OiFf1BcLlR4D+bZjGYzCwPXTVkRHs+/MIeZPpFs7KE/c6yOmTaZKsEDkeSUZr3QNeWXTeOAi0otZcOK+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5izb+FkE1i/rrX+mcTqTGqLnPQssOJQmzgOuWYTn0+Q8cZNgV
+	ie7/Wtm6x7u435GpsuSyraeXuhdnWJf9soQLMfqLVKvlGfnTgi0wZNgjIQNfZthr2uh5/uYGNV3
+	Zzr0ZL0v9XvW0IkwtbIx8gQSXhkWBXY+sAmK97+JYkHgp9GFrd3GXvIEudANekCTNwMj79g==
+X-Gm-Gg: ATEYQzwYf1JxHbyQGyo1MemmOwRtPQBF2kPpuz7XClniMLdZ+ie6r0O3N5SKaXXpYhj
+	uXhWgEBjpwaAte2MoliFqy+FqS+fTUlSZjUUxgA35zZqqp83fz8ijF+jVGMaViNINQkK608oYF+
+	aTdIszPdzotxWymOZb9KRLZQKVwd3wuKAawhd61KwOr2oY/bM5HoJT7GIw/h6chOf+22zpbR6mW
+	BUfFpgdJ4hEjW14nv4xZPfuLR1UHTWnW8rpuxar9IBRXA5yEn5CX5vEFkwkLyk8enUxAzpyLXm4
+	M9dRYlyPE3wfxVhjDAdrQLWcm9Lgwim/Tj0J9BAyMWMdTo81Vy5aAWfo56AtjDwCtmcFLgTZ+TC
+	nfEauQcW43j5Axtzyy0HkaMmnTel1oRmCWAWPFZZaO7AY59ZuE+Xjlm73
+X-Received: by 2002:a05:600c:458d:b0:482:eec4:74c with SMTP id 5b1f17b1804b1-4851988a630mr86649845e9.22.1772714746636;
+        Thu, 05 Mar 2026 04:45:46 -0800 (PST)
+X-Received: by 2002:a05:600c:458d:b0:482:eec4:74c with SMTP id 5b1f17b1804b1-4851988a630mr86649485e9.22.1772714746130;
+        Thu, 05 Mar 2026 04:45:46 -0800 (PST)
+Received: from [192.168.0.135] (185-219-167-205-static.vivo.cz. [185.219.167.205])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4851fb33815sm80533045e9.12.2026.03.05.04.45.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2026 02:16:36 -0800 (PST)
-Message-ID: <819fa670-f6f6-4251-a528-6d8264451b9f@linaro.org>
-Date: Thu, 5 Mar 2026 10:16:34 +0000
+        Thu, 05 Mar 2026 04:45:45 -0800 (PST)
+Message-ID: <80766050-c745-411b-8ee6-8141d2cfe4ff@redhat.com>
+Date: Thu, 5 Mar 2026 13:45:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,206 +87,114 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 16/19] KVM: arm64: Add vCPU device attr to partition
- the PMU
-To: Colton Lewis <coltonlewis@google.com>
-Cc: Alexandru Elisei <alexandru.elisei@arm.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
- Shuah Khan <shuah@kernel.org>,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kvm@vger.kernel.org
-References: <20260209221414.2169465-1-coltonlewis@google.com>
- <20260209221414.2169465-17-coltonlewis@google.com>
+Subject: Re: [PATCH] powerpc, perf: Check that current->mm is alive before
+ getting user callchain
+To: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ Joe Perches <joe@perches.com>, Paul Mackerras <paulus@ozlabs.org>,
+ Benjamin Herrenschmidt <benh@kernel.crashing.org>, atrajeev@linux.ibm.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20260227082502.1882395-1-vmalik@redhat.com>
+ <aab3EW1LfDcjSzzy@linux.ibm.com>
+From: Viktor Malik <vmalik@redhat.com>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260209221414.2169465-17-coltonlewis@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <aab3EW1LfDcjSzzy@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 09/02/2026 10:14 pm, Colton Lewis wrote:
-> Add a new PMU device attr to enable the partitioned PMU for a given
-> VM. This capability can be set when the PMU is initially configured
-> before the vCPU starts running and is allowed where PMUv3 and VHE are
-> supported and the host driver was configured with
-> arm_pmuv3.reserved_host_counters.
+On 3/3/26 15:58, Saket Kumar Bhaskar wrote:
+> On Fri, Feb 27, 2026 at 09:25:02AM +0100, Viktor Malik wrote:
+>> It may happen that mm is already released, which leads to kernel panic.
+>> This adds the NULL check for current->mm, similarly to 20afc60f892d
+>> ("x86, perf: Check that current->mm is alive before getting user
+>> callchain").
+>>
+>> I was getting this panic when running a profiling BPF program
+>> (profile.py from bcc-tools):
+>>
+>>     [26215.051935] Kernel attempted to read user page (588) - exploit attempt? (uid: 0)
+>>     [26215.051950] BUG: Kernel NULL pointer dereference on read at 0x00000588
+>>     [26215.051952] Faulting instruction address: 0xc00000000020fac0
+>>     [26215.051957] Oops: Kernel access of bad area, sig: 11 [#1]
+>>     [...]
+>>     [26215.052049] Call Trace:
+>>     [26215.052050] [c000000061da6d30] [c00000000020fc10] perf_callchain_user_64+0x2d0/0x490 (unreliable)
+>>     [26215.052054] [c000000061da6dc0] [c00000000020f92c] perf_callchain_user+0x1c/0x30
+>>     [26215.052057] [c000000061da6de0] [c0000000005ab2a0] get_perf_callchain+0x100/0x360
+>>     [26215.052063] [c000000061da6e70] [c000000000573bc8] bpf_get_stackid+0x88/0xf0
+>>     [26215.052067] [c000000061da6ea0] [c008000000042258] bpf_prog_16d4ab9ab662f669_do_perf_event+0xf8/0x274
+>>     [...]
+>>
+>> Fixes: 20002ded4d93 ("perf_counter: powerpc: Add callchain support")
+>> Signed-off-by: Viktor Malik <vmalik@redhat.com>
+>> ---
+>>  arch/powerpc/perf/callchain_32.c | 3 +++
+>>  arch/powerpc/perf/callchain_64.c | 3 +++
+>>  2 files changed, 6 insertions(+)
+>>
+>> diff --git a/arch/powerpc/perf/callchain_32.c b/arch/powerpc/perf/callchain_32.c
+>> index ddcc2d8aa64a..b46e21679566 100644
+>> --- a/arch/powerpc/perf/callchain_32.c
+>> +++ b/arch/powerpc/perf/callchain_32.c
+>> @@ -144,6 +144,9 @@ void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+>>  	sp = regs->gpr[1];
+>>  	perf_callchain_store(entry, next_ip);
+>>  
+>> +	if (!current->mm)
+>> +		return;
+>> +
+>>  	while (entry->nr < entry->max_stack) {
+>>  		fp = (unsigned int __user *) (unsigned long) sp;
+>>  		if (invalid_user_sp(sp) || read_user_stack_32(fp, &next_sp))
+>> diff --git a/arch/powerpc/perf/callchain_64.c b/arch/powerpc/perf/callchain_64.c
+>> index 115d1c105e8a..eaaadd6fa81b 100644
+>> --- a/arch/powerpc/perf/callchain_64.c
+>> +++ b/arch/powerpc/perf/callchain_64.c
+>> @@ -79,6 +79,9 @@ void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+>>  	sp = regs->gpr[1];
+>>  	perf_callchain_store(entry, next_ip);
+>>  
+>> +	if (!current->mm)
+>> +		return;
+>> +
+>>  	while (entry->nr < entry->max_stack) {
+>>  		fp = (unsigned long __user *) sp;
+>>  		if (invalid_user_sp(sp) || read_user_stack_64(fp, &next_sp))
+>> -- 
+>> 2.53.0
+>>
+> Sorry, I missed adding cc list for the last conversation so adding this for reference:
 > 
-> The enabled capability is tracked by the new flag
-> KVM_ARCH_FLAG_PARTITIONED_PMU_ENABLED.
-
-Typo, should be: KVM_ARCH_FLAG_PARTITION_PMU_ENABLED. Or maybe the 
-#define should be fixed.
-
-I couldn't see if this was discussed before, but what's the reason to 
-not use the guest partition by default and make this flag control 
-reverting back to use the non passed through PMU?
-
-Seems like if you already have to enable it by creating a partition on 
-the host, then you more than likely want your guests to use it. And it's 
-lower overhead so it's "better". Right now it's two things that you have 
-to set at the same time to do one thing.
-
-Or does having to set it on the host go away with the dynamic approach 
-here [1]?
-
-[1]: https://lore.kernel.org/kvmarm/aWjlfl85vSd6sMwT@willie-the-truck/
-
+>> Wouldn't be good if we check this in perf_callchain_user() as it will
+>> cover both cases.
 > 
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> ---
->   arch/arm64/include/asm/kvm_host.h |  2 ++
->   arch/arm64/include/uapi/asm/kvm.h |  2 ++
->   arch/arm64/kvm/pmu-direct.c       | 35 ++++++++++++++++++++++++++++---
->   arch/arm64/kvm/pmu.c              | 14 +++++++++++++
->   include/kvm/arm_pmu.h             |  9 ++++++++
->   5 files changed, 59 insertions(+), 3 deletions(-)
+> to which Viktor replied:
+> I considered it but in that case, we'd also miss the top-level stack
+> frame (the perf_callchain_store call above). Other arches include it so
+> I followed the behavior for powerpc.
 > 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 41577ede0254f..f0b0a5edc7252 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -353,6 +353,8 @@ struct kvm_arch {
->   #define KVM_ARCH_FLAG_WRITABLE_IMP_ID_REGS		10
->   	/* Unhandled SEAs are taken to userspace */
->   #define KVM_ARCH_FLAG_EXIT_SEA				11
-> +	/* Partitioned PMU Enabled */
-> +#define KVM_ARCH_FLAG_PARTITION_PMU_ENABLED		12
->   	unsigned long flags;
->   
->   	/* VM-wide vCPU feature set */
-> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
-> index a792a599b9d68..3e0b7619f781d 100644
-> --- a/arch/arm64/include/uapi/asm/kvm.h
-> +++ b/arch/arm64/include/uapi/asm/kvm.h
-> @@ -436,6 +436,8 @@ enum {
->   #define   KVM_ARM_VCPU_PMU_V3_FILTER		2
->   #define   KVM_ARM_VCPU_PMU_V3_SET_PMU		3
->   #define   KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS	4
-> +#define   KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION	5
-> +
->   #define KVM_ARM_VCPU_TIMER_CTRL		1
->   #define   KVM_ARM_VCPU_TIMER_IRQ_VTIMER		0
->   #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
-> diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
-> index 6ebb59d2aa0e7..1dbf50b8891f6 100644
-> --- a/arch/arm64/kvm/pmu-direct.c
-> +++ b/arch/arm64/kvm/pmu-direct.c
-> @@ -44,8 +44,8 @@ bool kvm_pmu_is_partitioned(struct arm_pmu *pmu)
->   }
->   
->   /**
-> - * kvm_vcpu_pmu_is_partitioned() - Determine if given VCPU has a partitioned PMU
-> - * @vcpu: Pointer to kvm_vcpu struct
-> + * kvm_pmu_is_partitioned() - Determine if given VCPU has a partitioned PMU
-> + * @kvm: Pointer to kvm_vcpu struct
->    *
->    * Determine if given VCPU has a partitioned PMU by extracting that
->    * field and passing it to :c:func:`kvm_pmu_is_partitioned`
-> @@ -55,7 +55,36 @@ bool kvm_pmu_is_partitioned(struct arm_pmu *pmu)
->   bool kvm_vcpu_pmu_is_partitioned(struct kvm_vcpu *vcpu)
->   {
->   	return kvm_pmu_is_partitioned(vcpu->kvm->arch.arm_pmu) &&
-> -		false;
-> +		test_bit(KVM_ARCH_FLAG_PARTITION_PMU_ENABLED, &vcpu->kvm->arch.flags);
-> +}
-> +
-> +/**
-> + * has_kvm_pmu_partition_support() - If we can enable/disable partition
-> + *
-> + * Return: true if allowed, false otherwise.
-> + */
-> +bool has_kvm_pmu_partition_support(void)
-> +{
-> +	return has_host_pmu_partition_support() &&
-> +		kvm_supports_guest_pmuv3() &&
-> +		armv8pmu_max_guest_counters > -1;
-> +}
-> +
-> +/**
-> + * kvm_pmu_partition_enable() - Enable/disable partition flag
-> + * @kvm: Pointer to vcpu
-> + * @enable: Whether to enable or disable
-> + *
-> + * If we want to enable the partition, the guest is free to grab
-> + * hardware by accessing PMU registers. Otherwise, the host maintains
-> + * control.
-> + */
-> +void kvm_pmu_partition_enable(struct kvm *kvm, bool enable)
-> +{
-> +	if (enable)
-> +		set_bit(KVM_ARCH_FLAG_PARTITION_PMU_ENABLED, &kvm->arch.flags);
-> +	else
-> +		clear_bit(KVM_ARCH_FLAG_PARTITION_PMU_ENABLED, &kvm->arch.flags);
->   }
->   
->   /**
-> diff --git a/arch/arm64/kvm/pmu.c b/arch/arm64/kvm/pmu.c
-> index 72d5b7cb3d93e..cdf51f24fdaf3 100644
-> --- a/arch/arm64/kvm/pmu.c
-> +++ b/arch/arm64/kvm/pmu.c
-> @@ -759,6 +759,19 @@ int kvm_arm_pmu_v3_set_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
->   
->   		return kvm_arm_pmu_v3_set_nr_counters(vcpu, n);
->   	}
-> +	case KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION: {
-> +		unsigned int __user *uaddr = (unsigned int __user *)(long)attr->addr;
-> +		bool enable;
-> +
-> +		if (get_user(enable, uaddr))
-> +			return -EFAULT;
-> +
-> +		if (!has_kvm_pmu_partition_support())
-> +			return -EPERM;
-> +
-> +		kvm_pmu_partition_enable(kvm, enable);
-> +		return 0;
-> +	}
->   	case KVM_ARM_VCPU_PMU_V3_INIT:
->   		return kvm_arm_pmu_v3_init(vcpu);
->   	}
-> @@ -798,6 +811,7 @@ int kvm_arm_pmu_v3_has_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
->   	case KVM_ARM_VCPU_PMU_V3_FILTER:
->   	case KVM_ARM_VCPU_PMU_V3_SET_PMU:
->   	case KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS:
-> +	case KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION:
->   		if (kvm_vcpu_has_pmu(vcpu))
->   			return 0;
->   	}
-> diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
-> index 93586691a2790..ff898370fa63f 100644
-> --- a/include/kvm/arm_pmu.h
-> +++ b/include/kvm/arm_pmu.h
-> @@ -109,6 +109,8 @@ void kvm_pmu_load(struct kvm_vcpu *vcpu);
->   void kvm_pmu_put(struct kvm_vcpu *vcpu);
->   
->   void kvm_pmu_set_physical_access(struct kvm_vcpu *vcpu);
-> +bool has_kvm_pmu_partition_support(void);
-> +void kvm_pmu_partition_enable(struct kvm *kvm, bool enable);
->   
->   #if !defined(__KVM_NVHE_HYPERVISOR__)
->   bool kvm_vcpu_pmu_is_partitioned(struct kvm_vcpu *vcpu);
-> @@ -311,6 +313,13 @@ static inline void kvm_pmu_host_counters_enable(void) {}
->   static inline void kvm_pmu_host_counters_disable(void) {}
->   static inline void kvm_pmu_handle_guest_irq(struct arm_pmu *pmu, u64 pmovsr) {}
->   
-> +static inline bool has_kvm_pmu_partition_support(void)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline void kvm_pmu_partition_enable(struct kvm *kvm, bool enable) {}
-> +
->   #endif
->   
->   #endif
+> Viktor, agreed with your first point. I have another concern:
+> 
+> I was hitting this issue with stacktrace_build_id_nmi in bpf and
+> applied this patch https://lore.kernel.org/bpf/20260126074331.815684-1-chen.dylane@linux.dev/T/#mf901967ebe77506f1bd6e3d876c2a85824d9519d
+> 
+> Wondering if the above generic fix is working do we need to add this
+> check in powerpc specific code?
+
+I tried to apply that patch series but, unfortunately, keep getting the
+panic when running the BCC profile tool.
+
+Also, looking at the patch, it seems that it would only solve the issue
+when perf_callchain_user is called from a BPF context, however, I assume
+that it may be called from other contexts, too.
+
+Since perf_callchain_user_{32,64} are dereferencing current->mm while
+walking the stack, I think that an explicit protection against
+current->mm being NULL makes sense here, even in the presence of the
+above patch. Especially since other arches have it, too.
+
+Viktor
 
