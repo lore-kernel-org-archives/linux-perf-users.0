@@ -1,267 +1,441 @@
-Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80FD61F0995;
-	Thu,  5 Mar 2026 06:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB153368B8;
+	Thu,  5 Mar 2026 06:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772691259; cv=none; b=NT1wVPXO5Hip1TPstmlrnSIFWYylbnpB1tYdmaazOH3gWHnEq03eq6WCksiSI45g/DU3qV3RNU9BB39kSlKNbIvyOshvh38upb9V5WQA8sAfaqncl4c/yMQjzvKvShi177EkVxj/1L8Qv3y3A1hk6bGhC7PlZK9zQ+Oo6hykwyo=
+	t=1772691812; cv=none; b=b6WI5tJ82Uh0k52LjWAQrSvnrccTTOTnM8DkuZf1VCdYc0f1zUSfZEiCzWzP5W5USn9WB1DnpiHxZg5vZzXejFvuHdwUPECuh8TTQVBNx6b//8K3hegaxGV7c4MoFiLRAV0muiZ4ot/J/tJ7pZTE7fSgBWh/WDkq0oeGl4UkzBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772691259; c=relaxed/simple;
-	bh=U6CRz9ZFaosPCbXMYNCP++vpUui/e9wHOD/+bweJnuE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SLNcHwTEKZB4DYrF1xv5t+AZdXS4oCzJc5FdxLfT1drZefK4DLl4OHpqtNGJv5f6N9stdvLyVX1otYLRDXqrsX+Uynh6O8yvW7s6i0RvUa3fM3MSuDaJhK/TIHuJFUW3aLu0zY/6iqt1DZJXJFUqfreehxlT3LnPT6b1GbcIiTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=4jut2Qjl; arc=none smtp.client-ip=113.46.200.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1772691812; c=relaxed/simple;
+	bh=0d8fXfJcsSgRMttYaENb/nVpeMydNcDuGsAwLYZdQxI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N9a3dYIBtnT+nRvsRDI9HxptscCyrFvfmTKYxOnbklMx8410WSug4anv1sPFqxK5p4k+/OvKCy0n8j79a49yacK9IzNWKs8q7lVVxkYzvuon3EcadgFc+bmsd7B/korhDbv08W4e2ILN4IgM2Aea/W/XHZw8eZDnV3JxXpRv8MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GA9e5eEJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="4jut2Qjl"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=jJzj1BkLnhAoNL5+WKUdYx8gNtt4tVeCO7DclpuXOLA=;
-	b=4jut2QjlLchD5uTWnD+EdcR5A0t4PvV3cY806o7+Gy8z4SwT8xGqzC8FDv2/wh8tlxOSbSlIu
-	BUziKuGZvdzszC0H9HJ2hNSwXd3uunvAGMHknsapv+EXdF4MGHcdIfjhdzvbMcKgylA5aLnZ1ra
-	+1tH5oNyCVt7om8ec0GxU4s=
-Received: from mail.maildlp.com (unknown [172.19.162.92])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fRJz53QbqznTVx;
-	Thu,  5 Mar 2026 14:09:37 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9DA1440565;
-	Thu,  5 Mar 2026 14:14:13 +0800 (CST)
-Received: from [10.67.120.170] (10.67.120.170) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 5 Mar 2026 14:14:12 +0800
-Message-ID: <116e9d60-8031-4897-acd5-457c1fafedf8@huawei.com>
-Date: Thu, 5 Mar 2026 14:14:12 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GA9e5eEJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17AF7C116C6;
+	Thu,  5 Mar 2026 06:23:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772691811;
+	bh=0d8fXfJcsSgRMttYaENb/nVpeMydNcDuGsAwLYZdQxI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GA9e5eEJDKjlvdXJ+qdRCbkK+Eac21R51jN0whVy7rRLPFLP9zxDtjg/9OQOrD1Wc
+	 6twkkg1dVDf0VK9DfARG0jFw0vZ2XjPTd+lSH2hBi64sN6PNfyX7iOGdmwnwldgI32
+	 +Xir/v+UuwbfYID0UnzOk0wpMKPlAPgGWhiQIlzdgpwYoaSM6t40CttFaYqFLwlygj
+	 2F5Ztv87l/qn0tBUC8snU85wSumWAPEIFm5yPXnGy7+cYxBjMSi0mfXcW/sdOYQo+K
+	 OWjKUuyIEhd6exFQYXCIlBNVktWYl1jSTeDfscjP/zv/nTYThDLaIcwuxftfQCnXIs
+	 CJFoNhCy4pkFQ==
+Date: Wed, 4 Mar 2026 22:23:29 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Derek Foreman <derek.foreman@collabora.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>,
+	Anubhav Shelat <ashelat@redhat.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Hrishikesh Suresh <hrishikesh123s@gmail.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] perf header: Refactor pipe mode end marker
+ handling
+Message-ID: <aakhYWGgzyQma6dQ@z2>
+References: <20260228065953.3226283-1-irogers@google.com>
+ <20260228065953.3226283-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] perf: Add --pmu-filter option for filtering PMUs
-To: Namhyung Kim <namhyung@kernel.org>
-CC: <irogers@google.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<acme@kernel.org>, <wangyushan12@huawei.com>, <hejunhao3@h-partners.com>,
-	<jonathan.cameron@huawei.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<adrian.hunter@intel.com>
-References: <20260225034125.2157622-1-xiaqinxin@huawei.com>
- <20260225034125.2157622-2-xiaqinxin@huawei.com> <aaeItD2RYk0DZU0x@google.com>
-From: Qinxin Xia <xiaqinxin@huawei.com>
-In-Reply-To: <aaeItD2RYk0DZU0x@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemj200003.china.huawei.com (7.202.194.15)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260228065953.3226283-5-irogers@google.com>
 
+On Fri, Feb 27, 2026 at 10:59:50PM -0800, Ian Rogers wrote:
+> In non-pipe/data mode the header has a 256-bit bitmap representing
+> whether a feature is enabled or not. In pipe mode features are written
+> out in perf_event__synthesize_features as PERF_RECORD_HEADER_FEATURE
+> events with a special zero sized marker for the last feature. If a new
+> feature is added the last feature marker event appears as that feature
+> from old pipe mode perf data. As the event is zero sized it will fail
+> to be processed and generally terminate perf.
+> 
+> Add a last_feat variable to the header that in non-pipe/data mode is
+> just HEADER_LAST_FEATURE. In pipe mode compute the last_feat by
+> handling zero sized feature events, assuming they are the marker and
+> updating last_feat accordingly. Potentially a feature event could be
+> zero sized and so still process the feature event, just ignore the
+> error if it fails.
 
+Can we just use 256 instead of HEADER_LAST_FEATURE in the marker for
+the last feature record?  Then it can always know it's the last one and
+no need to save the last feature number in the header.  IIUC it only can
+handle features up to the current HEADER_LAST_FEATURE, right?
 
-On 2026/3/4 09:19:48, Namhyung Kim <namhyung@kernel.org> wrote:
-> On Wed, Feb 25, 2026 at 11:41:25AM +0800, Qinxin Xia wrote:
->> This patch adds a new --pmu-filter option to perf-stat command to allow
->> filtering events on specific PMUs. This is useful when there are
->> multiple PMUs with same type (e.g. hisi_sicl2_cpa0 and hisi_sicl0_cpa0).
->>
->> perf event:
->> [root@localhost tmp]# perf stat -e cpa_cycles
->>   Performance counter stats for 'system wide':
->>
->>       3,005,509,659      hisi_sicl0_cpa0/cpa_cycles/
->>       3,005,502,319      hisi_sicl2_cpa0/cpa_cycles/
->>
->>         3.005460970 seconds time elapsed
->>
->> [root@localhost tmp]# perf stat --pmu-filter hisi_sicl0_cpa0 -e cpa_cycles
->>   Performance counter stats for 'system wide':
->>
->>       3,003,899,571      cpa_cycles
->>
->>         3.003864470 seconds time elapsed
-> 
-> In this case, you can just use -e /hisi_sicl0_cpa0/cpa_cycles/.
-> 
-Oh, I overlooked that, thanks for pointing it out. In the next version,
-I'll delete this description in commit.
->>
->> perf metric:
->> [root@localhost tmp]# perf stat -M cpa_p0_avg_bw
->>   Performance counter stats for 'system wide':
->>
->>      19,417,779,115      hisi_sicl0_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
->>                   0      hisi_sicl0_cpa0/cpa_p0_wr_dat/
->>                   0      hisi_sicl0_cpa0/cpa_p0_rd_dat_64b/
->>                   0      hisi_sicl0_cpa0/cpa_p0_rd_dat_32b/
->>      19,417,751,103      hisi_sicl10_cpa0/cpa_cycles/     #     0.00 cpa_p0_avg_bw
->>                   0      hisi_sicl10_cpa0/cpa_p0_wr_dat/
->>                   0      hisi_sicl10_cpa0/cpa_p0_rd_dat_64b/
->>                   0      hisi_sicl10_cpa0/cpa_p0_rd_dat_32b/
->>      19,417,730,679      hisi_sicl2_cpa0/cpa_cycles/      #     0.31 cpa_p0_avg_bw
->>          75,635,749      hisi_sicl2_cpa0/cpa_p0_wr_dat/
->>          18,520,640      hisi_sicl2_cpa0/cpa_p0_rd_dat_64b/
->>                   0      hisi_sicl2_cpa0/cpa_p0_rd_dat_32b/
->>      19,417,674,227      hisi_sicl8_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
->>                   0      hisi_sicl8_cpa0/cpa_p0_wr_dat/
->>                   0      hisi_sicl8_cpa0/cpa_p0_rd_dat_64b/
->>                   0      hisi_sicl8_cpa0/cpa_p0_rd_dat_32b/
->>
->>        19.417734480 seconds time elapsed
->>
->> [root@localhost tmp]# perf stat --pmu-filter hisi_sicl2_cpa0 -M cpa_p0_avg_bw
->>   Performance counter stats for 'system wide':
->>
->>       6,234,093,559      cpa_cycles                       #     0.60 cpa_p0_avg_bw
->>          50,548,465      cpa_p0_wr_dat
->>           7,552,182      cpa_p0_rd_dat_64b
->>                   0      cpa_p0_rd_dat_32b
->>
->>         6.234139320 seconds time elapsed
-> 
-> But right, metrics seem to need this.  Does this support wildcard match
-> for multiple PMUs?
-> 
-> Thanks,
-> Namhyung
-> 
-This patch does not support wildcard match. I will try to support it in
-the next version.
-Thank you for your review.
-
->>
->> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
->> ---
->>   tools/perf/Documentation/perf-stat.txt |  4 ++++
->>   tools/perf/builtin-stat.c              | 26 ++++++++++++++++++++++++++
->>   tools/perf/util/metricgroup.c          | 18 +++++++++++++-----
->>   3 files changed, 43 insertions(+), 5 deletions(-)
->>
->> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
->> index 7cccc3a847d1..b72a29c9223c 100644
->> --- a/tools/perf/Documentation/perf-stat.txt
->> +++ b/tools/perf/Documentation/perf-stat.txt
->> @@ -578,6 +578,10 @@ $ perf config stat.no-csv-summary=true
->>   Only enable events on applying cpu with this type for hybrid platform
->>   (e.g. core or atom)"
->>   
->> +--pmu-filter::
->> +Only enable events on applying pmu with specified for multiple
->> +pmus with same type (e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)
->> +
->>   EXAMPLES
->>   --------
->>   
->> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->> index 73c2ba7e3076..67fb91816c0b 100644
->> --- a/tools/perf/builtin-stat.c
->> +++ b/tools/perf/builtin-stat.c
->> @@ -1214,6 +1214,28 @@ static int parse_cputype(const struct option *opt,
->>   	return 0;
->>   }
->>   
->> +static int parse_pmu_filter(const struct option *opt,
->> +			   const char *str,
->> +			   int unset __maybe_unused)
->> +{
->> +	const struct perf_pmu *pmu;
->> +	struct evlist *evlist = *(struct evlist **)opt->value;
->> +
->> +	if (!list_empty(&evlist->core.entries)) {
->> +		fprintf(stderr, "Must define pmu-filter before events/metrics\n");
->> +		return -1;
->> +	}
->> +
->> +	pmu = perf_pmus__pmu_for_pmu_filter(str);
->> +	if (!pmu) {
->> +		fprintf(stderr, "--pmu-filter %s is not supported!\n", str);
->> +		return -1;
->> +	}
->> +	parse_events_option_args.pmu_filter = pmu->name;
->> +
->> +	return 0;
->> +}
->> +
->>   static int parse_cache_level(const struct option *opt,
->>   			     const char *str,
->>   			     int unset __maybe_unused)
->> @@ -2561,6 +2583,10 @@ int cmd_stat(int argc, const char **argv)
->>   			"Only enable events on applying cpu with this type "
->>   			"for hybrid platform (e.g. core or atom)",
->>   			parse_cputype),
->> +		OPT_CALLBACK(0, "pmu-filter", &evsel_list, "pmu",
->> +			"Only enable events on applying pmu with specified "
->> +			"for multiple pmus with same type(e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)",
->> +			parse_pmu_filter),
->>   #ifdef HAVE_LIBPFM
->>   		OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
->>   			"libpfm4 event selector. use 'perf list' to list available events",
->> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
->> index 46bf4dfeebc8..89b83ca38483 100644
->> --- a/tools/perf/util/metricgroup.c
->> +++ b/tools/perf/util/metricgroup.c
->> @@ -387,8 +387,13 @@ static bool match_pm_metric_or_groups(const struct pmu_metric *pm, const char *p
->>   				      const char *metric_or_groups)
->>   {
->>   	const char *pm_pmu = pm->pmu ?: "cpu";
->> +	struct perf_pmu *perf_pmu = NULL;
->>   
->> -	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu))
->> +	if (pm->pmu)
->> +		perf_pmu = perf_pmus__find(pm->pmu);
->> +
->> +	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu) &&
->> +	   (perf_pmu && !perf_pmu__name_wildcard_match(perf_pmu, pmu)))
->>   		return false;
->>   
->>   	return match_metric_or_groups(pm->metric_group, metric_or_groups) ||
->> @@ -1259,7 +1264,8 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
->>   static int parse_ids(bool metric_no_merge, bool fake_pmu,
->>   		     struct expr_parse_ctx *ids, const char *modifier,
->>   		     bool group_events, const bool tool_events[TOOL_PMU__EVENT_MAX],
->> -		     struct evlist **out_evlist)
->> +		     struct evlist **out_evlist,
->> +		     const char *filter_pmu)
->>   {
->>   	struct parse_events_error parse_error;
->>   	struct evlist *parsed_evlist;
->> @@ -1313,7 +1319,7 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
->>   	}
->>   	pr_debug("Parsing metric events '%s'\n", events.buf);
->>   	parse_events_error__init(&parse_error);
->> -	ret = __parse_events(parsed_evlist, events.buf, /*pmu_filter=*/NULL,
->> +	ret = __parse_events(parsed_evlist, events.buf, filter_pmu,
->>   			     &parse_error, fake_pmu, /*warn_if_reordered=*/false,
->>   			     /*fake_tp=*/false);
->>   	if (ret) {
->> @@ -1416,7 +1422,8 @@ static int parse_groups(struct evlist *perf_evlist,
->>   					/*modifier=*/NULL,
->>   					/*group_events=*/false,
->>   					tool_events,
->> -					&combined_evlist);
->> +					&combined_evlist,
->> +					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
->>   		}
->>   		if (combined)
->>   			expr__ctx_free(combined);
->> @@ -1471,7 +1478,8 @@ static int parse_groups(struct evlist *perf_evlist,
->>   		}
->>   		if (!metric_evlist) {
->>   			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
->> -					m->group_events, tool_events, &m->evlist);
->> +					m->group_events, tool_events, &m->evlist,
->> +					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
->>   			if (ret)
->>   				goto out;
->>   
->> -- 
->> 2.33.0
->>
-> 
-
--- 
 Thanks,
-Qinxin
+Namhyung
 
+> 
+> As perf_event__process_feature can properly handle pipe mode data,
+> migrate users to it except for report that still wants to group events
+> and stop header printing with the last feature marker. Make
+> perf_event__process_feature non-fatal in the case of a newer feature
+> than this version of perf's HEADER_LAST_FEATURE, which was the
+> behavior all users wanted.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-annotate.c       | 11 +-----
+>  tools/perf/builtin-report.c         | 27 ++++++-------
+>  tools/perf/builtin-script.c         | 11 +-----
+>  tools/perf/util/data-convert-bt.c   |  9 ++---
+>  tools/perf/util/data-convert-json.c | 12 +-----
+>  tools/perf/util/header.c            | 59 ++++++++++++++++++++++-------
+>  tools/perf/util/header.h            |  4 +-
+>  tools/perf/util/intel-tpebs.c       | 11 +-----
+>  8 files changed, 67 insertions(+), 77 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index 9c27bb30b708..cf2d2011e148 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -313,15 +313,6 @@ static int process_sample_event(const struct perf_tool *tool,
+>  	return ret;
+>  }
+>  
+> -static int process_feature_event(const struct perf_tool *tool __maybe_unused,
+> -				 struct perf_session *session,
+> -				 union perf_event *event)
+> -{
+> -	if (event->feat.feat_id < HEADER_LAST_FEATURE)
+> -		return perf_event__process_feature(session, event);
+> -	return 0;
+> -}
+> -
+>  static int hist_entry__stdio_annotate(struct hist_entry *he,
+>  				    struct evsel *evsel,
+>  				    struct perf_annotate *ann)
+> @@ -876,7 +867,7 @@ int cmd_annotate(int argc, const char **argv)
+>  	annotate.tool.id_index	= perf_event__process_id_index;
+>  	annotate.tool.auxtrace_info	= perf_event__process_auxtrace_info;
+>  	annotate.tool.auxtrace	= perf_event__process_auxtrace;
+> -	annotate.tool.feature	= process_feature_event;
+> +	annotate.tool.feature	= perf_event__process_feature;
+>  	annotate.tool.ordering_requires_timestamps = true;
+>  
+>  	annotate.session = perf_session__new(&data, &annotate.tool);
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index 3b81f4b3dc49..0b9dc66723f2 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -245,25 +245,20 @@ static int process_feature_event(const struct perf_tool *tool,
+>  				 union perf_event *event)
+>  {
+>  	struct report *rep = container_of(tool, struct report, tool);
+> +	int ret = perf_event__process_feature(tool, session, event);
+>  
+> -	if (event->feat.feat_id < HEADER_LAST_FEATURE)
+> -		return perf_event__process_feature(session, event);
+> +	if (ret == 0 && event->header.size == sizeof(struct perf_record_header_feature) &&
+> +	    (int)event->feat.feat_id == session->header.last_feat) {
+> +		/*
+> +		 * (feat_id = HEADER_LAST_FEATURE) is the end marker which means
+> +		 * all features are received.
+> +		 */
+> +		if (rep->header_only)
+> +			session_done = 1;
+>  
+> -	if (event->feat.feat_id != HEADER_LAST_FEATURE) {
+> -		pr_err("failed: wrong feature ID: %" PRI_lu64 "\n",
+> -		       event->feat.feat_id);
+> -		return -1;
+> -	} else if (rep->header_only) {
+> -		session_done = 1;
+> +		setup_forced_leader(rep, session->evlist);
+>  	}
+> -
+> -	/*
+> -	 * (feat_id = HEADER_LAST_FEATURE) is the end marker which
+> -	 * means all features are received, now we can force the
+> -	 * group if needed.
+> -	 */
+> -	setup_forced_leader(rep, session->evlist);
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static int process_sample_event(const struct perf_tool *tool,
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 9f8b0fd27a0a..53f016156d7a 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -3943,15 +3943,6 @@ int process_cpu_map_event(const struct perf_tool *tool,
+>  	return set_maps(script);
+>  }
+>  
+> -static int process_feature_event(const struct perf_tool *tool __maybe_unused,
+> -				 struct perf_session *session,
+> -				 union perf_event *event)
+> -{
+> -	if (event->feat.feat_id < HEADER_LAST_FEATURE)
+> -		return perf_event__process_feature(session, event);
+> -	return 0;
+> -}
+> -
+>  static int perf_script__process_auxtrace_info(const struct perf_tool *tool,
+>  					      struct perf_session *session,
+>  					      union perf_event *event)
+> @@ -4427,7 +4418,7 @@ int cmd_script(int argc, const char **argv)
+>  #ifdef HAVE_LIBTRACEEVENT
+>  	script.tool.tracing_data	 = perf_event__process_tracing_data;
+>  #endif
+> -	script.tool.feature		 = process_feature_event;
+> +	script.tool.feature		 = perf_event__process_feature;
+>  	script.tool.build_id		 = perf_event__process_build_id;
+>  	script.tool.id_index		 = perf_event__process_id_index;
+>  	script.tool.auxtrace_info	 = perf_script__process_auxtrace_info;
+> diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+> index ba1c8e48d495..665bf8eea24b 100644
+> --- a/tools/perf/util/data-convert-bt.c
+> +++ b/tools/perf/util/data-convert-bt.c
+> @@ -1412,13 +1412,10 @@ static int process_feature_event(const struct perf_tool *tool,
+>  	struct convert *c = container_of(tool, struct convert, tool);
+>  	struct ctf_writer *cw = &c->writer;
+>  	struct perf_record_header_feature *fe = &event->feat;
+> +	int ret = perf_event__process_feature(tool, session, event);
+>  
+> -	if (event->feat.feat_id < HEADER_LAST_FEATURE) {
+> -		int ret = perf_event__process_feature(session, event);
+> -
+> -		if (ret)
+> -			return ret;
+> -	}
+> +	if (ret)
+> +		return ret;
+>  
+>  	switch (fe->feat_id) {
+>  	case HEADER_HOSTNAME:
+> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+> index 6a626322476a..4b1b2f7bed25 100644
+> --- a/tools/perf/util/data-convert-json.c
+> +++ b/tools/perf/util/data-convert-json.c
+> @@ -326,16 +326,6 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
+>  	output_json_format(out, false, 2, "]");
+>  }
+>  
+> -static int process_feature_event(const struct perf_tool *tool __maybe_unused,
+> -				 struct perf_session *session,
+> -				 union perf_event *event)
+> -{
+> -	if (event->feat.feat_id < HEADER_LAST_FEATURE)
+> -		return perf_event__process_feature(session, event);
+> -
+> -	return 0;
+> -}
+> -
+>  int bt_convert__perf2json(const char *input_name, const char *output_name,
+>  		struct perf_data_convert_opts *opts __maybe_unused)
+>  {
+> @@ -375,7 +365,7 @@ int bt_convert__perf2json(const char *input_name, const char *output_name,
+>  	c.tool.auxtrace       = perf_event__process_auxtrace;
+>  	c.tool.event_update   = perf_event__process_event_update;
+>  	c.tool.attr           = perf_event__process_attr;
+> -	c.tool.feature        = process_feature_event;
+> +	c.tool.feature        = perf_event__process_feature;
+>  	c.tool.ordering_requires_timestamps = true;
+>  
+>  	if (opts->all) {
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index fe5d21dde04f..af4b6e3e4e1f 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -3785,11 +3785,11 @@ static int perf_file_section__fprintf_info(struct perf_file_section *section,
+>  	struct feat_fd ff;
+>  
+>  	if (lseek(fd, section->offset, SEEK_SET) == (off_t)-1) {
+> -		pr_debug("Failed to lseek to %" PRIu64 " offset for feature "
+> -				"%d, continuing...\n", section->offset, feat);
+> +		pr_debug("Failed to lseek to %" PRIu64 " offset for feature %s (%d), continuing...\n",
+> +			 section->offset, header_feat__name(feat), feat);
+>  		return 0;
+>  	}
+> -	if (feat >= HEADER_LAST_FEATURE) {
+> +	if (feat >= ph->last_feat) {
+>  		pr_warning("unknown feature %d\n", feat);
+>  		return 0;
+>  	}
+> @@ -3841,7 +3841,7 @@ int perf_header__fprintf_info(struct perf_session *session, FILE *fp, bool full)
+>  		return 0;
+>  
+>  	fprintf(fp, "# missing features: ");
+> -	for_each_clear_bit(bit, header->adds_features, HEADER_LAST_FEATURE) {
+> +	for_each_clear_bit(bit, header->adds_features, header->last_feat) {
+>  		if (bit)
+>  			fprintf(fp, "%s ", feat_ops[bit].name);
+>  	}
+> @@ -4171,7 +4171,7 @@ int perf_header__process_sections(struct perf_header *header, int fd,
+>  	if (err < 0)
+>  		goto out_free;
+>  
+> -	for_each_set_bit(feat, header->adds_features, HEADER_LAST_FEATURE) {
+> +	for_each_set_bit(feat, header->adds_features, header->last_feat) {
+>  		err = process(sec++, header, feat, fd, data);
+>  		if (err < 0)
+>  			goto out_free;
+> @@ -4386,6 +4386,7 @@ int perf_file_header__read(struct perf_file_header *header,
+>  	ph->data_offset  = header->data.offset;
+>  	ph->data_size	 = header->data.size;
+>  	ph->feat_offset  = header->data.offset + header->data.size;
+> +	ph->last_feat	 = HEADER_LAST_FEATURE;
+>  	return 0;
+>  }
+>  
+> @@ -4401,8 +4402,8 @@ static int perf_file_section__process(struct perf_file_section *section,
+>  	};
+>  
+>  	if (lseek(fd, section->offset, SEEK_SET) == (off_t)-1) {
+> -		pr_debug("Failed to lseek to %" PRIu64 " offset for feature "
+> -			  "%d, continuing...\n", section->offset, feat);
+> +		pr_debug("Failed to lseek to %" PRIu64 " offset for feature %s (%d), continuing...\n",
+> +			 section->offset, header_feat__name(feat), feat);
+>  		return 0;
+>  	}
+>  
+> @@ -4435,6 +4436,8 @@ static int perf_file_header__read_pipe(struct perf_pipe_file_header *header,
+>  	if (ph->needs_swap)
+>  		header->size = bswap_64(header->size);
+>  
+> +	/* The last feature is written out as a 0 sized event and will update this value. */
+> +	ph->last_feat = 0;
+>  	return 0;
+>  }
+>  
+> @@ -4667,31 +4670,61 @@ int perf_session__read_header(struct perf_session *session)
+>  	return -ENOMEM;
+>  }
+>  
+> -int perf_event__process_feature(struct perf_session *session,
+> +int perf_event__process_feature(const struct perf_tool *tool __maybe_unused,
+> +				struct perf_session *session,
+>  				union perf_event *event)
+>  {
+>  	struct feat_fd ff = { .fd = 0 };
+>  	struct perf_record_header_feature *fe = (struct perf_record_header_feature *)event;
+> +	struct perf_header *header = &session->header;
+>  	int type = fe->header.type;
+> -	u64 feat = fe->feat_id;
+> +	int feat = (int)fe->feat_id;
+>  	int ret = 0;
+>  	bool print = dump_trace;
+> +	bool last_feature_mark = false;
+>  
+>  	if (type < 0 || type >= PERF_RECORD_HEADER_MAX) {
+>  		pr_warning("invalid record type %d in pipe-mode\n", type);
+>  		return 0;
+>  	}
+> -	if (feat == HEADER_RESERVED || feat >= HEADER_LAST_FEATURE) {
+> -		pr_warning("invalid record type %d in pipe-mode\n", type);
+> +	if (feat == HEADER_RESERVED) {
+> +		pr_warning("invalid reserved record type in pipe-mode\n");
+>  		return -1;
+>  	}
+> +	if (feat >= header->last_feat) {
+> +		if (event->header.size == sizeof(*fe)) {
+> +			/*
+> +			 * Either an unexpected zero size feature or the
+> +			 * HEADER_LAST_FEATURE mark.
+> +			 */
+> +			if (feat > header->last_feat)
+> +				header->last_feat = min(feat, HEADER_LAST_FEATURE);
+> +			last_feature_mark = true;
+> +		} else {
+> +			/*
+> +			 * A feature but beyond what is known as in
+> +			 * bounds. Assume the last feature is 1 beyond this
+> +			 * feature.
+> +			 */
+> +			session->header.last_feat = min(feat + 1, HEADER_LAST_FEATURE);
+> +		}
+> +	}
+> +	if (feat >= HEADER_LAST_FEATURE) {
+> +		if (!last_feature_mark) {
+> +			pr_warning("unknown feature %d for data file version (%s) in this version of perf (%s)\n",
+> +				   feat, header->env.version, perf_version_string);
+> +		}
+> +		return 0;
+> +	}
+>  
+>  	ff.buf  = (void *)fe->data;
+>  	ff.size = event->header.size - sizeof(*fe);
+> -	ff.ph = &session->header;
+> +	ff.ph = header;
+>  
+>  	if (feat_ops[feat].process && feat_ops[feat].process(&ff, NULL)) {
+> -		ret = -1;
+> +		// Processing failed, ignore when this is the last feature mark.
+> +		if (!last_feature_mark)
+> +			ret = -1;
+>  		goto out;
+>  	}
+>  
+> diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+> index ca22030a1434..41ce663d93ff 100644
+> --- a/tools/perf/util/header.h
+> +++ b/tools/perf/util/header.h
+> @@ -109,6 +109,7 @@ struct perf_header {
+>  	u64				data_size;
+>  	u64				feat_offset;
+>  	DECLARE_BITMAP(adds_features, HEADER_FEAT_BITS);
+> +	int				last_feat;
+>  	struct perf_env 	env;
+>  };
+>  
+> @@ -172,7 +173,8 @@ int perf_header__process_sections(struct perf_header *header, int fd,
+>  
+>  int perf_header__fprintf_info(struct perf_session *s, FILE *fp, bool full);
+>  
+> -int perf_event__process_feature(struct perf_session *session,
+> +int perf_event__process_feature(const struct perf_tool *tool,
+> +				struct perf_session *session,
+>  				union perf_event *event);
+>  int perf_event__process_attr(const struct perf_tool *tool, union perf_event *event,
+>  			     struct evlist **pevlist);
+> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+> index 3c958d738ca6..f57ea6db02a0 100644
+> --- a/tools/perf/util/intel-tpebs.c
+> +++ b/tools/perf/util/intel-tpebs.c
+> @@ -217,15 +217,6 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  	return 0;
+>  }
+>  
+> -static int process_feature_event(const struct perf_tool *tool __maybe_unused,
+> -				 struct perf_session *session,
+> -				 union perf_event *event)
+> -{
+> -	if (event->feat.feat_id < HEADER_LAST_FEATURE)
+> -		return perf_event__process_feature(session, event);
+> -	return 0;
+> -}
+> -
+>  static void *__sample_reader(void *arg __maybe_unused)
+>  {
+>  	struct perf_session *session;
+> @@ -238,7 +229,7 @@ static void *__sample_reader(void *arg __maybe_unused)
+>  
+>  	perf_tool__init(&tool, /*ordered_events=*/false);
+>  	tool.sample = process_sample_event;
+> -	tool.feature = process_feature_event;
+> +	tool.feature = perf_event__process_feature;
+>  	tool.attr = perf_event__process_attr;
+>  
+>  	session = perf_session__new(&data, &tool);
+> -- 
+> 2.53.0.473.g4a7958ca14-goog
+> 
