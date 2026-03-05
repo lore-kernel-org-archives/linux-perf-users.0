@@ -1,271 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7938F3D3CEC;
-	Thu,  5 Mar 2026 15:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148CD3E1207
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Mar 2026 17:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772725047; cv=none; b=VEmwX32JJUZx6AJw4aEJ/vjIXArUh8Qdd6MuK9oIY+OigsJ8YPAGfIZlbKFO77cSTQXQiilU1j99CiRU9m+igIeEiuduQn9ZQ4S0DVAXGphUtBW4MKc9y5z9mYkb3vGiFkoYJOyqNLh/KVXTkZPKOFZcKBYYOChTTbN6uukNyFo=
+	t=1772730825; cv=none; b=UuVVoR+uxLWqGcgYmpO+VMQjywdbIWiuQWWQU6uzz5bO9Z8gLW+YjbPJWmdetx6qETaJOXqtdfZiAEunDedv2AA974wSBr5orgB5icaNxE9QeVg/kISA30ENLm5UQVWQehoajhu7FJb/xL6fF06rEqsVC6213qXmlk5klPHC+2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772725047; c=relaxed/simple;
-	bh=gtdfbBijqUhBdwEAgJ/XmjyU1cog7CX3srrrURFT14Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QYsa2D0zC4ukgsxk5XfGRwtN9Kjgvz+vw0zUBjStGW2ktXEYX+7FfLV2t9Rju5jPQYn0VwkQP44382DbiEvvVxjCXWfa6NoWtywtxvPzf8q3psXDatbz0xPVaan46+6tQvw6ykcwUK3xF5PwWtLTOpnHQOcHagZjD3T7dF07b+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d78NbGRr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772730825; c=relaxed/simple;
+	bh=qHC00ISKgrMZfRY6dSld9netJgpoxAtIn0hM+5n3r7Q=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=lH9pNJ060fs+rAbyqGOa+cXuanwTVDUvhsla1pZ6NAXi/PMrXxsD5Nggy3r3nRhHXYsE15TY9CRti9L0hVgx/ruK8fPh5vleP6ncv/YB3PfqtbNVX4VHZaWd1D1lOMVG/nuZuYbbQy0Y5vncOsK7om/2gKfzqZHs9rfKRYE5djg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WgSst99w; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d78NbGRr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FF4EC116C6;
-	Thu,  5 Mar 2026 15:37:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772725047;
-	bh=gtdfbBijqUhBdwEAgJ/XmjyU1cog7CX3srrrURFT14Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=d78NbGRrzdjaSnAICg9jLYPM56dlz9m0ThBwDgq8Nlm40mzdwlwgFibOzwhDsORA7
-	 wL5btz4j0XS3GGkYWmBRtxXt5vPnpAu6UpTksGcWj2fOh/9sWTi+sTqnajWNmd0Le2
-	 azCTQaDPCrYm8x+Qbg4dHfxi5yh1t6iLPdAQjUlK9gQs8RgECM8xg6vVi3nk2juJy7
-	 Fdd1HL3rvXSWlXyqkfXfL5j0ViCqCsh7ms8yCEnNnB9hyUErut+bnc3sdMDbj1OHur
-	 YCHipcIjBeRIx3Y5kJj6ydPpINPqi58jvqz6uL5Nh85q+ZehEt9J0R3N9h7n4S4lMo
-	 /xnkUmX4JeJKA==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Haocheng Yu <yuhaocheng035@gmail.com>,
-	kernel test robot <lkp@intel.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.19-6.18] perf/core: Fix refcount bug and potential UAF in perf_mmap
-Date: Thu,  5 Mar 2026 10:36:58 -0500
-Message-ID: <20260305153704.106918-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260305153704.106918-1-sashal@kernel.org>
-References: <20260305153704.106918-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WgSst99w"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-35985522c1aso16715331a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Mar 2026 09:13:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772730823; x=1773335623; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=E2bUC8Oe3NfU9TjoldHhqqoJKW3UcTrvlp0nRfSmBH0=;
+        b=WgSst99wO14nPvwYGNzwVu7zFqWbhBYXbeWUh1X0bxuTonM88WDGioqoEDUAxoRsr8
+         OHF7UqxvABpSSXCjkbjmo/9agMBHB/VtlE531cP6jYYMWxxYSvqRn2TrndTK8NGWVdM8
+         ttrYauQ/XjExxfx1qcb366cvmHBi8r5lfYn94jhjX2JH6Xsy6d0fQFr3bfSLYnI/iIiA
+         4ecDP5xtksAZLg///y16BagwYqPhwP2Mh2vuxMiEF/M6cK0NhlXc9goMUHAL3OWnl2gg
+         OmFsU3cDq7QLYu8uLbH/a4BZ5GuKCaxhRSyHgwd1/6Tv+F6wYf/bkng19o8WL74fzmTw
+         oz8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772730823; x=1773335623;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E2bUC8Oe3NfU9TjoldHhqqoJKW3UcTrvlp0nRfSmBH0=;
+        b=rpW83s5h6bfxO3IhYqH8g3uw6wZ18dDmud5qng0rQXHdhTapfkeKlgqKi/LbtQ+JJn
+         SXAWQnH7eXnErk+kLh+GTbjQtqkcGkpSV2sEFVpUt/RZS3HKdVXR7p3FFM/Cqt4+pn1G
+         dNBoJP+OtMP7nqXcc87PbAHth6FMBIZBy4XJUtnbYztOYucuHL23xWkaWTTGhH2VByKy
+         dQXbzx5yCwfAsoiI4z4aIFoz9twvAHGsWyLTaf4IhWk3JrahTkvnPWfAMAnQMezDnnfI
+         KgtOQ3Zlpe5BnNCt1L3Pq0/pMx+iASI3xNaXseioUhZdqigQsxAVBglZQB2IN2V1NOIq
+         1D4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVqjCfyrADDOrvenTUQL2NgpilTRl8HQRmOh5zKp5tECYZTEHWIVVwaPjF+ZVb+qffLUhXerYVTUz8AjuuuNEPf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyscNVEZxjsyX+HRWcI6fnKiAyRlQ1KYHdH0RUa5jyAdGFS64N
+	Hr+7Qv+TZOrfZDx17svtCzBoHWw/00Id40OQGRin6k4YU6RLKVanR89EyS/rNGQKmyo64LyYOJq
+	dhS3log==
+X-Received: from pjbms20.prod.google.com ([2002:a17:90b:2354:b0:359:8d4a:7276])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:388d:b0:359:8293:67f2
+ with SMTP id 98e67ed59e1d1-359a6a7a05fmr4296177a91.32.1772730823229; Thu, 05
+ Mar 2026 09:13:43 -0800 (PST)
+Date: Thu,  5 Mar 2026 09:08:39 -0800
+In-Reply-To: <20260214012702.2368778-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.19.6
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20260214012702.2368778-1-seanjc@google.com>
+X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
+Message-ID: <177272960351.1566277.2741684808536756847.b4-ty@google.com>
+Subject: Re: [PATCH v3 00/16] KVM: x86/tdx: Have TDX handle VMXON during bringup
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Kiryl Shutsemau <kas@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
+	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Chao Gao <chao.gao@intel.com>, Xu Yilun <yilun.xu@linux.intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="utf-8"
 
-From: Haocheng Yu <yuhaocheng035@gmail.com>
+On Fri, 13 Feb 2026 17:26:46 -0800, Sean Christopherson wrote:
+> Assuming I didn't break anything between v2 and v3, I think this is ready to
+> rip.  Given the scope of the KVM changes, and that they extend outside of x86,
+> my preference is to take this through the KVM tree.  But a stable topic branch
+> in tip would work too, though I think we'd want it sooner than later so that
+> it can be used as a base.
+> 
+> Chao, I deliberately omitted your Tested-by, as I shuffled things around enough
+> while splitting up the main patch that I'm not 100% positive I didn't regress
+> anything relative to v2.
+> 
+> [...]
 
-[ Upstream commit 77de62ad3de3967818c3dbe656b7336ebee461d2 ]
+Applied to kvm-x86 vmxon, with the minor fixups.  I'll make sure not to touch
+the hashes at this point, but holler if anyone wants an "official" stable tag.
 
-Syzkaller reported a refcount_t: addition on 0; use-after-free warning
-in perf_mmap.
+[01/16] KVM: x86: Move kvm_rebooting to x86
+        https://github.com/kvm-x86/linux/commit/4059172b2a78
+[02/16] KVM: VMX: Move architectural "vmcs" and "vmcs_hdr" structures to public vmx.h
+        https://github.com/kvm-x86/linux/commit/3c75e6a5da3c
+[03/16] KVM: x86: Move "kvm_rebooting" to kernel as "virt_rebooting"
+        https://github.com/kvm-x86/linux/commit/a1450a8156c6
+[04/16] KVM: VMX: Unconditionally allocate root VMCSes during boot CPU bringup
+        https://github.com/kvm-x86/linux/commit/405b7c27934e
+[05/16] x86/virt: Force-clear X86_FEATURE_VMX if configuring root VMCS fails
+        https://github.com/kvm-x86/linux/commit/95e4adb24ff6
+[06/16] KVM: VMX: Move core VMXON enablement to kernel
+        https://github.com/kvm-x86/linux/commit/920da4f75519
+[07/16] KVM: SVM: Move core EFER.SVME enablement to kernel
+        https://github.com/kvm-x86/linux/commit/32d76cdfa122
+[08/16] KVM: x86: Move bulk of emergency virtualizaton logic to virt subsystem
+        https://github.com/kvm-x86/linux/commit/428afac5a8ea
+[09/16] x86/virt: Add refcounting of VMX/SVM usage to support multiple in-kernel users
+        https://github.com/kvm-x86/linux/commit/8528a7f9c91d
+[10/16] x86/virt/tdx: Drop the outdated requirement that TDX be enabled in IRQ context
+        https://github.com/kvm-x86/linux/commit/0efe5dc16169
+[11/16] KVM: x86/tdx: Do VMXON and TDX-Module initialization during subsys init
+        https://github.com/kvm-x86/linux/commit/165e77353831
+[12/16] x86/virt/tdx: Tag a pile of functions as __init, and globals as __ro_after_init
+        https://github.com/kvm-x86/linux/commit/9900400e20c0
+[13/16] x86/virt/tdx: KVM: Consolidate TDX CPU hotplug handling
+        https://github.com/kvm-x86/linux/commit/eac90a5ba0aa
+[14/16] x86/virt/tdx: Use ida_is_empty() to detect if any TDs may be running
+        https://github.com/kvm-x86/linux/commit/afe31de159bf
+[15/16] KVM: Bury kvm_{en,dis}able_virtualization() in kvm_main.c once more
+        https://github.com/kvm-x86/linux/commit/d30372d0b7e6
+[16/16] KVM: TDX: Fold tdx_bringup() into tdx_hardware_setup()
+        https://github.com/kvm-x86/linux/commit/f630de1f8d70
 
-The issue is caused by a race condition between a failing mmap() setup
-and a concurrent mmap() on a dependent event (e.g., using output
-redirection).
-
-In perf_mmap(), the ring_buffer (rb) is allocated and assigned to
-event->rb with the mmap_mutex held. The mutex is then released to
-perform map_range().
-
-If map_range() fails, perf_mmap_close() is called to clean up.
-However, since the mutex was dropped, another thread attaching to
-this event (via inherited events or output redirection) can acquire
-the mutex, observe the valid event->rb pointer, and attempt to
-increment its reference count. If the cleanup path has already
-dropped the reference count to zero, this results in a
-use-after-free or refcount saturation warning.
-
-Fix this by extending the scope of mmap_mutex to cover the
-map_range() call. This ensures that the ring buffer initialization
-and mapping (or cleanup on failure) happens atomically effectively,
-preventing other threads from accessing a half-initialized or
-dying ring buffer.
-
-Closes: https://lore.kernel.org/oe-kbuild-all/202602020208.m7KIjdzW-lkp@intel.com/
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Haocheng Yu <yuhaocheng035@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://patch.msgid.link/20260202162057.7237-1-yuhaocheng035@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-LLM Generated explanations, may be completely bogus:
-
-This confirms the race scenario. `perf_event_set_output()` acquires
-`output_event->mmap_mutex` and then calls `ring_buffer_get()` which
-increments the refcount. If the mmap_mutex was released after
-`perf_mmap_rb()` set `event->rb` but before cleanup on `map_range()`
-failure, another thread can observe `event->rb` and attempt to get the
-ring buffer.
-
-## Analysis
-
-### 1. COMMIT MESSAGE ANALYSIS
-The commit clearly describes a **race condition** leading to a **use-
-after-free** and **refcount saturation warning** in `perf_mmap()`. It
-was:
-- **Reported by**: kernel test robot (syzkaller-like automated testing)
-- **Signed-off by**: Peter Zijlstra (Intel), the perf subsystem
-  maintainer
-- **Link to report**: Provided via `Closes:` tag
-
-### 2. CODE CHANGE ANALYSIS
-The fix is **purely a scope change** - it extends the existing
-`scoped_guard(mutex, &event->mmap_mutex)` to cover the `map_range()`
-call and associated cleanup. Specifically:
-
-**Before**: The mutex was released at line 7191 (closing brace of
-`scoped_guard`), then `vm_flags_set()`, `mapped()` callback, and
-`map_range()` all ran without the mutex. If `map_range()` failed and
-`perf_mmap_close()` was called, a concurrent thread could race in
-between.
-
-**After**: All of `vm_flags_set()`, `mapped()`, `map_range()`, and
-`perf_mmap_close()` (on failure) run inside the `scoped_guard`, closing
-the race window.
-
-The race scenario:
-1. Thread A: acquires `mmap_mutex`, allocates rb, assigns `event->rb`,
-   releases mutex
-2. Thread B: acquires `mmap_mutex`, sees valid `event->rb`, calls
-   `ring_buffer_get()` (refcount increment)
-3. Thread A: `map_range()` fails, calls `perf_mmap_close()` which drops
-   refcount to 0
-4. Thread B: now holds a reference to a freed ring buffer → UAF
-
-### 3. CLASSIFICATION
-- **Bug type**: Race condition → use-after-free / refcount corruption
-- **Severity**: HIGH - UAF is a security-class bug (exploitable from
-  userspace via perf syscall)
-- **Subsystem**: perf/core - widely used, security-sensitive subsystem
-
-### 4. SCOPE AND RISK
-- **Size**: 1 file, 38 lines changed (19 insertions, 19 deletions) -
-  essentially indentation changes moving code into the existing
-  scoped_guard block
-- **Risk**: LOW - the fix simply holds a mutex for longer, covering
-  operations that logically should have been protected. The only risk is
-  holding the mutex across `map_range()`, but `map_range()` doesn't take
-  any conflicting locks.
-- **Regression potential**: Minimal - holding a mutex slightly longer
-  might theoretically increase contention, but `perf_mmap()` is not a
-  hot path (called during mmap setup, not during data collection)
-
-### 5. USER IMPACT
-- perf is used by virtually all Linux deployments for profiling
-- The race can be triggered from userspace with concurrent mmap
-  operations
-- Found by automated fuzzing (kernel test robot), meaning it's reachable
-
-### 6. DEPENDENCIES
-- **Requires**: `scoped_guard` for mmap_mutex (commit d23a6dbc0a717, in
-  v6.18+) - **present in 6.19.y**
-- **Requires**: `map_range()` and `perf_mmap_close()` on failure path
-  (commit f74b9f4ba63ff, in v6.17+) - **present in 6.19.y**
-- For older stable trees (6.17.y, 6.12.y, etc.), this would need
-  adaptation since the `scoped_guard` pattern and `map_range()` function
-  may not exist. The underlying race exists but the fix would need to be
-  written differently.
-
-### 7. STABILITY
-- Signed-off by Peter Zijlstra, the perf maintainer
-- Already merged into mainline (v7.0 merge window)
-- Clean, minimal change with clear logic
-
-### Verification
-
-- **git log showed** commit 77de62ad3de39 exists and is authored by
-  Haocheng Yu, signed by Peter Zijlstra (Intel) - **verified**
-- **git merge-base** confirmed the commit is NOT yet in the 6.19.y
-  stable tree (HEAD = v6.19.6) - **verified**
-- **git merge-base** confirmed prerequisite d23a6dbc0a717 (scoped_guard)
-  IS in 6.19.y - **verified**
-- **git merge-base** confirmed prerequisite f74b9f4ba63ff (map_range
-  fail handling) IS in 6.19.y - **verified**
-- **Read of current perf_mmap()** (lines 7145-7215) confirmed the race
-  window: scoped_guard closes at line 7191, then map_range() at line
-  7210 is unprotected - **verified**
-- **Read of perf_event_set_output()** (lines 13320-13389) confirmed
-  concurrent path: acquires mmap_mutex, calls ring_buffer_get() on
-  output_event's rb - **verified as concurrent accessor**
-- **git show --stat** confirmed 1 file changed, 19 insertions/19
-  deletions - **verified minimal scope**
-- **git tag --contains** confirmed scoped_guard was first in v6.18,
-  map_range fix first in v6.17 - older stable trees would need different
-  backport approach - **verified**
-
-### Conclusion
-
-This is a textbook stable backport candidate:
-- Fixes a **use-after-free** race condition (security-class bug)
-- Found by automated testing (reproducible)
-- Signed off by the subsystem maintainer
-- Minimal, surgical fix (scope extension of existing mutex)
-- Low regression risk
-- Applies cleanly to 6.19.y (prerequisites present)
-- Core subsystem (perf) with broad user impact
-
-**YES**
-
- kernel/events/core.c | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 69c56cad88a89..c0bb657e28e31 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7188,28 +7188,28 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
- 			ret = perf_mmap_aux(vma, event, nr_pages);
- 		if (ret)
- 			return ret;
--	}
- 
--	/*
--	 * Since pinned accounting is per vm we cannot allow fork() to copy our
--	 * vma.
--	 */
--	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
--	vma->vm_ops = &perf_mmap_vmops;
-+		/*
-+		 * Since pinned accounting is per vm we cannot allow fork() to copy our
-+		 * vma.
-+		 */
-+		vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
-+		vma->vm_ops = &perf_mmap_vmops;
- 
--	mapped = get_mapped(event, event_mapped);
--	if (mapped)
--		mapped(event, vma->vm_mm);
-+		mapped = get_mapped(event, event_mapped);
-+		if (mapped)
-+			mapped(event, vma->vm_mm);
- 
--	/*
--	 * Try to map it into the page table. On fail, invoke
--	 * perf_mmap_close() to undo the above, as the callsite expects
--	 * full cleanup in this case and therefore does not invoke
--	 * vmops::close().
--	 */
--	ret = map_range(event->rb, vma);
--	if (ret)
--		perf_mmap_close(vma);
-+		/*
-+		 * Try to map it into the page table. On fail, invoke
-+		 * perf_mmap_close() to undo the above, as the callsite expects
-+		 * full cleanup in this case and therefore does not invoke
-+		 * vmops::close().
-+		 */
-+		ret = map_range(event->rb, vma);
-+		if (ret)
-+			perf_mmap_close(vma);
-+	}
- 
- 	return ret;
- }
--- 
-2.51.0
-
+--
+https://github.com/kvm-x86/linux/tree/next
