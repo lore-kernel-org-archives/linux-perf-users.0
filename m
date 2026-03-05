@@ -1,186 +1,271 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260483A7F6E;
-	Thu,  5 Mar 2026 14:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7938F3D3CEC;
+	Thu,  5 Mar 2026 15:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772720745; cv=none; b=MQ3cv50hn6gfs+15TGW6UGE6A8zpIQgU02th+qKYo+eOzbqEFTjmDmx5yGGl5j1p3nJ26JdVAJ+CGliUtCKcqoiEbxG5eecja27IebdUQwrpsKFIVz6lsDueojzf0mFD0QqzSlTzlUApSl+8xQ7qiFVBOMdqsp8i3Md2MMaELTk=
+	t=1772725047; cv=none; b=VEmwX32JJUZx6AJw4aEJ/vjIXArUh8Qdd6MuK9oIY+OigsJ8YPAGfIZlbKFO77cSTQXQiilU1j99CiRU9m+igIeEiuduQn9ZQ4S0DVAXGphUtBW4MKc9y5z9mYkb3vGiFkoYJOyqNLh/KVXTkZPKOFZcKBYYOChTTbN6uukNyFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772720745; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AoWs93sJMlT32P4cjGOVTGkLesR/bxcqDAF5tY7h6QI2nP9Tx9gu5+LPBNk9lhesm3EspHj4Bs9qtOKTGjwZzTHauEy7UBXjTxzb8GU1r/K4Fith8Q5i4BLMBEPPxZmlYhyuAt747/eKCHXs+/24uJ/7QtY10R9mD4Lkd1j0gVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=N/OnFzWa; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1772725047; c=relaxed/simple;
+	bh=gtdfbBijqUhBdwEAgJ/XmjyU1cog7CX3srrrURFT14Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QYsa2D0zC4ukgsxk5XfGRwtN9Kjgvz+vw0zUBjStGW2ktXEYX+7FfLV2t9Rju5jPQYn0VwkQP44382DbiEvvVxjCXWfa6NoWtywtxvPzf8q3psXDatbz0xPVaan46+6tQvw6ykcwUK3xF5PwWtLTOpnHQOcHagZjD3T7dF07b+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d78NbGRr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N/OnFzWa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=N/OnFzWa9k33Gb8WoaORaZf8/1
-	omQzMxzv7AKB0iGBOiFBTlfDd8cv/SFY2cN/xlhCF9LD4axDr458b3KkJDHIqY9jaYSeX0Iuke/ea
-	ruLhr6C+ymLhOMKavxBklyL56gQe5kOFHaR9GqikFPQ4+YspElC14XRfWh6kM52omEOHgMpsSREro
-	y5uto1k++Slfwuo7nq2YzlvQFOIu0vNsS5w8AUmDYAa3V8L257/vRobIemRsPwt43jEH4dMBKvjE9
-	qvJU8j7WutreciL7iwRXCEmJf59WsaeHF8hGB2PcyqrdNOf6OBCyjpqgu7qzQ+34Omj2U+HU1z4kP
-	lBT6VZKQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vy9dP-00000001z65-3qix;
-	Thu, 05 Mar 2026 14:25:03 +0000
-Date: Thu, 5 Mar 2026 06:25:03 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	"Theodore Y. Ts'o" <tytso@mit.edu>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Steve French <sfrench@samba.org>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Bharath SM <bharathsm@microsoft.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	David Sterba <dsterba@suse.com>,
-	Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>,
-	Luis de Bethencourt <luisbg@kernel.org>,
-	Salah Triki <salah.triki@gmail.com>,
-	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Alex Markuze <amarkuze@redhat.com>,
-	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-	Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Yangtao Li <frank.li@vivo.com>,
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Dave Kleikamp <shaggy@kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Johannes Thumshirn <jth@kernel.org>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Willem de Bruijn <willemb@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Martin Schiller <ms@dev.tdt.de>, Eric Paris <eparis@redhat.com>,
-	Joerg Reuter <jreuter@yaina.de>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Oliver Hartkopp <socketcan@hartkopp.net>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	David Ahern <dsahern@kernel.org>,
-	Neal Cardwell <ncardwell@google.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
-	autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-	linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-hams@vger.kernel.org, linux-x25@vger.kernel.org,
-	audit@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-can@vger.kernel.org, linux-sctp@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v3 12/12] treewide: change inode->i_ino from unsigned
- long to u64
-Message-ID: <aamSP0KKicK3dvIf@infradead.org>
-References: <20260304-iino-u64-v3-0-2257ad83d372@kernel.org>
- <20260304-iino-u64-v3-12-2257ad83d372@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d78NbGRr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FF4EC116C6;
+	Thu,  5 Mar 2026 15:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772725047;
+	bh=gtdfbBijqUhBdwEAgJ/XmjyU1cog7CX3srrrURFT14Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=d78NbGRrzdjaSnAICg9jLYPM56dlz9m0ThBwDgq8Nlm40mzdwlwgFibOzwhDsORA7
+	 wL5btz4j0XS3GGkYWmBRtxXt5vPnpAu6UpTksGcWj2fOh/9sWTi+sTqnajWNmd0Le2
+	 azCTQaDPCrYm8x+Qbg4dHfxi5yh1t6iLPdAQjUlK9gQs8RgECM8xg6vVi3nk2juJy7
+	 Fdd1HL3rvXSWlXyqkfXfL5j0ViCqCsh7ms8yCEnNnB9hyUErut+bnc3sdMDbj1OHur
+	 YCHipcIjBeRIx3Y5kJj6ydPpINPqi58jvqz6uL5Nh85q+ZehEt9J0R3N9h7n4S4lMo
+	 /xnkUmX4JeJKA==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Haocheng Yu <yuhaocheng035@gmail.com>,
+	kernel test robot <lkp@intel.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.19-6.18] perf/core: Fix refcount bug and potential UAF in perf_mmap
+Date: Thu,  5 Mar 2026 10:36:58 -0500
+Message-ID: <20260305153704.106918-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260305153704.106918-1-sashal@kernel.org>
+References: <20260305153704.106918-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260304-iino-u64-v3-12-2257ad83d372@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.19.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Looks good:
+From: Haocheng Yu <yuhaocheng035@gmail.com>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+[ Upstream commit 77de62ad3de3967818c3dbe656b7336ebee461d2 ]
+
+Syzkaller reported a refcount_t: addition on 0; use-after-free warning
+in perf_mmap.
+
+The issue is caused by a race condition between a failing mmap() setup
+and a concurrent mmap() on a dependent event (e.g., using output
+redirection).
+
+In perf_mmap(), the ring_buffer (rb) is allocated and assigned to
+event->rb with the mmap_mutex held. The mutex is then released to
+perform map_range().
+
+If map_range() fails, perf_mmap_close() is called to clean up.
+However, since the mutex was dropped, another thread attaching to
+this event (via inherited events or output redirection) can acquire
+the mutex, observe the valid event->rb pointer, and attempt to
+increment its reference count. If the cleanup path has already
+dropped the reference count to zero, this results in a
+use-after-free or refcount saturation warning.
+
+Fix this by extending the scope of mmap_mutex to cover the
+map_range() call. This ensures that the ring buffer initialization
+and mapping (or cleanup on failure) happens atomically effectively,
+preventing other threads from accessing a half-initialized or
+dying ring buffer.
+
+Closes: https://lore.kernel.org/oe-kbuild-all/202602020208.m7KIjdzW-lkp@intel.com/
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Haocheng Yu <yuhaocheng035@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://patch.msgid.link/20260202162057.7237-1-yuhaocheng035@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+
+LLM Generated explanations, may be completely bogus:
+
+This confirms the race scenario. `perf_event_set_output()` acquires
+`output_event->mmap_mutex` and then calls `ring_buffer_get()` which
+increments the refcount. If the mmap_mutex was released after
+`perf_mmap_rb()` set `event->rb` but before cleanup on `map_range()`
+failure, another thread can observe `event->rb` and attempt to get the
+ring buffer.
+
+## Analysis
+
+### 1. COMMIT MESSAGE ANALYSIS
+The commit clearly describes a **race condition** leading to a **use-
+after-free** and **refcount saturation warning** in `perf_mmap()`. It
+was:
+- **Reported by**: kernel test robot (syzkaller-like automated testing)
+- **Signed-off by**: Peter Zijlstra (Intel), the perf subsystem
+  maintainer
+- **Link to report**: Provided via `Closes:` tag
+
+### 2. CODE CHANGE ANALYSIS
+The fix is **purely a scope change** - it extends the existing
+`scoped_guard(mutex, &event->mmap_mutex)` to cover the `map_range()`
+call and associated cleanup. Specifically:
+
+**Before**: The mutex was released at line 7191 (closing brace of
+`scoped_guard`), then `vm_flags_set()`, `mapped()` callback, and
+`map_range()` all ran without the mutex. If `map_range()` failed and
+`perf_mmap_close()` was called, a concurrent thread could race in
+between.
+
+**After**: All of `vm_flags_set()`, `mapped()`, `map_range()`, and
+`perf_mmap_close()` (on failure) run inside the `scoped_guard`, closing
+the race window.
+
+The race scenario:
+1. Thread A: acquires `mmap_mutex`, allocates rb, assigns `event->rb`,
+   releases mutex
+2. Thread B: acquires `mmap_mutex`, sees valid `event->rb`, calls
+   `ring_buffer_get()` (refcount increment)
+3. Thread A: `map_range()` fails, calls `perf_mmap_close()` which drops
+   refcount to 0
+4. Thread B: now holds a reference to a freed ring buffer → UAF
+
+### 3. CLASSIFICATION
+- **Bug type**: Race condition → use-after-free / refcount corruption
+- **Severity**: HIGH - UAF is a security-class bug (exploitable from
+  userspace via perf syscall)
+- **Subsystem**: perf/core - widely used, security-sensitive subsystem
+
+### 4. SCOPE AND RISK
+- **Size**: 1 file, 38 lines changed (19 insertions, 19 deletions) -
+  essentially indentation changes moving code into the existing
+  scoped_guard block
+- **Risk**: LOW - the fix simply holds a mutex for longer, covering
+  operations that logically should have been protected. The only risk is
+  holding the mutex across `map_range()`, but `map_range()` doesn't take
+  any conflicting locks.
+- **Regression potential**: Minimal - holding a mutex slightly longer
+  might theoretically increase contention, but `perf_mmap()` is not a
+  hot path (called during mmap setup, not during data collection)
+
+### 5. USER IMPACT
+- perf is used by virtually all Linux deployments for profiling
+- The race can be triggered from userspace with concurrent mmap
+  operations
+- Found by automated fuzzing (kernel test robot), meaning it's reachable
+
+### 6. DEPENDENCIES
+- **Requires**: `scoped_guard` for mmap_mutex (commit d23a6dbc0a717, in
+  v6.18+) - **present in 6.19.y**
+- **Requires**: `map_range()` and `perf_mmap_close()` on failure path
+  (commit f74b9f4ba63ff, in v6.17+) - **present in 6.19.y**
+- For older stable trees (6.17.y, 6.12.y, etc.), this would need
+  adaptation since the `scoped_guard` pattern and `map_range()` function
+  may not exist. The underlying race exists but the fix would need to be
+  written differently.
+
+### 7. STABILITY
+- Signed-off by Peter Zijlstra, the perf maintainer
+- Already merged into mainline (v7.0 merge window)
+- Clean, minimal change with clear logic
+
+### Verification
+
+- **git log showed** commit 77de62ad3de39 exists and is authored by
+  Haocheng Yu, signed by Peter Zijlstra (Intel) - **verified**
+- **git merge-base** confirmed the commit is NOT yet in the 6.19.y
+  stable tree (HEAD = v6.19.6) - **verified**
+- **git merge-base** confirmed prerequisite d23a6dbc0a717 (scoped_guard)
+  IS in 6.19.y - **verified**
+- **git merge-base** confirmed prerequisite f74b9f4ba63ff (map_range
+  fail handling) IS in 6.19.y - **verified**
+- **Read of current perf_mmap()** (lines 7145-7215) confirmed the race
+  window: scoped_guard closes at line 7191, then map_range() at line
+  7210 is unprotected - **verified**
+- **Read of perf_event_set_output()** (lines 13320-13389) confirmed
+  concurrent path: acquires mmap_mutex, calls ring_buffer_get() on
+  output_event's rb - **verified as concurrent accessor**
+- **git show --stat** confirmed 1 file changed, 19 insertions/19
+  deletions - **verified minimal scope**
+- **git tag --contains** confirmed scoped_guard was first in v6.18,
+  map_range fix first in v6.17 - older stable trees would need different
+  backport approach - **verified**
+
+### Conclusion
+
+This is a textbook stable backport candidate:
+- Fixes a **use-after-free** race condition (security-class bug)
+- Found by automated testing (reproducible)
+- Signed off by the subsystem maintainer
+- Minimal, surgical fix (scope extension of existing mutex)
+- Low regression risk
+- Applies cleanly to 6.19.y (prerequisites present)
+- Core subsystem (perf) with broad user impact
+
+**YES**
+
+ kernel/events/core.c | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 69c56cad88a89..c0bb657e28e31 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7188,28 +7188,28 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 			ret = perf_mmap_aux(vma, event, nr_pages);
+ 		if (ret)
+ 			return ret;
+-	}
+ 
+-	/*
+-	 * Since pinned accounting is per vm we cannot allow fork() to copy our
+-	 * vma.
+-	 */
+-	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
+-	vma->vm_ops = &perf_mmap_vmops;
++		/*
++		 * Since pinned accounting is per vm we cannot allow fork() to copy our
++		 * vma.
++		 */
++		vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
++		vma->vm_ops = &perf_mmap_vmops;
+ 
+-	mapped = get_mapped(event, event_mapped);
+-	if (mapped)
+-		mapped(event, vma->vm_mm);
++		mapped = get_mapped(event, event_mapped);
++		if (mapped)
++			mapped(event, vma->vm_mm);
+ 
+-	/*
+-	 * Try to map it into the page table. On fail, invoke
+-	 * perf_mmap_close() to undo the above, as the callsite expects
+-	 * full cleanup in this case and therefore does not invoke
+-	 * vmops::close().
+-	 */
+-	ret = map_range(event->rb, vma);
+-	if (ret)
+-		perf_mmap_close(vma);
++		/*
++		 * Try to map it into the page table. On fail, invoke
++		 * perf_mmap_close() to undo the above, as the callsite expects
++		 * full cleanup in this case and therefore does not invoke
++		 * vmops::close().
++		 */
++		ret = map_range(event->rb, vma);
++		if (ret)
++			perf_mmap_close(vma);
++	}
+ 
+ 	return ret;
+ }
+-- 
+2.51.0
 
