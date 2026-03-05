@@ -1,225 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7397E2C21F4;
-	Thu,  5 Mar 2026 21:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E78C33D502
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Mar 2026 22:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772745740; cv=none; b=PjmiuyAAhnXRmQCFiPxCP3cUv9BJfAlzVxRggULeLjhSVu8b61rf9D8fNW6MSH82cL/3FX2va78YRuJG3tJLz8UPmi0HkuJ4DNMw3TEraFi0M6Z8MT2yWSXVlzZTs0X9eHYY81R31t8RPUkZrh+Sw14J8/QifPYzDR60mOcavZU=
+	t=1772749181; cv=none; b=GG2M+3qO5R/1DUo7gJ+YWCfSRdgaHCIj1jzO9khfMiRoCJ9Rqf5QDe9YQFL2xRvIJMq5Fvori284H9fCWPxsqRfwFsfT4Gs+Qa6IxvCtSLoMj4IB0WHQfu1hetOJi6d69rFMupwRTxJPI6/U9mOYSobhtZVsVggMKd1Y2M9mTBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772745740; c=relaxed/simple;
-	bh=OXXE4RUJw+TnCUdSP3DZ/XtM0ObRg1jiprd0LOaBVnU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZMSi4O/C/+yP5q0o6I+MRIYbA7FoGClS1XtYdtiKYNxbZmffNwjZeXXDa1r4D81/TDVNOZZxbSTZrnzeMrFfX6IGDDZFNwdLVRkRig78dfv2V8vv4awKFuucF09o3w0JdNNerXwPkvSsWeBZJPWSDf1lTaSG1rJiJlXmSPFVjb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NzdISaeV; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1772749181; c=relaxed/simple;
+	bh=r4BkxTgoKBfeSLRF+4AZrbL50z8jtJ5iUznfs4uAWhk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mEGZK3Qx19EmcJXGg1cGNHPxloE4yC0Qlt8RvD+AaUJHN4LvlldxS4UJCoZP+qKsal95xHBjmhLciCAXhCf4nKKRETu6ea22uxBsT9wfUUBTY6hhpS9OgM7kXcLlGpldx6Pddb7OcQVygKOLTgZWf7653mpAWW16y6jUWJmsiBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DST6+wUV; arc=none smtp.client-ip=74.125.82.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NzdISaeV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772745740; x=1804281740;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=OXXE4RUJw+TnCUdSP3DZ/XtM0ObRg1jiprd0LOaBVnU=;
-  b=NzdISaeV0nOPuueWaHH/SZAp1swsawcxoIu/SVootLwO/q18vWZXc9S0
-   o/faYsBJDeU5oQJJZwNTY4v1h7NMLIDdrrENux6jbj11i4AEzX/VVbqvo
-   vm/nrelL+ub4C0U2ZVx482RJx7Hc3cgJA+/vJI9HqNmfnW4BtPY3qD4ys
-   0W+xYHA89VtRWrRHl2AANnmOG9SCdSaeSRk8fFJER8070Txkhkn2WqVKD
-   8XhEtJCpwFbK9tG01hRL8bo3MoQeSrrx9KFkXnlGh3mV0bJSmIkvNsbrL
-   IzXNjpUzla7qCjZMhbZNDk0/Zs2xHmKQ8IDxSm2sYLwjYGrK6R/bLJ2Wj
-   g==;
-X-CSE-ConnectionGUID: kS9MC8fARW+qO7w34frWWg==
-X-CSE-MsgGUID: HRItaxVwRRKm4s2YOvwGtg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11720"; a="85320379"
-X-IronPort-AV: E=Sophos;i="6.23,103,1770624000"; 
-   d="scan'208";a="85320379"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2026 13:22:19 -0800
-X-CSE-ConnectionGUID: tE+1CR8HSzq5XsJe7Jmoew==
-X-CSE-MsgGUID: JMgg7HNgS6e1B36G3XG+7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,103,1770624000"; 
-   d="scan'208";a="223295218"
-Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2026 13:22:20 -0800
-Received: from ray2.jf.intel.com (unknown [10.24.81.183])
-	by smtp.ostc.intel.com (Postfix) with ESMTP id D584C6362;
-	Thu,  5 Mar 2026 13:22:18 -0800 (PST)
-From: Dave Hansen <dave.hansen@linux.intel.com>
-To: linux-kernel@vger.kernel.org
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Boqun Feng <boqun@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	linux-perf-users@vger.kernel.org,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Waiman Long <longman@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	x86@kernel.org
-Subject: [PATCH] MAINTAINERS: Add references to tip tree handbook
-Date: Thu,  5 Mar 2026 13:22:15 -0800
-Message-ID: <20260305212215.3188399-1-dave.hansen@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DST6+wUV"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1275c6fc58aso16316975c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Mar 2026 14:19:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772749179; x=1773353979; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XwuczH7zeef+TPhZgFlCxU0vVFk4yo7TmGdzaIH3pVk=;
+        b=DST6+wUVfTCcNcrfYbo7HMrpnxsDm/w9speSOV6F+G7xe4qkwUdU0SgcB9Lr11MIrF
+         wR6gsEJNuv7h95fjnBU/uc7MWMpR6eTC6/bG8M7LGzd95KoYfl9Q5sMPGM1v1iiaGfN6
+         L7JPbudq9iQlzfYp3gRRlXgH8EDVt5EEC3/eIl4rx0/ATigeI2zz4/jsBnbUq0LtnZOM
+         qC7r+Yvc3bseE5Hjk0IIxFWfqmRQRBQrq3/j48lQUWLbb6m1ydKMigRldAY/P3HU0zTv
+         mwCJvd0mN2a6AVtqYASq1og4INEQN1hnQbU8DEvbD1bpCSXMlSxAPzDbxcOpHk7AGTMG
+         G+oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772749179; x=1773353979;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XwuczH7zeef+TPhZgFlCxU0vVFk4yo7TmGdzaIH3pVk=;
+        b=NNSBN1voncXW1QXaTwue93wAem+O4hs12difRZ63cjnY4j5bKr3kO7mfhBTo72Zogl
+         aHa4NoWiDD0Tz8hYWFKL8vVVlEdaS97wVrsgqBGxRaNauQDlvdm2KboVFGWeegngSuH8
+         ToRbWMeRmwgKqf5ki+jxyj8OHAIhW+OkQ2CjOBcPWgtS7eyUF3TADJzW8W1C5+NGogaY
+         cNn+qtwoQvh2SyyHVUveJWIXSwKFGbTFn8Jt9wgSgScCGZ2ommXpuz6Z5LgLKCLi33H8
+         G4jlhKOwhRHXT5IE3mPk9Aucze/6+ljNiD21uImqIShTQ9/NsOnwuIg3yRksDPuiPUym
+         59hg==
+X-Forwarded-Encrypted: i=1; AJvYcCWumhX0M95PXwnFlHAPUV9M11PZjTzWnbGqb0a3VwkxideJLcUCKIq7dE4FnV3WOiQcS47CQgXJD+NAufwOSOI7@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvKIyn6TexmztgClbRMne63DRPJk9pvWJDPyuxdD1UDaKggJQ4
+	dTYZiElLhZBCYVK8DFzpWb7lwywzLYhlTXBkdcIRQ5nL/VOzCNF3EvSqI3uoyzKzdNHAI8doon0
+	qvfSRn4Cudw==
+X-Received: from dlbov3.prod.google.com ([2002:a05:7022:1183:b0:127:1508:19ae])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6ba9:b0:128:bec5:1b37
+ with SMTP id a92af1059eb24-128c2df7d50mr14489c88.16.1772749179209; Thu, 05
+ Mar 2026 14:19:39 -0800 (PST)
+Date: Thu,  5 Mar 2026 14:19:19 -0800
+In-Reply-To: <CAP-5=fWVU3ktkGAnZQrjQJf+Z5AtQo73BVUhj-nr3H95GdcEJQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <CAP-5=fWVU3ktkGAnZQrjQJf+Z5AtQo73BVUhj-nr3H95GdcEJQ@mail.gmail.com>
+X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
+Message-ID: <20260305221927.3237145-1-irogers@google.com>
+Subject: [PATCH v2 0/8] perf libunwind multiple remote support
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com
+Cc: 9erthalion6@gmail.com, acme@kernel.org, adrian.hunter@intel.com, 
+	alex@ghiti.fr, alexander.shishkin@linux.intel.com, 
+	andrew.jones@oss.qualcomm.com, aou@eecs.berkeley.edu, atrajeev@linux.ibm.com, 
+	blakejones@google.com, ctshao@google.com, dapeng1.mi@linux.intel.com, 
+	howardchu95@gmail.com, james.clark@linaro.org, john.g.garry@oracle.com, 
+	jolsa@kernel.org, leo.yan@linux.dev, libunwind-devel@nongnu.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	mingo@redhat.com, namhyung@kernel.org, palmer@dabbelt.com, 
+	peterz@infradead.org, pjw@kernel.org, shimin.guo@skydio.com, 
+	tglozar@redhat.com, tmricht@linux.ibm.com, will@kernel.org, yuzhuo@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-The tip tree handbook is a pretty handy reference for keeping the
-various tip maintainers happy. But there are no references to it
-in the MAINTAINERS file.
+Fix the libunwind build for when libdw and libunwind are feature
+detected, currently failing with a duplicate symbol.
 
-Add a references to the handbook for a number of subsystems. I've
-added these for all of the obvious subsystems that list T:.../tip.git
-and are likely to follow the tip rules.
+Refactor the libunwind support so that whenever a remote target is
+available, perf functions using the ELF machine can use that remote
+target regardless of what the host/local machine is. Migrate existing
+libunwind supported architectures like powerpc, arm64 and loongarch so
+that they can work in a cross-architecture way. Add support for
+RISC-V. Make the code more regular in function names, etc. and avoid
+including a C-file. This increases the lines of code. It is similar in
+style to the unwind-libdw implementation. It is hoped that the more
+uniform nature of the code with help with refactoring the perf
+registers for SIMD/APX support.
 
-This will be useful both for humans digging in the MAINTAINERS file
-and our new AI bot overlords.
+Aside from local host testing these patches are under tested, in part
+as I'm failing to see how to build libunwind with support for multiple
+remote targets. Please could I get help in testing.
 
-I'm cc'ing all the M:'s and L:'s listed for the subsystems but leaving
-off the R:'s because the cc list is already out of control. I'll
-commit this to *some* tip branch if there's general consensus that
-this is a good idea.
+v2: Move two fixes patches to position 1 and 2 in the series. Fix
+    struct naming inconsistency, Andrew Jones
+    <andrew.jones@oss.qualcomm.com>. Fix other inconsistencies and
+    potential non-x86 build issues.
 
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Boqun Feng <boqun@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Daniel Lezcano <daniel.lezcano@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: x86@kernel.org
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+v1: https://lore.kernel.org/lkml/20260224142938.26088-1-irogers@google.com/
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 61bf550fd37c2..3e852a5babf77 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6283,6 +6283,7 @@ M:	Daniel Lezcano <daniel.lezcano@kernel.org>
- M:	Thomas Gleixner <tglx@kernel.org>
- L:	linux-kernel@vger.kernel.org
- S:	Supported
-+P:	Documentation/process/maintainer-tip.rst
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
- F:	Documentation/devicetree/bindings/timer/
- F:	drivers/clocksource/
-@@ -6657,6 +6658,7 @@ M:	Thomas Gleixner <tglx@kernel.org>
- M:	Peter Zijlstra <peterz@infradead.org>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
-+P:	Documentation/process/maintainer-tip.rst
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git smp/core
- F:	include/linux/cpu.h
- F:	include/linux/cpuhotplug.h
-@@ -7085,6 +7087,7 @@ DEBUGOBJECTS:
- M:	Thomas Gleixner <tglx@kernel.org>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
-+P:	Documentation/process/maintainer-tip.rst
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core/debugobjects
- F:	include/linux/debugobjects.h
- F:	lib/debugobjects.c
-@@ -10656,6 +10659,7 @@ M:	Peter Zijlstra <peterz@infradead.org>
- M:	Andy Lutomirski <luto@kernel.org>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
-+P:	Documentation/process/maintainer-tip.rst
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core/entry
- F:	include/linux/entry-common.h
- F:	include/linux/entry-virt.h
-@@ -13494,6 +13498,7 @@ F:	sound/soc/codecs/sma*
- IRQ DOMAINS (IRQ NUMBER MAPPING LIBRARY)
- M:	Thomas Gleixner <tglx@kernel.org>
- S:	Maintained
-+P:	Documentation/process/maintainer-tip.rst
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
- F:	Documentation/core-api/irq/irq-domain.rst
- F:	include/linux/irqdomain.h
-@@ -13505,6 +13510,7 @@ IRQ SUBSYSTEM
- M:	Thomas Gleixner <tglx@kernel.org>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
-+P:	Documentation/process/maintainer-tip.rst
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
- F:	include/linux/group_cpus.h
- F:	include/linux/irq.h
-@@ -13518,6 +13524,7 @@ IRQCHIP DRIVERS
- M:	Thomas Gleixner <tglx@kernel.org>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
-+P:	Documentation/process/maintainer-tip.rst
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
- F:	Documentation/devicetree/bindings/interrupt-controller/
- F:	drivers/irqchip/
-@@ -14888,6 +14895,7 @@ M:	Boqun Feng <boqun@kernel.org> (LOCKDEP & RUST)
- R:	Waiman Long <longman@redhat.com>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
-+P:	Documentation/process/maintainer-tip.rst
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/core
- F:	Documentation/locking/
- F:	arch/*/include/asm/spinlock*.h
-@@ -20694,6 +20702,7 @@ L:	linux-perf-users@vger.kernel.org
- L:	linux-kernel@vger.kernel.org
- S:	Supported
- W:	https://perf.wiki.kernel.org/
-+P:	Documentation/process/maintainer-tip.rst
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git perf-tools
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
-@@ -21005,6 +21014,7 @@ M:	Frederic Weisbecker <frederic@kernel.org>
- M:	Thomas Gleixner <tglx@kernel.org>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
-+P:	Documentation/process/maintainer-tip.rst
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
- F:	fs/timerfd.c
- F:	include/linux/time_namespace.h
-@@ -23671,6 +23681,7 @@ R:	Mel Gorman <mgorman@suse.de> (CONFIG_NUMA_BALANCING)
- R:	Valentin Schneider <vschneid@redhat.com> (TOPOLOGY)
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
-+P:	Documentation/process/maintainer-tip.rst
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
- F:	include/linux/preempt.h
- F:	include/linux/sched.h
-@@ -28555,6 +28566,7 @@ M:	x86@kernel.org
- R:	"H. Peter Anvin" <hpa@zytor.com>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
-+P:	Documentation/process/maintainer-tip.rst
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
- F:	Documentation/arch/x86/
- F:	Documentation/devicetree/bindings/x86/
+Ian Rogers (8):
+  perf unwind: Refactor get_entries to allow dynamic libdw/libunwind
+    selection
+  perf build loongarch: Remove reference to missing file
+  tools build: Deduplicate test-libunwind for different architectures
+  perf build: Be more programmatic when setting up libunwind variables
+  perf unwind-libunwind: Make libunwind register reading cross platform
+  perf unwind-libunwind: Move flush/finish access out of local
+  perf unwind-libunwind: Remove libunwind-local
+  perf unwind-libunwind: Add RISC-V libunwind support
+
+ tools/build/feature/Makefile                  |  38 +-
+ tools/build/feature/test-libunwind-aarch64.c  |  27 -
+ tools/build/feature/test-libunwind-arm.c      |  28 -
+ .../test-libunwind-debug-frame-aarch64.c      |  17 -
+ .../feature/test-libunwind-debug-frame-arm.c  |  17 -
+ .../feature/test-libunwind-debug-frame.c      |   1 -
+ tools/build/feature/test-libunwind-x86.c      |  28 -
+ tools/build/feature/test-libunwind-x86_64.c   |  28 -
+ tools/build/feature/test-libunwind.c          |   1 -
+ tools/perf/Makefile.config                    | 215 ++---
+ tools/perf/arch/arm/util/Build                |   2 -
+ tools/perf/arch/arm/util/unwind-libunwind.c   |  50 --
+ tools/perf/arch/arm64/util/Build              |   1 -
+ tools/perf/arch/arm64/util/unwind-libunwind.c |  17 -
+ tools/perf/arch/loongarch/util/Build          |   3 -
+ .../arch/loongarch/util/unwind-libunwind.c    |  82 --
+ tools/perf/arch/mips/Build                    |   1 -
+ tools/perf/arch/mips/util/Build               |   1 -
+ tools/perf/arch/mips/util/unwind-libunwind.c  |  22 -
+ tools/perf/arch/powerpc/util/Build            |   1 -
+ .../perf/arch/powerpc/util/unwind-libunwind.c |  92 --
+ tools/perf/arch/x86/util/Build                |   3 -
+ tools/perf/arch/x86/util/unwind-libunwind.c   | 115 ---
+ tools/perf/builtin-inject.c                   |   4 +
+ tools/perf/builtin-report.c                   |   4 +
+ tools/perf/builtin-script.c                   |   4 +
+ tools/perf/util/Build                         |   5 +-
+ tools/perf/util/libunwind-arch/Build          |  11 +
+ .../perf/util/libunwind-arch/libunwind-arch.c | 319 +++++++
+ .../perf/util/libunwind-arch/libunwind-arch.h | 296 +++++++
+ .../perf/util/libunwind-arch/libunwind-arm.c  | 290 ++++++
+ .../util/libunwind-arch/libunwind-arm64.c     | 289 ++++++
+ .../perf/util/libunwind-arch/libunwind-i386.c | 312 +++++++
+ .../util/libunwind-arch/libunwind-loongarch.c | 297 +++++++
+ .../perf/util/libunwind-arch/libunwind-mips.c | 299 +++++++
+ .../util/libunwind-arch/libunwind-ppc32.c     | 301 +++++++
+ .../util/libunwind-arch/libunwind-ppc64.c     | 303 +++++++
+ .../util/libunwind-arch/libunwind-riscv.c     | 297 +++++++
+ .../perf/util/libunwind-arch/libunwind-s390.c | 299 +++++++
+ .../util/libunwind-arch/libunwind-x86_64.c    | 320 +++++++
+ tools/perf/util/libunwind/arm64.c             |  40 -
+ tools/perf/util/libunwind/x86_32.c            |  41 -
+ tools/perf/util/maps.c                        |  29 +-
+ tools/perf/util/maps.h                        |   4 +-
+ tools/perf/util/symbol_conf.h                 |  15 +
+ tools/perf/util/thread.c                      |  29 +-
+ tools/perf/util/unwind-libdw.c                |   2 +-
+ tools/perf/util/unwind-libunwind-local.c      | 832 ------------------
+ tools/perf/util/unwind-libunwind.c            | 679 ++++++++++++--
+ tools/perf/util/unwind.c                      | 102 +++
+ tools/perf/util/unwind.h                      |  56 +-
+ 51 files changed, 4536 insertions(+), 1733 deletions(-)
+ delete mode 100644 tools/build/feature/test-libunwind-aarch64.c
+ delete mode 100644 tools/build/feature/test-libunwind-arm.c
+ delete mode 100644 tools/build/feature/test-libunwind-debug-frame-aarch64.c
+ delete mode 100644 tools/build/feature/test-libunwind-debug-frame-arm.c
+ delete mode 100644 tools/build/feature/test-libunwind-x86.c
+ delete mode 100644 tools/build/feature/test-libunwind-x86_64.c
+ delete mode 100644 tools/perf/arch/arm/util/unwind-libunwind.c
+ delete mode 100644 tools/perf/arch/arm64/util/unwind-libunwind.c
+ delete mode 100644 tools/perf/arch/loongarch/util/unwind-libunwind.c
+ delete mode 100644 tools/perf/arch/mips/Build
+ delete mode 100644 tools/perf/arch/mips/util/Build
+ delete mode 100644 tools/perf/arch/mips/util/unwind-libunwind.c
+ delete mode 100644 tools/perf/arch/powerpc/util/unwind-libunwind.c
+ delete mode 100644 tools/perf/arch/x86/util/unwind-libunwind.c
+ create mode 100644 tools/perf/util/libunwind-arch/Build
+ create mode 100644 tools/perf/util/libunwind-arch/libunwind-arch.c
+ create mode 100644 tools/perf/util/libunwind-arch/libunwind-arch.h
+ create mode 100644 tools/perf/util/libunwind-arch/libunwind-arm.c
+ create mode 100644 tools/perf/util/libunwind-arch/libunwind-arm64.c
+ create mode 100644 tools/perf/util/libunwind-arch/libunwind-i386.c
+ create mode 100644 tools/perf/util/libunwind-arch/libunwind-loongarch.c
+ create mode 100644 tools/perf/util/libunwind-arch/libunwind-mips.c
+ create mode 100644 tools/perf/util/libunwind-arch/libunwind-ppc32.c
+ create mode 100644 tools/perf/util/libunwind-arch/libunwind-ppc64.c
+ create mode 100644 tools/perf/util/libunwind-arch/libunwind-riscv.c
+ create mode 100644 tools/perf/util/libunwind-arch/libunwind-s390.c
+ create mode 100644 tools/perf/util/libunwind-arch/libunwind-x86_64.c
+ delete mode 100644 tools/perf/util/libunwind/arm64.c
+ delete mode 100644 tools/perf/util/libunwind/x86_32.c
+ delete mode 100644 tools/perf/util/unwind-libunwind-local.c
+ create mode 100644 tools/perf/util/unwind.c
+
 -- 
-2.43.0
+2.53.0.473.g4a7958ca14-goog
 
