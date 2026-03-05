@@ -1,52 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3F1EEBA;
-	Thu,  5 Mar 2026 06:39:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A5A286A9;
+	Thu,  5 Mar 2026 06:48:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772692793; cv=none; b=CYV5HCz/RReEthGIhP6pS7WEQQ15JP5WGfLrV9gY823rCtJIOn2pdEeN2fkxvRUskdzUH1adgYjpMRGHr3NoJpAWBJA2BDnD3Db03a9DD7MGWBbBzZBWzLBXh0on9ZseDRGStmMlfSjHeZdjc24+9roJHGjZQBvkzPJNuS4/vvc=
+	t=1772693282; cv=none; b=jmP+9G3M6PgbIc5+Y1w6bQpuSgFcMDaKBlaO/HlE4xzb9tSUa0CQmaprJ1Cg4YIgr+6UavrxLUrzZbq0wU+44RdtUFKEVvW7TrWp7J3gsvBrN5NLFbBE1YJpWZ/i5aJCxpqmOdDC3Ab4t2IZKBylP26mwDOahixG15fTP0XWhZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772692793; c=relaxed/simple;
-	bh=k81IUKBtJLwZrGmN/xV4OqojfKX88TIuOxTZAnXXy5o=;
+	s=arc-20240116; t=1772693282; c=relaxed/simple;
+	bh=/zjw1XSBZf87BFhcwAM5VotMlVxLflPZFnIh+/tEZl4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rul8KSwijIHg1r0o+0MIoqwVyI/+88o3Rs0a8otUZr4xYWYHhgMYJrl5vnPSjAZwa7X9ciNwfdnnF8XWpw2yqRtR40Idh4ZsTOKj7qJuyvaoYvMGlSIoIrnpW0pjwNvreCmmtd4YeQ+HJT9djm8tT0Zkg2NqvAUXc2zT4gpo+jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=klztSzM1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z9KDTCNokG23crdkrHeMZifZMsxD0xPNgeXn4h3taQZYZM8nNOLtsGEycufjW96xPLsByAg2e7GXngshC/lx+fXQa5FNgswx2HQLT66lVj/N4E4wZnZ8vJpCyjM+83aufeMvO9S9xPjbqKW06payNVHm3PVYsYAUeU8kyqN/8qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTlTrJ+d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="klztSzM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4383EC116C6;
-	Thu,  5 Mar 2026 06:39:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTlTrJ+d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBF8CC116C6;
+	Thu,  5 Mar 2026 06:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772692793;
-	bh=k81IUKBtJLwZrGmN/xV4OqojfKX88TIuOxTZAnXXy5o=;
+	s=k20201202; t=1772693282;
+	bh=/zjw1XSBZf87BFhcwAM5VotMlVxLflPZFnIh+/tEZl4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=klztSzM1Nd4QmB6RLYIpQ2csd4zB7vIqWAA/Z5/Gzb22Atsa0Cdesvh/LjpWXPoDs
-	 bxvyGohkQfDYIvK5yaiMfbXRoUcjBxsJy94zj61qFaxYgxANCBjmxFxGmw78dyDJHu
-	 JPGk+AKIXEDcCMY4tk4jeZ1SIwv+TU3j17F8GPQ3Edl/VfNIeLFAPtWvTHFy8dC5GO
-	 SLdSDfe1TjhmHQaGDMeRWTgmuFZoHx6bf23tnUsGkm36Dcka6uN1GwbD+mwwJLH9Ot
-	 n/hwT0KWJ/f1CbnUj5RNstNPsTSxzjACjw6ODGDLLuPj6ZrrluJ8yBiLBiS7kzJ8z1
-	 7aWbDjc0o5pQA==
-Date: Wed, 4 Mar 2026 22:39:50 -0800
+	b=CTlTrJ+dT6YF3gBCLvLx5oVrHWWUpAP9jd7gRgKqV+G+Aey4XUizFPRZoNsCH/Y/c
+	 Dv1FxBwMuOUoc9smjPyUbYAh9pwuYsR623W21fgGjDrA9ycOtF7Uk5md6KFBHEfZC7
+	 XG0dilzKLvYI913U7qmkkZ8F2A00t1OMz5+LDGewDHhTDUj0iiL2Bf7trx0Il3Qg01
+	 qQxGQSPpfapXD++u60WRRRxt2f6nWbD1JArElhs2FtWmGYcoYRJKfam3WfEm3Xjou9
+	 j5O9vDBk6MetmnuQktbGQSh7+NVNbugUxBBUyONGwkiVPtN72qX1rUEEhfhGd+MqD5
+	 9uRKwutEDWUTg==
+Date: Wed, 4 Mar 2026 22:48:00 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
+To: Changbin Du <changbin.du@huawei.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Derek Foreman <derek.foreman@collabora.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Anubhav Shelat <ashelat@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Hrishikesh Suresh <hrishikesh123s@gmail.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] perf data convert ctf: Pipe mode improvements
-Message-ID: <aaklNmye9-6rsTCb@z2>
-References: <20260228065953.3226283-1-irogers@google.com>
- <20260228065953.3226283-8-irogers@google.com>
+Subject: Re: [PATCH v3] perf: Add layout support for --symfs option
+Message-ID: <aaknIOp-PrDNCf-L@z2>
+References: <20260301192455.1053900-1-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,135 +48,465 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260228065953.3226283-8-irogers@google.com>
+In-Reply-To: <20260301192455.1053900-1-changbin.du@huawei.com>
 
-On Fri, Feb 27, 2026 at 10:59:53PM -0800, Ian Rogers wrote:
-> Handle the finished_round event. Set up the CTF events when the
-> feature event desc is read. In pipe mode the attr events will create
-> the evsels and the feature event desc events will name the evsels. The
-> CTF events need the evsel name, so wait until feature event descs are
-> read (in pipe mode) before setting up the events except for tracepoint
-> events. Handle the tracing_data event so that tracepoint information
-> is available when setting up tracepoint events.
+Hello,
+
+On Sun, Mar 01, 2026 at 07:24:55PM +0000, Changbin Du wrote:
+> Add support for parsing an optional layout parameter in the --symfs
+> command line option. The format is:
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+>   --symfs <directory[,layout]>
+> 
+> Where layout can be:
+>   - 'hierarchy': matches full path (default)
+>   - 'flat': only matches base name
+> 
+> When debugging symbol files from a copy of the filesystem (e.g., from a
+> container or remote machine), the debug files are often stored in a
+> flat directory structure with only filenames, not the full original
+> paths. In this case, using 'flat' layout allows perf to find debug
+> symbols by matching only the filename rather than the full path.
+> 
+> For example, given a binary path like:
+>   /build/output/lib/foo.so
+> 
+> With 'perf report --symfs /debug/files,flat', perf will look for:
+>   /debug/files/foo.so
+> 
+> Instead of:
+>   /debug/files/build/output/lib/foo.so
+> 
+> This is particularly useful when:
+> - Extracting debug files from containers with different directory layouts
+> - Working with build systems that flatten directory structures
+
+Looks useful.
+
+> 
+> Changes:
+> - Add symfs_layout_flat field to symbol_conf struct.
+> - Parse optional layout in symbol__config_symfs().
+> - Modify __symbol__join_symfs() to use basename() when layout
+>   is 'flat'.
+> - Update documentation in Documentation/ folder.
+> 
+> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> 
 > ---
->  tools/perf/util/data-convert-bt.c | 54 +++++++++++++++++++++++++++++--
->  1 file changed, 51 insertions(+), 3 deletions(-)
+> v3:
+>   Handle paths containing commas in symbol__config_symfs().
+> v2:
+>   Renaming the new option from 'match_mode' to 'layout', as it better
+>   aligns with the conventions of technical terminology.
+> ---
+>  tools/perf/Documentation/perf-annotate.txt  |  7 +++--
+>  tools/perf/Documentation/perf-diff.txt      |  7 +++--
+>  tools/perf/Documentation/perf-kwork.txt     |  7 +++--
+>  tools/perf/Documentation/perf-probe.txt     |  6 +++++
+>  tools/perf/Documentation/perf-report.txt    |  7 +++--
+>  tools/perf/Documentation/perf-sched.txt     |  7 +++--
+>  tools/perf/Documentation/perf-script.txt    |  7 +++--
+>  tools/perf/Documentation/perf-timechart.txt |  7 +++--
+>  tools/perf/Documentation/tips.txt           |  2 +-
+>  tools/perf/builtin-annotate.c               |  3 +--
+>  tools/perf/builtin-diff.c                   |  3 +--
+>  tools/perf/builtin-kwork.c                  |  4 +--
+>  tools/perf/builtin-probe.c                  |  4 +--
+>  tools/perf/builtin-report.c                 |  3 +--
+>  tools/perf/builtin-sched.c                  |  4 +--
+>  tools/perf/builtin-script.c                 |  3 +--
+>  tools/perf/builtin-timechart.c              |  3 +--
+>  tools/perf/util/symbol.c                    | 29 ++++++++++++++++++---
+>  tools/perf/util/symbol.h                    | 18 +++++++++++++
+>  tools/perf/util/symbol_conf.h               |  1 +
+>  20 files changed, 97 insertions(+), 35 deletions(-)
 > 
-> diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-> index 665bf8eea24b..5d35e9822b8f 100644
-> --- a/tools/perf/util/data-convert-bt.c
-> +++ b/tools/perf/util/data-convert-bt.c
-> @@ -1223,13 +1223,28 @@ static int add_event(struct ctf_writer *cw, struct evsel *evsel)
->  	return -1;
->  }
+> diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
+> index 547f1a268018..a688738809c4 100644
+> --- a/tools/perf/Documentation/perf-annotate.txt
+> +++ b/tools/perf/Documentation/perf-annotate.txt
+> @@ -110,8 +110,11 @@ include::itrace.txt[]
+>  	Interleave source code with assembly code. Enabled by default,
+>  	disable with --no-source.
 >  
-> -static int setup_events(struct ctf_writer *cw, struct perf_session *session)
-> +enum setup_events_type {
-> +	SETUP_EVENTS_ALL,
-> +	SETUP_EVENTS_NOT_TRACEPOINT,
-> +	SETUP_EVENTS_TRACEPOINT_ONLY,
-> +};
+> ---symfs=<directory>::
+> -        Look for files with symbols relative to this directory.
+> +--symfs=<directory[,layout]>::
+> +        Look for files with symbols relative to this directory. The optional
+> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
+> +        (only matches base name). This is useful when debug files are stored
+> +        in a flat directory structure.
+>  
+>  -M::
+>  --disassembler-style=:: Set disassembler style for objdump.
+> diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
+> index 58efab72d2e5..8e4a3f093135 100644
+> --- a/tools/perf/Documentation/perf-diff.txt
+> +++ b/tools/perf/Documentation/perf-diff.txt
+> @@ -81,8 +81,11 @@ OPTIONS
+>  --force::
+>          Don't do ownership validation.
+>  
+> ---symfs=<directory>::
+> -        Look for files with symbols relative to this directory.
+> +--symfs=<directory[,layout]>::
+> +        Look for files with symbols relative to this directory. The optional
+> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
+> +        (only matches base name). This is useful when debug files are stored
+> +        in a flat directory structure.
+>  
+>  -b::
+>  --baseline-only::
+> diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
+> index 21e607669d78..5c33a1fb2ffe 100644
+> --- a/tools/perf/Documentation/perf-kwork.txt
+> +++ b/tools/perf/Documentation/perf-kwork.txt
+> @@ -169,8 +169,11 @@ OPTIONS for 'perf kwork timehist'
+>  --max-stack::
+>  	Maximum number of functions to display in backtrace, default 5.
+>  
+> ---symfs=<directory>::
+> -    Look for files with symbols relative to this directory.
+> +--symfs=<directory[,layout]>::
+> +        Look for files with symbols relative to this directory. The optional
+> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
+> +        (only matches base name). This is useful when debug files are stored
+> +        in a flat directory structure.
+>  
+>  --time::
+>  	Only analyze samples within given time window: <start>,<stop>. Times
+> diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
+> index 5c43a6edc0e5..2e5790325430 100644
+> --- a/tools/perf/Documentation/perf-probe.txt
+> +++ b/tools/perf/Documentation/perf-probe.txt
+> @@ -50,6 +50,12 @@ OPTIONS
+>  --source=PATH::
+>  	Specify path to kernel source.
+>  
+> +--symfs=<directory[,layout]>::
+> +	Look for files with symbols relative to this directory. The optional
+> +	layout can be 'hierarchy' (default, matches full path) or 'flat'
+> +	(only matches base name). This is useful when debug files are stored
+> +	in a flat directory structure.
 > +
-> +static int setup_events(struct ctf_writer *cw, struct perf_session *session,
-> +			enum setup_events_type type)
+>  -v::
+>  --verbose::
+>          Be more verbose (show parsed arguments, etc).
+> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+> index acef3ff4178e..802f931ae64d 100644
+> --- a/tools/perf/Documentation/perf-report.txt
+> +++ b/tools/perf/Documentation/perf-report.txt
+> @@ -368,8 +368,11 @@ OPTIONS
+>  --force::
+>          Don't do ownership validation.
+>  
+> ---symfs=<directory>::
+> -        Look for files with symbols relative to this directory.
+> +--symfs=<directory[,layout]>::
+> +        Look for files with symbols relative to this directory. The optional
+> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
+> +        (only matches base name). This is useful when debug files are stored
+> +        in a flat directory structure.
+>  
+>  -C::
+>  --cpu:: Only report samples for the list of CPUs provided. Multiple CPUs can
+> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+> index 4d9981609c04..a4221398e5e0 100644
+> --- a/tools/perf/Documentation/perf-sched.txt
+> +++ b/tools/perf/Documentation/perf-sched.txt
+> @@ -437,8 +437,11 @@ OPTIONS for 'perf sched timehist'
+>      Show all scheduling events followed by a summary by thread with min,
+>      max, and average run times (in sec) and relative stddev.
+>  
+> ---symfs=<directory>::
+> -    Look for files with symbols relative to this directory.
+> +--symfs=<directory[,layout]>::
+> +        Look for files with symbols relative to this directory. The optional
+> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
+> +        (only matches base name). This is useful when debug files are stored
+> +        in a flat directory structure.
+>  
+>  -V::
+>  --cpu-visual::
+> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+> index ddf92f9c7821..200ea25891d8 100644
+> --- a/tools/perf/Documentation/perf-script.txt
+> +++ b/tools/perf/Documentation/perf-script.txt
+> @@ -307,8 +307,11 @@ OPTIONS
+>  --kallsyms=<file>::
+>          kallsyms pathname
+>  
+> ---symfs=<directory>::
+> -        Look for files with symbols relative to this directory.
+> +--symfs=<directory[,layout]>::
+> +        Look for files with symbols relative to this directory. The optional
+> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
+> +        (only matches base name). This is useful when debug files are stored
+> +        in a flat directory structure.
+>  
+>  -G::
+>  --hide-call-graph::
+> diff --git a/tools/perf/Documentation/perf-timechart.txt b/tools/perf/Documentation/perf-timechart.txt
+> index ef2281c56743..bacc5df3c400 100644
+> --- a/tools/perf/Documentation/perf-timechart.txt
+> +++ b/tools/perf/Documentation/perf-timechart.txt
+> @@ -53,8 +53,11 @@ TIMECHART OPTIONS
+>  -f::
+>  --force::
+>  	Don't complain, do it.
+> ---symfs=<directory>::
+> -        Look for files with symbols relative to this directory.
+> +--symfs=<directory[,layout]>::
+> +        Look for files with symbols relative to this directory. The optional
+> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
+> +        (only matches base name). This is useful when debug files are stored
+> +        in a flat directory structure.
+>  -n::
+>  --proc-num::
+>          Print task info for at least given number of tasks.
+> diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
+> index 3fee9b2a88ea..ebf12a8c5db5 100644
+> --- a/tools/perf/Documentation/tips.txt
+> +++ b/tools/perf/Documentation/tips.txt
+> @@ -11,7 +11,7 @@ Search options using a keyword: perf report -h <keyword>
+>  Use parent filter to see specific call path: perf report -p <regex>
+>  List events using substring match: perf list <keyword>
+>  To see list of saved events and attributes: perf evlist -v
+> -Use --symfs <dir> if your symbol files are in non-standard locations
+> +Use --symfs <dir>[,layout] if your symbol files are in non-standard locations.
+>  To see callchains in a more compact form: perf report -g folded
+>  To see call chains by final symbol taking CPU time (bottom up) use perf report -G
+>  Show individual samples with: perf script
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index 9c27bb30b708..686ad08561d6 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -744,8 +744,7 @@ int cmd_annotate(int argc, const char **argv)
+>  			&annotate.group_set,
+>  			"Show event group information together"),
+>  	OPT_STRING('C', "cpu", &annotate.cpu_list, "cpu", "list of cpus to profile"),
+> -	OPT_CALLBACK(0, "symfs", NULL, "directory",
+> -		     "Look for files with symbols relative to this directory",
+> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+>  		     symbol__config_symfs),
+>  	OPT_BOOLEAN(0, "source", &annotate_opts.annotate_src,
+>  		    "Interleave source code with assembly code (default)"),
+> diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+> index 59bf1f72d12e..69069926dd0b 100644
+> --- a/tools/perf/builtin-diff.c
+> +++ b/tools/perf/builtin-diff.c
+> @@ -1280,8 +1280,7 @@ static const struct option options[] = {
+>  	OPT_STRING_NOEMPTY('t', "field-separator", &symbol_conf.field_sep, "separator",
+>  		   "separator for columns, no spaces will be added between "
+>  		   "columns '.' is reserved."),
+> -	OPT_CALLBACK(0, "symfs", NULL, "directory",
+> -		     "Look for files with symbols relative to this directory",
+> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+>  		     symbol__config_symfs),
+>  	OPT_UINTEGER('o', "order", &sort_compute, "Specify compute sorting."),
+>  	OPT_CALLBACK(0, "percentage", NULL, "relative|absolute",
+> diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+> index 7f3068264568..6f94a8f45f60 100644
+> --- a/tools/perf/builtin-kwork.c
+> +++ b/tools/perf/builtin-kwork.c
+> @@ -2423,8 +2423,8 @@ int cmd_kwork(int argc, const char **argv)
+>  		    "Display call chains if present"),
+>  	OPT_UINTEGER(0, "max-stack", &kwork.max_stack,
+>  		   "Maximum number of functions to display backtrace."),
+> -	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
+> -		    "Look for files with symbols relative to this directory"),
+> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+> +		     symbol__config_symfs),
+>  	OPT_STRING(0, "time", &kwork.time_str, "str",
+>  		   "Time span for analysis (start,stop)"),
+>  	OPT_STRING('C', "cpu", &kwork.cpu_list, "cpu",
+> diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+> index 1b4ba85ee019..a67b565278ae 100644
+> --- a/tools/perf/builtin-probe.c
+> +++ b/tools/perf/builtin-probe.c
+> @@ -597,8 +597,8 @@ __cmd_probe(int argc, const char **argv)
+>  	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
+>  		    "Enable kernel symbol demangling"),
+>  	OPT_BOOLEAN(0, "cache", &probe_conf.cache, "Manipulate probe cache"),
+> -	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
+> -		   "Look for files with symbols relative to this directory"),
+> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+> +		     symbol__config_symfs),
+>  	OPT_CALLBACK(0, "target-ns", NULL, "pid",
+>  		     "target pid for namespace contexts", opt_set_target_ns),
+>  	OPT_BOOLEAN(0, "bootconfig", &probe_conf.bootconfig,
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index 3b81f4b3dc49..343c0ada5ea1 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -1416,8 +1416,7 @@ int cmd_report(int argc, const char **argv)
+>  		   "columns '.' is reserved."),
+>  	OPT_BOOLEAN('U', "hide-unresolved", &symbol_conf.hide_unresolved,
+>  		    "Only display entries resolved to a symbol"),
+> -	OPT_CALLBACK(0, "symfs", NULL, "directory",
+> -		     "Look for files with symbols relative to this directory",
+> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+>  		     symbol__config_symfs),
+>  	OPT_STRING('C', "cpu", &report.cpu_list, "cpu",
+>  		   "list of cpus to profile"),
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 3f509cfdd58c..d083e2bb7703 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -4879,8 +4879,8 @@ int cmd_sched(int argc, const char **argv)
+>  		    "Display call chains if present (default on)"),
+>  	OPT_UINTEGER(0, "max-stack", &sched.max_stack,
+>  		   "Maximum number of functions to display backtrace."),
+> -	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
+> -		    "Look for files with symbols relative to this directory"),
+> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+> +		     symbol__config_symfs),
+>  	OPT_BOOLEAN('s', "summary", &sched.summary_only,
+>  		    "Show only syscall summary with statistics"),
+>  	OPT_BOOLEAN('S', "with-summary", &sched.summary,
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 7c743a303507..9912199d22da 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -4074,8 +4074,7 @@ int cmd_script(int argc, const char **argv)
+>  		   "file", "kallsyms pathname"),
+>  	OPT_BOOLEAN('G', "hide-call-graph", &no_callchain,
+>  		    "When printing symbols do not display call chain"),
+> -	OPT_CALLBACK(0, "symfs", NULL, "directory",
+> -		     "Look for files with symbols relative to this directory",
+> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+>  		     symbol__config_symfs),
+>  	OPT_CALLBACK('F', "fields", NULL, "str",
+>  		     "comma separated output fields prepend with 'type:'. "
+> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+> index f8b49d69e9a5..28f33e39895d 100644
+> --- a/tools/perf/builtin-timechart.c
+> +++ b/tools/perf/builtin-timechart.c
+> @@ -1951,8 +1951,7 @@ int cmd_timechart(int argc, const char **argv)
+>  	OPT_CALLBACK('p', "process", NULL, "process",
+>  		      "process selector. Pass a pid or process name.",
+>  		       parse_process),
+> -	OPT_CALLBACK(0, "symfs", NULL, "directory",
+> -		     "Look for files with symbols relative to this directory",
+> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
+>  		     symbol__config_symfs),
+>  	OPT_INTEGER('n', "proc-num", &tchart.proc_num,
+>  		    "min. number of tasks to print"),
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 8662001e1e25..6247d73c32a7 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -66,6 +66,7 @@ struct symbol_conf symbol_conf = {
+>  	.time_quantum		= 100 * NSEC_PER_MSEC, /* 100ms */
+>  	.show_hist_headers	= true,
+>  	.symfs			= "",
+> +	.symfs_layout_flat	= false,
+>  	.event_group		= true,
+>  	.inline_name		= true,
+>  	.res_sample		= 0,
+> @@ -2491,16 +2492,36 @@ int symbol__config_symfs(const struct option *opt __maybe_unused,
+>  			 const char *dir, int unset __maybe_unused)
 >  {
->  	struct evlist *evlist = session->evlist;
->  	struct evsel *evsel;
+>  	char *bf = NULL;
+> +	char *layout_str;
 >  	int ret;
 >  
->  	evlist__for_each_entry(evlist, evsel) {
-> +		bool is_tracepoint = evsel->core.attr.type == PERF_TYPE_TRACEPOINT;
-> +
-> +		if (is_tracepoint && type == SETUP_EVENTS_NOT_TRACEPOINT)
-> +			continue;
-> +
-> +		if (!is_tracepoint && type == SETUP_EVENTS_TRACEPOINT_ONLY)
-> +			continue;
-> +
->  		ret = add_event(cw, evsel);
->  		if (ret)
->  			return ret;
-> @@ -1418,6 +1433,18 @@ static int process_feature_event(const struct perf_tool *tool,
->  		return ret;
->  
->  	switch (fe->feat_id) {
-> +	case HEADER_EVENT_DESC:
-> +		/*
-> +		 * In non-pipe mode (not here) the evsels combine the desc with
-> +		 * the perf_event_attr when it is parsed. In pipe mode the
-> +		 * perf_event_attr events appear first and then the event desc
-> +		 * feature events that set the names appear after. Once we have
-> +		 * the full evsel data we can generate the babeltrace
-> +		 * events. For tracepoint events we still don't have the tracing
-> +		 * data and so need to wait until the tracing data event to add
-> +		 * those events to babeltrace.
-> +		 */
-> +		return setup_events(cw, session, SETUP_EVENTS_NOT_TRACEPOINT);
->  	case HEADER_HOSTNAME:
->  		if (session->header.env.hostname) {
->  			return bt_ctf_writer_add_environment_field(cw->writer, "host",
-> @@ -1448,6 +1475,26 @@ static int process_feature_event(const struct perf_tool *tool,
->  	return 0;
->  }
->  
-> +static int process_tracing_data(const struct perf_tool *tool,
-> +				struct perf_session *session,
-> +				union perf_event *event)
-> +{
-> +	struct convert *c = container_of(tool, struct convert, tool);
-> +	struct ctf_writer *cw = &c->writer;
-> +	int ret;
-> +
-> +	ret = perf_event__process_tracing_data(tool, session, event);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/*
-> +	 * Now the attr was set up by the attr event, the name by the feature
-> +	 * event desc event and the tracepoint data set up above, the tracepoint
-> +	 * babeltrace events can be added.
-> +	 */
-> +	return setup_events(cw, session, SETUP_EVENTS_TRACEPOINT_ONLY);
-> +}
-> +
->  static int ctf_writer__setup_clock(struct ctf_writer *cw,
->  				   struct perf_session *session,
->  				   bool tod)
-> @@ -1677,9 +1724,10 @@ int bt_convert__perf2ctf(const char *input, const char *path,
->  	c.tool.exit            = perf_event__process_exit;
->  	c.tool.fork            = perf_event__process_fork;
->  	c.tool.lost            = perf_event__process_lost;
-> -	c.tool.tracing_data    = perf_event__process_tracing_data;
-> +	c.tool.tracing_data    = process_tracing_data;
->  	c.tool.build_id        = perf_event__process_build_id;
->  	c.tool.namespaces      = perf_event__process_namespaces;
-> +	c.tool.finished_round  = perf_event__process_finished_round;
->  	c.tool.attr            = perf_event__process_attr;
->  	c.tool.feature         = process_feature_event;
->  	c.tool.ordering_requires_timestamps = true;
-> @@ -1725,7 +1773,7 @@ int bt_convert__perf2ctf(const char *input, const char *path,
->  		goto free_writer;
->  
->  	/* CTF events setup */
-> -	if (setup_events(cw, session))
-> +	if (setup_events(cw, session, SETUP_EVENTS_ALL))
+> -	symbol_conf.symfs = strdup(dir);
+> -	if (symbol_conf.symfs == NULL)
+> -		return -ENOMEM;
+> +	layout_str = strrchr(dir, ',');
+> +	if (layout_str &&
+> +	    (!strcmp(layout_str + 1, "flat") || !strcmp(layout_str + 1, "hierarchy"))) {
 
-I was wondering if it'd add duplicate events in pipe mode.  But it turns
-out that it would do nothing in pipe mode as no event was found at the
-moment.
-
-Can you please update the comment that it's for file, and pipe mode will
-be handled differently?
+I think it's better to fail with a message if unknown layout is given.
 
 Thanks,
 Namhyung
 
-
->  		goto free_writer;
+> +		size_t dir_len = layout_str - dir;
+> +		char *dir_copy = strndup(dir, dir_len);
+> +
+> +		if (dir_copy == NULL)
+> +			return -ENOMEM;
+> +
+> +		symbol_conf.symfs = dir_copy;
+> +
+> +		layout_str++;
+> +		if (!strcmp(layout_str, "flat"))
+> +			symbol_conf.symfs_layout_flat = true;
+> +		else
+> +			symbol_conf.symfs_layout_flat = false;
+> +	} else {
+> +		symbol_conf.symfs = strdup(dir);
+> +		if (symbol_conf.symfs == NULL)
+> +			return -ENOMEM;
+> +		symbol_conf.symfs_layout_flat = false;
+> +	}
 >  
->  	if (opts->all && setup_non_sample_events(cw, session))
+>  	/* skip the locally configured cache if a symfs is given, and
+>  	 * config buildid dir to symfs/.debug
+>  	 */
+> -	ret = asprintf(&bf, "%s/%s", dir, ".debug");
+> +	ret = asprintf(&bf, "%s/%s", symbol_conf.symfs, ".debug");
+>  	if (ret < 0)
+>  		return -ENOMEM;
+>  
+> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+> index 3fb5d146d9b1..4f1dbd1ebd99 100644
+> --- a/tools/perf/util/symbol.h
+> +++ b/tools/perf/util/symbol.h
+> @@ -9,6 +9,7 @@
+>  #include <linux/list.h>
+>  #include <linux/rbtree.h>
+>  #include <stdio.h>
+> +#include <errno.h>
+>  #include "addr_location.h"
+>  #include "path.h"
+>  #include "symbol_conf.h"
+> @@ -96,6 +97,18 @@ struct intlist;
+>  
+>  static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
+>  {
+> +	if (symbol_conf.symfs_layout_flat) {
+> +		char *path_copy = strdup(path);
+> +		char *base;
+> +		int ret;
+> +
+> +		if (!path_copy)
+> +			return -ENOMEM;
+> +		base = basename(path_copy);
+> +		ret = path__join(bf, size, symbol_conf.symfs, base);
+> +		free(path_copy);
+> +		return ret;
+> +	}
+>  	return path__join(bf, size, symbol_conf.symfs, path);
+>  }
+>  
+> @@ -169,6 +182,11 @@ size_t symbol__fprintf_symname(const struct symbol *sym, FILE *fp);
+>  size_t symbol__fprintf(struct symbol *sym, FILE *fp);
+>  bool symbol__restricted_filename(const char *filename,
+>  				 const char *restricted_filename);
+> +
+> +#define SYMFS_HELP "setup root directory which contains debug files:\n" \
+> +	"\t\t\t\t" "directory:\tLook for files with symbols relative to this directory.\n" \
+> +	"\t\t\t\t" "layout:   \tLayout of files, 'hierarchy' matches full path (default), 'flat' only matches base name.\n"
+> +
+>  int symbol__config_symfs(const struct option *opt __maybe_unused,
+>  			 const char *dir, int unset __maybe_unused);
+>  
+> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+> index 71bb17372a6c..ac1b444a8fd8 100644
+> --- a/tools/perf/util/symbol_conf.h
+> +++ b/tools/perf/util/symbol_conf.h
+> @@ -93,6 +93,7 @@ struct symbol_conf {
+>  			*tid_list,
+>  			*addr_list;
+>  	const char	*symfs;
+> +	bool		symfs_layout_flat;
+>  	int		res_sample;
+>  	int		pad_output_len_dso;
+>  	int		group_sort_idx;
 > -- 
-> 2.53.0.473.g4a7958ca14-goog
+> 2.43.0
 > 
