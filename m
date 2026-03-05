@@ -1,512 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A5A286A9;
-	Thu,  5 Mar 2026 06:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4250BA21;
+	Thu,  5 Mar 2026 09:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772693282; cv=none; b=jmP+9G3M6PgbIc5+Y1w6bQpuSgFcMDaKBlaO/HlE4xzb9tSUa0CQmaprJ1Cg4YIgr+6UavrxLUrzZbq0wU+44RdtUFKEVvW7TrWp7J3gsvBrN5NLFbBE1YJpWZ/i5aJCxpqmOdDC3Ab4t2IZKBylP26mwDOahixG15fTP0XWhZI=
+	t=1772701349; cv=none; b=iewYEwye8+ohbwjvHInrav3hVD/kh5xmGr+0biZNQxas9Syls/1xpVCRqpwdsLR8nH0L8bVbc47hmynCOlSsm0LZZh39UHULx4rVzZFxETlalpiQ7ZJNFa/+WJSKWOBPJ6URTPyt4WbNy9hNXFqMoq4Wq41iOCuPVl4v3Dv7PUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772693282; c=relaxed/simple;
-	bh=/zjw1XSBZf87BFhcwAM5VotMlVxLflPZFnIh+/tEZl4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z9KDTCNokG23crdkrHeMZifZMsxD0xPNgeXn4h3taQZYZM8nNOLtsGEycufjW96xPLsByAg2e7GXngshC/lx+fXQa5FNgswx2HQLT66lVj/N4E4wZnZ8vJpCyjM+83aufeMvO9S9xPjbqKW06payNVHm3PVYsYAUeU8kyqN/8qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTlTrJ+d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772701349; c=relaxed/simple;
+	bh=l665niY4fjbYT4SMS/ny9uoFatDgmnrBtS9TpBtyjP0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=N7aiMJNPf2UyyvqgRboCyqZxGZJEFsn64KYDaiNFuxYVA0069zEx8yaUm5i7r9QOzzeymFkTSt47WUoiUgXnwkYxOXY1iQW917oXv5djzFUteTMkI8WD3a2GWJ4/7Yl5fkoqfGm0nWDxmb6+pNYtMkcnzzHvUFDua/V33j2OL34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=wPfi/a/Z; arc=none smtp.client-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTlTrJ+d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBF8CC116C6;
-	Thu,  5 Mar 2026 06:48:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772693282;
-	bh=/zjw1XSBZf87BFhcwAM5VotMlVxLflPZFnIh+/tEZl4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CTlTrJ+dT6YF3gBCLvLx5oVrHWWUpAP9jd7gRgKqV+G+Aey4XUizFPRZoNsCH/Y/c
-	 Dv1FxBwMuOUoc9smjPyUbYAh9pwuYsR623W21fgGjDrA9ycOtF7Uk5md6KFBHEfZC7
-	 XG0dilzKLvYI913U7qmkkZ8F2A00t1OMz5+LDGewDHhTDUj0iiL2Bf7trx0Il3Qg01
-	 qQxGQSPpfapXD++u60WRRRxt2f6nWbD1JArElhs2FtWmGYcoYRJKfam3WfEm3Xjou9
-	 j5O9vDBk6MetmnuQktbGQSh7+NVNbugUxBBUyONGwkiVPtN72qX1rUEEhfhGd+MqD5
-	 9uRKwutEDWUTg==
-Date: Wed, 4 Mar 2026 22:48:00 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Changbin Du <changbin.du@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="wPfi/a/Z"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=l665niY4fjbYT4SMS/ny9uoFatDgmnrBtS9TpBtyjP0=;
+	b=wPfi/a/Z8/OXDB5YgL+MEwJvQWTP7tTOa/yPQbN5/mm/aD2ahnocSGQNahK3Ms+19SueGwTtH
+	T2QZ+sIOXUMNUthaohIRhDAYrakZoQRpfJ7NjjSUQtLfDW9OT4gKHfFhOcPmW8KBZEGAvefxey7
+	Lfomm8skJJnYSk2U3xNZKhc=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4fRNhh3rMRz1prR4;
+	Thu,  5 Mar 2026 16:57:24 +0800 (CST)
+Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8F1CC40561;
+	Thu,  5 Mar 2026 17:02:18 +0800 (CST)
+Received: from kwepemq200001.china.huawei.com (7.202.195.16) by
+ dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 5 Mar 2026 17:02:18 +0800
+Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
+ kwepemq200001.china.huawei.com (7.202.195.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 5 Mar 2026 17:02:17 +0800
+Received: from kwepemq200002.china.huawei.com ([7.202.195.90]) by
+ kwepemq200002.china.huawei.com ([7.202.195.90]) with mapi id 15.02.1544.011;
+ Thu, 5 Mar 2026 17:02:17 +0800
+From: duchangbin <changbin.du@huawei.com>
+To: Namhyung Kim <namhyung@kernel.org>
+CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
+ Melo" <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH v3] perf: Add layout support for --symfs option
-Message-ID: <aaknIOp-PrDNCf-L@z2>
+Thread-Topic: [PATCH v3] perf: Add layout support for --symfs option
+Thread-Index: AQHcqWv7qgRFvdXDEU29kITXQZ801LWe/w8AgACrhIA=
+Date: Thu, 5 Mar 2026 09:02:17 +0000
+Message-ID: <dd08137f2d2e4d39a37d4c50552f8a86@huawei.com>
 References: <20260301192455.1053900-1-changbin.du@huawei.com>
+ <aaknIOp-PrDNCf-L@z2>
+In-Reply-To: <aaknIOp-PrDNCf-L@z2>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: kwepemq200002.china.huawei.com (15.02.1544.011)
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DCC984BD3C93074A88675772F43A3D12@huawei.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260301192455.1053900-1-changbin.du@huawei.com>
 
-Hello,
-
-On Sun, Mar 01, 2026 at 07:24:55PM +0000, Changbin Du wrote:
-> Add support for parsing an optional layout parameter in the --symfs
-> command line option. The format is:
-> 
->   --symfs <directory[,layout]>
-> 
-> Where layout can be:
->   - 'hierarchy': matches full path (default)
->   - 'flat': only matches base name
-> 
-> When debugging symbol files from a copy of the filesystem (e.g., from a
-> container or remote machine), the debug files are often stored in a
-> flat directory structure with only filenames, not the full original
-> paths. In this case, using 'flat' layout allows perf to find debug
-> symbols by matching only the filename rather than the full path.
-> 
-> For example, given a binary path like:
->   /build/output/lib/foo.so
-> 
-> With 'perf report --symfs /debug/files,flat', perf will look for:
->   /debug/files/foo.so
-> 
-> Instead of:
->   /debug/files/build/output/lib/foo.so
-> 
-> This is particularly useful when:
-> - Extracting debug files from containers with different directory layouts
-> - Working with build systems that flatten directory structures
-
-Looks useful.
-
-> 
-> Changes:
-> - Add symfs_layout_flat field to symbol_conf struct.
-> - Parse optional layout in symbol__config_symfs().
-> - Modify __symbol__join_symfs() to use basename() when layout
->   is 'flat'.
-> - Update documentation in Documentation/ folder.
-> 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> 
-> ---
-> v3:
->   Handle paths containing commas in symbol__config_symfs().
-> v2:
->   Renaming the new option from 'match_mode' to 'layout', as it better
->   aligns with the conventions of technical terminology.
-> ---
->  tools/perf/Documentation/perf-annotate.txt  |  7 +++--
->  tools/perf/Documentation/perf-diff.txt      |  7 +++--
->  tools/perf/Documentation/perf-kwork.txt     |  7 +++--
->  tools/perf/Documentation/perf-probe.txt     |  6 +++++
->  tools/perf/Documentation/perf-report.txt    |  7 +++--
->  tools/perf/Documentation/perf-sched.txt     |  7 +++--
->  tools/perf/Documentation/perf-script.txt    |  7 +++--
->  tools/perf/Documentation/perf-timechart.txt |  7 +++--
->  tools/perf/Documentation/tips.txt           |  2 +-
->  tools/perf/builtin-annotate.c               |  3 +--
->  tools/perf/builtin-diff.c                   |  3 +--
->  tools/perf/builtin-kwork.c                  |  4 +--
->  tools/perf/builtin-probe.c                  |  4 +--
->  tools/perf/builtin-report.c                 |  3 +--
->  tools/perf/builtin-sched.c                  |  4 +--
->  tools/perf/builtin-script.c                 |  3 +--
->  tools/perf/builtin-timechart.c              |  3 +--
->  tools/perf/util/symbol.c                    | 29 ++++++++++++++++++---
->  tools/perf/util/symbol.h                    | 18 +++++++++++++
->  tools/perf/util/symbol_conf.h               |  1 +
->  20 files changed, 97 insertions(+), 35 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-> index 547f1a268018..a688738809c4 100644
-> --- a/tools/perf/Documentation/perf-annotate.txt
-> +++ b/tools/perf/Documentation/perf-annotate.txt
-> @@ -110,8 +110,11 @@ include::itrace.txt[]
->  	Interleave source code with assembly code. Enabled by default,
->  	disable with --no-source.
->  
-> ---symfs=<directory>::
-> -        Look for files with symbols relative to this directory.
-> +--symfs=<directory[,layout]>::
-> +        Look for files with symbols relative to this directory. The optional
-> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
-> +        (only matches base name). This is useful when debug files are stored
-> +        in a flat directory structure.
->  
->  -M::
->  --disassembler-style=:: Set disassembler style for objdump.
-> diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
-> index 58efab72d2e5..8e4a3f093135 100644
-> --- a/tools/perf/Documentation/perf-diff.txt
-> +++ b/tools/perf/Documentation/perf-diff.txt
-> @@ -81,8 +81,11 @@ OPTIONS
->  --force::
->          Don't do ownership validation.
->  
-> ---symfs=<directory>::
-> -        Look for files with symbols relative to this directory.
-> +--symfs=<directory[,layout]>::
-> +        Look for files with symbols relative to this directory. The optional
-> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
-> +        (only matches base name). This is useful when debug files are stored
-> +        in a flat directory structure.
->  
->  -b::
->  --baseline-only::
-> diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
-> index 21e607669d78..5c33a1fb2ffe 100644
-> --- a/tools/perf/Documentation/perf-kwork.txt
-> +++ b/tools/perf/Documentation/perf-kwork.txt
-> @@ -169,8 +169,11 @@ OPTIONS for 'perf kwork timehist'
->  --max-stack::
->  	Maximum number of functions to display in backtrace, default 5.
->  
-> ---symfs=<directory>::
-> -    Look for files with symbols relative to this directory.
-> +--symfs=<directory[,layout]>::
-> +        Look for files with symbols relative to this directory. The optional
-> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
-> +        (only matches base name). This is useful when debug files are stored
-> +        in a flat directory structure.
->  
->  --time::
->  	Only analyze samples within given time window: <start>,<stop>. Times
-> diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
-> index 5c43a6edc0e5..2e5790325430 100644
-> --- a/tools/perf/Documentation/perf-probe.txt
-> +++ b/tools/perf/Documentation/perf-probe.txt
-> @@ -50,6 +50,12 @@ OPTIONS
->  --source=PATH::
->  	Specify path to kernel source.
->  
-> +--symfs=<directory[,layout]>::
-> +	Look for files with symbols relative to this directory. The optional
-> +	layout can be 'hierarchy' (default, matches full path) or 'flat'
-> +	(only matches base name). This is useful when debug files are stored
-> +	in a flat directory structure.
-> +
->  -v::
->  --verbose::
->          Be more verbose (show parsed arguments, etc).
-> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-> index acef3ff4178e..802f931ae64d 100644
-> --- a/tools/perf/Documentation/perf-report.txt
-> +++ b/tools/perf/Documentation/perf-report.txt
-> @@ -368,8 +368,11 @@ OPTIONS
->  --force::
->          Don't do ownership validation.
->  
-> ---symfs=<directory>::
-> -        Look for files with symbols relative to this directory.
-> +--symfs=<directory[,layout]>::
-> +        Look for files with symbols relative to this directory. The optional
-> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
-> +        (only matches base name). This is useful when debug files are stored
-> +        in a flat directory structure.
->  
->  -C::
->  --cpu:: Only report samples for the list of CPUs provided. Multiple CPUs can
-> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-> index 4d9981609c04..a4221398e5e0 100644
-> --- a/tools/perf/Documentation/perf-sched.txt
-> +++ b/tools/perf/Documentation/perf-sched.txt
-> @@ -437,8 +437,11 @@ OPTIONS for 'perf sched timehist'
->      Show all scheduling events followed by a summary by thread with min,
->      max, and average run times (in sec) and relative stddev.
->  
-> ---symfs=<directory>::
-> -    Look for files with symbols relative to this directory.
-> +--symfs=<directory[,layout]>::
-> +        Look for files with symbols relative to this directory. The optional
-> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
-> +        (only matches base name). This is useful when debug files are stored
-> +        in a flat directory structure.
->  
->  -V::
->  --cpu-visual::
-> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> index ddf92f9c7821..200ea25891d8 100644
-> --- a/tools/perf/Documentation/perf-script.txt
-> +++ b/tools/perf/Documentation/perf-script.txt
-> @@ -307,8 +307,11 @@ OPTIONS
->  --kallsyms=<file>::
->          kallsyms pathname
->  
-> ---symfs=<directory>::
-> -        Look for files with symbols relative to this directory.
-> +--symfs=<directory[,layout]>::
-> +        Look for files with symbols relative to this directory. The optional
-> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
-> +        (only matches base name). This is useful when debug files are stored
-> +        in a flat directory structure.
->  
->  -G::
->  --hide-call-graph::
-> diff --git a/tools/perf/Documentation/perf-timechart.txt b/tools/perf/Documentation/perf-timechart.txt
-> index ef2281c56743..bacc5df3c400 100644
-> --- a/tools/perf/Documentation/perf-timechart.txt
-> +++ b/tools/perf/Documentation/perf-timechart.txt
-> @@ -53,8 +53,11 @@ TIMECHART OPTIONS
->  -f::
->  --force::
->  	Don't complain, do it.
-> ---symfs=<directory>::
-> -        Look for files with symbols relative to this directory.
-> +--symfs=<directory[,layout]>::
-> +        Look for files with symbols relative to this directory. The optional
-> +        layout can be 'hierarchy' (default, matches full path) or 'flat'
-> +        (only matches base name). This is useful when debug files are stored
-> +        in a flat directory structure.
->  -n::
->  --proc-num::
->          Print task info for at least given number of tasks.
-> diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
-> index 3fee9b2a88ea..ebf12a8c5db5 100644
-> --- a/tools/perf/Documentation/tips.txt
-> +++ b/tools/perf/Documentation/tips.txt
-> @@ -11,7 +11,7 @@ Search options using a keyword: perf report -h <keyword>
->  Use parent filter to see specific call path: perf report -p <regex>
->  List events using substring match: perf list <keyword>
->  To see list of saved events and attributes: perf evlist -v
-> -Use --symfs <dir> if your symbol files are in non-standard locations
-> +Use --symfs <dir>[,layout] if your symbol files are in non-standard locations.
->  To see callchains in a more compact form: perf report -g folded
->  To see call chains by final symbol taking CPU time (bottom up) use perf report -G
->  Show individual samples with: perf script
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> index 9c27bb30b708..686ad08561d6 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -744,8 +744,7 @@ int cmd_annotate(int argc, const char **argv)
->  			&annotate.group_set,
->  			"Show event group information together"),
->  	OPT_STRING('C', "cpu", &annotate.cpu_list, "cpu", "list of cpus to profile"),
-> -	OPT_CALLBACK(0, "symfs", NULL, "directory",
-> -		     "Look for files with symbols relative to this directory",
-> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
->  		     symbol__config_symfs),
->  	OPT_BOOLEAN(0, "source", &annotate_opts.annotate_src,
->  		    "Interleave source code with assembly code (default)"),
-> diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-> index 59bf1f72d12e..69069926dd0b 100644
-> --- a/tools/perf/builtin-diff.c
-> +++ b/tools/perf/builtin-diff.c
-> @@ -1280,8 +1280,7 @@ static const struct option options[] = {
->  	OPT_STRING_NOEMPTY('t', "field-separator", &symbol_conf.field_sep, "separator",
->  		   "separator for columns, no spaces will be added between "
->  		   "columns '.' is reserved."),
-> -	OPT_CALLBACK(0, "symfs", NULL, "directory",
-> -		     "Look for files with symbols relative to this directory",
-> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
->  		     symbol__config_symfs),
->  	OPT_UINTEGER('o', "order", &sort_compute, "Specify compute sorting."),
->  	OPT_CALLBACK(0, "percentage", NULL, "relative|absolute",
-> diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-> index 7f3068264568..6f94a8f45f60 100644
-> --- a/tools/perf/builtin-kwork.c
-> +++ b/tools/perf/builtin-kwork.c
-> @@ -2423,8 +2423,8 @@ int cmd_kwork(int argc, const char **argv)
->  		    "Display call chains if present"),
->  	OPT_UINTEGER(0, "max-stack", &kwork.max_stack,
->  		   "Maximum number of functions to display backtrace."),
-> -	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
-> -		    "Look for files with symbols relative to this directory"),
-> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
-> +		     symbol__config_symfs),
->  	OPT_STRING(0, "time", &kwork.time_str, "str",
->  		   "Time span for analysis (start,stop)"),
->  	OPT_STRING('C', "cpu", &kwork.cpu_list, "cpu",
-> diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-> index 1b4ba85ee019..a67b565278ae 100644
-> --- a/tools/perf/builtin-probe.c
-> +++ b/tools/perf/builtin-probe.c
-> @@ -597,8 +597,8 @@ __cmd_probe(int argc, const char **argv)
->  	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
->  		    "Enable kernel symbol demangling"),
->  	OPT_BOOLEAN(0, "cache", &probe_conf.cache, "Manipulate probe cache"),
-> -	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
-> -		   "Look for files with symbols relative to this directory"),
-> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
-> +		     symbol__config_symfs),
->  	OPT_CALLBACK(0, "target-ns", NULL, "pid",
->  		     "target pid for namespace contexts", opt_set_target_ns),
->  	OPT_BOOLEAN(0, "bootconfig", &probe_conf.bootconfig,
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index 3b81f4b3dc49..343c0ada5ea1 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -1416,8 +1416,7 @@ int cmd_report(int argc, const char **argv)
->  		   "columns '.' is reserved."),
->  	OPT_BOOLEAN('U', "hide-unresolved", &symbol_conf.hide_unresolved,
->  		    "Only display entries resolved to a symbol"),
-> -	OPT_CALLBACK(0, "symfs", NULL, "directory",
-> -		     "Look for files with symbols relative to this directory",
-> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
->  		     symbol__config_symfs),
->  	OPT_STRING('C', "cpu", &report.cpu_list, "cpu",
->  		   "list of cpus to profile"),
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 3f509cfdd58c..d083e2bb7703 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -4879,8 +4879,8 @@ int cmd_sched(int argc, const char **argv)
->  		    "Display call chains if present (default on)"),
->  	OPT_UINTEGER(0, "max-stack", &sched.max_stack,
->  		   "Maximum number of functions to display backtrace."),
-> -	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
-> -		    "Look for files with symbols relative to this directory"),
-> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
-> +		     symbol__config_symfs),
->  	OPT_BOOLEAN('s', "summary", &sched.summary_only,
->  		    "Show only syscall summary with statistics"),
->  	OPT_BOOLEAN('S', "with-summary", &sched.summary,
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 7c743a303507..9912199d22da 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -4074,8 +4074,7 @@ int cmd_script(int argc, const char **argv)
->  		   "file", "kallsyms pathname"),
->  	OPT_BOOLEAN('G', "hide-call-graph", &no_callchain,
->  		    "When printing symbols do not display call chain"),
-> -	OPT_CALLBACK(0, "symfs", NULL, "directory",
-> -		     "Look for files with symbols relative to this directory",
-> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
->  		     symbol__config_symfs),
->  	OPT_CALLBACK('F', "fields", NULL, "str",
->  		     "comma separated output fields prepend with 'type:'. "
-> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-> index f8b49d69e9a5..28f33e39895d 100644
-> --- a/tools/perf/builtin-timechart.c
-> +++ b/tools/perf/builtin-timechart.c
-> @@ -1951,8 +1951,7 @@ int cmd_timechart(int argc, const char **argv)
->  	OPT_CALLBACK('p', "process", NULL, "process",
->  		      "process selector. Pass a pid or process name.",
->  		       parse_process),
-> -	OPT_CALLBACK(0, "symfs", NULL, "directory",
-> -		     "Look for files with symbols relative to this directory",
-> +	OPT_CALLBACK(0, "symfs", NULL, "directory[,layout]", SYMFS_HELP,
->  		     symbol__config_symfs),
->  	OPT_INTEGER('n', "proc-num", &tchart.proc_num,
->  		    "min. number of tasks to print"),
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 8662001e1e25..6247d73c32a7 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -66,6 +66,7 @@ struct symbol_conf symbol_conf = {
->  	.time_quantum		= 100 * NSEC_PER_MSEC, /* 100ms */
->  	.show_hist_headers	= true,
->  	.symfs			= "",
-> +	.symfs_layout_flat	= false,
->  	.event_group		= true,
->  	.inline_name		= true,
->  	.res_sample		= 0,
-> @@ -2491,16 +2492,36 @@ int symbol__config_symfs(const struct option *opt __maybe_unused,
->  			 const char *dir, int unset __maybe_unused)
->  {
->  	char *bf = NULL;
-> +	char *layout_str;
->  	int ret;
->  
-> -	symbol_conf.symfs = strdup(dir);
-> -	if (symbol_conf.symfs == NULL)
-> -		return -ENOMEM;
-> +	layout_str = strrchr(dir, ',');
-> +	if (layout_str &&
-> +	    (!strcmp(layout_str + 1, "flat") || !strcmp(layout_str + 1, "hierarchy"))) {
-
-I think it's better to fail with a message if unknown layout is given.
-
-Thanks,
-Namhyung
-
-> +		size_t dir_len = layout_str - dir;
-> +		char *dir_copy = strndup(dir, dir_len);
-> +
-> +		if (dir_copy == NULL)
-> +			return -ENOMEM;
-> +
-> +		symbol_conf.symfs = dir_copy;
-> +
-> +		layout_str++;
-> +		if (!strcmp(layout_str, "flat"))
-> +			symbol_conf.symfs_layout_flat = true;
-> +		else
-> +			symbol_conf.symfs_layout_flat = false;
-> +	} else {
-> +		symbol_conf.symfs = strdup(dir);
-> +		if (symbol_conf.symfs == NULL)
-> +			return -ENOMEM;
-> +		symbol_conf.symfs_layout_flat = false;
-> +	}
->  
->  	/* skip the locally configured cache if a symfs is given, and
->  	 * config buildid dir to symfs/.debug
->  	 */
-> -	ret = asprintf(&bf, "%s/%s", dir, ".debug");
-> +	ret = asprintf(&bf, "%s/%s", symbol_conf.symfs, ".debug");
->  	if (ret < 0)
->  		return -ENOMEM;
->  
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> index 3fb5d146d9b1..4f1dbd1ebd99 100644
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-> @@ -9,6 +9,7 @@
->  #include <linux/list.h>
->  #include <linux/rbtree.h>
->  #include <stdio.h>
-> +#include <errno.h>
->  #include "addr_location.h"
->  #include "path.h"
->  #include "symbol_conf.h"
-> @@ -96,6 +97,18 @@ struct intlist;
->  
->  static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
->  {
-> +	if (symbol_conf.symfs_layout_flat) {
-> +		char *path_copy = strdup(path);
-> +		char *base;
-> +		int ret;
-> +
-> +		if (!path_copy)
-> +			return -ENOMEM;
-> +		base = basename(path_copy);
-> +		ret = path__join(bf, size, symbol_conf.symfs, base);
-> +		free(path_copy);
-> +		return ret;
-> +	}
->  	return path__join(bf, size, symbol_conf.symfs, path);
->  }
->  
-> @@ -169,6 +182,11 @@ size_t symbol__fprintf_symname(const struct symbol *sym, FILE *fp);
->  size_t symbol__fprintf(struct symbol *sym, FILE *fp);
->  bool symbol__restricted_filename(const char *filename,
->  				 const char *restricted_filename);
-> +
-> +#define SYMFS_HELP "setup root directory which contains debug files:\n" \
-> +	"\t\t\t\t" "directory:\tLook for files with symbols relative to this directory.\n" \
-> +	"\t\t\t\t" "layout:   \tLayout of files, 'hierarchy' matches full path (default), 'flat' only matches base name.\n"
-> +
->  int symbol__config_symfs(const struct option *opt __maybe_unused,
->  			 const char *dir, int unset __maybe_unused);
->  
-> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-> index 71bb17372a6c..ac1b444a8fd8 100644
-> --- a/tools/perf/util/symbol_conf.h
-> +++ b/tools/perf/util/symbol_conf.h
-> @@ -93,6 +93,7 @@ struct symbol_conf {
->  			*tid_list,
->  			*addr_list;
->  	const char	*symfs;
-> +	bool		symfs_layout_flat;
->  	int		res_sample;
->  	int		pad_output_len_dso;
->  	int		group_sort_idx;
-> -- 
-> 2.43.0
-> 
+T24gV2VkLCBNYXIgMDQsIDIwMjYgYXQgMTA6NDg6MDBQTSAtMDgwMCwgTmFtaHl1bmcgS2ltIHdy
+b3RlOg0KPiBIZWxsbywNCj4gDQo+ID4gQEAgLTI0OTEsMTYgKzI0OTIsMzYgQEAgaW50IHN5bWJv
+bF9fY29uZmlnX3N5bWZzKGNvbnN0IHN0cnVjdCBvcHRpb24gKm9wdCBfX21heWJlX3VudXNlZCwN
+Cj4gPiAgCQkJIGNvbnN0IGNoYXIgKmRpciwgaW50IHVuc2V0IF9fbWF5YmVfdW51c2VkKQ0KPiA+
+ICB7DQo+ID4gIAljaGFyICpiZiA9IE5VTEw7DQo+ID4gKwljaGFyICpsYXlvdXRfc3RyOw0KPiA+
+ICAJaW50IHJldDsNCj4gPiAgDQo+ID4gLQlzeW1ib2xfY29uZi5zeW1mcyA9IHN0cmR1cChkaXIp
+Ow0KPiA+IC0JaWYgKHN5bWJvbF9jb25mLnN5bWZzID09IE5VTEwpDQo+ID4gLQkJcmV0dXJuIC1F
+Tk9NRU07DQo+ID4gKwlsYXlvdXRfc3RyID0gc3RycmNocihkaXIsICcsJyk7DQo+ID4gKwlpZiAo
+bGF5b3V0X3N0ciAmJg0KPiA+ICsJICAgICghc3RyY21wKGxheW91dF9zdHIgKyAxLCAiZmxhdCIp
+IHx8ICFzdHJjbXAobGF5b3V0X3N0ciArIDEsICJoaWVyYXJjaHkiKSkpIHsNCj4gDQo+IEkgdGhp
+bmsgaXQncyBiZXR0ZXIgdG8gZmFpbCB3aXRoIGEgbWVzc2FnZSBpZiB1bmtub3duIGxheW91dCBp
+cyBnaXZlbi4NCj4NCkFncmVlZC4gVGhlIGN1cnJlbnQgaXNzdWUgaXMgdGhhdCBpZiB3ZSB1c2Ug
+JywnIGFzIHRoZSBkZWxpbWl0ZXIgKHRvIG1haW50YWluIGENCmNvbnNpc3RlbnQgc3R5bGUgd2l0
+aCBvdGhlciBvcHRpb25zKSwgYW5kIHRoZSBwYXRoIGl0c2VsZiBjb250YWlucyBhIGNvbW1hLCBp
+dA0Kd291bGQgcmVzdWx0IGluIHRoZSBmb2xsb3dpbmcgYW1iaWd1aXR5Og0KIC0gL3BhdGgsZmxh
+dCDihpIgc3ltZnM9L3BhdGgsIGxheW91dD1mbGF0DQogLSAvcGF0aCxoaWVyYXJjaHkg4oaSIHN5
+bWZzPS9wYXRoLCBsYXlvdXQ9aGllcmFyY2h5DQogLSAvc29tZSxwYXRoLyDihpIgc3ltZnM9L3Nv
+bWUsIGxheW91dD1wYXRoLw0KDQpEbyB5b3UgaGF2ZSBiZXR0ZXIgc3VnZ2VzdGlvbnM/IFVzaW5n
+IGEgZGlmZmVyZW50IGRlbGltaXRlciAoZS5nLiwgOiBvciA7KT8NCg0KPiBUaGFua3MsDQo+IE5h
+bWh5dW5nDQo+IA0KPiA+ICsJCXNpemVfdCBkaXJfbGVuID0gbGF5b3V0X3N0ciAtIGRpcjsNCj4g
+PiArCQljaGFyICpkaXJfY29weSA9IHN0cm5kdXAoZGlyLCBkaXJfbGVuKTsNCj4gPiArDQo+ID4g
+KwkJaWYgKGRpcl9jb3B5ID09IE5VTEwpDQo+ID4gKwkJCXJldHVybiAtRU5PTUVNOw0KPiA+ICsN
+Cj4gPiArCQlzeW1ib2xfY29uZi5zeW1mcyA9IGRpcl9jb3B5Ow0KPiA+ICsNCj4gPiArCQlsYXlv
+dXRfc3RyKys7DQo+ID4gKwkJaWYgKCFzdHJjbXAobGF5b3V0X3N0ciwgImZsYXQiKSkNCj4gPiAr
+CQkJc3ltYm9sX2NvbmYuc3ltZnNfbGF5b3V0X2ZsYXQgPSB0cnVlOw0KPiA+ICsJCWVsc2UNCj4g
+PiArCQkJc3ltYm9sX2NvbmYuc3ltZnNfbGF5b3V0X2ZsYXQgPSBmYWxzZTsNCj4gPiArCX0gZWxz
+ZSB7DQo+ID4gKwkJc3ltYm9sX2NvbmYuc3ltZnMgPSBzdHJkdXAoZGlyKTsNCj4gPiArCQlpZiAo
+c3ltYm9sX2NvbmYuc3ltZnMgPT0gTlVMTCkNCj4gPiArCQkJcmV0dXJuIC1FTk9NRU07DQo+ID4g
+KwkJc3ltYm9sX2NvbmYuc3ltZnNfbGF5b3V0X2ZsYXQgPSBmYWxzZTsNCj4gPiArCX0NCj4gPiAg
+DQo+ID4gIAkvKiBza2lwIHRoZSBsb2NhbGx5IGNvbmZpZ3VyZWQgY2FjaGUgaWYgYSBzeW1mcyBp
+cyBnaXZlbiwgYW5kDQo+ID4gIAkgKiBjb25maWcgYnVpbGRpZCBkaXIgdG8gc3ltZnMvLmRlYnVn
+DQo+ID4gIAkgKi8NCj4gPiAtCXJldCA9IGFzcHJpbnRmKCZiZiwgIiVzLyVzIiwgZGlyLCAiLmRl
+YnVnIik7DQo+ID4gKwlyZXQgPSBhc3ByaW50ZigmYmYsICIlcy8lcyIsIHN5bWJvbF9jb25mLnN5
+bWZzLCAiLmRlYnVnIik7DQo+ID4gIAlpZiAocmV0IDwgMCkNCj4gPiAgCQlyZXR1cm4gLUVOT01F
+TTsNCj4gPiAgDQo+ID4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvdXRpbC9zeW1ib2wuaCBiL3Rv
+b2xzL3BlcmYvdXRpbC9zeW1ib2wuaA0KPiA+IGluZGV4IDNmYjVkMTQ2ZDliMS4uNGYxZGJkMWVi
+ZDk5IDEwMDY0NA0KPiA+IC0tLSBhL3Rvb2xzL3BlcmYvdXRpbC9zeW1ib2wuaA0KPiA+ICsrKyBi
+L3Rvb2xzL3BlcmYvdXRpbC9zeW1ib2wuaA0KPiA+IEBAIC05LDYgKzksNyBAQA0KPiA+ICAjaW5j
+bHVkZSA8bGludXgvbGlzdC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvcmJ0cmVlLmg+DQo+ID4g
+ICNpbmNsdWRlIDxzdGRpby5oPg0KPiA+ICsjaW5jbHVkZSA8ZXJybm8uaD4NCj4gPiAgI2luY2x1
+ZGUgImFkZHJfbG9jYXRpb24uaCINCj4gPiAgI2luY2x1ZGUgInBhdGguaCINCj4gPiAgI2luY2x1
+ZGUgInN5bWJvbF9jb25mLmgiDQo+ID4gQEAgLTk2LDYgKzk3LDE4IEBAIHN0cnVjdCBpbnRsaXN0
+Ow0KPiA+ICANCj4gPiAgc3RhdGljIGlubGluZSBpbnQgX19zeW1ib2xfX2pvaW5fc3ltZnMoY2hh
+ciAqYmYsIHNpemVfdCBzaXplLCBjb25zdCBjaGFyICpwYXRoKQ0KPiA+ICB7DQo+ID4gKwlpZiAo
+c3ltYm9sX2NvbmYuc3ltZnNfbGF5b3V0X2ZsYXQpIHsNCj4gPiArCQljaGFyICpwYXRoX2NvcHkg
+PSBzdHJkdXAocGF0aCk7DQo+ID4gKwkJY2hhciAqYmFzZTsNCj4gPiArCQlpbnQgcmV0Ow0KPiA+
+ICsNCj4gPiArCQlpZiAoIXBhdGhfY29weSkNCj4gPiArCQkJcmV0dXJuIC1FTk9NRU07DQo+ID4g
+KwkJYmFzZSA9IGJhc2VuYW1lKHBhdGhfY29weSk7DQo+ID4gKwkJcmV0ID0gcGF0aF9fam9pbihi
+Ziwgc2l6ZSwgc3ltYm9sX2NvbmYuc3ltZnMsIGJhc2UpOw0KPiA+ICsJCWZyZWUocGF0aF9jb3B5
+KTsNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsJfQ0KPiA+ICAJcmV0dXJuIHBhdGhfX2pvaW4o
+YmYsIHNpemUsIHN5bWJvbF9jb25mLnN5bWZzLCBwYXRoKTsNCj4gPiAgfQ0KPiA+ICANCj4gPiBA
+QCAtMTY5LDYgKzE4MiwxMSBAQCBzaXplX3Qgc3ltYm9sX19mcHJpbnRmX3N5bW5hbWUoY29uc3Qg
+c3RydWN0IHN5bWJvbCAqc3ltLCBGSUxFICpmcCk7DQo+ID4gIHNpemVfdCBzeW1ib2xfX2Zwcmlu
+dGYoc3RydWN0IHN5bWJvbCAqc3ltLCBGSUxFICpmcCk7DQo+ID4gIGJvb2wgc3ltYm9sX19yZXN0
+cmljdGVkX2ZpbGVuYW1lKGNvbnN0IGNoYXIgKmZpbGVuYW1lLA0KPiA+ICAJCQkJIGNvbnN0IGNo
+YXIgKnJlc3RyaWN0ZWRfZmlsZW5hbWUpOw0KPiA+ICsNCj4gPiArI2RlZmluZSBTWU1GU19IRUxQ
+ICJzZXR1cCByb290IGRpcmVjdG9yeSB3aGljaCBjb250YWlucyBkZWJ1ZyBmaWxlczpcbiIgXA0K
+PiA+ICsJIlx0XHRcdFx0IiAiZGlyZWN0b3J5Olx0TG9vayBmb3IgZmlsZXMgd2l0aCBzeW1ib2xz
+IHJlbGF0aXZlIHRvIHRoaXMgZGlyZWN0b3J5LlxuIiBcDQo+ID4gKwkiXHRcdFx0XHQiICJsYXlv
+dXQ6ICAgXHRMYXlvdXQgb2YgZmlsZXMsICdoaWVyYXJjaHknIG1hdGNoZXMgZnVsbCBwYXRoIChk
+ZWZhdWx0KSwgJ2ZsYXQnIG9ubHkgbWF0Y2hlcyBiYXNlIG5hbWUuXG4iDQo+ID4gKw0KPiA+ICBp
+bnQgc3ltYm9sX19jb25maWdfc3ltZnMoY29uc3Qgc3RydWN0IG9wdGlvbiAqb3B0IF9fbWF5YmVf
+dW51c2VkLA0KPiA+ICAJCQkgY29uc3QgY2hhciAqZGlyLCBpbnQgdW5zZXQgX19tYXliZV91bnVz
+ZWQpOw0KPiA+ICANCj4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi91dGlsL3N5bWJvbF9jb25m
+LmggYi90b29scy9wZXJmL3V0aWwvc3ltYm9sX2NvbmYuaA0KPiA+IGluZGV4IDcxYmIxNzM3MmE2
+Yy4uYWMxYjQ0NGE4ZmQ4IDEwMDY0NA0KPiA+IC0tLSBhL3Rvb2xzL3BlcmYvdXRpbC9zeW1ib2xf
+Y29uZi5oDQo+ID4gKysrIGIvdG9vbHMvcGVyZi91dGlsL3N5bWJvbF9jb25mLmgNCj4gPiBAQCAt
+OTMsNiArOTMsNyBAQCBzdHJ1Y3Qgc3ltYm9sX2NvbmYgew0KPiA+ICAJCQkqdGlkX2xpc3QsDQo+
+ID4gIAkJCSphZGRyX2xpc3Q7DQo+ID4gIAljb25zdCBjaGFyCSpzeW1mczsNCj4gPiArCWJvb2wJ
+CXN5bWZzX2xheW91dF9mbGF0Ow0KPiA+ICAJaW50CQlyZXNfc2FtcGxlOw0KPiA+ICAJaW50CQlw
+YWRfb3V0cHV0X2xlbl9kc287DQo+ID4gIAlpbnQJCWdyb3VwX3NvcnRfaWR4Ow0KPiA+IC0tIA0K
+PiA+IDIuNDMuMA0KPiA+IA0KPiANCg0KLS0gDQpDaGVlcnMsDQpDaGFuZ2JpbiBEdQ0K
