@@ -1,422 +1,430 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0879D329E5C;
-	Fri,  6 Mar 2026 02:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700D1317715;
+	Fri,  6 Mar 2026 02:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772763455; cv=none; b=EUDocc+nx9KqLvkW/IFOVQKd1MlYyOPtq6vWm15kwUYveJYdxFmXSosSLPG2H6LiX4u/NTrBN43DBZgcZRbrXTlpymkwY4YsGjDTL5GmU5tOlIzocn89yIXSRZo/GPp2t0OjNoplZc6zmZudjwI9/77xyRelpdVi1VAgi63wveg=
+	t=1772763574; cv=none; b=JWfETtjJMeHkwWPuE3yNEV0lKBvKoGICiLV6r1T6YqZiHfNT8oBtFyN0ACgal/6oOcjGwsj738up5skUjoVRMBnzXgcVPBstO73TAkiN901p0Dn8MYxRRUEaB0Wj9yRsdtmQ8Gdcc6Qe8zb3/fQMQlNaYw8Mas+z9YOlWGLeJVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772763455; c=relaxed/simple;
-	bh=mKAAkeTpuzc0Ru3sBrk3nKTyyu5wtZAC7TH9zvRB7O8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mpd6KaB5wdPPC8xh8IvfL1jhtifPPbt5abAYtesy9dXO+12M3+TPxTyj3wLOkmsgA2If4vWWgUWmp6Og1P7Qx/eNd0NWBX5T4NT0jMs37jNhSclsQY+Db9v7yjQa7tKAPJYKbqp4aX1K1NuvLiAV5MbyMTTKybczDxP9bmfyQjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NtQsZNf/; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1772763574; c=relaxed/simple;
+	bh=yKN4j+c/JW8JyphjBUkaK0kHgcCkYU698CToNMvKlBo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pteooc88R3PzIYuVS/9FeBIAW1EoSBwHkOsfzoDKyWnXCPi5q5aSdHQLkx3r9JxUyJUkslvO0ly3V+r9+Tluc7GnGpaHq/DWS4UbQaxXwtKRQixEmEgAeWmmg4juth8bGZR+jjR656u5VvBcdKDfTCjv5EvrcLt0YTjY1KErTBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=5QG1NEmJ; arc=none smtp.client-ip=113.46.200.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NtQsZNf/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772763454; x=1804299454;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mKAAkeTpuzc0Ru3sBrk3nKTyyu5wtZAC7TH9zvRB7O8=;
-  b=NtQsZNf/M1uahxZtNKJyFeENgjLh21vh8UP0kgpubW2ZUzzmbhFqMtR7
-   1XsAR7u4/SLv/hbUWufhjw5BPZELyWCdscXi3w0pqTXeBxi9g+lbgA0cG
-   MXejyWfr9ZSJ0Ah1nSQF+jlfLxThzWcGqW4mgcxF9rFUaAD+62aT2hx39
-   DqGjVCEgioo5CE58indEdNcIhPsfFC1aV0myrEK/mlGttv2MvJY5v4pcq
-   45Hn7FMyJCm8KygtYeSU6DxMf3gXZeWXL6uaSAhhm87wLcP6Wai89gEbR
-   Pih1KD2q0HQglgT84OK0RCM3alEud6sLagOXf39OF7CPKZYyfSonhAIY0
-   Q==;
-X-CSE-ConnectionGUID: XqV1NA5LRLa7Tm3wUgpUFw==
-X-CSE-MsgGUID: pUHvwSzPSpqQ1tuxHr/esw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11720"; a="76472146"
-X-IronPort-AV: E=Sophos;i="6.23,104,1770624000"; 
-   d="scan'208";a="76472146"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2026 18:17:33 -0800
-X-CSE-ConnectionGUID: /a3eqlzJT5C90sQzQOPqTQ==
-X-CSE-MsgGUID: kwZSFVANQqqR4PMcEaEQmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,104,1770624000"; 
-   d="scan'208";a="218112788"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2026 18:17:29 -0800
-Message-ID: <59e94944-78be-4d76-9445-6095093e0742@linux.intel.com>
-Date: Fri, 6 Mar 2026 10:17:26 +0800
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="5QG1NEmJ"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=yfMx8zNgzaqPrBfREx6+iwivzUdYyzT0Hs0ec61O+Nk=;
+	b=5QG1NEmJIhkm3YFDFldXOR3evDsXu6CrEywGvqQ5CLkThfE42kdLfXxIYXM8J7azYR/0U8h2D
+	ZvY4q+7KiX7ZiB9D+F6aueg6bE9UJExt0mbJzbvtb8xIz5JYwJHmn9ebeI+UQi6M6eGNqY6Rv3m
+	X29t/dQFsxKILZQASDRYGZE=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4fRqjQ5rjlzmVcw;
+	Fri,  6 Mar 2026 10:14:34 +0800 (CST)
+Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
+	by mail.maildlp.com (Postfix) with ESMTPS id D70354048B;
+	Fri,  6 Mar 2026 10:19:27 +0800 (CST)
+Received: from localhost.localdomain (10.50.163.32) by
+ kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 6 Mar 2026 10:19:26 +0800
+From: Chengwen Feng <fengchengwen@huawei.com>
+To: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>, Jonathan Corbet
+	<corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
+	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul Walmsley
+	<pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Thomas Gleixner
+	<tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, Mark
+ Rutland <mark.rutland@arm.com>, Eric Van Tassell <Eric.VanTassell@amd.com>,
+	Wei Huang <wei.huang2@amd.com>, Ajit Khaparde <ajit.khaparde@broadcom.com>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>
+CC: <linux-acpi@vger.kernel.org>, <jonathan.cameron@huawei.com>,
+	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
+	<liuyonglong@huawei.com>, <stable@vger.kernel.org>, <jeremy.linton@arm.com>,
+	<sunilvl@oss.qualcomm.com>, <chenhuacai@loongson.cn>,
+	<wangliupu@loongson.cn>, Chengwen Feng <fengchengwen@huawei.com>, Somnath
+ Kotur <somnath.kotur@broadcom.com>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linux-riscv@lists.infradead.org>,
+	<linux-perf-users@vger.kernel.org>
+Subject: [PATCH v3] PCI/TPH: Fix get cpu steer-tag fail on ARM64 platform
+Date: Fri, 6 Mar 2026 10:19:17 +0800
+Message-ID: <20260306021920.23233-1-fengchengwen@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20260303003625.39035-1-fengchengwen@huawei.com>
+References: <20260303003625.39035-1-fengchengwen@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v9 11/12] perf/x86/intel: Setup PEBS data configuration
- and enable legacy groups
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>
-References: <20251029102136.61364-1-dapeng1.mi@linux.intel.com>
- <20251029102136.61364-12-dapeng1.mi@linux.intel.com>
- <CAP-5=fUPw6qs9i9NoxHgnc1wW3MhQqO5KxRnn2S8sDuX5ynUSQ@mail.gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAP-5=fUPw6qs9i9NoxHgnc1wW3MhQqO5KxRnn2S8sDuX5ynUSQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemk500009.china.huawei.com (7.202.194.94)
 
+Currently the pcie_tph_get_cpu_st() has an issue on ARM64 platform:
+1. The pcie_tph_get_cpu_st() function directly uses cpu_uid as the input
+   parameter to call the PCI ACPI DSM method. According to the DSM
+   definition, the input value should be the ACPI Processor UID (see [1]
+   for details).
+2. In the Broadcom driver implementation [2] (which invokes
+   pcie_tph_get_cpu_st()), cpu_uid is obtained via
+   cpumask_first(irq->cpu_mask) - this is the logical CPU ID of a CPU
+   core, generated and managed by kernel (e.g., [0,255] for a system
+   with 256 logical CPU cores).
+3. On ARM64 platforms, ACPI assigns Processor UID to cores listed in the
+   MADT table, and this UID may not match the kernel's logical CPU ID.
+   As a result, the current implementation fails to retrieve the correct
+   CPU steer-tag in such cases.
+4. The function works on AMD x86 platforms only because the logical CPU
+   ID is identical to the ACPI Processor UID on those systems.
 
-On 3/5/2026 9:20 AM, Ian Rogers wrote:
-> On Wed, Oct 29, 2025 at 3:25 AM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->> Different with legacy PEBS, arch-PEBS provides per-counter PEBS data
->> configuration by programing MSR IA32_PMC_GPx/FXx_CFG_C MSRs.
->>
->> This patch obtains PEBS data configuration from event attribute and then
->> writes the PEBS data configuration to MSR IA32_PMC_GPx/FXx_CFG_C and
->> enable corresponding PEBS groups.
->>
->> Please notice this patch only enables XMM SIMD regs sampling for
->> arch-PEBS, the other SIMD regs (OPMASK/YMM/ZMM) sampling on arch-PEBS
->> would be supported after PMI based SIMD regs (OPMASK/YMM/ZMM) sampling
->> is supported.
->>
->> Co-developed-by: Kan Liang <kan.liang@linux.intel.com>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/events/intel/core.c     | 136 ++++++++++++++++++++++++++++++-
->>  arch/x86/events/intel/ds.c       |  17 ++++
->>  arch/x86/events/perf_event.h     |   4 +
->>  arch/x86/include/asm/intel_ds.h  |   7 ++
->>  arch/x86/include/asm/msr-index.h |   8 ++
->>  5 files changed, 171 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index 40ccfd80d554..75cba28b86d5 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -2563,6 +2563,45 @@ static void intel_pmu_disable_fixed(struct perf_event *event)
->>         cpuc->fixed_ctrl_val &= ~mask;
->>  }
->>
->> +static inline void __intel_pmu_update_event_ext(int idx, u64 ext)
->> +{
->> +       struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->> +       u32 msr;
->> +
->> +       if (idx < INTEL_PMC_IDX_FIXED) {
->> +               msr = MSR_IA32_PMC_V6_GP0_CFG_C +
->> +                     x86_pmu.addr_offset(idx, false);
->> +       } else {
->> +               msr = MSR_IA32_PMC_V6_FX0_CFG_C +
->> +                     x86_pmu.addr_offset(idx - INTEL_PMC_IDX_FIXED, false);
->> +       }
->> +
->> +       cpuc->cfg_c_val[idx] = ext;
->> +       wrmsrq(msr, ext);
->> +}
->> +
->> +static void intel_pmu_disable_event_ext(struct perf_event *event)
->> +{
->> +       if (!x86_pmu.arch_pebs)
->> +               return;
->> +
->> +       /*
->> +        * Only clear CFG_C MSR for PEBS counter group events,
->> +        * it avoids the HW counter's value to be added into
->> +        * other PEBS records incorrectly after PEBS counter
->> +        * group events are disabled.
->> +        *
->> +        * For other events, it's unnecessary to clear CFG_C MSRs
->> +        * since CFG_C doesn't take effect if counter is in
->> +        * disabled state. That helps to reduce the WRMSR overhead
->> +        * in context switches.
->> +        */
->> +       if (!is_pebs_counter_event_group(event))
->> +               return;
->> +
->> +       __intel_pmu_update_event_ext(event->hw.idx, 0);
->> +}
->> +
->>  static void intel_pmu_disable_event(struct perf_event *event)
->>  {
->>         struct hw_perf_event *hwc = &event->hw;
->> @@ -2571,9 +2610,12 @@ static void intel_pmu_disable_event(struct perf_event *event)
->>         switch (idx) {
->>         case 0 ... INTEL_PMC_IDX_FIXED - 1:
->>                 intel_clear_masks(event, idx);
->> +               intel_pmu_disable_event_ext(event);
->>                 x86_pmu_disable_event(event);
->>                 break;
->>         case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_BTS - 1:
->> +               intel_pmu_disable_event_ext(event);
->> +               fallthrough;
->>         case INTEL_PMC_IDX_METRIC_BASE ... INTEL_PMC_IDX_METRIC_END:
->>                 intel_pmu_disable_fixed(event);
->>                 break;
->> @@ -2940,6 +2982,66 @@ static void intel_pmu_enable_acr(struct perf_event *event)
->>
->>  DEFINE_STATIC_CALL_NULL(intel_pmu_enable_acr_event, intel_pmu_enable_acr);
->>
->> +static void intel_pmu_enable_event_ext(struct perf_event *event)
->> +{
->> +       struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->> +       struct hw_perf_event *hwc = &event->hw;
->> +       union arch_pebs_index old, new;
->> +       struct arch_pebs_cap cap;
->> +       u64 ext = 0;
->> +
->> +       if (!x86_pmu.arch_pebs)
->> +               return;
->> +
->> +       cap = hybrid(cpuc->pmu, arch_pebs_cap);
->> +
->> +       if (event->attr.precise_ip) {
->> +               u64 pebs_data_cfg = intel_get_arch_pebs_data_config(event);
->> +
->> +               ext |= ARCH_PEBS_EN;
->> +               if (hwc->flags & PERF_X86_EVENT_AUTO_RELOAD)
->> +                       ext |= (-hwc->sample_period) & ARCH_PEBS_RELOAD;
-> Nit: Perhaps there should be a warning if "hwc->sample_period >
-> ARCH_PEBS_RELOAD"?
+This commit fixes it by:
+1. For ACPI-enabled platforms, unify the CPU ACPI ID retrieval
+   interface:
+   - On arm64/riscv/loongarch: Rename existing get_acpi_id_for_cpu() to
+     acpi_get_cpu_acpi_id().
+   - On x86: Add new acpi_get_cpu_acpi_id() implementation that wraps
+     cpu_acpi_id().
+2. Update pcie_tph_get_cpu_st() to use acpi_get_cpu_acpi_id(cpu) to get
+   valid ACPI Processor UID for DSM calls.
+3. Renaming pcie_tph_get_cpu_st()'s input parameter cpu_uid to cpu for
+   clarity, as the parameter now represents a logical CPU ID (not a
+   UID).
 
-Hmm, strictly speaking, we should not check if hwc->sample_period is larger
-than ARCH_PEBS_RELOAD since it's allowed even hwc->sample_period is larger
-than ARCH_PEBS_RELOAD as long as hwc->sample_period is not larger than
-x86_pmu.max_period (which is "x86_pmu.cntval_mask >> 1" for modern Intel
-platforms). But we indeed need a sample_period check for arch-PEBS, just
-like what the below ACR does.
+[1] According to ECN_TPH-ST_Revision_20200924
+    (https://members.pcisig.com/wg/PCI-SIG/document/15470), the input
+    is defined as: "If the target is a processor, then this field
+    represents the ACPI Processor UID of the processor as specified in
+    the MADT. If the target is a processor container, then this field
+    represents the ACPI Processor UID of the processor container as
+    specified in the PPTT."
+[2] commit c214410c47d6e ("bnxt_en: Add TPH support in BNXT driver")
 
-```
+Fixes: d2e8a34876ce ("PCI/TPH: Add Steering Tag support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
 
-        /* The reload value cannot exceeds the max period */
-        if (event->attr.sample_period > x86_pmu.max_period)
-            return -EINVAL;
+---
+Changes in v3:
+- Rename existing get_acpi_id_for_cpu() to acpi_get_cpu_acpi_id() other
+  than add one new API.
 
-```
+Changes in v2:
+- Add ECN _DSM reference doc name and its URL.
+- Separate implement acpi_get_cpu_acpi_id() in each arch which supports
+  ACPI.
+- Refine commit-log.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/events/intel/core.c?h=v7.0-rc2#n4789
+---
+ Documentation/PCI/tph.rst          |  4 ++--
+ arch/arm64/include/asm/acpi.h      |  4 ++--
+ arch/loongarch/include/asm/acpi.h  |  2 +-
+ arch/riscv/include/asm/acpi.h      |  2 +-
+ arch/riscv/kernel/acpi_numa.c      |  2 +-
+ arch/x86/include/asm/acpi.h        |  2 ++
+ arch/x86/kernel/cpu/common.c       |  8 ++++++++
+ drivers/acpi/pptt.c                | 16 ++++++++--------
+ drivers/acpi/riscv/rhct.c          |  2 +-
+ drivers/pci/tph.c                  | 11 ++++++-----
+ drivers/perf/arm_cspmu/arm_cspmu.c |  2 +-
+ include/linux/pci-tph.h            |  4 ++--
+ 12 files changed, 35 insertions(+), 24 deletions(-)
 
-I would add a patch to do this check. Thanks.
+diff --git a/Documentation/PCI/tph.rst b/Documentation/PCI/tph.rst
+index e8993be64fd6..b6cf22b9bd90 100644
+--- a/Documentation/PCI/tph.rst
++++ b/Documentation/PCI/tph.rst
+@@ -79,10 +79,10 @@ To retrieve a Steering Tag for a target memory associated with a specific
+ CPU, use the following function::
+ 
+   int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type type,
+-                          unsigned int cpu_uid, u16 *tag);
++                          unsigned int cpu, u16 *tag);
+ 
+ The `type` argument is used to specify the memory type, either volatile
+-or persistent, of the target memory. The `cpu_uid` argument specifies the
++or persistent, of the target memory. The `cpu` argument specifies the
+ CPU where the memory is associated to.
+ 
+ After the ST value is retrieved, the device driver can use the following
+diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
+index c07a58b96329..202107aeb05b 100644
+--- a/arch/arm64/include/asm/acpi.h
++++ b/arch/arm64/include/asm/acpi.h
+@@ -114,7 +114,7 @@ static inline bool acpi_has_cpu_in_madt(void)
+ }
+ 
+ struct acpi_madt_generic_interrupt *acpi_cpu_get_madt_gicc(int cpu);
+-static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
++static inline u32 acpi_get_cpu_acpi_id(unsigned int cpu)
+ {
+ 	return	acpi_cpu_get_madt_gicc(cpu)->uid;
+ }
+@@ -125,7 +125,7 @@ static inline int get_cpu_for_acpi_id(u32 uid)
+ 
+ 	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
+ 		if (acpi_cpu_get_madt_gicc(cpu) &&
+-		    uid == get_acpi_id_for_cpu(cpu))
++		    uid == acpi_get_cpu_acpi_id(cpu))
+ 			return cpu;
+ 
+ 	return -EINVAL;
+diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
+index 7376840fa9f7..89c6c8f52cc3 100644
+--- a/arch/loongarch/include/asm/acpi.h
++++ b/arch/loongarch/include/asm/acpi.h
+@@ -40,7 +40,7 @@ extern struct acpi_madt_core_pic acpi_core_pic[MAX_CORE_PIC];
+ 
+ extern int __init parse_acpi_topology(void);
+ 
+-static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
++static inline u32 acpi_get_cpu_acpi_id(unsigned int cpu)
+ {
+ 	return acpi_core_pic[cpu_logical_map(cpu)].processor_id;
+ }
+diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
+index 6e13695120bc..1d23681b61b5 100644
+--- a/arch/riscv/include/asm/acpi.h
++++ b/arch/riscv/include/asm/acpi.h
+@@ -61,7 +61,7 @@ static inline void arch_fix_phys_package_id(int num, u32 slot) { }
+ 
+ void acpi_init_rintc_map(void);
+ struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu);
+-static inline u32 get_acpi_id_for_cpu(int cpu)
++static inline u32 acpi_get_cpu_acpi_id(int cpu)
+ {
+ 	return acpi_cpu_get_madt_rintc(cpu)->uid;
+ }
+diff --git a/arch/riscv/kernel/acpi_numa.c b/arch/riscv/kernel/acpi_numa.c
+index 130769e3a99c..c2eb4824d0f7 100644
+--- a/arch/riscv/kernel/acpi_numa.c
++++ b/arch/riscv/kernel/acpi_numa.c
+@@ -40,7 +40,7 @@ static inline int get_cpu_for_acpi_id(u32 uid)
+ 	int cpu;
+ 
+ 	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
+-		if (uid == get_acpi_id_for_cpu(cpu))
++		if (uid == acpi_get_cpu_acpi_id(cpu))
+ 			return cpu;
+ 
+ 	return -EINVAL;
+diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
+index a03aa6f999d1..b968369715c1 100644
+--- a/arch/x86/include/asm/acpi.h
++++ b/arch/x86/include/asm/acpi.h
+@@ -157,6 +157,8 @@ static inline bool acpi_has_cpu_in_madt(void)
+ 	return !!acpi_lapic;
+ }
+ 
++u32 acpi_get_cpu_acpi_id(unsigned int cpu);
++
+ #define ACPI_HAVE_ARCH_SET_ROOT_POINTER
+ static __always_inline void acpi_arch_set_root_pointer(u64 addr)
+ {
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 1c3261cae40c..1c7aa7a4faa0 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -29,6 +29,7 @@
+ #include <linux/utsname.h>
+ #include <linux/efi.h>
+ 
++#include <asm/acpi.h>
+ #include <asm/alternative.h>
+ #include <asm/cmdline.h>
+ #include <asm/cpuid/api.h>
+@@ -57,6 +58,7 @@
+ #include <asm/asm.h>
+ #include <asm/bugs.h>
+ #include <asm/cpu.h>
++#include <asm/smp.h>
+ #include <asm/mce.h>
+ #include <asm/msr.h>
+ #include <asm/cacheinfo.h>
+@@ -2643,3 +2645,9 @@ void __init arch_cpu_finalize_init(void)
+ 	 */
+ 	mem_encrypt_init();
+ }
++
++u32 acpi_get_cpu_acpi_id(unsigned int cpu)
++{
++	return cpu_acpi_id(cpu);
++}
++EXPORT_SYMBOL_GPL(acpi_get_cpu_acpi_id);
+diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
+index de5f8c018333..c1a8fba4c2b2 100644
+--- a/drivers/acpi/pptt.c
++++ b/drivers/acpi/pptt.c
+@@ -459,7 +459,7 @@ static void cache_setup_acpi_cpu(struct acpi_table_header *table,
+ {
+ 	struct acpi_pptt_cache *found_cache;
+ 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
+-	u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
++	u32 acpi_cpu_id = acpi_get_cpu_acpi_id(cpu);
+ 	struct cacheinfo *this_leaf;
+ 	unsigned int index = 0;
+ 	struct acpi_pptt_processor *cpu_node = NULL;
+@@ -546,7 +546,7 @@ static int topology_get_acpi_cpu_tag(struct acpi_table_header *table,
+ 				     unsigned int cpu, int level, int flag)
+ {
+ 	struct acpi_pptt_processor *cpu_node;
+-	u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
++	u32 acpi_cpu_id = acpi_get_cpu_acpi_id(cpu);
+ 
+ 	cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
+ 	if (cpu_node) {
+@@ -622,7 +622,7 @@ static int find_acpi_cpu_topology_tag(unsigned int cpu, int level, int flag)
+ static int check_acpi_cpu_flag(unsigned int cpu, int rev, u32 flag)
+ {
+ 	struct acpi_table_header *table;
+-	u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
++	u32 acpi_cpu_id = acpi_get_cpu_acpi_id(cpu);
+ 	struct acpi_pptt_processor *cpu_node = NULL;
+ 	int ret = -ENOENT;
+ 
+@@ -671,7 +671,7 @@ int acpi_get_cache_info(unsigned int cpu, unsigned int *levels,
+ 
+ 	pr_debug("Cache Setup: find cache levels for CPU=%d\n", cpu);
+ 
+-	acpi_cpu_id = get_acpi_id_for_cpu(cpu);
++	acpi_cpu_id = acpi_get_cpu_acpi_id(cpu);
+ 	cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
+ 	if (!cpu_node)
+ 		return -ENOENT;
+@@ -797,7 +797,7 @@ int find_acpi_cpu_topology_cluster(unsigned int cpu)
+ 	if (!table)
+ 		return -ENOENT;
+ 
+-	acpi_cpu_id = get_acpi_id_for_cpu(cpu);
++	acpi_cpu_id = acpi_get_cpu_acpi_id(cpu);
+ 	cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
+ 	if (!cpu_node || !cpu_node->parent)
+ 		return -ENOENT;
+@@ -872,7 +872,7 @@ static void acpi_pptt_get_child_cpus(struct acpi_table_header *table_hdr,
+ 	cpumask_clear(cpus);
+ 
+ 	for_each_possible_cpu(cpu) {
+-		acpi_id = get_acpi_id_for_cpu(cpu);
++		acpi_id = acpi_get_cpu_acpi_id(cpu);
+ 		cpu_node = acpi_find_processor_node(table_hdr, acpi_id);
+ 
+ 		while (cpu_node) {
+@@ -966,7 +966,7 @@ int find_acpi_cache_level_from_id(u32 cache_id)
+ 	for_each_possible_cpu(cpu) {
+ 		bool empty;
+ 		int level = 1;
+-		u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
++		u32 acpi_cpu_id = acpi_get_cpu_acpi_id(cpu);
+ 		struct acpi_pptt_cache *cache;
+ 		struct acpi_pptt_processor *cpu_node;
+ 
+@@ -1030,7 +1030,7 @@ int acpi_pptt_get_cpumask_from_cache_id(u32 cache_id, cpumask_t *cpus)
+ 	for_each_possible_cpu(cpu) {
+ 		bool empty;
+ 		int level = 1;
+-		u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
++		u32 acpi_cpu_id = acpi_get_cpu_acpi_id(cpu);
+ 		struct acpi_pptt_cache *cache;
+ 		struct acpi_pptt_processor *cpu_node;
+ 
+diff --git a/drivers/acpi/riscv/rhct.c b/drivers/acpi/riscv/rhct.c
+index caa2c16e1697..c15ce8c13136 100644
+--- a/drivers/acpi/riscv/rhct.c
++++ b/drivers/acpi/riscv/rhct.c
+@@ -44,7 +44,7 @@ int acpi_get_riscv_isa(struct acpi_table_header *table, unsigned int cpu, const
+ 	struct acpi_rhct_isa_string *isa_node;
+ 	struct acpi_table_rhct *rhct;
+ 	u32 *hart_info_node_offset;
+-	u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
++	u32 acpi_cpu_id = acpi_get_cpu_acpi_id(cpu);
+ 
+ 	BUG_ON(acpi_disabled);
+ 
+diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
+index ca4f97be7538..c1bd60637b5a 100644
+--- a/drivers/pci/tph.c
++++ b/drivers/pci/tph.c
+@@ -236,18 +236,19 @@ static int write_tag_to_st_table(struct pci_dev *pdev, int index, u16 tag)
+  * with a specific CPU
+  * @pdev: PCI device
+  * @mem_type: target memory type (volatile or persistent RAM)
+- * @cpu_uid: associated CPU id
++ * @cpu: associated CPU id
+  * @tag: Steering Tag to be returned
+  *
+  * Return the Steering Tag for a target memory that is associated with a
+- * specific CPU as indicated by cpu_uid.
++ * specific CPU as indicated by cpu.
+  *
+  * Return: 0 if success, otherwise negative value (-errno)
+  */
+ int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
+-			unsigned int cpu_uid, u16 *tag)
++			unsigned int cpu, u16 *tag)
+ {
+ #ifdef CONFIG_ACPI
++	u32 cpu_uid = acpi_get_cpu_acpi_id(cpu);
+ 	struct pci_dev *rp;
+ 	acpi_handle rp_acpi_handle;
+ 	union st_info info;
+@@ -265,9 +266,9 @@ int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
+ 
+ 	*tag = tph_extract_tag(mem_type, pdev->tph_req_type, &info);
+ 
+-	pci_dbg(pdev, "get steering tag: mem_type=%s, cpu_uid=%d, tag=%#04x\n",
++	pci_dbg(pdev, "get steering tag: mem_type=%s, cpu=%d, tag=%#04x\n",
+ 		(mem_type == TPH_MEM_TYPE_VM) ? "volatile" : "persistent",
+-		cpu_uid, *tag);
++		cpu, *tag);
+ 
+ 	return 0;
+ #else
+diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
+index 34430b68f602..506b661c60fd 100644
+--- a/drivers/perf/arm_cspmu/arm_cspmu.c
++++ b/drivers/perf/arm_cspmu/arm_cspmu.c
+@@ -1115,7 +1115,7 @@ static int arm_cspmu_acpi_get_cpus(struct arm_cspmu *cspmu)
+ 	if (affinity_flag == ACPI_APMT_FLAGS_AFFINITY_PROC) {
+ 		for_each_possible_cpu(cpu) {
+ 			if (apmt_node->proc_affinity ==
+-			    get_acpi_id_for_cpu(cpu)) {
++			    acpi_get_cpu_acpi_id(cpu)) {
+ 				cpumask_set_cpu(cpu, &cspmu->associated_cpus);
+ 				break;
+ 			}
+diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
+index ba28140ce670..be68cd17f2f8 100644
+--- a/include/linux/pci-tph.h
++++ b/include/linux/pci-tph.h
+@@ -25,7 +25,7 @@ int pcie_tph_set_st_entry(struct pci_dev *pdev,
+ 			  unsigned int index, u16 tag);
+ int pcie_tph_get_cpu_st(struct pci_dev *dev,
+ 			enum tph_mem_type mem_type,
+-			unsigned int cpu_uid, u16 *tag);
++			unsigned int cpu, u16 *tag);
+ void pcie_disable_tph(struct pci_dev *pdev);
+ int pcie_enable_tph(struct pci_dev *pdev, int mode);
+ u16 pcie_tph_get_st_table_size(struct pci_dev *pdev);
+@@ -36,7 +36,7 @@ static inline int pcie_tph_set_st_entry(struct pci_dev *pdev,
+ { return -EINVAL; }
+ static inline int pcie_tph_get_cpu_st(struct pci_dev *dev,
+ 				      enum tph_mem_type mem_type,
+-				      unsigned int cpu_uid, u16 *tag)
++				      unsigned int cpu, u16 *tag)
+ { return -EINVAL; }
+ static inline void pcie_disable_tph(struct pci_dev *pdev) { }
+ static inline int pcie_enable_tph(struct pci_dev *pdev, int mode)
+-- 
+2.17.1
 
-
->
-> Thanks,
-> Ian
->
->> +
->> +               if (pebs_data_cfg && cap.caps) {
->> +                       if (pebs_data_cfg & PEBS_DATACFG_MEMINFO)
->> +                               ext |= ARCH_PEBS_AUX & cap.caps;
->> +
->> +                       if (pebs_data_cfg & PEBS_DATACFG_GP)
->> +                               ext |= ARCH_PEBS_GPR & cap.caps;
->> +
->> +                       if (pebs_data_cfg & PEBS_DATACFG_XMMS)
->> +                               ext |= ARCH_PEBS_VECR_XMM & cap.caps;
->> +
->> +                       if (pebs_data_cfg & PEBS_DATACFG_LBRS)
->> +                               ext |= ARCH_PEBS_LBR & cap.caps;
->> +               }
->> +
->> +               if (cpuc->n_pebs == cpuc->n_large_pebs)
->> +                       new.thresh = ARCH_PEBS_THRESH_MULTI;
->> +               else
->> +                       new.thresh = ARCH_PEBS_THRESH_SINGLE;
->> +
->> +               rdmsrq(MSR_IA32_PEBS_INDEX, old.whole);
->> +               if (new.thresh != old.thresh || !old.en) {
->> +                       if (old.thresh == ARCH_PEBS_THRESH_MULTI && old.wr > 0) {
->> +                               /*
->> +                                * Large PEBS was enabled.
->> +                                * Drain PEBS buffer before applying the single PEBS.
->> +                                */
->> +                               intel_pmu_drain_pebs_buffer();
->> +                       } else {
->> +                               new.wr = 0;
->> +                               new.full = 0;
->> +                               new.en = 1;
->> +                               wrmsrq(MSR_IA32_PEBS_INDEX, new.whole);
->> +                       }
->> +               }
->> +       }
->> +
->> +       if (cpuc->cfg_c_val[hwc->idx] != ext)
->> +               __intel_pmu_update_event_ext(hwc->idx, ext);
->> +}
->> +
->>  static void intel_pmu_enable_event(struct perf_event *event)
->>  {
->>         u64 enable_mask = ARCH_PERFMON_EVENTSEL_ENABLE;
->> @@ -2955,10 +3057,12 @@ static void intel_pmu_enable_event(struct perf_event *event)
->>                         enable_mask |= ARCH_PERFMON_EVENTSEL_BR_CNTR;
->>                 intel_set_masks(event, idx);
->>                 static_call_cond(intel_pmu_enable_acr_event)(event);
->> +               intel_pmu_enable_event_ext(event);
->>                 __x86_pmu_enable_event(hwc, enable_mask);
->>                 break;
->>         case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_BTS - 1:
->>                 static_call_cond(intel_pmu_enable_acr_event)(event);
->> +               intel_pmu_enable_event_ext(event);
->>                 fallthrough;
->>         case INTEL_PMC_IDX_METRIC_BASE ... INTEL_PMC_IDX_METRIC_END:
->>                 intel_pmu_enable_fixed(event);
->> @@ -5301,6 +5405,30 @@ static inline bool intel_pmu_broken_perf_cap(void)
->>         return false;
->>  }
->>
->> +static inline void __intel_update_pmu_caps(struct pmu *pmu)
->> +{
->> +       struct pmu *dest_pmu = pmu ? pmu : x86_get_pmu(smp_processor_id());
->> +
->> +       if (hybrid(pmu, arch_pebs_cap).caps & ARCH_PEBS_VECR_XMM)
->> +               dest_pmu->capabilities |= PERF_PMU_CAP_EXTENDED_REGS;
->> +}
->> +
->> +static inline void __intel_update_large_pebs_flags(struct pmu *pmu)
->> +{
->> +       u64 caps = hybrid(pmu, arch_pebs_cap).caps;
->> +
->> +       x86_pmu.large_pebs_flags |= PERF_SAMPLE_TIME;
->> +       if (caps & ARCH_PEBS_LBR)
->> +               x86_pmu.large_pebs_flags |= PERF_SAMPLE_BRANCH_STACK;
->> +
->> +       if (!(caps & ARCH_PEBS_AUX))
->> +               x86_pmu.large_pebs_flags &= ~PERF_SAMPLE_DATA_SRC;
->> +       if (!(caps & ARCH_PEBS_GPR)) {
->> +               x86_pmu.large_pebs_flags &=
->> +                       ~(PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER);
->> +       }
->> +}
->> +
->>  #define counter_mask(_gp, _fixed) ((_gp) | ((u64)(_fixed) << INTEL_PMC_IDX_FIXED))
->>
->>  static void update_pmu_cap(struct pmu *pmu)
->> @@ -5349,8 +5477,12 @@ static void update_pmu_cap(struct pmu *pmu)
->>                 hybrid(pmu, arch_pebs_cap).counters = pebs_mask;
->>                 hybrid(pmu, arch_pebs_cap).pdists = pdists_mask;
->>
->> -               if (WARN_ON((pebs_mask | pdists_mask) & ~cntrs_mask))
->> +               if (WARN_ON((pebs_mask | pdists_mask) & ~cntrs_mask)) {
->>                         x86_pmu.arch_pebs = 0;
->> +               } else {
->> +                       __intel_update_pmu_caps(pmu);
->> +                       __intel_update_large_pebs_flags(pmu);
->> +               }
->>         } else {
->>                 WARN_ON(x86_pmu.arch_pebs == 1);
->>                 x86_pmu.arch_pebs = 0;
->> @@ -5514,6 +5646,8 @@ static void intel_pmu_cpu_starting(int cpu)
->>                 }
->>         }
->>
->> +       __intel_update_pmu_caps(cpuc->pmu);
->> +
->>         if (!cpuc->shared_regs)
->>                 return;
->>
->> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->> index 1179980f795b..c66e9b562de3 100644
->> --- a/arch/x86/events/intel/ds.c
->> +++ b/arch/x86/events/intel/ds.c
->> @@ -1528,6 +1528,18 @@ pebs_update_state(bool needed_cb, struct cpu_hw_events *cpuc,
->>         }
->>  }
->>
->> +u64 intel_get_arch_pebs_data_config(struct perf_event *event)
->> +{
->> +       u64 pebs_data_cfg = 0;
->> +
->> +       if (WARN_ON(event->hw.idx < 0 || event->hw.idx >= X86_PMC_IDX_MAX))
->> +               return 0;
->> +
->> +       pebs_data_cfg |= pebs_update_adaptive_cfg(event);
->> +
->> +       return pebs_data_cfg;
->> +}
->> +
->>  void intel_pmu_pebs_add(struct perf_event *event)
->>  {
->>         struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->> @@ -2947,6 +2959,11 @@ static void intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
->>
->>         index.wr = 0;
->>         index.full = 0;
->> +       index.en = 1;
->> +       if (cpuc->n_pebs == cpuc->n_large_pebs)
->> +               index.thresh = ARCH_PEBS_THRESH_MULTI;
->> +       else
->> +               index.thresh = ARCH_PEBS_THRESH_SINGLE;
->>         wrmsrq(MSR_IA32_PEBS_INDEX, index.whole);
->>
->>         mask = hybrid(cpuc->pmu, arch_pebs_cap).counters & cpuc->pebs_enabled;
->> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
->> index 13f411bca6bc..3161ec0a3416 100644
->> --- a/arch/x86/events/perf_event.h
->> +++ b/arch/x86/events/perf_event.h
->> @@ -304,6 +304,8 @@ struct cpu_hw_events {
->>         /* Intel ACR configuration */
->>         u64                     acr_cfg_b[X86_PMC_IDX_MAX];
->>         u64                     acr_cfg_c[X86_PMC_IDX_MAX];
->> +       /* Cached CFG_C values */
->> +       u64                     cfg_c_val[X86_PMC_IDX_MAX];
->>
->>         /*
->>          * Intel LBR bits
->> @@ -1782,6 +1784,8 @@ void intel_pmu_pebs_data_source_cmt(void);
->>
->>  void intel_pmu_pebs_data_source_lnl(void);
->>
->> +u64 intel_get_arch_pebs_data_config(struct perf_event *event);
->> +
->>  int intel_pmu_setup_lbr_filter(struct perf_event *event);
->>
->>  void intel_pt_interrupt(void);
->> diff --git a/arch/x86/include/asm/intel_ds.h b/arch/x86/include/asm/intel_ds.h
->> index 023c2883f9f3..695f87efbeb8 100644
->> --- a/arch/x86/include/asm/intel_ds.h
->> +++ b/arch/x86/include/asm/intel_ds.h
->> @@ -7,6 +7,13 @@
->>  #define PEBS_BUFFER_SHIFT      4
->>  #define PEBS_BUFFER_SIZE       (PAGE_SIZE << PEBS_BUFFER_SHIFT)
->>
->> +/*
->> + * The largest PEBS record could consume a page, ensure
->> + * a record at least can be written after triggering PMI.
->> + */
->> +#define ARCH_PEBS_THRESH_MULTI ((PEBS_BUFFER_SIZE - PAGE_SIZE) >> PEBS_BUFFER_SHIFT)
->> +#define ARCH_PEBS_THRESH_SINGLE        1
->> +
->>  /* The maximal number of PEBS events: */
->>  #define MAX_PEBS_EVENTS_FMT4   8
->>  #define MAX_PEBS_EVENTS                32
->> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
->> index fc7a4e7c718d..f1ef9ac38bfb 100644
->> --- a/arch/x86/include/asm/msr-index.h
->> +++ b/arch/x86/include/asm/msr-index.h
->> @@ -333,6 +333,14 @@
->>  #define ARCH_PEBS_OFFSET_MASK          0x7fffff
->>  #define ARCH_PEBS_INDEX_WR_SHIFT       4
->>
->> +#define ARCH_PEBS_RELOAD               0xffffffff
->> +#define ARCH_PEBS_LBR_SHIFT            40
->> +#define ARCH_PEBS_LBR                  (0x3ull << ARCH_PEBS_LBR_SHIFT)
->> +#define ARCH_PEBS_VECR_XMM             BIT_ULL(49)
->> +#define ARCH_PEBS_GPR                  BIT_ULL(61)
->> +#define ARCH_PEBS_AUX                  BIT_ULL(62)
->> +#define ARCH_PEBS_EN                   BIT_ULL(63)
->> +
->>  #define MSR_IA32_RTIT_CTL              0x00000570
->>  #define RTIT_CTL_TRACEEN               BIT(0)
->>  #define RTIT_CTL_CYCLEACC              BIT(1)
->> --
->> 2.34.1
->>
