@@ -1,241 +1,285 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2E63815E4;
-	Fri,  6 Mar 2026 12:03:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE1E364059;
+	Fri,  6 Mar 2026 12:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772798614; cv=none; b=U5EuB+a3ys7VQ28qqJozNh6iajgiRSjUEZe3hPqYwb4zakSK3Cy8LxoW2W6XkGgO60GUVcfydSFs7S40Bh7HmrzZbIU5I9SnoKeiHpCh65WZV0R8496xYU43SzZ/8WYzTvch2w+HemKtw3/+tl2dY1tjY1HQn/Sm6fg6jC/GYmI=
+	t=1772798818; cv=none; b=MS/HqXv/xyNovopVReB0ntI9/M3lpG9LeNuwKkDl2j+0YzdWvoNiAWnnlfGjCQh4Wht8MZwmwv+uQjHD3Bcw2TtWq/jGpBXK/IG4+piK3xTdia450WZX4JYR9eeITI+lfSYVkUK7MlXJ9wavCvEBo0szc5mAruCxFcRAduRbox4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772798614; c=relaxed/simple;
-	bh=CzoqwvSAeRfK44X4Sq+CvuqCGufXKFog8r6S8FJOxVw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=f8U5qjJOB6Qa3ZrRhhxLmYZBy6joJV7uEreoY6X8rxboHZ/LotIz7GNFDJlnZKQTyCmI/l8uBdkl52xigwoGVudKq9sqvlacEdIMLwEhrmBxpadf8HwdS0SLgQiQaYqPgNUX92CJmz+41flZLkSlj6zQCUkrrdFKpNNniMWRjsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCjBLVlD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772798818; c=relaxed/simple;
+	bh=vBj3woozlRPQJAsoS5/IW+klSPAITAbOF218ghzCguY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hMrnzJoMBjZX/cx367EsjJJOXNY6oHj1alBub55XFhfgjN7LNDUHYdz2NTikGiHXcvcNUIenrf54JdWtWDmcPdjv6w00ySqTWEMtuiE6hNOLzzWRr9JMPfRE7yp3xnqFSY8PorU4HD5Z0Aen3O90BpuYJ0C/Tx8DMCwQ20n19Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkmrBFKC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCjBLVlD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1420C2BCB7;
-	Fri,  6 Mar 2026 12:03:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkmrBFKC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFC1EC4CEF7;
+	Fri,  6 Mar 2026 12:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772798613;
-	bh=CzoqwvSAeRfK44X4Sq+CvuqCGufXKFog8r6S8FJOxVw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=PCjBLVlDFqG1oBbiQd+HrQ8rEG3m21Qiku684yY84WX7GTtS+y22sDcetMx6fqlDG
-	 LyaV2QWfjEjHKnaTBhb2ZyNX9SFxkrcFxd8xmBSw10TVnHnhS0zklAYvDZWfy1MhCv
-	 EqAAKKPvBAf8/leoZU2xyvvUC2H2ff6epkVxlixuQAdN30RqgGAAANDm6+QgRlIONP
-	 nSZFLHXIxiEEdhVxKiUpBs4MgDfHXlWKg6jpYf1CJ6BWin5R9K6G5kaUjvZWbwwqHc
-	 /GlMSkLIs98hGrKPSpz99NUzB1chQOGo7EfaFgQI/brIj9+nBjb2M5ZbjJGNoDObHM
-	 NMEjDVji5mrvw==
-Message-ID: <c1845a4b8d35d367953ac6cbfcf91ac36958ba51.camel@kernel.org>
-Subject: Re: [PATCH v3 01/12] vfs: widen inode hash/lookup functions to u64
-From: Jeff Layton <jlayton@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt	
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Dan Williams
- <dan.j.williams@intel.com>, Eric Biggers	 <ebiggers@kernel.org>, "Theodore
- Y. Ts'o" <tytso@mit.edu>, Muchun Song	 <muchun.song@linux.dev>, Oscar
- Salvador <osalvador@suse.de>, David Hildenbrand	 <david@kernel.org>, David
- Howells <dhowells@redhat.com>, Paulo Alcantara	 <pc@manguebit.org>, Andreas
- Dilger <adilger.kernel@dilger.ca>, Jan Kara	 <jack@suse.com>, Jaegeuk Kim
- <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,  Trond Myklebust
- <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck Lever
- <chuck.lever@oracle.com>,  NeilBrown <neil@brown.name>, Olga Kornievskaia
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,  Tom Talpey
- <tom@talpey.com>, Steve French <sfrench@samba.org>, Ronnie Sahlberg
- <ronniesahlberg@gmail.com>,  Shyam Prasad N <sprasad@microsoft.com>,
- Bharath SM <bharathsm@microsoft.com>, Alexander Aring	
- <alex.aring@gmail.com>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
- Viacheslav Dubeyko	 <slava@dubeyko.com>, Eric Van Hensbergen
- <ericvh@kernel.org>, Latchesar Ionkov	 <lucho@ionkov.net>, Dominique
- Martinet <asmadeus@codewreck.org>, Christian Schoenebeck
- <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, Marc Dionne	
- <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>, Luis de
- Bethencourt	 <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>,
- "Tigran A. Aivazian"	 <aivazian.tigran@gmail.com>, Ilya Dryomov
- <idryomov@gmail.com>, Alex Markuze	 <amarkuze@redhat.com>, Jan Harkes
- <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,  Nicolas Pitre <nico@fluxnic.net>,
- Tyler Hicks <code@tyhicks.com>, Amir Goldstein <amir73il@gmail.com>, John
- Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Yangtao Li
- <frank.li@vivo.com>, Mikulas Patocka	 <mikulas@artax.karlin.mff.cuni.cz>,
- David Woodhouse <dwmw2@infradead.org>,  Richard Weinberger	
- <richard@nod.at>, Dave Kleikamp <shaggy@kernel.org>, Konstantin Komarov	
- <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, 
- Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
- Mike Marshall	 <hubcap@omnibond.com>, Martin Brandenburg
- <martin@omnibond.com>, Miklos Szeredi	 <miklos@szeredi.hu>, Anders Larsen
- <al@alarsen.net>, Zhihao Cheng	 <chengzhihao1@huawei.com>, Damien Le Moal
- <dlemoal@kernel.org>, Naohiro Aota	 <naohiro.aota@wdc.com>, Johannes
- Thumshirn <jth@kernel.org>, John Johansen	 <john.johansen@canonical.com>,
- Paul Moore <paul@paul-moore.com>, James Morris	 <jmorris@namei.org>, "Serge
- E. Hallyn" <serge@hallyn.com>, Mimi Zohar	 <zohar@linux.ibm.com>, Roberto
- Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, Fan
- Wu	 <wufan@kernel.org>, Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler
- <casey@schaufler-ca.com>, Alex Deucher	 <alexander.deucher@amd.com>,
- Christian =?ISO-8859-1?Q?K=F6nig?=	 <christian.koenig@amd.com>, David
- Airlie <airlied@gmail.com>, Simona Vetter	 <simona@ffwll.ch>, Sumit Semwal
- <sumit.semwal@linaro.org>, Eric Dumazet	 <edumazet@google.com>, Kuniyuki
- Iwashima <kuniyu@google.com>, Paolo Abeni	 <pabeni@redhat.com>, Willem de
- Bruijn <willemb@google.com>, "David S. Miller"	 <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman	 <horms@kernel.org>, Oleg
- Nesterov <oleg@redhat.com>, Peter Zijlstra	 <peterz@infradead.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland	 <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>,  James Clark <james.clark@linaro.org>, "Darrick
- J. Wong" <djwong@kernel.org>, Martin Schiller <ms@dev.tdt.de>,  Eric Paris
- <eparis@redhat.com>, Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann
- <marcel@holtmann.org>,  Johan Hedberg <johan.hedberg@gmail.com>, Luiz
- Augusto von Dentz <luiz.dentz@gmail.com>, Oliver Hartkopp	
- <socketcan@hartkopp.net>, Marc Kleine-Budde <mkl@pengutronix.de>, David
- Ahern	 <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>, Steffen
- Klassert	 <steffen.klassert@secunet.com>, Herbert Xu
- <herbert@gondor.apana.org.au>,  Remi Denis-Courmont	 <courmisch@gmail.com>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,  Xin Long
- <lucien.xin@gmail.com>, Magnus Karlsson <magnus.karlsson@intel.com>, Maciej
- Fijalkowski	 <maciej.fijalkowski@intel.com>, Stanislav Fomichev
- <sdf@fomichev.me>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Jesper Dangaard Brouer	 <hawk@kernel.org>, John
- Fastabend <john.fastabend@gmail.com>, 	linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-trace-kernel@vger.kernel.org,
- nvdimm@lists.linux.dev, 	fsverity@lists.linux.dev, linux-mm@kvack.org,
- netfs@lists.linux.dev, 	linux-ext4@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, 	linux-nfs@vger.kernel.org,
- linux-cifs@vger.kernel.org, 	samba-technical@lists.samba.org,
- linux-nilfs@vger.kernel.org, 	v9fs@lists.linux.dev,
- linux-afs@lists.infradead.org, autofs@vger.kernel.org, 
-	ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
- ecryptfs@vger.kernel.org, 	linux-mtd@lists.infradead.org,
- jfs-discussion@lists.sourceforge.net, 	ntfs3@lists.linux.dev,
- ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org, 
-	linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, 
-	selinux@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
-	linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-fscrypt@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org,
- linux-x25@vger.kernel.org, 	audit@vger.kernel.org,
- linux-bluetooth@vger.kernel.org, 	linux-can@vger.kernel.org,
- linux-sctp@vger.kernel.org, bpf@vger.kernel.org
-Date: Fri, 06 Mar 2026 07:03:15 -0500
-In-Reply-To: <aamSFgXhrORAJLBC@infradead.org>
-References: <20260304-iino-u64-v3-0-2257ad83d372@kernel.org>
-	 <20260304-iino-u64-v3-1-2257ad83d372@kernel.org>
-	 <aamSFgXhrORAJLBC@infradead.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=k20201202; t=1772798817;
+	bh=vBj3woozlRPQJAsoS5/IW+klSPAITAbOF218ghzCguY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AkmrBFKCRbCHZUTyW9ICY4wBEh7Pe2S+YM/wqEXDcxFbGGnByiHHlbb3EYKuqNZO0
+	 q2Usn/TeECRhZl/rRCEONLCagepvAgIirItP2eC3qQ8ChVybtdQP4cnbuxMspCqW2l
+	 NuRTEQcZ4fNf0tnEm2Vt9rwza2i3hBvcHJoaSIUIev91gK+ZQxbmGNyuTbfBNfDzL8
+	 uczsg8/HVlnzzRmWjuPHT7rnXFdsVjPMqku8Ani2QkPzrZQ1tx0APw0DKJ47bqWkCl
+	 F3GWu9zvI/f7ShUPFDiLOLuo7Nr5RGLGYycyCEDy+H2U/X6/mJjX+zGqmWubbpWaHm
+	 6cB2ohevQ1byA==
+Date: Fri, 6 Mar 2026 12:06:54 +0000
+From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-kernel@vger.kernel.org, 
+	"linux-mm @ kvack . org" <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, David Rientjes <rientjes@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Christian Brauner <brauner@kernel.org>, 
+	Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Eric Dumazet <edumazet@google.com>, 
+	Neal Cardwell <ncardwell@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
+	kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v1 02/16] mm/memory: remove "zap_details" parameter from
+ zap_page_range_single()
+Message-ID: <6ad209ea-4be2-42f0-94ef-a2da69292dc2@lucifer.local>
+References: <20260227200848.114019-1-david@kernel.org>
+ <20260227200848.114019-3-david@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260227200848.114019-3-david@kernel.org>
 
-On Thu, 2026-03-05 at 06:24 -0800, Christoph Hellwig wrote:
-> > =C2=A0extern struct inode *ilookup5_nowait(struct super_block *sb,
-> > -		unsigned long hashval, int (*test)(struct inode *, void *),
-> > +		u64 hashval, int (*test)(struct inode *, void *),
-> > =C2=A0		void *data, bool *isnew);
-> > -extern struct inode *ilookup5(struct super_block *sb, unsigned long ha=
-shval,
-> > +extern struct inode *ilookup5(struct super_block *sb, u64 hashval,
-> > =C2=A0		int (*test)(struct inode *, void *), void *data);
->=20
-> ...
->=20
-> Can you please drop all these pointless externs while you're at it?
->=20
+On Fri, Feb 27, 2026 at 09:08:33PM +0100, David Hildenbrand (Arm) wrote:
+> Nobody except memory.c should really set that parameter to non-NULL. So
+> let's just drop it and make unmap_mapping_range_vma() use
+> zap_page_range_single_batched() instead.
+>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-I was planning to do that, but then Christian merged it!
+This is nice, good cleanup.
 
-I'll do a patch on top of this that does this in the range of fs.h that
-the patch touches. Christian can throw it on top of the series, and
-that shouldn't be too bad for backports.
+Assuming rust side is all sorted (seems it from thread)... LGTM, so:
 
-> Otherwise looks good:
->=20
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 
-Thanks for the review!
---=20
-Jeff Layton <jlayton@kernel.org>
+> ---
+>  arch/s390/mm/gmap_helpers.c    |  2 +-
+>  drivers/android/binder_alloc.c |  2 +-
+>  include/linux/mm.h             |  5 ++---
+>  kernel/bpf/arena.c             |  3 +--
+>  kernel/events/core.c           |  2 +-
+>  mm/madvise.c                   |  3 +--
+>  mm/memory.c                    | 16 ++++++++++------
+>  net/ipv4/tcp.c                 |  5 ++---
+>  rust/kernel/mm/virt.rs         |  2 +-
+>  9 files changed, 20 insertions(+), 20 deletions(-)
+>
+> diff --git a/arch/s390/mm/gmap_helpers.c b/arch/s390/mm/gmap_helpers.c
+> index dea83e3103e5..ae2d59a19313 100644
+> --- a/arch/s390/mm/gmap_helpers.c
+> +++ b/arch/s390/mm/gmap_helpers.c
+> @@ -89,7 +89,7 @@ void gmap_helper_discard(struct mm_struct *mm, unsigned long vmaddr, unsigned lo
+>  		if (!vma)
+>  			return;
+>  		if (!is_vm_hugetlb_page(vma))
+> -			zap_page_range_single(vma, vmaddr, min(end, vma->vm_end) - vmaddr, NULL);
+> +			zap_page_range_single(vma, vmaddr, min(end, vma->vm_end) - vmaddr);
+>  		vmaddr = vma->vm_end;
+>  	}
+>  }
+> diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
+> index 241f16a9b63d..dd2046bd5cde 100644
+> --- a/drivers/android/binder_alloc.c
+> +++ b/drivers/android/binder_alloc.c
+> @@ -1185,7 +1185,7 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
+>  	if (vma) {
+>  		trace_binder_unmap_user_start(alloc, index);
+>
+> -		zap_page_range_single(vma, page_addr, PAGE_SIZE, NULL);
+> +		zap_page_range_single(vma, page_addr, PAGE_SIZE);
+>
+>  		trace_binder_unmap_user_end(alloc, index);
+>  	}
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index ecff8268089b..a8138ff7d1fa 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2835,11 +2835,10 @@ struct page *vm_normal_page_pud(struct vm_area_struct *vma, unsigned long addr,
+>  void zap_vma_ptes(struct vm_area_struct *vma, unsigned long address,
+>  		  unsigned long size);
+>  void zap_page_range_single(struct vm_area_struct *vma, unsigned long address,
+> -			   unsigned long size, struct zap_details *details);
+> +			   unsigned long size);
+>  static inline void zap_vma_pages(struct vm_area_struct *vma)
+>  {
+> -	zap_page_range_single(vma, vma->vm_start,
+> -			      vma->vm_end - vma->vm_start, NULL);
+> +	zap_page_range_single(vma, vma->vm_start, vma->vm_end - vma->vm_start);
+>  }
+>  struct mmu_notifier_range;
+>
+> diff --git a/kernel/bpf/arena.c b/kernel/bpf/arena.c
+> index 144f30e740e8..c34510d83b1f 100644
+> --- a/kernel/bpf/arena.c
+> +++ b/kernel/bpf/arena.c
+> @@ -656,8 +656,7 @@ static void zap_pages(struct bpf_arena *arena, long uaddr, long page_cnt)
+>  	guard(mutex)(&arena->lock);
+>  	/* iterate link list under lock */
+>  	list_for_each_entry(vml, &arena->vma_list, head)
+> -		zap_page_range_single(vml->vma, uaddr,
+> -				      PAGE_SIZE * page_cnt, NULL);
+> +		zap_page_range_single(vml->vma, uaddr, PAGE_SIZE * page_cnt);
+>  }
+>
+>  static void arena_free_pages(struct bpf_arena *arena, long uaddr, long page_cnt, bool sleepable)
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index ac70d68217b6..c94c56c94104 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -7215,7 +7215,7 @@ static int map_range(struct perf_buffer *rb, struct vm_area_struct *vma)
+>  #ifdef CONFIG_MMU
+>  	/* Clear any partial mappings on error. */
+>  	if (err)
+> -		zap_page_range_single(vma, vma->vm_start, nr_pages * PAGE_SIZE, NULL);
+> +		zap_page_range_single(vma, vma->vm_start, nr_pages * PAGE_SIZE);
+>  #endif
+>
+>  	return err;
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index efc04334a000..557a360f7919 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -1193,8 +1193,7 @@ static long madvise_guard_install(struct madvise_behavior *madv_behavior)
+>  		 * OK some of the range have non-guard pages mapped, zap
+>  		 * them. This leaves existing guard pages in place.
+>  		 */
+> -		zap_page_range_single(vma, range->start,
+> -				range->end - range->start, NULL);
+> +		zap_page_range_single(vma, range->start, range->end - range->start);
+>  	}
+>
+>  	/*
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 9385842c3503..19f5f9a60995 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2203,17 +2203,16 @@ void zap_page_range_single_batched(struct mmu_gather *tlb,
+>   * @vma: vm_area_struct holding the applicable pages
+>   * @address: starting address of pages to zap
+>   * @size: number of bytes to zap
+> - * @details: details of shared cache invalidation
+>   *
+>   * The range must fit into one VMA.
+>   */
+>  void zap_page_range_single(struct vm_area_struct *vma, unsigned long address,
+> -		unsigned long size, struct zap_details *details)
+> +		unsigned long size)
+>  {
+>  	struct mmu_gather tlb;
+>
+>  	tlb_gather_mmu(&tlb, vma->vm_mm);
+> -	zap_page_range_single_batched(&tlb, vma, address, size, details);
+> +	zap_page_range_single_batched(&tlb, vma, address, size, NULL);
+>  	tlb_finish_mmu(&tlb);
+>  }
+>
+> @@ -2235,7 +2234,7 @@ void zap_vma_ptes(struct vm_area_struct *vma, unsigned long address,
+>  	    		!(vma->vm_flags & VM_PFNMAP))
+>  		return;
+>
+> -	zap_page_range_single(vma, address, size, NULL);
+> +	zap_page_range_single(vma, address, size);
+>  }
+>  EXPORT_SYMBOL_GPL(zap_vma_ptes);
+>
+> @@ -3003,7 +3002,7 @@ static int remap_pfn_range_notrack(struct vm_area_struct *vma, unsigned long add
+>  	 * maintain page reference counts, and callers may free
+>  	 * pages due to the error. So zap it early.
+>  	 */
+> -	zap_page_range_single(vma, addr, size, NULL);
+> +	zap_page_range_single(vma, addr, size);
+>  	return error;
+>  }
+>
+> @@ -4226,7 +4225,12 @@ static void unmap_mapping_range_vma(struct vm_area_struct *vma,
+>  		unsigned long start_addr, unsigned long end_addr,
+>  		struct zap_details *details)
+>  {
+> -	zap_page_range_single(vma, start_addr, end_addr - start_addr, details);
+> +	struct mmu_gather tlb;
+> +
+> +	tlb_gather_mmu(&tlb, vma->vm_mm);
+> +	zap_page_range_single_batched(&tlb, vma, start_addr,
+> +				      end_addr - start_addr, details);
+> +	tlb_finish_mmu(&tlb);
+>  }
+>
+>  static inline void unmap_mapping_range_tree(struct rb_root_cached *root,
+> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> index f84d9a45cc9d..befcde27dee7 100644
+> --- a/net/ipv4/tcp.c
+> +++ b/net/ipv4/tcp.c
+> @@ -2104,7 +2104,7 @@ static int tcp_zerocopy_vm_insert_batch_error(struct vm_area_struct *vma,
+>  		maybe_zap_len = total_bytes_to_map -  /* All bytes to map */
+>  				*length + /* Mapped or pending */
+>  				(pages_remaining * PAGE_SIZE); /* Failed map. */
+> -		zap_page_range_single(vma, *address, maybe_zap_len, NULL);
+> +		zap_page_range_single(vma, *address, maybe_zap_len);
+>  		err = 0;
+>  	}
+>
+> @@ -2269,8 +2269,7 @@ static int tcp_zerocopy_receive(struct sock *sk,
+>  	total_bytes_to_map = avail_len & ~(PAGE_SIZE - 1);
+>  	if (total_bytes_to_map) {
+>  		if (!(zc->flags & TCP_RECEIVE_ZEROCOPY_FLAG_TLB_CLEAN_HINT))
+> -			zap_page_range_single(vma, address, total_bytes_to_map,
+> -					      NULL);
+> +			zap_page_range_single(vma, address, total_bytes_to_map);
+>  		zc->length = total_bytes_to_map;
+>  		zc->recv_skip_hint = 0;
+>  	} else {
+> diff --git a/rust/kernel/mm/virt.rs b/rust/kernel/mm/virt.rs
+> index da21d65ccd20..b8e59e4420f3 100644
+> --- a/rust/kernel/mm/virt.rs
+> +++ b/rust/kernel/mm/virt.rs
+> @@ -124,7 +124,7 @@ pub fn zap_page_range_single(&self, address: usize, size: usize) {
+>          // sufficient for this method call. This method has no requirements on the vma flags. The
+>          // address range is checked to be within the vma.
+>          unsafe {
+> -            bindings::zap_page_range_single(self.as_ptr(), address, size, core::ptr::null_mut())
+> +            bindings::zap_page_range_single(self.as_ptr(), address, size)
+>          };
+>      }
+>
+> --
+> 2.43.0
+>
