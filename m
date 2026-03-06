@@ -1,274 +1,302 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD9A33B6CB;
-	Fri,  6 Mar 2026 09:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA08D3451D7
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Mar 2026 09:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772788508; cv=none; b=e+8vKnSn84cLNLd4ZqnhbpZQ8kIURZi7XqPNUAdVTGF1vkwY96Wprk7pcQZqALiso2xj+M5ginnmVgyAJ/eu6l2y/nFH+GVemtYGsUX4wnV8uZpVUki+WoGqVbpm++w6Mtq9LozfiSAAp/feMTT1fvNbOojpBxMNczzpuS6lCwI=
+	t=1772789783; cv=none; b=Q8/onlJsKT+kolpQ1wEJQ0DJhOLqun1i9onxQHbkoDVSDmTKomhHfyOPY1SVXWgZwW+1bArGKK9SJWkKJEa2RBsylMG3O7xT3ty6xLVI/mc9d7xS3tGdw7eiGM5vnwoVtQR6YCkap88srnn7Cq5S6QeoEWeHvSmOkmV8T/1S6UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772788508; c=relaxed/simple;
-	bh=7RvOdnrFs/iEe9G84pPe+q4PLv+gFd3Sa58Nl0eTC8M=;
+	s=arc-20240116; t=1772789783; c=relaxed/simple;
+	bh=jcA+on09iDE1IR2yBmTExuW1QlEziEnx+GwxlhMn1i0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MhkrUNew/kVjjDX00OOp2HBs5hVrUxZeQ+VO91IGOaVaGPyrv/7spRARgvL4zQSEQEm5Soq62lHODY+P8EFU2BSfjsBxus5wxEs6wP6knTO423TDZzAZK0kJ8WCPPK06gaQ5BB7kgguVlb6DEYYVM5ZKe5J9x4Q4fnwuwp8KipI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TyR366hp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pd9z99rKH4nzdp7suS37TUfsTMy4DRZlRsHtFYf83eO/jpw+W/vezCXPAJ4VUgzqvYr3BPG7iUK1y/NSSoKUXTVU4t4yJk6+gyQeW8qer3oclY06oFc1+BdK0m81pube77pOKLzsajS0J5CxPvJ8Ka2R4tRhACU0AeUP9JW71AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QdnESQ43; arc=none smtp.client-ip=209.85.216.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TyR366hp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C425BC4CEF7;
-	Fri,  6 Mar 2026 09:14:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772788507;
-	bh=7RvOdnrFs/iEe9G84pPe+q4PLv+gFd3Sa58Nl0eTC8M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TyR366hpH5SBgvb3stJOO+3+JgB4eyp8Ub6SIcEY5Wv5+DIXq3qwQ1akUuyGzm4GI
-	 oVWqv0SYGKFQk/aIJcLbDc3SkZdh03GwnjPJPfc8DHBxnnTk3pTwokbH2aquirHejB
-	 nz1gJxpKMhkWSd0cvlbIm12Yo0dUUSzlaMGnA70lo5LCfYmGHYkoB3BEoaWxEw9skO
-	 0XSBCv8+kTn/Gf5HrA+24udlPqxoLhC1731SEC00PUdG+t6hKArOjAPEtT/hHxR1LY
-	 s+VuE2scXcViJMBvNGcnMzw7bfK0RAeQxP1RLAMHfxMD+S62KQ5DOUo/0QF6h57vkJ
-	 rf8R3FiiVNktg==
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdnESQ43"
+Received: by mail-pj1-f65.google.com with SMTP id 98e67ed59e1d1-3597c40a838so2362366a91.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Mar 2026 01:36:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772789781; x=1773394581; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IN0zGFg33zgQxzT7/xaXsRp6BwBZHo415245xIuslL8=;
+        b=QdnESQ43ulIUfpu+kj7meA8Qm9EfoeG/29jtThd+QiWnDdS5s7y4l3qJEBupmUhl0L
+         dw/AwiWjeV0vr1LobhA/Vq1JdBZ/lDXTFc19BuJRvBFvI+NK3Osv/WBeBph0wxpm37q2
+         y6NltqdR0SXb+wQb3ITd73bhCFYQn1fndRYVZsEu63dHhoymD0Yr9bXchcXwPD7ZDDHV
+         yCTcMSFzNKdRt0zPuSpGBcH7yphTBOqov0ktq74X6MvbEeIqDHZYpPv7HvlvCBrqahnU
+         0Ik1go54zBTb/nk7WG+jS0nZ6HWuKn8+vI+SmxY8a7sxA0eyLQzPr9Pic/qCaOWtvnYk
+         QCHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772789781; x=1773394581;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=IN0zGFg33zgQxzT7/xaXsRp6BwBZHo415245xIuslL8=;
+        b=nYww4mzAMxdEOTTY8p6v5/WVrYgv20+lcyUPNoAJoPu5bbo7gSP3kXEnEpjfGxJufL
+         tOsXF+MDhyKmR+tjCpyN2g3I7JtvCw0WJ9qd0IHdQ2EbzCvRRtcCFTaFiWKWw4adv2xB
+         Qtw6ExFi617659SXrRQ5+TJcnpuhK2m/38Nwa1O6bICIylGrPdNq77lT60tp11byHiJ1
+         g7hejbnoaLUlJt5bnp851EgMAgo8ZPBbJO/2Pr2IYnZMtkzJvRzVJVzj7frkNB0Onb64
+         lPfwq6LeL0wusg3aTLZmX24fbDpGUVKUa9hkftct/6TuS45O71yRupmFSf1i3MVLOPIo
+         AX8w==
+X-Forwarded-Encrypted: i=1; AJvYcCW2gWELvUgbsDd/ZKsiz5pOX0R/O9KodAh7oq+0ghQ391IWfxdrRADyQoyj0nfCA7I0Ldquh2AX/mnhoyVFTz34@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxRc1ELRhtl9YJdA73XzzRwTypIK49hc2PD5UYmwAN7eWx1JlT
+	aLps3ysC7QWIFqeLREBcNDZludSdyGRkRYoGWyq2GvXCdeO47cTW4Fqs
+X-Gm-Gg: ATEYQzxpTnrxJ2GNHALLsdSAHPUD3oZZTQklmo2wFdDY2MBKWh/sXIL7qEwI9WkAhnY
+	txLVnJb+RxDbJ0K+FVBzBETMamGG7dx5JS0o5zTY7AlScnO5jrpTmkKJhLkyhtb1VoUBai21Uis
+	+r5VUHFdWEJB0+r02pw6G2QxxKVFmISffqiy298QjX9WKaBxk7Oi8I5tAYoqBPALsiblKf5opHH
+	ABlUyfPzpzmBgmKQ+JcQng1F0mWIz2Uc73PXo+vdlUrf88t2sl9gqxfHTj29QCSsjzghZtl+Y7I
+	zlc/+9LIahi4bmziBXVbDC+t2c5BjlnowaSLLd7ArT8msQ4FLRhb9y7RQWBdbwuSsfVnfotDpLF
+	Hm1Mde3Vek5ny1an9YGMeymJaABfsBlEqQqARPmYTUWfr9KtvYrnlcqj/2jvxdStcyak28EjVGh
+	j7cW0OITBZpYak2CPuYFH9qPUERL0=
+X-Received: by 2002:a17:90b:3512:b0:34c:c514:ee1f with SMTP id 98e67ed59e1d1-359be2a5cf2mr1459073a91.11.1772789780957;
+        Fri, 06 Mar 2026 01:36:20 -0800 (PST)
+Received: from localhost ([2408:8642:893:d2da:cc80:5adf:acd4:7172])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-359c01961a4sm1233661a91.15.2026.03.06.01.36.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2026 01:36:20 -0800 (PST)
+From: yuhaocheng035@gmail.com
+To: irogers@google.com
+Cc: peterz@infradead.org,
+	acme@kernel.org,
+	security@kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	fsverity@lists.linux.dev,
-	linux-mm@kvack.org,
-	netfs@lists.linux.dev,
-	linux-ext4@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-nfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org,
-	linux-nilfs@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	autofs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	codalist@coda.cs.cmu.edu,
-	ecryptfs@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	jfs-discussion@lists.sourceforge.net,
-	ntfs3@lists.linux.dev,
-	ocfs2-devel@lists.linux.dev,
-	devel@lists.orangefs.org,
-	linux-unionfs@vger.kernel.org,
-	apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	selinux@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org,
-	netdev@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-hams@vger.kernel.org,
-	linux-x25@vger.kernel.org,
-	audit@vger.kernel.org,
-	linux-bluetooth@vger.kernel.org,
-	linux-can@vger.kernel.org,
-	linux-sctp@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	"Theodore Y. Ts'o" <tytso@mit.edu>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Jan Kara <jack@suse.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Steve French <sfrench@samba.org>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Bharath SM <bharathsm@microsoft.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	David Sterba <dsterba@suse.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Ian Kent <raven@themaw.net>,
-	Luis de Bethencourt <luisbg@kernel.org>,
-	Salah Triki <salah.triki@gmail.com>,
-	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Alex Markuze <amarkuze@redhat.com>,
-	Jan Harkes <jaharkes@cs.cmu.edu>,
-	coda@cs.cmu.edu,
-	Nicolas Pitre <nico@fluxnic.net>,
-	Tyler Hicks <code@tyhicks.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Yangtao Li <frank.li@vivo.com>,
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Dave Kleikamp <shaggy@kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mark Fasheh <mark@fasheh.com>,
-	Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Anders Larsen <al@alarsen.net>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Johannes Thumshirn <jth@kernel.org>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Fan Wu <wufan@kernel.org>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Willem de Bruijn <willemb@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Martin Schiller <ms@dev.tdt.de>,
-	Eric Paris <eparis@redhat.com>,
-	Joerg Reuter <jreuter@yaina.de>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Oliver Hartkopp <socketcan@hartkopp.net>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	David Ahern <dsahern@kernel.org>,
-	Neal Cardwell <ncardwell@google.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>
-Subject: Re: [PATCH v3 00/12] vfs: change inode->i_ino from unsigned long to u64
-Date: Fri,  6 Mar 2026 10:09:33 +0100
-Message-ID: <20260306-kennen-zubrot-2605fcfd6950@brauner>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260304-iino-u64-v3-0-2257ad83d372@kernel.org>
-References: <20260304-iino-u64-v3-0-2257ad83d372@kernel.org>
+	gregkh@linuxfoundation.org
+Subject: [PATCH v2] perf/core: Fix refcount bug and potential UAF in perf_mmap
+Date: Fri,  6 Mar 2026 17:35:49 +0800
+Message-ID: <20260306093616.84299-1-yuhaocheng035@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <CAP-5=fVJyVMZw=DqP53Kxg58nUmJ_0bxoaeOKAbC03BVc11HaA@mail.gmail.com>
+References: <CAP-5=fVJyVMZw=DqP53Kxg58nUmJ_0bxoaeOKAbC03BVc11HaA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2708; i=brauner@kernel.org; h=from:subject:message-id; bh=7RvOdnrFs/iEe9G84pPe+q4PLv+gFd3Sa58Nl0eTC8M=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSumvWu2uNxbBFXikaZQKrMtl0PLj1c+kZGWOrvZiHz/ W/CTGOed5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzk4A5GhimT869vPnNH4Vqj t6Tr0fqPLXs3v0g/qbXpwf6o52L5D7YyMnxU+idovG+O5JQe0WVOK45/sI9bw9AjJfah78/izrQ aXg4A
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-On Wed, 04 Mar 2026 10:32:30 -0500, Jeff Layton wrote:
-> Christian said [1] to "just do it" when I proposed this, so here we are!
-> 
-> For historical reasons, the inode->i_ino field is an unsigned long,
-> which means that it's 32 bits on 32 bit architectures. This has caused a
-> number of filesystems to implement hacks to hash a 64-bit identifier
-> into a 32-bit field, and deprives us of a universal identifier field for
-> an inode.
-> 
-> [...]
+From: Haocheng Yu <yuhaocheng035@gmail.com>
 
-This series makes me happy. We've been talking about this conversion for
-a while and I'm thankful that you did this work. Without the automation
-available this probably wouldn't have happened as quickly as it did now.
-Let's see what bits and pieces it missed.
+Syzkaller reported a refcount_t: addition on 0; use-after-free warning
+in perf_mmap.
 
+The issue is caused by a race condition between a failing mmap() setup
+and a concurrent mmap() on a dependent event (e.g., using output
+redirection).
+
+In perf_mmap(), the ring_buffer (rb) is allocated and assigned to
+event->rb with the mmap_mutex held. The mutex is then released to
+perform map_range().
+
+If map_range() fails, perf_mmap_close() is called to clean up.
+However, since the mutex was dropped, another thread attaching to
+this event (via inherited events or output redirection) can acquire
+the mutex, observe the valid event->rb pointer, and attempt to
+increment its reference count. If the cleanup path has already
+dropped the reference count to zero, this results in a
+use-after-free or refcount saturation warning.
+
+Fix this by extending the scope of mmap_mutex to cover the
+map_range() call. This ensures that the ring buffer initialization
+and mapping (or cleanup on failure) happens atomically effectively,
+preventing other threads from accessing a half-initialized or
+dying ring buffer.
+
+v2:
+Because expanding the guarded region would cause the event->mmap_mutex
+to be acquired repeatedly in the perf_mmap_close function, potentially
+leading to a self deadlock, the original logic of perf_mmap_close was
+retained, and the mutex-holding logic was modified to obtain the
+perf_mmap_close_locked function.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202602020208.m7KIjdzW-lkp@intel.com/
+Suggested-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Haocheng Yu <yuhaocheng035@gmail.com>
 ---
+ kernel/events/core.c | 152 +++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 133 insertions(+), 19 deletions(-)
 
-Applied to the vfs-7.1.kino branch of the vfs/vfs.git tree.
-Patches in the vfs-7.1.kino branch should appear in linux-next soon.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2c35acc2722b..6c161761db38 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6842,6 +6842,120 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ 	ring_buffer_put(rb); /* could be last */
+ }
+ 
++static void perf_mmap_close_locked(struct vm_area_struct *vma)
++{
++	struct perf_event *event = vma->vm_file->private_data;
++	struct perf_event *iter_event;
++	mapped_f unmapped = get_mapped(event, event_unmapped);
++	struct perf_buffer *rb = ring_buffer_get(event);
++	struct user_struct *mmap_user = rb->mmap_user;
++	int mmap_locked = rb->mmap_locked;
++	unsigned long size = perf_data_size(rb);
++	bool detach_rest = false;
++
++	/* FIXIES vs perf_pmu_unregister() */
++	if (unmapped)
++		unmapped(event, vma->vm_mm);
++
++	/*
++	 * The AUX buffer is strictly a sub-buffer, serialize using aux_mutex
++	 * to avoid complications.
++	 */
++	if (rb_has_aux(rb) && vma->vm_pgoff == rb->aux_pgoff &&
++	    refcount_dec_and_mutex_lock(&rb->aux_mmap_count, &rb->aux_mutex)) {
++		/*
++		 * Stop all AUX events that are writing to this buffer,
++		 * so that we can free its AUX pages and corresponding PMU
++		 * data. Note that after rb::aux_mmap_count dropped to zero,
++		 * they won't start any more (see perf_aux_output_begin()).
++		 */
++		perf_pmu_output_stop(event);
++
++		/* now it's safe to free the pages */
++		atomic_long_sub(rb->aux_nr_pages - rb->aux_mmap_locked, &mmap_user->locked_vm);
++		atomic64_sub(rb->aux_mmap_locked, &vma->vm_mm->pinned_vm);
++
++		/* this has to be the last one */
++		rb_free_aux(rb);
++		WARN_ON_ONCE(refcount_read(&rb->aux_refcount));
++
++		mutex_unlock(&rb->aux_mutex);
++	}
++
++	if (refcount_dec_and_test(&rb->mmap_count))
++		detach_rest = true;
++
++	if (!refcount_dec_and_test(&event->mmap_count))
++		goto out_put;
++
++	ring_buffer_attach(event, NULL);
++
++	/* If there's still other mmap()s of this buffer, we're done. */
++	if (!detach_rest)
++		goto out_put;
++
++	/*
++	 * No other mmap()s, detach from all other events that might redirect
++	 * into the now unreachable buffer. Somewhat complicated by the
++	 * fact that rb::event_lock otherwise nests inside mmap_mutex.
++	 */
++again:
++	rcu_read_lock();
++	list_for_each_entry_rcu(iter_event, &rb->event_list, rb_entry) {
++		if (!atomic_long_inc_not_zero(&iter_event->refcount)) {
++			/*
++			 * This event is en-route to free_event() which will
++			 * detach it and remove it from the list.
++			 */
++			continue;
++		}
++		rcu_read_unlock();
++
++		if (iter_event != event) {
++			mutex_lock(&iter_event->mmap_mutex);
++			/*
++			 * Check we didn't race with perf_event_set_output() which can
++			 * swizzle the rb from under us while we were waiting to
++			 * acquire mmap_mutex.
++			 *
++			 * If we find a different rb; ignore this event, a next
++			 * iteration will no longer find it on the list. We have to
++			 * still restart the iteration to make sure we're not now
++			 * iterating the wrong list.
++			 */
++			if (iter_event->rb == rb)
++				ring_buffer_attach(iter_event, NULL);
++
++			mutex_unlock(&iter_event->mmap_mutex);
++		}
++		put_event(iter_event);
++
++		/*
++		 * Restart the iteration; either we're on the wrong list or
++		 * destroyed its integrity by doing a deletion.
++		 */
++		goto again;
++	}
++	rcu_read_unlock();
++
++	/*
++	 * It could be there's still a few 0-ref events on the list; they'll
++	 * get cleaned up by free_event() -- they'll also still have their
++	 * ref on the rb and will free it whenever they are done with it.
++	 *
++	 * Aside from that, this buffer is 'fully' detached and unmapped,
++	 * undo the VM accounting.
++	 */
++
++	atomic_long_sub((size >> PAGE_SHIFT) + 1 - mmap_locked,
++			&mmap_user->locked_vm);
++	atomic64_sub(mmap_locked, &vma->vm_mm->pinned_vm);
++	free_uid(mmap_user);
++
++out_put:
++	ring_buffer_put(rb); /* could be last */
++}
++
+ static vm_fault_t perf_mmap_pfn_mkwrite(struct vm_fault *vmf)
+ {
+ 	/* The first page is the user control page, others are read-only. */
+@@ -7167,28 +7281,28 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 			ret = perf_mmap_aux(vma, event, nr_pages);
+ 		if (ret)
+ 			return ret;
+-	}
+ 
+-	/*
+-	 * Since pinned accounting is per vm we cannot allow fork() to copy our
+-	 * vma.
+-	 */
+-	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
+-	vma->vm_ops = &perf_mmap_vmops;
++		/*
++		 * Since pinned accounting is per vm we cannot allow fork() to copy our
++		 * vma.
++		 */
++		vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
++		vma->vm_ops = &perf_mmap_vmops;
+ 
+-	mapped = get_mapped(event, event_mapped);
+-	if (mapped)
+-		mapped(event, vma->vm_mm);
++		mapped = get_mapped(event, event_mapped);
++		if (mapped)
++			mapped(event, vma->vm_mm);
+ 
+-	/*
+-	 * Try to map it into the page table. On fail, invoke
+-	 * perf_mmap_close() to undo the above, as the callsite expects
+-	 * full cleanup in this case and therefore does not invoke
+-	 * vmops::close().
+-	 */
+-	ret = map_range(event->rb, vma);
+-	if (ret)
+-		perf_mmap_close(vma);
++		/*
++		 * Try to map it into the page table. On fail, invoke
++		 * perf_mmap_close() to undo the above, as the callsite expects
++		 * full cleanup in this case and therefore does not invoke
++		 * vmops::close().
++		 */
++		ret = map_range(event->rb, vma);
++		if (ret)
++			perf_mmap_close_locked(vma);
++	}
+ 
+ 	return ret;
+ }
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+base-commit: 7d0a66e4bb9081d75c82ec4957c50034cb0ea449
+-- 
+2.51.0
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-7.1.kino
-
-[01/12] vfs: widen inode hash/lookup functions to u64
-        https://git.kernel.org/vfs/vfs/c/2412a9fa518a
-[02/12] audit: widen ino fields to u64
-        https://git.kernel.org/vfs/vfs/c/a5e863be4d02
-[03/12] net: change sock.sk_ino and sock_i_ino() to u64
-        https://git.kernel.org/vfs/vfs/c/c21144a0a33f
-[04/12] vfs: widen trace event i_ino fields to u64
-        https://git.kernel.org/vfs/vfs/c/5e5c380870b2
-[05/12] cachefiles: widen trace event i_ino fields to u64
-        https://git.kernel.org/vfs/vfs/c/25291f67aad7
-[06/12] ext2: widen trace event i_ino fields to u64
-        https://git.kernel.org/vfs/vfs/c/797d04a355e3
-[07/12] hugetlbfs: widen trace event i_ino fields to u64
-        https://git.kernel.org/vfs/vfs/c/3c976fb36a9a
-[08/12] zonefs: widen trace event i_ino fields to u64
-        https://git.kernel.org/vfs/vfs/c/988f68c01b3a
-[09/12] ext4: widen trace event i_ino fields to u64
-        https://git.kernel.org/vfs/vfs/c/1c1427c79bc2
-[10/12] f2fs: widen trace event i_ino fields to u64
-        https://git.kernel.org/vfs/vfs/c/6e62bf74bd8a
-[11/12] nilfs2: widen trace event i_ino fields to u64
-        https://git.kernel.org/vfs/vfs/c/6ce73711525a
-[12/12] treewide: change inode->i_ino from unsigned long to u64
-        https://git.kernel.org/vfs/vfs/c/af82d143e869
