@@ -1,268 +1,149 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323C537CD25
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Mar 2026 11:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FD52874FF;
+	Fri,  6 Mar 2026 12:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772796468; cv=none; b=o3Rn5xYMpWMMokwi6Duls0tgdgdEpsbSVMbaMSJ1axgHCHUW3NyK5O/HksYFIfnSDdt82qq+ndEddnTYlqpx9o2gkWAMnd3FlUqxRsvP8J9xBuS+TpC5mdsVPxRD78Loj46aVqLdj9GMVqXHlAnCJ7tlOIAHkIpDI2OrlWz9C3c=
+	t=1772798607; cv=none; b=BBWuHlULqxdMkxUF1YalK4PfrYrEkYkiWP+C1fBkUuLBnkX46CbCBOABZy5Pqld06m3IDbfzWgl5tpzEKfX9caTmFvd6z9AazQOjHxlwmL5cC1mTxnIcoUKKuUybkxNkM2plI6CGcV38Xj2mQzD5OYKyxeZTEOQ53DR1sNiyukc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772796468; c=relaxed/simple;
-	bh=9o0CnNEEpRcWyU8vPLQVvp9NQ89fFOZowCHZCWI1G+k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HWHQ+DmVYqRO8FCPRjKfyDWGrqthjR0QXTF3bd6rs4EP1fnZKCZXoOpzcFTat/l0NZJ4PrN5MUKQC0qwC6gokVU561qPjn8fl+L+o3UJqfTxNIFF+UiEYHX7VWGvEOCRT58Ha8Cu3uCdVBg67m1C4sfczhb3P0XpnbSgo+UUx74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ec25TkPD; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1772798607; c=relaxed/simple;
+	bh=8tIEjkmwTnv14wqiBx5utAVT1y4BywX848doWLEUMyQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l/pvDdoh12cyyBQhF3uShKmq3RUUWBseTFvnjqbEWbxVg3TpWX6tPCm2nrll0IDjvmrm2zt0nulCI8hCNWiNNWsJFFvHspMGWh7rA1h4AGkdW0hX7YwRbWWRwSSAmxeyphAIRY5KrJe4Lsu8l5O5L4sJjlrf/G7AypTlNSoKYvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1hNNt/g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ec25TkPD"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-439b7c2788dso3939419f8f.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Mar 2026 03:27:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1772796466; x=1773401266; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cpvzU01k3DVDMfnP12TQ8nzX3bCfGsyylsruBZSY0NI=;
-        b=Ec25TkPDpQSzkva6s1hvj+uWaL6FztndADqE5jWTqsPDX0UjTfSjOQ1mLPyluu5+g+
-         F+QxMuOKyjAMaDdcVcpnwl84VWjjcw0c26LJ2KyIeMeTypeMoN9QQi1NKVlFypGQqk11
-         m5KTpkxfS6EmjHA0wnlmN12A8PsPmm54oZ3nAuEzaHL4q45pVBd3WBngMW0fmsvBM3Mq
-         h8H9Q2rlfEBOJKgVBQh0dlC7C/h2CnSqx6aoNrs7zyjhWtbd7VobRyaJU/k5iYrY/rbv
-         hgSQWW1xV9umYaZq9+tq5kbipDu3/k86fqKLCevcDfnh3gbnpifgOWINZZFe3anYkeY4
-         YLPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772796466; x=1773401266;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cpvzU01k3DVDMfnP12TQ8nzX3bCfGsyylsruBZSY0NI=;
-        b=bUqemAFCFBEnELMqX8xhGfsvA8OK3kCWgACYw48+DBXLaZu+OZhxyWJ+jFIDmOMczp
-         vhbPxsKoKteqVm4TvIr0XysDYscGY9H469CrjQVIqln7qiSn1DWrd3TpWiIHfzfCsFY1
-         EPGr9jgiJJ2ajZH9WouFfHS4Jv4ma1euBN6G6dZOg7NpKKZJzYSSRRGoTPL6AS91vUyq
-         AGgskVMDKKI9Z1SvYXPYtXhZkJjsZ/BrE3JmxoG15eg7bK1GjC8BRQ62pfENS7pPN6Me
-         sHLkhi04wyTDWkO3G1QQRjexXajk+jnXKnTamyl+TPWRlRjCt2vSEAT1wFRLANezPt93
-         9Aag==
-X-Forwarded-Encrypted: i=1; AJvYcCUM1hgv7JfPjetZisa2gdK1CdVqFhXeki7bFFhAjM5P3+7n3zMLYR2zYaWGpFkjzAJ+8DrumMJse8bejevGFpfH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIqdluIQ8LKnVRO2IvfI9Qual9PJ7R8bBaWlvUtzUEkfEHVGUO
-	YFvbtkR+vajAjBtYHg0ZG8L7F1Q8KGc0nVHJL4eOxQlM8Z3p2IpE4fjNVytF7pqugvc=
-X-Gm-Gg: ATEYQzxf932VqSmej8JL1ESaYxB9hcRT22/K8IVbjlKWG6WnfcZSu7Fgn7hy0zz7Xa7
-	Qb1RbDv60Ud/ZrSVfqrvIC+951DzVzRDYUimHZ9ty0zTGAq/3sit+Zlb2hZwiMxUHfBlGogExdw
-	Anx2RTZuKS3ROAvHXs/acb+ak4MmM8sj1rkauemvjZGWOn61f5R9ZxzhIlWvM9Q5DSsHjRdciej
-	zI8SjIm8KZGNGd4GyuyGwvPOECh/pyTCJwJlAFeHbNBBJnfZw5CnFJURKNu8PFSb1KeXTSk+opK
-	faiNTUolCDerFpIUtcigSKBUgTNSHo9BmzvqHEkrJnTJ9IyJAbVj1RpEPeGgmMKV3ujb+arZcbE
-	HQ88WQWk6aUImom3a0s75sYwP8uLfh54GxKUb+fOjA1O+oaADkkXHwMLDTUrIfAKxEOB0BbS/L0
-	hI0HFHUZ5cje5GhVHbexjvbaq72eB+
-X-Received: by 2002:a05:6000:609:b0:439:cb10:dfcd with SMTP id ffacd0b85a97d-439da67982fmr2952968f8f.39.1772796465552;
-        Fri, 06 Mar 2026 03:27:45 -0800 (PST)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439dad8dbb3sm2911017f8f.4.2026.03.06.03.27.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Mar 2026 03:27:45 -0800 (PST)
-Message-ID: <557db631-aef8-43b1-9f45-fae75910ccb4@linaro.org>
-Date: Fri, 6 Mar 2026 11:27:44 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1hNNt/g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6488CC4CEF7;
+	Fri,  6 Mar 2026 12:03:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772798607;
+	bh=8tIEjkmwTnv14wqiBx5utAVT1y4BywX848doWLEUMyQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h1hNNt/ggkmOIg6nOIs6YVKXxpvjxXfuNC1/E243FERUMlrdAP/1JGuS8WftUsd7f
+	 sEmFfcrfCzizYh1WflGJxM+Mh8s8/NGzCybtmxDbPIa+RYlLhAC8M2mVomjBVzk4GJ
+	 ovvi/YoGsX9AnKFqWBjW+IpIUt/t0ThtH++DKgi9JosbOXhePSuaAgqwo9ysipyiZZ
+	 tJR6V8PVm0Q3rJsUQBZpi2/tPfiYYA+aTsakBMmVszHI4rXW/zZE1/jrzMC/3s/CgY
+	 3bcJ8hm+9ce3MEINimXRaNGIqZXC4Xd93/yIA5/AX590NC8dE2fbRiLTj205GiFNUz
+	 8UXcS4I1Opdeg==
+Date: Fri, 6 Mar 2026 12:03:24 +0000
+From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-kernel@vger.kernel.org, 
+	"linux-mm @ kvack . org" <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, David Rientjes <rientjes@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Christian Brauner <brauner@kernel.org>, 
+	Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Eric Dumazet <edumazet@google.com>, 
+	Neal Cardwell <ncardwell@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
+	kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v1 01/16] mm/madvise: drop range checks in
+ madvise_free_single_vma()
+Message-ID: <c5a89c14-0c6b-4c1e-a68c-0680c7d64f4c@lucifer.local>
+References: <20260227200848.114019-1-david@kernel.org>
+ <20260227200848.114019-2-david@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Syncing include/linux/coresight-pmu.h with its copy in tools/perf
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@arm.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- linux-perf-users@vger.kernel.org
-References: <aanm4oUxeJ4U34FO@x1>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <aanm4oUxeJ4U34FO@x1>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260227200848.114019-2-david@kernel.org>
 
+On Fri, Feb 27, 2026 at 09:08:32PM +0100, David Hildenbrand (Arm) wrote:
+> madvise_vma_behavior()-> madvise_dontneed_free()->madvise_free_single_vma()
+> is only called from madvise_walk_vmas()
+>
+> (a) After try_vma_read_lock() confirmed that the whole range falls into
+>     a single VMA (see is_vma_lock_sufficient()).
+>
+> (b) After adjusting the range to the VMA in the loop afterwards.
+>
+> madvise_dontneed_free() might drop the MM lock when handling
+> userfaultfd, but it properly looks up the VMA again to adjust the range.
+>
+> So in madvise_free_single_vma(), the given range should always fall into
+> a single VMA and should also span at least one page.
+>
+> Let's drop the error checks.
+>
+> The code now matches what we do in madvise_dontneed_single_vma(), where
+> we call zap_vma_range_batched() that documents: "The range must fit into
+> one VMA.". Although that function still adjusts that range, we'll change
+> that soon.
+>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
+Yeah I did wonder about some of these checks, thanks for going through and
+confirming these are useless.
 
-On 05/03/2026 8:26 pm, Arnaldo Carvalho de Melo wrote:
-> Hi,
-> 
-> 	Right now we have this perf build warning:
-> 
->    diff -u tools/include/linux/coresight-pmu.h include/linux/coresight-pmu.h
-> 
-> But when I try to update it it explodes, can someone in the ARM front
-> take a look at it?
-> 
-> Thanks,
-> 
-> - Arnaldo
-> 
+Checked the madvise_dontneed_free() case to be sure and LGTM so overall:
 
-Sent "[PATCH 0/2] perf cs-etm: Finish removal of ETM_OPT_*" to fix that 
-and update the header.
+Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 
-Thanks
-James
-
-> ⬢ [acme@toolbx perf-tools]$ m
-> make: Entering directory '/home/acme/git/perf-tools/tools/perf'
->    BUILD:   Doing 'make -j32' parallel build
-> Warning: Kernel ABI header differences:
->    diff -u tools/arch/x86/include/uapi/asm/svm.h arch/x86/include/uapi/asm/svm.h
->    diff -u tools/include/linux/coresight-pmu.h include/linux/coresight-pmu.h
->    diff -u tools/arch/x86/include/asm/amd/ibs.h arch/x86/include/asm/amd/ibs.h
->    diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
-> 
-> Auto-detecting system features:
-> ...                                   libdw: [ on  ]
-> ...                                   glibc: [ on  ]
-> ...                                  libelf: [ on  ]
-> ...                                 libnuma: [ on  ]
-> ...                  numa_num_possible_cpus: [ on  ]
-> ...                               libpython: [ on  ]
-> ...                             libcapstone: [ on  ]
-> ...                               llvm-perf: [ on  ]
-> ...                                    zlib: [ on  ]
-> ...                                    lzma: [ on  ]
-> ...                                     bpf: [ on  ]
-> ...                                  libaio: [ on  ]
-> ...                                 libzstd: [ on  ]
-> ...                              libopenssl: [ on  ]
-> ...                                    rust: [ on  ]
-> 
->    INSTALL libsubcmd_headers
->    INSTALL libapi_headers
->    INSTALL libperf_headers
->    INSTALL libsymbol_headers
->    INSTALL libbpf_headers
->    INSTALL binaries
->    INSTALL tests
->    INSTALL libperf-jvmti.so
->    INSTALL libexec
->    INSTALL perf-archive
->    INSTALL perf-iostat
->    INSTALL python-scripts
->    INSTALL dlfilters
->    INSTALL perf_completion-script
->    INSTALL perf-tip
-> make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
-> ⬢ [acme@toolbx perf-tools]$   diff -u tools/include/linux/coresight-pmu.h include/linux/coresight-pmu.h
-> --- tools/include/linux/coresight-pmu.h	2025-06-16 13:19:13.119223002 -0300
-> +++ include/linux/coresight-pmu.h	2026-02-21 18:08:24.737530149 -0300
-> @@ -22,30 +22,6 @@
->   #define CORESIGHT_LEGACY_CPU_TRACE_ID(cpu)  (0x10 + (cpu * 2))
-> 
->   /*
-> - * Below are the definition of bit offsets for perf option, and works as
-> - * arbitrary values for all ETM versions.
-> - *
-> - * Most of them are orignally from ETMv3.5/PTM's ETMCR config, therefore,
-> - * ETMv3.5/PTM doesn't define ETMCR config bits with prefix "ETM3_" and
-> - * directly use below macros as config bits.
-> - */
-> -#define ETM_OPT_BRANCH_BROADCAST 8
-> -#define ETM_OPT_CYCACC		12
-> -#define ETM_OPT_CTXTID		14
-> -#define ETM_OPT_CTXTID2		15
-> -#define ETM_OPT_TS		28
-> -#define ETM_OPT_RETSTK		29
-> -
-> -/* ETMv4 CONFIGR programming bits for the ETM OPTs */
-> -#define ETM4_CFG_BIT_BB         3
-> -#define ETM4_CFG_BIT_CYCACC	4
-> -#define ETM4_CFG_BIT_CTXTID	6
-> -#define ETM4_CFG_BIT_VMID	7
-> -#define ETM4_CFG_BIT_TS		11
-> -#define ETM4_CFG_BIT_RETSTK	12
-> -#define ETM4_CFG_BIT_VMID_OPT	15
-> -
-> -/*
->    * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
->    * Used to associate a CPU with the CoreSight Trace ID.
->    * [07:00] - Trace ID - uses 8 bits to make value easy to read in file.
-> ⬢ [acme@toolbx perf-tools]$ cp include/linux/coresight-pmu.h tools/include/linux/coresight-pmu.h
-> ⬢ [acme@toolbx perf-tools]$ m
-> make: Entering directory '/home/acme/git/perf-tools/tools/perf'
->    BUILD:   Doing 'make -j32' parallel build
-> Warning: Kernel ABI header differences:
->    diff -u tools/arch/x86/include/uapi/asm/svm.h arch/x86/include/uapi/asm/svm.h
->    diff -u tools/arch/x86/include/asm/amd/ibs.h arch/x86/include/asm/amd/ibs.h
->    diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
-> 
-> Auto-detecting system features:
-> ...                                   libdw: [ on  ]
-> ...                                   glibc: [ on  ]
-> ...                                  libelf: [ on  ]
-> ...                                 libnuma: [ on  ]
-> ...                  numa_num_possible_cpus: [ on  ]
-> ...                               libpython: [ on  ]
-> ...                             libcapstone: [ on  ]
-> ...                               llvm-perf: [ on  ]
-> ...                                    zlib: [ on  ]
-> ...                                    lzma: [ on  ]
-> ...                                     bpf: [ on  ]
-> ...                                  libaio: [ on  ]
-> ...                                 libzstd: [ on  ]
-> ...                              libopenssl: [ on  ]
-> ...                                    rust: [ on  ]
-> 
->    INSTALL libsubcmd_headers
->    INSTALL libperf_headers
->    INSTALL libapi_headers
->    INSTALL libsymbol_headers
->    INSTALL libbpf_headers
->    CC      /tmp/build/perf-tools/util/cs-etm-decoder/cs-etm-decoder.o
->    CC      /tmp/build/perf-tools/util/cs-etm.o
->    LD      /tmp/build/perf-tools/util/cs-etm-decoder/perf-util-in.o
-> In file included from /home/acme/git/perf-tools/tools/include/linux/bits.h:5,
->                   from /home/acme/git/perf-tools/tools/include/linux/bitops.h:14,
->                   from util/cs-etm.c:10:
-> util/cs-etm.c: In function ‘cs_etm__init_pid_fmt’:
-> util/cs-etm.c:213:31: error: ‘ETM_OPT_CTXTID’ undeclared (first use in this function)
->    213 |                 if (val & BIT(ETM_OPT_CTXTID))
->        |                               ^~~~~~~~~~~~~~
-> /home/acme/git/perf-tools/tools/include/vdso/bits.h:7:44: note: in definition of macro ‘BIT’
->      7 | #define BIT(nr)                 (UL(1) << (nr))
->        |                                            ^~
-> util/cs-etm.c:213:31: note: each undeclared identifier is reported only once for each function it appears in
->    213 |                 if (val & BIT(ETM_OPT_CTXTID))
->        |                               ^~~~~~~~~~~~~~
-> /home/acme/git/perf-tools/tools/include/vdso/bits.h:7:44: note: in definition of macro ‘BIT’
->      7 | #define BIT(nr)                 (UL(1) << (nr))
->        |                                            ^~
-> util/cs-etm.c:218:32: error: ‘ETM4_CFG_BIT_VMID’ undeclared (first use in this function)
->    218 |                 if (val & (BIT(ETM4_CFG_BIT_VMID) | BIT(ETM4_CFG_BIT_VMID_OPT)))
->        |                                ^~~~~~~~~~~~~~~~~
-> /home/acme/git/perf-tools/tools/include/vdso/bits.h:7:44: note: in definition of macro ‘BIT’
->      7 | #define BIT(nr)                 (UL(1) << (nr))
->        |                                            ^~
-> util/cs-etm.c:218:57: error: ‘ETM4_CFG_BIT_VMID_OPT’ undeclared (first use in this function)
->    218 |                 if (val & (BIT(ETM4_CFG_BIT_VMID) | BIT(ETM4_CFG_BIT_VMID_OPT)))
->        |                                                         ^~~~~~~~~~~~~~~~~~~~~
-> /home/acme/git/perf-tools/tools/include/vdso/bits.h:7:44: note: in definition of macro ‘BIT’
->      7 | #define BIT(nr)                 (UL(1) << (nr))
->        |                                            ^~
-> util/cs-etm.c:221:36: error: ‘ETM4_CFG_BIT_CTXTID’ undeclared (first use in this function)
->    221 |                 else if (val & BIT(ETM4_CFG_BIT_CTXTID))
->        |                                    ^~~~~~~~~~~~~~~~~~~
-> /home/acme/git/perf-tools/tools/include/vdso/bits.h:7:44: note: in definition of macro ‘BIT’
->      7 | #define BIT(nr)                 (UL(1) << (nr))
->        |                                            ^~
-> util/cs-etm.c: In function ‘cs_etm__setup_timeless_decoding’:
-> util/cs-etm.c:2934:65: error: ‘ETM_OPT_TS’ undeclared (first use in this function)
->   2934 |                                 !(evsel->core.attr.config & BIT(ETM_OPT_TS));
->        |                                                                 ^~~~~~~~~~
-> /home/acme/git/perf-tools/tools/include/vdso/bits.h:7:44: note: in definition of macro ‘BIT’
->      7 | #define BIT(nr)                 (UL(1) << (nr))
->        |                                            ^~
-> make[4]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:95: /tmp/build/perf-tools/util/cs-etm.o] Error 1
-> make[3]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:158: util] Error 2
-> make[2]: *** [Makefile.perf:797: /tmp/build/perf-tools/perf-util-in.o] Error 2
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [Makefile.perf:289: sub-make] Error 2
-> make: *** [Makefile:119: install-bin] Error 2
-> make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
-> ⬢ [acme@toolbx perf-tools]$
-> 
-> 
-
+> ---
+>  mm/madvise.c | 13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
+>
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index c0370d9b4e23..efc04334a000 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -799,9 +799,10 @@ static int madvise_free_single_vma(struct madvise_behavior *madv_behavior)
+>  {
+>  	struct mm_struct *mm = madv_behavior->mm;
+>  	struct vm_area_struct *vma = madv_behavior->vma;
+> -	unsigned long start_addr = madv_behavior->range.start;
+> -	unsigned long end_addr = madv_behavior->range.end;
+> -	struct mmu_notifier_range range;
+> +	struct mmu_notifier_range range = {
+> +		.start = madv_behavior->range.start,
+> +		.end = madv_behavior->range.end,
+> +	};
+>  	struct mmu_gather *tlb = madv_behavior->tlb;
+>  	struct mm_walk_ops walk_ops = {
+>  		.pmd_entry		= madvise_free_pte_range,
+> @@ -811,12 +812,6 @@ static int madvise_free_single_vma(struct madvise_behavior *madv_behavior)
+>  	if (!vma_is_anonymous(vma))
+>  		return -EINVAL;
+>
+> -	range.start = max(vma->vm_start, start_addr);
+> -	if (range.start >= vma->vm_end)
+> -		return -EINVAL;
+> -	range.end = min(vma->vm_end, end_addr);
+> -	if (range.end <= vma->vm_start)
+> -		return -EINVAL;
+>  	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm,
+>  				range.start, range.end);
+>
+> --
+> 2.43.0
+>
