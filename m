@@ -1,132 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10FC72701B6;
-	Fri,  6 Mar 2026 12:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E430D2E8882
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Mar 2026 13:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772801005; cv=none; b=WU31MgBlu8AGjfB9jHpHzOx7GVzBYsDnhDT+Ll+wMxd++QQNNB087SwWfDks9z21mLNQXlxUw+n0Bdxbattg1poRTH29UrG1fxc4x1Zs0RXzN2POHWchjXAV2mYsjrHg9aN0aHKvfz4EQ4kGmqnpiYjH+9M99eMDvQ1z7V+g/s4=
+	t=1772802089; cv=none; b=A+UdeO2xTjV7qnIcq3fY2Rb6w1fe6J05KgHq5fBcyRQnBhO7guFD03LYR3ljsSIF0wsIhHHAn2Ik8JOfwt1GyQfJ07rbLizCtNKnfXWysz3krGB8uLuBE8PPB29nmjnGeZHKA0JTKiGOEs8ZCW8mQz/XCBvbuKjqLuisBXbCUlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772801005; c=relaxed/simple;
-	bh=laI5Gks8UKTtQyxqn7mx9nW4b8iCTs15iKu2otVUFHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M7qq3JTt31p5g0XaukvqdQ4cMt2aprEER950/tWV7vWw7DUsIr/ABNUj0oYPdzUTeZm2lM4k+5hi2lkhtdhtA8Z5V4rcPT6Ox7OzDogZYMx9zyZ89yqkuLp+uZT9Ha5aNIHOG6WikO89HFD48fLsdcvyQji2rR2NK8L3ENXn7MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9mC0Dtb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772802089; c=relaxed/simple;
+	bh=9vXHwpFBLID5YqZonK+Nr6AaGb+ZbZcd5/Z+RsS8dJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rp+Tc33FaskorLFVnMLKeOXO/Wi6IhLzMdY8XPm/QVM5oc7OhDC3FnImH8RNS0S9Yl8LM+WsZq9hH90catYQXu0Ip2Dw0hvZdGkjf7oL3Y4ULRQ1o+XA1PwU4dh3lJC/+yMqWKeRpAO2kD9o/CavVTjs9jgSijGIu/vVgpKhZwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qprj06Qm; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9mC0Dtb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 149B7C4CEF7;
-	Fri,  6 Mar 2026 12:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772801004;
-	bh=laI5Gks8UKTtQyxqn7mx9nW4b8iCTs15iKu2otVUFHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p9mC0Dtb5HP8pcPpgD7riizGZNEqblFXhyCBB7gyX3iYqVlML2IEu/E46TQAfJ6kB
-	 5ES8F1tVf64ZhuAJ2vES+zOK4kRMzYtKhCjqesskIYnO8sAKVgRvaUWEnRMwLwSDQe
-	 6ozGy1rqY43AQN4mamdsvpi0UFTEWG/1ua9kPc8CcoyCTro7l1nx6xbY3HJtSjDB33
-	 HoXIf0/JjwlmXYcHIiJHIJDR1zTA/RgIid+TR7+6DmUz/5MSsmXaWj5qjtxVswmSpB
-	 y7qIWK2NRTkB+QK0r3eC/5U81n1lw5TgFlHl0zqxfvXpiP2u3XAAAbXR9+cd9x48Kv
-	 4L7tL1NMHpRqQ==
-Date: Fri, 6 Mar 2026 12:43:21 +0000
-From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: linux-kernel@vger.kernel.org, 
-	"linux-mm @ kvack . org" <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
-	Pedro Falcato <pfalcato@suse.de>, David Rientjes <rientjes@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Eric Dumazet <edumazet@google.com>, 
-	Neal Cardwell <ncardwell@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v1 16/16] mm/memory: support VM_MIXEDMAP in
- zap_special_vma_range()
-Message-ID: <f2a7bdf4-8db7-4101-b7c6-3f5d9c20e078@lucifer.local>
-References: <20260227200848.114019-1-david@kernel.org>
- <20260227200848.114019-17-david@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qprj06Qm"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-439c5b40f60so2674827f8f.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Mar 2026 05:01:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1772802086; x=1773406886; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pZPTd9XqPxo27WQA3KpO9Gn9NiuPxcGYqc9Rn0MTrsQ=;
+        b=qprj06QmHJ01KGSCd+hr1XK6CHozSiNMhKFb7CIsfJi7ePeXKY1fAS8AR4OtWEmy1S
+         QIWlerJgo86FDQJHuFaU0M+OxCFnFWB/ZUEGVlWy9GsLg7HDfuTgSWni2zGbuPRfuUw+
+         eoIZEyya4xoP7mvCPbZzIGVhA14ZS5Ry1aFc1cfscRHpWMW7s/UR4/A/vNSZxOY/iZf5
+         g6mtJPG8hRU81tx6ZvaqLgEhzzu/YZk9zyoFrEVpUbJHtgIj8Ko4RxkxHuut9Pq2Tfm5
+         wbM7UQk3OuDOB2fehZ2Af/qfavwAelUMPp+FCYSvamV922Ed02cHJacYn4Mwv/NzXElH
+         5GJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772802086; x=1773406886;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pZPTd9XqPxo27WQA3KpO9Gn9NiuPxcGYqc9Rn0MTrsQ=;
+        b=QqSvTyKUAywV+NiYfh/e75juEqPGmuA/CJybAwil3/flumWEZg9WvC0NdbAcvj6/Fd
+         2C0LaBkfT0+xKJEwD+xdBdI+LJw1lLy8fCNqr0C1OMo63NVH+vOtWFI9xuA7jeN+AV5k
+         tIj7CYBFc+0dIEi1ar4uALGAsGyuY/iSTjV2FeeeRb2Mj6aKC69TvOquso3HwaW7wzl1
+         vTCWrtp9bMqlMfy3oYohO678OxHp3OSIUuPptumJFCIuMr878SainLBZg9WLKMJ5YAPm
+         0c8Ef9Eh6paVAtQPY9w7Sz5Fu4yynPnGu8ocuLVEOnWnR41pEARpjj3MvqePiYRb3qPk
+         vyZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMci3MkBdN53Hv0xx0B+xJCLAIZ6a1C9rDUOsDW352P2YBDsCoshrTNrGtq49wrWFjPdz5BZvhoiXEwC2/F80j@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxqwlQJx69mP9PIiFWEfZ24iRvcBwIB6m+XUg2E0hm0PixkfTY
+	w7Z7woIx5hGC9m1ZDuTJBdNOSVmPYWEPOF+5LGqm84BxLmDWUJlNux+i2QMrPMHVyF0=
+X-Gm-Gg: ATEYQzx+sktITx721c3Mdxba3dM9jIGPev8zB4lsioWBylDHl4+e7xYUgViWZpBVgoe
+	Qf9kZSoJBgjQ7IWXAo1fMvFNUCWp51xmyj8myIodZiLAq2v6e4czk3bwMTf9Tg4zrO1tk50Cabr
+	RkfIyyJKkwCRJ9ng0oYr0HMr6m95c8ki6ze7uhsBw3W7t7QzLVhRBo6h6rtNVjVncDvJnJo2MBs
+	q3iUpFAjHy7Z35hF8felam5W4KtSRbFZ1EOpkAf3+GfpF//P8lUXS6GlWMZHNysOH8fhQcIOqiW
+	F4UCy6vnTJoHOBu3KA/gxoz9fn/1QWi7MhsQqzqBORjGO2ZFZ0Tgmr6WImYNsYIHv7Ixa8OJyXg
+	7TLdZGdURuptYCfMB6hqjVUXqrTbajP8Llkgfw8bETXLVNFEAgWa6dKM8dIMd7u5/eJTaymLJ0F
+	CGq/SbjC18nCUXA4GDrmOJr8WGwKoP
+X-Received: by 2002:a05:6000:2913:b0:439:af0e:57a8 with SMTP id ffacd0b85a97d-439da669bcdmr3404575f8f.33.1772802086227;
+        Fri, 06 Mar 2026 05:01:26 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439dae3a20fsm4090161f8f.28.2026.03.06.05.01.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Mar 2026 05:01:25 -0800 (PST)
+Message-ID: <0be8ed2c-9305-49e6-a315-bdfc15af70d6@linaro.org>
+Date: Fri, 6 Mar 2026 13:01:24 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260227200848.114019-17-david@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf cs-etm: Finish removal of ETM_OPT_*
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Leo Yan <leo.yan@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@arm.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260306-james-perf-remove-etm_opt-v1-0-03c662380361@linaro.org>
+ <20260306-james-perf-remove-etm_opt-v1-1-03c662380361@linaro.org>
+ <20260306122729.GL1098637@e132581.arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260306122729.GL1098637@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 27, 2026 at 09:08:47PM +0100, David Hildenbrand (Arm) wrote:
-> There is demand for also zapping page table entries by drivers in
-> VM_MIXEDMAP VMAs[1].
->
-> Nothing really speaks against supporting VM_MIXEDMAP for driver use. We
-> just don't want arbitrary drivers to zap in ordinary (non-special) VMAs.
->
-> [1] https://lore.kernel.org/r/aYSKyr7StGpGKNqW@google.com
 
-Dude, you have to start your indices with 0 what kind of programmer are
-you? ;)
 
->
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+On 06/03/2026 12:27 pm, Leo Yan wrote:
+> On Fri, Mar 06, 2026 at 11:24:45AM +0000, Coresight ML wrote:
+> 
+> [...]
+> 
+>> -static int cs_etm__setup_timeless_decoding(struct cs_etm_auxtrace *etm)
+>> +static void cs_etm__setup_timeless_decoding(struct cs_etm_auxtrace *etm,
+>> +					    u64 *metadata)
+> 
+> nitpick: here it can avoid a new argument "metadata", directly retrieve
+> from etm->metadata[0].  Otherwise, LGTM.
 
-Agreed that there's no reason not to allow this, so LGTM and:
+Oh yeah, I thought it wasn't assigned yet but it is.
 
-Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
-
-Thanks for this series overall, very nice cleanup and I was frustra^Whappy
-to see that there was nothing major or really of note to comment on here, a
-rare occurrence in review :)
-
-> ---
->  mm/memory.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/memory.c b/mm/memory.c
-> index f3b7b7e16138..3fe30dc2f179 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -2239,13 +2239,13 @@ void zap_vma_range(struct vm_area_struct *vma, unsigned long address,
->   * @size: number of bytes to zap
->   *
->   * This function does nothing when the provided address range is not fully
-> - * contained in @vma, or when the @vma is not VM_PFNMAP.
-> + * contained in @vma, or when the @vma is not VM_PFNMAP or VM_MIXEDMAP.
->   */
->  void zap_special_vma_range(struct vm_area_struct *vma, unsigned long address,
->  		unsigned long size)
->  {
->  	if (!range_in_vma(vma, address, address + size) ||
-> -	    		!(vma->vm_flags & VM_PFNMAP))
-> +	   !(vma->vm_flags & (VM_PFNMAP | VM_MIXEDMAP)))
->  		return;
->
->  	zap_vma_range(vma, address, size);
-> --
-> 2.43.0
->
-
-Cheers, Lorenzo
