@@ -1,128 +1,133 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A9336C0D3;
-	Fri,  6 Mar 2026 16:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772813389; cv=none; b=RedfXj2AQtjSc7RM6g3iYbNGi8K39FoRt5io+N3psO4CmjqbbQPBO6H90ciNS9a6dh5guEbIK6Zo+Jr46/V/snO+O4+fZi4ek4PX2W4FYkUSOpAfa3PSMEnXx7+Va2AtjedgiprsGzgJRQpP83+yuwQ7ogV2ac+YHOCpCXgCFG8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772813389; c=relaxed/simple;
-	bh=ijXGaJWUViaOUpLIMrNPVgZXACg9PxvjH/F31I84tS0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YVWMlVhYZY9w6vBzZ4lLnnsxYBRlrEM+m6WmkcWWkbgBmo3GAxglJAQoswfDMsfKsB5Yk1synYFZU4n+lHjElWf2BdWrNxdV5Un64lJ3/zZ6oMGWn/karaMy6h0bFtcV+vyWGtyV7ohi5bNZ5CArjAvn3mIv34DwGYexK+lEp3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jAU4goC/; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556683B4EA4
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Mar 2026 16:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772816009; cv=pass; b=lAYpjsgYgwZOutLkb+veZgc5BqEkyar6I61FlBn3tqZUKfZUMXb4JMyKkyBKFZlkutY6QtkTRCwii2phgP30FI1zN6WLu8YRtPimccnvZPOa/LmxDXRnyrx6G1riZrgU1I26SectrSL/98vTNfjoIZMcxaNgt8ncQC6Fcdt3oVE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772816009; c=relaxed/simple;
+	bh=uvJAJqJ+OUG+8Qc6KivjDGtBu8adoepmT7qHr235oD4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P1TyySIQPrv6RA2EtbLiYQPgSZBpcHal7ox5uqUEzD6EVvsy1C078Ifje37HCYJSmIXN2yo2tKMHtNxyzzeqjF5W7FlsLcU7WXxSRPlANS+BqAOmLV6KY6ECH8zoDjHZ8QVWKKMMlBPJS4XP13+8nabH+rgkGi823/y7Y+qI2Wc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b+8xlYrT; arc=pass smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jAU4goC/"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7A4E040E0163;
-	Fri,  6 Mar 2026 16:09:46 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 6pEGM0WzYpuj; Fri,  6 Mar 2026 16:09:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1772813381; bh=BjqVHXIzuvmwNTbYb+QBG/sSOUQnnPucpuvQkYYsYgg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jAU4goC/tLvu96O63tImRQ1LCOPUQ7gut1SEsSt+oHf/xK64iibrhkq+c5k+qhexg
-	 gS15ftHyfJvJ+Awe7q6KYGgbwOpOCHtylGdCqsG/Glqz1QqPZZm8TvHX4aYSqyW4KE
-	 4SwWMa4ciL8vOvh+ew1oF+CiO0JE3B27exOxFa6aEU0agF35wenxkVrDP5XYgS9hRt
-	 mI8nOEw+GEFdasI63i5NT5iEj0NGy69Dn0zjTKwM4HHCXnGsIUkfWq2wYEkrJw3RJa
-	 c8ponEyfk3KXE2shqvXIsaYZPk2hkS6xhvTebsWWZifZn6K80+YeSMyKuL0IB9iSRT
-	 lJKI/B0Or2YV+7SMSj/BKMkl9wg1cQVOXk4H57A5etYu/YgzuLFu7Hh6oaPBlN8bfy
-	 HOHt2JCuGy+NXe7guuWAGJvWiqGcd1h5sSff6CDdvN9TzM6qOW5CdVdHYKxef8rOmN
-	 HPj8WJU5vpfBYBxWCMIIc26rv1MXf43l9mo7kuskfuuJEocl/huC1+9lDnCFv4hdo9
-	 cttBdtUSlFDDO5tE/hT+0cDhA8cgDPcAfkAxArgtj7PxucD53hxF2H1rZWeBPSYYON
-	 9H5/6t55KMEeCjyVDndYOM5WFaGPRLVCNE4gG93YfnduuWIU9DgSzgcVFBDg5hC6sC
-	 Cgkv1S0SP4yMd5lxmLRlgbAI=
-Received: from zn.tnic (pd9530d5e.dip0.t-ipconnect.de [217.83.13.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 4630440E00DE;
-	Fri,  6 Mar 2026 16:09:22 +0000 (UTC)
-Date: Fri, 6 Mar 2026 17:09:16 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Boqun Feng <boqun@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	linux-perf-users@vger.kernel.org,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
-	x86@kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Add references to tip tree handbook
-Message-ID: <20260306160916.GHaar8LPlIl_ygYs6v@fat_crate.local>
-References: <20260305212215.3188399-1-dave.hansen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b+8xlYrT"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2ae49120e97so102065ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Mar 2026 08:53:28 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772816008; cv=none;
+        d=google.com; s=arc-20240605;
+        b=AR87oF9B7kR0UAby+zpEwn5ROQ3AfUyfJHDtwu57J/xCbpkyX+KHcCrCXpxTzVurIX
+         8YsgJiUm9t7FkrEsxIsz8K0t3gHG7Q2/8p9kzJCUa/+1rL6Untl86eq8s1Y93V4WVhZq
+         GBljKH4/HTT+Gjfin8EXGy7yLr4AVFSrdOqfA/mNtAtIROxzY9LpQFILLwMR0UBuk5QP
+         NdTl4mPlBL9W3LFGUJOpS/8GhNAwSFNpXcvhKsqetG6HuBgPgD+UpxaN6IhkGJctb1wl
+         Cp5wVve6yirrpO5osqH3mdJ13u3WP/1NOY4UGq/pYC+k9nTueGg6TrpGGqP+/LzSY1lE
+         X6og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=933sEyemrbKBxApG2XPD0d2uPjKeHtvt7oVBd4xEr8I=;
+        fh=NFaLDVAoNQgvlGnsAu639cv9rEFB875S3iJEyFya+PE=;
+        b=GIKvkhXOqbHXlu6FH5CnGmYx7pDoIanamtJk6eAC9Rzea4JyywwbhWE2mxzOVISRdK
+         xLXkyuzBOIXXuBNQdl3NzYJVvLf/jew/fpmaNPF9v0IcbMjw7n44b+WukBiMhwE+/bjo
+         nO4ClcImMhPll4u6b152x+FMYcgL12Kt7AsnMDLz4iuN0QjUKaM7pnOsSUbFtTiB4r3l
+         VAXug+v8JJ/s4E+MxsVggfWgdcc8/NEwfb3EauDo72DZPIQeGZi2eAksoFTUvDtCokOD
+         bzYG+Lw1RS3CPCrmyFohYWqAjKPHHtz2ULpp//gfWx8yUm2Zd7vCELtoEMGXl5cYPgto
+         +4eg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772816008; x=1773420808; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=933sEyemrbKBxApG2XPD0d2uPjKeHtvt7oVBd4xEr8I=;
+        b=b+8xlYrTITiYbj80vcLrufR5Z/yneu9x9IgtJPoEjTUVRs+B3dhuMoEIE6XJ3HH9QM
+         CIPpgLGAObu5xZ1/CcciTrhiFi/VbjC+xMPFktDbgntRlVI3B8qvk80D4vpzV+GXdklh
+         TeYjczm0nvRz1pG6rhYo3F3+5nNJDsK17hM+OJnNc0GYUaAzxTJ6wNQ7aE/D+c18vxCe
+         XiTcJsMYJF9Kd0ZrLH89Y6+bkOo2cDSIYvA6vjTY0LXDmi5KrZ4j5NRtPFDCyvNOe8+y
+         WqIj/gkPnGoHbi97KQ0s9fo1B2b6SwIECLEiGKNBTNM/u07v8xdLHsPbHL/RE6kp9YSZ
+         p8zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772816008; x=1773420808;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=933sEyemrbKBxApG2XPD0d2uPjKeHtvt7oVBd4xEr8I=;
+        b=hN/2cr2UiIzW9gk1vBeYrXkY4FGkm2UlxaoubXZHEs4JHDjUeB6NrdnyvYgJh8FXrw
+         jiJw21MuAGo0N+u//0f6LtYkO2UA/q+ZjEcUBiUAxrVfAOeyjz0iEPE02M9CccEh6xA0
+         qg2Xjr+yE1yCvCDULXDoByN4A8MGw+paXPfWKiMh8MNuGM5BIkXl9HdBngUg3VIUsh5I
+         ZF39LNvsc0x9befRfeXfi3oaieCbgJfPy13TTBYQW6D6JJyUAba2pAzBq03N3pSbp4FN
+         bu6QblR0USsnra669BxfNzzJ0UiQkoCrxp4LctOKxFOq3EOyecxaTmvKK/pDMdK8/qzN
+         2gxg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8jghIHwGag3Gwd5DX8P96Yzj8ZT0Z/M3LEmB9y7mTesNZnWtKJ1Cdi+zxREEF95W3Zi2y9z4F4wDY8uwU1kO1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS1xoFZGN+awMoCKlGgTGoUMhZJy05pp2TiEaCnpoWi8ad7yfu
+	dxheyCi09VTlLFmzTxocpleoLJ+W2F2X+sMyyBSjuozR7+mtzhIGYCUiM2S0/bb6EZkVcwXvy1K
+	MsXLgsjLGOVMoa1urdkXqe7hSHJ0J6XO8mUlD5Z68
+X-Gm-Gg: ATEYQzzbO6pl8HbEGbQq62MrKLCCJLtDsAD8NxzehLupCqArRUGlRKeWojLU+lajdz+
+	GYI2cA4FoAtK/eADuYCgu1UpM1KL6JrZY6erFYLheJOi1jaaIN5x7/OdIxWbGc5P14zBW2bz/rV
+	t6BX5z1+rErs6IIz+8T7zinOZUISnCusYls3cAoRoza4LbF7+G96TTyLU9XecPAbsaziGHa1h30
+	KEdbE7pXURoGXOBH3lZ5cXH6Yf9zvswVrpkl0vj/UuN9AAK+QOOgDdVvdTqJlgowNFUqKzQr6/5
+	aBMFPZ/v
+X-Received: by 2002:a17:902:e54d:b0:2ad:ab68:f2c3 with SMTP id
+ d9443c01a7336-2ae81e624cemr2487815ad.13.1772816007246; Fri, 06 Mar 2026
+ 08:53:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260305212215.3188399-1-dave.hansen@linux.intel.com>
+References: <20260306071002.2526085-1-tmricht@linux.ibm.com> <aar4GKP1c66egZnn@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
+In-Reply-To: <aar4GKP1c66egZnn@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 6 Mar 2026 08:53:15 -0800
+X-Gm-Features: AaiRm52ymk7n_TnJgTnMzHWevukVygoazKQGzkWbtsoNC-MRSTc2_F6Kq8bl054
+Message-ID: <CAP-5=fXs0UrMVhwU-_=iunCYa_ye18FHj0W1V8sE5T9nOkeZWg@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Fix test case 120 and 121 for s390
+To: Jan Polensky <japo@linux.ibm.com>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, 
+	namhyung@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com, 
+	sumanthk@linux.ibm.com, hca@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 05, 2026 at 01:22:15PM -0800, Dave Hansen wrote:
-> The tip tree handbook is a pretty handy reference for keeping the
-> various tip maintainers happy. But there are no references to it
-> in the MAINTAINERS file.
-> 
-> Add a references to the handbook for a number of subsystems. I've
-> added these for all of the obvious subsystems that list T:.../tip.git
-> and are likely to follow the tip rules.
-> 
-> This will be useful both for humans digging in the MAINTAINERS file
-> and our new AI bot overlords.
-> 
-> I'm cc'ing all the M:'s and L:'s listed for the subsystems but leaving
-> off the R:'s because the cc list is already out of control. I'll
-> commit this to *some* tip branch if there's general consensus that
-> this is a good idea.
-> 
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Boqun Feng <boqun@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Daniel Lezcano <daniel.lezcano@kernel.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Frederic Weisbecker <frederic@kernel.org>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: x86@kernel.org
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> ---
->  MAINTAINERS | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+On Fri, Mar 6, 2026 at 7:52=E2=80=AFAM Jan Polensky <japo@linux.ibm.com> wr=
+ote:
+>
+> On Fri, Mar 06, 2026 at 08:10:02AM +0100, Thomas Richter wrote:
+> > Perf tests
+> > 120: 'perf data convert --to-ctf' command test
+> > 121: 'perf data convert --to-json' command test
+> > fail on s390. It is caused by selecting the default event cycles
+> > which does not exist on s390 z/VM. Use software event cpu-clock
+> > and specify it explicitly on the command line.
+> >
+> > Output before:
+> > =E2=9D=AF perf test 120 121
+> > 120: 'perf data convert --to-ctf' command test       : FAILED!
+> > 121: 'perf data convert --to-json' command test      : FAILED!
+> >
+> > Output after:
+> > =E2=9D=AF perf test 120 121
+> > 120: 'perf data convert --to-ctf' command test       : Ok
+> > 121: 'perf data convert --to-json' command test      : Ok
+> >
+> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> [snip]
+> Thanks for providing this, Thomas!
+> Tested-by: Jan Polensky <japo@linux.ibm.com>
+> Reviewed-by: Jan Polensky <japo@linux.ibm.com>
 
-Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+Should we not fallback for the cycles as a default event?
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/builtin-record.c#n1374
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/evsel.c#n3792
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+Ian
