@@ -1,181 +1,274 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D1A33E358
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Mar 2026 07:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD9A33B6CB;
+	Fri,  6 Mar 2026 09:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772783597; cv=none; b=rEfvQFljGChNAKuspKNCo5os/Fq/BTkr1HBrZWSnpiUaazPwXyOmSg8Eba8xLo0sPwlvFAJESsIawbZ9uoVjy9y5Hi81qCS4A3iuiIAEG07W5DPTz+yNsjsOoHXk6HMVB45uIEsB+POlDzXqR+1KHP6hxgh7LK2fhaC5/nC5Ng4=
+	t=1772788508; cv=none; b=e+8vKnSn84cLNLd4ZqnhbpZQ8kIURZi7XqPNUAdVTGF1vkwY96Wprk7pcQZqALiso2xj+M5ginnmVgyAJ/eu6l2y/nFH+GVemtYGsUX4wnV8uZpVUki+WoGqVbpm++w6Mtq9LozfiSAAp/feMTT1fvNbOojpBxMNczzpuS6lCwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772783597; c=relaxed/simple;
-	bh=PgSHDVI+rpF0XEl034rHoRrMtsjWIP8893ffDws7MO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TsR7yvPg9MUI29XKPiQ84U+5p68mY8NqkT/3XM6XZip7C/lWx7C4t9uEU+oEvwCuGmiKJDVQOX6K05pmeRFt+kWEZoRvvG3OLNEQEWQ/G+HRK3Zl0Z5xiQ7jgz9aqZgGcndZU1gQr/SkXzNpLj581wYnsnqw1W2+s5H6JK2iNxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YCWUHyGt; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=MoT6RrW/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1772788508; c=relaxed/simple;
+	bh=7RvOdnrFs/iEe9G84pPe+q4PLv+gFd3Sa58Nl0eTC8M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MhkrUNew/kVjjDX00OOp2HBs5hVrUxZeQ+VO91IGOaVaGPyrv/7spRARgvL4zQSEQEm5Soq62lHODY+P8EFU2BSfjsBxus5wxEs6wP6knTO423TDZzAZK0kJ8WCPPK06gaQ5BB7kgguVlb6DEYYVM5ZKe5J9x4Q4fnwuwp8KipI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TyR366hp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YCWUHyGt";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="MoT6RrW/"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6264aV9M1087386
-	for <linux-perf-users@vger.kernel.org>; Fri, 6 Mar 2026 07:53:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	VDqdJFAg0KU1it5TveUhRei5AuIxuL6SLpcPwfpjiuU=; b=YCWUHyGtze9XQ1qo
-	uPXQKTuMI4EZVqRP2bblBhiPoxJO/wEW77aZUXVhoTp+61n9vx7datVG951vCK+l
-	P7nxmuE472VA6uVe4vgYNumJvjmbdYi1aLRkleSFuLk78irrKjhSeVh/g9xRLqvR
-	ETueAAN6C2fGPnwt/tFB1HSg9CBq4TD/WCpAafKLimUgaIPFm8zy/j8t8BLgx0nP
-	zANq60yhMQweU++fb+HQJfpZy3RKJ4LoHUDS3ZbF79FgS8/3EReYedWdb6g46CO3
-	TQUgNNzrdbSJRICwCjV084hup5Ot9jme4oEMSIP1FOCHfTprBq4tB9AzY6QhvrVD
-	XBlxfQ==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cqfg6a5h2-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Fri, 06 Mar 2026 07:53:14 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8cbb8040f48so5611350685a.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Mar 2026 23:53:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1772783593; x=1773388393; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VDqdJFAg0KU1it5TveUhRei5AuIxuL6SLpcPwfpjiuU=;
-        b=MoT6RrW/9TF+7NGZAoXPDJfDZ+bmd79ucCrzVgONXC2CSU/RdWd5a66q4yhvzqhDiB
-         JmeoC8ROrlUvHoD0Oyxe9d08Z1Rdka56tSRdnS1GUpOsJJyAeXlkYEO3xlr7tFdGv087
-         gK/25tOlYIwqmpYndzs0tzzHXWhixtnCI7XRS+XuYsiWGAIFKtJnRtWOztCUyhVnc9yn
-         9Hg1mN58v+6PpUiLEVAa/RQ1PNGIB9oVN5w031rwpdqNb3Ir0ywUcs08M1/XadsiZuyQ
-         M6mSX0CdwpPYIh2oJCsEzFQWpweYRDbbfKMkm4hcUZ5GfOym0PldOAHgZ8DVWVAkB/bJ
-         0hsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772783593; x=1773388393;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VDqdJFAg0KU1it5TveUhRei5AuIxuL6SLpcPwfpjiuU=;
-        b=HoJrZsxVsiePv5uMzrzHBb2mSJXmmdwHKDxaHBWW5OOuKp3usMYWZRnNe7unbR83Jg
-         JXi7NiqTioAU3Hpjd/DPA3rhgELsJCgQT/Qd9NY9YbVhwssL3O1kA0ki/5z8h9Hp3/2B
-         FWwLkanEmNjsewihlBL716fDEER59P9s/CY96BBM5/Z4QqKxZhoj/0bdcwa/AkIwNnOl
-         dKZ/7zW1WgNNAapAKSA8mbjdK/9aItoFL2vPWxJMHbFNmMlwBioFUfGjJ1YPAZUpI5OR
-         IojnaPRVKCI+ETcvtojfxO0X6mIOz3cmCM1rDPw4CcQZRmDxKVqMGuszjwX3xBa3inTg
-         2Zwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUO9EEbuvVhLv09nIN+95o/bSP/j6ti1qoJAXjPwv1+d8x75QRNimsyxzapGDvT2Qu9+jR3rV2RPjTloF0rtM9g@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvXqYqJ804P2J03hLNpMcwZgF5Rts5xh4BHHRwCwrwSim9b0z0
-	rMgXYhNbnwb1xRVYK6V+gKgYMDoypK9M31m00Pp6gFcsAazkUk3kdNOE1ypOgdDzZ2WupmsFVRC
-	HGyRUpYOtGSgap4avWoSo7qjFeEQQLtbY+DippVjd4NvGcHffmBt7qAEBv1aiGwCO/9ra/F0C
-X-Gm-Gg: ATEYQzwiIYmG6F7kolh8tNeRF/ONZolIwRXUfSYQdYcANoxOGHGVxccAbCQvssqhyoj
-	/Ty63c5M7+hBzuXywMe0lp9ST+6ahZ9SUh7PL2V6il3NxyPEk/Ce+pKD3rXQZnhI6Yu2vIk/siC
-	y80gjRLf1Dwvrbn0xDta9V3az4NZiQpMzAMaiVSJo6T4dGiL7NsLwAaswiE9UhA/Vux8FgbFWbP
-	9Npo6IBoob7XCjQK/C09KDPODMipaTKLvAyZ24zv0jtMIy7vj0EG1E67+ofUpGiXpgf/YHYHQqi
-	NwWSvlMdb1kzu0SMSr9E0vkygCL+8ekoGhg5UZskU1K1kG3vhgPaLs8NC4gcnUEzRCKeVca9a0k
-	XHgSKJmgNW6CPJ9JWIJA/aZQ4jeyirvmPT3OzNOGm78H7E5azUuv20/0U1iMF1fcTSRQwPw==
-X-Received: by 2002:a05:620a:44cc:b0:8ca:123e:819b with SMTP id af79cd13be357-8cd6d336d89mr169110785a.13.1772783593233;
-        Thu, 05 Mar 2026 23:53:13 -0800 (PST)
-X-Received: by 2002:a05:620a:44cc:b0:8ca:123e:819b with SMTP id af79cd13be357-8cd6d336d89mr169107685a.13.1772783592833;
-        Thu, 05 Mar 2026 23:53:12 -0800 (PST)
-Received: from ?IPV6:2a05:6e02:1041:c10:1265:158c:17d1:c76e? ([2a05:6e02:1041:c10:1265:158c:17d1:c76e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439dae483desm1793314f8f.34.2026.03.05.23.53.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2026 23:53:12 -0800 (PST)
-Message-ID: <86ea19c5-306c-4ebd-a9a2-ced274977ec8@oss.qualcomm.com>
-Date: Fri, 6 Mar 2026 08:53:11 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TyR366hp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C425BC4CEF7;
+	Fri,  6 Mar 2026 09:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772788507;
+	bh=7RvOdnrFs/iEe9G84pPe+q4PLv+gFd3Sa58Nl0eTC8M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TyR366hpH5SBgvb3stJOO+3+JgB4eyp8Ub6SIcEY5Wv5+DIXq3qwQ1akUuyGzm4GI
+	 oVWqv0SYGKFQk/aIJcLbDc3SkZdh03GwnjPJPfc8DHBxnnTk3pTwokbH2aquirHejB
+	 nz1gJxpKMhkWSd0cvlbIm12Yo0dUUSzlaMGnA70lo5LCfYmGHYkoB3BEoaWxEw9skO
+	 0XSBCv8+kTn/Gf5HrA+24udlPqxoLhC1731SEC00PUdG+t6hKArOjAPEtT/hHxR1LY
+	 s+VuE2scXcViJMBvNGcnMzw7bfK0RAeQxP1RLAMHfxMD+S62KQ5DOUo/0QF6h57vkJ
+	 rf8R3FiiVNktg==
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	fsverity@lists.linux.dev,
+	linux-mm@kvack.org,
+	netfs@lists.linux.dev,
+	linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-nfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org,
+	linux-nilfs@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	autofs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	codalist@coda.cs.cmu.edu,
+	ecryptfs@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	jfs-discussion@lists.sourceforge.net,
+	ntfs3@lists.linux.dev,
+	ocfs2-devel@lists.linux.dev,
+	devel@lists.orangefs.org,
+	linux-unionfs@vger.kernel.org,
+	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	selinux@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org,
+	netdev@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-fscrypt@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-hams@vger.kernel.org,
+	linux-x25@vger.kernel.org,
+	audit@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org,
+	linux-can@vger.kernel.org,
+	linux-sctp@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Eric Biggers <ebiggers@kernel.org>,
+	"Theodore Y. Ts'o" <tytso@mit.edu>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jan Kara <jack@suse.com>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Chao Yu <chao@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Steve French <sfrench@samba.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	David Sterba <dsterba@suse.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Ian Kent <raven@themaw.net>,
+	Luis de Bethencourt <luisbg@kernel.org>,
+	Salah Triki <salah.triki@gmail.com>,
+	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Alex Markuze <amarkuze@redhat.com>,
+	Jan Harkes <jaharkes@cs.cmu.edu>,
+	coda@cs.cmu.edu,
+	Nicolas Pitre <nico@fluxnic.net>,
+	Tyler Hicks <code@tyhicks.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Yangtao Li <frank.li@vivo.com>,
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mark Fasheh <mark@fasheh.com>,
+	Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Anders Larsen <al@alarsen.net>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	Fan Wu <wufan@kernel.org>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Martin Schiller <ms@dev.tdt.de>,
+	Eric Paris <eparis@redhat.com>,
+	Joerg Reuter <jreuter@yaina.de>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Oliver Hartkopp <socketcan@hartkopp.net>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	David Ahern <dsahern@kernel.org>,
+	Neal Cardwell <ncardwell@google.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Magnus Karlsson <magnus.karlsson@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>
+Subject: Re: [PATCH v3 00/12] vfs: change inode->i_ino from unsigned long to u64
+Date: Fri,  6 Mar 2026 10:09:33 +0100
+Message-ID: <20260306-kennen-zubrot-2605fcfd6950@brauner>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260304-iino-u64-v3-0-2257ad83d372@kernel.org>
+References: <20260304-iino-u64-v3-0-2257ad83d372@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: Add references to tip tree handbook
-To: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Boqun Feng <boqun@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>, linux-perf-users@vger.kernel.org,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
-        x86@kernel.org
-References: <20260305212215.3188399-1-dave.hansen@linux.intel.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-In-Reply-To: <20260305212215.3188399-1-dave.hansen@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 12X_dHusZMEvFFEWV0_Rg5bYY454KmXM
-X-Proofpoint-ORIG-GUID: 12X_dHusZMEvFFEWV0_Rg5bYY454KmXM
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA2MDA3MyBTYWx0ZWRfX8kAb6BRmf24m
- vAfe96sBEgjmLebw8sDX8XeLf+i7fn8n1ao1bJKVnPEz3s8zya0vvND/Ei2yY0WjE82K2YCtLkK
- 91IvUUrScKMgrHcgVQxOB0qBM0i7+vLI0UAEutHsZXC90nkNWXQw4ROGAt+gYcUITINSb4m1pUn
- VAmz4X3xDwLc3IUC4gbixtEY4V9BWZNaJa5+15+sJUGTFOQtfsCZMShteFSTPZfcoQjPUVzrPwO
- CAgaD2KlzfXRSdZc6QnwmC0TTeS7Fkrl+KFXhUhsU9sFDX4aCqKz9kD7imGhdGkAJ5R4b0vUKnw
- 6IB2y9e6rHmfdBqon+F/pH1uRvcW4tkyGPrlRDr6UEnDjS2SteVsRBCjg9hZL7LWX6Fy8TMdRSc
- WFovdnSbWAJNzhm/4Yh80KdMWlvu2tpbjP+0RpY5LfloGyWZhZMk3zJVrC/XGvK65ozNiK6ZsIP
- JRhr12AqgJA3NTl3KSg==
-X-Authority-Analysis: v=2.4 cv=XKg9iAhE c=1 sm=1 tr=0 ts=69aa87ea cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22 a=QyXUC8HyAAAA:8
- a=VwQbUJbxAAAA:8 a=oGMlB6cnAAAA:8 a=20KFwNOVAAAA:8 a=JfrnYn6hAAAA:8
- a=KKAkSRfTAAAA:8 a=DE3I5U_dAa-LTm6LnEgA:9 a=QEXdDO2ut3YA:10
- a=IoWCM6iH3mJn3m4BftBB:22 a=NdAtdrkLVvyUPsUoGJp4:22 a=1CNFftbPRP8L7MoqJWF3:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-06_02,2026-03-04_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 adultscore=0 clxscore=1011 priorityscore=1501 phishscore=0
- malwarescore=0 spamscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603060073
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2708; i=brauner@kernel.org; h=from:subject:message-id; bh=7RvOdnrFs/iEe9G84pPe+q4PLv+gFd3Sa58Nl0eTC8M=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSumvWu2uNxbBFXikaZQKrMtl0PLj1c+kZGWOrvZiHz/ W/CTGOed5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzk4A5GhimT869vPnNH4Vqj t6Tr0fqPLXs3v0g/qbXpwf6o52L5D7YyMnxU+idovG+O5JQe0WVOK45/sI9bw9AjJfah78/izrQ aXg4A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On 3/5/26 22:22, Dave Hansen wrote:
-> The tip tree handbook is a pretty handy reference for keeping the
-> various tip maintainers happy. But there are no references to it
-> in the MAINTAINERS file.
+On Wed, 04 Mar 2026 10:32:30 -0500, Jeff Layton wrote:
+> Christian said [1] to "just do it" when I proposed this, so here we are!
 > 
-> Add a references to the handbook for a number of subsystems. I've
-> added these for all of the obvious subsystems that list T:.../tip.git
-> and are likely to follow the tip rules.
+> For historical reasons, the inode->i_ino field is an unsigned long,
+> which means that it's 32 bits on 32 bit architectures. This has caused a
+> number of filesystems to implement hacks to hash a 64-bit identifier
+> into a 32-bit field, and deprives us of a universal identifier field for
+> an inode.
 > 
-> This will be useful both for humans digging in the MAINTAINERS file
-> and our new AI bot overlords.
-> 
-> I'm cc'ing all the M:'s and L:'s listed for the subsystems but leaving
-> off the R:'s because the cc list is already out of control. I'll
-> commit this to *some* tip branch if there's general consensus that
-> this is a good idea.
-> 
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Boqun Feng <boqun@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Daniel Lezcano <daniel.lezcano@kernel.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Frederic Weisbecker <frederic@kernel.org>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: x86@kernel.org
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> ---
+> [...]
 
-Acked-by: Daniel Lezcano <daniel.lezcano@kernel.org>
+This series makes me happy. We've been talking about this conversion for
+a while and I'm thankful that you did this work. Without the automation
+available this probably wouldn't have happened as quickly as it did now.
+Let's see what bits and pieces it missed.
+
+---
+
+Applied to the vfs-7.1.kino branch of the vfs/vfs.git tree.
+Patches in the vfs-7.1.kino branch should appear in linux-next soon.
+
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-7.1.kino
+
+[01/12] vfs: widen inode hash/lookup functions to u64
+        https://git.kernel.org/vfs/vfs/c/2412a9fa518a
+[02/12] audit: widen ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/a5e863be4d02
+[03/12] net: change sock.sk_ino and sock_i_ino() to u64
+        https://git.kernel.org/vfs/vfs/c/c21144a0a33f
+[04/12] vfs: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/5e5c380870b2
+[05/12] cachefiles: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/25291f67aad7
+[06/12] ext2: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/797d04a355e3
+[07/12] hugetlbfs: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/3c976fb36a9a
+[08/12] zonefs: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/988f68c01b3a
+[09/12] ext4: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/1c1427c79bc2
+[10/12] f2fs: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/6e62bf74bd8a
+[11/12] nilfs2: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/6ce73711525a
+[12/12] treewide: change inode->i_ino from unsigned long to u64
+        https://git.kernel.org/vfs/vfs/c/af82d143e869
