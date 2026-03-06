@@ -1,133 +1,121 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556683B4EA4
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Mar 2026 16:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772816009; cv=pass; b=lAYpjsgYgwZOutLkb+veZgc5BqEkyar6I61FlBn3tqZUKfZUMXb4JMyKkyBKFZlkutY6QtkTRCwii2phgP30FI1zN6WLu8YRtPimccnvZPOa/LmxDXRnyrx6G1riZrgU1I26SectrSL/98vTNfjoIZMcxaNgt8ncQC6Fcdt3oVE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772816009; c=relaxed/simple;
-	bh=uvJAJqJ+OUG+8Qc6KivjDGtBu8adoepmT7qHr235oD4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P1TyySIQPrv6RA2EtbLiYQPgSZBpcHal7ox5uqUEzD6EVvsy1C078Ifje37HCYJSmIXN2yo2tKMHtNxyzzeqjF5W7FlsLcU7WXxSRPlANS+BqAOmLV6KY6ECH8zoDjHZ8QVWKKMMlBPJS4XP13+8nabH+rgkGi823/y7Y+qI2Wc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b+8xlYrT; arc=pass smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFAD3F23B3
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Mar 2026 18:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772823029; cv=none; b=J42qhrRVCmf1ljkeVKVbKs9EUHO02f4/KGSeRAILKGVhySj3yN5qoxAlVHt9EoldYJ1Pn4sYhNI5QmL63SheSwqvmLDbnYXBzZci+TFueUsEOUiKMbR0Rfp9wMRrj9OVcqScx8pYMrHnYYC+1l3zawAUSlGPVt5mDDERCWKDH3Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772823029; c=relaxed/simple;
+	bh=xn8nRn3PBEai+XwhzmEVhdf0J3gdqLpxs/5746Rxges=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=nqnoBYHKZ/JGQw6l9a4WHe3huIM4RNMCVpvuP1QzG58JA9ZvvrKCpM2ibJp9/vzm8ThYHXEwO4TCaZlULWYT52a7Hv739LncwmPAoHExCIR4S6nffL5AtFs/Ub2/lYb8hVHXRdUvBWbT+IADjIc3PcbD5qpuhGryWLiZCLbWbU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BhyFh6kj; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b+8xlYrT"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2ae49120e97so102065ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Mar 2026 08:53:28 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772816008; cv=none;
-        d=google.com; s=arc-20240605;
-        b=AR87oF9B7kR0UAby+zpEwn5ROQ3AfUyfJHDtwu57J/xCbpkyX+KHcCrCXpxTzVurIX
-         8YsgJiUm9t7FkrEsxIsz8K0t3gHG7Q2/8p9kzJCUa/+1rL6Untl86eq8s1Y93V4WVhZq
-         GBljKH4/HTT+Gjfin8EXGy7yLr4AVFSrdOqfA/mNtAtIROxzY9LpQFILLwMR0UBuk5QP
-         NdTl4mPlBL9W3LFGUJOpS/8GhNAwSFNpXcvhKsqetG6HuBgPgD+UpxaN6IhkGJctb1wl
-         Cp5wVve6yirrpO5osqH3mdJ13u3WP/1NOY4UGq/pYC+k9nTueGg6TrpGGqP+/LzSY1lE
-         X6og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=933sEyemrbKBxApG2XPD0d2uPjKeHtvt7oVBd4xEr8I=;
-        fh=NFaLDVAoNQgvlGnsAu639cv9rEFB875S3iJEyFya+PE=;
-        b=GIKvkhXOqbHXlu6FH5CnGmYx7pDoIanamtJk6eAC9Rzea4JyywwbhWE2mxzOVISRdK
-         xLXkyuzBOIXXuBNQdl3NzYJVvLf/jew/fpmaNPF9v0IcbMjw7n44b+WukBiMhwE+/bjo
-         nO4ClcImMhPll4u6b152x+FMYcgL12Kt7AsnMDLz4iuN0QjUKaM7pnOsSUbFtTiB4r3l
-         VAXug+v8JJ/s4E+MxsVggfWgdcc8/NEwfb3EauDo72DZPIQeGZi2eAksoFTUvDtCokOD
-         bzYG+Lw1RS3CPCrmyFohYWqAjKPHHtz2ULpp//gfWx8yUm2Zd7vCELtoEMGXl5cYPgto
-         +4eg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BhyFh6kj"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2be21c6e2f5so62537808eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Mar 2026 10:50:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772816008; x=1773420808; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=933sEyemrbKBxApG2XPD0d2uPjKeHtvt7oVBd4xEr8I=;
-        b=b+8xlYrTITiYbj80vcLrufR5Z/yneu9x9IgtJPoEjTUVRs+B3dhuMoEIE6XJ3HH9QM
-         CIPpgLGAObu5xZ1/CcciTrhiFi/VbjC+xMPFktDbgntRlVI3B8qvk80D4vpzV+GXdklh
-         TeYjczm0nvRz1pG6rhYo3F3+5nNJDsK17hM+OJnNc0GYUaAzxTJ6wNQ7aE/D+c18vxCe
-         XiTcJsMYJF9Kd0ZrLH89Y6+bkOo2cDSIYvA6vjTY0LXDmi5KrZ4j5NRtPFDCyvNOe8+y
-         WqIj/gkPnGoHbi97KQ0s9fo1B2b6SwIECLEiGKNBTNM/u07v8xdLHsPbHL/RE6kp9YSZ
-         p8zg==
+        d=google.com; s=20230601; t=1772823026; x=1773427826; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=52hfCZ16RpnGMPOUeS9KQdXOkClBKdKam0G4pLZQt5s=;
+        b=BhyFh6kj6ZG85c8gFf9W94cLVAmZsmm2QnhJIs7NF0LTu78YbLaoa6OsCkulIxbTi5
+         0o03ozHMQALhNA37S29Pf1fZvapRXN9ZqPaEi5ZlRSbmc0piPNHjMbYgGaPPU+M4QeKZ
+         0cHiRKSl6o+SvdPRfUq2oDpZsTJFizoKJDsPUA3thEvII8r/+OrtyDvt+771GVHqufL0
+         /abEoYzq/Lpf2tdqEvaIykf5dFp4xGiBZJbAE+SQ6czLZKYoc1ZV4ieMkdvazwmQmgEs
+         9l4PXdcpxJPUqnIQIJ+tDr22+Pz7mIm90K0cUhNuF9ax9JjFoya+qRo2TWyN/CaPCjVl
+         qNIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772816008; x=1773420808;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=933sEyemrbKBxApG2XPD0d2uPjKeHtvt7oVBd4xEr8I=;
-        b=hN/2cr2UiIzW9gk1vBeYrXkY4FGkm2UlxaoubXZHEs4JHDjUeB6NrdnyvYgJh8FXrw
-         jiJw21MuAGo0N+u//0f6LtYkO2UA/q+ZjEcUBiUAxrVfAOeyjz0iEPE02M9CccEh6xA0
-         qg2Xjr+yE1yCvCDULXDoByN4A8MGw+paXPfWKiMh8MNuGM5BIkXl9HdBngUg3VIUsh5I
-         ZF39LNvsc0x9befRfeXfi3oaieCbgJfPy13TTBYQW6D6JJyUAba2pAzBq03N3pSbp4FN
-         bu6QblR0USsnra669BxfNzzJ0UiQkoCrxp4LctOKxFOq3EOyecxaTmvKK/pDMdK8/qzN
-         2gxg==
-X-Forwarded-Encrypted: i=1; AJvYcCW8jghIHwGag3Gwd5DX8P96Yzj8ZT0Z/M3LEmB9y7mTesNZnWtKJ1Cdi+zxREEF95W3Zi2y9z4F4wDY8uwU1kO1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS1xoFZGN+awMoCKlGgTGoUMhZJy05pp2TiEaCnpoWi8ad7yfu
-	dxheyCi09VTlLFmzTxocpleoLJ+W2F2X+sMyyBSjuozR7+mtzhIGYCUiM2S0/bb6EZkVcwXvy1K
-	MsXLgsjLGOVMoa1urdkXqe7hSHJ0J6XO8mUlD5Z68
-X-Gm-Gg: ATEYQzzbO6pl8HbEGbQq62MrKLCCJLtDsAD8NxzehLupCqArRUGlRKeWojLU+lajdz+
-	GYI2cA4FoAtK/eADuYCgu1UpM1KL6JrZY6erFYLheJOi1jaaIN5x7/OdIxWbGc5P14zBW2bz/rV
-	t6BX5z1+rErs6IIz+8T7zinOZUISnCusYls3cAoRoza4LbF7+G96TTyLU9XecPAbsaziGHa1h30
-	KEdbE7pXURoGXOBH3lZ5cXH6Yf9zvswVrpkl0vj/UuN9AAK+QOOgDdVvdTqJlgowNFUqKzQr6/5
-	aBMFPZ/v
-X-Received: by 2002:a17:902:e54d:b0:2ad:ab68:f2c3 with SMTP id
- d9443c01a7336-2ae81e624cemr2487815ad.13.1772816007246; Fri, 06 Mar 2026
- 08:53:27 -0800 (PST)
+        d=1e100.net; s=20230601; t=1772823026; x=1773427826;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=52hfCZ16RpnGMPOUeS9KQdXOkClBKdKam0G4pLZQt5s=;
+        b=NqM5Xz2faZA0+62XbBB4oQS7vBIwZwM/f0gMX8pceHCdp9Wl9UNZcbv845UXisYPl7
+         /HX3+/7ji2gB/1yekr/mFu9aIuU9BCjxFO/AdEAJz9RfMiav5f/WPnRHyy1jyp9LRTpX
+         fAdbUXG87Zujf9Rb8tcxKUUOrn4lsPEuZC83qA+h2hfou5KgPtMeny/bfzaGUJmeWfKf
+         h3/1nIct3VIlGyvv9RrE1GVMXUItFC3cRGVfo/2ijLkxbTAYUJ4X9W999rz2H5shzqdm
+         E0hWMrXIph/i4msGWguxJQwo/jgZXu9iFNfwHfAQ3EslZTy38BTIAHziUEXIvTt7YHbH
+         xOTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWW96YHRuVwyXi1AZHw6ckTwHxrLNllSmWmhquZRGdKZM7IRVlMAx811Eh5nmt+abzxBzCifxNL2cOGRdeeurMg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBPS7Nb2vaAvUs59DUxHj5oVchov3pjXJSKNmQvJWdi5cmuu2a
+	6p4gnqKmceMSR/J85XkaqZ6FYTMXjU319TkpvycLVdvbQkanCiK5cDBIeLwewbnm720YtHcT1VJ
+	Oc6a6DqhHMg==
+X-Received: from dyfv3.prod.google.com ([2002:a05:7300:8243:b0:2be:1421:f19])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:1355:b0:2be:617:2dec
+ with SMTP id 5a478bee46e88-2be4dfcc739mr1422007eec.17.1772823025919; Fri, 06
+ Mar 2026 10:50:25 -0800 (PST)
+Date: Fri,  6 Mar 2026 10:50:22 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260306071002.2526085-1-tmricht@linux.ibm.com> <aar4GKP1c66egZnn@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
-In-Reply-To: <aar4GKP1c66egZnn@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
+Message-ID: <20260306185022.2016541-1-irogers@google.com>
+Subject: [PATCH v1] perf ftrace: Proper error clean up in print_profile_result
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 6 Mar 2026 08:53:15 -0800
-X-Gm-Features: AaiRm52ymk7n_TnJgTnMzHWevukVygoazKQGzkWbtsoNC-MRSTc2_F6Kq8bl054
-Message-ID: <CAP-5=fXs0UrMVhwU-_=iunCYa_ye18FHj0W1V8sE5T9nOkeZWg@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Fix test case 120 and 121 for s390
-To: Jan Polensky <japo@linux.ibm.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, 
-	namhyung@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com, 
-	sumanthk@linux.ibm.com, hca@linux.ibm.com
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 6, 2026 at 7:52=E2=80=AFAM Jan Polensky <japo@linux.ibm.com> wr=
-ote:
->
-> On Fri, Mar 06, 2026 at 08:10:02AM +0100, Thomas Richter wrote:
-> > Perf tests
-> > 120: 'perf data convert --to-ctf' command test
-> > 121: 'perf data convert --to-json' command test
-> > fail on s390. It is caused by selecting the default event cycles
-> > which does not exist on s390 z/VM. Use software event cpu-clock
-> > and specify it explicitly on the command line.
-> >
-> > Output before:
-> > =E2=9D=AF perf test 120 121
-> > 120: 'perf data convert --to-ctf' command test       : FAILED!
-> > 121: 'perf data convert --to-json' command test      : FAILED!
-> >
-> > Output after:
-> > =E2=9D=AF perf test 120 121
-> > 120: 'perf data convert --to-ctf' command test       : Ok
-> > 121: 'perf data convert --to-json' command test      : Ok
-> >
-> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> [snip]
-> Thanks for providing this, Thomas!
-> Tested-by: Jan Polensky <japo@linux.ibm.com>
-> Reviewed-by: Jan Polensky <japo@linux.ibm.com>
+The ftrace profile_hash is cleaned up on success but not on memory
+allocation and empty paths. Fix by running the clean up for all. Free
+the profile too, so make it NULL, just for clarity that this is all
+clean up code.
 
-Should we not fallback for the cycles as a default event?
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/builtin-record.c#n1374
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/evsel.c#n3792
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-ftrace.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 6b6eec65f93f..19e796e58fb0 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -18,6 +18,7 @@
+ #include <poll.h>
+ #include <ctype.h>
+ #include <linux/capability.h>
++#include <linux/err.h>
+ #include <linux/string.h>
+ #include <sys/stat.h>
+ 
+@@ -1369,17 +1370,17 @@ static int cmp_profile_data(const void *a, const void *b)
+ 
+ static void print_profile_result(struct perf_ftrace *ftrace)
+ {
+-	struct hashmap_entry *entry, **profile;
++	struct hashmap_entry *entry, **profile = NULL;
+ 	size_t i, nr, bkt;
+ 
+ 	nr = hashmap__size(ftrace->profile_hash);
+ 	if (nr == 0)
+-		return;
++		goto out;
+ 
+ 	profile = calloc(nr, sizeof(*profile));
+ 	if (profile == NULL) {
+ 		pr_err("failed to allocate memory for the result\n");
+-		return;
++		goto out;
+ 	}
+ 
+ 	i = 0;
+@@ -1403,6 +1404,7 @@ static void print_profile_result(struct perf_ftrace *ftrace)
+ 		       p->st.max / 1000, p->st.max % 1000, p->st.n, name);
+ 	}
+ 
++out:
+ 	free(profile);
+ 
+ 	hashmap__for_each_entry(ftrace->profile_hash, entry, bkt) {
+-- 
+2.53.0.473.g4a7958ca14-goog
+
