@@ -1,116 +1,271 @@
-Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-43103.protonmail.ch (mail-43103.protonmail.ch [185.70.43.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C72778F2F
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Mar 2026 00:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772755274; cv=pass; b=I3IvYB63c4gmqNMMbTWsSJrPJIhycOv+WCQzbb4VLzyBzqBLZ9lE0TaY3PzAuciyAkHd8l8mMTuQcx8mR3kRI8xCcCRDjoELjovvZS0zCCXemL3lXyBs7xRffhTnwfEFndnRxKEvJbdzn9/cHbvC9kcV0gqsFdfjLkqDfLyhwtA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772755274; c=relaxed/simple;
-	bh=3qEbBm1jbPyvcyzPvbQ27b0RLrReUvTwWMgymBGu5P4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L1GpJp7Jj4nglFezeVN1VK4X2YDe+YjLcO9rfAOzvW9FDf+MhKSwuc/BylWdz+JU2+fpu+DeibyMESktwzlu0M1UTRnb6vp0yxg48FwLaXiyR5zlan+g06W9Zg9reo4U8tIQJOXJxPDH7kqx0Q0DmV/uatBQSLaEsi1XoZvfI10=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mv53he1W; arc=pass smtp.client-ip=74.125.82.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9185322D7B9
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Mar 2026 00:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.103
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772755939; cv=none; b=F2YsvvmJQxlyIIkd3ltzm/YZd4PheC+HFrddQx93gjLD3MwoxXOdxFvadD86p7tzOwdtFDrUCXXJM/nn14Kzwx3m7jyWdJ1dfAi8zdyyMsWXiZiySdolQTABFJD3R4GS4+ugchvs0ENfS/lgnXgaI4h0wii1ehSTcXU0VC9Gwwc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772755939; c=relaxed/simple;
+	bh=VFE5Q6r/BsqbE9I9kWLyYXFvB2L7KGo0PCbBHQ7FgbY=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C5dy91Ij3h1KnXmcRInRVoN8k8NRgKyfnpzP918FE7r7/hHtCDjJ1TguO7fAMpOtLozgoIO7/Z/+yx5dt8l3t4T3QK5BYmOE8HXyqJURIqhMxbLcxm65wBR+lO3JhZNfdAZZu8iwaPn+ENy4ckzIwaJTLzFNomodtDZ/jJSBgOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=BPn5JDRk; arc=none smtp.client-ip=185.70.43.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mv53he1W"
-Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-2bd801b40dbso643840eec.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Mar 2026 16:01:13 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772755272; cv=none;
-        d=google.com; s=arc-20240605;
-        b=hzzWWX3RctlSd1q5iCP31peyULHcDw06PE3GVdvxU9D46D5uzoIZBuer9d96jwCaNj
-         d1n91ST7FZETZBNEhrYHCB/67+B3zwXURPCMCcW+CmzqnZJu7OqxYY+FpKc/TddTfl5x
-         J6NOXMuf0qD5YT3bnYcJz9eCsrPVQAFLk0EDEU2mIhrHOjUnfGBjIzM2Ep+4v6UoeDMo
-         NZWNPBB3rLw7yhVYAhSQl33t1f4l2Vs9HiLXd2PMoPU1zxsKE9qo0ujbKDRhGSVFR//j
-         mwGwnZygMR0PSiDMJteDKVSbJgnvHMb6ROmkms8yjcOT2T0jvWgd/86f5Xg+wc6bJv9Q
-         mBAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=3qEbBm1jbPyvcyzPvbQ27b0RLrReUvTwWMgymBGu5P4=;
-        fh=pComdKKhFioadU1Jyq2gRok+oe2Eqo6WFngVqKt5hZk=;
-        b=CQLGoSv7G39XyE3i3kJE+jRgs7XGoNg2e7GUz0G9bv9dmMqKXyNE/GLScn9Zhj++2b
-         bXVHqskkKzssOHaLoxKkz29leNyiP48SbpcUraBYhzxqR/PDInBN7ubocch55A/QC7MT
-         G/ajtIao3Svx/oUnlecjpYgFljb+ne+tNRYAgyjUMixVrNigbJ7o+gJxF/YEVgQzVXk0
-         0YsgDRU8iaGZj+InEaPKimQ4W7hSxB6iHHyGjNDpsY19oLkTOMkKFMdub3kAvhoeJFap
-         kRucOrePRS7F5xWjFyetAa0oxLTPYP50SA6s9kpVkklE82kIquEkTRAv7abS6smHlcbw
-         pu2w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772755272; x=1773360072; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3qEbBm1jbPyvcyzPvbQ27b0RLrReUvTwWMgymBGu5P4=;
-        b=mv53he1WEnDGV0lX+GuahMPhSpG6WxgyBCZnb/0g60YXYN6Ws0r/dNfHVwtDW1C5UP
-         U2uTEh/PHvUvvisVjWf8ezIMqFJo4TTwr5dlheSoDaB4BmVVhIGBAbRFJIM7QORlAXMI
-         ecAf0D96ULVsbSWvqja/T37jbRDldhcw8yiRsQ3TiH69TTJOqCMqwK6hl7XPC2NNXx6v
-         iePE38nnC3Mf5ws0N8uowtH4qk1wpZdJZuTug1mRkoEqOtvSjuvjWKnjWdN5spEIvfkH
-         O0Xg/2yN3NZ0QHTXD0+7kJl8chTpTfoCcpsHKsNEyuwQtgpb0YNxafHDSo0ezcAEDpQX
-         A0JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772755272; x=1773360072;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3qEbBm1jbPyvcyzPvbQ27b0RLrReUvTwWMgymBGu5P4=;
-        b=Ofk55ujnyuEYWgyrtI+/HW7gMhIoGLMCcdjkh7sA/RxgFuQNKHm0DSJZVph9AcNW4U
-         GXlw2BOBAAnUTTN/2qN8RUfkgucVdORjJmMn+5ELBSgBX5Mzg1yNc8yzl8DmgTSU3eOZ
-         JPAXD784em5WzkpyMoB2yKcf0AScWGUIqxiPVuOFyHssk54+ljyeOHANbqfEsC7kmnF+
-         X51gRBc95SBy7wdd51DoVYCWWPGdpoSXH+eQfMVSm5XbXNPwFIVkfXj4Z3o9l3TUKr/R
-         JzHoJXOD+PSrIpfzUkPq9B6EZH3Y+jtzuu2rOAP2wynPIbP7oF/TUTkY22zyehFFGTFQ
-         swFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdZ3E7HK6Fz3mmIWldaZN0KJDjMyohGmPcgwBN0mykPeJ6VW3LhrW6+UWcPay2IMKitjyeGU+WOUeLIARM8/JO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyukwLs/FlSxeoWLUklQx6yOEpCbHzVQlh5p9qkjxLTBKRa3RlO
-	GA/XGQwo2PxkOgNfrh/G58UCkf/oVmiL2LWYwEGPwaDTCgxLNBdPOlQf24k5/WSol88sp0SCX7R
-	DgzzTldH4hAh4Mb4QPky88VlKDi+zMbI=
-X-Gm-Gg: ATEYQzx9ZjQML8BIZreZGFAT53aQA61YMpGjTKSCT2GWBoHkW8u5xP1LCo/zgA4S7T9
-	DfNXWu9WnigRiILqPdTprd+70FD3+34WwFRQ0KNhR0A8dffOTybSmjgjdzdIRHJLdMuqYhPQML4
-	3D+rRaZOyfNwyLRd8zqZOOvMwFLupkPoETCkc59dYzn3Kyece4cYR0q44uvoZLYinXsSVxUAzmr
-	+NBCXGniD9W5gEbK8qEcC6rLc7VzpnjPf87zf1cbmhJRlT+8uWJj3Rp1mzyxF5JZNnNnrddI9/J
-	PppRqEl9R6K4KhvkcVK/E3eMSz+JKNbNZLNEha7Gp0+0z3bMUb2Hp6NhJe3nmol2LT1DANkkKg+
-	bYopur36i8DPUgeWb+p4YZSMpDXU28Oj94ds=
-X-Received: by 2002:a05:7300:724b:b0:2be:140c:bc2b with SMTP id
- 5a478bee46e88-2be4de7afc2mr72164eec.2.1772755272189; Thu, 05 Mar 2026
- 16:01:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="BPn5JDRk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=ujmfgvqhifdvdn7vpd5hyobhcm.protonmail; t=1772755928; x=1773015128;
+	bh=O9+GzxDNQjalgQgAYXLPoktkB3BKo0iUQzGGAi0joSc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=BPn5JDRkUrVxckO4V+o/Av7uH5WoNJ5q/4tmftKQK+fYOHp61brUKhfR8EawFXkrg
+	 h7pmf/0yjLgeEFmt4q9CKVdmdo4cFZJ62GeWHwncrc1HcRvK0Z4ZbCHULRsllfVWvL
+	 5H5Ya63D8aB9nOUTMBrCR4p8AZxZFKRLUdDVHi0RpJ/lMYNO7hhbkfgRF27b/3cEFk
+	 q1PbeaH2gH7PNtO55WPypBk4K9Vn7ePvNrXJRtngYFeYDyCc45oBwJQCQH7MJivWjG
+	 Mujc09XL0xQnPTNmBCh/OcGQ9R2uQ3MVSFbrTKqWanSxWl4CqkGOvl/HzkF8ihw2R3
+	 4Wg5n+a6rfetg==
+Date: Fri, 06 Mar 2026 00:12:04 +0000
+To: namhyung@kernel.org
+From: Ricky Ringler <ricky.ringler@proton.me>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ricky Ringler <ricky.ringler@proton.me>
+Subject: Re: [PATCH v2] perf utilities: cln_size header
+Message-ID: <THyJLu3kRy_7q7V6-XpKu2hIZsSzkadNwnZ6YIOUSSTS2if2u3OWv6ROm_MtvBWVQVOJ03FVWw0POxzhU0LpeSBhoKSxTwKVV-JhZFJNCvg=@proton.me>
+In-Reply-To: <20260305235655.40779-1-ricky.ringler@proton.me>
+References: <20260214040659.168769-2-ricky.ringler@proton.me> <aaeKBOolC3AyHAFa@google.com> <20260305235655.40779-1-ricky.ringler@proton.me>
+Feedback-ID: 171348601:user:proton
+X-Pm-Message-ID: e576ec7c27cd29114dffbbb9201f9c60a3d14a9c
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260218154800.367720-1-9erthalion6@gmail.com>
- <CAP-5=fXLNybYv08dDfAqAsDBzbOPzQY4EZQvdY0WZsfrMu9Yyg@mail.gmail.com> <aahEEkHP5g-T_tFg@x1>
-In-Reply-To: <aahEEkHP5g-T_tFg@x1>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 6 Mar 2026 01:01:00 +0100
-X-Gm-Features: AaiRm51qiqId7CqvK_sID90lFjp0_dfbyZ9p1mZ9wtbLjp2EwVVDFdfBNYEombc
-Message-ID: <CANiq72mdo3TFS=t=t05Qc4RZ7a6DNayaDkXMUHBhBFixRjCVYQ@mail.gmail.com>
-Subject: Re: [PATCH v4] tools build: Fix rust cross compilation
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
-	linux-perf-users@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, Levi Zim <i@kxxt.dev>, 
-	Namhyung Kim <namhyung@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
-	rust-for-linux <rust-for-linux@vger.kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 4, 2026 at 3:39=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> Thanks, applied to perf-tools, for v7.0.
+Apologies all. I just realized I rebased on the kernel instead of perf-tool=
+s-next. Please hold off reviewing. I will submit a v3 patch rebased on perf=
+-tools-next.
 
-I think v5 (the latest one) was applied (to tmp.perf-tools -- not sure
-if that is the right place), but this reply was to v4 -- I mentioned
-it just in case.
+On Thursday, March 5th, 2026 at 5:57 PM, Ricky Ringler <ricky.ringler@proto=
+n.me> wrote:
 
-I hope that helps!
-
-Cheers,
-Miguel
+> Store cacheline size during perf record in header, so
+> that cacheline size can be used for other features, like
+> sort.
+>=20
+> Follow-up patch from message ID "aYZiQk6Uftzlb_JV@x1"
+>=20
+>  Testing:
+> - Built perf
+> - Ran record + report with feat enabled
+> - Ran record + report with feat disabled
+>=20
+> Tested-by: Ricky Ringler <ricky.ringler@proton.me>
+> Signed-off-by: Ricky Ringler <ricky.ringler@proton.me>
+> ---
+>  tools/perf/builtin-inject.c |  1 +
+>  tools/perf/util/env.h       |  1 +
+>  tools/perf/util/header.c    | 29 +++++++++++++++++++++++++++++
+>  tools/perf/util/header.h    |  1 +
+>  tools/perf/util/sort.c      | 37 ++++++++++++++++++++++++++-----------
+>  5 files changed, 58 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index aa7be4fb5838..9639154459d9 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -2047,6 +2047,7 @@ static bool keep_feat(int feat)
+>  =09case HEADER_CLOCK_DATA:
+>  =09case HEADER_HYBRID_TOPOLOGY:
+>  =09case HEADER_PMU_CAPS:
+> +=09case HEADER_CLN_SIZE:
+>  =09=09return true;
+>  =09/* Information that can be updated */
+>  =09case HEADER_BUILD_ID:
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index 9977b85523a8..04580c64847b 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
+> @@ -93,6 +93,7 @@ struct perf_env {
+>  =09struct cpu_topology_map=09*cpu;
+>  =09struct cpu_cache_level=09*caches;
+>  =09int=09=09=09 caches_cnt;
+> +=09unsigned int=09=09cln_size;
+>  =09u32=09=09=09comp_ratio;
+>  =09u32=09=09=09comp_ver;
+>  =09u32=09=09=09comp_type;
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index f5cad377c99e..ad15829acc69 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -54,6 +54,7 @@
+>  #include "bpf-event.h"
+>  #include "bpf-utils.h"
+>  #include "clockid.h"
+> +#include "cacheline.h"
+> =20
+>  #include <linux/ctype.h>
+>  #include <internal/lib.h>
+> @@ -1288,6 +1289,18 @@ static int write_cache(struct feat_fd *ff,
+>  =09return ret;
+>  }
+> =20
+> +static int write_cln_size(struct feat_fd *ff,
+> +=09=09       struct evlist *evlist __maybe_unused)
+> +{
+> +=09int cln_size =3D cacheline_size();
+> +
+> +=09if (!cln_size)
+> +=09=09cln_size =3D 0;
+> +=09ff->ph->env.cln_size =3D cln_size;
+> +
+> +=09return do_write(ff, &cln_size, sizeof(cln_size));
+> +}
+> +
+>  static int write_stat(struct feat_fd *ff __maybe_unused,
+>  =09=09      struct evlist *evlist __maybe_unused)
+>  {
+> @@ -2084,6 +2097,11 @@ static void print_cache(struct feat_fd *ff, FILE *=
+fp __maybe_unused)
+>  =09}
+>  }
+> =20
+> +static void print_cln_size(struct feat_fd *ff, FILE *fp __maybe_unused)
+> +{
+> +=09fprintf(fp, "# cacheline size: %u\n", ff->ph->env.cln_size);
+> +}
+> +
+>  static void print_compressed(struct feat_fd *ff, FILE *fp)
+>  {
+>  =09fprintf(fp, "# compressed : %s, level =3D %d, ratio =3D %d\n",
+> @@ -2933,6 +2951,16 @@ static int process_cache(struct feat_fd *ff, void =
+*data __maybe_unused)
+>  =09return -1;
+>  }
+> =20
+> +static int process_cln_size(struct feat_fd *ff, void *data __maybe_unuse=
+d)
+> +{
+> +=09struct perf_env *env =3D &ff->ph->env;
+> +
+> +=09if (do_read_u32(ff, &env->cln_size))
+> +=09=09return -1;
+> +
+> +=09return 0;
+> +}
+> +
+>  static int process_sample_time(struct feat_fd *ff, void *data __maybe_un=
+used)
+>  {
+>  =09struct perf_session *session;
+> @@ -3453,6 +3481,7 @@ const struct perf_header_feature_ops feat_ops[HEADE=
+R_LAST_FEATURE] =3D {
+>  =09FEAT_OPR(CLOCK_DATA,=09clock_data,=09false),
+>  =09FEAT_OPN(HYBRID_TOPOLOGY,=09hybrid_topology,=09true),
+>  =09FEAT_OPR(PMU_CAPS,=09pmu_caps,=09false),
+> +=09FEAT_OPR(CLN_SIZE,=09cln_size,=09false),
+>  };
+> =20
+>  struct header_print_data {
+> diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+> index c058021c3150..04394331630f 100644
+> --- a/tools/perf/util/header.h
+> +++ b/tools/perf/util/header.h
+> @@ -53,6 +53,7 @@ enum {
+>  =09HEADER_CLOCK_DATA,
+>  =09HEADER_HYBRID_TOPOLOGY,
+>  =09HEADER_PMU_CAPS,
+> +=09HEADER_CLN_SIZE,
+>  =09HEADER_LAST_FEATURE,
+>  =09HEADER_FEAT_BITS=09=3D 256,
+>  };
+> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> index aa79eb6476dd..e636b9f88e5c 100644
+> --- a/tools/perf/util/sort.c
+> +++ b/tools/perf/util/sort.c
+> @@ -30,6 +30,7 @@
+>  #include "time-utils.h"
+>  #include "cgroup.h"
+>  #include "machine.h"
+> +#include "session.h"
+>  #include "trace-event.h"
+>  #include <linux/kernel.h>
+>  #include <linux/string.h>
+> @@ -2474,7 +2475,26 @@ struct sort_entry sort_type_offset =3D {
+> =20
+>  /* --sort typecln */
+> =20
+> -#define DEFAULT_CACHELINE_SIZE 64
+> +static int
+> +hist_entry__cln_size(struct hist_entry *he)
+> +{
+> +=09int ret =3D 0;
+> +
+> +=09if (he && he->hists) {
+> +=09=09struct evsel *evsel =3D hists_to_evsel(he->hists);
+> +
+> +=09=09if (evsel && evsel->evlist->session && evsel->evlist->session)
+> +=09=09=09ret =3D evsel->evlist->session->header.env.cln_size;
+> +=09}
+> +
+> +=09if (!ret || ret < 1) {
+> +=09=09int default_cacheline_size =3D 64; // avoid div/0 later
+> +
+> +=09=09ret =3D default_cacheline_size;
+> +=09}
+> +
+> +=09return ret;
+> +}
+> =20
+>  static int64_t
+>  sort__typecln_sort(struct hist_entry *left, struct hist_entry *right)
+> @@ -2482,11 +2502,9 @@ sort__typecln_sort(struct hist_entry *left, struct=
+ hist_entry *right)
+>  =09struct annotated_data_type *left_type =3D left->mem_type;
+>  =09struct annotated_data_type *right_type =3D right->mem_type;
+>  =09int64_t left_cln, right_cln;
+> +=09int64_t cln_size_left =3D hist_entry__cln_size(left);
+> +=09int64_t cln_size_right =3D hist_entry__cln_size(right);
+>  =09int64_t ret;
+> -=09int cln_size =3D cacheline_size();
+> -
+> -=09if (cln_size =3D=3D 0)
+> -=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
+> =20
+>  =09if (!left_type) {
+>  =09=09sort__type_init(left);
+> @@ -2502,8 +2520,8 @@ sort__typecln_sort(struct hist_entry *left, struct =
+hist_entry *right)
+>  =09if (ret)
+>  =09=09return ret;
+> =20
+> -=09left_cln =3D left->mem_type_off / cln_size;
+> -=09right_cln =3D right->mem_type_off / cln_size;
+> +=09left_cln =3D left->mem_type_off / cln_size_left;
+> +=09right_cln =3D right->mem_type_off / cln_size_right;
+>  =09return left_cln - right_cln;
+>  }
+> =20
+> @@ -2511,10 +2529,7 @@ static int hist_entry__typecln_snprintf(struct his=
+t_entry *he, char *bf,
+>  =09=09=09=09     size_t size, unsigned int width __maybe_unused)
+>  {
+>  =09struct annotated_data_type *he_type =3D he->mem_type;
+> -=09int cln_size =3D cacheline_size();
+> -
+> -=09if (cln_size =3D=3D 0)
+> -=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
+> +=09int cln_size =3D hist_entry__cln_size(he);
+> =20
+>  =09return repsep_snprintf(bf, size, "%s: cache-line %d", he_type->self.t=
+ype_name,
+>  =09=09=09       he->mem_type_off / cln_size);
+> --=20
+> 2.53.0
+>=20
+> 
