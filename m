@@ -1,91 +1,146 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B43D25A2C9
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Mar 2026 19:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239A5481FB3
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Mar 2026 21:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772824754; cv=none; b=dPrg39HRAt+eb17abqNmF09s+AOIjN2w1VDIjEGob+Ts4N0NDJe9YPzlT6sYeRev4PfNc3TFR8hA/iBrzr2HPz2LRLjzI3KmgXKbChAnaTybPWV0tP6jLflkwfNMf6T+Km9ObkDDaKtnWy4FwnXvFsQL3xX3QzDhgVnohk3CflE=
+	t=1772831633; cv=none; b=PDGT4LSdUshHP0oCwPcZU13cKfl+OpuKnhhHWv9W/9zhoSeToA9ToGTZwzj4dRPjOv+lp/z/QvG/YaJ4MRdeAdJY/aLBwgNhJZM6ut6FDPD8Fw2SxW2ndlZCwz4iStUT1lGTolQfZV3hLtk333vS8s8CWZ6DKsghg+QZGfebS2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772824754; c=relaxed/simple;
-	bh=xAFg8zgkKdwLH4pyr1GKk3ex/m6Sg1pSmTB5DU4tkvk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=ccGUxQECzQJPdpXZNThbKADPO+8tvObJ9uDNmoSHhagOVE6IEMoMJ8qd+NVePJ0Er2zgWrMlZKS2VeM5qmCxHwmjMkV1S4prp2U0JocTS0HGnhBN4xqdWgGhaTBfeDBZOSVPJsxOXWpmAjwo4Oj82uKJbuZTUMScO6JyvPhrFAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yMVvU7bG; arc=none smtp.client-ip=74.125.82.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1772831633; c=relaxed/simple;
+	bh=xLeiiAuxWI4SWc08bgqVdeXt16JUlRLlLuCLPKDnrWA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=HWqv6OWvk5YvdTJugV08YmXzQSXDLTR+jgJHxjQr8/BzIEWI893DKAoWa24RUdvb7kgyOTXn/1txxfQ3dUzEkD0rjyujAB2pRfe3PWZBmk8XWsTHhwARSaZ7QtRKQ4kSrmUN9uzaa4d+mfOX5c1r4z9CfgQwfcNIx3UBxXEWdns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YWpikRpF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yMVvU7bG"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2be2f742c46so18878506eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Mar 2026 11:19:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772824752; x=1773429552; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=28NLJG5tyekf2B3gw/YpvMmeB6EaLfZh/gYVw4RvfY0=;
-        b=yMVvU7bGdsgcjsV8KR9Y74fVihi7V5pqNudcErLoTszDbzEaanpsWqhdGoJFKCOD9O
-         edOPuyAZQCR1L9Rs6aUVaXdiotkA5jehFIQDY6MqEPkRYJR/MzR1yrHuA7R87D/+FzNu
-         pfmR/OCe7wTx5fMRlLh9lvw/6Yqg4b7DAyAHy5DE32MprJS8soexwz/Z+0PaMXkz+HEQ
-         60hUi7wZzLB3F70TMqxw0RULHSphI4DYMhMR1MqpCX+FBHxUm1CsE/yeFl5IgMC9yyYy
-         byRzBzQIM9vEaAtluT1weCCQSzwqAxQ8DYCn+h1JgJE6OpHNzG714gBIA/eLcL4a8QmX
-         egHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772824752; x=1773429552;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=28NLJG5tyekf2B3gw/YpvMmeB6EaLfZh/gYVw4RvfY0=;
-        b=fu5vrekMIjRX8jNtG1mJ2dx8xyqE3IbHS+piqu35XpX8TGE7jpCQ58mhLYd4cw7qkE
-         4MN5XI042KSXhz76FkhQxQ7TxUSXmnQSZ+ywQbR0g+FTFwpwd1Bfjuxj1C6krSAGNmHz
-         yA210rMuGOzkffYe2WvaPi9zr+7tG3ZU5yuYCdKUYcJArALLAY1+2l7qwBqD2TYMZMzA
-         2r6JgW6lLvZ9emzVbYjOapfchEGAmKBqf91ZlZ4HV0XMzh7L+Jeb7zP9KDW+jWADSIEO
-         zA2Ha5nv3iWuXdJ3rSdGEUW0ldm3e+QFXAhi9XgvxRn4yQQvZp8RE0OEoCRWxn7yQRFQ
-         V5KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVCPKPx2fuJQedy2T/Qmuvm/eBmuSkTO5K2eo1bxb6piG8KFbJj2woUM+Ms2JTkCJS2MyPBulmqLvp/b9hevnc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxkk6Fr+5v7IYMo1QxDcEadno3rzFrfX3nNsmv/sBkOhLjBXJEZ
-	hgdPcne8gBmVFYPUyxf0ZCu4UJQpCIFIGYep/mEIbRbVgZfzSvK8ZAa+yKtOtGtJE+cOZxGSbLV
-	T9uwG/xpU6g==
-X-Received: from dyax21-n1.prod.google.com ([2002:a05:693c:4195:10b0:2be:3b4b:b1e2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:d17:b0:2b8:c1b4:9cb7
- with SMTP id 5a478bee46e88-2be4e02b8a6mr1339040eec.22.1772824751332; Fri, 06
- Mar 2026 11:19:11 -0800 (PST)
-Date: Fri,  6 Mar 2026 11:19:08 -0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YWpikRpF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772831631;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wjUwOnsjFj7x2OOTndf56oD3Bdw2XZlDeep7pBKBPdQ=;
+	b=YWpikRpFVUuZd2mATBNl5UbiqXT1fTvz43M6B/rncDRNAKfM4/SuQdj6EoNIQPUSLM2GtA
+	cS8utO7YXMhy+rZb3UzhemTQzRuAuP5+j1AWlAS+BvkBf9RchTm1ce9n5IiqXGYyBaZZqG
+	3nwLKq2CdW88UlKqyfW/TLaXiThCbjU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-133-wlCPo-W2OZ-cmwgxRCxpPQ-1; Fri,
+ 06 Mar 2026 16:13:46 -0500
+X-MC-Unique: wlCPo-W2OZ-cmwgxRCxpPQ-1
+X-Mimecast-MFC-AGG-ID: wlCPo-W2OZ-cmwgxRCxpPQ_1772831623
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9481E19560A3;
+	Fri,  6 Mar 2026 21:13:43 +0000 (UTC)
+Received: from Carbon (unknown [10.45.242.4])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 792931958DC5;
+	Fri,  6 Mar 2026 21:13:33 +0000 (UTC)
+Date: Fri, 6 Mar 2026 22:13:27 +0100 (CET)
+From: Michael Petlan <mpetlan@redhat.com>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+    Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+    James Clark <james.clark@linaro.org>, 
+    Sadasivan Shaiju <sadasivan.shaiju2@amd.com>, x86@kernel.org, 
+    linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    Manali Shukla <manali.shukla@amd.com>, 
+    Santosh Shukla <santosh.shukla@amd.com>, 
+    Ananth Narayan <ananth.narayan@amd.com>, 
+    Sandipan Das <sandipan.das@amd.com>
+Subject: Re: [PATCH v2 4/5] perf/amd/ibs: Avoid calling perf_allow_kernel()
+ from the IBS NMI handler
+In-Reply-To: <20260216042216.1440-5-ravi.bangoria@amd.com>
+Message-ID: <e0c9b76-29a3-45c0-d2b9-039b9fc5025@redhat.com>
+References: <20260216042216.1440-1-ravi.bangoria@amd.com> <20260216042216.1440-5-ravi.bangoria@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <20260306191908.2065682-1-irogers@google.com>
-Subject: [PATCH v1] perf build: Add -funsigned-char to default CFLAGS
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Commit 3bc753c06dd0 ("kbuild: treat char as always unsigned") made
-chars unsigned by default in the Linux kernel. To avoid similar kinds
-of bugs and warnings, make unsigned chars the default for the perf tool.
+On Mon, 16 Feb 2026, Ravi Bangoria wrote:
+> Calling perf_allow_kernel() from the NMI context is unsafe and could be
+> fatal. Capture the permission at event-initialization time by storing it
+> in event->hw.flags, and have the NMI handler rely on that cached flag
+> instead of making the call directly.
+>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config | 1 +
- 1 file changed, 1 insertion(+)
+Hi Ravi.
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a8dc72cfe48e..3820bdf73f43 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -349,6 +349,7 @@ CORE_CFLAGS += -fno-omit-frame-pointer
- CORE_CFLAGS += -Wall
- CORE_CFLAGS += -Wextra
- CORE_CFLAGS += -std=gnu11
-+CORE_CFLAGS += -funsigned-char
- 
- CXXFLAGS += -std=gnu++17 -fno-exceptions -fno-rtti
- CXXFLAGS += -Wall
--- 
-2.53.0.473.g4a7958ca14-goog
+I have tested this fix on a machine (below), which without this fix can
+be easily crashed by recording ibs_op/l3missonly=1/ event.
+
+With this fix, it survived 4900+ iterations without any crash.
+
+CPU details
+===========
+BIOS CPU family:      107
+CPU family:            26
+Model:                  2
+Stepping:               1
+
+Thanks for fixing.
+
+Cheers,
+Michael
+
+> Reported-by: Sadasivan Shaiju <sadasivan.shaiju2@amd.com>
+> Fixes: 50a53b60e141d ("perf/amd/ibs: Prevent leaking sensitive data to userspace")
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+
+Tested-by: Michael Petlan <mpetlan@redhat.com>
+
+> ---
+>  arch/x86/events/amd/ibs.c          | 5 ++++-
+>  arch/x86/events/perf_event_flags.h | 1 +
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+> index 05b7c9f2ec33..004226b52ac7 100644
+> --- a/arch/x86/events/amd/ibs.c
+> +++ b/arch/x86/events/amd/ibs.c
+> @@ -313,6 +313,9 @@ static int perf_ibs_init(struct perf_event *event)
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (perf_allow_kernel())
+> +		hwc->flags |= PERF_X86_EVENT_UNPRIVILEGED;
+> +
+>  	if (hwc->sample_period) {
+>  		if (config & perf_ibs->cnt_mask)
+>  			/* raw max_cnt may not be set */
+> @@ -1349,7 +1352,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+>  	 * unprivileged users.
+>  	 */
+>  	if ((event->attr.sample_type & PERF_SAMPLE_RAW) &&
+> -	    perf_allow_kernel()) {
+> +	    (hwc->flags & PERF_X86_EVENT_UNPRIVILEGED)) {
+>  		perf_ibs_phyaddr_clear(perf_ibs, &ibs_data);
+>  	}
+>  
+> diff --git a/arch/x86/events/perf_event_flags.h b/arch/x86/events/perf_event_flags.h
+> index 70078334e4a3..47f84ee8f540 100644
+> --- a/arch/x86/events/perf_event_flags.h
+> +++ b/arch/x86/events/perf_event_flags.h
+> @@ -23,3 +23,4 @@ PERF_ARCH(PEBS_LAT_HYBRID,	0x0020000) /* ld and st lat for hybrid */
+>  PERF_ARCH(NEEDS_BRANCH_STACK,	0x0040000) /* require branch stack setup */
+>  PERF_ARCH(BRANCH_COUNTERS,	0x0080000) /* logs the counters in the extra space of each branch */
+>  PERF_ARCH(ACR,			0x0100000) /* Auto counter reload */
+> +PERF_ARCH(UNPRIVILEGED,		0x0200000) /* Unprivileged event (wrt perf_allow_kernel()) */
+> -- 
+> 2.43.0
+> 
+> 
+> 
 
