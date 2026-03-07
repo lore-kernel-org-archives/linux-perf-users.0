@@ -1,140 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C067F2ECE91;
-	Fri,  6 Mar 2026 22:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70300262FC0
+	for <linux-perf-users@vger.kernel.org>; Sat,  7 Mar 2026 00:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772837185; cv=none; b=BnZSm7P5jy2+uoJcw7aCsnSVogs3DfYfReE91pUh0SerKdTIVTxglZRINSKjb/Px8qWqS7T9nImrVVF7evhuBMW48SIB646YSaM5yB7NLdGaHXogU+vcbwYBi1gx45O5KnL1T3MyBJBJKgYHcWxnu4KDRmeJdMfMeFK1JEOyWEI=
+	t=1772842947; cv=none; b=l28B6pAaXDcfOlzbE8eLJPiE7/ev7Sks0us+Z5HvMDQEM63ctpppYfwbaZz30DYt9/56Jx8jLJt64C+f2qjRYjGE/QuBSDI2WCmstBddPYPudBs9xP/VFVemrNRiNdiIyLolNC6bTpmFK2sFNWphZyWogb/nIgrCNrMrghsdC/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772837185; c=relaxed/simple;
-	bh=cN+KiMWcwhEO2xQFiecg1z69XlvH9EP+MIkD7Sl6y8g=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=dWCBJhw92vLhChB2CuTzCtJ19OsSB2J8CGnxjAWOPwFZVszpWURk/NimWbBwY+3kzrs5W6GlHdwHyqv41Z1AMEx8bWmuJSRY180habZr+4S/t2R4nlBi6qnYOuZcrwyj0D0cSbGDftg5iSKi4L0OI9D+rULvvd7e11Wv+SEJLQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSWDslwY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772842947; c=relaxed/simple;
+	bh=eWQYFbwgl94p3jmuxbH9YgoYlnKa580ycuvfZ+uUojg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=HNBDYss7gzBHhD+VJL+rwy06hqhb27pnOoZZXuyx7qFKF9K1s0NjShA0VNDFDQj3gKf9yDtzoHqnwGGY17zgksGS3N0uoPA0npmEExBX0B5Y3X0+dZRGhbgatNkcm/fscMRPBdWCA2qwED6r0GvsbzmxWAY4OkNQVxrtRL6FGnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SYJbGhrd; arc=none smtp.client-ip=74.125.82.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSWDslwY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA35FC19425;
-	Fri,  6 Mar 2026 22:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772837185;
-	bh=cN+KiMWcwhEO2xQFiecg1z69XlvH9EP+MIkD7Sl6y8g=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=hSWDslwYB/Dg+F2//bUKmZINVawinjvaZwTBS7zbEhKeKaIomVxxWwkdYmXj42mCc
-	 wTCrwpf7GgMDDYiIP+nMIgPWuscsvOza+VA4JDBV8XqAhKog/a2NZltfeah8Kbt9pz
-	 zs26i/U7+ijbu9cUl34ERqE92lNmBSbKiFXiIVFG9KicLpiiv3BHzxUsPwCjzQW17r
-	 dkvAxav9kdtzILRZT+/2ZPdpkZtXgQZtOpCapbZSWV4aWtIg5neqFFVFo18NxNT3Nm
-	 lFgsQIjiYbib+gjo6GXRr/Yijm3CnBpmgOR9oSfC0CxTyTz1QthcK5ZItnB+8YUwZs
-	 kKc7VhNM8GD9w==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id D1414F40068;
-	Fri,  6 Mar 2026 17:46:23 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Fri, 06 Mar 2026 17:46:23 -0500
-X-ME-Sender: <xms:P1mraQuQHAAkDAKpiIjzDiSFKKSZZgY_HHrvoD6wap0-6TVGyQ2zMw>
-    <xme:P1mraUBAXR_SS5Htak9STTGmwRwLV1nX-5ld9d4DIuPjS8vuP7gc5RbeCdv39RzdQ
-    kNCGDgxcoPnFpsDHWh9gdolrBLad5qy08qnEdj_TSuuA_p8s0s96ms>
-X-ME-Received: <xmr:P1mradc4UfJpSDOQ9OSIDOqOD0BE9NYAOLtdCv4Bt5DJuHrT9wYgxhyVkD0Qgc3B3YR4UatlxTF8NfkuXBsNshWHK7NnA1Ge>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvjedtheegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepggfgtgffkfevuffhvffofhgjsehtqhertdertdejnecuhfhrohhmpedfuehoqhhu
-    nhcuhfgvnhhgfdcuoegsohhquhhnsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvg
-    hrnhepudevieejudektefgvdefjeeuleevkeeutefgueelgfetfedvkedtleefheelheel
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
-    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeijedtleekgeejuddq
-    udejjeekheehhedvqdgsohhquhhnpeepkhgvrhhnvghlrdhorhhgsehfihigmhgvrdhnrg
-    hmvgdpnhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
-    pegurghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoh
-    eplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
-    oheplhhuthhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhhnrgdqmhgrrhhirg
-    eslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopegrtghmvgeskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepsghpsegrlhhivghnkedruggvpdhrtghpthhtohepuggrnhhivg
-    hlrdhlvgiitggrnhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehfrhgvuggvrhhi
-    tgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhprgesiiihthhorhdrtghomh
-X-ME-Proxy: <xmx:P1mracqvya_rDQExYVYpF5b8v2GRVlkVyd6VMJtSaljoEy4gGzd4Ww>
-    <xmx:P1mraR6NvWuGwQtXQItwVRhqz5ExbAuMH5djGnhStbMxTT8gX4E6cQ>
-    <xmx:P1mraUD-hGINmlzk5LM5oT0O1D4gqVem9Y18g1uTDsogNoP4ZNEjeQ>
-    <xmx:P1mrabaY3843a9-EXomKUPbh_OOWbL7GeC2ZBUbzuOWMzdP5nVq5Ow>
-    <xmx:P1mraQLSe8dQyzwld4R5GcNff84218jbh_jnNgAoky5qYHWGGOfKklO_>
-Feedback-ID: i8dbe485b:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 6 Mar 2026 17:46:23 -0500 (EST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SYJbGhrd"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2be232ef3d3so8686852eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Mar 2026 16:22:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772842945; x=1773447745; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LPf3Axghl6gfwZpPkxBU3xu5lg7lW1gM/wsxQ2W2Ez8=;
+        b=SYJbGhrdAseccUxbS/yWdTKl3Oo2azlYNsfNN7Lt0UaA+vuf71sJ9Oc6w3wuJiFoVf
+         tvKbQ/+2cZB12kH1UJOpMtaSYw4GXe/KfybGQZ34V/WEN0mqK2GM/XctGHzA3s9RCqkZ
+         C48qPi3w3WEeYtc0URvoCrrS0nmFj2OOSRuJ47fSSRma9OaW+s19ItlOcZ5O1pC9t+IH
+         BzyosmxPIckgrjXvrZNqH4ZJHM6ZYBIXABqUF+/3BxPilzMd/KSeo8RaqB29hUfaLr6t
+         l2YurSJ5pZg0LHY80xYcOcx7gc8ux4wijTsK8i4CFUX2+xCB/6s9MOEFDafQnlTV1z5s
+         JrEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772842945; x=1773447745;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LPf3Axghl6gfwZpPkxBU3xu5lg7lW1gM/wsxQ2W2Ez8=;
+        b=Veuo8BDuWpG+C30glWT1ThDy1/M82CQAfH7LGCHdrLDrfsIp2MaxzqPa3yW8vPoKBZ
+         MqagkRf5uCsidc7goA7no3VSrm+cO7OOyVlujLW27Ak8cTz5UALJMStLnTv06GpMkXoc
+         sURmtOusTMSoK0ZgDuCIuCDvDTn5ba297AI0VDUSsX+yNNFOtxt3pLfCue+WLf77nCbs
+         7NqWgqP0YyrfacV5vA+23EISc6HA+o76U9BPH0WdiWPMrhPu53AJyYgEnnJmaLx0+Kpq
+         4G0ACrno7LRTyljpa2kN/cs5HJdxF3WHv1n1ZSxJOKHEbzJ6nMlzgo6SBBiiJqCyjRvl
+         RgwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmff0qTGlaXW+rQ9QXpm4+fm6V0oHc06Zb1YVqhJSn9VcuBZ606lsLUALpWSeG9qU7lOe88WIR57g9czhR4e4I@vger.kernel.org
+X-Gm-Message-State: AOJu0YzM+PhKt+WthyuZr6oSWnStrEOWdldMpcdX0vOxyNKAphepIFyy
+	OxtpTm6KeUkRZOKvOv4t1KkRntf97wCk5RmuEjkqdSCzcEh6JMsJveFYNVIGUio8IxlwXjQR76J
+	B9Z98oL3cVQ==
+X-Received: from dycoi5.prod.google.com ([2002:a05:7301:da85:b0:2be:3f20:9002])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:818c:b0:2be:22b0:8be7
+ with SMTP id 5a478bee46e88-2be4e08b14emr1802520eec.35.1772842945433; Fri, 06
+ Mar 2026 16:22:25 -0800 (PST)
+Date: Fri,  6 Mar 2026 16:22:22 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 06 Mar 2026 14:46:22 -0800
-Message-Id: <DGW2BYAJBIIH.38RQFJI57PW82@kernel.org>
-Cc: "Andy Lutomirski" <luto@kernel.org>, "Anna-Maria Behnsen"
- <anna-maria@linutronix.de>, "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Borislav Petkov" <bp@alien8.de>, "Daniel Lezcano"
- <daniel.lezcano@kernel.org>, "Frederic Weisbecker" <frederic@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, "Ingo Molnar" <mingo@redhat.com>, "Juri
- Lelli" <juri.lelli@redhat.com>, <linux-perf-users@vger.kernel.org>,
- "Namhyung Kim" <namhyung@kernel.org>, "Peter Zijlstra"
- <peterz@infradead.org>, "Thomas Gleixner" <tglx@kernel.org>, "Vincent
- Guittot" <vincent.guittot@linaro.org>, "Waiman Long" <longman@redhat.com>,
- "Will Deacon" <will@kernel.org>, <x86@kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: Add references to tip tree handbook
-From: "Boqun Feng" <boqun@kernel.org>
-To: "Dave Hansen" <dave.hansen@linux.intel.com>,
- <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20260305212215.3188399-1-dave.hansen@linux.intel.com>
-In-Reply-To: <20260305212215.3188399-1-dave.hansen@linux.intel.com>
+X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
+Message-ID: <20260307002222.2463509-1-irogers@google.com>
+Subject: [PATCH v2] perf disasm: Fix potential use-after-free on fileloc
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu Mar 5, 2026 at 1:22 PM PST, Dave Hansen wrote:
-> The tip tree handbook is a pretty handy reference for keeping the
-> various tip maintainers happy. But there are no references to it
-> in the MAINTAINERS file.
->
-> Add a references to the handbook for a number of subsystems. I've
-> added these for all of the obvious subsystems that list T:.../tip.git
-> and are likely to follow the tip rules.
->
-> This will be useful both for humans digging in the MAINTAINERS file
-> and our new AI bot overlords.
->
-> I'm cc'ing all the M:'s and L:'s listed for the subsystems but leaving
-> off the R:'s because the cc list is already out of control. I'll
-> commit this to *some* tip branch if there's general consensus that
-> this is a good idea.
->
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Boqun Feng <boqun@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Daniel Lezcano <daniel.lezcano@kernel.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Frederic Weisbecker <frederic@kernel.org>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: x86@kernel.org
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> ---
+The fileloc is a copy of a pointer to a string but in places like
+symbol_disassemble__llvm this string appears to be freed setting up
+potential use-after-frees:
 
-Acked-by: Boqun Feng <boqun@kernel.org>
+llvm.c:
+```
+		dl = disasm_line__new(args);
+		if (dl == NULL)
+			goto err;
 
-Thanks!
+		annotation_line__add(&dl->al, &notes->src->source);
 
-Regards,
-Boqun
+		free(args->fileloc);
+```
+disasm.c:
+```
+static void annotation_line__init(struct annotation_line *al,
+				  struct annotate_args *args,
+				  int nr)
+{
+	al->offset = args->offset;
+	al->line = strdup(args->line);
+	al->line_nr = args->line_nr;
+	al->fileloc = args->fileloc;
+	al->data_nr = nr;
+}
 
->  MAINTAINERS | 12 ++++++++++++
-[...]
+struct disasm_line *disasm_line__new(struct annotate_args *args)
+{
+	struct disasm_line *dl = NULL;
+	struct annotation *notes = symbol__annotation(args->ms->sym);
+	int nr = notes->src->nr_events;
+
+	dl = zalloc(disasm_line_size(nr));
+	if (!dl)
+		return NULL;
+
+	annotation_line__init(&dl->al, args, nr);
+```
+
+Fix this by making the fileloc a copy of the underlying string in its
+init/exit.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/disasm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index ddcc488f2e5f..3fcb3634a7e0 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -908,13 +908,14 @@ static void annotation_line__init(struct annotation_line *al,
+ 	al->offset = args->offset;
+ 	al->line = strdup(args->line);
+ 	al->line_nr = args->line_nr;
+-	al->fileloc = args->fileloc;
++	al->fileloc = args->fileloc ? strdup(args->fileloc) : NULL;
+ 	al->data_nr = nr;
+ }
+ 
+ static void annotation_line__exit(struct annotation_line *al)
+ {
+ 	zfree_srcline(&al->path);
++	zfree(&al->fileloc);
+ 	zfree(&al->line);
+ 	zfree(&al->cycles);
+ 	zfree(&al->br_cntr);
+@@ -950,7 +951,7 @@ struct disasm_line *disasm_line__new(struct annotate_args *args)
+ 
+ 	annotation_line__init(&dl->al, args, nr);
+ 	if (dl->al.line == NULL)
+-		goto out_delete;
++		goto out_free_line;
+ 
+ 	if (args->offset != -1) {
+ 		if (arch__is_powerpc(args->arch)) {
+@@ -965,8 +966,7 @@ struct disasm_line *disasm_line__new(struct annotate_args *args)
+ 	return dl;
+ 
+ out_free_line:
+-	zfree(&dl->al.line);
+-out_delete:
++	annotation_line__exit(&dl->al);
+ 	free(dl);
+ 	return NULL;
+ }
+-- 
+2.53.0.473.g4a7958ca14-goog
+
