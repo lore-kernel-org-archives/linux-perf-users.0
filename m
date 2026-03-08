@@ -1,109 +1,264 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E58C3389456;
-	Sun,  8 Mar 2026 16:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-106121.protonmail.ch (mail-106121.protonmail.ch [79.135.106.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5B08479;
+	Sun,  8 Mar 2026 17:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772988647; cv=none; b=hC/fPOsYN7IEkfMFvJq7Hxi+aZ89nd0GN8F8AJB1XPj9gYLvNhatVxUuiFCaz3mPluFXyl7eXaBI2dTD+mmTvEvZE/ipcjoI4lDujM4Vls9RNrqwuykn8+alq1VL3pCDdsB3DeA/CepDOR2a9xE3GbgylBnjxUoq5eqojJB+M2Q=
+	t=1772990467; cv=none; b=CdwqmoDFihFooUh6sw+tObFuW1gBsoG8ID1AR1yDzGGqT0txJnvJZNpzxnxLXRAchhR0tfdQAA9rPPZmWUSApcO1axDKm5B8ridSVLBoRUm+S7qojAK92/tp+lrsAM7ngUDbUZlB22UG4ZFDWqkVNXimSiSSQCseF7QdEj0acuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772988647; c=relaxed/simple;
-	bh=6fa1hK+r0aPhZL3fayi+LxFYmgJr6kdDCoMOrNXGWCA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Flmuhq2waeTQgoD5RyErTrGmiba/pgsiGpGAFdaq8I/HPrgT02HxDvirzw01tZvWOtBC6PsqUS1NXwpzHa1iI6R9uHnDclhZzLTpBs5aqhNzdsQCcEreM66PYpREqLs/dK0iH9yuRWR9bhSkuwoc385T7nNPhn4jnOePUTvwvY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8E551E2F;
-	Sun,  8 Mar 2026 09:50:34 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 087133F694;
-	Sun,  8 Mar 2026 09:50:32 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-Date: Sun, 08 Mar 2026 16:46:35 +0000
-Subject: [PATCH v3 30/30] selftests/sched_ext: Append extra cflags
+	s=arc-20240116; t=1772990467; c=relaxed/simple;
+	bh=3ijY/KqwN9P4ZrwyLiF9K59NZQ1iu2kwlHHH8KtWJv0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dKbHEfjNnIndEF78tj/DslMLWsOMlA1IfeFk3aq4bYQUB6KZ3DG2uaPPuJLtG4fnpqR7aA6p4iyoIW3n9D70dt6BWu6tZ5UkqUP8hSOv9Dk7gfapDGEzc2U86UfYdalCw1OxE2SuWaAXrsodrGk6fstE/Gn8TknihiLZA/SLtSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=nMJtRosg; arc=none smtp.client-ip=79.135.106.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="nMJtRosg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=dpx7qjho4na3nf67c3fgdhztpa.protonmail; t=1772990460; x=1773249660;
+	bh=rZeY9awbXV2AELWQ0l82Ft6/xvgEtB4QXMh5/vxLtO0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=nMJtRosgTZIoO1xM3/2D+NS6tNu4OB9xNsKEKk1L1+T6HRyO94KUoyjL3rKojlTCE
+	 cgBgSxIxHfvDbqfxU99FZQSQ71T0LAa9LppsxOgas1hS6b6QjKm8cXbhmjY0oNw5F7
+	 hnd8urj2rKJnNPJmnZG7wU6dbgAuwHMn847tTLuPywncgnwtoZt6IUFrRWcPc+/xXF
+	 Uc9HOIfYciizAa1Sj3ljByq+QNmQxhRtpHiuR8PezN/1bvnJJEhzq/p0ujjAZHv2P6
+	 pBuRdOJj+ZzYVp5eZw5/TodvkuM5r+Fmf5F/W+aiXZbJeHjMQN5tl3aldAiDIyUELe
+	 RIzT/lBcO9qKg==
+Date: Sun, 08 Mar 2026 17:20:58 +0000
+To: namhyung@kernel.org
+From: Ricky Ringler <ricky.ringler@proton.me>
+Cc: mingo@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ricky Ringler <ricky.ringler@proton.me>
+Subject: [PATCH v3] perf utilities: cln_size header
+Message-ID: <20260308172037.123654-1-ricky.ringler@proton.me>
+In-Reply-To: <THyJLu3kRy_7q7V6-XpKu2hIZsSzkadNwnZ6YIOUSSTS2if2u3OWv6ROm_MtvBWVQVOJ03FVWw0POxzhU0LpeSBhoKSxTwKVV-JhZFJNCvg=@proton.me>
+References: <20260214040659.168769-2-ricky.ringler@proton.me> <aaeKBOolC3AyHAFa@google.com> <20260305235655.40779-1-ricky.ringler@proton.me> <THyJLu3kRy_7q7V6-XpKu2hIZsSzkadNwnZ6YIOUSSTS2if2u3OWv6ROm_MtvBWVQVOJ03FVWw0POxzhU0LpeSBhoKSxTwKVV-JhZFJNCvg=@proton.me>
+Feedback-ID: 171348601:user:proton
+X-Pm-Message-ID: c0b448a5d3e013ed848fa346055fba240c63fb71
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260308-tools_build_fix_zero_init-v3-30-6477808123b7@arm.com>
-References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com>
-In-Reply-To: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
- James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>, 
- Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Nicolas Schier <nsc@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- William Breathitt Gray <wbg@kernel.org>, Barry Song <baohua@kernel.org>, 
- Qinxin Xia <xiaqinxin@huawei.com>, Bartosz Golaszewski <brgl@kernel.org>, 
- Kent Gibson <warthog618@gmail.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- Josh Poimboeuf <jpoimboe@kernel.org>, Robert Moore <robert.moore@intel.com>, 
- Len Brown <lenb@kernel.org>, 
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
- Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, 
- Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>, 
- Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>, 
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772988384; l=850;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=6fa1hK+r0aPhZL3fayi+LxFYmgJr6kdDCoMOrNXGWCA=;
- b=gAKVQy5T5THX3Hwb3o86ZTGlxfO0FDVQewHiIZIpOeEtI72L0rRLygt1lC+DnZSWfq3gAPTdN
- o9UY9Ce/uECCLY7rgjJFBrY2hYVd1Og7K56s1ikShRDPd+Ni2V//V9/
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
-the compiler.
+Store cacheline size during perf record in header, so
+that cacheline size can be used for other features, like
+sort.
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
+Follow-up patch from message ID "aYZiQk6Uftzlb_JV@x1"
+
+Testing:
+- Built perf
+- Ran record + report with feat enabled
+- Ran record + report with feat disabled
+
+Tested-by: Ricky Ringler <ricky.ringler@proton.me>
+Signed-off-by: Ricky Ringler <ricky.ringler@proton.me>
 ---
- tools/testing/selftests/sched_ext/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-inject.c |  1 +
+ tools/perf/util/env.h       |  1 +
+ tools/perf/util/header.c    | 29 +++++++++++++++++++++++++++++
+ tools/perf/util/header.h    |  1 +
+ tools/perf/util/sort.c      | 37 ++++++++++++++++++++++++++-----------
+ 5 files changed, 58 insertions(+), 11 deletions(-)
 
-diff --git a/tools/testing/selftests/sched_ext/Makefile b/tools/testing/selftests/sched_ext/Makefile
-index 006300ac6dff88a48104977398d8517753e7e385..81d8f4a184245d8c330cf45b75bd868b2a7aa7dc 100644
---- a/tools/testing/selftests/sched_ext/Makefile
-+++ b/tools/testing/selftests/sched_ext/Makefile
-@@ -53,6 +53,7 @@ ifneq ($(wildcard $(GENHDR)),)
-   GENFLAGS := -DHAVE_GENHDR
- endif
- 
-+CFLAGS += $(EXTRA_CFLAGS)
- CFLAGS += -g -O2 -rdynamic -pthread -Wall -Werror $(GENFLAGS)			\
- 	  -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR)				\
- 	  -I$(TOOLSINCDIR) -I$(APIDIR) -I$(CURDIR)/include -I$(SCXTOOLSINCDIR)
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 5b29f4296861..2675d32f88cf 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -2134,6 +2134,7 @@ static bool keep_feat(struct perf_inject *inject, int=
+ feat)
+ =09case HEADER_HYBRID_TOPOLOGY:
+ =09case HEADER_PMU_CAPS:
+ =09case HEADER_CPU_DOMAIN_INFO:
++=09case HEADER_CLNq_SIZE:
+ =09=09return true;
+ =09/* Information that can be updated */
+ =09case HEADER_BUILD_ID:
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index a4501cbca375..c7052ac1f856 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -112,6 +112,7 @@ struct perf_env {
+ =09struct cpu_cache_level=09*caches;
+ =09struct cpu_domain_map=09**cpu_domain;
+ =09int=09=09=09 caches_cnt;
++=09unsigned int=09=09cln_size;
+ =09u32=09=09=09comp_ratio;
+ =09u32=09=09=09comp_ver;
+ =09u32=09=09=09comp_type;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 9142a8ba4019..4f65faafe75d 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -54,6 +54,7 @@
+ #include "bpf-event.h"
+ #include "bpf-utils.h"
+ #include "clockid.h"
++#include "cacheline.h"
+=20
+ #include <linux/ctype.h>
+ #include <internal/lib.h>
+@@ -1304,6 +1305,18 @@ static int write_cache(struct feat_fd *ff,
+ =09return ret;
+ }
+=20
++static int write_cln_size(struct feat_fd *ff,
++=09=09       struct evlist *evlist __maybe_unused)
++{
++=09int cln_size =3D cacheline_size();
++
++=09if (!cln_size)
++=09=09cln_size =3D 0;
++=09ff->ph->env.cln_size =3D cln_size;
++
++=09return do_write(ff, &cln_size, sizeof(cln_size));
++}
++
+ static int write_stat(struct feat_fd *ff __maybe_unused,
+ =09=09      struct evlist *evlist __maybe_unused)
+ {
+@@ -2261,6 +2274,11 @@ static void print_cache(struct feat_fd *ff, FILE *fp=
+ __maybe_unused)
+ =09}
+ }
+=20
++static void print_cln_size(struct feat_fd *ff, FILE *fp __maybe_unused)
++{
++=09fprintf(fp, "# cacheline size: %u\n", ff->ph->env.cln_size);
++}
++
+ static void print_compressed(struct feat_fd *ff, FILE *fp)
+ {
+ =09fprintf(fp, "# compressed : %s, level =3D %d, ratio =3D %d\n",
+@@ -3154,6 +3172,16 @@ static int process_cache(struct feat_fd *ff, void *d=
+ata __maybe_unused)
+ =09return -1;
+ }
+=20
++static int process_cln_size(struct feat_fd *ff, void *data __maybe_unused)
++{
++=09struct perf_env *env =3D &ff->ph->env;
++
++=09if (do_read_u32(ff, &env->cln_size))
++=09=09return -1;
++
++=09return 0;
++}
++
+ static int process_sample_time(struct feat_fd *ff, void *data __maybe_unus=
+ed)
+ {
+ =09struct perf_session *session;
+@@ -3763,6 +3791,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_=
+LAST_FEATURE] =3D {
+ =09FEAT_OPR(PMU_CAPS,=09pmu_caps,=09false),
+ =09FEAT_OPR(CPU_DOMAIN_INFO,=09cpu_domain_info,=09true),
+ =09FEAT_OPR(E_MACHINE,=09e_machine,=09false),
++=09FEAT_OPR(CLN_SIZE,=09cln_size,=09false),
+ };
+=20
+ struct header_print_data {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index cc40ac796f52..be315040727f 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -55,6 +55,7 @@ enum {
+ =09HEADER_PMU_CAPS,
+ =09HEADER_CPU_DOMAIN_INFO,
+ =09HEADER_E_MACHINE,
++=09HEADER_CLN_SIZE,
+ =09HEADER_LAST_FEATURE,
+ =09HEADER_FEAT_BITS=09=3D 256,
+ };
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 42d5cd7ef4e2..13287ade784e 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -30,6 +30,7 @@
+ #include "time-utils.h"
+ #include "cgroup.h"
+ #include "machine.h"
++#include "session.h"
+ #include "trace-event.h"
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+@@ -2474,7 +2475,26 @@ struct sort_entry sort_type_offset =3D {
+=20
+ /* --sort typecln */
+=20
+-#define DEFAULT_CACHELINE_SIZE 64
++static int
++hist_entry__cln_size(struct hist_entry *he)
++{
++=09int ret =3D 0;
++
++=09if (he && he->hists) {
++=09=09struct evsel *evsel =3D hists_to_evsel(he->hists);
++
++=09=09if (evsel && evsel->evlist->session && evsel->evlist->session)
++=09=09=09ret =3D evsel->evlist->session->header.env.cln_size;
++=09}
++
++=09if (!ret || ret < 1) {
++=09=09int default_cacheline_size =3D 64; // avoid div/0 later
++
++=09=09ret =3D default_cacheline_size;
++=09}
++
++=09return ret;
++}
+=20
+ static int64_t
+ sort__typecln_sort(struct hist_entry *left, struct hist_entry *right)
+@@ -2482,11 +2502,9 @@ sort__typecln_sort(struct hist_entry *left, struct h=
+ist_entry *right)
+ =09struct annotated_data_type *left_type =3D left->mem_type;
+ =09struct annotated_data_type *right_type =3D right->mem_type;
+ =09int64_t left_cln, right_cln;
++=09int64_t cln_size_left =3D hist_entry__cln_size(left);
++=09int64_t cln_size_right =3D hist_entry__cln_size(right);
+ =09int64_t ret;
+-=09int cln_size =3D cacheline_size();
+-
+-=09if (cln_size =3D=3D 0)
+-=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
+=20
+ =09if (!left_type) {
+ =09=09sort__type_init(left);
+@@ -2502,8 +2520,8 @@ sort__typecln_sort(struct hist_entry *left, struct hi=
+st_entry *right)
+ =09if (ret)
+ =09=09return ret;
+=20
+-=09left_cln =3D left->mem_type_off / cln_size;
+-=09right_cln =3D right->mem_type_off / cln_size;
++=09left_cln =3D left->mem_type_off / cln_size_left;
++=09right_cln =3D right->mem_type_off / cln_size_right;
+ =09return left_cln - right_cln;
+ }
+=20
+@@ -2511,10 +2529,7 @@ static int hist_entry__typecln_snprintf(struct hist_=
+entry *he, char *bf,
+ =09=09=09=09     size_t size, unsigned int width __maybe_unused)
+ {
+ =09struct annotated_data_type *he_type =3D he->mem_type;
+-=09int cln_size =3D cacheline_size();
+-
+-=09if (cln_size =3D=3D 0)
+-=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
++=09int cln_size =3D hist_entry__cln_size(he);
+=20
+ =09return repsep_snprintf(bf, size, "%s: cache-line %d", he_type->self.typ=
+e_name,
+ =09=09=09       he->mem_type_off / cln_size);
+--=20
+2.53.0
 
--- 
-2.34.1
 
