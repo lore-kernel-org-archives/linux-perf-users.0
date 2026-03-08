@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 878873542CA;
-	Sun,  8 Mar 2026 16:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8C5D34D4CA;
+	Sun,  8 Mar 2026 16:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772988612; cv=none; b=TILC4kXIdZgczlECgE+2Ey1znju3ZiTjKVlmNuUgD6TobTCLWOFKl2x+nRh74LsHf9xnce7dARYNbeIuMeAt4ynTPYeV10o5hglV2YZ5Eb0RqWsd3dYtFHQZ4IS4UV5318sKyxcd7y8L4rj+zLA43F1u/gxzIC4HCwsRSFa8C7M=
+	t=1772988622; cv=none; b=naTGXM4Mq/GdxlFEeh+8D7FeLvtjpJRgRGPNDnAeBNEXn7nIJy+xVhJDQJZL0iTv3bVt5M1qA+zr5TyzaOgUV0sDxopRsy5YZN4/AC0MWwneMvWFFx/Fi8y3NKBfvcXrGQAwyrDG/8yIxE+4sTELI1Lgcvt3OVtFQC2GnyoN/6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772988612; c=relaxed/simple;
-	bh=HjKy1yNbOgQLCbEPUFlzOk+uwTzZBAtD2E6nw3UWOug=;
+	s=arc-20240116; t=1772988622; c=relaxed/simple;
+	bh=4jS6VhC1o17u3kAOSFbl/nskx5znu+8CYsSgrzPEvW4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=giQ541b+sTt6UPW5lzfwTmDYW8qlx7B8dGLW5ZC9Eq/rqWY35/2gjL/84emOPnKLn+I7rJ9TZGEZmWSeUPKGiL/vXmT/NQkSh1wBChTTfobw6syXssr6AuhrUA6xDmXZnWXBBGM/m32im/9Ye7HIMxJfMRaLz8Zv7cqM4hldqmw=
+	 In-Reply-To:To:Cc; b=nmlrDPxXRBZayaahpZTj5YJZq+kN4ttX0EEIsOBONp5KwaBXnPb1nb74fBSrapIEqoP5OPGWTsoq/dGrSJMKsios3EslB6GVZTm+d7EyEmSzXfmEvX09c3LAVHRxpgTI73IqLrXbRczUCPVZNIBpLTjDAViyBKSa8JykdwqIK3o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B09161CE2;
-	Sun,  8 Mar 2026 09:50:01 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 018801E2F;
+	Sun,  8 Mar 2026 09:50:10 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCF8B3F694;
-	Sun,  8 Mar 2026 09:49:59 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 309053F694;
+	Sun,  8 Mar 2026 09:50:08 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Sun, 08 Mar 2026 16:46:31 +0000
-Subject: [PATCH v3 26/30] tools: verification: Append extra cflags
+Date: Sun, 08 Mar 2026 16:46:32 +0000
+Subject: [PATCH v3 27/30] selftests/bpf: Append extra cflags
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260308-tools_build_fix_zero_init-v3-26-6477808123b7@arm.com>
+Message-Id: <20260308-tools_build_fix_zero_init-v3-27-6477808123b7@arm.com>
 References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com>
 In-Reply-To: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -75,11 +75,11 @@ Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772988384; l=659;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772988384; l=802;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=HjKy1yNbOgQLCbEPUFlzOk+uwTzZBAtD2E6nw3UWOug=;
- b=96zpi2G0sJauSU2S+gSRIvS2fub1iBrMVy1q9XuxhvFOhHO2vG3LbMNNMvSwqeu4ckzJk4618
- 8VQ+a2lUevJBLJ/k2WtfrG3xRbXJNfyj/GZhwxG/amgU0LeUZm00RdW
+ bh=4jS6VhC1o17u3kAOSFbl/nskx5znu+8CYsSgrzPEvW4=;
+ b=He5d9nEDUf5L+pmtpZpqbqoiP2twA3IIn0Jwwz3Rkg2vE//5IvmnZeo/2FkQelpsDshG/pGP5
+ hU7yfDtzAnBA9w5M6YU5Bdti4hRw+irDusMQU1Z8e4lxM/IfcXXQUxx
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
@@ -88,21 +88,21 @@ the compiler.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/verification/rv/Makefile | 1 +
+ tools/testing/selftests/bpf/Makefile | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/tools/verification/rv/Makefile b/tools/verification/rv/Makefile
-index 5b898360ba4818b12e8a16c27bd88c75d0076fb9..2882f0e93dca03b31d790b42d2ee3d8f73cc5c8b 100644
---- a/tools/verification/rv/Makefile
-+++ b/tools/verification/rv/Makefile
-@@ -55,6 +55,7 @@ ifeq ($(config),1)
-   include Makefile.config
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 72a9ba41f95ebb825d25799c07ba3f0311243e45..29dfcdbe98c781b53f1e87dcebecf2027bafcd5d 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -49,6 +49,7 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
+ srctree := $(patsubst %/,%,$(dir $(srctree)))
  endif
  
-+CFLAGS		+= $(EXTRA_CFLAGS)
- CFLAGS		+= $(INCLUDES) $(LIB_INCLUDES)
- 
- export CFLAGS OUTPUT srctree
++CFLAGS += $(EXTRA_CFLAGS)
+ CFLAGS += -g $(OPT_FLAGS) -rdynamic -std=gnu11				\
+ 	  -Wall -Werror -fno-omit-frame-pointer				\
+ 	  -Wno-unused-but-set-variable					\
 
 -- 
 2.34.1
