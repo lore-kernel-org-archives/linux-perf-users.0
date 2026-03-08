@@ -1,264 +1,246 @@
-Received: from mail-106121.protonmail.ch (mail-106121.protonmail.ch [79.135.106.121])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11022090.outbound.protection.outlook.com [40.107.209.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5B08479;
-	Sun,  8 Mar 2026 17:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.121
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772990467; cv=none; b=CdwqmoDFihFooUh6sw+tObFuW1gBsoG8ID1AR1yDzGGqT0txJnvJZNpzxnxLXRAchhR0tfdQAA9rPPZmWUSApcO1axDKm5B8ridSVLBoRUm+S7qojAK92/tp+lrsAM7ngUDbUZlB22UG4ZFDWqkVNXimSiSSQCseF7QdEj0acuA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772990467; c=relaxed/simple;
-	bh=3ijY/KqwN9P4ZrwyLiF9K59NZQ1iu2kwlHHH8KtWJv0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dKbHEfjNnIndEF78tj/DslMLWsOMlA1IfeFk3aq4bYQUB6KZ3DG2uaPPuJLtG4fnpqR7aA6p4iyoIW3n9D70dt6BWu6tZ5UkqUP8hSOv9Dk7gfapDGEzc2U86UfYdalCw1OxE2SuWaAXrsodrGk6fstE/Gn8TknihiLZA/SLtSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=nMJtRosg; arc=none smtp.client-ip=79.135.106.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A7A275864;
+	Sun,  8 Mar 2026 20:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773001771; cv=fail; b=BUi8dOPtws+rHPgDoojdUTlFJTqRoxGRprsKBe36e/8X5vD9Fop3ElD3+GENaNL/oQxjfM9EeoMndU0B8KFWU+JDuWXKOr1HvoY+31gdWQyX+vKPf8bBAsBj+5Nxnsz8fsB79b6W+NEyvw8uotN/UUtm8xXbZgVMwNXVobtTq48=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773001771; c=relaxed/simple;
+	bh=rwn0IDHk1KQ4qk+lCWodhVmF3dhL2tKie99zZbRniOM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=MmHymkiwwSUaW7ZBjyLjkXvqtBvGf+65tCoHaW1UyrRvFc2RdOTlZ3AP1WxPFPO2LJ6Y7qg2J3f6y+kNBwKDv4s+T17PlhJPtkzGFvQkYldcnt0kNZ3R3iG2zQ8H8d7D7FvxLTivAuETB3otq54hnLynHsHaRdKsq50XvCStfKk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=gNC4ihzw; arc=fail smtp.client-ip=40.107.209.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="nMJtRosg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=dpx7qjho4na3nf67c3fgdhztpa.protonmail; t=1772990460; x=1773249660;
-	bh=rZeY9awbXV2AELWQ0l82Ft6/xvgEtB4QXMh5/vxLtO0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=nMJtRosgTZIoO1xM3/2D+NS6tNu4OB9xNsKEKk1L1+T6HRyO94KUoyjL3rKojlTCE
-	 cgBgSxIxHfvDbqfxU99FZQSQ71T0LAa9LppsxOgas1hS6b6QjKm8cXbhmjY0oNw5F7
-	 hnd8urj2rKJnNPJmnZG7wU6dbgAuwHMn847tTLuPywncgnwtoZt6IUFrRWcPc+/xXF
-	 Uc9HOIfYciizAa1Sj3ljByq+QNmQxhRtpHiuR8PezN/1bvnJJEhzq/p0ujjAZHv2P6
-	 pBuRdOJj+ZzYVp5eZw5/TodvkuM5r+Fmf5F/W+aiXZbJeHjMQN5tl3aldAiDIyUELe
-	 RIzT/lBcO9qKg==
-Date: Sun, 08 Mar 2026 17:20:58 +0000
-To: namhyung@kernel.org
-From: Ricky Ringler <ricky.ringler@proton.me>
-Cc: mingo@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ricky Ringler <ricky.ringler@proton.me>
-Subject: [PATCH v3] perf utilities: cln_size header
-Message-ID: <20260308172037.123654-1-ricky.ringler@proton.me>
-In-Reply-To: <THyJLu3kRy_7q7V6-XpKu2hIZsSzkadNwnZ6YIOUSSTS2if2u3OWv6ROm_MtvBWVQVOJ03FVWw0POxzhU0LpeSBhoKSxTwKVV-JhZFJNCvg=@proton.me>
-References: <20260214040659.168769-2-ricky.ringler@proton.me> <aaeKBOolC3AyHAFa@google.com> <20260305235655.40779-1-ricky.ringler@proton.me> <THyJLu3kRy_7q7V6-XpKu2hIZsSzkadNwnZ6YIOUSSTS2if2u3OWv6ROm_MtvBWVQVOJ03FVWw0POxzhU0LpeSBhoKSxTwKVV-JhZFJNCvg=@proton.me>
-Feedback-ID: 171348601:user:proton
-X-Pm-Message-ID: c0b448a5d3e013ed848fa346055fba240c63fb71
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="gNC4ihzw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HXVRm2sAIQPkYWdlR8l3cCAe/oi/F4GHY8DoQE9aIWFShQEzjk2QMQAxyw/JJbS2tghWDEMHTSpAplhpYV63+ODYCrWAWr3oXBWwdCE1eczkrbZl6wnArXYukLtcphlpkAjI2pbOaHhB1OUvw5pRCE4PJYDZtn8D3SDn6WSJnAgesD45bE2Gunwxg9+JkulLbhkmEZSQohZNHnUcq3W7LQMfB/JKQWjABXi4qriH0byOsZI5Nyxm8R4PJVPNatoRXgrfU8+NDxkgznfuJqiMMfyzksF82zlClAS/FcAUuKsKPceYe/IBmrJDjh0lFBcYpuK97wHtKl6kzbXHfjPMvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jDemPd7okg87CjXPYtOMi4CNsaUvi1708HRRCOoMLhM=;
+ b=JYkx1iIw3WjutUyEycjdlNYy6KLQYL/GnSd+AssQ+RlfG/mvfcFHiNQjw26hgOqYcRPVPWWoa/o69vEjtOe+Mqn+ZkGLMgdzeWZOOMGr27ArMZgcg9IvcHZ3Vn2OeaYPTQBT7vwOd8SyMJUK9afzkWbfqSrgXf2M452DByRI4slZL6M9ThUpxYkW0FPHB9VGqxk+esd01tmMelqfTwwdV5B12U2Xct63VATXFzWlBgbuD3PINK6hN0w5cqZn3p5HeECj9ZrLC1oDE7NfXcKGjmMKb1u2mPd+nz75PXveZPMN1Hj/qyWXa18iu2yCAEAJNTC/KWZblNKgBdCbKopCAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jDemPd7okg87CjXPYtOMi4CNsaUvi1708HRRCOoMLhM=;
+ b=gNC4ihzwNCvap/edbzw7ZHBv17RVwT+4YZdEzG1GhfOgxx7YqCTNd6F8h+/kByku5IQ7Ca8rJ6c52OXGUMGt9q1t8iuRqNJYDTiEinxcc+C0JXN9vaFUA0TpjJ+qrPIl4j6J08cNE3neUgOws4xGU1I89JNP3TEJZ7RfwduABk4=
+Received: from SA3PR21MB3867.namprd21.prod.outlook.com (2603:10b6:806:2fc::15)
+ by LV9PR21MB4975.namprd21.prod.outlook.com (2603:10b6:408:2f6::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.8; Sun, 8 Mar
+ 2026 20:29:07 +0000
+Received: from SA3PR21MB3867.namprd21.prod.outlook.com
+ ([fe80::70ff:4d3:2cb6:92a3]) by SA3PR21MB3867.namprd21.prod.outlook.com
+ ([fe80::70ff:4d3:2cb6:92a3%6]) with mapi id 15.20.9700.006; Sun, 8 Mar 2026
+ 20:28:58 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ian
+ Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, James Clark
+	<james.clark@linaro.org>, Kees Cook <kees@kernel.org>, Quentin Monnet
+	<qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier
+	<nsc@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill
+ Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii
+ Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard
+ Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
+	<yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
+	<haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui
+	<rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, William
+ Breathitt Gray <wbg@kernel.org>, Barry Song <baohua@kernel.org>, Qinxin Xia
+	<xiaqinxin@huawei.com>, Bartosz Golaszewski <brgl@kernel.org>, Kent Gibson
+	<warthog618@gmail.com>, KY Srinivasan <kys@microsoft.com>, Wei Liu
+	<wei.liu@kernel.org>, Dexuan Cui <DECUI@microsoft.com>, Long Li
+	<longli@microsoft.com>, Jonathan Cameron <jic23@kernel.org>, David Lechner
+	<dlechner@baylibre.com>, =?iso-8859-1?Q?Nuno_S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	Willy Tarreau <w@1wt.eu>, =?iso-8859-1?Q?Thomas_Wei=DFschuh?=
+	<linux@weissschuh.net>, Josh Poimboeuf <jpoimboe@kernel.org>, Robert Moore
+	<robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Srinivas Pandruvada
+	<srinivas.pandruvada@linux.intel.com>, Tejun Heo <tj@kernel.org>, David
+ Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>, Changwoo Min
+	<changwoo@igalia.com>, Mark Brown <broonie@kernel.org>, Steven Rostedt
+	<rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan
+	<shuah@kernel.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires
+	<bentiss@kernel.org>
+CC: "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>, "bpf@vger.kernel.org"
+	<bpf@vger.kernel.org>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>
+Subject: RE: [EXTERNAL] [PATCH v3 15/30] tools: hv: Append extra cflags
+Thread-Topic: [EXTERNAL] [PATCH v3 15/30] tools: hv: Append extra cflags
+Thread-Index: AQHcrxtcqhII8/trZUizp+l+eWHo3LWlFftA
+Date: Sun, 8 Mar 2026 20:28:57 +0000
+Message-ID:
+ <SA3PR21MB38677651B6DDAE1DF3A0A026CA78A@SA3PR21MB3867.namprd21.prod.outlook.com>
+References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com>
+ <20260308-tools_build_fix_zero_init-v3-15-6477808123b7@arm.com>
+In-Reply-To: <20260308-tools_build_fix_zero_init-v3-15-6477808123b7@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=287acd7f-e766-451c-8997-2362be107c8b;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-03-08T20:28:18Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA3PR21MB3867:EE_|LV9PR21MB4975:EE_
+x-ms-office365-filtering-correlation-id: b8bf1b2a-8738-4e3b-b772-08de7d51537c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|366016|1800799024|38070700021|921020|7053199007;
+x-microsoft-antispam-message-info:
+ dPkm0kDokGGL1E3SydwNiGPSnsJeveqg4q6kZglgmtkNFS33tWD9REscmF26kaiM62dpoAt6VH0yTinGGx7Idby7mbdbDHdvANAoqPHLjmGBAFOd/Gth/wjuwbApdJr2soaVcv+C09pQFCLqP4asyZ+KyEc1lEZSm9iOVWHepcjCAaHLIq8bhyK8oYICsYhKmtBAoM6V95EDzlIg9NYL2E5GUK5T2mJpAWrXfeEfugJuuNRvShKyXhDgVFsIrBzahof+3psy8R22D+0QJ6kNGZGGrBP/GpbQfhbN3K/xS1HdLI8ZsJy0DJOL9LBfjUsfYDdOfy2B6GDLZmsn+Cag8fcyfAxHRoaXS8Z+ONa0Qz/qLQsF5RZoKJkNyiKkoBmcX8XG+fa3FndCPMWsepmwldoG7UexcLmjzuEaMQkm4KbuAVVk5GVrIuajzMx8vNDHv1RQ/5nmhG4dGkB5mqAW+LD5E8g4ckGCyCfh2xvDubOOlY3jbdcnm/HFILdmnjP3oMKUXQwNWjPxhERzh0x0oK8EEHh/jAC9lbR4Tag3akw6dyvfHk6DdI+SPrKXraZLQ2+2WJh9xWaK17OJQ9AiFcZbhobXux3MJJKNazu+9dRNH7OpNJooLfUw1dTsIQu85Gvox5whytAdCIUpbzj4bFBPRpvLf3fG1osVCbPVgpvH1FB2pMI0eFkcYremXkSYvdlY/Af37PGLn1o5sz185liijvq+hpFgh4HHfe4JzbpiRyH+9mUiT7zjEe57F1ouUcBLS08o876NIF9cdY46zB7JnCvjPzZ9i6SM/8h+QeajzXwpzi4IeszhFLredxOG
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3867.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(38070700021)(921020)(7053199007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?aD7wuRbeMneBsAcBBx2x1oiMXJX666vvDvB9vWbIonav3EjNW6AQ+eY6Wz?=
+ =?iso-8859-1?Q?f1HPmRFxiz+CTq7ahdr9EGEX3twEgUcVBsTzBAejDnbHOVAPft8B4w2QFh?=
+ =?iso-8859-1?Q?Q/PumltF8stOkKK455nhXSAHKyJhCQD0rot4OfZ4kP/UQRRZXBEdsc1NnU?=
+ =?iso-8859-1?Q?uujmESI2rVGj9r/TXC3HazyBRdxPGTXM/TStZFDJlfa8K1PaaCvE+TzL18?=
+ =?iso-8859-1?Q?Yisp6uuSye7HsSvyCAjWtBgTkJSq0WWiD8Pa6jOvV70xrrJqhwtv4F2AoB?=
+ =?iso-8859-1?Q?YlbeLdc0LVI5yUjBYIEyWcc5qsAmSxiA/zjoQmmgC2/a3ncEhQlmLRJAXe?=
+ =?iso-8859-1?Q?0u+NeS4G3ItEtMuunKZqIkYB3Czbd+TV+tQk25Ggs8gmrqtDBHVrUIPkMZ?=
+ =?iso-8859-1?Q?SzkE55aLBUBeAN3SIgrAsjKZT3gRKqcZiqrg6wnpJ4DHm4eWyZlJNwIOjL?=
+ =?iso-8859-1?Q?2EWUqwB/a22GEmiBed85mYubH2CUKCK+ZA2WX5dWrDFRwLZhhTrkgII+40?=
+ =?iso-8859-1?Q?LXf5CcN9GKC6F1bXhz0M6Mx+Jh6KVnpCylathnShj4xXb7V+DENiM2kSGk?=
+ =?iso-8859-1?Q?sWSHoa0vFXE0vErOq+8sBkWSuOJ5Wa+6FqoXOOqYwcIzCHD9lyDjo9zwQs?=
+ =?iso-8859-1?Q?Fo90nrDFCGr5qf+WBwdRqrRPhZ8Qxew4gbtdJCDaI5se62TInVVo9EV3My?=
+ =?iso-8859-1?Q?YuilozaFzGJdVwBMIQqyS+S34x0p09w/7cPFrr9pTmpr8RASxs5l27TJHv?=
+ =?iso-8859-1?Q?uNOkNQODEmeky3wXamFcWwfHHSHfbjmq+3w7SnClhsW239fUZyG/I8yPk6?=
+ =?iso-8859-1?Q?nFwVplOAoqO+fgknrWV2s6jmz/LeyJUFKN0Xg4WT7N5D9X6SaW1wIGP4Hu?=
+ =?iso-8859-1?Q?h1+3r3fdxEH1OooczTmv3ICPN4HFdk5OqoJqLKeZk9+zBnc4vIivppcooX?=
+ =?iso-8859-1?Q?GnkQ8GCLkdZa5blc8eXq6Qk+60mUgqyuFnmqFNKqdIhizMO/QGurlBBNpj?=
+ =?iso-8859-1?Q?kJHClPEnLQR2T1EGiB6jEI57WvfWC6fvnGjXqBhGWuyXjJ+QRNjA41a4ZB?=
+ =?iso-8859-1?Q?mrdUWlWH+EUwW8tDN9OwyXHkYtqCZX/U/PJBONjPiDAoPrYfm7bnpePEoS?=
+ =?iso-8859-1?Q?Wd+ANsKEr4Oi0JcIp607Wxcf8EMv2w1iEgkVMEwoDDqs9oeHqj4ohKVV1h?=
+ =?iso-8859-1?Q?PYaDIUu+Zs5HZIcGCCv/rA1E1seuw7KaXaufzCcOb9khDtnNO1zO5TDBgx?=
+ =?iso-8859-1?Q?MdJO7Ibeu/bGGHd/y1FLuMmMWqgAd7QV/uM/h+qynAYeM+TivTDhabJpzO?=
+ =?iso-8859-1?Q?CkeTpNKHwTBTcc+j5Y8n/HZ9uuS9eq7qMNVKQrzIxE4ruakfjkRaE8Zdf+?=
+ =?iso-8859-1?Q?30FlJjc6PWl+F3/YNmA2PIPpMspeFxYX4lNZlzyCKf6GEPVkMTmPnKrlOj?=
+ =?iso-8859-1?Q?OTXzcUsVaWiG0U+0xCsDRc8gq+/cIzNXzclp7EAqwvraN+01FIGPtmImFG?=
+ =?iso-8859-1?Q?3zP7ZZZIk7iVIip+j1Ku5IH6DdSGY41mWSAmvfKrr11VQDzPXddpKt4GU5?=
+ =?iso-8859-1?Q?s64cmq2ChiBCz0rANCAF8dT7DVuN0KLNlVktqjnQqv6A/ZIgMbFWEsrMjv?=
+ =?iso-8859-1?Q?V00qe2hgPMKbAbVLcR/tcOLswWdUCRWpHcO8/722Yx2qJsdz1qxnpKpOcX?=
+ =?iso-8859-1?Q?nH8WFw4YttT+ZaZsX7k9A3LlaRDekUrCvX7tkOq31SxYLNbQe3TcAh0wVB?=
+ =?iso-8859-1?Q?VAVguih//iyAeLNv1Yi/1yK04bSM7sfZLsxKEmWYPQs9e/BJD9VLR80uHy?=
+ =?iso-8859-1?Q?RDtUxW1VDQ=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3867.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8bf1b2a-8738-4e3b-b772-08de7d51537c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2026 20:28:57.9153
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iIyAN3Em7aEWw6StvNTfXuvcMEnxZeZ9tCXRmNUs3p1b1k+LPb8MOXoLbfVajyjWSUXwnFXhkWFvlqlTqfpZuA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV9PR21MB4975
 
-Store cacheline size during perf record in header, so
-that cacheline size can be used for other features, like
-sort.
 
-Follow-up patch from message ID "aYZiQk6Uftzlb_JV@x1"
 
-Testing:
-- Built perf
-- Ran record + report with feat enabled
-- Ran record + report with feat disabled
+> -----Original Message-----
+> From: Leo Yan <leo.yan@arm.com>
+> Sent: Sunday, March 8, 2026 12:46 PM
+> To: Arnaldo Carvalho de Melo <acme@kernel.org>; Ian Rogers
+> <irogers@google.com>; Namhyung Kim <namhyung@kernel.org>; James Clark
+> <james.clark@linaro.org>; Kees Cook <kees@kernel.org>; Quentin Monnet
+> <qmo@kernel.org>; Nathan Chancellor <nathan@kernel.org>; Nicolas Schier
+> <nsc@kernel.org>; Nick Desaulniers <nick.desaulniers+lkml@gmail.com>; Bil=
+l
+> Wendling <morbo@google.com>; Justin Stitt <justinstitt@google.com>; Alexe=
+i
+> Starovoitov <ast@kernel.org>; Daniel Borkmann <daniel@iogearbox.net>;
+> Andrii Nakryiko <andrii@kernel.org>; Martin KaFai Lau
+> <martin.lau@linux.dev>; Eduard Zingerman <eddyz87@gmail.com>; Song Liu
+> <song@kernel.org>; Yonghong Song <yonghong.song@linux.dev>; John Fastaben=
+d
+> <john.fastabend@gmail.com>; KP Singh <kpsingh@kernel.org>; Stanislav
+> Fomichev <sdf@fomichev.me>; Hao Luo <haoluo@google.com>; Jiri Olsa
+> <jolsa@kernel.org>; Rafael J. Wysocki <rafael@kernel.org>; Daniel Lezcano
+> <daniel.lezcano@kernel.org>; Zhang Rui <rui.zhang@intel.com>; Lukasz Luba
+> <lukasz.luba@arm.com>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
+> <mingo@redhat.com>; Mark Rutland <mark.rutland@arm.com>; Alexander
+> Shishkin <alexander.shishkin@linux.intel.com>; Adrian Hunter
+> <adrian.hunter@intel.com>; Masami Hiramatsu <mhiramat@kernel.org>; Willia=
+m
+> Breathitt Gray <wbg@kernel.org>; Barry Song <baohua@kernel.org>; Qinxin
+> Xia <xiaqinxin@huawei.com>; Bartosz Golaszewski <brgl@kernel.org>; Kent
+> Gibson <warthog618@gmail.com>; KY Srinivasan <kys@microsoft.com>; Haiyang
+> Zhang <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Dexuan Cui
+> <DECUI@microsoft.com>; Long Li <longli@microsoft.com>; Jonathan Cameron
+> <jic23@kernel.org>; David Lechner <dlechner@baylibre.com>; Nuno S=E1
+> <nuno.sa@analog.com>; Andy Shevchenko <andy@kernel.org>; Andrew Morton
+> <akpm@linux-foundation.org>; Willy Tarreau <w@1wt.eu>; Thomas Wei=DFschuh
+> <linux@weissschuh.net>; Josh Poimboeuf <jpoimboe@kernel.org>; Robert Moor=
+e
+> <robert.moore@intel.com>; Len Brown <lenb@kernel.org>; Srinivas Pandruvad=
+a
+> <srinivas.pandruvada@linux.intel.com>; Tejun Heo <tj@kernel.org>; David
+> Vernet <void@manifault.com>; Andrea Righi <arighi@nvidia.com>; Changwoo
+> Min <changwoo@igalia.com>; Mark Brown <broonie@kernel.org>; Steven Rosted=
+t
+> <rostedt@goodmis.org>; Gabriele Monaco <gmonaco@redhat.com>; Shuah Khan
+> <shuah@kernel.org>; Jiri Kosina <jikos@kernel.org>; Benjamin Tissoires
+> <bentiss@kernel.org>
+> Cc: linux-kbuild@vger.kernel.org; linux-kernel@vger.kernel.org;
+> llvm@lists.linux.dev; bpf@vger.kernel.org; linux-perf-
+> users@vger.kernel.org; Leo Yan <leo.yan@arm.com>
+> Subject: [EXTERNAL] [PATCH v3 15/30] tools: hv: Append extra cflags
+>=20
+> [Some people who received this message don't often get email from
+> leo.yan@arm.com. Learn why this is important at
+> https://aka.ms/LearnAboutSenderIdentification ]
+>=20
+> Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
+> the compiler.
+>=20
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/hv/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/tools/hv/Makefile b/tools/hv/Makefile
+> index
+> 34ffcec264ab0fdf7075d25456ef012cb866796b..e39c16325b451ee7c2ddc581cc4d168=
+9
+> 15472ed6 100644
+> --- a/tools/hv/Makefile
+> +++ b/tools/hv/Makefile
+> @@ -16,6 +16,7 @@ endif
+>  # (this improves performance and avoids hard-to-debug behaviour);
+>  MAKEFLAGS +=3D -r
+>=20
+> +override CFLAGS +=3D $(EXTRA_CFLAGS)
+>  override CFLAGS +=3D -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+>  override CFLAGS +=3D -Wno-address-of-packed-member
 
-Tested-by: Ricky Ringler <ricky.ringler@proton.me>
-Signed-off-by: Ricky Ringler <ricky.ringler@proton.me>
----
- tools/perf/builtin-inject.c |  1 +
- tools/perf/util/env.h       |  1 +
- tools/perf/util/header.c    | 29 +++++++++++++++++++++++++++++
- tools/perf/util/header.h    |  1 +
- tools/perf/util/sort.c      | 37 ++++++++++++++++++++++++++-----------
- 5 files changed, 58 insertions(+), 11 deletions(-)
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 5b29f4296861..2675d32f88cf 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -2134,6 +2134,7 @@ static bool keep_feat(struct perf_inject *inject, int=
- feat)
- =09case HEADER_HYBRID_TOPOLOGY:
- =09case HEADER_PMU_CAPS:
- =09case HEADER_CPU_DOMAIN_INFO:
-+=09case HEADER_CLNq_SIZE:
- =09=09return true;
- =09/* Information that can be updated */
- =09case HEADER_BUILD_ID:
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index a4501cbca375..c7052ac1f856 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -112,6 +112,7 @@ struct perf_env {
- =09struct cpu_cache_level=09*caches;
- =09struct cpu_domain_map=09**cpu_domain;
- =09int=09=09=09 caches_cnt;
-+=09unsigned int=09=09cln_size;
- =09u32=09=09=09comp_ratio;
- =09u32=09=09=09comp_ver;
- =09u32=09=09=09comp_type;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 9142a8ba4019..4f65faafe75d 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -54,6 +54,7 @@
- #include "bpf-event.h"
- #include "bpf-utils.h"
- #include "clockid.h"
-+#include "cacheline.h"
-=20
- #include <linux/ctype.h>
- #include <internal/lib.h>
-@@ -1304,6 +1305,18 @@ static int write_cache(struct feat_fd *ff,
- =09return ret;
- }
-=20
-+static int write_cln_size(struct feat_fd *ff,
-+=09=09       struct evlist *evlist __maybe_unused)
-+{
-+=09int cln_size =3D cacheline_size();
-+
-+=09if (!cln_size)
-+=09=09cln_size =3D 0;
-+=09ff->ph->env.cln_size =3D cln_size;
-+
-+=09return do_write(ff, &cln_size, sizeof(cln_size));
-+}
-+
- static int write_stat(struct feat_fd *ff __maybe_unused,
- =09=09      struct evlist *evlist __maybe_unused)
- {
-@@ -2261,6 +2274,11 @@ static void print_cache(struct feat_fd *ff, FILE *fp=
- __maybe_unused)
- =09}
- }
-=20
-+static void print_cln_size(struct feat_fd *ff, FILE *fp __maybe_unused)
-+{
-+=09fprintf(fp, "# cacheline size: %u\n", ff->ph->env.cln_size);
-+}
-+
- static void print_compressed(struct feat_fd *ff, FILE *fp)
- {
- =09fprintf(fp, "# compressed : %s, level =3D %d, ratio =3D %d\n",
-@@ -3154,6 +3172,16 @@ static int process_cache(struct feat_fd *ff, void *d=
-ata __maybe_unused)
- =09return -1;
- }
-=20
-+static int process_cln_size(struct feat_fd *ff, void *data __maybe_unused)
-+{
-+=09struct perf_env *env =3D &ff->ph->env;
-+
-+=09if (do_read_u32(ff, &env->cln_size))
-+=09=09return -1;
-+
-+=09return 0;
-+}
-+
- static int process_sample_time(struct feat_fd *ff, void *data __maybe_unus=
-ed)
- {
- =09struct perf_session *session;
-@@ -3763,6 +3791,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_=
-LAST_FEATURE] =3D {
- =09FEAT_OPR(PMU_CAPS,=09pmu_caps,=09false),
- =09FEAT_OPR(CPU_DOMAIN_INFO,=09cpu_domain_info,=09true),
- =09FEAT_OPR(E_MACHINE,=09e_machine,=09false),
-+=09FEAT_OPR(CLN_SIZE,=09cln_size,=09false),
- };
-=20
- struct header_print_data {
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index cc40ac796f52..be315040727f 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -55,6 +55,7 @@ enum {
- =09HEADER_PMU_CAPS,
- =09HEADER_CPU_DOMAIN_INFO,
- =09HEADER_E_MACHINE,
-+=09HEADER_CLN_SIZE,
- =09HEADER_LAST_FEATURE,
- =09HEADER_FEAT_BITS=09=3D 256,
- };
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 42d5cd7ef4e2..13287ade784e 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -30,6 +30,7 @@
- #include "time-utils.h"
- #include "cgroup.h"
- #include "machine.h"
-+#include "session.h"
- #include "trace-event.h"
- #include <linux/kernel.h>
- #include <linux/string.h>
-@@ -2474,7 +2475,26 @@ struct sort_entry sort_type_offset =3D {
-=20
- /* --sort typecln */
-=20
--#define DEFAULT_CACHELINE_SIZE 64
-+static int
-+hist_entry__cln_size(struct hist_entry *he)
-+{
-+=09int ret =3D 0;
-+
-+=09if (he && he->hists) {
-+=09=09struct evsel *evsel =3D hists_to_evsel(he->hists);
-+
-+=09=09if (evsel && evsel->evlist->session && evsel->evlist->session)
-+=09=09=09ret =3D evsel->evlist->session->header.env.cln_size;
-+=09}
-+
-+=09if (!ret || ret < 1) {
-+=09=09int default_cacheline_size =3D 64; // avoid div/0 later
-+
-+=09=09ret =3D default_cacheline_size;
-+=09}
-+
-+=09return ret;
-+}
-=20
- static int64_t
- sort__typecln_sort(struct hist_entry *left, struct hist_entry *right)
-@@ -2482,11 +2502,9 @@ sort__typecln_sort(struct hist_entry *left, struct h=
-ist_entry *right)
- =09struct annotated_data_type *left_type =3D left->mem_type;
- =09struct annotated_data_type *right_type =3D right->mem_type;
- =09int64_t left_cln, right_cln;
-+=09int64_t cln_size_left =3D hist_entry__cln_size(left);
-+=09int64_t cln_size_right =3D hist_entry__cln_size(right);
- =09int64_t ret;
--=09int cln_size =3D cacheline_size();
--
--=09if (cln_size =3D=3D 0)
--=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
-=20
- =09if (!left_type) {
- =09=09sort__type_init(left);
-@@ -2502,8 +2520,8 @@ sort__typecln_sort(struct hist_entry *left, struct hi=
-st_entry *right)
- =09if (ret)
- =09=09return ret;
-=20
--=09left_cln =3D left->mem_type_off / cln_size;
--=09right_cln =3D right->mem_type_off / cln_size;
-+=09left_cln =3D left->mem_type_off / cln_size_left;
-+=09right_cln =3D right->mem_type_off / cln_size_right;
- =09return left_cln - right_cln;
- }
-=20
-@@ -2511,10 +2529,7 @@ static int hist_entry__typecln_snprintf(struct hist_=
-entry *he, char *bf,
- =09=09=09=09     size_t size, unsigned int width __maybe_unused)
- {
- =09struct annotated_data_type *he_type =3D he->mem_type;
--=09int cln_size =3D cacheline_size();
--
--=09if (cln_size =3D=3D 0)
--=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
-+=09int cln_size =3D hist_entry__cln_size(he);
-=20
- =09return repsep_snprintf(bf, size, "%s: cache-line %d", he_type->self.typ=
-e_name,
- =09=09=09       he->mem_type_off / cln_size);
---=20
-2.53.0
 
 
