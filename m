@@ -1,226 +1,204 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850B33C199F
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 14:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773067414; cv=none; b=mbBKeq3rDQWq/zOu6ayRYOtoPBQGQFvbje8EaJnVSPCNOh0wOrPYmeM8C4ztpGTHXfAGRiWus+8GCLO2XWo+tCYVDHGJZxOXyZlu8AeEeS07TfE9B7asJ66U7vOfzvNVk2OTUF9qBCNunzBDfd6KLOJh5I6AL+rJHDexA/lcQDM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773067414; c=relaxed/simple;
-	bh=mguFycCClC7hIxduu/YAtXMSiWY4hv6TL5+n2Mt+bxk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=M65uRXZDgOud0Afd3MR1Y6DoZdHBB+vAbCaQyJ9PuftAnjGTm0egp9Rdxh3lzpl1L5qdL+dul67MzpqsP2mHBZ9DAUEcN5vHFQy5ZEe6N3GZ8C0wltOY5rRwAsONb6OkE7E0mSETQu5dK5HMkInIBvYExol751I70ZdXKSWbTH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CivCS4Dz; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=erPtHQ78; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C878A3D7D69
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 15:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773069029; cv=pass; b=P3S+eTcXeK+oXnyH/TykikaqK3OmXLvzMsj3L/7rv3soxY+gwVGHf9/t0wYZ5SqEpczGI5/kIqzxhI8v5IY7jNJzFRd+LCCQfmuPk7MzasvZu5c0rgfrfm70Mq32Y9wa+oQBVq4JmdWb3gKTTvjJJ1wQw8/XmQv3dpqIIbuvpp0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773069029; c=relaxed/simple;
+	bh=5i8qPmQzszVgv/IzZW6/JLkFuKhxnzZQEpxh8nw5jy0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WHir7+51Icor7V1p6ftTYIYX+q7uFbLpQTUuD3MFHoKJCmDlJSUai2Apaz02QvkKNYCELngf4MEELhiQeQUqYJMPPfV0M8Xy4fXVMJwH+Hr2d987DI57OFbGvY2J+93PNJrSfpk30pQO2EzmarAf2aMqb0mnXhEIXWrECHCsFnw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v4xaBXqp; arc=pass smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CivCS4Dz";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="erPtHQ78"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773067409;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DaKhYXczwtijwhMhNK50Qi+Imd2B6nrC4erR8UlvNrQ=;
-	b=CivCS4Dz9jJp2Yi78B7go+mtYkcc7Pzfqa6KCamzDSqerng/gqDVX2cf7w6h9bysIjErla
-	cTKtgz4x1rYe44x5kLX6RrZ3HvnFDvKH9mbtQQMQd2LTJ86tuPvWfKGHcO5Cs/SsrxkwBf
-	5371gxTBYq1c3y145sM6tmijO0Nta4Q=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-441-jqVOxN7pPwG-SG4F8IqCzw-1; Mon, 09 Mar 2026 10:43:28 -0400
-X-MC-Unique: jqVOxN7pPwG-SG4F8IqCzw-1
-X-Mimecast-MFC-AGG-ID: jqVOxN7pPwG-SG4F8IqCzw_1773067407
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-b96eed52862so112540666b.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 07:43:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v4xaBXqp"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2ae4b40999bso157355ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 08:10:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773069025; cv=none;
+        d=google.com; s=arc-20240605;
+        b=kOWXk1a3yoPZdxNa0wfsvx86EHB2pY7h/yWgbEeTTF9Sy05Vj9G1NuDCn9ooTPSrbt
+         NnRpgbB49fneajo+h4af9Kxu85rNgdxay+Jyu5HqFr/sr+oZli1HLPLStQSFKc/DKvuS
+         5hMaMrbuO/i8KUA1if1Iv6F8ircuve1zI60EmJy82gyJm0pmlRWZoTuURKnGXOhK4/o/
+         79IyIMM33PT1G4LHoC3yOjDWHTQsex4XOLkugTH+t/eNYNlNuBN1LMHJxgE5TYYK8ML6
+         CN4o0PHW9+p0uYzdzkQdGfwv/5QpzVn+w8pLlwinTJgD6T4NCHkD05rbXDdhmXLGKPPH
+         RjOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=6FbR4+wo96W1dWPj028FNCvwM/SPgWjQY/Nh61K7Dcw=;
+        fh=mPr51QXlxNzGEjJ8ve17FGQPkhpQ+Nxl/HKd3gXwbtc=;
+        b=jL3TaNhgvAEavehUH4n9vtRZhv6HOFWiTU3sCFb1TYXkIRAsU13vdLJ/cp2VenGnuz
+         XqVgO++HmjzfZM1J1b20zy6Tj4t9MCatsQvZ0/jBE0EZNckpMgdEuDPKvQLepgtG+Jvu
+         b0h7Y7Mk0VDWSUB7sJR7P95LPtIriSSFE2GfglpkhHioeUW2cGC2P+KyXmedwixQxcXk
+         JygBTCAMSbnBVJF1Jnp9FTptj0gzHEz3HCi7x9os+EWT6X2S+B56+lje8RkiIwNRpX+P
+         VhQ17bG5nYBNR8dH2AKSXJ0QaPV+jmUJGhA98CLi7YHKUprVNB7A1XUGtE4eQ8yCNVt3
+         0kcg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1773067407; x=1773672207; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DaKhYXczwtijwhMhNK50Qi+Imd2B6nrC4erR8UlvNrQ=;
-        b=erPtHQ78lKGLDImHXgF+GM+YMGasz8jZ63fIHDD4R9cXupefmJZEwgIHLh01MESD26
-         wWGF7pLZygZ2iWDO9bONlhpyxYMvb/jO72x2ai+r46sHh+t8KvnuOY7BIe6Y8ayEG9U1
-         /fe/0LKvdOHDjN0kP41dnBgKrWulpzJ2+nW3pYBs26i9Vrzgf1yDhdivglWlcjqipk8k
-         xzdO08LlxEfJ5l80zgQZke7dlP9ehwbf73uUtAn+jZ1SwcAHUBGYzzbUkQQEVY+bD6Gr
-         f9EIjtS5AhAAVFdDz1LFU/T9MWQzqNq7Kxz0+xIt4u5HHBOutjg2UcFefhjgPh9d5B65
-         4kXw==
+        d=google.com; s=20230601; t=1773069025; x=1773673825; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6FbR4+wo96W1dWPj028FNCvwM/SPgWjQY/Nh61K7Dcw=;
+        b=v4xaBXqpIuT0bcg9isx0DX3xggBhIWuO0XIcHogy6/uqvk8alDDzE93ExeqxdD3Sfw
+         LCsZzFCDhtusjba0bkIhwHbSNGnhQUO6vu3DNZh87taQZRfn9+D+Elpv+Ynf2hYyADuz
+         VDxp+QEGAuKbb1r5F172LIHP5d2NAt2N3iblcYpHCIlv1eElakEj/77cV9F2s1FaMMzG
+         Xz6mCsiAU8By3/xu9Aslk2tRWeI2Su3wnNde9NrXGaY5wBmyNF+gq6vH5G2+UBxbbxAh
+         kuhAtfvIecAhpClqOUsl6E+B7CyePTnCR/uGfYsdWerlfkA7OygbIp5yFuPn9eLdjs+j
+         wRTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773067407; x=1773672207;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DaKhYXczwtijwhMhNK50Qi+Imd2B6nrC4erR8UlvNrQ=;
-        b=PrMuL3Z3fJUcyNIoz2muxVSdleKMg75FoQV8gqvx4YaOVbwkav18DD5IifFVYS8GOD
-         eFIooK7M5YA/8odNCiU+3D/GZpo0eFz+m4Jyfj/NxtXHO4i7UNTN17SazGkVXbH+eUZg
-         UVfNB0mWnFPAGyWvjkvYeDqfMZ1wt8RT1oxEr9bvsSk+k638uYkvCAIEKe2hgruE5Fg/
-         MUzQicdMKT9fcboJOHpShY2PSm7YE//Kxe9agVNjUnxRvlrtPGaib60o6VrRanhk5Sqi
-         d99vl/2tp/xOjBfKlpXvT9xF/R3FxE9dhX9OBBBucaaZVr61zJF9/8L8mIbb0k4Nt/5M
-         9rbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFbwpK+zcwzw9UkDCvAbcDwVWkTxQyr3w0lF/V0CIGf1g+5iGtPw+iPl8QQXpMwRsTFA1v+xhSt6Z8LvyH8CMR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyFOl5RxffoJa4SEwQXQWraN+eqRXpnWJRKA6Qq+NqQlihhMCm
-	nsohRbh0h7tHFO6ZA2E9Uv2PicFjjrpwD1NXWYFN5z9PvfP222DRcsfrsFOiawqi7lOu+V1z82G
-	IJMX3YOdcWjP2pvolZ65zqkKwwHIEiqB8hFm4Q8qqbylHGeddEkFjBygTx8ubsDA2E8vWzw==
-X-Gm-Gg: ATEYQzyKWSC6JylLHpWVuhMk5vFKW960zLFgcvFntZmfwZ2M1opN6pLGdcrxqvDTCuK
-	Ct9QG9+7515VvwpjolGBLB0cJ++1xnIu05Spq88DSHh80g0CPTsZp28H1p0pUdGCrW+tnTXtPuO
-	XBEmkgJcoU875/VnYiPxMiQxnu9yYtY/DD6OCfEL6gANmywADDnz0xucUr366M09NeVpp3w5igT
-	gdz0+WD0u7Cib//KxeRcPwptpmq+29dGRrbLYcPZroVKcZQ2P2HWgNdGfd3q7a24vSS2aWITcZ+
-	DeOaDPV5rNWB9b8KRICS7XPksvB/A6oB/VUnpFEQYtTWTONGRi7K9Zt7HifWTjRj6Fb7mfC4dGN
-	2DzfkwmuDDq7A38TKc8/Q8Wy4gRTnm7SmoJsIxHTqYNEkHI8k6lygnDhV
-X-Received: by 2002:a17:907:7fa4:b0:b96:eb7e:bc3b with SMTP id a640c23a62f3a-b96eb7ec9a3mr256773666b.49.1773067406725;
-        Mon, 09 Mar 2026 07:43:26 -0700 (PDT)
-X-Received: by 2002:a17:907:7fa4:b0:b96:eb7e:bc3b with SMTP id a640c23a62f3a-b96eb7ec9a3mr256771866b.49.1773067406195;
-        Mon, 09 Mar 2026 07:43:26 -0700 (PDT)
-Received: from [192.168.0.135] (185-219-167-205-static.vivo.cz. [185.219.167.205])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b942f189de1sm382893266b.63.2026.03.09.07.43.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2026 07:43:25 -0700 (PDT)
-Message-ID: <100385b1-afd0-4c17-831a-6cd45a02f6f3@redhat.com>
-Date: Mon, 9 Mar 2026 15:43:23 +0100
+        d=1e100.net; s=20230601; t=1773069025; x=1773673825;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=6FbR4+wo96W1dWPj028FNCvwM/SPgWjQY/Nh61K7Dcw=;
+        b=Wlq42jC4ngTXbnvz+3eo0UX/T+RjJopygoQj/KsLrCg2t4hwBN8e4aRCDxmPdvPlhf
+         0eB5HgYXFEh1G9es9H05QMh1czLihNI2ZL9MEyenB1ORmgB4mmgheBBrm9VQ0I3/362i
+         c7lEirESsklWPhsiyeoxOXuCMc8NOVRY3nZSAtLfY35ysmqI0MEeegInxqAXfiSHQPv9
+         ebMa0Scv34U3uYALXJjj/BvooMihjumGOTtsLaW0N+cpDZ329gpjugVuOSuoXvLi5zMp
+         H7PJ8l1gGtpFZymi8uVszQAKCC6AGX2gsZjbKKBzbofqS0NBd086T03T8HLMZxUr+MYO
+         gprA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlIhXTabEuFZBiyyuGC722N4vTYkvtxRmACTSVT/GRDYtBv2GEcyETj2qtgGlD+6xiqlshvUr2eUIAQcqZKGoG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzvYaxPH4Fzw8+46l0yrcXGX4MLYJVzItdFTR4yBYJZgLKTSQq
+	g78ssrKLVdE+IDpM1wKf0j9s9TGe2DwmWRGc+9psGTOQvFPSuPYMcRnGdXvzS6q5YUEA0LR2p8+
+	acJRlm6xdoOI80nUxjXR4s1OpslYZwXV9rxJkbeBy
+X-Gm-Gg: ATEYQzxejUiBNlgdKdh31JnHtxsulrlBA3uUoWfJ8J55Sh0YEhumuWCE7mBJBoqda0C
+	G4d+V1U8jfBC6G+DpA3ohNPgIVwoLhQ2j6slOFKCM1Eo5RHaI+xA85wABg2dL/ChLdXevys/3qa
+	OYn1DGPXXrG4NVrVumWHvaNlS9d7xNNlRQ8iHVYzGo+UIhvuMZYkTQeRJBGbyRuZDB88zWGEirW
+	LN8g7EZKS9laQ0OPVeQz4lxNrSDAYW8Fa2T4Qtgl3wfFK0OR464exL+oXaNha1fWdRwlUHgt+Hu
+	8SFGXK0gooQJDPV/cZGBZQ2ZFtm2BO/NCMc8sg==
+X-Received: by 2002:a17:903:1a23:b0:2a7:6c4e:5914 with SMTP id
+ d9443c01a7336-2ae8ad1c62emr4122395ad.6.1773069024342; Mon, 09 Mar 2026
+ 08:10:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc, perf: Check that current->mm is alive before
- getting user callchain
-From: Viktor Malik <vmalik@redhat.com>
-To: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Joe Perches <joe@perches.com>, Paul Mackerras <paulus@ozlabs.org>,
- Benjamin Herrenschmidt <benh@kernel.crashing.org>, atrajeev@linux.ibm.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-References: <20260227082502.1882395-1-vmalik@redhat.com>
- <aab3EW1LfDcjSzzy@linux.ibm.com>
- <80766050-c745-411b-8ee6-8141d2cfe4ff@redhat.com>
- <aa6pZaDySMl9JGKf@linux.ibm.com>
- <f40b2ccd-2d71-4089-bd28-3adbc70f0a1d@redhat.com>
-Content-Language: en-US
-In-Reply-To: <f40b2ccd-2d71-4089-bd28-3adbc70f0a1d@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com> <20260308-tools_build_fix_zero_init-v3-3-6477808123b7@arm.com>
+In-Reply-To: <20260308-tools_build_fix_zero_init-v3-3-6477808123b7@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 9 Mar 2026 08:10:13 -0700
+X-Gm-Features: AaiRm53Q6tq8LuPIrmfsSi3or0ZsIgIF5Wzq_daN-fddH5XU6fwZ-9Q1_o7c91A
+Message-ID: <CAP-5=fUjJ1QONNLNyJL7Ugc3=44sJ2i10wpQNoGtM7Fnd5wJ0g@mail.gmail.com>
+Subject: Re: [PATCH v3 03/30] tools: lib: thermal: Initialize CFLAGS before
+ including Makefile.include
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>, 
+	Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	William Breathitt Gray <wbg@kernel.org>, Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Kent Gibson <warthog618@gmail.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Robert Moore <robert.moore@intel.com>, 
+	Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>, 
+	Changwoo Min <changwoo@igalia.com>, Mark Brown <broonie@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/9/26 13:17, Viktor Malik wrote:
-> On 3/9/26 12:05, Saket Kumar Bhaskar wrote:
->> On Thu, Mar 05, 2026 at 01:45:44PM +0100, Viktor Malik wrote:
->>> On 3/3/26 15:58, Saket Kumar Bhaskar wrote:
->>>> On Fri, Feb 27, 2026 at 09:25:02AM +0100, Viktor Malik wrote:
->>>>> It may happen that mm is already released, which leads to kernel panic.
->>>>> This adds the NULL check for current->mm, similarly to 20afc60f892d
->>>>> ("x86, perf: Check that current->mm is alive before getting user
->>>>> callchain").
->>>>>
->>>>> I was getting this panic when running a profiling BPF program
->>>>> (profile.py from bcc-tools):
->>>>>
->>>>>     [26215.051935] Kernel attempted to read user page (588) - exploit attempt? (uid: 0)
->>>>>     [26215.051950] BUG: Kernel NULL pointer dereference on read at 0x00000588
->>>>>     [26215.051952] Faulting instruction address: 0xc00000000020fac0
->>>>>     [26215.051957] Oops: Kernel access of bad area, sig: 11 [#1]
->>>>>     [...]
->>>>>     [26215.052049] Call Trace:
->>>>>     [26215.052050] [c000000061da6d30] [c00000000020fc10] perf_callchain_user_64+0x2d0/0x490 (unreliable)
->>>>>     [26215.052054] [c000000061da6dc0] [c00000000020f92c] perf_callchain_user+0x1c/0x30
->>>>>     [26215.052057] [c000000061da6de0] [c0000000005ab2a0] get_perf_callchain+0x100/0x360
->>>>>     [26215.052063] [c000000061da6e70] [c000000000573bc8] bpf_get_stackid+0x88/0xf0
->>>>>     [26215.052067] [c000000061da6ea0] [c008000000042258] bpf_prog_16d4ab9ab662f669_do_perf_event+0xf8/0x274
->>>>>     [...]
->>>>>
->>>>> Fixes: 20002ded4d93 ("perf_counter: powerpc: Add callchain support")
->>>>> Signed-off-by: Viktor Malik <vmalik@redhat.com>
->>>>> ---
->>>>>  arch/powerpc/perf/callchain_32.c | 3 +++
->>>>>  arch/powerpc/perf/callchain_64.c | 3 +++
->>>>>  2 files changed, 6 insertions(+)
->>>>>
->>>>> diff --git a/arch/powerpc/perf/callchain_32.c b/arch/powerpc/perf/callchain_32.c
->>>>> index ddcc2d8aa64a..b46e21679566 100644
->>>>> --- a/arch/powerpc/perf/callchain_32.c
->>>>> +++ b/arch/powerpc/perf/callchain_32.c
->>>>> @@ -144,6 +144,9 @@ void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
->>>>>  	sp = regs->gpr[1];
->>>>>  	perf_callchain_store(entry, next_ip);
->>>>>  
->>>>> +	if (!current->mm)
->>>>> +		return;
->>>>> +
->>>>>  	while (entry->nr < entry->max_stack) {
->>>>>  		fp = (unsigned int __user *) (unsigned long) sp;
->>>>>  		if (invalid_user_sp(sp) || read_user_stack_32(fp, &next_sp))
->>>>> diff --git a/arch/powerpc/perf/callchain_64.c b/arch/powerpc/perf/callchain_64.c
->>>>> index 115d1c105e8a..eaaadd6fa81b 100644
->>>>> --- a/arch/powerpc/perf/callchain_64.c
->>>>> +++ b/arch/powerpc/perf/callchain_64.c
->>>>> @@ -79,6 +79,9 @@ void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
->>>>>  	sp = regs->gpr[1];
->>>>>  	perf_callchain_store(entry, next_ip);
->>>>>  
->>>>> +	if (!current->mm)
->>>>> +		return;
->>>>> +
->>>>>  	while (entry->nr < entry->max_stack) {
->>>>>  		fp = (unsigned long __user *) sp;
->>>>>  		if (invalid_user_sp(sp) || read_user_stack_64(fp, &next_sp))
->>>>> -- 
->>>>> 2.53.0
->>>>>
->>>> Sorry, I missed adding cc list for the last conversation so adding this for reference:
->>>>
->>>>> Wouldn't be good if we check this in perf_callchain_user() as it will
->>>>> cover both cases.
->>>>
->>>> to which Viktor replied:
->>>> I considered it but in that case, we'd also miss the top-level stack
->>>> frame (the perf_callchain_store call above). Other arches include it so
->>>> I followed the behavior for powerpc.
->>>>
->>>> Viktor, agreed with your first point. I have another concern:
->>>>
->>>> I was hitting this issue with stacktrace_build_id_nmi in bpf and
->>>> applied this patch https://lore.kernel.org/bpf/20260126074331.815684-1-chen.dylane@linux.dev/T/#mf901967ebe77506f1bd6e3d876c2a85824d9519d
->>>>
->>>> Wondering if the above generic fix is working do we need to add this
->>>> check in powerpc specific code?
->>>
->>> I tried to apply that patch series but, unfortunately, keep getting the
->>> panic when running the BCC profile tool.
->>>
->>> Also, looking at the patch, it seems that it would only solve the issue
->>> when perf_callchain_user is called from a BPF context, however, I assume
->>> that it may be called from other contexts, too.
->>>
->>> Since perf_callchain_user_{32,64} are dereferencing current->mm while
->>> walking the stack, I think that an explicit protection against
->>> current->mm being NULL makes sense here, even in the presence of the
->>> above patch. Especially since other arches have it, too.
->>>
->>> Viktor
->>>
->> Ok that looks convincing then, another thing is that, how about moving perf_callchain_store
->> to perf_callchain_user and checking current->mm == NULL there for both perf_callchain_user_32/64.
->> next_ip, lr and sp can be passed to perf_callchain_user_32/64.
-> 
-> Yeah, that should be possible. I'll send v2.
+On Sun, Mar 8, 2026 at 9:46=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> Initialize CFLAGS to the default value before including
+> tools/scripts/Makefile.include.
+>
+> Defer appending EXTRA_CFLAGS to CFLAGS until after including
+> Makefile.include, as it may extend EXTRA_CFLAGS in the future.
+>
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/lib/thermal/Makefile | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/lib/thermal/Makefile b/tools/lib/thermal/Makefile
+> index 41aa7a324ff4d76351b89d7d7cf382df3fc14052..50efa97163fc089455161d6b8=
+1db13aa0ae41af6 100644
+> --- a/tools/lib/thermal/Makefile
+> +++ b/tools/lib/thermal/Makefile
+> @@ -23,6 +23,14 @@ INSTALL =3D install
+>  DESTDIR ?=3D
+>  DESTDIR_SQ =3D '$(subst ','\'',$(DESTDIR))'
+>
+> +# Defer assigning EXTRA_CFLAGS to CFLAGS until after including
+> +# tools/scripts/Makefile.include, as it may add flags to EXTRA_CFLAGS.
+> +ifdef EXTRA_CFLAGS
+> +  CFLAGS :=3D
+> +else
+> +  CFLAGS :=3D -g -Wall
+> +endif
+> +
+>  include $(srctree)/tools/scripts/Makefile.include
+>  include $(srctree)/tools/scripts/Makefile.arch
+>
+> @@ -39,13 +47,6 @@ libdir =3D $(prefix)/$(libdir_relative)
+>  libdir_SQ =3D $(subst ','\'',$(libdir))
+>  libdir_relative_SQ =3D $(subst ','\'',$(libdir_relative))
+>
+> -# Set compile option CFLAGS
+> -ifdef EXTRA_CFLAGS
+> -  CFLAGS :=3D $(EXTRA_CFLAGS)
+> -else
+> -  CFLAGS :=3D -g -Wall
+> -endif
+> -
+>  NL3_CFLAGS =3D $(shell pkg-config --cflags libnl-3.0 2>/dev/null)
+>  ifeq ($(NL3_CFLAGS),)
+>  NL3_CFLAGS =3D -I/usr/include/libnl3
+> @@ -60,6 +61,7 @@ INCLUDES =3D \
+>  -I$(srctree)/tools/include/uapi
+>
+>  # Append required CFLAGS
+> +override CFLAGS +=3D $(EXTRA_CFLAGS)
+>  override CFLAGS +=3D $(EXTRA_WARNINGS)
+>  override CFLAGS +=3D -Werror -Wall
+>  override CFLAGS +=3D -fPIC
 
-v2 sent:
+The change lgtm. Running this patch through an AI review showed that
+what looks like a typo, CFLAGS becoming CFGLAS, is located below:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/tools/lib/thermal/Makefile#n62
+```
+# Append required CFLAGS
+override CFLAGS +=3D $(EXTRA_WARNINGS)
+override CFLAGS +=3D -Werror -Wall
+override CFLAGS +=3D -fPIC
+override CFLAGS +=3D $(NL3_CFLAGS)
+override CFLAGS +=3D $(INCLUDES)
+override CFLAGS +=3D -fvisibility=3Dhidden
+override CFGLAS +=3D -Wl,-L.
+override CFGLAS +=3D -Wl,-lthermal
+```
 
-https://lore.kernel.org/linuxppc-dev/20260309144045.169427-1-vmalik@redhat.com/T/#u
+Thanks,
+Ian
 
-Viktor
-
-> 
-> Viktor
-> 
->>
->> Thanks,
->> Saket
->>
-> 
-
+> --
+> 2.34.1
+>
