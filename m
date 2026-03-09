@@ -1,57 +1,75 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D287335958;
-	Mon,  9 Mar 2026 13:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CF73B8BA2;
+	Mon,  9 Mar 2026 13:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773063458; cv=none; b=McwZmQdtN22i/4Ssh5H6QHQbP+FThK7Y2LweUkszT+LKJHtIwoSEmta4nJEiD+ignmSobdJ0+8xMJiBbcfNlrbPXdZq3z8emBkVC2ppey62zgYoqGyPZCl5PwlaHH866RWTnN9ZHZ16XtdsVNySvi19iqLAox8G9ZTbbS0Sgri8=
+	t=1773064006; cv=none; b=hbOb0e2ZFhyy7OHmfLEhF6WAD/0Vf/BHg2CfDvebegzzntr/g5oidbCYbJj5lpq4cYfse/+5gMFzLKbKwUAEenVJrj0hfrqHDczg7G6y8eGNunclGWZr4lQjANfdWiSrPcJmsMCRGdSsakj3jwiZe09BkanfNWTqJbIJWpFmz/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773063458; c=relaxed/simple;
-	bh=181AFqySLRnIhAAf1iKIUCgnCzuCJ96AMmOKu3+9vMw=;
+	s=arc-20240116; t=1773064006; c=relaxed/simple;
+	bh=w0QUYZum+m+R/ZMJD9ICvWbnwxxvrz4NQJRGvdgYc+w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q4R3rt1xdSyxaxRU8dmQyhFwxrT3yaw8HB3/1oPvwEoptDITrFRdFaMqCThNKXtpz6vGmGT/oE9ld1k1hvtHtN4wkhyPHLbFbC9iyZrNBB21b+8nQtNHLzr8EuxVKhfwJseLs0VEQFTJcxY/NSqQkaVQcyW9t/WCy7Q0Ln4h1QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RXjOZ1fq; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=OS94GinChKh1M1pwP5cNfLlXU6oLtX0Jd1ZQ+G2iSmNSnKEjsV6h5A67C8e/vg87ZktdfN8BAGWxArASYOu0bPaTWmID97jvWFXvX9drsXeobc5kkWjUIZDi7xDOZe2lDt0lEFgbKZ8TGnf6sA3B2nW/DkXb5QBpI9ju3zJA93s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVr69GD8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RXjOZ1fq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ufcok373yNwLXFp2rCpzw/LKuLx7dgd3kF5Pw+wIfuc=; b=RXjOZ1fqtElXmacMpnBP+CnJmL
-	vaAbc6Hn9216BvnHB1sVwISwKodkgwMSvKo6gfBO2DHeKUNT/3ACcdr2SwOjxWOw1egBj1DFTmXhF
-	lleqO+T5L5ph9zdBgd/BFBt6o6Wwx1jVU7z1RGWX1O0JX4HxvCj26HkXCe6sCZnoVksq+fqqtimjz
-	byzKg7eLaOVDO/u+llc2MYi7xmx70wrqWx2PdLYQ78vgYwjZ4YpOwk+w9Mb9S9tDFOccgJZi8T4xk
-	G/i7xs04ImbsZZE4+ZiZp6yMj92870HqCtYch2iS78r175xlo1li58p3JEVeKyQ8WQEKnD9bnTh4G
-	/bkZGuIw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzanV-0000000CGEP-0QTt;
-	Mon, 09 Mar 2026 13:37:25 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 91CEC300FB6; Mon, 09 Mar 2026 14:37:13 +0100 (CET)
-Date: Mon, 9 Mar 2026 14:37:13 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Oliver Rosenberg <olrose55@gmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf_events: fix array-index-out-of-bounds in x86_pmu_del
-Message-ID: <20260309133713.GB606826@noisy.programming.kicks-ass.net>
-References: <20260309014215.3871484-1-olrose55@gmail.com>
- <20260309120543.GA606826@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVr69GD8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FF8FC4CEF7;
+	Mon,  9 Mar 2026 13:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773064005;
+	bh=w0QUYZum+m+R/ZMJD9ICvWbnwxxvrz4NQJRGvdgYc+w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BVr69GD85TMcTAfG+a8utDGbnLRZpnfsgk6oAEieKIf3SbpafBvF3+irOxH5364Mf
+	 5pQjiP3OB9FC6sxDF6sRahqD3JxDLeM/LKZhytQKKexcd9nKBgdJPKEyw8sk8hmBqZ
+	 6Umeng6LJPjNhP9ijAtZ1GLP3fQirKriMZIBcjz1MV/Ly4Ym8+L+fbakf0sGYzf2HZ
+	 3zIBqoZorFxzO8i8L6kszr5AnLvTpWYNSPn5PmXLkOowtVs0WINaH4TFDGQhbj2jWW
+	 Xu+fRiMPtxXfm3CsyrGqKEUJHR4HPp+HrebcbqvJ0J7zXXW7tbIaDGtBQ28EmTK0dV
+	 febooG99fQKig==
+Date: Mon, 9 Mar 2026 13:46:27 +0000
+From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-kernel@vger.kernel.org, 
+	"linux-mm @ kvack . org" <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, David Rientjes <rientjes@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Christian Brauner <brauner@kernel.org>, 
+	Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Eric Dumazet <edumazet@google.com>, 
+	Neal Cardwell <ncardwell@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
+	kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v1 11/16] mm/memory: inline unmap_page_range() into
+ __zap_vma_range()
+Message-ID: <737a88b8-8221-44e6-aa90-3be326bc8612@lucifer.local>
+References: <20260227200848.114019-1-david@kernel.org>
+ <20260227200848.114019-12-david@kernel.org>
+ <a5765cac-69d6-4314-82d5-80ee363906de@lucifer.local>
+ <bc5cfcc4-5e51-4da1-9ce9-ea0831bec400@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,95 +78,88 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260309120543.GA606826@noisy.programming.kicks-ass.net>
+In-Reply-To: <bc5cfcc4-5e51-4da1-9ce9-ea0831bec400@kernel.org>
 
-On Mon, Mar 09, 2026 at 01:05:43PM +0100, Peter Zijlstra wrote:
-> Now, let me go audit the code to see if this same problem exists in more
-> shapes...
+On Fri, Mar 06, 2026 at 02:16:26PM +0100, David Hildenbrand (Arm) wrote:
+> On 3/6/26 13:29, Lorenzo Stoakes (Oracle) wrote:
+> > On Fri, Feb 27, 2026 at 09:08:42PM +0100, David Hildenbrand (Arm) wrote:
+> >> Let's inline it into the single caller to reduce the number of confusing
+> >> unmap/zap helpers.
+> >>
+> >> Get rid of the unnecessary BUG_ON().
+> >>
+> >> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> >
+> > Small nits below, but overall LGTM so:
+> >
+> > Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+> >
+> >> ---
+> >>  mm/memory.c | 32 ++++++++++++--------------------
+> >>  1 file changed, 12 insertions(+), 20 deletions(-)
+> >>
+> >> diff --git a/mm/memory.c b/mm/memory.c
+> >> index 394b2e931974..1c0bcdfc73b7 100644
+> >> --- a/mm/memory.c
+> >> +++ b/mm/memory.c
+> >> @@ -2056,25 +2056,6 @@ static inline unsigned long zap_p4d_range(struct mmu_gather *tlb,
+> >>  	return addr;
+> >>  }
+> >>
+> >> -static void unmap_page_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+> >> -		unsigned long addr, unsigned long end,
+> >> -		struct zap_details *details)
+> >> -{
+> >> -	pgd_t *pgd;
+> >> -	unsigned long next;
+> >> -
+> >> -	BUG_ON(addr >= end);
+> >> -	tlb_start_vma(tlb, vma);
+> >> -	pgd = pgd_offset(vma->vm_mm, addr);
+> >> -	do {
+> >> -		next = pgd_addr_end(addr, end);
+> >> -		if (pgd_none_or_clear_bad(pgd))
+> >> -			continue;
+> >> -		next = zap_p4d_range(tlb, vma, pgd, addr, next, details);
+> >> -	} while (pgd++, addr = next, addr != end);
+> >> -	tlb_end_vma(tlb, vma);
+> >> -}
+> >> -
+> >>  static void __zap_vma_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+> >>  		unsigned long start, unsigned long end,
+> >>  		struct zap_details *details)
+> >> @@ -2100,7 +2081,18 @@ static void __zap_vma_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+> >>  			return;
+> >>  		__unmap_hugepage_range(tlb, vma, start, end, NULL, zap_flags);
+> >>  	} else {
+> >> -		unmap_page_range(tlb, vma, start, end, details);
+> >> +		unsigned long next, cur = start;
+> >
+> > VERY nitty, but generally current is abbreviated to curr not cur.
+> >
+>
+> The following might not be fully expressive (but simple to grep):
+>
+> $ git grep "cur_" | wc -l
+> 24261
+> $ git grep "curr_" | wc -l
+> 9288
 
-I've ended up with the below.
+Lol hmm...
 
----
-Subject: perf: Make sure to use pmu_ctx->pmu for groups
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Mon Mar 9 13:55:46 CET 2026
+>
+> Tells me that "cur" is rather common.
+>
+> > It's not a big deal, but why not addr?
+>
+> Good question, I can just do that. :)
 
-Oliver reported that x86_pmu_del() ended up doing an out-of-bound memory access
-when group_sched_in() fails and needs to roll back.
+Thanks!
 
-This *should* be handled by the transaction callbacks, but he found that when
-the group leader is a software event, the transaction handlers of the wrong PMU
-are used. Despite the move_group case in perf_event_open() and group_sched_in()
-using pmu_ctx->pmu.
+>
+> --
+> Cheers,
+>
+> David
 
-Turns out, inherit uses event->pmu to clone the events, effectively undoing the
-move_group case for all inherited contexts. Fix this by also making inherit use
-pmu_ctx->pmu, ensuring all inherited counters end up in the same pmu context.
-
-Similarly, __perf_event_read() should use equally use pmu_ctx->pmu for the
-group case.
-
-Fixes: bd2756811766 ("perf: Rewrite core context handling")
-Reported-by: Oliver Rosenberg <olrose55@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/events/core.c |   14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
-
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4813,7 +4813,7 @@ static void __perf_event_read(void *info
- 	struct perf_event *sub, *event = data->event;
- 	struct perf_event_context *ctx = event->ctx;
- 	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
--	struct pmu *pmu = event->pmu;
-+	struct pmu *pmu;
- 
- 	/*
- 	 * If this is a task context, we need to check whether it is
-@@ -4825,7 +4825,7 @@ static void __perf_event_read(void *info
- 	if (ctx->task && cpuctx->task_ctx != ctx)
- 		return;
- 
--	raw_spin_lock(&ctx->lock);
-+	guard(raw_spinlock)(&ctx->lock);
- 	ctx_time_update_event(ctx, event);
- 
- 	perf_event_update_time(event);
-@@ -4833,14 +4833,15 @@ static void __perf_event_read(void *info
- 		perf_event_update_sibling_time(event);
- 
- 	if (event->state != PERF_EVENT_STATE_ACTIVE)
--		goto unlock;
-+		return;
- 
- 	if (!data->group) {
- 		pmu->read(event);
- 		data->ret = 0;
--		goto unlock;
-+		return;
- 	}
- 
-+	pmu = event->pmu_ctx->pmu;
- 	pmu->start_txn(pmu, PERF_PMU_TXN_READ);
- 
- 	pmu->read(event);
-@@ -4849,9 +4850,6 @@ static void __perf_event_read(void *info
- 		perf_pmu_read(sub);
- 
- 	data->ret = pmu->commit_txn(pmu);
--
--unlock:
--	raw_spin_unlock(&ctx->lock);
- }
- 
- static inline u64 perf_event_count(struct perf_event *event, bool self)
-@@ -14743,7 +14741,7 @@ inherit_event(struct perf_event *parent_
- 	get_ctx(child_ctx);
- 	child_event->ctx = child_ctx;
- 
--	pmu_ctx = find_get_pmu_context(child_event->pmu, child_ctx, child_event);
-+	pmu_ctx = find_get_pmu_context(parent_event->pmu_ctx->pmu, child_ctx, child_event);
- 	if (IS_ERR(pmu_ctx)) {
- 		free_event(child_event);
- 		return ERR_CAST(pmu_ctx);
+Cheers, Lorenzo
