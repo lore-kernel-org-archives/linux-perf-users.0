@@ -1,207 +1,132 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012063.outbound.protection.outlook.com [52.101.48.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D12F39524F;
-	Mon,  9 Mar 2026 11:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773054384; cv=none; b=pSbRhLveAr9r84pU6Gbx/siuZ9XEACaEvYB0/d9/AmheKRIscw8IRZ+bS0UV4fJWM4UClSYxw4s+N1FSHpoKQiWHf9dfoJ8aIO9VNbHvYnS+anPGmPcCs89A31gEo2s4rLyI2lDhMbOdjznYX7jWMR6pPv/EImiRGoCfWZm1slg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773054384; c=relaxed/simple;
-	bh=KbTZxQxtEbla+RaayCgnxDIdxTaPc95rLhr01jHDrak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cuXqI2dt+k26HYGMMLb+W87kH9mLFnzRRnxLXWnA3AiggOSdR/XdHDfCARY0BZBEcy7E5w0vfCzKEetDfRicqPk617t3bzTi0FSOrfLxcZvTOvxLXmf11B+MADSXTXRLBMU6qbbu2Mzm641FWbK1fQLtXnT+8gygxaXPG8dzyZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=h3uUuO6P; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F501395244;
+	Mon,  9 Mar 2026 11:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773056418; cv=fail; b=n7eroPDWLTGQA/3xIyB6U3l90QZmfKawYozJADN3RNhEUzCkdCqNm6ImLbd9CqcWR9dyaFIgT1aMEssriqaUT87bAa9g0Yi14y1sfgWdjISAg/pT4Y7pLuu3A9H/8s/J3bm0u60Xj0fiYRvVYzIVLhaGuokvMNy67Xj1fwy/ABA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773056418; c=relaxed/simple;
+	bh=knXUT0gJUKEIQhq6hAQGcJ1Q8AlstiD9U12q02v4ric=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KPraCaE/CecDdqKhPY9VXh4ikis8rDpq9dC1qx82eoWcK4coxGF3CGLgMbTBx1yY/KfYw/O0s4dvgFL2jEe015kc793xvJq8avDfF+Tqez2qoSdfRpXhHleoh3YwgzL66e+NrIiV2QmqEnAb6t9p1m26H3sq2tZOdDS0AovHUi0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ob+8kyUC; arc=fail smtp.client-ip=52.101.48.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="h3uUuO6P"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 628MsJjq1613004;
-	Mon, 9 Mar 2026 11:05:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=rpIXdQ6m8izsaZzFlwX9FzwEH7Tcoi
-	a9WGkEgx1Zq74=; b=h3uUuO6PZc1Lc3NBXDEXwrVDHx50Tu+cMkcIiR+4gBzdVN
-	tKcI0EyLTscM1pj9uTMooR4CGrh3IhJPt5YtWcKLcT7mQIZEFkk9uSvFjxkXARqS
-	RjbdUEOT3SC+PnEST03T8KGcRjUgbsQYQVox+sVyuqtRaCh5REosiDQ9r1CVGhBo
-	WHY0E2URPQB0bFcdAaeI44Sk0ivDO10iZEdmnSfY2N0D5TvnmaTxGmHGryL0KHni
-	c7FNwkCPSeVyLNfMmhtxLl6Mur+B6H4Cy7mXfn4WH6LiNmkg1/GJTLyEeYXs6wSf
-	655w2P18Zcf2IB6mWfTTHHjwVCBhsFtec9t72BFQ==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcvr60k5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Mar 2026 11:05:18 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 629AhIu7024649;
-	Mon, 9 Mar 2026 11:05:18 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cs0jjvfp9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Mar 2026 11:05:17 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 629B5ETa31392438
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 9 Mar 2026 11:05:14 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 29DF42004D;
-	Mon,  9 Mar 2026 11:05:14 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0468220040;
-	Mon,  9 Mar 2026 11:05:12 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.109.207.131])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon,  9 Mar 2026 11:05:11 +0000 (GMT)
-Date: Mon, 9 Mar 2026 16:35:09 +0530
-From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-To: Viktor Malik <vmalik@redhat.com>
-Cc: linuxppc-dev@lists.ozlabs.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Joe Perches <joe@perches.com>, Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        atrajeev@linux.ibm.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] powerpc, perf: Check that current->mm is alive before
- getting user callchain
-Message-ID: <aa6pZaDySMl9JGKf@linux.ibm.com>
-References: <20260227082502.1882395-1-vmalik@redhat.com>
- <aab3EW1LfDcjSzzy@linux.ibm.com>
- <80766050-c745-411b-8ee6-8141d2cfe4ff@redhat.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ob+8kyUC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cL46FF/0gpVCfJ55t7w1GecA296g10Q8whx1Na2Y81tDFy69M2c3NgMd9dYwpkxYoZMrGEP3ib673lSoEICBhPfqhnYw8YJPNqce5sUtdLfhnKAXvrx0RkF1+VAyWRFEeL3aXh76qMKSvwL8vEkpT5I7WeiQdnI9UHjDJlvrOHOgaxJLtuqD+aikQpC1uu5/IFXWtPIHzm9NZTCXa3vcfxeWYkNgDT69NAeh/kM5m5MBaatOo8rOkFOOkp4X5bWQFX/nLpfawWHBU1O30dMvbKHzaX2CyAaqKvApDpCh1rebSIwO1gXaOPDFA390edP9GDME5yOzZ/26uIxIBxTO0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=knXUT0gJUKEIQhq6hAQGcJ1Q8AlstiD9U12q02v4ric=;
+ b=J+YgoNeFyTWNOQ1Ybyz+wX9T944iBa2DsFh/MNpVG5FHzjq+OtY7Q7oY5DX/QuzFgh4TjudlRmm63jaQEcbZF3xNo3O6PPln7Xq07qcEl0za+K+MdBevDf5WvcxN1t/CMsdMbrkZKTBB1ZflhwLU4GUdSTHLL5ZcY/yRelM9gzUbmwqia0QbteQk8Dcm9eyGVbrJuegqtX6HmdcgQDa8lLdexcPJEjU2LLCQtDaoJn6k+6tJVkXUgLc9udY9NuRVyT9U9mWCrvHS/9HGpbIRAupHVmxioLZqyZYMyp0XTBVuJeUflTbifFpADZ/XdZKKmNmsGwMNnYFgJBsXIWeTJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=knXUT0gJUKEIQhq6hAQGcJ1Q8AlstiD9U12q02v4ric=;
+ b=Ob+8kyUCyxP2za/mjR5QHfV8HEePPnRjpkMw1Pg2/gT8m0oxK9sYXl1qaUcg0XY1l1weEnCGAHY9rHJ3G5hvwYJjaHKdLlBpPI7gVt2YGsgbxK1az8SPhWBcpJJPSNNIK1Dnj0JOma5ttg0kWqhfsSyVqV+q8F1CMntqMZNuAuk=
+Received: from CH2PR18CA0037.namprd18.prod.outlook.com (2603:10b6:610:55::17)
+ by LV8PR12MB9619.namprd12.prod.outlook.com (2603:10b6:408:2a1::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.7; Mon, 9 Mar
+ 2026 11:40:13 +0000
+Received: from CH1PEPF0000AD7A.namprd04.prod.outlook.com
+ (2603:10b6:610:55:cafe::b2) by CH2PR18CA0037.outlook.office365.com
+ (2603:10b6:610:55::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.25 via Frontend
+ Transport; Mon, 9 Mar 2026 11:40:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ CH1PEPF0000AD7A.mail.protection.outlook.com (10.167.244.59) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9678.18 via Frontend Transport; Mon, 9 Mar 2026 11:40:12 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 9 Mar
+ 2026 06:40:12 -0500
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 9 Mar
+ 2026 06:40:12 -0500
+Received: from [172.31.177.127] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Mon, 9 Mar 2026 06:40:07 -0500
+Message-ID: <9145b8b7-fb83-49c4-aa17-acdba069359a@amd.com>
+Date: Mon, 9 Mar 2026 17:10:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80766050-c745-411b-8ee6-8141d2cfe4ff@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA5MDEwMSBTYWx0ZWRfX9HRC0qNVEgfA
- bEUmuSVOi2BbDiiAWkeFZqtOIGjJvAHnAS9W6rAYwvm4QuLtM1zDIloqKxQHJLOBgu/saq1mIGM
- UfimMFy+EUqJ8bbqnX3zqm+hO/ftuXcyGQMHblLzKPSmZ00cFII1AWOVFZ0GgYJS14haQmAJLbN
- Z+T2SA+y4n87dnlBlEfKN1ArGrKavhOEPTkSEVq/FVn3bPkrU2kzplYNl4nTvh3vyOoQ+TzlPCL
- cB7Yol4zrQoUNSdD98rQFyDqP+L1vlucQ00RThHW5W+zGqhFe6Nyc4XtX/6QYNRkdFEMjDyWgGU
- brHURKwbga1dMbGOSQ7cOXtp7/y8ZU2stagjaPIzC32w1Y6qfeNYYlNga9WibYchAbr2ORm5p6Q
- hfuXsRQp/peJxAQFa0XfG6ll3QTnnGDDj8cXL22BJZSFDv3v5MkOAipgTPiLbO2KkpSO3cFtDjL
- Qx5tafzTDiq3w+9yCDg==
-X-Proofpoint-GUID: zOXVtuDP8n-88aBUmjAnr0rW02vS92rk
-X-Proofpoint-ORIG-GUID: ZHV80IJLcR6lIXaRXdAQ93ARIpmM0gGZ
-X-Authority-Analysis: v=2.4 cv=QoFTHFyd c=1 sm=1 tr=0 ts=69aea96f cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=kj9zAlcOel0A:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8
- a=20KFwNOVAAAA:8 a=eEc1wmYC7BjqnX_VJ48A:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-09_03,2026-03-06_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 adultscore=0 clxscore=1015 malwarescore=0 suspectscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2602130000
- definitions=main-2603090101
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] perf/amd/ibs: Avoid calling perf_allow_kernel()
+ from the IBS NMI handler
+To: Michael Petlan <mpetlan@redhat.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Dapeng Mi
+	<dapeng1.mi@linux.intel.com>, James Clark <james.clark@linaro.org>, Sadasivan
+ Shaiju <sadasivan.shaiju2@amd.com>, <x86@kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Manali
+ Shukla" <manali.shukla@amd.com>, Santosh Shukla <santosh.shukla@amd.com>,
+	Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20260216042216.1440-1-ravi.bangoria@amd.com>
+ <20260216042216.1440-5-ravi.bangoria@amd.com>
+ <81204aa7-9d81-8d53-b82b-6c4ad8c89c2@redhat.com>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <81204aa7-9d81-8d53-b82b-6c4ad8c89c2@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7A:EE_|LV8PR12MB9619:EE_
+X-MS-Office365-Filtering-Correlation-Id: b4ab8452-ca55-413f-daf9-08de7dd0a05c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	UIwNzSpUl/F3VT9gi80bxwVObtuu6rz8Y9m6MkG8o1POALfLKNru/R5HC691y7fq5VwV4KuA6i5iBJ+4000/IYaTfl65uxVNJ6h9B+Tppse9C4a1bRsLmdzagj+Llr/d4/Ee099XWD/DKf3tOcXmo6trkULLdG2gRW942Pj07WeyX+CjvU77ClzlGvIx0mEA03MXg3QsyN7caDoBw9z1efxfJ0aPn8zIls8GYjgG8sebDd7t8p340Hp/w5ESeDNMAX4UBBnnv0OFhFNk3I4wCW0ZCUDY63Yi9pZYwkStCKVzA9gbs7aA3wG9JCApq8Cp4J9M6Yzd6n7+Yd9vR4LeiDih7QfQcWRJiI2GNT2mvTnqgHCQzUrbZneWah5WHxoODubNIFFP6w71J98qugyZg1oMPl3ze7FQJyy+Bn8miBVJvEZNYT1A/J8cseWf4JFM6XZniUlg0YjKrX5saNX/hRLJ7ocKaCQiJVZa30bKiyB4CW9UkH0/Wz+aFESbFL1HbtSrbnWoUTxugmcEeVhoAu/HkCm6LltfW1vlTrE2VOVs7+Tj+HNZITebBwpaEfljW/jOXKWHBFpQXT0TIRIPjdHnSHOwS6Gp3II3KRPFUxjPFE8aUYcUIOcdTJJgA77BIbrTI84TECBL7f2QO6AamexmyTZGaWUbMATzqgcJLTFI7O4BHdghbzy5h3bY5QSV8fEWJwRHNx1/Hga65huBV8284VfyPkoKeuyPKdyXqu6ot4RdEb90FSoEp2EZdN0zOTy4LYm7JGHPszY5a+L0Ow==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	tDCDOjVI1LDH42b1GMvPoIurO1ExUde1dWmoNIoV2tbdWYjaZXCy8wWcSCjh1zEFVV45gEdkj4zUCxWO0c58oSjZ33+wl+G2f2ABzERSCGThteVvrBY027UdZK7NIsxI6tCyGEbP+7OJPSS0Ibyjjqd4v9PEQnenB3PGRLLaVN5fLZAr6EE5mz+JGvnRE9wO59xMXrleh9TxfDDvY3qmY3qLZdjqJZUM7SA1LnQIdx7DkX+lkCZVf/kf9EZmVvBemmV3kOR5vD3q8zuFnImMoER9djBuhDf1It9RMaooHLsz0Iuy9SBicsBCDX2bsHldZugvwY+dr4PAeGKj+KdMTb7HmFPb319ULV5EoJawSa1wQQs2VGLwJ5VHglNaLGdQdO4OxoQMCuf6md5F2hQDM8JeKvDNRQHPLOAhoNjw1aBYHTTySg+oaViQtqZ+ZIz/
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2026 11:40:12.9982
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4ab8452-ca55-413f-daf9-08de7dd0a05c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD7A.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9619
 
-On Thu, Mar 05, 2026 at 01:45:44PM +0100, Viktor Malik wrote:
-> On 3/3/26 15:58, Saket Kumar Bhaskar wrote:
-> > On Fri, Feb 27, 2026 at 09:25:02AM +0100, Viktor Malik wrote:
-> >> It may happen that mm is already released, which leads to kernel panic.
-> >> This adds the NULL check for current->mm, similarly to 20afc60f892d
-> >> ("x86, perf: Check that current->mm is alive before getting user
-> >> callchain").
-> >>
-> >> I was getting this panic when running a profiling BPF program
-> >> (profile.py from bcc-tools):
-> >>
-> >>     [26215.051935] Kernel attempted to read user page (588) - exploit attempt? (uid: 0)
-> >>     [26215.051950] BUG: Kernel NULL pointer dereference on read at 0x00000588
-> >>     [26215.051952] Faulting instruction address: 0xc00000000020fac0
-> >>     [26215.051957] Oops: Kernel access of bad area, sig: 11 [#1]
-> >>     [...]
-> >>     [26215.052049] Call Trace:
-> >>     [26215.052050] [c000000061da6d30] [c00000000020fc10] perf_callchain_user_64+0x2d0/0x490 (unreliable)
-> >>     [26215.052054] [c000000061da6dc0] [c00000000020f92c] perf_callchain_user+0x1c/0x30
-> >>     [26215.052057] [c000000061da6de0] [c0000000005ab2a0] get_perf_callchain+0x100/0x360
-> >>     [26215.052063] [c000000061da6e70] [c000000000573bc8] bpf_get_stackid+0x88/0xf0
-> >>     [26215.052067] [c000000061da6ea0] [c008000000042258] bpf_prog_16d4ab9ab662f669_do_perf_event+0xf8/0x274
-> >>     [...]
-> >>
-> >> Fixes: 20002ded4d93 ("perf_counter: powerpc: Add callchain support")
-> >> Signed-off-by: Viktor Malik <vmalik@redhat.com>
-> >> ---
-> >>  arch/powerpc/perf/callchain_32.c | 3 +++
-> >>  arch/powerpc/perf/callchain_64.c | 3 +++
-> >>  2 files changed, 6 insertions(+)
-> >>
-> >> diff --git a/arch/powerpc/perf/callchain_32.c b/arch/powerpc/perf/callchain_32.c
-> >> index ddcc2d8aa64a..b46e21679566 100644
-> >> --- a/arch/powerpc/perf/callchain_32.c
-> >> +++ b/arch/powerpc/perf/callchain_32.c
-> >> @@ -144,6 +144,9 @@ void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
-> >>  	sp = regs->gpr[1];
-> >>  	perf_callchain_store(entry, next_ip);
-> >>  
-> >> +	if (!current->mm)
-> >> +		return;
-> >> +
-> >>  	while (entry->nr < entry->max_stack) {
-> >>  		fp = (unsigned int __user *) (unsigned long) sp;
-> >>  		if (invalid_user_sp(sp) || read_user_stack_32(fp, &next_sp))
-> >> diff --git a/arch/powerpc/perf/callchain_64.c b/arch/powerpc/perf/callchain_64.c
-> >> index 115d1c105e8a..eaaadd6fa81b 100644
-> >> --- a/arch/powerpc/perf/callchain_64.c
-> >> +++ b/arch/powerpc/perf/callchain_64.c
-> >> @@ -79,6 +79,9 @@ void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-> >>  	sp = regs->gpr[1];
-> >>  	perf_callchain_store(entry, next_ip);
-> >>  
-> >> +	if (!current->mm)
-> >> +		return;
-> >> +
-> >>  	while (entry->nr < entry->max_stack) {
-> >>  		fp = (unsigned long __user *) sp;
-> >>  		if (invalid_user_sp(sp) || read_user_stack_64(fp, &next_sp))
-> >> -- 
-> >> 2.53.0
-> >>
-> > Sorry, I missed adding cc list for the last conversation so adding this for reference:
-> > 
-> >> Wouldn't be good if we check this in perf_callchain_user() as it will
-> >> cover both cases.
-> > 
-> > to which Viktor replied:
-> > I considered it but in that case, we'd also miss the top-level stack
-> > frame (the perf_callchain_store call above). Other arches include it so
-> > I followed the behavior for powerpc.
-> > 
-> > Viktor, agreed with your first point. I have another concern:
-> > 
-> > I was hitting this issue with stacktrace_build_id_nmi in bpf and
-> > applied this patch https://lore.kernel.org/bpf/20260126074331.815684-1-chen.dylane@linux.dev/T/#mf901967ebe77506f1bd6e3d876c2a85824d9519d
-> > 
-> > Wondering if the above generic fix is working do we need to add this
-> > check in powerpc specific code?
-> 
-> I tried to apply that patch series but, unfortunately, keep getting the
-> panic when running the BCC profile tool.
-> 
-> Also, looking at the patch, it seems that it would only solve the issue
-> when perf_callchain_user is called from a BPF context, however, I assume
-> that it may be called from other contexts, too.
-> 
-> Since perf_callchain_user_{32,64} are dereferencing current->mm while
-> walking the stack, I think that an explicit protection against
-> current->mm being NULL makes sense here, even in the presence of the
-> above patch. Especially since other arches have it, too.
-> 
-> Viktor
-> 
-Ok that looks convincing then, another thing is that, how about moving perf_callchain_store
-to perf_callchain_user and checking current->mm == NULL there for both perf_callchain_user_32/64.
-next_ip, lr and sp can be passed to perf_callchain_user_32/64.
+Hi Michael,
+
+> By evaluating the privileges at the event-init moment and using cached
+> value later, couldn't it lead to the cached value being obsolete at
+> some point? E.g. a setuid program later dropping the privileges but
+> still being able to read physical addresses?
+
+Yes, but wouldn't the same concern apply to all other call sites of
+perf_allow_kernel() ?
 
 Thanks,
-Saket
+Ravi
