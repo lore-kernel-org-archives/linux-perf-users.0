@@ -1,294 +1,193 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBD536655A
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 23:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECF83264C6
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 23:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773099468; cv=pass; b=r/xW7ydt/TrNXFqo7PWNZyHyVjDQAFcPpRU51wgoccj7C6xR2TIZIabBAGgVF6s8E4vNrSOpf1djMrhCPZFtJM0p3ewp/WF/gx9RpjoBr2Pfs875auY6T6WC/Q+r4DdINKa/NOp4ugD4AzHWOk+x5SiMEt9RCHyi66r7/YIf3wc=
+	t=1773100615; cv=pass; b=KZwRFR8xmyHB5RKg2DVsEReXmHUA5bx0z3S4Ri8c3jHy2snn5gdy79KDN7M6hqErcOO6KPfm8LGu7TriEfwV46m+eQM4E5g2BmTnx5fWfQiWpT0iCYKQWxFxh31jJ/vqoGxQ6Xqs/SXmy7emFfbPvFEXAF0wRb5jZ4KOfQFOYv4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773099468; c=relaxed/simple;
-	bh=SXrW8pzMM80n3NBlZnw3c8N70cM3xASBRUQOi8HUUc8=;
+	s=arc-20240116; t=1773100615; c=relaxed/simple;
+	bh=rCkqlmOoX493PcNokTYXqB/RoubSartBr89jYzTEuJI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LQi5VK1gt9JgFrC3ytGOz34pmwbecnaYi5ImBTWDtXFs0XkG+Qk2T0IujD+gkuhY+iFgh95OKghyD5G/tbNh3ZbCcnomaL1o1Gu6xVP+xi6CY/+N0lPpl2Yftwm0grsKrOkwyNtcwvhVXerroKncMPf1M1G1voVoxPMv11cKxpM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m6crVE1+; arc=pass smtp.client-ip=209.85.214.170
+	 To:Cc:Content-Type; b=fthopyhktbr5MJ+9YMig1LeGZUutJ4XkOUh6pESRnOymIY1Umgsv+umvqkrxFxvZD+aFw0zF6V3nJbCWcUrJJqnN2vRberj/6j+MxKqr4N3Xd3io7cyK71cW4Zhv+WoNLX5D1gxgSZPEhMiGoFqzTJ30xAQxR5c6yNleqAdYEDo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BjsQO3Y5; arc=pass smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m6crVE1+"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2ae3f822163so37175ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 16:37:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773099466; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BjsQO3Y5"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2ae3f822163so38065ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 16:56:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773100614; cv=none;
         d=google.com; s=arc-20240605;
-        b=F6R9q/6p5/zZAj1Wf40DRAD4OALxeHzRDk0oBqFMqY41P2avqzOBaQmQBdeYCaQwZa
-         MoBwgaVUql6Au4GXgSXaXTyp2rAkauzcKrd4xWM7saPXlcrZ/I0QLuuHPYJhs717x9ra
-         a1fm2EcGU16z3hyZjg2X9R0emt07pchhGD92YJ89BJuMH4q+woRShoU9xmX9+w2d4WuL
-         D7Px+l0Ptl2X8Ut2DMBHZBpZzWy13tgsksq//FueyX4wKKVUM+2RvbALXoEA8vTaHZHk
-         wYHbmz8GPPHQkBCtIjbOfYgrOGiYLVoMWZo66skofU+AbZenBXbIQGeA0LAWaXkF42Hy
-         IP2g==
+        b=Y9f/mhFxOwV+qTbKbsxvXmJB0cJNJ9N1RpZHHRRPM7oExlYM0NhNJyZr2+0+u/nIg8
+         aTUkaEfSjS3763RYpKW1qF2qMcCnpithihCWcIc0ZgDXrzTu5fZpAzE4eCueweOnXM5J
+         zAI7/cciK4XgXVqqdQqYK0G7dk0sSXmCK7OTdlKj95+2MTjLpkw0kToMSZ2C27ojYUFL
+         rda53iB6700I0PjfmvkYXIuGd5fYsxSalwCLCnI45lJG6vUWOojFmmGv7O9d//b+EyR0
+         FXA+JISIz83/LvY/2YLQKCftbjg+PspFpuUe2oJcaUdNRV6Pm+ZYreDNAwGW0vfcaW8N
+         na8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=X9FuYZtseXZj9s2BtuBpTmFTulfhnD70/PZNneQF7vA=;
-        fh=PHQ2SJU6ZcRYYc4PxYhjieUx0pSNPmjhyyX5AyOLM8Q=;
-        b=NsR9LBYYSGHyGI+f0gp2VrpdSybmltnremEUUm4nxqWGoGwQl60ulp2NdXyRQYIFgO
-         6yY2WZqOlR3ARFGsk81/Rx/1kx7jPD083ggkBI7PX6WALAJXcnFyRX05HSIu9RENuuyt
-         Jk60tU2krF+6jdv5DdpKUia1/q/IKzCodsQ0C6sNK/izzd7ZCiyJaCH2S4IN/DcDJqw5
-         sbdlwC9KpK1d3jpjnV6JStosm52I4+lmMi+8442/MOrK+9hv6knxo+m3HZCet5uqjcc+
-         SFGCNafWL7trxPjEyZg2xD03hI2YnYrXHBacSDXH44dDnoeqy2+cqNC59q3dBPbv9/zV
-         NQgg==;
+        bh=v6T7JtNle+obQbNoh/527NQd5aVpDuOky67lKQ0q6CI=;
+        fh=G09kBGkRqBkd+MMn1ScgH8KnCk5gtzklJ/r0ZMLln0w=;
+        b=d4aYWOXG4oPzLY1pmgny4g9rSCvRarFNIUd5YS/2GBxt5N9ZMfmVQwwpzRfByUbJEM
+         Hf0Int94iUDRfSsdwzYxFs1/tnlnsfZ34NsbKLaFY65Nl7/Gge4HAtrKyfBPnQdYyJNT
+         mLOUxQJflygN//E9I2XPwqCQ/CQOH0MIxfgZYJ/kcmAF2CGQJEF0zRPgHf5RdrEWNqPH
+         SYZu/IRfuMGDY6vguN6/0ZOpZHyyW0TR5oLCv6YNr1SYIl7+Y464TvZD+xRhQR8Ibt6S
+         f7U3rnn3cPfBmPArKzF5BTpVwHQ6wKCfOZBrWgJbX0vzvx8y2kthY7xPoKYToO5uU4wY
+         FuTQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773099466; x=1773704266; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1773100614; x=1773705414; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=X9FuYZtseXZj9s2BtuBpTmFTulfhnD70/PZNneQF7vA=;
-        b=m6crVE1+KxqQDRf7TTXEpoYlK7xThyWFU2HEnvDz/8z0SeZTWezwwtMaWcpQgDMJ9V
-         buk8AXSyQIPx/qLm44yUebXJT6/kdJFSrFnNiMC8YAYFK9+JnqCRPjakqS/GUzE/bToL
-         Ll++dfIv44yeqwWPu5qjPmmpFNFi2Gz163Md55piV9L4pKO0sA7gqXyWQ55yyj3+dRNi
-         +NP9EfMXwf17Q9pL3YyqT58qIvSv5678JgTLF3xz+viLP0Fm5kkXvx9LV90dUOpSXixr
-         i7YpAf2dcM0VmE3IV2n/F3dOeFYhtGZwa9HC7BcvDhBcc4LBwzwhaBy8UBrixGgh4Rse
-         dP5g==
+        bh=v6T7JtNle+obQbNoh/527NQd5aVpDuOky67lKQ0q6CI=;
+        b=BjsQO3Y58YlhiO0a9LUpMcu+uihVAQM9pSDl3rmq68rqyfEzNDThhl6nxk/V+X7Xde
+         PpWyMgo82hx2htmOI8f9YX8Suu4kb0j4lYQ+KiHftyrGGaBfLZTfs0YEwF2x6XPgpkqQ
+         JAo/h4mVgSGP/a/NHQpKREv7kLYTVRP44uBiBFiHviXZEjt77AxfJ8pt5CXaJ3xJOziY
+         v2D6Dd7HC4xNvgD9Lx+4Ogjj73UsUvcssAZp5cKtRokI3czjsJsFK9nYdbA/H+tYzTbC
+         ZlPLkDHyjCLUk5A/K0ukr+Mnuy4gnGt6mAOuM3z+NsRRbi2mvu4BJw2h8C8ZTWjzuCDO
+         9cXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773099466; x=1773704266;
+        d=1e100.net; s=20230601; t=1773100614; x=1773705414;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=X9FuYZtseXZj9s2BtuBpTmFTulfhnD70/PZNneQF7vA=;
-        b=eqRGLEp6l+kbHgLtU4qI6BPInBctd6gB0IduTEUg8+D3MCmA+mpXr/VKnkzihRC6Vs
-         4/WX8tBNLjRc9rjUrWQxPpr2Qi/aU++kmUwrlr8A+24EJCXo/3cJu5AvnLiYsIX2S7GR
-         chGWfQJfOdOBReTO3ZjK+XX7gNcMx5J34HG7/Q5ImNbGxNw9an47hqnF1mT+tn3j1XJQ
-         Qz2bdXVxJ43I9I7gq5CarXgzk6HxRpn3Vps9lAUmzurEKs7mNl4tjhCsJMwPyfdjl+Fl
-         3PNUakv3wuN5rpM5rnIpIxXnzE9ktvw/LZ6h7ntI0I2QPr19ilTIhCz51UctWSUWAcNW
-         YHPg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+1eiTUvIt7Sxs2Jr+qIQ7/eorLVlzAiAEusZMpyGJlZjrfyqoNFcTdyK5g73WV7c3xGxvvE/dxfTwh3PjGzyK@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLY2zTri11iDbAz3dR2rq27X2+7/+WdbZyCjJDbMRzRAaDMs8K
-	Dn4M9HGE4b85td8YQ6Pov3yZ7ZfTtwtxlkH020bCyRX7+CMEmHykAzFA689I/ybl6Y0TT166X/r
-	vwFue9zdIG142Q926ae18SwU9gJedKt+x/lmOkqLF
-X-Gm-Gg: ATEYQzwgVXXWLjotFoljVhqkNM+coAZoNxNba2SgpYPpY24TaFXb5cV2OZQEX5bX/ms
-	Mvvs+7PrlLic3fozVrLq0UuA+OalLf1IZtTuLhbh9BdM4dFc2NtnIue8I5bgQMXnd0Indt0IyKJ
-	Or/OBTRCKu71qqvcLtBJidhO6UODd1lRh3yfT+anPFYWJxBtvTrP/woBDRrIJjQP1o5d1O7poam
-	QB75x6dWXvQl6Hqp1QvuyC3aX7wWrYVhjZ3y0ubv8DzDVR9zLmQleLxlfyHQF3tEH2wkOVy5E+u
-	qI9WovIKj6nDi1dlifgI2OX5JJE1iYku8W4=
-X-Received: by 2002:a17:903:19ce:b0:2aa:d604:62f3 with SMTP id
- d9443c01a7336-2aea3025c94mr1289245ad.10.1773099465895; Mon, 09 Mar 2026
- 16:37:45 -0700 (PDT)
+        bh=v6T7JtNle+obQbNoh/527NQd5aVpDuOky67lKQ0q6CI=;
+        b=YjxZEZsffMq7OsaWAC1KcR+ibyrpC8OMK62PsyhOzOfkAHqnjoCR/QRZqshQ/1SR6I
+         CS+JRJeewJWhmFIUs9FdFOzUdqS/YL3lY8Z5s283MswsZBvexX+/Ib5JqUI6hIQBlGdk
+         0vTeDzZ60bX7ms0siBEiyCBkiocMd7uVJyrHEYLgXMx2gHswS8Aaj6pSZwFymL0yQNgV
+         9pbP1sxzhgsWSRU0uoDn01LNdR7orsXayookFPTkAwfw8sKx3nad9bkNCOR8oGowT8MK
+         +gDykk2OxSKE7/hyz85y5Rbf3uVU6GGhFOFEAA+W7oXR/rlXfMxumRqtvb1uhfxTRwxo
+         lo2w==
+X-Forwarded-Encrypted: i=1; AJvYcCV+jpkU6PbFBE++UrBNznp8bm9BHyKw7AMkL0Vw6SOsnP650t3nMuRGEyVApwl0JbBUbnRpmLVLGESPfHtFzA3n@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0wIMfoUl+A8EMdEMAa/jXnGIs2HGsveBgBANnm2J3cb6k1YrM
+	TdbzR5CSZk0A8yBdfZToTcdCT+kO99Eh1cvUDCoqYAHPhjfs9Wc38Zrnj08ob7R/5wU7lJmU4jp
+	jBtmfjih4hMLOGTjU5u9sPZ2qNsqLyVcPwWKIvGy+
+X-Gm-Gg: ATEYQzwzbYFhTjoHjNA6Bz0QIDUXgm226qPGu5JOGP99R9483PzhSfOuQ0DI4yTSPMr
+	Xu+1OF3sY2yTfF7PTuI+Ok3lLXTcoRScygInexAQqZtLJpW+Ter+pSudmk4MDEexbyuoH7NiEn5
+	ISFxz5WD7xOvQ8RG8ZB6U4rz9HKBQO5QbsYmT2mwTl9ISi0lVt0Knpf1qYA+54Nik54Sy/NFMYy
+	jMFHyzL7X2nw2o3fpIHlsKsCqOXdDPJYNscym6FxRx+teR32qC8IFmAJnjCJlbKergiT8DIBJk+
+	uMcdw+3l76kcvVHsNt1xp0bb6IjzU+5T7+Y=
+X-Received: by 2002:a17:902:cec2:b0:2ad:6f9b:7818 with SMTP id
+ d9443c01a7336-2aea459afe5mr794195ad.23.1773100613386; Mon, 09 Mar 2026
+ 16:56:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aS1x278mfIu6gIcd@gmail.com>
-In-Reply-To: <aS1x278mfIu6gIcd@gmail.com>
+References: <20260114011750.350569-1-dapeng1.mi@linux.intel.com> <20260114011750.350569-7-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260114011750.350569-7-dapeng1.mi@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Mar 2026 16:37:34 -0700
-X-Gm-Features: AaiRm5122r5-kl17iH-uIBLqDg-DH93eia8zrLvRx1j5vDwOf4im6YFA5vdeR_Y
-Message-ID: <CAP-5=fUtWC6bP6Jc1ZciAJ_+xarxzet55vpgCEVgrGs6CGfEww@mail.gmail.com>
-Subject: Re: [GIT PULL] Performance events changes for v6.19
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, 
-	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, 
-	linux-perf-users@vger.kernel.org
+Date: Mon, 9 Mar 2026 16:56:42 -0700
+X-Gm-Features: AaiRm53yCeqJhXsRyPH_nKTZd_QVKpTpHhgWJNLz2w3TzzU-V1yF-V4C_UROwDY
+Message-ID: <CAP-5=fVSbYX9qV7NOrfkH7GyFRBXjkfgc34sv8FkioPgY9xQ4Q@mail.gmail.com>
+Subject: Re: [Patch v3 6/7] perf/x86: Use macros to replace magic numbers in attr_rdpmc
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>, 
+	Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>, 
+	Xudong Hao <xudong.hao@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 1, 2025 at 2:47=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrote=
-:
+On Tue, Jan 13, 2026 at 5:22=E2=80=AFPM Dapeng Mi <dapeng1.mi@linux.intel.c=
+om> wrote:
 >
-> Linus,
+> Replace magic numbers in attr_rdpmc with macros to improve readability
+> and make their meanings clearer for users.
 >
-> Please pull the latest perf/core Git tree from:
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/events/core.c       | 7 ++++---
+>  arch/x86/events/intel/p6.c   | 2 +-
+>  arch/x86/events/perf_event.h | 7 +++++++
+>  3 files changed, 12 insertions(+), 4 deletions(-)
 >
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-20=
-25-12-01
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 0ecac9495d74..c2717cb5034f 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2163,7 +2163,8 @@ static int __init init_hw_perf_events(void)
 >
->    # HEAD: 9929dffce5ed7e2988e0274f4db98035508b16d9 perf/x86/intel: Fix a=
-nd clean up intel_pmu_drain_arch_pebs() type use
+>         pr_cont("%s PMU driver.\n", x86_pmu.name);
 >
-> Performance events changes for v6.19:
+> -       x86_pmu.attr_rdpmc =3D 1; /* enable userspace RDPMC usage by defa=
+ult */
+> +       /* enable userspace RDPMC usage by default */
+> +       x86_pmu.attr_rdpmc =3D X86_USER_RDPMC_CONDITIONAL_ENABLE;
 >
-> Callchain support:
->
->  - Add support for deferred user-space stack unwinding for
->    perf, enabled on x86. (Peter Zijlstra, Steven Rostedt)
->
->  - unwind_user/x86: Enable frame pointer unwinding on x86
->    (Josh Poimboeuf)
->
-> x86 PMU support and infrastructure:
->
->  - x86/insn: Simplify for_each_insn_prefix() (Peter Zijlstra)
->
->  - x86/insn,uprobes,alternative: Unify insn_is_nop()
->    (Peter Zijlstra)
->
-> Intel PMU driver:
->
->  - Large series to prepare for and implement architectural PEBS
->    support for Intel platforms such as Clearwater Forest (CWF)
->    and Panther Lake (PTL). (Dapeng Mi, Kan Liang)
->
->  - Check dynamic constraints (Kan Liang)
->
->  - Optimize PEBS extended config (Peter Zijlstra)
+>         for (quirk =3D x86_pmu.quirks; quirk; quirk =3D quirk->next)
+>                 quirk->func();
+> @@ -2643,12 +2644,12 @@ static ssize_t set_attr_rdpmc(struct device *cdev=
+,
+>                  */
+>                 if (val =3D=3D 0)
 
-I'm not seeing this patch on the mailing list, so I'm asking here. An
-AI review flagged this change and the condition it describes sounds
-unlikely but possible:
+nit: Could 0 here be X86_USER_RDPMC_NEVER_ENABLE to eliminate even
+more magic numbers?
 
-> @@ -8171,8 +8169,13 @@
->  if (!is_hybrid() && boot_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
->  update_pmu_cap(NULL);
+>                         static_branch_inc(&rdpmc_never_available_key);
+> -               else if (x86_pmu.attr_rdpmc =3D=3D 0)
+> +               else if (x86_pmu.attr_rdpmc =3D=3D X86_USER_RDPMC_NEVER_E=
+NABLE)
+>                         static_branch_dec(&rdpmc_never_available_key);
 >
-> - if (x86_pmu.arch_pebs)
-> + if (x86_pmu.arch_pebs) {
-> + static_call_update(intel_pmu_disable_event_ext,
-> +    intel_pmu_disable_event_ext);
-> + static_call_update(intel_pmu_enable_event_ext,
-> +    intel_pmu_enable_event_ext);
->  pr_cont("Architectural PEBS, ");
-> + }
->
->  intel_pmu_check_counters_mask(&x86_pmu.cntr_mask64,
->        &x86_pmu.fixed_cntr_mask64,
+>                 if (val =3D=3D 2)
 
-Does this code expose us to a #GP on hybrid platforms if the CPUID check
-fails? For hybrid processors, update_pmu_cap() is deferred to
-init_hybrid_pmu(), which runs after intel_pmu_init() sets up the static
-calls. If update_pmu_cap() encounters an inconsistent CPUID and clears
-x86_pmu.arch_pebs, the static calls remain patched. This will cause
-intel_pmu_enable_event_ext() to execute on precise events and access
-MSR_IA32_PEBS_INDEX, potentially crashing the kernel.
+Similarly could 2 be X86_USER_RDPMC_ALWAYS_ENABLE ?
 
 Thanks,
 Ian
 
->  - cstates: Remove PC3 support from LunarLake (Zhang Rui)
+>                         static_branch_inc(&rdpmc_always_available_key);
+> -               else if (x86_pmu.attr_rdpmc =3D=3D 2)
+> +               else if (x86_pmu.attr_rdpmc =3D=3D X86_USER_RDPMC_ALWAYS_=
+ENABLE)
+>                         static_branch_dec(&rdpmc_always_available_key);
 >
->  - cstates: Add Pantherlake support (Zhang Rui)
+>                 on_each_cpu(cr4_update_pce, NULL, 1);
+> diff --git a/arch/x86/events/intel/p6.c b/arch/x86/events/intel/p6.c
+> index 6e41de355bd8..fb991e0ac614 100644
+> --- a/arch/x86/events/intel/p6.c
+> +++ b/arch/x86/events/intel/p6.c
+> @@ -243,7 +243,7 @@ static __init void p6_pmu_rdpmc_quirk(void)
+>                  */
+>                 pr_warn("Userspace RDPMC support disabled due to a CPU er=
+ratum\n");
+>                 x86_pmu.attr_rdpmc_broken =3D 1;
+> -               x86_pmu.attr_rdpmc =3D 0;
+> +               x86_pmu.attr_rdpmc =3D X86_USER_RDPMC_NEVER_ENABLE;
+>         }
+>  }
 >
->  - cstates: Clearwater Forest support (Zide Chen)
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index f7caabc5d487..24a81d2916e9 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -187,6 +187,13 @@ struct amd_nb {
+>          (1ULL << PERF_REG_X86_R14)   | \
+>          (1ULL << PERF_REG_X86_R15))
 >
-> AMD PMU driver:
->
->  - x86/amd: Check event before enable to avoid GPF (George Kennedy)
->
-> Fixes and cleanups:
->
->  - task_work: Fix NMI race condition (Peter Zijlstra)
->
->  - perf/x86: Fix NULL event access and potential PEBS record loss
->    (Dapeng Mi)
->
->  - Misc other fixes and cleanups.
->    (Dapeng Mi, Ingo Molnar, Peter Zijlstra)
->
->  Thanks,
->
->         Ingo
->
-> ------------------>
-> Dapeng Mi (12):
->       perf/x86: Remove redundant is_x86_event() prototype
->       perf/x86: Fix NULL event access and potential PEBS record loss
->       perf/x86/intel: Replace x86_pmu.drain_pebs calling with static call
->       perf/x86/intel: Correct large PEBS flag check
->       perf/x86/intel: Initialize architectural PEBS
->       perf/x86/intel/ds: Factor out PEBS record processing code to functi=
-ons
->       perf/x86/intel/ds: Factor out PEBS group processing code to functio=
-ns
->       perf/x86/intel: Process arch-PEBS records or record fragments
->       perf/x86/intel: Allocate arch-PEBS buffer and initialize PEBS_BASE =
-MSR
->       perf/x86/intel: Update dyn_constraint base on PEBS event precise le=
-vel
->       perf/x86/intel: Setup PEBS data configuration and enable legacy gro=
-ups
->       perf/x86/intel: Add counter group support for arch-PEBS
->
-> George Kennedy (1):
->       perf/x86/amd: Check event before enable to avoid GPF
->
-> Ingo Molnar (1):
->       perf/x86/intel: Fix and clean up intel_pmu_drain_arch_pebs() type u=
-se
->
-> Josh Poimboeuf (1):
->       unwind_user/x86: Enable frame pointer unwinding on x86
->
-> Kan Liang (1):
->       perf/x86/intel: Add a check for dynamic constraints
->
-> Peter Zijlstra (19):
->       x86/insn,uprobes,alternative: Unify insn_is_nop()
->       x86/insn: Simplify for_each_insn_prefix()
->       task_work: Fix NMI race condition
->       unwind: Shorten lines
->       unwind: Add required include files
->       unwind: Simplify unwind_reset_info()
->       unwind: Add comment to unwind_deferred_task_exit()
->       unwind: Fix unwind_deferred_request() vs NMI
->       unwind: Clarify calling context
->       unwind: Simplify unwind_user_faultable()
->       unwind: Make unwind_task_info::unwind_mask consistent
->       unwind: Simplify unwind_user_next_fp() alignment check
->       unwind: Implement compat fp unwind
->       unwind_user/x86: Teach FP unwind about start of function
->       perf: Support deferred user unwind
->       unwind_user/x86: Fix arch=3Dum build
->       entry,unwind/deferred: Fix unwind_reset_info() placement
->       perf/x86/intel: Check PEBS dyn_constraints
->       perf/x86/intel: Optimize PEBS extended config
->
-> Zhang Rui (2):
->       perf/x86/intel/cstate: Remove PC3 support from LunarLake
->       perf/x86/intel/cstate: Add Pantherlake support
->
-> Zide Chen (1):
->       perf/x86/intel/cstate: Add Clearwater Forest support
->
->
->  arch/x86/Kconfig                         |   1 +
->  arch/x86/boot/compressed/sev-handle-vc.c |   3 +-
->  arch/x86/events/amd/core.c               |   7 +-
->  arch/x86/events/core.c                   |  66 +---
->  arch/x86/events/intel/core.c             | 444 +++++++++++++++++++++--
->  arch/x86/events/intel/cstate.c           |  18 +-
->  arch/x86/events/intel/ds.c               | 601 +++++++++++++++++++++++++=
-------
->  arch/x86/events/perf_event.h             |  41 ++-
->  arch/x86/include/asm/insn-eval.h         |   2 +
->  arch/x86/include/asm/insn.h              |   5 +-
->  arch/x86/include/asm/intel_ds.h          |  10 +-
->  arch/x86/include/asm/msr-index.h         |  20 +
->  arch/x86/include/asm/perf_event.h        | 116 +++++-
->  arch/x86/include/asm/unwind_user.h       |  41 +++
->  arch/x86/include/asm/uprobes.h           |   9 +
->  arch/x86/kernel/alternative.c            |  20 +-
->  arch/x86/kernel/kprobes/core.c           |   3 +-
->  arch/x86/kernel/uprobes.c                |  70 ++--
->  arch/x86/lib/insn-eval.c                 | 151 +++++++-
->  include/linux/irq-entry-common.h         |   2 +-
->  include/linux/perf_event.h               |   2 +-
->  include/linux/unwind_deferred.h          |  52 ++-
->  include/linux/unwind_deferred_types.h    |  18 +-
->  include/linux/unwind_user_types.h        |   2 +
->  include/uapi/linux/perf_event.h          |  21 +-
->  kernel/bpf/stackmap.c                    |   4 +-
->  kernel/events/callchain.c                |  14 +-
->  kernel/events/core.c                     |  78 +++-
->  kernel/exit.c                            |   7 +-
->  kernel/task_work.c                       |   8 +-
->  kernel/unwind/deferred.c                 |  44 ++-
->  kernel/unwind/user.c                     |  59 ++-
->  tools/arch/x86/include/asm/insn.h        |   5 +-
->  tools/include/uapi/linux/perf_event.h    |  21 +-
->  34 files changed, 1627 insertions(+), 338 deletions(-)
->  create mode 100644 arch/x86/include/asm/unwind_user.h
+> +/* user space rdpmc control values */
+> +enum {
+> +       X86_USER_RDPMC_NEVER_ENABLE             =3D 0,
+> +       X86_USER_RDPMC_CONDITIONAL_ENABLE       =3D 1,
+> +       X86_USER_RDPMC_ALWAYS_ENABLE            =3D 2,
+> +};
+> +
+>  /*
+>   * Per register state.
+>   */
+> --
+> 2.34.1
 >
