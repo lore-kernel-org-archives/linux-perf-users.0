@@ -1,187 +1,159 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867D130F7F2;
-	Mon,  9 Mar 2026 16:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773073853; cv=none; b=aA1Zz9S3X1B911pdknO0Sa3246KCgytoC6dvA6mCGeAhb6BWnQxczpIH/V5yyKKtlXsm23cUwnZhaN5RIMNYWtwNtNNIM9V/yxvprO55auLVwo3JlQ65BKeFgrbdVe5QX4nTlYbkFpMgVtLiNZlHkiVcwePWnoi9s/vg47tgVAw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773073853; c=relaxed/simple;
-	bh=/g/YyAmYCQXluFTU0N+NMwUrGYpeFYyauq6d0pk9dMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B0rS0tjZmcp3nQElbS0S0Yo9NlFgvXtMIc7QM/KG/QP7Ax3LusjQzhU166KTTlVxkQgPkeKeweePnCqpltZsi+YrgITNLqXUbV3AKqDsX6F0EKWDQx1cREP6WcJtg3obT2jcfkK5zobEYtsspjFjywfU4STxgwmBKD5MgLG4uUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MuKabqMb; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719AD3AEF22
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 16:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773074241; cv=pass; b=bTmuzW+EwxRyakM85XkUrw0e7w9iZeskWiEzPG+6U9GbBRqIazmCQTb4OANvN4GMkJqhKapHUBNW5+rKcMlxzVXPrwMDpahntcJMbQE7WrwPqMsickTa7nMz8c8mXKxPUmq/vQV/6peAfy6tG86ZmT4q05X3Vyo3Qc63KGU6Ed0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773074241; c=relaxed/simple;
+	bh=/xVvyD0Lqn/lAfbvI9yNkpJEV7R1uzy3kwW07nfLaKg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bS4Iqz9KV7kToS9RaD3rDRhG93U676uJYitW+ITHUXgPZeRjpf8R7Oy/iCAqhWwJbcMZdvBe0UpLfJ1b6Uia3yIXwwx991+llNP+kyF4ezyEGFZjlXvprscPQpOzfnpa8NztDkkscSm2STcXmmUPmQeuOaiAnoMjX521sqjvG3Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yr1LTfWL; arc=pass smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MuKabqMb"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 629F7tiO1275175;
-	Mon, 9 Mar 2026 16:29:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=u9Jv1xiXDQhoRB+qsZiT314gW/jnX6
-	o87tkiSY3Qjbw=; b=MuKabqMb+xg6/RZCHxRCXFEhM9L9ve9Xxh4PMw3nBl3eG0
-	F9ctw5HrR8mjlBWQYjxv6HhHolpryanLaJteXF35v/6fSu0bCIGpvNyFJOmaVrxx
-	ZmOCRYP4sZemqEYFRE0rulWPTV/DbxcY4EA2JGJdp3rmljszBf3GW4gAN4Zt/Q5z
-	K+z3U32Inmwo4q0ZMUXhIaP1BBEgWUUFpzaO7gLt2T/JCfIAn94mFwy9Iyo1Tad0
-	Cg3FQPMrqzBmvC2YgqjRylLfjYZdptzWavm/uuss9NEdgBRqixSNWLjYmLbiOcWP
-	VPfxlMBoJcwv2Sg/DPeDUA1+qF9eEvtJpxrYqKCQ==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcvr78cm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Mar 2026 16:29:56 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 629DNmZo021181;
-	Mon, 9 Mar 2026 16:29:55 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4crxbsnukt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Mar 2026 16:29:55 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 629GTsri56885708
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 9 Mar 2026 16:29:54 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 03D7520043;
-	Mon,  9 Mar 2026 16:29:54 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 44A8E20040;
-	Mon,  9 Mar 2026 16:29:51 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.124.216.7])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon,  9 Mar 2026 16:29:51 +0000 (GMT)
-Date: Mon, 9 Mar 2026 21:59:48 +0530
-From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-To: Viktor Malik <vmalik@redhat.com>
-Cc: linuxppc-dev@lists.ozlabs.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@ozlabs.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2] powerpc, perf: Check that current->mm is alive before
- getting user callchain
-Message-ID: <aa71fOBjQwvCFFNq@linux.ibm.com>
-References: <20260309144045.169427-1-vmalik@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yr1LTfWL"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2ae49120e97so1225ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 09:37:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773074240; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Rhcrmld5vM2A0vXRaAmqlPnGIKLh6m5XkWX4KofyXfW1XJlikexIRWACP8BGook6Hm
+         EozbObjXeqS/L7F7EE8AKOr4yX+9+3PTsVnqEzWJliO/9i7jeabQXa1KCCTBT5u1LxXo
+         T7jfVPiDav11F4EEN0Va0BTR9cBalo9q1mnVcte95WOnHoZZQDxeOepaMpDMBAMWgdy2
+         wfM6ix/7jVz445uqZ0C4zA/2kSl371VKuYs509x1y1VnRCQlx2YQfVOz+DU47hxHdioX
+         WjiCHOKjiRfQowJ7CeALvDUkc3spqQYEPWUTZ8/lnWMO0KjdLMrAepFmYXerRroXyzmp
+         00Qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=c8Tx6Ml8LCMcseT9tf2wyQ8mZ0fxne/KMVLw9eyT1gw=;
+        fh=AzFr3rUAjULrD5rdCYD7v6zaeDTqDvOUxfpcf48E44Y=;
+        b=NlHyejLtoLE35A/JwF454QPJ7mv8Bg9+nVNqFWdSDgOyKSK5NKY/WoLm2B2qJdUcU0
+         6q3KIzKIOaa4NDH56Ba+iEgEI1m2bCIHz9/hp0aNgakyofwkjGcn+NqE44xBboIqyqkO
+         mS4eHR3WozlqNzRF5c5tsXFzg7vTA0jSO/frltczVyWZsayWhrLf5JAu28SQryicK+9W
+         Gh8fFJCrmgNx0sLQhs5q9KxbKjjfuSAydO7g8xq+PJ2Df80NHasSBolHqIX4nbcafL+e
+         vY0BQ+3K9GrjwvCpjJqFesgBeG6tmCji/cFSiFt72P18lwspaHeKpLHrw3ulOH/8xdmI
+         QsMw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1773074240; x=1773679040; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c8Tx6Ml8LCMcseT9tf2wyQ8mZ0fxne/KMVLw9eyT1gw=;
+        b=Yr1LTfWLk6ccaQbsjiQW0i0d0CCRFWodupiTvfLJrDQM5BKKyC1JcPik9YZ3XNKs4x
+         w1dLJohfjorzxddlDE8D2IZ9PyYW+MQvvWgwq5CEusXSOSgBm7NPt6CcrmhxANc9qRP0
+         UMrToZX/bZWJwLyk237DVjkMX5MH5mvRiMb7IagBvFrsdyT7vpx9iBAQjFWYFRhuM1Ps
+         OtcnJS+643oP8xu0MHir/DO5fAoADSw8Gdbhx/Xo57CQmn3DQF4g8FmuQEruZcHPOEfB
+         xhrQfjeQAWAU3FbHiKi7VT06GdutY1T3BJFRgBWSOFR0MzUtqOupPCWekcGS/MbfS3zS
+         OXVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773074240; x=1773679040;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=c8Tx6Ml8LCMcseT9tf2wyQ8mZ0fxne/KMVLw9eyT1gw=;
+        b=gAcsp5+H1guuMHhXpEdbEnVgY34KSvbHXgyc/UMZB6h4NL5bwuarU3efU0rCFQ/06A
+         AeiGbRCBy3eGkY0pGkq5Z548uE8AFa/xIRJHjBIcgCvS7WVPcarkF1xzSIeMCp1mZlGW
+         CacxEoWZBnQyEmFahieMsOLrlE2LXDYF+KarQqAhMZkSle153y8TvYiRnfR70+69Sky3
+         j/OK+7e1jz9YX6X8LGqSEe0L9UKfAuzS2CfxXGLqsrMJwZ2y3mFx8/oeck0DQoMb6TOI
+         dGvpDmuiPSCNz8XegCmAjPTZfWQ/fGi7ZX63NV+uBTWER5GaYZ1J9LBApgHfVpvI4haP
+         /eEg==
+X-Forwarded-Encrypted: i=1; AJvYcCW5nwiFmpuamvh3g7nM1+dj2aLw1+c4Ng6w25uuO9+HYBD82QtnGPG/sfdsWtLi23FYvpr+XvLw0S1aqZ8oOzjB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtkrbOVM7zED0/HEphxzjVFd5oHzS6o1OeUvu16zUMUYcj8CKx
+	l4AlZ80k2nWqy+VicB0rUoiw2hPGFjavIa9QVkUbJWmoFimT8toUWc23ISXVyY0xuRNRO7L/QV5
+	09av3rQUbD63vf688nBzIafL74FauNFadd8OW0uFf
+X-Gm-Gg: ATEYQzy74/7iPboF4uw/ihdiT1pH1pLmUMl+johY+otri3M8EHIRNnFHghz6cff69T5
+	CnEGwt5xm9DkEYlH65TDxgmGFC/Uy9vn9iFheB0/XKP+rSwwAe406TmmJIkNgZVQwO1YWrQl3hj
+	Kv6XbC+2F1bmvMIKE/2bbw5jwOBg0Zodf942bwOsuVIjK2eBwK4QpqHUBLK3jaXUNxvDO3EGFBy
+	HKce4+g3w+olizXPRmjMfx9AdWhFhXh9v7ZU2Adg2DqWufLOT0mdK1lTNIuPoqnr9kS/ALNPKSV
+	F5PTxbLulY/9L2Ip9BaApwYrvxkYnAC1nI4=
+X-Received: by 2002:a17:902:cf4a:b0:2ae:4e8e:954e with SMTP id
+ d9443c01a7336-2ae8b99a09fmr3540605ad.5.1773074239351; Mon, 09 Mar 2026
+ 09:37:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260309144045.169427-1-vmalik@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA5MDE0NSBTYWx0ZWRfX+rjeGaeASbO2
- DRRCfL+CMorHO5ng1qGUas6J8JvgX5kk/akDTzG+WtfiXrtQPT337K5va/I6ATguS1jUcTGEzH+
- 1qUEdOzZBCz8pZoFVqPQE09RWTe9C2CD2iBQySe1f/IjXU2FOEs+WMIyxZ5I/CNi7OUokx7MGRr
- ftoeP5tRJ1019lbSHRewSQ4jQXpPBJ9y2fZTZMqX2q8ZAZGqYrg4vWJjO9nMmDe884OBye9//WK
- o7c46o3MbT2VP1NjQ6u82nEMXLKlug+vWoX2qsrw4QH5vXXLzL++Z4Yh0Gor5EnSb0cyyuR3kEK
- iID65YQcNw8QuqYtIheYBhSBj9GOXivDtq5XhN/2nJ+L2GmR/zX0j49Hz9JiTrOVXdcQpH9L+sn
- ylSAOQIfC+dyoUZxr2omBDe1CasazDS71d3fBzHIg1hgGZk03AG6po7boYLsp+IK1VRK5fu5VsS
- u/bMuNFLnc+gZ6v7+Lg==
-X-Proofpoint-GUID: AykpcraF3vgF-W4mHKIkLrlGlLQPY39P
-X-Proofpoint-ORIG-GUID: 7ljpo1MiTfY3ZH2wBCg09610OOHkGqxF
-X-Authority-Analysis: v=2.4 cv=QoFTHFyd c=1 sm=1 tr=0 ts=69aef585 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=kj9zAlcOel0A:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=20KFwNOVAAAA:8
- a=VnNF1IyMAAAA:8 a=e-EAHXkKvpEb-08ajsIA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-09_04,2026-03-09_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 adultscore=0 clxscore=1015 malwarescore=0 suspectscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2602130000
- definitions=main-2603090145
+References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com>
+ <20260308-tools_build_fix_zero_init-v3-24-6477808123b7@arm.com> <20260309114413.09e05127@gandalf.local.home>
+In-Reply-To: <20260309114413.09e05127@gandalf.local.home>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 9 Mar 2026 09:37:07 -0700
+X-Gm-Features: AaiRm51Y_hOVZDhnwqzBMfs_foRdCHZgFLdwNP1ZXf1eU_ewkridlTQIwkfdNsE
+Message-ID: <CAP-5=fU4JF6=aocKhgyZqyqm0NOKpAKEmruFj2mgBHfkqbN2yw@mail.gmail.com>
+Subject: Re: [PATCH v3 24/30] tools: tracing: Append extra cflags
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>, 
+	Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	William Breathitt Gray <wbg@kernel.org>, Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Kent Gibson <warthog618@gmail.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Robert Moore <robert.moore@intel.com>, 
+	Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>, 
+	Changwoo Min <changwoo@igalia.com>, Mark Brown <broonie@kernel.org>, 
+	Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
+	Benjamin Tissoires <bentiss@kernel.org>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 09, 2026 at 03:40:45PM +0100, Viktor Malik wrote:
-> It may happen that mm is already released, which leads to kernel panic.
-> This adds the NULL check for current->mm, similarly to 20afc60f892d
-> ("x86, perf: Check that current->mm is alive before getting user
-> callchain").
-> 
-> I was getting this panic when running a profiling BPF program
-> (profile.py from bcc-tools):
-> 
->     [26215.051935] Kernel attempted to read user page (588) - exploit attempt? (uid: 0)
->     [26215.051950] BUG: Kernel NULL pointer dereference on read at 0x00000588
->     [26215.051952] Faulting instruction address: 0xc00000000020fac0
->     [26215.051957] Oops: Kernel access of bad area, sig: 11 [#1]
->     [...]
->     [26215.052049] Call Trace:
->     [26215.052050] [c000000061da6d30] [c00000000020fc10] perf_callchain_user_64+0x2d0/0x490 (unreliable)
->     [26215.052054] [c000000061da6dc0] [c00000000020f92c] perf_callchain_user+0x1c/0x30
->     [26215.052057] [c000000061da6de0] [c0000000005ab2a0] get_perf_callchain+0x100/0x360
->     [26215.052063] [c000000061da6e70] [c000000000573bc8] bpf_get_stackid+0x88/0xf0
->     [26215.052067] [c000000061da6ea0] [c008000000042258] bpf_prog_16d4ab9ab662f669_do_perf_event+0xf8/0x274
->     [...]
-> 
-> In addition, move storing the top-level stack entry to generic
-> perf_callchain_user to make sure the top-evel entry is always captured,
-> even if current->mm is NULL.
-> 
-> Fixes: 20002ded4d93 ("perf_counter: powerpc: Add callchain support")
-> Signed-off-by: Viktor Malik <vmalik@redhat.com>
-> ---
-> Changes in v2:
-> - Move call to perf_callchain_store() for the top-level stack entry to
->   common perf_callchain_user (Saket)
-> 
->  arch/powerpc/perf/callchain.c    | 5 +++++
->  arch/powerpc/perf/callchain_32.c | 1 -
->  arch/powerpc/perf/callchain_64.c | 1 -
->  3 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-> index 26aa26482c9a..992cc5c98214 100644
-> --- a/arch/powerpc/perf/callchain.c
-> +++ b/arch/powerpc/perf/callchain.c
-> @@ -103,6 +103,11 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
->  void
->  perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
->  {
-> +	perf_callchain_store(entry, perf_arch_instruction_pointer(regs));
-> +
-> +	if (!current->mm)
-> +		return;
-> +
->  	if (!is_32bit_task())
->  		perf_callchain_user_64(entry, regs);
->  	else
-> diff --git a/arch/powerpc/perf/callchain_32.c b/arch/powerpc/perf/callchain_32.c
-> index ddcc2d8aa64a..0de21c5d272c 100644
-> --- a/arch/powerpc/perf/callchain_32.c
-> +++ b/arch/powerpc/perf/callchain_32.c
-> @@ -142,7 +142,6 @@ void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
->  	next_ip = perf_arch_instruction_pointer(regs);
->  	lr = regs->link;
->  	sp = regs->gpr[1];
-> -	perf_callchain_store(entry, next_ip);
->  
->  	while (entry->nr < entry->max_stack) {
->  		fp = (unsigned int __user *) (unsigned long) sp;
-> diff --git a/arch/powerpc/perf/callchain_64.c b/arch/powerpc/perf/callchain_64.c
-> index 115d1c105e8a..30fb61c5f0cb 100644
-> --- a/arch/powerpc/perf/callchain_64.c
-> +++ b/arch/powerpc/perf/callchain_64.c
-> @@ -77,7 +77,6 @@ void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
->  	next_ip = perf_arch_instruction_pointer(regs);
->  	lr = regs->link;
->  	sp = regs->gpr[1];
-> -	perf_callchain_store(entry, next_ip);
->  
->  	while (entry->nr < entry->max_stack) {
->  		fp = (unsigned long __user *) sp;
-> -- 
-> 2.53.0
-LGTM, feel free to add below tag:
-Reviewed-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-> 
+On Mon, Mar 9, 2026 at 8:44=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Sun, 08 Mar 2026 16:46:29 +0000
+> Leo Yan <leo.yan@arm.com> wrote:
+>
+> > Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied t=
+o
+> > the compiler.
+> >
+> > Signed-off-by: Leo Yan <leo.yan@arm.com>
+>
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Not a problem with the change but running this patch through an AI
+agent brought up:
+
+  Should CFLAGS be initialized with default optimization and warning flags
+  (e.g., -g -O2 -Wall)?
+
+  Currently, latency-collector is built without these standard compilation
+  flags because they are missing from the Makefile. In other commits in thi=
+s
+  series (like for libbpf and thermal), CFLAGS was explicitly initialized t=
+o
+ -g -O2 or -g -Wall when EXTRA_CFLAGS is not set.
+
+  Additionally, should EXTRA_WARNINGS (provided by
+  tools/scripts/Makefile.include) be appended to CFLAGS here, similar to
+  how it is done for other tools?
+
+Thanks,
+Ian
