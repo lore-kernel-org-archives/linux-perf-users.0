@@ -1,159 +1,176 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-yx1-f41.google.com (mail-yx1-f41.google.com [74.125.224.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C5E311967
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 17:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.179
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773078810; cv=pass; b=FIigoUc6ZW1qGeM3E8ua85RUoJg2uwGzdZMwGqtciASWK2Ga3tkskOs/AT8I7LW5k6YzAqSoxrdC4+HiQ6uyXN1cEd5nEOmLEYKC7HopU3Db3QllQCvI7osxn7YtlHcGdtGwBRjT4eMBvHzQuR1Xd45uJKt/NETS4Q2zmiwPmkY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773078810; c=relaxed/simple;
-	bh=SeWt//XSlE7FH97wAOv/MRdhXb4yjQFM3ji/K8xaQqU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tGY9yc9nqD/gR8lNqoY+aZq5z8xxSydjR7m/qyBlZ7CND7MflVNrMemcD1ebO9v52T5+JTAIcGlrYIagWXPMqmSb35MI3tvanah31G0cLjvw89x+A1CiP19oe6CpQp2m6QgxFm50T2oNmTSWf89OzUMeEST+klT/TRfMtPPfosk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y/fO9i+E; arc=pass smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0970D3EFD2D
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 17:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773078956; cv=none; b=RK5zG40gP2+YYbG1wuCMpLIjAcniXB5BX91NBkiSG2LCS0xQ3biAeFldLq+QEp/mM+H8AEcawlTjcqV3Rpn8Pecjsf3T/e9A71EXw0PBknZHSk5mqysxkibsQS7fT/cQ4QaPpB0I3gw0OaD/yhdGBlXRt30g46+LtqK7zMcKQVc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773078956; c=relaxed/simple;
+	bh=erA0vHZIXnreUGcKUqzendnVvXL5q2Sfskx4F/EgGxQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GuIpz7bnM/u6fhpJGAEfe2pWYKxv7mnuy3VRknY76XJhnlR8LEHnUP+hk1NKv3ABOa2YDge65s/9op7x239EkV+Ac8uRrTTTfwif62+Vw+gcI6ifIl/agWgKAeRvdnGECS+R0yJBa41sBDSsCvuWdmACsi5MWbzr9uotJYoFK0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=Lzm1qa6F; arc=none smtp.client-ip=74.125.224.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y/fO9i+E"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2ae49120e97so15845ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 10:53:25 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773078805; cv=none;
-        d=google.com; s=arc-20240605;
-        b=e0THRltSAcgniHBRXM7gf8magsmBDG/vAyg7W99uEhugC4Fn/LPgyorHyLRfl4xNSk
-         dk54k8fMy4gsZS5NOPuHX89pg37ZN5DCm8Ab+UEE+6NN3s0vOLRdzqQc9balcrjwadCL
-         qnsBxwTJcXIbhNwalSy2YIxDAIZ5iYyj/5pu7QRXsOCCDY1JTCkI3cXBdJJ18BJAI7gF
-         pg3dAGYZGfeoiYHX90R2PtJppkdV/hLIVVHsGHJ3MckCmZPcN/D/cSBgU23lf7DvmmIO
-         Wf12Nby/CpqRe90r9vP1CcjiMtR8QbwlfXd4VjHsHV65Qyh5j/rdhJRilA8aHkZKFzMH
-         gq7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ZPvt17sBw48Uy9b6qgDNm1YzVe8WydV5Zk9wwY2Hrr0=;
-        fh=I6n6u5S9d6AIHnT3xcmOFTLM6Zh25tQo5N8mrbINeeA=;
-        b=hP36K5z1iF+nWSSpSfTeJFK4j64elaay67D5D2OcjPOsSae4N8cbvhzqZfWEBwPkT4
-         nB9beZLZVUIlrNiHhwZYHzeO6taEHFEUL9q4MNUZ9jdY0BoHANhYEOL3f6aUupCLDGpx
-         E8wjXAGzts4AkTtuytZbJdC4OVxCl1hUwDflkcBJXWdEB9qmfs/7JMfgM9QSp+M8odKn
-         4fPQ09Y/sSSSrhIeZdnjxhBbfBuSCKTu6u11D0KUGg8brAGiGqZxdcemehukRLEY/pmt
-         +d+WuA5iMALG+TzqgNS73SZQEfMVcz9RPVgvmJs08silBEzDzX34ANnuEEiQQbi6yqAG
-         qPkg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="Lzm1qa6F"
+Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-64aedd812baso10687011d50.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 10:55:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773078805; x=1773683605; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZPvt17sBw48Uy9b6qgDNm1YzVe8WydV5Zk9wwY2Hrr0=;
-        b=Y/fO9i+EVobtRUdlgy12NnwkYs07I3cNqZngk7kvG97Pl1b7nN1wezhs1qvbQqE7sT
-         L0bxgyrgsfbRgROFZZzZfUTWwEA68BsPXAA5lspoOfhNiNNzBhRGh/0cUPEfqZj5TNIn
-         GZWsReZH4o9W6qFuZUD4Z+t5Rd4bSR1sG++UKRqdRZ+L/VQKwpbeHnw8ih9q4SNcr76Q
-         3SPDBFWELMERQMNsXSAlWsv04sLE1C9tWGdz1bcbphex84NmSaYEn68W78p1kC8SPz6/
-         G/QJ/FnCdfk9ePA17+IHT78XC3iC56as2tLtNMDT/r6qSpWNpf/d+w1+a0MdIIzvP8/6
-         6LLg==
+        d=ncsu.edu; s=google; t=1773078952; x=1773683752; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YE2mHU6KwCoEtF8g4jF0uyxyhHL4Ep5rBF9TlDHsldU=;
+        b=Lzm1qa6FwN6RM5XWnNzXB6uPAwBJCyyP6eF3mxVEjojo7KoECtu67xW0OdXvaneafb
+         A2u69V/4dyGiGzn3MSduDDf9aB0RrUVAQ8r6DJ0yjfvUheVCbWC1NF4iI3YJzfVumtI6
+         AmaM4WmMhgu/EzlZ+bguovm6oBtow6fb2NIUr60s4lAeS31PuKI2eRfVrHd6pwFX3aco
+         CCZKwJQTd9vGWx53PMlp2yXe76VB5uRHEH1IXK7++fa8Exovg+b77T61MCV0tJVdhACF
+         dj83+IF8Jat9RjCPnlfCXdiKbd4uPi40n9RUZFWBCHwnZ8FfKfWsPQYqZg8X+iHVxOl7
+         CrCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773078805; x=1773683605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZPvt17sBw48Uy9b6qgDNm1YzVe8WydV5Zk9wwY2Hrr0=;
-        b=mFSVO6GtBLLpymIAoaIHCRxFk/+Bt1HQN+CBrHTGxfxmFFjrE3LhIlq9g7PNviYkyJ
-         4oSAciLvbjJcp3LZj/c5vUZUK6uYMqEtZKqVRxWaJOp/00g77jzgowvPbpHcoWJLI9sr
-         OMBrfzYJUjmQrEJOyPCyq6PqJpcrrKJ6cOuA3f9SXJ6ffz2BRg/xUjJJvuJ5AD8/+cZG
-         3LObQtRE0uEn/w8amZI29O5eXwjmwzldRM6snoDNlXKz81axKCk9EBEM8rKwCf03VaSP
-         sC4RgY18IPqB0vYYVFjeovpihuvkxlbV2czUHzKLwmvfm/FXY/WB2/OfWeFmgNVp0/JQ
-         brxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyQpTTZxqt+nSaB40ZYEVZGHsY6S3WZum2U+wi2r00n2fsAeot24BD6LI7PXV2knRkkpfn5jZyLJrcwV1Qt/CB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtybVhVDJLIUCaNe6X5+kJqkQimqfbQ9QRXv+kMZL0OCdBKQQu
-	Y8qNKvjAhUsn827baNfkZwozniu7by5gHnm+UDoEAqcpPJSJaD8VdPeSpNE7iCOfhP69axghJww
-	MrWvIis/s8Q1C7AuguzDCGfmKgbEbtZz70ABhRPRj
-X-Gm-Gg: ATEYQzxEeG253OR0JIG1MRI++ASo5xK8Rng2nOXNhMJ67U5VETXlRZ4VuTNANPyxWHT
-	jM0PKmAEQnVCklz7WSzJ4upTBMIr5WjaH3xLLQsU9itKwC9uqQj3sc3tV1zskf8oTizBlPL4ouy
-	sAr549nQEzgaxRdLzizpvA3GxnFx+hkcScZO50wr/ZPeYiFgli6OPCS/VETegpf2D0wjJERsKRR
-	bK0raRYnEHl1RNhDFXT981/OWguUga9DrtpcdoRDIFjn6d8o8lJRA3aLdou1IpKwm4U7JqjIGpH
-	JeF0PVNFnZVZLFMcEZLJb3SF5In+edytFw8=
-X-Received: by 2002:a17:903:37cc:b0:2ae:46c6:e4e1 with SMTP id
- d9443c01a7336-2aea30cfc85mr220315ad.18.1773078804518; Mon, 09 Mar 2026
- 10:53:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1773078952; x=1773683752;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YE2mHU6KwCoEtF8g4jF0uyxyhHL4Ep5rBF9TlDHsldU=;
+        b=lIwV/OmqcEo4Hek4tl4ORx6JQ3RoCPTejWMMt1KENglUn8kes6K4iYKtQzRMA2a8DO
+         OyL8zRPeXFfwM3N74k4pqlZ7d1fhZUqy/eg9d+ql8bOlClFV0XZxny37FbB2K2WwOq0I
+         aeF/u438oJIhbH4AQSt1/Q2O+Z6NYxcOL9f+6xYLwXDxfwr6ivTibAQYsAXCxZvWSXdx
+         oT9C2BzFo3jREh/deu+E9v+zjwpGA3yXzomcI/5nFKmoLNSMyITFlW5Hcjg5pqqycAaw
+         zIpHNXBT83Z1B/Eqb7ugjIkEu/A3us5dR9pHIbBeGEmfJKQIvHrQsdaqrBKKFXXgVdeG
+         DGhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTP7X/hU/48YxIj2DwZdzXR/sgdXZdtC4BGnVLVMx/0/VNx4MGLM3FFD47Ayg8TRHGGlLRBL2fafK1fPyCrBKp@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvzeImmc6fgD7njg/4+zuuyCqSAF2rynaHIzyeAOlY2XqemV7r
+	e7Ge3TtOSsfoYbinUOWeOUMNXVDYrm0gmjJqA9o0iyhMc8pCXkFQrkY0AtDrtmSigZlQ5nEeaph
+	M7xY8YA==
+X-Gm-Gg: ATEYQzzW9M/D/WS03d7ji162/RIub27KPQ5GZP+qR97Q5tyIehZPji8/SQJ7l1UfUzk
+	4iBrTU9FdSLGMckiISmrVmuc6/KS/iOJ4kSKOUanwnSMBlg1+p1q6ManSrI0AC11PUvyFF3EFJP
+	0pUS1iKOgm8byH3f/CnL1Q/rFfZFvaBLbhrmB5seTgtMmQoPNV57L+CLFXV19++KPAD0/nrfqfy
+	r/z1YralCpUNpZqT0ITGwM2qorAT7Cx54qT1nKfGQw+DlW3+ulhcvl9qwn7EUVU7Kgbc+UwVDoV
+	AxzmKwJS14qPcnjh/26eJjYeG2pz7lC7fVIMKNhnG+tILRMUxo4u8HmxIED5ky/79KL8y5d3OXq
+	gkMw0ipE/Z31+OzZFbra3yujq14WtUsocURGBZqfLeQMrCdliS65Omk85CPjzfu1THzS2Wl3bLK
+	52ZTmpouo/fE2imMjZi2tB0c/XMEWKOuU6KhzfokMXfKmMfb1OuQ+yvF3c
+X-Received: by 2002:a05:690e:b4e:b0:63f:9ff9:1493 with SMTP id 956f58d0204a3-64d140a3665mr12225298d50.2.1773078951619;
+        Mon, 09 Mar 2026 10:55:51 -0700 (PDT)
+Received: from um773-cachyos.sd.ncsu.edu ([152.7.255.206])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64d176e70e7sm4992535d50.20.2026.03.09.10.55.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2026 10:55:51 -0700 (PDT)
+From: Zecheng Li <zli94@ncsu.edu>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Zecheng Li <zli94@ncsu.edu>,
+	xliuprof@google.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/11] perf tools: Improvements to data type profiler
+Date: Mon,  9 Mar 2026 13:55:13 -0400
+Message-ID: <20260309175546.916039-1-zli94@ncsu.edu>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com> <20260308-tools_build_fix_zero_init-v3-11-6477808123b7@arm.com>
-In-Reply-To: <20260308-tools_build_fix_zero_init-v3-11-6477808123b7@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Mar 2026 10:53:12 -0700
-X-Gm-Features: AaiRm51jJv0K2rf94QzPgrcYebl4loRMt-0YaQXZssGW2-L2HjxaFLVTS-jTCdg
-Message-ID: <CAP-5=fWHe0JaJ0FPm7jKfL4YMb8y+o0YcnOfSs=DCgHyNsyYyw@mail.gmail.com>
-Subject: Re: [PATCH v3 11/30] tools: bootconfig: Append extra cflags
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>, 
-	Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	William Breathitt Gray <wbg@kernel.org>, Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Kent Gibson <warthog618@gmail.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Robert Moore <robert.moore@intel.com>, 
-	Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>, 
-	Changwoo Min <changwoo@igalia.com>, Mark Brown <broonie@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Mar 8, 2026 at 9:48=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
->
-> Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
-> the compiler.
->
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  tools/bootconfig/Makefile | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/bootconfig/Makefile b/tools/bootconfig/Makefile
-> index 90eb47c9d8de67b0ccc74a8de0af3a7e0b97feeb..6bbf4dfdb5b56fcb2a43ccda1=
-8b59a270778267b 100644
-> --- a/tools/bootconfig/Makefile
-> +++ b/tools/bootconfig/Makefile
-> @@ -10,6 +10,7 @@ srctree :=3D $(patsubst %/,%,$(dir $(srctree)))
->  endif
->
->  LIBSRC =3D $(srctree)/lib/bootconfig.c $(srctree)/include/linux/bootconf=
-ig.h
-> +override CFLAGS +=3D $(EXTRA_CFLAGS)
->  override CFLAGS +=3D -Wall -g -I$(CURDIR)/include
+This patch series improves the coverage and correctness of data type
+annotations in the perf tools.
 
-Should the EXTRA_CFLAGS be appended last so that the user can override
-the default CFLAGS (e.g. switching off warnings) ?
+Here's a breakdown of the patches:
 
-Thanks,
-Ian
+Patches 1-4 improve variable type matching:
+- Add die_get_pointer_type() to properly handle typedef'd pointer types
+- Preserve typedefs in match_var_offset for consistent type handling
+- Skip redundant check_variable for die_find_variable_by_reg and
+  die_find_variable_by_addr since match_var_offset already performs
+  sufficient checking
+- Improve type comparison when variables are found in different scopes
 
->  ALL_TARGETS :=3D bootconfig
->
-> --
-> 2.34.1
->
+Patch 5 handles array types in die_get_member_type, allowing proper
+resolution of struct members that are arrays.
+
+Patches 6-7 improve global variable handling:
+- Allow collecting global variables without symbol names (DWARF provides
+  the address directly via DW_OP_addr)
+- Handle global variable access when a register holds a const value
+  with negative offset
+
+Patches 8-9 improve caller-saved register handling:
+- Add invalidate_reg_state() helper for consistent register invalidation
+- Always invalidate caller-saved registers for call instructions per ABI
+  requirements, even when the call target is unknown
+
+Patches 10-11 use DWARF location ranges to improve type tracking:
+- Track DWARF location lifetime to preserve register state across calls
+  when the debug info indicates the value is still valid
+- Collect all variable location entries instead of just the first one
+
+Tested with the Linux kernel vmlinux with sampled functions and five
+programs from binutils (as, ld, nm, objdump, readelf) with all
+functions. Coverage rate includes all memory access instructions,
+excluding stack memory accesses.
+
+`lost` means coverage loss (only including annotated -> none);
+`chg` means type name change. Net coverage gain is new_rate - prev_rate.
+
+         -------- vmlinux --------   ------- binutils -------
+  Patch  rate     lost     chg       rate     lost     chg
+  ----------------------------------------------------------------
+  base   88.87%   -        -         72.55%   -        -
+  1      88.87%   0%       0%        74.22%   0%       .03%
+  2      88.88%   0%       .05%      74.32%   0%       0%
+  3      88.90%   0%       .69%      74.38%   0%       .31%
+  4      88.90%   0%       .83%      74.38%   0%       .17%
+  5      89.11%   .01%     .08%      74.41%   0%       .01%
+  6      89.12%   0%       .05%      75.33%   0%       1.62%
+  7      89.18%   0%       0%        75.33%   0%       0%
+  8      89.18%   0%       0%        75.30%   .02%     0%
+  9      89.09%   .09%     0%        75.24%   .05%     0%
+  10     89.05%   .08%     .09%      75.53%   .03%     .03%
+  11     89.97%   0%       .10%      76.63%   .26%     .07%
+
+  Total: vmlinux  88.87% -> 89.97% (+1.10%)
+         binutils 72.55% -> 76.63% (+4.08%)
+
+Changes in v2:
+- Reorder patches 1-3 to avoid temporary regression: pointer_type and
+  typedef patches now come before skip check_variable (Namhyung)
+- Skip check_variable for both die_find_variable_by_reg and
+  die_find_variable_by_addr paths (Namhyung)
+- Add dso__kernel() guard for const register global variable access
+  to restrict it to kernel DSOs (Namhyung)
+
+Zecheng Li (11):
+  perf dwarf-aux: Add die_get_pointer_type to get pointer types
+  perf dwarf-aux: Preserve typedefs in match_var_offset
+  perf dwarf-aux: Skip check_variable for variable lookup
+  perf annotate-data: Improve type comparison from different scopes
+  perf dwarf-aux: Handle array types in die_get_member_type
+  perf annotate-data: Collect global variables without name
+  perf annotate-data: Handle global variable access with const register
+  perf annotate-data: Add invalidate_reg_state() helper for x86
+  perf annotate-data: Invalidate caller-saved regs for all calls
+  perf annotate-data: Use DWARF location ranges to preserve reg state
+  perf dwarf-aux: Collect all variable locations for insn tracking
+
+ tools/perf/util/annotate-arch/annotate-x86.c |  69 ++++++---
+ tools/perf/util/annotate-data.c              | 119 ++++++++-------
+ tools/perf/util/annotate-data.h              |   3 +
+ tools/perf/util/dwarf-aux.c                  | 145 +++++++++++++------
+ tools/perf/util/dwarf-aux.h                  |   9 +-
+ 5 files changed, 230 insertions(+), 115 deletions(-)
+
+-- 
+2.53.0
+
