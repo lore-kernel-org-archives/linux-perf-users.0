@@ -1,162 +1,117 @@
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0322D6401;
-	Mon,  9 Mar 2026 08:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CE836896B
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 08:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773046086; cv=none; b=aubqN7/99/zRea5SJl1s4dxjH5S82oAzaJkPbgMHOoJb0T0jslUyeUqK7UAglIy/f/y1a9BVpBXw1D1ro4dByRa2T8ZI2S/Bw0IEPenJ6707u2vgp9BzR3RVhxrG38qqUpVGpoPsTE6+gM/bYvEX+bEo7+9JrtNCRtfs/v7EPV0=
+	t=1773046465; cv=none; b=sJTfOz7vN8xzxAeS2qlGvRGZyQKUhq4ROfnhlr6sNZhaFUz47PCYvVfvHTFexGO6mVdLnxW/AfZqP99Fr5VRQuttD14zLB6I+A+fDkHz1+iUuUHmT9BdHRZTJxKrtVU3l5hY2alXTaLlmv1SXHVYMTXnHlSiES65T4zk1X3NPnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773046086; c=relaxed/simple;
-	bh=YNjN3U3QMmmOB/PUlZ3OptwFm10INMeeYqTIMWwh5bs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VpOGcEzm2DepSlL1Dalj0dTiWt9tIil2M3pHEjYX/s9FJbPSJ/5danHQT3nWNMNwT5heDWjAi2qXRA5K1XE01G5MboNHK6tPlu0IZdAcBtzdx6974Pea/2dClmxd/xQJ9DnZk4TWDKtqWuHz2syWGEVdS4JBtH14YuNzLHCCI0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=E6Us1ZA7; arc=none smtp.client-ip=113.46.200.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1773046465; c=relaxed/simple;
+	bh=wG5+/hVL6HjKUoRhP7gA3WSoKo1PhFh9knJZ5mzHy6Y=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PLlmp7RbZKpgmmsH8IhOQZJfo0Ah/5n+5XhUjmoJAwJQ2PwVQuDnWz/hCazKy5VO/nkUGnGHERJEzzcuRHHPujQ8rOh5IJt8bSrgPs15FnSA7k9pVBv03vKxSBo+20lCgDZp2Q/O2oSnJN0G/AAuW9pJsl6VcpmWqX7kAJLFODg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCIWThDb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="E6Us1ZA7"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=YNjN3U3QMmmOB/PUlZ3OptwFm10INMeeYqTIMWwh5bs=;
-	b=E6Us1ZA7yGJHJq02U0vnVseMg0JWSYa6N3oVWXbnRiEUE6goRuP33ris4uctX1vUVj3NRLpX5
-	xa96G/N+OyAJiC2UMwxNtKQ9ofhS/4uVKTCBFRo1ns8Tvi9X4CIOHLay8CTOaHoLaXUz+GWgyb1
-	6ZipFfHPy9kaVTlATTnwkqs=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4fTrBH2rbyz1prL6;
-	Mon,  9 Mar 2026 16:43:03 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id CA08720104;
-	Mon,  9 Mar 2026 16:47:59 +0800 (CST)
-Received: from kwepemq500003.china.huawei.com (7.202.195.117) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 9 Mar 2026 16:47:59 +0800
-Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
- kwepemq500003.china.huawei.com (7.202.195.117) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 9 Mar 2026 16:47:59 +0800
-Received: from kwepemq200002.china.huawei.com ([7.202.195.90]) by
- kwepemq200002.china.huawei.com ([7.202.195.90]) with mapi id 15.02.1544.011;
- Mon, 9 Mar 2026 16:47:59 +0800
-From: duchangbin <changbin.du@huawei.com>
-To: Namhyung Kim <namhyung@kernel.org>
-CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
- Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "James
- Clark" <james.clark@linaro.org>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] perf: Add layout support for --symfs option
-Thread-Topic: [PATCH v3] perf: Add layout support for --symfs option
-Thread-Index: AQHcqWv7qgRFvdXDEU29kITXQZ801LWe/w8AgACrhICABkVLgA==
-Date: Mon, 9 Mar 2026 08:47:59 +0000
-Message-ID: <2f617208b9fd42b682380a3306c2603b@huawei.com>
-References: <20260301192455.1053900-1-changbin.du@huawei.com>
- <aaknIOp-PrDNCf-L@z2> <dd08137f2d2e4d39a37d4c50552f8a86@huawei.com>
-In-Reply-To: <dd08137f2d2e4d39a37d4c50552f8a86@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-imapappendstamp: kwepemq200002.china.huawei.com (15.02.1544.011)
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3EEC2404B6C0674DB783990DAE9649A4@huawei.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCIWThDb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 595D7C4CEF7
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 08:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773046464;
+	bh=wG5+/hVL6HjKUoRhP7gA3WSoKo1PhFh9knJZ5mzHy6Y=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=sCIWThDb1pmD+lNgEh46tr1vNedfh7KDb/87oVDfsXY1s3m/gsVhqQ2nwHXly/rwv
+	 nX5+JMWc45p87a2svSkXrI9ciK1Bjt5muz4MF0D9hcgClxj/TbBFew/Y+s3QPXzY5J
+	 66GLmPG4XePGRrTcLf/vtY58jPNDILLKl5U5YnKEB7rr4H39QBlPLTVPgsvySPFdMQ
+	 xj6xqsa97AagA1+NhpCThgz+I4MmomXwcR4LBFvUDXsAXL4pdX5F1nJBsB6Q3WaVDe
+	 aXsSosImQpvl9rbkIdEZ570JaBJsZmDWPMUcoqZ9kSCTj+OeVPcaJZiYoSpgY5F0HF
+	 43k/sMXnLD6qw==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5a12cd0bd79so4776194e87.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 01:54:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWP9LVBW8sWgmrT2MUWmHmoLFligfvRCp3gZaChCv2/nTDmcSCViSgpsCFzf6738eYyELMCBMkyZ7GeIltkVXAG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGKLiLkVQZfYZHBdq7AhqwV2xgphhzeEf9nChVrNFNnZ1pbboQ
+	uZvb2WYsK8QouerleOpphFXRWaLtH+OSJdujGFhFaaDAjDdztECTPwF98nembwxXXe6DjnrDW94
+	WRSgtUmat3L80oR3kVPUs+SnjDkSYkevrJ+rN80nUcg==
+X-Received: by 2002:a2e:b8d1:0:b0:383:1f06:559e with SMTP id
+ 38308e7fff4ca-38a40910e52mr31075631fa.0.1773046462934; Mon, 09 Mar 2026
+ 01:54:22 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 9 Mar 2026 01:54:21 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 9 Mar 2026 01:54:21 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260308-tools_build_fix_zero_init-v3-14-6477808123b7@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com> <20260308-tools_build_fix_zero_init-v3-14-6477808123b7@arm.com>
+Date: Mon, 9 Mar 2026 01:54:21 -0700
+X-Gmail-Original-Message-ID: <CAMRc=Mcts8eWGJG2RfTrJ4=ZtcGbraSfN7pnPUkuVs7LN3MJGQ@mail.gmail.com>
+X-Gm-Features: AaiRm53otyAIdQ8tJkI0Szk9_yhE2ni_y74h6y-9Tp-K59x5n9G2XJBB-whf1jY
+Message-ID: <CAMRc=Mcts8eWGJG2RfTrJ4=ZtcGbraSfN7pnPUkuVs7LN3MJGQ@mail.gmail.com>
+Subject: Re: [PATCH v3 14/30] tools: gpio: Append extra cflags
+To: Leo Yan <leo.yan@arm.com>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>, 
+	Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	William Breathitt Gray <wbg@kernel.org>, Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Kent Gibson <warthog618@gmail.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Robert Moore <robert.moore@intel.com>, 
+	Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>, 
+	Changwoo Min <changwoo@igalia.com>, Mark Brown <broonie@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-T24gVGh1LCBNYXIgMDUsIDIwMjYgYXQgMDU6MDI6MTdQTSArMDgwMCwgZHVjaGFuZ2JpbiB3cm90
-ZToNCj4gT24gV2VkLCBNYXIgMDQsIDIwMjYgYXQgMTA6NDg6MDBQTSAtMDgwMCwgTmFtaHl1bmcg
-S2ltIHdyb3RlOg0KPiA+IEhlbGxvLA0KPiA+IA0KPiA+ID4gQEAgLTI0OTEsMTYgKzI0OTIsMzYg
-QEAgaW50IHN5bWJvbF9fY29uZmlnX3N5bWZzKGNvbnN0IHN0cnVjdCBvcHRpb24gKm9wdCBfX21h
-eWJlX3VudXNlZCwNCj4gPiA+ICAJCQkgY29uc3QgY2hhciAqZGlyLCBpbnQgdW5zZXQgX19tYXli
-ZV91bnVzZWQpDQo+ID4gPiAgew0KPiA+ID4gIAljaGFyICpiZiA9IE5VTEw7DQo+ID4gPiArCWNo
-YXIgKmxheW91dF9zdHI7DQo+ID4gPiAgCWludCByZXQ7DQo+ID4gPiAgDQo+ID4gPiAtCXN5bWJv
-bF9jb25mLnN5bWZzID0gc3RyZHVwKGRpcik7DQo+ID4gPiAtCWlmIChzeW1ib2xfY29uZi5zeW1m
-cyA9PSBOVUxMKQ0KPiA+ID4gLQkJcmV0dXJuIC1FTk9NRU07DQo+ID4gPiArCWxheW91dF9zdHIg
-PSBzdHJyY2hyKGRpciwgJywnKTsNCj4gPiA+ICsJaWYgKGxheW91dF9zdHIgJiYNCj4gPiA+ICsJ
-ICAgICghc3RyY21wKGxheW91dF9zdHIgKyAxLCAiZmxhdCIpIHx8ICFzdHJjbXAobGF5b3V0X3N0
-ciArIDEsICJoaWVyYXJjaHkiKSkpIHsNCj4gPiANCj4gPiBJIHRoaW5rIGl0J3MgYmV0dGVyIHRv
-IGZhaWwgd2l0aCBhIG1lc3NhZ2UgaWYgdW5rbm93biBsYXlvdXQgaXMgZ2l2ZW4uDQo+ID4NCj4g
-QWdyZWVkLiBUaGUgY3VycmVudCBpc3N1ZSBpcyB0aGF0IGlmIHdlIHVzZSAnLCcgYXMgdGhlIGRl
-bGltaXRlciAodG8gbWFpbnRhaW4gYQ0KPiBjb25zaXN0ZW50IHN0eWxlIHdpdGggb3RoZXIgb3B0
-aW9ucyksIGFuZCB0aGUgcGF0aCBpdHNlbGYgY29udGFpbnMgYSBjb21tYSwgaXQNCj4gd291bGQg
-cmVzdWx0IGluIHRoZSBmb2xsb3dpbmcgYW1iaWd1aXR5Og0KPiAgLSAvcGF0aCxmbGF0IOKGkiBz
-eW1mcz0vcGF0aCwgbGF5b3V0PWZsYXQNCj4gIC0gL3BhdGgsaGllcmFyY2h5IOKGkiBzeW1mcz0v
-cGF0aCwgbGF5b3V0PWhpZXJhcmNoeQ0KPiAgLSAvc29tZSxwYXRoLyDihpIgc3ltZnM9L3NvbWUs
-IGxheW91dD1wYXRoLw0KPiANCj4gRG8geW91IGhhdmUgYmV0dGVyIHN1Z2dlc3Rpb25zPyBVc2lu
-ZyBhIGRpZmZlcmVudCBkZWxpbWl0ZXIgKGUuZy4sIDogb3IgOyk/DQo+IA0KRmluYWxseSwgSSd2
-ZSBkZWNpZGVkIHRvIGdvIHdpdGggdGhlIHNpbXBsZXN0IGltcGxlbWVudGF0aW9uLiBUaGUgcmVz
-dWx0IGlzOiBpZg0KdGhlIHBhdGggY29udGFpbnMgYSBjb21tYSwgdGhlIGxheW91dCBtdXN0IGJl
-IHNwZWNpZmllZCwgb3RoZXJ3aXNlIGFuIGVycm9yIHdpbGwNCmJlIHJhaXNlZCAodGhlIHBhcnQg
-YWZ0ZXIgdGhlIGNvbW1hIHdvdWxkIGJlIGluY29ycmVjdGx5IHJlY29nbml6ZWQgYXMgdGhlDQps
-YXlvdXQgb3B0aW9uKS4NCg0KLSAvcGF0aCDihpIgc3ltZnM9L3BhdGgsIGxheW91dD1oaWVyYXJj
-aHkNCi0gL3BhdGgsZmxhdCDihpIgc3ltZnM9L3BhdGgsIGxheW91dD1mbGF0DQotIC9zb21lLHBh
-dGgvIOKGkiBlcnJvcg0KLSAvc29tZSxwYXRoLyxmbGF0IOKGkiBzeW1mcz0vc29tZSxwYXRoLywg
-bGF5b3V0PWZsYXQNCg0KPiA+IFRoYW5rcywNCj4gPiBOYW1oeXVuZw0KPiA+IA0KPiA+ID4gKwkJ
-c2l6ZV90IGRpcl9sZW4gPSBsYXlvdXRfc3RyIC0gZGlyOw0KPiA+ID4gKwkJY2hhciAqZGlyX2Nv
-cHkgPSBzdHJuZHVwKGRpciwgZGlyX2xlbik7DQo+ID4gPiArDQo+ID4gPiArCQlpZiAoZGlyX2Nv
-cHkgPT0gTlVMTCkNCj4gPiA+ICsJCQlyZXR1cm4gLUVOT01FTTsNCj4gPiA+ICsNCj4gPiA+ICsJ
-CXN5bWJvbF9jb25mLnN5bWZzID0gZGlyX2NvcHk7DQo+ID4gPiArDQo+ID4gPiArCQlsYXlvdXRf
-c3RyKys7DQo+ID4gPiArCQlpZiAoIXN0cmNtcChsYXlvdXRfc3RyLCAiZmxhdCIpKQ0KPiA+ID4g
-KwkJCXN5bWJvbF9jb25mLnN5bWZzX2xheW91dF9mbGF0ID0gdHJ1ZTsNCj4gPiA+ICsJCWVsc2UN
-Cj4gPiA+ICsJCQlzeW1ib2xfY29uZi5zeW1mc19sYXlvdXRfZmxhdCA9IGZhbHNlOw0KPiA+ID4g
-Kwl9IGVsc2Ugew0KPiA+ID4gKwkJc3ltYm9sX2NvbmYuc3ltZnMgPSBzdHJkdXAoZGlyKTsNCj4g
-PiA+ICsJCWlmIChzeW1ib2xfY29uZi5zeW1mcyA9PSBOVUxMKQ0KPiA+ID4gKwkJCXJldHVybiAt
-RU5PTUVNOw0KPiA+ID4gKwkJc3ltYm9sX2NvbmYuc3ltZnNfbGF5b3V0X2ZsYXQgPSBmYWxzZTsN
-Cj4gPiA+ICsJfQ0KPiA+ID4gIA0KPiA+ID4gIAkvKiBza2lwIHRoZSBsb2NhbGx5IGNvbmZpZ3Vy
-ZWQgY2FjaGUgaWYgYSBzeW1mcyBpcyBnaXZlbiwgYW5kDQo+ID4gPiAgCSAqIGNvbmZpZyBidWls
-ZGlkIGRpciB0byBzeW1mcy8uZGVidWcNCj4gPiA+ICAJICovDQo+ID4gPiAtCXJldCA9IGFzcHJp
-bnRmKCZiZiwgIiVzLyVzIiwgZGlyLCAiLmRlYnVnIik7DQo+ID4gPiArCXJldCA9IGFzcHJpbnRm
-KCZiZiwgIiVzLyVzIiwgc3ltYm9sX2NvbmYuc3ltZnMsICIuZGVidWciKTsNCj4gPiA+ICAJaWYg
-KHJldCA8IDApDQo+ID4gPiAgCQlyZXR1cm4gLUVOT01FTTsNCj4gPiA+ICANCj4gPiA+IGRpZmYg
-LS1naXQgYS90b29scy9wZXJmL3V0aWwvc3ltYm9sLmggYi90b29scy9wZXJmL3V0aWwvc3ltYm9s
-LmgNCj4gPiA+IGluZGV4IDNmYjVkMTQ2ZDliMS4uNGYxZGJkMWViZDk5IDEwMDY0NA0KPiA+ID4g
-LS0tIGEvdG9vbHMvcGVyZi91dGlsL3N5bWJvbC5oDQo+ID4gPiArKysgYi90b29scy9wZXJmL3V0
-aWwvc3ltYm9sLmgNCj4gPiA+IEBAIC05LDYgKzksNyBAQA0KPiA+ID4gICNpbmNsdWRlIDxsaW51
-eC9saXN0Lmg+DQo+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L3JidHJlZS5oPg0KPiA+ID4gICNpbmNs
-dWRlIDxzdGRpby5oPg0KPiA+ID4gKyNpbmNsdWRlIDxlcnJuby5oPg0KPiA+ID4gICNpbmNsdWRl
-ICJhZGRyX2xvY2F0aW9uLmgiDQo+ID4gPiAgI2luY2x1ZGUgInBhdGguaCINCj4gPiA+ICAjaW5j
-bHVkZSAic3ltYm9sX2NvbmYuaCINCj4gPiA+IEBAIC05Niw2ICs5NywxOCBAQCBzdHJ1Y3QgaW50
-bGlzdDsNCj4gPiA+ICANCj4gPiA+ICBzdGF0aWMgaW5saW5lIGludCBfX3N5bWJvbF9fam9pbl9z
-eW1mcyhjaGFyICpiZiwgc2l6ZV90IHNpemUsIGNvbnN0IGNoYXIgKnBhdGgpDQo+ID4gPiAgew0K
-PiA+ID4gKwlpZiAoc3ltYm9sX2NvbmYuc3ltZnNfbGF5b3V0X2ZsYXQpIHsNCj4gPiA+ICsJCWNo
-YXIgKnBhdGhfY29weSA9IHN0cmR1cChwYXRoKTsNCj4gPiA+ICsJCWNoYXIgKmJhc2U7DQo+ID4g
-PiArCQlpbnQgcmV0Ow0KPiA+ID4gKw0KPiA+ID4gKwkJaWYgKCFwYXRoX2NvcHkpDQo+ID4gPiAr
-CQkJcmV0dXJuIC1FTk9NRU07DQo+ID4gPiArCQliYXNlID0gYmFzZW5hbWUocGF0aF9jb3B5KTsN
-Cj4gPiA+ICsJCXJldCA9IHBhdGhfX2pvaW4oYmYsIHNpemUsIHN5bWJvbF9jb25mLnN5bWZzLCBi
-YXNlKTsNCj4gPiA+ICsJCWZyZWUocGF0aF9jb3B5KTsNCj4gPiA+ICsJCXJldHVybiByZXQ7DQo+
-ID4gPiArCX0NCj4gPiA+ICAJcmV0dXJuIHBhdGhfX2pvaW4oYmYsIHNpemUsIHN5bWJvbF9jb25m
-LnN5bWZzLCBwYXRoKTsNCj4gPiA+ICB9DQo+ID4gPiAgDQo+ID4gPiBAQCAtMTY5LDYgKzE4Miwx
-MSBAQCBzaXplX3Qgc3ltYm9sX19mcHJpbnRmX3N5bW5hbWUoY29uc3Qgc3RydWN0IHN5bWJvbCAq
-c3ltLCBGSUxFICpmcCk7DQo+ID4gPiAgc2l6ZV90IHN5bWJvbF9fZnByaW50ZihzdHJ1Y3Qgc3lt
-Ym9sICpzeW0sIEZJTEUgKmZwKTsNCj4gPiA+ICBib29sIHN5bWJvbF9fcmVzdHJpY3RlZF9maWxl
-bmFtZShjb25zdCBjaGFyICpmaWxlbmFtZSwNCj4gPiA+ICAJCQkJIGNvbnN0IGNoYXIgKnJlc3Ry
-aWN0ZWRfZmlsZW5hbWUpOw0KPiA+ID4gKw0KPiA+ID4gKyNkZWZpbmUgU1lNRlNfSEVMUCAic2V0
-dXAgcm9vdCBkaXJlY3Rvcnkgd2hpY2ggY29udGFpbnMgZGVidWcgZmlsZXM6XG4iIFwNCj4gPiA+
-ICsJIlx0XHRcdFx0IiAiZGlyZWN0b3J5Olx0TG9vayBmb3IgZmlsZXMgd2l0aCBzeW1ib2xzIHJl
-bGF0aXZlIHRvIHRoaXMgZGlyZWN0b3J5LlxuIiBcDQo+ID4gPiArCSJcdFx0XHRcdCIgImxheW91
-dDogICBcdExheW91dCBvZiBmaWxlcywgJ2hpZXJhcmNoeScgbWF0Y2hlcyBmdWxsIHBhdGggKGRl
-ZmF1bHQpLCAnZmxhdCcgb25seSBtYXRjaGVzIGJhc2UgbmFtZS5cbiINCj4gPiA+ICsNCj4gPiA+
-ICBpbnQgc3ltYm9sX19jb25maWdfc3ltZnMoY29uc3Qgc3RydWN0IG9wdGlvbiAqb3B0IF9fbWF5
-YmVfdW51c2VkLA0KPiA+ID4gIAkJCSBjb25zdCBjaGFyICpkaXIsIGludCB1bnNldCBfX21heWJl
-X3VudXNlZCk7DQo+ID4gPiAgDQo+ID4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi91dGlsL3N5
-bWJvbF9jb25mLmggYi90b29scy9wZXJmL3V0aWwvc3ltYm9sX2NvbmYuaA0KPiA+ID4gaW5kZXgg
-NzFiYjE3MzcyYTZjLi5hYzFiNDQ0YThmZDggMTAwNjQ0DQo+ID4gPiAtLS0gYS90b29scy9wZXJm
-L3V0aWwvc3ltYm9sX2NvbmYuaA0KPiA+ID4gKysrIGIvdG9vbHMvcGVyZi91dGlsL3N5bWJvbF9j
-b25mLmgNCj4gPiA+IEBAIC05Myw2ICs5Myw3IEBAIHN0cnVjdCBzeW1ib2xfY29uZiB7DQo+ID4g
-PiAgCQkJKnRpZF9saXN0LA0KPiA+ID4gIAkJCSphZGRyX2xpc3Q7DQo+ID4gPiAgCWNvbnN0IGNo
-YXIJKnN5bWZzOw0KPiA+ID4gKwlib29sCQlzeW1mc19sYXlvdXRfZmxhdDsNCj4gPiA+ICAJaW50
-CQlyZXNfc2FtcGxlOw0KPiA+ID4gIAlpbnQJCXBhZF9vdXRwdXRfbGVuX2RzbzsNCj4gPiA+ICAJ
-aW50CQlncm91cF9zb3J0X2lkeDsNCj4gPiA+IC0tIA0KPiA+ID4gMi40My4wDQo+ID4gPiANCj4g
-PiANCj4gDQo+IC0tIA0KPiBDaGVlcnMsDQo+IENoYW5nYmluIER1DQoNCi0tIA0KQ2hlZXJzLA0K
-Q2hhbmdiaW4gRHUNCg==
+On Sun, 8 Mar 2026 17:46:19 +0100, Leo Yan <leo.yan@arm.com> said:
+> Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
+> the compiler.
+>
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/gpio/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
+> index 342e056c8c665ac075041ff7c7ca7ba94c691187..206fb6c91a569d64b1e4b906ada5ec866323053c 100644
+> --- a/tools/gpio/Makefile
+> +++ b/tools/gpio/Makefile
+> @@ -16,6 +16,7 @@ endif
+>  # (this improves performance and avoids hard-to-debug behaviour);
+>  MAKEFLAGS += -r
+>
+> +override CFLAGS += $(EXTRA_CFLAGS)
+>  override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+>
+>  ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon gpio-watch
+>
+> --
+> 2.34.1
+>
+>
+
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
