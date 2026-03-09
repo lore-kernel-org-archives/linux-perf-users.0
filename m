@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2037638F65F;
-	Mon,  9 Mar 2026 10:17:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB4D38E5D4;
+	Mon,  9 Mar 2026 10:18:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773051461; cv=none; b=dRq8fipRagy2InHEImwNIgQHx1AANf4lGV3TLtyoDkLZRGylPOu7H3Kw8w1K4jFNYQxH80j+LweDcbV+W3PXoevaqUBYs0E4BasiOgrQFGNmQlpi1npVcyr+KcxEiMjBR0rIMC0lu/4UPhEYwhN6wLdqnBDFok+CoRPapG2sWK0=
+	t=1773051481; cv=none; b=Gbeb43UxkMe+lH+y7CA5HwKtfekBf6SiOYll974w6Zw9VMCtp7mCi0TJacynk19WUdeJPxGGXySCLZf3fEi5mIJlNfj3RRDxqbf2j6kSKg6PXiErxmzsdKWW7HVFZoS0J2j5GYBijGwk7D2C6MTriO3MgTIkKU50yh/Om4YwIvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773051461; c=relaxed/simple;
-	bh=h17xRooob/NjSPrlNjlltY9eQtTUi8G3SHGUmwObWzw=;
+	s=arc-20240116; t=1773051481; c=relaxed/simple;
+	bh=2EC+wTYFQkxUTDCtHiHCoOwNgIgiRnx9FT0UQMAHILc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f9VumBNum47Lt3JuoQirButTWBU7eNd3n//1NYFUmXMAycSejRcl7Qg5+EbiSs2ijCuzbJqekxrtgvCAB7dSpOqcLwTEmxpEqHeFy5/ZBtyKzWxF+eIohlCcVeVtNPQLg84/A0mNfjB7tQZHOAWT6u0iGD+YRXrjmMPDf7h5l58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qcISnSBW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=nucLicAECL9GKzsd739R2TTRN96g2tBgDbOcBWdhWFbC01mOgeeWGUNG829erCe5WwsiqzM8xWHN5OCx6AIbmtqUsl2BYdMLlebXtX5nfTzbo5N61iuCRbfTi741hWODrLiDFqVvbPy3N9qX0oQPiCL0OQZzPJJVvdUZiOlkkuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FMlHZ2gs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qcISnSBW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB55AC19423;
-	Mon,  9 Mar 2026 10:17:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FMlHZ2gs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B123C2BCAF;
+	Mon,  9 Mar 2026 10:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773051460;
-	bh=h17xRooob/NjSPrlNjlltY9eQtTUi8G3SHGUmwObWzw=;
+	s=k20201202; t=1773051480;
+	bh=2EC+wTYFQkxUTDCtHiHCoOwNgIgiRnx9FT0UQMAHILc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qcISnSBWeBIBZ8/E3/T6klqoS/HrhPByDqp4ynjbpZNT26WjwIWyyiB6kQ2GCBoJC
-	 7lRpQFAKHLrJlufltvydY9o+fPsT81SJK5fTBsWowsJHD6uEAc6GT9gZKwBq7cx2Sc
-	 dfM5wSYpPuWluKxR5hxNoJ3AC6TsrgINwsliqk8n7VclULyyjSh1UMgmXDldapD6Ji
-	 6MiPvOve4ZyLkKN2Jk0TcBliZAjlfB52HWLttkbyUckBtOqaKX7I4eD6rN1y0qK9Nr
-	 cF/woPOUAoQ6K6yic4sUMOVpuiY6tt43tLhQF9uqWwYOxne+k6h0pX0ElJDWH2l8cO
-	 dhcKFft+HcBjQ==
-Message-ID: <a0e77fec-4271-40a7-b725-ae7ace6eac48@kernel.org>
-Date: Mon, 9 Mar 2026 10:17:30 +0000
+	b=FMlHZ2gsXqYoMc0B50ulHkU+VdI0fwSM5vDNkmq/f/qa7R+ym3zrku8rvnOtBfdI6
+	 dPxWyld6YnAtmcY3mEnhum3nQh6i4XWacWw9TEptM90xzKbBOjnTUjdYr4N2qP+ppo
+	 VTot2VEEurdk7y7tUuhOIzc1O5UWLf8Obsu3bb7hRulDQn3UXWynn6snRqBwydsefv
+	 Miva8ljrX780FoGNfNnhVIncoJ1aQqwv8Ihc5RqTm4nnSUzb84jHgnY73Wcz4NloqQ
+	 rduQPbZhjMuWbaxDavP9Dyd/NaSXhan6lR82SSCtLVk8gfL9qlpeNN0dxKR9SR/PLG
+	 /cBq3vYl7etrw==
+Message-ID: <8b5b0e81-436f-49f7-8d3c-9271d4d05ffc@kernel.org>
+Date: Mon, 9 Mar 2026 10:17:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 06/30] bpftool: Append extra host flags
+Subject: Re: [PATCH v3 05/30] tools build: Append -fzero-init-padding-bits=all
+ to extra cflags
 To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
  Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
  James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>,
@@ -76,18 +77,42 @@ To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
 References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com>
- <20260308-tools_build_fix_zero_init-v3-6-6477808123b7@arm.com>
+ <20260308-tools_build_fix_zero_init-v3-5-6477808123b7@arm.com>
 From: Quentin Monnet <qmo@kernel.org>
 Content-Language: en-GB
-In-Reply-To: <20260308-tools_build_fix_zero_init-v3-6-6477808123b7@arm.com>
+In-Reply-To: <20260308-tools_build_fix_zero_init-v3-5-6477808123b7@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 2026-03-08 16:46 UTC+0000 ~ Leo Yan <leo.yan@arm.com>
-> Append HOST_EXTRACFLAGS to HOST_CFLAGS so that additional flags can be
-> applied to the host compiler.
+> GCC-15 release claims [1]:
+> 
+>   {0} initializer in C or C++ for unions no longer guarantees clearing
+>   of the whole union (except for static storage duration initialization),
+>   it just initializes the first union member to zero. If initialization
+>   of the whole union including padding bits is desirable, use {} (valid
+>   in C23 or C++) or use -fzero-init-padding-bits=unions option to
+>   restore old GCC behavior.
+> 
+> As a result, this new behaviour might cause unexpected data when we
+> initialize a union with using the '{ 0 }' initializer.
+> 
+> Since commit dce4aab8441d ("kbuild: Use -fzero-init-padding-bits=all"),
+> the kernel has enabled -fzero-init-padding-bits=all to zero padding bits
+> in unions and structures.  This commit applies the same option for tools
+> building.
+> 
+> The option is not supported by any version older than GCC 15, nor is it
+> supported by LLVM.  This patch adds the cc-option and host-cc-option
+> functions to dynamically detect compiler option and append it to the
+> EXTRA_CFLAGS and HOST_EXTRACFLAGS respectively.
+> 
+> [1] https://gcc.gnu.org/gcc-15/changes.html
 > 
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
 
+
+I can't speak for the maintainers of the other tools of course, but as
+far as bpftool is concerned, this looks OK to me. Thanks for this work!
 
 Acked-by: Quentin Monnet <qmo@kernel.org>
