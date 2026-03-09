@@ -1,215 +1,100 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C353C1995
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 15:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773071333; cv=pass; b=PshChiWYegtBJi9RGRzKuJ5mCUvWrRP9uPL/sTHJE049fph6t4qGiULJjGZWbbefkyH/3G8jCbITFxk7ml6rnBcRD+GRkze2kZyltT8wh2e7YKWbpo+OtzJLGZHacblO2eHDKLJ5dGNDoLBPmmKDMkgOvpqAHRTV9vOmLpopVHc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773071333; c=relaxed/simple;
-	bh=uJ/VC6Uxtx3MxQiAnMLJsC+6B6yK26/1pFhyOFBOrH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bXCmclGP/oJ2a4tAgVbpkeyCsMcoCt5yEyU2z+c1uHSla58ong+2KGjir79bbJMcBMIAMEKzeG82OXXVUOhZn5oaMrOy0PSGJb3NWFkBD4Y+dOeZnEWLlC2GbMeLG6LUxgxjx1VqWwxF/SpnqrFPJKPrjTS4wHEHyq/7SEKVZc4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uFxrrKmA; arc=pass smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094E53DA5A7
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 15:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773071858; cv=none; b=r3pGCpTDBfGBZfmwnw+7ACbhdaisk1Px5T91EWcML3BgOBSEpgk2g5/o6F1VgxNaTbgBAsA/Zx1YMNrbZpFkbziaH37Tzzdohq4TEIFK+Lorv/24eNh2w6apersumGKUrCgQV8EF/RtaNaAKf9Fpd4o8NIG1i8wa6zsZXR3xQXI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773071858; c=relaxed/simple;
+	bh=fLkhu9nBmx7K8AJ6ynrrAwHCAF1k7/MnjzQncRyujPk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t/YQZDgzvCkJheVZ7sk26N+BXjEWVIb56KM2eSpZ7CP5WZ0Bfki2/4nXG0BJlP5LFnKeTUB6ii+vYsCyDtD2IxV0I/WgN0DBBzVDxIqlC+mJo56uQS2JvEw0gbr7TXdx5jddkzNJpxUH2v8Un2ckLXOoI1GhR+OwrCgrB8+Pe/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SnHK3HeK; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uFxrrKmA"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2ae3f822163so152805ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 08:48:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773071330; cv=none;
-        d=google.com; s=arc-20240605;
-        b=arzGsBLGwbWj32glyQbz5nZOeQczvKD598lFCUy6rh59zS/OKsbN4XExekeHfhprNN
-         bAhbDHtCXICLY0c9T6y0fcDPfiX/mZERqMFOMWGuJpfoHtFBMuYS4/TrIbU+G2vW7Kx8
-         TutmtZXokcUsZSMr2OCcuOyIUv6HdrorqtSCRFGlUAPyTPjEVsNiyNeepuTkWMXulOy6
-         NDT2E3xt3dJ4kIaE8L23ATc2DdO267nlcHh5tzuQ/8VZDhV7RC6vjRHPKj5rDLEH0fnV
-         YdcU0suwVvgSRr/ZLwM7Et3/RAFRtwd191UuaDNgfJ8QARfbmvU1ydzm1F0prbI8aSPu
-         0obg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=CA6/7hC6/EjB6Ur1CNpGWcjCxmjoCcUj5HNax+6YIEg=;
-        fh=x2YdKGOyXkM/iVtlzlr0Qmd62FEgs+hsFzFGgg3PZkU=;
-        b=MFqQMYc9s8z5Sxq/aJp3KbGcqpaJ+zOLvK1nFwQmOd9dZxiOopt3T1jqp4O6cEqRIS
-         jBxS0+6Q9aTiWwvyEwKUOjbNU94q/Mr0PdwYY7r4gkh/teuHUn6VU/LecXFukov8hBTl
-         oSTDkJvRx7QtvxgDXli6Y6Ioq4yhjWWLaJX7W2AB4VvzI67Ull/lk3AxMytyvaANJdKn
-         yLjXGwLQXa0VezSDGzGuokTFb4ge4gXAs2wuKyj3rq92A3u5y0PVn7m5R5HgmTuf0K1I
-         Ksiyi37FIWKgIu5irmKKlKC09kg3xGigSL7SABxZ0YzuVH+mh6Rnzl2gdCUJBkwZJ8Tb
-         OHmA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773071330; x=1773676130; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CA6/7hC6/EjB6Ur1CNpGWcjCxmjoCcUj5HNax+6YIEg=;
-        b=uFxrrKmAWYlOoMHf+tmADsGZPS2Qus7CYVMdep0IHgA0aSN9fODo6Fu7e4Lx+4jG1V
-         8oXVh1uZzVQq9uf828/SiUljFrj+8mL3GNhBHfTQEyrSolJ063ulq09ecaKA+aQbUcl/
-         Ndd5hPT3Z/DtUfh7/pmY2+OEoOafkPI9y1n7ENDNcdQ4fFwRUcHf3A5tw38dTUa/aSoq
-         9zkCfMPsSI6hMiaHU3LvMcdJ0380bXJsKttht+/6TdSt8TQ4pbFa/yBdEJX+dhwl81T+
-         2rzIq12xV0w32SG4lDVFdGJzCzp7xCjlckLrWVAQF/BeNOC7h8CLKW0M/RUTVj5qM37q
-         BMLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773071330; x=1773676130;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=CA6/7hC6/EjB6Ur1CNpGWcjCxmjoCcUj5HNax+6YIEg=;
-        b=Bz7QoUrTrryGSf1Cn8ZmIJiy5blSySocc8IhIE5m5JaXDrXoAN/NZHXv0cmd+FCdZX
-         05gPQa0PWx+oNwo5mtEnCzlK7IRpzGI5PjmA5JUr5ANTUaMq88m6TP+/4df4WruXBOd+
-         jl1hKZOutmflL1C2FnGXUdFRAzd/7YBa7sj6q7XZDZrJzkarPYYnC6KDf7DxGBeh2tjT
-         ymhPcICv0XJWzK+5HVPATsxnOcE8tvxWCp0PVz+n1XHmCqMmWjtBEEO7hwFpilnFlINP
-         Lv9qr/SbyJEmJAbrNgKX0vqtX7bf9FWGfuVOPiXsrSFsYqGBEZej/3m6ni0+5eZwuzqo
-         fSKg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7enX1VkETywJKrLT77z5KppUBQSj6U5VKuBaDDEWYRA9XKkjLJys6LM2coHKQSTy+b59n3XDAUF0zF7EI2o45@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMz4zWF68boncukC0+FbbF2quBmG6KRL0D0AIN0YSMQKaANw4I
-	uMG4g9wBwq+X1WJ2JpEf9UBH/m+BsnlZjuNhW7jwj2B64k8HdXc6o5kVzsqpSVOUoqKzKYYS75O
-	rCsKRCipB3XLc8omaFpE5AOH8uYrgyWlm9d9+WdlZ
-X-Gm-Gg: ATEYQzy0jLAnFLbZt1Ji45GLXKpItjnuGvthOXySXvytqCOrWsLplMmD3cs76dZT9ND
-	vaFT4gwP0qxvnLPujMWgkF8k+dw5zZuIzF4aseddT1GOgU9rzzCZaUTWFJfwqogiyFyo+cai5dY
-	PiaJnlQvijZpvIdUb9/FY7ns23XEG9js45VD9n+eLG3oyPyYeT4MYIZHj5qHp/KAojzEjVeFe0H
-	NKIkVLlrfD0/IAZU8Li8FVR+HaWCSGfzbhSEeH8a2MKHQ1VnpV2ahqAInEn1sfCZti4XH2DoFFL
-	2mYKbgqdAACVd6asKIll6f3PtM+u9PAuHdEmeQ==
-X-Received: by 2002:a17:902:e74a:b0:2ae:80a3:cd11 with SMTP id
- d9443c01a7336-2ae8ba41590mr3695495ad.7.1773071330236; Mon, 09 Mar 2026
- 08:48:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SnHK3HeK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773071855;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Z4gbmjPzIbKPwsawUq9GrRYxc3jP1mYSLT83XRpT0vg=;
+	b=SnHK3HeKFQcdWmzuZf7dOm10sOCrj8LFMBR+eL7ucZKLZw8Bi9QhB7+sqFrHjGK9w53Nf0
+	Lo4EeUK/DOP/cFtK99BKAdRoW1TGgBvb3ky/bT7b2vbKKzNnmcs8BqRjkHXiN0QxSkzGLb
+	45iJgTMY6ZWxTisJ2uS9iekZLKtZ+CE=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-711-iEnfNAUfNCq0K77lfh6znA-1; Mon,
+ 09 Mar 2026 11:57:33 -0400
+X-MC-Unique: iEnfNAUfNCq0K77lfh6znA-1
+X-Mimecast-MFC-AGG-ID: iEnfNAUfNCq0K77lfh6znA_1773071852
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8080C19560A2;
+	Mon,  9 Mar 2026 15:57:32 +0000 (UTC)
+Received: from jbrnak-thinkpadx1carbongen9.tpbc.com (unknown [10.43.17.6])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DD8A030001BB;
+	Mon,  9 Mar 2026 15:57:30 +0000 (UTC)
+From: Jakub Brnak <jbrnak@redhat.com>
+To: acme@kernel.org,
+	acme@redhat.com,
+	linux-perf-users@vger.kernel.org
+Cc: namhyung@kernel.org,
+	irogers@google.com,
+	mpetlan@redhat.com
+Subject: [PATCH v6 0/7] Introduce structure for shell tests
+Date: Mon,  9 Mar 2026 16:57:21 +0100
+Message-ID: <20260309155728.98026-1-jbrnak@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260309014215.3871484-1-olrose55@gmail.com> <20260309120543.GA606826@noisy.programming.kicks-ass.net>
- <20260309133713.GB606826@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260309133713.GB606826@noisy.programming.kicks-ass.net>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Mar 2026 08:48:38 -0700
-X-Gm-Features: AaiRm51pMqayV3W3Ak-qGlvdzW9jI8BX5MqJR7_rltk8rBj50L3PYzrHYe5VqJI
-Message-ID: <CAP-5=fVg8EcZCzmZgvb6SY9_XkRh7JP4_TcCV05vWAZchiSNgw@mail.gmail.com>
-Subject: Re: [PATCH] perf_events: fix array-index-out-of-bounds in x86_pmu_del
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Oliver Rosenberg <olrose55@gmail.com>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Mon, Mar 9, 2026 at 6:37=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
-> wrote:
->
-> On Mon, Mar 09, 2026 at 01:05:43PM +0100, Peter Zijlstra wrote:
-> > Now, let me go audit the code to see if this same problem exists in mor=
-e
-> > shapes...
->
-> I've ended up with the below.
->
-> ---
-> Subject: perf: Make sure to use pmu_ctx->pmu for groups
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Mon Mar 9 13:55:46 CET 2026
->
-> Oliver reported that x86_pmu_del() ended up doing an out-of-bound memory =
-access
-> when group_sched_in() fails and needs to roll back.
->
-> This *should* be handled by the transaction callbacks, but he found that =
-when
-> the group leader is a software event, the transaction handlers of the wro=
-ng PMU
-> are used. Despite the move_group case in perf_event_open() and group_sche=
-d_in()
-> using pmu_ctx->pmu.
->
-> Turns out, inherit uses event->pmu to clone the events, effectively undoi=
-ng the
-> move_group case for all inherited contexts. Fix this by also making inher=
-it use
-> pmu_ctx->pmu, ensuring all inherited counters end up in the same pmu cont=
-ext.
->
-> Similarly, __perf_event_read() should use equally use pmu_ctx->pmu for th=
-e
-> group case.
->
-> Fixes: bd2756811766 ("perf: Rewrite core context handling")
-> Reported-by: Oliver Rosenberg <olrose55@gmail.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Hi,
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Sending the next revision of patches for perftool-testsuite structure
+setup which incorporates the changes in Patch 4 suggested by Ian.
 
 Thanks,
-Ian
+Jakub
 
-> ---
->  kernel/events/core.c |   14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
->
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -4813,7 +4813,7 @@ static void __perf_event_read(void *info
->         struct perf_event *sub, *event =3D data->event;
->         struct perf_event_context *ctx =3D event->ctx;
->         struct perf_cpu_context *cpuctx =3D this_cpu_ptr(&perf_cpu_contex=
-t);
-> -       struct pmu *pmu =3D event->pmu;
-> +       struct pmu *pmu;
->
->         /*
->          * If this is a task context, we need to check whether it is
-> @@ -4825,7 +4825,7 @@ static void __perf_event_read(void *info
->         if (ctx->task && cpuctx->task_ctx !=3D ctx)
->                 return;
->
-> -       raw_spin_lock(&ctx->lock);
-> +       guard(raw_spinlock)(&ctx->lock);
->         ctx_time_update_event(ctx, event);
->
->         perf_event_update_time(event);
-> @@ -4833,14 +4833,15 @@ static void __perf_event_read(void *info
->                 perf_event_update_sibling_time(event);
->
->         if (event->state !=3D PERF_EVENT_STATE_ACTIVE)
-> -               goto unlock;
-> +               return;
->
->         if (!data->group) {
->                 pmu->read(event);
->                 data->ret =3D 0;
-> -               goto unlock;
-> +               return;
->         }
->
-> +       pmu =3D event->pmu_ctx->pmu;
->         pmu->start_txn(pmu, PERF_PMU_TXN_READ);
->
->         pmu->read(event);
-> @@ -4849,9 +4850,6 @@ static void __perf_event_read(void *info
->                 perf_pmu_read(sub);
->
->         data->ret =3D pmu->commit_txn(pmu);
-> -
-> -unlock:
-> -       raw_spin_unlock(&ctx->lock);
->  }
->
->  static inline u64 perf_event_count(struct perf_event *event, bool self)
-> @@ -14743,7 +14741,7 @@ inherit_event(struct perf_event *parent_
->         get_ctx(child_ctx);
->         child_event->ctx =3D child_ctx;
->
-> -       pmu_ctx =3D find_get_pmu_context(child_event->pmu, child_ctx, chi=
-ld_event);
-> +       pmu_ctx =3D find_get_pmu_context(parent_event->pmu_ctx->pmu, chil=
-d_ctx, child_event);
->         if (IS_ERR(pmu_ctx)) {
->                 free_event(child_event);
->                 return ERR_CAST(pmu_ctx);
+Link to v5: https://lore.kernel.org/linux-perf-users/20251125155648.197527-1-jbrnak@redhat.com/
+
+Changes since v5:
+Patch 4: fixed log deletion logic to ensure logs are only removed after
+all tests (including those executed in parallel) have fully completed
+
+Jakub Brnak (7):
+  perf tests: Create a structure for shell tests
+  perf test: Provide setup for the shell test suite
+  perftool-testsuite: Add empty setup for base_probe
+  perf test: Introduce storing logs for shell tests
+  perf test: Format log directories for shell tests
+  perf test: Remove perftool drivers
+  perf test: Fix relative path for 'stderr-whitelist.txt'
+
+ tools/perf/tests/builtin-test.c               | 141 ++++++++-
+ tools/perf/tests/shell/base_probe/setup.sh    |  13 +
+ .../tests/shell/base_report/test_basic.sh     |   6 +-
+ .../tests/shell/perftool-testsuite_probe.sh   |  24 --
+ .../tests/shell/perftool-testsuite_report.sh  |  23 --
+ tools/perf/tests/tests-scripts.c              | 289 +++++++++++++++---
+ tools/perf/tests/tests-scripts.h              |  17 ++
+ tools/perf/tests/tests.h                      |   8 +-
+ 8 files changed, 413 insertions(+), 108 deletions(-)
+ create mode 100755 tools/perf/tests/shell/base_probe/setup.sh
+ delete mode 100755 tools/perf/tests/shell/perftool-testsuite_probe.sh
+ delete mode 100755 tools/perf/tests/shell/perftool-testsuite_report.sh
+
+-- 
+2.52.0
+
