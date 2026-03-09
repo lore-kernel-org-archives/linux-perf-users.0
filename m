@@ -1,182 +1,235 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDCB329391
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 19:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773082809; cv=pass; b=AtEmgXpteydFehggqX5O7TMHeapCVn8k2oAcn+fogpVGqHuaf6mc/kuSeoH3ufcRWPe/IyxisQJI1wm5XvxR6tzN9gVfF7v3UwWgnb7Sk7ZOEWmp2wwNWyQU1TowwCeHc6UR0a1lQWaPOKwr0Hh7doSDEFr8OdUFZlz+4YcgdAc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773082809; c=relaxed/simple;
-	bh=CA6S3On2vTP5a5E5aET5ntZ0ItXqO0wHfnxbUEuk+RE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DY34vuhZLmU4BPMYgb8p+6kqAhtUQyyFmmXGDA/jCeSr657kNuAq/r+a5Iv6QLrPAhTkVkK0vK3epHMqagDEd0HUYFtCoBgpinsyXIrc8dFs58bn+s073ypFvx6mn31m/QWEvyPx8OQVxktzK9y6XaKWVxzyAExsiT19wNAXMeA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c75zsmgS; arc=pass smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E006114A4CC;
+	Mon,  9 Mar 2026 19:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773082873; cv=none; b=aZqu906/3H8AZ1W0bOaFhhO3F1b1/f3wkfFQswIL/BTwx2Q9H3xqD2j+QlLBPm1OHEyz66wrqF5yXGEkoRhW06tJWAZ1UZM9tg2IRIDCKu/AoIrpduOw8rxyEGmgZ+aspxn+D5zoNMsthOks5PwDsdNlnFMXxxCKrJRUoAwXHrA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773082873; c=relaxed/simple;
+	bh=zuZybXxG4NWtCCamlMtgm4GPhCUwWs75GokKHhfMbyA=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=QCmBAwOLqWrnXR8eva6gXElo4OqrkXzQuB5QYgU3FvYWtoDJC7B85wjJTWwGoLp5rzxGkemZmw0E57Jvh2Atm6KSaM5c86CDvWQ/ujg1lSONgiypvYEUN/lpO0DGycqC65/yg5OSCt0zXJJXHxjsbOWwPU75UcJZPDJlQBPVqhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=d2IgH4d2; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c75zsmgS"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2ae523d54d2so21365ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 12:00:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773082808; cv=none;
-        d=google.com; s=arc-20240605;
-        b=FoEU8F3plQb4QoNY5mgT1GnGKQYWKhYdqwioPoZuKmpKU8yECOdfnYu431h45mB01Z
-         n2EFtuxuKvXWc3pvGBKqQirQ3o1uPgWCyCPgtGaBoYvCG+qUQ/D7OKo0dJN9iBBQOHPQ
-         swMrI/hFwPeOiX3m5yYk0xD7U5zQRD07GeHIhJ0rtxKyyTQSrXnps+DnT9ARW7BfAzQK
-         DfZ5lXW2e1P1A+rvhqej87wtiKFYnxLuKuh6TW6esckJcn/fs5R4ytH2hY9cgI/NkvcV
-         IDhWpJZh6j5M5k0rxo44aWMRDQy8cz/nZs+GqGFclTTuy6RgCNEgCrVFxRyw+NEUjDKu
-         exUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=A69zc9BdB5IhC524YUAWFmjoBTZB9t4o4zitXpX63fc=;
-        fh=JWIpOMLvwr34BqCSpZBDW07PZkBzBqRXwXYtmVDr0Kw=;
-        b=RcFqPoDs8CnappmZEm3Dslk4ujYdGvbaOEGA3tP31VnH6xEZBPNjxbLR7K7IITJ+2s
-         gtUCNlFh4qakRv6vrtmK5w+SRXgWE0jtE0bTtsuBiesvlGWywWl2VpA4/5IoQ+bbwkHJ
-         dsZ2tTuin6ukYPL1IvpCK7G4uS5U4B6NjnqX+lGpsuKOjCa1CxguraaJU5lRKqE45KcB
-         xGwDUAmKrPIHE+4CFRRpBVxpKFK719IsKiVnBq8A1as4qtK6MsXqBPHbqIVy1U7f5Qt9
-         smpKc+2XoQ9yBKfIFfvnImB0Y8aZXx8AQrng6Sqo97XJRI1wJqWLgO5u88jGD+5h15iO
-         AV1g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773082808; x=1773687608; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A69zc9BdB5IhC524YUAWFmjoBTZB9t4o4zitXpX63fc=;
-        b=c75zsmgSuEs2nto+f0QGaIswwpJ25SkeIvHnOopAR8yjB76t68zrPHdvT9BS/a702+
-         +nn0ExP8F2SOJMfXnhaIMpZPgVUHFtGEZc2Sgg4zrbHJxcRHseXfrmKzD8GpB6rN2og8
-         YwOLrn+wyP8a4j4W0shbW9ktcGuo+4DkinwHfLNeochNjojx/GZGpOvfc62GBGG7xmtx
-         sTZlt4el2UdESD7cXnJ5HDE+a5JJEhfjEBnlhK9fW6n8SGetK9DsNxsrcioY3fe2OpS0
-         lAfpyi6UVyhrQVaS8v+wSz3j6HwyNq1CLzKCYgKaYQOzVoEHn//Ykezm9/pBdoTcQjkb
-         831Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773082808; x=1773687608;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=A69zc9BdB5IhC524YUAWFmjoBTZB9t4o4zitXpX63fc=;
-        b=e0/JfljWAooUqegeRs8FeqHhJNBwzbvi/RxoEwjo9mIlYz/N9JPxLLSKxsPMdhIkZn
-         a2FcaHdNeorQ4lgXqe3HxSfMgrTTKMrJrlN6L/lNjz55iykkv8tAkstUrIURcvBixpfY
-         c7Zyn4SNeev4VI5/ijm5G86aLXh7Y4Q4pum3SdsySh3xTJk43nUhjWB7gyJ9cQ+gB179
-         eUeIXfa7NOU4lsrpzEVRqxouEId9LWtEvdHgImCp66KC8U+4/VsLruMYAPdSSHTgTL2Q
-         uEbZRMDr8GIWN0Sm9be6ZyWXR54cETGhnS6ruYZxZGWucN/VqjlkcsjJuSXMad1+QTdM
-         9r4g==
-X-Forwarded-Encrypted: i=1; AJvYcCWpJ9w0QMQN0MspWgBk0yUA0kGKid2FYcQM8Em+hDqi5YLs705bcf52o92rEsqYxqgHXiJg2MMGgVtN46PnfiVH@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDyewVLkI8ssU3Ebaa/L1gbUYpIXw/ugosfnWO2cQZxRny9vsl
-	zGcycoYFyQML2fwqYqTdJv4zbT1hRqAkv4VCXUxAGEmq6CI6V6850kMZPv/RmeR9JBj1smqC/n0
-	v5db9/PGZPaO0DWeoft0KIjAqrDzTih2vWJbj5BmQ
-X-Gm-Gg: ATEYQzzaLkuAdB6XDmIJ4lTFYRGVh4lRWtnAy1fJLHI7khtzmT8frQHNdgaOLTAOMdK
-	pMltecQR60dxZVLpQoCjXWjGEqtisZXOlnLJgkd1huCU20YZArlR2grbHoHqlIWhS2HeWa/ZK3N
-	6Oifu++OvuEdkSBepL5LLbeho1KOSleQczTJkf7QEZPw5JYFAI2Syi6nOi8y0zMoTtF/z9t4IFK
-	WWHO7CJSrb4PiEL2vV1PwyjgkiQ80DdLMd4EnbHFFmI355zA9bSPKvd+pxudSXdyEAriK73vPb0
-	qkP2KJ1DIFJ78nmW51FpaDE3Cm5RzfVKXzo=
-X-Received: by 2002:a17:902:cccb:b0:2a7:4151:2c74 with SMTP id
- d9443c01a7336-2aea30cfb2dmr468065ad.16.1773082806886; Mon, 09 Mar 2026
- 12:00:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="d2IgH4d2"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 629BiYp9402979;
+	Mon, 9 Mar 2026 19:00:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=5swsN0
+	rUxxavDq9zMYnPJS2Jv47BUk07HnZRz0pbh40=; b=d2IgH4d2cI76xjXosS08+5
+	z7p4cmRM3+vsUQToHiG2nB8DP/joMF596z7727f61cqMRXeNJJpaPHxOajT8sUoA
+	4hdB+fd4u1HsuNVMFr3OsadtAG1CKvM35tVtsMpgaqqCM2ZBMMXJkpG++BlAdorh
+	a25OzV7jJWb6oFmtakhiLNn+qzaAmqYeRhvuloIidiB6X0BgKDL71O4yfuzN3RUh
+	AoqpvZ653XjMWMMwrSPrZbVK8uRNsl6RplSUCc6nWvYsnXyDf2A2VF2Up7qZowSZ
+	aJlNA2A77/MP8caSRZkmC6D9PsUx9bOXT5BvUfyuxzfxj3qWmymQF0ir3jH77L1w
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcun7rdb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Mar 2026 19:00:09 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 629FvaW1015771;
+	Mon, 9 Mar 2026 19:00:08 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cs121ww0t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Mar 2026 19:00:08 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 629J079s4915810
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 9 Mar 2026 19:00:08 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B444C58064;
+	Mon,  9 Mar 2026 19:00:07 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E09F35805A;
+	Mon,  9 Mar 2026 19:00:04 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.72.80])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  9 Mar 2026 19:00:04 +0000 (GMT)
+Message-ID: <c9500adc562665d44feaca9206f23a5ba07432c1.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 00/12] vfs: change inode->i_ino from unsigned long
+ to u64
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+        fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
+        v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+        autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+        devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
+        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-x25@vger.kernel.org,
+        audit@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-can@vger.kernel.org, linux-sctp@vger.kernel.org,
+        bpf@vger.kernel.org
+In-Reply-To: <f22758116dabd3c135a833bcb5cfcd2ea4f6ecf4.camel@kernel.org>
+References: <20260304-iino-u64-v3-0-2257ad83d372@kernel.org>
+		 <05b5d55c49b5a1bbc43a5315e3c84872e7e634b3.camel@linux.ibm.com>
+	 <f22758116dabd3c135a833bcb5cfcd2ea4f6ecf4.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 09 Mar 2026 15:00:04 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260309082548.3084264-1-wangqing7171@gmail.com>
-In-Reply-To: <20260309082548.3084264-1-wangqing7171@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Mar 2026 11:59:55 -0700
-X-Gm-Features: AaiRm519kDNzK9lKlbcsZ89g5eBroJB4EAWXUe13eNdTd-jVAPSHd81mv3FaRz4
-Message-ID: <CAP-5=fW3jcUyOOF5ikEUHbp8r=yMZE=iUPVesUhcba38T8ayZA@mail.gmail.com>
-Subject: Re: [PATCH] perf: Fix deadlock in perf_mmap()
-To: Qing Wang <wangqing7171@gmail.com>, Haocheng Yu <yuhaocheng035@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzbot+196a82fd904572696b3c@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: IXXixi4WEaMt5ZLipHNyYmLY2v6HWLsd
+X-Authority-Analysis: v=2.4 cv=Hp172kTS c=1 sm=1 tr=0 ts=69af18ba cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
+ a=o9bg_TheAfZNAX0b3qsA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA5MDE2NSBTYWx0ZWRfX6z/xa1oiKPHE
+ y5EqU++9e+D9gbPsThEA40KAIQaMNONuQFv6rphXC4UXK9hbuizpabscJIBcCstT+gR2HtuKysP
+ juuUkxGaMl7wxMTZHQleqdpaj1BApzfJEmhJlxbY5TY+zaAhKCE7FmRzIMEIOEQTi0cM+UreNNn
+ frwDdmfnFwh4sJREHHlQDdGWVECyjZbYar7Sfrv1WmeMPxeeCh8/LcWzrRHQxRnw2tvA2a4D8NR
+ c7ma8KolSpfVjNgJ0OleioMQBwEZGtoJr7jBKqVpvCDiflI9IHYr2EnI/OMDVmsDQcjOAtzHE2E
+ Cqs2ZZL0dk00OuX7g/sw5bXFEAXaWjWvfls2vJrY4HNOaz6u97184uDaehJuW5B2dmjBv87lTJU
+ mdY20MyhE/Ql/CExB+A/Xcl6KkN3u1kmsdTu44KKD0LP1RVDdsR5dGWPIvWKEchoHvJnuy6WqMG
+ FGu2ZyF+vBxNE+HNtfg==
+X-Proofpoint-ORIG-GUID: IXXixi4WEaMt5ZLipHNyYmLY2v6HWLsd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-09_05,2026-03-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 malwarescore=0 impostorscore=0 suspectscore=0
+ spamscore=0 phishscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603090165
 
-On Mon, Mar 9, 2026 at 1:26=E2=80=AFAM Qing Wang <wangqing7171@gmail.com> w=
-rote:
->
-> There is a possible deadlock in perf_mmap() if mmap_range() fails then
-> perf_mmap_close() is called while holding event->mmap_mutex. Since
-> perf_mmap_close() also acquire the same mutex, this result in self-deadlo=
-ck.
->
-> Fix this by moving the cleanup(perf_mmap_close()) outside the scope of
-> scoped_guard(mutex, &event->mmap_mutex).
->
-> Fixes: 77de62ad3de3 ("perf/core: Fix refcount bug and potential UAF in pe=
-rf_mmap")
-> Reported-by: syzbot+196a82fd904572696b3c@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=3D196a82fd904572696b3c
-> Signed-off-by: Qing Wang <wangqing7171@gmail.com>
-
-Hi Qing, thank you for looking into this. I proposed a similar fix:
-https://lore.kernel.org/lkml/CAP-5=3DfW-wHEv=3DTCULwk_HVOhWHdqRd8AZoESZsU_v=
-nhLjghUBQ@mail.gmail.com/
-but Haocheng noted it reintroduced the race condition the original fix
-was targeting. Haocheng has a larger fix in:
-https://lore.kernel.org/lkml/20260306093616.84299-1-yuhaocheng035@gmail.com=
+On Mon, 2026-03-09 at 13:59 -0400, Jeff Layton wrote:
+> On Mon, 2026-03-09 at 13:47 -0400, Mimi Zohar wrote:
+> > [ I/O socket time out.  Trimming the To list.]
+> >=20
+> > On Wed, 2026-03-04 at 10:32 -0500, Jeff Layton wrote:
+> > > This version squashes all of the format-string changes and the i_ino
+> > > type change into the same patch. This results in a giant 600+ line pa=
+tch
+> > > at the end of the series, but it does remain bisectable.  Because the
+> > > patchset was reorganized (again) some of the R-b's and A-b's have bee=
+n
+> > > dropped.
+> > >=20
+> > > The entire pile is in the "iino-u64" branch of my tree, if anyone is
+> > > interested in testing this.
+> > >=20
+> > >     https://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git=
 /
-that should handle both the original race condition and the deadlock.
-I wonder that fix may be made smaller by passing a parameter like
-"holds_event_mmap_mutex" to perf_mmap_close, something like:
-```
-static void __perf_mmap_close(struct vm_area_struct *vma, struct
-perf_event *event, bool holds_event_mmap_lock)
-{
-   ... // code from original perf_mmap_close
-   if ((!holds_event_mmap_lock &&
-!refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
-||
-       (holds_event_mmap_lock && !refcount_dec_and_test(&event->mmap_count)=
-))
-     ...
+> > >=20
+> > > Original cover letter follows:
+> > >=20
+> > > ----------------------8<-----------------------
+> > >=20
+> > > Christian said [1] to "just do it" when I proposed this, so here we a=
+re!
+> > >=20
+> > > For historical reasons, the inode->i_ino field is an unsigned long,
+> > > which means that it's 32 bits on 32 bit architectures. This has cause=
+d a
+> > > number of filesystems to implement hacks to hash a 64-bit identifier
+> > > into a 32-bit field, and deprives us of a universal identifier field =
+for
+> > > an inode.
+> > >=20
+> > > This patchset changes the inode->i_ino field from an unsigned long to=
+ a
+> > > u64. This shouldn't make any material difference on 64-bit hosts, but
+> > > 32-bit hosts will see struct inode grow by at least 4 bytes. This cou=
+ld
+> > > have effects on slabcache sizes and field alignment.
+> > >=20
+> > > The bulk of the changes are to format strings and tracepoints, since =
+the
+> > > kernel itself doesn't care that much about the i_ino field. The first
+> > > patch changes some vfs function arguments, so check that one out
+> > > carefully.
+> > >=20
+> > > With this change, we may be able to shrink some inode structures. For
+> > > instance, struct nfs_inode has a fileid field that holds the 64-bit
+> > > inode number. With this set of changes, that field could be eliminate=
+d.
+> > > I'd rather leave that sort of cleanups for later just to keep this
+> > > simple.
+> > >=20
+> > > Much of this set was generated by LLM, but I attributed it to myself
+> > > since I consider this to be in the "menial tasks" category of LLM usa=
+ge.
+> > >=20
+> > > [1]: https://lore.kernel.org/linux-fsdevel/20260219-portrait-winkt-95=
+9070cee42f@brauner/
+> > >=20
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> >=20
+> > Jeff, missing from this patch set is EVM.  In hmac_add_misc() EVM copie=
+s the
+> > i_ino and calculates either an HMAC or file meta-data hash, which is th=
+en
+> > signed.=20
+> >=20
+> >=20
+>=20
+> Thanks Mimi, good catch.
+>=20
+> It looks like we should just be able to change the ino field to a u64
+> alongside everything else. Something like this:
+>=20
+> diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm=
+/evm_crypto.c
+> index c0ca4eedb0fe..77b6c2fa345e 100644
+> --- a/security/integrity/evm/evm_crypto.c
+> +++ b/security/integrity/evm/evm_crypto.c
+> @@ -144,7 +144,7 @@ static void hmac_add_misc(struct shash_desc *desc, st=
+ruct inode *inode,
+>                           char type, char *digest)
+>  {
+>         struct h_misc {
+> -               unsigned long ino;
+> +               u64 ino;
+>                 __u32 generation;
+>                 uid_t uid;
+>                 gid_t gid;
+>=20
 
-static void perf_mmap_close(struct vm_area_struct *vma)
-{
-       struct perf_event *event =3D vma->vm_file->private_data;
-       __perf_mmap_close(vma, event, /*holds_event_mmap_lock=3D*/false);
-}
+Agreed.
 
-static void perf_mmap_close_locked(struct vm_area_struct *vma, struct
-perf_event *event)
-{
-       __perf_mmap_close(vma, event, /*holds_event_mmap_lock=3D*/true);
-}
-```
+>=20
+> That should make no material difference on 64-bit hosts. What's the
+> effect on 32-bit? Will they just need to remeasure everything or would
+> the consequences be more dire? Do we have any clue whether anyone is
+> using EVM in 32-bit environments?
 
-Thanks,
-Ian
+All good questions. Unfortunately I don't know the answer to most of them. =
+What
+we do know: changing the size of the i_ino field would affect EVM file meta=
+data
+verification and would require relabeling the filesystem.  Even packages
+containing EVM portable signatures, which don't include or verify the i_ino
+number, would be affected.
 
-> ---
->  kernel/events/core.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 1f5699b339ec..e5ce03ce926d 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -7485,9 +7485,12 @@ static int perf_mmap(struct file *file, struct vm_=
-area_struct *vma)
->                  */
->                 ret =3D map_range(event->rb, vma);
->                 if (ret)
-> -                       perf_mmap_close(vma);
-> +                       goto out_close;
->         }
-> +       return 0;
->
-> +out_close:
-> +       perf_mmap_close(vma);
->         return ret;
->  }
->
-> --
-> 2.34.1
->
+Mimi
+
+
+
+
