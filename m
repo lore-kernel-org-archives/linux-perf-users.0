@@ -1,206 +1,223 @@
-Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011041.outbound.protection.outlook.com [40.107.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACA41D88A4
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 01:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773020545; cv=none; b=MMAmRFSTmswF1lwWn2Cgjbgg7gfsVzCo5BtoHHrMYO5wXCDEcD476Oi9gaqz5dBX5aXLkT6K1pSvpVAXwfKgIHCwWBWemJDuqjuahegxaLkp/oJ6A1wRWHMy56MvsSUqolV04R2JBbWexCB2JCfrPUyB3kB0BbOK2ENioTdALbA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773020545; c=relaxed/simple;
-	bh=7eIRj2vMmWqWMoz7ARzhm3Vzc/DWOI+G7T8MQ6zGMtE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BFYTIwxPeKSS6d0MH20R9kA7aXfagxgEakXSIAvQfGhpAjezvhMUZ3eJ00NYiWHyrAtVyR921S8aWP+s5TKQrxNrsI5SEpy/95nbWYNpyYplbPY2H7Bo2EHgNkRJiFuVVFbOGgpXN1XfCm9R8kpgKy4qkpGIIB/HfL0gKZsNtJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kv7uWuCa; arc=none smtp.client-ip=74.125.82.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C5C26FA5B;
+	Mon,  9 Mar 2026 02:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773025113; cv=fail; b=qsxQnzxv4DQIT0xa9sGiTr4BOTVBngvE1ESIt/JxS+GwKr2JZK8/Mlkr6vEdAFMMEYJXzmDWE6IioiTWYE4DaGycV5SDqbggtUwma4HDhoWtyU896clJvIvxcBoek3bfKGZigOcdjXGAvnIgBCQ0tZz7N/IJ46z9m3r6VDOwXRA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773025113; c=relaxed/simple;
+	bh=erYGmpCDpC+j/bCE1rWgu/bAW5QKxJeDc/FcgYhcYSU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Qj14hB+GUVzb8nEhOCqZw1lYMMdjNbtMJ2Qcw+hGQR4BZo0buehe1qNxsGFTVuf/zLR/KwHwq34YU4qC75JaGQhXOvMb1RQ6689TkuXe5JD9B8Izodaj6rhMsAE60JVqCW4+gJMTFstpG6Up2aLPKX//uLIshHG5/iLRUYK9zj8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=w5OHIaO3; arc=fail smtp.client-ip=40.107.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kv7uWuCa"
-Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-2b4520f6b32so12794441eec.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 08 Mar 2026 18:42:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773020543; x=1773625343; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PUaRsNVwFauHrwZp2JYwojAS9B/lt2+UrlKTaGTgnNQ=;
-        b=kv7uWuCaIam9J6WC4zuL1b9Eu9Dk9L0xRFjOnwp3tR224KRLJVmYQfaIiZbgy6k2hZ
-         ovNFTVAY3wzBYCrtdHH4F7k09FBjrR7zqOQlhSvz0yzZgayAU4P/jzpmQpVvTLgBPLlL
-         GZVb0awOqE+waEm87qsKeM+t8GVoiToLIh9VSCcohPgKV8pyACkhyyqdJXEea2796Ttc
-         rAnbhNqFtK5pVJP5sJV+HV8R9/KcSkPDVVbEVFvms5uf+3ZExJ1HTayL3yRb9AbmcWgs
-         oJs6vSt8eLbI+u31zu3Kn9obq+L7GbscWXNPI7dZas7/9YZMYGwURW6QdoEIyanrABn4
-         V3rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773020543; x=1773625343;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PUaRsNVwFauHrwZp2JYwojAS9B/lt2+UrlKTaGTgnNQ=;
-        b=VTLmmeGUpMpAwfLBVPAk6BGKBrjNd6fM6nXLOZ6QrW47LihtpYQVdL/8t2b9ltED/w
-         MuRMOWW7eF1oUPu0G39w9PoX0L98Rv8H4BEAIZfWhaNmUoMZ9lRd6jASX2db4NJLvNRB
-         RnpDQmc81zyp3UVo94+vM2nmkzVmOK2/jn0XEX72G6XI9EkP8NNiDeeR2osIGjhBEFk1
-         Dv/e8ZSbtVPTssLSxfN/ocisWXLtATC2nH8bemGnf4wv/ldpRGqGAYDLt302wF5Eq5hw
-         cOG8yN3xXKOwMJzKRY9G+ICaIJ4s9/11YFNhYerYcbQdn8Gb48MoeP6bY5rgdEHW4E9s
-         jUkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVO/FaFdkJT90IaI4BTCeKN+rVrZ+L2yZsfoxZIhNDvkS9IevgrR/r+4q+nhxFMvj+yXzKyHA3JxA+9CBp3QJD@vger.kernel.org
-X-Gm-Message-State: AOJu0YykMe45RpIGYGzItuQx6FQkBlt3Ed6HaC2kj/Ao2MztqPPvKv9S
-	NHIymR9MiQTEPstKinsBJzyySTi+YQ/4B0ywmIIfO8UynHaz0//jMMMb
-X-Gm-Gg: ATEYQzyIVvqOX7WXyV3vK/tAPvCiCt5Zes4SIeoc4unzfIHD3NVzgqYKfKYS5weUWv5
-	HGhX30swt0fft4s8FNNUk8zTxPXk2XXP0jBDTES+6JrW2F2B1O2/dwz+CogTx+6TkOJhe1HWJa8
-	y7myCBeA1NnbqlLxNfrVBLzJrLAwtNJaFMv9S2Mv3qWveqecwl4Of8K9uSn13XJLQxDFR0TlVw9
-	/FDiJ/hU0v0ARHE7DRV8dzan60gDSrhWbOmsSbEIo7ggI187/8u2fbOUCKjqcmZmm6ByHMSxDCo
-	SUYTWP1ssjRuPhkHMrjd0/keR3H+KiceXa0ZzxD9448pINKfEf6gHzZmCIAKN3/BP18ub5YvyG3
-	8H+yzPyGLErLZixOwH7cXLid1SX4jmIpyvK5XIRXDlEjxPWAwaXp3JR4kg0UboDGgF1tWPRlP6r
-	1xHOgw9OgQk3JEdaG305bjwCm268cGi3/wcFivIRaYB+rdObY=
-X-Received: by 2002:a05:7300:cd90:b0:2ba:8496:498 with SMTP id 5a478bee46e88-2be4de8e32amr3293507eec.7.1773020542692;
-        Sun, 08 Mar 2026 18:42:22 -0700 (PDT)
-Received: from homelab.. (ip72-200-102-19.tc.ph.cox.net. [72.200.102.19])
-        by smtp.googlemail.com with ESMTPSA id 5a478bee46e88-2be6df8a348sm1367736eec.30.2026.03.08.18.42.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2026 18:42:21 -0700 (PDT)
-From: Oliver Rosenberg <olrose55@gmail.com>
-To: 
-Cc: olrose55@gmail.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf_events: fix array-index-out-of-bounds in x86_pmu_del
-Date: Sun,  8 Mar 2026 18:41:30 -0700
-Message-ID: <20260309014215.3871484-1-olrose55@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="w5OHIaO3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nTB3uQeTFuXt1O4QinrgAMzGwVvywEhOqpEGBGa5Kd3lrZZZhs/2beQYVA1inbNz6huDis6x6iAhupNnloqmUBvIR4qOW/vl+4Oe/uIEp10ayhxNillX3eRx9RG4sPygvwFRsS4C4073EoF8ujCvhhdhroGc1tSNXM95RE3VjjvUk9bpfzHk8ocAy9gPnrFtPBoDrRyWQnqPZEyCwoEsETb1pdvdDU+S/y7fAK81xDp/XtAQW8bx7Y2063eeDkvDAPCbGwQ5NWYmB1hlhU6wA0d91V49PzdKm+JMSR2a7jyw9DgbHMQXXCBHhS10MkE2mcQu8Tje9kL/vSOkzoD45Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8duVZr6p/2PnW3s58D7oeXe7iX+x22vgsYGlCuaudNI=;
+ b=fIIky1fKx7UOji0Tf0goycwDFmU1pQP87pRvlhadYiPLowgk2K1Poy4loDWBKWxDfInuaD4Z/GKZUPv4ZD9tKjh2YxoMQ08Fv54axjducCKBVsE5P9sgwDIrVOPVj/T17kNSmGFwG5Aam8IpdfnisMmJeazq2G58bHNmFCODvr3U7jgtPpSVwOxRore3xfx5VXi247usMuXxL3oOB+5n0A/5Yw9cE+KW2DtdtPi9rJM+UZGz2YF76joxLKhpd2rWhlR+wwh/Bicrk97awvMO+Nhs5Rx4D4dM3k21Cx2euAJFIym1kcPJUv8A1LlMN4b76Wl53OUnSvnXoHFlIJX1lw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8duVZr6p/2PnW3s58D7oeXe7iX+x22vgsYGlCuaudNI=;
+ b=w5OHIaO3E0scRW4rc0b0GYw6+oWtLFbHxwlQIF1rCtavOQiBJ71OzfSUpFxIjTfTQDbIaiqy4odKutPJXONox9C9Q13dAHCp/Y/4lTZCd0Lv9C3XOggwbK6gTcoTzm6+s91DU0Bmfq4WPy7NFX448xrwf4imwJTzHC0CESkDvKg=
+Received: from CH0PR03CA0405.namprd03.prod.outlook.com (2603:10b6:610:11b::15)
+ by DM4PR12MB6590.namprd12.prod.outlook.com (2603:10b6:8:8f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Mon, 9 Mar
+ 2026 02:58:26 +0000
+Received: from CH2PEPF0000014A.namprd02.prod.outlook.com
+ (2603:10b6:610:11b:cafe::ce) by CH0PR03CA0405.outlook.office365.com
+ (2603:10b6:610:11b::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9678.25 via Frontend Transport; Mon,
+ 9 Mar 2026 02:58:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ CH2PEPF0000014A.mail.protection.outlook.com (10.167.244.107) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9678.18 via Frontend Transport; Mon, 9 Mar 2026 02:58:25 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sun, 8 Mar
+ 2026 21:58:25 -0500
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sun, 8 Mar
+ 2026 21:58:25 -0500
+Received: from [172.31.177.127] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Sun, 8 Mar 2026 21:58:21 -0500
+Message-ID: <3b6ff125-4110-4fbd-9da9-c510b3d43106@amd.com>
+Date: Mon, 9 Mar 2026 08:28:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/7] perf/amd/ibs: Enable RIP bit63 hardware filtering
+To: Ian Rogers <irogers@google.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, James Clark
+	<james.clark@linaro.org>, Sadasivan Shaiju <sadasivan.shaiju2@amd.com>,
+	<x86@kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Manali Shukla <manali.shukla@amd.com>,
+	Santosh Shukla <santosh.shukla@amd.com>, Ananth Narayan
+	<ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>, "Stephane
+ Eranian" <eranian@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20260216042530.1546-1-ravi.bangoria@amd.com>
+ <20260216042530.1546-6-ravi.bangoria@amd.com>
+ <CAP-5=fV_cJskvLRZhQQXMGAcPUb_Rg_b30PDJNXzxL49JK4B5g@mail.gmail.com>
+ <8b99652d-155a-444e-8395-d461714bf4b8@amd.com>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <8b99652d-155a-444e-8395-d461714bf4b8@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000014A:EE_|DM4PR12MB6590:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22193b55-c9fe-4985-9752-08de7d87bbda
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700016|1800799024|13003099007|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	ZHk+xBirjrmsDquk/mlO2Em+urNVy9kXSkyqRm3vff8k4NevKS75c9t9VcKhqh3/RBKfUO0xu73RT18xNHg2LRio4/mNi1eV1lZNP+xL5yFazTepC2HJwhROR+6qenb8P/nnQoEukDitwbZfHjb8Ulso3piof/4KX51gOcoRiqbVnMNnCKEGM7S8Vk0eiHSqCOuuA6G6TNoB+QrAyLk412sjC/htkG5ai3hjBu37xyXGRdSqoV+JXvrHhY6hd9wvXV2kqxJOJTxN1Nd5S6m/9YYhtXKMsoE9ICwphedJzuasZM7Xk31v9/QxQo/W7ErbaMnrJGBQVVH3W4xOvozItt5muJxnsR5+QzUNoekytDMZdZlrCk4ptBRSMNuDeDRbAeOaSK7eFskcfVgZnzRQu+lTMhNE6lEYg/IgEwRPxbUXNhx1JE27wm2TI93gkESMUuFprUgsJZHb1eKF3xWrKf4qI0MufljsNCEjj4Zbs8tUN5oGBCGvEvdFa2VJg8C17T60FtNQAob7QZw1HpFQBKp35RJzdPVOIZpXmTuN8RUtvMXHM0g/CIsOskCb3+ZsoUKQ8TfBLONzrCeR+uBxytfQ9QcaTZtHaQnHn8M25d+c999d6GDK0kDahmUshaEuJ08PRMrJqq7JSDEHIP618IgMoOUTlZZ3lYELZva2Wc8GJ2GhogIkNXyTZNqrdWS5TqY/8gcS/7gJFqT1c0g8epOTB7fNpqkdoUl62Pw0RYQmNpqdpa5LFUzi4SsL3dvqBHHTUvHvJqu9/Ys+STuvnA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700016)(1800799024)(13003099007)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	/IghP9thR1gfjz9o9hY9zrTy0RdmfBaXpBumCFWYwZmwnBpQ+l857L3g+1I12+fayefEdOXnmnUSwS2gMb1dhKkS5AFVJZeiXhO9GudNCAAR03VcA3qeZx6sMppIPT9PREDUBuTJdLK4XbFU/7ohiIV5q94vV7i0M5TbKGGH4WMCmej1hWiaJeAIei0tvy9WBaJ0Kpt4GkuMgp3XOvXbEtCc/EIJEdj0w5abgzBNqwPLtWDvxJL6g2O0+hr4LvV4v1bgmyV5AT0wKk1zuOy9CkJ3NyqNgl/2LnFrCKufP5zAW2x8HO//pbR0Ifgj1w5TQRrpFZjhGbqjxCQqCTEFUwZcBU3YlJDwzFBO+FSZ91YzwmE6y6vePh95B8yvPLT9mVU5EdUUeaHLxTNKPcn8mXcPIwhawRxmFT5v86kt/qxYEQ7GLVL+l+/P5sLCKvm/
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2026 02:58:25.8372
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22193b55-c9fe-4985-9752-08de7d87bbda
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF0000014A.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6590
 
-Vulnerability Description:
-There exists a KASAN:wild-memory-access and an array-index-out-of-bounds
-(-1 index) in x86_pmu_del(). When a cross-PMU event group is created
-where the group leader is a PMU type that does not have txn implemented
-then the cpuc->txn_flags for the siblings are not set because only the
-group leader's pmu->start_txn() is called and in the case of not being
-implemented it is set to perf_pmu_nop_txn(). The events are still attempted
-to be processed as a group, when one of the x86 PMUs errors out,
-cpuc->txn_flags is not set and event->hw.idx is not set. The x86_pmu_del()
-function expects event->hw.idx not to be set when events are batched and
-not yet enabled during a transaction so the function checks the
-cpuc->txn_flags to skip the array-index-out-of-bounds. However, when an
-event errors out and the group events are not enable here, cpuc->txn_flags
-is not set and event->hw.idx is -1 so we do not skip the uses of
-event->hw.idx which causes an array-index-out-of-bounds.
+Hi Ian,
 
-Vulnerability Reproduction (POC):
-static int peo(struct perf_event_attr *a, int g) {
-        return syscall(__NR_perf_event_open, a, 0, -1, g, 0);
-}
+>> Does the bit 63 assumption hold for guest operating systems?
+> 
+> Yes, this seems to be an issue, even with current swfilt approach. Let
+> me inspect the code and get back.
 
-int main(void) {
-        struct perf_event_attr raw = {}, bp = {};
-        int fds[64], n = 0, leader;
+All mainstream 64 bit OSes use the bit-63 set for kernel addresses and zero
+for userspace addresses. This norm does not apply to 32 bit guests, but
+those are rare, and profiling them with IBS would be even rarer. So, I'll
+document this limitation in the perf-amd-ibs man page.
 
-        raw.type = PERF_TYPE_RAW;
-        raw.size = sizeof(raw);
-        raw.config = 0x76;
-        raw.exclude_kernel = 1;
+While looking at this, I found some issues in IBS. Below patch fixes it:
 
-        leader = peo(&raw, -1);
-        if (leader < 0) return 1;
-        while (n < 64 && (fds[n] = peo(&raw, leader)) >= 0) n++;
-        for (int i = 0; i < n; i++) close(fds[i]);
-        close(leader);
-        if (n <= 0) return 1;
-
-        bp.type = PERF_TYPE_BREAKPOINT;
-        bp.size = sizeof(bp);
-        bp.bp_type = 4;
-        bp.bp_len = sizeof(long);
-        bp.exclude_kernel = 1;
-        bp.inherit = 1;
-        leader = peo(&bp, -1);
-        if (leader < 0) return 1;
-
-        raw.inherit = 1;
-        if (peo(&raw, leader) < 0 || peo(&raw, leader) < 0) return 1;
-
-        for (int i = 0; i < n; i++)
-                if (peo(&raw, -1) < 0) return 1;
-
-        if (fork() == 0) _exit(0);
-        wait(NULL);
-        return 0;
-}
-
-POC Explanation:
-The POC first fills the CPUs PMU events with x86 raw PMU events (type 4) to
-set up the group scheduling to fail and trigger the bug, it then creates a
-cross-PMU group with BREAKPOINT (type 5) as the group leader and 2 x86 raw
-PMU siblings. The first sibling is added but batched and not enabled, the
-second sibling fails on add because we exceed the max number of PMU events
-for the cpu. This triggers the cleanup of the first sibling for which
-cpu->txn_flags is not set and event->hw.idx=-1 since sibling 1 was not
-enabled. This triggers the bug when event->hw.idx is used as an
-array-index-out-of-bounds in x86_pmu_del().
-
-Suggested Fix:
-The suggested fix is to add a check in x86_pmu_del() to verify
-event->hw.idx is set before using the value. If it is not set then jump
-over the use of event->hw.idx and proceed with cleanup.
-
-Fixes: bd2756811766 ("perf: Rewrite core context handling")
-Signed-off-by: Oliver Rosenberg <olrose55@gmail.com>
 ---
 
-Notes:
-    This patch fixes the symptom and prevents the array-index-out-of-bounds
-    caused by the dangerous use of hw->idx when it is not set. I was not sure
-    if it may make sense to also solve the root cause of the issue which is
-    cpuc->txn_flags not being set for PMU events in a group where the group
-    leader does not implement transactions, or if this would require a redesign
-    to how group events are process and have potential performance
-    degredations.
+From deb6cdcbc60778b57a6eef60b2b7bd1b8e3cea74 Mon Sep 17 00:00:00 2001
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+Date: Fri, 6 Mar 2026 04:52:00 +0000
+Subject: [PATCH] perf/amd/ibs: Improve guest profiling
 
- arch/x86/events/core.c | 5 +++++
- 1 file changed, 5 insertions(+)
+IBS captures the RIP but not its privilege level. Since the NMI is
+delivered with delay, CPL can change between the IBS tag and NMI
+delivery. Add a check to catch and discard invalid guest samples
+using CPL stored in vCPU save area. This will work when there is
+user/kernel CPL change in between IBS tag and NMI delivery within
+the guest boundary. But it won't work when there is a guest entry
+or exit in between IBS tag and NMI delivery.
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 03ce1bc7e..7474b2d66 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1655,6 +1655,9 @@ static void x86_pmu_del(struct perf_event *event, int flags)
- 	if (cpuc->txn_flags & PERF_PMU_TXN_ADD)
- 		goto do_del;
+When profiling a guest and the IBS RIP is valid, assign the sample
+IP from the IBS-captured RIP and set PERF_SAMPLE_IP in sample_flags
+so that perf_prepare_sample() do not overwrite the RIP with
+perf_guest_get_ip() from the vCPU save area. This keeps the perf
+sample IP consistent with IBS raw data, data_src, weight, phy_addr
+etc. The privilege level in the perf "misc" field can now go out
+of sync, as it is taken from the vCPU save area.
+
+Reported-by: Ian Rogers <irogers@google.com>
+Closes: https://lore.kernel.org/r/CAP-5=fV_cJskvLRZhQQXMGAcPUb_Rg_b30PDJNXzxL49JK4B5g@mail.gmail.com
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+---
+ arch/x86/events/amd/ibs.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index eeb607b84dda..70408b0b1597 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -1415,6 +1415,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ 	unsigned int msr;
+ 	u64 *buf, *config, period, new_config = 0;
+ 	int br_target_idx = -1;
++	unsigned int guest_state;
  
-+	if (event->hw.idx < 0)
-+		goto remove_from_list;
+ 	if (!test_bit(IBS_STARTED, pcpu->state)) {
+ fail:
+@@ -1526,6 +1527,42 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ 		regs.flags |= PERF_EFLAGS_EXACT;
+ 	}
+ 
++	guest_state = perf_guest_state();
++	if (!event->attr.exclude_guest && guest_state & PERF_GUEST_ACTIVE) {
++		/*
++		 * IBS captures the RIP but not its privilege level. Since
++		 * NMI arrives delayed, CPL might change in between IBS tag
++		 * and the NMI delivery. Below checks can identify and filter
++		 * out invalid samples when the CPL changes are within the
++		 * guest boundary. However, these checks fail to handle cases
++		 * where the CPU performs a guest entry or exit in between
++		 * the IBS tag and the NMI delivery.
++		 */
++		if (event->attr.exclude_kernel && !(guest_state & PERF_GUEST_USER)) {
++			throttle = perf_event_account_interrupt(event);
++			goto out;
++		}
++		if (event->attr.exclude_user && guest_state & PERF_GUEST_USER) {
++			throttle = perf_event_account_interrupt(event);
++			goto out;
++		}
 +
- 	__set_bit(event->hw.idx, cpuc->dirty);
- 
- 	/*
-@@ -1663,6 +1666,8 @@ static void x86_pmu_del(struct perf_event *event, int flags)
- 	x86_pmu_stop(event, PERF_EF_UPDATE);
- 	cpuc->events[event->hw.idx] = NULL;
- 
-+remove_from_list:
++		/*
++		 * Assign the IBS RIP value directly in the perf sample here
++		 * to prevent perf_prepare_sample() from retrieving it from
++		 * the vCPU save-area. With this, rest of the perf sample
++		 * fields (raw data, data_src, weight, phy_addr, etc.) will
++		 * remain in sync with sample IP. However, privilege level
++		 * captured as part of perf sample "misc" field could now
++		 * go out of sync since privilege level is fetched from the
++		 * vCPU save area.
++		 */
++		if (regs.flags & PERF_EFLAGS_EXACT) {
++			data.ip = regs.ip;
++			data.sample_flags |= PERF_SAMPLE_IP;
++		}
++	}
 +
- 	for (i = 0; i < cpuc->n_events; i++) {
- 		if (event == cpuc->event_list[i])
- 			break;
+ 	if (((ibs_caps & IBS_CAPS_BIT63_FILTER) ||
+ 	     (event->attr.config2 & IBS_SW_FILTER_MASK)) &&
+ 	    perf_ibs_discard_sample(perf_ibs, event, &regs, &ibs_data, br_target_idx)) {
 -- 
 2.43.0
+
 
