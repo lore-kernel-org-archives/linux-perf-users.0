@@ -1,183 +1,226 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C263D2FEC;
-	Mon,  9 Mar 2026 14:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850B33C199F
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 14:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773067316; cv=none; b=lODg89qvvVViwpBvdN8MJR/NUYTEsur/ehwRcuJ4pTY4G/YW0cWQfxw9mmTVAzNNIvLAfrpOu2V6CmwhkO6iOdUQlxBUQ92yh6apZSg6m4IpzNj9qKW7Nzd/qPjT1QYbO6w2+k0AsnRzn/SdNcW7RyMkc43kmop7oER9Xqfm9oI=
+	t=1773067414; cv=none; b=mbBKeq3rDQWq/zOu6ayRYOtoPBQGQFvbje8EaJnVSPCNOh0wOrPYmeM8C4ztpGTHXfAGRiWus+8GCLO2XWo+tCYVDHGJZxOXyZlu8AeEeS07TfE9B7asJ66U7vOfzvNVk2OTUF9qBCNunzBDfd6KLOJh5I6AL+rJHDexA/lcQDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773067316; c=relaxed/simple;
-	bh=nY0yefsOgV5X12XzKflWqQ4ZP3A/fJd1njRAyfqGdOQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FLULvYSDwS6Rnusgo0hQI8hqeWrT4ere4gkHDtDJmGEghZ8G4jzQyPEMBFL0QuiOIrnmWd6TVSWUDRZqEAiUN8fCnJurCOK3up86BqdepwVIt015CdFSb8MPO0dHZoBUg8SqlQqja70Z5I7UJdKdqVDmHDQo6DTPvfJ8XLHF4WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=CvjSunns; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1773067414; c=relaxed/simple;
+	bh=mguFycCClC7hIxduu/YAtXMSiWY4hv6TL5+n2Mt+bxk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=M65uRXZDgOud0Afd3MR1Y6DoZdHBB+vAbCaQyJ9PuftAnjGTm0egp9Rdxh3lzpl1L5qdL+dul67MzpqsP2mHBZ9DAUEcN5vHFQy5ZEe6N3GZ8C0wltOY5rRwAsONb6OkE7E0mSETQu5dK5HMkInIBvYExol751I70ZdXKSWbTH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CivCS4Dz; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=erPtHQ78; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="CvjSunns"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
-	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
-	bh=r8H1HXbZxPVkEnzeYmiqVL1g+zE/V3u0QwhfcvUX2os=; b=CvjSunnsrTIg8kMAr5H+cmyKfd
-	lNOQLP7GslfTPU9+jB0Gj4aSYaccfoPL7D2l/fCwGjWkCwUaGpe5tmoeNRM6mttw48oJ+4a7T23wf
-	DJuHWBJW17LVgo5FalUc5aGmHELsP8Dfdtx87w8UtrFfCGNu5egrvpQdMnyCBKn0gHFTuAQ+5/a9B
-	ZhPxJM4ZynmwskYnegN5jk/y++S4KdXMCHr48RHJnjRwHHZ++Gn70Vyo2QcjJYdX4RMcX8gvGodrc
-	qQwlJVfVqp660TQ3H416fSW95FuAAoicgHxqokV1u+UY0z+NK89O3AFIyIrpKjajsRUlVvesoBkUp
-	X+91sUDA==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1vzbne-002HzM-4o; Mon, 09 Mar 2026 14:41:38 +0000
-From: Breno Leitao <leitao@debian.org>
-Date: Mon, 09 Mar 2026 07:40:56 -0700
-Subject: [PATCH] perf/x86: Restore event pointer setup in x86_pmu_start()
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CivCS4Dz";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="erPtHQ78"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773067409;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DaKhYXczwtijwhMhNK50Qi+Imd2B6nrC4erR8UlvNrQ=;
+	b=CivCS4Dz9jJp2Yi78B7go+mtYkcc7Pzfqa6KCamzDSqerng/gqDVX2cf7w6h9bysIjErla
+	cTKtgz4x1rYe44x5kLX6RrZ3HvnFDvKH9mbtQQMQd2LTJ86tuPvWfKGHcO5Cs/SsrxkwBf
+	5371gxTBYq1c3y145sM6tmijO0Nta4Q=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-441-jqVOxN7pPwG-SG4F8IqCzw-1; Mon, 09 Mar 2026 10:43:28 -0400
+X-MC-Unique: jqVOxN7pPwG-SG4F8IqCzw-1
+X-Mimecast-MFC-AGG-ID: jqVOxN7pPwG-SG4F8IqCzw_1773067407
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-b96eed52862so112540666b.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 07:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1773067407; x=1773672207; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DaKhYXczwtijwhMhNK50Qi+Imd2B6nrC4erR8UlvNrQ=;
+        b=erPtHQ78lKGLDImHXgF+GM+YMGasz8jZ63fIHDD4R9cXupefmJZEwgIHLh01MESD26
+         wWGF7pLZygZ2iWDO9bONlhpyxYMvb/jO72x2ai+r46sHh+t8KvnuOY7BIe6Y8ayEG9U1
+         /fe/0LKvdOHDjN0kP41dnBgKrWulpzJ2+nW3pYBs26i9Vrzgf1yDhdivglWlcjqipk8k
+         xzdO08LlxEfJ5l80zgQZke7dlP9ehwbf73uUtAn+jZ1SwcAHUBGYzzbUkQQEVY+bD6Gr
+         f9EIjtS5AhAAVFdDz1LFU/T9MWQzqNq7Kxz0+xIt4u5HHBOutjg2UcFefhjgPh9d5B65
+         4kXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773067407; x=1773672207;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DaKhYXczwtijwhMhNK50Qi+Imd2B6nrC4erR8UlvNrQ=;
+        b=PrMuL3Z3fJUcyNIoz2muxVSdleKMg75FoQV8gqvx4YaOVbwkav18DD5IifFVYS8GOD
+         eFIooK7M5YA/8odNCiU+3D/GZpo0eFz+m4Jyfj/NxtXHO4i7UNTN17SazGkVXbH+eUZg
+         UVfNB0mWnFPAGyWvjkvYeDqfMZ1wt8RT1oxEr9bvsSk+k638uYkvCAIEKe2hgruE5Fg/
+         MUzQicdMKT9fcboJOHpShY2PSm7YE//Kxe9agVNjUnxRvlrtPGaib60o6VrRanhk5Sqi
+         d99vl/2tp/xOjBfKlpXvT9xF/R3FxE9dhX9OBBBucaaZVr61zJF9/8L8mIbb0k4Nt/5M
+         9rbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFbwpK+zcwzw9UkDCvAbcDwVWkTxQyr3w0lF/V0CIGf1g+5iGtPw+iPl8QQXpMwRsTFA1v+xhSt6Z8LvyH8CMR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyFOl5RxffoJa4SEwQXQWraN+eqRXpnWJRKA6Qq+NqQlihhMCm
+	nsohRbh0h7tHFO6ZA2E9Uv2PicFjjrpwD1NXWYFN5z9PvfP222DRcsfrsFOiawqi7lOu+V1z82G
+	IJMX3YOdcWjP2pvolZ65zqkKwwHIEiqB8hFm4Q8qqbylHGeddEkFjBygTx8ubsDA2E8vWzw==
+X-Gm-Gg: ATEYQzyKWSC6JylLHpWVuhMk5vFKW960zLFgcvFntZmfwZ2M1opN6pLGdcrxqvDTCuK
+	Ct9QG9+7515VvwpjolGBLB0cJ++1xnIu05Spq88DSHh80g0CPTsZp28H1p0pUdGCrW+tnTXtPuO
+	XBEmkgJcoU875/VnYiPxMiQxnu9yYtY/DD6OCfEL6gANmywADDnz0xucUr366M09NeVpp3w5igT
+	gdz0+WD0u7Cib//KxeRcPwptpmq+29dGRrbLYcPZroVKcZQ2P2HWgNdGfd3q7a24vSS2aWITcZ+
+	DeOaDPV5rNWB9b8KRICS7XPksvB/A6oB/VUnpFEQYtTWTONGRi7K9Zt7HifWTjRj6Fb7mfC4dGN
+	2DzfkwmuDDq7A38TKc8/Q8Wy4gRTnm7SmoJsIxHTqYNEkHI8k6lygnDhV
+X-Received: by 2002:a17:907:7fa4:b0:b96:eb7e:bc3b with SMTP id a640c23a62f3a-b96eb7ec9a3mr256773666b.49.1773067406725;
+        Mon, 09 Mar 2026 07:43:26 -0700 (PDT)
+X-Received: by 2002:a17:907:7fa4:b0:b96:eb7e:bc3b with SMTP id a640c23a62f3a-b96eb7ec9a3mr256771866b.49.1773067406195;
+        Mon, 09 Mar 2026 07:43:26 -0700 (PDT)
+Received: from [192.168.0.135] (185-219-167-205-static.vivo.cz. [185.219.167.205])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b942f189de1sm382893266b.63.2026.03.09.07.43.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Mar 2026 07:43:25 -0700 (PDT)
+Message-ID: <100385b1-afd0-4c17-831a-6cd45a02f6f3@redhat.com>
+Date: Mon, 9 Mar 2026 15:43:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc, perf: Check that current->mm is alive before
+ getting user callchain
+From: Viktor Malik <vmalik@redhat.com>
+To: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ Joe Perches <joe@perches.com>, Paul Mackerras <paulus@ozlabs.org>,
+ Benjamin Herrenschmidt <benh@kernel.crashing.org>, atrajeev@linux.ibm.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20260227082502.1882395-1-vmalik@redhat.com>
+ <aab3EW1LfDcjSzzy@linux.ibm.com>
+ <80766050-c745-411b-8ee6-8141d2cfe4ff@redhat.com>
+ <aa6pZaDySMl9JGKf@linux.ibm.com>
+ <f40b2ccd-2d71-4089-bd28-3adbc70f0a1d@redhat.com>
+Content-Language: en-US
+In-Reply-To: <f40b2ccd-2d71-4089-bd28-3adbc70f0a1d@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260309-perf-v1-1-601ffb531893@debian.org>
-X-B4-Tracking: v=1; b=H4sIAPjbrmkC/6tWKk4tykwtVrJSqFYqSi3LLM7Mz1OyUjDUUVBKz
- kjMS0/VzUxRslJQMjIwMjMwNrDULUgtStNNSzE2Skk0MDY0T7RQ0lFQKihKTcusABsTHQvhF5c
- mZaUml4D0KtXWAgC5UEfraAAAAA==
-X-Change-ID: 20260309-perf-fd32da0317a8
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel-team@meta.com, Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-363b9
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4143; i=leitao@debian.org;
- h=from:subject:message-id; bh=nY0yefsOgV5X12XzKflWqQ4ZP3A/fJd1njRAyfqGdOQ=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBprtwb40mCxonZwLGJFdKvAOCNf9Z1ejF9h1QLc
- KbpEn/XCmSJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaa7cGwAKCRA1o5Of/Hh3
- bT8zD/9PRj3adLVgcinUk4bxKws/7ijwXTW36Xv2kkWLNFX9pc22jayj/SCiPtS3M+gDgfJAIY2
- +Vw/EePc/2sj9bMdIpRIM0RIPC1HahEXpcW0lRANPtipVn65YtkGaAHD4nwmTR5XRF0FgxI7VSW
- FBCVbj3MHgUFBgp46CqRVnBJ2wJYzuAwJlrGFl7DhXS32c/YdrgImOBMbAlIeQDnU0qCbYMFqvi
- sTMhYpL9kQ/rnT3fystUMP1i6+64GLilQNMrtwJ3TeWheeNuRwa7Iz00iO8ksbpiR4GrkG9SfC9
- rWNQRzypsYy5uGoeIfela/cJhA5zQpDwwRv1KE8Q9lr0Cj37sQ/e7TOghVJBwQqErAli807FjW7
- RqwUQvWRuVu0LVRRah5q8vbry3zWoBKzrPPcOfttH9rPhQtA5aW/NIcHI3iuflJShrHxrRMiqf4
- 4eRR68N3SC/8kACyX570wzTcr/Aa07SW/jy2YaR1sxr7zP3dxgx3p7dEHrfqrGBpR+czu74z/P9
- bgiJ0EdG1gmEjdziKkdBJ9OBQYseRFWiHjytPE7OT73dnONWqm2dkV7ZpcChhUdTTqfX0/calmW
- Wk/M5n7t9iG+jFUXf74EXt8KR5fbj0HrJK+ZkVN2Dv2iuPrs0Z5vXQyDI4Kfi41cYeYZ/j0YGO3
- /mEeqYcc8ua6G+Q==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
-X-Debian-User: leitao
 
-A production AMD EPYC system crashed with a NULL pointer dereference
-in the PMU NMI handler:
+On 3/9/26 13:17, Viktor Malik wrote:
+> On 3/9/26 12:05, Saket Kumar Bhaskar wrote:
+>> On Thu, Mar 05, 2026 at 01:45:44PM +0100, Viktor Malik wrote:
+>>> On 3/3/26 15:58, Saket Kumar Bhaskar wrote:
+>>>> On Fri, Feb 27, 2026 at 09:25:02AM +0100, Viktor Malik wrote:
+>>>>> It may happen that mm is already released, which leads to kernel panic.
+>>>>> This adds the NULL check for current->mm, similarly to 20afc60f892d
+>>>>> ("x86, perf: Check that current->mm is alive before getting user
+>>>>> callchain").
+>>>>>
+>>>>> I was getting this panic when running a profiling BPF program
+>>>>> (profile.py from bcc-tools):
+>>>>>
+>>>>>     [26215.051935] Kernel attempted to read user page (588) - exploit attempt? (uid: 0)
+>>>>>     [26215.051950] BUG: Kernel NULL pointer dereference on read at 0x00000588
+>>>>>     [26215.051952] Faulting instruction address: 0xc00000000020fac0
+>>>>>     [26215.051957] Oops: Kernel access of bad area, sig: 11 [#1]
+>>>>>     [...]
+>>>>>     [26215.052049] Call Trace:
+>>>>>     [26215.052050] [c000000061da6d30] [c00000000020fc10] perf_callchain_user_64+0x2d0/0x490 (unreliable)
+>>>>>     [26215.052054] [c000000061da6dc0] [c00000000020f92c] perf_callchain_user+0x1c/0x30
+>>>>>     [26215.052057] [c000000061da6de0] [c0000000005ab2a0] get_perf_callchain+0x100/0x360
+>>>>>     [26215.052063] [c000000061da6e70] [c000000000573bc8] bpf_get_stackid+0x88/0xf0
+>>>>>     [26215.052067] [c000000061da6ea0] [c008000000042258] bpf_prog_16d4ab9ab662f669_do_perf_event+0xf8/0x274
+>>>>>     [...]
+>>>>>
+>>>>> Fixes: 20002ded4d93 ("perf_counter: powerpc: Add callchain support")
+>>>>> Signed-off-by: Viktor Malik <vmalik@redhat.com>
+>>>>> ---
+>>>>>  arch/powerpc/perf/callchain_32.c | 3 +++
+>>>>>  arch/powerpc/perf/callchain_64.c | 3 +++
+>>>>>  2 files changed, 6 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/powerpc/perf/callchain_32.c b/arch/powerpc/perf/callchain_32.c
+>>>>> index ddcc2d8aa64a..b46e21679566 100644
+>>>>> --- a/arch/powerpc/perf/callchain_32.c
+>>>>> +++ b/arch/powerpc/perf/callchain_32.c
+>>>>> @@ -144,6 +144,9 @@ void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+>>>>>  	sp = regs->gpr[1];
+>>>>>  	perf_callchain_store(entry, next_ip);
+>>>>>  
+>>>>> +	if (!current->mm)
+>>>>> +		return;
+>>>>> +
+>>>>>  	while (entry->nr < entry->max_stack) {
+>>>>>  		fp = (unsigned int __user *) (unsigned long) sp;
+>>>>>  		if (invalid_user_sp(sp) || read_user_stack_32(fp, &next_sp))
+>>>>> diff --git a/arch/powerpc/perf/callchain_64.c b/arch/powerpc/perf/callchain_64.c
+>>>>> index 115d1c105e8a..eaaadd6fa81b 100644
+>>>>> --- a/arch/powerpc/perf/callchain_64.c
+>>>>> +++ b/arch/powerpc/perf/callchain_64.c
+>>>>> @@ -79,6 +79,9 @@ void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+>>>>>  	sp = regs->gpr[1];
+>>>>>  	perf_callchain_store(entry, next_ip);
+>>>>>  
+>>>>> +	if (!current->mm)
+>>>>> +		return;
+>>>>> +
+>>>>>  	while (entry->nr < entry->max_stack) {
+>>>>>  		fp = (unsigned long __user *) sp;
+>>>>>  		if (invalid_user_sp(sp) || read_user_stack_64(fp, &next_sp))
+>>>>> -- 
+>>>>> 2.53.0
+>>>>>
+>>>> Sorry, I missed adding cc list for the last conversation so adding this for reference:
+>>>>
+>>>>> Wouldn't be good if we check this in perf_callchain_user() as it will
+>>>>> cover both cases.
+>>>>
+>>>> to which Viktor replied:
+>>>> I considered it but in that case, we'd also miss the top-level stack
+>>>> frame (the perf_callchain_store call above). Other arches include it so
+>>>> I followed the behavior for powerpc.
+>>>>
+>>>> Viktor, agreed with your first point. I have another concern:
+>>>>
+>>>> I was hitting this issue with stacktrace_build_id_nmi in bpf and
+>>>> applied this patch https://lore.kernel.org/bpf/20260126074331.815684-1-chen.dylane@linux.dev/T/#mf901967ebe77506f1bd6e3d876c2a85824d9519d
+>>>>
+>>>> Wondering if the above generic fix is working do we need to add this
+>>>> check in powerpc specific code?
+>>>
+>>> I tried to apply that patch series but, unfortunately, keep getting the
+>>> panic when running the BCC profile tool.
+>>>
+>>> Also, looking at the patch, it seems that it would only solve the issue
+>>> when perf_callchain_user is called from a BPF context, however, I assume
+>>> that it may be called from other contexts, too.
+>>>
+>>> Since perf_callchain_user_{32,64} are dereferencing current->mm while
+>>> walking the stack, I think that an explicit protection against
+>>> current->mm being NULL makes sense here, even in the presence of the
+>>> above patch. Especially since other arches have it, too.
+>>>
+>>> Viktor
+>>>
+>> Ok that looks convincing then, another thing is that, how about moving perf_callchain_store
+>> to perf_callchain_user and checking current->mm == NULL there for both perf_callchain_user_32/64.
+>> next_ip, lr and sp can be passed to perf_callchain_user_32/64.
+> 
+> Yeah, that should be possible. I'll send v2.
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000198
-  RIP: x86_perf_event_update+0xc/0xa0
-  Call Trace:
-   <NMI>
-   amd_pmu_v2_handle_irq+0x1a6/0x390
-   perf_event_nmi_handler+0x24/0x40
+v2 sent:
 
-The faulting instruction is `cmpq $0x0, 0x198(%rdi)` with RDI=0,
-corresponding to the `if (unlikely(!hwc->event_base))` check in
-x86_perf_event_update() where hwc = &event->hw and event is NULL.
+https://lore.kernel.org/linuxppc-dev/20260309144045.169427-1-vmalik@redhat.com/T/#u
 
-drgn inspection of the vmcore on CPU 106 showed a mismatch between
-cpuc->active_mask and cpuc->events[]:
+Viktor
 
-  active_mask: 0x1e (bits 1, 2, 3, 4)
-  events[1]:   0xff1100136cbd4f38  (valid)
-  events[2]:   0x0                 (NULL, but active_mask bit 2 set)
-  events[3]:   0xff1100076fd2cf38  (valid)
-  events[4]:   0xff1100079e990a90  (valid)
-
-The event that should occupy events[2] was found in event_list[2]
-with hw.idx=2 and hw.state=0x0, confirming x86_pmu_start() had run
-(which clears hw.state and sets active_mask) but events[2] was
-never populated.
-
-Another event (event_list[0]) had hw.state=0x7 (STOPPED|UPTODATE|ARCH),
-showing it was stopped when the PMU rescheduled events, confirming the
-throttle-then-reschedule sequence occurred.
-
-The root cause is commit 7e772a93eb61 ("perf/x86: Fix NULL event access
-and potential PEBS record loss") which moved the cpuc->events[idx]
-assignment out of x86_pmu_start() and into x86_pmu_enable(). This
-broke any path that calls pmu->start() without going through
-x86_pmu_enable() -- specifically the unthrottle path:
-
-  perf_adjust_freq_unthr_events()
-    -> perf_event_unthrottle_group()
-      -> perf_event_unthrottle()
-        -> event->pmu->start(event, 0)
-          -> x86_pmu_start()     // sets active_mask but not events[]
-
-The race sequence is:
-
-  1. A group of perf events overflows, triggering group throttle via
-     perf_event_throttle_group(). All events are stopped: active_mask
-     bits cleared, events[] preserved (x86_pmu_stop no longer clears
-     events[] after commit 7e772a93eb61).
-
-  2. While still throttled (PERF_HES_STOPPED), x86_pmu_enable() runs
-     due to other scheduling activity. Stopped events that need to
-     move counters get PERF_HES_ARCH set and events[old_idx] cleared.
-     In step 2 of x86_pmu_enable(), PERF_HES_ARCH causes these events
-     to be skipped -- events[new_idx] is never set.
-
-  3. The timer tick unthrottles the group via pmu->start(). Since
-     commit 7e772a93eb61 removed the events[] assignment from
-     x86_pmu_start(), active_mask[new_idx] is set but events[new_idx]
-     remains NULL.
-
-  4. A PMC overflow NMI fires. The handler iterates active counters,
-     finds active_mask[2] set, reads events[2] which is NULL, and
-     crashes dereferencing it.
-
-Restore cpuc->events[idx] = event in x86_pmu_start() so that every
-caller of pmu->start() correctly populates events[] before setting
-active_mask. This does not reintroduce the PEBS issue that commit
-7e772a93eb61 fixed, because that fix also moved the events[] = NULL
-clearing from x86_pmu_stop() to x86_pmu_del() -- throttle/unthrottle
-cycles no longer clear events[].
-
-Fixes: 7e772a93eb61 ("perf/x86: Fix NULL event access and potential PEBS record loss")
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- arch/x86/events/core.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 03ce1bc7ef2ea..fd82d1427b335 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1546,6 +1546,11 @@ static void x86_pmu_start(struct perf_event *event, int flags)
- 
- 	event->hw.state = 0;
- 
-+	/*
-+	 * Ensure events[idx] is set before active_mask, so NMI handlers
-+	 * never see an active counter with a NULL event pointer.
-+	 */
-+	cpuc->events[idx] = event;
- 	__set_bit(idx, cpuc->active_mask);
- 	static_call(x86_pmu_enable)(event);
- 	perf_event_update_userpage(event);
-
----
-base-commit: 0bcac7b11262557c990da1ac564d45777eb6b005
-change-id: 20260309-perf-fd32da0317a8
-
-Best regards,
---  
-Breno Leitao <leitao@debian.org>
+> 
+> Viktor
+> 
+>>
+>> Thanks,
+>> Saket
+>>
+> 
 
