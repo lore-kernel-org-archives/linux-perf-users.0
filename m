@@ -1,159 +1,148 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719AD3AEF22
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 16:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773074241; cv=pass; b=bTmuzW+EwxRyakM85XkUrw0e7w9iZeskWiEzPG+6U9GbBRqIazmCQTb4OANvN4GMkJqhKapHUBNW5+rKcMlxzVXPrwMDpahntcJMbQE7WrwPqMsickTa7nMz8c8mXKxPUmq/vQV/6peAfy6tG86ZmT4q05X3Vyo3Qc63KGU6Ed0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773074241; c=relaxed/simple;
-	bh=/xVvyD0Lqn/lAfbvI9yNkpJEV7R1uzy3kwW07nfLaKg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bS4Iqz9KV7kToS9RaD3rDRhG93U676uJYitW+ITHUXgPZeRjpf8R7Oy/iCAqhWwJbcMZdvBe0UpLfJ1b6Uia3yIXwwx991+llNP+kyF4ezyEGFZjlXvprscPQpOzfnpa8NztDkkscSm2STcXmmUPmQeuOaiAnoMjX521sqjvG3Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yr1LTfWL; arc=pass smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CAC314D08;
+	Mon,  9 Mar 2026 16:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773074342; cv=none; b=KQL07YHH4IrPgOCUBli1kOv6jQ9h3HCKgKQVSID/+b9Ut0+3Wc5fCF449g8FB/zMhli3JHRxTGMB7wIlbLb/p+ExSlNqnq8I4EAaif5Y/IwRAdPp1gH6KghzrL1XyME7QnRIX1628erJ6Wk6FLiehs9iQTz+5dIO8JSY8QAaiBU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773074342; c=relaxed/simple;
+	bh=kKwDp49L3SDIWKktS09q4HkY7nf4iMP9Vx9VqN8zevI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mdOYwWOOdYMKAk0XtT+3Ct09Y/AOBvxvwDpLsgYbu6X6Rh8nWdfsLYGmWuSbdPxqwh1U7HHTO9omqKR91OZ7xSJc+E38aUfMDDvWpWiU7i/jn3PDXUlPUM7AZouzjuJW/YTugnytvnZYOBl8mBrRMk36XdnvwoFcbm8JWptCefc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=m7DFO/LX; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yr1LTfWL"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2ae49120e97so1225ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 09:37:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773074240; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Rhcrmld5vM2A0vXRaAmqlPnGIKLh6m5XkWX4KofyXfW1XJlikexIRWACP8BGook6Hm
-         EozbObjXeqS/L7F7EE8AKOr4yX+9+3PTsVnqEzWJliO/9i7jeabQXa1KCCTBT5u1LxXo
-         T7jfVPiDav11F4EEN0Va0BTR9cBalo9q1mnVcte95WOnHoZZQDxeOepaMpDMBAMWgdy2
-         wfM6ix/7jVz445uqZ0C4zA/2kSl371VKuYs509x1y1VnRCQlx2YQfVOz+DU47hxHdioX
-         WjiCHOKjiRfQowJ7CeALvDUkc3spqQYEPWUTZ8/lnWMO0KjdLMrAepFmYXerRroXyzmp
-         00Qg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=c8Tx6Ml8LCMcseT9tf2wyQ8mZ0fxne/KMVLw9eyT1gw=;
-        fh=AzFr3rUAjULrD5rdCYD7v6zaeDTqDvOUxfpcf48E44Y=;
-        b=NlHyejLtoLE35A/JwF454QPJ7mv8Bg9+nVNqFWdSDgOyKSK5NKY/WoLm2B2qJdUcU0
-         6q3KIzKIOaa4NDH56Ba+iEgEI1m2bCIHz9/hp0aNgakyofwkjGcn+NqE44xBboIqyqkO
-         mS4eHR3WozlqNzRF5c5tsXFzg7vTA0jSO/frltczVyWZsayWhrLf5JAu28SQryicK+9W
-         Gh8fFJCrmgNx0sLQhs5q9KxbKjjfuSAydO7g8xq+PJ2Df80NHasSBolHqIX4nbcafL+e
-         vY0BQ+3K9GrjwvCpjJqFesgBeG6tmCji/cFSiFt72P18lwspaHeKpLHrw3ulOH/8xdmI
-         QsMw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773074240; x=1773679040; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c8Tx6Ml8LCMcseT9tf2wyQ8mZ0fxne/KMVLw9eyT1gw=;
-        b=Yr1LTfWLk6ccaQbsjiQW0i0d0CCRFWodupiTvfLJrDQM5BKKyC1JcPik9YZ3XNKs4x
-         w1dLJohfjorzxddlDE8D2IZ9PyYW+MQvvWgwq5CEusXSOSgBm7NPt6CcrmhxANc9qRP0
-         UMrToZX/bZWJwLyk237DVjkMX5MH5mvRiMb7IagBvFrsdyT7vpx9iBAQjFWYFRhuM1Ps
-         OtcnJS+643oP8xu0MHir/DO5fAoADSw8Gdbhx/Xo57CQmn3DQF4g8FmuQEruZcHPOEfB
-         xhrQfjeQAWAU3FbHiKi7VT06GdutY1T3BJFRgBWSOFR0MzUtqOupPCWekcGS/MbfS3zS
-         OXVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773074240; x=1773679040;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=c8Tx6Ml8LCMcseT9tf2wyQ8mZ0fxne/KMVLw9eyT1gw=;
-        b=gAcsp5+H1guuMHhXpEdbEnVgY34KSvbHXgyc/UMZB6h4NL5bwuarU3efU0rCFQ/06A
-         AeiGbRCBy3eGkY0pGkq5Z548uE8AFa/xIRJHjBIcgCvS7WVPcarkF1xzSIeMCp1mZlGW
-         CacxEoWZBnQyEmFahieMsOLrlE2LXDYF+KarQqAhMZkSle153y8TvYiRnfR70+69Sky3
-         j/OK+7e1jz9YX6X8LGqSEe0L9UKfAuzS2CfxXGLqsrMJwZ2y3mFx8/oeck0DQoMb6TOI
-         dGvpDmuiPSCNz8XegCmAjPTZfWQ/fGi7ZX63NV+uBTWER5GaYZ1J9LBApgHfVpvI4haP
-         /eEg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5nwiFmpuamvh3g7nM1+dj2aLw1+c4Ng6w25uuO9+HYBD82QtnGPG/sfdsWtLi23FYvpr+XvLw0S1aqZ8oOzjB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtkrbOVM7zED0/HEphxzjVFd5oHzS6o1OeUvu16zUMUYcj8CKx
-	l4AlZ80k2nWqy+VicB0rUoiw2hPGFjavIa9QVkUbJWmoFimT8toUWc23ISXVyY0xuRNRO7L/QV5
-	09av3rQUbD63vf688nBzIafL74FauNFadd8OW0uFf
-X-Gm-Gg: ATEYQzy74/7iPboF4uw/ihdiT1pH1pLmUMl+johY+otri3M8EHIRNnFHghz6cff69T5
-	CnEGwt5xm9DkEYlH65TDxgmGFC/Uy9vn9iFheB0/XKP+rSwwAe406TmmJIkNgZVQwO1YWrQl3hj
-	Kv6XbC+2F1bmvMIKE/2bbw5jwOBg0Zodf942bwOsuVIjK2eBwK4QpqHUBLK3jaXUNxvDO3EGFBy
-	HKce4+g3w+olizXPRmjMfx9AdWhFhXh9v7ZU2Adg2DqWufLOT0mdK1lTNIuPoqnr9kS/ALNPKSV
-	F5PTxbLulY/9L2Ip9BaApwYrvxkYnAC1nI4=
-X-Received: by 2002:a17:902:cf4a:b0:2ae:4e8e:954e with SMTP id
- d9443c01a7336-2ae8b99a09fmr3540605ad.5.1773074239351; Mon, 09 Mar 2026
- 09:37:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m7DFO/LX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lSyAeknhNDmuYr0petYBrv+Ya1BSdLDe/u7IF149fCg=; b=m7DFO/LXtm3o3Vo8IiM2W0JM3G
+	/IpPPTp/ITlfp0nJl8gR6SIiR4DTrt1BKicWU567yS1QwlX8sXYxAnZILetNhsxPTo6zZ0bwCv620
+	rMV0Nw1eC9zWZqBJCpG+SHNxrWEcJed6aI+jDab23gqjIUBI9gD3g4bIlTKbJsAFepi0rXXNOedj1
+	C6Tol+ybbDmNwLgiVH0gMP0r/eXhcphMvp9YwqMX3yTrGLpp2lqbh5rgQ6tPTKuhlRDToxEud3ttl
+	gCGTt9F5fe0KbYaNhKRFNYV+/6zbTJZvCnsiLs3FxvJ17SNjwepwlhNSNTEZ0bcgAmTqaee12BWbC
+	I68+r7wQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vzdd3-0000000Ch0Y-0Uae;
+	Mon, 09 Mar 2026 16:38:49 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C7D52300182; Mon, 09 Mar 2026 17:38:47 +0100 (CET)
+Date: Mon, 9 Mar 2026 17:38:47 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH] perf/x86: Restore event pointer setup in x86_pmu_start()
+Message-ID: <20260309163847.GE2277644@noisy.programming.kicks-ass.net>
+References: <20260309-perf-v1-1-601ffb531893@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com>
- <20260308-tools_build_fix_zero_init-v3-24-6477808123b7@arm.com> <20260309114413.09e05127@gandalf.local.home>
-In-Reply-To: <20260309114413.09e05127@gandalf.local.home>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Mar 2026 09:37:07 -0700
-X-Gm-Features: AaiRm51Y_hOVZDhnwqzBMfs_foRdCHZgFLdwNP1ZXf1eU_ewkridlTQIwkfdNsE
-Message-ID: <CAP-5=fU4JF6=aocKhgyZqyqm0NOKpAKEmruFj2mgBHfkqbN2yw@mail.gmail.com>
-Subject: Re: [PATCH v3 24/30] tools: tracing: Append extra cflags
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>, 
-	Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	William Breathitt Gray <wbg@kernel.org>, Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Kent Gibson <warthog618@gmail.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Robert Moore <robert.moore@intel.com>, 
-	Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>, 
-	Changwoo Min <changwoo@igalia.com>, Mark Brown <broonie@kernel.org>, 
-	Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <bentiss@kernel.org>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260309-perf-v1-1-601ffb531893@debian.org>
 
-On Mon, Mar 9, 2026 at 8:44=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Sun, 08 Mar 2026 16:46:29 +0000
-> Leo Yan <leo.yan@arm.com> wrote:
->
-> > Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied t=
-o
-> > the compiler.
-> >
-> > Signed-off-by: Leo Yan <leo.yan@arm.com>
->
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+On Mon, Mar 09, 2026 at 07:40:56AM -0700, Breno Leitao wrote:
+> A production AMD EPYC system crashed with a NULL pointer dereference
+> in the PMU NMI handler:
+> 
+>   BUG: kernel NULL pointer dereference, address: 0000000000000198
+>   RIP: x86_perf_event_update+0xc/0xa0
+>   Call Trace:
+>    <NMI>
+>    amd_pmu_v2_handle_irq+0x1a6/0x390
+>    perf_event_nmi_handler+0x24/0x40
+> 
+> The faulting instruction is `cmpq $0x0, 0x198(%rdi)` with RDI=0,
+> corresponding to the `if (unlikely(!hwc->event_base))` check in
+> x86_perf_event_update() where hwc = &event->hw and event is NULL.
+> 
+> drgn inspection of the vmcore on CPU 106 showed a mismatch between
+> cpuc->active_mask and cpuc->events[]:
+> 
+>   active_mask: 0x1e (bits 1, 2, 3, 4)
+>   events[1]:   0xff1100136cbd4f38  (valid)
+>   events[2]:   0x0                 (NULL, but active_mask bit 2 set)
+>   events[3]:   0xff1100076fd2cf38  (valid)
+>   events[4]:   0xff1100079e990a90  (valid)
+> 
+> The event that should occupy events[2] was found in event_list[2]
+> with hw.idx=2 and hw.state=0x0, confirming x86_pmu_start() had run
+> (which clears hw.state and sets active_mask) but events[2] was
+> never populated.
+> 
+> Another event (event_list[0]) had hw.state=0x7 (STOPPED|UPTODATE|ARCH),
+> showing it was stopped when the PMU rescheduled events, confirming the
+> throttle-then-reschedule sequence occurred.
+> 
+> The root cause is commit 7e772a93eb61 ("perf/x86: Fix NULL event access
+> and potential PEBS record loss") which moved the cpuc->events[idx]
+> assignment out of x86_pmu_start() and into x86_pmu_enable(). This
+> broke any path that calls pmu->start() without going through
+> x86_pmu_enable() -- specifically the unthrottle path:
+> 
+>   perf_adjust_freq_unthr_events()
+>     -> perf_event_unthrottle_group()
+>       -> perf_event_unthrottle()
+>         -> event->pmu->start(event, 0)
+>           -> x86_pmu_start()     // sets active_mask but not events[]
+> 
+> The race sequence is:
+> 
+>   1. A group of perf events overflows, triggering group throttle via
+>      perf_event_throttle_group(). All events are stopped: active_mask
+>      bits cleared, events[] preserved (x86_pmu_stop no longer clears
+>      events[] after commit 7e772a93eb61).
+> 
+>   2. While still throttled (PERF_HES_STOPPED), x86_pmu_enable() runs
+>      due to other scheduling activity. Stopped events that need to
+>      move counters get PERF_HES_ARCH set and events[old_idx] cleared.
+>      In step 2 of x86_pmu_enable(), PERF_HES_ARCH causes these events
+>      to be skipped -- events[new_idx] is never set.
 
-Not a problem with the change but running this patch through an AI
-agent brought up:
 
-  Should CFLAGS be initialized with default optimization and warning flags
-  (e.g., -g -O2 -Wall)?
+So why not just move this then? Having less sites that set that value is
+more better, no?
 
-  Currently, latency-collector is built without these standard compilation
-  flags because they are missing from the Makefile. In other commits in thi=
-s
-  series (like for libbpf and thermal), CFLAGS was explicitly initialized t=
-o
- -g -O2 or -g -Wall when EXTRA_CFLAGS is not set.
-
-  Additionally, should EXTRA_WARNINGS (provided by
-  tools/scripts/Makefile.include) be appended to CFLAGS here, similar to
-  how it is done for other tools?
-
-Thanks,
-Ian
+---
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 03ce1bc7ef2e..54b4c315d927 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1372,6 +1372,8 @@ static void x86_pmu_enable(struct pmu *pmu)
+ 			else if (i < n_running)
+ 				continue;
+ 
++			cpuc->events[hwc->idx] = event;
++
+ 			if (hwc->state & PERF_HES_ARCH)
+ 				continue;
+ 
+@@ -1379,7 +1381,6 @@ static void x86_pmu_enable(struct pmu *pmu)
+ 			 * if cpuc->enabled = 0, then no wrmsr as
+ 			 * per x86_pmu_enable_event()
+ 			 */
+-			cpuc->events[hwc->idx] = event;
+ 			x86_pmu_start(event, PERF_EF_RELOAD);
+ 		}
+ 		cpuc->n_added = 0;
