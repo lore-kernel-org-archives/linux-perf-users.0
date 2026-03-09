@@ -1,70 +1,70 @@
 Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890AB175A5
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 01:00:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB253221F39
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 01:00:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773018040; cv=none; b=s4WApdRv6V2lU1aE2RHmBiQbFbam9L9RL4+xhqs44Q8WoDTxWqqYvwqJZh0ZaK6c4xaB+EUfH83XckQZlCNXeH8Noye5DJFoJgG+eEUaR2wnaTuNBbiAFH21mgBzPqd3X6bp1ruBC6gFOiM+g4uf9DEUgpW6yWDRGJ6QS4X77IM=
+	t=1773018040; cv=none; b=E+kW5VcFtuMuUn8OxZWuzCDfymvWwsphOf2PxeonQexgxQD4WlnlS52rYbOYx6qulrYPN0WuTmbDECFGkaWCU6aM7FjWUG0T9h+81jpqvbjxYXGiQfqCDgQAa+K7R+87t+jeTEcji07X2xQ8kLKtu27HZXnZ8ei1pmGFT54CuLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773018040; c=relaxed/simple;
-	bh=NGQAwbh0eonvMn/502fepVgx9WwjPmeAEqNFF5zQefY=;
+	bh=XdcNrO1rpl9oROTyNF0DxVnNHOaFtHkMCKTMyUXfRTE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N/WbmGCno5MC0S1xP0dCFTlctz6vkESJzh+acR+VaKqhd86DLfi9Uaj/OKp+QkRXKrd4mko0MIfBzU9/0Xj51ef8LoIKKFZ0IxeC9vr9CNxZcQRQroHBsbiKFt16Qiul0d2nEDadcA97xDjfCJft0rQlVf5OqLEN/4TR2YMlM4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YajV4KwC; arc=none smtp.client-ip=209.85.210.170
+	 MIME-Version; b=g6Q9YtvrrylRanDLipSuH2a+6D3xFDDeSgRhMOAGsgT3VafIxJ+rYI61pBxPtMi0Fi0QseRGAiov7KnM9mQsjpHGiHHLHhVIHq7AyZA2bgu3YYkJpEwyN0zExngGPHEBJsBPbTf/FJ0CNCbYj/rR0dSJ6LLOzuW8cUV766PS9Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CWb3nNY0; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YajV4KwC"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-82990763921so3358094b3a.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 08 Mar 2026 18:00:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWb3nNY0"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-8297e0b27e5so2509052b3a.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 08 Mar 2026 18:00:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773018038; x=1773622838; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773018039; x=1773622839; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ftia8jqG22JrmUTK8MZbXcb4EANSUCc/UjRFsQcjVtY=;
-        b=YajV4KwC1bs2gmuRTGhudAXdjMcmXxZBqO3brsRRITt7zwetKNekUzxRS3/r4WsP42
-         26c0Nm/AZb+urUZB9/8H2G4NMXQVHz0hWDgHrJs0lvJRH0Yg3cf9dqrHvsHm5CZB/Skz
-         wy++gSDvetzRnXY40hAu08VvcWT2TkVAeEmVCLSI9m41AiP5YeMRbzJyNd9UK39eQzme
-         2nU6R+zGVdbIuuX83HzAHMfHjSwwOTLF+fWg9PDwk0Ax9U7NJdaYS8WyMkhB7JzqU0s/
-         rI54sauoOSsmVpOUgAw17PRvU+AFh3NLYt1A7JjqFeK9w4BKjR9m16H9VXhMrh+iGHCg
-         4+8w==
+        bh=w43nXR7xWSoKpck0e6FCmKt3LrGCcnIPN9hu9NiuuQA=;
+        b=CWb3nNY0RsoP1INcsOQEwTjAhh2xJXyHuyqbm9e+tJXyT9vqqrs32IWb4/pnsBqNZJ
+         L/1IcGpu30VpQ6qfLl0mkBsqM7M+kaDr63SAguf5+am3RY0YUBpOURkzaIxRoYGA6zOM
+         4Me5py34qucql3+ueHfs3DW36QHLmqa5tVjeYiPRsYxxyKwv9IOB3yX5hzMu4OugcUk3
+         l1D4RViJPCUTqnKYF3Jk90JxpCPCi0rNlyD0gLvO8N6piYRwsZugrQwkG+/O4SDrM4dZ
+         0yNMcuAnJQ4pT4gMQYMHN0i3MypPq3G4s7z25BIrIbZUX3AwV+Vp7wmKLMF3uFSd6hQn
+         b6Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773018038; x=1773622838;
+        d=1e100.net; s=20230601; t=1773018039; x=1773622839;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Ftia8jqG22JrmUTK8MZbXcb4EANSUCc/UjRFsQcjVtY=;
-        b=IZAb3On+G3SQ0g57sdIAa8tPcSnkxK8t1COlKQMvt9uQvzwxOW2R70RRG0eo/V+x2l
-         XlYGLDy0OWWfhKbWvscgmvYB9AepplxnbZJdXPXB8za/7U4hCw0uwcyw3Nvv5mTF7p8V
-         zMxnbwxDmS/gDeEsxdUW+S1zdPyXQaAXqtHRdz/ziL6zCVy25Tb3r9BOIVZNB33ozWz/
-         4WsSWBqPwyCB7W2qyl7fMVCV5+kuc7bVgWK2NHhhBa7ayC4cuFYVntMYgDw5CM6bCNUZ
-         GshXgkKxDmqvNEgo+Gx7gVNFQG5+huBS1/yACYkiCU8HkZGTeh1dByI4Rd5Yp5smOGep
-         EH8w==
-X-Gm-Message-State: AOJu0YwxJfmzQSEHgr95S+DGiH8//SUNN9Hv2zP1P4V3qmEvYr9qVSFP
-	U3pw7Mil3VmWGP0yCgjyXdYNuJ0lpRgp2rxswR2YHQd9tb+USlH9KKCIunSRgw==
-X-Gm-Gg: ATEYQzzxupuNk82TqUBZs3dETGDWwcCGWt4OtCgHOqJL9ZtZru0Qr8yiseGW5SxXP19
-	FmkLkuW76UnXIdr/P8Gj/qHc67XtKZf9LtPvdwJ+FieK8PBAIDg+/3Up8fjShUR6e07jugByAcG
-	Ar0fI+BXmqrp350X2dNR7pn4igdn7/V58RLWmwE+D4L6ENay3PYgyd2ftA3HIPlSgb33qIuxx9U
-	0HBzIN02QMnODrxCAgylfObAt2pDLKptQsagfo+GYRJWwKPsN5j9oHPU2GUfB/Kx18bD8wgUB4J
-	SB/s08MsK3eImbfsInb0eokUpVufIi/RaD5PKFMe9RmbFiWO5tsmnmW9JaR+d3wcP5hlGsAROGB
-	5C8aE0+hQmJycnZ6Yq3DXAZtiveac8WybhpNUaWW9qhWxBpUrt6+XMo0nBjNGN/wSdFH+62GUoi
-	yi6xtDmB329b+XJS8n6mro9e/QDiKZ6/ucTzdDaA==
-X-Received: by 2002:a05:6a00:4211:b0:829:924c:3488 with SMTP id d2e1a72fcca58-829a30c40e1mr7033001b3a.55.1773018037634;
-        Sun, 08 Mar 2026 18:00:37 -0700 (PDT)
+        bh=w43nXR7xWSoKpck0e6FCmKt3LrGCcnIPN9hu9NiuuQA=;
+        b=VIB1VcYz+V0uRf7b8Y7jVQVxCzh+8ZBjEF0GI9Qdoh4kj9+cf3mlbGY9JqSeMj1woK
+         7FRO00MBAMBOrbAJRZK2EHoeIbDDrSiGJUsLtGMYCEY3igaqITElHe5MoY6aHlFSEHJG
+         jViz7UlO8d2vHqc+T21hOT6Wxq9uyP8B/t2XdEhOOaQ7MwIjxk1A+IXQBhL8W8sq/rex
+         Ac7lrawXyT3EiN3yZNci/O7RYhC8yJa5a5uaMwD+JDI3BurzLqJ6vWOJe6vkoRTbl04l
+         WTttBplwBEidONsmqAjX1bxILDqrahSYrpnHmGMnGd7QglKJ5Mt1b0oHt3Havc4121RT
+         I8dg==
+X-Gm-Message-State: AOJu0YzVmo1a90YLHSwrhT+AfDJOsGpYjVGWWPn5O2hDTEmptlAWqm/w
+	qVhlXG+md5w0/UZcBeXO4mPyquyaQZyQOAbK8CSHYIqfvAKAIzp+xQgH
+X-Gm-Gg: ATEYQzzjoKSgi/aMFRREZh1rApi8z04jv2Ie9FhXpIyjcLYdAkEjNSIDXkSQovalI+k
+	lIRqSq9McYdN7dcA3mWH0dCRW3nMqv022HCqt4Cd7N9SBLAH4N3Q5JB6P7GZ10Ti2HJGEkRGeep
+	YDSej6aaJdBVVS1aQxQRnwMlp2LKKFSdnvbht+O9oZCy06S6yrUX+fVNTkpKcQihkzSY+wpHnza
+	ak46u9MSTX9HdTk+OaLJ26cwenXnJotHHNR/KOWZmFlFk8c/Q38qTJAVcsocq4ZxJPqlSHuUHg0
+	4m/mIdSTk5Wpv9w1K2QJTG0YN/jHwgoY5hbSdkMZ3roHwNVYczSP0jbsSKFmPmsjIWdYG8wSttB
+	GdNh593hInc6IjhU/A5jVuByHUJNn95YO8fj1hpRVhdaXDVuP4oHTzIP3llWW2lCvaLN1RUh9Fl
+	Ddu16PYFw9Td2WCYXvduk/43Tqp0MUbr69Te31Aw==
+X-Received: by 2002:a05:6a00:cd0:b0:823:c59:9cb0 with SMTP id d2e1a72fcca58-829a2db98d7mr8752687b3a.1.1773018038895;
+        Sun, 08 Mar 2026 18:00:38 -0700 (PDT)
 Received: from localhost.localdomain ([240f:34:212d:1:35e4:35af:8d0d:ad4c])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829a4635d62sm8468794b3a.5.2026.03.08.18.00.36
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829a4635d62sm8468794b3a.5.2026.03.08.18.00.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2026 18:00:37 -0700 (PDT)
+        Sun, 08 Mar 2026 18:00:38 -0700 (PDT)
 From: Akinobu Mita <akinobu.mita@gmail.com>
 To: damon@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org,
 	sj@kernel.org,
 	akinobu.mita@gmail.com
-Subject: [RFC PATCH v2 4/6] mm/damon/vaddr: support perf event based access check
-Date: Mon,  9 Mar 2026 10:00:07 +0900
-Message-ID: <20260309010009.11639-5-akinobu.mita@gmail.com>
+Subject: [RFC PATCH v2 5/6] mm/damon/paddr: support perf event based access check
+Date: Mon,  9 Mar 2026 10:00:08 +0900
+Message-ID: <20260309010009.11639-6-akinobu.mita@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260309010009.11639-1-akinobu.mita@gmail.com>
 References: <20260309010009.11639-1-akinobu.mita@gmail.com>
@@ -76,337 +76,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch adds perf event based access check for virtual address space monitoring.
+This patch adds perf event based access checks for physical address spaces monitoring.
 
-The perf event that can be specified for perf event-based access check must be able
-to obtain the data source address corresponding to the sample.
-In other words, PERF_SAMPLE_DATA_SRC must be able to be specified in perf_event_attr.sample_type
+The implementation is very similar to that described in perf event based access check
+for virtual address space monitoring.
 
-The perf event based access check is performed as follows:
-
-1. During the sampling interval, samples of the perf event are stored in a sampling buffer.
-
-2. After the sampling interval ends, during the access check, a histogram showing the number of accesses
-to each memory address is generated based on each sample contained in the sampling buffer.
-
-If the sampling buffer is full during a sampling interval,
-the sampling buffer is expanded to prepare for the next sampling interval.
-
-If you configure the memory addresses corresponding to the perf event samples to be obtained
-as virtual addresses, the histogram is implemented as a two-dimensional xarray indexed
-by pid and virtual memory address.
-
-If you configure perf event samples to have their corresponding memory addresses retrieved
-by physical addresses, the histogram is implemented using an xarray indexed by physical addresses.
-
-3. For each monitoring target region, the number of accesses is updated based on the histogram.
+However, for perf events that can be specified with physical address spaces monitoring,
+the data source address corresponding to the sample must be obtainable as a physical address.
+In other words, PERF_SAMPLE_DATA_SRC and PERF_SAMPLE_PHYS_ADDR must be specifiable
+in perf_event_attr.sample_type.
 ---
- mm/damon/ops-common.h |  18 ++
- mm/damon/vaddr.c      | 406 +++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 418 insertions(+), 6 deletions(-)
+ mm/damon/paddr.c | 102 ++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 96 insertions(+), 6 deletions(-)
 
-diff --git a/mm/damon/ops-common.h b/mm/damon/ops-common.h
-index 395af11b91fb..7791e3fa0b7f 100644
---- a/mm/damon/ops-common.h
-+++ b/mm/damon/ops-common.h
-@@ -28,11 +28,29 @@ bool damos_ops_has_filter(struct damos *s);
+diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
+index 68dcde5d423f..a5293af870fd 100644
+--- a/mm/damon/paddr.c
++++ b/mm/damon/paddr.c
+@@ -48,7 +48,7 @@ static void damon_pa_mkold(phys_addr_t paddr)
+ 	folio_put(folio);
+ }
  
- void damon_perf_prepare_access_checks(struct damon_ctx *ctx, struct damon_perf_event *event);
- 
-+struct damon_vaddr_histogram {
-+	struct xarray targets;
-+};
-+
-+struct damon_paddr_histogram {
-+	struct xarray accesses;
-+};
-+
- struct damon_perf {
- 	struct perf_event * __percpu *event;
- 	struct damon_perf_buffer __percpu *buffer;
-+	union {
-+		struct damon_vaddr_histogram vaddr_histogram;
-+		struct damon_paddr_histogram paddr_histogram;
-+	};
- };
- 
-+void damon_paddr_histogram_init(struct damon_paddr_histogram *histogram);
-+unsigned long damon_paddr_histogram_count(struct damon_paddr_histogram *histogram, u64 paddr);
-+void damon_paddr_histogram_destroy(struct damon_paddr_histogram *histogram);
-+
-+void damon_perf_populate_paddr_histogram(struct damon_ctx *ctx, struct damon_perf_event *event);
-+
- #else /* CONFIG_PERF_EVENTS */
- 
- static inline void damon_perf_prepare_access_checks(struct damon_ctx *ctx,
-diff --git a/mm/damon/vaddr.c b/mm/damon/vaddr.c
-index 4eb81cc1e8cd..a9398c319331 100644
---- a/mm/damon/vaddr.c
-+++ b/mm/damon/vaddr.c
-@@ -17,6 +17,7 @@
- 
- #include <linux/circ_buf.h>
- #include <linux/perf_event.h>
-+#include <linux/xarray.h>
- 
- #include "../internal.h"
- #include "ops-common.h"
-@@ -401,7 +402,7 @@ static void damon_va_mkold(struct mm_struct *mm, unsigned long addr)
-  * Functions for the access checking of the regions
-  */
- 
--static void __damon_va_prepare_access_check(struct mm_struct *mm,
-+static void __damon_va_basic_prepare_access_check(struct mm_struct *mm,
- 					struct damon_region *r)
+-static void __damon_pa_prepare_access_check(struct damon_region *r,
++static void __damon_pa_basic_prepare_access_check(struct damon_region *r,
+ 		unsigned long addr_unit)
  {
  	r->sampling_addr = damon_rand(r->ar.start, r->ar.end);
-@@ -409,7 +410,7 @@ static void __damon_va_prepare_access_check(struct mm_struct *mm,
- 	damon_va_mkold(mm, r->sampling_addr);
+@@ -56,14 +56,14 @@ static void __damon_pa_prepare_access_check(struct damon_region *r,
+ 	damon_pa_mkold(damon_pa_phys_addr(r->sampling_addr, addr_unit));
  }
  
--static void damon_va_prepare_access_checks(struct damon_ctx *ctx)
-+static void damon_va_basic_prepare_access_checks(struct damon_ctx *ctx)
+-static void damon_pa_prepare_access_checks(struct damon_ctx *ctx)
++static void damon_pa_basic_prepare_access_checks(struct damon_ctx *ctx)
  {
  	struct damon_target *t;
- 	struct mm_struct *mm;
-@@ -420,7 +421,7 @@ static void damon_va_prepare_access_checks(struct damon_ctx *ctx)
- 		if (!mm)
- 			continue;
+ 	struct damon_region *r;
+ 
+ 	damon_for_each_target(t, ctx) {
  		damon_for_each_region(r, t)
--			__damon_va_prepare_access_check(mm, r);
-+			__damon_va_basic_prepare_access_check(mm, r);
- 		mmput(mm);
+-			__damon_pa_prepare_access_check(r, ctx->addr_unit);
++			__damon_pa_basic_prepare_access_check(r, ctx->addr_unit);
  	}
  }
-@@ -539,7 +540,7 @@ static bool damon_va_young(struct mm_struct *mm, unsigned long addr,
-  * mm	'mm_struct' for the given virtual address space
-  * r	the region to be checked
-  */
--static void __damon_va_check_access(struct mm_struct *mm,
-+static void __damon_va_basic_check_access(struct mm_struct *mm,
- 				struct damon_region *r, bool same_target,
- 				struct damon_attrs *attrs)
- {
-@@ -565,7 +566,7 @@ static void __damon_va_check_access(struct mm_struct *mm,
- 	last_addr = r->sampling_addr;
+ 
+@@ -81,7 +81,7 @@ static bool damon_pa_young(phys_addr_t paddr, unsigned long *folio_sz)
+ 	return accessed;
  }
  
--static unsigned int damon_va_check_accesses(struct damon_ctx *ctx)
-+static unsigned int damon_va_basic_check_accesses(struct damon_ctx *ctx)
+-static void __damon_pa_check_access(struct damon_region *r,
++static void __damon_pa_basic_check_access(struct damon_region *r,
+ 		struct damon_attrs *attrs, unsigned long addr_unit)
+ {
+ 	static phys_addr_t last_addr;
+@@ -103,7 +103,7 @@ static void __damon_pa_check_access(struct damon_region *r,
+ 	last_addr = sampling_addr;
+ }
+ 
+-static unsigned int damon_pa_check_accesses(struct damon_ctx *ctx)
++static unsigned int damon_pa_basic_check_accesses(struct damon_ctx *ctx)
  {
  	struct damon_target *t;
- 	struct mm_struct *mm;
-@@ -577,7 +578,7 @@ static unsigned int damon_va_check_accesses(struct damon_ctx *ctx)
- 		mm = damon_get_mm(t);
- 		same_target = false;
- 		damon_for_each_region(r, t) {
--			__damon_va_check_access(mm, r, same_target,
-+			__damon_va_basic_check_access(mm, r, same_target,
- 					&ctx->attrs);
- 			max_nr_accesses = max(r->nr_accesses, max_nr_accesses);
- 			same_target = true;
-@@ -1015,6 +1016,63 @@ struct damon_perf_buffer {
- 	unsigned long size;
- };
+ 	struct damon_region *r;
+@@ -111,7 +111,7 @@ static unsigned int damon_pa_check_accesses(struct damon_ctx *ctx)
  
-+struct damon_vaddr_histogram_per_target {
-+	struct xarray accesses;
-+};
-+
-+static void damon_vaddr_histogram_init(struct damon_vaddr_histogram *histogram)
-+{
-+	xa_init(&histogram->targets);
-+}
-+
-+static void damon_vaddr_histogram_add(struct damon_vaddr_histogram *histogram, u32 pid,
-+						u64 vaddr)
-+{
-+	struct damon_vaddr_histogram_per_target *target;
-+	unsigned long nr_accesses;
-+
-+	while (!(target = xa_load(&histogram->targets, pid))) {
-+		target = kmalloc(sizeof(*target), GFP_KERNEL);
-+		if (!target)
-+			return;
-+
-+		xa_init(&target->accesses);
-+
-+		if (xa_err(xa_store(&histogram->targets, pid, target, GFP_KERNEL))) {
-+			pr_warn_once("Failed to store target histogram\n");
-+			kfree(target);
-+			return;
-+		}
-+	}
-+
-+	nr_accesses = xa_to_value(xa_load(&target->accesses, vaddr));
-+	xa_store(&target->accesses, vaddr, xa_mk_value(nr_accesses + 1), GFP_KERNEL);
-+}
-+
-+static unsigned long damon_vaddr_histogram_count(struct damon_vaddr_histogram *histogram,
-+							u32 pid, u64 vaddr)
-+{
-+	struct damon_vaddr_histogram_per_target *target;
-+	unsigned long nr_accesses = 0;
-+
-+	target = xa_load(&histogram->targets, pid);
-+	if (target)
-+		nr_accesses = xa_to_value(xa_load(&target->accesses, vaddr));
-+
-+	return nr_accesses;
-+}
-+
-+static void damon_vaddr_histogram_destroy(struct damon_vaddr_histogram *histogram)
-+{
-+	unsigned long index;
-+	struct damon_vaddr_histogram_per_target *target;
-+
-+	xa_for_each(&histogram->targets, index, target)
-+		xa_destroy(&target->accesses);
-+
-+	xa_destroy(&histogram->targets);
-+}
-+
- static void damon_perf_overflow(struct perf_event *perf_event, struct perf_sample_data *data,
- 				struct pt_regs *regs)
- {
-@@ -1158,6 +1216,298 @@ void damon_perf_prepare_access_checks(struct damon_ctx *ctx,
- 	}
+ 	damon_for_each_target(t, ctx) {
+ 		damon_for_each_region(r, t) {
+-			__damon_pa_check_access(
++			__damon_pa_basic_check_access(
+ 					r, &ctx->attrs, ctx->addr_unit);
+ 			max_nr_accesses = max(r->nr_accesses, max_nr_accesses);
+ 		}
+@@ -364,6 +364,96 @@ static int damon_pa_scheme_score(struct damon_ctx *context,
+ 	return DAMOS_MAX_SCORE;
  }
  
-+static void damon_va_perf_check_accesses_by_vaddr(struct damon_ctx *ctx,
-+		struct damon_perf_event *event)
-+{
-+	struct damon_perf *perf = event->priv;
-+	struct damon_target *t;
-+	int cpu;
-+	unsigned int tidx = 0;
++#ifdef CONFIG_PERF_EVENTS
 +
-+	if (!perf)
-+		return;
-+
-+	damon_vaddr_histogram_init(&perf->vaddr_histogram);
-+
-+	for_each_possible_cpu(cpu) {
-+		struct perf_event *perf_event = per_cpu(*perf->event, cpu);
-+		struct damon_perf_buffer *buffer = per_cpu_ptr(perf->buffer, cpu);
-+		unsigned long head, tail, count, i;
-+
-+		if (!perf_event)
-+			continue;
-+
-+		perf_event_disable(perf_event);
-+
-+		head = smp_load_acquire(&buffer->head);
-+		tail = buffer->tail;
-+		count = CIRC_CNT(head, tail, buffer->size);
-+
-+		for (i = 0; i < count; i++) {
-+			struct damon_access_report *report =
-+				&buffer->reports[(tail + i) & (buffer->size - 1)];
-+
-+			damon_vaddr_histogram_add(&perf->vaddr_histogram, report->tid,
-+							report->vaddr & PAGE_MASK);
-+		}
-+		smp_store_release(&buffer->tail, (tail + count) & (buffer->size - 1));
-+
-+		if ((count == buffer->size - 1) && (buffer->size < DAMON_PERF_MAX_RECORDS)) {
-+			void *new_reports = kvcalloc_node(buffer->size * 2,
-+					sizeof(buffer->reports[0]), GFP_KERNEL,
-+					cpu_to_node(cpu));
-+
-+			if (new_reports) {
-+				kvfree(buffer->reports);
-+				buffer->reports = new_reports;
-+				buffer->head = 0;
-+				buffer->tail = 0;
-+				buffer->size *= 2;
-+			}
-+		}
-+	}
-+
-+	damon_for_each_target(t, ctx) {
-+		struct damon_region *r;
-+		u32 pid = pid_nr(t->pid);
-+		unsigned int nr_accessed = 0;
-+
-+		damon_for_each_region(r, t) {
-+			unsigned long addr;
-+
-+			if (r->accessed)
-+				continue;
-+
-+			for (addr = r->ar.start; addr < r->ar.end; addr += PAGE_SIZE) {
-+				if (damon_vaddr_histogram_count(&perf->vaddr_histogram, pid,
-+									addr & PAGE_MASK)) {
-+					r->accessed = true;
-+					nr_accessed++;
-+					break;
-+				}
-+			}
-+		}
-+		tidx++;
-+	}
-+
-+	damon_vaddr_histogram_destroy(&perf->vaddr_histogram);
-+}
-+
-+struct damon_paddr_walk {
-+	struct damon_paddr_histogram *histogram;
-+	bool accessed;
-+};
-+
-+static void damon_paddr_histogram_add(struct damon_paddr_histogram *histogram, u64 paddr);
-+static const struct mm_walk_ops damon_paddr_ops;
-+
-+void damon_perf_populate_paddr_histogram(struct damon_ctx *ctx, struct damon_perf_event *event)
-+{
-+	struct damon_perf *perf = event->priv;
-+	int cpu;
-+
-+	if (!perf)
-+		return;
-+
-+	for_each_possible_cpu(cpu) {
-+		struct perf_event *perf_event = per_cpu(*perf->event, cpu);
-+		struct damon_perf_buffer *buffer = per_cpu_ptr(perf->buffer, cpu);
-+		unsigned long head, tail, count, i;
-+
-+		if (!perf_event)
-+			continue;
-+
-+		perf_event_disable(perf_event);
-+
-+		head = smp_load_acquire(&buffer->head);
-+		tail = buffer->tail;
-+		count = CIRC_CNT(head, tail, buffer->size);
-+
-+		for (i = 0; i < count; i++) {
-+			struct damon_access_report *report =
-+				&buffer->reports[(tail + i) & (buffer->size - 1)];
-+
-+			damon_paddr_histogram_add(&perf->paddr_histogram,
-+							report->paddr & PAGE_MASK);
-+		}
-+		smp_store_release(&buffer->tail, (tail + count) & (buffer->size - 1));
-+
-+		if ((count == buffer->size - 1) && (buffer->size < DAMON_PERF_MAX_RECORDS)) {
-+			void *new_reports = kvcalloc_node(buffer->size * 2,
-+					sizeof(buffer->reports[0]), GFP_KERNEL,
-+					cpu_to_node(cpu));
-+
-+			if (new_reports) {
-+				kvfree(buffer->reports);
-+				buffer->reports = new_reports;
-+				buffer->head = 0;
-+				buffer->tail = 0;
-+				buffer->size *= 2;
-+			}
-+		}
-+	}
-+}
-+
-+static void damon_va_perf_check_accesses_by_paddr(struct damon_ctx *ctx,
-+		struct damon_perf_event *event)
++static void damon_pa_perf_check_accesses(struct damon_ctx *ctx, struct damon_perf_event *event)
 +{
 +	struct damon_perf *perf = event->priv;
 +	struct damon_target *t;
@@ -421,177 +167,56 @@ index 4eb81cc1e8cd..a9398c319331 100644
 +
 +	damon_for_each_target(t, ctx) {
 +		struct damon_region *r;
-+		struct mm_struct *mm = damon_get_mm(t);
 +		unsigned int nr_accessed = 0;
 +
-+		if (!mm)
-+			continue;
-+
-+		mmap_read_lock(mm);
 +		damon_for_each_region(r, t) {
-+			struct damon_paddr_walk walk_private = {
-+				.histogram = &perf->paddr_histogram,
-+				.accessed = false,
-+			};
++			unsigned long addr;
 +
 +			if (r->accessed)
 +				continue;
 +
-+			walk_page_range(mm, r->ar.start, r->ar.end, &damon_paddr_ops,
-+					&walk_private);
-+			if (walk_private.accessed) {
-+				r->accessed = true;
-+				nr_accessed++;
++			for (addr = r->ar.start; addr < r->ar.end; addr += PAGE_SIZE) {
++				if (damon_paddr_histogram_count(&perf->paddr_histogram,
++									addr & PAGE_MASK)) {
++					r->accessed = true;
++					nr_accessed++;
++					break;
++				}
 +			}
 +		}
-+		mmap_read_unlock(mm);
-+		mmput(mm);
 +		tidx++;
 +	}
 +
 +	damon_paddr_histogram_destroy(&perf->paddr_histogram);
 +}
 +
-+static void damon_va_perf_check_accesses(struct damon_ctx *ctx, struct damon_perf_event *event)
++#else /* CONFIG_PERF_EVENTS */
++
++static void damon_pa_perf_check_accesses(struct damon_ctx *ctx, struct damon_perf_event *event)
 +{
-+	if (event->attr.sample_phys_addr)
-+		return damon_va_perf_check_accesses_by_paddr(ctx, event);
-+	else
-+		return damon_va_perf_check_accesses_by_vaddr(ctx, event);
 +}
 +
-+void damon_paddr_histogram_init(struct damon_paddr_histogram *histogram)
-+{
-+	xa_init(&histogram->accesses);
-+}
++#endif /* CONFIG_PERF_EVENTS */
 +
-+static void damon_paddr_histogram_add(struct damon_paddr_histogram *histogram,
-+						u64 paddr)
-+{
-+	unsigned long nr_accesses;
-+
-+	nr_accesses = xa_to_value(xa_load(&histogram->accesses, paddr));
-+	xa_store(&histogram->accesses, paddr, xa_mk_value(nr_accesses + 1), GFP_KERNEL);
-+}
-+
-+unsigned long damon_paddr_histogram_count(struct damon_paddr_histogram *histogram, u64 paddr)
-+{
-+	return xa_to_value(xa_load(&histogram->accesses, paddr));
-+}
-+
-+void damon_paddr_histogram_destroy(struct damon_paddr_histogram *histogram)
-+{
-+	xa_destroy(&histogram->accesses);
-+}
-+
-+static int damon_paddr_pmd_entry(pmd_t *pmd, unsigned long addr,
-+		unsigned long next, struct mm_walk *walk)
-+{
-+	pte_t *pte;
-+	spinlock_t *ptl;
-+	struct damon_paddr_walk *paddr_walk = walk->private;
-+
-+	ptl = pmd_trans_huge_lock(pmd, walk->vma);
-+	if (ptl) {
-+		pmd_t pmde = pmdp_get(pmd);
-+
-+		if (pmd_present(pmde)) {
-+			for (; addr < next && !paddr_walk->accessed; addr += PAGE_SIZE) {
-+				u64 frame = pmd_pfn(pmde) +
-+					((addr & ~HPAGE_PMD_MASK) >> PAGE_SHIFT);
-+
-+				if (damon_paddr_histogram_count(paddr_walk->histogram,
-+						PFN_PHYS(frame))) {
-+					paddr_walk->accessed = true;
-+					break;
-+				}
-+			}
-+		}
-+		spin_unlock(ptl);
-+		return paddr_walk->accessed ? 1 : 0;
-+	}
-+
-+	pte = pte_offset_map_lock(walk->mm, pmd, addr, &ptl);
-+	if (!pte) {
-+		walk->action = ACTION_AGAIN;
-+		return 0;
-+	}
-+
-+	for (; addr < next && !paddr_walk->accessed; pte++, addr += PAGE_SIZE) {
-+		pte_t ptent = ptep_get(pte);
-+
-+		if (pte_present(ptent)) {
-+			if (damon_paddr_histogram_count(paddr_walk->histogram,
-+					PFN_PHYS(pte_pfn(ptent)))) {
-+				paddr_walk->accessed = true;
-+			}
-+		}
-+	}
-+
-+	pte_unmap_unlock(pte - 1, ptl);
-+
-+	return paddr_walk->accessed ? 1 : 0;
-+}
-+
-+#ifdef CONFIG_HUGETLB_PAGE
-+static int damon_paddr_hugetlb_entry(pte_t *pte, unsigned long hmask,
-+		unsigned long addr, unsigned long end,
-+		struct mm_walk *walk)
-+{
-+	struct damon_paddr_walk *paddr_walk = walk->private;
-+	pte_t entry = huge_ptep_get(walk->mm, addr, pte);
-+
-+	if (pte_present(entry)) {
-+		for (; addr < end; addr += PAGE_SIZE) {
-+			u64 frame = pte_pfn(entry) + ((addr & ~hmask) >> PAGE_SHIFT);
-+
-+			if (damon_paddr_histogram_count(paddr_walk->histogram,
-+						PFN_PHYS(frame))) {
-+				paddr_walk->accessed = true;
-+				break;
-+			}
-+		}
-+	}
-+
-+	return paddr_walk->accessed ? 1 : 0;
-+}
-+#else
-+#define damon_perf_hugetlb_entry NULL
-+#endif /* CONFIG_HUGETLB_PAGE */
-+
-+static const struct mm_walk_ops damon_paddr_ops = {
-+	.pmd_entry = damon_paddr_pmd_entry,
-+	.hugetlb_entry = damon_paddr_hugetlb_entry,
-+	.walk_lock = PGWALK_RDLOCK,
-+};
-+
- #else
- 
- static inline int damon_perf_init(struct damon_ctx *ctx, struct damon_perf_event *event)
-@@ -1197,6 +1547,50 @@ static void damon_va_init(struct damon_ctx *ctx)
- 		damon_va_init_regions(ctx);
- }
- 
-+static void damon_va_prepare_access_checks(struct damon_ctx *ctx)
++static void damon_pa_prepare_access_checks(struct damon_ctx *ctx)
 +{
 +	struct damon_perf_event *event;
 +
 +	if (list_empty(&ctx->perf_events))
-+		return damon_va_basic_prepare_access_checks(ctx);
++		return damon_pa_basic_prepare_access_checks(ctx);
 +
-+	list_for_each_entry(event, &ctx->perf_events, list) {
++	list_for_each_entry(event, &ctx->perf_events, list)
 +		damon_perf_prepare_access_checks(ctx, event);
-+	}
 +}
 +
-+static unsigned int damon_va_check_accesses(struct damon_ctx *ctx)
++static unsigned int damon_pa_check_accesses(struct damon_ctx *ctx)
 +{
 +	struct damon_target *t;
 +	struct damon_perf_event *event;
 +	unsigned int max_nr_accesses = 0;
 +
 +	if (list_empty(&ctx->perf_events))
-+		return damon_va_basic_check_accesses(ctx);
++		return damon_pa_basic_check_accesses(ctx);
 +
 +	damon_for_each_target(t, ctx) {
 +		struct damon_region *r;
@@ -600,9 +225,8 @@ index 4eb81cc1e8cd..a9398c319331 100644
 +			r->accessed = false;
 +	}
 +
-+	list_for_each_entry(event, &ctx->perf_events, list) {
-+		damon_va_perf_check_accesses(ctx, event);
-+	}
++	list_for_each_entry(event, &ctx->perf_events, list)
++		damon_pa_perf_check_accesses(ctx, event);
 +
 +	damon_for_each_target(t, ctx) {
 +		struct damon_region *r;
@@ -616,9 +240,9 @@ index 4eb81cc1e8cd..a9398c319331 100644
 +	return max_nr_accesses;
 +}
 +
- void damon_ops_cleanup(struct damon_ctx *ctx)
+ static int __init damon_pa_initcall(void)
  {
- 	struct damon_perf_event *event;
+ 	struct damon_operations ops = {
 -- 
 2.43.0
 
