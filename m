@@ -1,126 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645D83451B2;
-	Sun,  8 Mar 2026 23:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B81D28FC
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 01:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773012114; cv=none; b=ky3uKZ3HiKEUFKESzsTYXw8/jIugAO51Z4dfF9MrkA+I7ZXVNgoFuvGD1afJPS9W4rVgbfnrf7SaB0zy/y5UmkSkZfQDzWdcLAd+4oL9aswAQQZFUIocW8DCvDLe8cdb82CG6aTSoEyzwV0BaqaeX3MHI1GV0xfWuTgMPI3mPSI=
+	t=1773018034; cv=none; b=GV3hNYxdJixTe6KDjNIwNsFZBmirbq8vAgMahZuckTqN+msS7/b7msezG8Zk/G/QwkQsIWI3wpj9JsGwEJIlKEqhdG9sA+OxUtPvSCaGkV0DjBHoEG2b4kFRcG0i/NhW+wgJe7V28Y/HBa7rn4lUaozuM5BU4d73bzG3GdtZlfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773012114; c=relaxed/simple;
-	bh=jNNNkiII245/C2khGGXc20U20DAStk9w4iZlI1E7WFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EiibQkOr/uqCbdikHIRx/iFZyF/4SJ62o4CyPffohWfXnzno4ZZnpk1agTbtPnA/Gg5jJeLTHPHQiQ6OFJq2uqLEMMiV2tHx5muoQpibFHU2MQeoSSAi7lC2u1jNq+zGkiTRCMKNmKq2QCpBSgeDjPOXfs8X8lLnVYiunWB+4L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V8fbwXVR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773018034; c=relaxed/simple;
+	bh=xXlTjxsjzpWoKY1/3S9+MsmoSzPZRCZxPsG/1f6Vnf4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rvuPFeWon/e5CbDe0rfhjXKTyFJ1AZsBambNBxEQSY2z7rrdmglRR3hUzU4mxP6WWCBDKNAStjBaQqVC4cqlVKv2J5hg3ht5gzWT/AaRGVq29cbrgPOXWTl+mDpiSUnHFMcYxy34iRyaQ7u6vArkJxUWYiZ5l9FdjLkxjn3yJLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UB1aRkf4; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V8fbwXVR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35013C116C6;
-	Sun,  8 Mar 2026 23:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773012114;
-	bh=jNNNkiII245/C2khGGXc20U20DAStk9w4iZlI1E7WFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V8fbwXVRyzt7joHpimPPusIIVcOaPBEvManQZGiJbXP9GBvSp9LRNh05ryrfqKPYT
-	 A5ds8yd81qL0fJu1d3uqEJlie6bjJ6EmBkCYXJmmuXnJzGZ0E7s5JjGNHGRyf6/C7r
-	 LEWGUpewkZmOAZB6IO8TopFR/xl0LKtzpSWCyKNjgNXLIcBSS37C6vaT1YhPvOg1HY
-	 BIAkjuyiA2CuloOEogHHtSNV2WGgsSQLHkPTIzIN/yetZary0m+uI05cq01A1Dt3Cf
-	 l9lTfVmZwC7rm7rh3v8tRoxc+VkHCXcDRtyWfCOOjI72e75Ajo3VeEN+7I+3oI9/e5
-	 ujaKhQgsY8HuQ==
-Date: Sun, 8 Mar 2026 23:21:39 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>,
-	Quentin Monnet <qmo@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	William Breathitt Gray <wbg@kernel.org>,
-	Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-	Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 23/30] tools: spi: Append extra cflags
-Message-ID: <ce4286b5-06de-49ac-8e5b-bf071d921540@sirena.org.uk>
-References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com>
- <20260308-tools_build_fix_zero_init-v3-23-6477808123b7@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UB1aRkf4"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-829a9c03780so2179094b3a.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 08 Mar 2026 18:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773018032; x=1773622832; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Npg7zsgmfHY86YOcXFkvoWsvRPot99dvgJ+7QRwG2Gs=;
+        b=UB1aRkf4MMqQAPHcnRfYoFwc7bkGaDKnKnpZphRYzSpnz20VCvn7Wyrg0P4PPBNt8X
+         FN980RtLatjsJB8despVLAb3CJhAPwHddGiDE05hCNVW4oFrdhx4BEKPKfvMV4ZvGIFn
+         voNNscpJlol4+Y4HcnCABBAwgVrU0/kd1aW49lcsIH9i9PVTeOCNJoZXhYr76/V//BSF
+         H/T8Vds5GiiPX272CYkpC+hSMcOIreV/bsuJ1DPy1kwvGTHOIjcZxQBEDzKO1g1IXwft
+         /5YV48XMHhk51GDf1W8s+vhqF/ergbpclXeA80VPSzqCMJXcGYjatCjlqVPST/pnsF42
+         x8jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773018032; x=1773622832;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Npg7zsgmfHY86YOcXFkvoWsvRPot99dvgJ+7QRwG2Gs=;
+        b=bo02rcnEAD2XFQ7Bo4P7QyV7X45yGN6wOUUI6Qwz/VGmbFWXm2hkXkKeJAZGC6rGwV
+         haTPbF6IaA1P1pw4NlUROAGp2JJNRz5gWJHD615ZQfbjL5hTzZTYUK5ct7Vy05WtX+Wn
+         /2EBOlmnFE9EFHkEhmSu1iCPAmOMR/KKbCTNe9gC1F9P058hBatic05EH19GKY+2ZUvs
+         yfHuhMc5YF2Z2ticw/mXpPY09qpLDE5kpVlENj6q6u8FkmsZgO99Iium5N9qPV1wG84x
+         I2MywO2NyXKzRQrTjhYAjxna19wXpHpRhATQnWSC//SuLKdJ1chWxDQ/mSf9Z0rMsYDV
+         tWlQ==
+X-Gm-Message-State: AOJu0YzYt+KA+WCQHZHbDDmSIvEKhJWtG+aP5RyzJRvv2lTtH82KZO50
+	2OaEH6TPZQgKdgK+rxXqDgS+c7Tgmdius3rur8h7DWnaYqLjlEBj4WhpvIGahw==
+X-Gm-Gg: ATEYQzx3jjV8Y3eRySk1yiG5xz45OkHa1qg8B6JT1x/ZPN6uGdbyBs2sL2X4FeZmqLq
+	RDrOmkvhy8i8pxnnfm7HkEvtOOwyiVfbR9qoQevAIf4cUpm/9vzT5e0BrX6IghaUTgrMrglahiF
+	fJz97OvMkBBssOgAC0o5i2i66fpMW9LwLBjY+Rhks462RfrEQjJutjdMO39pmrfQKshFtCMftcV
+	FlUJHVmP/sRjlgTjR6KGNJnH8erMuFV6Fn5F/2W8Cy1FMwsuryh0L6P5HbmNb0Lymg0IL066St1
+	0s7TYFetTZW4feDniJUfqy1Y4pZAu3PFQ4h3QkYUyOhL8Zvb2dGb/YiZMYYeiq5tPMg0rG/PQbB
+	Mr1bpk66vSBgplsRKxOQDKM3HCjxn6ILhKRr6junkfZZx49GBYQjQpsjXs1lBg331ZZzliMyvH5
+	4JBw1vKEr8mr4N8WRTCieT18bySDdtpn6BURTIfg==
+X-Received: by 2002:a05:6a00:a21e:b0:7f1:4:66b with SMTP id d2e1a72fcca58-829a2f5a6d8mr8061973b3a.44.1773018032173;
+        Sun, 08 Mar 2026 18:00:32 -0700 (PDT)
+Received: from localhost.localdomain ([240f:34:212d:1:35e4:35af:8d0d:ad4c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829a4635d62sm8468794b3a.5.2026.03.08.18.00.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2026 18:00:31 -0700 (PDT)
+From: Akinobu Mita <akinobu.mita@gmail.com>
+To: damon@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org,
+	sj@kernel.org,
+	akinobu.mita@gmail.com
+Subject: [RFC PATCH v2 0/6] mm/damon: introduce perf event based access check
+Date: Mon,  9 Mar 2026 10:00:03 +0900
+Message-ID: <20260309010009.11639-1-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="L8PNT90XVIA9M/yR"
-Content-Disposition: inline
-In-Reply-To: <20260308-tools_build_fix_zero_init-v3-23-6477808123b7@arm.com>
-X-Cookie: I smell a wumpus.
+Content-Transfer-Encoding: 8bit
 
+DAMON currently only provides PTE accessed-bit based access check, this
+patch series adds a new perf event based access check.
 
---L8PNT90XVIA9M/yR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Since perf event-based access checks do not require modifying the PTE
+accessed-bit for pages representing each damon region, it reduces the
+overhead of monitoring at a fixed granularity of the page size.
+Furthermore, this patch series also includes a feature that allows you
+to set a minimum region size for each target, enabling you to monitor
+at any fixed size greater than the page size for each target.
 
-On Sun, Mar 08, 2026 at 04:46:28PM +0000, Leo Yan wrote:
-> Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
-> the compiler.
+Using these features also requires modifications to damo, but these are
+not included in this patch series and are currently under development in
+the following branch:
 
-Acked-by: Mark Brown <broonie@kernel.org>
+* https://github.com/mita/damo/tree/damo-perf-for-v3.1.8
 
---L8PNT90XVIA9M/yR
-Content-Type: application/pgp-signature; name="signature.asc"
+Any feedback or advice on the patch set would be greatly appreciated.
 
------BEGIN PGP SIGNATURE-----
+* v2
+- reintroduce damon_operations->cleanup()
+- introduce struct damon_access_report
+- use struct damon_access_report instead of introducing struct
+  damon_perf_record
+- remove maximum region size setting
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmmuBH8ACgkQJNaLcl1U
-h9BYQwf+P1392LjsZ+ZPhzWbmpcXpIDSBO1qdtzXtehmsd1v1HNPYaENqJo5vgxe
-Amfy1Q45rQqkRUuYlUXjqQF6V3D+Z7/XTiWPl40Q7lWNI9E7XhBMpfNq5G8iqFL5
-mk1IwfmX0SpyUt2OSLKKJjqTuMHRUjIt0b0DjeyrskTbNaRwT2UTBB5nQLdFXo/M
-lLeZdLJwsnEjFcRmRmMmW2903FRxLfLKoD1Dx+83BnkCh7jbN6F94LEzV8VDCNHN
-+0EDJXOp+uLfO3pX6u1HWbV2+pSZnveCgK2wN6U8yDjUPGe3mz/K0phasCkLe6BL
-8SW+S9YNSL9O8qMn6FjPoTFwIoArhg==
-=ZxZe
------END PGP SIGNATURE-----
+* v1
+- https://lore.kernel.org/damon/20260123021014.26915-1-akinobu.mita@gmail.com/T/
 
---L8PNT90XVIA9M/yR--
+* TODO
+- Currently, it is possible to unintentionally specify a perf_event
+  that cannot obtain either PERF_SAMPLE_ADDR or PERF_SAMPLE_PHYS_ADDR
+- Check if it works in a virtual environment using vPMU
+
+Akinobu Mita (6):
+  mm/damon: reintroduce damon_operations->cleanup()
+  mm/damon/core: introduce struct damon_access_report
+  mm/damon/core: add common code for perf event based access check
+  mm/damon/vaddr: support perf event based access check
+  mm/damon/paddr: support perf event based access check
+  mm/damon: allow user to set min size of region
+
+ .../ABI/testing/sysfs-kernel-mm-damon         |  10 +
+ include/linux/damon.h                         |  63 ++
+ mm/damon/core.c                               |  77 ++-
+ mm/damon/ops-common.h                         |  39 ++
+ mm/damon/paddr.c                              | 105 ++-
+ mm/damon/sysfs-common.c                       |  11 +
+ mm/damon/sysfs-common.h                       |   1 +
+ mm/damon/sysfs.c                              | 399 ++++++++++-
+ mm/damon/tests/sysfs-kunit.h                  |   2 +
+ mm/damon/tests/vaddr-kunit.h                  |   5 +-
+ mm/damon/vaddr.c                              | 654 +++++++++++++++++-
+ 11 files changed, 1332 insertions(+), 34 deletions(-)
+
+-- 
+2.43.0
+
