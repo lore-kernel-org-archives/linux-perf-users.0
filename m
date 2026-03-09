@@ -1,63 +1,63 @@
-Received: from mail-yx1-f50.google.com (mail-yx1-f50.google.com [74.125.224.50])
+Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DCB3F23C6
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 17:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0A93F23C5
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 17:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773078959; cv=none; b=cvYnHq3onKoujla3/nqXmspHJzNiNUFKqGwTQTB+G0dKhp+cUPJRgKkwHLI9AkhVIDFByM+XBdGsV/d1jD5gnyoIcPAsxHhi32ODhGCBWynkGKQvRAmS4isBSTtxMqXqKARToT2OTNShhqIztjpIGaRcvEcm5+3myw4rwUEGyNA=
+	t=1773078961; cv=none; b=q8DLKzdTPLztJBAm/ruBCQNhB36oBOkPg2HJph4rOWosu4SK2MndG/Xz411Ijtl6/HGnVgC7NGEd95/fvCuvQ1HRw0FZtQq83gQm8YY8fsvAnFbPaWGBpvQl2T0PZOBaDTUcm7wcPPmEfdmM3StRUGnT238pIbKTQvCNyBVNy+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773078959; c=relaxed/simple;
-	bh=gr5gzJz+zJGQrTtkuM3wSWcpKQ5StwlicyaLJNKlcq0=;
+	s=arc-20240116; t=1773078961; c=relaxed/simple;
+	bh=OAU4joyMCvkTz0gfnas3vvrqU9KLdL5ai5pE4aFt60k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a2XxQJpfIuu7bDmOZ9MKu/3z6hQMRTU7lHSBhLIHBUTmGKDFOy6HvDI+BD0wfGhvJaRpVR1HJQQk2LjdemeaW8szblGrt6iX06wj8fNfUpPoIWloMtT+CtWlrq6o365EvUdh7OJGVtIqVjX4aI56TSYCQUd7NGT1eX/UMcuOVVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=J2BgIqRf; arc=none smtp.client-ip=74.125.224.50
+	 MIME-Version; b=dkXwOTbTWc0cUe6WSMz09KKHnzwKbvUHRw93KcI8KADjAYJy8vqfFGOaOWgIDULJcqFtySuBXbDKlJck9i0eBYtexztsXarDrnAh5mFQB+PI+dZsUriVVQ7jiE9WGCV2Ms4iMbox8oaa2SkZjh7zwVVqBT0rTXo0nvW7vw4DJCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=RaLAwFbz; arc=none smtp.client-ip=74.125.224.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="J2BgIqRf"
-Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-64c9707fc11so8831531d50.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 10:55:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="RaLAwFbz"
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-64ad79dfb7cso11527082d50.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 10:55:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ncsu.edu; s=google; t=1773078954; x=1773683754; darn=vger.kernel.org;
+        d=ncsu.edu; s=google; t=1773078957; x=1773683757; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ejER9XjyWi4jI3dlIAUxOX0udAsfG8pEAsk5mvY+7tE=;
-        b=J2BgIqRf4P4r3NWQVSgrDsiQ6aHB634LBci6lJez0270GAja1tQvlmVHFsmJNI7wwD
-         Pr/JbWw3iYmYNH2vMZG//oRS1uaT+Qq2BHzYenTKiySNgiXqBk1Lwy/QxFwiWPNbDaYp
-         hm7UTvDu/Bs0sREVynN+QAs8D8VWbBxJY5DdqXZ5mOmxmKsLnii+heAJ/xJCZcgpGkB9
-         XWoVWRF/LseXCW75XOyDj5wtVywrTKFgQX85K9F2L2NtbN/qEqep84+BA0PTXBEkHYYq
-         VUyHKACzELZxhrfhRhDVuLlsVkrFo+QsBGz3+zAHe+adp3YxZlKSUZmGGZzn9DcXTaOc
-         Rd+Q==
+        bh=sSYCnTvgRwKgqJAv6DduOBpprY0x2d8AW9Jn0k87SVE=;
+        b=RaLAwFbzkRcbjJaJXXz6kwuYB4M5qX+FSesZ4AzXwjJXOUw1fAp2COXxpyefz2iW+2
+         qmnu0QYr+2+riFb10x8X40L/gr3LYE0EbiLBfAziKqaMMB9+4ghOiPUzxL1wxWFIpGv3
+         HzGQk+NWOAzO3jr2uLev6yOFFbT16hSBXuRMRI6GNhoJI4NqA2FrG1tiOnZ4gzStSzBX
+         nplxlABEBI7rxjn1sZVFXwMCatiIhFuNS4x+x9PXOfYEcyv+IsK25YQgnhqDqSX6eZtu
+         8zG4rrAl0S9WDngUUMMpHLmNOvTyMesRpIQnoQ9xvr3JOIRyunKB7prylqGMkbVhDBi5
+         S4DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773078954; x=1773683754;
+        d=1e100.net; s=20230601; t=1773078957; x=1773683757;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ejER9XjyWi4jI3dlIAUxOX0udAsfG8pEAsk5mvY+7tE=;
-        b=RiDFQEIOIt3VlBKpE0SUZGsPlDrs2Db3jS2rlmyBfu7CVJLT/3fYAZauD4LRdrAprc
-         PtAHKENLsoONSm5EDTd4DgnuJNrBaz3jkkwwhkfuTcP72PvoAiPboHhNx1wmHJL9TGlZ
-         UbK7ucg28xyqu/BoJpj6v7FrqsFd50Qws8UOI4kSTnmKHNkmv6FST9sSSU6e5Nn6ew9P
-         8AP6KUPoPtzsdUcwf7vPidAw8lhTvbkp+notNNhKaOJieNY+cuLdPA5qQ+SUm0mQFwKT
-         +TJarFN7kKCjgVUub6I/W7iL+ZNTV5efd1y+NM6ao6li8TNZ2BrYQ2l/GIJch9O+cadL
-         EOzg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTF+OJSxOHFbXx4p1EjpcSfqZlobB0fTlCrwwI7nr/dgM+apwXl6lC6RoZSWmqQanwgOXcUHTjS+wf4AWubqe9@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaGQNL2WDtZbRP2em3Tp4Woz0Jj3hz8YzZKeg9gvfaGiFi3jpv
-	X0roCoz5JY8NT07XY0H/fXr6jkH0ARMD/wzlFrIImS1c0KEJ3YWi8am9zkfYiFF7tQ==
-X-Gm-Gg: ATEYQzy3FPj5/rWIBu2pcA5hUK0xTs2u1PQ4vITiAMn1s/zx3qKVUyGbFxhgLsFfPys
-	Gb1towlO1blAqQdkBzRFSGa8keUEfYn2w0PK7hGyLKY5OthjfXdq6P7MxfteIOnaYsL3HtWhGQu
-	q5UvTbdF3hpUwSkvmOjqAqchK2E1W29U3JEIXYNhNZ4xjhK0r3T0N4Sbrpwqtacf+u6w+r+VW+s
-	aUJ20g4PXFAQejr1aqmtdcVF85MgrAZizNc4nq38GY1aFJ1qwh2X4wu0x7NUEPSK0UV20XgqDa0
-	rICKl2RSIVyPCj7rqSutMW5DNLOPkM1aXkX4BZLkLRqGZOdPFDap796nmsH+ZI0IPj4ItjWNwD1
-	U9FNoDXl98YKOLKcXbdO7uswSig7oflrOmskMy4J7h9NQ/dtjzwU9JMEbINpTown1vLTOBr8ezu
-	Sye+oUJFBOt4YBe0zmOSZSa4sBsGZR7u40kXGAIcJglsuQ59SYAN4ZaE00iNyaFDAfe94=
-X-Received: by 2002:a53:e194:0:b0:64a:d6eb:6e with SMTP id 956f58d0204a3-64d1436ec4fmr8312416d50.80.1773078953722;
-        Mon, 09 Mar 2026 10:55:53 -0700 (PDT)
+        bh=sSYCnTvgRwKgqJAv6DduOBpprY0x2d8AW9Jn0k87SVE=;
+        b=iELf6tv/nH/7fYlxA2i7ZHRgTLpW2h2UYe7b9/YwAL3XCsVYkEz9EIKF5rdXXuF86J
+         lAZdTAU2AbCpqfu5bONcTqUdA57c9hF0k5Wp/vQc/SHRZzr06oAfQ8euCYVvs14pR0IR
+         zCGp7u3fTRW1VYF+HfdH+rNfpKdkogrfcGFx22o8nuoNFYr4bfrE6SIZkx2ED9y9L41t
+         PuUYF/1UcwFNerH6xMubTdSpH65THIK5d0FsIyRtfACQh9ZUs3yJZGKeyskQps+cuBmO
+         eJ4ueEx/4UlBjaUHSY972nFpT1Hkxj4eYGZDsNQH+NDBn2wzZGIN8OmCvNao7Jb3vYNU
+         eryw==
+X-Forwarded-Encrypted: i=1; AJvYcCV071aPIZKQAuAQ/c+a5BsVLp2lPH2jTgHmIZ8EnF2ZHtJ78y19uvnN/UcCARwgX4weoyHirtViznFp5yhxz5WH@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNmEc031o1XULHPFX9LK6VR93peQqTnpOs72+IvISHv4jSkpra
+	5ZPanXBF+6G23fd6Jo7tkEySMTzl6mIwmjIojhujv2g8/PFPSf8Ga3vREZ96SW4eFA==
+X-Gm-Gg: ATEYQzxG5R4uuDa3AaHr0Q9gV7Tluh9tk/pCEoMkk2iO4wivrqUHc7p/SodqQa4LK/c
+	EzdkBxSkgq9EM5HV/ccm6QfMdt93KIethjI0vtn2dbwv7oLTObFg+hTAGWXVZgQE18+IseW+bH7
+	M397azMvNMD1AKujyuTjBEa+8my+KniernAlGBBIaaIKC+A2ZZa8w8Jn/eJCLIGMeNmLy2J6P3I
+	0VXG8QuZcBxzQG18Pa8OFmMZ4hnVZ5hm3FbVuleM0HitG29nUFRzxOge39J/JuhHLdc4f8uSljT
+	6vYjwLNPF+7BJmQYqntuNpKZltDhWvY+J89vZyZ2JQqfEsMymaCpHL+w7tKZ0vf34x4SYAGzd0Z
+	C55I/XYxmpYkohRXfAxXNOAuc+abDVHfl74A7QhHhEMx4XgxPvqnZd9f2Z2+5XxdPRWG+zCiLOE
+	vVfCjD2k+5RO+0cXKjtXstoNCToL0YFvskbRm2TVDobKlCKVXAS8ckg//W
+X-Received: by 2002:a05:690e:134a:b0:64a:d1a9:a64 with SMTP id 956f58d0204a3-64d142baacdmr10625010d50.55.1773078956967;
+        Mon, 09 Mar 2026 10:55:56 -0700 (PDT)
 Received: from um773-cachyos.sd.ncsu.edu ([152.7.255.206])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64d176e70e7sm4992535d50.20.2026.03.09.10.55.52
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64d176e70e7sm4992535d50.20.2026.03.09.10.55.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2026 10:55:53 -0700 (PDT)
+        Mon, 09 Mar 2026 10:55:56 -0700 (PDT)
 From: Zecheng Li <zli94@ncsu.edu>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -72,11 +72,10 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Zecheng Li <zli94@ncsu.edu>,
 	xliuprof@google.com,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zecheng Li <zecheng@google.com>
-Subject: [PATCH v2 02/11] perf dwarf-aux: Preserve typedefs in match_var_offset
-Date: Mon,  9 Mar 2026 13:55:15 -0400
-Message-ID: <20260309175546.916039-3-zli94@ncsu.edu>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 05/11] perf dwarf-aux: Handle array types in die_get_member_type
+Date: Mon,  9 Mar 2026 13:55:18 -0400
+Message-ID: <20260309175546.916039-6-zli94@ncsu.edu>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260309175546.916039-1-zli94@ncsu.edu>
 References: <20260309175546.916039-1-zli94@ncsu.edu>
@@ -88,75 +87,55 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Zecheng Li <zecheng@google.com>
+When a struct member is an array type, die_get_member_type() would stop
+iterating since array types weren't handled in the loop. This caused
+accesses to array elements within structs to not resolve properly.
 
-Preserve typedefs in match_var_offset to match the results by
-__die_get_real_type. Also move the (offset == 0) branch after the
-is_pointer check to ensure the correct type is used, fixing cases where
-an incorrect pointer type was chosen when the access offset was 0.
+Add array type handling by resolving the array to its element type and
+calculating the offset within an element using modulo arithmetic
 
-Signed-off-by: Zecheng Li <zecheng@google.com>
+This improves type annotation coverage for struct members that are
+arrays.
+
 Signed-off-by: Zecheng Li <zli94@ncsu.edu>
 ---
- tools/perf/util/dwarf-aux.c | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ tools/perf/util/dwarf-aux.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 38142062d6e5..3b0fc9038f19 100644
+index 1484aa756826..1feefc329154 100644
 --- a/tools/perf/util/dwarf-aux.c
 +++ b/tools/perf/util/dwarf-aux.c
-@@ -1405,6 +1405,8 @@ struct find_var_data {
- 	Dwarf_Addr addr;
- 	/* Target register */
- 	unsigned reg;
-+	/* Access data type */
-+	Dwarf_Die type;
- 	/* Access offset, set for global data */
- 	int offset;
- 	/* True if the current register is the frame base */
-@@ -1417,29 +1419,31 @@ struct find_var_data {
- static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
- 			     s64 addr_offset, s64 addr_type, bool is_pointer)
- {
--	Dwarf_Die type_die;
- 	Dwarf_Word size;
-+	Dwarf_Die ptr_die;
-+	Dwarf_Die *ptr_type;
- 	s64 offset = addr_offset - addr_type;
+@@ -2127,13 +2127,28 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
  
--	if (offset == 0) {
--		/* Update offset relative to the start of the variable */
--		data->offset = 0;
--		return true;
--	}
--
- 	if (offset < 0)
- 		return false;
+ 		tag = dwarf_tag(&mb_type);
  
--	if (die_get_real_type(die_mem, &type_die) == NULL)
-+	if (__die_get_real_type(die_mem, &data->type) == NULL)
- 		return false;
+-		if (tag == DW_TAG_structure_type || tag == DW_TAG_union_type) {
++		if (tag == DW_TAG_structure_type || tag == DW_TAG_union_type ||
++		    tag == DW_TAG_array_type) {
+ 			Dwarf_Word loc;
  
--	if (is_pointer && dwarf_tag(&type_die) == DW_TAG_pointer_type) {
-+	ptr_type = die_get_pointer_type(&data->type, &ptr_die);
-+	if (is_pointer && ptr_type) {
- 		/* Get the target type of the pointer */
--		if (die_get_real_type(&type_die, &type_die) == NULL)
-+		if (__die_get_real_type(ptr_type, &data->type) == NULL)
- 			return false;
- 	}
- 
--	if (dwarf_aggregate_size(&type_die, &size) < 0)
-+	if (offset == 0) {
-+		/* Update offset relative to the start of the variable */
-+		data->offset = 0;
-+		return true;
-+	}
+ 			/* Update offset for the start of the member struct */
+ 			if (die_get_data_member_location(member, &loc) == 0)
+ 				offset -= loc;
+ 		}
 +
-+	if (dwarf_aggregate_size(&data->type, &size) < 0)
- 		return false;
- 
- 	if ((u64)offset >= size)
++		/* Handle array types: resolve to the element type by one level */
++		if (tag == DW_TAG_array_type) {
++			Dwarf_Word size;
++
++			if (die_get_real_type(&mb_type, &mb_type) == NULL)
++				return NULL;
++
++			if (dwarf_aggregate_size(&mb_type, &size) < 0)
++				return NULL;
++
++			offset = offset % size;
++			tag = dwarf_tag(&mb_type);
++		}
+ 	}
+ 	*die_mem = mb_type;
+ 	return die_mem;
 -- 
 2.53.0
 
