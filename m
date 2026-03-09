@@ -1,243 +1,162 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AA42DEA75
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 08:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0322D6401;
+	Mon,  9 Mar 2026 08:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773045684; cv=none; b=O/2cfW9t05W4IGXd8vA+9k5A+C8eqSJPHI2uNYbRKy58whUoGDAFOXm7Tz08USvc3VgjFzbFuZwo97Md9HsN+0lOd39LA+7ukiknTdF4aJXW1j8j9tqPmr9Sqr1a7fM5wKEiz7ygTQuIYnVGrHB2m0W+P3bn4+3rVymUfBK1+KY=
+	t=1773046086; cv=none; b=aubqN7/99/zRea5SJl1s4dxjH5S82oAzaJkPbgMHOoJb0T0jslUyeUqK7UAglIy/f/y1a9BVpBXw1D1ro4dByRa2T8ZI2S/Bw0IEPenJ6707u2vgp9BzR3RVhxrG38qqUpVGpoPsTE6+gM/bYvEX+bEo7+9JrtNCRtfs/v7EPV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773045684; c=relaxed/simple;
-	bh=QmC/1aZi1KMAI8qInvYmgDZW0GLqK+zvjW6rUzsfpMc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K6ho2DNeGUYeE9jrgjg9+57qF551IY6QTQLG0vMudd0Ibk/d3u26oxHq/Dhgy1blqfih7FFE6i1wG609E464VdbiZWfIhPlZOlNluRDQDilEvFJ+56Egob9lilpUYoFursobeveFvydGas4I8USCoC7sU8sBDMozMjBBl3KBleM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SdsdnzuP; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=bQlbtZwo; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1773046086; c=relaxed/simple;
+	bh=YNjN3U3QMmmOB/PUlZ3OptwFm10INMeeYqTIMWwh5bs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VpOGcEzm2DepSlL1Dalj0dTiWt9tIil2M3pHEjYX/s9FJbPSJ/5danHQT3nWNMNwT5heDWjAi2qXRA5K1XE01G5MboNHK6tPlu0IZdAcBtzdx6974Pea/2dClmxd/xQJ9DnZk4TWDKtqWuHz2syWGEVdS4JBtH14YuNzLHCCI0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=E6Us1ZA7; arc=none smtp.client-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SdsdnzuP";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="bQlbtZwo"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6298FE1C2697191
-	for <linux-perf-users@vger.kernel.org>; Mon, 9 Mar 2026 08:41:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xEa3WzuEsGwlSu+tKPUtbqO0QxG3vgk+PmyiHeY+Zck=; b=SdsdnzuPVbNbaNE+
-	W1d/LjZ27mcA+rlHb8qR7wYcsZhPHjwjUbo+SpJncaS3aMK/1HYPDbbI0LcwepaQ
-	30GJpjWD+PkJVv2pScUeOl5aWUQbl9z++HUSnRjG66CpBHebZOgbWCXdYicZd1It
-	iwM4OeGoSO5Xl9iKb5jKkifS8nh/lUEGu5E+EwK+Wacd6GAX+F3V/donu8lkQp0V
-	Sa/ijwZcGApL/bfuueQ3N31nGnyw7JJBY1ikDiYQZY3SGTL9vUy3rF514Nt+rcXp
-	nQK0esTLpI1LaVRUxRZwgsG7H5L+eXgLSMRKYF7M68zAJF2CCXXmvYJPvf6dc0u2
-	gnNa5w==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cr9cpmvcp-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 08:41:20 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8cd722c1a69so1276532685a.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 01:41:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1773045680; x=1773650480; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xEa3WzuEsGwlSu+tKPUtbqO0QxG3vgk+PmyiHeY+Zck=;
-        b=bQlbtZwoYkK2UuwXiLhOB4YG+aekbjZkk8/6JPbtkTA8447mhi0St6zcOTbPPqwHWk
-         aBKkeqHx7RgKoOsmWVbrY+S4/A5bMifcnBYskgLrGd+8hP/UYBKrcxFb+/QInmpGiwM5
-         fbDoLbRfCtTLJb+7r0O37NTtXIQ9LD56Wb3v5OFFyYahpjxueVHKjbTj1WRrXuzW1egL
-         mN26aFUhDzAcOdMCtVQrG1lHxmO0SYg043OrYGSwuPkJx9ZtSLY5uWSIL9X+YXquBkGd
-         BW14wXNWIXOTYXVBzVonr0W9Atd6modCaBymlIhXvbMiVUcI9+LdCbo3gLcPU13JC6xC
-         b5Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773045680; x=1773650480;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xEa3WzuEsGwlSu+tKPUtbqO0QxG3vgk+PmyiHeY+Zck=;
-        b=bWNsQxJ1G3eoX6HYLHscN1UbL48Zb6I1i9Bkjy70t/CPv2s7iWSGi3/Fw+h66D3N2J
-         RRKhFsZ4vDgy5OOMZMmAXa73A/AWbSEyNXcYAnglzltz7Y/onkFaKZAfPxWdNhiWvyo6
-         aHp4xb9t3Y2iSQU8NA+4dZqNwcGa6FPFcpyk6Ha6WF/V+9zgPJsTRrv7l3BNoHsXt9BN
-         hrC+AaKcAAcz3e391TMG2hCilJlfxnsVPNjPR0roX5tRp+xg5mDB8MCWsRgESK8FnrqE
-         LP3z0IDED8pt+RH6ugrD4LhxBJvoagnvxJsPnUEQDrUi0SO0MlQU4CPJiOUyoseZcAxJ
-         9Eiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxOkL8gCQKPVkYGWNewxG++M6OOe6709WhktB5Y8YD2buUWQp3nthAabYjCFb2AlaoMuyvmlbgrf1RYMcBHX2u@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXis3J2OpRj7rSQaHufXAgaHejmiH/w9WE20YGH7UWf157oo8W
-	yn+2jZQqCdDU8YEHMgxR1iZ1zCqd6b3fARXCJ33CtiLFEllKzLCXxsSh7MqI/MuCS++cAqVO7Q/
-	Z4SE4TraZaC3fARzDykopbmb4Hnqsr1M7oh9aGE0Kzs6+VCNLMKljCUb5HQW601NWkRDqYBEq
-X-Gm-Gg: ATEYQzwYHUYkKebULxVNGyrga5bzdkhOxojsaevZ8PbgtBigpQg2rACpTde0w6pfE2U
-	SvC2EQrOGJMDdF+yYXeZkbg3HVWXBoOCQdCH1AqK49k8c+xjFzy4BS1z2LakNPFW1G4m9V25Hc2
-	oivYkIJX31GlXtQT99u15HIPrTCtxKzHwemFss7lPfl4MUv+bXZaxNaNaXOnAilGAzjSfKJDky1
-	KbXqKd4+ZUdPmQORjmb1bCji4Syyu4i4c7Gm7aZT6VenSrk6Dftzbf1P6v824r8+uyzLMic3WLz
-	cGh2lln/QUhm3S8fr62qsBD1pHYa92+/mCq5hAzW9Gx/iA+ITbuI3Ewo0H5YW3W5OiajkhXuTZ+
-	REx0/9CY09/2iB7shiVhDOtMeLH1h2SI71Igx9RIM0q+J/+pXO00m9sQwIVDEpEFfcRqMClOTQC
-	GULU8CHTuf
-X-Received: by 2002:a05:620a:1707:b0:8cb:b062:c2e5 with SMTP id af79cd13be357-8cd6d386908mr1323657885a.27.1773045679901;
-        Mon, 09 Mar 2026 01:41:19 -0700 (PDT)
-X-Received: by 2002:a05:620a:1707:b0:8cb:b062:c2e5 with SMTP id af79cd13be357-8cd6d386908mr1323656285a.27.1773045679422;
-        Mon, 09 Mar 2026 01:41:19 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:ae20:597c:99b8:d161? ([2a05:6e02:1041:c10:ae20:597c:99b8:d161])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4853a946978sm88693385e9.1.2026.03.09.01.41.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2026 01:41:18 -0700 (PDT)
-Message-ID: <2ae5e4e5-a860-4f94-9655-67368d558f86@oss.qualcomm.com>
-Date: Mon, 9 Mar 2026 09:41:16 +0100
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="E6Us1ZA7"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=YNjN3U3QMmmOB/PUlZ3OptwFm10INMeeYqTIMWwh5bs=;
+	b=E6Us1ZA7yGJHJq02U0vnVseMg0JWSYa6N3oVWXbnRiEUE6goRuP33ris4uctX1vUVj3NRLpX5
+	xa96G/N+OyAJiC2UMwxNtKQ9ofhS/4uVKTCBFRo1ns8Tvi9X4CIOHLay8CTOaHoLaXUz+GWgyb1
+	6ZipFfHPy9kaVTlATTnwkqs=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4fTrBH2rbyz1prL6;
+	Mon,  9 Mar 2026 16:43:03 +0800 (CST)
+Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
+	by mail.maildlp.com (Postfix) with ESMTPS id CA08720104;
+	Mon,  9 Mar 2026 16:47:59 +0800 (CST)
+Received: from kwepemq500003.china.huawei.com (7.202.195.117) by
+ dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 9 Mar 2026 16:47:59 +0800
+Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
+ kwepemq500003.china.huawei.com (7.202.195.117) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 9 Mar 2026 16:47:59 +0800
+Received: from kwepemq200002.china.huawei.com ([7.202.195.90]) by
+ kwepemq200002.china.huawei.com ([7.202.195.90]) with mapi id 15.02.1544.011;
+ Mon, 9 Mar 2026 16:47:59 +0800
+From: duchangbin <changbin.du@huawei.com>
+To: Namhyung Kim <namhyung@kernel.org>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
+ Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "James
+ Clark" <james.clark@linaro.org>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] perf: Add layout support for --symfs option
+Thread-Topic: [PATCH v3] perf: Add layout support for --symfs option
+Thread-Index: AQHcqWv7qgRFvdXDEU29kITXQZ801LWe/w8AgACrhICABkVLgA==
+Date: Mon, 9 Mar 2026 08:47:59 +0000
+Message-ID: <2f617208b9fd42b682380a3306c2603b@huawei.com>
+References: <20260301192455.1053900-1-changbin.du@huawei.com>
+ <aaknIOp-PrDNCf-L@z2> <dd08137f2d2e4d39a37d4c50552f8a86@huawei.com>
+In-Reply-To: <dd08137f2d2e4d39a37d4c50552f8a86@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: kwepemq200002.china.huawei.com (15.02.1544.011)
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3EEC2404B6C0674DB783990DAE9649A4@huawei.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 04/30] tools/thermal: Initialize CFLAGS before
- including Makefile.include
-To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>,
-        Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
-        Nicolas Schier <nsc@kernel.org>,
-        Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-        Bill Wendling <morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau
- <martin.lau@linux.dev>,
-        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        William Breathitt Gray <wbg@kernel.org>,
-        Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>,
-        Bartosz Golaszewski <brgl@kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        David Lechner <dlechner@baylibre.com>,
-        =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Andrew Morton
- <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
-        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-        Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>,
-        Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <bentiss@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com>
- <20260308-tools_build_fix_zero_init-v3-4-6477808123b7@arm.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-In-Reply-To: <20260308-tools_build_fix_zero_init-v3-4-6477808123b7@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA5MDA3OSBTYWx0ZWRfX4B+Uhs8rncZ0
- rm3aycCXixpny5/1mmjtnhEttAQU5N0hHPjrqw7E6Ro7weq3X4YKasAXoVlmcs2SKRJkzqBi/fH
- h6F2VLGChCQ2A6SZgDdGjKBmb8fpcrkSYT2C3qW/13kAmOKDDCO76ZOkNeM4ZN5e1LMUeqYYG0w
- vMKhMb0rRdSgkK/6gHDCtTW7q5tb0SZN9PKsW5R1bZGlKly+XEXvJD/S/+QmlnUV8ynH+WIt4BL
- i6oaWCLvffMUZptppIyXQGClRVLpH0tnGEQpFpFdZ4UpJ+13iwxmIqVCdvdKkeHFqYcPRLlUFoL
- BK0WT7Jmhr/GUZ3u5/A8sZgYUbbbRIgmmQUmUuNKam8PNXsFbSdUrFAPo7aiwjcn80lEX+Wg4jx
- ASun4fsTXEpG+B9XLlN2fUnE6WGHkpxflzi9vRJaXcgpIV17SRykISEnRF6M4Oht+NilgPWmAA1
- 6+euhvZb7eamswKJkgg==
-X-Proofpoint-ORIG-GUID: zknStP3ahbyPKBUoVa95E1meb7xzNT0n
-X-Proofpoint-GUID: zknStP3ahbyPKBUoVa95E1meb7xzNT0n
-X-Authority-Analysis: v=2.4 cv=e7sLiKp/ c=1 sm=1 tr=0 ts=69ae87b0 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22 a=7CQSdrXTAAAA:8
- a=ZAywS_63PuHDt0GrRrsA:9 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
- a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-09_03,2026-03-06_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 priorityscore=1501 adultscore=0
- suspectscore=0 spamscore=0 bulkscore=0 impostorscore=0 malwarescore=0
- clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2602130000
- definitions=main-2603090079
 
-
-Hi Leo,
-
-On 3/8/26 17:46, Leo Yan wrote:
-> Initialize CFLAGS to the default value before including
-> tools/scripts/Makefile.include.
-> 
-> Defer appending EXTRA_CFLAGS to CFLAGS until after including
-> Makefile.include, as it may extend EXTRA_CFLAGS in the future.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->   tools/thermal/lib/Makefile | 16 +++++++++-------
->   1 file changed, 9 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/thermal/lib/Makefile b/tools/thermal/lib/Makefile
-> index 056d212f25cf51cd8c02260fbe2ef28dda5e4acb..1890779f1574ebd9015f3001b9bb31d4bc0ae5ce 100644
-> --- a/tools/thermal/lib/Makefile
-> +++ b/tools/thermal/lib/Makefile
-> @@ -23,6 +23,14 @@ INSTALL = install
->   DESTDIR ?=
->   DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
->   
-> +# Defer assigning EXTRA_CFLAGS to CFLAGS until after including
-> +# tools/scripts/Makefile.include, as it may add flags to EXTRA_CFLAGS.
-> +ifdef EXTRA_CFLAGS
-> +  CFLAGS :=
-> +else
-> +  CFLAGS := -g -Wall
-> +endif
-> +
-
-Sorry, I don't get the comment :/
-
-Can you clarify the intended purpose with this change and the 'override' 
-directive below ?
-
-
->   include $(srctree)/tools/scripts/Makefile.include
->   include $(srctree)/tools/scripts/Makefile.arch
->   
-> @@ -39,13 +47,6 @@ libdir = $(prefix)/$(libdir_relative)
->   libdir_SQ = $(subst ','\'',$(libdir))
->   libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
->   
-> -# Set compile option CFLAGS
-> -ifdef EXTRA_CFLAGS
-> -  CFLAGS := $(EXTRA_CFLAGS)
-> -else
-> -  CFLAGS := -g -Wall
-> -endif
-> -
->   INCLUDES = \
->   -I/usr/include/libnl3 \
->   -I$(srctree)/tools/lib/thermal/include \
-> @@ -56,6 +57,7 @@ INCLUDES = \
->   -I$(srctree)/tools/include/uapi
->   
->   # Append required CFLAGS
-> +override CFLAGS += $(EXTRA_CFLAGS)
->   override CFLAGS += $(EXTRA_WARNINGS)
->   override CFLAGS += -Werror -Wall
->   override CFLAGS += -fPIC
-> 
-
+T24gVGh1LCBNYXIgMDUsIDIwMjYgYXQgMDU6MDI6MTdQTSArMDgwMCwgZHVjaGFuZ2JpbiB3cm90
+ZToNCj4gT24gV2VkLCBNYXIgMDQsIDIwMjYgYXQgMTA6NDg6MDBQTSAtMDgwMCwgTmFtaHl1bmcg
+S2ltIHdyb3RlOg0KPiA+IEhlbGxvLA0KPiA+IA0KPiA+ID4gQEAgLTI0OTEsMTYgKzI0OTIsMzYg
+QEAgaW50IHN5bWJvbF9fY29uZmlnX3N5bWZzKGNvbnN0IHN0cnVjdCBvcHRpb24gKm9wdCBfX21h
+eWJlX3VudXNlZCwNCj4gPiA+ICAJCQkgY29uc3QgY2hhciAqZGlyLCBpbnQgdW5zZXQgX19tYXli
+ZV91bnVzZWQpDQo+ID4gPiAgew0KPiA+ID4gIAljaGFyICpiZiA9IE5VTEw7DQo+ID4gPiArCWNo
+YXIgKmxheW91dF9zdHI7DQo+ID4gPiAgCWludCByZXQ7DQo+ID4gPiAgDQo+ID4gPiAtCXN5bWJv
+bF9jb25mLnN5bWZzID0gc3RyZHVwKGRpcik7DQo+ID4gPiAtCWlmIChzeW1ib2xfY29uZi5zeW1m
+cyA9PSBOVUxMKQ0KPiA+ID4gLQkJcmV0dXJuIC1FTk9NRU07DQo+ID4gPiArCWxheW91dF9zdHIg
+PSBzdHJyY2hyKGRpciwgJywnKTsNCj4gPiA+ICsJaWYgKGxheW91dF9zdHIgJiYNCj4gPiA+ICsJ
+ICAgICghc3RyY21wKGxheW91dF9zdHIgKyAxLCAiZmxhdCIpIHx8ICFzdHJjbXAobGF5b3V0X3N0
+ciArIDEsICJoaWVyYXJjaHkiKSkpIHsNCj4gPiANCj4gPiBJIHRoaW5rIGl0J3MgYmV0dGVyIHRv
+IGZhaWwgd2l0aCBhIG1lc3NhZ2UgaWYgdW5rbm93biBsYXlvdXQgaXMgZ2l2ZW4uDQo+ID4NCj4g
+QWdyZWVkLiBUaGUgY3VycmVudCBpc3N1ZSBpcyB0aGF0IGlmIHdlIHVzZSAnLCcgYXMgdGhlIGRl
+bGltaXRlciAodG8gbWFpbnRhaW4gYQ0KPiBjb25zaXN0ZW50IHN0eWxlIHdpdGggb3RoZXIgb3B0
+aW9ucyksIGFuZCB0aGUgcGF0aCBpdHNlbGYgY29udGFpbnMgYSBjb21tYSwgaXQNCj4gd291bGQg
+cmVzdWx0IGluIHRoZSBmb2xsb3dpbmcgYW1iaWd1aXR5Og0KPiAgLSAvcGF0aCxmbGF0IOKGkiBz
+eW1mcz0vcGF0aCwgbGF5b3V0PWZsYXQNCj4gIC0gL3BhdGgsaGllcmFyY2h5IOKGkiBzeW1mcz0v
+cGF0aCwgbGF5b3V0PWhpZXJhcmNoeQ0KPiAgLSAvc29tZSxwYXRoLyDihpIgc3ltZnM9L3NvbWUs
+IGxheW91dD1wYXRoLw0KPiANCj4gRG8geW91IGhhdmUgYmV0dGVyIHN1Z2dlc3Rpb25zPyBVc2lu
+ZyBhIGRpZmZlcmVudCBkZWxpbWl0ZXIgKGUuZy4sIDogb3IgOyk/DQo+IA0KRmluYWxseSwgSSd2
+ZSBkZWNpZGVkIHRvIGdvIHdpdGggdGhlIHNpbXBsZXN0IGltcGxlbWVudGF0aW9uLiBUaGUgcmVz
+dWx0IGlzOiBpZg0KdGhlIHBhdGggY29udGFpbnMgYSBjb21tYSwgdGhlIGxheW91dCBtdXN0IGJl
+IHNwZWNpZmllZCwgb3RoZXJ3aXNlIGFuIGVycm9yIHdpbGwNCmJlIHJhaXNlZCAodGhlIHBhcnQg
+YWZ0ZXIgdGhlIGNvbW1hIHdvdWxkIGJlIGluY29ycmVjdGx5IHJlY29nbml6ZWQgYXMgdGhlDQps
+YXlvdXQgb3B0aW9uKS4NCg0KLSAvcGF0aCDihpIgc3ltZnM9L3BhdGgsIGxheW91dD1oaWVyYXJj
+aHkNCi0gL3BhdGgsZmxhdCDihpIgc3ltZnM9L3BhdGgsIGxheW91dD1mbGF0DQotIC9zb21lLHBh
+dGgvIOKGkiBlcnJvcg0KLSAvc29tZSxwYXRoLyxmbGF0IOKGkiBzeW1mcz0vc29tZSxwYXRoLywg
+bGF5b3V0PWZsYXQNCg0KPiA+IFRoYW5rcywNCj4gPiBOYW1oeXVuZw0KPiA+IA0KPiA+ID4gKwkJ
+c2l6ZV90IGRpcl9sZW4gPSBsYXlvdXRfc3RyIC0gZGlyOw0KPiA+ID4gKwkJY2hhciAqZGlyX2Nv
+cHkgPSBzdHJuZHVwKGRpciwgZGlyX2xlbik7DQo+ID4gPiArDQo+ID4gPiArCQlpZiAoZGlyX2Nv
+cHkgPT0gTlVMTCkNCj4gPiA+ICsJCQlyZXR1cm4gLUVOT01FTTsNCj4gPiA+ICsNCj4gPiA+ICsJ
+CXN5bWJvbF9jb25mLnN5bWZzID0gZGlyX2NvcHk7DQo+ID4gPiArDQo+ID4gPiArCQlsYXlvdXRf
+c3RyKys7DQo+ID4gPiArCQlpZiAoIXN0cmNtcChsYXlvdXRfc3RyLCAiZmxhdCIpKQ0KPiA+ID4g
+KwkJCXN5bWJvbF9jb25mLnN5bWZzX2xheW91dF9mbGF0ID0gdHJ1ZTsNCj4gPiA+ICsJCWVsc2UN
+Cj4gPiA+ICsJCQlzeW1ib2xfY29uZi5zeW1mc19sYXlvdXRfZmxhdCA9IGZhbHNlOw0KPiA+ID4g
+Kwl9IGVsc2Ugew0KPiA+ID4gKwkJc3ltYm9sX2NvbmYuc3ltZnMgPSBzdHJkdXAoZGlyKTsNCj4g
+PiA+ICsJCWlmIChzeW1ib2xfY29uZi5zeW1mcyA9PSBOVUxMKQ0KPiA+ID4gKwkJCXJldHVybiAt
+RU5PTUVNOw0KPiA+ID4gKwkJc3ltYm9sX2NvbmYuc3ltZnNfbGF5b3V0X2ZsYXQgPSBmYWxzZTsN
+Cj4gPiA+ICsJfQ0KPiA+ID4gIA0KPiA+ID4gIAkvKiBza2lwIHRoZSBsb2NhbGx5IGNvbmZpZ3Vy
+ZWQgY2FjaGUgaWYgYSBzeW1mcyBpcyBnaXZlbiwgYW5kDQo+ID4gPiAgCSAqIGNvbmZpZyBidWls
+ZGlkIGRpciB0byBzeW1mcy8uZGVidWcNCj4gPiA+ICAJICovDQo+ID4gPiAtCXJldCA9IGFzcHJp
+bnRmKCZiZiwgIiVzLyVzIiwgZGlyLCAiLmRlYnVnIik7DQo+ID4gPiArCXJldCA9IGFzcHJpbnRm
+KCZiZiwgIiVzLyVzIiwgc3ltYm9sX2NvbmYuc3ltZnMsICIuZGVidWciKTsNCj4gPiA+ICAJaWYg
+KHJldCA8IDApDQo+ID4gPiAgCQlyZXR1cm4gLUVOT01FTTsNCj4gPiA+ICANCj4gPiA+IGRpZmYg
+LS1naXQgYS90b29scy9wZXJmL3V0aWwvc3ltYm9sLmggYi90b29scy9wZXJmL3V0aWwvc3ltYm9s
+LmgNCj4gPiA+IGluZGV4IDNmYjVkMTQ2ZDliMS4uNGYxZGJkMWViZDk5IDEwMDY0NA0KPiA+ID4g
+LS0tIGEvdG9vbHMvcGVyZi91dGlsL3N5bWJvbC5oDQo+ID4gPiArKysgYi90b29scy9wZXJmL3V0
+aWwvc3ltYm9sLmgNCj4gPiA+IEBAIC05LDYgKzksNyBAQA0KPiA+ID4gICNpbmNsdWRlIDxsaW51
+eC9saXN0Lmg+DQo+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L3JidHJlZS5oPg0KPiA+ID4gICNpbmNs
+dWRlIDxzdGRpby5oPg0KPiA+ID4gKyNpbmNsdWRlIDxlcnJuby5oPg0KPiA+ID4gICNpbmNsdWRl
+ICJhZGRyX2xvY2F0aW9uLmgiDQo+ID4gPiAgI2luY2x1ZGUgInBhdGguaCINCj4gPiA+ICAjaW5j
+bHVkZSAic3ltYm9sX2NvbmYuaCINCj4gPiA+IEBAIC05Niw2ICs5NywxOCBAQCBzdHJ1Y3QgaW50
+bGlzdDsNCj4gPiA+ICANCj4gPiA+ICBzdGF0aWMgaW5saW5lIGludCBfX3N5bWJvbF9fam9pbl9z
+eW1mcyhjaGFyICpiZiwgc2l6ZV90IHNpemUsIGNvbnN0IGNoYXIgKnBhdGgpDQo+ID4gPiAgew0K
+PiA+ID4gKwlpZiAoc3ltYm9sX2NvbmYuc3ltZnNfbGF5b3V0X2ZsYXQpIHsNCj4gPiA+ICsJCWNo
+YXIgKnBhdGhfY29weSA9IHN0cmR1cChwYXRoKTsNCj4gPiA+ICsJCWNoYXIgKmJhc2U7DQo+ID4g
+PiArCQlpbnQgcmV0Ow0KPiA+ID4gKw0KPiA+ID4gKwkJaWYgKCFwYXRoX2NvcHkpDQo+ID4gPiAr
+CQkJcmV0dXJuIC1FTk9NRU07DQo+ID4gPiArCQliYXNlID0gYmFzZW5hbWUocGF0aF9jb3B5KTsN
+Cj4gPiA+ICsJCXJldCA9IHBhdGhfX2pvaW4oYmYsIHNpemUsIHN5bWJvbF9jb25mLnN5bWZzLCBi
+YXNlKTsNCj4gPiA+ICsJCWZyZWUocGF0aF9jb3B5KTsNCj4gPiA+ICsJCXJldHVybiByZXQ7DQo+
+ID4gPiArCX0NCj4gPiA+ICAJcmV0dXJuIHBhdGhfX2pvaW4oYmYsIHNpemUsIHN5bWJvbF9jb25m
+LnN5bWZzLCBwYXRoKTsNCj4gPiA+ICB9DQo+ID4gPiAgDQo+ID4gPiBAQCAtMTY5LDYgKzE4Miwx
+MSBAQCBzaXplX3Qgc3ltYm9sX19mcHJpbnRmX3N5bW5hbWUoY29uc3Qgc3RydWN0IHN5bWJvbCAq
+c3ltLCBGSUxFICpmcCk7DQo+ID4gPiAgc2l6ZV90IHN5bWJvbF9fZnByaW50ZihzdHJ1Y3Qgc3lt
+Ym9sICpzeW0sIEZJTEUgKmZwKTsNCj4gPiA+ICBib29sIHN5bWJvbF9fcmVzdHJpY3RlZF9maWxl
+bmFtZShjb25zdCBjaGFyICpmaWxlbmFtZSwNCj4gPiA+ICAJCQkJIGNvbnN0IGNoYXIgKnJlc3Ry
+aWN0ZWRfZmlsZW5hbWUpOw0KPiA+ID4gKw0KPiA+ID4gKyNkZWZpbmUgU1lNRlNfSEVMUCAic2V0
+dXAgcm9vdCBkaXJlY3Rvcnkgd2hpY2ggY29udGFpbnMgZGVidWcgZmlsZXM6XG4iIFwNCj4gPiA+
+ICsJIlx0XHRcdFx0IiAiZGlyZWN0b3J5Olx0TG9vayBmb3IgZmlsZXMgd2l0aCBzeW1ib2xzIHJl
+bGF0aXZlIHRvIHRoaXMgZGlyZWN0b3J5LlxuIiBcDQo+ID4gPiArCSJcdFx0XHRcdCIgImxheW91
+dDogICBcdExheW91dCBvZiBmaWxlcywgJ2hpZXJhcmNoeScgbWF0Y2hlcyBmdWxsIHBhdGggKGRl
+ZmF1bHQpLCAnZmxhdCcgb25seSBtYXRjaGVzIGJhc2UgbmFtZS5cbiINCj4gPiA+ICsNCj4gPiA+
+ICBpbnQgc3ltYm9sX19jb25maWdfc3ltZnMoY29uc3Qgc3RydWN0IG9wdGlvbiAqb3B0IF9fbWF5
+YmVfdW51c2VkLA0KPiA+ID4gIAkJCSBjb25zdCBjaGFyICpkaXIsIGludCB1bnNldCBfX21heWJl
+X3VudXNlZCk7DQo+ID4gPiAgDQo+ID4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi91dGlsL3N5
+bWJvbF9jb25mLmggYi90b29scy9wZXJmL3V0aWwvc3ltYm9sX2NvbmYuaA0KPiA+ID4gaW5kZXgg
+NzFiYjE3MzcyYTZjLi5hYzFiNDQ0YThmZDggMTAwNjQ0DQo+ID4gPiAtLS0gYS90b29scy9wZXJm
+L3V0aWwvc3ltYm9sX2NvbmYuaA0KPiA+ID4gKysrIGIvdG9vbHMvcGVyZi91dGlsL3N5bWJvbF9j
+b25mLmgNCj4gPiA+IEBAIC05Myw2ICs5Myw3IEBAIHN0cnVjdCBzeW1ib2xfY29uZiB7DQo+ID4g
+PiAgCQkJKnRpZF9saXN0LA0KPiA+ID4gIAkJCSphZGRyX2xpc3Q7DQo+ID4gPiAgCWNvbnN0IGNo
+YXIJKnN5bWZzOw0KPiA+ID4gKwlib29sCQlzeW1mc19sYXlvdXRfZmxhdDsNCj4gPiA+ICAJaW50
+CQlyZXNfc2FtcGxlOw0KPiA+ID4gIAlpbnQJCXBhZF9vdXRwdXRfbGVuX2RzbzsNCj4gPiA+ICAJ
+aW50CQlncm91cF9zb3J0X2lkeDsNCj4gPiA+IC0tIA0KPiA+ID4gMi40My4wDQo+ID4gPiANCj4g
+PiANCj4gDQo+IC0tIA0KPiBDaGVlcnMsDQo+IENoYW5nYmluIER1DQoNCi0tIA0KQ2hlZXJzLA0K
+Q2hhbmdiaW4gRHUNCg==
