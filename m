@@ -1,78 +1,207 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBBF37DEBF;
-	Mon,  9 Mar 2026 10:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D12F39524F;
+	Mon,  9 Mar 2026 11:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773052223; cv=none; b=axfOEmQGpFh9Jc91z6Pa0gOAPJ5JFkSiUZQ4rfvkJPg/S5lThgbkWuTZmgANjrNppRJdzFXE556b+UTCJK92lf9SodKpBMabumlvuEYTBb9uu6RgmzQ4fNZJWUFhWjqymUVx+d7cUU0HAbiD+qCn0n8+w2qRy2QDdxvx6s2fqtc=
+	t=1773054384; cv=none; b=pSbRhLveAr9r84pU6Gbx/siuZ9XEACaEvYB0/d9/AmheKRIscw8IRZ+bS0UV4fJWM4UClSYxw4s+N1FSHpoKQiWHf9dfoJ8aIO9VNbHvYnS+anPGmPcCs89A31gEo2s4rLyI2lDhMbOdjznYX7jWMR6pPv/EImiRGoCfWZm1slg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773052223; c=relaxed/simple;
-	bh=S39RhiGVyimXCDjc1xM5yDuZY2cvR5hVkmeqHSg9+Tg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HziSm9V/BDEY582fZrho78j0Ey4Yl1JOZyaZRrkwywv8HOJOhrAsWXepGVFHWy9X/jUFdDG+1Qta/dRzERo5AMFOrZmJddG+K6pCod6VsMaYxxLr91Y+Iefy0zpsvDePA5BICDePCWqaaMPjEU/7qTaqnMPpF1rNGEV72JAhszY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fTtYy5PyzzHnHKh;
-	Mon,  9 Mar 2026 18:30:14 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4D32140086;
-	Mon,  9 Mar 2026 18:30:18 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 9 Mar
- 2026 10:30:16 +0000
-Date: Mon, 9 Mar 2026 10:30:15 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Chengwen Feng <fengchengwen@huawei.com>
-CC: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
-	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul Walmsley
-	<pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, Len Brown <lenb@kernel.org>, Sunil V L
-	<sunilvl@ventanamicro.com>, Mark Rutland <mark.rutland@arm.com>,
-	<linux-acpi@vger.kernel.org>, <wei.huang2@amd.com>,
-	<Eric.VanTassell@amd.com>, <wangzhou1@hisilicon.com>,
-	<wanghuiqiang@huawei.com>, <liuyonglong@huawei.com>,
-	<stable@vger.kernel.org>, <jeremy.linton@arm.com>,
-	<sunilvl@oss.qualcomm.com>, <chenhuacai@loongson.cn>,
-	<wangliupu@loongson.cn>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linux-riscv@lists.infradead.org>, <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] ACPI: Rename get_acpi_id_for_cpu() to
- acpi_get_cpu_acpi_id() on non-x86
-Message-ID: <20260309103015.000070c3@huawei.com>
-In-Reply-To: <20260309041659.18815-2-fengchengwen@huawei.com>
-References: <20260303003625.39035-1-fengchengwen@huawei.com>
-	<20260309041659.18815-1-fengchengwen@huawei.com>
-	<20260309041659.18815-2-fengchengwen@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1773054384; c=relaxed/simple;
+	bh=KbTZxQxtEbla+RaayCgnxDIdxTaPc95rLhr01jHDrak=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cuXqI2dt+k26HYGMMLb+W87kH9mLFnzRRnxLXWnA3AiggOSdR/XdHDfCARY0BZBEcy7E5w0vfCzKEetDfRicqPk617t3bzTi0FSOrfLxcZvTOvxLXmf11B+MADSXTXRLBMU6qbbu2Mzm641FWbK1fQLtXnT+8gygxaXPG8dzyZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=h3uUuO6P; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="h3uUuO6P"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 628MsJjq1613004;
+	Mon, 9 Mar 2026 11:05:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=rpIXdQ6m8izsaZzFlwX9FzwEH7Tcoi
+	a9WGkEgx1Zq74=; b=h3uUuO6PZc1Lc3NBXDEXwrVDHx50Tu+cMkcIiR+4gBzdVN
+	tKcI0EyLTscM1pj9uTMooR4CGrh3IhJPt5YtWcKLcT7mQIZEFkk9uSvFjxkXARqS
+	RjbdUEOT3SC+PnEST03T8KGcRjUgbsQYQVox+sVyuqtRaCh5REosiDQ9r1CVGhBo
+	WHY0E2URPQB0bFcdAaeI44Sk0ivDO10iZEdmnSfY2N0D5TvnmaTxGmHGryL0KHni
+	c7FNwkCPSeVyLNfMmhtxLl6Mur+B6H4Cy7mXfn4WH6LiNmkg1/GJTLyEeYXs6wSf
+	655w2P18Zcf2IB6mWfTTHHjwVCBhsFtec9t72BFQ==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcvr60k5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Mar 2026 11:05:18 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 629AhIu7024649;
+	Mon, 9 Mar 2026 11:05:18 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cs0jjvfp9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Mar 2026 11:05:17 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 629B5ETa31392438
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 9 Mar 2026 11:05:14 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 29DF42004D;
+	Mon,  9 Mar 2026 11:05:14 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0468220040;
+	Mon,  9 Mar 2026 11:05:12 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.109.207.131])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon,  9 Mar 2026 11:05:11 +0000 (GMT)
+Date: Mon, 9 Mar 2026 16:35:09 +0530
+From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+To: Viktor Malik <vmalik@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Joe Perches <joe@perches.com>, Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        atrajeev@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] powerpc, perf: Check that current->mm is alive before
+ getting user callchain
+Message-ID: <aa6pZaDySMl9JGKf@linux.ibm.com>
+References: <20260227082502.1882395-1-vmalik@redhat.com>
+ <aab3EW1LfDcjSzzy@linux.ibm.com>
+ <80766050-c745-411b-8ee6-8141d2cfe4ff@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <80766050-c745-411b-8ee6-8141d2cfe4ff@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA5MDEwMSBTYWx0ZWRfX9HRC0qNVEgfA
+ bEUmuSVOi2BbDiiAWkeFZqtOIGjJvAHnAS9W6rAYwvm4QuLtM1zDIloqKxQHJLOBgu/saq1mIGM
+ UfimMFy+EUqJ8bbqnX3zqm+hO/ftuXcyGQMHblLzKPSmZ00cFII1AWOVFZ0GgYJS14haQmAJLbN
+ Z+T2SA+y4n87dnlBlEfKN1ArGrKavhOEPTkSEVq/FVn3bPkrU2kzplYNl4nTvh3vyOoQ+TzlPCL
+ cB7Yol4zrQoUNSdD98rQFyDqP+L1vlucQ00RThHW5W+zGqhFe6Nyc4XtX/6QYNRkdFEMjDyWgGU
+ brHURKwbga1dMbGOSQ7cOXtp7/y8ZU2stagjaPIzC32w1Y6qfeNYYlNga9WibYchAbr2ORm5p6Q
+ hfuXsRQp/peJxAQFa0XfG6ll3QTnnGDDj8cXL22BJZSFDv3v5MkOAipgTPiLbO2KkpSO3cFtDjL
+ Qx5tafzTDiq3w+9yCDg==
+X-Proofpoint-GUID: zOXVtuDP8n-88aBUmjAnr0rW02vS92rk
+X-Proofpoint-ORIG-GUID: ZHV80IJLcR6lIXaRXdAQ93ARIpmM0gGZ
+X-Authority-Analysis: v=2.4 cv=QoFTHFyd c=1 sm=1 tr=0 ts=69aea96f cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=kj9zAlcOel0A:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8
+ a=20KFwNOVAAAA:8 a=eEc1wmYC7BjqnX_VJ48A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-09_03,2026-03-06_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 spamscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 adultscore=0 clxscore=1015 malwarescore=0 suspectscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2602130000
+ definitions=main-2603090101
 
-On Mon, 9 Mar 2026 12:16:57 +0800
-Chengwen Feng <fengchengwen@huawei.com> wrote:
-
-> To unify the CPU ACPI ID retrieval interface across architectures,
-> rename the existing get_acpi_id_for_cpu() function to
-> acpi_get_cpu_acpi_id() on arm64/riscv/loongarch platforms.
+On Thu, Mar 05, 2026 at 01:45:44PM +0100, Viktor Malik wrote:
+> On 3/3/26 15:58, Saket Kumar Bhaskar wrote:
+> > On Fri, Feb 27, 2026 at 09:25:02AM +0100, Viktor Malik wrote:
+> >> It may happen that mm is already released, which leads to kernel panic.
+> >> This adds the NULL check for current->mm, similarly to 20afc60f892d
+> >> ("x86, perf: Check that current->mm is alive before getting user
+> >> callchain").
+> >>
+> >> I was getting this panic when running a profiling BPF program
+> >> (profile.py from bcc-tools):
+> >>
+> >>     [26215.051935] Kernel attempted to read user page (588) - exploit attempt? (uid: 0)
+> >>     [26215.051950] BUG: Kernel NULL pointer dereference on read at 0x00000588
+> >>     [26215.051952] Faulting instruction address: 0xc00000000020fac0
+> >>     [26215.051957] Oops: Kernel access of bad area, sig: 11 [#1]
+> >>     [...]
+> >>     [26215.052049] Call Trace:
+> >>     [26215.052050] [c000000061da6d30] [c00000000020fc10] perf_callchain_user_64+0x2d0/0x490 (unreliable)
+> >>     [26215.052054] [c000000061da6dc0] [c00000000020f92c] perf_callchain_user+0x1c/0x30
+> >>     [26215.052057] [c000000061da6de0] [c0000000005ab2a0] get_perf_callchain+0x100/0x360
+> >>     [26215.052063] [c000000061da6e70] [c000000000573bc8] bpf_get_stackid+0x88/0xf0
+> >>     [26215.052067] [c000000061da6ea0] [c008000000042258] bpf_prog_16d4ab9ab662f669_do_perf_event+0xf8/0x274
+> >>     [...]
+> >>
+> >> Fixes: 20002ded4d93 ("perf_counter: powerpc: Add callchain support")
+> >> Signed-off-by: Viktor Malik <vmalik@redhat.com>
+> >> ---
+> >>  arch/powerpc/perf/callchain_32.c | 3 +++
+> >>  arch/powerpc/perf/callchain_64.c | 3 +++
+> >>  2 files changed, 6 insertions(+)
+> >>
+> >> diff --git a/arch/powerpc/perf/callchain_32.c b/arch/powerpc/perf/callchain_32.c
+> >> index ddcc2d8aa64a..b46e21679566 100644
+> >> --- a/arch/powerpc/perf/callchain_32.c
+> >> +++ b/arch/powerpc/perf/callchain_32.c
+> >> @@ -144,6 +144,9 @@ void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+> >>  	sp = regs->gpr[1];
+> >>  	perf_callchain_store(entry, next_ip);
+> >>  
+> >> +	if (!current->mm)
+> >> +		return;
+> >> +
+> >>  	while (entry->nr < entry->max_stack) {
+> >>  		fp = (unsigned int __user *) (unsigned long) sp;
+> >>  		if (invalid_user_sp(sp) || read_user_stack_32(fp, &next_sp))
+> >> diff --git a/arch/powerpc/perf/callchain_64.c b/arch/powerpc/perf/callchain_64.c
+> >> index 115d1c105e8a..eaaadd6fa81b 100644
+> >> --- a/arch/powerpc/perf/callchain_64.c
+> >> +++ b/arch/powerpc/perf/callchain_64.c
+> >> @@ -79,6 +79,9 @@ void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+> >>  	sp = regs->gpr[1];
+> >>  	perf_callchain_store(entry, next_ip);
+> >>  
+> >> +	if (!current->mm)
+> >> +		return;
+> >> +
+> >>  	while (entry->nr < entry->max_stack) {
+> >>  		fp = (unsigned long __user *) sp;
+> >>  		if (invalid_user_sp(sp) || read_user_stack_64(fp, &next_sp))
+> >> -- 
+> >> 2.53.0
+> >>
+> > Sorry, I missed adding cc list for the last conversation so adding this for reference:
+> > 
+> >> Wouldn't be good if we check this in perf_callchain_user() as it will
+> >> cover both cases.
+> > 
+> > to which Viktor replied:
+> > I considered it but in that case, we'd also miss the top-level stack
+> > frame (the perf_callchain_store call above). Other arches include it so
+> > I followed the behavior for powerpc.
+> > 
+> > Viktor, agreed with your first point. I have another concern:
+> > 
+> > I was hitting this issue with stacktrace_build_id_nmi in bpf and
+> > applied this patch https://lore.kernel.org/bpf/20260126074331.815684-1-chen.dylane@linux.dev/T/#mf901967ebe77506f1bd6e3d876c2a85824d9519d
+> > 
+> > Wondering if the above generic fix is working do we need to add this
+> > check in powerpc specific code?
 > 
-> This is a pure rename with no functional change, preparing for a
-> consistent ACPI Processor UID retrieval interface across all ACPI-enabled
-> platforms.
+> I tried to apply that patch series but, unfortunately, keep getting the
+> panic when running the BCC profile tool.
 > 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
+> Also, looking at the patch, it seems that it would only solve the issue
+> when perf_callchain_user is called from a BPF context, however, I assume
+> that it may be called from other contexts, too.
+> 
+> Since perf_callchain_user_{32,64} are dereferencing current->mm while
+> walking the stack, I think that an explicit protection against
+> current->mm being NULL makes sense here, even in the presence of the
+> above patch. Especially since other arches have it, too.
+> 
+> Viktor
+> 
+Ok that looks convincing then, another thing is that, how about moving perf_callchain_store
+to perf_callchain_user and checking current->mm == NULL there for both perf_callchain_user_32/64.
+next_ip, lr and sp can be passed to perf_callchain_user_32/64.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Thanks,
+Saket
